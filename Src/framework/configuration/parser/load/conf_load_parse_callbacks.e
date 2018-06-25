@@ -1790,6 +1790,15 @@ feature {NONE} -- Implementation attribute processing
 					report_unknown_attribute (o_syntax)
 				end
 			end
+			if attached current_attributes.item (at_manifest_array_type) as o then
+				if not includes_this_or_after (namespace_1_18_0) then
+					report_unknown_attribute (o_manifest_array_type)
+				elseif l_current_option.array.is_valid_item (o) then
+					l_current_option.array.put (o)
+				else
+					set_parse_error_message (conf_interface_names.e_parse_invalid_value (o_manifest_array_type))
+				end
+			end
 
 			if a_class_option then
 				if
@@ -2378,7 +2387,11 @@ feature {NONE} -- Processing of options
 			new_options: CONF_TARGET_OPTION
 		do
 			if
-				a_namespace.same_string (namespace_1_18_0) or else
+				a_namespace.same_string (namespace_1_18_0)
+			then
+					-- Use the defaults of ES 18.01.
+				default_options := default_options_18_01
+			elseif
 				a_namespace.same_string (namespace_1_17_0) or else
 				a_namespace.same_string (namespace_1_16_0)
 			then
@@ -2941,17 +2954,19 @@ feature {NONE} -- Implementation state transitions
 				-- * optimize
 				-- * debug
 				-- * warning
+				-- * manifest_array_type
 				-- * namespace
 				-- * full_class_checking
 				-- * cat_call_detection
 				-- * is_attached_by_default
 				-- * is_void_safe
-			create l_attr.make (15)
+			create l_attr.make (16)
 			l_attr.force (at_trace, o_is_trace)
 			l_attr.force (at_profile, o_is_profile)
 			l_attr.force (at_optimize, o_is_optimize)
 			l_attr.force (at_debug, o_is_debug)
 			l_attr.force (at_warning, o_is_warning)
+			l_attr.force (at_manifest_array_type, o_manifest_array_type)
 			l_attr.force (at_msil_application_optimize, o_is_msil_application_optimize)
 			l_attr.force (at_namespace, o_namespace)
 			l_attr.force (at_full_class_checking, o_is_full_class_checking)
@@ -3190,6 +3205,14 @@ feature {NONE} -- Implementation state transitions
 		end
 
 feature {NONE} -- Default options
+
+	default_options_18_01: CONF_TARGET_OPTION
+			-- Default options of 18.01.
+		once
+			create Result.make_18_01
+		ensure
+			result_attached: Result /= Void
+		end
 
 	default_options_16_11: CONF_TARGET_OPTION
 			-- Default options of 16.11.

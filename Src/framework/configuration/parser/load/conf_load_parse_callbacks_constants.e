@@ -14,14 +14,15 @@ feature {NONE} -- Access
 		once
 			Result :=
 				<<
-					at_namespace,
-					at_full_class_checking,
 					at_catcall_detection,
+					at_full_class_checking,
 					at_is_attached_by_default,
 					at_is_void_safe,
-					at_void_safety,
+					at_manifest_array_type,
+					at_namespace,
+					at_syntax,
 					at_syntax_level,
-					at_syntax
+					at_void_safety
 				>>
 		end
 
@@ -162,6 +163,7 @@ feature {NONE} -- Implementation constants
 	at_support: INTEGER = 1067
 	at_use: INTEGER = 1068
 	at_match: INTEGER = 1069
+	at_manifest_array_type: INTEGER = 1070
 
 		-- Undefined tag starting number
 	undefined_tag_start: INTEGER = 100000

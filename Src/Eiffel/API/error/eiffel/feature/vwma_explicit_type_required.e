@@ -44,13 +44,15 @@ inherit
 	SHARED_WORKBENCH
 
 create
-	make
+	make_conformance,
+	make_mismatch
 
 feature {NONE} -- Creation
 
-	make (c: AST_CONTEXT; i, t: TYPE_A; a: ARRAY_AS; e: BOOLEAN)
+	make_conformance (c: AST_CONTEXT; i, t: TYPE_A; a: ARRAY_AS; e: BOOLEAN)
 			-- Initialize error object for implicit element type `i` and target element type `t`
-			-- of a manifest array `a` in the context `c` with the error indicator `e`.
+			-- of a manifest array `a` in the context `c` with the error indicator `e`
+			-- the manifest array type does not conform to the target type.
 			--
 			-- `e`: `True` - Error, `False` - Warning.
 		require
@@ -69,6 +71,32 @@ feature {NONE} -- Creation
 			target_element_type_set: target_element_type = t
 			is_error_set: is_error = e
 			array_set: array = a
+			is_conformance: is_conformance
+		end
+
+	make_mismatch (c: AST_CONTEXT; i, t: TYPE_A; a: ARRAY_AS; e: BOOLEAN)
+			-- Initialize error object for implicit element type `i` and target element type `t`
+			-- of a manifest array `a` in the context `c` with the error indicator `e`
+			-- the manifest array type is different from the target type.
+			--
+			-- `e`: `True` - Error, `False` - Warning.
+		require
+			c_attached: attached c
+			i_attached: attached i
+			t_attached: attached t
+			a_attached: attached a
+		do
+			implicit_element_type := i
+			target_element_type := t
+			is_error := e
+			array := a
+			make_parent (c, a.first_token (system.match_list_server.item (c.written_class.class_id)))
+		ensure
+			implicit_element_type_set: implicit_element_type = i
+			target_element_type_set: target_element_type = t
+			is_error_set: is_error = e
+			array_set: array = a
+			not_is_conformance: not is_conformance
 		end
 
 feature -- Access
@@ -109,6 +137,9 @@ feature {NONE} -- Access
 	is_error: BOOLEAN
 			-- Does current represent an error?
 
+	is_conformance: BOOLEAN
+			-- Is issue related to type conformance (rather than to type mismatch)?
+
 feature -- Output
 
 	build_explain (t: TEXT_FORMATTER)
@@ -116,7 +147,12 @@ feature -- Output
 		do
 			trace_single_line (t)
 			t.add_new_line
-			format_elements (t, locale.translation_in_context ("Computed type of array elements {1} does not conform to the type {2} of target array elements.", "compiler.error"),
+			format_elements (t,
+				if is_conformance then
+					locale.translation_in_context ("Computed type of array elements {1} does not conform to the type {2} of target array elements.", "compiler.error")
+				else
+					locale.translation_in_context ("Computed type of array elements {1} differs from the type {2} of target array elements.", "compiler.error")
+				end,
 				<<agent implicit_element_type.append_to, agent target_element_type.append_to>>)
 			t.add_new_line
 		end
@@ -128,7 +164,7 @@ feature -- Output
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

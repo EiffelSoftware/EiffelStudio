@@ -453,6 +453,17 @@ feature -- Option names and descriptions
 	option_syntax_standard_name: STRING_32 do Result := locale.translation ("Standard syntax") end
 	option_syntax_provisional_name: STRING_32 do Result := locale.translation ("Provisional syntax") end
 
+	option_array_name: STRING_32 do Result := locale.translation_in_context ("Manifest array type", "configuration.option") end
+	option_array_description: STRING_32 do Result := locale.translation_in_context ({STRING_32} "[
+			Should computed manifest array type be compared against target type of reattachment?
+			 • Mismatch error: Yes, report an error if the types are different;
+			 • Mismatch warning: Yes, report a warning if the types are different;
+			 • Standard: No.
+		]", "configuration.option") end
+	option_array_mismatch_error_name: STRING_32 do Result := locale.translation_in_context ("Mismatch error", "configuration.option") end
+	option_array_mismatch_warning_name: STRING_32 do Result := locale.translation_in_context ("Mismatch warning", "configuration.option") end
+	option_array_standard_name: STRING_32 do Result := locale.translation_in_context ("Standard", "configuration.option") end
+
 	warning_names: STRING_TABLE [STRING_32]
 			-- Warning names.
 		once

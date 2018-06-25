@@ -916,41 +916,41 @@ feature {NONE} -- Implementation
 			w: READABLE_STRING_GENERAL
 		do
 			if an_options.is_trace_configured then
-				append_boolean_attribute ("trace", an_options.is_trace)
+				append_boolean_attribute (o_is_trace, an_options.is_trace)
 			end
 			if an_options.is_profile_configured then
-				append_boolean_attribute ("profile", an_options.is_profile)
+				append_boolean_attribute (o_is_profile, an_options.is_profile)
 			end
 			if an_options.is_optimize_configured then
-				append_boolean_attribute ("optimize", an_options.is_optimize)
+				append_boolean_attribute (o_is_optimize, an_options.is_optimize)
 			end
 			if an_options.is_debug_configured then
-				append_boolean_attribute ("debug", an_options.is_debug)
+				append_boolean_attribute (o_is_debug, an_options.is_debug)
 			end
 			if an_options.is_warning_configured then
-				append_boolean_attribute ("warning", an_options.is_warning)
+				append_boolean_attribute (o_is_warning, an_options.is_warning)
 			end
 			if an_options.is_msil_application_optimize_configured then
-				append_boolean_attribute ("msil_application_optimize", an_options.is_msil_application_optimize)
+				append_boolean_attribute (o_is_msil_application_optimize, an_options.is_msil_application_optimize)
 			end
 			if an_options.is_full_class_checking_configured then
-				append_boolean_attribute ("full_class_checking", an_options.is_full_class_checking)
+				append_boolean_attribute (o_is_full_class_checking, an_options.is_full_class_checking)
 			end
 			if
 				is_before_or_equal (namespace, namespace_1_15_0) and then
 				an_options.catcall_detection.is_set
 			then
 					-- Starting from `namespace_1_16_0` the option is treated as capability.
-				append_text_attribute ("cat_call_detection", an_options.catcall_detection.item)
+				append_text_attribute (o_catcall_detection, an_options.catcall_detection.item)
 			end
 			if an_options.is_attached_by_default_configured then
-				append_boolean_attribute ("is_attached_by_default", an_options.is_attached_by_default)
+				append_boolean_attribute (o_is_attached_by_default, an_options.is_attached_by_default)
 			end
 			if
 				(an_options.is_obsolete_routine_type_configured or else an_options.is_obsolete_routine_type) and then
 				is_after_or_equal (namespace, namespace_1_15_0)
 			then
-				append_boolean_attribute ("is_obsolete_routine_type", an_options.is_obsolete_routine_type)
+				append_boolean_attribute (o_is_obsolete_routine_type, an_options.is_obsolete_routine_type)
 			end
 			if
 				is_before_or_equal (namespace, namespace_1_15_0) and then
@@ -981,11 +981,18 @@ feature {NONE} -- Implementation
 				append_text_attribute (o_void_safety, l_str)
 			end
 			if an_options.syntax.is_set then
-				append_text_attribute ("syntax", an_options.syntax.item)
+				append_text_attribute (o_syntax, an_options.syntax.item)
+			end
+			if
+				is_after_or_equal (namespace, namespace_1_18_0) and then
+				an_options.array.is_set
+			then
+					-- The option is available only starting from `namespace_1_18_0`.
+				append_text_attribute (o_manifest_array_type, an_options.array.item)
 			end
 			l_str := an_options.local_namespace
 			if l_str /= Void and then not l_str.is_empty then
-				append_text_attribute ("namespace", l_str)
+				append_text_attribute (o_namespace, l_str)
 			end
 			append_tag_close
 

@@ -15,6 +15,7 @@ inherit
 			default_create,
 			is_empty,
 			make_6_3,
+			make_16_11,
 			merge
 		end
 
@@ -26,14 +27,15 @@ create
 	make_7_3,
 	make_14_05,
 	make_15_11,
-	make_16_11
+	make_16_11,
+	make_18_01
 
 feature {NONE} -- Creation
 
 	default_create
 			-- <Precursor>
 		do
-			make_16_11
+			make_18_01
 		end
 
 	make_6_3
@@ -48,9 +50,9 @@ feature {NONE} -- Creation
 
 	make_16_11
 			-- <Precursor>
-			-- Difference from `make_15_11': SCOOP for concurrency.
+			-- Difference from `make_15_11`: SCOOP for concurrency.
 		do
-			make_15_11
+			Precursor
 			concurrency.put_default_index (concurrency_index_scoop)
 		end
 
@@ -155,7 +157,7 @@ invariant
 	consistent_void_safety: void_safety_capability.value = void_safety
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

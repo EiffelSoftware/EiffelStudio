@@ -257,14 +257,12 @@ feature {NONE} -- Implementation
 				-- Language section.
 			if not a_group.is_assembly then
 				properties.add_section (conf_interface_names.section_language)
-					-- Void safety.
-				add_void_safety_property (a_group.changeable_internal_options, a_group.options, True, a_group.is_library)
-					-- Cat calls.
-				add_cat_call_property (a_group.changeable_internal_options, a_group.options, True, a_group.is_library)
 					-- Full class checking.
 				add_full_checking_property (a_group.changeable_internal_options, a_group.options, True, a_group.is_library)
 					-- Syntax.
 				add_syntax_property (a_group.changeable_internal_options, a_group.options, True, a_group.is_library)
+					-- Manifest array type checks.
+				add_array_property (a_group.changeable_internal_options, a_group.options, True, a_group.is_library)
 				if attached l_cluster then
 						-- Type mapping.
 					create l_mapping_prop.make_with_dialog (conf_interface_names.cluster_mapping_name, create {RENAMING_DIALOG})

@@ -213,8 +213,11 @@ feature {NONE} -- Usage
 			Result := version_number
 		end
 
-	copyright: STRING = "Copyright Eiffel Software 1984-2017. All Rights Reserved."
+	copyright: attached IMMUTABLE_STRING_8
 			-- <Precursor>
+		once
+			Result := {STRING_8} "Copyright Eiffel Software 1984-" + {EIFFEL_ENV}.copyright_year + ". All Rights Reserved."
+		end
 
 	non_switched_argument_name: attached STRING_8
 			-- Name of lose argument, used in usage information

@@ -630,7 +630,7 @@ feature {NONE} -- Parameters operation
 				if with_first_empty_element then
 					create Result.make (1, 1)
 				else
-					Result := << >>
+					create Result.make_empty
 				end
 			end
 		ensure
@@ -1045,7 +1045,7 @@ feature {NONE} -- Debug purpose only
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

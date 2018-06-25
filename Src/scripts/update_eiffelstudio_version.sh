@@ -37,6 +37,7 @@ do_sed "s/EiffelStudio [0-9][0-9]\.[0-9][0-9]/EiffelStudio $to_version/g" $EIFFE
 
 # $EIFFEL_SRC/Delivery/scripts/windows/set_aliases.btm
 do_sed "s/Eiffel_[0-9][0-9]\.[0-9][0-9]/Eiffel_$to_version/g" $EIFFEL_SRC/Delivery/scripts/windows/set_aliases.btm
+do_sed "s/[0-9][0-9]\.[0-9][0-9]_deliv/${to_version}_deliv/g" $EIFFEL_SRC/Delivery/scripts/windows/set_aliases.btm
 
 # $EIFFEL_SRC/Delivery/scripts/unix/README.unix
 do_sed "s/Eiffel_[0-9][0-9]\.[0-9][0-9]/Eiffel_$to_version/g" $EIFFEL_SRC/Delivery/scripts/unix/README.unix
@@ -66,6 +67,13 @@ do_sed "s/Eiffel_[0-9][0-9]\.[0-9][0-9]/Eiffel_$to_version/g" $EIFFEL_SRC/C/ipc/
 
 # $EIFFEL_SRC/C/CONFIGS/*
 doall_sed "s/'\.[0-9][0-9]\.[0-9][0-9]'/'\.$to_version'/g" $EIFFEL_SRC/C/CONFIGS/
+
+# $EIFFEL_SRC/Eiffel/Ace/ec.rc
+do_sed "s/[0-9][0-9]\.[0-9][0-9]\(,0,0\)/$to_version\1/g" $EIFFEL_SRC/Eiffel/Ace/ec.rc
+do_sed "s/[0-9][0-9]\.[0-9][0-9]\(\.0\.0\)/$to_version\1/g" $EIFFEL_SRC/Eiffel/Ace/ec.rc
+do_sed "s/[0-9][0-9]\.[0-9][0-9]\(.0\"\)/$to_version\1/g" $EIFFEL_SRC/Eiffel/Ace/ec.rc
+do_sed "s/Eiffel Studio [0-9][0-9]\.[0-9][0-9]/Eiffel Studio $to_version/g" $EIFFEL_SRC/Eiffel/Ace/ec.rc
+do_sed "s/\"[0-9][0-9]\.[0-9][0-9]\"/\"$to_version\"/g" $EIFFEL_SRC/Eiffel/Ace/ec.rc
  
 # $EIFFEL_SRC/framework/environment/interface/eiffel_constants.e
 do_sed "s/\(major_version: .* = \)[0-9][0-9]/\1$to_version_major/g" $EIFFEL_SRC/framework/environment/interface/eiffel_constants.e

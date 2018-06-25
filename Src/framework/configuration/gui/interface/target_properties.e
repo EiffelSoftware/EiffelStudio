@@ -249,10 +249,12 @@ feature {NONE} -- Implementation
 
 				-- Language section.
 			properties.add_section (conf_interface_names.section_language)
-				-- Syntax.			
-			add_syntax_property (current_target.changeable_internal_options, current_target.options, l_extends, False)
 				-- Full class checking.
 			add_full_checking_property (current_target.changeable_internal_options, current_target.options, l_extends, False)
+				-- Syntax.			
+			add_syntax_property (current_target.changeable_internal_options, current_target.options, l_extends, False)
+				-- Manifest array type checks.
+			add_array_property (current_target.changeable_internal_options, current_target.options, l_extends, False)
 				-- Address expression.
 			l_bool_prop := new_boolean_property (conf_interface_names.target_address_expression_name, current_target.setting_address_expression)
 			l_bool_prop.set_description (conf_interface_names.target_address_expression_description)

@@ -9,12 +9,14 @@ to_version_minor=`echo $to_version | cut -d. -f2`
 function do_sed {
 	echo sed -i -e "$1" "$2" 
 	sed -i -e "$1" "$2" 
+	svn diff "$2"
 }
 
 function doall_sed {
 	for filename in $2*; do
 		echo sed -i -e "$1" "$filename" 
 		sed -i -e "$1" "$filename" 
+		svn diff "$filename"
 	done
 }
 
@@ -56,7 +58,7 @@ do_sed "s/Eiffel_[0-9][0-9]\.[0-9][0-9]/Eiffel_$to_version/g" $EIFFEL_SRC/Delive
 
 # $EIFFEL_SRC/Delivery/studio/spec/unix/finish_freezing
 do_sed "s/Version [0-9][0-9]\.[0-9][0-9]/Version $to_version/g" $EIFFEL_SRC/Delivery/studio/spec/unix/finish_freezing
-do_sed "s/=[0-9][0-9]\.[0-9][0-9]/=to_version/g" $EIFFEL_SRC/Delivery/studio/spec/unix/finish_freezing
+do_sed "s/=[0-9][0-9]\.[0-9][0-9]/=$to_version/g" $EIFFEL_SRC/Delivery/studio/spec/unix/finish_freezing
 
 # $EIFFEL_SRC/C/ipc/daemon/env.c
 do_sed "s/Eiffel_[0-9][0-9]\.[0-9][0-9]/Eiffel_$to_version/g" $EIFFEL_SRC/C/ipc/daemon/env.c

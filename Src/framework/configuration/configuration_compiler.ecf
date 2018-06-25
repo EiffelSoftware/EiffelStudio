@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-17-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-17-0 http://www.eiffel.com/developers/xml/configuration-1-17-0.xsd" name="configuration_compiler" uuid="D99D877F-0F37-4B82-8FB6-EE98AF7B13D7" library_target="configuration_compiler">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="configuration_compiler" uuid="D99D877F-0F37-4B82-8FB6-EE98AF7B13D7" library_target="configuration_compiler">
 	<target name="configuration_compiler">
 		<root all_classes="true"/>
 		<file_rule>
@@ -21,7 +21,7 @@
 		<library name="file_utilities" location="$EIFFEL_SRC\framework\file_utilities\file_utilities.ecf"/>
 		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
 		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure.ecf"/>
-		<library name="parser" location="$EIFFEL_SRC\framework\parser\parser.ecf"/>
+		<library name="parser" location="..\parser\parser.ecf"/>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf"/>
 		<cluster name="configuration" location="compiler\" recursive="true">
 			<option namespace="Compiler">

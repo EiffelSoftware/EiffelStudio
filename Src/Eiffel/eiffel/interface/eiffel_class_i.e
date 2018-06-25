@@ -240,7 +240,7 @@ feature {COMPILER_EXPORTER} -- Setting
 						end
 					end
 					if
-						(new_options.is_full_class_checking /= old_options.is_full_class_checking or else
+						(new_options.is_full_class_checking and then not old_options.is_full_class_checking or else
 						new_options.array.index /= old_options.array.index) and then
 						attached c
 					then

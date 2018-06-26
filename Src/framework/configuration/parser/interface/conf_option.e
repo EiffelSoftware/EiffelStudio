@@ -37,14 +37,15 @@ create
 	make_7_0,
 	make_7_3,
 	make_14_05,
-	make_15_11
+	make_15_11,
+	make_18_01
 
 feature {NONE} -- Creation
 
 	default_create
 			-- Initialize options to the defaults of the current version.
 		do
-			make_15_11
+			make_18_01
 		end
 
 	make_6_3
@@ -52,6 +53,7 @@ feature {NONE} -- Creation
 			-- First versioned settings.
 		do
 			create syntax.make (syntax_name, syntax_index_obsolete)
+			create array.make (array_name, array_index_mismatch_error)
 			create void_safety.make (void_safety_name, void_safety_index_none)
 			create catcall_detection.make (catcall_detection_values, catcall_detection_index_none)
 			is_obsolete_routine_type := True
@@ -93,10 +95,25 @@ feature {NONE} -- Creation
 
 	make_15_11
 			-- Initialize options to the defaults of 15.11.
-			-- Difference from `make_15_11': routine types without target parameter.
+			-- Difference from `make_14_05`: routine types without target parameter.
 		do
 			make_14_05
 			is_obsolete_routine_type := False
+		end
+
+	make_16_11
+			-- Initialize options to the defaults of 16.11.
+			-- Difference from `make_15_11`: none. See `{CONF_TARGET_OPTION}`.
+		do
+			make_15_11
+		end
+
+	make_18_01
+			-- Initialize options to the defaults of 18.01.
+			-- Difference from `make_16_11`: manifest array type is computed without taking target type into account.
+		do
+			make_16_11
+			array.put_default_index (array_index_standard)
 		end
 
 feature -- Status
@@ -147,7 +164,8 @@ feature -- Status
 				local_namespace /= Void or
 				warnings /= Void or
 				debugs /= Void or
-				syntax.is_set)
+				syntax.is_set or
+				array.is_set)
 		end
 
 	is_empty_for (n: detachable READABLE_STRING_32): BOOLEAN
@@ -168,6 +186,7 @@ feature -- Status
 				warnings /= Void or
 				debugs /= Void or
 				syntax.is_set or
+				array.is_set or
 					-- Void safety and catcall detection options are used only before `namespace_1_15_0`.
 				(is_before_or_equal (n, namespace_1_15_0) and then
 					(catcall_detection.is_set or
@@ -303,6 +322,30 @@ feature {NONE} -- Access: syntax
 			-- Available values for `syntax' option
 		once
 			Result := <<{STRING_32} "obsolete", {STRING_32} "transitional", {STRING_32} "standard", {STRING_32} "provisional">>
+		ensure
+			result_attached: Result /= Void
+		end
+
+feature -- Access: manifest array type
+
+	array: CONF_VALUE_CHOICE
+			-- Expected variant of manifest array typing rules.
+
+	array_index_mismatch_error: NATURAL_8 = 1
+			-- Option index for obsolete syntax
+
+	array_index_mismatch_warning: NATURAL_8 = 2
+			-- Option index for transitional syntax
+
+	array_index_standard: NATURAL_8 = 3
+			-- Option index for standard syntax
+
+feature {NONE} -- Access: syntax
+
+	array_name: ARRAY [READABLE_STRING_32]
+			-- Available values for `manifest_array_type` option.
+		once
+			Result := <<{STRING_32} "mismatch_error", {STRING_32} "mismatch_warning", {STRING_32} "standard">>
 		ensure
 			result_attached: Result /= Void
 		end
@@ -579,6 +622,7 @@ feature -- Duplication
 				void_safety := other.void_safety.twin
 				catcall_detection := other.catcall_detection.twin
 				syntax := other.syntax.twin
+				array := other.array.twin
 				if attached other.warnings as w then
 					warnings := w.twin
 				end
@@ -615,6 +659,7 @@ feature -- Comparison
 			and then equal (namespace, other.namespace)
 			and then void_safety.is_equal (other.void_safety)
 			and then syntax.is_equal (other.syntax)
+			and then array.is_equal (other.array)
 			and then equal (warnings, other.warnings)
 			then
 				Result := True
@@ -635,6 +680,7 @@ feature -- Comparison
 				is_trace = other.is_trace and
 				void_safety.index = other.void_safety.index and
 				syntax.index = other.syntax.index and
+				array.index = other.array.index and
 				equal(local_namespace, other.local_namespace) and
 				equal (debugs, other.debugs)
 		end
@@ -776,6 +822,7 @@ feature -- Merging
 					is_obsolete_routine_type := other.is_obsolete_routine_type
 				end
 				syntax.set_safely (other.syntax)
+				array.set_safely (other.array)
 				void_safety.set_safely (other.void_safety)
 					-- The merge for `is_attached_by_default' should happen after merging `void_safety'
 					-- because the latter is used to default to `True' if the resulting project is not Void-safe.
@@ -792,6 +839,15 @@ feature -- Merging
 					end
 				end
 			end
+		end
+
+	override_settings_from (other: like Current)
+			-- Override settings from `other'.
+		do
+			is_full_class_checking_configured := other.is_full_class_checking_configured
+			is_full_class_checking := other.is_full_class_checking
+			catcall_detection.copy (other.catcall_detection)
+			void_safety.copy (other.void_safety)
 		end
 
 invariant

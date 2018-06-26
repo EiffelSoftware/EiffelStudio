@@ -155,6 +155,7 @@ feature -- Option names
 	o_is_trace: STRING_32 = "trace"
 	o_is_warning: STRING_32 = "warning"
 
+	o_manifest_array_type: STRING_32 = "manifest_array_type"
 	o_namespace: STRING_32 = "namespace"
 	o_syntax: STRING_32 = "syntax"
 	o_void_safety: STRING_32 = "void_safety"

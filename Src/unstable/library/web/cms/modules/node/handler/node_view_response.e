@@ -56,6 +56,10 @@ feature -- Execution
 					l_manager.append_content_as_html_to_page (l_node, Current)
 				end
 				set_modification_date (l_node.modification_date)
+				if attached l_node.summary as l_node_summary and then not l_node_summary.is_whitespace then
+					set_description (l_node_summary)
+				end
+				set_metadata ("article", "type")
 			elseif revision > 0 then
 				set_main_content ("Missing revision node!")
 			else

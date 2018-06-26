@@ -38,10 +38,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	copyright: STRING = "Copyright Eiffel Software 2011-2017"
+	copyright: STRING = "Copyright Eiffel Software 2011-2018"
 			-- Copyright information.
 			-- Not used if empty.
-
+	
 feature {NONE} -- Status report		
 
 	is_using_unix_switch_style: BOOLEAN = True

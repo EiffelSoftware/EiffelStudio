@@ -1,4 +1,4 @@
-Type error: non-conforming manifest array. 
+Type error: non-conforming or mismatching manifest array type.
 What to do: make sure that the explicit manifest array type (if specified)
  is an array type (`ARRAY [...]`) and every element type conforms or
  converts to the specified type of items.

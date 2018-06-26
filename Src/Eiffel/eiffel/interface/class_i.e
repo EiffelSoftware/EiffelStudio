@@ -318,7 +318,7 @@ feature -- Access
 		end
 
 	is_syntax_standard: BOOLEAN
-			-- Is obsolete syntax used in the source code?
+			-- Is standard syntax used in the source code?
 		do
 			inspect
 				options.syntax.index
@@ -330,6 +330,27 @@ feature -- Access
 				Result := True
 			else
 			end
+		end
+
+	is_manifest_array_type_standard: BOOLEAN
+			-- Is standard manifest array typing used?
+		do
+			Result := options.array.index = {CONF_OPTION}.array_index_standard
+		ensure
+			not_warning: Result implies not is_manifest_array_type_mismatch_warning
+			not_error: Result implies not is_manifest_array_type_mismatch_error
+		end
+
+	is_manifest_array_type_mismatch_warning: BOOLEAN
+			-- Should manifest array type mismatch be reported as a warning?
+		do
+			Result := options.array.index = {CONF_OPTION}.array_index_mismatch_warning
+		end
+
+	is_manifest_array_type_mismatch_error: BOOLEAN
+			-- Should manifest array type mismatch be reported as an error?
+		do
+			Result := options.array.index = {CONF_OPTION}.array_index_mismatch_error
 		end
 
 	is_compiled: BOOLEAN

@@ -3,7 +3,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+class 
 	WDOCS_MODULE
 
 inherit
@@ -38,7 +38,7 @@ inherit
 
 	CMS_TAXONOMY_HOOK
 
-create
+create 
 	make
 
 feature {NONE} -- Initialization
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 			package := "doc"
 
 				-- FIXME: maybe have a WDOCS_MODULE_EXECUTION to get those info when needed...
-				-- Note those values are really set in `register'
+				-- Note those values are really set in `register`
 			create l_root_dir.make_current
 			temp_dir := l_root_dir.extended ("tmp")
 			documentation_dir := l_root_dir.extended ("data").extended ("documentation")
@@ -63,10 +63,11 @@ feature {NONE} -- Initialization
 			add_optional_dependency ({CMS_RECENT_CHANGES_MODULE})
 			add_optional_dependency ({CMS_SITEMAP_MODULE})
 		end
-
+	
 feature -- Access
 
 	name: STRING = "wdocs"
+			-- Name of the module.
 
 	permissions: LIST [READABLE_STRING_8]
 			-- <Precursor>.
@@ -74,7 +75,7 @@ feature -- Access
 			Result := Precursor
 			Result.force ("clear wdocs cache")
 		end
-
+	
 feature -- Administration
 
 	administration: WDOCS_MODULE_ADMINISTRATION
@@ -82,25 +83,29 @@ feature -- Administration
 		do
 			create Result.make (Current)
 		end
-
+	
 feature {CMS_API} -- Module Initialization			
 
 	initialize (api: CMS_API)
 			-- <Precursor>
 		local
 			l_setup: WDOCS_SETUP
+			l_wdocs_api: attached like wdocs_api
 		do
 			Precursor (api)
-			l_setup:= settings (api)
+			l_setup := settings (api)
 			temp_dir := l_setup.temp_dir
 			documentation_dir := l_setup.documentation_dir
 			cache_duration := l_setup.cache_duration
 			get_default_version_id (l_setup)
-			create wdocs_api.make (default_version_id, api, l_setup)
+			create l_wdocs_api.make (default_version_id, api, l_setup)
+			wdocs_api := l_wdocs_api
+
+			api.add_content_type_webform_manager (create {WDOCS_TYPE_WEBFORM_MANAGER}.make (create {CMS_WDOCS_CONTENT_TYPE}, l_wdocs_api))
 		end
 
 	get_default_version_id (cfg: WDOCS_SETUP)
-			-- Get default version id from `cfg' or "version" file from `documentation_dir'.
+			-- Get default version id from `cfg` or "version" file from `documentation_dir`.
 			-- If set via configuration, it has priority over "version" file.
 		local
 			f: PLAIN_TEXT_FILE
@@ -134,12 +139,12 @@ feature {CMS_API} -- Module Initialization
 			retried := True
 			retry
 		end
-
+	
 feature -- Access: API
 
 	wdocs_api: detachable WDOCS_API
 			-- <Precursor>		
-
+	
 feature -- Router
 
 	setup_router (a_router: WSF_ROUTER; a_api: CMS_API)
@@ -192,7 +197,7 @@ feature -- Router
 			a_router.handle ("/doc-static/version/{version_id}{/vars}", h, a_router.methods_get)
 
 		end
-
+	
 feature -- Hooks configuration
 
 	setup_hooks (a_hooks: CMS_HOOK_CORE_MANAGER)
@@ -205,7 +210,7 @@ feature -- Hooks configuration
 			a_hooks.subscribe_to_hook (Current, {CMS_TAXONOMY_HOOK})
 			a_hooks.subscribe_to_hook (Current, {CMS_SITEMAP_HOOK})
 		end
-
+	
 feature {NONE} -- Config
 
 	settings (api: CMS_API): WDOCS_SETUP
@@ -255,7 +260,7 @@ feature {NONE} -- Config
 				end
 			end
 		end
-
+	
 feature -- Access: docs
 
 	temp_dir: PATH
@@ -290,7 +295,7 @@ feature -- Access: docs
 				Result := l_wdocs_api.manager (a_version_id)
 			end
 		end
-
+	
 feature -- Hooks
 
 	response_alter (a_response: CMS_RESPONSE)
@@ -300,8 +305,8 @@ feature -- Hooks
 		end
 
 	menu_system_alter (a_menu_system: CMS_MENU_SYSTEM; a_response: CMS_RESPONSE)
-			-- Hook execution on collection of menu contained by `a_menu_system'
-			-- for related response `a_response'.
+			-- Hook execution on collection of menu contained by `a_menu_system`
+			-- for related response `a_response`.
 		local
 			lnk: CMS_LOCAL_LINK
 			l_docs_admin_loc: READABLE_STRING_8
@@ -336,9 +341,9 @@ feature -- Hooks
 			l_version_id, l_book_name, l_page_name: detachable READABLE_STRING_GENERAL
 			mng: like manager
 		do
-			if
+			if 
 				attached {READABLE_STRING_GENERAL} a_response.optional_content_type as l_type and then
-				l_type.is_case_insensitive_equal ("doc")
+				l_type.is_case_insensitive_equal ("doc") 
 			then
 				if a_block_id /= Void then
 					if attached {READABLE_STRING_GENERAL} a_response.values.item ("wiki_version_id") as t then
@@ -356,16 +361,16 @@ feature -- Hooks
 					end
 
 					if a_block_id.same_string_general ("wdocs-tree") then
-						m := cached_wdocs_cms_menu ("Documentation", l_version_id, l_book_name, mng)
+						m := cached_wdocs_cms_menu ({STRING_32} "Documentation", l_version_id, l_book_name, mng)
 						create l_menublock.make (m)
 						l_menublock.set_title (Void)
 						a_response.add_block (l_menublock, "sidebar_first")
 					elseif a_block_id.same_string_general ("wdocs-cards") then
 						a_response.add_block (wdocs_cards_block (a_block_id, a_response, mng), "content")
 					elseif a_block_id.same_string_general ("wdocs-page-info") then
-						if
-							l_book_name /= Void and then l_page_name /= Void and then
-							attached mng.page (l_page_name, l_book_name) as wp
+						if 
+							l_book_name /= Void and then l_page_name /= Void and then 
+							attached mng.page (l_page_name, l_book_name) as wp 
 						then
 							create s.make_empty
 							s.append ("<strong>title:</strong>")
@@ -396,7 +401,7 @@ feature -- Hooks
 									s.append_character ('%N')
 								end
 							end
-							create l_content_block.make (a_block_id, "Page info", s, a_response.formats.filtered_html)
+							create l_content_block.make (a_block_id, {STRING_32} "Page info", s, a_response.formats.filtered_html)
 							a_response.add_block (l_content_block, "sidebar_second")
 						end
 					end
@@ -418,9 +423,9 @@ feature -- Hooks
 				loop
 					if attached book_ic.item as l_book then
 						if attached a_manager.version_id as l_version_id then
-							l_url := a_response.request.script_url ("/doc/version/" + percent_encoder.percent_encoded_string (l_version_id) + "/" + percent_encoder.percent_encoded_string (l_book.name) +"/index")
+							l_url := a_response.request.script_url ("/doc/version/" + percent_encoder.percent_encoded_string (l_version_id) + "/" + percent_encoder.percent_encoded_string (l_book.name) + "/index")
 						else
-							l_url := a_response.request.script_url ("/doc/" + percent_encoder.percent_encoded_string (l_book.name) +"/index")
+							l_url := a_response.request.script_url ("/doc/" + percent_encoder.percent_encoded_string (l_book.name) + "/index")
 						end
 						if attached l_book.root_page as l_root_page then
 							tb.force (l_root_page, l_url)
@@ -435,7 +440,7 @@ feature -- Hooks
 				create {CMS_CONTENT_BLOCK} Result.make_raw (a_block_id, Void, "", Void)
 			end
 		end
-
+	
 feature -- Hook/sitemap
 
 	populate_sitemap (a_sitemap: CMS_SITEMAP)
@@ -449,8 +454,8 @@ feature -- Hook/sitemap
 		do
 			if attached wdocs_api as l_wdocs_api then
 				if
-					attached l_wdocs_api.manager (Void) as mng and then
-					attached mng.book_names as l_book_names
+					attached l_wdocs_api.manager (Void) as mng and then 
+					attached mng.book_names as l_book_names 
 				then
 					across
 						l_book_names as bk_ic
@@ -482,7 +487,7 @@ feature -- Hook/sitemap
 				end
 			end
 		end
-
+	
 feature -- Hook / Recent changes
 
 	recent_changes_sources: detachable LIST [READABLE_STRING_8]
@@ -498,7 +503,7 @@ feature -- Hook / Recent changes
 	populate_recent_changes (a_changes: CMS_RECENT_CHANGE_CONTAINER; a_current_user: detachable CMS_USER)
 			-- <Precursor>.
 		local
-			pos,pos_eol: INTEGER
+			pos, pos_eol: INTEGER
 			i: CMS_RECENT_CHANGE_ITEM
 			dt: detachable DATE_TIME
 			l_src: detachable READABLE_STRING_8
@@ -532,7 +537,7 @@ feature -- Hook / Recent changes
 							i.set_author_name (l_data.author)
 							if attached ic.item.log as l_log then
 								i.set_information (l_log)
-									-- Looking for real author "Signed-off-by: Super Developer <super.dev@gmail.com>"
+									-- Looking for real author "Signed-off-by: Super Developer <super.dev@example.com>"
 								pos_eol := 0
 								pos := l_log.substring_index ("(Signed-off-by:", 1)
 								if pos > 0 then
@@ -563,7 +568,7 @@ feature -- Hook / Recent changes
 				end
 			end
 		end
-
+	
 feature {NONE} -- Implementation		
 
 	wdocs_page_cms_menu_link (a_version_id: detachable READABLE_STRING_GENERAL; a_book: WIKI_BOOK; a_page: detachable WIKI_PAGE; a_current_page_name: detachable READABLE_STRING_GENERAL; is_full: BOOLEAN; mng: WDOCS_MANAGER): CMS_LOCAL_LINK
@@ -572,13 +577,13 @@ feature {NONE} -- Implementation
 			l_page: detachable WIKI_PAGE
 			l_title: detachable READABLE_STRING_32
 		do
-			l_book_name := a_book.name.as_string_32
+			l_book_name := a_book.name
 
 			if a_page = Void then
 				create Result.make (l_book_name, wdocs_book_link_location (a_version_id, l_book_name))
 			else
 				l_title := mng.wiki_page_link_title (a_page)
-				create Result.make (l_title, wdocs_page_link_location (a_version_id, l_book_name, a_page.title))
+				create Result.make (l_title, wdocs_page_link_location (a_version_id, l_book_name, mng.url_friendly_wiki_name (a_page.title)))
 			end
 			Result.set_expandable (True)
 			if a_page /= Void then
@@ -609,7 +614,7 @@ feature {NONE} -- Implementation
 		end
 
 	wdocs_cms_menu (a_menu_title: detachable READABLE_STRING_32; a_version_id, a_book_name, a_page_name: detachable READABLE_STRING_GENERAL; is_full: BOOLEAN; mng: WDOCS_MANAGER): CMS_MENU
-			-- CMS Menu for wdocs books (version `a_version_id', with `a_book_name':`a_page_name' optionally selected.
+			-- CMS Menu for wdocs books (version `a_version_id`, with `a_book_name`:`a_page_name` optionally selected.
 		local
 			ln: CMS_LOCAL_LINK
 			loc: STRING
@@ -626,12 +631,12 @@ feature {NONE} -- Implementation
 					mng.book_names as ic
 				loop
 					if
-						attached mng.book (ic.item) as i_wb and then
-						attached i_wb.root_page as l_root_page
+						attached mng.book (ic.item) as i_wb and then 
+						attached i_wb.root_page as l_root_page 
 					then
 						l_root_page.sort
 						if
-							a_book_name /= Void and then
+							a_book_name /= Void and then 
 							i_wb.name.is_case_insensitive_equal_general (a_book_name)
 						then
 							ln := wdocs_page_cms_menu_link (a_version_id, i_wb, l_root_page, a_page_name, is_full, mng)
@@ -664,15 +669,15 @@ feature {NONE} -- Implementation
 					else
 						if a_book_name /= Void then
 							wb := mng.book (a_book_name)
-							loc := wdocs_page_link_location (a_version_id, a_book_name, a_page_name)
+							loc := wdocs_page_link_location (a_version_id, a_book_name, mng.url_friendly_wiki_name (a_page_name))
 						else
-							loc := wdocs_page_link_location (a_version_id, "???", a_page_name)
+							loc := wdocs_page_link_location (a_version_id, "???", mng.url_friendly_wiki_name (a_page_name))
 						end
 
 						if wb /= Void and then attached wb.page (a_page_name) as wp then
 							l_parent := wb.page_by_key (wp.parent_key)
 							if l_parent /= Void then
-								create ln.make ({STRING_32} "Back to: " + mng.wiki_page_title (l_parent), wdocs_page_link_location (a_version_id, wb.name, l_parent.title))
+								create ln.make ({STRING_32} "Back to: " + mng.wiki_page_title (l_parent), wdocs_page_link_location (a_version_id, wb.name, mng.url_friendly_wiki_name (l_parent.title)))
 								ln.set_expandable (True)
 								Result.extend (ln)
 
@@ -683,7 +688,7 @@ feature {NONE} -- Implementation
 									check has_wp: False end
 								end
 							else
-								create ln.make ({STRING_32} "Book %"" + wb.name + "%"", wdocs_book_link_location (a_version_id, wb.name))
+								create ln.make ({STRING_32}"Book %"" + wb.name + "%"", wdocs_book_link_location (a_version_id, wb.name))
 								ln.set_expandable (True)
 								Result.extend (ln)
 
@@ -745,9 +750,10 @@ feature {NONE} -- Implementation
 				loop
 					wp := ic.item
 					l_title := mng.wiki_page_link_title (wp)
-					create sub_ln.make (l_title, wdocs_page_link_location (a_version_id, a_book_name, wp.title))
+					create sub_ln.make (l_title, wdocs_page_link_location (a_version_id, a_book_name, mng.url_friendly_wiki_name (wp.title)))
 					l_is_active := a_active_page_name /= Void and then
 									a_active_page_name.is_case_insensitive_equal (wp.title)
+
 					if l_is_active then
 						a_link.set_expanded (True)
 					end
@@ -767,26 +773,23 @@ feature {NONE} -- Implementation
 								end
 							end
 						end
-					else
 					end
 					a_link.add_link (sub_ln)
 				end
 			end
 		end
-
+	
 feature -- Hook
 
 	populate_content_associated_with_term (a_term: CMS_TERM; a_contents: CMS_TAXONOMY_ENTITY_CONTAINER)
-			-- Populate `a_contents' with taxonomy entity associated with term `t'.
+			-- Populate `a_contents` with taxonomy entity associated with term `t`.
 		local
 			c: CMS_WDOCS_CONTENT
 			lnk: CMS_LOCAL_LINK
 			l_uuid: READABLE_STRING_GENERAL
 			l_info_to_remove: ARRAYED_LIST [TUPLE [entity: READABLE_STRING_32; typename: detachable READABLE_STRING_32]]
 		do
-			if
-				attached wdocs_api as l_wdocs_api
-			then
+			if attached wdocs_api as l_wdocs_api then
 				create l_info_to_remove.make (0)
 				across
 					a_contents.taxonomy_info as ic
@@ -812,8 +815,8 @@ feature -- Hook
 				end
 			end
 		end
-
-feature -- Handler		
+	
+feature -- Handler
 
 	handle_documentation (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
@@ -854,7 +857,7 @@ feature -- Handler
 				r.set_title (l_bookid)
 				r.values.force (l_bookid, "wiki_book_name")
 				if l_toc or wp = Void then
-					create b.make_from_string ("<h1>Book # "+ html_encoded (l_bookid) +"</h1>")
+					create b.make_from_string ("<h1>Book # " + html_encoded (l_bookid) + "</h1>")
 					if l_book /= Void then
 						b.append ("<div class=%"wdocs-nav%"><ul>")
 						if wp /= Void then
@@ -908,7 +911,7 @@ feature -- Handler
 					l_eis_id := p_eis_id.value
 					lst := l_eis_id.split ('@')
 					if lst.is_empty then
-							-- Bad request !
+						-- Bad request !
 					else
 						l_uuid := lst.first
 						lst.start
@@ -948,11 +951,11 @@ feature -- Handler
 					if s /= Void then
 						create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 						r.set_redirection (wdocs_page_uuid_link_location (l_version_id, utf.utf_32_string_to_utf_8_string_8 (s)))
-						r.set_main_content ({STRING_32} "UUID associated with %"" + l_eis_id.as_string_32 + "%" is " + s)
+						r.set_main_content ({STRING_32} "UUID associated with %"" + l_eis_id.as_string_32 + {STRING_32} "%" is " + s)
 					else
 						create {NOT_FOUND_ERROR_CMS_RESPONSE} r.make (req, res, api)
 						r.set_main_content ("Page not found")
-						r.set_title ("Wiki page not found!")
+						r.set_title ({STRING_32} "Wiki page not found!")
 							-- FIXME: Provide a form, to add a new EIS mapping!
 						fixme ("Provide a form, to add a new EIS mapping!")
 					end
@@ -986,13 +989,13 @@ feature -- Handler
 			end
 		end
 
-	handle_wikipage_by_uuid	(api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+	handle_wikipage_by_uuid (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
 		do
 			if req.is_get_request_method then
 				if attached wikipage_data_from_request (req) as pg_info then
-					if attached wdocs_page_link_location (pg_info.manager.version_id, pg_info.bookid, pg_info.page.title) as l_url then
+					if attached wdocs_page_link_location (pg_info.manager.version_id, pg_info.bookid, pg_info.manager.url_friendly_wiki_name (pg_info.page.title)) as l_url then
 						res.redirect_now (req.absolute_script_url ("/" + l_url))
 					else
 						send_wikipage (pg_info.page, pg_info.manager, pg_info.bookid, api, req, res)
@@ -1000,7 +1003,7 @@ feature -- Handler
 				else
 					create {NOT_FOUND_ERROR_CMS_RESPONSE} r.make (req, res, api)
 					r.set_main_content ("Page not found")
-					r.set_title ("Wiki page not found!")
+					r.set_title ({STRING_32} "Wiki page not found!")
 					r.execute
 				end
 			else
@@ -1019,7 +1022,7 @@ feature -- Handler
 				else
 					create {NOT_FOUND_ERROR_CMS_RESPONSE} r.make (req, res, api)
 					r.set_main_content ("Page not found")
-					r.set_title ("Wiki page not found!")
+					r.set_title ({STRING_32} "Wiki page not found!")
 					r.execute
 				end
 			else
@@ -1046,7 +1049,7 @@ feature -- Handler
 				else
 					create {NOT_FOUND_ERROR_CMS_RESPONSE} r.make (req, res, api)
 					r.set_main_content ("Page not found")
-					r.set_title ("Wiki page not found!")
+					r.set_title ({STRING_32} "Wiki page not found!")
 					r.execute
 				end
 			else
@@ -1220,7 +1223,7 @@ feature -- Handler
 			create redir.make (req.absolute_script_url ("/files/doc/static/" + vid + loc))
 			res.send (redir)
 		end
-
+	
 feature {WDOCS_EDIT_MODULE, WDOCS_EDIT_FORM_RESPONSE} -- Implementation: request and response.
 
 	send_wikipage (pg: attached like {WDOCS_MANAGER}.page;
@@ -1289,7 +1292,18 @@ feature {WDOCS_EDIT_MODULE, WDOCS_EDIT_FORM_RESPONSE} -- Implementation: request
 --					s.append (html_encoded (s))
 --					s.append ("</pre>")
 				else
+					r.set_metadata ({STRING_32} "article", "type")
+					if attached pg.metadata ("description") as l_wp_description then
+						r.set_description (l_wp_description)
+					end
 					append_wiki_page_xhtml_to (pg, l_title, a_bookid, a_manager, s, req, r)
+
+					if attached pg.metadata ("publication_date") as l_pub_date and then attached date_time_from_string (l_pub_date) as dt then
+						r.set_publication_date (dt)
+					end
+					if attached pg.metadata ("modification_date") as l_mod_date and then attached date_time_from_string (l_mod_date) as dt then
+						r.set_modification_date (dt)
+					end
 
 					if attached {WSF_STRING} req.query_parameter ("debug") as s_debug and then not s_debug.is_case_insensitive_equal ("no") then
 						s.append ("<hr/>")
@@ -1310,7 +1324,7 @@ feature {WDOCS_EDIT_MODULE, WDOCS_EDIT_FORM_RESPONSE} -- Implementation: request
 					end
 				end
 			else
-				r.set_title ("Wiki page not found!")
+				r.set_title ({STRING_32} "Wiki page not found!")
 				create s.make_from_string ("Page not found")
 			end
 
@@ -1324,7 +1338,7 @@ feature {WDOCS_EDIT_MODULE, WDOCS_EDIT_FORM_RESPONSE} -- Implementation: request
 		end
 
 	wikipage_data_from_request (req: WSF_REQUEST): like wikipage_data_from_ids
-			-- Page information related with request `req'.
+			-- Page information related with request `req`.
 		local
 			l_ids: like wikipage_ids_from_request
 		do
@@ -1342,7 +1356,7 @@ feature {WDOCS_EDIT_MODULE, WDOCS_EDIT_FORM_RESPONSE} -- Implementation: request
 			end
 		end
 
-	wikipage_data_from_ids (ids: like wikipage_ids_from_request): detachable TUPLE [page: attached like {WDOCS_MANAGER}.page;
+		wikipage_data_from_ids (ids: like wikipage_ids_from_request): detachable TUPLE [page: attached like {WDOCS_MANAGER}.page;
 					bookid: READABLE_STRING_GENERAL; manager: WDOCS_MANAGER]
 		local
 			pg: detachable like {WDOCS_MANAGER}.page
@@ -1380,7 +1394,7 @@ feature {WDOCS_EDIT_MODULE, WDOCS_EDIT_FORM_RESPONSE} -- Implementation: request
 						wikipage_uuid (req, Void)
 						]
 		end
-
+	
 feature {WDOCS_EDIT_MODULE} -- Implementation: wiki render	
 
 	version_id (req: WSF_REQUEST; a_default: detachable READABLE_STRING_32): detachable READABLE_STRING_32
@@ -1413,7 +1427,7 @@ feature {WDOCS_EDIT_MODULE} -- Implementation: wiki render
 			end
 			s.append ("<li><a href=%"" + req.script_url ("/") + "%">back to home</a></li>")
 			if attached req.http_referer as l_ref then
-				s.append ("<li><a href=%"" + l_ref + "%">back to "+ l_ref +"</a></li>")
+				s.append ("<li><a href=%"" + l_ref + "%">back to " + l_ref + "</a></li>")
 			end
 			s.append ("<li>Location: " + req.request_uri + "</li>")
 		end
@@ -1428,14 +1442,12 @@ feature {WDOCS_EDIT_MODULE} -- Implementation: wiki render
 			client_request_no_server_cache: BOOLEAN
 			l_version_id: detachable READABLE_STRING_GENERAL
 		do
-			-- FIXME: move cache access to `wdocs_api', to give WDOCS_EDIT_MODULE the possibility to reset it.
+				-- FIXME: move cache access to `wdocs_api', to give WDOCS_EDIT_MODULE the possibility to reset it.
 			l_version_id := version_id (req, Void)
 			if l_version_id = Void then
 				l_version_id := a_manager.version_id
 			end
-			if
-				cache_disabled
-			then
+			if cache_disabled then
 					-- No cache!
 			else
 				if attached wdocs_api as l_wdocs_api then
@@ -1445,6 +1457,7 @@ feature {WDOCS_EDIT_MODULE} -- Implementation: wiki render
 					create f.make_with_path (l_pg_path)
 					if f.exists and then f.is_access_readable then
 						create l_wiki_page_date_time.make_from_epoch (f.date)
+						a_response.set_modification_date (l_wiki_page_date_time)
 					end
 				end
 			end
@@ -1469,7 +1482,7 @@ feature {WDOCS_EDIT_MODULE} -- Implementation: wiki render
 						lab := l_wdocs_api.label_of_version (default_version_id)
 					end
 					if lab = Void then
-						lab := "current"
+						lab := {STRING_32} "current"
 					end
 					l_xhtml.append ("<ul class=%"message%"><li class=%"warning%">This is not the " + lab + " version of the documentation. ")
 					a_response.append_link_to_html ("Recommended Version", a_manager.wiki_page_uri_path (a_wiki_page, a_book_name, Void), Void, l_xhtml)
@@ -1514,9 +1527,7 @@ feature {WDOCS_EDIT_MODULE} -- Implementation: wiki render
 				end
 
 					-- UUID if any...
-				if
-					attached a_wiki_page.metadata ("uuid") as l_uuid
-				then
+				if attached a_wiki_page.metadata ("uuid") as l_uuid then
 					l_xhtml.append ("<div class=%"wdocs-uuid%">")
 					if attached wdocs_api as l_wdocs_api then
 						l_xhtml.append ("<a href=%"")
@@ -1547,7 +1558,7 @@ feature {WDOCS_EDIT_MODULE} -- Implementation: wiki render
 				Result := pg.text.content
 			end
 		end
-
+	
 feature {NONE} -- implementation: wiki docs
 
 	last_segment (s: READABLE_STRING_8): READABLE_STRING_8
@@ -1581,9 +1592,9 @@ feature {NONE} -- implementation: wiki docs
 			end
 
 			if a_book_id /= Void then
-				a_output.append ("<a href=%""+ req.script_url ("/" + wdocs_page_link_location (a_version_id, a_book_id, a_page.title)) + "%"")
+				a_output.append ("<a href=%"" + req.script_url ("/" + wdocs_page_link_location (a_version_id, a_book_id, a_manager.url_friendly_wiki_name (a_page.title))) + "%"")
 			else
-				a_output.append ("<a href=%"../" + wiki_name_to_url_encoded_string (a_page.title) + "%"")
+				a_output.append ("<a href=%"../" + wiki_name_to_url_encoded_string (a_manager.url_friendly_wiki_name (a_page.title)) + "%"")
 			end
 			if l_pages /= Void then
 				a_output.append (" class=%"wdocs-folder%"")
@@ -1613,7 +1624,7 @@ feature {NONE} -- implementation: wiki docs
 	wdocs_book_link_location (a_version_id: detachable READABLE_STRING_GENERAL; a_book_name: READABLE_STRING_GENERAL): STRING
 		do
 			create Result.make_from_string ("doc/")
-			if a_version_id /= Void and then not  a_version_id.same_string (default_version_id) then
+			if a_version_id /= Void and then not a_version_id.same_string (default_version_id) then
 				Result.append ("version/")
 				Result.append (percent_encoder.percent_encoded_string (a_version_id))
 				Result.append_character ('/')
@@ -1632,7 +1643,7 @@ feature {NONE} -- implementation: wiki docs
 	wdocs_page_uuid_link_location (a_version_id: detachable READABLE_STRING_GENERAL; a_uuid: READABLE_STRING_8): STRING
 		do
 			create Result.make_from_string ("doc/")
-			if a_version_id /= Void and then not  a_version_id.same_string (default_version_id) then
+			if a_version_id /= Void and then not a_version_id.same_string (default_version_id) then
 				Result.append ("version/")
 				Result.append (percent_encoder.percent_encoded_string (a_version_id))
 				Result.append_character ('/')
@@ -1640,11 +1651,11 @@ feature {NONE} -- implementation: wiki docs
 			Result.append ("uuid/")
 			Result.append (a_uuid)
 		end
-
+	
 feature {NONE} -- Implementation		
 
 	template_block (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE): detachable CMS_SMARTY_TEMPLATE_BLOCK
-			-- Smarty content block for `a_block_id'
+			-- Smarty content block for `a_block_id`.
 		local
 			res: PATH
 			p: detachable PATH
@@ -1670,15 +1681,16 @@ feature {NONE} -- Implementation
 			end
 			t.append ("</li>")
 		end
-
+	
 note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			Eiffel Software
-			5949 Hollister Ave., Goleta, CA 93117 USA
-			Telephone 805-685-1006, Fax 805-685-6869
-			Website http://www.eiffel.com
-			Customer support http://support.eiffel.com
-		]"
+		Eiffel Software
+		5949 Hollister Ave., Goleta, CA 93117 USA
+		Telephone 805-685-1006, Fax 805-685-6869
+		Website http://www.eiffel.com
+		Customer support http://support.eiffel.com
+	]"
+
 end

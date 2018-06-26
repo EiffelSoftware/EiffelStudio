@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-17-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-17-0 http://www.eiffel.com/developers/xml/configuration-1-17-0.xsd" name="configuration_parser" uuid="A548E53F-02A4-4B6A-9570-26A727A3A069" library_target="configuration_parser">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="configuration_parser" uuid="A548E53F-02A4-4B6A-9570-26A727A3A069" library_target="configuration_parser">
 	<target name="configuration_parser">
 		<root all_classes="true"/>
 		<file_rule>
@@ -16,8 +16,8 @@
 		<library name="gobo_lexical" location="$ISE_LIBRARY\library\gobo\gobo_lexical.ecf"/>
 		<library name="gobo_parse" location="$ISE_LIBRARY\library\gobo\gobo_parse.ecf"/>
 		<library name="interface_names" location="$EIFFEL_SRC\framework\interface_names\interface_names.ecf"/>
-		<library name="iron_api" location="$EIFFEL_SRC\framework\iron\api\iron_api.ecf"/>
-		<library name="iron_installation_api" location="$EIFFEL_SRC\framework\iron\api\iron_installation_api.ecf"/>
+		<library name="iron_api" location="..\iron\api\iron_api.ecf"/>
+		<library name="iron_installation_api" location="..\iron\api\iron_installation_api.ecf"/>
 		<library name="kmp_matcher" location="$ISE_LIBRARY\library\text\regexp\kmp_matcher\kmp_matcher.ecf"/>
 		<library name="pcre" location="$ISE_LIBRARY\unstable\library\text\regexp\pcre\pcre.ecf" readonly="true"/>
 		<library name="string_expander" location="$EIFFEL_SRC\framework\string_expander\string_expander.ecf"/>

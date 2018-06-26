@@ -1,5 +1,5 @@
 class
-	TEST1 [G -> ?COMPARABLE, H -> ?NUMERIC]
+	TEST1 [G -> detachable COMPARABLE, H -> detachable NUMERIC]
 
 create
 	default_create,
@@ -77,14 +77,14 @@ feature
 
 	test1p (a_item: H)
 		local
-			a: ?ANY
+			a: detachable ANY
 		do
 			a := + a_item
 		end
 
 	test2p (a_item: H)
 		local
-			a: ?ANY
+			a: detachable ANY
 		do
 			if a_item /= Void then
 				a := + a_item
@@ -93,14 +93,14 @@ feature
 
 	test3p (a_item: H)
 		local
-			a: ?ANY
+			a: detachable ANY
 		do
 			a := a_item.identity
 		end
 
 	test4p (a_item: H)
 		local
-			a: ?ANY
+			a: detachable ANY
 		do
 			if a_item /= Void then
 				a := a_item.identity
@@ -109,7 +109,7 @@ feature
 
 	test1c (b: TEST)
 		local
-			a: ?TEST1 [G, H]
+			a: detachable TEST1 [G, H]
 			c: TEST
 		do
 			c := a + b
@@ -117,7 +117,7 @@ feature
 
 	test2c (b: TEST)
 		local
-			a: ?TEST1 [G, H]
+			a: detachable TEST1 [G, H]
 			c: TEST
 		do
 			if a /= Void then
@@ -127,7 +127,7 @@ feature
 
 	test3c (b: TEST)
 		local
-			a: ?TEST1 [G, H]
+			a: detachable TEST1 [G, H]
 			c: TEST
 		do
 			c := b + a
@@ -135,7 +135,7 @@ feature
 
 	test4c (b: TEST)
 		local
-			a: ?TEST1 [G, H]
+			a: detachable TEST1 [G, H]
 			c: TEST
 		do
 			if a /= Void then
@@ -143,14 +143,14 @@ feature
 			end
 		end
 
-	test1f (a: ?COMPARABLE)
+	test1f (a: detachable COMPARABLE)
 		local
 			b: BOOLEAN
 		do
 			b := a < Current
 		end
 
-	test2f (a: ?COMPARABLE)
+	test2f (a: detachable COMPARABLE)
 		local
 			b: BOOLEAN
 		do
@@ -159,14 +159,14 @@ feature
 			end
 		end
 
-	test3f (a: ?COMPARABLE)
+	test3f (a: detachable COMPARABLE)
 		local
 			b: BOOLEAN
 		do
 			b := Current < a
 		end
 
-	test4f (a: ?COMPARABLE)
+	test4f (a: detachable COMPARABLE)
 		local
 			b: BOOLEAN
 		do
@@ -209,7 +209,7 @@ feature
 
 	item (i: INTEGER): G
 		local
-			l_g: ?G
+			l_g: detachable G
 		do
 			check l_g /= Void end
 			Result := l_g
@@ -217,12 +217,12 @@ feature
 
 feature -- Basic operations
 
-	plus alias "+" (other: ?TEST1 [G, H]): TEST1 [G, H]
+	plus alias "+" (other: detachable TEST1 [G, H]): TEST1 [G, H]
 		do
 			Result := Current
 		end
 
-	less alias "<" (other: ?TEST1 [G, H]): BOOLEAN
+	less alias "<" (other: detachable TEST1 [G, H]): BOOLEAN
 		do
 		end
 

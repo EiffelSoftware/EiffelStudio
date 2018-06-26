@@ -89,7 +89,7 @@ feature -- Access
 	--				Result := book_from_index_file (a_bookid, p.extended ("book.index"))
 					if Result = Void then
 							-- Scan each folder, and sub folder(s)
-						create Result.make (a_bookid.as_string_8, p) -- FIXME: truncated
+						create {WDOCS_BOOK} Result.make (a_bookid.as_string_8, p, manager) -- FIXME: truncated
 						create vis.make (Result, manager)
 					end
 					if Result /= Void then
@@ -105,7 +105,31 @@ feature -- Access
 	page (a_bookpage: READABLE_STRING_GENERAL; a_bookid: READABLE_STRING_GENERAL): detachable like new_page
 			-- Wiki page for book `a_bookid', and if provided title `a_bookpage', otherwise the root page of related wiki book.
 		do
-			Result := manager.page (a_bookpage, a_bookid)
+			if attached book (a_bookid) as wb then
+				Result := wb.page (a_bookpage)
+				if Result = Void then
+					Result := wb.page_by_key (a_bookpage)
+				end
+			end
+		end
+
+	page_by_title (a_page_title: READABLE_STRING_GENERAL; a_bookid: detachable READABLE_STRING_GENERAL): detachable like new_page
+			-- Wiki page with title `a_page_title', and in book related to `a_bookid' if provided.
+		do
+			if a_bookid /= Void then
+					-- Same as `page` but without `page_by_key`!
+				if attached book (a_bookid) as wb then
+					Result := wb.page (a_page_title)
+				end
+			elseif attached pages_data.book_names_with_page_title (a_page_title) as lst and then not lst.is_empty then
+				across
+					lst as ic
+				until
+					Result /= Void
+				loop
+					Result := page_by_title (a_page_title, ic.item)
+				end
+			end
 		end
 
 	page_book_and_title_for_path (a_path: PATH): detachable TUPLE [bookid: READABLE_STRING_GENERAL; title: READABLE_STRING_GENERAL]
@@ -132,24 +156,6 @@ feature -- Access
 			end
 			if l_bookid /= Void and l_title /= Void then
 				Result := [l_bookid, l_title]
-			end
-		end
-
-	page_by_title (a_page_title: READABLE_STRING_GENERAL; a_bookid: detachable READABLE_STRING_GENERAL): detachable like new_page
-			-- Wiki page with title `a_page_title', and in book related to `a_bookid' if provided.
-		do
-			if a_bookid /= Void then
-				if attached book (a_bookid) as wb then
-					Result := wb.page (a_page_title)
-				end
-			elseif attached pages_data.book_names_with_page_title (a_page_title) as lst and then not lst.is_empty then
-				across
-					lst as ic
-				until
-					Result /= Void
-				loop
-					Result := page_by_title (a_page_title, ic.item)
-				end
 			end
 		end
 
@@ -520,7 +526,7 @@ feature {NONE} -- Implamentation: books
 						create l_dir.make_with_path (p.extended (l_name))
 						if l_dir.exists then
 									-- FIXME: unicode support in Wikitext lib?
-							create wb.make (utf.escaped_utf_32_string_to_utf_8_string_8 (l_name), l_dir.path.extended (l_name))
+							create {WDOCS_BOOK} wb.make (utf.escaped_utf_32_string_to_utf_8_string_8 (l_name), l_dir.path.extended (l_name), manager)
 
 							wp := new_page ("index", wb.name)
 							md := page_metadata (wp, Void)
@@ -678,6 +684,8 @@ feature {NONE} -- Implementation: pages
 	new_pages_data: like pages_data
 			-- Read data from the wikidatabase and save it on `data'.
 			-- Save the data on a cache.
+		local
+			pg: WIKI_BOOK_PAGE
 		do
 			create Result.make
 
@@ -695,8 +703,9 @@ feature {NONE} -- Implementation: pages
 					across
 						l_wikibook.pages as p_ic
 					loop
-						if attached p_ic.item.path as l_page_path then
-							Result.record_page_path (l_page_path, p_ic.item.title, l_wikibook.name)
+						pg := p_ic.item
+						if attached pg.path as l_page_path then
+							Result.record_page_path (l_page_path, pg.title, l_wikibook.name)
 						else
 							check has_path: False end
 						end
@@ -1082,8 +1091,5 @@ feature {NONE} -- Helpers
 			create l_sorter.make (create {COMPARABLE_COMPARATOR [WIKI_BOOK]})
 			l_sorter.sort (lst)
 		end
-
-invariant
-
 
 end

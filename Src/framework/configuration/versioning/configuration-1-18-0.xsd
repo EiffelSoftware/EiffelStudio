@@ -160,6 +160,15 @@
 				</xs:restriction>
 			</xs:simpleType>
 		</xs:attribute>
+		<xs:attribute name="manifest_array_type" use="optional" default="standard">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="mismatch_error"/>
+					<xs:enumeration value="mismatch_warning"/>
+					<xs:enumeration value="standard"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
 	</xs:complexType>
 
 	<xs:complexType name="capability">
@@ -302,7 +311,6 @@
 	<xs:simpleType name="available_warnings">
 		<xs:restriction base = "xs:string">
 			  <xs:enumeration value = "export_class_missing"/>
-			  <xs:enumeration value = "manifest_array_type"/>
 			  <xs:enumeration value = "obsolete_class"/>
 			  <xs:enumeration value = "obsolete_feature"/>
 			  <xs:enumeration value = "old_verbatim_strings"/>

@@ -1,5 +1,5 @@
-note
-	description: "Available encodings in the OS"
+﻿note
+	description: "Available encodings in the operating system."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -61,12 +61,14 @@ feature {NONE} -- Implementation
 	system_encodings_i: SYSTEM_ENCODINGS_I
 			-- Implementation bridge.
 		once
-			create {SYSTEM_ENCODINGS_IMP}Result
+			create {SYSTEM_ENCODINGS_IMP} Result
+		ensure
+			instance_free: class
 		end
 
 note
 	library:   "Encoding: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -75,7 +77,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

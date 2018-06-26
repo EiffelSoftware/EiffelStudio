@@ -40,8 +40,11 @@ feature {NONE} -- Access
 			Result.append ((create {EIFFEL_CONSTANTS}).two_digit_minimum_minor_version)
 		end
 
-	copyright: STRING_32 = "Copyright Eiffel Software 2006-2017. All Rights Reserved."
+	copyright: IMMUTABLE_STRING_32
 			-- <Precursor>
+		once
+			Result := {STRING_32} "Copyright Eiffel Software 2006-" + {EIFFEL_ENV}.copyright_year + ". All Rights Reserved."
+		end
 
 	switches: ARRAYED_LIST [ARGUMENT_SWITCH]
 			-- Argument switches

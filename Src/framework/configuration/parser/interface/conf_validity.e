@@ -52,7 +52,8 @@ feature -- Basic validity queries
 			a_warning_lower: a_warning.same_string (a_warning.as_lower)
 		do
 			Result :=
-				is_after_or_equal (a_namespace, namespace_1_17_0) and then valid_warnings_1_17_0.has (a_warning) or else
+				is_after_or_equal (a_namespace, namespace_1_18_0) and then valid_warnings_1_18_0.has (a_warning) or else
+				is_between_or_equal (a_namespace, namespace_1_17_0, namespace_1_17_0) and then valid_warnings_1_17_0.has (a_warning) or else
 				is_between_or_equal (a_namespace, namespace_1_10_0, namespace_1_16_0) and then valid_warnings_1_10_0.has (a_warning) or else
 				is_before_or_equal (a_namespace, namespace_1_9_0) and then valid_warnings_default.has (a_warning)
 		end
@@ -364,7 +365,7 @@ feature {NONE} -- Implementation
 	known_warnings: STRING_TABLE [BOOLEAN]
 			-- The codes of known warnings.
 		once
-			Result := valid_warnings_1_17_0
+			Result := valid_warnings_1_18_0
 		end
 
 	valid_warnings_default: STRING_TABLE [BOOLEAN]
@@ -402,6 +403,15 @@ feature {NONE} -- Implementation
 		once
 			Result := valid_warnings_1_10_0.twin
 			Result.force (True, w_manifest_array_type)
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	valid_warnings_1_18_0: STRING_TABLE [BOOLEAN]
+			-- The codes of valid warnings in `namespace_1_18_0` and above.
+		once
+			Result := valid_warnings_1_17_0.twin
+			Result.force (False, w_manifest_array_type)
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -654,6 +664,7 @@ feature {NONE} -- Option names
 			Result := boolean_options.twin
 			Result.force (o_catcall_detection)
 			Result.force (o_description)
+			Result.force (o_manifest_array_type)
 			Result.force (o_namespace)
 			Result.force (o_syntax)
 			Result.force (o_void_safety)

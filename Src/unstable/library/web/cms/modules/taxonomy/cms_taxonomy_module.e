@@ -35,7 +35,6 @@ feature {NONE} -- Initialization
 			version := "1.0"
 			description := "Taxonomy solution"
 			package := "core"
---			put_dependency ({CMS_NODE_MODULE}, False)
 		end
 
 feature -- Access

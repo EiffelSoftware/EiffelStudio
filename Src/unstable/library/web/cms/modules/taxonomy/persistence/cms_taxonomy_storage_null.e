@@ -88,6 +88,12 @@ feature -- Access
 			create Result.make (0)
 		end
 
+	cloud_of_terms (a_vocab: CMS_VOCABULARY; a_limit: NATURAL_32; a_offset: NATURAL_32): ARRAYED_LIST [TUPLE [term: CMS_TERM; occurrences: NATURAL_64]]
+			-- List of terms from vocabulary `a_vocab' ordered by weight from `a_offset' to `a_offset + a_limit'.
+		do
+			create Result.make (0)
+		end
+
 	terms_of_entity (a_type_name: READABLE_STRING_GENERAL; a_entity: READABLE_STRING_GENERAL; a_vocabulary: detachable CMS_VOCABULARY): detachable CMS_TERM_COLLECTION
 			-- Terms related to `(a_type_name,a_entity)'.
 		do

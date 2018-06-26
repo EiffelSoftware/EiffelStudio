@@ -5123,7 +5123,7 @@ feature -- Pattern table generation
 
 			final_mode := byte_context.final_mode
 
-			l_empty_array := <<>>
+			create l_empty_array.make_empty
 
 			buffer.put_string ("#include %"eif_eiffel.h%"")
 

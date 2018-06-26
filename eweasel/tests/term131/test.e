@@ -5,7 +5,7 @@ create
 
 feature {NONE} -- Creation
 
-	make is
+	make
 			-- Run tests.
 		local
 			l_test2: COMPUSTAT_FUNDAMENTAL_COMPOSITE_DATA_SOURCE

@@ -1,10 +1,11 @@
 class TEST
+
 create
 	make
 
 feature
 
-	make is
+	make
 		local
 			a: ARRAY [ARRAY [DOUBLE]]
 			b: ARRAY [ARRAY [ARRAY [DOUBLE]]]

@@ -61,6 +61,7 @@ feature {NONE} -- Initialization
 			create generic_wrappers.make (0)
 			create precondition_object_test_local_offset.make (0)
 			create postcondition_object_test_local_offset.make (0)
+			create once_creation_procedures.make (5)
 		end
 
 feature -- Access
@@ -469,6 +470,69 @@ feature {NONE} -- Once features: implementation
 					-- Register new once
 				storage.put (create {PAIR [TYPE_C, INTEGER]}.make (type, storage.count), code_index)
 			end
+		end
+
+feature -- Once creation procedure tracking
+
+	once_creation_procedures: HASH_TABLE [ARRAYED_LIST [TUPLE [current_type:CL_TYPE_A; current_feature: FEATURE_I; call:ROUTINE_B]], INTEGER]
+			-- List of once creation procedure filtered by class type id.
+
+	add_once_creation (a_class_id: INTEGER; a_tuple:TUPLE [current_type:CL_TYPE_A; current_feature: FEATURE_I; call:ROUTINE_B])
+			-- Register once creation procedure identified by its `current_type', `current_featyre', `call' and  `class_id'.
+		local
+			l_array:ARRAYED_LIST [TUPLE [current_type:CL_TYPE_A; current_feature: FEATURE_I; call:ROUTINE_B]]
+			l_found: BOOLEAN
+		do
+			if not once_creation_procedures.has (a_class_id) then
+				create l_array.make (1)
+				l_array.force (a_tuple)
+				once_creation_procedures.force (l_array, a_class_id)
+			else
+				if attached once_creation_procedures.item (a_class_id) as l_items then
+					l_items.compare_objects
+					a_tuple.compare_objects
+					if not has_once_creation (a_class_id, a_tuple) then
+						l_items.force (a_tuple)
+					end
+				end
+			end
+		end
+
+	has_once_creation (a_class_id: INTEGER; a_tuple: TUPLE [current_type: CL_TYPE_A; current_feature: FEATURE_I; call: ROUTINE_B]): BOOLEAN
+			-- Has the list of once creation procedures an entry for class_id `a_class_id' with the given tuple `a_tuple'.
+		local
+			l_found: BOOLEAN
+			l_item: TUPLE [current_type: CL_TYPE_A; current_feature: FEATURE_I; call: ROUTINE_B]
+		do
+			if once_creation_procedures.has (a_class_id) then
+				if attached once_creation_procedures.item (a_class_id) as l_items then
+					l_items.compare_objects
+					a_tuple.compare_objects
+					from
+						l_items.start
+					until
+						l_items.after or l_found
+					loop
+						l_item := l_items.item_for_iteration
+						l_item.compare_objects
+						if
+							l_item.current_type.same_as (a_tuple.current_type) and then
+							l_item.current_feature.same_signature (a_tuple.current_feature) and then
+							l_item.call.same (a_tuple.call)
+						then
+							Result := True
+							l_found := True
+						end
+						l_items.forth
+					end
+				end
+			end
+		end
+
+	reset_once_creation
+			-- Clean once creation procedure list.
+		do
+			once_creation_procedures.wipe_out
 		end
 
 feature -- C code generation: once features

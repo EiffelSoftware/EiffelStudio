@@ -2522,6 +2522,9 @@ end
 			Byte_server.take_control (Tmp_byte_server)
 			Inv_byte_server.take_control (Tmp_inv_byte_server)
 
+				-- Clean once creation list
+			byte_context.reset_once_creation
+
 				-- Melt features
 				-- Open the file for writing on disk feature byte code
 			process_degree_2

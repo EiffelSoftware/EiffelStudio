@@ -6,8 +6,8 @@
 		<setting name="console_application" value="true"/>
 		<setting name="concurrency" value="thread"/>
 		$EWEASEL_DOTNET_SETTING
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf" use_application_options="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>
 		$BAD_LIBRARY
-		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf" use_application_options="true"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf" use_application_options="true"/>
 	</target>
 </system>

@@ -8,7 +8,7 @@ create
 
 feature -- Initialization
 
-	make is
+	make
 		do
 			make_composite (<< industrial >>)
 		end

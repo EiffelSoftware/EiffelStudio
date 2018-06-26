@@ -1,19 +1,22 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2018 University of Southern California and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
 
 class TEST
-creation
+
+create
 	make
+
 feature
 	
-	make (args: ARRAY [STRING]) is
+	make (args: ARRAY [STRING])
 		local
+			a: ARRAY [ANY]
 			k, count: INTEGER
 		do
-			count := args.item (1).to_integer;
+			count := args [1].to_integer
 			from
 				k := 1
 			until
@@ -275,10 +278,9 @@ feature
 					strip (), 
 					strip (),
 					strip ()
-					>>;
-				k := k + 1;
+					>>
+				k := k + 1
 			end
-		end;
+		end
 
-	a: ARRAY [ANY];
 end

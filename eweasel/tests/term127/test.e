@@ -6,12 +6,12 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		do
 			f (<< <<1>> >>)
 		end
 		
-	f (n: ARRAY [REAL]) is
+	f (n: ARRAY [REAL])
 		do
 		end
 		

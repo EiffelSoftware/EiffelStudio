@@ -2412,10 +2412,10 @@ feature {NONE} -- Visitor
 								-- The implicit type is required to compute array type, it should be replaced with an explicit one.
 							if context.current_class.lace_class.is_manifest_array_type_mismatch_warning then
 									-- Report a warning.
-								error_handler.insert_warning (create {VWMA_EXPLICIT_TYPE_REQUIRED}.make_conformance (context, default_element_type, l_type_a, l_as, False))
+								error_handler.insert_warning (create {VWMA_EXPLICIT_TYPE_REQUIRED_FOR_CONFORMANCE}.make (context, default_element_type, l_type_a, l_as, False))
 							elseif context.current_class.lace_class.is_manifest_array_type_mismatch_error then
 									-- Report an error.
-								error_handler.insert_error (create {VWMA_EXPLICIT_TYPE_REQUIRED}.make_conformance (context, default_element_type, l_type_a, l_as, True))
+								error_handler.insert_error (create {VWMA_EXPLICIT_TYPE_REQUIRED_FOR_CONFORMANCE}.make (context, default_element_type, l_type_a, l_as, True))
 							end
 						end
 							-- Check that expressions' type matches element's type of the array.
@@ -2464,10 +2464,10 @@ feature {NONE} -- Visitor
 								-- The source type is different from the target one.
 							if context.current_class.lace_class.is_manifest_array_type_mismatch_error then
 									-- Report an error.
-								error_handler.insert_error (create {VWMA_EXPLICIT_TYPE_REQUIRED}.make_mismatch (context, default_element_type, l_type_a, l_as, True))
+								error_handler.insert_error (create {VWMA_EXPLICIT_TYPE_REQUIRED_FOR_MATCH}.make (context, default_element_type, l_type_a, l_as, True))
 							else
 									-- Report a warning.
-								error_handler.insert_warning (create {VWMA_EXPLICIT_TYPE_REQUIRED}.make_mismatch (context, default_element_type, l_type_a, l_as, False))
+								error_handler.insert_warning (create {VWMA_EXPLICIT_TYPE_REQUIRED_FOR_MATCH}.make (context, default_element_type, l_type_a, l_as, False))
 							end
 						end
 							-- Use the default (computed) array type.

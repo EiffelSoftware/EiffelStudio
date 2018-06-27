@@ -20,7 +20,12 @@ feature {COMPILER_ERROR} -- Visitor
 		deferred
 		end
 
-	process_array_explicit_type_required (e: VWMA_EXPLICIT_TYPE_REQUIRED)
+	process_array_explicit_type_required_for_conformance (e: VWMA_EXPLICIT_TYPE_REQUIRED_FOR_CONFORMANCE)
+			-- Visit `e`.
+		deferred
+		end
+
+	process_array_explicit_type_required_for_match (e: VWMA_EXPLICIT_TYPE_REQUIRED_FOR_MATCH)
 			-- Visit `e`.
 		deferred
 		end
@@ -28,7 +33,7 @@ feature {COMPILER_ERROR} -- Visitor
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

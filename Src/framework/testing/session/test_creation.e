@@ -40,7 +40,7 @@ feature -- Access
 				l_cache := create {EVENT_CHAINED_CONNECTION [TEST_CREATION_OBSERVER, TEST_CREATION_I, TEST_SESSION_OBSERVER, TEST_SESSION_I]}.make
 					(agent (an_observer: TEST_CREATION_OBSERVER): ARRAY [TUPLE [EVENT_TYPE [TUPLE], PROCEDURE]]
 						do
-							Result := <<
+							Result := {ARRAY [TUPLE [EVENT_TYPE, PROCEDURE]]} <<
 								[test_created_event, agent an_observer.on_test_created]
 							>>
 						end,

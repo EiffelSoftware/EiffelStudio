@@ -45,7 +45,7 @@ feature -- Access
 				l_result := create {EVENT_CONNECTION [TEST_SESSION_OBSERVER, TEST_SESSION_I]}.make (
 					agent (an_observer: TEST_SESSION_OBSERVER): ARRAY [TUPLE[ EVENT_TYPE [TUPLE], PROCEDURE]]
 						do
-							Result := <<
+							Result := {ARRAY [TUPLE [EVENT_TYPE, PROCEDURE]]} <<
 									[proceeded_event, agent an_observer.on_proceeded],
 									[error_event, agent an_observer.on_error]
 								>>

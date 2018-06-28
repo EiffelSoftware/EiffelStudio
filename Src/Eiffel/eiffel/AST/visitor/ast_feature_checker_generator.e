@@ -2457,6 +2457,7 @@ feature {NONE} -- Visitor
 					else
 							-- There is no explicit array type and the computed array type conforms to the target array type.
 						if
+							not is_inherited and then
 							not context.current_class.lace_class.is_manifest_array_type_standard and then
 							attached default_element_type and then
 							not l_type_a.conform_to (context.current_class, default_element_type)

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="repository_tool" uuid="BE42D306-725A-4333-A838-10237BAB8567">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="repository_tool" uuid="BE42D306-725A-4333-A838-10237BAB8567">
 	<target name="repository_tool_core">
 		<file_rule>
 			<exclude>/.git$</exclude>
 			<exclude>/.svn$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option trace="false" profile="false" debug="false" warning="true">
+		<option trace="false" profile="false" debug="false" warning="true" manifest_array_type="standard">
 			<debug name="svn_engine" enabled="true"/>
 			<assertions precondition="true"/>
 		</option>
@@ -81,7 +81,7 @@
 			</file_rule>
 		</cluster>
 	</target>
-	<target name="repository_tool_test_compilation_unix" extends="repository_tool_unix">
+	<target name="repository_tool_test_compilation_unix" extends="repository_tool">
 		<description>Compiling UNIX version on other platforms than Unices</description>
 		<setting name="platform" value="unix"/>
 	</target>

@@ -41,7 +41,7 @@ feature -- Access
 	copyright: STRING = "Copyright Eiffel Software 2011-2018"
 			-- Copyright information.
 			-- Not used if empty.
-	
+
 feature {NONE} -- Status report		
 
 	is_using_unix_switch_style: BOOLEAN = True
@@ -51,7 +51,7 @@ feature {NONE} -- Status report
 	switch_prefixes: ARRAY [CHARACTER_32]
 			-- Prefixes used to indicate a command line switch.
 		once
-			Result := <<'-'>>
+			Result := <<{CHARACTER_32} '-'>>
 		end
 
 feature -- Access
@@ -351,7 +351,7 @@ feature {NONE} -- Switches
 	verbose_switch: STRING = "v|verbose"
 
 ;note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

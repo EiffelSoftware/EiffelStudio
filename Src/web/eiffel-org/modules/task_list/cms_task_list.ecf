@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="task_list_module" uuid="0E77D23F-1922-4F9A-B4DD-45AE89A049A7" library_target="task_list_module">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="task_list_module" uuid="0E77D23F-1922-4F9A-B4DD-45AE89A049A7" library_target="task_list_module">
 	<target name="task_list_module">
 		<root all_classes="true"/>
 		<file_rule>
@@ -10,7 +10,6 @@
 		</file_rule>
 		<option warning="true" is_obsolete_routine_type="true">
 		</option>
-		
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="cms" location="$ISE_LIBRARY\unstable\library\web\cms\cms.ecf" readonly="false"/>
 		<library name="cms_app_env" location="$ISE_LIBRARY\unstable\library\web\cms\library\app_env\app_env.ecf" readonly="false"/>

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="all_libs" uuid="6B1B7306-BAF7-4FA5-AB84-A8348978EB47">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="all_libs" uuid="6B1B7306-BAF7-4FA5-AB84-A8348978EB47">
 	<target name="all_libs">
 		<description>All libraries</description>
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-<capability>
-	<void_safety use="none"/>
-	<concurrency use="thread"/>
-</capability>
+		<capability>
+			<concurrency use="thread"/>
+			<void_safety use="none"/>
+		</capability>
 		<setting name="platform" value="windows"/>
 		<library name="api_wrapper" location="$ISE_LIBRARY\library\api_wrapper\api_wrapper.ecf"/>
 		<library name="argument_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf"/>

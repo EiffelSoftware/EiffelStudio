@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-17-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-17-0 http://www.eiffel.com/developers/xml/configuration-1-17-0.xsd" name="eiffel_community_site" uuid="AD6F84E0-E046-4841-9EF5-BD90D508904F">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="eiffel_community_site" uuid="AD6F84E0-E046-4841-9EF5-BD90D508904F">
 	<description>Eiffel.org community site.</description>
 	<target name="eiffel_community_site_common">
 		<file_rule>
-			<exclude>/.git$</exclude>
-			<exclude>/.svn$</exclude>
 			<exclude>/EIFGENs$</exclude>
+			<exclude>/\.git$</exclude>
+			<exclude>/\.svn$</exclude>
 		</file_rule>
 		<option warning="true">
 			<assertions precondition="true" postcondition="true" check="true" supplier_precondition="true"/>

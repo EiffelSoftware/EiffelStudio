@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="log_info" uuid="5AF71F31-FBF6-4C3E-A17F-DBAD674A7716">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="log_info" uuid="5AF71F31-FBF6-4C3E-A17F-DBAD674A7716">
 	<target name="log_info">
 		<root cluster="log_info" class="LOG_INFO" feature="main"/>
 		<option full_class_checking="false" is_obsolete_routine_type="true" syntax="transitional" namespace="EiffelSoftware.Samples">

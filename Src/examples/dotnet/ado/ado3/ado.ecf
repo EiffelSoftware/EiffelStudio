@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="ado" uuid="279FA46B-C8FB-41AE-B11F-11D1F28CF3A0">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="ado" uuid="279FA46B-C8FB-41AE-B11F-11D1F28CF3A0">
 	<target name="ado">
 		<root class="ADO" feature="make"/>
 		<option warning="true" full_class_checking="false" is_obsolete_routine_type="true" syntax="transitional">
@@ -11,8 +11,7 @@
 			<concurrency support="none"/>
 			<void_safety support="none"/>
 		</capability>
-		<precompile name="pre_base" location="$ISE_PRECOMP\base.ecf"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<precompile name="pre_base" location="$ISE_PRECOMP\base.ecf"/>		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<assembly name="data" location="$ISE_DOTNET_FRAMEWORK\System.Data.dll" prefix="DATA_"/>
 		<cluster name="root_cluster" location=".\"/>
 	</target>

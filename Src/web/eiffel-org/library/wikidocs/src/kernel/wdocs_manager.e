@@ -368,8 +368,8 @@ feature -- Access: link
 					l_book_name := book_name (pg)
 				end
 				if l_book_name /= Void then
-					Result.append ("/" + url_friendly_wiki_name (l_book_name))
-					Result.append ("/" + url_friendly_wiki_name (pg.title))
+					Result.append ("/" + wiki_name_to_url_encoded_string (url_friendly_wiki_name (l_book_name)))
+					Result.append ("/" + wiki_name_to_url_encoded_string (url_friendly_wiki_name (pg.title)))
 				elseif attached {WIKI_BOOK_PAGE} pg as l_book_pg then
 					Result.append ("/" + l_book_pg.src)
 				else

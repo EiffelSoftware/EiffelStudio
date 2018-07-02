@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="websocket_server" uuid="FDD2276B-7149-4490-9E09-46AFEA122D1E" library_target="websocket_server">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="websocket_server" uuid="FDD2276B-7149-4490-9E09-46AFEA122D1E" library_target="websocket_server">
 	<target name="websocket_server">
 		<root all_classes="true"/>
 		<file_rule>
-			<exclude>/\.git$</exclude>
-			<exclude>/\.svn$</exclude>
 			<exclude>/CVS$</exclude>
 			<exclude>/EIFGENs$</exclude>
+			<exclude>/\.git$</exclude>
+			<exclude>/\.svn$</exclude>
 		</file_rule>
 		<option warning="true">
 		</option>

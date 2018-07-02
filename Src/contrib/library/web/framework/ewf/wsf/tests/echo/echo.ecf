@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="echo_server" uuid="D3EE5B55-6F2E-4247-8C94-E7CFC4C5B648">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="echo_server" uuid="D3EE5B55-6F2E-4247-8C94-E7CFC4C5B648">
 	<target name="echo_server">
 		<root class="ECHO_SERVER" feature="make"/>
 		<file_rule>
+			<exclude>/EIFGENs$</exclude>
 			<exclude>/\.git$</exclude>
 			<exclude>/\.svn$</exclude>
-			<exclude>/EIFGENs$</exclude>
 		</file_rule>
 		<option warning="true">
 		</option>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="pc_demo" uuid="28F63E97-A471-4939-AA76-AD43813DFA17">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="pc_demo" uuid="28F63E97-A471-4939-AA76-AD43813DFA17">
 	<target name="pc_demo">
 		<root cluster="pc_demo" class="PC_DEMO" feature="main"/>
 		<option full_class_checking="false" is_obsolete_routine_type="true" syntax="transitional" namespace="EiffelSoftware.Samples">

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="simple" uuid="B6DA3CCB-F2FE-42AC-8BB8-C9EE56AE0D67">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="simple" uuid="B6DA3CCB-F2FE-42AC-8BB8-C9EE56AE0D67">
 	<target name="simple">
 		<root cluster="simple" class="APPLICATION" feature="make"/>
 		<option warning="true" is_obsolete_routine_type="true" syntax="transitional">
@@ -10,9 +10,9 @@
 			<concurrency support="none"/>
 			<void_safety support="none"/>
 		</capability>
-		<precompile name="precompile" location="$ISE_PRECOMP\base.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="curl" location="$ISE_LIBRARY\library\cURL\cURL.ecf"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<cluster name="simple" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/.svn$</exclude>

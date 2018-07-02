@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="share" uuid="1C18F8A4-0F54-4DA0-B9A2-8716A176F53E" library_target="share">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="share" uuid="1C18F8A4-0F54-4DA0-B9A2-8716A176F53E" library_target="share">
 	<target name="share">
 		<root class="ANY" feature="default_create"/>
 		<option full_class_checking="false" is_obsolete_routine_type="true" syntax="transitional" namespace="EiffelSoftware.Samples">

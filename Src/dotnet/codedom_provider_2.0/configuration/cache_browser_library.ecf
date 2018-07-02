@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="eiffelsoftware.codedom.cachebrowser" uuid="D4AA8561-2F79-48F1-B3AE-8AC3DB165329" library_target="cache_browser">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="eiffelsoftware.codedom.cachebrowser" uuid="D4AA8561-2F79-48F1-B3AE-8AC3DB165329" library_target="cache_browser">
 	<target name="cache_browser">
 		<description>Codedom provider consumer</description>
 		<root class="ANY"/>

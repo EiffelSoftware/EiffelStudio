@@ -33,6 +33,12 @@ inherit
 			error_string
 		end
 
+	FIX_PROVIDER_FOR_MANIFEST_ARRAY_TYPE
+		rename
+			source_feature as e_feature,
+			type_to_add as target_array_type
+		end
+
 	SHARED_WORKBENCH
 
 feature {NONE} -- Creation
@@ -40,7 +46,7 @@ feature {NONE} -- Creation
 	make (c: AST_CONTEXT; i, t: TYPE_A; a: ARRAY_AS; e: BOOLEAN)
 			-- Initialize error object for implicit element type `i` and target element type `t`
 			-- of a manifest array `a` in the context `c` with the error indicator `e`
-			-- the manifest array type is different from the target type.
+			-- when the manifest array type is different from the target type.
 			--
 			-- `e`: `True` - Error, `False` - Warning.
 		require
@@ -79,6 +85,14 @@ feature {FIX_FEATURE} -- Access
 
 	array: ARRAY_AS
 			-- Manifest array AST node.
+
+feature -- Access: fixing
+
+	source_class: CLASS_I
+			-- <Precursor>
+		do
+			Result := written_class.lace_class
+		end
 
 feature {NONE} -- Access
 

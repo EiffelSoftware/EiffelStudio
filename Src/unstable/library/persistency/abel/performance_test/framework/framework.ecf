@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="framework" uuid="A164BC5A-E67D-4BB7-80F5-87A53E682F21">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="framework" uuid="A164BC5A-E67D-4BB7-80F5-87A53E682F21">
 	<target name="framework">
 		<root class="CONTROLLER" feature="start_test"/>
 		<option warning="true">
@@ -10,22 +10,18 @@
 		<capability>
 			<concurrency support="none"/>
 		</capability>
-		<library name="abel_connector_mysql" location="$ISE_LIBRARY\unstable\library\persistency\abel\connector_mysql\connector_mysql.ecf">
-		</library>
-		<library name="abel_connector_sqlite" location="$ISE_LIBRARY\unstable\library\persistency\abel\connector_sqlite\connector_sqlite.ecf">
-		</library>
-		<library name="abel_core" location="$ISE_LIBRARY\unstable\library\persistency\abel\core\core.ecf">
-		</library>
+		<library name="abel_connector_mysql" location="$ISE_LIBRARY\unstable\library\persistency\abel\connector_mysql\connector_mysql.ecf"/>
+		<library name="abel_connector_sqlite" location="$ISE_LIBRARY\unstable\library\persistency\abel\connector_sqlite\connector_sqlite.ecf"/>
+		<library name="abel_core" location="$ISE_LIBRARY\unstable\library\persistency\abel\core\core.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="base_testing" location="$ISE_LIBRARY\library\base\test\test.ecf"/>
-		<library name="mysql" location="$ISE_LIBRARY\unstable\library\persistency\database\mysqli\mysqli.ecf">
-		</library>
+		<library name="mysql" location="$ISE_LIBRARY\unstable\library\persistency\database\mysqli\mysqli.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<cluster name="framework" location=".\" recursive="true">
 			<file_rule>
-				<exclude>/\.svn$</exclude>
 				<exclude>/CVS$</exclude>
 				<exclude>/EIFGENs$</exclude>
+				<exclude>/\.svn$</exclude>
 			</file_rule>
 		</cluster>
 	</target>

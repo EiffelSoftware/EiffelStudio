@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="store_mysql" uuid="DC757CBD-D8C4-44D6-A07F-C1148D8D233E" library_target="store_mysql">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="store_mysql" uuid="DC757CBD-D8C4-44D6-A07F-C1148D8D233E" library_target="store_mysql">
 	<description>CMS Eiffel Store MySQL persistence solution</description>
 	<target name="store_mysql">
 		<root all_classes="true"/>
@@ -22,10 +22,10 @@
 		</cluster>
 		<cluster name="persistence_store_mysql" location=".\src\" recursive="true">
 			<file_rule>
-				<exclude>/\.git$</exclude>
-				<exclude>/\.svn$</exclude>
 				<exclude>/CVS$</exclude>
 				<exclude>/EIFGENs$</exclude>
+				<exclude>/\.git$</exclude>
+				<exclude>/\.svn$</exclude>
 			</file_rule>
 		</cluster>
 	</target>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="abel_core" uuid="067A6237-38BE-4CA2-82E6-03A37BF60E9F" library_target="abel_core">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="abel_core" uuid="067A6237-38BE-4CA2-82E6-03A37BF60E9F" library_target="abel_core">
 	<description>A library for unified access to persistence services.
 Copyright (c) 1984-2006, Eiffel Software and others.
 Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>

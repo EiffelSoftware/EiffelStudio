@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="auto_test_library" uuid="197D2624-6547-4BAB-904B-131A4FA4EA32" library_target="auto_test">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="auto_test_library" uuid="197D2624-6547-4BAB-904B-131A4FA4EA32" library_target="auto_test">
 	<target name="auto_test">
 		<root all_classes="true"/>
-		<option warning="true" full_class_checking="false">
-			<assertions/>
-		</option>
 		<file_rule>
 			<exclude>/.git$</exclude>
 			<exclude>/.svn$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
+		<option warning="true" full_class_checking="false">
+			<assertions/>
+		</option>
 		<capability>
 			<concurrency support="thread" use="thread"/>
 			<void_safety support="none"/>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="xebra_precompile" uuid="FA73F6AF-A7E8-472A-98BD-E1043D8159D6" library_target="xebra_precompile">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="xebra_precompile" uuid="FA73F6AF-A7E8-472A-98BD-E1043D8159D6" library_target="xebra_precompile">
 	<target name="xebra_precompile">
 		<root class="ANY"/>
 		<option>

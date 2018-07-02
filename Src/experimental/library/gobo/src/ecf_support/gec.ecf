@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="gec" uuid="A8516DA2-7B93-4728-ABFE-7DAE95CD7F1C">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="gec" uuid="A8516DA2-7B93-4728-ABFE-7DAE95CD7F1C">
 	<target name="gec">
 		<root class="ECF_GEC" feature="execute"/>
 		<option warning="true" is_obsolete_routine_type="true">
@@ -34,7 +34,7 @@
 		<library name="gobo_structure" location="$ISE_LIBRARY\library\gobo\gobo_structure.ecf"/>
 		<library name="gobo_tools" location="$ISE_LIBRARY\library\gobo\gobo_tools.ecf"/>
 		<library name="gobo_utility" location="$ISE_LIBRARY\library\gobo\gobo_utility.ecf"/>
-		<cluster name="gec" location="$ISE_LIBRARY\contrib\library\gobo\tool\gec\src" recursive="true"/>
+		<cluster name="gec" location="$ISE_LIBRARY\contrib\library\gobo\tool\gec\src\" recursive="true"/>
 		<override name="ecf_support" location="$ISE_LIBRARY\library\gobo\src\ecf_support\" recursive="true"/>
 	</target>
 </system>

@@ -801,6 +801,16 @@ feature -- Protocol
 			is_class: class
 		end
 
+	curlopt_mimepost: INTEGER
+			-- Declared as CURLOPT_TIMEVALUE
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"return CURLOPT_MIMEPOST;"
+		ensure
+			is_class: class
+		end
+
 feature -- Connection
 
 	curlopt_timeout: INTEGER
@@ -1280,6 +1290,16 @@ feature -- SSH
 			is_class: class
 		end
 
+	curl_zero_terminated: INTEGER
+			-- Declared as CURL_ZERO_TERMINATED
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"return CURL_ZERO_TERMINATED;"
+		ensure
+			is_class: class
+		end
+
 feature -- Status report
 
 	is_valid (v: INTEGER): BOOLEAN
@@ -1398,12 +1418,13 @@ feature -- Status report
 						v = curlopt_ssh_public_keyfile or
 						v = curlopt_ssh_private_keyfile or
 						v = curlopt_mail_from or
-						v = curlopt_mail_rcpt
+						v = curlopt_mail_rcpt or
+						v = curl_zero_terminated
 		end
 
 note
 	library:   "cURL: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -115,6 +115,16 @@ feature -- Command
 			setopt_void_star (a_curl_handle, a_opt, a_file.file_pointer)
 		end
 
+	setopt_mime (a_curl_handle: POINTER; a_opt: INTEGER; a_mime: POINTER)
+			-- Declared as curl_easy_setopt().
+		require
+			exists: not a_curl_handle.is_default_pointer
+			valid: a_opt = {CURL_OPT_CONSTANTS}.curlopt_mimepost
+			exists: a_mime /= default_pointer
+		do
+			setopt_void_star (a_curl_handle, a_opt, a_mime)
+		end
+
 	perform (a_curl_handle: POINTER): INTEGER
 			-- Declared as curl_easy_perform().
 			-- Result is one value from {CURL_CODES}
@@ -378,7 +388,7 @@ feature {NONE} -- C externals
 
 note
 	library:   "cURL: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

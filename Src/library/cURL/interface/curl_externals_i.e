@@ -49,6 +49,38 @@ feature -- Function pointer
 		deferred
 		end
 
+	curl_mime_init_ptr: POINTER
+		deferred
+		end
+
+	curl_mime_addpart_ptr: POINTER
+		deferred
+		end
+
+	curl_mime_data_ptr: POINTER
+		deferred
+		end
+
+	curl_mime_type_ptr: POINTER
+		deferred
+		end
+
+	curl_mime_subparts_ptr: POINTER
+		deferred
+		end
+
+	curl_mime_headers_ptr: POINTER
+		deferred
+		end
+
+	curl_mime_filedata_ptr: POINTER
+		deferred
+		end
+
+	curl_mime_free_ptr: POINTER
+		deferred
+		end
+
 feature -- Command
 
 	global_init
@@ -127,6 +159,75 @@ feature -- Command
 				create {STRING_32} Result.make_from_string (l_cstring.string)
 			end
 		end
+
+feature -- MIME
+
+	curl_mime_init (a_curl_handle: POINTER): POINTER
+		require
+			exists: not a_curl_handle.is_default_pointer
+		do
+			Result := c_mime_init (curl_mime_init_ptr, a_curl_handle)
+		end
+
+	curl_mime_addpart (a_curl_mime: POINTER): POINTER
+		require
+			exists: not a_curl_mime.is_default_pointer
+		do
+			Result := c_mime_addpart (curl_mime_addpart_ptr, a_curl_mime)
+		end
+
+	curl_mime_data (a_curl_mime: POINTER; a_inline_html: READABLE_STRING_8; a_size: INTEGER): INTEGER
+	 	require
+	 		exists: not a_curl_mime.is_default_pointer
+	 	local
+	 		l_cstring: C_STRING
+	 	do
+	 		create l_cstring.make (a_inline_html)
+			Result := c_mime_data (curl_mime_data_ptr, a_curl_mime, l_cstring.item, a_size)
+	 	end
+
+	curl_mime_type (a_curl_mime: POINTER; a_type: READABLE_STRING_8): INTEGER
+	 	require
+	 		exists: not a_curl_mime.is_default_pointer
+	 	local
+	 		l_cstring: C_STRING
+	 	do
+			create l_cstring.make (a_type)
+			Result := c_mime_type (curl_mime_type_ptr, a_curl_mime, l_cstring.item)
+	 	end
+
+	curl_mime_subparts (a_curl_mime_part: POINTER; a_subpart: POINTER): INTEGER
+	 	require
+	 		exists_mime_part: not a_curl_mime_part.is_default_pointer
+	 		exists_subpart: not a_subpart.is_default_pointer
+	 	do
+	 		Result := c_mime_subparts (curl_mime_subparts_ptr, a_curl_mime_part, a_subpart)
+	 	end
+
+	 curl_mime_headers (a_mime_part: POINTER; a_headers: POINTER; a_take_ownership: INTEGER): INTEGER
+	 	require
+	 		exists_mime_part: not a_mime_part.is_default_pointer
+	 		exists_headers: not a_headers.is_default_pointer
+	 	do
+	 		Result := c_mime_headers (curl_mime_headers_ptr,a_mime_part, a_headers, a_take_ownership)
+	 	end
+
+	 curl_mime_filedata (a_mime_part: POINTER; a_filename: READABLE_STRING_8): INTEGER
+	 	require
+	 		exists_mime_part: not a_mime_part.is_default_pointer
+	 	local
+	 		l_cstring: C_STRING
+	 	do
+	 		create l_cstring.make (a_filename)
+	 		Result := c_mime_filedata (curl_mime_filedata_ptr, a_mime_part, l_cstring.item)
+	 	end
+
+	 curl_mime_free (a_mime: POINTER)
+	 	require
+	 		exist_mime: not a_mime.is_default_pointer
+	 	do
+	 		c_mime_free (curl_mime_free_ptr, a_mime)
+	 	end
 
 feature {CURL_FORM} -- Internal command
 
@@ -253,9 +354,158 @@ feature {NONE} -- C externals
 			]"
 		end
 
+	c_mime_init (a_api: POINTER; a_curl_handle: POINTER): POINTER
+			-- Decalred as curl_mime * curl_mime_init(CURL * easy_handle );.
+		require
+			a_api_exists: not a_api.is_default_pointer
+			exists: not a_curl_handle.is_default_pointer
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"[
+				#ifdef CURL_STATICLIB
+					return (FUNCTION_CAST(curl_mime *, (CURL *)) $a_api)((CURL *)$a_curl_handle);
+				#else
+						/* Using proper calling convention for dynamic module */
+					return (FUNCTION_CAST(curl_mime *, (CURL *)) $a_api)((CURL *)$a_curl_handle);
+				#endif
+			]"
+		end
+
+	c_mime_addpart (a_api: POINTER; a_curl_handle: POINTER): POINTER
+			-- Decalred as curl_mimepart * curl_mime_addpart(curl_mime * mime ).
+		require
+			a_api_exists: not a_api.is_default_pointer
+			exists: not a_curl_handle.is_default_pointer
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"[
+				#ifdef CURL_STATICLIB
+					return (FUNCTION_CAST(curl_mimepart *, (curl_mime *)) $a_api)((curl_mime *)$a_curl_handle);
+				#else
+						/* Using proper calling convention for dynamic module */
+					return (FUNCTION_CAST(curl_mimepart *, (curl_mime *)) $a_api)((curl_mime *)$a_curl_handle);
+				#endif
+			]"
+		end
+
+	c_mime_data (a_api: POINTER; a_curl_handle: POINTER; a_data: POINTER; a_size: INTEGER): INTEGER
+			-- Declared as CURLcode curl_mime_data(curl_mimepart * part , const char * data , size_t datasize );
+		require
+			a_api_exists: not a_api.is_default_pointer
+			exists: not a_curl_handle.is_default_pointer
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"[
+				#ifdef CURL_STATICLIB
+					return (FUNCTION_CAST(CURLcode, (curl_mimepart *, const char *, size_t)) $a_api)((curl_mimepart *)$a_curl_handle, (const char *) $a_data , (size_t)$a_size );
+				#else
+						/* Using proper calling convention for dynamic module */
+					return (FUNCTION_CAST(CURLcode, (curl_mimepart *, const char *, size_t)) $a_api)((curl_mimepart *)$a_curl_handle, (const char *) $a_data , (size_t)$a_size);
+				#endif
+			]"
+		end
+
+	c_mime_type (a_api: POINTER; a_curl_handle: POINTER; a_mimetype: POINTER): INTEGER
+			--	CURLcode curl_mime_type(curl_mimepart * part , const char * mimetype );
+		require
+			a_api_exists: not a_api.is_default_pointer
+			exists: not a_curl_handle.is_default_pointer
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"[
+				#ifdef CURL_STATICLIB
+					return (FUNCTION_CAST(CURLcode, (curl_mimepart *, const char *)) $a_api)((curl_mimepart *)$a_curl_handle, (const char *) $a_mimetype);
+				#else
+						/* Using proper calling convention for dynamic module */
+					return (FUNCTION_CAST(CURLcode, (curl_mimepart *, const char *)) $a_api)((curl_mimepart *)$a_curl_handle, (const char *) $a_mimetype);
+				#endif
+			]"
+		end
+
+	c_mime_subparts (a_api: POINTER; a_curl_handle: POINTER; a_subparts: POINTER): INTEGER
+			--	CURLcode curl_mime_subparts(curl_mimepart * part , curl_mime * subparts );
+		require
+			a_api_exists: not a_api.is_default_pointer
+			exists_mimepart: not a_curl_handle.is_default_pointer
+			exists_subparts: not a_subparts.is_default_pointer
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"[
+				#ifdef CURL_STATICLIB
+					return (FUNCTION_CAST(CURLcode, (curl_mimepart *, curl_mime * )) $a_api)((curl_mimepart *)$a_curl_handle, (curl_mime *) $a_subparts);
+				#else
+						/* Using proper calling convention for dynamic module */
+					return (FUNCTION_CAST(CURLcode, (curl_mimepart *, curl_mime *)) $a_api)((curl_mimepart *)$a_curl_handle, (curl_mime *) $a_subparts);
+				#endif
+			]"
+		end
+
+
+	c_mime_headers (a_api: POINTER; a_curl_handle: POINTER; a_headers: POINTER; a_take_ownership: INTEGER): INTEGER
+			-- CURLcode curl_mime_headers(curl_mimepart * part , struct curl_slist * headers , int take_ownership );
+		require
+			a_api_exists: not a_api.is_default_pointer
+			exists_mimepart: not a_curl_handle.is_default_pointer
+			exists_headers: not a_headers.is_default_pointer
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"[
+				#ifdef CURL_STATICLIB
+					return (FUNCTION_CAST(CURLcode, (curl_mimepart *, struct curl_slist * , int )) $a_api)((curl_mimepart *)$a_curl_handle, (struct curl_slist *) $a_headers, $a_take_ownership);
+				#else
+						/* Using proper calling convention for dynamic module */
+					return (FUNCTION_CAST(CURLcode, (curl_mimepart *, struct curl_slist * , int)) $a_api)((curl_mimepart *)$a_curl_handle, (struct curl_slist *) $a_headers, $a_take_ownership);
+				#endif
+			]"
+		end
+
+	c_mime_filedata (a_api: POINTER; a_curl_handle: POINTER; a_filename: POINTER): INTEGER
+			-- CURLcode curl_mime_filedata(curl_mimepart * part , const char * filename );
+		require
+			a_api_exists: not a_api.is_default_pointer
+			exists_mimepart: not a_curl_handle.is_default_pointer
+		external
+				"C inline use <curl/curl.h>"
+			alias
+				"[
+					#ifdef CURL_STATICLIB
+						return (FUNCTION_CAST(CURLcode, (curl_mimepart *, const char * )) $a_api)((curl_mimepart *)$a_curl_handle, (const char *) $a_filename);
+					#else
+							/* Using proper calling convention for dynamic module */
+						return (FUNCTION_CAST(CURLcode, (curl_mimepart *, const char *)) $a_api)((curl_mimepart *)$a_curl_handle, (const char *) $a_filename);
+					#endif
+				]"
+			end
+
+
+	c_mime_free (a_api: POINTER; a_curl_handle: POINTER)
+		require
+			a_api_exists: not a_api.is_default_pointer
+			a_curl_handle_exists: not a_curl_handle.is_default_pointer
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"[
+				#ifdef CURL_STATICLIB
+				(FUNCTION_CAST(void , (curl_mime *)) $a_api)
+										((curl_mime *)$a_curl_handle);
+				#else
+				(FUNCTION_CAST(void , (curl_mime *)) $a_api)
+										((curl_mime *)$a_curl_handle);
+				#endif
+			]"
+		end
+
+
 note
 	library:   "cURL: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

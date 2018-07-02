@@ -12,6 +12,6 @@ test_description Some nested manifest arrays might be rejected by compiler.
 copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e
 compile_melted
-compile_result 	validity_warning TEST VWMA:15 VWMA:16 VWMA:17 VWMA:18
+compile_result 	validity_warning TEST VWMA:15 VWMA:16 VWMA(1):17 VWMA:18
 
 test_end

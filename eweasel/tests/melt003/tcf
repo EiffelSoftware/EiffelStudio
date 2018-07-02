@@ -12,7 +12,7 @@ test_description An `old' expression in a manifest array in a postcondition
 copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e
 compile_melted
-compile_result 	validity_warning TEST VWMA:25
+compile_result 	validity_warning TEST VWMA(1):25
 
 execute_work NONE 	exec_output1
 execute_result 	ok

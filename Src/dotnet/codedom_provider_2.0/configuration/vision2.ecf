@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="eiffelsoftware.codedom.vision2" uuid="3AB3395F-5498-4549-8A8E-1E93CB3C9FD7" library_target="vision2">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="eiffelsoftware.codedom.vision2" uuid="3AB3395F-5498-4549-8A8E-1E93CB3C9FD7" library_target="vision2">
 	<target name="vision2">
 		<description>Codedom provider EiffelVision2</description>
 		<root class="ANY"/>

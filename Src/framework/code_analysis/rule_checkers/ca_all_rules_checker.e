@@ -33,6 +33,7 @@ inherit
 			process_access_id_as,
 			process_address_as,
 			process_agent_routine_creation_as,
+			process_array_as,
 			process_assign_as,
 			process_assigner_call_as,
 			process_bang_creation_as,
@@ -102,6 +103,8 @@ feature {NONE} -- Initialization
 			create address_post_actions
 			create agent_routine_pre_action
 			create agent_routine_post_action
+			create array_pre_actions
+			create array_post_actions
 			create assign_pre_actions
 			create assign_post_actions
 			create assigner_call_pre_actions
@@ -230,6 +233,16 @@ feature {CA_STANDARD_RULE} -- Adding agents
 	add_address_post_action (a: PROCEDURE [ADDRESS_AS])
 		do
 			address_post_actions.extend (a)
+		end
+
+	add_array_pre_action (a: PROCEDURE [ARRAY_AS])
+		do
+			array_pre_actions.extend (a)
+		end
+
+	add_array_post_action (a: PROCEDURE [ARRAY_AS])
+		do
+			array_post_actions.extend (a)
 		end
 
 	add_assign_pre_action (a_action: attached PROCEDURE [ASSIGN_AS])
@@ -692,6 +705,8 @@ feature {NONE} -- Agent lists
 
 	agent_routine_pre_action, agent_routine_post_action: ACTION_SEQUENCE [TUPLE [AGENT_ROUTINE_CREATION_AS]]
 
+	array_pre_actions, array_post_actions: ACTION_SEQUENCE [TUPLE [ARRAY_AS]]
+
 	assign_pre_actions, assign_post_actions: ACTION_SEQUENCE [TUPLE [ASSIGN_AS]]
 
 	assigner_call_pre_actions, assigner_call_post_actions: ACTION_SEQUENCE [TUPLE [ASSIGNER_CALL_AS]]
@@ -826,6 +841,14 @@ feature {NONE} -- Processing
 			agent_routine_pre_action.call (a)
 			Precursor (a)
 			agent_routine_post_action.call (a)
+		end
+
+	process_array_as (a: ARRAY_AS)
+			-- <Precursor>
+		do
+			array_pre_actions.call (a)
+			Precursor (a)
+			array_post_actions.call (a)
 		end
 
 	process_assign_as (a: ASSIGN_AS)

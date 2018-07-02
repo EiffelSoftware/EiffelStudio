@@ -734,6 +734,12 @@ feature -- Rules
 	obsolete_feature_description: STRING_32
 		do Result := locale.translation_in_context ("Obsolete feature should be removed.",  once "code_analyzer") end
 
+	manifest_array_type_mismatch_title: STRING_32
+		do Result := translation_in_context ("Manifest array type mismatch", once "code_analyzer") end
+
+	manifest_array_type_mismatch_description: STRING_32
+		do Result := translation_in_context ("An implicit type of a manifest array involved in a reattachment is different from a type of the target of the reattachment.", once "code_analyzer") end
+
 feature -- Preferences
 
 	preference_translation_namespace: STRING = "code_analysis.preference"

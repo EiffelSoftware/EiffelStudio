@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-17-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-17-0 http://www.eiffel.com/developers/xml/configuration-1-17-0.xsd" name="ribbon" uuid="52D26B03-0A56-4A1D-85C0-9F5AA69D8436" library_target="ribbon">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="ribbon" uuid="52D26B03-0A56-4A1D-85C0-9F5AA69D8436" library_target="ribbon">
 	<target name="ribbon">
 		<description>Eiffel Ribbon library of reusable components for Eiffel.
       Copyright (c) 1984-2010, Eiffel Software and others.

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="gobo_xslt" uuid="1CA3E1A5-7F9F-498B-8A35-287565E24C5D" library_target="gobo_xslt">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="gobo_xslt" uuid="1CA3E1A5-7F9F-498B-8A35-287565E24C5D" library_target="gobo_xslt">
 	<target name="gobo_xslt">
 		<description>gobo xml library</description>
 		<root all_classes="true"/>

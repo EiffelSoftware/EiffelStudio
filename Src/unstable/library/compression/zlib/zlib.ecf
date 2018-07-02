@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-17-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-17-0 http://www.eiffel.com/developers/xml/configuration-1-17-0.xsd" name="zlib" uuid="8D76506B-B91E-49A2-BB2C-3B37F2FFA56C" library_target="zlib">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="zlib" uuid="8D76506B-B91E-49A2-BB2C-3B37F2FFA56C" library_target="zlib">
 	<target name="zlib">
 		<root all_classes="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>

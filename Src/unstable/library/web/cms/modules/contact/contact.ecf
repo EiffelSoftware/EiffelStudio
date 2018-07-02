@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="contact" uuid="5F9BB4AA-FB62-4550-B314-DED374843DC0" library_target="contact">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="contact" uuid="5F9BB4AA-FB62-4550-B314-DED374843DC0" library_target="contact">
 	<target name="contact">
 		<root all_classes="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="config_tests" uuid="AD1DE0F7-BC8A-4A17-9A44-56C917BD5604" library_target="config_tests">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="config_tests" uuid="AD1DE0F7-BC8A-4A17-9A44-56C917BD5604" library_target="config_tests">
 	<target name="config_tests">
 		<root class="TEST_CONFIG_READER_SET" feature="default_create"/>
 		<file_rule>
+			<exclude>/EIFGENs$</exclude>
 			<exclude>/\.git$</exclude>
 			<exclude>/\.svn$</exclude>
-			<exclude>/EIFGENs$</exclude>
 		</file_rule>
 		<capability>
 			<concurrency use="none"/>

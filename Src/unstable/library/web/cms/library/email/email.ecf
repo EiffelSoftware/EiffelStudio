@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="email_service" uuid="261DC9D5-C3A0-498D-A063-0BB6C80423CC" library_target="email_service">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="email_service" uuid="261DC9D5-C3A0-498D-A063-0BB6C80423CC" library_target="email_service">
 	<target name="email_service">
 		<root all_classes="true"/>
 		<file_rule>
+			<exclude>/EIFGENs$</exclude>
 			<exclude>/\.git$</exclude>
 			<exclude>/\.svn$</exclude>
-			<exclude>/EIFGENs$</exclude>
 		</file_rule>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="cms_app_env" location="..\app_env\app_env.ecf"/>

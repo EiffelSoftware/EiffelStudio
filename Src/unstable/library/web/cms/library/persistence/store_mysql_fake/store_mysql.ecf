@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="store_mysql_fake" uuid="F79448C5-95FA-4BAD-9194-A6142F9EE041" library_target="store_mysql_fake">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="store_mysql_fake" uuid="F79448C5-95FA-4BAD-9194-A6142F9EE041" library_target="store_mysql_fake">
 	<description>CMS Eiffel Store MySQL persistence solution FAKE!!!</description>
 	<target name="store_mysql_fake">
 		<root all_classes="true"/>
@@ -15,9 +15,9 @@
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<cluster name="persistence_store_mysql_fake" location=".\src\" recursive="true">
 			<file_rule>
-				<exclude>/\.svn$</exclude>
 				<exclude>/CVS$</exclude>
 				<exclude>/EIFGENs$</exclude>
+				<exclude>/\.svn$</exclude>
 			</file_rule>
 		</cluster>
 	</target>

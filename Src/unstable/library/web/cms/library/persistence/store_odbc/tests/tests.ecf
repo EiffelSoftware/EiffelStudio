@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="tests_store_odbc" uuid="FE27C81D-3F7D-4E46-992B-55F4BBDA4F8B" library_target="tests_store_odbc">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="tests_store_odbc" uuid="FE27C81D-3F7D-4E46-992B-55F4BBDA4F8B" library_target="tests_store_odbc">
 	<target name="tests_store_odbc">
 		<root class="APPLICATION" feature="make"/>
 		<option warning="true">
@@ -19,9 +19,9 @@
 		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
 		<cluster name="tests" location=".\" recursive="true">
 			<file_rule>
-				<exclude>/\.svn$</exclude>
 				<exclude>/CVS$</exclude>
 				<exclude>/EIFGENs$</exclude>
+				<exclude>/\.svn$</exclude>
 				<exclude>/nodes$</exclude>
 			</file_rule>
 		</cluster>

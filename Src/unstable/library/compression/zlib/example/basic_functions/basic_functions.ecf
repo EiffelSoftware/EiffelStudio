@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="basic_functions" uuid="767BDFE1-6550-42C0-95C2-B520E7E30C71">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="basic_functions" uuid="767BDFE1-6550-42C0-95C2-B520E7E30C71">
 	<target name="basic_functions">
 		<root class="APPLICATION" feature="make"/>
 		<option warning="true">
@@ -8,7 +8,6 @@
 		<setting name="console_application" value="true"/>
 		<capability>
 			<concurrency support="none"/>
-			
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="gobo_time" location="$ISE_LIBRARY\library\gobo\gobo_time.ecf"/>

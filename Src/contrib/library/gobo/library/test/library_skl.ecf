@@ -1,49 +1,33 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system 
-	xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd"
-	name="test_skl"
-	uuid="E1FFE100-60B0-0015-0002-000020160829"
-	library_target="test_skl">
-
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="test_skl" uuid="E1FFE100-60B0-0015-0002-000020160829" library_target="test_skl">
 	<description>
 		description: "ECF file for the Gobo Eiffel test harness"
 		library: "Gobo Eiffel Test Library"
 		copyright: "Copyright (c) 2002-2016, Eric Bezault and others"
 		license: "MIT License"
-	</description>
-
+	</description>	
 	<target name="test_skl">
 		<root all_classes="true"/>
 		<file_rule>
-			<exclude>/\.svn$</exclude>
 			<exclude>/\.git$</exclude>
+			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all"/>
-
-		<library name="base" location="$ISE_LIBRARY/library/base/base.ecf" readonly="true">
+		<option warning="true" full_class_checking="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true">
 			<condition>
 				<custom name="GOBO_EIFFEL" excluded_value="ge"/>
 			</condition>
 		</library>
-
-		<library name="free_elks" location="../free_elks/library.ecf" readonly="true">
+		<library name="free_elks" location="..\free_elks\library.ecf" readonly="true">
 			<condition>
 				<custom name="GOBO_EIFFEL" value="ge"/>
 			</condition>
 		</library>
-
-		<library name="kernel" location="../kernel/library.ecf" readonly="true"/>
-
-		<library name="pattern" location="../pattern/library.ecf" readonly="true"/>
-
-		<library name="regexp" location="../regexp/library.ecf" readonly="true"/>
-		
-		<library name="structure" location="../structure/library.ecf" readonly="true"/>
-
-		<library name="utility" location="../utility/library.ecf" readonly="true"/>
-		
-		<cluster name="harness" location="./src/harness/" recursive="true"/>
+		<library name="kernel" location="..\kernel\library.ecf" readonly="true"/>
+		<library name="pattern" location="..\pattern\library.ecf" readonly="true"/>
+		<library name="regexp" location="..\regexp\library.ecf" readonly="true"/>
+		<library name="structure" location="..\structure\library.ecf" readonly="true"/>
+		<library name="utility" location="..\utility\library.ecf" readonly="true"/>
+		<cluster name="harness" location=".\src\harness\" recursive="true"/>
 	</target>
 </system>

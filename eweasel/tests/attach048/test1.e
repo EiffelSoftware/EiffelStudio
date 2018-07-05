@@ -15,7 +15,7 @@ feature
 		local
 			b: BOOLEAN
 		do
-			b := a_item < item (2)
+			b := a_item < item (2) -- VUTA(2): `a_item` should be attached to make a call. 
 		end
 
 	test2 (a_item: G)
@@ -23,7 +23,7 @@ feature
 			b: BOOLEAN
 		do
 			if a_item /= Void then
-				b := a_item < item (2)
+				b := a_item < item (2) -- VWOE: argument `item (2)` should be attached.
 			end
 		end
 
@@ -31,7 +31,7 @@ feature
 		local
 			b: BOOLEAN
 		do
-			b := item (2) < a_item
+			b := item (2) < a_item -- VUTA(2): `item (2)` should be attached to make a call.
 		end
 
 	test4 (a_item: G)
@@ -39,7 +39,7 @@ feature
 			b: BOOLEAN
 		do
 			if a_item /= Void then
-				b := item (2) < a_item
+				b := item (2) < a_item -- VUTA(2): `item (2)` should be attached to make a call.
 			end
 		end
 		
@@ -47,7 +47,7 @@ feature
 		local
 			b: BOOLEAN
 		do
-			b := a_item.is_less (item (2))
+			b := a_item.is_less (item (2)) -- VUTA(2): `a_item` should be attached to make a call. 
 		end
 
 	test6 (a_item: G)
@@ -55,7 +55,7 @@ feature
 			b: BOOLEAN
 		do
 			if a_item /= Void then
-				b := a_item.is_less (item (2))
+				b := a_item.is_less (item (2)) -- VUAR(2): argument `item (2)` should be attached.
 			end
 		end
 
@@ -63,7 +63,7 @@ feature
 		local
 			b: BOOLEAN
 		do
-			b := item (2).is_less (a_item)
+			b := item (2).is_less (a_item) -- VUTA(2): `item (2)` should be attached to make a call.
 		end
 
 	test8 (a_item: G)
@@ -71,7 +71,7 @@ feature
 			b: BOOLEAN
 		do
 			if a_item /= Void then
-				b := item (2).is_less (a_item)
+				b := item (2).is_less (a_item) -- VUTA(2): `item (2)` should be attached to make a call.
 			end
 		end
 
@@ -79,7 +79,7 @@ feature
 		local
 			a: detachable ANY
 		do
-			a := + a_item
+			a := + a_item -- VUTA(2): `a_item` should be attached to make a call.
 		end
 
 	test2p (a_item: H)
@@ -95,7 +95,7 @@ feature
 		local
 			a: detachable ANY
 		do
-			a := a_item.identity
+			a := a_item.identity -- VUTA(2): `a_item` should be attached to make a call.
 		end
 
 	test4p (a_item: H)
@@ -112,7 +112,7 @@ feature
 			a: detachable TEST1 [G, H]
 			c: TEST
 		do
-			c := a + b
+			c := a + b -- VWOE: `a` neither conforms nor converts to `{TEST}`. (For conversion `{attached TEST1}` is needed.)
 		end
 
 	test2c (b: TEST)
@@ -130,7 +130,7 @@ feature
 			a: detachable TEST1 [G, H]
 			c: TEST
 		do
-			c := b + a
+			c := b + a -- VWOE: `a` neither conforms nor converts to `{TEST}`. (For conversion `{attached TEST1}` is needed.)
 		end
 
 	test4c (b: TEST)
@@ -147,7 +147,7 @@ feature
 		local
 			b: BOOLEAN
 		do
-			b := a < Current
+			b := a < Current -- VWOE: `a` neither conforms nor converts to `{TEST1}`. (For conversion `{attached COMPARABLE}` is needed.)
 		end
 
 	test2f (a: detachable COMPARABLE)
@@ -163,7 +163,7 @@ feature
 		local
 			b: BOOLEAN
 		do
-			b := Current < a
+			b := Current < a -- VWOE: `a` neither conforms nor converts to `{TEST1}`. (For conversion `{attached COMPARABLE}` is needed.)
 		end
 
 	test4f (a: detachable COMPARABLE)

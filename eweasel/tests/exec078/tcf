@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2018 University of Southern California and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -12,7 +12,7 @@ test_description A class has a routine which repeatedly creates a manifest array
 copy_sub 	 Ace $TEST Ace
 copy_raw 	 test.e  $CLUSTER test.e
 compile_melted
-compile_result 	 ok
+compile_result 	 validity_warning TEST VWMA(1):25
 
 execute_work	 NONE exec_output1 10000
 execute_result	 ok

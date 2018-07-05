@@ -36,6 +36,8 @@ feature {NONE} -- Initialization
 			dirs: ARRAYED_LIST [READABLE_STRING_GENERAL]
 			lst: ARRAYED_LIST [PATH]
 			fut: FILE_UTILITIES
+			utf: UTF_CONVERTER
+			l_regexp: REGULAR_EXPRESSION
 		do
 			default_create
 			create errors.make (0)
@@ -67,6 +69,13 @@ feature {NONE} -- Initialization
 			end
 
 			is_simulation := args.simulation_enabled
+			if attached args.regexp_pattern as l_pattern then
+				create l_regexp
+				l_regexp.compile (utf.utf_32_string_to_utf_8_string_8 (l_pattern))
+				if l_regexp.is_compiled then
+					ecf_regexp := l_regexp
+				end
+			end
 			verbose := args.verbose
 
 			if attached args.included_paths as l_included_paths and then not l_included_paths.is_empty then
@@ -219,39 +228,47 @@ feature -- Access
 
 	is_simulation: BOOLEAN
 
+	ecf_regexp: detachable REGULAR_EXPRESSION
+
 	verbose: BOOLEAN
 
 	errors: ARRAYED_LIST [READABLE_STRING_GENERAL]
 	warnings: ARRAYED_LIST [READABLE_STRING_GENERAL]
-
 
 feature -- Basic operation	
 
 	process_ecf (a_fn: PATH)
 		local
 			tgt: CONF_TARGET
+			l_regexp: detachable REGULAR_EXPRESSION
 		do
-			if attached config_system_from (a_fn.name) as l_system then
-				across
-					l_system.targets as ic
-				loop
-					tgt := ic.item
-					if not tgt.is_abstract then
-						if verbose then
-							localized_print (a_fn.name)
-							localized_print ("[")
-							localized_print (l_system.uuid.out)
-							localized_print ("].")
-							localized_print (l_system.name)
-							localized_print (".")
-							localized_print (tgt.name)
-							localized_print ("%N")
+			l_regexp := ecf_regexp
+			if
+				l_regexp = Void or else
+				(attached a_fn.entry as e and then l_regexp.matches (e.utf_8_name))
+			then
+				if attached config_system_from (a_fn.name) as l_system then
+					across
+						l_system.targets as ic
+					loop
+						tgt := ic.item
+						if not tgt.is_abstract then
+							if verbose then
+								localized_print (a_fn.name)
+								localized_print ("[")
+								localized_print (l_system.uuid.out)
+								localized_print ("].")
+								localized_print (l_system.name)
+								localized_print (".")
+								localized_print (tgt.name)
+								localized_print ("%N")
+							end
+							process_expression (a_fn.name, l_system.uuid.out, l_system.name, tgt.name)
 						end
-						process_expression (a_fn.name, l_system.uuid.out, l_system.name, tgt.name)
 					end
+				else
+					report_warning ({STRING_32} "Could not load ecf from %"" + a_fn.name + "%".")
 				end
-			else
-				report_warning ({STRING_32} "Could not load ecf from %"" + a_fn.name + "%".")
 			end
 		end
 
@@ -309,7 +326,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

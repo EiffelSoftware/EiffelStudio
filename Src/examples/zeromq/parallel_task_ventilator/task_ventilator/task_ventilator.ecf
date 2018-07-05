@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="task_ventilator" uuid="EA89815B-62FD-4828-A72B-453217ABC5A3">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="task_ventilator" uuid="EA89815B-62FD-4828-A72B-453217ABC5A3">
 	<target name="task_ventilator">
 		<root class="TASK_VENTILATOR" feature="make"/>
 		<option warning="true" is_obsolete_routine_type="true">

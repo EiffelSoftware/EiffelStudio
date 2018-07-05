@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="class_structure_editor" uuid="033E433F-5A38-4F90-9AA8-F8E2A0DE990E">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="class_structure_editor" uuid="033E433F-5A38-4F90-9AA8-F8E2A0DE990E">
 	<target name="class_structure_editor">
 		<root class="CLASS_STRUCTURE_EDITOR" feature="make"/>
 		<file_rule>

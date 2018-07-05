@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="controller" uuid="18703970-6222-4F1A-8A63-4E72E05E8A6B" library_target="common">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="controller" uuid="18703970-6222-4F1A-8A63-4E72E05E8A6B" library_target="common">
 	<target name="common" abstract="true">
 		<root class="IRON_NODE_SERVICE_APPLICATION" feature="make_and_launch"/>
 		<file_rule>
@@ -59,7 +59,6 @@
 		<cluster name="service_launcher" location=".\service_launcher\default\" recursive="true"/>
 	</target>
 	<target name="server_standalone" extends="common">
-		
 		<variable name="httpd_ssl_disabled" value="true"/>
 		<library name="default_standalone" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\standalone.ecf"/>
 		<cluster name="service" location=".\service\" recursive="true">

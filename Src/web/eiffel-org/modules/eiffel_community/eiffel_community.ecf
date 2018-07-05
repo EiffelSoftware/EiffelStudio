@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="eiffel_community_module" uuid="5AF34A7F-2A43-42F6-9CF1-9E6EB727F94E" library_target="eiffel_community_module">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="eiffel_community_module" uuid="5AF34A7F-2A43-42F6-9CF1-9E6EB727F94E" library_target="eiffel_community_module">
 	<target name="eiffel_community_module">
 		<root all_classes="true"/>
 		<file_rule>

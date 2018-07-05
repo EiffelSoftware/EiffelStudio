@@ -91,7 +91,7 @@ feature {NONE} -- Implementation
 				create {PARENT_C} last_parent_c
 			end
 			if attached {CL_TYPE_A} type_a_generator.evaluate_type (l_as.type, current_class) as l_parent_type then
-				last_parent_c.set_parent_type (l_parent_type)
+				last_parent_c.set_parent_type (l_parent_type.as_normally_attached (current_class))
 				if attached l_as.exports as l_exports then
 					from
 						create last_export_adaptation.make (l_exports.count)
@@ -246,7 +246,7 @@ feature {NONE} -- Implementation
 	Selec: INTEGER = 3;
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

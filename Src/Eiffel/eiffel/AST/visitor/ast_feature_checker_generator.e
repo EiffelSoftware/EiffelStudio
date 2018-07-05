@@ -2392,7 +2392,7 @@ feature {NONE} -- Visitor
 					create l_generics.make (1)
 					l_generics.extend (default_element_type)
 						-- Type of a manifest array is always attached.
-					default_array_type := (create {GEN_TYPE_A}.make (system.array_id, l_generics)).as_attached_in (l_current_class)
+					default_array_type := (create {GEN_TYPE_A}.make (system.array_id, l_generics)).as_normally_attached (l_current_class)
 						-- Type of a manifest array is always frozen.
 					default_array_type.set_frozen_mark
 				end
@@ -2412,10 +2412,10 @@ feature {NONE} -- Visitor
 								-- The implicit type is required to compute array type, it should be replaced with an explicit one.
 							if context.current_class.lace_class.is_manifest_array_type_mismatch_warning then
 									-- Report a warning.
-								error_handler.insert_warning (create {VWMA_EXPLICIT_TYPE_REQUIRED}.make_conformance (context, default_element_type, l_type_a, l_as, False))
+								error_handler.insert_warning (create {VWMA_EXPLICIT_TYPE_REQUIRED_FOR_CONFORMANCE}.make (context, default_element_type, l_type_a, l_as, False))
 							elseif context.current_class.lace_class.is_manifest_array_type_mismatch_error then
 									-- Report an error.
-								error_handler.insert_error (create {VWMA_EXPLICIT_TYPE_REQUIRED}.make_conformance (context, default_element_type, l_type_a, l_as, True))
+								error_handler.insert_error (create {VWMA_EXPLICIT_TYPE_REQUIRED_FOR_CONFORMANCE}.make (context, default_element_type, l_type_a, l_as, True))
 							end
 						end
 							-- Check that expressions' type matches element's type of the array.
@@ -2457,6 +2457,7 @@ feature {NONE} -- Visitor
 					else
 							-- There is no explicit array type and the computed array type conforms to the target array type.
 						if
+							not is_inherited and then
 							not context.current_class.lace_class.is_manifest_array_type_standard and then
 							attached default_element_type and then
 							not l_type_a.conform_to (context.current_class, default_element_type)
@@ -2464,10 +2465,10 @@ feature {NONE} -- Visitor
 								-- The source type is different from the target one.
 							if context.current_class.lace_class.is_manifest_array_type_mismatch_error then
 									-- Report an error.
-								error_handler.insert_error (create {VWMA_EXPLICIT_TYPE_REQUIRED}.make_mismatch (context, default_element_type, l_type_a, l_as, True))
+								error_handler.insert_error (create {VWMA_EXPLICIT_TYPE_REQUIRED_FOR_MATCH}.make (context, default_element_type, l_type_a, l_as, True))
 							else
 									-- Report a warning.
-								error_handler.insert_warning (create {VWMA_EXPLICIT_TYPE_REQUIRED}.make_mismatch (context, default_element_type, l_type_a, l_as, False))
+								error_handler.insert_warning (create {VWMA_EXPLICIT_TYPE_REQUIRED_FOR_MATCH}.make (context, default_element_type, l_type_a, l_as, False))
 							end
 						end
 							-- Use the default (computed) array type.
@@ -2493,15 +2494,7 @@ feature {NONE} -- Visitor
 							l_array_type := l_array_type.deep_actual_type
 						end
 							-- Type of a manifest array is always attached.
-						if not l_array_type.is_attached then
-							if l_current_class.lace_class.is_void_safe_conformance then
-								l_array_type := l_array_type.duplicate
-								l_array_type.set_is_attached
-							elseif not l_array_type.is_implicitly_attached then
-								l_array_type := l_array_type.as_implicitly_attached
-							end
-						end
-						l_array_type := l_array_type.as_attached_in (l_current_class)
+						l_array_type := l_array_type.as_normally_attached (l_current_class)
 					end
 				else
 						-- There is no explicit or implicit array type,  use the default one.
@@ -2560,7 +2553,7 @@ feature {NONE} -- Visitor
 			end
 			if l_simplified_string_type /= Void then
 					-- Constants are always of an attached type.
-				l_simplified_string_type := l_simplified_string_type.as_attached_in (context.current_class)
+				l_simplified_string_type := l_simplified_string_type.as_normally_attached (context.current_class)
 				set_type (l_simplified_string_type, l_as)
 				class_id := l_simplified_string_type.base_class.class_id
 				if attached system.string_8_class as c then
@@ -11060,12 +11053,7 @@ feature {NONE} -- Implementation: type validation
 			i, j, n: INTEGER
 		do
 				-- Use "(attached) NONE" as the initial lowest type, it conforms to any other type.
-			Result := none_type.duplicate
-			if context.current_class.lace_class.is_void_safe_conformance then
-				Result.set_is_attached
-			else
-				Result.set_is_implicitly_attached
-			end
+			Result := none_type.as_normally_attached (context.current_class)
 			from
 				n := ts.count
 			until
@@ -11078,12 +11066,7 @@ feature {NONE} -- Implementation: type validation
 				else
 					if i >= n or else j >= n then
 							-- Cannot find a common type, use "(attached) ANY".
-						Result := system.any_type
-						if context.current_class.lace_class.is_void_safe_conformance then
-							Result.set_is_attached
-						else
-							Result.set_is_implicitly_attached
-						end
+						Result := system.any_type.as_normally_attached (context.current_class)
 					else
 							-- Start over from the next unprocessed element type as the initial one.
 						if i > j then

@@ -17,10 +17,10 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING)
+	make (a_name: STRING; a_manager: SD_DOCKING_MANAGER)
 		do
 			create {EV_VERTICAL_BOX} container
-			create sd_content.make_with_widget (container, a_name)
+			create sd_content.make_with_widget (container, a_name, a_manager)
 			build_interface (container)
 		end
 

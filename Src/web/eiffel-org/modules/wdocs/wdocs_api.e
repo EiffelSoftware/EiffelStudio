@@ -669,6 +669,7 @@ feature -- Page management
 					end
 
 					l_storage_layer := new_storage_layer
+						-- Save wiki file
 					if (create {FILE_UTILITIES}).file_path_exists (p) then
 						l_storage_layer.overwrite_file (txt, p)
 					else

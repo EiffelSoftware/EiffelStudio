@@ -642,7 +642,6 @@ end;
 				-- Feature table of the parent `parent_c'
 			parent_type: LIKE_CURRENT
 				-- "like Current" type of `parent_c'
-			actual_parent_type: CL_TYPE_A
 			l_feature_name_id: INTEGER
 			i, nb: INTEGER
 			l_inherit_info_cache: like inherit_info_cache
@@ -651,21 +650,7 @@ end;
 			from
 				l_inherit_info_cache := inherit_info_cache
 				l_inherit_feat_cache := inherit_feat_cache
-				actual_parent_type := parent_c.parent_type
-				if not actual_parent_type.is_attached then
-					if a_class.lace_class.is_attached_by_default then
-						if not actual_parent_type.is_attached then
-							actual_parent_type := actual_parent_type.twin
-							actual_parent_type.set_is_attached
-						end
-					else
-						if not actual_parent_type.is_implicitly_attached then
-							actual_parent_type := actual_parent_type.twin
-							actual_parent_type.set_is_implicitly_attached
-						end
-					end
-				end
-				create parent_type.make (actual_parent_type)
+				create parent_type.make (parent_c.parent_type)
 					-- Look for the parent table on the disk
 				parent_table := parent_c.parent.feature_table.features.area
 				check

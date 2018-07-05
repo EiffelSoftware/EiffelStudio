@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-17-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-17-0 http://www.eiffel.com/developers/xml/configuration-1-17-0.xsd" name="eac_browser" uuid="6D32A198-6ED4-4B14-B236-3F635244C54E">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="eac_browser" uuid="6D32A198-6ED4-4B14-B236-3F635244C54E">
 	<target name="eac_browser">
 		<root class="VISION2_APPLICATION" feature="make_and_launch"/>
 		<option trace="false" profile="false" debug="false" warning="true" full_class_checking="false" is_obsolete_routine_type="true" syntax="transitional">
@@ -18,7 +18,6 @@
 		<setting name="il_verifiable" value="true"/>
 		<setting name="inlining" value="false"/>
 		<setting name="line_generation" value="false"/>
-		<setting name="msil_assembly_compatibility" value="None"/>
 		<setting name="msil_generation_type" value="exe"/>
 		<setting name="platform" value="windows"/>
 		<capability>

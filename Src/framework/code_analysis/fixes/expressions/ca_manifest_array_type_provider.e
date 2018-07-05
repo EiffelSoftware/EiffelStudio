@@ -1,71 +1,50 @@
 ﻿note
-	description: "Fix of {VWMA_EXPLICIT_TYPE_REQUIRED} by adding a type declaration."
+	description: "A provider of data required to add an explicit manifest array type to a manifest array."
 
-class	FIX_VWMA_EXPLICIT_TYPE_REQUIRED
+class
+	CA_MANIFEST_ARRAY_TYPE_PROVIDER
 
 inherit
-	FIX_FEATURE
-	FORMATTED_MESSAGE
-	SHARED_LOCALE
+	FIX_PROVIDER_FOR_MANIFEST_ARRAY_TYPE
 
 create
 	make
 
 feature {NONE} -- Creation
 
-	make (e: VWMA_EXPLICIT_TYPE_REQUIRED)
-			-- Associate a fix with the error `e'.
-		require
-			is_class_writable: not e.written_class.lace_class.is_read_only
+	make (c: like source_class; f: like source_feature; t: like type_to_add; a: like array)
+			-- Initialize an object with the source class `c`, source feature `f`, manifest array type to be added `t`, array node `a`.
 		do
-			source := e
+			source_class := c
+			source_feature := f
+			type_to_add := t
+			array := a
+		ensure
+			source_class_set: source_class = c
+			source_feature_set: source_feature = f
+			type_to_add_set: type_to_add = t
+			array_set: array = a
 		end
-
-feature {NONE} -- Access
-
-	source: VWMA_EXPLICIT_TYPE_REQUIRED
-			-- Associated warning.
 
 feature -- Access
 
 	source_class: CLASS_I
-			-- Descriptor of a class to be fixed.
-		do
-			Result := source.written_class.lace_class
-		end
+			-- <Precursor>
 
 	source_feature: E_FEATURE
-			-- Descriptor of a feature to be fixed.
-		do
-			Result := source.e_feature
-		end
-
-feature -- Output
-
-	append_name (t: TEXT_FORMATTER)
 			-- <Precursor>
-		do
-			format_elements (t, locale.translation_in_context ("Add type {1}", "fix"), <<agent (source.target_array_type).append_to>>)
-		end
 
-	append_description (t: TEXT_FORMATTER)
+	type_to_add: GEN_TYPE_A
 			-- <Precursor>
-		do
-			format_elements (t, locale.translation_in_context ("Add type declaration {1} in front of the manifest array.", "fix"), <<agent (source.target_array_type).append_to>>)
-		end
 
-feature -- Basic operations
+	array: ARRAY_AS
+			-- <Precursor>
 
-	apply (s: FEATURE_AS; l: LEAF_AS_LIST)
-			-- Attempt to apply the fix to the source AST `s'.
-		do
-			(create {FIX_VWMA_EXPLICIT_TYPE_REQUIRED_APPLICATION}.make (source.target_array_type, source_class.compiled_class, source_feature.associated_feature_i, source.array, s, l)).do_nothing
-		end
-
-note
+;note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	author: "Alexander Kogtenkov"
+	copyright: "Copyright (c) 2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

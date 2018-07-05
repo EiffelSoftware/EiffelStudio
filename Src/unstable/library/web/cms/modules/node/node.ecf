@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="node" uuid="C7114DD4-FA92-4AE5-A209-0FFC45E44257" library_target="node">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="node" uuid="C7114DD4-FA92-4AE5-A209-0FFC45E44257" library_target="node">
 	<target name="node">
 		<root all_classes="true"/>
 		<file_rule>
@@ -10,9 +10,9 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="cms" location="..\..\cms.ecf"/>
 		<library name="cms_comments_module" location="..\..\modules\comments\comments.ecf" readonly="false"/>
+		<library name="cms_feed_aggregator_module" location="..\..\modules\feed_aggregator\feed_aggregator.ecf" readonly="false"/>
 		<library name="cms_model" location="..\..\library\model\cms_model.ecf" readonly="false"/>
 		<library name="cms_recent_changes_module" location="..\..\modules\recent_changes\recent_changes.ecf" readonly="false"/>
-		<library name="cms_feed_aggregator_module" location="..\..\modules\feed_aggregator\feed_aggregator.ecf" readonly="false"/>
 		<library name="cms_sitemap_module" location="..\..\modules\sitemap\sitemap.ecf" readonly="false"/>
 		<library name="cms_taxonomy_module" location="..\..\modules\taxonomy\taxonomy.ecf" readonly="false"/>
 		<library name="error" location="$ISE_LIBRARY\contrib\library\utility\general\error\error.ecf"/>

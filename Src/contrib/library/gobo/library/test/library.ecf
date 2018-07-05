@@ -1,57 +1,39 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system 
-	xmlns="http://www.eiffel.com/developers/xml/configuration-1-15-0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-15-0 http://www.eiffel.com/developers/xml/configuration-1-15-0.xsd"
-	name="test"
-	uuid="E1FFE100-60B0-0016-0002-000020160829"
-	library_target="test">
-
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="test" uuid="E1FFE100-60B0-0016-0002-000020160829" library_target="test">
 	<description>
 		description: "ECF file for the Gobo Eiffel Test Library"
 		library: "Gobo Eiffel Test Library"
 		copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
 		license: "MIT License"
 	</description>
-
 	<target name="test">
 		<root all_classes="true"/>
 		<file_rule>
-			<exclude>/\.svn$</exclude>
 			<exclude>/\.git$</exclude>
+			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option warning="true" full_class_checking="true" is_attached_by_default="true" void_safety="all"/>
+		<option warning="true" full_class_checking="true">
+		</option>
 
-		<library name="base" location="$ISE_LIBRARY/library/base/base.ecf" readonly="true">
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true">
 			<condition>
 				<custom name="GOBO_EIFFEL" excluded_value="ge"/>
 			</condition>
 		</library>
-
-		<library name="free_elks" location="../free_elks/library.ecf" readonly="true">
+		<library name="free_elks" location="..\free_elks\library.ecf" readonly="true">
 			<condition>
 				<custom name="GOBO_EIFFEL" value="ge"/>
 			</condition>
 		</library>
-
-
-		<library name="kernel" location="../kernel/library.ecf" readonly="true"/>
-
-		<library name="lexical" location="../lexical/library.ecf" readonly="true"/>
-
-		<library name="lexical_skl" location="../lexical/library_skl.ecf" readonly="true"/>
-
-		<library name="parse_skl" location="../parse/library_skl.ecf" readonly="true"/>
-
-		<library name="structure" location="../structure/library.ecf" readonly="true"/>
-
-		<library name="test_skl" location="../test/library_skl.ecf" readonly="true"/>
-
-		<library name="tools" location="../tools/library.ecf" readonly="true"/>
-		
-		<library name="utility" location="../utility/library.ecf" readonly="true"/>
-
-		<cluster name="test" location="./src/" recursive="true">
+		<library name="kernel" location="..\kernel\library.ecf" readonly="true"/>
+		<library name="lexical" location="..\lexical\library.ecf" readonly="true"/>
+		<library name="lexical_skl" location="..\lexical\library_skl.ecf" readonly="true"/>
+		<library name="parse_skl" location="..\parse\library_skl.ecf" readonly="true"/>
+		<library name="structure" location="..\structure\library.ecf" readonly="true"/>
+		<library name="test_skl" location="library_skl.ecf" readonly="true"/>
+		<library name="tools" location="..\tools\library.ecf" readonly="true"/>
+		<library name="utility" location="..\utility\library.ecf" readonly="true"/>
+		<cluster name="test" location=".\src\" recursive="true">
 			<file_rule>
 				<exclude>/harness$</exclude>
 			</file_rule>

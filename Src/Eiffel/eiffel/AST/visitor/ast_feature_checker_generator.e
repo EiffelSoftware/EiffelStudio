@@ -1126,6 +1126,8 @@ feature {NONE} -- Implementation
 							-- Feature without arguments is found, try parenthesis alias on it.
 						look_for_parenthesis_alias (l_as.internal_parameters, e, t)
 					end
+						-- Set type of the call as a whole.
+					set_type (last_type, l_as)
 				end
 			end
 		end
@@ -2883,6 +2885,9 @@ feature {NONE} -- Visitor
 				if not l_is_not_call and then attached last_vuar_error as e and then attached last_type as q then
 					look_for_parenthesis_alias (l_as.internal_parameters, e, q)
 				end
+				if attached last_type as t then
+					set_type (t, l_as)
+				end
 			else
 				reset_types
 			end
@@ -2909,21 +2914,26 @@ feature {NONE} -- Visitor
 				is_controlled := l_local_info.is_controlled
 				l_type := l_local_info.type
 				l_type := l_type.instantiation_in (last_type.as_implicitly_detachable.as_variant_free, last_type.base_class.class_id)
-				set_type (l_type, l_as)
+				if not is_inherited then
+					l_as.enable_object_test_local
+					l_as.set_class_id (class_id_of (l_type))
+				end
+				if is_byte_node_enabled then
+					create {OBJECT_TEST_LOCAL_B} last_byte_node.make (l_local_info.position, current_feature.body_index, l_type)
+				end
 				if attached l_as.parameters as p then
 					create l_vuar1
 					context.init_error (l_vuar1)
 					l_vuar1.set_local_name (l_as.feature_name.name)
 					l_vuar1.set_location (l_as.feature_name)
 					look_for_parenthesis_alias (l_as.internal_parameters, l_vuar1, l_type)
+					if attached last_type as t then
+							-- Record type of the object test local.
+						set_type (l_type, l_as.feature_name)
+						l_type := t
+					end
 				end
-				if is_byte_node_enabled then
-					create {OBJECT_TEST_LOCAL_B} last_byte_node.make (l_local_info.position, current_feature.body_index, l_type)
-				end
-				if not is_inherited then
-					l_as.enable_object_test_local
-					l_as.set_class_id (class_id_of (l_type))
-				end
+				set_type (l_type, l_as)
 			else
 				if is_inherited then
 					l_feature := l_type.base_class.feature_of_rout_id (l_as.routine_ids.first)
@@ -2938,6 +2948,10 @@ feature {NONE} -- Visitor
 				if attached last_vuar_error as e and then attached last_type as t then
 						-- Feature without arguments is found, try parenthesis alias on it.
 					look_for_parenthesis_alias (l_as.internal_parameters, e, t)
+				end
+				if attached last_type as t then
+						-- Record type of the feature call.
+					set_type (t, l_as)
 				end
 			end
 		end
@@ -2989,14 +3003,14 @@ feature {NONE} -- Visitor
 					l_argument.set_position (l_arg_pos)
 					last_byte_node := l_argument
 				end
-					-- set some type attributes of the node
+				if context.is_argument_attached (l_as.feature_name.name_id) then
+					l_type := l_type.as_attached_in (l_context_current_class)
+				end
+					-- Set some type attributes of the node.
 				if not is_inherited then
 					l_as.enable_argument
 					l_as.set_argument_position (l_arg_pos)
 					l_as.set_class_id (class_id_of (l_type))
-				end
-				if context.is_argument_attached (l_as.feature_name.name_id) then
-					l_type := l_type.as_attached_in (l_context_current_class)
 				end
 			else
 					-- Look for a local if not in a pre- or postcondition
@@ -3107,6 +3121,10 @@ feature {NONE} -- Visitor
 				end
 			end
 			if l_has_vuar_error then
+				if attached last_type as t then
+						-- Record type of the entity without arguments.
+					set_type (t, l_as.feature_name)
+				end
 				if not attached l_vuar1 then
 					create l_vuar1
 					if l_arg_pos = 0 then
@@ -3118,9 +3136,10 @@ feature {NONE} -- Visitor
 					l_vuar1.set_location (l_as.feature_name)
 				end
 				look_for_parenthesis_alias (l_as.internal_parameters, l_vuar1, l_type)
-			else
-				set_type (l_type, l_as)
+					-- Record type of the call as a whole.
+				l_type := last_type
 			end
+			set_type (l_type, l_as)
 		end
 
 	process_access_assert_as (l_as: ACCESS_ASSERT_AS)
@@ -3164,7 +3183,6 @@ feature {NONE} -- Visitor
 				if context.is_argument_attached (l_as.feature_name.name_id) then
 					l_arg_type := l_arg_type.as_attached_in (context.current_class)
 				end
-				set_type (l_arg_type, l_as)
 				if is_byte_node_enabled then
 					create l_argument
 					l_argument.set_position (l_arg_pos)
@@ -3182,7 +3200,13 @@ feature {NONE} -- Visitor
 					l_vuar1.set_arg_name (l_as.feature_name.name)
 					l_vuar1.set_location (l_as.feature_name)
 					look_for_parenthesis_alias (l_as.internal_parameters, l_vuar1, l_arg_type)
+					if attached last_type as t then
+							-- Set type for the argument.
+						set_type (l_arg_type, l_as.feature_name)
+						l_arg_type := t
+					end
 				end
+				set_type (l_arg_type, l_as)
 			else
 					-- Look for a local if in a pre- or postcondition
 				if not is_inherited then
@@ -3215,14 +3239,19 @@ feature {NONE} -- Visitor
 							l_as.enable_object_test_local
 							l_as.set_class_id (class_id_of (l_type))
 						end
-						set_type (l_type, l_as)
 						if attached l_as.parameters as p then
 							create l_vuar1
 							context.init_error (l_vuar1)
 							l_vuar1.set_local_name (l_as.feature_name.name)
 							l_vuar1.set_location (l_as.feature_name)
 							look_for_parenthesis_alias (l_as.internal_parameters, l_vuar1, l_type)
+							if attached last_type as t then
+									-- Set type for the object-test local.
+								set_type (l_type, l_as.feature_name)
+								l_type := t
+							end
 						end
+						set_type (l_type, l_as)
 					else
 							-- Look for a feature
 						l_feature := Void
@@ -3238,6 +3267,10 @@ feature {NONE} -- Visitor
 						if attached last_vuar_error as e and then attached last_type as t then
 								-- Feature without arguments is found, try parenthesis alias on it.
 							look_for_parenthesis_alias (l_as.internal_parameters, e, t)
+						end
+						if attached last_type as t then
+								-- Set type for the feature call.
+							set_type (t, l_as)
 						end
 					end
 				end
@@ -3383,11 +3416,13 @@ feature {NONE} -- Visitor
 						-- Now `last_type' is the type we got from the processing of `Precursor'. We have to adapt
 						-- it to the current class, but instead of using the malformed `last_type' we use `l_orig_result_type'.
 					set_type (l_orig_result_type.evaluated_type_in_descendant
-						(l_parent_type.base_class, context.current_class, context.current_feature), l_as)
+						(l_parent_type.base_class, context.current_class, context.current_feature), l_as.precursor_keyword)
 					if attached last_vuar_error as e and then attached last_type as t then
 							-- Feature without arguments is found, try parenthesis alias on it.
 						look_for_parenthesis_alias (l_as.internal_parameters, e, t)
 					end
+						-- Record type of the call as a whole.
+					set_type (last_type, l_as)
 				end
 			else
 				reset_types

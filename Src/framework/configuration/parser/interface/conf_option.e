@@ -53,7 +53,7 @@ feature {NONE} -- Creation
 			-- First versioned settings.
 		do
 			create syntax.make (syntax_name, syntax_index_obsolete)
-			create array.make (array_name, array_index_mismatch_error)
+			create array.make (array_name, array_index_mismatch_warning)
 			create void_safety.make (void_safety_name, void_safety_index_none)
 			create catcall_detection.make (catcall_detection_values, catcall_detection_index_none)
 			is_obsolete_routine_type := True

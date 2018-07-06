@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Representation of argument basic scope of a metric"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -38,9 +37,9 @@ feature -- Access
 	scope: QL_SCOPE
 			-- Scope
 		do
-			Result := assertion_scope
+			Result := argument_scope
 		ensure then
-			good_result: Result = assertion_scope
+			good_result: Result = argument_scope
 		end
 
 	calculate_function: FUNCTION [QL_ARGUMENT, DOUBLE]
@@ -67,7 +66,7 @@ invariant
 	scope_valid: scope.is_equal (argument_scope)
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -97,7 +96,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

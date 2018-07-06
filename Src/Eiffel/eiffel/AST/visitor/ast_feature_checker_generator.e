@@ -5567,6 +5567,10 @@ feature {NONE} -- Visitor
 						l_is_qualified_call := is_qualified_call
 						is_qualified_call := True
 						process_call (last_type, Void, id_feature_name, last_alias_feature, l_as.operands, False, False, True, False, False)
+						if attached last_type as t then
+								-- Record type for the call as a whole.
+							set_type (t, l_as)
+						end
 						is_qualified_call := l_is_qualified_call
 						if error_level = l_error_level and then is_byte_node_enabled then
 							create nested_b
@@ -11056,7 +11060,7 @@ feature {NONE} -- Implementation: type validation
 				-- Source types should conform to the computed ones.
 			check
 				x_conforms_to_rx: x.conform_to (context.current_class, rx)
-				y_conforms_to_ry: x.conform_to (context.current_class, ry)
+				y_conforms_to_ry: y.conform_to (context.current_class, ry)
 			end
 			if rx.is_separate then
 					-- Use `x` separateness status.
@@ -11068,7 +11072,7 @@ feature {NONE} -- Implementation: type validation
 				-- Source types should conform to the computed ones.
 			check
 				x_conforms_to_rx: x.conform_to (context.current_class, rx)
-				y_conforms_to_ry: x.conform_to (context.current_class, ry)
+				y_conforms_to_ry: y.conform_to (context.current_class, ry)
 			end
 				-- Use the type to which both `x` and `y` conform.
 			if x.conform_to (context.current_class, ry) then

@@ -1255,9 +1255,9 @@ feature {NONE} -- String matching
 		local
 			low, up, mid: INTEGER
 		do
-			if table.item (table.lower) >= a_name then
+			if table.item (table.lower).sort_name >= a_name.sort_name then
 				Result := table.lower
-			elseif table.item (table.upper) <= a_name then
+			elseif table.item (table.upper).sort_name <= a_name.sort_name then
 				Result := table.upper
 			else
 				from
@@ -1268,7 +1268,7 @@ feature {NONE} -- String matching
 					up - low <= 1
 				loop
 					mid := (up + low) // 2
-					if table.item (mid) >= a_name then
+					if table.item (mid).sort_name >= a_name.sort_name then
 						up := mid
 					else
 						low := mid
@@ -1277,12 +1277,12 @@ feature {NONE} -- String matching
 				Result := up
 			end
 		ensure
-			table.item (table.lower) >= a_name
+			table.item (table.lower).sort_name >= a_name.sort_name
 				or else
-			table.item (table.upper) <= a_name
+			table.item (table.upper).sort_name <= a_name.sort_name
 				or else
-			(table.item (Result - 1) < a_name and
-				table.item (Result) >= a_name)
+			(table.item (Result - 1).sort_name < a_name.sort_name and
+				table.item (Result).sort_name >= a_name.sort_name)
 		end
 
 	current_index: INTEGER

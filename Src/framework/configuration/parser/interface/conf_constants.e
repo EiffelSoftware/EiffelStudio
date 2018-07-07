@@ -113,6 +113,7 @@ feature -- Settings
 	s_java_generation: STRING = "java_generation"
 	s_library_root: STRING = "library_root"
 	s_line_generation: STRING = "line_generation"
+	s_manifest_array_type: STRING = "manifest_array_type"
 	s_metadata_cache_path: STRING = "metadata_cache_path"
 	s_msil_assembly_compatibility: STRING = "msil_assembly_compatibility"
 	s_msil_classes_per_module: STRING = "msil_classes_per_module"
@@ -130,6 +131,13 @@ feature -- Settings
 	s_total_order_on_reals: STRING = "total_order_on_reals"
 	s_use_cluster_name_as_namespace: STRING = "use_cluster_name_as_namespace"
 	s_use_all_cluster_name_as_namespace: STRING = "use_all_cluster_name_as_namespace"
+
+feature -- Setting values: manifest array type
+
+	sv_array_default: STRING_32 = "default"
+	sv_array_standard: STRING_32 = "standard"
+	sv_array_mismatch_warning: STRING_32 = "mismatch_warning"
+	sv_array_mismatch_error: STRING_32 = "mismatch_error"
 
 feature -- Option names
 

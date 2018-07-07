@@ -1112,6 +1112,7 @@ feature {NONE} -- Implementation
 					error_handler.insert_error (l_vsta1)
 					reset_types
 				else
+					set_type (l_type, l_as.class_type)
 					instantiator.dispatch (l_type, context.current_class)
 					if is_inherited then
 						l_feature := last_type.base_class.feature_of_rout_id (l_as.routine_ids.first)
@@ -3121,10 +3122,8 @@ feature {NONE} -- Visitor
 				end
 			end
 			if l_has_vuar_error then
-				if attached last_type as t then
-						-- Record type of the entity without arguments.
-					set_type (t, l_as.feature_name)
-				end
+					-- Record type of the entity without arguments.
+				set_type (l_type, l_as.feature_name)
 				if not attached l_vuar1 then
 					create l_vuar1
 					if l_arg_pos = 0 then
@@ -4138,18 +4137,22 @@ feature {NONE} -- Visitor
 			is_assigner_call := attached assigner_source
 			reset_for_unqualified_call_checking
 			l_as.call.process (Current)
-			if last_type /= Void and then last_type.is_void and then not is_assigner_call then
-				create l_vkcn3
-				context.init_error (l_vkcn3)
-				l_vkcn3.set_location (l_as.call.end_location)
-				if attached context.written_class as cl then
-					l_list := match_list_of_class (cl.class_id)
-					if l_list /= Void and then l_as.call.is_text_available (l_list) then
-						l_vkcn3.set_called_feature (l_as.call.text (l_list))
+			if attached last_type as t then
+				if t.is_void and then not is_assigner_call then
+					create l_vkcn3
+					context.init_error (l_vkcn3)
+					l_vkcn3.set_location (l_as.call.end_location)
+					if attached context.written_class as cl then
+						l_list := match_list_of_class (cl.class_id)
+						if l_list /= Void and then l_as.call.is_text_available (l_list) then
+							l_vkcn3.set_called_feature (l_as.call.text (l_list))
+						end
 					end
+					error_handler.insert_error (l_vkcn3)
+					reset_types
+				else
+					set_type (t, l_as)
 				end
-				error_handler.insert_error (l_vkcn3)
-				reset_types
 			end
 
 			-- Nothing to be done for `last_byte_node' as it was computed in previous call
@@ -4917,13 +4920,14 @@ feature {NONE} -- Visitor
 				l_as.expr.process (Current)
 					-- Restore scope information.
 				context.set_scope (s)
-				if last_type /= Void then
+				if attached last_type as t then
+					set_type (t, l_as)
 					if not l_saved_vaol_check then
 							-- Reset flag for vaol check
 						check_for_vaol := False
 					end
 
-					if last_type.conform_to (context.current_class, Void_type) or else check_for_vaol then
+					if t.conform_to (context.current_class, Void_type) or else check_for_vaol then
 							-- Not an expression
 						create l_vaol2
 						context.init_error (l_vaol2)
@@ -4940,7 +4944,7 @@ feature {NONE} -- Visitor
 						last_byte_node := l_un_old
 					end
 					if not is_inherited then
-						l_as.set_class_id (class_id_of (last_type.actual_type))
+						l_as.set_class_id (class_id_of (t.actual_type))
 					end
 				end
 			end

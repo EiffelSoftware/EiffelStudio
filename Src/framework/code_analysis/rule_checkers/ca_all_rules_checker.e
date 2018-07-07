@@ -66,6 +66,7 @@ inherit
 			process_inspect_as,
 			process_instr_call_as,
 			process_integer_as,
+			process_invariant_as,
 			process_loop_as,
 			process_nested_as,
 			process_nested_expr_as,
@@ -169,6 +170,8 @@ feature {NONE} -- Initialization
 			create inspect_post_actions
 			create instruction_call_pre_actions
 			create instruction_call_post_actions
+			create invariant_pre_actions
+			create invariant_post_actions
 			create loop_pre_actions
 			create loop_post_actions
 			create nested_pre_actions
@@ -569,6 +572,16 @@ feature {CA_STANDARD_RULE} -- Adding agents
 			instruction_call_post_actions.extend (a_action)
 		end
 
+	add_invariant_pre_action (a: PROCEDURE [INVARIANT_AS])
+		do
+			invariant_pre_actions.extend (a)
+		end
+
+	add_invariant_post_action (a: PROCEDURE [INVARIANT_AS])
+		do
+			invariant_post_actions.extend (a)
+		end
+
 	add_loop_pre_action (a_action: attached PROCEDURE [LOOP_AS])
 		do
 			loop_pre_actions.extend (a_action)
@@ -794,6 +807,8 @@ feature {NONE} -- Agent lists
 	inspect_pre_actions, inspect_post_actions: ACTION_SEQUENCE [TUPLE [INSPECT_AS]]
 
 	instruction_call_pre_actions, instruction_call_post_actions: ACTION_SEQUENCE [TUPLE [INSTR_CALL_AS]]
+
+	invariant_pre_actions, invariant_post_actions: ACTION_SEQUENCE [INVARIANT_AS]
 
 	loop_pre_actions, loop_post_actions: ACTION_SEQUENCE [TUPLE [LOOP_AS]]
 
@@ -1119,6 +1134,13 @@ feature {NONE} -- Processing
 			instruction_call_pre_actions.call ([a_call])
 			Precursor (a_call)
 			instruction_call_post_actions.call ([a_call])
+		end
+
+	process_invariant_as (a: INVARIANT_AS)
+		do
+			invariant_pre_actions.call (a)
+			Precursor (a)
+			invariant_post_actions.call (a)
 		end
 
 	process_loop_as (a_loop: LOOP_AS)

@@ -238,6 +238,18 @@ feature -- Visit nodes
 					append_tag_close_empty
 				end
 			end
+				-- Add a manifest array type setting.
+			if
+				attached a_target.internal_options as o and then
+				attached o.array_override as array_override and then
+				array_override.is_set and then
+				includes_this_or_after (namespace_1_18_0)
+			then
+				append_tag_open ({STRING_32} "setting")
+				append_text_attribute ("name", s_manifest_array_type)
+				append_text_attribute ("value", array_override.item)
+				append_tag_close_empty
+			end
 			if
 				attached a_target.internal_options as o and then
 				attached o.concurrency_capability as concurrency_capability and then

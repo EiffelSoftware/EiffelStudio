@@ -920,6 +920,13 @@ feature {NONE} -- Implementation attribute processing
 										-- The setting is not available in this XML schema.
 									set_parse_error_message (conf_interface_names.e_parse_incorrect_setting (l_name))
 								end
+							elseif l_name.same_string (s_manifest_array_type) then
+								if l_current_target.changeable_internal_options.array_override.is_valid_item (l_value) then
+									l_current_target.changeable_internal_options.array_override.put (l_value)
+								else
+										-- The value is invalid.
+									set_parse_error_message (conf_interface_names.e_parse_incorrect_setting_value (l_name))
+								end
 							else
 								l_current_target.add_setting (l_name, l_value)
 							end

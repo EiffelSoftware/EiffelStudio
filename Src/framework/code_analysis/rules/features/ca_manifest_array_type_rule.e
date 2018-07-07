@@ -235,7 +235,11 @@ feature {NONE} -- Checking the rule
 	process_call (a: CALL_AS; t: TYPE_A)
 			-- Check arguments of `a` called on type `t` for rule violations.
 		do
-			if attached {ACCESS_FEAT_AS} a as g then
+			if attached {STATIC_ACCESS_AS} a as g then
+					-- Use explicit type.
+				process_argument_list (g.internal_parameters, g.feature_name, g, current_context.node_type (g.class_type, current_feature))
+			elseif attached {ACCESS_FEAT_AS} a as g then
+					-- Use context type.
 				process_argument_list (g.internal_parameters, g.feature_name, g, t)
 			end
 		end
@@ -281,7 +285,7 @@ feature {NONE} -- Checking the rule
 					actual_arguments := a.new_cursor
 				loop
 					if attached t.base_class as b then
-						check_array_type (actual_arguments.item, formal_argument.item.instantiation_in (t, b.class_id))
+						check_array_type (actual_arguments.item, formal_argument.item.evaluated_type_in_descendant (c,b,current_feature).instantiation_in (t, b.class_id))
 					end
 					actual_arguments.forth
 				end

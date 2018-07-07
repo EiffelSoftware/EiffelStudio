@@ -31,7 +31,7 @@ feature {NONE} -- Creation
 			-- <Precursor>
 		do
 			Precursor
-			create {ARRAYED_STACK [FEATURE_I]} current_feature.make (1)
+			create {ARRAYED_STACK [FEATURE_I]} current_features.make (1)
 		end
 
 feature {NONE} -- Activation
@@ -86,53 +86,64 @@ feature {NONE} -- State
 
 feature {NONE} -- Checking the rule
 
-	current_feature: STACK [FEATURE_I]
+	current_feature: detachable FEATURE_I
+			-- A feature currently being processed (Void for class invariant).
+		local
+			fs: like current_features
+		do
+			fs := current_features
+			if not fs.is_empty then
+				Result := fs.item
+			end
+		end
+
+	current_features: STACK [FEATURE_I]
 			-- A stack of descriptors of a currently being processed features (empty for class invariant).
 
 	process_feature_start (a: FEATURE_AS)
 			-- Remember the feature `current_feature` associated with `a`.
 		do
-			current_feature.put (current_context.checking_class.feature_named_32 (a.feature_name.name_32))
+			current_features.put (current_context.checking_class.feature_named_32 (a.feature_name.name_32))
 		ensure
-			current_feature_added: current_feature.count = old current_feature.count + 1
+			current_feature_added: current_features.count = old current_features.count + 1
 		end
 
 	process_feature_end (a: FEATURE_AS)
 			-- Forget `current_feature`.
 		do
 			check
-				current_feature_exists: not current_feature.is_empty
-				current_feature_expected: current_feature.item = current_context.checking_class.feature_named_32 (a.feature_name.name_32)
+				current_feature_exists: attached current_feature
+				current_feature_expected: current_feature = current_context.checking_class.feature_named_32 (a.feature_name.name_32)
 			end
-			current_feature.remove
+			current_features.remove
 		ensure
-			current_feature_removed: current_feature.count = old current_feature.count - 1
+			current_feature_removed: current_features.count = old current_features.count - 1
 		end
 
 	process_agent_start (a: INLINE_AGENT_CREATION_AS)
 			-- Remember the feature `current_feature` associated with `a`.
 		do
-			current_feature.put (current_context.checking_class.feature_of_rout_id (a.routine_ids.first))
+			current_features.put (current_context.checking_class.feature_of_rout_id (a.routine_ids.first))
 		ensure
-			current_feature_added: current_feature.count = old current_feature.count + 1
+			current_feature_added: current_features.count = old current_features.count + 1
 		end
 
 	process_agent_end (a: INLINE_AGENT_CREATION_AS)
 			-- Forget `current_feature`.
 		do
 			check
-				current_feature_exists: not current_feature.is_empty
-				current_feature_expected: current_feature.item = current_context.checking_class.feature_of_rout_id (a.routine_ids.first)
+				current_feature_exists: attached current_feature
+				current_feature_expected: current_feature = current_context.checking_class.feature_of_rout_id (a.routine_ids.first)
 			end
-			current_feature.remove
+			current_features.remove
 		ensure
-			current_feature_removed: current_feature.count = old current_feature.count - 1
+			current_feature_removed: current_features.count = old current_features.count - 1
 		end
 
 	process_assign (a: ASSIGN_AS)
 			-- Check `a` for rule violations.
 		do
-			check_array_type (a.source, current_context.node_type (a.target, current_feature.item))
+			check_array_type (a.source, current_context.node_type (a.target, current_feature))
 		end
 
 	process_binary (a: BINARY_AS)
@@ -142,7 +153,7 @@ feature {NONE} -- Checking the rule
 		do
 			c := current_context.checking_class
 			if
-				attached current_context.node_type (a.left, current_feature.item) as left_type and then
+				attached current_context.node_type (a.left, current_feature) as left_type and then
 				attached system.class_of_id (a.class_id) as operator_class and then
 				attached operator_class.feature_of_rout_id (a.routine_ids.first) as operator_feature
 			then
@@ -154,7 +165,7 @@ feature {NONE} -- Checking the rule
 			-- Check operand of `a` for rule violations.
 		do
 			if
-				attached current_context.node_type (a.target, current_feature.item) as target_type and then
+				attached current_context.node_type (a.target, current_feature) as target_type and then
 				attached system.class_of_id (a.class_id) as operator_class and then
 				attached operator_class.feature_of_rout_id (a.routine_ids.first) as operator_feature
 			then
@@ -177,13 +188,13 @@ feature {NONE} -- Checking the rule
 	process_nested (a: NESTED_AS)
 			-- Check arguments of the call in `a` for rule violations.
 		do
-			process_call (a.message, current_context.node_type (a.target, current_feature.item))
+			process_call (a.message, current_context.node_type (a.target, current_feature))
 		end
 
 	process_nested_expr (a: NESTED_EXPR_AS)
 			-- Check arguments of the call in `a` for rule violations.
 		do
-			process_call (a.message, current_context.node_type (a.target, current_feature.item))
+			process_call (a.message, current_context.node_type (a.target, current_feature))
 		end
 
 	process_precursor (a: PRECURSOR_AS)
@@ -216,7 +227,7 @@ feature {NONE} -- Checking the rule
 					a.class_id /= 0 and then
 					a.routine_ids.first /= 0 and then
 					attached p and then
-					attached current_context.node_type (p, current_feature.item) as q
+					attached current_context.node_type (p, current_feature) as q
 				then
 						-- It must be a parenthesis call.
 					process_arguments (actual_arguments, a, q)
@@ -240,7 +251,9 @@ feature {NONE} -- Checking the rule
 				from
 					actual_arguments := a.new_cursor
 				loop
-					check_array_type (actual_arguments.item, formal_argument.item.instantiation_in (t, current_context.checking_class.class_id))
+					if attached t.base_class as b then
+						check_array_type (actual_arguments.item, formal_argument.item.instantiation_in (t, b.class_id))
+					end
 					actual_arguments.forth
 				end
 			end
@@ -250,7 +263,7 @@ feature {NONE} -- Checking the rule
 			-- Check that the expression `e` is a manifest array which type matches the target type `t` of a reattachment.
 		local
 			array_type: TYPE_A
-			tuple_expressions: like {EIFFEL_LIST [EXPR_AS]}.new_cursor
+			v: like {EIFFEL_LIST [EXPR_AS]}.new_cursor
 			violation: CA_RULE_VIOLATION
 			c: CLASS_C
 			f: FEATURE_I
@@ -258,7 +271,7 @@ feature {NONE} -- Checking the rule
 			if attached {ARRAY_AS} e as a then
 				if not attached a.type then
 					c := current_context.checking_class
-					f := current_feature.item
+					f := current_feature
 					array_type := current_context.node_type (a, f).as_normally_attached (c)
 					if
 						attached {GEN_TYPE_A} t.conformance_type.as_normally_attached (c) as target_type and then
@@ -291,12 +304,12 @@ feature {NONE} -- Checking the rule
 					generics.count = expressions.count
 				then
 					across
-						generics as generic
+						generics as g
 					from
-						tuple_expressions := expressions.new_cursor
+						v := expressions.new_cursor
 					loop
-						check_array_type (tuple_expressions.item, generics.item)
-						tuple_expressions.forth
+						check_array_type (v.item, g.item)
+						v.forth
 					end
 				end
 			elseif attached {PARAN_AS} e as p then

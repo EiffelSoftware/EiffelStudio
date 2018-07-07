@@ -32,6 +32,12 @@ feature {NONE} -- Creation
 			separate create {separate TEST}.make as x do x (<<>>) end
 			;(agent (x: TEST) do x (<<>>) end (Current)).do_nothing
 			a.do_nothing
+		ensure
+			plus (<<>>) = Current
+			Current.plus (<<>>) = Current
+			Current + <<>> = Current
+			Current [<<>>] = Current
+			agent (x: TEST) do x (<<>>) end (Current) /= Current
 		end
 
 feature
@@ -57,4 +63,10 @@ feature
 			Result := Precursor
 		end
 
+invariant
+			plus (<<>>) = Current
+			Current.plus (<<>>) = Current
+			Current + <<>> = Current
+			Current [<<>>] = Current
+			agent (x: TEST) do x (<<>>) end (Current) /= Current
 end

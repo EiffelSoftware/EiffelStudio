@@ -1125,7 +1125,12 @@ feature -- Duplication
 				end
 			elseif not is_implicitly_attached then
 					-- Mark the type as implicitly attached in void-unsafe mode.
-				Result := as_implicitly_attached
+				if has_detachable_mark then
+					Result := as_attachment_mark_free
+					Result.set_is_implicitly_attached
+				else
+					Result := as_implicitly_attached
+				end
 			else
 				Result:= Current
 			end

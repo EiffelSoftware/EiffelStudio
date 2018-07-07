@@ -5,9 +5,6 @@
 			The type of the manifest array does not match the array type of the target.
 			This may lead to cat-calls.
 		]"
-	author: "Alexander Kogtenkov"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class
 	CA_MANIFEST_ARRAY_TYPE_RULE
@@ -39,8 +36,12 @@ feature {NONE} -- Activation
 	register_actions (c: CA_ALL_RULES_CHECKER)
 			-- <Precursor>
 		do
+				-- Context setup.
 			c.add_feature_pre_action (agent process_feature_start)
 			c.add_feature_post_action (agent process_feature_end)
+			c.add_invariant_pre_action (agent process_invariant_start)
+			c.add_invariant_post_action (agent process_invariant_end)
+				-- Processing.
 			c.add_assign_pre_action (agent process_assign)
 			c.add_binary_pre_action (agent process_binary)
 			c.add_bracket_pre_action (agent process_bracket)
@@ -84,17 +85,14 @@ feature {NONE} -- State
 	checker: CA_ALL_RULES_CHECKER
 			-- Code analysis iterator.
 
-feature {NONE} -- Checking the rule
+feature {NONE} -- Context
 
-	current_feature: detachable FEATURE_I
+	current_feature: FEATURE_I
 			-- A feature currently being processed (Void for class invariant).
-		local
-			fs: like current_features
+		require
+			has_current_feature: not current_features.is_empty
 		do
-			fs := current_features
-			if not fs.is_empty then
-				Result := fs.item
-			end
+			Result := current_features.item
 		end
 
 	current_features: STACK [FEATURE_I]
@@ -119,6 +117,37 @@ feature {NONE} -- Checking the rule
 		ensure
 			current_feature_removed: current_features.count = old current_features.count - 1
 		end
+
+	process_invariant_start (a: INVARIANT_AS)
+			-- Remember the feature `current_feature` associated with `a`.
+		do
+			if attached current_context.checking_class.invariant_feature as f then
+				current_features.put (f)
+			end
+		ensure
+			current_feature_added: attached current_context.checking_class.invariant_feature implies current_features.count = old current_features.count + 1
+			no_current_feature: not attached current_context.checking_class.invariant_feature implies current_features.count = old current_features.count
+		end
+
+	process_invariant_end (a: INVARIANT_AS)
+			-- Forget `current_feature`.
+		do
+			if attached current_feature then
+				check
+					current_feature_expected: current_feature = current_context.checking_class.invariant_feature
+				end
+				current_features.remove
+			else
+				check
+					no_invariant_feature: not attached current_context.checking_class.invariant_feature
+				end
+			end
+		ensure
+			current_feature_removed: attached current_context.checking_class.invariant_feature implies current_features.count = old current_features.count - 1
+			no_current_feature: not attached current_context.checking_class.invariant_feature implies current_features.count = old current_features.count
+		end
+
+feature {NONE} -- Checking the rule
 
 	process_agent_start (a: INLINE_AGENT_CREATION_AS)
 			-- Remember the feature `current_feature` associated with `a`.
@@ -318,6 +347,9 @@ feature {NONE} -- Checking the rule
 		end
 
 note
+	date: "$Date$"
+	revision: "$Revision$"
+	author: "Alexander Kogtenkov"
 	copyright:	"Copyright (c) 2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

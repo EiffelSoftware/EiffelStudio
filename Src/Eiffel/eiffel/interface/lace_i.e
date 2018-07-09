@@ -64,6 +64,8 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_DEGREES
+
 create
 	make
 
@@ -1477,6 +1479,22 @@ feature {NONE} -- Implementation
 					system.set_total_order_on_reals (true_boolean_settings.has (s_total_order_on_reals))
 				end
 			end
+
+			if
+				workbench.has_compilation_started and then
+				a_target.options.array_override.index /= system.array_override
+			then
+					-- Recheck all compiled classes using the new array override setting.
+				across
+					system.classes as cc
+				loop
+					if attached cc.item as c and then c.is_valid and then not c.is_precompiled then
+						degree_3.insert_class (c)
+						c.set_need_type_check (True)
+					end
+				end
+			end
+			system.set_array_override (a_target.options.array_override.index)
 
 			l_s := l_settings.item (s_use_cluster_name_as_namespace)
 			if l_s /= Void then

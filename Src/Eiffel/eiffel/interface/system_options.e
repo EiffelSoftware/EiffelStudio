@@ -123,6 +123,10 @@ feature -- Access
 			-- comparing NaN with another NaN will yield True and not False as usually
 			-- done in IEEE arithmetic.
 
+	array_override: like {CONF_TARGET_OPTION}.array_override.index
+			-- An index of an option that controls whether a system overrides manifest array type checks for code that does not use standard manifest array semantics.
+			-- See `{CONF_TARGET_OPTION}.array_override`.
+
 feature -- Access: IL code generation
 
 	use_cluster_as_namespace, use_all_cluster_as_namespace: BOOLEAN
@@ -583,6 +587,20 @@ feature -- Update
 			total_order_on_reals := v
 		ensure
 			total_order_on_reals_set: total_order_on_reals = v
+		end
+
+	set_array_override (v: like array_override)
+			-- Set `array_override` to `v`.
+		require
+			valid_value:
+				v = {CONF_TARGET_OPTION}.array_override_index_default or
+				v = {CONF_TARGET_OPTION}.array_override_index_standard or
+				v = {CONF_TARGET_OPTION}.array_override_index_mismatch_warning or
+				v = {CONF_TARGET_OPTION}.array_override_index_mismatch_error
+		do
+			array_override := v
+		ensure
+			array_override_set: array_override = v
 		end
 
 feature -- Status report

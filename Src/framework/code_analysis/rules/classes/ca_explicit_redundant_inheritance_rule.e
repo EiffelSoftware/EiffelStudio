@@ -71,7 +71,7 @@ feature {NONE} -- Rule checking
 						-- Only complain if there are no export, redefine, rename, select and undefine clauses.
 					if ic.item.exports = Void and then ic.item.redefining = Void and then ic.item.renaming = Void and then ic.item.selecting = Void and then ic.item.undefining = Void then
 						l_parent_class_name := ic.item.type.class_name.name_32
-						if l_seen_parents.has (ic.item.type.class_name.name_32) and then l_seen_parents.at (ic.item.type.class_name.name_32) = false then
+						if l_seen_parents.has (ic.item.type.class_name.name_32) and then not l_seen_parents.at (ic.item.type.class_name.name_32) then
 							create l_viol.make_with_rule (Current)
 							l_viol.set_location (ic.item.start_location)
 							l_viol.long_description_info.extend (l_parent_class_name)

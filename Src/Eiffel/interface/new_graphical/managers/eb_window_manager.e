@@ -122,25 +122,21 @@ feature -- Basic operations
 			-- Create a new development window and update `last_created_window'.
 		local
 			l_director: EB_DEVELOPMENT_WINDOW_DIRECTOR
-			l_window: EB_DEVELOPMENT_WINDOW
 		do
 			create l_director.make
 			l_director.construct
-			l_window := l_director.develop_window
-			initialize_window (l_window, True)
+			initialize_window (l_director.develop_window, True)
 		end
 
 	load_window_session_data (a_dev_window: EB_DEVELOPMENT_WINDOW)
 			-- Load `a_dev_window''s session data.
 			-- If `a_dev_window' is void, a new development window will be created.
 		local
-			l_window: EB_DEVELOPMENT_WINDOW
 			l_director: EB_DEVELOPMENT_WINDOW_DIRECTOR
 		do
 			create l_director.make
 			l_director.construct_with_session_data (a_dev_window)
-			l_window := l_director.develop_window
-			initialize_window (l_window, False)
+			initialize_window (l_director.develop_window, False)
 		end
 
 	initialize_window (a_window: EB_DEVELOPMENT_WINDOW; a_new_window: BOOLEAN)
@@ -203,10 +199,11 @@ feature -- Access
 			until
 				managed_windows.after
 			loop
-				if attached {EB_DEVELOPMENT_WINDOW} managed_windows.item as a_dev then
-					if a_dev.editors_manager.is_class_editing (a_class) then
-						Result.extend (a_dev)
-					end
+				if
+					attached {EB_DEVELOPMENT_WINDOW} managed_windows.item as a_dev and then
+					a_dev.editors_manager.is_class_editing (a_class)
+				then
+					Result.extend (a_dev)
 				end
 				managed_windows.forth
 			end
@@ -271,11 +268,10 @@ feature {EB_SHARED_INTERFACE_TOOLS, EB_COMMAND} -- Access
 			loop
 				if
 					attached {EB_DEVELOPMENT_WINDOW} managed_windows.item as a_dev and then
-					not a_dev.is_recycled
+					not a_dev.is_recycled and then
+					a_dev.editors_manager.changed
 				then
-					if a_dev.editors_manager.changed then
-						Result.append (a_dev.editors_manager.changed_classes)
-					end
+					Result.append (a_dev.editors_manager.changed_classes)
 				end
 				managed_windows.forth
 			end
@@ -310,7 +306,7 @@ feature -- Status report
 	has_active_development_windows: BOOLEAN
 			-- Are there any active development window up?
 		do
-			Result := (development_windows_count /= 0)
+			Result := development_windows_count /= 0
 		end
 
 	has_modified_windows: BOOLEAN
@@ -330,7 +326,7 @@ feature -- Status report
 				managed_windows.forth
 			end
 			if not Result then
-				Result := (dynamic_lib_window_is_valid and then dynamic_lib_window.changed)
+				Result := dynamic_lib_window_is_valid and then dynamic_lib_window.changed
 			end
 			managed_windows.go_i_th (l_index)
 		end
@@ -386,7 +382,7 @@ feature -- Status report
 			if not focused_windows.is_empty then
 				Result := focused_windows.last
 			elseif not managed_windows.is_empty then
-				l_list := managed_windows.twin
+				l_list := managed_windows
 				Result := l_list.last
 			end
 		end
@@ -467,28 +463,19 @@ feature -- Query
 			-- `Result': A list of editors editing the supplied class.
 		require
 			a_class_attached: a_class /= Void
-		local
-			l_windows: like windows
-			l_editor_manager: EB_EDITORS_MANAGER
-			l_editor: EB_SMART_EDITOR
-			l_editors: ARRAYED_LIST [EB_SMART_EDITOR]
 		do
 			create Result.make_default
-
-			l_windows := windows
-			if l_windows /= Void and then not l_windows.is_empty then
+			if attached windows as l_windows then
 				from l_windows.start until l_windows.after loop
-					if attached {EB_DEVELOPMENT_WINDOW} l_windows.item_for_iteration as l_dev_window then
-						l_editor_manager := l_dev_window.editors_manager
-						if l_editor_manager /= Void then
-							l_editors := l_editor_manager.editor_editing (a_class)
-							if l_editors /= Void and then not l_editors.is_empty then
-								from l_editors.start until l_editors.after loop
-									l_editor := l_editors.item_for_iteration
-									Result.force_last (l_editor)
-									l_editors.forth
-								end
-							end
+					if
+						attached {EB_DEVELOPMENT_WINDOW} l_windows.item_for_iteration as l_dev_window and then
+						attached l_dev_window.editors_manager as l_editor_manager and then
+						attached l_editor_manager.editor_editing (a_class) as l_editors
+					then
+						across
+							l_editors as e
+						loop
+							Result.force_last (e.item)
 						end
 					end
 					l_windows.forth
@@ -855,17 +842,14 @@ feature {EB_WINDOW, EB_DEVELOPMENT_WINDOW_BUILDER} -- Events
 
 	try_to_destroy_window (a_window: EB_WINDOW)
 			-- Destroy the window if it is possible.
-			-- The window-level checks should be performed in EB_WINDOW::destroy.
+			-- The window-level checks should be performed in `{EB_WINDOW}.destroy`.
 			-- This method only takes into account the cases when closing the
 			-- window means exiting the application.
-		local
-			l_cosumer: SERVICE_CONSUMER [SESSION_MANAGER_S]
 		do
 			if development_windows_count = 1 and then attached {EB_DEVELOPMENT_WINDOW} a_window then
 				confirm_and_quit
 			else
 				if attached {EB_DEVELOPMENT_WINDOW} a_window as loc_development_window then
-					create l_cosumer
 					loc_development_window.save_window_data
 				end
 				destroy_window (a_window)
@@ -921,9 +905,8 @@ feature {NONE} -- Exit implementation
 			-- Save all windows and destroy the last development window.
 		do
 			save_all
-			if has_modified_windows then
-					-- Some windows couldn't be saved, do not exit.
-			else
+				-- Exit only when all windows have been saved.
+			if not has_modified_windows then
 				quit
 			end
 		end
@@ -944,21 +927,18 @@ feature -- Access: session data
 			-- Try to initialize the favorites with the session data.
 		local
 			retried: BOOLEAN
-			l_data: STRING_32
 		do
+				-- Give up if loading favorites has failed.
 			if not retried then
 				if favorites_storage = Void then
 					create favorites_storage
 				end
-				l_data := favorites_storage.data_from_storage
-				if l_data /= Void then
+				if attached favorites_storage.data_from_storage as l_data then
 					favorites.make_with_string (l_data)
 					if favorites.loading_error then
 						favorites_storage.store_data (Void)
 					end
 				end
-			else
-				-- Do nothing. Something is wrong
 			end
 		rescue
 			retried := True
@@ -1364,12 +1344,10 @@ feature {NONE} -- Implementation
 
 	backup_action (a_window: EB_WINDOW)
 			-- Create a backup file of the text contained in `a_window'.
-		local
-			conv_dev: EB_DEVELOPMENT_WINDOW
 		do
-			if attached {EB_DEVELOPMENT_WINDOW} a_window as a_dev_window then
-				a_dev_window.editors_manager.backup_all
-				not_backuped := not_backuped + conv_dev.editors_manager.not_backuped
+			if attached {EB_DEVELOPMENT_WINDOW} a_window as w then
+				w.editors_manager.backup_all
+				not_backuped := not_backuped + w.editors_manager.not_backuped
 			end
 		end
 
@@ -1569,7 +1547,6 @@ feature {EB_DEVELOPMENT_WINDOW} -- Implementation
 			window_titles: ARRAYED_LIST [STRING_GENERAL]
 			i: INTEGER
 			l_found: BOOLEAN
-			l_str: STRING_GENERAL
 			l_name, l_target_name: detachable STRING_32
 		do
 				-- Remember the title of all windows.
@@ -1609,14 +1586,13 @@ feature {EB_DEVELOPMENT_WINDOW} -- Implementation
 			until
 				l_found
 			loop
-				l_str := empty_title.twin
-				l_str.append (i.out)
-				if not window_titles.has (l_str) then
+				Result := empty_title.twin
+				Result.append (i.out)
+				if not window_titles.has (Result) then
 					l_found := True
 				end
 				i := i + 1
 			end
-			Result := l_str
 		end
 
 	stop_ev_application
@@ -1668,7 +1644,9 @@ feature{NONE} -- Implementation
 			-- Implementation of `compile_start_actions'
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	ca_ignore:
+		"CA033", "CA033: too long class"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

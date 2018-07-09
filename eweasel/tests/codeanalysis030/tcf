@@ -1,0 +1,11 @@
+test_name 	 ca-manifest-array-type-mismatch
+test_description A warning about manifest array type not matching the type of the target of a reattachment.
+
+copy_sub	Ace $TEST Ace
+copy_raw	a.e $CLUSTER a.e
+copy_raw	test.e $CLUSTER test.e
+
+analyze_code rule "CA093"
+analyze_code_result violation "TEST CA093:22 CA093:23 CA093:24 CA093:25 CA093:26 CA093:27 CA093:28 CA093:29 CA093:30 CA093:31 CA093:32 CA093:33 CA093:36 CA093:37 CA093:38 CA093:39 CA093:40 CA093:57 CA093:62 CA093:67 CA093:68 CA093:69 CA093:70 CA093:71"
+
+test_end

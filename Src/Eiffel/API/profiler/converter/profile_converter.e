@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 		"Converts ASCII output of profiler into the internal representation."
@@ -20,7 +20,7 @@ inherit
 create
 	make
 
-feature -- Creation
+feature {NONE} -- Creation
 
 	make (profile: like profilename; translat: PATH; s_p_config: SHARED_PROF_CONFIG; a_is_final: BOOLEAN)
 			-- Create the converter.
@@ -347,7 +347,6 @@ end
 			-- Sets up a PROFILE_DATA object for storage into the
 			-- `profile_information' object.
 		local
-			total_time: REAL_64
 			e_data: EIFFEL_PROFILE_DATA
 			c_data: C_PROFILE_DATA
 			cy_data: CYCLE_PROFILE_DATA
@@ -367,8 +366,7 @@ end
 			elseif is_c then
 				create c_data.make (number_of_calls, percentage, function_time, descendant_time, c_function)
 				if function_name.is_equal ("main") then
-					total_time := function_time + descendant_time
-					profile_information.set_total_execution_time (total_time)
+					profile_information.set_total_execution_time (function_time + descendant_time)
 				end
 				profile_information.insert_c_profiling_data (c_data)
 
@@ -488,10 +486,11 @@ end
 				end
 
 					-- Remove the leading underscore if necessary.
-				if config.leading_underscore then
-					if token_string.item(1) = '_' then
-						token_string := token_string.substring (2, token_string.count)
-					end
+				if
+					config.leading_underscore and then
+					token_string.item(1) = '_'
+				then
+					token_string := token_string.substring (2, token_string.count)
 				end
 				token_type := String_token
 			elseif next_char = '<' then
@@ -532,7 +531,7 @@ end
 						next_char := profile_string.item (string_idx)
 						create token_string.make (0)
 					until
-						not (next_char.is_digit)
+						not next_char.is_digit
 					loop
 						token_string.extend (next_char)
 						string_idx := string_idx + 1
@@ -556,7 +555,7 @@ end
 					string_idx := string_idx + 1
 					next_char := profile_string.item (string_idx)
 				until
-					not (next_char.is_digit)
+					not next_char.is_digit
 				loop
 					token_string.extend (next_char)
 					string_idx := string_idx + 1
@@ -672,7 +671,7 @@ feature {NONE} -- Commands
 				create functions.make (20)
 				io.put_string ("Creating function table. Please wait...%N")
 			until
-				translat_string.count = 0
+				translat_string.is_empty
 			loop
 					-- Initialize function / feature name.
 				create c_name.make (0)
@@ -804,7 +803,7 @@ feature {NONE} -- Constants
 	Error_token: INTEGER = 7;
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -835,4 +834,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class PROFILE_CONVERTER
+end

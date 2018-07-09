@@ -43,6 +43,7 @@ feature {NONE} -- Creation
 		do
 			Precursor
 			create concurrency.make (concurrency_name, concurrency_index_none)
+			create array_override.make (array_override_name, array_override_index_default)
 			create void_safety_capability.make (void_safety)
 			create catcall_safety_capability.make (catcall_detection)
 			create concurrency_capability.make (concurrency)
@@ -64,6 +65,7 @@ feature -- Status report
 			Result := Precursor and then
 				not catcall_safety_capability.is_root_set and then
 				not concurrency.is_set and then
+				not array_override.is_set and then
 				not concurrency_capability.is_root_set and then
 				not void_safety_capability.is_root_set
 		end
@@ -107,6 +109,23 @@ feature -- Access: concurrency
 			-- Option index for SCOOP concurrency.
 			-- This is the highest level, most restricted.
 
+feature -- Access: manifest array type checks
+
+	array_override: CONF_VALUE_CHOICE
+			-- Manifest artray type checks override.
+
+	array_override_index_default: NATURAL_8 = 1
+			-- Option index for no override.
+
+	array_override_index_standard: NATURAL_8 = 2
+			-- Option index for override with standard behavior.
+
+	array_override_index_mismatch_warning: NATURAL_8 = 3
+			-- Option index for override with mismatch warning.
+
+	array_override_index_mismatch_error: NATURAL_8 = 4
+			-- Option index for override with mismatch error.
+
 feature -- Merging
 
 	merge (other: like Current)
@@ -118,6 +137,8 @@ feature -- Merging
 				-- Merge CAT-call and void safety: only root settings need to be merged because capabilities are merged by precursor.
 			catcall_safety_capability.set_safely_root (other.catcall_safety_capability)
 			void_safety_capability.set_safely_root (other.void_safety_capability)
+				-- Merge manifest array type settings.
+			array_override.set_safely (other.array_override)
 		end
 
 feature -- Duplication
@@ -134,6 +155,7 @@ feature -- Duplication
 				concurrency_capability.put_root_index (other.concurrency_capability.custom_root_index)
 				create void_safety_capability.make (void_safety)
 				void_safety_capability.put_root_index (other.void_safety_capability.custom_root_index)
+				array_override := other.array_override.twin
 			end
 		end
 
@@ -146,6 +168,21 @@ feature {NONE} -- Access: concurrency
 					{CONF_CONSTANTS}.concurrency_multithreaded_name.as_string_32,
 					{CONF_CONSTANTS}.concurrency_none_name.as_string_32,
 					{CONF_CONSTANTS}.concurrency_scoop_name.as_string_32
+				>>
+		ensure
+			result_attached: Result /= Void
+		end
+
+feature {NONE} -- Access: manifest array type
+
+	array_override_name: ARRAY [READABLE_STRING_32]
+			-- Available values for `manifest_array_type` setting.
+		once
+			Result := <<
+					{CONF_CONSTANTS}.sv_array_default,
+					{CONF_CONSTANTS}.sv_array_standard,
+					{CONF_CONSTANTS}.sv_array_mismatch_warning,
+					{CONF_CONSTANTS}.sv_array_mismatch_error
 				>>
 		ensure
 			result_attached: Result /= Void

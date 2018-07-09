@@ -473,6 +473,8 @@ invariant
 	auto_export_debugger_profiles_enabled_preference_not_void: auto_export_debugger_profiles_enabled_preference /= Void
 
 note
+	ca_ignore:
+		"CA093", "CA093: manifest array type mismatch"
 	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

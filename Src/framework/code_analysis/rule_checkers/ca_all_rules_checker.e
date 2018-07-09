@@ -66,6 +66,7 @@ inherit
 			process_inspect_as,
 			process_instr_call_as,
 			process_integer_as,
+			process_invariant_as,
 			process_loop_as,
 			process_nested_as,
 			process_nested_expr_as,
@@ -151,6 +152,8 @@ feature {NONE} -- Initialization
 			create eiffel_list_post_actions
 			create elseif_pre_actions
 			create elseif_post_actions
+			create expression_call_pre_actions
+			create expression_call_post_actions
 			create feature_pre_actions
 			create feature_post_actions
 			create feature_clause_pre_actions
@@ -167,10 +170,14 @@ feature {NONE} -- Initialization
 			create inspect_post_actions
 			create instruction_call_pre_actions
 			create instruction_call_post_actions
+			create invariant_pre_actions
+			create invariant_post_actions
 			create loop_pre_actions
 			create loop_post_actions
 			create nested_pre_actions
 			create nested_post_actions
+			create nested_expr_pre_actions
+			create nested_expr_post_actions
 			create object_test_pre_actions
 			create object_test_post_actions
 			create once_pre_actions
@@ -475,6 +482,16 @@ feature {CA_STANDARD_RULE} -- Adding agents
 			elseif_post_actions.extend (a_action)
 		end
 
+	add_expression_call_pre_action (a: attached PROCEDURE [EXPR_CALL_AS])
+		do
+			expression_call_pre_actions.extend (a)
+		end
+
+	add_expression_call_post_action (a: attached PROCEDURE [EXPR_CALL_AS])
+		do
+			expression_call_post_actions.extend (a)
+		end
+
 	add_feature_pre_action (a_action: attached PROCEDURE [FEATURE_AS])
 		do
 			feature_pre_actions.extend (a_action)
@@ -555,6 +572,16 @@ feature {CA_STANDARD_RULE} -- Adding agents
 			instruction_call_post_actions.extend (a_action)
 		end
 
+	add_invariant_pre_action (a: PROCEDURE [INVARIANT_AS])
+		do
+			invariant_pre_actions.extend (a)
+		end
+
+	add_invariant_post_action (a: PROCEDURE [INVARIANT_AS])
+		do
+			invariant_post_actions.extend (a)
+		end
+
 	add_loop_pre_action (a_action: attached PROCEDURE [LOOP_AS])
 		do
 			loop_pre_actions.extend (a_action)
@@ -573,6 +600,16 @@ feature {CA_STANDARD_RULE} -- Adding agents
 	add_nested_post_action (a_action: attached PROCEDURE [NESTED_AS])
 		do
 			nested_post_actions.extend (a_action)
+		end
+
+	add_nested_expr_pre_action (a: PROCEDURE [NESTED_EXPR_AS])
+		do
+			nested_expr_pre_actions.extend (a)
+		end
+
+	add_nested_expr_post_action (a: PROCEDURE [NESTED_EXPR_AS])
+		do
+			nested_expr_post_actions.extend (a)
 		end
 
 	add_object_test_pre_action (a_action: attached PROCEDURE [OBJECT_TEST_AS])
@@ -753,6 +790,8 @@ feature {NONE} -- Agent lists
 
 	elseif_pre_actions, elseif_post_actions: ACTION_SEQUENCE [TUPLE [ELSIF_AS]]
 
+	expression_call_pre_actions, expression_call_post_actions: ACTION_SEQUENCE [EXPR_CALL_AS]
+
 	feature_pre_actions, feature_post_actions: ACTION_SEQUENCE [TUPLE [FEATURE_AS]]
 
 	feature_clause_pre_actions, feature_clause_post_actions: ACTION_SEQUENCE [TUPLE [FEATURE_CLAUSE_AS]]
@@ -769,9 +808,13 @@ feature {NONE} -- Agent lists
 
 	instruction_call_pre_actions, instruction_call_post_actions: ACTION_SEQUENCE [TUPLE [INSTR_CALL_AS]]
 
+	invariant_pre_actions, invariant_post_actions: ACTION_SEQUENCE [INVARIANT_AS]
+
 	loop_pre_actions, loop_post_actions: ACTION_SEQUENCE [TUPLE [LOOP_AS]]
 
 	nested_pre_actions, nested_post_actions: ACTION_SEQUENCE [TUPLE [NESTED_AS]]
+
+	nested_expr_pre_actions, nested_expr_post_actions: ACTION_SEQUENCE [NESTED_EXPR_AS]
 
 	object_test_pre_actions, object_test_post_actions: ACTION_SEQUENCE [TUPLE [OBJECT_TEST_AS]]
 
@@ -1030,8 +1073,11 @@ feature {NONE} -- Processing
 		end
 
 	process_expr_call_as (a: EXPR_CALL_AS)
+			-- <Precursor>
 		do
+			expression_call_pre_actions.call (a)
 			Precursor (a)
+			expression_call_post_actions.call (a)
 		end
 
 	process_feature_as (a_feature: FEATURE_AS)
@@ -1090,6 +1136,13 @@ feature {NONE} -- Processing
 			instruction_call_post_actions.call ([a_call])
 		end
 
+	process_invariant_as (a: INVARIANT_AS)
+		do
+			invariant_pre_actions.call (a)
+			Precursor (a)
+			invariant_post_actions.call (a)
+		end
+
 	process_loop_as (a_loop: LOOP_AS)
 		do
 			loop_pre_actions.call ([a_loop])
@@ -1114,11 +1167,13 @@ feature {NONE} -- Processing
 		local
 			old_is_assigner_call: BOOLEAN
 		do
+			nested_expr_pre_actions.call (a)
 			old_is_assigner_call := is_assigner_call
 			is_assigner_call := False
 			a.target.process (Current)
 			is_assigner_call := old_is_assigner_call
 			a.message.process (Current)
+			nested_expr_post_actions.call (a)
 		end
 
 	process_object_test_as (a_ot: OBJECT_TEST_AS)

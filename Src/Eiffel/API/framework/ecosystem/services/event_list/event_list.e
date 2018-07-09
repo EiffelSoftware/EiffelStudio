@@ -1,12 +1,12 @@
-note
+﻿note
 	description: "[
 		The ecosystem's default implementation for the {EVENT_LIST_S} interface.
 		It performs the simple event of managing event items and raising the appropriate events to any and all subscribers.
 	]"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$date$";
-	revision: "$revision$"
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EVENT_LIST
@@ -284,7 +284,7 @@ feature -- Events: Connection point
 			l_result := internal_event_list_connection
 			if l_result = Void then
 				create {EVENT_CHAINED_CONNECTION [EVENT_LIST_OBSERVER, EVENT_LIST_S, LOCKABLE_OBSERVER, LOCKABLE_I]} Result.make (
-					agent (ia_observer: EVENT_LIST_OBSERVER): ARRAY [TUPLE [event: EVENT_TYPE [TUPLE]; action: PROCEDURE]]
+					agent (ia_observer: EVENT_LIST_OBSERVER): ARRAY [TUPLE [event: EVENT_TYPE [EVENT_LIST_S]; action: PROCEDURE [EVENT_LIST_S]]]
 						do
 							Result := << [item_added_event, agent ia_observer.on_event_item_added],
 								[item_adopted_event, agent ia_observer.on_event_item_adopted],
@@ -396,7 +396,7 @@ invariant
 	internal_event_items_index_contains_attached_items: not internal_event_items_index.has_item (Void)
 
 ;note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

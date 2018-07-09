@@ -498,6 +498,7 @@ feature {NONE} -- Implementation
 		once
 			Result := valid_settings_1_17_0.twin
 			Result.remove (s_msil_assembly_compatibility)
+			Result.force (s_manifest_array_type)
 		end
 
 	boolean_settings: STRING_TABLE [BOOLEAN]

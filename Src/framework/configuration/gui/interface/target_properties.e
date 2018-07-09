@@ -255,6 +255,23 @@ feature {NONE} -- Implementation
 			add_syntax_property (current_target.changeable_internal_options, current_target.options, l_extends, False)
 				-- Manifest array type checks.
 			add_array_property (current_target.changeable_internal_options, current_target.options, l_extends, False)
+			add_choice_property
+				(locale.translation_in_context ("Override manifest array type checks", "configuration.option"),
+				locale.translation_in_context ("[
+					Set override for manifest array type checks:
+						- Default: no override (use per-library settings);
+						- Standard: override default library settings by using standard semantics (compute array type from its expressions);
+						- Mismatch warning: override default library settings by raising a warning if a computed manifest array type differs from the target type of a reattachment;
+						- Mismatch error: override default library settings by raising an error if a computed manifest array type differs from the target type of a reattachment.
+				]", "configuration.option"),
+				create {ARRAYED_LIST [STRING_32]}.make_from_array
+					(<<
+						locale.translation_in_context ("Default", "configuration.option"),
+						locale.translation_in_context ("Standard", "configuration.option"),
+						locale.translation_in_context ("Mismatch warning", "configuration.option"),
+						locale.translation_in_context ("Mismatch error", "configuration.option")
+					>>),
+				current_target.changeable_internal_options.array_override, if l_extends then current_target.options.array_override else Void end)
 				-- Address expression.
 			l_bool_prop := new_boolean_property (conf_interface_names.target_address_expression_name, current_target.setting_address_expression)
 			l_bool_prop.set_description (conf_interface_names.target_address_expression_description)

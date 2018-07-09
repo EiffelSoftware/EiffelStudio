@@ -187,19 +187,28 @@ feature {NONE} -- Rule checking
 	expression_length (a_assign: attached ASSIGN_AS): INTEGER
 			-- How many characters long is the source expression of the
 			-- assignment `a_assign'?
+		local
+			leaf_list: LEAF_AS_LIST
 		do
-			Result := a_assign.source.end_position - a_assign.source.start_position + 1
+			leaf_list := System.match_list_server.item (current_context.checking_class.class_id)
+			Result := a_assign.source.last_token (leaf_list).final_position - a_assign.source.first_token (leaf_list).position + 1
 		end
 
 	create_expression_length (a_create: attached CREATION_AS): INTEGER
+		local
+			leaf_list: LEAF_AS_LIST
 		do
-			Result := a_create.end_position - a_create.start_position + 1
+			leaf_list := System.match_list_server.item (current_context.checking_class.class_id)
+			Result := a_create.last_token (leaf_list).final_position - a_create.first_token (leaf_list).position + 1
 		end
 
 	instruction_length (a_instr: attached INSTRUCTION_AS): INTEGER
 			-- How many characters long is `a_instr'?
+		local
+			leaf_list: LEAF_AS_LIST
 		do
-			Result := a_instr.end_position - a_instr.start_position + 1
+			leaf_list := System.match_list_server.item (current_context.checking_class.class_id)
+			Result := a_instr.last_token (leaf_list).final_position - a_instr.first_token (leaf_list).position + 1
 		end
 
 	suspected_variables: LINKED_LIST [ID_AS]

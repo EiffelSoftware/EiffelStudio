@@ -21,6 +21,7 @@ inherit
 			make as make_feature_id,
 			name as feature_name
 		redefine
+			index,
 			is_equivalent,
 			last_token,
 			process
@@ -136,6 +137,12 @@ feature -- Roundtrip
 			-- Internal list of parameters, in which "(" and ")" are stored
 
 feature -- Roundtrip/Token
+
+	index: INTEGER
+			-- <Precursor>
+		do
+			Result := if attached internal_parameters as p then p.index else Precursor end
+		end
 
 	last_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 		do

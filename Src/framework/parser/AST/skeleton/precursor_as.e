@@ -99,7 +99,9 @@ feature -- Roundtrip
 	index: INTEGER
 			-- <Precursor>
 		do
-			if attached precursor_keyword as k then
+			if attached internal_parameters as p then
+				Result := p.index
+			elseif attached precursor_keyword as k then
 				Result := k.index
 			end
 		end
@@ -149,7 +151,7 @@ invariant
 	parameter_count_correct: (parameters = Void implies parameter_count = 0) and (parameters /= Void implies parameter_count > 0)
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

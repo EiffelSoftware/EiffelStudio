@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that represents the display of stack and debugged objects"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -1530,13 +1530,15 @@ feature {NONE} -- Debugged objects grid Implementation
 feature {NONE} -- Constants
 
 	Left_address_delim: STRING = " <"
-	Right_address_delim: STRING = ">";
+	Right_address_delim: STRING = ">"
 
 invariant
 	debugger_manager_not_void: debugger_manager /= Void
 	objects_grids_not_void: (is_initialized and is_interface_usable) implies objects_grids /= Void
 
 note
+	ca_ignore:
+		"CA093", "CA093: manifest array type mismatch"
 	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

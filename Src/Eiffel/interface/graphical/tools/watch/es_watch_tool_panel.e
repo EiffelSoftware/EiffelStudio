@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Tool that evaluates expressions in the debugger"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -1957,6 +1957,8 @@ invariant
 	not_void_delete_expression_cmd: mini_toolbar /= Void implies delete_expression_cmd /= Void
 
 note
+	ca_ignore:
+		"CA093", "CA093: manifest array type mismatch"
 	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
@@ -1988,5 +1990,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class ES_WATCH_TOOL
-
+end

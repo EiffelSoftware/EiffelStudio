@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Recent project preferences."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -114,7 +114,9 @@ invariant
 	preferences_not_void: preferences /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	ca_ignore:
+		"CA093", "CA093: manifest array type mismatch"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

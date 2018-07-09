@@ -258,11 +258,11 @@ feature {NONE} -- Implementation
 			add_choice_property
 				(locale.translation_in_context ("Override manifest array type checks", "configuration.option"),
 				locale.translation_in_context ("[
-					Set override for manifest array type checks:
+					Set override for manifest array type checks in the code that does not use the standard semantics:
 						- Default: no override (use per-library settings);
-						- Standard: override default library settings by using standard semantics (compute array type from its expressions);
-						- Mismatch warning: override default library settings by raising a warning if a computed manifest array type differs from the target type of a reattachment;
-						- Mismatch error: override default library settings by raising an error if a computed manifest array type differs from the target type of a reattachment.
+						- Standard: override library settings by using standard semantics (compute an array type from its expressions);
+						- Mismatch warning: override library settings by raising a warning if a computed manifest array type differs from the target type of a reattachment;
+						- Mismatch error: override library settings by raising an error if a computed manifest array type differs from the target type of a reattachment.
 				]", "configuration.option"),
 				create {ARRAYED_LIST [STRING_32]}.make_from_array
 					(<<

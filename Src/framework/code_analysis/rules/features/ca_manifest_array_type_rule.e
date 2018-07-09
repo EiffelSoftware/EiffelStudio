@@ -316,12 +316,14 @@ feature {NONE} -- Checking the rule
 							(agent format_elements (?, locale.translation_in_context ("Manifest array type differs from target array type.", "code_analyzer"), <<>>),
 							agent format_elements (?, locale.translation_in_context ("[
 									Manifest array of type {1} is used in a reattachment with target type {2}:
-										- consider adding an explicit manifest array type to make sure the types are the same.
-										- disable the rule "{3}" in the code analizer preferences.
+										- add an explicit manifest array type;
+										- change target type to make sure the types are the same;
+										- disable the rule "{3}" in the code analizer preferences or add the rule {4} to the list of ignored rules of the class.
 								]", "code_analyzer"),
 								<<agent array_type.ext_append_to (?, c),
 								agent target_type.ext_append_to (?, c),
-								agent {TEXT_FORMATTER}.add (ca_names.manifest_array_type_mismatch_title)>>), Current)
+								agent {TEXT_FORMATTER}.add (ca_names.manifest_array_type_mismatch_title),
+								agent {TEXT_FORMATTER}.add (id)>>), Current)
 						violation.set_location (a.first_token (System.match_list_server.item (c.class_id)))
 						violation.fixes.extend (create {FIX_MANIFEST_ARRAY_TYPE_ADDER}.make
 							(create {CA_MANIFEST_ARRAY_TYPE_PROVIDER}.make (c.lace_class, f.e_feature, target_type, a)))

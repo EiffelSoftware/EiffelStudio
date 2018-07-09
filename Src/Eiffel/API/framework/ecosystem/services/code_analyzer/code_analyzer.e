@@ -88,7 +88,10 @@ feature -- Events: Connection point
 			Result := internal_connection
 			if not attached Result then
 				create {EVENT_CONNECTION [CODE_ANALYZER_OBSERVER [STONE, CA_RULE_VIOLATION], CODE_ANALYZER_S [STONE, CA_RULE_VIOLATION]]} Result.make (
-					agent (o: CODE_ANALYZER_OBSERVER [STONE, CA_RULE_VIOLATION]): ARRAY [TUPLE [event: EVENT_TYPE_I; action: PROCEDURE]]
+					agent (o: CODE_ANALYZER_OBSERVER [STONE, CA_RULE_VIOLATION]):
+						ARRAY [TUPLE
+							[event: EVENT_TYPE [CODE_ANALYZER_S [STONE, CA_RULE_VIOLATION]];
+							action: PROCEDURE [CODE_ANALYZER_S [STONE, CA_RULE_VIOLATION]]]]
 						do
 							Result :=
 								<<

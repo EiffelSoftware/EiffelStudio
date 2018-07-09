@@ -1,7 +1,5 @@
 ﻿note
-	description: "[
-		Base class for all EiffelStudio pixmap matrix accessor classes.
-	]"
+	description: "Base class for all EiffelStudio pixmap matrix accessor classes."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
 	date: "$Date$"
@@ -35,7 +33,7 @@ feature {NONE} -- Initialization
 		local
 			l_buffer: attached EV_PIXEL_BUFFER
 		do
-			if attached {EV_PIXEL_BUFFER} resource_handler.retrieve_matrix (a_name) as l_loaded_buffer then
+			if attached resource_handler.retrieve_matrix (a_name) as l_loaded_buffer then
 				l_buffer := l_loaded_buffer
 			else
 				if attached logger.service as s then
@@ -145,9 +143,8 @@ feature {NONE} -- Access
 			-- Key: An icon name.
 			-- Value: Icon matrix coordinates.
 		do
-			if attached {like icon_coordinates_table} internal_icon_coordinates_table as l_result then
-				Result := l_result
-			else
+			Result := internal_icon_coordinates_table
+			if not attached Result then
 				create Result.make (10)
 				populate_coordinates_table (Result)
 				internal_icon_coordinates_table := Result

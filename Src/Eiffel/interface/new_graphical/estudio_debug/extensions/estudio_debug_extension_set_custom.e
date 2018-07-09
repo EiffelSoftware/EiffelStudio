@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Custom set of extensions for Estudio debug menu ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -26,7 +26,9 @@ feature -- Access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	ca_ignore:
+		"CA093", "CA093: manifest array type mismatch"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

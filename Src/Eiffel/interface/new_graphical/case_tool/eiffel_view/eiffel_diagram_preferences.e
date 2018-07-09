@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "All shared attributes specific to the context tool."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -698,7 +698,9 @@ invariant
 	excluded_class_figures_preference_not_void: excluded_class_figures_preference /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	ca_ignore:
+		"CA093", "CA093: manifest array type mismatch"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -729,4 +731,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EIFFEL_DIAGRAM_PREFERENCES
+end

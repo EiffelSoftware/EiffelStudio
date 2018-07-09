@@ -335,9 +335,14 @@ feature -- Access
 	is_manifest_array_type_standard: BOOLEAN
 			-- Is standard manifest array typing used?
 		do
-			if options.array.is_set or else target.options.array_override.index = {CONF_TARGET_OPTION}.array_override_index_default then
-				Result := options.array.index = {CONF_OPTION}.array_index_standard
+			if options.array.index = {CONF_OPTION}.array_index_standard then
+					-- Ignore override if the current option is set to `standard`.
+				Result := True
+			elseif target.options.array_override.index = {CONF_TARGET_OPTION}.array_override_index_default then
+					-- Use current option when the override is not requested.
+				Result := False
 			else
+					-- Use override when it is requested.
 				Result := target.options.array_override.index = {CONF_TARGET_OPTION}.array_override_index_standard
 			end
 		ensure
@@ -348,9 +353,14 @@ feature -- Access
 	is_manifest_array_type_mismatch_warning: BOOLEAN
 			-- Should manifest array type mismatch be reported as a warning?
 		do
-			if options.array.is_set or else target.options.array_override.index = {CONF_TARGET_OPTION}.array_override_index_default then
+			if options.array.index = {CONF_OPTION}.array_index_standard then
+					-- Ignore override if the current option is set to `standard`.
+				Result := False
+			elseif target.options.array_override.index = {CONF_TARGET_OPTION}.array_override_index_default then
+					-- Use current option when the override is not requested.
 				Result := options.array.index = {CONF_OPTION}.array_index_mismatch_warning
 			else
+					-- Use override when it is requested.
 				Result := target.options.array_override.index = {CONF_TARGET_OPTION}.array_override_index_mismatch_warning
 			end
 		end
@@ -358,9 +368,14 @@ feature -- Access
 	is_manifest_array_type_mismatch_error: BOOLEAN
 			-- Should manifest array type mismatch be reported as an error?
 		do
-			if options.array.is_set or else target.options.array_override.index = {CONF_TARGET_OPTION}.array_override_index_default then
+			if options.array.index = {CONF_OPTION}.array_index_standard then
+					-- Ignore override if the current option is set to `standard`.
+				Result := False
+			elseif target.options.array_override.index = {CONF_TARGET_OPTION}.array_override_index_default then
+					-- Use current option when the override is not requested.
 				Result := options.array.index = {CONF_OPTION}.array_index_mismatch_error
 			else
+					-- Use override when it is requested.
 				Result := target.options.array_override.index = {CONF_TARGET_OPTION}.array_override_index_mismatch_error
 			end
 		end

@@ -1,14 +1,13 @@
-note
+﻿note
 	description: "[
-					Roundtrip compiler factory
-					It doesn't generate `match_list' during parsing.
-					Use `EIFFEL_ROUNDTRIP_SCANNER' to generate `match_list' later.
-					Or use `AST_ROUNDTRIP_COMPILER_FACTORY' to do parsing and `match_list' generating
-					at the same time.
-					]"
+			Roundtrip compiler factory
+			It doesn't generate `match_list' during parsing.
+			Use `EIFFEL_ROUNDTRIP_SCANNER' to generate `match_list' later.
+			Or use `AST_ROUNDTRIP_COMPILER_FACTORY' to do parsing and `match_list' generating
+			at the same time.
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -19,10 +18,6 @@ inherit
 	AST_ROUNDTRIP_LIGHT_FACTORY
 		undefine
 			new_array_as,
-			new_integer_as,
-			new_integer_hexa_as,
-			new_integer_octal_as,
-			new_integer_binary_as,
 			new_feature_as,
 			new_class_as,
 			new_class_type_as,
@@ -38,6 +33,11 @@ inherit
 			validate_integer_real_type,
 			validate_non_conforming_inheritance_type,
 			new_line_pragma
+		redefine
+			new_integer_as,
+			new_integer_hexa_as,
+			new_integer_octal_as,
+			new_integer_binary_as
 		end
 
 	AST_COMPILER_FACTORY
@@ -64,8 +64,6 @@ inherit
 			new_character_as, new_typed_char_as,
 			set_buffer, append_text_to_buffer,
 			new_once_string_keyword_as,
-			new_integer_as,
-			new_integer_hexa_as,
 			new_real_as,
 			new_string_as,
 			new_verbatim_string_as,
@@ -76,12 +74,17 @@ inherit
 			new_filled_id_as_with_existing_stub,
 			extend_match_list_with_stub,
 			extend_match_list
+		redefine
+			new_integer_as,
+			new_integer_hexa_as,
+			new_integer_octal_as,
+			new_integer_binary_as
 		end
 
 feature -- Roundtrip
 
 	new_integer_as (t: detachable TYPE_AS; s: BOOLEAN; v: detachable STRING; buf: detachable STRING; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cn: INTEGER): detachable INTEGER_CONSTANT
-			-- New INTEGER_AS node
+			-- <Precursor>
 		do
 			if v /= Void then
 				create Result.make_from_string (t, s, v)
@@ -92,8 +95,20 @@ feature -- Roundtrip
 			end
 		end
 
+	new_integer_binary_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cn: INTEGER): detachable INTEGER_CONSTANT
+			-- <Precursor>
+		do
+			if v /= Void then
+				create Result.make_from_binary_string (t, s, v)
+				Result.set_position (l, c, p, n, cc, cp, cn)
+				Result.set_sign_symbol (s_as)
+				increase_match_list_count
+				Result.set_index (match_list_count)
+			end
+		end
+
 	new_integer_hexa_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cn: INTEGER): detachable INTEGER_CONSTANT
-			-- New INTEGER_AS node
+			-- <Precursor>
 		do
 			if v /= Void then
 				create Result.make_from_hexa_string (t, s, v)
@@ -104,8 +119,20 @@ feature -- Roundtrip
 			end
 		end
 
+	new_integer_octal_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cn: INTEGER): detachable INTEGER_CONSTANT
+			-- <Precursor>
+		do
+			if v /= Void then
+				create Result.make_from_octal_string (t, s, v)
+				Result.set_position (l, c, p, n, cc, cp, cn)
+				Result.set_sign_symbol (s_as)
+				increase_match_list_count
+				Result.set_index (match_list_count)
+			end
+		end
+
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

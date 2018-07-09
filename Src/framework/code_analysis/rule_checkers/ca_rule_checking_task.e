@@ -91,13 +91,15 @@ feature -- From ROTA
 			-- <Precursor>
 		local
 			is_retried: BOOLEAN
+			c: CLASS_C
 		do
 			if not is_retried then
 					-- Gather type information
 				type_recorder.clear
-				type_recorder.analyze_class (classes.item)
+				c := classes.item
+				type_recorder.analyze_class (c)
 				context.set_node_types (type_recorder.node_types)
-				context.set_checking_class (classes.item)
+				context.set_checking_class (c)
 
 				across rules as l_rules loop
 						-- If rule is non-standard then it will not be checked by l_rules_checker.
@@ -106,16 +108,16 @@ feature -- From ROTA
 						l_rules.item.is_enabled.value
 						and then attached {CA_CFG_RULE} l_rules.item as l_cfg_rule
 					then
-						l_cfg_rule.check_class (classes.item)
+						l_cfg_rule.check_class (c)
 					end
 				end
 
 					-- Status output.
 				if output_actions /= Void then
-					output_actions.call ([ca_messages.analyzing_class (classes.item.name)])
+					output_actions.call ([ca_messages.analyzing_class (c.name)])
 				end
 
-				rules_checker.run_on_class (classes.item)
+				rules_checker.run_on_class (c)
 
 				classes.forth
 				has_next_step := not classes.after
@@ -124,13 +126,17 @@ feature -- From ROTA
 				end
 			end
 		rescue
-				-- Instant error output.
-			if output_actions /= Void then
-				output_actions.call ([ca_messages.error_on_class (classes.item.name)])
+			if attached c then
+					-- Instant error output.
+				if output_actions /= Void then
+					output_actions.call ([ca_messages.error_on_class (c.name)])
+				end
+				exceptions.extend ([exception_manager.last_exception, c])
 			end
-			exceptions.extend ([exception_manager.last_exception, classes.item])
-				-- Jump to the next class.
-			classes.forth
+			if not classes.after then
+					-- Jump to the next class.
+				classes.forth
+			end
 			has_next_step := not classes.after
 			if not has_next_step then
 				completed_action (exceptions)

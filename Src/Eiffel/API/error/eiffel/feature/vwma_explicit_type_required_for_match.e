@@ -59,9 +59,9 @@ feature -- Output
 			format_elements (t, locale.translation_in_context ("[
 					Error: An implicit type of the manifest array used as a source of a reattachment differs from the type of the reattachment target.
 					What to do:
-						- add an explicit manifest type;
+						- add an explicit manifest array type;
 						- change target type to make sure the types are the same;
-						- (recommended) change options to always compute a manifest array type without checking it against a target type (In project settings, set "Advanced | Language | Manifest array type" to "standard").
+						- (recommended) change options to always compute a manifest array type without checking it against a target type (In project settings, set "Advanced | Language | Manifest array type" to "Standard").
 				]", "compiler.error"),
 				<<agent target_array_type.append_to>>)
 			t.add_new_line

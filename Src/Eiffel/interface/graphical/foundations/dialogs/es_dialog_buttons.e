@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Access to all common button groups used in EiffelStudio dialogs.
 		Note: Use {ES_SHARED_DIALOG_BUTTONS} to access a shared instance. If you are using {ES_DIALOG} as a base
@@ -11,9 +11,9 @@ note
 		                     the new model. This means we have button layout inconsistencies.
 	]"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$date$";
-	revision: "$revision$"
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	ES_DIALOG_BUTTONS
@@ -223,13 +223,13 @@ feature -- Constants
 feature {NONE} -- Constants
 
 	button_id_mask: INTEGER
-			-- Button ID mask
+			-- Button ID mask.
 		once
 			Result := 0b1111111111111111
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

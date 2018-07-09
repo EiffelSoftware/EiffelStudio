@@ -1,7 +1,5 @@
-note
-	description: "[
-		Base class for all tool-specific pixmap matrix accessor classes.
-	]"
+﻿note
+	description: "Base class for all tool-specific pixmap matrix accessor classes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
@@ -37,7 +35,7 @@ feature {NONE} -- Initialization
 					-- The user has replaced the icons.
 				l_matrix := l_user_matrix
 			end
-			if attached {EV_PIXEL_BUFFER} resource_handler.retrieve_matrix (l_matrix.name) as l_buffer then
+			if attached resource_handler.retrieve_matrix (l_matrix.name) as l_buffer then
 				make_from_buffer (l_buffer)
 			else
 				if attached logger.service as l_logger_service then
@@ -71,7 +69,7 @@ feature {NONE} -- Internationalization
 	w_could_not_load_tool_icons_1: STRING = "Cannot read pixmap icon file for $1.%N%NPlease make sure the installation is not corrupted."
 
 ;note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

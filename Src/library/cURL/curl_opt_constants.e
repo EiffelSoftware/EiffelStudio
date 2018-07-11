@@ -802,7 +802,7 @@ feature -- Protocol
 		end
 
 	curlopt_mimepost: INTEGER
-			-- Declared as CURLOPT_TIMEVALUE
+			-- Declared as CURLOPT_MIMEPOST
 		external
 			"C inline use <curl/curl.h>"
 		alias

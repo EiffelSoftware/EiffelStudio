@@ -54,7 +54,7 @@ feature -- Command
 		end
 
 	setopt_string (a_curl_handle: POINTER; a_opt: INTEGER; a_string: READABLE_STRING_GENERAL)
-			-- Declared as curl_easy_setopt().
+			-- Declared as curl_easy_setopt.
 		require
 			exists: not a_curl_handle.is_default_pointer
 			valid: (create {CURL_OPT_CONSTANTS}).is_valid (a_opt)
@@ -67,7 +67,7 @@ feature -- Command
 		end
 
 	setopt_form (a_curl_handle: POINTER; a_opt: INTEGER; a_form: CURL_FORM)
-			-- Declared as curl_easy_setopt().
+			-- Declared as curl_easy_setopt.
 		require
 			exists: not a_curl_handle.is_default_pointer
 			valid: (create {CURL_OPT_CONSTANTS}).is_valid (a_opt)
@@ -77,7 +77,7 @@ feature -- Command
 		end
 
 	setopt_slist (a_curl_handle: POINTER; a_opt: INTEGER; a_curl_slist: POINTER)
-			-- Declared as curl_easy_setopt().
+			-- Declared as curl_easy_setopt.
 		require
 			exists: not a_curl_handle.is_default_pointer
 			valid: a_opt = {CURL_OPT_CONSTANTS}.curlopt_httpheader or else a_opt = {CURL_OPT_CONSTANTS}.curlopt_mail_rcpt
@@ -87,7 +87,7 @@ feature -- Command
 		end
 
 	setopt_curl_string (a_curl_handle: POINTER; a_opt: INTEGER; a_curl_string: CURL_STRING)
-			-- Declared as curl_easy_setopt().
+			-- Declared as curl_easy_setopt.
 		require
 			exists: not a_curl_handle.is_default_pointer
 			valid: (create {CURL_OPT_CONSTANTS}).is_valid (a_opt)
@@ -97,7 +97,7 @@ feature -- Command
 		end
 
 	setopt_integer (a_curl_handle: POINTER; a_opt: INTEGER; a_integer: INTEGER)
-			-- Declared as curl_easy_setopt().
+			-- Declared as curl_easy_setopt.
 		require
 			exists: not a_curl_handle.is_default_pointer
 			valid: (create {CURL_OPT_CONSTANTS}).is_valid (a_opt)
@@ -106,7 +106,7 @@ feature -- Command
 		end
 
 	setopt_file (a_curl_handle: POINTER; a_opt: INTEGER; a_file: FILE)
-			-- Declared as curl_easy_setopt().
+			-- Declared as curl_easy_setopt.
 		require
 			exists: not a_curl_handle.is_default_pointer
 			valid: a_opt = {CURL_OPT_CONSTANTS}.curlopt_readdata
@@ -116,7 +116,7 @@ feature -- Command
 		end
 
 	setopt_mime (a_curl_handle: POINTER; a_opt: INTEGER; a_mime: POINTER)
-			-- Declared as curl_easy_setopt().
+			-- Declared as curl_easy_setopt.
 		require
 			exists: not a_curl_handle.is_default_pointer
 			valid: a_opt = {CURL_OPT_CONSTANTS}.curlopt_mimepost
@@ -126,7 +126,7 @@ feature -- Command
 		end
 
 	perform (a_curl_handle: POINTER): INTEGER
-			-- Declared as curl_easy_perform().
+			-- Declared as curl_easy_perform.
 			-- Result is one value from {CURL_CODES}
 		require
 			exists: not a_curl_handle.is_default_pointer
@@ -135,7 +135,7 @@ feature -- Command
 		end
 
 	cleanup (a_curl_handle: POINTER)
-			-- Declared as curl_easy_cleanup().
+			-- Declared as curl_easy_cleanup.
 		require
 			exists: not a_curl_handle.is_default_pointer
 		do
@@ -254,7 +254,7 @@ feature {NONE} -- Implementation
 			-- cURL functions.
 
 	setopt_void_star (a_curl_handle: POINTER; a_opt: INTEGER; a_data:POINTER)
-			-- Declared as curl_easy_setopt().
+			-- Declared as curl_easy_setopt.
 		require
 			exists: not a_curl_handle.is_default_pointer
 			valid: (create {CURL_OPT_CONSTANTS}).is_valid (a_opt)
@@ -265,7 +265,7 @@ feature {NONE} -- Implementation
 feature {NONE} -- C externals
 
 	c_init (a_api: POINTER): POINTER
-			-- Declared curl_easy_init ().
+			-- Declared curl_easy_init .
 		require
 			a_api_exists: not a_api.is_default_pointer
 		external
@@ -282,7 +282,7 @@ feature {NONE} -- C externals
 		end
 
 	c_cleanup (a_api: POINTER; a_curl_handle: POINTER)
-			-- Decalred as curl_easy_cleanup ().
+			-- Decalred as curl_easy_cleanup .
 		require
 			a_api_exists: not a_api.is_default_pointer
 			exists: not a_curl_handle.is_default_pointer
@@ -300,7 +300,7 @@ feature {NONE} -- C externals
 		end
 
 	c_perform (a_api: POINTER; a_curl_handle: POINTER): INTEGER
-			-- Declared as curl_easy_perform().
+			-- Declared as curl_easy_perform.
 		require
 			a_api_exists: not a_api.is_default_pointer
 			exists: not a_curl_handle.is_default_pointer
@@ -342,7 +342,7 @@ feature {NONE} -- C externals
 
 	c_setopt (a_api: POINTER; a_curl_handle: POINTER; a_opt: INTEGER; a_data: POINTER)
 			-- C implementation of `setopt_void_star'.
-			-- Declared as curl_easy_setopt ().
+			-- Declared as curl_easy_setopt .
 		require
 			a_api_exists: not a_api.is_default_pointer
 			exists: not a_curl_handle.is_default_pointer
@@ -365,7 +365,7 @@ feature {NONE} -- C externals
 
 	c_getinfo (a_api: POINTER; a_curl_handle: POINTER; a_opt: INTEGER; a_data: POINTER): INTEGER
 			-- C implementation of `curl_easy_getinfo'.
-			-- Declared as curl_easy_setopt ().
+			-- Declared as curl_easy_setopt .
 		require
 			a_api_exists: not a_api.is_default_pointer
 			exists: not a_curl_handle.is_default_pointer

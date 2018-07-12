@@ -55,6 +55,7 @@ feature {NONE} -- Initialization
 	initialize
 			-- Initialize.
 		local
+			fr: EV_FRAME
 			main, vb: EV_VERTICAL_BOX
 			cl: EV_CELL
 			l_service: ES_GUI_IRON_SERVICE
@@ -76,9 +77,11 @@ feature {NONE} -- Initialization
 			extend (main)
 			create hsp
 			main.extend (hsp)
+			create fr
 			create vb
+			fr.extend (vb)
 
-			hsp.set_first (vb)
+			hsp.set_first (fr)
 			build_search_box (vb)
 
 			create cl
@@ -148,7 +151,7 @@ feature {NONE} -- Initialization
 
 				-- Create grid
 			create search_results_box.make (target)
-			search_results_box.set_minimum_size (600, 200)
+			search_results_box.set_minimum_size (600, 100)
 			search_results_box.on_item_selected_actions.extend (agent on_search_item_selected ({ES_LIBRARY_PROVIDER_ITEM}?))
 
 				-- Create border for the grid

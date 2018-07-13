@@ -477,7 +477,7 @@ feature {NONE} -- Implementation
 			append_text (name8)
 			if a_value /= Void and then not a_value.is_empty then
 				append_text (">")
-				append_text_escaped (a_value, True)
+				append_text_element (a_value)
 				append_text ("</")
 				append_text (name8)
 				append_text (">%N")
@@ -598,6 +598,44 @@ feature {NONE} -- Implementation
 							text.append_natural_32 (c.code.as_natural_32)
 							text.append_character (';')
 						end
+					end
+				end
+			end
+		end
+
+	append_text_element (v: READABLE_STRING_GENERAL)
+			-- Append `v', in a tag element, replacing special characters by character references,
+		require
+			attached_v: v /= Void
+		local
+			i: like {STRING_32}.count
+			m: like {STRING_32}.count
+			c: CHARACTER_32
+		do
+			from
+				m := v.count
+			until
+				i >= m
+			loop
+				i := i + 1
+				c := v [i]
+					-- Replace special markup characters with character entities
+					-- and control or non-ASCII characters with character references.
+				inspect c
+				when '<' then text.append_string_general ({XML_MARKUP_CONSTANTS}.lt_entity)
+				when '&' then text.append_string_general ({XML_MARKUP_CONSTANTS}.amp_entity)
+				else
+					if
+						'%N' = c or else
+						'%T' = c or else
+						(' ' <= c and then c <= '%/127/')
+					then
+						text.append_character (c.to_character_8)
+					else
+						text.append_character ('&')
+						text.append_character ('#')
+						text.append_natural_32 (c.code.as_natural_32)
+						text.append_character (';')
 					end
 				end
 			end

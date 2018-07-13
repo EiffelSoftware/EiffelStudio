@@ -613,6 +613,25 @@ feature -- Test
 			end
 		end
 
+	test_json_string_and_escaped_slashes
+		local
+			s: STRING
+			js: detachable JSON_STRING
+			jrep: STRING
+			parser: JSON_PARSER
+		do
+			s := "foo/bar"
+
+				-- JSON representation with escaped slash -> JSON value -> Eiffel value
+			jrep := "%"foo\/bar%""
+			create parser.make_with_string (jrep)
+			if attached {JSON_STRING} parser.next_parsed_json_value as l_js2 then
+				assert ("l_js2.unesc.is_equal (%"foo/bar%")", l_js2.unescaped_string_32.same_string_general (s))
+			else
+				assert ("parser.next_parsed_json_value /= Void", False)
+			end
+		end
+
 	test_json_string_and_uc_string
 		local
 			js: detachable JSON_STRING

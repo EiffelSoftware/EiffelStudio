@@ -548,7 +548,7 @@ feature -- Status Setting
 				end
 			end
 
-			create displayed_column_indexes.make (1, 6)
+			create displayed_column_indexes.make_filled (0, 1, 6)
 				-- Build the column headers
 				-- Note that "Function" is always displayed.
 			output_grid.insert_new_column (1)

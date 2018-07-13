@@ -161,6 +161,14 @@
 			</xs:simpleType>
 		</xs:attribute>
 		<xs:attribute name="manifest_array_type" use="optional" default="standard">
+			<xs:annotation>
+				<xs:documentation>
+					Should a manifest array type be checked against a target type of the reattachment the array is involved in?
+					- mismatch_error - yes, report an error if the types are different;
+					- mismatch_warning - yes, report a warning if the types are different;
+					- standard - no, do not perform any checks specific to manifest arrays.
+				</xs:documentation>
+			</xs:annotation>
 			<xs:simpleType>
 				<xs:restriction base="xs:string">
 					<xs:enumeration value="mismatch_error"/>
@@ -248,45 +256,56 @@
 
 	<xs:simpleType name="available_settings">
 		<xs:restriction base = "xs:string">
-			  <xs:enumeration value = "absent_explicit_assertion"/>
-			  <xs:enumeration value = "address_expression"/>
-			  <xs:enumeration value = "array_optimization"/>
-			  <xs:enumeration value = "automatic_backup"/>
-			  <xs:enumeration value = "check_for_void_target"/>
-			  <xs:enumeration value = "check_generic_creation_constraint"/>
-			  <xs:enumeration value = "check_vape"/>
-			  <xs:enumeration value = "cls_compliant"/>
-			  <xs:enumeration value = "console_application"/>
-			  <xs:enumeration value = "dead_code_removal"/>
-			  <xs:enumeration value = "dotnet_naming_convention"/>
-			  <xs:enumeration value = "dynamic_runtime"/>
-			  <xs:enumeration value = "enforce_unique_class_names"/>
-			  <xs:enumeration value = "exception_trace"/>
-			  <xs:enumeration value = "executable_name"/>
-			  <xs:enumeration value = "external_runtime"/>
-			  <xs:enumeration value = "force_32bits"/>
-			  <xs:enumeration value = "il_verifiable"/>
-			  <xs:enumeration value = "inlining"/>
-			  <xs:enumeration value = "inlining_size"/>
-			  <xs:enumeration value = "java_generation"/>
-			  <xs:enumeration value = "library_root"/>
-			  <xs:enumeration value = "line_generation"/>
-			  <xs:enumeration value = "metadata_cache_path"/>
-			  <xs:enumeration value = "msil_classes_per_module"/>
-			  <xs:enumeration value = "msil_clr_version"/>
-			  <xs:enumeration value = "msil_culture"/>
-			  <xs:enumeration value = "msil_generation"/>
-			  <xs:enumeration value = "msil_generation_type"/>
-			  <xs:enumeration value = "msil_key_file_name"/>
-			  <xs:enumeration value = "msil_use_optimized_precompile"/>
-			  <xs:enumeration value = "old_feature_replication"/>
-			  <xs:enumeration value = "old_verbatim_strings"/>
-			  <xs:enumeration value = "platform"/>
-			  <xs:enumeration value = "shared_library_definition"/>
-			  <xs:enumeration value = "total_order_on_reals"/>
-			  <xs:enumeration value = "use_all_cluster_name_as_namespace"/>
-			  <xs:enumeration value = "use_cluster_name_as_namespace"/>
-	    </xs:restriction>
+			<xs:enumeration value = "absent_explicit_assertion"/>
+			<xs:enumeration value = "address_expression"/>
+			<xs:enumeration value = "array_optimization"/>
+			<xs:enumeration value = "automatic_backup"/>
+			<xs:enumeration value = "check_for_void_target"/>
+			<xs:enumeration value = "check_generic_creation_constraint"/>
+			<xs:enumeration value = "check_vape"/>
+			<xs:enumeration value = "cls_compliant"/>
+			<xs:enumeration value = "console_application"/>
+			<xs:enumeration value = "dead_code_removal"/>
+			<xs:enumeration value = "dotnet_naming_convention"/>
+			<xs:enumeration value = "dynamic_runtime"/>
+			<xs:enumeration value = "enforce_unique_class_names"/>
+			<xs:enumeration value = "exception_trace"/>
+			<xs:enumeration value = "executable_name"/>
+			<xs:enumeration value = "external_runtime"/>
+			<xs:enumeration value = "force_32bits"/>
+			<xs:enumeration value = "il_verifiable"/>
+			<xs:enumeration value = "inlining"/>
+			<xs:enumeration value = "inlining_size"/>
+			<xs:enumeration value = "java_generation"/>
+			<xs:enumeration value = "library_root"/>
+			<xs:enumeration value = "line_generation"/>
+			<xs:enumeration value = "manifest_array_type">
+				<xs:annotation>
+					<xs:documentation>
+						An override for an option of the same name to control whether a manifest array type should be checked against a target type of the reattachment the array is involved in. The corresponding value can be one of:
+						- default (default) - rely on the option value;
+						- standard - force option value "standard" for all code used in the project;
+						- mismatch_warning - force option value "mismatch_warning" for all code except the code for which the option is set to "standard";
+						- mismatch_error - force option value "mismatch_error" for all code except the code for which the option is set to "standard".
+					</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value = "metadata_cache_path"/>
+			<xs:enumeration value = "msil_classes_per_module"/>
+			<xs:enumeration value = "msil_clr_version"/>
+			<xs:enumeration value = "msil_culture"/>
+			<xs:enumeration value = "msil_generation"/>
+			<xs:enumeration value = "msil_generation_type"/>
+			<xs:enumeration value = "msil_key_file_name"/>
+			<xs:enumeration value = "msil_use_optimized_precompile"/>
+			<xs:enumeration value = "old_feature_replication"/>
+			<xs:enumeration value = "old_verbatim_strings"/>
+			<xs:enumeration value = "platform"/>
+			<xs:enumeration value = "shared_library_definition"/>
+			<xs:enumeration value = "total_order_on_reals"/>
+			<xs:enumeration value = "use_all_cluster_name_as_namespace"/>
+			<xs:enumeration value = "use_cluster_name_as_namespace"/>
+		</xs:restriction>
 	</xs:simpleType>
 
 	<xs:complexType name="debug">

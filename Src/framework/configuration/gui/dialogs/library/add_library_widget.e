@@ -22,6 +22,7 @@ feature {NONE} -- Initialization
 	make (a_target: CONF_TARGET)
 			-- Build the name + location + browse button.
 		local
+			fr: EV_FRAME
 			vb,vb2: EV_VERTICAL_BOX
 			hb, hb2: EV_HORIZONTAL_BOX
 			l_btn: EV_BUTTON
@@ -32,8 +33,11 @@ feature {NONE} -- Initialization
 			create on_ok_actions
 			create on_cancel_actions
 
+			create fr
 			create vb2
-			widget := vb2
+			fr.extend (vb2)
+
+			widget := fr
 			vb2.set_padding (layout_constants.small_padding_size)
 			vb2.set_border_width (layout_constants.small_border_size)
 
@@ -400,7 +404,7 @@ feature {NONE} -- Actions
 invariant
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

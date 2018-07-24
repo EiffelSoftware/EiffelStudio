@@ -8,6 +8,7 @@
 			variables of expanded types.
 		]"
 	author: "Stefan Zurfluh"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -124,17 +125,11 @@ feature -- Node Visitor
 			end
 		end
 
-	visit_edge (a_from, a_to: attached CA_CFG_BASIC_BLOCK): BOOLEAN
+	visit_edge (a_from, a_to: CA_CFG_BASIC_BLOCK): BOOLEAN
 			-- Is called when a CFG edge from `a_from' to `a_to' is being visited. Here, the data
 			-- about live variables at the nodes will be updated.
-		local
-			l_from, l_to: INTEGER
 		do
-			l_from := a_from.label
-			l_to := a_to.label
-
-			Result := node_union (l_from, l_to)
-
+			Result := node_union (a_from.label, a_to.label)
 			if attached {CA_CFG_INSTRUCTION} a_from as l_instr then
 				Result := process_instr (l_instr) or Result
 			elseif attached {CA_CFG_IF} a_from as l_if then
@@ -172,7 +167,7 @@ feature {NONE} -- Implementation
 			Result := l_old_count /= lv_entry.at (a_from).count
 		end
 
-	process_instr (a_from: attached CA_CFG_INSTRUCTION): BOOLEAN
+	process_instr (a_from: CA_CFG_INSTRUCTION): BOOLEAN
 			-- Processes the instruction node `a_from'. If the instruction
 			-- is an assignment or a creation then the live variables will be
 			-- pruned. All other free variables will be added to the live variables.
@@ -204,7 +199,6 @@ feature {NONE} -- Implementation
 				if l_assigned_id /= -1 then
 					assignment_nodes.extend (a_from)
 				end
-				l_lv.prune (l_assigned_id)
 			else
 				extract_generated (a_from.instruction)
 				l_lv.merge (generated)
@@ -214,7 +208,7 @@ feature {NONE} -- Implementation
 			Result := l_old_count /= lv_entry.at (a_from.label).count
 		end
 
-	process_if (a_from: attached CA_CFG_IF): BOOLEAN
+	process_if (a_from: CA_CFG_IF): BOOLEAN
 			-- Adds to lv_entry (`a_from'): lv_exit (`a_from') with gen's added.
 			-- If something could be added then Result = True, otherwise False.
 		local
@@ -227,7 +221,7 @@ feature {NONE} -- Implementation
 			Result := l_old_count /= lv_entry.at (a_from.label).count
 		end
 
-	process_loop (a_from: attached CA_CFG_LOOP): BOOLEAN
+	process_loop (a_from: CA_CFG_LOOP): BOOLEAN
 			-- Adds to lv_entry (`a_from'): lv_exit (`a_from') with gen's added.
 			-- If something could be added then Result = True, otherwise False.
 		local
@@ -246,7 +240,7 @@ feature {NONE} -- Implementation
 			Result := l_old_count /= lv_entry.at (a_from.label).count
 		end
 
-	process_inspect (a_from: attached CA_CFG_INSPECT): BOOLEAN
+	process_inspect (a_from: CA_CFG_INSPECT): BOOLEAN
 			-- Adds to lv_entry (`a_from'): lv_exit (`a_from') with gen's added.
 			-- If something could be added then Result = True, otherwise False.
 		local
@@ -264,7 +258,7 @@ feature {NONE} -- Extracting Used Variables
 	generated: detachable LINKED_SET [INTEGER]
 		-- Set of generated variables, created by `extract_generated'.
 
-	extract_generated (a_ast: attached AST_EIFFEL)
+	extract_generated (a_ast: AST_EIFFEL)
 			-- Extracts all free (and local) variables from `a_ast' and stores them
 			-- in `generated'.
 		do
@@ -301,7 +295,7 @@ feature {NONE} -- Extracting Used Variables
 
 feature {NONE} -- Extracting Assignments
 
-	extract_assigned (a_target: attached ACCESS_AS): INTEGER
+	extract_assigned (a_target: ACCESS_AS): INTEGER
 			-- Extracts the variable ID of the target `a_target' of an
 			-- assignment if a local variable gets assigned. If no local
 			-- variable gets assigned then Result = -1.
@@ -316,7 +310,7 @@ feature {NONE} -- Extracting Assignments
 
 feature {NONE} -- Utilities
 
-	is_local (a_id: attached ACCESS_ID_AS): BOOLEAN
+	is_local (a_id: ACCESS_ID_AS): BOOLEAN
 			-- Is `a_id' a local?
 		do
 			Result := a_id.is_local
@@ -350,7 +344,7 @@ feature -- Properties
 	id: STRING_32 = "CA020"
 			-- <Precursor>
 
-	format_violation_description (a_violation: attached CA_RULE_VIOLATION; a_formatter: attached TEXT_FORMATTER)
+	format_violation_description (a_violation: CA_RULE_VIOLATION; a_formatter: TEXT_FORMATTER)
 			-- Generates a formatted rule violation description for `a_formatter' based on `a_violation'.
 		do
 			a_formatter.add (ca_messages.variable_not_read_violation_1)

@@ -993,11 +993,17 @@ feature -- Handler
 		local
 			r: CMS_RESPONSE
 			wnotfound: WDOCS_PAGE_NOT_FOUND_CMS_RESPONSE
+			l_expected_url: STRING
 		do
 			if req.is_get_request_method then
 				if attached wikipage_data_from_request (req) as pg_info then
 					if attached wdocs_page_link_location (pg_info.manager.version_id, pg_info.bookid, pg_info.manager.url_friendly_wiki_name (pg_info.page.title)) as l_url then
-						res.redirect_now (req.absolute_script_url ("/" + l_url))
+						if attached req.query_string as qs and then not qs.is_whitespace then
+							l_expected_url := l_url + "?" + qs
+						else
+							l_expected_url := l_url
+						end
+						res.redirect_now (req.absolute_script_url ("/" + l_expected_url))
 					else
 						send_wikipage (pg_info.page, pg_info.manager, pg_info.bookid, api, req, res)
 					end
@@ -1024,10 +1030,23 @@ feature -- Handler
 		local
 			r: CMS_RESPONSE
 			wnotfound: WDOCS_PAGE_NOT_FOUND_CMS_RESPONSE
+			l_expected_url: STRING
 		do
 			if req.is_get_request_method then
 				if attached wikipage_data_from_request (req) as pg_info then
-					send_wikipage (pg_info.page, pg_info.manager, pg_info.bookid, api, req, res)
+					if
+						attached wdocs_page_link_location (pg_info.manager.version_id, pg_info.bookid, pg_info.manager.url_friendly_wiki_name (pg_info.page.title)) as l_url and then
+						req.percent_encoded_path_info.substring_index (l_url, 1) < 2 -- missing first "/" for l_url
+					then
+						if attached req.query_string as qs and then not qs.is_whitespace then
+							l_expected_url := l_url + "?" + qs
+						else
+							l_expected_url := l_url
+						end
+						res.redirect_now (req.absolute_script_url ("/" + l_expected_url))
+					else
+						send_wikipage (pg_info.page, pg_info.manager, pg_info.bookid, api, req, res)
+					end
 				elseif
 					attached wdocs_api as l_wdocs_api and then
 					attached wikipage_ids_from_request (req) as pg_ids

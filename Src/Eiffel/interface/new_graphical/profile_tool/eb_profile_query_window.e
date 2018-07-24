@@ -292,9 +292,6 @@ feature -- Status Setting
 			profile_set_count: INTEGER
 			quick_sorter: DS_ARRAY_QUICK_SORTER [EB_PROFILE_QUERY_GRID_ROW]
 			equality_tester: AGENT_BASED_EQUALITY_TESTER [EB_PROFILE_QUERY_GRID_ROW]
-			current_eiffel_profile_data: EIFFEL_PROFILE_DATA
-			current_c_profile_data: C_PROFILE_DATA
-			current_cycle_profile_data: CYCLE_PROFILE_DATA
 			current_profile_data: PROFILE_DATA
 			function: EIFFEL_FUNCTION
 			last_cluster_string: STRING
@@ -374,13 +371,8 @@ feature -- Status Setting
 				profile_set.after
 			loop
 				current_profile_data := profile_set.item
-				current_eiffel_profile_data ?= current_profile_data
-				if current_eiffel_profile_data /= Void then
+				if attached {EIFFEL_PROFILE_DATA} current_profile_data as current_eiffel_profile_data then
 					create query_grid_item.make_node (current_profile_data.function.name, current_profile_data, 4)
-				else
-					create query_grid_item.make_node (current_profile_data.function.name, current_profile_data, 5)
-				end
-				if current_eiffel_profile_data /= Void then
 						-- Now we perform special handling for the row as we must have access to each of the three
 						-- feature, class and cluster texts individually.
 					l_class := current_eiffel_profile_data.function.class_c
@@ -389,6 +381,8 @@ feature -- Status Setting
 					else
 						query_grid_item.set_cluster_class_feature_text ("Unknown cluster.", current_eiffel_profile_data.function.int_class_name + full_stop, current_eiffel_profile_data.function.displayed_feature_name)
 					end
+				else
+					create query_grid_item.make_node (current_profile_data.function.name, current_profile_data, 5)
 				end
 				query_grid_item.set_values (current_profile_data.calls, current_profile_data.self, current_profile_data.descendants, current_profile_data.total, current_profile_data.percentage)
 				profile_array.put (query_grid_item, i)
@@ -404,12 +398,12 @@ feature -- Status Setting
 
 				-- Store the tree profile information needed for the tree mode.
 			from
-				create cluster_array.make (1, 0)
-				create class_array.make (1, 0)
-				create feature_array.make (1, 0)
-				create c_functions_array.make (1, 0)
-				create cyclic_functions_array.make (1, 0)
-				create root_nodes_array.make (1, 0)
+				create cluster_array.make_empty
+				create class_array.make_empty
+				create feature_array.make_empty
+				create c_functions_array.make_empty
+				create cyclic_functions_array.make_empty
+				create root_nodes_array.make_empty
 				i := 1
 				cluster_lower := 1
 				class_lower := 1
@@ -420,8 +414,7 @@ feature -- Status Setting
 			until
 				i > profile_array.count
 			loop
-				current_eiffel_profile_data ?= (profile_array.item (i)).profile_data
-				if current_eiffel_profile_data /= Void then
+				if attached {EIFFEL_PROFILE_DATA} (profile_array.item (i)).profile_data as current_eiffel_profile_data then
 					function := current_eiffel_profile_data.function
 					if function.class_c /= Void then
 						current_cluster_string := function.class_c.group.name
@@ -463,18 +456,19 @@ feature -- Status Setting
 					class_lower := class_lower + 1
 				else
 					current_profile_data := (profile_array.item (i)).profile_data
-					current_c_profile_data ?= current_profile_data
-					if current_c_profile_data /= Void then
+					if attached {C_PROFILE_DATA} current_profile_data as current_c_profile_data then
 						create query_grid_item.make_node (current_c_profile_data.function.name, current_c_profile_data, 5)
 						query_grid_item.set_values (current_c_profile_data.calls, current_c_profile_data.self, current_c_profile_data.descendants, current_c_profile_data.total, current_c_profile_data.percentage)
 						c_functions_array.force (query_grid_item, c_functions_array.upper + 1)
 					else
-						current_cycle_profile_data ?= current_profile_data
-						check
-							unsupported_type: current_cycle_profile_data = Void
+						if attached {CYCLE_PROFILE_DATA} current_profile_data as current_cycle_profile_data then
+							create query_grid_item.make_node (current_cycle_profile_data.function.name, current_cycle_profile_data, 5)
+							query_grid_item.set_values (current_cycle_profile_data.calls, current_cycle_profile_data.self, current_cycle_profile_data.descendants, current_cycle_profile_data.total, current_cycle_profile_data.percentage)
+						else
+							check
+								supported_type: False
+							end
 						end
-						create query_grid_item.make_node (current_cycle_profile_data.function.name, current_cycle_profile_data, 5)
-						query_grid_item.set_values (current_cycle_profile_data.calls, current_cycle_profile_data.self, current_cycle_profile_data.descendants, current_cycle_profile_data.total, current_cycle_profile_data.percentage)
 						cyclic_functions_array.force (query_grid_item, cyclic_functions_array.upper + 1)
 					end
 
@@ -554,59 +548,59 @@ feature -- Status Setting
 				end
 			end
 
-			create displayed_column_indexes.make (1, 6)
+			create displayed_column_indexes.make_filled (0, 1, 6)
 				-- Build the column headers
 				-- Note that "Function" is always displayed.
 			output_grid.insert_new_column (1)
 			displayed_column_indexes.put (1, 1)
 			output_grid.column (1).set_title ("Function")
-			output_grid.column (1).header_item.pointer_button_press_actions.force_extend (agent sort_column (1))
-			output_grid.column (1).header_item.pointer_double_press_actions.force_extend (agent resize_column (1))
+			output_grid.column (1).header_item.pointer_button_press_actions.extend (agent sort_column (1, ?,?,?,?,?,?,?,?))
+			output_grid.column (1).header_item.pointer_double_press_actions.extend (agent resize_column (1, ?,?,?,?,?,?,?,?))
 			output_grid.column (1).set_data ([True, True])
 
 			if show_calls then
 				i := output_grid.column_count + 1
 				output_grid.insert_new_column (i)
 				output_grid.column (i).set_title ("Calls")
-				output_grid.column (i).header_item.pointer_button_press_actions.force_extend (agent sort_column (2))
+				output_grid.column (i).header_item.pointer_button_press_actions.extend (agent sort_column (2, ?,?,?,?,?,?,?,?))
 				displayed_column_indexes.put (i, 2)
-				output_grid.column (i).header_item.pointer_double_press_actions.force_extend (agent resize_column (i))
+				output_grid.column (i).header_item.pointer_double_press_actions.extend (agent resize_column (i, ?,?,?,?,?,?,?,?))
 				output_grid.column (i).set_data ([True, True])
 			end
 			if show_self then
 				i := output_grid.column_count + 1
 				output_grid.insert_new_column (i)
 				output_grid.column (i).set_title ("Self")
-				output_grid.column (i).header_item.pointer_button_press_actions.force_extend (agent sort_column (3))
+				output_grid.column (i).header_item.pointer_button_press_actions.extend (agent sort_column (3, ?,?,?,?,?,?,?,?))
 				displayed_column_indexes.put (i, 3)
-				output_grid.column (i).header_item.pointer_double_press_actions.force_extend (agent resize_column (i))
+				output_grid.column (i).header_item.pointer_double_press_actions.extend (agent resize_column (i, ?,?,?,?,?,?,?,?))
 				output_grid.column (i).set_data ([True, True])
 			end
 			if show_descendents then
 				i := output_grid.column_count + 1
 				output_grid.insert_new_column (i)
 				output_grid.column (i).set_title ("Descendants")
-				output_grid.column (i).header_item.pointer_button_press_actions.force_extend (agent sort_column (4))
+				output_grid.column (i).header_item.pointer_button_press_actions.extend (agent sort_column (4, ?,?,?,?,?,?,?,?))
 				displayed_column_indexes.put (i, 4)
-				output_grid.column (i).header_item.pointer_double_press_actions.force_extend (agent resize_column (i))
+				output_grid.column (i).header_item.pointer_double_press_actions.extend (agent resize_column (i, ?,?,?,?,?,?,?,?))
 				output_grid.column (i).set_data ([True, True])
 			end
 			if show_total then
 				i := output_grid.column_count + 1
 				output_grid.insert_new_column (i)
 				output_grid.column (i).set_title ("Total")
-				output_grid.column (i).header_item.pointer_button_press_actions.force_extend (agent sort_column (5))
+				output_grid.column (i).header_item.pointer_button_press_actions.extend (agent sort_column (5, ?,?,?,?,?,?,?,?))
 				displayed_column_indexes.put (i, 5)
-				output_grid.column (i).header_item.pointer_double_press_actions.force_extend (agent resize_column (i))
+				output_grid.column (i).header_item.pointer_double_press_actions.extend (agent resize_column (i, ?,?,?,?,?,?,?,?))
 				output_grid.column (i).set_data ([True, True])
 			end
 			if show_percentage then
 				i := output_grid.column_count + 1
 				output_grid.insert_new_column (i)
 				output_grid.column (i).set_title ("Percentage")
-				output_grid.column (i).header_item.pointer_button_press_actions.force_extend (agent sort_column (6))
+				output_grid.column (i).header_item.pointer_button_press_actions.extend (agent sort_column (6, ?,?,?,?,?,?,?,?))
 				displayed_column_indexes.put (i, 6)
-				output_grid.column (i).header_item.pointer_double_press_actions.force_extend (agent resize_column (i))
+				output_grid.column (i).header_item.pointer_double_press_actions.extend (agent resize_column (i, ?,?,?,?,?,?,?,?))
 				output_grid.column (i).set_data ([True, True])
 			end
 
@@ -755,9 +749,11 @@ feature {NONE} -- Implementation
 				until
 					i < 1
 				loop
-					query_grid_row ?= output_grid.row (i).data
-					if query_grid_row.is_expanded then
-						query_grid_row.row.expand
+					if
+						attached {EB_PROFILE_QUERY_GRID_ROW} output_grid.row (i).data as l_query_grid_row and then
+						l_query_grid_row.is_expanded
+					then
+						l_query_grid_row.row.expand
 					end
 					i := i - 1
 				end
@@ -771,7 +767,7 @@ feature {NONE} -- Implementation
 			query_grid_row_not_void: query_grid_row /= Void
 		local
 			cluster_index, class_index, feature_index: INTEGER
-			cluster_query_grid_row, class_query_grid_row, feature_query_grid_row: EB_PROFILE_QUERY_GRID_ROW
+			cluster_query_grid_row, class_query_grid_row: EB_PROFILE_QUERY_GRID_ROW
 			class_lower, class_upper, cluster_lower, cluster_upper: INTEGER
 			cluster_row_index, class_row_index, feature_row_index: INTEGER
 			cluster_node_index: INTEGER
@@ -806,10 +802,11 @@ feature {NONE} -- Implementation
 						until
 							feature_index > class_upper
 						loop
-							feature_query_grid_row ?= feature_array [feature_index]
-							feature_row_index := output_grid.row_count + 1
-							fill_grid_row (feature_query_grid_row, feature_row_index)
-							output_grid.row (class_row_index).add_subrow (output_grid.row (feature_row_index))
+							if attached {EB_PROFILE_QUERY_GRID_ROW} feature_array [feature_index] as feature_query_grid_row then
+								feature_row_index := output_grid.row_count + 1
+								fill_grid_row (feature_query_grid_row, feature_row_index)
+								output_grid.row (class_row_index).add_subrow (output_grid.row (feature_row_index))
+							end
 							feature_index := feature_index + 1
 						end
 						class_index := class_index + 1
@@ -985,35 +982,36 @@ feature {NONE} -- Implementation
 			-- so updated display in `output_grid' to reflect this.
 		do
 			tree_structure_enabled := tree_nodes_enabled_button.is_selected
-			sort_column (1)
+			sort_column (1, 0,0,0,0,0,0,0,0)
 		end
 
-	sort_column (column_index: INTEGER)
+	sort_column (column_index: INTEGER; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Sort logical column `column_index'.
 		require
 			valid_column_index: column_index >= min_column_index and column_index <= max_column_index
 		local
 			ascending: BOOLEAN
-			sorted_tuple: TUPLE [first: BOOLEAN; second: BOOLEAN]
 		do
 			if output_grid.header.pointed_divider_index = 0 then
 
 					-- Should sorting be performed within the last sort?
 				sort_within_last := ev_application.ctrl_pressed
 
-				sorted_tuple ?= output_grid.column (displayed_column_indexes.item (column_index)).data
-				check
-					sorted_tuple_not_void: sorted_tuple /= Void
-				end
-				if not ev_application.ctrl_pressed then
-						-- Determine the direction for the sort.
-					ascending := sorted_tuple.first
+				if attached {TUPLE [first: BOOLEAN; second: BOOLEAN]} output_grid.column (displayed_column_indexes.item (column_index)).data as sorted_tuple then
 
-						-- Now store the new direction for the column state.
-					sorted_tuple.first := not ascending
-				else
-					ascending := sorted_tuple.second
-					sorted_tuple.second := not ascending
+					if not ev_application.ctrl_pressed then
+							-- Determine the direction for the sort.
+						ascending := sorted_tuple.first
+
+							-- Now store the new direction for the column state.
+						sorted_tuple.first := not ascending
+					else
+						ascending := sorted_tuple.second
+						sorted_tuple.second := not ascending
+					end
+				else					check
+						sorted_tuple_not_void: False
+					end
 				end
 
 					-- Now perform actual sort on data.
@@ -1145,7 +1143,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	resize_column (a_column: INTEGER)
+	resize_column (a_column: INTEGER; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Resize column `a_column' in `output_grid' to required width to display
 			-- its contents if the mouse pointer is currently over a column divider.
 		require
@@ -1153,7 +1151,7 @@ feature {NONE} -- Implementation
 		local
 			pointed_index: INTEGER
 			grid_row: EV_GRID_ROW
-			query_grid_row: EB_PROFILE_QUERY_GRID_ROW
+--			query_grid_row: EB_PROFILE_QUERY_GRID_ROW
 			required_width: INTEGER
 			i: INTEGER
 		do
@@ -1171,17 +1169,19 @@ feature {NONE} -- Implementation
 						i > output_grid.row_count
 					loop
 						grid_row := output_grid.row (i)
-						query_grid_row ?= grid_row.data
-						if query_grid_row.type = 4 then
-								-- If the row type is 4, then we must add the widths of all three
-								-- components comprising the text.
-							required_width := required_width.max (query_grid_row.cluster_text_width + query_grid_row.class_text_width + query_grid_row.feature_text_width + (left_border * 2))
+						if attached {EB_PROFILE_QUERY_GRID_ROW} grid_row.data as query_grid_row then
+							if query_grid_row.type = 4 then
+									-- If the row type is 4, then we must add the widths of all three
+									-- components comprising the text.
+								required_width := required_width.max (query_grid_row.cluster_text_width + query_grid_row.class_text_width + query_grid_row.feature_text_width + (left_border * 2))
+							else
+									-- Although in this mode we only have a single text, we are in the tree mode so
+									-- we also add on the indent of the first item.
+								required_width := required_width.max (query_grid_row.text_width + (left_border * 2) + grid_row.item (1).horizontal_indent)
+							end
 						else
-								-- Although in this mode we only have a single text, we are in the tree mode so
-								-- we also add on the indent of the first item.
-							required_width := required_width.max (query_grid_row.text_width + (left_border * 2) + grid_row.item (1).horizontal_indent)
+							check is_profile_query_grid_row: False end
 						end
-
 							-- We now ignore all rows that are not expanded.
 						if grid_row.subrow_count > 0 and not grid_row.is_expanded then
 							i := i + grid_row.subrow_count_recursive
@@ -1226,43 +1226,46 @@ feature {NONE} -- Implementation
 			-- Done only if we are not in pick and drop mode, or else if pick
 			-- and drop mode but the Ctrl key is not pressed.
 		local
-			query_grid_row: EB_PROFILE_QUERY_GRID_ROW
-			eiffel_profile_data: EIFFEL_PROFILE_DATA
 			e_feature: E_FEATURE
 			total_offset: INTEGER
 		do
 			if (not a_pnd_mode or else not ev_application.ctrl_pressed) and then an_item /= Void then
-				query_grid_row ?= an_item.data
-				if query_grid_row /= Void then
+				if attached {EB_PROFILE_QUERY_GRID_ROW} an_item.data as query_grid_row then
 					if query_grid_row.type = 1 then
 						if last_x > left_border and last_x < query_grid_row.text_width + left_border then
-							eiffel_profile_data ?= query_grid_row.profile_data
-							check
-								only_eiffel_data_pickable: eiffel_profile_data /= Void
-							end
-							e_feature := eiffel_profile_data.function.e_feature
-							if e_feature /= Void then
-								create {FEATURE_STONE} Result.make (e_feature)
+							if attached {EIFFEL_PROFILE_DATA} query_grid_row.profile_data as eiffel_profile_data then
+								e_feature := eiffel_profile_data.function.e_feature
+								if e_feature /= Void then
+									create {FEATURE_STONE} Result.make (e_feature)
+								end
+							else
+								check
+									only_eiffel_data_pickable: False
+								end
 							end
 						end
 					elseif query_grid_row.type = 2 then
 						if last_x > left_border and last_x < query_grid_row.text_width + left_border then
-							eiffel_profile_data ?= query_grid_row.profile_data
-							check
-								only_eiffel_data_pickable: eiffel_profile_data /= Void
-							end
-							if eiffel_profile_data.function.class_c /= Void then
-								create {CLASSC_STONE} Result.make (eiffel_profile_data.function.class_c)
+							if attached {EIFFEL_PROFILE_DATA} query_grid_row.profile_data as eiffel_profile_data then
+								if eiffel_profile_data.function.class_c /= Void then
+									create {CLASSC_STONE} Result.make (eiffel_profile_data.function.class_c)
+								end
+							else
+								check
+									only_eiffel_data_pickable: False
+								end
 							end
 						end
 					elseif query_grid_row.type = 3 then
 						if last_x > left_border and last_x < query_grid_row.text_width + left_border then
-							eiffel_profile_data ?= query_grid_row.profile_data
-							check
-								only_eiffel_data_pickable: eiffel_profile_data /= Void
-							end
-							if eiffel_profile_data.function.class_c /= Void then
-								create {CLUSTER_STONE} Result.make (eiffel_profile_data.function.class_c.group)
+							if attached {EIFFEL_PROFILE_DATA} query_grid_row.profile_data as eiffel_profile_data then
+								if eiffel_profile_data.function.class_c /= Void then
+									create {CLUSTER_STONE} Result.make (eiffel_profile_data.function.class_c.group)
+								end
+							else
+								check
+									only_eiffel_data_pickable: False
+								end
 							end
 						end
 					elseif query_grid_row.type = 4 then
@@ -1272,33 +1275,40 @@ feature {NONE} -- Implementation
 
 							total_offset := left_border + query_grid_row.cluster_text_width
 							if last_x < total_offset then
-								eiffel_profile_data ?= query_grid_row.profile_data
-								check
-									only_eiffel_data_pickable: eiffel_profile_data /= Void
-								end
-								if eiffel_profile_data.function.class_c /= Void then
-									create {CLUSTER_STONE} Result.make (eiffel_profile_data.function.class_c.group)
+								if attached {EIFFEL_PROFILE_DATA} query_grid_row.profile_data as eiffel_profile_data then
+									if eiffel_profile_data.function.class_c /= Void then
+										create {CLUSTER_STONE} Result.make (eiffel_profile_data.function.class_c.group)
+									end
+
+								else
+									check
+										only_eiffel_data_pickable: False
+									end
 								end
 							else
 								total_offset := total_offset + query_grid_row.class_text_width
 								if last_x < total_offset then
-									eiffel_profile_data ?= query_grid_row.profile_data
-									check
-										only_eiffel_data_pickable: eiffel_profile_data /= Void
-									end
-									if eiffel_profile_data.function.class_c /= Void then
-										create {CLASSC_STONE} Result.make (eiffel_profile_data.function.class_c)
+									if attached {EIFFEL_PROFILE_DATA} query_grid_row.profile_data as eiffel_profile_data then
+										if eiffel_profile_data.function.class_c /= Void then
+											create {CLASSC_STONE} Result.make (eiffel_profile_data.function.class_c)
+										end
+									else
+										check
+											only_eiffel_data_pickable: False
+										end
 									end
 								else
 									total_offset := total_offset + query_grid_row.feature_text_width
 									if last_x < total_offset then
-										eiffel_profile_data ?= query_grid_row.profile_data
-										check
-											only_eiffel_data_pickable: eiffel_profile_data /= Void
-										end
-										e_feature := eiffel_profile_data.function.e_feature
-										if e_feature /= Void then
-											create {FEATURE_STONE} Result.make (e_feature)
+										if attached {EIFFEL_PROFILE_DATA} query_grid_row.profile_data as eiffel_profile_data then
+											e_feature := eiffel_profile_data.function.e_feature
+											if e_feature /= Void then
+												create {FEATURE_STONE} Result.make (e_feature)
+											end
+										else
+											check
+												only_eiffel_data_pickable: False
+											end
 										end
 									end
 								end
@@ -1398,20 +1408,18 @@ feature {NONE} -- Implementation
 			a_string_not_void: a_string /= Void
 		local
 			i: INTEGER
-			label_item: EV_GRID_LABEL_ITEM
-			query_grid_row: EB_PROFILE_QUERY_GRID_ROW
 		do
 			from
 				i := 1
 			until
 				i > a_row.count
 			loop
-				label_item ?= a_row.item (i)
-				if label_item /= Void then
+				if attached {EV_GRID_LABEL_ITEM} a_row.item (i) as label_item then
 					a_string.append (label_item.text)
-				else
-					query_grid_row ?= a_row.data
+				elseif attached {EB_PROFILE_QUERY_GRID_ROW} a_row.data as query_grid_row then
 					a_string.append (full_feature_path (query_grid_row))
+				else
+					check is_profile_query_grid_row: False end
 				end
 				if i < a_row.count then
 					a_string.append (tab)
@@ -1429,7 +1437,6 @@ feature {NONE} -- Implementation
 		require
 			query_grid_row_not_void: query_grid_row /= Void
 		local
-			eiffel_profile_data: EIFFEL_PROFILE_DATA
 			function: EIFFEL_FUNCTION
 			l_class: CLASS_C
 		do
@@ -1439,8 +1446,7 @@ feature {NONE} -- Implementation
 				Result.append (query_grid_row.class_text)
 				Result.append (query_grid_row.feature_text)
 			else
-				eiffel_profile_data ?= query_grid_row.profile_data
-				if eiffel_profile_data /= Void then
+				if attached {EIFFEL_PROFILE_DATA} query_grid_row.profile_data as eiffel_profile_data then
 					function := eiffel_profile_data.function
 					l_class := function.class_c
 					if query_grid_row.type = 1 then
@@ -1486,12 +1492,13 @@ feature {NONE} -- Implementation
 			l_indent: INTEGER
 			spacing: INTEGER
 			rows: ARRAYED_LIST [INTEGER]
-			l_stone: STONE
 		do
 			if a_button = {EV_POINTER_CONSTANTS}.right then
 				if ev_application.ctrl_pressed then
-					l_stone ?= retrieve_pebble (an_item, False)
-					if l_stone /= Void and then l_stone.is_valid then
+					if
+						attached {STONE} retrieve_pebble (an_item, False) as l_stone and then
+						l_stone.is_valid
+					then
 						(create {EB_CONTROL_PICK_HANDLER}).launch_stone (l_stone)
 					end
 				elseif tree_structure_enabled then
@@ -1575,19 +1582,19 @@ feature {NONE} -- Implementation
 
 	record_mouse_relative_to_item (an_x, a_y: INTEGER; grid_item: detachable EV_GRID_ITEM)
 			-- Store the last position of the mouse relative to an item.
-		local
-			query_grid_row: EB_PROFILE_QUERY_GRID_ROW
 		do
 			if grid_item /= Void then
 				last_x := an_x - grid_item.virtual_x_position
 				last_y := a_y - grid_item.virtual_y_position
 
 				if grid_item.column.index = 1 then
-					query_grid_row ?= grid_item.row.data
-					check
-						data_pointed_to_query_grid_row: query_grid_row /= Void
+					if attached {EB_PROFILE_QUERY_GRID_ROW} grid_item.row.data as query_grid_row then
+						output_grid.set_tooltip (full_feature_path (query_grid_row))
+					else
+						check
+							data_pointed_to_query_grid_row: False
+						end
 					end
-					output_grid.set_tooltip (full_feature_path (query_grid_row))
 				else
 					output_grid.remove_tooltip
 				end
@@ -1601,14 +1608,14 @@ feature {NONE} -- Implementation
 			-- the associated `query_grid_row' to reflect this.
 		require
 			a_row_not_void: a_row /= Void
-		local
-			query_grid_row: EB_PROFILE_QUERY_GRID_ROW
 		do
-			query_grid_row ?= a_row.data
-			check
-				query_grid_row_not_void: query_grid_row /= Void
+			if attached {EB_PROFILE_QUERY_GRID_ROW} a_row.data as query_grid_row then
+				query_grid_row.set_is_expanded (True)
+			else
+				check
+					query_grid_row_not_void: False
+				end
 			end
-			query_grid_row.set_is_expanded (True)
 		end
 
 	row_collapsed (a_row: EV_GRID_ROW)
@@ -1616,14 +1623,14 @@ feature {NONE} -- Implementation
 			-- the associated `query_grid_row' to reflect this.
 		require
 			a_row_not_void: a_row /= Void
-		local
-			query_grid_row: EB_PROFILE_QUERY_GRID_ROW
 		do
-			query_grid_row ?= a_row.data
-			check
-				query_grid_row_not_void: query_grid_row /= Void
+			if attached {EB_PROFILE_QUERY_GRID_ROW} a_row.data as query_grid_row then
+				query_grid_row.set_is_expanded (False)
+			else
+				check
+					query_grid_row_not_void: False
+				end
 			end
-			query_grid_row.set_is_expanded (False)
 		end
 
 	last_x, last_y: INTEGER
@@ -1792,7 +1799,6 @@ feature {NONE} -- Implementation
 			-- and operators in `all_subqueries' and `all_operators'
 		local
 			selected_subqueries: DYNAMIC_LIST  [EV_MULTI_COLUMN_LIST_ROW]
-			selected_subquery: EB_SUBQUERY_ITEM
 			i: INTEGER
 		do
 			selected_subqueries := active_query_window.selected_items
@@ -1801,24 +1807,30 @@ feature {NONE} -- Implementation
 			until
 				selected_subqueries.after
 			loop
-				selected_subquery ?= selected_subqueries.item
-				i := selected_subquery.number
-					--| inactivate the subquery in 'all_subqueries'
-				all_subqueries.go_i_th (i)
-				all_subqueries.item.inactivate
-					--| inactivate the operator in 'all_subquery_operators'
-				if i > 1 then
-					all_operators.go_i_th (i-1)
-					all_operators.item.inactivate
+				if attached {EB_SUBQUERY_ITEM} selected_subqueries.item as selected_subquery then
+					i := selected_subquery.number
+						--| inactivate the subquery in 'all_subqueries'
+					all_subqueries.go_i_th (i)
+					all_subqueries.item.inactivate
+						--| inactivate the operator in 'all_subquery_operators'
+					if i > 1 then
+						all_operators.go_i_th (i-1)
+						all_operators.item.inactivate
+					end
+				else
+					check is_subquery: False end
 				end
 				selected_subqueries.forth
 			end
 			if active_query_window.count > 0 then
-				selected_subquery ?= active_query_window.first
-				i := selected_subquery.number
-				if i > 1 then
-					all_operators.go_i_th (i-1)
-					all_operators.item.inactivate
+				if attached {EB_SUBQUERY_ITEM} active_query_window.first as selected_subquery then
+					i := selected_subquery.number
+					if i > 1 then
+						all_operators.go_i_th (i-1)
+						all_operators.item.inactivate
+					end
+				else
+					check is_subquery: False end
 				end
 			end
 			profiler_query.set_subqueries ( all_subqueries )
@@ -1832,7 +1844,6 @@ feature {NONE} -- Implementation
 			-- and operators in `all_subqueries' and `all_operators'
 		local
 			selected_subqueries: DYNAMIC_LIST [EV_MULTI_COLUMN_LIST_ROW]
-			selected_subquery: EB_SUBQUERY_ITEM
 			i, smallest_active: INTEGER
 			is_window_empty: BOOLEAN
 				-- is `active_subquery_window' empty?
@@ -1841,30 +1852,33 @@ feature {NONE} -- Implementation
 				selected_subqueries := inactive_subqueries_window.selected_items
 				is_window_empty := (active_query_window.count = 0)
 				if not is_window_empty then
-					selected_subquery ?= active_query_window.first
-					smallest_active := selected_subquery.number
+					if attached {EB_SUBQUERY_ITEM} active_query_window.first as selected_subquery then
+						smallest_active := selected_subquery.number
+					end
 				end
 				from
 					selected_subqueries.start
 				until
 					selected_subqueries.after
 				loop
-					selected_subquery ?= selected_subqueries.item
-
-					i := selected_subquery.number
-						--| inactivate the subquery in 'all_subqueries'
-					all_subqueries.go_i_th (i)
-					all_subqueries.item.activate
-						--| inactivate the operator in 'all_subquery_operators'
-					if is_window_empty then
-						smallest_active := i
-					elseif i < smallest_active then
-						all_operators.go_i_th (smallest_active - 1)
-						all_operators.item.activate
-						smallest_active := i
+					if attached {EB_SUBQUERY_ITEM} selected_subqueries.item as selected_subquery then
+						i := selected_subquery.number
+							--| inactivate the subquery in 'all_subqueries'
+						all_subqueries.go_i_th (i)
+						all_subqueries.item.activate
+							--| inactivate the operator in 'all_subquery_operators'
+						if is_window_empty then
+							smallest_active := i
+						elseif i < smallest_active then
+							all_operators.go_i_th (smallest_active - 1)
+							all_operators.item.activate
+							smallest_active := i
+						else
+							all_operators.go_i_th (i - 1)
+							all_operators.item.activate
+						end
 					else
-						all_operators.go_i_th (i - 1)
-						all_operators.item.activate
+						check is_subquery: False end
 					end
 					selected_subqueries.forth
 				end
@@ -1906,7 +1920,6 @@ feature {NONE} -- execution
 			-- operators according to `string_arg'.
 		local
 			selected_subqueries: DYNAMIC_LIST  [EV_MULTI_COLUMN_LIST_ROW]
-			selected_subquery: EB_SUBQUERY_ITEM
 		do
 			if active_query_window.count > 0 then
 				from
@@ -1915,13 +1928,13 @@ feature {NONE} -- execution
 				until
 					selected_subqueries.after
 				loop
-					selected_subquery ?= selected_subqueries.item
-					check
-						valid_entry: selected_subquery /= Void
-					end
-					if selected_subquery.number > 1 then
-						all_operators.go_i_th (selected_subquery.number - 1)
-						all_operators.item.change_operator (string_arg)
+					if attached {EB_SUBQUERY_ITEM} selected_subqueries.item as selected_subquery then
+						if selected_subquery.number > 1 then
+							all_operators.go_i_th (selected_subquery.number - 1)
+							all_operators.item.change_operator (string_arg)
+						end
+					else
+						check valid_entry: False end
 					end
 					selected_subqueries.forth
 				end
@@ -1934,13 +1947,15 @@ feature {NONE} -- execution
 				until
 					selected_subqueries.after
 				loop
-					selected_subquery ?= selected_subqueries.item
-					check
-						valid_entry: selected_subquery /= Void
-					end
-					if selected_subquery.number > 1 then
-						all_operators.go_i_th (selected_subquery.number - 1)
-						all_operators.item.change_operator (string_arg)
+					if attached {EB_SUBQUERY_ITEM} selected_subqueries.item as selected_subquery then
+						if selected_subquery.number > 1 then
+							all_operators.go_i_th (selected_subquery.number - 1)
+							all_operators.item.change_operator (string_arg)
+						end
+					else
+						check
+							valid_entry: False
+						end
 					end
 					selected_subqueries.forth
 				end
@@ -2000,7 +2015,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

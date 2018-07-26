@@ -1,7 +1,5 @@
 ﻿note
-	description: "[
-		A base matrix configuration INI file processor.
-	]"
+	description: "A base matrix configuration INI file processor."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -183,15 +181,12 @@ feature {NONE} -- Processing
 			-- Process document properties
 		require
 			a_properties_attached: a_properties /= Void
-		local
-			l_cursor: CURSOR
 		do
-			l_cursor := a_properties.cursor
-			from a_properties.start until a_properties.after loop
-				process_property (a_properties.item).do_nothing
-				a_properties.forth
+			across
+				a_properties as p
+			loop
+				process_property (p.item).do_nothing
 			end
-			a_properties.go_to (l_cursor)
 		ensure
 			a_properties_unmoved: a_properties.cursor.is_equal (old a_properties.cursor)
 		end
@@ -403,7 +398,7 @@ invariant
 	not_suffix_is_empty: attached suffix as s implies not s.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

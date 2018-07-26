@@ -64,7 +64,7 @@ feature {NONE} -- Implementation
 	rand: separate RANDOM
 			-- Random number generator.
 		once ("PROCESS")
-			create Result.set_seed (seed)
+			create <NONE> Result.set_seed (seed)
 		ensure
 			instance_free: class
 			rand_not_void: Result /= Void
@@ -73,7 +73,7 @@ feature {NONE} -- Implementation
 	rand_count: separate CELL [INTEGER]
 			-- The `rand_count'-th random number was used.
 		once ("PROCESS")
-			create Result.put (0)
+			create <NONE> Result.put (0)
 		ensure
 			instance_free: class
 			rand_count_not_void: Result /= Void

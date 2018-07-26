@@ -4,7 +4,7 @@
 	]"
 	generator: "Eiffel Matrix Generator"
 	command_line: "[
-		emcgen C:\DEV\eiffelstudio\trunk\Src\Delivery\studio\bitmaps\png\16x16.ini -f C:\DEV\eiffelstudio\trunk\Src\tools\eiffel_matrix_code_generator\frames\studio.e.frame --output_file C:\DEV\eiffelstudio\trunk\Src\Eiffel\interface\new_graphical\shared\es_pixmaps_16x16.e
+		emcgen --frame ..\..\..\..\tools\eiffel_matrix_code_generator\frames\studio.e.frame ..\..\..\..\Delivery\studio\bitmaps\png\16x16.ini
 		]"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -2902,6 +2902,166 @@ feature -- Icons
 			Result := named_icon_buffer (analyzer_preferences_name)
 		ensure
 			analyzer_preferences_icon_buffer_attached: Result /= Void
+		end
+
+	frozen verifier_verify_icon: EV_PIXMAP
+			-- Access to 'verify' pixmap.
+		require
+			has_named_icon: has_named_icon (verifier_verify_name)
+		once
+			Result := named_icon (verifier_verify_name)
+		ensure
+			verifier_verify_icon_attached: Result /= Void
+		end
+
+	frozen verifier_verify_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'verify' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (verifier_verify_name)
+		once
+			Result := named_icon_buffer (verifier_verify_name)
+		ensure
+			verifier_verify_icon_buffer_attached: Result /= Void
+		end
+
+	frozen verifier_verify_feature_icon: EV_PIXMAP
+			-- Access to 'verify feature' pixmap.
+		require
+			has_named_icon: has_named_icon (verifier_verify_feature_name)
+		once
+			Result := named_icon (verifier_verify_feature_name)
+		ensure
+			verifier_verify_feature_icon_attached: Result /= Void
+		end
+
+	frozen verifier_verify_feature_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'verify feature' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (verifier_verify_feature_name)
+		once
+			Result := named_icon_buffer (verifier_verify_feature_name)
+		ensure
+			verifier_verify_feature_icon_buffer_attached: Result /= Void
+		end
+
+	frozen verifier_verify_class_icon: EV_PIXMAP
+			-- Access to 'verify class' pixmap.
+		require
+			has_named_icon: has_named_icon (verifier_verify_class_name)
+		once
+			Result := named_icon (verifier_verify_class_name)
+		ensure
+			verifier_verify_class_icon_attached: Result /= Void
+		end
+
+	frozen verifier_verify_class_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'verify class' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (verifier_verify_class_name)
+		once
+			Result := named_icon_buffer (verifier_verify_class_name)
+		ensure
+			verifier_verify_class_icon_buffer_attached: Result /= Void
+		end
+
+	frozen verifier_verify_editor_icon: EV_PIXMAP
+			-- Access to 'verify editor' pixmap.
+		require
+			has_named_icon: has_named_icon (verifier_verify_editor_name)
+		once
+			Result := named_icon (verifier_verify_editor_name)
+		ensure
+			verifier_verify_editor_icon_attached: Result /= Void
+		end
+
+	frozen verifier_verify_editor_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'verify editor' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (verifier_verify_editor_name)
+		once
+			Result := named_icon_buffer (verifier_verify_editor_name)
+		ensure
+			verifier_verify_editor_icon_buffer_attached: Result /= Void
+		end
+
+	frozen verifier_verify_cluster_icon: EV_PIXMAP
+			-- Access to 'verify cluster' pixmap.
+		require
+			has_named_icon: has_named_icon (verifier_verify_cluster_name)
+		once
+			Result := named_icon (verifier_verify_cluster_name)
+		ensure
+			verifier_verify_cluster_icon_attached: Result /= Void
+		end
+
+	frozen verifier_verify_cluster_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'verify cluster' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (verifier_verify_cluster_name)
+		once
+			Result := named_icon_buffer (verifier_verify_cluster_name)
+		ensure
+			verifier_verify_cluster_icon_buffer_attached: Result /= Void
+		end
+
+	frozen verifier_verify_target_icon: EV_PIXMAP
+			-- Access to 'verify target' pixmap.
+		require
+			has_named_icon: has_named_icon (verifier_verify_target_name)
+		once
+			Result := named_icon (verifier_verify_target_name)
+		ensure
+			verifier_verify_target_icon_attached: Result /= Void
+		end
+
+	frozen verifier_verify_target_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'verify target' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (verifier_verify_target_name)
+		once
+			Result := named_icon_buffer (verifier_verify_target_name)
+		ensure
+			verifier_verify_target_icon_buffer_attached: Result /= Void
+		end
+
+	frozen verifier_verify_refresh_icon: EV_PIXMAP
+			-- Access to 'verify refresh' pixmap.
+		require
+			has_named_icon: has_named_icon (verifier_verify_refresh_name)
+		once
+			Result := named_icon (verifier_verify_refresh_name)
+		ensure
+			verifier_verify_refresh_icon_attached: Result /= Void
+		end
+
+	frozen verifier_verify_refresh_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'verify refresh' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (verifier_verify_refresh_name)
+		once
+			Result := named_icon_buffer (verifier_verify_refresh_name)
+		ensure
+			verifier_verify_refresh_icon_buffer_attached: Result /= Void
+		end
+
+	frozen verifier_preferences_icon: EV_PIXMAP
+			-- Access to 'preferences' pixmap.
+		require
+			has_named_icon: has_named_icon (verifier_preferences_name)
+		once
+			Result := named_icon (verifier_preferences_name)
+		ensure
+			verifier_preferences_icon_attached: Result /= Void
+		end
+
+	frozen verifier_preferences_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'preferences' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (verifier_preferences_name)
+		once
+			Result := named_icon_buffer (verifier_preferences_name)
+		ensure
+			verifier_preferences_icon_buffer_attached: Result /= Void
 		end
 
 	frozen project_melt_icon: EV_PIXMAP
@@ -9024,6 +9184,26 @@ feature -- Icons
 			overlay_instance_free_icon_buffer_attached: Result /= Void
 		end
 
+	frozen overlay_feature_left_icon: EV_PIXMAP
+			-- Access to 'feature left' pixmap.
+		require
+			has_named_icon: has_named_icon (overlay_feature_left_name)
+		once
+			Result := named_icon (overlay_feature_left_name)
+		ensure
+			overlay_feature_left_icon_attached: Result /= Void
+		end
+
+	frozen overlay_feature_left_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'feature left' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (overlay_feature_left_name)
+		once
+			Result := named_icon_buffer (overlay_feature_left_name)
+		ensure
+			overlay_feature_left_icon_buffer_attached: Result /= Void
+		end
+
 	frozen errors_and_warnings_next_error_icon: EV_PIXMAP
 			-- Access to 'next error' pixmap.
 		require
@@ -9569,15 +9749,16 @@ feature -- Icons: Animations
 	frozen compile_animation_anim: ARRAY [EV_PIXMAP]
 			-- Access to 'compile_animation' pixmap animation items.
 		once
-			create Result.make (1, 8)
-				Result.put (named_icon (compile_animation_1_name), 1)
-			Result.put (named_icon (compile_animation_2_name), 2)
-			Result.put (named_icon (compile_animation_3_name), 3)
-			Result.put (named_icon (compile_animation_4_name), 4)
-			Result.put (named_icon (compile_animation_5_name), 5)
-			Result.put (named_icon (compile_animation_6_name), 6)
-			Result.put (named_icon (compile_animation_7_name), 7)
-			Result.put (named_icon (compile_animation_8_name), 8)
+			Result := <<
+				named_icon (compile_animation_1_name),
+				named_icon (compile_animation_2_name),
+				named_icon (compile_animation_3_name),
+				named_icon (compile_animation_4_name),
+				named_icon (compile_animation_5_name),
+				named_icon (compile_animation_6_name),
+				named_icon (compile_animation_7_name),
+				named_icon (compile_animation_8_name)
+			>>
 		ensure
 			compile_animation_anim_attached: Result /= Void
 		end
@@ -9585,15 +9766,16 @@ feature -- Icons: Animations
 	frozen compile_animation_buffer_anim: ARRAY [EV_PIXEL_BUFFER]
 			-- Access to 'compile_animation' pixel buffer animation items.
 		once
-			create Result.make (1, 8)
-				Result.put (named_icon_buffer (compile_animation_1_name), 1)
-			Result.put (named_icon_buffer (compile_animation_2_name), 2)
-			Result.put (named_icon_buffer (compile_animation_3_name), 3)
-			Result.put (named_icon_buffer (compile_animation_4_name), 4)
-			Result.put (named_icon_buffer (compile_animation_5_name), 5)
-			Result.put (named_icon_buffer (compile_animation_6_name), 6)
-			Result.put (named_icon_buffer (compile_animation_7_name), 7)
-			Result.put (named_icon_buffer (compile_animation_8_name), 8)
+			Result := <<
+				named_icon_buffer (compile_animation_1_name),
+				named_icon_buffer (compile_animation_2_name),
+				named_icon_buffer (compile_animation_3_name),
+				named_icon_buffer (compile_animation_4_name),
+				named_icon_buffer (compile_animation_5_name),
+				named_icon_buffer (compile_animation_6_name),
+				named_icon_buffer (compile_animation_7_name),
+				named_icon_buffer (compile_animation_8_name)
+			>>
 		ensure
 			compile_animation_buffer_anim_attached: Result /= Void
 		end
@@ -9601,12 +9783,13 @@ feature -- Icons: Animations
 	frozen run_animation_anim: ARRAY [EV_PIXMAP]
 			-- Access to 'run_animation' pixmap animation items.
 		once
-			create Result.make (1, 5)
-				Result.put (named_icon (run_animation_1_name), 1)
-			Result.put (named_icon (run_animation_2_name), 2)
-			Result.put (named_icon (run_animation_3_name), 3)
-			Result.put (named_icon (run_animation_4_name), 4)
-			Result.put (named_icon (run_animation_5_name), 5)
+			Result := <<
+				named_icon (run_animation_1_name),
+				named_icon (run_animation_2_name),
+				named_icon (run_animation_3_name),
+				named_icon (run_animation_4_name),
+				named_icon (run_animation_5_name)
+			>>
 		ensure
 			run_animation_anim_attached: Result /= Void
 		end
@@ -9614,12 +9797,13 @@ feature -- Icons: Animations
 	frozen run_animation_buffer_anim: ARRAY [EV_PIXEL_BUFFER]
 			-- Access to 'run_animation' pixel buffer animation items.
 		once
-			create Result.make (1, 5)
-				Result.put (named_icon_buffer (run_animation_1_name), 1)
-			Result.put (named_icon_buffer (run_animation_2_name), 2)
-			Result.put (named_icon_buffer (run_animation_3_name), 3)
-			Result.put (named_icon_buffer (run_animation_4_name), 4)
-			Result.put (named_icon_buffer (run_animation_5_name), 5)
+			Result := <<
+				named_icon_buffer (run_animation_1_name),
+				named_icon_buffer (run_animation_2_name),
+				named_icon_buffer (run_animation_3_name),
+				named_icon_buffer (run_animation_4_name),
+				named_icon_buffer (run_animation_5_name)
+			>>
 		ensure
 			run_animation_buffer_anim_attached: Result /= Void
 		end
@@ -9769,6 +9953,14 @@ feature -- Constants: Icon names
 	analyzer_analyze_target_name: STRING = "analyzer analyze target"
 	analyzer_analyze_refresh_name: STRING = "analyzer analyze refresh"
 	analyzer_preferences_name: STRING = "analyzer preferences"
+	verifier_verify_name: STRING = "verifier verify"
+	verifier_verify_feature_name: STRING = "verifier verify feature"
+	verifier_verify_class_name: STRING = "verifier verify class"
+	verifier_verify_editor_name: STRING = "verifier verify editor"
+	verifier_verify_cluster_name: STRING = "verifier verify cluster"
+	verifier_verify_target_name: STRING = "verifier verify target"
+	verifier_verify_refresh_name: STRING = "verifier verify refresh"
+	verifier_preferences_name: STRING = "verifier preferences"
 	project_melt_name: STRING = "project melt"
 	project_quick_melt_name: STRING = "project quick melt"
 	project_freeze_name: STRING = "project freeze"
@@ -10075,6 +10267,7 @@ feature -- Constants: Icon names
 	overlay_editor_left_name: STRING = "overlay editor left"
 	overlay_refresh_left_name: STRING = "overlay refresh left"
 	overlay_instance_free_name: STRING = "overlay instance free"
+	overlay_feature_left_name: STRING = "overlay feature left"
 	errors_and_warnings_next_error_name: STRING = "errors and warnings next error"
 	errors_and_warnings_previous_error_name: STRING = "errors and warnings previous error"
 	errors_and_warnings_next_warning_name: STRING = "errors and warnings next warning"
@@ -10251,6 +10444,14 @@ feature {NONE} -- Basic operations
 			a_table.put ([{NATURAL_8} 7, {NATURAL_8} 7], analyzer_analyze_target_name)
 			a_table.put ([{NATURAL_8} 8, {NATURAL_8} 7], analyzer_analyze_refresh_name)
 			a_table.put ([{NATURAL_8} 9, {NATURAL_8} 7], analyzer_preferences_name)
+			a_table.put ([{NATURAL_8} 10, {NATURAL_8} 7], verifier_verify_name)
+			a_table.put ([{NATURAL_8} 11, {NATURAL_8} 7], verifier_verify_feature_name)
+			a_table.put ([{NATURAL_8} 12, {NATURAL_8} 7], verifier_verify_class_name)
+			a_table.put ([{NATURAL_8} 13, {NATURAL_8} 7], verifier_verify_editor_name)
+			a_table.put ([{NATURAL_8} 14, {NATURAL_8} 7], verifier_verify_cluster_name)
+			a_table.put ([{NATURAL_8} 15, {NATURAL_8} 7], verifier_verify_target_name)
+			a_table.put ([{NATURAL_8} 16, {NATURAL_8} 7], verifier_verify_refresh_name)
+			a_table.put ([{NATURAL_8} 17, {NATURAL_8} 7], verifier_preferences_name)
 			a_table.put ([{NATURAL_8} 1, {NATURAL_8} 8], project_melt_name)
 			a_table.put ([{NATURAL_8} 2, {NATURAL_8} 8], project_quick_melt_name)
 			a_table.put ([{NATURAL_8} 3, {NATURAL_8} 8], project_freeze_name)
@@ -10557,6 +10758,7 @@ feature {NONE} -- Basic operations
 			a_table.put ([{NATURAL_8} 22, {NATURAL_8} 22], overlay_editor_left_name)
 			a_table.put ([{NATURAL_8} 23, {NATURAL_8} 22], overlay_refresh_left_name)
 			a_table.put ([{NATURAL_8} 24, {NATURAL_8} 22], overlay_instance_free_name)
+			a_table.put ([{NATURAL_8} 25, {NATURAL_8} 22], overlay_feature_left_name)
 			a_table.put ([{NATURAL_8} 1, {NATURAL_8} 23], errors_and_warnings_next_error_name)
 			a_table.put ([{NATURAL_8} 2, {NATURAL_8} 23], errors_and_warnings_previous_error_name)
 			a_table.put ([{NATURAL_8} 3, {NATURAL_8} 23], errors_and_warnings_next_warning_name)

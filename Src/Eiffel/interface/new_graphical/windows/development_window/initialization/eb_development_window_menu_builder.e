@@ -10,9 +10,8 @@ class
 
 inherit
 	EB_DEVELOPMENT_WINDOW_BUILDER
-
+	EB_SHARED_MENU_EXTENDER
 	EB_SHARED_PREFERENCES
-
 	SHARED_ES_CLOUD_SERVICE
 
 create
@@ -1221,6 +1220,10 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 				Result.extend (create {EV_MENU_SEPARATOR})
 				insert_show_tool_menu_item (Result, {ES_TESTING_TOOL})
 				insert_show_tool_menu_item (Result, {ES_TESTING_RESULTS_TOOL})
+			end
+			if attached (create {SERVICE_CONSUMER [TOOL_MENU_EXTENSION_S]}).service as s then
+				Result.extend (create {EV_MENU_SEPARATOR})
+				s.extend (agent menu_extender.extend (?, ?, ?, ?, Result))
 			end
 		end
 

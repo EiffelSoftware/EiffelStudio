@@ -1141,7 +1141,6 @@ feature {EVENT_LIST_OBSERVER} -- Events handlers
 						item_count_big_enough: item_count >= 1
 					end
 					if l_row.subrow_count > 0 then
-						check only_one_subrow: l_row.subrow_count = 1 end
 						grid_events.remove_and_clear_subrows_from (l_row)
 					end
 

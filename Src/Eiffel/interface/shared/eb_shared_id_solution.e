@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Identifier solution for group, folder, class and feature."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -63,7 +63,6 @@ feature -- Access (Target)
 			a_id_not_void: a_id /= Void
 		local
 			uuid: STRING_32
-			l_target: CONF_TARGET
 			l_target_name: STRING
 			l_uuid: UUID
 		do
@@ -77,16 +76,15 @@ feature -- Access (Target)
 				last_target_name := l_target_name
 				if universe.target.system.uuid.out.same_string_general (uuid) then
 						-- Get the target from current system by name.
-					l_target := universe.target.system.targets.item (l_target_name)
+					Result := universe.target.system.targets.item (l_target_name)
 				else
 					create l_uuid
 					if l_uuid.is_valid_uuid (uuid) then
-						l_target := universe.target.system.all_libraries.item (create {UUID}.make_from_string (uuid))
+						Result := universe.target.system.all_libraries.item (create {UUID}.make_from_string (uuid))
 					end
 				end
 			end
-			Result := l_target
-			if Result /= Void then
+			if attached Result then
 				last_target_name := Result.name
 			end
 		ensure
@@ -101,23 +99,16 @@ feature -- Access (Group)
 			-- Assembly: assembly + name_sep + ph + name_sep + assemblyID
 		require
 			a_group_not_void: a_group /= Void
-		local
-			l_phys_as: CONF_PHYSICAL_ASSEMBLY
 		do
-			if a_group.is_physical_assembly then
-				create Result.make (50)
-				l_phys_as ?= a_group
-				check
-					assembly: l_phys_as /= Void
-				end
+			create Result.make (50)
+			if attached {CONF_PHYSICAL_ASSEMBLY} a_group as l_phys_as then
 				Result.append (encode (assembly_prefix))
 				Result.append (name_sep)
 					-- We need a place holder to keep the same section number with other types of group.
 				Result.append (encode (place_holder_string))
 				Result.append (name_sep)
-				Result.append (l_phys_as.guid)
+				Result.append (l_phys_as.guid.to_string_8)
 			else
-				create Result.make (50)
 				Result.append (id_of_target (a_group.target))
 				Result.append (name_sep)
 				Result.append (encode (a_group.name))
@@ -137,13 +128,14 @@ feature -- Access (Group)
 		do
 			last_group_name := Void
 			strings := split_by_string (a_id, name_sep)
-			if strings.count >= group_id_sections then
-				if decode (strings.i_th (1)).is_equal (assembly_prefix) then
-					l_ass_id := decode (strings.i_th (group_id_sections))
-					Result := universe.target.system.all_assemblies.item (l_ass_id)
-					if Result /= Void then
-						last_group_name := Result.name
-					end
+			if
+				strings.count >= group_id_sections and then
+				decode (strings.i_th (1)).is_equal (assembly_prefix)
+			then
+				l_ass_id := decode (strings.i_th (group_id_sections))
+				Result := universe.target.system.all_assemblies.item (l_ass_id)
+				if Result /= Void then
+					last_group_name := Result.name
 				end
 			end
 			if Result = Void then
@@ -165,11 +157,8 @@ feature -- Access (Folder)
 			-- `id_of_group' + `name_sep' + path
 		require
 			a_folder_not_void: a_folder /= Void
-		local
-			l_group : CONF_GROUP
 		do
-			l_group := a_folder.cluster
-			Result := id_of_group (l_group)
+			Result := id_of_group (a_folder.cluster)
 			Result.append (name_sep)
 			Result.append (encode (a_folder.path))
 		ensure
@@ -182,15 +171,13 @@ feature -- Access (Folder)
 			a_id_not_void: a_id /= Void
 		local
 			l_path: STRING_32
-			l_cluster: CONF_CLUSTER
 			l_dir: DIRECTORY
 		do
 			last_folder_path := Void
-			l_cluster ?= group_of_id (a_id)
 			if strings.count >= folder_id_sections then
 				l_path := decode (strings.i_th (folder_id_sections))
 				last_folder_path := l_path
-				if l_cluster /= Void then
+				if attached {CONF_CLUSTER} group_of_id (a_id) as l_cluster then
 					create l_dir.make_with_path (l_cluster.location.build_path (l_path, {STRING_32} ""))
 					if l_dir.exists then
 						create Result.make (l_cluster, l_path)
@@ -206,11 +193,8 @@ feature -- Access (Class)
 			-- `id_of_group' + `name_sep' + class_name
 		require
 			a_class_not_void: a_class /= Void
-		local
-			l_group: CONF_GROUP
 		do
-			l_group := a_class.group
-			Result := id_of_group (l_group)
+			Result := id_of_group (a_class.group)
 			Result.append (name_sep)
 			Result.append (encode (a_class.name))
 		ensure
@@ -223,14 +207,12 @@ feature -- Access (Class)
 			a_id_not_void: a_id /= Void
 		local
 			class_name: STRING
-			l_group: CONF_GROUP
 		do
 			last_class_name := Void
-			l_group ?= group_of_id (a_id)
 			if strings.count >= class_id_sections then
 				class_name := decode_string_8 (strings.i_th (class_id_sections))
 				last_class_name := class_name
-				if l_group /= Void and then l_group.classes /= Void then
+				if attached group_of_id (a_id) as l_group and then l_group.classes /= Void then
 					Result := l_group.classes.item (class_name)
 				end
 			end
@@ -243,20 +225,18 @@ feature -- Access (Feature)
 		require
 			a_id_not_void: a_id /= Void
 		local
-			l_class: CLASS_I
-			l_class_c: CLASS_C
 			l_feature_name: STRING_32
 		do
 			last_feature_name := Void
-			l_class ?= class_of_id (a_id)
 			if strings.count >= feature_id_sections then
 				l_feature_name := decode (strings.i_th (feature_id_sections))
 				last_feature_name := l_feature_name
-				if l_class /= Void then
-					l_class_c := l_class.compiled_representation
-					if l_class_c /= Void and then l_class_c.has_feature_table then
-						Result := l_class_c.feature_with_name_32 (l_feature_name)
-					end
+				if
+					attached {CLASS_I} class_of_id (a_id) as l_class and then
+					attached l_class.compiled_representation as l_class_c and then
+					l_class_c.has_feature_table
+				then
+					Result := l_class_c.feature_with_name_32 (l_feature_name)
 				end
 			end
 		end
@@ -267,10 +247,12 @@ feature -- Access (Feature)
 		require
 			a_feature_not_void: a_feature /= Void
 		local
-			l_class: CONF_CLASS
+			c: CLASS_C
 		do
-			l_class ?= a_feature.associated_class.lace_class
-			Result := id_of_class (l_class)
+			c := a_feature.associated_class
+			Result := id_of_group (c.group)
+			Result.append (name_sep)
+			Result.append (encode (c.name))
 			Result.append (name_sep)
 			Result.append (encode (a_feature.name_32))
 		ensure
@@ -329,19 +311,20 @@ feature -- ID modification
 				last_split_strings_not_void: last_split_strings /= Void
 			end
 			l_strings := last_split_strings
-			if not decode (l_strings.i_th (1)).same_string (assembly_prefix) then
-				if l_strings.count >= target_id_sections then
-					create Result.make (40)
-					Result.append (encode (a_target_uuid))
-					from
-						l_strings.go_i_th (target_id_sections)
-					until
-						l_strings.after
-					loop
-						Result.append (name_sep)
-						Result.append (l_strings.item)
-						l_strings.forth
-					end
+			if
+				not decode (l_strings.i_th (1)).same_string (assembly_prefix) and then
+				l_strings.count >= target_id_sections
+			then
+				create Result.make (40)
+				Result.append (encode (a_target_uuid))
+				from
+					l_strings.go_i_th (target_id_sections)
+				until
+					l_strings.after
+				loop
+					Result.append (name_sep)
+					Result.append (l_strings.item)
+					l_strings.forth
 				end
 			end
 		end
@@ -362,23 +345,24 @@ feature -- ID modification
 				last_split_strings_not_void: last_split_strings /= Void
 			end
 			l_strings := last_split_strings
-			if not decode (l_strings.i_th (1)).same_string (assembly_prefix) then
-				if last_split_strings.count >= target_id_sections then
-					create Result.make (40)
-					Result.append (l_strings.first)
-					from
-						l_strings.go_i_th (target_id_sections)
-					until
-						l_strings.after
-					loop
-						Result.append (name_sep)
-						if l_strings.index = target_id_sections then
-							Result.append (encode (a_target_name))
-						else
-							Result.append (l_strings.item)
-						end
-						l_strings.forth
+			if
+				not decode (l_strings.i_th (1)).same_string (assembly_prefix) and then
+				last_split_strings.count >= target_id_sections
+			then
+				create Result.make (40)
+				Result.append (l_strings.first)
+				from
+					l_strings.go_i_th (target_id_sections)
+				until
+					l_strings.after
+				loop
+					Result.append (name_sep)
+					if l_strings.index = target_id_sections then
+						Result.append (encode (a_target_name))
+					else
+						Result.append (l_strings.item)
 					end
+					l_strings.forth
 				end
 			end
 		end
@@ -399,23 +383,24 @@ feature -- ID modification
 				last_split_strings_not_void: last_split_strings /= Void
 			end
 			l_strings := last_split_strings
-			if not decode (l_strings.i_th (1)).same_string (assembly_prefix) then
-				if last_split_strings.count >= group_id_sections then
-					create Result.make (40)
-					Result.append (l_strings.first)
-					from
-						l_strings.go_i_th (target_id_sections)
-					until
-						l_strings.after
-					loop
-						Result.append (name_sep)
-						if l_strings.index = group_id_sections then
-							Result.append (encode (a_group_name))
-						else
-							Result.append (l_strings.item)
-						end
-						l_strings.forth
+			if
+				not decode (l_strings.i_th (1)).same_string (assembly_prefix) and then
+				last_split_strings.count >= group_id_sections
+			then
+				create Result.make (40)
+				Result.append (l_strings.first)
+				from
+					l_strings.go_i_th (target_id_sections)
+				until
+					l_strings.after
+				loop
+					Result.append (name_sep)
+					if l_strings.index = group_id_sections then
+						Result.append (encode (a_group_name))
+					else
+						Result.append (l_strings.item)
 					end
+					l_strings.forth
 				end
 			end
 		end
@@ -495,11 +480,9 @@ feature -- Querry
 		require
 			a_id_not_void: a_id /= Void
 		local
-			l_strings: like split_by_string
 			l_count: INTEGER
 		do
-			l_strings := split_by_string (a_id, name_sep)
-			l_count := l_strings.count
+			l_count := split_by_string (a_id, name_sep).count
 			if l_count = target_id_sections then
 				Result := target_type
 			elseif l_count = group_id_sections then
@@ -518,7 +501,6 @@ feature -- Querry
 				Result := class_type
 			elseif l_count = feature_id_sections then
 				Result := feature_type
-			else
 			end
 		end
 
@@ -582,7 +564,6 @@ feature {NONE} -- Implementation
 			a_separator_atatched: a_separator /= Void
 		local
 			l_list: like split_by_string
-			part: STRING
 			i, j, c, sc: INTEGER_32
 		do
 			c := a_source_string.count
@@ -598,8 +579,7 @@ feature {NONE} -- Implementation
 					if j = 0 then
 						j := c + 1
 					end
-					part := a_source_string.substring (i, j - 1)
-					l_list.extend (part)
+					l_list.extend (a_source_string.substring (i, j - 1))
 					i := j + sc
 				end
 				if j + sc - 1 = c then
@@ -723,7 +703,7 @@ feature {NONE} -- Implementation. Encoding/Decoding
 			-- Hex presentations are converted back to what it was.
 		local
 			i: INTEGER
-			l_code, c, hc, lc: NATURAL_32
+			l_code, hc, lc: NATURAL_32
 		do
 			create Result.make (a_string.count)
 			from
@@ -737,8 +717,7 @@ feature {NONE} -- Implementation. Encoding/Decoding
 						hc := a_string.code (i)
 						i := i + 1
 						lc := a_string.code (i)
-						c := natural_of_code (hc, lc)
-						Result.append_code (c)
+						Result.append_code (natural_of_code (hc, lc))
 				else
 					Result.append_code (l_code)
 				end
@@ -766,12 +745,12 @@ feature {NONE} -- Implementation. Encoding/Decoding
 			if ('a').natural_32_code <= hc and then hc <= ('f').natural_32_code then
 				Result := (hc - ('a').natural_32_code) & 0xf + 10
 			elseif ('0').natural_32_code <= hc and then hc <= ('9').natural_32_code then
-				Result := (hc - ('0').natural_32_code)
+				Result := hc - ('0').natural_32_code
 			end
 			if ('a').natural_32_code <= lc and then lc <= ('f').natural_32_code then
 				Result := (Result |<< 4) | ((lc - ('a').natural_32_code) & 0xf + 10)
 			elseif ('0').natural_32_code <= lc and then lc <= ('9').natural_32_code then
-				Result := (Result |<< 4) | ((lc - ('0').natural_32_code))
+				Result := (Result |<< 4) | (lc - ('0').natural_32_code)
 			end
 		end
 

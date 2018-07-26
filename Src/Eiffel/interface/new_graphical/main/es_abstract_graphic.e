@@ -152,8 +152,19 @@ feature {NONE} -- Access
 
 	service_initializer: SERVICE_INITIALIZER
 			-- Initializer used to register all services.
+		local
+			t: like {REFLECTOR}.dynamic_type_from_string
 		once
-			create {ES_SERVICE_INITIALIZER} Result
+			t := {REFLECTOR}.dynamic_type_from_string ("ES_SERVICE_INITIALIZER_EXTENSION")
+			if
+				t >= 0 and then
+				not {REFLECTOR}.type_of_type (t).is_deferred and then
+				attached {ES_SERVICE_INITIALIZER} {REFLECTOR}.new_instance_of (t) as e
+			then
+				Result := e
+			else
+				create {ES_SERVICE_INITIALIZER} Result
+			end
 		end
 
 feature {NONE} -- Implementation (preparation of all widgets)

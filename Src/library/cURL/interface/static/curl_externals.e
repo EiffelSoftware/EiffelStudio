@@ -81,9 +81,65 @@ feature -- Function pointer
 		end
 
 
+	curl_mime_init_ptr: POINTER
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"&curl_mime_init"
+		end
+
+	curl_mime_addpart_ptr: POINTER
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"&curl_mime_addpart"
+		end
+
+	curl_mime_data_ptr: POINTER
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"&curl_mime_data"
+		end
+
+	curl_mime_type_ptr: POINTER
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"&curl_mime_type"
+		end
+
+	curl_mime_subparts_ptr: POINTER
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"&curl_mime_subparts"
+		end
+
+	curl_mime_headers_ptr: POINTER
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"&curl_mime_headers"
+		end
+
+	curl_mime_filedata_ptr: POINTER
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"&curl_mime_filedata"
+		end
+
+	curl_mime_free_ptr: POINTER
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"&curl_mime_free"
+		end
+
 note
 	library:   "cURL: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

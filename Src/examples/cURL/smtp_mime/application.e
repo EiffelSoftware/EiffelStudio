@@ -1,10 +1,8 @@
 ﻿note
 	description: "[
-					cURL https://curl.haxx.se/libcurl/c/smtp-mail.html
-					For original C version, please see:
-					https://curl.haxx.se/libcurl/c/smtp-mime.html
-					This is a simple example showing how to send mime mail using libcurl's SMTP
-		 			capabilities
+		cURL https://curl.haxx.se/libcurl/c/smtp-mail.html
+		For original C version, please see:	https://curl.haxx.se/libcurl/c/smtp-mime.html
+		This is a simple example showing how to send mime mail using libcurl's SMTP capabilities
 	]"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -38,7 +36,7 @@ feature {NONE} -- Initialization
 		do
 			io.put_string ("Eiffel cURL SMTP example showing how to send e-mails with mime.")
 			io.put_new_line
-			print ("%NLibCurl Veriosn:" + (create {CURL_OPT_CONSTANTS}).libcurl_version.out)
+			print ("%NLibCurl Version:" + (create {CURL_OPT_CONSTANTS}).libcurl_version.out)
 
 				-- add the from email.
 			l_from := "sender@example.org"

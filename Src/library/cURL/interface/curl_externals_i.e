@@ -519,16 +519,16 @@ feature {NONE} -- C externals
 			exists_mimepart: not a_curl_handle.is_default_pointer
 		external
 				"C inline use <curl/curl.h>"
-			alias
-				"[
-					#ifdef CURL_STATICLIB
-						return (FUNCTION_CAST(CURLcode, (curl_mimepart *, const char * )) $a_api)((curl_mimepart *)$a_curl_handle, (const char *) $a_filename);
-					#else
-							/* Using proper calling convention for dynamic module */
-						return (FUNCTION_CAST(CURLcode, (curl_mimepart *, const char *)) $a_api)((curl_mimepart *)$a_curl_handle, (const char *) $a_filename);
-					#endif
-				]"
-			end
+		alias
+			"[
+				#ifdef CURL_STATICLIB
+					return (FUNCTION_CAST(CURLcode, (curl_mimepart *, const char * )) $a_api)((curl_mimepart *)$a_curl_handle, (const char *) $a_filename);
+				#else
+						/* Using proper calling convention for dynamic module */
+					return (FUNCTION_CAST(CURLcode, (curl_mimepart *, const char *)) $a_api)((curl_mimepart *)$a_curl_handle, (const char *) $a_filename);
+				#endif
+			]"
+		end
 
 
 	c_mime_free (a_api: POINTER; a_curl_handle: POINTER)
@@ -540,11 +540,9 @@ feature {NONE} -- C externals
 		alias
 			"[
 				#ifdef CURL_STATICLIB
-				(FUNCTION_CAST(void , (curl_mime *)) $a_api)
-										((curl_mime *)$a_curl_handle);
+					(FUNCTION_CAST(void , (curl_mime *)) $a_api) ((curl_mime *)$a_curl_handle);
 				#else
-				(FUNCTION_CAST(void , (curl_mime *)) $a_api)
-										((curl_mime *)$a_curl_handle);
+					(FUNCTION_CAST(void , (curl_mime *)) $a_api) ((curl_mime *)$a_curl_handle);
 				#endif
 			]"
 		end

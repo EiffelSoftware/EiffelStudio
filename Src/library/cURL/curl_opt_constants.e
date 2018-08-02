@@ -801,6 +801,16 @@ feature -- Protocol
 			is_class: class
 		end
 
+	curlopt_mimepost: INTEGER
+			-- Declared as CURLOPT_MIMEPOST
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"return CURLOPT_MIMEPOST;"
+		ensure
+			is_class: class
+		end
+
 feature -- Connection
 
 	curlopt_timeout: INTEGER
@@ -1280,6 +1290,16 @@ feature -- SSH
 			is_class: class
 		end
 
+	curl_zero_terminated: INTEGER
+			-- Declared as CURL_ZERO_TERMINATED
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"return CURL_ZERO_TERMINATED;"
+		ensure
+			is_class: class
+		end
+
 feature -- Status report
 
 	is_valid (v: INTEGER): BOOLEAN
@@ -1398,7 +1418,8 @@ feature -- Status report
 						v = curlopt_ssh_public_keyfile or
 						v = curlopt_ssh_private_keyfile or
 						v = curlopt_mail_from or
-						v = curlopt_mail_rcpt
+						v = curlopt_mail_rcpt or
+						v = curl_zero_terminated
 		end
 
 note

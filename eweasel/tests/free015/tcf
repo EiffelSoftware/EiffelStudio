@@ -1,0 +1,11 @@
+test_name 	 instance_free-valid-explicit-redeclaration
+test_description Redeclaration into a class feature is safe if unqualified calls in assertions use class features. See also: test#free012, test#free016, test#free017, test#free018.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 a.e $CLUSTER a.e
+copy_raw 	 test.e $CLUSTER test.e
+
+compile_melted
+compile_result 	 ok
+
+test_end

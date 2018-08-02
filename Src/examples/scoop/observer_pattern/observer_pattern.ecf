@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="observer_pattern" uuid="69C6B5DE-187A-479B-9471-A2D1B59426DE">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="observer_pattern" uuid="69C6B5DE-187A-479B-9471-A2D1B59426DE">
 	<target name="observer_pattern">
 		<note>
 			<eis name="Observer Pattern" protocol="" src="$(ISE_DOC)/book/solutions/Observer-pattern"/>

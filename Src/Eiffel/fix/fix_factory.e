@@ -49,11 +49,19 @@ feature {COMPILER_ERROR} -- Visitor
 			end
 		end
 
-	process_array_explicit_type_required (e: VWMA_EXPLICIT_TYPE_REQUIRED)
+	process_array_explicit_type_required_for_conformance (e: VWMA_EXPLICIT_TYPE_REQUIRED_FOR_CONFORMANCE)
 			-- <Precursor>
 		do
-			if not e.written_class.lace_class.is_read_only then
-				record_fix (create {FIX_VWMA_EXPLICIT_TYPE_REQUIRED}.make (e))
+			if not e.source_class.is_read_only then
+				record_fix (create {FIX_MANIFEST_ARRAY_TYPE_ADDER}.make (e))
+			end
+		end
+
+	process_array_explicit_type_required_for_match (e: VWMA_EXPLICIT_TYPE_REQUIRED_FOR_MATCH)
+			-- <Precursor>
+		do
+			if not e.source_class.is_read_only then
+				record_fix (create {FIX_MANIFEST_ARRAY_TYPE_ADDER}.make (e))
 			end
 		end
 

@@ -88,13 +88,15 @@ feature -- Request processing
 				exec.execute
 				res.push
 				exec.clean
-			else
+			elseif exec /= Void then
 				if not has_error then
-					process_rescue (res)
+					exec.execute_rescue ((create {EXCEPTION_MANAGER}).last_exception)
 				end
-				if exec /= Void then
-					exec.clean
-				end
+				exec.clean
+			elseif not has_error then
+				(create {WGI_RESCUE_EXECUTION}).execute (req, res, (create {EXCEPTION_MANAGER}).last_exception)
+			else
+					-- Bad error.
 			end
 		rescue
 			if l_output = Void or else not l_output.is_available then
@@ -105,31 +107,6 @@ feature -- Request processing
 				retry
 			end
 		end
-
-
-	process_rescue (res: detachable WGI_RESPONSE)
-		local
-			s: STRING
-		do
-			if attached (create {EXCEPTION_MANAGER}).last_exception as e and then attached e.trace as l_trace then
-				if res /= Void then
-					if not res.status_is_set then
-						res.set_status_code ({HTTP_STATUS_CODE}.internal_server_error, Void)
-					end
-					create s.make_empty
-					s.append ("<pre>")
-					s.append (html_encoder.encoded_string (l_trace))
-					s.append ("</pre>")
-					if not res.header_committed then
-						res.put_header_text ("Content-Type: text/html%R%NContent-Length: " + s.count.out + "%R%N%R%N")
-					end
-					if res.message_writable then
-						res.put_string (s)
-					end
-					res.push
-				end
-			end
-		end		
 
 	httpd_environment (a_socket: HTTPD_STREAM_SOCKET): STRING_TABLE [READABLE_STRING_8]
 		local

@@ -42,6 +42,14 @@ feature -- Execution
 			is_valid_end_of_execution: is_valid_end_of_execution
 		end
 
+feature {WGI_EXPORTER, WGI_CONNECTOR} -- Execution: rescue
+
+	execute_rescue (e: detachable EXCEPTION)
+			-- Execute on rescue.
+		do
+			(create {WGI_RESCUE_EXECUTION}).execute (request, response, e)
+		end		
+
 feature -- Status report
 
 	is_valid_end_of_execution: BOOLEAN
@@ -61,7 +69,6 @@ invariant
 
 	wgi_request_set: request /= Void
 	wgi_response_set: response /= Void
-
 
 note
 	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"

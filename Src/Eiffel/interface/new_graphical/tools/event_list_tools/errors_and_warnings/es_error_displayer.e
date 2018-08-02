@@ -263,7 +263,7 @@ feature -- Basic operations
 			a_cookie_attached: a_cookie /= Void
 			not_a_cookie_is_null: not a_cookie.is_null
 			a_handler_attached: a_handler /= Void
-			not_a_handler_warning_list_is_empty: not a_handler.warning_list.is_empty
+			not_a_handler_warning_list_is_empty: a_handler.has_warning
 		local
 			service: EVENT_LIST_S
 			l_warnings: LIST [ERROR]

@@ -102,6 +102,18 @@
 		<geant target="copy_from_to_w_code" if="${tmp0_available}=true" />
 		<echo message="! Unavailable: W_code folder= ${wcode_dir}" unless="${tmp0_available}=true" />
 
+		<!-- contrib -->
+		<echo message="Update C_library ..." />
+		<set name="EIFFEL_SRC_CLIB" value="${EIFFEL_SRC}${path_separator}C_library" />
+		<set name="ISE_EIFFEL_WB_CLIB" value="${ISE_EIFFEL}_workbench${path_separator}C_library" />
+		<copy 	dir="${EIFFEL_SRC_CLIB}"
+			to_directory="${ISE_EIFFEL_WB_CLIB}"
+				force="true" unless="${return_code}=0" >
+			<fileset include="@(**/*)" />
+		</copy>
+		<unset name="EIFFEL_SRC_CLIB" />
+		<unset name="ISE_EIFFEL_WB_CLIB" />
+
 		<!-- libraries -->
 		<mkdir directory="${ISE_EIFFEL}_workbench${path_separator}library" />
 		<available resource="${EIFFEL_SRC}${path_separator}library" variable="tmp0_available" />
@@ -245,16 +257,8 @@
 				force="true" unless="${ISE_PLATFORM}=windows" >
 				<fileset include="@(**/*)" />
 			</copy>
-		</group>
-
-		<copy to_directory="${ISE_EIFFEL}_workbench${path_separator}studio${path_separator}config${path_separator}${ISE_PLATFORM}" 
-			dir="${ISE_EIFFEL}${path_separator}studio${path_separator}config${path_separator}unix" 
-			force="true" unless="${is_windows}" >
-			<fileset include="@(**/*)" />
-		</copy>
-		<group if="$is_windows">
-			<copy to_directory="${ISE_EIFFEL}_workbench${path_separator}studio${path_separator}config${path_separator}${ISE_PLATFORM}" 
-				dir="${ISE_EIFFEL}_workbench${path_separator}studio${path_separator}config${path_separator}windows" 
+			<copy to_directory="${ISE_EIFFEL}_workbench${path_separator}studio${path_separator}config${path_separator}${ISE_PLATFORM}${path_separator}msc_vc140" 
+				dir="${ISE_EIFFEL}_workbench${path_separator}studio${path_separator}config${path_separator}windows${path_separator}msc" 
 				force="true" unless="${ISE_PLATFORM}=windows" >
 				<fileset include="@(**/*)" />
 			</copy>

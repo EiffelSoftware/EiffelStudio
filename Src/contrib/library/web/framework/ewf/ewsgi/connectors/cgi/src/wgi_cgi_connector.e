@@ -38,34 +38,16 @@ feature -- Execution
 				exec.execute
 				res.push
 				exec.clean
+			elseif exec /= Void then
+				exec.execute_rescue ((create {EXCEPTION_MANAGER}).last_exception)
+				exec.clean
 			else
-				process_rescue (res)
-				if exec /= Void then
-					exec.clean
-				end
+				(create {WGI_RESCUE_EXECUTION}).execute (req, res, (create {EXCEPTION_MANAGER}).last_exception)
 			end
 		rescue
 			if not rescued then
 				rescued := True
 				retry
-			end
-		end
-
-	process_rescue (res: detachable WGI_RESPONSE)
-			-- Handle rescued execution of current request.
-		do
-			if attached (create {EXCEPTION_MANAGER}).last_exception as e and then attached e.trace as l_trace then
-				if res /= Void then
-					if not res.status_is_set then
-						res.set_status_code ({HTTP_STATUS_CODE}.internal_server_error, Void)
-					end
-					if res.message_writable then
-						res.put_string ("<pre>")
-						res.put_string (html_encoder.encoded_string (l_trace))
-						res.put_string ("</pre>")
-					end
-					res.push
-				end
 			end
 		end
 

@@ -1,11 +1,11 @@
-note
-	description : "Objects used to evaluate a DBG_EXPRESSION ..."
+﻿note
+	description: "Objects used to evaluate a DBG_EXPRESSION ..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date        : "$Date$"
-	revision    : "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 	fixme: "FIXME jfiat [2007/05/07] : factorize code between process_array_const_b and process_tuple_const_b"
-	fixme: "check all case where we do not create a tmp_result .. should we set it to Void? "
+	fixme: "check all case where we do not create a tmp_result ... should we set it to Void? "
 
 class
 	DBG_EXPRESSION_EVALUATOR_B
@@ -111,7 +111,7 @@ feature {NONE} -- Evaluation
 			elseif on_class then
 				init_context_address_with_current_callstack
 			elseif on_object then
-				init_context_on_object_with_current_callstack
+				init_context_on_object_with_current_callstack (context.address)
 			end
 
 			debug ("debugger_evaluator")
@@ -2300,7 +2300,7 @@ feature -- Context: Element change
 			end
 		end
 
-	init_context_on_object_with_current_callstack
+	init_context_on_object_with_current_callstack (addr: DBG_ADDRESS)
 			-- Init context on object with data from current callstack
 			-- i.e: current debugging context
 		local
@@ -2308,14 +2308,15 @@ feature -- Context: Element change
 		do
 			init_context_with_current_callstack
 
-			if attached debugger_manager.object_manager as objman and then objman.is_valid_and_known_object_address (context.address) then
-				dobj := objman.debugged_object (context.address, 0, 0)
+			if attached debugger_manager.object_manager as objman and then objman.is_valid_and_known_object_address (addr) then
+				dobj := objman.debugged_object (addr, 0, 0)
 			else
 				dobj := Void
 			end
 			if dobj = Void or else dobj.is_erroneous then
-				dbg_error_handler.notify_error_expression (Debugger_names.msg_error_during_context_preparation (Debugger_names.msg_error_unable_to_get_valid_target_for (context.address.output)))
+				dbg_error_handler.notify_error_expression (Debugger_names.msg_error_during_context_preparation (Debugger_names.msg_error_unable_to_get_valid_target_for (addr.output)))
 			else
+				context.set_address (addr)
 				context.set_data (context.feature_i, dobj.dynamic_class, dobj.class_type, context.local_table, context.object_test_locals, context.breakable_index, context.bp_nested_index)
 				apply_context
 			end

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="mci_splash" uuid="D658AF38-884C-439C-B2C7-01A0F2DA7047">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="mci_splash" uuid="D658AF38-884C-439C-B2C7-01A0F2DA7047">
 	<target name="mci_splash">
 		<root cluster="root_cluster" class="APPLICATION" feature="make"/>
 		<option warning="true" full_class_checking="false" is_obsolete_routine_type="true" syntax="obsolete">

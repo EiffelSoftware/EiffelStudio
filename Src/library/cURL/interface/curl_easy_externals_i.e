@@ -275,7 +275,7 @@ feature {NONE} -- C externals
 				#ifdef CURL_STATICLIB
 					return (FUNCTION_CAST(CURL *, ()) $a_api)();
 				#else
-					/* Using the proper calling convention for dynamic module */
+						/* Using the proper calling convention for dynamic module */
 					return (FUNCTION_CAST(CURL *, ()) $a_api)();
 				#endif
 			]"

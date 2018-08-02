@@ -333,7 +333,91 @@ feature -- Access: cache system
 			cache_for_book_cms_menu (a_version_id, a_book_name).delete
 		end
 
-	append_available_versions_to_xhtml (pg: like new_wiki_page; a_version_id: READABLE_STRING_GENERAL; a_response: CMS_RESPONSE; a_output: STRING_8)
+	append_available_versions_menu_to_xhtml (pg: detachable like new_wiki_page; a_version_id: detachable READABLE_STRING_GENERAL; a_response: CMS_RESPONSE; a_output: STRING_8)
+		local
+			s, loc, uri: detachable STRING
+			l_link_title, lab: detachable READABLE_STRING_GENERAL
+			l_curr_version: READABLE_STRING_GENERAL
+			l_version_id: READABLE_STRING_GENERAL
+			i: INTEGER
+		do
+			if attached available_versions (False) as l_versions and then not l_versions.is_empty then
+				loc := a_response.location
+				if loc.starts_with_general ("doc/") then
+					if loc.starts_with_general ("doc/version/") then
+						i := loc.index_of ('/', 13)
+						if i > 0 then
+							l_curr_version := loc.substring (13, i - 1)
+							s := loc.substring (i, loc.count)
+						else
+							l_curr_version := loc.substring (13, loc.count)
+							s := ""
+						end
+					else
+						s := loc.substring (4, loc.count)
+					end
+				elseif loc.same_string_general ("documentation") or loc.same_string_general ("documentation/") then
+					s := ""
+				end
+				if s /= Void then
+					a_output.append ("<ul class=%"wdocs-versions%">")
+					a_output.append (cms_api.translation ("Version", Void))
+					a_output.append ("<li class=%"active%">")
+					if a_version_id = Void then
+						l_version_id := default_version_id
+					else
+						l_version_id := a_version_id
+					end
+					lab := l_versions.item (l_version_id)
+					if l_version_id.is_case_insensitive_equal (default_version_id) then
+						if lab = Void then
+							lab := "current"
+						end
+						uri := "doc" + s
+					else
+						uri := "doc/version/" + l_version_id.out + s
+					end
+					if lab /= Void then
+						l_link_title := l_version_id + " (" + lab + ")"
+					else
+						l_link_title := l_version_id
+					end
+					a_response.append_link_to_html (l_link_title + " ...", uri, Void, a_output)
+
+					a_output.append ("<ul class=%"popup-menu%">")
+					across
+						l_versions as ic
+					loop
+						lab := ic.item
+						if l_version_id.is_case_insensitive_equal (ic.key) then
+							a_output.append ("<li class=%"active%">")
+						else
+							a_output.append ("<li>")
+						end
+						if default_version_id.is_case_insensitive_equal (ic.key) then
+							if lab = Void then
+								lab := "current"
+							end
+							uri := "doc" + s
+						else
+							uri := "doc/version/" + ic.key.out + s
+						end
+						if lab /= Void then
+							l_link_title := ic.key.to_string_32 + " (" + lab + ")"
+						else
+							l_link_title := ic.key
+						end
+						a_response.append_link_to_html (l_link_title, uri, Void, a_output)
+
+						a_output.append ("</li>")
+					end
+					a_output.append ("</ul></li>")
+					a_output.append ("</ul>%N")
+				end
+			end
+		end
+
+	append_versions_to_xhtml (a_version_ids: ITERABLE [READABLE_STRING_GENERAL]; a_response: CMS_RESPONSE; a_show_url: BOOLEAN; a_output: STRING_8; a_css_class: detachable READABLE_STRING_8)
 		local
 			s, loc, uri: detachable STRING
 			l_link_title, lab: detachable READABLE_STRING_GENERAL
@@ -359,53 +443,40 @@ feature -- Access: cache system
 					s := ""
 				end
 				if s /= Void then
-					a_output.append ("<ul class=%"wdocs-versions%">")
-					a_output.append (cms_api.translation ("Version", Void))
-					a_output.append ("<li class=%"active%">")
-					lab := l_versions.item (a_version_id)
-					if a_version_id.is_case_insensitive_equal (default_version_id) then
-						if lab = Void then
-							lab := "current"
-						end
-						uri := "doc" + s
+					if a_css_class /= Void then
+						a_output.append ("<ul class=%"" + a_css_class + "%">")
 					else
-						uri := "doc/version/" + a_version_id.out + s
+						a_output.append ("<ul>")
 					end
-					if lab /= Void then
-						l_link_title := a_version_id + " (" + lab + ")"
-					else
-						l_link_title := a_version_id
-					end
-					a_response.append_link_to_html (l_link_title + " ...", uri, Void, a_output)
-
-					a_output.append ("<ul class=%"popup-menu%">")
 					across
 						l_versions as ic
 					loop
 						lab := ic.item
-						if a_version_id.is_case_insensitive_equal (ic.key) then
-							a_output.append ("<li class=%"active%">")
-						else
+						if across a_version_ids as vic some vic.item.is_case_insensitive_equal (ic.key) end then
+								-- Excluded
 							a_output.append ("<li>")
-						end
-						if default_version_id.is_case_insensitive_equal (ic.key) then
-							if lab = Void then
-								lab := "current"
+							if default_version_id.is_case_insensitive_equal (ic.key) then
+								if lab = Void then
+									lab := "current"
+								end
+								uri := "doc" + s
+							else
+								uri := "doc/version/" + ic.key.out + s
 							end
-							uri := "doc" + s
-						else
-							uri := "doc/version/" + ic.key.out + s
-						end
-						if lab /= Void then
-							l_link_title := ic.key.to_string_32 + " (" + lab + ")"
-						else
-							l_link_title := ic.key
-						end
-						a_response.append_link_to_html (l_link_title, uri, Void, a_output)
+							if lab /= Void then
+								l_link_title := ic.key.to_string_32 + " (" + lab + ")"
+							else
+								l_link_title := ic.key
+							end
+							if a_show_url then
+								l_link_title := l_link_title + ": " + uri
+							end
 
-						a_output.append ("</li>")
+							a_response.append_link_to_html (l_link_title, uri, Void, a_output)
+
+							a_output.append ("</li>")
+						end
 					end
-					a_output.append ("</ul></li>")
 					a_output.append ("</ul>%N")
 				end
 			end
@@ -575,7 +646,8 @@ feature -- Page management
 			end
 		end
 
-	save_wiki_page (a_page: like new_wiki_page; a_parent_page: detachable like new_wiki_page; a_source: detachable READABLE_STRING_8; a_path: detachable PATH; a_book_id: READABLE_STRING_GENERAL; a_manager: WDOCS_MANAGER; a_context: detachable WDOCS_CHANGE_CONTEXT)
+	save_wiki_page (a_page: like new_wiki_page; a_parent_page: detachable like new_wiki_page; a_source: detachable READABLE_STRING_8;
+			a_path: detachable PATH; a_book_id: READABLE_STRING_GENERAL; a_manager: WDOCS_MANAGER; a_context: detachable WDOCS_CHANGE_CONTEXT)
 			-- Save page `a_page' with source `a_source' into file `a_path' or inside folder `a_path' if `a_path' is a folder.
 		local
 			p: detachable PATH
@@ -588,6 +660,7 @@ feature -- Page management
 			l_storage_layer: like new_storage_layer
 			md_text: WDOCS_METADATA_WIKI_TEXT
 			l_prev_md: detachable STRING_TABLE [READABLE_STRING_32]
+			l_save_succeed, l_commit_succeed: BOOLEAN
 		do
 			reset_error
 
@@ -642,6 +715,11 @@ feature -- Page management
 					if not a_page.has_metadata ("uuid") then
 						a_page.set_metadata ((create {UUID_GENERATOR}).generate_uuid.out, "uuid")
 					end
+					if not a_page.has_metadata ("publication_date") then
+						a_page.set_metadata (cms_api.date_time_to_string (create {DATE_TIME}.make_now_utc), "publication_date")
+					end
+					a_page.set_metadata (cms_api.date_time_to_string (create {DATE_TIME}.make_now_utc), "modification_date")
+
 					if attached a_page.metadata_table as tb then
 						across
 							tb as ic
@@ -662,15 +740,18 @@ feature -- Page management
 					end
 
 					l_storage_layer := new_storage_layer
+						-- Save wiki file
 					if (create {FILE_UTILITIES}).file_path_exists (p) then
 						l_storage_layer.overwrite_file (txt, p)
 					else
 						prepare_wiki_parent_directory (p.parent, a_parent_page, l_storage_layer)
 						l_storage_layer.new_file (txt, p)
 					end
+					l_save_succeed := not has_error
 					l_storage_layer.commit (a_context, Void)
+					l_commit_succeed := not has_error
 					a_page.set_text (create {WIKI_CONTENT_TEXT}.make_from_string (txt))
-					if not has_error then
+					if l_save_succeed then
 						a_manager.refresh_page_data (a_book_id, a_page)
 						l_storage_layer.update (documentation_dir.extended (a_manager.version_id))
 						cache_for_wiki_page_xhtml (a_manager.version_id, a_book_id, a_page).delete

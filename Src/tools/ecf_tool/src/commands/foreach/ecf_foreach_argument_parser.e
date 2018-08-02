@@ -40,10 +40,16 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	regexp_pattern: detachable READABLE_STRING_32
+			-- Pattern matching ecf file name.
+		do
+			if has_option (regexp_pattern_switch) and then attached option_of_name (regexp_pattern_switch) as o and then o.has_value then
+				Result := o.value
+			end
+		end
+
 	expression: STRING_32
 			-- Expression to evaluate for each ecf file.
-		local
-			f: RAW_FILE
 		once
 			create Result.make_empty
 			across
@@ -165,7 +171,8 @@ feature {NONE} -- Switches
 	switches: ARRAYED_LIST [ARGUMENT_SWITCH]
 			-- Retrieve a list of switch used for a specific application
 		once
-			create Result.make (5)
+			create Result.make (6)
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (regexp_pattern_switch, "Regexp pattern to match ecf filename", True, False, regexp_pattern_switch, "regexp-pattern", False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (include_switch, "Include <directory>", True, True, include_switch, "directory", False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (exclude_switch, "Exclude <directory>", True, True, exclude_switch, "directory", False))
 
@@ -176,6 +183,7 @@ feature {NONE} -- Switches
 
 	simulation_switch: STRING = "n|simulation"
 	execution_forced_switch: STRING = "f|force"
+	regexp_pattern_switch: STRING = "regexp-match"
 	include_switch: STRING = "include"
 	exclude_switch: STRING = "exclude"
 	verbose_switch: STRING = "v|verbose"
@@ -194,7 +202,7 @@ feature {NONE} -- Implementation
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

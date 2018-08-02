@@ -38,6 +38,8 @@ test	ca-local-only-initializes-result		codeanalysis026 tcf pass code_analysis ca
 test	ca-self-comparison				codeanalysis027 tcf pass code_analysis ca071
 test	ca-inequality-in-conditional			codeanalysis028 tcf pass code_analysis ca046
 test	ca-empty-compound-in-conditional		codeanalysis029 tcf pass code_analysis ca017
+test	ca-manifest-array-type-mismatch			codeanalysis030 tcf pass code_analysis ca093
+test	ca-local-used-in-creation-argument		codeanalysis031 tcf pass code_analysis
 
 -- EiffelTime tests
 
@@ -68,6 +70,7 @@ test	array-force-precondition	array009 tcf pass array
 test	array-binary-search-overflow	array010 tcf fail array
 test	array-force2				array011 tcf fail array
 test	array-operation-violations		array012 tcf pass array
+test	array-force_and_fill		array013 tcf pass array
 
 test	list-is-equal			list001 tcf pass list
 test	list-put-extend			list002 tcf pass list
@@ -581,6 +584,7 @@ test	typed-manifest-array-item-validity	valid292 tcf pass validity manifest arra
 test	typed-manifest-array-type-validity	valid293 tcf pass validity manifest array
 test	identifier-scope-validity		valid294 tcf pass validity scope argument local object_test separate iteration agent
 test	identifier-scope-validity-recompilation	valid295 tcf pass validity scope argument local object_test separate iteration agent incrementality
+test	obsolete-feature-call-date	valid296 tcf pass validity warning obsolete_call
 
 -- Multiple error reporting tests
 test	multi-error-degree-4	multierr001 tcf pass multi-errors
@@ -2772,20 +2776,30 @@ test	agent-third-formal-finalization	agent014 tcf pass agents finalizing
 test	agent-introspection-open-argument	agent015 tcf pass agents library
 
 -- Tests for instance-free features
-test	instance_free-declaration		free001 tcf pass instance_free declaration validity
-test	instance_free-validity			free002 tcf pass instance_free call validity
-test	instance_free-call			free003 tcf pass instance_free call execution
-test	instance_free-call-redeclaration	free004 tcf pass instance_free call execution anchored_type
-test	instance_free-call-derivation		free005 tcf pass instance_free call execution formal generic
-test	instance_free-call-on-deferred		free006 tcf fail instance_free call execution
-test	instance_free-external-assertion	free007 tcf pass instance_free call validity
-test	instance_free-redeclaration-of-class	free008 tcf pass instance_free declaration adaptation validity
-test	instance_free-merging			free009 tcf pass instance_free declaration adaptation validity
-test	instance_free-joining			free010 tcf pass instance_free declaration adaptation validity
-test	instance_free-redeclaration-to-class	free011 tcf pass instance_free declaration adaptation validity
-test	instance_free-redeclaration-validity	free012 tcf pass instance_free declaration adaptation validity
-test	instance_free-merging-validity		free013 tcf pass instance_free declaration adaptation validity
-test	instance_free-joining-validity		free014 tcf pass instance_free declaration adaptation validity
+test	instance_free-declaration			free001 tcf pass instance_free declaration validity
+test	instance_free-validity				free002 tcf pass instance_free call validity
+test	instance_free-call				free003 tcf pass instance_free call execution
+test	instance_free-call-redeclaration		free004 tcf pass instance_free call execution anchored_type
+test	instance_free-call-derivation			free005 tcf pass instance_free call execution formal generic
+test	instance_free-call-on-deferred			free006 tcf pass instance_free call execution
+test	instance_free-external-assertion		free007 tcf pass instance_free call validity
+test	instance_free-redeclaration-of-class		free008 tcf pass instance_free declaration adaptation validity
+test	instance_free-merging				free009 tcf pass instance_free declaration adaptation validity
+test	instance_free-joining				free010 tcf pass instance_free declaration adaptation validity
+test	instance_free-redeclaration-to-class		free011 tcf pass instance_free declaration adaptation validity
+test	instance_free-redeclaration-validity		free012 tcf pass instance_free declaration adaptation validity
+test	instance_free-merging-validity			free013 tcf pass instance_free declaration adaptation validity
+test	instance_free-joining-validity			free014 tcf pass instance_free declaration adaptation validity
+test	instance_free-valid-explicit-redeclaration	free015 tcf pass instance_free declaration adaptation validity
+test	instance_free-valid-implicit-redeclaration	free016 tcf pass instance_free declaration adaptation validity
+test	instance_free-invalid-explicit-redeclaration	free017 tcf pass instance_free declaration adaptation validity
+test	instance_free-invalid-implicit-redeclaration	free018 tcf pass instance_free declaration adaptation validity
+test	instance_free-valid-explicit-merging		free019 tcf pass instance_free declaration adaptation validity
+test	instance_free-valid-implicit-merging		free020 tcf pass instance_free declaration adaptation validity
+test	instance_free-invalid-explicit-merging		free021 tcf pass instance_free declaration adaptation validity
+test	instance_free-invalid-implicit-merging		free022 tcf pass instance_free declaration adaptation validity
+test	instance_free-valid-explicit-joining		free023 tcf pass instance_free declaration adaptation validity
+test	instance_free-invalid-explicit-joining		free024 tcf pass instance_free declaration adaptation validity
 
 -- Tests for platform specific results
 test	print-large-pointer				platform001 tcf pass platform

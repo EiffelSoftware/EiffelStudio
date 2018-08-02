@@ -75,6 +75,10 @@ feature -- Access
 					Result := file_to_item (f)
 					f.close
 				end
+			else
+				if f /= Void and then not f.is_closed then
+					f.close
+				end				
 			end
 		rescue
 			retried := True
@@ -106,18 +110,28 @@ feature -- Element change
 		local
 			f: RAW_FILE
 			d: DIRECTORY
+			retried: BOOLEAN
 		do
-			create f.make_with_path (path)
-				-- Create recursively parent directory if it does not exists.
-			create d.make_with_path (path.parent)
-			if not d.exists then
-				d.recursive_create_dir
+			if not retried then
+				create f.make_with_path (path)
+					-- Create recursively parent directory if it does not exists.
+				create d.make_with_path (path.parent)
+				if not d.exists then
+					d.recursive_create_dir
+				end
+				if not f.exists or else f.is_access_writable then
+					f.open_write
+					item_to_file (g, f)
+					f.close
+				end
+			else
+				if f /= Void and then not f.is_closed then
+					f.close
+				end
 			end
-			if not f.exists or else f.is_access_writable then
-				f.open_write
-				item_to_file (g, f)
-				f.close
-			end
+		rescue
+			retried := True
+			retry
 		end
 
 feature -- Helpers
@@ -145,6 +159,6 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

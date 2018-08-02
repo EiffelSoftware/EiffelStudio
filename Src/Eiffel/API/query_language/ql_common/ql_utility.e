@@ -92,28 +92,46 @@ feature -- Access
 		local
 			l_path: ARRAYED_LIST [QL_ITEM]
 			l_target: CONF_TARGET
+			l_target_system: CONF_SYSTEM
 			l_is_application_target_reached: BOOLEAN
 		do
+				-- FIXME: check the remote target case [2018-05-31].
 			create l_path.make (10)
 			from
 				l_target := a_target
 			until
-				l_is_application_target_reached
+				l_is_application_target_reached or l_target = Void
 			loop
 				l_path.put_front (create {QL_TARGET}.make (l_target))
-				if l_target.system = l_target.system.application_target.system then
-					l_target := l_target.system.application_target
+				l_target_system := l_target.system
+				if
+					attached l_target_system.application_target as l_app_target and then
+					l_target_system = l_app_target.system
+				then
+					l_target := l_app_target
 					l_is_application_target_reached := True
+				elseif attached l_target_system.library_target as l_lib_target then
+					l_target := l_lib_target
 				else
 					check
-						library_target: l_target.system.library_target /= Void
+						application_or_library_target: False
 					end
-					l_target := l_target.system.library_target
+					l_target := Void
 				end
-				if not l_is_application_target_reached then
-					check l_target.system.lowest_used_in_library /= Void end
-					l_path.put_front (create {QL_GROUP}.make (l_target.system.lowest_used_in_library))
-					l_target := l_target.system.lowest_used_in_library.target
+
+				if l_target /= Void then
+					l_target_system := l_target.system
+
+					if not l_is_application_target_reached then
+						if attached l_target_system.lowest_used_in_library as l_lowest_used_in_library then
+							l_path.put_front (create {QL_GROUP}.make (l_lowest_used_in_library))
+							l_target := l_lowest_used_in_library.target
+						else
+								-- Unless the target is a remote target...
+							check target_system_has_lowest_used_in_library: False end
+							l_target := Void
+						end
+					end
 				end
 			end
 			set_parents (l_path)

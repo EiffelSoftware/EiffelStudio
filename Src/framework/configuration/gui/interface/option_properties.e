@@ -59,7 +59,7 @@ feature -- Update
 
 feature {NONE} -- Modification: language properties
 
-	add_void_safety_property (an_options, an_inherited_options: CONF_OPTION; a_inherits: BOOLEAN; a_check_non_client_option: BOOLEAN)
+	add_void_safety_property (an_options, an_inherited_options: CONF_TARGET_OPTION; a_inherits: BOOLEAN; a_check_non_client_option: BOOLEAN)
 			-- Add a void safety property that  may come from `an_options' (defined on the node itself) itself
 			-- or from `an_inherited_options' (final value after inheritance).
 		local
@@ -84,7 +84,7 @@ feature {NONE} -- Modification: language properties
 			end
 		end
 
-	add_cat_call_property (an_options, an_inherited_options: CONF_OPTION; a_inherits: BOOLEAN; a_check_non_client_option: BOOLEAN)
+	add_cat_call_property (an_options, an_inherited_options: CONF_TARGET_OPTION; a_inherits: BOOLEAN; a_check_non_client_option: BOOLEAN)
 			-- Add a cat call detection property that  may come from `an_options' (defined on the node itself) itself
 			-- or from `an_inherited_options' (final value after inheritance).
 		local
@@ -128,6 +128,32 @@ feature {NONE} -- Modification: language properties
 				c
 			)
 			if attached last_added_choice_property as l_prop and then a_check_non_client_option and then is_non_client_option (at_syntax_level) then
+				l_prop.enable_readonly
+			end
+		end
+
+	add_array_property (an_options, an_inherited_options: CONF_OPTION; a_inherits: BOOLEAN; a_check_non_client_option: BOOLEAN)
+			-- Add a manifest array type check property that  may come from `an_options' (defined on the node itself) itself
+			-- or from `an_inherited_options' (final value after inheritance).
+		local
+			c: CONF_VALUE_CHOICE
+		do
+			if a_inherits then
+				c := an_inherited_options.array
+			else
+				c := Void
+			end
+			add_choice_property (
+				conf_interface_names.option_array_name,
+				conf_interface_names.option_array_description,
+				create {ARRAYED_LIST [STRING_32]}.make_from_array (
+					<<conf_interface_names.option_array_mismatch_error_name,
+					conf_interface_names.option_array_mismatch_warning_name,
+					conf_interface_names.option_array_standard_name>>),
+				an_options.array,
+				c
+			)
+			if attached last_added_choice_property as l_prop and then a_check_non_client_option and then is_non_client_option (at_manifest_array_type) then
 				l_prop.enable_readonly
 			end
 		end
@@ -292,14 +318,12 @@ feature {NONE} -- Modification
 		do
 				-- Language section.
 			properties.add_section (conf_interface_names.section_language)
-				-- Void safety.
-			add_void_safety_property (an_options, an_inherited_options, a_inherits, a_check_non_client_option)
-				-- Cat call detection.
-			add_cat_call_property (an_options, an_inherited_options, a_inherits, a_check_non_client_option)
-				-- Syntax.
-			add_syntax_property (an_options, an_inherited_options, a_inherits, a_check_non_client_option)
 				-- Full checking.
 			add_full_checking_property (an_options, an_inherited_options, a_inherits, a_check_non_client_option)
+				-- Syntax.
+			add_syntax_property (an_options, an_inherited_options, a_inherits, a_check_non_client_option)
+				-- Manifest array type checks.
+			add_array_property (an_options, an_inherited_options, a_inherits, a_check_non_client_option)
 			properties.current_section.expand
 
 				-- Execution section.

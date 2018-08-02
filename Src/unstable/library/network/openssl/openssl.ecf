@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-17-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-17-0 http://www.eiffel.com/developers/xml/configuration-1-17-0.xsd" name="openssl" uuid="22EE78DC-1AC1-4EBC-8AA9-9E8D6B8C3989" library_target="openssl">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="openssl" uuid="22EE78DC-1AC1-4EBC-8AA9-9E8D6B8C3989" library_target="openssl">
 	<target name="openssl">
 		<description>Eiffel OpenSSL Wrap library.
       Copyright (c) 1984-2018, Eiffel Software and others.
@@ -46,8 +46,8 @@
 				<platform excluded_value="windows"/>
 			</condition>
 		</external_linker_flag>
-		<library name="clibs_openssl" location="$ISE_LIBRARY\C_library\openssl\clibs_openssl.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="clibs_openssl" location="$ISE_LIBRARY\C_library\openssl\clibs_openssl.ecf"/>
 		<cluster name="ssl" location="src\" recursive="true">
 			<file_rule>
 				<exclude>/mt$</exclude>

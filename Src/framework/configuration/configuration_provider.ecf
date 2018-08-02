@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-17-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-17-0 http://www.eiffel.com/developers/xml/configuration-1-17-0.xsd" name="provider" uuid="C030FDC5-DAAB-4027-BDF2-111569B9DB70" library_target="provider">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="provider" uuid="C030FDC5-DAAB-4027-BDF2-111569B9DB70" library_target="provider">
 	<target name="provider">
 		<root all_classes="true"/>
 		<option warning="true">
@@ -12,10 +12,10 @@
 		<library name="configuration_parser" location="configuration_parser.ecf"/>
 		<library name="criteria" location="$ISE_LIBRARY\unstable\library\pattern\criteria\criteria.ecf"/>
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
-		<library name="iron_api" location="$EIFFEL_SRC\framework\iron\api\iron_api.ecf"/>
-		<library name="iron_installation_api" location="$EIFFEL_SRC\framework\iron\api\iron_installation_api.ecf"/>
+		<library name="iron_api" location="..\iron\api\iron_api.ecf"/>
+		<library name="iron_installation_api" location="..\iron\api\iron_installation_api.ecf"/>
 		<library name="kmp_matcher" location="$ISE_LIBRARY\library\text\regexp\kmp_matcher\kmp_matcher.ecf"/>
-		<library name="package_database" location="$EIFFEL_SRC\framework\packages\database\package_database.ecf"/>
+		<library name="package_database" location="..\packages\database\package_database.ecf"/>
 		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<cluster name="src" location=".\provider\" recursive="true">

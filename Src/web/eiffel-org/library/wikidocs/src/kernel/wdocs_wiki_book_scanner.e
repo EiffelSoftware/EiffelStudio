@@ -131,6 +131,7 @@ feature -- Visiting
 			wp: WIKI_BOOK_PAGE
 			l_name: STRING_32
 			wk, pk: detachable STRING
+			conv: UTF_CONVERTER
 		do
 			Precursor (fn)
 			if attached fn.entry as e then
@@ -144,7 +145,8 @@ feature -- Visiting
 					-- already processed
 				check is_index: l_name.is_case_insensitive_equal_general ("index") end
 			else
-				wk := l_name
+					-- FIXME: why not supporting unicode name?
+				wk := conv.utf_32_string_to_utf_8_string_8 (l_name)
 				if attached parent_page as pp then
 					pk := pp.key
 					if pk.is_case_insensitive_equal_general ("index") then

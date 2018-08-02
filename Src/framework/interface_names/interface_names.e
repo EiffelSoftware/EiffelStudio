@@ -637,6 +637,7 @@ feature -- Accelerator, focus label and menu name
 	f_History_back: STRING_32			do Result := locale.translation("Go back")	end
 	m_How_to_s: STRING_32				do Result := locale.translation("&How to's")	end
 	m_If_block: STRING_32				do Result := locale.translation("&Embed in %"if...%"%TCtrl+I")	end
+	m_import_settings: STRING_32 			do Result := locale.translation_in_context ("Import Settings", "menu.tools") end
 	m_Indent: STRING_32					do Result := locale.translation("&Indent Selection%TTab")	end
 	m_keep_grid_layout: STRING_32		do Result := locale.translation("Keep grid layout")	end
 	m_Line_numbers: STRING_32			do Result := locale.translation("Toggle &Line Numbers")	end

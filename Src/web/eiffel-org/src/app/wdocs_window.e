@@ -209,7 +209,7 @@ feature {NONE} -- Implementation
 			wdocs: like wdocs_manager
 			dft: detachable READABLE_STRING_GENERAL
 		do
-			create cfg.make (environment.config_path.extended ("wdocs.ini"), "trunk")
+			create cfg.make (environment.path, "trunk")
 			dft := cfg.documentation_default_version
 			if dft = Void then
 				dft := "trunk"

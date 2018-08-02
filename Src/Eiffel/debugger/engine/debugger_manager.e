@@ -407,7 +407,8 @@ feature -- Debugger data change
 			end
 			if
 				auto_export_debugger_profiles_enabled and then
-				attached profiles_file_location_suggestion as p
+				attached profiles_file_location_suggestion as p and then
+				(profiles.count > 0 or else (create {FILE_UTILITIES}).file_path_exists (p))
 			then
 				export_profiles_data_to (p)
 			end

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="tftp_server_console" uuid="5E11F610-2835-4A71-A362-352A595C7FFC">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="tftp_server_console" uuid="5E11F610-2835-4A71-A362-352A595C7FFC">
 	<target name="tftp_server_console">
 		<root class="TFTP_SERVER_CONSOLE" feature="make"/>
 		<option warning="true" is_obsolete_routine_type="true" syntax="transitional">

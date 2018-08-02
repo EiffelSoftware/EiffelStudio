@@ -100,7 +100,7 @@ feature {NONE} -- Initialization: User interface
 
 			l_col := a_widget.column (rule_column)
 			l_col.set_title (interface_names.l_rule_code)
-			l_col.set_width (40)
+			l_col.set_width (50)
 
 			l_col := a_widget.column (description_column)
 			l_col.set_title (interface_names.l_description)

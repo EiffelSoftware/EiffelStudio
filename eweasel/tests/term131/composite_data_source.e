@@ -3,7 +3,7 @@ class
 
 feature
 
-	make (a_source: ARRAY [like data_source_anchor]) is
+	make (a_source: ARRAY [like data_source_anchor])
 		do
 			create data_sources.make
 		end

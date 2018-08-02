@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="esa_api" uuid="8B2873E9-8E2A-4490-8B6C-1122B579FD1D" library_target="esa_api">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="esa_api" uuid="8B2873E9-8E2A-4490-8B6C-1122B579FD1D" library_target="esa_api">
 	<target name="common" abstract="true">
 		<file_rule>
 			<exclude>/.svn$</exclude>
@@ -14,7 +14,6 @@
 		<setting name="exception_trace" value="true"/>
 		<capability>
 			<concurrency support="thread" use="thread"/>
-			
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="conneg" location="$ISE_LIBRARY\contrib\library\network\protocol\content_negotiation\conneg.ecf"/>

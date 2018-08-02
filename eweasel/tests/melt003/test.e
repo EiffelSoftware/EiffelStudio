@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2018 University of Southern California and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -13,18 +13,20 @@
 
 class 
 	TEST
-creation
+
+create
 	make
+
 feature
 	
-	make is
+	make
 		do
 		ensure
-			post1: check_it (<< 1, old 2, 3 >>);
-		end;
+			post1: check_it (<< 1, old 2, 3 >>)
+		end
 	
-	check_it (arg: ARRAY [ANY]): BOOLEAN is
+	check_it (arg: ARRAY [ANY]): BOOLEAN
 		do
-			Result := true;
+			Result := true
 		end
 end

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="lexical_skl" uuid="E1FFE100-60B0-0004-0001-000020160219" library_target="lexical_skl">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="lexical_skl" uuid="E1FFE100-60B0-0004-0001-000020160219" library_target="lexical_skl">
 	<description>description: &quot;ECF file for the Gobo Eiffel scanner skeletons&quot;
 		library: &quot;Gobo Eiffel Lexical  Library&quot;
 		copyright: &quot;Copyright (c) 2002-2016, Eric Bezault and others&quot;

@@ -347,7 +347,7 @@ feature -- Access: settings
 feature -- Modification
 
 	force (other: CONF_TARGET_SETTINGS)
-			-- Update current settings so that anythin defined in `other' takes precedence.
+			-- Update current settings so that anything defined in `other' takes precedence.
 		local
 			new_options: like options
 		do

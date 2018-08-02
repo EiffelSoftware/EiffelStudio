@@ -48,8 +48,8 @@ feature {NONE} -- Creation
 			Precursor
 			value := b
 			b := value
-			array_test := <<b>>
-			array_boolean := <<value>>
+			array_test := {ARRAY [TEST]} <<b>>
+			array_boolean := {ARRAY [BOOLEAN]} <<value>>
 			;(value = b).do_nothing
 			;(b = value).do_nothing
 			;(value * b).do_nothing

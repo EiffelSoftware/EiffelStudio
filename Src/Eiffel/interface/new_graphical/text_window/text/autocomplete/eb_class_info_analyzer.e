@@ -443,13 +443,17 @@ feature {NONE}-- Clickable/Editable implementation
 								Result := [feat, Void]
 							else
 								vn := token.wide_image
-								if vn /= Void and then vn.same_string (feat.name_32) then
+								if vn /= Void and then vn.is_case_insensitive_equal (feat.name_32) then
 									Result := [feat, Void]
 								end
 							end
 						elseif attached token.previous as l_prev and then l_prev.wide_image.same_string_general (".") then
 								-- Ignore nested expression.
-						elseif cl.has_feature_table and then attached cl.feature_with_name_32 (ft.feature_names.first.visual_name_32) as feat then
+						elseif
+							cl.has_feature_table and then
+							ft /= Void and then
+							attached cl.feature_with_name_32 (ft.feature_names.first.visual_name_32) as feat
+						then
 							if token_image_is_same_as_word (token, "precursor") then
 								l_precursor_feat := Void
 								across
@@ -494,7 +498,7 @@ feature {NONE}-- Clickable/Editable implementation
 										until
 											td /= Void
 										loop
-											if vn.same_string (ic.item) then
+											if vn.is_case_insensitive_equal (ic.item) then
 												td := feat.ast
 											end
 										end
@@ -822,9 +826,9 @@ feature {NONE} -- Implementation (`type_from')
 				l_named_tuple_type := {NAMED_TUPLE_TYPE_A} / last_target_type
 				l_processed_class := last_target_type.base_class
 				written_class := l_processed_class
-				if 
-					l_processed_class /= Void and then l_processed_class.has_feature_table 
-					or l_named_tuple_type /= Void 
+				if
+					l_processed_class /= Void and then l_processed_class.has_feature_table
+					or l_named_tuple_type /= Void
 				then
 					type := Void
 					if l_named_tuple_type /= Void then
@@ -1761,10 +1765,10 @@ feature {NONE}-- Implementation
 					if feat /= Void and then feat.type /= Void then
 						Result := feat.type
 						if Result.is_formal then
-							if 
-								attached {FORMAL_A} Result as formal and then 
-								a_type.has_generics and then 
-								a_type.generics.valid_index (formal.position) 
+							if
+								attached {FORMAL_A} Result as formal and then
+								a_type.has_generics and then
+								a_type.generics.valid_index (formal.position)
 							then
 								Result := a_type.generics [formal.position]
 							end

@@ -339,7 +339,9 @@ feature -- Basic Operations
 						if line = Void then
 							check is_eiffel_line: False end
 						elseif a_position >= invariant_index then
-							if attached described_access_id (token, line, ft) as tu then
+								-- In Invariant clause ...
+								-- FIXME jfiat [2018/05/17] : find way to resolve token for invariants.
+							if attached described_access_id (token, line, Void) as tu then
 								feat := tu.feat
 								create {FEATURE_STONE} Result.make (feat)
 							else
@@ -840,7 +842,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

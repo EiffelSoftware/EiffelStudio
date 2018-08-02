@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-17-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-17-0 http://www.eiffel.com/developers/xml/configuration-1-17-0.xsd" name="libevent" uuid="E20A0027-1D9F-40AF-9269-DD09AC083AE6" library_target="libevent">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="libevent" uuid="E20A0027-1D9F-40AF-9269-DD09AC083AE6" library_target="libevent">
 	<target name="libevent">
 		<description>libevent: libevent wrapper library for Eiffel.
 			Copyright (c) 1984-2016, Eiffel Software and others.

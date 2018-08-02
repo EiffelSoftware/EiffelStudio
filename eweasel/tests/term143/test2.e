@@ -1,4 +1,5 @@
 class TEST2
+
 inherit
 	TEST1 [STRING]
 		redefine
@@ -8,7 +9,7 @@ create
 	make
 
 feature
-	make is
+	make
 		do
 
 		end

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="tree_view_ctl" uuid="31988705-6DA4-49B0-8668-AD7657D5EEA7">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="tree_view_ctl" uuid="31988705-6DA4-49B0-8668-AD7657D5EEA7">
 	<target name="tree_view_ctl">
 		<root cluster="root_cluster" class="TREE_VIEW_CTL" feature="make"/>
 		<option warning="true" full_class_checking="false" is_obsolete_routine_type="true" syntax="transitional">

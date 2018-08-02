@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="xebra_deployer" uuid="DA33C660-20DA-4B32-820E-2F37F08DB248">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="xebra_deployer" uuid="DA33C660-20DA-4B32-820E-2F37F08DB248">
 	<target name="xebra_deployer">
 		<root class="XD_APPLICATION" feature="make"/>
 		<option warning="true">
@@ -10,10 +10,10 @@
 			<concurrency support="thread"/>
 		</capability>
 		<precompile name="precompile" location="$XEBRA_LIBRARY\xebra_precompile\xebra_precompile.ecf">
- 			<condition>
+			<condition>
 				<custom name="ISE_NO_PRECOMP" excluded_value="true"/>
- 			</condition>
- 		</precompile>		
+			</condition>
+		</precompile>
 		<library name="arg_parser" location="$ISE_LIBRARY\library\argument_parser\argument_parser.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="error_manager" location="$EIFFEL_SRC\framework\base\application\error_manager\error_manager.ecf"/>

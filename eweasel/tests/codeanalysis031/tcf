@@ -1,0 +1,10 @@
+test_name 	 ca-local-used-in-creation-argument
+test_description A local variable should be considered as used if it is set by a creation instruction that used this local in arguments.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+analyze_code rule "CA020"
+analyze_code_result ok
+
+test_end

@@ -3,7 +3,7 @@
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
-	revision	: "$Revision$"
+	revision: "$Revision$"
 
 class
 	EB_DYNAMIC_LIB_WINDOW
@@ -825,35 +825,30 @@ feature {NONE} -- Implementation: Creation routine selection
 		end
 
 	valid_creation_routines (cl:CLASS_C): LIST [E_FEATURE]
-			-- Calculate the list of valid creation procedure.
+			-- Calculate the list of valid creation procedures.
 		require
 			valid_class_c: cl /= Void and then cl.has_feature_table
 		local
-			tmp_creation: E_FEATURE
-			dfcr: FEATURE_I
 			i, max: INTEGER
 		do
 			create {ARRAYED_LIST [E_FEATURE]} Result.make (5)
 			if cl.creators /= Void then
-				if attached {ARRAY [STRING]} cl.creators.current_keys as list_creators then
+					-- TODO: Replace the following iteration on keys with the direct iteration on hash table with an across loop.
+				if attached cl.creators.current_keys as list_creators then
 					max := list_creators.upper
 					from
 						i := list_creators.lower
 					until
 						i > max
 					loop
-						tmp_creation := cl.feature_with_name (list_creators @ i)
-						if tmp_creation /= Void and then not tmp_creation.has_arguments then
+						if attached cl.feature_with_name (list_creators [i]) as tmp_creation and then not tmp_creation.has_arguments then
 							Result.extend (tmp_creation)
 						end
 						i := i + 1
 					end
 				end
-			else
-				dfcr := cl.default_create_feature
-				if dfcr /= Void then
-					Result.extend (dfcr.api_feature (cl.class_id))
-				end
+			elseif attached cl.default_create_feature as default_create_feature then
+				Result.extend (default_create_feature.api_feature (cl.class_id))
 			end
 		ensure
 			not_void_result: Result /= Void
@@ -1801,7 +1796,9 @@ invariant
 	graphical_synchronization_ok: exports_list.count = exports.count
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	ca_ignore:
+		"CA093", "CA093: manifest array type mismatch"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

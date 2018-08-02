@@ -12,7 +12,7 @@ feature -- Access
 	copyright: IMMUTABLE_STRING_32
 			-- <Precursor>
 		once
-			create Result.make_from_string_general ("Copyright Eiffel Software 1985-2017. All Rights Reserved.")
+			Result := {STRING_32} "Copyright Eiffel Software 1985-" + {EIFFEL_ENV}.copyright_year + ". All Rights Reserved."
 		end
 
 	version: attached STRING

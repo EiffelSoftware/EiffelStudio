@@ -68,6 +68,7 @@ feature {NONE} -- Initialization
 			add_rule (create {CA_LOCAL_NAMING_CONVENTION_RULE}.make (settings.preference_manager))
 			add_rule (create {CA_LOCAL_USED_FOR_RESULT_RULE}.make)
 			add_rule (create {CA_LOOP_INVARIANT_COMPUTATION_RULE}.make)
+			add_rule (create {CA_MANIFEST_ARRAY_TYPE_RULE}.make)
 			add_rule (create {CA_MANY_ARGUMENTS_RULE}.make (settings.preference_manager))
 			add_rule (create {CA_MERGEABLE_CONDITIONALS_RULE}.make)
 			add_rule (create {CA_MERGEABLE_FEATURE_CLAUSES_RULE}.make)

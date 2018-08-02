@@ -76,7 +76,7 @@ feature -- Access
 	location: detachable LOCATION_AS
 			-- Location of rule violation, if available.
 
-	fixes: LINKED_LIST [CA_FIX]
+	fixes: LINKED_LIST [FIX_CLASS]
 			-- Fix "strategies". Empty if there is no fix available for this rule
 			-- violation.
 

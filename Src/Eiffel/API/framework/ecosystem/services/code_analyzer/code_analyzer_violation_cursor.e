@@ -20,11 +20,21 @@ feature {NONE} -- Creation.
 
 	make (violations: like {CA_CODE_ANALYZER}.rule_violations)
 			-- Initialize cursor with data from `collection`.
+		local
+			i: like inner_cursor
 		do
-			outer_cursor := violations.new_cursor
-			if not outer_cursor.after then
-				inner_cursor := outer_cursor.item.new_cursor
+				-- Look for a non-empty inner container.
+			across
+				violations as o
+			from
+				outer_cursor := o
+				i := inner_empty_structure.new_cursor
+			until
+				not i.after
+			loop
+				i := o.item.new_cursor
 			end
+			inner_cursor := i
 		end
 
 feature -- Access
@@ -32,11 +42,7 @@ feature -- Access
 	item: CA_RULE_VIOLATION
 			-- <Precursor>
 		do
-			check
-				from_precondition: attached inner_cursor as c
-			then
-				Result := c.item
-			end
+			Result := inner_cursor.item
 		end
 
 feature -- Status report	
@@ -44,33 +50,34 @@ feature -- Status report
 	after: BOOLEAN
 			-- <Precursor>
 		do
-			Result := attached inner_cursor as c implies c.after
+			Result := inner_cursor.after
 		ensure then
-			false_definition: not Result implies (attached inner_cursor as c and then not c.after)
+			definition: Result = inner_cursor.after
 		end
 
 feature -- Cursor movement
 
 	forth
 			-- <Precursor>
+		local
+			o: like outer_cursor
+			i: like inner_cursor
 		do
-			check
-				inner_cursor_attached_from_precondition: attached inner_cursor as c
-			then
+			o := outer_cursor
+			i := inner_cursor
+			from
 				check
-					inner_cursor_not_after_from_precondition: not c.after
+					inner_cursor_not_after_from_precondition: not i.after
 				end
-				c.forth
-				if c.after then
-					check
-						outer_cursor_not_after_from_precondition: not outer_cursor.after
-					end
-					outer_cursor.forth
-					if outer_cursor.after then
-						inner_cursor := Void
-					end
-				end
+				i.forth
+			until
+				not i.after or else o.after
+			loop
+					-- Inner cursor has finished, advance to the next one.
+				i := o.item.new_cursor
+				o.forth
 			end
+			inner_cursor := i
 		end
 
 feature {NONE} -- Implementation: Internal cache
@@ -78,15 +85,21 @@ feature {NONE} -- Implementation: Internal cache
 	outer_cursor: like {CA_CODE_ANALYZER}.rule_violations.new_cursor
 			-- Outer cursor.
 
-	inner_cursor: detachable like {CA_CODE_ANALYZER}.rule_violations.new_cursor.item.new_cursor
+	inner_cursor: like {CA_CODE_ANALYZER}.rule_violations.new_cursor.item.new_cursor
 			-- Inner cursor.
+
+	inner_empty_structure: SORTED_TWO_WAY_LIST [CA_RULE_VIOLATION]
+			-- An empty container to initialize inner cursor.
+		once
+			create Result.make
+		end
 
 invariant
 
-	consistent_cursors: outer_cursor.after /= attached inner_cursor
+	consistent_cursors: inner_cursor.after implies outer_cursor.after
 
 note
-	copyright: "Copyright (c) 2017, Eiffel Software"
+	copyright: "Copyright (c) 2017-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

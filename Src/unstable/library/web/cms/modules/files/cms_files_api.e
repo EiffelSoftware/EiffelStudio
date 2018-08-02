@@ -37,6 +37,23 @@ feature -- Access : path
 			Result := uploads_directory.extended (thumbnail_directory_name)
 		end
 
+	is_file_owner (a_user: detachable CMS_USER; a_relative_path: PATH): BOOLEAN
+		do
+			if
+				a_user /= Void and then
+				attached metadata (new_uploads_file (a_relative_path)) as md
+			then
+				Result := a_user.same_as (md.user)
+			end
+		end
+
+	file_owner (a_relative_path: PATH): detachable CMS_USER
+		do
+			if attached metadata (new_uploads_file (a_relative_path)) as md then
+				Result := md.user
+			end
+		end
+
 feature {CMS_FILES_MODULE} -- Access : metadata path
 
 	metadata_path (f: READABLE_STRING_GENERAL): PATH

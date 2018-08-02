@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Contextual menu factory"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,20 +10,18 @@ class
 
 inherit
 
-	EB_SHARED_MANAGERS
-
-	EB_SHARED_PREFERENCES
-
 	EV_SHARED_APPLICATION
-
 	EB_RECYCLABLE
-
+	EB_SHARED_MANAGERS
+	EB_SHARED_MENU_EXTENDER
+	EB_SHARED_PIXMAPS
+	EB_SHARED_PREFERENCES
 	SHARED_BENCH_NAMES
 
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (a_window: EB_DEVELOPMENT_WINDOW)
 			-- Initialization
@@ -158,16 +156,17 @@ feature -- Class Tree Menu
 		require
 			a_menu_not_void: a_menu /= Void
 		do
-			if menu_displayable (a_pebble) then
-				if attached {DATA_STONE} a_pebble as l_data_stone then
-					build_name (a_pebble)
-					setup_pick_item (a_menu, l_data_stone)
-					extend_separator (a_menu)
-					extend_add_subcluster_item (a_menu, Void, False)
-					extend_separator (a_menu)
-					extend_add_to_menu (a_menu, l_data_stone)
-					extend_property_menu (a_menu, l_data_stone)
-				end
+			if
+				menu_displayable (a_pebble) and then
+				attached {DATA_STONE} a_pebble as l_data_stone
+			then
+				build_name (a_pebble)
+				setup_pick_item (a_menu, l_data_stone)
+				extend_separator (a_menu)
+				extend_add_subcluster_item (a_menu, Void, False)
+				extend_separator (a_menu)
+				extend_add_to_menu (a_menu, l_data_stone)
+				extend_property_menu (a_menu, l_data_stone)
 			end
 		end
 
@@ -176,16 +175,17 @@ feature -- Class Tree Menu
 		require
 			a_menu_not_void: a_menu /= Void
 		do
-			if menu_displayable (a_pebble) then
-				if attached {DATA_STONE} a_pebble as l_data_stone then
-					build_name (a_pebble)
-					setup_pick_item (a_menu, l_data_stone)
-					extend_separator (a_menu)
-					extend_add_library (a_menu)
-					extend_separator (a_menu)
-					extend_add_to_menu (a_menu, l_data_stone)
-					extend_property_menu (a_menu, l_data_stone)
-				end
+			if
+				menu_displayable (a_pebble) and then
+				attached {DATA_STONE} a_pebble as l_data_stone
+			then
+				build_name (a_pebble)
+				setup_pick_item (a_menu, l_data_stone)
+				extend_separator (a_menu)
+				extend_add_library (a_menu)
+				extend_separator (a_menu)
+				extend_add_to_menu (a_menu, l_data_stone)
+				extend_property_menu (a_menu, l_data_stone)
 			end
 		end
 
@@ -194,16 +194,17 @@ feature -- Class Tree Menu
 		require
 			a_menu_not_void: a_menu /= Void
 		do
-			if menu_displayable (a_pebble) then
-				if attached {DATA_STONE} a_pebble as l_data_stone then
-					build_name (a_pebble)
-					setup_pick_item (a_menu, l_data_stone)
-					extend_separator (a_menu)
-					extend_add_assembly (a_menu)
-					extend_separator (a_menu)
-					extend_add_to_menu (a_menu, l_data_stone)
-					extend_property_menu (a_menu, l_data_stone)
-				end
+			if
+				menu_displayable (a_pebble) and then
+				attached {DATA_STONE} a_pebble as l_data_stone
+			then
+				build_name (a_pebble)
+				setup_pick_item (a_menu, l_data_stone)
+				extend_separator (a_menu)
+				extend_add_assembly (a_menu)
+				extend_separator (a_menu)
+				extend_add_to_menu (a_menu, l_data_stone)
+				extend_property_menu (a_menu, l_data_stone)
 			end
 		end
 
@@ -376,8 +377,6 @@ feature -- Object tool, Object Viewer and Watch tool menus
 
 	watch_tool_menu (a_menu: EV_MENU; a_target_list: ARRAYED_LIST [EV_PND_TARGET_DATA]; a_source: EV_PICK_AND_DROPABLE; a_pebble: detachable ANY; a_watch_tool: ES_WATCH_TOOL_PANEL; a_grid: ES_OBJECTS_GRID)
 			-- Watch tool menu
-		local
-			l_sep_added: BOOLEAN
 		do
 			if menu_displayable (a_pebble) then
 				build_name (a_pebble)
@@ -389,14 +388,8 @@ feature -- Object tool, Object Viewer and Watch tool menus
 					extend_standard_compiler_item_menu (a_menu, a_pebble)
 					if attached {OBJECT_STONE} a_pebble as l_object_stone then
 						extend_separator (a_menu)
-						l_sep_added := True
 						extend_expanded_object_view (a_menu, a_pebble)
-
 						if attached {EV_GRID_ROW} l_object_stone.ev_item as l_row then
-							if not l_sep_added then
-								extend_separator (a_menu)
-								l_sep_added := True
-							end
 							a_menu.extend (new_menu_item (names.m_remove))
 							a_menu.last.select_actions.extend (agent a_watch_tool.remove_expression_row (l_row))
 						end
@@ -459,7 +452,6 @@ feature -- Object tool, Object Viewer and Watch tool menus
 					if not s.is_empty then
 						if not l_sep_added then
 							extend_separator (a_menu)
-							l_sep_added := True
 						end
 						a_menu.extend (new_menu_item (names.m_Copy_cell_to_clipboard))
 						a_menu.last.select_actions.extend (agent copy_to_clipboard (s))
@@ -550,6 +542,7 @@ feature {NONE} -- Menu section, Granularity 2.
 					extend_debug_feature_menus (a_menu, l_feat)
 				end
 				extend_add_to_menu (a_menu, l_feature_stone)
+				extend_feature_extension (l_feature_stone, a_menu)
 			elseif attached {CLASSC_STONE} a_pebble as l_stonec then
 				extend_basic_opening_menus (a_menu, l_stonec, True)
 				extend_separator (a_menu)
@@ -558,6 +551,7 @@ feature {NONE} -- Menu section, Granularity 2.
 				extend_debug_class_menus (a_menu, l_stonec.e_class)
 				extend_add_to_menu (a_menu, l_stonec)
 				(create {ES_CODE_ANALYSIS_BENCH_HELPER}).build_context_menu_for_class_stone (a_menu, l_stonec)
+				extend_class_extension (l_stonec, a_menu)
 			elseif attached {CLASSI_STONE} a_pebble as l_stonei then
 				extend_basic_opening_menus (a_menu, l_stonei, True)
 				extend_separator (a_menu)
@@ -579,7 +573,6 @@ feature {NONE} -- Menu section, Granularity 2.
 		require
 			a_menu_not_void: a_menu /= Void
 		do
-
 		end
 
 feature {NONE} -- Menu section, Granularity 1.
@@ -648,7 +641,6 @@ feature {NONE} -- Menu section, Granularity 1.
 			l_menu_item: EV_MENU_ITEM
 			l_unmanaged_editor: BOOLEAN
 --			l_editor_is_current_editor: BOOLEAN
-			l_selection: STRING_32
 		do
 				-- The commented code below is kept so that if one wants to add one of the commented item back to the
 				-- context menu, we know in which order we should do it.
@@ -718,7 +710,6 @@ feature {NONE} -- Menu section, Granularity 1.
 					not l_list.is_empty
 				then
 					l_menu.enable_sensitive
-					l_selection := a_editor.wide_string_selection
 					from
 						l_list.start
 					until
@@ -938,7 +929,7 @@ feature {NONE} -- Menu section, Granularity 1.
 			across
 				dev_window.managed_class_formatters as ic
 			loop
-				if attached {EB_CLASS_INFO_FORMATTER} ic.item as l_class_formatter then
+				if attached ic.item as l_class_formatter then
 					l_menu.extend (new_menu_item (l_class_formatter.menu_name))
 					l_menu.last.set_pixmap (l_class_formatter.pixel_buffer)
 					l_menu.last.select_actions.extend (agent (dev_window.tools.class_tool).show)
@@ -995,7 +986,7 @@ feature {NONE} -- Menu section, Granularity 1.
 			across
 				dev_window.managed_feature_formatters as ic
 			loop
-				if attached {EB_FEATURE_INFO_FORMATTER} ic.item as l_feature_formatter then
+				if attached ic.item as l_feature_formatter then
 					l_menu.extend (new_menu_item (l_feature_formatter.menu_name))
 					l_menu.last.set_pixmap (l_feature_formatter.pixel_buffer)
 					l_menu.last.select_actions.extend (agent (dev_window.tools.features_relation_tool).show)
@@ -1076,6 +1067,26 @@ feature {NONE} -- Menu section, Granularity 1.
 			l_menu.extend (dev_window.refactoring_manager.pull_command.new_menu_item_unmanaged)
 			l_menu.last.select_actions.wipe_out
 			l_menu.last.select_actions.extend (agent (dev_window.refactoring_manager.pull_command).drop_feature (a_stone))
+		end
+
+	extend_feature_extension (f: FEATURE_STONE; m: EV_MENU)
+			-- Extend menu `m` with entries for a feature `f`.
+		do
+			if
+				attached context_menu_extension.service as s
+			then
+				s.extend_feature (f.e_feature, agent menu_extender.extend (?, ?, ?, ?, m))
+			end
+		end
+
+	extend_class_extension (c: CLASSC_STONE; m: EV_MENU)
+			-- Extend menu `m` with entries for a class `c`.
+		do
+			if
+				attached context_menu_extension.service as s
+			then
+				s.extend_class (c.e_class, agent menu_extender.extend (?, ?, ?, ?, m))
+			end
 		end
 
 	extend_debug_class_menus (a_menu: EV_MENU; a_class_c: CLASS_C)
@@ -1206,27 +1217,28 @@ feature {NONE} -- Menu section, Granularity 1.
 
 				-- Added to Watch tool, if possible.
 			l_debugger := dev_window.eb_debugger_manager
-			if l_debugger.raised then
-				if attached {CLASSC_STONE} a_pebble as l_class_stone then
-					l_list := l_debugger.watch_tool_list
-					if not l_list.is_empty then
-						create l_menu2.make_with_text (names.m_watch_tool)
-						l_menu.extend (l_menu2)
-						from
-							l_list.start
-						until
-							l_list.after
-						loop
-							if l_list.item.is_tool_instantiated then
-								if l_list.item.is_multiple_edition then
-									l_menu2.extend (new_menu_item (l_list.item.edition_title))
-								else
-									l_menu2.extend (new_menu_item (l_list.item.title))
-								end
-								l_menu2.last.select_actions.extend (agent (l_list.item).drop_stone (l_class_stone))
+			if
+				l_debugger.raised and then
+				attached {CLASSC_STONE} a_pebble as l_class_stone
+			then
+				l_list := l_debugger.watch_tool_list
+				if not l_list.is_empty then
+					create l_menu2.make_with_text (names.m_watch_tool)
+					l_menu.extend (l_menu2)
+					from
+						l_list.start
+					until
+						l_list.after
+					loop
+						if l_list.item.is_tool_instantiated then
+							if l_list.item.is_multiple_edition then
+								l_menu2.extend (new_menu_item (l_list.item.edition_title))
+							else
+								l_menu2.extend (new_menu_item (l_list.item.title))
 							end
-							l_list.forth
+							l_menu2.last.select_actions.extend (agent (l_list.item).drop_stone (l_class_stone))
 						end
+						l_list.forth
 					end
 				end
 			end
@@ -1393,7 +1405,7 @@ feature {NONE} -- Menu section, Granularity 1.
 			end
 		end
 
-	extend_show_tool_command (a_cmd: ES_SHOW_TOOL_COMMAND; a_stone: STONE): attached EV_MENU_ITEM
+	extend_show_tool_command (a_cmd: ES_SHOW_TOOL_COMMAND; a_stone: STONE): EV_MENU_ITEM
 			-- Extends a menu item to show a stonable tool.
 		require
 			a_cmd_is_attached: a_cmd /= Void
@@ -1401,17 +1413,15 @@ feature {NONE} -- Menu section, Granularity 1.
 			a_stone_is_usable: a_cmd.is_stone_usable (a_stone)
 			a_stone_attached: a_stone /= Void
 		local
-			l_menu_item: detachable EV_MENU_ITEM
 			l_old_stone: STONE
 		do
 				-- Set the stone temporarly to retrieve the menu name, if it's based on the set stone.
 			l_old_stone := a_cmd.stone
 			a_cmd.set_stone (a_stone)
-			l_menu_item := a_cmd.new_menu_item_unmanaged
-			if l_menu_item = Void then
-				create l_menu_item.make_with_text (a_cmd.menu_name)
+			Result := a_cmd.new_menu_item_unmanaged
+			if not attached Result then
+				create Result.make_with_text (a_cmd.menu_name)
 			end
-			Result := l_menu_item
 			a_cmd.set_stone (l_old_stone)
 
 				-- Extend the menu.
@@ -1862,32 +1872,33 @@ feature {NONE} -- Implementation
 			l_menu_item: EV_MENU_ITEM
 			l_browser_context: ES_EIS_ENTRY_HELP_CONTEXT
 		do
-			if attached {EIS_LINK_STONE} a_pebble as l_pebble then
-				if attached {ES_EIS_ENTRY_HELP_CONTEXT} l_pebble.link as l_context then
+			if
+				attached {EIS_LINK_STONE} a_pebble as l_pebble and then
+				attached l_pebble.link as l_context
+			then
+				a_menu.go_i_th (1)
+				if l_context.is_http_link then
+						-- Choices to open the link
+					create l_menu_item.make_with_text (names.m_open)
+					l_context.set_is_shown_in_es (True)
+					l_menu_item.select_actions.extend (agent show_help (l_context))
+					a_menu.put_left (l_menu_item)
 					a_menu.go_i_th (1)
-					if l_context.is_http_link then
-							-- Choices to open the link
-						create l_menu_item.make_with_text (names.m_open)
-						l_context.set_is_shown_in_es (True)
-						l_menu_item.select_actions.extend (agent show_help (l_context))
-						a_menu.put_left (l_menu_item)
-						a_menu.go_i_th (1)
-						create l_menu_item.make_with_text (names.m_open_in_brower)
-						create l_browser_context.make_from_other (l_context)
-						l_browser_context.set_is_shown_in_es (False)
-						l_menu_item.select_actions.extend (agent show_help (l_browser_context))
-						a_menu.put_right (l_menu_item)
-						a_menu.forth
-					else
-							-- Only show web in EiffelStudio
-						create l_menu_item.make_with_text (names.m_open)
-						l_context.set_is_shown_in_es (False)
-						l_menu_item.select_actions.extend (agent show_help (l_context))
-						a_menu.put_left (l_menu_item)
-						a_menu.go_i_th (1)
-					end
-					a_menu.put_right (create {EV_MENU_SEPARATOR})
+					create l_menu_item.make_with_text (names.m_open_in_brower)
+					create l_browser_context.make_from_other (l_context)
+					l_browser_context.set_is_shown_in_es (False)
+					l_menu_item.select_actions.extend (agent show_help (l_browser_context))
+					a_menu.put_right (l_menu_item)
+					a_menu.forth
+				else
+						-- Only show web in EiffelStudio
+					create l_menu_item.make_with_text (names.m_open)
+					l_context.set_is_shown_in_es (False)
+					l_menu_item.select_actions.extend (agent show_help (l_context))
+					a_menu.put_left (l_menu_item)
+					a_menu.go_i_th (1)
 				end
+				a_menu.put_right (create {EV_MENU_SEPARATOR})
 			end
 		end
 
@@ -1947,10 +1958,11 @@ feature {NONE} -- Implementation
 		do
 				-- Add a separator, only if it is not the first entry in the menu
 				-- and if the last inserted entry was not a separator.
-			if not a_menu.is_empty then
-				if not attached {EV_MENU_SEPARATOR} a_menu.last then
-					a_menu.extend (create {EV_MENU_SEPARATOR})
-				end
+			if
+				not a_menu.is_empty and then
+				not attached {EV_MENU_SEPARATOR} a_menu.last
+			then
+				a_menu.extend (create {EV_MENU_SEPARATOR})
 			end
 		end
 
@@ -1991,10 +2003,18 @@ feature {NONE} -- Recycle
 		do
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Access
 
-	dev_window: EB_DEVELOPMENT_WINDOW;
-			-- Window
+	dev_window: EB_DEVELOPMENT_WINDOW
+			-- Window.
+
+feature {NONE} -- Context menu extension
+
+	context_menu_extension: SERVICE_CONSUMER [CONTEXT_MENU_EXTENSION_S]
+			-- A context menu extension service access.
+		once
+			create Result
+		end
 
 invariant
 	dev_window_not_void: dev_window /= Void

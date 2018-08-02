@@ -1,8 +1,5 @@
-note
-	description: "[
-		Base implementation of a {ROTA_S} service.
-	]"
-	author: ""
+﻿note
+	description: "Base implementation of a {ROTA_S} service."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -42,7 +39,7 @@ feature -- Access
 			l_result := connection_cache
 			if l_result = Void then
 				l_result := create {EVENT_CONNECTION [ROTA_OBSERVER, ROTA_S]}.make (
-					agent (an_observer: ROTA_OBSERVER): ARRAY [TUPLE[ EVENT_TYPE [TUPLE], PROCEDURE]]
+					agent (an_observer: ROTA_OBSERVER): ARRAY [TUPLE [EVENT_TYPE [ROTA_S, ROTA_TIMED_TASK_I], PROCEDURE [ROTA_S, ROTA_TIMED_TASK_I]]]
 						do
 							Result := <<
 									[task_run_event, agent an_observer.on_task_run],
@@ -175,7 +172,7 @@ feature {NONE} -- Factory
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

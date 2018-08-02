@@ -6,6 +6,6 @@ copy_raw	test.e $CLUSTER test.e
 copy_raw	test1.e $CLUSTER test1.e
 
 compile_melted
-compile_result	validity_error TEST1 VUTA(2) VUAR(2) VUTA(2) VUTA(2) VUTA(2) VUTA(2) VUTA(2) VWOE VWOE VWOE VWOE VWOE VWOE VWOE
+compile_result	validity_error TEST1 VUTA(2):18 VWOE:26 VUTA(2):34 VUTA(2):42 VUTA(2):50 VUAR(2):58 VUTA(2):66 VUTA(2):74 VUTA(2):82 VUTA(2):98 VWOE:115 VWOE:133 VWOE:150 VWOE:166
 
 test_end

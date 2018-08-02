@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="abel_connector_sqlite" uuid="BD841C07-CA4D-475E-8645-27138A2540F4" library_target="abel_connector_sqlite">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="abel_connector_sqlite" uuid="BD841C07-CA4D-475E-8645-27138A2540F4" library_target="abel_connector_sqlite">
 	<target name="abel_connector_sqlite">
 		<root all_classes="true"/>
 		<option warning="true">

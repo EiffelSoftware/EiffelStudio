@@ -2184,7 +2184,7 @@ feature {EXTERNAL_CLASS_C} -- Initialization
 				a := create_generic_type (t)
 			end
 				-- Associated actual type is always attached in a Void-safe class.
-			actual_type := a.as_attached_in (Current)
+			actual_type := a.as_normally_attached (Current)
 		end
 
 	create_generic_type (g: ARRAYED_LIST [TYPE_A]): GEN_TYPE_A

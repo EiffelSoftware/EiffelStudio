@@ -1,0 +1,43 @@
+<html>
+<head>
+<title>EiffelStudio installation script</title>
+</head>
+<body>
+<h1>on Linux / install.sh</h1>
+<p>To easily install latest EiffelStudio on <strong>linux system</strong>:</p>
+<code>
+	curl -sSL <a href="install.sh">https://www.eiffel.org/setup/install.sh</a> | bash
+</code>
+<p><strong>note:</strong> EiffelStudio will be installed in your current directory, you will find a eiffel_*.rc file to configure your environment</p>
+
+<h1>on Windows / install.bat</h1>
+<p>To easily install latest EiffelStudio on <strong>Windows system</strong>:</p>
+<code>
+	curl -sSL -o %TEMP%\get-es.bat <a href="install.bat">https://www.eiffel.org/setup/install.bat</a> && call %TEMP%\get-es.bat && del %TEMP%\get-es.bat
+</code>
+<p>Or you can download the file <a href="install.bat">https://www.eiffel.org/setup/install.bat</a> and execute it in a dos console.</a>
+<p>
+<strong>Note:</strong> EiffelStudio will be installed in your current directory, you will find a eiffel_*.bat file to configure your environment<br/>
+<strong>Requirements:</strong> the installation script requires 7z.exe, curl.ex or (wget.exe).<br/>
+<strong>WARNING</strong>: installing EiffelStudio using the .msi file is safer as it performs additional registration operations useful for specific tools.
+</p>
+
+<h1>Customization</h1>
+<p>You can customize the installation with the following environment variables:
+<blockquote>
+<ul>
+<li>ISE_CHANNEL: latest (default), nightly,  custom <code>major.minor.build</code> (i.e 17.05.100416 if it exists)
+</li>
+<li>ISE_PLATFORM: if not set, the script tries to find expected value</li>
+</ul>
+On <strong>Linux</strong>, you can also pass arguments to the script using <code> .. | bash -s <em>channel</em> <em>platform</em></code>.
+For instance:
+<ul>
+<li><code>curl -sSL ... | bash -s nightly </code></li>
+<li><code>curl -sSL ... | bash -s latest linux-x86-64 </code></li>
+</ul>
+On <strong>Windows</strong>, you can also use similar argument in the <code>get-es.bat nighlty</code>.
+</blockquote>
+</p>
+</body>
+</html>

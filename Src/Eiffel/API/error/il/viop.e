@@ -1,7 +1,7 @@
-note
+﻿note
 	description	: "[
-		Warning when user selected to use ompitimized version of a precompiled library,
-		but precompiled library has not been optimized.
+			Warning when user selected to use optimized version of a precompiled library,
+			but precompiled library has not been optimized.
 		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -59,7 +59,7 @@ invariant
 	valid_precompiled_path: not precompiled_path.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -90,4 +90,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class VIOP
+end

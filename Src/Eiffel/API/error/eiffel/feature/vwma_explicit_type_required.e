@@ -1,20 +1,13 @@
 ﻿note
 	description: "[
-		Manifest array has to be specified with an explicit type.
-		
-		Example:
-			x: ARRAY [NATURAL_8]
-			...
-			x := <<2, 3>> -- Implicit type is ARRAY [INTEGER] that does not conform to ARRAY [NATURAL_8].
-				-- The code has to be written as
-			x := {ARRAY [NATURAL_8]} <<2, 3>>
+		Manifest array may need to be specified with an explicit type.
 	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class VWMA_EXPLICIT_TYPE_REQUIRED
+deferred class VWMA_EXPLICIT_TYPE_REQUIRED
 
 inherit
 	VWMA
@@ -22,35 +15,38 @@ inherit
 			class_c as associated_class,
 			make as make_parent
 		undefine
-			has_associated_file
-		redefine
-			build_explain,
-			error_string,
+			has_associated_file,
 			process_issue
+		redefine
+			error_string
 		end
 
 	EIFFEL_WARNING
 		undefine
-			file_name,
-			trace,
-			trace_primary_context
-		redefine
 			build_explain,
-			error_string,
+			file_name,
 			process_issue,
+			trace,
+			trace_primary_context,
 			trace_single_line
+		redefine
+			error_string
+		end
+
+	FIX_PROVIDER_FOR_MANIFEST_ARRAY_TYPE
+		rename
+			source_feature as e_feature,
+			type_to_add as target_array_type
 		end
 
 	SHARED_WORKBENCH
-
-create
-	make
 
 feature {NONE} -- Creation
 
 	make (c: AST_CONTEXT; i, t: TYPE_A; a: ARRAY_AS; e: BOOLEAN)
 			-- Initialize error object for implicit element type `i` and target element type `t`
-			-- of a manifest array `a` in the context `c` with the error indicator `e`.
+			-- of a manifest array `a` in the context `c` with the error indicator `e`
+			-- when the manifest array type is different from the target type.
 			--
 			-- `e`: `True` - Error, `False` - Warning.
 		require
@@ -79,14 +75,6 @@ feature -- Access
 			Result := if is_error then Precursor {VWMA} else Precursor {EIFFEL_WARNING} end
 		end
 
-feature {COMPILER_ERROR_VISITOR} -- Visitor
-
-	process_issue (v: COMPILER_ERROR_VISITOR)
-			-- <Precursor>
-		do
-			v.process_array_explicit_type_required (Current)
-		end
-
 feature {FIX_FEATURE} -- Access
 
 	target_array_type: GEN_TYPE_A
@@ -97,6 +85,14 @@ feature {FIX_FEATURE} -- Access
 
 	array: ARRAY_AS
 			-- Manifest array AST node.
+
+feature -- Access: fixing
+
+	source_class: CLASS_I
+			-- <Precursor>
+		do
+			Result := written_class.lace_class
+		end
 
 feature {NONE} -- Access
 
@@ -109,26 +105,8 @@ feature {NONE} -- Access
 	is_error: BOOLEAN
 			-- Does current represent an error?
 
-feature -- Output
-
-	build_explain (t: TEXT_FORMATTER)
-			-- <Precursor>
-		do
-			trace_single_line (t)
-			t.add_new_line
-			format_elements (t, locale.translation_in_context ("Computed type of array elements {1} does not conform to the type {2} of target array elements.", "compiler.error"),
-				<<agent implicit_element_type.append_to, agent target_element_type.append_to>>)
-			t.add_new_line
-		end
-
-	trace_single_line (t: TEXT_FORMATTER)
-			-- <Precursor>
-		do
-			format_elements (t, locale.translation_in_context ("Explicit array type {1} has to be specified.", "compiler.error"), <<agent target_array_type.append_to>>)
-		end
-
-note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+;note
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

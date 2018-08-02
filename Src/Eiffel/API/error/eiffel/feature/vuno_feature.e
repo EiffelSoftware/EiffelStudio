@@ -47,7 +47,9 @@ feature {NONE} -- Output
 			format_elements (t, locale.translation_in_context ("[
 						{1} used in the non-object call is not a class feature.
 						
-						What to do: Make sure the non-object call uses a class feature or replace it with an object call.
+						What to do:
+							- make sure the non-object call uses a class feature or
+							- replace the non-object call with an object call.
 					]", "compiler.error"),
 				<<agent callee.append_name>>)
 			t.add_new_line

@@ -1,6 +1,5 @@
-note
-	description:
-		"Import settings."
+﻿note
+	description: "Import settings."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -25,7 +24,7 @@ create
 feature {NONE} -- Initialization
 
 	make
-			-- Initialize `Current'
+			-- Initialize the command.
 		do
 		end
 
@@ -40,13 +39,11 @@ feature -- Formatting
 		end
 
 	open_settings_import_dialog
-			-- Show the arguments dialog
+			-- Show the arguments dialog.
 		local
 			dlg: detachable ES_SETTINGS_IMPORT_DIALOG
-			dev: EV_WINDOW
 		do
 			if attached {EB_DEVELOPMENT_WINDOW} window_manager.last_focused_window as window then
-				dev := window.window
 				if attached importation_dialog as l_import_dlg then
 					dlg := l_import_dlg
 					l_import_dlg.update
@@ -74,13 +71,13 @@ feature -- Properties
 		end
 
 	menu_name: STRING_GENERAL
-			-- Menu name
+			-- <Precursor>
 		do
-			Result := "Import Settings" -- FIXME interface_names.m_Execution_parameters
+			Result := interface_names.m_import_settings
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -111,4 +108,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_DEBUG_OPTIONS_CMD
+end

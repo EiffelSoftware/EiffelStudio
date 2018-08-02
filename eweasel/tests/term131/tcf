@@ -11,7 +11,7 @@ copy_raw 	fundamental_composite_data_source.e $CLUSTER fundamental_composite_dat
 copy_raw 	fundamental_data_source.e $CLUSTER fundamental_data_source.e
 
 compile_final
-compile_result 	ok
+compile_result 	validity_warning COMPUSTAT_FUNDAMENTAL_COMPOSITE_DATA_SOURCE VWMA(1):13
 
 c_compile_final
 c_compile_result ok

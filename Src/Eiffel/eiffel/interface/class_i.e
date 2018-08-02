@@ -318,7 +318,7 @@ feature -- Access
 		end
 
 	is_syntax_standard: BOOLEAN
-			-- Is obsolete syntax used in the source code?
+			-- Is standard syntax used in the source code?
 		do
 			inspect
 				options.syntax.index
@@ -329,6 +329,69 @@ feature -- Access
 			then
 				Result := True
 			else
+			end
+		end
+
+	is_manifest_array_type_standard: BOOLEAN
+			-- Is standard manifest array typing used?
+		local
+			current_index: like {CONF_OPTION}.array_index_standard
+			override_index: like {CONF_TARGET_OPTION}.array_override_index_default
+		do
+			current_index := options.array.index
+			override_index := target.system.application_target.options.array_override.index
+			if current_index = {CONF_OPTION}.array_index_standard then
+					-- Ignore override if the current option is set to `standard`.
+				Result := True
+			elseif override_index = {CONF_TARGET_OPTION}.array_override_index_default then
+					-- Use current option when the override is not requested.
+				Result := False
+			else
+					-- Use override when it is requested.
+				Result := override_index = {CONF_TARGET_OPTION}.array_override_index_standard
+			end
+		ensure
+			not_warning: Result implies not is_manifest_array_type_mismatch_warning
+			not_error: Result implies not is_manifest_array_type_mismatch_error
+		end
+
+	is_manifest_array_type_mismatch_warning: BOOLEAN
+			-- Should manifest array type mismatch be reported as a warning?
+		local
+			current_index: like {CONF_OPTION}.array_index_standard
+			override_index: like {CONF_TARGET_OPTION}.array_override_index_default
+		do
+			current_index := options.array.index
+			override_index := target.system.application_target.options.array_override.index
+			if current_index = {CONF_OPTION}.array_index_standard then
+					-- Ignore override if the current option is set to `standard`.
+				Result := False
+			elseif override_index = {CONF_TARGET_OPTION}.array_override_index_default then
+					-- Use current option when the override is not requested.
+				Result := current_index = {CONF_OPTION}.array_index_mismatch_warning
+			else
+					-- Use override when it is requested.
+				Result := override_index = {CONF_TARGET_OPTION}.array_override_index_mismatch_warning
+			end
+		end
+
+	is_manifest_array_type_mismatch_error: BOOLEAN
+			-- Should manifest array type mismatch be reported as an error?
+		local
+			current_index: like {CONF_OPTION}.array_index_standard
+			override_index: like {CONF_TARGET_OPTION}.array_override_index_default
+		do
+			current_index := options.array.index
+			override_index := target.system.application_target.options.array_override.index
+			if current_index = {CONF_OPTION}.array_index_standard then
+					-- Ignore override if the current option is set to `standard`.
+				Result := False
+			elseif override_index = {CONF_TARGET_OPTION}.array_override_index_default then
+					-- Use current option when the override is not requested.
+				Result := current_index = {CONF_OPTION}.array_index_mismatch_error
+			else
+					-- Use override when it is requested.
+				Result := override_index = {CONF_TARGET_OPTION}.array_override_index_mismatch_error
 			end
 		end
 

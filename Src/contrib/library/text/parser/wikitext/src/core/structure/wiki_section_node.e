@@ -61,7 +61,7 @@ feature -- Query
 				from
 					Result := Current
 				until
-					Result = Void or else Result.level <= a_section.level - 1 
+					Result = Void or else Result.level <= a_section.level - 1
 				loop
 					Result := Result.parent
 				end
@@ -114,7 +114,6 @@ feature -- Element change
 	extend_section (a_new_section: WIKI_SECTION)
 		require
 			attached section as l_section implies l_section.level + 1 = a_new_section.level
-			section = Void implies a_new_section.level = 0
 		do
 			extend (create {WIKI_SECTION_NODE}.make (a_new_section))
 		end
@@ -136,7 +135,7 @@ feature -- Status report
 invariant
 
 note
-	copyright: "2011-2017, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2018, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

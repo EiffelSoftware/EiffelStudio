@@ -1,7 +1,5 @@
 ﻿note
-	description: "[
-		A generator for creating Eiffel classes from a matrix INI file.
-	]"
+	description: "A generator for creating Eiffel classes from a matrix INI file."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -36,7 +34,7 @@ feature {NONE} -- Access
 	class_name: detachable READABLE_STRING_32
 			-- Class name specified in matrix file
 
-	animation_pixmaps: attached HASH_TABLE [attached ARRAYED_LIST [attached STRING], attached STRING]
+	animation_pixmaps: HASH_TABLE [attached ARRAYED_LIST [attached STRING], attached STRING]
 			-- Table of pixmap animations
 
 feature -- Basic Operations
@@ -52,12 +50,14 @@ feature -- Basic Operations
 			l_cursor: CURSOR
 			l_of: PATH
 			l_buffer: STRING
-			l_temp_buffer: attached STRING
+			l_temp_buffer: STRING
 			l_buffers: like internal_buffers
 			l_fragment: STRING
-			l_anim_pixmaps: attached like animation_pixmaps
-			l_iname: attached STRING
-			l_ibname: attached STRING
+			l_anim_pixmaps: like animation_pixmaps
+			l_animations: like animation_pixmaps.item_for_iteration
+			l_name: like animation_pixmaps.key_for_iteration
+			l_iname: STRING
+			l_ibname: STRING
 			l_args: ARGUMENTS_32
 			u: UTF_CONVERTER
 		do
@@ -104,52 +104,47 @@ feature -- Basic Operations
 						l_anim_pixmaps := animation_pixmaps
 						if not l_anim_pixmaps.is_empty then
 							from l_anim_pixmaps.start until l_anim_pixmaps.after loop
-								if
-									attached {ARRAYED_LIST [STRING]} l_anim_pixmaps.item_for_iteration as l_animations and then
-									l_animations.count > 1
-								then
+								l_animations := l_anim_pixmaps.item_for_iteration
+								if l_animations.count > 1 then
 										-- More than one entry, so it must be an animation
-									if attached {STRING} l_anim_pixmaps.key_for_iteration as l_name then
-											-- Create feature names
-										create l_iname.make_from_string (l_name)
-										l_iname.append (icon_animation_suffix)
-										l_iname := format_eiffel_name (l_iname)
+									l_name := l_anim_pixmaps.key_for_iteration
+										-- Create feature names
+									create l_iname.make_from_string (l_name)
+									l_iname.append (icon_animation_suffix)
+									l_iname := format_eiffel_name (l_iname)
 
-										create l_ibname.make_from_string (l_name)
-										l_ibname.append (icon_buffer_suffix)
-										l_ibname.append (icon_animation_suffix)
-										l_ibname := format_eiffel_name (l_ibname)
+									create l_ibname.make_from_string (l_name)
+									l_ibname.append (icon_buffer_suffix)
+									l_ibname.append (icon_animation_suffix)
+									l_ibname := format_eiffel_name (l_ibname)
 
-											-- Pixmap icons animations
-										create l_temp_buffer.make (400)
-										from l_animations.start until l_animations.after loop
-											l_temp_buffer.append (string_formatter.format (icon_animation_registration_template , [l_animations.item, l_animations.index]))
-											l_animations.forth
-										end
-										if not l_temp_buffer.is_empty and then l_temp_buffer.item (l_temp_buffer.count) = '%N' then
-											l_temp_buffer.keep_head (l_temp_buffer.count - 1)
-										end
-										if not l_temp_buffer.is_empty and then l_temp_buffer.item (l_temp_buffer.count) = ',' then
-											l_temp_buffer.keep_head (l_temp_buffer.count - 1)
-										end
-										buffer (animations_token).append (string_formatter.format (icon_animation_template, [l_iname, l_name, l_animations.count, l_temp_buffer]))
-
-											-- Pixel buffer icon animations
-										l_temp_buffer.wipe_out
-										from l_animations.start until l_animations.after loop
-											l_temp_buffer.append (string_formatter.format (icon_buffer_animation_registration_template , [l_animations.item, l_animations.index]))
-											l_animations.forth
-										end
-										if not l_temp_buffer.is_empty and then l_temp_buffer.item (l_temp_buffer.count) = '%N' then
-											l_temp_buffer.keep_head (l_temp_buffer.count - 1)
-										end
-										if not l_temp_buffer.is_empty and then l_temp_buffer.item (l_temp_buffer.count) = ',' then
-											l_temp_buffer.keep_head (l_temp_buffer.count - 1)
-										end
-										buffer (animations_token).append (string_formatter.format (icon_buffer_animation_template, [l_ibname, l_name, l_animations.count, l_temp_buffer]))
-									else
-										check False end
+										-- Pixmap icons animations
+									create l_temp_buffer.make (400)
+									from l_animations.start until l_animations.after loop
+										l_temp_buffer.append (string_formatter.format (icon_animation_registration_template , [l_animations.item, l_animations.index]))
+										l_animations.forth
 									end
+									if not l_temp_buffer.is_empty and then l_temp_buffer.item (l_temp_buffer.count) = '%N' then
+										l_temp_buffer.keep_head (l_temp_buffer.count - 1)
+									end
+									if not l_temp_buffer.is_empty and then l_temp_buffer.item (l_temp_buffer.count) = ',' then
+										l_temp_buffer.keep_head (l_temp_buffer.count - 1)
+									end
+									buffer (animations_token).append (string_formatter.format (icon_animation_template, [l_iname, l_name, l_animations.count, l_temp_buffer]))
+
+										-- Pixel buffer icon animations
+									l_temp_buffer.wipe_out
+									from l_animations.start until l_animations.after loop
+										l_temp_buffer.append (string_formatter.format (icon_buffer_animation_registration_template , [l_animations.item, l_animations.index]))
+										l_animations.forth
+									end
+									if not l_temp_buffer.is_empty and then l_temp_buffer.item (l_temp_buffer.count) = '%N' then
+										l_temp_buffer.keep_head (l_temp_buffer.count - 1)
+									end
+									if not l_temp_buffer.is_empty and then l_temp_buffer.item (l_temp_buffer.count) = ',' then
+										l_temp_buffer.keep_head (l_temp_buffer.count - 1)
+									end
+									buffer (animations_token).append (string_formatter.format (icon_buffer_animation_template, [l_ibname, l_name, l_animations.count, l_temp_buffer]))
 								end
 								l_anim_pixmaps.forth
 							end
@@ -286,7 +281,7 @@ feature {NONE} -- Processing
 		do
 				-- Create feature prefix
 			l_prefix := icon_prefix (a_item)
-			if attached {STRING} a_item.name as l_name then
+			if attached a_item.name as l_name then
 				l_name.to_lower
 
 					-- Name constants
@@ -533,7 +528,7 @@ invariant
 	class_name_not_empty: attached class_name as n implies not n.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

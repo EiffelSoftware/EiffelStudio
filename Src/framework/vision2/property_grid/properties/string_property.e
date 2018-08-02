@@ -47,8 +47,7 @@ feature -- Specialized update
 		do
 			if not equal (value, a_value) then
 				value := a_value
-				tu := [a_value]
-				change_value_actions.call (tu)
+				change_value_actions.call ([a_value])
 			end
 			l_val := displayed_value
 			set_text (l_val)

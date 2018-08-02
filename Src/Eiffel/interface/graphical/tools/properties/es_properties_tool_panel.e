@@ -184,8 +184,12 @@ feature {EB_STONE_CHECKER, EB_CONTEXT_MENU_FACTORY} -- Actions
 			else
 				if attached {CLUSTER_STONE} a_stone as l_gs then
 					l_group := l_gs.group
-					if l_group.is_cluster and l_group.is_used_in_library then
-						l_group := l_group.target.system.lowest_used_in_library
+					if
+						l_group.is_cluster and
+						l_group.is_used_in_library and
+						attached l_group.target.system.lowest_used_in_library as l_lowest_used_in_library
+					then
+						l_group := l_lowest_used_in_library
 					end
 					current_system := l_group.target.system
 					properties.reset
@@ -195,8 +199,11 @@ feature {EB_STONE_CHECKER, EB_CONTEXT_MENU_FACTORY} -- Actions
 					l_lib_use := l_group.target.system.used_in_libraries
 				elseif attached {CLASSI_STONE} a_stone as l_cs then
 					l_group := l_cs.class_i.group
-					if l_group.is_used_in_library then
-						l_group := l_group.target.system.lowest_used_in_library
+					if 
+						l_group.is_used_in_library and then
+						attached l_group.target.system.lowest_used_in_library as l_lowest_used_in_library
+					then
+						l_group := l_lowest_used_in_library
 					end
 					current_system := l_group.target.system
 					if l_group.classes_set and then l_group.classes.has (l_cs.class_i.config_class.name) then
@@ -332,7 +339,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

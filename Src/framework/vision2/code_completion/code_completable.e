@@ -228,18 +228,18 @@ feature -- Basic operation
 	trigger_completion
 			-- Start timer, let timer to start code completion.
 		do
-			if completion_timeout /= Void then
-				completion_timeout.reset_count
-				completion_timeout.actions.resume
+			if attached completion_timeout as t then
+				t.reset_count
+				t.actions.resume
 			end
 		end
 
 	block_completion
 			-- Stop timer, block code completion.
 		do
-			if completion_timeout /= Void then
-				completion_timeout.reset_count
-				completion_timeout.actions.block
+			if attached completion_timeout as t then
+				t.reset_count
+				t.actions.block
 			end
 		end
 
@@ -250,7 +250,7 @@ feature -- Basic operation
 		do
 			if not retried then
 				if attached possibilities_provider as l_provider then
-					if attached precompletion_actions as l_actions then
+					if attached precompletion_actions as l_actions and then not l_actions.is_empty then
 						l_actions.call (Void)
 					end
 					prepare_auto_complete
@@ -288,10 +288,10 @@ feature -- Basic operation
 			l_x := calculate_completion_list_x_position
 			l_y := calculate_completion_list_y_position
 
-			if parent_window /= Void and then not parent_window.is_destroyed and then parent_window.is_show_requested then
+			if attached parent_window as p and then not p.is_destroyed and then p.is_show_requested then
 					-- Reposition based on screen coords
 				create l_helpers
-				l_coords := l_helpers.suggest_pop_up_widget_location_with_size (parent_window, l_x, l_y, l_width, l_height)
+				l_coords := l_helpers.suggest_pop_up_widget_location_with_size (p, l_x, l_y, l_width, l_height)
 				if l_y >= l_coords.y then
 						-- Adjust height to prevent the completion list from shift up and over the text.
 						-- This is ok to do because `calculate_completion_list_y_position' determines if the
@@ -597,7 +597,7 @@ feature {NONE} -- Timer
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

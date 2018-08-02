@@ -1112,6 +1112,7 @@ feature {NONE} -- Implementation
 					error_handler.insert_error (l_vsta1)
 					reset_types
 				else
+					set_type (l_type, l_as.class_type)
 					instantiator.dispatch (l_type, context.current_class)
 					if is_inherited then
 						l_feature := last_type.base_class.feature_of_rout_id (l_as.routine_ids.first)
@@ -1126,6 +1127,8 @@ feature {NONE} -- Implementation
 							-- Feature without arguments is found, try parenthesis alias on it.
 						look_for_parenthesis_alias (l_as.internal_parameters, e, t)
 					end
+						-- Set type of the call as a whole.
+					set_type (last_type, l_as)
 				end
 			end
 		end
@@ -1202,7 +1205,7 @@ feature {NONE} -- Implementation
 			l_vtmc1: VTMC1
 			l_error_level: NATURAL_32
 			l_is_in_assignment: BOOLEAN
-			l_warning_count: INTEGER
+			l_warning_level: like {ERROR_HANDLER}.warning_level
 			l_tcat: CAT_CALL_WARNING
 			l_is_controlled: BOOLEAN
 			is_target_known: BOOLEAN
@@ -1434,7 +1437,7 @@ feature {NONE} -- Implementation
 									if attached argument_compatibility_error (l_named_tuple, l_named_tuple, l_arg_type, l_label_pos, l_named_tuple.generics, Void, l_feature_name, l_feature_name) as e then
 										error_handler.insert_error (e)
 									else
-										l_warning_count := error_handler.warning_list.count
+										l_warning_level := error_handler.warning_level
 										if not l_formal_arg_type.backward_conform_to (l_context_current_class, l_arg_type) then
 											if
 												not is_inherited and then
@@ -1457,7 +1460,7 @@ feature {NONE} -- Implementation
 													-- Update `l_arg_type' with the converted type.
 												l_arg_type := l_formal_arg_type
 											end
-										elseif l_warning_count /= error_handler.warning_list.count then
+										elseif l_warning_level /= error_handler.warning_level then
 											error_handler.warning_list.last.set_location (l_feature_name)
 										end
 										if l_needs_byte_node then
@@ -1842,7 +1845,7 @@ feature {NONE} -- Implementation
 											l_tcat.add_covariant_generic_violation
 										end
 
-										l_warning_count := error_handler.warning_list.count
+										l_warning_level := error_handler.warning_level
 										if not l_formal_arg_type.backward_conform_to (l_context_current_class, l_arg_type) then
 											if
 												not is_inherited and then
@@ -1870,7 +1873,7 @@ feature {NONE} -- Implementation
 													-- This fixes eweasel test#freez022.
 												l_arg_types.put_i_th (l_formal_arg_type, i)
 											end
-										elseif l_warning_count /= error_handler.warning_list.count then
+										elseif l_warning_level /= error_handler.warning_level then
 											error_handler.warning_list.last.set_location (l_parameters.i_th (i).start_location)
 										end
 										if l_needs_byte_node then
@@ -2178,7 +2181,7 @@ feature {NONE} -- Type checks
 			like_argument_type: TYPE_A
 			target_base_class: CLASS_C
 			target_base_class_id: INTEGER
-			warning_count: INTEGER
+			warning_level: like {ERROR_HANDLER}.warning_level
 		do
 			actual_target_type := target_type.actual_type
 			target_base_class := target_base_type.base_class
@@ -2201,14 +2204,14 @@ feature {NONE} -- Type checks
 					-- Check that `expression_type' is compatible to its `like argument'.
 					-- Once this is done, then type checking is done on the real
 					-- type of the routine, not the anchor.
-				warning_count := error_handler.warning_list.count
+				warning_level := error_handler.warning_level
 				if
 					not expression_type.conform_to (current_class, like_argument_type) and then
 					(is_inherited or else not expression_type.convert_to (current_class, like_argument_type.deep_actual_type))
 				then
 					create {VUAR2} Result.make (context, callee, name, target_base_class, argument_number, like_argument_type, expression_type, location)
 				end
-				if warning_count /= error_handler.warning_list.count then
+				if warning_level /= error_handler.warning_level then
 					error_handler.warning_list.last.set_location (location)
 				end
 			elseif system.is_scoop and then target_type.is_separate and then expression_type.is_reference and then not formal_type.is_separate then
@@ -2217,7 +2220,7 @@ feature {NONE} -- Type checks
 				create {VUAR4} Result.make (context, callee, name, target_base_class, argument_number, formal_type, expression_type, location)
 			end
 
-			warning_count := error_handler.warning_list.count
+			warning_level := error_handler.warning_level
 			if not formal_type.backward_conform_to (current_class, expression_type) then
 				if
 					not is_inherited and then
@@ -2232,7 +2235,7 @@ feature {NONE} -- Type checks
 				end
 			elseif not is_frozen_type_compatible (expression_type, formal_type, False) then
 				create {VUAR2} Result.make (context, callee, name, target_base_class, argument_number, formal_type, expression_type, location)
-			elseif warning_count /= error_handler.warning_list.count then
+			elseif warning_level /= error_handler.warning_level then
 				error_handler.warning_list.last.set_location (location)
 			end
 		end
@@ -2362,7 +2365,6 @@ feature {NONE} -- Visitor
 				end
 			elseif
 					-- Look at the target type to see if it can be used to compute target type.
-					-- TODO on [2018-01-30]: Remove this branch when all source code is updated.
 				attached current_target_type as t and then
 				attached {GEN_TYPE_A} t.conformance_type as g and then
 					-- Check that it is either an ARRAY, or a NATIVE_ARRAY when used
@@ -2393,7 +2395,7 @@ feature {NONE} -- Visitor
 					create l_generics.make (1)
 					l_generics.extend (default_element_type)
 						-- Type of a manifest array is always attached.
-					default_array_type := (create {GEN_TYPE_A}.make (system.array_id, l_generics)).as_attached_in (l_current_class)
+					default_array_type := (create {GEN_TYPE_A}.make (system.array_id, l_generics)).as_normally_attached (l_current_class)
 						-- Type of a manifest array is always frozen.
 					default_array_type.set_frozen_mark
 				end
@@ -2410,17 +2412,13 @@ feature {NONE} -- Visitor
 							-- Either an explicit array type is specified or the computed array type is not useable for all elements.
 							-- Check conformance and conversion rules for the explicit array type or for the target type.
 						if attached default_element_type then
-								-- TODO on [2019-06-30]: Remove this branch when all source code is updated.
 								-- The implicit type is required to compute array type, it should be replaced with an explicit one.
-							if (create {DATE}.make (2017, 11, 30)).relative_duration (create {DATE}.make_now_utc).days_count + 366  + 183 <= 0 then
+							if context.current_class.lace_class.is_manifest_array_type_mismatch_warning then
+									-- Report a warning.
+								error_handler.insert_warning (create {VWMA_EXPLICIT_TYPE_REQUIRED_FOR_CONFORMANCE}.make (context, default_element_type, l_type_a, l_as, False))
+							elseif context.current_class.lace_class.is_manifest_array_type_mismatch_error then
 									-- Report an error.
-								error_handler.insert_error (create {VWMA_EXPLICIT_TYPE_REQUIRED}.make (context, default_element_type, l_type_a, l_as, True))
-							elseif
-									(create {DATE}.make (2017, 11, 30)).relative_duration (create {DATE}.make_now_utc).days_count + 366 <= 0 or else
-									context.current_class.is_warning_enabled (w_manifest_array_type)
-							then
-									-- Report a warning either when it is enabled or when a year has passed since the release.
-								error_handler.insert_warning (create {VWMA_EXPLICIT_TYPE_REQUIRED}.make (context, default_element_type, l_type_a, l_as, False))
+								error_handler.insert_error (create {VWMA_EXPLICIT_TYPE_REQUIRED_FOR_CONFORMANCE}.make (context, default_element_type, l_type_a, l_as, True))
 							end
 						end
 							-- Check that expressions' type matches element's type of the array.
@@ -2461,6 +2459,21 @@ feature {NONE} -- Visitor
 						end
 					else
 							-- There is no explicit array type and the computed array type conforms to the target array type.
+						if
+							not is_inherited and then
+							not context.current_class.lace_class.is_manifest_array_type_standard and then
+							attached default_element_type and then
+							not l_type_a.conform_to (context.current_class, default_element_type)
+						then
+								-- The source type is different from the target one.
+							if context.current_class.lace_class.is_manifest_array_type_mismatch_error then
+									-- Report an error.
+								error_handler.insert_error (create {VWMA_EXPLICIT_TYPE_REQUIRED_FOR_MATCH}.make (context, default_element_type, l_type_a, l_as, True))
+							else
+									-- Report a warning.
+								error_handler.insert_warning (create {VWMA_EXPLICIT_TYPE_REQUIRED_FOR_MATCH}.make (context, default_element_type, l_type_a, l_as, False))
+							end
+						end
 							-- Use the default (computed) array type.
 						l_type_a := default_element_type
 						implicit_type := default_array_type
@@ -2483,8 +2496,8 @@ feature {NONE} -- Visitor
 								-- support that, so we remove the anchors.
 							l_array_type := l_array_type.deep_actual_type
 						end
-							-- Type of a manifest array is always attached
-						l_array_type := l_array_type.as_attached_in (l_current_class)
+							-- Type of a manifest array is always attached.
+						l_array_type := l_array_type.as_normally_attached (l_current_class)
 					end
 				else
 						-- There is no explicit or implicit array type,  use the default one.
@@ -2532,18 +2545,18 @@ feature {NONE} -- Visitor
 		do
 			if l_as.type = Void then
 					-- Default to STRING_8, if not specified in the code.
-					l_simplified_string_type := manifest_string_type
-		else
+				l_simplified_string_type := manifest_string_type
+			else
 				check_type (l_as.type)
 				if attached last_type as l_last_type then
 					l_simplified_string_type := l_last_type.duplicate
-						-- Manifest string are always frozen.
+						-- Manifest strings are always frozen.
 					l_simplified_string_type.set_frozen_mark
 				end
 			end
 			if l_simplified_string_type /= Void then
 					-- Constants are always of an attached type.
-				l_simplified_string_type := l_simplified_string_type.as_attached_in (context.current_class)
+				l_simplified_string_type := l_simplified_string_type.as_normally_attached (context.current_class)
 				set_type (l_simplified_string_type, l_as)
 				class_id := l_simplified_string_type.base_class.class_id
 				if attached system.string_8_class as c then
@@ -2873,6 +2886,9 @@ feature {NONE} -- Visitor
 				if not l_is_not_call and then attached last_vuar_error as e and then attached last_type as q then
 					look_for_parenthesis_alias (l_as.internal_parameters, e, q)
 				end
+				if attached last_type as t then
+					set_type (t, l_as)
+				end
 			else
 				reset_types
 			end
@@ -2899,21 +2915,26 @@ feature {NONE} -- Visitor
 				is_controlled := l_local_info.is_controlled
 				l_type := l_local_info.type
 				l_type := l_type.instantiation_in (last_type.as_implicitly_detachable.as_variant_free, last_type.base_class.class_id)
-				set_type (l_type, l_as)
+				if not is_inherited then
+					l_as.enable_object_test_local
+					l_as.set_class_id (class_id_of (l_type))
+				end
+				if is_byte_node_enabled then
+					create {OBJECT_TEST_LOCAL_B} last_byte_node.make (l_local_info.position, current_feature.body_index, l_type)
+				end
 				if attached l_as.parameters as p then
 					create l_vuar1
 					context.init_error (l_vuar1)
 					l_vuar1.set_local_name (l_as.feature_name.name)
 					l_vuar1.set_location (l_as.feature_name)
 					look_for_parenthesis_alias (l_as.internal_parameters, l_vuar1, l_type)
+					if attached last_type as t then
+							-- Record type of the object test local.
+						set_type (l_type, l_as.feature_name)
+						l_type := t
+					end
 				end
-				if is_byte_node_enabled then
-					create {OBJECT_TEST_LOCAL_B} last_byte_node.make (l_local_info.position, current_feature.body_index, l_type)
-				end
-				if not is_inherited then
-					l_as.enable_object_test_local
-					l_as.set_class_id (class_id_of (l_type))
-				end
+				set_type (l_type, l_as)
 			else
 				if is_inherited then
 					l_feature := l_type.base_class.feature_of_rout_id (l_as.routine_ids.first)
@@ -2928,6 +2949,10 @@ feature {NONE} -- Visitor
 				if attached last_vuar_error as e and then attached last_type as t then
 						-- Feature without arguments is found, try parenthesis alias on it.
 					look_for_parenthesis_alias (l_as.internal_parameters, e, t)
+				end
+				if attached last_type as t then
+						-- Record type of the feature call.
+					set_type (t, l_as)
 				end
 			end
 		end
@@ -2979,14 +3004,14 @@ feature {NONE} -- Visitor
 					l_argument.set_position (l_arg_pos)
 					last_byte_node := l_argument
 				end
-					-- set some type attributes of the node
+				if context.is_argument_attached (l_as.feature_name.name_id) then
+					l_type := l_type.as_attached_in (l_context_current_class)
+				end
+					-- Set some type attributes of the node.
 				if not is_inherited then
 					l_as.enable_argument
 					l_as.set_argument_position (l_arg_pos)
 					l_as.set_class_id (class_id_of (l_type))
-				end
-				if context.is_argument_attached (l_as.feature_name.name_id) then
-					l_type := l_type.as_attached_in (l_context_current_class)
 				end
 			else
 					-- Look for a local if not in a pre- or postcondition
@@ -3097,6 +3122,8 @@ feature {NONE} -- Visitor
 				end
 			end
 			if l_has_vuar_error then
+					-- Record type of the entity without arguments.
+				set_type (l_type, l_as.feature_name)
 				if not attached l_vuar1 then
 					create l_vuar1
 					if l_arg_pos = 0 then
@@ -3108,9 +3135,10 @@ feature {NONE} -- Visitor
 					l_vuar1.set_location (l_as.feature_name)
 				end
 				look_for_parenthesis_alias (l_as.internal_parameters, l_vuar1, l_type)
-			else
-				set_type (l_type, l_as)
+					-- Record type of the call as a whole.
+				l_type := last_type
 			end
+			set_type (l_type, l_as)
 		end
 
 	process_access_assert_as (l_as: ACCESS_ASSERT_AS)
@@ -3154,7 +3182,6 @@ feature {NONE} -- Visitor
 				if context.is_argument_attached (l_as.feature_name.name_id) then
 					l_arg_type := l_arg_type.as_attached_in (context.current_class)
 				end
-				set_type (l_arg_type, l_as)
 				if is_byte_node_enabled then
 					create l_argument
 					l_argument.set_position (l_arg_pos)
@@ -3172,7 +3199,13 @@ feature {NONE} -- Visitor
 					l_vuar1.set_arg_name (l_as.feature_name.name)
 					l_vuar1.set_location (l_as.feature_name)
 					look_for_parenthesis_alias (l_as.internal_parameters, l_vuar1, l_arg_type)
+					if attached last_type as t then
+							-- Set type for the argument.
+						set_type (l_arg_type, l_as.feature_name)
+						l_arg_type := t
+					end
 				end
+				set_type (l_arg_type, l_as)
 			else
 					-- Look for a local if in a pre- or postcondition
 				if not is_inherited then
@@ -3205,14 +3238,19 @@ feature {NONE} -- Visitor
 							l_as.enable_object_test_local
 							l_as.set_class_id (class_id_of (l_type))
 						end
-						set_type (l_type, l_as)
 						if attached l_as.parameters as p then
 							create l_vuar1
 							context.init_error (l_vuar1)
 							l_vuar1.set_local_name (l_as.feature_name.name)
 							l_vuar1.set_location (l_as.feature_name)
 							look_for_parenthesis_alias (l_as.internal_parameters, l_vuar1, l_type)
+							if attached last_type as t then
+									-- Set type for the object-test local.
+								set_type (l_type, l_as.feature_name)
+								l_type := t
+							end
 						end
+						set_type (l_type, l_as)
 					else
 							-- Look for a feature
 						l_feature := Void
@@ -3228,6 +3266,10 @@ feature {NONE} -- Visitor
 						if attached last_vuar_error as e and then attached last_type as t then
 								-- Feature without arguments is found, try parenthesis alias on it.
 							look_for_parenthesis_alias (l_as.internal_parameters, e, t)
+						end
+						if attached last_type as t then
+								-- Set type for the feature call.
+							set_type (t, l_as)
 						end
 					end
 				end
@@ -3373,11 +3415,13 @@ feature {NONE} -- Visitor
 						-- Now `last_type' is the type we got from the processing of `Precursor'. We have to adapt
 						-- it to the current class, but instead of using the malformed `last_type' we use `l_orig_result_type'.
 					set_type (l_orig_result_type.evaluated_type_in_descendant
-						(l_parent_type.base_class, context.current_class, context.current_feature), l_as)
+						(l_parent_type.base_class, context.current_class, context.current_feature), l_as.precursor_keyword)
 					if attached last_vuar_error as e and then attached last_type as t then
 							-- Feature without arguments is found, try parenthesis alias on it.
 						look_for_parenthesis_alias (l_as.internal_parameters, e, t)
 					end
+						-- Record type of the call as a whole.
+					set_type (last_type, l_as)
 				end
 			else
 				reset_types
@@ -4093,18 +4137,22 @@ feature {NONE} -- Visitor
 			is_assigner_call := attached assigner_source
 			reset_for_unqualified_call_checking
 			l_as.call.process (Current)
-			if last_type /= Void and then last_type.is_void and then not is_assigner_call then
-				create l_vkcn3
-				context.init_error (l_vkcn3)
-				l_vkcn3.set_location (l_as.call.end_location)
-				if attached context.written_class as cl then
-					l_list := match_list_of_class (cl.class_id)
-					if l_list /= Void and then l_as.call.is_text_available (l_list) then
-						l_vkcn3.set_called_feature (l_as.call.text (l_list))
+			if attached last_type as t then
+				if t.is_void and then not is_assigner_call then
+					create l_vkcn3
+					context.init_error (l_vkcn3)
+					l_vkcn3.set_location (l_as.call.end_location)
+					if attached context.written_class as cl then
+						l_list := match_list_of_class (cl.class_id)
+						if l_list /= Void and then l_as.call.is_text_available (l_list) then
+							l_vkcn3.set_called_feature (l_as.call.text (l_list))
+						end
 					end
+					error_handler.insert_error (l_vkcn3)
+					reset_types
+				else
+					set_type (t, l_as)
 				end
-				error_handler.insert_error (l_vkcn3)
-				reset_types
 			end
 
 			-- Nothing to be done for `last_byte_node' as it was computed in previous call
@@ -4872,13 +4920,14 @@ feature {NONE} -- Visitor
 				l_as.expr.process (Current)
 					-- Restore scope information.
 				context.set_scope (s)
-				if last_type /= Void then
+				if attached last_type as t then
+					set_type (t, l_as)
 					if not l_saved_vaol_check then
 							-- Reset flag for vaol check
 						check_for_vaol := False
 					end
 
-					if last_type.conform_to (context.current_class, Void_type) or else check_for_vaol then
+					if t.conform_to (context.current_class, Void_type) or else check_for_vaol then
 							-- Not an expression
 						create l_vaol2
 						context.init_error (l_vaol2)
@@ -4895,7 +4944,7 @@ feature {NONE} -- Visitor
 						last_byte_node := l_un_old
 					end
 					if not is_inherited then
-						l_as.set_class_id (class_id_of (last_type.actual_type))
+						l_as.set_class_id (class_id_of (t.actual_type))
 					end
 				end
 			end
@@ -5522,6 +5571,10 @@ feature {NONE} -- Visitor
 						l_is_qualified_call := is_qualified_call
 						is_qualified_call := True
 						process_call (last_type, Void, id_feature_name, last_alias_feature, l_as.operands, False, False, True, False, False)
+						if attached last_type as t then
+								-- Record type for the call as a whole.
+							set_type (t, l_as)
+						end
 						is_qualified_call := l_is_qualified_call
 						if error_level = l_error_level and then is_byte_node_enabled then
 							create nested_b
@@ -5784,7 +5837,7 @@ feature {NONE} -- Visitor
 			l_source_type, l_target_type: TYPE_A
 			target_attribute: FEATURE_I
 			l_vjar: VJAR
-			l_warning_count: INTEGER
+			l_warning_level: like {ERROR_HANDLER}.warning_level
 			l_reinitialized_variable: like last_reinitialized_variable
 			l_error_level: NATURAL_32
 		do
@@ -5830,7 +5883,7 @@ feature {NONE} -- Visitor
 
 			if l_source_type /= Void and then l_target_type /= Void then
 					-- Type checking
-				l_warning_count := error_handler.warning_list.count
+				l_warning_level := error_handler.warning_level
 				process_type_compatibility (l_target_type)
 				if not is_inherited then
 					if l_target_type.is_like then
@@ -5857,7 +5910,7 @@ feature {NONE} -- Visitor
 				then
 					error_handler.insert_error (create {VBAR2}.make (l_source_type, target_attribute, l_as.start_location, context))
 				else
-					if l_warning_count /= error_handler.warning_list.count then
+					if l_warning_level /= error_handler.warning_level then
 						error_handler.warning_list.last.set_location (l_as.start_location)
 					end
 					if
@@ -6598,7 +6651,7 @@ feature {NONE} -- Visitor
 			l_vgcc7: VGCC7
 			l_needs_byte_node: BOOLEAN
 			l_error_level: NATURAL_32
-			l_warning_count: INTEGER
+			l_warning_level: like {ERROR_HANDLER}.warning_level
 			l_reinitialized_variable: like last_reinitialized_variable
 		do
 			l_error_level := error_level
@@ -6662,7 +6715,7 @@ feature {NONE} -- Visitor
 							l_vgcc3.set_location (l_as.target.start_location)
 							error_handler.insert_error (l_vgcc3)
 						else
-							l_warning_count := error_handler.warning_list.count
+							l_warning_level := error_handler.warning_level
 							if
 								l_explicit_type /= Void and then
 								not l_target_type.backward_conform_to (context.current_class, l_explicit_type)
@@ -6675,7 +6728,7 @@ feature {NONE} -- Visitor
 								l_vgcc31.set_type (l_explicit_type)
 								l_vgcc31.set_location (l_as.type.start_location)
 								error_handler.insert_error (l_vgcc31)
-							elseif l_warning_count /= error_handler.warning_list.count then
+							elseif l_warning_level /= error_handler.warning_level then
 								error_handler.warning_list.last.set_location (l_as.type.start_location)
 							end
 
@@ -11008,6 +11061,11 @@ feature {NONE} -- Implementation: type validation
 				rx := x.to_other_immediate_attachment (y)
 				ry := y
 			end
+				-- Source types should conform to the computed ones.
+			check
+				x_conforms_to_rx: x.conform_to (context.current_class, rx)
+				y_conforms_to_ry: y.conform_to (context.current_class, ry)
+			end
 			if rx.is_separate then
 					-- Use `x` separateness status.
 				ry := ry.to_other_separateness (rx)
@@ -11015,11 +11073,20 @@ feature {NONE} -- Implementation: type validation
 					-- Use `y` separateness status.
 				rx := rx.to_other_separateness (ry)
 			end
-			if rx.conform_to (context.current_class, ry) then
+				-- Source types should conform to the computed ones.
+			check
+				x_conforms_to_rx: x.conform_to (context.current_class, rx)
+				y_conforms_to_ry: y.conform_to (context.current_class, ry)
+			end
+				-- Use the type to which both `x` and `y` conform.
+			if x.conform_to (context.current_class, ry) then
 				Result := ry
-			elseif ry.conform_to (context.current_class, rx) then
+			elseif y.conform_to (context.current_class, rx) then
 				Result := rx
 			end
+		ensure
+			x_conforms_to_Result: attached Result implies x.conform_to (context.current_class, Result)
+			y_conforms_to_Result: attached Result implies y.conform_to (context.current_class, Result)
 		end
 
 	maximal_type (ts: ARRAYED_LIST [TYPE_A]): TYPE_A
@@ -11028,8 +11095,8 @@ feature {NONE} -- Implementation: type validation
 			t: TYPE_A
 			i, j, n: INTEGER
 		do
-				-- Use "NONE" as the initial lowest type, it conforms to any other type.
-			Result := none_type.as_attached_type
+				-- Use "(attached) NONE" as the initial lowest type, it conforms to any other type.
+			Result := none_type.as_normally_attached (context.current_class)
 			from
 				n := ts.count
 			until
@@ -11041,8 +11108,8 @@ feature {NONE} -- Implementation: type validation
 					Result := x
 				else
 					if i >= n or else j >= n then
-							-- Cannot find a common type, use "ANY".
-						Result := (create {CL_TYPE_A}.make (system.any_id)).as_attached_type
+							-- Cannot find a common type, use "(attached) ANY".
+						Result := system.any_type.as_normally_attached (context.current_class)
 					else
 							-- Start over from the next unprocessed element type as the initial one.
 						if i > j then
@@ -11056,6 +11123,8 @@ feature {NONE} -- Implementation: type validation
 					i := 0
 				end
 			end
+		ensure
+			types_conform_to_result: across ts as x all x.item.conform_to (context.current_class, Result) end
 		end
 
 feature {NONE} -- Implementation: checking locals

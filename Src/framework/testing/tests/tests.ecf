@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="test-engine-tests" uuid="DD3DA5DF-AE77-44CD-88D1-177058DDD673" library_target="test-engine-tests">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="test-engine-tests" uuid="DD3DA5DF-AE77-44CD-88D1-177058DDD673" library_target="test-engine-tests">
 	<description>Unit-tests for testing framework.</description>
 	<target name="test-engine-tests">
 		<root class="ANY" feature="default_create"/>

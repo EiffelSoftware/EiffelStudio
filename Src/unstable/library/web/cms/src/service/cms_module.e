@@ -62,6 +62,12 @@ feature {CMS_API} -- Module Initialization
 			put_dependency (a_type, True)
 		end
 
+	add_optional_dependency (a_type: TYPE [CMS_MODULE])
+			-- Add optional dependency using type of module `a_type'.
+		do
+			put_dependency (a_type, False)
+		end
+
 	put_dependency (a_type: TYPE [CMS_MODULE]; is_required: BOOLEAN)
 			-- Add required or optional dependency using type of module `a_type', based on `is_required' value.
 		local
@@ -240,6 +246,6 @@ invariant
 	version_set: not version.is_whitespace
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

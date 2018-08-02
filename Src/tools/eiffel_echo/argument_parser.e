@@ -20,7 +20,7 @@ create
 
 feature -- Access
 
-	copyright: STRING = "Copyright Eiffel Software 1985-2017. All Rights Reserved."
+	copyright: STRING = "Copyright Eiffel Software 1985-2018. All Rights Reserved."
 			-- <Precursor>
 
 	name: STRING_8 = "eiffel_echo"

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="imap_client_lib" uuid="7502B9D8-C542-4324-9972-9D8FC40253E2" library_target="imap_client_lib">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="imap_client_lib" uuid="7502B9D8-C542-4324-9972-9D8FC40253E2" library_target="imap_client_lib">
 	<target name="imap_client_lib">
 		<root class="IMAP_CLIENT_LIB" feature="make"/>
 		<file_rule>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="framework_example" uuid="F9E183D7-1FC1-4050-A6D4-7EA63A2E9717">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="framework_example" uuid="F9E183D7-1FC1-4050-A6D4-7EA63A2E9717">
 	<target name="framework_example">
 		<root cluster="root_cluster" class="APPLICATION" feature="make"/>
 		<option warning="true" full_class_checking="false" is_obsolete_routine_type="true" syntax="transitional">

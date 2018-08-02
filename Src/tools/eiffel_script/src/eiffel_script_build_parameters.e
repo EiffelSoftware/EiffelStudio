@@ -33,6 +33,9 @@ feature {NONE} -- Creation
 			elseif v.same_string ("--target") then
 				set_ecf_target (arr [i + 1])
 				cl_index.replace (i + 2)
+			elseif v.same_string ("--resource") then
+				add_resource (arr [i + 1])
+				cl_index.replace (i + 2)
 			else
 				Precursor (arr, cl_index)
 			end
@@ -45,6 +48,8 @@ feature -- Access
 	ecf_target: detachable IMMUTABLE_STRING_32
 
 	executable_path: detachable PATH
+
+	resources: detachable LIST [PATH]
 
 feature -- Element change
 
@@ -61,6 +66,18 @@ feature -- Element change
 	set_executable_path (v: READABLE_STRING_GENERAL)
 		do
 			executable_path := (create {PATH}.make_from_string (v)).absolute_path.canonical_path
+		end
+
+	add_resource (v: READABLE_STRING_GENERAL)
+		local
+			lst: like resources
+		do
+			lst := resources
+			if lst = Void then
+				create {ARRAYED_LIST [PATH]} lst.make (1)
+				resources := lst
+			end
+			lst.force ((create {PATH}.make_from_string (v)).absolute_path.canonical_path)
 		end
 
 end

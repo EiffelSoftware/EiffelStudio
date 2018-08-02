@@ -82,6 +82,8 @@ feature -- Access: Cursor
 			-- <Precursor>
 		do
 			Result := internal_argument_array.new_cursor
+		ensure then
+			instance_free: class
 		end
 
 feature -- Status report

@@ -1,9 +1,9 @@
-note
+﻿note
 	description: "[
 		Automatically generated class for EiffelStudio 12x12 icons.
 	]"
 	generator: "Eiffel Matrix Generator"
-	command_line: "emcgen.exe \work\64dev\Delivery\studio\bitmaps\png\12x12.ini -f \work\64dev\tools\eiffel_matrix_code_generator\frames\studio.e.frame"
+	command_line: "emcgen.exe $EIFFEL_SRC/Delivery/studio/bitmaps/png/12x12.ini -f $EIFFEL_SRC/tools/eiffel_matrix_code_generator/frames/studio.e.frame"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
 	date: "$Date$"
@@ -303,7 +303,7 @@ feature -- Constants: Icon names
 
 feature {NONE} -- Basic operations
 
-	populate_coordinates_table (a_table: HASH_TABLE [TUPLE [x: NATURAL_8; y: NATURAL_8], STRING])
+	populate_coordinates_table (a_table: STRING_TABLE [TUPLE [x: NATURAL_8; y: NATURAL_8]])
 			-- <Precursor>
 		do
 			a_table.put ([{NATURAL_8} 1, {NATURAL_8} 1], bp_current_line_name)
@@ -321,7 +321,7 @@ feature {NONE} -- Basic operations
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

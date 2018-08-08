@@ -1478,7 +1478,7 @@ feature -- Constants: Icon names
 
 feature {NONE} -- Basic operations
 
-	populate_coordinates_table (a_table: HASH_TABLE [TUPLE [x: NATURAL_8; y: NATURAL_8], STRING])
+	populate_coordinates_table (a_table: STRING_TABLE [TUPLE [x: NATURAL_8; y: NATURAL_8]])
 			-- <Precursor>
 		do
 			a_table.put ([{NATURAL_8} 1, {NATURAL_8} 1], toolbar_close_name)
@@ -1551,7 +1551,7 @@ feature {NONE} -- Basic operations
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -59,10 +59,12 @@ feature -- Error handling primitives
 		require
 			good_argument: e /= Void
 		do
-			fixme ("[
-				Callers should set the error position. We have checked this for most errors
-				but some may not be correct, this is why there is still a fixme.
-				]")
+			debug ("refactor_fixme")
+				fixme ("[
+					Callers should set the error position. We have checked this for most errors
+					but some may not be correct, this is why there is still a fixme.
+					]")
+			end
 			error_list.extend (e)
 			error_list.finish
 		end

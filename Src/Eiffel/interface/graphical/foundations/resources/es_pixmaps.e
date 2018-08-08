@@ -24,14 +24,14 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_name: attached STRING)
+	make (a_name: READABLE_STRING_GENERAL)
 			-- Initialize matrix from a moniker.
 			--
 			-- `a_name': An identifier/moniker used to load a pixmap image.
 		require
 			not_a_name_is_empty: not a_name.is_empty
 		local
-			l_buffer: attached EV_PIXEL_BUFFER
+			l_buffer: EV_PIXEL_BUFFER
 		do
 			if attached resource_handler.retrieve_matrix (a_name) as l_loaded_buffer then
 				l_buffer := l_loaded_buffer
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 			make_from_buffer (l_buffer)
 		end
 
-	make_from_path (a_path: attached STRING)
+	make_from_path (a_path: READABLE_STRING_GENERAL)
 			-- Initialize matrix from a path.
 			--
 			-- `a_path': The path to a matrix pixmap file to load.
@@ -78,7 +78,7 @@ feature {NONE} -- Initialization
 			make_from_buffer (l_buffer)
 		end
 
-	make_from_buffer (a_buffer: attached like matrix_buffer)
+	make_from_buffer (a_buffer: like matrix_buffer)
 			-- Initializes the tool pixmaps with a loaded raw pixel buffer.
 			-- Note: the set buffer may not be the same as the supplied buffer, if the supplied buffer is
 			--       smaller than the required dimensions.
@@ -137,14 +137,14 @@ feature {NONE} -- Access
 		deferred
 		end
 
-	frozen icon_coordinates_table: HASH_TABLE [TUPLE [x: NATURAL_8; y: NATURAL_8], STRING]
+	frozen icon_coordinates_table: STRING_TABLE [TUPLE [x: NATURAL_8; y: NATURAL_8]]
 			-- Table of icon coordinates.
 			--
 			-- Key: An icon name.
 			-- Value: Icon matrix coordinates.
 		do
 			Result := internal_icon_coordinates_table
-			if not attached Result then
+			if Result = Void then
 				create Result.make (10)
 				populate_coordinates_table (Result)
 				internal_icon_coordinates_table := Result
@@ -153,12 +153,12 @@ feature {NONE} -- Access
 			result_consistent: Result = icon_coordinates_table
 		end
 
-	matrix_buffer: attached EV_PIXEL_BUFFER
+	matrix_buffer: EV_PIXEL_BUFFER
 			-- Raw matrix pixel buffer
 
 feature -- Status report
 
-	has_named_icon (a_name: attached STRING): BOOLEAN
+	has_named_icon (a_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Indicates if a name icon if availalbe.
 			--
 			-- `a_name': The icon name. (See section Access: Icon name constants)
@@ -173,13 +173,13 @@ feature -- Status report
 
 feature {NONE} -- Helpers
 
-	resource_handler: attached ES_PIXMAP_RESOURCE_HANDLER
+	resource_handler: ES_PIXMAP_RESOURCE_HANDLER
 			-- Access to an icon resource handler, for unified access to icon resources
 		once
 			create Result.make
 		end
 
-	frozen logger: attached SERVICE_CONSUMER [LOGGER_S]
+	frozen logger: SERVICE_CONSUMER [LOGGER_S]
 			-- Access to the EiffelStudio logger service.
 		once
 			create Result
@@ -187,7 +187,7 @@ feature {NONE} -- Helpers
 
 feature -- Query
 
-	named_icon_buffer (a_name: attached STRING): EV_PIXEL_BUFFER
+	named_icon_buffer (a_name: READABLE_STRING_GENERAL): EV_PIXEL_BUFFER
 			-- Retrieves a icon buffer given a known icon name
 			--
 			-- `a_name':
@@ -205,7 +205,7 @@ feature -- Query
 			not_result_is_destroyed: not Result.is_destroyed
 		end
 
-	named_icon (a_name: attached STRING): EV_PIXMAP
+	named_icon (a_name: READABLE_STRING_GENERAL): EV_PIXMAP
 			-- Retrieves a icon buffer given a known icon name
 			--
 			-- `a_name':
@@ -223,7 +223,7 @@ feature -- Query
 			not_result_is_destroyed: not Result.is_destroyed
 		end
 
-	icon_buffer_with_overlay (a_icon: EV_PIXEL_BUFFER; a_overlay: EV_PIXEL_BUFFER; a_x_offset: NATURAL_8; a_y_offset: NATURAL_8): attached EV_PIXEL_BUFFER
+	icon_buffer_with_overlay (a_icon: EV_PIXEL_BUFFER; a_overlay: EV_PIXEL_BUFFER; a_x_offset: NATURAL_8; a_y_offset: NATURAL_8): EV_PIXEL_BUFFER
 			-- Creates a new icon with a supplied overlay.
 			--
 			-- `a_icon': The original icon to draw an overlay on top of.
@@ -251,7 +251,7 @@ feature -- Query
 			not_result_is_destroyed: not Result.is_destroyed
 		end
 
-	icon_with_overlay (a_icon: EV_PIXMAP; a_overlay: EV_PIXEL_BUFFER; a_x_offset: NATURAL_8; a_y_offset: NATURAL_8): attached EV_PIXMAP
+	icon_with_overlay (a_icon: EV_PIXMAP; a_overlay: EV_PIXEL_BUFFER; a_x_offset: NATURAL_8; a_y_offset: NATURAL_8): EV_PIXMAP
 			-- Creates a new icon with a supplied overlay.
 			--
 			-- `a_icon': The original icon to draw an overlay on top of.
@@ -281,7 +281,7 @@ feature -- Query
 
 feature {NONE} -- Query
 
-	frozen pixel_rectangle (a_x: NATURAL_8; a_y: NATURAL_8): attached EV_RECTANGLE
+	frozen pixel_rectangle (a_x: NATURAL_8; a_y: NATURAL_8): EV_RECTANGLE
 			-- Retrieves a rectangle from an icon matrix coordinates.
 			--
 			-- `a_x': Icon x coordinate.
@@ -310,7 +310,7 @@ feature {NONE} -- Query
 
 feature {NONE} -- Basic operation
 
-	frozen expand_buffer (a_buffer: attached like matrix_buffer): attached like matrix_buffer
+	frozen expand_buffer (a_buffer: like matrix_buffer): like matrix_buffer
 			-- Expands a pixel buffer to ensure it will fit the hard-coded dimensions set in the matrix configuration file.
 			--
 			-- `a_buffer': The pixel buffer to expand to fix the coded matrix dimensions.
@@ -331,14 +331,14 @@ feature {NONE} -- Basic operation
 			result_height_big_enough: Result.height.to_natural_32 >= matrix_pixel_height
 		end
 
-	populate_coordinates_table (a_table: HASH_TABLE [TUPLE [x: NATURAL_8; y: NATURAL_8], STRING])
+	populate_coordinates_table (a_table: STRING_TABLE [TUPLE [x: NATURAL_8; y: NATURAL_8]])
 			-- Populates a coordinates table with the coordinates for the implemented icons
 		deferred
 		end
 
 feature {NONE} -- Implementation: cache
 
-	frozen rectangle: attached EV_RECTANGLE
+	frozen rectangle: EV_RECTANGLE
 			-- Reusable rectangle for `pixmap_from_constant'.
 		once
 			create Result

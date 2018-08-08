@@ -57,7 +57,7 @@ feature {NONE} -- Access
 	matrix_buffer: EV_PIXEL_BUFFER
 			-- Raw matrix pixel buffer
 
-	frozen icon_coordinates_table: HASH_TABLE [TUPLE [x: NATURAL_8; y: NATURAL_8], STRING]
+	frozen icon_coordinates_table: STRING_TABLE [TUPLE [x: NATURAL_8; y: NATURAL_8]]
 			-- Table of icon coordinates.
 			--
 			-- Key: An icon name.
@@ -76,7 +76,7 @@ feature {NONE} -- Access
 
 feature -- Status report
 
-	has_named_icon (a_name: STRING): BOOLEAN
+	has_named_icon (a_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Indicates if a name icon if availalbe.
 			--
 			-- `a_name': The icon name. (See section Access: Icon name constants)
@@ -91,7 +91,7 @@ feature -- Status report
 
 feature -- Query
 
-	named_icon_buffer (a_name: STRING): EV_PIXEL_BUFFER
+	named_icon_buffer (a_name: READABLE_STRING_GENERAL): EV_PIXEL_BUFFER
 			-- Retrieves a icon buffer given a known icon name
 			--
 			-- `a_name':
@@ -107,7 +107,7 @@ feature -- Query
 			not_result_is_destroyed: not Result.is_destroyed
 		end
 
-	named_icon (a_name: STRING): EV_PIXMAP
+	named_icon (a_name: READABLE_STRING_GENERAL): EV_PIXMAP
 			-- Retrieves a icon buffer given a known icon name
 			--
 			-- `a_name':
@@ -166,7 +166,7 @@ feature {NONE} -- Query
 
 feature {NONE} -- Basic operation
 
-	populate_coordinates_table (a_table: HASH_TABLE [TUPLE [x: NATURAL_8; y: NATURAL_8], STRING])
+	populate_coordinates_table (a_table: STRING_TABLE [TUPLE [x: NATURAL_8; y: NATURAL_8]])
 			-- <Precursor>
 		do
 ${COORDINATES}

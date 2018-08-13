@@ -42,8 +42,11 @@ feature {CMS_API} -- Module Initialization
 	initialize (api: CMS_API)
 			-- <Precursor>
 		do
+			cms_api := api
 			Precursor (api)
 		end
+
+	cms_api: detachable CMS_API
 
 feature {CMS_API} -- Module management
 
@@ -107,6 +110,11 @@ feature {CMS_API} -- Module management
 			l_authenticated_role.add_permission ("edit own page")
 			l_authenticated_role.add_permission ("delete own page")
 			l_authenticated_role.add_permission ("trash own page")
+			across
+				a_api.formats as ic
+			loop
+				l_authenticated_role.add_permission (use_format_permission_name (ic.item))
+			end
 			a_api.user_api.save_user_role (l_authenticated_role)
 		end
 
@@ -132,6 +140,18 @@ feature -- Security
 			Result.force ("edit path_alias")
 			Result.force ("use access_token")
 			Result.force ("view users")
+			if attached cms_api as l_cms_api then
+				across
+					l_cms_api.formats as ic
+				loop
+					Result.force (use_format_permission_name (ic.item))
+				end
+			end
+		end
+
+	use_format_permission_name (a_format: CONTENT_FORMAT): STRING
+		do
+			Result := "use format " + a_format.name
 		end
 
 feature {CMS_EXECUTION} -- Administration
@@ -182,7 +202,7 @@ feature -- Hook
 		end
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

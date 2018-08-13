@@ -24,7 +24,7 @@ feature -- Token Generation
 			es: CMS_AUTHENTICATION_EMAIL_SERVICE
 		do
 			l_user_api := cms_api.user_api
-			
+
 				-- New temp user
 			u.set_personal_information (a_personal_information)
 			l_user_api.new_temp_user (u)
@@ -32,12 +32,21 @@ feature -- Token Generation
 				-- Create activation token
 			l_token := new_token
 			l_user_api.new_activation (l_token, u.id)
-			l_url_activate := cms_api.absolute_url ("/account/activate/" + l_token, Void)
-			l_url_reject := cms_api.absolute_url ("/account/reject/" + l_token, Void)
+			l_url_activate := cms_api.absolute_url (cms_api.administration_path ("/account/activate/" + l_token), Void)
+			l_url_reject := cms_api.absolute_url (cms_api.administration_path ("/account/reject/" + l_token), Void)
+
 				-- Send Email to webmaster
 			cms_api.log_debug ("registration", "send_register_email", Void)
 			create es.make (create {CMS_AUTHENTICATION_EMAIL_SERVICE_PARAMETERS}.make (cms_api))
-			es.send_account_evaluation (u, a_personal_information, l_url_activate, l_url_reject, cms_api.absolute_url ("", Void))
+			es.send_admin_account_evaluation (u, a_personal_information, l_url_activate, l_url_reject, cms_api.absolute_url ("", Void))
+
+-- TODO: 2018-08-13 add email verification operation. 
+--			if cms_api.user_has_permission (Void, "account auto activate") then
+--					-- Send Email comfirmation to user
+--				cms_api.log_debug ("registration", "send_email_confirmation", Void)
+--				create es.make (create {CMS_AUTHENTICATION_EMAIL_SERVICE_PARAMETERS}.make (cms_api))
+--				es.send_contact_account_email_verification (a_email, u, cms_api.absolute_url ("/account/confirm-email/" + l_token, Void), cms_api.absolute_url ("", Void))
+--			end
 
 				-- Send Email to user
 			cms_api.log_debug ("registration", "send_contact_email", Void)

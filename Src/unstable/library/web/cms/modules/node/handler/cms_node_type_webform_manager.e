@@ -22,8 +22,6 @@ feature -- Forms ...
 			opt: WSF_FORM_SELECT_OPTION
 			cms_format: CMS_EDITOR_CONTENT_FORMAT
 		do
-			create cms_format
-
 			create ti.make ("title")
 			ti.enable_required
 			ti.set_label ("Title")
@@ -39,6 +37,9 @@ feature -- Forms ...
 			create tselect.make ("format")
 			tselect.set_label ("Format for content (and summary)")
 			tselect.set_is_required (True)
+
+				-- Content format
+			create cms_format
 
 				-- Main Content
 			create ta.make ("content")
@@ -78,11 +79,13 @@ feature -- Forms ...
 			across
 				 content_type.available_formats as c
 			loop
-				create opt.make (c.item.name, c.item.title)
-				if attached c.item.html_help as f_help then
-					opt.set_description ("<ul>" + f_help + "</ul>")
+				if cms_api.has_permission_to_use_format (c.item) then
+					create opt.make (c.item.name, c.item.title)
+					if attached c.item.html_help as f_help then
+						opt.set_description ("<ul>" + f_help + "</ul>")
+					end
+					tselect.add_option (opt)
 				end
-				tselect.add_option (opt)
 			end
 			if a_node /= Void and then attached a_node.format as l_format then
 				tselect.set_text_by_value (l_format)

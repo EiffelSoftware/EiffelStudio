@@ -108,7 +108,7 @@ feature	-- Access
 	contact_subject_rejected: IMMUTABLE_STRING_8
 	contact_subject_activated: IMMUTABLE_STRING_8
 
-	account_evaluation: STRING
+	admin_account_evaluation: STRING
 			-- Account evaluation template email message.
 		do
 			Result := template_string ("admin_account_evaluation.html", default_template_account_evaluation)
@@ -118,6 +118,12 @@ feature	-- Access
 			-- Account activation template email message.
 		do
 			Result := template_string ("account_activation.html", default_template_account_activation)
+		end
+
+	account_email_verification: STRING
+			-- Account activation confirmation template email message.
+		do
+			Result := template_string ("account_email_verification.html", default_template_account_activation_confirmation)
 		end
 
 	account_activation_confirmation: STRING

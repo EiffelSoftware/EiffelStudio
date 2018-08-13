@@ -234,6 +234,12 @@ feature -- Form
 				b.append ("<div class=%"preview-container%"><strong>Preview</strong><div class=%"preview%">")
 				if attached fd.string_item ("format") as s_format and then attached api.format (s_format) as f_format then
 					l_format := f_format
+					if
+						l_format /= Void and then
+						not api.has_permission_to_use_format (l_format)
+					then
+						fd.report_invalid_field ("format", "You are not allowed to use format [" + l_format.title + "]")
+					end
 				end
 				if attached fd.string_item ("title") as l_title then
 					b.append ("<strong>Title:</strong><div class=%"title%">" + html_encoded (l_title) + "</div>")

@@ -81,12 +81,12 @@ feature -- Basic Operations / Internal
 
 feature -- Basic Operations / Contact
 
-	send_account_evaluation (a_user: CMS_USER; a_application: READABLE_STRING_GENERAL; a_url_activate, a_url_reject, a_host: READABLE_STRING_8)
+	send_admin_account_evaluation (a_user: CMS_USER; a_application: READABLE_STRING_GENERAL; a_url_activate, a_url_reject, a_host: READABLE_STRING_8)
 			-- Send new user register to webmaster to confirm or reject itt.
 		local
 			l_message: STRING
 		do
-			create l_message.make_from_string (parameters.account_evaluation)
+			create l_message.make_from_string (parameters.admin_account_evaluation)
 			l_message.replace_substring_all ("$host", a_host)
 			l_message.replace_substring_all ("$sitename", parameters.utf_8_site_name)
 			l_message.replace_substring_all ("$user", a_user.utf_8_name)
@@ -131,6 +131,22 @@ feature -- Basic Operations / Contact
 			send_message (contact_email_address, a_to, parameters.contact_subject_activate, l_message)
 		end
 
+	send_contact_account_email_verification (a_to: READABLE_STRING_8; a_user: CMS_USER; a_activation_url: READABLE_STRING_8; a_host: READABLE_STRING_8)
+			-- Send email validation message to a_to.
+		require
+			attached_to: a_to /= Void
+		local
+			l_message: STRING
+		do
+			create l_message.make_from_string (parameters.account_email_verification)
+			l_message.replace_substring_all ("$host", a_host)
+			l_message.replace_substring_all ("$sitename", parameters.utf_8_site_name)
+			l_message.replace_substring_all ("$user", a_user.utf_8_name)
+			l_message.replace_substring_all ("$email", a_to)
+			l_message.replace_substring_all ("$activation_url", a_activation_url)
+			send_message (contact_email_address, a_to, parameters.contact_subject_activated, l_message)
+		end
+
 	send_contact_activation_confirmation_email (a_to: READABLE_STRING_8; a_user: CMS_USER; a_host: READABLE_STRING_8)
 			-- Send successful message activation to a_to.
 		require
@@ -146,18 +162,24 @@ feature -- Basic Operations / Contact
 			send_message (contact_email_address, a_to, parameters.contact_subject_activated, l_message)
 		end
 
-	send_contact_activation_reject_email (a_to: READABLE_STRING_8; a_user: CMS_USER; a_host: READABLE_STRING_8)
+	send_contact_activation_reject_email (a_to: READABLE_STRING_8; a_user: CMS_USER; a_host: READABLE_STRING_8; a_rejection_reason: detachable READABLE_STRING_GENERAL)
 			-- Send successful contact activation reject message to `a_to'.
 		require
 			attached_to: a_to /= Void
 		local
 			l_message: STRING
+			utf: UTF_CONVERTER
 		do
 			create l_message.make_from_string (parameters.account_rejected)
 			l_message.replace_substring_all ("$host", a_host)
 			l_message.replace_substring_all ("$sitename", parameters.utf_8_site_name)
 			l_message.replace_substring_all ("$email", a_to)
 			l_message.replace_substring_all ("$user", a_user.utf_8_name)
+			if a_rejection_reason /= Void and then not a_rejection_reason.is_whitespace then
+				l_message.replace_substring_all ("$rejection_reason", utf.utf_32_string_to_utf_8_string_8 (a_rejection_reason))
+			else
+				l_message.replace_substring_all ("$rejection_reason", "it was not respecting the requirements.")
+			end
 			send_message (contact_email_address, a_to, parameters.contact_subject_rejected, l_message)
 		end
 

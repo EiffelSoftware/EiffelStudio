@@ -32,8 +32,13 @@ feature -- Access
 
 	html_help: READABLE_STRING_8
 			-- Help in html text.
+		local
+			s: STRING_8
 		do
-			Result := help
+			create s.make_from_string (help)
+			s.prepend ("<pre>")
+			s.append ("<pre>")
+			Result := s
 		end
 
 feature -- Conversion

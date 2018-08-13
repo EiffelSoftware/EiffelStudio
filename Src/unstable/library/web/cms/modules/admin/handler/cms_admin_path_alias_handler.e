@@ -79,6 +79,10 @@ feature -- Execution
 						s.append ("</li>")
 					end
 					s.append ("</ul>")
+						-- New Alias?
+					s.append ("<fieldset><legend>New alias</legend>")
+					s.append ("<form action=%"%" method=%"POST%">Alias:<input type=%"text%" name=%"path_alias%" value=%"%"/><br/>Target:<input type=%"text%" name=%"source%" value=%"%"/><br/><input type=%"submit%" name=%"op%" value=%"Set Alias%"/></form>")
+					s.append ("</fieldset>")
 				end
 				l_response.set_main_content (s)
 				l_response.execute
@@ -91,29 +95,39 @@ feature -- Execution
 		local
 			l_response: CMS_RESPONSE
 			s: STRING
+			l_delay: NATURAL_32
 		do
 			if api.has_permission ("admin path_alias") then
 				create {GENERIC_VIEW_CMS_RESPONSE} l_response.make (req, res, api)
 				create s.make_empty
 
 				if
-					attached {WSF_STRING} req.form_parameter ("op") as p_op and then p_op.same_string ("unset") and then
 					attached {WSF_STRING} req.form_parameter ("path_alias") as p_alias and then
 					attached {WSF_STRING} req.form_parameter ("source") as p_source
 				then
-					api.unset_path_alias (p_source.value.to_string_8, p_alias.value.to_string_8) -- FIXME: avoid `to_string_8`
-					if api.has_error then
-						s.append ("<div class=%"error%">ERROR: Path alias %"" + l_response.html_encoded (p_alias.value) + "%" raised error!</div>")
-					else
-						s.append ("<div class=%"success%">Path alias %"" + l_response.html_encoded (p_alias.value) + "%" is now unset!</div>")
+					if attached {WSF_STRING} req.form_parameter ("op") as p_op and then p_op.same_string ("unset") then
+						api.unset_path_alias (p_source.value.to_string_8, p_alias.value.to_string_8) -- FIXME: avoid `to_string_8`
+						if api.has_error then
+							s.append ("<div class=%"error%">ERROR: Path alias %"" + l_response.html_encoded (p_alias.value) + "%" raised error!</div>")
+						else
+							s.append ("<div class=%"success%">Path alias %"" + l_response.html_encoded (p_alias.value) + "%" is now unset!</div>")
+						end
+					elseif attached {WSF_STRING} req.form_parameter ("op") as p_op and then p_op.same_string ("Set Alias") then
+						api.set_path_alias (p_source.value.to_string_8, p_alias.value.to_string_8, False)
+						if api.has_error then
+							s.append ("<div class=%"error%">ERROR: Path alias %"" + l_response.html_encoded (p_alias.value) + "%" raised error!</div>")
+						else
+							s.append ("<div class=%"success%">Path alias %"" + l_response.html_encoded (p_alias.value) + "%" is now set!</div>")
+						end
 					end
 				end
 				s.append ("<p><a href=%"%">Back to list of path aliases ...</a><p>")
-				s.append ("(in 3 seconds...)")
+				l_delay := 3
+				s.append ("(in " + l_delay.out + " seconds...)")
 				l_response.set_main_content (s)
 
 				l_response.set_redirection (l_response.location)
-				l_response.set_redirection_delay (3)
+				l_response.set_redirection_delay (l_delay)
 				l_response.execute
 			else
 				send_access_denied (req, res)

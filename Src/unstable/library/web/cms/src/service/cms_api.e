@@ -967,6 +967,13 @@ feature -- Permissions system
 			end
 		end
 
+	has_permission_to_use_format (a_format: CONTENT_FORMAT): BOOLEAN
+			-- Anonymous or user `user` has permission to use content format `a_format`?
+		do
+					-- See `CMS_CORE_MODULE.use_format_permission_name (...)`
+			Result := has_permission ("use format " + a_format.name)
+		end
+
 feature -- Query: module
 
 	is_module_installed (a_module: CMS_MODULE): BOOLEAN
@@ -1607,7 +1614,7 @@ feature {NONE} -- Implementation: current user
 		end
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end
 

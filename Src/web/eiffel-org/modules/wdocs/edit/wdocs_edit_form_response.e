@@ -242,7 +242,7 @@ feature -- Form
 			l_title: detachable READABLE_STRING_32
 			l_source: detachable READABLE_STRING_32
 			l_xhtml: READABLE_STRING_8
-			s: STRING
+			s32: STRING_32
 		do
 --			if fd.item ("bookid") = Void then
 --				fd.report_error ("Missing book name information!")
@@ -262,9 +262,9 @@ feature -- Form
 				l_source := fd.string_item ("source")
 				if l_title /= Void and l_source /= Void then
 						-- FIXME: workaround to handle CRNL as NL, as we had such issue.
-					create s.make_from_string (l_source)
-					s.prune_all ('%R')
-					l_source := s
+					create s32.make_from_string (l_source)
+					s32.prune_all ({CHARACTER_32} '%R')
+					l_source := s32
 					l_xhtml := wiki_to_xhtml (wdocs_api, l_title, l_source, pg, a_manager)
 					b.append ("<strong>Title:</strong><div class=%"title%">" + html_encoded (l_title) + "</div>")
 
@@ -362,7 +362,7 @@ feature -- Form
 							-- The "title" field was changed, it has priority over eventual changed wiki title property from content!
 						l_page.set_metadata (l_title_value, "title")
 						l_changed := True
-					elseif l_meta_title /= Void and then not l_page.title.same_string (l_meta_title) then
+					elseif l_meta_title /= Void and then not l_page.title.same_string_general (l_meta_title) then
 						l_page.set_title (l_meta_title)
 							-- The "title" metadata was changed, but not the title field.
 						l_page.set_metadata (l_meta_title, "title")

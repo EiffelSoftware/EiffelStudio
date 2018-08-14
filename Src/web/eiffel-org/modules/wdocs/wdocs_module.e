@@ -1242,7 +1242,7 @@ feature -- Handler
 							l_is_ref := True
 						else
 							loc.append_character ('/')
-							loc.append (v.value)
+							loc.append (url_encoded (v.value))
 						end
 					end
 				end
@@ -1269,7 +1269,7 @@ feature {WDOCS_EDIT_MODULE, WDOCS_EDIT_FORM_RESPONSE} -- Implementation: request
 			pgr: WDOCS_PAGE_CMS_RESPONSE
 			r: CMS_RESPONSE
 			s: STRING
-			l_title: detachable READABLE_STRING_8
+			l_title: detachable READABLE_STRING_32
 		do
 			debug ("refactor_fixme")
 				to_implement ("Find a way to extract presentation [html code] outside Eiffel")
@@ -1467,7 +1467,7 @@ feature {WDOCS_EDIT_MODULE} -- Implementation: wiki render
 			s.append ("<li>Location: " + req.request_uri + "</li>")
 		end
 
-	append_wiki_page_xhtml_to (a_wiki_page: WIKI_BOOK_PAGE; a_page_title: detachable READABLE_STRING_8; a_book_name: detachable READABLE_STRING_GENERAL; a_manager: WDOCS_MANAGER; a_output: STRING; req: WSF_REQUEST; a_response: CMS_RESPONSE)
+	append_wiki_page_xhtml_to (a_wiki_page: WIKI_BOOK_PAGE; a_page_title: detachable READABLE_STRING_GENERAL; a_book_name: detachable READABLE_STRING_GENERAL; a_manager: WDOCS_MANAGER; a_output: STRING; req: WSF_REQUEST; a_response: CMS_RESPONSE)
 		local
 			l_cache: detachable WDOCS_FILE_STRING_8_CACHE
 			l_xhtml: detachable STRING_8

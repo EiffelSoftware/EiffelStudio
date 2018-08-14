@@ -177,6 +177,7 @@ feature {NONE} -- Initialize
 			l_filters.extend (create {LINE_BREAK_TO_HTML_CONTENT_FILTER})
 			l_filters.extend (create {URL_CONTENT_FILTER})
 			l_filters.extend (create {HTML_CONTENT_FILTER})
+			l_filters.extend (create {SECURITY_HTML_CONTENT_FILTER})
 
 
 				-- Initialize built-in formats
@@ -200,7 +201,7 @@ feature {NONE} -- Initialize
 				l_formats.extend (new_format ("full_html", "Full HTML", <<{URL_CONTENT_FILTER}.name>>))
 
 					-- filtered_html: url + html_filter + line_break_converter
-				l_formats.extend (new_format ("filtered_html", "Filtered HTML", <<{URL_CONTENT_FILTER}.name, {HTML_CONTENT_FILTER}.name, {LINE_BREAK_TO_HTML_CONTENT_FILTER}.name>>))
+				l_formats.extend (new_format ("filtered_html", "Filtered HTML", <<{URL_CONTENT_FILTER}.name, {HTML_CONTENT_FILTER}.name, {LINE_BREAK_TO_HTML_CONTENT_FILTER}.name, {SECURITY_HTML_CONTENT_FILTER}.name>>))
 
 					-- CMS Editor!
 				l_formats.extend (new_format ("cms_editor", "CMS HTML content", Void))

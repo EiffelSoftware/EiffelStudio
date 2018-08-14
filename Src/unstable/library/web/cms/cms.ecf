@@ -31,6 +31,18 @@
 		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf.ecf"/>
 		<library name="wsf_extension" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf_extension.ecf" readonly="false"/>
 		<library name="wsf_html" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf_html\wsf_html.ecf" readonly="false"/>
-		<cluster name="src" location=".\src\" recursive="true"/>
+		<cluster name="src" location=".\src\" recursive="true">
+			<file_rule>
+				<exclude>/testing$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+	<target name="cms_testing" extends="cms">
+		<root class="ANY" feature="default_create"/>
+		<capability>
+			<concurrency use="none"/>
+		</capability>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
+		<tests name="tests" location=".\testing" recursive="true"/>
 	</target>
 </system>

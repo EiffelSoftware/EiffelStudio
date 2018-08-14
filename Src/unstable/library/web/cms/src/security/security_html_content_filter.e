@@ -171,7 +171,7 @@ feature -- Conversion
 						-- Skip ending spaces and ending slash
 					n := a_elt.count - 1
 				until
-					n < i or else (not a_elt[n].is_space or a_elt[n] /= '/')
+					n < i or else (not a_elt[n].is_space and a_elt[n] /= '/')
 				loop
 					n := n - 1
 				end
@@ -228,20 +228,20 @@ feature -- Conversion
 								i := k + 1
 							else
 								from
-									i := i + 1
 									vv := a_elt.substring (1,0) -- Empty string using same type as `a_elt`.
 									c := a_elt[i]
+									k := i
 								until
 									i > n or else (c.is_space)
 								loop
-									k := i
 									if vvk = Void and c = ':' then
 										vvk := vv.twin
 									end
 									vv.append_code (a_elt.code (i))
 									i := i + 1
 									if i <= n then
-										c := a_elt[i + 1]
+										k := i
+										c := a_elt[i]
 									end
 								end
 							end

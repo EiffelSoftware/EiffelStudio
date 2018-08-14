@@ -30,6 +30,12 @@ feature -- Test routines
 			text := "<img src=%"javascript:alert('XSS');%">"
 			expected_text := "<img >"
 			assert ("expected no javascript: in attribute value", filtered (text).same_string (expected_text))
+
+			text := "<IMG SRC=JaVaScRiPt:alert('XSS')/>"
+			expected_text := "<IMG />"
+			assert ("expected no javascript: in attribute value", filtered (text).same_string (expected_text))
+
+
 		end
 
 	test_attribute_name

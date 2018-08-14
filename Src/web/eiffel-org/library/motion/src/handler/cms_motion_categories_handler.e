@@ -91,7 +91,7 @@ feature -- HTTP Methods
 						s.append ("<a href=%"")
 						s.append (req.absolute_script_url ("/" + motion_api.resource_path + "/" + motion_api.item + "/category/"+u.id.out))
 						s.append ("%">")
-						s.append (u.synopsis)
+						s.append (html_encoded (u.synopsis))
 						s.append (" - ")
 						s.append (u.is_active.out)
 						s.append ("</a>")

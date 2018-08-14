@@ -382,9 +382,8 @@ feature -- Request handling: Contribute
 			r: CMS_RESPONSE
 			l_videos: LIST[STRING]
 			l_filter: VIDEO_CONTENT_FILTER
-			s: STRING_8
+			l_content: STRING_8
 		do
-
 			fixme ("Use CMS node and associated content for Resources link!")
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 			r.set_value ("videos", "optional_content_type")
@@ -393,14 +392,13 @@ feature -- Request handling: Contribute
 	 		if attached {CMS_NODE_API} api.module_api_by_name ("node") as l_node_api then
                 create l_filter
 				across l_node_api.nodes as ic loop
-					create s.make_empty
 					if
 						attached ic.item.format as l_format and then l_format.same_string ("video_html") and then
-						attached ic.item.content as l_content
+						attached ic.item.content as l_item_content
 					then
+						l_content := utf_8_encoded (l_item_content)
 						l_filter.filter (l_content)
-						s.append (l_content)
-						l_videos.force (s)
+						l_videos.force (l_content)
 					end
 				end
 			end

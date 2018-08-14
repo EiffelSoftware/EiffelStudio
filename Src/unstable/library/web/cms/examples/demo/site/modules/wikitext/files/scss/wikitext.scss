@@ -10,11 +10,10 @@
 		margin: 2px 0 2px 0;
 
 		&.inline {
-			display: inline-block;
+			display: inline;
 			padding: 0 2px 0 2px;
 			margin: 0;
 			border: none;
-			border-bottom: dotted 1px #ddd;
 			border-radius: 4px;
 			background-color: #efefef;
 		}

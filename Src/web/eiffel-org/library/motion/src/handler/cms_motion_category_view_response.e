@@ -83,11 +83,11 @@ feature -- Execution
 			s.append ("<div class=%"info%"> ")
 			s.append ("<h4>Category Information</h4>")
 			s.append ("<p>Synopsis: ")
-			s.append (a_category.synopsis)
+			s.append (html_encoded (a_category.synopsis))
 			s.append ("</p>")
 			if attached a_category.description as l_description then
 				s.append ("<p>Description: ")
-				s.append (l_description)
+				s.append (html_encoded (l_description))
 				s.append ("</p>")
 			end
 			s.append ("<p>Is Active?:")

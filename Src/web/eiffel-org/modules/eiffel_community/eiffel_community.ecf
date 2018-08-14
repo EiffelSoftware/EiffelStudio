@@ -15,7 +15,7 @@
 		<library name="cms_model" location="$ISE_LIBRARY\unstable\library\web\cms\library\model\cms_model.ecf" readonly="false"/>
 		<library name="cms_node_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\node\node.ecf" readonly="false"/>
 		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http.ecf"/>
-		<library name="module_embedded_video" location="..\embedded_video\video.ecf" readonly="false" use_application_options="true"/>
+		<library name="cms_module_embedded_video" location="$ISE_LIBRARY\unstable\library\web\cms\modules\embedded_video\embedded_video.ecf" readonly="false" use_application_options="true"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf.ecf"/>
 		<library name="wsf_encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder.ecf"/>

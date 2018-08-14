@@ -109,8 +109,7 @@ feature -- Access
 				end
 				if Result = Void then
 					create hd.make_from_string (s)
-					if hd.has_error then
-					else
+					if not hd.has_error then
 						Result := hd.date_time
 					end
 				end
@@ -118,6 +117,6 @@ feature -- Access
 		end
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

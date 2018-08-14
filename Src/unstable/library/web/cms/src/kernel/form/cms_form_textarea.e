@@ -19,7 +19,7 @@ inherit
 create
 	make
 
-feature -- Initialisation
+feature {NONE} -- Initialisation
 
 	make (a_name: like name)
 			-- <Precursor>
@@ -74,4 +74,7 @@ feature -- Conversion
 			end
 		end
 
+note
+	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

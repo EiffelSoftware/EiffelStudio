@@ -46,29 +46,20 @@ feature -- Response helpers
 
 	send_not_found (a_message: detachable READABLE_STRING_8; req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Send via `res' a not found response.
-		local
-			r: NOT_FOUND_ERROR_CMS_RESPONSE
 		do
-			create r.make (req, res, cms_api)
-			impl_response_execute (r, a_message)
+			impl_response_execute (create {NOT_FOUND_ERROR_CMS_RESPONSE}.make (req, res, cms_api), a_message)
 		end
 
 	send_bad_request (a_message: detachable READABLE_STRING_8; req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Send via `res' a bad request response.
-		local
-			r: BAD_REQUEST_ERROR_CMS_RESPONSE
 		do
-			create r.make (req, res, cms_api)
-			impl_response_execute (r, a_message)
+			impl_response_execute (create {BAD_REQUEST_ERROR_CMS_RESPONSE}.make (req, res, cms_api), a_message)
 		end
 
 	send_not_implemented (a_message: detachable READABLE_STRING_8; req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Send via `res' a not implemented response.
-		local
-			r: NOT_IMPLEMENTED_ERROR_CMS_RESPONSE
 		do
-			create r.make (req, res, cms_api)
-			impl_response_execute (r, a_message)
+			impl_response_execute (create {NOT_IMPLEMENTED_ERROR_CMS_RESPONSE}.make (req, res, cms_api), a_message)
 		end
 
 feature {NONE} -- Implementation
@@ -82,6 +73,6 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

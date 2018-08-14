@@ -40,10 +40,10 @@ feature -- Access
 
 feature -- Settings
 
-	default_width: INTEGER;
-		-- Specifies the width of an <iframe> in pixels.
+	default_width: INTEGER assign set_default_width
+			-- Specifies the width of an <iframe> in pixels.
 
-	default_height: INTEGER
+	default_height: INTEGER assign set_default_height
 			-- Specifies the height of an <iframe> in pixels.
 
 	template: detachable READABLE_STRING_8
@@ -54,11 +54,13 @@ feature -- Settings
 feature -- Settings change
 
 	set_default_width (w: like default_width)
+			-- Set `default_width` to `w`.
 		do
 			default_width := w
 		end
 
 	set_default_height (h: like default_height)
+			-- Set `default_height` to `h`.	
 		do
 			default_height := h
 		end
@@ -73,110 +75,117 @@ feature -- Conversion
 	filter (a_text: STRING_GENERAL)
 			-- [video:url width:X height:Y]
 		local
-			l_new: detachable STRING_GENERAL
-			i,p,q,diff: INTEGER
+			l_new: STRING_8
+			i,j,k: INTEGER
 		do
 			from
 				i := 1
 			until
 				i > a_text.count
 			loop
-				p := a_text.substring_index ("[video:", i)
-				if p > 0 then
-					q := a_text.index_of (']', p + 1)
-					l_new := to_embedded_video_code (a_text, p, q)
-					if l_new /= Void then
-						diff := l_new.count - (q - p + 1)
-						i := i + diff
-						replace_substring (a_text, l_new, p, q)
-					else
-						i := q + 1
-					end
+				j := a_text.index_of ('[', i)
+				if j = 0 then
+					j := i
+					k := a_text.count
+					i := k + 1 -- Exit
 				else
-					i := a_text.count
+					k := a_text.index_of (']', j + 1)
+					if k = 0 then
+						k := a_text.count
+						i := k + 1
+					else
+						l_new := to_embedded_video_code (a_text, j, k)
+						if l_new = Void then
+							i := k + 1
+						else
+							replace_substring (a_text, l_new, j, k)
+							i := i + l_new.count
+						end
+					end
 				end
-				i := i + 1
 			end
 		end
 
-	to_embedded_video_code (a_text: STRING_GENERAL; a_lower, a_upper: INTEGER): detachable STRING_GENERAL
+	to_embedded_video_code (a_text: STRING_GENERAL; a_lower, a_upper: INTEGER): detachable STRING_8
+			-- Filtered `a_text [a_lower:a_upper]` if pattern detected, otherwise Void.
 		require
 			a_lower < a_upper
-			a_text.substring (a_lower, a_lower + 6).same_string ("[video:")
-			a_text.ends_with ("]")
+			a_text[a_lower] = '['
+			a_text[a_upper] = ']'
 		local
-			i,j,n: INTEGER
-			s,k,v: STRING_GENERAL
-			l_url, l_att: STRING_GENERAL
-			l_width, l_height, l_extra: detachable STRING_GENERAL
+			l_line, s: STRING_8
+			l_param: STRING_8
+			l_url, l_att, l_width, l_height: detachable STRING_8
+			l_ext: detachable ARRAYED_LIST [TUPLE [name: STRING_8; value: detachable STRING_8]]
+			t: TUPLE [name: STRING_8; value: detachable STRING_8]
+			i: INTEGER
+			j: INTEGER
+			utf_conv: UTF_CONVERTER
 		do
-			s := a_text.substring (a_lower + 7, a_upper - 1)
-			s.left_adjust
-			i := next_space_position (s, 1)
-			if i > 0 then
-				l_url := s.head (i - 1)
-				remove_head (s, i)
+			l_line := utf_conv.utf_32_string_to_utf_8_string_8 (a_text.substring (a_lower + 1, a_upper - 1))
+			l_line.left_adjust
+			l_line.right_adjust
+			from
+				i := l_line.index_of (':', 1)
+				l_param := l_line.substring (1, i - 1)
+				remove_head (l_line, i)
+				l_line.adjust
+				l_param.adjust
+			until
+				i = 0 or i > l_line.count
+			loop
+				j := next_space_position (l_line, 1)
+				if j > 0 then
+					s := l_line.substring (1, j - 1)
+					remove_head (l_line, j)
+				else
+					s := l_line.twin
+					wipe_out (l_line)
+					i := l_line.count + 1
+				end
 				s.left_adjust
-				from
-					n := s.count
-					i := 1
-				until
-					i > n
-				loop
-					j := s.index_of (':', i)
-					if j > 0 then
-						k := s.head (j - 1)
-						k.left_adjust
-						k.right_adjust
-						remove_head (s, j)
-						s.left_adjust
+				s.right_adjust
+
+				if l_param.is_case_insensitive_equal ("video") then
+					l_url := s
+				elseif l_param.is_case_insensitive_equal ("width") then
+					l_width := s
+				elseif l_param.is_case_insensitive_equal ("height") then
+					l_height := s
+				elseif not l_param.is_whitespace then
+					if l_ext = Void then
+						create l_ext.make (1)
+					end
+					l_ext.force ([l_param, s])
+				end
+				if i < l_line.count then
+					l_line.adjust
+					i := l_line.index_of (':', 1)
+					if i > 0 then
+						l_param := l_line.substring (1, i - 1)
+						remove_head (l_line, i)
 						i := 1
-						n := s.count
-						j := next_space_position (s, 1)
-						if j > 0 then
-							v := s.head (j - 1)
-							v.left_adjust
-							v.right_adjust
-							remove_head (s, j)
-							s.left_adjust
-						else
-							v := s.substring (i, n)
-							v.left_adjust
-							v.right_adjust
-							wipe_out (s)
-						end
-						n := s.count
-						i := 1
-						if k.is_case_insensitive_equal ("width") then
-							l_width := v
-						elseif k.is_case_insensitive_equal ("height") then
-							l_height := v
-						else
-								-- Ignore
-						end
+						l_line.adjust
+						l_param.adjust
 					else
-						s.left_adjust
-						s.right_adjust
-						if not s.is_whitespace then
-							l_extra := s
+						s := l_line.twin
+						wipe_out (l_line)
+						if l_ext = Void then
+							create l_ext.make (1)
 						end
-						i := n + 1
+						l_ext.force ([s, Void])
+						i := 1
 					end
 				end
-			else
-				l_url := s
 			end
-			if not l_url.is_whitespace then
-				if l_width = Void then
-					if default_width > 0 then
-						l_width := default_width.out
-					end
+			if l_url /= Void and then not l_url.is_whitespace then
+				if l_width = Void and then default_width > 0 then
+					l_width := default_width.out
 				end
-				if l_height = Void then
-					if default_height > 0 then
-						l_height := default_height.out
-					end
+				if l_height = Void and then default_height > 0 then
+					l_height := default_height.out
 				end
+
 				create {STRING_8} l_att.make_empty
 				if l_width /= Void then
 					if not l_att.is_empty then
@@ -194,18 +203,25 @@ feature -- Conversion
 					l_att.append (l_height)
 					append_character (l_att, '%"')
 				end
-				if l_extra /= Void and then not l_extra.is_empty then
-					if not l_att.is_empty and not l_extra[1].is_space then
-						append_character (l_att, ' ')
+				if l_ext /= Void then
+					across
+						l_ext as ic
+					loop
+						t := ic.item
+						if not l_att.is_empty then
+							append_character (l_att, ' ')
+						end
+						l_att.append (t.name)
+						if attached t.value as val then
+							l_att.append_character ('=')
+							l_att.append_character ('%"')
+							l_att.append (val)
+							l_att.append_character ('%"')
+						end
 					end
-					l_att.append (l_extra)
 				end
 
-				if attached {STRING_8} a_text then
-					create {STRING_8} Result.make_empty
-				else
-					create {STRING_32} Result.make_empty
-				end
+				create Result.make_empty
 
 				if attached template as tpl then
 					Result.append (tpl)
@@ -215,14 +231,16 @@ feature -- Conversion
 					Result.append ("<iframe src=%"")
 					Result.append (l_url)
 					append_character (Result, '%"')
-					if not l_att.is_empty then
+					if not l_att.is_whitespace then
 						append_character (Result, ' ')
+						Result.append (l_att)
 					end
-					Result.append (l_att)
 					Result.append ("></iframe>")
 				end
 			end
 		end
+
+feature {NONE} -- Helpers
 
 	next_space_position (a_text: READABLE_STRING_GENERAL; a_start_index: INTEGER): INTEGER
 		local
@@ -232,7 +250,7 @@ feature -- Conversion
 				Result := a_start_index
 				n := a_text.count
 			until
-				a_text[Result].is_space or Result > n
+				Result > n or else a_text[Result].is_space
 			loop
 				Result := Result + 1
 			end
@@ -241,31 +259,26 @@ feature -- Conversion
 			end
 		end
 
-feature {NONE} -- Implementation
-
 	replace_substring (a_text: STRING_GENERAL; s: READABLE_STRING_GENERAL; start_index, end_index: INTEGER_32)
 		do
 			if attached {STRING_8} a_text as s8 then
 				s8.replace_substring (s.to_string_8, start_index, end_index)
-			elseif attached {STRING_32} s as s32 then
+			elseif attached {STRING_32} a_text as s32 then
 				s32.replace_substring (s.as_string_32, start_index, end_index)
+			else
+				-- TODO
 			end
 		end
 
-	replace_substring_all (s: STRING_GENERAL; a_old: READABLE_STRING_8; a_new: STRING_GENERAL)
+	replace_substring_all (s: STRING_GENERAL; a_old: READABLE_STRING_GENERAL; a_new: READABLE_STRING_GENERAL)
 		local
 			utf: UTF_CONVERTER
 		do
 			if attached {STRING_8} s as s8 then
-				if a_new.is_valid_as_string_8 then
-					s8.replace_substring_all (a_old, a_new.to_string_8)
-				else
-					check a_new_is_string_8: False end
-						-- Use UTF-8 for now.
-					s8.replace_substring_all (a_old, utf.utf_32_string_to_utf_8_string_8 (a_new))
-				end
+					-- Use UTF-8 for now.
+				s8.replace_substring_all (utf.utf_32_string_to_utf_8_string_8 (a_old), utf.utf_32_string_to_utf_8_string_8 (a_new))
 			elseif attached {STRING_32} s as s32 then
-				s32.replace_substring_all (a_old.to_string_32, a_new)
+				s32.replace_substring_all (a_old.to_string_32, a_new.to_string_32)
 			end
 		end
 
@@ -295,6 +308,5 @@ feature {NONE} -- Implementation
 				s.keep_tail (s.count - n)
 			end
 		end
-
 
 end

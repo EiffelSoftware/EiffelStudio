@@ -7,6 +7,9 @@ note
 class
 	VIDEO_HTML_CONTENT_FORMAT
 
+obsolete
+	"not needed anymore, EMBEDDED_VIDEO_MODULE already registers a custom format with the VIDEO_CONTENT_FILTER"
+
 inherit
 
 	CONTENT_FORMAT

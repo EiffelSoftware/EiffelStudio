@@ -9,7 +9,6 @@ class
 	EMBEDDED_VIDEO_MODULE
 
 inherit
-
 	CMS_MODULE
 		redefine
 			initialize
@@ -44,11 +43,13 @@ feature {CMS_API} -- Module Initialization
 
 	initialize (api: CMS_API)
 			-- <Precursor>
+		local
+			f: CMS_FORMAT
 		do
 			Precursor {CMS_MODULE} (api)
 			api.content_filters.extend (create {VIDEO_CONTENT_FILTER})
---			f := api.new_format ("video_html", "Video HTML content", <<{VIDEO_CONTENT_FILTER}.name>>)
---			api.formats.extend (f)
+			f := api.new_format ("video_html", "Video HTML content", <<{VIDEO_CONTENT_FILTER}.name>>)
+			api.formats.extend (f)
 		end
 
 feature -- Router

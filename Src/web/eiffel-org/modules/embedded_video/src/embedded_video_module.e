@@ -9,20 +9,10 @@ class
 	EMBEDDED_VIDEO_MODULE
 
 inherit
-
 	CMS_MODULE
 		redefine
 			initialize
 		end
-
-	SHARED_EXECUTION_ENVIRONMENT
-		export
-			{NONE} all
-		end
-
-	REFACTORING_HELPER
-
-	SHARED_LOGGER
 
 create
 	make

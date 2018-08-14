@@ -20,7 +20,6 @@ feature -- Forms ...
 			ta, sum: CMS_FORM_TEXTAREA
 			tselect: WSF_FORM_SELECT
 			opt: WSF_FORM_SELECT_OPTION
-			cms_format: CMS_EDITOR_CONTENT_FORMAT
 		do
 			create ti.make ("title")
 			ti.enable_required
@@ -38,14 +37,12 @@ feature -- Forms ...
 			tselect.set_label ("Format for content (and summary)")
 			tselect.set_is_required (True)
 
-				-- Content format
-			create cms_format
 
 				-- Main Content
 			create ta.make ("content")
 			ta.set_rows (10)
 			ta.set_cols (70)
-			ta.show_as_editor_if_selected (tselect, cms_format.name)
+			ta.show_as_editor_if_selected (tselect, {CMS_EDITOR_CONTENT_FORMAT}.name)
 			if a_node /= Void then
 				ta.set_text_value (a_node.content)
 			end
@@ -58,7 +55,7 @@ feature -- Forms ...
 			sum.set_rows (3)
 			sum.set_cols (70)
 				-- if cms_html is selected
-			sum.show_as_editor_if_selected (tselect, cms_format.name)
+			sum.show_as_editor_if_selected (tselect, {CMS_EDITOR_CONTENT_FORMAT}.name)
 			if a_node /= Void then
 				sum.set_text_value (a_node.summary)
 			end
@@ -87,8 +84,8 @@ feature -- Forms ...
 					tselect.add_option (opt)
 				end
 			end
-			if a_node /= Void and then attached a_node.format as l_format then
-				tselect.set_text_by_value (l_format)
+			if a_node /= Void and then attached a_node.format as l_node_format then
+				tselect.set_text_by_value (l_node_format)
 			end
 
 			fset.extend (tselect)

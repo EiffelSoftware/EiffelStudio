@@ -48,15 +48,13 @@ feature -- Helpers
 	save_to_file (a_text: STRING; opt_name: detachable READABLE_STRING_GENERAL)
 		local
 			s: READABLE_STRING_GENERAL
-			now: DATE_TIME
 			fut: WSF_FILE_UTILITIES [RAW_FILE]
 		do
 			create fut
 			if opt_name /= Void then
 				s := opt_name
 			else
-				create now.make_now_utc
-				s := date_to_yyyymmdd_hhmmss_string (now)
+				s := date_to_yyyymmdd_hhmmss_string (create {DATE_TIME}.make_now_utc)
 			end
 			if attached fut.new_file (location.extended (s)) as f then
 				f.put_string (a_text)
@@ -104,4 +102,7 @@ feature -- Helpers
 			Result.append_integer (i)
 		end
 
+note
+	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

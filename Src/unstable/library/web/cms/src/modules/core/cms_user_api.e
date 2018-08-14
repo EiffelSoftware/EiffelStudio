@@ -58,8 +58,11 @@ feature -- Validation
 					not Result
 				loop
 					c := ic.item
-					if c.is_alpha_numeric or c = '-' or c = '_' then
-					else
+					if
+						not c.is_alpha_numeric and
+						c /= '-' and
+						c /= '_'
+					then
 						Result := False
 					end
 				end
@@ -84,8 +87,13 @@ feature -- Validation
 					not Result
 				loop
 					c := ic.item
-					if c.is_alpha_numeric or c = '-' or c = '_' or c.is_space or c = '%'' then
-					else
+					if
+						not c.is_alpha_numeric and
+						c /= '-' and
+						c /= '_' and
+						not c.is_space
+						and c /= '%''
+					then
 						Result := False
 					end
 				end
@@ -659,6 +667,6 @@ feature -- Change Temp User
 --		end
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

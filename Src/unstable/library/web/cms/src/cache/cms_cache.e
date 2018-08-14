@@ -63,12 +63,8 @@ feature -- Access
 			-- Number of seconds since cache was set.
 		require
 			exists: exists
-		local
-			d1, d2: DATE_TIME
 		do
-			d1 := cache_date_time
-			d2 := current_date_time
-			Result := d2.relative_duration (d1).seconds_count
+			Result := current_date_time.relative_duration (cache_date_time).seconds_count
 		end
 
 	current_date_time: DATE_TIME
@@ -89,6 +85,6 @@ feature -- Element change
 		end
 
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

@@ -366,8 +366,7 @@ feature -- Settings
 		do
 			if is_theme_valid (site_theme_name) then
 				set_theme (site_theme_name)
-			else
-					-- Keep previous theme!
+			-- else Keep previous theme!
 			end
 		end
 
@@ -384,8 +383,7 @@ feature -- Settings
 		do
 			if is_theme_valid (administration_theme_name) then
 				set_theme (administration_theme_name)
-			else
-					-- Keep previous theme!
+			-- else Keep previous theme!
 			end
 		end
 
@@ -530,7 +528,7 @@ feature -- Access: storage
 				to_implement ("Workaround code, persistence layer does not implement yet this kind of error handling.")
 					-- error handling.
 				create l_message.make (1024)
-				if attached ((create {EXCEPTION_MANAGER}).last_exception) as l_exception then
+				if attached (create {EXCEPTION_MANAGER}).last_exception as l_exception then
 					if attached l_exception.description as l_description then
 						l_message.append (l_description.as_string_32)
 						l_message.append ("%N%N")

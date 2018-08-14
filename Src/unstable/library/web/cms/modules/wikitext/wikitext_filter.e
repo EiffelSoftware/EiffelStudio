@@ -20,7 +20,39 @@ feature -- Access
 
 	title: STRING_8 = "Wikitext renderer"
 
-	help: STRING = "Wikitext rendered as HTML"
+	help: STRING = "[
+		Wikitext rendered as HTML
+		
+		formatting: ''italics'', '''bold''', and '''''both'''''
+		link:  	[[WikiName|Title ...]] , [https://example.com Title ...]
+		
+		sections: ==Level 2 ==
+		          ===Level 3 ===
+		          ====Level 4 ====
+		          (=Level 1= is for page titles)
+				  
+		List:     * One
+		          * Two
+		          ** Two point one
+		          * Three
+						
+		Numbered list:  # One
+		                # Two
+		                ## Two point one
+		                # Three
+						
+		Code:   use `inline code`, or 
+		        ```
+		           multi lines code
+		        ```
+		        (use ```lang ...``` to provide a lang such as eiffel, shell, ...)
+		
+		Indenting:
+		        :first indent
+		        ::second indent
+				
+		For more, see https://en.wikipedia.org/wiki/Help:Cheatsheet
+	]"
 
 	description: STRING_8 = "Render Wikitext as HTML."
 

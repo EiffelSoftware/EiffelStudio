@@ -19,6 +19,8 @@ inherit
 
 	REFACTORING_HELPER
 
+	CMS_API_ACCESS
+
 feature -- Access URI
 
 	wiki_name_text_path_parameter (req: WSF_REQUEST; a_name: READABLE_STRING_GENERAL; a_default: detachable READABLE_STRING_32): detachable READABLE_STRING_32
@@ -91,12 +93,12 @@ feature -- Access URI
 			wvis.set_image_resolver (a_manager)
 			wvis.set_template_resolver (a_manager)
 			wvis.set_file_resolver (a_manager)
-			if attached a_wdocs_api as l_wdocs_api then
+			if a_wdocs_api /= Void then
 					-- register interwiki mapping,
 					-- and expand "$version" if any.
 				vid := percent_encoder.percent_encoded_string (a_manager.version_id)
 				across
-					l_wdocs_api.settings.interwiki_mapping as ic
+					a_wdocs_api.settings.interwiki_mapping as ic
 				loop
 					l_map := ic.item
 					l_map.replace_substring_all ("$version", vid)
@@ -108,6 +110,10 @@ feature -- Access URI
 			wvis.code_aliases.force ("e") 		-- Support <e>..</e> as <code lang=eiffel>
 
 			wvis.visit_page_with_title (l_preview_pg, l_title)
+
+				-- Security parsing to remove security vulnerabilities.
+				-- TODO: allow customized extra formatter/filter for wdoc wikitext.
+			(create {SECURITY_HTML_CONTENT_FILTER}).filter (l_xhtml)
 
 			Result := l_xhtml
 		end

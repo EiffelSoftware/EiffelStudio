@@ -15,7 +15,7 @@ this.page.identifier = '{$site_title/}'; // Replace PAGE_IDENTIFIER with your pa
 this.page.url = "{$site_url/}node/{$node.id/}"; // Replace PAGE_URL with your page's canonical URL variable
 this.page.identifier = 'node/{$node.id/}'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
 {/unless}
-this.page.title = "{$node.title/}";
+this.page.title = "{htmlentities}{$node.title/}{/htmlentities}";
 //this.page.category_id = "eiffel-org";
 {literal}
 };

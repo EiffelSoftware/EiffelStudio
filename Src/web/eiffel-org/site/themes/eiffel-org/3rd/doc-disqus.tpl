@@ -9,13 +9,13 @@ var disqus_config = function () {
 {/literal}
 {if isempty="$wiki_uuid"}
 this.page.url = window.location.href; // Replace PAGE_URL with your page's canonical URL variable
-this.page.identifier = 'wdocs-{$wiki_book_name/}__{$wiki_page_name/}'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+this.page.identifier = '{htmlentities}wdocs-{$wiki_book_name/}__{$wiki_page_name/}{/htmlentities}'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
 {/if}
 {unless isempty="$wiki_uuid"}
 this.page.url = "{$site_url/}doc/uuid/{$wiki_uuid/}"; // Replace PAGE_URL with your page's canonical URL variable
 this.page.identifier = 'wdocs-{$wiki_uuid/}'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
 {/unless}
-this.page.title = "[{$wiki_book_name/}] {$wiki_page_name/}";
+this.page.title = "{htmlentities}[{$wiki_book_name/}] {$wiki_page_name/}{/htmlentities}";
 //this.page.category_id = "eiffel-org";
 {literal}
 };

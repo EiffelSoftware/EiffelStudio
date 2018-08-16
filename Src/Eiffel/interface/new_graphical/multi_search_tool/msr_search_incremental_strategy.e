@@ -94,10 +94,10 @@ feature -- Basic operations
 				l_keyword := string_formatter.build_match_whole_word (l_keyword)
 			end
 
-				-- Gobo only supoorts partial Unicode at the moment.
+				-- FIXME: Gobo only supports partial Unicode at the moment.
 				-- Plus using UC_STRING is very slow. So we still do not
 				-- support Uncode search.
-			l_to_be_searched := text_to_be_searched.as_string_8
+			l_to_be_searched := text_to_be_searched.as_string_8 -- WARNING: truncated code!
 			l_compile_string := l_keyword.as_string_8
 			pcre_regex.compile (l_compile_string)
 			if pcre_regex.is_compiled then
@@ -115,6 +115,9 @@ feature -- Basic operations
 			end
 			launched := True
 			item_matched_internal.start
+		rescue
+			launched := False
+			create item_matched_internal.make (0)
 		end
 
 feature {NONE} -- Implementation
@@ -127,7 +130,7 @@ invariant
 	invariant_clause: True -- Your invariant here
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

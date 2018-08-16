@@ -59,6 +59,18 @@ feature -- Access
 
 feature -- Status report
 
+	has_filter_by_name (f_name: READABLE_STRING_GENERAL): BOOLEAN
+			-- Has filter named `f_name`?
+		do
+			across
+				filters as ic
+			until
+				Result
+			loop
+				Result := f_name.is_case_insensitive_equal (ic.item.name)
+			end
+		end
+
 	debug_output: STRING
 			-- String that should be displayed in debugger to represent `Current'.
 		do
@@ -131,6 +143,6 @@ feature -- Element change
 
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

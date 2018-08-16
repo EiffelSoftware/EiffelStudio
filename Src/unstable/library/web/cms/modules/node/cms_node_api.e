@@ -360,9 +360,7 @@ feature -- Access: feeds
 							create lnk.make (cms_api.absolute_url ("/" + node_link (n).location, Void))
 							l_feed_item.links.force (lnk, "")
 							if attached n.summary as l_summary and then not l_summary.is_whitespace then
-								l_feed_item.set_description (l_summary)
-	--						elseif attached n.content as l_content then
-	--							l_feed_item.set_content (l_content, Void)
+								l_feed_item.set_description (cms_api.formatted_text (n.format, l_summary))
 							end
 							if attached {CMS_TAXONOMY_API} cms_api.module_api ({CMS_TAXONOMY_MODULE}) as l_taxonomy_api then
 								if attached l_taxonomy_api.terms_of_content (n, Void) as coll then

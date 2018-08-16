@@ -413,21 +413,13 @@ feature -- Output
 			if is_teaser then
 				if attached a_node.summary as l_summary then
 					a_output.append ("<p class=%"summary%">")
-					if attached cms_api.format (a_node.format) as f then
-						append_formatted_content_to (l_summary, f, a_output)
-					else
-						append_formatted_content_to (l_summary, cms_api.formats.default_format, a_output)
-					end
+					cms_api.append_text_formatted_to (a_node.format, l_summary, a_output)
 					a_output.append ("</p>")
 				end
 			else
 				if attached a_node.content as l_content then
 					a_output.append ("<p class=%"content%">")
-					if attached cms_api.format (a_node.format) as f then
-						append_formatted_content_to (l_content, f, a_output)
-					else
-						append_formatted_content_to (l_content, cms_api.formats.default_format, a_output)
-					end
+					cms_api.append_text_formatted_to (a_node.format, l_content, a_output)
 					a_output.append ("</p>")
 				end
 

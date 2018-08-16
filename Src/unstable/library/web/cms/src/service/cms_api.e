@@ -702,9 +702,51 @@ feature -- Filters and Formats
 			-- Available content formats.
 
 	format (a_format_name: detachable READABLE_STRING_GENERAL): detachable CMS_FORMAT
-			-- Content format name `a_format_name' if any.
+			-- Content format named `a_format_name' if any.
 		do
 			Result := formats.item (a_format_name)
+		end
+
+	append_text_formatted_to (a_format_name: detachable READABLE_STRING_GENERAL; a_text: READABLE_STRING_GENERAL; a_output: STRING_GENERAL)
+			-- Append `a_text`  to `a_output`, formatted with format named `a_format_name` or using `formats.default_format`.
+		do
+			if attached secured_format (a_format_name) then
+
+			end
+			if attached format (a_format_name) as ft then
+				ft.append_formatted_to (a_text, a_output)
+			else
+				formats.default_format.append_formatted_to (a_text, a_output)
+			end
+		end
+
+	formatted_text (a_format_name: detachable READABLE_STRING_GENERAL; a_text: READABLE_STRING_GENERAL): STRING_GENERAL
+			-- Append `a_text`  to `a_output`, formatted with format named `a_format_name` or using `formats.default_format`.
+		do
+			if attached {READABLE_STRING_8} a_text as s8 then
+				create {STRING_8} Result.make (a_text.count)
+			else
+				create {STRING_32} Result.make (a_text.count)
+			end
+			append_text_formatted_to (a_format_name, a_text, Result)
+		end
+
+	secured_format (a_format_name: detachable READABLE_STRING_GENERAL): CMS_FORMAT
+			-- Content format named `a_format_name` (if any) chained with security vulnerability filter.
+		do
+			Result := format (a_format_name)
+			if Result = Void then
+				if attached {CMS_FORMAT} formats.default_format as dft then
+					Result := dft
+				else
+					create Result.make_from_format (formats.default_format)
+				end
+			end
+			if not Result.has_filter_by_name ({SECURITY_HTML_CONTENT_FILTER}.name) then
+				create Result.make ("secured format", Void)
+				Result.import_filters_from_format (Result)
+				Result.add_filter (create {SECURITY_HTML_CONTENT_FILTER})
+			end
 		end
 
 	new_format (a_name: READABLE_STRING_8; a_title: READABLE_STRING_8; a_filter_names: detachable ITERABLE [READABLE_STRING_GENERAL]): CMS_FORMAT

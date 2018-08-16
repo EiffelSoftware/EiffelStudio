@@ -13,7 +13,7 @@ feature -- Modification
 		(f: E_FEATURE;
 		extender: PROCEDURE [
 			READABLE_STRING_32, -- name
-			STRING, -- icon
+			READABLE_STRING_GENERAL, -- icon
 			BOOLEAN, -- is_sensitive
 			PROCEDURE -- action
 		])
@@ -24,7 +24,7 @@ feature -- Modification
 	extend_class (c: CLASS_C; extender:
 		PROCEDURE [
 			READABLE_STRING_32, -- name
-			STRING, -- icon
+			READABLE_STRING_GENERAL, -- icon
 			BOOLEAN, -- is_sensitive
 			PROCEDURE -- action
 		])

@@ -18,10 +18,10 @@
 											<option value=""></option>
 											{foreach from="$categories" item="item"}
 												{if condition="$item.id = $category"}
-													<option value="{$item.id/}" selected>{$item.synopsis/}</option>
+													<option value="{$item.id/}" selected>{htmlentities}{$item.synopsis/}{/htmlentities}</option>
 												{/if}
 												{unless condition="$item.id = $category"}
-													<option value="{$item.id/}">{$item.synopsis/}</option>
+													<option value="{$item.id/}">{htmlentities}{$item.synopsis/}{/htmlentities}</option>
 												{/unless}
 											{/foreach}
 						</select>
@@ -31,7 +31,7 @@
 								{foreach from="uploaded_files" item="item"}
 									<div class="controls">
 										<input type="checkbox" id="checkbox-{$item.name/}" name="uploaded_files" value="{$item.name/}" checked />
-										<label class="checkbox" for="checkbox-{$item.name/}"/>{$item.name/}</label>
+										<label class="checkbox" for="checkbox-{$item.name/}"/>{htmlentities}{$item.name/}{/htmlentities}</label>
 										<button onclick="myFunction()">View</button>
 										<br/>
 									</div>
@@ -42,10 +42,10 @@
 							<small><p>Note: Attachments files size cannot exceed 10240 kilobytes (10 MB).</p></small>
 
 							<label class="class-form-4 tooltip" has-success has-feedback itemprop="synopsis" title="<p>One-line summary of the problem. This information will be used as the subject of the problem and it should be short, but still descriptive enough to be different from other problem wish subjects.</p>">Synopsis</label>
-							<input type="text" id="synopsis" name="synopsis" class="class-form-6" value="{$synopsis/}" required>
+							<input type="text" id="synopsis" name="synopsis" class="class-form-6" value="{htmlentities}{$synopsis/}{/htmlentities}" required>
 							<div>
 							<label class="class-form-12 tooltip" for="description" itemprop="description" title="<p>Precise description of the problem.</p>">Description</label>
-							<textarea  class="class-form-textarea" id="description" name="description" rows="17" placeholder="" maxlength="32768" required form="wish">{$description/}</textarea>
+							<textarea  class="class-form-textarea" id="description" name="description" rows="17" placeholder="" maxlength="32768" required form="wish">{htmlentities}{$description/}{/htmlentities}</textarea>
 							<small><p>Note: Description cannot exceed 32768 bytes (32 KB).</p></small>
 							</div>
 						<hr>

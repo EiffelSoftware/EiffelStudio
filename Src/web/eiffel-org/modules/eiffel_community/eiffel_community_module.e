@@ -81,10 +81,6 @@ feature -- Router
 			a_router.handle ("/privacy_policy", create {WSF_URI_AGENT_HANDLER}.make (agent handle_privacy_policy (a_api, ?, ?)), a_router.methods_head_get)
 			a_router.handle ("/terms_of_use", create {WSF_URI_AGENT_HANDLER}.make (agent handle_terms_of_use (a_api, ?, ?)), a_router.methods_head_get)
 
-			a_router.handle ("/contribute_description", create {WSF_URI_AGENT_HANDLER}.make (agent handle_contribute_description (a_api, ?, ?)), a_router.methods_head_get)
-
-			a_router.handle ("/resources", create {WSF_URI_AGENT_HANDLER}.make (agent handle_resources (a_api, ?, ?)), a_router.methods_head_get)
-			a_router.handle ("/resources/videos", create {WSF_URI_AGENT_HANDLER}.make (agent handle_resources_video (a_api, ?, ?)), a_router.methods_head_get)
 		end
 
 feature -- Access			
@@ -353,82 +349,6 @@ feature -- Request handling: About
 			write_debug_log (generator + ".handle_main")
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 			r.values.force ("main", "main")
-			r.execute
-		end
-
-
-feature -- Request handling: Contribute
-
-	handle_resources (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
-		local
-			r: CMS_RESPONSE
-		do
-			fixme ("Use CMS node and associated content for Resources link!")
-			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-			r.set_value ("resources", "optional_content_type")
-			r.set_main_content ("")
-			if attached smarty_template_block (Current, "resources_page", api) as l_tpl_block then
-				r.add_block (l_tpl_block, "content")
-			else
-				debug ("cms")
-					r.add_warning_message ("Error with block [resources_page]")
-				end
-			end
-			r.execute
-		end
-
-	handle_resources_video (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
-		local
-			r: CMS_RESPONSE
-			l_videos: LIST[STRING]
-			l_filter: VIDEO_CONTENT_FILTER
-			l_content: STRING_8
-		do
-			fixme ("Use CMS node and associated content for Resources link!")
-			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-			r.set_value ("videos", "optional_content_type")
-
-			create {ARRAYED_LIST[STRING_8]} l_videos.make (3)
-	 		if attached {CMS_NODE_API} api.module_api_by_name ("node") as l_node_api then
-                create l_filter
-				across l_node_api.nodes as ic loop
-					if
-						attached ic.item.format as l_format and then l_format.same_string ("video_html") and then
-						attached ic.item.content as l_item_content
-					then
-						l_content := utf_8_encoded (l_item_content)
-						l_filter.filter (l_content)
-						l_videos.force (l_content)
-					end
-				end
-			end
-
-			if attached smarty_template_block (Current, "videos_page", api) as l_tpl_block then
-				l_tpl_block.set_value (l_videos, "videos")
-				r.add_block (l_tpl_block, "content")
-			else
-				debug ("cms")
-					r.add_warning_message ("Error with block [resources_page]")
-				end
-			end
-			r.execute
-		end
-
-	handle_contribute_description (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
-		local
-			r: CMS_RESPONSE
-		do
-			fixme ("Use CMS node and associated content for Contribute link!")
-			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-			r.set_value ("contribute", "optional_content_type")
-			r.set_main_content ("")
-			if attached smarty_template_block (Current, "contribute_description", api) as l_tpl_block then
-				r.add_block (l_tpl_block, "content")
-			else
-				debug ("cms")
-					r.add_warning_message ("Error with block [contribute_page]")
-				end
-			end
 			r.execute
 		end
 

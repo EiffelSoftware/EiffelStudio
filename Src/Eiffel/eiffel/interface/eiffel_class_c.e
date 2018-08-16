@@ -375,6 +375,11 @@ feature -- Action
 					check_suppliers (light_supplier_list, True)
 				end
 			end
+
+				-- Check conce creation procedures of parsed class
+				-- represented by `ast_b`
+			check_once_creation_procedure (ast_b)
+
 			parent_list := ast_b.parents
 			if parent_list /= Void then
 					-- FIXME add incrementality check  Type check error
@@ -1908,6 +1913,56 @@ feature -- Supplier checking
 				system.record_potential_vtct_error (Current, class_name)
 			end
 		end
+
+feature -- Once Creation Procedure
+
+	check_once_creation_procedure (ast_b: CLASS_AS)
+				-- Check if there is/are once creation procedures
+				-- and validate they don't have arguments.
+		local
+			parent_list: EIFFEL_LIST [PARENT_AS]
+		do
+			parent_list := ast_b.parents
+			if attached {EIFFEL_LIST [CREATE_AS]} ast_b.creators as l_creators then
+				from
+					l_creators.start
+				until
+					l_creators.after
+				loop
+					if
+						attached {CREATE_AS} l_creators.item as l_item and then
+						attached {EIFFEL_LIST [FEATURE_NAME]} l_item.feature_list as l_feature_list
+					then
+						from
+							l_feature_list.start
+						until
+							l_feature_list.after
+						loop
+							if
+								attached {FEAT_NAME_ID_AS} l_feature_list.item as l_feature_name and then
+								l_feature_name.is_feature
+							then
+								if
+									attached {FEATURE_AS} ast_b.feature_of_name (l_feature_name.feature_name.name, False) as l_feature and then
+									attached {ONCE_AS} l_feature.once_as
+								then
+										-- TODO
+										-- Check what IS the best option to use `COMPILER_ERROR`.
+										--
+									if attached {EIFFEL_LIST [TYPE_DEC_AS]} l_feature.body.arguments as l_arguments and then not l_arguments.is_empty then
+										Error_handler.insert_error (create {NOT_SUPPORTED}.make ("Once creation procedures are not permitted to have arguments"))
+									end
+								end
+
+							end
+							l_feature_list.forth
+						end
+					end
+					l_creators.forth
+				end
+			end
+		end
+
 
 feature -- Inline agents
 

@@ -19,12 +19,23 @@ create {CMS_TASK_LIST_MODULE}
 
 feature -- Resource Access
 
-	name, collection: STRING = "task_list"
+	name, collection: IMMUTABLE_STRING_8
 			-- <Precursor>
+		once
+			create Result.make_from_string ("task_list")
+		end
 
-	resource_path: STRING = "resources"
+	resource_path: IMMUTABLE_STRING_8
 			-- <Precursor>
+		once
+			create Result.make_from_string ("resources")
+		end
 
-	item: STRING = "task"
+	item: IMMUTABLE_STRING_8
+			-- <Precursor>
+		once
+			create Result.make_from_string ("task")
+		end
+
 
 end

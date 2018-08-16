@@ -473,8 +473,9 @@ feature {NONE} -- Implementation
 						end
 					end
 					l_type := l_type.actual_type
-					if l_type.is_loose then
-						last_type := l_type.instantiation_in (l_static_type, last_class.class_id)
+						-- FIXME: check why `last_class` can be Void [2018-08-16].
+					if l_type.is_loose and attached last_class as l_last_class then
+						last_type := l_type.instantiation_in (l_static_type, l_last_class.class_id)
 					else
 						last_type := l_type
 					end
@@ -3243,11 +3244,11 @@ feature {NONE} -- Implementation
 			l_as.language_name.process (Current)
 			l_text_formatter_decorator.exdent
 			l_text_formatter_decorator.put_new_line
-			if l_as.alias_name_literal /= Void then
+			if attached l_as.alias_name_literal as l_alias_name_literal then
 				l_text_formatter_decorator.process_keyword_text (ti_alias_keyword, Void)
 				l_text_formatter_decorator.indent
 				l_text_formatter_decorator.put_new_line
-				l_as.alias_name_literal.process (Current)
+				l_alias_name_literal.process (Current)
 				l_text_formatter_decorator.put_new_line
 				l_text_formatter_decorator.exdent
 			end
@@ -5258,7 +5259,7 @@ note
 	ca_ignore: "CA033", "CA033 — very long class"
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

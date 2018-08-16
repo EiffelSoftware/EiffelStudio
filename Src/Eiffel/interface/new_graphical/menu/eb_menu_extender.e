@@ -24,7 +24,7 @@ feature {NONE} -- Creation
 
 feature -- Basic operations
 
-	extend (name: READABLE_STRING_32; icon: like {ES_PIXMAPS_16X16}.general_blank_name; is_sensitive: BOOLEAN; action: PROCEDURE; menu: EV_MENU)
+	extend (name: READABLE_STRING_32; icon: READABLE_STRING_GENERAL; is_sensitive: BOOLEAN; action: PROCEDURE; menu: EV_MENU)
 			-- Extend `menu` with an entry `name` with an icon `icon` that is enabled if `is_sensitive` and disabled otherwise, using `action` on select.
 		local
 			i: EV_MENU_ITEM
@@ -44,7 +44,7 @@ feature {NONE} -- Icons
 	icons: STRING_TABLE [detachable EV_PIXMAP]
 			-- A cache of menu icons indexed by their names.
 
-	set_icon (name: like {ES_PIXMAPS_16X16}.general_blank_name; entry: EV_MENU_ITEM)
+	set_icon (name: READABLE_STRING_GENERAL; entry: EV_MENU_ITEM)
 			-- Set an icon of name `name` for a menu entry `entry`.
 		local
 			p: EV_PIXMAP
@@ -63,7 +63,7 @@ feature {NONE} -- Icons
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

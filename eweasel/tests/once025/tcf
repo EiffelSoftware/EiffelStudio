@@ -1,0 +1,17 @@
+
+test_name 	once-per-thread-creation-procedure-with-constrained-genericity 
+test_description A class with a once-per-thread-creation-procedure-with-constrained-genericity , if it's called multiple times it should return the same object id.
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+copy_raw 	task.e $CLUSTER task.e
+copy_raw 	worker.e $CLUSTER worker.e
+
+compile_melted
+compile_result 	ok
+
+execute_work	NONE exec_output
+execute_result 	ok
+compare		exec_output output
+
+test_end

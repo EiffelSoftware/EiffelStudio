@@ -1117,7 +1117,6 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 			class_i: CLASS_I
 			file_name: PATH
 			class_name: STRING
-			class_stone: CLASSI_STONE
 			l_text: STRING_32
 		do
 			last_was_incremental_search := True
@@ -1129,8 +1128,7 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR} -- Search perform
 					-- "not editor.is_empty" doesn't imply l_text is not empty string.
 				if l_text /= Void and then not l_text.is_empty then
 					currently_searched := a_word
-					class_stone ?= editor.stone
-					if class_stone /= Void then
+					if attached {CLASSI_STONE} editor.stone as class_stone then
 						class_i := class_stone.class_i
 						file_name := class_i.file_name
 						class_name := class_i.name
@@ -2101,7 +2099,7 @@ invariant
 	multi_search_performer_not_void: multi_search_performer /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

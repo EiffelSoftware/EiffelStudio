@@ -749,7 +749,7 @@ feature {NONE} -- Filling
 			end
 		end
 
-	on_slice_double_click
+	on_slice_double_click (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Action triggered by double clicking on the slice limit row
 		local
 			cmd: ES_OBJECTS_GRID_SLICES_CMD
@@ -904,7 +904,7 @@ feature {NONE} -- Filling
 							if object_spec_lower > object_spec_count_and_capacity.spec_capacity then
 								es_glab.set_text (es_glab.text + " (" + object_spec_lower.out + ")")
 							end
-							es_glab.pointer_double_press_actions.force_extend (agent on_slice_double_click)
+							es_glab.pointer_double_press_actions.extend (agent on_slice_double_click)
 							i := a_row.index + 1
 							grid.insert_new_row_parented (i, a_row)
 							grid.set_item (Col_name_index, i, es_glab)
@@ -1261,7 +1261,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

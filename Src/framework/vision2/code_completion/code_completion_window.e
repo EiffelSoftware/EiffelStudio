@@ -851,7 +851,7 @@ feature {NONE} -- Implementation
 			l_list := full_list
 			l_names := sorted_names
 			if not has_child_node then
-				full_list := l_names
+				l_list := l_names
 			else
 				create l_list.make (1, calculate_full_count)
 				start_pos := 1
@@ -866,8 +866,11 @@ feature {NONE} -- Implementation
 					i := i + 1
 				end
 				l_list.sort
-				full_list := l_list
 			end
+			if l_list = Void then
+				create l_list.make_empty
+			end
+			full_list := l_list
 		ensure
 			full_list_not_void: full_list /= Void
 		end
@@ -883,15 +886,19 @@ feature {NONE} -- Implementation
 			l_upper: INTEGER
 			l_name: like name_type
 		do
-			from
-				i := sorted_names.lower
-				l_upper := sorted_names.upper
-			until
-				i > l_upper or Result
-			loop
-				l_name := sorted_names.item (i)
-				Result := l_name.has_child
-				i := i + 1
+			if attached sorted_names as l_sorted_names then
+				from
+					i := l_sorted_names.lower
+					l_upper := l_sorted_names.upper
+				until
+					i > l_upper or Result
+				loop
+					l_name := l_sorted_names.item (i)
+					Result := l_name.has_child
+					i := i + 1
+				end
+			else
+				check has_sorted_names: False end
 			end
 		end
 

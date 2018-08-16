@@ -224,7 +224,7 @@ feature -- Basic operations
 						-- Reset and sort matches
 						--| TODO check if we can return completion_possibilities as an empty array.
 					if cp_index = 1 then
-						completion_possibilities := Void
+						reset_completion_list
 					else
 						completion_possibilities := completion_possibilities.subarray (1, cp_index - 1)
 						completion_possibilities.sort
@@ -925,13 +925,10 @@ feature {NONE} -- Implementation
 					l_overloaded_names.forth
 				end
 					-- Insert all remaining features from inserted_feature_table into completion_possibilities.
-				from
-					inserted_feature_table.start
-				until
-					inserted_feature_table.after
+				across
+					inserted_feature_table as ic
 				loop
-					internal_add_feature (inserted_feature_table.item_for_iteration)
-					inserted_feature_table.forth
+					internal_add_feature (ic.item)
 				end
 			end
 		end
@@ -940,11 +937,20 @@ feature {NONE} -- Implementation
 			--
 		require
 			name /= Void
+		local
+			l_possibilities: like completion_possibilities
 		do
-			if completion_possibilities.capacity < cp_index then
-				completion_possibilities.grow (cp_index + 50)
+			l_possibilities := completion_possibilities
+			if l_possibilities = Void then
+				check has_completion_possibilities: False end
+				create l_possibilities.make_empty
+				completion_possibilities := l_possibilities
+				cp_index := 1
 			end
-			completion_possibilities.put (name, cp_index)
+			if l_possibilities.capacity < cp_index then
+				l_possibilities.grow (cp_index + 50)
+			end
+			l_possibilities.put (name, cp_index)
 			cp_index := cp_index + 1
 		end
 

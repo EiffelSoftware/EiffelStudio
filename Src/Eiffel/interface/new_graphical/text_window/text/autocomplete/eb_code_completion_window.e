@@ -405,7 +405,7 @@ feature -- Initialization
 			code_template_label.set_text (interface_names.l_show_templates)
 			sorted_names := Void
 			template_sorted_names := Void
-			across  a_completion_possibilities as ic loop
+			across a_completion_possibilities as ic loop
 				if attached {EB_TEMPLATE_FOR_COMPLETION} ic.item as l_item then
 					add_template_item (l_item)
 				else
@@ -436,8 +436,7 @@ feature -- Initialization
 		do
 			l_sorted_names := sorted_names
 			if l_sorted_names = Void then
-				create l_sorted_names.make_empty
-				l_sorted_names.force (a_item, l_sorted_names.count + 1)
+				create l_sorted_names.make_filled (a_item, 1, 1)
 			else
 				l_sorted_names.force (a_item, l_sorted_names.count + 1)
 			end
@@ -1169,12 +1168,14 @@ feature {NONE} -- Implementation
 	on_char (character_string: STRING_32)
 			-- Process displayable character key press event.
 		local
+			uc: CHARACTER_32
 			c: CHARACTER
 		do
 			if character_string.count = 1 then
+				uc := character_string [1]
 				if code_completable.is_completing then
 					if
-						code_completable.is_char_activator_character (character_string.item (1))
+						code_completable.is_char_activator_character (uc)
 					then
 							-- Continue completing
 						if code_completable.completing_feature then
@@ -1187,7 +1188,7 @@ feature {NONE} -- Implementation
 						exit
 					end
 				end
-				c := character_string.item (1).to_character_8
+				c := uc.to_character_8
 				if c.is_alpha or c.is_digit or c = '_' or c = '*' or c = '?' then
 					buffered_input.append_character (c)
 					code_completable.handle_character (c)

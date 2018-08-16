@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			if not retried then
 				Precursor {EB_NORMAL_COMPLETION_POSSIBILITIES_PROVIDER}
 			else
-				completion_possibilities := Void
+				reset_completion_list
 				class_completion_possibilities := Void
 				is_prepared := True
 			end
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 		end
 
 note
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -65,11 +65,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

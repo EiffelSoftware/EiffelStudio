@@ -22,6 +22,8 @@ inherit
 
 	CMS_HOOK_BLOCK_HELPER
 
+	CMS_HOOK_RESPONSE_ALTER
+
 	SHARED_LOGGER
 
 create
@@ -132,6 +134,13 @@ feature -- Hooks configuration
 				else
 						-- missing setting.
 				end
+			end
+		end
+
+	response_alter (a_response: CMS_RESPONSE)
+		do
+			if a_response.location.starts_with_general ("gcse20") then
+				a_response.add_style (a_response.module_resource_url (Current, "/files/css/gcse.css", Void), Void)
 			end
 		end
 

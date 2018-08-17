@@ -1,4 +1,4 @@
-<h1 class="sub-header">{$module_item/}# {$wish.id/} {$wish.synopsis/} </h1>  
+<h1 class="sub-header">{$module_item/}# {$wish.id/} {htmlentities}{$wish.synopsis/}{/htmlentities} </h1>  
 	{if isset="$can_edit"}
 		<div id="primary-tabs" class="menu tabs"><ul class="horizontal">
 			<li class="active"><a href="{$site_url/}{$resource_path/}/{$module_item/}/{$wish.id/}/form">Edit</a></li></ul>
@@ -48,15 +48,15 @@
 			</div>
 				
 			<section>
-				<span  class="class-form-6" itemprop="submitter">Submitter:</span>	<span class="class-form-6"><strong>{$wish.contact.name/}</strong></span> <br>
+				<span  class="class-form-6" itemprop="submitter">Submitter:</span>	<span class="class-form-6"><strong>{htmlentities}{$wish.contact.name/}{/htmlentities}</strong></span> <br>
 				<span  class="class-form-6" itemprop="category">Category:</span>	<span class="class-form-6">{$wish.category.synopsis/}</span> <br>
 				<span  class="class-form-6" itemprop="date">Date:</span>	<span class="class-form-6">{$wish.submission_date_output/}</span> <br>
 				<span  class="class-form-6" itemprop="report_number">Number:</span>	<span class="class-form-6">{$wish.id/}</span><br>
 				<span  class="class-form-6" itemprop="status">Status:</span> <span class="class-form-6">{$wish.status.synopsis/}</span> <br>
-				<span  class="class-form-6" itemprop="synopsis">Synopsis:</span> <span class="class-form-6">{$wish.synopsis/}</span> <br>
+				<span  class="class-form-6" itemprop="synopsis">Synopsis:</span> <span class="class-form-6">{htmlentities}{$wish.synopsis/}{/htmlentities}</span> <br>
 			
 				<strong>Description</strong>
-				<textarea class="class-form-textarea" style="border: none ;background-color:white;" rows="17" readonly>{$wish.description/}</textarea>
+				<textarea class="class-form-textarea" style="border: none ;background-color:white;" rows="17" readonly>{htmlentities}{$wish.description/}{/htmlentities}</textarea>
 				{foreach from="$wish.attachments" item="elem"}
 								<div class="row">
 									<div class="col-xs-1">
@@ -85,7 +85,7 @@
 		<strong>Interactions</strong><br>
 			{foreach from="$wish.interactions" item="item"}
 				<div class="row-interaction">
-				<span class="label label-primary-api-interactions" itemprop="submitter">From:</span>{$item.contact.name/}&nbsp;&nbsp;&nbsp;
+				<span class="label label-primary-api-interactions" itemprop="submitter">From:</span>{htmlentities}{$item.contact.name/}{/htmlentities}&nbsp;&nbsp;&nbsp;
 				<span class="label label-primary-api-interactions" itemprop="date">Date:</span>{$item.date_output/}&nbsp;&nbsp;&nbsp;
 					{if isset="$item.status"}
 						<span class="label label-primary-api-interactions" itemprop="status">Status:</span> {$item.status/}&nbsp;&nbsp;&nbsp;

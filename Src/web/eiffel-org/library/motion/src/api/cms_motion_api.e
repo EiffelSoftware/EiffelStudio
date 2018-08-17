@@ -238,20 +238,20 @@ feature -- Access - Status
 
 feature -- Resource Access
 
-	name, collection: STRING
+	name, collection: IMMUTABLE_STRING_8
 			-- Resource name, also
 			-- used as a collection of resources
 			-- like wish_list
 		deferred
 		end
 
-	resource_path: STRING
+	resource_path: IMMUTABLE_STRING_8
 			-- Path to the resource
 			-- For example "/resources"
 		deferred
 		end
 
-	item: STRING
+	item: IMMUTABLE_STRING_8
 			-- Element in a collection of resources
 			-- for example wish in a wish_list
 		deferred

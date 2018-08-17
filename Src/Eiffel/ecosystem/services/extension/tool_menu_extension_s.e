@@ -12,7 +12,7 @@ feature -- Modification
 	extend
 		(extender: PROCEDURE [
 			READABLE_STRING_32, -- name
-			STRING, -- icon
+			READABLE_STRING_GENERAL, -- icon
 			BOOLEAN, -- is_sensitive
 			PROCEDURE -- action
 		])

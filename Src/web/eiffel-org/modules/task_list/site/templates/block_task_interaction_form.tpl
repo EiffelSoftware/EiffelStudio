@@ -10,7 +10,7 @@
 						<p>Fill in the description for the new interaction for the <strong>{$form.wish.status.synopsis/}</strong> item wish <a target="_blank" href="{$site_url/}{$resource_path/}/{$module_item/}/{$form.wish.id/}/detail">{$form.wish.id/}</a>.</p>
 								<label class="control-label" for="textarea">Description</label>
 								<div class="controls">
-									<textarea class="class-form-textarea" id="description" name="description" rows="17" placeholder="" required form="wish">{$form.description/}</textarea>
+									<textarea class="class-form-textarea" id="description" name="description" rows="17" placeholder="" required form="wish">{htmlentities}{$form.description/}{/htmlentities}</textarea>
 								</div>
 						<p></p>
 						{if condition="$can_edit_category"}
@@ -23,10 +23,10 @@
 									<option value="0">ALL</option>
 									{foreach from="$categories" item="item"}
 										{if condition="$item.id = $form.category"}
-											<option value="{$item.id/}" selected>{$item.synopsis/}</option>
+											<option value="{$item.id/}" selected>{htmlentities}{$item.synopsis/}{/htmlentities}</option>
 										{/if}
 										{unless condition="$item.id = $form.category"}
-											<option value="{$item.id/}">{$item.synopsis/}</option>
+											<option value="{$item.id/}">{htmlentities}{$item.synopsis/}{/htmlentities}</option>
 										{/unless}
 									{/foreach}
 								</select>
@@ -43,10 +43,10 @@
 									<option value="0">ALL</option>
 									{foreach from="$status" item="item"}
 										{if condition="$item.id = $form.selected_status"}
-											<option value="{$item.id/}" selected>{$item.synopsis/}</option>
+											<option value="{$item.id/}" selected>{htmlentities}{$item.synopsis/}{/htmlentities}</option>
 										{/if}
 										{unless condition="$item.id = $form.selected_status"}
-											<option value="{$item.id/}">{$item.synopsis/}</option>
+											<option value="{$item.id/}">{htmlentities}{$item.synopsis/}{/htmlentities}</option>
 										{/unless}
 									{/foreach}
 								</select>
@@ -81,7 +81,7 @@
 						{if isset="$id"}
 							<div class="form-actions">
 								<button type="submit" class="btn btn-primary">Update</button>
-								<a href="{$site_url/}{$resource_path/}/{$module_item/}_list">Go to wish list</a>
+								<a href="{$site_url/}{$resource_path/}/{$module_item/}_list">Go to {$module_item/} list</a>
 							</div>
 						{/if}
 						{unless isset="$id"}

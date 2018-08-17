@@ -19,12 +19,22 @@ create {CMS_WISH_LIST_MODULE}
 
 feature -- Resource Access
 
-	name, collection: STRING = "wish_list"
+	name, collection: IMMUTABLE_STRING_8
 			-- <Precursor>
+		once
+			create Result.make_from_string ("wish_list")
+		end
 
-	resource_path: STRING = "resources"
+	resource_path: IMMUTABLE_STRING_8
 			-- <Precursor>
+		once
+			create Result.make_from_string ("resources")
+		end
 
-	item: STRING = "wish"
+	item: IMMUTABLE_STRING_8
+			-- <Precursor>
+		once
+			create Result.make_from_string ("wish")
+		end
 
 end

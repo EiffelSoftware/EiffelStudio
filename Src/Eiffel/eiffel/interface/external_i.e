@@ -32,20 +32,19 @@ feature -- Initialization
 
 	init_arg (argument_as: EIFFEL_LIST [TYPE_DEC_AS]; a_context_class: CLASS_C)
 			-- Initialization of arguments.
-		local
-			l_inline_ext: INLINE_EXTENSION_I
 		do
 			Precursor {PROCEDURE_I} (argument_as, a_context_class)
 			if has_arguments and extension.is_inline then
 					-- In order to replace arguments specified in external `alias' part of
 					-- inline clause, we need to initialize `extension' with argument
 					-- names.
-				l_inline_ext ?= extension
-				check
-					l_inline_ext_not_void: l_inline_ext /= Void
+				if attached {INLINE_EXTENSION_I} extension as l_inline_ext then
+					l_inline_ext.set_argument_names (arguments.argument_names)
+				else
+					check
+						extension_is_inline_extension_i: False
+					end
 				end
-
-				l_inline_ext.set_argument_names (arguments.argument_names)
 			end
 		end
 
@@ -79,11 +78,8 @@ feature -- Incrementality
 
 	freezing_equiv (other: FEATURE_I): BOOLEAN
 			-- is `Current' equivalent to `other' as far as freezing is concerned?
-		local
-			other_ext: EXTERNAL_I
 		do
-			other_ext ?= other
-			if other_ext /= Void then
+			if attached {EXTERNAL_I} other as other_ext then
 					-- To be equivalent means having a similar signature, same name,
 					-- same encapsulation and same extension (i.e. specification)
 				Result := pattern_id = other.pattern_id and then

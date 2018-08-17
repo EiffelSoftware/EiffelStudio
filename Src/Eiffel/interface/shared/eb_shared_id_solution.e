@@ -65,14 +65,15 @@ feature -- Access (Target)
 			uuid: STRING_32
 			l_target_name: STRING
 			l_uuid: UUID
+			l_strings: like split_by_string
 		do
 			last_target_uuid := Void
 			last_target_name := Void
-			strings := split_by_string (a_id, name_sep)
-			if strings.count >= target_id_sections then
-				uuid := decode (strings.i_th (target_id_sections - 1))
+			l_strings := split_by_string (a_id, name_sep)
+			if l_strings.count >= target_id_sections then
+				uuid := decode (l_strings [target_id_sections - 1])
 				last_target_uuid := uuid
-				l_target_name := decode_string_8 (strings.i_th (target_id_sections))
+				l_target_name := decode_string_8 (l_strings [target_id_sections])
 				last_target_name := l_target_name
 				if universe.target.system.uuid.out.same_string_general (uuid) then
 						-- Get the target from current system by name.
@@ -87,8 +88,6 @@ feature -- Access (Target)
 			if attached Result then
 				last_target_name := Result.name
 			end
-		ensure
-			strings_not_void: strings /= Void
 		end
 
 feature -- Access (Group)
@@ -125,14 +124,15 @@ feature -- Access (Group)
 			group_name: STRING
 			l_target: CONF_TARGET
 			l_ass_id: STRING_32
+			l_strings: like split_by_string
 		do
 			last_group_name := Void
-			strings := split_by_string (a_id, name_sep)
+			l_strings := split_by_string (a_id, name_sep)
 			if
-				strings.count >= group_id_sections and then
-				decode (strings.i_th (1)).is_equal (assembly_prefix)
+				l_strings.count >= group_id_sections and then
+				decode (l_strings [1]).is_equal (assembly_prefix)
 			then
-				l_ass_id := decode (strings.i_th (group_id_sections))
+				l_ass_id := decode (l_strings [group_id_sections])
 				Result := universe.target.system.all_assemblies.item (l_ass_id)
 				if Result /= Void then
 					last_group_name := Result.name
@@ -140,8 +140,8 @@ feature -- Access (Group)
 			end
 			if Result = Void then
 				l_target := target_of_id (a_id)
-				if strings.count >= group_id_sections then
-					group_name := decode_string_8 (strings.i_th (group_id_sections))
+				if l_strings.count >= group_id_sections then
+					group_name := decode_string_8 (l_strings [group_id_sections])
 					last_group_name := group_name
 					if l_target /= Void then
 						Result := l_target.groups.item (group_name)
@@ -172,10 +172,12 @@ feature -- Access (Folder)
 		local
 			l_path: STRING_32
 			l_dir: DIRECTORY
+			l_strings: like split_by_string
 		do
 			last_folder_path := Void
-			if strings.count >= folder_id_sections then
-				l_path := decode (strings.i_th (folder_id_sections))
+			l_strings := split_by_string (a_id, name_sep)
+			if l_strings.count >= folder_id_sections then
+				l_path := decode (l_strings [folder_id_sections])
 				last_folder_path := l_path
 				if attached {CONF_CLUSTER} group_of_id (a_id) as l_cluster then
 					create l_dir.make_with_path (l_cluster.location.build_path (l_path, {STRING_32} ""))
@@ -207,10 +209,12 @@ feature -- Access (Class)
 			a_id_not_void: a_id /= Void
 		local
 			class_name: STRING
+			l_strings: like split_by_string
 		do
 			last_class_name := Void
-			if strings.count >= class_id_sections then
-				class_name := decode_string_8 (strings.i_th (class_id_sections))
+			l_strings := split_by_string (a_id, name_sep)
+			if l_strings.count >= class_id_sections then
+				class_name := decode_string_8 (l_strings [class_id_sections])
 				last_class_name := class_name
 				if attached group_of_id (a_id) as l_group and then l_group.classes /= Void then
 					Result := l_group.classes.item (class_name)
@@ -226,10 +230,12 @@ feature -- Access (Feature)
 			a_id_not_void: a_id /= Void
 		local
 			l_feature_name: STRING_32
+			l_strings: like split_by_string
 		do
 			last_feature_name := Void
-			if strings.count >= feature_id_sections then
-				l_feature_name := decode (strings.i_th (feature_id_sections))
+			l_strings := split_by_string (a_id, name_sep)
+			if l_strings.count >= feature_id_sections then
+				l_feature_name := decode (l_strings [feature_id_sections])
 				last_feature_name := l_feature_name
 				if
 					attached {CLASS_I} class_of_id (a_id) as l_class and then
@@ -460,7 +466,7 @@ feature -- Querry
 			a_id_not_void: a_id /= Void
 			not_target_id: most_possible_type_of_id (a_id) /= target_type
 		local
-			l_strings: like strings
+			l_strings: like split_by_string
 		do
 			l_strings := split_by_string (a_id, name_sep)
 			if attached decode (l_strings.last) as lt_name then
@@ -755,9 +761,6 @@ feature {NONE} -- Implementation. Encoding/Decoding
 		end
 
 feature {NONE} -- Implementation
-
-	strings: ARRAYED_LIST [STRING]
-			-- Strings splitted
 
 	uuid_gen: UUID_GENERATOR
 			-- UUID generator

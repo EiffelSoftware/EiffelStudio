@@ -1,12 +1,8 @@
-.gcse_searchresults {
-  border: solid 1px green; }
-  .gcse_searchresults a {
-    text-decoration: underline !important; }
-  .gcse_searchresults table {
-    border: none !important;
-    border-collapse: separate !important;
-    table-layout: auto; }
-  .gcse_searchresults td {
-    border: none !important; }
+.gcse_searchresults table {
+  border: none !important;
+  border-collapse: separate !important;
+  table-layout: auto; }
+.gcse_searchresults td {
+  border: none !important; }
 
 /*# sourceMappingURL=gcse.css.map */

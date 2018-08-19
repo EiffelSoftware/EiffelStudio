@@ -1,0 +1,10 @@
+test_name pretty-across-loop
+test_description An across form of a loop can take different forms.
+
+copy_raw test.e $CLUSTER test.e
+
+prettify	test.e prettify_output
+compile_result ok
+compare		prettify_output output
+
+test_end

@@ -24,6 +24,9 @@ inherit
 	SHARED_ENCODING_CONVERTER
 		export {ANY} encoding_converter end
 
+	SHARED_LOCALE
+		export {NONE} all end
+
 	INTERNAL_COMPILER_STRING_EXPORTER
 		export {NONE} all end
 
@@ -1285,6 +1288,26 @@ feature {AST_FACTORY} -- Error handling
 			-- Print error message.
 		do
 			report_one_error (create {SYNTAX_ERROR}.make (line, column, filename, ""))
+		end
+
+	report_deprecated_use_of_keyword_is (token: detachable KEYWORD_AS)
+			-- Report that the use of the keyword "is" corresponding to `token` is deprecated.
+		local
+			l: like line
+			c: like column
+		do
+			if has_syntax_warning and then syntax_version /= obsolete_syntax then
+				if attached token then
+					l := token_line (token)
+					c := token_column (token)
+				else
+					l := line
+					c := column
+				end
+				report_one_warning
+					(create {SYNTAX_WARNING}.make (l, c, filename,
+						locale.translation_in_context (once "Deprecated use of keyword `is`.", once "parser.eiffel.warning")))
+			end
 		end
 
 feature{NONE} -- Roundtrip

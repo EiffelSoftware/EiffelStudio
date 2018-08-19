@@ -16,6 +16,7 @@
 		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
 		<library name="gobo_lexical" location="$ISE_LIBRARY\library\gobo\gobo_lexical.ecf"/>
 		<library name="gobo_parse" location="$ISE_LIBRARY\library\gobo\gobo_parse.ecf"/>
+		<library name="interface_names" location="..\interface_names\interface_names.ecf"/>
 		<cluster name="parser" location=".\" recursive="true"/>
 	</target>
 </system>

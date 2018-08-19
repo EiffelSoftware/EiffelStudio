@@ -5807,7 +5807,9 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval12 := extract_keyword (yyvs13.item (yyvsp13)) 
+				yyval12 := extract_keyword (yyvs13.item (yyvsp13))
+				report_deprecated_use_of_keyword_is (yyval12)
+			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp12 := yyvsp12 + 1
@@ -5913,8 +5915,8 @@ end
 				else
 					yyval30 := ast_factory.new_body_as (Void, yyvs83.item (yyvsp83), Void, yyvs36.item (yyvsp36), yyvs4.item (yyvsp4), extract_keyword (yyvs13.item (yyvsp13)), Void, yyvs111.item (yyvsp111))
 				end
-				
 				feature_indexes := yyvs111.item (yyvsp111)
+				report_deprecated_use_of_keyword_is (extract_keyword (yyvs13.item (yyvsp13)))
 			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 6
@@ -5983,8 +5985,8 @@ end
 				else
 					yyval30 := ast_factory.new_body_as (Void, yyvs83.item (yyvsp83), Void, yyvs78.item (yyvsp78), yyvs4.item (yyvsp4), extract_keyword (yyvs13.item (yyvsp13)), Void, yyvs111.item (yyvsp111))
 				end
-				
 				feature_indexes := yyvs111.item (yyvsp111)
+				report_deprecated_use_of_keyword_is (extract_keyword (yyvs13.item (yyvsp13)))
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 6

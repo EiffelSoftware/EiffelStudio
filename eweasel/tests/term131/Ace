@@ -5,7 +5,8 @@
 All rights reserved.
 Your use of this work is governed under the terms of the GNU General Public License version 2.</description>
 		<root class="TEST" feature="make"/>
-		<option manifest_array_type="mismatch_warning" warning="true"/>
+		<option warning="true" syntax="obsolete" manifest_array_type="mismatch_warning">
+		</option>
 		<setting name="inlining" value="true"/>
 		<setting name="inlining_size" value="100"/>
 		<setting name="console_application" value="true"/>

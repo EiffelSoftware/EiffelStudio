@@ -884,7 +884,10 @@ Alias_mark: -- Empty
 Is_keyword: -- Empty
 			{ $$ := Void }
 	| TE_IS
-			{ $$ := extract_keyword ($1) }
+			{
+				$$ := extract_keyword ($1)
+				report_deprecated_use_of_keyword_is ($$)
+			}
 	;
 
 Declaration_body: TE_COLON Type Assigner_mark_opt Dotnet_indexing
@@ -916,8 +919,8 @@ Declaration_body: TE_COLON Type Assigner_mark_opt Dotnet_indexing
 				else
 					$$ := ast_factory.new_body_as (Void, $2, Void, $5, $1, extract_keyword ($4), Void, $6)
 				end
-				
 				feature_indexes := $6
+				report_deprecated_use_of_keyword_is (extract_keyword ($4))
 			}
 	|	Is_keyword Indexing Routine
 			{
@@ -933,8 +936,8 @@ Declaration_body: TE_COLON Type Assigner_mark_opt Dotnet_indexing
 				else
 					$$ := ast_factory.new_body_as (Void, $2, Void, $6, $1, extract_keyword ($4), Void, $5)
 				end
-				
 				feature_indexes := $5
+				report_deprecated_use_of_keyword_is (extract_keyword ($4))
 		}
 	|	TE_COLON Type Assigner_mark_opt Indexing Routine
 			{
@@ -2805,7 +2808,15 @@ Iteration:
 			{
 				insert_supplier ("ITERABLE", $4)
 				insert_supplier ("ITERATION_CURSOR", $4)
-				$$ := ast_factory.new_iteration_as (extract_keyword ($1), $2, $3, $4)
+				$$ := ast_factory.new_iteration_as (extract_keyword ($1), $2, $3, $4, False)
+				enter_scope
+				add_scope_iteration ($4)
+			}
+	| TE_ACROSS Expression TE_IS Identifier_as_lower
+			{
+				insert_supplier ("ITERABLE", $4)
+				insert_supplier ("ITERATION_CURSOR", $4)
+				$$ := ast_factory.new_iteration_as (extract_keyword ($1), $2, extract_keyword ($3), $4, True)
 				enter_scope
 				add_scope_iteration ($4)
 			}

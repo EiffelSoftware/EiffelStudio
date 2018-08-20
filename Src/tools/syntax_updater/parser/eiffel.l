@@ -531,19 +531,8 @@ BREAK	{HORIZONAL_BREAK}|\n
 			}
 [iI][sS]	{
 				update_character_locations
-				if syntax_version = ecma_syntax or else syntax_version = provisional_syntax then
-					process_id_as
-					last_token := TE_ID
-				else
-					last_keyword_id_value := ast_factory.new_keyword_id_as (TE_IS, Current)
-					last_token := TE_IS
-					if has_syntax_warning and then syntax_version /= obsolete_syntax then
-						report_one_warning (
-							create {SYNTAX_WARNING}.make (line, column, filename,
-								once "Usage of `is' has now been deprecated."))
-					end
-				end
-
+				last_keyword_id_value := ast_factory.new_keyword_id_as (TE_IS, Current)
+				last_token := TE_IS
 			}
 [lL][iI][kK][eE]	{
 				update_character_locations

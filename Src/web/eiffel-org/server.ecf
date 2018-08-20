@@ -33,7 +33,7 @@
 		<library name="cms_module_embedded_video" location="$ISE_LIBRARY\unstable\library\web\cms\modules\embedded_video\embedded_video.ecf" readonly="false" use_application_options="true"/>
 		<library name="cms_node_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\node\node.ecf" readonly="false"/>
 		<library name="cms_persistence_sqlite3" location="$ISE_LIBRARY\unstable\library\web\cms\library\persistence\sqlite3\sqlite3.ecf" readonly="false"/>
-		<library name="cms_persistence_store_mysql" location="$ISE_LIBRARY\unstable\library\web\cms\library\persistence\store_mysql\store_mysql.ecf" readonly="false"/>
+		<library name="cms_persistence_store_mysql" location="$ISE_LIBRARY\unstable\library\web\cms\library\persistence\store_mysql_fake\store_mysql.ecf" readonly="false"/>
 		<library name="cms_recent_changes_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\recent_changes\recent_changes.ecf" readonly="false"/>
 		<library name="cms_seo_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\seo\seo.ecf" readonly="false" use_application_options="true"/>
 		<library name="cms_session_auth_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\session_auth\cms_session_auth.ecf" readonly="false"/>

@@ -1,0 +1,30 @@
+{
+        "blocks": {
+                "built_with_eiffel": {
+                        "is_raw": "yes",
+                        "region": "footer",
+                        "weight": 100,
+                        "conditions": ["path:*"]
+                },
+                "front_header_welcome": {
+                        "region": "jumbotron2",
+                        "weight": 2
+                },
+                "eiffel_copyright": {
+                        "is_raw": "yes",
+                        "region": "footer"
+                },
+                "social_area": {
+                        "region": "jumbotron1",
+                        "weight": 3
+                },
+                "?doc_edit_helper": {
+                        "region": "sidebar_first",
+                        "conditions": ["path:doc/*/edit"]
+                },
+                "?social_buttons": {
+                        "region": "sidebar_first",
+                        "conditions": ["path:doc/*"]
+                }
+        }
+}

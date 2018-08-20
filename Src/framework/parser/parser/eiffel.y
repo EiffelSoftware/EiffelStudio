@@ -2808,7 +2808,15 @@ Iteration:
 			{
 				insert_supplier ("ITERABLE", $4)
 				insert_supplier ("ITERATION_CURSOR", $4)
-				$$ := ast_factory.new_iteration_as (extract_keyword ($1), $2, $3, $4)
+				$$ := ast_factory.new_iteration_as (extract_keyword ($1), $2, $3, $4, False)
+				enter_scope
+				add_scope_iteration ($4)
+			}
+	| TE_ACROSS Expression TE_IS Identifier_as_lower
+			{
+				insert_supplier ("ITERABLE", $4)
+				insert_supplier ("ITERATION_CURSOR", $4)
+				$$ := ast_factory.new_iteration_as (extract_keyword ($1), $2, extract_keyword ($3), $4, True)
 				enter_scope
 				add_scope_iteration ($4)
 			}

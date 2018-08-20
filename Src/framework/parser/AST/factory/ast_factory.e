@@ -1617,11 +1617,13 @@ feature -- Access
 			create Result.initialize (a, once_manifest_string_count, i_as, object_test_locals)
 		end
 
-	new_iteration_as (a: detachable KEYWORD_AS; e: detachable EXPR_AS; b: detachable KEYWORD_AS; i: detachable ID_AS): detachable ITERATION_AS
-			-- New ITERATION AST node
+	new_iteration_as (a: detachable KEYWORD_AS; e: detachable EXPR_AS; b: detachable KEYWORD_AS; i: detachable ID_AS; is_restricted: BOOLEAN): detachable ITERATION_AS
+			-- New ITERATION AST node for an iteration part of a loop in the form
+			-- 	across expr as x -- when `not is_resticted`
+			-- 	across expr is x -- when `is_resticted`
 		do
 			if e /= Void and i /= Void then
-				create Result.initialize (a, e, b, i)
+				create Result.initialize (a, e, b, i, is_restricted)
 			end
 		end
 

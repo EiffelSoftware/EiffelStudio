@@ -14,6 +14,8 @@ inherit
 
 	CMS_HOOK_BLOCK
 
+	CMS_HOOK_BLOCK_HELPER
+
 	CMS_HOOK_AUTO_REGISTER
 
 	CMS_HOOK_MENU_SYSTEM_ALTER
@@ -67,7 +69,6 @@ feature -- Router
 	setup_router (a_router: WSF_ROUTER; a_api: CMS_API)
 			-- Router configuration.
 		do
-			a_router.handle ("/try_eiffel", create {WSF_URI_AGENT_HANDLER}.make (agent handle_try_eiffel (a_api, ?, ?)), a_router.methods_head_get)
 			a_router.handle ("/launch_codeboard", create {WSF_URI_AGENT_HANDLER}.make (agent handle_launch_codeboard (a_api, ?, ?)), a_router.methods_head_get)
 		end
 
@@ -95,7 +96,7 @@ feature -- Hooks
 		local
 			l_string: STRING
 		do
-			Result := <<"try_eiffel", "launch_codeboard", "play_eiffel">>--, "button_try_eiffel">>
+			Result := <<"launch_codeboard", "play_eiffel">>
 			create l_string.make_empty
 			across Result as ic loop
 					l_string.append (ic.item)
@@ -106,23 +107,11 @@ feature -- Hooks
 
 	get_block_view (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
 		do
-
 			if
-				a_block_id.is_case_insensitive_equal_general ("try_eiffel") and then
-				a_response.request.path_info.starts_with ("/try_eiffel")
-			then
-				if attached template_block (a_block_id, a_response) as l_tpl_block then
-					a_response.add_block (l_tpl_block, "content")
-				else
-					debug ("cms")
-						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
-					end
-				end
-			elseif
 				a_block_id.is_case_insensitive_equal_general ("launch_codeboard") and then
 				a_response.request.path_info.same_string_general ("/launch_codeboard")
 			then
-				if attached template_block (a_block_id, a_response) as l_tpl_block then
+				if attached smarty_template_block (Current, a_block_id, a_response.api) as l_tpl_block then
 					a_response.add_block (l_tpl_block, "content")
 				else
 					debug ("cms")
@@ -131,19 +120,9 @@ feature -- Hooks
 				end
 			elseif
 				a_block_id.is_case_insensitive_equal_general ("play_eiffel") and then
-				a_response.request.path_info.same_string_general ("/")
+				a_response.is_front
 			then
-				if attached template_block (a_block_id, a_response) as l_tpl_block then
-					a_response.add_block (l_tpl_block, "header")
-				else
-					debug ("cms")
-						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
-					end
-				end
-			elseif
-				a_block_id.is_case_insensitive_equal_general ("button_try_eiffel")
-			then
-				if attached template_block (a_block_id, a_response) as l_tpl_block then
+				if attached smarty_template_block (Current, a_block_id, a_response.api) as l_tpl_block then
 					a_response.add_block (l_tpl_block, "header")
 				else
 					debug ("cms")
@@ -151,16 +130,6 @@ feature -- Hooks
 					end
 				end
 			end
-		end
-
-	handle_try_eiffel (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
-		local
-			r: CMS_RESPONSE
-		do
-			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-			r.set_value ("Try_Eiffel", "optional_content_type")
-			r.set_title ("Try Eiffel")
-			r.execute
 		end
 
 	handle_launch_codeboard (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
@@ -172,26 +141,6 @@ feature -- Hooks
 			r.set_value ("Codeboard", "optional_content_type")
 			r.set_title ("Codeboard")
 			r.execute
-		end
-
-feature {NONE} -- Helpers
-
-	template_block (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE): detachable CMS_SMARTY_TEMPLATE_BLOCK
-			-- Smarty content block for `a_block_id'
-		local
-			res: PATH
-			p: detachable PATH
-		do
-			create res.make_from_string ("templates")
-			res := res.extended ("block_").appended (a_block_id).appended_with_extension ("tpl")
-			p := a_response.api.module_theme_resource_location (Current, res)
-			if p /= Void then
-				if attached p.entry as e then
-					create Result.make (a_block_id, Void, p.parent, e)
-				else
-					create Result.make (a_block_id, Void, p.parent, p)
-				end
-			end
 		end
 
 feature {NONE} -- Implementation: date and time

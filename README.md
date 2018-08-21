@@ -1,5 +1,6 @@
 EiffelStudio
 ============
+[![Build Status](https://travis-ci.org/EiffelSoftware/EiffelStudio.svg?branch=master)](https://travis-ci.org/EiffelSoftware/EiffelStudio)
 
 Introduction
 ------------

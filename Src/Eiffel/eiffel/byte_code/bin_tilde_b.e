@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Node for ~ equality operator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,7 +34,7 @@ feature -- Visitor
 feature -- Status report
 
 	is_built_in: BOOLEAN = True
-			-- Is the current binary operator a built-in one ?
+			-- Is the current binary operator a built-in one?
 
 	is_commutative: BOOLEAN = True
 			-- Operation is commutative.
@@ -49,13 +49,13 @@ feature -- Status report
 feature -- Access
 
 	type: TYPE_A
-			-- Expression type is boolean
+			-- Expression type is boolean.
 		do
 			Result := Boolean_type
 		end
 
 	allocates_memory: BOOLEAN
-			-- Does the expression allocates memory ?
+			-- <Precursor>
 		local
 			left_type: TYPE_A
 			right_type: TYPE_A
@@ -110,7 +110,7 @@ feature -- Inlining
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -579,7 +579,7 @@ feature -- Package: change
 						s.append_character ('%"')
 						s.append_character (' ')
 					end
-					s.append (link_ic.item.url)
+					s.append_string_general (link_ic.item.url)
 					inf.put (s, "links["+ link_ic.key +"]")
 				end
 			end

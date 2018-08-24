@@ -1,4 +1,4 @@
-<div class="holder-play">
+<div class="codeboard-demo"><div class="holder-play">
 <div class="btn-holder"><a class="btn-play" href="{$site_url/}codeboard">Play with Eiffel</a></div>
 <pre class="prettyprint lang-eiffel">
 class
@@ -13,4 +13,4 @@ feature {NONE} -- Initialization
         end
 end
 </pre>
-</div>		
+</div></div>

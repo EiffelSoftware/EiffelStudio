@@ -2493,7 +2493,7 @@ ul.is-unstyled, ul.unstyled {
       padding: 10px;
       text-align: center; }
   /* line 26, ../scss/site/jumbotron.scss */
-  .jumbotron > .container > div #block-play_eiffel .prettyprint {
+  .jumbotron > .container > div .codeboard-demo .prettyprint {
     padding-top: 20px;
     height: 267px; }
   /* line 31, ../scss/site/jumbotron.scss */
@@ -3640,17 +3640,17 @@ code, eiffel {
 
 /* Codeboard */
 /* line 9, ../scss/site/codeboard.scss */
-#block-play_eiffel pre.prettyprint {
+.codeboard-demo pre.prettyprint {
   padding-left: 18px;
   border: solid 1px #fff;
   -webkit-border-radius: 6px;
   border-radius: 6px;
   background-color: rgba(255, 255, 255, 0.75); }
 /* line 18, ../scss/site/codeboard.scss */
-#block-play_eiffel .holder-play .btn-holder {
+.codeboard-demo .holder-play .btn-holder {
   position: relative; }
   /* line 20, ../scss/site/codeboard.scss */
-  #block-play_eiffel .holder-play .btn-holder .btn-play {
+  .codeboard-demo .holder-play .btn-holder .btn-play {
     background-color: #12273A;
     background-image: -webkit-linear-gradient(top, #2B4054, #12273A);
     background-image: -moz-linear-gradient(top, #2B4054, #12273A);
@@ -3667,7 +3667,7 @@ code, eiffel {
     letter-spacing: 1px;
     text-align: center; }
     /* line 30, ../scss/site/codeboard.scss */
-    #block-play_eiffel .holder-play .btn-holder .btn-play:hover {
+    .codeboard-demo .holder-play .btn-holder .btn-play:hover {
       background-color: #0C1A26;
       background-image: -webkit-linear-gradient(top, #12273A, #0C1A26);
       background-image: -moz-linear-gradient(top, #12273A, #0C1A26);

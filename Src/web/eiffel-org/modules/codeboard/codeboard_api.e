@@ -49,7 +49,6 @@ feature -- Access
 		local
 			p: PATH
 			fut: FILE_UTILITIES
-			utf: UTF_CONVERTER
 			jp: JSON_PARSER
 		do
 			p := cms_api.module_resource_location_by_name ({CODEBOARD_MODULE}.name, (create {PATH}.make_from_string ("snippet")).extended (a_id.out))

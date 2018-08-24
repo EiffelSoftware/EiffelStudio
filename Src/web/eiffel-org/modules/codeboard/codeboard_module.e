@@ -161,6 +161,7 @@ feature -- Hooks
 						-- Support any block based on existing template
 				if attached smarty_template_block (Current, a_block_id, a_response.api) as l_tpl_block then
 					a_response.add_block (l_tpl_block, "content")
+					a_response.add_style (a_response.module_resource_url (Current, "/files/css/"+ a_block_id +".css", Void), Void)
 				end
 			end
 		end

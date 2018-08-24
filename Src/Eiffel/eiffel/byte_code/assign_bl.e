@@ -287,15 +287,14 @@ feature
 				source_has_gcable := call_b.has_gcable_variable and not
 					call_b.is_simple_expr
 			else
-				expr_b ?= source
+				expr_b := source
  				source_has_gcable := expr_b.has_call or expr_b.allocates_memory
 			end
 
 				-- Mark Result used only if not the last instruction (in which
 				-- case we'll generate a direct return, hence Result won't be
 				-- needed).
-			if last_in_result and target.is_result and not source_has_gcable
-			then
+			if last_in_result and target.is_result and not source_has_gcable then
 				context.restore (saved_context)
 				source.unanalyze
 				context.init_propagation
@@ -317,7 +316,7 @@ feature
 					-- have been removed.
 				expand_return := True
 			else
-					-- Force usage of Result
+					-- Force usage of Result.
 				last_in_result := False
 			end
 			if result_used then

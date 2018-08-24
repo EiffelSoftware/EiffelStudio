@@ -347,11 +347,11 @@ feature {NONE} -- HTML Generation
 				across
 					lst as c
 				loop
-					s.append ("<li><a href=%"" + c.item.url + "%">" + html_encoder.encoded_string (c.item.title) + "</a>")
+					s.append ("<li><a href=%"" + c.item.url + "%">" + html_encoder.general_encoded_string (c.item.title) + "</a>")
 					if attached c.item.sub_links as sublst then
 						s.append ("<ul>")
 						across sublst as ic_sub loop
-							s.append ("<li><a href=%"" + ic_sub.item.url + "%">" + html_encoder.encoded_string (ic_sub.item.title) + "</a>")
+							s.append ("<li><a href=%"" + ic_sub.item.url + "%">" + html_encoder.general_encoded_string (ic_sub.item.title) + "</a>")
 						end
 						s.append ("</ul>%N")
 					end
@@ -427,7 +427,7 @@ feature {NONE} -- HTML Generation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

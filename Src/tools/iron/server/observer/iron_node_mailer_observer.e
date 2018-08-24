@@ -31,10 +31,11 @@ feature -- Event
 	on_user_event (a_user: IRON_NODE_USER; a_title: READABLE_STRING_32; a_message: READABLE_STRING_32)
 		local
 			m: NOTIFICATION_EMAIL
+			utf: UTF_CONVERTER
 		do
 			if mailer.is_available then
 				if attached a_user.email as l_email then
-					create m.make (admin_email, l_email, a_title, a_message)
+					create m.make (admin_email, l_email, utf.utf_32_string_to_utf_8_string_8 (a_title), a_message)
 					mailer.process_email (m)
 				end
 				create m.make (admin_email, admin_email, a_title, a_message)
@@ -118,7 +119,7 @@ feature -- Event
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

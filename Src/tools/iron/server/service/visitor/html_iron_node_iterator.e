@@ -70,7 +70,7 @@ feature -- Visit
 				s.append (")</span>")
 				if attached p.description as l_description then
 					s.append ("<pre class=%"description%">")
-					s.append (l_description)
+					s.append (html_encoder.encoded_string (l_description))
 					s.append ("</pre>")
 				end
 				if attached p.tags as l_tags and then not l_tags.is_empty then
@@ -78,7 +78,7 @@ feature -- Visit
 					across
 						l_tags as ic_tags
 					loop
-						s.append (ic_tags.item)
+						s.append (html_encoder.encoded_string (ic_tags.item))
 						s.append_character (',')
 					end
 					if s.ends_with (",") then
@@ -210,7 +210,7 @@ feature -- Visit
 					s.append (")</span>")
 					if attached p.description as l_description then
 						s.append ("<pre class=%"description%">")
-						s.append (l_description)
+						s.append (html_encoder.encoded_string (l_description))
 						s.append ("</pre>")
 					end
 					if attached p.tags as l_tags and then not l_tags.is_empty then
@@ -218,7 +218,7 @@ feature -- Visit
 						across
 							l_tags as ic_tags
 						loop
-							s.append (ic_tags.item)
+							s.append (html_encoder.encoded_string (ic_tags.item))
 							s.append_character (',')
 						end
 						if s.ends_with (",") then
@@ -361,7 +361,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

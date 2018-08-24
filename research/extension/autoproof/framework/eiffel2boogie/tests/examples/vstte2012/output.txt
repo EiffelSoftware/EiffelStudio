@@ -1,0 +1,30 @@
+======================================
+RING_BUFFER (invariant admissibility)
+Successfully verified.
+======================================
+RING_BUFFER.make (creator)
+Successfully verified.
+======================================
+RING_BUFFER.item
+Successfully verified.
+======================================
+RING_BUFFER.extend
+Successfully verified.
+======================================
+RING_BUFFER.remove
+Successfully verified.
+======================================
+RING_BUFFER.wipe_out
+Successfully verified.
+======================================
+VSTTE2012 (invariant admissibility)
+Successfully verified.
+======================================
+ANY.default_create (creator, inherited by VSTTE2012)
+Successfully verified.
+======================================
+VSTTE2012.two_way_sort
+Successfully verified.
+======================================
+VSTTE2012.ring_buffer_client
+Successfully verified.

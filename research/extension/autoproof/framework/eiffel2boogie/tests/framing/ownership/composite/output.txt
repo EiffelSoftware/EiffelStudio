@@ -1,0 +1,60 @@
+======================================
+F_COM_CLIENT (invariant admissibility)
+Successfully verified.
+======================================
+ANY.default_create (creator, inherited by F_COM_CLIENT)
+Successfully verified.
+======================================
+F_COM_CLIENT.test
+Successfully verified.
+======================================
+F_COM_CLIENT.test_d
+Successfully verified.
+======================================
+F_COM_COMPOSITE (invariant admissibility)
+Successfully verified.
+======================================
+F_COM_COMPOSITE.make (creator)
+Successfully verified.
+======================================
+F_COM_COMPOSITE.children_set
+Successfully verified.
+======================================
+F_COM_COMPOSITE.is_max
+Successfully verified.
+======================================
+F_COM_COMPOSITE.add_child
+Successfully verified.
+======================================
+F_COM_COMPOSITE.set_parent
+Successfully verified.
+======================================
+F_COM_COMPOSITE.update
+Successfully verified.
+======================================
+F_COM_COMPOSITE.lemma_ancestors_have_children
+Successfully verified.
+======================================
+F_COM_COMPOSITE_D (invariant admissibility)
+Successfully verified.
+======================================
+F_COM_COMPOSITE_D.make (creator)
+Successfully verified.
+======================================
+F_COM_COMPOSITE_D.children_set
+Successfully verified.
+======================================
+F_COM_COMPOSITE_D.is_max
+Successfully verified.
+======================================
+F_COM_COMPOSITE_D.add_child
+Successfully verified.
+======================================
+F_COM_COMPOSITE_D.set_parent
+Successfully verified.
+======================================
+F_COM_COMPOSITE_D.update
+Successfully verified.
+======================================
+F_COM_COMPOSITE_D.lemma_ancestors_have_children
+Successfully verified.

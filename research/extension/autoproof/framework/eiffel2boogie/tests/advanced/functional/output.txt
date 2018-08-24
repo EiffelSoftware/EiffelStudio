@@ -1,0 +1,50 @@
+======================================
+A_FUNCTIONAL.not_functional1
+AutoProof error.
+Validity: Functional feature has to be a pure function.
+======================================
+A_FUNCTIONAL.not_functional2
+AutoProof error.
+Validity: A functional feature has to consist of exactly one assignment to the Result.
+======================================
+A_FUNCTIONAL (invariant admissibility)
+Successfully verified.
+======================================
+ANY.default_create (creator, inherited by A_FUNCTIONAL)
+Successfully verified.
+======================================
+A_FUNCTIONAL.not_functional1
+Successfully verified.
+======================================
+A_FUNCTIONAL.functional1
+Successfully verified.
+======================================
+A_FUNCTIONAL.functional2
+Successfully verified.
+======================================
+A_FUNCTIONAL.functional3
+Successfully verified.
+======================================
+A_FUNCTIONAL.call_functional
+Successfully verified.
+======================================
+A_FUNCTIONAL.functional4
+Successfully verified.
+======================================
+A_FUNCTIONAL.caller1
+Verification failed.
+
+Line: 79. Precondition may be violated on invocation of {A_FUNCTIONAL}.functional4.
+======================================
+A_FUNCTIONAL.caller2
+Verification failed.
+
+Line: 86. Precondition may be violated on invocation of {A_FUNCTIONAL}.functional4.
+======================================
+A_FUNCTIONAL.factorial
+Successfully verified.
+======================================
+A_FUNCTIONAL.factorial_client
+Verification failed.
+
+Line: 103. Check may be violated (untagged).

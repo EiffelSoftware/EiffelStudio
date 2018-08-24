@@ -1,0 +1,109 @@
+======================================
+A_LOOPS (invariant admissibility)
+Successfully verified.
+======================================
+ANY.default_create (creator, inherited by A_LOOPS)
+Successfully verified.
+======================================
+A_LOOPS.loop_variant
+Successfully verified.
+======================================
+A_LOOPS.loop_decreases
+Successfully verified.
+======================================
+A_LOOPS.loop_variant_bad1
+Verification failed.
+
+Line: 64. Variant may not decrease at this recursive call / the end of this loop body.
+======================================
+A_LOOPS.loop_variant_bad2
+Verification failed.
+
+Line: 79. Integer variant component at position 1 may be negative.
+======================================
+A_LOOPS.loop_decreases_bad
+Verification failed.
+
+Line: 93. Variant may not decrease at this recursive call / the end of this loop body.
+======================================
+A_LOOPS.loop_defaults
+Successfully verified.
+======================================
+A_LOOPS.nonterminating_bad
+Verification failed.
+
+Line: 137. Variant may not decrease at this recursive call / the end of this loop body.
+======================================
+A_LOOPS.nonterminating
+Successfully verified.
+======================================
+A_TERMINATION (invariant admissibility)
+Successfully verified.
+======================================
+ANY.default_create (creator, inherited by A_TERMINATION)
+Successfully verified.
+======================================
+A_TERMINATION.fibonacci
+Successfully verified.
+======================================
+A_TERMINATION.fibonacci_bad
+Verification failed.
+
+Line: 22. Integer variant component at position 1 may be negative.
+--------------------------------------
+Line: 22. Integer variant component at position 1 may be negative.
+======================================
+A_TERMINATION.fibonacci_function
+Successfully verified.
+======================================
+A_TERMINATION.fibonacci_function_bad
+Verification failed.
+
+Line: 38. Integer variant component at position 1 may be negative.
+--------------------------------------
+Line: 38. Integer variant component at position 1 may be negative.
+======================================
+A_TERMINATION.ref_recursive
+Successfully verified.
+======================================
+A_TERMINATION.ref_recursive_bad1
+Verification failed.
+
+Line: 59. Variant may not decrease at this recursive call / the end of this loop body.
+======================================
+A_TERMINATION.ref_recursive_bad2
+Verification failed.
+
+Line: 71. Variant may not decrease at this recursive call / the end of this loop body.
+======================================
+A_TERMINATION.set_sum
+Successfully verified.
+======================================
+A_TERMINATION.set_sum_bad
+Verification failed.
+
+Line: 94. Variant may not decrease at this recursive call / the end of this loop body.
+======================================
+A_TERMINATION.sequence_sum
+Successfully verified.
+======================================
+A_TERMINATION.sequence_sum_bad
+Verification failed.
+
+Line: 111. Variant may not decrease at this recursive call / the end of this loop body.
+======================================
+A_TERMINATION.bag_sum
+Successfully verified.
+======================================
+A_TERMINATION.bag_sum_bad
+Verification failed.
+
+Line: 129. Variant may not decrease at this recursive call / the end of this loop body.
+======================================
+A_TERMINATION.no_args_bad
+Verification failed.
+
+Line: 137. Variant may not decrease at this recursive call / the end of this loop body.
+======================================
+A_TERMINATION.no_termination_check
+Successfully verified.

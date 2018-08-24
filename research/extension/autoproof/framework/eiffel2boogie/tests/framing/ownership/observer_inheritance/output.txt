@@ -1,0 +1,39 @@
+======================================
+F_OI_OBSERVER (invariant admissibility)
+Successfully verified.
+======================================
+F_OI_PARITY_OBSERVER (invariant admissibility)
+Successfully verified.
+======================================
+F_OI_OBSERVER.make (creator, inherited by F_OI_PARITY_OBSERVER)
+Successfully verified.
+======================================
+F_OI_PARITY_OBSERVER.is_synchronized
+Successfully verified.
+======================================
+F_OI_PARITY_OBSERVER.notify
+Successfully verified.
+======================================
+F_OI_SIGN_OBSERVER (invariant admissibility)
+Successfully verified.
+======================================
+F_OI_OBSERVER.make (creator, inherited by F_OI_SIGN_OBSERVER)
+Successfully verified.
+======================================
+F_OI_SIGN_OBSERVER.is_synchronized
+Successfully verified.
+======================================
+F_OI_SIGN_OBSERVER.notify
+Successfully verified.
+======================================
+F_OI_SUBJECT (invariant admissibility)
+Successfully verified.
+======================================
+F_OI_SUBJECT.make (creator)
+Successfully verified.
+======================================
+F_OI_SUBJECT.update
+Successfully verified.
+======================================
+F_OI_SUBJECT.register
+Successfully verified.

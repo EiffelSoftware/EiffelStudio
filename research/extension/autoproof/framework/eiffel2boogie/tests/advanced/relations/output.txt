@@ -1,0 +1,12 @@
+======================================
+A_RELATIONS (invariant admissibility)
+Successfully verified.
+======================================
+ANY.default_create (creator, inherited by A_RELATIONS)
+Successfully verified.
+======================================
+A_RELATIONS.good
+Successfully verified.
+======================================
+A_RELATIONS.good1
+Successfully verified.

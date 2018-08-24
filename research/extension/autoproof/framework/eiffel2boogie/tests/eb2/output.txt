@@ -1,0 +1,30 @@
+======================================
+EB2_KEY (invariant admissibility)
+Successfully verified.
+======================================
+EB2_KEY.hash_code
+Successfully verified.
+======================================
+EB2_KEY.set_value (creator)
+Successfully verified.
+======================================
+EB2_KEY.set_value
+Successfully verified.
+======================================
+EB2_KEY.hash_code_
+Successfully verified.
+======================================
+EB2_KEY.is_model_equal
+Successfully verified.
+======================================
+EB2_KEY.lemma_transitive
+Successfully verified.
+======================================
+EB2_TESTER (invariant admissibility)
+Successfully verified.
+======================================
+ANY.default_create (creator, inherited by EB2_TESTER)
+Successfully verified.
+======================================
+EB2_TESTER.test_hash_table
+Successfully verified.

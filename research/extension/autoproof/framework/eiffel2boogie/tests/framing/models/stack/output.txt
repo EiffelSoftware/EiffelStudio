@@ -1,0 +1,57 @@
+======================================
+F_ST_CONTAINER (invariant admissibility)
+Successfully verified.
+======================================
+F_ST_CONTAINER.is_empty
+Successfully verified.
+======================================
+F_ST_LIST (invariant admissibility)
+Successfully verified.
+======================================
+F_ST_LIST.make (creator)
+Successfully verified.
+======================================
+F_ST_LIST.is_empty
+Successfully verified.
+======================================
+F_ST_LIST.count
+Successfully verified.
+======================================
+F_ST_LIST.item
+Successfully verified.
+======================================
+F_ST_LIST.has
+Successfully verified.
+======================================
+F_ST_LIST.extend_back
+Successfully verified.
+======================================
+F_ST_LIST.remove_back
+Successfully verified.
+======================================
+F_ST_LIST.wipe_out
+Successfully verified.
+======================================
+F_ST_STACK (invariant admissibility)
+Successfully verified.
+======================================
+F_ST_CONTAINER.is_empty (inherited by F_ST_STACK)
+Successfully verified.
+======================================
+F_ST_STACK.make (creator)
+Successfully verified.
+======================================
+F_ST_STACK.item
+Successfully verified.
+======================================
+F_ST_STACK.count
+Successfully verified.
+======================================
+F_ST_STACK.push
+Successfully verified.
+======================================
+F_ST_STACK.pop
+Successfully verified.
+======================================
+F_ST_STACK.wipe_out
+Successfully verified.

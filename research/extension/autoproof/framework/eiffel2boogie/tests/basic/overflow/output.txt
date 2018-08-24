@@ -1,0 +1,38 @@
+======================================
+B_OVERFLOW (invariant admissibility)
+Successfully verified.
+======================================
+ANY.default_create (creator, inherited by B_OVERFLOW)
+Successfully verified.
+======================================
+B_OVERFLOW.overflow_integer_addition
+Verification failed.
+
+Line: 7. Possible arithmetic overflow.
+======================================
+B_OVERFLOW.no_overflow_integer_addition
+Successfully verified.
+======================================
+B_OVERFLOW.overflow_integer_subtraction
+Verification failed.
+
+Line: 19. Possible arithmetic overflow.
+======================================
+B_OVERFLOW.no_overflow_integer_subtraction
+Successfully verified.
+======================================
+B_OVERFLOW.overflow_natural_addition
+Verification failed.
+
+Line: 31. Possible arithmetic overflow.
+======================================
+B_OVERFLOW.no_overflow_natural_addition
+Successfully verified.
+======================================
+B_OVERFLOW.overflow_natural_subtraction
+Verification failed.
+
+Line: 43. Possible arithmetic overflow.
+======================================
+B_OVERFLOW.no_overflow_natural_subtraction
+Successfully verified.

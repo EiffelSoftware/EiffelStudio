@@ -1,0 +1,60 @@
+======================================
+A_PARTIAL (invariant admissibility)
+Verification failed.
+
+Line: 154. Precondition may be violated on invocation of {A_PARTIAL}.nasty.
+======================================
+ANY.default_create (creator, inherited by A_PARTIAL)
+Successfully verified.
+======================================
+A_PARTIAL.nasty
+Successfully verified.
+======================================
+A_PARTIAL.client1
+Verification failed.
+
+Line: 29. Precondition may be violated on invocation of {A_PARTIAL}.nasty.
+======================================
+A_PARTIAL.nasty1
+Successfully verified.
+======================================
+A_PARTIAL.client4
+Verification failed.
+
+Line: 49. Precondition may be violated on call to {A_PARTIAL}.nasty1 (untagged).
+======================================
+A_PARTIAL.client5
+Successfully verified.
+======================================
+A_PARTIAL.client2
+Successfully verified.
+======================================
+A_PARTIAL.p1
+Successfully verified.
+======================================
+A_PARTIAL.client_p1
+Successfully verified.
+======================================
+A_PARTIAL.p2
+Successfully verified.
+======================================
+A_PARTIAL.client_p2
+Successfully verified.
+======================================
+A_PARTIAL.client_loop
+Successfully verified.
+======================================
+A_PARTIAL.nasty2
+Successfully verified.
+======================================
+A_PARTIAL.client3
+Verification failed.
+
+Line: 138. Precondition may be violated on invocation of {A_PARTIAL}.nasty2.
+======================================
+A_PARTIAL.method
+Verification failed.
+
+Line: 146. Check may be violated (untagged).
+--------------------------------------
+Line: 147. Check may be violated (untagged).

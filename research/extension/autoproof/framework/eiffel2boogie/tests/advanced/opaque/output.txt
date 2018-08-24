@@ -1,0 +1,17 @@
+======================================
+A_OPAQUE (invariant admissibility)
+Successfully verified.
+======================================
+ANY.default_create (creator, inherited by A_OPAQUE)
+Successfully verified.
+======================================
+A_OPAQUE.all_positive
+Successfully verified.
+======================================
+A_OPAQUE.lemma_bad
+Verification failed.
+
+Line: 22. Postcondition may be violated (untagged).
+======================================
+A_OPAQUE.lemma_good
+Successfully verified.

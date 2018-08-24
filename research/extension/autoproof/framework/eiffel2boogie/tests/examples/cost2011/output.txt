@@ -1,0 +1,9 @@
+======================================
+COST2011 (invariant admissibility)
+Successfully verified.
+======================================
+ANY.default_create (creator, inherited by COST2011)
+Successfully verified.
+======================================
+COST2011.max_in_array
+Successfully verified.

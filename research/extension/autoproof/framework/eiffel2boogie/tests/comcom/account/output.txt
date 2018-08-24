@@ -1,0 +1,19 @@
+======================================
+ACCOUNT (invariant admissibility)
+Successfully verified.
+======================================
+ANY.default_create (creator, inherited by ACCOUNT)
+Successfully verified.
+======================================
+ACCOUNT.deposit
+Successfully verified.
+======================================
+ACCOUNT.withdraw
+Verification failed.
+
+Line: 31. Postcondition balance_decreased may be violated.
+======================================
+ACCOUNT.transfer
+Verification failed.
+
+Line: 49. Postcondition balance_decreased may be violated.

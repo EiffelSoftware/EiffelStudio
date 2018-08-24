@@ -1,0 +1,88 @@
+======================================
+A_B.get_x
+AutoProof error.
+Validity: Functional feature cannot be redefined.
+======================================
+A_A (invariant admissibility)
+Successfully verified.
+======================================
+A_A.make (creator)
+Successfully verified.
+======================================
+A_A.set_x
+Successfully verified.
+======================================
+A_A.set_to_next_public
+Successfully verified.
+======================================
+A_A.set_to_prev_public
+Successfully verified.
+======================================
+A_A.get_x
+Successfully verified.
+======================================
+A_A.set_to_next
+Successfully verified.
+======================================
+A_A.break
+Successfully verified.
+======================================
+A_A.something
+Successfully verified.
+======================================
+A_A.set_prev
+Successfully verified.
+======================================
+A_B (invariant admissibility)
+Successfully verified.
+======================================
+ANY.default_create (creator, inherited by A_B)
+Verification failed.
+
+Line: 45. Invariant next_exists might not hold on call to {ANY}.wrap.
+--------------------------------------
+Line: 45. Invariant prev_exists might not hold on call to {ANY}.wrap.
+--------------------------------------
+Line: 45. Invariant next_is_b might not hold on call to {ANY}.wrap.
+--------------------------------------
+Line: 45. Invariant x_positive might not hold on call to {ANY}.wrap.
+======================================
+A_A.set_x (inherited by A_B)
+Verification failed.
+
+Line: 45. Invariant x_positive might not hold on call to {ANY}.wrap.
+======================================
+A_A.set_to_next_public (inherited by A_B)
+Successfully verified.
+======================================
+A_A.set_to_prev_public (inherited by A_B)
+Successfully verified.
+======================================
+A_A.set_to_next (inherited by A_B)
+Verification failed.
+
+Line: 65. Postcondition invariant_holds may be violated.
+======================================
+A_A.set_prev (inherited by A_B)
+Successfully verified.
+======================================
+A_B.use_break
+Verification failed.
+
+Line: 46. Check new_property may be violated.
+--------------------------------------
+Line: 48. Invariant unknown_invariant might not hold on call to {ANY}.wrap.
+======================================
+A_B.break
+Verification failed.
+
+Line: 61. Check new_property may be violated.
+======================================
+A_B.something
+Successfully verified.
+======================================
+A_C (invariant admissibility)
+Successfully verified.
+======================================
+A_C.something
+Successfully verified.

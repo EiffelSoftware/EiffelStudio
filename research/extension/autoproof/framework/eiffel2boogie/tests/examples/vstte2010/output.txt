@@ -1,0 +1,9 @@
+======================================
+VSTTE2010 (invariant admissibility)
+Successfully verified.
+======================================
+ANY.default_create (creator, inherited by VSTTE2010)
+Successfully verified.
+======================================
+VSTTE2010.sum_and_max
+Successfully verified.

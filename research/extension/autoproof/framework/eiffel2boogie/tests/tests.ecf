@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="autoproof-tests" uuid="B9FC6CC3-5F19-4CE1-9131-56A0455E9224">
+	<target name="tests">
+		<root all_classes="true"/>
+		<option warning="true" full_class_checking="false" is_attached_by_default="false" void_safety="none" syntax="transitional">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<library name="base-eve" location="$ISE_LIBRARY\library\base\base-eve.ecf" readonly="false"/>
+		<cluster name="autoproof_tests" location=".\">
+			<file_rule>
+				<exclude>/EIFGENs$</exclude>
+				<exclude>/CVS$</exclude>
+				<exclude>/.svn$</exclude>
+			</file_rule>
+			<cluster name="basic" location=".\basic\" recursive="true"/>
+			<cluster name="examples" location=".\examples\" recursive="true"/>
+			<cluster name="framing" location=".\framing\">
+				<cluster name="observer_one_to_one" location=".\framing\ownership\observer_one_to_one\" recursive="true"/>
+				<cluster name="observer_one_to_many" location=".\framing\ownership\observer_one_to_many\" recursive="true"/>
+				<cluster name="master_clock" location=".\framing\ownership\master_clock\" recursive="true"/>
+				<cluster name="iterator" location=".\framing\ownership\iterator\" recursive="true"/>
+				<cluster name="double_linked_list" location=".\framing\ownership\double_linked_list\" recursive="true"/>
+				<cluster name="composite" location=".\framing\ownership\composite\" recursive="true"/>
+				<cluster name="pip" location=".\framing\ownership\pip\" recursive="true"/>
+				<cluster name="observer_inheritance" location=".\framing\ownership\observer_inheritance\" recursive="true"/>
+				<cluster name="hash_set" location=".\framing\ownership\hash_set\" recursive="true"/>
+				<cluster name="stack" location=".\framing\models\stack\" recursive="true"/>
+			</cluster>
+			<cluster name="language" location=".\language\" recursive="true"/>
+			<cluster name="advanced" location=".\advanced\" recursive="true"/>
+			<cluster name="comcom" location=".\comcom\" recursive="true"/>
+			<cluster name="eb2" location=".\eb2\" recursive="true"/>
+		</cluster>
+	</target>
+</system>

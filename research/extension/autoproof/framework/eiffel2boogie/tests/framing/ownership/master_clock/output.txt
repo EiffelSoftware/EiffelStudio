@@ -1,0 +1,60 @@
+======================================
+F_MC_CLIENT (invariant admissibility)
+Successfully verified.
+======================================
+ANY.default_create (creator, inherited by F_MC_CLIENT)
+Successfully verified.
+======================================
+F_MC_CLIENT.test
+Successfully verified.
+======================================
+F_MC_CLIENT.test_d
+Successfully verified.
+======================================
+F_MC_CLOCK (invariant admissibility)
+Successfully verified.
+======================================
+F_MC_CLOCK.make (creator)
+Successfully verified.
+======================================
+F_MC_CLOCK.sync
+Successfully verified.
+======================================
+F_MC_CLOCK_D (invariant admissibility)
+Successfully verified.
+======================================
+F_MC_CLOCK_D.make (creator)
+Successfully verified.
+======================================
+F_MC_CLOCK_D.sync
+Successfully verified.
+======================================
+F_MC_MASTER (invariant admissibility)
+Successfully verified.
+======================================
+F_MC_MASTER.make (creator)
+Successfully verified.
+======================================
+F_MC_MASTER.tick
+Successfully verified.
+======================================
+F_MC_MASTER.reset
+Successfully verified.
+======================================
+F_MC_MASTER.time_increased
+Successfully verified.
+======================================
+F_MC_MASTER_D (invariant admissibility)
+Successfully verified.
+======================================
+F_MC_MASTER_D.make (creator)
+Successfully verified.
+======================================
+F_MC_MASTER_D.tick
+Successfully verified.
+======================================
+F_MC_MASTER_D.reset
+Successfully verified.
+======================================
+F_MC_MASTER_D.time_increased
+Successfully verified.

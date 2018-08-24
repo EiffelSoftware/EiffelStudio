@@ -191,14 +191,12 @@ feature -- C generation
 			-- has already been propagated, then `register' is not void and
 			-- nothing has to be done.
 		local
-			tmp_register: REGISTER
 			ctype: TYPE_C
 		do
 			if register = Void then
 				ctype := c_type
 				if not ctype.is_void then
-					create tmp_register.make (ctype)
-					set_register (tmp_register)
+					set_register (create {REGISTER}.make (ctype))
 				end
 			end
 		ensure then
@@ -244,61 +242,96 @@ feature -- C generation
 		do
 		end
 
-	generate_for_type (target_register: REGISTRABLE; target_type: TYPE_A)
-			-- Generate expression which is about
-			-- to be assigned or compared to the type `target_type'.
+	generate_for_call (target_register: REGISTRABLE)
+			-- Generate expression and set (without cloning, but with boxing if necessary) it's value
+			-- to `target_register`.
+			-- See also `generate_for_attachment`.
 		require
-			target_type_not_void: target_type /= Void
-			target_register_not_void: is_register_required (target_type) implies target_register /= Void
+			target_register_attached: attached target_register
 		local
 			expression_type: TYPE_A
-			basic_i: BASIC_A
 			buf: GENERATION_BUFFER
 		do
 			generate
 			buf := buffer
 			expression_type := context.real_type (type)
-			if target_type.is_reference and then expression_type.is_expanded then
-				if expression_type.is_basic and then attached {BASIC_A} expression_type as b then
-					basic_i := b
-					if attached {TYPED_POINTER_A} basic_i as typed_pointer_i then
-							-- Use POINTER instead of TYPED_POINTER to follow .NET semantics.
-						basic_i := pointer_type
+			if
+				target_register.c_type.is_reference and then
+				expression_type.is_basic and then
+				attached {BASIC_A} expression_type as b
+			then
+					-- `generate_for_attachment` uses POINTER for expressions of type TYPED_POINTER [...],
+					-- but this is not done here at the moment for compatibility with earlier implementations and
+					-- potential native support of TYPED_POINTER in .NET.
+				b.metamorphose (target_register, Current, buf)
+				buf.put_character (';')
+			elseif target_register /~ register then
+					-- Assign the result to `target_register` if it is not there yet.
+				buf.put_new_line
+				target_register.print_register
+				buf.put_string (" = ")
+				print_register
+				buf.put_character (';')
+			end
+		end
+
+	generate_for_attachment (target_register: REGISTRABLE; target_type: TYPE_A)
+			-- Generate expression and attach (with cloning if needed) it's value
+			-- to `target_register` (if specified) of the type `target_type'.
+			-- See also `generate_for_call`.
+		require
+			target_type_attached: attached target_type
+			target_register_attached: is_register_required (target_type) implies attached target_register
+		local
+			expression_type: TYPE_A
+			buf: GENERATION_BUFFER
+		do
+			generate
+			if attached target_register then
+				buf := buffer
+				expression_type := context.real_type (type)
+				if target_type.is_reference and then expression_type.is_expanded then
+					if expression_type.is_basic and then attached {BASIC_A} expression_type as b then
+						(if attached {TYPED_POINTER_A} b then
+								-- Use POINTER instead of TYPED_POINTER to follow .NET semantics.
+							pointer_type
+						else
+							b
+						end).metamorphose (target_register, Current, buf)
+					else
+						buf.put_new_line
+						target_register.print_register
+						buf.put_string (" = ")
+						buf.put_string ("RTRCL(")
+						print_register
+						buf.put_character (')')
 					end
-					basic_i.metamorphose (target_register, Current, buf)
-				else
+					buf.put_character (';')
+				elseif target_type.is_true_expanded then
 					buf.put_new_line
 					target_register.print_register
 					buf.put_string (" = ")
 					buf.put_string ("RTRCL(")
 					print_register
-					buf.put_character (')')
+					buf.put_two_character (')', ';')
+				elseif expression_type.is_reference and is_dynamic_clone_required (expression_type) then
+					buf.put_new_line
+					target_register.print_register
+					buf.put_string (" = ")
+					generate_dynamic_clone (Current, expression_type)
+					buf.put_character (';')
+				elseif target_register /~ register then
+						-- The case where we created a register in the parent node to hold the value.
+						-- Currently it can only be when Current is a constant expression which is
+						-- used as argument of a polymorphic routine call and we pass the address
+						-- of the varable, and since it is a constant, we need to assign it first to
+						-- a variable.
+					buf.put_new_line
+					target_register.print_register
+					buf.put_string (" = ")
+					print_register
+					buf.put_character (';')
 				end
-				buf.put_character (';')
-			elseif target_type.is_true_expanded then
-				buf.put_new_line
-				target_register.print_register
-				buf.put_string (" = ")
-				buf.put_string ("RTRCL(")
-				print_register
-				buf.put_two_character (')', ';')
-			elseif expression_type.is_reference and is_dynamic_clone_required (expression_type) then
-				buf.put_new_line
-				target_register.print_register
-				buf.put_string (" = ")
-				generate_dynamic_clone (Current, expression_type)
-				buf.put_character (';')
-			elseif target_register /= Void and then target_register /= register then
-					-- The case where we created a register in the parent node to hold the value.
-					-- Currently it can only be when Current is a constant expression which is
-					-- used as argument of a polymorphic routine call and we pass the address
-					-- of the varable, and since it is a constant, we need to assign it first to
-					-- a variable.
-				buf.put_new_line
-				target_register.print_register
-				buf.put_string (" = ")
-				print_register
-				buf.put_character (';')
 			end
 		end
 
@@ -345,7 +378,7 @@ feature -- Inlining
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

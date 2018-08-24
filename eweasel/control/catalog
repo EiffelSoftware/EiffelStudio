@@ -1366,7 +1366,7 @@ test	profile-crash-on-override		final116 tcf pass finalizing profile
 test	tight-loop-integer-constant-infinite-loop final117 tcf pass finalizing manual
 test	finalize-once-strings-in-invariant	final118 tcf fail finalizing
 test	equation-evaluation-sequence	final119 tcf fail finalizing
-test	comparison-involving-allocation	final120 tcf fail finalizing
+test	comparison-involving-allocation	final120 tcf pass finalizing
 test	bracket-wrong-dispatch			final121 tcf pass finalizing bracket_expression assigner
 test	wrong-boolean-branch-optimization	final122 tcf pass finalizing
 test	inline-internal-locals			final123 tcf pass finalizing inlining loop iteration object_test scoop

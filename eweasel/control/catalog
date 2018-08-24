@@ -1372,6 +1372,7 @@ test	wrong-boolean-branch-optimization	final122 tcf pass finalizing
 test	inline-internal-locals			final123 tcf pass finalizing inlining loop iteration object_test scoop
 test	inline-attribute-with-body		final124 tcf fail finalizing inlining attribute
 test	agent-call-gc-corruption		final125 tcf pass finalizing runtime
+test	reference-equality-gc-protection	final126 tcf pass finalizing gc
 
 -- Runtime
 test	gc-tracking-001					runtime001	tcf pass runtime

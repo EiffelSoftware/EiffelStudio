@@ -1,5 +1,5 @@
 test_name 	comparison-involving-allocation
-test_description In finalized mode, "a = b" where a and b are functions allocating objects (or triggering a GC for that matter) could yield false even if they are the same.
+test_description In finalized mode, "a = b" where a and b are functions allocating objects (or triggering a GC for that matter) could yield false even if they are the same. See also test#final126, test#runtime001.
 
 copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e

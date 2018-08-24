@@ -10,7 +10,6 @@
 {$snippet.text/}
         </pre>
 {unless isempty="$snippet.description"}		<p class="slide-caption">{$snippet.description/}</p>{/unless}
-{if isempty="$snippet.description"}		<p class="slide-caption">No Caption!!!</p>{/if}
     </div><!-- .slide -->
 {/foreach}	
   </div>

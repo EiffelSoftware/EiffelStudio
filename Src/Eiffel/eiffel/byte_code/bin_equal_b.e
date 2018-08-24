@@ -1,6 +1,7 @@
 note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+	-- TODO: Factor out common code of this class and BIN_TILDE_BL to simplify maintainance.
 
 deferred class BIN_EQUAL_B
 

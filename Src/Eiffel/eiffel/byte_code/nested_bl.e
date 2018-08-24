@@ -350,7 +350,15 @@ feature
 	has_call: BOOLEAN = True
 			-- The expression has at least one call
 
-	allocates_memory: BOOLEAN = True;
+	allocates_memory: BOOLEAN
+			-- <Precursor>
+		do
+			Result :=
+				context.has_invariant or else
+				target.allocates_memory or else
+				message.target.allocates_memory or else
+				message.allocates_memory
+		end
 
 feature {REGISTRABLE} -- C code generation
 
@@ -378,7 +386,7 @@ feature {REGISTRABLE} -- C code generation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

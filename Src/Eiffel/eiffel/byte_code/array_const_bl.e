@@ -234,7 +234,7 @@ feature {NONE} -- C code generation
 				expressions.after
 			loop
 				expr ?= expressions.item;
-				expr.generate_for_type (item_register, target_type)
+				expr.generate_for_attachment (item_register, target_type)
 				buf.put_new_line
 				if is_expanded then
 					if context.workbench_mode then

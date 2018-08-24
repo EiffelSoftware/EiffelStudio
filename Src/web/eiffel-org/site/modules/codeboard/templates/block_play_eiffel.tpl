@@ -1,5 +1,5 @@
 <div class="holder-play">
-<div class="btn-holder"><a class="btn-play" href="{$site_url/}launch_codeboard">Play with Eiffel</a></div>
+<div class="btn-holder"><a class="btn-play" href="{$site_url/}codeboard">Play with Eiffel</a></div>
 <pre class="prettyprint lang-eiffel">
 class
     HELLO_WORLD

@@ -1,0 +1,54 @@
+======================================
+F_OOM_CLIENT (invariant admissibility)
+Successfully verified.
+======================================
+ANY.default_create (creator, inherited by F_OOM_CLIENT)
+Successfully verified.
+======================================
+F_OOM_CLIENT.test
+Successfully verified.
+======================================
+F_OOM_CLIENT.test_d
+Successfully verified.
+======================================
+F_OOM_OBSERVER (invariant admissibility)
+Successfully verified.
+======================================
+F_OOM_OBSERVER.make (creator)
+Successfully verified.
+======================================
+F_OOM_OBSERVER.notify
+Successfully verified.
+======================================
+F_OOM_OBSERVER_D (invariant admissibility)
+Successfully verified.
+======================================
+F_OOM_OBSERVER_D.make (creator)
+Successfully verified.
+======================================
+F_OOM_OBSERVER_D.notify
+Successfully verified.
+======================================
+F_OOM_SUBJECT (invariant admissibility)
+Successfully verified.
+======================================
+F_OOM_SUBJECT.make (creator)
+Successfully verified.
+======================================
+F_OOM_SUBJECT.update
+Successfully verified.
+======================================
+F_OOM_SUBJECT.register
+Successfully verified.
+======================================
+F_OOM_SUBJECT_D (invariant admissibility)
+Successfully verified.
+======================================
+F_OOM_SUBJECT_D.make (creator)
+Successfully verified.
+======================================
+F_OOM_SUBJECT_D.update
+Successfully verified.
+======================================
+F_OOM_SUBJECT_D.register
+Successfully verified.

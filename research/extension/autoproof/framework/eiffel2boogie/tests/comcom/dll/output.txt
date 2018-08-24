@@ -1,0 +1,24 @@
+======================================
+DLL_NODE (invariant admissibility)
+Successfully verified.
+======================================
+DLL_NODE.make (creator)
+Successfully verified.
+======================================
+DLL_NODE.insert_right
+Successfully verified.
+======================================
+DLL_NODE.remove
+Successfully verified.
+======================================
+DLL_NODE.set_left
+Successfully verified.
+======================================
+DLL_NODE.set_right
+Successfully verified.
+======================================
+DLL_NODE.not_left
+Successfully verified.
+======================================
+DLL_NODE.not_right
+Successfully verified.

@@ -1,0 +1,24 @@
+======================================
+A_BAGS (invariant admissibility)
+Successfully verified.
+======================================
+ANY.default_create (creator, inherited by A_BAGS)
+Successfully verified.
+======================================
+A_BAGS.good
+Successfully verified.
+======================================
+A_BAGS.good1
+Successfully verified.
+======================================
+A_BAGS.use_lemma
+Successfully verified.
+======================================
+A_BAGS.bad
+Verification failed.
+
+Line: 81. Precondition may be violated on invocation of {MML_BAG}.multiple.
+--------------------------------------
+Line: 83. Precondition may be violated on invocation of {MML_BAG}.extended_multiple.
+--------------------------------------
+Line: 85. Precondition may be violated on invocation of {MML_BAG}.removed_multiple.

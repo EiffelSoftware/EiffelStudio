@@ -1,0 +1,24 @@
+======================================
+A_ACROSS (invariant admissibility)
+Successfully verified.
+======================================
+ANY.default_create (creator, inherited by A_ACROSS)
+Successfully verified.
+======================================
+A_ACROSS.set_across
+Successfully verified.
+======================================
+A_ACROSS.sequence_across
+Successfully verified.
+======================================
+A_ACROSS.map_across
+Successfully verified.
+======================================
+A_ACROSS.interval_across
+Successfully verified.
+======================================
+A_ACROSS.simple_array_across
+Successfully verified.
+======================================
+A_ACROSS.simple_list_across
+Successfully verified.

@@ -1,0 +1,48 @@
+======================================
+F_PIP_CLIENT (invariant admissibility)
+Successfully verified.
+======================================
+ANY.default_create (creator, inherited by F_PIP_CLIENT)
+Successfully verified.
+======================================
+F_PIP_CLIENT.test
+Successfully verified.
+======================================
+F_PIP_CLIENT.test_d
+Successfully verified.
+======================================
+F_PIP_NODE (invariant admissibility)
+Successfully verified.
+======================================
+F_PIP_NODE.make (creator)
+Successfully verified.
+======================================
+F_PIP_NODE.is_max
+Successfully verified.
+======================================
+F_PIP_NODE.acquire
+Successfully verified.
+======================================
+F_PIP_NODE.set_parent
+Successfully verified.
+======================================
+F_PIP_NODE.update_value
+Successfully verified.
+======================================
+F_PIP_NODE_D (invariant admissibility)
+Successfully verified.
+======================================
+F_PIP_NODE_D.make (creator)
+Successfully verified.
+======================================
+F_PIP_NODE_D.is_max
+Successfully verified.
+======================================
+F_PIP_NODE_D.acquire
+Successfully verified.
+======================================
+F_PIP_NODE_D.set_parent
+Successfully verified.
+======================================
+F_PIP_NODE_D.update_value
+Successfully verified.

@@ -1,0 +1,31 @@
+======================================
+B_BASIC (invariant admissibility)
+Successfully verified.
+======================================
+ANY.default_create (creator, inherited by B_BASIC)
+Successfully verified.
+======================================
+B_BASIC.empty
+Successfully verified.
+======================================
+B_BASIC.check_false
+Verification failed.
+
+Line: 11. Check has_to_fail may be violated.
+======================================
+B_BASIC.check_true
+Successfully verified.
+======================================
+B_BASIC.ensure_false
+Verification failed.
+
+Line: 22. Postcondition has_to_fail may be violated.
+======================================
+B_BASIC.ensure_true
+Successfully verified.
+======================================
+B_BASIC.require_false
+Successfully verified.
+======================================
+B_BASIC.assume_false
+Successfully verified.

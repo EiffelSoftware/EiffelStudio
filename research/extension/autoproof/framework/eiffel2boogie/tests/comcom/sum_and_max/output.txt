@@ -1,0 +1,9 @@
+======================================
+SUM_AND_MAX (invariant admissibility)
+Successfully verified.
+======================================
+ANY.default_create (creator, inherited by SUM_AND_MAX)
+Successfully verified.
+======================================
+SUM_AND_MAX.sum_and_max
+Successfully verified.

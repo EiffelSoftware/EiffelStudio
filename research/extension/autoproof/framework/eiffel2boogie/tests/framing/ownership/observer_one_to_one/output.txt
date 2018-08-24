@@ -1,0 +1,54 @@
+======================================
+F_OOO_CLIENT (invariant admissibility)
+Successfully verified.
+======================================
+ANY.default_create (creator, inherited by F_OOO_CLIENT)
+Successfully verified.
+======================================
+F_OOO_CLIENT.test
+Successfully verified.
+======================================
+F_OOO_CLIENT.test_d
+Successfully verified.
+======================================
+F_OOO_OBSERVER (invariant admissibility)
+Successfully verified.
+======================================
+F_OOO_OBSERVER.make (creator)
+Successfully verified.
+======================================
+F_OOO_OBSERVER.notify
+Successfully verified.
+======================================
+F_OOO_OBSERVER_D (invariant admissibility)
+Successfully verified.
+======================================
+F_OOO_OBSERVER_D.make (creator)
+Successfully verified.
+======================================
+F_OOO_OBSERVER_D.notify
+Successfully verified.
+======================================
+F_OOO_SUBJECT (invariant admissibility)
+Successfully verified.
+======================================
+F_OOO_SUBJECT.default_create (creator)
+Successfully verified.
+======================================
+F_OOO_SUBJECT.update
+Successfully verified.
+======================================
+F_OOO_SUBJECT.register
+Successfully verified.
+======================================
+F_OOO_SUBJECT_D (invariant admissibility)
+Successfully verified.
+======================================
+F_OOO_SUBJECT_D.default_create (creator)
+Successfully verified.
+======================================
+F_OOO_SUBJECT_D.update
+Successfully verified.
+======================================
+F_OOO_SUBJECT_D.register
+Successfully verified.

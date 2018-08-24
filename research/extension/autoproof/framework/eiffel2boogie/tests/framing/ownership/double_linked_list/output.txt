@@ -1,0 +1,60 @@
+======================================
+F_DLL_CLIENT (invariant admissibility)
+Successfully verified.
+======================================
+ANY.default_create (creator, inherited by F_DLL_CLIENT)
+Successfully verified.
+======================================
+F_DLL_CLIENT.test
+Successfully verified.
+======================================
+F_DLL_CLIENT.test_d
+Successfully verified.
+======================================
+F_DLL_NODE (invariant admissibility)
+Successfully verified.
+======================================
+F_DLL_NODE.make (creator)
+Successfully verified.
+======================================
+F_DLL_NODE.insert_right
+Successfully verified.
+======================================
+F_DLL_NODE.remove
+Successfully verified.
+======================================
+F_DLL_NODE.set_left
+Successfully verified.
+======================================
+F_DLL_NODE.set_right
+Successfully verified.
+======================================
+F_DLL_NODE.not_left
+Successfully verified.
+======================================
+F_DLL_NODE.not_right
+Successfully verified.
+======================================
+F_DLL_NODE_D (invariant admissibility)
+Successfully verified.
+======================================
+F_DLL_NODE_D.make (creator)
+Successfully verified.
+======================================
+F_DLL_NODE_D.insert_right
+Successfully verified.
+======================================
+F_DLL_NODE_D.remove
+Successfully verified.
+======================================
+F_DLL_NODE_D.set_left
+Successfully verified.
+======================================
+F_DLL_NODE_D.set_right
+Successfully verified.
+======================================
+F_DLL_NODE_D.not_left
+Successfully verified.
+======================================
+F_DLL_NODE_D.not_right
+Successfully verified.

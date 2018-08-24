@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="eiffel2boogie" uuid="CBD7B157-995D-4849-B0D5-D14E5CB5E3C2" readonly="false" library_target="eiffel2boogie">
+	<target name="eiffel2boogie">
+		<root class="E2B_AUTOPROOF" feature="make"/>
+		<file_rule>
+			<exclude>/.svn$</exclude>
+		</file_rule>
+		<capability>
+			<concurrency support="thread"/>
+			<void_safety support="none"/>
+		</capability>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="compiler" location="$EIFFEL_SRC\Eiffel\Ace\ec_kernel.ecf"/>
+		<library name="ecosystem" location="$EIFFEL_SRC\Eiffel\ecosystem\ecosystem.ecf"/>
+		<library name="eve_blackboard" location="..\eve_blackboard\eve_blackboard.ecf"/>
+		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
+		<library name="gobo_regexp" location="$ISE_LIBRARY\library\gobo\gobo_regexp.ecf"/>
+		<library name="gobo_time" location="$ISE_LIBRARY\library\gobo\gobo_time.ecf"/>
+		<library name="interface_names" location="$EIFFEL_SRC\framework\interface_names\interface_names.ecf"/>
+		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
+		<library name="parser" location="$ISE_LIBRARY\framework\parser\parser.ecf"/>
+		<library name="patterns" location="$ISE_LIBRARY\library\patterns\patterns.ecf"/>
+		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
+		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
+		<library name="time" location="$EIFFEL_SRC\library\time\time.ecf"/>
+		<cluster name="eiffel2boogie" location=".\" recursive="true">
+			<file_rule>
+				<exclude>/tests$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+</system>

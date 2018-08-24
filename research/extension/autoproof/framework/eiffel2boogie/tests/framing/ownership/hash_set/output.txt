@@ -1,0 +1,89 @@
+======================================
+F_HS_CLIENT (invariant admissibility)
+Successfully verified.
+======================================
+ANY.default_create (creator, inherited by F_HS_CLIENT)
+Successfully verified.
+======================================
+F_HS_CLIENT.test
+Successfully verified.
+======================================
+F_HS_CLIENT.test_modification
+Successfully verified.
+======================================
+F_HS_CLIENT.test_modification_fail
+Verification failed.
+
+Line: 131. Invariant valid_buckets might not hold on call to {ANY}.wrap.
+======================================
+F_HS_HASHABLE (invariant admissibility)
+Successfully verified.
+======================================
+F_HS_KEY (invariant admissibility)
+Successfully verified.
+======================================
+F_HS_KEY.hash_code
+Successfully verified.
+======================================
+F_HS_KEY.set_value (creator)
+Successfully verified.
+======================================
+F_HS_KEY.set_value
+Successfully verified.
+======================================
+F_HS_KEY.hash_code_
+Successfully verified.
+======================================
+F_HS_KEY.is_model_equal
+Successfully verified.
+======================================
+F_HS_KEY.lemma_transitive
+Successfully verified.
+======================================
+F_HS_LOCK (invariant admissibility)
+Successfully verified.
+======================================
+ANY.default_create (creator, inherited by F_HS_LOCK)
+Successfully verified.
+======================================
+F_HS_LOCK.add_set
+Successfully verified.
+======================================
+F_HS_LOCK.lock
+Successfully verified.
+======================================
+F_HS_LOCK.unlock
+Successfully verified.
+======================================
+F_HS_SET (invariant admissibility)
+Successfully verified.
+======================================
+F_HS_SET.make (creator)
+Successfully verified.
+======================================
+F_HS_SET.has
+Successfully verified.
+======================================
+F_HS_SET.extend
+Successfully verified.
+======================================
+F_HS_SET.join
+Successfully verified.
+======================================
+F_HS_SET.remove
+Successfully verified.
+======================================
+F_HS_SET.wipe_out
+Successfully verified.
+======================================
+F_HS_SET.bucket_index
+Successfully verified.
+======================================
+F_HS_SET.index_of
+Successfully verified.
+======================================
+F_HS_SET.set_has
+Successfully verified.
+======================================
+F_HS_SET.no_duplicates
+Successfully verified.

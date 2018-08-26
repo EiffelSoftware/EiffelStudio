@@ -2358,6 +2358,7 @@ test	library-reversed-hash_table-cursor	lib043 tcf pass library table iteration 
 test	library-removed-hash_table-cursor	lib044 tcf pass library table iteration loop across
 test	library-hexadecimal-to-natural		lib045 tcf pass library string_parse
 test	library-arguments-command-line-start	lib046 tcf pass library arguments command_line
+test	library-sortable-array-empty-search	lib047 tcf pass library
 
 test	utf-16-basics			utf001	tcf pass library unicode
 test	utf-8-basics			utf002	tcf pass library unicode

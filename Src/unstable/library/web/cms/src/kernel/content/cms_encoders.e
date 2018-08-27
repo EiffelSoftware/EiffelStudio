@@ -52,6 +52,23 @@ feature -- Encoders
 			Result := percent_encoder.percent_encoded_string (a_string)
 		end
 
+feature -- Helpers / security vulnerabilities
+
+	secured_html_content (a_html_content: READABLE_STRING_8): STRING_8
+			-- `a_html_content` cleaned from XSS vulnerabilities.
+		do
+			create Result.make_from_string (a_html_content)
+			secure_text (Result)
+		end
+
+	secure_text (a_text: STRING_GENERAL)
+			-- Clean `a_text` from XSS vulnerabilities.
+		do
+			(create {SECURITY_HTML_CONTENT_FILTER}).filter (a_text)
+		end
+
+feature -- Helper conversions to and from string		
+
 	date_time_to_string (dt: DATE_TIME): STRING_8
 			-- Date time `dt` converted to standard output (using RFC1123)
 		local

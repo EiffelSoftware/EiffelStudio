@@ -162,7 +162,6 @@ feature -- Hook: block
 		local
 			bl, l_alias: READABLE_STRING_8
 			bl_optional: BOOLEAN
-			l_block_cache: detachable TUPLE [block: CMS_CACHE_BLOCK; region: READABLE_STRING_8; expired: BOOLEAN]
 			l_alias_table: detachable STRING_TABLE [LIST [READABLE_STRING_8]] --| block_id => [alias_ids..]
 			l_origin_block: detachable CMS_BLOCK
 		do
@@ -186,11 +185,17 @@ feature -- Hook: block
 							end
 
 							if a_response.is_block_included (bl, not bl_optional) then
-								l_block_cache := a_response.block_cache (bl)
-								if l_block_cache /= Void and then not l_block_cache.expired then
-									a_response.add_block (l_block_cache.block, l_block_cache.region)
+								if
+									attached a_response.block_cache (bl) as l_block_cache and then
+									not l_block_cache.expired
+								then
+									a_response.add_block (l_block_cache.cache_block, l_block_cache.region)
+									h.setup_block (l_block_cache.cache_block, a_response)
 								else
 									h.get_block_view (bl, a_response)
+									if attached a_response.blocks.item (bl) as l_block then
+										h.setup_block (l_block, a_response)
+									end
 								end
 							end
 							if
@@ -334,6 +339,6 @@ feature -- Hook: import
 
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

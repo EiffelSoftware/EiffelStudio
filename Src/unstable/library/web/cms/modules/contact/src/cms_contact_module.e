@@ -182,6 +182,7 @@ feature -- Hooks
 							l_tpl_block.set_value (l_recaptcha_site_key, "recaptcha_site_key")
 						end
 						a_response.add_block (l_tpl_block, "content")
+							-- WARNING: may be an issue with block caching.
 						a_response.add_style (a_response.module_resource_url (Current, "/files/css/contact.css", Void), Void)
 					else
 						debug ("cms")

@@ -573,7 +573,7 @@ feature {NONE} -- Implementation
 
 	wdocs_page_cms_menu_link (a_version_id: detachable READABLE_STRING_GENERAL; a_book: WIKI_BOOK; a_page: detachable WIKI_PAGE; a_current_page_name: detachable READABLE_STRING_GENERAL; is_full: BOOLEAN; mng: WDOCS_MANAGER): CMS_LOCAL_LINK
 		local
-			l_book_name: READABLE_STRING_32
+			l_book_name: READABLE_STRING_GENERAL
 			l_page: detachable WIKI_PAGE
 			l_title: detachable READABLE_STRING_32
 		do

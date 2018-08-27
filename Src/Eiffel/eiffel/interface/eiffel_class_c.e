@@ -378,7 +378,10 @@ feature -- Action
 
 				-- Check conce creation procedures of parsed class
 				-- represented by `ast_b`
-			check_once_creation_procedure (ast_b)
+				--! TODO this validity check should be done in another
+				-- place.
+				--! Alexander's comment said we should only apply to once classes.
+--			check_once_creation_procedure (ast_b)
 
 			parent_list := ast_b.parents
 			if parent_list /= Void then

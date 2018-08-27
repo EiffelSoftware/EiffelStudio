@@ -149,8 +149,6 @@ feature -- Hooks
 				then
 					if attached new_codeboard_static_demo_block as l_tpl_block then
 						a_response.add_block (l_tpl_block, "header")
-						a_response.add_style (a_response.module_resource_url (Current, "/files/css/codeboard_static_demo.css", Void), Void)
-						a_response.add_javascript_url (a_response.module_resource_url (Current, "/files/codeboard_static_demo.js", Void))
 					else
 						debug ("cms")
 							a_response.add_warning_message ("Error with block [" + a_block_id + "]")

@@ -144,7 +144,7 @@ feature {NONE} -- Implementation: routes
 				attached p_destination.value as v and then
 				v.is_valid_as_string_8
 			then
-				r.set_redirection (v.to_string_8)
+				r.set_redirection (secured_html_content (v.to_string_8))
 			else
 				r.set_redirection (req.absolute_script_url (""))
 			end
@@ -171,7 +171,7 @@ feature {NONE} -- Implementation: routes
 							attached p_destination.value as v and then
 							v.is_valid_as_string_8
 						then
-							r.set_redirection (v.to_string_8)
+							r.set_redirection (secured_html_content (v.to_string_8))
 						else
 							r.set_redirection ("")
 						end

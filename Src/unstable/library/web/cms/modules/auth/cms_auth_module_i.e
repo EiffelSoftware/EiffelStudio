@@ -74,6 +74,7 @@ feature -- Hooks
 			else
 				l_destination := a_response.location
 			end
+			l_destination := secured_url_content (l_destination)
 			if is_authenticating (a_response) then
 
 			else
@@ -102,7 +103,7 @@ feature {NONE} -- Template
 					l_destination := p_destination.value
 				end
 				if l_destination /= Void then
-					Result.set_value (l_destination, "site_destination")
+					Result.set_value (secured_url_content (l_destination), "site_destination")
 				end
 			end
 		end

@@ -61,6 +61,13 @@ feature -- Helpers / security vulnerabilities
 			secure_text (Result)
 		end
 
+	secured_url_content (a_url_content: READABLE_STRING_8): STRING_8
+			-- `a_url_content` cleaned from XSS vulnerabilities.
+		do
+			create Result.make_from_string (a_url_content)
+			secure_text (Result)
+		end
+
 	secure_text (a_text: STRING_GENERAL)
 			-- Clean `a_text` from XSS vulnerabilities.
 		do

@@ -167,7 +167,7 @@ feature -- Hooks configuration
 			l_url_name: READABLE_STRING_GENERAL
 		do
 			if attached {WSF_STRING} a_response.request.item ("destination") as p_destination then
-				l_destination := p_destination.value
+				l_destination := secured_url_content (p_destination.value)
 			else
 				l_destination := a_response.location
 			end
@@ -392,7 +392,7 @@ feature -- Handler
 					-- FIXME: find better solution to support a default login system.
 				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, a_auth_api.cms_api)
 				if attached {WSF_STRING} req.item ("destination") as l_destination then
-					r.set_redirection ("account/auth/roc-session-login?destination=" + l_destination.url_encoded_value)
+					r.set_redirection ("account/auth/roc-session-login?destination=" + secured_url_content (l_destination.url_encoded_value))
 				else
 					r.set_redirection ("account/auth/roc-session-login")
 				end
@@ -403,7 +403,7 @@ feature -- Handler
 					-- FIXME: find better solution to support a default login system.
 				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, a_auth_api.cms_api)
 				if attached {WSF_STRING} req.item ("destination") as l_destination then
-					r.set_redirection ("account/auth/roc-basic-login?destination=" + l_destination.url_encoded_value)
+					r.set_redirection ("account/auth/roc-basic-login?destination=" + secured_url_content (l_destination.url_encoded_value))
 				else
 					r.set_redirection ("account/auth/roc-basic-login")
 				end
@@ -428,7 +428,7 @@ feature -- Handler
 			end
 				-- Do not try to redirect to previous page or destination!
 --			if attached {WSF_STRING} req.query_parameter ("destination") as l_destination then
---				loc.append ("?destination=" + l_destination.url_encoded_value)
+--				loc.append ("?destination=" + secured_html_content (l_destination.url_encoded_value))
 --			end
 			r.set_redirection (loc)
 			r.execute

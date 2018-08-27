@@ -3640,17 +3640,20 @@ code, eiffel {
 
 /* Codeboard */
 /* line 9, ../scss/site/codeboard.scss */
-.codeboard-demo pre.prettyprint {
+.jumbotron .codeboard-demo .slider-wrapper > .slider {
   padding-left: 18px;
   border: solid 1px #fff;
   -webkit-border-radius: 6px;
   border-radius: 6px;
   background-color: rgba(255, 255, 255, 0.75); }
-/* line 18, ../scss/site/codeboard.scss */
-.codeboard-demo .holder-play .btn-holder {
+  /* line 10, ../scss/site/codeboard.scss */
+  .jumbotron .codeboard-demo .slider-wrapper > .slider > .slide > .slide-item {
+    border: none !important; }
+/* line 20, ../scss/site/codeboard.scss */
+.jumbotron .codeboard-demo .holder-play .btn-holder {
   position: relative; }
-  /* line 20, ../scss/site/codeboard.scss */
-  .codeboard-demo .holder-play .btn-holder .btn-play {
+  /* line 22, ../scss/site/codeboard.scss */
+  .jumbotron .codeboard-demo .holder-play .btn-holder .btn-play {
     background-color: #12273A;
     background-image: -webkit-linear-gradient(top, #2B4054, #12273A);
     background-image: -moz-linear-gradient(top, #2B4054, #12273A);
@@ -3666,8 +3669,8 @@ code, eiffel {
     color: white;
     letter-spacing: 1px;
     text-align: center; }
-    /* line 30, ../scss/site/codeboard.scss */
-    .codeboard-demo .holder-play .btn-holder .btn-play:hover {
+    /* line 32, ../scss/site/codeboard.scss */
+    .jumbotron .codeboard-demo .holder-play .btn-holder .btn-play:hover {
       background-color: #0C1A26;
       background-image: -webkit-linear-gradient(top, #12273A, #0C1A26);
       background-image: -moz-linear-gradient(top, #12273A, #0C1A26);
@@ -3675,7 +3678,7 @@ code, eiffel {
       background-image: -o-linear-gradient(top, #12273A, #0C1A26);
       background-image: linear-gradient(top, #12273A, #0C1A26); }
 
-/* line 38, ../scss/site/codeboard.scss */
+/* line 40, ../scss/site/codeboard.scss */
 .container-codeboard {
   width: 920px;
   height: 800px; }

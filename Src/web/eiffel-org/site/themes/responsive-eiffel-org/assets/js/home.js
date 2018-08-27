@@ -1,9 +1,9 @@
 var EHOME = EHOME || { };
 
 $(document).ready(function() {
-    $("main input, main textarea").on("input change", function() {
+    $("main form input, main form textarea").on("input[type='text'] change", function() {
         window.onbeforeunload = window.onbeforeunload || function (e) {
-            return "You have unsaved changes.  Do you want to leave this page and lose your changes?";
+            return "You have unsaved changes. Do you want to leave this page and lose your changes?";
         };
     });
     $("form").on("submit", function() {

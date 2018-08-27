@@ -24,28 +24,29 @@
 			margin: 0;
 
 			.slide-item {
+				width: 100%;
 				max-width: 100%;
-				/* vertical-align: middle; */
-				/* filter: brightness(50%); */
 				height: 100%;
-				/* object-fit: fill; */
-				display: block;
 				/* margin: 0 auto; */
-				margin: 0;
+				vertical-align: middle;
 
 				overflow: auto;
+				display: flex;
+				items-align: center;
+				justify-content: center;
 
 				border: solid 1px #ccc;
-
-				pre {
-					background-color: #ccf;
+				>pre { 
+					width: 100%;
+					padding-left: 10px;
+					overflow: auto;
+					border: none;
 				}
 			}
 
 			.slide-caption {
 				font-size: smaller;
 				padding: 0 1rem 0 1rem;
-				font-style: italic;
 				position: absolute;
 				top: -1rem;
 				right: 2rem;

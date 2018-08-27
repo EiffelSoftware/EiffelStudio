@@ -18,22 +18,24 @@
       transition: opacity .5s ease-in-out;
       margin: 0; }
       .slider-wrapper .slider .slide .slide-item {
+        width: 100%;
         max-width: 100%;
-        /* vertical-align: middle; */
-        /* filter: brightness(50%); */
         height: 100%;
-        /* object-fit: fill; */
-        display: block;
         /* margin: 0 auto; */
-        margin: 0;
+        vertical-align: middle;
         overflow: auto;
+        display: flex;
+        items-align: center;
+        justify-content: center;
         border: solid 1px #ccc; }
-        .slider-wrapper .slider .slide .slide-item pre {
-          background-color: #ccf; }
+        .slider-wrapper .slider .slide .slide-item > pre {
+          width: 100%;
+          padding-left: 10px;
+          overflow: auto;
+          border: none; }
       .slider-wrapper .slider .slide .slide-caption {
         font-size: smaller;
         padding: 0 1rem 0 1rem;
-        font-style: italic;
         position: absolute;
         top: -1rem;
         right: 2rem;

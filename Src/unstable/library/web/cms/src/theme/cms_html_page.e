@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 
 	make
 		do
-			create regions.make (5)
+			create regions.make_caseless (5)
 			language := "en"
 
 			status_code := {HTTP_STATUS_CODE}.ok
@@ -109,22 +109,22 @@ feature -- Element change
 			variables.force (a_value, k)
 		end
 
-	add_to_region (s: STRING; k: STRING)
+	add_to_region (a_content: READABLE_STRING_8; k: READABLE_STRING_GENERAL)
 		local
-			r: detachable STRING
+			r: detachable STRING_8
 		do
 			r := regions.item (k)
 			if r = Void then
-				create r.make_from_string (s)
-				set_region (r, k)
+				create r.make_from_string (a_content)
+				set_region (a_content, k)
 			else
-				r.append (s)
+				r.append (a_content)
 			end
 		end
 
-	set_region (s: STRING; k: STRING)
+	set_region (a_content: STRING; k: READABLE_STRING_GENERAL)
 		do
-			regions.force (s, k)
+			regions.force (a_content, k)
 		end
 
 feature -- Element change
@@ -211,7 +211,7 @@ feature -- Element change
 		end
 
 note
-	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

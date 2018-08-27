@@ -300,7 +300,7 @@ feature -- Block management
 			end
 		end
 
-	block_cache (a_block_id: READABLE_STRING_8): detachable TUPLE [block: CMS_CACHE_BLOCK; region: READABLE_STRING_8; expired: BOOLEAN]
+	block_cache (a_block_id: READABLE_STRING_8): detachable TUPLE [cache_block: CMS_CACHE_BLOCK; region: READABLE_STRING_8; expired: BOOLEAN]
 			-- Cached version of block `a_block_id'.
 		local
 			l_cache: CMS_FILE_STRING_8_CACHE
@@ -958,9 +958,11 @@ feature -- Generation
 					end
 					l_block_html := theme.block_html (ic.item)
 					if attached {CMS_CACHE_BLOCK} ic.item then
-
-					elseif attached block_cache (ic.item.name) as l_cache_block then
-						l_cache_block.block.cache.put (l_block_html)
+							-- Already block from cache
+						do_nothing
+					elseif attached block_cache (ic.item.name) as l_block_cache_info then
+							-- Cache-able block, then update/create the related cache.
+						l_block_cache_info.cache_block.set_cache_content (l_block_html)
 					end
 					page.add_to_region (l_block_html, reg_ic.item.name)
 				end
@@ -1117,6 +1119,7 @@ feature -- Execution
 
 	execute
 		do
+--			(create {DEVELOPER_EXCEPTION}).raise
 			begin
 			process
 			terminate
@@ -1179,6 +1182,6 @@ feature {NONE} -- Execution
 		end
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

@@ -32,8 +32,17 @@ feature -- Access
 	name: READABLE_STRING_8
 			-- <Precursor>
 
+feature {NONE} -- Access			
+
 	cache: CMS_CACHE [READABLE_STRING_8]
 			-- Cache content.
+
+feature -- Cache update
+
+	set_cache_content (a_cache_content: READABLE_STRING_8)
+		do
+			cache.put (a_cache_content)
+		end
 
 feature -- Status report
 
@@ -78,7 +87,7 @@ feature -- Conversion
 			end
 		end
 note
-	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

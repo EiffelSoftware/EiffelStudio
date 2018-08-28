@@ -4,25 +4,25 @@
      {
             "id": "eiffelstudio",
             "name": "EiffelStudio",
-            "version": "18.01 GPL",
-            "number": "18.01",
-            "build": "Build_101424",
+            "version": "18.07 GPL",
+            "number": "18.07",
+            "build": "Build_101981",
             "download": [
-                {"filename":"Eiffel_18.01_gpl_101424-freebsd-x86-64.tar.bz2", "size":"103399998", "hash":"4404d5123bd3fef773856184562d8e840479b18e7dc02c389d3ff049a97d2cfb",  "platform":"freebsd-x86-64"},
-                {"filename":"Eiffel_18.01_gpl_101424-windows.msi", "size":"139360604", "hash":"e25319a9c2ca071e8a45a7fc0ae9ddfc99ffa1819d419c1923e6d24f8a6918de",  "platform":"windows"},
-                {"filename":"Eiffel_18.01_gpl_101424-linux-x86-64-suncc.tar.bz2", "size":"100544264", "hash":"61be7c78774615406fe71ad33cbd0be567dd332f235053840607642b3e5da62b",  "platform":"linux-x86-64-suncc"},
-                {"filename":"Eiffel_18.01_gpl_101424-macosx-x86-64.tar.bz2", "size":"95546954", "hash":"a7b06be0c5cbc10c7f0799b4659097a469cb199d3eeb6f380ddeb1053fb84527",  "platform":"macosx-x86-64"},
-                {"filename":"Eiffel_18.01_gpl_101424-solaris-x86-64.tar.bz2", "size":"99934104", "hash":"c10adc3bbbab9b0bc252b4e212dcad866e2d5a3f0a26da5529fcdc2b7f910ab0",  "platform":"solaris-x86-64"},
-                {"filename":"Eiffel_18.01_gpl_101424-openbsd-x86-64.tar.bz2", "size":"119453222", "hash":"0cbd6b0a32d8d290e4b819bf104fb14501684ba4acce55f27ede6a9deb677a2a",  "platform":"openbsd-x86-64"},
-                {"filename":"Eiffel_18.01_gpl_101424-linux-x86-64.tar.bz2", "size":"109806414", "hash":"1a69e348851deb340b0338dd54a5fd0e47decfb6e101b2532dd0e0fdb22fb8d2",  "platform":"linux-x86-64"},
-                {"filename":"Eiffel_18.01_gpl_101424-freebsd-x86.tar.bz2", "size":"101812493", "hash":"bf8d4ffabadeaaf4aa457041507f534226a55522b179f596eccecea2768e4b55",  "platform":"freebsd-x86"},
-                {"filename":"Eiffel_18.01_gpl_101424-solaris-x86.tar.bz2", "size":"90466801", "hash":"311657684987e79efb318895977de887d5306289f9fbb1c2a82a325b1957b492",  "platform":"solaris-x86"},
-                {"filename":"Eiffel_18.01_gpl_101424-win64.msi", "size":"153723035", "hash":"e0f18273c05dcf33f6b141fbfa48e080e620d565da1519a3ae5dab3d24953cec",  "platform":"win64"},
-                {"filename":"Eiffel_18.01_gpl_101424-linux-armv6.tar.bz2", "size":"100448499", "hash":"21c5375a0f0ad5f95a7d441e5042460f64cd5ef9e65118211d062eef039bc56e",  "platform":"linux-armv6"},
-                {"filename":"Eiffel_18.01_gpl_101424-linux-x86.tar.bz2", "size":"96839757", "hash":"1d09588e401cfa726140862bcb57ce91e80a848703bcbb624a3ad6b6815093ff",  "platform":"linux-x86"},
-                {"filename":"Eiffel_18.01_gpl_101424-linux-x86-suncc.tar.bz2", "size":"89969921", "hash":"c693c74eb6f89cdd83880c1204a311e629cfdee50e6571bd440cdf1f2d7af3e5",  "platform":"linux-x86-suncc"},
-                {"filename":"Eiffel_18.01_gpl_101424-solaris-sparc-64.tar.bz2", "size":"117346538", "hash":"a65cfa42d85670877a81b75cc8546664f4c2fda9c5465ca0d4bae238de1b14d6",  "platform":"solaris-sparc-64"},
-                {"filename":"Eiffel_18.01_gpl_101424-solaris-sparc.tar.bz2", "size":"115332171", "hash":"dadb371418dd85f5b1efd476e403845b766502a97e4b516e1c0cad4fd40520e8",  "platform":"solaris-sparc"}
+                {"filename":"Eiffel_18.07_gpl_101981-linux-armv6.tar.bz2", "size":"99838651", "hash":"aa6b12fcc2da249b78bf129354dc2deab1022ba5a71f3eb4f0cd546492cd1735","platform":"linux-armv6"},
+                {"filename":"Eiffel_18.07_gpl_101981-windows.msi", "size":"138794083", "hash":"850fb28cf2579dce568cff3cc0bcb3f6dc3ea298919480fc75b60f60f18815aa", "platform":"windows"},
+                {"filename":"Eiffel_18.07_gpl_101981-win64.7z", "size":"89645871", "hash":"bfc8e7bb32f50fb7512d300c7d97b86285aa523c5c327a6a1b98627c279d67c4","platform":"win64"},
+                {"filename":"Eiffel_18.07_gpl_101981-openbsd-x86-64.tar.bz2", "size":"119038816", "hash":"f574c9618a9db06987b50400bee27153df1e6f8fc3b5822c38e9278ced80a27f","platform":"openbsd-x86-64"},
+                {"filename":"Eiffel_18.07_gpl_101981-macosx-x86-64.tar.bz2", "size":"95710918", "hash":"9fbb07b70ade9db317e639acf3e58bc2b4f3a3ddafce2aca49a76eb7e73428c3", "platform":"macosx-x86-64"},
+                {"filename":"Eiffel_18.07_gpl_101981-windows.7z", "size":"78375449", "hash":"a250625576d6c2094ce033b637ad5caf3245e78acaec24d7853d467656334c4d","platform":"windows"},
+                {"filename":"Eiffel_18.07_gpl_101981-freebsd-x86-64.tar.bz2", "size":"102632071", "hash":"4bd5d45d1d60fc752525a13e7a71c83bd6b97980de091c999fbe8c406c13d065","platform":"freebsd-x86-64"},
+                {"filename":"Eiffel_18.07_gpl_101981-solaris-sparc-64.tar.bz2", "size":"116663646", "hash":"4dadae25513976c08b46d63a605076a0e29f5e51ece40abc5e2e38e57cb84285","platform":"solaris-sparc-64"},
+                {"filename":"Eiffel_18.07_gpl_101981-solaris-sparc.tar.bz2", "size":"114790217", "hash":"2fbf27aca4603b4e69b2f4996408b4718bfc79fccca7b4e2873eb88f372f1a39", "platform":"solaris-sparc"},
+                {"filename":"Eiffel_18.07_gpl_101981-linux-x86-suncc.tar.bz2", "size":"89031797", "hash":"d710ba24a77498f5afff5ba1821cc9b94c985b2c005ed5bbdcfb6a972ebd80cc","platform":"linux-x86-suncc"},
+                {"filename":"Eiffel_18.07_gpl_101981-linux-x86-64.tar.bz2", "size":"109394141", "hash":"a59951c1409a0554d2d068303651e3569465cbf88dfb548932a4638ad77f7a50","platform":"linux-x86-64"},
+                {"filename":"Eiffel_18.07_gpl_101981-linux-x86.tar.bz2", "size":"96017796", "hash":"8604bb612fae8ca7d94758129db8ddeba20ddffa1204db2c1e5b4aa25f75809d","platform":"linux-x86"},
+                {"filename":"Eiffel_18.07_gpl_101981-linux-x86-64-suncc.tar.bz2", "size":"99883798", "hash":"8a02b1882a26fbbe9ef7f8856929f2d066d53b7ea7a6ae8b75896cd7ecdab4df","platform":"linux-x86-64-suncc"},
+                {"filename":"Eiffel_18.07_gpl_101981-win64.msi", "size":"152936816", "hash":"ebef4280be72c6ec60c4e61c8929a901cc2a87a2ff40afd2d94156189061be32","platform":"win64"},
+                {"filename":"Eiffel_18.07_gpl_101981-freebsd-x86.tar.bz2", "size":"101000595", "sha256":"c2921db057fb41770b41b6cc26a3c7926aec8f00f8e7fc337adb65f516980254","platform":"freebsd-x86"}]}         
              ]
         }        
     ]

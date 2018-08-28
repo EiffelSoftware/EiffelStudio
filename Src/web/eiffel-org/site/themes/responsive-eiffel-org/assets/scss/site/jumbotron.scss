@@ -23,9 +23,10 @@
 			@extend .one-half;
 		}
 		.codeboard-demo {
+			min-height: 320px;
 			.prettyprint {
 				padding-top: 20px;
-				height: 267px;
+				height: 265px;
 			}
 		}	
 		#block-front_header_welcome {

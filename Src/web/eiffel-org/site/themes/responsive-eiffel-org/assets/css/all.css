@@ -2492,59 +2492,62 @@ ul.is-unstyled, ul.unstyled {
     .jumbotron > .container > div .holder h3 {
       padding: 10px;
       text-align: center; }
-  /* line 26, ../scss/site/jumbotron.scss */
-  .jumbotron > .container > div .codeboard-demo .prettyprint {
-    padding-top: 20px;
-    height: 267px; }
-  /* line 31, ../scss/site/jumbotron.scss */
+  /* line 25, ../scss/site/jumbotron.scss */
+  .jumbotron > .container > div .codeboard-demo {
+    min-height: 320px; }
+    /* line 27, ../scss/site/jumbotron.scss */
+    .jumbotron > .container > div .codeboard-demo .prettyprint {
+      padding-top: 20px;
+      height: 265px; }
+  /* line 32, ../scss/site/jumbotron.scss */
   .jumbotron > .container > div #block-front_header_welcome {
     margin-top: 55px; }
-    /* line 33, ../scss/site/jumbotron.scss */
+    /* line 34, ../scss/site/jumbotron.scss */
     .jumbotron > .container > div #block-front_header_welcome .holder {
       height: 115px; }
-  /* line 37, ../scss/site/jumbotron.scss */
+  /* line 38, ../scss/site/jumbotron.scss */
   .jumbotron > .container > div #block-download_area {
     border: none; }
-    /* line 39, ../scss/site/jumbotron.scss */
+    /* line 40, ../scss/site/jumbotron.scss */
     .jumbotron > .container > div #block-download_area .btn-holder {
       border: none;
       padding: 0;
       margin: 0; }
-    /* line 44, ../scss/site/jumbotron.scss */
+    /* line 45, ../scss/site/jumbotron.scss */
     .jumbotron > .container > div #block-download_area .row {
       padding-left: 10px; }
-    /* line 47, ../scss/site/jumbotron.scss */
+    /* line 48, ../scss/site/jumbotron.scss */
     .jumbotron > .container > div #block-download_area .link-platforms.row {
       border: none; }
-      /* line 49, ../scss/site/jumbotron.scss */
+      /* line 50, ../scss/site/jumbotron.scss */
       .jumbotron > .container > div #block-download_area .link-platforms.row:hover {
         color: #3498db; }
-  /* line 56, ../scss/site/jumbotron.scss */
+  /* line 57, ../scss/site/jumbotron.scss */
   .jumbotron > .container .social-networks {
     position: absolute;
     top: -40px;
     right: 0px;
     float: right; }
-    /* line 62, ../scss/site/jumbotron.scss */
+    /* line 63, ../scss/site/jumbotron.scss */
     .jumbotron > .container .social-networks li {
       float: left; }
-  /* line 66, ../scss/site/jumbotron.scss */
+  /* line 67, ../scss/site/jumbotron.scss */
   .jumbotron > .container .holder {
     padding: 10px 0 0 9px;
     margin-bottom: 15px; }
-    /* line 74, ../scss/site/jumbotron.scss */
+    /* line 75, ../scss/site/jumbotron.scss */
     .jumbotron > .container .holder h1 {
       font: 36px/36px "museo_sans500", Arial, Helvetica, sans-serif;
       color: #112935;
       margin: 0 0 35px;
       letter-spacing: 2px; }
-    /* line 80, ../scss/site/jumbotron.scss */
+    /* line 81, ../scss/site/jumbotron.scss */
     .jumbotron > .container .holder .btn-holder {
       width: auto;
       border: 1px solid #98dcd4;
       padding: 0 0 16px;
       margin: 0 0 0 2px; }
-      /* line 87, ../scss/site/jumbotron.scss */
+      /* line 88, ../scss/site/jumbotron.scss */
       .jumbotron > .container .holder .btn-holder .row {
         color: #112935;
         margin: 0 0 14px;
@@ -2552,7 +2555,7 @@ ul.is-unstyled, ul.unstyled {
         letter-spacing: 1px;
         text-transform: uppercase;
         border-bottom: 1px solid #98dcd4; }
-      /* line 96, ../scss/site/jumbotron.scss */
+      /* line 97, ../scss/site/jumbotron.scss */
       .jumbotron > .container .holder .btn-holder .btn-download {
         background-color: #769830;
         background-image: -webkit-linear-gradient(top, #99cc33, #769830);
@@ -2572,7 +2575,7 @@ ul.is-unstyled, ul.unstyled {
         text-align: center;
         position: relative;
         padding: 0 57px 6px 0; }
-        /* line 110, ../scss/site/jumbotron.scss */
+        /* line 111, ../scss/site/jumbotron.scss */
         .jumbotron > .container .holder .btn-holder .btn-download:after {
           background: url(../images/ico-download.png) no-repeat;
           width: 37px;
@@ -2581,7 +2584,7 @@ ul.is-unstyled, ul.unstyled {
           right: 16px;
           top: 13px;
           content: ''; }
-        /* line 119, ../scss/site/jumbotron.scss */
+        /* line 120, ../scss/site/jumbotron.scss */
         .jumbotron > .container .holder .btn-holder .btn-download:hover {
           background-color: #6a8c28;
           background-image: -webkit-linear-gradient(top, #89bc2b, #6a8c28);
@@ -3639,21 +3642,22 @@ code, eiffel {
   list-style: none; }
 
 /* Codeboard */
-/* line 9, ../scss/site/codeboard.scss */
-.jumbotron .codeboard-demo .slider-wrapper > .slider {
-  padding-left: 18px;
+/* line 10, ../scss/site/codeboard.scss */
+.jumbotron .codeboard-demo .slider-wrapper > .slider > .slide > .slide-item {
+  border: none !important; }
+/* line 12, ../scss/site/codeboard.scss */
+.jumbotron .codeboard-demo .codeboard-player {
+  margin-top: 10px;
   border: solid 1px #fff;
   -webkit-border-radius: 6px;
   border-radius: 6px;
-  background-color: rgba(255, 255, 255, 0.75); }
-  /* line 10, ../scss/site/codeboard.scss */
-  .jumbotron .codeboard-demo .slider-wrapper > .slider > .slide > .slide-item {
-    border: none !important; }
+  background-color: rgba(255, 255, 255, 0.75);
+  height: 268px; }
 /* line 20, ../scss/site/codeboard.scss */
-.jumbotron .codeboard-demo .holder-play .btn-holder {
+.jumbotron .codeboard-demo .btn-holder {
   position: relative; }
   /* line 22, ../scss/site/codeboard.scss */
-  .jumbotron .codeboard-demo .holder-play .btn-holder .btn-play {
+  .jumbotron .codeboard-demo .btn-holder .btn-play {
     background-color: #12273A;
     background-image: -webkit-linear-gradient(top, #2B4054, #12273A);
     background-image: -moz-linear-gradient(top, #2B4054, #12273A);
@@ -3670,7 +3674,7 @@ code, eiffel {
     letter-spacing: 1px;
     text-align: center; }
     /* line 32, ../scss/site/codeboard.scss */
-    .jumbotron .codeboard-demo .holder-play .btn-holder .btn-play:hover {
+    .jumbotron .codeboard-demo .btn-holder .btn-play:hover {
       background-color: #0C1A26;
       background-image: -webkit-linear-gradient(top, #12273A, #0C1A26);
       background-image: -moz-linear-gradient(top, #12273A, #0C1A26);
@@ -3678,7 +3682,7 @@ code, eiffel {
       background-image: -o-linear-gradient(top, #12273A, #0C1A26);
       background-image: linear-gradient(top, #12273A, #0C1A26); }
 
-/* line 40, ../scss/site/codeboard.scss */
+/* line 39, ../scss/site/codeboard.scss */
 .container-codeboard {
   width: 920px;
   height: 800px; }
@@ -4158,5 +4162,3 @@ div.container {
 a {
   color: #5082D9;
   text-decoration: none; }
-
-/*# sourceMappingURL=all.css.map */

@@ -1,12 +1,14 @@
 BASE_SRC=$(ISE_LIBRARY)/library/base/base.ecf
 ANY_SRC=$(ISE_LIBRARY)/library/base/elks/kernel/any.e
+ARGUMENTS_SRC=$(ISE_LIBRARY)/library/base/elks/kernel/arguments.e
+ARGUMENTS_32_SRC=$(ISE_LIBRARY)/library/base/elks/kernel/arguments_32.e
 ARRAY_SRC=$(ISE_LIBRARY)/library/base/elks/kernel/array.e
 ITERABLE_SRC=$(ISE_LIBRARY)/library/base/elks/kernel/iterable.e
 ITERATION_CURSOR_SRC=$(ISE_LIBRARY)/library/base/elks/kernel/iteration_cursor.e
 STD_FILES_SRC=$(ISE_LIBRARY)/library/base/elks/kernel/std_files.e
 TUPLE_SRC=$(ISE_LIBRARY)/library/base/elks/kernel/tuple.e
 
-GENERATED_FILES=base.ecf eve/any.e eve/array.e eve/iterable.e eve/iteration_cursor.e eve/std_files.e eve/tuple.e
+GENERATED_FILES=base.ecf eve/any.e eve/arguments.e eve/arguments_32.e eve/array.e eve/iterable.e eve/iteration_cursor.e eve/std_files.e eve/tuple.e
 
 ARRAY_CONVERSION=,$(ISE_WIN_CR)\n\
 \	to_mml_set: {MML_SET [G]},$(ISE_WIN_CR)\n\
@@ -58,6 +60,12 @@ base.ecf: $(BASE_SRC) base.sed Makefile
 eve/any.e: $(ANY_SRC) any.sed any.txt Makefile
 	sed -f any.sed $(ANY_SRC) > $@
 
+eve/arguments.e: $(ARGUMENTS_SRC) arguments.sed Makefile
+	sed -f arguments.sed $(ARGUMENTS_SRC) > $@
+
+eve/arguments_32.e: $(ARGUMENTS_32_SRC) arguments.sed Makefile
+	sed -f arguments.sed $(ARGUMENTS_32_SRC) > $@
+
 eve/array.e: $(ARRAY_SRC) Makefile
 	sed \
 		-e "s/\(make_from_cil ({NATIVE_ARRAY \[G\]})\)/\1$(ARRAY_CONVERSION)/" \
@@ -79,5 +87,5 @@ eve/tuple.e: $(TUPLE_SRC) Makefile
 		$(TUPLE_SRC) > $@
 
 clean:
-	-del base.ecf eve\any.e eve\array.e eve\iterable.e eve\iteration_cursor.e eve\std_files.e eve\tuple.e
+	-del base.ecf eve\any.e eve\arguments.e eve\arguments_32.e eve\array.e eve\iterable.e eve\iteration_cursor.e eve\std_files.e eve\tuple.e
 	-rm $(GENERATED_FILES)

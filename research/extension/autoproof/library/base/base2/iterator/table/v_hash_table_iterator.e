@@ -226,7 +226,7 @@ feature -- Cursor movement
 				check list_iterator.inv_only ("sequence_definition") end
 				index_ := concat (target.buckets_.front (bucket_index - 1)).count + list_iterator.index_
 				lemma_single_out (target.buckets_, bucket_index)
-				k.lemma_transitive (sequence [index_], [target.domain_item (k)])
+				k.lemma_transitive (sequence [index_], create {MML_SET [K]}.singleton (target.domain_item (k)))
 			end
 		end
 

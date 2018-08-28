@@ -8,7 +8,7 @@
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option warning="true" full_class_checking="false" namespace="EiffelSoftware.Library">
+		<option warning="true" namespace="EiffelSoftware.Library">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<capability>
@@ -44,6 +44,8 @@
 			<file_rule>
 				<description>Classes with additional or different code for AutoProof.</description>
 				<exclude>/any.e</exclude>
+				<exclude>/arguments.e</exclude>
+				<exclude>/arguments_32.e</exclude>
 				<exclude>/array.e</exclude>
 				<exclude>/iterable.e</exclude>
 				<exclude>/iteration_cursor.e</exclude>

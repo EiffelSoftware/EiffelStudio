@@ -4,7 +4,7 @@ CBPLAYMOD.slider_timeout = null;
 CBPLAYMOD.initialize_slider = function (a_slider) {
 	//console.log("CBPLAYMOD.initialize_slider (...)");
 	
-    var l_delay = $(a_slider).find('.slider').first().attr('slider-delay');
+    var l_delay = $(a_slider).find('.slider').first().attr('data-slider-delay');
 	if (l_delay) {
 		CBPLAYMOD.slider_delay = l_delay;
 		//console.log("CBPLAYMOD.slider_delay = " + l_delay);

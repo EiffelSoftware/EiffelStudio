@@ -3,7 +3,7 @@
 <div class="codeboard-player">
 <link rel="stylesheet" property="stylesheet" href="{$site_url/}/module/codeboard/files/css/codeboard_static_demo.css"/>
 <div class="slider-wrapper">
-  <div class="slider" slider-delay="7000">
+  <div class="slider" data-slider-delay="7000">
 {foreach  from="$snippets" item="snippet"}
     <input type="radio" name="slider" class="trigger" id="slide{$snippet.id/}" {if isempty="$snippet_curr"}checked="checked"{/if}{assign name="snippet_curr" value="{$snippet.id/}"/} />
     <div class="slide">

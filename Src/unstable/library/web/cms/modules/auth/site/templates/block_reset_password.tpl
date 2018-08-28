@@ -3,7 +3,7 @@
         <fieldset>
             <legend>Generate New Password Form</legend>
             <div>
-                <input type="text" id="token" name="token"  value="{$token/}" required />
+                <input type="text" id="token" name="token"  value="{htmlentities}{$token/}{/htmlentities}" required />
                 <label for="token">Token</label>
                 {if isset="$error_token"}
                     <span><i>{$error_token/}</i></span> <br>

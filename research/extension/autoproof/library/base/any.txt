@@ -1,5 +1,5 @@
 feature -- Comparison (verified)
-	
+
 	is_equal_ (other: like Current): BOOLEAN
 			-- Is the abstract state of Current equal to that of `other'?
 		note

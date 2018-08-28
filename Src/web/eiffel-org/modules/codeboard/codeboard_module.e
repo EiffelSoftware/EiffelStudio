@@ -127,7 +127,7 @@ feature -- Hooks
 
 	block_list: ITERABLE [like {CMS_BLOCK}.name]
 		do
-			Result := <<"launch_codeboard", "play_eiffel", "?codeboard_static_demo">>
+			Result := <<"launch_codeboard", "?codeboard_static_demo">>
 		end
 
 	get_block_view (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)

@@ -2497,7 +2497,7 @@ ul.is-unstyled, ul.unstyled {
     min-height: 320px; }
     /* line 27, ../scss/site/jumbotron.scss */
     .jumbotron > .container > div .codeboard-demo .prettyprint {
-      padding-top: 20px;
+      padding-top: 10px;
       height: 265px; }
   /* line 32, ../scss/site/jumbotron.scss */
   .jumbotron > .container > div #block-front_header_welcome {
@@ -4162,3 +4162,5 @@ div.container {
 a {
   color: #5082D9;
   text-decoration: none; }
+
+/*# sourceMappingURL=all.css.map */

@@ -1,5 +1,5 @@
 {
   "lang": "eiffel",
   "description": "Across loop",
-  "code": "across value as i from sum:= 0 loop\n            --    Sum of (index * value [index])).\n\tsum:= sum + i.cursor_index * i.item\nend\n\n\n"
+  "code": "value := << 1, 2, 4, 8 >>\n\nacross value as i from sum := 0 loop\n            --    Sum of (index * value [index])).\n\tsum := sum + i.cursor_index * i.item\nend\n\n\n"
 }

@@ -1,11 +1,16 @@
+/* line 1, ../scss/codeboard_static_demo.scss */
 .slider-wrapper {
-  margin-top: 10px;
-  position: relative; }
+  position: relative;
+  /* height: 270px; */
+  height: 100%; }
+  /* line 7, ../scss/codeboard_static_demo.scss */
   .slider-wrapper .slider {
-    margin-top: 10px;
-    position: relative; }
+    position: relative;
+    height: 100%; }
+    /* line 11, ../scss/codeboard_static_demo.scss */
     .slider-wrapper .slider .trigger {
       display: none; }
+    /* line 15, ../scss/codeboard_static_demo.scss */
     .slider-wrapper .slider .slide {
       width: 100%;
       overflow: hidden;
@@ -17,6 +22,7 @@
       opacity: 0;
       transition: opacity .5s ease-in-out;
       margin: 0; }
+      /* line 28, ../scss/codeboard_static_demo.scss */
       .slider-wrapper .slider .slide .slide-item {
         width: 100%;
         max-width: 100%;
@@ -28,11 +34,13 @@
         items-align: center;
         justify-content: center;
         border: solid 1px #ccc; }
+        /* line 41, ../scss/codeboard_static_demo.scss */
         .slider-wrapper .slider .slide .slide-item > pre {
           width: 100%;
           padding-left: 10px;
           overflow: auto;
           border: none; }
+      /* line 49, ../scss/codeboard_static_demo.scss */
       .slider-wrapper .slider .slide .slide-caption {
         font-size: smaller;
         padding: 0 1rem 0 1rem;
@@ -42,9 +50,11 @@
         color: #666;
         background-color: rgba(210, 210, 210, 0.6);
         text-align: center; }
+  /* line 62, ../scss/codeboard_static_demo.scss */
   .slider-wrapper .slider .trigger:checked + .slide {
     z-index: 6000;
     opacity: 1; }
+  /* line 67, ../scss/codeboard_static_demo.scss */
   .slider-wrapper .slider-nav {
     position: absolute;
     bottom: 0.5em;
@@ -53,8 +63,10 @@
     text-align: right;
     margin: 0;
     z-index: 6000; }
+    /* line 76, ../scss/codeboard_static_demo.scss */
     .slider-wrapper .slider-nav .slider-nav__item {
       display: inline-block; }
+    /* line 79, ../scss/codeboard_static_demo.scss */
     .slider-wrapper .slider-nav .slider-nav__label {
       font-size: 13px;
       background-color: #333;
@@ -67,34 +79,28 @@
       color: white;
       cursor: pointer;
       transition: background-color .25s, color .25s ease-in-out; }
+    /* line 93, ../scss/codeboard_static_demo.scss */
     .slider-wrapper .slider-nav .slider-nav__label:hover,
     .slider-wrapper .slider-nav .slider-nav__label:active,
     .slider-wrapper .slider-nav .slider-nav__label:focus {
       background-color: gray;
       color: black; }
+    /* line 99, ../scss/codeboard_static_demo.scss */
     .slider-wrapper .slider-nav .slider-nav__label.slider-active {
       background-color: white;
       color: black; }
 
 /* responsive layout */
 @media only screen and (min-width: 1024px) {
-  .slider, .slider-wrapper {
-    height: 270px; }
-
+  /* line 108, ../scss/codeboard_static_demo.scss */
   .slide-caption {
     font-size: 1.5rem; } }
 @media only screen and (max-width: 1023px) and (min-width: 768px) {
-  .slider, .slider-wrapper {
-    height: 270px; }
-
+  /* line 113, ../scss/codeboard_static_demo.scss */
   .slide-caption {
     font-size: 1.25rem; } }
 @media only screen and (max-width: 768px) {
-  .slider, .slider-wrapper {
-    height: 270px; }
-
+  /* line 118, ../scss/codeboard_static_demo.scss */
   .slide-item {
     width: 100%;
     height: auto; } }
-
-/*# sourceMappingURL=codeboard_static_demo.css.map */

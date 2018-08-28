@@ -8,30 +8,29 @@
 .jumbotron .codeboard-demo {
 	.slider-wrapper>.slider {
 		>.slide>.slide-item { border: none !important ;}
-
+	}
+	.codeboard-player {
 		//@include grid-width(6);
-		padding-left:18px;
+		margin-top: 10px;
 		border: solid 1px #fff;
 		@include border-radius($front-box-radius);
 		background-color: $front-box-bg-color;
-		//min-height: 246px;
+		height: 268px;
 	}
-	.holder-play{
-		.btn-holder{
-			position: relative;
-			.btn-play{
-				@include linear-gradient(#2B4054, #12273A);
-				@include border-radius(4px);
-				width: 143px;
-				height: 43px;
-				display: inline-block;
-				font: 15px/43px $museo-sans500;
-				color: $white;
-				letter-spacing: 1px;
-				text-align: center;
-				&:hover{
-					@include linear-gradient(#12273A, #0C1A26);
-				}
+	.btn-holder{
+		position: relative;
+		.btn-play{
+			@include linear-gradient(#2B4054, #12273A);
+			@include border-radius(4px);
+			width: 143px;
+			height: 43px;
+			display: inline-block;
+			font: 15px/43px $museo-sans500;
+			color: $white;
+			letter-spacing: 1px;
+			text-align: center;
+			&:hover{
+				@include linear-gradient(#12273A, #0C1A26);
 			}
 		}
 	}

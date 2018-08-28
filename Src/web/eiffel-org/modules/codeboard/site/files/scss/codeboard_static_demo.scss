@@ -1,10 +1,12 @@
 .slider-wrapper {
-	margin-top: 10px;
 	position: relative;
+    /* height: 270px; */
+    //min-height: 200px;
+	height: 100%;
 
 	.slider {
-		margin-top: 10px;
 		position: relative;
+		height: 100%;
 
 		.trigger {
 			display: none;
@@ -103,18 +105,15 @@
 
 /* responsive layout */
 @media only screen and (min-width: 1024px) {
-  .slider, .slider-wrapper { height: 270px; }
   .slide-caption {
     font-size: 1.5rem;
   }
 }
 @media only screen and (max-width: 1023px) and (min-width: 768px) {
-  .slider, .slider-wrapper { height: 270px; }
   .slide-caption {
     font-size: 1.25rem;
   }  
 }
 @media only screen and (max-width: 768px) {
-  .slider, .slider-wrapper { height: 270px; }
   .slide-item { width: 100%; height: auto; }
 }

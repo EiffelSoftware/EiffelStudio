@@ -1,5 +1,6 @@
-<div class="codeboard-demo"><div class="holder-play">
+<div class="codeboard-demo">
 <div class="btn-holder"><a class="btn-play" href="{$site_url/}codeboard">Play with Eiffel</a></div>
+<div class="codeboard-player">
 <link rel="stylesheet" property="stylesheet" href="{$site_url/}/module/codeboard/files/css/codeboard_static_demo.css"/>
 <div class="slider-wrapper">
   <div class="slider">
@@ -23,4 +24,5 @@
 </div><!-- .slider-wrapper -->
 
 <script type="text/javascript" src="{$site_url/}/module/codeboard/files/codeboard_static_demo.js"></script>
-</div></div>
+</div><!-- codeboard-player -->
+</div>

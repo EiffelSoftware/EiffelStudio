@@ -1,6 +1,7 @@
-note
+﻿note
 	description: "Wrapper around SPECIAL for use in verification."
 	author: "Nadia Polikarpova"
+	revised_by: "Alexander Kogtenkov"
 	model: sequence, capacity
 	manual_inv: true
 	false_guards: true
@@ -92,7 +93,7 @@ feature -- Status report
 			n_is_small_enough_for_destination: destination_index + n <= count
 			reads (Current, other)
 		local
-			i, j, nb, n_: INTEGER
+			i, j, nb: INTEGER
 		do
 			Result := True
 			if other /= Current or source_index /= destination_index then
@@ -357,7 +358,7 @@ invariant
 	capacity_constraint: sequence.count <= capacity
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

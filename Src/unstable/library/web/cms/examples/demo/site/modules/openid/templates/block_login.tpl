@@ -7,7 +7,7 @@
 		<div><input type="submit" name="op" value="Validate"/></div>
 		<div hgv vtid="openid">Login with 			
 			{foreach item="item" from="$openid_consumers"}
-				<a href="{$site_url/}account/login-with-openid/{$item/}">{$item/}</a><br>
+				<a href="{$site_url/}account/login-with-openid/{$item/}">{htmlentities}{$item/}{/htmlentities}</a><br>
 			{/foreach}	
 	</form>
 	<div>

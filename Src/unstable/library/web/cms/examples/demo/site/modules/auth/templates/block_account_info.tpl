@@ -3,13 +3,13 @@
 		<h3>Account Information</h3>
 		<ul class="user-information">
 			<div>	
-				<label>Username:</label>  {$user.name/}
+				<label>Username:</label>  {htmlentities}{$user.name/}{/htmlentities}
 			</div>
 			<div>	
 				<label>Email:</label>  {$user.email/}
 			</div>
 			<div>	
-				<label>Profile name:</label>  {$user.profile_name/}
+				<label>Profile name:</label>  {htmlentities}{$user.profile_name/}{/htmlentities}
 			</div>
 			<div>	
 				<label>Creation Date:</label>  {$user.creation_date/} (UTC)
@@ -28,7 +28,7 @@
     	<ul class="user-profile">
     		{foreach item="the_value" key="the_name" from="$user.profile"}
     			<li>	
-			   		<label>{$the_name/}:</label><div>{$the_value/}</div>
+			   		<label>{htmlentities}{$the_name/}{/htmlentities}:</label><div>{htmlentities}{$the_value/}{/htmlentities}</div>
 			   	</li>
     		{/foreach}
     	</ul>

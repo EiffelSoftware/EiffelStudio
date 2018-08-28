@@ -220,7 +220,7 @@ feature -- Removal
 			idx := index (k)
 			i_ := remove_equal (buckets [idx], k)
 			count_ := count_ - 1
-			k.lemma_transitive (domain_item (k), [(buckets_ [idx]) [i_]])
+			k.lemma_transitive (domain_item (k), create {MML_SET [K]}.singleton (buckets_ [idx] [i_]))
 			map := map.removed ((buckets_ [idx]) [i_])
 			buckets_ := buckets_.replaced_at (idx, buckets_ [idx].removed_at (i_))
 			wrap
@@ -312,7 +312,7 @@ feature {V_CONTAINER, V_ITERATOR, V_LOCK} -- Implementation
 			Result := cell_equal (buckets [index (k)], k)
 			check across 1 |..| buckets_ [index (k)].count as j all (buckets_ [index (k)]) [j.item] = lists [index (k)].sequence [j.item].left end end
 			if domain_has (k) then
-				k.lemma_transitive (Result.item.left, [domain_item (k)])
+				k.lemma_transitive (Result.item.left, create {MML_SET [K]}.singleton (domain_item (k)))
 			end
 		ensure
 			definition_not_found: not domain_has (k) implies Result = Void

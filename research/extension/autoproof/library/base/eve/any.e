@@ -395,7 +395,7 @@ feature -- Basic operations
 		end
 
 feature -- Comparison (verified)
-	
+
 	is_equal_ (other: like Current): BOOLEAN
 			-- Is the abstract state of Current equal to that of `other'?
 		note
@@ -731,7 +731,7 @@ feature -- Verification: auxiliary
 			symmetric: Result = other.is_model_equal (Current)
 		end
 
-	lemma_transitive (x: like Current; ys: MML_SET [ANY])
+	lemma_transitive (x: like Current; ys: MML_SET [like Current])
 			-- Property that follows from transitivity of `is_model_equal'.
 			-- ToDo: reformulate once we have call_forall.
 		note

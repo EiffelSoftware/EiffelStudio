@@ -43,19 +43,21 @@
 					padding-left: 10px;
 					overflow: auto;
 					border: none;
+					font-size: 1.4rem;
+					line-height: 2.1rem;
 				}
-			}
+				.slide-caption {
+					font-size: 1.6rem;
+					padding: 0 1rem 0 1rem;
+					position: absolute;
+					top: -1rem;
+					right: 2rem;
+					//width: calc(80% - 1rem);
+					color: #666;
+					background-color: rgba(230,230,230,.5);
+					text-align: center;
+				}
 
-			.slide-caption {
-				font-size: smaller;
-				padding: 0 1rem 0 1rem;
-				position: absolute;
-				top: -1rem;
-				right: 2rem;
-				//width: calc(80% - 1rem);
-				color: #666;
-				background-color: rgba(210,210,210,.6);
-				text-align: center;
 			}
 		}
 	}
@@ -77,7 +79,7 @@
 			display: inline-block;
 		}
 		.slider-nav__label {
-			font-size: 13px;
+			font-size: 1.3rem;
 			background-color: #333;
 			display: block;
 			height: 2em;
@@ -99,6 +101,7 @@
 		.slider-nav__label.slider-active {
 			background-color: white;
 			color: black;
+			border: solid 1px #ccc;
 		}
 	}
 }

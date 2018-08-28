@@ -107,3 +107,6 @@
   .slide-item {
     width: 100%;
     height: auto; } }
+/* line 125, ../scss/codeboard_static_demo.scss */
+#content.codeboard_demo div.codeboard-player {
+  height: 270px; }

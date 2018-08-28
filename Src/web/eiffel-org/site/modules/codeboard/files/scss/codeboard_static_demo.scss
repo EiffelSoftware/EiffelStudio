@@ -120,3 +120,9 @@
 @media only screen and (max-width: 768px) {
   .slide-item { width: 100%; height: auto; }
 }
+
+#content.codeboard_demo {
+	div.codeboard-player {
+		height: 270px;
+	}
+}

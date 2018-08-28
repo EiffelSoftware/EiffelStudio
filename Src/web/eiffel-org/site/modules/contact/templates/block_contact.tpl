@@ -2,13 +2,13 @@
     <h1>Contact us!</h1>
     <form method="post" action="{$site_url/}contact" id="contact-form">
         <label for="name">Name: <span class="required">*</span></label>
-        <input type="text" id="name" name="name" value="{$name/}" required="required" autofocus="autofocus" />
+        <input type="text" id="name" name="name" value="{htmlentities}{$name/}{/htmlentities}" required="required" autofocus="autofocus" />
          
         <label for="email">Email Address: <span class="required">*</span></label>
-        <input type="email" id="email" name="email" value="{$email/}" required="required" />
+        <input type="email" id="email" name="email" value="{htmlentities}{$email/}{/htmlentities}" required="required" />
          
         <label for="message">Message: <span class="required">*</span></label>
-        <textarea id="message" name="message" required="required" data-minlength="20" minlength="20" >{$message/}</textarea>
+        <textarea id="message" name="message" required="required" data-minlength="20" minlength="20" >{htmlentities}{$message/}{/htmlentities}</textarea>
 		{unless isempty="$recaptcha_site_key"}
         <div class="g-recaptcha" data-sitekey="{$recaptcha_site_key/}"></div>
         <br/>

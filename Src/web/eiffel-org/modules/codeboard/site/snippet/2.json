@@ -1,5 +1,5 @@
 {
   "lang": "eiffel",
   "description": "Assertion: class invariants",
-  "code": "class\n    EXAMPLE\n\nfeature -- Access\n\n    ...\n\ninvariant\n    all_elements_valid: across Current is x all x.is_valid end\n    At_least_one_marked: across Current is x some x.is_marked end\n\nend"
+  "code": "feature -- Access\n\n  ...\ninvariant\n  all_elements_valid: across Current as x all x.item.is_valid end\n    at_least_one_marked: across Current as x some x.item.is_marked end\n\nend"
 }

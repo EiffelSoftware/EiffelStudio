@@ -127,7 +127,7 @@ feature -- Hooks
 
 	block_list: ITERABLE [like {CMS_BLOCK}.name]
 		do
-			Result := <<"launch_codeboard", "?codeboard_static_demo">>
+			Result := <<"launch_codeboard", "?codeboard_static_demo", "?snippet_editor">>
 		end
 
 	get_block_view (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
@@ -136,10 +136,6 @@ feature -- Hooks
 				if a_response.location.same_string_general (codeboard_location) then
 					if attached smarty_template_block (Current, a_block_id, a_response.api) as l_tpl_block then
 						a_response.add_block (l_tpl_block, "content")
-					else
-						debug ("cms")
-							a_response.add_warning_message ("Error with block [" + a_block_id + "]")
-						end
 					end
 				end
 			elseif a_block_id.is_case_insensitive_equal_general ("codeboard_static_demo") then
@@ -149,17 +145,18 @@ feature -- Hooks
 				then
 					if attached new_codeboard_static_demo_block as l_tpl_block then
 						a_response.add_block (l_tpl_block, "header")
-					else
-						debug ("cms")
-							a_response.add_warning_message ("Error with block [" + a_block_id + "]")
-						end
+					end
+				end
+			elseif a_block_id.is_case_insensitive_equal_general ("snippet_editor") then
+				if a_response.has_permission ({CODEBOARD_MODULE_WEBAPI}.manage_snippet_permission) then
+					if attached smarty_template_block (Current, a_block_id, a_response.api) as l_tpl_block then
+						a_response.add_block (l_tpl_block, "content")
 					end
 				end
 			else
 						-- Support any block based on existing template
 				if attached smarty_template_block (Current, a_block_id, a_response.api) as l_tpl_block then
 					a_response.add_block (l_tpl_block, "content")
-					a_response.add_style (a_response.module_resource_url (Current, "/files/css/"+ a_block_id +".css", Void), Void)
 				end
 			end
 		end
@@ -179,7 +176,7 @@ feature -- Hooks
 					i > nb
 				loop
 					if attached l_api.code (i) as l_code then
-						l_code.set_id (i.out)
+						l_code.set_id (i)
 						lst.force (l_code)
 					end
 					i := i + 1

@@ -19,13 +19,20 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	id: detachable READABLE_STRING_8
+	id: INTEGER
 
 	text: READABLE_STRING_32
 
 	lang: detachable READABLE_STRING_8 assign set_lang
 
 	description: detachable READABLE_STRING_32 assign set_description
+
+feature -- Status
+
+	has_id: BOOLEAN
+		do
+			Result := id > 0
+		end
 
 feature -- Element change
 

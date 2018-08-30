@@ -22,6 +22,8 @@ inherit
 			session_api
 		end
 
+	CMS_WITH_WEBAPI
+
 	CMS_HOOK_BLOCK
 
 create
@@ -82,7 +84,14 @@ feature {CMS_API} -- Module management
 			end
 		end
 
-feature {CMS_API} -- Access: API
+feature {CMS_EXECUTION} -- Administration
+
+	webapi: CMS_SESSION_AUTH_MODULE_WEBAPI
+		do
+			create Result.make (Current)
+		end
+
+feature {CMS_API, CMS_MODULE_WEBAPI} -- Access: API
 
 	session_api: detachable CMS_SESSION_API
 			-- <Precursor>	

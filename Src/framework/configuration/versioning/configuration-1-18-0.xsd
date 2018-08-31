@@ -84,18 +84,19 @@
 						- another target of the current system if the attribute `extends_location` is not specified;
 						- a specified target of another system if the attribute `extends_location` is specified;
 						- a library target of another system if this attribute is not specified and the attribute `extends_location` is specified.
-					It is taken from the 
+					
+					See also: `extends_location`.
 				</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
 		<xs:attribute name="extends_location" type="xs:string" use="optional">
 			<xs:annotation>
 				<xs:documentation>
-					An optional name of a target to be used as a parent of the current one:
-						- another target of the current system if the attribute `extends_location` is not specified;
-						- a specified target of another system if the attribute `extends_location` is specified;
-						- a library target of another system if this attribute is not specified and the attribute `extends_location` is specified.
-					It is taken from the 
+					An optional location of a system describing a parent target.
+					If specified, the attribute "extends" refers to a target of that system or defaults to the library target,
+					otherwise, the attribute "extends" refers to a target of the current system.
+
+					See also: `extends`.
 				</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>

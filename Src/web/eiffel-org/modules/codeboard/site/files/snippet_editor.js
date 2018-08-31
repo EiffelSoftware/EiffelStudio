@@ -402,7 +402,7 @@ class CodeEditor {
 		this.fields.lang.val("eiffel");
 		this.fields.caption.val("");
 		this.fields.text.val("class\n\tAPPLICATION\n\nfeature -- Access\n\nend");
-		this.controls.button_save.one('click', this, function (event) { event.data.on_new_save_action() });
+		this.controls.button_add.one('click', this, function (event) { event.data.on_new_save_action() });
 	}
 
 	on_new_save_action() {

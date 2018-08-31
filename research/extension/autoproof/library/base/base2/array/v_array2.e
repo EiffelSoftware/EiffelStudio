@@ -4,6 +4,7 @@ note
 		Indexing of rows and columns starts from 1.
 		]"
 	author: "Nadia Polikarpova"
+	revised_by: "Alexander Kogtenkov"
 	model: sequence, column_count
 	manual_inv: true
 	false_guards: true
@@ -251,7 +252,7 @@ feature -- Specification
 
 invariant
 	array_exists: array /= Void
-	owns_definition: owns = [array]
+	owns_definition: owns ~ create {MML_SET [ANY]}.singleton (array)
 	array_lower_definition: array.lower_ = 1
 	array_no_observers: array.observers.is_empty
 	sequence_implementation: sequence = array.sequence
@@ -261,7 +262,7 @@ invariant
 	row_count_definition: row_count * column_count = sequence.count
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

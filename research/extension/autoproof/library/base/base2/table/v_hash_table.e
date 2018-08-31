@@ -5,6 +5,7 @@ note
 			Search, extension and removal are amortized constant time.
 		]"
 	author: "Nadia Polikarpova"
+	revised_by: "Alexander Kogtenkov"
 	model: map, lock
 	manual_inv: true
 	false_guards: true
@@ -37,7 +38,7 @@ feature {NONE} -- Initialization
 			modify_model ("observers", l)
 		do
 			lock := l
-			Current.subjects := [l]
+			set_subjects (create {MML_SET [ANY]}.singleton (l))
 			lock.add_client (Current)
 			make_empty_buckets (default_capacity)
 		ensure then
@@ -123,13 +124,27 @@ feature -- Search
 	key (k: K): K
 			-- Element of `map.domain' equivalent to `v' according to object equality.
 		do
-			Result := cell_for_key (k).item.left
+			if attached cell_for_key (k) as c then
+				Result := c.item.left
+			else
+				check
+					from_precondition: False
+				then
+				end
+			end
 		end
 
 	item alias "[]" (k: K): V assign force
 			-- Value associated with `k'.
 		do
-			Result := cell_for_key (k).item.right
+			if attached cell_for_key (k) as c then
+				Result := c.item.right
+			else
+				check
+					from_precondition: False
+				then
+				end
+			end
 		end
 
 feature -- Iteration
@@ -297,7 +312,7 @@ feature {V_CONTAINER, V_ITERATOR, V_LOCK} -- Implementation
 			definition: Result = bucket_index (k.hash_code_, buckets.sequence.count)
 		end
 
-	cell_for_key (k: K): V_LINKABLE [MML_PAIR [K, V]]
+	cell_for_key (k: K): detachable V_LINKABLE [MML_PAIR [K, V]]
 			-- Cell of one of the buckets where the key is equal to `k' according to object equality.
 			-- Void if the list has no such cell.
 		require
@@ -311,7 +326,7 @@ feature {V_CONTAINER, V_ITERATOR, V_LOCK} -- Implementation
 			check lock.inv_only ("owns_definition", "equivalence_definition", "hash_domain_definition", "hash_definition") end
 			Result := cell_equal (buckets [index (k)], k)
 			check across 1 |..| buckets_ [index (k)].count as j all (buckets_ [index (k)]) [j.item] = lists [index (k)].sequence [j.item].left end end
-			if domain_has (k) then
+			if domain_has (k) and then attached Result then
 				k.lemma_transitive (Result.item.left, create {MML_SET [K]}.singleton (domain_item (k)))
 			end
 		ensure
@@ -320,7 +335,7 @@ feature {V_CONTAINER, V_ITERATOR, V_LOCK} -- Implementation
 				Result.item.left = domain_item (k) and then map [Result.item.left] = Result.item.right
 		end
 
-	cell_equal (list: V_LINKED_LIST [MML_PAIR [K, V]]; k: K): V_LINKABLE [MML_PAIR [K, V]]
+	cell_equal (list: V_LINKED_LIST [MML_PAIR [K, V]]; k: K): detachable V_LINKABLE [MML_PAIR [K, V]]
 			-- Cell of `list' where the key is equal to `k' according to object equality.
 			-- Void if the list has no such cell.
 		require
@@ -343,7 +358,7 @@ feature {V_CONTAINER, V_ITERATOR, V_LOCK} -- Implementation
 			definition_found: Result /= Void implies list.cells.has (Result) and list.sequence.has (Result.item) and k.is_model_equal (Result.item.left)
 		end
 
-	cell_before (list: V_LINKED_LIST [MML_PAIR [K, V]]; k: K): V_LINKABLE [MML_PAIR [K, V]]
+	cell_before (list: V_LINKED_LIST [MML_PAIR [K, V]]; k: K): detachable V_LINKABLE [MML_PAIR [K, V]]
 			-- Cell of `list' to the left of the cell where the key is equal to `k' according to object equality.
 			-- Void if the first list element is equal to `k'; last cell if no list element is equal to `k'.
 		require
@@ -355,31 +370,35 @@ feature {V_CONTAINER, V_ITERATOR, V_LOCK} -- Implementation
 			j_: INTEGER
 		do
 			check list.inv_only ("cells_domain", "cells_exist", "cells_first", "first_cell_empty", "sequence_implementation") end
-			if not k.is_equal_ (list.first_cell.item.left) then
-				from
-					j_ := 1
-					Result := list.first_cell
-				invariant
-					list.inv_only ("cells_domain", "cells_exist", "cells_linked", "cells_first", "cells_last", "first_cell_empty", "sequence_implementation")
-					1 <= j_ and j_ <= list.sequence.count
-					Result = list.cells [j_]
-					list.sequence.domain [j_ + 1] implies Result.right = list.cells [j_ + 1]
-					across 1 |..| j_ as l all not k.is_model_equal (list.sequence [l.item].left) end
-				until
-					Result.right = Void or else k.is_equal_ (Result.right.item.left)
-				loop
-					Result := Result.right
-					j_ := j_ + 1
-				variant
-					list.sequence.count - j_
+			if attached list.first_cell as c then
+				if not k.is_equal_ (c.item.left) then
+					from
+						j_ := 1
+						Result := c
+					invariant
+						list.inv_only ("cells_domain", "cells_exist", "cells_linked", "cells_first", "cells_last", "first_cell_empty", "sequence_implementation")
+						1 <= j_ and j_ <= list.sequence.count
+						Result = list.cells [j_]
+						list.sequence.domain [j_ + 1] implies Result.right = list.cells [j_ + 1]
+						across 1 |..| j_ as l all not k.is_model_equal (list.sequence [l.item].left) end
+					until
+						attached Result.right as r implies k.is_equal_ (r.item.left)
+					loop
+						Result := r
+						j_ := j_ + 1
+					variant
+						list.sequence.count - j_
+					end
 				end
+			else
+				check from_precondition: False then end
 			end
 		ensure
 			definition_not_found: Result /= Void and then Result.right = Void implies
 				across 1 |..| list.sequence.count as i all not k.is_model_equal (list.sequence [i.item].left) end
 			definition_found_first: Result = Void implies k.is_model_equal (list.sequence.first.left)
-			definition_found_later: Result /= Void and then Result.right /= Void implies
-				list.cells.has (Result) and list.cells.has (Result.right) and k.is_model_equal (Result.right.item.left)
+			definition_found_later: Result /= Void and then attached Result.right as r implies
+				list.cells.has (Result) and list.cells.has (r) and k.is_model_equal (r.item.left)
 		end
 
 	make_empty_buckets (n: INTEGER)
@@ -436,7 +455,7 @@ feature {V_CONTAINER, V_ITERATOR, V_LOCK} -- Implementation
 			it_open: it.is_open
 			valid_target: it.target = Current
 			lock_wrapped: lock.is_wrapped
-			only_iterator: observers = [it]
+			only_iterator: observers ~ create {MML_SET [ANY]}.singleton (it)
 			1 <= it.bucket_index and it.bucket_index <= lists.count
 			list_iterator_wrapped: it.list_iterator.is_wrapped
 			it.inv_only ("target_which_bucket", "list_iterator_not_off")
@@ -450,7 +469,7 @@ feature {V_CONTAINER, V_ITERATOR, V_LOCK} -- Implementation
 			i_ := it.list_iterator.index_
 			check it.list_iterator.inv_only ("subjects_definition", "A2", "sequence_definition") end
 
-			check lists [idx_].observers = [it.list_iterator] end
+			check lists [idx_].observers ~ create {MML_SET [ANY]}.singleton (it.list_iterator) end
 			it.list_iterator.remove
 
 			count_ := count_ - 1
@@ -505,7 +524,7 @@ feature {V_CONTAINER, V_ITERATOR, V_LOCK} -- Implementation
 			it_open: it.is_open
 			valid_target: it.target = Current
 			lock_wrapped: lock.is_wrapped
-			only_iterator: observers = [it]
+			only_iterator: observers ~ create {MML_SET [ANY]}.singleton (it)
 			1 <= it.bucket_index and it.bucket_index <= lists.count
 			list_iterator_wrapped: it.list_iterator.is_wrapped
 			it.inv_only ("target_which_bucket", "list_iterator_not_off")
@@ -522,7 +541,7 @@ feature {V_CONTAINER, V_ITERATOR, V_LOCK} -- Implementation
 			x := it.list_iterator.item.left
 			check x = (buckets_ [idx_]) [i_] end
 
-			check lists [idx_].observers = [it.list_iterator] end
+			check lists [idx_].observers ~ create {MML_SET [ANY]}.singleton (it.list_iterator) end
 			it.list_iterator.put (create {MML_PAIR [K, V]}.make (x, v))
 
 			map := map.updated (x, v)
@@ -706,6 +725,7 @@ feature -- Specification
 		note
 			status: ghost
 		attribute
+			check is_executable: False then end
 		end
 
 	buckets_: MML_SEQUENCE [MML_SEQUENCE [K]]
@@ -713,6 +733,7 @@ feature -- Specification
 		note
 			status: ghost
 		attribute
+			check is_executable: False then end
 		end
 
 	lock: V_HASH_LOCK [K]
@@ -720,6 +741,7 @@ feature -- Specification
 		note
 			status: ghost
 		attribute
+			check is_executable: False then end
 		end
 
 	forget_iterator (it: V_ITERATOR [V])
@@ -778,6 +800,7 @@ feature {V_CONTAINER, V_ITERATOR, V_LOCK} -- Specification
 		note
 			status: ghost
 		attribute
+			check is_executable: False then end
 		end
 
 	lemma_lists_domain (i: INTEGER)
@@ -848,7 +871,7 @@ invariant
 	list_observers_count: across 1 |..| lists.count as i all lists [i.item].observers.count <= observers.count end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

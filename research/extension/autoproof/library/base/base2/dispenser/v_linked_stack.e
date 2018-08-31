@@ -1,6 +1,7 @@
 note
 	description: "Linked implementation of stacks."
 	author: "Nadia Polikarpova"
+	revised_by: "Alexander Kogtenkov"
 	model: sequence
 	manual_inv: true
 	false_guards: true
@@ -133,14 +134,14 @@ feature -- Specification
 
 invariant
 	list_exists: list /= Void
-	owns_definition: owns = [list]
+	owns_definition: owns ~ create {MML_SET [ANY]}.singleton (list)
 	sequence_implementation: sequence ~ list.sequence
 	observers_type: across observers as o all attached {V_LINKED_STACK_ITERATOR [G]} o.item end
 	observers_correspond: list.observers.count <= observers.count
 
 note
 	explicit: observers
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

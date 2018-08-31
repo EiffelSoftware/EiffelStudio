@@ -3,6 +3,7 @@ note
 		Helper ghost objects that prevent hashable container items from unwanted modifications.
 		]"
 	author: "Nadia Polikarpova"
+	revised_by: "Alexander Kogtenkov"
 	status: ghost
 	model: locked, equivalence, hash
 	manual_inv: true
@@ -24,7 +25,9 @@ feature -- Access
 			-- Cache of hash codes of items from `locked'.
 		note
 			guard: agrees_on_locked
+			status: ghost
 		attribute
+			check is_executable: False then end
 		end
 
 feature -- Basic operations
@@ -58,7 +61,7 @@ invariant
 	hash_definition: across locked as x all hash [x.item] = x.item.hash_code_ end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

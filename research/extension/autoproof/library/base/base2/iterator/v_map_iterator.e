@@ -1,12 +1,13 @@
 note
 	description: "Iterators to read from maps in linear order."
 	author: "Nadia Polikarpova"
+	revised_by: "Alexander Kogtenkov"
 	model: target, sequence, index_
 	manual_inv: true
 	false_guards: true
 
 deferred class
-	V_MAP_ITERATOR [K, V]
+	V_MAP_ITERATOR [K -> separate ANY, V]
 
 inherit
 	V_ITERATOR [V]
@@ -105,7 +106,7 @@ invariant
 	value_sequence_definition: value_sequence ~ value_sequence_from (sequence, target.map)
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

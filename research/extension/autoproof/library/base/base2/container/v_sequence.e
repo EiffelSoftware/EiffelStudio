@@ -4,6 +4,7 @@ note
 		Immutable interface.
 		]"
 	author: "Nadia Polikarpova"
+	revised_by: "Alexander Kogtenkov"
 	model: sequence, lower_
 	manual_inv: true
 	false_guards: true
@@ -206,6 +207,7 @@ feature -- Specification
 			status: ghost
 			replaces: bag
 		attribute
+			check is_executable: False then end
 		end
 
 	lower_: INTEGER
@@ -236,7 +238,7 @@ invariant
 	bag_definition: bag ~ sequence.to_bag
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

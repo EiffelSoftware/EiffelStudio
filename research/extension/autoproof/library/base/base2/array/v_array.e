@@ -5,6 +5,7 @@ note
 		The logical size of array is the same as the physical size of the underlying memory area.
 		]"
 	author: "Nadia Polikarpova"
+	revised_by: "Alexander Kogtenkov"
 	model: sequence, lower_
 	manual_inv: true
 	false_guards: true
@@ -351,12 +352,12 @@ invariant
 	area_exists: area /= Void
 	lower_definition: lower_ = lower
 	upper_definition: upper = lower_ + sequence.count - 1
-	owns_definition: owns = [ area ]
+	owns_definition: owns ~ create {MML_SET [ANY]}.singleton (area)
 	sequence_implementation: sequence ~ area.sequence
 
 note
 	explicit: observers
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

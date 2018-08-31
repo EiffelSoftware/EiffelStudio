@@ -1,12 +1,13 @@
 note
 	description: "Iterators over sets, allowing efficient search."
 	author: "Nadia Polikarpova"
+	revised_by: "Alexander Kogtenkov"
 	model: target, sequence, index_
 	manual_inv: true
 	false_guards: true
 
 deferred class
-	V_SET_ITERATOR [G]
+	V_SET_ITERATOR [G -> separate ANY]
 
 inherit
 	V_ITERATOR [G]
@@ -45,7 +46,7 @@ feature -- Removal
 			not_off: not off
 			target_wrapped: target.is_wrapped
 			lock_wrapped: target.lock.is_wrapped
-			only_iterator: target.observers = [Current]
+			only_iterator: target.observers ~ create {MML_SET [ANY]}.singleton (Current)
 			modify_model (["sequence", "box"], Current)
 			modify_model ("set", target)
 		deferred
@@ -70,7 +71,7 @@ invariant
 	target_set_constraint: target.set ~ sequence.range
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

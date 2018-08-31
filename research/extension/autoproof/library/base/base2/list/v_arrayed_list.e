@@ -6,6 +6,7 @@ note
 		Inserting or removing elements in the middle is linear time.
 		]"
 	author: "Nadia Polikarpova"
+	revised_by: "Alexander Kogtenkov"
 	model: sequence
 	manual_inv: true
 	false_guards: true
@@ -469,7 +470,7 @@ feature {NONE} -- Specification
 
 invariant
 	array_exists: array /= Void
-	owns_definition: owns = [ array ]
+	owns_definition: owns ~ create {MML_SET [ANY]}.singleton (array)
 	array_non_empty: array.sequence.count > 0
 	array_starts_from_zero: array.lower_ = 0
 	first_index_in_bounds: 0 <= first_index and first_index < array.sequence.count
@@ -479,7 +480,7 @@ invariant
 
 note
 	explicit: observers
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

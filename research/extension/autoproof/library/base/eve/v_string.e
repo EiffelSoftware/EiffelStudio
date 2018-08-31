@@ -50,6 +50,7 @@ feature {NONE} -- Initialization
 			status: skip
 		do
 			sequence := a_sequence
+			check is_executable: False then end
 		ensure
 			same_string: sequence = a_sequence
 		end
@@ -232,6 +233,7 @@ feature -- Specification
 		note
 			status: ghost
 		attribute
+			check is_executable: False then end
 		end
 
 	hash_code_: INTEGER
@@ -278,7 +280,7 @@ invariant
 	internal_string_not_void: internal_string /= Void
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

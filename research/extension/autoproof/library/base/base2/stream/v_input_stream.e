@@ -1,6 +1,7 @@
 note
 	description: "Streams that provide values one by one."
 	author: "Nadia Polikarpova"
+	revised_by: "Alexander Kogtenkov"
 	model: box
 	manual_inv: true
 	false_guards: true
@@ -73,14 +74,15 @@ feature -- Specification
 		note
 			status: ghost
 		attribute
+			check is_executable: False then end
 		end
 
 invariant
 	box_count_constraint: box.count <= 1
-	no_observers: observers = []
+	no_observers: observers ~ create {MML_SET [ANY]}
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

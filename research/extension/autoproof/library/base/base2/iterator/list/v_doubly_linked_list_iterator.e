@@ -89,7 +89,11 @@ feature -- Access
 		do
 			check inv end
 			check target.inv end
-			Result := active.item
+			if attached active as a then
+				Result := a.item
+			else
+				check from_precondition: False then end
+			end
 		end
 
 feature -- Measurement
@@ -177,7 +181,11 @@ feature -- Cursor movement
 			-- Move one position forward.
 		do
 			check target.inv end
-			active := active.right
+			if attached active as a then
+				active := a.right
+			else
+				check from_precondition: False then end
+			end
 			index_ := index_ + 1
 			after_ := active = Void
 		end
@@ -186,7 +194,11 @@ feature -- Cursor movement
 			-- Go one position backwards.
 		do
 			check target.inv end
-			active := active.left
+			if attached active as a then
+				active := a.left
+			else
+				check from_precondition: False then end
+			end
 			index_ := index_ - 1
 			check index_ >= 1 implies target.cells [index_].inv end
 		end
@@ -234,7 +246,11 @@ feature -- Replacement
 	put (v: G)
 			-- Replace item at current position with `v'.
 		do
-			target.put_cell (v, active, index_)
+			if attached active as a then
+				target.put_cell (v, a, index_)
+			else
+				check from_precondition: False then end
+			end
 			check target.inv_only ("bag_definition") end
 		end
 
@@ -266,7 +282,11 @@ feature -- Extension
 	extend_right (v: G)
 			-- Insert `v' to the right of current position. Do not move cursor.
 		do
-			target.extend_after (create {V_DOUBLY_LINKABLE [G]}.put (v), active, index_)
+			if attached active as a then
+				target.extend_after (create {V_DOUBLY_LINKABLE [G]}.put (v), a, index_)
+			else
+				check from_precondition: False then end
+			end
 			check target.inv_only ("bag_definition") end
 		ensure then
 			cell_sequence_front_preserved: target.cells.old_.front (index_) ~ target.cells.front (index_)
@@ -306,6 +326,7 @@ feature -- Extension
 			from
 				check inv_only ("subjects_definition", "no_observers", "A2") end
 				check other.inv_only ("target_exists", "subjects_definition", "index_constraint") end
+				create s
 			invariant
 				1 <= index_.old_ and index_.old_ <= index_ and index_ <= sequence.count
 				1 <= other.index_.old_ and other.index_.old_ <= other.index_ and other.index_ <= other.sequence.count + 1
@@ -393,13 +414,17 @@ feature -- Removal
 	remove_right
 			-- Remove element to the right of current position. Do not move cursor.
 		do
-			target.remove_after (active, index_)
+			if attached active as a then
+				target.remove_after (a, index_)
+			else
+				check from_precondition: False then end
+			end
 			check target.inv_only ("bag_definition") end
 		end
 
 feature {V_DOUBLY_LINKED_LIST_ITERATOR} -- Implementation
 
-	active: V_DOUBLY_LINKABLE [G]
+	active: detachable V_DOUBLY_LINKABLE [G]
 			-- Cell at current position.
 
 	after_: BOOLEAN
@@ -431,10 +456,18 @@ feature {V_DOUBLY_LINKED_LIST_ITERATOR} -- Implementation
 				active = cf or active = cb
 			loop
 				i := i + 1
-				cf := cf.right
+				if attached cf then
+					cf := cf.right
+				else
+					check from_loop_invariant: False then end
+				end
 				check target.cells [j - 1].inv end
 				j := j - 1
-				cb := cb.left
+				if attached cb then
+					cb := cb.left
+				else
+					check from_loop_invariant: False then end
+				end
 			variant
 				target.count_ - i
 			end

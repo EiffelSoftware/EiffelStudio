@@ -10,7 +10,7 @@ Contributors:
 
 Supported Version
 =================
-OpenSSL version 1.1.0f.
+OpenSSL version 1.1.0g.
 
 
 
@@ -103,7 +103,6 @@ Documentation
 $>wget https://www.openssl.org/source/openssl-1.1.0g.tar.gz
 $>tar xzvf openssl-1.1.0f.tar.gz
 $>cd openssl-1.1.0g
-$>./Configure is now
 $>./config -Wl,--enable-new-dtags,-rpath,`$(LIBRPATH)`
 $>make
 $>sudo make install
@@ -114,6 +113,13 @@ $>echo	If you have an already installed OpenSSL library remove it using
 
 $>sudo apt-get remove libssl-dev
 ```
+
+Rebuild the ldconfig cache using
+
+```
+$sudo ldconfig
+```
+
 
 
 

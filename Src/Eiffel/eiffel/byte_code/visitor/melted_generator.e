@@ -694,29 +694,62 @@ feature {NONE} -- Visitors
 						l_call.set_parent (Void)
 					end
 				else
-					ba.append (Bc_create)
-						-- If there is a call, we need to duplicate newly created object
-						-- after its creation. This information is used by the runtime
-						-- to do this duplication.
-					ba.append_boolean (l_call /= Void)
+--					if
+--						attached {FEATURE_B} l_call as ll_call and then
+--						ll_call.is_once
+--					then
+--							-- once creation procedure.
+--						if not Context.has_once_creation (Context.class_type.type_id, [Context.current_type, Context.current_feature, l_call]) then
+--							ba.append (Bc_create)
+--								-- If there is a call, we need to duplicate newly created object
+--								-- after its creation. This information is used by the runtime
+--								-- to do this duplication.
+--							ba.append_boolean (l_call /= Void)
 
-						-- Create associated object.
-					a_node.info.updated_info.make_byte_code (ba)
-					ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.terminator_type)
+--								-- Create associated object.
+--							a_node.info.updated_info.make_byte_code (ba)
+--							ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.terminator_type)
 
-						-- Call creation procedure if any.
-					if l_call /= Void then
-						create l_nested
-						l_nested.set_target (a_node)
-						l_nested.set_message (l_call)
-						l_call.set_parent (l_nested)
-						is_in_creation_call := True
-						is_active_region := a_node.is_active
-						l_call.process (Current)
-						is_active_region := False
-						is_in_creation_call := False
-						l_call.set_parent (Void)
-					end
+--								-- Call creation procedure if any.
+--							if l_call /= Void then
+--								create l_nested
+--								l_nested.set_target (a_node)
+--								l_nested.set_message (l_call)
+--								l_call.set_parent (l_nested)
+--								is_in_creation_call := True
+--								is_active_region := a_node.is_active
+--								l_call.process (Current)
+--								is_active_region := False
+--								is_in_creation_call := False
+--								l_call.set_parent (Void)
+--							end
+--							Context.add_once_creation (Context.class_type.type_id, [Context.current_type, Context.current_feature, l_call])
+--						end
+--					else
+						ba.append (Bc_create)
+							-- If there is a call, we need to duplicate newly created object
+							-- after its creation. This information is used by the runtime
+							-- to do this duplication.
+						ba.append_boolean (l_call /= Void)
+
+							-- Create associated object.
+						a_node.info.updated_info.make_byte_code (ba)
+						ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.terminator_type)
+
+							-- Call creation procedure if any.
+						if l_call /= Void then
+							create l_nested
+							l_nested.set_target (a_node)
+							l_nested.set_message (l_call)
+							l_call.set_parent (l_nested)
+							is_in_creation_call := True
+							is_active_region := a_node.is_active
+							l_call.process (Current)
+							is_active_region := False
+							is_in_creation_call := False
+							l_call.set_parent (Void)
+						end
+--					end
 				end
 			end
 		end
@@ -2679,7 +2712,7 @@ feature {NONE} -- SCOOP
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

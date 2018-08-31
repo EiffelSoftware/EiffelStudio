@@ -332,10 +332,10 @@ feature -- Generation
 			l_generate_call: BOOLEAN
 			l_is_separate: BOOLEAN
 			p: PARAMETER_B
+			internal_name: STRING
 		do
 			buf := buffer
 			generate_line_info
-
 			t := real_type (type)
 			l_is_separate := system.is_scoop and then t.is_separate
 
@@ -376,15 +376,34 @@ feature -- Generation
 					end
 				end
 			else
-				info.generate_start (buf)
-				info.generate_gen_type_conversion (0)
-				buf.put_new_line
-				register.print_register
-				buf.put_string (" = ")
-				info.generate
-				buf.put_character (';')
-				info.generate_end (buf)
-				l_generate_call := True
+				if
+					attached {FEATURE_B} call as l_call and then
+					l_call.is_once
+				then
+						-- once creation procedure.
+					if not Context.has_once_creation (Context.class_type.type_id, [Context.current_type, Context.current_feature, call]) then
+						info.generate_start (buf)
+						info.generate_gen_type_conversion (0)
+						buf.put_new_line
+						register.print_register
+						buf.put_string (" = ")
+						info.generate
+						buf.put_character (';')
+						info.generate_end (buf)
+						l_generate_call := True
+						Context.add_once_creation (Context.class_type.type_id, [Context.current_type, Context.current_feature, call])
+					end
+				else
+					info.generate_start (buf)
+					info.generate_gen_type_conversion (0)
+					buf.put_new_line
+					register.print_register
+					buf.put_string (" = ")
+					info.generate
+					buf.put_character (';')
+					info.generate_end (buf)
+					l_generate_call := True
+				end
 			end
 
 			if l_is_separate then
@@ -407,6 +426,8 @@ feature -- Generation
 					-- Call a creation procedure
 				c.generate_call (l_is_separate, l_is_separate and is_active, True, Void, register)
 				c.set_parent (Void)
+				generate_frozen_debugger_hook_nested
+			else
 				generate_frozen_debugger_hook_nested
 			end
 		end
@@ -435,7 +456,7 @@ feature {BYTE_NODE_VISITOR} -- Assertion support
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

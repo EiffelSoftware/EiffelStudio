@@ -148,7 +148,7 @@ feature -- Hooks
 					end
 				end
 			elseif a_block_id.is_case_insensitive_equal_general ("snippet_editor") then
-				if a_response.has_permission ({CODEBOARD_MODULE_WEBAPI}.manage_snippet_permission) then
+				if a_response.has_permissions (<<{CODEBOARD_MODULE_WEBAPI}.manage_snippet_permission, {CODEBOARD_MODULE_WEBAPI}.edit_snippet_permission>>) then
 					if attached smarty_template_block (Current, a_block_id, a_response.api) as l_tpl_block then
 						a_response.add_block (l_tpl_block, "content")
 					end

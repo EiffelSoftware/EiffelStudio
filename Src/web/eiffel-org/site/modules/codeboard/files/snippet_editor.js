@@ -417,8 +417,6 @@ class CodeEditor {
 			);
 		req.done(function(data) {
 				var l_code_url = data._links.self.href;
-				//controls.button_cancel.show();	
-				//controls.button_back.show();	
 				this.show_message("Snippet code successfully created!",'fadeout');
 				}
 			);	

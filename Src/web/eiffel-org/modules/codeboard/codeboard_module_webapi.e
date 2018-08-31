@@ -241,7 +241,11 @@ feature -- Handlers
 				end
 			else
 				resp.set_status_code ({HTTP_STATUS_CODE}.user_access_denied)
-				resp.add_string_field ("error", "Access denied")
+				if a_codeboard_api.cms_api.user_is_authenticated then
+					resp.add_string_field ("error", "Access denied!")
+				else
+					resp.add_string_field ("error", "Access denied (no user)!")
+				end
 				resp.add_self (req.request_uri)
 			end
 

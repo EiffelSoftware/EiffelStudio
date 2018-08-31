@@ -11,7 +11,15 @@
         <pre class="prettyprint {unless isempty="$snippet.lang"}lang-{$snippet.lang/}{/unless}">
 {$snippet.text/}
         </pre>
-{unless isempty="$snippet.description"}		<p class="slide-caption">{$snippet.description/}</p>{/unless}
+	{unless isempty="$snippet.caption"}		<p class="slide-caption">
+		{unless isempty="$snippet.link"}<a href="{$snippet.link/}">{/unless}
+		{htmlentities}{$snippet.caption/}{/htmlentities}
+		{unless isempty="$snippet.link"}</a>{/unless}
+		</p>
+	{/unless}
+	{if isempty="$snippet.caption"}
+		{unless isempty="$snippet.link"}<p class="slide-caption"><a href="{$snippet.link/}">{$snippet.link/}</a></p>{/unless}
+	{/if}
 	  </div>
     </div><!-- .slide -->
 {/foreach}	

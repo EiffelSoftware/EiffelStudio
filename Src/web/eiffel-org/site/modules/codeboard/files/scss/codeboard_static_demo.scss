@@ -56,6 +56,12 @@
 					color: #666;
 					background-color: rgba(230,230,230,.5);
 					text-align: center;
+					a {
+						color: blue;
+					}
+					a:hover {
+						border-bottom: dotted 1px blue;
+					}
 				}
 
 			}

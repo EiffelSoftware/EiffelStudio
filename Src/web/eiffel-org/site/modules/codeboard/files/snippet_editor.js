@@ -1,332 +1,447 @@
-//console.log('Start codeboard_editor...(jquery='+ jQuery().jquery +')');
+//DBG.log('Start codeboard_editor...(jquery='+ jQuery().jquery +')');
+//
 
-var CBEDITOR = CBEDITOR || {};
-CBEDITOR.count = 0;
-CBEDITOR.endpoint = null;
-//TODO support multiple CBEDITOR ...
-CBEDITOR.form_data = null;
-CBEDITOR.loaded = false;
+var DBG = DBG || {}
+DBG.log = function (msg) { /* console.log (msg); */ };
+DBG.dir = function (msg) { /* console.dir (msg); */ };
 
-CBEDITOR.initialize = function(a_editor) {
-  CBEDITOR.endpoint = a_editor.attr("data-codeboard-endpoint");
-  CBEDITOR.count = CBEDITOR.count + 1;
-  if (CBEDITOR.count == 1) {
-	var l_editor_id = "cbeditor_" + CBEDITOR.count;
-	a_editor.attr("id", l_editor_id);
-	$('<button type="button">Editor &gt;&gt;</button>').insertBefore(a_editor);
-	var l_editor_button = $(a_editor).prev();
-	$(l_editor_button).on('click', function() { 
-		if (CBEDITOR.loaded) {
-			CBEDITOR.unload(a_editor); 
-			l_editor_button.html("Editor &gt;&gt;");
-		} else {
-			CBEDITOR.load(a_editor); 
-			l_editor_button.html("&lt;&lt; Editor");
-		}
-	});
-  }
-}
+class CodeEditor {
+	constructor(a_editor) {
+		this.editor = a_editor;
+		this.id = a_editor.attr("id");
+		this.loaded = false;
+		this.endpoint = a_editor.attr("data-codeboard-endpoint");
+		this.controls = {};
+		this.fields = {};
+		this.messages = {};
 
-CBEDITOR.unload = function(a_editor) {
-	CBEDITOR.loaded = false;
-	a_editor.text("");
-}
-CBEDITOR.load = function(a_editor) {
-	CBEDITOR.loaded = true;
-	a_editor.append(`
-	<style>
-	.codeboard-editor { width: 500px; margin-left: auto; margin-right: auto; }
-	.codeboard-editor .message { margin: 3px; padding: 5px; border: solid 1px #090; background-color: #dfd; color: #090;}
-	.codeboard-editor .error { border: solid 1px red; background-color: red; color: white; }
-	.codeboard-editor .control { width: 100%;  }
-	.codeboard-editor-inner { width: 100%; margin-top: 1rem; padding: .5rem; border: solid 1px #999; background-color: #ddd; }
-	.codeboard-editor label { font-style: italic; color: #777; }
-	.codeboard-editor textarea { width: 100%; height: 250px; }
-	.codeboard-editor-inner input { margin-bottom: 5px; width: 100%; }
-	</style>
-	`
-	);
-	var l_control = $('<div class="control"/>');
-	var l_cancel = $('<button type="button" name="cancel">&lt;&lt;</button>'); l_cancel.hide();
-	var l_new = $('<button type="button" name="new">New</button>');
-	var l_edit = $('<button type="button" name="edit">Edit...</button>');
-	a_editor.append(l_control);
-	l_control.append(l_cancel);
-	l_control.append(l_new);
-	l_control.append(l_edit);
+		$('<button type="button">Editor &gt;&gt;</button>').insertBefore(this.editor);
+		var l_editor_button = $(this.editor).prev();
 
-	var l_error = $('<div class="message error"/>');
-	var l_message = $('<div class="message"/>');
-
-	var l_form = $('<div class="codeboard-editor-inner">');
-	a_editor.append(l_form);
-	l_form.append(l_error); l_error.hide();
-	l_form.append(l_message); l_message.hide();
-
-	var l_lang = $('<input type="text" name="lang" value="eiffel"/>');
-	var l_desc = $('<input type="text" name="description" value=""/>');
-	var l_text = $('<textarea name="code"></textarea>');
-	l_form.append('<label for="lang">Language</label>'); l_form.append(l_lang); l_form.append("<br/>");
-	l_form.append('<label for="description">Short description</label>'); l_form.append(l_desc); l_form.append("<br/>");
-	l_form.append('<label for="text">Code</label>');
-	l_form.append(l_text);
-	CBEDITOR.form_data = {
-			control: {
-				div:l_control, 
-				//button_back:l_back, 
-				button_new:l_new, 
-				button_edit:l_edit, 
-				button_cancel:l_cancel
-			},
-			error:l_error,
-			message:l_message,
-			form:l_form, 
-			lang:l_lang, 
-			description:l_desc,
-			text:l_text 
-		};
-
-	l_control.on('click', 'button[name=back]', CBEDITOR.reset);
-	l_control.on('click', 'button[name=cancel]', CBEDITOR.reset);
-	l_control.on('click', 'button[name=new]', function() {
-			CBEDITOR.on_new_action (CBEDITOR.form_data);
-		});
-
-	l_control.on('click', 'button[name=edit]', CBEDITOR.on_edit_action);
-}
-
-CBEDITOR.reset = function() {
-	//console.log ("Reset ...");
-	CBEDITOR.reset_control_and_form();
-	CBEDITOR.reset_error();
-	CBEDITOR.reset_message();
-	CBEDITOR.show_snippet({lang:"eiffel", description:"", code: ""});
-}
-CBEDITOR.reset_control_and_form = function() {
-	//console.log ("Reset control and form...");
-	var form_data = CBEDITOR.form_data;
-	$(form_data.control.div).children("button,select").each (function() {
-		var l_name =$(this).attr('name');
-		if (l_name == 'new') {
-			$(this).show();
-		} else if (l_name == 'edit') {
-			$(this).show();
-		} else if (l_name == 'cancel') {
-			$(this).hide();
-		} else {
-			$(this).remove();
-		}
-	});
-	CBEDITOR.show_snippet({lang:"eiffel", description:"", code: ""});
-}
-
-CBEDITOR.show_message = function (msg) {
-	CBEDITOR.reset_error();
-	CBEDITOR.form_data.message.text(msg);
-	CBEDITOR.form_data.message.show();
-}
-CBEDITOR.show_error = function (msg,info) {
-	CBEDITOR.reset_message();
-	if (info) {
-		CBEDITOR.form_data.error.text("ERROR:"+ msg + " [" + info + "]");
-	} else {
-		CBEDITOR.form_data.error.text("ERROR:"+ msg);
-	}
-	CBEDITOR.form_data.error.show();
-}
-CBEDITOR.reset_error = function () {
-	CBEDITOR.form_data.error.text("");
-	CBEDITOR.form_data.error.hide();
-}
-CBEDITOR.reset_message = function () {
-	CBEDITOR.form_data.message.text("");
-	CBEDITOR.form_data.message.hide();
-}
-CBEDITOR.show_snippet = function (data) {
-	CBEDITOR.form_data.lang.val(data.lang);
-	CBEDITOR.form_data.description.val(data.description);
-	CBEDITOR.form_data.text.val(data.code);
-}
-
-CBEDITOR.on_edit_action = function() {
-	CBEDITOR.reset_error();
-
-	var req = $.ajax({
-					url: CBEDITOR.endpoint,
-					type: 'GET'
-				}
-		);
-	req.done(function(data) {
-			var i;
-			var html = '<select class="code_snippets">';
-			html += '<option value="" selected="selected">Select code</option>';
-			for (i = 1; i <= data.available_code_count; i++) {
-				var snip = data._links['code-' + i];
-				if (snip) {
-					html += '<option value="'+snip.href+'">Code ' + i + '</option>';
-				}
+		$(l_editor_button).on('click', this, function(event) { 
+			//console.dir(event.data);
+			if (event.data.loaded) {
+				event.data.unload_editor(); 
+				l_editor_button.html("Editor &gt;&gt;");
+			} else {
+				event.data.load_editor(); 
+				l_editor_button.html("&lt;&lt; Editor");
 			}
-			html += '</select>';
-			CBEDITOR.form_data.control.button_new.hide();
-			CBEDITOR.form_data.control.button_edit.hide();
-			CBEDITOR.form_data.control.button_cancel.show();
-
-			CBEDITOR.form_data.control.div.find("select.code_snippets").remove();
-
-			CBEDITOR.form_data.control.div.append(html);
-			CBEDITOR.form_data.control.div.find("select.code_snippets").change(function() { 
-					CBEDITOR.on_edit_selected_action($(this).val());
-				});
+		});
+	};
+	
+	fields_as_json() {
+		let j = {}
+		let v = null;
+		if (this.fields.locked.attr('checked')) {
+			j.is_locked = true;
 		}
-		);	
-	req.fail(function(data) { CBEDITOR.on_failure_action ("Could not get snippet list!", data); });
-}
-CBEDITOR.on_edit_selected_action = function(a_code_url) {
-	var l_code_id = a_code_url.substr(a_code_url.lastIndexOf('/') + 1);
-	if (l_code_id) {
+		j.lang = this.fields.lang.val();
+		j.code = this.fields.text.val();
+		v = this.fields.caption.val(); if (v.length !== 0) { j.caption = v; }
+		v = this.fields.link.val(); if (v.length !== 0) {
+			j.link = v; 
+		}
+		return j;
+	}
+	unload_editor() {
+		this.loaded = false;
+		this.editor.text("");
+	}
+
+	put_new_control_button(a_name, a_title, a_tooltip=null, a_hidden=false) {
+		let but=null;
+		if (a_tooltip) {
+			but =  $('<button type="button" name="' + a_name + '" title="' + a_tooltip + '">' + a_title + '</button>');
+		} else {
+			but =  $('<button type="button" name="' + a_name + '" title="' + a_title + '">' + a_title + '</button>');
+		}
+		this.remove_control_button (a_name);
+		this.controls["button_" + a_name] = but;
+		this.controls.div.append(but);
+		if (a_hidden) { but.hide(); }
+	}
+
+	remove_control_button(a_name) {
+		let but = this.controls['button_' + a_name];
+		if (but) {
+			delete this.controls['button_' + a_name];
+			$(but).remove();
+		}
+	}
+
+	load_editor() {
+		this.loaded = true;
+		this.editor.append(`
+		<style>
+		.codeboard-editor { width: 500px; margin-left: auto; margin-right: auto; }
+		.codeboard-editor .message { margin: 3px; padding: 5px; border: solid 1px #090; background-color: #dfd; color: #090;}
+		.codeboard-editor .error { border: solid 1px red; background-color: red; color: white; }
+		.codeboard-editor .control { width: 100%;  }
+		.codeboard-editor button { padding: 2px; margin-left: 3px; }
+		.codeboard-editor-fields { width: 100%; margin-top: 1rem; padding: .5rem; border: solid 1px #999; background-color: #ddd; }
+		.codeboard-editor-fields.locked { border: solid 1px red; background-color: #fcc;}
+		.codeboard-editor label { font-style: italic; color: #777; }
+		.codeboard-editor textarea { width: 100%; height: 250px; }
+		.codeboard-editor-fields input { margin-bottom: 5px; width: 100%; }
+		.codeboard-editor-fields div.code-locked { display: none; }
+		.codeboard-editor-fields.locked div.code-locked { display: block; color: red; font-weight: bold; }
+		</style>
+		`
+		);
+
+			// Control bar
+		var l_controls = $('<div class="control"/>');
+		this.editor.append(l_controls);
+		this.controls['div'] = l_controls;
+		this.put_new_control_button ('cancel', '&lt;&lt;', "Cancel", true);
+		this.put_new_control_button ('new', 'New', "New");
+		this.put_new_control_button ('edit', 'Edit...', "Edit existing codes");
+
+			// Messages
+		this.messages = {
+				error:$('<div class="message error"/>'),
+				message:$('<div class="message"/>')
+			}
+		this.editor.append(this.messages.error); this.messages.error.hide();
+		this.editor.append(this.messages.message); this.messages.message.hide();
+
+
+			// Web form
+		var l_fields = $('<div class="codeboard-editor-fields">');
+		this.editor.append(l_fields);
+		this.fields = {
+			div:l_fields,
+			locked:$('<input type="checkbox" name="locked" value="no" style="display: none"/>'),
+			lang:$('<input type="text" name="lang" value="eiffel"/>'),
+			caption:$('<input type="text" name="caption" placeholder="one line caption..."/>'),
+			link:$('<input type="url" name="link" value="" placeholder="Enter an associated url ..." />'),
+			text:$('<textarea name="code" required="required"></textarea>')
+		}
+		l_fields.append('<div class="code-locked">This item is locked!</div>'); l_fields.append(this.fields.locked);
+		l_fields.append('<label for="lang">Language</label>'); l_fields.append(this.fields.lang); 
+		l_fields.append('<br/><label for="caption">Optional caption</label>'); l_fields.append(this.fields.caption);
+		l_fields.append('<br/><label for="link">Optional link</label>'); l_fields.append(this.fields.link);
+		l_fields.append('<br/><label for="text">Code</label>'); l_fields.append(this.fields.text);
+		
+			// Actions
+		l_controls.on('click', 'button[name=back]', this, function (event) { event.data.reset() });
+		l_controls.on('click', 'button[name=cancel]', this, function (event) { event.data.reset() });
+		l_controls.on('click', 'button[name=new]', this, function(event) {
+				event.data.on_new_action ();
+			});
+		l_controls.on('click', 'button[name=edit]', this, function (event) { event.data.on_edit_action() });
+	}
+
+	reset() {
+		DBG.log ("Reset ...");
+		this.reset_control_and_form();
+		this.reset_error();
+		this.reset_message();
+		this.show_snippet(null);
+	}
+	reset_control_and_form() {
+		DBG.log ("Reset control and form...");
+		var editor = this;
+		$(this.controls.div).children("button,select").each (function() {
+			let l_name =$(this).attr('name');
+			if (l_name == 'new') {
+				$(this).show();
+			} else if (l_name == 'edit') {
+				$(this).show();
+			} else if (l_name == 'cancel') {
+				$(this).hide();
+			} else {
+				$(this).remove();
+				delete editor.remove_control_button(l_name);
+			}
+		});
+		this.show_snippet(null);
+	}
+
+	show_message(msg,opt=null) {
+		this.reset_error();
+		this.messages.message.text(msg);
+		this.messages.message.show();
+		if (opt == 'fadeout') {
+			this.messages.message.fadeOut(3000);
+		}
+	}
+
+	show_error(msg,info,opt=null) {
+		this.reset_message();
+		if (info) {
+			this.messages.error.text("ERROR:"+ msg + " [" + info + "]");
+		} else {
+			this.messages.error.text("ERROR:"+ msg);
+		}
+		this.messages.error.show();
+		if (opt == 'fadeout') {
+			this.messages.error.fadeOut(5000);
+		}
+	}
+
+	reset_error() {
+		DBG.log ("Reset error...");
+		this.messages.error.text("");
+		this.messages.error.hide();
+	}
+	reset_message() {
+		DBG.log ("Reset message...");
+		this.messages.message.text("");
+		this.messages.message.hide();
+	}
+	reset_messages() {
+		this.reset_error();
+		this.reset_message();
+	}
+	show_snippet(data) {
+		DBG.log ("show_snippet");
+		DBG.dir (data);
+		if (data) {
+			if ("is_locked" in data) {
+				this.fields.locked.prop("checked", data.is_locked);
+			} else {
+				this.fields.locked.prop("checked", false);
+			}
+			this.fields.lang.val(data.lang);
+			this.fields.caption.val(data.caption);
+			this.fields.text.val(data.code);
+			this.fields.link.val(data.link);
+
+			this.fields.text.addClass("prettyprint");
+			if (data.lang) {
+				this.fields.text.addClass("lang-" + data.lang);
+			}
+		} else {
+			this.fields.locked.prop("checked", false);
+			this.fields.lang.val("eiffel");
+			this.fields.caption.val("");
+			this.fields.text.val("");
+			this.fields.link.val("");
+
+			this.fields.text.removeClass("prettyprint");
+			this.fields.text.removeClass("lang-*");
+		}
+	}
+
+	on_edit_action(){
+		this.reset_error();
+
 		var req = $.ajax({
-						url: a_code_url,
-						type: 'GET'
+						url: this.endpoint,
+						type: 'GET',
+						context: this
 					}
 			);
 		req.done(function(data) {
-			CBEDITOR.reset_error();
-			CBEDITOR.show_message("Code snippet loaded: " + a_code_url);
-			CBEDITOR.show_snippet(data);
+				var i;
+				var html = '<select class="code_snippets">';
+				html += '<option value="" selected="selected">Select code</option>';
+				for (i = 1; i <= data.code_count; i++) {
+					var snip = data._links['code-' + i];
+					if (snip) {
+						html += '<option value="'+snip.href+'">Code ' + i + '</option>';
+					}
+				}
+				html += '</select>';
+				this.controls.button_new.hide();
+				this.controls.button_edit.hide();
+				this.controls.button_cancel.show();
 
-			CBEDITOR.form_data.control.div.find("button[name=save]").remove();
-			CBEDITOR.form_data.control.div.find("button[name=delete]").remove();
-			CBEDITOR.form_data.control.div.find("button[name=insert]").remove();
+				this.controls.div.find("select.code_snippets").remove();
 
-			var but_save = $('<button type="button" name="save">Save '+ l_code_id +'</button>');
-			CBEDITOR.form_data.control.div.append(but_save);
-
-			var but_delete = $('<button type="button" name="delete">Delete '+ l_code_id +'</button>');
-			CBEDITOR.form_data.control.div.append(but_delete);
-
-			var but_insert = $('<button type="button" name="insert">Insert new before '+ l_code_id +'</button>');
-			CBEDITOR.form_data.control.div.append(but_insert);
-
-			$(but_save).on('click', {url:a_code_url,codeid:l_code_id}, CBEDITOR.save_code_snippet_action);
-			$(but_delete).on('click', {url:a_code_url,codeid:l_code_id}, CBEDITOR.delete_code_snippet_action);
-			$(but_insert).on('click', {url:a_code_url, codeid:l_code_id}, CBEDITOR.insert_code_snippet_action);
-		});
-		req.fail(function(data) { CBEDITOR.on_failure_action ("Could not get snippet #"+ l_code_id +" information!", data); });
+				this.controls.div.append(html);
+				this.controls.div.find("select.code_snippets").change(this, function(event) { 
+						event.data.on_edit_selected_action($(this).val());
+					});
+			}
+			);	
+		req.fail(function(data) { this.on_failure_action ("Could not get snippet list!", data); });
 	}
-}
-CBEDITOR.save_code_snippet_action = function(ev) {
-	var j = {
-		"lang": CBEDITOR.form_data.lang.val() ,
-		"description": CBEDITOR.form_data.description.val() ,
-		"code": CBEDITOR.form_data.text.val()
-	};
+	on_edit_selected_action(a_code_url) {
+		var l_code_id = a_code_url.substr(a_code_url.lastIndexOf('/') + 1);
+		if (l_code_id) {
+			this.reset_message();
+			var req = $.ajax({
+							url: a_code_url,
+							type: 'GET',
+							context: this
+						}
+				);
+			req.done(function(data) {
+				this.reset_error();
+				this.show_message("Code snippet loaded: " + a_code_url, 'fadeout');
+				this.show_snippet(data);
 
-	var req = $.ajax({
-					url: ev.data.url, 
-					type: 'PUT', 
-					contentType: 'application/json',
-					dataType: 'json',
-					data: JSON.stringify(j)
+				this.remove_control_button('lock');
+				this.remove_control_button('unlock');
+				this.remove_control_button('save');
+				this.remove_control_button('delete');
+				this.remove_control_button('insert');
+				this.remove_control_button('unlock');
+				if (data.is_locked) {
+					this.fields.div.attr('disabled', 'disabled');
+					this.fields.div.addClass("locked");
+					this.put_new_control_button("unlock", 'Unlock &#128275;', "Unlock" + l_code_id); // Unlock
+
+					this.controls.button_unlock.on('click', {obj:this, info:{url:a_code_url,codeid:l_code_id}}, function (event) { event.data.obj.unlock_code_snippet_action(event.data.info) });
+				} else {
+					this.fields.div.removeAttr('disabled');
+					this.fields.div.removeClass("locked");
+					this.put_new_control_button("lock", '&#128274;', "Lock code " + l_code_id); // Lock
+					this.put_new_control_button("save", 'Save', "Save code " + l_code_id);
+					this.put_new_control_button("delete", 'Del', "Delete code " + l_code_id);
+					this.put_new_control_button("insert", 'Insert before ' + l_code_id, "Insert before code " + l_code_id);
+
+					this.controls.button_save.on('click', {obj:this, info:{url:a_code_url,codeid:l_code_id}}, function (event) { event.data.obj.save_code_snippet_action(event.data.info) });
+					this.controls.button_delete.on('click', {obj:this, info:{url:a_code_url,codeid:l_code_id}}, function (event) { event.data.obj.delete_code_snippet_action(event.data.info) });
+					this.controls.button_insert.on('click', {obj:this, info:{url:a_code_url,codeid:l_code_id}}, function (event) { event.data.obj.insert_code_snippet_action() });
+					this.controls.button_lock.on('click', {obj:this, info:{url:a_code_url,codeid:l_code_id}}, function (event) { event.data.obj.lock_code_snippet_action(event.data.info) });
 				}
-		);
-	req.done(function(data) {
-			//CBEDITOR.form_data.control.button_cancel.hide();	
-			//CBEDITOR.form_data.control.button_back.show();	
-			CBEDITOR.show_message("Snippet code successfully saved!");
-			}
-		);	
-	req.fail(function(data) { CBEDITOR.on_failure_action ("Could not update code snippet!", data); });
-}
-CBEDITOR.insert_code_snippet_action = function(ev) {
-	var form_data = CBEDITOR.form_data;
-	var j = {
-		"code_id": ev.data.codeid ,
-		"lang": form_data.lang.val() ,
-		"description": form_data.description.val() ,
-		"code": form_data.text.val()
-	};
-
-	var req = $.ajax({
-					url: CBEDITOR.endpoint,
-					type: 'POST', 
-					contentType: 'application/json',
-					dataType: 'json',
-					data: JSON.stringify(j)
-				}
-		);
-	req.done(function(data) {
-			var l_code_url = data._links.self.href;
-			CBEDITOR.show_message("Snippet code successfully inserted!");
-			CBEDITOR.reset_control_and_form();
-			}
-		);	
-	req.fail(function(data) { CBEDITOR.on_failure_action ("Could not insert new code snippet!", data); });
-
-}
-CBEDITOR.delete_code_snippet_action = function(ev) {
-	var req = $.ajax({
-					url: ev.data.url, 
-					type: 'DELETE'
-				}
-		);
-	req.done(function(data) {
-			CBEDITOR.show_message("Snippet code successfully deleted!");
-			CBEDITOR.reset_control_and_form();
-			}
-		);	
-	req.fail(function(data) { CBEDITOR.on_failure_action ("Could not delete code snippet!", data); });
-
-}
-
-CBEDITOR.on_new_action = function(form_data) {
-	CBEDITOR.reset_error();
-	form_data.control.button_new.hide();
-	form_data.control.button_edit.hide();
-	form_data.control.button_cancel.show();
-	var l_button_save = $('<button type="button" name="add">Save</button>');
-	form_data.control.div.append(l_button_save);
-	form_data.lang.val("eiffel");
-	form_data.description.val("");
-	form_data.text.val("class\n\tAPPLICATION\n\n\tfeature -- Access\n\nend");
-	l_button_save.one('click', CBEDITOR.on_new_save_action);
-}
-
-CBEDITOR.on_new_save_action = function() {
-	var form_data = CBEDITOR.form_data;
-	var j = {
-		"lang": form_data.lang.val() ,
-		"description": form_data.description.val() ,
-		"code": form_data.text.val()
-	};
-
-	var req = $.ajax({
-					url: CBEDITOR.endpoint,
-					type: 'POST', 
-					contentType: 'application/json',
-					dataType: 'json',
-					data: JSON.stringify(j)
-				}
-		);
-	req.done(function(data) {
-			var l_code_url = data._links.self.href;
-			//form_data.control.button_cancel.show();	
-			//form_data.control.button_back.show();	
-			CBEDITOR.show_message("Snippet code successfully created!");
-			}
-		);	
-	req.fail(function(data) { CBEDITOR.on_failure_action ("Could not create new code snippet!", data); });
-
-}
-CBEDITOR.on_failure_action = function(msg, response_data) {
-		var j = JSON.parse(response_data.responseText);
-		if (j) {
-			CBEDITOR.show_error(msg, j.error); 
-		} else {
-			CBEDITOR.show_error(msg, null); 
+			});
+			req.fail(function(data) { this.on_failure_action ("Could not get snippet #"+ l_code_id +" information!", data); });
 		}
-}
+	}
+	unlock_code_snippet_action(info){
+		let j = this.fields_as_json();
+		j.is_locked = false;
+		let req = $.ajax({
+						url: info.url, 
+						type: 'PUT', 
+						context: this,
+						contentType: 'application/json',
+						dataType: 'json',
+						data: JSON.stringify(j)
+					}
+			);
+		req.done(function(data) {
+				this.on_edit_selected_action(info.url);
+				this.show_message("Snippet code successfully unlocked!",'fadeout');
+				}
+			);	
+		req.fail(function(data) { this.on_failure_action ("Could not unlock code snippet!", data); });
+	}
+	lock_code_snippet_action(info){
+		let j = this.fields_as_json();
+		j.is_locked = true;
+		let req = $.ajax({
+						url: info.url, 
+						type: 'PUT', 
+						context: this,
+						contentType: 'application/json',
+						dataType: 'json',
+						data: JSON.stringify(j)
+					}
+			);
+		req.done(function(data) {
+				this.on_edit_selected_action(info.url);
+				this.show_message("Snippet code successfully locked!",'fadeout');
+				}
+			);	
+		req.fail(function(data) { this.on_failure_action ("Could not lock code snippet!", data); });
+	}
+	save_code_snippet_action(info){
+		var req = $.ajax({
+						url: info.url, 
+						type: 'PUT', 
+						context: this,
+						contentType: 'application/json',
+						dataType: 'json',
+						data: JSON.stringify(this.fields_as_json())
+					}
+			);
+		req.done(function(data) {
+				this.show_message("Snippet code successfully saved!",'fadeout');
+				}
+			);	
+		req.fail(function(data) { this.on_failure_action ("Could not update code snippet!", data); });
+	}
+	insert_code_snippet_action() {
+		var req = $.ajax({
+						url: this.endpoint,
+						type: 'POST', 
+						context: this,
+						contentType: 'application/json',
+						dataType: 'json',
+						data: JSON.stringify(this.fields_as_json())
+					}
+			);
+		req.done(function(data) {
+				var l_code_url = data._links.self.href;
+				this.show_message("Snippet code successfully inserted!",'fadeout');
+				this.reset_control_and_form();
+				}
+			);	
+		req.fail(function(data) { this.on_failure_action ("Could not insert new code snippet!", data); });
+
+	}
+	delete_code_snippet_action(info) {
+		var req = $.ajax({
+						url: info.url, 
+						type: 'DELETE',
+						context: this,
+					}
+			);
+		req.done(function(data) {
+				this.show_message("Snippet code successfully deleted!",'fadeout');
+				this.reset_control_and_form();
+				}
+			);	
+		req.fail(function(data) { this.on_failure_action ("Could not delete code snippet!", data); });
+
+	}
+
+	on_new_action() {
+		this.reset_error();
+		this.controls.button_new.hide();
+		this.controls.button_edit.hide();
+		this.controls.button_cancel.show();
+		this.put_new_control_button("add", "Create", "Save");
+		this.show_snippet(null);
+		this.fields.lang.val("eiffel");
+		this.fields.caption.val("");
+		this.fields.text.val("class\n\tAPPLICATION\n\nfeature -- Access\n\nend");
+		this.controls.button_save.one('click', this, function (event) { event.data.on_new_save_action() });
+	}
+
+	on_new_save_action() {
+		var req = $.ajax({
+						url: this.endpoint,
+						type: 'POST', 
+						context: this,
+						contentType: 'application/json',
+						dataType: 'json',
+						data: JSON.stringify(this.fields_as_json())
+					}
+			);
+		req.done(function(data) {
+				var l_code_url = data._links.self.href;
+				//controls.button_cancel.show();	
+				//controls.button_back.show();	
+				this.show_message("Snippet code successfully created!",'fadeout');
+				}
+			);	
+		req.fail(function(data) { this.on_failure_action ("Could not create new code snippet!", data); });
+
+	}
+	on_failure_action(msg, response_data) {
+			var j = JSON.parse(response_data.responseText);
+			if (j) {
+				this.show_error(msg, j.error); 
+			} else {
+				this.show_error(msg, null); 
+			}
+	}
+
+} // end of class CodeEditor
 
 $(document).ready(function() {
-	$('.codeboard-editor').each (function() { CBEDITOR.initialize($(this)); });
+	var code_editor_count = 0;
+	$('.codeboard-editor').each (function() { 
+		code_editor_count += 1;
+		$(this).attr("id", "cbeditor_" + code_editor_count);
+		let editor = new CodeEditor($(this));
+	});
 });
 

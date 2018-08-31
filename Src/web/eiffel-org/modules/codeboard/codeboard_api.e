@@ -72,11 +72,22 @@ feature -- Access
 				if jp.is_parsed and jp.is_valid and attached jp.parsed_json_object as jo then
 					if attached {JSON_STRING} jo.item ("code") as l_code then
 						create Result.make (l_code.unescaped_string_32)
-						if attached {JSON_STRING} jo.item ("description") as l_desc then
-							Result.set_description (l_desc.unescaped_string_32)
+						if attached {JSON_STRING} jo.item ("caption") as l_caption then
+							Result.set_caption (l_caption.unescaped_string_32)
 						end
 						if attached {JSON_STRING} jo.item ("lang") as l_lang then
 							Result.set_lang (l_lang.unescaped_string_8)
+						end
+						if attached {JSON_BOOLEAN} jo.item ("is_locked") as l_is_locked then
+							Result.set_is_locked (l_is_locked.item)
+						end
+						if attached {JSON_STRING} jo.item ("link") as js_link then
+							Result.set_link (js_link.unescaped_string_8)
+						elseif
+							attached {JSON_OBJECT} jo.item ("link") as j_link and then
+							attached {JSON_STRING} j_link.item ("href") as j_link_href
+						then
+							Result.set_link (j_link_href.unescaped_string_8)
 						end
 					end
 				end
@@ -92,18 +103,33 @@ feature -- Access
 			end
 		end
 
+	is_code_locked (a_code_id: INTEGER): BOOLEAN
+			-- Is code related to `a_code_id` locked?
+		do
+			if attached code (a_code_id) as l_code then
+				Result := l_code.is_locked
+			end
+		end
+
 	code_to_json (a_code: CODEBOARD_SNIPPET): STRING_8
 		local
 			j: JSON_OBJECT
 		do
 			create j.make_with_capacity (3)
+			if a_code.is_locked then
+				j.put_boolean (True, "is_locked")
+			end
 			if attached a_code.lang as l_lang then
 				j.put_string (l_lang, "lang")
 			end
-			if attached a_code.description as l_desc then
-				j.put_string (l_desc, "description")
+			if attached a_code.caption as l_caption then
+				j.put_string (l_caption, "caption")
 			end
 			j.put_string (a_code.text, "code")
+			if attached a_code.link as l_link then
+				j.put_string (l_link, "link")
+			end
+
 			Result := j.representation
 		end
 
@@ -161,6 +187,7 @@ feature -- Element change
 	delete_code (a_code_id: INTEGER)
 		require
 			a_code_id_valid: a_code_id > 0
+			not_locked: not is_code_locked (a_code_id)
 		local
 			i, nb: INTEGER
 		do

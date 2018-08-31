@@ -112,10 +112,19 @@ feature -- Access
 		end
 
 	code_to_json (a_code: CODEBOARD_SNIPPET): STRING_8
+		do
+			Result := code_with_id_to_json (a_code, 0)
+		end
+
+	code_with_id_to_json (a_code: CODEBOARD_SNIPPET; a_code_id: INTEGER): STRING_8
 		local
 			j: JSON_OBJECT
 		do
 			create j.make_with_capacity (3)
+				-- Code id  (ignore a_code.id) !
+			if a_code_id > 0 then
+				j.put_integer (a_code_id, "id")
+			end
 			if a_code.is_locked then
 				j.put_boolean (True, "is_locked")
 			end
@@ -135,6 +144,25 @@ feature -- Access
 
 feature -- Element change
 
+	on_code_changed (a_code: detachable CODEBOARD_SNIPPET; a_mesg: READABLE_STRING_8)
+		local
+			l_mesg_text, l_subject: STRING
+		do
+			create l_subject.make_from_string (a_mesg)
+			if a_code /= Void then
+				if a_code.has_id then
+					l_subject.append ("(code #" + a_code.id.out + ")")
+				end
+				l_mesg_text := code_with_id_to_json (a_code, a_code.id)
+			else
+				create l_mesg_text.make_from_string (a_mesg)
+			end
+			l_mesg_text.append_character ('%N')
+			if attached cms_api.new_email (cms_api.setup.site_email, a_mesg, l_mesg_text) as e then
+				cms_api.process_email (e)
+			end
+		end
+
 	create_code (a_code: CODEBOARD_SNIPPET)
 		local
 			l_new_id: like code_count
@@ -150,6 +178,8 @@ feature -- Element change
 				l_new_id := code_count + 1
 			end
 			cms_api.storage.set_custom_value ("snippet." + l_new_id.out, code_to_json (a_code), {CODEBOARD_MODULE}.name)
+			a_code.set_id (l_new_id)
+			on_code_changed (a_code, "New code snippet")
 		end
 
 	update_code (a_code: CODEBOARD_SNIPPET)
@@ -158,6 +188,7 @@ feature -- Element change
 			existing_code: code (a_code.id) /= Void
 		do
 			cms_api.storage.set_custom_value ("snippet." + a_code.id.out, code_to_json (a_code), {CODEBOARD_MODULE}.name)
+			on_code_changed (a_code, "Updated code snippet")
 		end
 
 	insert_code (a_code_id: INTEGER; a_code: CODEBOARD_SNIPPET)
@@ -180,6 +211,7 @@ feature -- Element change
 				i := i - 1
 			end
 			cms_api.storage.set_custom_value ("snippet." + a_code_id.out, code_to_json (a_code), {CODEBOARD_MODULE}.name)
+			on_code_changed (a_code, "New code snippet inserted before " + a_code_id.out)
 		ensure
 			not has_error implies (old code_count) + 1 = code_count
 		end
@@ -206,6 +238,7 @@ feature -- Element change
 			cms_api.storage.unset_custom_value ("snippet." + nb.out, {CODEBOARD_MODULE}.name)
 			nb := nb - 1
 			cms_api.storage.set_custom_value ("snippet.count", nb.out, {CODEBOARD_MODULE}.name)
+			on_code_changed (Void, "Code snippet #"+ a_code_id.out +" deleted")
 		ensure
 			not has_error implies (old code_count) - 1 = code_count
 		end

@@ -4,6 +4,7 @@ note
 		Immutable interface.
 		]"
 	author: "Nadia Polikarpova"
+	revised_by: "Alexander Kogtenkov"
 	model: bag
 	manual_inv: true
 	false_guards: true
@@ -69,6 +70,7 @@ feature -- Search
 		do
 			from
 				it := new_cursor
+				create s
 			invariant
 				1 <= it.index_ and it.index_ <= it.sequence.count + 1
 				s = it.sequence.front (it.index_ - 1)
@@ -111,6 +113,7 @@ feature -- Specification
 		note
 			status: ghost
 		attribute
+			check is_executable: False then end
 		end
 
 	forget_iterator (it: V_ITERATOR [G])
@@ -158,7 +161,7 @@ invariant
 	not_observer: not observers [Current]
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

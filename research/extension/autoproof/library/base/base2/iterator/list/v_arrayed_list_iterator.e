@@ -1,6 +1,7 @@
 note
 	description: "Iterators over arrayed lists."
 	author: "Nadia Polikarpova"
+	revised_by: "Alexander Kogtenkov"
 	model: target, index_
 	manual_inv: true
 	false_guards: true
@@ -176,6 +177,7 @@ feature -- Specification
 		note
 			status: ghost
 		attribute
+			check is_executable: False then end
 		end
 
 	index_: INTEGER
@@ -186,7 +188,7 @@ feature -- Specification
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

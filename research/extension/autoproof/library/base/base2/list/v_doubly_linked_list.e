@@ -6,6 +6,7 @@ note
 		and doesn't require reallocation of other elements.
 		]"
 	author: "Nadia Polikarpova"
+	revised_by: "Alexander Kogtenkov"
 	model: sequence
 	manual_inv: true
 	false_guards: true
@@ -63,14 +64,22 @@ feature -- Access
 			-- First element.
 		do
 			check inv end
-			Result := first_cell.item
+			if attached first_cell as c then
+				Result := c.item
+			else
+				check from_precondition: False then end
+			end
 		end
 
 	last: G
 			-- Last element.
 		do
 			check inv end
-			Result := last_cell.item
+			if attached last_cell as c then
+				Result := c.item
+			else
+				check from_precondition: False then end
+			end
 		end
 
 feature -- Iteration
@@ -104,29 +113,43 @@ feature -- Comparison
 			if other = Current then
 				Result := True
 			elseif count = other.count then
-				from
-					Result := True
-					c1 := first_cell
-					c2 := other.first_cell
-					i_ := 1
-				invariant
-					1 <= i_ and i_ <= sequence.count + 1
+				Result := True
+				c1 := first_cell
+				c2 := other.first_cell
+				check
 					inv
 					other.inv
-					i_ <= sequence.count implies c1 = cells [i_] and c2 = other.cells [i_]
-					i_ = sequence.count + 1 implies c1 = Void and c2 = Void
-					if Result
-						then across 1 |..| (i_ - 1) as k all sequence [k.item] = other.sequence [k.item] end
-						else sequence [i_ - 1] /= other.sequence [i_ - 1] end
-				until
-					c1 = Void or not Result
-				loop
-					Result := c1.item = c2.item
-					c1 := c1.right
-					c2 := c2.right
-					i_ := i_ + 1
-				variant
-					sequence.count - i_
+				end
+				if attached c1 then
+					if not attached c2 then
+						check from_same_count_and_non_empty: False then end
+					end
+					from
+						i_ := 1
+					invariant
+						1 <= i_ and i_ <= sequence.count + 1
+						inv
+						other.inv
+						i_ <= sequence.count implies c1 = cells [i_] and c2 = other.cells [i_]
+						i_ = sequence.count + 1 implies c1 = Void and c2 = Void
+						if Result
+							then across 1 |..| (i_ - 1) as k all sequence [k.item] = other.sequence [k.item] end
+							else sequence [i_ - 1] /= other.sequence [i_ - 1] end
+					until
+						c1 = Void or not Result
+					loop
+						if not attached c2 then
+							check from_exit_condition_and_loop_invariant: False then end
+						end
+						Result := c1.item = c2.item
+						c1 := c1.right
+						c2 := c2.right
+						i_ := i_ + 1
+					variant
+						sequence.count - i_
+					end
+				else
+					check from_condition: not attached c2 then end
 				end
 			end
 		end
@@ -165,7 +188,7 @@ feature -- Replacement
 			invariant
 				across 2 |..| cells.count as i all cells [i.item].is_wrapped end
 				across 2 |..| rest_cells.count as i all rest_cells [i.item].is_wrapped end
-				first_cell = Void or else (first_cell.is_open and first_cell.inv_without ("left_consistent"))
+				attached first_cell as f implies (f.is_open and f.inv_without ("left_consistent"))
 				rest = Void or else (rest.is_open and rest.inv_without ("left_consistent"))
 
 				rest_cells.count = count_ - cells.count
@@ -177,7 +200,7 @@ feature -- Replacement
 				not rest_cells.is_empty implies rest = rest_cells.first and rest_cells.last.right = Void
 				rest_cells.is_empty = (rest = Void)
 
-				first_cell /= Void implies first_cell.left = rest
+				attached first_cell as f implies f.left = rest
 				rest /= Void implies rest.left = first_cell
 
 				cells.old_.tail (cells.count + 1) = rest_cells
@@ -189,22 +212,22 @@ feature -- Replacement
 			until
 				rest = Void
 			loop
-				check cells.count > 1 implies cells [2] = first_cell.right end
+				check cells.count > 1 implies attached first_cell as f and then cells [2] = f.right end
 				check rest_cells.count > 1 implies rest_cells [2] = rest.right end
 
 				next := rest.right
 				reverse_step (first_cell, rest, next)
 				first_cell := rest
-				check cells.prepended (first_cell).range = cells.range & first_cell end
-				cells := cells.prepended (first_cell)
-				sequence := sequence.prepended (first_cell.item)
+				check cells.prepended (rest).range = cells.range & rest end
+				cells := cells.prepended (rest)
+				sequence := sequence.prepended (rest.item)
 				rest := next
 				rest_cells := rest_cells.but_first
 			variant
 				rest_cells.count
 			end
-			if first_cell /= Void then
-				first_cell.wrap
+			if attached first_cell as f then
+				f.wrap
 			end
 			wrap
 		end
@@ -217,10 +240,10 @@ feature -- Extension
 			cell: V_DOUBLY_LINKABLE [G]
 		do
 			create cell.put (v)
-			if first_cell = Void then
-				last_cell := cell
+			if attached first_cell as f then
+				cell.connect_right (f)
 			else
-				cell.connect_right (first_cell)
+				last_cell := cell
 			end
 			first_cell := cell
 			count_ := count_ + 1
@@ -240,7 +263,11 @@ feature -- Extension
 			if first_cell = Void then
 				first_cell := cell
 			else
-				last_cell.connect_right (cell)
+				if attached last_cell as l then
+					l.connect_right (cell)
+				else
+					check from_condition: False then end
+				end
 			end
 			last_cell := cell
 			count_ := count_ + 1
@@ -324,6 +351,7 @@ feature -- Extension
 					it := at (i - 1)
 					check input.inv_only ("subjects_definition", "index_constraint", "no_observers") end
 					check inv_only ("lower_definition") end
+					create s
 				invariant
 					1 <= input.index_ and input.index_ <= input.sequence.count + 1
 					i - 1 <= it.index_
@@ -359,23 +387,26 @@ feature -- Removal
 			-- Remove first element.
 		note
 			explicit: wrapping
-		local
-			second: like first_cell
 		do
 			lemma_cells_distinct
 			unwrap
-			if count_ = 1 then
-				last_cell := Void
-			else
-				second := first_cell.right
-				check second = cells [2] end
-				check second.inv end
-				first_cell.unwrap
-				second.unwrap
-				second.put_left (Void)
-				second.wrap
+			if attached first_cell as f then
+				if count_ = 1 then
+					last_cell := Void
+				else
+					check f.right = cells [2] end
+					if attached f.right as second then
+						check second.inv end
+						f.unwrap
+						second.unwrap
+						second.put_left (Void)
+						second.wrap
+					else
+						check from_condition: False then end
+					end
+				end
+				first_cell := f.right
 			end
-			first_cell := first_cell.right
 			count_ := count_ - 1
 
 			cells := cells.but_first
@@ -389,23 +420,28 @@ feature -- Removal
 			-- Remove last element.
 		note
 			explicit: wrapping
-		local
-			second_last: like first_cell
 		do
 			lemma_cells_distinct
 			unwrap
-			if count_ = 1 then
-				first_cell := Void
+			if attached last_cell as l then
+				if count_ = 1 then
+					first_cell := Void
+				else
+					check cells [cells.count - 1].inv end
+					if attached l.left as second_last then
+						check cells [cells.count - 1].right = l end
+						l.unwrap
+						second_last.unwrap
+						second_last.put_right (Void)
+						second_last.wrap
+					else
+						check from_condition: False then end
+					end
+				end
+				last_cell := l.left
 			else
-				second_last := last_cell.left
-				check cells [cells.count - 1].inv end
-				check cells [cells.count - 1].right = last_cell end
-				last_cell.unwrap
-				second_last.unwrap
-				second_last.put_right (Void)
-				second_last.wrap
+				check from_precondition: False then end
 			end
-			last_cell := last_cell.left
 			count_ := count_ - 1
 
 			cells := cells.but_last
@@ -443,16 +479,16 @@ feature -- Removal
 			cells_exist: (old cells).non_void
 			cells_linked: is_linked (old cells)
 			items_unchanged: across 1 |..| sequence.count.old_ as i all (old sequence) [i.item] = (old cells) [i.item].item end
-			cells_last: old cells.count > 0 implies (old last_cell).right = Void
-			cells_first: old cells.count > 0 implies (old first_cell).left = Void
+			cells_last: old cells.count > 0 implies attached old last_cell as l and then l.right = Void
+			cells_first: old cells.count > 0 implies attached old first_cell as f and then f.left = Void
 		end
 
 feature {V_CONTAINER, V_ITERATOR} -- Implementation
 
-	first_cell: V_DOUBLY_LINKABLE [G]
+	first_cell: detachable V_DOUBLY_LINKABLE [G]
 			-- First cell of the list.
 
-	last_cell: V_DOUBLY_LINKABLE [G]
+	last_cell: detachable V_DOUBLY_LINKABLE [G]
 			-- Last cell of the list.
 
 	cell_at (i: INTEGER): V_DOUBLY_LINKABLE [G]
@@ -476,7 +512,11 @@ feature {V_CONTAINER, V_ITERATOR} -- Implementation
 				until
 					j = i
 				loop
-					Result := Result.right
+					if attached Result then
+						Result := Result.right
+					else
+						check from_loop_invariant: False then end
+					end
 					j := j + 1
 				end
 			else
@@ -490,9 +530,16 @@ feature {V_CONTAINER, V_ITERATOR} -- Implementation
 					j = i
 				loop
 					check cells [j - 1].inv end
-					Result := Result.left
+					if attached Result then
+						Result := Result.left
+					else
+						check from_loop_invariant: False then end
+					end
 					j := j - 1
 				end
+			end
+			if not attached Result then
+				check from_loop_invariant: False then end
 			end
 		ensure
 			definition: Result = cells [i]
@@ -566,15 +613,18 @@ feature {V_CONTAINER, V_ITERATOR} -- Implementation
 			lemma_cells_distinct
 			unwrap
 			check c.right = cells [index_ + 1] end
-			check index_ + 1 < cells.count implies c.right.right = cells [index_ + 2] end
-
-			if c.right.right = Void then
-				unwrap_all ([c, c.right])
-				c.put_right (Void)
-				c.wrap
-				last_cell := c
+			if attached c.right as r then
+				check index_ + 1 < cells.count implies r.right = cells [index_ + 2] end
+				if r.right = Void then
+					unwrap_all (create {MML_SET [ANY]}.singleton (c) & r)
+					c.put_right (Void)
+					c.wrap
+					last_cell := c
+				else
+					c.remove_right
+				end
 			else
-				c.remove_right
+				check from_precondition: False then end
 			end
 			count_ := count_ - 1
 			cells := cells.removed_at (index_ + 1)
@@ -586,7 +636,7 @@ feature {V_CONTAINER, V_ITERATOR} -- Implementation
 			wrapped: is_wrapped
 		end
 
-	merge_after (other: V_DOUBLY_LINKED_LIST [G]; c: V_DOUBLY_LINKABLE [G]; index_: INTEGER)
+	merge_after (other: V_DOUBLY_LINKED_LIST [G]; c: detachable V_DOUBLY_LINKABLE [G]; index_: INTEGER)
 			-- Merge `other' into `Current' after cell `c'. If `c' is `Void', merge to the front.
 		require
 			valid_index: 0 <= index_ and index_ <= cells.count
@@ -609,15 +659,21 @@ feature {V_CONTAINER, V_ITERATOR} -- Implementation
 
 				other_first := other.first_cell
 				other_last := other.last_cell
+				if
+					not attached other_first or else
+					not attached other_last
+				then
+					check from_condition: False then end
+				end
 				other_count := other.count_
 				other.wipe_out
 
 				unwrap
 				if c = Void then
-					if first_cell = Void then
-						last_cell := other_last
+					if attached first_cell as f then
+						other_last.connect_right (f)
 					else
-						other_last.connect_right (first_cell)
+						last_cell := other_last
 					end
 					first_cell := other_first
 				else
@@ -644,7 +700,7 @@ feature {V_CONTAINER, V_ITERATOR} -- Implementation
 
 feature {NONE} -- Implementation
 
-	reverse_step (head, rest, next: like first_cell)
+	reverse_step (head: like first_cell; rest: attached like first_cell; next: like first_cell)
 			-- One step of list reversal, where
 			-- `head' is the head of the already reversed statement,
 			-- `rest' is the head of the rest of the list,
@@ -661,7 +717,9 @@ feature {NONE} -- Implementation
 			rest.left = head
 			next = rest.right
 			next /= Void implies next.is_wrapped
-			modify_field ("closed", ([head, next]).to_mml_set / Void)
+			modify_field ("closed",
+				if attached head as c then create {MML_SET [ANY]}.singleton (c) else create {MML_SET [ANY]} end +
+				if attached next as c then create {MML_SET [ANY]}.singleton (c) else create {MML_SET [ANY]} end)
 			modify_model (["left", "right", "subjects", "observers"], rest)
 		do
 			if next /= Void then
@@ -688,6 +746,7 @@ feature -- Specificaton
 		note
 			status: ghost
 		attribute
+ 			check is_executable: False then end
 		end
 
 feature {V_DOUBLY_LINKED_LIST, V_DOUBLY_LINKED_LIST_ITERATOR} -- Specificaton	
@@ -750,12 +809,12 @@ invariant
 	cells_exist: cells.non_void
 	sequence_implementation: across 1 |..| cells.count as i all sequence [i.item] = cells [i.item].item end
 	cells_linked: is_linked (cells)
-	cells_first: cells.count > 0 implies first_cell = cells.first and then first_cell.left = Void
-	cells_last: cells.count > 0 implies last_cell = cells.last and then last_cell.right = Void
+	cells_first: cells.count > 0 implies attached first_cell as c and then c = cells.first and then c.left = Void
+	cells_last: cells.count > 0 implies attached last_cell as c and then c = cells.last and then c.right = Void
 
 note
 	explicit: observers
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

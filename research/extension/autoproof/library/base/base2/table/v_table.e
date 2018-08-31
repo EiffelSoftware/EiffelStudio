@@ -4,12 +4,13 @@ note
 		Keys are unique with respect to object equality.
 		]"
 	author: "Nadia Polikarpova"
+	revised_by: "Alexander Kogtenkov"
 	model: map, lock
 	manual_inv: true
 	false_guards: true
 
 deferred class
-	V_TABLE [K, V]
+	V_TABLE [K -> separate ANY, V]
 
 inherit
 	V_MAP [K, V]
@@ -127,7 +128,7 @@ feature -- Removal
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

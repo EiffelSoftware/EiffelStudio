@@ -1,6 +1,7 @@
 note
 	description: "Iterators over linked stacks."
 	author: "Nadia Polikarpova"
+	revised_by: "Alexander Kogtenkov"
 	model: target, index_
 	manual_inv: true
 	false_guards: true
@@ -215,8 +216,13 @@ feature {V_CONTAINER, V_ITERATOR} -- Implementation
 			elseif other.iterator.after then
 				iterator.go_after
 			else
-				iterator.go_to_cell (other.iterator.active)
-				target.list.lemma_cells_distinct
+				check other.iterator.inv end
+				if attached other.iterator.active as a then
+					iterator.go_to_cell (a)
+					target.list.lemma_cells_distinct
+				else
+					check from_condition: False then end
+				end
 			end
 			wrap
 		ensure
@@ -237,13 +243,13 @@ feature -- Specification
 invariant
 	sequence_definition: sequence ~ target.sequence
 	iterator_exists: iterator /= Void
-	owns_definition: owns = [ iterator ]
+	owns_definition: owns ~ create {MML_SET [ANY]}.singleton (iterator)
 	targets_connected: target.list = iterator.target
 	same_sequence: sequence ~ iterator.sequence
 	same_index: index_ = iterator.index_
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

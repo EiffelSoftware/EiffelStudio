@@ -5,6 +5,7 @@ note
 			Search, extension and removal are amortized constant time.
 		]"
 	author: "Nadia Polikarpova"
+	revised_by: "Alexander Kogtenkov"
 	model: set, lock
 	manual_inv: true
 	false_guards: true
@@ -151,7 +152,7 @@ feature -- Removal
 
 feature -- Implementation
 
-	table: V_HASH_TABLE [G, ANY]
+	table: V_HASH_TABLE [G, detachable ANY]
 			-- Hash table that stores set elements as keys.
 
 feature -- Specification
@@ -161,6 +162,7 @@ feature -- Specification
 		note
 			status: ghost
 		attribute
+			check is_executable: False then end
 		end
 
 	forget_iterator (it: V_ITERATOR [G])
@@ -182,7 +184,7 @@ feature -- Specification
 
 invariant
 	table_exists: table /= Void
-	owns_definition: owns = [table]
+	owns_definition: owns ~ create {MML_SET [ANY]}.singleton (table)
 	set_implementation: set = table.map.domain
 	table_values_definition: across set as x all table.map [x.item] = Void end
 	same_lock: lock = table.lock
@@ -190,7 +192,7 @@ invariant
 	observers_correspond: table.observers.count <= observers.count
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

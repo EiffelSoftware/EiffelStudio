@@ -1,6 +1,7 @@
 note
 	description: "Iterators over linked lists."
 	author: "Nadia Polikarpova"
+	revised_by: "Alexander Kogtenkov"
 	model: target, index_
 	manual_inv: true
 	false_guards: true
@@ -108,7 +109,11 @@ feature -- Access
 		do
 			check inv end
 			check target.inv end
-			Result := active.item
+			if attached active as a then
+				Result := a.item
+			else
+				check from_precondition: False then end
+			end
 		end
 
 feature -- Measurement
@@ -198,7 +203,11 @@ feature -- Cursor movement
 			-- Move one position forward.		
 		do
 			check target.inv end
-			active := active.right
+			if attached active as a then
+				active := a.right
+			else
+				check from_precondition: False then end
+			end
 			index_ := index_ + 1
 			after_ := active = Void
 		end
@@ -224,7 +233,7 @@ feature -- Cursor movement
 					across 1 |..| index_ as i all target.cells [i.item] /= old_active end
 					is_wrapped
 				until
-					active.right = old_active
+					attached active as a implies a.right = old_active
 				loop
 					forth
 				variant
@@ -257,7 +266,11 @@ feature -- Replacement
 	put (v: G)
 			-- Replace item at current position with `v'.
 		do
-			target.put_cell (v, active, index_)
+			if attached active as a then
+				target.put_cell (v, a, index_)
+			else
+				check from_precondition: False then end
+			end
 			check target.inv_only ("bag_definition") end
 		end
 
@@ -289,7 +302,11 @@ feature -- Extension
 	extend_right (v: G)
 			-- Insert `v' to the right of current position. Do not move cursor.
 		do
-			target.extend_after (create {V_LINKABLE [G]}.put (v), active, index_)
+			if attached active as a then
+				target.extend_after (create {V_LINKABLE [G]}.put (v), a, index_)
+			else
+				check from_precondition: False then end
+			end
 			check target.inv_only ("bag_definition") end
 		ensure then
 			cell_sequence_front_preserved: target.cells.old_.front (index_) ~ target.cells.front (index_)
@@ -329,6 +346,7 @@ feature -- Extension
 			from
 				check inv_only ("subjects_definition", "no_observers", "A2") end
 				check other.inv_only ("target_exists", "subjects_definition", "index_constraint") end
+				create s
 			invariant
 				1 <= index_.old_ and index_.old_ <= index_ and index_ <= sequence.count
 				1 <= other.index_.old_ and other.index_.old_ <= other.index_ and other.index_ <= other.sequence.count + 1
@@ -416,13 +434,17 @@ feature -- Removal
 	remove_right
 			-- Remove element to the right of current position. Do not move cursor.
 		do
-			target.remove_after (active, index_)
+			if attached active as a then
+				target.remove_after (a, index_)
+			else
+				check from_precondition: False then end
+			end
 			check target.inv_only ("bag_definition") end
 		end
 
 feature {V_ITERATOR} -- Implementation
 
-	active: V_LINKABLE [G]
+	active: detachable V_LINKABLE [G]
 			-- Cell at current position.
 
 	after_: BOOLEAN
@@ -449,7 +471,11 @@ feature {V_ITERATOR} -- Implementation
 				c = active
 			loop
 				Result := Result + 1
-				c := c.right
+				if attached c then
+					c := c.right
+				else
+					check from_loop_invariant: False end
+				end
 			variant
 				target.count_ - Result
 			end
@@ -484,7 +510,7 @@ invariant
 	target_cells_distinct: target.cells.no_duplicates
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

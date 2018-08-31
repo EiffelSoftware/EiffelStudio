@@ -111,6 +111,8 @@ feature -- Access
 		note
 			status: impure
 		do
+				-- TODO: provide implementation.
+			check is_implemented: False then end
 		end
 
 feature -- Status report

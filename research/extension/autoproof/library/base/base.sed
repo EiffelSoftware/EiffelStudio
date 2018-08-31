@@ -36,6 +36,5 @@ b2
 	a\	\	\	\	<exclude>/iterable.e</exclude>
 	a\	\	\	\	<exclude>/iteration_cursor.e</exclude>
 	a\	\	\	\	<exclude>/std_files.e</exclude>
-	a\	\	\	\	<exclude>/tuple.e</exclude>
 	a\	\	\	</file_rule>
 :2

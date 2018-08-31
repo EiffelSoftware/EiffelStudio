@@ -1,6 +1,7 @@
 note
 	description: "Iterators over hash tables."
 	author: "Nadia Polikarpova"
+	revised_by: "Alexander Kogtenkov"
 	model: target, sequence, index_
 	manual_inv: true
 	false_guards: true
@@ -412,8 +413,13 @@ feature {V_CONTAINER, V_ITERATOR, V_LOCK} -- Implementation
 				check other.list_iterator.inv_only ("sequence_definition", "index_constraint", "cell_not_off") end
 				check list_iterator.inv_only ("sequence_definition") end
 				check target.lists [bucket_index].inv_only ("cells_domain") end
-				list_iterator.go_to_cell (other.list_iterator.active)
-				list_iterator.target.lemma_cells_distinct
+				check other.list_iterator.inv end
+				if attached other.list_iterator.active as a then
+					list_iterator.go_to_cell (a)
+					list_iterator.target.lemma_cells_distinct
+				else
+					check from_condition: False then end
+				end
 			end
 			index_ := other.index_
 
@@ -646,7 +652,7 @@ feature {V_CONTAINER, V_ITERATOR} -- Specification
 invariant
 	list_iterator_exists: list_iterator /= Void
 	bucket_index_in_bounds: 0 <= bucket_index and bucket_index <= target.lists.count + 1
-	owns_definition: owns = [ list_iterator ]
+	owns_definition: owns ~ create {MML_SET [ANY]}.singleton (list_iterator)
 	target_is_bucket: target.lists.has (list_iterator.target)
 	target_which_bucket: target.lists.domain [bucket_index] implies list_iterator.target = target.lists [bucket_index]
 	list_iterator_not_off: target.lists.domain [bucket_index] implies 1 <= list_iterator.index_ and list_iterator.index_ <= list_iterator.sequence.count
@@ -657,7 +663,7 @@ invariant
 
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

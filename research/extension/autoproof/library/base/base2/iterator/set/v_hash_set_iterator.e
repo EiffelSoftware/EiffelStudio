@@ -1,6 +1,7 @@
 note
 	description: "Iterators over hash sets."
 	author: "Nadia Polikarpova"
+	revised_by: "Alexander Kogtenkov"
 	model: target, sequence, index_
 	manual_inv: true
 	false_guards: true
@@ -237,18 +238,18 @@ feature -- Removal
 
 feature {V_CONTAINER, V_ITERATOR, V_LOCK} -- Implementation
 
-	iterator: V_HASH_TABLE_ITERATOR [G, ANY]
+	iterator: V_HASH_TABLE_ITERATOR [G, detachable ANY]
 			-- Iterator over the storage.		
 
 invariant
 	iterator_exists: iterator /= Void
-	owns_definition: owns = [ iterator ]
+	owns_definition: owns ~ create {MML_SET [ANY]}.singleton (iterator)
 	targets_connected: target.table = iterator.target
 	same_sequence: sequence ~ iterator.sequence
 	same_index: index_ = iterator.index_
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

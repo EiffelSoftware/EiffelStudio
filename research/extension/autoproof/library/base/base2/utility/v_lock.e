@@ -3,6 +3,7 @@ note
 		Helper ghost objects that prevent container items from unwanted modifications.
 		]"
 	author: "Nadia Polikarpova"
+	revised_by: "Alexander Kogtenkov"
 	status: ghost
 	model: locked, equivalence
 	manual_inv: true
@@ -10,7 +11,7 @@ note
 	explicit: "all"
 
 class
-	V_LOCK [G]
+	V_LOCK [G -> separate ANY]
 
 feature -- Access	
 
@@ -18,14 +19,18 @@ feature -- Access
 			-- All locked items (might be shared between multiple `observers').
 		note
 			guard: in_use_still_locked
+			status: ghost
 		attribute
+ 			check is_executable: False then end
 		end
 
 	equivalence: MML_RELATION [G, G]
 			-- Cache of object equality relation on items from `locked'.
 		note
 			guard: no_new_pairs
+			status: ghost
 		attribute
+			check is_executable: False then end
 		end
 
 feature -- Basic operations
@@ -204,11 +209,11 @@ invariant
 	locked_non_void: locked.non_void
 	owns_definition: across locked as x all owns [x.item] and x.item.subjects <= owns end
 	equivalence_definition: across locked as x all across locked as y all equivalence [x.item, y.item] = (x.item.is_model_equal (y.item)) end end
-	default_subjects: subjects = []
+	default_subjects: subjects ~ create {MML_SET [ANY]}
 	observrs_are_lockers: across observers as o all attached {V_LOCKER [G]} o.item end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

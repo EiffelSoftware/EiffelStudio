@@ -6,9 +6,8 @@ ARRAY_SRC=$(ISE_LIBRARY)/library/base/elks/kernel/array.e
 ITERABLE_SRC=$(ISE_LIBRARY)/library/base/elks/kernel/iterable.e
 ITERATION_CURSOR_SRC=$(ISE_LIBRARY)/library/base/elks/kernel/iteration_cursor.e
 STD_FILES_SRC=$(ISE_LIBRARY)/library/base/elks/kernel/std_files.e
-TUPLE_SRC=$(ISE_LIBRARY)/library/base/elks/kernel/tuple.e
 
-GENERATED_FILES=base.ecf eve/any.e eve/arguments.e eve/arguments_32.e eve/array.e eve/iterable.e eve/iteration_cursor.e eve/std_files.e eve/tuple.e
+GENERATED_FILES=base.ecf base-safe.ecf eve/any.e eve/arguments.e eve/arguments_32.e eve/array.e eve/iterable.e eve/iteration_cursor.e eve/std_files.e
 
 ARRAY_CONVERSION=,$(ISE_WIN_CR)\n\
 \	to_mml_set: {MML_SET [G]},$(ISE_WIN_CR)\n\
@@ -33,17 +32,6 @@ $(ISE_WIN_CR)\n\
 \	\	\	check is_executable: False then end$(ISE_WIN_CR)\n\
 \	\	end$(ISE_WIN_CR)\n\
 
-TUPLE_CONVERSION=$(ISE_WIN_CR)\n\
-$(ISE_WIN_CR)\nconvert$(ISE_WIN_CR)\n\
-$(ISE_WIN_CR)\n\
-\	to_mml_set: {MML_SET [ANY]}$(ISE_WIN_CR)\n\
-$(ISE_WIN_CR)\nfeature -- MML$(ISE_WIN_CR)\n\
-$(ISE_WIN_CR)\n\
-\	to_mml_set: MML_SET [ANY]$(ISE_WIN_CR)\n\
-\	\	do$(ISE_WIN_CR)\n\
-\	\	\	check is_executable: False then end$(ISE_WIN_CR)\n\
-\	\	end
-
 .SILENT:
 
 all:
@@ -56,6 +44,9 @@ update: $(GENERATED_FILES)
 
 base.ecf: $(BASE_SRC) base.sed Makefile
 	sed -f base.sed $(BASE_SRC) > $@
+
+base-safe.ecf: base.ecf base-safe.sed Makefile
+	sed -f base-safe.sed base.ecf > $@
 
 eve/any.e: $(ANY_SRC) any.sed any.txt Makefile
 	sed -f any.sed $(ANY_SRC) > $@
@@ -81,11 +72,6 @@ eve/iteration_cursor.e: $(ITERATION_CURSOR_SRC) iteration_cursor.sed Makefile
 eve/std_files.e: $(STD_FILES_SRC) std_files.sed Makefile
 	sed -f std_files.sed $(STD_FILES_SRC) > $@
 
-eve/tuple.e: $(TUPLE_SRC) Makefile
-	sed \
-		-e "s/\(^\tdefault_create\)/\1$(TUPLE_CONVERSION)/" \
-		$(TUPLE_SRC) > $@
-
 clean:
-	-del base.ecf eve\any.e eve\arguments.e eve\arguments_32.e eve\array.e eve\iterable.e eve\iteration_cursor.e eve\std_files.e eve\tuple.e
+	-del base.ecf base-safe.ecf eve\any.e eve\arguments.e eve\arguments_32.e eve\array.e eve\iterable.e eve\iteration_cursor.e eve\std_files.e
 	-rm $(GENERATED_FILES)

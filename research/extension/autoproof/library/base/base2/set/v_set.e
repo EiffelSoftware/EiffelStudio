@@ -4,12 +4,13 @@ note
 		Elements can be added and removed.
 		]"
 	author: "Nadia Polikarpova"
+	revised_by: "Alexander Kogtenkov"
 	model: set, lock
 	manual_inv: true
 	false_guards: true
 
 deferred class
-	V_SET [G]
+	V_SET [G-> separate ANY]
 
 inherit
 	V_CONTAINER [G]
@@ -127,7 +128,7 @@ feature -- Comparison
 			same_lock: other.lock = lock
 			modify_model ("observers", [Current, other])
 		local
-			it: V_SET_ITERATOR [G]
+			it: like new_cursor
 		do
 			Result := True
 			if other /= Current then
@@ -147,7 +148,11 @@ feature -- Comparison
 				until
 					it.after or not Result
 				loop
-					Result := other.has (it.item)
+					if attached it.item as v then
+						Result := other.has (v)
+					else
+						check from_loop_exit_condition: False then end
+					end
 					it.forth
 				variant
 					it.sequence.count - it.index_
@@ -188,7 +193,7 @@ feature -- Comparison
 			same_lock: other.lock = lock
 			modify_model ("observers", [Current, other])
 		local
-			it: V_SET_ITERATOR [G]
+			it: like new_cursor
 		do
 			if other.is_empty then
 				Result := True
@@ -210,7 +215,11 @@ feature -- Comparison
 				until
 					it.after or not Result
 				loop
-					Result := not other.has (it.item)
+					if attached it.item as v then
+						Result := not other.has (v)
+					else
+						check from_loop_exit_condition: False then end
+					end
 					it.forth
 				variant
 					it.sequence.count - it.index_
@@ -301,7 +310,7 @@ feature -- Removal
 			no_iterators: observers.is_empty
 			modify_model (["set", "observers"], Current)
 		local
-			it: V_SET_ITERATOR [G]
+			it: like new_cursor
 		do
 			check inv_only ("lock_non_current", "items_locked", "no_duplicates") end
 			check lock.inv_only ("owns_definition", "equivalence_definition") end
@@ -330,7 +339,7 @@ feature -- Removal
 			modify_model ("set", Current)
 			modify_model ("observers", [Current, other])
 		local
-			it: V_SET_ITERATOR [G]
+			it: like new_cursor
 		do
 			check inv_only ("locked_non_void") end
 			if other /= Current then
@@ -346,7 +355,7 @@ feature -- Removal
 					lock.inv_only ("owns_definition", "equivalence_definition")
 					1 <= it.index_ and it.index_ <= it.sequence.count + 1
 					set <= set.old_
-					across 1 |..| (it.index_ - 1) as i all other.set_has (it.sequence [i.item]) end
+					across 1 |..| (it.index_ - 1) as i all attached it.sequence [i.item] as x and then other.set_has (x) end
 					across set.old_ as y all other.set_has (y.item) implies set [y.item] end
 					modify_model ("set", Current)
 					modify_model (["sequence", "index_"], it)
@@ -396,7 +405,7 @@ feature -- Removal
 					lock.inv_only ("owns_definition", "equivalence_definition")
 					1 <= it.index_ and it.index_ <= it.sequence.count + 1
 					set <= set.old_
-					across 1 |..| (it.index_ - 1) as i all not set_has (it.sequence [i.item]) end
+					across 1 |..| (it.index_ - 1) as i all attached it.sequence [i.item] as x implies not set_has (x) end
 					across set.old_ as y all not other.set_has (y.item) implies set [y.item] end
 					observers ~ observers.old_
 					modify_model (["set", "observers"], Current)
@@ -456,15 +465,19 @@ feature -- Removal
 				until
 					it.after
 				loop
-					if has (it.item) then
-						check it.inv_only ("target_bag_constraint") end
-						seq.lemma_no_duplicates
-						check other.inv_only ("items_locked", "no_duplicates") end
-						check inv_only ("items_locked", "no_duplicates") end
-						check lock.inv_only ("equivalence_definition") end
-						remove (it.item)
+					if attached it.item as v then
+						if has (v) then
+							check it.inv_only ("target_bag_constraint") end
+							seq.lemma_no_duplicates
+							check other.inv_only ("items_locked", "no_duplicates") end
+							check inv_only ("items_locked", "no_duplicates") end
+							check lock.inv_only ("equivalence_definition") end
+							remove (v)
+						else
+							extend (v)
+						end
 					else
-						extend (it.item)
+						check from_loop_exit_condition: False then end
 					end
 					it.forth
 				variant
@@ -500,6 +513,7 @@ feature -- Specification
 			status: ghost
 			replaces: bag
 		attribute
+			check is_executable: False then end
 		end
 
 	set_has (v: G): BOOLEAN
@@ -544,6 +558,7 @@ feature -- Specification
 		do
 			from
 				s1 := s
+				create Result
 			invariant
 				s = s1 + Result.domain
 				s1.is_disjoint (Result.domain)
@@ -575,7 +590,7 @@ invariant
 	bag_definition: bag = bag_from (set)
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

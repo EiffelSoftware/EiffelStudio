@@ -352,6 +352,7 @@ feature -- Specification
 		note
 			status: ghost
 		attribute
+			check is_executable: False then end
 		end
 
 invariant

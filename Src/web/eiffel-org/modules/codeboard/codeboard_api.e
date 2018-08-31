@@ -153,6 +153,11 @@ feature -- Element change
 				if a_code.has_id then
 					l_subject.append ("(code #" + a_code.id.out + ")")
 				end
+				if attached cms_api.user as u then
+					l_subject.append (" by ")
+					l_subject.append (cms_api.utf_8_encoded (cms_api.user_display_name (u)))
+					l_subject.append (".")
+				end
 				l_mesg_text := code_with_id_to_json (a_code, a_code.id)
 			else
 				create l_mesg_text.make_from_string (a_mesg)

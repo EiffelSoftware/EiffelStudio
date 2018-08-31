@@ -13,6 +13,22 @@
 class
 	STD_FILES
 
+inherit
+	ANY
+		redefine
+			default_create
+		end
+
+feature {NONE} -- Creation
+
+	default_create
+			-- Initialize storage.
+		note
+			status: creator
+		do
+			create internal_last_string_.make_from_string ("")
+		end
+
 feature -- Access
 
 	input: PLAIN_TEXT_FILE

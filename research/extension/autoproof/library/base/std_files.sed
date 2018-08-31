@@ -1,4 +1,22 @@
 n
+/STD_FILES/{
+	a
+	ainherit
+	a\	ANY
+	a\	\	redefine
+	a\		\	default_create
+	a\	\	end
+	a
+	afeature {NONE} -- Creation
+	a
+	a\	default_create
+	a\	\	\	-- Initialize storage.
+	a\	\	note
+	a\	\	\	status: creator
+	a\	\	do
+	a\	\	\	create internal_last_string_.make_from_string ("")
+	a\	\	end
+}
 /put_string/{
 	N
 	N

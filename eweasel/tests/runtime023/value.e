@@ -30,6 +30,8 @@ feature -- Duplication
 			;(create {MEMORY}).full_collect
 				-- Access `other.item`.
 			other.item.do_nothing
+				-- Make sure the objects are equal.
+			item := other.item
 		end
 
 end

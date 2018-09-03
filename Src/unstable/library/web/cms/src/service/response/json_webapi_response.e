@@ -131,7 +131,7 @@ feature -- Execution
 				m.header.put_location (loc)
 				m.set_status_code ({HTTP_STATUS_CODE}.temp_redirect)
 			end
-			m.header.put_content_type ("application/json")
+			m.header.put_content_type_with_charset ("application/json", "utf-8")
 			response.send (m)
 		end
 
@@ -156,6 +156,6 @@ feature {NONE} -- Implementation factory
 invariant
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

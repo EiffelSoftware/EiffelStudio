@@ -2,7 +2,7 @@ expanded class
 	VALUE
 
 inherit
-	ANY
+	MEMORY
 		redefine
 			copy,
 			default_create
@@ -27,9 +27,9 @@ feature -- Duplication
 			-- <Precursor>
 		do
 				-- Trigger GC to move `other.item`.
-			;(create {MEMORY}).full_collect
-				-- Access `other.item`.
-			other.item.do_nothing
+			full_collect
+				-- Use `other.item`.
+			other.item.f
 				-- Make sure the objects are equal.
 			item := other.item
 		end

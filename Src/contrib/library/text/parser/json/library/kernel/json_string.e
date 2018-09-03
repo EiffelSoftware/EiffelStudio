@@ -106,7 +106,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	item: STRING
-			-- Contents with escaped entities if any
+			-- JSON+UTF-8 encoded content.
 
 feature -- Status report			
 
@@ -460,6 +460,7 @@ feature {NONE} -- Implementation
 			uc: CHARACTER_32
 			c: CHARACTER_8
 			h: STRING_8
+			l_utf_8_encoding_needed: BOOLEAN
 		do
 			n := s.count
 			create Result.make (n + n // 10)
@@ -497,6 +498,9 @@ feature {NONE} -- Implementation
 					when '%T' then
 						Result.append_string ("\t")
 					else
+						if uc.natural_32_code > 127 then
+							l_utf_8_encoding_needed := True
+						end
 						Result.extend (c)
 					end
 				else
@@ -524,6 +528,17 @@ feature {NONE} -- Implementation
 				end
 				i := i + 1
 			end
+			if l_utf_8_encoding_needed then
+				Result := utf_converter.utf_32_string_to_utf_8_string_8 (Result)
+				check is_valid_utf_8_string_8: utf_converter.is_valid_utf_8_string_8 (Result) end
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	utf_converter: UTF_CONVERTER
+		once
+			create Result
 		end
 
 invariant

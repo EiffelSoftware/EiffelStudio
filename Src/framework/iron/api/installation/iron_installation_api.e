@@ -156,7 +156,7 @@ feature -- Change
 		do
 			increment_db_revision
 		ensure
-			need_refresh: not is_up_to_date
+			need_refresh: db_revision /= 0 implies not is_up_to_date
 		end
 
 	refresh

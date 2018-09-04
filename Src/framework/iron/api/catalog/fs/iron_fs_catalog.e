@@ -216,30 +216,36 @@ feature -- Operation
 					end
 				end
 			elseif attached {IRON_WORKING_COPY_REPOSITORY} repo as l_wc_repo then
-				create dir_vis.make_empty
-				dir_vis.set_default_iron_file_name ("package.iron")
-				dir_vis.exclude_directory_names (<<"EIFGENs", ".svn", ".git">>)
-				dir_vis.stop_on_first_matching_file (True)
-				dir_vis.process_directory (l_wc_repo.path)
-				create l_package_file_factory
-				across
-					dir_vis.list as ic
-				loop
-					pif := l_package_file_factory.new_package_file (ic.item)
-					p := pif.to_package (l_wc_repo)
-					if not is_silent then
-						print ("- ")
-						print (p.human_identifier)
-						print ("%N")
-						if not pif.has_expected_file_name then
-							print ("!Warning: expected file name is %"")
-							print (pif.expected_file_name)
-							print ("%" instead of %"")
-							print (ic.item)
-							print ("%"%N")
+				if l_wc_repo.exists then
+					create dir_vis.make_empty
+					dir_vis.set_default_iron_file_name ("package.iron")
+					dir_vis.exclude_directory_names (<<"EIFGENs", ".svn", ".git">>)
+					dir_vis.stop_on_first_matching_file (True)
+					dir_vis.process_directory (l_wc_repo.path)
+					create l_package_file_factory
+					across
+						dir_vis.list as ic
+					loop
+						pif := l_package_file_factory.new_package_file (ic.item)
+						p := pif.to_package (l_wc_repo)
+						if not is_silent then
+							print ("- ")
+							print (p.human_identifier)
+							print ("%N")
+							if not pif.has_expected_file_name then
+								print ("!Warning: expected file name is %"")
+								print (pif.expected_file_name)
+								print ("%" instead of %"")
+								print (ic.item)
+								print ("%"%N")
+							end
 						end
+						repo.put_package (p)
 					end
-					repo.put_package (p)
+				else
+					if not is_silent then
+						print ("ERROR: Repository %"" + l_wc_repo.location_string + "%" does not exist!%N")
+					end
 				end
 			else
 				debug ("refactor_fixme")
@@ -610,7 +616,7 @@ feature {NONE} -- Helper
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

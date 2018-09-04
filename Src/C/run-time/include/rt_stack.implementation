@@ -152,7 +152,6 @@ doc:	<routine name="truncate" return_type="XX_EIF_STACK_ELEM_TYPE *" export="pub
 doc:		<summary>Free unused chunks in the stack. If the current chunk has at least MIN_FREE locations, then we may free all the chunks starting with the next one. Otherwise, we skip the next chunk and free the remainder. This is to avoid having to reallocate a new chunk soon after truncating a stack.</summary>
 doc:		<param name="stk" type="XX_EIF_STACK_TYPE *">Stack to be truncated.</param>
 doc:		<param name="nb_items" type="size_t">Number of items allocated in `stk'.</param>
-doc:		<return>NULL if `stk' cannot be extended, otherwise address of the first free location in new chunk.</return>
 doc:		<thread_safety>Re-entrant but not MT-safe</thread_safety>
 doc:		<synchronization>Requires safe access to `stk'.</synchronization>
 doc:	</routine>
@@ -510,7 +509,7 @@ rt_public int XX_EIF_STACK_FUNC(push_address) (XX_EIF_STACK_TYPE *stk, XX_EIF_ST
 doc:	<routine name="npop" export="public">
 doc:		<summary>Pop `nb_items' from top of stack `stk. If the new top of the stack is at the beginning of the current chunk, we will set update the current stack to use the previous chunk if any. The scenario is the following, you called push but current chunk was full, thus you need to create a new chunk and add the element. Now if you pop the element and remain in the same chunk, the you do not end up with the same stack as before the push.</summary>
 doc:		<param name="stk" type="XX_EIF_STACK_TYPE *">Stack in which we are going to push `value'.</param>
-doc:		<param name="nb_items" type="rt_uint_ptr">Address being looked for in `stk'.</param>
+doc:		<param name="nb_items" type="rt_uint_ptr">Number of items to pop from `stk'.</param>
 doc:		<return>T_OK if `value' is added to `stk', T_NO_MORE_MEMORY otherwise.</return>
 doc:		<thread_safety>Re-entrant but not MT-safe</thread_safety>
 doc:		<synchronization>Requires safe access to `stk'.</synchronization>

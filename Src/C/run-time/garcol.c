@@ -2287,13 +2287,18 @@ rt_private void unmark_c_stack_objects (void)
 {
 	EIF_REFERENCE *object;		/* For looping over subsidiary roots */
 	rt_uint_ptr roots;			/* Number of roots in each chunk */
-	struct stochunk *s;			/* To walk through each stack's chunk */
+	struct stochunk *s, *current_chunk;			/* To walk through each stack's chunk */
+	int done;
+	size_t n;			/* Number of items */
 
 		/* Only do some processing if the stack was created. */
-	if (c_stack_object_set.st_cur) {
-		for (s = c_stack_object_set.st_head; s && (s != c_stack_object_set.st_cur); s = s->sk_next) {
+	current_chunk = c_stack_object_set.st_cur;
+	if (current_chunk) {
+		for (done = 0, n = 0, s = c_stack_object_set.st_head; s && !done; s = s->sk_next) {
+			done = (s == current_chunk);
 			object = s->sk_arena;				/* Start of stack */
 			roots = s->sk_top - object;			/* The whole chunk */
+			n += roots;
 			for (; roots > 0; roots--, object++) {
 				CHECK("Object is marked", HEADER(*object)->ov_flags & EO_MARK);
 				CHECK("Object is on C stack", HEADER(*object)->ov_flags & EO_STACK);
@@ -2301,9 +2306,12 @@ rt_private void unmark_c_stack_objects (void)
 			}
 		}
 
-			/* Reset the content of the stack. This is not great for performance since
-			 * we will most likely reallocate the stack at the next GC cycle. */
-		eif_ostack_reset(&c_stack_object_set);
+			/*
+			 * Remove all elements from the stack.
+			 * Calling `eif_ostack_reset(&c_stack_object_set)` would cause decllocation of the stack
+			 * with potential allocation of it later. This is avoided by removing elements from the stack instead.
+			 */
+		eif_ostack_npop(&c_stack_object_set, n);
 	}
 }
 
@@ -3597,8 +3605,8 @@ rt_private EIF_REFERENCE scavenge(register EIF_REFERENCE root, char **top)
 
 	zone = HEADER(root);
 
-		/* If object has the EO_STACK mark, then it means that it cannot move. So we have
-		 * to return immediately. */
+		/* If object has the EO_STACK mark, then it means that it cannot move and should be returned as is.
+		 * However, the object has to be marked to avoid double processing, and stored in a stack of C objects for later unmarking. */
 	if (zone->ov_flags & EO_STACK) {
 		CHECK ("EO_STACK not in Generation Scavenge From zone",
 			!((rt_g_data.status & GC_GEN) &&
@@ -3616,6 +3624,11 @@ rt_private EIF_REFERENCE scavenge(register EIF_REFERENCE root, char **top)
 			!((rt_g_data.status & GC_PART) &&
 			(root > ps_to.sc_active_arena) &&
 			(root <= ps_to.sc_top)));
+			/* Mark the object. */
+		zone->ov_flags |= EO_MARK;
+			/* Record it for future unmarking. */
+		eif_ostack_push(&c_stack_object_set, root);
+			/* Return the original reference. */
 		return root;
 	}
 
@@ -4033,7 +4046,7 @@ rt_private EIF_REFERENCE hybrid_gen_mark(EIF_REFERENCE *a_root)
 				*prev = current;
 		}
 
-			/* It's useless to mark an expanded which has a prent object since the later is marked.
+			/* It's useless to mark an expanded which has a parent object since the later is marked.
 			 * Scavengend objects need not any mark either, as the forwarding mark
 			 * tells that they are alive. */
 		if (!eif_is_nested_expanded(flags) && (flags & EO_NEW)) {

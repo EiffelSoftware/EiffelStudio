@@ -191,8 +191,10 @@ feature -- Element change
 		require
 			a_code_id_valid: a_code.has_id
 			existing_code: code (a_code.id) /= Void
+		local
+			utf: UTF_CONVERTER
 		do
-			cms_api.storage.set_custom_value ("snippet." + a_code.id.out, code_to_json (a_code), {CODEBOARD_MODULE}.name)
+			cms_api.storage.set_custom_value ("snippet." + a_code.id.out, utf.utf_8_string_8_to_string_32 (code_to_json (a_code)), {CODEBOARD_MODULE}.name)
 			on_code_changed (a_code, "Updated code snippet")
 		end
 

@@ -80,6 +80,8 @@ feature -- Change Element
 		do
 			if attached {READABLE_STRING_8} a_value as s then
 				create l_value.make_from_string (s)
+			elseif attached {READABLE_STRING_32} a_value as s32 then
+				create l_value.make_from_string_32 (s32)
 			else
 				create l_value.make_from_string_32 (a_value.as_string_32)
 			end
@@ -333,6 +335,6 @@ invariant
 	items_not_void: items /= Void
 
 note
-	copyright: "2010-2017, Javier Velilla and others https://github.com/eiffelhub/json."
+	copyright: "2010-2018, Javier Velilla, Jocelyn Fiat, Eiffel Software and others https://github.com/eiffelhub/json."
 	license: "https://github.com/eiffelhub/json/blob/master/License.txt"
 end

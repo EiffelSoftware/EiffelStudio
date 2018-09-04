@@ -163,7 +163,7 @@ feature -- Element change
 				create l_mesg_text.make_from_string (a_mesg)
 			end
 			l_mesg_text.append_character ('%N')
-			if attached cms_api.new_email (cms_api.setup.site_email, a_mesg, l_mesg_text) as e then
+			if attached cms_api.new_email (cms_api.setup.site_email, l_subject, l_mesg_text) as e then
 				cms_api.process_email (e)
 			end
 		end

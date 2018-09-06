@@ -933,10 +933,14 @@ feature {BYTE_NODE} -- Visitor
 								--| parameters ...
 							params := parameter_values_from_parameters_b (a_node.parameters)
 							if not error_occurred then
-								if tmp_target_dump_value /= Void then
-									evaluate_routine (tmp_target_dump_value.value_address, tmp_target_dump_value, cl, fi, params)
+								if fi.is_class then
+									evaluate_class_routine (cl, fi, params)
 								else
-									evaluate_routine (context.address, Void, cl, fi, params)
+									if tmp_target_dump_value /= Void then
+										evaluate_routine (tmp_target_dump_value.value_address, tmp_target_dump_value, cl, fi, params)
+									else
+										evaluate_routine (context.address, Void, cl, fi, params)
+									end
 								end
 							end
 						elseif fi.is_attribute then
@@ -1054,7 +1058,7 @@ feature {BYTE_NODE} -- Visitor
 			l_tmp_result_value_backup := tmp_result
 			l_tmp_target_backup := tmp_target
 
-				-- ELSIF_EXPRESSION...
+				-- ELSEIF_EXPRESSION...
 			l_condition_value := standalone_evaluation_expr_b (a_node.condition)
 			if not error_occurred then
 				if
@@ -2098,6 +2102,33 @@ feature {NONE} -- Evaluation: implementation
 			end
 		end
 
+	evaluate_class_routine (cl: CLASS_C; f: FEATURE_I; params: LIST [DUMP_VALUE])
+			-- Evaluate class routine `f' with parameters `params'
+		require
+			f /= Void
+			f_is_class_routine: f.is_class
+		do
+			if cl = Void then
+				dbg_error_handler.notify_error_evaluation ("Missing class information for non object call " + f.feature_name)
+			elseif cl.is_deferred then
+				dbg_error_handler.notify_error_evaluation ("Evaluation of class routine {" + cl.name + "}." + f.feature_name + " is not supported (deferred target type)!")
+			else
+					-- Instanciate empty object as the "target" of non object call.
+				prepare_dbg_evaluation
+				dbg_evaluator.create_empty_instance_of (cl.actual_type)
+				retrieve_dbg_evaluation
+				if
+					not error_occurred and then
+					attached tmp_result as res and then
+					attached res.value as dv
+				then
+					prepare_dbg_evaluation
+					Dbg_evaluator.evaluate_class_routine (dv.address, dv, cl, f, params)
+					retrieve_dbg_evaluation
+				end
+			end
+		end
+
 	evaluate_static_routine (a_addr: DBG_ADDRESS; a_target: DUMP_VALUE; cl: CLASS_C; f: FEATURE_I; params: LIST [DUMP_VALUE])
 			-- Evaluate static routine `f' with parameters `params'
 		require
@@ -2112,7 +2143,7 @@ feature {NONE} -- Evaluation: implementation
 					dbg_error_handler.notify_error_evaluation_call_on_void (f.feature_name)
 				else
 					prepare_dbg_evaluation
-					Dbg_evaluator.evaluate_routine (a_addr, a_target, cl, f, params, True)
+					Dbg_evaluator.evaluate_static_routine (a_addr, a_target, cl, f, params)
 					retrieve_dbg_evaluation
 				end
 			end

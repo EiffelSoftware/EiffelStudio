@@ -53,7 +53,7 @@ feature {NONE} -- Implementation
 
 	effective_evaluate_routine (addr: DBG_ADDRESS; a_target: DUMP_VALUE; f, realf: FEATURE_I;
 			ctype: CLASS_TYPE; orig_class: CLASS_C; params: LIST [DUMP_VALUE];
-			is_static_call: BOOLEAN)
+			is_non_object_call: BOOLEAN)
 			-- Evaluate dotnet function
 		local
 			l_params: ARRAY [DUMP_VALUE]

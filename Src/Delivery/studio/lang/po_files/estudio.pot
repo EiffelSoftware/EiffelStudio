@@ -144,6 +144,13 @@ msgstr ""
 msgid " (!) This variable already has a value [$1=$2].\n"
 msgstr ""
 
+#. Source code: a_formatter.add (locale.plural_translation_in_context (" (+1 more error)", " (+$1 more errors)", "tool.autoproof.error", n - 1))
+#: e2b_failed_verification.e:43
+msgctxt "tool.autoproof.error"
+msgid " (+1 more error)"
+msgid_plural " (+$1 more errors)"
+msgstr[0] ""
+
 #. Source code: l_request_restart: STRING_32			do Result := locale.translation (" (REQUIRES RESTART)") end
 #: interface_names.e:1646
 msgid " (REQUIRES RESTART)"
@@ -559,6 +566,12 @@ msgstr ""
 #: debugger_names.e:406
 msgid "$1 => this should not occur during expression evaluation."
 msgstr ""
+
+#. Source code: do Result := locale.formatted_string (locale.plural_translation ("$1 Error", "$1 Errors", a_value), a_value) end
+#: e2b_messages.e:226
+msgid "$1 Error"
+msgid_plural "$1 Errors"
+msgstr[0] ""
 
 #. Source code: do Result := plural_translation_in_context (once "$1 Error", once "$1 Errors", once "code_analyzer.toolbar.selector", n) end
 #: ca_names.e:785
@@ -4661,6 +4674,17 @@ msgstr ""
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:278
 msgctxt "preference"
 msgid "Auto-complete quotes"
+msgstr ""
+
+#. Source code: t_title: STRING = "AutoProof"
+#: es_autoproof_tool.e:45
+msgid "AutoProof"
+msgstr ""
+
+#. Source code: (locale.translation_in_context ("AutoProof", "menu.tool"),
+#: es_tool_menu_extension.e:26
+msgctxt "menu.tool"
+msgid "AutoProof"
 msgstr ""
 
 #. Source code: 
@@ -13740,6 +13764,12 @@ msgstr ""
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:151
 msgctxt "preference"
 msgid "Dependency view sorting order"
+msgstr ""
+
+#. Source code: locale.translation_in_context (once "Deprecated use of keyword `is`.", once "parser.eiffel.warning")))
+#: eiffel_parser_skeleton.e:1309
+msgctxt "parser.eiffel.warning"
+msgid "Deprecated use of keyword `is`."
 msgstr ""
 
 #. Source code: do Result := translation_in_context ("Depth threshold", once "code_analyzer") end
@@ -23246,6 +23276,12 @@ msgid ""
 "Click Yes to convert this project to version $5.\n"
 msgstr ""
 
+#. Source code: a_formatter.add (locale.translation_in_context ("Inconclusive result (verifier timed out).", once "tool.auto_proof.result"))
+#: e2b_inconclusive_result.e:24
+msgctxt "tool.auto_proof.result"
+msgid "Inconclusive result (verifier timed out)."
+msgstr ""
+
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
 #. 	<PREF NAME="rule.inconsistent_hash_code_redeclaration.enable" DESCRIPTION="Enable rule."><BOOLEAN>True</BOOLEAN></PREF>
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
@@ -31834,7 +31870,7 @@ msgid "Retrieve supplier classes"
 msgstr ""
 
 #. Source code: l_synchronizing_errors: STRING = "Retrieving last compilation's error and warning information..."
-#: es_event_list_tool_panel_base.e:1323
+#: es_event_list_tool_panel_base.e:1322
 msgid "Retrieving last compilation's error and warning information..."
 msgstr ""
 
@@ -41749,6 +41785,43 @@ msgid ""
 "when determinable by context;\n"
 " • Standard syntax - Enforce current standard syntax;\n"
 " • Provisional syntax - Allow not-yet-approved constructs."
+msgstr ""
+
+#. Source code: ("Verification successful after inlining. (See an original error.)",
+#: e2b_successful_verification.e:52
+msgctxt "tool.auto_proof.result"
+msgid "Verification successful after inlining. (See an original error.)"
+msgid_plural "Verification successful after inlining. (See original errors.)"
+msgstr[0] ""
+
+#. Source code: a_formatter.add (locale.translation_in_context (once "Verification successful.", once "tool.auto_proof.result"))
+#: e2b_successful_verification.e:56
+msgctxt "tool.auto_proof.result"
+msgid "Verification successful."
+msgstr ""
+
+#. Source code: locale.translation_in_context ("Verify with AutoProof", "menu.class")
+#: es_context_menu_extension.e:61
+msgctxt "menu.class"
+msgid "Verify with AutoProof"
+msgstr ""
+
+#. Source code: locale.translation_in_context ("Verify with AutoProof", "menu.feature")
+#: es_context_menu_extension.e:36
+msgctxt "menu.feature"
+msgid "Verify with AutoProof"
+msgstr ""
+
+#. Source code: locale.translation_in_context ("Verify with AutoProof (running)", "menu.class")
+#: es_context_menu_extension.e:59
+msgctxt "menu.class"
+msgid "Verify with AutoProof (running)"
+msgstr ""
+
+#. Source code: locale.translation_in_context ("Verify with AutoProof (running)", "menu.feature")
+#: es_context_menu_extension.e:34
+msgctxt "menu.feature"
+msgid "Verify with AutoProof (running)"
 msgstr ""
 
 #. Source code: target_version_name: STRING_32 do Result := locale.translation ("Version")	end

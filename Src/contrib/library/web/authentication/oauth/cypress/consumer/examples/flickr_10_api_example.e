@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {FLICKR_10_API_EXAMPLE}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -18,15 +17,19 @@ feature {NONE} -- Initialization
 			verifier: OAUTH_VERIFIER
 			request: OAUTH_REQUEST
 			service: OAUTH_SERVICE_I
+			signature_type: OAUTH_SIGNATURE_TYPE
 		do
+			create signature_type.make
+			signature_type.mark_query_string
 			create api
 			service := api.with_api (create {OAUTH_10_FLICKR_API})
 								.with_api_key (api_key)
 								.with_api_secret (api_secret)
+								.with_signature (signature_type)
+								.with_callback ("www.example.com")
 								.build
 
 			print ("%N=== Flickr's OAuth Workflow ===%N");
-
 			print ("%NFetching the Request Token...");
 			request_token := service.request_token
 			print ("%NGot the Request Token!%N");
@@ -65,7 +68,7 @@ feature {NONE} -- Implementation
 	Api_key: STRING  =""
 	Api_secret: STRING =""
 note
-	copyright: "2013-2013, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2017, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

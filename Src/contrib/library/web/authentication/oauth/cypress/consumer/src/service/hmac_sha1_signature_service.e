@@ -8,7 +8,6 @@ class
 	HMAC_SHA1_SIGNATURE_SERVICE
 
 inherit
-
 	SIGNATURE_SERVICE
 
 	OAUTH_SHARED_ENCODER
@@ -54,7 +53,6 @@ feature {NONE} -- Encoding Byte Array Implementation
 		local
 			i: INTEGER
 		do
-
 			create Result.make_filled (0,a_bytes.count)
 			across a_bytes as c
 				loop
@@ -63,7 +61,7 @@ feature {NONE} -- Encoding Byte Array Implementation
 				end
 		end
 
-	to_byte (a_val : INTEGER) : INTEGER_8
+	to_byte (a_val: INTEGER) : INTEGER_8
 			-- takes a value between 0 and 255
 			-- Result :-128 to 127
 		do
@@ -76,10 +74,10 @@ feature {NONE} -- Encoding Byte Array Implementation
 			result_value :  127 >= Result and Result >= -128
 		end
 
-	encode_base_64 (bytes:SPECIAL[INTEGER_8]) : STRING_8
+	encode_base_64 (bytes: SPECIAL [INTEGER_8]): STRING_8
 			-- Encodes a byte array into a STRING doing base64 encoding.
 		local
-			l_output : SPECIAL[INTEGER_8]
+			l_output : SPECIAL [INTEGER_8]
 			l_remaining : INTEGER
 			i,ptr: INTEGER
 			char : CHARACTER
@@ -140,12 +138,10 @@ feature {NONE} -- Encoding Byte Array Implementation
 			Result := ("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/").area
 		end
 
-	encode_value (i: INTEGER_8) : INTEGER_8
+	encode_value (i: INTEGER_8): INTEGER_8
 		do
 			Result := base64_map[i & 0x3F].code.as_integer_8
 		end
-
-
 
 note
 	copyright: "2013-2015, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"

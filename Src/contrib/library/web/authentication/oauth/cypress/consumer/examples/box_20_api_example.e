@@ -1,6 +1,5 @@
 note
-	description: "Summary description for {BOX_20_API_EXAMPLE}."
-	author: ""
+	description: "Example test for the BOX OAUTH API"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -23,7 +22,7 @@ feature {NONE} -- Initialization
 			access_token : detachable OAUTH_TOKEN
 		do
 			create config.make_default (api_key, api_secret)
-			config.set_callback ("http://127.0.0.1")
+			config.set_callback ("http://127.0.0.1:9090")
 			create box
 			api_service := box.create_service (config)
 			print ("%N=== Bos's OAuth Workflow ===%N")
@@ -48,7 +47,6 @@ feature {NONE} -- Initialization
 	    	  print("%NNow we're going to access a protected resource...%N");
 	    	  create request.make ("GET", protected_resource_url)
 			  request.add_header("Authorization", "Bearer " + l_access_token.token )
-	 		  api_service.sign_request (l_access_token, request)
 	    	  if attached {OAUTH_RESPONSE} request.execute as l_response then
 					print ("%NOk, let see what we found...")
 					print ("%NResponse: STATUS" + l_response.status.out)
@@ -63,13 +61,13 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	api_key : STRING ="xwfpl8mzof5pfab8f7kxral4zgwhvcj2"
-	api_secret :STRING ="IVyaqYZyXuXdEmFe3E4DZOAvNXKA8iQL"
-	protected_resource_url : STRING = "https://www.box.com/api/2.0/folders/0";
+	api_key : STRING ="api_key"
+	api_secret :STRING ="api_secret"
+	protected_resource_url : STRING = "https://api.box.com/2.0/folders/0";
  	empty_token : detachable  OAUTH_TOKEN
 
 ;note
-	copyright: "2013-2013, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2017, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

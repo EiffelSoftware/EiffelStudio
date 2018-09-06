@@ -1,0 +1,6 @@
+# See https://github.com/settings/developers to register your github application
+# and set expected callback, and get api_key=Client ID and api_secret=Client Secret.
+
+callback=/login_with_github_callback
+#api_key=...
+#api_secret=...

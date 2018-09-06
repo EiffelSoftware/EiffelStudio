@@ -52,7 +52,7 @@ feature -- Authenticated query
 			EIS: "name=Repositories", "protocol=URI", "src=http://developer.github.com/v3/repos/"
 		local
 			lst: ARRAYED_LIST [GITHUB_REPOSITORY]
-			cl: LIBCURL_HTTP_CLIENT
+			cl: DEFAULT_HTTP_CLIENT
 			sess: HTTP_CLIENT_SESSION
 			ctx: HTTP_CLIENT_REQUEST_CONTEXT
 			p: JSON_PARSER
@@ -60,7 +60,7 @@ feature -- Authenticated query
 			if attached active_authorization as auth and then attached auth.token as tok then
 				create lst.make (0)
 
-				create cl.make
+				create cl
 				sess := cl.new_session ("https://api.github.com/")
 				create ctx.make_with_credentials_required
 				ctx.add_query_parameter ("sort", "updated")
@@ -91,12 +91,12 @@ feature -- Authorization
 
 	new_authorization_token (a_scopes: ITERABLE [READABLE_STRING_8]): detachable GITHUB_AUTHORIZATION
 		local
-			cl: LIBCURL_HTTP_CLIENT
+			cl: DEFAULT_HTTP_CLIENT
 			sess: HTTP_CLIENT_SESSION
 			ctx: HTTP_CLIENT_REQUEST_CONTEXT
 			s: STRING
 		do
-			create cl.make
+			create cl
 			sess := cl.new_session ("https://api.github.com/")
 			create ctx.make_with_credentials_required
 			sess.set_credentials (username, password)
@@ -126,12 +126,12 @@ feature -- Authorization
 		note
 			EIS: "name=Authorization", "protocol=URI", "src=http://developer.github.com/v3/oauth/"
 		local
-			cl: LIBCURL_HTTP_CLIENT
+			cl: DEFAULT_HTTP_CLIENT
 			sess: HTTP_CLIENT_SESSION
 			ctx: HTTP_CLIENT_REQUEST_CONTEXT
 			p: JSON_PARSER
 		do
-			create cl.make
+			create cl
 			sess := cl.new_session ("https://api.github.com/")
 			create ctx.make_with_credentials_required
 			sess.set_credentials (username, password)

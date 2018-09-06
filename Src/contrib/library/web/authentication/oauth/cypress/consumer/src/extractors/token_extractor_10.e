@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {TOKEN_EXTRACTOR_10}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -1,8 +1,8 @@
 note
-	description: "Summary description for {BITBUCKET_10_API_EXAMPLE}."
-	author: ""
+	description: "Example test for the BITBUCKET OAUTH API"
 	date: "$Date$"
 	revision: "$Revision$"
+	EIS: "name=Bitbucket version1", "src=https://confluence.atlassian.com/bitbucket/repository-resource-1-0-296095202.html", "protocol=uri"
 
 class
 	BITBUCKET_10_API_EXAMPLE
@@ -20,11 +20,14 @@ feature {NONE} -- Initialization
 			request: OAUTH_REQUEST
 			service: OAUTH_SERVICE_I
 		do
+			Api_key := "TO-COMPLETE"
+			Api_secret := "TO-COMPLETE"
+
 			create api
 			service := api.with_api (create {OAUTH_10_BITBUCKET_API})
 								.with_api_key (api_key)
 								.with_api_secret (api_secret)
-								.with_callback ("http://www.eiffelroom.com")
+								.with_callback ("http://localhost:9090")
 								.build
 
 			print ("%N=== Bitbucket's OAuth Workflow ===%N");
@@ -65,10 +68,18 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation	
 	Protected_resource_url: STRING = "https://bitbucket.org/api/1.0/user/repositories"
-	Api_key: STRING  =""
-	Api_secret: STRING =""
+
+	Api_key: STRING
+	Api_secret: STRING
+
+invariant
+
+	key_set: not api_key.is_empty
+	secret_set: not api_secret.is_empty
+
+
 note
-	copyright: "2013-2013, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2017, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

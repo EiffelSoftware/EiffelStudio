@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="login_with_box" uuid="452106F0-FF6E-44DC-806F-B422C2B71499" library_target="login_with_box">
+	<target name="login_with_box">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/\.git$</exclude>
+			<exclude>/\.svn$</exclude>
+		</file_rule>
+		<option warning="true" is_obsolete_routine_type="true">
+		</option>
+		<setting name="console_application" value="true"/>
+		<capability>
+			<void_safety support="all" use="all"/>
+		</capability>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="cypress_consumer" location="..\..\consumer\consumer-safe.ecf" readonly="false"/>
+		<cluster name="login_with_box" location=".\" recursive="true"/>
+	</target>
+</system>

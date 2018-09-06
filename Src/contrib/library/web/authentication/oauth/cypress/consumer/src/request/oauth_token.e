@@ -26,6 +26,8 @@ inherit
 			is_equal
 		end
 
+--!TODO check if we need to split OAUTH token in OAUTH_TOKEN_1O and OAUTH_TOKEN_20.
+
 create
 	make_empty, make_token_secret, make_token_secret_response, make_token_secret_response_refresh
 
@@ -100,12 +102,16 @@ feature -- Access
 	        -- otherwise REQUIRED
 
     raw_response: detachable STRING
+    		-- raw response.
+
+    token_type: detachable STRING
+    		-- OAuth 2.0 token type.
 
 
 feature -- Element Change
 
 	set_token (a_token: READABLE_STRING_GENERAL)
-			-- Set `token' with `a_token'
+			-- Set `token' with `a_token'.
 		do
 			token := a_token.as_string_8
 		ensure
@@ -113,7 +119,7 @@ feature -- Element Change
 		end
 
 	set_secret (a_secret: READABLE_STRING_8)
-			-- Set `secret' with `a_secret'
+			-- Set `secret' with `a_secret'.
 		do
 			secret := a_secret
 		ensure
@@ -121,7 +127,7 @@ feature -- Element Change
 		end
 
 	set_refresh_token (a_refresh_token: READABLE_STRING_8)
-			-- Set `refresh_token' with `a_refresh_token'
+			-- Set `refresh_token' with `a_refresh_token'.
 		do
 			refresh_token := a_refresh_token
 		ensure
@@ -129,7 +135,7 @@ feature -- Element Change
 		end
 
 	set_expires_in (a_expire: INTEGER)
-			-- Set `expires_in' with `a_expire'
+			-- Set `expires_in' with `a_expire'.
 		do
 			expires_in := a_expire
 		ensure
@@ -137,7 +143,7 @@ feature -- Element Change
 		end
 
 	set_scope (a_scope: READABLE_STRING_8)
-			-- Set `scope' with `a_scope'
+			-- Set `scope' with `a_scope'.
 		do
 			scope := a_scope
 		ensure
@@ -145,12 +151,21 @@ feature -- Element Change
 		end
 
 	set_raw_response (a_response: READABLE_STRING_8)
-			-- Set `raw_response' with `a_response'
+			-- Set `raw_response' with `a_response'.
 		do
 			raw_response := a_response
 		ensure
 			raw_response_set: attached raw_response as l_response implies l_response = a_response
 		end
+
+	set_token_type (a_type: READABLE_STRING_8)
+			-- Set `token_type' with `a_token'.
+		do
+			token_type := a_type
+		ensure
+			token_type_set: attached token_type as l_token_type implies l_token_type = a_type
+		end
+
 feature -- debug
 
 	debug_output: STRING
@@ -161,7 +176,7 @@ feature -- debug
 		end
 
 note
-	copyright: "2013-2015, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2017, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 			access_token : detachable OAUTH_TOKEN
 		do
 			create config.make_default (api_key, api_secret)
-			config.set_callback ("http://eiffelroom.com/")
+			config.set_callback ("http://www.eiffel.org")
 			create foursquare
 			api_service := foursquare.create_service (config)
 
@@ -69,7 +69,7 @@ feature {NONE} -- Implementation
  	empty_token : detachable  OAUTH_TOKEN
 
 ;note
-	copyright: "2013-2013, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2017, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

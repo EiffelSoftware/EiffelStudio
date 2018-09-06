@@ -7,13 +7,13 @@
 			<exclude>/\.git$</exclude>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<library name="apis" location="$ISE_LIBRARY\contrib\library\web\authentication\oauth\cypress\consumer\apis\apis.ecf" readonly="false"/>
+		<library name="login_with" location="$ISE_LIBRARY\contrib\library\web\authentication\oauth\cypress\login_with\login_with.ecf" readonly="false"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="cms" location="..\..\cms.ecf" readonly="false"/>
 		<library name="cms_app_env" location="..\..\library\app_env\app_env.ecf" readonly="false"/>
 		<library name="cms_model" location="..\..\library\model\cms_model.ecf" readonly="false"/>
 		<library name="config" location="..\..\library\configuration\config.ecf"/>
-		<library name="cypress_consumer" location="$ISE_LIBRARY\contrib\library\web\authentication\oauth\cypress\consumer.ecf" readonly="false"/>
+		<library name="cypress_consumer" location="$ISE_LIBRARY\contrib\library\web\authentication\oauth\cypress\consumer\consumer.ecf" readonly="false"/>
 		<library name="email_service" location="..\..\library\email\email.ecf"/>
 		<library name="encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder.ecf"/>
 		<library name="error" location="$ISE_LIBRARY\contrib\library\utility\general\error\error.ecf"/>

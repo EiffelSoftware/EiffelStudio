@@ -55,7 +55,7 @@ feature {NONE} -- Implementation
 
 	effective_evaluate_routine (a_addr: DBG_ADDRESS; a_target: DUMP_VALUE; f, realf: FEATURE_I;
 			ctype: CLASS_TYPE; orig_class: CLASS_C; params: LIST [DUMP_VALUE];
-			is_static_call: BOOLEAN)
+			is_non_object_call: BOOLEAN)
 		local
 			fi: FEATURE_I
 			dmp: DUMP_VALUE
@@ -316,7 +316,7 @@ feature -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

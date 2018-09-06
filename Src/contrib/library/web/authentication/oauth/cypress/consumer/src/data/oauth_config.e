@@ -33,8 +33,8 @@ feature {NONE} -- Initializaton
 		do
 			make (a_key, a_secret, Void, Void, Void, Void)
 		ensure
-			key_set: api_key = a_key
-			secret_Set: api_secret = a_secret
+			key_set: api_key.same_string_general (a_key)
+			secret_Set: api_secret.same_string_general (a_secret)
 		end
 
 feature -- Access

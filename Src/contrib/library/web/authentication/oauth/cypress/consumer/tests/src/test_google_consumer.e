@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			client_secret := p.client_secret
 			redirect_uri := p.redirect_uri
 
-			create http_client.make
+			create http_client
 			initialize (p)
 		end
 
@@ -234,7 +234,7 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
- 	http_client: LIBCURL_HTTP_CLIENT
+ 	http_client: DEFAULT_HTTP_CLIENT
 
 	session: detachable HTTP_CLIENT_SESSION
 

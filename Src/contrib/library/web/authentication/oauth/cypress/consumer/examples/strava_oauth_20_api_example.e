@@ -50,7 +50,7 @@ feature {NONE} -- Creation
 		end
 
 feature {NONE} -- Implementation
-	
+
 	authorization_code (a_request_url: READABLE_STRING_GENERAL): STRING
 			-- The authorization token as computed by calling `a_request_url'
 		local
@@ -91,8 +91,18 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Configuration
 
-	api_key : STRING ="899"
-	api_secret :STRING ="6d3570028fcb372d49d7abebeb9a4c62a92d3831"
+	api_key : STRING =""
+	api_secret :STRING =""
 	protected_resource_url : STRING = "https://www.strava.com/api/v3/athlete"
 
+note
+	copyright: "2013-2017, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

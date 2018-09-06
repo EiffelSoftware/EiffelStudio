@@ -66,13 +66,13 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	api_key : STRING ="bZIRfo7mhylo6jCpvlnVABSDYAodnDKTVn3ZAbKj0fcyLfPemW"
-	api_secret :STRING ="RBtBWdAvmqRTjlXgqLEjkjTAS7coDOdacKX3nKXCzywoXwjtQc"
+	api_key : STRING =""
+	api_secret :STRING =""
 	protected_resource_url : STRING = "http://api.tumblr.com/v2/blog/good.tumblr.com/info"
  	empty_token : detachable  OAUTH_TOKEN
 
 ;note
-	copyright: "2013-2013, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2017, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

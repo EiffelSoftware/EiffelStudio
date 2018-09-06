@@ -23,7 +23,7 @@ feature {NONE} -- Events
 
 feature -- Tests
 
-	not_append_to_query_string_with_empty_map()
+	not_append_to_query_string_with_empty_map
  		local
  			l_uri : STRING_8
  			l_uri_expected: STRING_8
@@ -89,7 +89,7 @@ feature {NONE} -- Implementation
 	parameters: OAUTH_PARAMETER_LIST
 
 ;note
-	copyright: "2013-2015, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2017, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

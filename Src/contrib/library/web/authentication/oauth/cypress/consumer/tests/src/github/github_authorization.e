@@ -75,33 +75,30 @@ feature -- Access
 
 feature -- Status report
 
-	debug_output: READABLE_STRING_GENERAL
+	debug_output: STRING_8
 			-- String that should be displayed in debugger to represent `Current'.
-		local
-			s: STRING
 		do
 			if attached app_name as n then
-				create s.make_from_string (n)
+				create Result.make_from_string (n)
 			else
-				create s.make_empty
+				create Result.make_empty
 			end
 			if not scopes.is_empty then
-				s.append_character (' ')
-				s.append_character ('(')
-				s.append_character (' ')
+				Result.append_character (' ')
+				Result.append_character ('(')
+				Result.append_character (' ')
 				across
 					scopes as c
 				loop
-					s.append (c.item)
-					s.append (" ")
+					Result.append (c.item)
+					Result.append (" ")
 				end
-				s.append_character (')')
+				Result.append_character (')')
 			end
 			if attached token as t then
-				s.append_character (' ')
-				s.append (t)
+				Result.append_character (' ')
+				Result.append (t)
 			end
-			Result := s
 		end
 
 

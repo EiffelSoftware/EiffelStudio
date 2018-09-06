@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="login_with_evernote" uuid="F6AD7A1C-F8C6-4548-B3CC-83874311B0B2" library_target="login_with_evernote">
+	<target name="login_with_evernote">
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/\.git$</exclude>
+			<exclude>/\.svn$</exclude>
+		</file_rule>
+		<option warning="true" is_obsolete_routine_type="true">
+		</option>
+		<setting name="console_application" value="true"/>
+		<capability>
+			<void_safety support="all" use="all"/>
+		</capability>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="cypress_consumer" location="..\..\consumer\consumer-safe.ecf" readonly="false"/>
+		<cluster name="login_with_evernote" location=".\" recursive="true"/>
+	</target>
+</system>

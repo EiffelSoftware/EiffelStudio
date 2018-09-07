@@ -10,6 +10,8 @@ note
 
 class
 	GITHUB
+inherit
+	JSON_PARSER_ACCESS
 
 create
 	make
@@ -71,8 +73,8 @@ feature -- Authenticated query
 					if res.error_occurred then
 						print (res)
 					elseif attached res.body as b then
-						create p.make_parser (b)
-						if attached {JSON_ARRAY} p.parse as jarr then
+						create p.make_with_string (b)
+						if attached {JSON_ARRAY} p.next_parsed_json_value as jarr and then p.is_valid then
 							across
 								jarr.array_representation as c
 							loop
@@ -140,8 +142,8 @@ feature -- Authorization
 				if res.error_occurred then
 					print (res)
 				elseif attached res.body as b then
-					create p.make_parser (b)
-					if attached {JSON_ARRAY} p.parse as arr then
+					create p.make_with_string (b)
+					if attached {JSON_ARRAY} p.next_parsed_json_value as arr and then p.is_valid then
 						across
 							arr.array_representation as c
 						loop
@@ -155,7 +157,7 @@ feature -- Authorization
 		end
 
 note
-	copyright: "2013-2013, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2018, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

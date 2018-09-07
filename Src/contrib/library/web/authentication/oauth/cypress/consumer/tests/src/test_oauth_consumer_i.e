@@ -39,11 +39,11 @@ feature -- Helper
 			if not d.exists then
 				d.recursive_create_dir
 			end
-			execution_environment.change_working_directory (d.name)
+			execution_environment.change_working_path (d.path)
 		end
 
 note
-	copyright: "2013-2013, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2018, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -43,9 +43,9 @@ feature {NONE} -- Initialization
 			-- Get OAuth2 Token
 			sess := http_client.new_session ("https://api.twitter.com/")
 
-			s := (create {URL_ENCODER}).encoded_string (consumer_secret) + "&"
+			s := (create {URL_ENCODER}).encoded_string (consumer_secret.to_string_32) + "&"
 			if attached token_secret as ts then
-				s.append ((create {URL_ENCODER}).encoded_string (ts))
+				s.append ((create {URL_ENCODER}).encoded_string (ts.to_string_32))
 			end
 			signing_key := s
 
@@ -135,7 +135,7 @@ feature {NONE} -- Initialization
 				end
 			end
 
-			Result := l_sig_builder.signature (<<rqst_method.as_upper, a_url>>, tb, signing_key)
+			Result := l_sig_builder.signature (<<rqst_method.as_upper, a_url.to_string_32>>, tb, signing_key)
 		end
 
 	nonce: STRING_8
@@ -210,7 +210,7 @@ invariant
 --	invariant_clause: True
 
 note
-	copyright: "2013-2017, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2018, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

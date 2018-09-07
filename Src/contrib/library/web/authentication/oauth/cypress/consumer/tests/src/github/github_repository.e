@@ -9,6 +9,7 @@ class
 
 inherit
 	DEBUG_OUTPUT
+	JSON_PARSER_ACCESS
 
 create
 	make_from_json_object,
@@ -20,15 +21,13 @@ feature {NONE} -- Initialization
 		local
 			p: JSON_PARSER
 		do
-			create p.make_parser (s)
-			if attached {JSON_OBJECT} p.parse as j then
+			create p.make_with_string (s)
+			if attached {JSON_OBJECT} p.next_parsed_json_value as j and then p.is_valid then
 				make_from_json_object (j)
 			end
 		end
 
 	make_from_json_object (j: JSON_OBJECT)
-		local
-			p: JSON_PARSER
 		do
 			if attached {JSON_NUMBER} j.item ("id") as js then
 				id := js.item
@@ -87,7 +86,7 @@ feature -- Status report
 		end
 
 note
-	copyright: "2013-2013, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2018, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

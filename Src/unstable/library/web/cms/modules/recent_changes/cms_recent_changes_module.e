@@ -263,6 +263,11 @@ feature -- Handler
 				if l_filter_source.is_empty then
 					l_filter_source := Void
 				end
+			elseif attached {WSF_STRING} req.query_parameter ("filter") as p_filter then
+				l_filter_source := p_filter.url_encoded_value
+				if l_filter_source.is_empty then
+					l_filter_source := Void
+				end
 			end
 			if attached {WSF_STRING} req.query_parameter ("size") as p_size then
 				l_size := p_size.integer_value.to_natural_32
@@ -413,7 +418,7 @@ feature -- Handler
 						l_query.append ("&date=")
 						l_query.append (htdate.timestamp.out)
 						if l_filter_source /= Void then
-							l_query.append ("&filter=")
+							l_query.append ("&source=")
 							l_query.append (l_filter_source)
 						end
 						l_content.append ("<a href=%"")

@@ -149,7 +149,7 @@ feature -- Recent changes
 				if l_logs = Void or else l_logs.count = 0 then
 					done := True
 				else
-					done := l_logs.count < nb - l_result_count
+					done := l_logs.count >= nb - l_result_count
 					across
 						l_logs as ic
 					until

@@ -135,7 +135,7 @@ feature {NONE} -- Initialization
 				end
 			end
 
-			Result := l_sig_builder.signature (<<rqst_method.as_upper, a_url.to_string_32>>, tb, signing_key)
+			Result := l_sig_builder.signature ({ARRAY [READABLE_STRING_32]}<<rqst_method.as_upper, a_url.to_string_32>>, tb, signing_key)
 		end
 
 	nonce: STRING_8

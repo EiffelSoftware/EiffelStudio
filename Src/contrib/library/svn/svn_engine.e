@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 	default_create
 		do
-			set_svn_executable_path ("svn")
+			make_with_executable_path ("svn")
 		end
 
 	make_with_executable_path (v: READABLE_STRING_GENERAL)
@@ -333,28 +333,32 @@ feature -- Access: working copy
 		local
 			res: detachable PROCESS_COMMAND_RESULT
 			s: detachable STRING
-			cmd: STRING_32
+			cmd,msg: STRING_32
+			args: ARRAYED_LIST [READABLE_STRING_GENERAL]
 		do
 			debug ("SVN_ENGINE")
 				print ({STRING_32} "svn commit " + a_changelist.as_command_line_arguments + "%N")
 			end
 
-			create cmd.make_from_string (svn_executable_path)
-			cmd.append_string (option_to_command_line_flags (a_options))
-			cmd.append_string (" commit ")
-			a_changelist.append_as_command_line_arguments_to (cmd)
-
-			if a_log_message /= Void then
-				cmd.append (" --message %"")
-				cmd.append_string_general (a_log_message)
-				cmd.append ("%"")
+			create args.make (10)
+			option_into_command_line_arguments (a_options, args)
+			args.force ("commit")
+			across
+				a_changelist as ic
+			loop
+				args.force (ic.item)
 			end
-
+			if a_log_message /= Void then
+				args.force ("--message")
+				create msg.make_from_string_general (a_log_message)
+				msg.prune_all ('%R')
+				args.force (msg)
+			end
 
 			debug ("SVN_ENGINE")
-				print ("Command: [" + cmd + "]%N")
+				print ("Command: svn commit ...%N")
 			end
-			res := process_misc.output_of_command (cmd, Void)
+			res := process_misc.output (svn_executable_path, args, Void)
 			debug ("SVN_ENGINE")
 				print ("-> terminated %N")
 			end
@@ -363,6 +367,24 @@ feature -- Access: working copy
 					print ("-> terminated : None .%N")
 				end
 				create Result.make_failure
+					-- Compute pseudo command line for info.
+				create cmd.make_from_string (svn_executable_path)
+				cmd.append_string (option_to_command_line_flags (a_options))
+				cmd.append_string (" commit ")
+				a_changelist.append_as_command_line_arguments_to (cmd)
+				if a_log_message /= Void then
+					if a_log_message.has ('%N') then
+						create msg.make_from_string_general (a_log_message)
+						msg.replace_substring_all ("%N", "\n")
+						cmd.append (" --message %"")
+						cmd.append_string_general (msg)
+						cmd.append ("%"")
+					else
+						cmd.append (" --message %"")
+						cmd.append_string_general (a_log_message)
+						cmd.append ("%"")
+					end
+				end
 				Result.set_command (cmd)
 				if res /= Void then
 					Result.set_message ("Exit code: " + res.exit_code.out + "%N" + res.error_output)
@@ -626,13 +648,42 @@ feature {NONE} -- impl
 				if not a_options.auth_cached then
 					Result.append_string_general (" --no-auth-cache " )
 				end
-				if 
+				if
 					attached a_options.parameters as l_params and then
 					not l_params.is_whitespace
 				then
 					Result.append_string_general (" ")
 					Result.append (l_params)
 					Result.append_string_general (" ")
+				end
+			end
+		end
+
+	option_into_command_line_arguments (a_options: detachable SVN_OPTIONS; a_args: LIST [READABLE_STRING_GENERAL])
+		do
+			if a_options /= Void then
+				if attached a_options.username as u then
+					a_args.force ("--username")
+					a_args.force (u)
+				end
+				if attached a_options.password as p then
+					a_args.force ("--password")
+					a_args.force (p)
+				end
+				if not a_options.auth_cached then
+					a_args.force ("--no-auth-cache")
+				end
+				if
+					attached a_options.parameters as l_params and then
+					not l_params.is_whitespace
+				then
+					across
+						l_params.split (' ') as ic
+					loop
+						if not ic.item.is_whitespace then
+							a_args.force (ic.item)
+						end
+					end
 				end
 			end
 		end
@@ -725,7 +776,7 @@ feature {NONE} -- impl
 		end
 
 note
-	copyright: "Copyright (c) 2003-2015, Jocelyn Fiat"
+	copyright: "Copyright (c) 2003-2018, Jocelyn Fiat"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Jocelyn Fiat

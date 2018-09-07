@@ -34,7 +34,7 @@ feature -- Basic operation
 			s: STRING_8
 			p: INTEGER
 		do
-			create f.make ("github.data")
+			create f.make_with_name ("github.data")
 			if f.exists and f.is_readable then
 				f.open_read
 				from
@@ -72,7 +72,7 @@ feature -- Basic operation
 			end
 			if not u.is_empty then
 				username := u
-				create f.make ("github." + u)
+				create f.make_with_name ("github." + u)
 				if f.exists and f.is_readable then
 					f.open_read
 					from
@@ -160,7 +160,7 @@ feature -- Access
 	token: detachable STRING
 
 ;note
-	copyright: "2013-2013, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2018, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

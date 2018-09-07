@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 				d.recursive_create_dir
 			end
 			create e
-			e.change_working_directory (d.name)
+			e.change_working_path (d.path)
 		end
 
 	test_github
@@ -83,7 +83,7 @@ feature {NONE} -- Initialization
 		end
 
 note
-	copyright: "2013-2013, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2018, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

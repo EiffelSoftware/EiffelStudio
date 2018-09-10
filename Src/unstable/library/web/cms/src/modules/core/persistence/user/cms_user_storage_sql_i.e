@@ -113,6 +113,33 @@ feature -- Access: user
 			sql_finalize_query (select_user_by_email)
 		end
 
+	users_by_profile_name (a_name: READABLE_STRING_GENERAL): detachable LIST [CMS_USER]
+			-- Users for the given profile name `a_name', if any.
+		local
+			l_parameters: STRING_TABLE [detachable ANY]
+		do
+			create {ARRAYED_LIST [CMS_USER]} Result.make (0)
+
+			error_handler.reset
+			create l_parameters.make (1)
+			l_parameters.put (a_name, "profile_name")
+			sql_query (select_users_by_profile_name, l_parameters)
+			from
+				sql_start
+			until
+				sql_after
+			loop
+				if attached fetch_user as l_user then
+					Result.force (l_user)
+				end
+				sql_forth
+			end
+			sql_finalize_query (select_users_by_profile_name)
+			if Result.is_empty then
+				Result := Void
+			end
+		end
+
 	user_by_activation_token (a_token: READABLE_STRING_32): detachable CMS_USER
 			-- User for the given activation token `a_token', if any.
 		local
@@ -968,6 +995,9 @@ feature {NONE} -- Sql Queries: USER
 	select_user_by_email: STRING = "SELECT uid, name, password, salt, email, status, created, signed, profile_name FROM users WHERE email =:email;"
 			-- Retrieve user by email if exists.
 
+	select_users_by_profile_name: STRING = "SELECT uid, name, password, salt, email, status, created, signed, profile_name FROM users WHERE profile_name=:profile_name ORDER BY uid DESC;"
+			-- Retrieve users by profile name if exists.
+
 	select_salt_by_username: STRING = "SELECT salt FROM users WHERE name =:name;"
 			-- Retrieve salt by username if exists.
 
@@ -1433,6 +1463,6 @@ feature {NONE} -- SQL select
 
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

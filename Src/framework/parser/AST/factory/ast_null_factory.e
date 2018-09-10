@@ -884,7 +884,7 @@ feature -- Access
 		do
 		end
 
-	new_iteration_as (a: detachable KEYWORD_AS; e: detachable EXPR_AS; b: detachable KEYWORD_AS; i: detachable ID_AS): detachable ITERATION_AS
+	new_iteration_as (a: detachable KEYWORD_AS; e: detachable EXPR_AS; b: detachable KEYWORD_AS; i: detachable ID_AS; is_restricted: BOOLEAN): detachable ITERATION_AS
 			-- <Precursor>
 		do
 		end

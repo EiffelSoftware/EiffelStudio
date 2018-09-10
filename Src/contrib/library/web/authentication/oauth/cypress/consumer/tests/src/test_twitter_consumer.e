@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			consumer_key := a_consumer_key
 			consumer_secret := a_consumer_secret
 
-			create http_client.make
+			create http_client
 			initialize
 		end
 
@@ -43,9 +43,9 @@ feature {NONE} -- Initialization
 			-- Get OAuth2 Token
 			sess := http_client.new_session ("https://api.twitter.com/")
 
-			s := (create {URL_ENCODER}).encoded_string (consumer_secret) + "&"
+			s := (create {URL_ENCODER}).encoded_string (consumer_secret.to_string_32) + "&"
 			if attached token_secret as ts then
-				s.append ((create {URL_ENCODER}).encoded_string (ts))
+				s.append ((create {URL_ENCODER}).encoded_string (ts.to_string_32))
 			end
 			signing_key := s
 
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 			create ctx.make
 			ctx.add_query_parameter ("include_entities", "true")
 			ctx.add_form_parameter ("status", "Hello Ladies + Gentlemen, a signed OAuth request!")
-			l_url := "https://api.twitter.com/1/statuses/update.json"
+			l_url := "https://api.twitter.com/1.1/statuses/update.json"
 			s := new_http_autorizaton_value ("POST", l_url, ctx, "370773112-GmHxMAgYyLbNEtIKZeRNFsMKPR9EyMZeS9weJAEb")
 
 		end
@@ -123,26 +123,19 @@ feature {NONE} -- Initialization
 				across
 					ctx.query_parameters as q
 				loop
-					tb.force (q.item.value, q.item.name)
+--					tb.force (q.item, q.key)
 				end
 				if not ctx.form_parameters.is_empty then
 					check is_post: rqst_method.is_case_insensitive_equal ("POST") end
 					across
 						ctx.form_parameters as f
 					loop
-						if attached {HTTP_CLIENT_REQUEST_STRING_PARAMETER} f.item as sp then
-							tb.force (sp.value, sp.name)
-						else
-							check
-									-- no file.
-								only_string_parameters: False
-							end
-						end
+--						tb.force (f.item, f.key)
 					end
 				end
 			end
 
-			Result := l_sig_builder.signature (<<rqst_method.as_upper, a_url.to_string_32>>, tb, signing_key)
+			Result := l_sig_builder.signature ({ARRAY [READABLE_STRING_32]}<<rqst_method.as_upper, a_url.to_string_32>>, tb, signing_key)
 		end
 
 	nonce: STRING_8
@@ -207,7 +200,7 @@ feature -- Basic operation
 
  feature {NONE} -- Implementation
 
- 	http_client: LIBCURL_HTTP_CLIENT
+ 	http_client: DEFAULT_HTTP_CLIENT
 
 	session: detachable HTTP_CLIENT_SESSION
 
@@ -217,7 +210,7 @@ invariant
 --	invariant_clause: True
 
 note
-	copyright: "2013-2017, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2018, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

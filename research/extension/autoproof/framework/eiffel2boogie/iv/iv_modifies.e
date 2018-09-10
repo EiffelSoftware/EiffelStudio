@@ -1,0 +1,79 @@
+note
+	description: "[
+		TODO
+	]"
+	date: "$Date$"
+	revision: "$Revision$"
+
+class
+	IV_MODIFIES
+
+inherit
+
+	IV_CONTRACT
+		redefine
+			is_equal
+		end
+
+inherit {NONE}
+
+	IV_HELPER
+		redefine
+			is_equal
+		end
+
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_name: STRING)
+			-- Initialize havoc with `a_name'.
+		require
+			a_name_valid: is_valid_name (a_name)
+		do
+			create names.make
+			names.extend (a_name.twin)
+		ensure
+			a_name_added: names.first ~ a_name
+		end
+
+feature -- Access
+
+	names: LINKED_LIST [STRING]
+			-- Names of entities.
+
+feature -- Comparison
+
+	is_equal (a_other: like Current): BOOLEAN
+			-- Is this clause the same as `a_other'?
+		do
+			Result := names.count = a_other.names.count and
+				across names as i all a_other.names.has (i.item) end
+		end
+
+feature -- Element changed
+
+	add_name (a_name: STRING)
+			-- Add `a_name' to `names'.
+		require
+			a_name_valid: is_valid_name (a_name)
+		do
+			names.extend (a_name)
+		ensure
+			a_name_added: names.last ~ a_name
+		end
+
+feature -- Visitor
+
+	process (a_visitor: IV_CONTRACT_VISITOR)
+			-- <Precursor>
+		do
+			a_visitor.process_modifies (Current)
+		end
+
+invariant
+	names_attached: attached names
+	names_valid: across names as i all is_valid_name (i.item) end
+
+end

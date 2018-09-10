@@ -1,0 +1,12 @@
+======================================
+LONGEST_COMMON_PREFIX (invariant admissibility)
+Successfully verified.
+======================================
+ANY.default_create (creator, inherited by LONGEST_COMMON_PREFIX)
+Successfully verified.
+======================================
+LONGEST_COMMON_PREFIX.lcp
+Successfully verified.
+======================================
+LONGEST_COMMON_PREFIX.test_lcp
+Successfully verified.

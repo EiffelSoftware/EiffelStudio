@@ -314,6 +314,7 @@ feature -- Hooks
 				l_nodes := l_node_api.recent_node_changes_before (params, l_date)
 				across l_nodes as ic loop
 					n := ic.item
+					a_changes.set_last_date_for_source (n.modification_date, n.content_type)
 					if l_src = Void or else l_src.is_case_insensitive_equal_general (n.content_type) then
 						if l_node_api.has_permission_for_action_on_node ("view", n, a_current_user) then
 							n := l_node_api.full_node (n)
@@ -350,7 +351,11 @@ feature -- Hooks
 									end
 								end
 							end
-							a_changes.force (ch)
+							if a_changes.has_expected_author (ch) then
+								a_changes.force (ch)
+							else
+									-- filtered out.
+							end
 						else
 							-- Forbidden
 							-- FIXME: provide a visual indication!

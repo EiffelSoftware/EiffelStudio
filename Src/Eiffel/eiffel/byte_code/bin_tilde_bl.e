@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Node for ~ equality operator for C code generation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,10 +22,10 @@ create
 feature -- Access
 
 	left_register: REGISTRABLE
-			-- Where metamorphosed left value is kept
+			-- Where metamorphosed left value is kept.
 
 	right_register: REGISTRABLE
-			-- Where metamorphosed right value is kept
+			-- Where metamorphosed right value is kept.
 
 feature -- C code generation
 
@@ -42,118 +42,115 @@ feature -- C code generation
 		end
 
 	generate_boolean_constant
-			-- Generate false constant
+			-- Generate false constant.
 		do
 			buffer.put_string ("EIF_FALSE")
 		end
 
 	get_left_register
-			-- Get register for left expression
-		local
-			tmp_register: REGISTER
+			-- Get register for left expression.
 		do
 			if left_register = Void then
-				create tmp_register.make (Reference_c_type)
-				set_left_register (tmp_register)
+				set_left_register (create {REGISTER}.make (Reference_c_type))
 			end
 		end
 
 	get_right_register
-			-- Get register for right expression
-		local
-			tmp_register: REGISTER
+			-- Get register for right expression.
 		do
 			if right_register = Void then
-				create tmp_register.make (Reference_c_type)
-				set_right_register (tmp_register)
+				set_right_register (create {REGISTER}.make (Reference_c_type))
 			end
 		end
 
 	analyze
-			-- Analyze expression
+			-- <Precursor>
 		local
 			left_type: TYPE_A
 			right_type: TYPE_A
 		do
-			if is_real_comparison then
-				Precursor
+			left.analyze
+			left_type := context.real_type (left.type)
+			right_type := context.real_type (right.type)
+			if left_type.is_basic and not (right_type.is_none or right_type.is_basic) then
+					-- Release register of `left` because its result will be kept in `left_register`.
+				left.free_register
+				get_left_register
+			end
+				-- Make sure the left hand side reference value is tracked by GC
+				-- if the right hand side allocates memory.
+			if
+				left_type.is_reference and then
+				right.allocates_memory and then
+				not left.is_predefined and then
+				not left.stored_register.is_predefined and then
+				not attached left_register
+			then
+					-- Release register of `left` because its result will be kept in `left_register`.
+				left.free_register
+				get_left_register
+			end
+			right.analyze
+			if right_type.is_basic and not (left_type.is_none or left_type.is_basic) then
+					-- Release register of `right` because its result will be kept in `right_register`.
+				right.free_register
+				get_right_register
+			end
+		end
+
+	free_register
+			-- <Precursor>
+		do
+				-- Take into account that if a temporary register is used, the corresponding expression register has been freed.
+			if attached left_register as r then
+				r.free_register
 			else
-				left_type := context.real_type (left.type)
-				right_type := context.real_type (right.type)
-				left.analyze
-				right.analyze
-				if
-					(left_type.is_basic and not (right_type.is_none or right_type.is_basic)) or
-				 	(right_type.is_basic and not (left_type.is_none or left_type.is_basic))
-				then
-					if left_type.is_basic then
-						get_left_register
-					else
-						get_right_register
-					end
-				end
+				left.free_register
+			end
+			if attached right_register as r then
+				r.free_register
+			else
+				right.free_register
 			end
 		end
 
 	unanalyze
-			-- Undo the analysis
-		local
-			void_register: REGISTER
+			-- <Precursor>
 		do
-			Precursor {BIN_TILDE_B}
-			set_left_register (void_register)
-			set_right_register (void_register)
-		end
-
-	free_register
-			-- Free registers used
-		do
-			Precursor {BIN_TILDE_B}
-			if left_register /= Void then
-				left_register.free_register
-			end
-			if right_register /= Void then
-				right_register.free_register
-			end
+			Precursor
+			set_left_register (Void)
+			set_right_register (Void)
 		end
 
 	generate
-			-- Generate expression
-		local
-			basic_i: BASIC_A
-			buf: GENERATION_BUFFER
+			-- <Precursor>
 		do
-			left.generate
-			right.generate
-			buf := buffer
-			if left_register /= Void then
-				basic_i ?= context.real_type (left.type)
-				basic_i.metamorphose (left_register, left, buf)
-				buf.put_character (';')
+			if attached left_register as r then
+				left.generate_for_call (r)
+			else
+				left.generate
 			end
-			if right_register /= Void then
-				basic_i ?= context.real_type (right.type)
-				basic_i.metamorphose (right_register, right, buf)
-				buf.put_character (';')
+			if attached right_register as r then
+				right.generate_for_call (r)
+			else
+				right.generate
 			end
 		end
 
 	generate_real_comparison_routine_name (buf: GENERATION_BUFFER)
 			-- <Precursor>
 		do
-			if attached {BIN_NOT_TILDE_BL} Current then
-				buf.put_character ('!')
-			end
-			buf.put_string ("eif_is_equal_real_")
-			if context.real_type (left.type).is_real_32 then
-				buf.put_two_character ('3', '2')
-			else
-				buf.put_two_character ('6', '4')
-			end
+			generate_negation
+			buf.put_string
+				(if context.real_type (left.type).is_real_32 then
+					"eif_is_equal_real_32"
+				else
+					"eif_is_equal_real_64"
+				end)
 		end
 
 	print_register
-			-- Print expression value
+			-- Print expression value.
 		local
 			left_type: TYPE_A
 			right_type: TYPE_A
@@ -210,7 +207,7 @@ feature -- C code generation
 feature -- Settings
 
 	set_left_register (r: REGISTRABLE)
-			-- Assign `r' to `left_register'
+			-- Assign `r' to `left_register'.
 		do
 			left_register := r
 		ensure
@@ -218,7 +215,7 @@ feature -- Settings
 		end
 
 	set_right_register (r: REGISTRABLE)
-			-- Assign `r' to `right_register'
+			-- Assign `r' to `right_register'.
 		do
 			right_register := r
 		ensure
@@ -226,7 +223,7 @@ feature -- Settings
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

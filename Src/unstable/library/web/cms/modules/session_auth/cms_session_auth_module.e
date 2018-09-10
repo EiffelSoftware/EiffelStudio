@@ -22,6 +22,8 @@ inherit
 			session_api
 		end
 
+	CMS_WITH_WEBAPI
+
 	CMS_HOOK_BLOCK
 
 create
@@ -82,7 +84,14 @@ feature {CMS_API} -- Module management
 			end
 		end
 
-feature {CMS_API} -- Access: API
+feature {CMS_EXECUTION} -- Administration
+
+	webapi: CMS_SESSION_AUTH_MODULE_WEBAPI
+		do
+			create Result.make (Current)
+		end
+
+feature {CMS_API, CMS_MODULE_WEBAPI} -- Access: API
 
 	session_api: detachable CMS_SESSION_API
 			-- <Precursor>	
@@ -176,7 +185,7 @@ feature {NONE} -- Implementation: routes
 				attached p_destination.value as v and then
 				v.is_valid_as_string_8
 			then
-				r.set_redirection (v.to_string_8)
+				r.set_redirection (secured_url_content (v.to_string_8))
 			else
 				r.set_redirection (req.absolute_script_url (""))
 			end
@@ -214,7 +223,7 @@ feature {NONE} -- Implementation: routes
 							attached p_destination.value as v and then
 							v.is_valid_as_string_8
 						then
-							r.set_redirection (v.to_string_8)
+							r.set_redirection (secured_url_content (v.to_string_8))
 						else
 							r.set_redirection ("")
 						end

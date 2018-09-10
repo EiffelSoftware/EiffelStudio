@@ -343,7 +343,7 @@ feature -- Hooks
 		do
 			if
 				attached {READABLE_STRING_GENERAL} a_response.optional_content_type as l_type and then
-				l_type.is_case_insensitive_equal ("doc")
+				l_type.is_case_insensitive_equal (documentation_content_type)
 			then
 				if a_block_id /= Void then
 					if attached {READABLE_STRING_GENERAL} a_response.values.item ("wiki_version_id") as t then
@@ -490,13 +490,15 @@ feature -- Hook/sitemap
 
 feature -- Hook / Recent changes
 
+	documentation_content_type: STRING = "doc"
+
 	recent_changes_sources: detachable LIST [READABLE_STRING_8]
 			-- <Precursor>
 		local
 			lst: ARRAYED_LIST [READABLE_STRING_8]
 		do
 			create lst.make (1)
-			lst.extend ("doc")
+			lst.extend (documentation_content_type)
 			Result := lst
 		end
 
@@ -512,11 +514,12 @@ feature -- Hook / Recent changes
 			s: STRING
 			utf: UTF_CONVERTER
 			l_title: detachable READABLE_STRING_32
+			l_author: detachable READABLE_STRING_32
 		do
 			if attached wdocs_api as l_wdocs_api then
 				l_src := a_changes.source --| i.e filter on source
 
-				if l_src = Void or else l_src.is_case_insensitive_equal_general ("doc") then
+				if l_src = Void or else l_src.is_case_insensitive_equal_general (documentation_content_type) then
 					dt := a_changes.date
 					if dt = Void then
 						create dt.make_now_utc
@@ -527,17 +530,20 @@ feature -- Hook / Recent changes
 						l_wdocs_api.recent_changes_before (params, dt, Void) as ic
 					loop
 						if attached ic.item as l_data then
+							a_changes.set_last_date_for_source (l_data.time, documentation_content_type)
+
 							wp := l_data.page
 							l_title := wp.metadata ("link_title")
 							if l_title = Void then
 								l_title := wp.title
 							end
-							create i.make ("doc", create {CMS_LOCAL_LINK}.make (l_title, wp.src), l_data.time)
-							i.set_id ("doc:" + wp.src)
+							create i.make (documentation_content_type, create {CMS_LOCAL_LINK}.make (l_title, wp.src), l_data.time)
+							i.set_id (documentation_content_type + ":" + wp.src)
 							i.set_author_name (l_data.author)
 							if attached ic.item.log as l_log then
 								i.set_information (l_log)
 									-- Looking for real author "Signed-off-by: Super Developer <super.dev@example.com>"
+									-- Check only the first instance.
 								pos_eol := 0
 								pos := l_log.substring_index ("(Signed-off-by:", 1)
 								if pos > 0 then
@@ -559,10 +565,18 @@ feature -- Hook / Recent changes
 									s := l_log.substring (pos + 15, pos_eol - 1)
 									s.right_adjust
 									s.left_adjust
-									i.set_author_name (utf.utf_8_string_8_to_string_32 (s))
+									l_author := utf.utf_8_string_8_to_string_32 (s)
+									i.set_author_name (l_author)
+									if attached l_wdocs_api.cms_api.user_api.user_by_name (l_author) as u then
+										i.set_author (u)
+									end
 								end
 							end
-							a_changes.force (i)
+							if a_changes.has_expected_author (i) then
+								a_changes.force (i)
+							else
+									-- filtered out.
+							end
 						end
 					end
 				end
@@ -573,7 +587,7 @@ feature {NONE} -- Implementation
 
 	wdocs_page_cms_menu_link (a_version_id: detachable READABLE_STRING_GENERAL; a_book: WIKI_BOOK; a_page: detachable WIKI_PAGE; a_current_page_name: detachable READABLE_STRING_GENERAL; is_full: BOOLEAN; mng: WDOCS_MANAGER): CMS_LOCAL_LINK
 		local
-			l_book_name: READABLE_STRING_32
+			l_book_name: READABLE_STRING_GENERAL
 			l_page: detachable WIKI_PAGE
 			l_title: detachable READABLE_STRING_32
 		do
@@ -853,7 +867,7 @@ feature -- Handler
 					wp := l_book.root_page
 				end
 
-				r.set_optional_content_type ("doc")
+				r.set_optional_content_type (documentation_content_type)
 				r.set_title (l_bookid)
 				r.values.force (l_bookid, "wiki_book_name")
 				if l_toc or wp = Void then
@@ -886,7 +900,7 @@ feature -- Handler
 				if wp /= Void then
 					send_wikipage (wp, mnger, "", api, req, res)
 				else
-					r.set_optional_content_type ("doc")
+					r.set_optional_content_type (documentation_content_type)
 					r.set_title (Void) --"Documentation")
 					r.set_main_content (b)
 					r.execute
@@ -1282,7 +1296,7 @@ feature {WDOCS_EDIT_MODULE, WDOCS_EDIT_FORM_RESPONSE} -- Implementation: request
 				create {NOT_FOUND_ERROR_CMS_RESPONSE} r.make (req, res, api)
 			end
 
-			r.set_optional_content_type ("doc")
+			r.set_optional_content_type (documentation_content_type)
 			r.values.force (a_manager.version_id, "wiki_version_id")
 			if a_bookid /= Void then
 				r.values.force (a_bookid, "wiki_book_name")

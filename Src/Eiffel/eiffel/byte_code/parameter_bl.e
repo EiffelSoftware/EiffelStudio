@@ -133,15 +133,15 @@ feature -- Settings
 				buffer.put_new_line
 				buffer.put_string ("RTEC(EN_VEXP);")
 			elseif is_compound then
-				expression.generate_for_type (register, target_type)
+				expression.generate_for_attachment (register, target_type)
 			else
 				if is_address_needed then
 					check
 						no_register_needed_in_theory: not expression.is_register_required (real_type (internal_attachment_type))
 					end
-					expression.generate_for_type (register, real_type (internal_attachment_type))
+					expression.generate_for_attachment (register, real_type (internal_attachment_type))
 				else
-					expression.generate_for_type (register, target_type)
+					expression.generate_for_attachment (register, target_type)
 				end
 			end
 		end

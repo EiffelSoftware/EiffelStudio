@@ -10,6 +10,8 @@ note
 
 class
 	GITHUB
+inherit
+	JSON_PARSER_ACCESS
 
 create
 	make
@@ -52,7 +54,7 @@ feature -- Authenticated query
 			EIS: "name=Repositories", "protocol=URI", "src=http://developer.github.com/v3/repos/"
 		local
 			lst: ARRAYED_LIST [GITHUB_REPOSITORY]
-			cl: LIBCURL_HTTP_CLIENT
+			cl: DEFAULT_HTTP_CLIENT
 			sess: HTTP_CLIENT_SESSION
 			ctx: HTTP_CLIENT_REQUEST_CONTEXT
 			p: JSON_PARSER
@@ -60,7 +62,7 @@ feature -- Authenticated query
 			if attached active_authorization as auth and then attached auth.token as tok then
 				create lst.make (0)
 
-				create cl.make
+				create cl
 				sess := cl.new_session ("https://api.github.com/")
 				create ctx.make_with_credentials_required
 				ctx.add_query_parameter ("sort", "updated")
@@ -71,8 +73,8 @@ feature -- Authenticated query
 					if res.error_occurred then
 						print (res)
 					elseif attached res.body as b then
-						create p.make_parser (b)
-						if attached {JSON_ARRAY} p.parse as jarr then
+						create p.make_with_string (b)
+						if attached {JSON_ARRAY} p.next_parsed_json_value as jarr and then p.is_valid then
 							across
 								jarr.array_representation as c
 							loop
@@ -91,12 +93,12 @@ feature -- Authorization
 
 	new_authorization_token (a_scopes: ITERABLE [READABLE_STRING_8]): detachable GITHUB_AUTHORIZATION
 		local
-			cl: LIBCURL_HTTP_CLIENT
+			cl: DEFAULT_HTTP_CLIENT
 			sess: HTTP_CLIENT_SESSION
 			ctx: HTTP_CLIENT_REQUEST_CONTEXT
 			s: STRING
 		do
-			create cl.make
+			create cl
 			sess := cl.new_session ("https://api.github.com/")
 			create ctx.make_with_credentials_required
 			sess.set_credentials (username, password)
@@ -126,12 +128,12 @@ feature -- Authorization
 		note
 			EIS: "name=Authorization", "protocol=URI", "src=http://developer.github.com/v3/oauth/"
 		local
-			cl: LIBCURL_HTTP_CLIENT
+			cl: DEFAULT_HTTP_CLIENT
 			sess: HTTP_CLIENT_SESSION
 			ctx: HTTP_CLIENT_REQUEST_CONTEXT
 			p: JSON_PARSER
 		do
-			create cl.make
+			create cl
 			sess := cl.new_session ("https://api.github.com/")
 			create ctx.make_with_credentials_required
 			sess.set_credentials (username, password)
@@ -140,8 +142,8 @@ feature -- Authorization
 				if res.error_occurred then
 					print (res)
 				elseif attached res.body as b then
-					create p.make_parser (b)
-					if attached {JSON_ARRAY} p.parse as arr then
+					create p.make_with_string (b)
+					if attached {JSON_ARRAY} p.next_parsed_json_value as arr and then p.is_valid then
 						across
 							arr.array_representation as c
 						loop
@@ -155,7 +157,7 @@ feature -- Authorization
 		end
 
 note
-	copyright: "2013-2013, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2018, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

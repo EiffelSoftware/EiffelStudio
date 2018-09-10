@@ -1,6 +1,8 @@
 note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+	-- TODO: Factor out common code of this class and BIN_TILDE_BL to simplify maintainance.
+
 deferred class BIN_EQUAL_B
 
 inherit
@@ -10,11 +12,20 @@ inherit
 			set_register as set_left_register
 		redefine
 			allocates_memory,
-			free_register, unanalyze, is_type_fixed,
-			is_commutative, print_register, type,
-			generate, analyze, is_unsafe, optimized_byte_node,
-			calls_special_features, pre_inlined_code, inlined_byte_code,
-			is_binary_comparison, generate_real_comparison_routine_name
+			analyze,
+			calls_special_features,
+			free_register,
+			generate,
+			generate_real_comparison_routine_name,
+			inlined_byte_code,
+			is_binary_comparison,
+			is_commutative,
+			is_type_fixed,
+			is_unsafe,
+			optimized_byte_node,
+			pre_inlined_code,
+			print_register, type,
+			unanalyze
 		end
 
 	SHARED_TYPE_I
@@ -25,7 +36,7 @@ inherit
 feature -- Status report
 
 	is_built_in: BOOLEAN = True
-			-- Is the current binary operator a built-in one ?
+			-- Is the current binary operator a built-in one?
 
 	is_commutative: BOOLEAN = True
 			-- Operation is commutative.
@@ -39,24 +50,20 @@ feature -- Status report
 
 feature
 
-	set_register: ANY do end;
-
-	register: ANY do end;
-
 	type: TYPE_A
-			-- Expression type is boolean
+			-- Expression type is boolean.
 		do
-			Result := Boolean_type;
-		end;
+			Result := Boolean_type
+		end
 
 	allocates_memory: BOOLEAN
-			-- Does the expression allocates memory ?
+			-- <Precursor>
 		local
-			left_type: TYPE_A;
-			right_type: TYPE_A;
+			left_type: TYPE_A
+			right_type: TYPE_A
 		do
-			left_type := context.real_type (left.type);
-			right_type := context.real_type (right.type);
+			left_type := context.real_type (left.type)
+			right_type := context.real_type (right.type)
 			Result := Precursor or else
 				(left_type.is_basic and not (right_type.is_none or right_type.is_basic)) or else
 				(right_type.is_basic and not (left_type.is_none or left_type.is_basic))
@@ -64,7 +71,7 @@ feature
 
 	generate_boolean_constant
 		deferred
-		end;
+		end
 
 	generate_negation
 			-- Generate negation of an equality test (if required).
@@ -79,156 +86,155 @@ feature
 		do
 			buffer.put_string (name)
 			buffer.put_character ('(')
-			generate_equal_end
+			if left_register = Void then
+				left.print_register
+			else
+				left_register.print_register
+			end
+			buffer.put_string ({C_CONST}.comma_space)
+			if right_register = Void then
+				right.print_register
+			else
+				right_register.print_register
+			end
+			buffer.put_character (')')
 		end
 
-	generate_equal_end
-			-- Generate last portion of equality.
-		do
-			if left_register = Void then
-				left.print_register;
-			else
-				left_register.print_register;
-			end;
-			buffer.put_string ({C_CONST}.comma_space);
-			if right_register = Void then
-				right.print_register;
-			else
-				right_register.print_register;
-			end;
-			buffer.put_character (')');
-		end;
-
 	right_register: REGISTRABLE
-			-- Where metamorphosed right value is kept
+			-- Where metamorphosed right value is kept.
 		do
-		end;
+		end
 
 	set_right_register (r: REGISTRABLE)
-			-- Assign `r' to `right_register'
+			-- Assign `r' to `right_register'.
 		do
-		end;
+		end
 
 	get_left_register
-			-- Get register for left expression
+			-- Get register for left expression.
 		do
 			if left_register = Void then
-				set_left_register (create {REGISTER}.make (Reference_c_type));
-			end;
-		end;
+				set_left_register (create {REGISTER}.make (Reference_c_type))
+			end
+		end
 
 	get_right_register
-			-- Get register for right expression
+			-- Get register for right expression.
 		do
 			if right_register = Void then
-				set_right_register (create {REGISTER}.make (Reference_c_type));
-			end;
-		end;
+				set_right_register (create {REGISTER}.make (Reference_c_type))
+			end
+		end
 
 	analyze
-			-- Analyze expression
+			-- <Precursor>
 		local
-			left_type: TYPE_A;
-			right_type: TYPE_A;
+			left_type: TYPE_A
+			right_type: TYPE_A
 		do
-			if is_real_comparison then
-				Precursor
-			else
-				left_type := context.real_type (left.type);
-				right_type := context.real_type (right.type);
-				left.analyze;
-				right.analyze;
-				if (left_type.is_basic and not (right_type.is_none or
-					right_type.is_basic)) or (right_type.is_basic and not
-					(left_type.is_none or left_type.is_basic))
-				then
-					if left_type.is_basic then
-						get_left_register;
-					else
-						get_right_register;
-					end;
-				end;
+			left.analyze
+			left_type := context.real_type (left.type)
+			right_type := context.real_type (right.type)
+			if left_type.is_basic and not (right_type.is_none or right_type.is_basic) then
+					-- Release register of `left` because its result will be kept in `left_register`.
+				left.free_register
+				get_left_register
 			end
-		end;
-
-	unanalyze
-			-- Undo the analysis
-		local
-			void_register: REGISTER;
-		do
-			Precursor {BINARY_B}
-			set_left_register (void_register);
-			set_right_register (void_register);
-		end;
+				-- Make sure the left hand side reference value is tracked by GC
+				-- if the right hand side allocates memory.
+			if
+				left_type.is_reference and then
+				right.allocates_memory and then
+				not left.is_predefined and then
+				not left.stored_register.is_predefined and then
+				not attached left_register
+			then
+					-- Release register of `left` because its result will be kept in `left_register`.
+				left.free_register
+				get_left_register
+			end
+			right.analyze
+			if right_type.is_basic and not (left_type.is_none or left_type.is_basic) then
+					-- Release register of `right` because its result will be kept in `right_register`.
+				right.free_register
+				get_right_register
+			end
+		end
 
 	free_register
-			-- Free registers used
+			-- <Precursor>
 		do
-			Precursor {BINARY_B}
-			if left_register /= Void then
-				left_register.free_register;
-			end;
-			if right_register /= Void then
-				right_register.free_register;
-			end;
-		end;
+				-- Take into account that if a temporary register is used, the corresponding expression register has been freed.
+			if attached left_register as r then
+				r.free_register
+			else
+				left.free_register
+			end
+			if attached right_register as r then
+				r.free_register
+			else
+				right.free_register
+			end
+		end
+
+	unanalyze
+			-- <Precursor>
+		do
+			Precursor
+			set_left_register (Void)
+			set_right_register (Void)
+		end
 
 	generate
-			-- Generate expression
-		local
-			basic_i: BASIC_A
-			buf: GENERATION_BUFFER
+			-- <Precursor>
 		do
-			left.generate
-			right.generate
-			buf := buffer
-			if left_register /= Void then
-				basic_i ?= context.real_type (left.type)
-				basic_i.metamorphose (left_register, left, buf)
-				buf.put_character (';')
+			if attached left_register as r then
+				left.generate_for_call (r)
+			else
+				left.generate
 			end
-			if right_register /= Void then
-				basic_i ?= context.real_type (right.type)
-				basic_i.metamorphose (right_register, right, buf)
-				buf.put_character (';')
+			if attached right_register as r then
+				right.generate_for_call (r)
+			else
+				right.generate
 			end
 		end
 
 	generate_real_comparison_routine_name (buf: GENERATION_BUFFER)
 			-- <Precursor>
 		do
-			if attached {BIN_NE_B} Current then
-				buf.put_character ('!')
-			end
-			buf.put_string ("eif_is_equal_real_")
-			if context.real_type (left.type).is_real_32 then
-				buf.put_two_character ('3', '2')
-			else
-				buf.put_two_character ('6', '4')
-			end
+			generate_negation
+			buf.put_string
+				(if context.real_type (left.type).is_real_32 then
+					"eif_is_equal_real_32"
+				else
+					"eif_is_equal_real_64"
+				end)
 		end
 
 	print_register
-			-- Print expression value
+			-- Print expression value.
 		local
-			left_type: TYPE_A;
-			right_type: TYPE_A;
+			left_type: TYPE_A
+			right_type: TYPE_A
 			buf: GENERATION_BUFFER
 		do
 			if is_real_comparison then
 				Precursor
 			else
-				left_type := context.real_type (left.type);
-				right_type := context.real_type (right.type);
-
+				left_type := context.real_type (left.type)
+				right_type := context.real_type (right.type)
 				if
-					(left_type.is_none and right_type.is_basic) or
-					(left_type.is_basic and right_type.is_none)
+					left_type.is_none and right_type.is_expanded or
+					left_type.is_expanded and right_type.is_none
 				then
-						-- Simple type can never be Void
-					generate_boolean_constant;
-				elseif left_type.is_true_expanded or right_type.is_true_expanded or
-					left_register /= Void or right_register /= Void
+						-- Expanded type can never be Void.
+					generate_boolean_constant
+				elseif
+					left_type.is_true_expanded or
+					right_type.is_true_expanded or
+					attached left_register and then left_type.is_basic or
+					attached right_register and then right_type.is_basic
 				then
 					generate_negation
 					generate_equal_macro ("RTEQ")
@@ -244,33 +250,32 @@ feature
 					buf := buffer
 					buf.put_string ("(EIF_BOOLEAN)(")
 					if left_register = Void then
-						left.print_register;
+						left.print_register
 					else
-						left_register.print_register;
-					end;
+						left_register.print_register
+					end
 					generate_operator (buf)
 					if right_register = Void then
-						right.print_register;
+						right.print_register
 					else
-						right_register.print_register;
-					end;
+						right_register.print_register
+					end
 					buf.put_character (')')
-				end;
+				end
 			end
-		end;
+		end
 
 feature -- Array optimization
 
 	is_unsafe: BOOLEAN
 		do
-			Result := right.is_unsafe or else
-				left.is_unsafe
+			Result := right.is_unsafe or else left.is_unsafe
 		end
 
 	optimized_byte_node: EXPR_B
 		do
-			Result := Current;
-			left := left.optimized_byte_node;
+			Result := Current
+			left := left.optimized_byte_node
 			right := right.optimized_byte_node
 		end
 
@@ -284,7 +289,7 @@ feature -- Inlining
 
 	pre_inlined_code: like Current
 		do
-			Result := Current;
+			Result := Current
 			left := left.pre_inlined_code
 			right := right.pre_inlined_code
 		end
@@ -297,7 +302,7 @@ feature -- Inlining
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

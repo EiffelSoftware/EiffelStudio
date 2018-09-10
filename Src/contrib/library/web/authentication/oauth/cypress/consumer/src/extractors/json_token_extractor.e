@@ -29,6 +29,9 @@ feature -- Extractor
 					if attached {JSON_STRING} l_object.item ("refresh_token") as l_refresh_value then
 						Result.set_refresh_token (l_refresh_value.item)
 					end
+					if attached {JSON_STRING} l_object.item ("token_type") as l_token_type then
+						Result.set_token_type (l_token_type.item)
+					end
 					if
 						attached {JSON_NUMBER} l_object.item ("expires_in") as l_expires_in_value and then
 						l_expires_in_value.is_integer
@@ -40,7 +43,7 @@ feature -- Extractor
 		end
 
 note
-	copyright: "2013-2015, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2017, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

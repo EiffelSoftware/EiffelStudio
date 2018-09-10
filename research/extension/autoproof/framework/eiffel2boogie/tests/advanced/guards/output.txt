@@ -1,0 +1,48 @@
+======================================
+A_GUARDS (invariant admissibility)
+Successfully verified.
+======================================
+ANY.default_create (creator, inherited by A_GUARDS)
+Successfully verified.
+======================================
+A_GUARDS.greater
+Successfully verified.
+======================================
+A_GUARDS.test
+Verification failed.
+
+Line: 51. Observers of the assignment target may be invalidated.
+======================================
+A_GUARDS.test1
+Verification failed.
+
+Line: 56. Observers of the assignment target may be invalidated.
+======================================
+A_GUARDS.test2
+Verification failed.
+
+Line: 66. Observers of the assignment target may be invalidated.
+======================================
+A_STRONGER_GUARDS (invariant admissibility)
+Successfully verified.
+======================================
+ANY.default_create (creator, inherited by A_STRONGER_GUARDS)
+Successfully verified.
+======================================
+A_GUARDS.greater (inherited by A_STRONGER_GUARDS)
+Successfully verified.
+======================================
+A_GUARDS.test (inherited by A_STRONGER_GUARDS)
+Verification failed.
+
+Line: 48. Observers of the assignment target may be invalidated.
+--------------------------------------
+Line: 51. Observers of the assignment target may be invalidated.
+======================================
+A_GUARDS.test1 (inherited by A_STRONGER_GUARDS)
+Verification failed.
+
+Line: 56. Observers of the assignment target may be invalidated.
+======================================
+A_STRONGER_GUARDS.not_too_large
+Successfully verified.

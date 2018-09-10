@@ -10,7 +10,7 @@ class
 feature -- List task
 
 	m_warning_no_repository: STRING_32
-		do Result := {STRING_32} "Warning: no repository is defined!" end
+		do Result := {STRING_32} "Warning: no repository defined!" end
 
 	m_available_packages: STRING_32
 		do Result := {STRING_32} "Available packages:" end
@@ -19,7 +19,7 @@ feature -- List task
 		do Result := {STRING_32} "Installed packages:" end
 
 	m_no_installed_package: STRING_32
-		do Result := {STRING_32} "No package is installed !" end
+		do Result := {STRING_32} "No package installed !" end
 
 	tk_package: STRING_32
 		do Result := {STRING_32} "Package" end
@@ -28,7 +28,7 @@ feature -- List task
 		do Result := string_with_args ("Repository [$1]", [a_uri]) end
 
 	m_repository_without_package (a_uri: READABLE_STRING_GENERAL): STRING_32
-		do Result := string_with_args ("Repository [$1] has no package!", [a_uri]) end
+		do Result := string_with_args ("Repository [$1] is empty!", [a_uri]) end
 
 feature -- Install task
 
@@ -118,7 +118,7 @@ feature -- Repository task
 		do Result := string_with_args ("Registering repository [$1] ", [a_uri]) end
 
 	m_unregistering_repository (a_uri: READABLE_STRING_GENERAL): STRING_32
-		do Result := string_with_args ("Un-Registering repository [$1] ", [a_uri]) end
+		do Result := string_with_args ("Unregistering repository [$1] ", [a_uri]) end
 
 	m_invalid_repository_location (a_loc: READABLE_STRING_GENERAL): STRING_32
 		do Result := string_with_args ("Invalid repository location [$1] ", [a_loc]) end
@@ -126,6 +126,14 @@ feature -- Repository task
 	m_already_registered_repository_location (a_loc: READABLE_STRING_GENERAL): STRING_32
 		do Result := string_with_args ("Repository [$1] is already registered ", [a_loc]) end
 
+	m_repository_location_not_registered (a_loc: READABLE_STRING_GENERAL): STRING_32
+		do Result := string_with_args ("No such repository [$1] registered!", [a_loc]) end
+
+	m_help_see_list_of_registered_repositories: STRING_32
+		do Result := {STRING_32} "[Help] to list the added repositories:%N  iron repository --list" end
+
+	m_help_add_repository: STRING_32
+		do Result := {STRING_32} "[Help] to add a new repository:%N  iron repository --add https://iron.eiffel.com/<version-name>" end
 
 feature {NONE} -- Implementation
 
@@ -152,7 +160,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

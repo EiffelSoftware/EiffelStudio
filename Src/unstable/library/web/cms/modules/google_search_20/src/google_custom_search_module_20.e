@@ -84,22 +84,27 @@ feature -- Handler
 				attached {WSF_STRING} req.query_parameter ("q") as l_query and then
 				not l_query.value.is_empty
 			then
-				if
-					attached gcse_cx_key (api) as l_cx
-				then
+				if attached gcse_cx_key (api) as l_cx then
 					r.set_value (l_query.value, "cms_search_query")
-					if
-						attached smarty_template_block (Current, "gcse_search_results", api) as l_tpl_block
-					then
+					if attached smarty_template_block (Current, "gcse_search_results", api) as l_tpl_block then
 						r.add_block (l_tpl_block, "content")
-
-						if attached gcse_cx_key (api) as l_ctx then
-							create l_script.make_from_string (gcse_20_script)
-							l_script.replace_substring_all ("#CX_VALUE", l_ctx)
-							create b.make_raw ("gcse2_js", Void, "<script>%N" + l_script + "%N</script>", Void)
-							r.add_block (b, "footer")
-						end
+					else
+						r.add_block (
+							create {CMS_CONTENT_BLOCK}.make ("gcse_search_results", Void,
+									"<section><header><h2>Results for <kbd>" +  html_encoded (l_query.value) + "</kbd></h2></header>%N%
+									%	<div class=%"gcse_searchresults%"><gcse:searchresults-only></gcse:searchresults-only></div></section>",
+								Void),
+								"content"
+							)
 					end
+					if attached gcse_cx_key (api) as l_ctx then
+						create l_script.make_from_string (gcse_20_script)
+						l_script.replace_substring_all ("#CX_VALUE", l_ctx)
+						create b.make_raw ("gcse2_js", Void, "<script>%N" + l_script + "%N</script>", Void)
+						r.add_block (b, "footer")
+					end
+				else
+					r.add_message ("Internal server error!", Void)
 				end
 			else
 				r.add_message ("No query submitted", Void)
@@ -127,9 +132,17 @@ feature -- Hooks configuration
 					if attached smarty_template_block (Current, a_block_id, a_response.api) as l_tpl_block then
 						a_response.add_block (l_tpl_block, "search")
 					else
-						debug ("cms")
-							a_response.add_warning_message ("Error with block [" + a_block_id + "]")
-						end
+						a_response.add_block (
+								create {CMS_CONTENT_BLOCK}.make ("gcse_search_form", Void,
+									"<form action=%"" + a_response.site_url + "gcse20%" class=%"search-form%" id=%"search-form%"> %
+									%	<div class=%"form-group has-feedback%">	%
+									%	<input type=%"search%" class=%"form-control%" name=%"q%" id=%"search-query%" placeholder=%"search%" value=%"%" > %
+									%	<span class=%"glyphicon glyphicon-search form-control-feedback%"></span> %
+									%	</div> %
+									%   </form>",
+									Void),
+								"search"
+							)
 					end
 				else
 						-- missing setting.

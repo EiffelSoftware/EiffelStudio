@@ -54,7 +54,7 @@ feature -- Request execution
 					if u.same_as (l_user) and api.has_permission ("use access_token") then
 						rep := new_access_token_response (l_user, user_access_token (l_user), req, res)
 						if attached {WSF_STRING} req.item ("destination") as dest then
-							rep.set_redirection (dest.url_encoded_value)
+							rep.set_redirection (secured_url_content (dest.url_encoded_value))
 						end
 					else
 							-- Only admin, or current user can see its access_token!
@@ -88,7 +88,7 @@ feature -- Request execution
 
 						rep := new_access_token_response (l_user, l_access_token, req, res)
 						if attached {WSF_STRING} req.item ("destination") as dest then
-							rep.set_redirection (dest.url_encoded_value)
+							rep.set_redirection (secured_url_content (dest.url_encoded_value))
 						end
 					else
 							-- Only admin, or current user can create the user access_token!
@@ -172,6 +172,6 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

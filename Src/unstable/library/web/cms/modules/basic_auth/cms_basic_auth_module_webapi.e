@@ -9,11 +9,23 @@ class
 inherit
 	CMS_MODULE_WEBAPI [CMS_BASIC_AUTH_MODULE]
 		redefine
-			filters
+			filters,
+			permissions
 		end
 
 create
 	make
+
+feature -- Access
+
+	permissions: LIST [READABLE_STRING_8]
+			-- List of permission ids, used by this module, and declared.
+		do
+			Result := Precursor
+			Result.force (perm_use_webapi_basic_auth)
+		end
+
+	perm_use_webapi_basic_auth: STRING = "use webapi basic_auth"
 
 feature {NONE} -- Router/administration
 

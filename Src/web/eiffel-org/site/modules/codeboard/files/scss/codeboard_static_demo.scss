@@ -1,0 +1,134 @@
+.slider-wrapper {
+	position: relative;
+    /* height: 270px; */
+    //min-height: 200px;
+	height: 100%;
+
+	.slider {
+		position: relative;
+		height: 100%;
+
+		.trigger {
+			display: none;
+		}
+	
+		.slide {
+			width: 100%;
+			overflow: hidden;
+			position: absolute;
+			height: 100%;
+			left: 0;
+			top: 0;
+			z-index: 5000;
+			opacity: 0;
+			transition: opacity .5s ease-in-out;
+
+			margin: 0;
+
+			.slide-item {
+				width: 100%;
+				max-width: 100%;
+				height: 100%;
+				/* margin: 0 auto; */
+				vertical-align: middle;
+
+				overflow: auto;
+				display: flex;
+				items-align: center;
+				justify-content: center;
+
+				border: solid 1px #ccc;
+				>pre { 
+					width: 100%;
+					padding-left: 10px;
+					overflow: auto;
+					border: none;
+					font-size: 1.4rem;
+					line-height: 2.1rem;
+				}
+				.slide-caption {
+					font-size: 1.6rem;
+					padding: 0 1rem 0 1rem;
+					position: absolute;
+					top: -1rem;
+					right: 2rem;
+					//width: calc(80% - 1rem);
+					color: #666;
+					background-color: rgba(230,230,230,.5);
+					text-align: center;
+					a {
+						color: blue;
+					}
+					a:hover {
+						border-bottom: dotted 1px blue;
+					}
+				}
+
+			}
+		}
+	}
+	.slider .trigger:checked + .slide {
+	  z-index: 6000;
+	  opacity: 1;
+	}
+
+	.slider-nav {
+		position: absolute; 
+		bottom: 0.5em; 
+		right: 0.5em;
+		width: 100%;
+		text-align: right;
+		margin: 0;
+		z-index: 6000;
+
+		.slider-nav__item {
+			display: inline-block;
+		}
+		.slider-nav__label {
+			font-size: 1.3rem;
+			background-color: #333;
+			display: block;
+			height: 2em;
+			line-height: 2em;
+			width: 2em;
+			text-align: center;
+			border-radius: 50%;
+			color: white;
+			cursor: pointer;
+			transition: background-color .25s, color .25s ease-in-out;
+		}
+
+		.slider-nav__label:hover,
+		.slider-nav__label:active,
+		.slider-nav__label:focus {
+			background-color: gray;
+			color: black;
+		}
+		.slider-nav__label.slider-active {
+			background-color: white;
+			color: black;
+			border: solid 1px #ccc;
+		}
+	}
+}
+
+/* responsive layout */
+@media only screen and (min-width: 1024px) {
+  .slide-caption {
+    font-size: 1.5rem;
+  }
+}
+@media only screen and (max-width: 1023px) and (min-width: 768px) {
+  .slide-caption {
+    font-size: 1.25rem;
+  }  
+}
+@media only screen and (max-width: 768px) {
+  .slide-item { width: 100%; height: auto; }
+}
+
+#content.codeboard_demo {
+	div.codeboard-player {
+		height: 270px;
+	}
+}

@@ -1,0 +1,5 @@
+{
+  "lang": "eiffel",
+  "caption": "Assertion: class invariants",
+  "code": "feature -- Access\n\n  ...\ninvariant\n  all_items_valid: across items as x all x.item.is_valid end\n  at_least_one_marked: across items as x some x.item.marked end\n\nend"
+}

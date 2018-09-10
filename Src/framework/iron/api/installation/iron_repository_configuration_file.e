@@ -59,7 +59,10 @@ feature -- Access
 
 	repositories: ARRAYED_LIST [IRON_REPOSITORY]
 
+feature -- Status
+
 	has_repository (repo: IRON_REPOSITORY): BOOLEAN
+			-- Has repository `repo` registered?
 		do
 			across
 				repositories as ic
@@ -67,6 +70,18 @@ feature -- Access
 				Result
 			loop
 				Result := ic.item.is_same_repository (repo)
+			end
+		end
+
+	has_repository_by_uri (a_uri: READABLE_STRING_GENERAL): BOOLEAN
+			-- Has repository associated with location `a_uri` ?
+		do
+			across
+				repositories as ic
+			until
+				Result
+			loop
+				Result := a_uri.same_string (ic.item.location_string)
 			end
 		end
 
@@ -143,7 +158,7 @@ feature -- Operation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

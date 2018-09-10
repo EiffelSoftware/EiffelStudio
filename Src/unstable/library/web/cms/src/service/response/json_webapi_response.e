@@ -124,14 +124,23 @@ feature -- Execution
 	process
 		local
 			m: WSF_PAGE_RESPONSE
+			j: READABLE_STRING_8
+			utf: UTF_CONVERTER
 		do
-			create m.make_with_body (resource.representation)
+			j := resource.representation
+			if not utf.is_valid_utf_8_string_8 (j) then
+					-- FIXME: Remove this hack end of 2019! [2018-09-03]
+				check json_representation_invalid: False end
+				j := utf.utf_32_string_to_utf_8_string_8 (j)
+			end
+
+			create m.make_with_body (j)
 			m.set_status_code (status_code)
 			if attached redirection as loc then
 				m.header.put_location (loc)
 				m.set_status_code ({HTTP_STATUS_CODE}.temp_redirect)
 			end
-			m.header.put_content_type ("application/json")
+			m.header.put_content_type_with_charset ("application/json", "utf-8")
 			response.send (m)
 		end
 
@@ -156,6 +165,6 @@ feature {NONE} -- Implementation factory
 invariant
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

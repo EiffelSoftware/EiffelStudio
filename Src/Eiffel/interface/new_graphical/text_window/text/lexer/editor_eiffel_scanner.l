@@ -1,11 +1,12 @@
 %{
-indexing
+note
 	description:"Scanners for Eiffel parsers"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author:     "Arnaud PICHERY from an Eric Bezault model"
-	date:       "$Date$"
-	revision:   "$Revision$"
+	author: "Arnaud PICHERY from an Eric Bezault model"
+	revised_by: "Alexander Kogtenkov"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class EDITOR_EIFFEL_SCANNER
 
@@ -166,6 +167,7 @@ UTF8_tail	[\x80-\xBF]
 [iI][nN][hH][eE][rR][iI][tT]			|
 [iI][nN][sS][pP][eE][cC][tT]			|
 [iI][nN][vV][aA][rR][iI][aA][nN][tT]	|
+[iI][sS]								|
 [lL][iI][kK][eE]						|
 [lL][oO][cC][aA][lL]					|
 [lL][oO][oO][pP]						|
@@ -195,14 +197,15 @@ UTF8_tail	[\x80-\xBF]
 [vV][oO][iI][dD]						|
 [wW][hH][eE][nN]						|
 [xX][oO][rR]							{
-										-- Keyword
-										if not in_comments then
-											curr_token := new_keyword (text)
-										else
-											curr_token := new_comment (text)
-										end
-										update_token_list
-										}
+									if in_comments then
+											-- Comment.
+										curr_token := new_comment (text)
+									else
+											-- Keyword.
+										curr_token := new_keyword (text)
+									end
+									update_token_list
+								}
 
 [aA][cC][rR][oO][sS][sS]		|
 [aA][tT][tT][aA][cC][hH][eE][dD]		|
@@ -223,8 +226,7 @@ UTF8_tail	[\x80-\xBF]
 							update_token_list
 						}
 
-[iI][nN][dD][eE][xX][iI][nN][gG]		|
-[iI][sS]					{
+[iI][nN][dD][eE][xX][iI][nN][gG]		{
 							if in_comments then
 									-- Comment
 								curr_token := new_comment (text)
@@ -310,39 +312,39 @@ UTF8_tail	[\x80-\xBF]
 \'%\(\'				|
 \'%\)\'				|
 \'%<\'				|
-\'%>\'				{
-					if not in_comments then
-						curr_token := new_character (text)
-					else
-						curr_token := new_comment (text)
-					end
-					update_token_list
-					}
+\'%>\' {
+		if not in_comments then
+			curr_token := new_character (text)
+		else
+			curr_token := new_comment (text)
+		end
+		update_token_list
+	}
 
-\'%\/[0-9]+\/\'		{
-					if not in_comments then
-						code_ := text_substring (4, text_count - 2).to_integer
-						if code_ > {CHARACTER}.Max_value then
-							-- Character error. Consedered as text.
-							curr_token := new_text (text)
-						else
-							curr_token := new_character (text)
-						end						
-					else
-						curr_token := new_comment (text)
-					end
-					update_token_list
-					}
+\'%\/[0-9]+\/\' {
+		if not in_comments then
+			code_ := text_substring (4, text_count - 2).to_integer
+			if code_ > {CHARACTER}.Max_value then
+					-- Character error. Consedered as text.
+				curr_token := new_text (text)
+			else
+				curr_token := new_character (text)
+			end						
+		else
+			curr_token := new_comment (text)
+		end
+		update_token_list
+	}
 
-\'([^' \t\r\n]|{NON_ASCII})+		{
-					-- Character error. Catch-all rules (no backing up)
-					if not in_comments then
-						curr_token := new_text (text)
-					else
-						curr_token := new_comment (text)
-					end
-					update_token_list
-					}
+\'([^' \t\r\n]|{NON_ASCII})+ {
+			-- Character error. Catch-all rules (no backing up)
+		if not in_comments then
+			curr_token := new_text (text)
+		else
+			curr_token := new_comment (text)
+		end
+		update_token_list
+	}
 
 
 ----------/** Eiffel strings **/------------------------------------------------
@@ -356,135 +358,123 @@ UTF8_tail	[\x80-\xBF]
 --     the special character such as %N, %T,... we have to list all of
 --     them in the second expression.
 
- \"([^\n"%]|{NON_ASCII})*\[/[ \t\r]*	{
- 				if not in_comments then
-						-- Verbatim string opener.
-					curr_token := new_string (text)
-					update_token_list
-					in_verbatim_string := True
-					start_of_verbatim_string := True
-					set_start_condition (VERBATIM_STR1)
-				else
-					curr_token := new_comment (text)
-					update_token_list
-				end
-			}
+ \"([^\n"%]|{NON_ASCII})*\[/[ \t\r]* {
+ 		if not in_comments then
+				-- Verbatim string opener.
+			curr_token := new_string (text)
+			update_token_list
+			in_verbatim_string := True
+			start_of_verbatim_string := True
+			set_start_condition (VERBATIM_STR1)
+		else
+			curr_token := new_comment (text)
+			update_token_list
+		end
+	}
 
-\"([^\n"%]|{NON_ASCII})*\{/[ \t\r]*	{
-				if not in_comments then
-						-- Verbatim string opener.
-					curr_token := new_string (text)
-					update_token_list
-					in_verbatim_string := True
-					start_of_verbatim_string := True
-					set_start_condition (VERBATIM_STR1)
-				else
-					curr_token := new_comment (text)
-					update_token_list
-				end				
-			}
+\"([^\n"%]|{NON_ASCII})*\{/[ \t\r]* {
+		if not in_comments then
+				-- Verbatim string opener.
+			curr_token := new_string (text)
+			update_token_list
+			in_verbatim_string := True
+			start_of_verbatim_string := True
+			set_start_condition (VERBATIM_STR1)
+		else
+			curr_token := new_comment (text)
+			update_token_list
+		end				
+	}
 
 <VERBATIM_STR1>{
-	[ \t\r]*\]([^%\n"]|{NON_ASCII})*\" 	{
-							-- Verbatim string closer, possibly.
-						curr_token := new_string (text)						
-						end_of_verbatim_string := True
-						in_verbatim_string := False
-						set_start_condition (INITIAL)
-						update_token_list
-					}
+	[ \t\r]*\]([^%\n"]|{NON_ASCII})*\" {
+				-- Verbatim string closer, possibly.
+			curr_token := new_string (text)						
+			end_of_verbatim_string := True
+			in_verbatim_string := False
+			set_start_condition (INITIAL)
+			update_token_list
+		}
 	
-	[ \t\r]*\}([^%\n"]|{NON_ASCII})*\" 	{
-							-- Verbatim string closer, possibly.
-						curr_token := new_string (text)						
-						end_of_verbatim_string := True
-						in_verbatim_string := False
-						set_start_condition (INITIAL)
-						update_token_list
-					}	
+	[ \t\r]*\}([^%\n"]|{NON_ASCII})*\" {
+				-- Verbatim string closer, possibly.
+			curr_token := new_string (text)						
+			end_of_verbatim_string := True
+			in_verbatim_string := False
+			set_start_condition (INITIAL)
+			update_token_list
+		}	
 	
-	[ ]+				{
-						curr_token := new_space (text_count)
-						update_token_list						
-					}
+	[ ]+ {
+			curr_token := new_space (text_count)
+			update_token_list						
+		}
 					
-	[\t]+				{						
-						curr_token := new_tabulation (text_count)
-						update_token_list						
-					}
+	[\t]+ {
+			curr_token := new_tabulation (text_count)
+			update_token_list						
+		}
 					
-	\r\n				{
-						curr_token := new_eol (True)
-						update_token_list
-						in_comments := False
-						}
-	\n					{
-						curr_token := new_eol (False)
-						update_token_list
-						in_comments := False
-						}
-	\r					{
-						curr_token := new_text (text)
-						update_token_list
-						}
+	\r\n {
+			curr_token := new_eol (True)
+			update_token_list
+			in_comments := False
+		}
+	\n {
+			curr_token := new_eol (False)
+			update_token_list
+			in_comments := False
+		}
+	\r {
+			curr_token := new_text (text)
+			update_token_list
+		}
 					
-	([^\n\ \t]|{NON_ASCII})*			{
-						curr_token := new_string (text)
-						update_token_list
-					}
+	([^\n\ \t]|{NON_ASCII})* {
+			curr_token := new_string (text)
+			update_token_list
+		}
 	}
 
 [%\"]([^\n\"]|{NON_ASCII}|%\")*(\"|%)	|
-[%\"]([^\n\"\%]|{NON_ASCII}|%\"|%A|%B|%C\%D|%F|%H|%L|%N|%Q|%R|%S|%T|%U|%V|%%|%\'|%\(|%\)|%<|%>|%\/[0-9]{1,3}\/)*		{
-					-- Eiffel String
-					if not in_comments then						
-						curr_token := new_string (text)
-					else
-						curr_token := new_comment (text)
-					end
-					update_token_list
-					}
+[%\"]([^\n\"\%]|{NON_ASCII}|%\"|%A|%B|%C\%D|%F|%H|%L|%N|%Q|%R|%S|%T|%U|%V|%%|%\'|%\(|%\)|%<|%>|%\/[0-9]{1,3}\/)* {
+			-- Eiffel String
+		if not in_comments then						
+			curr_token := new_string (text)
+		else
+			curr_token := new_comment (text)
+		end
+		update_token_list
+	}
 
-----------/** Eiffel bits **/---------------------------------------------------
-
-[0-1]+[bB]			{
-					-- Eiffel Bit
-					if not in_comments then
-						curr_token := new_number (text)						
-					else
-						curr_token := new_comment (text)
-					end
-					update_token_list
-					}
-						
 ----------/** Eiffel integers **/-----------------------------------------------
 
 {D}(({D}|_)*{D})?			|
 0[xX]{H}(({H}|_)*{H})?			|
 0[cC]{O}(({O}|_)*{O})?			|
-0[bB]{B}(({B}|_)*{B})?			{
-						-- Eiffel Integer
-						if not in_comments then
-							curr_token := new_number (text)
-						else
-							curr_token := new_comment (text)
-						end
-						update_token_list
-						}
+0[bB]{B}(({B}|_)*{B})? {
+			-- Eiffel Integer
+		if not in_comments then
+			curr_token := new_number (text)
+		else
+			curr_token := new_comment (text)
+		end
+		update_token_list
+	}
 
 
 0[xX]{A}(({A}|_)*{A})?			|
 0[cC]{A}(({A}|_)*{A})?			|
 0[bB]{A}(({A}|_)*{A})?			|
-{D}(({A}|_)*{A})?			{
-						-- Bad Eiffel Integer
-						if not in_comments then
-							curr_token := new_text (text)
-						else
-							curr_token := new_comment (text)
-						end
-						update_token_list
-						}
+{D}(({A}|_)*{A})? {
+			-- Bad Eiffel Integer
+		if not in_comments then
+			curr_token := new_text (text)
+		else
+			curr_token := new_comment (text)
+		end
+		update_token_list
+	}
 
 ---------/** Eiffel reals **/---------------------------------------------------
 
@@ -493,15 +483,15 @@ UTF8_tail	[\x80-\xBF]
 [0-9]*\.[0-9]+([eE][+-]?[0-9]+)?	|
 [0-9]{1,3}(_[0-9]{3})+\./[^.0-9]	|
 [0-9]{1,3}(_[0-9]{3})*\.([0-9]{1,3}(_[0-9]{3})*)?[eE][+-]?[0-9]{1,3}(_[0-9]{3})*	|
-([0-9]{1,3}(_[0-9]{3})*)?\.[0-9]{1,3}(_[0-9]{3})*([eE][+-]?[0-9]{1,3}(_[0-9]{3})*)?	{
-							-- Eiffel reals & doubles
-						if not in_comments then		
-							curr_token := new_number (text)
-						else
-							curr_token := new_comment (text)
-						end
-						update_token_list
-						}
+([0-9]{1,3}(_[0-9]{3})*)?\.[0-9]{1,3}(_[0-9]{3})*([eE][+-]?[0-9]{1,3}(_[0-9]{3})*)? {
+			-- Eiffel reals & doubles
+		if not in_comments then		
+			curr_token := new_number (text)
+		else
+			curr_token := new_comment (text)
+		end
+		update_token_list
+	}
 
 		-- The first and fourth expressions use a trailing context
 		-- to make sure that an integer followed by two dots is
@@ -510,29 +500,29 @@ UTF8_tail	[\x80-\xBF]
 ----------/** Comments enable/disable **/-----------------------------------------
 
 \`([^%\n\`']|{NON_ASCII})+\`					|
-\`([^%\n\`']|{NON_ASCII})+\'					{
-					curr_token := new_text_in_comment (text)
-					update_token_list
-					}
+\`([^%\n\`']|{NON_ASCII})+\' {
+		curr_token := new_text_in_comment (text)
+		update_token_list
+	}
 
 --------------------------------------------------------------------------------
 
 <<EOF>>			terminate
-.				{
-					-- Error (considered as text)
-				if not in_comments then
-					curr_token := new_text (text)
-				else
-					curr_token := new_comment (text)
-				end
-				update_token_list
-				}
+. {
+			-- Error (considered as text)
+		if not in_comments then
+			curr_token := new_text (text)
+		else
+			curr_token := new_comment (text)
+		end
+		update_token_list
+	}
 
 --------------------------------------------------------------------------------
 %%
 
-indexing
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+note
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -563,4 +553,4 @@ indexing
 			Customer support http://support.eiffel.com
 		]"
 
-end -- EDITOR_EIFFEL_SCANNER
+end

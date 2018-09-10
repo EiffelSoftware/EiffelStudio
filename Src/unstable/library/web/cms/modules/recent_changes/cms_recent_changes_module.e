@@ -112,7 +112,7 @@ feature -- Hook
 			s: STRING_32
 		do
 			l_user := Void -- Public access for the feed!
-			create l_changes.make (a_size, create {DATE_TIME}.make_now_utc, a_source)
+			create l_changes.make (a_size, create {DATE_TIME}.make_now_utc, a_source, Void)
 			if attached a_response.api.hooks.subscribers ({CMS_RECENT_CHANGES_HOOK}) as lst then
 				across
 					lst as ic
@@ -187,6 +187,7 @@ feature -- Handler
 			l_until_date: detachable DATE_TIME
 			l_until_date_timestamp: INTEGER_64
 			l_filter_source: detachable READABLE_STRING_8
+			l_filter_author: detachable READABLE_STRING_32
 			l_size: NATURAL_32
 			mesg: CMS_CUSTOM_RESPONSE_MESSAGE
 		do
@@ -240,12 +241,15 @@ feature -- Handler
 			l_content: STRING
 			l_form: CMS_FORM
 			l_select: WSF_FORM_SELECT
+			l_author_field: WSF_FORM_TEXT_INPUT
 			l_size_field: WSF_FORM_NUMBER_INPUT
 			l_date_field: WSF_FORM_HIDDEN_INPUT
 			l_submit: WSF_FORM_SUBMIT_INPUT
 			l_until_date: detachable DATE_TIME
 			l_until_date_timestamp: INTEGER_64
 			l_filter_source: detachable READABLE_STRING_8
+			l_filter_author: detachable READABLE_STRING_32
+			l_filter_username: detachable READABLE_STRING_32
 			l_size: NATURAL_32
 			l_query: STRING
 			opt: WSF_FORM_SELECT_OPTION
@@ -263,6 +267,17 @@ feature -- Handler
 				if l_filter_source.is_empty then
 					l_filter_source := Void
 				end
+			elseif attached {WSF_STRING} req.query_parameter ("filter") as p_filter then
+				l_filter_source := p_filter.url_encoded_value
+				if l_filter_source.is_empty then
+					l_filter_source := Void
+				end
+			end
+			if attached {WSF_STRING} req.query_parameter ("author") as p_author then
+				l_filter_author := p_author.value
+				if l_filter_author.is_empty then
+					l_filter_author := Void
+				end
 			end
 			if attached {WSF_STRING} req.query_parameter ("size") as p_size then
 				l_size := p_size.integer_value.to_natural_32
@@ -274,7 +289,17 @@ feature -- Handler
 			if api.has_permission ("view recent changes") then
 				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 				l_user := api.user
-				create l_changes.make (l_size, l_until_date, l_filter_source)
+				if l_filter_author /= Void then
+					if attached api.user_api.user_by_id_or_name (l_filter_author) as u then
+						l_filter_username := u.name
+					elseif
+						attached api.user_api.users_by_profile_name (l_filter_author) as lst and then
+						lst.count = 1
+					then
+						l_filter_username := lst.first.name
+					end
+				end
+				create l_changes.make (l_size, l_until_date, l_filter_source, l_filter_username)
 
 				create l_content.make (1024)
 				if attached api.hooks.subscribers ({CMS_RECENT_CHANGES_HOOK}) as lst then
@@ -312,6 +337,14 @@ feature -- Handler
 					end
 					l_form.extend (l_select)
 
+					create l_author_field.make ("author")
+					if l_filter_author /= Void then
+						l_author_field.set_text_value (l_filter_author)
+					end
+					l_author_field.set_label ("By author")
+					l_form.extend (l_author_field)
+
+
 					create l_size_field.make_with_text ("size", l_size.out)
 					l_size_field.set_size (25)
 					l_size_field.set_label ("Items per page")
@@ -345,76 +378,87 @@ feature -- Handler
 					l_changes as ic
 				loop
 					ch := ic.item
-					dt := ch.date
-					if prev_dt = Void or else dt.date /~ prev_dt.date then
-						l_content.append ("<tr>")
-						l_content.append ("<td class=%"title%" colspan=%"5%">")
-						l_content.append (dt.date.formatted_out ("ddd, dd mmm yyyy"))
-						l_content.append ("</td>")
-						l_content.append ("</tr>")
-					end
-					l_content.append ("<tr>")
-					l_content.append ("<td class=%"date%">")
-					if dt /~ prev_dt then
-						create htdate.make_from_date_time (dt)
-						htdate.append_to_rfc1123_string (l_content)
-					else
-						l_content.append ("<span class=%"same-value%">''</span>")
-					end
-					l_content.append ("</td>")
-
-					l_content.append ("<td class=%"source%">" + ch.source + "</td>")
-					l_content.append ("<td class=%"resource%">")
-					l_content.append (r.link (ch.link.title, ch.link.location, Void))
-					l_content.append ("</td>")
-					l_content.append ("<td class=%"user%">")
-					if attached ch.author as u then
-						l_content.append (r.link (r.user_profile_name (u), "user/" + u.id.out, Void))
-					elseif attached ch.author_name as un then
-						l_content.append (r.html_encoded (un))
-					end
-					l_content.append ("</td>")
-					l_content.append ("<td class=%"info%">")
-					if attached ch.information as l_info and then not l_info.is_empty then
-						if prev_dt ~ dt and prev_info ~ l_info then
-							l_content.append ("<span class=%"same-value%">''</span>")
-						else
-							i := l_info.index_of ('%N', 1)
-							if i > 0 and i < l_info.count then
-								l_content.append (l_info.substring (1, i - 1))
-								l_content.append ("<span class=%"tooltip%">")
-								l_content.append (l_info.substring (i, l_info.count))
-								l_content.append ("</span>")
-							else
-								l_content.append (l_info)
-							end
+					if l_changes.has_expected_author (ch) then
+						dt := ch.date
+						if prev_dt = Void or else dt.date /~ prev_dt.date then
+							l_content.append ("<tr>")
+							l_content.append ("<td class=%"title%" colspan=%"5%">")
+							l_content.append (dt.date.formatted_out ("ddd, dd mmm yyyy"))
+							l_content.append ("</td>")
+							l_content.append ("</tr>")
 						end
-						prev_info := l_info
-					else
-						prev_info := Void
+						l_content.append ("<tr>")
+						l_content.append ("<td class=%"date%">")
+						if dt /~ prev_dt then
+							create htdate.make_from_date_time (dt)
+							htdate.append_to_rfc1123_string (l_content)
+						else
+							l_content.append ("<span class=%"same-value%">''</span>")
+						end
+						l_content.append ("</td>")
+
+						l_content.append ("<td class=%"source%">" + ch.source + "</td>")
+						l_content.append ("<td class=%"resource%">")
+						l_content.append (r.link (ch.link.title, ch.link.location, Void))
+						l_content.append ("</td>")
+						l_content.append ("<td class=%"user%">")
+						if attached ch.author as u then
+							l_content.append (r.link (r.user_profile_name (u), "user/" + u.id.out, Void))
+						elseif attached ch.author_name as un then
+							l_content.append (r.html_encoded (un))
+						end
+						l_content.append ("</td>")
+						l_content.append ("<td class=%"info%">")
+						if attached ch.information as l_info and then not l_info.is_empty then
+							if prev_dt ~ dt and prev_info ~ l_info then
+								l_content.append ("<span class=%"same-value%">''</span>")
+							else
+								i := l_info.index_of ('%N', 1)
+								if i > 0 and i < l_info.count then
+									l_content.append (l_info.substring (1, i - 1))
+									l_content.append ("<span class=%"tooltip%">")
+									l_content.append (l_info.substring (i, l_info.count))
+									l_content.append ("</span>")
+								else
+									l_content.append (l_info)
+								end
+							end
+							prev_info := l_info
+						else
+							prev_info := Void
+						end
+						l_content.append ("</td>")
+						l_content.append ("</tr>%N")
+						prev_dt := dt
 					end
-					l_content.append ("</td>")
-					l_content.append ("</tr>%N")
-					prev_dt := dt
 				end
 				l_content.append ("</tbody>")
 				l_content.append ("</table>%N")
 
-				if ch /= Void then
-					if l_until_date /= Void then
-						l_content.append (" <a href=%"")
-						l_content.append (r.request_url (Void))
-						l_content.append ("?size=" + l_size.out + "%">&lt;&lt;</a> ")
-					end
+					-- Reset date filter!
+				if l_until_date /= Void then
+					l_content.append (" <a href=%"")
+					l_content.append (r.request_url (Void))
+					l_content.append ("?size=" + l_size.out + "%">&lt;&lt;</a> ")
+				end
 
-					if l_until_date /~ ch.date then
-						create htdate.make_from_date_time (ch.date)
+				dt := l_changes.last_date
+				if dt = Void and ch /= Void then
+					dt := ch.date
+				end
+				if dt /= Void then
+					if l_until_date /~ dt then
+						create htdate.make_from_date_time (dt)
 						create l_query.make_from_string ("size=" + l_size.out)
 						l_query.append ("&date=")
 						l_query.append (htdate.timestamp.out)
 						if l_filter_source /= Void then
-							l_query.append ("&filter=")
-							l_query.append (l_filter_source)
+							l_query.append ("&source=")
+							l_query.append (percent_encoded (l_filter_source))
+						end
+						if l_filter_author /= Void then
+							l_query.append ("&author=")
+							l_query.append (percent_encoded (l_filter_author))
 						end
 						l_content.append ("<a href=%"")
 						l_content.append (r.request_url (create {CMS_API_OPTIONS}.make_from_manifest (<<["query", l_query]>>)))

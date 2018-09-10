@@ -7,6 +7,12 @@ note
 class
 	IRON_CLIENT_DB
 
+inherit
+	ANY
+		rename
+			print as log_print -- To prevent
+		end
+
 create
 	make
 
@@ -62,7 +68,7 @@ feature -- Access
 			l_unordered_result: like installed_packages
 		do
 			debug ("iron_api")
-				print ("DEBUG:[" + revision.out + "] Scan for installed packages!!%N")
+				log_print ("DEBUG:[" + revision.out + "] Scan for installed packages!!%N")
 			end
 				-- FIXME: repository order !!
 			create l_unordered_result.make (0)
@@ -120,7 +126,7 @@ feature -- Access
 				end
 			end
 			debug ("iron_api")
-				print ("DEBUG:[" + revision.out + "] Scan for installed packages: COMPLETED!!%N")
+				log_print ("DEBUG:[" + revision.out + "] Scan for installed packages: COMPLETED!!%N")
 			end
 		end
 
@@ -286,8 +292,10 @@ feature -- Change
 			repo_conf: IRON_REPOSITORY_CONFIGURATION_FILE
 		do
 			create repo_conf.make (layout.repositories_configuration_file)
-			repo_conf.remove_repository_by_uri (a_uri)
-			repo_conf.save
+			if repo_conf.has_repository_by_uri (a_uri) then
+				repo_conf.remove_repository_by_uri (a_uri)
+				repo_conf.save
+			end
 		end
 
 	save_available_repository_packages	(a_repo: IRON_REPOSITORY)
@@ -372,7 +380,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

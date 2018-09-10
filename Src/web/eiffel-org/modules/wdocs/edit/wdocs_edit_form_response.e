@@ -360,7 +360,7 @@ feature -- Form
 					if not l_page.title.same_string (l_title_value) then
 						l_page.set_title (l_title_value)
 							-- The "title" field was changed, it has priority over eventual changed wiki title property from content!
-						l_page.set_metadata (l_title_value, "title")
+						l_page.set_metadata (l_title_value.to_string_32, "title")
 						l_changed := True
 					elseif l_meta_title /= Void and then not l_page.title.same_string_general (l_meta_title) then
 						l_page.set_title (l_meta_title)
@@ -370,15 +370,15 @@ feature -- Form
 					end
 					if l_meta_link_title = Void or else l_meta_link_title.is_whitespace then
 						if l_link_title_value /= Void and then not l_link_title_value.is_whitespace then
-							l_page.set_metadata (l_link_title_value, "link_title")
+							l_page.set_metadata (l_link_title_value.to_string_32, "link_title")
 							l_changed := True
 						end
 					else
 						if l_link_title_value = Void or else l_link_title_value.is_whitespace then
 							l_page.set_metadata (Void, "link_title")
 							l_changed := True
-						elseif not l_meta_link_title.same_string (l_link_title_value) then
-							l_page.set_metadata (l_link_title_value, "link_title")
+						elseif not l_meta_link_title.same_string_general (l_link_title_value) then
+							l_page.set_metadata (l_link_title_value.to_string_32, "link_title")
 							l_changed := True
 						end
 					end
@@ -443,7 +443,10 @@ feature -- Form
 							l_mesg_text.append ("%N%N")
 
 							-- FIXME: hardcoded link to admin wdocs clear-cache ! change that.
-							add_warning_message ("You may need to " + link ("clear the cache", api.administration_path_location ("module/wdocs/clear-cache?destination=" + url_encoded (view_location)), Void) + ".")
+							add_warning_message ("You may need to " + link ("clear the cache",
+											api.administration_path_location ("module/wdocs/clear-cache?destination=" + url_encoded (secured_url_content (view_location))),
+											Void
+										) + ".")
 
 							api.log ("wdocs", "Doc page changed", 0, create {CMS_LOCAL_LINK}.make (l_page.title, location))
 							add_success_message ("Doc page saved.")

@@ -8,10 +8,23 @@ class NESTED_BL
 inherit
 	NESTED_B
 		redefine
-			print_register, free_register, print_checked_target_register,
-			stored_register, has_call, has_gcable_variable, c_type,
-			set_register, register, set_parent, parent, propagate,
-			unanalyze, generate, analyze, allocates_memory
+			allocates_memory,
+			analyze,
+			c_type,
+			free_register,
+			generate,
+			has_call,
+			has_gcable_variable,
+			is_temporary,
+			parent,
+			print_checked_target_register,
+			print_register,
+			propagate,
+			register,
+			set_parent,
+			set_register,
+			stored_register,
+			unanalyze
 		end
 
 	SHARED_TYPE_I
@@ -144,22 +157,23 @@ feature
 			-- See  also `print_checked_target_register'.
 		do
 			if message.target = message then
-					-- We reached the last call
-				if register /= No_register then
+					-- We reached the last call.
+				if register = No_register then
+						-- There is no register, which means the call has not
+						-- been generated yet.
+					message.target.generate_on
+						(if parent = Void then
+								-- This is the first call.
+							target
+						else
+								-- This is part of a dot call. Generate a call on
+								-- the entity stored in the parent's register.
+							parent.register
+						end)
+				else
 						-- There is a register, hence the call has already
 						-- been generated and the result is in the register.
 					register.print_register
-				else
-						-- There is no register, which means the call has not
-						-- been generated yet.
-					if parent = Void then
-							-- This is the first call.
-						message.target.generate_on (target)
-					else
-							-- This is part of a dot call. Generate a call on
-							-- the entity stored in the parent's register.
-						message.target.generate_on (parent.register)
-					end
 				end
 			else
 					-- Simply propagate the request (it is impossible for a
@@ -243,7 +257,7 @@ feature
 						-- polymorphic one...
 						-- Check also that target is not a parenthesized expression
 						-- that could enclose an attribute, a polymorphic call, etc.
-					message.target.parameters = Void and then
+					msg_target.parameters = Void and then
 						-- This test leads to an optimization for t.f (ref).
 						-- The generated_code was E_f (E_t (l[0]), ref)
 						-- Possible problems for the GC depending on the order
@@ -280,7 +294,7 @@ feature
 				get_register
 			end
 			if register /= No_register then
-				if (parent = Void) then
+				if parent = Void then
 						-- First call. Otherwise, target is freed by parent.
 					target.free_register
 				else
@@ -350,7 +364,25 @@ feature
 	has_call: BOOLEAN = True
 			-- The expression has at least one call
 
-	allocates_memory: BOOLEAN = True;
+	allocates_memory: BOOLEAN
+			-- <Precursor>
+		do
+			Result :=
+				context.has_invariant or else
+				target.allocates_memory or else
+				message.target.allocates_memory or else
+				message.allocates_memory
+		end
+
+	is_temporary: BOOLEAN
+			-- <Precursor>
+		do
+			if message.target /= message then
+				Result := message.is_temporary
+			elseif register /= No_register then
+				Result := register.is_temporary
+			end
+		end
 
 feature {REGISTRABLE} -- C code generation
 
@@ -378,7 +410,7 @@ feature {REGISTRABLE} -- C code generation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

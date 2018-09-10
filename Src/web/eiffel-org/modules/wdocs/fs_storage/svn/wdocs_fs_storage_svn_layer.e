@@ -99,7 +99,8 @@ feature -- Recent changes
 			l_info: SVN_REVISION_INFO
 			l_log: READABLE_STRING_8
 			loc: PATH
-			l_base_url: detachable STRING_8
+			i: INTEGER
+			l_base_url, l_version_base_url: detachable STRING_8
 			s: STRING_32
 			utf: UTF_CONVERTER
 			wp: detachable WIKI_BOOK_PAGE
@@ -124,18 +125,29 @@ feature -- Recent changes
 			else
 				loc := wdocs_api.documentation_dir.extended (a_version_id)
 			end
-
 			if attached svn.repository_info (loc.name, opts) as l_repo_info then
 				if
 					attached l_repo_info.url as l_repo_url and
 					attached l_repo_info.repository_root as l_repo_root
 				then
-					create l_base_url.make_from_string (l_repo_url)
-					l_base_url.remove_head (l_repo_root.count)
+					create l_version_base_url.make_from_string (l_repo_url)
+					l_version_base_url.remove_head (l_repo_root.count)
+
+						-- Remove the version segment.
+					create l_base_url.make_from_string (l_version_base_url)
+					i := l_base_url.last_index_of ('/', l_base_url.count)
+					if i > 0 then
+						l_base_url.keep_head (i - 1)
+					end
 				end
 			end
+--			loc := wdocs_api.documentation_dir -- Remove the version part			
+
+			if l_version_base_url = Void then
+				create l_version_base_url.make_empty
+			end
 			if l_base_url = Void then
-				create l_base_url.make_empty
+				l_base_url := l_version_base_url
 			end
 			from
 				nb := params.size.to_integer_32
@@ -149,7 +161,7 @@ feature -- Recent changes
 				if l_logs = Void or else l_logs.count = 0 then
 					done := True
 				else
-					done := l_logs.count < nb - l_result_count
+					done := l_result_count >= nb
 					across
 						l_logs as ic
 					until
@@ -161,8 +173,14 @@ feature -- Recent changes
 							l_info.paths as p_ic
 						loop
 							s := p_ic.item.path
-							if s.starts_with (l_base_url) then
+							if s.starts_with (l_version_base_url) then
+								s.remove_head (l_version_base_url.count + 1)
+							elseif s.starts_with (l_base_url) then
 								s.remove_head (l_base_url.count + 1)
+								i := s.index_of ('/', 2)
+								if i > 0 then
+									s.remove_head (i)
+								end
 							end
 							if not s.is_empty and then s.item (1) = '/' then
 								s.remove_head (1)

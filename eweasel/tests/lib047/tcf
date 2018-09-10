@@ -1,0 +1,13 @@
+test_name	 library-sortable-array-empty-search
+test_description Search in an empty sortable array should not cause assertion violation.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+compile_melted
+compile_result 	ok
+execute_work	NONE exec_output_m
+execute_result	ok
+compare		exec_output_m output
+
+test_end

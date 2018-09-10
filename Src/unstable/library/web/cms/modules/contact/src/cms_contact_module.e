@@ -182,6 +182,7 @@ feature -- Hooks
 							l_tpl_block.set_value (l_recaptcha_site_key, "recaptcha_site_key")
 						end
 						a_response.add_block (l_tpl_block, "content")
+							-- WARNING: may be an issue with block caching.
 						a_response.add_style (a_response.module_resource_url (Current, "/files/css/contact.css", Void), Void)
 					else
 						debug ("cms")
@@ -312,7 +313,7 @@ feature -- Hooks
 
 					write_debug_log (generator + ".handle_post_contact: send notification email")
 
-					e := api.new_email (l_params.admin_email, "Notification Contact", email_html_message ("notification", r, vars))
+					e := api.new_email (l_params.admin_email, "Contact message from " + html_encoded (l_name.value) + " (" + html_encoded (l_contact_email_address) + ")" , email_html_message ("notification", r, vars))
 					e.set_from_address (l_params.admin_email)
 					e.add_header_line ("MIME-Version:1.0")
 					e.add_header_line ("Content-Type: text/html; charset=utf-8")

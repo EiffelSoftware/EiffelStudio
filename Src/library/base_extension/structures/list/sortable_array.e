@@ -1,5 +1,5 @@
 ﻿note
-	description	: "Sortable Array"
+	description: "Sortable Array"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -23,10 +23,10 @@ create
 feature -- Access
 
 	found_index: INTEGER
-			-- Found index
+			-- Found index.
 
 	found: BOOLEAN
-			-- Found
+			-- Found.
 
 	binary_search (a_item: G)
 		local
@@ -35,15 +35,15 @@ feature -- Access
 		do
 			found_index := upper + 1
 			found := False
-			if a_item /= Void then
+			if a_item /= Void and then lower <= upper then
 				l_item_lower := item (lower)
 				l_item_upper := item (upper)
 				if l_item_lower = Void or else l_item_upper = Void or else a_item < l_item_lower or else l_item_upper < a_item then
 				elseif l_item_upper ~ a_item then
-					found := True;
+					found := True
 					found_index := upper
 				elseif l_item_lower ~ a_item then
-					found := True;
+					found := True
 					found_index := lower
 				else
 					from
@@ -54,14 +54,12 @@ feature -- Access
 					loop
 						l_mid := (l_lower + l_upper) // 2
 						found := a_item ~ item (l_mid)
-						if not found then
-							if item (l_mid) < a_item then
-								l_lower := l_mid
-							else
-								l_upper := l_mid
-							end
-						else
+						if found then
 							found_index := l_mid
+						elseif item (l_mid) < a_item then
+							l_lower := l_mid
+						else
+							l_upper := l_mid
 						end
 					end
 				end
@@ -69,51 +67,52 @@ feature -- Access
 		end
 
 	balanced_linear_search (a_item: G; a_start: INTEGER)
-			-- Balanced linear search
+			-- Balanced linear search.
 		local
 			l_lower, l_upper, l_start, l_examined: INTEGER
 		do
 			found := False
-			if not valid_index (a_start) then
-				l_start := lower
-			else
+			if valid_index (a_start) then
 				l_start := a_start
-			end
-
-			if a_item ~ item (l_start) then
-				found := True
-				found_index := l_start
 			else
-				from
-					l_lower := l_start - 1
-					l_upper := l_start + 1
-					l_examined := 1
-				until
-					found or l_examined >= count
-				loop
-					if l_lower < lower then
-						l_lower := upper
-					end
-					if l_upper > upper then
-						l_upper := lower
-					end
+				l_start := lower
+			end
+			if l_start <= upper then
+				if a_item ~ item (l_start) then
+					found := True
+					found_index := l_start
+				else
+					from
+						l_lower := l_start - 1
+						l_upper := l_start + 1
+						l_examined := 1
+					until
+						found or l_examined >= count
+					loop
+						if l_lower < lower then
+							l_lower := upper
+						end
+						if l_upper > upper then
+							l_upper := lower
+						end
 
-					if item (lower) ~ a_item then
-						found_index := l_lower
-						found := True
-					elseif item (upper) ~ a_item then
-						found_index := l_upper;
-						found := True
+						if item (lower) ~ a_item then
+							found_index := l_lower
+							found := True
+						elseif item (upper) ~ a_item then
+							found_index := l_upper
+							found := True
+						end
+						l_lower := l_lower - 1
+						l_upper := l_upper + 1
+						l_examined := l_examined + 2
 					end
-					l_lower := l_lower - 1
-					l_upper := l_upper + 1
-					l_examined := l_examined + 2
 				end
 			end
 		end
 
 	linear_search (a_item: G)
-			-- Linear search
+			-- Linear search.
 		do
 			found := False
 			from
@@ -207,23 +206,23 @@ feature -- Basic operations
 					put (item (j), f)
 					put (l_temp_item, j)
 				end
-				if ((j - 1) <= f) and (ell <= (j + 1)) then
+				if j - 1 <= f and ell <= j + 1 then
 					f := stack_1.item
 					stack_1.remove
 					ell := stack_2.item
 					stack_2.remove
-				elseif ((j - 1) <= f) and (ell > (j + 1)) then
+				elseif j - 1 <= f and ell > j + 1 then
 					f := j + 1
-				elseif ((j - 1) > f) and (ell <= (j + 1)) then
+				elseif j - 1 > f and ell <= j + 1 then
 					ell := j - 1
-				elseif ((j - 1) > f) and (ell > (j + 1)) then
-					if (j - f) > (ell - j) then
-						stack_1.put (f);
-						stack_2.put (j - 1);
+				elseif j - 1 > f and ell > j + 1 then
+					if j - f > ell - j then
+						stack_1.put (f)
+						stack_2.put (j - 1)
 						f := j + 1
 					else
-						stack_1.put (j + 1);
-						stack_2.put (ell);
+						stack_1.put (j + 1)
+						stack_2.put (ell)
 						ell := j - 1
 					end
 				end
@@ -248,8 +247,9 @@ feature -- Duplication
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	ca_ignore: "CA057", "CA057: comparison operator with negation can be simplified"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

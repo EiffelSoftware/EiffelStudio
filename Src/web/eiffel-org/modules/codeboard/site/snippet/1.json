@@ -1,0 +1,5 @@
+{
+	"lang":"eiffel",
+	"caption":"Simple Hello World.",
+	"code":"class\n    HELLO_WORLD\ncreate\n    make\n\nfeature  -- Initialization\n    make\n        do\n            print (\"Hello Eiffel World!%N\")\n        end\nend"
+}

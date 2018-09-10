@@ -65,7 +65,7 @@ feature -- Access
 
 feature -- Access
 
-	authorization_url_builder: FUNCTION [OAUTH_CONFIG, STRING_8]
+	authorization_url_builder: FUNCTION [ANY, TUPLE [OAUTH_CONFIG], STRING_8]
 
 feature {NONE} -- Implementation
 

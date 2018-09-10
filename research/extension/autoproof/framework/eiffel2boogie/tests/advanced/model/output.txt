@@ -1,0 +1,47 @@
+======================================
+A_REMODELS.bad1
+AutoProof error.
+Line: 40. Validity: Feature 'z' is not a model attribute of class 'A_REMODELS'.
+======================================
+A_MODELS (invariant admissibility)
+Successfully verified.
+======================================
+ANY.default_create (creator, inherited by A_MODELS)
+Successfully verified.
+======================================
+A_MODELS.foo
+Successfully verified.
+======================================
+A_MODELS.bar
+Verification failed.
+
+Line: 29. Precondition frame_writable may be violated on call to {A_MODELS}.foo.
+--------------------------------------
+Line: 32. Target attribute may not be writable.
+======================================
+A_MODELS.bar_ok
+Successfully verified.
+======================================
+A_REMODELS (invariant admissibility)
+Successfully verified.
+======================================
+ANY.default_create (creator, inherited by A_REMODELS)
+Successfully verified.
+======================================
+A_MODELS.bar (inherited by A_REMODELS)
+Verification failed.
+
+Line: 29. Precondition frame_writable may be violated on call to {A_REMODELS}.foo.
+--------------------------------------
+Line: 32. Target attribute may not be writable.
+======================================
+A_MODELS.bar_ok (inherited by A_REMODELS)
+Successfully verified.
+======================================
+A_REMODELS.foo
+Verification failed.
+
+Line: 32. Target attribute may not be writable.
+======================================
+A_REMODELS.new
+Successfully verified.

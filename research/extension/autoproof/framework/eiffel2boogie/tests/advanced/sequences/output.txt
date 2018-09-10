@@ -1,0 +1,31 @@
+======================================
+A_SEQUENCES (invariant admissibility)
+Successfully verified.
+======================================
+ANY.default_create (creator, inherited by A_SEQUENCES)
+Successfully verified.
+======================================
+A_SEQUENCES.good
+Successfully verified.
+======================================
+A_SEQUENCES.good1
+Successfully verified.
+======================================
+A_SEQUENCES.bad
+Verification failed.
+
+Line: 56. Precondition may be violated on invocation of {MML_SEQUENCE}.item.
+--------------------------------------
+Line: 58. Precondition may be violated on invocation of {MML_SEQUENCE}.but_last.
+--------------------------------------
+Line: 60. Precondition may be violated on invocation of {MML_SEQUENCE}.but_last.
+--------------------------------------
+Line: 60. Precondition may be violated on invocation of {MML_SEQUENCE}.item.
+--------------------------------------
+Line: 62. Precondition may be violated on invocation of {MML_SEQUENCE}.item.
+======================================
+A_SEQUENCES.triv
+Successfully verified.
+======================================
+A_SEQUENCES.seq_to_set
+Successfully verified.

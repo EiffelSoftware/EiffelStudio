@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 			html := a_html
 			status_code := {HTTP_STATUS_CODE}.ok
 			create header.make
-			header.put_content_type_text_html
+			header.put_content_type_utf_8_text_html
 		end
 
 feature -- Status
@@ -64,7 +64,7 @@ feature {WSF_RESPONSE} -- Output
 		end
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

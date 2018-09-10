@@ -469,7 +469,7 @@ feature -- Concrete evaluation
 			end
 		end
 
-	evaluate_routine (a_addr: DBG_ADDRESS; a_target: DUMP_VALUE; cl: CLASS_C; f: FEATURE_I; params: LIST [DUMP_VALUE]; is_static_call: BOOLEAN)
+	evaluate_routine (a_addr: DBG_ADDRESS; a_target: DUMP_VALUE; cl: CLASS_C; f: FEATURE_I; params: LIST [DUMP_VALUE]; is_non_object_call: BOOLEAN)
 		require
 			f /= Void
 			f_is_not_attribute: not f.is_attribute
@@ -561,7 +561,7 @@ feature -- Concrete evaluation
 					if realf.is_deferred and f.is_deferred then
 						dbg_error_handler.notify_error_evaluation (Debugger_names.msg_error_unable_to_evaluate_deferred_call (f.written_class.name_in_upper, f.feature_name))
 					else
-						effective_evaluate_routine (l_addr, a_target, f, realf, l_dyntype, l_target_dynclass, params, is_static_call)
+						effective_evaluate_routine (l_addr, a_target, f, realf, l_dyntype, l_target_dynclass, params, is_non_object_call)
 						if last_result = Void or else not last_result.has_value then
 							if l_addr /= Void then
 								dbg_error_handler.notify_error_evaluation (
@@ -604,6 +604,16 @@ feature -- Concrete evaluation
 			end
 		end
 
+	evaluate_class_routine (a_addr: DBG_ADDRESS; a_target: DUMP_VALUE; cl: CLASS_C; f: FEATURE_I; params: LIST [DUMP_VALUE])
+		do
+			evaluate_routine (a_addr, a_target, cl, f, params, True)
+		end
+
+	evaluate_static_routine (a_addr: DBG_ADDRESS; a_target: DUMP_VALUE; cl: CLASS_C; f: FEATURE_I; params: LIST [DUMP_VALUE])
+		do
+			evaluate_routine (a_addr, a_target, cl, f, params, True)
+		end
+
 	evaluate_function_with_name (a_addr: DBG_ADDRESS; a_target: DUMP_VALUE;
 				a_feature_name, a_external_name: STRING;
 				params: LIST [DUMP_VALUE])
@@ -628,7 +638,7 @@ feature -- Concrete evaluation
 	effective_evaluate_routine (a_addr: DBG_ADDRESS; a_target: DUMP_VALUE; f, realf: FEATURE_I;
 				ctype: CLASS_TYPE; orig_class: CLASS_C;
 				params: LIST [DUMP_VALUE];
-				is_static_call: BOOLEAN
+				is_non_object_call: BOOLEAN
 			)
 		require
 			realf /= Void
@@ -734,7 +744,7 @@ invariant
 	dbg_handler_attached: dbg_error_handler /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

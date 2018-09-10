@@ -22,10 +22,11 @@
 		.col {
 			@extend .one-half;
 		}
-		#block-play_eiffel {
+		.codeboard-demo {
+			min-height: 320px;
 			.prettyprint {
-				padding-top: 20px;
-				height: 267px;
+				padding-top: 10px;
+				height: 265px;
 			}
 		}	
 		#block-front_header_welcome {

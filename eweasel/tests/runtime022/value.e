@@ -29,7 +29,7 @@ feature -- Comparison
 			;(create {MEMORY}).full_collect
 				-- Access `other.item`.
 			other.report
-			other.item.do_nothing
+			other.item.f
 		end
 
 feature -- Output

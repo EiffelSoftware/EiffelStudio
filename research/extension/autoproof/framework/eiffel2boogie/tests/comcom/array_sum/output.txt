@@ -1,0 +1,12 @@
+======================================
+ARRAY_SUM (invariant admissibility)
+Successfully verified.
+======================================
+ANY.default_create (creator, inherited by ARRAY_SUM)
+Successfully verified.
+======================================
+ARRAY_SUM.seq_sum
+Successfully verified.
+======================================
+ARRAY_SUM.array_sum
+Successfully verified.

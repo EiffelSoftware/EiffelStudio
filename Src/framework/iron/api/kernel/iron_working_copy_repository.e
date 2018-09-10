@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 		do
 			location := a_location_uri
 
-			 	-- Be sure to use same format C:\ vs C|\
+				-- Be sure to use same format C:\ vs C|\
 			create l_path_uri.make_from_file_uri (a_location_uri)
 			create l_path_uri.make_from_path (l_path_uri.file_path)
 			location := l_path_uri
@@ -121,6 +121,14 @@ feature -- Status report
 			end
 		end
 
+	exists: BOOLEAN
+			-- Does repository exists?
+		local
+			ut: FILE_UTILITIES
+		do
+			Result := ut.directory_path_exists (path)
+		end
+
 	debug_output: READABLE_STRING_GENERAL
 		do
 			Result := path.name
@@ -168,7 +176,7 @@ invariant
 --	version_uri_no_trailing_slash: not version_uri.path.ends_with ("/")
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

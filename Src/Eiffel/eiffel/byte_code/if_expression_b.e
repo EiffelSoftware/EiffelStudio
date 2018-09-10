@@ -253,20 +253,28 @@ feature -- Code generation: C
 	analyze
 			-- <Precursor>
 		do
+			analyze_expression (condition)
+			analyze_expression (then_expression)
+				-- A register will be required after computing a result of Then_branch
+				-- to store the result of the whole comditional expression.
 			get_register
-			context.init_propagation
-			condition.propagate (No_register)
-			condition.analyze
-			condition.free_register
-			then_expression.propagate (No_register)
-			then_expression.analyze
-			then_expression.free_register
-			if attached elsif_list as l then
-				l.analyze
+			if attached elsif_list as es then
+				across
+					es as e
+				loop
+					analyze_expression (e.item)
+				end
 			end
-			else_expression.propagate (No_register)
-			else_expression.analyze
-			else_expression.free_register
+			analyze_expression (else_expression)
+		end
+
+	analyze_expression (e: EXPR_B)
+			-- Analyze expression `e`.
+		do
+			context.init_propagation
+			e.propagate (No_register)
+			e.analyze
+			e.free_register
 		end
 
 	set_register (r: REGISTRABLE)
@@ -375,18 +383,9 @@ feature {NONE} -- Code generation: C
 			buf.indent
 				-- Generate the hook for the branch.
 			generate_frozen_debugger_hook
-			e.generate_for_type (register, t)
-			if not e.is_register_required (t) then
-					-- Assign value to register when it is not done yet.
-				buf.put_new_line
-				print_register
-				buf.put_three_character (' ', '=', ' ')
-				e.print_register
-				buf.put_character (';')
-			end
-			buf.exdent
-			buf.put_new_line
-			buf.put_character ('}')
+				-- Assign result of a expression `e` to `register` of type `t`.
+			e.generate_for_attachment (register, t)
+			buf.generate_block_close
 		end
 
 feature -- Array optimization
@@ -463,7 +462,7 @@ feature -- Inlining
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

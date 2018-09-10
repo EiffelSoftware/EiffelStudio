@@ -11,6 +11,8 @@ note
 
 class
 	TEST_GOOGLE_CONSUMER
+inherit
+	JSON_PARSER_ACCESS
 
 create
 	make
@@ -28,7 +30,7 @@ feature {NONE} -- Initialization
 			client_secret := p.client_secret
 			redirect_uri := p.redirect_uri
 
-			create http_client.make
+			create http_client
 			initialize (p)
 		end
 
@@ -61,7 +63,7 @@ feature {NONE} -- Initialization
 					f.put_string ("<a href=%"" + u + "%">Visit this page</a>")
 					f.close
 					create e
-					e.system ("explorer %"" + f.name + "%"")
+					e.system ("explorer %"" + f.path.name + "%"")
 					io.put_string ("Enter the code:")
 					io.read_line
 					l_code := io.last_string
@@ -87,8 +89,8 @@ feature {NONE} -- Initialization
 
 				if l_access_token = Void then
 					if attached sess.post ("/token", ctx, Void) as res and then attached res.body as l_body then
-						create p.make_parser (l_body)
-						if attached {JSON_OBJECT} p.parse as j then
+						create p.make_with_string (l_body)
+						if attached {JSON_OBJECT} p.next_parsed_json_value as j then
 							if attached {JSON_STRING} j.item ("access_token") as j_access_token then
 								l_access_token := j_access_token.item
 							end
@@ -234,7 +236,7 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
- 	http_client: LIBCURL_HTTP_CLIENT
+ 	http_client: DEFAULT_HTTP_CLIENT
 
 	session: detachable HTTP_CLIENT_SESSION
 
@@ -254,7 +256,7 @@ invariant
 --	invariant_clause: True
 
 note
-	copyright: "2013-2013, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2018, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

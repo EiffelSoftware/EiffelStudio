@@ -1,0 +1,28 @@
+======================================
+A_SETS (invariant admissibility)
+Successfully verified.
+======================================
+ANY.default_create (creator, inherited by A_SETS)
+Successfully verified.
+======================================
+A_SETS.good
+Successfully verified.
+======================================
+A_SETS.good1
+Successfully verified.
+======================================
+A_SETS.bad
+Verification failed.
+
+Line: 48. Precondition may be violated on invocation of {MML_SET}.any_item.
+--------------------------------------
+Line: 50. Check bad_disjoint may be violated.
+--------------------------------------
+Line: 52. Check bad_empty may be violated.
+--------------------------------------
+Line: 54. Check bad_has may be violated.
+--------------------------------------
+Line: 56. Check may be violated (untagged).
+======================================
+A_SETS.interval
+Successfully verified.

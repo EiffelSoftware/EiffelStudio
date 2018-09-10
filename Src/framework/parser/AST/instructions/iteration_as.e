@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description: "Abstract node for Iteration part of a loop."
 	legal: "See notice at end of class."
@@ -20,8 +20,10 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (a: like across_keyword; e: like expression; b: like as_keyword; i: like identifier)
-			-- Create a new ITERATION AST node.
+	initialize (a: like across_keyword; e: like expression; b: like as_keyword; i: like identifier; r: BOOLEAN)
+			-- Create a new ITERATION AST node for an iteration part of a loop in the form
+			-- across e as i -- when `not r`
+			-- across e is i -- when `r`
 		require
 			e_attached: e /= Void
 			i_attached: i /= Void
@@ -34,6 +36,7 @@ feature {NONE} -- Initialization
 				as_keyword_index := b.index
 			end
 			identifier := i
+			is_restricted := r
 				-- Build initialization code in the form
 				--    `identifier'.start
 			create {INSTR_CALL_AS} initialization.initialize (
@@ -135,6 +138,10 @@ feature -- Attributes
 	identifier: ID_AS
 			-- Cursor of iteration
 
+	is_restricted: BOOLEAN
+			-- Does the iteration use a restricted form for an iteration variable?
+			-- (I.e. the iteration uses "is" instead of "as".)
+
 feature -- AST used during code generation
 
 	initialization: INSTRUCTION_AS
@@ -175,7 +182,8 @@ feature -- Comparison
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (expression, other.expression) and then
-				equivalent (identifier, other.identifier)
+				equivalent (identifier, other.identifier) and then
+				is_restricted = other.is_restricted
 		end
 
 invariant
@@ -186,7 +194,7 @@ invariant
 	advance_attached: advance /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

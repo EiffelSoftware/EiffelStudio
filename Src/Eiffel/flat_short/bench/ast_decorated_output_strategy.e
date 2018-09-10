@@ -5202,7 +5202,8 @@ feature {NONE} -- Implementation: helpers
 			l_as.expression.process (Current)
 			if not expr_type_visiting then
 				l_text_formatter_decorator.put_space
-				l_text_formatter_decorator.process_keyword_text (ti_as_keyword, Void)
+				l_text_formatter_decorator.process_keyword_text
+					(if l_as.is_restricted then ti_is_keyword else ti_as_keyword end, Void)
 				l_text_formatter_decorator.put_space
 				l_as.identifier.process (Current)
 				exdent.call (Void)

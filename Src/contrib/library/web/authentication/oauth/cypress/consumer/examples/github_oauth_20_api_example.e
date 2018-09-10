@@ -21,7 +21,7 @@ feature -- Access
 			access_token: detachable OAUTH_TOKEN
 		do
 			create config.make_default (api_key, api_secret)
-			config.set_callback ("http://127.0.0.1")
+			config.set_callback ("http://127.0.0.1:7070/login_with_github_callback")
 			config.set_scope ("user,repo,public_repo")
 			create box
 			api_service := box.create_service (config)
@@ -45,6 +45,7 @@ feature -- Access
 				print ("%NNow we're going to access a protected resource...%N");
 				create request.make ("GET", protected_resource_url)
 				request.add_header ("Authorization", "Bearer " + l_access_token.token)
+				request.add_header ("User-Agent", "Cypress LoginExample") --Required by Github API.
 				api_service.sign_request (l_access_token, request)
 				if attached {OAUTH_RESPONSE} request.execute as l_response then
 					print ("%NOk, let see what we found...")
@@ -58,18 +59,17 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	api_key: STRING = "COMPLETE"
+	api_key: STRING = ""
 
-	api_secret: STRING = "COMPLETE"
+	api_secret: STRING = ""
 
 	protected_resource_url: STRING = "https://api.github.com/user"
 	protected_resource_url_emails: STRING = "https://api.github.com/user/emails"
-	protected_resource_url_user_repos: STRING = "https://api.github.com/users/jocelyn/repos"
 
 	empty_token: detachable OAUTH_TOKEN
 
 ;note
-	copyright: "2013-2013, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2017, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

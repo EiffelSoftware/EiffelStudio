@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {CAMPAING_MONITOR_20_API_EXAMPLE}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -66,11 +65,11 @@ feature {NONE} -- Implementation
 
 	api_key : STRING =""
 	api_secret :STRING =""
-	protected_resource_url : STRING = "https://api.createsend.com/api/v3/clients.json?pretty=true";
+	protected_resource_url : STRING = "https://api.createsend.com/api/v3.1/clients.json?pretty=true";
  	empty_token : detachable  OAUTH_TOKEN
 
 ;note
-	copyright: "2013-2013, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2017, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

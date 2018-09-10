@@ -8,11 +8,17 @@ class
 
 inherit
 	CMS_MODULE
+		rename
+			module_api as codeboard_api
 		redefine
-			setup_hooks
+			initialize,
+			setup_hooks,
+			codeboard_api
 		end
 
 	CMS_HOOK_BLOCK
+
+	CMS_HOOK_BLOCK_HELPER
 
 	CMS_HOOK_AUTO_REGISTER
 
@@ -22,6 +28,8 @@ inherit
 		export
 			{NONE} all
 		end
+
+	CMS_WITH_WEBAPI
 
 	REFACTORING_HELPER
 
@@ -36,7 +44,7 @@ feature {NONE} -- Initialization
 			-- Create current module
 		do
 			version := "1.0"
-			description := "Eiffel codeboard module"
+			description := "Codeboard module"
 			package := "codeboard"
 
 			create root_dir.make_current
@@ -46,6 +54,19 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	name: STRING = "codeboard"
+
+feature {CMS_API} -- Initialization
+
+	initialize (api: CMS_API)
+			-- <Precursor>
+		do
+			create codeboard_api.make (api)
+			Precursor (api)
+		end
+
+feature	-- Access
+
+	codeboard_api: detachable CODEBOARD_API
 
 feature -- Access: docs
 
@@ -67,8 +88,21 @@ feature -- Router
 	setup_router (a_router: WSF_ROUTER; a_api: CMS_API)
 			-- Router configuration.
 		do
-			a_router.handle ("/try_eiffel", create {WSF_URI_AGENT_HANDLER}.make (agent handle_try_eiffel (a_api, ?, ?)), a_router.methods_head_get)
-			a_router.handle ("/launch_codeboard", create {WSF_URI_AGENT_HANDLER}.make (agent handle_launch_codeboard (a_api, ?, ?)), a_router.methods_head_get)
+			a_router.handle ("/" + codeboard_location, create {WSF_URI_AGENT_HANDLER}.make (agent handle_codeboard (a_api, ?, ?)), a_router.methods_head_get)
+			a_router.handle ("/" + codeboard_demo_location, create {WSF_URI_AGENT_HANDLER}.make (agent handle_codeboard_demo (a_api, ?, ?)), a_router.methods_head_get)
+
+		end
+
+	codeboard_location: STRING = "codeboard"
+
+	codeboard_demo_location: STRING = "codeboard/demo"
+
+
+feature -- Webapi
+
+	webapi: CODEBOARD_MODULE_WEBAPI
+		do
+			create Result.make (Current)
 		end
 
 feature -- Hooks configuration
@@ -92,106 +126,87 @@ feature -- Hooks
 		end
 
 	block_list: ITERABLE [like {CMS_BLOCK}.name]
-		local
-			l_string: STRING
 		do
-			Result := <<"try_eiffel", "launch_codeboard", "play_eiffel">>--, "button_try_eiffel">>
-			create l_string.make_empty
-			across Result as ic loop
-					l_string.append (ic.item)
-					l_string.append_character (' ')
-				end
-			write_debug_log (generator + ".block_list:" + l_string )
+			Result := <<"launch_codeboard", "?codeboard_static_demo", "?snippet_editor">>
 		end
 
 	get_block_view (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
 		do
-
-			if
-				a_block_id.is_case_insensitive_equal_general ("try_eiffel") and then
-				a_response.request.path_info.starts_with ("/try_eiffel")
-			then
-				if attached template_block (a_block_id, a_response) as l_tpl_block then
+			if a_block_id.is_case_insensitive_equal_general ("launch_codeboard") then
+				if a_response.location.same_string_general (codeboard_location) then
+					if attached smarty_template_block (Current, a_block_id, a_response.api) as l_tpl_block then
+						a_response.add_block (l_tpl_block, "content")
+					end
+				end
+			elseif a_block_id.is_case_insensitive_equal_general ("codeboard_static_demo") then
+				if
+					a_response.is_front
+					or else a_response.location.same_string_general (codeboard_demo_location)
+				then
+					if attached new_codeboard_static_demo_block as l_tpl_block then
+						a_response.add_block (l_tpl_block, "header")
+					end
+				end
+			elseif a_block_id.is_case_insensitive_equal_general ("snippet_editor") then
+				if a_response.has_permissions (<<{CODEBOARD_MODULE_WEBAPI}.manage_snippet_permission, {CODEBOARD_MODULE_WEBAPI}.edit_snippet_permission>>) then
+					if attached smarty_template_block (Current, a_block_id, a_response.api) as l_tpl_block then
+						a_response.add_block (l_tpl_block, "content")
+					end
+				end
+			else
+						-- Support any block based on existing template
+				if attached smarty_template_block (Current, a_block_id, a_response.api) as l_tpl_block then
 					a_response.add_block (l_tpl_block, "content")
-				else
-					debug ("cms")
-						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
-					end
-				end
-			elseif
-				a_block_id.is_case_insensitive_equal_general ("launch_codeboard") and then
-				a_response.request.path_info.same_string_general ("/launch_codeboard")
-			then
-				if attached template_block (a_block_id, a_response) as l_tpl_block then
-					a_response.add_block (l_tpl_block, "content")
-				else
-					debug ("cms")
-						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
-					end
-				end
-			elseif
-				a_block_id.is_case_insensitive_equal_general ("play_eiffel") and then
-				a_response.request.path_info.same_string_general ("/")
-			then
-				if attached template_block (a_block_id, a_response) as l_tpl_block then
-					a_response.add_block (l_tpl_block, "header")
-				else
-					debug ("cms")
-						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
-					end
-				end
-			elseif
-				a_block_id.is_case_insensitive_equal_general ("button_try_eiffel")
-			then
-				if attached template_block (a_block_id, a_response) as l_tpl_block then
-					a_response.add_block (l_tpl_block, "header")
-				else
-					debug ("cms")
-						a_response.add_warning_message ("Error with block [" + a_block_id + "]")
-					end
 				end
 			end
 		end
 
-	handle_try_eiffel (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+	new_codeboard_static_demo_block: detachable CMS_BLOCK
 		local
-			r: CMS_RESPONSE
+			lst: ARRAYED_LIST [CODEBOARD_SNIPPET]
+			i,nb: INTEGER
+			tb: STRING_TABLE [ANY]
 		do
-			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-			r.set_value ("Try_Eiffel", "optional_content_type")
-			r.set_title ("Try Eiffel")
-			r.execute
+			if attached codeboard_api as l_api then
+				from
+					i := 1
+					nb := l_api.code_count
+					create lst.make (nb)
+				until
+					i > nb
+				loop
+					if attached l_api.code (i) as l_code then
+						l_code.set_id (i)
+						lst.force (l_code)
+					end
+					i := i + 1
+				end
+				create tb.make_caseless (1)
+				tb.force (lst, "snippets")
+				Result := smarty_template_block_with_values (Current, "codeboard_static_demo", l_api.cms_api, tb)
+			end
 		end
 
-	handle_launch_codeboard (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+feature -- Handling		
+
+	handle_codeboard (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
 		do
-			fixme ("Use CMS node and associated content for Contribute link!")
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 			r.set_value ("Codeboard", "optional_content_type")
 			r.set_title ("Codeboard")
 			r.execute
 		end
 
-feature {NONE} -- Helpers
-
-	template_block (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE): detachable CMS_SMARTY_TEMPLATE_BLOCK
-			-- Smarty content block for `a_block_id'
+	handle_codeboard_demo (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
-			res: PATH
-			p: detachable PATH
+			r: CMS_RESPONSE
 		do
-			create res.make_from_string ("templates")
-			res := res.extended ("block_").appended (a_block_id).appended_with_extension ("tpl")
-			p := a_response.api.module_theme_resource_location (Current, res)
-			if p /= Void then
-				if attached p.entry as e then
-					create Result.make (a_block_id, Void, p.parent, e)
-				else
-					create Result.make (a_block_id, Void, p.parent, p)
-				end
-			end
+			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+			r.set_value ("codeboard_demo", "optional_content_type")
+			r.set_title ("Codeboard demo")
+			r.execute
 		end
 
 feature {NONE} -- Implementation: date and time

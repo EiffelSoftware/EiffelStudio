@@ -1,0 +1,12 @@
+======================================
+A_ONCE (invariant admissibility)
+Successfully verified.
+======================================
+ANY.default_create (creator, inherited by A_ONCE)
+Successfully verified.
+======================================
+A_ONCE.singleton
+Successfully verified.
+======================================
+A_ONCE.test
+Successfully verified.

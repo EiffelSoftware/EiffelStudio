@@ -58,7 +58,7 @@ PR['registerLangHandler'](
 			/**
 			 * Keywords
 			 */
-			[PR['PR_KEYWORD'], /^(?:across|agent|alias|all|and|as|assign|attached|attribute|check|class|convert|create|Current|debug|deferred|detachable|do|else|elseif|end|ensure|expanded|export|external|False|feature|from|frozen|if|implies|inherit|indexing|inspect|invariant|like|local|loop|not|note|obsolete|old|once|only|or|Precursor|redefine|reference|rename|require|rescue|Result|retry|select|separate|some|then|True|TUPLE|undefine|until|variant|Void|when|xor)\b/i, null],
+			[PR['PR_KEYWORD'], /^(?:across|agent|alias|all|and|as|assign|attached|attribute|check|class|convert|create|Current|debug|deferred|detachable|do|else|elseif|end|ensure|expanded|export|external|False|feature|from|frozen|if|is|implies|inherit|indexing|inspect|invariant|like|local|loop|not|note|obsolete|old|once|only|or|Precursor|redefine|reference|rename|require|rescue|Result|retry|select|separate|some|then|True|TUPLE|undefine|until|variant|Void|when|xor)\b/i, null],
 
 			/*
 			*  Eiffel specific
@@ -67,7 +67,7 @@ PR['registerLangHandler'](
 			*  there must be corresponding css clauses to render them.
 			*/
 
-			["atg", /^[a-zA-Z][a-z0-9_]*[\ \t]*\:/ ], 	// Assertion TaG
+			["atg", /^[a-zA-Z][a-z0-9_]*\:/ ], 	// Assertion TaG
 			["fcl", /^\.[a-zA-Z][a-z0-9_]*/], 			// Function CaLl
 
 			[PR['PR_TYPE'], /^[A-Z][A-Z0-9_]*/],

@@ -1366,12 +1366,13 @@ test	profile-crash-on-override		final116 tcf pass finalizing profile
 test	tight-loop-integer-constant-infinite-loop final117 tcf pass finalizing manual
 test	finalize-once-strings-in-invariant	final118 tcf fail finalizing
 test	equation-evaluation-sequence	final119 tcf fail finalizing
-test	comparison-involving-allocation	final120 tcf fail finalizing
+test	comparison-involving-allocation	final120 tcf pass finalizing
 test	bracket-wrong-dispatch			final121 tcf pass finalizing bracket_expression assigner
 test	wrong-boolean-branch-optimization	final122 tcf pass finalizing
 test	inline-internal-locals			final123 tcf pass finalizing inlining loop iteration object_test scoop
 test	inline-attribute-with-body		final124 tcf fail finalizing inlining attribute
 test	agent-call-gc-corruption		final125 tcf pass finalizing runtime
+test	reference-equality-gc-protection	final126 tcf pass finalizing gc
 
 -- Runtime
 test	gc-tracking-001					runtime001	tcf pass runtime
@@ -1395,8 +1396,8 @@ test	memory-leak-with-dynamic-dispatch	runtime018	tcf pass runtime
 test	special-expanded-referring-new-object	runtime019	tcf fail used_to_pass runtime special
 test	standard-stream-redirection		runtime020	tcf pass runtime console file input output library
 test	generational-gc-expanded-semantics	runtime021	tcf pass runtime gc expanded reattachment
-test	gc-tracking-in-expanded-argument	runtime022	tcf fail runtime gc expanded argument
-test	gc-tracking-in-expanded-argument-copy	runtime023	tcf fail runtime gc expanded argument copy twin
+test	gc-tracking-in-expanded-argument	runtime022	tcf pass runtime gc expanded argument
+test	gc-tracking-in-expanded-argument-copy	runtime023	tcf pass runtime gc expanded argument copy twin
 
 -- Thread
 test	cond-timedwait-failure		thread001	tcf pass multithreaded
@@ -2357,6 +2358,7 @@ test	library-reversed-hash_table-cursor	lib043 tcf pass library table iteration 
 test	library-removed-hash_table-cursor	lib044 tcf pass library table iteration loop across
 test	library-hexadecimal-to-natural		lib045 tcf pass library string_parse
 test	library-arguments-command-line-start	lib046 tcf pass library arguments command_line
+test	library-sortable-array-empty-search	lib047 tcf pass library
 
 test	utf-16-basics			utf001	tcf pass library unicode
 test	utf-8-basics			utf002	tcf pass library unicode
@@ -3096,6 +3098,7 @@ test	pretty-comments-between-features	pretty028 tcf pass pretty
 test	pretty-loop-invariant			pretty029 tcf pass pretty
 test	pretty-inline-separate-instruction	pretty030 tcf pass pretty
 test	pretty-manifest-array			pretty031 tcf pass pretty manifest array
+test	pretty-across-loop			pretty032 tcf pass pretty across iteration loop
 
 -- Benchmarks
 test	benchmark-scoop-gc-sequential-processor-creation	bench001 tcf pass benchmark scoop scoop_gc gc

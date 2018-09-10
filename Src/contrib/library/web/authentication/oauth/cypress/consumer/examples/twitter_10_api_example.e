@@ -1,5 +1,12 @@
 note
-	description: "Summary description for {TWITTER_10_API_EXAMPLE}."
+	description: "[
+			Example to consume twitter.com api
+
+			You have to use your own API keys, and set them in
+				`api_key` and `api_secret`
+			
+			See https://apps.twitter.com/ to get api keys and related.
+		]"
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -9,6 +16,12 @@ class
 
 create
 	make
+
+feature {NONE} -- Custom
+
+	api_key : STRING = ""
+	
+	api_secret :STRING = ""
 
 feature {NONE} -- Initialization
 
@@ -71,14 +84,12 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	api_key : STRING =""
-	api_secret :STRING =""
 	protected_resource_url : STRING = "https://api.twitter.com/1.1/users/lookup.json";
 
  	empty_token : detachable  OAUTH_TOKEN
 
 ;note
-	copyright: "2013-2013, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2017, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -1,0 +1,33 @@
+======================================
+VSTTE2008 (invariant admissibility)
+Successfully verified.
+======================================
+ANY.default_create (creator, inherited by VSTTE2008)
+Successfully verified.
+======================================
+VSTTE2008.add
+Successfully verified.
+======================================
+VSTTE2008.add_recursive
+Successfully verified.
+======================================
+VSTTE2008.multiply
+Successfully verified.
+======================================
+VSTTE2008.multiply_recursive
+Successfully verified.
+======================================
+VSTTE2008.client_binary_search
+Successfully verified.
+======================================
+VSTTE2008.binary_search
+Successfully verified.
+======================================
+VSTTE2008.sorted
+Successfully verified.
+======================================
+VSTTE2008.lemma_smaller_until_index
+Successfully verified.
+======================================
+VSTTE2008.lemma_larger_from_index
+Successfully verified.

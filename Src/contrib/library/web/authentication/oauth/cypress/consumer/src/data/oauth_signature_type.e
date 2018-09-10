@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {OAUTH_SIGNATURE_TYPE}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

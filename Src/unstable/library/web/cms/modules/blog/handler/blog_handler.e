@@ -226,7 +226,6 @@ feature -- HTML Output
 				l_title.append (" (Page " + page_number.out + " of " + pages_count.out + ")")
 			end
 			a_page.set_title (l_title)
---			a_output.append ("<h2>" + l_title + "</h2>")
 		end
 
 	append_user_related_html_to (a_page: CMS_RESPONSE; a_output: STRING)

@@ -9,6 +9,7 @@ class
 
 inherit
 	DEBUG_OUTPUT
+	JSON_PARSER_ACCESS
 
 create
 	make_from_json_object,
@@ -28,15 +29,13 @@ feature {NONE} -- Initialization
 			p: JSON_PARSER
 		do
 			create {ARRAYED_LIST [READABLE_STRING_8]} scopes.make (0)
-			create p.make_parser (s)
-			if attached {JSON_OBJECT} p.parse as j then
+			create p.make_with_string (s)
+			if attached {JSON_OBJECT} p.next_parsed_json_value as j and then p.is_valid then
 				make_from_json_object (j)
 			end
 		end
 
 	make_from_json_object (j: JSON_OBJECT)
-		local
-			p: JSON_PARSER
 		do
 			create {ARRAYED_LIST [READABLE_STRING_8]} scopes.make (0)
 			if attached {JSON_STRING} j.item ("token") as js then
@@ -75,38 +74,35 @@ feature -- Access
 
 feature -- Status report
 
-	debug_output: READABLE_STRING_GENERAL
+	debug_output: STRING_8
 			-- String that should be displayed in debugger to represent `Current'.
-		local
-			s: STRING
 		do
 			if attached app_name as n then
-				create s.make_from_string (n)
+				create Result.make_from_string (n)
 			else
-				create s.make_empty
+				create Result.make_empty
 			end
 			if not scopes.is_empty then
-				s.append_character (' ')
-				s.append_character ('(')
-				s.append_character (' ')
+				Result.append_character (' ')
+				Result.append_character ('(')
+				Result.append_character (' ')
 				across
 					scopes as c
 				loop
-					s.append (c.item)
-					s.append (" ")
+					Result.append (c.item)
+					Result.append (" ")
 				end
-				s.append_character (')')
+				Result.append_character (')')
 			end
 			if attached token as t then
-				s.append_character (' ')
-				s.append (t)
+				Result.append_character (' ')
+				Result.append (t)
 			end
-			Result := s
 		end
 
 
 note
-	copyright: "2013-2013, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2018, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

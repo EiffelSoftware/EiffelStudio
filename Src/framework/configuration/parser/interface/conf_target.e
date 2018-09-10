@@ -1009,7 +1009,16 @@ feature -- Equality
 					Result := True
 				elseif a_target.name.is_case_insensitive_equal_general (name) then
 					if attached system as s1 and attached a_target.system as s2 then
-						Result := (s1 = s2) or (s1.uuid ~ s2.uuid)
+						if s1 = s2 then
+							Result := True
+						else
+							if s1.is_generated_uuid and s2.is_generated_uuid then
+									-- Check system file path.
+								Result := s1.file_path.same_as (s2.file_path)
+							else
+								Result := s1.uuid ~ s2.uuid
+							end
+						end
 					else
 							-- Assume this is target of same system
 						Result := True

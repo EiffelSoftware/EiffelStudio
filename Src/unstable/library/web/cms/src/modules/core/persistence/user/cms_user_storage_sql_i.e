@@ -123,7 +123,7 @@ feature -- Access: user
 			error_handler.reset
 			create l_parameters.make (1)
 			l_parameters.put (a_name, "profile_name")
-			sql_query (select_user_by_profile_name, l_parameters)
+			sql_query (select_users_by_profile_name, l_parameters)
 			from
 				sql_start
 			until
@@ -134,7 +134,7 @@ feature -- Access: user
 				end
 				sql_forth
 			end
-			sql_finalize_query (select_user_by_profile_name)
+			sql_finalize_query (select_users_by_profile_name)
 			if Result.is_empty then
 				Result := Void
 			end
@@ -995,8 +995,8 @@ feature {NONE} -- Sql Queries: USER
 	select_user_by_email: STRING = "SELECT uid, name, password, salt, email, status, created, signed, profile_name FROM users WHERE email =:email;"
 			-- Retrieve user by email if exists.
 
-	select_user_by_profile_name: STRING = "SELECT uid, name, password, salt, email, status, created, signed, profile_name FROM users WHERE profile_name =:name;"
-			-- Retrieve user by profile name if exists.
+	select_users_by_profile_name: STRING = "SELECT uid, name, password, salt, email, status, created, signed, profile_name FROM users WHERE profile_name=:profile_name ORDER BY uid DESC;"
+			-- Retrieve users by profile name if exists.
 
 	select_salt_by_username: STRING = "SELECT salt FROM users WHERE name =:name;"
 			-- Retrieve salt by username if exists.

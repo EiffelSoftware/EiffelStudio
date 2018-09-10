@@ -33,6 +33,10 @@ feature -- Access: user
 		do
 		end
 
+	users_by_profile_name (a_profile_name: READABLE_STRING_GENERAL): detachable LIST [CMS_USER]
+		do
+		end
+
 	user_by_activation_token (a_token: READABLE_STRING_32): detachable CMS_USER
 		do
 		end
@@ -210,6 +214,6 @@ feature -- Temp Users
 		do
 		end
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

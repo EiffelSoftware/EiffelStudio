@@ -56,6 +56,15 @@ feature -- Access
 			password: Result /= Void implies (Result.hashed_password /= Void and Result.password = Void)
 		end
 
+	users_by_profile_name (a_profile_name: READABLE_STRING_GENERAL): detachable LIST [CMS_USER]
+			-- Users with profile_name `a_profile_name', if any.
+		deferred
+		ensure
+			same_profile_name: Result /= Void implies across Result as c all
+					(attached c.item.profile_name as r_profile_name and then a_profile_name.same_string (r_profile_name))
+				end
+		end
+
 	user_by_activation_token (a_token: READABLE_STRING_32): detachable CMS_USER
 			-- User with activation token `a_token', if any.
 		deferred
@@ -304,6 +313,6 @@ feature -- New Temp User
 		end
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

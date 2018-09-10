@@ -157,6 +157,12 @@ feature -- Access: user
 			Result := user_storage.user_by_email (a_email)
 		end
 
+	users_by_profile_name (a_profile_name: READABLE_STRING_GENERAL): detachable LIST [CMS_USER]
+			-- Users by profile_name `a_profile_name', if any.
+		do
+			Result := user_storage.users_by_profile_name (a_profile_name)
+		end
+
 	user_by_activation_token (a_token: READABLE_STRING_32): detachable CMS_USER
 			-- User by activation token `a_token'.
 		do

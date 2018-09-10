@@ -92,14 +92,14 @@ feature -- Hook
 					nb := l_size.to_natural_32
 				end
 
-				recent_changes_feed (a_response, nb, Void, Void).accept (gen)
+				recent_changes_feed (a_response, nb, Void).accept (gen)
 
 				create b.make (a_block_id, Void, l_content, Void)
 				a_response.add_block (b, Void)
 			end
 		end
 
-	recent_changes_feed (a_response: CMS_RESPONSE; a_size: NATURAL_32; a_source: detachable READABLE_STRING_8; a_author: detachable READABLE_STRING_GENERAL): FEED
+	recent_changes_feed (a_response: CMS_RESPONSE; a_size: NATURAL_32; a_source: detachable READABLE_STRING_8): FEED
 		local
 			l_changes: CMS_RECENT_CHANGE_CONTAINER
 			ch: CMS_RECENT_CHANGE_ITEM
@@ -112,7 +112,7 @@ feature -- Hook
 			s: STRING_32
 		do
 			l_user := Void -- Public access for the feed!
-			create l_changes.make (a_size, create {DATE_TIME}.make_now_utc, a_source, a_author)
+			create l_changes.make (a_size, create {DATE_TIME}.make_now_utc, a_source, Void)
 			if attached a_response.api.hooks.subscribers ({CMS_RECENT_CHANGES_HOOK}) as lst then
 				across
 					lst as ic
@@ -202,12 +202,6 @@ feature -- Handler
 					l_filter_source := Void
 				end
 			end
-			if attached {WSF_STRING} req.query_parameter ("author") as p_author then
-				l_filter_author := p_author.value
-				if l_filter_author.is_empty then
-					l_filter_author := Void
-				end
-			end
 			if attached {WSF_STRING} req.query_parameter ("size") as p_size then
 				l_size := p_size.integer_value.to_natural_32
 			end
@@ -225,11 +219,11 @@ feature -- Handler
 			then
 				mesg.header.put_content_type ("application/rss+xml")
 
-				recent_changes_feed (r, l_size, l_filter_source, l_filter_author).accept (create {RSS_2_FEED_GENERATOR}.make (l_content))
+				recent_changes_feed (r, l_size, l_filter_source).accept (create {RSS_2_FEED_GENERATOR}.make (l_content))
 			else
 				mesg.header.put_content_type ("application/atom+xml")
 
-				recent_changes_feed (r, l_size, l_filter_source, l_filter_author).accept (create {ATOM_FEED_GENERATOR}.make (l_content))
+				recent_changes_feed (r, l_size, l_filter_source).accept (create {ATOM_FEED_GENERATOR}.make (l_content))
 			end
 			mesg.set_payload (l_content)
 			res.send (mesg)
@@ -255,6 +249,7 @@ feature -- Handler
 			l_until_date_timestamp: INTEGER_64
 			l_filter_source: detachable READABLE_STRING_8
 			l_filter_author: detachable READABLE_STRING_32
+			l_filter_username: detachable READABLE_STRING_32
 			l_size: NATURAL_32
 			l_query: STRING
 			opt: WSF_FORM_SELECT_OPTION
@@ -294,7 +289,17 @@ feature -- Handler
 			if api.has_permission ("view recent changes") then
 				create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 				l_user := api.user
-				create l_changes.make (l_size, l_until_date, l_filter_source, l_filter_author)
+				if l_filter_author /= Void then
+					if attached api.user_api.user_by_id_or_name (l_filter_author) as u then
+						l_filter_username := u.name
+					elseif
+						attached api.user_api.users_by_profile_name (l_filter_author) as lst and then
+						lst.count = 1
+					then
+						l_filter_username := lst.first.name
+					end
+				end
+				create l_changes.make (l_size, l_until_date, l_filter_source, l_filter_username)
 
 				create l_content.make (1024)
 				if attached api.hooks.subscribers ({CMS_RECENT_CHANGES_HOOK}) as lst then
@@ -447,7 +452,7 @@ feature -- Handler
 							l_query.append (percent_encoded (l_filter_source))
 						end
 						if l_filter_author /= Void then
-							l_query.append ("&source=")
+							l_query.append ("&author=")
 							l_query.append (percent_encoded (l_filter_author))
 						end
 						l_content.append ("<a href=%"")

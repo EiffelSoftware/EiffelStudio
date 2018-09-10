@@ -350,7 +350,11 @@ feature -- Hooks
 									end
 								end
 							end
-							a_changes.force (ch)
+							if a_changes.has_expected_author (ch) then
+								a_changes.force (ch)
+							else
+									-- filtered out.
+							end
 						else
 							-- Forbidden
 							-- FIXME: provide a visual indication!

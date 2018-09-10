@@ -14,11 +14,12 @@ create
 
 feature -- Initialization
 
-	make (a_limit: NATURAL_32; a_date: detachable DATE_TIME; a_source: detachable READABLE_STRING_8)
+	make (a_limit: NATURAL_32; a_date: detachable DATE_TIME; a_source: detachable READABLE_STRING_8; a_author: detachable READABLE_STRING_GENERAL)
 		do
 			limit := a_limit
 			date := a_date
 			source := a_source
+			author := a_author
 			create items.make (a_limit.to_integer_32)
 		end
 
@@ -30,6 +31,8 @@ feature -- Settings
 
 	source: detachable READABLE_STRING_8
 
+	author: detachable READABLE_STRING_GENERAL
+
 feature -- Access
 
 	items: ARRAYED_LIST [CMS_RECENT_CHANGE_ITEM]
@@ -39,6 +42,21 @@ feature -- Access
 			-- Number of change items.
 		do
 			Result := items.count
+		end
+
+feature -- Helpers
+
+	has_expected_author (a_item: CMS_RECENT_CHANGE_ITEM): BOOLEAN
+			-- If `author` is set, is `a_item` authored by `author` ?
+			-- otherwise return True.
+		do
+			if attached author as l_author_name then
+				Result := attached a_item.author_name as l_item_author_name and then
+							 l_author_name.same_string (l_item_author_name)
+			else
+					-- No filter on author name.
+				Result := True
+			end
 		end
 
 feature -- Access
@@ -53,6 +71,8 @@ feature -- Change
 
 	force (a_item: CMS_RECENT_CHANGE_ITEM)
 			-- Add `a_item'.
+		require
+			has_expected_author (a_item)
 		do
 			items.force (a_item)
 		end

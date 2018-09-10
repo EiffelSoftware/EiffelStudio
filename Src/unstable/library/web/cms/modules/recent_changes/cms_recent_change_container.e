@@ -38,10 +38,43 @@ feature -- Access
 	items: ARRAYED_LIST [CMS_RECENT_CHANGE_ITEM]
 			-- List of recent events.	
 
+	last_date_by_source: detachable STRING_TABLE [DATE_TIME]
+			-- Last date during previous search for each source.
+
+	last_date: detachable DATE_TIME
+			-- More recent last date.
+		do
+			if attached last_date_by_source as tb then
+				across
+					tb as ic
+				loop
+					if Result = Void then
+						Result := ic.item
+					elseif Result < ic.item then
+						Result := ic.item
+					end
+				end
+			end
+		end
+
 	count: INTEGER
 			-- Number of change items.
 		do
 			Result := items.count
+		end
+
+feature -- Element change
+
+	set_last_date_for_source (dt: DATE_TIME; a_source: READABLE_STRING_GENERAL)
+		local
+			tb: like last_date_by_source
+		do
+			tb := last_date_by_source
+			if tb = Void then
+				create tb.make_caseless (1)
+				last_date_by_source := tb
+			end
+			tb.force (dt, a_source)
 		end
 
 feature -- Helpers

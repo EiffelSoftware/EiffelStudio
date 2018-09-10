@@ -435,15 +435,20 @@ feature -- Handler
 				l_content.append ("</tbody>")
 				l_content.append ("</table>%N")
 
-				if ch /= Void then
-					if l_until_date /= Void then
-						l_content.append (" <a href=%"")
-						l_content.append (r.request_url (Void))
-						l_content.append ("?size=" + l_size.out + "%">&lt;&lt;</a> ")
-					end
+					-- Reset date filter!
+				if l_until_date /= Void then
+					l_content.append (" <a href=%"")
+					l_content.append (r.request_url (Void))
+					l_content.append ("?size=" + l_size.out + "%">&lt;&lt;</a> ")
+				end
 
-					if l_until_date /~ ch.date then
-						create htdate.make_from_date_time (ch.date)
+				dt := l_changes.last_date
+				if dt = Void and ch /= Void then
+					dt := ch.date
+				end
+				if dt /= Void then
+					if l_until_date /~ dt then
+						create htdate.make_from_date_time (dt)
 						create l_query.make_from_string ("size=" + l_size.out)
 						l_query.append ("&date=")
 						l_query.append (htdate.timestamp.out)

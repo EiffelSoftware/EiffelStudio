@@ -512,6 +512,7 @@ feature -- Hook / Recent changes
 			s: STRING
 			utf: UTF_CONVERTER
 			l_title: detachable READABLE_STRING_32
+			l_author: detachable READABLE_STRING_32
 		do
 			if attached wdocs_api as l_wdocs_api then
 				l_src := a_changes.source --| i.e filter on source
@@ -538,6 +539,7 @@ feature -- Hook / Recent changes
 							if attached ic.item.log as l_log then
 								i.set_information (l_log)
 									-- Looking for real author "Signed-off-by: Super Developer <super.dev@example.com>"
+									-- Check only the first instance.
 								pos_eol := 0
 								pos := l_log.substring_index ("(Signed-off-by:", 1)
 								if pos > 0 then
@@ -559,10 +561,18 @@ feature -- Hook / Recent changes
 									s := l_log.substring (pos + 15, pos_eol - 1)
 									s.right_adjust
 									s.left_adjust
-									i.set_author_name (utf.utf_8_string_8_to_string_32 (s))
+									l_author := utf.utf_8_string_8_to_string_32 (s)
+									i.set_author_name (l_author)
+									if attached l_wdocs_api.cms_api.user_api.user_by_name (l_author) as u then
+										i.set_author (u)
+									end
 								end
 							end
-							a_changes.force (i)
+							if a_changes.has_expected_author (i) then
+								a_changes.force (i)
+							else
+									-- filtered out.
+							end
 						end
 					end
 				end

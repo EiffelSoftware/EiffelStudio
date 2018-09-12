@@ -9,8 +9,10 @@ feature {NONE} -- Initialization
 	make
 			-- Run application.
 		local
-			a: A
+			b: B
 		do
+			create b.make2
 		end
+
 
 end

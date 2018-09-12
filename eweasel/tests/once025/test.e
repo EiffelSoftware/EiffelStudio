@@ -8,15 +8,13 @@ feature {NONE} -- Initialization
 
 	make
 			-- Run application.
-	local
-		w: WORKER [TASK]
-		t1, t2: TASK
-	do
-		create w
-		t1 := w.new_task
-		t2 := w.new_task
-		check
-			same_value: t1 = t2
+		local
+			a: A
+			b: B
+		do
+				-- Once creation procedure must be immediate (i.e. not inherited).
+			create a.make
+			create b.make
 		end
-	end
+
 end

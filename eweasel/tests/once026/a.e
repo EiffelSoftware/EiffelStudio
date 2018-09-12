@@ -1,23 +1,12 @@
 note
-	description: "Summary description for {A}."
-	date: "$Date$"
-	revision: "$Revision$"
+	description: "Once creation procedures can't be part of a Generic class."
 
 class
-	A
+	A [G]
+create make
 
-create
+feature -- Implementation
 	make
-
-feature {NONE} -- Initialization
-
-	make
-		do
-			create t.make_from_string ("A")
+		once
 		end
-
-feature -- Access
-
-	t: STRING
-
 end

@@ -7,10 +7,10 @@
 			<assertions check="true"/>
 		</option>
 		<capability>
-			<concurrency support="none"/>
-			<void_safety use="none"/>
+			<concurrency support="thread"/>
+			<void_safety use="all"/>
 		</capability>
-		<!--<precompile name="precompile" location="$PRECOMPILED_BASE_SAFE"/> -->
+		<precompile name="precompile" location="$PRECOMPILED_BASE_SAFE"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<cluster name="root_cluster" location="$CLUSTER\"/>

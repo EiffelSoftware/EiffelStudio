@@ -5,7 +5,7 @@ copy_sub 	Ace $TEST Ace
 copy_raw 	test0.e      $CLUSTER test.e
 
 compile_melted
-compile_result validity_error TEST VUTA(3) VUTA(3) VUTA(3) VUTA(3) VUTA(3)
+compile_result validity_error TEST VUTA(3):19 VUTA(3):19 VUTA(3):19 VUTA(3):22 VUTA(3):22 VUTA(3):25 VUTA(3):25 VUTA(3):25 VUTA(3):25
 
 copy_raw 	test1.e      $CLUSTER test.e
 
@@ -18,7 +18,7 @@ compare		exec_output_m1 output1
 copy_raw 	test2.e      $CLUSTER test.e
 
 compile_melted
-compile_result validity_error TEST VUTA(3)
+compile_result validity_error TEST VUTA(3):23 VUTA(3):31
 
 copy_raw 	test3.e      $CLUSTER test.e
 

@@ -23,6 +23,14 @@ feature {NONE} -- Creation
 					c.item.report (i)
 				end
 			end
+			separate s as ss do
+				across
+					ss is c
+				loop
+					i := i + 1
+					c.report (i)
+				end
+			end
 				-- This is going to be printed after the loop
 				-- because `t.report (i)' above is executed on
 				-- a controlled target that is used in expressions

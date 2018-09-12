@@ -20,7 +20,15 @@ feature {NONE} -- Creation
 					ss as c
 				loop
 					i := i + 1
-					c.item.report (i) -- VUTA(3) for `report'
+					c.item.report (i) -- VUTA(3) for `report`
+				end
+			end
+			separate s as ss do
+				across
+					ss is c
+				loop
+					i := i + 1
+					c.report (i) -- VUTA(3) for `report`
 				end
 			end
 			io.put_integer (0)
@@ -38,7 +46,7 @@ feature -- Access
 feature -- Output
 
 	report (n: INTEGER)
-			-- Report a test `n' is passing.
+			-- Report a test `n` is passing.
 		do
 				-- Wait 1 second before printing.
 			(create {EXECUTION_ENVIRONMENT}).sleep (1_000_000_000)

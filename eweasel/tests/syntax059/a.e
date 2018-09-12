@@ -12,13 +12,13 @@ feature {NONE} -- Creation
 
 				-- Simple iteration (empty)
 			across
-				items as l_cursor
+				items $AS l_cursor
 			loop
 			end
 
 				-- Extra initialization (empty)
 			across
-				items as l_cursor
+				items $AS l_cursor
 			from
 			loop
 				i := i + 1
@@ -26,7 +26,7 @@ feature {NONE} -- Creation
 
 				-- Extra initialization
 			across
-				items as l_cursor
+				items $AS l_cursor
 			from
 				i := 1
 			loop
@@ -35,7 +35,7 @@ feature {NONE} -- Creation
 
 				-- Extra condition
 			across
-				items as l_cursor
+				items $AS l_cursor
 			until
 				i > 2
 			loop
@@ -44,7 +44,7 @@ feature {NONE} -- Creation
 
 				-- Extra initialization and condition
 			across
-				items as l_cursor
+				items $AS l_cursor
 			from
 				i := 1
 			until
@@ -55,7 +55,7 @@ feature {NONE} -- Creation
 
 				-- Simple iteration (invariant)
 			across
-				items as l_cursor
+				items $AS l_cursor
 			invariant
 				j = 0
 			loop
@@ -63,7 +63,7 @@ feature {NONE} -- Creation
 
 				-- Extra initialization (invariant)
 			across
-				items as l_cursor
+				items $AS l_cursor
 			from
 				i := 1
 			invariant
@@ -74,7 +74,7 @@ feature {NONE} -- Creation
 
 				-- Extra condition (invariant)
 			across
-				items as l_cursor
+				items $AS l_cursor
 			invariant
 				j = 0
 			until
@@ -85,7 +85,7 @@ feature {NONE} -- Creation
 
 				-- Extra initialization and condition (invariant)
 			across
-				items as l_cursor
+				items $AS l_cursor
 			from
 				i := 1
 			invariant
@@ -99,7 +99,7 @@ feature {NONE} -- Creation
 				-- Simple iteration (invariant, variant)
 			i := 1
 			across
-				items as l_cursor
+				items $AS l_cursor
 			invariant
 				j = 0
 			loop
@@ -110,7 +110,7 @@ feature {NONE} -- Creation
 
 				-- Extra initialization (invariant, variant)
 			across
-				items as l_cursor
+				items $AS l_cursor
 			from
 				i := 1
 			invariant
@@ -124,7 +124,7 @@ feature {NONE} -- Creation
 				-- Extra condition (invariant, variant)
 			i := 1
 			across
-				items as l_cursor
+				items $AS l_cursor
 			invariant
 				j = 0
 			until
@@ -137,7 +137,7 @@ feature {NONE} -- Creation
 
 				-- Extra initialization and condition (invariant, variant)
 			across
-				items as l_cursor
+				items $AS l_cursor
 			from
 				i := 1
 			invariant

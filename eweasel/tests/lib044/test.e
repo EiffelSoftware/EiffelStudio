@@ -22,6 +22,13 @@ feature {NONE} -- Creation
 				io.put_character ('%T')
 				io.put_integer (c.item)
 			end
+			across
+				table is c
+			loop
+				io.put_character ('(')
+				io.put_integer (c)
+				io.put_character (')')
+			end
 			from
 				table.start
 			until
@@ -36,6 +43,13 @@ feature {NONE} -- Creation
 			loop
 				io.put_character ('-')
 				io.put_integer (c.item)
+			end
+			across
+				table.new_cursor.reversed is c
+			loop
+				io.put_character ('(')
+				io.put_integer (c)
+				io.put_character (')')
 			end
 			io.put_new_line
 
@@ -56,6 +70,13 @@ feature {NONE} -- Creation
 					io.put_character ('%T')
 					io.put_integer (c.item)
 				end
+				across
+					table is c
+				loop
+					io.put_character ('(')
+					io.put_integer (c)
+					io.put_character (')')
+				end
 				from
 					table.start
 				until
@@ -70,6 +91,13 @@ feature {NONE} -- Creation
 				loop
 					io.put_character ('-')
 					io.put_integer (c.item)
+				end
+				across
+					table.new_cursor.reversed is c
+				loop
+					io.put_character ('(')
+					io.put_integer (c)
+					io.put_character (')')
 				end
 				io.put_new_line
 			end
@@ -93,6 +121,13 @@ feature {NONE} -- Creation
 					io.put_character ('%T')
 					io.put_integer (c.item)
 				end
+				across
+					table is c
+				loop
+					io.put_character ('(')
+					io.put_integer (c)
+					io.put_character (')')
+				end
 				from
 					table.start
 				until
@@ -107,6 +142,13 @@ feature {NONE} -- Creation
 				loop
 					io.put_character ('-')
 					io.put_integer (c.item)
+				end
+				across
+					table.new_cursor.reversed is c
+				loop
+					io.put_character ('(')
+					io.put_integer (c)
+					io.put_character (')')
 				end
 				io.put_new_line
 			end

@@ -6,6 +6,6 @@ copy_raw	a.e $CLUSTER a.e
 copy_raw	test.e $CLUSTER test.e
 
 compile_melted
-compile_result	validity_error A VEVI VEVI VEVI; TEST VEVI VEVI VEVI
+compile_result	validity_error A VEVI:27 VEVI:33 VEVI:39 VEVI:45 VEVI:51 VEVI:57; TEST VEVI:27 VEVI:33 VEVI:39 VEVI:45 VEVI:51 VEVI:57
 
 test_end

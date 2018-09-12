@@ -13,6 +13,10 @@ feature {NONE} -- Creation
 				x as c
 			loop
 			end
+			across
+				x is c
+			loop
+			end
 		end
 
 end

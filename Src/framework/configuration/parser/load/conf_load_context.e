@@ -28,50 +28,6 @@ feature -- Element change
 			redirections.force (p)
 		end
 
-feature -- Access: parent target
-
-	targets: detachable ARRAYED_LIST [CONF_TARGET]
-			-- structure containing current processed target, and eventual parents.
-
-	has_target (tgt: CONF_TARGET): BOOLEAN
-		do
-			if attached targets as lst then
-				Result := across lst as ic some tgt.same_as (ic.item)  end
-			end
-		end
-
-feature -- Element change
-
-	enter_target (t: CONF_TARGET)
-		local
-			lst: like targets
-		do
-			lst := targets
-			if lst = Void then
-				create lst.make (1)
-				targets := lst
-			end
-			lst.force (t)
-		end
-
-	leave_target (t: CONF_TARGET)
-		local
-			lst: like targets
-		do
-			lst := targets
-			if
-				lst /= Void and then
-				lst.last = t
-			then
-				lst.finish
-				lst.remove
-				if lst.is_empty then
-					targets := Void
-				end
-			else
-				check is_created: False end
-			end
-		end
 
 note
 	copyright: "Copyright (c) 1984-2018, Eiffel Software"

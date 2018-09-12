@@ -16,42 +16,73 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_target: CONF_TARGET; a_targets: detachable LIST [CONF_TARGET])
+	make (a_target: CONF_TARGET; a_targets: ITERABLE [CONF_TARGET])
+		require
+			a_targets_set: a_targets /= Void
 		do
 			target := a_target
-			targets := a_targets
+			create {ARRAYED_LIST [CONF_TARGET]} targets.make (5)
+			across
+				a_targets as ic
+			loop
+				targets.force (ic.item)
+			end
 		end
 
 feature -- Access
 
 	target: CONF_TARGET
 
-	targets: detachable LIST [CONF_TARGET]
+	targets: LIST [CONF_TARGET]
 
 	text: STRING_32
 			-- Error message.
 		local
 			t: CONF_TARGET
+			n: INTEGER
 		do
 			Result := {STRING_32} "Cycle detected in target parents:%N"
-			if attached targets as lst then
-				from
-					lst.start
-				until
-					lst.after
-				loop
-					t := lst.item
-					if t.same_as (target) then
-						Result.append ({STRING_32} " -> ")
-					else
-						Result.append ({STRING_32} "  - ")
-					end
-					Result.append (t.name + {STRING_32} " (" + t.system.file_path.name + {STRING_32} ")%N")
-
-					lst.forth
-				end
+			across
+				targets as ic
+			loop
+				n := n.max (ic.item.name.count)
 			end
-			Result.append ({STRING_32} " -> " + target.name + {STRING_32} " (" + target.system.file_path.name + {STRING_32} ")%N")
+			across
+				targets as ic
+			loop
+				t := ic.item
+				if t.same_as (target) then
+					Result.append_character ('!')
+				else
+					Result.append_character (' ')
+				end
+				append_target_info_to (t, n, Result)
+				Result.append_character ('%N')
+			end
+			Result.append_character ('!')
+			append_target_info_to (target, n, Result)
+			Result.append_character ('%N')
+
+			Result.append ("%NFor each target involved in the cycle, review the parent to find the cause of the cycle.")
+		end
+
+feature {NONE} -- Implementation		
+
+	append_target_info_to (t: CONF_TARGET; a_max_name_size: INTEGER; buf: STRING_32)
+		do
+			buf.append ({STRING_32} "- ")
+			buf.append (adjusted_string (t.name, a_max_name_size))
+			buf.append ({STRING_32} " (" + t.system.file_path.name + {STRING_32} ")")
+		end
+
+	adjusted_string (s: READABLE_STRING_32; nb: INTEGER): STRING_32
+		do
+			if s.count < nb then
+				create Result.make_from_string (s)
+				Result.append (create {STRING_32}.make_filled (' ', nb - Result.count))
+			else
+				Result := s
+			end
 		end
 
 invariant

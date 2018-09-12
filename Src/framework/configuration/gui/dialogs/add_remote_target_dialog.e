@@ -271,7 +271,9 @@ feature {NONE} -- Actions
 						t := cfg.library_target
 					end
 				end
-				destroy
+				if is_ok then
+					destroy
+				end
 			end
 		ensure
 			is_ok_last_target: is_ok implies last_target /= Void

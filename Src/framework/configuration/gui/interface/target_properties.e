@@ -31,16 +31,23 @@ feature {NONE} -- Implementation
 		do
 				-- Does `current_target' extend something?
 			properties.add_section ("Information")
+
+				-- FIXME: for now, it is readonly information
+				--        it requires manual editing of the file to change!
+
 				-- Name.
 			create l_string_prop.make (conf_interface_names.target_name_name)
 			l_string_prop.set_description (conf_interface_names.target_name_description)
 			l_string_prop.set_value (current_target.name)
+			l_string_prop.enable_readonly
 			properties.add_property (l_string_prop)
 
-				-- Name.
+				-- Location.
 			create l_file_prop.make (conf_interface_names.target_location_name, current_target)
 			l_string_prop.set_description (conf_interface_names.target_location_description)
 			l_file_prop.set_value (current_target.system.file_name)
+			l_file_prop.disable_text_editing
+			l_file_prop.enable_readonly
 			properties.add_property (l_file_prop)
 
 			properties.current_section.expand

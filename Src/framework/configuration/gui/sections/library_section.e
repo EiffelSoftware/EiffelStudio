@@ -58,7 +58,7 @@ feature -- Basic operations
 				l_lib_conf.raise
 			else
 				create l_load.make (configuration_window.conf_factory)
-				l_load.retrieve_configuration (l_config)
+				l_load.retrieve_and_check_configuration (l_config)
 				if l_load.is_error then
 					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (l_load.last_error.text, configuration_window, Void)
 				elseif not attached l_load.last_system as system or else not attached l_load.last_system.library_target then

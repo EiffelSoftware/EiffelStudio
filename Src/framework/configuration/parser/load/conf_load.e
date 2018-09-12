@@ -73,9 +73,10 @@ feature -- Status
 
 feature -- Error changes
 
-	report_error (e: CONF_ERROR)
+	report_error (e: detachable CONF_ERROR)
 		require
 			has_no_error: not is_error and last_error = Void
+			e_attached: e /= Void
 		do
 			is_error := True
 			last_error := e

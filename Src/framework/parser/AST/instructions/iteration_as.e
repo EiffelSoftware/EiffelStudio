@@ -169,7 +169,7 @@ feature -- AST used during code generation
 			-- (Generated automatically to allow for subsequent checks in inherited code
 			-- that refers to the original class and routine IDs.)
 
-	item: EXPR_AS
+	item: detachable EXPR_AS
 			-- Access to an item for a restricted form of a loop.
 			-- See `is_restricted`.
 			-- (Generated automatically to allow for subsequent checks in inherited code

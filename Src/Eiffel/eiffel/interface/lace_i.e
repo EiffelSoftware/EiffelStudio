@@ -578,6 +578,7 @@ feature {NONE} -- Implementation
 			vd68: VD68
 			vd69: VD69
 			vd70: VD70
+			l_parent_target_checker: CONF_PARENT_TARGET_CHECKER
 		do
 				-- get new target
 			if target_name /= Void then
@@ -600,6 +601,11 @@ feature {NONE} -- Implementation
 				Error_handler.insert_error (vd68)
 				Error_handler.raise_error
 			end
+
+				-- Resolve remote parent target (i.e from another ecf file).
+				-- raise error if issue is found.
+			create l_parent_target_checker.make_with_observer (create {CONF_COMP_FACTORY}, Current)
+			l_parent_target_checker.check_target (l_new_target)
 
 				-- Update found target with `settings'.
 			if attached settings as s then
@@ -824,20 +830,28 @@ feature {NONE} -- Implementation
 	report_error (e: CONF_ERROR)
 			-- <Precursor>
 		do
-			if system.compiler_profile.is_capability_warning then
-				error_handler.insert_warning (create {VD01}.make (e))
+			if attached {CONF_ERROR_CAPABILITY} e as l_cap_error then
+				if system.compiler_profile.is_capability_warning then
+					error_handler.insert_warning (create {VD01}.make (l_cap_error))
+				else
+					error_handler.insert_error (create {VD01}.make (l_cap_error))
+				end
 			else
-				error_handler.insert_error (create {VD01}.make (e))
+				error_handler.insert_error (create {VD00}.make (e))
 			end
 		end
 
 	report_warning (e: CONF_ERROR)
 			-- <Precursor>
 		do
-			if system.compiler_profile.is_capability_error then
-				error_handler.insert_error (create {VD01}.make (e))
+			if attached {CONF_ERROR_CAPABILITY} e as l_cap_error then
+				if system.compiler_profile.is_capability_error then
+					error_handler.insert_error (create {VD01}.make (l_cap_error))
+				else
+					error_handler.insert_warning (create {VD01}.make (l_cap_error))
+				end
 			else
-				error_handler.insert_warning (create {VD01}.make (e))
+				error_handler.insert_warning (create {VD00}.make (e))
 			end
 		end
 

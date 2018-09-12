@@ -1,29 +1,17 @@
-﻿note
-	description: "Observer of configuration errors."
-	instruction: "[
-			A descendant provides implementations of `report_error` and `report_warning` to be called.
-			Any detected configuration errors and warnings are reported by calling these features.
-		]"
-
-deferred class CONF_ERROR_OBSERVER
-
-feature -- Access
-
-	report_error (e: CONF_ERROR)
-			-- Report an error `e'.
-		deferred
-		end
-
-	report_warning (e: CONF_ERROR)
-			-- Report a warning `e'.
-		deferred
-		end
-
 note
+	description: "Summary description for {CONF_ERROR_CAPABILITY}."
 	date: "$Date$"
 	revision: "$Revision$"
+
+deferred class
+	CONF_ERROR_CAPABILITY
+
+inherit
+	CONF_ERROR
+
+note
 	copyright: "Copyright (c) 1984-2018, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

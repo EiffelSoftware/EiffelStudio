@@ -18,15 +18,15 @@ create
 
 feature {NONE} -- Creation
 
-	make (e: CONF_ERROR)
-			-- Associate error object with confoguration error `e'.
+	make (e: CONF_ERROR_CAPABILITY)
+			-- Associate error object with configuration error `e'.
 		do
 			error := e
 		end
 
 feature -- Properties
 
-	error: CONF_ERROR
+	error: CONF_ERROR_CAPABILITY
 			-- Error from configuration system.
 
 feature -- Output
@@ -38,7 +38,7 @@ feature -- Output
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1168,9 +1168,7 @@ feature {REMOTE_TARGET_SECTION, TARGET_SECTION, SYSTEM_SECTION} -- Target creati
 			across
 				child_targets_of (a_target) as ic
 			loop
-				if not is_remote_target (ic.item) then
-					add_target_sections (ic.item, l_parent)
-				end
+				add_target_sections (ic.item, l_parent)
 			end
 		end
 

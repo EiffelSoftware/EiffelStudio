@@ -204,12 +204,10 @@ feature -- Report
 							l_solved_type_a := l_type_a_generator.evaluate_type (l_type_as, cl)
 							l_solved_type_a := l_type_a_checker.solved (l_solved_type_a, l_type_as)
 						else
-							l_solved_type_a := Void
+							l_solved_type_a := eiffel_project.workbench.system.any_type
 						end
 						l_name_id := l_loc.id
-						create li -- .make (l_name_id)
-						li.set_position (i)
-						li.set_type (l_solved_type_a)
+						create li.make (l_solved_type_a, i)
 						l_local_table_resolved.put (li, l_name_id)
 						l_locals.forth
 						i := i + 1
@@ -235,16 +233,11 @@ feature -- Report
 							elseif attached l_ot_loc.expression as e then
 								l_solved_type_a := l_dbg_type_checker.type_a_from_expr_as (e)
 							else
-								l_solved_type_a := Void
+								l_solved_type_a := eiffel_project.workbench.system.any_type
 							end
 							l_id := l_ot_loc.name_id
-							create li --.make (l_id.name_id)
-							li.set_position (l_ast_context.next_object_test_local_position)
-							li.set_type (l_solved_type_a)
---							li.set_is_used (True)
-
+							create li.make (l_solved_type_a, l_ast_context.next_object_test_local_position)
 							l_object_test_locals_resolved.force ([l_id, li])
-
 							l_ast_context.add_object_test_local (li, l_id)
 							l_ast_context.add_object_test_expression_scope (l_id)
 						else
@@ -338,7 +331,7 @@ feature {NONE} -- Implementation
 ;note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

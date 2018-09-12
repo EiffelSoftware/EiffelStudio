@@ -56,9 +56,7 @@ feature -- Basic operations
 			l_local: LOCAL_INFO
 			l_id: INTEGER
 		do
-			create l_local
-			l_local.set_position (context.locals.count + 1)
-			l_local.set_type (a_type)
+			create l_local.make (a_type, context.locals.count + 1)
 			l_id := names_heap.id_of (a_id.string)
 			if l_id = 0 then
 				names_heap.put (a_id.string)

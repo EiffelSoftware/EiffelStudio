@@ -2908,33 +2908,8 @@ feature {NONE} -- Visitor
 				not_formal: not l_type.is_formal
 			end
 			l_class_id := l_type.base_class.class_id
-			l_local_info := context.object_test_local (l_as.feature_name.name_id)
-			if l_local_info /= Void then
-				last_access_writable := False
-				l_local_info.set_is_used (True)
-				is_controlled := l_local_info.is_controlled
-				l_type := l_local_info.type
-				l_type := l_type.instantiation_in (last_type.as_implicitly_detachable.as_variant_free, last_type.base_class.class_id)
-				if not is_inherited then
-					l_as.enable_object_test_local
-					l_as.set_class_id (class_id_of (l_type))
-				end
-				if is_byte_node_enabled then
-					create {OBJECT_TEST_LOCAL_B} last_byte_node.make (l_local_info.position, current_feature.body_index, l_type)
-				end
-				if attached l_as.parameters as p then
-					create l_vuar1
-					context.init_error (l_vuar1)
-					l_vuar1.set_local_name (l_as.feature_name.name)
-					l_vuar1.set_location (l_as.feature_name)
-					look_for_parenthesis_alias (l_as.internal_parameters, l_vuar1, l_type)
-					if attached last_type as t then
-							-- Record type of the object test local.
-						set_type (l_type, l_as.feature_name)
-						l_type := t
-					end
-				end
-				set_type (l_type, l_as)
+			if attached context.object_test_local (l_as.feature_name.name_id) as i then
+				process_object_test_local (i, l_as)
 			else
 				if is_inherited then
 					l_feature := l_type.base_class.feature_of_rout_id (l_as.routine_ids.first)
@@ -2972,6 +2947,7 @@ feature {NONE} -- Visitor
 			l_type: TYPE_A
 			l_context_current_class: CLASS_C
 			l_error_level: NATURAL_32
+			is_type_set: BOOLEAN
 		do
 			l_context_current_class := context.current_class
 			l_needs_byte_node := is_byte_node_enabled
@@ -3020,7 +2996,7 @@ feature {NONE} -- Visitor
 				end
 				if l_local_info /= Void then
 						-- Local found
-					l_local_info.set_is_used (True)
+					l_local_info.enable_is_used
 					last_access_writable := True
 					l_has_vuar_error := l_as.parameters /= Void
 					l_type := l_local_info.type
@@ -3070,54 +3046,30 @@ feature {NONE} -- Visitor
 						l_as.enable_local
 						l_as.set_class_id (class_id_of (l_type))
 					end
+				elseif attached context.object_test_local (l_as.feature_name.name_id) as i then
+					process_object_test_local (i, l_as)
+					is_type_set := True
 				else
-					l_local_info := context.object_test_local (l_as.feature_name.name_id)
-					if l_local_info /= Void then
-						is_controlled := l_local_info.is_controlled
-						l_local_info.set_is_used (True)
-						last_access_writable := False
-						l_has_vuar_error := l_as.parameters /= Void
-						is_controlled := l_local_info.is_controlled
-						l_type := l_local_info.type
-						if l_type /= Void then
-							l_type := l_type.instantiation_in (last_type.as_implicitly_detachable.as_variant_free, l_last_id)
-						else
-							check has_local_info_type: False end
-						end
-						if l_needs_byte_node then
-							create {OBJECT_TEST_LOCAL_B} l_local.make (l_local_info.position, l_feature.body_index, l_type)
-							last_byte_node := l_local
-						end
-						if not is_inherited then
-							l_as.enable_object_test_local
-							if l_type /= Void then
-								l_as.set_class_id (class_id_of (l_type))
-							else
-								l_as.set_class_id (-1)
-							end
-						end
-					else
-							-- Look for a feature
-						l_feature := Void
-						if is_inherited then
-							check system.class_of_id (l_last_id) = last_type.base_class end
-							l_feature := system.class_of_id (l_last_id).feature_of_rout_id (l_as.routine_ids.first)
-						end
+						-- Look for a feature
+					l_feature := Void
+					if is_inherited then
+						check system.class_of_id (l_last_id) = last_type.base_class end
+						l_feature := system.class_of_id (l_last_id).feature_of_rout_id (l_as.routine_ids.first)
+					end
 
-						l_error_level := error_level
-						process_call (last_type, Void, l_as.feature_name, l_feature, l_as.parameters, False, False, False, False, True)
-						l_type := last_type
-						if error_level = l_error_level and not is_inherited then
-								-- set some type attributes of the node
-							l_as.set_class_id (l_last_id)
-							set_routine_ids (last_routine_id_set, l_as)
-						end
-						if attached {VUAR1} last_vuar_error as e and then attached last_type as t then
-								-- Feature without arguments is found, try parenthesis alias on it.
-							l_vuar1 := e
-							l_type := t
-							l_has_vuar_error := True
-						end
+					l_error_level := error_level
+					process_call (last_type, Void, l_as.feature_name, l_feature, l_as.parameters, False, False, False, False, True)
+					l_type := last_type
+					if error_level = l_error_level and not is_inherited then
+							-- set some type attributes of the node
+						l_as.set_class_id (l_last_id)
+						set_routine_ids (last_routine_id_set, l_as)
+					end
+					if attached {VUAR1} last_vuar_error as e and then attached last_type as t then
+							-- Feature without arguments is found, try parenthesis alias on it.
+						l_vuar1 := e
+						l_type := t
+						l_has_vuar_error := True
 					end
 				end
 			end
@@ -3138,7 +3090,56 @@ feature {NONE} -- Visitor
 					-- Record type of the call as a whole.
 				l_type := last_type
 			end
-			set_type (l_type, l_as)
+			if not is_type_set then
+				set_type (l_type, l_as)
+			end
+		end
+
+	process_object_test_local (l_local_info: LOCAL_INFO; l_as: ACCESS_INV_AS)
+			-- Process object test local identified by `i` in access node `a`
+			-- including an optional call to a parenthesis alias and set `last_type` accordingly.
+		local
+			l_type: TYPE_A
+			l_vuar1: VUAR1
+			old_is_inherited: BOOLEAN
+		do
+			if l_local_info.is_cursor then
+					-- Process access to the feature `item` on the cursor variable.
+					-- Disable expansion of the variable name in recursive calls.
+				l_local_info.disable_is_cursor
+					-- Process associated expression instead of the variable using routine ID computed earlier to handle renaming properly.
+				old_is_inherited := is_inherited
+				is_inherited := old_is_inherited
+				l_local_info.expression.process (Current)
+				is_inherited := old_is_inherited
+					-- Restore status of the variable meaning.
+				l_local_info.enable_is_cursor
+			else
+				l_local_info.enable_is_used
+				last_access_writable := False
+				is_controlled := l_local_info.is_controlled
+				l_type := l_local_info.type.instantiation_in (last_type.as_implicitly_detachable.as_variant_free, last_type.base_class.class_id)
+				if not is_inherited then
+					l_as.enable_object_test_local
+					l_as.set_class_id (class_id_of (l_type))
+				end
+				if is_byte_node_enabled then
+					create {OBJECT_TEST_LOCAL_B} last_byte_node.make (l_local_info.position, current_feature.body_index, l_type)
+				end
+				if attached l_as.parameters as p then
+					create l_vuar1
+					context.init_error (l_vuar1)
+					l_vuar1.set_local_name (l_as.feature_name.name)
+					l_vuar1.set_location (l_as.feature_name)
+					look_for_parenthesis_alias (l_as.internal_parameters, l_vuar1, l_type)
+					if attached last_type as t then
+							-- Record type of the object test local.
+						set_type (l_type, l_as.feature_name)
+						l_type := t
+					end
+				end
+				set_type (l_type, l_as)
+			end
 		end
 
 	process_access_assert_as (l_as: ACCESS_ASSERT_AS)
@@ -3152,8 +3153,6 @@ feature {NONE} -- Visitor
 			l_veen2b: VEEN2B
 			l_last_id: INTEGER
 			l_error_level: NATURAL_32
-			l_type: like last_type
-			l_local: LOCAL_B
 		do
 			-- No need for `last_type.actual_type' as here `last_type' is equal to
 			-- `context.current_class_type' since we start a feature call.
@@ -3218,59 +3217,27 @@ feature {NONE} -- Visitor
 					l_veen2b.set_identifier (l_as.feature_name.name)
 					l_veen2b.set_location (l_as.feature_name)
 					error_handler.insert_error (l_veen2b)
+				elseif attached context.object_test_local (l_as.feature_name.name_id) as i then
+					process_object_test_local (i, l_as)
 				else
-					l_local_info := context.object_test_local (l_as.feature_name.name_id)
-					if l_local_info /= Void then
-						l_local_info.set_is_used (True)
-						last_access_writable := False
-						is_controlled := l_local_info.is_controlled
-						l_type := l_local_info.type
-						if l_type /= Void then
-							l_type := l_type.instantiation_in (last_type.as_implicitly_detachable.as_variant_free, l_last_id)
-						else
-							check has_local_info_type: False end
-						end
-						if is_byte_node_enabled then
-							create {OBJECT_TEST_LOCAL_B} l_local.make (l_local_info.position, l_feature.body_index, l_type)
-							last_byte_node := l_local
-						end
-						if not is_inherited then
-							l_as.enable_object_test_local
-							l_as.set_class_id (class_id_of (l_type))
-						end
-						if attached l_as.parameters as p then
-							create l_vuar1
-							context.init_error (l_vuar1)
-							l_vuar1.set_local_name (l_as.feature_name.name)
-							l_vuar1.set_location (l_as.feature_name)
-							look_for_parenthesis_alias (l_as.internal_parameters, l_vuar1, l_type)
-							if attached last_type as t then
-									-- Set type for the object-test local.
-								set_type (l_type, l_as.feature_name)
-								l_type := t
-							end
-						end
-						set_type (l_type, l_as)
-					else
-							-- Look for a feature
-						l_feature := Void
-						if is_inherited then
-							l_feature := system.class_of_id (l_last_id).feature_of_rout_id (l_as.routine_ids.first)
-						end
-						process_call (last_type, Void, l_as.feature_name, l_feature, l_as.parameters, False, False, False, False, True)
-						if error_level = l_error_level and not is_inherited then
-								-- Record routine and class IDs for descendants and tools.
-							set_routine_ids (last_routine_id_set, l_as)
-							l_as.set_class_id (l_last_id)
-						end
-						if attached last_vuar_error as e and then attached last_type as t then
-								-- Feature without arguments is found, try parenthesis alias on it.
-							look_for_parenthesis_alias (l_as.internal_parameters, e, t)
-						end
-						if attached last_type as t then
-								-- Set type for the feature call.
-							set_type (t, l_as)
-						end
+						-- Look for a feature
+					l_feature := Void
+					if is_inherited then
+						l_feature := system.class_of_id (l_last_id).feature_of_rout_id (l_as.routine_ids.first)
+					end
+					process_call (last_type, Void, l_as.feature_name, l_feature, l_as.parameters, False, False, False, False, True)
+					if error_level = l_error_level and not is_inherited then
+							-- Record routine and class IDs for descendants and tools.
+						set_routine_ids (last_routine_id_set, l_as)
+						l_as.set_class_id (l_last_id)
+					end
+					if attached last_vuar_error as e and then attached last_type as t then
+							-- Feature without arguments is found, try parenthesis alias on it.
+						look_for_parenthesis_alias (l_as.internal_parameters, e, t)
+					end
+					if attached last_type as t then
+							-- Set type for the feature call.
+						set_type (t, l_as)
 					end
 				end
 			end
@@ -4281,7 +4248,7 @@ feature {NONE} -- Visitor
 				end
 				if l_local_info /= Void then
 						-- Local found
-					l_local_info.set_is_used (True)
+					l_local_info.enable_is_used
 					l_type := l_local_info.type
 					if attached {LOCAL_TYPE_A} l_type as t and then attached t.minimum as m then
 							-- Use type approximation.
@@ -4318,27 +4285,18 @@ feature {NONE} -- Visitor
 				else
 					l_local_info := context.object_test_local (l_as.feature_name.internal_name.name_id)
 					if l_local_info /= Void then
-						l_local_info.set_is_used (True)
+						l_local_info.enable_is_used
 						last_access_writable := False
 						is_controlled := l_local_info.is_controlled
-						l_type := l_local_info.type
-						if l_type /= Void then
-							l_type := l_type.instantiation_in (last_type.as_implicitly_detachable.as_variant_free, l_last_id)
-						else
-							check has_local_info_type: False end
-						end
-						if l_type /= Void then
-							create l_typed_pointer.make_typed (l_type)
-						else
-							l_typed_pointer := Void
-						end
+						l_type := l_local_info.type.instantiation_in (last_type.as_implicitly_detachable.as_variant_free, l_last_id)
+						create l_typed_pointer.make_typed (l_type)
 						set_type (l_typed_pointer, l_as)
+						if not is_inherited then
+							l_as.enable_object_test_local
+						end
 						if l_needs_byte_node then
 							create {OBJECT_TEST_LOCAL_B} l_local.make (l_local_info.position, l_feature.body_index, l_type)
 							create {HECTOR_B} last_byte_node.make_with_type (l_local, l_typed_pointer)
-						end
-						if not is_inherited then
-							l_as.enable_object_test_local
 						end
 					else
 						if is_inherited then
@@ -5680,16 +5638,10 @@ feature {NONE} -- Visitor
 						local_info := context.unchecked_object_test_local (local_id)
 					end
 					if local_info = Void and then (local_id /= Void or else l_needs_byte_node) then
-						create local_info
+						create local_info.make (local_type, context.next_object_test_local_position)
 						local_info.set_is_controlled (is_controlled)
-						local_info.set_type (local_type)
-						local_info.set_position (context.next_object_test_local_position)
-						if local_id /= Void then
-							context.add_object_test_local (local_info, local_id)
-						else
-							context.add_object_test_local (local_info, create {ID_AS}.initialize ("dummy_" + context.hidden_local_counter.next.out))
-						end
-						local_info.set_is_used (True)
+						local_info.enable_is_used
+						context.add_object_test_local (local_info, if attached local_id then local_id else create {ID_AS}.initialize ("dummy_" + context.hidden_local_counter.next.out) end)
 					end
 
 					if l_needs_byte_node then
@@ -7270,7 +7222,7 @@ feature {NONE} -- Visitor
 			end
 			if local_info = Void then
 					-- There was an error or there is no iteration part, so we do not care which local info to modify.
-				create local_info
+				create local_info.make (none_type, 0)
 			end
 			if l_as.from_part /= Void then
 					-- Type check the from part
@@ -7283,8 +7235,11 @@ feature {NONE} -- Visitor
 			end
 
 			if attached i and then attached iteration_cursor_type then
-					-- Avoid processing iteration exit condition when iteration part has errors.
-					-- Check iteration exit condition assuming the cursor is of ITERATION_CURSOR type.
+					-- Avoid processing iteration exit condition and item access when iteration part has errors.
+					-- Check iteration exit condition and item access assuming the cursor is of ITERATION_CURSOR type.
+				if attached local_info.expression then
+					local_info.disable_is_cursor
+				end
 				if is_inherited then
 						-- Rely on routine ID computed earlier.
 					i.exit_condition.process (Current)
@@ -7293,6 +7248,9 @@ feature {NONE} -- Visitor
 					local_info.set_type (iteration_cursor_type)
 					is_byte_node_enabled := False
 					i.exit_condition.process (Current)
+					if attached last_type and then attached i.item as access then
+						access.process (Current)
+					end
 					is_byte_node_enabled := l_needs_byte_node
 					local_info.set_type (local_type)
 						-- If everything is OK, recompute the code using actual local type.
@@ -7301,6 +7259,9 @@ feature {NONE} -- Visitor
 						i.exit_condition.process (Current)
 						is_inherited := False
 					end
+				end
+				if attached local_info.expression then
+					local_info.enable_is_cursor
 				end
 				if last_type /= Void then
 						-- Check if it is a boolean expression.
@@ -7411,6 +7372,9 @@ feature {NONE} -- Visitor
 				if attached iteration_cursor_type then
 						-- Generate cursor movement assuming the cursor is of ITERATION_CURSOR type.
 					e := error_level
+					if attached local_info.expression then
+						local_info.disable_is_cursor
+					end
 					if is_inherited then
 							-- Rely on routine ID computed earlier.
 						i.advance.process (Current)
@@ -7427,6 +7391,9 @@ feature {NONE} -- Visitor
 							i.advance.process (Current)
 							is_inherited := False
 						end
+					end
+					if attached local_info.expression then
+						local_info.enable_is_cursor
 					end
 					if error_level = e and then l_needs_byte_node then
 						create l_list.make (1)
@@ -7503,7 +7470,7 @@ feature {NONE} -- Visitor
 				local_type := local_info.type
 			else
 					-- There was an error, so we do not care where to set the type.
-				create local_info
+				create local_info.make (none_type, 0)
 					-- Skip code generation for next parts.
 				iteration_code := Void
 			end
@@ -7538,6 +7505,9 @@ feature {NONE} -- Visitor
 
 				-- Avoid processing iteration exit condition when iteration part has errors.
 			if attached iteration_cursor_type then
+				if attached local_info.expression then
+					local_info.disable_is_cursor
+				end
 				if is_inherited then
 						-- Rely on routine ID computed earlier.
 					iteration_as.exit_condition.process (Current)
@@ -7555,6 +7525,9 @@ feature {NONE} -- Visitor
 						iteration_as.exit_condition.process (Current)
 						is_inherited := False
 					end
+				end
+				if attached local_info.expression then
+					local_info.enable_is_cursor
 				end
 				if last_type = Void then
 						-- Skip code generation for next parts.
@@ -7650,6 +7623,9 @@ feature {NONE} -- Visitor
 				-- Avoid processing iteration advancement when iteration part has errors.
 			if attached iteration_cursor_type then
 					-- Generate cursor movement assuming the cursor is of ITERATION_CURSOR type.
+				if attached local_info.expression then
+					local_info.disable_is_cursor
+				end
 				if is_inherited then
 						-- Rely on routine ID computed earlier.
 					iteration_as.advance.process (Current)
@@ -7666,6 +7642,9 @@ feature {NONE} -- Visitor
 						iteration_as.advance.process (Current)
 						is_inherited := False
 					end
+				end
+				if attached local_info.expression then
+					local_info.enable_is_cursor
 				end
 				if attached last_byte_node as advance_part then
 					advance_code := advance_part
@@ -7824,12 +7803,13 @@ feature {NONE} -- Visitor
 							-- Avoid generating new object test local record when processing loop body multiple times.
 						local_info := context.unchecked_object_test_local (local_id)
 						if local_info = Void then
-							create local_info
-							local_info.set_type (local_type)
-							local_info.set_position (context.next_object_test_local_position)
+							create local_info.make (local_type, context.next_object_test_local_position)
 							context.add_object_test_local (local_info, local_id)
-							local_info.set_is_used (True)
+							local_info.enable_is_used
 							local_info.set_is_controlled (is_controlled)
+							if attached l_as.item as cursor then
+								local_info.set_cursor (cursor)
+							end
 						end
 							-- Generate cursor creation code.
 						if is_byte_node_enabled and then attached {EXPR_B} last_byte_node as e then
@@ -7865,7 +7845,13 @@ feature {NONE} -- Visitor
 						if attached c.feature_of_name_id (names_heap.start_name_id) then
 								-- Process AST tree that initializes the iteration.
 							local_info.set_type (iteration_cursor_type)
+							if attached local_info.expression then
+								local_info.disable_is_cursor
+							end
 							l_as.initialization.process (Current)
+							if attached local_info.expression then
+								local_info.enable_is_cursor
+							end
 							local_info.set_type (local_type)
 							if attached initialization_code and then attached {INSTR_B} last_byte_node as b then
 								initialization_code.extend (b)
@@ -7961,13 +7947,11 @@ feature {NONE} -- Visitor
 					-- A name clash with object test locals, iteration cursors and separate instruction arguments will be reported when checking for their scopes.
 				local_info := context.unchecked_object_test_local (local_id)
 				if not attached local_info then
-					create local_info
-					local_info.set_type (local_type)
-					local_info.set_position (context.next_object_test_local_position)
-					context.add_object_test_local (local_info, local_id)
-					local_info.set_is_used (True)
+					create local_info.make (local_type, context.next_object_test_local_position)
+					local_info.enable_is_used
 						-- Mark this variable as controlled.
-					local_info.set_is_controlled (True)
+					local_info.enable_is_controlled
+					context.add_object_test_local (local_info, local_id)
 				end
 				if attached argument_code and then attached {EXPR_B} last_byte_node as b then
 					create assign_b
@@ -11147,6 +11131,7 @@ feature {NONE} -- Implementation: checking locals
 			l_local_name: STRING
 			i: INTEGER
 			l_local_info: LOCAL_INFO
+			local_type: TYPE_A
 			l_context_locals: HASH_TABLE [LOCAL_INFO, INTEGER]
 			l_vrle1: VRLE1
 			l_vrle2: VRLE2
@@ -11223,11 +11208,9 @@ feature {NONE} -- Implementation: checking locals
 
 								-- Build the local table in the context
 							i := i + 1
-							create l_local_info
 								-- Check an expanded local type
-
 							if attached l_missing_type then
-								l_local_info.set_type (create {LOCAL_TYPE_A}.make (i, system.detachable_separate_any_type, context.current_class))
+								local_type := create {LOCAL_TYPE_A}.make (i, system.detachable_separate_any_type, context.current_class)
 									-- Record an error for this local.
 								l_untyped_local := untyped_local
 								if not attached l_untyped_local then
@@ -11236,9 +11219,9 @@ feature {NONE} -- Implementation: checking locals
 								end
 								l_untyped_local.force (l_missing_type, i)
 							else
-								l_local_info.set_type (l_solved_type)
+								local_type := l_solved_type
 							end
-							l_local_info.set_position (i)
+							create l_local_info.make (local_type, i)
 							if l_context_locals.has (l_local_name_id) then
 									-- Error: two locals with the same name
 								create l_vreg

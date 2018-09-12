@@ -36,7 +36,6 @@ feature {NONE} -- Initialization
 				as_keyword_index := b.index
 			end
 			identifier := i
-			is_restricted := r
 				-- Build initialization code in the form
 				--    `identifier'.start
 			create {INSTR_CALL_AS} initialization.initialize (
@@ -61,14 +60,22 @@ feature {NONE} -- Initialization
 					create_access_feat_as ("forth", i),
 					Void
 			))
+			if r then
+					-- Build advance code in the form
+					--    `identifier'.item
+				create {EXPR_CALL_AS} item.initialize (
+					create {NESTED_AS}.initialize (
+						create {ACCESS_ID_AS}.initialize (i, Void),
+						create_access_feat_as ("item", i),
+						Void
+				))
+			end
 		ensure
 			across_keyword_set: a /= Void implies across_keyword_index = a.index
 			expression_set: expression = e
 			as_keyword_set: b /= Void implies as_keyword_index = b.index
 			identifier_set: identifier = i
 		end
-
-feature {NONE} -- Initialization
 
 	create_access_feat_as (n: STRING; i: like identifier): ACCESS_FEAT_AS
 			-- Create a new node for a feature call of name `n'
@@ -141,21 +148,30 @@ feature -- Attributes
 	is_restricted: BOOLEAN
 			-- Does the iteration use a restricted form for an iteration variable?
 			-- (I.e. the iteration uses "is" instead of "as".)
+		do
+			Result := attached item
+		end
 
 feature -- AST used during code generation
 
 	initialization: INSTRUCTION_AS
-			-- Instruction to initialize iteration
+			-- Instruction to initialize iteration.
 			-- (Generated automatically to allow for subsequent checks in inherited code
 			-- that refers to the original class and routine IDs.)
 
 	exit_condition: EXPR_AS
-			-- Exit condition for the iteration part only
+			-- Exit condition for the iteration part only.
 			-- (Generated automatically to allow for subsequent checks in inherited code
 			-- that refers to the original class and routine IDs.)
 
 	advance: INSTRUCTION_AS
-			-- Instruction to advance the loop
+			-- Instruction to advance the loop.
+			-- (Generated automatically to allow for subsequent checks in inherited code
+			-- that refers to the original class and routine IDs.)
+
+	item: EXPR_AS
+			-- Access to an item for a restricted form of a loop.
+			-- See `is_restricted`.
 			-- (Generated automatically to allow for subsequent checks in inherited code
 			-- that refers to the original class and routine IDs.)
 
@@ -192,8 +208,10 @@ invariant
 	initialization_attached: initialization /= Void
 	exit_condition_attached: exit_condition /= Void
 	advance_attached: advance /= Void
+	item_attached_if_restricted: attached item = is_restricted
 
 note
+	ca_ignore: "CA011", "CA011: too many arguments"
 	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

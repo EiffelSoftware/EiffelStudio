@@ -77,6 +77,11 @@ inherit
 			{NONE} all
 		end
 
+	EB_SHARED_GRAPHICAL_COMMANDS
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -161,7 +166,7 @@ feature -- Settings
 			l_dialog: EB_EXTERNAL_OUTPUT_DIALOG
 		do
 			create l_prc_factory
-			
+
 				-- Launch the iron command in `eiffel_layout.bin_path' (i.e $ISE_EIFFEL/studio/soec/$ISE_PLATFORM/bin)
 				-- to have access to the required DLLs on Windows (libcurl,...).
 			l_prc_launcher := l_prc_factory.process_launcher (a_iron_cmd.name, a_arguments, eiffel_layout.bin_path.name)
@@ -356,20 +361,20 @@ feature {NONE} -- Error reporting
 			-- Report an error when retrieving a project which is corrupted and possibly
 			-- propose user to recompile from scratch.
 		do
-			report_loading_error (a_msg)
+			report_loading_error_with_clean_compilation_option (a_msg)
 		end
 
 	report_project_retrieval_interrupted (a_msg: READABLE_STRING_GENERAL)
 			-- Report an error when project retrieval was stopped.
 		do
-			report_loading_error (a_msg)
+			report_loading_error_with_clean_compilation_option (a_msg)
 		end
 
 	report_project_incomplete (a_msg: READABLE_STRING_GENERAL)
 			-- Report an error when project is incomplete and possibly propose
 			-- user to recompile from scratch.
 		do
-			report_loading_error (a_msg)
+			report_loading_error_with_clean_compilation_option (a_msg)
 		end
 
 	report_project_loaded_successfully
@@ -422,6 +427,23 @@ feature {NONE} -- Error reporting
 			-- <Precursor>
 		do
 			report_loading_error (warning_messages.w_iron_packages_installation_error)
+		end
+
+	report_loading_error_with_clean_compilation_option (a_msg: READABLE_STRING_GENERAL)
+			-- Report an error when project is incomplete and possibly propose
+			-- user to recompile from scratch.
+		require
+			a_msg_attached: a_msg /= Void
+			not_a_msg_is_empty: not a_msg.is_empty
+		local
+			l_error: ES_ERROR_PROMPT
+		do
+			create l_error.make_ok_retry (a_msg)
+			l_error.set_button_text (l_error.dialog_buttons.retry_button, interface_names.b_clean_compile)
+			l_error.set_button_action (l_error.dialog_buttons.retry_button, agent clean_compile_project_cmd.execute)
+			l_error.set_sub_title (interface_names.t_configuration_loading_error)
+			l_error.show (parent_window)
+			set_has_error
 		end
 
 	report_loading_error (a_msg: READABLE_STRING_GENERAL)
@@ -692,7 +714,7 @@ invariant
 	parent_window_not_destroyed: not parent_window.is_destroyed
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

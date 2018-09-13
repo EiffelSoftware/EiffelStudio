@@ -125,6 +125,7 @@ feature -- Button texts
 	b_Total_time: STRING_32						do Result := locale.translation("Total Time")	end
 	b_Up_text: STRING_32 						do Result := locale.translation("Up")	end
 	b_Update: STRING_32 							do Result := locale.translation("Update")	end
+	b_Clean_compile: STRING_32					do Result := locale.translation("Compile from scratch")	end
 	b_Compile: STRING_32							do Result := locale.translation("Compile")	end
 	b_Launch: STRING_32							do Result := locale.translation("Start")	end
 	b_Restart: STRING_32							do Result := locale.translation("Restart") end
@@ -647,6 +648,12 @@ feature -- Accelerator, focus label and menu name
 	m_lock_docking_editor: STRING_32		do Result := locale.translation ("Lock the Editors") end
 	f_match_case_question: STRING_32		do Result := locale.translation("Match case?")	end
 	f_Melt: STRING_32					do Result := locale.translation("Compile current project")	end
+	h_clean_compile: STRING_32
+		do
+			Result := locale.translation("Compile from scratch is not needed in ordinary work with EiffelStudio, and is only useful to enable EiffelStudio to recover from an internal error.%NCompile from scratch erases all compiler-generated information about your project.%NDo you wish to continue?")
+		end
+	f_clean_compile: STRING_32					do Result := locale.translation("Compile current project from scratch")	end
+	m_clean_compile: STRING_32		do Result := locale.translation("Compile from scratch")	end
 	m_Melt_new: STRING_32				do Result := locale.translation("&Compile")	end
 	m_New: STRING_32						do Result := locale.translation("&New")	end
 	l_new_name: STRING_32				do Result := locale.translation("New Name:")	end

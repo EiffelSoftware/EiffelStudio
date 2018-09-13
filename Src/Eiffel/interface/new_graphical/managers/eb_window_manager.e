@@ -653,6 +653,7 @@ feature -- Actions on all windows
 			analyze_target_cmd.update_sensitive
 
 			project_cancel_cmd.disable_sensitive
+			clean_compile_project_cmd.enable_sensitive
 			if process_manager.is_c_compilation_running then
 				on_c_compilation_start
 			else
@@ -1168,6 +1169,7 @@ feature -- Events
 			Freeze_project_cmd.enable_sensitive
 			Finalize_project_cmd.enable_sensitive
 			Precompilation_cmd.enable_sensitive
+			clean_compile_project_cmd.enable_sensitive
 			System_cmd.enable_sensitive
 			System_information_cmd.enable_sensitive
 			override_scan_cmd.enable_sensitive
@@ -1208,6 +1210,7 @@ feature -- Events
 				analyze_editor_cmd.update_sensitive
 				analyze_parent_cmd.update_sensitive
 				analyze_target_cmd.update_sensitive
+				clean_compile_project_cmd.enable_sensitive
 				System_cmd.enable_sensitive
 				System_information_cmd.enable_sensitive
 				Export_cmd.enable_sensitive
@@ -1253,6 +1256,7 @@ feature -- Events
 			Freeze_project_cmd.disable_sensitive
 			Finalize_project_cmd.disable_sensitive
 			Precompilation_cmd.disable_sensitive
+			clean_compile_project_cmd.disable_sensitive
 			System_cmd.disable_sensitive
 			System_information_cmd.disable_sensitive
 			Export_cmd.disable_sensitive

@@ -294,6 +294,7 @@ feature {NONE} -- Initialization
 			toolbarable_commands.extend (Finalize_project_cmd)
 			toolbarable_commands.extend (override_scan_cmd)
 			toolbarable_commands.extend (discover_melt_cmd)
+			toolbarable_commands.extend (clean_compile_project_cmd)
 
 			toolbarable_commands.extend (analyze_cmd)
 			toolbarable_commands.extend (analyze_editor_cmd)
@@ -454,7 +455,7 @@ feature {ES_OBJECTS_GRID_MANAGER, EB_CONTEXT_MENU_FACTORY, ES_DEBUGER_TOOLTIP_HA
 	object_storage_management_cmd: ES_DBG_OBJECT_STORAGE_MANAGEMENT_COMMAND
 			-- Command controlling the remove object storage operation
 
-feature {EB_EXEC_FORMAT_CMD, EB_DOCKING_LAYOUT_MANAGER, ES_DBG_TOOLBARABLE_AND_MENUABLE_COMMAND} -- Command
+feature {EB_SHARED_DEBUGGER_MANAGER, EB_EXEC_FORMAT_CMD, EB_DOCKING_LAYOUT_MANAGER, ES_DBG_TOOLBARABLE_AND_MENUABLE_COMMAND} -- Command
 
 	bkpt_info_cmd: EB_STANDARD_CMD
 			-- Command that can display info concerning the breakpoints in the system.

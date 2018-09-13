@@ -903,6 +903,7 @@ feature -- Stone process
 			Freeze_project_cmd.update (window)
 			Finalize_project_cmd.update (window)
 			project_cancel_cmd.update (window)
+			clean_compile_project_cmd.update (window)
 
 				-- Update analyzer commands.
 			analyze_cmd.update (window)
@@ -2553,7 +2554,7 @@ invariant
 	window_id_positive: window_id > 0
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

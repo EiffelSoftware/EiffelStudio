@@ -14,29 +14,62 @@ inherit
 		end
 
 create
-	make
+	make,
+	make_from_string
 
-feature
+feature {NONE} -- Creation
 
-	description: STRING
-
-	make (i: STRING)
+	make (d: like description; c: AST_CONTEXT; l: LOCATION_AS)
+			-- Initialize an error object with the given message `d` describing the issue at position `l` in the context `c`.
 		do
-			description := i
+			description := d
+			c.init_error (Current)
+			set_location (l)
+		ensure
+			description_set: description = d
+			class_c_set: class_c = c.current_class
+			written_class_set: written_class = c.written_class
+			e_feature_unset: not attached c.current_feature implies not attached e_feature
+			e_feature_set: attached c.current_feature as f implies f.e_feature ~ e_feature
+			column_set: column = l.column
+			line_set: line = l.line
 		end
+
+	make_from_string (d: STRING_32; c: AST_CONTEXT; l: LOCATION_AS)
+			-- Initialize an error object with the given plain string message `d` describing the issue at position `l` in the context `c`.
+			-- See also: `make`.
+		do
+			make (agent {TEXT_FORMATTER}.add (d), c, l)
+		ensure
+			class_c_set: class_c = c.current_class
+			written_class_set: written_class = c.written_class
+			e_feature_unset: not attached c.current_feature implies not attached e_feature
+			e_feature_set: attached c.current_feature as f implies f.e_feature ~ e_feature
+			column_set: column = l.column
+			line_set: line = l.line
+		end
+
+feature -- Access
+
+	description: PROCEDURE [TEXT_FORMATTER]
+			-- Message describing the issue.
 
 	code: STRING = "NOT_SUPPORTED"
 			-- Error code.
 
-	build_explain (a_text_formatter: TEXT_FORMATTER)
+feature -- Output
+
+	build_explain (t: TEXT_FORMATTER)
+			-- <Precursor>
 		do
-			a_text_formatter.add ("Error message: ")
-			a_text_formatter.add (description)
-			a_text_formatter.add_new_line
+			format_elements
+				(t,
+				locale.translation_in_context ("Error message: {1}%N", "compiler.error"),
+				<<description>>)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

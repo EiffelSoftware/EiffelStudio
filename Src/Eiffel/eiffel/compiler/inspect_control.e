@@ -51,6 +51,16 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_LOCALE
+		export
+			{NONE} all
+		end
+
+	FORMATTED_MESSAGE
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -173,7 +183,13 @@ feature {STATIC_ACCESS_AS} -- Visitor
 			if attached feature_checker.last_type as l_last_type then
 				if attached {FORMAL_A} l_last_type.actual_type as l_formal then
 					if l_formal.is_multi_constrained (context.current_class) then
-						error_handler.insert_error (create {NOT_SUPPORTED}.make ("Multiple constraints not supported in static access for when clause"))
+						error_handler.insert_error (create {NOT_SUPPORTED}.make
+							(agent format_elements
+								(?,
+								locale.translation_in_context ("Multiple constraints are not supported in static access for {1} clause.", "compiler.error"),
+								<<agent {TEXT_FORMATTER}.process_keyword_text ({TEXT_FORMATTER}.ti_when_keyword, Void)>>),
+							context,
+							l_as.start_location))
 					else
 						class_c := context.current_class.constrained_type (l_formal.position).base_class
 					end
@@ -368,7 +384,7 @@ invariant
 	intervals_not_void: intervals /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

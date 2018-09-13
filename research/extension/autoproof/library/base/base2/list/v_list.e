@@ -4,6 +4,7 @@ note
 		Indexing starts from 1.
 		]"
 	author: "Nadia Polikarpova"
+	revised_by: "Alexander Kogtenkov"
 	model: sequence
 	manual_inv: true
 	false_guards: true
@@ -66,20 +67,20 @@ feature -- Extension
 			-- Insert `v' at the front.
 		require
 			observers_open: across observers as o all o.item.is_open end
-			modify_model ("sequence", Current)
 		deferred
 		ensure
 			sequence_effect: sequence ~ old sequence.prepended (v)
+			modify_model ("sequence", Current)
 		end
 
 	extend_back (v: G)
 			-- Insert `v' at the back.
 		require
 			observers_open: across observers as o all o.item.is_open end
-			modify_model ("sequence", Current)
 		deferred
 		ensure
 			sequence_effect: sequence ~ old (sequence & v)
+			modify_model ("sequence", Current)
 		end
 
 	extend_at (v: G; i: INTEGER)
@@ -87,10 +88,10 @@ feature -- Extension
 		require
 			valid_index: 1 <= i and i <= sequence.count + 1
 			observers_open: across observers as o all o.item.is_open end
-			modify_model ("sequence", Current)
 		deferred
 		ensure
 			sequence_effect: sequence ~ old sequence.extended_at (i, v)
+			modify_model ("sequence", Current)
 		end
 
 	append (input: V_ITERATOR [G])
@@ -103,8 +104,6 @@ feature -- Extension
 			input_target_wrapped: input.target.is_wrapped
 			not_before: not input.before
 			observers_open: across observers as o all o.item.is_open end
-			modify_model ("sequence", Current)
-			modify_model ("index_", input)
 		do
 			from
 			invariant
@@ -124,6 +123,8 @@ feature -- Extension
 		ensure
 			sequence_effect: sequence ~ old (sequence + input.sequence.tail (input.index_))
 			input_index_effect: input.index_ = input.sequence.count + 1
+			modify_model ("sequence", Current)
+			modify_model ("index_", input)
 		end
 
 	prepend (input: V_ITERATOR [G])
@@ -134,13 +135,13 @@ feature -- Extension
 			input_target_wrapped: input.target.is_wrapped
 			not_before: not input.before
 			observers_open: across observers as o all o.item.is_open end
-			modify_model (["sequence", "observers"], Current)
-			modify_model ("index_", input)
 		deferred
 		ensure
 			sequence_effect: sequence ~ old (input.sequence.tail (input.index_) + sequence)
 			input_index_effect: input.index_ = input.sequence.count + 1
 			observers_preserved: observers ~ old observers
+			modify_model (["sequence", "observers"], Current)
+			modify_model ("index_", input)
 		end
 
 	insert_at (input: V_ITERATOR [G]; i: INTEGER)
@@ -152,13 +153,13 @@ feature -- Extension
 			input_target_wrapped: input.target.is_wrapped
 			not_before: not input.before
 			observers_open: across observers as o all o.item.is_open end
-			modify_model (["sequence", "observers"], Current)
-			modify_model ("index_", input)
 		deferred
 		ensure
 			sequence_effect: sequence ~ old (sequence.front (i - 1) + input.sequence.tail (input.index_) + sequence.tail (i))
 			input_index_effect: input.index_ = input.sequence.count + 1
 			observers_preserved: observers ~ old observers
+			modify_model (["sequence", "observers"], Current)
+			modify_model ("index_", input)
 		end
 
 feature -- Removal
@@ -168,10 +169,10 @@ feature -- Removal
 		require
 			not_empty: not is_empty
 			observers_open: across observers as o all o.item.is_open end
-			modify_model ("sequence", Current)
 		deferred
 		ensure
 			sequence_effect: sequence ~ old sequence.but_first
+			modify_model ("sequence", Current)
 		end
 
 	remove_back
@@ -179,10 +180,10 @@ feature -- Removal
 		require
 			not_empty: not is_empty
 			observers_open: across observers as o all o.item.is_open end
-			modify_model ("sequence", Current)
 		deferred
 		ensure
 			sequence_effect: sequence ~ old sequence.but_last
+			modify_model ("sequence", Current)
 		end
 
 	remove_at (i: INTEGER)
@@ -190,10 +191,10 @@ feature -- Removal
 		require
 			has_index: 1 <= i and i <= sequence.count
 			observers_open: across observers as o all o.item.is_open end
-			modify_model ("sequence", Current)
 		deferred
 		ensure
 			sequence_effect: sequence ~ old sequence.removed_at (i)
+			modify_model ("sequence", Current)
 		end
 
 	remove (v: G)
@@ -203,7 +204,6 @@ feature -- Removal
 		require
 			has: sequence.has (v)
 			observers_open: across observers as o all o.item.is_open end
-			modify_model (["sequence", "observers"], Current)
 		local
 			i: V_LIST_ITERATOR [G]
 		do
@@ -218,6 +218,7 @@ feature -- Removal
 					not sequence.old_.front (j.item - 1).has (v) and
 					sequence ~ sequence.old_.removed_at (j.item) end
 			observers_restored: observers ~ old observers
+			modify_model (["sequence", "observers"], Current)
 		end
 
 	remove_all (v: G)
@@ -226,7 +227,6 @@ feature -- Removal
 			status: nonvariant
 		require
 			observers_open: across observers as o all o.item.is_open end
-			modify_model (["sequence", "observers"], Current)
 		local
 			i: V_LIST_ITERATOR [G]
 			n_, j_: INTEGER
@@ -269,16 +269,17 @@ feature -- Removal
 		ensure
 			sequence_effect: sequence ~ removed_all (old sequence, v)
 			observers_restored: observers ~ old observers
+			modify_model (["sequence", "observers"], Current)
 		end
 
 	wipe_out
 			-- Remove all elements.
 		require
 			observers_open: across observers as o all o.item.is_open end
-			modify_model ("sequence", Current)
 		deferred
 		ensure
 			sequence_effect: sequence.is_empty
+			modify_model ("sequence", Current)
 		end
 
 feature {V_LIST, V_LIST_ITERATOR} -- Implementation
@@ -332,7 +333,7 @@ invariant
 	count_definition: count_ = sequence.count
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

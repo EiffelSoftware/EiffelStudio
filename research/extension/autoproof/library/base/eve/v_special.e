@@ -132,22 +132,22 @@ feature -- Element change
 		require
 			index_large_enough: i >= 0
 			index_small_enough: i < count
-			modify_model ("sequence", Current)
 		do
 			sequence := sequence.replaced_at (i + 1, v)
 		ensure
 			sequence_effect: sequence ~ old sequence.replaced_at (i + 1, v)
+			modify_model ("sequence", Current)
 		end
 
 	extend (v: T)
 			-- Add `v' at index `count'.
 		require
 			count_small_enough: count < capacity
-			modify_model ("sequence", Current)
 		do
 			sequence := sequence & v
 		ensure
 			sequence_effect: sequence ~ old sequence & v
+			modify_model ("sequence", Current)
 		end
 
 	fill_with (v: T; start_index, end_index: INTEGER)
@@ -159,7 +159,6 @@ feature -- Element change
 			start_index_in_bound: start_index <= count
 			start_index_not_too_big: start_index <= end_index + 1
 			end_index_valid: end_index < capacity
-			modify_model ("sequence", Current)
 		local
 			i, nb: INTEGER
 			l_count: like count
@@ -205,6 +204,7 @@ feature -- Element change
 			sequence_effect: across (start_index + 1) |..| (end_index + 1) as k all sequence [k.item] = v end
 			sequence_front_unchanged: across 1 |..| start_index as k all sequence [k.item] = (old sequence) [k.item] end
 			sequence_tail_unchanged: across (end_index + 2) |..| sequence.count as k all sequence [k.item] = (old sequence) [k.item] end
+			modify_model ("sequence", Current)
 		end
 
 	fill_with_default (start_index, end_index: INTEGER)
@@ -216,7 +216,6 @@ feature -- Element change
 			start_index_non_negative: start_index >= 0
 			start_index_not_too_big: start_index <= end_index + 1
 			end_index_valid: end_index < count
-			modify_model ("sequence", Current)
 		do
 			check inv end
 			fill_with (({T}).default, start_index, end_index)
@@ -225,6 +224,7 @@ feature -- Element change
 			sequence_effect: across (start_index + 1) |..| (end_index + 1) as k all sequence [k.item] = ({T}).default end
 			sequence_front_unchanged: across 1 |..| start_index as k all sequence [k.item] = (old sequence) [k.item] end
 			sequence_tail_unchanged: across (end_index + 2) |..| sequence.count as k all sequence [k.item] = (old sequence) [k.item] end
+			modify_model ("sequence", Current)
 		end
 
 	copy_data (other: V_SPECIAL [T]; source_index, destination_index, n: INTEGER)
@@ -242,7 +242,6 @@ feature -- Element change
 			n_is_small_enough_for_source: source_index + n <= other.count
 			n_is_small_enough_for_destination: destination_index + n <= capacity
 --			same_type: other.conforms_to (Current)
-			modify_model ("sequence", Current)
 		do
 			-- ToDo
 			sequence := sequence.front (destination_index) +
@@ -254,6 +253,7 @@ feature -- Element change
 				other.sequence.interval (source_index + 1, source_index + n) +
 				sequence.tail (destination_index + n + 1))
 			wrapped: is_wrapped
+			modify_model ("sequence", Current)
 		end
 
 	move_data (source_index, destination_index, n: INTEGER)
@@ -266,7 +266,6 @@ feature -- Element change
 			n_non_negative: n >= 0
 			n_is_small_enough_for_source: source_index + n <= count
 			n_is_small_enough_for_destination: destination_index + n <= capacity
-			modify_model ("sequence", Current)
 		do
 			-- ToDo
 			sequence := sequence.front (destination_index) +
@@ -279,6 +278,7 @@ feature -- Element change
 					j.item = i.item - destination_index + source_index implies sequence [i.item] = (old sequence) [j.item] end end
 			sequence_effect_old: across 1 |..| (old sequence.count) as i all
 				i.item <= destination_index or destination_index + n < i.item implies sequence [i.item] = (old sequence) [i.item] end
+			modify_model ("sequence", Current)
 		end
 
 feature -- Resizing
@@ -289,7 +289,6 @@ feature -- Resizing
 			status: impure
 		require
 			n_non_negative: n >= 0
-			modify ([])
 		do
 			create Result.make_empty (n)
 			Result.copy_data (Current, 0, 0, n.min (count))
@@ -298,6 +297,7 @@ feature -- Resizing
 			result_fresh: Result.is_fresh
 			capacity_definition: Result.capacity = n
 			sequence_definition: Result.sequence ~ sequence.front (n)
+			modify ([])
 		end
 
 	aliased_resized_area (n: INTEGER): like Current
@@ -307,7 +307,6 @@ feature -- Resizing
 			status: impure
 		require
 			n_non_negative: n >= 0
-			modify (Current)
 		do
 			unwrap
 			capacity := n
@@ -319,6 +318,7 @@ feature -- Resizing
 			current_or_fresh: Result = Current or Result.is_fresh
 			capacity_definition: Result.capacity = n
 			sequence_definition: Result.sequence ~ old sequence.front (n)
+			modify (Current)
 		end
 
 	aliased_resized_area_with_default (a_default_value: T; n: INTEGER): like Current
@@ -328,7 +328,6 @@ feature -- Resizing
 			status: impure
 		require
 			n_non_negative: n >= 0
-			modify (Current)
 		do
 			Result := aliased_resized_area (n)
 			check Result.inv end
@@ -343,6 +342,7 @@ feature -- Resizing
 			sequence_domain_definition: Result.sequence.count = n
 			sequence_definition_old: across 1 |..| (sequence.old_.count.min (n)) as i all Result.sequence [i.item] = sequence.old_ [i.item] end
 			sequence_definition_new: across (sequence.count.old_ + 1) |..| n as i all Result.sequence [i.item] = a_default_value end
+			modify (Current)
 		end
 
 feature -- Specification

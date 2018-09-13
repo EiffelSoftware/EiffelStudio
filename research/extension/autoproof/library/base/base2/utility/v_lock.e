@@ -44,8 +44,6 @@ feature -- Basic operations
 			item_wrapped: item.is_wrapped
 			subjects_wrapped: across item.subjects as s all s.item.is_wrapped end
 			not_current: item /= Current and not item.subjects [Current]
-			modify (Current)
-			modify_field ("owner", [item, item.subjects, owns])
 		do
 			unwrap
 			add_equivalences (item)
@@ -56,6 +54,8 @@ feature -- Basic operations
 			locked_effect: locked = old locked & item
 			owns_effect: owns = old owns & item + item.subjects
 			wrapped: is_wrapped
+			modify (Current)
+			modify_field ("owner", [item, item.subjects, owns])
 		end
 
 	unlock (item: G)
@@ -67,8 +67,6 @@ feature -- Basic operations
 			item_locked: locked [item]
 			not_in_use: across observers as o all attached {V_LOCKER [G]} o.item as c and then not c.locked [item] end
 			not_subject: across locked as o all not o.item.subjects [item] and o.item.subjects.is_disjoint (item.subjects) end
-			modify (Current)
-			modify_field ("owner", [item, owns])
 		do
 			unwrap
 			locked := locked / item
@@ -79,6 +77,8 @@ feature -- Basic operations
 			owns_effect: owns = old owns / item - item.subjects
 			item_wrapped: item.is_wrapped
 			wrapped: is_wrapped
+			modify (Current)
+			modify_field ("owner", [item, owns])
 		end
 
 	add_client (c: V_LOCKER [G])
@@ -86,7 +86,6 @@ feature -- Basic operations
 		require
 			c_exists: c /= Void
 			wrapped: is_wrapped
-			modify_model ("observers", Current)
 		do
 			unwrap
 			set_observers (observers & c)
@@ -94,6 +93,7 @@ feature -- Basic operations
 		ensure
 			wrapped: is_wrapped
 			observers_effect: observers = old observers & c
+			modify_model ("observers", Current)
 		end
 
 feature -- Specification
@@ -173,7 +173,6 @@ feature {NONE} -- Implementation
 			locked_wrapped: across locked as a all a.item.is_wrapped end
 			inv_holds: inv
 			new_item: not locked [x]
-			modify_field ("equivalence", Current)
 		local
 			s: like locked
 			y: G
@@ -203,6 +202,7 @@ feature {NONE} -- Implementation
 		ensure
 			still_holds: inv
 			equivalences_added: across locked & x as a all equivalence [x, a.item] = x.is_model_equal (a.item) and equivalence [a.item, x] = x.is_model_equal (a.item) end
+			modify_field ("equivalence", Current)
 		end
 
 invariant

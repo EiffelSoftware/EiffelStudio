@@ -34,8 +34,6 @@ feature {NONE} -- Initialization
 			explicit: wrapping
 		require
 			l_wrapped: l.is_wrapped
-			modify (Current)
-			modify_model ("observers", l)
 		do
 			lock := l
 			set_subjects (create {MML_SET [ANY]}.singleton (l))
@@ -45,6 +43,8 @@ feature {NONE} -- Initialization
 			map_empty: map.is_empty
 			lock_set: lock = l
 			observers_empty: observers.is_empty
+			modify (Current)
+			modify_model ("observers", l)
 		end
 
 feature -- Initialization
@@ -57,8 +57,6 @@ feature -- Initialization
 			lock_wrapped: lock.is_wrapped
 			same_lock: lock = other.lock
 			no_iterators: observers.is_empty
-			modify_model ("map", Current)
-			modify_model ("observers", [Current, other])
 		local
 			it: V_HASH_TABLE_ITERATOR [K, V]
 		do
@@ -100,6 +98,8 @@ feature -- Initialization
 			map_effect: map ~ old other.map
 			observers_restored: observers ~ old observers
 			other_observers_restored: other.observers ~ old other.observers
+			modify_model ("map", Current)
+			modify_model ("observers", [Current, other])
 		end
 
 feature -- Measurement
@@ -408,7 +408,6 @@ feature {V_CONTAINER, V_ITERATOR, V_LOCK} -- Implementation
 			n_positive: n > 0
 			no_iterators: observers.is_empty
 			inv_only ("lock_exists", "subjects_definition", "A2")
-			modify_field (["buckets", "count_", "map", "lists", "buckets_", "locked", "bag", "owns", "closed"], Current)
 		local
 			i: INTEGER
 		do
@@ -446,6 +445,7 @@ feature {V_CONTAINER, V_ITERATOR, V_LOCK} -- Implementation
 			map_effect: map.is_empty
 			locked_effect: locked.is_empty
 			capacity_effect: lists.count = n
+			modify_field (["buckets", "count_", "map", "lists", "buckets_", "locked", "bag", "owns", "closed"], Current)
 		end
 
 	remove_at (it: V_HASH_TABLE_ITERATOR [K, V])
@@ -459,8 +459,6 @@ feature {V_CONTAINER, V_ITERATOR, V_LOCK} -- Implementation
 			1 <= it.bucket_index and it.bucket_index <= lists.count
 			list_iterator_wrapped: it.list_iterator.is_wrapped
 			it.inv_only ("target_which_bucket", "list_iterator_not_off")
-			modify_model ("map", Current)
-			modify_model (["index_", "sequence"], it.list_iterator)
 		local
 			idx_, i_: INTEGER
 		do
@@ -483,6 +481,8 @@ feature {V_CONTAINER, V_ITERATOR, V_LOCK} -- Implementation
 			same_index: it.list_iterator.index_ = old it.list_iterator.index_
 			same_lists: lists = old lists
 			buckets_effect: buckets_ = old (buckets_.replaced_at (it.bucket_index, buckets_ [it.bucket_index].removed_at (it.list_iterator.index_)))
+			modify_model ("map", Current)
+			modify_model (["index_", "sequence"], it.list_iterator)
 		end
 
 	remove_equal (list: V_LINKED_LIST [MML_PAIR [K, V]]; k: K): INTEGER
@@ -497,7 +497,6 @@ feature {V_CONTAINER, V_ITERATOR, V_LOCK} -- Implementation
 			list_keys_owned: across 1 |..| list.sequence.count as i all lock.locked [list.sequence [i.item].left] end
 			has_equal: across 1 |..| list.sequence.count as i some k.is_model_equal (list.sequence [i.item].left) end
 			no_observers: list.observers.is_empty
-			modify_model ("sequence", list)
 		local
 			c: V_LINKABLE [MML_PAIR [K, V]]
 		do
@@ -515,6 +514,7 @@ feature {V_CONTAINER, V_ITERATOR, V_LOCK} -- Implementation
 			list_wrapped: list.is_wrapped
 			found: k.is_model_equal ((old list.sequence) [Result].left)
 			removed: list.sequence ~ old list.sequence.removed_at (Result)
+			modify_model ("sequence", list)
 		end
 
 	replace_at (it: V_HASH_TABLE_ITERATOR [K, V]; v: V)
@@ -528,8 +528,6 @@ feature {V_CONTAINER, V_ITERATOR, V_LOCK} -- Implementation
 			1 <= it.bucket_index and it.bucket_index <= lists.count
 			list_iterator_wrapped: it.list_iterator.is_wrapped
 			it.inv_only ("target_which_bucket", "list_iterator_not_off")
-			modify_field (["map", "bag", "closed"], Current)
-			modify_model (["sequence", "box"], it.list_iterator)
 		local
 			idx_, i_: INTEGER
 			x: K
@@ -552,6 +550,8 @@ feature {V_CONTAINER, V_ITERATOR, V_LOCK} -- Implementation
 			list_iterator_wrapped: it.list_iterator.is_wrapped
 			map_effect: map = old (map.updated ((buckets_ [it.bucket_index]) [it.list_iterator.index_], v))
 			same_index: it.list_iterator.index_ = old it.list_iterator.index_
+			modify_field (["map", "bag", "closed"], Current)
+			modify_model (["sequence", "box"], it.list_iterator)
 		end
 
 	simple_extend (v: V; k: K)
@@ -562,7 +562,6 @@ feature {V_CONTAINER, V_ITERATOR, V_LOCK} -- Implementation
 			fresh_key: not domain_has (k)
 			lock_wrapped: lock.is_wrapped
 			no_iterators: observers.is_empty
-			modify_model ("map", Current)
 		local
 			idx: INTEGER
 			list: V_LINKED_LIST [MML_PAIR [K, V]]
@@ -581,6 +580,7 @@ feature {V_CONTAINER, V_ITERATOR, V_LOCK} -- Implementation
 			map_effect: map ~ old map.updated (k, v)
 			map_domain_effect: map.domain ~ old map.domain & k
 			capacity_unchanged: lists.count = old lists.count
+			modify_model ("map", Current)
 		end
 
 	auto_resize (new_count: INTEGER)
@@ -589,7 +589,6 @@ feature {V_CONTAINER, V_ITERATOR, V_LOCK} -- Implementation
 			wrapped: is_wrapped
 			no_iterators: observers.is_empty
 			lock_wrapped: lock.is_wrapped
-			modify_model ("map", Current)
 		do
 			check inv end
 			if new_count * target_load_factor // 100 > growth_rate * capacity then
@@ -602,6 +601,7 @@ feature {V_CONTAINER, V_ITERATOR, V_LOCK} -- Implementation
 			wrapped: is_wrapped
 			map_unchanged: map ~ old map
 			locked_unchanged: locked ~ old locked
+			modify_model ("map", Current)
 		end
 
 	resize (c: INTEGER)
@@ -611,7 +611,6 @@ feature {V_CONTAINER, V_ITERATOR, V_LOCK} -- Implementation
 			c_positive: c > 0
 			no_iterators: observers.is_empty
 			lock_wrapped: lock.is_wrapped
-			modify_model ("map", Current)
 		local
 			i: INTEGER
 			b: like buckets
@@ -668,6 +667,7 @@ feature {V_CONTAINER, V_ITERATOR, V_LOCK} -- Implementation
 			wrapped: is_wrapped
 			capacity_effect: lists.count = c
 			map_unchanged: map = old map
+			modify_model ("map", Current)
 		end
 
 	has_list (list: V_LINKED_LIST [MML_PAIR [K, V]]; other: like Current): BOOLEAN

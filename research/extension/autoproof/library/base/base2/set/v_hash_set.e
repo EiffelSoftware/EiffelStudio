@@ -32,8 +32,6 @@ feature {NONE} -- Initialization
 			status: creator
 		require
 			l_wrapped: l.is_wrapped
-			modify (Current)
-			modify_model ("observers", l)
 		do
 			create table.make (l)
 			l.add_client (Current)
@@ -41,6 +39,8 @@ feature {NONE} -- Initialization
 			set_empty: set.is_empty
 			lock_set: lock = l
 			observers_empty: observers.is_empty
+			modify (Current)
+			modify_model ("observers", l)
 		end
 
 feature -- Initialization
@@ -53,8 +53,6 @@ feature -- Initialization
 			lock_wrapped: lock.is_wrapped
 			same_lock: lock = other.lock
 			no_iterators: observers.is_empty
-			modify_model ("set", Current)
-			modify_model ("observers", [Current, other])
 		do
 			if other /= Current then
 				unwrap
@@ -67,6 +65,8 @@ feature -- Initialization
 			set_effect: set ~ old other.set
 			observers_restored: observers ~ old observers
 			other_observers_restored: other.observers ~ old other.observers
+			modify_model ("set", Current)
+			modify_model ("observers", [Current, other])
 		end
 
 feature -- Measurement

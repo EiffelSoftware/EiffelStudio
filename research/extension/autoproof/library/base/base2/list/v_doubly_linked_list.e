@@ -33,8 +33,6 @@ feature -- Initialization
 			explicit: wrapping
 		require
 			observers_open: across observers as o all o.item.is_open end
-			modify_model ("sequence", Current)
-			modify_field (["observers", "closed"], other)
 		local
 			i: V_LIST_ITERATOR [G]
 		do
@@ -49,6 +47,8 @@ feature -- Initialization
 			sequence_effect: sequence ~ other.sequence
 			other_sequence_effect: other.sequence ~ old other.sequence
 			observers_preserved: other.observers ~ old other.observers
+			modify_model ("sequence", Current)
+			modify_field (["observers", "closed"], other)
 		end
 
 feature -- Access
@@ -552,7 +552,6 @@ feature {V_CONTAINER, V_ITERATOR} -- Implementation
 			c_in_list: cells [index_] = c
 			wrapped: is_wrapped
 			observers_open: across observers as o all o.item.is_open end
-			modify_model (["sequence"], Current)
 		do
 			lemma_cells_distinct
 			unwrap
@@ -563,6 +562,7 @@ feature {V_CONTAINER, V_ITERATOR} -- Implementation
 			sequence ~ old sequence.replaced_at (index_, v)
 			cells ~ old cells
 			wrapped: is_wrapped
+			modify_model (["sequence"], Current)
 		end
 
 	extend_after (new, c: V_DOUBLY_LINKABLE [G]; index_: INTEGER)
@@ -577,9 +577,6 @@ feature {V_CONTAINER, V_ITERATOR} -- Implementation
 			c_in_list: cells [index_] = c
 			new_right_void: new.right = Void
 			new_left_void: new.left = Void
-
-			modify_model ("sequence", Current)
-			modify (new)
 		do
 			lemma_cells_distinct
 			unwrap
@@ -599,6 +596,8 @@ feature {V_CONTAINER, V_ITERATOR} -- Implementation
 			sequence ~ old sequence.extended_at (index_ + 1, new.item)
 			cells ~ old cells.extended_at (index_ + 1, new)
 			wrapped: is_wrapped
+			modify_model ("sequence", Current)
+			modify (new)
 		end
 
 	remove_after (c: V_DOUBLY_LINKABLE [G]; index_: INTEGER)
@@ -608,7 +607,6 @@ feature {V_CONTAINER, V_ITERATOR} -- Implementation
 			c_in_list: cells [index_] = c
 			wrapped: is_wrapped
 			observers_open: across observers as o all o.item.is_open end
-			modify_model ("sequence", Current)
 		do
 			lemma_cells_distinct
 			unwrap
@@ -634,6 +632,7 @@ feature {V_CONTAINER, V_ITERATOR} -- Implementation
 			sequence ~ old sequence.removed_at (index_ + 1)
 			cells ~ old cells.removed_at (index_ + 1)
 			wrapped: is_wrapped
+			modify_model ("sequence", Current)
 		end
 
 	merge_after (other: V_DOUBLY_LINKED_LIST [G]; c: detachable V_DOUBLY_LINKABLE [G]; index_: INTEGER)
@@ -647,7 +646,6 @@ feature {V_CONTAINER, V_ITERATOR} -- Implementation
 			other_wrapped: other.is_wrapped
 			observers_open: across observers as o all o.item.is_open end
 			other_observers_open: across other.observers as o all o.item.is_open end
-			modify_model ("sequence", [Current, other])
 		local
 			other_first, other_last: V_DOUBLY_LINKABLE [G]
 			other_count: INTEGER
@@ -696,6 +694,7 @@ feature {V_CONTAINER, V_ITERATOR} -- Implementation
 			sequence_effect: sequence = old (sequence.front (index_) + other.sequence + sequence.tail (index_ + 1))
 			other_sequence_effect: other.sequence.is_empty
 			cells_effect: cells = old (cells.front (index_) + other.cells + cells.tail (index_ + 1))
+			modify_model ("sequence", [Current, other])
 		end
 
 feature {NONE} -- Implementation
@@ -717,10 +716,6 @@ feature {NONE} -- Implementation
 			rest.left = head
 			next = rest.right
 			next /= Void implies next.is_wrapped
-			modify_field ("closed",
-				if attached head as c then create {MML_SET [ANY]}.singleton (c) else create {MML_SET [ANY]} end +
-				if attached next as c then create {MML_SET [ANY]}.singleton (c) else create {MML_SET [ANY]} end)
-			modify_model (["left", "right", "subjects", "observers"], rest)
 		do
 			if next /= Void then
 				next.unwrap
@@ -737,6 +732,10 @@ feature {NONE} -- Implementation
 			rest.right = head
 			rest.left = next
 			next /= Void implies next.is_open and next.inv_without ("left_consistent")
+			modify_field ("closed",
+				if attached head as c then create {MML_SET [ANY]}.singleton (c) else create {MML_SET [ANY]} end +
+				if attached next as c then create {MML_SET [ANY]}.singleton (c) else create {MML_SET [ANY]} end)
+			modify_model (["left", "right", "subjects", "observers"], rest)
 		end
 
 feature -- Specificaton

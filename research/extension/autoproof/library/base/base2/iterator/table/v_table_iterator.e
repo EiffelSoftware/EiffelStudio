@@ -29,12 +29,12 @@ feature -- Replacement
 			target_wrapped: target.is_wrapped
 			lock_wrapped: target.lock.is_wrapped
 			only_iterator: target.observers ~ create {MML_SET [ANY]}.singleton (Current)
-			modify_model (["value_sequence", "box"], Current)
-			modify_model ("map", target)
 		deferred
 		ensure
 			target_map_effect: target.map ~ old target.map.updated (sequence [index_], v)
 			target_wrapped: target.is_wrapped
+			modify_model (["value_sequence", "box"], Current)
+			modify_model ("map", target)
 		end
 
 feature -- Removal
@@ -46,14 +46,14 @@ feature -- Removal
 			target_wrapped: target.is_wrapped
 			lock_wrapped: target.lock.is_wrapped
 			only_iterator: target.observers ~ create {MML_SET [ANY]}.singleton (Current)
-			modify_model (["sequence", "box"], Current)
-			modify_model ("map", target)
 		deferred
 		ensure
 			sequence_effect: sequence ~ old sequence.removed_at (index_)
 			target_map_effect: target.map ~ old target.map.removed (sequence [index_])
 			target_wrapped: target.is_wrapped
 			index_ = old index_
+			modify_model (["sequence", "box"], Current)
+			modify_model ("map", target)
 		end
 
 note

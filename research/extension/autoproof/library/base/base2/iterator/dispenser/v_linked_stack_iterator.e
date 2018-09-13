@@ -31,8 +31,6 @@ feature {NONE} -- Initialization
 			t_wrapped: t.is_wrapped
 			no_observers: observers.is_empty
 			not_observing_t: not t.observers [Current]
-			modify_field (["observers", "closed"], t)
-			modify (Current)
 		do
 			target := t
 			t.unwrap
@@ -47,6 +45,8 @@ feature {NONE} -- Initialization
 			index_effect: index_ = 1
 			t_observers_effect: t.observers = old t.observers & Current
 			iterator.is_fresh
+			modify_field (["observers", "closed"], t)
+			modify (Current)
 		end
 
 feature -- Initialization

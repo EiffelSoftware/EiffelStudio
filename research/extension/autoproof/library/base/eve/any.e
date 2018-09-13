@@ -653,7 +653,7 @@ feature -- Verification: ownership fields
 		do
 		end
 
-	owns: MML_SET [ANY] assign set_owns
+	owns: MML_SET [separate ANY] assign set_owns
 			-- Owns set of this object.
 		note
 			status: ghost
@@ -662,7 +662,7 @@ feature -- Verification: ownership fields
 			check is_executable: False then end
 		end
 
-	frozen set_owns (a: MML_SET [ANY])
+	frozen set_owns (a: MML_SET [separate ANY])
 			-- Set owns set of this object.
 		do
 		end

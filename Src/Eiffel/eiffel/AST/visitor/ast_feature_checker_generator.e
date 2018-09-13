@@ -94,6 +94,16 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_LOCALE
+		export
+			{NONE} all
+		end
+
+	FORMATTED_MESSAGE
+		export
+			{NONE} all
+		end
+
 	OBSOLETE_CALL_HANDLER
 
 feature -- Initialization
@@ -870,10 +880,13 @@ feature {NONE} -- Roundtrip
 				r.is_external or else
 				r.is_once
 			then
-				create l_unsupported.make ("Inline agent with the body other than a %"do%" form is not supported.")
-				context.init_error (l_unsupported)
-				l_unsupported.set_location (l_as.body.start_location)
-				error_handler.insert_error (l_unsupported)
+				error_handler.insert_error (create {NOT_SUPPORTED}.make
+					(agent format_elements
+						(?,
+						locale.translation_in_context ("Inline agent with the body other than a {1} form is not supported.", "compiler.error"),
+						<<agent {TEXT_FORMATTER}.process_keyword_text ({TEXT_FORMATTER}.ti_do_keyword, Void)>>),
+					context,
+					l_as.body.start_location))
 				reset_types
 			elseif is_byte_node_enabled or else has_untyped_local then
 					-- TODO: Move creation of a new `{FEATURE_I}' object to an earlier stage to avoid the dependency on code generation.
@@ -2900,8 +2913,6 @@ feature {NONE} -- Visitor
 			l_type: TYPE_A
 			l_feature: FEATURE_I
 			l_error_level: NATURAL_32
-			l_local_info: LOCAL_INFO
-			l_vuar1: VUAR1
 		do
 			l_type := last_type.actual_type
 			check
@@ -4285,18 +4296,28 @@ feature {NONE} -- Visitor
 				else
 					l_local_info := context.object_test_local (l_as.feature_name.internal_name.name_id)
 					if l_local_info /= Void then
-						l_local_info.enable_is_used
-						last_access_writable := False
-						is_controlled := l_local_info.is_controlled
-						l_type := l_local_info.type.instantiation_in (last_type.as_implicitly_detachable.as_variant_free, l_last_id)
-						create l_typed_pointer.make_typed (l_type)
-						set_type (l_typed_pointer, l_as)
-						if not is_inherited then
-							l_as.enable_object_test_local
-						end
-						if l_needs_byte_node then
-							create {OBJECT_TEST_LOCAL_B} l_local.make (l_local_info.position, l_feature.body_index, l_type)
-							create {HECTOR_B} last_byte_node.make_with_type (l_local, l_typed_pointer)
+						if l_local_info.is_cursor then
+							error_handler.insert_error (create {NOT_SUPPORTED}.make
+								(agent format_elements
+									(?,
+									locale.translation_in_context ("Address of a cursor variable of {1} form of a loop is not supported.", "compiler.error"),
+									<<agent {TEXT_FORMATTER}.process_keyword_text ({TEXT_FORMATTER}.ti_is_keyword, Void)>>),
+								context,
+								l_as.feature_name.internal_name))
+						else
+							l_local_info.enable_is_used
+							last_access_writable := False
+							is_controlled := l_local_info.is_controlled
+							l_type := l_local_info.type.instantiation_in (last_type.as_implicitly_detachable.as_variant_free, l_last_id)
+							create l_typed_pointer.make_typed (l_type)
+							set_type (l_typed_pointer, l_as)
+							if not is_inherited then
+								l_as.enable_object_test_local
+							end
+							if l_needs_byte_node then
+								create {OBJECT_TEST_LOCAL_B} l_local.make (l_local_info.position, l_feature.body_index, l_type)
+								create {HECTOR_B} last_byte_node.make_with_type (l_local, l_typed_pointer)
+							end
 						end
 					else
 						if is_inherited then
@@ -4318,10 +4339,10 @@ feature {NONE} -- Visitor
 								l_vzaa1.set_location (l_as.feature_name.start_location)
 								error_handler.insert_error (l_vzaa1)
 							elseif l_feature.is_external then
-								create l_unsupported.make ("The $ operator is not supported on externals.")
-								context.init_error (l_unsupported)
-								l_unsupported.set_location (l_as.feature_name.start_location)
-								error_handler.insert_error (l_unsupported)
+								error_handler.insert_error (create {NOT_SUPPORTED}.make_from_string
+									(locale.translation_in_context ("The $ operator is not supported on externals.", "compiler.error"),
+									context,
+									l_as.feature_name.start_location))
 							elseif l_feature.is_attribute then
 								l_type := l_feature.type.actual_type
 								create l_typed_pointer.make_typed (l_type)
@@ -4448,14 +4469,14 @@ feature {NONE} -- Visitor
 				if l_target_type.conformance_type.is_formal or l_target_type.conformance_type.is_basic then
 						-- Not supported. May change in the future - M.S.
 						-- Reason: We cannot call a feature with basic call target!
-					create l_unsupported.make ("Type of target in a agent call may not be a basic type or a formal.")
-					context.init_error (l_unsupported)
-					if l_as.target /= Void then
-						l_unsupported.set_location (l_as.target.start_location)
-					else
-						l_unsupported.set_location (l_feature_name)
-					end
-					error_handler.insert_error (l_unsupported)
+					error_handler.insert_error (create {NOT_SUPPORTED}.make_from_string
+						(locale.translation_in_context ("Type of target in a agent call may not be a basic type or a formal.", "compiler.error"),
+						context,
+						if attached l_as.target as t then
+							t.start_location
+						else
+							l_feature_name
+						end))
 				else
 					if l_target_type.has_associated_class then
 						l_class := l_target_type.base_class
@@ -4502,12 +4523,15 @@ feature {NONE} -- Visitor
 
 						if l_feature = Void and then not l_is_named_tuple then
 							if l_target_type.is_known then
-								create l_unsupported.make ("Agent creation on `" + l_feature_name.name + "' is%
-									% not supported because it is either an attribute, a constant or%
-									% an external feature")
-								context.init_error (l_unsupported)
-								l_unsupported.set_location (l_feature_name)
-								error_handler.insert_error (l_unsupported)
+								error_handler.insert_error (create {NOT_SUPPORTED}.make
+									(agent format_elements
+										(?,
+										locale.translation_in_context
+											("Agent creation on {1} is not supported because it is either an attribute, a constant or an external feature.",
+											"compiler.error"),
+										<<agent {TEXT_FORMATTER}.process_feature_name_text (l_feature_name.name_32, context.written_class)>>),
+									context,
+									l_feature_name))
 							else
 								set_type (unknown_type, l_as)
 							end

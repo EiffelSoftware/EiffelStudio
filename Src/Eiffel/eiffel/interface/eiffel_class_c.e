@@ -36,6 +36,8 @@ inherit
 
 	SHARED_GENERATION
 
+	SHARED_LOCALE
+
 create
 	make
 
@@ -1744,7 +1746,10 @@ feature {NONE} -- Class initialization
 			Inst_context.set_group (cluster)
 			across generics as l_formal_generic loop
 				if is_expanded and then l_formal_generic.item.constraints.count > 1 then
-					Error_handler.insert_error (create {NOT_SUPPORTED}.make ("Multiple constraints are not permitted in an expanded generic class"))
+					Error_handler.insert_error (create {NOT_SUPPORTED}.make_from_string
+						(locale.translation_in_context ("Multiple constraints are not permitted in an expanded generic class", "compiler.error"),
+						ast_context,
+						l_formal_generic.item.start_location))
 				else
 					across l_formal_generic.item.constraints as l_constraint loop
 						l_constraint_type := l_constraint.item.type

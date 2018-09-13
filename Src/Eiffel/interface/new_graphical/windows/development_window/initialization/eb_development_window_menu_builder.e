@@ -820,6 +820,11 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			auto_recycle (l_command_menu_item)
 			l_project_menu.extend (l_command_menu_item)
 
+				-- Clean recompilation
+			l_command_menu_item := develop_window.clean_compile_project_cmd.new_menu_item
+			auto_recycle (l_command_menu_item)
+			l_project_menu.extend (l_command_menu_item)
+
 				-- Separator -------------------------------------------------
 			l_project_menu.extend (create {EV_MENU_SEPARATOR})
 

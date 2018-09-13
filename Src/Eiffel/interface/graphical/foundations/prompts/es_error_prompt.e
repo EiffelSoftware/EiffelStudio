@@ -19,11 +19,12 @@ inherit
 create
 	make,
 	make_standard,
+	make_ok_retry,
 	make_abort_retry_ignore
 
 feature {NONE} -- Initialization
 
-	make_abort_retry_ignore (a_text: like text)
+	make_abort_retry_ignore (a_text: READABLE_STRING_GENERAL)
 			-- Initialize an error prompt, with Abort|Retry|Ignore buttons, using required information.
 			--
 			-- `a_text': The text to display on the prompt.
@@ -37,6 +38,21 @@ feature {NONE} -- Initialization
 			default_confirm_button_set: default_confirm_button = dialog_buttons.abort_button
 			default_cancel_button_set: default_cancel_button = dialog_buttons.ignore_button
 			buttons_set: buttons = dialog_buttons.abort_retry_ignore_buttons
+		end
+
+	make_ok_retry (a_text: READABLE_STRING_GENERAL)
+			-- Initialize an error prompt, with Ok| Retry buttons, using required information.
+			--
+			-- `a_text': The text to display on the prompt.
+		require
+			a_text_attached: a_text /= Void
+		do
+			make (a_text, dialog_buttons.ok_retry_buttons, Standard_default_button, standard_default_confirm_button, dialog_buttons.retry_button)
+		ensure
+			text_set: format_text (a_text).is_equal (text)
+			default_button_set: default_button = standard_default_button
+			default_confirm_button_set: default_confirm_button = standard_default_confirm_button
+			default_cancel_button_set: default_cancel_button = dialog_buttons.retry_button
 		end
 
 feature {NONE} -- User interface initialization
@@ -84,7 +100,7 @@ feature {NONE} -- Access
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2007, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -97,22 +113,22 @@ feature {NONE} -- Access
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

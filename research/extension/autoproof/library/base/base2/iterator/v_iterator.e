@@ -115,22 +115,22 @@ feature -- Cursor movement
 			-- Go to the first position.
 		require
 			target_closed: target.closed
-			modify_model ("index_", Current)
 		deferred
 		ensure
 			index_effect: index_ = 1
 			target_closed: target.closed
+			modify_model ("index_", Current)
 		end
 
 	finish
 			-- Go to the last position.
 		require
 			target_closed: target.closed
-			modify_model ("index_", Current)
 		deferred
 		ensure
 			index_effect: index_ = sequence.count
 			target_closed: target.closed
+			modify_model ("index_", Current)
 		end
 
 	forth
@@ -145,11 +145,11 @@ feature -- Cursor movement
 		require
 			not_off: not off
 			target_closed: target.closed
-			modify_model ("index_", Current)
 		deferred
 		ensure
 			index_effect: index_ = old index_ - 1
 			target_closed: target.closed
+			modify_model ("index_", Current)
 		end
 
 	go_to (i: INTEGER)
@@ -159,7 +159,6 @@ feature -- Cursor movement
 		require
 			has_index: valid_index (i)
 			target_wrapped: target.is_wrapped
-			modify_model ("index_", Current)
 		local
 			j: INTEGER
 		do
@@ -189,26 +188,26 @@ feature -- Cursor movement
 			end
 		ensure
 			index_effect: index_ = i
+			modify_model ("index_", Current)
 		end
 
 	go_before
 			-- Go before any position of `target'.
-		require
-			modify_model ("index_", Current)
 		deferred
 		ensure
 			index_effect: index_ = 0
+			modify_model ("index_", Current)
 		end
 
 	go_after
 			-- Go after any position of `target'.
 		require
 			target_closed: target.closed
-			modify_model ("index_", Current)
 		deferred
 		ensure
 			index_effect: index_ = sequence.count + 1
 			target_closed: target.closed
+			modify_model ("index_", Current)
 		end
 
 	search_forth (v: G)
@@ -251,7 +250,6 @@ feature -- Cursor movement
 			status: nonvariant
 		require
 			target_wrapped: target.is_wrapped
-			modify_model ("index_", Current)
 		do
 			if after then
 				finish
@@ -276,6 +274,7 @@ feature -- Cursor movement
 			index_effect_not_found: not sequence.front (old index_).has (v) implies index_ = 0
 			index_effect_found: sequence.front (old index_).has (v) implies
 				(sequence [index_] = v and not sequence.interval (index_ + 1, old index_).has (v))
+			modify_model ("index_", Current)
 		end
 
 feature -- Specification

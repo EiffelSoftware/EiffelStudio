@@ -105,7 +105,6 @@ feature -- Iteration
 		require
 			lock_wrapped: lock.is_wrapped
 			v_locked: lock.locked [v]
-			modify_field (["observers", "closed"], Current)
 		deferred
 		ensure
 			result_fresh: Result.is_fresh
@@ -114,6 +113,7 @@ feature -- Iteration
 			target_definition: Result.target = Current
 			index_definition_found: set_has (v) implies Result.sequence [Result.index_] = set_item (v)
 			index_definition_not_found: not set_has (v) implies Result.index_ = Result.sequence.count + 1
+			modify_field (["observers", "closed"], Current)
 		end
 
 feature -- Comparison
@@ -126,7 +126,6 @@ feature -- Comparison
 		require
 			lock_wrapped: lock.is_wrapped
 			same_lock: other.lock = lock
-			modify_model ("observers", [Current, other])
 		local
 			it: like new_cursor
 		do
@@ -164,6 +163,7 @@ feature -- Comparison
 			definition: Result = across set as x all other.set_has (x.item) end
 			observers_restored: observers ~ old observers
 			other_observers_restored: other.observers ~ old other.observers
+			modify_model ("observers", [Current, other])
 		end
 
 	is_superset_of (other: V_SET [G]): BOOLEAN
@@ -174,13 +174,13 @@ feature -- Comparison
 		require
 			lock_wrapped: lock.is_wrapped
 			same_lock: other.lock = lock
-			modify_model ("observers", [Current, other])
 		do
 			Result := other.is_subset_of (Current)
 		ensure
 			definition: Result = across other.set as x all set_has (x.item) end
 			observers_restored: observers ~ old observers
 			other_observers_restored: other.observers ~ old other.observers
+			modify_model ("observers", [Current, other])
 		end
 
 	disjoint (other: V_SET [G]): BOOLEAN
@@ -191,7 +191,6 @@ feature -- Comparison
 		require
 			lock_wrapped: lock.is_wrapped
 			same_lock: other.lock = lock
-			modify_model ("observers", [Current, other])
 		local
 			it: like new_cursor
 		do
@@ -231,6 +230,7 @@ feature -- Comparison
 			definition: Result = across set as x all not other.set_has (x.item) end
 			observers_restored: observers ~ old observers
 			other_observers_restored: other.observers ~ old other.observers
+			modify_model ("observers", [Current, other])
 		end
 
 feature -- Extension
@@ -241,12 +241,12 @@ feature -- Extension
 			v_locked: lock.locked [v]
 			lock_wrapped: lock.is_wrapped
 			no_iterators: observers.is_empty
-			modify_model ("set", Current)
 		deferred
 		ensure
 			abstract_effect: set_has (v)
 			precise_effect_has: old set_has (v) implies set = old set
 			precise_effect_new: not old set_has (v) implies set = old set & v
+			modify_model ("set", Current)
 		end
 
 	join (other: V_SET [G])
@@ -257,8 +257,6 @@ feature -- Extension
 			lock_wrapped: lock.is_wrapped
 			same_lock: other.lock = lock
 			no_iterators: observers.is_empty
-			modify_model ("set", Current)
-			modify_model ("observers", [Current, other])
 		local
 			it: V_SET_ITERATOR [G]
 		do
@@ -295,6 +293,8 @@ feature -- Extension
 			no_extra: across set as x all set.old_ [x.item] or other.set.old_ [x.item] end
 			observers_restored: observers ~ old observers
 			other_observers_restored: other.observers ~ old other.observers
+			modify_model ("set", Current)
+			modify_model ("observers", [Current, other])
 		end
 
 feature -- Removal
@@ -308,7 +308,6 @@ feature -- Removal
 			v_locked: lock.locked [v]
 			lock_wrapped: lock.is_wrapped
 			no_iterators: observers.is_empty
-			modify_model (["set", "observers"], Current)
 		local
 			it: like new_cursor
 		do
@@ -326,6 +325,7 @@ feature -- Removal
 			precise_effect_not_found: not old set_has (v) implies set = old set
 			precise_effect_found: old set_has (v) implies set = old (set / set_item (v))
 			observers_restored: observers ~ old observers
+			modify_model (["set", "observers"], Current)
 		end
 
 	meet (other: V_SET [G])
@@ -336,8 +336,6 @@ feature -- Removal
 			lock_wrapped: lock.is_wrapped
 			same_lock: lock = other.lock
 			no_iterators: observers.is_empty
-			modify_model ("set", Current)
-			modify_model ("observers", [Current, other])
 		local
 			it: like new_cursor
 		do
@@ -377,6 +375,8 @@ feature -- Removal
 			not_too_few: across old set as y all other.set_has (y.item).old_ = set_has (y.item) end
 			observers_restored: observers ~ old observers
 			other_observers_restored: other.observers ~ old other.observers
+			modify_model ("set", Current)
+			modify_model ("observers", [Current, other])
 		end
 
 	subtract (other: V_SET [G])
@@ -387,8 +387,6 @@ feature -- Removal
 			lock_wrapped: lock.is_wrapped
 			same_lock: lock = other.lock
 			no_iterators: observers.is_empty
-			modify_model ("set", Current)
-			modify_model ("observers", [Current, other])
 		local
 			it: V_SET_ITERATOR [G]
 		do
@@ -427,6 +425,8 @@ feature -- Removal
 			not_too_few: across old set as y all other.set_has (y.item).old_ /= set_has (y.item) end
 			observers_restored: observers ~ old observers
 			other_observers_restored: other.observers ~ old other.observers
+			modify_model ("set", Current)
+			modify_model ("observers", [Current, other])
 		end
 
 	symmetric_subtract (other: V_SET [G])
@@ -437,8 +437,6 @@ feature -- Removal
 			lock_wrapped: lock.is_wrapped
 			same_lock: lock = other.lock
 			no_iterators: observers.is_empty
-			modify_model ("set", Current)
-			modify_model ("observers", [Current, other])
 		local
 			it: V_SET_ITERATOR [G]
 			seq: MML_SEQUENCE [G]
@@ -493,16 +491,18 @@ feature -- Removal
 			set_effect_new: across set as x all set.old_ [x.item] or other.set.old_ [x.item] end
 			observers_restored: observers ~ old observers
 			other_observers_restored: other.observers ~ old other.observers
+			modify_model ("set", Current)
+			modify_model ("observers", [Current, other])
 		end
 
 	wipe_out
 			-- Remove all elements.
 		require
 			no_iterators: observers.is_empty
-			modify_model ("set", Current)
 		deferred
 		ensure
 			set_effect: set.is_empty
+			modify_model ("set", Current)
 		end
 
 feature -- Specification

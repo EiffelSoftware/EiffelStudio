@@ -1,6 +1,7 @@
 note
 	description: "Sequences where values can be updated."
 	author: "Nadia Polikarpova"
+	revised_by: "Alexander Kogtenkov"
 	model: sequence, lower_
 	manual_inv: true
 	false_guards: true
@@ -37,10 +38,10 @@ feature -- Replacement
 		require
 			has_index: has_index (i)
 			observers_open: across observers as o all o.item.is_open end
-			modify_model ("sequence", Current)
 		deferred
 		ensure
 			sequence_effect: sequence ~ old sequence.replaced_at (idx (i), v)
+			modify_model ("sequence", Current)
 		end
 
 	swap (i1, i2: INTEGER)
@@ -51,7 +52,6 @@ feature -- Replacement
 			has_index_one: has_index (i1)
 			has_index_two: has_index (i2)
 			observers_open: across observers as o all o.item.is_open end
-			modify_model ("sequence", Current)
 		local
 			v: G
 		do
@@ -60,6 +60,7 @@ feature -- Replacement
 			put (v, i2)
 		ensure
 			sequence_effect: sequence ~ old sequence.replaced_at (idx(i1), sequence [idx(i2)]).replaced_at (idx(i2), sequence [idx(i1)])
+			modify_model ("sequence", Current)
 		end
 
 	fill (v: G; l, u: INTEGER)
@@ -71,7 +72,6 @@ feature -- Replacement
 			u_not_too_large: u <= upper_
 			l_not_too_large: l <= u + 1
 			observers_open: across observers as o all o.item.is_open end
-			modify_model (["sequence", "observers"], Current)
 		local
 			it: V_MUTABLE_SEQUENCE_ITERATOR [G]
 			j: INTEGER
@@ -103,6 +103,7 @@ feature -- Replacement
 			sequence_front_unchanged: across 1 |..| idx (l - 1) as i all sequence [i.item] = (old sequence) [i.item] end
 			sequence_tail_unchanged: across idx (u + 1) |..| sequence.count as i all sequence [i.item] = (old sequence) [i.item] end
 			observers_restored: observers ~ old observers
+			modify_model (["sequence", "observers"], Current)
 		end
 
 	clear (l, u: INTEGER)
@@ -114,7 +115,6 @@ feature -- Replacement
 			u_not_too_large: u <= upper_
 			l_not_too_large: l <= u + 1
 			observers_open: across observers as o all o.item.is_open end
-			modify_model (["sequence", "observers"], Current)
 		do
 			fill (({G}).default, l, u)
 		ensure
@@ -123,6 +123,7 @@ feature -- Replacement
 			sequence_front_unchanged: across 1 |..| idx (l - 1) as i all sequence [i.item] = (old sequence) [i.item] end
 			sequence_tail_unchanged: across idx (u + 1) |..| sequence.count as i all sequence [i.item] = (old sequence) [i.item] end
 			observers_restored: observers ~ old observers
+			modify_model (["sequence", "observers"], Current)
 		end
 
 	copy_range (other: V_SEQUENCE [G]; other_first, other_last, index: INTEGER)
@@ -137,8 +138,6 @@ feature -- Replacement
 			index_not_too_small: index >= lower_
 			enough_space: upper_ - index >= other_last - other_first
 			observers_open: across observers as o all o.item.is_open end
-			modify_model (["sequence", "observers"], Current)
-			modify_model ("observers", other)
 		local
 			other_it: V_SEQUENCE_ITERATOR [G]
 			it: V_MUTABLE_SEQUENCE_ITERATOR [G]
@@ -182,6 +181,8 @@ feature -- Replacement
 					else sequence [i.item] = (old sequence) [i.item] end end
 			observers_restored: observers ~ old observers
 			other_observers_restored: other.observers ~ old other.observers
+			modify_model (["sequence", "observers"], Current)
+			modify_model ("observers", other)
 		end
 
 	reverse
@@ -190,7 +191,6 @@ feature -- Replacement
 			status: nonvariant
 		require
 			observers_open: across observers as o all o.item.is_open end
-			modify_model (["sequence"], Current)
 		local
 			j, k: INTEGER
 		do
@@ -216,6 +216,7 @@ feature -- Replacement
 		ensure
 			sequence_domain_effect: sequence.count = old sequence.count
 			sequence_effect: across 1 |..| sequence.count as i all sequence [i.item] = (old sequence) [sequence.count - i.item + 1] end
+			modify_model (["sequence"], Current)
 		end
 
 note

@@ -42,7 +42,6 @@ feature -- Replacement
 			k_locked: lock.locked [k]
 			has_key: domain_has (k)
 			no_iterators: observers.is_empty
-			modify_model (["map", "observers"], Current)
 		local
 			it: V_TABLE_ITERATOR [K, V]
 		do
@@ -55,6 +54,7 @@ feature -- Replacement
 			map_effect: map ~ old map.updated (domain_item (k), v)
 			observers_restored: observers ~ old observers
 			same_domain: map.domain ~ old map.domain
+			modify_model (["map", "observers"], Current)
 		end
 
 feature -- Extension
@@ -66,11 +66,11 @@ feature -- Extension
 			fresh_key: not domain_has (k)
 			lock_wrapped: lock.is_wrapped
 			no_iterators: observers.is_empty
-			modify_model ("map", Current)
 		deferred
 		ensure
 			abstract_effect: domain_has (k)
 			map_effect: map ~ old map.updated (k, v)
+			modify_model ("map", Current)
 		end
 
 	force (v: V; k: K)
@@ -82,7 +82,6 @@ feature -- Extension
 			k_locked: lock.locked [k]
 			lock_wrapped: lock.is_wrapped
 			no_iterators: observers.is_empty
-			modify_model (["map", "observers"], Current)
 		local
 			it: V_TABLE_ITERATOR [K, V]
 		do
@@ -100,6 +99,7 @@ feature -- Extension
 			map_effect_has: old domain_has (k) implies map ~ old map.updated (domain_item (k), v)
 			map_effect_not_has: not old domain_has (k) implies map ~ old map.updated (k, v)
 			observers_restored: observers ~ old observers
+			modify_model (["map", "observers"], Current)
 		end
 
 feature -- Removal
@@ -111,20 +111,20 @@ feature -- Removal
 			has_key: domain_has (k)
 			lock_wrapped: lock.is_wrapped
 			no_iterators: observers.is_empty
-			modify_model ("map", Current)
 		deferred
 		ensure
 			map_effect: map ~ old map.removed (domain_item (k))
+			modify_model ("map", Current)
 		end
 
 	wipe_out
 			-- Remove all elements.
 		require
 			no_iterators: observers.is_empty
-			modify_model ("map", Current)
 		deferred
 		ensure
 			map_effect: map.is_empty
+			modify_model ("map", Current)
 		end
 
 note

@@ -35,8 +35,6 @@ feature -- Initialization
 			-- Initialize by copying all the items of `other'.
 		require
 			no_observers: observers.is_empty
-			modify_model ("sequence", Current)
-			modify_field ("closed", other)
 		do
 			if other /= Current then
 				other.unwrap
@@ -45,6 +43,8 @@ feature -- Initialization
 			end
 		ensure then
 			sequence_effect: sequence ~ other.sequence
+			modify_model ("sequence", Current)
+			modify_field ("closed", other)
 		end
 
 feature -- Access

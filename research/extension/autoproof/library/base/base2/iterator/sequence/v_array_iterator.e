@@ -36,9 +36,6 @@ feature {NONE} -- Initialization
 			-- Create an iterator at position `i' in `t'.
 		note
 			status: creator
-		require
-			modify (Current)
-			modify_field (["observers", "closed"], t)
 		do
 			target := t
 			target.add_iterator (Current)
@@ -56,6 +53,8 @@ feature {NONE} -- Initialization
 			index_effect_before: i < 1 implies index_ = 0
 			index_effect_after: i > t.sequence.count implies index_ = t.sequence.count + 1
 			t_observers_effect: t.observers = old t.observers & Current
+			modify (Current)
+			modify_field (["observers", "closed"], t)
 		end
 
 feature -- Initialization
@@ -67,8 +66,6 @@ feature -- Initialization
 		require
 			target_wrapped: target.is_wrapped
 			other_target_wrapped: other.target.is_wrapped
-			modify (Current)
-			modify_model ("observers", [target, other.target])
 		do
 			check other.inv_only ("index_constraint", "sequence_definition", "default_owns", "index_definition") end
 			check inv_only ("no_observers", "subjects_definition", "A2", "default_owns") end
@@ -88,6 +85,8 @@ feature -- Initialization
 			old_target_observers_effect: other.target /= old target implies (old target).observers = old target.observers / Current
 			other_target_observers_effect: other.target /= old target implies other.target.observers = old other.target.observers & Current
 			target_observers_preserved: other.target = old target implies other.target.observers = old other.target.observers
+			modify (Current)
+			modify_model ("observers", [target, other.target])
 		end
 
 feature -- Access

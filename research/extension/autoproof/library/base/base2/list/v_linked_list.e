@@ -34,8 +34,6 @@ feature -- Initialization
 			explicit: wrapping
 		require
 			observers_open: across observers as o all o.item.is_open end
-			modify_model ("sequence", Current)
-			modify_field (["observers", "closed"], other)
 		local
 			i: V_LIST_ITERATOR [G]
 		do
@@ -49,6 +47,8 @@ feature -- Initialization
 			sequence_effect: sequence ~ old other.sequence
 			observers_open: across observers as o all o.item.is_open end
 			observers_preserved: other.observers ~ old other.observers
+			modify_model ("sequence", Current)
+			modify_field (["observers", "closed"], other)
 		end
 
 feature -- Access
@@ -443,10 +443,10 @@ feature -- Removal
 			create cells
 			create sequence
 		ensure then
-			old_cells_wrapped: across owns.old_ as c all c.item.is_wrapped end
+			old_cells_wrapped: across old owns as c all c.item.is_wrapped end
 			cells_exist: (old cells).non_void
 			cells_linked: is_linked (old cells)
-			items_unchanged: across 1 |..| sequence.count.old_ as i all (old sequence) [i.item] = (old cells) [i.item].item end
+			items_unchanged: across 1 |..| old sequence.count as i all (old sequence) [i.item] = (old cells) [i.item].item end
 			cells_last: old cells.count > 0 implies (attached old last_cell as c and then not attached c.right)
 		end
 
@@ -495,7 +495,6 @@ feature {V_CONTAINER, V_ITERATOR} -- Implementation
 			c_in_list: cells [index_] = c
 			wrapped: is_wrapped
 			observers_open: across observers as o all o.item.is_open end
-			modify_model ("sequence", Current)
 		do
 			lemma_cells_distinct
 			unwrap
@@ -506,6 +505,7 @@ feature {V_CONTAINER, V_ITERATOR} -- Implementation
 			sequence ~ old sequence.replaced_at (index_, v)
 			cells ~ old cells
 			wrapped: is_wrapped
+			modify_model ("sequence", Current)
 		end
 
 	extend_after (new, c: V_LINKABLE [G]; index_: INTEGER)
@@ -519,9 +519,6 @@ feature {V_CONTAINER, V_ITERATOR} -- Implementation
 			index_in_domain: 1 <= index_ and index_ <= cells.count
 			c_in_list: cells [index_] = c
 			new_right_void: new.right = Void
-
-			modify_model ("sequence", Current)
-			modify_model ("right", new)
 		do
 			lemma_cells_distinct
 			unwrap
@@ -543,6 +540,8 @@ feature {V_CONTAINER, V_ITERATOR} -- Implementation
 			sequence ~ old sequence.extended_at (index_ + 1, new.item)
 			cells ~ old cells.extended_at (index_ + 1, new)
 			wrapped: is_wrapped
+			modify_model ("sequence", Current)
+			modify_model ("right", new)
 		end
 
 	remove_after (c: V_LINKABLE [G]; index_: INTEGER)
@@ -552,7 +551,6 @@ feature {V_CONTAINER, V_ITERATOR} -- Implementation
 			c_in_list: cells [index_] = c
 			wrapped: is_wrapped
 			observers_open: across observers as o all o.item.is_open end
-			modify_model ("sequence", Current)
 		do
 			lemma_cells_distinct
 			unwrap
@@ -575,6 +573,7 @@ feature {V_CONTAINER, V_ITERATOR} -- Implementation
 			sequence ~ old sequence.removed_at (index_ + 1)
 			cells ~ old cells.removed_at (index_ + 1)
 			wrapped: is_wrapped
+			modify_model ("sequence", Current)
 		end
 
 	merge_after (other: V_LINKED_LIST [G]; c: detachable V_LINKABLE [G]; index_: INTEGER)
@@ -588,7 +587,6 @@ feature {V_CONTAINER, V_ITERATOR} -- Implementation
 			other_wrapped: other.is_wrapped
 			observers_open: across observers as o all o.item.is_open end
 			other_observers_open: across other.observers as o all o.item.is_open end
-			modify_model ("sequence", [Current, other])
 		local
 			other_first, other_last: V_LINKABLE [G]
 			other_count: INTEGER
@@ -637,6 +635,7 @@ feature {V_CONTAINER, V_ITERATOR} -- Implementation
 			sequence_effect: sequence = old (sequence.front (index_) + other.sequence + sequence.tail (index_ + 1))
 			other_sequence_effect: other.sequence.is_empty
 			cells_effect: cells = old (cells.front (index_) + other.cells + cells.tail (index_ + 1))
+			modify_model ("sequence", [Current, other])
 		end
 
 feature -- Specificaton

@@ -1,6 +1,7 @@
 note
 	description: "Cells containing an item."
 	author: "Nadia Polikarpova"
+	revised_by: "Alexander Kogtenkov"
 	model: item
 
 class
@@ -22,12 +23,11 @@ feature -- Replacement
 
 	put (v: G)
 			-- Replace `item' with `v'.
-		require
-			modify_model ("item", Current)
 		do
 			item := v
 		ensure
 			item_effect: item = v
+			modify_model ("item", Current)
 		end
 
 note

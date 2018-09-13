@@ -112,8 +112,6 @@ feature -- Search
 			-- out of range, if `v' does not occur.			
 		note
 			status: impure, nonvariant
-		require
-			modify_model (["observers"], Current)
 		do
 			check inv end
 			if not is_empty then
@@ -127,6 +125,7 @@ feature -- Search
 			definition_has: sequence.has (v) implies lower_ <= Result and Result <= upper_ and then sequence [idx (Result)] = v
 			constraint: not sequence.front (idx (Result - 1)).has (v)
 			observers_restored: observers ~ old observers
+			modify_model (["observers"], Current)
 		end
 
 	index_of_from (v: G; i: INTEGER): INTEGER
@@ -136,7 +135,6 @@ feature -- Search
 			status: impure, nonvariant
 		require
 			has_index: has_index (i)
-			modify_model (["observers"], Current)
 		local
 			it: V_SEQUENCE_ITERATOR [G]
 		do
@@ -153,6 +151,7 @@ feature -- Search
 			definition_has: sequence.tail (idx (i)).has (v) implies i <= Result and Result <= upper_ and then sequence [idx (Result)] = v
 			constraint: not sequence.interval (idx (i), idx (Result - 1)).has (v)
 			observers_restored: observers ~ old observers
+			modify_model (["observers"], Current)
 		end
 
 feature -- Iteration
@@ -169,8 +168,6 @@ feature -- Iteration
 			-- New iterator pointing to the last position.
 		note
 			status: impure, nonvariant
-		require
-			modify_field (["observers", "closed"], Current)
 		do
 			Result := at (upper)
 		ensure
@@ -179,6 +176,7 @@ feature -- Iteration
 			result_in_observers: observers = old observers & Result
 			target_definition: Result.target = Current
 			index_definition: Result.index_ = sequence.count
+			modify_field (["observers", "closed"], Current)
 		end
 
 	at (i: INTEGER): V_SEQUENCE_ITERATOR [G]
@@ -186,8 +184,6 @@ feature -- Iteration
 			-- If `i' is off scope, iterator is off.
 		note
 			status: impure
-		require
-			modify_field (["observers", "closed"], Current)
 		deferred
 		ensure
 			result_fresh: Result.is_fresh
@@ -197,6 +193,7 @@ feature -- Iteration
 			index_definition_in_bounds: lower_ - 1 <= i and i <= upper_ + 1 implies Result.index_ = i - lower_ + 1
 			index_definition_before: i < lower_ implies Result.index_ = 0
 			index_definition_after: i > upper_ implies Result.index_ = sequence.count + 1
+			modify_field (["observers", "closed"], Current)
 		end
 
 feature -- Specification

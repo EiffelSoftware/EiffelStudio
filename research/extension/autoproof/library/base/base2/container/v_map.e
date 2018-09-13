@@ -99,7 +99,6 @@ feature -- Iteration
 		require
 			lock_wrapped: lock.is_wrapped
 			v_locked: lock.locked [k]
-			modify_field (["observers", "closed"], Current)
 		deferred
 		ensure
 			result_fresh: Result.is_fresh
@@ -108,6 +107,7 @@ feature -- Iteration
 			target_definition: Result.target = Current
 			index_definition_found: domain_has (k) implies Result.sequence [Result.index_] = domain_item (k)
 			index_definition_not_found: not domain_has (k) implies Result.index_ = Result.sequence.count + 1
+			modify_field (["observers", "closed"], Current)
 		end
 
 feature -- Specification

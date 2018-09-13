@@ -205,9 +205,10 @@ feature -- Element change
 			-- Write `s' at end of default output.
 		require
 			string_not_void: s /= Void
-			modify (Current)
 		do
 			standard_default.put_string (s)
+		ensure
+			modify (Current)
 		end
 
 	put_real, putreal (r: REAL_32)
@@ -282,10 +283,10 @@ feature -- Element change
 
 	put_new_line, new_line
 			-- Write line feed at end of default output.
-		require
-			modify (Current)
 		do
 			standard_default.put_new_line
+		ensure
+			modify (Current)
 		end
 
 feature -- Input
@@ -293,8 +294,6 @@ feature -- Input
 	read_integer, readint, read_integer_32
 			-- Read a new 32-bit integer from standard input.
 			-- Make result available in `last_integer'.
-		require
-			reads ([])
 		do
 			input.read_integer
 		ensure
@@ -304,6 +303,8 @@ feature -- Input
 	read_integer_8
 			-- Read a new 8-bit integer from standard input.
 			-- Make result available in `last_integer_8'.
+		require
+			reads ([])
 		do
 			input.read_integer_8
 		ensure
@@ -324,6 +325,8 @@ feature -- Input
 	read_integer_64
 			-- Read a new 64-bit integer from standard input.
 			-- Make result available in `last_integer_64'.
+		require
+			reads ([])
 		do
 			input.read_integer_64
 		ensure
@@ -387,15 +390,13 @@ feature -- Input
 	read_line, readline
 			-- Read a line from standard input.
 			-- Make result available in `last_string'.
-		require
-			modify (Current)
 		do
 			input.read_line
 			create internal_last_string_.make_from_string (last_string)
 		ensure
 			internal_last_string_ /= Void
 			internal_last_string_.is_wrapped
-
+			modify (Current)
 			last_string_not_void: last_string /= Void
 		end
 

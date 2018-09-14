@@ -12,6 +12,10 @@ class
 inherit
 	EB_CLASS_BROWSER_GRID_ROW
 
+	ES_SHARED_FONTS_AND_COLORS
+
+	SHARED_EDITOR_DATA
+
 create
 	make
 
@@ -33,7 +37,7 @@ feature{NONE} -- Initialization
 
 feature -- Grid binding
 
-	bind_row (a_row: EV_GRID_ROW; a_grid: EV_GRID; a_background_color: EV_COLOR; a_height: INTEGER; a_path: BOOLEAN)
+	bind_row (a_row: EV_GRID_ROW; a_grid: EV_GRID; a_background_color: EV_COLOR; a_height: INTEGER; a_path, a_class_description: BOOLEAN)
 			-- Bind current as a subrow of `a_row' in `a_grid'. if `a_row' is Void, insert a new
 			-- row in `a_grid' directly.
 			-- Set backgroud color of inserted row with `a_background_color',
@@ -59,6 +63,9 @@ feature -- Grid binding
 			if a_path then
 				l_row.set_item (2, path_grid_item)
 			end
+			if a_class_description then
+				l_row.set_item (3, class_description_grid_item)
+			end
 			set_grid_row (l_row)
 			l_children := children
 			if not l_children.is_empty then
@@ -67,7 +74,7 @@ feature -- Grid binding
 				until
 					l_children.after
 				loop
-					l_children.item_for_iteration.bind_row (l_row, a_grid, a_background_color, a_height, a_path)
+					l_children.item_for_iteration.bind_row (l_row, a_grid, a_background_color, a_height, a_path, a_class_description)
 					l_children.forth
 				end
 			end
@@ -155,6 +162,45 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
+	class_description_grid_item: EV_GRID_LABEL_ITEM
+			-- Class description item
+		local
+			l_item: like class_description_grid_item_internal
+			l_description, l_one_line_description: STRING_32
+			i: INTEGER
+			conv: CHARACTER_ROUTINES
+		do
+			l_item := class_description_grid_item_internal
+			if l_item = Void then
+				create l_item
+				l_item.set_font (fonts.italic_label_font)
+				l_item.set_foreground_color (editor_preferences.comments_text_color)
+				l_item.set_background_color (editor_preferences.comments_background_color)
+
+				class_description_grid_item_internal := l_item
+				create conv
+				l_description := conv.unescaped_string_32 (class_item.description)
+				l_description.adjust
+				if not l_description.is_empty and then (l_description[1] = '"' and l_description[l_description.count] = '"') then
+					l_description := l_description.substring (2, l_description.count - 1)
+				end
+				i := l_description.index_of ('%N', 1)
+				if i > 0 then
+					l_one_line_description := l_description.head (i - 1)
+					l_one_line_description.adjust
+					l_one_line_description.append_string_general (" ...")
+				else
+					l_one_line_description := l_description
+				end
+				l_item.set_text (l_one_line_description)
+				l_item.set_tooltip (l_description)
+				l_item.set_pixmap (pixmaps.icon_pixmaps.general_information_icon)
+			end
+			Result := l_item
+		ensure
+			result_attached: Result /= Void
+		end
+
 	parent: like Current
 			-- Parent of Current row
 
@@ -171,6 +217,9 @@ feature{NONE} -- Implementation
 
 	path_grid_item_internal: like path_grid_item
 			-- Implementation of `path_grid_item'
+
+	class_description_grid_item_internal: like class_description_grid_item
+			-- Implementation of `class_description_grid_item'
 
 	complete_generic_class_no_star_style: EB_CLASS_EDITOR_TOKEN_STYLE
 			-- Editor token style to generate class information in complete generic form without star.
@@ -228,7 +277,7 @@ invariant
 	class_item_valid: class_item.is_valid_domain_item
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

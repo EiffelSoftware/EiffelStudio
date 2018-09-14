@@ -2088,6 +2088,7 @@ feature -- Label texts
 	h_show_feature_from_any: STRING_32  do Result := locale.translation("Show unchanged features from class ANY?")	end
 	h_show_tooltip: STRING_32 do Result := locale.translation("Show tooltips?")	end
 	h_show_item_location: STRING_32 do Result := locale.translation("Show class location?")	end
+	h_show_item_description: STRING_32 do Result := locale.translation("Show class description?")	end
 	l_class_browser_classes: STRING_32 do Result := locale.translation_in_context ("Class", "eiffelstudio.formatter.column_name")	end
 	l_class_browser_Path: STRING_32 do Result := locale.translation("Path")	end
 	l_class_browser_features: STRING_32 do Result := locale.translation_in_context ("Feature", "eiffelstudio.formatter.column_name")	end

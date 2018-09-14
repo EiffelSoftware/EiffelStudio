@@ -139,6 +139,7 @@
 	<PREF NAME="tools.class_browser.expand_categorized_folder_level" HIDDEN="false" DESCRIPTION="Should categorized folder level in dependency view be expanded by default?"><BOOLEAN>False</BOOLEAN></PREF>	
 	<PREF NAME="tools.class_browser.inheritance_classes" HIDDEN="false" DESCRIPTION="Should inheritance classes be displayed?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="tools.class_browser.show_item_path" HIDDEN="false" DESCRIPTION="Is item path shown?"><BOOLEAN>False</BOOLEAN></PREF>
+	<PREF NAME="tools.class_browser.show_item_description" HIDDEN="false" DESCRIPTION="Is item description shown?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="tools.class_browser.show_self_dependency" HIDDEN="false" DESCRIPTION="Is dependency on self shown?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="tools.class_browser.syntactical_classes" HIDDEN="false" DESCRIPTION="Should syntactical referenced classes be displayed?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="tools.class_browser.normal_referenced_classes" HIDDEN="false" DESCRIPTION="Will normal referenced supplier/client classes be shown?"><BOOLEAN>True</BOOLEAN></PREF>

@@ -2313,14 +2313,28 @@ feature -- Signature checking
 				then
 					error_handler.insert_error (create {VRVA}.make_invalid_type (Current, a_context_class, written_class, l_type))
 				end
+					-- A generic class can't have a once creation procedure
+				if is_once and then a_context_class.is_generic then
+					error_handler.insert_error (create {VGCC10}.make_invalid_context (Current, a_context_class, written_class))
+				end
+
+			else
+					-- For an inherited once feature, we check if it's part of the creations procedures.
+					-- In that case we raise an issue since once creation procedures must be immediates (not inherited)
+				if is_once and then	attached a_context_class.creators as l_creators and then l_creators.has (Current.feature_name) then
+					error_handler.insert_error (create {VGCC9}.make_invalid_context (Current, a_context_class, written_class))
+				end
 			end
 
 				-- For an inherited attributem we make sure that it is not inherited in a user defined
 				-- expanded class as our runtime would not cope properly with that (i.e. it needs all
 				-- attributes, not just a subset).
+
 			if is_transient and then (a_context_class.is_expanded and not a_context_class.is_basic) then
 				error_handler.insert_error (create {VRVA}.make_invalid_context (Current, a_context_class, written_class))
 			end
+
+
 		end
 
 	check_expanded (class_c: CLASS_C)

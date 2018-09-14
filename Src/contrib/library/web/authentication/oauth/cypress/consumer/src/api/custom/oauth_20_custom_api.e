@@ -65,7 +65,7 @@ feature -- Access
 
 feature -- Access
 
-	authorization_url_builder: FUNCTION [ANY, TUPLE [OAUTH_CONFIG], STRING_8]
+	authorization_url_builder: FUNCTION [TUPLE [OAUTH_CONFIG], STRING_8]
 
 feature {NONE} -- Implementation
 
@@ -74,7 +74,7 @@ feature {NONE} -- Implementation
 	internal_access_token_endpoint: like access_token_endpoint
 
 ;note
-	copyright: "2013-2015, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2018, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

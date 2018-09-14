@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="consumer-tests" uuid="FE368136-51DC-4A67-B657-B26A93F0EE6D">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" name="consumer-tests" uuid="FE368136-51DC-4A67-B657-B26A93F0EE6D">
 	<target name="consumer-tests">
 		<root class="APPLICATION" feature="make"/>
 		<file_rule>
@@ -11,7 +11,7 @@
 		</option>
 		<capability>
 			<concurrency support="none" use="none"/>
-			<void_safety support="all"/>
+			<void_safety support="all" use="transitional"/>
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="crypto" location="$ISE_LIBRARY\unstable\library\text\encryption\crypto\crypto.ecf"/>

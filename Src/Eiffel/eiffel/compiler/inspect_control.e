@@ -128,7 +128,6 @@ feature -- Processing
 			lower_bound: INTERVAL_VAL_B
 			upper_bound: INTERVAL_VAL_B
 			vomb3: VOMB3
-			i: like intervals
 			interval_byte_node: like last_interval_byte_node
 		do
 			is_inherited := a_code_inherited
@@ -144,24 +143,20 @@ feature -- Processing
 			end
 			if lower_bound /= Void and then upper_bound /= Void and then lower_bound <= upper_bound then
 				interval_byte_node := lower_bound.inspect_interval (upper_bound)
-				from
-					i := intervals
-					i.start
-				until
-					i.after
+				across
+					intervals as i
 				loop
 					if not interval_byte_node.disjunction (i.item) then
-							-- Intersecting intervals
-							-- Report error
+							-- Intersecting intervals.
+							-- Report error.
 						create vomb3
 						context.init_error (vomb3)
 						vomb3.set_interval (interval_byte_node.intersection (i.item))
 						vomb3.set_location (interval.end_location)
 						Error_handler.insert_error (vomb3)
 					end
-					i.forth
 				end
-				i.extend (interval_byte_node)
+				intervals.extend (interval_byte_node)
 			end
 			last_interval_byte_node := interval_byte_node
 		end
@@ -219,7 +214,7 @@ feature {STATIC_ACCESS_AS} -- Visitor
 							-- Record dependencies.
 						context.supplier_ids.extend_depend_unit_with_level (class_c.class_id, constant_i, 0)
 							-- Check if this is a unique constant.
-						last_unique_constant ?= constant_i
+						last_unique_constant := if attached {UNIQUE_I} constant_i as c then c else Void end
 							-- Calculate byte node.
 						last_inspect_value := constant_i.value.inspect_value (type)
 						if not is_inherited then
@@ -255,7 +250,7 @@ feature {ID_AS} -- Visitor
 					-- Record dependencies.
 				context.supplier_ids.extend_depend_unit_with_level (context.current_class.class_id, constant_i, 0)
 					-- Check if this is a unique constant.
-				last_unique_constant ?= constant_i
+				last_unique_constant := if attached {UNIQUE_I} constant_i as c then c else Void end
 					-- Calculate byte node.
 				last_inspect_value := constant_i.value.inspect_value (type)
 			elseif

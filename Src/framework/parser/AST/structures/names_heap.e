@@ -426,6 +426,7 @@ feature {NONE} -- Implementation: access
 			put ("is_attached") check found_item = is_attached_name_id end
 			put ("is_deferred") check found_item = is_deferred_name_id end
 			put ("is_expanded") check found_item = is_expanded_name_id end
+			put ("minus") check found_item = minus_name_id end
 		end
 
 invariant
@@ -434,7 +435,7 @@ invariant
 	found_item_positive: found_item >= 0
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -2,7 +2,7 @@
 	description: "The byte code interpreter."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2016, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2018, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -4288,14 +4288,14 @@ rt_private void diadic_op(int code)
 
 	/* Minus operation. */
 	case BC_MINUS: {
-		uint32 sk_type = s->type & SK_HEAD;
+		uint32 sk_type = f->type & SK_HEAD;
 			/* Special case for `-' from CHARACTER_8 and CHARACTER_32 class. */
-		if ((f->type & SK_HEAD) == SK_CHAR8) {
-			CHECK ("right operand is INTEGER_32", sk_type == SK_INT32);
+		if (sk_type == SK_CHAR8) {
+			CHECK ("right operand is INTEGER_32", s->type & SK_HEAD == SK_INT32);
 			f->it_char = f->it_char - (EIF_CHARACTER_8) s->it_int32;
-		} else if ((f->type & SK_HEAD) == SK_CHAR32) {
-			CHECK ("right operand is INTEGER_32", sk_type == SK_INT32);
-			f->it_wchar = f->it_wchar - s->it_int32;
+		} else if (sk_type == SK_CHAR32) {
+			CHECK ("right operand is NATURAL_32", s->type & SK_HEAD == SK_UINT32);
+			f->it_wchar = f->it_wchar - s->it_uint32;
 		} else {
 				/* Normal case of substraction between numeric types. */
 			CHECK ("same_type", (f->type & SK_HEAD) == (s->type & SK_HEAD));
@@ -4318,13 +4318,13 @@ rt_private void diadic_op(int code)
 
 	/* Plus operator. */
 	case BC_PLUS: {
-		uint32 sk_type = s->type & SK_HEAD;
+		uint32 sk_type = f->type & SK_HEAD;
 			/* Special case for `+' from CHARACTER_8 and CHARACTER_32 class. */
-		if ((f->type & SK_HEAD) == SK_CHAR8) {
-			CHECK ("right operand is INTEGER_32", sk_type == SK_INT32);
+		if (sk_type == SK_CHAR8) {
+			CHECK ("right operand is INTEGER_32", s->type & SK_HEAD == SK_INT32);
 			f->it_char = f->it_char + (EIF_CHARACTER_8) s->it_int32;
-		} else if ((f->type & SK_HEAD) == SK_CHAR32) {
-			CHECK ("right operand is NATURAL_32", sk_type == SK_UINT32);
+		} else if (sk_type == SK_CHAR32) {
+			CHECK ("right operand is NATURAL_32", s->type & SK_HEAD == SK_UINT32);
 			f->it_wchar = f->it_wchar + s->it_uint32;
 		} else {
 				/* Normal case of addition between numeric types. */

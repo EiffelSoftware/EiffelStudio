@@ -1,6 +1,6 @@
 
 test_name 	once-creation-procedures-qualified-call
-test_description Violate the validity rule on once creation procedure can't b used in a  qualified Call
+test_description Once creation procedure called from 
 
 
 copy_sub 	Ace $TEST Ace
@@ -8,5 +8,5 @@ copy_raw 	a.e $CLUSTER a.e
 copy_raw 	test.e $CLUSTER test.e
 
 compile_melted
-compile_result 	validity_error
+compile_result 	ok
 

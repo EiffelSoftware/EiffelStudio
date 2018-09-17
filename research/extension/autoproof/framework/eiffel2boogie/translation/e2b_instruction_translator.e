@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Translates Eiffel instructions to Boogie."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -364,7 +364,7 @@ feature -- Processing
 				set_current_origin_information (a_assert)
 				process_contract_expression (a_assert.expr, False)
 
-				if attached a_assert.tag and then a_assert.tag.is_case_insensitive_equal ("assume") then
+				if attached a_assert.tag and then a_assert.tag.is_case_insensitive_equal_general ("assume") then
 						-- This is an assume: translate as
 						--	assume checks; assume free_checks; assume last_expression
 					across last_safety_checks as i loop
@@ -1165,7 +1165,7 @@ feature {NONE} -- Loop processing
 					if not helper.is_clause_modify (l_invariant) and not helper.is_clause_decreases (l_invariant) then
 						set_current_origin_information (l_invariant)
 						process_contract_expression (l_invariant.expr, False)
-						if l_invariant.tag /= Void and then l_invariant.tag ~ "assume" then
+						if l_invariant.tag /= Void and then l_invariant.tag.is_case_insensitive_equal_general ("assume") then
 								-- Free invariant: translate as
 								--	assume checks; assume free_checks; assume last_expression
 							across last_safety_checks as i loop

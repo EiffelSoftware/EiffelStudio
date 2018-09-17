@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		IV-visitor that generates Boogie code.
 	]"
@@ -451,12 +451,13 @@ feature -- Statement Visitor
 	print_statement_origin_information (a_statement: IV_STATEMENT)
 			-- Print origin information of `a_statement'.
 		do
-			if attached a_statement.origin_information as l_origin then
-				if attached l_origin.file then
-					output.put_comment_line (l_origin.file + ":" + l_origin.line.out)
-					if l_origin.line > 0 then
-						output.put_comment_line (l_origin.text_of_line)
-					end
+			if
+				attached a_statement.origin_information as l_origin and then
+				attached l_origin.file
+			then
+				output.put_comment_line (l_origin.file + ":" + l_origin.line.out)
+				if l_origin.line > 0 then
+					output.put_comment_line (l_origin.text_of_line)
 				end
 			end
 		end
@@ -466,16 +467,13 @@ feature -- Statement Visitor
 		do
 			if attached a_info and then attached a_info.attributes as l_attributes then
 				output.put (" //")
-				from
-					l_attributes.start
-				until
-					l_attributes.after
+				across
+					l_attributes as a
 				loop
 					output.put (" ")
-					output.put (l_attributes.key_for_iteration.out)
+					output.put (a.key.out)
 					output.put (":")
-					output.put (l_attributes.item_for_iteration)
-					l_attributes.forth
+					output.put_literal_string (a.item)
 				end
 			end
 		end
@@ -754,7 +752,10 @@ feature -- Other
 
 feature {NONE} -- Implementation
 
-	is_in_type: BOOLEAN
+	is_in_type: BOOLEAN;
 			-- Is the printer processing a complex type (i.e. a context where other complex types have to be parenthesized)?
+
+note
+	ca_ignore: "CA033", "CA033: too long class"
 
 end

@@ -1,0 +1,12 @@
+
+test_name 	once-creation-procedures-creation-invalid_call
+test_description Invalid call to a once creation procedure. 
+
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	a.e $CLUSTER a.e
+copy_raw 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result 	validity_check VUEX(3)
+

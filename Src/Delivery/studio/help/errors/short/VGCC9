@@ -1,0 +1,2 @@
+Error: once creation procedure is inherited but must be immediate (non-inherited).
+What to do: either do not use this procedure as creation procedure, or replace it by an immediate procedure (which may call inherited features). 

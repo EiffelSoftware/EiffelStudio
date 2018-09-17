@@ -1,0 +1,2 @@
+Error: Generic class cannot have a once procedure.
+What to do: either make the class non-generic, or do not use once creation procedures.

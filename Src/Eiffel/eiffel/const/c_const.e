@@ -125,6 +125,9 @@ feature -- Macros
 	rtjb: STRING = "RTJB"
 	rtck: STRING = "RTCK"
 	rtcf: STRING = "RTCF"
+	rtct: STRING = "RTCT"
+	rtct0: STRING = "RTCT0"
+	rtit: STRING = "RTIT"
 
 	rtsn: STRING = "RTSN"
 	rtda: STRING = "RTDA"

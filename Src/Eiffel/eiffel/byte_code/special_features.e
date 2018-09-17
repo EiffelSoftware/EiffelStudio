@@ -155,12 +155,20 @@ feature -- Byte code special generation
 			when generator_type then
 				ba.append (Bc_basic_operations)
 				ba.append (Bc_generator)
-			when offset_type then
+			when plus_type then
 				if type_of (basic_type) = pointer_type_id then
 					ba.append (Bc_basic_operations)
 					ba.append (Bc_offset)
 				else
 					ba.append (Bc_plus)
+				end
+			when minus_type then
+				if type_of (basic_type) = pointer_type_id then
+					ba.append (bc_uminus)
+					ba.append (Bc_basic_operations)
+					ba.append (Bc_offset)
+				else
+					ba.append (Bc_minus)
 				end
 			when zero_type then
 				ba.append (Bc_basic_operations)
@@ -331,8 +339,10 @@ feature -- C special code generation
 					-- Add `eif_helpers.h' for C declaration of `floor'.
 				shared_include_queue_put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
 
-			when offset_type then
-				generate_offset (buffer, type_of (basic_type), target, parameter)
+			when plus_type then
+				generate_plus (buffer, type_of (basic_type), target, parameter, False)
+			when minus_type then
+				generate_plus (buffer, type_of (basic_type), target, parameter, True)
 			when out_type then
 				generate_out (buffer, type_of (basic_type), target)
 			when hash_code_type then
@@ -450,8 +460,9 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (to_real_64_type, {PREDEFINED_NAMES}.to_double_name_id)
 			Result.put (to_real_32_type, {PREDEFINED_NAMES}.to_real_name_id)
 			Result.put (to_real_32_type, {PREDEFINED_NAMES}.truncated_to_real_name_id)
-			Result.put (offset_type, {PREDEFINED_NAMES}.plus_name_id)
-			Result.put (offset_type, {PREDEFINED_NAMES}.infix_plus_name_id)
+			Result.put (plus_type, {PREDEFINED_NAMES}.plus_name_id)
+			Result.put (plus_type, {PREDEFINED_NAMES}.infix_plus_name_id)
+			Result.put (minus_type, {PREDEFINED_NAMES}.minus_name_id)
 			Result.put (default_type, {PREDEFINED_NAMES}.default_name_id)
 			Result.put (bit_and_type, {PREDEFINED_NAMES}.bit_and_name_id)
 			Result.put (bit_and_type, {PREDEFINED_NAMES}.infix_bit_and_name_id)
@@ -510,8 +521,9 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (max_type, {PREDEFINED_NAMES}.max_name_id)
 			Result.put (min_type, {PREDEFINED_NAMES}.min_name_id)
 			Result.put (generator_type, {PREDEFINED_NAMES}.generator_name_id)
-			Result.put (offset_type, {PREDEFINED_NAMES}.plus_name_id)
-			Result.put (offset_type, {PREDEFINED_NAMES}.infix_plus_name_id)
+			Result.put (plus_type, {PREDEFINED_NAMES}.plus_name_id)
+			Result.put (plus_type, {PREDEFINED_NAMES}.infix_plus_name_id)
+			Result.put (minus_type, {PREDEFINED_NAMES}.minus_name_id)
 			Result.put (zero_type, {PREDEFINED_NAMES}.zero_name_id)
 			Result.put (one_type, {PREDEFINED_NAMES}.one_name_id)
 			Result.put (default_type, {PREDEFINED_NAMES}.default_name_id)
@@ -590,7 +602,7 @@ feature {NONE} -- Fast access to feature name
 	abs_type: INTEGER = 7
 	generator_type: INTEGER = 8
 	to_integer_32_type: INTEGER = 9
-	offset_type: INTEGER = 10
+	plus_type: INTEGER = 10
 	default_type: INTEGER = 11
 	bit_and_type: INTEGER = 12
 	bit_or_type: INTEGER = 13
@@ -648,6 +660,7 @@ feature {NONE} -- Fast access to feature name
 	is_character_8_type: INTEGER = 65
 	hash_code_64_type: INTEGER = 66
 	max_type_id: INTEGER = 66
+	minus_type: INTEGER = 67
 
 feature {NONE} -- Byte code generation
 
@@ -756,7 +769,7 @@ feature {NONE} -- C code generation
 			parameter.print_immediate_register
 		end
 
-	generate_offset (buffer: GENERATION_BUFFER; type_of_basic: INTEGER; target: REGISTRABLE; parameter: PARAMETER_BL)
+	generate_plus (buffer: GENERATION_BUFFER; type_of_basic: INTEGER; target: REGISTRABLE; parameter: PARAMETER_BL; is_minus: BOOLEAN)
 			-- Generate fast wrapper for call on `+' where target and parameter
 			-- are both basic types. Only `POINTER' and `CHARACTER' are handled, the
 			-- other basic types have their own handling by the compiler.
@@ -771,20 +784,26 @@ feature {NONE} -- C code generation
 				buffer.put_string ("RTPOF(")
 				target.print_register
 				buffer.put_character (',')
+				if is_minus then
+					buffer.put_three_character (' ', '-', '(')
+				end
 			when character_type_id then
 				if is_wide then
-					buffer.put_string ("(EIF_CHARACTER_32) (((EIF_INTEGER_32) ")
+					buffer.put_string ("(EIF_CHARACTER_32) (((EIF_NATURAL_32) ")
 				else
 					buffer.put_string ("(EIF_CHARACTER_8) (((EIF_INTEGER_32) ")
 				end
 				target.print_register
-				buffer.put_string (") + ")
+				buffer.put_four_character (')', ' ', if is_minus then '-' else '+' end,' ')
 			else
 				buffer.put_character ('(')
 				target.print_register
-				buffer.put_string (" + ")
+				buffer.put_three_character (' ', if is_minus then '-' else '+' end,' ')
 			end
 			parameter.print_immediate_register
+			if is_minus and then type_of_basic = pointer_type_id then
+				buffer.put_character (')')
+			end
 			buffer.put_character (')')
 		end
 
@@ -1364,7 +1383,7 @@ feature {NONE} -- Type information
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

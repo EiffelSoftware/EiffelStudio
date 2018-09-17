@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Individual error of verifying a Boogie procedure."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -110,15 +110,14 @@ feature {NONE} -- Implementation
 			-- Parse attributes from line `a_line'.
 		local
 			l_index: INTEGER
-			l_comment_text: STRING
 			l_parts: LIST [STRING]
 			l_part: STRING
+			value: STRING
 		do
 			create Result.make (4)
 			l_index := a_line.substring_index ("//", 1)
 			if l_index > 0 then
-				l_comment_text := a_line.substring (l_index + 2, a_line.count)
-				l_parts := l_comment_text.split (' ')
+				l_parts := a_line.substring (l_index + 2, a_line.count).split (' ')
 				across l_parts as i loop
 					l_part := i.item
 					l_part.left_adjust
@@ -128,7 +127,10 @@ feature {NONE} -- Implementation
 						if l_index = 0 then
 							Result.force (Void, l_part)
 						else
-							Result.force (l_part.substring (l_index + 1, l_part.count), l_part.substring (1, l_index - 1))
+							value := l_part.substring (l_index + 1, l_part.count)
+								-- Replace no-break spaces with ordinary ones.
+							value.replace_substring_all ("%/194/%/160/", " ")
+							Result.force (value, l_part.substring (1, l_index - 1))
 						end
 					end
 				end

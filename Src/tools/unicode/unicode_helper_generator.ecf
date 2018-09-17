@@ -10,10 +10,10 @@
 			<concurrency use="none"/>
 		</capability>
 		<library name="arg_parser" location="$ISE_LIBRARY\library\runtime\process\arg_parser\argument_parser.ecf"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
 		<library name="framework_utilities" location="$EIFFEL_SRC\framework\utilities\utilities.ecf"/>
-		<cluster name="helper_generator" location=".\" recursive="true">
+		<cluster name="helper_generator" location=".\">
 			<file_rule>
 				<exclude>/.svn$</exclude>
 				<exclude>/CVS$</exclude>

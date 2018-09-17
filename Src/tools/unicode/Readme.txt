@@ -1,5 +1,5 @@
-Unicode Helper Generator - Version: 1.1
-Copyright Eiffel Software 2012-2017. All Rights Reserved.
+Unicode Helper Generator - Version: 1.3
+Copyright Eiffel Software 2012-2018. All Rights Reserved.
 
 USAGE: 
    unicode_helper_generator.exe -i <file> [-d <density>] [-p <template>] [-o <dir>] [-s] -u <version> [-v] [--nologo]

@@ -4,7 +4,7 @@
 		This includes finding out if a character is lower, upper, title case, or if it is a digit,
 		a punctuation, a control or a space character.
 	]"
-	generator: "unicode_helper_generator"
+	generator: "$GENERATOR"
 	unicode_version: "$UNICODE_VERSION"
 	date: "$Date: $"
 	revision: "$Revision: $"
@@ -28,7 +28,6 @@ feature -- Status report
 			if a_char.natural_32_code <= max_ascii_value then
 					-- Fast implementation for ASCII character.
 				if ('a' <= a_char and a_char <= 'z') or ('A' <= a_char and a_char <= 'Z') then
-						-- Fast implementation for ASCII character
 					Result := True
 				end
 			else
@@ -44,7 +43,6 @@ feature -- Status report
 			if a_char.natural_32_code <= max_ascii_value then
 					-- Fast implementation for ASCII character.
 				if 'a' <= a_char and a_char <= 'z' then
-						-- Fast implementation for ASCII character.
 					Result := True
 				end
 			else
@@ -58,7 +56,6 @@ feature -- Status report
 			if a_char.natural_32_code <= max_ascii_value then
 					-- Fast implementation for ASCII character.
 				if 'A' <= a_char and a_char <= 'Z' then
-						-- Fast implementation for ASCII character.
 					Result := True
 				end
 			else
@@ -72,7 +69,6 @@ feature -- Status report
 			if a_char.natural_32_code <= max_ascii_value then
 					-- Fast implementation for ASCII character.
 				if 'A' <= a_char and a_char <= 'Z' then
-						-- Fast implementation for ASCII character.
 					Result := True
 				end
 			else
@@ -86,7 +82,6 @@ feature -- Status report
 			if a_char.natural_32_code <= max_ascii_value then
 					-- Fast implementation for ASCII character.
 				if '0' <= a_char and a_char <= '9' then
-						-- Fast implementation for ASCII character.
 					Result := True
 				end
 			else
@@ -182,7 +177,7 @@ feature -- Conversion
 					check
 						valid_assumption: ('a').natural_32_code = ('A').natural_32_code + 32
 					end
-					Result := (a_char.natural_32_code - 32).to_character_32
+					Result := a_char - 32
 				end
 			else
 --$TO_UPPER_HELPER
@@ -203,10 +198,9 @@ feature -- Conversion
 					check
 						valid_assumption: ('a').natural_32_code = ('A').natural_32_code + 32
 					end
-					Result := (a_char.natural_32_code - 32).to_character_32
+					Result := a_char - 32
 				end
 			else
-				Result := to_upper (a_char)
 --$TO_TITLE_HELPER
 			end
 		end
@@ -238,7 +232,7 @@ feature {NONE} -- Property tables
 
 --$TABLES
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

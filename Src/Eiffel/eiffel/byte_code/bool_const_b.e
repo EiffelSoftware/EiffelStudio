@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Boolean constant for code generation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ inherit
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (v: BOOLEAN)
 			-- Assign `v' to `value'.
@@ -44,14 +44,14 @@ feature -- Visitor
 feature -- Access
 
 	value: BOOLEAN
-			-- Boolean value
+			-- Boolean value.
 
 feature -- Evaluation
 
 	evaluate: VALUE_I
 			-- Evaluation of Current.
 		do
-			create {BOOL_VALUE_I} Result.make (value)
+			Result := if value then true_value else false_value end
 		end
 
 feature -- Status report
@@ -63,7 +63,7 @@ feature -- Status report
 			-- A boolean constant is constant.
 
 	type: TYPE_A
-			-- Boolean type
+			-- Boolean type.
 		do
 			Result := boolean_type
 		end
@@ -71,27 +71,42 @@ feature -- Status report
 feature -- C code generation
 
 	print_register
-			-- Print boolean constant
+			-- Print boolean constant.
 		do
-			if value then
-				buffer.put_string ("(EIF_BOOLEAN) 1")
-			else
-				buffer.put_string ("(EIF_BOOLEAN) 0")
-			end
+			buffer.put_string
+				(if value then
+					"(EIF_BOOLEAN) 1"
+				else
+					"(EIF_BOOLEAN) 0"
+				end)
 		end
 
 	used (r: REGISTRABLE): BOOLEAN
-			-- False
+			-- False.
 		do
 		end
 
 feature -- IL code generation
 
-	is_fast_as_local: BOOLEAN = true;
+	is_fast_as_local: BOOLEAN = True
 			-- Is expression calculation as fast as loading a local?
 
+feature {NONE} -- Predefined values
+
+	true_value: BOOL_VALUE_I
+			-- An instance of a value `True`.
+		once
+			create Result.make (True)
+		end
+
+	false_value: BOOL_VALUE_I
+			-- An instance of a value `False`.
+		once
+			create Result.make (False)
+		end
+
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -122,4 +137,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class BOOL_CONST_B
+end

@@ -1,6 +1,7 @@
 note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+
 class PARAN_B
 
 inherit
@@ -14,7 +15,8 @@ inherit
 			is_unsafe, optimized_byte_node,
 			calls_special_features, size,
 			pre_inlined_code, inlined_byte_code,
-			is_constant_expression, print_checked_target_register
+			is_constant_expression, print_checked_target_register,
+			evaluate
 		end
 
 create
@@ -46,6 +48,12 @@ feature -- Properties
 			-- Is current a constant expression?
 		do
 			Result := expr.is_constant_expression
+		end
+
+	evaluate: VALUE_I
+			-- <Precursor>
+		do
+			Result := expr.evaluate
 		end
 
 feature
@@ -81,29 +89,27 @@ feature
 	allocates_memory: BOOLEAN
 		do
 			Result := expr.allocates_memory
-		end;
+		end
 
 	used (r: REGISTRABLE): BOOLEAN
 			-- Is `r' used in the expression ?
 		do
-			Result := expr.used (r);
-		end;
+			Result := expr.used (r)
+		end
 
 	propagate (r: REGISTRABLE)
 			-- Propagate a register in expression.
 		do
-			if r = No_register or not used (r) then
-				if not context.propagated or r = No_register then
-					expr.propagate (r);
-				end;
-			end;
-		end;
+			if r = No_register or not used (r) and not context.propagated then
+				expr.propagate (r)
+			end
+		end
 
 	free_register
 			-- Free register used by expression
 		do
-			expr.free_register;
-		end;
+			expr.free_register
+		end
 
 	analyze
 			-- Analyze expression
@@ -206,7 +212,7 @@ invariant
 	expr_not_void: expr /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

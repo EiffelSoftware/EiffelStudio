@@ -593,6 +593,7 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 feature {NONE} -- Fast access to feature name
 
 	min_type_id: INTEGER = 1
+	
 	is_equal_type: INTEGER = 1
 	set_item_type: INTEGER = 2
 	out_type: INTEGER = 3
@@ -659,8 +660,9 @@ feature {NONE} -- Fast access to feature name
 	is_default_pointer_type: INTEGER = 64
 	is_character_8_type: INTEGER = 65
 	hash_code_64_type: INTEGER = 66
-	max_type_id: INTEGER = 66
 	minus_type: INTEGER = 67
+
+	max_type_id: INTEGER = 67
 
 feature {NONE} -- Byte code generation
 

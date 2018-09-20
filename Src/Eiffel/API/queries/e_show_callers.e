@@ -99,7 +99,6 @@ feature -- Execution
 		local
 			l_domain: QL_FEATURE_DOMAIN
 			l_formatter: like text_formatter
-			l_callee: QL_FEATURE
 			l_caller: QL_FEATURE
 			l_last_callee_written_class_id: INTEGER
 			l_last_caller_class_id: INTEGER
@@ -115,12 +114,12 @@ feature -- Execution
 					l_domain.after
 				loop
 					l_caller := l_domain.item
-					l_callee ?= l_caller.data
-					check
-						l_callee /= Void
-					end
 					l_changed := False
-					if l_callee.class_c.class_id /= l_last_callee_written_class_id then
+					check data_is_callee: attached {QL_FEATURE} l_caller.data end
+					if
+						attached {QL_FEATURE} l_caller.data as l_callee and then
+						l_callee.class_c.class_id /= l_last_callee_written_class_id
+					then
 						l_changed := True
 						l_last_callee_written_class_id := l_callee.class_c.class_id
 						if l_callee.is_real_feature then
@@ -196,29 +195,27 @@ feature {NONE} -- Implementation
 
 	feature_name_tester (feature_a, feature_b: QL_FEATURE): BOOLEAN
 			-- Compare name of `feature_a' and `feature_b'.
-		local
-			l_callee_a: QL_FEATURE
-			l_callee_b: QL_FEATURE
 		do
-			l_callee_a ?= feature_a.data
-			l_callee_b ?= feature_b.data
-			check
-				l_callee_a /= Void
-				l_callee_b /= Void
-			end
-			if l_callee_a.class_c.topological_id /= l_callee_b.class_c.topological_id then
-				Result := l_callee_a.class_c.topological_id < l_callee_b.class_c.topological_id
-			else
-				if not feature_a.class_c.name.is_equal (feature_b.class_c.name) then
-					Result := feature_a.class_c.name < feature_b.class_c.name
+			if
+				attached {QL_FEATURE} feature_a.data as l_callee_a and then
+				attached {QL_FEATURE} feature_b.data as l_callee_b
+			then
+				if l_callee_a.class_c.topological_id = l_callee_b.class_c.topological_id then
+					if feature_a.class_c.name.is_case_insensitive_equal (feature_b.class_c.name) then
+						Result := feature_a.name < feature_b.name
+					else
+						Result := feature_a.class_c.name < feature_b.class_c.name
+					end
 				else
-					Result := feature_a.name < feature_b.name
+					Result := l_callee_a.class_c.topological_id < l_callee_b.class_c.topological_id
 				end
+			else
+				check data_are_ql_feature: False end
 			end
 		end
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -242,11 +239,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

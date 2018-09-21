@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Abstract representation of a file system location."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -183,7 +183,7 @@ feature -- Access queries
 				if l_root = Void then
 					create l_root.make_from_string ("/")
 				end
-				Result := Result.absolute_path_in (l_root.absolute_path).canonical_path
+				Result := l_root.extended_path (Result).canonical_path
 			end
 		ensure
 			Result_not_void: Result /= Void

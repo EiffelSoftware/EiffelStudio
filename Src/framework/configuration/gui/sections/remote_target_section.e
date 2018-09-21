@@ -151,8 +151,8 @@ feature -- Element update
 			end
 				-- add it to the configuration
 			l_target := configuration_window.conf_factory.new_target (l_name, l_system)
-			l_target.set_parent (target)
-			l_target.set_remote_parent (create {CONF_REMOTE_TARGET}.make (target.name, location))
+			l_target.reference_parent (create {CONF_REMOTE_TARGET_REFERENCE}.make (target.name, location))
+			l_target.set_remote_parent (target)
 			l_system.add_target (l_target)
 
 				-- add and display the section

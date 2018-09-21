@@ -75,7 +75,6 @@ feature -- Error changes
 
 	report_error (e: detachable CONF_ERROR)
 		require
-			has_no_error: not is_error and last_error = Void
 			e_attached: e /= Void
 		do
 			is_error := True
@@ -122,15 +121,24 @@ feature -- Basic operation
 		require
 			a_file_ok: a_file /= Void and then not a_file.is_empty
 		local
-			l_checker: CONF_PARENT_TARGET_CHECKER
+			l_parent_checker: CONF_PARENT_TARGET_CHECKER
+			l_group_checker: CONF_GROUPS_TARGET_CHECKER
 		do
 			retrieve_configuration (a_file)
-			if not is_error and then attached last_system as syst then
-				create l_checker.make (factory)
-				l_checker.resolve_targets (syst)
-				if attached l_checker.last_error as err then
-					is_warning := True
-					add_warning (err)
+			if attached last_system as syst then
+				if not is_error then
+					create l_parent_checker.make (factory)
+					l_parent_checker.report_issue_as_warning
+					l_parent_checker.resolve_system (syst)
+					if attached l_parent_checker.last_error as err then
+						is_warning := True
+						add_warning (err)
+					end
+				end
+				if not is_error then
+					create l_group_checker.make
+					l_group_checker.report_issue_as_warning
+					l_group_checker.check_system (syst)
 				end
 			end
 		ensure

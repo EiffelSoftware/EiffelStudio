@@ -1,70 +1,32 @@
 note
-	description: "Checker of library dependency cycles"
+	description: "Summary description for {CONF_TARGET_REFERENCE}."
+	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	CONF_CYCLE_CHECKER
+deferred class
+	CONF_TARGET_REFERENCE
 
-inherit
-	DIRECTED_GRAPH [CONF_TARGET]
-		rename
-			vertices as targets,
-			out_bound_vertices as dependent_targets
+feature -- Status report
+
+	has_name: BOOLEAN
+		deferred
 		end
 
-create
-	make_with_targets
-
-feature {NONE} -- Initialization
-
-	make_with_targets (a_targets: like targets)
-			-- Initialization
-		do
-			targets := a_targets
-		ensure
-			targets_set: targets = a_targets
+	has_location: BOOLEAN
+		deferred
 		end
 
-feature -- Access
-
-	library_cycles: ARRAYED_LIST [SEARCH_TABLE [CONF_TARGET]]
-			-- Does `a_system' have library dependency cycle?
-		local
-			l_cycle_finder: TARJAN_STRONGLY_CONNECTED_ALGORITHM [CONF_TARGET]
-		do
-			create l_cycle_finder.make_with_graph (Current)
-			l_cycle_finder.compute_cycle
-			Result := l_cycle_finder.cycles
+	is_remote: BOOLEAN
+		deferred
 		end
 
-feature -- Access
+invariant
 
-	targets: ITERABLE [CONF_TARGET]
-			-- Vertices
-
-	dependent_targets (v: CONF_TARGET): ITERABLE [CONF_TARGET]
-			-- Vertices lead away from the vertex `v'.
-		local
-			l_libraries: STRING_TABLE [CONF_LIBRARY]
-			l_targets: ARRAYED_LIST [CONF_TARGET]
-		do
-			l_libraries := v.libraries
-			create l_targets.make (l_libraries.count)
-			across
-				l_libraries as l_c
-			loop
-				if attached l_c.item.library_target as l_target then
-					l_targets.extend (l_target)
-				end
-			end
-			Result := l_targets
-		end
-
-feature {NONE} -- Implementation
+	location_or_name_set: has_location or has_name 
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

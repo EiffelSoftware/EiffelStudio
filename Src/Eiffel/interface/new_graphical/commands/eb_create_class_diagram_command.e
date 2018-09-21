@@ -1,9 +1,9 @@
-note
-	description	: "Command to change links layout."
+﻿note
+	description: "Command to change links layout."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EB_CREATE_CLASS_DIAGRAM_COMMAND
@@ -50,9 +50,13 @@ feature -- Basic operations
 				end
 			else
 				if attached {CLASSI_STONE} tool.last_stone as l_class_i_stone then
-					l_group ?= l_class_i_stone.group
+					if attached {CONF_CLUSTER} l_class_i_stone.group as c then
+						l_group := c
+					end
 				elseif attached {CLUSTER_STONE} tool.last_stone as l_cluster_stone then
-					l_group ?= l_cluster_stone.group
+					if attached {CONF_CLUSTER} l_cluster_stone.group as c then
+						l_group := c
+					end
 				end
 				if l_group /= Void and then not l_group.is_readonly then
 					create dialog.make_default (tool.develop_window, False)
@@ -69,7 +73,7 @@ feature -- Basic operations
 			initialize_sd_toolbar_item (Result, display_text)
 			Result.set_menu_function (agent new_menu)
 
-			Result.select_actions.force_extend (agent execute)
+			Result.select_actions.extend (agent execute)
 		end
 
 	new_menu: EV_MENU
@@ -102,14 +106,12 @@ feature {NONE} -- Implementation
 			tt: STRING_GENERAL
 		do
 			add_existing_class := a_value
-			if internal_managed_sd_toolbar_items /= Void then
+			if attached internal_managed_sd_toolbar_items as items then
 				tt := tooltip.twin
-				from
-					internal_managed_sd_toolbar_items.start
-				until
-					internal_managed_sd_toolbar_items.after
+				across
+					items as i
 				loop
-					l_sd_button := internal_managed_sd_toolbar_items.item
+					l_sd_button := i.item
 					l_sd_button.set_pixel_buffer (pixel_buffer)
 					l_sd_button.set_tooltip (tt)
 					if is_sensitive then
@@ -117,7 +119,6 @@ feature {NONE} -- Implementation
 					else
 						l_sd_button.disable_sensitive
 					end
-					internal_managed_sd_toolbar_items.forth
 				end
 			end
 		end
@@ -166,7 +167,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -197,4 +198,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_CREATE_CLASS_DIAGRAM_COMMAND
+end

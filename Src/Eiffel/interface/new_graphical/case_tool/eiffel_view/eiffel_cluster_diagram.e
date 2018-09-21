@@ -1,8 +1,7 @@
-note
-	description: "Objects that is view for a CLUSTER_GRAPH"
+﻿note
+	description: "Objects that is view for a CLUSTER_GRAPH."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -88,16 +87,15 @@ feature -- Store/Retrive
 			-- Retrive state from `node'.
 		local
 			l_cluster_id: STRING
-			esc: ES_CLUSTER
 		do
 			node.forth
 			model.set_subcluster_depth (xml_routines.xml_integer (node, subcluster_depth_str))
 			model.set_supercluster_depth (xml_routines.xml_integer (node, supercluster_depth_str))
 			l_cluster_id := xml_routines.xml_string (node, center_cluster_id_str)
 			Precursor {EIFFEL_WORLD} (node)
-
-			esc := model.cluster_of_id (l_cluster_id)
-			model.set_center_cluster (esc)
+			if attached model.cluster_of_id (l_cluster_id) as center_cluster then
+				model.set_center_cluster (center_cluster)
+			end
 		end
 
 feature -- Element change
@@ -480,7 +478,6 @@ feature {NONE} -- Cluster manager observer
 					l_classes.after
 				loop
 					es_class := l_classes.item
-					l_remove_links := es_class.needed_links
 					update_cluster_legend
 					fig ?= figure_from_model (es_class)
 					fig.request_update
@@ -727,13 +724,6 @@ feature {EB_CREATE_CLASS_DIAGRAM_COMMAND} -- Element Change
 			l_class_bounding_box.set_x (l_class_x_offset)
 			l_class_bounding_box.set_y (l_class_y_offset)
 
-			if l_insertion_bounding_box.intersection (l_class_bounding_box).is_equal (l_class_bounding_box) then
-				-- Class fits in insertion box
-
-			else
-				-- Class will end up resizing diagram as it does not fit.
-			end
-
 			from
 				i := classes.count
 				l_add_across := True
@@ -754,12 +744,11 @@ feature {EB_CREATE_CLASS_DIAGRAM_COMMAND} -- Element Change
 						end
 						l_add_across := not l_add_across
 
-
 						if i > 1 then
 								-- Reset counter so that we iterate all the classes again.
 							i := classes.count + 1
 						else
-							-- We have iterated all of the classes so we exit at this final set position to avoid infinite looping
+							-- We have iterated all of the classes so we exit at this final set position to avoid infinite looping.
 						end
 					end
 				end
@@ -929,8 +918,6 @@ feature {NONE} -- Implementation
 			-- All links to remove in `a_cluster'
 		require
 			a_classes_not_void: a_classes /= Void
-		local
-			fig: EIFFEL_CLASS_FIGURE
 		do
 			from
 				create {ARRAYED_LIST [ES_ITEM]} Result.make (a_classes.count * 2)
@@ -938,8 +925,7 @@ feature {NONE} -- Implementation
 			until
 				a_classes.after
 			loop
-				fig := a_classes.item.figure
-				Result.append (fig.model.needed_links)
+				Result.append (a_classes.item.figure.model.needed_links)
 				a_classes.forth
 			end
 		ensure
@@ -1140,48 +1126,29 @@ feature {NONE} -- Implementation
 			-- Veto function.
 			-- CREATE_CLASS_STONE, CLASSI_STONE, CLUSTER_STONE none assemble accepted.
 		local
-			l_cc_stone: CREATE_CLASS_STONE
-			l_class_stone: CLASSI_STONE
-			l_cluster_stone: CLUSTER_STONE
 			l_pointer_position: EV_COORDINATE
-			l_class_fig_stone: CLASSI_FIGURE_STONE
-			l_cluster: EIFFEL_CLUSTER_FIGURE
-			l_cluster_fig_stone: CLUSTER_FIGURE_STONE
 		do
-			l_cc_stone ?= a_any
-			l_class_stone ?= a_any
-			l_cluster_stone ?= a_any
-			l_cluster_fig_stone ?= a_any
-			if l_cc_stone /= Void or l_cluster_stone /= Void or l_class_stone /= Void then
+			if attached {CLASSI_STONE} a_any as l_class_stone then
 				Result := True
-				if l_cluster_stone /= Void then
-					if l_cluster_stone.group.is_assembly or l_cluster_stone.group.is_physical_assembly then
+					-- Only a figure is picked, we check it.
+				if attached {CLASSI_FIGURE_STONE} l_class_stone as l_class_fig_stone then
+					l_pointer_position := context_editor.pointer_position
+					if
+						attached top_cluster_at (Current, l_pointer_position.x, l_pointer_position.y) as l_cluster implies
+							-- If the figure is readonly or contains the same group, we deny dropping.
+							(l_cluster.model.group.is_readonly or else
+							l_cluster.model.group.is_library or else
+							l_cluster.model.group = l_class_fig_stone.class_i.group)
+					then
 						Result := False
 					end
 				end
-					-- Only a figure is picked, we check it.
-				if l_class_stone /= Void then
-					l_class_fig_stone ?= l_class_stone
-					if l_class_fig_stone /= Void then
-						l_pointer_position := context_editor.pointer_position
-						l_cluster := top_cluster_at (Current, l_pointer_position.x, l_pointer_position.y)
-						if l_cluster /= Void then
-								-- If the figure is readonly or contains the same group, we deny dropping
-							if l_cluster.model.group.is_readonly or else l_cluster.model.group.is_library then
-								Result := False
-							else
-								if l_cluster.model.group = l_class_fig_stone.class_i.group then
-									Result := False
-								end
-							end
-						else
-							Result := False
-						end
-					end
-				end
-				if l_cluster_fig_stone /= Void then
-					Result := False
-				end
+			elseif attached {CREATE_CLASS_STONE} a_any then
+				Result := True
+			elseif attached {CLUSTER_FIGURE_STONE} a_any then
+				-- Result := False
+			elseif attached {CLUSTER_STONE} a_any as l_cluster_stone then
+				Result := not l_cluster_stone.group.is_assembly and not l_cluster_stone.group.is_physical_assembly
 			end
 		end
 
@@ -1209,7 +1176,7 @@ feature {NONE} -- Implementation
 			until
 				l_clusters.after or l_found
 			loop
-				l_found := (a_group = l_clusters.item.group)
+				l_found := a_group = l_clusters.item.group
 				if l_found then
 					l_found_cluster := l_clusters.item
 				end
@@ -1278,7 +1245,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -1309,4 +1276,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EIFFEL_CLUSTER_DIAGRAM
+end

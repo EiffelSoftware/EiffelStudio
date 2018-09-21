@@ -1,8 +1,7 @@
-note
-	description: "Objects that is a view for on EIFFEL_GRAPH"
+﻿note
+	description: "Objects that is a view for on EIFFEL_GRAPH."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -554,9 +553,9 @@ feature -- Store/Retrive
 		local
 			diagram_output: XML_DOCUMENT
 			view_output: like xml_element
-			a_cursor: XML_COMPOSITE_CURSOR
 			root: like xml_element
 			l_view_str, l_name_str: STRING
+			i: INTEGER
 		do
 			if ptf.is_open_read then
 					-- Remove any previous save of `current_view'.
@@ -567,23 +566,24 @@ feature -- Store/Retrive
 					create {XML_NAMESPACE}.make_default)
 			end
 			if diagram_output /= Void then
-				a_cursor := diagram_output.root_element.new_cursor
+					-- TODO: avoid creating a duplicate list of elements as soon as XML_COMPOSITE is fixed and supports element removal.
+				across
+					diagram_output.root_element.elements as elements
 				from
 					l_view_str := "VIEW"
 					l_name_str := "NAME"
-					a_cursor.start
-				until
-					a_cursor.after
+					i := 1
 				loop
 					if
-						attached {like xml_element} a_cursor.item as l_node and then
+						attached elements.item as l_node and then
 						l_node.has_same_name (l_view_str) and then
 						current_view.same_string (l_node.attribute_by_name (l_name_str).value)
 					then
-						diagram_output.root_element.remove_at_cursor (a_cursor)
-					end
-					if not a_cursor.after then
-						a_cursor.forth
+							-- Remove found element.
+						diagram_output.root_element.remove (i)
+					else
+							-- Advance to the next element.
+						i := i + 1
 					end
 				end
 				create root.make_root (create {XML_DOCUMENT}.make, "VIEW", xml_namespace)
@@ -1469,7 +1469,7 @@ invariant
 	available_views_compare_objects: available_views.object_comparison
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -1500,4 +1500,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EIFFEL_WORLD
+end

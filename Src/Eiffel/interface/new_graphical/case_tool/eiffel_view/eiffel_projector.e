@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Objects that projects an EIFFEL_WORLD."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -460,20 +459,10 @@ feature {NONE} -- Implementation
 
 				if offset_x /= 0 or else offset_y /= 0 then
 					offset_coordinates (point_array)
-					d.draw_polyline (point_array, line.is_closed)
-					if is_client_supplier and then line.line_width > 4 then
-						d.set_line_width (line.line_width - 4)
-						d.set_foreground_color (default_colors.white)
-						d.draw_polyline (point_array, line.is_closed)
-					end
+					draw_overlayed (agent d.draw_polyline (point_array, line.is_closed), is_client_supplier, d)
 					deoffset_coordinates (point_array)
 				else
-					d.draw_polyline (point_array, line.is_closed)
-					if is_client_supplier and then line.line_width > 4 then
-						d.set_line_width (line.line_width - 4)
-						d.set_foreground_color (default_colors.white)
-						d.draw_polyline (point_array, line.is_closed)
-					end
+					draw_overlayed (agent d.draw_polyline (point_array, line.is_closed), is_client_supplier, d)
 				end
 
 				point_array.item (point_array.count).set_precise (old_lex, old_ley)
@@ -506,18 +495,27 @@ feature {NONE} -- Implementation
 				if (y1 - y2).abs = 1 then
 					y1 := y2
 				end
-				d.draw_segment (x1, y1, x2, y2)
-				if is_client_supplier and then line.line_width > 4 then
-					d.set_line_width (line.line_width - 4)
-					d.set_foreground_color (default_colors.white)
-					d.draw_segment (x1, y1, x2, y2)
-				end
+				draw_overlayed (agent d.draw_segment (x1, y1, x2, y2), is_client_supplier, d)
 			end
 
 		end
 
+	draw_overlayed (draw: PROCEDURE; is_doubly_line: BOOLEAN; context: EV_DRAWABLE)
+			-- Call `draw` one or two times in context `context`, changing the width of line and its color to get double line when `is_doubly_line`.
+		local
+			w: like {EV_DRAWABLE}.line_width
+		do
+			draw.call
+			w := context.line_width
+			if is_doubly_line and then w >= 3 then
+				context.set_line_width ((w - 1) // 2)
+				context.set_foreground_color (default_colors.white)
+				draw.call
+			end
+		end
+
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -548,4 +546,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EIFFEL_PROJECTOR
+end

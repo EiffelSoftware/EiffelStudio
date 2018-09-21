@@ -375,6 +375,8 @@ feature -- Status setting
 				create d1.make_now
 			end
 
+				-- Resetting values
+			is_error := False
 			create file.make_with_name (file_name)
 			has_group_changed := False
 			has_changed := False
@@ -562,7 +564,7 @@ feature {NONE} -- Implementation
 					end)
 			end
 
-			conf_system := l_load.last_system
+			set_conf_system (l_load.last_system)
 		ensure
 			conf_system_set: conf_system /= Void
 		rescue
@@ -578,7 +580,6 @@ feature {NONE} -- Implementation
 			vd68: VD68
 			vd69: VD69
 			vd70: VD70
-			l_parent_target_checker: CONF_PARENT_TARGET_CHECKER
 		do
 				-- get new target
 			if target_name /= Void then
@@ -604,8 +605,8 @@ feature {NONE} -- Implementation
 
 				-- Resolve remote parent target (i.e from another ecf file).
 				-- raise error if issue is found.
-			create l_parent_target_checker.make_with_observer (create {CONF_COMP_FACTORY}, Current)
-			l_parent_target_checker.check_target (l_new_target)
+			validate_target (l_new_target)
+			validate_groups (l_new_target)
 
 				-- Update found target with `settings'.
 			if attached settings as s then
@@ -763,6 +764,9 @@ feature {NONE} -- Implementation
 				system.set_msil_version (l_new_target.version.version)
 			end
 
+				-- Resolve parent target, and groups
+			resolve_system (l_new_target.system)
+
 			if has_group_changed then
 				parse_target (l_new_target)
 			end
@@ -784,6 +788,53 @@ feature {NONE} -- Implementation
 					-- Reset `Workbench'
 				successful := False
 			end
+		end
+
+	resolve_system (cfg: CONF_SYSTEM)
+			-- Resolve entities such as parent targets, overrides, dependencies, ... for the system `cfg`.
+		require
+			no_error: not is_error
+		local
+			l_parent_checker: CONF_PARENT_TARGET_CHECKER
+			l_group_checker: CONF_GROUPS_TARGET_CHECKER
+		do
+				-- Resolve remote parent target (i.e from another ecf file).
+				-- raise warning if issue is found.
+			create l_parent_checker.make_with_observer (create {CONF_COMP_FACTORY}, Current)
+			l_parent_checker.report_issue_as_warning
+			l_parent_checker.resolve_system (cfg)
+
+				-- Resolve override, dependencies ...
+				-- raise warning if issue is found.
+			create l_group_checker.make
+			l_group_checker.report_issue_as_warning
+			l_group_checker.check_system (cfg)
+		end
+
+	validate_target (a_target: CONF_TARGET)
+			-- Check if `a_target` has no cycle, and no conflict.
+		require
+			no_error: not is_error
+		local
+			l_checker: CONF_PARENT_TARGET_CHECKER
+		do
+				-- Resolve remote parent target (i.e from another ecf file).
+				-- raise error if issue is found.
+			create l_checker.make_with_observer (create {CONF_COMP_FACTORY}, Current)
+			l_checker.check_target (a_target)
+		end
+
+	validate_groups (a_target: CONF_TARGET)
+			-- Check if `a_target` has no cycle, and no conflict.
+		require
+			no_error: not is_error
+		local
+			l_checker: CONF_GROUPS_TARGET_CHECKER
+		do
+				-- Resolve remote parent target (i.e from another ecf file).
+				-- raise error if issue is found.
+			create l_checker.make_with_observer (Current)
+			l_checker.check_target (a_target)
 		end
 
 	validate_capabilities
@@ -867,8 +918,8 @@ feature {NONE} -- Implementation
 			vd80: VD80
 			vd89: VD89
 			l_errors: LIST [CONF_ERROR]
-			l_cycle_checker: CONF_CYCLE_CHECKER
-			l_cycles: like {CONF_CYCLE_CHECKER}.library_cycles
+			l_cycle_checker: CONF_LIBRARY_CYCLE_CHECKER
+			l_cycles: like {CONF_LIBRARY_CYCLE_CHECKER}.library_cycles
 		do
 			create l_factory
 			l_state := universe.conf_state_from_target (a_target)

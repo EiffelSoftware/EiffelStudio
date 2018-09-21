@@ -111,8 +111,8 @@ feature -- Element update
 							create loc.make_from_string (s)
 						end
 					end
-					target.set_remote_parent (create {CONF_REMOTE_TARGET}.make (tgt.name, loc.name))
-					target.set_parent (tgt)
+					target.reference_parent (create {CONF_REMOTE_TARGET_REFERENCE}.make (tgt.name, loc.name))
+					target.set_remote_parent (tgt)
 					if attached configuration_window.remote_target_section_from (tgt, p) as l_section then
 						p.start
 						p.prune (l_section)
@@ -287,7 +287,7 @@ feature {NONE} -- Implementation
 			create l_item.make_with_text_and_action (conf_interface_names.add_remote_target, agent add_remote_target)
 			Result.extend (l_item)
 			l_item.set_pixmap (conf_pixmaps.new_remote_target_icon)
-			if target.extends /= Void or target.remote_parent /= Void then
+			if target.extends /= Void or target.parent_reference /= Void then
 				l_item.disable_sensitive
 			end
 
@@ -332,7 +332,7 @@ feature {NONE} -- Implementation
 			toolbar.add_target_button.select_actions.extend (agent add_target)
 			toolbar.add_target_button.enable_sensitive
 
-			if target.extends = Void and target.remote_parent = Void then
+			if target.extends = Void and target.parent_reference = Void then
 				toolbar.add_remote_target_button.select_actions.wipe_out
 				toolbar.add_remote_target_button.select_actions.extend (agent add_remote_target)
 				toolbar.add_remote_target_button.enable_sensitive

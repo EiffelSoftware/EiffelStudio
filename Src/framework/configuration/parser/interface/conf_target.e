@@ -81,13 +81,15 @@ feature -- Access, stored in configuration file
 	extends: detachable CONF_TARGET
 			-- If we extend another target, this is the other target.
 
-	remote_parent: detachable CONF_REMOTE_TARGET
-			-- Optional remote target as parent.
+	parent_reference: detachable CONF_TARGET_REFERENCE
+			-- Optional target reference as parent.
+			-- Mainly use for remote target (i.e target from another Eiffel Configuration File).
+			-- This will be resolved to set `extends` value.
 
 	is_library_parent: BOOLEAN
-			-- Does `extends` refer to a library target corresponding to `parent_target_location` rather than to a specific target?
+			-- Does `extends` refer to a library target corresponding to `parent_reference.location` rather than to a specific target?
 		do
-			Result := attached remote_parent as p and then p.name = Void
+			Result := attached {CONF_REMOTE_TARGET_REFERENCE} parent_reference as p and then not p.has_name
 		end
 
 	system: CONF_SYSTEM
@@ -474,13 +476,26 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			a_target_not_void: a_target /= Void
 		do
 			extends := a_target
+			parent_reference := Void
+		ensure
+			parent_set: extends = a_target
+			no_parent_ref: parent_reference = Void
+		end
+
+	set_remote_parent (a_target: like extends)
+			-- Set `extends' to `a_target'.
+		require
+			a_target_not_void: a_target /= Void
+			has_remote_reference: attached {CONF_REMOTE_TARGET_REFERENCE} parent_reference
+		do
+			extends := a_target
 		ensure
 			parent_set: extends = a_target
 		end
 
-	set_remote_parent (a_remote: like remote_parent)
+	reference_parent (a_parent: like parent_reference)
 		do
-			remote_parent := a_remote
+			parent_reference := a_parent
 		end
 
 	set_parent_by_name (a_target: STRING)
@@ -504,10 +519,10 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			-- Remove the parent of the target (if any).
 		do
 			extends := Void
-			remote_parent := Void
+			parent_reference := Void
 		ensure
 			extends_unset: extends = Void
-			remote_parent_unset: remote_parent = Void
+			parent_reference_unset: parent_reference = Void
 		end
 
 	set_version (a_version: like version)

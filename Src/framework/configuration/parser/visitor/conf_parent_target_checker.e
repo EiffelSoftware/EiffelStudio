@@ -20,6 +20,8 @@ feature {NONE} -- Creation
 		do
 			factory := fac
 			create targets.make (0)
+		ensure
+			error_reported_as_error: error_reported_as_error
 		end
 
 	make_with_observer (fac: like factory; o: CONF_ERROR_OBSERVER)
@@ -40,7 +42,11 @@ feature -- Access
 		do
 			last_error := e
 			if attached observer as obs then
-				obs.report_error (e)
+				if error_reported_as_warning then
+					obs.report_warning (e)
+				else
+					obs.report_error (e)
+				end
 			end
 		ensure
 			has_error: has_error
@@ -56,24 +62,37 @@ feature -- Access
 
 	last_error: detachable CONF_ERROR
 
+feature -- Settings
+
+	error_reported_as_warning: BOOLEAN
+			-- Error reported as warning?
+
+	error_reported_as_error: BOOLEAN
+			-- Error reported as error?
+		do
+			Result := not error_reported_as_warning
+		end
+
+	report_issue_as_warning
+		do
+			error_reported_as_warning := True
+		end
+
+	report_issue_as_error
+		do
+			error_reported_as_warning := False
+		end
+
 feature -- Basic operation
 
 	check_target (a_target: CONF_TARGET)
 			-- Check target `a_target` for parent target validity, especially remote parent target issues.
 		do
 			reset
-			process_target (a_target, False)
+			process_target (a_target)
 		end
 
-	resolve_target (a_target: CONF_TARGET)
-			-- Check target `a_target` for parent target validity, especially remote parent target issues,
-			-- and update the `CONF_TARGET.extends` attribute with resolved remote target.
-		do
-			reset
-			process_target (a_target, True)
-		end
-
-	resolve_targets (a_system: CONF_SYSTEM)
+	resolve_system (a_system: CONF_SYSTEM)
 			-- Check all target from `a_system` for parent target validity, especially remote parent target issues,
 			-- and update the `CONF_TARGET.extends` attribute with resolved remote target.
 		do
@@ -83,7 +102,7 @@ feature -- Basic operation
 			until
 				has_error
 			loop
-				process_target (ic.item, True)
+				process_target (ic.item)
 			end
 		end
 
@@ -99,9 +118,9 @@ feature {NONE} -- Execution
 			has_no_error: not has_error
 		end
 
-	process_target (a_target: CONF_TARGET; a_update_remote_parent: BOOLEAN)
-			-- Check validity of remote parent `CONF_TARGET.remote_parent` and report any issue.
-			-- If `a_update_remote_parent` is True, also update the `CONF_TARGET.extends` attribute.
+	process_target (a_target: CONF_TARGET)
+			-- Check validity of remote parent `CONF_TARGET.remote_parent` and report any issue,
+			-- and update the `CONF_TARGET.extends` attribute.
 		local
 			cfg: CONF_SYSTEM
 			tgt, par: detachable CONF_TARGET
@@ -115,38 +134,48 @@ feature {NONE} -- Execution
 				report_conf_error (create {CONF_ERROR_CYCLE_IN_PARENTS}.make (tgt, targets))
 			elseif attached tgt.extends as p_tgt then
 				enter_target (tgt)
-				process_target (p_tgt, a_update_remote_parent)
+				process_target (p_tgt)
 				leave_target (tgt)
-			elseif attached tgt.remote_parent as l_remote_parent then
+			elseif attached tgt.parent_reference as l_parent_ref then
 				enter_target (tgt)
-				loc := factory.new_file_location_from_path (l_remote_parent.location, tgt)
-				create l_load.make (factory)
-				l_load.retrieve_configuration (loc.evaluated_path.name) -- Follow redirection.
-				if attached l_load.last_error as err then
-					report_conf_error (err)
-				end
-				if not has_error and attached l_load.last_system as l_remote_cfg then
-					if attached l_remote_parent.name as l_parent_name then
-						par := l_remote_cfg.target (l_parent_name)
-					else
-						par := l_remote_cfg.library_target
+				if attached {CONF_REMOTE_TARGET_REFERENCE} l_parent_ref as l_remote then
+						-- Remote parent
+					loc := factory.new_file_location_from_path (l_remote.location, tgt)
+					create l_load.make (factory)
+					l_load.retrieve_configuration (loc.evaluated_path.name) -- Follow redirection.
+					if attached l_load.last_error as err then
+						report_conf_error (err)
 					end
-					if par = Void then
-						report_conf_error (create {CONF_ERROR_PARSE}.make ({STRING_32} "Unable to find parent target of '" + tgt.name + {STRING_32} "' (" + tgt.system.file_path.name + {STRING_32} ")!"))
+					if not has_error and attached l_load.last_system as l_remote_cfg then
+						if attached l_remote.name as l_parent_name then
+							par := l_remote_cfg.target (l_parent_name)
+						else
+							par := l_remote_cfg.library_target
+						end
+						if par = Void then
+							report_conf_error (create {CONF_ERROR_PARSE}.make ({STRING_32} "Unable to find parent target of '" + tgt.name + {STRING_32} "' (" + tgt.system.file_path.name + {STRING_32} ")!"))
+						else
+							tgt.set_remote_parent (par)
+							process_target (par)
+							if attached l_load.last_error as err then
+								report_conf_error (err)
+							end
+						end
 					else
-						if a_update_remote_parent then
-							tgt.set_parent (par)
-						end
-						process_target (par, a_update_remote_parent)
-						if attached l_load.last_error as err then
-							report_conf_error (err)
-						end
+							-- Due to `l_load.recursive_retrieve_configuration` "no_error_implies_last_system_not_void" postcondition.
+						check is_error: has_error end
 					end
-					leave_target (tgt)
+				elseif attached {CONF_LOCAL_TARGET_REFERENCE} l_parent_ref as l_local_parent then
+						-- Local parent, eventually declared after `tgt`.
+					if attached cfg.target (l_local_parent.name) as p then
+						tgt.set_parent (p)
+					else
+						report_conf_error (create {CONF_ERROR_PARSE}.make ({STRING_32} "Unable to find parent target '" + l_local_parent.name + "' of '" + tgt.name + {STRING_32} "' !"))
+					end
 				else
-						-- Due to `l_load.recursive_retrieve_configuration` "no_error_implies_last_system_not_void" postcondition.
-					check is_error: has_error end
+					check should_not_occur: False end
 				end
+				leave_target (tgt)
 			end
 		end
 

@@ -413,7 +413,7 @@ feature {NONE} -- Helper
 			if not retried then
 				l_reader := ecf_reader
 					-- Ignore redirection!
-				l_reader.retrieve_configuration (a_file_name.name)
+				l_reader.retrieve_and_check_configuration (a_file_name.name)
 				if not l_reader.is_error then
 					if not is_ignoring_redirection or else l_reader.last_redirection = Void then
 							-- Ignore redirection if asked. 

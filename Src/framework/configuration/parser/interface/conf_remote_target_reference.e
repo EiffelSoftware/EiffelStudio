@@ -1,11 +1,14 @@
 note
-	description: "Summary description for {CONF_REMOTE_TARGET}."
+	description: "Summary description for {CONF_REMOTE_TARGET_REFERENCE}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	CONF_REMOTE_TARGET
+	CONF_REMOTE_TARGET_REFERENCE
+
+inherit
+	CONF_TARGET_REFERENCE
 
 create
 	make
@@ -21,8 +24,21 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	name: detachable READABLE_STRING_32
+			-- target name.
 
 	location: READABLE_STRING_32
+			-- location of remote target.
+
+feature -- Status report
+
+	has_name: BOOLEAN
+		do
+			Result := name /= Void
+		end
+
+	has_location: BOOLEAN = True
+
+	is_remote: BOOLEAN = True
 
 feature -- Element change
 

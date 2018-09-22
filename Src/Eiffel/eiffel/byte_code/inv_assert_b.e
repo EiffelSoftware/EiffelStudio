@@ -1,9 +1,9 @@
-note
-	description	: "Byte code for instruction inside an invariant clause."
+﻿note
+	description: "Byte code for instruction inside an invariant clause."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class INV_ASSERT_B
 
@@ -13,6 +13,9 @@ inherit
 			generate, process
 		end
 
+create
+	make_enlarged
+
 feature -- Visitor
 
 	process (v: BYTE_NODE_VISITOR)
@@ -21,50 +24,22 @@ feature -- Visitor
 			v.process_inv_assert_b (Current)
 		end
 
-feature
-
-	fill_from (a: ASSERT_B)
-			-- Initialization
-		require
-			good_argument: not (a = Void)
-		do
-			expr := a.expr.enlarged
-				-- Make sure the expression has never been analyzed before
-			expr.unanalyze
-			tag := a.tag
-		end
+feature -- C code generation
 
 	 generate
-			-- Generate assertion
-		local
-			buf: GENERATION_BUFFER
+			-- Generate assertion.
 		do
-			if is_true_expression (expr) then
-					-- Nothing to generate, the assertion was statically evaluated to be True
-					-- all the time
-			else
-				buf := buffer
-					-- Generate the recording of the assertion
-				buf.put_new_line
-				buf.put_string ("RTIT(")
-				if tag /= Void then
-					buf.put_character ('"')
-					buf.put_string (tag)
-					buf.put_character ('"')
-				else
-					buf.put_string ("NULL")
-				end
-				buf.put_string ({C_CONST}.comma_space)
-				context.Current_register.print_register
-				buf.put_two_character (')', ';')
-
-					-- Now evaluate the expression
-				generate_expression (buf)
+				-- Avoid generating code if the assertion is known to be True all the time.
+			if not is_true_expression then
+					-- Generate the recording of the assertion.
+				generate_assertion_macro
+					-- Now evaluate the expression.
+				generate_expression (buffer)
 			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,9 +1,9 @@
-note
-	description	: "Byte code for instruction inside a check/postcondition/[in]variant."
+﻿note
+	description: "Byte code for instruction inside a check/postcondition/[in]variant."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class ASSERT_B
 
@@ -25,8 +25,35 @@ inherit
 		end
 
 	ASSERT_TYPE
-		export
-			{NONE} generate_assertion_code, buffer
+
+create
+	make
+
+feature {NONE} -- Creation
+
+	make (t: like tag; e: like expr; l: like line_number)
+			-- Initialize with a tag `t` and expression `e` at line number `l`.
+		do
+			tag := t
+			expr := e
+			line_number := l
+		ensure
+			tag_set: tag = t
+			expr_set: expr = e
+			line_number_set: line_number = l
+		end
+
+	make_enlarged (a: ASSERT_B)
+			-- Fill from `a` with enlarged `a.expr`.
+		local
+			e: like expr
+		do
+			tag := a.tag
+			e := a.expr.enlarged
+			expr := e
+				-- Make sure the expression has never been analyzed before.
+			e.unanalyze
+			line_number := a.line_number
 		end
 
 feature -- Visitor
@@ -46,14 +73,20 @@ feature -- Access
 			-- Assertion expression which returns a boolean
 
 	line_number : INTEGER
+			-- Source code line number.
 
 feature -- Status report
 
-	is_true_expression (a_expr: like expr): BOOLEAN
-			-- Does `a_expr' always evaluate to True?
+	is_true_expression: BOOLEAN
+			-- Does `expr' always evaluate to True?
 			--| Useful to avoid code generation of useless assertion clauses.
+		local
+			v: VALUE_I
 		do
-			Result := attached {BOOL_CONST_B} a_expr as l_bool and then l_bool.value
+			v := expr.evaluate
+			if v.is_boolean then
+				Result := v.boolean_value
+			end
 		end
 
 feature -- Line number setting
@@ -102,38 +135,15 @@ feature -- Line number setting
 
 	generate
 			-- Generate assertion C code.
-		local
-			buf: GENERATION_BUFFER
 		do
-				-- generate a debugger hook
+				-- Generate a debugger hook.
 			generate_frozen_debugger_hook
-
-			if is_true_expression (expr) then
-					-- Nothing to generate, the assertion was statically evaluated to be True
-					-- all the time
-			else
-				buf := buffer
-
-
+				-- Avoid generating code if the assertion is known to be True all the time.
+			if not is_true_expression then
 					-- Generate the recording of the assertion
-				buf.put_new_line
-				buf.put_string ("RTCT")
-				if context.assertion_type = in_guard then
-					buf.put_character ('0')
-				end
-				buf.put_character ('(')
-				if tag /= Void then
-					buf.put_character ('"')
-					buf.put_string (tag)
-					buf.put_character ('"')
-				else
-					buf.put_string ("NULL")
-				end
-				buf.put_string ({C_CONST}.comma_space)
-				generate_assertion_code (context.assertion_type)
-				buf.put_two_character (')', ';')
+				generate_assertion_macro
 					-- Now evaluate the expression
-				generate_expression (buf)
+				generate_expression (buffer)
 			end
 		end
 
@@ -199,19 +209,12 @@ feature -- Line number setting
 		end
 
 	enlarged: ASSERT_B
-			-- Tree enlarging
-		local
-			inv_assert: INV_ASSERT_B
-			require_b: REQUIRE_B
+			-- Tree enlarging.
 		do
 			if context.assertion_type = In_invariant then
-				create inv_assert
-				inv_assert.fill_from (Current)
-				Result := inv_assert
+				create {INV_ASSERT_B} Result.make_enlarged (Current)
 			elseif context.assertion_type = In_precondition then
-				create require_b
-				require_b.fill_from (Current)
-				Result := require_b
+				create {REQUIRE_B} Result.make_enlarged (Current)
 			else
 				expr := expr.enlarged
 					-- Make sure the expression has never been analyzed before,
@@ -220,7 +223,54 @@ feature -- Line number setting
 				expr.unanalyze
 				Result := Current
 			end
-		end;
+		end
+
+feature {NONE} -- C code generation
+
+	generate_assertion_macro
+			-- Generate a call to a macro that records beginning of the assertion.
+		require
+			in_assertion: is_assertion (context.assertion_type)
+		local
+			a: like context.assertion_type
+			buf: like buffer
+		do
+			a := context.assertion_type
+			buf := buffer
+			buf.put_new_line
+			buf.put_string
+				(if a = in_guard then
+					{C_CONST}.rtct0
+				elseif a = in_invariant then
+					{C_CONST}.rtit
+				else
+					{C_CONST}.rtct
+				end)
+			buf.put_character ('(')
+			if attached tag as t then
+				buf.put_character ('"')
+				buf.put_escaped_string (t)
+				buf.put_character ('"')
+			else
+				buf.put_string ("NULL")
+			end
+			buf.put_string ({C_CONST}.comma_space)
+			inspect a
+			when In_precondition then
+				buf.put_string ({C_CONST}.ex_pre)
+			when In_postcondition then
+				buf.put_string ({C_CONST}.ex_post)
+			when In_check, In_guard then
+				buf.put_string ({C_CONST}.ex_check)
+			when In_loop_invariant then
+				buf.put_string ({C_CONST}.ex_linv)
+			when In_loop_variant then
+				buf.put_string ({C_CONST}.ex_var)
+			when In_invariant then
+				context.Current_register.print_register
+			end
+			buf.put_two_character (')', ';')
+		end
 
 feature -- Array optimization
 
@@ -250,7 +300,7 @@ feature -- Inlining
 
 	pre_inlined_code: like Current
 		do
-			Result := Current;
+			Result := Current
 			expr := expr.pre_inlined_code
 		end
 
@@ -261,7 +311,7 @@ feature -- Inlining
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

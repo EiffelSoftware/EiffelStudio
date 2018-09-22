@@ -850,7 +850,6 @@ feature {NONE} -- Roundtrip
 			l_id_list: IDENTIFIER_LIST
 			l_error_level: NATURAL_32
 			l_vpir: VPIR3
-			l_unsupported: NOT_SUPPORTED
 		do
 			if current_feature.is_class then
 				report_vucr (create {VUCR_BODY}.make_inline_agent (current_feature, context.current_class, context.written_class, l_as.first_token (match_list_of_class (context.written_class.class_id))))
@@ -3905,7 +3904,6 @@ feature {NONE} -- Visitor
 	process_tagged_as (l_as: TAGGED_AS)
 		local
 			l_vwbe3: VWBE3
-			l_assert: ASSERT_B
 			l_expr: EXPR_B
 			l_error_level: NATURAL_32
 		do
@@ -3932,15 +3930,7 @@ feature {NONE} -- Visitor
 					check
 						l_expr_not_void: l_expr /= Void
 					end
-					create l_assert
-					if l_as.tag /= Void then
-						l_assert.set_tag (l_as.tag.name)
-					else
-						l_assert.set_tag (Void)
-					end
-					l_assert.set_expr (l_expr)
-					l_assert.set_line_number (l_as.expr.start_location.line)
-					last_byte_node := l_assert
+					create {ASSERT_B} last_byte_node.make (assertion_tag (l_as), l_expr, l_as.expr.start_location.line)
 				end
 			end
 		end
@@ -3948,8 +3938,6 @@ feature {NONE} -- Visitor
 	process_variant_as (l_as: VARIANT_AS)
 		local
 			l_vave: VAVE
-			l_assert: VARIANT_B
-			l_expr: EXPR_B
 		do
 			reset_for_unqualified_call_checking
 			l_as.expr.process (Current)
@@ -3966,19 +3954,11 @@ feature {NONE} -- Visitor
 				end
 
 				if is_byte_node_enabled then
-					l_expr ?= last_byte_node
-					check
-						l_expr_not_void: l_expr /= Void
-					end
-					create l_assert
-					if l_as.tag /= Void then
-						l_assert.set_tag (l_as.tag.name)
+					if attached {EXPR_B} last_byte_node as e then
+						create {VARIANT_B} last_byte_node.make (assertion_tag (l_as), e, l_as.expr.start_location.line)
 					else
-						l_assert.set_tag (Void)
+						check expected_byte_node_type: False end
 					end
-					l_assert.set_expr (l_expr)
-					l_assert.set_line_number (l_as.expr.start_location.line)
-					last_byte_node := l_assert
 				end
 			end
 		end
@@ -4201,7 +4181,6 @@ feature {NONE} -- Visitor
 			l_argument: ARGUMENT_B
 			l_local: LOCAL_B
 			l_local_info: LOCAL_INFO
-			l_unsupported: NOT_SUPPORTED
 			l_feature: FEATURE_I
 			l_vzaa1: VZAA1
 			l_veen: VEEN
@@ -4415,7 +4394,6 @@ feature {NONE} -- Visitor
 			l_class: CLASS_C
 			l_feature: FEATURE_I
 			l_table: FEATURE_TABLE
-			l_unsupported: NOT_SUPPORTED
 			l_target_type: TYPE_A
 			l_return_type: TYPE_A
 			l_target_node: EXPR_B
@@ -8965,7 +8943,55 @@ feature {NONE} -- Parenthesis alias
 			-- Last VUAR error set by `process_call' when found feature has no formal arguments, but there are actual arguments.
 			-- Used to delay error report in case there is a parenthesis alias.
 
-feature {NONE} -- Implementation
+feature {NONE} -- Assertions
+
+	assertion_tag (a: TAGGED_AS): detachable STRING
+			-- A tag associated with an assertion or a printable representation of the expression (if available).
+		local
+			e: EXPR_AS
+			m: like match_list_of_class
+			i: like assertion_tag.count
+			has_space: BOOLEAN
+		do
+			if attached a.tag as t then
+				Result := t.name
+			else
+				e := a.expr
+				m := match_list_of_class (context.written_class.class_id)
+				if e.is_text_available (m) then
+						-- Obtain the text as written in source code.
+					Result := e.text (m)
+						-- Normalize the text: remove leading and trailing spaces, replace white space sequances (including line endings) with a single space.
+					from
+							-- Assume there are white spaces at the end of a string.
+						has_space := True
+						i := Result.count
+					until
+						i <= 0
+					loop
+						if Result [i].is_space then
+							if has_space then
+									-- Remove a subsequent white space character.
+								Result.remove (i)
+							else
+									-- Replace a white space with a standard one.
+								Result [i] := ' '
+									-- Remember that there are white spaces.
+								has_space := True
+							end
+						else
+								-- Remember that the last character is not a white space.
+							has_space := False
+						end
+						i := i - 1
+					end
+					if has_space and Result.count > 0 then
+							-- Remove a leading white space.
+						Result.remove (1)
+					end
+				end
+			end
+		end
 
 	process_inherited_assertions (a_feature: FEATURE_I; process_preconditions: BOOLEAN)
 			-- Process assertions inherited by `a_feature'.
@@ -9054,6 +9080,8 @@ feature {NONE} -- Implementation
 				context.set_locals (old_locals)
 			end
 		end
+
+feature {NONE} -- Implementation
 
 	process_expressions_list (l_as: EIFFEL_LIST [EXPR_AS])
 			-- Process `l_as' as an EIFFEL_LIST but also set `last_expressions_type' accordingly.

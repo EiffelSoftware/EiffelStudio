@@ -366,7 +366,7 @@ feature -- Callbacks
 						loop
 							l_target := ic.item
 							if attached l_target.parent_reference as p_ref then
-								if attached {CONF_REMOTE_TARGET_REFERENCE} p_ref as p_remote and then attached p_remote.name as l_parent_name then
+								if attached {CONF_LOCAL_TARGET_REFERENCE} p_ref as p_remote and then attached p_remote.name as l_parent_name then
 									if attached syst.target (l_parent_name) as l_parent then
 										if l_target = l_parent or l_target.same_as (l_parent) then
 											set_parse_error_message (conf_interface_names.e_parse_incorrect_target_parent (l_parent.name, l_target.name))

@@ -1,7 +1,8 @@
 <!doctype html>
 <html>
 <head>
-	<meta charset="utf-8">
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
 	<title>{if isset="$site_title"}{$site_title/}{/if}</title>
 <link media="all" rel="stylesheet" href="{$theme_path/}css/all.css" />
 <link rel="shortcut icon" href="{$site_url/}favicon.ico"/>

@@ -26,13 +26,13 @@
 			min-height: 320px;
 			.prettyprint {
 				padding-top: 10px;
-				height: 265px;
+				height: 270px;
 			}
 		}	
 		#block-front_header_welcome {
-			margin-top: 55px;
+			margin-top: 53px;
 			.holder {
-				height: 115px;
+				min-height: 122px;
 			}
 		}	
 		#block-download_area {
@@ -123,4 +123,10 @@
 			}
 		}
 	}
+}
+@media only screen and (max-width: 768px) {
+  .jumbotron >.container .holder .btn-holder .btn-download { 
+  	width: auto; height: auto;  margin: auto; padding: 0;
+	&:after { background: none; display:none;}
+  }
 }

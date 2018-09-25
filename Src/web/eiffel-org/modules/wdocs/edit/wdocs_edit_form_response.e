@@ -404,7 +404,7 @@ feature -- Form
 						l_page.update_from_metadata
 						create ctx
 						ctx.set_user (user)
-						if l_log_message /= Void then
+						if l_log_message /= Void and then not l_log_message.is_empty then
 							ctx.set_log (l_log_message + {STRING_32} "%NUpdated wikipage " + l_page.title + ".%N")
 						else
 							ctx.set_log ({STRING_32} "Updated wikipage " + l_page.title + ".")

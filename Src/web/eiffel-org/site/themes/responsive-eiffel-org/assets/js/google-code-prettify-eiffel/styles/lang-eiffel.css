@@ -8,7 +8,7 @@
   .str { color: #080 }  			/* string content */
   .kwd { color: #008; font-weight: bold }  	/* a keyword */
   .com { color: #800 }  			/* a comment */
-  .typ { color: #606 }  			/* a type name */
+  .typ { color: #00f }  			/* a type name */
   .lit { color: #066 }  			/* a literal value */
   
   /* Eiffel specific */

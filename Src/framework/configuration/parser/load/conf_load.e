@@ -71,6 +71,22 @@ feature -- Status
 			end
 		end
 
+feature -- Error changes
+
+	report_error (e: detachable CONF_ERROR)
+		require
+			e_attached: e /= Void
+		do
+			is_error := True
+			last_error := e
+		end
+
+	reset_error
+		do
+			is_error := False
+			last_error := Void
+		end
+
 feature -- Access
 
 	last_system: detachable CONF_SYSTEM
@@ -99,6 +115,36 @@ feature -- Element change
 
 feature -- Basic operation
 
+	retrieve_and_check_configuration (a_file: READABLE_STRING_32)
+			-- Retrieve the configuration in `a_file' and make it available in `last_system'.
+			-- Also report as warning any validity issue such as cycle in parent target.
+		require
+			a_file_ok: a_file /= Void and then not a_file.is_empty
+		local
+			l_parent_checker: CONF_PARENT_TARGET_CHECKER
+			l_group_checker: CONF_GROUPS_TARGET_CHECKER
+		do
+			retrieve_configuration (a_file)
+			if attached last_system as syst then
+				if not is_error then
+					create l_parent_checker.make (factory)
+					l_parent_checker.report_issue_as_warning
+					l_parent_checker.resolve_system (syst)
+					if attached l_parent_checker.last_error as err then
+						is_warning := True
+						add_warning (err)
+					end
+				end
+				if not is_error then
+					create l_group_checker.make
+					l_group_checker.report_issue_as_warning
+					l_group_checker.check_system (syst)
+				end
+			end
+		ensure
+			no_error_implies_last_system_not_void: not is_error implies last_system /= Void
+		end
+
 	retrieve_configuration (a_file: READABLE_STRING_32)
 			-- Retrieve the configuration in `a_file' and make it available in `last_system'.
 		require
@@ -108,7 +154,7 @@ feature -- Basic operation
 			last_redirection := Void
 			last_redirected_location := Void
 			last_warnings := Void
-			last_error := Void
+			reset_error
 			recursive_retrieve_configuration (a_file, Void, Void)
 		ensure
 			no_error_implies_last_system_not_void: not is_error implies last_system /= Void
@@ -123,7 +169,7 @@ feature -- Basic operation
 			last_redirected_location := Void
 			last_uuid := Void
 			last_warnings := Void
-			last_error := Void
+			reset_error
 			recursive_retrieve_uuid (a_file, Void, Void)
 		ensure
 			no_error_implies_last_uuid_not_void: not is_error implies last_uuid /= Void
@@ -155,7 +201,7 @@ feature {CONF_LOAD} -- Implementation
 	recursive_retrieve_configuration (a_file: READABLE_STRING_32; ctx: detachable CONF_LOAD_CONTEXT; a_previous_redirection: detachable TUPLE [file: READABLE_STRING_32; uuid: UUID])
 			-- Retrieve the configuration in `a_file' and make it available in `last_system',
 			-- it might occur inside an ecf redirection process.
-			-- `a_redirections' is used to keep track of potential cycle in redirection.
+			-- `ctx' is used to keep track of potential cycle in redirection.
 			-- `a_previous_redirection' is used to carry the file+uuid of previous redirected file
 			--     the `file' is used to report the error with the details of the various implied ecf files.
 		require
@@ -168,9 +214,8 @@ feature {CONF_LOAD} -- Implementation
 			create l_callback.make_with_factory (a_file, factory)
 			parse_file (a_file, l_callback)
 			if l_callback.is_error then
-				is_error := True
 				is_invalid_xml := l_callback.is_invalid_xml
-				last_error := l_callback.last_error
+				report_error (l_callback.last_error)
 			elseif not is_error then
 				last_system := l_callback.last_system
 				l_context := ctx
@@ -194,8 +239,7 @@ feature {CONF_LOAD} -- Implementation
 							a_previous_redirection /= Void and then a_previous_redirection.uuid /~ l_new_location_uuid
 						then
 								--| The previously recorded UUID and the UUID from the `a_file' does not match -> report error
-							is_error := True
-							create {CONF_ERROR_UUID_MISMATCH_IN_REDIRECTION} last_error.make (a_previous_redirection.file, a_file, a_previous_redirection.uuid, l_new_location_uuid)
+							report_error (create {CONF_ERROR_UUID_MISMATCH_IN_REDIRECTION}.make (a_previous_redirection.file, a_file, a_previous_redirection.uuid, l_new_location_uuid))
 						else
 							if a_previous_redirection /= Void then
 									--| Update previous redirection with new uuid, so that caller gets new data
@@ -248,17 +292,13 @@ feature {CONF_LOAD} -- Implementation
 						--| if `a_file' is the end of a redirection chain
 						--| if there is a UUID mismatch, report error
 					if a_previous_redirection /= Void and then a_previous_redirection.uuid /~ l_last_system.uuid then
-						is_error := True
 						if l_last_system.is_generated_uuid then
 								--| i.e `a_file' does not set any uuid, so it was internally set to new generated UUID.
-							create {CONF_ERROR_UUID_MISMATCH_IN_REDIRECTION} last_error.make (a_previous_redirection.file, a_file, a_previous_redirection.uuid, Void)
+							report_error (create {CONF_ERROR_UUID_MISMATCH_IN_REDIRECTION}.make (a_previous_redirection.file, a_file, a_previous_redirection.uuid, Void))
 						else
-							create {CONF_ERROR_UUID_MISMATCH_IN_REDIRECTION} last_error.make (a_previous_redirection.file, a_file, a_previous_redirection.uuid, l_last_system.uuid)
+							report_error (create {CONF_ERROR_UUID_MISMATCH_IN_REDIRECTION}.make (a_previous_redirection.file, a_file, a_previous_redirection.uuid, l_last_system.uuid))
 						end
 					end
-
-						-- Resolve `CONF_TARGET.parent_target_location` into `CONF_TARGET.extends` if any.
-					resolve_remote_parent_target (l_last_system, l_context)
 				else
 						--| `last_system' is Void AND `last_location' is also Void.
 						--|
@@ -268,15 +308,14 @@ feature {CONF_LOAD} -- Implementation
 						--|    <system ... location="..."/>
 						--| This is not valid, then report the error
 					l_callback.set_internal_error
-					is_error := True
 					is_invalid_xml := l_callback.is_invalid_xml
 					if attached l_callback.last_error as err then
-						last_error := err
+						report_error (err)
 							--| It could be "Tag %"system%" or %"redirection%" not found",
 							--| but redirection should be used occasionally, so let's not confuse the user.
 						err.set_message ("Tag %"system%" not found")
 					else
-						last_error := Void
+						reset_error
 					end
 				end
 			end
@@ -318,8 +357,7 @@ feature {CONF_LOAD} -- Implementation
 				last_redirected_location := l_redirected_location
 			end
 			if l_callback.is_error then
-				is_error := True
-				last_error := l_callback.last_error
+				report_error (l_callback.last_error)
 			elseif not is_error then
 				if attached l_callback.last_uuid as l_new_location_uuid then
 						--| `a_file' has a UUID, then let's check if it is already in a redirection chain, and if ever
@@ -330,8 +368,7 @@ feature {CONF_LOAD} -- Implementation
 						a_previous_redirection /= Void and then a_previous_redirection.uuid /~ l_new_location_uuid
 					then
 							--| The previously recorded UUID and the UUID from the `a_file' does not match -> report error
-						is_error := True
-						create {CONF_ERROR_UUID_MISMATCH_IN_REDIRECTION} last_error.make (a_previous_redirection.file, a_file, a_previous_redirection.uuid, l_new_location_uuid)
+						report_error (create {CONF_ERROR_UUID_MISMATCH_IN_REDIRECTION}.make (a_previous_redirection.file, a_file, a_previous_redirection.uuid, l_new_location_uuid))
 					else
 						if a_previous_redirection /= Void then
 								--| Update previous redirection with new uuid, so that caller gets new data
@@ -395,10 +432,9 @@ feature {CONF_LOAD} -- Implementation
 						last_uuid := l_previous.uuid
 					else
 							--| No UUID found
-						is_error := True
 						create l_err
 						l_err.set_position (a_file, 1, 1)
-						last_error := l_err
+						report_error (l_err)
 					end
 				end
 			end
@@ -438,8 +474,7 @@ feature {NONE} -- Redirection
 			if across ctx.redirections as c some p.is_same_file_as (c.item) end then
 					--| `a_new_location' already appears in the redirection chain
 					--| this is a cycle in redirection which not allowed.
-				is_error := True
-				create {CONF_ERROR_CYCLE_IN_REDIRECTION} last_error.make (p.name, ctx.redirections)
+				report_error (create {CONF_ERROR_CYCLE_IN_REDIRECTION}.make (p.name, ctx.redirections))
 			else
 					--| Follow the redirection, and record the current redirection node in `a_redirections'
 				ctx.record_redirection (p)
@@ -465,66 +500,11 @@ feature {NONE} -- Redirection
 			if across a_redirections as c some p.is_same_file_as (c.item) end then
 					--| `a_new_location' already appears in the redirection chain
 					--| this is a cycle in redirection which not allowed.				
-				is_error := True
-				create {CONF_ERROR_CYCLE_IN_REDIRECTION} last_error.make (p.name, a_redirections)
+				report_error (create {CONF_ERROR_CYCLE_IN_REDIRECTION}.make (p.name, a_redirections))
 			else
 					--| Follow the redirection until a UUID is set.
 				a_redirections.extend (p)
 				recursive_retrieve_uuid (p.name, a_redirections, a_previous_redirection)
-			end
-		end
-
-feature {NONE} -- Implementation: resolve remote target
-
-	resolve_remote_parent_target (cfg: CONF_SYSTEM; a_context: CONF_LOAD_CONTEXT)
-			-- Resolve the `CONF_TARGET.remove_parent` and update the `CONF_TARGET.extends` attribute.
-		require
-			a_context_set: a_context /= Void
-		local
-			tgt, par: detachable CONF_TARGET
-			loc: CONF_FILE_LOCATION
-			l_load: CONF_LOAD
-		do
-			create l_load.make (factory)
-			across
-				cfg.targets as ic
-			until
-				is_error
-			loop
-				tgt := ic.item
-				if
-					tgt.extends = Void and then
-					attached tgt.remote_parent as l_remote_parent
-				then
-					if a_context.has_target (tgt) then
-							-- Cycle
-						is_error := True
-						create {CONF_ERROR_CYCLE_IN_PARENTS} last_error.make (tgt, a_context.targets)
-					else
-						a_context.enter_target (tgt)
-						loc := factory.new_file_location_from_path (l_remote_parent.location, tgt)
-						l_load.recursive_retrieve_configuration (loc.evaluated_path.name, a_context, Void)
-						is_error := l_load.is_error
-						last_error := l_load.last_error
-						if not is_error and attached l_load.last_system as l_remote_cfg then
-							if attached l_remote_parent.name as l_parent_name then
-								par := l_remote_cfg.target (l_parent_name)
-							else
-								par := l_remote_cfg.library_target
-							end
-							if par = Void then
-								create {CONF_ERROR_PARSE} last_error.make ({STRING_32} "Unable to find parent target of '" + tgt.name + {STRING_32} "' (" + tgt.system.file_path.name + {STRING_32} ")!")
-								is_error := True
-							else
-								tgt.set_parent (par)
-							end
-							a_context.leave_target (tgt)
-						else
-								-- Due to `l_load.recursive_retrieve_configuration` "no_error_implies_last_system_not_void" postcondition.
-							check is_error: is_error end
-						end
-					end
-				end
 			end
 		end
 
@@ -570,11 +550,10 @@ feature {NONE} -- Implementation
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
-				is_error := False
+				reset_error
 
 				if a_file.is_empty then
-					is_error := True
-					last_error := create {CONF_ERROR_FILE}.make (a_file)
+					report_error (create {CONF_ERROR_FILE}.make (a_file))
 				else
 					create {XML_STOPPABLE_PARSER} l_parser.make
 					a_callback.set_associated_parser (l_parser)
@@ -592,12 +571,10 @@ feature {NONE} -- Implementation
 						l_parser.parse_from_file (l_file)
 						l_file.close
 					else
-						is_error := True
-						last_error := create {CONF_ERROR_FILE}.make (a_file)
+						report_error (create {CONF_ERROR_FILE}.make (a_file))
 					end
 				end
 			else
-				is_error := True
 				if l_parser /= Void then --| not is_error implies l_parser /= Void
 						-- In case it is an internal error (Call on Void target, or others...)
 						-- we need to properly handle this.
@@ -616,6 +593,11 @@ feature {NONE} -- Implementation
 					end
 				else
 					a_callback.set_internal_error
+				end
+				if attached a_callback.last_error as err then
+					report_error (err)
+				else
+					check is_error_expected: is_error end
 				end
 			end
 				-- add warnings

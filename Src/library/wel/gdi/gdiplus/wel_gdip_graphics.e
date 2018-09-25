@@ -1,10 +1,11 @@
-note
+﻿note
 	description: "[
-					Grapics functions in Gdi+.
-					For more information, please see:
-					MSDN Graphics Functions:					
-					http://msdn.microsoft.com/en-us/library/ms534038(VS.85).aspx
-																			]"
+			Grapics functions in Gdi+.
+			For more information, please see:
+			MSDN Graphics Functions:					
+			http://msdn.microsoft.com/en-us/library/ms534038(VS.85).aspx
+		]"
+	eis: "protocol=uri", "src=http://msdn.microsoft.com/en-us/library/ms534038(VS.85).aspx"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -78,19 +79,6 @@ feature -- Command
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
-	draw_rectangle (a_pen: WEL_GDIP_PEN; a_x, a_y, a_width, a_height: INTEGER)
-			-- Draw a rectangle with the specified `a_x'/`a_y' and `a_width'/`a_height'
-		require
-			not_void: a_pen /= Void
-			a_pen_exists: a_pen.exists
-			exists: exists
-		local
-			l_result: INTEGER
-		do
-			c_gdip_draw_rectangle_i (gdi_plus_handle, item, a_pen.item, a_x, a_y, a_width, a_height, $l_result)
-			check ok: l_result = {WEL_GDIP_STATUS}.ok end
-		end
-
 	draw_ellipse (a_pen: WEL_GDIP_PEN; a_x, a_y, a_width, a_height: INTEGER)
 			-- Draw a ellipse with the specified `a_x'/`a_y' and `a_width'/`a_height'
 		require
@@ -101,19 +89,6 @@ feature -- Command
 			l_result: INTEGER
 		do
 			c_gdip_draw_ellipse_i (gdi_plus_handle, item, a_pen.item, a_x, a_y, a_width, a_height, $l_result)
-			check ok: l_result = {WEL_GDIP_STATUS}.ok end
-		end
-
-	fill_ellipse (a_brush: WEL_GDIP_BRUSH; a_x, a_y, a_width, a_height: INTEGER)
-			-- Fill a ellipse with the specified `a_x'/`a_y' and `a_width'/`a_height'
-		require
-			not_void: a_brush /= Void
-			a_pen_exists: a_brush.exists
-			exists: exists
-		local
-			l_result: INTEGER
-		do
-			c_gdip_fill_ellipse_i (gdi_plus_handle, item, a_brush.item, a_x, a_y, a_width, a_height, $l_result)
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
@@ -169,6 +144,53 @@ feature -- Command
 			else
 				c_gdip_draw_image_rect_rect_i (gdi_plus_handle, item, a_image.item, a_dest_rect.x, a_dest_rect.y, a_dest_rect.width, a_dest_rect.height, a_src_rect.x, a_src_rect.y, a_src_rect.width, a_src_rect.height, a_unit, a_image_attributes.item, l_null_pointer, l_null_pointer, $l_result)
 			end
+			check ok: l_result = {WEL_GDIP_STATUS}.ok end
+		end
+
+	draw_lines (pen: WEL_GDIP_PEN; coorinates: ARRAY [INTEGER_32])
+			-- Draw a series of line segments that connect an array of specified coordinates `coorinates` with a pen `pen`.
+		require
+			pen_attached: attached pen
+			pen_exists: pen.exists
+			exists: exists
+			coordinates_attached: attached coorinates
+			coordinates_in_pairs: coorinates.count & 1 = 0
+		local
+			a: WEL_INTEGER_ARRAY
+			r: INTEGER
+		do
+			create a.make (coorinates)
+			c_gdip_draw_lines_i (gdi_plus_handle, item, pen.item, a.item, coorinates.count // 2, $r)
+			a.dispose
+		end
+
+	draw_polygon (pen: WEL_GDIP_PEN; coorinates: ARRAY [INTEGER_32])
+			-- Draw a polygon with a pen `pen` at specified coordinates `coorinates`.
+		require
+			pen_attached: attached pen
+			pen_exists: pen.exists
+			exists: exists
+			coordinates_attached: attached coorinates
+			coordinates_in_pairs: coorinates.count & 1 = 0
+		local
+			a: WEL_INTEGER_ARRAY
+			r: INTEGER
+		do
+			create a.make (coorinates)
+			c_gdip_draw_polygon_i (gdi_plus_handle, item, pen.item, a.item, coorinates.count // 2, $r)
+			a.dispose
+		end
+
+	draw_rectangle (a_pen: WEL_GDIP_PEN; a_x, a_y, a_width, a_height: INTEGER)
+			-- Draw a rectangle with the specified `a_x'/`a_y' and `a_width'/`a_height'
+		require
+			not_void: a_pen /= Void
+			a_pen_exists: a_pen.exists
+			exists: exists
+		local
+			l_result: INTEGER
+		do
+			c_gdip_draw_rectangle_i (gdi_plus_handle, item, a_pen.item, a_x, a_y, a_width, a_height, $l_result)
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
 		end
 
@@ -229,6 +251,37 @@ feature -- Command
 			c_gdip_draw_string (gdi_plus_handle, item, l_wel_string.item, l_wel_string.count, l_font_item, l_rect_item, l_format_item, l_brush_item, $l_result)
 
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
+		end
+
+	fill_ellipse (a_brush: WEL_GDIP_BRUSH; a_x, a_y, a_width, a_height: INTEGER)
+			-- Fill a ellipse with the specified `a_x'/`a_y' and `a_width'/`a_height'
+		require
+			not_void: a_brush /= Void
+			a_pen_exists: a_brush.exists
+			exists: exists
+		local
+			l_result: INTEGER
+		do
+			c_gdip_fill_ellipse_i (gdi_plus_handle, item, a_brush.item, a_x, a_y, a_width, a_height, $l_result)
+			check ok: l_result = {WEL_GDIP_STATUS}.ok end
+		end
+
+	fill_polygon (brush: WEL_GDIP_BRUSH; coorinates: ARRAY [INTEGER_32]; mode: INTEGER)
+			-- Fill the interior of a polygon defined by an array of coordinates `coorinates` using a brush `brush` and fill mode `mode`.
+		require
+			brush_attached: attached brush
+			brush_exists: brush.exists
+			exists: exists
+			coordinates_attached: attached coorinates
+			coordinates_in_pairs: coorinates.count & 1 = 0
+			is_mode_valid: {WEL_GDIP_FILL_MODE}.is_valid (mode)
+		local
+			a: WEL_INTEGER_ARRAY
+			r: INTEGER
+		do
+			create a.make (coorinates)
+			c_gdip_fill_polygon_i (gdi_plus_handle, item, brush.item, a.item, coorinates.count // 2, mode, $r)
+			a.dispose
 		end
 
 	fill_rectangle (a_brush: WEL_GDIP_BRUSH; a_rect: WEL_GDIP_RECT)
@@ -329,6 +382,16 @@ feature -- Command
 		do
 			c_gdip_set_clip_path (gdi_plus_handle, item, a_path.item, {WEL_GDIP_COMBINE_MODE}.replace, $l_result)
 			check ok: l_result = {WEL_GDIP_STATUS}.ok end
+		end
+
+	set_smoothing_mode (mode: INTEGER)
+		require
+			is_mode_valid: {WEL_GDIP_SMOOTHING_MODE}.is_valid (mode)
+			exists
+		local
+			r: INTEGER
+		do
+			c_gdip_set_smoothing_mode (gdi_plus_handle, item, mode, $r)
 		end
 
 	reset_clip
@@ -541,8 +604,8 @@ feature {NONE} -- C externals
 			]"
 		end
 
-	c_gdip_draw_line_i (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_pen: POINTER; a_x_1, a_y_1, a_x_2, a_y_2: INTEGER; a_result_status: TYPED_POINTER [INTEGER])
-			-- Draw a line on `a_graphics' from `a_x_1', `a_y_1' to `a_x_2', `a_y_2'.
+	c_gdip_fill_ellipse_i (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_brush: POINTER; a_x, a_y, a_width, a_height: INTEGER; a_result_status: TYPED_POINTER [INTEGER])
+			-- Fill a ellipse on `a_graphics' with specified `a_x', `a_y', `a_width', `a_height'.
 		require
 			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
 			a_graphics_not_null: a_graphics /= default_pointer
@@ -551,47 +614,17 @@ feature {NONE} -- C externals
 		alias
 			"[
 			{
-				static FARPROC GdipDrawLineI = NULL;
+				static FARPROC GdipFillEllipseI = NULL;
 				*(EIF_INTEGER *) $a_result_status = 1;
 				
-				if (!GdipDrawLineI) {
-					GdipDrawLineI = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipDrawLineI");
+				if (!GdipFillEllipseI) {
+					GdipFillEllipseI = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipFillEllipseI");
 				}
 				
-				if (GdipDrawLineI) {			
-					*(EIF_INTEGER *) $a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpGraphics *, GpPen *, INT, INT, INT, INT)) GdipDrawLineI)
+				if (GdipFillEllipseI) {			
+					*(EIF_INTEGER *) $a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpGraphics *, GpBrush *, INT, INT, INT, INT)) GdipFillEllipseI)
 								((GpGraphics *) $a_graphics,
-								(GpPen *) $a_pen,
-								(INT) $a_x_1,
-								(INT) $a_y_1,
-								(INT) $a_x_2,
-								(INT) $a_y_2);
-				}
-			}
-			]"
-		end
-
-	c_gdip_draw_rectangle_i (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_pen: POINTER; a_x, a_y, a_width, a_height: INTEGER; a_result_status: TYPED_POINTER [INTEGER])
-			-- Draw a rectangle on `a_graphics' with specified `a_x', `a_y', `a_width', `a_height'.
-		require
-			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
-			a_graphics_not_null: a_graphics /= default_pointer
-		external
-			"C inline use %"wel_gdi_plus.h%""
-		alias
-			"[
-			{
-				static FARPROC GdipDrawRectangleI = NULL;
-				*(EIF_INTEGER *) $a_result_status = 1;
-				
-				if (!GdipDrawRectangleI) {
-					GdipDrawRectangleI = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipDrawRectangleI");
-				}
-				
-				if (GdipDrawRectangleI) {			
-					*(EIF_INTEGER *) $a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpGraphics *, GpPen *, INT, INT, INT, INT)) GdipDrawRectangleI)
-								((GpGraphics *) $a_graphics,
-								(GpPen *) $a_pen,
+								(GpBrush *) $a_brush,
 								(INT) $a_x,
 								(INT) $a_y,
 								(INT) $a_width,
@@ -600,6 +633,8 @@ feature {NONE} -- C externals
 			}
 			]"
 		end
+
+feature {NONE} -- Drawing
 
 	c_gdip_draw_ellipse_i (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_pen: POINTER; a_x, a_y, a_width, a_height: INTEGER; a_result_status: TYPED_POINTER [INTEGER])
 			-- Draw a ellipse on `a_graphics' with specified `a_x', `a_y', `a_width', `a_height'.
@@ -622,36 +657,6 @@ feature {NONE} -- C externals
 					*(EIF_INTEGER *) $a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpGraphics *, GpPen *, INT, INT, INT, INT)) GdipDrawEllipseI)
 								((GpGraphics *) $a_graphics,
 								(GpPen *) $a_pen,
-								(INT) $a_x,
-								(INT) $a_y,
-								(INT) $a_width,
-								(INT) $a_height);
-				}
-			}
-			]"
-		end
-
-	c_gdip_fill_ellipse_i (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_brush: POINTER; a_x, a_y, a_width, a_height: INTEGER; a_result_status: TYPED_POINTER [INTEGER])
-			-- Fill a ellipse on `a_graphics' with specified `a_x', `a_y', `a_width', `a_height'.
-		require
-			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
-			a_graphics_not_null: a_graphics /= default_pointer
-		external
-			"C inline use %"wel_gdi_plus.h%""
-		alias
-			"[
-			{
-				static FARPROC GdipFillEllipseI = NULL;
-				*(EIF_INTEGER *) $a_result_status = 1;
-				
-				if (!GdipFillEllipseI) {
-					GdipFillEllipseI = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipFillEllipseI");
-				}
-				
-				if (GdipFillEllipseI) {			
-					*(EIF_INTEGER *) $a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpGraphics *, GpBrush *, INT, INT, INT, INT)) GdipFillEllipseI)
-								((GpGraphics *) $a_graphics,
-								(GpBrush *) $a_brush,
 								(INT) $a_x,
 								(INT) $a_y,
 								(INT) $a_width,
@@ -698,6 +703,132 @@ feature {NONE} -- C externals
 			]"
 		end
 
+	c_gdip_draw_line_i (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_pen: POINTER; a_x_1, a_y_1, a_x_2, a_y_2: INTEGER; a_result_status: TYPED_POINTER [INTEGER])
+			-- Draw a line on `a_graphics' from `a_x_1', `a_y_1' to `a_x_2', `a_y_2'.
+		require
+			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
+			a_graphics_not_null: a_graphics /= default_pointer
+		external
+			"C inline use %"wel_gdi_plus.h%""
+		alias
+			"[
+			{
+				static FARPROC GdipDrawLineI = NULL;
+				*(EIF_INTEGER *) $a_result_status = 1;
+				
+				if (!GdipDrawLineI) {
+					GdipDrawLineI = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipDrawLineI");
+				}
+				
+				if (GdipDrawLineI) {			
+					*(EIF_INTEGER *) $a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpGraphics *, GpPen *, INT, INT, INT, INT)) GdipDrawLineI)
+								((GpGraphics *) $a_graphics,
+								(GpPen *) $a_pen,
+								(INT) $a_x_1,
+								(INT) $a_y_1,
+								(INT) $a_x_2,
+								(INT) $a_y_2);
+				}
+			}
+			]"
+		end
+
+	c_gdip_draw_lines_i (handle: POINTER; graphics: POINTER; pen: POINTER; coordinates: POINTER; count: INTEGER; status: TYPED_POINTER [INTEGER])
+			-- Draw a series of line segments that connect an array of specified coordinates `coorinates` with a total number of points (pairs of coordinates) `count` using a pen `pen` on the Graphics object `graphics` accessible through a GDI+ handle `handle` and record the return value to `status`.
+		require
+			handle_not_null: handle /= default_pointer
+			graphics_not_null: graphics /= default_pointer
+			pen_not_null: pen /= default_pointer
+			coordinates_not_null: coordinates /= default_pointer
+			count_non_negative: count >= 0
+		external
+			"[
+				C inline use "wel_gdi_plus.h"
+			]"
+		alias
+			"[
+			{
+				static FARPROC GdipDrawLinesI = NULL;
+				*(EIF_INTEGER *) $status = 1;
+				
+				if (!GdipDrawLinesI) {
+					GdipDrawLinesI = GetProcAddress ((HMODULE) $handle, "GdipDrawLinesI");
+				}
+				
+				if (GdipDrawLinesI) {			
+					*(EIF_INTEGER *) $status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpGraphics *, GpPen *, INT *, INT)) GdipDrawLinesI)
+								((GpGraphics *) $graphics,
+								(GpPen *) $pen,
+								(INT *) $coordinates,
+								(INT) $count);
+				}
+			}
+			]"
+		end
+
+	c_gdip_draw_polygon_i (handle: POINTER; graphics: POINTER; pen: POINTER; coordinates: POINTER; count: INTEGER; status: TYPED_POINTER [INTEGER])
+			-- Draw a polygon on the Graphics object `graphics` accessible using a GDI+ handle `handle` with pen `pen` using coordinates `coordinates` with a total number of points (pairs of coordinates) `count` and record return value to `status`.
+		require
+			handle_not_null: handle /= default_pointer
+			graphics_not_null: graphics /= default_pointer
+			pen_not_null: pen /= default_pointer
+			coordinates_not_null: coordinates /= default_pointer
+			count_non_negative: count >= 0
+		external
+			"[
+				C inline use "wel_gdi_plus.h"
+			]"
+		alias
+			"[
+			{
+				static FARPROC GdipDrawPolygonI = NULL;
+				*(EIF_INTEGER *) $status = 1;
+				
+				if (!GdipDrawPolygonI) {
+					GdipDrawPolygonI = GetProcAddress ((HMODULE) $handle, "GdipDrawPolygonI");
+				}
+				
+				if (GdipDrawPolygonI) {			
+					*(EIF_INTEGER *) $status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpGraphics *, GpPen *, INT *, INT)) GdipDrawPolygonI)
+								((GpGraphics *) $graphics,
+								(GpPen *) $pen,
+								(INT *) $coordinates,
+								(INT) $count);
+				}
+			}
+			]"
+		end
+
+	c_gdip_draw_rectangle_i (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_pen: POINTER; a_x, a_y, a_width, a_height: INTEGER; a_result_status: TYPED_POINTER [INTEGER])
+			-- Draw a rectangle on `a_graphics' with specified `a_x', `a_y', `a_width', `a_height'.
+		require
+			a_gdiplus_handle_not_null: a_gdiplus_handle /= default_pointer
+			a_graphics_not_null: a_graphics /= default_pointer
+		external
+			"C inline use %"wel_gdi_plus.h%""
+		alias
+			"[
+			{
+				static FARPROC GdipDrawRectangleI = NULL;
+				*(EIF_INTEGER *) $a_result_status = 1;
+				
+				if (!GdipDrawRectangleI) {
+					GdipDrawRectangleI = GetProcAddress ((HMODULE) $a_gdiplus_handle, "GdipDrawRectangleI");
+				}
+				
+				if (GdipDrawRectangleI) {			
+					*(EIF_INTEGER *) $a_result_status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpGraphics *, GpPen *, INT, INT, INT, INT)) GdipDrawRectangleI)
+								((GpGraphics *) $a_graphics,
+								(GpPen *) $a_pen,
+								(INT) $a_x,
+								(INT) $a_y,
+								(INT) $a_width,
+								(INT) $a_height);
+				}
+			}
+			]"
+		end
+
 	c_gdip_draw_string (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_wchar_string: POINTER; a_length: INTEGER; a_font: POINTER; a_gp_rect_f: POINTER; a_gp_string_format: POINTER; a_gp_brush: POINTER; a_result_status: TYPED_POINTER [INTEGER])
 			-- Draw `a_wchar_string' on `a_graphics'.
 		require
@@ -723,6 +854,41 @@ feature {NONE} -- C externals
 								(GDIPCONST RectF *) $a_gp_rect_f,
 								(GDIPCONST GpStringFormat *) $a_gp_string_format,
 								(GDIPCONST GpBrush *) $a_gp_brush);
+				}
+			}
+			]"
+		end
+
+	c_gdip_fill_polygon_i (handle: POINTER; graphics: POINTER; brush: POINTER; coordinates: POINTER; count: INTEGER; mode: INTEGER; status: TYPED_POINTER [INTEGER])
+			-- Fill the interior of a polygon defined by an array of coordinate pairs `coordinates` with the number of pairs `count` on the Graphics object `graphics` accessible using a GDI+ handle `handle` with a brush `brush` and record return value to `status`.
+		require
+			handle_not_null: handle /= default_pointer
+			graphics_not_null: graphics /= default_pointer
+			brush_not_null: brush /= default_pointer
+			coordinates_not_null: coordinates /= default_pointer
+			count_non_negative: count >= 0
+			valid_mode: {WEL_GDIP_FILL_MODE}.is_valid (mode)
+		external
+			"[
+				C inline use "wel_gdi_plus.h"
+			]"
+		alias
+			"[
+			{
+				static FARPROC GdipFillPolygonI = NULL;
+				*(EIF_INTEGER *) $status = 1;
+				
+				if (!GdipFillPolygonI) {
+					GdipFillPolygonI = GetProcAddress ((HMODULE) $handle, "GdipFillPolygonI");
+				}
+				
+				if (GdipFillPolygonI) {			
+					*(EIF_INTEGER *) $status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpGraphics *, GpPen *, INT *, INT, INT)) GdipFillPolygonI)
+								((GpGraphics *) $graphics,
+								(GpPen *) $brush,
+								(INT *) $coordinates,
+								(INT) $count,
+								(INT) $mode);
 				}
 			}
 			]"
@@ -954,6 +1120,34 @@ feature {NONE} -- C externals
 			]"
 		end
 
+	c_gdip_set_smoothing_mode (handle: POINTER; graphics: POINTER; mode: INTEGER; status: TYPED_POINTER [INTEGER])
+			-- Sets the rendering quality of the Graphics object `graphics` accessible using a GDI+ handle `handle` to smoothing mode `mode` and record return value to `status`.
+		require
+			handle_not_null: handle /= default_pointer
+			graphics_not_null: graphics /= default_pointer
+			mode_valid: {WEL_GDIP_SMOOTHING_MODE}.is_valid (mode)
+		external
+			"[
+				C++ inline use "wel_gdi_plus.h", "GdiPlusTypes.h"
+			]"
+		alias
+			"[
+			{
+				static FARPROC GdipSetSmoothingMode = NULL;
+				*(EIF_INTEGER *) $status = 1;
+
+				if (!GdipSetSmoothingMode) {
+					GdipSetSmoothingMode = GetProcAddress ((HMODULE) $handle, "GdipSetSmoothingMode");
+				}
+				if (GdipSetSmoothingMode) {
+					*(EIF_INTEGER *) $status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpGraphics *, enum SmoothingMode)) GdipSetSmoothingMode)
+								((GpGraphics *) $graphics,
+								(enum SmoothingMode) $mode);
+				}
+			}
+			]"
+		end
+
 	c_gdip_reset_clip (a_gdiplus_handle: POINTER; a_graphics: POINTER; a_result_status: TYPED_POINTER [INTEGER])
 			-- Resets the clip region of `a_graphics' to an infinite region.
 		require
@@ -996,7 +1190,7 @@ feature -- Obsolete
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -1,7 +1,5 @@
 .slider-wrapper {
 	position: relative;
-    /* height: 270px; */
-    //min-height: 200px;
 	height: 100%;
 
 	.slider {
@@ -63,7 +61,6 @@
 						border-bottom: dotted 1px blue;
 					}
 				}
-
 			}
 		}
 	}
@@ -125,10 +122,11 @@
 }
 @media only screen and (max-width: 768px) {
   .slide-item { width: 100%; height: auto; }
+  .slider-wrapper .slider-nav { position: relative; display: block; }
 }
 
 #content.codeboard_demo {
 	div.codeboard-player {
-		height: 270px;
+		height: 273px;
 	}
 }

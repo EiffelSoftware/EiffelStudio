@@ -1,5 +1,5 @@
-note
-	description	: "Byte code for instruction inside an enalarged loop variant."
+﻿note
+	description: "Byte code for instruction inside an enalarged loop variant."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -19,6 +19,9 @@ inherit
 		export
 			{NONE} all
 		end
+
+create
+	make_enlarged
 
 feature
 
@@ -52,25 +55,13 @@ feature
 		local
 			buf: GENERATION_BUFFER
 		do
-			buf := buffer
-
-				-- generate a debugger hook
+				-- Generate a debugger hook.
 			generate_frozen_debugger_hook
-
-				-- Assertion recording on stack
-			buf.put_new_line
-			buf.put_string ("RTCT(")
-			if tag /= Void then
-				buf.put_character ('"')
-				buf.put_string (tag)
-				buf.put_character ('"')
-			else
-				buf.put_string ("NULL")
-			end
-			buf.put_string ({C_CONST}.comma_space)
-			generate_assertion_code (In_loop_variant)
-			buf.put_two_character (')', ';')
+				-- Assertion recording on stack.
+			generate_assertion_macro
+				-- Generate the check.
 			expr.generate
+			buf := buffer
 			buf.put_new_line
 			register.print_register
 			buf.put_string (" = ")
@@ -99,26 +90,13 @@ feature
 		local
 			buf: GENERATION_BUFFER
 		do
-			buf := buffer
-
-				-- generate a debugger hook
+				-- Generate a debugger hook.
 			generate_frozen_debugger_hook
-
-				-- Assertion recording on stack
-			buf.put_new_line
-			buf.put_string ("RTCT(")
-			if tag /= Void then
-				buf.put_character ('"')
-				buf.put_string (tag)
-				buf.put_character ('"')
-			else
-				buf.put_string ("NULL")
-			end
-			buf.put_string ({C_CONST}.comma_space)
-			generate_assertion_code (In_loop_variant)
-			buf.put_two_character (')', ';')
-
+				-- Assertion recording on stack.
+			generate_assertion_macro
+				-- Generate the check.
 			expr.generate
+			buf := buffer
 			buf.put_new_line
 			new_register.print_register
 			buf.put_string (" = ")
@@ -166,15 +144,8 @@ feature
 			set_register (Void)
 		end
 
-	fill_from (v: VARIANT_B)
-			-- Fill in current node
-		do
-			tag := v.tag
-			expr := v.expr.enlarged
-		end
-
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

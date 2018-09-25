@@ -43,8 +43,6 @@ feature -- Initialization
 			-- Initialize by copying all the items of `other'.
 		require
 			observers_open: across observers as o all o.item.is_open end
-			modify_model ("sequence", Current)
-			modify_field ("closed", other)
 		do
 			if other /= Current then
 				other.unwrap
@@ -56,6 +54,8 @@ feature -- Initialization
 			end
 		ensure
 			sequence_effect: sequence ~ old other.sequence
+			modify_model ("sequence", Current)
+			modify_field ("closed", other)
 		end
 
 feature -- Access
@@ -334,7 +334,6 @@ feature {NONE} -- Implementation
 			src_non_negative: 1 <= src and src <= array.sequence.count - n + 1
 			dest_in_bounds: 1 <= dest and dest <= array.sequence.count - n + 1
 			inv_only ("array_non_empty", "first_index_in_bounds", "array_no_observers", "array_starts_from_zero")
-			modify_model ("sequence", array)
 		local
 			i: INTEGER
 		do
@@ -384,6 +383,7 @@ feature {NONE} -- Implementation
 						l.item = array_seq_index (list_index (k.item) - dest + src) implies array.sequence [k.item] = (old array.sequence) [l.item]
 					end end
 			sequence_effect_old: across 1 |..| array.sequence.count as k all not array_index_set (dest, dest + n - 1) [k.item] implies array.sequence [k.item] = array.sequence.old_ [k.item] end
+			modify_model ("sequence", array)
 		end
 
 	reserve (n: INTEGER)
@@ -394,7 +394,6 @@ feature {NONE} -- Implementation
 		require
 			wrapped: is_wrapped
 			observers_open: across observers as o all o.item.is_open end
-			modify_field (["first_index", "closed"], Current)
 		local
 			old_size, new_size: INTEGER
 		do
@@ -414,6 +413,7 @@ feature {NONE} -- Implementation
 			at_least_n: array.sequence.count >= n
 			at_least_old: array.sequence.count >= old array.sequence.count
 			wrapped: is_wrapped
+			modify_field (["first_index", "closed"], Current)
 		end
 
 feature {NONE} -- Specification

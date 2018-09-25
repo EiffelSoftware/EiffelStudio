@@ -39,8 +39,9 @@ feature -- Cursor movement
 		require
 			subjects_closed: across subjects as s all s.item.closed end
 			not_off: not off
-			modify_model (["box"], Current)
 		deferred
+		ensure
+			modify_model (["box"], Current)
 		end
 
 	search (v: G)
@@ -51,7 +52,6 @@ feature -- Cursor movement
 			status: nonvariant
 		require
 			subjects_closed: across subjects as s all s.item.is_wrapped end
-			modify_model (["box"], Current)
 		do
 			from
 			invariant
@@ -65,6 +65,7 @@ feature -- Cursor movement
 			end
 		ensure
 			box_effect: box.is_empty or else box.any_item = v
+			modify_model (["box"], Current)
 		end
 
 feature -- Specification

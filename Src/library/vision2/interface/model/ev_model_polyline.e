@@ -1,6 +1,5 @@
-note
-	description:
-		"Sequences of lines through `point_array'."
+﻿note
+	description: "Sequences of lines through `point_array'."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "figure, polyline, line"
@@ -13,11 +12,12 @@ class
 inherit
 	EV_MODEL_ATOMIC
 		redefine
-			default_create
+			default_create,
+			bounding_box
 		end
 
 	EV_MODEL_MULTI_POINTED
-		undefine
+		redefine
 			default_create,
 			bounding_box
 		end
@@ -157,6 +157,21 @@ feature {EV_MODEL_DRAWING_ROUTINES, EV_MODEL} -- Implementation
 			Result := point_array.item (point_array.count - 1)
 		end
 
+feature -- Measurement
+
+	bounding_box: EV_RECTANGLE
+			-- <Precursor>
+		do
+			Result := Precursor {EV_MODEL_ATOMIC}
+				-- Include arrows in the box.
+			if is_start_arrow then
+				Result.merge (start_arrow.bounding_box)
+			end
+			if is_end_arrow then
+				Result.merge (end_arrow.bounding_box)
+			end
+		end
+
 feature -- Events
 
 	position_on_figure (ax, ay: INTEGER): BOOLEAN
@@ -233,7 +248,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -243,9 +258,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_MODEL_POLYLINE
-
-
+end

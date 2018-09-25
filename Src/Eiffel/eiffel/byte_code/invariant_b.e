@@ -1,7 +1,7 @@
-note
+﻿note
+	description: "Block of invariant assertions."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
--- Block of invariant assertions
 
 class INVARIANT_B
 
@@ -92,7 +92,7 @@ feature
 			buf := buffer
 
 				-- Set the control flag for enlarging the assertions
-			context.set_assertion_type (In_invariant);
+			context.set_assertion_type (In_invariant)
 
 			o := object_test_locals
 			if o /= Void then
@@ -106,13 +106,13 @@ feature
 				end
 			end
 
-			byte_list.enlarge_tree;
-			byte_list.analyze;
+			byte_list.enlarge_tree
+			byte_list.analyze
 				-- For invariant, we always need the GC hook.
 			context.force_gc_hooks
 
 				--| Always mark current as used in all modes
-			context.mark_current_used;
+			context.mark_current_used
 
 			l_inv_is_call := context.workbench_mode or else system.exception_stack_managed
 			l_is_profiler_enabled := context.workbench_mode or else
@@ -125,10 +125,10 @@ feature
 
 				-- Routine's name				
 			if context.final_mode then
-				body_index := Invariant_body_index;
+				body_index := Invariant_body_index
 			else
-				body_index := associated_class.invariant_feature.body_index;
-			end;
+				body_index := associated_class.invariant_feature.body_index
+			end
 			context.set_original_body_index (body_index)
 
 				-- Generate extern clauses for once manifest strings.
@@ -139,7 +139,7 @@ feature
 			buf.put_string ("%N/* {" + context.class_type.associated_class.name_in_upper + "}._invariant */")
 			buf.generate_function_signature ("void", internal_name,
 					True, Context.header_buffer,
-					<<"Current", "where">>, <<"EIF_REFERENCE", "int">>);
+					<<"Current", "where">>, <<"EIF_REFERENCE", "int">>)
 
 			buf.generate_block_open
 			buf.put_gtcx
@@ -166,11 +166,11 @@ feature
 			context.generate_dtype_declaration (False)
 
 				-- Generation of the local variable array
-			i := context.ref_var_used;
+			i := context.ref_var_used
 			if i > 0 then
-				buf.put_new_line;
-				buf.put_string ("RTLD;");
-			end;
+				buf.put_new_line
+				buf.put_string ("RTLD;")
+			end
 
 			if l_is_profiler_enabled then
 				buf.put_new_line
@@ -192,10 +192,10 @@ feature
 			end
 
 				-- Separate declarations and body with a blank line
-			buf.put_new_line;
+			buf.put_new_line
 
 				-- Generate GC hooks
-			context.generate_gc_hooks (True);
+			context.generate_gc_hooks (True)
 
 				-- Generate debug information about object test locals, Current.
 			context.generate_push_debug_locals (Void, Void)
@@ -230,7 +230,7 @@ feature
 				end
 			end
 
-			byte_list.generate;
+			byte_list.generate
 
 				-- Generate the update of the locals stack used to debug.
 			context.generate_pop_debug_locals (Void)
@@ -242,11 +242,11 @@ feature
 			end
 
 				-- Remove gc hooks
-			i := context.ref_var_used;
+			i := context.ref_var_used
 			if i > 0 then
 				buf.put_new_line
-				buf.put_string ("RTLE;");
-			end;
+				buf.put_string ("RTLE;")
+			end
 
 			if l_inv_is_call then
 				if l_is_profiler_enabled and not context.workbench_mode then
@@ -254,7 +254,7 @@ feature
 					buf.put_string ("RTXP;")
 				end
 				buf.put_new_line
-				buf.put_string ("RTEE;");
+				buf.put_string ("RTEE;")
 			end
 
 				-- Undefines all macros defined for temporary locals.
@@ -274,8 +274,10 @@ invariant
 	valid_once_manifest_string_count: once_manifest_string_count >= 0
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

@@ -1031,7 +1031,7 @@ feature {NONE} -- Implementation
 	set_target_file_name
 			-- Finalize file name using `root_directory'.
 		do
-			target_file_name := root_directory.path.appended (Eiffel_system.name).appended_with_extension ("xml")
+			target_file_name := root_directory.path.extended (Eiffel_system.name).appended_with_extension ("xml")
 		end
 
 	feature_name (f: E_FEATURE): STRING

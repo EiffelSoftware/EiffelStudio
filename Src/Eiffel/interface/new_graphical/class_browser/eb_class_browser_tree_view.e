@@ -65,6 +65,7 @@ feature -- Access
 				create control_tool_internal.make (4)
 				control_tool_internal.extend (create{SD_TOOL_BAR_SEPARATOR}.make)
 				control_tool_internal.extend (display_path_button)
+				control_tool_internal.extend (display_description_button)
 				if is_flat_view_enabled then
 					control_tool_internal.extend (normal_referenced_button)
 					control_tool_internal.extend (syntactical_button)
@@ -237,6 +238,17 @@ feature -- Actions
 			if is_flat_view_enabled then
 				setup_sorting_for_location
 			end
+			if data /= Void then
+				bind_grid
+			end
+		ensure
+			grid_sorting_setting_correct: is_sorting_setting_valid
+		end
+
+	on_show_description_changed
+			-- Action to be performed when selection status of `display_description_button' changes
+		do
+			is_up_to_date := False
 			if data /= Void then
 				bind_grid
 			end
@@ -541,6 +553,7 @@ feature{NONE} -- Implementation
 			l_rows: like rows
 			l_bg_color: EV_COLOR
 			l_is_path_displayed: BOOLEAN
+			l_is_class_description_displayed: BOOLEAN
 		do
 			l_bg_color := even_line_color
 			if grid.row_count > 0 then
@@ -549,6 +562,7 @@ feature{NONE} -- Implementation
 			grid.hide_tree_node_connectors
 			grid.set_row_height (default_row_height)
 			l_is_path_displayed := display_path_button.is_selected
+			l_is_class_description_displayed := display_description_button.is_selected
 			from
 				l_rows := rows
 				l_rows.start
@@ -556,7 +570,7 @@ feature{NONE} -- Implementation
 				l_rows.after
 			loop
 				l_row := rows.item_for_iteration
-				l_row.bind_row (Void, grid, l_bg_color, 0, l_is_path_displayed)
+				l_row.bind_row (Void, grid, l_bg_color, 0, l_is_path_displayed, l_is_class_description_displayed)
 				l_rows.forth
 			end
 			try_auto_resize_grid (<<[500, 800, 1]>>, False)
@@ -653,11 +667,33 @@ feature{NONE} -- Implementation
 			result_attached: Result /= Void
 		end
 
+	display_description_button: EB_PREFERENCED_SD_TOOL_BAR_TOGGLE_BUTTON
+			-- Toggle button to turn on/off item description display
+		local
+			but: like display_description_button_internal
+		do
+			but := display_description_button_internal
+			if but = Void then
+				create but.make (preferences.class_browser_data.show_item_description_preference)
+				display_description_button_internal := but
+				but.set_pixel_buffer (pixmaps.icon_pixmaps.general_information_icon_buffer)
+				but.set_pixmap (pixmaps.icon_pixmaps.general_information_icon)
+				but.set_tooltip (interface_names.h_show_item_description)
+				but.select_actions.extend (agent on_show_description_changed)
+			end
+			Result := but
+		ensure
+			result_attached: Result /= Void
+		end
+
 	syntactical_button_internal: like syntactical_button
 			-- Implementation of `syntactical_button'
 
 	display_path_button_internal: like display_path_button
 			-- Implementation of `display_path_button'
+
+	display_description_button_internal: like display_description_button
+			-- Implementation of `display_description_button`.
 
 	normal_referenced_button_internal: like normal_referenced_button
 			-- Implementation of `normal_referenced_button'
@@ -667,6 +703,9 @@ feature{NONE} -- Implementation
 		do
 			if display_path_button_internal /= Void then
 				display_path_button.recycle
+			end
+			if attached display_description_button_internal as but then
+				but.recycle
 			end
 			if syntactical_button_internal /= Void then
 				syntactical_button.recycle
@@ -714,10 +753,11 @@ feature{NONE} -- Initialization
 			-- Build `grid'.
 		do
 			create grid
-			grid.set_column_count_to (2)
+			grid.set_column_count_to (3)
 			grid.enable_selection_on_single_button_click
 			grid.header.i_th (class_name_column_index).set_text (interface_names.l_class_browser_classes)
 			grid.header.i_th (location_column_index).set_text (interface_names.l_location)
+			grid.header.i_th (description_column_index).set_text (interface_names.l_description)
 			grid.enable_single_row_selection
 			grid.enable_tree
 			grid.set_row_height (default_row_height)
@@ -765,6 +805,9 @@ feature{NONE} -- Initialization
 	location_column_index: INTEGER = 2;
 			-- Index of location column
 
+	description_column_index: INTEGER = 3;
+			-- Index of description column
+
 feature{NONE} -- Implementation/Stone
 
 	item_to_put_in_editor: EV_GRID_ITEM
@@ -775,7 +818,7 @@ feature{NONE} -- Implementation/Stone
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

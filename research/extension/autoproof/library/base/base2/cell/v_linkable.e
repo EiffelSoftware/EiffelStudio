@@ -27,12 +27,12 @@ feature -- Replacement
 			explicit: contracts
 		require
 			wrapped: is_wrapped
-			modify_model ("right", Current)
 		do
 			right := cell
 		ensure
 			wrapped: is_wrapped
 			right_effect: right = cell
+			modify_model ("right", Current)
 		end
 
 note

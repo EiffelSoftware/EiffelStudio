@@ -1,0 +1,38 @@
+version: 1.0.{build}
+
+image: Visual Studio 2015
+
+clone_folder: c:\dev\trunk
+
+init:
+- cmd: mkdir -p C:\dev\eiffel
+
+environment:
+  ISE_C_COMPILER: msc_vc140
+  ISE_PLATFORM: win64
+  EIFFEL_SRC: c:\dev\trunk\Src
+  ISE_LIBRARY: c:\dev\trunk\Src
+  XEBRA_LIBRARY: c:\dev\trunk\Src\framework\web\xebra\eiffel_projects\library
+  EWEASEL: c:\dev\trunk\eweasel
+
+install:
+- cmd: >-
+    cd C:\dev\eiffel
+    appveyor DownloadFile https://www.eiffel.org/setup/install.bat -FileName %TEMP%\get-eiffelstudio.bat
+    %TEMP%\get-eiffelstudio.bat nightly > C:\dev\eiffel\eiffel_nightly.bat
+    call C:\dev\eiffel\eiffel_nightly.bat
+    echo EiffelStudio versions...
+    ec -version
+    compile_all -version
+
+build_script:
+- cmd: >-
+    set COMPILE_ALL_CMD=compile_all -ecb -clean -melt -list_failures -options dotnet=false -log_verbose
+    cd %EIFFEL_SRC%\Eiffel
+    %COMPILE_ALL_CMD%
+    cd %EIFFEL_SRC%\tools
+    %COMPILE_ALL_CMD%
+    cd %EIFFEL_SRC%\framework
+    %COMPILE_ALL_CMD%
+    cd %EIFFEL_SRC%\library
+    %COMPILE_ALL_CMD%

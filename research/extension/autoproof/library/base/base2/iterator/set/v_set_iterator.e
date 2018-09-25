@@ -31,11 +31,11 @@ feature -- Cursor movement
 			target_closed: target.closed
 			lock_wrapped: target.lock.is_wrapped
 			v_locked: target.lock.locked [v]
-			modify_model ("index_", Current)
 		deferred
 		ensure
 			index_effect_found: target.set_has (v) implies sequence [index_] = target.set_item (v)
 			index_effect_not_found: not target.set_has (v) implies index_ = sequence.count + 1
+			modify_model ("index_", Current)
 		end
 
 feature -- Removal
@@ -47,14 +47,14 @@ feature -- Removal
 			target_wrapped: target.is_wrapped
 			lock_wrapped: target.lock.is_wrapped
 			only_iterator: target.observers ~ create {MML_SET [ANY]}.singleton (Current)
-			modify_model (["sequence", "box"], Current)
-			modify_model ("set", target)
 		deferred
 		ensure
 			sequence_effect: sequence ~ old sequence.removed_at (index_)
 			target_set_effect: target.set ~ old (target.set / sequence [index_])
 			target_wrapped: target.is_wrapped
 			index_ = old index_
+			modify_model (["sequence", "box"], Current)
+			modify_model ("set", target)
 		end
 
 feature -- Specification

@@ -1,9 +1,9 @@
-note
-	description	: "Byte code for instruction inside a require."
+﻿note
+	description: "Byte code for instruction inside a require."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class REQUIRE_B
 
@@ -13,6 +13,9 @@ inherit
 			generate, process
 		end
 
+create
+	make_enlarged
+
 feature -- Visitor
 
 	process (v: BYTE_NODE_VISITOR)
@@ -21,21 +24,7 @@ feature -- Visitor
 			v.process_require_b (Current)
 		end
 
-feature
-
-	fill_from (a: ASSERT_B)
-			-- Initialization
-		require
-			good_argument: not (a = Void)
-		local
-			l_expr: like expr
-		do
-			l_expr := a.expr.enlarged
-				-- Make sure the expression has never been analyzed before
-			expr := l_expr
-			l_expr.unanalyze
-			tag := a.tag
-		end
+feature -- C code generation
 
 	generate
 			-- Generate assertion
@@ -67,28 +56,14 @@ feature
 				l_context.set_new_precondition_block (False)
 			end
 
-				-- generate a debugger hook
+				-- Generate a debugger hook.
 			generate_frozen_debugger_hook
 
-			if is_true_expression (expr) then
-					-- Assertion was statically evaluated to be True all the time,
-					-- so we can jump to the next one.
-			else
-					-- Generate the recording of the assertion
-				buf.put_new_line
-				buf.put_string ("RTCT(")
-				if tag /= Void then
-					buf.put_character ('"')
-					buf.put_string (tag)
-					buf.put_character ('"')
-				else
-					buf.put_string ("NULL")
-				end
-				buf.put_string ({C_CONST}.comma_space)
-				generate_assertion_code (l_context.assertion_type)
-				buf.put_two_character (')', ';')
-
-					-- Now evaluate the expression
+				-- Avoid generating code if the assertion is known to be True all the time.
+			if not is_true_expression then
+					-- Generate the recording of the assertion.
+				generate_assertion_macro
+					-- Now evaluate the expression.
 				l_expr := expr
 				l_expr.generate
 				if context.has_request_chain then
@@ -144,7 +119,7 @@ feature {NONE} -- C code generation: wait conditions
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

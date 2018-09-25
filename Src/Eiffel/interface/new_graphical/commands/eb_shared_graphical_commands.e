@@ -101,6 +101,13 @@ feature -- Commands
 			Result.disable_sensitive
 		end
 
+	clean_compile_project_cmd: EB_CLEAN_COMPILE_PROJECT_COMMAND
+			-- Command to compile from scratch a project.
+		once
+			create Result.make
+			Result.enable_sensitive
+		end
+
 	analyze_cmd: ES_CODE_ANALYSIS_COMMAND
 			-- Command to analyze last item.
 		once
@@ -196,7 +203,7 @@ feature -- Commands
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

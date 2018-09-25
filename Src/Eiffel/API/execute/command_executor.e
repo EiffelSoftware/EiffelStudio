@@ -19,7 +19,9 @@ feature -- Command Execution
 		require
 			valid_command: command /= Void
 		do
-			Execution_environment.launch (command)
+			{EXECUTION_ENVIRONMENT}.launch (command)
+		ensure
+			instance_free: class
 		end
 
 	execute_with_args (appl_name: READABLE_STRING_GENERAL; args: READABLE_STRING_GENERAL)
@@ -28,7 +30,9 @@ feature -- Command Execution
 			appl_name_not_void: appl_name /= Void
 			args_not_void: args /= Void
 		do
-			execute_with_args_and_working_directory (appl_name, args, Execution_environment.current_working_path)
+			execute_with_args_and_working_directory (appl_name, args, {EXECUTION_ENVIRONMENT}.current_working_path)
+		ensure
+			instance_free: class
 		end
 
 	execute_with_args_and_working_directory (appl_name: READABLE_STRING_GENERAL; args: READABLE_STRING_GENERAL; working_directory: PATH)
@@ -39,6 +43,8 @@ feature -- Command Execution
 			working_directory_not_void: working_directory /= Void
 		do
 			execute_with_args_and_working_directory_and_environment (appl_name, args, working_directory, Void)
+		ensure
+			instance_free: class
 		end
 
 	execute_with_args_and_working_directory_and_environment (appl_name: READABLE_STRING_GENERAL; args: READABLE_STRING_GENERAL; working_directory: detachable PATH;
@@ -68,6 +74,8 @@ feature -- Command Execution
 			end
 			l_prc_launcher.set_separate_console (True)
 			l_prc_launcher.launch
+		ensure
+			instance_free: class
 		end
 
 feature -- Compiler specific calls
@@ -116,7 +124,7 @@ feature -- Compiler specific calls
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

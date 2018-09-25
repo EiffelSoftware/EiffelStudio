@@ -22,17 +22,19 @@ n
 	N
 	N
 	N
-	s/\(\t\tdo\)/\t\t\tmodify (Current)\n\1/
+	N
+	N
+	N
+	s/\(\t\tend\)/\t\tensure\n\t\t\tmodify (Current)\n\1/
 }
 /put_new_line/{
 	N
 	N
 	N
 	N
-	s/\(\t\tdo\)/\t\trequire\n\t\t\tmodify (Current)\n\1/
+	s/\(\t\tend\)/\t\tensure\n\t\t\tmodify (Current)\n\1/
 }
 /read_integer/{
-	N
 	N
 	N
 	N
@@ -43,11 +45,10 @@ n
 	N
 	N
 	N
-	s/\(\t\tdo\)/\t\trequire\n\t\t\tmodify (Current)\n\1/
 	N
 	N
-	s/\(\t\tensure\)/\t\t\tcreate internal_last_string_.make_from_string (last_string)\n\1\n\t\t\tinternal_last_string_ \/= Void\n\t\t\tinternal_last_string_.is_wrapped/
-	s/\t\t\tinstance_free: class//
+	s/\(\t\tensure\)/\t\t\tcreate internal_last_string_.make_from_string (last_string)\n\1/
+	s/\t\t\tinstance_free: class/\t\t\tinternal_last_string_ \/= Void\n\t\t\tinternal_last_string_.is_wrapped\n\t\t\tmodify (Current)/
 }
 /note/{
 	i feature -- EVE

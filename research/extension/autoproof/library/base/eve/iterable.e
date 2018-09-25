@@ -15,8 +15,6 @@ feature -- Access
 			-- Fresh cursor associated with current structure
 		note
 			status: impure
-		require
-			modify_field (["observers", "closed"], Current)
 		deferred
 		ensure
 			result_attached: Result /= Void
@@ -24,6 +22,7 @@ feature -- Access
 			result_fresh: Result.is_fresh
 			result_wrapped: Result.is_wrapped and Result.inv
 			result_in_observers: observers = old observers & Result
+			modify_field (["observers", "closed"], Current)
 		end
 
 note

@@ -26,9 +26,6 @@ feature {V_CONTAINER, V_ITERATOR} -- Initialization
 			-- Create iterator over `list'.
 		note
 			status: creator
-		require
-			modify (Current)
-			modify_field (["observers", "closed"], list)
 		do
 			target := list
 			target.add_iterator (Current)
@@ -38,6 +35,8 @@ feature {V_CONTAINER, V_ITERATOR} -- Initialization
 			target_effect: target = list
 			index_effect: index_ = 0
 			list_observers_effect: list.observers = old list.observers & Current
+			modify (Current)
+			modify_field (["observers", "closed"], list)
 		end
 
 	switch_target (list: V_LINKED_LIST [G])
@@ -46,7 +45,6 @@ feature {V_CONTAINER, V_ITERATOR} -- Initialization
 			is_wrapped
 			list_closed: list.closed
 			has_observer: list.observers [Current]
-			modify_model (["target", "index_", "subjects", "sequence"], Current)
 		do
 			unwrap
 			target := list
@@ -61,6 +59,7 @@ feature {V_CONTAINER, V_ITERATOR} -- Initialization
 			target_effect: target = list
 			index_effect: index_ = 0
 			default_owns: owns.is_empty
+			modify_model (["target", "index_", "subjects", "sequence"], Current)
 		end
 
 feature -- Initialization
@@ -72,8 +71,6 @@ feature -- Initialization
 		require
 			target_wrapped: target.is_wrapped
 			other_target_wrapped: other.target.is_wrapped
-			modify (Current)
-			modify_model ("observers", [target, other.target])
 		do
 			if Current /= other then
 				check other.inv_only ("index_constraint", "after_definition", "sequence_definition", "cell_off", "cell_not_off", "default_owns") end
@@ -97,6 +94,8 @@ feature -- Initialization
 			old_target_observers_effect: other.target /= old target implies (old target).observers = old target.observers / Current
 			other_target_observers_effect: other.target /= old target implies other.target.observers = old other.target.observers & Current
 			target_observers_preserved: other.target = old target implies other.target.observers = old other.target.observers
+			modify (Current)
+			modify_model ("observers", [target, other.target])
 		end
 
 feature -- Access
@@ -386,8 +385,6 @@ feature -- Extension
 			not_after: index_ <= sequence.count
 			observers_open: across target.observers as o all o.item /= Current implies o.item.is_open end
 			other_observers_open: across other.observers as o all o.item.is_open end
-			modify_model ("sequence", Current)
-			modify_model ("sequence", [target, other])
 		do
 			target.merge_after (other, active, index_)
 			check target.inv_only ("cells_domain", "bag_definition") end
@@ -395,6 +392,8 @@ feature -- Extension
 		ensure
 			sequence_effect: sequence ~ old (sequence.front (index_) + other.sequence + sequence.tail (index_ + 1))
 			other_sequence_effect: other.sequence.is_empty
+			modify_model ("sequence", Current)
+			modify_model ("sequence", [target, other])
 		end
 
 feature -- Removal
@@ -489,7 +488,6 @@ feature {V_ITERATOR} -- Implementation
 			wrapped: is_wrapped
 			target_closed: target.closed
 			c_in_list: target.cells.has (c)
-			modify_model ("index_", Current)
 		do
 			check target.inv end
 			unwrap
@@ -500,6 +498,7 @@ feature {V_ITERATOR} -- Implementation
 		ensure
 			index_effect: target.cells [index_] = c
 			wrapped: is_wrapped
+			modify_model ("index_", Current)
 		end
 
 invariant

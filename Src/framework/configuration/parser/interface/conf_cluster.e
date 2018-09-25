@@ -486,6 +486,30 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			added: el_internal_dependencies.has (a_group)
 		end
 
+	add_dependency_name (a_group_name: like {CONF_GROUP}.name)
+			-- Add dependency on group named `a_group_name`.
+		require
+			a_group_not_void: a_group_name /= Void
+		local
+			l_dep_names: like dependency_names
+		do
+			l_dep_names := dependency_names
+			if l_dep_names = Void then
+				create l_dep_names.make (0)
+				dependency_names := l_dep_names
+			end
+			l_dep_names.force (a_group_name)
+		ensure
+			dependency_names_set: attached dependency_names as el_depnames
+			added: el_depnames.has (a_group_name)
+		end
+
+	reset_dependency_names
+			-- Reset group dependency names.
+		do
+			dependency_names := Void
+		end
+
 	add_file_rule (a_file_rule: CONF_FILE_RULE)
 			-- Add `a_file_rule'.
 		require
@@ -565,6 +589,10 @@ feature {CONF_ACCESS} -- Implementation, attributes stored in configuration file
 
 	internal_dependencies: detachable like dependencies
 			-- Dependencies to other groups of this cluster itself.
+
+	dependency_names: detachable ARRAYED_LIST [like {CONF_GROUP}.name]
+			-- Dependencies to other groups of this cluster itself.
+			-- It will be expanded as `dependencies`.
 
 	internal_file_rule: like file_rule
 			-- Rules for files to be included or excluded of this cluster itself.

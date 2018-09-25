@@ -517,7 +517,7 @@ feature -- Misc
 		end
 	remove_remote_target (a_target, a_location: READABLE_STRING_GENERAL): STRING_32
 		do
-			Result := locale.formatted_string (locale.translation ("Are you sure you want to remove remote $1 ($2)?"), [a_target, a_location])
+			Result := locale.formatted_string (locale.translation ("Are you sure you want to remove (remote) parent $1 ($2)?"), [a_target, a_location])
 		end
 
 	target_remove_group (a_group: READABLE_STRING_GENERAL): STRING_32

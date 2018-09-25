@@ -2498,13 +2498,13 @@ ul.is-unstyled, ul.unstyled {
     /* line 27, ../scss/site/jumbotron.scss */
     .jumbotron > .container > div .codeboard-demo .prettyprint {
       padding-top: 10px;
-      height: 265px; }
+      height: 270px; }
   /* line 32, ../scss/site/jumbotron.scss */
   .jumbotron > .container > div #block-front_header_welcome {
-    margin-top: 55px; }
+    margin-top: 53px; }
     /* line 34, ../scss/site/jumbotron.scss */
     .jumbotron > .container > div #block-front_header_welcome .holder {
-      height: 115px; }
+      min-height: 122px; }
   /* line 38, ../scss/site/jumbotron.scss */
   .jumbotron > .container > div #block-download_area {
     border: none; }
@@ -2593,6 +2593,17 @@ ul.is-unstyled, ul.unstyled {
           background-image: -o-linear-gradient(top, #89bc2b, #6a8c28);
           background-image: linear-gradient(top, #89bc2b, #6a8c28); }
 
+@media only screen and (max-width: 768px) {
+  /* line 128, ../scss/site/jumbotron.scss */
+  .jumbotron > .container .holder .btn-holder .btn-download {
+    width: auto;
+    height: auto;
+    margin: auto;
+    padding: 0; }
+    /* line 130, ../scss/site/jumbotron.scss */
+    .jumbotron > .container .holder .btn-holder .btn-download:after {
+      background: none;
+      display: none; } }
 /* line 5, ../scss/site/frontpage.scss */
 .front-section, .rss-block, #eiffel-community, #built-with-eiffel {
   padding: 20px 0 40px 0;
@@ -3652,7 +3663,7 @@ code, eiffel {
   -webkit-border-radius: 6px;
   border-radius: 6px;
   background-color: rgba(255, 255, 255, 0.75);
-  height: 268px; }
+  height: 273px; }
 /* line 20, ../scss/site/codeboard.scss */
 .jumbotron .codeboard-demo .btn-holder {
   position: relative; }

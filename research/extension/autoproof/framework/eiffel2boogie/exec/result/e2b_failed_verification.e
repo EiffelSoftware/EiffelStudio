@@ -10,6 +10,7 @@ inherit
 
 	E2B_VERIFICATION_RESULT
 	SHARED_LOCALE
+	FORMATTED_MESSAGE
 
 create
 	make
@@ -40,7 +41,10 @@ feature -- Display
 				errors.first.single_line_message (a_formatter)
 				n := errors.count
 				if n > 1 then
-					a_formatter.add (locale.plural_translation_in_context (" (+1 more error)", " (+$1 more errors)", "tool.autoproof.error", n - 1))
+					format_elements
+						(a_formatter,
+						locale.plural_translation_in_context (" (+1 more error)", " (+{1} more errors)", "tool.autoproof.error", n - 1),
+						<<agent {TEXT_FORMATTER}.add ((n - 1).out)>>)
 				end
 			end
 		end

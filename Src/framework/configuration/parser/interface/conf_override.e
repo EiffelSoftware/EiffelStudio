@@ -32,12 +32,19 @@ feature -- Access, stored in configuration file
 			-- The groups that this cluster overrides.
 			-- override.is_empty => overrides everything
 
+	override_group_names: detachable ARRAYED_LIST [like {CONF_GROUP}.name]
+			-- The group names that this cluster overrides.
+			-- To be expanded in `override`.
+
 feature {CONF_ACCESS} -- Update, stored in configuration file
 
 	set_override (an_override: like override)
 			-- Set `override' to `an_override'.
 		do
 			override := an_override
+			if an_override = Void or else an_override.is_empty then
+				override_group_names := Void
+			end
 		ensure
 			override_set: override = an_override
 		end
@@ -55,6 +62,26 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 				override := l_override
 			end
 			l_override.extend (a_group)
+		end
+
+	add_override_group_name (a_group_name: READABLE_STRING_32)
+			-- Add override group named `a_group_name` to the `override_group_names`.
+		require
+			a_group_not_void: a_group_name /= Void
+		local
+			l_override: like override_group_names
+		do
+			l_override := override_group_names
+			if l_override = Void then
+				create l_override.make (1)
+				override_group_names := l_override
+			end
+			l_override.extend (a_group_name)
+		end
+
+	reset_override_group_names
+		do
+			override_group_names := Void
 		end
 
 feature -- Equality
@@ -98,7 +125,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

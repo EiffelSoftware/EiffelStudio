@@ -85,7 +85,7 @@ feature -- Visit nodes
 
 					-- Also parse remaining info for remote parents (such as libraries...)!
 				if
-					attached a_target.remote_parent as l_remote_parent and then
+					attached a_target.parent_reference as l_parent_ref and then
 					attached a_target.extends as l_extends
 				then
 					l_extends.process (Current)

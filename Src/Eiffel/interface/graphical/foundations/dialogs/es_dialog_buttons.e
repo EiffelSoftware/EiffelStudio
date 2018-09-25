@@ -46,6 +46,22 @@ feature -- Access
 			result_contains_valid_items: Result.for_all (agent is_valid_button_id)
 		end
 
+	frozen ok_retry_buttons: attached DS_HASH_SET [INTEGER]
+		once
+			create Result.make (2)
+--			if {PLATFORM}.is_windows then
+				Result.put_last (ok_button)
+				Result.put_last (retry_button)
+--			else
+--				Result.put_last (cancel_button)
+--				Result.put_last (ok_button)
+--			end
+		ensure
+			result_attached: Result /= Void
+			not_result_is_empty: not Result.is_empty
+			result_contains_valid_items: Result.for_all (agent is_valid_button_id)
+		end
+
 	frozen yes_no_buttons: attached DS_HASH_SET [INTEGER]
 		once
 			create Result.make (2)

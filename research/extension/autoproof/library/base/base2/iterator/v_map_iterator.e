@@ -44,11 +44,11 @@ feature -- Cursor movement
 			target_closed: target.closed
 			lock_wrapped: target.lock.is_wrapped
 			k_locked: target.lock.locked [k]
-			modify_model ("index_", Current)
 		deferred
 		ensure
 			index_effect_found: target.domain_has (k) implies sequence [index_] = target.domain_item (k)
 			index_effect_not_found: not target.domain_has (k) implies index_ = sequence.count + 1
+			modify_model ("index_", Current)
 		end
 
 feature -- Specification

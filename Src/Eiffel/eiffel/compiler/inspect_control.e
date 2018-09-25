@@ -51,6 +51,16 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_LOCALE
+		export
+			{NONE} all
+		end
+
+	FORMATTED_MESSAGE
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -118,7 +128,6 @@ feature -- Processing
 			lower_bound: INTERVAL_VAL_B
 			upper_bound: INTERVAL_VAL_B
 			vomb3: VOMB3
-			i: like intervals
 			interval_byte_node: like last_interval_byte_node
 		do
 			is_inherited := a_code_inherited
@@ -134,24 +143,20 @@ feature -- Processing
 			end
 			if lower_bound /= Void and then upper_bound /= Void and then lower_bound <= upper_bound then
 				interval_byte_node := lower_bound.inspect_interval (upper_bound)
-				from
-					i := intervals
-					i.start
-				until
-					i.after
+				across
+					intervals as i
 				loop
 					if not interval_byte_node.disjunction (i.item) then
-							-- Intersecting intervals
-							-- Report error
+							-- Intersecting intervals.
+							-- Report error.
 						create vomb3
 						context.init_error (vomb3)
 						vomb3.set_interval (interval_byte_node.intersection (i.item))
 						vomb3.set_location (interval.end_location)
 						Error_handler.insert_error (vomb3)
 					end
-					i.forth
 				end
-				i.extend (interval_byte_node)
+				intervals.extend (interval_byte_node)
 			end
 			last_interval_byte_node := interval_byte_node
 		end
@@ -173,7 +178,13 @@ feature {STATIC_ACCESS_AS} -- Visitor
 			if attached feature_checker.last_type as l_last_type then
 				if attached {FORMAL_A} l_last_type.actual_type as l_formal then
 					if l_formal.is_multi_constrained (context.current_class) then
-						error_handler.insert_error (create {NOT_SUPPORTED}.make ("Multiple constraints not supported in static access for when clause"))
+						error_handler.insert_error (create {NOT_SUPPORTED}.make
+							(agent format_elements
+								(?,
+								locale.translation_in_context ("Multiple constraints are not supported in static access for {1} clause.", "compiler.error"),
+								<<agent {TEXT_FORMATTER}.process_keyword_text ({TEXT_FORMATTER}.ti_when_keyword, Void)>>),
+							context,
+							l_as.start_location))
 					else
 						class_c := context.current_class.constrained_type (l_formal.position).base_class
 					end
@@ -203,7 +214,7 @@ feature {STATIC_ACCESS_AS} -- Visitor
 							-- Record dependencies.
 						context.supplier_ids.extend_depend_unit_with_level (class_c.class_id, constant_i, 0)
 							-- Check if this is a unique constant.
-						last_unique_constant ?= constant_i
+						last_unique_constant := if attached {UNIQUE_I} constant_i as c then c else Void end
 							-- Calculate byte node.
 						last_inspect_value := constant_i.value.inspect_value (type)
 						if not is_inherited then
@@ -239,7 +250,7 @@ feature {ID_AS} -- Visitor
 					-- Record dependencies.
 				context.supplier_ids.extend_depend_unit_with_level (context.current_class.class_id, constant_i, 0)
 					-- Check if this is a unique constant.
-				last_unique_constant ?= constant_i
+				last_unique_constant := if attached {UNIQUE_I} constant_i as c then c else Void end
 					-- Calculate byte node.
 				last_inspect_value := constant_i.value.inspect_value (type)
 			elseif
@@ -368,7 +379,7 @@ invariant
 	intervals_not_void: intervals /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

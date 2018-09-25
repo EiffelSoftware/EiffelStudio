@@ -8,12 +8,11 @@ feature {NONE} -- Initialization
 
 	make
 			-- Run application.
+		local
+			a: A [INTEGER]
 		do
-			check
-				diff_obj_A: create {A}.make /= create {A}.make
-				same_obj_b: create {B}.make /= create {B}.make
-				diff_obj_c: create {C}.make /= create {C}.make
-				same_obj_d: create {D}.make /= create {D}.make
-			end		
+				-- Once creation procedure can't be part of Generic classes.
+			create a.make
 		end
+
 end

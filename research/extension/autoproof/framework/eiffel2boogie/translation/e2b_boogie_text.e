@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Helper class to create Boogie code."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -56,27 +56,22 @@ feature -- Basic operations
 			a_text_attached: attached a_text
 		local
 			l_string: STRING
-			l_lines: LIST [STRING]
 		do
 			l_string := a_text.string
 			if not l_string.is_empty then
 				if l_string.ends_with ("%N") then
 					l_string.remove_tail (1)
 				end
-				l_lines := a_text.string.split ('%N')
-				from
-					l_lines.start
-				until
-					l_lines.after
+				across
+					a_text.string.split ('%N') as l
 				loop
-					if l_lines.item.ends_with (":") and indentation_level > 0 then
+					if l.item.ends_with (":") and indentation_level > 0 then
 						unindent
-						put_line ("  " + l_lines.item)
+						put_line ("  " + l.item)
 						indent
 					else
-						put_line (l_lines.item)
+						put_line (l.item)
 					end
-					l_lines.forth
 				end
 			end
 		end
@@ -89,6 +84,24 @@ feature -- Basic operations
 			internal_string.append (a_string)
 		ensure
 --			a_string_added: string.ends_with (a_string)
+		end
+
+	put_literal_string (s: STRING)
+			-- Append string `s` making sure it can be read back.
+		require
+			s_attached: attached s
+			only_regular_spaces: across s as c all c.item.is_space implies c.item = ' ' end
+		local
+			e: STRING
+		do
+			if s.has (' ') then
+				e := s.twin
+					-- Replace all spaces with no-break space.
+				e.replace_substring_all (" ", "%/194/%/160/")
+				internal_string.append (e)
+			else
+				internal_string.append (s)
+			end
 		end
 
 	put_comment_line (a_comment: STRING)

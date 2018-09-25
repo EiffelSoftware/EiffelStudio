@@ -19,4 +19,8 @@ copy_raw 	test3.e $CLUSTER test.e
 resume_compile
 compile_result	syntax_error TEST 15
 
+copy_raw 	test4.e $CLUSTER test.e
+resume_compile
+compile_result	syntax_error TEST 15
+
 test_end

@@ -90,6 +90,12 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := show_item_path_preference.value
 		end
 
+	is_item_description_shown: BOOLEAN
+			-- Is item description shown?
+		do
+			Result := show_item_description_preference.value
+		end
+
 	is_self_dependency_shown: BOOLEAN
 			-- Is dependency on self shown?
 		do
@@ -168,6 +174,7 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	feature_view_sorting_order_preference: STRING_PREFERENCE
 	dependency_view_sorting_order_preference: STRING_PREFERENCE
 	show_item_path_preference: BOOLEAN_PREFERENCE
+	show_item_description_preference: BOOLEAN_PREFERENCE
 	show_self_dependency_preference: BOOLEAN_PREFERENCE
 	expand_referenced_class_preference: BOOLEAN_PREFERENCE
 	expand_referencer_class_preference: BOOLEAN_PREFERENCE
@@ -192,6 +199,7 @@ feature {NONE} -- Preference Strings
 	feature_view_sorting_order_string: STRING = "tools.class_browser.feature_view_sorting_order"
 	dependency_view_sorting_order_string: STRING = "tools.class_browser.dependency_view_sorting_order"
 	show_item_path_string: STRING = "tools.class_browser.show_item_path"
+	show_item_description_string: STRING = "tools.class_browser.show_item_description"
 	show_self_dependency_string: STRING = "tools.class_browser.show_self_dependency"
 	expand_referenced_class_string: STRING = "tools.class_browser.expand_referenced_class"
 	expand_referencer_class_string: STRING = "tools.class_browser.expand_referencer_class"
@@ -227,6 +235,7 @@ feature {NONE} -- Implementation
 			dependency_view_sorting_order_preference := l_manager.new_string_preference_value (l_manager, dependency_view_sorting_order_string, "1:1,2:1,3:1,4:1")
 			dependency_view_sorting_order_preference.set_hidden (True)
 			show_item_path_preference := l_manager.new_boolean_preference_value (l_manager, show_item_path_string, False)
+			show_item_description_preference := l_manager.new_boolean_preference_value (l_manager, show_item_description_string, False)
 			show_self_dependency_preference := l_manager.new_boolean_preference_value (l_manager, show_self_dependency_string, False)
 			expand_referenced_class_preference := l_manager.new_boolean_preference_value (l_manager, expand_referenced_class_string, True)
 			expand_referencer_class_preference := l_manager.new_boolean_preference_value (l_manager, expand_referencer_class_string, False)
@@ -247,7 +256,7 @@ invariant
 	preferences_not_void: preferences /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

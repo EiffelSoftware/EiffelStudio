@@ -47,9 +47,6 @@ feature {NONE} -- Initialization
 			make
 			create current_tag.make
 			create current_attributes.make (0)
-			create group_list.make (0)
-			create uses_list.make (0)
-			create overrides_list.make (0)
 			create current_content.make_empty
 			factory := a_factory
 			last_undefined_tag_number := undefined_tag_start
@@ -92,6 +89,8 @@ feature -- Callbacks
 
 				l_tag := tag_from_state_transitions (current_tag.item, l_local_part)
 					-- Record levels of note element as a flag we allow any content in note.
+
+				create current_content.make_empty
 
 				if note_level = 0 and then l_tag = t_note then
 						-- Root element
@@ -324,16 +323,12 @@ feature -- Callbacks
 	on_end_tag (a_namespace: detachable READABLE_STRING_32; a_prefix: detachable READABLE_STRING_32; a_local_part: READABLE_STRING_32)
 			-- End tag.
 		local
-			l_group: detachable CONF_GROUP
-			l_error: CONF_ERROR_GRUNDEF
-			l_e_ov: CONF_ERROR_OVERRIDE
 			l_current_target: like current_target
 			l_current_cluster: like current_cluster
+			l_target: detachable CONF_TARGET
 		do
 			if not is_error then
-				current_content.left_adjust
-				current_content.right_adjust
-				if not current_content.is_empty then
+				if not current_content.is_whitespace then
 					lt_gt_escape_string (current_content)
 
 					inspect
@@ -341,18 +336,21 @@ feature -- Callbacks
 					when t_description then
 						process_description_content
 					when t_exclude then
+						current_content.adjust
 						process_exclude_content
 					when t_include then
+						current_content.adjust
 						process_include_content
 					else
+						current_content.adjust
 						if note_level > 0 then
 							current_element_under_note.item.set_content (current_content)
 						else
 							set_parse_error_message (conf_interface_names.e_parse_invalid_content (current_content))
 						end
 					end
-					create current_content.make_empty
 				end
+				create current_content.make_empty
 
 				l_current_cluster := current_cluster
 
@@ -361,6 +359,28 @@ feature -- Callbacks
 				when t_system then
 					if current_library_target /= Void then
 						set_error (create {CONF_ERROR_LIBTAR})
+					end
+					if attached last_system as syst then
+						across
+							syst.targets as ic
+						loop
+							l_target := ic.item
+							if attached l_target.parent_reference as p_ref then
+								if attached {CONF_LOCAL_TARGET_REFERENCE} p_ref as p_remote and then attached p_remote.name as l_parent_name then
+									if attached syst.target (l_parent_name) as l_parent then
+										if l_target = l_parent or l_target.same_as (l_parent) then
+											set_parse_error_message (conf_interface_names.e_parse_incorrect_target_parent (l_parent.name, l_target.name))
+										else
+											l_target.set_parent (l_parent)
+										end
+									else
+										set_parse_error_message (conf_interface_names.e_parse_incorrect_target_parent (l_parent_name, l_target.name))
+									end
+								else
+										-- Do not try here to resolve remote parent.
+								end
+							end
+						end
 					end
 				when t_target then
 						-- check for overrides and precompiles in a library_target
@@ -373,34 +393,6 @@ feature -- Callbacks
 							set_error (create {CONF_ERROR_LIBOVER})
 						end
 					end
-						-- handle uses and overrides
-					across uses_list as uses_ic loop
-						l_group := group_list.item (uses_ic.key)
-						if l_group = Void then
-							create l_error
-							l_error.set_group (uses_ic.key)
-							set_error (l_error)
-						else
-							uses_ic.item.do_all (agent {CONF_CLUSTER}.add_dependency (l_group))
-						end
-					end
-					across overrides_list as overrides_ic loop
-						l_group := group_list.item (overrides_ic.key)
-						if l_group = Void then
-							create l_error
-							l_error.set_group (overrides_ic.key)
-							set_error (l_error)
-						elseif l_group.is_override then
-							create l_e_ov
-							l_e_ov.set_group (l_group.name)
-							set_error (l_e_ov)
-						else
-							overrides_ic.item.do_all (agent {CONF_OVERRIDE}.add_override (l_group))
-						end
-					end
-					uses_list.wipe_out
-					overrides_list.wipe_out
-					group_list.wipe_out
 					if l_current_target /= Void and then l_current_target.extends = Void then
 							-- Set default options for the standalone target in case the old schema is being processed.
 							-- Extension targets do not need it because the options are inherited from the standalone ones.
@@ -748,31 +740,34 @@ feature {NONE} -- Implementation attribute processing
 									-- This is not a remote system, it is current one!
 								l_extends_location := Void
 							else
-								l_current_target.set_remote_parent (create {CONF_REMOTE_TARGET}.make (l_extends, l_extends_location))
+								l_current_target.reference_parent (create {CONF_REMOTE_TARGET_REFERENCE}.make (l_extends, l_extends_location))
 							end
 						else
 							report_unknown_attribute (ta_extends_location)
 						end
-					elseif l_extends /= Void then
+					end
+					if
+						l_current_target.parent_reference = Void and then
+						l_extends /= Void
+					then
 						if l_parent_system = Void then
 								-- Use the current system if a parent one is not specified
 							l_parent_system := l_last_system
 						end
 							-- Target are known internally in lower case,
 							-- so we should respect this (see bug#12698).
-						l_parent_target := l_parent_system.target (l_extends)
-						if l_parent_target = Void or else l_parent_target = l_current_target then
-							if l_extends_location /= Void then
-									-- No target `l_extends` on remote location!
-								set_parse_error_message (conf_interface_names.e_parse_incorrect_remote_target_parent (l_extends, l_name, l_extends_location))
+						if l_extends.is_case_insensitive_equal_general (l_current_target.name) then
+							set_parse_error_message (conf_interface_names.e_parse_incorrect_target_parent (l_extends, l_name))
+						else
+							l_parent_target := l_parent_system.target (l_extends)
+							if l_parent_target = Void then
+								l_current_target.reference_parent (create {CONF_LOCAL_TARGET_REFERENCE}.make (l_extends))
+									-- Could be declared later in the configuration file.
 							else
-								set_parse_error_message (conf_interface_names.e_parse_incorrect_target_parent (l_extends, l_name))
+								l_current_target.set_parent (l_parent_target)
+								check not_same_target: l_parent_target /= l_current_target and not l_parent_target.same_as (l_current_target) end
 							end
 						end
-					end
-					if l_parent_target /= Void then
-						l_current_target.set_parent (l_parent_target)
-						group_list := l_parent_target.groups
 					end
 				else
 					set_parse_error_message (conf_interface_names.e_parse_incorrect_target_no_name)
@@ -1126,7 +1121,6 @@ feature {NONE} -- Implementation attribute processing
 				if
 					is_valid_group_name (l_lower_name) and
 					attached current_attributes.item (at_location) as l_location and
-					not group_list.has (l_lower_name) and
 					attached current_target as l_current_target -- implied by precondition `current_target_not_void'
 				then
 					l_current_library := factory.new_library (l_lower_name, l_location, l_current_target)
@@ -1150,12 +1144,9 @@ feature {NONE} -- Implementation attribute processing
 					if attached current_attributes.item (at_prefix) as l_prefix then
 						l_current_library.set_name_prefix (l_prefix)
 					end
-					group_list.force (l_current_group, l_lower_name)
 					l_current_target.add_library (l_current_library)
 				elseif not is_valid_group_name (l_lower_name) then
 					set_parse_error_message (conf_interface_names.e_parse_incorrect_library_name (l_name))
-				elseif group_list.has (l_lower_name) then
-					set_parse_error_message (conf_interface_names.e_parse_incorrect_library_conflict (l_name))
 				else
 					set_parse_error_message (conf_interface_names.e_parse_incorrect_library (l_name))
 				end
@@ -1183,7 +1174,6 @@ feature {NONE} -- Implementation attribute processing
 				if
 					is_valid_group_name (l_lower_name) and
 					attached current_attributes.item (at_location) as l_location and
-					not group_list.has (l_lower_name) and
 					l_current_target.precompile = Void
 				then
 					l_current_library := factory.new_precompile (l_lower_name, l_location, l_current_target)
@@ -1203,12 +1193,9 @@ feature {NONE} -- Implementation attribute processing
 					if attached current_attributes.item (at_eifgens_location) as l_eifgen then
 						l_current_library.set_eifgens_location (factory.new_location_from_path (l_eifgen, l_current_target))
 					end
-					group_list.force (l_current_group, l_lower_name)
 					l_current_target.set_precompile (l_current_library)
 				elseif not is_valid_group_name (l_lower_name) then
 					set_parse_error_message (conf_interface_names.e_parse_incorrect_precompile_name (l_name))
-				elseif group_list.has (l_lower_name) then
-					set_parse_error_message (conf_interface_names.e_parse_incorrect_precompile_conflict (l_name))
 				elseif attached l_current_target.precompile as l_precompile then
 					set_parse_error_message (conf_interface_names.e_parse_incorrect_precompile_multiple (l_name, l_precompile.name))
 				else
@@ -1237,7 +1224,6 @@ feature {NONE} -- Implementation attribute processing
 				if
 					is_valid_group_name (l_lower_name) and
 					l_location /= Void and
-					not group_list.has (l_lower_name) and
 					attached current_target as l_current_target -- implied by precondition `current_target_not_void'
 				then
 					if
@@ -1266,14 +1252,11 @@ feature {NONE} -- Implementation attribute processing
 					if attached current_attributes.item (at_prefix) as l_prefix then
 						l_current_assembly.set_name_prefix (l_prefix)
 					end
-					group_list.force (l_current_group, l_lower_name)
 					l_current_target.add_assembly (l_current_assembly)
 				elseif not is_valid_group_name (l_lower_name) then
 					set_parse_error_message (conf_interface_names.e_parse_incorrect_assembly_name (l_name))
 				elseif l_location = Void then
 					set_parse_error_message (conf_interface_names.e_parse_incorrect_assembly (l_name))
-				elseif group_list.has (l_lower_name) then
-					set_parse_error_message (conf_interface_names.e_parse_incorrect_assembly_conflict (l_name))
 				else
 					check should_not_reach: False end
 				end
@@ -1304,7 +1287,6 @@ feature {NONE} -- Implementation attribute processing
 				if
 					is_valid_group_name (l_lower_name) and
 					l_location /= Void and
-					not group_list.has (l_lower_name) and
 					attached current_target as l_current_target -- implied by precondition `target_set'
 				then
 					l_parent := current_cluster
@@ -1344,7 +1326,6 @@ feature {NONE} -- Implementation attribute processing
 						l_loc.set_parent (l_parent.location)
 					end
 
-					group_list.force (l_current_group, l_lower_name)
 					l_current_target.add_cluster (l_current_cluster)
 				elseif not is_valid_group_name (l_lower_name) then
 					set_parse_error_message (conf_interface_names.e_parse_incorrect_cluster_name (l_name))
@@ -1378,7 +1359,6 @@ feature {NONE} -- Implementation attribute processing
 				if
 					is_valid_group_name (l_lower_name) and
 					l_location /= Void and
-					not group_list.has (l_lower_name) and
 					attached current_target as l_current_target -- implied by precondition `target_set'
 				then
 					l_parent := current_cluster
@@ -1415,12 +1395,9 @@ feature {NONE} -- Implementation attribute processing
 						l_parent.add_child (l_current_cluster)
 						l_current_cluster.set_parent (l_parent)
 					end
-					group_list.force (l_current_group, l_lower_name)
 					l_current_target.add_override (l_current_override)
 				elseif not is_valid_group_name (l_lower_name) then
 					set_parse_error_message (conf_interface_names.e_parse_incorrect_override_name (l_name))
-				elseif group_list.has (l_lower_name) then
-					set_parse_error_message (conf_interface_names.e_parse_incorrect_override_conflict (l_name))
 				else
 					set_parse_error_message (conf_interface_names.e_parse_incorrect_override (l_name))
 				end
@@ -1895,20 +1872,13 @@ feature {NONE} -- Implementation attribute processing
 			-- Process attributes of an uses tag.
 		require
 			current_cluster_set: current_cluster /= Void
-		local
-			ll: detachable ARRAYED_LIST [CONF_CLUSTER]
 		do
 			if attached current_cluster as l_current_cluster then
 				if attached current_attributes.item (at_group) as l_group and then is_valid_group_name (l_group) then
 					if l_group.same_string_general ("none") then
 						l_current_cluster.set_dependencies (create {SEARCH_TABLE [CONF_GROUP]}.make (0))
 					else
-						ll := uses_list.item (l_group)
-						if ll = Void then
-							create ll.make (1)
-						end
-						ll.extend (l_current_cluster)
-						uses_list.force (ll, l_group)
+						l_current_cluster.add_dependency_name (l_group)
 					end
 				else
 					set_parse_error_message (conf_interface_names.e_parse_incorrect_uses (l_current_cluster.name))
@@ -1923,20 +1893,13 @@ feature {NONE} -- Implementation attribute processing
 			-- Process attributes of an overides tag.
 		require
 			current_override_set: current_override /= Void
-		local
-			ll:  detachable ARRAYED_LIST [CONF_OVERRIDE]
 		do
 			if attached current_override as l_current_override then
 				if attached current_attributes.item (at_group) as l_group and then is_valid_group_name (l_group) then
 					if l_group.same_string_general ("none") then
 						l_current_override.set_override (create {ARRAYED_LIST [CONF_GROUP]}.make (0))
 					else
-						ll := overrides_list.item (l_group)
-						if ll = Void then
-							create ll.make (1)
-						end
-						ll.extend (l_current_override)
-						overrides_list.force (ll, l_group)
+						l_current_override.add_override_group_name (l_group)
 					end
 				else
 					set_parse_error_message (conf_interface_names.e_parse_incorrect_overrides (l_current_override.name))
@@ -2525,17 +2488,6 @@ feature {NONE} -- Implementation
 	current_action: detachable CONF_ACTION
 	current_content: STRING_32
 	current_condition: detachable CONF_CONDITION
-
-	uses_list: STRING_TABLE [ARRAYED_LIST [CONF_CLUSTER]]
-			-- The list of classes, that have a uses clause on something.
-			-- Entries will be handled at the end.
-
-	overrides_list: STRING_TABLE [ARRAYED_LIST [CONF_OVERRIDE]]
-			-- The list of classes, that have an overrides clause on something.
-			-- Entries will be handled at the end.
-
-	group_list: STRING_TABLE [CONF_GROUP]
-			-- All groups of `current_target', to check for name conflicts and to compute dependencies and overrides.
 
 	current_tag: LINKED_STACK [INTEGER]
 			-- The stack of tags we are currently processing
@@ -3285,9 +3237,6 @@ invariant
 	current_tag_not_void: current_tag /= Void
 	current_attributes_not_void: current_attributes /= Void
 	current_content_not_void: current_content /= Void
-	group_list_not_void: group_list /= Void
-	uses_list_not_void: uses_list /= Void
-	overrides_list_not_void: overrides_list /= Void
 	factory_not_void: factory /= Void
 
 note

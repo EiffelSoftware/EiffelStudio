@@ -1,9 +1,9 @@
-note
-	description	: "Enlarged byte code for Eiffel loops."
+﻿note
+	description: "Enlarged byte code for Eiffel loops."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class LOOP_BL
 
@@ -227,6 +227,7 @@ feature -- Access
 			end
 				-- Regenerate the variant clause	
 			if generate_variant then
+				context.set_assertion_type (In_loop_variant)
 				if workbench_mode then
 					generate_workbench_test
 					variant_part.print_register
@@ -236,6 +237,7 @@ feature -- Access
 					variant_part.print_register
 					generate_end_final_mode_test
 				end
+				context.set_assertion_type (0)
 			end
 
 			debug ("DEBUGGER_HOOK")
@@ -343,7 +345,7 @@ feature {NONE} -- Implementation
 			-- "invariant/variant" clause.
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

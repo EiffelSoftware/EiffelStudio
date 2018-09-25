@@ -87,6 +87,44 @@ feature -- Element update
 			last.enable_select
 		end
 
+	add_remote_target
+			-- Add a new remote target.
+		local
+			dlg: ADD_REMOTE_TARGET_DIALOG
+			par_loc, loc: PATH
+			s: STRING_32
+		do
+			create dlg.make (configuration_window.current_target, configuration_window.conf_factory)
+			dlg.show_modal_to_window (configuration_window)
+			if dlg.is_ok then
+				if
+					attached dlg.last_target as tgt and then
+					attached parent as p
+				then
+					par_loc := target.system.file_path.absolute_path.canonical_path.parent
+					loc := tgt.system.file_path.absolute_path.canonical_path
+					if loc.name.starts_with (loc.name) then
+						create s.make_from_string (loc.name)
+						s.remove_head (par_loc.name.count)
+						if not s.is_empty and s[1] = loc.directory_separator then
+							s.remove_head (1)
+							create loc.make_from_string (s)
+						end
+					end
+					target.reference_parent (create {CONF_REMOTE_TARGET_REFERENCE}.make (tgt.name, loc.name))
+					target.set_remote_parent (tgt)
+					if attached configuration_window.remote_target_section_from (tgt, p) as l_section then
+						p.start
+						p.prune (l_section)
+					end
+					p.start
+					p.prune (Current)
+					configuration_window.add_target_sections (tgt, p)
+					p.last.enable_select
+				end
+			end
+		end
+
 	ask_remove_target
 			-- Ask for confirmation and remove Current.
 		local
@@ -246,6 +284,13 @@ feature {NONE} -- Implementation
 			Result.extend (l_item)
 			l_item.set_pixmap (conf_pixmaps.new_target_icon)
 
+			create l_item.make_with_text_and_action (conf_interface_names.add_remote_target, agent add_remote_target)
+			Result.extend (l_item)
+			l_item.set_pixmap (conf_pixmaps.new_remote_target_icon)
+			if target.extends /= Void or target.parent_reference /= Void then
+				l_item.disable_sensitive
+			end
+
 			l_groups := groups_section
 			Result.append (l_groups.context_menu)
 			l_externals := externals_section
@@ -286,6 +331,12 @@ feature {NONE} -- Implementation
 			toolbar.add_target_button.select_actions.wipe_out
 			toolbar.add_target_button.select_actions.extend (agent add_target)
 			toolbar.add_target_button.enable_sensitive
+
+			if target.extends = Void and target.parent_reference = Void then
+				toolbar.add_remote_target_button.select_actions.wipe_out
+				toolbar.add_remote_target_button.select_actions.extend (agent add_remote_target)
+				toolbar.add_remote_target_button.enable_sensitive
+			end
 
 			toolbar.remove_button.select_actions.wipe_out
 			toolbar.remove_button.select_actions.extend (agent ask_remove_target)

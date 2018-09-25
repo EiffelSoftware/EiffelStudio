@@ -28,14 +28,14 @@ feature -- Replacement
 					s.item.is_wrapped and
 					across s.item.observers as o all o.item /= Current implies o.item.is_open end
 				end
-			modify_model ("off_", Current)
-			modify (subjects)
 		deferred
 		ensure
 			subjects_wrapped: across subjects as s all
 					s.item.is_wrapped and
 					across s.item.observers as o all o.item /= Current implies o.item.is_open end
 				end
+			modify_model ("off_", Current)
+			modify (subjects)
 		end
 
 	pipe (input: V_INPUT_STREAM [G])
@@ -50,8 +50,6 @@ feature -- Replacement
 					across s.item.observers as o all o.item /= Current implies o.item.is_open end
 				end
 			input_subjects_wrapped: across input.subjects as s all s.item.is_wrapped end
-			modify (Current, subjects)
-			modify_model ("box", input)
 		do
 			from
 			invariant
@@ -71,6 +69,8 @@ feature -- Replacement
 			end
 		ensure
 			off_effect: off_ or input.box.is_empty
+			modify (Current, subjects)
+			modify_model ("box", input)
 		end
 
 	pipe_n (input: V_INPUT_STREAM [G]; n: INTEGER)
@@ -86,8 +86,6 @@ feature -- Replacement
 					across s.item.observers as o all o.item /= Current implies o.item.is_open end
 				end
 			input_subjects_wrapped: across input.subjects as s all s.item.is_wrapped end
-			modify_model ("box", input)
-			modify (Current, subjects)
 		local
 			i: INTEGER
 		do
@@ -110,6 +108,9 @@ feature -- Replacement
 			variant
 				n - i
 			end
+		ensure
+			modify_model ("box", input)
+			modify (Current, subjects)
 		end
 
 feature -- Specification

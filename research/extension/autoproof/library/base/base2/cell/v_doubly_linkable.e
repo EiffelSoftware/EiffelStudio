@@ -41,8 +41,6 @@ feature -- Replacement
 			cell_wrapped: cell.is_wrapped
 			segment_end: right = Void
 			segment_start: cell.left = Void
-			modify_model (["right", "subjects", "observers"], Current)
-			modify_model (["left", "subjects", "observers"], cell)
 		do
 			cell.unwrap
 			put_right (cell)
@@ -52,6 +50,8 @@ feature -- Replacement
 			wrapped: is_wrapped
 			cell_wrapped: cell.is_wrapped
 			connected: right = cell
+			modify_model (["right", "subjects", "observers"], Current)
+			modify_model (["left", "subjects", "observers"], cell)
 		end
 
 	insert_right (front, back: V_DOUBLY_LINKABLE [G])
@@ -65,8 +65,6 @@ feature -- Replacement
 			right_wrapped: right.is_wrapped
 			segment_start: front.left = Void
 			segment_end: back.right = Void
-			modify_model (["right", "subjects", "observers"], [Current, back])
-			modify_model (["left", "subjects", "observers"], [right, front])
 		do
 			unwrap_all (create {MML_SET [ANY]} & Current & right & front & back)
 			back.put_right (right)
@@ -81,6 +79,8 @@ feature -- Replacement
 			front_wrapped: front.is_wrapped
 			back_wrapped: back.is_wrapped
 			right_wrapped: (old right).is_wrapped
+			modify_model (["right", "subjects", "observers"], [Current, back])
+			modify_model (["left", "subjects", "observers"], [right, front])
 		end
 
 	remove_right
@@ -90,10 +90,8 @@ feature -- Replacement
 		require
 			wrapped: is_wrapped
 			right_wrapped: right.is_wrapped
+			right_wrapped: attached right as x and then x.is_wrapped
 			next_wrapped: right.right.is_wrapped
-			modify_model (["right", "subjects", "observers"], Current)
-			modify_model (["left", "subjects", "observers"], right.right)
-			modify (right)
 		do
 			unwrap_all (create {MML_SET [ANY]} & Current & right & right.right)
 			put_right (right.right)
@@ -103,6 +101,9 @@ feature -- Replacement
 			right_set: right = old right.right
 			wrapped: is_wrapped
 			right_wrapped: right.is_wrapped
+			modify_model (["right", "subjects", "observers"], Current)
+			modify_model (["left", "subjects", "observers"], right.right)
+			modify (right)
 		end
 
 feature {V_DOUBLY_LINKABLE, V_DOUBLY_LINKED_LIST} -- Replacement
@@ -113,7 +114,6 @@ feature {V_DOUBLY_LINKABLE, V_DOUBLY_LINKED_LIST} -- Replacement
 			open: is_open
 			right_open: attached right as r implies r.is_open
 			inv_only ("subjects_definition", "observers_definition")
-			modify_field (["right", "subjects", "observers"], Current)
 		do
 			right := cell
 			set_subjects
@@ -123,6 +123,7 @@ feature {V_DOUBLY_LINKABLE, V_DOUBLY_LINKED_LIST} -- Replacement
 		ensure
 			right_effect: right = cell
 			inv_only ("subjects_definition", "observers_definition")
+			modify_field (["right", "subjects", "observers"], Current)
 		end
 
 	put_left (cell: detachable V_DOUBLY_LINKABLE [G])
@@ -131,7 +132,6 @@ feature {V_DOUBLY_LINKABLE, V_DOUBLY_LINKED_LIST} -- Replacement
 			open: is_open
 			left_open: attached left as l implies l.is_open
 			inv_only ("subjects_definition", "observers_definition")
-			modify_field (["left", "subjects", "observers"], Current)
 		do
 			left := cell
 			set_subjects
@@ -141,6 +141,7 @@ feature {V_DOUBLY_LINKABLE, V_DOUBLY_LINKED_LIST} -- Replacement
 		ensure
 			left_effect: left = cell
 			inv_only ("subjects_definition", "observers_definition")
+			modify_field (["left", "subjects", "observers"], Current)
 		end
 
 feature -- Specification

@@ -13,8 +13,8 @@
 		<capability>
 			<void_safety support="all" use="all"/>
 		</capability>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="cypress_consumer" location="..\..\consumer\consumer-safe.ecf" readonly="false"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="cypress_consumer" location="..\..\consumer\consumer.ecf" readonly="false"/>
 		<cluster name="login_with_asana" location=".\" recursive="true"/>
 	</target>
 </system>

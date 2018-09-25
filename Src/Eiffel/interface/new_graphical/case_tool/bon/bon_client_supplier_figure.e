@@ -1,8 +1,9 @@
-note
+﻿note
 	description: "Objects that is a BON view for an EIFFEL_CLIENT_SUPPLIER_LINK"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "Benno Baumgartner"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,23 +15,24 @@ inherit
 		undefine
 			is_storable
 		redefine
-			update,
-			remove_i_th_point,
 			add_point_between,
 			default_create,
-			set_foreground_color,
-			recursive_transform,
-			set_line_width,
-			retrieve_edges,
-			show_label,
 			hide_label,
-			set_name_label_text,
 			is_label_shown,
-			xml_element,
-			xml_node_name,
-			set_with_xml_element,
+			line,
+			recursive_transform,
+			recycle,
 			reset,
-			recycle
+			remove_i_th_point,
+			retrieve_edges,
+			set_foreground_color,
+			set_line_width,
+			set_name_label_text,
+			set_with_xml_element,
+			show_label,
+			update,
+			xml_element,
+			xml_node_name
 		select
 			default_create,
 			set_with_xml_element,
@@ -71,6 +73,11 @@ create
 
 create {BON_CLIENT_SUPPLIER_FIGURE}
 	make_filled
+
+feature {NONE} -- Access
+
+	line: ES_DOUBLE_POLYLINE
+			-- A model for drawing the figure.
 
 feature {NONE} -- Initialization
 
@@ -136,11 +143,9 @@ feature -- Access
 			-- Xml node representing `Current's state.
 		local
 			was_low: BOOLEAN
-			l_xml_namespace: like xml_namespace
 			l_xml_routines: like xml_routines
 			l_model: like model
 		do
-			l_xml_namespace := xml_namespace
 			l_xml_routines := xml_routines
 			l_model := model
 			if not is_high_quality then
@@ -185,9 +190,8 @@ feature -- Access
 			end
 			real_line_width := (l_xml_routines.xml_integer (node, once "REAL_LINE_WIDTH") / 100).truncated_to_real
 			if real_line_width.rounded.max (1) /= line_width then
-				line.set_line_width (real_line_width.rounded.max (1))
+				set_line_width (real_line_width.rounded.max (1))
 			end
-
 			polyline_label_set_with_xml_element (node)
 			if was_low then
 				disable_high_quality
@@ -247,9 +251,16 @@ feature -- Element change
 
 	set_line_width (a_line_width: like line_width)
 			-- Set `line_width' to `a_line_width'.
+		local
+			arrow_size: like line.arrow_size
 		do
 			Precursor {EIFFEL_CLIENT_SUPPLIER_FIGURE} (a_line_width)
-			real_line_width := a_line_width
+				-- Make arrow proportional to the line width.
+			arrow_size := (a_line_width + (a_line_width * 0.8).max (4.0)).rounded
+			line.set_arrow_size (arrow_size)
+				-- Update aggregate figure.
+			aggregate_figure.set_line_width ((a_line_width * 0.3).max (1.0).rounded)
+			set_aggregate_figure_position (arrow_size * 2)
 		end
 
 	set_foreground_color (a_color: EV_COLOR)
@@ -303,7 +314,7 @@ feature {EG_FIGURE, EG_FIGURE_WORLD} -- Update
 				if label_group.is_show_requested then
 					update_label_position
 				end
-				set_aggregate_figure_position (aggregate_figure_distance)
+				set_aggregate_figure_position (line.arrow_size * 2)
 			else
 				if is_reflexive then
 					low_quality_circle.set_x_y (source.port_x + as_integer (source.width / 2 + reflexive_radius / 2), source.port_y)
@@ -343,17 +354,16 @@ feature {EV_MODEL_GROUP} -- Transformation
 		do
 			Precursor {EIFFEL_CLIENT_SUPPLIER_FIGURE} (a_transformation)
 			real_line_width := real_line_width * a_transformation.item (1, 1).truncated_to_real
-			if real_line_width.rounded.max (1) /= line_width then
-				line.set_line_width (real_line_width.rounded.max (1))
-				request_update
-			end
 			real_arrow_head_size := real_arrow_head_size * a_transformation.item (1, 1).truncated_to_real
-			if real_arrow_head_size.rounded.max (1) /= line.arrow_size then
-				if is_high_quality then
-					line.set_arrow_size (real_arrow_head_size.rounded.max (1))
-				elseif not is_reflexive then
-					low_quality_line.set_arrow_size (real_arrow_head_size.rounded.max (1))
-				end
+			if real_line_width.rounded.max (1) /= line_width then
+				set_line_width (real_line_width.rounded.max (1))
+			end
+			if
+				real_arrow_head_size.rounded.max (1) /= line.arrow_size and then
+				not is_high_quality and then
+				not is_reflexive
+			then
+				low_quality_line.set_arrow_size (real_arrow_head_size.rounded.max (1))
 				request_update
 			end
 			real_reflexive_radius := real_reflexive_radius * a_transformation.item (1, 1).truncated_to_real
@@ -390,18 +400,10 @@ feature {NONE} -- Implementation
 	aggregate_figure: EV_MODEL_LINE
 			-- Figure indicating that `Current' `is_aggregated'.
 
-	aggregate_figure_distance: INTEGER
-			-- Distance in pixel `aggregate_figure' has from `end_point'
-		do
-			Result := (real_arrow_head_size * 3).truncated_to_integer
-		ensure
-			Result_positive: Result >= 0
-		end
-
 	aggregate_figure_length: INTEGER
 			-- Length of aggregate figure.
 		do
-			Result := real_arrow_head_size.truncated_to_integer
+			Result := line.arrow_size
 		ensure
 			Result_positive: Result >= 0
 		end
@@ -579,12 +581,10 @@ feature {NONE} -- Implementation
 		local
 			txt: EV_MODEL_TEXT
 			l_features: LIST [FEATURE_AS]
-			l_item: FEATURE_AS
 			l_feature_names: EIFFEL_LIST [FEATURE_NAME]
 			str: STRING_32
 			sorted_names: SORTED_TWO_WAY_LIST [EV_MODEL_TEXT]
 			signature: STRING
-			e_feature: E_FEATURE
 			cur_y: INTEGER
 		do
 			if not is_label_expanded then
@@ -599,14 +599,12 @@ feature {NONE} -- Implementation
 				if l_features.is_empty then
 					name_label.remove_pebble
 				else
-					l_item := l_features.first
-
-					e_feature := e_feature_from_abstract (l_item)
-					if e_feature /= Void then
-						name_label.set_pebble (create {FEATURE_STONE}.make (e_feature))
-					else
-						name_label.set_pebble (create {CLASSI_STONE}.make (model.client.class_i))
-					end
+					name_label.set_pebble
+						(if attached e_feature_from_abstract (l_features.first) as e_feature then
+							create {FEATURE_STONE}.make (e_feature)
+						else
+							create {CLASSI_STONE}.make (model.client.class_i)
+						end)
 				end
 			else
 				label_group.wipe_out
@@ -639,12 +637,12 @@ feature {NONE} -- Implementation
 						if world /= Void then
 							txt.scale (world.scale_factor)
 						end
-						e_feature := e_feature_from_abstract (l_features.item)
-						if e_feature /= Void then
-							txt.set_pebble (create {FEATURE_STONE}.make (e_feature))
-						else
-							txt.set_pebble (create {CLASSI_STONE}.make (model.client.class_i))
-						end
+						txt.set_pebble
+							(if attached e_feature_from_abstract (l_features.item) as e_feature then
+								create {FEATURE_STONE}.make (e_feature)
+							else
+								create {CLASSI_STONE}.make (model.client.class_i)
+							end)
 						txt.set_accept_cursor (cursors.cur_feature)
 						txt.set_deny_cursor (cursors.cur_x_feature)
 						sorted_names.extend (txt)
@@ -656,17 +654,15 @@ feature {NONE} -- Implementation
 				check
 					is_sorted: sorted_names.sorted
 				end
+				across
+					sorted_names as n
 				from
 					cur_y := label_group.point_y
-					sorted_names.start
-				until
-					sorted_names.after
 				loop
-					txt := sorted_names.item
+					txt := n.item
 					txt.set_point_position (label_group.point_x + 5, cur_y)
 					label_group.extend (txt)
 					cur_y := cur_y + ((txt.height * 12) // 10)
-					sorted_names.forth
 				end
 			end
 		end
@@ -685,23 +681,19 @@ feature {NONE} -- Implementation
 						prune_all (low_quality_line)
 					end
 					prune_all (name_label)
-					extend (line)
 					line.enable_sensitive
-					line.set_arrow_size (real_arrow_head_size.rounded.max (1))
+					extend (line)
 					extend (aggregate_figure)
 					name_label.set_point_position (label_group.point_x, label_group.point_y)
 					label_group.extend (name_label)
 					extend (label_move_handle)
 					label_move_handle.enable_sensitive
-					from
-						edge_move_handlers.start
-					until
-						edge_move_handlers.after
+					across
+						edge_move_handlers as h
 					loop
-						l_mh := edge_move_handlers.item
+						l_mh := h.item
 						extend (l_mh)
 						l_mh.enable_sensitive
-						edge_move_handlers.forth
 					end
 					if not is_label_shown then
 						label_group.hide
@@ -721,15 +713,12 @@ feature {NONE} -- Implementation
 					prune_all (line)
 					line.disable_sensitive
 					prune_all (aggregate_figure)
-					from
-						edge_move_handlers.start
-					until
-						edge_move_handlers.after
+					across
+						edge_move_handlers as h
 					loop
-						l_mh := edge_move_handlers.item
+						l_mh := h.item
 						prune_all (l_mh)
 						l_mh.disable_sensitive
-						edge_move_handlers.forth
 					end
 
 					if is_reflexive then
@@ -756,28 +745,23 @@ feature {NONE} -- Implementation
 
 	retrieve_preferences
 			-- Retrieve preferences from shared resources.
-		local
-			txt: EV_MODEL_TEXT
 		do
-			from
-				label_group.start
-			until
-				label_group.after
+			across
+				label_group as g
 			loop
-				txt ?= label_group.item
-				if txt /= Void then
+				if attached {EV_MODEL_TEXT} g.item as txt then
 					txt.set_identified_font (bon_client_label_font)
 					txt.set_foreground_color (bon_client_label_color)
 				end
-				label_group.forth
 			end
 			name_label.set_identified_font (bon_client_label_font)
 			name_label.set_foreground_color (bon_client_label_color)
 			set_foreground_color (bon_client_color)
 			set_line_width (bon_client_line_width)
+			real_line_width := line_width
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Optimization
 
 	reusable_rectangle_1: EV_RECTANGLE
 			-- Temporary reusable rectangle used to prevent recreation of objects.
@@ -795,7 +779,7 @@ invariant
 	aggregate_figure_not_void: aggregate_figure /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -826,4 +810,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class BON_CLIENT_SUPPLIER_FIGURE
+end

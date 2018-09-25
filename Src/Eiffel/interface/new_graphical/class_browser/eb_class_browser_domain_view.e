@@ -384,9 +384,11 @@ feature{NONE} -- Implementation
 				if should_headers_be_shown then
 					grid.column (1).set_title (interface_names.first_character_as_upper (domain_type_name (a_domain)))
 					grid.column (2).set_title (interface_names.l_location)
+					grid.column (3).set_title (interface_names.l_description)
 				else
 					grid.column (1).set_title ("")
 					grid.column (2).set_title ("")
+					grid.column (3).set_title ("")
 				end
 				create domain.make
 				l_domain := domain
@@ -648,7 +650,7 @@ feature{NONE} -- Recycle
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

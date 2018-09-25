@@ -1,7 +1,5 @@
-note
-	description: "[
-		Base class for routine translators.
-	]"
+﻿note
+	description: "Base class for routine translators."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -112,6 +110,7 @@ feature -- Helper functions: contracts
 		local
 			l_pre, l_post, l_modifies, l_reads, l_decreases: LINKED_LIST [E2B_ASSERT_ORIGIN]
 			l_class: CLASS_C
+			a: ASSERT_B
 		do
 			create l_pre.make
 			create l_post.make
@@ -156,13 +155,15 @@ feature -- Helper functions: contracts
 			until
 				l_pre.after
 			loop
-				if helper.is_clause_reads (l_pre.item.clause) then
+				a := l_pre.item.clause
+				if helper.is_clause_reads (a) then
 					l_reads.extend (l_pre.item)
 					l_pre.remove
-				elseif helper.is_clause_modify (l_pre.item.clause) then
+				elseif helper.is_clause_modify (a) then
+					helper.add_semantic_warning (a_feature, messages.invalid_context_for_special_predicate ("Modify"), a.line_number)
 					l_modifies.extend (l_pre.item)
 					l_pre.remove
-				elseif helper.is_clause_decreases (l_pre.item.clause) then
+				elseif helper.is_clause_decreases (a) then
 					l_decreases.extend (l_pre.item)
 					l_pre.remove
 				else
@@ -174,14 +175,15 @@ feature -- Helper functions: contracts
 			until
 				l_post.after
 			loop
-				if helper.is_clause_reads (l_post.item.clause) then
-					helper.add_semantic_warning (a_feature, messages.invalid_context_for_special_predicate ("Read"), l_post.item.clause.line_number)
+				a := l_post.item.clause
+				if helper.is_clause_reads (a) then
+					helper.add_semantic_warning (a_feature, messages.invalid_context_for_special_predicate ("Read"), a.line_number)
 					l_post.remove
-				elseif helper.is_clause_modify (l_post.item.clause) then
-					helper.add_semantic_warning (a_feature, messages.invalid_context_for_special_predicate ("Modify"), l_post.item.clause.line_number)
+				elseif helper.is_clause_modify (a) then
+					l_modifies.extend (l_post.item)
 					l_post.remove
-				elseif helper.is_clause_decreases (l_post.item.clause) then
-					helper.add_semantic_warning (a_feature, messages.invalid_context_for_special_predicate ("Decrease"), l_post.item.clause.line_number)
+				elseif helper.is_clause_decreases (a) then
+					helper.add_semantic_warning (a_feature, messages.invalid_context_for_special_predicate ("Decrease"), a.line_number)
 					l_post.remove
 				else
 					l_post.forth

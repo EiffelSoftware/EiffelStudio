@@ -37,7 +37,7 @@ feature {NONE} -- Access
 	density: REAL_64
 			-- Density of the table we generate.
 
-	output_path: detachable STRING_32
+	output_path: READABLE_STRING_32
 			-- Path where files will be generated.
 		require
 			is_successful: argument_parser.is_successful
@@ -198,6 +198,7 @@ feature -- Basic operations
 			end
 			l_output.open_write
 
+			l_class.replace_substring_all (generator_marker, argument_parser.name + " " + argument_parser.version)
 			l_class.replace_substring_all (unicode_version_marker, unicode_version.to_string_8)
 
 			l_class.replace_substring_all (tables_marker, l_tables)
@@ -211,9 +212,9 @@ feature -- Basic operations
 			l_class.replace_substring_all (to_upper_helper_marker, l_filter)
 
 				-- Special cases for `title' case where if there are not too many
-				-- differences we simply generate an override.it de
+				-- differences we simply generate an override.
+			create l_filter.make (10)
 			if l_diffs /= Void then
-				create l_filter.make (10)
 				l_simplified_diffs := title_fix_up (l_diffs)
 				if l_simplified_diffs = l_diffs then
 					generate_override (l_filter, l_diffs, "l_code", 4)
@@ -221,7 +222,6 @@ feature -- Basic operations
 					generate_override (l_filter, l_simplified_diffs, "Result.natural_32_code", 4)
 				end
 			else
-				create l_filter.make (10)
 				generate_filter (l_filter, l_titles, to_title_table_name, 4, True)
 			end
 			l_class.replace_substring_all (to_title_helper_marker, l_filter)
@@ -229,8 +229,8 @@ feature -- Basic operations
 			create l_filter.make (10)
 			generate_filter (l_filter, l_properties, property_table_name, 3, False)
 			l_class.replace_substring_all (property_helper_marker, l_filter)
-			l_output.put_string (l_class)
 
+			l_output.put_string (l_class)
 			l_output.close
 		end
 
@@ -551,8 +551,10 @@ feature -- Basic operations
 		end
 
 	generate_override (a_output: STRING; a_diffs: attached like mismatches; a_variable: STRING; a_nb_tab: INTEGER)
-			-- Generate code in `a_output' to select the new values
+			-- Generate code in `a_output` to select the new values.
 		do
+			write_tab (a_output, a_nb_tab)
+			a_output.append ("Result := to_upper (Result)%N")
 			write_tab (a_output, a_nb_tab)
 			a_output.append ("inspect ")
 			a_output.append (a_variable)
@@ -603,7 +605,6 @@ feature {NONE} -- Helpers
 						l_upper_char := l_char.code
 					end
 				end
-				l_same := True
 				across l_entry.item as l_codes until not l_same loop
 					if attached unicode_table as l_unicode_table and then attached l_unicode_table.item (l_codes.item) as l_char then
 						if l_char.has_upper_code then
@@ -620,7 +621,7 @@ feature {NONE} -- Helpers
 					l_list.extend (l_upper_char)
 					Result.extend (l_list, l_entry.key)
 				else
-						-- We could not optimized, keep the original set.
+						-- We could not optimize, keep the original set.
 					Result.extend (l_entry.item, l_entry.key)
 				end
 			end
@@ -629,14 +630,17 @@ feature {NONE} -- Helpers
 	mismatches (l_table1, l_table2: like extract_case_ranges): detachable HASH_TABLE [ARRAYED_LIST [NATURAL_32], NATURAL_32]
 			-- Compute the differences between two sets `l_table1' and `l_table2', and return the necessary information
 			-- required to patch `l_table1' to get to `l_table2'.
-			-- If blocks are different we return nothing as they are too many differences
+			-- If blocks are different we return nothing as there are too many differences.
 		local
 			l_diffs: detachable HASH_TABLE [NATURAL_32, NATURAL_32]
 			l_matches: detachable ARRAYED_LIST [NATURAL_32]
 		do
-				-- We use `l_diffs' to collect all the mismatches between the two lists.
-			create l_diffs.make (1)
+				-- The range 10D0..10FF in Unicode 11.0.0 has different upper case, but the same title case.
+				-- If this were taken into account, the patch could still be computed. The algorithm below should be modified to accomplish this though.
+				-- TODO: Update the algorithm to deal with ranges present in one table and absent in the other one.
 			if l_table1.count = l_table2.count then
+					-- We use `l_diffs' to collect all the mismatches between the two lists.
+				create l_diffs.make (1)
 				from
 					l_table1.start
 					l_table2.start
@@ -669,7 +673,7 @@ feature {NONE} -- Helpers
 				end
 			end
 				-- Now that we have the list, we are going to merge the values with the same output
-				-- in `l_table2' to create a list that will more compact.
+				-- in `l_table2' to create a list that will be more compact.
 			if l_diffs /= Void then
 				create Result.make (l_diffs.count)
 				across l_diffs as l_entry loop
@@ -723,11 +727,14 @@ feature {NONE} -- Helpers
 	to_title_helper_marker: STRING = "--$TO_TITLE_HELPER"
 	property_helper_marker: STRING = "--$PROPERTY_HELPER"
 	unicode_version_marker: STRING = "$UNICODE_VERSION"
+	generator_marker: STRING = "$GENERATOR"
 			-- Various marker in the template file that will be replaced.
 
 feature {NONE} -- Command line processing
 
-	argument_parser: ARGUMENT_PARSER
+	argument_parser: ARGUMENT_PARSER;
 			-- Parser of command line arguments.
 
+note
+	ca_ignore: "CA011", "CA011: too many arguments"
 end

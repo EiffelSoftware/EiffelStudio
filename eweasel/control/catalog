@@ -144,7 +144,7 @@ test	hash-table-is-equal		table012 tcf fail table
 test	string-table-duplicate-caseless-insertion table013 tcf pass table
 
 test	recursive-delete-with-symlinks	directory001 tcf pass directory
-test	directory-multibyte-delete	directory002 tcf fail directory library unicode
+test	directory-multibyte-delete	directory002 tcf pass directory library unicode
 
 test	basic-iterations		iteration001 tcf pass iteration
 test	iteration-cursor-two-generics	iteration002 tcf pass iteration formal generic
@@ -1896,6 +1896,17 @@ test once-per-object-nonconforming-2		once020 tcf fail once non-conforming
 test once-per-object-generic-precursor		once021 tcf fail once
 test once-per-object-array-of-expanded		once022 tcf fail once
 test once-per-object-inherited-twice		once023 tcf fail once
+
+
+-- Once creation procedures
+
+test once-per-thread-creation-procedure     once024 tcf fail once 
+test once-creation-procedures-immediate     once025 tcf fail once 
+test once-creation-procedures-generic       once026 tcf fail once 
+test once-creation-procedures-not-qualified-call once027 tcf fail once 
+test once-creation-procedures-qualified-call once028 tcf fail once 
+test once-creation-procedures-creation-call once029 tcf fail once 
+test once-creation-procedures-creation-invalid-call once030 tcf fail once 
 
 -- Compiler termination (exception trace, panic, etc.)
 

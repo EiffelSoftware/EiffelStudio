@@ -7,13 +7,8 @@
 			<exclude>/\.git$</exclude>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option warning="true" is_obsolete_routine_type="true">
-			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		<option warning="true">
 		</option>
-		<setting name="console_application" value="true"/>
-		<capability>
-			<void_safety support="none" use="none"/>
-		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="cypress_consumer" location="..\..\consumer\consumer.ecf" readonly="false"/>
 		<cluster name="login_with_github" location=".\" recursive="true"/>

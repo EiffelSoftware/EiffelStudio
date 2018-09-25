@@ -30,8 +30,6 @@ feature {NONE} -- Initialization
 			t_wrapped: t.is_wrapped
 			no_observers: observers.is_empty
 			not_observing_t: not t.observers [Current]
-			modify_field (["observers", "closed"], t)
-			modify (Current)
 		do
 			target := t
 			t.unwrap
@@ -52,6 +50,8 @@ feature {NONE} -- Initialization
 			index_effect: index_ = 1
 			t_observers_effect: t.observers = old t.observers & Current
 			iterator.is_fresh
+			modify_field (["observers", "closed"], t)
+			modify (Current)
 		end
 
 feature -- Initialization
@@ -64,8 +64,6 @@ feature -- Initialization
 			target_wrapped: target.is_wrapped
 			other_target_wrapped: other.target.is_wrapped
 			target /= other.target implies not other.target.observers [Current]
-			modify (Current)
-			modify_model ("observers", [target, other.target])
 		do
 			if Current /= other then
 				if target /= other.target then
@@ -89,6 +87,8 @@ feature -- Initialization
 			old_target_observers_effect: other.target /= old target implies (old target).observers = old target.observers / Current
 			other_target_observers_effect: other.target /= old target implies other.target.observers = old other.target.observers & Current
 			target_observers_preserved: other.target = old target implies other.target.observers = old other.target.observers
+			modify (Current)
+			modify_model ("observers", [target, other.target])
 		end
 
 feature -- Access

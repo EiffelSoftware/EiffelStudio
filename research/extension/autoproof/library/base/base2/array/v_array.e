@@ -84,7 +84,6 @@ feature -- Initialization
 			-- Reallocate memory unless count stays the same.
 		require
 			observers_open: across observers as o all o.item.is_open end
-			modify_model (["sequence", "lower_"], Current)
 		do
 			if other /= Current then
 				check other.inv end
@@ -101,6 +100,7 @@ feature -- Initialization
 			observers_open: across observers as o all o.item.is_open end
 			sequence_effect: sequence ~ old other.sequence
 			lower_effect: lower_ = old other.lower_
+			modify_model (["sequence", "lower_"], Current)
 		end
 
 feature -- Access
@@ -120,7 +120,6 @@ feature -- Access
 			l_not_too_small: l >= lower_
 			u_not_too_large: u <= upper_
 			l_not_too_large: l <= u + 1
-			modify_model ("observers", Current)
 		do
 			create Result.make (l, u)
 			check Result.inv end
@@ -132,6 +131,7 @@ feature -- Access
 			result_sequence_definition: Result.sequence ~ sequence.interval (idx(l), idx(u))
 			result_lower_definition: l <= u implies Result.lower_ =  l
 			observers_unchanged: observers ~ old observers
+			modify_model ("observers", Current)
 		end
 
 feature -- Measurement
@@ -205,7 +205,6 @@ feature -- Replacement
 			index_not_too_small: index >= lower_
 			enough_space: upper_ - index >= lst - fst
 			observers_open: across observers as o all o.item.is_open end
-			modify_model ("sequence", Current)
 		do
 			if lst >= fst then
 				check area.inv end
@@ -216,6 +215,7 @@ feature -- Replacement
 			sequence_effect: across 1 |..| sequence.count as i all if idx (index) <= i.item and i.item < idx (index + lst - fst + 1)
 					then sequence [i.item] = (old sequence) [i.item - index + fst]
 					else sequence [i.item] = (old sequence) [i.item] end end
+			modify_model ("sequence", Current)
 		end
 
 feature -- Resizing
@@ -228,7 +228,6 @@ feature -- Resizing
 		require
 			valid_indexes: l <= u + 1
 			observers_open: across observers as o all o.item.is_open  end
-			modify_model (["sequence", "lower_"], Current)
 		local
 			new_count, x, y: INTEGER
 		do
@@ -268,6 +267,7 @@ feature -- Resizing
 					sequence [k.item] = (old sequence) [j.item] end end
 			sequence_effect_new: across 1 |..| sequence.count as k all
 				k.item < idx (old lower_) or idx (old upper_) < k.item implies sequence [k.item] = ({G}).default end
+			modify_model (["sequence", "lower_"], Current)
 		end
 
 	include (i: INTEGER)
@@ -277,7 +277,6 @@ feature -- Resizing
 			explicit: wrapping
 		require
 			observers_open: across observers as o all o.item.is_open  end
-			modify_model (["sequence", "lower_"], Current)
 		do
 			check inv end
 			if is_empty then
@@ -295,6 +294,7 @@ feature -- Resizing
 					sequence [k.item] = (old sequence) [j.item] end end
 			sequence_effect_new: across 1 |..| sequence.count as k all
 				k.item < idx (old lower_) or idx (old upper_) < k.item implies sequence [k.item] = ({G}).default end
+			modify_model (["sequence", "lower_"], Current)
 		end
 
 	force (v: G; i: INTEGER)
@@ -304,7 +304,6 @@ feature -- Resizing
 			explicit: wrapping
 		require
 			observers_open: across observers as o all o.item.is_open  end
-			modify_model (["sequence", "lower_"], Current)
 		do
 			include (i)
 			put (v, i)
@@ -317,13 +316,13 @@ feature -- Resizing
 					sequence [k.item] = (old sequence) [j.item] end end
 			sequence_effect_new: across 1 |..| sequence.count as k all
 				k.item /= idx (i) and (k.item < idx (old lower_) or idx (old upper_) < k.item) implies sequence [k.item] = ({G}).default end
+			modify_model (["sequence", "lower_"], Current)
 		end
 
 	wipe_out
 			-- Remove all elements.
 		require
 			observers_open: across observers as o all o.item.is_open end
-			modify_model (["sequence", "lower_"], Current)
 		do
 			create area.make_empty (0)
 			lower := 1
@@ -331,6 +330,7 @@ feature -- Resizing
 		ensure
 			sequence_effect: sequence.is_empty
 			lower_effect: lower_ = 1
+			modify_model (["sequence", "lower_"], Current)
 		end
 
 feature {V_CONTAINER, V_ITERATOR} -- Implementation

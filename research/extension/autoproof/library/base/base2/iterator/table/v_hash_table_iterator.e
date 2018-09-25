@@ -30,8 +30,6 @@ feature {NONE} -- Initialization
 			t_wrapped: t.is_wrapped
 			no_observers: observers.is_empty
 			not_observing_t: not t.observers [Current]
-			modify_field (["observers", "closed"], t)
-			modify (Current)
 		local
 			i_: INTEGER
 		do
@@ -69,6 +67,8 @@ feature {NONE} -- Initialization
 			target_effect: target = t
 			t_observers_effect: t.observers = old t.observers & Current
 			list_iterator.is_fresh
+			modify_field (["observers", "closed"], t)
+			modify (Current)
 		end
 
 feature -- Initialization
@@ -81,8 +81,6 @@ feature -- Initialization
 			target_wrapped: target.is_wrapped
 			other_target_wrapped: other.target.is_wrapped
 			target /= other.target implies not other.target.observers [Current]
-			modify (Current)
-			modify_model ("observers", [target, other.target])
 		do
 			if Current /= other then
 				if target /= other.target then
@@ -100,6 +98,8 @@ feature -- Initialization
 			old_target_observers_effect: other.target /= old target implies (old target).observers = old target.observers / Current
 			other_target_observers_effect: other.target /= old target implies other.target.observers = old other.target.observers & Current
 			target_observers_preserved: other.target = old target implies other.target.observers = old other.target.observers
+			modify (Current)
+			modify_model ("observers", [target, other.target])
 		end
 
 feature -- Access
@@ -397,7 +397,6 @@ feature {V_CONTAINER, V_ITERATOR, V_LOCK} -- Implementation
 			not_current: other /= Current
 			same_target: target = other.target
 			target_closed: target.closed
-			modify_model ("index_", Current)
 		do
 			unwrap
 			bucket_index := other.bucket_index
@@ -429,6 +428,7 @@ feature {V_CONTAINER, V_ITERATOR, V_LOCK} -- Implementation
 			is_wrapped
 			other.closed
 			index_effect: index_ = old other.index_
+			modify_model ("index_", Current)
 		end
 
 feature {NONE} -- Implementation
@@ -473,8 +473,6 @@ feature {NONE} -- Implementation
 			bucket_index_in_range: target.lists.domain [bucket_index]
 			list_iterator_after: list_iterator.index_ = target.lists [bucket_index].sequence.count + 1
 			almost_holds: inv_without ("list_iterator_not_off", "box_definition")
-			modify_field (["bucket_index", "closed", "box"], Current)
-			modify (list_iterator)
 		do
 			check target.inv_only ("buckets_exist", "lists_definition", "owns_definition", "buckets_lower", "buckets_count", "list_observers_same", "lists_counts") end
 			from
@@ -507,6 +505,8 @@ feature {NONE} -- Implementation
 			wrap
  		ensure
 			wrapped: is_wrapped
+			modify_field (["bucket_index", "closed", "box"], Current)
+			modify (list_iterator)
 		end
 
 	to_prev_bucket
@@ -520,8 +520,6 @@ feature {NONE} -- Implementation
 			bucket_index_in_range: target.lists.domain [bucket_index]
 			list_iterator_before: list_iterator.index_ = 0
 			almost_holds: inv_without ("list_iterator_not_off", "box_definition")
-			modify_field (["bucket_index", "closed", "box"], Current)
-			modify (list_iterator)
 		do
 			check target.inv_only ("buckets_exist", "lists_definition", "owns_definition", "buckets_lower", "buckets_count", "list_observers_same", "lists_counts") end
 			from
@@ -551,6 +549,8 @@ feature {NONE} -- Implementation
 			wrap
  		ensure
 			wrapped: is_wrapped
+			modify_field (["bucket_index", "closed", "box"], Current)
+			modify (list_iterator)
 		end
 
 feature {V_CONTAINER, V_ITERATOR} -- Specification

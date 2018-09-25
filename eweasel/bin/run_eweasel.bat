@@ -10,12 +10,12 @@ if "%~3" == "nosvn" (
 	cd /d %TMP_PATH%
 )
 
-rem Cleaning test directory
+	rem Cleaning test directory
 rd /q /s %EWEASEL_OUTPUT%
 mkdir %EWEASEL_OUTPUT%
 
-rem Override any ECF to use the one from eweasel
-if "%ISE_PLATFORM%" == "dotnet" (
+	rem Override any ECF to use the one from eweasel
+if "%EWEASEL_PLATFORM%" == "DOTNET" (
 	copy %EWEASEL%\compilation\precomp\dotnet\*.ecf %ISE_PRECOMP%
 ) else (
 	copy %EWEASEL%\compilation\precomp\neutral\*.ecf %ISE_PRECOMP%
@@ -26,11 +26,14 @@ cd /d %ISE_PRECOMP%
 %ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\ec.exe -config base.ecf -precompile -c_compile %2
 %ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\ec.exe -config base-mt.ecf -precompile -c_compile %2
 
-rem Performing void-safe precompilation
+	rem Performing void-safe precompilation
 %ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\ec.exe -config base-safe.ecf -precompile -c_compile %2
-%ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\ec.exe -config base-scoop-safe.ecf -precompile -c_compile %2
+if not "%EWEASEL_PLATFORM%" == "DOTNET" (
+		rem SCOOP is not available for .NET
+	%ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin\ec.exe -config base-scoop-safe.ecf -precompile -c_compile %2
+)
 
-rem Launch EiffelWeasel tests
+	rem Launch EiffelWeasel tests
 cd /d %TMP_PATH%
 
 if "%~1" == "" (

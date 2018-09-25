@@ -77,8 +77,12 @@ feature -- Element change
 		end
 
 	set_text (a_text: READABLE_STRING_GENERAL)
+		local
+			s32: STRING_32
 		do
-			create {IMMUTABLE_STRING_32} text.make_from_string_general (a_text)
+			create s32.make_from_string_general (a_text)
+			s32.right_adjust
+			create {IMMUTABLE_STRING_32} text.make_from_string (s32)
 		end
 
 	set_lang (a_lang: detachable READABLE_STRING_8)

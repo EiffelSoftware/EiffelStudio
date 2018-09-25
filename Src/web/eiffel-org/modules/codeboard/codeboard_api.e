@@ -166,6 +166,10 @@ feature -- Element change
 			if attached cms_api.new_email (cms_api.setup.site_email, l_subject, l_mesg_text) as e then
 				cms_api.process_email (e)
 			end
+				-- Reset related cache
+			if attached {CMS_HOOK_BLOCK} cms_api.module ({CODEBOARD_MODULE}) as l_hook_block then
+				l_hook_block.clear_block_caches (Void, cms_api)
+			end
 		end
 
 	create_code (a_code: CODEBOARD_SNIPPET)

@@ -117,6 +117,14 @@ feature -- Code generation
 			end
 		end
 
+feature -- Instance Free		
+
+	set_instance_free_creation (a_creation: like instance_free_creation)
+			-- Set instance free creation `instance_free_creation' with `a_creation'
+		do
+			instance_free_creation := a_creation
+		end
+
 feature -- Optimization
 
 	is_polymorphic: BOOLEAN
@@ -139,7 +147,7 @@ feature -- Optimization
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

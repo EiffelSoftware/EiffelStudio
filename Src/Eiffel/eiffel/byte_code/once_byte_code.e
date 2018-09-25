@@ -279,11 +279,11 @@ feature -- C code generation
 					else --| default: if is_thread_relative_once then
 						generate_once_result_definition ("RTOTR", "RTOTD")
 					end
-					if is_once_creation_procedure then
-						buf.put_string (generated_c_feature_name + "_factory")
-					else
+--					if is_once_creation_procedure then
+--						buf.put_string (generated_c_feature_name + "_factory")
+--					else
 						buf.put_string (generated_c_feature_name)
-					end
+--					end
 					buf.put_two_character (')', ';')
 				elseif is_thread_relative_once and then System.has_multithreaded then
 						-- Generate locals for thread-relative once routine

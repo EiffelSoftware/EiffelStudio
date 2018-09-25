@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {VUEX2}."
+	description: "Error for a feature call (qualified or not )of once creation procedure, only valid in a creation call "
 	date: "$Date$"
 	revision: "$Revision$"
 

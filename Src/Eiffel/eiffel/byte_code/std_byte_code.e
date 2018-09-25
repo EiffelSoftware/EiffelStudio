@@ -387,9 +387,9 @@ feature -- Analyzis
 				-- Function's name
 			internal_name := generated_c_feature_name
 
-			if is_once_creation_procedure then
-				internal_name := internal_name + "_factory"
-			end
+--			if is_once_creation_procedure then
+--				internal_name := internal_name + "_factory"
+--			end
 
 				-- Add entry in the log file
 			add_in_log (internal_name)
@@ -1435,11 +1435,11 @@ end
 				buf.put_string ("char *")
 				buf.put_string ({BYTE_CONTEXT}.feature_name_local)
 				buf.put_three_character (' ', '=', ' ')
-				if is_once_creation_procedure then
-					buf.put_string_literal (feature_name + "_factory")
-				else
+--				if is_once_creation_procedure then
+--					buf.put_string_literal (feature_name + "_factory")
+--				else
 					buf.put_string_literal (feature_name)
-				end
+--				end
 				buf.put_character (';')
 			else
 				context.set_has_feature_name_stored (False)

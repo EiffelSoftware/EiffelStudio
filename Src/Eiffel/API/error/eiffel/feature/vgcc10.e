@@ -10,7 +10,10 @@ inherit
 
 	VGCC
 		redefine
-			subcode, build_explain
+			subcode,
+			print_short_help,
+			trace_single_line,
+			build_explain
 		end
 
 create
@@ -40,12 +43,31 @@ feature -- Output
 	build_explain (a_text_formatter: TEXT_FORMATTER)
 			-- Construct `a_text_formatter' with error.
 		do
-			a_text_formatter.add ("Generic class : ")
-			a_text_formatter.add (written_class.class_signature)
-			a_text_formatter.add (" cannot have a once procedure ")
-			a_text_formatter.add (e_feature.name_32)
-			a_text_formatter.add_new_line
 		end
+
+feature {NONE} -- Output
+
+	print_short_help (t: TEXT_FORMATTER)
+			-- <Precursor>
+		do
+			t.add_new_line
+			format_elements (t, locale.translation_in_context ("[
+						Generic class cannot have a once procedure {1}.
+						What to do: either make the class non-generic, or do not use once creation procedures..
+					]", "compiler.error"),
+				<<agent e_feature.append_name>>)
+			t.add_new_line
+			t.add_new_line
+		end
+
+	trace_single_line (t: TEXT_FORMATTER)
+			-- <Precursor>
+		do
+			format_elements (t, locale.translation_in_context
+				("Generic class cannot have a once procedure {1}.", "compiler.error"),
+				<<agent e_feature.append_name>>)
+		end
+
 
 
 note

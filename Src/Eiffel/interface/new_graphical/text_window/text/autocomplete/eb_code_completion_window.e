@@ -81,6 +81,14 @@ inherit
 			copy
 		end
 
+	EB_SHARED_PREFERENCES
+		export
+			{NONE} all
+		undefine
+			default_create,
+			copy
+		end
+
 create
 	make
 
@@ -92,7 +100,8 @@ feature {NONE} -- Initialization
 			Precursor {CODE_COMPLETION_WINDOW}
 			mode_template := False
 			build_option_bar
-			build_option_bar_template
+			build_option_bar_template (header_box)
+			build_info_associated_class_box (header_box)
 			choice_list.enable_tree
 			choice_list.set_configurable_target_menu_mode
 			choice_list.set_configurable_target_menu_handler (agent context_menu_handler)
@@ -202,43 +211,96 @@ feature {NONE} -- Initialization
 --			register_action (l_label.select_actions, agent on_option_label_selected (l_label))
 		end
 
-	build_option_bar_template
+	build_info_associated_class_box (a_box: EV_BOX)
+		do
+			create info_associated_target_class_box
+			a_box.extend (info_associated_target_class_box)
+			a_box.disable_item_expand (info_associated_target_class_box)
+		end
+
+	set_associated_target_class (cl: detachable CLASS_C)
+		local
+			lab: EV_LABEL
+			l_box: like info_associated_target_class_box
+			l_sep: EV_HORIZONTAL_SEPARATOR
+			hb: EV_HORIZONTAL_BOX
+--			pix: EV_PIXMAP
+		do
+			l_box := info_associated_target_class_box
+			l_box.wipe_out
+			if cl = Void then
+				l_box.wipe_out
+				l_box.hide
+				info_associated_target_class_set := False
+			else
+				create hb
+				hb.set_padding_width (layout_constants.small_padding_size)
+				hb.set_border_width (1)
+
+				create lab.make_with_text (interface_names.l_target_colon_space)
+				lab.align_text_left
+				hb.extend (lab)
+				hb.disable_item_expand (lab)
+
+--				pix := pixmaps.icon_pixmaps.class_normal_icon
+--				hb.extend (pix)
+--				hb.set_padding_width (2)
+--				pix.set_minimum_width (16)
+--				pix.set_minimum_height (16)
+--				hb.disable_item_expand (pix)
+
+				create lab.make_with_text (cl.name)
+				lab.set_pebble (create {CLASSC_STONE}.make (cl))
+				lab.set_foreground_color (preferences.editor_data.class_text_color)
+				lab.align_text_left
+				hb.extend (lab)
+				hb.disable_item_expand (lab)
+
+				hb.extend (create {EV_CELL})
+
+					-- Layout
+				create l_sep
+				l_box.extend (l_sep)
+				l_box.disable_item_expand (l_sep)
+
+				l_box.extend (hb)
+				l_box.disable_item_expand (hb)
+
+				create l_sep
+				l_box.extend (l_sep)
+				l_box.disable_item_expand (l_sep)
+
+				l_box.show
+				l_box.set_background_color (preferences.editor_data.class_background_color)
+				l_box.propagate_background_color
+				lab.refresh_now
+				info_associated_target_class_set := True
+			end
+		end
+
+	build_option_bar_template (a_box: EV_BOX)
 			-- Build option bar.
 		local
 			l_hbox: EV_HORIZONTAL_BOX
---			l_sep: EV_HORIZONTAL_SEPARATOR
---			l_label: EVS_LINK_LABEL
+			l_tpl_box: like option_template_feature
 		do
-				--| Code for bottom right label in comments)
-				-- Separator
---			create l_sep
---			l_sep.set_minimum_height (2)
---			option_template_feature.extend (l_sep)
+			create l_tpl_box
+			option_template_feature := l_tpl_box
+			a_box.extend (l_tpl_box)
+			a_box.disable_item_expand (l_tpl_box)
 
 			create l_hbox
 			l_hbox.set_padding_width (layout_constants.small_padding_size)
 			l_hbox.set_border_width (1)
-			option_template_feature.extend (l_hbox)
-			option_template_feature.disable_item_expand (l_hbox)
+			l_tpl_box.extend (l_hbox)
+			l_tpl_box.disable_item_expand (l_hbox)
 
-
---			create l_sep
---			l_sep.set_minimum_height (2)
---			option_bar_box_tpl.extend (l_sep)
-
---			create l_hbox
---			l_hbox.set_padding_width (layout_constants.small_padding_size)
---			l_hbox.set_border_width (1)
---			option_bar_box_tpl.extend (l_hbox)
---			option_bar_box_tpl.disable_item_expand (l_hbox)
-
-
-				-- Show features label
---			l_label.align_text_right
+			l_hbox.extend (create {EV_CELL}) -- to align on the right
+				-- Show template label
 			code_template_label.set_text (interface_names.l_show_templates)
 			l_hbox.extend (code_template_label)
 			l_hbox.disable_item_expand (code_template_label)
---			option_bar_box_tpl.hide
+
 				-- Callback
 			register_action (code_template_label.select_actions, agent on_option_label_selected (code_template_label))
 		end
@@ -386,6 +448,7 @@ feature -- Initialization
 			l_string.prune_all_leading (' ')
 			l_string.prune_all_leading ('	')
 			common_initialization (an_editor, l_string, a_remainder, completion_possibilities, a_complete_word)
+			set_associated_target_class (target_class_c)
 		end
 
 	initialize_for_classes (an_editor: like code_completable;
@@ -395,6 +458,7 @@ feature -- Initialization
 			-- Initialize to to complete for `class_name' in `an_editor'.
 		do
 			option_template_feature.hide
+			set_associated_target_class (Void)
 			feature_mode := False
 			common_initialization (an_editor, class_name, a_remainder, completion_possibilities, True)
 		end
@@ -454,6 +518,38 @@ feature -- Access
 	sorted_names: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION]
 			-- List of possible feature names sorted alphabetically.
 
+	target_class_c: detachable CLASS_C
+			-- Targetted class c when feature completing.
+			-- It may be Void if there is not a unique target class.
+		require
+			is_feature_mode: feature_mode
+		local
+			l_stop: BOOLEAN
+			cl: CLASS_C
+		do
+			if feature_mode and attached sorted_names as arr and then not arr.is_empty then
+				across
+					arr as ic
+				until
+					l_stop
+				loop
+					if attached {EB_FEATURE_FOR_COMPLETION} ic.item as l_item then
+						if attached l_item.associated_feature as f then
+							cl := f.associated_class
+							if cl /= Void then
+								if Result = Void then
+									Result := cl
+								elseif Result.class_id /= cl.class_id then
+									Result := Void
+									l_stop := True
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+
 	template_sorted_names: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION]
 			-- List of possible template names sorted alphabetically.
 
@@ -465,6 +561,15 @@ feature -- Access
 
 	tooltip_window: ES_SMART_TOOLTIP_WINDOW
 			-- Window to show extra info as tooltip.
+
+	option_template_feature: EV_VERTICAL_BOX
+			-- Widget to show template/feature CTRL +SPACE
+
+	info_associated_target_class_box: EV_VERTICAL_BOX
+			-- Box to show associated target class if any.
+
+	info_associated_target_class_set: BOOLEAN
+			-- Is associated target class set ?
 
 feature -- Widget
 
@@ -573,7 +678,6 @@ feature {NONE} -- Option behaviour
 			-- On option button selected
 		require
 			a_label_not_void: a_label /= Void
-		local
 		do
 			show_template
 		end
@@ -1245,22 +1349,31 @@ feature {NONE} -- Implementation
 		do
 				-- Render the templates.
 			    --| Should we disable the actions and accelerators?
-			if not mode_template then
-				mode_template := True
-				option_bar_box.hide
---				option_bar_box_tpl.show
-				code_template_label.set_text (interface_names.l_show_features)
-				code_template_label.refresh_now
-				apply_template_completion_list
-				show
-			else
+			if mode_template then
 				mode_template := False
+
 				option_bar_box.show
 --				option_bar_box_tpl.hide
+				if info_associated_target_class_set then
+					info_associated_target_class_box.show
+				end
 				code_template_label.set_text (interface_names.l_show_templates)
 				code_template_label.refresh_now
 				build_full_list
 				resize_column_to_window_width
+				show
+			else
+				mode_template := True
+
+				option_bar_box.hide
+--				option_bar_box_tpl.show
+				if info_associated_target_class_set then
+					info_associated_target_class_box.hide
+				end
+
+				code_template_label.set_text (interface_names.l_show_features)
+				code_template_label.refresh_now
+				apply_template_completion_list
 				show
 			end
 		end

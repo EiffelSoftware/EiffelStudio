@@ -1735,6 +1735,7 @@ feature -- Label texts
 	l_Tab_feature_info: STRING_32 		do Result := locale.translation("Feature")	end
 	l_Tab_diagram: STRING_32 			do Result := locale.translation("Diagram")	end
 	l_target: STRING_32					do Result := locale.translation("Target")	end
+	l_target_colon_space: STRING_32					do Result := locale.translation("Target: ")	end
 	l_target_does_not_exist (a_target: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_target_not_void: a_target /= Void

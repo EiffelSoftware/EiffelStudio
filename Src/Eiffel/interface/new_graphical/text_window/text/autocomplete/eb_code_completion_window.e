@@ -89,6 +89,14 @@ inherit
 			copy
 		end
 
+	EB_PIXMAPABLE_ITEM_PIXMAP_FACTORY
+		export
+			{NONE} all
+		undefine
+			default_create,
+			copy
+		end
+
 create
 	make
 
@@ -96,12 +104,27 @@ feature {NONE} -- Initialization
 
 	make
 			-- Initialize completion window.
+		local
+			hb: EV_HORIZONTAL_BOX
+			sep: EV_VERTICAL_SEPARATOR
 		do
 			Precursor {CODE_COMPLETION_WINDOW}
 			mode_template := False
-			build_option_bar
-			build_option_bar_template (header_box)
-			build_info_associated_class_box (header_box)
+
+			create hb
+			header_box.extend (hb)
+
+			header_box.disable_item_expand (hb)
+			build_info_associated_class_box (hb)--footer_box)
+--			hb.extend (create {EV_CELL})
+			create sep
+			hb.extend (sep)
+			hb.disable_item_expand (sep)
+			build_option_bar_template (hb)--header_box)
+
+			build_option_bar (footer_box)
+
+
 			choice_list.enable_tree
 			choice_list.set_configurable_target_menu_mode
 			choice_list.set_configurable_target_menu_handler (agent context_menu_handler)
@@ -116,7 +139,7 @@ feature {NONE} -- Initialization
 			register_accelerator_preference_change_actions
 		end
 
-	build_option_bar
+	build_option_bar (a_box: EV_BOX)
 			-- Build option bar.
 		local
 			l_hbox: EV_HORIZONTAL_BOX
@@ -124,6 +147,10 @@ feature {NONE} -- Initialization
 			l_label: EVS_LINK_LABEL
 			l_tooltip: STRING_32
 		do
+			create option_bar_box
+			a_box.extend (option_bar_box)
+			a_box.disable_item_expand (option_bar_box)
+
 				-- Separator
 			create l_sep
 			l_sep.set_minimum_height (2)
@@ -195,6 +222,14 @@ feature {NONE} -- Initialization
 			end
 			option_bar.extend (show_tooltip_button)
 
+			create show_target_class_button
+			show_target_class_button.set_pixmap (pixmaps.mini_pixmaps.completion_show_target_class_icon)
+			l_tooltip := preferences.editor_data.show_completion_target_class_preference.description
+			if l_tooltip /= Void then
+				show_target_class_button.set_tooltip (locale.translation (l_tooltip))
+			end
+			option_bar.extend (show_target_class_button)
+
 			create remember_size_button
 			remember_size_button.set_pixmap (pixmaps.mini_pixmaps.completion_remember_size_icon)
 			l_tooltip := preferences.development_window_data.remember_completion_list_size_preference.description
@@ -212,69 +247,64 @@ feature {NONE} -- Initialization
 		end
 
 	build_info_associated_class_box (a_box: EV_BOX)
+		local
+			b: like info_associated_target_class_box
+			hb: EV_HORIZONTAL_BOX
 		do
-			create info_associated_target_class_box
-			a_box.extend (info_associated_target_class_box)
-			a_box.disable_item_expand (info_associated_target_class_box)
+			create b
+			info_associated_target_class_box := b
+			a_box.extend (b)
+
+			create hb
+			hb.set_padding_width (layout_constants.small_padding_size)
+			hb.set_border_width (1)
+
+			b.extend (hb)
+			b.disable_item_expand (hb)
+			info_associated_target_class_inner_box := hb
 		end
 
 	set_associated_target_class (cl: detachable CLASS_C)
 		local
 			lab: EV_LABEL
-			l_box: like info_associated_target_class_box
-			l_sep: EV_HORIZONTAL_SEPARATOR
+			l_cl_lab: EVS_ELLIPSIS_LABEL
 			hb: EV_HORIZONTAL_BOX
---			pix: EV_PIXMAP
+			pix: EV_PIXMAP
+			st: CLASSC_STONE
 		do
-			l_box := info_associated_target_class_box
-			l_box.wipe_out
+			hb := info_associated_target_class_inner_box
+			hb.wipe_out
 			if cl = Void then
-				l_box.wipe_out
-				l_box.hide
+				hide_info_associated_target_class
 				info_associated_target_class_set := False
 			else
-				create hb
-				hb.set_padding_width (layout_constants.small_padding_size)
-				hb.set_border_width (1)
+				create st.make (cl)
 
 				create lab.make_with_text (interface_names.l_target_colon_space)
 				lab.align_text_left
 				hb.extend (lab)
 				hb.disable_item_expand (lab)
 
---				pix := pixmaps.icon_pixmaps.class_normal_icon
---				hb.extend (pix)
---				hb.set_padding_width (2)
---				pix.set_minimum_width (16)
---				pix.set_minimum_height (16)
---				hb.disable_item_expand (pix)
+				create pix.make_with_pixel_buffer (pixel_buffer_from_class_i (cl.original_class))
+				hb.extend (pix)
+				hb.set_padding_width (2)
+				pix.set_minimum_width (16)
+				pix.set_minimum_height (16)
+				pix.set_pebble (st)
+				hb.disable_item_expand (pix)
 
-				create lab.make_with_text (cl.name)
-				lab.set_pebble (create {CLASSC_STONE}.make (cl))
-				lab.set_foreground_color (preferences.editor_data.class_text_color)
-				lab.align_text_left
-				hb.extend (lab)
-				hb.disable_item_expand (lab)
-
-				hb.extend (create {EV_CELL})
-
-					-- Layout
-				create l_sep
-				l_box.extend (l_sep)
-				l_box.disable_item_expand (l_sep)
-
-				l_box.extend (hb)
-				l_box.disable_item_expand (hb)
-
-				create l_sep
-				l_box.extend (l_sep)
-				l_box.disable_item_expand (l_sep)
-
-				l_box.show
-				l_box.set_background_color (preferences.editor_data.class_background_color)
-				l_box.propagate_background_color
-				lab.refresh_now
+				create l_cl_lab.make_with_text (cl.name)
+				l_cl_lab.set_minimum_width (l_cl_lab.font.string_width ("___"))
+				l_cl_lab.set_tooltip (cl.name)
+				l_cl_lab.set_pebble (st)
+				l_cl_lab.align_text_left
+				hb.extend (l_cl_lab)
+				l_cl_lab.align_text_top
+				l_cl_lab.refresh_now
 				info_associated_target_class_set := True
+				if show_completion_target_class then
+					show_info_associated_target_class
+				end
 			end
 		end
 
@@ -295,7 +325,6 @@ feature {NONE} -- Initialization
 			l_tpl_box.extend (l_hbox)
 			l_tpl_box.disable_item_expand (l_hbox)
 
-			l_hbox.extend (create {EV_CELL}) -- to align on the right
 				-- Show template label
 			code_template_label.set_text (interface_names.l_show_templates)
 			l_hbox.extend (code_template_label)
@@ -345,6 +374,11 @@ feature {NONE} -- Initialization
 			else
 				show_tooltip_button.disable_select
 			end
+			if show_completion_target_class then
+				show_target_class_button.enable_select
+			else
+				show_target_class_button.disable_select
+			end
 
 				-- Callbacks
 			register_action (filter_button.select_actions, agent on_option_button_selected (filter_button))
@@ -353,6 +387,7 @@ feature {NONE} -- Initialization
 			register_action (show_disambiguated_name_button.select_actions, agent on_option_button_selected (show_disambiguated_name_button))
 			register_action (show_obsolete_items_button.select_actions, agent on_option_button_selected (show_obsolete_items_button))
 			register_action (show_tooltip_button.select_actions, agent on_option_button_selected (show_tooltip_button))
+			register_action (show_target_class_button.select_actions, agent on_option_button_selected (show_target_class_button))
 			register_action (remember_size_button.select_actions, agent on_option_button_selected (remember_size_button))
 
 			register_action (preferences.editor_data.filter_completion_list_preference.change_actions, agent on_option_preferenced_changed (filter_button))
@@ -361,6 +396,7 @@ feature {NONE} -- Initialization
 			register_action (preferences.editor_data.show_completion_disambiguated_name_preference.change_actions, agent on_option_preferenced_changed (show_disambiguated_name_button))
 			register_action (preferences.editor_data.show_completion_obsolete_items_preference.change_actions, agent on_option_preferenced_changed (show_obsolete_items_button))
 			register_action (preferences.editor_data.show_completion_tooltip_preference.change_actions, agent on_option_preferenced_changed (show_tooltip_button))
+			register_action (preferences.editor_data.show_completion_target_class_preference.change_actions, agent on_option_preferenced_changed (show_target_class_button))
 			register_action (preferences.development_window_data.remember_completion_list_size_preference.change_actions, agent on_option_preferenced_changed (remember_size_button))
 		end
 
@@ -442,6 +478,7 @@ feature -- Initialization
 		local
 			l_string: STRING
 		do
+			option_bar_box.show
 			option_template_feature.show
 			feature_mode := True
 			l_string := feature_name
@@ -457,6 +494,7 @@ feature -- Initialization
 							completion_possibilities: like sorted_names)
 			-- Initialize to to complete for `class_name' in `an_editor'.
 		do
+			option_bar_box.show
 			option_template_feature.hide
 			set_associated_target_class (Void)
 			feature_mode := False
@@ -566,7 +604,22 @@ feature -- Access
 			-- Widget to show template/feature CTRL +SPACE
 
 	info_associated_target_class_box: EV_VERTICAL_BOX
+			-- Box to hold `info_associated_target_class_inner_box`
+
+	info_associated_target_class_inner_box: EV_HORIZONTAL_BOX
 			-- Box to show associated target class if any.
+
+	show_info_associated_target_class
+		do
+			if info_associated_target_class_set then
+				info_associated_target_class_box.show
+			end
+		end
+
+	hide_info_associated_target_class
+		do
+			info_associated_target_class_box.hide
+		end
 
 	info_associated_target_class_set: BOOLEAN
 			-- Is associated target class set ?
@@ -578,6 +631,9 @@ feature -- Widget
 
 	show_signature_button: EV_TOOL_BAR_TOGGLE_BUTTON
 			-- Button to show signature.
+
+	show_target_class_button: EV_TOOL_BAR_TOGGLE_BUTTON
+			-- Button to show/hide target class info.
 
 	show_disambiguated_name_button: EV_TOOL_BAR_TOGGLE_BUTTON
 			-- Button to show disambiguated name.
@@ -652,6 +708,11 @@ feature {NONE} -- Option Preferences
 			Result := preferences.editor_data.show_completion_signature
 		end
 
+	show_completion_target_class: BOOLEAN
+		do
+			Result := preferences.editor_data.show_completion_target_class
+		end
+
 	show_completion_disambiguated_name: BOOLEAN
 		do
 			Result := preferences.editor_data.show_completion_disambiguated_name
@@ -708,6 +769,9 @@ feature {NONE} -- Option behaviour
 			elseif a_button = show_tooltip_button then
 				l_preference := preferences.editor_data.show_completion_tooltip_preference
 				apply_show_tooltip (a_button.is_selected)
+			elseif a_button = show_target_class_button then
+				l_preference := preferences.editor_data.show_completion_target_class_preference
+				apply_show_target_class (a_button.is_selected)
 			elseif a_button = remember_size_button then
 				l_preference := preferences.development_window_data.remember_completion_list_size_preference
 				apply_remember_window_size (a_button.is_selected)
@@ -747,6 +811,9 @@ feature {NONE} -- Option behaviour
 				elseif a_button = show_tooltip_button then
 					l_preference := preferences.editor_data.show_completion_tooltip_preference
 					apply_show_tooltip (l_preference.value)
+				elseif a_button = show_target_class_button then
+					l_preference := preferences.editor_data.show_completion_target_class_preference
+					apply_show_target_class (l_preference.value)
 				elseif a_button = remember_size_button then
 					l_preference := preferences.development_window_data.remember_completion_list_size_preference
 					apply_remember_window_size (l_preference.value)
@@ -860,6 +927,18 @@ feature {NONE} -- Option behaviour
 				if attached tooltip_window as l_w and then l_w.is_shown and then not l_w.is_recycled then
 					l_w.hide
 				end
+			end
+		end
+
+	apply_show_target_class (b: BOOLEAN)
+			-- Apply showing completion target class.
+		do
+			if b then
+				if feature_mode then
+					show_info_associated_target_class
+				end
+			else
+				hide_info_associated_target_class
 			end
 		end
 
@@ -1353,9 +1432,8 @@ feature {NONE} -- Implementation
 				mode_template := False
 
 				option_bar_box.show
---				option_bar_box_tpl.hide
-				if info_associated_target_class_set then
-					info_associated_target_class_box.show
+				if show_completion_target_class then
+					show_info_associated_target_class
 				end
 				code_template_label.set_text (interface_names.l_show_templates)
 				code_template_label.refresh_now
@@ -1366,10 +1444,7 @@ feature {NONE} -- Implementation
 				mode_template := True
 
 				option_bar_box.hide
---				option_bar_box_tpl.show
-				if info_associated_target_class_set then
-					info_associated_target_class_box.hide
-				end
+				hide_info_associated_target_class
 
 				code_template_label.set_text (interface_names.l_show_features)
 				code_template_label.refresh_now

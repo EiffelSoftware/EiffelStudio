@@ -266,7 +266,6 @@ feature {NONE} -- Initialization
 
 	set_associated_target_class (cl: detachable CLASS_C)
 		local
-			lab: EV_LABEL
 			l_cl_lab: EVS_ELLIPSIS_LABEL
 			hb: EV_HORIZONTAL_BOX
 			pix: EV_PIXMAP
@@ -279,12 +278,6 @@ feature {NONE} -- Initialization
 				info_associated_target_class_set := False
 			else
 				create st.make (cl)
-
-				create lab.make_with_text (interface_names.l_target_colon_space)
-				lab.align_text_left
-				hb.extend (lab)
-				hb.disable_item_expand (lab)
-
 				create pix.make_with_pixel_buffer (pixel_buffer_from_class_i (cl.original_class))
 				hb.extend (pix)
 				hb.set_padding_width (2)
@@ -294,7 +287,7 @@ feature {NONE} -- Initialization
 				hb.disable_item_expand (pix)
 
 				create l_cl_lab.make_with_text (cl.name)
-				l_cl_lab.set_minimum_width (l_cl_lab.font.string_width ("___"))
+				l_cl_lab.set_minimum_width (l_cl_lab.font.width * 3)
 				l_cl_lab.set_tooltip (cl.name)
 				l_cl_lab.set_pebble (st)
 				l_cl_lab.align_text_left

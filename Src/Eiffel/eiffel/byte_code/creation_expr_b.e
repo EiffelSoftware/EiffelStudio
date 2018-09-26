@@ -122,15 +122,15 @@ feature -- Analyze
 							is_special_call_valid: is_special_call_valid
 						end
 						l_call.parameters.first.analyze
-					elseif is_creation_instruction and then attached {FEATURE_B} l_call as ll_call and then ll_call.is_once and then
-						    type.actual_type.base_class.feature_named (l_call.feature_name).body_index /= ll_call.body_index
-					then
-						l_call.set_parent (nested_b)
-						l_call.set_register (register)
-						l_call.set_call_kind (call_kind_creation)
-						l_call.set_type (l_type)
-						l_call.analyze_on (register)
-						l_call.set_parent (Void)
+--					elseif is_creation_instruction and then attached {FEATURE_B} l_call as ll_call and then ll_call.is_once and then
+--					       attached {ROUTINE_BL} l_call as l_routine
+--					then
+--						l_call.set_parent (nested_b)
+--						l_call.set_register (register)
+--						l_call.set_type (l_type)
+--						l_call.set_call_kind (call_kind_creation)
+--						l_call.analyze_on (register)
+--						l_call.set_parent (Void)
 					else
 						l_call.set_parent (nested_b)
 						l_call.set_register (register)

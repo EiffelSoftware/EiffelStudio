@@ -12,6 +12,7 @@ inherit
 		redefine
 			set_text,
 			refresh_now,
+			create_interface_objects, 
 			initialize
 		end
 
@@ -20,6 +21,13 @@ create
 	make_with_text
 
 feature {NONE} -- Implementation
+
+	create_interface_objects
+			-- <Precursor>
+		do
+			Precursor
+			create original_text.make_empty
+		end
 
 	initialize
 		local
@@ -97,11 +105,11 @@ feature -- Basic operation
 			l_first_word: detachable READABLE_STRING_32
 		do
 			create Result.make (0)
+			ft := font
 			if is_ellipsing_character then
 				l_first_word := original_text
 			else
 				l_words := split_words (original_text)
-				ft := font
 				l_remaining_width := a_available_width
 				across
 					l_words as ic
@@ -120,7 +128,7 @@ feature -- Basic operation
 					end
 				end
 			end
-			if Result.is_empty and l_first_word /= Void then
+			if Result.is_empty and then l_first_word /= Void then
 				from
 					l_remaining_width := a_available_width
 					l_done := False
@@ -144,7 +152,7 @@ feature -- Element change
 			-- Assign `a_text' to `text'.
 		do
 			Precursor (a_text)
-			create original_text.make_from_string_general (a_text)
+			create original_text.make_from_separate (a_text)
 		end
 
 feature {NONE} -- Implementation

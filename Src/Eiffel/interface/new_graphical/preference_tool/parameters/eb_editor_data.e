@@ -247,6 +247,12 @@ feature -- Value
 			Result := show_completion_signature_preference.value
 		end
 
+	show_completion_target_class: BOOLEAN
+			-- Should target class be shown in completion dialog?
+		do
+			Result := show_completion_target_class_preference.value
+		end
+
 	show_completion_type: BOOLEAN
 			-- Should feature type be shown in completion list?
 		do
@@ -425,6 +431,9 @@ feature -- Preference
 	show_completion_signature_preference: BOOLEAN_PREFERENCE
 			-- Should feature signature be shown in completion list?
 
+	show_completion_target_class_preference: BOOLEAN_PREFERENCE
+			-- Should target class be shown in completion dialog?
+
 	show_completion_type_preference: BOOLEAN_PREFERENCE
 			-- Should feature type be shown in completion list?
 
@@ -527,6 +536,9 @@ feature {NONE} -- Preference Strings
 
 	show_completion_signature_string: STRING = "editor.eiffel.show_completion_signature"
 			-- Should feature signature be shown in completion list?
+
+	show_completion_target_class_string: STRING = "editor.eiffel.show_completion_target_class"
+			-- Should target class be shown in completion dialog?
 
 	show_completion_type_string: STRING = "editor.eiffel.show_completion_type"
 			-- Should feature type be shown in completion list?
@@ -674,6 +686,7 @@ feature {NONE} -- Initialization
 			filter_completion_list_preference := l_manager.new_boolean_preference_value (l_manager, filter_completion_list_string, True)
 			highlight_matching_braces_preference := l_manager.new_boolean_preference_value (l_manager, highlight_matching_braces_string, True)
 			show_completion_signature_preference := l_manager.new_boolean_preference_value (l_manager, show_completion_signature_string, True)
+			show_completion_target_class_preference := l_manager.new_boolean_preference_value (l_manager, show_completion_target_class_string, True)
 			show_completion_type_preference := l_manager.new_boolean_preference_value (l_manager, show_completion_type_string, True)
 			show_completion_disambiguated_name_preference := l_manager.new_boolean_preference_value (l_manager, show_completion_disambiguated_name_string, False)
 			show_completion_obsolete_items_preference := l_manager.new_boolean_preference_value (l_manager, show_completion_obsolete_items_string, False)
@@ -755,6 +768,7 @@ feature {NONE} -- Initialization
 			auto_remove_trailing_blank_when_saving_preference.change_actions.extend (agent update)
 			filter_completion_list_preference.change_actions.extend (agent update)
 			show_completion_signature_preference.change_actions.extend (agent update)
+			show_completion_target_class_preference.change_actions.extend (agent update)
 			show_completion_type_preference.change_actions.extend (agent update)
 			show_completion_disambiguated_name_preference.change_actions.extend (agent update)
 			show_completion_obsolete_items_preference.change_actions.extend (agent update)
@@ -1291,6 +1305,7 @@ invariant
 	auto_remove_trailing_blank_when_saving_preference_not_void: auto_remove_trailing_blank_when_saving_preference /= Void
 	filter_completion_list_preference_not_void: filter_completion_list_preference /= Void
 	show_completion_signature_preference_not_void: show_completion_signature_preference /= Void
+	show_completion_target_class_preference_not_void: show_completion_target_class_preference /= Void
 	show_completion_type_preference_not_void: show_completion_type_preference /= Void
 	show_completion_disambiguated_name_preference_not_void: show_completion_disambiguated_name_preference /= Void
 	show_completion_obsolete_items_preference_not_void: show_completion_obsolete_items_preference /= Void
@@ -1309,7 +1324,7 @@ invariant
 
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -43,8 +43,8 @@ feature {NONE} -- Initialization
 		do
 			create sorted_names.make_empty
 			create header_box
+			create footer_box
 			create option_bar_box
-			create option_bar_box_tpl
 			create choice_list
 			create full_list.make_empty
 			create matches.make_empty
@@ -72,10 +72,8 @@ feature {NONE} -- Initialization
 			vbox.extend (header_box)
 			vbox.disable_item_expand (header_box)
 			vbox.extend (choice_list)
-			vbox.extend (option_bar_box)
-			vbox.disable_item_expand (option_bar_box)
-			vbox.extend (option_bar_box_tpl)
-			vbox.disable_item_expand (option_bar_box_tpl)
+			vbox.extend (footer_box)
+			vbox.disable_item_expand (footer_box)
 			extend (vbox)
 			choice_list.focus_out_actions.extend (agent on_lose_focus)
 			focus_out_actions.extend (agent on_lose_focus)
@@ -139,13 +137,13 @@ feature -- Access
 			-- list displaying possible feature signatures
 
 	header_box: EV_VERTICAL_BOX
-			-- Optional header bar box
+			-- Optional header bar box to hold additional widgets.
+
+	footer_box: EV_VERTICAL_BOX
+			-- Optional footer bar box to hold additional widgets.
 
 	option_bar_box: EV_VERTICAL_BOX
 			-- Option bar box
-
-	option_bar_box_tpl: EV_VERTICAL_BOX
-			-- Option bar box for templates
 
 	sorted_names: SORTABLE_ARRAY [like name_type]
 			-- list of possible names sorted alphabetically.
@@ -847,8 +845,6 @@ feature {NONE} -- Implementation
 			l_list: like full_list
 		do
 				-- Ensure we show the option_bar_box in full_list
-			option_bar_box_tpl.hide
-			option_bar_box.show
 			l_list := full_list
 			l_names := sorted_names
 			if not has_child_node then

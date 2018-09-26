@@ -3,7 +3,9 @@
 		Automatically generated class for EiffelStudio 10x10 icons.
 	]"
 	generator: "Eiffel Matrix Generator"
-	command_line: "emcgen $EIFFEL_SRC/Delivery/studio/bitmaps/png/10x10.ini -f $EIFFEL_SRC/tools/eiffel_matrix_code_generator/frames/studio.e.frame"
+	command_line: "[
+		emcgen %EIFFEL_SRC%\Delivery\studio\bitmaps\png\10x10.ini -f %EIFFEL_SRC%\tools\eiffel_matrix_code_generator\frames\studio.e.frame --output_file %EIFFEL_SRC%\Eiffel\interface\new_graphical\shared\es_pixmaps_10x10.e
+		]"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
 	date: "$Date$"
@@ -1302,6 +1304,26 @@ feature -- Icons
 			completion_show_obsolete_icon_buffer_attached: Result /= Void
 		end
 
+	frozen completion_show_target_class_icon: EV_PIXMAP
+			-- Access to 'show target class' pixmap.
+		require
+			has_named_icon: has_named_icon (completion_show_target_class_name)
+		once
+			Result := named_icon (completion_show_target_class_name)
+		ensure
+			completion_show_target_class_icon_attached: Result /= Void
+		end
+
+	frozen completion_show_target_class_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'show target class' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (completion_show_target_class_name)
+		once
+			Result := named_icon_buffer (completion_show_target_class_name)
+		ensure
+			completion_show_target_class_icon_buffer_attached: Result /= Void
+		end
+
 	frozen bon_persistent_icon: EV_PIXMAP
 			-- Access to 'persistent' pixmap.
 		require
@@ -1471,6 +1493,7 @@ feature -- Constants: Icon names
 	completion_show_return_type_name: STRING = "completion show return type"
 	completion_show_assigner_name: STRING = "completion show assigner"
 	completion_show_obsolete_name: STRING = "completion show obsolete"
+	completion_show_target_class_name: STRING = "completion show target class"
 	bon_persistent_name: STRING = "bon persistent"
 	bon_interfaces_name: STRING = "bon interfaces"
 	bon_effective_name: STRING = "bon effective"
@@ -1544,6 +1567,7 @@ feature {NONE} -- Basic operations
 			a_table.put ([{NATURAL_8} 6, {NATURAL_8} 6], completion_show_return_type_name)
 			a_table.put ([{NATURAL_8} 7, {NATURAL_8} 6], completion_show_assigner_name)
 			a_table.put ([{NATURAL_8} 8, {NATURAL_8} 6], completion_show_obsolete_name)
+			a_table.put ([{NATURAL_8} 9, {NATURAL_8} 6], completion_show_target_class_name)
 			a_table.put ([{NATURAL_8} 1, {NATURAL_8} 7], bon_persistent_name)
 			a_table.put ([{NATURAL_8} 2, {NATURAL_8} 7], bon_interfaces_name)
 			a_table.put ([{NATURAL_8} 3, {NATURAL_8} 7], bon_effective_name)
@@ -1551,7 +1575,7 @@ feature {NONE} -- Basic operations
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

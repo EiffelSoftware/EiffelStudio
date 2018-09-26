@@ -42,12 +42,12 @@ feature {NONE} -- Initialization
 			vbox: EV_VERTICAL_BOX
 		do
 			create sorted_names.make_empty
+			create header_box
 			create option_bar_box
 			create option_bar_box_tpl
 			create choice_list
 			create full_list.make_empty
 			create matches.make_empty
-			create option_template_feature
 			create code_template_label
 
 			choice_list.set_default_key_processing_handler (agent (a_key: EV_KEY): BOOLEAN
@@ -69,8 +69,8 @@ feature {NONE} -- Initialization
 			docking_make
 
 			create vbox
-			vbox.extend (option_template_feature)
-			vbox.disable_item_expand (option_template_feature)
+			vbox.extend (header_box)
+			vbox.disable_item_expand (header_box)
 			vbox.extend (choice_list)
 			vbox.extend (option_bar_box)
 			vbox.disable_item_expand (option_bar_box)
@@ -105,6 +105,7 @@ feature -- Initialization
 			end
 			build_full_list
 			is_closing := False
+
 			build_displayed_list (a_name)
 			is_first_show := True
 
@@ -137,14 +138,14 @@ feature -- Access
 	choice_list: EV_GRID
 			-- list displaying possible feature signatures
 
+	header_box: EV_VERTICAL_BOX
+			-- Optional header bar box
+
 	option_bar_box: EV_VERTICAL_BOX
 			-- Option bar box
 
 	option_bar_box_tpl: EV_VERTICAL_BOX
 			-- Option bar box for templates
-
-	option_template_feature: EV_VERTICAL_BOX
-			-- Widget to show template/feature CTRL +SPACE
 
 	sorted_names: SORTABLE_ARRAY [like name_type]
 			-- list of possible names sorted alphabetically.

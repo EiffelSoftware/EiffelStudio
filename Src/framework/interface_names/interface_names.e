@@ -467,6 +467,7 @@ feature -- Accelerator, focus label and menu name
 	m_Close_all_empty_tabs: STRING_32	do Result := locale.translation ("Close All Empty Tabs") end
 	m_Close_short: STRING_32				do Result := locale.translation("&Close")	end
 	m_Close_tab: STRING_32				do Result := locale.translation ("Close") end
+	m_reload_tab: STRING_32				do Result := locale.translation ("Reload") end
 
 	f_Create_new_cluster: STRING_32		do Result := locale.translation("Add a cluster")	end
 	f_Create_new_library: STRING_32		do Result := locale.translation("Add a library")	end

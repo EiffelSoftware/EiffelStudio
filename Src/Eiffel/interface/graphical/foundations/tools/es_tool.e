@@ -662,40 +662,28 @@ feature {NONE} -- Implementation
 	on_focus_in (a_content: SD_CONTENT)
 			-- Handle docking content focus in actions
 		local
-			l_item: EB_CLOSE_PANEL_COMMAND
-			l_commands: ARRAYED_LIST [EB_CLOSE_PANEL_COMMAND]
+			l_item: EB_FOCUS_PANEL_COMMAND
 		do
-			from
-				l_commands := window.commands.focus_commands
-				l_commands.start
-			until
-				l_commands.after
+			across
+				window.commands.focus_commands as ic
 			loop
-				l_item := l_commands.item
+				l_item := ic.item
 				l_item.enable_sensitive
 				l_item.set_current_focused_content (a_content)
-
-				l_commands.forth
 			end
 		end
 
 	on_focus_out (a_content: SD_CONTENT)
 				-- Handle docking content focus out actions
 		local
-			l_item: EB_CLOSE_PANEL_COMMAND
-			l_commands: ARRAYED_LIST [EB_CLOSE_PANEL_COMMAND]
+			l_item: EB_FOCUS_PANEL_COMMAND
 		do
-			from
-				l_commands := window.commands.focus_commands
-				l_commands.start
-			until
-				l_commands.after
+			across
+				window.commands.focus_commands as ic
 			loop
-				l_item := l_commands.item
+				l_item := ic.item
 				l_item.disable_sensitive
 				l_item.set_current_focused_content (void)
-
-				l_commands.forth
 			end
 		end
 
@@ -728,7 +716,7 @@ invariant
 		internal_docking_content.user_widget /= Void
 
 ;note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

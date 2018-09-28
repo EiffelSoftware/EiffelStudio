@@ -140,6 +140,9 @@ feature -- Query
 	close_current_panel_command: EB_CLOSE_CURRENT_PANEL_COMMAND
 			-- 	Command to close current focused (tab) editor/tool
 
+	reload_current_panel_command: EB_RELOAD_CURRENT_PANEL_COMMAND
+			-- 	Command to reload current focused (tab) editor/tool
+
 	close_all_tab_command: EB_CLOSE_ALL_TAB_COMMAND
 			-- Command to close all tabs in same notebook
 
@@ -208,7 +211,7 @@ feature -- Commands
 	editor_commands: ARRAYED_LIST [EB_GRAPHICAL_COMMAND]
 			-- Commands independent on the editor
 
-	focus_commands: ARRAYED_LIST [EB_CLOSE_PANEL_COMMAND]
+	focus_commands: ARRAYED_LIST [EB_FOCUS_PANEL_COMMAND]
 			-- Commands related with focus in/out actions
 
 	show_toolbar_commands: HASH_TABLE [EB_SHOW_TOOLBAR_COMMAND, SD_TOOL_BAR_CONTENT]
@@ -557,6 +560,14 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: run_to_this_point_command = a_cmd
 		end
 
+	set_reload_current_panel_command (a_cmd: like reload_current_panel_command)
+			-- Set `reload_current_panel_command'
+		do
+			reload_current_panel_command := a_cmd
+		ensure
+			set: reload_current_panel_command = a_cmd
+		end
+
 	set_close_current_panel_command (a_cmd: like close_current_panel_command)
 			-- Set `close_current_panel_command'
 		do
@@ -721,9 +732,6 @@ feature -- Recycle
 
 	internal_recycle
 			-- Recycle all commands.
-		local
-			os_cmd: EB_ON_SELECTION_COMMAND
-			l_recyclable: EB_RECYCLABLE
 		do
 			restore_tab_cmd.recycle
 			new_tab_cmd.recycle
@@ -776,8 +784,7 @@ feature -- Recycle
 			until
 				toolbarable_commands.after
 			loop
-				os_cmd ?= toolbarable_commands.item
-				if os_cmd /= Void then
+				if attached {EB_ON_SELECTION_COMMAND} toolbarable_commands.item as os_cmd then
 					os_cmd.recycle
 				end
 				toolbarable_commands.forth
@@ -798,8 +805,7 @@ feature -- Recycle
 			until
 				editor_commands.after
 			loop
-				l_recyclable ?= editor_commands.item
-				if l_recyclable /= Void then
+				if attached {EB_RECYCLABLE} editor_commands.item as l_recyclable then
 					l_recyclable.recycle
 				end
 				editor_commands.forth
@@ -811,8 +817,7 @@ feature -- Recycle
 			until
 				focus_commands.after
 			loop
-				l_recyclable ?= focus_commands.item
-				if l_recyclable /= Void then
+				if attached {EB_RECYCLABLE} focus_commands.item as l_recyclable then
 					l_recyclable.recycle
 				end
 				focus_commands.forth
@@ -840,7 +845,7 @@ feature -- Recycle
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

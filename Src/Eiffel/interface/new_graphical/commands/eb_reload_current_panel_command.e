@@ -1,16 +1,70 @@
 note
-	description: "Summary description for {EB_CLOSE_PANEL_COMMAND}."
-	author: ""
+	description: "[
+					Command to reload current panel (maybe a tab in editor/tool panel)
+																						]"
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
-	EB_CLOSE_PANEL_COMMAND
+class
+	EB_RELOAD_CURRENT_PANEL_COMMAND
 
 inherit
 	EB_FOCUS_PANEL_COMMAND
+		redefine
+			new_menu_item
+		end
 
-note
+	EB_DEVELOPMENT_WINDOW_COMMAND
+		rename
+			target as develop_window
+		end
+
+create
+	make
+
+feature -- Query
+
+	menu_name: STRING_GENERAL
+			-- <Precursor>
+		do
+			Result := interface_names.m_reload_tab
+		end
+
+	new_menu_item: EB_COMMAND_MENU_ITEM
+			-- <Precursor>
+		do
+			Result := Precursor
+			Result.set_pixmap (pixmaps.icon_pixmaps.general_refresh_icon)
+		end
+
+feature -- Command
+
+	execute
+			-- <Precursor>
+		local
+			l_manager: EB_EDITORS_MANAGER
+			l_smart_editor: EB_SMART_EDITOR
+			l_content: like current_focused_content
+		do
+			l_content := current_focused_content
+			if l_content /= Void then
+--				disable_all_focus_command
+
+				if l_content.type = {SD_ENUMERATION}.editor then
+					l_manager := window_manager.last_focused_development_window.editors_manager
+					l_smart_editor := l_manager.editor_with_content (l_content)
+					if l_smart_editor /= Void then
+						l_smart_editor.reload
+					else
+						check not_possible: False end
+					end
+				elseif l_content.type = {SD_ENUMERATION}.tool then
+					-- FIXME
+				end
+			end
+		end
+
+;note
 	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

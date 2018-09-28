@@ -68,11 +68,13 @@ feature -- Main operation
 				-- was the class opened? so we have to change the class to show the new class
 				-- must be done after compilation, because we can't get the class before
        		if open_classes.has (preferences.old_class_name) then
-				class_i ?= universe.safe_class_named (preferences.new_class_name, class_i.cluster)
-				if class_i /= Void then
-	       			create class_stone.make (class_i)
+				if attached {like class_i} universe.safe_class_named (preferences.new_class_name, class_i.cluster) as cl_i then
+					class_i := cl_i
+	       			create class_stone.make (cl_i)
 	       			open_classes.item (preferences.old_class_name).do_all (agent {EB_DEVELOPMENT_WINDOW}.set_stone (class_stone))
 	       			window_manager.for_all_development_windows (agent {EB_DEVELOPMENT_WINDOW}.synchronize)
+				else
+					class_i := Void
 				end
        		end
 		end
@@ -204,17 +206,17 @@ feature {NONE} -- Implementation
 			class_modifier.prepare
 
 			create rename_visitor.make (preferences.old_class_name, preferences.new_class_name, preferences.update_comments, preferences.update_strings)
-			class_modifier.execute_visitor (rename_visitor, false)
+			class_modifier.execute_visitor (rename_visitor, False)
 
         	class_modifier.commit
         	current_actions.extend (class_modifier)
         end
 
-	class_i: EIFFEL_CLASS_I;
+	class_i: detachable EIFFEL_CLASS_I;
 			-- The class to rename.
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

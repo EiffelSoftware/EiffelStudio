@@ -1,16 +1,54 @@
 note
-	description: "Summary description for {EB_CLOSE_PANEL_COMMAND}."
-	author: ""
+	description: "[
+					Ancestor for all focus panel/tab related commands
+																		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
-	EB_CLOSE_PANEL_COMMAND
-
-inherit
 	EB_FOCUS_PANEL_COMMAND
 
-note
+inherit
+	EB_MENUABLE_COMMAND
+
+	EB_SHARED_WINDOW_MANAGER
+
+feature -- Query
+
+	current_focused_content: SD_CONTENT
+			-- Current focused content
+
+feature -- Command
+
+	set_current_focused_content (a_content: detachable SD_CONTENT)
+			-- Set `current_focused_content' with `a_content'
+		do
+			current_focused_content := a_content
+		end
+
+feature {NONE} -- Implementation
+
+	disable_all_focus_command
+			-- Disable all close panel related commands
+		local
+			l_commands: ARRAYED_LIST [EB_FOCUS_PANEL_COMMAND]
+			l_item: EB_FOCUS_PANEL_COMMAND
+		do
+			from
+				l_commands := window_manager.last_focused_development_window.commands.focus_commands
+				l_commands.start
+			until
+				l_commands.after
+			loop
+				l_item := l_commands.item
+				l_item.set_current_focused_content (Void)
+				l_item.disable_sensitive
+
+				l_commands.forth
+			end
+		end
+
+;note
 	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

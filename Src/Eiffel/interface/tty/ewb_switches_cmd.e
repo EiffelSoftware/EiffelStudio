@@ -34,40 +34,41 @@ feature -- Properties
 
 	help_message: STRING_32
 		local
-			ewb_profile_switch: EWB_PROFILE_SWITCH
 			i: INTEGER
 		do
 			Result := switches_help.twin
-			Result.append_string_general ("%N%T%T%T%T");
+			Result.append_string_general ("%N%T%T%T%T")
 			from
 				i := 1
 			until
 				i > sub_menu.count
 			loop
-				ewb_profile_switch ?= sub_menu.item (i);
-				Result.append_string_general (ewb_profile_switch.abbrev_cmd_name);
-				Result.extend ('-');
-				if ewb_profile_switch.show_enabled then
-					Result.extend ('E');
+				if attached {EWB_PROFILE_SWITCH} sub_menu.item (i) as l_ewb_profile_switch then
+					Result.append_string_general (l_ewb_profile_switch.abbrev_cmd_name)
+					Result.extend ('-')
+					if l_ewb_profile_switch.show_enabled then
+						Result.extend ('E')
+					else
+						Result.extend ('D')
+					end
+					-- Tabs and Newlines are for output like
+					-- 1_tab_2_tab_3
+					-- 4_tab_5_tab_6
+					-- Where the numbers represent the columns.
+					if i = 3 then
+						Result.append_string_general ("%N%T%T%T%T")
+					elseif i /= 6 then
+						Result.extend ('%T')
+					end
 				else
-					Result.extend ('D');
-				end;
-
-				-- Tabs and Newlines are for output like
-				-- 1_tab_2_tab_3
-				-- 4_tab_5_tab_6
-				-- Where the numbers represent the columns.
-				if i = 3 then
-					Result.append_string_general ("%N%T%T%T%T");
-				elseif i /= 6 then
-					Result.extend ('%T');
-				end;
-				i := i + 1;
-			end;
-		end;
+					check is_profile_switch: False end
+				end
+				i := i + 1
+			end
+		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

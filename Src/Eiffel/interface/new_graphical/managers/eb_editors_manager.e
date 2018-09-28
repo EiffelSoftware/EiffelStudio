@@ -1224,40 +1224,28 @@ feature {NONE} -- Agents
 	on_editor_focus_in (a_content: SD_CONTENT)
 			-- Handle docking content focus in actions
 		local
-			l_item: EB_CLOSE_PANEL_COMMAND
-			l_commands: ARRAYED_LIST [EB_CLOSE_PANEL_COMMAND]
+			l_item: EB_FOCUS_PANEL_COMMAND
 		do
-			from
-				l_commands := development_window.commands.focus_commands
-				l_commands.start
-			until
-				l_commands.after
+			across
+				development_window.commands.focus_commands as ic
 			loop
-				l_item := l_commands.item
+				l_item := ic.item
 				l_item.set_current_focused_content (a_content)
 				l_item.enable_sensitive
-
-				l_commands.forth
 			end
 		end
 
 	on_editor_focus_out (a_content: SD_CONTENT)
 			-- Handle docking content focus out actions
 		local
-			l_item: EB_CLOSE_PANEL_COMMAND
-			l_commands: ARRAYED_LIST [EB_CLOSE_PANEL_COMMAND]
+			l_item: EB_FOCUS_PANEL_COMMAND
 		do
-			from
-				l_commands := development_window.commands.focus_commands
-				l_commands.start
-			until
-				l_commands.after
+			across
+				development_window.commands.focus_commands as ic
 			loop
-				l_item := l_commands.item
+				l_item := ic.item
 				l_item.set_current_focused_content (Void)
 				l_item.disable_sensitive
-
-				l_commands.forth
 			end
 		end
 

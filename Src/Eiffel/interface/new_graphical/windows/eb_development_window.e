@@ -829,7 +829,6 @@ feature -- Stone process
 		local
 			l_toolbarable_commands: ARRAYED_LIST [EB_TOOLBARABLE_COMMAND]
 			l_simple_cmds: ARRAYED_LIST [EB_SIMPLE_SHORTCUT_COMMAND]
-			l_focus_commands: ARRAYED_LIST [EB_CLOSE_PANEL_COMMAND]
 			l_main_formatter: ARRAYED_LIST [EB_CLASS_TEXT_FORMATTER]
 			l_editor_commands: ARRAYED_LIST [EB_GRAPHICAL_COMMAND]
 		do
@@ -871,14 +870,10 @@ feature -- Stone process
 			end
 
 				-- Update focus related commands
-			l_focus_commands := commands.focus_commands
-			from
-				l_focus_commands.start
-			until
-				l_focus_commands.after
+			across
+				commands.focus_commands as ic
 			loop
-				l_focus_commands.item.update (window)
-				l_focus_commands.forth
+				ic.item.update (window)
 			end
 
 				-- Update main formatters shortcuts and interfaces

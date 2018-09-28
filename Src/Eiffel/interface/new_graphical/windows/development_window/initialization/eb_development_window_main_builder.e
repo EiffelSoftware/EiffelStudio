@@ -157,6 +157,7 @@ feature -- Command
 			l_minimize_editors_command: EB_MINIMIZE_EDITORS_COMMAND
 			l_restore_editors_command: EB_RESTORE_EDITORS_COMMAND
 
+			l_reload_current_panel_command: EB_RELOAD_CURRENT_PANEL_COMMAND
 			l_close_current_panel_command: EB_CLOSE_CURRENT_PANEL_COMMAND
 			l_close_all_tabs_command: EB_CLOSE_ALL_TAB_COMMAND
 			l_close_all_but_current_command: EB_CLOSE_ALL_BUT_CURRENT_COMMAND
@@ -377,6 +378,10 @@ feature -- Command
 			l_dev_commands.set_enable_disable_bp_here_command (create {ES_TOGGLE_BREAKPOINT_HERE_CMD}.make_enable_disable (develop_window))
 			l_dev_commands.set_run_to_this_point_command (create {ES_EXEC_RUN_TO_THIS_POINT_CMD}.make (develop_window))
 
+			create l_reload_current_panel_command.make (develop_window)
+			l_dev_commands.set_reload_current_panel_command (l_reload_current_panel_command)
+			l_dev_commands.focus_commands.extend (l_reload_current_panel_command)
+
 			create l_close_current_panel_command.make (develop_window)
 			l_dev_commands.set_close_current_panel_command (l_close_current_panel_command)
 			l_dev_commands.focus_commands.extend (l_close_current_panel_command)
@@ -421,7 +426,7 @@ feature -- Command
 			create l_restore_tab_cmd.make (develop_window)
 			auto_recycle (l_restore_tab_cmd)
 			l_dev_commands.set_restore_tab_cmd (l_restore_tab_cmd)
-			l_dev_commands.toolbarable_commands.extend (l_dev_commands.restore_tab_cmd)
+			l_dev_commands.toolbarable_commands.extend (l_restore_tab_cmd)
 
 			l_dev_commands.set_customized_formatter_command (create {EB_SETUP_CUSTOMIZED_FORMATTER_COMMAND})
 			l_dev_commands.set_customized_tool_command (create {EB_SETUP_CUSTOMIZED_TOOL_COMMAND})
@@ -1111,7 +1116,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

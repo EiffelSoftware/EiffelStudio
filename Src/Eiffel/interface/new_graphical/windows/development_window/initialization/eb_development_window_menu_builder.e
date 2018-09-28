@@ -1240,6 +1240,7 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 		do
 			l_menu := develop_window.window_manager.new_menu
 
+			l_menu.extend (develop_window.commands.reload_current_panel_command.new_menu_item)
 			l_menu.extend (develop_window.commands.close_current_panel_command.new_menu_item)
 			l_menu.extend (develop_window.commands.close_all_tab_command.new_menu_item)
 			l_menu.extend (develop_window.commands.close_all_but_current_command.new_menu_item)

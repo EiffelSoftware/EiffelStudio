@@ -263,7 +263,7 @@ feature {NONE} -- Visitor implementation
 	process_feature_id_as (l_as: FEATURE_ID_AS)
 			-- Process `l_as'.
 		do
-			if recursive_descendants.has (l_as.class_id) then
+			if l_as.class_id > 0 and then recursive_descendants.has (l_as.class_id) then
 					-- check if it is the right feature (correct has old routine_id and old name)
 				if
 					attached l_as.routine_ids as routine_ids and then
@@ -449,7 +449,7 @@ invariant
 	type_a_generator_not_void: type_a_generator /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

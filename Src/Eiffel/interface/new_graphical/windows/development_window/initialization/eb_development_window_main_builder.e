@@ -145,7 +145,7 @@ feature -- Command
 
 			l_show_toolbar_commands: HASH_TABLE [EB_SHOW_TOOLBAR_COMMAND, SD_TOOL_BAR_CONTENT]
 			l_editor_commands: ARRAYED_LIST [EB_GRAPHICAL_COMMAND]
-			l_focus_commands: ARRAYED_LIST [EB_CLOSE_PANEL_COMMAND]
+			l_focus_commands: ARRAYED_LIST [EB_FOCUS_PANEL_COMMAND]
 			l_simple_shortcut_commands: ARRAYED_LIST [EB_SIMPLE_SHORTCUT_COMMAND]
 
 			l_reset_command: EB_RESET_LAYOUT_COMMAND

@@ -1,10 +1,9 @@
-note
-	description:
-		"Stone representing a compiled Eiffel class."
+﻿note
+	description: "Stone representing a compiled Eiffel class."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class
 	CLASSC_STONE
@@ -38,23 +37,23 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
-	e_class: CLASS_C
+	e_class: detachable CLASS_C
 
-	group: CONF_GROUP
+	group: detachable CONF_GROUP
 		do
 			if attached e_class as c then
 				Result := c.group
 			end
 		end
 
-	class_name: STRING
+	class_name: detachable STRING
 		do
 			if attached e_class as c then
 				Result := c.name
 			end
 		end
 
-	class_i: CLASS_I
+	class_i: detachable CLASS_I
 		do
 			if attached e_class as c then
 				Result := c.lace_class
@@ -63,7 +62,7 @@ feature -- Properties
 
 feature -- Access
 
-	stone_signature: STRING_32
+	stone_signature: detachable STRING_32
 		do
 			if attached e_class as c then
 				Result := c.class_signature
@@ -76,7 +75,7 @@ feature -- Access
 			Result.append_string (stone_signature)
 		end
 
-	header: STRING_GENERAL
+	header: detachable STRING_GENERAL
 			-- Display class name, class' cluster and class location in
 			-- window title bar.
 		do
@@ -96,7 +95,7 @@ feature -- Access
 			end
 		end
 
-	file_name: like {ERROR}.file_name
+	file_name: detachable like {ERROR}.file_name
 			-- The one from CLASSC
 		do
 			if e_class /= Void then
@@ -109,38 +108,35 @@ feature -- Status report
 	is_valid: BOOLEAN
 			-- Is `Current' a valid stone?
 		do
-			Result := e_class /= Void and then e_class.is_valid and then
-				Precursor {CLASSI_STONE}
+			Result := attached e_class as c and then c.is_valid and then Precursor
 		end
 
 	is_dotnet_class: BOOLEAN
 			-- <Precursor>
 		do
-			Result := e_class /= Void and then e_class.is_valid and then e_class.is_true_external
+			Result := attached e_class as c and then c.is_valid and then c.is_true_external
 		end
 
 feature -- Synchronization
 
-	synchronized_stone: CLASSI_STONE
+	synchronized_stone: detachable CLASSI_STONE
 			-- Clone of `Current' stone after a recompilation
 			-- (May be Void if not valid anymore. It may also be a
 			-- classi_stone if the class is not compiled anymore)
 		do
-			if e_class /= Void then
-				if e_class.is_valid then
-					if is_valid then
-						Result := Current
-					else
-						Result := create {CLASSC_STONE}.make (e_class)
-					end
+			if attached e_class as c then
+				if not c.is_valid then
+					Result := Precursor
+				elseif is_valid then
+					Result := Current
 				else
-					Result := Precursor {CLASSI_STONE}
+					Result := create {CLASSC_STONE}.make (e_class)
 				end
 			end
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -171,4 +167,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class CLASSC_STONE
+end

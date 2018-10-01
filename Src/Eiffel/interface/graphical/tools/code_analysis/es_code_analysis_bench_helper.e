@@ -10,12 +10,10 @@ class
 
 inherit
 
-	CA_SHARED_NAMES
-
-	EB_SHARED_PIXMAPS
-
-	EB_SHARED_WINDOW_MANAGER
 	EB_SHARED_GRAPHICAL_COMMANDS
+	CA_SHARED_NAMES
+	EB_SHARED_PIXMAPS
+	EB_SHARED_WINDOW_MANAGER
 
 feature -- Basic operations
 
@@ -30,7 +28,7 @@ feature -- Basic operations
 			l_item: EV_MENU_ITEM
 		do
 				-- The class should be compiled in any case. Make it sure anyway.
-			if a_stone.class_i.is_compiled then
+			if attached a_stone.class_i as c and then c.is_compiled then
 				create l_item.make_with_text_and_action
 					(ca_messages.class_context_menu_caption (a_stone.class_name),
 					agent analyze_cmd.execute_with_stone (a_stone))

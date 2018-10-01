@@ -387,6 +387,10 @@ feature -- Analyzis
 				-- Function's name
 			internal_name := generated_c_feature_name
 
+--			if is_once_creation_procedure then
+--				internal_name := internal_name + "_factory"
+--			end
+
 				-- Add entry in the log file
 			add_in_log (internal_name)
 
@@ -987,6 +991,7 @@ end
 			context.generate_request_chain_declaration
 
 				-- Generate temporary locals under the control of the GC
+				-- Check if we need to use is_once_creation_procedure.
 			context.generate_temporary_ref_variables
 
 				-- Result is declared only if needed. For onces, it is
@@ -1430,7 +1435,11 @@ end
 				buf.put_string ("char *")
 				buf.put_string ({BYTE_CONTEXT}.feature_name_local)
 				buf.put_three_character (' ', '=', ' ')
-				buf.put_string_literal (feature_name)
+--				if is_once_creation_procedure then
+--					buf.put_string_literal (feature_name + "_factory")
+--				else
+					buf.put_string_literal (feature_name)
+--				end
 				buf.put_character (';')
 			else
 				context.set_has_feature_name_stored (False)
@@ -2101,7 +2110,7 @@ feature {NONE} -- C code generation: wait conditions
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

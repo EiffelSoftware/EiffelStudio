@@ -11,7 +11,8 @@ inherit
 			append_once_mark,
 			is_once, is_process_relative_once, is_object_relative_once,
 			pre_inlined_code, inlined_byte_code_type, generate_once_declaration,
-			generate_once_data, generate_once_prologue, generate_once_epilogue
+			generate_once_data, generate_once_prologue, generate_once_epilogue,
+			is_once_creation_procedure
 		end
 
 	REFACTORING_HELPER
@@ -35,7 +36,16 @@ feature -- Status
 	is_object_relative_once: BOOLEAN
 			-- Is current once compiled as per object once?
 
+	is_once_creation_procedure: BOOLEAN
+			-- Is the current byte code relative to a once creation procedure feature?		
+
 feature -- Setting
+
+	set_is_once_creation_procedure
+			-- Set once as creation procedure.
+		do
+			is_once_creation_procedure := True
+		end
 
 	set_is_process_relative_once
 			-- Set once as per process (global).
@@ -269,7 +279,11 @@ feature -- C code generation
 					else --| default: if is_thread_relative_once then
 						generate_once_result_definition ("RTOTR", "RTOTD")
 					end
-					buf.put_string (generated_c_feature_name)
+--					if is_once_creation_procedure then
+--						buf.put_string (generated_c_feature_name + "_factory")
+--					else
+						buf.put_string (generated_c_feature_name)
+--					end
 					buf.put_two_character (')', ';')
 				elseif is_thread_relative_once and then System.has_multithreaded then
 						-- Generate locals for thread-relative once routine
@@ -436,7 +450,7 @@ feature {NONE} -- Convenience
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

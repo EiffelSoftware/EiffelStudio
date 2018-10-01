@@ -964,6 +964,17 @@ feature -- Generation
 			to_generate_in: f.to_generate_in (associated_class)
 		do
 			f.generate (Current, buffer, header_buffer)
+--				 if the current feature is a creation procedure
+--				 and is a once creation procedure.
+--				 We generate an special once factory funtion.
+--			if
+--				f.is_once and then
+--				attached associated_class.creators as l_creators and then
+--				l_creators.has (f.feature_name)
+--			then
+--					-- Generate the C once factory function for once creation procedures
+--				f.generate_once_factory (Current, buffer, header_buffer)
+--			end
 		end
 
 	open_generation_file (has_cpp_externals_calls: BOOLEAN): INDENT_FILE

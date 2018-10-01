@@ -109,6 +109,7 @@ feature -- Analyze
 			-- Analyze creation node
 		local
 			l_type: like type
+			c: CREATION_EXPR_B
 		do
 			l_type := real_type (type)
 			if not l_type.is_basic then
@@ -121,6 +122,15 @@ feature -- Analyze
 							is_special_call_valid: is_special_call_valid
 						end
 						l_call.parameters.first.analyze
+--					elseif is_creation_instruction and then attached {FEATURE_B} l_call as ll_call and then ll_call.is_once and then
+--					       attached {ROUTINE_BL} l_call as l_routine
+--					then
+--						l_call.set_parent (nested_b)
+--						l_call.set_register (register)
+--						l_call.set_type (l_type)
+--						l_call.set_call_kind (call_kind_creation)
+--						l_call.analyze_on (register)
+--						l_call.set_parent (Void)
 					else
 						l_call.set_parent (nested_b)
 						l_call.set_register (register)
@@ -435,7 +445,7 @@ feature {BYTE_NODE_VISITOR} -- Assertion support
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

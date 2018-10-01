@@ -165,6 +165,12 @@ feature -- Access
 			-- Do nothing
 		end
 
+	is_once_creation_procedure: BOOLEAN
+			-- Is the current byte code relative to a once creation procedure feature?
+		do
+			-- Do nothing.			
+		end
+
 	once_manifest_string_count: INTEGER
 			-- Number of once manifest strings in immediate (i.e., not inherited)
 			-- precondition, body, postcondition and rescue clause
@@ -1026,7 +1032,7 @@ invariant
 	valid_once_manifest_string_count: once_manifest_string_count >= 0
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -14,7 +14,8 @@ inherit
 			append_once_mark,
 			is_once, is_process_relative_once, is_object_relative_once,
 			pre_inlined_code, inlined_byte_code_type, generate_once_declaration,
-			generate_once_data, generate_once_prologue, generate_once_epilogue
+			generate_once_data, generate_once_prologue, generate_once_epilogue,
+			is_once_creation_procedure
 		redefine
 			make
 		end
@@ -38,7 +39,7 @@ feature -- Update
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

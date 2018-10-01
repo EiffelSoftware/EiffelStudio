@@ -1597,6 +1597,13 @@ feature {NONE} -- Implementation
 									has_vucr := w /= error_handler.warning_level
 								end
 							end
+						elseif
+							l_found_feature.is_once and then attached l_found_feature.written_class.creators as l_found_creators and then l_found_creators.has (l_found_feature.feature_name) and then
+							attached context.current_class.creators as l_creators and then not l_creators.has (current_feature.feature_name) then
+								-- l_found_feature is a once creation procedure
+								-- It may not be used in a Call (qualified or not) (i.e., only in a creation all).
+							error_handler.insert_error (create {VUEX2}.make (l_feature, current_feature,  context.current_class, context.written_class, a_name))
+							reset_types
 						end
 						if attached old_assigner_source then
 								-- Check if the assigner query is obsolete.

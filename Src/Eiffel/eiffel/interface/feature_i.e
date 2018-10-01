@@ -2313,14 +2313,28 @@ feature -- Signature checking
 				then
 					error_handler.insert_error (create {VRVA}.make_invalid_type (Current, a_context_class, written_class, l_type))
 				end
+					-- A generic class can't have a once creation procedure
+				if is_once and then a_context_class.is_generic then
+					error_handler.insert_error (create {VGCC10}.make_invalid_context (Current, a_context_class, written_class))
+				end
+
+			else
+					-- For an inherited once feature, we check if it's part of the creations procedures.
+					-- In that case we raise an issue since once creation procedures must be immediates (not inherited)
+				if is_once and then	attached a_context_class.creators as l_creators and then l_creators.has (Current.feature_name) then
+					error_handler.insert_error (create {VGCC9}.make_invalid_context (Current, a_context_class, written_class))
+				end
 			end
 
 				-- For an inherited attributem we make sure that it is not inherited in a user defined
 				-- expanded class as our runtime would not cope properly with that (i.e. it needs all
 				-- attributes, not just a subset).
+
 			if is_transient and then (a_context_class.is_expanded and not a_context_class.is_basic) then
 				error_handler.insert_error (create {VRVA}.make_invalid_context (Current, a_context_class, written_class))
 			end
+
+
 		end
 
 	check_expanded (class_c: CLASS_C)
@@ -3392,12 +3406,41 @@ feature -- C code generation
 			l_byte_code: BYTE_CODE
 			tmp_body_index: INTEGER
 			l_byte_context: like byte_context
+			l_assign: ASSIGN_B
+			l_compound: BYTE_LIST [BYTE_NODE]
 		do
 			if used then
 				tmp_body_index := body_index
 				l_byte_code := tmp_opt_byte_server.disk_item (tmp_body_index)
 				if l_byte_code = Void then
 					l_byte_code := byte_server.disk_item (tmp_body_index)
+				end
+
+				if
+					Current.is_once and then
+					attached class_type.associated_class.creators as l_creators and then
+					l_creators.has (Current.feature_name)
+				then
+						-- Generate the C once factory function for once creation procedures
+					create l_assign
+					l_assign.set_target (create {RESULT_B})
+					l_assign.set_source (create {CURRENT_B})
+					create l_compound.make (l_byte_code.compound.count + 1)
+
+					from
+						l_byte_code.compound.start
+					until
+						l_byte_code.compound.off
+					loop
+						l_compound.force (l_byte_code.compound.item_for_iteration)
+						l_byte_code.compound.forth
+					end
+					l_compound.force (l_assign)
+
+					if attached {ONCE_BYTE_CODE} l_byte_code as l_once_byte_code then
+						l_once_byte_code.set_compound (l_compound)
+					end
+					l_byte_code.set_result_type (class_type.associated_class.actual_type)
 				end
 
 				prepare_object_relative_once (l_byte_code)
@@ -3442,6 +3485,119 @@ feature -- C code generation
 			buffer.put_string (feature_name)
 			buffer.put_string (" */")
 		end
+
+	generate_once_factory (class_type: CLASS_TYPE; buffer, header_buffer: GENERATION_BUFFER)
+			-- Generate once factory feature written in `class_type' in `buffer'.
+		require
+			valid_buffer: buffer /= Void
+			header_buffer_attached: header_buffer /= Void
+			written_in_type: class_type.associated_class.class_id = generation_class_id or is_replicated
+			not_deferred: not is_deferred
+		local
+			l_byte_code: ONCE_BYTE_CODE
+			l_byte_context: like byte_context
+			l_assign: ASSIGN_B
+		do
+
+			if used then
+					-- create new BYTE_CODE from scratch for the new factory function.
+				create l_byte_code
+
+				create l_assign
+				l_assign.set_target (create {RESULT_B})
+				l_assign.set_source (generate_expression_factory (class_type))
+
+				if Current.argument_count > 0 then
+					l_byte_code.set_arguments (Current.arguments.to_array)
+				end
+				l_byte_code.set_body_index (Current.body_index)
+				l_byte_code.set_feature_name_id (Current.feature_name_id)
+
+				l_byte_code.set_compound (create {BYTE_LIST [BYTE_NODE]}.make (1))
+
+				l_byte_code.compound.force (l_assign)
+				l_byte_code.set_result_type (class_type.associated_class.actual_type)
+
+
+				prepare_object_relative_once (l_byte_code)
+
+					-- `generate' from BYTE_CODE will log the feature name
+					-- and encoded name in `used_features_log_file' from SYSTEM_I
+				generate_header (class_type, buffer)
+
+
+
+					-- Generation of C code for an Eiffel feature written in
+					-- the associated class of the current type.
+				l_byte_context := byte_context
+
+--				if System.in_final_mode and then System.inlining_on then
+--						-- We need to set `{BYTE_CONTEXT}.byte_code', since it is used
+--						-- in `inlined_byte_code'.
+--					l_byte_context.set_byte_code (l_byte_code)
+--					l_byte_code := l_byte_code.inlined_byte_code
+--				end
+
+					-- Generation of the C routine
+				l_byte_context.set_byte_code (l_byte_code)
+				l_byte_context.set_current_feature (Current)
+				l_byte_code.set_is_once_creation_procedure
+				l_byte_code.analyze
+				l_byte_code.set_real_body_id (real_body_index (class_type))
+				l_byte_code.generate
+				l_byte_context.clear_feature_data
+			end
+		end
+
+	generate_expression_factory (a_class_type: CLASS_TYPE): CREATION_EXPR_B
+			-- Generate Creation expression for once factory.
+		local
+			l_result: CREATION_EXPR_B
+			l_info: CREATE_INFO
+			l_feature: FEATURE_B
+			l_parameters: BYTE_LIST [PARAMETER_B]
+			l_param: PARAMETER_B
+			l_arg: ARGUMENT_B
+			l_index: INTEGER
+		do
+			create Result
+--TODO requires discussion and clear definition in the language standard, otherwise the behavior is unclear.
+			Result.set_info (create {CREATE_TYPE}.make (a_class_type.associated_class.actual_type))
+--			Result.set_is_active (True)
+			create l_feature.make (Current, create {VOID_A}, Void, False)
+
+			if Current.argument_count > 0 then
+				create l_parameters.make (Current.argument_count)
+				l_index := 1
+				across Current.arguments as ic loop
+					create l_param
+					create l_arg
+					l_arg.set_position (l_index)
+					l_param.set_expression (l_arg)
+					l_param.set_attachment_type (ic.item)
+					l_parameters.force (l_param)
+					l_index := l_index + 1
+				end
+				l_feature.set_parameters (l_parameters)
+			end
+
+			Result.set_call (l_feature)
+			Result.set_type (a_class_type.associated_class.actual_type)
+		end
+
+	generate_header_factory (a_type: CLASS_TYPE; buffer: GENERATION_BUFFER)
+			-- Generate a header before body of feature.
+		require
+			a_type_not_void: a_type /= Void
+			valid_buffer: buffer /= Void
+		do
+			buffer.put_string ("%N/* {")
+			buffer.put_string (a_type.associated_class.name)
+			buffer.put_two_character ('}', '.')
+			buffer.put_string (feature_name + "_factory")
+			buffer.put_string (" */")
+		end
+
 
 feature -- Object relative once
 

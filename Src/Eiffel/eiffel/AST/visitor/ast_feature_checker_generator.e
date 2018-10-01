@@ -8902,7 +8902,7 @@ feature {NONE} -- Parenthesis alias
 					if error_level = l_error_level then
 							-- Record feature ID for future use.
 						if not is_inherited then
-							p.set_routine_ids (last_routine_id_set)
+							set_routine_ids (last_routine_id_set, p)
 						end
 						if attached nested_b then
 							if l_is_multi_constraint then

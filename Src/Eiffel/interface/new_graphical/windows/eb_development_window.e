@@ -3,7 +3,7 @@
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
-	revision	: "$Revision$"
+	revision: "$Revision$"
 
 class
 	EB_DEVELOPMENT_WINDOW
@@ -802,8 +802,8 @@ feature -- Stone process
 				update_save_symbol
 			end
 		ensure then
-			stone_set: not is_processing_stone implies stone = a_stone
-			editor_stone: (not is_processing_stone and then attached a_stone) implies editors_manager.current_editor.stone = a_stone
+			-- stone_set: If there are no errors with the store, then: not is_processing_stone implies stone = a_stone
+			-- editor_stone: If there are no errors with the store, then: (not is_processing_stone and then attached a_stone) implies editors_manager.current_editor.stone = a_stone
 		end
 
 	refresh

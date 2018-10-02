@@ -1,6 +1,7 @@
-note
-	description: "A template to be inserted into the auto-complete list"
+﻿note
+	description: "A template to be inserted into the auto-complete list."
 	author: "javierv"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -117,10 +118,9 @@ feature -- Access
 	template_declarations: STRING_TABLE [STRING_32]
 			-- Formal arguments and Local variables definitions for the given template.
 		do
-			if attached template.declarations as l_declarations then
-				Result := l_declarations
-			else
-				Result.make (0)
+			Result := template.declarations
+			if not attached Result then
+				create Result.make (0)
 			end
 		end
 
@@ -586,7 +586,7 @@ feature {NONE} -- Implementation
 		end;
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

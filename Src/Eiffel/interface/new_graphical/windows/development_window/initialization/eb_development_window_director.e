@@ -32,7 +32,7 @@ feature -- Command
 			-- Create a new development window.
 		local
 			l_x, l_y: INTEGER
-			l_debugger_manager: EB_DEBUGGER_MANAGER
+			l_debugger_manager: detachable EB_DEBUGGER_MANAGER
 			l_window: EB_VISION_WINDOW
 		do
 			internal_construct
@@ -48,7 +48,7 @@ feature -- Command
 			end
 			l_window.show
 
-			l_debugger_manager ?= develop_window.debugger_manager
+			l_debugger_manager := {EB_DEBUGGER_MANAGER} / develop_window.debugger_manager
 			if
 				not develop_window.development_window_data.is_force_debug_mode or
 				l_debugger_manager = Void or
@@ -94,16 +94,12 @@ feature -- Command
 			-- Recreate a previously existing development window using `a_session_data'.
 		local
 			l_conf_class: CONF_CLASS
-			l_group: CONF_GROUP
-			l_class_i: CLASS_I
 			l_class_c_stone: CLASSC_STONE
 			l_class_i_stone: CLASSI_STONE
 			l_cluster_stone: CLUSTER_STONE
 			l_class_id, l_feature_id: STRING
 			l_has_editor_restored: BOOLEAN
-			l_feature: E_FEATURE
 			l_feature_stone: FEATURE_STONE
-			l_debugger_manager: EB_DEBUGGER_MANAGER
 			l_session_data, l_project_session_data: EB_DEVELOPMENT_WINDOW_SESSION_DATA
 			l_builder: EB_DEVELOPMENT_WINDOW_MAIN_BUILDER
 			l_open_classes: detachable HASH_TABLE [STRING, STRING]
@@ -116,10 +112,10 @@ feature -- Command
 				create l_builder.make (develop_window)
 			end
 
-			l_session_data ?= develop_window.session_data.value (develop_window.development_window_data.development_window_data_id)
+			l_session_data := {EB_DEVELOPMENT_WINDOW_SESSION_DATA} / develop_window.session_data.value (develop_window.development_window_data.development_window_data_id)
 
 			if (create {SHARED_WORKBENCH}).workbench.system_defined then
-				l_project_session_data ?= develop_window.project_session_data.value (develop_window.development_window_data.development_window_project_data_id)
+				l_project_session_data := {EB_DEVELOPMENT_WINDOW_SESSION_DATA} / develop_window.project_session_data.value (develop_window.development_window_data.development_window_project_data_id)
 			end
 
 				-- Initial editors.
@@ -146,11 +142,10 @@ feature -- Command
 			if l_has_editor_restored then
 				develop_window.layout_manager.restore_editors_layout
 				develop_window.editors_manager.show_editors_possible
-				l_debugger_manager ?= develop_window.debugger_manager
-				if not l_debugger_manager.raised then
-					develop_window.docking_manager.open_maximized_tool_config_with_path (eiffel_layout.user_docking_standard_file_name (develop_window.window_id))
-				else
+				if attached {EB_DEBUGGER_MANAGER} develop_window.debugger_manager as l_debugger_manager and then l_debugger_manager.raised then
 					develop_window.docking_manager.open_maximized_tool_config_with_path (eiffel_layout.user_docking_debug_file_name (develop_window.window_id))
+				else
+					develop_window.docking_manager.open_maximized_tool_config_with_path (eiffel_layout.user_docking_standard_file_name (develop_window.window_id))
 				end
 			end
 				-- Attempt to reload last edited class of `Current'.
@@ -160,11 +155,10 @@ feature -- Command
 					if not l_session_data.current_target_type then
 							-- A class target
 						l_conf_class := class_of_id (l_session_data.current_target)
-						if l_conf_class /= Void then
-							l_class_i ?= l_conf_class
-							check
-								l_class_i_not_void: l_class_i /= Void
-							end
+						if
+							l_conf_class /= Void and then
+							attached {CLASS_I} l_conf_class as l_class_i
+						then
 							if l_class_i.is_compiled then
 								create l_class_c_stone.make (l_class_i.compiled_class)
 								develop_window.set_stone (l_class_c_stone)
@@ -172,11 +166,12 @@ feature -- Command
 								create l_class_i_stone.make (l_class_i)
 								develop_window.set_stone (l_class_i_stone)
 							end
+						else
+							check is_class_i: l_conf_class /= Void implies False end
 						end
 					else
 							-- A group target
-						l_group := group_of_id (l_session_data.current_target)
-						if l_group /= Void then
+						if attached group_of_id (l_session_data.current_target) as l_group then
 							create l_cluster_stone.make (l_group)
 							develop_window.set_stone (l_cluster_stone)
 						end
@@ -190,19 +185,19 @@ feature -- Command
 				end
 				l_class_id := l_session_data.class_class_id
 				l_feature_id := l_session_data.feature_relation_feature_id
-				if l_feature_id /= Void then
-					l_feature := feature_of_id (l_feature_id)
-					if l_feature /= Void then
-						create l_feature_stone.make (l_feature)
-						develop_window.tools.set_stone (l_feature_stone)
-					end
+				if
+					l_feature_id /= Void and then
+					attached feature_of_id (l_feature_id) as l_feature
+				then
+					create l_feature_stone.make (l_feature)
+					develop_window.tools.set_stone (l_feature_stone)
 				end
-				if l_class_id /= Void then
-					l_class_i ?= class_of_id (l_class_id)
-					if l_class_i /= Void then
-						create l_class_i_stone.make (l_class_i)
-						develop_window.tools.set_stone (l_class_i_stone)
-					end
+				if
+					l_class_id /= Void and then
+					attached {CLASS_I} class_of_id (l_class_id) as l_class_i
+				then
+					create l_class_i_stone.make (l_class_i)
+					develop_window.tools.set_stone (l_class_i_stone)
 				end
 			end
 
@@ -296,7 +291,7 @@ feature{NONE} -- Implementation
 			-- Builder which build toolbars.
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

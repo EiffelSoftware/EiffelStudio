@@ -2940,22 +2940,11 @@ feature {NONE} -- Cleanup
 
 feature -- Debugger
 
-	instruction_line: LINE [AST_EIFFEL]
-			-- List of breakable instructions on which a breakpoint may be set.
-
 	breakpoint_slots_number: INTEGER
 			-- current number of breakpoint slots known
 
 	breakpoint_nested_slots_number: INTEGER
 			-- current number of breakpoint nested slots known
-
-	set_instruction_line (l: like instruction_line)
-			-- Assign `l' to `instruction_line' and position FIFO stack at the
-			-- beginning as a side effect, ready for usage by byte code classes.
-		do
-			instruction_line := l
-			l.start
-		end
 
 	get_next_breakpoint_slot: INTEGER
 			-- increase the current number of breakpoint slots and then

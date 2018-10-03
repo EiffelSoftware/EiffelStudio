@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"[
 			Widget that contains other widgets.
@@ -243,6 +243,14 @@ feature -- Element change
 			has_v: not has (v)
 		end
 
+feature -- Iteration
+
+	new_cursor: ITERATION_CURSOR [EV_WIDGET]
+			-- <Precursor>
+		do
+			Result := linear_representation.new_cursor
+		end
+
 feature -- Measurement
 
 	client_width: INTEGER
@@ -418,7 +426,7 @@ invariant
 	items_unique: is_usable implies items_unique
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -428,19 +436,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_CONTAINER
-
-
-
-
-
-
-
-
-
-
-
-
+end

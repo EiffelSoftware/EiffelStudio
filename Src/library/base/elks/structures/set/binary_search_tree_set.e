@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Sorted sets implemented as binary search trees"
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
@@ -23,7 +23,7 @@ create
 
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make
 			-- Create set.
@@ -107,6 +107,18 @@ feature -- Status report
 			-- it is `before' or `after'.
 		do
 			Result := is_empty or Precursor {COMPARABLE_SET}
+		end
+
+feature -- Iteration
+
+	new_cursor: ITERATION_CURSOR [G]
+			-- <Precursor>
+		do
+			if attached tree as t then
+				Result := t.new_cursor
+			else
+				create {EMPTY_ITERATION_CURSOR [G]} Result
+			end
 		end
 
 feature -- Cursor movement
@@ -343,7 +355,7 @@ invariant
 				object_comparison = t.object_comparison
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

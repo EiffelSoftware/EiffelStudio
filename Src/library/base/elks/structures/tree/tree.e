@@ -256,6 +256,14 @@ feature -- Status report
 			same_parent: Result = not is_root and other.parent = parent
 		end
 
+feature -- Iteration
+
+	new_cursor: TREE_ITERATION_CURSOR [G]
+			-- <Precursor>
+		do
+			create Result.make (Current)
+		end
+
 feature -- Cursor movement
 
 	child_go_to (p: CURSOR)
@@ -890,7 +898,7 @@ invariant
 	child_after_definition: child_after = (child_index >= child_capacity + 1)
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

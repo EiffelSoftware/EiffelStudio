@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Trees implemented using a two way linked list representation"
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
@@ -19,7 +19,8 @@ class TWO_WAY_TREE [G] inherit
 		redefine
 			parent, clone_node
 		select
-			has
+			has,
+			new_cursor
 		end
 
 	BI_LINKABLE [G]
@@ -105,7 +106,7 @@ class TWO_WAY_TREE [G] inherit
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (v: like item)
 			-- Create single node with item `v'.
@@ -383,7 +384,7 @@ invariant
 	off_constraint: (child = Void) implies child_off
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

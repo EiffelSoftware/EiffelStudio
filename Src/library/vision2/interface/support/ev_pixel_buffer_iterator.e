@@ -1,6 +1,5 @@
-note
+﻿note
 	description: "Iterator for pixel values of EV_PIXEL_BUFFER"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,25 +8,33 @@ class
 
 inherit
 	BILINEAR [EV_PIXEL_BUFFER_PIXEL]
+	ITERATION_CURSOR [EV_PIXEL_BUFFER_PIXEL]
 
-create
-	{EV_PIXEL_BUFFER_I}
+create {EV_PIXEL_BUFFER_I}
 		make_for_pixel_buffer
+
+create {EV_PIXEL_BUFFER_ITERATOR}
+		make_for_pixel_buffer_i
 
 feature {NONE} -- Creation
 
 	make_for_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER)
 			-- Make iterator for pixel buffer `a_pixel_buffer'.
 		do
-			pixel_buffer := a_pixel_buffer.implementation
-
-			create internal_item
-			internal_item.set_pixel_buffer (pixel_buffer)
-			max_row_value := a_pixel_buffer.height.to_natural_32
-			max_column_value := a_pixel_buffer.width.to_natural_32
+			make_for_pixel_buffer_i (a_pixel_buffer.implementation)
 		end
 
-feature
+	make_for_pixel_buffer_i (p: like pixel_buffer)
+			-- Make iterator for pixel buffer `p'.
+		do
+			pixel_buffer := p
+			create internal_item
+			internal_item.set_pixel_buffer (pixel_buffer)
+			max_row_value := p.height.to_natural_32
+			max_column_value := p.width.to_natural_32
+		end
+
+feature -- Iteration
 
 	start
 			-- Move to first position if any.
@@ -78,34 +85,6 @@ feature
 			end
 		end
 
-	is_empty: BOOLEAN
-			-- Is there no element?
-		do
-			-- False as there are always elements to iterate.
-		end
-
-	set_column (a_column: NATURAL_32)
-			-- Set iterator to column `a_column' of `pixel_buffer'.
-		require
-			a_column_valid: a_column >= 1 and then a_column <= max_column_value
-		do
-			column := a_column
-		end
-
-	column: NATURAL_32
-			-- Column index of `item'.
-
-	set_row (a_row: NATURAL_32)
-			-- Set iterator to row `a_row' of `pixel_buffer'.
-		require
-			a_row_valid: a_row >= 1 and then a_row <= max_row_value
-		do
-			row := a_row
-		end
-
-	row: NATURAL_32
-			-- Row index of `item'.
-
 	item: EV_PIXEL_BUFFER_PIXEL
 			-- Pixel at current iteration position.
 			-- Object is reused for efficiency so retained references will be automatically updated.
@@ -118,6 +97,59 @@ feature
 			else
 				create Result
 			end
+		end
+
+	index: INTEGER
+			-- Index of current position.
+		do
+			Result := ((row - 1) * max_column_value + column).to_integer_32
+		end
+
+	column: NATURAL_32
+			-- Column index of `item'.
+
+	row: NATURAL_32
+			-- Row index of `item'.
+
+	new_cursor: EV_PIXEL_BUFFER_ITERATOR
+			-- <Precursor>
+		do
+			create Result.make_for_pixel_buffer_i (pixel_buffer)
+			Result.start
+		end
+
+feature -- Measurement
+
+	max_column_value: NATURAL_32
+		-- Total number of columns for iteration.
+
+	max_row_value: NATURAL_32
+		-- Total number of rows for iteration.
+
+feature -- Status report
+
+	is_empty: BOOLEAN
+			-- Is there no element?
+		do
+			-- False as there are always elements to iterate.
+		end
+
+feature -- Modification
+
+	set_column (a_column: NATURAL_32)
+			-- Set iterator to column `a_column' of `pixel_buffer'.
+		require
+			a_column_valid: a_column >= 1 and then a_column <= max_column_value
+		do
+			column := a_column
+		end
+
+	set_row (a_row: NATURAL_32)
+			-- Set iterator to row `a_row' of `pixel_buffer'.
+		require
+			a_row_valid: a_row >= 1 and then a_row <= max_row_value
+		do
+			row := a_row
 		end
 
 	update_pixel (a_column, a_row: NATURAL_32; a_pixel: EV_PIXEL_BUFFER_PIXEL)
@@ -133,18 +165,6 @@ feature
 			end
 		end
 
-	index: INTEGER
-			-- Index of current position.
-		do
-			Result := ((row - 1) * max_column_value + column).to_integer_32
-		end
-
-	max_column_value: NATURAL_32
-		-- Total number of columns for iteration.
-
-	max_row_value: NATURAL_32
-		-- Total number of rows for iteration.
-
 feature {NONE} -- Implementation
 
 	internal_item: EV_PIXEL_BUFFER_PIXEL
@@ -153,7 +173,7 @@ feature {NONE} -- Implementation
 		-- Pixel buffer for which `Current' is iterating.
 
 ;note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

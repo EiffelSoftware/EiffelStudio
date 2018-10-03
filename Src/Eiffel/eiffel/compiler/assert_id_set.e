@@ -158,7 +158,7 @@ feature -- Basic operations
 					-- Routine id `body_index' is not present in the set.
 				if count >= array_count then
 						-- Resize needed
-					conservative_resize (1, array_count + Chunk)
+					conservative_resize_with_default (assert, 1, array_count + Chunk)
 				end
 				count := count + 1
 				array_put (assert, count)

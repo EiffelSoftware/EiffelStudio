@@ -196,7 +196,6 @@ feature {NONE} -- Implementation
 			l_extension: STRING
 			l_file_name: STRING
 			l_class: CLASS_C
-			l_types: TYPE_LIST
 		do
 			from
 				final_mode := context.final_mode
@@ -235,14 +234,10 @@ feature {NONE} -- Implementation
 			loop
 				l_class := System.class_of_id (key_for_iteration)
 				if l_class.has_types then
-					from
-						l_types := l_class.types
-						l_types.start
-					until
-						l_types.after
+					across
+						l_class.types as t
 					loop
-						generate_class_il (item_for_iteration, l_class, l_types.item, a_for_cpp, buffer, header_buffer)
-						l_types.forth
+						generate_class_il (item_for_iteration, l_class, t.item, a_for_cpp, buffer, header_buffer)
 					end
 					buffer.put_new_line
 				end
@@ -328,7 +323,7 @@ feature {NONE} -- Previous version
 			-- Old version of Current.
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

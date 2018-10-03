@@ -1,8 +1,9 @@
-note
+﻿note
 	description: "State navigator"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "pascalf"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -103,7 +104,7 @@ feature {WIZARD_WINDOW, WIZARD_SMART_TEXT_FIELD, WIZARD_PROJECT_MANAGER} -- Basi
 				destroying_wizard := False
 			end
 		ensure
-			ready_to_exit: history.count=0
+			ready_to_exit: history.is_empty
 		end
 
 	show_help
@@ -179,7 +180,7 @@ feature {NONE} -- Implementation
 			-- Is the wizard being currently destroyed?
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

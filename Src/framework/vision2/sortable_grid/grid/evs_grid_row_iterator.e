@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Object that represents a row iterator for EV_GRID_WRAPPER"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -32,6 +31,15 @@ feature -- Access
 			Result := y_internal * grid_wrapper.grid_column_count + x_internal
 		ensure then
 			good_result: Result = y_internal * grid_wrapper.grid_column_count + x_internal
+		end
+
+feature -- Iteration
+
+	new_cursor: EVS_GRID_ROW_ITERATOR
+			-- <Precursor>
+		do
+			create Result.make (1, 1, grid_wrapper)
+			Result.start
 		end
 
 feature{NONE} -- Implementation
@@ -119,8 +127,8 @@ invariant
 	y_internal_positive: y_internal > 0
 
 note
-        copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-        license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+        copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+        license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[
                         This file is part of Eiffel Software's Eiffel Development Environment.
@@ -143,11 +151,11 @@ note
                         Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
                 ]"
         source: "[
-                         Eiffel Software
-                         356 Storke Road, Goleta, CA 93117 USA
-                         Telephone 805-685-1006, Fax 805-685-6869
-                         Website http://www.eiffel.com
-                         Customer support http://support.eiffel.com
-                ]"
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

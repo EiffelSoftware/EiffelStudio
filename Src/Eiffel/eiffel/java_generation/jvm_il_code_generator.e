@@ -1,5 +1,4 @@
-
-note
+﻿note
 	description: "Generate Java Byte Code for the JVM"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -1148,7 +1147,7 @@ feature -- Variables access
 		do
 		end
 
-	generate_eiffel_metamorphose (a_type: TYPE_A)
+	generate_eiffel_metamorphose (a_type: BASIC_A)
 			-- Generate a metamorphose of `a_type' into a _REF type.
 		do
 		end
@@ -2512,7 +2511,7 @@ feature -- Convenience
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -2543,5 +2542,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class JVM_IL_CODE_GENERATOR
-
+end

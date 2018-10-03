@@ -38,7 +38,7 @@ create
 	make,
 	make_filled
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (n: INTEGER; v: G)
 			-- Create node with `n' void children and item `v'.
@@ -544,13 +544,6 @@ feature -- Access: chilldren
 			fixed_list.put_i_th (v, n)
 		end
 
-	array_make (min_index: INTEGER; max_index: INTEGER)
-		obsolete
-			"Should not be used. [2017-05-31]"
-		do
-			fixed_list.make (max_index - min_index + 1)
-		end
-
 	capacity: INTEGER
 		do
 			Result := fixed_list.capacity
@@ -624,7 +617,7 @@ feature {NONE} -- private access fixed_list
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

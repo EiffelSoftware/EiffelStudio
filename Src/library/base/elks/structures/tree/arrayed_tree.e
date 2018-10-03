@@ -479,8 +479,6 @@ feature {NONE} -- Implementation
 		require
 			non_void_agent: an_agent /= Void
 			non_void_tree_node: a_tree_node /= Void
-		local
-			c: like child
 		do
 			an_agent.call ([a_tree_node.item])
 			from
@@ -488,10 +486,7 @@ feature {NONE} -- Implementation
 			until
 				a_tree_node.child_off
 			loop
-				c := a_tree_node.child
-				if c /= Void then
-					do_all_internal (an_agent, c)
-				end
+				do_all_internal (an_agent, a_tree_node.child)
 				a_tree_node.child_forth
 			end
 		end
@@ -720,7 +715,7 @@ feature {NONE} -- private access arrayed_list
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

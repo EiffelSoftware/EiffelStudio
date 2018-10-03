@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Objects that contains an external signature"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -37,34 +36,30 @@ feature -- Transformation
 	arguments_id_array: ARRAY [INTEGER]
 			-- Array representation of `arguments'
 		local
-			list: like arguments
 			i: INTEGER
 		do
-			if arguments /= Void then
+			if attached arguments as list then
+				across
+					list as l
 				from
-					list := arguments
-					create Result.make (1, list.count)
+					create Result.make_filled (0, 1, list.count)
 					i := 1
-					list.start
-				until
-					list.after
 				loop
-					Result.put (list.item.value_id, i)
+					Result.put (l.item.value_id, i)
 					i := i + 1
-					list.forth
 				end
 			end
 		end
 
 	return_type_id: INTEGER
 		do
-			if return_type /= Void then
-				Result := return_type.value_id
+			if attached return_type as t then
+				Result := t.value_id
 			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -77,22 +72,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class SIGNATURE_AS
+end

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Address table indexed by class_id"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -77,10 +77,11 @@ feature -- Access
 			class_id_valid: class_id > 0
 			feature_id_valid: feature_id > 0
 		do
-			if has_table_of_class (class_id) then
-				if found_item.has_key (feature_id) then
-					Result := found_item.found_item.has_dollar_op
-				end
+			if
+				has_table_of_class (class_id) and then
+				found_item.has_key (feature_id)
+			then
+				Result := found_item.found_item.has_dollar_op
 			end
 		end
 
@@ -123,14 +124,10 @@ feature -- Access
 			class_id_valid: a_class_id > 0 and then has_table_of_class (a_class_id)
 			feature_id_valid: a_feature_id > 0 and then table_of_class (a_class_id).has (a_feature_id)
 			has_reordering: table_of_class (a_class_id).item (a_feature_id).has (make_reordering (a_is_target_closed, a_omap))
-		local
-			l_table_of_class:  like table_of_class
-			l_table_entry: ADDRESS_TABLE_ENTRY
 		do
-			l_table_of_class := table_of_class (a_class_id)
-			l_table_entry := l_table_of_class.item (a_feature_id)
 			Result :=
-				l_table_entry.item (make_reordering (a_is_target_closed, a_omap)).frozen_age = new_frozen_age
+				table_of_class (a_class_id).item (a_feature_id).item
+					(make_reordering (a_is_target_closed, a_omap)).frozen_age = new_frozen_age
 		end
 
 	id_of_dollar_feature (a_class_id, a_feature_id: INTEGER; a_class_type: CLASS_TYPE): INTEGER
@@ -141,13 +138,8 @@ feature -- Access
 								  found_item.has_key (a_feature_id) and then
 								  found_item.found_item.has_dollar_op and then
 								  found_item.found_item.dollar_ids.has (a_class_type.static_type_id)
-		local
-			l_table_of_class: like table_of_class
-			l_table_entry: ADDRESS_TABLE_ENTRY
 		do
-			l_table_of_class := table_of_class (a_class_id)
-			l_table_entry := l_table_of_class.item (a_feature_id)
-			Result := l_table_entry.dollar_ids.item (a_class_type.static_type_id)
+			Result := table_of_class (a_class_id).item (a_feature_id).dollar_ids.item (a_class_type.static_type_id)
 		end
 
 	update_ids
@@ -155,8 +147,6 @@ feature -- Access
 		local
 			l_table_of_class:  like table_of_class
 			l_class: CLASS_C
-			l_types: TYPE_LIST
-			l_type: CLASS_TYPE
 			l_feature_id: INTEGER
 			l_table_entry: ADDRESS_TABLE_ENTRY
 			l_feature: FEATURE_I
@@ -187,18 +177,13 @@ feature -- Access
 							l_table_of_class.remove (l_feature_id)
 						else
 							if l_table_entry.has_dollar_op then
-								from
-									l_types := l_class.types
-									l_types.start
-								until
-									l_types.after
+								across
+									l_class.types as t
 								loop
-									l_type := l_types.item
-									l_type_id := l_type.static_type_id
+									l_type_id := t.item.static_type_id
 									if not l_table_entry.dollar_ids.has (l_type_id) then
 										l_table_entry.dollar_ids.put (dollar_id_counter.next, l_type_id)
 									end
-									l_types.forth
 								end
 							end
 							from
@@ -228,12 +213,9 @@ feature -- Register
 			-- Records a dollar op for the given feature in the address table
 		require
 			class_id_valid: a_class_id > 0
-		local
-			l_table_entry: ADDRESS_TABLE_ENTRY
 		do
 			if not has_dollar_operator (a_class_id, a_feature_id) then
-				l_table_entry := force_new_table_entry (a_class_id, a_feature_id)
-				l_table_entry.set_has_dollar_op
+				force_new_table_entry (a_class_id, a_feature_id).set_has_dollar_op
 				System.request_freeze
 			end
 		ensure
@@ -269,10 +251,9 @@ feature -- Register
 feature {NONE} -- Insert
 
 	force_new_table_entry (a_class_id, a_feature_id: INTEGER): ADDRESS_TABLE_ENTRY
-			-- Forces, that there is an address table entry for feature with id a_feature_id of the class with id a_class_id
+			-- Forces, that there is an address table entry for feature with id a_feature_id of the class with id a_class_id.
 		local
 			l_table_of_class: like table_of_class
-			l_table_entry: ADDRESS_TABLE_ENTRY
 		do
 			if not has_table_of_class (a_class_id) then
 				create l_table_of_class.make (1)
@@ -281,12 +262,11 @@ feature {NONE} -- Insert
 				l_table_of_class := found_item
 			end
 
-			l_table_entry := l_table_of_class.item (a_feature_id)
-			if l_table_entry = Void then
-				create l_table_entry.make
-				l_table_of_class.force (l_table_entry, a_feature_id)
+			Result := l_table_of_class.item (a_feature_id)
+			if not attached Result then
+				create Result.make
+				l_table_of_class.force (Result, a_feature_id)
 			end
-			Result := l_table_entry
 		ensure
 			has_table_of_class (a_class_id)
 		end
@@ -333,7 +313,7 @@ feature -- Generation
 				l_class := System.class_of_id (class_id)
 				System.set_current_class (l_class)
 				if l_class /= Void then
-					if (final_mode implies (not l_class.is_precompiled or else l_class.is_in_system)) then
+					if final_mode implies (l_class.is_precompiled implies l_class.is_in_system) then
 						l_table_of_class := item_for_iteration
 						from
 							l_table_of_class.start
@@ -498,13 +478,12 @@ feature -- Generation helpers
 			from
 				i := 1
 				nb := args.count
-				create Result.make (1, nb + 1)
 				l_eif_reference_str := once "EIF_REFERENCE"
 				l_is_for_agent_and_workbench_mode := is_for_agent and then system.byte_context.workbench_mode
 				if l_is_for_agent_and_workbench_mode then
 					l_eif_typed_value_str := once "EIF_TYPED_VALUE"
 				end
-				Result.put (l_eif_reference_str, 1)
+				create Result.make_filled (l_eif_reference_str, 1, nb + 1)
 			until
 				i > nb
 			loop
@@ -585,12 +564,11 @@ feature {NONE} -- Generation
 			i: INTEGER
 			temp, l_arg: STRING
 		do
-			create Result.make (1, nb + 1)
-			Result.put (once "Current", 1)
+			create Result.make_filled ({C_CONST}.current_name, 1, nb + 1)
 			if nb > 0 then
 				from
 					i := 1
-					l_arg := once "arg"
+					l_arg := {C_CONST}.arg
 				until
 					i > nb
 				loop
@@ -716,8 +694,8 @@ feature {NONE} -- Generation
 					from
 						args := seed.arguments
 						i := args.count
-						create reference_arg.make (1, i)
-						create formal_arg.make (1, i)
+						create reference_arg.make_filled (False, 1, i)
+						create formal_arg.make_filled (False, 1, i)
 					until
 						i <= 0
 					loop
@@ -1035,11 +1013,13 @@ feature {NONE} -- Generation
 					end
 				end
 				buffer.put_character (')')
-				if not c_return_type.is_void then
-					if not final_mode and then not is_for_agent then
-						buffer.put_character ('.')
-						c_return_type.generate_typed_field (buffer)
-					end
+				if
+					not c_return_type.is_void and then
+					not final_mode and then
+					not is_for_agent
+				then
+					buffer.put_character ('.')
+					c_return_type.generate_typed_field (buffer)
 				end
 				buffer.put_string (";")
 
@@ -1135,7 +1115,6 @@ feature {NONE} -- Generation
 		local
 			l_rout_id_set: ROUT_ID_SET
 			i, nb: INTEGER
-			l_rout_id: INTEGER
 			l_entry: POLY_TABLE [ENTRY]
 			l_tables: like eiffel_table
 		do
@@ -1147,8 +1126,7 @@ feature {NONE} -- Generation
 			until
 				i > nb or Result
 			loop
-				l_rout_id := l_rout_id_set.item (i)
-				l_entry :=  l_tables.poly_table (l_rout_id)
+				l_entry :=  l_tables.poly_table (l_rout_id_set.item (i))
 				if l_entry.is_polymorphic (a_type.type, a_type) then
 					Result := True
 				end
@@ -1422,7 +1400,7 @@ feature {NONE}	--implementation
 	new_frozen_age: INTEGER;
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -1453,4 +1431,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class ADDRESS_TABLE
+end

@@ -115,8 +115,14 @@ feature -- Access
 			is_class: class
 		end
 
+	key_wow64_64key: INTEGER = 0x0100
+			-- Access to a 64-bit key from either a 32-bit or 64-bit application.
+
+	key_wow64_32key: INTEGER = 0x0200
+			-- Access to a 32-bit key from either a 32-bit or 64-bit application.
+
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

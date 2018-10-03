@@ -934,11 +934,12 @@ feature {NONE} -- Processing
 			binary_post_actions.call ([a])
 		end
 
-	process_bin_eq_as (a_bin_eq: BIN_EQ_AS)
+	process_bin_eq_as (a: BIN_EQ_AS)
 		do
-			bin_eq_pre_actions.call ([a_bin_eq])
-			Precursor (a_bin_eq)
-			bin_eq_post_actions.call ([a_bin_eq])
+			bin_eq_pre_actions.call (a)
+			a.left.process (Current)
+			a.right.process (Current)
+			bin_eq_post_actions.call (a)
 		end
 
 	process_bin_ge_as (a_bin_ge: BIN_GE_AS)
@@ -969,18 +970,20 @@ feature {NONE} -- Processing
 			bin_lt_post_actions.call ([a_bin_lt])
 		end
 
-	process_bin_ne_as (a_bin_ne: BIN_NE_AS)
+	process_bin_ne_as (a: BIN_NE_AS)
 		do
-			bin_ne_pre_actions.call ([a_bin_ne])
-			Precursor (a_bin_ne)
-			bin_ne_post_actions.call ([a_bin_ne])
+			bin_ne_pre_actions.call (a)
+			a.left.process (Current)
+			a.right.process (Current)
+			bin_ne_post_actions.call (a)
 		end
 
 	process_bin_not_tilde_as (a: BIN_NOT_TILDE_AS)
 			-- <Precursor>
 		do
 			bin_not_tilde_pre_actions.call (a)
-			Precursor (a)
+			a.left.process (Current)
+			a.right.process (Current)
 			bin_not_tilde_post_actions.call (a)
 		end
 
@@ -988,7 +991,8 @@ feature {NONE} -- Processing
 			-- <Precursor>
 		do
 			bin_tilde_pre_actions.call (a)
-			Precursor (a)
+			a.left.process (Current)
+			a.right.process (Current)
 			bin_tilde_post_actions.call (a)
 		end
 
@@ -1259,7 +1263,7 @@ feature {NONE} -- Processing
 		end
 
 note
-	ca_ignore: "CA033", "CA033 — very long class"
+	ca_ignore: "CA033", "CA033: very long class"
 	copyright:	"Copyright (c) 2014-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

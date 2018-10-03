@@ -150,10 +150,10 @@ feature {NONE} -- Initialization
 			if show_open_project_frame then
 				create vb
 				create open_project.make (Current)
-				wizards_list.row_select_actions.force_extend (agent on_wizards_selected)
-				wizards_list.row_deselect_actions.force_extend (agent on_item_deselected)
-				open_project.select_actions.force_extend (agent on_project_selected)
-				open_project.deselect_actions.force_extend (agent on_item_deselected)
+				wizards_list.row_select_actions.extend (agent on_wizards_selected)
+				wizards_list.row_deselect_actions.extend (agent on_item_deselected)
+				open_project.select_actions.extend (agent on_project_selected)
+				open_project.deselect_actions.extend (agent on_item_deselected)
 
 				vb.extend (open_project.widget)
 
@@ -264,7 +264,7 @@ feature {NONE} -- Execution
 			incoming_command_manager.notify_closing_starting_dialog
 		end
 
-	on_item_deselected
+	on_item_deselected (a_row: EV_GRID_ROW)
 			-- Handle case when an item has been deselected and whether or not
 			-- the `OK' button should be activated.
 		do
@@ -307,7 +307,7 @@ feature {NONE} -- Execution
 			end
 		end
 
-	on_wizards_selected
+	on_wizards_selected (a_row: EV_GRID_ROW)
 			-- Items in the wizards are selected.
 		do
 			open_project.remove_selection
@@ -646,7 +646,7 @@ feature {NONE} -- Private attributes
 			-- Widget for opening a project using a config file.
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

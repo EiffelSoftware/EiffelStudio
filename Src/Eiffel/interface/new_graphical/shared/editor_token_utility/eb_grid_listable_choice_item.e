@@ -226,7 +226,11 @@ feature {NONE} -- Implementation
 				choice_list.focus_out_actions.extend (agent deactivate)
 				choice_list.pointer_button_press_item_actions.extend (agent on_mouse_click)
 				choice_list.pointer_double_press_item_actions.extend (agent on_mouse_click)
-				choice_list.pointer_motion_actions.force_extend (agent on_mouse_move)
+				choice_list.pointer_motion_actions.extend (agent (i_x, i_y: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER)
+						do
+							on_mouse_move (i_x, i_y)
+						end
+					)
 				choice_list.key_press_actions.extend (agent on_key)
 				choice_list.key_press_actions.extend (choice_list_key_press_action)
 				choice_list.hide_horizontal_scroll_bar
@@ -444,7 +448,7 @@ invariant
 	choice_list_parented_during_activation: choice_list /= Void implies choice_list.parent /= Void
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

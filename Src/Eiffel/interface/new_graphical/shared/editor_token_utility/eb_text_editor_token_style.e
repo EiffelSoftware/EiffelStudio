@@ -14,7 +14,7 @@ inherit
 
 feature -- Setting
 
-	set_source_text, st_normal_text (a_source_text: READABLE_STRING_32)
+	set_source_text, set_normal_text (a_source_text: READABLE_STRING_32)
 			-- Set `source_text' to be generated in `text' as normal text.
 		require
 			a_source_text_attached: a_source_text /= Void

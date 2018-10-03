@@ -178,8 +178,7 @@ feature {NONE} -- Implementation
 					--| even with blank character
 				if ignore_leading_blank then
 					from
-						create blank.make (0, 3)
-						blank.put ((' ').natural_32_code, 0)
+						create blank.make_filled ((' ').natural_32_code, 0, 3)
 						blank.put (('%T').natural_32_code, 1)
 						blank.put (('%N').natural_32_code, 2)
 						blank.put (('%R').natural_32_code, 3)
@@ -217,8 +216,7 @@ feature {NONE} -- Implementation
 					--| even with blank character
 				if ignore_leading_blank then
 					from
-						create blank.make (0, 3)
-						blank.put ((' ').natural_32_code, 0)
+						create blank.make_filled ((' ').natural_32_code, 0, 3)
 						blank.put (('%T').natural_32_code, 1)
 						blank.put (('%N').natural_32_code, 2)
 						blank.put (('%R').natural_32_code, 3)
@@ -246,7 +244,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -24,13 +24,14 @@ feature {NONE} -- Initialization
 				-- Read key pair data from `a_file_name'
 			key_pair := read_key_pair_from_file (a_file_name)
 
-			if is_valid then
-					-- Read public key from `l_orig_key' key pair.
-				item := a_signing.public_key (key_pair)
-
+				-- Read public key from `l_orig_key' key pair.
+			if is_valid and then attached a_signing.public_key (key_pair) as k then
+				item := k
 					-- Get public key token.
-				public_key_token := a_signing.public_key_token (item)
+				public_key_token := a_signing.public_key_token (k)
 			else
+					-- Indicate that the key is invalid.
+				is_valid := False
 					-- Dummy empty key.
 				create item.make (0)
 			end

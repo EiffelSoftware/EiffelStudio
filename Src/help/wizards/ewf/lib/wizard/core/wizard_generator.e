@@ -1,6 +1,5 @@
-note
+﻿note
 	description: "Summary description for {WIZARD_GENERATOR}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -29,9 +28,7 @@ feature -- Access
 			Result := wizard.application
 		end
 
-feature -- Access
-
-	variables: STRING_TABLE [READABLE_STRING_8]
+	variables: STRING_TABLE [READABLE_STRING_32]
 			-- Variables used for template and file name resolved string.
 			--| i.e to expand ${varname} in file name or file content.
 			--| could be used for other purpose.
@@ -52,11 +49,8 @@ feature -- Response
 feature -- Factory
 
 	new_uuid: STRING_8
-		local
-			gen: UUID_GENERATOR
 		do
-			create gen
-			Result := gen.generate_uuid.out
+			Result := {UUID_GENERATOR}.generate_uuid.out
 		end
 
 feature -- Operations
@@ -99,19 +93,17 @@ feature -- Templates
 
 	recursive_copy_templates (a_src: PATH; a_target: PATH)
 		local
-			d,td, subdir: DIRECTORY
+			d, subdir: DIRECTORY
 			p, ip, tp: PATH
 		do
 			create d.make_with_path (a_src)
 			if d.exists and then d.is_readable then
-				create td.make_with_path (a_target)
-				td.recursive_create_dir
+				;(create {DIRECTORY}.make_with_path (a_target)).recursive_create_dir
 				across
 					d.entries as ic
 				loop
 					p := ic.item
-					if p.is_parent_symbol or p.is_current_symbol then
-					else
+					if not p.is_parent_symbol and not p.is_current_symbol then
 						ip := a_src.extended_path (p)
 						create subdir.make_with_path (ip)
 						tp := a_target.extended_path (resolved_path_name (p))
@@ -133,8 +125,7 @@ feature -- Templates
 		require
 			a_src_is_a_template_file: is_template_file (a_src)
 		local
-			f,t: PLAIN_TEXT_FILE
-			line: READABLE_STRING_8
+			f, t: PLAIN_TEXT_FILE
 		do
 			create f.make_with_path (a_src)
 			if f.exists and f.is_readable then
@@ -147,8 +138,7 @@ feature -- Templates
 					until
 						f.exhausted
 					loop
-						line := f.last_string
-						t.put_string (resolved_string_8 (line))
+						t.put_string (resolved_string_8 (f.last_string))
 						t.put_new_line
 						f.read_line
 					end
@@ -178,7 +168,6 @@ feature -- Resolvers
 			from
 				i := 1
 				n := s.count
-				q := 0
 			until
 				i > n
 			loop

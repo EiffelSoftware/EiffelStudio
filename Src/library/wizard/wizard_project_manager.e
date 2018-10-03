@@ -1,8 +1,9 @@
-note
+﻿note
 	description: "Class which is launching the application."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "pascalf"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -24,7 +25,7 @@ feature {NONE} -- Initialization
 	make_and_launch
 			-- Initialize and launch application
 		do
-			if argument_count < 1 then
+			if {EXECUTION_ENVIRONMENT}.arguments.argument_count < 1 then
 				io.put_string("wizard resource_path [locale_id]%N")
 			else
 				default_create
@@ -54,7 +55,7 @@ feature {NONE} -- Initialization
 	Wizard_title: STRING_32
 			-- Window title for this wizard.
 		once
-			Result := "Wizard Version 1.1"
+			Result := "Wizard Version 1.1.1"
 		ensure
 			Valid_result: Result /= Void and then not Result.is_empty
 		end
@@ -67,19 +68,14 @@ feature {NONE} -- Initialization
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class WIZARD_PROJECT_MANAGER
-
-
+end

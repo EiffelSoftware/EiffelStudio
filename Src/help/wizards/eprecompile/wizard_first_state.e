@@ -1,10 +1,11 @@
-note
-	description	: "Page in which the user choose where he wants to generate the sources."
+﻿note
+	description: "Page in which the user choose where he wants to generate the sources."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "David Solal / Arnaud PICHERY [aranud@mail.dotcom.fr]"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	author: "David Solal / Arnaud PICHERY [aranud@mail.dotcom.fr]"
+	revised_by: "Alexander Kogtenkov"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	WIZARD_FIRST_STATE
@@ -160,43 +161,24 @@ feature -- Basic Operation
 			-- Update the two lists of precompilable and to_precompile libraries
 			-- If no item have been selected, we fill an empty list
 		local
-			lin_list, lin_list_2: LINEAR [EV_MULTI_COLUMN_LIST_ROW]
 			list: LINKED_LIST [EV_MULTI_COLUMN_LIST_ROW]
 		do
-			lin_list := to_precompile_libraries.linear_representation
-			lin_list_2 := precompilable_libraries.linear_representation
+			across
+				to_precompile_libraries.linear_representation as l
 			from
-				lin_list.start
 				create list.make
-			until
-				lin_list.after
 			loop
-				list.extend (lin_list.item)
-				lin_list.forth
+				list.extend (l.item)
 			end
-			if list /= Void then
-				wizard_information.set_l_to_precompile (list)
-			else
-				create list.make
-				wizard_information.set_l_to_precompile (list)
-			end
-
+			wizard_information.set_l_to_precompile (list)
+			across
+				precompilable_libraries.linear_representation as l
 			from
-				lin_list_2.start
 				create list.make
-			until
-				lin_list_2.after
 			loop
-				list.extend (lin_list_2.item)
-				lin_list_2.forth
+				list.extend (l.item)
 			end
-			if list /= Void then
-				wizard_information.set_l_precompilable (list)
-			else
-				create list.make
-				wizard_information.set_l_precompilable (list)
-			end
-
+			wizard_information.set_l_precompilable (list)
 			Precursor
 		end
 
@@ -209,9 +191,7 @@ feature {NONE} -- Tools
 			-- If the user has hit Back, then fill_lists_from_previous_state will be
 			-- called
 		local
-			it: EV_MULTI_COLUMN_LIST_ROW
 			eiffel_directory: DIRECTORY
-			list_of_preprecompilable_libraries: like {DIRECTORY}.entries
 			current_lib: PATH
 			current_lib_name: STRING_32
 		do
@@ -220,27 +200,20 @@ feature {NONE} -- Tools
 			eiffel_layout.set_precompile (False)
 			create eiffel_directory.make_with_path (eiffel_layout.precompilation_path (False))
 			if eiffel_directory.exists then
-				list_of_preprecompilable_libraries:= eiffel_directory.entries
-
-				from
-					list_of_preprecompilable_libraries.start
-				until
-					list_of_preprecompilable_libraries.after
+				across
+					eiffel_directory.entries as p
 				loop
-					current_lib:= list_of_preprecompilable_libraries.item
+					current_lib:= p.item
 					if not (current_lib.is_current_symbol or current_lib.is_parent_symbol) then
 						current_lib_name := current_lib.name
 						if
 							current_lib_name.count >= 4 and then
-							current_lib_name.substring (current_lib_name.count - 3, current_lib_name.count).same_string_general (".ecf")
+							current_lib_name.substring (current_lib_name.count - 3, current_lib_name.count).same_string_general (".ecf") and then
+							attached fill_ev_list_items (eiffel_directory.path.name, current_lib_name) as it
 						then
-							it:= fill_ev_list_items (eiffel_directory.path.name, current_lib_name)
-							if it /= Void then
-								precompilable_libraries.extend (it)
-							end
+							precompilable_libraries.extend (it)
 						end
 					end
-					list_of_preprecompilable_libraries.forth
 				end
 			end
 		end
@@ -254,15 +227,13 @@ feature {NONE} -- Tools
 			info_lib: TUPLE [path: READABLE_STRING_GENERAL; path_exists: BOOLEAN]
 			path_name: PATH
 			l_conf: CONF_LOAD
-			l_factory: CONF_PARSE_FACTORY
 			l_file: RAW_FILE
 			l_target_name: STRING_32
 			l_targets: STRING_TABLE [CONF_TARGET]
 		do
 			create path_name.make_from_string (path_lib)
 			path_name := path_name.extended (ace_name)
-			create l_factory
-			create l_conf.make (l_factory)
+			create l_conf.make (create {CONF_PARSE_FACTORY})
 			l_conf.retrieve_configuration (path_name.name)
 			if not l_conf.is_error then
 				l_targets := l_conf.last_system.compilable_targets
@@ -307,31 +278,22 @@ feature {NONE} -- Tools
 		local
 			curr_item: EV_MULTI_COLUMN_LIST_ROW
 		do
-			from
-				a_list.start
-			until
-				a_list.after
+			across
+				a_list as l
 			loop
-				curr_item := a_list.item
+				curr_item := l.item
 				curr_item.parent.prune_all (curr_item)
 				a_mc_list.extend (curr_item)
-				a_list.forth
 			end
 		end
 
 	add_all_items
 			-- Add all the item from precompilable_libraries to to_precompile_libraries
-		local
-			it: EV_MULTI_COLUMN_LIST_ROW
 		do
-			from
-				precompilable_libraries.start
-			until
-				precompilable_libraries.after
+			across
+				precompilable_libraries as p
 			loop
-				it := precompilable_libraries.item
-				it.enable_select
-				precompilable_libraries.forth
+				p.item.enable_select
 			end
 			add_b.disable_sensitive
 			add_items
@@ -341,36 +303,25 @@ feature {NONE} -- Tools
 
 	add_items
 		local
-			currently_selected_items: DYNAMIC_LIST [EV_MULTI_COLUMN_LIST_ROW]
 			it: EV_MULTI_COLUMN_LIST_ROW
 		do
-			currently_selected_items := precompilable_libraries.selected_items
-			from
-				currently_selected_items.start
-			until
-				currently_selected_items.after
+			across
+				precompilable_libraries.selected_items as p
 			loop
-				it := currently_selected_items.item
+				it := p.item
 				precompilable_libraries.prune (it)
 				to_precompile_libraries.extend (it)
-				currently_selected_items.forth
 			end
 			add_b.disable_sensitive
 		end
 
 	remove_all_items
 			-- Remove all the item from to_precompile_libraries to precompilable_libraries
-		local
-			it: EV_MULTI_COLUMN_LIST_ROW
 		do
-			from
-				to_precompile_libraries.start
-			until
-				to_precompile_libraries.after
+			across
+				to_precompile_libraries as p
 			loop
-				it := to_precompile_libraries.item
-				it.enable_select
-				to_precompile_libraries.forth
+				p.item.enable_select
 			end
 			remove_b.disable_sensitive
 			remove_items
@@ -380,19 +331,14 @@ feature {NONE} -- Tools
 
 	remove_items
 		local
-			currently_selected_items: DYNAMIC_LIST [EV_MULTI_COLUMN_LIST_ROW]
 			it: EV_MULTI_COLUMN_LIST_ROW
 		do
-			currently_selected_items := to_precompile_libraries.selected_items
-			from
-				currently_selected_items.start
-			until
-				currently_selected_items.after
+			across
+				to_precompile_libraries.selected_items as p
 			loop
-				it := currently_selected_items.item
+				it := p.item
 				to_precompile_libraries.prune (it)
 				precompilable_libraries.extend (it)
-				currently_selected_items.forth
 			end
 			remove_b.disable_sensitive
 		end
@@ -456,27 +402,26 @@ feature {NONE} -- Tools
 			-- Is the row `a_row' represent the same row as a row found in `a_mc_list'?
 		local
 			cur_row: EV_MULTI_COLUMN_LIST_ROW
-			cur_info_lib, ref_info_lib: TUPLE [path: READABLE_STRING_GENERAL; path_exists: BOOLEAN]
 			ref_ace: READABLE_STRING_GENERAL
 			cur_ace: READABLE_STRING_GENERAL
 			retried: BOOLEAN
 		do
-			if not retried then
-				ref_info_lib ?= a_row.data
-				check ref_info_lib_not_void: ref_info_lib /= Void end
+			if
+				not retried and then
+				attached {TUPLE [path: READABLE_STRING_GENERAL; path_exists: BOOLEAN]} a_row.data as ref_info_lib
+			then
 				ref_ace := ref_info_lib.path
-				from
-					a_mc_list.start
+				across
+					a_mc_list as i
 				until
-					Result or a_mc_list.after
+					Result
 				loop
-					cur_row := a_mc_list.item
-					cur_info_lib ?= cur_row.data
-					check cur_info_lib_not_void: cur_info_lib /= Void end
-					cur_ace := cur_info_lib.path
-					check cur_ace_not_void: cur_ace /= Void end
-					Result := ref_ace.is_case_insensitive_equal (cur_ace)
-					a_mc_list.forth
+					cur_row := i.item
+					if attached {TUPLE [path: READABLE_STRING_GENERAL; path_exists: BOOLEAN]} cur_row.data as cur_info_lib then
+						cur_ace := cur_info_lib.path
+						check cur_ace_not_void: cur_ace /= Void end
+						Result := ref_ace.is_case_insensitive_equal (cur_ace)
+					end
 				end
 			else
 				Result := False
@@ -502,13 +447,11 @@ feature {NONE} -- Implementation
 		local
 			l_item: EV_MULTI_COLUMN_LIST_ROW
 			l_found: BOOLEAN
-			l_head: EV_HEADER
 			l_header_height: INTEGER
 		do
 			from
 				a_list.start
-				create l_head
-				l_header_height := l_head.height -- FIXME: Cannot query header from {EV_MULTI_COLUMN_LIST} directly
+				l_header_height := (create {EV_HEADER}).height -- FIXME: Cannot query header from {EV_MULTI_COLUMN_LIST} directly
 			until
 				a_list.after or l_found
 			loop
@@ -544,7 +487,8 @@ feature {NONE} -- Implementation
 			-- button to let the user add his own library
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	ca_ignore: "CA093", "CA093: manifest array type mismatch"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

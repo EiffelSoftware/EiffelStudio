@@ -1,14 +1,13 @@
-note
-	description : "Objects that ..."
-	author      : "$Author$"
-	date        : "$Date$"
-	revision    : "$Revision$"
+﻿note
+	description: "Objects that ..."
+	author: "$Author$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	WIZARD_APPLICATION
 
 inherit
-	ARGUMENTS
 
 	SHARED_EXECUTION_ENVIRONMENT
 
@@ -17,24 +16,24 @@ feature {NONE} -- Initialization
 	initialize
 			-- Initialize `Current'.
 		local
-			i,n: INTEGER
-			s: READABLE_STRING_8
+			i, n: INTEGER
+			s: READABLE_STRING_32
 			wizard_directory_name: detachable PATH
 			callback_file_name: detachable PATH
 		do
 				-- Usage
-			n := argument_count
+			n := {EXECUTION_ENVIRONMENT}.arguments.argument_count
 			if n > 0 then
 				from
 					i := 1
 				until
 					i > n
 				loop
-					s := argument (i)
+					s := {EXECUTION_ENVIRONMENT}.arguments.argument (i)
 					if s.same_string ("-callback") or s.same_string ("--callback") then
 						i := i + 1
 						if i <= n then
-							create callback_file_name.make_from_string (argument (i))
+							create callback_file_name.make_from_string ({EXECUTION_ENVIRONMENT}.arguments.argument (i))
 						end
 					elseif wizard_directory_name = Void then
 						create wizard_directory_name.make_from_string (s)
@@ -115,13 +114,14 @@ feature -- Helpers
 				Result := a_folder.extended (a_name)
 				ok := not ut.directory_path_exists (Result)
 				p := Result
-				if not ok then
-					if attached p.extension as ext then
-						l_ext := ext
-						l_name := p.name
-						l_name.remove_head (ext.count + 1)
-						create p.make_from_string (l_name)
-					end
+				if
+					not ok and then
+					attached p.extension as ext
+				then
+					l_ext := ext
+					l_name := p.name
+					l_name.remove_head (ext.count + 1)
+					create p.make_from_string (l_name)
 				end
 			until
 				ok

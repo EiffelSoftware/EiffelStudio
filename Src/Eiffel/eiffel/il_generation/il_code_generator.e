@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Generation of IL code for stack based virtual machine."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -366,11 +366,10 @@ feature -- Variables access
 		deferred
 		end
 
-	generate_eiffel_metamorphose (a_type: TYPE_A)
+	generate_eiffel_metamorphose (a_type: BASIC_A)
 			-- Generate a metamorphose of `a_type' into a _REF type.
 		require
 			a_type_not_void: a_type /= Void
-			a_type_is_basic: a_type.is_basic
 		deferred
 		end
 
@@ -1285,7 +1284,7 @@ feature -- Generic conformance
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -1316,4 +1315,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class CIL_CODE_GENERATOR
+end

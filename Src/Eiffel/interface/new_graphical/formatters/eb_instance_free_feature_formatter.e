@@ -18,13 +18,8 @@ feature -- Properties
 
 	symbol: ARRAY [EV_PIXMAP]
 			-- Graphical representation of the command.
-		local
-			pix: EV_PIXMAP
 		once
-			create Result.make (1, 2)
-			pix := pixmaps.icon_pixmaps.class_features_instance_free_routine_icon
-			Result.put (pix, 1)
-			Result.put (pix, 2)
+			create Result.make_filled (pixmaps.icon_pixmaps.class_features_instance_free_routine_icon, 1, 2)
 		end
 
 	pixel_buffer: EV_PIXEL_BUFFER

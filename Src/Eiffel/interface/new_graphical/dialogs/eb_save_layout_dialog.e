@@ -95,7 +95,7 @@ feature {NONE} -- Initlization
 			create list_for_existing_layouts
 			list_for_existing_layouts.set_minimum_height (list_minimum_height)
 			list_for_existing_layouts.select_actions.extend (agent on_list_select)
-			list_for_existing_layouts.pointer_double_press_actions.force_extend (agent on_list_double_press)
+			list_for_existing_layouts.pointer_double_press_actions.extend (agent on_list_double_press)
 			list_for_existing_layouts.key_press_actions.extend (agent on_list_key_press)
 			a_container.extend (list_for_existing_layouts)
 
@@ -215,8 +215,7 @@ feature {NONE} -- Implementation functions
 			end
 		end
 
-	on_list_double_press
-			--
+	on_list_double_press (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 		do
 			if list_for_existing_layouts.selected_item /= Void then
 				on_ok
@@ -348,7 +347,7 @@ feature -- Access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

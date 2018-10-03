@@ -124,7 +124,12 @@ feature {NONE} -- Clean up
 						check l_count_unmodified: l_count = l_tools.count end
 
 						create l_new_tools.make (1, l_count - l_remove_indexes.count)
-						from i := 1; l_index := 1 until i > l_count loop
+						from
+							i := 1
+							l_index := 1
+						until
+							i > l_count
+						loop
 							if not l_remove_indexes.has (i) then
 								l_tool := l_tools.item (i)
 									-- Must set the correct edition
@@ -409,8 +414,7 @@ feature -- Query
 					l_editions.put (l_tool, a_edition)
 				end
 			else
-				create l_editions.make (1, 1)
-				l_editions.put (new_tool (a_type, 1), 1)
+				create l_editions.make_filled (new_tool (a_type, 1), 1, 1)
 				l_tools.force (l_editions, l_id)
 			end
 
@@ -680,7 +684,7 @@ invariant
 	internal_requested_tools_contains_attached_items: not is_recycled implies not internal_requested_tools.has_item (Void)
 
 ;note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

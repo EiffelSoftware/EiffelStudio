@@ -7,43 +7,43 @@ feature -- Access
 
 	output_names : ARRAY [STRING]
 		once
-			create Result.make(1, 0)
+			create Result.make_empty
 			Result.compare_objects
 		end
 
 	filenames : ARRAY [STRING_32]
 		once
-			create Result.make(1, 0)
+			create Result.make_empty
 			Result.compare_objects
 		end
 
 	language_names: ARRAY [STRING]
 		once
-			create Result.make (1, 0)
+			create Result.make_empty
 			Result.compare_objects
 		end
 
 	column_names : ARRAY [STRING]
 		once
-			create Result.make(1, 0)
+			create Result.make_empty
 			Result.compare_objects
 		end
 
 	binary_operators : ARRAY [STRING]
 		once
-			create Result.make(1, 0)
+			create Result.make_empty
 			Result.compare_objects
 		end
 
 	values : ARRAY [STRING]
 		once
-			create Result.make(1, 0)
+			create Result.make_empty
 			Result.compare_objects
 		end
 
 	boolean_operators : ARRAY [STRING]
 		once
-			create Result.make(1, 0)
+			create Result.make_empty
 			Result.compare_objects
 		end
 
@@ -66,7 +66,7 @@ feature -- Element change
 			empty_array: ARRAY [STRING]
 			empty_filenames: like filenames
 		do
-			create empty_array.make (1, 0)
+			create empty_array.make_empty
 			empty_array.compare_objects
 			output_names.copy (empty_array)
 			language_names.copy (empty_array)
@@ -81,7 +81,7 @@ feature -- Element change
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -94,22 +94,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class SHARED_QUERY_VALUES

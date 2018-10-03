@@ -28,64 +28,64 @@ feature -- Value
 
 	last_opened_projects: ARRAY [TUPLE [PATH, READABLE_STRING_32]]
 			-- List of last opened projects
+		local
+			i: INTEGER
+			p: TUPLE [PATH, READABLE_STRING_32]
+			f8: STRING_8
+			t8: STRING_8
+			f: READABLE_STRING_32
+			t: READABLE_STRING_32
+			u: UTF_CONVERTER
+			s: STRING
 		do
-			create Result.make (1, 0)
+			create Result.make_empty
 			Result.compare_objects
-			last_opened_projects_preference.value.do_all (
-				agent (s: STRING; r: ARRAY [TUPLE [PATH, READABLE_STRING_32]])
-					local
-						i: INTEGER
-						p: TUPLE [PATH, READABLE_STRING_32]
-						f8: STRING_8
-						t8: STRING_8
-						f: READABLE_STRING_32
-						t: READABLE_STRING_32
-						u: UTF_CONVERTER
-					do
-						i := s.index_of_code (('>').code.as_natural_32, 1)
-						if i > 1 then
-							f8 := s.substring (1, i - 1)
-							t8 := s.substring (i + 1, s.count)
-						else
-							f8 := s
-							t8 := ""
-						end
-						f := u.utf_8_string_8_to_string_32 (f8)
-						t := u.utf_8_string_8_to_string_32 (t8)
-							-- Ensure the type of tuple by using locals.
-						p := [create {PATH}.make_from_string (f), t]
-						p.compare_objects
-						r.force (p, r.upper + 1)
-					end
-				(?, Result)
-			)
+			across
+				last_opened_projects_preference.value as ic
+			loop
+				s := ic.item
+				i := s.index_of_code (('>').code.as_natural_32, 1)
+				if i > 1 then
+					f8 := s.substring (1, i - 1)
+					t8 := s.substring (i + 1, s.count)
+				else
+					f8 := s
+					t8 := ""
+				end
+				f := u.utf_8_string_8_to_string_32 (f8)
+				t := u.utf_8_string_8_to_string_32 (t8)
+					-- Ensure the type of tuple by using locals.
+				p := [create {PATH}.make_from_string (f), t]
+				p.compare_objects
+				Result.force (p, Result.upper + 1)
+			end
 		end
 
 feature -- Modification
 
-	set_last_opened_projects (l: ARRAY [TUPLE [PATH, READABLE_STRING_32]])
+	set_last_opened_projects (a_list: ARRAY [TUPLE [file: PATH; target: READABLE_STRING_32]])
 			-- Set list of last opened projects
 		local
 			a: ARRAY [STRING_8]
+			u: UTF_CONVERTER
 		do
-			create a.make (1, 0)
+			create a.make_empty
 			a.compare_objects
-			l.do_all (
-				agent (t: TUPLE [file: PATH; target: READABLE_STRING_32]; r: ARRAY [STRING_8])
-					local
-						u: UTF_CONVERTER
-					do
-						if t.target = Void or else t.target.is_empty then
-							r.force (u.string_32_to_utf_8_string_8 (t.file.name), r.upper + 1)
-						else
-							r.force (u.string_32_to_utf_8_string_8 (t.file.name + ">" + t.target), r.upper + 1)
-						end
+			across
+				a_list as ic
+			loop
+				if attached ic.item as t then
+					if attached t.target as t_target and then not t_target.is_empty then
+						a.force (u.string_32_to_utf_8_string_8 (t.file.name + ">" + t_target), a.upper + 1)
+					else
+						a.force (u.string_32_to_utf_8_string_8 (t.file.name), a.upper + 1)
 					end
-				(?, a)
-			)
+				end
+			end
+
 			last_opened_projects_preference.set_value (a)
 		ensure
-			last_opened_projects_set: last_opened_projects ~ l
+			last_opened_projects_set: last_opened_projects ~ a_list
 		end
 
 feature {EB_SHARED_PREFERENCES} -- Preference

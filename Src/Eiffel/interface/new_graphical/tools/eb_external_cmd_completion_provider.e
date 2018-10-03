@@ -122,20 +122,28 @@ feature{NONE} -- Implementation
 			-- Class possibilities.
 		local
 			l_index: INTEGER
+			l_item: EB_CLASS_FOR_COMPLETION
 		do
 			if attached {QL_CLASS_DOMAIN} system_target_domain.new_domain (create {QL_CLASS_DOMAIN_GENERATOR}.make (Void, True)) as l_class_domain then
-				create Result.make (1, l_class_domain.count)
-				from
-					l_class_domain.start
-					l_index := 1
-				until
-					l_class_domain.after
-				loop
-					Result.put (create {EB_CLASS_FOR_COMPLETION}.make (l_class_domain.item.class_i, Void), l_index)
-					l_index := l_index + 1
-					l_class_domain.forth
+				if l_class_domain.is_empty then
+					create Result.make_empty
+				else
+					from
+						l_class_domain.start
+						create l_item.make (l_class_domain.item.class_i, Void)
+						create Result.make_filled (l_item, 1, l_class_domain.count)
+						l_class_domain.forth
+						l_index := 2
+					until
+						l_class_domain.after
+					loop
+						create l_item.make (l_class_domain.item.class_i, Void)
+						Result.put (create {EB_CLASS_FOR_COMPLETION}.make (l_class_domain.item.class_i, Void), l_index)
+						l_index := l_index + 1
+						l_class_domain.forth
+					end
+					Result.sort
 				end
-				Result.sort
 			else
 				check is_class_domain: False end
 				create Result.make_empty

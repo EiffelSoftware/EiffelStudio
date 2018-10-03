@@ -1,10 +1,11 @@
-note
-	description	: "Class which is launching the application."
+﻿note
+	description: "Class which is launching the application."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	author: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
+	revised_by: "Alexander Kogtenkov"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	WIZARD_MANAGER
@@ -69,14 +70,14 @@ feature {NONE} -- Implementation
 			l_locale: like locale
 		do
 			create l_manager.make (eiffel_layout.language_path.name)
-			if argument_count >= 2 then
-				l_locale := l_manager.locale (create {I18N_LOCALE_ID}.make_from_string (argument (2)))
+			if {EXECUTION_ENVIRONMENT}.arguments.argument_count >= 2 then
+				l_locale := l_manager.locale (create {I18N_LOCALE_ID}.make_from_string ({EXECUTION_ENVIRONMENT}.arguments.argument (2)))
 			end
 			locale_cell.put (l_locale)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

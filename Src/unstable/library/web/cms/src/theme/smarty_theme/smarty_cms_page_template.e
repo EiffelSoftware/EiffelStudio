@@ -35,7 +35,8 @@ feature -- Access
 
 	prepare (page: CMS_HTML_PAGE)
 		do
-			variables.make (10)
+			variables.wipe_out
+			variables.accommodate (page.variables.count)
 
 			across
 				page.variables as ic
@@ -132,7 +133,7 @@ feature -- Registration
 		end
 
 note
-	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Alexander Kogtenkov, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

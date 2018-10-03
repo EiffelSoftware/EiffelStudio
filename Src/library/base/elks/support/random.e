@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Pseudo-random number sequence, linear congruential method
 		
@@ -9,7 +9,7 @@ note
 		Example 7.12 p 266 which is from
 		IMSL Scientific Subroutine Package [1978],
 		written in Fortran for IBM 360/370 computers.
-		
+
 		]"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
@@ -29,6 +29,8 @@ class RANDOM inherit
 		export
 			{NONE} all
 		end
+
+	ITERATION_CURSOR [INTEGER]
 
 create
 	make, set_seed
@@ -176,6 +178,15 @@ feature -- Access
 			Result := d / dmod
 		end
 
+feature -- Iteration
+
+	new_cursor: RANDOM
+			-- <Precursor>
+		do
+			create Result.set_seed (seed)
+			Result.start
+		end
+
 feature {NONE} -- Implementation
 
 	randomize (xn: INTEGER): INTEGER
@@ -226,7 +237,7 @@ invariant
 	modulus_constraint: modulus > 1
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

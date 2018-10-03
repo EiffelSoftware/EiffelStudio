@@ -15,6 +15,9 @@
 deferred class
 	CONTAINER [G]
 
+inherit
+	ITERABLE [G]
+
 feature -- Access
 
 	has (v: G): BOOLEAN
@@ -84,7 +87,7 @@ feature -- Conversion
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

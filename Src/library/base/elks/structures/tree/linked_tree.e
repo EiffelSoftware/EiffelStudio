@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Trees implemented using a linked list representation"
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
@@ -18,12 +18,15 @@ class LINKED_TREE [G] inherit
 		export
 			{NONE} ll_empty
 		undefine
-			child_after, child_before, child_item,
+			child_after,
+			child_before,
+			child_item,
 			child_off
 		redefine
 			parent, clone_node
 		select
-			has
+			has,
+			new_cursor
 		end
 
 	LINKABLE [G]
@@ -105,7 +108,7 @@ create
 
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (v: like item)
 			-- Create single node with item `v'.
@@ -368,7 +371,7 @@ invariant
 	no_void_child: readable_child = child_readable
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

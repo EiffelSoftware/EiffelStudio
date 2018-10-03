@@ -27,7 +27,7 @@ inherit
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (n: INTEGER)
 			-- Allocate heap space.
@@ -68,6 +68,14 @@ feature -- Access
 					i := i + 1
 				end
 			end
+		end
+
+feature -- Iteration
+
+	new_cursor: HEAP_PRIORITY_QUEUE_ITERATION_CURSOR [G]
+			-- <Precursor>
+		do
+			create Result.make (Current)
 		end
 
 feature -- Measurement
@@ -238,14 +246,12 @@ feature -- Duplication
 			end
 
 				--| Insert `n' greatest items into new queue.
+			across
+				l_tmp as x
 			from
 				create Result.make (n)
-				l_tmp.start
-			until
-				l_tmp.after
 			loop
-				Result.put (l_tmp.item)
-				l_tmp.forth
+				Result.put (x.item)
 			end
 		end
 
@@ -328,14 +334,12 @@ feature -- Removal
 
 			if l_tmp.count = count - 1 then
 					--| Item was found, we can update `Current'.
+				across
+					l_tmp as x
 				from
-					l_tmp.start
 					wipe_out
-				until
-					l_tmp.after
 				loop
-					put (l_tmp.item)
-					l_tmp.forth
+					put (x.item)
 				end
 			end
 		end
@@ -388,13 +392,15 @@ feature -- Conversion
 			end
 		end
 
-feature {HEAP_PRIORITY_QUEUE} -- Implementation
+feature {HEAP_PRIORITY_QUEUE, HEAP_PRIORITY_QUEUE_ITERATION_CURSOR} -- Access
 
 	lower: INTEGER = 1
-			-- Lower bound for internal access to `area'.
+			-- Lower bound for internal access to `area`.
 
 	area: SPECIAL [G]
-			-- Storage for queue
+			-- Storage for queue.
+
+feature {HEAP_PRIORITY_QUEUE} -- Implementation
 
 	i_th (i: INTEGER): G
 		require
@@ -443,7 +449,7 @@ feature {NONE} -- Comparison
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

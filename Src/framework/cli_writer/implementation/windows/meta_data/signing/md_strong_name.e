@@ -1,5 +1,5 @@
-note
-	description: "Plain encapsulation of StrongName API"
+﻿note
+	description: "Plain encapsulation of StrongName API."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -45,11 +45,9 @@ feature {NONE} -- Status report
 			-- Initialize environment for loading `mscorsn.dll', i.e.
 			-- append path to `mscorsn.dll' to PATH environment variable.
 		local
-			l_val: INTEGER
-			success: BOOLEAN
-			path, path_name: WEL_STRING
 			s: STRING_32
 			l_il_env: IL_ENVIRONMENT
+			e: EXECUTION_ENVIRONMENT
 		once
 				-- Look for specific version of the runtime since `mscorsn.dll' is
 				-- version specific.
@@ -58,18 +56,16 @@ feature {NONE} -- Status report
 					-- We try to call `get_error'. If the DLL exists, it
 					-- will work, if it does not exist it will not reach
 					-- `Result := True', thus `Result' will be False.
-				create path.make_empty (32767) -- Max size of env. var is 32767 characters
-				create path_name.make ("PATH")
-				l_val := get_environment_variable (path_name.item, path.item, 32767)
-				if l_val > 0 then
-					s := path.string
-					if attached l_il_env.dotnet_framework_path as l_dotnet_framework_path then
-						s.prepend_string_general (";")
-						s.prepend_string (l_dotnet_framework_path.name)
-					end
-					create path.make (s)
-					success := set_environment_variable (path_name.item, path.item)
+				create e
+				s := e.item ("PATH")
+				if not attached s then
+					create s.make_empty
 				end
+				if attached l_il_env.dotnet_framework_path as l_dotnet_framework_path then
+					s.prepend_string_general (";")
+					s.prepend_string (l_dotnet_framework_path.name)
+				end
+				e.put (s, "PATH")
 			end
 		end
 
@@ -81,20 +77,22 @@ feature -- Constants
 
 feature -- Access
 
-	public_key (a_key_blob: MANAGED_POINTER): MANAGED_POINTER
-			-- Retrieve public portion of key pair `a_key_blob'.
+	public_key (a_key_blob: MANAGED_POINTER): detachable MANAGED_POINTER
+			-- Retrieve public portion of key pair `a_key_blob`.
 		require
 			a_key_blob_not_void: a_key_blob /= Void
 		local
 			l_ptr: POINTER
 			l_key_size: INTEGER
-			l_result: INTEGER
 		do
-			l_result := strong_name_get_public_key (default_pointer, a_key_blob.item, a_key_blob.count, $l_ptr, $l_key_size)
-			create Result.make_from_pointer (l_ptr, l_key_size)
-			strong_name_free_buffer (l_ptr)
-		ensure
-			public_key_not_void: Result /= Void
+				-- TODO: This is an obsolete interface call:
+				-- https://docs.microsoft.com/en-us/dotnet/framework/unmanaged-api/strong-naming/strongnamegetpublickey-function
+				-- Use this instead:
+				-- https://docs.microsoft.com/en-us/dotnet/framework/unmanaged-api/hosting/iclrstrongname-strongnamegetpublickey-method
+			if strong_name_get_public_key (default_pointer, a_key_blob.item, a_key_blob.count, $l_ptr, $l_key_size) /= 0 then
+				create Result.make_from_pointer (l_ptr, l_key_size)
+				strong_name_free_buffer (l_ptr)
+			end
 		end
 
 	public_key_token (a_public_key_blob: MANAGED_POINTER): MANAGED_POINTER
@@ -311,29 +309,11 @@ feature {NONE} -- C externals
 			"GetHashFromFileW"
 		end
 
-	frozen get_environment_variable (name, buffer: POINTER; size: INTEGER): INTEGER
-			-- Get environment variable `name' and put result in `buffer' with size `size'.
-			-- Return size of variable or 0 if not found.
-		external
-			"C macro signature (LPCTSTR, LPTSTR, DWORD): EIF_INTEGER use <windows.h>"
-		alias
-			"GetEnvironmentVariable"
-		end
-
-	frozen set_environment_variable (name, value: POINTER): BOOLEAN
-			-- Set environment variable `name' with value `value'.
-			-- Return True if successful.
-		external
-			"C macro signature (LPCTSTR, LPCTSTR): EIF_BOOLEAN use <windows.h>"
-		alias
-			"SetEnvironmentVariable"
-		end
-
 invariant
 	runtime_version_not_void: runtime_version /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -364,4 +344,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class MD_STRONG_NAME
+end

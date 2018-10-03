@@ -1,8 +1,9 @@
-note
-	description	: "Final state for the precompilation wizard"
+﻿note
+	description: "Final state for the precompilation wizard"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "David Solal / Arnaud PICHERY [aranud@mail.dotcom.fr]"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision	: "$Revision$"
 
@@ -86,8 +87,6 @@ feature -- Basic Operations
 
 
 	proceed_with_current_info
-		local
-			mess: EV_INFORMATION_DIALOG
 		do
 			build_finish
 			first_window.disable_next_button
@@ -98,8 +97,7 @@ feature -- Basic Operations
 			end
 
 			launch_precompilations
-			create mess.make_with_text (final_message)
-			mess.show_modal_to_window (first_window)
+			;(create {EV_INFORMATION_DIALOG}.make_with_text (final_message)).show_modal_to_window (first_window)
 			Precursor
 		end
 
@@ -121,10 +119,8 @@ feature {NONE} -- Implementation
 			-- Launch all the choosen precompilations
 		local
 			current_it: EV_MULTI_COLUMN_LIST_ROW
-			lib_info: TUPLE [path: READABLE_STRING_GENERAL; path_exists: BOOLEAN]
 			sys_name: READABLE_STRING_GENERAL
 			ace_path: READABLE_STRING_GENERAL
-			already_precompiled: BOOLEAN
 			rescued: BOOLEAN
 			error_dialog: EV_ERROR_DIALOG
 		do
@@ -143,11 +139,10 @@ feature {NONE} -- Implementation
 				loop
 					current_it:= wizard_information.l_to_precompile.item
 					sys_name := current_it.i_th (1)
-					lib_info ?= current_it.data
-					ace_path := lib_info.path
-					already_precompiled := lib_info.path_exists
-
-					precompile (sys_name.as_string_32, ace_path.as_string_32, already_precompiled)
+					if attached {TUPLE [path: READABLE_STRING_GENERAL; path_exists: BOOLEAN]} current_it.data as lib_info then
+						ace_path := lib_info.path
+						precompile (sys_name.as_string_32, ace_path.as_string_32, lib_info.path_exists)
+					end
 					wizard_information.l_to_precompile.forth
 				end
 			end
@@ -216,8 +211,8 @@ feature {NONE} -- Implementation
 				progress_2.set_proportion (((time_left / 100) * 0.9).truncated_to_real)
 				progress_text_2.set_text (interface_names.l_precompiling_library (lib_name) + ((time_left * 90) // 100).out + "%%")
 
-				total_prog := ((time_left * 0.9 + 100*n_lib_done)/(n_lib_to_precompile)).floor
-				progress.set_proportion (((time_left * 0.9 + 100*n_lib_done)/(100*n_lib_to_precompile)).truncated_to_real)
+				total_prog := ((time_left * 0.9 + 100*n_lib_done) / n_lib_to_precompile).floor
+				progress.set_proportion (((time_left * 0.9 + 100*n_lib_done) / (100*n_lib_to_precompile)).truncated_to_real)
 				progress_text.set_text (interface_names.l_total_progress_is (total_prog.out))
 			end
 			n_lib_done := n_lib_done + 1
@@ -316,7 +311,7 @@ feature {NONE} -- Implementation
 			Result_valid: (Result <= 100 and Result >= 0) or (Result = -1)
 		end
 
-feature -- Access
+feature -- Progress
 
 	pixmap_icon_location: PATH
 			-- Icon for the Eiffel Precompile Wizard.
@@ -342,7 +337,7 @@ feature -- Access
 			-- Used to test .. unuseful if the progress file is used
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

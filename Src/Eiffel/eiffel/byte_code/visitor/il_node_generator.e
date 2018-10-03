@@ -2004,7 +2004,11 @@ feature {NONE} -- Visitors
 				if a_node.is_boxing or else not l_expr_type.is_basic then
 					il_generator.generate_metamorphose (l_expr_type)
 				else
-					generate_il_eiffel_metamorphose (l_expr_type)
+					if attached {BASIC_A} l_expr_type as b then
+						generate_il_eiffel_metamorphose (b)
+					else
+						check from_condition: False then end
+					end
 				end
 			end
 		end
@@ -3360,7 +3364,11 @@ feature {NONE} -- Implementation
 							-- Basic type is attached to Eiffel reference type,
 							-- so basic type has to be represented by Eiffel type
 							-- rather than by built-in IL type.
-						generate_il_eiffel_metamorphose (l_expression_type)
+						if attached {BASIC_A} l_expression_type as b then
+							generate_il_eiffel_metamorphose (b)
+						else
+							check from_condition: False then end
+						end
 					else
 						il_generator.generate_external_metamorphose (l_expression_type)
 					end
@@ -3368,12 +3376,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	generate_il_eiffel_metamorphose (a_type: TYPE_A)
+	generate_il_eiffel_metamorphose (a_type: BASIC_A)
 			-- Generate a metamorphose of `a_type' into a _REF type.
 		require
 			is_valid: is_valid
 			a_type_not_void: a_type /= Void
-			a_type_is_basic: a_type.is_basic
 		do
 			il_generator.generate_eiffel_metamorphose (a_type)
 		end
@@ -3391,7 +3398,11 @@ feature {NONE} -- Implementation
 		do
 			if a_target_type /= Void and then a_type.is_basic and then not a_target_type.is_true_external then
 					-- Box object.
-				generate_il_eiffel_metamorphose (a_type)
+				if attached {BASIC_A} a_type as b then
+					generate_il_eiffel_metamorphose (b)
+				else
+					check from_condition: False then end
+				end
 				if not a_real_metamorphose then
 						-- Get address of an object.
 					il_generator.generate_load_address (a_type)
@@ -4910,7 +4921,7 @@ feature {NONE} -- Convenience
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

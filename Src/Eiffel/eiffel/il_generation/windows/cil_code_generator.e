@@ -1144,10 +1144,8 @@ feature -- Class info
 			pars: ARRAYED_LIST [CLASS_INTERFACE]
 			class_interface: CLASS_INTERFACE
 			parents: FIXED_LIST [CL_TYPE_A]
-			l_native_array: NATIVE_ARRAY_CLASS_TYPE
 		do
-			l_native_array ?= class_type
-			if l_native_array /= Void then
+			if attached {NATIVE_ARRAY_CLASS_TYPE} class_type as l_native_array then
 				external_class_mapping.put (class_type.type, l_native_array.il_type_name)
 			elseif
 				class_type.is_external and then
@@ -1163,13 +1161,10 @@ feature -- Class info
 			create class_interface.make_from_context (class_c.class_interface, class_type)
 			create pars.make (parents.count)
 
-			from
-				parents.start
-			until
-				parents.after
+			across
+				parents as p
 			loop
-				pars.force (parents.item.associated_class_type (class_type.type).class_interface)
-				parents.forth
+				pars.force (p.item.associated_class_type (class_type.type).class_interface)
 			end
 
 			class_interface.set_parents (pars)
@@ -1276,7 +1271,6 @@ feature -- Class info
 			l_gen_type: GEN_TYPE_A
 			i, nb: INTEGER
 			l_type: TYPE_A
-			l_cl_type: CL_TYPE_A
 			l_class_type: CLASS_TYPE
 			l_ext_class: EXTERNAL_CLASS_C
 			l_feature: FEATURE_I
@@ -1301,15 +1295,11 @@ feature -- Class info
 					if l_type.is_formal then
 							-- It is a formal, simply put ANY here
 						l_class_type := any_type.associated_class_type (Void)
-					else
+					elseif attached {CL_TYPE_A} l_type as l_cl_type then
 							-- It is an expanded generic derivation
-						l_cl_type ?= l_type
-						check
-							l_cl_type_not_void: l_cl_type /= Void
-						end
 						l_class_type := l_cl_type.associated_class_type (class_type.type)
 						if l_cl_type.is_external then
-							l_ext_class ?= l_cl_type.base_class
+							l_ext_class := {EXTERNAL_CLASS_C} / l_cl_type.base_class
 						end
 					end
 					if l_class_type.is_basic and then l_class_type.type.generics = Void then
@@ -1696,7 +1686,6 @@ feature {NONE} -- SYSTEM_OBJECT features
 			l_class_token: INTEGER
 			l_meth_attr: INTEGER
 			l_feat: FEATURE_I
-			l_code: FEATURE_B
 		do
 			if System.disposable_descendants.has (class_type.associated_class) then
 				l_class_token := actual_class_type_token (class_type.implementation_id)
@@ -1723,13 +1712,8 @@ feature {NONE} -- SYSTEM_OBJECT features
 						l_feat_not_void: l_feat /= Void
 					end
 				end
-				l_code ?= l_feat.access (void_type, False, False)
-				check
-					l_code_not_void: l_code /= Void
-				end
-
 				start_new_body (l_meth_token)
-				cil_node_generator.generate_il_node (Current, l_code)
+				cil_node_generator.generate_il_node (Current, l_feat.access (void_type, False, False))
 				generate_return (False)
 				method_writer.write_current_body
 			end
@@ -1937,7 +1921,6 @@ feature -- Features info
 			class_type_not_void: class_type /= Void
 		local
 			duplicated_feature: FEATURE_I
-			proc: PROCEDURE_I
 		do
 			if inherited_feature /= Void then
 				if
@@ -1950,8 +1933,7 @@ feature -- Features info
 						-- signature. We do not do it on the parent itself because
 						-- its `feature_id' is not appropriate in `current_class_type'.
 					duplicated_feature := local_feature.duplicate
-					if duplicated_feature.is_routine then
-						proc ?= duplicated_feature
+					if duplicated_feature.is_routine and then attached {PROCEDURE_I} duplicated_feature as proc then
 						proc.set_arguments (inherited_feature.arguments)
 					end
 					duplicated_feature.set_type (inherited_feature.type, inherited_feature.assigner_name_id)
@@ -2055,13 +2037,11 @@ feature -- Features info
 			l_meth_sig: like method_sig
 			l_field_sig: like field_sig
 			l_name: STRING
-			l_feat_arg: FEAT_ARG
 			l_type_i: TYPE_A
 			l_meth_token, l_setter_token: INTEGER
 			l_parameter_count: INTEGER
 			l_is_attribute: BOOLEAN
 			l_return_type: TYPE_A
-			i: INTEGER
 			l_is_c_external: BOOLEAN
 			l_class_token: like current_class_token
 			l_ext: IL_EXTENSION_I
@@ -2221,17 +2201,10 @@ feature -- Features info
 				end
 
 				if a_feature_i.has_arguments then
-					from
-						l_feat_arg := a_feature_i.arguments
-						l_feat_arg.start
-						i := 0
-					until
-						l_feat_arg.after
+					across
+						a_feature_i.arguments as a
 					loop
-						l_type_i := argument_actual_type_in (l_feat_arg.item, l_class_type)
-						set_signature_type (l_meth_sig, l_type_i, l_class_type)
-						i := i + 1
-						l_feat_arg.forth
+						set_signature_type (l_meth_sig, argument_actual_type_in (a.item, l_class_type), l_class_type)
 					end
 				end
 
@@ -2301,7 +2274,6 @@ feature -- Features info
 			l_meth_sig: like method_sig
 			l_field_sig: like field_sig
 			l_name: STRING
-			l_feat_arg: FEAT_ARG
 			l_type_feature: TYPE_FEATURE_I
 			l_type_i: TYPE_A
 			l_type_a: TYPE_A
@@ -2313,6 +2285,7 @@ feature -- Features info
 			l_is_attribute: BOOLEAN
 			l_return_type: TYPE_A
 			l_has_arguments: BOOLEAN
+			l_feat_arg: like {FEATURE_I}.arguments
 			i, j: INTEGER
 			l_is_c_external: BOOLEAN
 			l_ca_factory: CUSTOM_ATTRIBUTE_FACTORY
@@ -2378,17 +2351,10 @@ feature -- Features info
 
 				if feat.has_arguments then
 					l_has_arguments := True
-					from
-						l_feat_arg := feat.arguments
-						l_feat_arg.start
-						i := 0
-					until
-						l_feat_arg.after
+					across
+						feat.arguments as a
 					loop
-						l_type_i := argument_actual_type_in (l_feat_arg.item, signature_declaration_type)
-						set_signature_type (l_meth_sig, l_type_i, signature_declaration_type)
-						i := i + 1
-						l_feat_arg.forth
+						set_signature_type (l_meth_sig, argument_actual_type_in (a.item, signature_declaration_type), signature_declaration_type)
 					end
 				end
 			end
@@ -2442,7 +2408,7 @@ feature -- Features info
 							end
 							l_type_i := l_return_type
 							if l_type_i.is_void then
-								l_type_i := argument_actual_type_in (l_feat_arg.first, signature_declaration_type)
+								l_type_i := argument_actual_type_in (feat.arguments.first, signature_declaration_type)
 							end
 								-- Define setter method.
 							prepare_property_setter (feat, current_class_type, l_property_name, l_type_i, signature_declaration_type)
@@ -2772,16 +2738,13 @@ feature -- Features info
 		local
 			l_type_feature: TYPE_FEATURE_I
 		do
-			from
-				feats.start
-			until
-				feats.after
+			across
+				feats as f
 			loop
-				l_type_feature := feats.item_for_iteration
+				l_type_feature := f.item
 				if is_interface implies l_type_feature.origin_class_id = class_id then
 					generate_feature (l_type_feature, is_interface, False, False)
 				end
-				feats.forth
 			end
 		end
 
@@ -2892,7 +2855,6 @@ feature -- IL Generation
 			l_attributes: INTEGER
 			l_creators: HASH_TABLE [EXPORT_I, STRING]
 			l_feat_tbl: FEATURE_TABLE
-			l_feat: FEATURE_I
 			l_type_token: INTEGER
 			l_is_generic: BOOLEAN
 		do
@@ -2920,24 +2882,17 @@ feature -- IL Generation
 				current_class_token := l_type_token
 				current_class_type := class_type
 
-				if l_creators = Void then
-					l_feat := class_c.default_create_feature
+				if attached l_creators then
+					l_feat_tbl := class_c.feature_table
+					across
+						l_creators as c
+					loop
+						generate_creation_procedure (class_c, class_type, l_feat_tbl.item (c.key), l_is_generic)
+					end
+				elseif attached class_c.default_create_feature as f then
 						-- It is not guaranteed that a class defines `default_create', e.g.
 						-- a class that does not inherit from ANY.
-					if l_feat /= Void then
-						generate_creation_procedure (class_c, class_type, l_feat, l_is_generic)
-					end
-				else
-					from
-						l_creators.start
-						l_feat_tbl := class_c.feature_table
-					until
-						l_creators.after
-					loop
-						l_feat := l_feat_tbl.item (l_creators.key_for_iteration)
-						generate_creation_procedure (class_c, class_type, l_feat, l_is_generic)
-						l_creators.forth
-					end
+					generate_creation_procedure (class_c, class_type, f, l_is_generic)
 				end
 			end
 		end
@@ -2957,10 +2912,7 @@ feature -- IL Generation
 		local
 			l_meth_sig: like method_sig
 			l_name: STRING
-			l_feat_arg: FEAT_ARG
-			l_external_i: EXTERNAL_I
 			l_is_il_external: BOOLEAN
-			l_type_i: TYPE_A
 			l_meth_token, l_meth_attr: INTEGER
 			i, nb: INTEGER
 		do
@@ -2975,24 +2927,16 @@ feature -- IL Generation
 			end
 			set_method_return_type (l_meth_sig, current_class_type.type, current_class_type)
 
-			if feat.is_external then
-				l_external_i ?= feat
-				if l_external_i /= Void then
-					l_is_il_external := l_external_i.extension.is_il
-				end
+			if feat.is_external and then attached {EXTERNAL_I} feat as l_external_i then
+				l_is_il_external := l_external_i.extension.is_il
 			end
 
 			if nb > 0 then
-					-- Only added arguments when calling parent ctor with arguments
-				from
-					l_feat_arg := feat.arguments
-					l_feat_arg.start
-				until
-					l_feat_arg.after
+					-- Only add arguments when calling parent ctor with arguments.
+				across
+					feat.arguments as a
 				loop
-					l_type_i := argument_actual_type_in (l_feat_arg.item, class_type)
-					set_signature_type (l_meth_sig, l_type_i, class_type)
-					l_feat_arg.forth
+					set_signature_type (l_meth_sig, argument_actual_type_in (a.item, class_type), class_type)
 				end
 			end
 			if is_generic then
@@ -3141,7 +3085,6 @@ feature -- IL Generation
 			i, nb: INTEGER
 			l_is_external: BOOLEAN
 			l_sequence_point: like sequence_point
-			l_sequence_point_list: LIST [like sequence_point]
 			l_class_type: CLASS_TYPE
 			l_type_i, l_impl_type_i: TYPE_A
 			l_same_signature: BOOLEAN
@@ -3206,14 +3149,10 @@ feature -- IL Generation
 				then
 					if is_debug_info_enabled then
 						dbg_writer.open_method (l_meth_token)
-						l_sequence_point_list :=
-							current_module.method_sequence_points.item (l_token)
-						from
-							l_sequence_point_list.start
-						until
-							l_sequence_point_list.after
+						across
+							current_module.method_sequence_points.item (l_token) as p
 						loop
-							l_sequence_point := l_sequence_point_list.item
+							l_sequence_point := p.item
 							dbg_offsets_count := l_sequence_point.offset_count
 							dbg_offsets := l_sequence_point.offsets
 							dbg_start_lines := l_sequence_point.start_lines
@@ -3224,7 +3163,6 @@ feature -- IL Generation
 								dbg_documents (l_sequence_point.written_class_id),
 								dbg_offsets_count, dbg_offsets, dbg_start_lines, dbg_start_columns,
 								dbg_end_lines, dbg_end_columns)
-							l_sequence_point_list.forth
 						end
 						generate_local_debug_info (l_token, l_class_type)
 						dbg_writer.close_method
@@ -3722,7 +3660,11 @@ feature -- IL Generation
 						-- Ideally a conformance check would possibly remove some unnecessary casts.
 					if not l_type_i.is_safe_equivalent (l_parent_arg_type_i) then
 						if l_type_i.is_basic then
-							generate_eiffel_metamorphose (l_type_i)
+							if attached {BASIC_A} l_type_i as b then
+								generate_eiffel_metamorphose (b)
+							else
+								check from_condition: False then end
+							end
 						elseif l_type_i.is_expanded then
 							generate_metamorphose (l_type_i)
 						elseif is_verifiable and not l_parent_arg_type_i.is_expanded then
@@ -4103,30 +4045,28 @@ feature {NONE} -- Implementation
 			l_inh_arguments, l_arguments: FEAT_ARG
 			l_is_expanded: BOOLEAN
 		do
-				-- Optimization as many times `inherited_feature' and `local_feature' are the same
+				-- Optimization as many times `inherited_feature' and `local_feature' are the same.
 			if inherited_feature /= local_feature then
 				l_is_expanded := current_class_type.is_expanded
 				Result := (inherited_feature.type.is_reference and local_feature.type.is_expanded) or
 					(l_is_expanded and local_feature.type.has_like_current)
 				l_arguments := local_feature.arguments
-				if not Result and l_arguments /= Void then
+				if not Result and attached l_arguments then
+					across
+						l_arguments as a
 					from
 						l_inh_arguments := inherited_feature.arguments
-						l_arguments.start
 						l_inh_arguments.start
 					until
-						l_arguments.after
+						Result
 					loop
 						if
-							(l_inh_arguments.item.is_reference and l_arguments.item.is_expanded) or
-							(l_is_expanded and l_arguments.item.has_like_current)
+							(l_inh_arguments.item.is_reference and a.item.is_expanded) or
+							(l_is_expanded and a.item.has_like_current)
 						then
 							Result := True
-								-- Jump out of loop
-							l_arguments.finish
 						end
 						l_inh_arguments.forth
-						l_arguments.forth
 					end
 				end
 			end
@@ -4326,7 +4266,6 @@ feature -- Object creation
 			-- Generate IL code for a hardcoded creation type `a_type'.
 			-- Expanded object will be boxed after creation.
 		local
-			gen_type_i: GEN_TYPE_A
 			local_index: INTEGER
 		do
 			if a_type.is_expanded and a_type.is_true_external then
@@ -4335,15 +4274,13 @@ feature -- Object creation
 				local_index := byte_context.local_list.count
 				put_dummy_local_info (a_type, local_index)
 				generate_local (local_index)
+			elseif attached {GEN_TYPE_A} a_type as gen_type_i then
+					-- Create object using default constructor.
+				generate_generic_type_info (gen_type_i)
+				create_generic_object (a_type.implementation_id (current_class_type.type))
 			else
 					-- Create object using default constructor.
-				gen_type_i ?= a_type
-				if gen_type_i = Void then
-					create_object (a_type.implementation_id (current_class_type.type))
-				else
-					generate_generic_type_info (gen_type_i)
-					create_generic_object (a_type.implementation_id (current_class_type.type))
-				end
+				create_object (a_type.implementation_id (current_class_type.type))
 			end
 			if a_type.is_expanded then
 					-- Box expanded object.
@@ -4488,16 +4425,10 @@ feature -- Variables access
 
 	generate_attribute (need_target: BOOLEAN; type_i: TYPE_A; a_feature_id: INTEGER)
 			-- Generate access to attribute of `a_feature_id' in `type_i'.
-		local
-			cl_type: CL_TYPE_A
-			l_class_type: CLASS_TYPE
 		do
-			cl_type ?= type_i
-			if cl_type /= Void then
-				l_class_type := cl_type.associated_class_type (current_class_type.type)
-			end
 			if
-				l_class_type /= Void and then
+				attached {CL_TYPE_A} type_i as cl_type and then
+				attached cl_type.associated_class_type (current_class_type.type) as l_class_type and then
 				(l_class_type.is_generated_as_single_type or l_class_type.is_expanded)
 			then
 				if need_target then
@@ -4705,42 +4636,28 @@ feature -- Variables access
 				actual_class_type_token (type_i.external_id (current_class_type.type)))
 		end
 
-	generate_eiffel_metamorphose (a_type: TYPE_A)
+	generate_eiffel_metamorphose (a_type: BASIC_A)
 			-- Generate a metamorphose of `a_type' into a _REF type.
 		local
 			l_local_number: INTEGER
-			l_cl_type: BASIC_A
 			l_feat: FEATURE_I
-			l_is_basic: BOOLEAN
 		do
 				-- FIXME: We only half support metamorphose of basic types
 				-- through the `set_item' routine.
-
-			l_cl_type ?= a_type
-			l_is_basic := l_cl_type.is_basic
-
-			if l_is_basic then
-					-- Assign value to a temporary local variable.
-				byte_context.add_local (a_type)
-				l_local_number := byte_context.local_list.count
-				put_dummy_local_info (a_type, l_local_number)
-				generate_local_assignment (l_local_number)
-			else
-				pop
-			end
-
+				-- Assign value to a temporary local variable.
+			byte_context.add_local (a_type)
+			l_local_number := byte_context.local_list.count
+			put_dummy_local_info (a_type, l_local_number)
+			generate_local_assignment (l_local_number)
 				-- Create a new (boxed) instance.
-			generate_creation (l_cl_type)
-
-			if l_is_basic then
-					-- Call `set_item' from the _REF class
-				duplicate_top
-				generate_load_address (l_cl_type)
-				generate_local (l_local_number)
-				l_feat := l_cl_type.base_class.feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id)
-				generate_feature_access (l_cl_type,
-					l_feat.feature_id, l_feat.argument_count, l_feat.has_return_value, False)
-			end
+			generate_creation (a_type)
+				-- Call `set_item' from the _REF class.
+			duplicate_top
+			generate_load_address (a_type)
+			generate_local (l_local_number)
+			l_feat := a_type.base_class.feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id)
+			generate_feature_access (a_type,
+				l_feat.feature_id, l_feat.argument_count, l_feat.has_return_value, False)
 		end
 
 	generate_unmetamorphose (type_i: TYPE_A)
@@ -6444,23 +6361,19 @@ feature -- Assertions
 			-- Generate call to all directly inherited invariant features.
 		local
 			parents: FIXED_LIST [CL_TYPE_A]
-			parent_type: CL_TYPE_A
 			cl_type: CLASS_TYPE
 			i, id: INTEGER
 			l_list: SEARCH_TABLE [INTEGER]
 		do
-			from
-					--| FIXME IEK: We currently only iterate conforming parents for invariant generation
-					--| as invariants from a non-conforming branch would have to be flat generated in the
-					--| current class.
-				parents := current_class_type.associated_class.conforming_parents
-				create l_list.make (parents.count)
-				parents.start
-			until
-				parents.after
+			parents := current_class_type.associated_class.conforming_parents
+			create l_list.make (parents.count)
+				--| FIXME IEK: We currently only iterate conforming parents for invariant generation
+				--| as invariants from a non-conforming branch would have to be flat generated in the
+				--| current class.
+			across
+				parents as p
 			loop
-				parent_type ?= byte_context.real_type (parents.item)
-				cl_type := parent_type.associated_class_type (current_class_type.type)
+				cl_type := byte_context.real_type (p.item).associated_class_type (current_class_type.type)
 				id := cl_type.implementation_id
 				if not l_list.has (id) then
 					l_list.force (id)
@@ -6471,7 +6384,6 @@ feature -- Assertions
 					end
 					i := i + 1
 				end
-				parents.forth
 			end
 		end
 
@@ -7651,29 +7563,22 @@ feature {CIL_CODE_GENERATOR} -- Implementation: convenience
 			-- Routine ID of `equals' of SYSTEM_OBJECT.
 		local
 			c: CLASS_C
-			l: LIST [FEATURE_I]
 			f: FEATURE_I
 		once
 			c := System.system_object_class.compiled_class
-			l := c.feature_table.overloaded_items ({PREDEFINED_NAMES}.equals_name_id)
-			check
-				l_attached: l /= Void
-			end
+			across
+				c.feature_table.overloaded_items ({PREDEFINED_NAMES}.equals_name_id) as l
 			from
 				l.start
+				f := l.item
+				l.forth
 			until
-				l.after
+					-- "public virtual bool Equals (System.Object)"
+				not f.is_class and then
+				f.argument_count = 1 and then
+				f.arguments.first.same_as (c.actual_type)
 			loop
 				f := l.item
-				if
-					not f.is_class and then
-					f.argument_count = 1 and then
-					f.arguments.first.same_as (c.actual_type)
-				then
-						-- "public virtual bool Equals (System.Object)" is found
-					l.finish
-				end
-				l.forth
 			end
 			Result := f.rout_id_set.first
 		ensure
@@ -8220,14 +8125,6 @@ feature {NONE} -- Implementation: name mangling
 
 feature {NONE} -- Storage
 
-	buffer: GENERATION_BUFFER
-			-- Inherited feature from ASSERT_TYPE which is not used therefore hidden.
-		do
-			check
-				not_callable: False
-			end
-		end
-
 	properties: LIST [INTEGER]
 			-- Feature id's of features that have associated properties
 			-- (valid for the current class only)
@@ -8254,27 +8151,22 @@ feature -- Inline agents
 		require
 			eif_cl_not_void: eif_cl /= Void
 			inline_agent_processor_attached: inline_agent_processor /= Void
-		local
-			inl_tbl: HASH_TABLE [FEATURE_I, INTEGER]
 		do
 			if eif_cl.has_inline_agents then
-				-- Generate
-				from
-					inl_tbl := eif_cl.inline_agent_table
-					inl_tbl.start
-				until
-					inl_tbl.after
+					-- Generate.
+				across
+					eif_cl.inline_agent_table as a
 				loop
-					inline_agent_processor.call ([inl_tbl.item_for_iteration])
-					inl_tbl.forth
+					inline_agent_processor (a.item)
 				end
 			end
 		end
 
 note
 	ca_ignore:
-		"CA011", "CA011 — too many arguments",
-		"CA033", "CA033 — very long class"
+		"CA011", "CA011: too many arguments",
+		"CA033", "CA033: very long class",
+		"CA093", "CA093: manifest array type mismatch"
 	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

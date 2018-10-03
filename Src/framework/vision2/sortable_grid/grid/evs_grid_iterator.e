@@ -1,8 +1,7 @@
-note
-	description: "Object that represents an iterator for EVS_GRID_WRAPPER"
+﻿note
+	description: "Object that represents an iterator for EVS_GRID_WRAPPER."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -12,9 +11,12 @@ deferred class
 inherit
 	BILINEAR [detachable EVS_GRID_SEARCHABLE_ITEM]
 		redefine
-			do_all, do_if, there_exists, for_all,
-			search, sequential_search,
-			item
+			do_all,
+			do_if,
+			for_all,
+			item,
+			search,
+			there_exists
 		end
 
 feature -- Iteration
@@ -249,17 +251,6 @@ feature{NONE} -- Implementation
 		deferred
 		end
 
-	sequential_search (v: like item)
-		do
-			if is_wrap_iteration_enabled then
-				disable_wrap_iteration
-				Precursor (v)
-				enable_wrap_iteration
-			else
-				Precursor (v)
-			end
-		end
-
 	force_go_to (x, y: INTEGER)
 			-- Move to position (x, y) even the position is not valid in `grid_wrapper'.`grid'.
 		require
@@ -278,8 +269,8 @@ invariant
 	y_internal_non_negative: y_internal >= 0
 
 note
-        copyright:	"Copyright (c) 1984-2006, Eiffel Software"
-        license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+        copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+        license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[
                         This file is part of Eiffel Software's Eiffel Development Environment.
@@ -302,11 +293,11 @@ note
                         Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
                 ]"
         source: "[
-                         Eiffel Software
-                         356 Storke Road, Goleta, CA 93117 USA
-                         Telephone 805-685-1006, Fax 805-685-6869
-                         Website http://www.eiffel.com
-                         Customer support http://support.eiffel.com
-                ]"
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 
 end

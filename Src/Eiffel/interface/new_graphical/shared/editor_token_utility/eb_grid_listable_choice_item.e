@@ -168,11 +168,8 @@ feature {NONE} -- Implementation
 		local
 			l_vbox: EV_VERTICAL_BOX
 			l_maximum_height, l_maximum_width: INTEGER
-			l_screen: EV_SCREEN_IMP
 			l_support: EB_EDITOR_TOKEN_GRID_SUPPORT
 		do
-			l_screen ?= (create {EV_SCREEN}).implementation
-			check l_screen_not_void: l_screen /= Void end
 			create choice_list
 			choice_list.hide_header
 			choice_list.enable_single_row_selection
@@ -198,8 +195,12 @@ feature {NONE} -- Implementation
 
 				-- Compute location and size of `popup_window' and `choice_list' so that we can see most
 				-- of the items at once.
-			l_maximum_height := (l_screen.virtual_height - popup_window.y_position).max (0)
-			l_maximum_width := (l_screen.virtual_width - popup_window.x_position).max (0)
+			if attached {EV_SCREEN_IMP} (create {EV_SCREEN}).implementation as l_screen then
+				l_maximum_height := (l_screen.virtual_height - popup_window.y_position).max (0)
+				l_maximum_width := (l_screen.virtual_width - popup_window.x_position).max (0)
+			else
+				check is_ev_screen_imp: False end
+			end
 			choice_list.column (1).set_width (left_border + l_maximum_width.min (
 				(popup_window.width - 2).max (choice_list.column (1).required_width_of_item_span (1, choice_list.row_count))))
 				-- +2 to take into account 2 pixels border of the vertical box.

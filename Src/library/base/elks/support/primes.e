@@ -3,7 +3,7 @@
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	names: primes;
+	names: primes
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -15,6 +15,8 @@ class PRIMES inherit
 		redefine
 			is_prime
 		end
+
+	ITERATION_CURSOR [INTEGER]
 
 feature -- Access
 
@@ -174,6 +176,17 @@ feature -- Access
 					i * i - Result
 				end
 			end
+		ensure then
+			instance_free: class
+		end
+
+feature -- Iteration
+
+	new_cursor: PRIMES
+			-- <Precursor>
+		do
+			create Result
+			Result.start
 		ensure then
 			instance_free: class
 		end

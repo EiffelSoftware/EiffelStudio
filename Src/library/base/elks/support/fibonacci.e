@@ -16,6 +16,8 @@ class FIBONACCI inherit
 			i_th, is_fibonacci
 		end
 
+	ITERATION_CURSOR [INTEGER]
+
 feature -- Access
 
 	First: INTEGER = 1
@@ -133,6 +135,17 @@ feature -- Access
 					count := count + 1
 				end
 			end
+		ensure then
+			instance_free: class
+		end
+
+feature -- Iteration
+
+	new_cursor: FIBONACCI
+			-- <Precursor>
+		do
+			create Result
+			Result.start
 		ensure then
 			instance_free: class
 		end

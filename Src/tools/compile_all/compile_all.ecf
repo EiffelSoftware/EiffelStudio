@@ -8,8 +8,7 @@
 		<setting name="console_application" value="true"/>
 		<setting name="exception_trace" value="true"/>
 		<capability>
-			<concurrency support="thread" use="thread"/>
-			<void_safety support="none"/>
+			<concurrency support="thread"/>
 		</capability>
 		<library name="argument_parser" location="$ISE_LIBRARY\library\runtime\process\arg_parser\argument_parser.ecf" readonly="false"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>

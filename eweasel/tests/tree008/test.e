@@ -54,7 +54,8 @@ feature {NONE} -- Initialization
 			create tree.make (2)
 			tree.child_start
 			check tree.child_after end
-			tree.make (3)
+				-- The feature is not available as a regular one anymore.
+			-- tree.make (3)
 		end
 
 	two_way_tree_put_child
@@ -246,7 +247,8 @@ feature {NONE} -- Initialization
 			tree.put_front (2)
 			tree.put_front (1)
 			tree.child_go_i_th (2)
-			tree.make (5)
+				-- The feature is not available as a regular one anymore.
+			-- tree.make (5)
 		end
 
 	two_way_tree_merge_tree_before_orig

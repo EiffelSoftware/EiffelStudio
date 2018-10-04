@@ -94,7 +94,8 @@ feature {NONE} -- Initialization
 			create tree1.make (1)
 			create tree2.make (2)
 			tree1.put_left_child (tree2)
-			tree2.make (3)
+				-- The feature is not available as a regular one anymore.
+			-- tree2.make (3)
 		end
 
 	binary_tree_make_2
@@ -106,7 +107,8 @@ feature {NONE} -- Initialization
 			create tree1.make (1)
 			create tree2.make (2)
 			tree1.put_left_child (tree2)
-			tree1.make (3)
+				-- The feature is not available as a regular one anymore.
+			-- tree1.make (3)
 		end
 
 end

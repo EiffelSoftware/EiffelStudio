@@ -1427,86 +1427,86 @@ test	multiple-thread-gc-crash		thread024	tcf pass multithreaded
 test	thread-terminated-attribute-renaming	thread025	tcf pass multithreaded
 
 -- SCOOP
-test	scoop-access-smoke				scoop001 tcf pass scoop multithreaded execution
-test	scoop-argument-validity				scoop002 tcf pass scoop multithreaded validity expanded
-test	scoop-hanging-1					scoop003 tcf pass scoop multithreaded execution
-test	scoop-basic-argument-formal-nested		scoop004 tcf pass scoop multithreaded execution
-test	scoop-separate-like-current			scoop005 tcf pass scoop multithreaded execution
-test	scoop-result-validity				scoop006 tcf pass scoop multithreaded validity expanded attribute
-test	scoop-external-call				scoop007 tcf pass scoop multithreaded execution
-test	scoop-freeze-condition				scoop008 tcf pass scoop multithreaded execution incrementality
-test	scoop-wait-condition				scoop009 tcf pass scoop multithreaded execution assertion
-test	scoop-request-chain-exception			scoop011 tcf pass scoop multithreaded execution exception
-test	scoop-false-wait-condition			scoop012 tcf manual scoop multithreaded execution assertion exception
-test	scoop-inline-separate-call			scoop013 tcf pass scoop multithreaded finalizing inlining
-test	scoop-separate-expanded				scoop014 tcf pass scoop multithreaded expanded
-test	scoop-separate-patterns-crash			scoop015 tcf pass scoop multithreaded finalizing stable attribute
-test	scoop-finalize-c-failure			scoop016 tcf pass scoop multithreaded finalizing c_compilation
-test	scoop-separate-call-to-constant			scoop017 tcf pass scoop multithreaded execution
-test	scoop-once-per-object				scoop018 tcf pass scoop multithreaded execution incrementality once
-test	scoop-top-exception				scoop019 tcf pass scoop multithreaded exception
-test	scoop-separate-formal				scoop020 tcf pass scoop multithreaded formal generic conformance validity
-test	scoop-object-test				scoop021 tcf fail used_to_pass scoop multithreaded formal generic conformance object_test execution
-test	scoop-undetected-vuer				scoop022 tcf fail scoop multithreaded validity incrementality
-test	scoop-expanded-class-constrained-generic	scoop023 tcf pass scoop multithreaded termination expanded generic
-test	scoop-multi-dot-call-chain			scoop024 tcf pass scoop multithreaded execution assigner
-test	scoop-expanded-separate				scoop025 tcf fail used_to_pass scoop multithreaded expanded execution
-test	scoop-unnested-logging				scoop026 tcf pass scoop multithreaded execution
-test	scoop-lock-passing-on-separate-creation		scoop027 tcf pass scoop multithreaded execution lock_passing
-test	scoop-sequential-processor-creation		scoop028 tcf pass scoop multithreaded execution
-test	scoop-recursive-processor-creation		scoop029 tcf pass scoop multithreaded execution
-test	scoop-agent-validity				scoop030 tcf pass scoop multithreaded validity expanded agents conformance
-test	scoop-agent-call				scoop031 tcf pass scoop multithreaded agents execution
-test	scoop-corrupted-string				scoop032 tcf pass scoop multithreaded execution
-test	scoop-lock-passing-same-target			scoop033 tcf pass scoop multithreaded execution lock_passing
-test	scoop-corrupted-polymorphic-call		scoop034 tcf pass scoop multithreaded execution
-test	scoop-null-reference-call			scoop035 tcf pass scoop multithreaded execution
-test	scoop-nested-chain-uncontrolled-check		scoop036 tcf pass scoop multithreaded execution
-test	scoop-run-time-crash				scoop037 tcf pass scoop multithreaded execution
-test	scoop-agent-creation-rule			scoop038 tcf pass scoop multithreaded agents
-test	scoop-agent-expression-uncontrolled		scoop039 tcf pass scoop multithreaded agents
-test	scoop-agent-expression-controlled		scoop040 tcf pass scoop multithreaded agents
-test	scoop-wait-condition-controlled			scoop041 tcf manual scoop multithreaded execution lock_passing assertion
-test	scoop-exceptions-precondition			scoop042 tcf pass scoop multithreaded exception
-test	scoop-exceptions-control-flow			scoop043 tcf pass scoop multithreaded exception
-test	scoop-exceptions-separate-callback		scoop044 tcf pass scoop multithreaded exception
-test	scoop-exceptions-accountability-handover	scoop045 tcf pass scoop multithreaded exception
-test	scoop-exceptions-small-tests			scoop046 tcf pass scoop multithreaded exception
-test	scoop-exceptions-import				scoop047 tcf fail scoop multithreaded exception
-test	scoop-exceptions-combinations			scoop048 tcf pass scoop multithreaded exception
-test	scoop-impersonation-lockpassing			scoop049 tcf pass scoop multithreaded deadlock lock_passing
-test	scoop-lockpassing-query					scoop050 tcf pass scoop multithreaded deadlock lock_passing
-test	scoop-nested-separate-callback			scoop051 tcf pass scoop multithreaded deadlock lock_passing
-test 	scoop-exceptions-unlock					scoop052 tcf pass scoop multithreaded exception deadlock
-test	scoop-exceptions-dispose			scoop053 tcf fail scoop multithreaded exception execution
-test	scoop-named-tuple-validity			scoop054 tcf pass scoop multithreaded tuple validity
-test	scoop-separate-instruction-fresh-id		scoop055 tcf pass scoop multithreaded validity
-test	scoop-separate-instruction-dependent-arguments	scoop056 tcf pass scoop multithreaded validity
-test	scoop-separate-instruction-non-separate		scoop057 tcf pass scoop multithreaded validity
-test	scoop-separate-instruction-execution		scoop058 tcf pass scoop multithreaded execution
-test	scoop-gc-stress-test				scoop059 tcf pass scoop multithreaded execution
-test	scoop-assigner-command-validity			scoop060 tcf pass scoop multithreaded assigner validity
-test	scoop-named-tuple-execution			scoop061 tcf pass scoop multithreaded tuple assigner execution
-test	scoop-generating-type-deadlock		scoop062 tcf manual scoop multithreaded
-test	scoop-conformance				scoop063 tcf pass scoop multithreaded generic conformance object_test execution
-test	scoop-agent-with-reference-argument		scoop064 tcf manual scoop multithreaded agent execution
-test	scoop-impersonation-tests				scoop065 tcf pass scoop multithreaded execution
-test	scoop-passive-processors			scoop066 tcf pass scoop multithreaded
-test	scoop-passive-processor-exception		scoop067 tcf pass scoop multithreaded exception
-test	scoop-estring_crash						scoop068 tcf fail scoop multithreaded execution
-test	scoop-generic-argument-check			scoop069 tcf pass scoop multithreaded validity
-test	scoop-impersonation-region-id			scoop070 tcf pass scoop multithreaded execution
-test	scoop-once-value-adoption				scoop071 tcf pass scoop multithreaded execution
-test	scoop-asynchronous-expanded				scoop072 tcf pass scoop multithreaded execution
-test	scoop-locking-expanded-argument			scoop073 tcf pass scoop multithreaded execution
-test	scoop-controlled-object-test			scoop074 tcf pass scoop multithreaded object_test validity execution
-test	scoop-temporary-pointer-variable		scoop075 tcf pass scoop multithreaded execution
-test	scoop-callback-region-adoption			scoop076 tcf pass scoop multithreaded execution
-test	scoop-across-iteration-loop			scoop077 tcf pass scoop multithreaded execution across iteration loop validity
-test	scoop-creation-class-invariant			scoop078 tcf pass scoop multithreaded execution invariant assertion
-test	scoop-creation-exception-access			scoop079 tcf fail scoop multithreaded execution creation exception
-test	scoop-separate-call-class-invariant		scoop080 tcf pass scoop multithreaded execution invariant assertion 
-test	scoop-recursive-precondition			scoop081 tcf pass scoop multithreaded execution precondition assertion
+if not DOTNET test	scoop-access-smoke				scoop001 tcf pass scoop multithreaded execution
+if not DOTNET test	scoop-argument-validity				scoop002 tcf pass scoop multithreaded validity expanded
+if not DOTNET test	scoop-hanging-1					scoop003 tcf pass scoop multithreaded execution
+if not DOTNET test	scoop-basic-argument-formal-nested		scoop004 tcf pass scoop multithreaded execution
+if not DOTNET test	scoop-separate-like-current			scoop005 tcf pass scoop multithreaded execution
+if not DOTNET test	scoop-result-validity				scoop006 tcf pass scoop multithreaded validity expanded attribute
+if not DOTNET test	scoop-external-call				scoop007 tcf pass scoop multithreaded execution
+if not DOTNET test	scoop-freeze-condition				scoop008 tcf pass scoop multithreaded execution incrementality
+if not DOTNET test	scoop-wait-condition				scoop009 tcf pass scoop multithreaded execution assertion
+if not DOTNET test	scoop-request-chain-exception			scoop011 tcf pass scoop multithreaded execution exception
+if not DOTNET test	scoop-false-wait-condition			scoop012 tcf manual scoop multithreaded execution assertion exception
+if not DOTNET test	scoop-inline-separate-call			scoop013 tcf pass scoop multithreaded finalizing inlining
+if not DOTNET test	scoop-separate-expanded				scoop014 tcf pass scoop multithreaded expanded
+if not DOTNET test	scoop-separate-patterns-crash			scoop015 tcf pass scoop multithreaded finalizing stable attribute
+if not DOTNET test	scoop-finalize-c-failure			scoop016 tcf pass scoop multithreaded finalizing c_compilation
+if not DOTNET test	scoop-separate-call-to-constant			scoop017 tcf pass scoop multithreaded execution
+if not DOTNET test	scoop-once-per-object				scoop018 tcf pass scoop multithreaded execution incrementality once
+if not DOTNET test	scoop-top-exception				scoop019 tcf pass scoop multithreaded exception
+if not DOTNET test	scoop-separate-formal				scoop020 tcf pass scoop multithreaded formal generic conformance validity
+if not DOTNET test	scoop-object-test				scoop021 tcf fail used_to_pass scoop multithreaded formal generic conformance object_test execution
+if not DOTNET test	scoop-undetected-vuer				scoop022 tcf fail scoop multithreaded validity incrementality
+if not DOTNET test	scoop-expanded-class-constrained-generic	scoop023 tcf pass scoop multithreaded termination expanded generic
+if not DOTNET test	scoop-multi-dot-call-chain			scoop024 tcf pass scoop multithreaded execution assigner
+if not DOTNET test	scoop-expanded-separate				scoop025 tcf fail used_to_pass scoop multithreaded expanded execution
+if not DOTNET test	scoop-unnested-logging				scoop026 tcf pass scoop multithreaded execution
+if not DOTNET test	scoop-lock-passing-on-separate-creation		scoop027 tcf pass scoop multithreaded execution lock_passing
+if not DOTNET test	scoop-sequential-processor-creation		scoop028 tcf pass scoop multithreaded execution
+if not DOTNET test	scoop-recursive-processor-creation		scoop029 tcf pass scoop multithreaded execution
+if not DOTNET test	scoop-agent-validity				scoop030 tcf pass scoop multithreaded validity expanded agents conformance
+if not DOTNET test	scoop-agent-call				scoop031 tcf pass scoop multithreaded agents execution
+if not DOTNET test	scoop-corrupted-string				scoop032 tcf pass scoop multithreaded execution
+if not DOTNET test	scoop-lock-passing-same-target			scoop033 tcf pass scoop multithreaded execution lock_passing
+if not DOTNET test	scoop-corrupted-polymorphic-call		scoop034 tcf pass scoop multithreaded execution
+if not DOTNET test	scoop-null-reference-call			scoop035 tcf pass scoop multithreaded execution
+if not DOTNET test	scoop-nested-chain-uncontrolled-check		scoop036 tcf pass scoop multithreaded execution
+if not DOTNET test	scoop-run-time-crash				scoop037 tcf pass scoop multithreaded execution
+if not DOTNET test	scoop-agent-creation-rule			scoop038 tcf pass scoop multithreaded agents
+if not DOTNET test	scoop-agent-expression-uncontrolled		scoop039 tcf pass scoop multithreaded agents
+if not DOTNET test	scoop-agent-expression-controlled		scoop040 tcf pass scoop multithreaded agents
+if not DOTNET test	scoop-wait-condition-controlled			scoop041 tcf manual scoop multithreaded execution lock_passing assertion
+if not DOTNET test	scoop-exceptions-precondition			scoop042 tcf pass scoop multithreaded exception
+if not DOTNET test	scoop-exceptions-control-flow			scoop043 tcf pass scoop multithreaded exception
+if not DOTNET test	scoop-exceptions-separate-callback		scoop044 tcf pass scoop multithreaded exception
+if not DOTNET test	scoop-exceptions-accountability-handover	scoop045 tcf pass scoop multithreaded exception
+if not DOTNET test	scoop-exceptions-small-tests			scoop046 tcf pass scoop multithreaded exception
+if not DOTNET test	scoop-exceptions-import				scoop047 tcf fail scoop multithreaded exception
+if not DOTNET test	scoop-exceptions-combinations			scoop048 tcf pass scoop multithreaded exception
+if not DOTNET test	scoop-impersonation-lockpassing			scoop049 tcf pass scoop multithreaded deadlock lock_passing
+if not DOTNET test	scoop-lockpassing-query					scoop050 tcf pass scoop multithreaded deadlock lock_passing
+if not DOTNET test	scoop-nested-separate-callback			scoop051 tcf pass scoop multithreaded deadlock lock_passing
+if not DOTNET test 	scoop-exceptions-unlock					scoop052 tcf pass scoop multithreaded exception deadlock
+if not DOTNET test	scoop-exceptions-dispose			scoop053 tcf fail scoop multithreaded exception execution
+if not DOTNET test	scoop-named-tuple-validity			scoop054 tcf pass scoop multithreaded tuple validity
+if not DOTNET test	scoop-separate-instruction-fresh-id		scoop055 tcf pass scoop multithreaded validity
+if not DOTNET test	scoop-separate-instruction-dependent-arguments	scoop056 tcf pass scoop multithreaded validity
+if not DOTNET test	scoop-separate-instruction-non-separate		scoop057 tcf pass scoop multithreaded validity
+if not DOTNET test	scoop-separate-instruction-execution		scoop058 tcf pass scoop multithreaded execution
+if not DOTNET test	scoop-gc-stress-test				scoop059 tcf pass scoop multithreaded execution
+if not DOTNET test	scoop-assigner-command-validity			scoop060 tcf pass scoop multithreaded assigner validity
+if not DOTNET test	scoop-named-tuple-execution			scoop061 tcf pass scoop multithreaded tuple assigner execution
+if not DOTNET test	scoop-generating-type-deadlock		scoop062 tcf manual scoop multithreaded
+if not DOTNET test	scoop-conformance				scoop063 tcf pass scoop multithreaded generic conformance object_test execution
+if not DOTNET test	scoop-agent-with-reference-argument		scoop064 tcf manual scoop multithreaded agent execution
+if not DOTNET test	scoop-impersonation-tests				scoop065 tcf pass scoop multithreaded execution
+if not DOTNET test	scoop-passive-processors			scoop066 tcf pass scoop multithreaded
+if not DOTNET test	scoop-passive-processor-exception		scoop067 tcf pass scoop multithreaded exception
+if not DOTNET test	scoop-estring_crash						scoop068 tcf fail scoop multithreaded execution
+if not DOTNET test	scoop-generic-argument-check			scoop069 tcf pass scoop multithreaded validity
+if not DOTNET test	scoop-impersonation-region-id			scoop070 tcf pass scoop multithreaded execution
+if not DOTNET test	scoop-once-value-adoption				scoop071 tcf pass scoop multithreaded execution
+if not DOTNET test	scoop-asynchronous-expanded				scoop072 tcf pass scoop multithreaded execution
+if not DOTNET test	scoop-locking-expanded-argument			scoop073 tcf pass scoop multithreaded execution
+if not DOTNET test	scoop-controlled-object-test			scoop074 tcf pass scoop multithreaded object_test validity execution
+if not DOTNET test	scoop-temporary-pointer-variable		scoop075 tcf pass scoop multithreaded execution
+if not DOTNET test	scoop-callback-region-adoption			scoop076 tcf pass scoop multithreaded execution
+if not DOTNET test	scoop-across-iteration-loop			scoop077 tcf pass scoop multithreaded execution across iteration loop validity
+if not DOTNET test	scoop-creation-class-invariant			scoop078 tcf pass scoop multithreaded execution invariant assertion
+if not DOTNET test	scoop-creation-exception-access			scoop079 tcf fail scoop multithreaded execution creation exception
+if not DOTNET test	scoop-separate-call-class-invariant		scoop080 tcf pass scoop multithreaded execution invariant assertion 
+if not DOTNET test	scoop-recursive-precondition			scoop081 tcf pass scoop multithreaded execution precondition assertion
 
 test	deadlock-simple-symmetric-cycle			deadlock001 tcf manual scoop multithreaded deadlock
 test	deadlock-simple-asymmetric-cycle		deadlock002 tcf manual scoop multithreaded deadlock

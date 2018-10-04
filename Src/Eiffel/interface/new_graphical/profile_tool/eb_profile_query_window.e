@@ -251,7 +251,8 @@ feature {EB_SAVE_RESULT_CMD} -- Save commands
 			pft_not_void: ptf /= Void
 			pft_closed: ptf.is_closed
 		local
-			a_string: STRING
+			a_string: STRING_32
+			utf: UTF_CONVERTER
 			i: INTEGER
 			current_row: EV_GRID_ROW
 		do
@@ -266,7 +267,7 @@ feature {EB_SAVE_RESULT_CMD} -- Save commands
 				append_row_to_string (current_row, a_string)
 				i := i + 1
 			end
-			ptf.put_string (a_string)
+			ptf.put_string (utf.utf_32_string_to_utf_8_string_8 (a_string))
 			ptf.put_new_line
 			ptf.close
 		end
@@ -290,8 +291,8 @@ feature -- Status Setting
 			i, j, k, l: INTEGER
 			profile_set: PROFILE_SET
 			profile_set_count: INTEGER
-			quick_sorter: DS_ARRAY_QUICK_SORTER [EB_PROFILE_QUERY_GRID_ROW]
-			equality_tester: AGENT_BASED_EQUALITY_TESTER [EB_PROFILE_QUERY_GRID_ROW]
+			quick_sorter: QUICK_SORTER [EB_PROFILE_QUERY_GRID_ROW]
+			equality_tester: AGENT_EQUALITY_TESTER [EB_PROFILE_QUERY_GRID_ROW]
 			current_profile_data: PROFILE_DATA
 			function: EIFFEL_FUNCTION
 			last_cluster_string: STRING
@@ -314,23 +315,23 @@ feature -- Status Setting
 
 				-- Now assign information from `profiler_options' to BOOLEAN
 				-- attributes for speed and ease of use when querying.
-			if profiler_options.output_names.valid_index (i) and then profiler_options.output_names.item (i).is_equal (profiler_calls) then
+			if profiler_options.output_names.valid_index (i) and then profiler_options.output_names.item (i).same_string (profiler_calls) then
 				show_calls := True
 				i := i + 1
 			end
-			if profiler_options.output_names.valid_index (i) and then profiler_options.output_names.item (i).is_equal (profiler_self) then
+			if profiler_options.output_names.valid_index (i) and then profiler_options.output_names.item (i).same_string (profiler_self) then
 				show_self := True
 				i := i + 1
 			end
-			if profiler_options.output_names.valid_index (i) and then profiler_options.output_names.item (i).is_equal (profiler_descendants) then
+			if profiler_options.output_names.valid_index (i) and then profiler_options.output_names.item (i).same_string (profiler_descendants) then
 				show_descendents := True
 				i := i + 1
 			end
-			if profiler_options.output_names.valid_index (i) and then profiler_options.output_names.item (i).is_equal (profiler_total) then
+			if profiler_options.output_names.valid_index (i) and then profiler_options.output_names.item (i).same_string (profiler_total) then
 				show_total := True
 				i := i + 1
 			end
-			if profiler_options.output_names.valid_index (i) and then profiler_options.output_names.item (i).is_equal (profiler_percentage) then
+			if profiler_options.output_names.valid_index (i) and then profiler_options.output_names.item (i).same_string (profiler_percentage) then
 				show_percentage := True
 				i := i + 1
 			end
@@ -362,11 +363,10 @@ feature -- Status Setting
 			profile_set_count := profile_set.c_profiling_list.count + profile_set.cycle_profiling_list.count + profile_set.eiffel_profiling_list.count
 
 				-- Store the flat profile information.
-			create profile_array.make (1, profile_set_count)
+			create profile_array.make (profile_set_count)
 			from
 				profile_set := pi.profile_data
 				profile_set.start
-				i := 1
 			until
 				profile_set.after
 			loop
@@ -385,8 +385,7 @@ feature -- Status Setting
 					create query_grid_item.make_node (current_profile_data.function.name, current_profile_data, 5)
 				end
 				query_grid_item.set_values (current_profile_data.calls, current_profile_data.self, current_profile_data.descendants, current_profile_data.total, current_profile_data.percentage)
-				profile_array.put (query_grid_item, i)
-				i := i + 1
+				profile_array.force (query_grid_item)
 				profile_set.forth
 			end
 
@@ -397,24 +396,23 @@ feature -- Status Setting
 			quick_sorter.sort (profile_array)
 
 				-- Store the tree profile information needed for the tree mode.
-			from
-				create cluster_array.make_empty
-				create class_array.make_empty
-				create feature_array.make_empty
-				create c_functions_array.make_empty
-				create cyclic_functions_array.make_empty
-				create root_nodes_array.make_empty
-				i := 1
-				cluster_lower := 1
-				class_lower := 1
-				class_upper := 1
-				cluster_upper := 1
-				last_cluster_string := ""
-				last_class_id := 0
-			until
-				i > profile_array.count
+			create cluster_array.make_empty
+			create class_array.make_empty
+			create feature_array.make_empty
+			create c_functions_array.make_empty
+			create cyclic_functions_array.make_empty
+			create root_nodes_array.make_empty
+			i := 1
+			cluster_lower := 1
+			class_lower := 1
+			class_upper := 1
+			cluster_upper := 1
+			last_cluster_string := ""
+			last_class_id := 0
+			across
+				profile_array as ic
 			loop
-				if attached {EIFFEL_PROFILE_DATA} (profile_array.item (i)).profile_data as current_eiffel_profile_data then
+				if attached {EIFFEL_PROFILE_DATA} ic.item.profile_data as current_eiffel_profile_data then
 					function := current_eiffel_profile_data.function
 					if function.class_c /= Void then
 						current_cluster_string := function.class_c.group.name
@@ -455,7 +453,7 @@ feature -- Status Setting
 					last_class_id := current_class_id
 					class_lower := class_lower + 1
 				else
-					current_profile_data := (profile_array.item (i)).profile_data
+					current_profile_data := ic.item.profile_data
 					if attached {C_PROFILE_DATA} current_profile_data as current_c_profile_data then
 						create query_grid_item.make_node (current_c_profile_data.function.name, current_c_profile_data, 5)
 						query_grid_item.set_values (current_c_profile_data.calls, current_c_profile_data.self, current_c_profile_data.descendants, current_c_profile_data.total, current_c_profile_data.percentage)
@@ -473,7 +471,6 @@ feature -- Status Setting
 					end
 
 				end
-				i := i + 1
 			end
 
 				-- The loop does not handle the upper of the final items, so
@@ -620,7 +617,7 @@ feature {NONE} -- Implementation
 		-- physical column index as displayed in `Current'.
 		-- If a column is not shown, its entry is zero.
 
-	profile_array: ARRAY [EB_PROFILE_QUERY_GRID_ROW]
+	profile_array: ARRAYED_LIST [EB_PROFILE_QUERY_GRID_ROW]
 		-- All grid rows used in the flat list mode.
 
 	cluster_array: ARRAY [EB_PROFILE_QUERY_GRID_ROW]
@@ -720,24 +717,20 @@ feature {NONE} -- Implementation
 			end
 			if not tree_structure_enabled then
 				output_grid.disable_tree
-				from
-					i := 1
-				until
-					i > profile_array.count
+				i := 1
+				across
+					profile_array as ic
 				loop
-					query_grid_row := profile_array.item (i)
+					query_grid_row := ic.item
 					fill_grid_row (query_grid_row, i)
 					i := i + 1
 				end
 			else
 				output_grid.enable_tree
-				from
-					i := 1
-				until
-					i > root_nodes_array.count
+				across
+					root_nodes_array as ic
 				loop
-					(root_nodes_array.item (i)).display_agent.call ([root_nodes_array.item (i)])
-					i := i + 1
+					ic.item.display_agent.call ([ic.item])
 				end
 			end
 
@@ -1037,8 +1030,8 @@ feature {NONE} -- Implementation
 			flat_mode_enabled: not tree_structure_enabled
 			valid_column_index: column_index >= min_column_index and column_index <= max_column_index
 		local
-			quick_sorter: DS_ARRAY_QUICK_SORTER [EB_PROFILE_QUERY_GRID_ROW]
-			equality_tester: AGENT_BASED_EQUALITY_TESTER [EB_PROFILE_QUERY_GRID_ROW]
+			quick_sorter: QUICK_SORTER [EB_PROFILE_QUERY_GRID_ROW]
+			equality_tester: AGENT_EQUALITY_TESTER [EB_PROFILE_QUERY_GRID_ROW]
 		do
 			create equality_tester.make (agent compare_profile_query_grid_rows (?, ?, column_index, ascending))
 			create quick_sorter.make (equality_tester)
@@ -1054,26 +1047,19 @@ feature {NONE} -- Implementation
 		local
 			quick_sorter: DS_ARRAY_QUICK_SORTER [EB_PROFILE_QUERY_GRID_ROW]
 			equality_tester: AGENT_BASED_EQUALITY_TESTER [EB_PROFILE_QUERY_GRID_ROW]
-			i: INTEGER
 		do
 			create equality_tester.make (agent compare_profile_query_grid_rows (?, ?, column_index, ascending))
 			create quick_sorter.make (equality_tester)
 			quick_sorter.sort (cluster_array)
-			from
-				i := 1
-			until
-				i > cluster_array.upper
+			across
+				cluster_array as ic
 			loop
-				quick_sorter.subsort (class_array, (cluster_array.item (i)).child_node_lower_index, (cluster_array.item (i)).child_node_upper_index)
-				i := i + 1
+				quick_sorter.subsort (class_array, ic.item.child_node_lower_index, ic.item.child_node_upper_index)
 			end
-			from
-				i := 1
-			until
-				i > class_array.upper
+			across
+				class_array as ic
 			loop
-				quick_sorter.subsort (feature_array, (class_array.item (i)).child_node_lower_index, (class_array.item (i)).child_node_upper_index)
-				i := i + 1
+				quick_sorter.subsort (feature_array, ic.item.child_node_lower_index, ic.item.child_node_upper_index)
 			end
 			quick_sorter.sort (root_nodes_array)
 		end
@@ -1331,7 +1317,7 @@ feature {NONE} -- Implementation
 			i: INTEGER
 			j: INTEGER
 			current_row: EV_GRID_ROW
-			clipboard_text: STRING
+			clipboard_text: STRING_32
 		do
 			if a_key.code = key_a and then ev_application.ctrl_pressed then
 					-- Select all rows in `output_grid'.
@@ -1401,7 +1387,7 @@ feature {NONE} -- Implementation
 				(output_grid.virtual_y_position + (output_grid.row_height * line_count)).min (output_grid.maximum_virtual_y_position).max (0))
 		end
 
-	append_row_to_string (a_row: EV_GRID_ROW; a_string: STRING)
+	append_row_to_string (a_row: EV_GRID_ROW; a_string: STRING_32)
 			-- Append output version of `a_row' to `string'.
 		require
 			a_row_not_void: a_row /= Void
@@ -1430,7 +1416,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	full_feature_path (query_grid_row: EB_PROFILE_QUERY_GRID_ROW): STRING
+	full_feature_path (query_grid_row: EB_PROFILE_QUERY_GRID_ROW): STRING_32
 			-- `Result' is expanded version of the the name a associated
 			-- with `query_grid_row'. For Eiffel features, this is the full cluster,
 			-- class and feature name.
@@ -1442,9 +1428,9 @@ feature {NONE} -- Implementation
 		do
 			Result := ""
 			if query_grid_row.type = 4 then
-				Result.append (query_grid_row.cluster_text)
-				Result.append (query_grid_row.class_text)
-				Result.append (query_grid_row.feature_text)
+				Result.append_string_general (query_grid_row.cluster_text)
+				Result.append_string_general (query_grid_row.class_text)
+				Result.append_string_general (query_grid_row.feature_text)
 			else
 				if attached {EIFFEL_PROFILE_DATA} query_grid_row.profile_data as eiffel_profile_data then
 					function := eiffel_profile_data.function

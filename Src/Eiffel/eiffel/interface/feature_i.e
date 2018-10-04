@@ -2313,6 +2313,16 @@ feature -- Signature checking
 				then
 					error_handler.insert_error (create {VRVA}.make_invalid_type (Current, a_context_class, written_class, l_type))
 				end
+					-- A generic class can't have a once creation procedure
+				if is_once and then a_context_class.is_generic then
+					error_handler.insert_error (create {VGCC10}.make_invalid_context (Current, a_context_class, written_class))
+				end
+			else
+					-- For an inherited once feature, we check if it's part of the creations procedures.
+					-- In that case we raise an issue since once creation procedures must be immediates (not inherited)
+				if is_once and then	attached a_context_class.creators as l_creators and then l_creators.has (Current.feature_name) then
+					error_handler.insert_error (create {VGCC9}.make_invalid_context (Current, a_context_class, written_class))
+				end
 			end
 
 				-- For an inherited attributem we make sure that it is not inherited in a user defined
@@ -3392,12 +3402,43 @@ feature -- C code generation
 			l_byte_code: BYTE_CODE
 			tmp_body_index: INTEGER
 			l_byte_context: like byte_context
+			l_assign: ASSIGN_B
+			l_compound: BYTE_LIST [BYTE_NODE]
 		do
 			if used then
 				tmp_body_index := body_index
 				l_byte_code := tmp_opt_byte_server.disk_item (tmp_body_index)
 				if l_byte_code = Void then
 					l_byte_code := byte_server.disk_item (tmp_body_index)
+				end
+
+					-- If the current feature is a once creation procedure
+					-- We generate the creation procedure as a function.
+				if
+					Current.is_once and then
+					attached class_type.associated_class.creators as l_creators and then
+					l_creators.has (Current.feature_name)
+				then
+						-- Generate the C once factory function for once creation procedures
+					create l_assign
+					l_assign.set_target (create {RESULT_B})
+					l_assign.set_source (create {CURRENT_B})
+					create l_compound.make (l_byte_code.compound.count + 1)
+
+					from
+						l_byte_code.compound.start
+					until
+						l_byte_code.compound.off
+					loop
+						l_compound.force (l_byte_code.compound.item_for_iteration)
+						l_byte_code.compound.forth
+					end
+					l_compound.force (l_assign)
+
+					if attached {ONCE_BYTE_CODE} l_byte_code as l_once_byte_code then
+						l_once_byte_code.set_compound (l_compound)
+					end
+					l_byte_code.set_result_type (class_type.associated_class.actual_type)
 				end
 
 				prepare_object_relative_once (l_byte_code)

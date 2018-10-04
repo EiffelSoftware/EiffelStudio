@@ -260,6 +260,14 @@ feature {NONE} -- Array optimization
 			Result := System.remover.array_optimizer
 		end
 
+feature -- Once creation procedure
+
+	enable_instance_free
+			-- Set current routine as instance free in the context of Once creation procedure
+		do
+			is_instance_free := True
+		end
+
 feature -- Inlining
 
 	inlined_byte_code: ACCESS_B
@@ -598,7 +606,7 @@ feature {NONE} -- Normalization of types
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

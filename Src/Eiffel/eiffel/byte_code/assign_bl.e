@@ -173,6 +173,18 @@ feature
 			expr_b: EXPR_B
 			saved_context: like context
 		do
+				-- If the source is a creation_exp_b and it's a once creation procedure
+				-- Analize it as a instance free call.
+			if
+				is_creation_instruction and then attached {CREATION_EXPR_B} source as l_source and then
+				attached {FEATURE_B} l_source.call as l_featureb and then l_featureb.is_once
+			then
+				l_featureb.set_precursor_type (l_source.info.type_to_create.actual_type)
+				l_featureb.enable_instance_free
+				l_featureb.set_type (l_source.info.type_to_create.actual_type)
+				set_source (l_source.call)
+			end
+
 			target_type := context.real_type (target.type)
 
 				-- The target is always expanded in-line for de-referencing.
@@ -417,7 +429,9 @@ feature
 				-- simple expression.
 				-- Note that this does not mean the target was predefined
 				-- (e.g. with a Result := "string").
-			if not (target_propagated and source.stored_register = target) then
+			if attached {FEATURE_BW} source as l_source and then l_source.is_instance_free then
+				-- Do nothing.	
+			elseif not (target_propagated and source.stored_register = target) then
 				generate_normal_assignment (how)
 			end
 		end

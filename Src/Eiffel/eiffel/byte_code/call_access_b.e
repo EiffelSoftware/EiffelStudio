@@ -456,6 +456,9 @@ feature {NONE} -- C code generation
 				buf.put_string_literal (feature_name)
 				buf.put_two_character (',', ' ')
 				t.print_register
+			elseif attached {FEATURE_B} Current as l_current and then l_current.is_once and then call_kind_creation = call_kind then
+					-- The current feature is a once creation procedure, we use the return type as a instance free call.
+				buf.put_static_type_id (cl_type_i.static_type_id (context.context_class_type.type))
 			else
 				buf.put_string ({C_CONST}.dtype)
 				buf.put_character ('(')
@@ -618,7 +621,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

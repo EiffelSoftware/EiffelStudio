@@ -57,50 +57,52 @@ feature -- Process
 			-- Process `a_item'.
 		local
 			l_conf_group: CONF_GROUP
-			l_cluster: CONF_CLUSTER
-			l_library: CONF_LIBRARY
-			l_assembly: CONF_ASSEMBLY
-			l_phys_as: CONF_PHYSICAL_ASSEMBLY
-			l_group_set: SEARCH_TABLE [CONF_GROUP]
 			l_list: ARRAYED_LIST [CONF_GROUP]
 		do
 			l_conf_group := a_item.group
 			if l_conf_group.is_cluster then
-				l_cluster ?= l_conf_group
-				l_group_set := l_cluster.dependencies
-				if l_group_set /= Void then
-					create l_list.make (l_group_set.count)
-					from
-						l_group_set.start
-					until
-						l_group_set.after
-					loop
-						l_list.extend (l_group_set.item_for_iteration)
-						l_group_set.forth
+				if attached {CONF_CLUSTER} l_conf_group as l_cluster then
+					if attached l_cluster.dependencies as l_group_set then
+						create l_list.make (l_group_set.count)
+						from
+							l_group_set.start
+						until
+							l_group_set.after
+						loop
+							l_list.extend (l_group_set.item_for_iteration)
+							l_group_set.forth
+						end
+						process_groups_from_list (l_list, a_item)
 					end
-					process_groups_from_list (l_list, a_item)
+				else
+					check is_cluster: False end
 				end
 			elseif l_conf_group.is_library then
-				l_library ?= l_conf_group
-				if l_library.library_target /= Void then
-					process_groups_from_target (l_library.library_target, a_item, agent evaluate_item)
+				if attached {CONF_LIBRARY} l_conf_group as l_library then
+					if attached l_library.library_target as l_library_target then
+						process_groups_from_target (l_library_target, a_item, agent evaluate_item)
+					end
+				else
+					check is_library: False end
 				end
 			elseif l_conf_group.is_assembly then
-				l_assembly ?= l_conf_group
-				check
-					assembly: l_assembly /= Void
-				end
-				l_phys_as ?= l_assembly.physical_assembly
-				if l_phys_as /= Void and then l_phys_as.dependencies /= Void then
-					process_groups_from_list (l_phys_as.dependencies.linear_representation, a_item)
+				if attached {CONF_ASSEMBLY} l_conf_group as l_assembly then
+					if
+						attached {CONF_PHYSICAL_ASSEMBLY} l_assembly.physical_assembly as l_phys_as and then
+						attached l_phys_as.dependencies as l_deps
+					then
+						process_groups_from_list (l_deps.linear_representation, a_item)
+					end
+				else
+					check is_assembly: False end
 				end
 			elseif l_conf_group.is_physical_assembly then
-				l_phys_as ?= l_conf_group
-				check
-					physical_assembly: l_phys_as /= Void
-				end
-				if l_phys_as.dependencies /= Void then
-					process_groups_from_list (l_phys_as.dependencies.linear_representation, a_item)
+				if attached {CONF_PHYSICAL_ASSEMBLY} l_conf_group as l_phys_as then
+					if attached l_phys_as.dependencies as l_deps then
+						process_groups_from_list (l_deps.linear_representation, a_item)
+					end
+				else
+					check is_physical_assembly: False end
 				end
 			end
 		end
@@ -207,7 +209,7 @@ feature{NONE} -- Implementation/Criterion interaction
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

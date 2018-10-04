@@ -2120,6 +2120,10 @@ feature {NONE} -- Implementation
 									if attached {EXTERNAL_B} l_access as l_ext then
 										l_ext.enable_static_call
 									end
+								elseif l_feature.is_once and then attached l_feature.written_class.creators as l_found_creators and then l_found_creators.has (l_feature.feature_name) then
+										-- If a feature call is a once creation procedure we handle it as instance free.
+									l_generated_result_type := a_type
+									create {FEATURE_B} l_access.make (l_feature, l_generated_result_type, a_type, True)
 								else
 									if l_is_multiple_constraint_case then
 										check not l_last_constrained.is_formal end
@@ -3673,6 +3677,7 @@ feature {NONE} -- Visitor
 					end
 
 					l_feat_type := f.type
+
 					if l_feat_type.is_initialization_required then
 							-- Verify that result is properly set in internal routine if required.
 						if
@@ -3838,11 +3843,24 @@ feature {NONE} -- Visitor
 			l_cursor: INTEGER
 			l_list: BYTE_LIST [BYTE_NODE]
 			e: like {ERROR_HANDLER}.error_level
+			is_once_creation_procedure: BOOLEAN
+			l_assign: ASSIGN_B
 		do
 			if is_byte_node_enabled then
 					-- Initialize result byte node.
 				if b = Void then
-					create l_list.make (l_as.count)
+						-- If the current feature is a once creation procedure
+						-- We generate the creation procedure as a function.
+					if
+						current_feature.is_once and then
+						attached context.current_class.creators as l_creators and then
+						l_creators.has (current_feature.feature_name)
+					then
+						is_once_creation_procedure := True
+						create l_list.make (l_as.count + 1)
+					else
+						create l_list.make (l_as.count)
+					end
 				else
 					l_list := b
 				end
@@ -3869,6 +3887,12 @@ feature {NONE} -- Visitor
 			end
 			l_as.go_i_th (l_cursor)
 			if is_byte_node_enabled then
+				if is_once_creation_procedure then
+					create l_assign
+					l_assign.set_target (create {RESULT_B})
+					l_assign.set_source (create {CURRENT_B})
+					l_list.extend (l_assign)
+				end
 				last_byte_node := l_list
 			end
 		end
@@ -6577,26 +6601,34 @@ feature {NONE} -- Visitor
 				context.current_class.extend_type_set (l_info.routine_id)
 			end
 
-			create l_creation_expr
-			l_creation_expr.set_is_active (l_is_active)
-			l_creation_expr.set_info (l_create_info)
-				-- When this is not `default_create'.
-			if l_call_access /= Void then
-				l_creation_expr.set_call (l_call_access)
-				l_creation_expr.set_multi_constraint_static (l_call_access.multi_constraint_static)
-			end
+			if attached {FEATURE_B} l_call_access  as l_call_access_b  and then l_call_access_b.is_once and then l_call_access.is_instance_free then
+					-- If the feature is a once creation procedure we generate it as an instance free call.
+				create l_assign
+				l_assign.set_target (l_access)
+				l_assign.set_source (l_call_access)
+				l_assign.set_line_number (l.line)
+			else
+				create l_creation_expr
+				l_creation_expr.set_is_active (l_is_active)
+				l_creation_expr.set_info (l_create_info)
+					-- When this is not `default_create'.
+				if l_call_access /= Void then
+					l_creation_expr.set_call (l_call_access)
+					l_creation_expr.set_multi_constraint_static (l_call_access.multi_constraint_static)
+				end
 
-			check t /= Void end
-			l_creation_expr.set_type (t)
-			l_creation_expr.set_creation_instruction (True)
-			l_creation_expr.set_line_number (l.line)
+				check t /= Void end
+				l_creation_expr.set_type (t)
+				l_creation_expr.set_creation_instruction (True)
+				l_creation_expr.set_line_number (l.line)
 
-			create l_assign
-			l_assign.set_target (l_access)
-			l_assign.set_source (l_creation_expr)
-			l_assign.set_line_number (l.line)
-			check
-				l_assign.is_creation_instruction
+				create l_assign
+				l_assign.set_target (l_access)
+				l_assign.set_source (l_creation_expr)
+				l_assign.set_line_number (l.line)
+				check
+					l_assign.is_creation_instruction
+				end
 			end
 
 			last_byte_node := l_assign

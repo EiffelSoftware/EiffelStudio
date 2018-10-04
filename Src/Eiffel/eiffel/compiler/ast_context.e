@@ -795,8 +795,15 @@ feature -- Setting
 			byte_code.set_feature_name_id (current_feature.feature_name_id)
 				-- Feature id
 			byte_code.set_body_index (current_feature.body_index)
-				-- Result type if any
-			byte_code.set_result_type (current_feature.type)
+
+			if current_feature.is_once and then current_class.valid_creation_procedure_32 (current_feature.feature_name_32) then
+					-- Result type iff current_feature is once creation procedure
+				byte_code.set_result_type (current_class.actual_type.actual_type)
+			else
+					-- Result type if any
+				byte_code.set_result_type (current_feature.type)
+			end
+
 				-- Routine id
 			byte_code.set_rout_id (current_feature.rout_id_set.first)
 				-- Written_id
@@ -1030,7 +1037,7 @@ invariant
 	object_test_locals_attached: object_test_locals /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

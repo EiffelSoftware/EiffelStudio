@@ -429,9 +429,7 @@ feature
 				-- simple expression.
 				-- Note that this does not mean the target was predefined
 				-- (e.g. with a Result := "string").
-			if attached {FEATURE_BW} source as l_source and then l_source.is_instance_free then
-				-- Do nothing.	
-			elseif not (target_propagated and source.stored_register = target) then
+			if not (target_propagated and source.stored_register = target) then
 				generate_normal_assignment (how)
 			end
 		end

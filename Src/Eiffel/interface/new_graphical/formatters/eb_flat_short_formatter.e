@@ -152,7 +152,7 @@ feature -- Status setting
 	set_classi (a_class: CLASS_I)
 			-- Associate current formatter with non-compiled `a_class'.
 		do
-			class_i ?= a_class
+			class_i := {like class_i} / a_class
 			class_cmd := Void
 			must_format := True
 			format

@@ -159,7 +159,7 @@ feature -- Status setting
 		require
 			a_class_not_void: a_class /= Void
 		do
-			class_i ?= a_class
+			class_i := {like class_i} / a_class
 			class_cmd := Void
 			must_format := True
 			format

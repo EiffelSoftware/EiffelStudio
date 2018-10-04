@@ -35,47 +35,47 @@ feature -- Execution
 	work
 			-- Execute Current command.	
 		local
-			l_domain: QL_FEATURE_DOMAIN
+			l_domain: QL_DOMAIN
 			l_formatter: like text_formatter
 			l_last_class: CLASS_C
 			l_feature: QL_FEATURE
 			l_is_first: BOOLEAN
 		do
 			text_formatter.add_new_line;
-			l_domain ?= query_class_item_from_class_c (current_class).wrapped_domain.new_domain (domain_generator)
-			check l_domain /= Void end
+			l_domain := query_class_item_from_class_c (current_class).wrapped_domain.new_domain (domain_generator)
 			if not l_domain.is_empty then
-				l_formatter := text_formatter
-				l_domain.sort (agent class_name_tester)
-				from
+				if attached {QL_FEATURE_DOMAIN} l_domain as l_feature_domain then
+					l_formatter := text_formatter
+					l_feature_domain.sort (agent class_name_tester)
 					l_is_first := True
-					l_domain.start
-				until
-					l_domain.after
-				loop
-					l_feature := l_domain.item
-					if l_last_class = Void or else l_last_class.class_id /= l_feature.written_class.class_id then
-						l_last_class := l_feature.written_class
-						if not l_is_first then
+					across
+						l_feature_domain as ic
+					loop
+						l_feature := ic.item
+						if l_last_class = Void or else l_last_class.class_id /= l_feature.written_class.class_id then
+							l_last_class := l_feature.written_class
+							if not l_is_first then
+								text_formatter.add_new_line
+							else
+								l_is_first := False
+							end
+							text_formatter.add (output_interface_names.class_word)
+							text_formatter.add_space
+							l_last_class.append_signature (text_formatter, True)
+							text_formatter.add (output_interface_names.colon)
 							text_formatter.add_new_line
-						else
-							l_is_first := False
+							text_formatter.add_new_line
 						end
-						text_formatter.add (output_interface_names.class_word)
-						text_formatter.add_space
-						l_last_class.append_signature (text_formatter, True)
-						text_formatter.add (output_interface_names.colon)
-						text_formatter.add_new_line
-						text_formatter.add_new_line
+						l_formatter.add_indent
+						if l_feature.is_real_feature then
+							display_feature (l_feature.e_feature, l_formatter)
+						else
+							l_formatter.add (l_feature.name)
+						end
+						l_formatter.add_new_line
 					end
-					l_formatter.add_indent
-					if l_feature.is_real_feature then
-						display_feature (l_feature.e_feature, l_formatter)
-					else
-						l_formatter.add (l_feature.name)
-					end
-					l_formatter.add_new_line
-					l_domain.forth
+				else
+					check is_feature_domain: False end
 				end
 			end
 		end
@@ -116,7 +116,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -129,22 +129,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class E_CLASS_FORMAT_CMD

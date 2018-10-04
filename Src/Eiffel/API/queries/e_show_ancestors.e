@@ -31,7 +31,7 @@ feature -- Execution
 		do
 			text_formatter.add_new_line;
 			l_class := query_class_item_from_class_c (current_class)
-			l_domain ?= system_target_domain.new_domain (domain_generator)
+			l_domain := {QL_CLASS_DOMAIN} / system_target_domain.new_domain (domain_generator)
 			check l_domain /= Void end
 			l_domain.compare_objects
 			l_domain.start
@@ -52,7 +52,6 @@ feature {NONE} -- Implementation
 			a_text_formatter_attached: a_text_formatter /= Void
 		local
 			l_any_id: INTEGER
-			l_list: LIST [QL_CLASS]
 			l_sorted_list: ARRAYED_LIST [QL_CLASS]
 		do
 			l_any_id := Eiffel_system.system.any_id
@@ -66,8 +65,7 @@ feature {NONE} -- Implementation
 			else
 				processed_class.put (a_class)
 				a_text_formatter.add_new_line
-				l_list ?= a_class.data
-				if l_list /= Void and then not l_list.is_empty then
+				if attached {LIST [QL_CLASS]} a_class.data as l_list and then not l_list.is_empty then
 					create l_sorted_list.make (l_list.count)
 					l_list.do_all (agent l_sorted_list.extend)
 					from
@@ -118,7 +116,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

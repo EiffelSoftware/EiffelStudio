@@ -342,21 +342,21 @@ feature -- Action
 			old_syntactical_suppliers: like syntactical_suppliers
 		do
 				-- Check that routine classes have an expected number of formal generics.
-			if system.routine_class_id = class_id then
-				if not attached ast_b.generics as g or else g.count /= 1 then
-					Error_handler.insert_error (create {SPECIAL_ERROR}.make ({SPECIAL_CONST}.routine_case_1, Current))
+			if attached system.routine_class as i and then attached i.compiled_class as c and then c.class_id = class_id then
+				if attached ast_b.generics as g implies g.count /= 1 then
+					error_handler.insert_error (create {SPECIAL_ERROR}.make ({SPECIAL_CONST}.routine_case_1, Current))
 				end
-			elseif system.predicate_class_id = class_id then
-				if not attached ast_b.generics as g or else g.count /= 1 then
-					Error_handler.insert_error (create {SPECIAL_ERROR}.make ({SPECIAL_CONST}.predicate_case_1, Current))
+			elseif attached system.predicate_class as i and then attached i.compiled_class as c and then c.class_id = class_id then
+				if attached ast_b.generics as g implies g.count /= 1 then
+					error_handler.insert_error (create {SPECIAL_ERROR}.make ({SPECIAL_CONST}.predicate_case_1, Current))
 				end
-			elseif system.procedure_class_id = class_id then
-				if not attached ast_b.generics as g or else g.count /= 1 then
-					Error_handler.insert_error (create {SPECIAL_ERROR}.make ({SPECIAL_CONST}.procedure_case_1, Current))
+			elseif attached system.procedure_class as i and then attached i.compiled_class as c and then c.class_id = class_id then
+				if attached ast_b.generics as g implies g.count /= 1 then
+					error_handler.insert_error (create {SPECIAL_ERROR}.make ({SPECIAL_CONST}.procedure_case_1, Current))
 				end
-			elseif system.function_class_id = class_id then
-				if not attached ast_b.generics as g or else g.count /= 2 then
-					Error_handler.insert_error (create {SPECIAL_ERROR}.make ({SPECIAL_CONST}.function_case_1, Current))
+			elseif attached system.function_class as i and then attached i.compiled_class as c and then c.class_id = class_id then
+				if attached ast_b.generics as g implies g.count /= 2 then
+					error_handler.insert_error (create {SPECIAL_ERROR}.make ({SPECIAL_CONST}.function_case_1, Current))
 				end
 			end
 				-- Check suppliers of parsed class represented by `ast_b'.
@@ -2174,7 +2174,7 @@ invariant
 	inline_agent_table_not_void: inline_agent_table /= Void
 
 note
-	ca_ignore: "CA033", "CA033 — very long class"
+	ca_ignore: "CA033", "CA033: very long class"
 	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

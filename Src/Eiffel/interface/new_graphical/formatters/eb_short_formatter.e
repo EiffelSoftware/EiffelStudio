@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Command to display the short version of a class."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -151,19 +151,7 @@ feature -- Status setting
 				set_dotnet_mode (False)
 				internal_consumed_type := Void
 			end
-			Precursor {EB_CLASS_TEXT_FORMATTER} (new_stone)
-		end
-
-	set_classi (a_class: CLASS_I)
-			-- Associate current formatter with `a_class'.
-		require
-			a_class_not_void: a_class /= Void
-		do
-			class_i := {like class_i} / a_class
-			class_cmd := Void
-			must_format := True
-			format
-			ensure_display_in_widget_owner
+			Precursor (new_stone)
 		end
 
 note
@@ -198,4 +186,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_SHORT_FORMATTER
+end

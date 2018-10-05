@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Objects which are recording IL code info at compilation time
 		the concerned information are :
@@ -220,7 +220,7 @@ feature -- Queries : eStudio data from debugger data
 			end
 		end
 
-	class_type_for_module_class_token (a_module_filename: STRING; a_class_token: NATURAL_32): CLASS_TYPE
+	class_type_for_module_class_token (a_module_filename: STRING; a_class_token: NATURAL_32): detachable CLASS_TYPE
 			-- CLASS_TYPE identified by `a_module_filename' and `a_class_token'
 		require
 			module_filename_valid: a_module_filename /= Void
@@ -283,14 +283,12 @@ feature -- Queries : eStudio data from debugger data
 	entry_point_feature_i: FEATURE_I
 			-- System entry point feature
 		local
-			l_class: CLASS_C
 			s: STRING
 		do
 				--| Update the root class info
 			s := System.root_creation_name
 			if not s.is_empty then
-				l_class := System.root_type.base_class
-				Result := l_class.feature_table.item (s)
+				Result := System.root_type.base_class.feature_table.item (s)
 			end
 		end
 
@@ -303,7 +301,6 @@ feature -- Access to module name computing
 			a_class_c_is_not_external: not a_class_c.is_external
 		local
 			l_assembly_name: STRING
-			l_module_filename: STRING
 			l_type_id: INTEGER
 			l_is_single_module: BOOLEAN
 		do
@@ -343,10 +340,8 @@ feature -- Access to module name computing
 				else
 					l_type_id := a_class_c.class_id // System.msil_classes_per_module + 1
 				end
-				l_module_filename := "module_" + l_type_id.out + ".dll"
-
 					--| There complete creation of module file name
-				Result := Result.extended (l_module_filename)
+				Result := Result.extended ("module_" + l_type_id.out + ".dll")
 			end
 		end
 
@@ -358,7 +353,6 @@ feature -- Access to module name computing
 			a_class_type_is_not_external: not a_class_type.is_external
 		local
 			l_assembly_name: STRING
-			l_module_filename: STRING
 			l_type_id: INTEGER
 			l_is_single_module: BOOLEAN
 		do
@@ -398,10 +392,8 @@ feature -- Access to module name computing
 				else
 					l_type_id := a_class_type.associated_class.class_id // System.msil_classes_per_module + 1
 				end
-				l_module_filename := "module_" + l_type_id.out + ".dll"
-
 					--| There complete creation of module file name
-				Result := Result.extended (l_module_filename)
+				Result := Result.extended ("module_" + l_type_id.out + ".dll")
 			end
 		end
 
@@ -485,21 +477,9 @@ feature {IL_DEBUG_INFO_RECORDER_EXPORTER} -- Queries : IL Offset data
 		require
 			class_type_not_void: a_class_type /= Void
 			feat_not_void: a_feat /= Void
-		local
-			l_il_offset_list: like feature_breakable_il_offsets
-			l_offsets_info: IL_OFFSET_SET
 		do
-			l_il_offset_list := feature_breakable_il_offsets (a_class_type, a_feat)
-			if l_il_offset_list /= Void then
-				from
-					l_il_offset_list.start
-				until
-					l_il_offset_list.after or Result
-				loop
-					l_offsets_info := l_il_offset_list.item.il_offset
-					Result := l_offsets_info.has (a_il_offset)
-					l_il_offset_list.forth
-				end
+			if attached feature_breakable_il_offsets (a_class_type, a_feat) as l_il_offset_list then
+				Result := across l_il_offset_list as o some o.item.il_offset.has (a_il_offset) end
 			end
 		end
 
@@ -509,23 +489,17 @@ feature {IL_DEBUG_INFO_RECORDER_EXPORTER} -- Queries : IL Offset data
 			class_type_not_void: a_class_type /= Void
 			feat_not_void: a_feat /= Void
 		local
-			l_il_offset_list: like feature_breakable_il_offsets
 			l_offsets_info: IL_OFFSET_SET
 			l_offset_before: INTEGER
-			l_breakable_line: INTEGER
 			o: INTEGER
 			i, upper: INTEGER
 		do
-			l_il_offset_list := feature_breakable_il_offsets (a_class_type, a_feat)
-			if l_il_offset_list /= Void then
-				from
-					l_breakable_line := 0
-					l_offset_before := -1
-					l_il_offset_list.start
-				until
-					l_il_offset_list.after
+			if attached feature_breakable_il_offsets (a_class_type, a_feat) as l_il_offset_list then
+				l_offset_before := -1
+				across
+					l_il_offset_list as l
 				loop
-					l_offsets_info := l_il_offset_list.item.il_offset
+					l_offsets_info := l.item.il_offset
 					if not l_offsets_info.is_empty then
 						from
 							i := l_offsets_info.lower
@@ -536,15 +510,13 @@ feature {IL_DEBUG_INFO_RECORDER_EXPORTER} -- Queries : IL Offset data
 							o := l_offsets_info.item (i)
 							if o <= a_il_offset and o > l_offset_before then
 								l_offset_before := o
-								l_breakable_line := l_il_offset_list.index - 1 --| LIST.first.index = 1
+								Result := l.target_index - 1 --| LIST.first.index = 1
 							end
 							i := i + 1
 						end
 					end
-					l_il_offset_list.forth
 				end
 			end
-			Result := l_breakable_line
 		end
 
 	approximate_feature_breakable_il_offset_for (a_class_type: CLASS_TYPE; a_feat: FEATURE_I; a_il_offset: INTEGER): INTEGER
@@ -570,7 +542,7 @@ feature {IL_DEBUG_INFO_RECORDER_EXPORTER} -- Queries : IL Offset data
 			end
 		end
 
-feature {IL_DEBUG_INFO_RECORDER_EXPORTER} -- Queries : IL Offset data
+feature {IL_DEBUG_INFO_RECORDER_EXPORTER} -- Queries : IL Offset data for lines
 
 	feature_breakable_il_line_for (a_class_type: CLASS_TYPE; a_feat: FEATURE_I;
 				a_breakable_line_number: INTEGER): IL_OFFSET_SET
@@ -651,20 +623,16 @@ feature {NONE} -- line debug exploitation
 			class_type_not_void: a_class_type /= Void
 			feat_not_void: a_feat /= Void
 		local
-			l_il_offset_list: like feature_breakable_il_offsets
 			l_offsets_info: IL_OFFSET_SET
 			i, upper: INTEGER
 		do
-			l_il_offset_list := feature_breakable_il_offsets (a_class_type, a_feat)
-			if l_il_offset_list /= Void then
-				from
-					create {SORTED_TWO_WAY_LIST [INTEGER]} Result.make
-						--| +2 : in case we have loop with variant + invariant
-					l_il_offset_list.start
-				until
-					l_il_offset_list.after
+			if attached feature_breakable_il_offsets (a_class_type, a_feat) as l_il_offset_list then
+				create {SORTED_TWO_WAY_LIST [INTEGER]} Result.make
+					--| +2 : in case we have loop with variant + invariant
+				across
+					l_il_offset_list as o
 				loop
-					l_offsets_info := l_il_offset_list.item.il_offset
+					l_offsets_info := o.item.il_offset
 					if not l_offsets_info.is_empty then
 						from
 							i := l_offsets_info.lower
@@ -676,7 +644,6 @@ feature {NONE} -- line debug exploitation
 							i := i + 1
 						end
 					end
-					l_il_offset_list.forth
 				end
 			end
 		end
@@ -794,10 +761,8 @@ feature {CIL_CODE_GENERATOR} -- Token recording
 					a_feature: FEATURE_I; a_class_c: CLASS_C)
 			--  Record `_done' `_result' and `_exception' tokens for once `a_once_name' from `a_class_type'.
 		local
-			l_class_types: LIST [CLASS_TYPE]
 			l_data_class_token,
 			l_once_done_token, l_once_result_token, l_once_exception_token: NATURAL_32
-			c: CURSOR
 		do
 			debug ("refactor_fixme")
 				fixme ("[
@@ -813,22 +778,14 @@ feature {CIL_CODE_GENERATOR} -- Token recording
 			l_once_result_token := a_once_result_token.as_natural_32
 			l_once_exception_token := a_once_exception_token.as_natural_32
 
-			if
-				is_debug_info_enabled
-			then
-				from
-					l_class_types := a_class_c.types
-					c := l_class_types.cursor
-					l_class_types.start
-				until
-					l_class_types.after
+			if is_debug_info_enabled then
+				across
+					a_class_c.types as c
 				loop
 					record_once_info_for_class_type	(l_data_class_token,
 							l_once_done_token, l_once_result_token, l_once_exception_token,
-							a_feature, l_class_types.item)
-					l_class_types.forth
+							a_feature, c.item)
 				end
-				l_class_types.go_to (c)
 			end
 		end
 
@@ -1027,8 +984,8 @@ feature {CIL_CODE_GENERATOR} -- Cleaning
 				--| Clean Module Info     |--
 			l_module_filename := module_file_name_for_class_type (l_class_type)
 			if
-				(last_module_info_cleaned = Void) or else
-				not (last_module_info_cleaned.is_equal (l_module_filename))
+				attached last_module_info_cleaned as m implies
+				not m.is_equal (l_module_filename)
 			 then
 				last_module_info_cleaned := l_module_filename
 				debug ("debugger_il_info_trace")
@@ -1193,17 +1150,14 @@ feature {CIL_CODE_GENERATOR, IL_DEBUG_INFO_RECORDER_EXPORTER} -- Persistence
 		do
 			create Result.make (50)
 			Result.append_string_general (" ERROR while retrieving IL DEBUG INFO data ...%N")
-			if loading_errors /= Void then
+			if attached loading_errors as es then
 				Result.append_string_general ("%N")
-				from
-					loading_errors.start
-				until
-					loading_errors.after
+				across
+					es as e
 				loop
 					Result.append_string_general ("   - ")
-					Result.append_string_general (loading_errors.item)
+					Result.append_string_general (e.item)
 					Result.append_string_general ("%N")
-					loading_errors.forth
 				end
 			end
 			Result.append_string_general ("%N")
@@ -1248,7 +1202,6 @@ feature {NONE}-- Implementation for save and load task
 			a_il_info_file_name_not_void: a_il_info_file_name /= Void
 		local
 			l_succeed: BOOLEAN
-			l_precomp_dirs: HASH_TABLE [REMOTE_PROJECT_DIRECTORY, INTEGER]
 			l_remote_project_directory: REMOTE_PROJECT_DIRECTORY
 			l_pfn: PATH
 		do
@@ -1264,34 +1217,25 @@ feature {NONE}-- Implementation for save and load task
 
 			load_successful := load_successful and l_succeed
 
-			l_precomp_dirs := System.precompilation_directories
-			if not l_precomp_dirs.is_empty then
-				from
-					l_precomp_dirs.start
-				until
-					l_precomp_dirs.after
-				loop
-					l_remote_project_directory := l_precomp_dirs.item_for_iteration
-					l_pfn := l_remote_project_directory.precomp_il_info_file (
-						l_remote_project_directory.is_precompile_finalized and system.msil_use_optimized_precompile)
-					debug ("debugger_il_info_trace_extra")
-						print (l_pfn.name)
-						io.put_new_line
-					end
-					l_succeed := import_file_data (l_pfn, l_remote_project_directory.system_name, True)
-					load_successful := load_successful and l_succeed
-					l_precomp_dirs.forth
+			across
+				System.precompilation_directories as d
+			loop
+				l_remote_project_directory := d.item
+				l_pfn := l_remote_project_directory.precomp_il_info_file (
+					l_remote_project_directory.is_precompile_finalized and system.msil_use_optimized_precompile)
+				debug ("debugger_il_info_trace_extra")
+					print (l_pfn.name)
+					io.put_new_line
 				end
+				l_succeed := import_file_data (l_pfn, l_remote_project_directory.system_name, True)
+				load_successful := load_successful and l_succeed
 			end
 
 			debug ("debugger_il_info_trace_extra")
-				from
-					dbg_info_modules.start
-				until
-					dbg_info_modules.after
+				across
+					dbg_info_modules as m
 				loop
-					dbg_info_modules.item_for_iteration.debug_display
-					dbg_info_modules.forth
+					m.item.debug_display
 				end
 			end
 		end
@@ -1382,13 +1326,11 @@ feature {NONE}-- Implementation for save and load task
 									io.error.put_string ("  - Location = " + l_current_project_path.as_string_8 +"%N")
 									io.error.put_string (" => Updating data ... ")
 								end
-								from
-									create l_patched_dbg_info_modules.make (l_dbg_info_modules.count)
-									l_dbg_info_modules.start
-								until
-									l_dbg_info_modules.after
+								create l_patched_dbg_info_modules.make (l_dbg_info_modules.count)
+								across
+									l_dbg_info_modules as m
 								loop
-									l_info_module := l_dbg_info_modules.item_for_iteration
+									l_info_module := m.item
 									update_imported_project_info_module (l_current_project_path, l_info_module)
 
 									check
@@ -1399,8 +1341,6 @@ feature {NONE}-- Implementation for save and load task
 									check
 										item_inserted: l_patched_dbg_info_modules.inserted
 									end
-
-									l_dbg_info_modules.forth
 								end
 								l_retrieved_object.set_modules_debugger_info (l_patched_dbg_info_modules)
 								l_retrieved_object.set_project_path (l_current_project_path)
@@ -1413,7 +1353,6 @@ feature {NONE}-- Implementation for save and load task
 								end
 
 								l_dbg_info_modules := l_retrieved_object.modules_debugger_info
-								l_dbg_info_project_path	:= l_retrieved_object.project_path
 									--| Now the data are patched and ready to be used
 							end
 
@@ -1423,12 +1362,10 @@ feature {NONE}-- Implementation for save and load task
 								--| regarding about module name
 								--| since we move assemblies/precompilation module under
 								--| W_code/assemblies/..
-							from
-								l_dbg_info_modules.start
-							until
-								l_dbg_info_modules.after
+							across
+								l_dbg_info_modules as m
 							loop
-								l_info_module := l_dbg_info_modules.item_for_iteration
+								l_info_module := m.item
 								update_imported_precompilation_info_module (a_system_name, l_info_module)
 								debug ("debugger_il_info_trace")
 									io.error.put_string (" :: Importing Module from [" + l_info_module.module_filename + "] %N")
@@ -1438,7 +1375,6 @@ feature {NONE}-- Implementation for save and load task
 								else
 									dbg_info_modules.put (l_info_module, l_info_module.module_filename)
 								end
-								l_dbg_info_modules.forth
 							end
 						end
 						dbg_info_class_types.merge (l_dbg_info_class_types)
@@ -1573,7 +1509,7 @@ feature {NONE} -- Module indexer implementation
 			-- and internal key for module
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Managing data used to get debugger info from eStudio info
 		This instance is related to one CLASS_TYPE
@@ -65,25 +65,14 @@ feature -- Properties
 	static_type_id: INTEGER
 			-- Static_type_id related to the CLASS_TYPE
 
-feature -- Access
-
-	class_type: CLASS_TYPE
-			-- Associated CLASS_TYPE
-		do
-			Result := Il_debug_info.class_types @ static_type_id
-		end
-
 feature -- Queries feature_token
 
 	feature_token (a_feature_i: FEATURE_I): NATURAL_32
 			-- `feature_token' associated with `a_feature_i'
 		require
 			feature_i_not_void: a_feature_i /= Void
-		local
-			l_feature_name_id: INTEGER
 		do
-			l_feature_name_id := a_feature_i.feature_name_id
-			Result := list_feature_token.item (l_feature_name_id)
+			Result := list_feature_token.item (a_feature_i.feature_name_id)
 		ensure
 			Result /= 0 implies list_feature_token.has (a_feature_i.feature_name_id)
 		end
@@ -129,11 +118,8 @@ feature -- Queries once_tokens
 			-- data class token,  `_done' and `_result' tokens associated with `a_feature_i'
 		require
 			feature_i_not_void: a_feature_i /= Void
-		local
-			l_feature_name_id: INTEGER
 		do
-			l_feature_name_id := a_feature_i.feature_name_id
-			Result := list_once_tokens.item (l_feature_name_id)
+			Result := list_once_tokens.item (a_feature_i.feature_name_id)
 		ensure
 			Result /= Void implies list_once_tokens.has (a_feature_i.feature_name_id)
 		end
@@ -189,11 +175,8 @@ feature -- Queries IL Offsets
 			-- breakable_il_offsets associated with `a_feature_i'
 		require
 			feature_i_not_void: a_feature_i /= Void
-		local
-			l_feature_name_id: INTEGER
 		do
-			l_feature_name_id := a_feature_i.feature_name_id
-			Result := list_breakable_il_offset.item (l_feature_name_id)
+			Result := list_breakable_il_offset.item (a_feature_i.feature_name_id)
 		ensure
 			Result /= Void implies list_breakable_il_offset.has (a_feature_i.feature_name_id)
 		end
@@ -337,7 +320,7 @@ invariant
 	static_type_id_valid: static_type_id /= 0
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

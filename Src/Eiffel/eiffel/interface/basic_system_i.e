@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Basic classes in a system"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ feature -- Generation type
 		deferred
 		end
 
-feature -- Access
+feature -- Classes from the configutation point of view
 
 	any_class: CLASS_I
 	system_object_class: EXTERNAL_CLASS_I
@@ -95,7 +95,7 @@ feature -- Access
 	exception_class: CLASS_I
 			-- Class EXCEPTION
 
-feature -- Access
+feature -- Classes from the type system of view
 
 	ancestor_class_to_all_classes_id: INTEGER
 		do
@@ -236,8 +236,7 @@ feature -- Access
 	routine_class_id: INTEGER
 			-- Id of class ROUTINE
 		require
-			routine_class_exists: routine_class /= Void
-			compiled: routine_class.is_compiled
+			is_routine_class_compiled: attached routine_class as c and then c.is_compiled
 		do
 			Result := routine_class.compiled_class.class_id
 		ensure
@@ -247,8 +246,7 @@ feature -- Access
 	procedure_class_id: INTEGER
 			-- Id of class PROCEDURE
 		require
-			procedure_class_exists: procedure_class /= Void
-			compiled: procedure_class.is_compiled
+			is_procedure_class_compiled: attached procedure_class as c and then c.is_compiled
 		do
 			Result := procedure_class.compiled_class.class_id
 		ensure
@@ -258,8 +256,7 @@ feature -- Access
 	function_class_id: INTEGER
 			-- Id of class FUNCTION
 		require
-			function_class_exists: function_class /= Void
-			compiled: function_class.is_compiled
+			is_function_class_compiled: attached function_class as c and then c.is_compiled
 		do
 			Result := function_class.compiled_class.class_id
 		ensure
@@ -269,8 +266,7 @@ feature -- Access
 	predicate_class_id: INTEGER
 			-- Id of class PREDICATE
 		require
-			predicate_class_exists: predicate_class /= Void
-			compiled: predicate_class.is_compiled
+			is_predicate_class_compiled: attached predicate_class as c and then c.is_compiled
 		do
 			Result := predicate_class.compiled_class.class_id
 		ensure
@@ -373,13 +369,10 @@ feature -- Settings
 			-- Assign `c' to `system_object_class
 		require
 			c_not_void: c /= Void
-		local
-			l_ext: EXTERNAL_CLASS_I
 		do
 			c.set_as_basic_class
-			l_ext ?= c
-			if l_ext /= Void then
-				system_object_class := l_ext
+			if attached {EXTERNAL_CLASS_I} c as e then
+				system_object_class := e
 			end
 		ensure
 			system_object_class_set: c.is_external_class implies system_object_class = c
@@ -389,13 +382,10 @@ feature -- Settings
 			-- Assign `c' to `system_value_type_class
 		require
 			c_not_void: c /= Void
-		local
-			l_ext: EXTERNAL_CLASS_I
 		do
 			c.set_as_basic_class
-			l_ext ?= c
-			if l_ext /= Void then
-				system_value_type_class := l_ext
+			if attached {EXTERNAL_CLASS_I} c as e then
+				system_value_type_class := e
 			end
 		ensure
 			system_object_class_set: c.is_external_class implies system_value_type_class = c
@@ -405,13 +395,10 @@ feature -- Settings
 			-- Assign `c' to `set_system_exception_type_class'
 		require
 			c_not_void: c /= Void
-		local
-			l_ext: EXTERNAL_CLASS_I
 		do
 			c.set_as_basic_class
-			l_ext ?= c
-			if l_ext /= Void then
-				system_exception_type_class := l_ext
+			if attached {EXTERNAL_CLASS_I} c as e then
+				system_exception_type_class := e
 			end
 		ensure
 			system_exception_class_set: c.is_external_class implies system_exception_type_class = c
@@ -719,7 +706,7 @@ feature -- Settings: Exception
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -750,4 +737,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class BASIC_SYSTEM_I
+end

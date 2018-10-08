@@ -4,6 +4,7 @@ note
 
 			[http://www.example.com Example site]
 			[http://www.example.com|Example site]
+			[#anchor_name Title]
 			[http://www.example.com|param1|param2|Example site]
 			[mailto:me@address.com Email me]
 			[file://.... the local file]
@@ -97,6 +98,7 @@ feature -- Status report
 			--|		https://example.com
 			--|		mailto:foo@bar.com
 			--|		foo:bar
+			--|		#anchor_name
 			--| But "foo: bar", "foo:", ":bar" will return False.
 		local
 			l_url: like url
@@ -116,6 +118,8 @@ feature -- Status report
 					check l_url.valid_index (i + 1) end
 					Result := not l_url[i + 1].is_space
 				end
+			elseif l_url.starts_with_general ("#") then
+				Result := True
 			else
 				Result := False
 			end
@@ -145,7 +149,7 @@ feature -- Visitor
 		end
 
 note
-	copyright: "2011-2017, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2018, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

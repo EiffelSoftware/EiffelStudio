@@ -118,7 +118,7 @@ feature{NONE} -- Implementation
 					until
 						i > l_cnt or Result /= Void
 					loop
-						if l_type_dec.item_name (i).is_case_insensitive_equal (name) then
+						if l_type_dec.item_name (i).is_case_insensitive_equal_general (name) then
 							Result := l_type_dec
 						end
 						i := i + 1
@@ -147,7 +147,7 @@ invariant
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

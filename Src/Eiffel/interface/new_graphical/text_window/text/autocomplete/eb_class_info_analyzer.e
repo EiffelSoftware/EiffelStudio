@@ -417,6 +417,7 @@ feature {NONE}-- Clickable/Editable implementation
 			vn_id: INTEGER
 			td: detachable AST_EIFFEL
 			l_precursor_feat: detachable E_FEATURE
+			l_type: like type_from
 		do
 			if is_ok_for_completion then
 				initialize_context
@@ -434,6 +435,7 @@ feature {NONE}-- Clickable/Editable implementation
 						last_was_constrained := False
 						last_feature := Void
 						is_for_feature := True
+						l_type := type_from (token, line)
 						is_for_feature := False
 						if attached last_feature as feat then
 							if token_image_is_same_as_word (token, "precursor") then
@@ -1257,7 +1259,7 @@ feature {NONE}-- Implementation
 					stop := False
 					error := exp.after
 					if not error then
-						if token_image_is_same_as_word (exp.item, Opening_parenthesis) then
+						if token_image_is_same_as_word (exp.item, Opening_parenthesis)	then
 								-- if there is a parenthesis, we fill the new `sub_exp' with what's inside
 							from
 								par_cnt := 1

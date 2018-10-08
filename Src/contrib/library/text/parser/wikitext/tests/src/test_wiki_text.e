@@ -1515,6 +1515,80 @@ e := "{
 			assert ("as e", o.same_string (e))
 		end
 
+	test_anchor_external_link
+		local
+			t: WIKI_CONTENT_TEXT
+			o: STRING
+			e: STRING
+			gen: like new_xhtml_generator
+		do
+			create t.make_from_string ("[
+test [#Section_name Anchor to #Section_name]
+			]")
+
+e := "{
+<p>test <a href="#Section_name" class="wiki_ext_link">Anchor to #Section_name</a>
+</p>
+
+}"
+
+			create o.make_empty
+
+			gen := new_xhtml_generator (o)
+			t.structure.process (gen)
+			assert ("o", not o.is_empty)
+			assert ("as e", o.same_string (e))
+		end
+
+	test_anchor_section_link
+		local
+			t: WIKI_CONTENT_TEXT
+			o: STRING
+			e: STRING
+			gen: like new_xhtml_generator
+		do
+			create t.make_from_string ("[
+* test [[#anchor|anchor link]]
+* test [[#Another_anchor|Another anchor link]]
+* test [[#another_anchor|Another anchor link]]
+* test [[#Summer-été|Summer-été]]
+
+== anchor ==
+first test
+
+== Another anchor ==
+another
+
+== Summer-été ==
+Summer
+			]")
+
+e := "{
+<ul><li> test <a href="#anchor" class="wiki_link">anchor link</a></li>
+<li> test <a href="#Another_anchor" class="wiki_link">Another anchor link</a></li>
+<li> test <a href="#another_anchor" class="wiki_link">Another anchor link</a></li>
+<li> test <a href="#Summer-%C3%A9t%C3%A9" class="wiki_link">Summer-été</a></li>
+</ul>
+
+<a name="anchor"></a><h2>anchor</h2>
+<p>first test</p>
+
+<a name="Another_anchor"></a><h2>Another anchor</h2>
+<p>another</p>
+
+<a name="Summer-%C3%A9t%C3%A9"></a><h2>Summer-été</h2>
+<p>Summer</p>
+
+}"
+
+			create o.make_empty
+
+			gen := new_xhtml_generator (o)
+			t.structure.process (gen)
+			assert ("o", not o.is_empty)
+			assert ("as e", o.same_string (e))
+		end
+
 	test_image
 		local
 			t: WIKI_CONTENT_TEXT

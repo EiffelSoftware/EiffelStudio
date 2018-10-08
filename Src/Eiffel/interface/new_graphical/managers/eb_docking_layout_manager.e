@@ -32,14 +32,15 @@ feature -- Normal mode command
 	save_tools_docking_layout
 			-- Save all tools docking layout.
 		local
-			l_eb_debugger_manager: EB_DEBUGGER_MANAGER
 			l_result: BOOLEAN
 		do
-			l_eb_debugger_manager ?= develop_window.debugger_manager
 			-- If directly exiting Eiffel Studio from EB_DEBUGGER_MANAGER, then we don't save the tools layout,
 			-- because current widgets layout is debug mode layout (not normal mode layout),
 			-- and the debug mode widgets layout is saved by EB_DEBUGGER_MANAGER already.
-			if l_eb_debugger_manager /= Void and then not l_eb_debugger_manager.is_exiting_eiffel_studio then
+			if
+				attached {EB_DEBUGGER_MANAGER} develop_window.debugger_manager as l_eb_debugger_manager and then
+				not l_eb_debugger_manager.is_exiting_eiffel_studio
+			then
 				l_result := develop_window.docking_manager.save_tools_data_with_path (eiffel_layout.user_docking_standard_file_name (develop_window.window_id))
 				if not l_result then
 					show_last_error
@@ -545,7 +546,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

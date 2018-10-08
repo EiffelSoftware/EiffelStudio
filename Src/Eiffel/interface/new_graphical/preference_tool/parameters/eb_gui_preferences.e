@@ -32,7 +32,6 @@ feature {NONE} -- Initialization
 			create error_list_tool_data.make (a_preferences)
 			create misc_shortcut_data.make (a_preferences)
 			create property_data.make (a_preferences)
-			create lab_data.make (a_preferences)
 			is_gui_mode := True
 		end
 
@@ -80,9 +79,6 @@ feature -- Access
 	property_data: EB_PROPERTY_DATA
 			-- Preference data for properties
 
-	lab_data: EB_LAB_DATA
-			-- Preference data for lab functionalities.
-
 	is_gui_mode: BOOLEAN
 			-- Is current in gui mode?
 
@@ -98,7 +94,6 @@ invariant
 	error_list_tool_data_attached: is_gui_mode implies error_list_tool_data /= Void
 	class_browser_data_attached: is_gui_mode implies class_browser_data /= Void
 	property_data_attached: is_gui_mode implies attached property_data
-	lab_data_attached: is_gui_mode implies attached lab_data
 
 note
 	copyright:	"Copyright (c) 1984-2018, Eiffel Software"

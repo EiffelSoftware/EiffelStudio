@@ -131,32 +131,31 @@ feature -- Output
 		require
 			valid_e_class: e_class /= Void
 		local
-			f: TEXT_FORMATTER_DECORATOR;
+			f: TEXT_FORMATTER_DECORATOR
 			old_group: CONF_GROUP
-			old_class, class_c: CLASS_C;
+			old_class: CLASS_C
 		do
-			create f.make (e_class, a_formatter);
+			create f.make (e_class, a_formatter)
 			if is_clickable then
 				f.set_in_bench_mode
-			end;
-			old_class := System.current_class;
-			old_group := Inst_context.group;
-			class_c ?= e_class;
-			System.set_current_class (class_c);
-			Inst_context.set_group (e_class.group);
-			f.register_invariants;
-			f.format_invariants;
-			System.set_current_class (old_class);
-			Inst_context.set_group (old_group);
+			end
+			old_class := System.current_class
+			old_group := Inst_context.group
+			System.set_current_class (e_class)
+			Inst_context.set_group (e_class.group)
+			f.register_invariants
+			f.format_invariants
+			System.set_current_class (old_class)
+			Inst_context.set_group (old_group)
 			error := f.execution_error
-		end;
+		end
 
 feature {NONE} -- Implementation
 
 	documentation: DOCUMENTATION_ROUTINES;
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

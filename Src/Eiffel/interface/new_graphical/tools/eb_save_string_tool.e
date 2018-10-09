@@ -69,19 +69,61 @@ feature -- Change
 			title := t
 		end
 
+	set_filter_for_extensions (a_extensions: ITERABLE [READABLE_STRING_GENERAL]; a_description: READABLE_STRING_GENERAL)
+			-- Set file dialog filters for `a_extensions` and `a_description`.
+		local
+			f: STRING_32
+			l_filters: like filters
+		do
+			create f.make_empty
+			across
+				a_extensions as ic
+			loop
+				if f.count > 0 then
+					f.append_character (';')
+				end
+				f.append_string_general ("*.")
+				f.append_string_general (ic.item)
+			end
+
+			l_filters := filters
+			if l_filters = Void then
+				create l_filters.make (1)
+				filters := l_filters
+			end
+			l_filters.extend ([f, a_description])
+		end
+
+	set_start_directory (dn: READABLE_STRING_GENERAL)
+			-- Set file dialog starting directory with directory name `dn`.
+		do
+			start_directory := dn
+		end
+
+	set_start_path (p: PATH)
+			-- Set file dialog starting directory with directory path `dn`.
+		do
+			set_start_directory (p.name)
+		end
+
 feature {NONE} -- Implementation
 
+	start_directory: detachable READABLE_STRING_GENERAL
+			-- Starting directory.
+
 	owner_window: EV_WINDOW
-		-- Onwer window.
+			-- Owner window.
 
 	text: STRING_32
-		-- Text to be saved.
+			-- Text to be saved.
 
 	title: STRING_GENERAL
-		-- Dialog's title.
+			-- Dialog's title.
 
 	save_file_dlg: EV_FILE_SAVE_DIALOG
 			-- File dialog to let user choose a file.
+
+	filters: detachable ARRAYED_LIST [TUPLE [filter, text: READABLE_STRING_GENERAL]]
 
 feature -- Save
 
@@ -99,8 +141,19 @@ feature -- Save
 			-- Called when user press Save output button.
 		do
 			create save_file_dlg.make_with_title (title)
-			save_file_dlg.filters.extend ([Text_files_filter, Text_files_description])
-			save_file_dlg.filters.extend ([All_files_filter, All_files_description])
+			if attached start_directory as dn then
+				save_file_dlg.set_start_directory (dn)
+			end
+			if attached filters as l_filters and then not l_filters.is_empty then
+				across
+					l_filters as ic
+				loop
+					save_file_dlg.filters.extend (ic.item)
+				end
+			else
+				save_file_dlg.filters.extend ([Text_files_filter, Text_files_description])
+				save_file_dlg.filters.extend ([All_files_filter, All_files_description])
+			end
 			save_file_dlg.save_actions.extend (agent on_save_file_selected)
 			save_file_dlg.show_modal_to_window (owner_window)
 			save_file_dlg.destroy
@@ -168,7 +221,7 @@ feature -- Save
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -38,8 +38,14 @@ feature
 					obj_fields.has (fdn)
 				then
 					Result := field (obj_fields.item (fdn), obj)
-				elseif attached {TABLE [detachable ANY, READABLE_STRING_GENERAL]} obj as l_table then
-					Result := l_table.item (fdn)
+				elseif attached {HASH_TABLE [detachable ANY, READABLE_STRING_GENERAL]} obj as htb then
+					if htb.has_key (fdn) then
+						Result := htb.found_item
+					end
+				elseif attached {TABLE [detachable ANY, READABLE_STRING_GENERAL]} obj as tb then
+					if tb.valid_key (fdn) then
+						Result := tb.item (fdn)
+					end
 				end
 			end
 		end

@@ -49,7 +49,7 @@ feature -- Access, stored in configuration file
 			exp: STRING_ENVIRONMENT_EXPANDER
 		do
 			create exp
-			Result := exp.expand_string_32 (redirection_location, True)
+			Result := exp.expand_string_32 (redirection_location, False)
 		end
 
 	uuid: detachable UUID
@@ -97,7 +97,7 @@ feature -- Output
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

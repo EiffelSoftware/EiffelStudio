@@ -94,22 +94,38 @@ feature -- Change
 			l_filters.extend ([f, a_description])
 		end
 
-	set_start_directory (dn: READABLE_STRING_GENERAL)
+	set_start_directory (dn: detachable READABLE_STRING_GENERAL)
 			-- Set file dialog starting directory with directory name `dn`.
 		do
 			start_directory := dn
 		end
 
-	set_start_path (p: PATH)
+	set_start_path (p: detachable PATH)
 			-- Set file dialog starting directory with directory path `dn`.
 		do
-			set_start_directory (p.name)
+			if p = Void then
+				set_start_directory (Void)
+			else
+				set_start_directory (p.name)
+			end
+		end
+
+	set_filename (fn: detachable READABLE_STRING_GENERAL)
+		do
+			if fn = Void then
+				filename := Void
+			else
+				filename := fn
+			end
 		end
 
 feature {NONE} -- Implementation
 
 	start_directory: detachable READABLE_STRING_GENERAL
 			-- Starting directory.
+
+	filename: detachable READABLE_STRING_GENERAL
+			-- Suggested filename.
 
 	owner_window: EV_WINDOW
 			-- Owner window.
@@ -143,6 +159,9 @@ feature -- Save
 			create save_file_dlg.make_with_title (title)
 			if attached start_directory as dn then
 				save_file_dlg.set_start_directory (dn)
+			end
+			if attached filename as fn then
+				save_file_dlg.set_file_name (fn)
 			end
 			if attached filters as l_filters and then not l_filters.is_empty then
 				across

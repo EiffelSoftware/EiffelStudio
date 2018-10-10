@@ -42,8 +42,8 @@ feature {NONE} -- Initialization
 			create ok_button.make_with_text (interface_names.b_open)
 
 			create open_project.make (dialog)
-			open_project.select_actions.force_extend (agent on_item_selected)
-			open_project.deselect_actions.force_extend (agent on_item_deselected)
+			open_project.select_actions.extend (agent on_item_selected)
+			open_project.deselect_actions.extend (agent on_item_deselected)
 
 			create l_frame.make_with_text (Interface_names.l_open_project)
 			l_frame.extend (open_project.widget)
@@ -121,7 +121,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	on_item_deselected
+	on_item_deselected (a_row: EV_GRID_ROW)
 			-- Handle case when an item has been deselected and whether or not
 			-- the `OK' button should be activated.
 		do
@@ -185,7 +185,7 @@ invariant
 	cancel_button_not_void: cancel_button /= Void
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

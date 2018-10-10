@@ -461,7 +461,7 @@ feature {NONE} -- Initialization
 			projects_list.enable_last_column_use_all_width
 			projects_list.enable_row_height_fixed
 			projects_list.set_minimum_height (8 * projects_list.row_height)
-			projects_list.pointer_double_press_actions.force_extend (agent on_double_click)
+			projects_list.pointer_double_press_actions.extend (agent on_double_click)
 			projects_list.row_deselect_actions.force_extend (agent disable_sensitive)
 			projects_list.key_press_actions.extend (agent on_key_pressed)
 
@@ -1158,7 +1158,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	on_double_click (x, y: INTEGER)
+	on_double_click (x, y: INTEGER; button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
 			-- Open currently selected project if valid.
 		local
 			l_row: EV_GRID_ROW

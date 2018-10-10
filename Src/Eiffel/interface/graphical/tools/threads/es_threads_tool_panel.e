@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Tool that displays the threads during a debugging session."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -224,12 +224,9 @@ feature -- Status setting
 		end
 
 	on_item_double_clicked (ax,ay,abut: INTEGER; gi:EV_GRID_ITEM)
-		local
-			gedit: EV_GRID_EDITABLE_ITEM
 		do
 			if gi /= Void and then gi.parent /= Void then
-				gedit ?= gi
-				if gedit /= Void then
+				if attached {EV_GRID_EDITABLE_ITEM} gi as gedit then
 					gedit.activate
 				else
 					on_row_double_clicked (gi.row)
@@ -385,12 +382,10 @@ feature {NONE} -- Implementation
 						l_notes_on_threads.after
 					loop
 						tid := l_notes_on_threads.key_for_iteration
-						if not arr.has (tid) then
-							if l_notes_on_threads.valid_key (tid) then
-								l_notes_on_threads.remove (tid)
-							else
-								l_notes_on_threads.forth
-							end
+						if arr.has (tid) then
+							l_notes_on_threads.forth
+						elseif l_notes_on_threads.has (tid) then
+							l_notes_on_threads.remove (tid)
 						else
 							l_notes_on_threads.forth
 						end
@@ -444,7 +439,6 @@ feature {NONE} -- Implementation
 							lab.set_font (group_thread_font)
 							row.set_item (1, lab)
 
-							r := r + 1
 							if threads_expanded then
 								fill_with_threads (arr, row, True, l_status)
 								if row.is_expandable then
@@ -486,7 +480,6 @@ feature {NONE} -- Implementation
 			l_row: EV_GRID_ROW
 			tid: POINTER
 			lab: EV_GRID_LABEL_ITEM
-			l_notes_on_threads: like notes_on_threads
 		do
 			g := grid
 			if a_row /= Void then
@@ -502,21 +495,18 @@ feature {NONE} -- Implementation
 				lab.set_font (group_thread_font)
 				a_row.set_item (col_note_index, lab)
 			end
-			l_notes_on_threads := notes_on_threads
-			from
-				if a_is_tree_enabled and a_row /= Void then
-					r := a_row.index + 1
-					g.insert_new_rows_parented (arr.count, r, a_row)
-				else
-					r := g.row_count + 1
-					g.insert_new_rows (arr.count, r)
-				end
-				arr.start
-			until
-				arr.after
+			if a_is_tree_enabled and a_row /= Void then
+				r := a_row.index + 1
+				g.insert_new_rows_parented (arr.count, r, a_row)
+			else
+				r := g.row_count + 1
+				g.insert_new_rows (arr.count, r)
+			end
+			across
+				arr as a
 			loop
 				l_row := g.row (r)
-				tid := arr.item
+				tid := a.item
 				l_row.set_data (tid)
 				if tid = a_appstatus.active_thread_id then
 					ev_application.add_idle_action_kamikaze (agent (irow: EV_GRID_ROW)
@@ -526,9 +516,7 @@ feature {NONE} -- Implementation
 							end
 						end(l_row))
 				end
-
 				r := r + 1
-				arr.forth
 			end
 		end
 
@@ -544,7 +532,6 @@ feature {NONE} -- Implementation
 			l_scp: NATURAL_16
 			j,sr: INTEGER
 			l_lab: EV_GRID_LABEL_ITEM
-			l_row: EV_GRID_ROW
 		do
 			g := grid
 
@@ -571,9 +558,7 @@ feature {NONE} -- Implementation
 				l_tid := a_scp.item (j)
 				l_scp := a_appstatus.scoop_processor_id (l_tid)
 				sr := sr + 1
-				l_row := g.row (sr)
-				set_row_data (l_row, l_tid, l_scp)
-
+				set_row_data (g.row (sr), l_tid, l_scp)
 				j := j + 1
 			end
 		end
@@ -607,10 +592,13 @@ feature {NONE} -- Implementation, cosmetic
 	thread_id_and_scoop_processor_id_from_row (r: EV_GRID_ROW): detachable TUPLE [tid: POINTER; scp: NATURAL_16]
 			-- Thread id and SCOOP Processor id related to `r'
 		do
-			if has_scoop_processor and then r.parent /= Void and then r /= Void then
-				if attached {like thread_id_and_scoop_processor_id_from_row} r.data as tu then
-					Result := tu
-				end
+			if
+				has_scoop_processor and then
+				attached r and then
+				attached r.parent and then
+				attached {like thread_id_and_scoop_processor_id_from_row} r.data as tu
+			then
+				Result := tu
 			end
 		end
 
@@ -659,7 +647,7 @@ feature {NONE} -- Constants
 	col_note_index: 	INTEGER = 4
 
 ;note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

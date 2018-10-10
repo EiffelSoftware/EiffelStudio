@@ -1,10 +1,9 @@
-note
-	description : "Objects that ..."
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author      : "$Author$"
-	date        : "$Date$"
-	revision    : "$Revision$"
+	author: "$Author$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	ES_OBJECTS_GRID_LAYOUT_MANAGER
@@ -26,7 +25,7 @@ inherit
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (a_grid: like grid; a_name: STRING)
 		do
@@ -75,8 +74,6 @@ feature -- Access
 feature {NONE} -- record/restore
 
 	recorded_row_layout (a_row: EV_GRID_ROW): like layout
-		local
-			line: ES_OBJECTS_GRID_LINE
 		do
 			if
 				has_saved_layout_for_row (a_row)
@@ -84,9 +81,8 @@ feature {NONE} -- record/restore
 				debug ("es_grid_layout")
 					print (":" + name + ": " + generator + ".recorded_row_layout @" + a_row.index.out + " %N")
 				end
-				line ?= a_row.data
 				if
-					line /= Void
+					attached {ES_OBJECTS_GRID_LINE} a_row.data as line
 					and then line.compute_grid_display_done
 				then
 					debug ("es_grid_layout")
@@ -104,11 +100,8 @@ feature {NONE} -- record/restore
 		end
 
 	restore_row_layout_on_idle (a_row: EV_GRID_ROW; lay: attached like layout; l_curr_pid: INTEGER)
-		local
-			line: ES_OBJECTS_GRID_LINE
 		do
-			line ?= a_row.data
-			if line /= Void then
+			if attached {ES_OBJECTS_GRID_LINE} a_row.data as line then
 				save_layout_for_row (a_row, lay)
 				debug ("es_grid_layout")
 					print (":" + name + ":  request delayed_restore_line_layout %N")
@@ -156,15 +149,11 @@ feature {NONE} -- delayed restoring data
 		end
 
 	save_layout_for_row (r: EV_GRID_ROW; lay: like layout)
-		local
-			rid: like row_id
 		do
 			debug ("es_grid_layout")
 				print (":" + name + ": save layout [" + string_id_for_lay (lay) + "] for " + r.index.out + "%N")
 			end
-
-			rid := row_id (r, True)
-			delayed_layout_by_row.force (lay, rid)
+			delayed_layout_by_row.force (lay, row_id (r, True))
 		end
 
 	has_saved_layout_for_row (r: EV_GRID_ROW): BOOLEAN
@@ -172,7 +161,7 @@ feature {NONE} -- delayed restoring data
 			rid: like row_id
 		do
 			rid := row_id (r, False)
-			if rid > 0 and then delayed_layout_by_row.valid_key (rid) then
+			if rid > 0 then
 				Result := delayed_layout_by_row.has (rid)
 			end
 		end
@@ -182,7 +171,7 @@ feature {NONE} -- delayed restoring data
 			rid: like row_id
 		do
 			rid := row_id (r, False)
-			if rid > 0 and then delayed_layout_by_row.valid_key (rid) then
+			if rid > 0 then
 				Result := delayed_layout_by_row.item (rid)
 				if removed_when_fetched then
 					debug ("es_grid_layout")
@@ -198,7 +187,7 @@ feature {NONE} -- delayed restoring data
 			rid: like row_id
 		do
 			rid := row_id (r, False)
-			if rid > 0 and then delayed_layout_by_row.valid_key (rid) then
+			if rid > 0 then
 				debug ("es_grid_layout")
 					print (":" + name + ": removing saved layout for " + r.index.out + "%N")
 				end
@@ -244,7 +233,7 @@ feature {NONE} -- delayed restoring data
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

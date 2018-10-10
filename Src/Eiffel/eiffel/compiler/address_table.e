@@ -17,7 +17,7 @@ inherit
 			cursor as ht_cursor
 		export
 			{ADDRESS_TABLE} all
-			{ANY} valid_key, merge, has_table_of_class, table_of_class, found_item
+			{ANY} merge, has_table_of_class, table_of_class, found_item
 		end
 
 	SHARED_CODE_FILES
@@ -672,7 +672,6 @@ feature {NONE} -- Generation
 			formal_arg_count: NATURAL_32
 			has_creation: BOOLEAN
 			names: ARRAY [STRING]
-			basic_i: BASIC_A
 			i, j: INTEGER
 			l_tabbed_open_c_comment_str, l_space_str, l_close_c_comment_str: STRING
 			l_arg_str: STRING
@@ -888,10 +887,12 @@ feature {NONE} -- Generation
 						until
 							i <= 0
 						loop
-							if formal_arg [i] and then not reference_arg [i] then
+							if
+								formal_arg [i] and then
+								not reference_arg [i] and then
+								attached {BASIC_A} args.i_th (i).adapted_in (l_type) as basic_i
+							then
 									-- Box expanded object.
-								basic_i ?= args.i_th (i).adapted_in (l_type)
-								check basic_i_not_void: basic_i /= Void end
 								basic_i.metamorphose (create {NAMED_REGISTER}.make ("arg" + i.out, reference_c_type), create {NAMED_REGISTER}.make (names [i + 1], basic_i.c_type), buffer)
 								buffer.put_character (';')
 							end
@@ -1046,7 +1047,6 @@ feature {NONE} -- Generation
 		local
 			l_table_name, l_function_name: STRING
 			l_entry: POLY_TABLE [ENTRY]
-			l_rout_table: ROUT_TABLE
 			l_rout_id: INTEGER
 		do
 				-- Routine is always implemented unless found otherwise (Deferred routine
@@ -1079,9 +1079,7 @@ feature {NONE} -- Generation
 					Extern_declarations.add_routine_table (l_table_name)
 						-- Mark table used.
 					Eiffel_table.mark_used (l_rout_id)
-				else
-					l_rout_table ?= l_entry
-
+				elseif attached {ROUT_TABLE} l_entry as l_rout_table then
 					l_rout_table.goto_implemented (a_type.type, a_type)
 					if l_rout_table.is_implemented then
 						c_return_type.generate_function_cast (buffer, a_types, False)
@@ -1101,7 +1099,6 @@ feature {NONE} -- Generation
 						buffer.put_string (a_current_name)
 					end
 				end
-
 			end
 		end
 
@@ -1138,21 +1135,10 @@ feature {NONE} -- Generation
 						   	   c_return_type: TYPE_C; a_type: CLASS_TYPE; a_types: like arg_types)
 		local
 			l_types: ARRAY [STRING]
-			i: INTEGER
-			l_eif_typed_value_str: STRING
 		do
 			buffer.put_character ('(')
-			create l_types.make (1, a_types.count)
+			create l_types.make_filled  ("EIF_TYPED_VALUE", 1, a_types.count)
 			l_types [1] := a_types [1]
-			from
-				i := l_types.count
-				l_eif_typed_value_str := "EIF_TYPED_VALUE"
-			until
-				i < 2
-			loop
-				l_types [i] := l_eif_typed_value_str
-				i := i - 1
-			end
 			c_return_type.generate_function_cast (buffer, l_types, True)
 
 			buffer.put_string ("RTVF(")
@@ -1261,7 +1247,7 @@ feature {NONE} -- Generation
 			else
 				n := a_args.count + 1
 			end
-			create Result.make (1, n)
+			create Result.make_filled ({C_CONST}.null, 1, n)
 			from
 				i := 1
 				j := 1
@@ -1323,17 +1309,15 @@ feature {NONE} -- Generation
 				l_arg_count := 2 + a_omap.count
 			end
 
-			create l_arg_names.make (1, l_arg_count)
-			create l_arg_types.make (1, l_arg_count)
-
 			tmp_buffer.clear_all
 			tmp_buffer.put_string (a_return_type)
 			tmp_buffer.put_string ("(*f_ptr) (")
 			tmp_buffer.put_string_array (a_types)
 			tmp_buffer.put_string (")")
-			l_arg_types.put (tmp_buffer.as_string, 1)
+
+			create l_arg_names.make_filled (tmp_buffer.as_string, 1, l_arg_count)
 				-- The name of the pointer is embedded in its type
-			l_arg_names.put ("", 1)
+			create l_arg_types.make_filled ("", 1, l_arg_count)
 
 			l_arg_types.put ("EIF_TYPED_VALUE *", 2)
 			l_arg_names.put ("closed", 2)

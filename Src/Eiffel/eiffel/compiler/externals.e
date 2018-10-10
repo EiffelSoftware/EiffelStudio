@@ -16,7 +16,7 @@ inherit
 	HASH_TABLE [SEARCH_TABLE [INTEGER], INTEGER]
 		export
 			{EXTERNALS} all
-			{ANY} has, remove, count, valid_key
+			{ANY} has, remove, count
 		end
 
 	SHARED_WORKBENCH
@@ -64,7 +64,6 @@ feature -- Insertion/Removal
 		require
 			ext_not_void: ext /= Void
 			is_c_external: ext.is_c_external
-			valid_key: valid_key (ext.written_in)
 		local
 			l_s: SEARCH_TABLE [INTEGER]
 		do
@@ -83,15 +82,11 @@ feature -- Insertion/Removal
 		require
 			ext_not_void: ext /= Void
 			is_c_external: ext.is_c_external
-			valid_key: valid_key (ext.written_in)
 			has_entry: has (ext.written_in)
 		local
 			l_s: SEARCH_TABLE [INTEGER]
 		do
-			l_s := item (ext.written_in)
-			check
-				l_s_not_void: l_s /= Void
-			end
+			l_s := definite_item (ext.written_in)
 			l_s.remove (ext.feature_name_id)
 			if l_s.is_empty then
 				remove (ext.written_in)

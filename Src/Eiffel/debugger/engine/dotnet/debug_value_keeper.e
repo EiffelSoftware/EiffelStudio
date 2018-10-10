@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that keep a reference to the debug value indexed by address..."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -47,11 +47,8 @@ feature -- Change
 	keep (dv: ABSTRACT_DEBUG_VALUE)
 		require
 			dv /= Void
-		local
-			ddv: EIFNET_ABSTRACT_DEBUG_VALUE
 		do
-			ddv ?= dv
-			if ddv /= Void then
+			if attached {EIFNET_ABSTRACT_DEBUG_VALUE} dv as ddv then
 				keep_dotnet_value (ddv)
 			end
 		end
@@ -59,29 +56,22 @@ feature -- Change
 	keep_dotnet_value (ddv: EIFNET_ABSTRACT_DEBUG_VALUE)
 		require
 			ddv /= Void
-		local
-			l_address: DBG_ADDRESS
 		do
-			l_address := ddv.address
-			if l_address /= Void then
-				if debug_value_kept /= Void then
-					if not debug_value_kept.has (l_address) then
-						debug_value_kept.put (ddv, l_address)
-					end
-				end
+			if
+				attached ddv.address as l_address and then
+				attached debug_value_kept as d and then
+				not d.has (l_address)
+			then
+				d.put (ddv, l_address)
 			end
 		end
 
 feature -- Access
 
 	know_about (l_k: DBG_ADDRESS): BOOLEAN
-			-- Has a Debug Value object address by `l_k'
+			-- Is there a Debug Value object address by `l_k'?
 		do
-			if debug_value_kept /= Void then
-				if debug_value_kept.valid_key (l_k) then
-					Result := debug_value_kept.has (l_k)
-				end
-			end
+			Result := attached debug_value_kept as d and then d.has (l_k)
 		end
 
 	item (l_k: DBG_ADDRESS): ABSTRACT_DEBUG_VALUE
@@ -142,7 +132,7 @@ feature {NONE} -- restricted access
 			-- Debug value indexed by `dbg_address'
 
 ;note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -155,22 +145,22 @@ feature {NONE} -- restricted access
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

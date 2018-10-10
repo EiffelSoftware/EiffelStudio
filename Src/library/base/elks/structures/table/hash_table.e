@@ -23,7 +23,8 @@ class HASH_TABLE [G, K -> detachable HASHABLE] inherit
 			at as definite_item,
 			extend as collection_extend,
 			item as definite_item,
-			has as has_item
+			has as has_item,
+			valid_key as has
 		export
 			{NONE} prune_all
 		redefine
@@ -309,7 +310,8 @@ feature -- Access
 		end
 
 	has_key (key: K): BOOLEAN
-			-- Is there an item in the table with key `key'? Set `found_item' to the found item.
+			-- Is there an item in the table with key `key'?
+			-- Set `found_item' to the found item.
 		local
 			old_position: INTEGER
 			l_default_value: detachable G
@@ -331,8 +333,7 @@ feature -- Access
 
 	has_item (v: G): BOOLEAN
 			-- Does structure include `v'?
-			-- (Reference or object equality,
-			-- based on `object_comparison'.)
+			-- (Reference or object equality, based on `object_comparison'.)
 		local
 			i, nb: INTEGER
 			l_content: like content
@@ -522,9 +523,6 @@ feature -- Comparison
 	same_keys (a_search_key, a_key: K): BOOLEAN
 			-- Does `a_search_key' equal to `a_key'?
 			--| Default implementation is using ~.
-		require
-			valid_search_key: valid_key (a_search_key)
-			valid_key: valid_key (a_key)
 		do
 			Result := a_search_key ~ a_key
 		end
@@ -610,6 +608,7 @@ feature -- Status report
 
 	valid_key (k: K): BOOLEAN
 			-- Is `k` a valid key?
+		obsolete "Remove the call to this feature or use `has` instead. [2018-11-30]"
 		do
 			Result := True
 			debug ("prevent_hash_table_catcall")
@@ -810,6 +809,8 @@ feature -- Element change
 			--
 			-- To choose between various insert/replace procedures,
 			-- see `instructions' in the Indexing clause.
+		require else
+			True
 		local
 			l_default_key: detachable K
 			l_default_value: detachable G

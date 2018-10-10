@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Hash table used to store tags as {IMMUTABLE_STRING_8} but also providing queries for more
 		general string arguments.
@@ -37,8 +37,6 @@ feature -- Query
 
 	has (key: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `access_key' currently used?
-		require
-			valid_key: valid_key (immutable_string (key))
 		do
 			Result := has_immutable (immutable_string (key))
 		ensure
@@ -63,8 +61,6 @@ feature -- Element change
 			--
 			-- To choose between various insert/replace procedures,
 			-- see `instructions' in the Indexing clause.
-		require
-			key_valid: valid_key (immutable_string (key))
 		do
 			force_immutable (new, immutable_string (key))
 		ensure
@@ -87,8 +83,6 @@ feature -- Element change
 	item (key: READABLE_STRING_GENERAL): detachable G
 			-- Item associated with `key', if present
 			-- otherwise default value of type `G'
-		require
-			key_valid: valid_key (immutable_string (key))
 		do
 			Result := immutable_item (immutable_string (key))
 		ensure
@@ -109,7 +103,7 @@ feature -- Basic operations
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

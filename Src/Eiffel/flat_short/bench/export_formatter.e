@@ -35,7 +35,6 @@ feature -- Formatting
 			a_ctxt_not_void: a_ctxt /= Void
 			a_export_not_void: a_export /= Void
 		local
-			l_export: EXPORT_SET_I
 			l_client: CLIENT_I
 		do
 			if a_export.is_all then
@@ -47,24 +46,26 @@ feature -- Formatting
 				a_ctxt.set_without_tabs
 				a_ctxt.process_symbol_text (ti_r_curly)
 			elseif a_export.is_set then
-				l_export ?= a_export
-				check l_export_not_void: l_export /= Void end
-				from
-					l_export.start
-				until
-					l_export.after
-				loop
-					l_client := l_export.item
-					if
-						not (l_client.clients.count = 1 and then
-						l_client.clients.first = {PREDEFINED_NAMES}.any_name_id)
-					then
-						a_ctxt.process_symbol_text (Ti_l_curly)
-						format_client_i (a_ctxt, l_client)
-						a_ctxt.set_without_tabs
-						a_ctxt.process_symbol_text (Ti_r_curly)
+				if attached {EXPORT_SET_I} a_export as l_export then
+					from
+						l_export.start
+					until
+						l_export.after
+					loop
+						l_client := l_export.item
+						if
+							not (l_client.clients.count = 1 and then
+							l_client.clients.first = {PREDEFINED_NAMES}.any_name_id)
+						then
+							a_ctxt.process_symbol_text (Ti_l_curly)
+							format_client_i (a_ctxt, l_client)
+							a_ctxt.set_without_tabs
+							a_ctxt.process_symbol_text (Ti_r_curly)
+						end
+						l_export.forth
 					end
-					l_export.forth
+				else
+					check export_is_set: False end
 				end
 			end
 		end
@@ -108,7 +109,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

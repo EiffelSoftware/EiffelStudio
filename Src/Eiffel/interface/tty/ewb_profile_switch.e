@@ -45,13 +45,13 @@ feature {NONE} -- Execution
 			show_enabled := not show_enabled;
 			if not show_enabled then
 				from
-					create new_array.make (1, 0);
+					create new_array.make_empty
 					i := 1;
 				until
 					i > output_names.count
 				loop
-					if not output_names.item (i).is_equal (column_name) then
-						new_array.force (output_names.item (i), new_array.count + 1);
+					if not output_names [i].same_string (column_name) then
+						new_array.force (output_names[i], new_array.count + 1);
 					end;
 					i := i + 1;
 				end;
@@ -84,7 +84,7 @@ feature -- Output strings
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

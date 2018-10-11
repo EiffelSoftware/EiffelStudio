@@ -64,7 +64,7 @@ feature {NONE} -- Execute
 			empty_array: ARRAY [STRING];
 			argument: STRING;
 		do
-			create empty_array.make (1, 0);
+			create empty_array.make_empty
 			command_arguments := command_line_io.command_arguments;
 			language_names.copy (empty_array);
 			if command_arguments.argument_count = 1 then
@@ -93,7 +93,7 @@ feature {NONE} -- Execute
 	execute do end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -351,7 +351,6 @@ feature -- Selection
 			nb				: INTEGER
 			new_rout_id		: INTEGER
 			rid				: INTEGER
-			attribute_i: ATTRIBUTE_I
 		do
 			a_feature := a_info.a_feature
 				-- If AST was replicated, we need to preserve the access_in of the inherited routine
@@ -415,10 +414,13 @@ end;
 
 			if a_feature.is_attribute and then a_feature.type.is_formal then
 					-- A wrapper has to be generated for the attribute.
-				attribute_i ?= a_feature
-					-- Set generate_in value of `attribute' to the current class's class id.
-					-- (stored as the feature table id in the newly generated feature table)
-				attribute_i.set_generate_in (new_t.feat_tbl_id)
+				if attached {ATTRIBUTE_I} a_feature as attribute_i then
+						-- Set generate_in value of `attribute' to the current class's class id.
+						-- (stored as the feature table id in the newly generated feature table)
+					attribute_i.set_generate_in (new_t.feat_tbl_id)
+				else
+					check is_attribute_i: False end
+				end
 			end
 
 			if a_feature.is_type_evaluation_delayed then

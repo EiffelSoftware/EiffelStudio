@@ -47,7 +47,7 @@ feature -- Access
 			if arguments /= Void then
 				from
 					count := arguments.count
-					create Result.make (1, count)
+					create Result.make_filled ("", 1, count)
 					j := 1
 					i := 1
 				until
@@ -63,7 +63,7 @@ feature -- Access
 					j := j + 1
 				end
 			else
-				create Result.make (1, 0)
+				create Result.make_empty
 			end
 		ensure
 			argument_types_not_void: Result /= Void
@@ -78,10 +78,10 @@ feature -- Access
 			if Result.count > 1 then
 				l_lower := Result.lower
 				l_upper := Result.upper
-				create Result.make (1, l_upper - l_lower)
+				create Result.make_filled ("", 1, l_upper - l_lower)
 				Result.subcopy (std_argument_names, l_lower + 1, l_upper, 1)
 			else
-				create Result.make (1, 0)
+				create Result.make_empty
 			end
 		end
 
@@ -408,7 +408,7 @@ invariant
 	external_name_id_positive: external_name_id > 0
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

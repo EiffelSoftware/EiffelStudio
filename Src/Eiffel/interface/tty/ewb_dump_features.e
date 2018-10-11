@@ -83,18 +83,22 @@ feature {NONE} -- Properties
 			l_item: FEATURE_I
 			tl: TYPE_LIST
 		do
-			if e_class.generics /= Void then
-				from
-					gs := e_class.generics
-					create gts.make (1, e_class.generics.count)
-					gs.start
-					i := 1
-				until
-					gs.after
-				loop
-					gts.put (gs.item.constraints.dump (False), i)
-					i := i + 1
-					gs.forth
+			if attached e_class.generics as l_generics then
+				if l_generics.is_empty then
+					create gts.make_empty
+				else
+					from
+						create gts.make_filled ("", 1, l_generics.count)
+						gs := l_generics
+						gs.start
+						i := 1
+					until
+						gs.after
+					loop
+						gts.put (gs.item.constraints.dump (False), i)
+						i := i + 1
+						gs.forth
+					end
 				end
 			end
 
@@ -111,8 +115,8 @@ feature {NONE} -- Properties
 					not l_item.is_external
 				then
 					localized_print (l_item.feature_name_32 + ": ")
-					if l_item.type /= Void then
-						s := l_item.type.dump
+					if attached l_item.type as l_type then
+						s := l_type.dump
 					else
 						s := "Void"
 					end
@@ -129,7 +133,7 @@ feature {NONE} -- Properties
 					if s.item (1) = '[' then
 						s.replace_substring ("", 1, s.index_of (']', 1) + 1)
 					end
-					print (s+ "%N")
+					print (s + "%N")
 					if extra_dump then
 						if l_item.is_attribute then
 							print ("attribute%N")
@@ -167,7 +171,7 @@ feature {NONE} -- Properties
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

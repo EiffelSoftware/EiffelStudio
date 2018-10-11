@@ -101,8 +101,10 @@ feature {NONE} -- Execution
 				if cluster = Void then
 					localized_print_error (ewb_names.cluster_does_not_exit (cluster_name))
 				else
-					class_i ?= cluster.classes.item (class_name);
-					if class_i = Void then
+					if attached {CLASS_I} cluster.classes.item (class_name) as cl_i then
+						class_i := cl_i
+					else
+						class_i := Void
 						if (create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_name (class_name) then
 							localized_print_error (ewb_names.class_is_not_in_cluster (class_name))
 						else
@@ -147,7 +149,7 @@ feature {NONE} -- Execution
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -281,7 +281,6 @@ feature
 			features /= Void;
 			features.count > 0;
 		local
-			encapsulated_i: ENCAPSULATED_I
 			vmfn2: VMFN2;
 			l_exit_loop: BOOLEAN
 		do
@@ -292,8 +291,10 @@ feature
 			elseif features_all_the_same then
 					-- Shared features from the same parent.
 				if features.count > 1 and then features.first.internal_a_feature.can_be_encapsulated then
-					encapsulated_i ?= features.first.internal_a_feature
-					if encapsulated_i /= Void and then encapsulated_i.generate_in = 0 then
+					if 
+						attached {ENCAPSULATED_I} features.first.internal_a_feature as encapsulated_i and then
+						encapsulated_i.generate_in = 0 
+					then
 						from
 								-- Go to the second item as the first has already been checked.
 							features.start
@@ -301,8 +302,10 @@ feature
 						until
 							features.after or else l_exit_loop
 						loop
-							encapsulated_i ?= features.item.internal_a_feature
-							if encapsulated_i /= Void and then encapsulated_i.generate_in /= 0 then
+							if 
+								attached {ENCAPSULATED_I} features.item.internal_a_feature as l_item_encapsulated_i and then
+								l_item_encapsulated_i.generate_in /= 0 
+							then
 								inherited_info := features.item
 								l_exit_loop := True
 							end
@@ -520,7 +523,7 @@ feature -- Debug
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

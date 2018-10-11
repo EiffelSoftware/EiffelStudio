@@ -106,17 +106,16 @@ feature{NONE} -- Implementation
 	retrieve_class_c_and_e_feature
 			-- Retrieve `class_c' and `e_feature'.
 			-- If parent of current is not a real feature, `e_feature' will be set to Void.
-		local
-			l_feature: QL_FEATURE
 		do
-			l_feature ?= parent
-			check
-				l_feature_attached: l_feature /= Void
-			end
-			internal_class_c := l_feature.class_c
-			if l_feature.is_real_feature then
-				internal_e_feature := l_feature.e_feature
+			if attached {QL_FEATURE} parent as l_feature then
+				internal_class_c := l_feature.class_c
+				if l_feature.is_real_feature then
+					internal_e_feature := l_feature.e_feature
+				else
+					internal_e_feature := Void
+				end
 			else
+				check is_feature: False end
 				internal_e_feature := Void
 			end
 		ensure
@@ -133,7 +132,7 @@ invariant
 	parent_is_feature: parent.is_feature
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

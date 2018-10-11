@@ -131,22 +131,22 @@ feature -- Access
 
 	class_i: CLASS_I
 			-- CLASS_I object associated with current item
-		local
-			l_class: QL_CLASS
 		do
-			l_class ?= parent
-			check l_class /= Void end
-			Result := l_class.class_i
+			if attached {QL_CLASS} parent as l_class then
+				Result := l_class.class_i
+			else
+				check is_class: False end
+			end
 		end
 
 	class_c: CLASS_C
 			-- CLASS_C object associated with current_item
-		local
-			l_class: QL_CLASS
 		do
-			l_class ?= parent
-			check l_class /= Void end
-			Result := l_class.class_c
+			if attached {QL_CLASS} parent as l_class then
+				Result := l_class.class_c
+			else
+				check is_class: False end
+			end
 		end
 
 	written_class: like class_c
@@ -217,12 +217,12 @@ feature -- Status report
 
 	is_visible: BOOLEAN
 			-- Is current visible from source domain level?
-		local
-			l_class: QL_CLASS
 		do
-			l_class ?= parent
-			check l_class /= Void end
-			Result := l_class.is_visible
+			if attached {QL_CLASS} parent as l_class then
+				Result := l_class.is_visible
+			else
+				check is_class: False end
+			end
 		end
 
 feature -- Visit
@@ -254,7 +254,7 @@ invariant
 	parent_valid: parent.is_class and then parent.is_valid_domain_item and then parent.is_compiled
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

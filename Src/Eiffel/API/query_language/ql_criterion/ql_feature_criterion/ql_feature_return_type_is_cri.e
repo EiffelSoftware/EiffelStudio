@@ -61,26 +61,26 @@ feature{NONE} -- Implementation
 			-- Prepare clients defined `criterion_domain'.
 		local
 			l_domain_generator: QL_CLASS_DOMAIN_GENERATOR
-			l_class_domain: QL_CLASS_DOMAIN
 			l_types: like return_types
 			l_class_c: CLASS_C
 		do
 			create l_domain_generator.make (class_criterion_factory.simple_criterion_with_index (
 					class_criterion_factory.c_is_compiled), True)
-			l_class_domain ?= criterion_domain.new_domain (l_domain_generator)
-			create l_types.make (l_class_domain.count)
+			check is_class_domain: attached {QL_CLASS_DOMAIN} criterion_domain.new_domain (l_domain_generator) as l_class_domain then
+				create l_types.make (l_class_domain.count)
 
-			from
-				l_class_domain.start
-			until
-				l_class_domain.after
-			loop
-				l_class_c := l_class_domain.item.class_c
-				check l_class_c /= Void end
-				l_types.force (l_class_c, l_class_c.class_id)
-				l_class_domain.forth
+				from
+					l_class_domain.start
+				until
+					l_class_domain.after
+				loop
+					l_class_c := l_class_domain.item.class_c
+					check l_class_c /= Void end
+					l_types.force (l_class_c, l_class_c.class_id)
+					l_class_domain.forth
+				end
+				return_types := l_types
 			end
-			return_types := l_types
 			is_criterion_domain_evaluated := True
 		ensure then
 			return_type_table_classes_attached: return_types /= Void
@@ -109,7 +109,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

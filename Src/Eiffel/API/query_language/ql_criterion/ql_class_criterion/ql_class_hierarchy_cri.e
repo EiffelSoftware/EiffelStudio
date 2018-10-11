@@ -97,17 +97,15 @@ feature{NONE} -- Implementation
 			a_domain_attached: a_domain /= Void
 		local
 			l_generator: QL_CLASS_DOMAIN_GENERATOR
-			l_domain: QL_CLASS_DOMAIN
 			l_class: QL_CLASS
 		do
 			create l_generator.make (
 				class_criterion_factory.simple_criterion_with_index (
 					class_criterion_factory.c_is_compiled), True)
-			l_domain ?= a_domain.new_domain (l_generator)
-			check
-				l_domain /= Void
-			end
-			if not l_domain.is_empty then
+			if
+				attached {QL_CLASS_DOMAIN} a_domain.new_domain (l_generator) as l_domain and then
+			 	not l_domain.is_empty
+			 then
 				create Result.make (l_domain.count)
 				from
 					l_domain.start
@@ -170,7 +168,7 @@ feature{NONE} -- Implemenation/Data
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

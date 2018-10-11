@@ -53,11 +53,11 @@ feature -- Access
 	intrinsic_domain: QL_TARGET_DOMAIN
 			-- Intrinsic domain which can be inferred from current criterion
 		do
-			Result ?= intrinsic_domain_internal
+			Result := intrinsic_domain_internal
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

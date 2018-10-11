@@ -131,7 +131,6 @@ feature{QL_CRITERION} -- Implementation for default criterion domain
 			l_cursor: CURSOR
 			l_class_table: like class_table
 			l_conf_group: CONF_GROUP
-			l_library: CONF_LIBRARY
 			l_found: BOOLEAN
 			l_used_in_libraries: LIST [CONF_LIBRARY]
 		do
@@ -146,8 +145,10 @@ feature{QL_CRITERION} -- Implementation for default criterion domain
 				l_conf_group := item.group
 				if l_conf_group.is_library then
 					l_used_in_libraries := a_class.group.target.system.used_in_libraries
-					if l_used_in_libraries /= Void then
-						l_library ?= l_conf_group
+					if
+						l_used_in_libraries /= Void and then
+						attached {CONF_LIBRARY} l_conf_group as l_library
+					then
 						l_found := l_used_in_libraries.has (l_library)
 					else
 						l_found := False
@@ -216,7 +217,7 @@ feature{NONE} -- Type ancher
 			-- Anchor type for items in current domain
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -36,22 +36,26 @@ feature -- Setting
 			-- Set `criterion_domain' with `a_domain'
 		require
 			a_domain_attached: a_domain /= Void
-		local
-			l_delayed_domain: QL_DELAYED_DOMAIN
 		do
-			if criterion_domain /= Void and then criterion_domain.is_delayed then
-				l_delayed_domain ?= criterion_domain
-				if l_delayed_domain.actions.has (initialize_agent) then
-					l_delayed_domain.actions.prune_all (initialize_agent)
+			if attached criterion_domain as l_criterion_domain and then l_criterion_domain.is_delayed then
+				if attached {QL_DELAYED_DOMAIN} l_criterion_domain as l_delayed_domain then
+					if l_delayed_domain.actions.has (initialize_agent) then
+						l_delayed_domain.actions.prune_all (initialize_agent)
+					end
+				else
+					check is_delayed_domain: False end
 				end
 			end
 			criterion_domain := a_domain
 			is_criterion_domain_evaluated := False
-			if criterion_domain.is_delayed then
-				l_delayed_domain ?= a_domain
-				check l_delayed_domain /= Void end
-				if not l_delayed_domain.actions.has (initialize_agent) then
-					l_delayed_domain.actions.extend (initialize_agent)
+			if a_domain.is_delayed then
+				if attached {QL_DELAYED_DOMAIN} a_domain as l_delayed_domain then
+
+					if not l_delayed_domain.actions.has (initialize_agent) then
+						l_delayed_domain.actions.extend (initialize_agent)
+					end
+				else
+					check is_delayed_domain: False end
 				end
 			end
 		ensure
@@ -93,7 +97,7 @@ invariant
 	criterion_domain_attached: criterion_domain /= Void
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

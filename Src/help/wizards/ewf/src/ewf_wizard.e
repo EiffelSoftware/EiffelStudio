@@ -30,14 +30,17 @@ feature -- Pages
 		once
 			Result := new_page ("first")
 			Result.set_title ("Web Application Wizard")
-			Result.set_subtitle ("Based on the EWF libraries...")
-			Result.add_section_text ("Create Web server application with EWF.")
+			Result.set_subtitle ("Based on the EiffelWeb framework...")
+			Result.add_section_text ("Create Web server application with EiffelWeb (Framework).")
 			Result.add_text ("[
 		
-Using the Eiffel Web Framework (EWF), the generated application
-will run on any platforms.
-Depending on the connector(s), you may need to use a 
-third-party httpd server (such as apache, nginx, ...)
+Using the EiffelWeb Framework (EWF), build server application for any platforms.
+Depending on the connector(s), there are dependencies on third-party httpd server.
+(For instance libfcgi requires to setup apache, ...)
+
+More information at:
+  - http://www.eiffelweb.org/
+  - https://www.eiffel.org/projects/eiffel-web .
 
 			]")
 		end
@@ -55,8 +58,8 @@ Please fill in:
 			Result.extend (Result.new_string_question ("Project name:", "name", "ASCII name, without space"))
 			Result.add_directory_question ("Project location:", "location", "Valid directory path, it will be created if missing")
 
-			Result.data.force ("ewf_app", "name")
-			Result.data.force (application.available_directory_path ("ewf_app", application.layout.default_projects_location.extended ("ewf")).name, "location")
+			Result.data.force ("new_app", "name")
+			Result.data.force (application.available_directory_path ("new_app", application.layout.default_projects_location.extended ("eiffelweb")).name, "location")
 
 			Result.set_validation (agent (a_page: WIZARD_PAGE)
 				do
@@ -84,8 +87,8 @@ Web application runs on top of connectors
 Select connectors you want to support:
 	]")
 			Result.add_boolean_question ("Standalone", "use_standalone", "Using the standalone Eiffel Web server")
-			Result.add_boolean_question ("CGI", "use_cgi", "Require a httpd server")
-			Result.add_boolean_question ("libFCGI", "use_libfcgi", "Require a httpd server")
+			Result.add_boolean_question ("CGI", "use_cgi", "Require to setup associated httpd server")
+			Result.add_boolean_question ("libFCGI", "use_libfcgi", "Require to setup associated httpd server, and have libfcgi dynamic libraries in the path")
 
 			Result.data.force ("yes", "use_standalone")
 			Result.data.force ("yes", "use_cgi")
@@ -97,10 +100,10 @@ Select connectors you want to support:
 			Result := new_page ("standalone_connector")
 			Result.set_title ("Standalone connector")
 			Result.set_subtitle ("Set options .")
-			Result.add_integer_question ("Port number", "port", "It happens port 80 is already taken, thus choose another one.")
+			Result.add_integer_question ("Port number", "port", "It happens port 8080 is already taken, thus choose another one.")
 			Result.add_boolean_question ("Verbose", "verbose", "Verbose output")
 
-			Result.data.force ("80", "port")
+			Result.data.force ("8080", "port")
 			Result.data.force ("no", "verbose")
 		end
 

@@ -10,13 +10,12 @@
 					
 					Apply a domain generator to a domain to get a new domain:
 					For example:
-						result_domain: QL_CLASS_DOMAIN
 						source_domain: QL_TARGET_DOMAIN
 						domain_generator: QL_CLASS_DOMAIN_GENERATOR						
 						...
 							-- Some code to initialize source_domain and domain_generator
 						...
-						result_domain ?= source_domain.new_domain (domain_generator)
+						if attached {QL_CLASS_DOMAIN} source_domain.new_domain (domain_generator) as result_domain then
 						
 					Usually, a criterion is given to a domain generator to perform certain kind of filtering.
 					For example, a "is_deferred" criterion is given to a class domain generator to indicate that
@@ -310,20 +309,20 @@ feature{NONE} -- Criterion visit
 
 	process_domain_criterion (a_cri: QL_DOMAIN_CRITERION)
 			-- Process `a_cri'.
-		local
-			l_delayed_domain: QL_DELAYED_DOMAIN
 		do
 			if a_cri.criterion_domain.is_delayed then
-				l_delayed_domain ?= a_cri.criterion_domain
-				check l_delayed_domain /= Void end
-				if is_setting_new_criterion then
-					if not observers.has (l_delayed_domain) then
-						add_observer (l_delayed_domain)
+				if attached {QL_DELAYED_DOMAIN} a_cri.criterion_domain as l_delayed_domain then
+					if is_setting_new_criterion then
+						if not observers.has (l_delayed_domain) then
+							add_observer (l_delayed_domain)
+						end
+					else
+						if has_observer (l_delayed_domain) then
+							remove_observer (l_delayed_domain)
+						end
 					end
 				else
-					if has_observer (l_delayed_domain) then
-						remove_observer (l_delayed_domain)
-					end
+					check is_delayed: False end
 				end
 			end
 		end
@@ -611,7 +610,7 @@ invariant
 	tautology_criterion_attached: tautology_criterion /= Void
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -24,31 +24,29 @@ feature -- Output
 	work
 			-- Execute Current command.	
 		local
-			l_domain: QL_CLASS_DOMAIN
 			l_formatter: like text_formatter
 		do
 			text_formatter.add_new_line;
-			l_domain ?= system_target_domain.new_domain (domain_generator)
-			check l_domain /= Void end
-			if not l_domain.is_empty then
-				l_formatter := text_formatter
-				l_domain.sort (agent class_name_tester)
-				from
-					l_domain.start
-				until
-					l_domain.after
-				loop
-					l_domain.item.class_c.append_signature (l_formatter, True)
-					l_formatter.add_new_line
-					l_domain.forth
+			if attached {QL_CLASS_DOMAIN} system_target_domain.new_domain (domain_generator) as l_domain then
+				if not l_domain.is_empty then
+					l_formatter := text_formatter
+					l_domain.sort (agent class_name_tester)
+					across
+						l_domain as ic
+					loop
+						ic.item.class_c.append_signature (l_formatter, True)
+						l_formatter.add_new_line
+					end
 				end
+			else
+				check is_class_domain: False end
 			end
 		end
 
 	criterion: QL_CRITERION
 			-- Criterion used in current command
 		do
-			create {QL_CLASS_SUPPLIER_RELATION_CRI}Result.make (
+			create {QL_CLASS_SUPPLIER_RELATION_CRI} Result.make (
 				query_class_item_from_class_c (current_class).wrapped_domain,
 				True, False, False)
 		ensure then
@@ -75,7 +73,7 @@ feature -- Output
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -88,22 +86,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class E_SHOW_SUPPLIERS

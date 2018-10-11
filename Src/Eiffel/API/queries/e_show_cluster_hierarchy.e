@@ -71,7 +71,6 @@ feature {NONE} -- Implementation
 			a_group_attached: a_group /= Void
 		local
 			l_classes: STRING_TABLE [CONF_CLASS]
-			l_library: CONF_LIBRARY
 			l_class_cnt: INTEGER
 		do
 			l_classes := a_group.classes
@@ -82,11 +81,14 @@ feature {NONE} -- Implementation
 				text_formatter.add (output_interface_names.override)
 			elseif a_group.is_library then
 				text_formatter.add (output_interface_names.library)
-				l_library ?= a_group
-				if l_library.is_precompile then
-					text_formatter.add (output_interface_names.comma)
-					text_formatter.add_space
-					text_formatter.add (output_interface_names.precompiled)
+				if attached {CONF_LIBRARY} a_group as l_library then
+					if l_library.is_precompile then
+						text_formatter.add (output_interface_names.comma)
+						text_formatter.add_space
+						text_formatter.add (output_interface_names.precompiled)
+					end
+				else
+					check is_library: False end
 				end
 			elseif a_group.is_assembly or a_group.is_physical_assembly then
 				text_formatter.add (output_interface_names.assembly)
@@ -114,10 +116,7 @@ feature {NONE} -- Implementation
 			a_group_attached: a_group /= Void
 			a_tab_count_non_negative: a_tab_count >= 0
 		local
-			l_group: CONF_GROUP
-			l_library: CONF_LIBRARY
-			l_assembly: CONF_ASSEMBLY
-			l_phys_as: CONF_PHYSICAL_ASSEMBLY
+			l_group, g: CONF_GROUP
 			l_classes: STRING_TABLE [CONF_CLASS]
 			l_processed: BOOLEAN
 			l_assembly_processed: BOOLEAN
@@ -128,23 +127,25 @@ feature {NONE} -- Implementation
 			text_formatter.add_indents (a_tab_count)
 			text_formatter.add_group (l_group, l_group.name)
 			if l_group.is_library then
-				l_library ?= l_group
-				if l_library.library_target /= Void then
-					l_processed := processed_libraries.has (l_library.library_target.system.uuid)
-					if l_processed then
-						text_formatter.add (output_interface_names.ellipse)
-					else
-						processed_libraries.extend (l_library.library_target.system.uuid)
+				if attached {CONF_LIBRARY} l_group as l_library then
+					if attached l_library.library_target as l_lib_target then
+						l_processed := processed_libraries.has (l_lib_target.system.uuid)
+						if l_processed then
+							text_formatter.add (output_interface_names.ellipse)
+						else
+							processed_libraries.extend (l_lib_target.system.uuid)
+						end
 					end
+				else
+					check is_library: False end
 				end
 			elseif l_group.is_assembly or l_group.is_physical_assembly then
-				l_assembly ?= l_group
-				if l_assembly /= Void then
-					l_phys_as ?= l_assembly.physical_assembly
+				if attached {CONF_ASSEMBLY} l_group as l_assembly then
+					g := l_assembly.physical_assembly
 				else
-					l_phys_as ?= l_group
+					g := l_group
 				end
-				if l_phys_as /= Void then
+				if attached {CONF_PHYSICAL_ASSEMBLY} g as l_phys_as then
 					l_assembly_processed := processed_assemblies.has (l_phys_as.guid)
 					if l_assembly_processed then
 						text_formatter.add (output_interface_names.ellipse)
@@ -382,19 +383,21 @@ feature {NONE} -- Implementation
 		require
 			a_class_attached: a_class /= Void
 			a_tab_count_non_negative: a_tab_count >= 0
-		local
-			l_class_c: CLASS_C
-			l_class_i: CLASS_I
 		do
 			text_formatter.add_indents (a_tab_count)
-			l_class_i ?= a_class
-			if a_class.is_compiled then
-				l_class_c ?= l_class_i.compiled_class
-				l_class_c.append_signature (text_formatter, True)
+			if attached {CLASS_I} a_class as l_class_i then
+				if
+					a_class.is_compiled and then
+					attached {CLASS_C} l_class_i.compiled_class as l_class_c
+				then
+					l_class_c.append_signature (text_formatter, True)
+				else
+					l_class_i.append_name (text_formatter)
+					text_formatter.add_space
+					text_formatter.add (output_interface_names.not_in_system)
+				end
 			else
-				l_class_i.append_name (text_formatter)
-				text_formatter.add_space
-				text_formatter.add (output_interface_names.not_in_system)
+				check is_class_i: False end
 			end
 			text_formatter.add_new_line
 		end
@@ -523,7 +526,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

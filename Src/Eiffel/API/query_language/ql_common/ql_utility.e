@@ -79,7 +79,9 @@ feature -- Access
 		require
 			a_group_attached: a_group /= Void
 		do
-			Result ?= conf_group_as_parent (a_group, False)
+			check attached {like query_group_item_from_conf_group} conf_group_as_parent (a_group, False) as res then
+				Result := res
+			end
 		ensure
 			result_attached: Result /= Void
 			result_valid: Result.is_valid_domain_item
@@ -307,16 +309,18 @@ feature{NONE} -- Implementation
 		require
 			a_class_c_attached: a_class_c /= Void
 			a_type_not_void: a_type /= Void
-		local
-			l_formal_type: FORMAL_A
 		do
 			if a_type.is_formal then
-				l_formal_type ?= a_type
-					-- TODO FIXME: Adapt code to be aware of multi-constraint generics.
-				check
-					not_has_multi_constraints: not a_class_c.has_multi_constraints (l_formal_type.position)
+				if attached {FORMAL_A} a_type as l_formal_type then
+						-- TODO FIXME: Adapt code to be aware of multi-constraint generics.
+					check
+						not_has_multi_constraints: not a_class_c.has_multi_constraints (l_formal_type.position)
+					end
+					Result := a_class_c.constraint (l_formal_type.position)
+				else
+					check is_formal: False end
+					Result := a_type
 				end
-				Result := a_class_c.constraint (l_formal_type.position)
 			else
 				Result := a_type
 			end

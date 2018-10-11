@@ -29,7 +29,7 @@ feature -- Access
 			if a_page.page_id.is_case_insensitive_equal_general ("first")
 				or a_page.page_id.is_case_insensitive_equal_general ("final")
 			then
-				create lab.make_with_text ("EWF")
+				create lab.make_with_text ("EiffelWeb")
 				lab.set_foreground_color (colors.white)
 				Result.extend (create {GRAPHICAL_WIZARD_PAGE_WIDGET}.make_with_widget (lab))
 			end

@@ -17,14 +17,15 @@ feature -- Evaluate
 	is_satisfied_by (a_item: QL_LOCAL): BOOLEAN
 			-- Evaluate `a_item'.
 		local
-			l_real_feature: QL_REAL_FEATURE
 			l_checker: like usage_checker
 		do
-			l_real_feature ?= a_item.parent
-			check l_real_feature /= Void end
-			l_checker := usage_checker
-			l_checker.process_ast (l_real_feature.ast, a_item.name)
-			Result := l_checker.last_is_used
+			if attached {QL_REAL_FEATURE} a_item.parent as l_real_feature then
+				l_checker := usage_checker
+				l_checker.process_ast (l_real_feature.ast, a_item.name)
+				Result := l_checker.last_is_used
+			else
+				check is_real_feature: False end
+			end
 		end
 
 feature{NONE} -- Implementation
@@ -38,7 +39,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -146,11 +146,18 @@ feature -- Access
 
 	code_structure: QL_CODE_STRUCTURE_ITEM
 			-- Class associated with Current line
+		local
+			l_code_structure_internal: like code_structure_internal
 		do
-			if code_structure_internal = Void then
-				code_structure_internal ?= parent
+			l_code_structure_internal := code_structure_internal
+			if
+				l_code_structure_internal = Void and then
+				attached {like code_structure_internal} parent as l_code_structure
+			then
+				l_code_structure_internal := l_code_structure
+				code_structure_internal := l_code_structure_internal
 			end
-			Result := code_structure_internal
+			Result := l_code_structure_internal
 		ensure
 			result_attached: Result /= Void
 		end
@@ -207,22 +214,24 @@ feature -- Status report
 			a_parent_attached: a_parent /= Void
 			a_parent_valid: a_parent.is_valid_domain_item and then a_parent.is_code_structure
 		local
-			l_code_item: QL_CODE_STRUCTURE_ITEM
 			l_text: STRING
 			l_line_cnt: INTEGER
 			l_text_cnt: INTEGER
 			l_last_new_line_pos: INTEGER
 		do
 			if a_line_number > 0 then
-				l_code_item ?= a_parent
-				l_text := l_code_item.text
-				l_line_cnt := l_text.occurrences ('%N')
-				l_text_cnt := l_text.count
-				l_last_new_line_pos := l_text.last_index_of ('%N', l_text_cnt)
-				if l_last_new_line_pos < l_text_cnt then
-					l_line_cnt := l_line_cnt + 1
+				if attached {QL_CODE_STRUCTURE_ITEM} a_parent as l_code_item then
+					l_text := l_code_item.text
+					l_line_cnt := l_text.occurrences ('%N')
+					l_text_cnt := l_text.count
+					l_last_new_line_pos := l_text.last_index_of ('%N', l_text_cnt)
+					if l_last_new_line_pos < l_text_cnt then
+						l_line_cnt := l_line_cnt + 1
+					end
+					Result := a_line_number <= l_line_cnt
+				else
+					check is_code_structure: False end
 				end
-				Result := a_line_number <= l_line_cnt
 			end
 		end
 
@@ -245,33 +254,34 @@ feature{NONE} -- Implementation
 			valid_line_number: is_line_number_valid (line_number, parent)
 		local
 			l_text: STRING
-			l_code_item: QL_CODE_STRUCTURE_ITEM
 			l_pos: INTEGER
 			l_cnt: INTEGER
 			l_new_line: CHARACTER
 			l_next_new_line_pos: INTEGER
 		do
-			l_code_item ?= parent
-			check l_code_item /= Void end
-			l_text := l_code_item.text
-			l_cnt := line_number - 1
-			l_pos := 1
-			l_new_line := '%N'
-			if l_cnt > 0 then
-				from
-				until
-					l_cnt = 0
-				loop
-					l_pos := l_text.index_of (l_new_line, l_pos)
-					l_pos := l_pos + 1
-					l_cnt := l_cnt - 1
+			if attached {QL_CODE_STRUCTURE_ITEM} parent as l_code_item then
+				l_text := l_code_item.text
+				l_cnt := line_number - 1
+				l_pos := 1
+				l_new_line := '%N'
+				if l_cnt > 0 then
+					from
+					until
+						l_cnt = 0
+					loop
+						l_pos := l_text.index_of (l_new_line, l_pos)
+						l_pos := l_pos + 1
+						l_cnt := l_cnt - 1
+					end
 				end
+				l_next_new_line_pos := l_text.index_of (l_new_line, l_pos)
+				if l_next_new_line_pos = 0 then
+					l_next_new_line_pos := l_text.count
+				end
+				create internal_text.make_from_string (l_text.substring (l_pos, l_next_new_line_pos))
+			else
+				check parent_is_code_structure: False end
 			end
-			l_next_new_line_pos := l_text.index_of (l_new_line, l_pos)
-			if l_next_new_line_pos = 0 then
-				l_next_new_line_pos := l_text.count
-			end
-			create internal_text.make_from_string (l_text.substring (l_pos, l_next_new_line_pos))
 		ensure
 			internal_text_attached: internal_text /= Void
 		end
@@ -356,7 +366,7 @@ invariant
 	parent_valid: parent.is_valid_domain_item and then parent.is_code_structure
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

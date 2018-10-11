@@ -198,16 +198,16 @@ feature{NONE} -- Implementation
 		require
 			a_item_attached: a_item /= Void
 			a_item_is_valid: a_item.is_valid_domain_item
-		local
-			l_feature: QL_FEATURE
 		do
-			l_feature ?= a_item.parent
-			check l_feature /= Void end
-			Result := l_feature.is_immediate
+			if attached {QL_FEATURE} a_item.parent as l_feature then
+				Result := l_feature.is_immediate
+			else
+				check is_feature: False end
+			end
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

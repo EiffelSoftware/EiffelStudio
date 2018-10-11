@@ -373,14 +373,11 @@ feature -- Status report
 
 	is_valid_domain_item: BOOLEAN
 			-- Is current a valid item that is fully attached in a domain?
-		local
-			l_target: QL_TARGET
 		do
 			if parent = Void then
 					-- If an item's parent is Void, and then if it's a target item that represents
 					-- the root target of current system, it's valid, otherwise, not valid.
-				if is_target then
-					l_target ?= Current
+				if is_target and then attached {QL_TARGET} Current as l_target then
 					Result := l_target.is_valid_domain_item
 				end
 			else
@@ -398,7 +395,7 @@ invariant
 	full_name_valid: path /= Void
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -53,7 +53,11 @@ feature{NONE} -- Implementation
 		do
 			create l_domain_generator.make (class_criterion_factory.simple_criterion_with_index (
 					class_criterion_factory.c_is_compiled), True)
-			clients ?= criterion_domain.new_domain (l_domain_generator)
+			if attached {like clients} criterion_domain.new_domain (l_domain_generator) as l_clients then
+				clients := l_clients
+			else
+				clients := Void
+			end
 			is_criterion_domain_evaluated := True
 		ensure then
 			client_classes_attached: clients /= Void
@@ -63,7 +67,7 @@ feature{NONE} -- Implementation
 			-- Client class domain
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

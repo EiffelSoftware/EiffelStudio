@@ -57,16 +57,16 @@ feature -- Process
 			-- Process `a_item'.
 		local
 			l_target: QL_TARGET
-			l_library: CONF_LIBRARY
 			l_group: CONF_GROUP
 		do
 			l_group := a_item.group
-			if l_group.is_library then
-				l_library ?= l_group
-				if l_library.library_target /= Void then
-					create l_target.make_with_parent (l_library.library_target, a_item)
+			if l_group.is_library and then attached {CONF_LIBRARY} l_group as l_library then
+				if attached l_library.library_target as l_lib_target then
+					create l_target.make_with_parent (l_lib_target, a_item)
 				end
 				evaluate_item (l_target)
+			else
+				check is_not_library: not l_group.is_library end
 			end
 		end
 
@@ -151,7 +151,7 @@ feature{NONE} -- Implementation/Criterion interaction
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

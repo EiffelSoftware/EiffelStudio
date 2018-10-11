@@ -48,12 +48,12 @@ feature -- Status report
 
 	is_visible: BOOLEAN
 			-- Is current visible from source domain level?
-		local
-			l_feature: QL_FEATURE
 		do
-			l_feature ?= parent
-			check l_feature /= Void end
-			Result := l_feature.is_visible
+			if attached {QL_FEATURE} parent as l_feature then
+				Result := l_feature.is_visible
+			else
+				check is_feature: False end
+			end
 		end
 
 feature -- Visit
@@ -79,7 +79,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

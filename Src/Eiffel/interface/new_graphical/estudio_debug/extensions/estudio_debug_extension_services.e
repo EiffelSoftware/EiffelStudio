@@ -58,6 +58,12 @@ feature -- Execution
 			end
 
 			a_menu.extend (create {EV_MENU_SEPARATOR})
+			create l_menu_item.make_with_text_and_action ("Export/Import Tabs ...", agent on_export_import_tabs)
+			a_menu.extend (l_menu_item)
+			if session_manager.service = Void then
+				l_menu_item.disable_sensitive
+			end
+			a_menu.extend (create {EV_MENU_SEPARATOR})
 
 			create l_menu_item.make_with_text_and_action ("Rescan Code Template Catalog", agent on_rescan_code_template_catalog)
 			a_menu.extend (l_menu_item)
@@ -106,7 +112,17 @@ feature {NONE} -- Actions
 			l_window.show_relative_to_window (window)
 		end
 
-feature {NONE} -- Basic operations
+feature {NONE} -- Tabs operations
+
+	on_export_import_tabs
+		local
+			dlg: ES_TABS_EXPORT_IMPORT_DIALOG
+		do
+			create dlg.make (window_manager)
+			dlg.set_title_and_label ("Open editor tabs", "Share open editor tabs ...")
+			dlg.set_is_modal (False)
+			dlg.show_on_active_window
+		end
 
 feature {NONE} -- Services
 
@@ -142,7 +158,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

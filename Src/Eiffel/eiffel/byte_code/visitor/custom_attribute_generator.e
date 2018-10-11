@@ -64,11 +64,9 @@ feature -- Code generation
 			a_code_generator_not_void: a_code_generator /= Void
 		local
 			cb: CREATION_EXPR_B
-			l_creation_external: EXTERNAL_B
 			l_extension: IL_EXTENSION_I
 			count: INTEGER
 			param: BYTE_LIST [EXPR_B]
-			param_b: PARAMETER_B
 			l_tuple_const: ARRAYED_LIST [TUPLE [STRING_B, EXPR_B]]
 			l_ctor_token: INTEGER
 			l_creation_class: CLASS_C
@@ -89,10 +87,14 @@ feature -- Code generation
 			end
 
 			if cb.type.is_external then
-				l_creation_external ?= cb.call
-				if l_creation_external /= Void then
-					l_extension ?= l_creation_external.extension
+				if
+					attached {EXTERNAL_B} cb.call as l_creation_external and then
+					attached {IL_EXTENSION_I} l_creation_external.extension as ext
+				then
+					l_extension := ext
 					l_ctor_token := l_extension.token
+				else
+					l_extension := Void
 				end
 			end
 			if l_extension = Void then
@@ -115,13 +117,15 @@ feature -- Code generation
 				until
 					param.after
 				loop
-					param_b ?= param.item
-					check
-						param_b_not_void: param_b /= Void
+					if
+						attached {PARAMETER_B} param.item as param_b and then
+						attached {CL_TYPE_A} param_b.attachment_type as l_param_type
+					then
+						set_target_type (l_param_type)
+						param_b.expression.process (Current)
+					else
+						check is_param_b_with_type_a: False end
 					end
-					l_type ?= param_b.attachment_type
-					set_target_type (l_type)
-					param_b.expression.process (Current)
 					param.forth
 				end
 			end
@@ -178,12 +182,13 @@ feature {BYTE_NODE} -- Visitors
 			-- Process `a_node'.
 		local
 			l_expressions: BYTE_LIST [BYTE_NODE]
-			l_expr: EXPR_B
 			l_old_target_type: like target_type
 			l_type: TYPE_A
 		do
 			check is_constant_expression: a_node.is_constant_expression end
 			l_expressions := a_node.expressions
+
+			check not a_node.type.generics.is_empty end
 			l_type := a_node.type.generics [1]
 
 			if is_target_object then
@@ -207,9 +212,11 @@ feature {BYTE_NODE} -- Visitors
 			until
 				l_expressions.after
 			loop
-				l_expr ?= l_expressions.item
-				check l_expr_not_void: l_expr /= Void end
-				l_expr.process (Current)
+				if attached {EXPR_B} l_expressions.item as l_expr then
+					l_expr.process (Current)
+				else
+					check is_expr_b: False end
+				end
 				l_expressions.forth
 			end
 
@@ -246,12 +253,6 @@ feature {BYTE_NODE} -- Visitors
 		local
 			l_value: VALUE_I
 			l_type: TYPE_A
-			l_char_type: CHARACTER_A
-			l_int: INTEGER_CONSTANT
-			l_bool: BOOL_VALUE_I
-			l_char: CHAR_VALUE_I
-			l_real: REAL_VALUE_I
-			l_string: STRING_VALUE_I
 		do
 			check is_constant_expression: a_node.is_constant_expression end
 			l_type := a_node.type
@@ -262,44 +263,56 @@ feature {BYTE_NODE} -- Visitors
 			l_value := a_node.value
 
 			if l_value.is_integer then
-				l_int ?= l_value
-				check l_int_not_void: l_int /= Void end
-				insert_integer_constant (l_int)
-			elseif l_value.is_string then
-				l_string ?= l_value
-				check l_string_not_void: l_string /= Void end
-				ca_blob.put_string (l_string.string_value_32)
-			elseif l_value.is_boolean then
-				l_bool ?= l_value
-				check l_bool_not_void: l_bool /= Void end
-				ca_blob.put_boolean (l_bool.boolean_value)
-			elseif l_value.is_character then
-				l_char ?= l_value
-				l_char_type ?= target_type
-				check
-					l_char_attached: l_char /= Void
-					l_char_type_attached: l_char_type /= Void
-				end
-				if l_char_type.is_character_32 then
-					ca_blob.put_natural_32 (l_char.character_value.natural_32_code)
+				if attached {INTEGER_CONSTANT} l_value as l_int then
+					insert_integer_constant (l_int)
 				else
-					ca_blob.put_character (l_char.character_value.to_character_8)
+					check is_integer: False end
+				end
+			elseif l_value.is_string then
+				if attached {STRING_VALUE_I} l_value as l_string then
+					ca_blob.put_string (l_string.string_value_32)
+				else
+					check is_string: False end
+				end
+			elseif l_value.is_boolean then
+				if attached {BOOL_VALUE_I} l_value as l_bool then
+					ca_blob.put_boolean (l_bool.boolean_value)
+				else
+					check is_boolean: False end
+				end
+			elseif l_value.is_character then
+				if
+					attached {CHAR_VALUE_I} l_value as l_char and
+					attached {CHARACTER_A} target_type as l_char_type
+				then
+					if l_char_type.is_character_32 then
+						ca_blob.put_natural_32 (l_char.character_value.natural_32_code)
+					else
+						ca_blob.put_character (l_char.character_value.to_character_8)
+					end
+				else
+					check
+						is_character: False
+						is_target_of_char_type: False
+					end
 				end
 			elseif l_value.is_real then
-				l_real ?= l_value
-				check l_real_not_void: l_real /= Void end
-				if target_type.is_real_32 then
-					ca_blob.put_real_32 (l_real.real_32_value)
-				elseif target_type.is_real_64 then
-					ca_blob.put_real_64 (l_real.real_64_value)
-				else
-						-- Case where target is System.object.
-					check is_target_object end
-					if l_value.is_real_32 then
+				if attached {REAL_VALUE_I} l_value as l_real then
+					if target_type.is_real_32 then
 						ca_blob.put_real_32 (l_real.real_32_value)
-					else
+					elseif target_type.is_real_64 then
 						ca_blob.put_real_64 (l_real.real_64_value)
+					else
+							-- Case where target is System.object.
+						check is_target_object end
+						if l_value.is_real_32 then
+							ca_blob.put_real_32 (l_real.real_32_value)
+						else
+							ca_blob.put_real_64 (l_real.real_64_value)
+						end
 					end
+				else
+					check is_real: False end
 				end
 			else
 				check not_supported: False end
@@ -308,17 +321,15 @@ feature {BYTE_NODE} -- Visitors
 
 	process_external_b (a_node: EXTERNAL_B)
 			-- Process `a_node'.
-		local
-			l_il_enum: IL_ENUM_EXTENSION_I
-			l_cl_type: CL_TYPE_A
 		do
 			check is_constant_expression: a_node.is_constant_expression end
-			l_il_enum ?= a_node.extension
-			if l_il_enum /= Void then
+			if attached {IL_ENUM_EXTENSION_I} a_node.extension as l_il_enum then
 				if is_target_object then
-					l_cl_type ?= a_node.type
-					check l_cl_type_not_void: l_cl_type /= Void end
-					insert_enum_type (l_cl_type)
+					if attached {CL_TYPE_A} a_node.type as l_cl_type then
+						insert_enum_type (l_cl_type)
+					else
+						check is_cl_type_a: False end
+					end
 				end
 				insert_integer_constant (l_il_enum.value)
 			else
@@ -388,11 +399,8 @@ feature {BYTE_NODE} -- Visitors
 	process_type_expr_b (a_node: TYPE_EXPR_B)
 			-- Process `a_node'.
 		local
-			l_gen_type: GEN_TYPE_A
-			l_actual_type: CL_TYPE_A
 			l_class_type: CLASS_TYPE
 			l_type_name: STRING_32
-			l_ext_class: EXTERNAL_CLASS_C
 		do
 			check is_constant_expression: a_node.is_constant_expression end
 			if is_target_object then
@@ -401,15 +409,13 @@ feature {BYTE_NODE} -- Visitors
 
 			if a_node.is_dotnet_type then
 				l_class_type := a_node.type.associated_class_type (cil_generator.current_class_type.type)
-			else
-				l_gen_type ?= a_node.type
-				check
-					l_gen_type_not_void: l_gen_type /= Void
-					l_gen_type_has_one_generic: l_gen_type.generics.count > 0
-				end
-				l_actual_type ?= l_gen_type.generics[1]
-				if l_actual_type /= Void then
+			elseif attached {GEN_TYPE_A} a_node.type as l_gen_type and then l_gen_type.generics.count > 0 then
+				if attached {CL_TYPE_A} l_gen_type.generics[1] as l_actual_type then
 					l_class_type := l_actual_type.associated_class_type (cil_generator.current_class_type.type)
+				end
+			else
+				check
+					a_node_type_with_non_empty_generics: False
 				end
 			end
 			if l_class_type /= Void then
@@ -419,8 +425,7 @@ feature {BYTE_NODE} -- Visitors
 					l_type_name.append_character (' ')
 					l_type_name.append_string_general (l_class_type.assembly_info.full_name)
 				else
-					l_ext_class ?= l_class_type.associated_class
-					if l_ext_class /= Void  then
+					if attached {EXTERNAL_CLASS_C} l_class_type.associated_class as l_ext_class then
 						l_type_name.append_character (',')
 						l_type_name.append_character (' ')
 						l_type_name.append (l_ext_class.assembly.full_name)
@@ -432,12 +437,12 @@ feature {BYTE_NODE} -- Visitors
 
 	process_void_b (a_node: VOID_B)
 			-- Process `a_node'.
-		local
-			l_cl_type: CL_TYPE_A
 		do
 			check is_constant_expression: a_node.is_constant_expression end
-			l_cl_type ?= target_type
-			if l_cl_type.base_class = system.native_array_class.compiled_class then
+			if
+				attached {CL_TYPE_A} target_type as l_cl_type and then
+				l_cl_type.base_class = system.native_array_class.compiled_class
+			then
 					-- We insert the value 0xFFFFFFFF to show that it is a Void array.
 				ca_blob.put_integer_32 (0xFFFFFFFF)
 			else
@@ -451,11 +456,8 @@ feature {NONE} -- Implemention
 			-- Is `a_type' of type System.Object?
 		require
 			target_type_not_void: target_type /= Void
-		local
-			l_cl_type: CL_TYPE_A
 		do
-			l_cl_type ?= target_type
-			if l_cl_type /= Void then
+			if attached {CL_TYPE_A} target_type as l_cl_type then
 				Result := l_cl_type.class_id = system.system_object_id or
 					l_cl_type.class_id = system.any_id
 			end
@@ -470,7 +472,6 @@ feature {NONE} -- Implemention
 		local
 			l_expr_b: EXPR_B
 			l_feat: FEATURE_I
-			l_extension: IL_EXTENSION_I
 			l_string_b: STRING_B
 			l_feat_name: STRING
 			l_type: TYPE_A
@@ -498,8 +499,10 @@ feature {NONE} -- Implemention
 			insert_field_or_prop_type (l_type)
 
 				-- Put name of attribute or property.
-			if l_feat.written_class.is_external then
-				l_extension ?= l_feat.extension
+			if
+				l_feat.written_class.is_external and then
+				attached {IL_EXTENSION_I} l_feat.extension as l_extension
+			then
 				l_feat_name := l_extension.alias_name
 				if not l_feat.is_attribute then
 					l_feat_name := l_feat_name.twin
@@ -523,10 +526,8 @@ feature {NONE} -- Implemention
 			-- compatible value, or a REAL_32/REAL_64 value.
 		local
 			l_element_type: INTEGER_8
-			l_cl_type_i: CL_TYPE_A
 			l_feature_table: FEATURE_TABLE
 			l_feature_i: FEATURE_I
-			l_il_extension_i: IL_EXTENSION_I
 			l_underlying_type: TYPE_A
 		do
 			if is_target_object then
@@ -534,8 +535,10 @@ feature {NONE} -- Implemention
 				l_element_type := a_int.type.element_type
 			else
 				l_element_type := target_type.element_type
-				l_cl_type_i ?= target_type
-				if l_cl_type_i /= Void and then l_cl_type_i.base_class.is_enum then
+				if
+					attached {CL_TYPE_A} target_type as l_cl_type_i and then
+					l_cl_type_i.base_class.is_enum
+				then
 						-- Use underlying integer type.
 					check
 						l_cl_type_i_not_void: l_cl_type_i /= Void
@@ -547,8 +550,10 @@ feature {NONE} -- Implemention
 						l_feature_table.after or else l_underlying_type /= Void
 					loop
 						l_feature_i := l_feature_table.item_for_iteration
-						l_il_extension_i ?= l_feature_i.extension
-						if l_il_extension_i /= Void and then l_il_extension_i.type = {SHARED_IL_CONSTANTS}.field_type then
+						if
+							attached {IL_EXTENSION_I} l_feature_i.extension as l_il_extension_i and then
+							l_il_extension_i.type = {SHARED_IL_CONSTANTS}.field_type
+						then
 							l_underlying_type := l_feature_i.type
 						end
 						l_feature_table.forth
@@ -624,11 +629,8 @@ feature {NONE} -- Implemention
 			-- Fill `FieldOrPropType' in `ca_blob'.
 		require
 			a_type_not_void: a_type /= Void
-		local
-			l_cl_type: CL_TYPE_A
 		do
-			l_cl_type ?= a_type
-			if l_cl_type = Void then
+			if not attached {CL_TYPE_A} a_type as l_cl_type then
 				ca_blob.put_integer_8 ({MD_SIGNATURE_CONSTANTS}.element_type_boxed)
 			elseif l_cl_type.is_enum then
 				insert_enum_type (l_cl_type)
@@ -658,15 +660,16 @@ feature {NONE} -- Implemention
 			a_cl_type_not_void: a_cl_type /= Void
 		local
 			l_type_name: STRING_32
-			l_ext_class: EXTERNAL_CLASS_C
 		do
 			ca_blob.put_integer_8 ({MD_SIGNATURE_CONSTANTS}.element_type_enum)
 			create l_type_name.make_from_string_general (a_cl_type.il_type_name (Void, cil_generator.current_class_type.type))
 			l_type_name.append_character (',')
 			l_type_name.append_character (' ')
-			l_ext_class ?= a_cl_type.base_class
-			check l_ext_class_not_void: l_ext_class /= Void end
-			l_type_name.append (l_ext_class.assembly.full_name)
+			if attached {EXTERNAL_CLASS_C} a_cl_type.base_class as l_ext_class then
+				l_type_name.append (l_ext_class.assembly.full_name)
+			else
+				check is_ext_class: False end
+			end
 			ca_blob.put_string (l_type_name)
 		end
 
@@ -674,7 +677,7 @@ invariant
 	is_dotnet_compilation: system.il_generation
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -46,24 +46,28 @@ feature {NONE} -- Properties
 			i: INTEGER
 			s: STRING
 		do
-			if e_class.generics /= Void then
-				from
-					gs := e_class.generics
-					create gts.make (1, e_class.generics.count)
-					gs.start
-					i := 1
-				until
-					gs.after
-				loop
-					gts.put (gs.item.constraints.dump (False),i)
-					i := i + 1
-					gs.forth
+			if attached e_class.generics as l_generics then
+				if l_generics.is_empty then
+					create gts.make_empty
+				else
+					from
+						create gts.make_filled ("", 1, l_generics.count)
+						gs := l_generics
+						gs.start
+						i := 1
+					until
+						gs.after
+					loop
+						gts.put (gs.item.constraints.dump (False),i)
+						i := i + 1
+						gs.forth
+					end
 				end
 			end
 
-			if e_feature.arguments /= Void and  e_feature.arguments.argument_names /= Void then
-				types := e_feature.arguments.linear_representation
-				l_names := e_feature.arguments.argument_names.linear_representation
+			if attached e_feature.arguments as l_feat_args and then attached l_feat_args.argument_names as l_feat_args_names then
+				types := l_feat_args.linear_representation
+				l_names := l_feat_args_names.linear_representation
 
 				from
 					types.start
@@ -72,8 +76,8 @@ feature {NONE} -- Properties
 					types.after
 				loop
 					print (l_names.item + ": ")
-					if types.item /= Void then
-						s := types.item.dump
+					if attached types.item as l_type then
+						s := l_type.dump
 					else
 						s := "Void"
 					end
@@ -98,7 +102,7 @@ feature {NONE} -- Properties
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

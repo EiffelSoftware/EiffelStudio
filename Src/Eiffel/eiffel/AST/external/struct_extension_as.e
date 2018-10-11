@@ -45,12 +45,10 @@ feature {NONE} -- Initialization
 			id := a_name.value_id
 			if type /= Void then
 					-- It is a `setter'
-				create argument_types.make (1, 2)
-				argument_types.put (id, 1)
+				create argument_types.make_filled (id, 1, 2)
 				argument_types.put (type.value_id, 2)
 			else
-				create argument_types.make (1, 1)
-				argument_types.put (id, 1)
+				create argument_types.make_filled (id, 1, 1)
 			end
 			field_name_id := a_field_name.name_id
 			header_files := use_list.array_representation
@@ -181,7 +179,7 @@ feature {NONE} -- Implementation
 					-- Add special file name to the list of header files at the
 					-- first position.
 				if header_files = Void then
-					create header_files.make (1,1)
+					create header_files.make_filled (0, 1, 1)
 				else
 					header_files.force (header_files.item (header_files.lower), header_files.upper + 1)
 				end
@@ -191,7 +189,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -209,17 +209,17 @@ feature {NONE} -- Implementation
 				l_code.right_adjust
 				l_code.left_adjust
 
-				if argument_names /= Void then
+				if attached argument_names as l_arg_names then
 						-- Generate all expressions corresponding to passed arguments.
 						-- We use a trick to use an empty generation buffer by replacing
 						-- shared one `context.buffer' by a temporary one.
 					l_old := context.buffer
-					create l_values.make (1, argument_names.count)
-					create l_names.make (1, argument_names.count)
+					create l_values.make_filled ("", 1, l_arg_names.count)
+					create l_names.make_filled ("", 1, l_arg_names.count)
 
 					from
 						i := 1
-						nb := argument_names.count
+						nb := l_arg_names.count
 					until
 						i > nb
 					loop
@@ -231,11 +231,11 @@ feature {NONE} -- Implementation
 					-- Extract names from arguments.
 					from
 						i := 0
-						nb := argument_names.count - 1
+						nb := l_arg_names.count - 1
 					until
 						i > nb
 					loop
-						l_arg := "$" + Names_heap.item (argument_names.item (i))
+						l_arg := "$" + Names_heap.item (l_arg_names.item (i))
 						l_names.put (l_arg, i + 1)
 							-- Find out the length of the biggest one.
 						l_max := l_max.max (l_arg.count)
@@ -252,7 +252,7 @@ feature {NONE} -- Implementation
 						from
 							done := True
 							i := 1
-							nb := argument_names.count
+							nb := l_arg_names.count
 						until
 							i > nb
 						loop
@@ -314,7 +314,7 @@ feature {NONE} -- Implementation
 			temp: STRING
 		do
 			from
-				create Result.make(1, count)
+				create Result.make_filled ("", 1, count)
 				i := 1
 			until
 				i > count
@@ -407,7 +407,7 @@ feature {NONE} -- Implementation
 	end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -420,22 +420,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class INLINE_EXTENSION_I

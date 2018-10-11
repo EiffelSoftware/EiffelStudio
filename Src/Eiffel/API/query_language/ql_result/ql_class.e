@@ -83,8 +83,14 @@ feature{NONE} -- Initialization
 			a_class_attached: a_class /= Void
 		do
 			conf_class := a_class
-			class_i ?= a_class
-			class_c := class_i.compiled_representation
+			if attached {like class_i} a_class as cl_i then
+				class_i := cl_i
+				class_c := class_i.compiled_representation
+			else
+				check is_class_i: False end
+				class_i := Void
+				class_c := Void
+			end
 			is_visible := True
 		ensure
 			class_item_set: conf_class = a_class
@@ -356,7 +362,7 @@ invariant
 	parent_valid: parent /= Void implies parent.is_group and parent.is_valid_domain_item
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

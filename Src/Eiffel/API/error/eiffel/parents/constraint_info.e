@@ -43,7 +43,6 @@ feature -- Output
 			actual_type_set /= Void
 			c_type /= Void
 		local
-			l_gen_type: GEN_TYPE_A
 			l_current_class: CLASS_C
 		do
 			l_current_class := system.current_class
@@ -58,10 +57,12 @@ feature -- Output
 			actual_type_set.ext_append_to (a_text_formatter, type.base_class )
 			a_text_formatter.add_new_line
 			if c_type.has_formal then
-				l_gen_type ?= type
-				check type_is_generic: l_gen_type /= Void end
-				c_type := c_type.twin
-				c_type.substitude_formals (l_gen_type)
+				if attached {GEN_TYPE_A} type as l_gen_type then
+					c_type := c_type.twin
+					c_type.substitude_formals (l_gen_type)
+				else
+					check type_is_generic: False end
+				end
 			end
 			if not actual_type_set.is_valid or else not actual_type_set.conform_to_type (a_context_class, c_type) then
 				a_text_formatter.add ("Type to which it should conform: ")
@@ -130,7 +131,7 @@ feature {COMPILER_EXPORTER} -- Setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -181,7 +181,6 @@ feature -- Status report
 	is_class_in_group (a_class: CLASS_I): BOOLEAN
 			-- Does `a_class' belongs to one of the group in `groups'.
 		local
-			l_phys_as: CONF_PHYSICAL_ASSEMBLY
 			l_assemblies: ARRAYED_LIST [CONF_ASSEMBLY]
 			l_index: INTEGER
 		do
@@ -194,18 +193,18 @@ feature -- Status report
 					-- if the class is in the list of classes there has to be a group that is included
 				if not groups.has (found_group) then
 					if found_group.is_physical_assembly then
-						l_phys_as ?= found_group
-						check
-							assembly: l_phys_as /= Void
-						end
-						from
-							l_assemblies := l_phys_as.assemblies
-							l_assemblies.start
-						until
-							groups.has (found_group) or l_assemblies.after
-						loop
-							found_group := l_assemblies.item
-							l_assemblies.forth
+						if attached {CONF_PHYSICAL_ASSEMBLY} found_group as l_phys_as then
+							from
+								l_assemblies := l_phys_as.assemblies
+								l_assemblies.start
+							until
+								groups.has (found_group) or l_assemblies.after
+							loop
+								found_group := l_assemblies.item
+								l_assemblies.forth
+							end
+						else
+							check is_physical_assembly: False end
 						end
 					else
 						found_group := found_group.target.system.lowest_used_in_library
@@ -289,7 +288,7 @@ invariant
 	groups_not_void: groups /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -35,7 +35,6 @@ feature -- Output
 
 	display_feature (f: E_FEATURE; a_text_formatter: TEXT_FORMATTER)
 		local
-			const: E_CONSTANT;
 			ec: CLASS_I;
 			str: STRING
 		do
@@ -44,7 +43,6 @@ feature -- Output
 				a_text_formatter.add_space
 				a_text_formatter.process_keyword_text (ti_is_keyword, Void)
 				a_text_formatter.add_space
-				const ?= f;	--| Cannot fail
 --				ec := const.type.associated_class.lace_class
 				if ec = eiffel_system.character_class then
 					str := "'"
@@ -52,23 +50,29 @@ feature -- Output
 					str := "%""
 				else
 					str := ""
-				end;
-				if const.is_unique then
-					a_text_formatter.add ("unique (");
-					a_text_formatter.add (str);
-					a_text_formatter.add (const.value_32);
-					a_text_formatter.add (str);
-					a_text_formatter.add_char (')')
+				end
+				if attached {E_CONSTANT} f as const then
+						--| Cannot fail			
+					if const.is_unique then
+						a_text_formatter.add ("unique (");
+						a_text_formatter.add (str);
+						a_text_formatter.add (const.value_32);
+						a_text_formatter.add (str);
+						a_text_formatter.add_char (')')
+					else
+						a_text_formatter.add (str);
+						a_text_formatter.add (const.value_32);
+						a_text_formatter.add (str);
+					end
 				else
-					a_text_formatter.add (str);
-					a_text_formatter.add (const.value_32);
-					a_text_formatter.add (str);
+					check is_constant: False end
+					a_text_formatter.add (f.name_8);
 				end
 			end
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

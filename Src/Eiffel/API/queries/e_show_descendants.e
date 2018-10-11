@@ -10,7 +10,6 @@ note
 class E_SHOW_DESCENDANTS
 
 inherit
-
 	E_CLASS_CMD
 		redefine
 			domain_generator,
@@ -25,19 +24,21 @@ feature -- Output
 	work
 			-- Execute Current command.	
 		local
-			l_domain: QL_CLASS_DOMAIN
 			l_class: QL_CLASS
 		do
 			text_formatter.add_new_line
 			l_class := query_class_item_from_class_c (current_class)
-			l_domain ?= system_target_domain.new_domain (domain_generator)
-			check l_domain /= Void end
-			l_domain.compare_objects
-			l_domain.start
-			l_domain.search (l_class)
-			check not l_domain.exhausted end
-			processed_class.wipe_out
-			rec_display_descendants (l_domain.item, 1, text_formatter)
+			if attached {QL_CLASS_DOMAIN} system_target_domain.new_domain (domain_generator) as l_domain then
+				l_domain.compare_objects
+				l_domain.start
+				l_domain.search (l_class)
+				check not l_domain.exhausted end
+				processed_class.wipe_out
+				rec_display_descendants (l_domain.item, 1, text_formatter)
+			else
+				check is_class_domain: False end
+				processed_class.wipe_out
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -50,22 +51,19 @@ feature {NONE} -- Implementation
 			a_tab_count_non_negative: a_tab_count >= 0
 			a_text_formatter_attached: a_text_formatter /= Void
 		local
-			l_list: LIST [QL_CLASS]
 			l_sorted_list: ARRAYED_LIST [QL_CLASS]
 		do
 			add_tabs (a_text_formatter, a_tab_count)
 			a_class.class_c.append_signature (a_text_formatter, True)
 			if processed_class.has (a_class) then
-				l_list ?= a_class.data
-				if l_list /= Void and then not l_list.is_empty then
+				if attached {LIST [QL_CLASS]} a_class.data as l_list and then not l_list.is_empty then
 					a_text_formatter.add (output_interface_names.ellipse)
 				end
 				a_text_formatter.add_new_line
 			else
 				processed_class.put (a_class)
 				a_text_formatter.add_new_line
-				l_list ?= a_class.data
-				if l_list /= Void and then not l_list.is_empty then
+				if attached {LIST [QL_CLASS]} a_class.data as l_list and then not l_list.is_empty then
 					create l_sorted_list.make (l_list.count)
 					l_list.do_all (agent l_sorted_list.extend)
 					from
@@ -116,7 +114,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -68,8 +68,6 @@ feature {COMPILER_EXPORTER} -- Setting
 			-- Assign proper type to `constant_type'
 		require
 			a_const_not_void: a_const /= Void
-		local
-			l_int: INTEGER_CONSTANT
 		do
 			if a_const.is_boolean then
 				constant_type := Boolean_type
@@ -78,11 +76,11 @@ feature {COMPILER_EXPORTER} -- Setting
 			elseif a_const.is_real then
 				constant_type := manifest_real_64_type
 			elseif a_const.is_integer then
-				l_int ?= a_const
-				check
-					l_int /= Void
+				if attached {INTEGER_CONSTANT} a_const as l_int then
+					constant_type := l_int.manifest_type
+				else
+					check is_integer: False end
 				end
-				constant_type := l_int.manifest_type
 			elseif a_const.is_string then
 				create {CL_TYPE_A} constant_type.make (System.string_8_id)
 			else
@@ -105,7 +103,7 @@ feature {COMPILER_EXPORTER} -- Setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

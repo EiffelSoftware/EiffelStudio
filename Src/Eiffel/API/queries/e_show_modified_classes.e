@@ -48,57 +48,45 @@ feature {NONE} -- Implementation
 
 	display_a_cluster (a_group: CONF_GROUP)
 		local
-			sorted_class_names: SORTED_TWO_WAY_LIST [READABLE_STRING_GENERAL];
-			classes: STRING_TABLE [CONF_CLASS];
-			a_classi: CLASS_I;
-			a_classe: CLASS_C
-			l_precompile: CONF_PRECOMPILE
+			sorted_class_names: SORTED_TWO_WAY_LIST [READABLE_STRING_GENERAL]
+			classes: STRING_TABLE [CONF_CLASS]
 		do
-			create sorted_class_names.make;
-			classes := a_group.classes;
-			from
-				classes.start
-			until
-				classes.after
+			create sorted_class_names.make
+			classes := a_group.classes
+			across
+				classes as ic
 			loop
-				if classes.item_for_iteration.has_modification_date_changed then
-					sorted_class_names.put_front (classes.key_for_iteration)
+				if ic.item.has_modification_date_changed then
+					sorted_class_names.put_front (ic.key)
 				end
-				classes.forth
-			end;
+			end
 			if not sorted_class_names.is_empty then
 				sorted_class_names.sort;
 				text_formatter.add ("Cluster: ");
 				text_formatter.add (a_group.name);
-				l_precompile ?= a_group
-				if l_precompile /= Void then
+				if attached {CONF_PRECOMPILE} a_group then
 					text_formatter.add (" (Precompiled)")
 				end;
 				text_formatter.add_new_line;
-				from
-					sorted_class_names.start
-				until
-					sorted_class_names.after
+				across
+					sorted_class_names as ic
 				loop
-					a_classi ?= classes.item (sorted_class_names.item);
-					if a_classi /= Void then
+					if attached {CLASS_I} classes.item (ic.item) as a_classi then
 						text_formatter.add_indent;
-						a_classe := a_classi.compiled_class;
-						if a_classe /= Void then
-							a_classe.append_signature (text_formatter, True)
+						if attached a_classi.compiled_class as l_classe then
+							l_classe.append_signature (text_formatter, True)
 						else
 							a_classi.append_name (text_formatter);
 							text_formatter.add ("  (not in system)")
 						end;
 						text_formatter.add_new_line;
 					end
-					sorted_class_names.forth
 				end
 			end;
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

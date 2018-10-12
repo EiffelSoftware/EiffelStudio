@@ -747,6 +747,8 @@ feature -- Element change
 			--
 			-- To choose between various insert/replace procedures,
 			-- see `instructions' in the Indexing clause.
+		require else
+			True
 		local
 			l_default_key: detachable K
 			l_new_pos, l_new_index_pos: like position

@@ -357,8 +357,9 @@ feature {NONE} -- Parent window
 			-- Window to which browsing dialog will be modal.
 		do
 			if w /= Void then
-				Result ?= w
-				if Result = Void then
+				if attached {EV_WINDOW} w as win then
+					Result := win
+				else
 					Result := parent_window_of (w.parent)
 				end
 			end

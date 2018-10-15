@@ -137,11 +137,8 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	accelerators_enabled: BOOLEAN = True
 
 	on_activate
-		local
-			p_imp: detachable EV_MENU_ITEM_LIST_IMP
 		do
-			p_imp ?= parent_imp
-			if p_imp /= Void then
+			if attached {EV_MENU_ITEM_LIST_IMP} parent_imp as p_imp then
 				if p_imp.item_select_actions_internal /= Void then
 					p_imp.item_select_actions.call ([attached_interface])
 				end

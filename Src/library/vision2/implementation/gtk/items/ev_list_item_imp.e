@@ -233,14 +233,10 @@ feature -- Measurement
 			-- Horizontal offset relative to parent `x_position' in pixels.
 		local
 			l_h_adjust: POINTER
-			l_parent_imp: like parent_imp
-			l_list_imp: detachable EV_LIST_IMP
 		do
 			-- Return parents horizontal scrollbar offset.
-			l_parent_imp := parent_imp
-			if l_parent_imp /= Void then
-				l_list_imp ?= l_parent_imp
-				if l_list_imp /= Void then
+			if attached parent_imp as l_parent_imp then
+				if attached {EV_LIST_IMP} l_parent_imp as l_list_imp then
 						--| FIXME Combo box list needs to be attained somehow
 					l_h_adjust := {GTK}.gtk_scrolled_window_get_hadjustment (l_list_imp.scrollable_area)
 					if l_h_adjust /= default_pointer then
@@ -254,15 +250,11 @@ feature -- Measurement
 			-- Vertical offset relative to parent `y_position' in pixels.
 		local
 			l_v_adjust: POINTER
-			l_parent_imp: like parent_imp
-			l_list_imp: detachable EV_LIST_IMP
 		do
 			-- Return parents horizontal scrollbar offset.
-			l_parent_imp := parent_imp
-			if l_parent_imp /= Void then
+			if attached parent_imp as l_parent_imp then
 				Result := (l_parent_imp.index_of (interface, 1) - 1) * l_parent_imp.row_height
-				l_list_imp ?= l_parent_imp
-				if l_list_imp /= Void then
+				if attached {EV_LIST_IMP} l_parent_imp as l_list_imp then
 						--| FIXME Combo box list needs to be attained somehow
 					l_v_adjust := {GTK}.gtk_scrolled_window_get_hadjustment (l_list_imp.scrollable_area)
 					if l_v_adjust /= default_pointer then
@@ -274,66 +266,48 @@ feature -- Measurement
 
 	screen_x: INTEGER
 			-- Horizontal offset relative to screen.
-		local
-			l_parent_imp: like parent_imp
 		do
-			l_parent_imp := parent_imp
-			if l_parent_imp /= Void then
+			if attached parent_imp as l_parent_imp then
 				Result := l_parent_imp.screen_x + x_position
 			end
 		end
 
 	screen_y: INTEGER
 			-- Vertical offset relative to screen.
-		local
-			l_parent_imp: like parent_imp
 		do
-			l_parent_imp := parent_imp
-			if l_parent_imp /= Void then
+			if attached parent_imp as l_parent_imp then
 				Result := l_parent_imp.screen_y + y_position
 			end
 		end
 
 	width: INTEGER
 			-- Horizontal size in pixels.
-		local
-			l_parent_imp: like parent_imp
 		do
-			l_parent_imp := parent_imp
-			if l_parent_imp /= Void then
+			if attached parent_imp as l_parent_imp then
 				Result := l_parent_imp.width
 			end
 		end
 
 	height: INTEGER
 			-- Vertical size in pixels.
-		local
-			l_parent_imp: like parent_imp
 		do
-			l_parent_imp := parent_imp
-			if l_parent_imp /= Void then
+			if attached parent_imp as l_parent_imp then
 				Result := l_parent_imp.height
 			end
 		end
 
 	minimum_width: INTEGER
 			-- Minimum horizontal size in pixels.
-		local
-			l_parent_imp: like parent_imp
 		do
-			l_parent_imp := parent_imp
-			if l_parent_imp /= Void then
+			if attached parent_imp as l_parent_imp then
 				Result := l_parent_imp.minimum_width
 			end
 		end
 
 	minimum_height: INTEGER
 			-- Minimum vertical size in pixels.
-		local
-			l_parent_imp: like parent_imp
 		do
-			l_parent_imp := parent_imp
-			if l_parent_imp /= Void then
+			if attached parent_imp as l_parent_imp then
 				Result := l_parent_imp.row_height
 			end
 		end

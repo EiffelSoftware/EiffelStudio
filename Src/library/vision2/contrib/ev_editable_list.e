@@ -193,16 +193,13 @@ feature -- Status setting
 			-- Set widget type to be displayed at column index 'i'
 		require
 			editable_column: column_editable (i)
-		local
-			combo_box: detachable EV_COMBO_BOX
 		do
 			if change_widgets.has (i) then
 				change_widgets.replace (a_widget, i)
 			else
 				change_widgets.put (a_widget, i)
 			end
-			combo_box ?= a_widget
-			if combo_box /= Void then
+			if attached {EV_COMBO_BOX} a_widget as combo_box then
 				combo_box.select_actions.extend (agent combo_item_selected (combo_box))
 			end
 		end
@@ -361,29 +358,21 @@ feature {NONE} -- Actions
 			-- it hides the editable dialog.  If not `adding' then remove the
 			-- appropriate agent.
 		local
-			con: detachable EV_CONTAINER
-			a_container: detachable LINEAR [EV_WIDGET]
 			button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
 		do
-			a_container ?= a_container_arg.linear_representation
-			check a_container /= Void then end
-			from
-				a_container.start
-			until
-				a_container.off
+			across
+				a_container_arg.linear_representation as ic
 			loop
-				button_press_actions := a_container.item.pointer_button_press_actions
+				button_press_actions := ic.item.pointer_button_press_actions
 				if adding then
 					button_press_actions.extend (agent hide_window)
 				else
 					button_press_actions.go_i_th (button_press_actions.count)
 					button_press_actions.remove
 				end
-				con ?= a_container.item
-				if con /= Void then
+				if attached {EV_CONTAINER} ic.item as con then
 					update_agents (con, adding)
 				end
-				a_container.forth
 			end
 		end
 
@@ -407,17 +396,23 @@ feature {NONE} -- Commands
 				end
 
 				if change_widgets.has (widget_column) then
-					widget ?= change_widgets.item (widget_column)
+					if attached {like widget} change_widgets.item (widget_column) as w then
+						widget := w
+					else
+						widget := Void
+					end
 				else
 						-- Use text field as default widget type
 					create {EV_TEXT_FIELD} textable
 					change_widgets.put (textable, widget_column)
-					widget ?= textable
+					if attached {like widget} textable as w then
+						widget := w
+					else
+						widget := Void
+					end
 				end
 				l_widget := widget
 				check l_widget /= Void then end
-
-
 
 						-- Create the parent dialog
 				create l_internal_dialog

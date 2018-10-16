@@ -24,11 +24,12 @@ create
 
 feature {NONE} -- Initialize
 
-	make (a_setup: CMS_SETUP; req: WSF_REQUEST)
+	make (a_setup: CMS_SETUP; req: WSF_REQUEST; resp: WSF_RESPONSE)
 			-- Create the API service with a setup `a_setup'
-			-- and request `req'.
+			-- and request `req', response `resp`.
 		do
 			request := req
+			response := resp
 			setup := a_setup
 			create error_handler.make
 			create {CMS_ENV_LOGGER} logger.make
@@ -69,6 +70,8 @@ feature {NONE} -- Initialize
 				storage := l_storage
 			else
 				create {CMS_STORAGE_NULL} storage
+				storage.error_handler.append (error_handler)
+				error_handler.remove_all_errors
 			end
 
 				-- Keep enable modules list.
@@ -322,7 +325,9 @@ feature {CMS_ACCESS} -- Module management
 			-- Install CMS or uninstalled module which are enabled.
 		local
 			l_module: CMS_MODULE
+			l_tmp_err_handler: ERROR_HANDLER
 		do
+			create l_tmp_err_handler.make_with_id ("cms_api.install_all_modules")
 			across
 				setup.modules as ic
 			loop
@@ -333,7 +338,14 @@ feature {CMS_ACCESS} -- Module management
 					-- if this is installed or not...
 				if l_module.is_enabled and not l_module.is_installed (Current) then
 					install_module (l_module)
+					if has_error then
+						l_tmp_err_handler.append (error_handler)
+						reset_error
+					end
 				end
+			end
+			if l_tmp_err_handler.has_error then
+				error_handler.append (l_tmp_err_handler)
 			end
 		end
 
@@ -350,7 +362,7 @@ feature {CMS_ACCESS} -- Module management
 			module_not_installed: not is_module_installed (m)
 		do
 			m.install (Current)
-			if m.is_enabled then
+			if not has_error and then m.is_enabled then
 				m.initialize (Current)
 			end
 		end
@@ -635,6 +647,10 @@ feature {NONE} -- Access: request
 			-- Associated http request.
 			--| note: here for the sole purpose of CMS_API.
 
+	response: WSF_RESPONSE
+			-- Associated http response.
+			--| note: here for the sole purpose of CMS_API, mainly to report error.
+
 feature -- Content
 
 	content_types: ARRAYED_LIST [CMS_CONTENT_TYPE]
@@ -808,25 +824,35 @@ feature -- Logging
 			end
 
 			inspect a_level
-				when {CMS_LOG}.level_emergency then
-					logger.put_alert (m, Void)
-				when {CMS_LOG}.level_alert then
-					logger.put_alert (m, Void)
-				when {CMS_LOG}.level_critical then
-					logger.put_critical (m, Void)
-				when {CMS_LOG}.level_error then
-					logger.put_error (m, Void)
-				when {CMS_LOG}.level_warning then
-					logger.put_warning (m, Void)
-				when {CMS_LOG}.level_notice then
-					logger.put_information (m, Void)
-				when {CMS_LOG}.level_info then
-					logger.put_information (m, Void)
-				when {CMS_LOG}.level_debug then
-					logger.put_debug (m, Void)
-				else
-					logger.put_debug (m, Void)
+			when {CMS_LOG}.level_emergency then
+				response.put_error (m)
+				logger.put_alert (m, Void)
+			when {CMS_LOG}.level_alert then
+				response.put_error (m)
+				logger.put_alert (m, Void)
+			when {CMS_LOG}.level_critical then
+				response.put_error (m)
+				logger.put_critical (m, Void)
+			when {CMS_LOG}.level_error then
+				response.put_error (m)
+				logger.put_error (m, Void)
+			when {CMS_LOG}.level_warning then
+				logger.put_warning (m, Void)
+			when {CMS_LOG}.level_notice then
+				logger.put_information (m, Void)
+			when {CMS_LOG}.level_info then
+				logger.put_information (m, Void)
+			when {CMS_LOG}.level_debug then
+				response.put_error (m)
+				logger.put_debug (m, Void)
+			else
+				logger.put_debug (m, Void)
 			end
+		end
+
+	log_error (a_category: READABLE_STRING_8; a_message: READABLE_STRING_8; a_link: detachable CMS_LINK)
+		do
+			log (a_category, a_message, {CMS_LOG}.level_error, a_link)
 		end
 
 	log_debug (a_category: READABLE_STRING_8; a_message: READABLE_STRING_8; a_link: detachable CMS_LINK)
@@ -1267,6 +1293,12 @@ feature -- Element Change: Error
 			-- Reset error handler.
 		do
 			error_handler.reset
+		end
+
+	report_error (a_name: STRING_8; a_message: detachable READABLE_STRING_GENERAL)
+			-- Report a custom error.
+		do
+			error_handler.add_custom_error (-1, a_name, a_message)
 		end
 
 feature {NONE}-- Implementation

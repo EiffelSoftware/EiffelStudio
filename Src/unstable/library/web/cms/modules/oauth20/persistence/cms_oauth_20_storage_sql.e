@@ -44,16 +44,13 @@ feature -- Access User Outh
 			-- <Precursor>
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
-			l_string: STRING
 			l_uid: INTEGER_64
 		do
 			error_handler.reset
 			write_information_log (generator + ".user_oauth2_by_id")
 			create l_parameters.make (1)
 			l_parameters.put (a_uid, "uid")
-			create l_string.make_from_string (select_user_id_oauth2_template_by_id)
-			l_string.replace_substring_all ("$table_name", oauth2_sql_table_name (a_consumer))
-			sql_query (l_string, l_parameters)
+			sql_query (select_user_id_oauth2_by_id (oauth2_sql_table_name (a_consumer)), l_parameters)
 			if not has_error and not sql_after then
 				l_uid := sql_read_integer_64 (1)
 				sql_forth
@@ -72,16 +69,13 @@ feature -- Access User Outh
 			-- <Precursor>
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
-			l_string: STRING
 			l_uid: INTEGER_64
 		do
 			error_handler.reset
 			write_information_log (generator + ".user_oauth2_by_email")
 			create l_parameters.make (1)
 			l_parameters.put (a_email, "email")
-			create l_string.make_from_string (select_user_id_oauth2_template_by_email)
-			l_string.replace_substring_all ("$table_name", oauth2_sql_table_name (a_consumer))
-			sql_query (l_string, l_parameters)
+			sql_query (select_user_id_oauth2_by_email (oauth2_sql_table_name (a_consumer)), l_parameters)
 			if not has_error and not sql_after then
 				l_uid := sql_read_integer_64 (1)
 				sql_forth
@@ -100,16 +94,13 @@ feature -- Access User Outh
 			-- <Precursor>
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
-			l_string: STRING
 			l_uid: INTEGER_64
 		do
 			error_handler.reset
 			write_information_log (generator + ".user_by_oauth2_token")
 			create l_parameters.make (1)
 			l_parameters.put (a_token, "token")
-			create l_string.make_from_string (select_user_id_by_oauth2_template_token)
-			l_string.replace_substring_all ("$table_name", oauth2_sql_table_name (a_consumer))
-			sql_query (l_string, l_parameters)
+			sql_query (select_user_id_by_oauth2_token (oauth2_sql_table_name (a_consumer)), l_parameters)
 			if not has_error and not sql_after then
 				l_uid := sql_read_integer_64 (1)
 				sql_forth
@@ -196,6 +187,7 @@ feature -- Change: User OAuth
 			-- Save consumer `a_cons`.
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
+			l_table: STRING
 		do
 			error_handler.reset
 			if a_cons.has_id then
@@ -220,6 +212,14 @@ feature -- Change: User OAuth
 				sql_insert (sql_insert_oauth2_consumers, l_parameters)
 			end
 			sql_finalize
+			if not has_error then
+				l_table := oauth2_sql_table_name (a_cons.name)
+				if not sql_table_exists (l_table) then
+						-- FIXME: shouldn't we use a unique table for all oauth providers? or as it is .. one table per oauth provider?
+					sql_execute_script (sql_oauth2_create_table (l_table), Void)
+					sql_finalize
+				end
+			end
 		end
 
 	new_user_oauth2 (a_token: READABLE_STRING_GENERAL; a_user_profile: READABLE_STRING_GENERAL; a_user: CMS_USER; a_consumer: READABLE_STRING_GENERAL)
@@ -227,7 +227,6 @@ feature -- Change: User OAuth
 		-- <Precursor>.
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
-			l_string: STRING
 		do
 			error_handler.reset
 			sql_begin_transaction
@@ -240,9 +239,7 @@ feature -- Change: User OAuth
 			l_parameters.put (create {DATE_TIME}.make_now_utc, "utc_date")
 			l_parameters.put (a_user.email, "email")
 
-			create l_string.make_from_string (sql_insert_oauth2_template)
-			l_string.replace_substring_all ("$table_name", oauth2_sql_table_name (a_consumer))
-			sql_insert (l_string, l_parameters)
+			sql_insert (sql_insert_oauth2 (oauth2_sql_table_name (a_consumer)), l_parameters)
 			sql_commit_transaction
 			sql_finalize
 		end
@@ -251,7 +248,6 @@ feature -- Change: User OAuth
 			-- <Precursor>
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
-			l_string: STRING
 		do
 			error_handler.reset
 			sql_begin_transaction
@@ -262,9 +258,7 @@ feature -- Change: User OAuth
 			l_parameters.put (a_token, "token")
 			l_parameters.put (a_user_profile, "profile")
 
-			create l_string.make_from_string (sql_update_oauth2_template)
-			l_string.replace_substring_all ("$table_name", oauth2_sql_table_name (a_consumer))
-			sql_modify (l_string, l_parameters)
+			sql_modify (sql_update_oauth2 (oauth2_sql_table_name (a_consumer)), l_parameters)
 			sql_commit_transaction
 			sql_finalize
 		end
@@ -282,9 +276,7 @@ feature -- Change: User OAuth
 			create l_parameters.make (1)
 			l_parameters.put (a_user.id, "uid")
 
-			create l_string.make_from_string (sql_remove_oauth2_template)
-			l_string.replace_substring_all ("$table_name", oauth2_sql_table_name (a_consumer))
-			sql_modify (l_string, l_parameters)
+			sql_modify (sql_remove_oauth2 (oauth2_sql_table_name (a_consumer)), l_parameters)
 			sql_commit_transaction
 			sql_finalize
 		end
@@ -354,30 +346,59 @@ feature {NONE} -- User OAuth2
 			end
 		end
 
-	Select_user_id_by_oauth2_template_token: STRING = "SELECT uid FROM $table_name WHERE access_token = :token;"
+	Select_user_id_by_oauth2_token (a_table: READABLE_STRING_8): STRING
+		do
+			Result := "SELECT uid FROM " + a_table + " WHERE access_token = :token;"
+		end
 			--| User id for access token :token
 
-	Select_user_id_oauth2_template_by_id: STRING = "SELECT uid FROM $table_name WHERE uid = :uid;"
+	Select_user_id_oauth2_by_id (a_table: READABLE_STRING_8): STRING
+		do
+			Result := "SELECT uid FROM " + a_table + " WHERE uid = :uid;"
+		end
 
-	Select_user_id_oauth2_template_by_email: STRING = "SELECT uid FROM $table_name WHERE email = :email;"
+	Select_user_id_oauth2_by_email (a_table: READABLE_STRING_8): STRING
+		do
+			Result := "SELECT uid FROM " + a_table + " WHERE email = :email;"
+		end
 
+	Sql_insert_oauth2 (a_table: READABLE_STRING_8): STRING
+		do
+			Result := "INSERT INTO " + a_table + " (uid, access_token, details, created, email) VALUES (:uid, :token, :profile, :utc_date, :email);"
+		end
 
---	Select_user_by_oauth2_template_token: STRING = "SELECT u.* FROM users as u JOIN $table_name as og ON og.uid = u.uid and og.access_token = :token;"
---			--| FIXME: replace the u.* by a list of field names, to avoid breaking `featch_user' if two fieds are swiped.
+	Sql_update_oauth2 (a_table: READABLE_STRING_8): STRING
+		do
+			Result := "UPDATE " + a_table + " SET access_token = :token, details = :profile WHERE uid =:uid;"
+		end
 
---	Select_user_oauth2_template_by_id: STRING = "SELECT u.* FROM users as u JOIN $table_name as og ON og.uid = u.uid and og.uid = :uid;"
-
---	Select_user_oauth2_template_by_email: STRING = "SELECT u.* FROM users as u JOIN $table_name as og ON og.uid = u.uid and og.email = :email;"
-
-	Sql_insert_oauth2_template: STRING = "INSERT INTO $table_name (uid, access_token, details, created, email) VALUES (:uid, :token, :profile, :utc_date, :email);"
-
-	Sql_update_oauth2_template: STRING = "UPDATE $table_name SET access_token = :token, details = :profile WHERE uid =:uid;"
-
-	Sql_remove_oauth2_template: STRING = "DELETE FROM $table_name WHERE uid =:uid;"
+	Sql_remove_oauth2 (a_table: READABLE_STRING_8): STRING
+		do
+			Result := "DELETE FROM " + a_table + " WHERE uid =:uid;"
+		end
 
 	Sql_oauth_consumers: STRING = "SELECT name FROM oauth2_consumers;"
 
 	Sql_oauth2_table_prefix: STRING = "oauth2_"
+
+	sql_oauth2_create_table (a_table_name: READABLE_STRING_8): STRING
+		do
+			create Result.make_from_string ("CREATE TABLE ")
+			Result.append (a_table_name)
+			Result.append ("[
+					(
+					`uid` INTEGER PRIMARY KEY NOT NULL CHECK(`uid`>=0),
+					`access_token` TEXT  NOT NULL,
+					`created` DATETIME NOT NULL,
+					`details` TEXT NOT NULL,
+					`email` TEXT NOT NULL,
+					CONSTRAINT `uid`
+						UNIQUE(`uid`),
+					CONSTRAINT `email`
+						UNIQUE(`email`)
+					);
+				]")
+		end
 
 feature {NONE} -- Consumer
 

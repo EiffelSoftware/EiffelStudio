@@ -67,7 +67,7 @@ CREATE TABLE tb_demo(
 					]"
 					l_sql_storage.sql_execute_script (sql, Void)
 					if l_sql_storage.has_error then
-						api.logger.put_error ("Could not initialize database for demo module", generating_type)
+						api.report_error ("[" + name + "]: installation failed!", l_sql_storage.error_handler.as_string_representation)
 					end
 				end
 			end

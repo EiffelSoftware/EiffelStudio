@@ -91,6 +91,8 @@ feature {CMS_API} -- Module management
 				create d.make_with_path (file_system_storage_path (api))
 				d.recursive_create_dir
 				Precursor {CMS_MODULE}(api) -- Marked installed
+			else
+				api.report_error ("[" + name + "]: installation failed!", {STRING_32} "Could not create %""+ file_system_storage_path (api).name + "%"")
 			end
 		rescue
 			retried := True

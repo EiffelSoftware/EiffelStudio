@@ -398,9 +398,12 @@ feature -- Execution
 						attached l_mods.item_by_name (l_mod_name.value) as m
 					then
 						api.install_module (m)
-						if not api.is_module_installed (m) then
+						if api.has_error and then attached api.string_representation_of_errors as errs then
+							fd.report_error (html_encoded (errs))
+						elseif not api.is_module_installed (m) then
 							fd.report_error ("Installation failed for module " + m.name)
 						end
+						api.reset_error
 					else
 						fd.report_error ("Can not find associated module " + ic.item.as_string.url_encoded_value)
 					end

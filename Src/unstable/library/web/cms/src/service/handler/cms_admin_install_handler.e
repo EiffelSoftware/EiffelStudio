@@ -67,7 +67,28 @@ feature -- HTTP Methods
 			if l_denied then
 				send_custom_access_denied ("You do not have permission to access CMS installation procedure!", Void, req, res)
 			else
-				create s.make_from_string ("<h1>Modules</h1><ul>")
+				create s.make_empty
+				s.append ("<h2>Informations</h2>")
+				s.append ("<ul>")
+				across
+					api.setup.system_info as ic
+				loop
+					s.append ("<li><strong>"+ html_encoded (ic.key) +":</strong> ")
+					s.append (html_encoded (ic.item))
+					s.append ("</li>")
+				end
+				s.append ("<li><strong>Storage:</strong> ")
+				s.append (" -&gt; ")
+				s.append (api.storage.generator)
+				if attached api.storage.error_handler.as_single_error as err then
+					s.append ("(error: ")
+					s.append (html_encoded (err.string_representation))
+					s.append (")")
+				end
+				s.append ("</li>")
+				s.append ("</ul>")
+
+				s.append ("<h2>Modules</h2><ul>")
 				create lst.make (1)
 				across
 					api.setup.modules as ic
@@ -86,6 +107,10 @@ feature -- HTTP Methods
 					end
 				end
 				api.install_all_modules
+				if api.has_error and then attached api.string_representation_of_errors as errs then
+					r.add_error_message (errs)
+				end
+
 				across
 					lst as ic
 				loop
@@ -120,6 +145,6 @@ feature -- HTTP Methods
 		end
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

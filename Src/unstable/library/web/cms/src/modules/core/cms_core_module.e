@@ -63,7 +63,7 @@ feature {CMS_API} -- Module management
 				end
 
 				if l_sql_storage.has_error then
-					a_api.logger.put_error ("Could not initialize database for module [" + name + "]", generating_type)
+					a_api.report_error ("[" + name + "]: installation failed!", l_sql_storage.error_handler.as_string_representation)
 				else
 					Precursor {CMS_MODULE} (a_api)
 				end

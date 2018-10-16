@@ -117,6 +117,14 @@ feature -- Status report
 
 feature -- Access: Config Reader
 
+	utf_8_text_item (k: READABLE_STRING_GENERAL): detachable READABLE_STRING_8
+			-- String item associated with key `k'.	
+		do
+			if attached text_item (k) as s32 then
+				Result := utf.utf_32_string_to_utf_8_string_8 (s32)
+			end
+		end
+
 	text_item (k: READABLE_STRING_GENERAL): detachable READABLE_STRING_32
 			-- String item associated with key `k'.	
 		do
@@ -536,7 +544,7 @@ feature {NONE} -- Implementation
 invariant
 
 note
-	copyright: "2011-2016, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2018, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

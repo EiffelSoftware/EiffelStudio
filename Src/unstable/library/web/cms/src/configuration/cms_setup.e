@@ -457,6 +457,33 @@ feature -- Access: directory
 	themes_location: PATH
 			-- Path to themes.
 
+	system_info: STRING_TABLE [READABLE_STRING_32]
+		local
+			n: INTEGER
+			s: STRING_32
+		do
+			create Result.make (10)
+			Result["Current direction"] := (create {EXECUTION_ENVIRONMENT}).current_working_path.name
+			Result["Site"] := site_location.name
+			Result["Cache"] := cache_location.name
+			Result["Files"] := files_location.name
+			Result["Temp"] := temp_location.name
+			if attached (create {APPLICATION_JSON_CONFIGURATION_HELPER}).new_database_configuration (environment.application_config_path) as l_database_config then
+				Result["Storage.connection_string"] := l_database_config.connection_string
+			end
+			create s.make (10)
+			across
+				storage_drivers as ic
+			loop
+				if s.count > 1 then
+					s.append_character (',')
+				end
+				s.append_character (' ')
+				s.append_string_general (ic.key)
+			end
+			Result["Storage.availables"] := s
+		end
+
 feature -- Access: theme
 
 	theme_location: PATH
@@ -508,6 +535,13 @@ feature -- Access: storage
 		deferred
 		end
 
+	storage_configuration_driver: detachable READABLE_STRING_32
+		do
+			if attached (create {APPLICATION_JSON_CONFIGURATION_HELPER}).new_database_configuration (environment.application_config_path) as l_database_config then
+				Result := l_database_config.driver
+			end
+		end
+
 	storage (a_error_handler: ERROR_HANDLER): detachable CMS_STORAGE
 			-- CMS Storage object defined according to the configuration or default.
 			-- Use `a_error_handler' to get eventual error information occurred during the storage
@@ -519,8 +553,8 @@ feature -- Access: storage
 			if not retried then
 				to_implement ("Refactor database setup")
 				if
-					attached (create {APPLICATION_JSON_CONFIGURATION_HELPER}).new_database_configuration (environment.application_config_path) as l_database_config and then
-					attached storage_drivers.item (l_database_config.driver) as l_builder
+					attached storage_configuration_driver as l_db_driver and then
+					attached storage_drivers.item (l_db_driver) as l_builder
 				then
 					Result := l_builder.storage (Current, a_error_handler)
 				end

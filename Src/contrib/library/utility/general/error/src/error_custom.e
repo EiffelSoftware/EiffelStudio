@@ -23,8 +23,6 @@ feature {NONE} -- Initialization
 			name := a_name
 			if a_message /= Void then
 				message := a_message.as_string_32
-			else
-				message := {STRING_32} "Error: " + a_name + " (code=" + a_code.out + ")"
 			end
 		end
 

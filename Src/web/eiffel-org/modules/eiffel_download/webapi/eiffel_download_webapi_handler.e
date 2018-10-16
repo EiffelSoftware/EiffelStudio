@@ -189,11 +189,11 @@ feature {NONE} -- Implementation
 						then
 							create {ARRAYED_LIST [EIFFEL_DOWNLOAD_RESOURCE]} l_list.make (1)
 							l_link := l_mirror
-							l_link.append (l_name)
-							l_link.append (" ")
-							l_link.append (l_number)
+							l_link.append (url_encoded (l_name))
+							l_link.append_character (' ')
+							l_link.append (url_encoded (l_number))
 							l_link.append_character ('/')
-							l_link.append (l_build)
+							l_link.append (url_encoded (l_build))
 							l_link.append_character ('/')
 							across l_downloads as ic1  loop
 								if
@@ -201,7 +201,7 @@ feature {NONE} -- Implementation
 									attached ic1.item.platform as l_platform
 								then
 									create l_url.make_from_string (l_link)
-									l_url.append (l_filename)
+									l_url.append (url_encoded (l_filename))
 									l_list.force (create {EIFFEL_DOWNLOAD_RESOURCE}.make (l_filename, l_url, ic1.item.size, l_platform))
 								end
 							end
@@ -227,11 +227,11 @@ feature {NONE} -- Implementation
 						then
 							create {ARRAYED_LIST [EIFFEL_DOWNLOAD_RESOURCE]} l_list.make (1)
 							l_link := l_mirror
-							l_link.append (l_name)
-							l_link.append (" ")
-							l_link.append (l_number)
+							l_link.append (url_encoded (l_name))
+							l_link.append_character (' ')
+							l_link.append (url_encoded (l_number))
 							l_link.append_character ('/')
-							l_link.append (l_build)
+							l_link.append (url_encoded (l_build))
 							l_link.append_character ('/')
 							across l_downloads as ic1  loop
 								if
@@ -240,7 +240,7 @@ feature {NONE} -- Implementation
 									l_platform.is_case_insensitive_equal (a_platform)
 								then
 									create l_url.make_from_string (l_link)
-									l_url.append (l_filename)
+									l_url.append (url_encoded (l_filename))
 									l_list.force (create {EIFFEL_DOWNLOAD_RESOURCE}.make (l_filename, l_url, ic1.item.size, l_platform))
 								end
 							end
@@ -265,21 +265,21 @@ feature {NONE} -- Implementation
 					Result.add_string_field ("number", l_number)
 						-- filter by plarform
 					l_link := l_mirror
-					l_link.append (l_name)
-					l_link.append (" ")
-					l_link.append (l_number)
+					l_link.append (url_encoded (l_name))
+					l_link.append_character (' ')
+					l_link.append (url_encoded (l_number))
 					l_link.append_character ('/')
-					l_link.append (l_build)
+					l_link.append (url_encoded (l_build))
 					l_link.append_character ('/')
 
 					if attached l_download.selected_platform (l_product.downloads, a_platform) as l_selected then
 						if attached l_selected.filename as l_filename then
-							l_link.append (l_filename)
+							l_link.append (url_encoded (l_filename))
 							Result.add_string_field ("name", l_name)
 							Result.add_string_field ("build", l_build)
 							Result.add_string_field ("version", l_version)
 							Result.add_string_field ("number", l_number)
-							Result.add_link ("download", l_filename, l_link)
+							Result.add_link ("download", utf_8_encoded (l_filename), l_link)
 						end
 					end
 				end
@@ -319,11 +319,11 @@ feature {NONE} -- Implementation
 					Result.add_string_field ("number", l_number)
 					if attached l_product.downloads as l_downloads then
 						l_link := l_mirror
-						l_link.append (l_name)
-						l_link.append (" ")
-						l_link.append (l_number)
+						l_link.append (url_encoded (l_name))
+						l_link.append_character (' ')
+						l_link.append (url_encoded (l_number))
 						l_link.append_character ('/')
-						l_link.append (l_build)
+						l_link.append (url_encoded (l_build))
 						l_link.append_character ('/')
 						create {ARRAYED_LIST [EIFFEL_DOWNLOAD_RESOURCE]} l_list.make (1)
 						across l_downloads as ic  loop
@@ -332,7 +332,7 @@ feature {NONE} -- Implementation
 								attached ic.item.platform as l_platform
 							then
 								create l_url.make_from_string (l_link)
-								l_url.append (l_filename)
+								l_url.append (url_encoded (l_filename))
 								l_list.force (create {EIFFEL_DOWNLOAD_RESOURCE}.make (l_filename, l_url, ic.item.size, l_platform))
 							end
 						end
@@ -372,11 +372,11 @@ feature {NONE} -- Implementation
 				Result.add_string_field ("number", l_number)
 				if attached l_product.downloads as l_downloads then
 					l_link := l_mirror
-					l_link.append (l_name)
-					l_link.append (" ")
-					l_link.append (l_number)
+					l_link.append (url_encoded (l_name))
+					l_link.append_character (' ')
+					l_link.append (url_encoded (l_number))
 					l_link.append_character ('/')
-					l_link.append (l_build)
+					l_link.append (url_encoded (l_build))
 					l_link.append_character ('/')
 					create {ARRAYED_LIST [EIFFEL_DOWNLOAD_RESOURCE]} l_list.make (1)
 					across l_downloads as ic  loop
@@ -385,7 +385,7 @@ feature {NONE} -- Implementation
 							attached ic.item.platform as l_platform
 						then
 							create l_url.make_from_string (l_link)
-							l_url.append (l_filename)
+							l_url.append (url_encoded (l_filename))
 							l_list.force (create {EIFFEL_DOWNLOAD_RESOURCE}.make (l_filename, l_url, ic.item.size, l_platform))
 						end
 					end

@@ -77,7 +77,7 @@ feature {CMS_API} -- Module management
 				l_sql_storage.sql_execute_file_script (api.module_resource_location (Current, (create {PATH}.make_from_string ("scripts")).extended ("install.sql")), Void)
 
 				if l_sql_storage.has_error then
-					api.logger.put_error ("Could not initialize database for module [" + name + "]", generating_type)
+					api.report_error ("[" + name + "]: installation failed!", l_sql_storage.error_handler.as_string_representation)
 				else
 					Precursor {CMS_AUTH_MODULE_I} (api) -- Mark it as installed.
 				end

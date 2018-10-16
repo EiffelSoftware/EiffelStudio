@@ -86,5 +86,4 @@ feature -- Factory
 			create Result.put (Void)
 		end
 
-
 end

@@ -96,45 +96,10 @@ feature {CMS_API} -- Module management
 				l_sql_storage.sql_execute_file_script (api.module_resource_location (Current, (create {PATH}.make_from_string ("scripts")).extended ("install.sql")), Void)
 
 				if l_sql_storage.has_error then
-					api.logger.put_error ("Could not initialize database for module [" + name + "]", generating_type)
+					api.report_error ("[" + name + "]: installation failed (install)!", l_sql_storage.error_handler.as_string_representation)
 				else
-						-- TODO workaround.
-					l_sql_storage.sql_execute_file_script (api.module_resource_location (Current, (create {PATH}.make_from_string ("scripts")).extended ("data.sql")), Void)
-					if l_sql_storage.has_error then
-						api.logger.put_error ("Could not initialize oauth2_consumers for module [" + name + "]", generating_type)
-					else
-							-- TODO workaround, until we have an admin module
-						l_sql_storage.sql_query ("SELECT name FROM oauth2_consumers;", Void)
-						if l_sql_storage.has_error then
-							api.logger.put_error ("Could not initialize database for different consumers", generating_type)
-						else
-							from
-								l_sql_storage.sql_start
-								create {ARRAYED_LIST [STRING]} l_consumers.make (2)
-							until
-								l_sql_storage.sql_after
-							loop
-								if attached l_sql_storage.sql_read_string (1) as l_name then
-									l_consumers.force ("oauth2_" + l_name)
-								end
-								l_sql_storage.sql_forth
-							end
-							l_sql_storage.sql_finalize
-
-							across l_consumers as ic  loop
-								if not l_sql_storage.sql_table_exists (ic.item) then
-									if attached l_sql_storage.sql_script_content (api.module_resource_location (Current, (create {PATH}.make_from_string ("scripts")).extended ("oauth2_table.sql.tpl"))) as sql then
-											-- FIXME: shouldn't we use a unique table for all oauth providers? or as it is .. one table per oauth provider?
-										sql.replace_substring_all ("$table_name", ic.item)
-										l_sql_storage.sql_execute_script (sql, Void)
-									end
-								end
-							end
-						end
-						l_sql_storage.sql_finalize
-
-						Precursor {CMS_AUTH_MODULE_I}(api) -- Marked as installed.
-					end
+					Precursor {CMS_AUTH_MODULE_I}(api) -- Marked as installed.
+					l_sql_storage.sql_finalize
 				end
 			end
 		end

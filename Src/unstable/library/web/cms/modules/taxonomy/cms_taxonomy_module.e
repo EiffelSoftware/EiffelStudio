@@ -77,7 +77,7 @@ feature {CMS_API} -- Module management
 			if attached {CMS_STORAGE_SQL_I} api.storage as l_sql_storage then
 				l_sql_storage.sql_execute_file_script (api.module_resource_location (Current, (create {PATH}.make_from_string ("scripts")).extended ("install.sql")), Void)
 				if l_sql_storage.has_error then
-					api.logger.put_error ("Could not install database for taxonomy module", generating_type)
+					api.report_error ("[" + name + "]: installation failed!", l_sql_storage.error_handler.as_string_representation)
 				else
 					Precursor (api)
 

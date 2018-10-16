@@ -65,6 +65,11 @@ feature -- Query
 			end
 		end
 
+	utf_8_text_item (k: READABLE_STRING_GENERAL): detachable READABLE_STRING_8
+			-- String item associated with key `k'.	
+		deferred
+		end		
+
 	text_item (k: READABLE_STRING_GENERAL): detachable READABLE_STRING_32
 			-- String item associated with key `k'.
 		deferred

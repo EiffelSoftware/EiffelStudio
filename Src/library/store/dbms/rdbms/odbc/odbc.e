@@ -28,7 +28,9 @@ inherit
 			text_not_supported,
 			exec_proc_not_supported,
 			is_convert_string_type_required,
-			is_connection_string_supported
+			is_connection_string_supported,
+			is_affected_row_count_supported,
+			affected_row_count
 		end
 
 	DISPOSABLE
@@ -86,6 +88,7 @@ feature -- For DATABASE_CHANGE
 
 	pre_immediate (descriptor, i: INTEGER)
 		do
+			affected_row_count := 0
 			odbc_pre_immediate (con_context_pointer, descriptor, i)
 			update_status
 		end
@@ -557,6 +560,7 @@ feature -- External
 			c_temp: ODBC_SQL_STRING
 		do
 			create c_temp.make (command)
+			affected_row_count := 0
 			odbc_init_order (con_context_pointer, no_descriptor, c_temp.item, c_temp.count, 0)
 			update_status
 		end
@@ -587,6 +591,7 @@ feature -- External
 			if l_para /= Void then
 				l_para.release
 			end
+			affected_row_count := odbc_row_count (con_context_pointer, no_descriptor)
 			odbc_terminate_order (con_context_pointer, no_descriptor)
 			update_status
 		end
@@ -850,6 +855,16 @@ feature -- External
 			Result := odbc_support_proc = 1
 		end
 
+
+	is_affected_row_count_supported: BOOLEAN
+			-- Is `affected_row_count' supported?
+		do
+			Result := True
+		end
+
+	affected_row_count: INTEGER
+			-- The number of rows changed, deleted, or inserted by the last statement.
+
 feature {NONE} -- Access
 
 	con_context_pointer: POINTER
@@ -892,6 +907,12 @@ feature {NONE} -- Disposal
 		end
 
 feature {NONE} -- External features
+
+	odbc_row_count (a_handle: POINTER; no_descriptor: INTEGER): INTEGER
+			-- Number of affected rows
+		external
+			"C use %"odbc.h%""
+		end
 
 	odbc_get_error_message (a_con: POINTER): POINTER
 			-- C buffer which contains the error_message.

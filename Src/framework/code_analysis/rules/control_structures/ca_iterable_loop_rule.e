@@ -30,12 +30,17 @@ feature {NONE} -- Initialization
 			make_with_defaults
 			default_severity_score := 30
 			severity := severity_hint
+			create loops.make (0)
 		end
 
-	register_actions (a_checker: attached CA_ALL_RULES_CHECKER)
+	register_actions (c: CA_ALL_RULES_CHECKER)
 		do
-			a_checker.add_feature_pre_action (agent process_feature)
-			a_checker.add_loop_pre_action (agent process_loop)
+			c.add_feature_pre_action (agent process_feature)
+			c.add_loop_pre_action (agent process_loop_start)
+			c.add_loop_post_action (agent process_loop_end)
+			c.add_instruction_call_pre_action (agent process_instruction_call)
+				-- Clean up storage.
+			loops.wipe_out
 		end
 
 feature {NONE} -- Rule checking
@@ -55,93 +60,136 @@ feature {NONE} -- Rule checking
 			current_feature_i := current_context.checking_class.feature_named_32 (a_feature.feature_name.name_32)
 		end
 
-	process_loop (a_loop: LOOP_AS)
+	process_loop_start (a: LOOP_AS)
 			-- Checks `a_loop' for a rule violation.
+		do
+			loops.extend (({detachable READABLE_STRING_32}).default, ({detachable INSTR_CALL_AS}).default, ({detachable INSTR_CALL_AS}).default, a)
+			check_until_part (a.stop, a)
+			check_from_part (a.from_part)
+			check_last_instruction (a.compound)
+		ensure
+			loops_updated: loops.count = old loops.count + 1
+		end
+
+	process_loop_end (a: LOOP_AS)
+		require
+			has_loop: not loops.is_empty
 		local
 			l_viol: CA_RULE_VIOLATION
+			inner_loop: like loops.item
 		do
-			check_until_part (a_loop.stop)
+			inner_loop := loops.last
 			if
-				matching_until_part
-				and then matching_from_part (a_loop.from_part)
-				and then matching_last_instruction (a_loop.compound)
+				attached inner_loop.cursor as variable and then
+				attached inner_loop.start and then
+				attached inner_loop.forth
 			then
 				create l_viol.make_with_rule (Current)
-				l_viol.set_location (a_loop.start_location)
-				l_viol.long_description_info.extend (expected_var)
+				l_viol.set_location (a.start_location)
+				l_viol.long_description_info.extend (variable)
 				violations.extend (l_viol)
 			end
+			loops.finish
+			loops.remove
+		ensure
+			loops_updated: loops.count = old loops.count - 1
 		end
 
-	matching_until_part: BOOLEAN
-			-- Is the until part analyzed in `check_until_part' as expected?
-
-	check_until_part (a_stop_condition: detachable EXPR_AS)
+	check_until_part (a_stop_condition: detachable EXPR_AS; a: LOOP_AS)
 			-- Checks if `a_stop_condition' is of the form 'list.after', where list is
 			-- a variable of a type that conforms to {ITERABLE}.
-		local
-			l_type: TYPE_A
-			l_target: ACCESS_AS
 		do
-			matching_until_part := False
-
 			if
-				a_stop_condition /= Void
-				and then attached {EXPR_CALL_AS} a_stop_condition as l_call
-				and then attached {NESTED_AS} l_call.call as l_nested_call
-				and then attached {ACCESS_AS} l_nested_call.message as l_msg
-				and then l_msg.access_name_8.is_equal ("after")
+				attached a_stop_condition and then
+				attached {EXPR_CALL_AS} a_stop_condition as l_call and then
+				attached {NESTED_AS} l_call.call as l_nested_call and then
+				attached {ACCESS_AS} l_nested_call.message as l_msg and then
+				l_msg.access_name_32.is_case_insensitive_equal ({STRING_32} "after") and then
+				attached current_context.node_type (l_nested_call.target, current_feature_i) as t and then
+				t.base_class.conform_to (iterable)
 			then
-				l_target := l_nested_call.target
-				l_type := current_context.node_type (l_target, current_feature_i)
-				if l_type /= Void and then l_type.base_class.conform_to (iterable) then
-					matching_until_part := True
-					expected_var := l_target.access_name_32
-				end
+				loops.last.cursor := l_nested_call.target.access_name_32
 			end
-		ensure
-			expected_variable_set: matching_until_part implies (expected_var /= Void)
 		end
 
-	expected_var: detachable STRING_32
-			-- The expected iteration variable.
+	loops: ARRAYED_LIST [TUPLE [cursor: detachable READABLE_STRING_32; start: detachable INSTR_CALL_AS; forth: detachable INSTR_CALL_AS; a: LOOP_AS]]
+			-- Nested loops.
 
-	matching_from_part (a_from: detachable EIFFEL_LIST [INSTRUCTION_AS]): BOOLEAN
+	check_from_part (a: detachable EIFFEL_LIST [INSTRUCTION_AS])
 			-- Does `a_from' contain an instruction of the form `expected_var'.start?			
-		require
-			expected_variable_set: expected_var /= Void
+		local
+			inner_loop: like loops.item
 		do
-			if a_from /= Void then
-				across a_from as l_instr loop
+			inner_loop := loops.last
+			if
+				attached a and then
+				attached inner_loop.cursor as expected_var
+			then
+				across
+					a as l_instr
+				loop
 					if
-						attached {INSTR_CALL_AS} l_instr.item as l_call
-						and then attached {NESTED_AS} l_call.call as l_nested_call
-						and then l_nested_call.target.access_name_32.is_equal (expected_var)
-						and then attached {ACCESS_AS} l_nested_call.message as l_msg
-						and then l_msg.access_name_8.is_equal ("start")
+						attached {INSTR_CALL_AS} l_instr.item as l_call and then
+						attached {NESTED_AS} l_call.call as l_nested_call and then
+						l_nested_call.target.access_name_32.is_case_insensitive_equal (expected_var) and then
+						attached {ACCESS_AS} l_nested_call.message as l_msg and then
+						l_msg.access_name_32.is_case_insensitive_equal ({STRING_32} "start")
 					then
 							-- We do not have to check the type of `l_target' since we know it is the expected variable
 							-- that has already been checked for conformance to {ITERABLE}.
-						Result := True
+						inner_loop.start := l_call
 					end
 				end
 			end
 		end
 
-	matching_last_instruction (a_loop_body: detachable EIFFEL_LIST [INSTRUCTION_AS]): BOOLEAN
-			-- Is the last instruction of `a_loop_body' of the form `expected_var'.start?
+	process_instruction_call (a: INSTR_CALL_AS)
 		do
 			if
-				a_loop_body /= Void
-				and then attached {INSTR_CALL_AS} a_loop_body.last as l_call
-				and then attached {NESTED_AS} l_call.call as l_nested_call
-				and then l_nested_call.target.access_name_32.is_equal (expected_var)
-				and then attached {ACCESS_AS} l_nested_call.message as l_msg
-				and then l_msg.access_name_8.is_equal ("forth")
+				attached {NESTED_AS} a.call as c and then
+				attached loop_with_variable (c.target.access_name_32) as l and then
+				l.start /= a and then
+				l.forth /= a
+			then
+					-- Mark the loop as not matching the pattern
+					-- because there is a procedure call on the loop variable.
+				l.cursor := Void
+			end
+		end
+
+	loop_with_variable (variable: READABLE_STRING_32): detachable like loops.item
+			-- Descriptor of a loop with iteration variable if name `name` if found,
+			-- `Void` otherwise.
+		do
+			across
+				loops as l
+			until
+				attached Result
+			loop
+				if attached l.item.cursor as c and then c.is_case_insensitive_equal (variable) then
+					Result := l.item
+				end
+			end
+		end
+
+	check_last_instruction (a: detachable EIFFEL_LIST [INSTRUCTION_AS])
+			-- Is the last instruction of `a_loop_body' of the form `expected_var'.start?
+		local
+			inner_loop: like loops.item
+		do
+			inner_loop := loops.last
+			if
+				attached a and then
+				attached inner_loop.cursor as expected_var and then
+				attached {INSTR_CALL_AS} a.last as l_call and then
+				attached {NESTED_AS} l_call.call as l_nested_call and then
+				l_nested_call.target.access_name_32.is_equal (expected_var) and then
+				attached {ACCESS_AS} l_nested_call.message as l_msg and then
+				l_msg.access_name_8.is_equal ("forth")
 			then
 					-- We do not have to check the type of `l_target' since we know it is the expected variable
 					-- that has already been checked for conformance to {ITERABLE}.
-				Result := True
+				inner_loop.forth := l_call
 			end
 		end
 

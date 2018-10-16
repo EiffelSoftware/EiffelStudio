@@ -556,7 +556,6 @@ feature -- Access
 			is_feature_mode: feature_mode
 		local
 			l_stop: BOOLEAN
-			cl: CLASS_C
 		do
 			if feature_mode and attached sorted_names as arr and then not arr.is_empty then
 				across
@@ -564,17 +563,16 @@ feature -- Access
 				until
 					l_stop
 				loop
-					if attached {EB_FEATURE_FOR_COMPLETION} ic.item as l_item then
-						if attached l_item.associated_feature as f then
-							cl := f.associated_class
-							if cl /= Void then
-								if Result = Void then
-									Result := cl
-								elseif Result.class_id /= cl.class_id then
-									Result := Void
-									l_stop := True
-								end
-							end
+					if
+						attached {EB_FEATURE_FOR_COMPLETION} ic.item as l_item and then
+						attached l_item.associated_feature as f and then
+						attached f.associated_class as cl
+					then
+						if Result = Void then
+							Result := cl
+						elseif Result.class_id /= cl.class_id then
+							Result := Void
+							l_stop := True
 						end
 					end
 				end
@@ -646,12 +644,12 @@ feature -- Query
 			-- Determines if `a_item' is an applicable item to show in the completion list
 		do
 			Result := Precursor {CODE_COMPLETION_WINDOW} (a_item)
-			if Result then
-				if attached {EB_NAME_FOR_COMPLETION} a_item as l_eb_name then
-					if not show_obsolete_items then
-						Result := not l_eb_name.is_obsolete
-					end
-				end
+			if
+				Result and then
+				attached a_item and then
+				show_obsolete_items
+			then
+				Result := not a_item.is_obsolete
 			end
 		end
 
@@ -956,15 +954,11 @@ feature {NONE} -- Option behaviour
 
 	build_template_list
 			-- Build template list.
-		local
-			l_names: like template_sorted_names
-			l_list: like full_list
 		do
-			l_list := full_list
-			l_names := template_sorted_names
-			full_list := l_names
-				-- Empty full list if we don't have templates to show.
-			if full_list = Void then
+			if attached template_sorted_names as l_names then
+				full_list := l_names
+			else
+					-- Empty full list if we don't have templates to show.
 				create full_list.make_empty
 			end
 		ensure
@@ -1082,10 +1076,14 @@ feature {NONE} -- Action handlers
 	on_window_resize (a_x, a_y, a_width, a_height: INTEGER)
 			-- React on window resizing.
 		do
-			if is_displayed and then attached tooltip_window as l_w and then l_w.is_shown and then not l_w.is_recycled then
-				if attached choice_list.single_selected_row as l_row then
-					show_tooltip (l_row)
-				end
+			if
+				is_displayed and then
+				attached tooltip_window as l_w and then
+				l_w.is_shown and then
+				not l_w.is_recycled and then
+				attached choice_list.single_selected_row as l_row
+			then
+				show_tooltip (l_row)
 			end
 		end
 
@@ -1093,10 +1091,14 @@ feature {NONE} -- Action handlers
 			-- React on window scrolling.
 		do
 			Precursor {CODE_COMPLETION_WINDOW}(a_x, a_y)
-			if is_displayed and then attached tooltip_window as l_w and then l_w.is_shown and then not l_w.is_recycled then
-				if attached choice_list.single_selected_row as l_row then
-					show_tooltip (l_row)
-				end
+			if
+				is_displayed and then
+				attached tooltip_window as l_w and then
+				l_w.is_shown and then
+				not l_w.is_recycled and then
+				attached choice_list.single_selected_row as l_row
+			then
+				show_tooltip (l_row)
 			end
 		end
 
@@ -1349,20 +1351,19 @@ feature {NONE} -- Implementation
 		do
 			if character_string.count = 1 then
 				uc := character_string [1]
-				if code_completable.is_completing then
-					if
-						code_completable.is_char_activator_character (uc)
-					then
-							-- Continue completing
-						if code_completable.completing_feature then
-							continue_completion := True
-						end
-						close_and_complete
-						if code_completable.completing_feature then
-							code_completable.trigger_completion
-						end
-						exit
+				if
+					code_completable.is_completing and then
+					code_completable.is_char_activator_character (uc)
+				then
+						-- Continue completing
+					if code_completable.completing_feature then
+						continue_completion := True
 					end
+					close_and_complete
+					if code_completable.completing_feature then
+						code_completable.trigger_completion
+					end
+					exit
 				end
 				c := uc.to_character_8
 				if c.is_alpha or c.is_digit or c = '_' or c = '*' or c = '?' then
@@ -1560,11 +1561,9 @@ feature {NONE} -- Implementation
 	complete_class
 			-- Complete class name
 		local
-			l_row: EV_GRID_ROW
 			local_name: STRING_GENERAL
 		do
 			if choice_list.has_selected_row then
-				l_row := choice_list.selected_rows.first
 				if
 					attached choice_list.selected_rows.first as l_first_row and then
 					attached {NAME_FOR_COMPLETION} l_first_row.data as l_name_item
@@ -1619,6 +1618,9 @@ feature {NONE} -- Implementation
 		end
 
 note
+	ca_ignore:
+		"CA011", "CA011: too many arguments",
+		"CA033", "CA033: too large class"
 	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

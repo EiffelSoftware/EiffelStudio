@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Interface for replaying a backup."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -37,7 +37,7 @@ inherit
 create
 	make
 
-feature
+feature {NONE} -- Creation
 
 	make
 		do
@@ -375,8 +375,7 @@ feature {NONE} -- Implementation
 						Result.extend (l_value)
 					end
 					l_pos := l_end_pos
-				elseif l_pos = 0 then
-				else
+				elseif l_pos /= 0 then
 						-- We found something, but that was not a key, we continue the search
 						-- to the next occurrence.
 					l_pos := l_pos + l_key.count
@@ -393,7 +392,7 @@ feature {NONE} -- Implementation
 			l_file: PLAIN_TEXT_FILE
 			l_removed_files: ARRAYED_LIST [STRING]
 			l_split: LIST [STRING]
-			l_class_name, l_cluster_id, l_cluster_name: STRING
+			l_class_name, l_cluster_id: STRING
 		do
 			l_comp_first := backup_path (1)
 			l_comp_last := backup_path (counter.value)
@@ -406,17 +405,14 @@ feature {NONE} -- Implementation
 				l_removed_files.merge_right (extract_values (counter.value, "REMOVED"))
 				if not l_removed_files.is_empty then
 					files_output.append_text ("Removing:%N")
-					from
-						l_removed_files.start
-					until
-						l_removed_files.after
+					across
+						l_removed_files as f
 					loop
-						l_split := l_removed_files.item.split (' ')
+						l_split := f.item.split (' ')
 						if l_split.count = 3 then
 								-- Compute class being removed
 							l_class_name := l_split.i_th (1).as_lower
 							l_cluster_id := l_split.i_th (2)
-							l_cluster_name := l_split.i_th (3)
 								-- Remove file from COMP1.
 							l_file_name := l_comp_first.extended (l_cluster_id).extended (l_class_name).extended (l_class_name + dot_e)
 							create l_file.make_with_path (l_file_name)
@@ -425,7 +421,6 @@ feature {NONE} -- Implementation
 								l_file.delete
 							end
 						end
-						l_removed_files.forth
 					end
 					files_output.append_text ("%N")
 				end
@@ -466,7 +461,7 @@ feature {NONE} -- Implementation
 				until
 					l_source_dir.last_entry_32 = Void
 				loop
-					if not l_source_dir.lastentry.is_equal (".") and not l_source_dir.lastentry.is_equal ("..") then
+					if not l_source_dir.last_entry_32.same_string ({STRING_32} ".") and not l_source_dir.last_entry_32.same_string ({STRING_32} "..") then
 						l_source_name := a_source.extended (l_source_dir.last_entry_32)
 						l_dest_name := a_dest.extended (l_source_dir.last_entry_32)
 						create l_source_file.make_with_path (l_source_name)
@@ -533,7 +528,7 @@ invariant
 	compilation_counter_pref_not_void: compilation_counter_pref /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Guides the user through the options for project documentation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -118,7 +118,7 @@ feature {EV_ANY} -- Initialization
 			set_default_cancel_button (cancel_button)
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Settings
 
 	set_default_settings
 			-- Initialize user selection.
@@ -191,11 +191,10 @@ feature -- Access
 		do
 			create Result.make
 			if attached cluster_include.included_items_data as l then
-				from l.start until l.after loop
-					if attached {CONF_GROUP} l.item as cl then
+				across l as c loop
+					if attached {CONF_GROUP} c.item as cl then
 						Result.include_group (cl)
 					end
-					l.forth
 				end
 			end
 		end
@@ -241,11 +240,8 @@ feature -- Access
 
 	directory: DIRECTORY
 			-- Location where documentation should be generated.
-		local
-			dir_name: STRING_32
 		do
-			dir_name := directory_field.text
-			create Result.make (dir_name)
+			create Result.make (directory_field.text)
 		end
 
 	cancelled: BOOLEAN
@@ -399,7 +395,7 @@ feature {NONE} -- Widgets
 	cluster_charts_button: EV_CHECK_BUTTON
 	cluster_diagrams_button: EV_CHECK_BUTTON
 
-feature {NONE} -- Implementation
+feature {NONE} -- Pages
 
 	current_page: INTEGER
 			-- Index of page currently opened.
@@ -575,20 +571,17 @@ feature {NONE} -- Implementation
 					create str_element
 					list.extend (str_element)
 				else
-					from
-						filter_names.start
-					until
-						filter_names.after
+					across
+						filter_names as f
 					loop
-						file_name := filter_names.item
+						file_name := f.item
 						create str_element.make_with_text (file_name)
 						list.extend (str_element)
-						str_element.pointer_double_press_actions.force_extend (agent str_element.enable_select)
-						str_element.pointer_double_press_actions.force_extend (agent next)
+						str_element.pointer_double_press_actions.extend (agent (i: EV_LIST_ITEM; x, y, button: INTEGER_32; x_tilt, y_tilt, pressure: REAL_64; s_x, s_y: INTEGER_32) do i.enable_select end (str_element, ?, ?, ?, ?, ?, ?, ?, ?))
+						str_element.pointer_double_press_actions.extend (agent (x, y, button: INTEGER_32; x_tilt, y_tilt, pressure: REAL_64; s_x, s_y: INTEGER_32) do next end)
 						if file_name.same_string_general (html_css_filter_name) then
 							selected := list.count
 						end
-						filter_names.forth
 					end
 				end
 			end
@@ -686,14 +679,13 @@ feature {NONE} -- Implementation
 			old_exclude := ie.excluded_items
 			old_exclude.compare_objects
 			ie.clear_all
-			from all_tags.start until all_tags.after loop
-				s := all_tags.item
+			across all_tags as t loop
+				s := t.item
 				if old_exclude.has (s) then
 					ie.add_exclude_item (s, Void)
 				else
 					ie.add_include_item (s, Void)
 				end
-				all_tags.forth
 			end
 		end
 
@@ -702,14 +694,13 @@ feature {NONE} -- Implementation
 			t: STRING_32
 		do
 			if i /= Void then
-				from i.start until i.after loop
-					if i.item.tag /= Void then
-						t := i.item.tag.name_32
+				across i as c loop
+					if attached c.item.tag as n then
+						t := n.name_32
+						if not l.has (t) then
+							l.extend (t.twin)
+						end
 					end
-					if t /= Void and then not l.has (t) then
-						l.extend (t.twin)
-					end
-					i.forth
 				end
 			end
 		end
@@ -719,7 +710,6 @@ feature {NONE} -- Implementation
 			cb: EV_CHECK_BUTTON
 			vs: EV_HORIZONTAL_SEPARATOR
 			cf: CLASS_FORMAT
-			af: LINEAR [INTEGER]
 		do
 			create class_list_button.make_with_text (interface_names.b_alphabetical_class_list)
 			class_list_button.enable_select
@@ -747,16 +737,14 @@ feature {NONE} -- Implementation
 			p.extend (vs)
 			p.disable_item_expand (vs)
 
-			af := all_class_formats.linear_representation
-			from af.start until af.after loop
-				create cf.make (af.item)
+			across all_class_formats as f loop
+				create cf.make (f.item)
 				create cb.make_with_text (cf.name)
 				cb.select_actions.extend (agent on_cf_toggle (cf, cb))
 				if cf.is_generated then
 					cb.enable_select
 				end
 				p.extend (cb)
-				af.forth
 			end
 		end
 
@@ -770,7 +758,6 @@ feature {NONE} -- Implementation
 			main_hb, button_hb: EV_HORIZONTAL_BOX
 			g: EB_DIAGRAM_HTML_GENERATOR
 			views: LINKED_LIST [STRING_32]
-			l_data: TUPLE [STRING_32, LINKED_LIST [STRING_32]]
 		do
 			vb.wipe_out
 			create diagram_views.make (10)
@@ -783,19 +770,16 @@ feature {NONE} -- Implementation
 			set_view_button.disable_sensitive
 			create view_label.make_with_text (interface_names.l_select_cluster_to_display)
 			if attached cluster_include.included_items_data as cluster_list then
-				from
-					cluster_list.start
-				until
-					cluster_list.after
+				across
+					cluster_list as c
 				loop
-					if attached {CONF_GROUP} cluster_list.item as ci then
+					if attached {CONF_GROUP} c.item as ci then
 						create g.make_for_wizard (ci)
 						create cluster_row
 						cluster_row.extend (ci.name)
 						cluster_row.extend ("DEFAULT")
 						views := g.available_views
-						l_data := [id_of_group (ci).as_string_32, views]
-						cluster_row.set_data (l_data)
+						cluster_row.set_data ([id_of_group (ci).as_string_32, views])
 						cluster_row.select_actions.extend (agent on_cluster_selected (cluster_row))
 						view_mcl.extend (cluster_row)
 
@@ -803,7 +787,6 @@ feature {NONE} -- Implementation
 							diagram_views.put ({STRING_32} "DEFAULT", id_of_group (ci).as_string_32)
 						end
 					end
-					cluster_list.forth
 				end
 			end
 			view_mcl.set_column_title (interface_names.l_cluster, 1)
@@ -828,21 +811,16 @@ feature {NONE} -- Implementation
 			-- `row' has been selected.
 			-- Display available views for corresponding cluster in `view_list'.
 			-- Update `view_label'.
-		local
-			l_data: TUPLE [group_id: STRING_32; views: LINKED_LIST [STRING_32]]
-			views: LINKED_LIST [STRING_32]
 		do
-			l_data ?= row.data
-			views := l_data.views
-			if views /= Void then
+			if
+				attached {TUPLE [group_id: STRING_32; views: LINKED_LIST [STRING_32]]} row.data as d and then
+				attached d.views as views
+			then
 				view_list.wipe_out
-				from
-					views.start
-				until
-					views.after
+				across
+					views as v
 				loop
-					view_list.extend (create {EV_LIST_ITEM}.make_with_text (views.item))
-					views.forth
+					view_list.extend (create {EV_LIST_ITEM}.make_with_text (v.item))
 				end
 				if views.is_empty then
 					view_label.set_text (interface_names.l_no_views_are_available)
@@ -858,18 +836,18 @@ feature {NONE} -- Implementation
 			-- `set_view_button' was pressed.
 			-- Update `view_mcl'.
 		local
-			l_data: TUPLE [group_id: STRING_32; views: LINKED_LIST [STRING_32]]
 			selected_row: EV_MULTI_COLUMN_LIST_ROW
 			l_group_id: STRING_32
 		do
 			if view_list.selected_item /= Void then
 				selected_row := view_mcl.selected_item
-				l_data ?= selected_row.data
-				l_group_id := l_data.group_id
-				selected_row.finish
-				selected_row.remove
-				selected_row.extend (view_list.selected_item.text)
-				diagram_views.replace (view_list.selected_item.text, l_group_id)
+				if attached {TUPLE [group_id: STRING_32; views: LINKED_LIST [STRING_32]]} selected_row.data as l_data then
+					l_group_id := l_data.group_id
+					selected_row.finish
+					selected_row.remove
+					selected_row.extend (view_list.selected_item.text)
+					diagram_views.replace (view_list.selected_item.text, l_group_id)
+				end
 			end
 		end
 
@@ -918,7 +896,7 @@ feature {NONE} -- Implementation
 		-- Nicest value for height of Current.
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -949,4 +927,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_DOCUMENTATION_WIZARD
+end

@@ -226,7 +226,6 @@ feature -- event
 			gpci: detachable EV_GRID_CHECKABLE_LABEL_ITEM
 			glab: EV_GRID_LABEL_ITEM
 			ltags: like used_tags
-			lptags: LIST [STRING_32]
 			s: STRING_32
 			cat, lastcat: detachable STRING_32
 			i,r: INTEGER
@@ -246,8 +245,8 @@ feature -- event
 			g.hide_header
 			if category_mode then
 				g.enable_tree
-				g.row_expand_actions.force_extend (agent (ag: EV_GRID) do ag.column (1).resize_to_content end(g))
-				g.row_collapse_actions.force_extend (agent (ag: EV_GRID) do ag.column (1).resize_to_content end(g))
+				g.row_expand_actions.extend (agent (u: EV_GRID_ROW; ag: EV_GRID) do ag.column (1).resize_to_content end (?, g))
+				g.row_collapse_actions.extend (agent (u: EV_GRID_ROW; ag: EV_GRID) do ag.column (1).resize_to_content end (?, g))
 			end
 
 			g.set_column_count_to (1)
@@ -317,19 +316,17 @@ feature -- event
 				end
 			end
 			if attached provider as l_provider then
-				from
-					lptags := l_provider.tags --| Sorted list of tags				
-					lptags.start
-					r := g.row_count
-					if ltags /= Void and then not ltags.is_empty then
-						r := r + 1
-						g.insert_new_row (r)
-						g.set_item (1, r, create {EV_GRID_LABEL_ITEM}.make_with_text ("- Available tags -"))
-					end
-				until
-					lptags.after
+				r := g.row_count
+				if ltags /= Void and then not ltags.is_empty then
+					r := r + 1
+					g.insert_new_row (r)
+					g.set_item (1, r, create {EV_GRID_LABEL_ITEM}.make_with_text ("- Available tags -"))
+				end
+				across
+						-- Sorted list of tags.
+					l_provider.tags as t
 				loop
-					s := lptags.item_for_iteration
+					s := t.item
 					check s /= Void end --| the tags provider contains valid tags
 					if category_mode then
 						tup := category_name_tag (s)
@@ -377,8 +374,6 @@ feature -- event
 						--| Default: gci.set_is_checked (False)
 					end
 					gci.checked_changed_actions.extend (chk_chg_action)
-
-					lptags.forth
 				end
 			end
 
@@ -416,7 +411,7 @@ feature -- event
 						aw.hide
 						aw.destroy
 					end(pw))
-			pw.resize_actions.force_extend (agent (ag: EV_GRID) do ag.column (1).resize_to_content end(g))
+			pw.resize_actions.extend (agent (ag: EV_GRID; x, y, width, height: INTEGER_32) do ag.column (1).resize_to_content end (g, ?, ?, ?, ?))
 			pw.show
 			g.set_focus
 		end
@@ -577,30 +572,22 @@ feature {NONE} -- Implementation
 		end
 
 	internal_set_tags (arr: ARRAY [STRING_32])
-			-- Set internal storage of tags from `arr'
+			-- Set internal storage of tags from `arr'.
 		local
 			t: like text
-			ltgs: detachable ARRAYED_LIST [STRING_32]
 		do
-			if arr /= Void and then not arr.is_empty then
-				create ltgs.make_from_array (arr)
-			end
-			if ltgs /= Void and then not ltgs.is_empty then
-				from
-					ltgs.start
-					create t.make_from_string (ltgs.item_for_iteration)
-					ltgs.forth
-				until
-					ltgs.after
+			create t.make_empty
+			if attached arr then
+				across
+					arr as c
 				loop
-					t.append (", ")
-					t.append (ltgs.item_for_iteration)
-					ltgs.forth
+					if not c.is_first then
+						t.append ({STRING_32} ", ")
+					end
+					t.append (c.item)
 				end
-				internal_set_text (t)
-			else
-				internal_remove_text
 			end
+			internal_set_text (t)
 		end
 
 	string_to_array_tags (a_text: STRING_32): ARRAY [STRING_32]

@@ -1,10 +1,10 @@
-note
+﻿note
 	description : "Dialog to handle exception handling ..."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	author      : "$Author$"
-	date        : "$Date$"
-	revision    : "$Revision$"
+	author: "$Author$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	ES_EXCEPTION_HANDLER_DIALOG
@@ -172,8 +172,6 @@ feature -- Change
 		require
 			exception_handler_not_void: exception_handler /= Void
 		local
-			exceptions_handling: LIST [TUPLE [INTEGER, STRING]]
-			elt: TUPLE [role: INTEGER; name: STRING]
 			lst: detachable LIST [STRING]
 			eh: DBG_EXCEPTION_HANDLER
 			l_sorter: SORTER [STRING]
@@ -189,42 +187,30 @@ feature -- Change
 				lst.compare_objects
 			end
 
-			from
-				exceptions_handling := eh.enabled_handled_exceptions_by_name
-				exceptions_handling.start
-			until
-				exceptions_handling.after
+			across
+				eh.enabled_handled_exceptions_by_name as e
 			loop
-				elt := exceptions_handling.item
-				if elt /= Void then
+				if attached e.item as elt then
 					lst.prune_all (elt.name)
 					add_row_from_data (elt)
 				end
-				exceptions_handling.forth
 			end
-			from
-				exceptions_handling := eh.disabled_handled_exceptions_by_name
-				exceptions_handling.start
-			until
-				exceptions_handling.after
+			across
+				eh.disabled_handled_exceptions_by_name as e
 			loop
-				elt := exceptions_handling.item
-				if elt /= Void then
-					if not lst.has (elt.name) then
-						lst.force (elt.name)
-					end
+				if
+					attached e.item as elt and then
+					not lst.has (elt.name)
+				then
+					lst.force (elt.name)
 				end
-				exceptions_handling.forth
 			end
-			from
-				create {QUICK_SORTER [STRING]} l_sorter.make (create {COMPARABLE_COMPARATOR [STRING]})
-				l_sorter.sort (lst)
-				lst.start
-			until
-				lst.after
+			create {QUICK_SORTER [STRING]} l_sorter.make (create {COMPARABLE_COMPARATOR [STRING]})
+			l_sorter.sort (lst)
+			across
+				lst as c
 			loop
-				add_row_from_data ([{DBG_EXCEPTION_HANDLER}.Role_disabled , lst.item_for_iteration])
-				lst.forth
+				add_row_from_data ([{DBG_EXCEPTION_HANDLER}.Role_disabled , c.item])
 			end
 
 			if exception_handler.enabled then
@@ -269,26 +255,26 @@ feature -- Change
 
 			cell_combo.activate_actions.extend (agent activate_combo (cell_combo, ?))
 			cell_combo.deactivate_actions.extend (agent refresh_row (row, Void))
-			cell_combo.pointer_double_press_actions.force_extend (agent cell_combo.activate)
+			cell_combo.pointer_double_press_actions.extend (agent (c: EV_GRID_COMBO_ITEM; x, y, button: INTEGER_32; x_tilt, y_tilt, pressure: REAL_64; screen_x, screen_y: INTEGER_32) do c.activate end (cell_combo, ?, ?, ?, ?, ?, ?, ?, ?))
 			row.set_item (1, cell_combo)
 
 			create cell_lab.make_with_text (pat)
 			row.set_item (2, cell_lab)
 
-			cell_lab.pointer_double_press_actions.force_extend (agent (arow: EV_GRID_ROW)
+			cell_lab.pointer_double_press_actions.extend (agent (arow: EV_GRID_ROW; x, y, button: INTEGER_32; x_tilt, y_tilt, pressure: REAL_64; screen_x, screen_y: INTEGER_32)
 				local
 					r: INTEGER
 				do
 					if arow /= Void and then arow.parent /= Void then
 						r := role_pattern_from_row (arow).role
-						if r /= {DBG_EXCEPTION_HANDLER}.Role_continue then
-							r := {DBG_EXCEPTION_HANDLER}.Role_continue
-						else
+						if r = {DBG_EXCEPTION_HANDLER}.Role_continue then
 							r := {DBG_EXCEPTION_HANDLER}.Role_stop
+						else
+							r := {DBG_EXCEPTION_HANDLER}.Role_continue
 						end
 						set_role_on_row (r, arow)
 					end
-				end(row)
+				end (row, ?, ?, ?, ?, ?, ?, ?, ?)
 			)
 
 			refresh_row (row, elt)
@@ -462,7 +448,6 @@ feature {NONE} -- events
 		local
 			lst: detachable LIST [STRING]
 			t: like role_pattern_from_row
-			s: STRING
 			r: INTEGER
 		do
 			lst := exception_handler.external_exception_names
@@ -479,14 +464,10 @@ feature {NONE} -- events
 					end
 					r := r + 1
 				end
-				from
-					lst.start
-				until
-					lst.after
+				across
+					lst as c
 				loop
-					s := lst.item_for_iteration
-					add_row_from_data ([{DBG_EXCEPTION_HANDLER}.role_continue, s])
-					lst.forth
+					add_row_from_data ([{DBG_EXCEPTION_HANDLER}.role_continue, c.item])
 				end
 			end
 		end
@@ -495,16 +476,18 @@ feature {NONE} -- events
 		local
 			r: INTEGER
 		do
-			if selected_row /= Void and selected_data /= Void then
-				if selected_data.is_equal (tf_pattern.text) then
-					r := selected_row.index
-					grid.remove_row (r)
-					if grid.row_count > 0 then
-						if r <= grid.row_count then
-							grid.select_row (r)
-						else
-							grid.select_row (grid.row_count)
-						end
+			if
+				selected_row /= Void and
+				selected_data /= Void and then
+				selected_data.is_equal (tf_pattern.text)
+			then
+				r := selected_row.index
+				grid.remove_row (r)
+				if grid.row_count > 0 then
+					if r <= grid.row_count then
+						grid.select_row (r)
+					else
+						grid.select_row (grid.row_count)
 					end
 				end
 			end
@@ -604,7 +587,7 @@ feature -- Access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -33,7 +33,7 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization
+feature {NONE} -- Creation
 
 	make (a_class: CLASS_I; a_eis_grid: ES_EIS_ENTRY_GRID)
 			-- Initialized with `a_conf_notable' and `a_eis_grid'.
@@ -125,7 +125,6 @@ feature -- Operation
 	delete_selected_entries
 			-- <precursor>
 		local
-			l_selected_rows: ARRAYED_LIST [EV_GRID_ROW]
 			l_request: ES_DISCARDABLE_QUESTION_PROMPT
 			l_cancelled, l_removed: BOOLEAN
 		do
@@ -143,20 +142,17 @@ feature -- Operation
 				end
 
 				if not l_cancelled then
-					l_selected_rows := eis_grid.selected_rows
-					from
-						l_selected_rows.start
-					until
-						l_selected_rows.after
+					across
+						eis_grid.selected_rows as r
 					loop
-						if attached {EIS_ENTRY} l_selected_rows.item_for_iteration.data as lt_entry then
-							if entry_editable (lt_entry, False) then
-								remove_entry (lt_entry)
-								extracted_entries.remove (l_selected_rows.item_for_iteration.index)
-								l_removed := True
-							end
+						if
+							attached {EIS_ENTRY} r.item.data as lt_entry and then
+							entry_editable (lt_entry, False)
+						then
+							remove_entry (lt_entry)
+							extracted_entries.remove (r.item.index)
+							l_removed := True
 						end
-						l_selected_rows.forth
 					end
 					if l_removed then
 						rebuild_and_refresh_grid
@@ -201,7 +197,7 @@ feature {NONE} -- Access
 				l_type := id_solution.most_possible_type_of_id (lt_id)
 				if l_type = id_solution.class_type then
 					if attached {CLASS_I} id_solution.class_of_id (lt_id) as lt_class then
-						Result := (l_class_i = lt_class)
+						Result := l_class_i = lt_class
 					end
 				elseif l_type = id_solution.feature_type then
 					l_feature := id_solution.feature_of_id (lt_id)
@@ -283,7 +279,7 @@ feature {NONE} -- Class modification
 			a_entry_not_void: a_entry /= Void
 			a_entry_editable: entry_editable (a_entry, False)
 		do
-			if attached {E_FEATURE} id_solution.feature_of_id (a_entry.target_id) as lt_feature then
+			if attached id_solution.feature_of_id (a_entry.target_id) as lt_feature then
 				remove_entry_in_feature (a_entry, lt_feature)
 				storage.deregister_entry (a_entry, component_id)
 			elseif attached {CLASS_I} id_solution.class_of_id (a_entry.target_id) as lt_class then
@@ -404,13 +400,11 @@ feature {NONE} -- Target token
 			l_list: ARRAYED_LIST [EB_GRID_LISTABLE_CHOICE_ITEM_ITEM]
 			l_item_item: EB_GRID_LISTABLE_CHOICE_ITEM_ITEM
 			l_e_com: EB_GRID_EDITOR_TOKEN_COMPONENT
-			l_classc: CLASS_C
 			l_written_in_features: LIST [E_FEATURE]
 			l_feature: E_FEATURE
 		do
 			if a_editable then
-				l_classc := class_i.compiled_class
-				l_written_in_features := l_classc.written_in_features
+				l_written_in_features := class_i.compiled_class.written_in_features
 
 				l_editable_item := new_listable_item
 				l_editable_item.set_choice_list_key_press_action (agent tab_to_next)
@@ -427,15 +421,17 @@ feature {NONE} -- Target token
 				if attached {CLASS_I} a_item as l_class and then l_class.is_equal (class_i) then
 					l_editable_item.set_list_item (l_item_item)
 				else
-					l_feature ?= a_item
+					l_feature := {E_FEATURE} / a_item
 				end
 
-				from
-					l_written_in_features.start
-				until
-					l_written_in_features.after
+				across
+					l_written_in_features as f
 				loop
-					if (attached {E_FEATURE} l_written_in_features.item_for_iteration as lt_feature and then not lt_feature.is_attribute and then not lt_feature.is_constant) then
+					if
+						attached f.item as lt_feature and then
+						not lt_feature.is_attribute and then
+						not lt_feature.is_constant
+					then
 						token_writer.new_line
 						token_writer.add_sectioned_feature_name (lt_feature)
 						l_line := token_writer.last_line
@@ -447,13 +443,12 @@ feature {NONE} -- Target token
 							l_editable_item.set_list_item (l_item_item)
 						end
 					end
-					l_written_in_features.forth
 				end
 				l_editable_item.set_item_components (l_list)
 
 				Result := l_editable_item
 				if attached l_editable_item.item_components as c and then c.upper > c.lower then
-					l_editable_item.pointer_button_press_actions.force_extend (agent activate_item (l_editable_item))
+					l_editable_item.pointer_button_press_actions.extend (agent activate_item (l_editable_item, ?, ?, ?, ?, ?, ?, ?, ?))
 					l_editable_item.set_selection_changing_action (agent on_target_changed (?, l_editable_item))
 				end
 			else
@@ -549,7 +544,7 @@ feature {NONE} -- Implementation
 			l_new_entry: EIS_ENTRY
 		do
 			if a_entry.override /= a_enable then
-				if attached {E_FEATURE} id_solution.feature_of_id (a_entry.target_id) as lt_feature then
+				if attached id_solution.feature_of_id (a_entry.target_id) as lt_feature then
 					if attached a_entry.twin as lt_new_entry then
 						l_new_entry := lt_new_entry
 					end
@@ -590,12 +585,12 @@ feature {NONE} -- Implementation
 			until
 				i > l_count
 			loop
-				if attached {EV_GRID_ROW}l_grid.row (i) as l_row then
-					if attached {EIS_ENTRY}l_row.data as l_entry then
-						if a_entry /= l_entry and then entry_editable (l_entry, TRUE) then
-							set_entry_override (l_entry, False)
-						end
-					end
+				if
+					attached l_grid.row (i) as l_row and then
+					attached {EIS_ENTRY} l_row.data as l_entry and then
+					a_entry /= l_entry and then entry_editable (l_entry, True)
+				then
+					set_entry_override (l_entry, False)
 				end
 				i := i + 1
 			end
@@ -629,7 +624,7 @@ feature {NONE} -- Callbacks
 						-- Do nothing when the name is not actually changed
 				else
 					if entry_editable (lt_entry, False) then
-						if attached {E_FEATURE} id_solution.feature_of_id (lt_entry.target_id) as lt_feature then
+						if attached id_solution.feature_of_id (lt_entry.target_id) as lt_feature then
 							if attached lt_entry.twin as lt_new_entry then
 								l_new_entry := lt_new_entry
 							end
@@ -671,7 +666,7 @@ feature {NONE} -- Callbacks
 						-- Do nothing when the protocol is not actually changed
 				else
 					if entry_editable (lt_entry, False) then
-						if attached {E_FEATURE} id_solution.feature_of_id (lt_entry.target_id) as lt_feature then
+						if attached id_solution.feature_of_id (lt_entry.target_id) as lt_feature then
 							if attached lt_entry.twin as lt_new_entry then
 								l_new_entry := lt_new_entry
 							end
@@ -714,7 +709,7 @@ feature {NONE} -- Callbacks
 						-- Do nothing when the source is not actually changed
 				else
 					if entry_editable (lt_entry, False) then
-						if attached {E_FEATURE} id_solution.feature_of_id (lt_entry.target_id) as lt_feature then
+						if attached id_solution.feature_of_id (lt_entry.target_id) as lt_feature then
 							if attached lt_entry.twin as lt_new_entry then
 								l_new_entry := lt_new_entry
 							end
@@ -755,8 +750,8 @@ feature {NONE} -- Callbacks
 						-- Do nothing when the tags is not actually changed
 				else
 					if entry_editable (lt_entry, False) then
-						if attached {E_FEATURE} id_solution.feature_of_id (lt_entry.target_id) as lt_feature then
-							if attached {EIS_ENTRY} lt_entry.twin as lt_new_entry then
+						if attached id_solution.feature_of_id (lt_entry.target_id) as lt_feature then
+							if attached lt_entry.twin as lt_new_entry then
 								l_new_entry := lt_new_entry
 							end
 							l_new_entry.set_tags (l_tags)
@@ -858,11 +853,8 @@ feature {NONE} -- Callbacks
 			a_item_not_void: a_item /= Void
 			a_item_not_void: a_grid_item /= Void
 		local
-			l_current_feature: E_FEATURE
-			l_current_class: CLASS_I
 			l_class_modifier: ES_EIS_CLASS_MODIFIER
 			l_feature_modifier: ES_EIS_FEATURE_MODIFIER
-			l_grid_item: EB_GRID_LISTABLE_CHOICE_ITEM_ITEM
 			l_eis_entry: EIS_ENTRY
 		do
 			if attached {EIS_ENTRY} a_grid_item.row.data as lt_entry then
@@ -897,26 +889,28 @@ feature {NONE} -- Callbacks
 					l_feature_modifier.prepare
 					if l_feature_modifier.is_modifiable then
 						if l_feature_modifier.is_ast_available then
-							l_grid_item := a_grid_item.selected_item
-							if l_grid_item /= Void then
-								l_current_feature ?= l_grid_item.data
-								l_current_class ?= l_grid_item.data
-							end
-							if l_current_class /= Void or l_current_feature /= Void then
-								l_feature_modifier.write_feature_entry (l_eis_entry)
-								l_feature_modifier.commit
-								Result := True
-
-								if l_current_feature /= Void then
+							if attached a_grid_item.selected_item as l_grid_item then
+								if attached {E_FEATURE} l_grid_item.data as l_current_feature then
+									l_feature_modifier.write_feature_entry (l_eis_entry)
+									l_feature_modifier.commit
+									Result := True
 										-- Remove the eis from current feature.
 									remove_entry_in_feature (l_eis_entry, l_current_feature)
-								elseif l_current_class /= Void then
+											-- Change the id of the entry
+									storage.deregister_entry (l_eis_entry, component_id)
+									l_eis_entry.set_id (id_solution.id_of_feature (lt_feature))
+									storage.register_entry (l_eis_entry, component_id, class_i.date)
+								elseif attached {CLASS_I} l_grid_item.data as l_current_class then
+									l_feature_modifier.write_feature_entry (l_eis_entry)
+									l_feature_modifier.commit
+									Result := True
+										-- Remove the eis from current class.
 									remove_entry_in_class (l_eis_entry, l_current_class)
+											-- Change the id of the entry
+									storage.deregister_entry (l_eis_entry, component_id)
+									l_eis_entry.set_id (id_solution.id_of_feature (lt_feature))
+									storage.register_entry (l_eis_entry, component_id, class_i.date)
 								end
-										-- Change the id of the entry
-								storage.deregister_entry (l_eis_entry, component_id)
-								l_eis_entry.set_id (id_solution.id_of_feature (lt_feature))
-								storage.register_entry (l_eis_entry, component_id, class_i.date)
 							end
 						else
 							prompts.show_error_prompt (interface_names.l_syntax_error, Void, Void)

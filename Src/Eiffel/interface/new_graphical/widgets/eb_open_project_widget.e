@@ -54,7 +54,7 @@ inherit
 create
 	make
 
-feature {NONE} -- Initialization
+feature {NONE} -- Creation
 
 	make (a_window: like parent_window)
 			-- Initialize current using `a_window' as top most parent.
@@ -163,15 +163,15 @@ feature -- Actions
 		local
 			l_loader: EB_GRAPHICAL_PROJECT_LOADER
 			l_item: EV_GRID_LABEL_ITEM
-			l_factory: USER_OPTIONS_FACTORY
 			l_project_initialized: BOOLEAN
 		do
 				-- Remove data associated to user file for selected project/target if any.
-			if remove_user_file.is_sensitive and then remove_user_file.is_selected then
-				if last_state.options /= Void then
-					create l_factory
-					l_factory.remove (last_state.options, selected_target)
-				end
+			if
+				remove_user_file.is_sensitive and then
+				remove_user_file.is_selected and then
+				attached last_state.options as o
+			then
+				;(create {USER_OPTIONS_FACTORY}).remove (o, selected_target)
 			end
 				-- Find which project was selected.
 			create l_loader.make (parent_window)
@@ -343,16 +343,16 @@ feature {NONE} -- Initialization
 			edit_project_button.set_minimum_width (l_minimum_size)
 			edit_project_button.set_pixmap (pixmaps.icon_pixmaps.tool_config_icon)
 			edit_project_button.align_text_left
-			projects_list.row_deselect_actions.force_extend (agent edit_project_button.disable_sensitive)
-			projects_list.row_select_actions.force_extend (agent edit_project_button.enable_sensitive)
+			projects_list.row_deselect_actions.extend (agent (r: EV_GRID_ROW) do edit_project_button.disable_sensitive end)
+			projects_list.row_select_actions.extend (agent (r: EV_GRID_ROW) do edit_project_button.enable_sensitive end)
 			hb.extend (edit_project_button)
 			hb.disable_item_expand (edit_project_button)
 			create remove_project_button.make_with_text_and_action (Interface_names.l_remove_project, agent remove_project_from_list)
 			remove_project_button.set_minimum_width (l_minimum_size)
 			remove_project_button.set_pixmap (pixmaps.icon_pixmaps.general_remove_icon)
 			remove_project_button.align_text_left
-			projects_list.row_deselect_actions.force_extend (agent remove_project_button.disable_sensitive)
-			projects_list.row_select_actions.force_extend (agent remove_project_button.enable_sensitive)
+			projects_list.row_deselect_actions.extend (agent (r: EV_GRID_ROW) do remove_project_button.disable_sensitive end)
+			projects_list.row_select_actions.extend (agent (r: EV_GRID_ROW) do remove_project_button.enable_sensitive end)
 			hb.extend (remove_project_button)
 			hb.disable_item_expand (remove_project_button)
 			hb.extend (create {EV_CELL})
@@ -462,7 +462,7 @@ feature {NONE} -- Initialization
 			projects_list.enable_row_height_fixed
 			projects_list.set_minimum_height (8 * projects_list.row_height)
 			projects_list.pointer_double_press_actions.extend (agent on_double_click)
-			projects_list.row_deselect_actions.force_extend (agent disable_sensitive)
+			projects_list.row_deselect_actions.extend (agent (r: EV_GRID_ROW) do disable_sensitive end)
 			projects_list.key_press_actions.extend (agent on_key_pressed)
 
 			lop := recent_projects_manager.recent_projects
@@ -877,7 +877,6 @@ feature {NONE} -- Implementation
 			i, nb: INTEGER
 			l_projects: ARRAYED_LIST [TUPLE [PATH, READABLE_STRING_32]]
 			p: TUPLE [PATH, READABLE_STRING_32]
-			f: PATH
 			t: READABLE_STRING_32
 		do
 				-- Search first if it is a file which is already in the list.
@@ -898,9 +897,8 @@ feature {NONE} -- Implementation
 				if t = Void then
 					t := ""
 				end
-				create f.make_from_string (l_item.text)
 					-- Ensure the type of tuple by using locals.
-				p := [f, t]
+				p := [create {PATH}.make_from_string (l_item.text), t]
 				p.compare_objects
 				l_projects.extend (p)
 				i := i + 1
@@ -918,11 +916,9 @@ feature {NONE} -- Actions
 			-- Open a non listed existing project
 		local
 			fod: EB_FILE_OPEN_DIALOG
-			environment_variable: EXECUTION_ENVIRONMENT
 		do
 				-- User just asked for an open file dialog,
 				-- and we set it on the last opened directory.
-			create environment_variable
 			create fod.make_with_preference (preferences.dialog_data.last_opened_project_directory_preference)
 			fod.set_title (Interface_names.t_select_a_file)
 			set_dialog_filters_and_add_all (fod, {ARRAY [STRING_32]} <<config_files_filter>>)
@@ -1011,21 +1007,17 @@ feature {NONE} -- Actions
 		local
 			l_filename: PATH
 			l_item: EV_GRID_LABEL_ITEM
-			l_has_file, l_is_ecf: BOOLEAN
+			l_has_file: BOOLEAN
 			i, nb: INTEGER
 			l_conf: CONF_LOAD
-			l_factory: CONF_COMP_FACTORY
 		do
 			projects_list.remove_selection
 
 			l_filename := a_dlg.full_file_path
-				-- Check if we have a .ecf extension.
-			l_is_ecf := l_filename.has_extension ({EIFFEL_CONSTANTS}.config_extension)
 
 				-- Try to see if we can load the project.
 				-- If not, it is either an incorrect configuration file
-			create l_factory
-			create l_conf.make (l_factory)
+			create l_conf.make (create {CONF_COMP_FACTORY})
 			l_conf.retrieve_configuration (l_filename.name)
 			if l_conf.is_error then
 				l_filename := Void

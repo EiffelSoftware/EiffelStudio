@@ -1,8 +1,7 @@
-note
-	description: "Flat view of class browser"
+﻿note
+	description: "Flat view of class browser."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -28,7 +27,7 @@ inherit
 create
 	make
 
-feature{NONE} -- Initialization
+feature{NONE} -- Creation
 
 	make (a_dev_window: like development_window)
 			-- Initialize.
@@ -43,29 +42,27 @@ feature -- Actions
 	on_row_expanded (a_row: EV_GRID_ROW)
 			-- Action performed when `a_row' is expanded
 		local
-			l_row: EB_CLASS_BROWSER_FLAT_ROW
 			l_height: INTEGER
 			l_row_index: INTEGER
 			done: BOOLEAN
-			l_cur_row: EB_CLASS_BROWSER_FLAT_ROW
 		do
-			l_row ?= a_row.data
-			check l_row /= Void end
-			l_row.set_is_expanded (True)
-			l_row.refresh
-			l_height := default_row_height
-			from
-				l_row_index := a_row.index + 2
-			until
-				done or l_row_index > grid.row_count
-			loop
-				l_cur_row ?= grid.row (l_row_index).data
-				check l_cur_row /= Void end
-				if not l_cur_row.is_parent then
-					grid.row (l_row_index).set_height (l_height)
-					l_row_index := l_row_index + 1
-				else
-					done := True
+			if attached {EB_CLASS_BROWSER_FLAT_ROW} a_row.data as l_row then
+				l_row.set_is_expanded (True)
+				l_row.refresh
+				l_height := default_row_height
+				from
+					l_row_index := a_row.index + 2
+				until
+					done or l_row_index > grid.row_count
+				loop
+					if attached {EB_CLASS_BROWSER_FLAT_ROW} grid.row (l_row_index).data as l_cur_row then
+						if l_cur_row.is_parent then
+							done := True
+						else
+							grid.row (l_row_index).set_height (l_height)
+							l_row_index := l_row_index + 1
+						end
+					end
 				end
 			end
 		end
@@ -73,27 +70,25 @@ feature -- Actions
 	on_row_collapsed (a_row: EV_GRID_ROW)
 			-- Action performed when `a_row' is collapsed
 		local
-			l_row: EB_CLASS_BROWSER_FLAT_ROW
 			l_row_index: INTEGER
 			done: BOOLEAN
-			l_cur_row: EB_CLASS_BROWSER_FLAT_ROW
 		do
-			l_row ?= a_row.data
-			check l_row /= Void end
-			l_row.set_is_expanded (False)
-			l_row.refresh
-			from
-				l_row_index := a_row.index + 2
-			until
-				done or l_row_index > grid.row_count
-			loop
-				l_cur_row ?= grid.row (l_row_index).data
-				check l_cur_row /= Void end
-				if not l_cur_row.is_parent then
-					grid.row (l_row_index).set_height (0)
-					l_row_index := l_row_index + 1
-				else
-					done := True
+			if attached {EB_CLASS_BROWSER_FLAT_ROW} a_row.data as l_row then
+				l_row.set_is_expanded (False)
+				l_row.refresh
+				from
+					l_row_index := a_row.index + 2
+				until
+					done or l_row_index > grid.row_count
+				loop
+					if attached {EB_CLASS_BROWSER_FLAT_ROW} grid.row (l_row_index).data as l_cur_row then
+						if l_cur_row.is_parent then
+							done := True
+						else
+							grid.row (l_row_index).set_height (0)
+							l_row_index := l_row_index + 1
+						end
+					end
 				end
 			end
 		end
@@ -203,11 +198,8 @@ feature{NONE} -- Sorting
 		require
 			a_column_list_attached: a_column_list /= Void
 			not_a_column_list_is_empty:
-		local
-			l_sorter: QUICK_SORTER [EB_CLASS_BROWSER_FLAT_ROW]
 		do
-			create l_sorter.make (a_comparator)
-			l_sorter.sort (rows)
+			;(create {QUICK_SORTER [EB_CLASS_BROWSER_FLAT_ROW]}.make (a_comparator)).sort (rows)
 			expand_all_rows
 			bind_grid
 		end
@@ -289,24 +281,15 @@ feature -- Access
 		local
 			l_selected: ARRAYED_LIST [EV_GRID_ITEM]
 			l_item: EV_GRID_ITEM
-			l_row: EB_CLASS_BROWSER_FLAT_ROW
 		do
 			l_selected := grid.selected_items
-			if l_selected.is_empty then
-				create Result.make (0)
-			else
-				create Result.make (l_selected.count)
-				from
-					l_selected.start
-				until
-					l_selected.after
-				loop
-					l_item := l_selected.item
-					l_row ?= l_item.row.data
-					if l_row /= Void then
-						Result.force (create {EVS_EMPTY_COORDINATED_ITEM}.make (l_item.column.index, l_item.row.index))
-					end
-					l_selected.forth
+			create Result.make (l_selected.count)
+			across
+				l_selected as s
+			loop
+				l_item := s.item
+				if attached {EB_CLASS_BROWSER_FLAT_ROW} l_item.row.data as l_row then
+					Result.force (create {EVS_EMPTY_COORDINATED_ITEM}.make (l_item.column.index, l_item.row.index))
 				end
 			end
 		end
@@ -317,7 +300,6 @@ feature -- Access
 			l_label: EV_LABEL
 			l_box: EV_HORIZONTAL_BOX
 			l_widget_item: SD_TOOL_BAR_WIDGET_ITEM
-			l_contants: EV_LAYOUT_CONSTANTS
 		do
 			if control_tool_bar = Void then
 				create control_tool_bar.make (5)
@@ -330,8 +312,7 @@ feature -- Access
 				create l_label.make_with_text (interface_names.l_filter)
 				create l_box
 				l_box.extend (l_label)
-				create l_contants
-				l_box.set_border_width (l_contants.small_border_size)
+				l_box.set_border_width ((create {EV_LAYOUT_CONSTANTS}).small_border_size)
 				create l_widget_item.make (l_box)
 				control_tool_bar.extend (l_widget_item)
 
@@ -411,7 +392,6 @@ feature{NONE} -- Update
 			l_color: EV_COLOR
 			l_feature: EB_CLASS_BROWSER_FLAT_ROW
 			l_height: INTEGER
-			l_rows: like rows
 			l_odd_line_color: EV_COLOR
 			l_even_line_color: EV_COLOR
 
@@ -426,13 +406,10 @@ feature{NONE} -- Update
 			grid.row_collapse_actions.wipe_out
 			l_color := l_odd_line_color
 			l_height := default_row_height
-			from
-				l_rows := rows
-				l_rows.start
-			until
-				l_rows.after
+			across
+				rows as r
 			loop
-				l_feature := l_rows.item_for_iteration
+				l_feature := r.item
 				if l_feature.is_parent then
 					if l_color = l_odd_line_color then
 						l_color := l_even_line_color
@@ -441,42 +418,34 @@ feature{NONE} -- Update
 					end
 				end
 				l_feature.bind_row (grid, l_color, l_height)
-				l_rows.forth
 			end
 			if grid.row_count > 0 then
 				grid.column (2).resize_to_content
 			end
-			grid.row_expand_actions.force_extend (agent on_row_expanded)
-			grid.row_collapse_actions.force_extend (agent on_row_collapsed)
+			grid.row_expand_actions.extend (agent on_row_expanded)
+			grid.row_collapse_actions.extend (agent on_row_collapsed)
 		end
 
 	default_ensure_visible_action (a_item: EVS_GRID_SEARCHABLE_ITEM; a_selected: BOOLEAN)
 			-- Ensure that `a_item' is visible.
 			-- If `a_selected' is True, make sure that `a_item' is in its selected status.
-		local
-			l_compiler_item: EB_GRID_EDITOR_TOKEN_ITEM
-			l_item: EV_GRID_ITEM
-			l_row: EB_CLASS_BROWSER_FLAT_ROW
-			l_grid_row: EV_GRID_ROW
 		do
 			grid.remove_selection
-			l_compiler_item ?= a_item
-			if l_compiler_item /= Void then
-				l_row ?= l_compiler_item.row.data
-				if not l_row.parent.is_expanded then
-					if l_row.parent.grid_row.is_expandable then
-						l_row.parent.grid_row.expand
-					end
+			if
+				attached {EB_GRID_EDITOR_TOKEN_ITEM} a_item as l_compiler_item and then
+				attached {EB_CLASS_BROWSER_FLAT_ROW} l_compiler_item.row.data as l_row
+			then
+				if
+					not l_row.parent.is_expanded and then
+					l_row.parent.grid_row.is_expandable
+				then
+					l_row.parent.grid_row.expand
 				end
-				if l_row /= Void then
-					l_grid_row := l_row.grid_row
-					l_grid_row.ensure_visible
-					l_item ?= a_item
-					if l_item /= Void and then l_item.is_parented then
-						l_item.ensure_visible
-						if a_selected then
-							l_item.enable_select
-						end
+				l_row.grid_row.ensure_visible
+				if attached {EV_GRID_ITEM} a_item as l_item and then l_item.is_parented then
+					l_item.ensure_visible
+					if a_selected then
+						l_item.enable_select
 					end
 				end
 			end
@@ -495,8 +464,8 @@ feature{NONE} -- Initialization
 			grid.enable_tree
 			grid.disable_row_height_fixed
 			grid.enable_multiple_item_selection
-			grid.row_expand_actions.force_extend (agent on_row_expanded)
-			grid.row_collapse_actions.force_extend (agent on_row_collapsed)
+			grid.row_expand_actions.extend (agent on_row_expanded)
+			grid.row_collapse_actions.extend (agent on_row_collapsed)
 			enable_ctrl_right_click_to_open_new_window
 			grid.key_press_actions.extend (agent on_key_pressed)
 			enable_grid_item_pnd_support
@@ -533,7 +502,7 @@ feature{NONE} -- Implementation/Data
 	show_feature_from_any_button_internal: like show_feature_from_any_button
 			-- Implementation of `show_feature_from_any_button'
 
-feature{NONE} -- Implementation			
+feature{NONE} -- Drawing			
 
 	fill_rows
 			-- Fill `rows' using information from `data'.
@@ -546,7 +515,6 @@ feature{NONE} -- Implementation
 			l_filter_used: BOOLEAN
 			l_filter_name: STRING
 			l_filter: like filter
-			l_macher: like wild_matcher
 		do
 			l_feature_list := data
 			if rows = Void then
@@ -561,24 +529,21 @@ feature{NONE} -- Implementation
 			l_filter_name.right_adjust
 			l_filter_used := not l_filter_name.is_empty
 			if l_filter_used then
-				l_macher := wild_matcher
-				l_macher.set_pattern (l_filter_name)
+				wild_matcher.set_pattern (l_filter_name)
 				l_filter := filter
 			end
-			from
-				l_feature_list.start
-			until
-				l_feature_list.after
+			across
+				l_feature_list as f
 			loop
-				l_feature := l_feature_list.item
-				if l_feature_from_any_displayed or else (l_feature.written_class.class_id /= l_any_class_id) then
-					if not l_filter_used or else l_filter.is_selected (l_feature, Void, Current) then
-						create l_row.make (l_feature_list.item, Current)
-						l_row.set_is_expanded (True)
-						rows.force (l_row)
-					end
+				l_feature := f.item
+				if
+					(l_feature_from_any_displayed or else l_feature.written_class.class_id /= l_any_class_id) and then
+					(l_filter_used implies l_filter.is_selected (l_feature, Void, Current))
+				then
+					create l_row.make (l_feature, Current)
+					l_row.set_is_expanded (True)
+					rows.force (l_row)
 				end
-				l_feature_list.forth
 			end
 		end
 
@@ -587,18 +552,14 @@ feature{NONE} -- Implementation
 		require
 			data_attached: rows /= Void
 		local
-			l_rows: like rows
 			l_parent_row: EB_CLASS_BROWSER_FLAT_ROW
 			l_cur_row: EB_CLASS_BROWSER_FLAT_ROW
 			l_children_count: INTEGER
 		do
-			l_rows := rows
-			from
-				l_rows.start
-			until
-				l_rows.after
+			across
+				rows as r
 			loop
-				l_cur_row := l_rows.item_for_iteration
+				l_cur_row := r.item
 				if l_parent_row = Void or else l_parent_row.written_class.class_id /= l_cur_row.written_class.class_id then
 					if l_parent_row /= Void then
 						l_parent_row.set_children_count (l_children_count)
@@ -611,7 +572,6 @@ feature{NONE} -- Implementation
 					l_cur_row.set_parent (l_parent_row)
 					l_children_count := l_children_count + 1
 				end
-				l_rows.forth
 			end
 			if l_children_count > 0 and then l_parent_row /= Void then
 				l_parent_row.set_children_count (l_children_count)
@@ -620,17 +580,11 @@ feature{NONE} -- Implementation
 
 	expand_all_rows
 			-- Set `is_expanded' flag of every row to True.
-		local
-			l_rows: like rows
 		do
-			from
-				l_rows := rows
-				l_rows.start
-			until
-				l_rows.after
+			across
+				rows as r
 			loop
-				l_rows.item_for_iteration.set_is_expanded (True)
-				l_rows.forth
+				r.item.set_is_expanded (True)
 			end
 		end
 
@@ -639,16 +593,15 @@ feature{NONE} -- Implementation
 		require
 			a_item_attached: a_item /= Void
 			a_item_is_parented: a_item.is_parented
-		local
-			l_row: EB_CLASS_BROWSER_FLAT_ROW
 		do
-			if a_item.column.index = 1 then
-				l_row ?= a_item.row.data
-				if l_row /= Void and then l_row.is_parent and then not l_row.is_expanded then
-					if a_item.row.is_expandable then
-						a_item.row.expand
-					end
-				end
+			if
+				a_item.column.index = 1 and then
+				attached {EB_CLASS_BROWSER_FLAT_ROW} a_item.row.data as l_row and then
+				l_row.is_parent and then
+				not l_row.is_expanded and then
+				a_item.row.is_expandable
+			then
+				a_item.row.expand
 			end
 		end
 
@@ -666,23 +619,22 @@ feature{NONE} -- Implementation
 		require
 			a_item_attached: a_item /= Void
 			a_item_is_parented: a_item.is_parented
-		local
-			l_row: EB_CLASS_BROWSER_FLAT_ROW
 		do
-			if a_item.column.index = 1 then
-				l_row ?= a_item.row.data
-				if l_row /= Void and then l_row.is_parent and then l_row.is_expanded then
-					if a_item.row.is_expandable then
-						a_item.row.collapse
-					end
-				end
+			if
+				a_item.column.index = 1 and then
+				attached {EB_CLASS_BROWSER_FLAT_ROW} a_item.row.data as l_row and then
+				l_row.is_parent and then
+				l_row.is_expanded and then
+				a_item.row.is_expandable
+			then
+				a_item.row.collapse
 			end
 		end
 
 	feature_name_list_internal: like feature_name_list
 			-- Implementation of `feature_name_list'
 
-feature{NONE} -- Implementation
+feature{NONE} -- Timeout
 
 	update_matches_timeout: EV_TIMEOUT
 			-- Internally used timer
@@ -757,7 +709,7 @@ invariant
 	wild_matcher_attached: wild_matcher /= Void
 
 note
-        copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2018, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

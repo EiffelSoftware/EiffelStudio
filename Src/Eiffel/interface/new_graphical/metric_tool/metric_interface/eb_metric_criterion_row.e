@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Object that represents a criterion row in basic metric definition panel"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -186,7 +185,7 @@ feature -- Status report
 			-- Is current row valid?
 			-- i.e., a right criterion name is sepcified.
 		do
-			Result := (not is_empty_row) and then (criterion_factory.has_criterion (criterion_name, scope))
+			Result := not is_empty_row and then criterion_factory.has_criterion (criterion_name, scope)
 		end
 
 	is_valid_nary_row: BOOLEAN
@@ -264,7 +263,7 @@ feature -- Access
 				criterion_item_internal.set_foreground_color (preferences.editor_data.normal_text_color)
 				create l_provider.make (criterion_list)
 				criterion_item_internal.set_completion_possibilities_provider (l_provider)
-				criterion_item_internal.pointer_double_press_actions.force_extend (agent activate_criterion_item)
+				criterion_item_internal.pointer_double_press_actions.extend (agent activate_criterion_item)
 				criterion_item_internal.activate_actions.extend (agent on_criterion_item_activated)
 				criterion_item_internal.deactivate_actions.extend (agent on_criterion_item_deactivated)
 					-- Setup tooltip.
@@ -640,30 +639,27 @@ feature{NONE} -- Implementation
 			-- List of criterion of `a_scope'
 		local
 			l_name_list: LIST [STRING]
-			l_name_array: ARRAY [NAME_FOR_COMPLETION]
+			l_names: ARRAYED_LIST [NAME_FOR_COMPLETION]
 			l_name: NAME_FOR_COMPLETION
 			l_pixmap: EV_PIXMAP
 			l_matcher: like criterion_name_matcher
 		do
 			if criterion_list_internal = Void then
 				l_name_list := criterion_factory_table.item (scope).available_names
-				create l_name_array.make (1, l_name_list.count)
+				create l_names.make (l_name_list.count)
 				l_matcher := criterion_name_matcher
-				from
-					l_name_list.start
-				until
-					l_name_list.after
+				across
+					l_name_list as n
 				loop
-					create l_name.make (l_name_list.item)
+					create l_name.make (n.item)
 					l_name.set_name_matcher (l_matcher)
-					l_pixmap := criterion_pixmap_from_name (l_name_list.item)
+					l_pixmap := criterion_pixmap_from_name (n.item)
 					if l_pixmap /= Void then
 						l_name.set_icon (l_pixmap)
 					end
-					l_name_array.put (l_name, l_name_list.index)
-					l_name_list.forth
+					l_names.extend (l_name)
 				end
-				create criterion_list_internal.make_from_array (l_name_array)
+				create criterion_list_internal.make_from_array (l_names.to_array)
 				criterion_list_internal.sort
 			end
 			Result := criterion_list_internal
@@ -707,7 +703,7 @@ feature{NONE} -- Implementation
 			end
 		end
 
-	activate_criterion_item
+	activate_criterion_item (x, y, button: INTEGER_32; x_tilt, y_tilt, pressure: REAL_64; screen_x, screen_y: INTEGER_32)
 			-- Activate `criterion_item'.
 		do
 			if not is_read_only then
@@ -849,7 +845,7 @@ invariant
 	subrows_attached: subrows /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

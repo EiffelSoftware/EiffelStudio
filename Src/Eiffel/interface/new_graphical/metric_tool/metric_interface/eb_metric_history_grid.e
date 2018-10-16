@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Grid to display metric history"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -60,26 +59,17 @@ feature -- Access
 
 	selected_archives: DS_HASH_SET [EB_METRIC_ARCHIVE_NODE]
 			-- Selected archives
-		local
-			l_metric_name_item: EV_GRID_CHECKABLE_LABEL_ITEM
-			l_archive: EB_METRIC_ARCHIVE_NODE
-			l_row_table: like row_archive_table
 		do
 			create Result.make (10)
-			l_row_table := row_archive_table
-			from
-				l_row_table.start
-			until
-				l_row_table.after
+			across
+				row_archive_table as a
 			loop
-				l_metric_name_item ?= l_row_table.item_for_iteration.item (checkbox_item_index)
-				check l_metric_name_item /= Void end
-				if l_metric_name_item.is_checked then
-					l_archive := l_row_table.key_for_iteration
-					check l_archive /= Void end
-					Result.force (l_archive)
+				if
+					attached {EV_GRID_CHECKABLE_LABEL_ITEM} a.item.item (checkbox_item_index) as l_metric_name_item and then
+					l_metric_name_item.is_checked
+				then
+					Result.force (a.key)
 				end
-				l_row_table.forth
 			end
 		end
 
@@ -166,17 +156,11 @@ feature -- Grid binding
 
 	update
 			-- Update status of current
-		local
-			l_row_table: like row_archive_table
 		do
-			l_row_table := row_archive_table
-			from
-				l_row_table.start
-			until
-				l_row_table.after
+			across
+				row_archive_table as a
 			loop
-				update_row (l_row_table.key_for_iteration)
-				l_row_table.forth
+				update_row (a.key)
 			end
 		end
 
@@ -226,25 +210,18 @@ feature -- Actions
 		require
 			a_key_attached: a_key /= Void
 		local
-			l_selected_rows: LIST [EV_GRID_ROW]
-			l_checkbox_item: EV_GRID_CHECKABLE_LABEL_ITEM
 			l_changed: BOOLEAN
 		do
 			if a_key.code = {EV_KEY_CONSTANTS}.key_space or a_key.code = {EV_KEY_CONSTANTS}.key_enter then
 				selection_change_actions.block
 				if grid.has_selected_row then
-					l_selected_rows := grid.selected_rows
-					from
-						l_selected_rows.start
-					until
-						l_selected_rows.after
+					across
+						grid.selected_rows as r
 					loop
-						l_checkbox_item ?= l_selected_rows.item.item (checkbox_item_index)
-						if l_checkbox_item /= Void then
+						if attached {EV_GRID_CHECKABLE_LABEL_ITEM} r.item.item (checkbox_item_index) as l_checkbox_item then
 							l_checkbox_item.set_is_checked (not l_checkbox_item.is_checked)
 							l_changed := True
 						end
-						l_selected_rows.forth
 					end
 				end
 				selection_change_actions.resume
@@ -318,7 +295,7 @@ feature{NONE} -- Grid item generation
 			a_archive_node_attached: a_archive_node /= Void
 		do
 			create Result.make (a_archive_node.input_domain)
-			Result.pointer_button_press_actions.force_extend (agent activate_grid_item (?, ?, ?, ?, ?, ?, ?, ?, Result))
+			Result.pointer_button_press_actions.extend (agent activate_grid_item (?, ?, ?, ?, ?, ?, ?, ?, Result))
 			Result.dialog_ok_actions.extend (agent set_input_domain_back_to_archive_node (Result, a_archive_node))
 			Result.set_dialog_function (agent plain_domain_setup_dialog)
 		ensure
@@ -748,11 +725,8 @@ feature{NONE} -- Implementation/Operations
 			-- Action to be performed when sort `a_column_list' using `a_comparator'.
 		require
 			a_column_list_attached: a_column_list /= Void
-		local
-			l_sorter: QUICK_SORTER [EB_METRIC_ARCHIVE_NODE]
 		do
-			create l_sorter.make (a_comparator)
-			l_sorter.sort (archive)
+			;(create {QUICK_SORTER [EB_METRIC_ARCHIVE_NODE]}.make (a_comparator)).sort (archive)
 			bind_grid (selected_archives_internal)
 		end
 
@@ -800,27 +774,19 @@ feature{NONE} -- Implementation/Operations
 		local
 			l_grid_row: EV_GRID_ROW
 			l_archive_node: EB_METRIC_ARCHIVE_NODE
-			l_checkbox_item: EV_GRID_CHECKABLE_LABEL_ITEM
-			l_row_table: like row_archive_table
 		do
 			selection_change_actions.block
-			l_row_table := row_archive_table
-			if not l_row_table.is_empty then
-				from
-					l_row_table.start
-				until
-					l_row_table.after
-				loop
-					l_archive_node := l_row_table.key_for_iteration
-					l_grid_row := l_row_table.item_for_iteration
-					if a_agent.item ([l_archive_node]) then
-						l_checkbox_item ?= l_grid_row.item (checkbox_item_index)
-						check l_checkbox_item /= Void end
-						if l_checkbox_item.is_checked /= a_status then
-							l_checkbox_item.set_is_checked (a_status)
-						end
-					end
-					l_row_table.forth
+			across
+				row_archive_table as a
+			loop
+				l_archive_node := a.key
+				l_grid_row := a.item
+				if
+					a_agent (l_archive_node) and then
+					attached {EV_GRID_CHECKABLE_LABEL_ITEM} l_grid_row.item (checkbox_item_index) as l_checkbox_item and then
+					l_checkbox_item.is_checked /= a_status
+				then
+					l_checkbox_item.set_is_checked (a_status)
 				end
 			end
 			selection_change_actions.resume

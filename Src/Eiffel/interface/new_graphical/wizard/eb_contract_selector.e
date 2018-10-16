@@ -1,6 +1,4 @@
-note
-	description: "Summary description for {EB_CONTRACT_SELECTOR}."
-	author: ""
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -31,7 +29,7 @@ feature {NONE} -- Initialization
 			Precursor
 			create hb
 			create tag_field
-			tag_field.pointer_button_press_actions.force_extend (agent edit_contract)
+			tag_field.pointer_button_press_actions.extend (agent edit_contract)
 
 			hb.extend (tag_field)
 			hb.disable_item_expand (hb.last)
@@ -48,7 +46,7 @@ feature {NONE} -- Initialization
 
 			create contract_selector.make_with_text ("True")
 			contract_selector.align_text_left
-			contract_selector.pointer_button_press_actions.force_extend (agent edit_contract)
+			contract_selector.pointer_button_press_actions.extend (agent edit_contract)
 			extend (contract_selector)
 
 			create vb
@@ -125,7 +123,7 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	edit_contract
+	edit_contract (x, y, button: INTEGER_32; x_tilt, y_tilt, pressure: REAL_64; s_x, s_y: INTEGER_32)
 			-- Edit contract represented by `Current'.
 		local
 			l_dialog: ES_EDIT_CONTRACT_DIALOG
@@ -148,7 +146,7 @@ feature {EV_ANY} -- Contract support
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -179,4 +177,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- EB_CONTRACT_SELECTOR
+end

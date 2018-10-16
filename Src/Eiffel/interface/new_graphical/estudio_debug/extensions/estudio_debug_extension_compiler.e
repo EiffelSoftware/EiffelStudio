@@ -26,7 +26,7 @@ feature -- Execution
 			open_debug_class_feature_info (Void, Void)
 		end
 
-	open_debug_class_feature_info (a_cl, a_ft: detachable STRING_GENERAL)
+	open_debug_class_feature_info (a_cl: detachable READABLE_STRING_GENERAL; a_ft: detachable READABLE_STRING_32)
 		local
 			l_dlg: EV_DIALOG
 			hb: EV_HORIZONTAL_BOX
@@ -107,7 +107,7 @@ feature -- Execution
 									l_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("class_id"))
 									gei := create {EV_GRID_EDITABLE_ITEM}.make_with_text (cl.class_id.out)
 									gei.set_background_color (bgcol)
-									gei.pointer_double_press_actions.force_extend (agent gei.activate)
+									gei.pointer_double_press_actions.extend (agent (e: EV_GRID_EDITABLE_ITEM; x, y, button: INTEGER_32; x_tilt, y_tilt, pressure: REAL_64; screen_x, screen_y: INTEGER_32) do e.activate end (gei, ?, ?, ?, ?, ?, ?, ?, ?))
 									gei.deactivate_actions.extend (agent (ai_gei: EV_GRID_EDITABLE_ITEM)
 											local
 												l_id: STRING
@@ -134,7 +134,7 @@ feature -- Execution
 										l_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("type_id"))
 										gei := create {EV_GRID_EDITABLE_ITEM}.make_with_text (cl.types.first.type_id.out)
 										gei.set_background_color (bgcol)
-										gei.pointer_double_press_actions.force_extend (agent gei.activate)
+										gei.pointer_double_press_actions.extend (agent (e: EV_GRID_EDITABLE_ITEM; x, y, button: INTEGER_32; x_tilt, y_tilt, pressure: REAL_64; screen_x, screen_y: INTEGER_32) do e.activate end (gei, ?, ?, ?, ?, ?, ?, ?, ?))
 										gei.deactivate_actions.extend (agent (ai_gei: EV_GRID_EDITABLE_ITEM)
 												local
 													l_id: STRING
@@ -156,7 +156,7 @@ feature -- Execution
 										l_row.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("static_type_id"))
 										gei := create {EV_GRID_EDITABLE_ITEM}.make_with_text (cl.types.first.static_type_id.out)
 										gei.set_background_color (bgcol)
-										gei.pointer_double_press_actions.force_extend (agent gei.activate)
+										gei.pointer_double_press_actions.extend (agent (e: EV_GRID_EDITABLE_ITEM; x, y, button: INTEGER_32; x_tilt, y_tilt, pressure: REAL_64; screen_x, screen_y: INTEGER_32) do e.activate end (gei, ?, ?, ?, ?, ?, ?, ?, ?))
 										gei.deactivate_actions.extend (agent (ai_gei: EV_GRID_EDITABLE_ITEM)
 												local
 													l_id: STRING
@@ -322,7 +322,12 @@ feature -- Execution
 				create gi.make_with_text (fi.feature_name_32)
 				if a_list then
 					gi.set_background_color (bgcol)
-					gi.pointer_double_press_actions.force_extend (agent open_debug_class_feature_info (cl.name, fi.feature_name_32))
+					gi.pointer_double_press_actions.extend
+						(agent (class_name: READABLE_STRING_GENERAL; feature_name: READABLE_STRING_32;
+							x, y, button: INTEGER_32; x_tilt, y_tilt, pressure: REAL_64; screen_x, screen_y: INTEGER_32)
+							do
+								open_debug_class_feature_info (class_name, feature_name)
+							end (cl.name, fi.feature_name_32, ?, ?, ?, ?, ?, ?, ?, ?))
 				end
 				l_row.set_item (1, gi)
 				s := attached_string (fi.alias_name_32).as_string_8
@@ -341,7 +346,7 @@ feature -- Execution
 				else
 					gei := create {EV_GRID_EDITABLE_ITEM}.make_with_text (fi.feature_id.out)
 					gei.set_background_color (bgcol)
-					gei.pointer_double_press_actions.force_extend (agent gei.activate)
+					gei.pointer_double_press_actions.extend (agent (e: EV_GRID_EDITABLE_ITEM; x, y, button: INTEGER_32; x_tilt, y_tilt, pressure: REAL_64; screen_x, screen_y: INTEGER_32) do e.activate end (gei, ?, ?, ?, ?, ?, ?, ?, ?))
 					gei.deactivate_actions.extend (agent (ai_gei: EV_GRID_EDITABLE_ITEM; ai_cl: CLASS_C)
 							local
 								l_id: STRING
@@ -408,7 +413,12 @@ feature -- Execution
 					sr := g.grid_extended_new_subrow (l_row)
 					sr.set_item (1, create {EV_GRID_LABEL_ITEM}.make_with_text ("written_class"))
 					create gi.make_with_text (wcl.name)
-					gi.pointer_double_press_actions.force_extend (agent open_debug_class_feature_info (wcl.name, f))
+					gi.pointer_double_press_actions.extend
+						(agent (class_name: READABLE_STRING_GENERAL; feature_name: READABLE_STRING_32;
+							x, y, button: INTEGER_32; x_tilt, y_tilt, pressure: REAL_64; screen_x, screen_y: INTEGER_32)
+						do
+							open_debug_class_feature_info (class_name, feature_name)
+						end (wcl.name, f, ?, ?, ?, ?, ?, ?, ?, ?))
 					gi.set_background_color (bgcol)
 					sr.set_item (2, gi)
 				end

@@ -97,6 +97,14 @@
 		<library name="libfcgi_launcher" location="..\..\launcher\libfcgi.ecf" readonly="false"/>
 		<cluster name="src" location=".\src\" recursive="true"/>
 	</target>
+	<target name="demo_libfcgi_with_mysql" extends="demo_libfcgi">
+		<library name="persistence_store_mysql" location="..\..\library\persistence\store_mysql\store_mysql.ecf"/>
+		<override name="setup-mysql" location="setup\mysql\" recursive="true"/>
+	</target>
+	<target name="demo_standalone_with_mysql" extends="demo_standalone">
+		<library name="persistence_store_mysql" location="..\..\library\persistence\store_mysql\store_mysql.ecf"/>
+		<override name="setup-mysql" location="setup\mysql\" recursive="true"/>
+	</target>
 	<target name="demo" extends="demo_standalone">
 	</target>
 </system>

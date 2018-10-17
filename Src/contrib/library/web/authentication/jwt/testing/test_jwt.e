@@ -16,6 +16,30 @@ inherit
 
 feature -- Test
 
+	example
+		local
+			jwt: JWS
+			l_loader: JWT_LOADER
+			tok: STRING
+		do
+			create jwt.make_with_json_payload ("[
+					{"iss":"joe", "exp":1200819380,"http://example.com/is_root":true}
+					]")
+			jwt.set_algorithm_to_hs256
+			tok := jwt.encoded_string ("my-secret")
+
+			create l_loader
+			if
+				attached l_loader.token (tok, Void, "my-secret", Void) as l_tok and then
+				not l_tok.has_error
+			then
+				print (l_tok.claimset.string)
+				check verified: not l_tok.has_unverified_token_error end
+				check no_error: not l_tok.has_error end
+			end
+		end
+
+
 	test_jwt_io
 		local
 			jwt: JWS
@@ -185,7 +209,8 @@ feature -- Test
 			tok := jwt.encoded_string ("secret")
 
 			if attached (create {JWT_LOADER}).token (tok, "HS256", "secret", Void) as l_tok then
-				assert ("no error", not jwt.has_error)
+				assert ("error", l_tok.has_error)
+				assert ("has_mismatched_alg_error", l_tok.has_mismatched_alg_error)
 				assert ("same payload", l_tok.claimset.string.same_string (payload))
 			end
 		end
@@ -205,12 +230,47 @@ feature -- Test
 			tok := jwt.encoded_string ("secret")
 
 			if attached (create {JWT_LOADER}).token (tok, "none", "secret", Void) as l_tok then
-				assert ("no error", not jwt.has_error)
+				assert ("no error", not l_tok.has_error)
 				assert ("same payload", l_tok.claimset.string.same_string (payload))
 			end
 			if attached (create {JWT_LOADER}).token (tok, Void, "secret", Void) as l_tok then
-				assert ("no error", not jwt.has_error)
+				assert ("no error", not l_tok.has_error)
 				assert ("same payload", l_tok.claimset.string.same_string (payload))
+			end
+		end
+
+	test_additional_alg
+		local
+			jwt: JWS
+			payload: STRING
+			tok: STRING
+			l_loader: JWT_LOADER
+		do
+			payload := "[
+				{"iss":"joe","exp":1300819380,"http://example.com/is_root":true}
+				]"
+
+			create jwt.make_with_json_payload (payload)
+			jwt.algorithms.register_algorithm (create {JWT_ALG_TEST})
+			jwt.set_algorithm ({JWT_ALG_TEST}.name)
+			tok := jwt.encoded_string ("secret")
+
+			create l_loader
+			l_loader.algorithms.register_algorithm (create {JWT_ALG_TEST})
+			if attached l_loader.token (tok, "test", "secret", Void) as l_tok then
+				assert ("no error", not l_tok.has_error)
+				assert ("not has_unsupported_alg_error", not l_tok.has_unsupported_alg_error)
+				assert ("same payload", l_tok.claimset.string.same_string (payload))
+			end
+			if attached l_loader.token (tok, Void, "secret", Void) as l_tok then
+				assert ("no error", not l_tok.has_error)
+				assert ("same payload", l_tok.claimset.string.same_string (payload))
+			end
+
+			create l_loader
+			if attached l_loader.token (tok, "test", "secret", Void) as l_tok then
+				assert ("has error", l_tok.has_error)
+				assert ("has_unsupported_alg_error", l_tok.has_unsupported_alg_error)
 			end
 		end
 

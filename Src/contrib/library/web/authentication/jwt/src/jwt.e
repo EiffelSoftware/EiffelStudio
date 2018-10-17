@@ -16,11 +16,14 @@ feature {NONE} -- Initialization
 
 	default_create
 		do
+			create algorithms
 			create header
 			create claimset
 		end
 
 feature -- Access
+
+	algorithms: JWT_ALGORITHMS
 
 	header: JWT_HEADER
 
@@ -60,7 +63,7 @@ feature -- Status report
 			if attached claimset.issuer as iss then
 				Result := a_issuer = Void or else a_issuer.same_string (iss)
 			else
-				Result := a_issuer = Void				
+				Result := a_issuer = Void
 			end
 		end
 
@@ -69,7 +72,7 @@ feature -- Status report
 			if attached claimset.audience as aud then
 				Result := a_audience = Void or else a_audience.same_string (aud)
 			else
-				Result := a_audience = Void				
+				Result := a_audience = Void
 			end
 		end
 
@@ -89,6 +92,11 @@ feature -- status report
 	has_unsupported_alg_error: BOOLEAN
 		do
 			Result := attached errors as errs and then across errs as ic some attached {JWT_UNSUPPORTED_ALG_ERROR} ic.item end
+		end
+
+	has_mismatched_alg_error: BOOLEAN
+		do
+			Result := attached errors as errs and then across errs as ic some attached {JWT_MISMATCHED_ALG_ERROR} ic.item end
 		end
 
 	has_unverified_token_error: BOOLEAN

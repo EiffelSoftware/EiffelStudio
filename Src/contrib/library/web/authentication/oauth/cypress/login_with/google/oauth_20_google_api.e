@@ -53,6 +53,7 @@ feature -- Access
 					l_result.replace_substring_all ("$REDIRECT_URI", (create {OAUTH_ENCODER}).encoded_string (l_callback.as_string_8))
 				end
 			end
+			Result := l_result
 		end
 
 feature -- Implementation

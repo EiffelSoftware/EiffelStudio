@@ -6,6 +6,7 @@
 		</option>
 		<setting name="console_application" value="true"/>
 		<capability>
+			<catcall_detection support="none"/>
 			<concurrency support="none" use="none"/>
 			<void_safety support="all" use="all"/>
 		</capability>
@@ -13,6 +14,10 @@
 		<library name="jwt" location="..\jwt.ecf" readonly="false"/>
 		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
-		<tests name="src" location=".\" recursive="true"/>
+		<tests name="src" location=".\" recursive="true">
+			<class_option class="TEST_JWT">
+				<assertions check="true"/>
+			</class_option>
+		</tests>
 	</target>
 </system>

@@ -9,6 +9,20 @@ class
 
 inherit
 	JWT_UTILITIES
+		redefine
+			default_create
+		end
+
+feature {NONE} -- Initialization
+
+	default_create
+		do
+			create algorithms
+		end
+
+feature -- Settings
+
+	algorithms: JWT_ALGORITHMS
 
 feature -- Access
 
@@ -18,11 +32,12 @@ feature -- Access
 			-- WARNING: passing Void for `a_alg` is not safe, as the server should know which alg he used for tokens,
 			-- 			leaving the possibility to use the header alg is dangerous as client may use "none" and then bypass verification!
 		require
-			a_valid_alg: a_alg /= Void implies is_supporting_signature_algorithm (a_alg)
+			a_valid_alg: a_alg /= Void implies algorithms.is_supported_algorithm (a_alg)
 		local
 			jws: JWS
 			i,j,n: INTEGER
 			alg, l_enc_payload, l_enc_header, l_signature: READABLE_STRING_8
+			alg_encoder: JWT_ALG
 		do
 			n := a_token_input.count
 			i := a_token_input.index_of ('.', 1)
@@ -43,17 +58,18 @@ feature -- Access
 					else
 						if alg = Void then
 								-- Use default
-							alg := alg_hs256
+							alg := algorithms.default_algorithm.name
 						end
 					end
 					jws.set_algorithm (alg)
 					check alg_set: alg /= Void end
 					if ctx = Void or else not ctx.validation_ignored then
-						if not is_supporting_signature_algorithm (alg) then
+						alg_encoder := algorithms [alg]
+						if alg_encoder = Void then
 							jws.report_unsupported_alg_error (alg)
-							alg := alg_hs256
+							alg_encoder := algorithms.default_algorithm
 						end
-						if not l_signature.same_string (signature (l_enc_header, l_enc_payload, a_verification_key, alg)) then
+						if not l_signature.same_string (signature (l_enc_header, l_enc_payload, a_verification_key, alg_encoder)) then
 							jws.report_unverified_token_error
 						end
 						if

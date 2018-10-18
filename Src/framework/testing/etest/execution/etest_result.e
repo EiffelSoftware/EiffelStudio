@@ -111,15 +111,15 @@ feature {NONE} -- Implementation
 				if attached project_access.class_from_name (l_exception.class_name, Void) as l_class then
 					a_formatter.add_class (l_class)
 					a_formatter.process_basic_text (".")
-					if attached project_access.feature_of_name (l_class, l_exception.recipient_name) as l_feature then
-						a_formatter.add_feature (l_feature.e_feature, l_exception.recipient_name.as_string_8)
+					if attached project_access.feature_of_name (l_class, l_exception.recipient_name.to_string_32) as l_feature then
+						a_formatter.add_feature (l_feature.e_feature, l_exception.recipient_name)
 					else
-						a_formatter.process_basic_text (l_exception.recipient_name.as_string_8)
+						a_formatter.process_basic_text (l_exception.recipient_name)
 					end
 				else
-					a_formatter.process_basic_text (l_exception.class_name.as_string_8)
+					a_formatter.process_basic_text (l_exception.class_name)
 					a_formatter.process_basic_text (".")
-					a_formatter.process_basic_text (l_exception.recipient_name.as_string_8)
+					a_formatter.process_basic_text (l_exception.recipient_name)
 				end
 				a_formatter.process_basic_text (")")
 				if a_verbose then
@@ -133,7 +133,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

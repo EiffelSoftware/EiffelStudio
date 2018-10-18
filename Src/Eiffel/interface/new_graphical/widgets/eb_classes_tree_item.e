@@ -85,7 +85,7 @@ feature -- Interactivity
 		do
 			if pointer_press_action_agent = Void then
 				pointer_press_action_agent := agent pointer_press_action
-				pointer_button_press_actions.force_extend (pointer_press_action_agent)
+				pointer_button_press_actions.extend (pointer_press_action_agent)
 			end
 			associated_window := a_window
 		end
@@ -182,7 +182,7 @@ feature {NONE} -- Implementation
 			-- `pointer_press_action' handler
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

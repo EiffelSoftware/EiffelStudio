@@ -471,7 +471,7 @@ feature -- Plug and Makefile file
 			buffer.put_string ("();%N")
 
 				-- Make STRING declaration
-			if attached {FEATURE_I} string_cl.feature_table.item_id ({PREDEFINED_NAMES}.make_name_id) as str_make_feat then
+			if attached string_cl.feature_table.item_id ({PREDEFINED_NAMES}.make_name_id) as str_make_feat then
 				str_make_name := Encoder.feature_name (str_make_feat.written_class.types.first.type_id,
 					str_make_feat.body_index).string
 				buffer.put_string ("extern void ")
@@ -1292,7 +1292,7 @@ feature -- Plug and Makefile file
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

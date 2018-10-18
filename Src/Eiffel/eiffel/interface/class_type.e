@@ -104,8 +104,12 @@ feature {NONE} -- Initialization
 					-- We have to do that as otherwise, `t' might be `TYPED_POINTER [G#2]' if this is
 					-- the type we have recorded but it certainly does not make sense in a class with
 					-- only one generic parameter.
-				basic_type ?= type
-				check basic_type_attached: basic_type /= Void end
+				if attached {like basic_type} type as l_basic_type then
+					basic_type := l_basic_type
+				else
+					check basic_type_attached: False end
+					basic_type := Void
+				end
 			end
 			is_changed := True
 			type_id := l_system.type_id_counter.next
@@ -705,8 +709,12 @@ feature -- Generation
 			final_mode := byte_context.final_mode
 
 			current_class := associated_class
-			current_eiffel_class ?= current_class
-			check current_eiffel_class_not_void: current_eiffel_class /= Void end
+			if attached {EIFFEL_CLASS_C} current_class as ecc then
+				current_eiffel_class := ecc
+			else
+				current_eiffel_class := Void
+				check current_eiffel_class_not_void: False end
+			end
 
 			l_byte_context := byte_context
 
@@ -1110,7 +1118,6 @@ feature -- Generation
 			has_creation_routine: has_creation_routine
 		local
 			i, nb_ref, position: INTEGER
-			exp_desc: EXPANDED_DESC
 			c_name: STRING
 			value: INTEGER
 			l_create_info: CREATE_INFO
@@ -1164,31 +1171,34 @@ feature -- Generation
 				buffer.put_string(") = Current + offset_position;")
 				buffer.put_new_line
 
-				exp_desc ?= skeleton.item;		-- Cannot fail
-					-- Initialize dynaminc type of the expanded object
-				l_create_info := exp_desc.type_i.create_info
+				if attached {EXPANDED_DESC} skeleton.item as exp_desc then
+						-- Initialize dynaminc type of the expanded object
+					l_create_info := exp_desc.type_i.create_info
 
-					-- The dynamic type has to be set after setting the flags.
-				buffer.put_string ("HEADER(Current + offset_position)->ov_flags = EO_EXP;")
-				buffer.put_new_line
-				l_create_info.generate_start (buffer)
-				l_create_info.generate_gen_type_conversion (0)
-				buffer.put_new_line
-				buffer.put_string ("RT_DFS(HEADER(Current + offset_position), ")
-				l_create_info.generate_type_id (buffer, True, 0)
-				buffer.put_character (')')
-				buffer.put_character (';')
-				l_create_info.generate_end (buffer)
+						-- The dynamic type has to be set after setting the flags.
+					buffer.put_string ("HEADER(Current + offset_position)->ov_flags = EO_EXP;")
+					buffer.put_new_line
+					l_create_info.generate_start (buffer)
+					l_create_info.generate_gen_type_conversion (0)
+					buffer.put_new_line
+					buffer.put_string ("RT_DFS(HEADER(Current + offset_position), ")
+					l_create_info.generate_type_id (buffer, True, 0)
+					buffer.put_character (')')
+					buffer.put_character (';')
+					l_create_info.generate_end (buffer)
 
-					-- Mark expanded object
-				buffer.put_new_line
-				buffer.put_string ("HEADER(Current + offset_position)->ov_size = ")
-				buffer.put_string ("offset_position + (Current - parent);")
+						-- Mark expanded object
+					buffer.put_new_line
+					buffer.put_string ("HEADER(Current + offset_position)->ov_size = ")
+					buffer.put_string ("offset_position + (Current - parent);")
 
-					-- Initializes expanded attribute if needed and then call creation procedure
-					-- if needed.
-				exp_desc.class_type.generate_expanded_initialization (buffer,
-					"Current + offset_position", "parent", True)
+						-- Initializes expanded attribute if needed and then call creation procedure
+						-- if needed.
+					exp_desc.class_type.generate_expanded_initialization (buffer,
+						"Current + offset_position", "parent", True)
+				else
+					check is_expanded_desc: False end
+				end
 
 				skeleton.forth
 				i := i + 1
@@ -1633,14 +1643,12 @@ feature -- Structure generation
 			a_type_not_void: a_type /= Void
 			compatible_type: a_type.adapted_in (a_context_type).generic_derivation.same_as (type)
 		local
---			l_gen_type: GEN_TYPE_A
 			l_create_info: CREATE_INFO
 			l_workbench_mode: BOOLEAN
 		do
 			l_create_info := a_type.create_info
 			l_workbench_mode := byte_context.workbench_mode
---			l_gen_type ?= a_type.adapted_in (type)
---			if l_workbench_mode or else (skeleton.has_references or l_gen_type /= Void) then
+--			if l_workbench_mode or else (skeleton.has_references or attached {GEN_TYPE_A} a_type.adapted_in (type) as l_gen_type) then
 					-- The dynamic type has to be set after setting the flags.
 					-- Also note that we use EO_STACK as those expanded cannot move.
 				buffer.put_new_line

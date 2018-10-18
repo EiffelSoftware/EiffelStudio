@@ -842,7 +842,6 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 			-- in the context of Current
 		local
 			instantiation: TYPE_A
-			gen_type: GEN_TYPE_A
 		do
 			if a_class_id = class_id then
 					-- Feature is written in the class associated to the
@@ -855,8 +854,11 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 			if attached instantiation.generics as l_generics and then l_generics.count > 0 then
 					-- Does not make sense to instantiate if `instantation' is
 					-- a TUPLE with no arguments.
-				gen_type ?= instantiation
-				Result := gen_type.instantiate (Result)
+				if attached {GEN_TYPE_A} instantiation as gen_type then
+					Result := gen_type.instantiate (Result)
+				else
+					check is_generic: False end
+				end
 			end
 		end
 
@@ -970,7 +972,6 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 			parents: FIXED_LIST [CL_TYPE_A]
 			parent: CL_TYPE_A
 			i, count: INTEGER
-			parent_class_type: CL_TYPE_A
 		do
 			from
 				parents := base_class.parents
@@ -982,10 +983,13 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 				parent := parents [i]
 				if parent.base_class = c then
 						-- Class `c' is found
-					Result ?= parent_type (parent)
-				else
-					parent_class_type ?= parent_type (parent)
+					if attached {CL_TYPE_A} parent_type (parent) as ta then
+						Result := ta
+					end
+				elseif attached {CL_TYPE_A} parent_type (parent) as parent_class_type then
 					Result := parent_class_type.find_class_type (c)
+				else
+					check parent_type_is_cl_type_a: False end
 				end
 				i := i + 1
 			end
@@ -1076,7 +1080,7 @@ invariant
 		class_declaration_mark = no_mark or class_declaration_mark = expanded_mark
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -162,7 +162,9 @@ feature{NONE} -- Implementation
 			l_generator: QL_FEATURE_DOMAIN_GENERATOR
 		do
 			create l_generator.make (Void, True)
-			Result ?= a_domain.new_domain (l_generator)
+			check attached {like features_from_domain} a_domain.new_domain (l_generator) as d then
+				Result := d
+			end
 		ensure
 			result_attached: Result /= Void
 		end
@@ -221,7 +223,7 @@ invariant
 		(feature_list /= Void and then user_data_list /= Void) implies (feature_list.count = user_data_list.count)
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

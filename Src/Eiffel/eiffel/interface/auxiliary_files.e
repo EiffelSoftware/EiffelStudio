@@ -389,7 +389,6 @@ feature -- Plug and Makefile file
 			any_cl, string_cl, string32_cl, array_cl, rout_cl, exception_manager_cl: CLASS_C
 			arr_type_id: INTEGER
 			id: INTEGER
-			str_make_feat, set_count_feat: FEATURE_I
 			count_feat, internal_hash_code_feat: ATTRIBUTE_I
 			str32_make_feat, str32_set_count_feat: FEATURE_I
 			str32_count_feat, str32_internal_hash_code_feat: ATTRIBUTE_I
@@ -472,22 +471,28 @@ feature -- Plug and Makefile file
 			buffer.put_string ("();%N")
 
 				-- Make STRING declaration
-			str_make_feat := string_cl.feature_table.item_id ({PREDEFINED_NAMES}.make_name_id)
-			str_make_name := Encoder.feature_name (str_make_feat.written_class.types.first.type_id,
-				str_make_feat.body_index).string
-			buffer.put_string ("extern void ")
-			buffer.put_string (str_make_name)
-			buffer.put_string ("();%N")
+			if attached {FEATURE_I} string_cl.feature_table.item_id ({PREDEFINED_NAMES}.make_name_id) as str_make_feat then
+				str_make_name := Encoder.feature_name (str_make_feat.written_class.types.first.type_id,
+					str_make_feat.body_index).string
+				buffer.put_string ("extern void ")
+				buffer.put_string (str_make_name)
+				buffer.put_string ("();%N")
+			else
+				check make_feat_is_feature_i: False end
+			end
 			if final_mode then
 				count_feat ?= string_cl.feature_table.item_id (Names_heap.count_name_id)
 				internal_hash_code_feat ?= string_cl.feature_table.item_id (Names_heap.internal_hash_code_name_id)
 			else
-				set_count_feat ?= string_cl.feature_table.item_id (Names_heap.set_count_name_id)
-				set_count_name := Encoder.feature_name (set_count_feat.written_class.types.first.type_id,
-					set_count_feat.body_index).string
-				buffer.put_string ("extern void ")
-				buffer.put_string (set_count_name)
-				buffer.put_string ("();%N")
+				if attached {FEATURE_I} string_cl.feature_table.item_id (Names_heap.set_count_name_id) as set_count_feat then
+					set_count_name := Encoder.feature_name (set_count_feat.written_class.types.first.type_id,
+						set_count_feat.body_index).string
+					buffer.put_string ("extern void ")
+					buffer.put_string (set_count_name)
+					buffer.put_string ("();%N")
+				else
+					check set_count_is_feature_i: False end
+				end
 			end
 
 				-- Make STRING_32 declaration

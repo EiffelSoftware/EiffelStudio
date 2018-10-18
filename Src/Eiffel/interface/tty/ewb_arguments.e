@@ -19,7 +19,6 @@ inherit
 		end
 
 create
-	make,
 	make_empty,
 	make_filled
 
@@ -60,7 +59,7 @@ feature -- Update
 	wipe_out
 			-- Clear arguments.
 		do
-			make (lower, upper);
+			make_empty
 			argument_position := 1;
 			argument_count := 1;
 		end;

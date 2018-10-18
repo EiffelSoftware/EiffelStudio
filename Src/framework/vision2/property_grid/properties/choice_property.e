@@ -80,7 +80,6 @@ feature {NONE} -- Agents
 		local
 			l_done: BOOLEAN
 			l_item: like value
-			l_converted_data: detachable like value
 		do
 			if attached text_field as l_text_field then
 				from
@@ -88,8 +87,10 @@ feature {NONE} -- Agents
 				until
 					l_done or item_strings.after
 				loop
-					l_converted_data := convert_to_data (l_text_field.text)
-					if l_converted_data /= Void and then l_converted_data ~ item_strings.item then
+					if
+						attached convert_to_data (l_text_field.text) as l_converted_data and then
+						l_converted_data ~ item_strings.item
+					then
 						if item_strings.islast then
 							l_item := item_strings.first
 						else
@@ -112,7 +113,10 @@ feature {NONE} -- Agents
 			Precursor
 			if attached text_field as l_text_field and then not l_text_field.is_destroyed then
 				l_text_field.disable_edit
-				l_text_field.pointer_button_press_actions.force_extend (agent switch)
+				l_text_field.pointer_button_press_actions.extend (agent (i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER)
+						do
+							switch
+						end)
 				l_text_field.key_press_actions.extend (agent on_text_field_key)
 			end
 		end
@@ -218,8 +222,11 @@ feature {NONE} -- Agents
 			a_key_not_void: a_key /= Void
 		do
 			if a_key.code = {EV_KEY_CONSTANTS}.key_enter and attached combo_grid as l_combo_grid then
-				if l_combo_grid.selected_items /= Void and then l_combo_grid.selected_items.count = 1 then
-					if attached {GENERIC_GRID_ITEM [G]} l_combo_grid.selected_items.first as l_item and then is_valid_value (l_item.value) then
+				if
+					attached l_combo_grid.selected_items as l_combo_selected_items and then
+					l_combo_selected_items.count = 1
+				then
+					if attached {GENERIC_GRID_ITEM [G]} l_combo_selected_items.first as l_item and then is_valid_value (l_item.value) then
 						set_value (l_item.value)
 					end
 					if not is_destroyed and then is_parented then
@@ -290,7 +297,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -81,7 +81,7 @@ feature -- Status report
 					ctx.ignore_validation (True)
 					sec := ""
 				end
-				Result := jwt_loader.token (token, jwt_loader.alg_hs256, sec, ctx)
+				Result := jwt_loader.token (token, {JWT_ALG_HS256}.name, sec, ctx)
 				internal_jwt := Result
 			end
 		end

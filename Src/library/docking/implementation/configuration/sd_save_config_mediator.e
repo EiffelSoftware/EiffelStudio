@@ -116,7 +116,7 @@ feature -- Save inner container data.
 				end
 
 				if l_maximized_zone /= Void then
-					-- We restore tool maximzied state.
+					-- We restore tool maximized state.
 					l_maximized_zone.on_normal_max_window
 				end
 			else
@@ -652,7 +652,7 @@ feature {NONE} -- Implementation attributes
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

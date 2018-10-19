@@ -52,7 +52,7 @@ feature -- Open inner container data
 		end
 
 	open_editors_config_with_path (a_file: PATH)
-			-- Open main window eidtor config data
+			-- Open main window editor config data
 		require
 			not_void: a_file /= Void
 		local
@@ -1050,7 +1050,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

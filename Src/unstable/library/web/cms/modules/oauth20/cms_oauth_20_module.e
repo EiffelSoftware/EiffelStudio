@@ -391,6 +391,7 @@ feature -- OAuth2 Login with Provider
 			l_cookie: WSF_COOKIE
 			es: CMS_AUTHENTICATION_EMAIL_SERVICE
 			l_oauth_id: READABLE_STRING_GENERAL
+			dt: DATE_TIME
 		do
 			if
 				attached {WSF_STRING} req.path_parameter (oauth_callback_path_parameter) as l_callback and then
@@ -438,6 +439,9 @@ feature -- OAuth2 Login with Provider
 							create l_cookie.make (a_oauth_api.session_token, l_access_token.token)
 							if l_access_token.expires_in > 0 then
 								l_cookie.set_max_age (l_access_token.expires_in)
+								create dt.make_now_utc
+								dt.second_add (l_access_token.expires_in)
+								l_cookie.set_expiration_date (dt)
 							end
 							l_cookie.set_path ("/")
 

@@ -89,6 +89,7 @@ feature -- Basic operation
 		local
 			l_token: STRING
 			l_cookie: WSF_COOKIE
+			dt: DATE_TIME
 		do
 			l_token := new_session_token
 			if has_user_token (a_user) then
@@ -98,6 +99,17 @@ feature -- Basic operation
 			end
 			create l_cookie.make (session_token, l_token)
 			l_cookie.set_max_age (session_max_age)
+			if l_cookie.max_age < 0 then
+				l_cookie.unset_expiration
+			else
+				if l_cookie.max_age = 0 then
+					create dt.make_from_epoch (0)
+				else
+					create dt.make_now_utc
+					dt.second_add (l_cookie.max_age)
+				end
+				l_cookie.set_expiration_date (dt)
+			end
 			l_cookie.set_path ("/")
 			res.add_cookie (l_cookie)
 			cms_api.set_user (a_user)

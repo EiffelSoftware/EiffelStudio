@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that represents a span grid label."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -121,8 +121,6 @@ feature {NONE} -- Implementation
 		require
 			a_popup_not_void: a_popup /= Void
 		local
-			l_x_coord: INTEGER
-			l_parent: like parent
 			l_first, l_last: detachable EV_GRID_SPAN_LABEL_ITEM
 			i: INTEGER
 			x_coord, y_coord: INTEGER
@@ -132,23 +130,23 @@ feature {NONE} -- Implementation
 			x_delta: INTEGER
 		do
 				-- Account for position of text relative to pixmap.
-
-			l_parent := parent
-			check l_parent /= Void end
-
-			if attached row as l_row then
+			if
+				attached parent as l_parent and
+				attached row as l_row
+			then
 				from
 					i := 1
 				until
 					i > l_row.count
 				loop
-					if attached {EV_GRID_SPAN_LABEL_ITEM} l_row.item (i) as l_item then
-						if l_item.is_displayed then
-							if l_first = Void then
-								l_first := l_item
-							else
-								l_last := l_item
-							end
+					if
+						attached {EV_GRID_SPAN_LABEL_ITEM} l_row.item (i) as l_item and then
+						l_item.is_displayed
+					then
+						if l_first = Void then
+							l_first := l_item
+						else
+							l_last := l_item
 						end
 					end
 					i := i + 1
@@ -291,24 +289,22 @@ feature {NONE} -- Implementation
 
 	initialize_actions
 			-- Setup the action sequences when the item is shown.
-		local
-			l_text_field: detachable like text_field
 		do
-			l_text_field := text_field
-			check l_text_field /= Void end
-			l_text_field.return_actions.extend (agent deactivate)
-			l_text_field.focus_out_actions.extend (agent deactivate)
-			l_text_field.set_focus
-			user_cancelled_activation := False
-			l_text_field.key_press_actions.extend (agent handle_key)
+			if attached text_field as t then
+				t.return_actions.extend (agent deactivate)
+				t.focus_out_actions.extend (agent deactivate)
+				t.set_focus
+				user_cancelled_activation := False
+				t.key_press_actions.extend (agent handle_key)
+			end
 		end
 
 invariant
 	text_field_parented_during_activation: attached text_field as l_text_field implies l_text_field.parent /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

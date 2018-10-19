@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Base for dialogs to edit properties."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -45,8 +45,8 @@ feature {NONE} -- Initialization
 		do
 			Precursor
 			create data_change_actions.make (1)
-			create ok_button.make_with_text_and_action (names.b_ok, agent on_ok)
-			create cancel_button.make_with_text_and_action (names.b_cancel, agent on_cancel)
+			create ok_button.make_with_text (names.b_ok)
+			create cancel_button.make_with_text (names.b_cancel)
 			create element_container
 		end
 
@@ -57,7 +57,9 @@ feature {NONE} -- Initialization
 			hb1, hb: EV_HORIZONTAL_BOX
 			cl: EV_CELL
 		do
-			Precursor {EV_DIALOG}
+			Precursor
+			ok_button.select_actions.extend (agent on_ok)
+			cancel_button.select_actions.extend (agent on_cancel)
 			set_size (dialog_width, dialog_height)
 			create hb1
 			extend (hb1)
@@ -157,7 +159,7 @@ invariant
 	events: is_initialized implies data_change_actions /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

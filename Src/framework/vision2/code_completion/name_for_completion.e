@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Name to be inserted by auto-completion"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -293,7 +292,7 @@ feature {NONE} -- Implementation
 	icon_internal: detachable EV_PIXMAP
 			-- Storage for `icon'.
 
-	string_32_to_lower (a_str: detachable STRING_32): attached STRING_32
+	string_32_to_lower (a_str: STRING_32): attached STRING_32
 			-- Make all possible char in `a_str' to lower.
 			-- |FIXME: We need real Unicode as lower.
 		require
@@ -328,7 +327,7 @@ feature {NONE} -- Implementation
 	name_matcher_internal: detachable like name_matcher;
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -46,15 +46,15 @@ feature {NONE} -- Initialization
 			set_pixmap (Void)
 
 			hb.extend (text_field)
-			hb.extend (button); hb.disable_item_expand (hb.last)
+			hb.extend (button)
+			hb.disable_item_expand (hb.last)
+			widget := hb
 
 			button.select_actions.extend (agent open_tags_popup)
 			text_field.key_release_actions.extend (agent on_key_released)
 			text_field.return_actions.extend (agent update_text)
 
 			set_category_mode (True)
-
-			widget := hb
 		end
 
 feature -- Properties
@@ -224,12 +224,10 @@ feature -- event
 			g: EV_GRID
 			gci: EV_GRID_CHECKABLE_LABEL_ITEM
 			gpci: detachable EV_GRID_CHECKABLE_LABEL_ITEM
-			glab: EV_GRID_LABEL_ITEM
 			ltags: like used_tags
 			s: STRING_32
 			cat, lastcat: detachable STRING_32
 			i,r: INTEGER
-			w: INTEGER
 			chk_chg_action: PROCEDURE [EV_GRID_CHECKABLE_LABEL_ITEM]
 			grp_chk_chg_action: detachable PROCEDURE [EV_GRID_CHECKABLE_LABEL_ITEM]
 			tup: like category_name_tag
@@ -341,7 +339,8 @@ feature -- event
 						else
 							if
 								lastcat = Void or else
-								not lastcat.is_case_insensitive_equal (cat)
+								not lastcat.is_case_insensitive_equal (cat) or else
+								not attached gpci
 							then
 								create gpci.make_with_text (cat)
 								r := r + 1
@@ -350,8 +349,6 @@ feature -- event
 								if grp_chk_chg_action /= Void then
 									gpci.checked_changed_actions.extend (grp_chk_chg_action)
 								end
-							else
-								check gpci /= Void end
 							end
 							lastcat := cat
 							create gci.make_with_text (tup.name)
@@ -437,7 +434,7 @@ feature -- event
 			a_text /= Void
 			t /= Void
 		local
-			i, p,l,r: INTEGER
+			i, p, l: INTEGER
 		do
 			if not a_text.is_empty then
 				from

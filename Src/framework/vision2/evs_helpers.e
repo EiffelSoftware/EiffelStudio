@@ -1,11 +1,9 @@
-note
-	description: "[
-		EiffelVision2 helper functions
-	]"
+﻿note
+	description: "	EiffelVision2 helper functions"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
-	date: "$date$";
-	revision: "$revision$"
+	date: "$Date: па$"
+	revision: "$Revision$"
 
 class
 	EVS_HELPERS
@@ -126,7 +124,7 @@ feature -- Screen
 
 feature -- Widget
 
-	maximum_string_width (a_strings: attached ARRAY [detachable READABLE_STRING_GENERAL]; a_font: detachable EV_FONT): INTEGER
+	maximum_string_width (a_strings: ARRAY [detachable READABLE_STRING_GENERAL]; a_font: EV_FONT): INTEGER
 			-- Maximum width of a collection of strings
 			--
 			-- `a_strings': An array of string to determine the maximum width for.
@@ -137,7 +135,6 @@ feature -- Widget
 			a_strings_contains_attached_items: not a_strings.has (Void)
 			a_font_attached: a_font /= Void
 		local
-			l_str: detachable READABLE_STRING_GENERAL
 			l_upper, i: INTEGER
 		do
 			from
@@ -146,17 +143,14 @@ feature -- Widget
 			until
 				i > l_upper
 			loop
-				l_str := a_strings [i]
-				if l_str /= Void then
-					if attached {STRING_GENERAL} l_str as l_sg then
-						Result := Result.max (a_font.string_width (l_sg))
-					else
-						Result := Result.max (a_font.string_width (l_str.as_string_32))
-					end
+				if attached a_strings [i] as l_str then
+					Result := Result.max (a_font.string_width
+						(if attached {STRING_GENERAL} l_str as l_sg then l_sg else l_str.as_string_32 end))
 				end
 				i := i + 1
 			end
 		end
+
 feature -- Placement
 
 	suggest_pop_up_widget_location_with_size (a_widget: EV_WIDGET; a_screen_x, a_screen_y, a_width, a_height: INTEGER): TUPLE [x, y: INTEGER]
@@ -268,7 +262,7 @@ feature -- Placement
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

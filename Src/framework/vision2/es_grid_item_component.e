@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Object that represents a component to be displayed in a grid listable item"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -67,7 +66,7 @@ feature -- General tooltip
 			Result := attached grid_item as gi and then gi.is_destroyed
 		end
 
-	set_general_tooltip (a_tooltip: like general_tooltip)
+	set_general_tooltip (a_tooltip: attached like general_tooltip)
 			-- Set `general_tooltip' with `a_tooltip' and enable it at the same time.
 		require
 			a_tooltip_attached: a_tooltip /= Void
@@ -324,8 +323,8 @@ feature{NONE} -- Implementation/Setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

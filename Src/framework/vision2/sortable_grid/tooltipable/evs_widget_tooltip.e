@@ -1,6 +1,5 @@
-note
+﻿note
 	description: "General tooltip that displays a widget as its content"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -41,7 +40,6 @@ feature{NONE} -- Initialization
 			create horizontal_container
 			create vertical_container
 			set_widget (a_widget)
-			setting_change_actions.extend (agent on_setting_change)
 
 			horizontal_container.extend (left_border_cell)
 			horizontal_container.disable_item_expand (left_border_cell)
@@ -69,6 +67,8 @@ feature{NONE} -- Initialization
 				a_destroy_function,
 				agent tooltip_width,
 				agent tooltip_height)
+
+			setting_change_actions.extend (agent on_setting_change)
 		end
 
 feature -- Access
@@ -176,5 +176,15 @@ feature{NONE} -- Implementation
 invariant
 	widget_attached: widget /= Void
 	widget_container_attached: widget_container /= Void
+note
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end
 

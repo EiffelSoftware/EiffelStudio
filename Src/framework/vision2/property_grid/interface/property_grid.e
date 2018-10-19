@@ -168,33 +168,37 @@ feature -- Update
 			l_index: INTEGER
 			l_name_item: EV_GRID_LABEL_ITEM
 		do
-			l_index := current_section.subrow_count + 1
-			current_section.insert_subrow (l_index)
-			if attached {like row_type} current_section.subrow (l_index) as l_row then
-				l_row.set_property (a_property)
-				create l_name_item.make_with_text (a_property.name)
-				l_name_item.set_left_border (3)
-				l_name_item.select_actions.extend (agent show_description (a_property))
-				a_property.select_actions.extend (agent show_description (a_property))
-				if a_property.description /= Void then
-					l_name_item.set_tooltip (a_property.description)
-				end
-				l_name_item.activate_actions.extend (agent activate_property (a_property, ?))
-	--			l_row.set_item (1, create {EV_GRID_ITEM})
-	--			l_row.item (1).set_background_color (separator_color)
-				l_row.set_item (name_column, l_name_item)
-				l_row.set_item (value_column, a_property)
-				l_name_item.pointer_button_press_actions.extend (agent a_property.check_right_click)
-				l_name_item.deselect_actions.extend (agent clear_description)
-				a_property.set_name_item (l_name_item)
+			if attached current_section as s then
+				l_index := s.subrow_count + 1
+				s.insert_subrow (l_index)
+				if attached {like row_type} s.subrow (l_index) as l_row then
+					l_row.set_property (a_property)
+					create l_name_item.make_with_text (a_property.name)
+					l_name_item.set_left_border (3)
+					l_name_item.select_actions.extend (agent show_description (a_property))
+					a_property.select_actions.extend (agent show_description (a_property))
+					if a_property.description /= Void then
+						l_name_item.set_tooltip (a_property.description)
+					end
+					l_name_item.activate_actions.extend (agent activate_property (a_property, ?))
+		--			l_row.set_item (1, create {EV_GRID_ITEM})
+		--			l_row.item (1).set_background_color (separator_color)
+					l_row.set_item (name_column, l_name_item)
+					l_row.set_item (value_column, a_property)
+					l_name_item.pointer_button_press_actions.extend (agent a_property.check_right_click)
+					l_name_item.deselect_actions.extend (agent clear_description)
+					a_property.set_name_item (l_name_item)
 
-				if current_section_name /= Void and then expanded_section_store.has_key (current_section_name) then
-					if expanded_section_store.found_item and not current_section.is_expanded then
-						current_section.expand
-					elseif not expanded_section_store.found_item and current_section.is_expanded then
-						current_section.collapse
+					if current_section_name /= Void and then expanded_section_store.has_key (current_section_name) then
+						if expanded_section_store.found_item and not s.is_expanded then
+							s.expand
+						elseif not expanded_section_store.found_item and s.is_expanded then
+							s.collapse
+						end
 					end
 				end
+			else
+				check from_precondition: attached current_section end
 			end
 		end
 
@@ -457,7 +461,7 @@ invariant
 	expanded_section_store_not_void: expanded_section_store /= Void
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

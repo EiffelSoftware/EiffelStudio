@@ -105,11 +105,7 @@ feature  -- Agents
 							(is_parent_recursive (lt_container, a_widget) and not ignore_additional_click) and
 							l_zone.content /= l_docking_manager.zones.place_holder_content
 						then
-							if l_docking_manager.property.last_focus_content /= l_zone.content then
-								l_docking_manager.property.set_last_focus_content (l_zone.content)
-								l_zone.on_focus_in (Void)
-								l_zone.content.focus_in_actions.call (Void)
-							else
+							if l_docking_manager.property.last_focus_content = l_zone.content then
 								l_content := l_docking_manager.property.last_focus_content
 								if
 									l_content /= Void and then
@@ -122,6 +118,10 @@ feature  -- Agents
 								elseif l_auto_hide_zone /= Void then
 									l_auto_hide_zone.set_focus_color (True)
 								end
+							else
+								l_docking_manager.property.set_last_focus_content (l_zone.content)
+								l_zone.on_focus_in (Void)
+								l_zone.content.focus_in_actions.call (Void)
 							end
 						end
 					else
@@ -300,31 +300,20 @@ feature  -- Agents
 		end
 
 	on_top_level_window_focus_out
-			-- Handle top level window focus out actions
-		local
-			l_floating_zones: ARRAYED_LIST [SD_FLOATING_ZONE]
-			l_has_focus: BOOLEAN
+			-- Handle top level window focus out actions.
 		do
-			if not is_destroyed and then is_docking_manager_attached then
-				if not docking_manager.main_window.is_destroyed and not docking_manager.property.is_opening_config then
-					l_floating_zones := docking_manager.query.floating_zones
-					l_has_focus := docking_manager.main_window.has_focus
-					if not l_has_focus then
-						across
-							l_floating_zones as ic
-						until
-							l_has_focus
-						loop
-							l_has_focus := ic.item.has_focus
-						end
-					end
-					if not l_has_focus then
-						--FIXIT: Currently we disable this feature
-						-- Because when show a dialog, it'll get focus, make main window lost focus
-						-- We should make a window can never get focus first
-		--				docking_manager.tool_bar_manager.hide_all_floating
-					end
-				end
+			if
+				not is_destroyed and then
+				is_docking_manager_attached and then
+				not docking_manager.main_window.is_destroyed and
+				not docking_manager.property.is_opening_config and then
+				not docking_manager.main_window.has_focus and then
+				not across docking_manager.query.floating_zones as ic some ic.item.has_focus end
+			then
+					-- TODO: Currently we disable this feature
+					-- Because when show a dialog, it'll get focus, make main window lost focus
+					-- We should make a window can never get focus first
+				-- docking_manager.tool_bar_manager.hide_all_floating
 			end
 		end
 
@@ -386,16 +375,14 @@ feature  -- Agents
 			l_screen_x := l_position.x
 			l_screen_y := l_position.y
 
-			if not notify_one_auto_hide_panel ({SD_ENUMERATION}.top, l_widget, l_screen_x, l_screen_y) then
-				if not notify_one_auto_hide_panel ({SD_ENUMERATION}.bottom, l_widget, l_screen_x, l_screen_y) then
-					if not notify_one_auto_hide_panel ({SD_ENUMERATION}.left, l_widget, l_screen_x, l_screen_y) then
-						if not notify_one_auto_hide_panel ({SD_ENUMERATION}.right, l_widget, l_screen_x, l_screen_y) then
-							if not pointer_in_tab then
-								focused_tab_stub := Void
-							end
-						end
-					end
-				end
+			if
+				not notify_one_auto_hide_panel ({SD_ENUMERATION}.top, l_widget, l_screen_x, l_screen_y) and then
+				not notify_one_auto_hide_panel ({SD_ENUMERATION}.bottom, l_widget, l_screen_x, l_screen_y) and then
+				not notify_one_auto_hide_panel ({SD_ENUMERATION}.left, l_widget, l_screen_x, l_screen_y) and then
+				not notify_one_auto_hide_panel ({SD_ENUMERATION}.right, l_widget, l_screen_x, l_screen_y) and then
+				not pointer_in_tab
+			then
+				focused_tab_stub := Void
 			end
 
 			debug ("docking")
@@ -494,26 +481,15 @@ feature -- Contract support
 			-- Does a_content alreay in docking system?
 		require
 			not_destroyed: not is_destroyed
-		local
-			l_found: BOOLEAN
 		do
-			across
+			Result := not across
 				docking_manager.contents as ic
-			until
-				l_found
-			loop
-				if ic.item /= a_content then
-					if attached {EV_CONTAINER} ic.item.user_widget as l_container then
-						if l_container.has_recursive (a_content.user_widget) then
-							l_found := True
-						end
-					end
-					if a_content.user_widget = ic.item.user_widget then
-						l_found := True
-					end
-				end
+			some
+				ic.item /= a_content and then
+				(attached {EV_CONTAINER} ic.item.user_widget as l_container and then
+				l_container.has_recursive (a_content.user_widget) or else
+				ic.item.user_widget = a_content.user_widget)
 			end
-			Result := not l_found
 		end
 
 	title_unique (a_content: SD_CONTENT): BOOLEAN
@@ -522,17 +498,12 @@ feature -- Contract support
 			not_destroyed: not is_destroyed
 			a_content_not_void: a_content /= Void
 		do
-			Result := True
-			across
-				docking_manager.contents as ic
-			until
-				not Result
-			loop
-				if ic.item /= a_content then
-						-- TODO: check if we should not compare lowercase.
-					Result := not ic.item.unique_title.same_string (a_content.unique_title)
+			Result :=
+				across
+					docking_manager.contents as ic
+				all
+					ic.item = a_content or else not ic.item.unique_title.same_string (a_content.unique_title)
 				end
-			end
 		end
 
 	is_destroyed: BOOLEAN

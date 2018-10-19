@@ -257,7 +257,7 @@ feature -- Command
 					if l_parent /= Void	then
 						l_parent.prune (l_content.user_widget)
 					end
-					-- Maybe uesr_widget is hidden because minimize
+					-- Maybe user_widget is hidden because minimized
 					l_content.user_widget.show
 				end
 				l_contents.forth
@@ -277,7 +277,7 @@ feature {NONE} -- Implementation
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

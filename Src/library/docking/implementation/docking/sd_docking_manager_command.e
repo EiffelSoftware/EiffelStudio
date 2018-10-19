@@ -128,32 +128,25 @@ feature -- Commands
 		local
 			l_containers: ARRAYED_LIST [SD_MULTI_DOCK_AREA]
 		do
-			from
-				l_containers := docking_manager.inner_containers
-				l_containers.start
-			until
-				l_containers.after
+			across
+				docking_manager.inner_containers as ic
 			loop
-				if l_containers.item /= Void then
-					l_containers.item.remove_empty_split_area
+				if attached ic.item as l_area then
+					l_area.remove_empty_split_area
+				else
+					check has_item: False end
 				end
-				l_containers.forth
 			end
 		end
 
 	remove_auto_hide_zones (a_animation: BOOLEAN)
 			-- Remove all auto hide zones in `zones'
-		local
-			l_zones_snapshot: ARRAYED_LIST [SD_ZONE]
 		do
-			l_zones_snapshot := docking_manager.zones.zones.twin
-			from
-				l_zones_snapshot.start
-			until
-				l_zones_snapshot.after
+			across
+				docking_manager.zones.zones.twin as ic
 			loop
 				if
-					attached {SD_AUTO_HIDE_ZONE} l_zones_snapshot.item as l_auto_hide_zone and then
+					attached {SD_AUTO_HIDE_ZONE} ic.item as l_auto_hide_zone and then
 					l_auto_hide_zone.has_content
 				then
 					if not a_animation then
@@ -168,7 +161,6 @@ feature -- Commands
 						end
 					end
 				end
-				l_zones_snapshot.forth
 			end
 		ensure
 --			no_auto_hide_zone_left: docking_manager.fixed_area.count = 1
@@ -176,21 +168,17 @@ feature -- Commands
 
 	recover_normal_state
 			-- Recover all zone's state to normal state
-		local
-			l_zones: ARRAYED_LIST [SD_ZONE]
 		do
 			restore_editor_area
 			restore_editor_area_for_minimized
-			from
-				l_zones := docking_manager.zones.zones.twin
-				l_zones.start
-			until
-				l_zones.after
+			across
+				docking_manager.zones.zones.twin as ic
 			loop
-				if l_zones.item /= Void then
-					l_zones.item.recover_to_normal_state
+				if attached ic.item as l_zone then
+					l_zone.recover_to_normal_state
+				else
+					check has_zone: False end
 				end
-				l_zones.forth
 			end
 		end
 
@@ -206,32 +194,28 @@ feature -- Commands
 				restore_editor_area_for_minimized
 			end
 
-			from
-				l_zones := docking_manager.zones.zones.twin
-				l_zones.start
-			until
-				l_zones.after
+			across
+				docking_manager.zones.zones.twin as ic
 			loop
-				if attached {EV_WIDGET} l_zones.item as lt_widget then
-					if l_zones.item /= Void and then a_dock_area.has_recursive (lt_widget) then
-						l_zones.item.recover_to_normal_state
+				if attached ic.item as l_zone then
+					if attached {EV_WIDGET} l_zone as lt_widget then
+						if a_dock_area.has_recursive (lt_widget) then
+							l_zone.recover_to_normal_state
+						end
+					else
+						check not_possible: False end
 					end
 				else
 					check not_possible: False end
 				end
-
-				l_zones.forth
 			end
 		end
 
 	recover_normal_state_in_dock_area_of (a_zone: detachable SD_ZONE)
 			-- Recover zone normal state in the SD_MULTI_DOCK_AREA which has `a_zone'
-		local
-			l_area: detachable SD_MULTI_DOCK_AREA
 		do
 			if a_zone /= Void then
-				l_area := docking_manager.query.inner_container_include_hidden (a_zone)
-				if l_area /= Void then
+				if attached docking_manager.query.inner_container_include_hidden (a_zone) as l_area then
 					if is_main_inner_container (l_area) then
 						restore_editor_area
 						restore_editor_area_for_minimized
@@ -244,40 +228,28 @@ feature -- Commands
 	update_title_bar
 			-- Update all title bar
 			-- Also prune and destroy floating zones which are not used anymore
-		local
-			l_inner_container_snapshot: ARRAYED_LIST [SD_MULTI_DOCK_AREA]
 		do
-			l_inner_container_snapshot := docking_manager.inner_containers.twin
-			from
-				l_inner_container_snapshot.start
-			until
-				l_inner_container_snapshot.after
+			across
+				docking_manager.inner_containers.twin as ic
 			loop
-				if l_inner_container_snapshot.item /= Void then
-					l_inner_container_snapshot.item.update_title_bar
+				if attached ic.item as l_area then
+					l_area.update_title_bar
 				end
-					l_inner_container_snapshot.forth
 			end
 		end
 
 	update_mini_tool_bar_size (a_content: SD_CONTENT)
 			-- Update all zones' title bar size for mini tool bar widgets new size
-		local
-			l_zones: ARRAYED_LIST [SD_ZONE]
 		do
 			if a_content /= Void then
 				a_content.update_mini_tool_bar_size
 			else
-				from
-					l_zones := docking_manager.zones.zones.twin
-					l_zones.start
-				until
-					l_zones.after
+				across
+					docking_manager.zones.zones.twin as ic
 				loop
-					if l_zones.item /= Void then
-						l_zones.item.update_mini_tool_bar_size
+					if attached ic.item as l_zone then
+						l_zone.update_mini_tool_bar_size
 					end
-					l_zones.forth
 				end
 			end
 		end
@@ -300,21 +272,16 @@ feature -- Commands
 	propagate_accelerators
 			-- If `main_window' of SD_DOCKING_MANAGER accelerators changed, we update all floating zones accelerators
 		local
-			l_zones: ARRAYED_LIST [SD_FLOATING_ZONE]
 			l_global_accelerators: SEQUENCE [EV_ACCELERATOR]
 		do
-			from
-				l_zones := docking_manager.query.floating_zones
-				l_global_accelerators := docking_manager.query.golbal_accelerators
-				l_zones.start
-			until
-				l_zones.after
+			l_global_accelerators := docking_manager.query.golbal_accelerators
+			across
+				docking_manager.query.floating_zones as ic
 			loop
-				l_zones.item.accelerators.wipe_out
+				ic.item.accelerators.wipe_out
 				if l_global_accelerators /= Void then
-					l_zones.item.accelerators.append (l_global_accelerators)
+					ic.item.accelerators.append (l_global_accelerators)
 				end
-				l_zones.forth
 			end
 		end
 
@@ -778,7 +745,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

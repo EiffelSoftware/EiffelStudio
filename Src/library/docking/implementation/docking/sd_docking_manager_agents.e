@@ -87,7 +87,6 @@ feature  -- Agents
 			not_destroyed: not is_destroyed
 		local
 			l_auto_hide_zone: detachable SD_AUTO_HIDE_ZONE
-			l_zones: ARRAYED_LIST [SD_ZONE]
 			l_content: detachable SD_CONTENT
 			l_setter: SD_SYSTEM_SETTER
 			l_docking_manager: like docking_manager
@@ -95,22 +94,21 @@ feature  -- Agents
 			create {SD_SYSTEM_SETTER_IMP} l_setter
 			if not l_setter.is_during_pnd then
 				l_docking_manager := docking_manager
-				l_zones := l_docking_manager.zones.zones.twin
-				from
-					l_zones.start
-				until
-					l_zones.after
+				across
+					l_docking_manager.zones.zones.twin as ic
 				loop
-					if attached {EV_CONTAINER} l_zones.item as lt_container then
+					if
+						attached ic.item as l_zone and then
+						attached {EV_CONTAINER} l_zone as lt_container then
 						if
 							not lt_container.is_destroyed and then
 							(is_parent_recursive (lt_container, a_widget) and not ignore_additional_click) and
-							l_zones.item.content /= l_docking_manager.zones.place_holder_content
+							l_zone.content /= l_docking_manager.zones.place_holder_content
 						then
-							if l_docking_manager.property.last_focus_content /= l_zones.item.content then
-								l_docking_manager.property.set_last_focus_content (l_zones.item.content)
-								l_zones.item.on_focus_in (Void)
-								l_zones.item.content.focus_in_actions.call (Void)
+							if l_docking_manager.property.last_focus_content /= l_zone.content then
+								l_docking_manager.property.set_last_focus_content (l_zone.content)
+								l_zone.on_focus_in (Void)
+								l_zone.content.focus_in_actions.call (Void)
 							else
 								l_content := l_docking_manager.property.last_focus_content
 								if
@@ -129,8 +127,6 @@ feature  -- Agents
 					else
 						check not_possible: False end
 					end
-
-					l_zones.forth
 				end
 
 				ignore_additional_click := False
@@ -141,17 +137,12 @@ feature  -- Agents
 			-- Handle EV_APPLICATION's pointer button press actions, for recover SD_UPPER_ZONE's size
 		require
 			not_destroyed: not is_destroyed
-		local
-			l_zones: ARRAYED_LIST [SD_ZONE]
 		do
-			l_zones := docking_manager.zones.zones.twin
-			from
-				l_zones.start
-			until
-				l_zones.after
+			across
+				docking_manager.zones.zones.twin as ic
 			loop
-				if attached {SD_UPPER_ZONE} l_zones.item as l_upper_zone then
-					if attached {EV_CONTAINER} l_zones.item as lt_container then
+				if attached {SD_UPPER_ZONE} ic.item as l_upper_zone then
+					if attached {EV_CONTAINER} ic.item as lt_container then
 						if
 							is_parent_recursive (lt_container, a_widget) and then
 							not attached {EV_TOOL_BAR} a_widget and then -- We ignore click on tool bar.
@@ -164,8 +155,6 @@ feature  -- Agents
 						check not_possible: False end
 					end
 				end
-
-				l_zones.forth
 			end
 		end
 
@@ -321,13 +310,12 @@ feature  -- Agents
 					l_floating_zones := docking_manager.query.floating_zones
 					l_has_focus := docking_manager.main_window.has_focus
 					if not l_has_focus then
-						from
-							l_floating_zones.start
+						across
+							l_floating_zones as ic
 						until
-							l_floating_zones.after or l_has_focus
+							l_has_focus
 						loop
-							l_has_focus := l_floating_zones.item.has_focus
-							l_floating_zones.forth
+							l_has_focus := ic.item.has_focus
 						end
 					end
 					if not l_has_focus then
@@ -471,6 +459,7 @@ feature -- Destory
 			-- Destory all underline objects
 		local
 			l_main_window: EV_WINDOW
+			ev_app: like ev_application
 		do
 			if attached docking_manager as l_docking_manager then
 				if attached l_docking_manager.internal_viewport as l_viewport then
@@ -484,13 +473,13 @@ feature -- Destory
 				l_main_window.focus_out_actions.prune_all (top_level_window_focus_out)
 				l_main_window.focus_in_actions.prune_all (top_level_window_focus_in)
 			end
-
-			ev_application.pnd_motion_actions.prune_all (pnd_motion_actions_handler)
-			ev_application.pick_actions.prune_all (pick_actions_handler)
-			ev_application.drop_actions.prune_all (drop_actions_handler)
-			ev_application.theme_changed_actions.prune_all (theme_changed_handler)
-			ev_application.pointer_button_press_actions.prune_all (widget_pointer_press_handler)
-			ev_application.pointer_button_press_actions.prune_all (widget_pointer_press_for_upper_zone_handler)
+			ev_app := ev_application
+			ev_app.pnd_motion_actions.prune_all (pnd_motion_actions_handler)
+			ev_app.pick_actions.prune_all (pick_actions_handler)
+			ev_app.drop_actions.prune_all (drop_actions_handler)
+			ev_app.theme_changed_actions.prune_all (theme_changed_handler)
+			ev_app.pointer_button_press_actions.prune_all (widget_pointer_press_handler)
+			ev_app.pointer_button_press_actions.prune_all (widget_pointer_press_for_upper_zone_handler)
 			focused_tab_stub := Void
 			clear_docking_manager
 
@@ -502,33 +491,27 @@ feature -- Destory
 feature -- Contract support
 
 	user_widget_valid (a_content: SD_CONTENT): BOOLEAN
-			-- Dose a_widget alreay in docking library?
+			-- Does a_content alreay in docking system?
 		require
 			not_destroyed: not is_destroyed
 		local
 			l_found: BOOLEAN
-			l_contents: ARRAYED_LIST [SD_CONTENT]
 		do
-			l_contents := docking_manager.contents.twin
-
-			from
-				l_contents.start
+			across
+				docking_manager.contents as ic
 			until
-				l_contents.after or l_found
+				l_found
 			loop
-				if l_contents.item /= a_content then
-					if attached {EV_CONTAINER} l_contents.item.user_widget as l_container then
+				if ic.item /= a_content then
+					if attached {EV_CONTAINER} ic.item.user_widget as l_container then
 						if l_container.has_recursive (a_content.user_widget) then
 							l_found := True
 						end
 					end
-
-					if a_content.user_widget = l_contents.item.user_widget then
+					if a_content.user_widget = ic.item.user_widget then
 						l_found := True
 					end
 				end
-
-				l_contents.forth
 			end
 			Result := not l_found
 		end
@@ -538,21 +521,17 @@ feature -- Contract support
 		require
 			not_destroyed: not is_destroyed
 			a_content_not_void: a_content /= Void
-		local
-			l_contents: ARRAYED_LIST [SD_CONTENT]
 		do
-			l_contents := docking_manager.contents.twin
 			Result := True
-
-			from
-				l_contents.start
+			across
+				docking_manager.contents as ic
 			until
-				l_contents.after or not Result
+				not Result
 			loop
-				if l_contents.item /= a_content then
-					Result := not l_contents.item.unique_title.as_string_32.is_equal (a_content.unique_title.as_string_32)
+				if ic.item /= a_content then
+						-- TODO: check if we should not compare lowercase.
+					Result := not ic.item.unique_title.same_string (a_content.unique_title)
 				end
-				l_contents.forth
 			end
 		end
 
@@ -646,7 +625,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

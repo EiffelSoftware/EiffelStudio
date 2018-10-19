@@ -77,32 +77,36 @@ feature -- Execution
 		do
 			set_title ("Forbidden")
 			set_page_title ("Forbidden")
-			s := "<em>Access denied for resource <strong>" + request.request_uri + "</strong>.</em>"
---			TODO: add a form to ask for missing permissions.
---			if
---				attached user as u and
---				attached associated_permissions as l_permissions and then
---				not l_permissions.is_empty
---			then
---					-- User signed in
---					-- Form to request access to this resource.
---				s.append ("Request access ...")
---				s.append (": ")
---				across
---					l_permissions as ic
---				loop
---					s.append_character ('"')
---					s.append (ic.item)
---					s.append_character ('"')
---					s.append (" ")
---				end
---			end
+			if attached main_content as l_main_content and then not l_main_content.is_whitespace then
+					-- Keep existing content!
+			else
+				s := "<em>Access denied for resource <strong>" + request.request_uri + "</strong>.</em>"
+	--			TODO: add a form to ask for missing permissions.
+	--			if
+	--				attached user as u and
+	--				attached associated_permissions as l_permissions and then
+	--				not l_permissions.is_empty
+	--			then
+	--					-- User signed in
+	--					-- Form to request access to this resource.
+	--				s.append ("Request access ...")
+	--				s.append (": ")
+	--				across
+	--					l_permissions as ic
+	--				loop
+	--					s.append_character ('"')
+	--					s.append (ic.item)
+	--					s.append_character ('"')
+	--					s.append (" ")
+	--				end
+	--			end
 
-			set_main_content (s)
+				set_main_content (s)
+			end
 		end
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end
 

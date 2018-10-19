@@ -20,7 +20,8 @@ inherit
 			install,
 			permissions,
 			masquerade_api,
-			menu_system_alter
+			menu_system_alter,
+			has_permission_to_use_authentication
 		end
 
 	CMS_HOOK_BLOCK
@@ -50,7 +51,14 @@ feature -- Access
 			-- List of permission ids, used by this module, and declared.
 		do
 			Result := Precursor
-			Result.extend ("masquerade")
+			Result.extend (perm_masquerade)
+		end
+
+	perm_masquerade: STRING = "masquerade"
+
+	has_permission_to_use_authentication (api: CMS_API): BOOLEAN
+		do
+			Result := api.has_permission (perm_masquerade)
 		end
 
 feature {CMS_API} -- Module Initialization			

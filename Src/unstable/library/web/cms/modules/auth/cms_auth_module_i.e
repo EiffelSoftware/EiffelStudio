@@ -52,6 +52,13 @@ feature -- Access: auth strategy
 			Result implies a_response.is_authenticated
 		end
 
+	has_permission_to_use_authentication (api: CMS_API): BOOLEAN
+			-- Is current user (or anonymous) has permission to use Current authentication?
+		do
+				-- By default, authorize
+			Result := True
+		end
+
 feature -- Hooks configuration
 
 	setup_hooks (a_hooks: CMS_HOOK_CORE_MANAGER)
@@ -78,7 +85,10 @@ feature -- Hooks
 			if is_authenticating (a_response) then
 
 			else
-				if a_response.location.starts_with ("account/auth/") then
+				if
+					a_response.location.starts_with ("account/auth/") and then
+					has_permission_to_use_authentication (a_response.api)
+				then
 					create lnk.make (login_title, login_location)
 					if not l_destination.starts_with ("account/auth/") then
 						lnk.add_query_parameter ("destination", l_destination)

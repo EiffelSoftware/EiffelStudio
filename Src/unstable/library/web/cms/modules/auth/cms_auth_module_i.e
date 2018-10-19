@@ -53,7 +53,7 @@ feature -- Access: auth strategy
 		end
 
 	has_permission_to_use_authentication (api: CMS_API): BOOLEAN
-			-- Is current user (or anonymous) has permission to use Current authentication?
+			-- Is current user (or anonymous) has permssion to use Current authentication?
 		do
 				-- By default, authorize
 			Result := True

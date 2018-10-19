@@ -42,7 +42,9 @@ feature -- Basic operations
 				attached {WSF_STRING} req.cookie (oauth_api.session_token) as l_roc_auth_session_token
 			then
 				if attached oauth_api.user_oauth2_without_consumer_by_token (l_roc_auth_session_token.value) as l_user then
-					set_current_user (l_user)
+					if api.has_permission ({CMS_OAUTH_20_MODULE}.perm_use_oauth2_auth) then
+						set_current_user (l_user)
+					end
 				else
 					api.logger.put_error (generator + ".execute login_valid failed for: " + l_roc_auth_session_token.value , Void)
 				end

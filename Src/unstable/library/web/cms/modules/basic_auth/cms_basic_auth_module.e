@@ -18,7 +18,8 @@ inherit
 			filters,
 			setup_hooks,
 			install,
-			permissions
+			permissions,
+			has_permission_to_use_authentication
 		end
 
 	CMS_WITH_WEBAPI
@@ -67,6 +68,11 @@ feature -- Access
 		end
 
 	perm_use_basic_auth: STRING = "use basic_auth"
+
+	has_permission_to_use_authentication (api: CMS_API): BOOLEAN
+		do
+			Result := api.has_permission (perm_use_basic_auth)
+		end
 
 feature -- Access: auth strategy
 

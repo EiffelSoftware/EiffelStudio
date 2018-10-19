@@ -15,19 +15,19 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_host: READABLE_STRING_32; a_consumer: CMS_OAUTH_20_CONSUMER)
+	make (a_host: READABLE_STRING_8; a_consumer: CMS_OAUTH_20_CONSUMER)
 			-- Create an object with the host `a_host'.
 		do
-			initilize (a_consumer)
+			initialize (a_consumer)
 			create config.make_default (a_consumer.api_key, a_consumer.api_secret)
-			config.set_callback (a_host + "/account/oauth-callback/"+ a_consumer.callback_name)
+			config.set_callback (a_host + {CMS_OAUTH_20_MODULE}.oauth_callback_path + a_consumer.callback_name)
 			config.set_scope (a_consumer.scope)
 				--Todo create a generic OAUTH_20_GENERIC_API
 			create oauth_api.make (a_consumer.endpoint, a_consumer.authorize_url, a_consumer.extractor)
 			api_service := oauth_api.create_service (config)
 		end
 
-	initilize (a_consumer: CMS_OAUTH_20_CONSUMER)
+	initialize (a_consumer: CMS_OAUTH_20_CONSUMER)
 		do
 				--Use configuration values if any if not defaul
 			api_key := a_consumer.api_key
@@ -65,6 +65,7 @@ feature -- Access
 					--! at the moment the scope is mail, but we can change it to get more information.
 				create request.make ("GET", protected_resource_url)
 				request.add_header ("Authorization", "Bearer " + l_access_token.token)
+				request.add_header ("User-Agent", "EiffelWeb-Cypress-App")
 				api_service.sign_request (l_access_token, request)
 				if attached {OAUTH_RESPONSE} request.execute as l_response then
 						write_debug_log (generator + ".sign_request Sign_request response [" + l_response.status.out + "]")
@@ -91,6 +92,34 @@ feature -- Access
 					Result := l_email.item
 				elseif attached {JSON_STRING} l_json.item ("email") as l_email then
 					Result := l_email.unescaped_string_8
+				end
+			end
+		end
+
+	user_id: detachable READABLE_STRING_32
+			-- User id if any.
+		local
+			l_json: JSON_CONFIG
+		do
+			if attached user_profile as l_profile then
+				create l_json.make_from_string (l_profile)
+				if attached {JSON_STRING} l_json.item ("id") as l_id then
+					Result := l_id.unescaped_string_32
+				elseif attached {JSON_NUMBER} l_json.item ("id") as l_id then
+					Result := l_id.item
+				end
+			end
+		end
+
+	user_login: detachable READABLE_STRING_32
+			-- User login if any.
+		local
+			l_json: JSON_CONFIG
+		do
+			if attached user_profile as l_profile then
+				create l_json.make_from_string (l_profile)
+				if attached {JSON_STRING} l_json.item ("login") as l_login then
+					Result := l_login.unescaped_string_32
 				end
 			end
 		end

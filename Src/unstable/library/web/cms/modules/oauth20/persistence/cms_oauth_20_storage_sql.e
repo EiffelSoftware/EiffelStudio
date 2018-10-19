@@ -40,7 +40,7 @@ feature -- Access User Outh
 			end
 		end
 
-	user_oauth2_by_id (a_uid: like {CMS_USER}.id; a_consumer: READABLE_STRING_GENERAL): detachable CMS_USER
+	user_oauth2_by_user_id (a_uid: like {CMS_USER}.id; a_consumer: READABLE_STRING_GENERAL): detachable CMS_USER
 			-- <Precursor>
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
@@ -50,7 +50,7 @@ feature -- Access User Outh
 			write_information_log (generator + ".user_oauth2_by_id")
 			create l_parameters.make (1)
 			l_parameters.put (a_uid, "uid")
-			sql_query (select_user_id_oauth2_by_id (oauth2_sql_table_name (a_consumer)), l_parameters)
+			sql_query (select_user_id_oauth2_by_user_id (oauth2_sql_table_name (a_consumer)), l_parameters)
 			if not has_error and not sql_after then
 				l_uid := sql_read_integer_64 (1)
 				sql_forth
@@ -65,17 +65,17 @@ feature -- Access User Outh
 			end
 		end
 
-	user_oauth2_by_email (a_email: like {CMS_USER}.email; a_consumer: READABLE_STRING_GENERAL): detachable CMS_USER
+	user_oauth2_by_id (a_oauth_id: READABLE_STRING_GENERAL; a_consumer: READABLE_STRING_GENERAL): detachable CMS_USER
 			-- <Precursor>
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
 			l_uid: INTEGER_64
 		do
 			error_handler.reset
-			write_information_log (generator + ".user_oauth2_by_email")
+			write_information_log (generator + ".user_oauth2_by_id")
 			create l_parameters.make (1)
-			l_parameters.put (a_email, "email")
-			sql_query (select_user_id_oauth2_by_email (oauth2_sql_table_name (a_consumer)), l_parameters)
+			l_parameters.put (a_oauth_id, "id")
+			sql_query (select_user_id_oauth2_by_id (oauth2_sql_table_name (a_consumer)), l_parameters)
 			if not has_error and not sql_after then
 				l_uid := sql_read_integer_64 (1)
 				sql_forth
@@ -222,14 +222,41 @@ feature -- Change: User OAuth
 			end
 		end
 
-	new_user_oauth2 (a_token: READABLE_STRING_GENERAL; a_user_profile: READABLE_STRING_GENERAL; a_user: CMS_USER; a_consumer: READABLE_STRING_GENERAL)
+	delete_oauth_consumer (a_cons: CMS_OAUTH_20_CONSUMER)
+			-- Save consumer `a_cons`.
+		local
+			l_parameters: STRING_TABLE [detachable ANY]
+			l_table, l_new_table: STRING
+			htdate: HTTP_DATE
+		do
+			error_handler.reset
+			if a_cons.has_id then
+				create l_parameters.make (10)
+				l_parameters.put (a_cons.id, "cid")
+
+				sql_delete (sql_delete_oauth2_consumers, l_parameters)
+				sql_finalize
+				if not has_error then
+					l_table := oauth2_sql_table_name (a_cons.name)
+					if sql_table_exists (l_table) then
+						create htdate.make_now_utc
+						create l_new_table.make_from_string (l_table)
+						l_new_table.append_character ('_')
+						l_new_table.append (htdate.timestamp.out)
+						sql_execute_script (sql_oauth2_rename_table (l_table, l_new_table), Void)
+						sql_finalize
+					end
+				end
+			end
+		end
+
+	new_user_oauth2 (a_token: READABLE_STRING_GENERAL; a_user_profile: READABLE_STRING_GENERAL; a_user: CMS_USER; a_oauth_id: READABLE_STRING_GENERAL; a_consumer: READABLE_STRING_GENERAL)
 			-- Add a new user with oauth2  authentication.
 		-- <Precursor>.
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
 		do
 			error_handler.reset
-			sql_begin_transaction
 
 			write_information_log (generator + ".new_user_oauth2")
 			create l_parameters.make (4)
@@ -237,29 +264,27 @@ feature -- Change: User OAuth
 			l_parameters.put (a_token, "token")
 			l_parameters.put (a_user_profile, "profile")
 			l_parameters.put (create {DATE_TIME}.make_now_utc, "utc_date")
-			l_parameters.put (a_user.email, "email")
+			l_parameters.put (a_oauth_id, "id")
 
 			sql_insert (sql_insert_oauth2 (oauth2_sql_table_name (a_consumer)), l_parameters)
-			sql_commit_transaction
 			sql_finalize
 		end
 
-	update_user_oauth2 (a_token: READABLE_STRING_GENERAL; a_user_profile: READABLE_STRING_32; a_user: CMS_USER; a_consumer: READABLE_STRING_GENERAL )
+	update_user_oauth2 (a_token: READABLE_STRING_GENERAL; a_user_profile: READABLE_STRING_GENERAL; a_user: CMS_USER; a_oauth_id: READABLE_STRING_GENERAL; a_consumer: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
 		do
 			error_handler.reset
-			sql_begin_transaction
 
-			write_information_log (generator + ".new_user_oauth2")
+			write_information_log (generator + ".update_user_oauth2")
 			create l_parameters.make (4)
 			l_parameters.put (a_user.id, "uid")
 			l_parameters.put (a_token, "token")
 			l_parameters.put (a_user_profile, "profile")
+			l_parameters.put (a_oauth_id, "id")
 
 			sql_modify (sql_update_oauth2 (oauth2_sql_table_name (a_consumer)), l_parameters)
-			sql_commit_transaction
 			sql_finalize
 		end
 
@@ -270,14 +295,12 @@ feature -- Change: User OAuth
 			l_string: STRING
 		do
 			error_handler.reset
-			sql_begin_transaction
 
 			write_information_log (generator + ".remove_user_oauth2")
 			create l_parameters.make (1)
 			l_parameters.put (a_user.id, "uid")
 
 			sql_modify (sql_remove_oauth2 (oauth2_sql_table_name (a_consumer)), l_parameters)
-			sql_commit_transaction
 			sql_finalize
 		end
 
@@ -352,24 +375,24 @@ feature {NONE} -- User OAuth2
 		end
 			--| User id for access token :token
 
-	Select_user_id_oauth2_by_id (a_table: READABLE_STRING_8): STRING
+	select_user_id_oauth2_by_user_id (a_table: READABLE_STRING_8): STRING
 		do
 			Result := "SELECT uid FROM " + a_table + " WHERE uid = :uid;"
 		end
 
-	Select_user_id_oauth2_by_email (a_table: READABLE_STRING_8): STRING
+	select_user_id_oauth2_by_id (a_table: READABLE_STRING_8): STRING
 		do
-			Result := "SELECT uid FROM " + a_table + " WHERE email = :email;"
+			Result := "SELECT uid FROM " + a_table + " WHERE id = :id;"
 		end
 
 	Sql_insert_oauth2 (a_table: READABLE_STRING_8): STRING
 		do
-			Result := "INSERT INTO " + a_table + " (uid, access_token, details, created, email) VALUES (:uid, :token, :profile, :utc_date, :email);"
+			Result := "INSERT INTO " + a_table + " (uid, access_token, details, created, id) VALUES (:uid, :token, :profile, :utc_date, :id);"
 		end
 
 	Sql_update_oauth2 (a_table: READABLE_STRING_8): STRING
 		do
-			Result := "UPDATE " + a_table + " SET access_token = :token, details = :profile WHERE uid =:uid;"
+			Result := "UPDATE " + a_table + " SET access_token = :token, details = :profile , id = :id WHERE uid =:uid;"
 		end
 
 	Sql_remove_oauth2 (a_table: READABLE_STRING_8): STRING
@@ -391,13 +414,22 @@ feature {NONE} -- User OAuth2
 					`access_token` TEXT  NOT NULL,
 					`created` DATETIME NOT NULL,
 					`details` TEXT NOT NULL,
-					`email` TEXT NOT NULL,
+					`id` VARCHAR (250) NOT NULL,
 					CONSTRAINT `uid`
 						UNIQUE(`uid`),
-					CONSTRAINT `email`
-						UNIQUE(`email`)
+					CONSTRAINT `id`
+						UNIQUE(`id`)
 					);
 				]")
+		end
+
+	sql_oauth2_rename_table (a_table_name, a_new_table_name: READABLE_STRING_8): STRING
+		do
+			create Result.make_from_string ("ALTER TABLE ")
+			Result.append (a_table_name)
+			Result.append (" RENAME TO ")
+			Result.append (a_new_table_name)
+			Result.append_character (';')
 		end
 
 feature {NONE} -- Consumer
@@ -409,5 +441,7 @@ feature {NONE} -- Consumer
 	sql_insert_oauth2_consumers: STRING = "INSERT INTO oauth2_consumers (name, api_secret, api_key,  scope, protected_resource_url, callback_name, extractor, authorize_url, endpoint) VALUES (:name, :api_secret, :api_key,  :scope, :protected_resource_url, :callback_name, :extractor, :authorize_url, :endpoint);"
 
 	sql_update_oauth2_consumers: STRING = "UPDATE oauth2_consumers SET name = :name, api_secret = :api_secret, api_key = :api_key, scope = :scope, protected_resource_url = :protected_resource_url, callback_name = :callback_name, extractor = :extractor, authorize_url = :authorize_url, endpoint = :endpoint WHERE cid = :cid;"
+
+	sql_delete_oauth2_consumers: STRING = "DELETE FROM oauth2_consumers WHERE cid=:cid ;"
 
 end

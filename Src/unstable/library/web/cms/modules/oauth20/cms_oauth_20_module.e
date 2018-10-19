@@ -196,6 +196,10 @@ feature -- Router
 				a_router.handle (oauth_callback_path + "{" + oauth_callback_path_parameter + "}",
 						create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_callback_oauth (a_api, l_oauth_api, ?, ?)),
 						a_router.methods_get_post)
+				a_router.handle (oauth_register_path,
+						create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_register (a_api, l_oauth_api, ?, ?)),
+						a_router.methods_post)
+
 				a_router.handle ("/account/auth/oauth-associate",
 						create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_associate (a_api, l_oauth_api, ?, ?)),
 						a_router.methods_post)
@@ -209,6 +213,8 @@ feature -- Router
 			-- Callback path parameter.	
 
 	oauth_callback_path: STRING = "/account/auth/oauth-callback/"
+
+	oauth_register_path: STRING = "/account/auth/oauth-register/"
 
 	oauth_code_query_parameter: STRING = "code"
 			-- Code query parameter, specific to OAuth protocol.
@@ -283,6 +289,7 @@ feature -- Hooks
 				create l_cookie.make (a_oauth20_api.session_token, "DELETED")
 				l_cookie.set_path ("/")
 				l_cookie.set_max_age (0) --| Remove cookie
+				l_cookie.set_expiration_date (create {DATE_TIME}.make_from_epoch (0))
 				res.add_cookie (l_cookie)
 				api.unset_current_user (req)
 			else
@@ -387,11 +394,12 @@ feature -- OAuth2 Login with Provider
 			l_auth: CMS_OAUTH_20_WORKFLOW
 			l_user_api: CMS_USER_API
 			l_user: CMS_USER
-			l_roles: LIST [CMS_USER_ROLE]
 			l_cookie: WSF_COOKIE
-			es: CMS_AUTHENTICATION_EMAIL_SERVICE
 			l_oauth_id: READABLE_STRING_GENERAL
 			dt: DATE_TIME
+			f: CMS_FORM
+			s: STRING
+			l_max_age: INTEGER
 		do
 			if
 				attached {WSF_STRING} req.path_parameter (oauth_callback_path_parameter) as l_callback and then
@@ -405,12 +413,12 @@ feature -- OAuth2 Login with Provider
 					attached l_auth.user_profile as l_user_profile
 				then
 						-- extract user email
-					if attached l_auth.user_id as l_id then
-						l_oauth_id := l_id
+					if attached l_auth.user_login as l_login then
+						l_oauth_id := l_login
 					elseif attached l_auth.user_email as l_email then
 						l_oauth_id := l_email
-					elseif attached l_auth.user_login as l_login then
-						l_oauth_id := l_login
+					elseif attached l_auth.user_id as l_id then
+						l_oauth_id := l_id
 					end
 					if l_oauth_id /= Void then
 							-- check if the user exist
@@ -437,13 +445,21 @@ feature -- OAuth2 Login with Provider
 							end
 						else
 							create l_cookie.make (a_oauth_api.session_token, l_access_token.token)
-							if l_access_token.expires_in > 0 then
-								l_cookie.set_max_age (l_access_token.expires_in)
-								create dt.make_now_utc
-								dt.second_add (l_access_token.expires_in)
-								l_cookie.set_expiration_date (dt)
-							end
 							l_cookie.set_path ("/")
+							l_max_age := l_access_token.expires_in
+							if l_max_age <= 0 then
+								if attached api.setup.string_8_item ("auth.session.max_age") as s_max_age and then s_max_age.is_integer then
+									l_max_age := s_max_age.to_integer
+								else
+									l_max_age := 86400 --| one day: 24(h) *60(min) *60(sec)
+								end
+								if l_max_age > 0 then
+									l_cookie.set_max_age (l_max_age)
+									create dt.make_now_utc
+									dt.second_add (l_max_age)
+									l_cookie.set_expiration_date (dt)
+								end
+							end
 
 							if
 								attached l_auth.user_email as l_email and then
@@ -457,7 +473,7 @@ feature -- OAuth2 Login with Provider
 										a_oauth_api.update_user_oauth2 (l_access_token.token, l_user_profile, p_user, l_oauth_id, l_consumer.name )
 									else
 											-- create a oauth entry
-										a_oauth_api.new_user_oauth2 (l_access_token.token, l_user_profile.to_string_32, p_user, l_oauth_id, l_consumer.name )
+										a_oauth_api.new_user_oauth2 (l_access_token.token, l_user_profile, p_user, l_oauth_id, l_consumer.name )
 									end
 									res.add_cookie (l_cookie)
 									r.set_redirection (r.front_page_url)
@@ -472,33 +488,11 @@ feature -- OAuth2 Login with Provider
 								r.set_redirection (r.front_page_url)
 							elseif api.has_permission (perm_account_oauth2_register) then
 								create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-								create {ARRAYED_LIST [CMS_USER_ROLE]} l_roles.make (1)
-								l_roles.force (l_user_api.authenticated_user_role)
 
-									-- Create a new user and oauth entry
-								create l_user.make (l_oauth_id)
-								if attached l_auth.user_email as l_email then
-									l_user.set_email (l_email)
-								end
-								l_user.set_password (new_token) -- generate a random password.
-								l_user.set_roles (l_roles)
-								l_user.mark_active
-								l_user_api.new_user (l_user)
-
-									-- Add oauth entry
-								a_oauth_api.new_user_oauth2 (l_access_token.token, l_user_profile, l_user, l_oauth_id, l_consumer.name )
-								api.set_user (l_user)
-								api.record_user_login (l_user)
-
-								res.add_cookie (l_cookie)
-								r.set_redirection (r.front_page_url)
-
-									-- Send Email
-								if attached l_user.email as l_email then
-									create es.make (create {CMS_AUTHENTICATION_EMAIL_SERVICE_PARAMETERS}.make (api))
-									write_debug_log (generator + ".handle_callback_oauth: send_contact_welcome_email")
-									es.send_contact_welcome_email (l_email, l_user, req.absolute_script_url (""))
-								end
+								f := new_registration_form (l_consumer, l_oauth_id, l_access_token, l_auth.user_email, l_user_profile, a_oauth_api)
+								create s.make_empty
+								f.append_to_html (r.wsf_theme, s)
+								r.set_main_content (s)
 							else
 								create {FORBIDDEN_ERROR_CMS_RESPONSE} r.make (req, res, api)
 								r.set_main_content ("You are not allowed to register with " + name + " account!")
@@ -579,6 +573,202 @@ feature -- OAuth2 Login with Provider
 				end
 			end
 			r.set_redirection (req.absolute_script_url ("/account"))
+			r.execute
+		end
+
+feature -- Registration
+
+	new_registration_form (a_consumer: CMS_OAUTH_20_CONSUMER; a_oauth_id: READABLE_STRING_GENERAL; a_access_token: OAUTH_TOKEN;
+				a_oauth_email: detachable READABLE_STRING_8; a_user_profile: READABLE_STRING_8; a_oauth2_api: CMS_OAUTH_20_API): CMS_FORM
+		local
+			tf_hidden: WSF_FORM_HIDDEN_INPUT
+			tf: WSF_FORM_TEXT_INPUT
+			tf_email: WSF_FORM_EMAIL_INPUT
+			fset: WSF_FORM_FIELD_SET
+			l_submit: WSF_FORM_SUBMIT_INPUT
+		do
+			create Result.make (oauth_register_path, "oauth-reg-form")
+			create fset.make
+			fset.set_legend ("Register with " + html_encoded (a_consumer.name) + " account.")
+			Result.extend (fset)
+
+			create tf.make_with_text ("username", a_oauth_id)
+			tf.set_size (70); tf.set_label ("Username")
+			tf.enable_required
+			fset.extend (tf)
+			create tf_email.make ("email")
+			tf_email.set_size (70); tf_email.set_label ("Email address")
+			tf_email.set_description ("Enter a valid email address.")
+			tf_email.set_text_value (a_oauth_email)
+			tf_email.enable_required
+			fset.extend (tf_email)
+
+			create tf.make ("profilename")
+			tf.set_size (70); tf.set_label ("Profile name")
+			tf.set_description ("Optional profile name")
+			fset.extend (tf)
+
+			create tf_hidden.make ("oauth_id")
+			tf_hidden.set_text_value (a_oauth_id)
+			Result.extend (tf_hidden)
+			create tf_hidden.make ("oauth_email")
+			tf_hidden.set_text_value (a_oauth_email)
+			Result.extend (tf_hidden)
+			create tf_hidden.make ("token")
+			tf_hidden.set_text_value (a_access_token.token)
+			Result.extend (tf_hidden)
+			create tf_hidden.make ("consumer")
+			tf_hidden.set_text_value (a_consumer.name)
+			Result.extend (tf_hidden)
+			create tf_hidden.make ("expires_in")
+			tf_hidden.set_text_value (a_access_token.expires_in.out)
+			Result.extend (tf_hidden)
+			create tf_hidden.make ("profile")
+			tf_hidden.set_text_value (a_user_profile)
+			Result.extend (tf_hidden)
+
+			create l_submit.make_with_text ("op", "Register")
+			Result.extend (l_submit)
+		end
+
+	new_empty_registration_form: CMS_FORM
+		local
+			tf_hidden: WSF_FORM_HIDDEN_INPUT
+			tf: WSF_FORM_TEXT_INPUT
+			tf_email: WSF_FORM_EMAIL_INPUT
+			fset: WSF_FORM_FIELD_SET
+		do
+			create Result.make (oauth_register_path, "oauth-reg-form")
+			create fset.make
+			fset.set_legend ("Register with Oauth account.")
+			Result.extend (fset)
+
+			create tf.make ("username")
+			tf.set_size (70); tf.set_label ("Username")
+			tf.enable_required
+			fset.extend (tf)
+			create tf_email.make ("email")
+			tf_email.set_size (70); tf.set_label ("Email address")
+			tf_email.enable_required
+			fset.extend (tf_email)
+			create tf.make ("profilename")
+			tf_email.set_size (70); tf.set_label ("Profile name")
+			fset.extend (tf)
+
+			create tf_hidden.make ("consumer")
+			Result.extend (tf_hidden)
+			create tf_hidden.make ("oauth_id")
+			Result.extend (tf_hidden)
+			create tf_hidden.make ("oauth_email")
+			Result.extend (tf_hidden)
+			create tf_hidden.make ("token")
+			Result.extend (tf_hidden)
+			create tf_hidden.make ("expires_in")
+			Result.extend (tf_hidden)
+			create tf_hidden.make ("profile")
+			Result.extend (tf_hidden)
+		end
+
+
+	handle_register (api: CMS_API; a_oauth_api: CMS_OAUTH_20_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+		local
+			r: CMS_RESPONSE
+			f: CMS_FORM
+		do
+			if req.is_post_request_method then
+				if api.has_permission (perm_account_oauth2_register) then
+					create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+
+					f := new_empty_registration_form
+					f.submit_actions.extend (agent (fd: WSF_FORM_DATA; i_oauth20_api: CMS_OAUTH_20_API; i_res: WSF_RESPONSE; i_r: CMS_RESPONSE)
+							local
+								cons: CMS_OAUTH_20_CONSUMER
+								l_user: CMS_USER
+								l_max_age: INTEGER
+								l_cookie: WSF_COOKIE
+								dt: DATE_TIME
+								es: CMS_AUTHENTICATION_EMAIL_SERVICE
+								l_known_email: BOOLEAN
+							do
+								if
+									attached i_oauth20_api.cms_api.user_api as l_user_api and then
+									attached fd.string_item ("consumer") as l_consumername and then
+									attached i_oauth20_api.oauth_consumer_by_name (l_consumername) as l_consumer and then
+									attached fd.string_item ("oauth_id") as l_oauth_id and then
+									attached fd.string_item ("token") as l_access_token and then
+									attached fd.string_item ("expires_in") as l_expires_in and then
+									attached fd.string_item ("profile") as l_user_profile
+								then
+									if attached fd.string_item ("username") as l_username then
+										if attached l_user_api.user_by_name (l_username) then
+											fd.report_invalid_field ("username", "Username is already taken by another account!")
+										elseif attached fd.string_item ("email") as l_email	then
+											if attached l_user_api.user_by_email (l_email) then
+												fd.report_invalid_field ("email", "Email already associated with another account!")
+											else
+												 	-- FIXME: better verification!
+												 	-- find a way to validate the given email.
+												l_known_email := attached fd.string_item ("oauth_email") as l_oauth_email and then l_oauth_email.is_case_insensitive_equal_general (l_email)
+													-- Create new account !
+													-- Create a new user and oauth entry
+												create l_user.make (l_oauth_id)
+												l_user.set_email (l_email)
+												l_user.set_password (new_token) -- generate a random password.
+												if attached fd.string_item ("profilename") as l_profilename then
+													l_user.set_profile_name (l_profilename)
+												end
+												l_user.mark_active
+												l_user_api.new_user (l_user)
+
+													-- Add oauth entry
+												i_oauth20_api.new_user_oauth2 (l_access_token, l_user_profile, l_user, l_oauth_id, l_consumer.name)
+
+												i_oauth20_api.cms_api.set_user (l_user)
+												i_oauth20_api.cms_api.record_user_login (l_user)
+
+												create l_cookie.make (i_oauth20_api.session_token, l_access_token)
+												l_cookie.set_path ("/")
+												l_max_age := l_expires_in.to_integer
+												if l_max_age <= 0 then
+													if attached i_oauth20_api.cms_api.setup.string_8_item ("auth.session.max_age") as s_max_age and then s_max_age.is_integer then
+														l_max_age := s_max_age.to_integer
+													else
+														l_max_age := 86400 --| one day: 24(h) *60(min) *60(sec)
+													end
+													if l_max_age > 0 then
+														l_cookie.set_max_age (l_max_age)
+														create dt.make_now_utc
+														dt.second_add (l_max_age)
+														l_cookie.set_expiration_date (dt)
+													end
+												end
+
+												i_res.add_cookie (l_cookie)
+												i_r.set_redirection (i_oauth20_api.cms_api.absolute_url ("/account", Void))
+
+													-- Send Email
+												create es.make (create {CMS_AUTHENTICATION_EMAIL_SERVICE_PARAMETERS}.make (i_oauth20_api.cms_api))
+												write_debug_log (generator + ".handle_callback_oauth: send_contact_welcome_email")
+												es.send_contact_welcome_email (l_email, l_user, i_oauth20_api.cms_api.absolute_url ("", Void))
+											end
+										else
+											fd.report_invalid_field ("email", "Missing email information!")
+										end
+									else
+										fd.report_invalid_field ("username", "Missing username information!")
+									end
+								else
+									fd.report_error ("Invalid form data!")
+								end
+							end(?, a_oauth_api, res, r)
+						);
+					f.process (r)
+				else
+					create {FORBIDDEN_ERROR_CMS_RESPONSE} r.make (req, res, api)
+				end
+			else
+				create {BAD_REQUEST_ERROR_CMS_RESPONSE} r.make (req, res, api)
+			end
 			r.execute
 		end
 

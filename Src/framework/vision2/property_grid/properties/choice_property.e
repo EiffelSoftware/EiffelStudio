@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Property with several values to choose from."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -131,50 +131,54 @@ feature {NONE} -- Agents
 			l_combo_popup: like combo_popup
 			l_combo_grid: like combo_grid
 		do
-			create l_combo_popup
-			combo_popup := l_combo_popup
-			l_combo_popup.set_position (popup_window.x_position, popup_window.y_position + popup_window.height)
-			l_combo_popup.set_width (popup_window.width)
+			if attached popup_window as w then
+				create l_combo_popup
+				combo_popup := l_combo_popup
+				l_combo_popup.set_position (w.x_position, w.y_position + w.height)
+				l_combo_popup.set_width (w.width)
 
-			create l_frame
-			l_frame.set_style ({EV_FRAME_CONSTANTS}.ev_frame_etched_out)
+				create l_frame
+				l_frame.set_style ({EV_FRAME_CONSTANTS}.ev_frame_etched_out)
 
-			create l_combo_grid
-			combo_grid := l_combo_grid
-			l_combo_grid.hide_header
-			l_combo_grid.pointer_button_press_item_actions.extend (agent combo_click)
-			l_combo_grid.key_press_actions.extend (agent on_combo_key)
-			l_frame.extend (l_combo_grid)
-			from
-				item_strings.start
-			until
-				item_strings.after
-			loop
-				create l_item.make_with_text (to_displayed_value (item_strings.item))
-				l_item.set_value (item_strings.item)
-				l_combo_grid.set_item (1, item_strings.index, l_item)
-				l_item.pointer_enter_actions.force_extend (agent combo_select (l_item))
-				if l_item.text.is_equal (displayed_value) then
-					l_item.enable_select
+				create l_combo_grid
+				combo_grid := l_combo_grid
+				l_combo_grid.hide_header
+				l_combo_grid.pointer_button_press_item_actions.extend (agent combo_click)
+				l_combo_grid.key_press_actions.extend (agent on_combo_key)
+				l_frame.extend (l_combo_grid)
+				from
+					item_strings.start
+				until
+					item_strings.after
+				loop
+					create l_item.make_with_text (to_displayed_value (item_strings.item))
+					l_item.set_value (item_strings.item)
+					l_combo_grid.set_item (1, item_strings.index, l_item)
+					l_item.pointer_enter_actions.force_extend (agent combo_select (l_item))
+					if l_item.text.is_equal (displayed_value) then
+						l_item.enable_select
+					end
+					item_strings.forth
 				end
-				item_strings.forth
-			end
-			if item_strings.count < 10 then
-				l_combo_popup.set_height ((item_strings.count) * (l_combo_grid.row_height) + 4)
+				if item_strings.count < 10 then
+					l_combo_popup.set_height ((item_strings.count) * (l_combo_grid.row_height) + 4)
+				else
+					l_combo_popup.set_height (10 * (l_combo_grid.row_height) + 4)
+				end
+				l_combo_grid.column (1).set_width (w.width)
+				l_combo_grid.hide_horizontal_scroll_bar
+				l_combo_grid.set_minimum_height (0)
+				l_combo_grid.set_minimum_width (0)
+
+				l_combo_popup.focus_out_actions.force (agent combo_focus_lost)
+				l_combo_grid.focus_out_actions.force (agent combo_focus_lost)
+
+				l_combo_popup.extend (l_frame)
+				l_combo_popup.show_actions.extend (agent l_combo_grid.set_focus)
+				l_combo_popup.show
 			else
-				l_combo_popup.set_height (10 * (l_combo_grid.row_height) + 4)
+				check from_precondition: attached popup_window end
 			end
-			l_combo_grid.column (1).set_width (popup_window.width)
-			l_combo_grid.hide_horizontal_scroll_bar
-			l_combo_grid.set_minimum_height (0)
-			l_combo_grid.set_minimum_width (0)
-
-			l_combo_popup.focus_out_actions.force (agent combo_focus_lost)
-			l_combo_grid.focus_out_actions.force (agent combo_focus_lost)
-
-			l_combo_popup.extend (l_frame)
-			l_combo_popup.show_actions.extend (agent l_combo_grid.set_focus)
-			l_combo_popup.show
 		end
 
 	deactivate

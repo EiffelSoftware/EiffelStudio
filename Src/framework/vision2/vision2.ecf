@@ -20,9 +20,8 @@
 				<platform excluded_value="windows"/>
 			</condition>
 		</file_rule>
-		<capability>
-			<void_safety support="transitional"/>
-		</capability>
+		<option warning="true">
+		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
 		<library name="docking" location="$ISE_LIBRARY\library\docking\docking.ecf"/>

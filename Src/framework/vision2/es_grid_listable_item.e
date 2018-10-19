@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "A component displayed in a grid item"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -81,25 +80,15 @@ feature -- Access
 			-- 0 if no such component is found.
 		require
 			not_void: a_orignal_pointer_position /= Void
-		local
-			l_coordinate: EV_COORDINATE
-			l_pos: like component_position
-			l_rec: EV_RECTANGLE
 		do
-			l_coordinate := relative_position (grid_item, a_orignal_pointer_position.x, a_orignal_pointer_position.y)
-			Result := component_index_at_imp (l_coordinate)
+			Result := component_index_at_imp (relative_position (grid_item, a_orignal_pointer_position.x, a_orignal_pointer_position.y))
 		end
 
 	component_index_at_pointer_position: INTEGER
 			-- 1-based Index component at current pointer position
 			-- 0 if no such component is found.
-		local
-			l_coordinate: EV_COORDINATE
-			l_pos: like component_position
-			l_rec: EV_RECTANGLE
 		do
-			l_coordinate := relative_pointer_position (grid_item)
-			Result := component_index_at_imp (l_coordinate)
+			Result := component_index_at_imp (relative_pointer_position (grid_item))
 		end
 
 	pick_component (i: INTEGER): detachable ANY
@@ -149,7 +138,7 @@ feature -- Setting
 			component_padding_set: component_padding = a_padding
 		end
 
-	set_general_tooltip (a_tooltip: like general_tooltip)
+	set_general_tooltip (a_tooltip: attached like general_tooltip)
 			-- Set `general_tooltip' with `a_tooltip' and enable it at the same time.
 			-- Note: If `components' is not empty and pointer is over a component area, this tooltip won't be displayed.
 		require
@@ -622,8 +611,8 @@ feature{NONE} -- Actions for components
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

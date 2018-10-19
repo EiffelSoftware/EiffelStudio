@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Descendant of EV_TEXT_FIELD equipped with suggestive typing."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -58,8 +58,8 @@ feature {NONE} -- Initialization
 	create_interface_objects
 			-- <Precursor>
 		do
-			Precursor {EV_ABSTRACT_SUGGESTION_FIELD}
 			Precursor {EV_TEXT_FIELD}
+			Precursor {EV_ABSTRACT_SUGGESTION_FIELD}
 		end
 
 	initialize
@@ -192,7 +192,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

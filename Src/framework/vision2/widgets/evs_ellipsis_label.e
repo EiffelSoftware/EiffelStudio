@@ -1,6 +1,4 @@
-note
-	description: "Summary description for {EVS_ELLIPSIS_LABEL}."
-	author: ""
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -12,7 +10,7 @@ inherit
 		redefine
 			set_text,
 			refresh_now,
-			create_interface_objects, 
+			create_interface_objects,
 			initialize
 		end
 
@@ -77,7 +75,6 @@ feature -- Basic operation
 			l_text_w: INTEGER
 			l_3dots_w: INTEGER
 			l_available_w: INTEGER
-			tb: STRING_TABLE [INTEGER_32]
 			t: STRING_32
 		do
 			l_original_text := original_text

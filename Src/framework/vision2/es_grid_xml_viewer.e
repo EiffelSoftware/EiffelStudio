@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Component to display valid XML in GRID"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -27,8 +26,6 @@ feature {NONE} -- Initialization
 
 			grid.enable_tree
 			grid.enable_single_row_selection
-			grid.row_select_actions.extend (agent on_row_selected)
-			grid.row_deselect_actions.extend (agent on_row_deselected)
 			grid.set_separator_color (create {EV_COLOR}.make_with_8_bit_rgb (180,180,180))
 			grid.enable_column_separators
 			grid.disable_row_height_fixed
@@ -45,6 +42,8 @@ feature {NONE} -- Initialization
 			status_label.set_minimum_width (10)
 			widget.disable_item_expand (status_label)
 
+			grid.row_select_actions.extend (agent on_row_selected)
+			grid.row_deselect_actions.extend (agent on_row_deselected)
 		end
 
 	status_label: EV_LABEL
@@ -773,7 +772,7 @@ invariant
 	value_font_not_void: value_font /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

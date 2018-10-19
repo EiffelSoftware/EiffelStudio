@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Simple string properties."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -43,22 +43,17 @@ feature -- Specialized update
 			-- Set `value' to `a_value' and propagate the change if it the new value is different from the old one.
 		local
 			l_val: like displayed_value
-			tu: TUPLE [like value]
 		do
 			if not equal (value, a_value) then
 				value := a_value
-				change_value_actions.call ([a_value])
+				change_value_actions.call (a_value)
 			end
 			l_val := displayed_value
 			set_text (l_val)
 			if attached text_field as l_text_field then
 				l_text_field.set_text (l_val)
 			end
-			if l_val.is_empty then
-				set_tooltip (description)
-			else
-				set_tooltip (l_val)
-			end
+			set_tooltip (if l_val.is_empty then description else l_val end)
 		end
 
 feature {NONE} -- Implementation

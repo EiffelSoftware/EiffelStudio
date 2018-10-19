@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Property where the value can be changed in a dialog."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_dialog (a_name: like name; a_dialog: like dialog)
+	make_with_dialog (a_name: like name; a_dialog: attached like dialog)
 			-- Create with `a_name' and `a_dialog'.
 		require
 			a_name_ok: a_name /= Void
@@ -94,7 +94,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

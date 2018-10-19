@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			Objects that manage the layout of a grid ...
 			In fact, it will keep the expanded nodes layout on 'record'
@@ -350,7 +350,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	reset_recorded_values_from (lay: like layout)
+	reset_recorded_values_from (lay: attached like layout)
 		require
 			lay /= Void
 		do
@@ -359,7 +359,9 @@ feature {NONE} -- Implementation
 				across
 					lst as lst_curs
 				loop
-					reset_recorded_values_from (lst_curs.item)
+					if attached lst_curs.item as x then
+						reset_recorded_values_from (x)
+					end
 				end
 			end
 		end
@@ -715,7 +717,7 @@ feature {NONE} -- Agent
 			-- row and old value
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -21,6 +21,7 @@
 		<library name="cms_admin_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\admin\admin.ecf" readonly="false"/>
 		<library name="cms_auth_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\auth\auth.ecf" readonly="false"/>
 		<library name="cms_basic_auth_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\basic_auth\basic_auth.ecf" readonly="false"/>
+		<library name="cms_oauth20_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\oauth20\oauth20.ecf" readonly="false"/>
 		<library name="cms_blog_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\blog\cms_blog_module.ecf" readonly="false"/>
 		<library name="cms_comments_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\comments\comments.ecf" readonly="false" use_application_options="true"/>
 		<library name="cms_contact_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\contact\contact.ecf" readonly="false" use_application_options="true"/>

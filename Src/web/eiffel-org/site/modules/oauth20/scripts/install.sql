@@ -1,6 +1,6 @@
 
 CREATE TABLE oauth2_consumers(
-   `cid` INTEGER PRIMARY KEY NOT NULL CHECK(`cid`>=0),
+   `cid` INTEGER PRIMARY KEY AUTO_INCREMENT NOT NULL,
    `name` VARCHAR(255) NOT NULL,
    `api_secret` TEXT  NOT NULL,
    `api_key` TEXT NOT NULL,

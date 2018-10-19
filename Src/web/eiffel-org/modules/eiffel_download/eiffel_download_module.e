@@ -305,17 +305,17 @@ feature -- Handler
 				   attached l_api.retrieve_mirror_gpl (cfg) as l_mirror
 				then
 				    l_link := l_mirror
-				    l_link.append (l_name)
-				    l_link.append (" ")
-				    l_link.append (l_number)
+				    l_link.append (url_encoded (l_name))
+				    l_link.append_character (' ')
+				    l_link.append (url_encoded (l_number))
 				    l_link.append_character ('/')
-				    l_link.append (l_build)
+				    l_link.append (url_encoded (l_build))
 				    l_link.append_character ('/')
 				    write_debug_log (generator + ".handle_download [ Link: " + l_link  + " ]")
 					if attached l_api.selected_platform (l_product.downloads, get_platform (l_ua)) as l_selected then
 						if attached l_selected.filename as l_filename then
-							write_debug_log (generator + ".handle_download [ Filename: " + l_filename  + " ]")
-							l_link.append (l_filename)
+							write_debug_log (generator + ".handle_download [ Filename: " + url_encoded (l_filename)  + " ]")
+							l_link.append (url_encoded (l_filename))
 							file_download (req, res, l_link)
 							done := True
 						end
@@ -336,10 +336,10 @@ feature -- Handler
 			h: HTTP_HEADER
 		do
 			create h.make
-			h.put_content_disposition ("attachment; filename", a_link)
+			h.put_content_disposition ("attachment; filename", utf_8_encoded (a_link))
 			h.put_current_date
 			h.put_header_key_value ("Content-type", "application/octet-stream")
-			h.put_location (a_link)
+			h.put_location (utf_8_encoded (a_link))
 			res.set_status_code ({HTTP_STATUS_CODE}.see_other)
 			res.put_header_text (h.string)
 		end

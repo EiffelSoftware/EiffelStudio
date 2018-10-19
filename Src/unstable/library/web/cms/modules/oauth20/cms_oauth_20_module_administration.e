@@ -103,7 +103,7 @@ feature -- Handle
 					s.append ("</ul>")
 				end
 				s.append ("<h2>New consumer</h2>")
-				f := new_consumer_form (req.percent_encoded_path_info, req, create {CMS_OAUTH_20_CONSUMER})
+				f := new_consumer_form (req.percent_encoded_path_info, req, create {CMS_OAUTH_20_CONSUMER}, a_api)
 				f.append_to_html (r.wsf_theme, s)
 				r.set_main_content (s)
 				r.execute
@@ -208,7 +208,15 @@ feature -- Handle
 						else
 							s.append ("<h2>Setup new consumer %"" + a_api.html_encoded (cons.name) + "%"</h2>")
 						end
-						f := new_consumer_form (req.percent_encoded_path_info, req, cons)
+						f := new_consumer_form (req.percent_encoded_path_info, req, cons, a_api)
+						create fset.make
+						fset.set_legend ("Information")
+						f.extend (fset)
+						create tf.make_with_text ("ignore-url",a_api.absolute_url ({CMS_OAUTH_20_MODULE}.oauth_callback_path + cons.callback_name, Void) )
+						tf.set_label ("Authorization callback URL"); tf.set_size (70); tf.set_is_readonly (True)
+						tf.set_description ("This value may be needed to setup OAuth "+ html_encoded (cons.name) +" authorization.")
+						fset.extend (tf)
+
 						if l_is_protect_predefined_fields then
 							f.extend (create {WSF_FORM_SUBMIT_INPUT}.make_with_text ("op", "Delete"))
 						end
@@ -273,7 +281,7 @@ feature -- Handle
 			end
 		end
 
-	new_consumer_form (a_action: READABLE_STRING_8; req: WSF_REQUEST; cons: CMS_OAUTH_20_CONSUMER): CMS_FORM
+	new_consumer_form (a_action: READABLE_STRING_8; req: WSF_REQUEST; cons: CMS_OAUTH_20_CONSUMER; a_api: CMS_API): CMS_FORM
 		local
 			s: STRING
 			f: CMS_FORM
@@ -300,7 +308,7 @@ feature -- Handle
 			fset.extend (create {WSF_FORM_SUBMIT_INPUT}.make_with_text ("op", "Submit"))
 
 			create fset.make
-			fset.set_legend ("Predefine settings (change with care)")
+			fset.set_legend ("Predefined settings (change with care)")
 			Result.extend (fset)
 
 			create tf.make_with_text ("authorize_url", cons.authorize_url)

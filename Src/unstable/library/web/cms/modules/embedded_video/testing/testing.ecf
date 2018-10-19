@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="embedded_video_testing" uuid="BD491995-C14C-4413-B09A-C1B4EDDA3116">
+	<target name="embedded_video_testing">
+		<root class="ANY" feature="default_create"/>
+		<file_rule>
+			<exclude>/EIFGENs$</exclude>
+			<exclude>/\.git$</exclude>
+			<exclude>/\.svn$</exclude>
+		</file_rule>
+		<option manifest_array_type="mismatch_warning">
+		</option>
+		<capability>
+			<concurrency support="none"/>
+		</capability>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="embedded_module" location="..\embedded_video.ecf" readonly="false"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
+		<library name="text_filter" location="$ISE_LIBRARY\unstable\library\text\text_filter\text_filter.ecf"/>
+		<tests name="src" location=".\"/>
+	</target>
+</system>

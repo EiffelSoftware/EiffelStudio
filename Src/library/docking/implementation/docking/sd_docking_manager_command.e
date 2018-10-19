@@ -77,15 +77,14 @@ feature -- Commands
 			a_widget_not_void_when_not_main_window: not a_main_window implies a_widget /= Void
 		do
 			if not docking_manager.is_closing_all then
-				if lock_call_time = 0 then
+				if lock_call_time /= 0 then
+						-- The update has not been not locked yet.
 					if ev_application.locked_window /= Void then
-							-- We should ignore these lock window update calls
+							-- We should ignore these lock window update calls.
 						ignore_update := True
 					else
 						lock_update_internal (a_widget, a_main_window)
 					end
-				else
-					-- Nothing to be done, since we have already locked it, or it was already locked
 				end
 				lock_call_time := lock_call_time + 1
 			end
@@ -125,17 +124,11 @@ feature -- Commands
 
 	remove_empty_split_area
 			-- Remove empty split area in SD_MULTI_DOCK_AREA
-		local
-			l_containers: ARRAYED_LIST [SD_MULTI_DOCK_AREA]
 		do
 			across
 				docking_manager.inner_containers as ic
 			loop
-				if attached ic.item as l_area then
-					l_area.remove_empty_split_area
-				else
-					check has_item: False end
-				end
+				ic.item.remove_empty_split_area
 			end
 		end
 
@@ -174,11 +167,7 @@ feature -- Commands
 			across
 				docking_manager.zones.zones.twin as ic
 			loop
-				if attached ic.item as l_zone then
-					l_zone.recover_to_normal_state
-				else
-					check has_zone: False end
-				end
+				ic.item.recover_to_normal_state
 			end
 		end
 
@@ -187,7 +176,7 @@ feature -- Commands
 		require
 			not_void: a_dock_area /= Void
 		local
-			l_zones: ARRAYED_LIST [SD_ZONE]
+			l_zone: SD_ZONE
 		do
 			if is_main_inner_container (a_dock_area) then
 				restore_editor_area
@@ -197,13 +186,10 @@ feature -- Commands
 			across
 				docking_manager.zones.zones.twin as ic
 			loop
-				if attached ic.item as l_zone then
-					if attached {EV_WIDGET} l_zone as lt_widget then
-						if a_dock_area.has_recursive (lt_widget) then
-							l_zone.recover_to_normal_state
-						end
-					else
-						check not_possible: False end
+				l_zone := ic.item
+				if attached {EV_WIDGET} l_zone as lt_widget then
+					if a_dock_area.has_recursive (lt_widget) then
+						l_zone.recover_to_normal_state
 					end
 				else
 					check not_possible: False end
@@ -211,17 +197,15 @@ feature -- Commands
 			end
 		end
 
-	recover_normal_state_in_dock_area_of (a_zone: detachable SD_ZONE)
+	recover_normal_state_in_dock_area_of (a_zone: SD_ZONE)
 			-- Recover zone normal state in the SD_MULTI_DOCK_AREA which has `a_zone'
 		do
-			if a_zone /= Void then
-				if attached docking_manager.query.inner_container_include_hidden (a_zone) as l_area then
-					if is_main_inner_container (l_area) then
-						restore_editor_area
-						restore_editor_area_for_minimized
-					end
-					recover_normal_state_in (l_area)
+			if attached docking_manager.query.inner_container_include_hidden (a_zone) as l_area then
+				if is_main_inner_container (l_area) then
+					restore_editor_area
+					restore_editor_area_for_minimized
 				end
+				recover_normal_state_in (l_area)
 			end
 		end
 
@@ -232,9 +216,7 @@ feature -- Commands
 			across
 				docking_manager.inner_containers.twin as ic
 			loop
-				if attached ic.item as l_area then
-					l_area.update_title_bar
-				end
+				ic.item.update_title_bar
 			end
 		end
 
@@ -247,9 +229,7 @@ feature -- Commands
 				across
 					docking_manager.zones.zones.twin as ic
 				loop
-					if attached ic.item as l_zone then
-						l_zone.update_mini_tool_bar_size
-					end
+					ic.item.update_mini_tool_bar_size
 				end
 			end
 		end
@@ -338,7 +318,6 @@ feature -- Commands
 		local
 			l_editor_parent: detachable EV_CONTAINER
 			l_editor_area: SD_MULTI_DOCK_AREA
-			l_has_maximized_zone: BOOLEAN
 			l_parent_parent: detachable EV_CONTAINER
 			l_minimized_editor_area: like minimized_editor_area
 		do
@@ -351,44 +330,42 @@ feature -- Commands
 				l_editor_parent := docking_manager.query.inner_container_main.editor_parent
 				l_editor_area := docking_manager.query.inner_container_main
 
-				l_has_maximized_zone := docking_manager.zones.maximized_zone_in_main_window /= Void
+				if
+					l_editor_parent /= Void and
+					not attached docking_manager.zones.maximized_zone_in_main_window and then
+					l_editor_parent /= l_editor_area
+				then
+						-- There is not only editor zone in container main area.
+					l_parent_parent := l_editor_parent.parent
+					if l_parent_parent /= Void then
+						orignal_whole_item_for_minimized := l_editor_parent
 
-				if l_editor_parent /= Void and not l_has_maximized_zone then
-					if l_editor_parent = l_editor_area then
-						-- Only editor zone in container main area now
-						-- Nothing to do
-					else
-						l_parent_parent := l_editor_parent.parent
-						if l_parent_parent /= Void then
-							orignal_whole_item_for_minimized := l_editor_parent
+						l_editor_area.save_spliter_position (l_parent_parent, generating_type.name_32 + {STRING_32} ".minimized")
 
-							l_editor_area.save_spliter_position (l_parent_parent, generating_type.name_32 + {STRING_32} ".minimized")
-
-							if attached {EV_BOX} l_parent_parent as lt_parent_parent then
-								is_minimize_orignally := True
-							else
-								is_minimize_orignally := False
-							end
-
-							l_parent_parent.prune (l_editor_parent)
-
-							l_minimized_editor_area := internal_shared.widget_factory.docking_zone (docking_manager.zones.place_holder_content)
-							if not l_minimized_editor_area.is_docking_manager_attached then
-								l_minimized_editor_area.set_docking_manager (docking_manager)
-							end
-							minimized_editor_area := l_minimized_editor_area
-							l_parent_parent.extend (l_minimized_editor_area)
-							if attached {SD_PLACE_HOLDER_ZONE} l_minimized_editor_area as lt_upper_zone  then
-								lt_upper_zone.prepare_for_minimized_editor_area (docking_manager)
-
-								-- Minimize this place holder zone, so it can replace surrounded spliter bar with FAKE spliter bar
-								lt_upper_zone.minimize
-							end
-
-							docking_manager.command.resize (True)
+						if attached {EV_BOX} l_parent_parent as lt_parent_parent then
+							is_minimize_orignally := True
 						else
-							check some_error_here: False end -- Implied by editor's parent must has parent now since it existing in main window
+							is_minimize_orignally := False
 						end
+
+						l_parent_parent.prune (l_editor_parent)
+
+						l_minimized_editor_area := internal_shared.widget_factory.docking_zone (docking_manager.zones.place_holder_content)
+						if not l_minimized_editor_area.is_docking_manager_attached then
+							l_minimized_editor_area.set_docking_manager (docking_manager)
+						end
+						minimized_editor_area := l_minimized_editor_area
+						l_parent_parent.extend (l_minimized_editor_area)
+						if attached {SD_PLACE_HOLDER_ZONE} l_minimized_editor_area as lt_upper_zone  then
+							lt_upper_zone.prepare_for_minimized_editor_area (docking_manager)
+
+							-- Minimize this place holder zone, so it can replace surrounded spliter bar with FAKE spliter bar
+							lt_upper_zone.minimize
+						end
+
+						docking_manager.command.resize (True)
+					else
+						check some_error_here: False end -- Implied by editor's parent must has parent now since it existing in main window
 					end
 				end
 			end
@@ -399,47 +376,45 @@ feature -- Commands
 		local
 			l_editor_parent: detachable EV_CONTAINER
 			l_editor_area: SD_MULTI_DOCK_AREA
-			l_has_maximized_zone: BOOLEAN
 			l_orignal_whole_item: like orignal_whole_item
 			l_orignal_editor_parent: like orignal_editor_parent
 		do
 			if docking_manager.is_editor_area_minimized then
 				restore_editor_area_for_minimized
 			end
-			-- We have to restore minimized editors first if all editors minimized
-			-- See bug#13648
+				-- We have to restore minimized editors first if all editors minimized
+				-- See bug#13648
 			restore_minimized_editors_for_maximize_editor_area
 
 			l_editor_parent := docking_manager.query.inner_container_main.editor_parent
 			l_editor_area := docking_manager.query.inner_container_main
 
-			l_has_maximized_zone := docking_manager.zones.maximized_zone_in_main_window /= Void
+			if
+				l_editor_parent /= Void and
+				not attached docking_manager.zones.maximized_zone_in_main_window and then
+				l_editor_parent /= l_editor_area
+			then
+					-- There is not only editor zone in container main area.
+				l_orignal_editor_parent := l_editor_parent.parent
+				orignal_editor_parent := l_orignal_editor_parent
 
-			if l_editor_parent /= Void and not l_has_maximized_zone then
-				if l_editor_parent = l_editor_area then
-					-- Only editor zone in container main area now. Nothing to do
-				else
-					l_orignal_editor_parent := l_editor_parent.parent
-					orignal_editor_parent := l_orignal_editor_parent
+				l_orignal_whole_item := l_editor_area.item
+				orignal_whole_item := l_orignal_whole_item
+				l_editor_area.save_spliter_position (l_orignal_whole_item, generating_type.name_32 + {STRING_32} ".maximize_editor_area")
 
-					l_orignal_whole_item := l_editor_area.item
-					orignal_whole_item := l_orignal_whole_item
-					l_editor_area.save_spliter_position (l_orignal_whole_item, generating_type.name_32 + {STRING_32} ".maximize_editor_area")
+				if attached l_orignal_editor_parent then
+					l_orignal_editor_parent.prune (l_editor_parent)
+				end
 
-					if attached l_orignal_editor_parent then
-						l_orignal_editor_parent.prune (l_editor_parent)
-					end
+				l_editor_area.wipe_out
+				l_editor_area.extend (l_editor_parent)
 
-					l_editor_area.wipe_out
-					l_editor_area.extend (l_editor_parent)
-
-					docking_manager.command.resize (True)
-					if attached {SD_UPPER_ZONE} l_editor_parent as l_only_one_editor_zone then
-						-- Only one editor zone in whole editor area, disable maximize/minimize icon in the tab bar
-						-- Otherwise, end user would be confused
-						-- See bug#16834
-						l_only_one_editor_zone.disable_maximize_minimize_buttons
-					end
+				docking_manager.command.resize (True)
+				if attached {SD_UPPER_ZONE} l_editor_parent as l_only_one_editor_zone then
+					-- Only one editor zone in whole editor area, disable maximize/minimize icon in the tab bar
+					-- Otherwise, end user would be confused
+					-- See bug#16834
+					l_only_one_editor_zone.disable_maximize_minimize_buttons
 				end
 			end
 		end
@@ -489,21 +464,17 @@ feature -- Commands
 
 	minimize_editors
 			-- Minimize all editors
-		local
-			l_upper_zones: ARRAYED_LIST [SD_UPPER_ZONE]
 		do
-			if not docking_manager.is_editor_area_maximized and then
-				not docking_manager.is_editor_area_minimized then
-				from
-					l_upper_zones := docking_manager.zones.upper_zones
-					l_upper_zones.start
-				until
-					l_upper_zones.after
+			if
+				not docking_manager.is_editor_area_maximized and then
+				not docking_manager.is_editor_area_minimized
+			then
+				across
+					docking_manager.zones.upper_zones as z
 				loop
-					if not l_upper_zones.item.is_minimized then
-						l_upper_zones.item.on_minimize
+					if not z.item.is_minimized then
+						z.item.on_minimize
 					end
-					l_upper_zones.forth
 				end
 			end
 		end
@@ -678,7 +649,7 @@ feature {NONE}  -- Implementation
 				end
 				locked_windows.remove (0)
 				remove_empty_split_area
-				check no_windows_in_locked_window: locked_windows.count = 0 end
+				check no_windows_in_locked_window: locked_windows.is_empty end
 			else
 				if attached locked_windows.item (lock_call_time) as l_item then
 					if not l_item.is_destroyed then
@@ -702,31 +673,21 @@ feature {NONE}  -- Implementation
 			-- The bug is a floating tool `is_displayed' is true but actually not displayed
 			-- We have to call show again in idle actions
 		local
-			l_floating_zones: ARRAYED_LIST [SD_FLOATING_ZONE]
 			l_item: SD_FLOATING_ZONE
 			l_width, l_height: INTEGER
-			l_checker: SD_DEPENDENCY_CHECKER
 		do
-			create {SD_DEPENDENCY_CHECKER_IMP} l_checker
-			if l_checker.is_solaris_cde then
-
-				from
-					l_floating_zones := docking_manager.query.floating_zones
-					l_floating_zones.start
-				until
-					l_floating_zones.after
+			if (create {SD_DEPENDENCY_CHECKER_IMP}).is_solaris_cde then
+				across
+					docking_manager.query.floating_zones as z
 				loop
-					l_item := l_floating_zones.item
+					l_item := z.item
 					if not l_item.is_destroyed and then l_item.is_displayed then
 						l_width := l_item.width
 						l_height := l_item.height
 						l_item.hide
-
 						l_item.show
 						l_item.set_size (l_width, l_height)
 					end
-
-					l_floating_zones.forth
 				end
 			end
 		end

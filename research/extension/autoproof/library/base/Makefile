@@ -5,9 +5,20 @@ ARGUMENTS_32_SRC=$(ISE_LIBRARY)/library/base/elks/kernel/arguments_32.e
 ARRAY_SRC=$(ISE_LIBRARY)/library/base/elks/kernel/array.e
 ITERABLE_SRC=$(ISE_LIBRARY)/library/base/elks/kernel/iterable.e
 ITERATION_CURSOR_SRC=$(ISE_LIBRARY)/library/base/elks/kernel/iteration_cursor.e
+PRIMES_SRC=$(ISE_LIBRARY)/library/base/elks/support/primes.e
 STD_FILES_SRC=$(ISE_LIBRARY)/library/base/elks/kernel/std_files.e
 
-GENERATED_FILES=base.ecf base-safe.ecf eve/any.e eve/arguments.e eve/arguments_32.e eve/array.e eve/iterable.e eve/iteration_cursor.e eve/std_files.e
+GENERATED_FILES= \
+	base.ecf \
+	base-safe.ecf \
+	eve/any.e \
+	eve/arguments.e \
+	eve/arguments_32.e \
+	eve/array.e \
+	eve/iterable.e \
+	eve/iteration_cursor.e \
+	eve/primes.e \
+	eve/std_files.e
 
 ARRAY_CONVERSION=,$(ISE_WIN_CR)\n\
 \	to_mml_set: {MML_SET [G]},$(ISE_WIN_CR)\n\
@@ -68,6 +79,9 @@ eve/iterable.e: $(ITERABLE_SRC) iterable.sed Makefile
 
 eve/iteration_cursor.e: $(ITERATION_CURSOR_SRC) iteration_cursor.sed Makefile
 	sed -f iteration_cursor.sed $(ITERATION_CURSOR_SRC) > $@
+
+eve/primes.e: $(PRIMES_SRC) arguments.sed Makefile
+	sed -f arguments.sed $(PRIMES_SRC) > $@
 
 eve/std_files.e: $(STD_FILES_SRC) std_files.sed Makefile
 	sed -f std_files.sed $(STD_FILES_SRC) > $@

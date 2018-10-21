@@ -49,6 +49,7 @@
 				<exclude>/array.e</exclude>
 				<exclude>/iterable.e</exclude>
 				<exclude>/iteration_cursor.e</exclude>
+				<exclude>/primes.e</exclude>
 				<exclude>/std_files.e</exclude>
 			</file_rule>
 			<file_rule>

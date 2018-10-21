@@ -35,6 +35,7 @@ b2
 	a\	\	\	\	<exclude>/array.e</exclude>
 	a\	\	\	\	<exclude>/iterable.e</exclude>
 	a\	\	\	\	<exclude>/iteration_cursor.e</exclude>
+	a\	\	\	\	<exclude>/primes.e</exclude>
 	a\	\	\	\	<exclude>/std_files.e</exclude>
 	a\	\	\	</file_rule>
 :2

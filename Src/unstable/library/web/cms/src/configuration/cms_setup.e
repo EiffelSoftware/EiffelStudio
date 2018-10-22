@@ -348,6 +348,31 @@ feature -- Access: Site
 	administration_base_path: IMMUTABLE_STRING_8
 			-- Administration base url, default=`default_administration_base_path`.
 
+	site_auth_max_age (a_auth: READABLE_STRING_GENERAL): INTEGER
+			-- `Max-Age` for session based authentication.
+		local
+			s_max_age: READABLE_STRING_8
+		do
+			s_max_age := string_8_item ("auth." + a_auth + ".max_age")
+			if s_max_age = Void then
+				s_max_age := string_8_item ("auth.max_age")
+			end
+			if s_max_age /= Void and then s_max_age.is_integer then
+				Result := s_max_age.to_integer
+			else
+				Result := 604800 --| 7 days: 7 * 24(h) *60(min) *60(sec)
+			end
+		end
+
+	site_auth_token (a_auth: READABLE_STRING_GENERAL): detachable READABLE_STRING_8
+			-- token for cookie related to session based authentication.
+		do
+			Result := string_8_item ("auth." + a_auth + ".token")
+			if Result = Void then
+				Result := string_8_item ("auth.token")
+			end
+		end
+
 feature {NONE} -- Constants
 
 	default_webapi_base_path: STRING = "/api"

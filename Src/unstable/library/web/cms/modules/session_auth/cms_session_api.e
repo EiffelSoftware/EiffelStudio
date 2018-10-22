@@ -25,18 +25,13 @@ feature {NONE} -- Initialization
 			make (a_api)
 
 				-- Initialize session related settings.
-			s := a_api.setup.string_8_item ("auth.session.token")
+			s := a_api.setup.site_auth_token ("session")
 			if s = Void then
 				s := a_api.setup.site_id + default_session_token_suffix
 			end
 			create session_token.make_from_string (s)
 
-			s := a_api.setup.string_8_item ("auth.session.max_age")
-			if s /= Void and then s.is_integer then
-				session_max_age := s.to_integer
-			else
-				session_max_age := 86400 --| one day: 24(h) *60(min) *60(sec)
-			end
+			session_max_age := a_api.setup.site_auth_max_age ("session")
 		ensure
 			session_auth_storage_set:  session_auth_storage = a_session_auth_storage
 		end

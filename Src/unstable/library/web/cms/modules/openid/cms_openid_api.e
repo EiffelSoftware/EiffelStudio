@@ -27,18 +27,13 @@ feature {NONE} -- Initialization
 			make (a_api)
 
 				-- Initialize openid related settings.
-			s := a_api.setup.string_8_item ("auth." + {CMS_OPENID_MODULE}.name + ".token")
+			s := a_api.setup.site_auth_token ({CMS_OPENID_MODULE}.name)
 			if s = Void then
 				s := a_api.setup.site_id + default_session_token_suffix
 			end
 			create session_token.make_from_string (s)
 
-			s := a_api.setup.string_8_item ("auth.openid.max_age")
-			if s /= Void and then s.is_integer then
-				session_max_age := s.to_integer
-			else
-				session_max_age := 3600 --| one hour: *60(min) *60(sec)
-			end
+			session_max_age := a_api.setup.site_auth_max_age ({CMS_OPENID_MODULE}.name)
 		ensure
 			openid_storage_set: openid_storage = a_openid_storage
 		end

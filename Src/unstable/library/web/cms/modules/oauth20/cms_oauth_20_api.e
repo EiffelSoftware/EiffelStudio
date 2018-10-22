@@ -27,11 +27,12 @@ feature {NONE} -- Initialization
 			make (a_api)
 
 				-- Initialize session related settings.
-			s := a_api.setup.string_8_item ("auth.oauth.token")
+			s := a_api.setup.site_auth_token ("oauth")
 			if s = Void then
 				s := a_api.setup.site_id + default_session_token_suffix
 			end
 			create session_token.make_from_string (s)
+			session_max_age := a_api.setup.site_auth_max_age ("oauth")
 		ensure
 			oauth_20_storage_set:  oauth_20_storage = a_oauth_storage
 		end
@@ -44,10 +45,13 @@ feature {CMS_MODULE} -- Access: Oauth storage.
 feature -- Access: tokens
 
 	default_session_token_suffix: STRING = "_OAUTH_TOKEN_"
-			-- Default value for `session_auth_token'.
+			-- Default value for `session_token'.
 
 	session_token: IMMUTABLE_STRING_8
 			-- Name of Cookie used to keep the session info.
+
+	session_max_age: INTEGER
+			-- Max age.	
 
 feature -- Access: Oauth20
 

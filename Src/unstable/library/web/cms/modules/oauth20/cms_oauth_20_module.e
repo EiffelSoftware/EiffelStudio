@@ -448,11 +448,7 @@ feature -- OAuth2 Login with Provider
 							l_cookie.set_path ("/")
 							l_max_age := l_access_token.expires_in
 							if l_max_age <= 0 then
-								if attached api.setup.string_8_item ("auth.session.max_age") as s_max_age and then s_max_age.is_integer then
-									l_max_age := s_max_age.to_integer
-								else
-									l_max_age := 86400 --| one day: 24(h) *60(min) *60(sec)
-								end
+								l_max_age := a_oauth_api.session_max_age
 								if l_max_age > 0 then
 									l_cookie.set_max_age (l_max_age)
 									create dt.make_now_utc
@@ -730,11 +726,7 @@ feature -- Registration
 												l_cookie.set_path ("/")
 												l_max_age := l_expires_in.to_integer
 												if l_max_age <= 0 then
-													if attached i_oauth20_api.cms_api.setup.string_8_item ("auth.session.max_age") as s_max_age and then s_max_age.is_integer then
-														l_max_age := s_max_age.to_integer
-													else
-														l_max_age := 86400 --| one day: 24(h) *60(min) *60(sec)
-													end
+													l_max_age := i_oauth20_api.session_max_age
 													if l_max_age > 0 then
 														l_cookie.set_max_age (l_max_age)
 														create dt.make_now_utc

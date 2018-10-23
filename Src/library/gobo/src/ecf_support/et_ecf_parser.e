@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Parse an ecf system and generate a gobo universe.
 
@@ -7,6 +7,7 @@ note
 		and `EIFFEL_ENV.set_precompile'.
 		]"
 	author: "Patrick Ruckstuhl <patrick@tario.org>"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 class
@@ -236,7 +237,7 @@ feature {NONE} -- Implementation
 			end
 
 				-- Build state
-			create Result.make (l_platform, l_build, application_target.concurrency_mode, application_target.setting_msil_generation, application_target.setting_dynamic_runtime, application_target.variables, l_version)
+			create Result.make (l_platform, l_build, application_target.concurrency_mode, application_target.void_safety_mode, application_target.setting_msil_generation, application_target.setting_dynamic_runtime, application_target.variables, l_version)
 		end
 
 	generate_system

@@ -429,19 +429,27 @@ feature -- Access queries
 		end
 
 	concurrency_mode: like {CONF_STATE}.concurrency
-			-- Concurrency mode to set `{CONF_STATE}.concurrency'
-			-- in the tools that process ECF.
+			-- Concurrency mode to set `{CONF_STATE}.concurrency' in the tools that process ECF.
 		do
-			inspect options.concurrency_capability.root_index
-			when {CONF_TARGET_OPTION}.concurrency_index_none then Result := concurrency_none
-			when {CONF_TARGET_OPTION}.concurrency_index_thread then Result := concurrency_multithreaded
-			when {CONF_TARGET_OPTION}.concurrency_index_scoop then Result := concurrency_scoop
-			end
+			Result := options.concurrency_mode
 		ensure
 			definition:
-				options.concurrency_capability.root_index = {CONF_TARGET_OPTION}.concurrency_index_none  and then Result = concurrency_none or else
-				options.concurrency_capability.root_index = {CONF_TARGET_OPTION}.concurrency_index_thread and then Result = concurrency_multithreaded or else
+				options.concurrency_capability.root_index = {CONF_TARGET_OPTION}.concurrency_index_none  and then Result = concurrency_none or
+				options.concurrency_capability.root_index = {CONF_TARGET_OPTION}.concurrency_index_thread and then Result = concurrency_multithreaded or
 				options.concurrency_capability.root_index = {CONF_TARGET_OPTION}.concurrency_index_scoop and then Result = concurrency_scoop
+		end
+
+	void_safety_mode: like {CONF_STATE}.void_safety
+			-- Void safety mode to set `{CONF_STATE}.void_safety' in the tools that process ECF.
+		do
+			Result := options.void_safety_mode
+		ensure
+			definition:
+				options.void_safety_capability.root_index = {CONF_TARGET_OPTION}.void_safety_index_none  and then Result = void_safety_none or
+				options.void_safety_capability.root_index = {CONF_TARGET_OPTION}.void_safety_index_conformance and then Result = void_safety_conformance or
+				options.void_safety_capability.root_index = {CONF_TARGET_OPTION}.void_safety_index_initialization and then Result = void_safety_initialization or
+				options.void_safety_capability.root_index = {CONF_TARGET_OPTION}.void_safety_index_transitional and then Result = void_safety_transitional or
+				options.void_safety_capability.root_index = {CONF_TARGET_OPTION}.void_safety_index_all and then Result = void_safety_all
 		end
 
 feature {CONF_ACCESS} -- Update, stored in configuration file

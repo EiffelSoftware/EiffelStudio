@@ -102,51 +102,29 @@ feature -- Properties
 		end
 
 	concurrency: INTEGER
-			-- Type of Concurrency (none, thread, scoop)
+			-- Type of Concurrency (none, thread, scoop).
 		do
-			if workbench.system_defined then
-				inspect
-					system.concurrency_index
-				when {CONF_TARGET_OPTION}.concurrency_index_thread then
-					Result := concurrency_multithreaded
-				when {CONF_TARGET_OPTION}.concurrency_index_scoop then
-					Result := concurrency_scoop
-				else
-						-- Default to no concurrency if none is specified.
-					if system.has_multithreaded then
-						Result := concurrency_multithreaded
-					else
-						Result := concurrency_none
-					end
-				end
+			if
+				workbench.system_defined and then
+				{CONF_TARGET_OPTION}.is_concurrency_index (system.concurrency_index)
+			then
+				Result := {CONF_TARGET_OPTION}.concurrency_mode_from_index (system.concurrency_index)
 			else
-					-- System is not defined!
+					-- Default if none is specified or system is not defined.
 				Result := concurrency_none
 			end
 		end
 
 	void_safety: INTEGER
-			-- Type of void_safety (none, conformance, initialization, transitional, all)
+			-- Type of void_safety (none, conformance, initialization, transitional, all).
 		do
-			if workbench.system_defined then
-				inspect
-					system.void_safety_index
-				when {CONF_TARGET_OPTION}.void_safety_index_all then
-					Result := void_safety_all
-				when {CONF_TARGET_OPTION}.void_safety_index_transitional then
-					Result := void_safety_transitional
-				when {CONF_TARGET_OPTION}.void_safety_index_initialization then
-					Result := void_safety_initialization
-				when {CONF_TARGET_OPTION}.void_safety_index_conformance then
-					Result := void_safety_conformance
-				when {CONF_TARGET_OPTION}.void_safety_index_none then
-					Result := void_safety_none
-				else
-						-- Default to void_safety if none is specified.
-					Result := void_safety_all
-				end
+			if
+				workbench.system_defined or else
+				{CONF_TARGET_OPTION}.is_void_safety_index (system.void_safety_index)
+			then
+				Result := {CONF_TARGET_OPTION}.void_safety_mode_from_index (system.void_safety_index)
 			else
-					-- System is not defined!
+					-- Default if none is specified or system is not defined.
 				Result := void_safety_all
 			end
 		end

@@ -109,6 +109,106 @@ feature -- Access: concurrency
 			-- Option index for SCOOP concurrency.
 			-- This is the highest level, most restricted.
 
+	is_concurrency_index (index: like {CONF_VALUE_CHOICE}.index): BOOLEAN
+			-- Does `index` correspond to a valid concurrency index?
+		do
+			inspect index
+			when
+				concurrency_index_thread,
+				concurrency_index_none,
+				concurrency_index_scoop
+			then
+				Result := True
+			else
+					-- False by default.
+			end
+		ensure
+			instance_free: class
+			definition: Result =
+				(index = concurrency_index_thread or index = concurrency_index_none or index = concurrency_index_scoop)
+		end
+
+	concurrency_mode_from_index (index: like {CONF_VALUE_CHOICE}.index): like {CONF_STATE}.concurrency
+			-- Concurrency mode corresponding to concurrency index `index`.
+		require
+			is_concurrency_index (index)
+		do
+			inspect index
+			when concurrency_index_none then Result := concurrency_none
+			when concurrency_index_thread then Result := concurrency_multithreaded
+			when concurrency_index_scoop then Result := concurrency_scoop
+			end
+		ensure
+			instance_free: class
+			definition:
+				index = concurrency_index_none  and Result = concurrency_none or
+				index = concurrency_index_thread and Result = concurrency_multithreaded or
+				index = concurrency_index_scoop and Result = concurrency_scoop
+		end
+
+	concurrency_mode: like {CONF_STATE}.concurrency
+			-- Concurrency mode corresponding to currently selected concurrency.
+			-- See also:  `concurrency`.
+		do
+			Result := concurrency_mode_from_index (concurrency.index)
+		end
+
+feature -- Access: void safety
+
+	is_void_safety_index (index: like {CONF_VALUE_CHOICE}.index): BOOLEAN
+			-- Does `index` correspond to a valid void safety index?
+		do
+			inspect index
+			when
+				void_safety_index_none,
+				void_safety_index_conformance,
+				void_safety_index_initialization,
+				void_safety_index_transitional,
+				void_safety_index_all
+			then
+				Result := True
+			else
+					-- False by default.
+			end
+		ensure
+			instance_free: class
+			definition: Result =
+				(index = void_safety_index_none or
+				index = void_safety_index_conformance or
+				index = void_safety_index_initialization or
+				index = void_safety_index_transitional or
+				index = void_safety_index_all)
+		end
+
+	void_safety_mode_from_index (index: like {CONF_VALUE_CHOICE}.index): like {CONF_STATE}.concurrency
+			-- Void safety mode corresponding to void safety index `index`.
+		require
+			is_void_safety_index (index)
+		do
+			inspect index
+			when void_safety_index_none then Result := void_safety_none
+			when void_safety_index_conformance then Result := void_safety_conformance
+			when void_safety_index_initialization then Result := void_safety_initialization
+			when void_safety_index_transitional then Result := void_safety_transitional
+			when void_safety_index_all then Result := void_safety_all
+			end
+		ensure
+			instance_free: class
+			definition:
+				index = void_safety_index_none  and Result = void_safety_none or
+				index = void_safety_index_conformance and Result = void_safety_conformance or
+				index = void_safety_index_initialization and Result = void_safety_initialization or
+				index = void_safety_index_transitional and Result = void_safety_transitional or
+				index = void_safety_index_all and Result = void_safety_all
+		end
+
+	void_safety_mode: like {CONF_STATE}.void_safety
+			-- Void safety mode corresponding to currently selected void safety level.
+			-- See also:  `void_safety`.
+		do
+			Result := void_safety_mode_from_index (void_safety.index)
+		end
+
 feature -- Access: manifest array type checks
 
 	array_override: CONF_VALUE_CHOICE

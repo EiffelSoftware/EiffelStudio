@@ -77,7 +77,6 @@ feature {NONE} -- From {CA_CFG_RULE}
 			-- Checks `a_feature' from `a_class' for dead assignments.
 		local
 			l_assigned_id: INTEGER
-			l_viol: CA_RULE_VIOLATION
 		do
 			Precursor (a_class, a_feature)
 				-- Iterate through all assignments in search for dead assignments.

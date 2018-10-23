@@ -155,6 +155,8 @@ feature {NONE} -- Execution
 						if par = Void then
 							report_conf_error (create {CONF_ERROR_PARSE}.make ({STRING_32} "Unable to find parent target of '" + tgt.name + {STRING_32} "' (" + tgt.system.file_path.name + {STRING_32} ")!"))
 						else
+								-- By default, remote parent target are editable, as other local target.!
+							par.system.set_readonly (False)
 							tgt.set_remote_parent (par)
 							process_target (par)
 							if attached l_load.last_error as err then

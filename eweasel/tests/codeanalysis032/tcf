@@ -1,0 +1,10 @@
+test_name 	 ca-unused-local-assignment-from-detachable
+test_description A local variable cannot be removed if it is assigned a detachable expression.
+
+copy_sub	Ace $TEST Ace
+copy_raw	test.e $CLUSTER test.e
+
+analyze_code rule "CA020"
+analyze_code_result violation "TEST CA020:16 CA020:18"
+
+test_end

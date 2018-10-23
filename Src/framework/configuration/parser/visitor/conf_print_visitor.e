@@ -762,23 +762,21 @@ feature {NONE} -- Implementation
 								append_tag_close_empty
 							end
 						end
-						if attached l_condition.void_safety as c then
-							if includes_this_or_after (namespace_1_19_0) then
-									-- Use "void_safety" condition.
-								append_condition_list (c, agent get_void_safety_name, {STRING_32} "void_safety")
-							end
+						if attached l_condition.void_safety as c and then includes_this_or_after (namespace_1_19_0) then
+								-- Add "void_safety" condition.
+							append_condition_list (c, agent get_void_safety_name, {STRING_32} "void_safety")
+						end
+
+							-- Don't print dotnet for assemblies.
+						if not is_assembly and then attached l_condition.dotnet as l_dotnet then
+							append_tag_open ({STRING_32} "dotnet")
+							append_boolean_attribute ("value", l_dotnet.item)
+							append_tag_close_empty
 						end
 
 						if attached l_condition.dynamic_runtime as l_dyn_runtime then
 							append_tag_open ({STRING_32} "dynamic_runtime")
 							append_boolean_attribute ("value", l_dyn_runtime.item)
-							append_tag_close_empty
-						end
-
-							-- don't print dotnet for assemblies
-						if not is_assembly and then attached l_condition.dotnet as l_dotnet then
-							append_tag_open ({STRING_32} "dotnet")
-							append_boolean_attribute ("value", l_dotnet.item)
 							append_tag_close_empty
 						end
 

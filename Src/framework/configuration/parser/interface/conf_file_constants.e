@@ -181,7 +181,7 @@ feature {NONE} -- Constants
 	schema_1_19_0: STRING_32
 			-- Schema of the 18.11 release.
 		once
-			Result := namespace_1_18_0 + {STRING_32} " http://www.eiffel.com/developers/xml/configuration-1-19-0.xsd"
+			Result := namespace_1_19_0 + {STRING_32} " http://www.eiffel.com/developers/xml/configuration-1-19-0.xsd"
 		end
 
 	Latest_namespace: READABLE_STRING_32

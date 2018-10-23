@@ -103,6 +103,44 @@ feature -- Ciphers
 			"return EVP_des_ofb();"
 		end
 
+	c_evp_md_ctx_new: POINTER
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"return EVP_MD_CTX_new();"
+		end
+
+	c_evp_pkey_new: POINTER
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"return EVP_PKEY_new();"
+		end
+
+	c_evp_sha256: POINTER
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"return EVP_sha256();"
+		end
+
+	c_evp_md_ctx_free (a_ctx: POINTER)
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"EVP_MD_CTX_free($a_ctx);"
+		end
+
+
+
+feature -- Error
+
+	c_error_get_error: NATURAL_64
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"return ERR_get_error ();"
+		end
 feature -- Access
 
 	c_evp_cipher_nid (a_cipher: POINTER): INTEGER
@@ -404,6 +442,39 @@ feature -- Access
 			"return EVP_OpenFinal((EVP_CIPHER_CTX *)$a_ctx, (unsigned char *)$a_out, (int *)$a_outi);"
 		end
 
+	c_evp_pkey_assign_rsa (a_pkey: POINTER; a_key: POINTER): INTEGER
+			-- https://www.openssl.org/docs/man1.1.0/crypto/EVP_PKEY_set1_RSA.html
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"return EVP_PKEY_assign_RSA((EVP_PKEY *)$a_pkey, (RSA *)$a_key) ;"
+		end
+
+	c_evp_digestsigninit (a_ctx: POINTER; a_pctx: POINTER; a_type: POINTER; a_engine: POINTER; a_key: POINTER): INTEGER
+			-- --https://www.openssl.org/docs/man1.1.0/crypto/EVP_DigestSignInit.html
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"return EVP_DigestSignInit((EVP_MD_CTX *)$a_ctx, (EVP_PKEY_CTX **)$a_pctx, (const EVP_MD *)$a_type, (ENGINE *)$a_engine, (EVP_PKEY *)$a_key);"
+		end
+
+	c_evp_digestsignupdate (a_ctx: POINTER; a_digest: POINTER; a_cnt: INTEGER): INTEGER
+			-- --https://www.openssl.org/docs/man1.1.0/crypto/EVP_DigestSignInit.html
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"return EVP_DigestSignUpdate((EVP_MD_CTX *)$a_ctx, (const void *)$a_digest, (size_t)$a_cnt);"
+		end
+
+	c_evp_digestsignfinal (a_ctx: POINTER; a_signed: POINTER; a_count: TYPED_POINTER [INTEGER]): INTEGER
+			-- --https://www.openssl.org/docs/man1.1.0/crypto/EVP_DigestSignInit.html
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"return EVP_DigestSignFinal((EVP_MD_CTX *)$a_ctx, (unsigned char *)$a_signed, (size_t *)$a_count);"
+		end
+
+
 feature -- RSA
 
 	c_rsa_generate_key_ex (a_rsa: POINTER; a_bits: INTEGER; a_e: POINTER; a_cb: POINTER): INTEGER
@@ -480,6 +551,37 @@ feature -- RSA
 			"return RSA_size((const RSA *)$a_rsa);"
 		end
 
+
+	c_set_rsaprivatekey	(a_key_buffer: POINTER): POINTER
+			-- Call external PEM_read_bio_RSAPrivateKey
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+		 "{
+			BIO *kbio;
+			RSA *rsa = NULL;
+	
+			kbio = BIO_new_mem_buf((void*)(const char *)$a_key_buffer, -1);
+			rsa = PEM_read_bio_RSAPrivateKey(kbio, &rsa, 0, NULL);
+			BIO_free(kbio);
+			return rsa;
+		  }"
+		end
+
+	c_set_rsapublickey (a_key_buffer: POINTER): POINTER
+			-- Call external PEM_read_bio_RSAPublicKey
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+		 "{
+		 	RSA *rsa= NULL;
+		   	BIO *bio = BIO_new_mem_buf((void*)$a_key_buffer, -1);
+			rsa = PEM_read_bio_RSA_PUBKEY(bio, &rsa, 0, NULL);
+			BIO_free(bio);
+			return rsa;
+		  }"
+		end
+
 feature -- BIGNUM
 
 	c_bn_new: POINTER
@@ -496,6 +598,7 @@ feature -- BIGNUM
 		alias
 			"return BN_set_word((BIGNUM *)$a_bn, (BN_ULONG)$a_w);"
 		end
+
 
 feature -- BIO
 

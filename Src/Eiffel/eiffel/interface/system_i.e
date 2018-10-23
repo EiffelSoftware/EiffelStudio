@@ -5020,14 +5020,13 @@ feature -- Copy routine
 			-- Copy routine id from class ANY.
 			-- Return 0 if the ANY class has not been compiled
 			-- or has no copy routine.
-		local
-			feature_i: FEATURE_I
 		once
-			if any_class /= Void and any_class.is_compiled then
-				feature_i := any_class.compiled_class.feature_table.item_id (names.copy_name_id)
-				if feature_i /= Void then
-					Result := feature_i.rout_id_set.first
-				end
+			if
+				attached any_class as c and then
+				c.is_compiled and then
+				attached c.compiled_class.feature_table.item_id (names.copy_name_id) as f
+			then
+				Result := f.rout_id_set.first
 			end
 		end
 

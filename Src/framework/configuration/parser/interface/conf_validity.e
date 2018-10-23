@@ -481,9 +481,7 @@ feature {NONE} -- Implementation
 	known_settings: SEARCH_TABLE [STRING]
 			-- The names of known settings.
 		once
-			create Result.make (40)
-			Result.merge (valid_settings)
-			Result.merge (valid_settings_1_17_0)
+			Result := valid_settings_1_17_0.twin
 			Result.merge (valid_settings_1_18_0)
 		ensure
 			known_settings_old: across valid_settings as s all Result.has (s.item) end
@@ -546,6 +544,8 @@ feature {NONE} -- Implementation
 		once
 			Result := valid_settings.twin
 			Result.force (s_absent_explicit_assertion)
+		ensure
+			valid_settings_1_17_0_includes_valid_settings: across valid_settings as s all Result.has (s.item) end
 		end
 
 	valid_settings_1_18_0: SEARCH_TABLE [STRING]

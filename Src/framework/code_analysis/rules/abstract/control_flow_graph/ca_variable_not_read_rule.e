@@ -1,6 +1,6 @@
 ﻿note
 	description: "[
-			RULE #20: Variable not read after assignment
+			RULE #20: Variable not read after assignment.
 	
 			An assignment to a local variable has no
 			effect at all if the variable is not read after the assignment, and
@@ -26,6 +26,8 @@ inherit
 			process_access_id_as,
 			process_converted_expr_as
 		end
+
+	SHARED_LOCALE
 
 create
 	make
@@ -71,33 +73,45 @@ feature -- Initialization
 
 feature {NONE} -- From {CA_CFG_RULE}
 
-	check_feature (a_class: attached CLASS_C; a_feature: attached E_FEATURE)
+	check_feature (a_class: CLASS_C; a_feature: E_FEATURE)
 			-- Checks `a_feature' from `a_class' for dead assignments.
 		local
 			l_assigned_id: INTEGER
 			l_viol: CA_RULE_VIOLATION
 		do
 			Precursor (a_class, a_feature)
-
-			if assignment_nodes /= Void then
-					-- Iterate through all assignments in search for dead assignments.
-				across assignment_nodes as l_assigns loop
-					if attached {ASSIGN_AS} l_assigns.item.instruction as l_assign then
-						l_assigned_id := extract_assigned (l_assign.target)
-						if l_assigned_id /= -1 and then (not lv_exit.at (l_assigns.item.label).has (l_assigned_id)) then
-							create l_viol.make_with_rule (Current)
-							l_viol.set_location (l_assign.start_location)
-							l_viol.long_description_info.extend (l_assign.target.access_name_32)
-							violations.extend (l_viol)
-						end
-					elseif attached {CREATION_AS} l_assigns.item.instruction as l_creation then
-						l_assigned_id := extract_assigned (l_creation.target)
-						if l_assigned_id /= -1 and then (not lv_exit.at (l_assigns.item.label).has (l_assigned_id)) then
-							create l_viol.make_with_rule (Current)
-							l_viol.set_location (l_creation.start_location)
-							l_viol.long_description_info.extend (l_creation.target.access_name_32)
-							violations.extend (l_viol)
-						end
+				-- Iterate through all assignments in search for dead assignments.
+			across assignment_nodes as l_assigns loop
+				if attached {ASSIGN_AS} l_assigns.item.instruction as l_assign then
+					l_assigned_id := extract_assigned (l_assign.target)
+					if
+						l_assigned_id /= -1 and then
+						not lv_exit.at (l_assigns.item.label).has (l_assigned_id) and then
+							-- There is no good replacement for assignments of detachable expressions to a variable,
+							-- because, in such cases, the assignment "target := source" cannot be replaced with "source.do_nothing".
+						current_context.checking_class.lace_class.is_void_safe_conformance and then
+						attached current_context.node_type (l_assign.source, current_feature.associated_feature_i) as t and then
+						t.is_attached
+					then
+						put_violation
+							(locale.translation_in_context ("Local {1} is not read after assignment.", once "code_analyzer.violation"),
+							<<agent {TEXT_FORMATTER}.process_local_text (l_assign.target, l_assign.target.access_name_32)>>,
+							locale.translation_in_context ("The value assigned to the local variable {1} is never read.", once "code_analyzer.violation"),
+							<<agent {TEXT_FORMATTER}.process_local_text (l_assign.target, l_assign.target.access_name_32)>>,
+							l_assign.target.index)
+					end
+				elseif attached {CREATION_AS} l_assigns.item.instruction as l_creation then
+					l_assigned_id := extract_assigned (l_creation.target)
+					if
+						l_assigned_id /= -1 and then
+						not lv_exit.at (l_assigns.item.label).has (l_assigned_id)
+					then
+						put_violation
+							(locale.translation_in_context ("Local {1} is not read after initialization by creation instruction.", once "code_analyzer.violation"),
+							<<agent {TEXT_FORMATTER}.process_local_text (l_creation.target, l_creation.target.access_name_32)>>,
+							locale.translation_in_context ("The value attached to the local variable {1} by the creation instruction is never read.", once "code_analyzer.violation"),
+							<<agent {TEXT_FORMATTER}.process_local_text (l_creation.target, l_creation.target.access_name_32)>>,
+							l_creation.target.index)
 					end
 				end
 			end
@@ -105,19 +119,19 @@ feature {NONE} -- From {CA_CFG_RULE}
 
 feature -- Node Visitor
 
-	initialize_processing (a_cfg: attached CA_CONTROL_FLOW_GRAPH)
+	initialize_processing (a_cfg: CA_CONTROL_FLOW_GRAPH)
 			-- Prepares data structures for the worklist algorithm on
 			-- the CFG `a_cfg'.
 		local
 			n, j: INTEGER
 		do
 			n := a_cfg.max_label
-
 			lv_entry.grow (n)
 			lv_exit.grow (n)
-
-			from j := 1
-			until j > n
+			from
+				j := 1
+			until
+				j > n
 			loop
 				lv_entry.extend (create {LINKED_SET [INTEGER]}.make)
 				lv_exit.extend (create {LINKED_SET [INTEGER]}.make)
@@ -177,7 +191,6 @@ feature {NONE} -- Implementation
 			l_lv: LINKED_SET [INTEGER]
 		do
 			l_old_count := lv_entry.at (a_from.label).count
-
 			create l_lv.make
 			l_lv.copy (lv_exit.at (a_from.label))
 			if attached {ASSIGN_AS} a_from.instruction as l_assign then
@@ -263,7 +276,6 @@ feature {NONE} -- Extracting Used Variables
 			-- in `generated'.
 		do
 			create generated.make
-
 				-- Delegate to AST visitor. We will only look at Access IDs
 				-- that occur in `a_ast'.
 			a_ast.process (Current)
@@ -273,7 +285,6 @@ feature {NONE} -- Extracting Used Variables
 			-- Adds a free variable from `a_access_id', if available.
 		do
 			Precursor (a_access_id)
-
 			if is_local (a_access_id) then
 				generated.extend (a_access_id.feature_name.name_id)
 			end
@@ -284,7 +295,6 @@ feature {NONE} -- Extracting Used Variables
 			-- `a_conv', if available.
 		do
 			Precursor (a_conv)
-
 			if
 				attached {ADDRESS_AS} a_conv.expr as l_address
 				and then attached {FEAT_NAME_ID_AS} l_address.feature_name as l_id
@@ -301,7 +311,6 @@ feature {NONE} -- Extracting Assignments
 			-- variable gets assigned then Result = -1.
 		do
 			Result := -1
-
 			if attached {ACCESS_ID_AS} a_target as l_id and then is_local (l_id) then
 					-- Something is assigned to a local variable.
 				Result := l_id.feature_name.name_id
@@ -330,13 +339,13 @@ feature -- Properties
 			-- <Precursor>
 
 	title: STRING_32
-			-- Rule title.
+			-- <Precursor>
 		do
 			Result := ca_names.variable_not_read_title
 		end
 
 	description: STRING_32
-			-- Rule description.
+			-- <Precursor>
 		do
 			Result :=  ca_names.variable_not_read_description
 		end
@@ -344,16 +353,9 @@ feature -- Properties
 	id: STRING_32 = "CA020"
 			-- <Precursor>
 
-	format_violation_description (a_violation: CA_RULE_VIOLATION; a_formatter: TEXT_FORMATTER)
-			-- Generates a formatted rule violation description for `a_formatter' based on `a_violation'.
+	format_violation_description (violation: CA_RULE_VIOLATION; formatter: TEXT_FORMATTER)
+			-- <Precursor>
 		do
-			a_formatter.add (ca_messages.variable_not_read_violation_1)
-
-			if attached {READABLE_STRING_GENERAL} a_violation.long_description_info.first as l_local then
-				a_formatter.add_local (l_local)
-			end
-
-			a_formatter.add (ca_messages.variable_not_read_violation_2)
 		end
 
 end

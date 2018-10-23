@@ -48,7 +48,6 @@ feature {NONE} -- Rule checking
 			-- <Precursor>
 		local
 			l_viol: CA_RULE_VIOLATION
-			l_called_feature: FEATURE_I
 		do
 				-- Sample violation
 				--
@@ -64,26 +63,26 @@ feature {NONE} -- Rule checking
 				--		secret_attribute: INTEGER
 				--
 
-				-- Check that the current feature is a function containing exactly one instruction.
-			if attached current_feature as l_current_feature and then l_current_feature.is_function and then attached a_as.compound as l_compound and then l_compound.count = 1 then
-
+			if
+					-- Check that the current feature is a function containing exactly one instruction.
+				attached current_feature as l_current_feature and then
+				l_current_feature.is_function and then
+				attached a_as.compound as l_compound and then
+				l_compound.count = 1 and then
 					-- Check that the said instruction is an assignment to 'Result'
-				if attached {ASSIGN_AS} a_as.compound.first as l_assignment and then attached {RESULT_AS} l_assignment.target then
-
-						-- Check that the right hand of the assignment is a feature accessed directly.
-					if attached {EXPR_CALL_AS} l_assignment.source as l_expr_call and then attached {ACCESS_ID_AS} l_expr_call.call as l_access_id then
-						l_called_feature := current_context.checking_class.feature_named_32 (l_access_id.access_name_32)
-
-							-- Check that said feature is an attribute.
-						if attached {ATTRIBUTE_I} l_called_feature as l_called_attribute then
-							create l_viol.make_with_rule (Current)
-							l_viol.set_location (current_feature.start_location)
-							l_viol.long_description_info.extend (current_feature.feature_name.name_32)
-							l_viol.long_description_info.extend (l_called_attribute.feature_name_32)
-							violations.extend (l_viol)
-						end
-					end
-				end
+				attached {ASSIGN_AS} a_as.compound.first as l_assignment and then
+				attached {RESULT_AS} l_assignment.target and then
+					-- Check that the right hand of the assignment is a feature accessed directly.
+				attached {EXPR_CALL_AS} l_assignment.source as l_expr_call and then
+				attached {ACCESS_ID_AS} l_expr_call.call as l_access_id and then
+					-- Check that said feature is an attribute.
+				attached {ATTRIBUTE_I} current_context.checking_class.feature_named_32 (l_access_id.access_name_32) as l_called_attribute
+			then
+				create l_viol.make_with_rule (Current)
+				l_viol.set_location (current_feature.start_location)
+				l_viol.long_description_info.extend (current_feature.feature_name.name_32)
+				l_viol.long_description_info.extend (l_called_attribute.feature_name_32)
+				violations.extend (l_viol)
 			end
 		end
 
@@ -95,7 +94,7 @@ feature {NONE} -- Rule checking
 
 feature -- Properties
 
-	name: STRING = "unnecessay_accessor"
+	name: STRING = "unnecessary_accessor"
 			-- <Precursor>
 
 	title: STRING_32

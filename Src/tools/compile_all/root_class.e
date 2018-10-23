@@ -1,5 +1,5 @@
 ﻿note
-	description	: "System's root class."
+	description: "System's root class."
 	date: "$Date$"
 	revision: "$Revision$"
 	ca_ignore: "CA033", "CA033 — too long class"
@@ -494,7 +494,7 @@ feature {NONE} -- Implementation
 					l_platform_id := current_platform
 				end
 			end
-			create l_state.make (l_platform_id, build_workbench, a_target.concurrency_mode, a_target.setting_msil_generation, a_target.setting_dynamic_runtime, a_target.variables, l_version)
+			create l_state.make (l_platform_id, build_workbench, a_target.concurrency_mode, a_target.void_safety_mode, a_target.setting_msil_generation, a_target.setting_dynamic_runtime, a_target.variables, l_version)
 
 				-- setup ISE_PRECOMP
 			eiffel_layout.set_precompile (a_target.setting_msil_generation)

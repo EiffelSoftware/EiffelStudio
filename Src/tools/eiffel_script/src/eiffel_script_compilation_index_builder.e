@@ -1,5 +1,4 @@
-note
-	description: "Summary description for {EIFFEL_SCRIPT_COMPILATION_INDEX_BUILDER}."
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -83,7 +82,7 @@ feature {NONE} -- Implementation
 			create l_version.make (1)
 			create l_conf_version.make_version ({EIFFEL_CONSTANTS}.major_version, {EIFFEL_CONSTANTS}.minor_version, 0, 0)
 			l_version.force (l_conf_version, "compiler")
-			create Result.make (platform (a_target), build_finalize, a_target.concurrency_mode, a_target.setting_msil_generation, a_target.setting_dynamic_runtime, a_target.variables, l_version)
+			create Result.make (platform (a_target), build_finalize, a_target.concurrency_mode, a_target.void_safety_mode, a_target.setting_msil_generation, a_target.setting_dynamic_runtime, a_target.variables, l_version)
 		end
 
 	platform (a_target: CONF_TARGET): INTEGER

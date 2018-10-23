@@ -228,10 +228,12 @@ feature -- Visitor
 			f: RAW_FILE
 		do
 			create f.make_with_path (p)
-			if f.exists and then f.is_access_readable then
-				if attached configuration_from (p) as cfg then
-					visit_system (cfg)
-				end
+			if
+				f.exists and then
+				f.is_access_readable and then
+				attached configuration_from (p) as cfg
+			then
+				visit_system (cfg)
 			end
 		end
 
@@ -328,9 +330,8 @@ feature -- Visitor
 		local
 			l_last_target: like last_target
 		do
-			if is_stopping_at_library then
-					-- Do not visit clusters, ...
-			else
+				-- Do not visit clusters, ...
+			if not is_stopping_at_library then
 				Precursor (a_library)
 				l_last_target := last_target
 				visit_ecf_file (a_library.location.evaluated_path)
@@ -412,10 +413,8 @@ feature {NONE} -- Helper
 			loop
 				c := l_text[i]
 				s.append_character (c)
-				if c = '%N' then
-					if i < n then
-						s.append_string_general (a_prefix)
-					end
+				if c = '%N' and then i < n then
+					s.append_string_general (a_prefix)
 				end
 				i := i + 1
 			end
@@ -440,17 +439,17 @@ feature {NONE} -- Helper
 				l_reader.retrieve_and_check_configuration (a_file_name.name)
 				if not l_reader.is_error then
 					if not is_ignoring_redirection or else l_reader.last_redirection = Void then
-							-- Ignore redirection if asked. 
+							-- Ignore redirection if asked.
 						Result := l_reader.last_system
 					end
-				else
+--				else
 --					if l_reader.is_invalid_xml then
 --						error_handler.add_error (create {SCIX}.make (a_file_name, 0, Void), False)
 --					else
 --						error_handler.add_error (create {SCLF}.make (a_file_name, 0, Void), False)
 --					end
 				end
-			else
+--			else
 --				error_handler.add_error (create {SCFE}.make (a_file_name, 0, Void), False)
 			end
 		rescue
@@ -469,8 +468,7 @@ feature {NONE} -- Helper
 			create l_version.make (1)
 			create l_conf_version.make_version ({EIFFEL_CONSTANTS}.major_version, {EIFFEL_CONSTANTS}.minor_version, 0, 0)
 			l_version.force (l_conf_version, "compiler")
-			create Result.make (platform, build, concurrency, is_il_generation, has_dynamic_runtime, a_target.variables, l_version)
-			Result.set_void_safety (void_safety)
+			create Result.make (platform, build, concurrency, void_safety, is_il_generation, has_dynamic_runtime, a_target.variables, l_version)
 		end
 
 	current_conf_state: detachable CONF_STATE

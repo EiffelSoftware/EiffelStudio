@@ -225,22 +225,19 @@ feature -- Status setting
 			valid_conf_system: conf_system /= Void
 			valid_target: target /= Void
 		local
-			p: PATH
-			s,fn: READABLE_STRING_32
+			s: READABLE_STRING_32
 		do
 			reset_iron_packages_to_install
 			if attached target as tgt then
 				if attached tgt.precompile as pre then
 					s := pre.location.original_path
-					p := pre.location.evaluated_path
-					fn := pre.path
-
 					if attached conf_location_mapper.expected_action (s) as l_action_info then
 						check attached {CONF_LOCATION_IRON_MAPPING} l_action_info.mapping end
-						if l_action_info.is_action ("iron install") then
-							if attached l_action_info.parameter ("package_name") as l_package_name then
-								suggest_iron_package_installation (l_package_name)
-							end
+						if
+							l_action_info.is_action ("iron install") and then
+							attached l_action_info.parameter ("package_name") as l_package_name
+						then
+							suggest_iron_package_installation (l_package_name)
 						end
 					end
 				end
@@ -249,15 +246,13 @@ feature -- Status setting
 					tgt.libraries as ic
 				loop
 					s := ic.item.location.original_path
-					p := ic.item.location.evaluated_path
-					fn := ic.item.path
-
 					if attached conf_location_mapper.expected_action (s) as l_action_info then
 						check attached {CONF_LOCATION_IRON_MAPPING} l_action_info.mapping end
-						if l_action_info.is_action ("iron install") then
-							if attached l_action_info.parameter ("package_name") as l_package_name then
-								suggest_iron_package_installation (l_package_name)
-							end
+						if
+							l_action_info.is_action ("iron install") and then
+							attached l_action_info.parameter ("package_name") as l_package_name
+						then
+							suggest_iron_package_installation (l_package_name)
 						end
 					end
 				end
@@ -271,7 +266,6 @@ feature -- Status setting
 			valid_target: target /= Void
 		local
 			l_load: CONF_LOAD
-			l_factory: CONF_COMP_FACTORY
 			l_project_location: PROJECT_DIRECTORY
 			l_epr: PROJECT_EIFFEL_FILE
 			l_precompile: like precompile
@@ -287,8 +281,7 @@ feature -- Status setting
 			end
 			if l_precompile /= Void then
 				precompile := l_precompile
-				create l_factory
-				create l_load.make (l_factory)
+				create l_load.make (create {CONF_COMP_FACTORY})
 				l_load.retrieve_configuration (l_precompile.path)
 				if l_load.is_error then
 					is_precompile_invalid := True
@@ -512,11 +505,12 @@ feature -- Status setting
 			-- Update capabilities for all elements a target `t` depends on
 			-- to the target's settings.
 		do
-			if attached target as t then
-				if not system.compiler_profile.is_capability_strict then
-						-- Update options to use target's settings.
-					(create {CONF_CAPABILITY_SETTER}.make (t)).do_nothing
-				end
+			if
+				attached target as t and then
+				not system.compiler_profile.is_capability_strict
+			then
+					-- Update options to use target's settings.
+				(create {CONF_CAPABILITY_SETTER}.make (t)).do_nothing
 			end
 		end
 
@@ -537,11 +531,9 @@ feature {NONE} -- Implementation
 		local
 			l_load: CONF_LOAD
 			vd00: VD00
-			l_factory: CONF_COMP_FACTORY
 		do
-			create l_factory
-				-- load configuration file
-			create l_load.make (l_factory)
+				-- Load configuration file.
+			create l_load.make (create {CONF_COMP_FACTORY})
 			l_load.retrieve_configuration (file_name)
 			if l_load.is_error then
 				create vd00
@@ -577,9 +569,6 @@ feature {NONE} -- Implementation
 			conf_system_set: conf_system /= Void
 		local
 			l_new_target: CONF_TARGET
-			vd68: VD68
-			vd69: VD69
-			vd70: VD70
 		do
 				-- get new target
 			if target_name /= Void then
@@ -587,19 +576,16 @@ feature {NONE} -- Implementation
 			elseif conf_system.targets.count = 1 then
 				l_new_target := conf_system.targets.linear_representation.first
 			else
-				create vd69
-				Error_handler.insert_error (vd69)
+				Error_handler.insert_error (create {VD69})
 				Error_handler.raise_error
 			end
 			if l_new_target = Void then
-				create vd70.make (target_name)
-				Error_handler.insert_error (vd70)
+				Error_handler.insert_error (create {VD70}.make (target_name))
 				Error_handler.raise_error
 			end
 			target_name := l_new_target.name
 			if l_new_target.is_abstract then
-				create vd68.make (target_name)
-				Error_handler.insert_error (vd68)
+				Error_handler.insert_error (create {VD68}.make (target_name))
 				Error_handler.raise_error
 			end
 
@@ -643,9 +629,6 @@ feature {NONE} -- Implementation
 			sys: SYSTEM_I
 			l_new_target, l_old_target: CONF_TARGET
 			vd00: VD00
-			vd73: VD73
-			vd74: VD74
-			vd75: VD75
 			l_option_vis: CONF_RECOMPUTE_OPTIONS
 			l_errors: LIST [CONF_ERROR]
 			l_old_pre, l_new_pre: CONF_PRECOMPILE
@@ -709,19 +692,16 @@ feature {NONE} -- Implementation
 				end
 				l_new_pre := l_new_target.precompile
 				if l_old_pre /= Void and l_new_pre = Void then
-					-- precompile removed
-					create vd73
-					Error_handler.insert_error (vd73)
+						-- Precompile removed.
+					Error_handler.insert_error (create {VD73})
 					Error_handler.raise_error
 				elseif not l_first and l_old_target /= Void and l_old_pre = Void and l_new_pre /= Void then
-					-- precompile added and not first compilation
-					create vd74
-					Error_handler.insert_error (vd74)
+						-- Precompile added and not first compilation.
+					Error_handler.insert_error (create {VD74})
 					Error_handler.raise_error
 				elseif l_old_pre /= Void and then l_new_pre /= Void and then not l_old_pre.is_group_equivalent (l_new_pre) then
 					-- precompile changed
-					create vd75
-					Error_handler.insert_error (vd75)
+					Error_handler.insert_error (create {VD75})
 					Error_handler.raise_error
 				end
 			else
@@ -828,13 +808,10 @@ feature {NONE} -- Implementation
 			-- Check if `a_target` has no cycle, and no conflict.
 		require
 			no_error: not is_error
-		local
-			l_checker: CONF_GROUPS_TARGET_CHECKER
 		do
 				-- Resolve remote parent target (i.e from another ecf file).
 				-- raise error if issue is found.
-			create l_checker.make_with_observer (Current)
-			l_checker.check_target (a_target)
+			;(create {CONF_GROUPS_TARGET_CHECKER}.make_with_observer (Current)).check_target (a_target)
 		end
 
 	validate_capabilities
@@ -981,7 +958,6 @@ feature {NONE} -- Implementation
 			l_b: BOOLEAN
 			vd15: VD15
 			vd83: VD83
-			vd86: VD86
 			l_settings: like {CONF_TARGET}.settings
 			l_factory: CONF_COMP_FACTORY
 		do
@@ -1384,8 +1360,7 @@ feature {NONE} -- Implementation
 							Error_handler.insert_warning (vd83)
 						end
 					elseif l_b and then not eiffel_layout.default_il_environment.is_dotnet_installed then
-						create vd86
-						Error_handler.insert_error (vd86)
+						Error_handler.insert_error (create {VD86})
 					else
 						system.set_il_generation (l_b)
 						il_parsing_cell.put (l_b)
@@ -1408,7 +1383,7 @@ feature {NONE} -- Implementation
 						create vd83.make (s_msil_clr_version, system.clr_runtime_version, l_s)
 						Error_handler.insert_warning (vd83)
 					end
-				elseif (a_target.precompile = Void and not workbench.has_compilation_started) then
+				elseif a_target.precompile = Void and not workbench.has_compilation_started then
 					set_clr_runtime_version (l_s)
 				end
 			end
@@ -1494,13 +1469,13 @@ feature {NONE} -- Implementation
 
 			l_s := l_settings.item (s_platform)
 			if l_s /= Void then
-				if get_platform (l_s) /= 0 then
-					system.set_platform (get_platform (l_s))
-				else
+				if get_platform (l_s) = 0 then
 					create vd15
 					vd15.set_option_name (s_platform)
 					vd15.set_option_value (l_s)
 					Error_handler.insert_error (vd15)
+				else
+					system.set_platform (get_platform (l_s))
 				end
 			end
 
@@ -1602,8 +1577,7 @@ feature {NONE} -- Implementation
 		do
 			create l_version.make (1)
 			l_version.force (compiler_version_number, v_compiler)
-			create Result.make (universe.platform, universe.build, concurrency_none, False, False, a_target.variables, l_version)
-			Result.set_void_safety (void_safety_none)
+			create Result.make (universe.platform, universe.build, concurrency_none, void_safety_none, False, False, a_target.variables, l_version)
 		end
 
 	retrieve_precompile (a_target: CONF_TARGET)
@@ -1616,9 +1590,7 @@ feature {NONE} -- Implementation
 			l_system: CONF_SYSTEM
 			l_load: CONF_LOAD
 			vd77: VD77
-			vd78: VD78
 			l_file_name: like {CONF_PRECOMPILE}.path
-			l_precomp_r: PRECOMP_R
 			l_target: CONF_TARGET
 			l_old_target: CONF_TARGET
 			l_factory: CONF_COMP_FACTORY
@@ -1657,8 +1629,7 @@ feature {NONE} -- Implementation
 
 				-- check if we have a library target
 			if l_system.library_target = Void then
-				create vd78
-				Error_handler.insert_error (vd78)
+				Error_handler.insert_error (create {VD78})
 				Error_handler.raise_error
 			end
 
@@ -1668,8 +1639,7 @@ feature {NONE} -- Implementation
 			else
 				create l_project_location.make (l_pre.location.evaluated_path.parent, l_system.library_target.name)
 			end
-			create l_precomp_r
-			l_precomp_r.retrieve_precompiled (l_project_location)
+			;(create {PRECOMP_R}).retrieve_precompiled (l_project_location)
 
 				-- move the configuration data from the precompile into the precompile node
 			l_target := universe.target

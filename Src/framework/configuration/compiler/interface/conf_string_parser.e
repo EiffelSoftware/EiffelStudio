@@ -37,6 +37,7 @@ feature -- Basic operations
 			valid_values: ITERABLE [READABLE_STRING_GENERAL]
 			is_value_checked: BOOLEAN
 			is_value_case_sensitive: BOOLEAN
+			l_is_capability: BOOLEAN
 		do
 				-- Reset previous error message (if any).
 			error := Void
@@ -47,7 +48,7 @@ feature -- Basic operations
 				if delimiter_index = 0 then
 					delimiter_index := input.count + 1
 				end
-				option := setting_name (input, 1, delimiter_index - 1)
+				option := setting_or_capability_name (input, 1, delimiter_index - 1)
 				if attached option then
 						-- The option name is correct, but the value is missing.
 					error := conf_interface_names.e_parse_string_missing_value (option)
@@ -58,11 +59,17 @@ feature -- Basic operations
 			elseif delimiter_index = 1 then
 				error := conf_interface_names.e_parse_string_missing_name (input)
 			else
-				option := setting_name (input, 1, delimiter_index - 1)
+				option := setting_or_capability_name (input, 1, delimiter_index - 1)
 				if attached option then
+					l_is_capability := False
 					is_value_case_sensitive := True
 					if option.same_string_general (s_concurrency) then
+						l_is_capability := True
 						valid_values := concurrency_names
+						is_value_case_sensitive := False
+					elseif option.same_string_general (s_void_safety) then
+						l_is_capability := True
+						valid_values := void_safety_names
 						is_value_case_sensitive := False
 					elseif option.same_string_general (s_platform) then
 						valid_values := platform_names
@@ -95,8 +102,12 @@ feature -- Basic operations
 						value := input.substring (delimiter_index + 1, input.count)
 					end
 					if attached value then
-							-- This is a valid setting, add it.
-						settings.add_setting (option, value)
+						if l_is_capability then
+							settings.add_capability (option, value)
+						else
+								-- This is a valid setting, add it.
+							settings.add_setting (option, value)
+						end
 					else
 							-- The option value is invalid.
 						error := conf_interface_names.e_parse_string_invalid_value
@@ -125,9 +136,10 @@ feature {NONE} -- Search
 	available_configuration_option_names: ARRAYED_LIST [READABLE_STRING_GENERAL]
 			-- Available option names.
 		do
-			create Result.make (10)
-			Result.force (s_concurrency)
+			create Result.make (20)
 			Result.force (s_platform)
+			Result.force (s_concurrency)
+			Result.force (s_void_safety)
 
 			across
 				boolean_options as ic
@@ -138,14 +150,22 @@ feature {NONE} -- Search
 			Result.force (s_msil_clr_version)
 			Result.force (s_msil_classes_per_module)
 			Result.force (s_inlining_size)
-			Result.force ("...") --  arbitrary option name
+			Result.force ("- arbitrary option name ... - ") --  arbitrary option name
+		end
+
+	available_configuration_capability_names: ARRAYED_LIST [READABLE_STRING_GENERAL]
+			-- Available option names.
+		do
+			create Result.make (2)
+			Result.force (s_concurrency)
+			Result.force (s_void_safety)
 		end
 
 	value_from_list (list: ITERABLE [READABLE_STRING_GENERAL]; input: READABLE_STRING_32; delimiter_index: INTEGER; is_value_case_sensitive: BOOLEAN): detachable READABLE_STRING_32
 			-- A value specified in string `input' after value delimited index `delimited_index' that matches one of values specified in `list' (if any).
 			-- If `is_value_case_sensitive` is False, compare name caseless, otherwise compare strictly.
 		require
-			valid_delimter_index: input.valid_index (delimiter_index) and input.valid_index (delimiter_index + 1)
+			valid_delimiter_index: input.valid_index (delimiter_index) and input.valid_index (delimiter_index + 1)
 		local
 			l_name_count, l_input_count: INTEGER
 			l_found: BOOLEAN
@@ -172,7 +192,7 @@ feature {NONE} -- Search
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

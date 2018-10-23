@@ -1146,12 +1146,12 @@ feature {NONE} -- Update
 					if attached configuration_option_parser.error as e then
 							-- Add option name to the error message.
 						option_error_message := locale.formatted_string (locale.translation_in_context
-							("Error in command-line option %"-config_option%": $1", once "compiler"), e)
+							("Error in command-line option %"$1%": $2", once "compiler"), [option, e])
 							-- Reset configuration settings.
 						configuration_settings := Void
 					end
 				else
-					option_error_message := locale.translation ("Missing configuration option for option -config_option.")
+					option_error_message := locale.translation ("Missing configuration option for option " + option + ".")
 				end
 			elseif option.same_string_general ("-target") then
 				if is_single_file_compilation then

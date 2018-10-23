@@ -729,7 +729,11 @@ feature {NONE} -- Implementation
 					-- assembly and only the default rule? => don't print it
 				if is_assembly and then a_conditions.count = 1 then
 					l_condition := a_conditions.first
-					l_done := l_condition.build = Void and l_condition.platform = Void and l_condition.concurrency = Void and l_condition.version.is_empty and l_condition.custom.is_empty
+					l_done := l_condition.build = Void and
+								l_condition.platform = Void and
+								l_condition.concurrency = Void and
+								l_condition.void_safety = Void and
+								l_condition.version.is_empty and l_condition.custom.is_empty
 				end
 				if not l_done then
 					from
@@ -756,6 +760,12 @@ feature {NONE} -- Implementation
 								append_tag_open ({STRING_32} "multithreaded")
 								append_boolean_attribute ("value", c.value.has (concurrency_none) = c.invert)
 								append_tag_close_empty
+							end
+						end
+						if attached l_condition.void_safety as c then
+							if includes_this_or_after (namespace_1_19_0) then
+									-- Use "void_safety" condition.
+								append_condition_list (c, agent get_void_safety_name, {STRING_32} "void_safety")
 							end
 						end
 

@@ -399,7 +399,13 @@ feature {NONE} -- Access: void safety
 	void_safety_name: ARRAY [READABLE_STRING_32]
 			-- Available values for `void_safety' option.
 		once
-			Result := <<{STRING_32} "none", {STRING_32} "conformance", {STRING_32} "initialization", {STRING_32} "transitional", {STRING_32} "all">>
+			Result := <<
+					{CONF_CONSTANTS}.void_safety_none_name.as_string_32,
+					{CONF_CONSTANTS}.void_safety_conformance_name.as_string_32,
+					{CONF_CONSTANTS}.void_safety_initialization_name.as_string_32,
+					{CONF_CONSTANTS}.void_safety_transitional_name.as_string_32,
+					{CONF_CONSTANTS}.void_safety_all_name.as_string_32
+				>>
 		ensure
 			result_attached: Result /= Void
 		end

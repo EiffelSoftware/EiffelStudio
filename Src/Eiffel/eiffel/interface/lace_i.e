@@ -1455,6 +1455,8 @@ feature {NONE} -- Implementation
 			then
 					-- Update concurrency setting on first compilation.
 				system.set_concurrency_index (a_target.options.concurrency_capability.root_index)
+					-- Update void_safety setting on first compilation.
+				system.set_void_safety_index (a_target.options.void_safety_capability.root_index)
 			elseif
 				(not system.il_generation or else
 				a_target.options.concurrency_capability.root_index = {CONF_TARGET_OPTION}.concurrency_index_scoop or else
@@ -1601,6 +1603,7 @@ feature {NONE} -- Implementation
 			create l_version.make (1)
 			l_version.force (compiler_version_number, v_compiler)
 			create Result.make (universe.platform, universe.build, concurrency_none, False, False, a_target.variables, l_version)
+			Result.set_void_safety (void_safety_none)
 		end
 
 	retrieve_precompile (a_target: CONF_TARGET)

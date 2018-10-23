@@ -149,6 +149,33 @@ feature {NONE} -- Initialization
 				exclude_concurrency.enable_select
 			end
 
+				-- void_safety
+			create l_frame.make_with_text (conf_interface_names.dial_cond_void_safety)
+			hb_top.extend (l_frame)
+			create vb
+			l_frame.extend (vb)
+			vb.set_border_width (layout_constants.default_border_size)
+			create void_safety
+			from
+				void_safety_names.start
+			until
+				void_safety_names.after
+			loop
+				create li.make_with_text (conf_interface_names.dial_cond_void_safety_value (void_safety_names.item_for_iteration))
+				void_safety.extend (li)
+				if data.void_safety /= Void and then data.void_safety.value.has (void_safety_names.key_for_iteration) then
+					void_safety.check_item (li)
+				end
+				void_safety_names.forth
+			end
+			vb.extend (void_safety)
+			void_safety.set_minimum_size (105, 75)
+			create exclude_void_safety.make_with_text (conf_interface_names.dial_cond_void_safety_exclude)
+			vb.extend (exclude_void_safety)
+			if data.void_safety /= Void and then data.void_safety.invert then
+				exclude_void_safety.enable_select
+			end
+
 				-- other
 			create l_frame.make_with_text (conf_interface_names.dial_cond_other)
 			hb_top.extend (l_frame)
@@ -306,6 +333,9 @@ feature {NONE} -- Initialization
 				-- concurrency
 			concurrency.focus_out_actions.extend (agent on_concurrency)
 			exclude_concurrency.select_actions.extend (agent on_concurrency)
+				-- void_safety
+			void_safety.focus_out_actions.extend (agent on_void_safety)
+			exclude_void_safety.select_actions.extend (agent on_void_safety)
 				--other
 			build_enabled.select_actions.extend (agent on_build_enabled)
 			builds.select_actions.extend (agent on_build)
@@ -337,8 +367,14 @@ feature {NONE} -- GUI elements
 	concurrency: EV_CHECKABLE_LIST
 			-- Concurrency list.
 
+	void_safety: EV_CHECKABLE_LIST
+			-- Void_safety list.
+
 	exclude_concurrency: EV_CHECK_BUTTON
 			-- Are the selected concurrency elements excluded?
+
+	exclude_void_safety: EV_CHECK_BUTTON
+			-- Are the selected void_safety elements excluded?
 
 	build_enabled: EV_CHECK_BUTTON
 			-- Is the build value set?
@@ -419,6 +455,31 @@ feature {NONE} -- Actions
 				end
 				concurrency.forth
 				concurrency_names.forth
+			end
+		end
+
+	on_void_safety
+			-- void_safety value was changed, update data.
+		local
+			is_excluded: BOOLEAN
+		do
+			data.wipe_out_void_safety
+			is_excluded := exclude_void_safety.is_selected
+			from
+				void_safety.start
+				void_safety_names.start
+			until
+				void_safety.after
+			loop
+				if void_safety.is_item_checked (void_safety.item) then
+					if is_excluded then
+						data.exclude_void_safety (void_safety_names.key_for_iteration)
+					else
+						data.add_void_safety (void_safety_names.key_for_iteration)
+					end
+				end
+				void_safety.forth
+				void_safety_names.forth
 			end
 		end
 

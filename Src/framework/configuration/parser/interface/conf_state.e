@@ -41,6 +41,24 @@ feature {NONE} -- Initialization
 			version_set: version = a_version
 		end
 
+feature -- Element change
+
+	set_concurrency (a_concurrency: like concurrency)
+			-- Set concurrency setting.
+		do
+			concurrency := a_concurrency
+		ensure
+			concurrency_set: concurrency = a_concurrency
+		end
+
+	set_void_safety (a_void_safety: like void_safety)
+			-- Set void_safety setting.
+		do
+			void_safety := a_void_safety
+		ensure
+			void_safety_set: void_safety = a_void_safety
+		end
+
 feature -- Access
 
 	platform: INTEGER
@@ -52,6 +70,11 @@ feature -- Access
 	concurrency: like concurrency_none
 			-- Current concurrency setting.
 			-- (See `concurrency_none', `concurrency_thread', `concurrency_scoop'.)
+
+	void_safety: like void_safety_none
+			-- Current void_safety setting.
+			-- (See `void_safety_all`, `void_safety_transitional', `void_safety_initialization`,
+			--	 `void_safety_conformance`, `void_safety_none`.)
 
 	is_dotnet: BOOLEAN
 			-- Dotnet?
@@ -72,7 +95,7 @@ invariant
 	custom_variables_not_void: custom_variables /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

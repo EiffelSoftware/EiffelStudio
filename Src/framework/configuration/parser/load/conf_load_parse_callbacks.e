@@ -278,6 +278,13 @@ feature -- Callbacks
 					else
 						check concurrency_under_current_condition: False end
 					end
+				when t_void_safety then
+					l_current_condition := current_condition
+					if l_current_condition /= Void then
+						process_void_safety_attributes (l_current_condition)
+					else
+						check void_safety_under_current_condition: False end
+					end
 				when t_dotnet then
 					l_current_condition := current_condition
 					if l_current_condition /= Void then
@@ -2123,6 +2130,63 @@ feature {NONE} -- Implementation attribute processing
 			end
 		end
 
+	process_void_safety_attributes (a_current_condition: attached like current_condition)
+			-- Process attributes of a void_safety tag.
+		require
+			current_condition_set: a_current_condition /= Void
+		local
+			l_name, l_value, l_excluded_value: like current_attributes.item
+			l_void_safety_values: detachable LIST [attached like current_attributes.item]
+			l_invert: BOOLEAN
+			l_conc: INTEGER
+		do
+			if includes_this_or_after (namespace_1_19_0) then
+				l_name := current_attributes.item (at_name)
+				l_value := current_attributes.item (at_value)
+				l_excluded_value := current_attributes.item (at_excluded_value)
+				if l_value = Void and then l_excluded_value = Void then
+						-- No value is set so we are in an invalid state.
+					set_parse_error_message (conf_interface_names.e_parse_incorrect_void_safety ("(undefined)"))
+				elseif l_value /= Void and then l_excluded_value /= Void then
+					set_parse_error_message (conf_interface_names.e_parse_incorrect_void_safety ("(Cannot include and exclude at the same time)"))
+				elseif l_value /= Void then
+					l_void_safety_values := l_value.split (' ')
+					-- Check for value and exclude_value tags.
+				elseif l_excluded_value /= Void then
+					l_void_safety_values := l_excluded_value.split (' ')
+					l_invert := True
+				else
+					check code_implies_value_or_excluded_value_set: False end
+				end
+
+				if
+					not is_error and then
+					l_void_safety_values /= Void -- note: from code: not is_error implies l_void_safety_values /= Void
+				then
+					from
+						l_void_safety_values.start
+					until
+						l_void_safety_values.after or is_error
+					loop
+						l_conc := get_void_safety (l_void_safety_values.item)
+						if not valid_void_safety (l_conc) then
+							set_parse_error_message (conf_interface_names.e_parse_incorrect_void_safety (l_void_safety_values.item))
+						else
+							if l_invert then
+								a_current_condition.exclude_void_safety (l_conc)
+							else
+								a_current_condition.add_void_safety (l_conc)
+							end
+						end
+						l_void_safety_values.forth
+					end
+				end
+			else
+					-- "void_safety" tag is not available.
+				set_parse_error_message (conf_interface_names.e_parse_incorrect_condition)
+			end
+		end
+
 	process_dotnet_attributes (a_current_condition: attached like current_condition)
 			-- Process attributes of a dotnet tag.
 		require
@@ -2810,15 +2874,17 @@ feature {NONE} -- Implementation state transitions
 				-- => build
 				-- => multithreaded
 				-- => concurrency
+				-- => void_safety
 				-- => dotnet
 				-- => dynamic_runtime
 				-- => version
 				-- => custom
-			create l_trans.make (8)
+			create l_trans.make (9)
 			l_trans.force (t_platform, "platform")
 			l_trans.force (t_build, "build")
 			l_trans.force (t_multithreaded, "multithreaded")
 			l_trans.force (t_concurrency, "concurrency")
+			l_trans.force (t_void_safety, "void_safety")
 			l_trans.force (t_dotnet, "dotnet")
 			l_trans.force (t_dynamic_runtime, "dynamic_runtime")
 			l_trans.force (t_version_condition, "version")
@@ -3099,6 +3165,14 @@ feature {NONE} -- Implementation state transitions
 			l_attr.force (at_value, "value")
 			l_attr.force (at_excluded_value, "excluded_value")
 			Result.force (l_attr, t_concurrency)
+
+				-- void_safety
+				-- * value
+				-- * excluded_value
+			create l_attr.make (2)
+			l_attr.force (at_value, "value")
+			l_attr.force (at_excluded_value, "excluded_value")
+			Result.force (l_attr, t_void_safety)
 
 				-- version
 			create l_attr.make (3)

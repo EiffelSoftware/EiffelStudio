@@ -547,6 +547,10 @@ feature -- Condition dialog
 	dial_cond_concurrency: STRING_32 do Result := locale.translation ("Concurrency")	end
 	dial_cond_concurrency_exclude: STRING_32 do Result := locale.translation ("Exclude value(s)")	end
 	dial_cond_concurrency_value (value: READABLE_STRING_GENERAL): STRING_32 do Result := locale.translation (value)	end
+	dial_cond_void_safety: STRING_32 do Result := locale.translation ("Void-safety")	end
+	dial_cond_void_safety_exclude: STRING_32 do Result := locale.translation ("Exclude value(s)")	end
+	dial_cond_void_safety_value (value: READABLE_STRING_GENERAL): STRING_32 do Result := locale.translation (value)	end
+
 	dial_cond_dynamic_runtime: STRING_32 do Result := locale.translation ("Dynamic runtime")	end
 	dial_cond_version: STRING_32 do Result := locale.translation ("Version")	end
 	dial_cond_version_compiler: STRING_32 do Result := locale.translation ("<= compiler version <= ")	end
@@ -1108,6 +1112,10 @@ feature -- Parse errors
 	e_parse_incorrect_concurrency (a_concurrency: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation ("Invalid concurrency condition $1."), [a_concurrency])
+		end
+	e_parse_incorrect_void_safety (a_void_safety: READABLE_STRING_GENERAL): STRING_32
+		do
+			Result := locale.formatted_string (locale.translation ("Invalid void_safety condition $1."), [a_void_safety])
 		end
 	e_parse_incorrect_dotnet: STRING_32 do Result := locale.translation ("No valid value specified in .NET condition.") end
 	e_parse_incorrect_dynamic_runtime: STRING_32 do Result := locale.translation ("No valid value specified in dynamic runtime condition.") end

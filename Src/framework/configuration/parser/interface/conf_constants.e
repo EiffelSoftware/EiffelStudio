@@ -63,6 +63,21 @@ feature -- Concurrency
 	concurrency_multithreaded_name: STRING = "thread"
 	concurrency_scoop_name: STRING = "scoop"
 
+feature -- Void-safety	
+
+	void_safety_none: INTEGER = 0x1100
+	void_safety_conformance: INTEGER = 0x1200
+	void_safety_initialization: INTEGER = 0x1300
+	void_safety_transitional: INTEGER = 0x1400
+	void_safety_all: INTEGER = 0x1500
+
+		-- Names
+	void_safety_none_name: STRING = "none"
+	void_safety_conformance_name: STRING = "conformance"
+	void_safety_initialization_name: STRING = "initialization"
+	void_safety_transitional_name: STRING = "transitional"
+	void_safety_all_name: STRING = "all"
+
 feature -- Version types
 
 	v_compiler: STRING = "compiler"
@@ -98,6 +113,7 @@ feature -- Settings
 	s_check_vape: STRING = "check_vape"
 	s_cls_compliant: STRING = "cls_compliant"
 	s_concurrency: STRING = "concurrency"
+	s_void_safety: STRING = "void_safety"
 	s_console_application: STRING = "console_application"
 	s_dead_code_removal: STRING = "dead_code_removal"
 	s_dotnet_naming_convention: STRING = "dotnet_naming_convention"

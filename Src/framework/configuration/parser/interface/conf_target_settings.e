@@ -390,6 +390,30 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			added: internal_settings.item (a_name) = a_value
 		end
 
+	add_capability (a_name, a_value: READABLE_STRING_32)
+			-- Add a new setting.
+		require
+			a_name_ok: a_name /= Void and then not a_name.is_empty
+			a_value_not_void: a_value /= Void
+		local
+			l_opts: like internal_options
+		do
+			l_opts := internal_options
+			if a_name.is_case_insensitive_equal_general (s_concurrency) then
+				if l_opts = Void then
+					create l_opts
+					internal_options := l_opts
+				end
+				l_opts.concurrency.put (a_value)
+			elseif a_name.is_case_insensitive_equal_general (s_void_safety) then
+				if l_opts = Void then
+					create l_opts
+					internal_options := l_opts
+				end
+				l_opts.void_safety.put (a_value)
+			end
+		end
+
 	update_setting (a_name: READABLE_STRING_32; a_value: detachable READABLE_STRING_32)
 			-- Update/add/remove a setting.
 		require

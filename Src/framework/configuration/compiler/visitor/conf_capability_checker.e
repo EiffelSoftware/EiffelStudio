@@ -351,6 +351,44 @@ feature {NONE} -- Traversal
 			end
 		end
 
+	restricted_void_safety (index: like {CONF_TARGET_OPTION}.void_safety_index_none): like {CONF_TARGET_OPTION}.void_safety_index_none
+			-- Void_safety index `index` restricted by current condition `condition`.
+		local
+			value: INTEGER
+		do
+			Result := index
+			if attached condition as cs then
+				from
+					inspect Result
+					when {CONF_TARGET_OPTION}.void_safety_index_all then value := {CONF_CONSTANTS}.void_safety_all
+					when {CONF_TARGET_OPTION}.void_safety_index_transitional then value := {CONF_CONSTANTS}.void_safety_transitional
+					when {CONF_TARGET_OPTION}.void_safety_index_initialization then value := {CONF_CONSTANTS}.void_safety_initialization
+					when {CONF_TARGET_OPTION}.void_safety_index_conformance then value := {CONF_CONSTANTS}.void_safety_conformance
+					when {CONF_TARGET_OPTION}.void_safety_index_none then value := {CONF_CONSTANTS}.void_safety_none
+					end
+				until
+					Result = {CONF_TARGET_OPTION}.void_safety_index_none or else
+					across cs as ic some attached ic.item.void_safety as s implies (s.value.has (value) xor s.invert) end
+				loop
+						-- Move to the smaller capability.
+					inspect Result
+					when {CONF_TARGET_OPTION}.void_safety_index_all then
+						Result := {CONF_TARGET_OPTION}.void_safety_index_transitional
+						value := {CONF_CONSTANTS}.void_safety_transitional
+					when {CONF_TARGET_OPTION}.void_safety_index_transitional then
+						Result := {CONF_TARGET_OPTION}.void_safety_index_initialization
+						value := {CONF_CONSTANTS}.void_safety_initialization
+					when {CONF_TARGET_OPTION}.void_safety_index_initialization then
+						Result := {CONF_TARGET_OPTION}.void_safety_index_conformance
+						value := {CONF_CONSTANTS}.void_safety_conformance
+					when {CONF_TARGET_OPTION}.void_safety_index_conformance then
+						Result := {CONF_TARGET_OPTION}.void_safety_index_none
+						value := {CONF_CONSTANTS}.void_safety_none
+					end
+				end
+			end
+		end
+
 note
 	date: "$Date$"
 	revision: "$Revision$"

@@ -73,6 +73,9 @@ feature -- Access
 			Result := concurrency_index = {CONF_TARGET_OPTION}.concurrency_index_scoop
 		end
 
+	void_safety_index: like {CONF_TARGET_OPTION}.void_safety_index_none
+			-- Current void_safety index.			
+
 	has_old_verbatim_strings: BOOLEAN
 			-- Is old semantics of verbatim strings used?
 
@@ -442,6 +445,14 @@ feature -- Update
 			concurrency_index := v
 		ensure
 			concurrency_index_set: concurrency_index = v
+		end
+
+	set_void_safety_index (v: like void_safety_index)
+			-- Set `void_safety' to `v'.
+		do
+			void_safety_index := v
+		ensure
+			void_safety_set: void_safety_index = v
 		end
 
 	set_has_old_verbatim_strings (b: BOOLEAN)

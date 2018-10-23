@@ -99,6 +99,7 @@ feature -- Properties
 				l_version.force (l_clr_version, v_msil_clr)
 			end
 			create Result.make (platform, build, concurrency, system.il_generation, system.has_dynamic_runtime, a_target.variables, l_version)
+			Result.set_void_safety (void_safety)
 		end
 
 	concurrency: INTEGER
@@ -122,6 +123,32 @@ feature -- Properties
 			else
 					-- System is not defined!
 				Result := concurrency_none
+			end
+		end
+
+	void_safety: INTEGER
+			-- Type of void_safety (none, conformance, initialization, transitional, all)
+		do
+			if workbench.system_defined then
+				inspect
+					system.void_safety_index
+				when {CONF_TARGET_OPTION}.void_safety_index_all then
+					Result := void_safety_all
+				when {CONF_TARGET_OPTION}.void_safety_index_transitional then
+					Result := void_safety_transitional
+				when {CONF_TARGET_OPTION}.void_safety_index_initialization then
+					Result := void_safety_initialization
+				when {CONF_TARGET_OPTION}.void_safety_index_conformance then
+					Result := void_safety_conformance
+				when {CONF_TARGET_OPTION}.void_safety_index_none then
+					Result := void_safety_none
+				else
+						-- Default to void_safety if none is specified.
+					Result := void_safety_all
+				end
+			else
+					-- System is not defined!
+				Result := void_safety_all
 			end
 		end
 

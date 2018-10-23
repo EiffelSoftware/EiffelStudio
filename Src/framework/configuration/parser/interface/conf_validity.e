@@ -36,6 +36,12 @@ feature -- Basic validity queries
 			Result := concurrency_names.has (a_concurrency)
 		end
 
+	valid_void_safety (a_void_safety: INTEGER): BOOLEAN
+			-- Is `a_void_safety' a valid void_safety value?
+		do
+			Result := void_safety_names.has (a_void_safety)
+		end
+
 	is_warning_known (a_warning: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `a_warning' known?
 		require
@@ -196,6 +202,20 @@ feature {NONE} -- Basic operation
 			result_not_void: Result /= Void
 		end
 
+	get_void_safety_name (index: INTEGER): STRING
+			-- Get the void_safety name of `index'.
+		require
+			valid_index: valid_void_safety (index)
+		do
+			check
+				valid_index: attached void_safety_names.item (index) as l_item
+			then
+				Result := l_item
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
+
 	get_platform (a_name: detachable READABLE_STRING_GENERAL): INTEGER
 			-- Get the platform with `a_name', otherwise return 0.
 		do
@@ -253,6 +273,25 @@ feature {NONE} -- Basic operation
 			Result_valid: Result = 0 or else valid_concurrency (Result)
 		end
 
+	get_void_safety (a_name: detachable READABLE_STRING_GENERAL): INTEGER
+			-- Get the void_safety value with `a_name', otherwise return 0.
+		do
+			if a_name /= Void then
+				from
+					void_safety_names.start
+				until
+					Result /= 0 or void_safety_names.after
+				loop
+					if a_name.is_case_insensitive_equal (void_safety_names.item_for_iteration) then
+						Result := void_safety_names.key_for_iteration
+					end
+					void_safety_names.forth
+				end
+			end
+		ensure
+			Result_valid: Result = 0 or else valid_void_safety (Result)
+		end
+
 	current_platform: INTEGER
 			-- Get the underlying platform identifier.
 		do
@@ -298,6 +337,19 @@ feature {NONE} -- Onces
 			Result.force (concurrency_none_name, concurrency_none)
 			Result.force (concurrency_multithreaded_name, concurrency_multithreaded)
 			Result.force (concurrency_scoop_name, concurrency_scoop)
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	void_safety_names: HASH_TABLE [STRING, INTEGER]
+			-- The void_safety values mapped to their integer.
+		once
+			create Result.make (5)
+			Result.force (void_safety_none_name, void_safety_none)
+			Result.force (void_safety_conformance_name, void_safety_conformance)
+			Result.force (void_safety_initialization_name, void_safety_initialization)
+			Result.force (void_safety_transitional_name, void_safety_transitional)
+			Result.force (void_safety_all_name, void_safety_all)
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -429,7 +481,10 @@ feature {NONE} -- Implementation
 	known_settings: SEARCH_TABLE [STRING]
 			-- The names of known settings.
 		once
-			Result := valid_settings_1_17_0
+			create Result.make (40)
+			Result.merge (valid_settings)
+			Result.merge (valid_settings_1_17_0)
+			Result.merge (valid_settings_1_18_0)
 		ensure
 			known_settings_old: across valid_settings as s all Result.has (s.item) end
 			known_settings_1_17_0: across valid_settings_1_17_0 as s all Result.has (s.item) end
@@ -567,6 +622,21 @@ feature {NONE} -- Implementation
 			valid_setting: attached Result implies is_setting_known (Result)
 		end
 
+	setting_or_capability_name (string: READABLE_STRING_32; start_index, end_index: INTEGER): detachable READABLE_STRING_32
+			-- A name of a valid setting or capability (if any) starting at `start_index' and ending at `end_index' of a string `string'.
+		require
+			valid_start_index: string.valid_index (start_index)
+			valid_end_index: string.valid_index (end_index)
+			valid_start_index_end_index: start_index <= end_index
+		do
+			Result := key_name (string, start_index, end_index, known_settings)
+			if Result = Void then
+				Result := key_name (string, start_index, end_index, known_capabilities)
+			end
+		ensure
+			valid_setting: attached Result implies (is_setting_known (Result) or is_capability_known (Result))
+		end
+
 	key_name (string: READABLE_STRING_32; start_index, end_index: INTEGER; keys: ITERABLE [READABLE_STRING_GENERAL]): detachable READABLE_STRING_32
 			-- A key from `keys' (if any) starting at `start_index' and ending at `end_index' of a string `string'.
 		require
@@ -634,6 +704,34 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			valid_concurrency_setting: attached Result implies Result.same_string_general (s_concurrency)
+		end
+
+feature -- Capabilities
+
+	is_capability_known (s: READABLE_STRING_GENERAL): BOOLEAN
+			-- Is capability `s` known?
+		do
+			Result := attached s and then s.is_valid_as_string_8 and then known_capabilities.has (s.to_string_8)
+		end
+
+	capability_name (string: READABLE_STRING_32; start_index, end_index: INTEGER): detachable READABLE_STRING_32
+			-- A name of a valid capability (if any) starting at `start_index' and ending at `end_index' of a string `string'.
+		require
+			valid_start_index: string.valid_index (start_index)
+			valid_end_index: string.valid_index (end_index)
+			valid_start_index_end_index: start_index <= end_index
+		do
+			Result := key_name (string, start_index, end_index, <<s_concurrency, s_void_safety>>)
+		ensure
+			valid_setting: attached Result implies is_capability_known (Result)
+		end
+
+	known_capabilities: SEARCH_TABLE [STRING]
+			-- The names of known settings.
+		once
+			create Result.make (2)
+			Result.force (s_concurrency)
+			Result.force (s_void_safety)
 		end
 
 feature {NONE} -- Option names

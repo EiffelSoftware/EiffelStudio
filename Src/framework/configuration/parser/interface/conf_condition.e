@@ -52,7 +52,10 @@ feature -- Access
 			-- Build where it is is enabled or for which it is disabled (if `invert' is true)
 
 	concurrency: detachable TUPLE [value: ARRAYED_LIST [INTEGER]; invert: BOOLEAN]
-			-- Concurrency setting where it is is enabled or for which it is disabled (if `invert' is true)
+			-- Concurrency capability where it is is enabled or for which it is disabled (if `invert' is true)
+
+	void_safety: detachable TUPLE [value: ARRAYED_LIST [INTEGER]; invert: BOOLEAN]
+			-- Void_safety capability where it is is enabled or for which it is disabled (if `invert' is true)
 
 	dotnet: detachable CELL [BOOLEAN]
 			-- Enabled for dotnet?
@@ -87,6 +90,11 @@ feature -- Queries
 				-- concurrency
 			if Result and attached concurrency as l_concurrency then
 				Result := l_concurrency.value.has (a_state.concurrency) xor l_concurrency.invert
+			end
+
+				-- void_safety
+			if Result and attached void_safety as l_void_safety then
+				Result := l_void_safety.value.has (a_state.void_safety) xor l_void_safety.invert
 			end
 
 				-- dotnet
@@ -343,6 +351,48 @@ feature -- Update
 			concurrency_void: concurrency = Void
 		end
 
+	add_void_safety (a_void_safety: INTEGER)
+			-- Add requirement on `a_void_safety'.
+		require
+			valid_platform: valid_void_safety (a_void_safety)
+			not_invert: attached void_safety as c implies not c.invert
+		local
+			l_void_safety: like void_safety
+		do
+			l_void_safety := void_safety
+			if l_void_safety = Void then
+				l_void_safety := [create {ARRAYED_LIST [INTEGER]}.make (1), False]
+				l_void_safety.compare_objects
+				void_safety := l_void_safety
+			end
+			l_void_safety.value.force (a_void_safety)
+		end
+
+	exclude_void_safety (a_void_safety: INTEGER)
+			-- Add an exclude requirement on `a_void_safety'.
+		require
+			valid_void_safety: valid_void_safety (a_void_safety)
+			all_invert: attached void_safety as c implies c.invert
+		local
+			l_void_safety: like void_safety
+		do
+			l_void_safety := void_safety
+			if l_void_safety = Void then
+				l_void_safety := [create {ARRAYED_LIST [INTEGER]}.make (1), True]
+				l_void_safety.compare_objects
+				void_safety := l_void_safety
+			end
+			l_void_safety.value.force (a_void_safety)
+		end
+
+	wipe_out_void_safety
+			-- Wipe out void_safety.
+		do
+			void_safety := Void
+		ensure
+			void_safety_void: void_safety = Void
+		end
+
 	set_dotnet (a_value: BOOLEAN)
 			-- Set `dotnet' to `a_value'.
 		do
@@ -453,6 +503,7 @@ feature -- Output
 			append_list (platform, platform_names, Result)
 			append_list (build, build_names, Result)
 			append_list (concurrency, concurrency_names, Result)
+			append_list (void_safety, void_safety_names, Result)
 
 			from
 				version.start
@@ -574,6 +625,7 @@ invariant
 	platform_ok: attached platform as p implies p.object_comparison and p.value /= Void
 	build_ok: attached build as b implies b.object_comparison and b.value /= Void
 	concurrency_ok: attached concurrency as c implies c.object_comparison and attached c.value
+	void_safety_ok: attached void_safety as c implies c.object_comparison and attached c.value
 	version_not_void: version /= Void
 	custom_not_void: custom /= Void
 

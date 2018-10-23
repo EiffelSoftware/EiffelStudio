@@ -85,12 +85,14 @@ feature {NONE} -- Implementation constants
 	t_test_cluster: INTEGER = 45
 	t_concurrency: INTEGER = 46
 	t_redirection: INTEGER = 47
-	t_capability: INTEGER = 48
-	t_capability_catcall_detection: INTEGER = 49
-	t_capability_code: INTEGER = 50
-	t_capability_concurrency: INTEGER = 51
-	t_capability_platform: INTEGER = 52
-	t_capability_void_safety: INTEGER = 53
+	t_void_safety: INTEGER = 48
+	t_capability: INTEGER = 49
+	t_capability_catcall_detection: INTEGER = 50
+	t_capability_code: INTEGER = 51
+	t_capability_concurrency: INTEGER = 52
+	t_capability_platform: INTEGER = 53
+	t_capability_void_safety: INTEGER = 54
+
 
 		-- Attribute states
 	at_abstract: INTEGER = 1000

@@ -61,6 +61,7 @@ feature {NONE} -- Initialization
 			is_il_generation := False
 			build := {CONF_CONSTANTS}.Build_workbench
 			concurrency := {CONF_CONSTANTS}.concurrency_multithreaded
+			void_safety := {CONF_CONSTANTS}.void_safety_all
 			has_dynamic_runtime := False
 
 			if {PLATFORM}.is_dotnet then
@@ -93,6 +94,8 @@ feature -- Settings
 	build: INTEGER
 
 	concurrency: INTEGER
+
+	void_safety: INTEGER
 
 	is_il_generation: BOOLEAN
 
@@ -178,6 +181,27 @@ feature -- Change
 					concurrency := {CONF_CONSTANTS}.concurrency_scoop
 				else
 					concurrency := {CONF_CONSTANTS}.concurrency_multithreaded
+				end
+			end
+		end
+
+	set_void_safety (a_void_safety: detachable READABLE_STRING_GENERAL)
+		do
+			if a_void_safety = Void then
+				void_safety := {CONF_CONSTANTS}.void_safety_all
+			else
+				if a_void_safety.is_case_insensitive_equal ({CONF_CONSTANTS}.void_safety_none_name) then
+					void_safety := {CONF_CONSTANTS}.void_safety_none
+				elseif a_void_safety.is_case_insensitive_equal ({CONF_CONSTANTS}.void_safety_conformance_name) then
+					void_safety := {CONF_CONSTANTS}.void_safety_conformance
+				elseif a_void_safety.is_case_insensitive_equal ({CONF_CONSTANTS}.void_safety_initialization_name) then
+					void_safety := {CONF_CONSTANTS}.void_safety_initialization
+				elseif a_void_safety.is_case_insensitive_equal ({CONF_CONSTANTS}.void_safety_transitional_name) then
+					void_safety := {CONF_CONSTANTS}.void_safety_transitional
+				elseif a_void_safety.is_case_insensitive_equal ({CONF_CONSTANTS}.void_safety_all_name) then
+					void_safety := {CONF_CONSTANTS}.void_safety_all
+				else
+					void_safety := {CONF_CONSTANTS}.void_safety_all
 				end
 			end
 		end
@@ -446,6 +470,7 @@ feature {NONE} -- Helper
 			create l_conf_version.make_version ({EIFFEL_CONSTANTS}.major_version, {EIFFEL_CONSTANTS}.minor_version, 0, 0)
 			l_version.force (l_conf_version, "compiler")
 			create Result.make (platform, build, concurrency, is_il_generation, has_dynamic_runtime, a_target.variables, l_version)
+			Result.set_void_safety (void_safety)
 		end
 
 	current_conf_state: detachable CONF_STATE

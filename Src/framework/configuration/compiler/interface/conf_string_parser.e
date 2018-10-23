@@ -137,10 +137,10 @@ feature {NONE} -- Search
 			-- Available option names.
 		do
 			create Result.make (20)
+			Result.compare_objects
 			Result.force (s_platform)
 			Result.force (s_concurrency)
 			Result.force (s_void_safety)
-
 			across
 				boolean_options as ic
 			loop
@@ -150,15 +150,22 @@ feature {NONE} -- Search
 			Result.force (s_msil_clr_version)
 			Result.force (s_msil_classes_per_module)
 			Result.force (s_inlining_size)
-			Result.force ("- arbitrary option name ... - ") --  arbitrary option name
-		end
-
-	available_configuration_capability_names: ARRAYED_LIST [READABLE_STRING_GENERAL]
-			-- Available option names.
-		do
-			create Result.make (2)
-			Result.force (s_concurrency)
-			Result.force (s_void_safety)
+			across
+				known_settings as s
+			loop
+				if not Result.has (s.item) then
+					Result.force (s.item)
+				end
+			end
+			across
+				known_capabilities as s
+			loop
+				if not Result.has (s.item) then
+					Result.force (s.item)
+				end
+			end
+			;(create {QUICK_SORTER [like available_configuration_option_names.item]}.make
+				(create {STRING_COMPARATOR}.make)).sort (Result)
 		end
 
 	value_from_list (list: ITERABLE [READABLE_STRING_GENERAL]; input: READABLE_STRING_32; delimiter_index: INTEGER; is_value_case_sensitive: BOOLEAN): detachable READABLE_STRING_32

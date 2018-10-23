@@ -39,7 +39,8 @@ test	ca-self-comparison				codeanalysis027 tcf pass code_analysis ca071
 test	ca-inequality-in-conditional			codeanalysis028 tcf pass code_analysis ca046
 test	ca-empty-compound-in-conditional		codeanalysis029 tcf pass code_analysis ca017
 test	ca-manifest-array-type-mismatch			codeanalysis030 tcf pass code_analysis ca093
-test	ca-local-used-in-creation-argument		codeanalysis031 tcf pass code_analysis
+test	ca-local-used-in-creation-argument		codeanalysis031 tcf pass code_analysis ca020
+test	ca-unused-local-assignment-from-detachable	codeanalysis032 tcf pass code_analysis ca020
 
 -- EiffelTime tests
 

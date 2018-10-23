@@ -34,76 +34,147 @@ feature {NONE} -- Initialization
 			create rules.make_caseless (100) -- Rule IDs should be case insensitive.
 
 				-- Adding the rules.
+				-- CA066: argument_name
 			add_rule (create {CA_ARGUMENT_NAMING_CONVENTION_RULE}.make (settings.preference_manager))
+				-- CA048: fixed_attribute_value
 			add_rule (create {CA_ATTRIBUTE_CAN_BE_CONSTANT_RULE}.make)
+				-- CA054: attribute_in_single_feature
 			add_rule (create {CA_ATTRIBUTE_TO_LOCAL_RULE}.make)
+				-- CA042: comparison_to_boolean_constant
 			add_rule (create {CA_BOOLEAN_COMPARISON_RULE}.make)
+				-- CA041: conditional_computes_only_boolean
 			add_rule (create {CA_BOOLEAN_RESULT_RULE}.make)
+				-- CA063: class_name
 			add_rule (create {CA_CLASS_NAMING_CONVENTION_RULE}.make)
+				-- CA073: comment_style
 			add_rule (create {CA_COMMENT_NOT_WELL_PHRASED_RULE}.make)
+				-- CA049: reference_comparison
 			add_rule (create {CA_COMPARISON_OF_OBJECT_REFS_RULE}.make)
+				-- CA052: zero_count_test
 			add_rule (create {CA_COUNT_EQUALS_ZERO_RULE}.make) -- Needs type info.
+				-- CA004: possible_side_effect
 			add_rule (create {CA_CQ_SEPARATION_RULE}.make)
+				-- CA013: exported_creation_procedure
 			add_rule (create {CA_CREATION_PROC_EXPORTED_RULE}.make)
+				-- CA043: deeply_nested_conditionals
 			add_rule (create {CA_DEEPLY_NESTED_IF_RULE}.make (settings.preference_manager))
+				-- CA015: double_negation
 			add_rule (create {CA_DOUBLE_NEGATION_RULE}.make)
+				-- CA038: empty_creation_procedure
 			add_rule (create {CA_EMPTY_CREATION_PROC_RULE}.make)
+				-- CA053: empty_feature_in_deferred
 			add_rule (create {CA_EMPTY_EFFECTIVE_ROUTINE_RULE}.make)
+				-- CA017: empty_conditional
 			add_rule (create {CA_EMPTY_IF_RULE}.make)
+				-- CA016: empty_loop
 			add_rule (create {CA_EMPTY_LOOP_RULE}.make)
+				-- CA059: empty_rescue
 			add_rule (create {CA_EMPTY_RESCUE_CLAUSE_RULE}.make)
+				-- CA051: empty_feature
 			add_rule (create {CA_EMPTY_UNCOMMENTED_ROUTINE_RULE}.make)
+				-- CA089: duplicated_parent
 			add_rule (create {CA_EXPLICIT_REDUNDANT_INHERITANCE_RULE}.make)
+				-- CA075: unused_export
 			add_rule (create {CA_EXPORT_CAN_BE_RESTRICTED_RULE}.make)
+				-- CA064: feature_name
 			add_rule (create {CA_FEATURE_NAMING_CONVENTION_RULE}.make)
+				-- CA003: unused_feature
 			add_rule (create {CA_FEATURE_NEVER_CALLED_RULE}.make)
+				-- CA036: missing_feature_comment
 			add_rule (create {CA_FEATURE_NOT_COMMENTED_RULE}.make)
+				-- CA035: missing_feature_clause_comment
 			add_rule (create {CA_FEATURE_SECTION_COMMENT_RULE}.make)
+				-- CA067: long_formal_generic_name
 			add_rule (create {CA_GENERIC_PARAMETER_TOO_LONG_RULE}.make_with_defaults)
+				-- CA046: inequality_in_conditional
 			add_rule (create {CA_IF_ELSE_NOT_EQUAL_RULE}.make)
+				-- CA031: inheritance_from_any
 			add_rule (create {CA_INHERIT_FROM_ANY_RULE}.make)
+				-- CA044: long_multi_branch
 			add_rule (create {CA_INSPECT_INSTRUCTIONS_RULE}.make (settings.preference_manager))
+				-- CA060: no_when_part
 			add_rule (create {CA_INSPECT_NO_WHEN_RULE}.make)
+				-- CA024: general_loop_on_iterable
 			add_rule (create {CA_ITERABLE_LOOP_RULE}.make) -- Needs type info.
+				-- CA065: local_name
 			add_rule (create {CA_LOCAL_NAMING_CONVENTION_RULE}.make (settings.preference_manager))
+				-- CA050: local_used_as_result
 			add_rule (create {CA_LOCAL_USED_FOR_RESULT_RULE}.make)
+				-- CA021: invariant_in_loop
 			add_rule (create {CA_LOOP_INVARIANT_COMPUTATION_RULE}.make)
+				-- CA093: manifest_array_type_mismatch
 			add_rule (create {CA_MANIFEST_ARRAY_TYPE_RULE}.make)
+				-- CA011: many_arguments
 			add_rule (create {CA_MANY_ARGUMENTS_RULE}.make (settings.preference_manager))
+				-- CA087: mergeable_conditionals
 			add_rule (create {CA_MERGEABLE_CONDITIONALS_RULE}.make)
+				-- CA088: duplicate_feature_clause
 			add_rule (create {CA_MERGEABLE_FEATURE_CLAUSES_RULE}.make)
+				-- CA012: no_default_creation_procedure
 			add_rule (create {CA_MISSING_CREATION_PROC_WITHOUT_ARGS_RULE}.make)
+				-- CA082: inconsistent_hash_code_redeclaration
 			add_rule (create {CA_MISSING_IS_EQUAL_RULE}.make)
+				-- CA010: nested_complexity
 			add_rule (create {CA_NESTED_COMPLEXITY_RULE}.make (settings.preference_manager))
+				-- CA034: npath_complexity
 			add_rule (create {CA_NPATH_RULE}.make (settings.preference_manager))
+				-- CA068: creation_in_loop
 			add_rule (create {CA_OBJECT_CREATION_WITHIN_LOOP_RULE}.make)
+				-- CA029: unnecessary_voidness_test
 			add_rule (create {CA_OBJECT_TEST_ALWAYS_SUCCEEDS_RULE}.make)
+				-- CA007: nonconforming_object_test
 			add_rule (create {CA_OBJECT_TEST_FAILING_RULE}.make_with_defaults)
+				-- CA069: obsolete_feature_call
 			add_rule (create {CA_OBSOLETE_FEATURE_CALL_RULE}.make (settings.preference_manager))
+				-- CA070: obsolete_feature
 			add_rule (create {CA_OBSOLETE_FEATURE_RULE}.make (settings.preference_manager))
+				-- CA045: nan_comparison
 			add_rule (create {CA_REAL_NAN_COMPARISON_RULE}.make)
+				-- CA001: self_assignment
 			add_rule (create {CA_SELF_ASSIGNMENT_RULE}.make)
+				-- CA071: self_comparison
 			add_rule (create {CA_SELF_COMPARISON_RULE}.make)
+				-- CA025: missing_argument_semicolon
 			add_rule (create {CA_SEMICOLON_ARGUMENTS_RULE}.make)
+				-- CA028: combinable_nested_conditionals
 			add_rule (create {CA_SHORT_CIRCUIT_IF_RULE}.make)
+				-- CA057: negated_comparison
 			add_rule (create {CA_SIMPLIFIABLE_BOOLEAN_RULE}.make)
+				-- CA080: todo_comment
 			add_rule (create {CA_TODO_RULE}.make)
+				-- CA037: comment_content
 			add_rule (create {CA_UNDESIRABLE_COMMENT_CONTENT_RULE}.make (settings.preference_manager))
+				-- CA030: unnecessary_sign
 			add_rule (create {CA_UNNECESSARY_SIGN_OPERATOR_RULE}.make)
+				-- CA079: unnecessary_accessor
 			add_rule (create {CA_UNNEEDED_ACCESSOR_FUNCTION_RULE}.make)
+				-- CA085: single_use_variable
 			add_rule (create {CA_UNNEEDED_HELPER_VARIABLE_RULE}.make (settings.preference_manager))
+				-- CA006: redundant_object_test
 			add_rule (create {CA_UNNEEDED_OBJECT_TEST_RULE}.make) -- Needs type info.
+				-- CA005: redundant_object_test_local
 			add_rule (create {CA_UNNEEDED_OT_LOCAL_RULE}.make)
+				-- CA023: redundant_parentheses
 			add_rule (create {CA_UNNEEDED_PARENTHESES_RULE}.make)
+				-- CA022: unreachable_code
 			add_rule (create {CA_UNREACHABLE_CODE_RULE}.make)
+				-- CA002: unused_argument
 			add_rule (create {CA_UNUSED_ARGUMENT_RULE}.make)
+				-- CA009: useless_attachment_check
 			add_rule (create {CA_USELESS_CONTRACT_RULE}.make)
+				-- CA020: unread_variable
 			add_rule (create {CA_VARIABLE_NOT_READ_RULE}.make)
+				-- CA033: long_class
 			add_rule (create {CA_VERY_BIG_CLASS_RULE}.make (settings.preference_manager))
+				-- CA062: long_identifier
 			add_rule (create {CA_VERY_LONG_IDENTIFIER_RULE}.make (settings.preference_manager))
+				-- CA032: long_feature
 			add_rule (create {CA_VERY_LONG_ROUTINE_RULE}.make (settings.preference_manager))
+				-- CA061: short_identifier
 			add_rule (create {CA_VERY_SHORT_IDENTIFIER_RULE}.make (settings.preference_manager))
+				-- CA047: equal_in_void_test
 			add_rule (create {CA_VOID_CHECK_USING_IS_EQUAL_RULE}.make)
+				-- CA092: suspicious_interation_scheme
 			add_rule (create {CA_WRONG_LOOP_ITERATION_RULE}.make)
 
 			settings.initialize_rule_settings (rules)

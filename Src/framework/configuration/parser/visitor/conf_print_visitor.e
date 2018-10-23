@@ -729,11 +729,13 @@ feature {NONE} -- Implementation
 					-- assembly and only the default rule? => don't print it
 				if is_assembly and then a_conditions.count = 1 then
 					l_condition := a_conditions.first
-					l_done := l_condition.build = Void and
-								l_condition.platform = Void and
-								l_condition.concurrency = Void and
-								l_condition.void_safety = Void and
-								l_condition.version.is_empty and l_condition.custom.is_empty
+					l_done :=
+						l_condition.build = Void and
+						l_condition.platform = Void and
+						l_condition.concurrency = Void and
+						l_condition.void_safety = Void and
+						l_condition.version.is_empty and
+						l_condition.custom.is_empty
 				end
 				if not l_done then
 					from

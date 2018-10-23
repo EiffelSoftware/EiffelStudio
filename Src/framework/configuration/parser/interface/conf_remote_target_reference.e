@@ -19,6 +19,8 @@ feature {NONE} -- Initialization
 		do
 			location := a_location
 			name := a_name
+				-- By default, remote parent targets are editable, as other local parent targets.!
+			is_readonly := False
 		end
 
 feature -- Access
@@ -28,6 +30,10 @@ feature -- Access
 
 	location: READABLE_STRING_32
 			-- location of remote target.
+
+	is_readonly: BOOLEAN
+			-- Parent target is readonly?
+			-- For now, this can not be changed.
 
 feature -- Status report
 

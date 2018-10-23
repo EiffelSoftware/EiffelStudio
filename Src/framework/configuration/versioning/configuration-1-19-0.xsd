@@ -366,7 +366,7 @@
 			<xs:element name="platform" type="platform" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="build" type="build" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="concurrency" type="concurrency" minOccurs="0" maxOccurs="1"/>
-			<xs:element name="void_safety" type="void_safety" minOccurs="0" maxOccurs="1"/>
+			<xs:element name="void_safety" type="condition.void_safety" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="dotnet" type="dotnet" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="dynamic_runtime" type="dynamic_runtime" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="version" type="version_condition" minOccurs="0" maxOccurs="1"/>
@@ -431,6 +431,15 @@
 			  <xs:enumeration value="thread"/>
 			  <xs:enumeration value="scoop"/>
 		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="condition.void_safety">
+		<xs:attribute name="value"          type="void_safety.list"/>
+		<xs:attribute name="excluded_value" type="void_safety.list"/>
+	</xs:complexType>
+
+	<xs:simpleType name="void_safety.list">
+		<xs:list itemType="void_safety_value"/>
 	</xs:simpleType>
 
 	<xs:simpleType name="void_safety_value">

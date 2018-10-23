@@ -2421,6 +2421,7 @@ feature {NONE} -- Processing of options
 			new_options: CONF_TARGET_OPTION
 		do
 			if
+				a_namespace.same_string (namespace_1_19_0) or else
 				a_namespace.same_string (namespace_1_18_0)
 			then
 					-- Use the defaults of ES 18.01.

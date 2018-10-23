@@ -1,5 +1,5 @@
 note
-	description: "Object Representing a public/private key pair"
+	description: "Object Responsible to generate a public/private key pair"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,7 +11,11 @@ create
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_size: INTEGER)
+			-- Create an RSA pair (public/private key) with size `a_size'.
+		require
+			valid_size: a_size = 512 or else a_size = 1024 or else a_size = 2048 or a_size = 4096
+
 		local
 			l_bne: POINTER
 				-- BIGNUM
@@ -29,7 +33,8 @@ feature {NONE} -- Initialization
 			l_priv_key: C_STRING
 			l_pub_key: C_STRING
 		do
-			l_bits := 2048
+			l_bits := a_size
+
 				-- 1 generate RSA key.
 				-- Key Length
 			l_bne := {SSL_CRYPTO_EXTERNALS}.c_bn_new
@@ -63,7 +68,7 @@ feature {NONE} -- Initialization
 
 		end
 
-feature -- RSA
+feature {NONE} -- RSA Implementation.
 
 	rsa: POINTER
 		-- rsa key pair.

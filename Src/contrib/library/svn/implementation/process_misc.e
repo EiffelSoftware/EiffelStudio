@@ -16,7 +16,6 @@ feature
 			pf: BASE_PROCESS_FACTORY
 			p: BASE_PROCESS
 			retried: BOOLEAN
-			dn: detachable READABLE_STRING_32
 			err,res: STRING
 			err_spec, res_spec: SPECIAL [NATURAL_8]
 		do

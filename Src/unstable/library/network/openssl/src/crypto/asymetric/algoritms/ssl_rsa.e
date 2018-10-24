@@ -209,7 +209,4 @@ feature -- Sign
 			{SSL_CRYPTO_EXTERNALS}.c_evp_md_ctx_free (l_sign_ctx)
 		end
 
-
-
-
 end

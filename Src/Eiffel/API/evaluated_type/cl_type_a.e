@@ -667,16 +667,13 @@ feature {TYPE_A} -- Helpers
 
 	internal_same_generic_derivation_as (current_type, other: TYPE_A; a_level: INTEGER): BOOLEAN
 		do
-			Result :=
-				attached {CL_TYPE_A} other as t and then
-				t.class_id = class_id and then
-				not attached t.generics and then
+			Result := same_type (other) and then attached {like Current} other as l_cl_type and then
+				l_cl_type.class_id = class_id and then
 						-- 'class_id' is the same therefore we can compare 'declaration_mark'.
 						-- If 'declaration_mark' is not the same for both then we have to make sure
 						-- that both expanded and separate states are identical.
-				(t.declaration_mark /= declaration_mark implies
-					(t.is_expanded = is_expanded and then
-					t.is_separate = is_separate))
+				(l_cl_type.declaration_mark /= declaration_mark implies
+					(l_cl_type.is_expanded = is_expanded))
 		end
 
 feature {COMPILER_EXPORTER} -- Settings

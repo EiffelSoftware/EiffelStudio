@@ -10,15 +10,62 @@ ISE_BUILD_NIGHTLY=101981
 ISE_MAJOR_MINOR_BETA=$ISE_MAJOR_MINOR_LATEST
 ISE_BUILD_BETA=$ISE_BUILD_LATEST
 
-# Arguments
-while true; do
-	ISE_CHANNEL=$1
-	shift || break
-	ISE_PLATFORM=$1
-	shift || break
-	break
-done
+# predefined
+T_CURRENT_DIR=$(pwd)
 
+# Arguments
+POSITIONAL=()
+while [[ $# -gt 0 ]]
+do
+	key=$1
+	case $key in
+		--channel)
+			ISE_CHANNEL=$2
+			shift
+			shift
+		;;
+		--platform)
+			ISE_PLATFORM=$2
+			shift
+			shift
+		;;
+		--install-dir)
+			ISE_INSTALL_DIR=$2
+			shift
+			shift
+		;;
+		--dir)
+			T_CURRENT_DIR=$2
+			shift
+			shift
+		;;
+		*)
+			POSITIONAL+=("$1") # save it in an array for later
+			shift
+		;;
+	esac
+done
+set -- "${POSITIONAL[@]}" # restore positional parameters
+while true; do
+	case $1 in
+		--*)
+			echo Ignore argument "$1"
+			shift || break
+			;;
+		*)
+			if [ -z "$ISE_CHANNEL" ]; then
+				echo get ISE_CHANNEL
+				ISE_CHANNEL=$1
+				shift || break
+			fi
+			if [ -z "$ISE_PLATFORM" ]; then
+				echo get ISE_PLATFORM
+				ISE_PLATFORM=$1
+				shift || break
+			fi
+		;;
+	esac
+done
 
 TMP_SAFETY_DELAY=10
 
@@ -30,8 +77,6 @@ TMP_SAFETY_DELAY=10
 #   $ curl -sSL https://svn.eiffel.com/eiffelstudio/trunk/Src/web/eiffel-org/www-setup/install.sh | sh
 #
 # (Inspired by get.docker.com)
-
-T_CURRENT_DIR=$(pwd)
 
 # This value will automatically get changed for:
 #   * latest
@@ -186,7 +231,11 @@ do_install() {
 	fi
 
 	#mkdir -p eiffel; cd eiffel
-	ISE_EIFFEL=$(pwd)/Eiffel_$ISE_MAJOR_MINOR
+	if [ -n "$ISE_INSTALL_DIR" ]; then
+		ISE_EIFFEL=$ISE_INSTALL_DIR
+	else
+		ISE_EIFFEL=$T_CURRENT_DIR/Eiffel_$ISE_MAJOR_MINOR
+	fi
 
 	if [ -d "$ISE_EIFFEL" ]; then
 		cat >&2 <<-'EOF'
@@ -211,7 +260,17 @@ do_install() {
 		echo >&2 No download url !!!
 		exit 1
 	fi
-	$curl $ISE_DOWNLOAD_URL | tar -x -p -s --bzip2
+
+	if [ -n "$ISE_INSTALL_DIR" ]; then
+		mkdir -p ${ISE_INSTALL_DIR}.tmp
+		cd ${ISE_INSTALL_DIR}.tmp
+		$curl $ISE_DOWNLOAD_URL | tar -x -p -s --bzip2
+		mv $(pwd)/Eiffel_$ISE_MAJOR_MINOR $ISE_INSTALL_DIR
+		\rm -rf ${ISE_INSTALL_DIR}.tmp
+	else
+		#Should be inside $ISE_EIFFEL=$T_CURRENT_DIR/Eiffel_$ISE_MAJOR_MINOR
+		$curl $ISE_DOWNLOAD_URL | tar -x -p -s --bzip2
+	fi
         #if [ -f "$ISE_DOWNLOAD_FILE" ]; then
 	#	echo >&2 Already there.
         #else
@@ -220,7 +279,7 @@ do_install() {
 	#echo Extracting ...
 	#tar -xv --bzip2 -f $ISE_DOWNLOAD_FILE
 
-	ISE_RC_FILE="./eiffel_${ISE_MAJOR_MINOR}_${ISE_BUILD}.rc"
+	ISE_RC_FILE="$ISE_EIFFEL/setup.rc"
 	echo \# Setup for EiffelStudio ${ISE_MAJOR_MINOR}.${ISE_BUILD} > $ISE_RC_FILE
 	echo export ISE_PLATFORM=$ISE_PLATFORM >> $ISE_RC_FILE
 	echo export ISE_EIFFEL=$ISE_EIFFEL >> $ISE_RC_FILE
@@ -236,19 +295,22 @@ do_install() {
 	if command_exists ecb; then
 		echo >&2 EiffelStudio installed in $ISE_EIFFEL
 		$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ecb -version  >&2
-		echo >&2 Use the file `pwd`/$ISE_RC_FILE to setup your Eiffel environment.
+		echo >&2 Use the file $ISE_RC_FILE to setup your Eiffel environment.
 		case $ISE_CHANNEL in
 			latest)
-				ln -s -f $ISE_RC_FILE eiffel_latest.rc > /dev/null
-				echo >&2 or the file `pwd`/eiffel_latest.rc
+				rm $T_CURRENT_DIR/eiffel_latest.rc
+				ln -s -f $ISE_RC_FILE $T_CURRENT_DIR/eiffel_latest.rc > /dev/null
+				echo >&2 or the file $T_CURRENT_DIR/eiffel_latest.rc
 				;;
 			beta)
-				ln -s -f $ISE_RC_FILE eiffel_beta.rc > /dev/null
-				echo >&2 or the file `pwd`/eiffel_beta.rc
+				rm $T_CURRENT_DIR/eiffel_beta.rc
+				ln -s -f $ISE_RC_FILE $T_CURRENT_DIR/eiffel_beta.rc > /dev/null
+				echo >&2 or the file $T_CURRENT_DIR/eiffel_beta.rc
 				;;
 			nightly)
-				ln -s -f $ISE_RC_FILE eiffel_nightly.rc > /dev/null
-				echo >&2 or the file `pwd`/eiffel_nightly.rc
+				rm $T_CURRENT_DIR/eiffel_nightly.rc
+				ln -s -f $ISE_RC_FILE $T_CURRENT_DIR/eiffel_nightly.rc > /dev/null
+				echo >&2 or the file $T_CURRENT_DIR/eiffel_nightly.rc
 				;;
 			*)
 				;;

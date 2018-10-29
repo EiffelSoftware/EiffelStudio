@@ -109,9 +109,9 @@ feature -- Execution
 				log ("  - port = " + configuration.http_server_port.out)
 				log ("  - max_tcp_clients = " + configuration.max_tcp_clients.out)
 				log ("  - max_concurrent_connections = " + configuration.max_concurrent_connections.out)
-				log ("  - socket_timeout = " + configuration.socket_timeout.out + " seconds")
-				log ("  - socket_recv_timeout = " + configuration.socket_recv_timeout.out + " seconds")
-				log ("  - keep_alive_timeout = " + configuration.keep_alive_timeout.out + " seconds")
+				log ("  - socket_timeout = " + timeout_representation (configuration.socket_timeout_ns))
+				log ("  - socket_recv_timeout = " + timeout_representation (configuration.socket_recv_timeout_ns))
+				log ("  - keep_alive_timeout = " + timeout_representation (configuration.keep_alive_timeout_ns))
 				log ("  - max_keep_alive_requests = " + configuration.max_keep_alive_requests.out)
 				if configuration.has_secure_support then
 					if configuration.is_secure then
@@ -366,8 +366,25 @@ feature -- Output
 			end
 		end
 
+	timeout_representation (a_ns: NATURAL_64): STRING
+		do
+			if 1_000 * (a_ns // 1_000) = a_ns then
+				if 1_000_000 * (a_ns // 1_000_000) = a_ns then
+					if 1_000_000_000 * (a_ns // 1_000_000_000) = a_ns then
+						Result := (a_ns // 1_000_000_000).out + " seconds"
+					else
+						Result := (a_ns // 1_000_000).out + " milliseconds"
+					end
+				else
+					Result := (a_ns // 1_000).out + " microseconds"
+				end
+			else
+				Result := a_ns.out + " nanoseconds"
+			end
+		end
+
 note
-	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

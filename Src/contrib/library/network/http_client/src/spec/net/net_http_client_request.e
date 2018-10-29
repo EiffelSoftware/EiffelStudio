@@ -64,7 +64,7 @@ feature {NONE} -- Internal
 					create Result.make_client_by_port (a_port, a_host)
 				end
 				Result.set_connect_timeout (connect_timeout)
-				Result.set_timeout (timeout)
+				Result.set_timeout_ns (Result.seconds_to_nanoseconds (timeout))
 				Result.connect
 			end
 		end
@@ -887,7 +887,7 @@ feature {NONE} -- Helpers
 
 invariant
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -152,6 +152,80 @@ feature -- Helpers
 			end			
 		end
 
+	option_natural_64_value (a_opt_name: READABLE_STRING_GENERAL; a_default: NATURAL_64): NATURAL_64
+			-- NATURAL_64 value associated to option name `a_opt_name', other return `a_default'.
+		local
+			s: READABLE_STRING_GENERAL
+		do
+			Result := a_default
+			if attached option (a_opt_name) as opt then
+				if attached {NATURAL_64} opt as n then
+					Result := n
+				else
+					s := opt.out
+					if s.is_natural_64 then
+						Result := s.to_natural_64
+					end
+				end
+			end			
+		end
+
+	option_timeout_ns_value (a_opt_name: READABLE_STRING_GENERAL; a_default: NATURAL_64): NATURAL_64
+			-- Timeout in nanoseconds associated to option name `a_opt_name', other return `a_default'.
+		local
+			v: detachable READABLE_STRING_GENERAL
+			s: STRING_32
+			i,l_count: INTEGER
+		do
+			if a_opt_name.ends_with ("_ns") then
+					-- Option use "nanoseconds" convention.
+				Result := option_natural_64_value (a_opt_name, a_default)
+			elseif attached option (a_opt_name) as opt then
+				if attached {READABLE_STRING_GENERAL} opt as str then
+					from
+						i := 1
+						l_count := str.count
+					until
+						i > l_count or v /= Void
+					loop
+						if str[i].is_space then
+							-- ignore
+						elseif str[i].is_digit then
+							-- Keep it
+						else
+							v := str.head (i - 1)
+							create s.make_from_string_general (str.substring (i, l_count))
+							s.adjust
+						end
+						i := i + 1
+					end
+					if v = Void then
+						v := str
+					end
+					if v /= Void then
+						if s = Void or else s.is_whitespace or else s.is_case_insensitive_equal_general ("s") then
+								-- Consider as `seconds` for backward compatibility
+							Result := timeout_utilities.seconds_to_nanoseconds (v.to_integer)
+						elseif s.is_case_insensitive_equal_general ("ns") then
+							check v.is_natural_64 end
+							Result := v.to_natural_64
+						elseif s.is_case_insensitive_equal_general ("us") then
+							check v.is_integer end
+							Result := timeout_utilities.microseconds_to_nanoseconds (v.to_integer)
+						elseif s.is_case_insensitive_equal_general ("ms") then
+							check v.is_integer end
+							Result := timeout_utilities.milliseconds_to_nanoseconds (v.to_integer)
+						end
+					else
+							-- Error!
+					end
+				else
+						-- Backward comptability with timeout in seconds!
+					Result := timeout_utilities.seconds_to_nanoseconds (option_integer_value (a_opt_name, timeout_utilities.nanoseconds_to_seconds (a_default)))
+				end
+			end
+		end
+
 	option_boolean_value (a_opt_name: READABLE_STRING_GENERAL; a_default: BOOLEAN): BOOLEAN
 			-- BOOLEAN value associated to option name `a_opt_name', other return `a_default'.
 		local
@@ -221,6 +295,11 @@ feature {NONE} -- Implementation
 
 	options: STRING_TABLE [detachable ANY]
 			-- Custom options which might be support (or not) by the default service
+
+	timeout_utilities: WSF_TIMEOUT_UTILITIES
+		once
+			create Result
+		end
 
 invariant
 	options_attached: options /= Void

@@ -197,6 +197,24 @@ feature -- Change Element
 			expiration_set: attached expiration as l_expiration and then l_expiration.same_string (date_to_rfc1123_http_date_format (a_date))
 		end
 
+	set_expiration_from_max_age
+			-- Set `expiration` value from `max_age`.
+		local
+			dt: DATE_TIME
+		do
+			if max_age < 0 then
+				unset_expiration
+			else
+				if max_age = 0 then
+					create dt.make_from_epoch (0)
+				else
+					create dt.make_now_utc
+					dt.second_add (max_age)
+				end
+				set_expiration_date (dt)
+			end
+		end		
+
 	set_path (a_path: READABLE_STRING_8)
 			-- Set `path' to `a_path'.
 		do

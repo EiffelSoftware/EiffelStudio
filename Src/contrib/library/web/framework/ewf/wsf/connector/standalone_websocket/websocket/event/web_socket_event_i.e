@@ -23,6 +23,8 @@ deferred class
 inherit
 	WEB_SOCKET_CONSTANTS
 
+	WSF_TIMEOUT_UTILITIES
+
 	REFACTORING_HELPER
 
 feature -- Web Socket Interface
@@ -90,13 +92,18 @@ feature -- Websocket events
 
 feature {WEB_SOCKET} -- Timeout.
 
-	timer_delay: INTEGER
-			-- Maximal duration in seconds between two `on_timeout` event.
+	timer_delay_ns: NATURAL_64
+			-- Maximal duration in nanoseconds between two `on_timeout` event.
 			-- Disable timeout event, by setting it to `0` (default).
+
+	set_timer_delay_ns (nb_nanosecs: NATURAL_64)
+		do
+			timer_delay_ns := nb_nanosecs
+		end
 
 	set_timer_delay (nb_secs: INTEGER)
 		do
-			timer_delay := nb_secs
+			timer_delay_ns := seconds_to_nanoseconds (nb_secs)
 		end
 
 	on_timer (ws: WEB_SOCKET)
@@ -143,7 +150,7 @@ feature -- Websocket events: implemented
 		end
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

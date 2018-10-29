@@ -17,8 +17,6 @@ feature -- Connection
 			"C inline use %"fcgi_stdio.h%""
 		alias
 			"return FCGI_Accept();"
-		ensure
-			is_class: class
 		end
 
 	environ: POINTER
@@ -27,8 +25,6 @@ feature -- Connection
 			"C inline use %"fcgi_stdio.h%""
 		alias
 			"return (char**) environ;"
-		ensure
-			is_class: class
 		end
 
 	finish
@@ -38,8 +34,6 @@ feature -- Connection
 			"C inline use %"fcgi_stdio.h%""
 		alias
 			"FCGI_Finish();"
-		ensure
-			is_class: class
 		end
 
 	set_exit_status (v: INTEGER)
@@ -48,8 +42,6 @@ feature -- Connection
 			"C inline use %"fcgi_stdio.h%""
 		alias
 			"FCGI_SetExitStatus($v);"
-		ensure
-			is_class: class
 		end
 
 feature -- Input
@@ -70,8 +62,6 @@ feature -- Input
 					return n;
 				}
 			]"
-		ensure
-			is_class: class
 		end
 
 feature {FCGI_IMP} -- Internal
@@ -83,8 +73,6 @@ feature {FCGI_IMP} -- Internal
 			"C inline use %"fcgi_stdio.h%""
 		alias
 			"return FCGI_feof($v);"
-		ensure
-			is_class: class
 		end
 
 	ferror (v: POINTER): INTEGER
@@ -94,8 +82,6 @@ feature {FCGI_IMP} -- Internal
 			"C inline use %"fcgi_stdio.h%""
 		alias
 			"return FCGI_ferror($v);"
-		ensure
-			is_class: class
 		end
 
 	clearerr (v: POINTER)
@@ -104,8 +90,6 @@ feature {FCGI_IMP} -- Internal
 			"C inline use %"fcgi_stdio.h%""
 		alias
 			"FCGI_clearerr($v)"
-		ensure
-			is_class: class
 		end
 
 feature {NONE} -- Input
@@ -119,8 +103,6 @@ feature {NONE} -- Input
 			"C inline use %"fcgi_stdio.h%""
 		alias
 			"return FCGI_gets($s);"
-		ensure
-			is_class: class
 		end
 
 feature -- Output
@@ -130,8 +112,6 @@ feature -- Output
 			"C inline use %"fcgi_stdio.h%""
 		alias
 			"FCGI_fwrite($v, 1, $n, FCGI_stdout);"
-		ensure
-			is_class: class
 		end
 
 feature -- Error
@@ -141,8 +121,6 @@ feature -- Error
 			"C inline use %"fcgi_stdio.h%""
 		alias
 			"FCGI_fwrite($v, 1, $n, FCGI_stderr);"
-		ensure
-			is_class: class
 		end
 
 feature -- Access
@@ -153,8 +131,6 @@ feature -- Access
 			"C inline use %"fcgi_stdio.h%""
 		alias
 			"return FCGI_stdout;"
-		ensure
-			is_class: class
 		end
 
 	stdin: POINTER
@@ -163,8 +139,6 @@ feature -- Access
 			"C inline use %"fcgi_stdio.h%""
 		alias
 			"return FCGI_stdin;"
-		ensure
-			is_class: class
 		end
 
 	stderr: POINTER
@@ -173,8 +147,6 @@ feature -- Access
 			"C inline use %"fcgi_stdio.h%""
 		alias
 			"return FCGI_stderr;"
-		ensure
-			is_class: class
 		end
 
 note

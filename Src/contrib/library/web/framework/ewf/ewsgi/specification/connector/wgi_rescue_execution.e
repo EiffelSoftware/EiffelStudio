@@ -20,10 +20,10 @@ feature -- Execution
 		local
 			s: STRING
 		do
-			if 
+			if
 				res /= Void and then
-				e /= Void and then 
-				attached e.trace as l_trace 
+				e /= Void and then
+				attached e.trace as l_trace
 			then
 				if not res.status_is_set then
 					res.set_status_code ({HTTP_STATUS_CODE}.internal_server_error, Void)
@@ -41,6 +41,16 @@ feature -- Execution
 				end
 				res.push
 			end
-		end		
+		end
 
+note
+	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

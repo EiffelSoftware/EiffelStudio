@@ -151,14 +151,14 @@ feature -- Settings
 
 	timeout: INTEGER
 			-- HTTP transaction timeout in seconds.
-			--| 0 means it nevers timeout
+			--| 0 means it never timeouts
 		do
 			Result := session.timeout
 		end
 
 	connect_timeout: INTEGER
-			-- HTTP connection timeout in seconds.
-			--| 0 means it nevers timeout			
+			-- HTTP connection timeout in milliseconds.
+			--| 0 means it never timeouts
 		do
 			Result := session.connect_timeout
 		end
@@ -208,7 +208,7 @@ feature -- Settings
 		end
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

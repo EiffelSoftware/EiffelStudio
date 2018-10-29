@@ -19,9 +19,9 @@ feature {NONE} -- Initialization
 		do
 			reset
 				-- Import global request settings.
-			timeout := a_request_settings.timeout -- seconds
-			socket_recv_timeout := a_request_settings.socket_recv_timeout -- seconds
-			keep_alive_timeout := a_request_settings.keep_alive_timeout -- seconds
+			timeout_ns := a_request_settings.timeout_ns -- nanoseconds
+			socket_recv_timeout_ns := a_request_settings.socket_recv_timeout_ns -- nanoseconds
+			keep_alive_timeout_ns := a_request_settings.keep_alive_timeout_ns -- nanoseconds
 			max_keep_alive_requests := a_request_settings.max_keep_alive_requests
 
 			is_verbose := a_request_settings.is_verbose
@@ -140,7 +140,7 @@ feature -- Settings
 	is_persistent_connection_supported: BOOLEAN
 			-- Is persistent connection supported?
 		do
-			Result := {HTTPD_SERVER}.is_persistent_connection_supported and then 
+			Result := {HTTPD_SERVER}.is_persistent_connection_supported and then
 					max_keep_alive_requests /= 0 --| `-1` no limit			
 		end
 
@@ -148,17 +148,17 @@ feature -- Settings
 			-- Is next persistent connection supported?
 			-- note: it is relevant only if `is_persistent_connection_supported' is True.
 
-	timeout: INTEGER -- seconds
-			-- Amount of seconds that the server waits for receipts and transmissions during communications.
+	timeout_ns: NATURAL_64 -- nanoseconds
+			-- Amount of nanoseconds that the server waits for receipts and transmissions during communications.
 
-	socket_recv_timeout: INTEGER -- seconds
-			-- Amount of seconds that the server waits for receiving data on socket during communications.
+	socket_recv_timeout_ns: NATURAL_64 -- nanoseconds
+			-- Amount of nanoseconds that the server waits for receiving data on socket during communications.
 
 	max_keep_alive_requests: INTEGER
 			-- Maximum number of requests allowed per persistent connection.
 
-	keep_alive_timeout: INTEGER -- seconds
-			-- Number of seconds for persistent connection timeout.
+	keep_alive_timeout_ns: NATURAL_64 -- nanoseconds
+			-- Number of nanoseconds for persistent connection timeout.
 
 feature -- Status report
 
@@ -173,7 +173,7 @@ feature -- Status change
 			has_error := True
 			if m /= Void and then is_verbose then
 				log (m.as_string_8, debug_level)
-			end			
+			end
 		end
 
 	reset_error
@@ -225,6 +225,10 @@ feature -- Execution
 			n,m: INTEGER
 		do
 			l_socket := client_socket
+
+				-- Set to expected `timeout_ns`.
+			l_socket.set_timeout_ns (timeout_ns)
+			l_socket.set_recv_timeout_ns (socket_recv_timeout_ns)
 
 				-- Compute remote info once for the persistent connection.			
 			create l_remote_info
@@ -299,13 +303,13 @@ feature -- Execution
 				end
 
 					-- Try to get request header.
-					-- If the request is reusing persistent connection, use `keep_alive_timeout',
-					-- otherwise `socket_recv_timeout'.
+					-- If the request is reusing persistent connection, use `keep_alive_timeout_ns',
+					-- otherwise `socket_recv_timeout_ns'.
 				get_request_header (l_socket, a_is_reusing_connection)
 
 				if has_error then
 					if a_is_reusing_connection and then request_header.is_empty then
-							-- Close persistent connection, since no new connection occurred in the delay `keep_alive_timeout'.
+							-- Close persistent connection, since no new connection occurred in the delay `keep_alive_timeout_ns'.
 						debug ("dbglog")
 							dbglog ("execute_request socket=" + l_socket.descriptor.out + "} close persistent connection.")
 						end
@@ -407,9 +411,9 @@ feature -- Parsing
 				a_socket.readable
 			then
 				if a_is_reusing_connection then
-					a_socket.set_recv_timeout (keep_alive_timeout) -- in seconds!
+					a_socket.set_recv_timeout_ns (keep_alive_timeout_ns) -- in nanoseconds!
 				else
-					a_socket.set_recv_timeout (socket_recv_timeout) -- FIXME: return a 408 Request Timeout response ..
+					a_socket.set_recv_timeout_ns (socket_recv_timeout_ns) -- FIXME: return a 408 Request Timeout response ..
 				end
 
 				if
@@ -424,7 +428,7 @@ feature -- Parsing
 					if not has_error then
 						if a_is_reusing_connection then
 								-- Restore normal recv timeout!
-							a_socket.set_recv_timeout (socket_recv_timeout) -- FIXME: return a 408 Request Timeout response ..
+							a_socket.set_recv_timeout_ns (socket_recv_timeout_ns) -- FIXME: return a 408 Request Timeout response ..
 						end
 						from
 							line := next_line (a_socket)
@@ -646,7 +650,7 @@ invariant
 	request_header_attached: request_header /= Void
 
 note
-	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

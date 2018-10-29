@@ -213,6 +213,7 @@ feature -- Content related header
 			--| note: see `put_content_type_with_charset' for examples.
 		local
 			s: STRING_8
+			v: READABLE_STRING_8
 		do
 			if a_params /= Void and then not a_params.is_empty then
 				create s.make_from_string (a_content_type)
@@ -224,16 +225,21 @@ feature -- Content related header
 						s.append_character (' ')
 						s.append (nv.name)
 						s.append_character ('=')
-						s.append_character ('%"')
-						s.append (nv.value)
-						s.append_character ('%"')
+						v := nv.value
+						if v.has(' ') or v.has ('%T') or v.has ('=') then
+							s.append_character ('%"')
+							s.append (v)
+							s.append_character ('%"')
+						else
+							s.append (v)
+						end
 					end
 				end
 				put_header_key_value ({HTTP_HEADER_NAMES}.header_content_type, s)
 			else
 				put_content_type (a_content_type)
 			end
-		end
+		end		
 
 	add_content_type_with_parameters (a_content_type: READABLE_STRING_8; a_params: detachable ARRAY [TUPLE [name: READABLE_STRING_8; value: READABLE_STRING_8]])
 			-- Add header line "Content-Type:" + type `a_content_type' and extra paramaters `a_params'.
@@ -265,25 +271,25 @@ feature -- Content related header
 	put_content_type_with_charset (a_content_type: READABLE_STRING_8; a_charset: READABLE_STRING_8)
 			-- Put content type `a_content_type' with `a_charset' as "charset" parameter.
 		do
-			put_content_type_with_parameters (a_content_type, {ARRAY [TUPLE [name: READABLE_STRING_8; value: READABLE_STRING_8]]} <<["charset", a_charset]>>)
+			put_content_type_with_parameters (a_content_type, <<["charset", a_charset]>>)
 		end
 
 	add_content_type_with_charset (a_content_type: READABLE_STRING_8; a_charset: READABLE_STRING_8)
 			-- Same as `put_content_type_with_charset', but allow multiple definition of "Content-Type".
 		do
-			add_content_type_with_parameters (a_content_type, {ARRAY [TUPLE [name: READABLE_STRING_8; value: READABLE_STRING_8]]} <<["charset", a_charset]>>)
+			add_content_type_with_parameters (a_content_type, <<["charset", a_charset]>>)
 		end
 
 	put_content_type_with_name (a_content_type: READABLE_STRING_8; a_name: READABLE_STRING_8)
 			-- Put content type `a_content_type' with `a_name' as "name" parameter.	
 		do
-			put_content_type_with_parameters (a_content_type, {ARRAY [TUPLE [name: READABLE_STRING_8; value: READABLE_STRING_8]]} <<["name", a_name]>>)
+			put_content_type_with_parameters (a_content_type, <<["name", a_name]>>)
 		end
 
 	add_content_type_with_name (a_content_type: READABLE_STRING_8; a_name: READABLE_STRING_8)
 			-- same as `put_content_type_with_name', but allow multiple definition of "Content-Type"	
 		do
-			add_content_type_with_parameters (a_content_type, {ARRAY [TUPLE [name: READABLE_STRING_8; value: READABLE_STRING_8]]} <<["name", a_name]>>)
+			add_content_type_with_parameters (a_content_type, <<["name", a_name]>>)
 		end
 
 	put_content_length (a_length: INTEGER)
@@ -683,7 +689,7 @@ feature {NONE} -- Constants
 		end
 
 note
-	copyright: "2011-2018, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2017, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

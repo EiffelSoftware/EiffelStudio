@@ -11,6 +11,8 @@ inherit
 
 	HTTPD_CONSTANTS
 
+	SOCKET_TIMEOUT_UTILITIES
+
 feature {NONE} -- Initialization
 
 	make
@@ -18,9 +20,9 @@ feature {NONE} -- Initialization
 			http_server_port := default_http_server_port
 			max_concurrent_connections := default_max_concurrent_connections
 			max_tcp_clients := default_max_tcp_clients
-			socket_timeout := default_socket_timeout
-			socket_recv_timeout := default_socket_recv_timeout
-			keep_alive_timeout := default_keep_alive_timeout
+			socket_timeout_ns := seconds_to_nanoseconds (default_socket_timeout)
+			socket_recv_timeout_ns := seconds_to_nanoseconds (default_socket_recv_timeout)
+			keep_alive_timeout_ns := seconds_to_nanoseconds (default_keep_alive_timeout)
 			max_keep_alive_requests := default_max_keep_alive_requests
 			is_secure := False
 			create secure_certificate.make_empty
@@ -39,12 +41,12 @@ feature -- Access
 	max_tcp_clients: INTEGER assign set_max_tcp_clients
 			-- Listen on socket for at most `queue' connections.
 
-	socket_timeout: INTEGER assign set_socket_timeout
+	socket_timeout_ns: NATURAL_64 assign set_socket_timeout_ns
 			-- Amount of seconds that the server waits for receipts and transmissions during communications.
 			-- note: with timeout of 0, socket can wait for ever.
 			-- By default: 60 seconds, which is appropriate for most situations.
 
-	socket_recv_timeout: INTEGER assign set_socket_recv_timeout
+	socket_recv_timeout_ns: NATURAL_64 assign set_socket_recv_timeout_ns
 			-- Amount of seconds that the server waits for receiving data during communications.
 			-- note: with timeout of 0, socket can wait for ever.
 			-- By default: 5 seconds.
@@ -65,7 +67,7 @@ feature -- Access
 	verbose_level: INTEGER assign set_verbose_level
 			-- Verbosity of output.
 
-	keep_alive_timeout: INTEGER assign set_keep_alive_timeout
+	keep_alive_timeout_ns: NATURAL_64 assign set_keep_alive_timeout_ns
 			-- Persistent connection timeout.
 			-- Number of seconds the server waits after a request has been served before it closes the connection.
 			-- Timeout unit in Seconds.
@@ -86,9 +88,9 @@ feature -- Access
 		do
 			Result.is_verbose := is_verbose
 			Result.verbose_level := verbose_level
-			Result.timeout := socket_timeout
-			Result.socket_recv_timeout := socket_recv_timeout
-			Result.keep_alive_timeout := keep_alive_timeout
+			Result.timeout_ns := socket_timeout_ns
+			Result.socket_recv_timeout_ns := socket_recv_timeout_ns
+			Result.keep_alive_timeout_ns := keep_alive_timeout_ns
 			Result.max_keep_alive_requests := max_keep_alive_requests
 			Result.is_secure := is_secure
 		end
@@ -166,28 +168,52 @@ feature -- Element change
 			max_concurrent_connections_set : max_concurrent_connections = v
 		end
 
-	set_socket_timeout (a_nb_seconds: like socket_timeout)
+	set_socket_timeout_ns (a_nano_seconds: like socket_timeout_ns)
+			-- Set `socket_timeout_ns' with `a_nano_seconds'.
+		require
+			is_valid_timeout_ns: is_valid_timeout_ns (a_nano_seconds)
+		do
+			socket_timeout_ns := a_nano_seconds
+		ensure
+			socket_timeout_ns_set: socket_timeout_ns = a_nano_seconds
+		end
+
+	set_socket_recv_timeout_ns (a_nano_seconds: like socket_recv_timeout_ns)
+			-- Set `socket_recv_timeout_ns' with `a_nano_seconds'.
+		require
+			is_valid_timeout_ns: is_valid_timeout_ns (a_nano_seconds)
+		do
+			socket_recv_timeout_ns := a_nano_seconds
+		ensure
+			socket_recv_timeout_ns_set: socket_recv_timeout_ns = a_nano_seconds
+		end
+
+	set_keep_alive_timeout_ns (a_nano_seconds: like keep_alive_timeout_ns)
+			-- Set `keep_alive_timeout_ns' with `a_nano_seconds'.
+		require
+			is_valid_timeout_ns: is_valid_timeout_ns (a_nano_seconds)
+		do
+			keep_alive_timeout_ns := a_nano_seconds
+		ensure
+			keep_alive_timeout_ns_set: keep_alive_timeout_ns = a_nano_seconds
+		end
+
+	set_socket_timeout (a_nb_seconds: INTEGER)
 			-- Set `socket_timeout' with `a_nb_seconds'.
 		do
-			socket_timeout := a_nb_seconds
-		ensure
-			socket_timeout_set: socket_timeout = a_nb_seconds
+			set_socket_timeout_ns (seconds_to_nanoseconds (a_nb_seconds))
 		end
 
-	set_socket_recv_timeout (a_nb_seconds: like socket_recv_timeout)
+	set_socket_recv_timeout (a_nb_seconds: INTEGER)
 			-- Set `socket_recv_timeout' with `a_nb_seconds'.
 		do
-			socket_recv_timeout := a_nb_seconds
-		ensure
-			socket_recv_timeout_set: socket_recv_timeout = a_nb_seconds
+			set_socket_recv_timeout_ns (seconds_to_nanoseconds (a_nb_seconds))
 		end
 
-	set_keep_alive_timeout (a_seconds: like keep_alive_timeout)
-			-- Set `keep_alive_timeout' with `a_seconds'.
+	set_keep_alive_timeout (a_nb_seconds: INTEGER)
+			-- Set `keep_alive_timeout' with `a_nb_seconds'.
 		do
-			keep_alive_timeout := a_seconds
-		ensure
-			keep_alive_timeout_set: keep_alive_timeout = a_seconds
+			set_keep_alive_timeout_ns (seconds_to_nanoseconds (a_nb_seconds))
 		end
 
 	set_max_keep_alive_requests (nb: like max_keep_alive_requests)

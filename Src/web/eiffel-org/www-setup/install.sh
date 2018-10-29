@@ -262,11 +262,11 @@ do_install() {
 	fi
 
 	if [ -n "$ISE_INSTALL_DIR" ]; then
-		mkdir -p ${ISE_INSTALL_DIR}.tmp
-		cd ${ISE_INSTALL_DIR}.tmp
+		tdir=$(mktemp -d /tmp/eiffel.XXXXXXXXX)
+		cd ${tdir}
 		$curl $ISE_DOWNLOAD_URL | tar -x -p -s --bzip2
-		mv $(pwd)/Eiffel_$ISE_MAJOR_MINOR $ISE_INSTALL_DIR
-		\rm -rf ${ISE_INSTALL_DIR}.tmp
+		mv $(tdir)/Eiffel_$ISE_MAJOR_MINOR $ISE_INSTALL_DIR
+		\rm -rf ${tdir}
 	else
 		#Should be inside $ISE_EIFFEL=$T_CURRENT_DIR/Eiffel_$ISE_MAJOR_MINOR
 		$curl $ISE_DOWNLOAD_URL | tar -x -p -s --bzip2

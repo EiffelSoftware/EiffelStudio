@@ -1,3 +1,0 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
-<redirection xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" uuid="0A4331F9-4D2B-4474-A9F5-8DBE6655714C" message="Obsolete: use ewsgi.ecf !" location="ewsgi.ecf">
-</redirection>

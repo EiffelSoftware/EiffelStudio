@@ -298,17 +298,17 @@ do_install() {
 		echo >&2 Use the file $ISE_RC_FILE to setup your Eiffel environment.
 		case $ISE_CHANNEL in
 			latest)
-				rm $T_CURRENT_DIR/eiffel_latest.rc
+				\rm -f $T_CURRENT_DIR/eiffel_latest.rc
 				ln -s -f $ISE_RC_FILE $T_CURRENT_DIR/eiffel_latest.rc > /dev/null
 				echo >&2 or the file $T_CURRENT_DIR/eiffel_latest.rc
 				;;
 			beta)
-				rm $T_CURRENT_DIR/eiffel_beta.rc
+				\rm -f $T_CURRENT_DIR/eiffel_beta.rc
 				ln -s -f $ISE_RC_FILE $T_CURRENT_DIR/eiffel_beta.rc > /dev/null
 				echo >&2 or the file $T_CURRENT_DIR/eiffel_beta.rc
 				;;
 			nightly)
-				rm $T_CURRENT_DIR/eiffel_nightly.rc
+				\rm -f $T_CURRENT_DIR/eiffel_nightly.rc
 				ln -s -f $ISE_RC_FILE $T_CURRENT_DIR/eiffel_nightly.rc > /dev/null
 				echo >&2 or the file $T_CURRENT_DIR/eiffel_nightly.rc
 				;;

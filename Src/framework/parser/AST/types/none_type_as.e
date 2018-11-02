@@ -75,7 +75,7 @@ feature -- Comparison
 
 	is_equivalent (o: like Current): BOOLEAN
 		do
-			Result := True
+			Result := has_same_marks (o)
 		end
 
 feature -- Output
@@ -83,14 +83,16 @@ feature -- Output
 	dump: STRING
 			-- Dumped trace.
 		do
-			Result := "NONE"
+			create Result.make (4)
+			dump_marks (Result)
+			Result.append ("NONE")
 		end
 
 invariant
 	class_name_literal_not_void: class_name_literal /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -121,4 +123,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class NONE_TYPE_AS
+end

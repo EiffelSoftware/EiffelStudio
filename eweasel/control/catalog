@@ -2270,6 +2270,7 @@ test	finalize-expanded-generic-c-error	ccomp087 tcf fail c_compilation
 test	finalize-inline-with-dollar-operator	ccomp088 tcf pass c_compilation
 test	real64-constant-zero			ccomp089 tcf pass c_compilation
 test	removing-type-c-compilation-error	ccomp090 tcf pass c_compilation incrementality
+test	object-test-on-basic-types		ccomp091 tcf fail c_compilation object_test execution
 
 -- Storable tests
 

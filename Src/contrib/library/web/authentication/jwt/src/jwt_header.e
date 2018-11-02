@@ -4,8 +4,8 @@ note
 			
 			See https://tools.ietf.org/html/rfc7515
 		]"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2017-06-20 13:16:59 -0300 (ma. 20 de jun. de 2017) $"
+	revision: "$Revision: 100534 $"
 
 class
 	JWT_HEADER
@@ -52,6 +52,10 @@ feature -- Access
 			-- The issuer can freely set an algorithm to verify the signature on the token.
 			-- However, some supported algorithms are insecure.
 
+	private_key_id: detachable READABLE_STRING_8
+			-- For the kid field in the header, specify your service account's private key ID.
+			-- You can find this value in the private_key_id field of your service account JSON file. 		
+
 feature -- Conversion
 
 	string: STRING
@@ -67,7 +71,13 @@ feature -- Conversion
 			end
 			Result.append (",%"alg%":%"")
 			Result.append (algorithm)
-			Result.append ("%"}")
+			Result.append ("%"")
+			if attached private_key_id as kid then
+				Result.append (",%"kid%":%"")
+				Result.append (kid)
+				Result.append ("%"")
+			end
+			Result.append ("}")
 		end
 
 feature -- Element change
@@ -91,6 +101,11 @@ feature -- Element change
 			end
 		end
 
+	set_private_key_id (a_id: detachable READABLE_STRING_8)
+		do
+			private_key_id := a_id
+		end
+
 feature -- Element change
 
 	import_json (a_json: READABLE_STRING_8)
@@ -110,6 +125,9 @@ feature -- Element change
 				end
 				if attached {JSON_STRING} jo.item ("alg") as j_alg then
 					set_algorithm (j_alg.unescaped_string_8)
+				end
+				if attached {JSON_STRING} jo.item ("kid") as j_kid then
+					set_private_key_id (j_kid.unescaped_string_8)
 				end
 			end
 		end

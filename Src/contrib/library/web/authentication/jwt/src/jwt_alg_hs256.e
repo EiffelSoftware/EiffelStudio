@@ -12,7 +12,7 @@ inherit
 
 feature -- Access
 
-	name: STRING = "hs256"
+	name: STRING = "HS256"
 
 	encoded_string (a_message: READABLE_STRING_8; a_secret: READABLE_STRING_8): STRING
 		do

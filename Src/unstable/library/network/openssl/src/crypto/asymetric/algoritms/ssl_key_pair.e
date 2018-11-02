@@ -32,6 +32,7 @@ feature {NONE} -- Initialization
 
 			l_priv_key: C_STRING
 			l_pub_key: C_STRING
+			l_temp: STRING
 		do
 			l_bits := a_size
 
@@ -65,7 +66,6 @@ feature {NONE} -- Initialization
 
 			private_key := l_priv_key.string
 			public_key := l_pub_key.string
-
 		end
 
 feature {NONE} -- RSA Implementation.

@@ -1021,6 +1021,14 @@ feature -- Cursor movement
 			end
 		end
 
+feature -- Iteration
+
+	new_cursor: FILE_ITERATION_CURSOR
+			-- <Precursor>
+		do
+			create Result.make_open_read (internal_file)
+		end
+
 feature -- Element change
 
 	extend (v: CHARACTER)
@@ -1946,7 +1954,7 @@ invariant
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

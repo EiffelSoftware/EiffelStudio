@@ -50,39 +50,34 @@ feature {AST_EIFFEL} -- Visitor
 	process_local_dec_list_as (a: LOCAL_DEC_LIST_AS)
 			-- <Precursor>
 		local
-			t: AST_TYPE_OUTPUT_STRATEGY
 			y: YANK_STRING_WINDOW
 			u: UTF_CONVERTER
 		do
-			if attached a.locals as l then
+			if attached a.locals as ls then
 					-- Iterate over all local declarations.
-				from
-					l.start
-				until
-					l.after
+				across
+					ls as l
 				loop
 						-- Look only at the local declarations without type.
 						-- Check that all local names are in `locals'.
 					if not attached l.item.type and then
 						across l.item.id_list as i all
-							across locals as j all j.item = i.item end
+							across locals as j some j.item = i.item end
 						end
 					then
 						create y.make
-						create t
-						t.process (type, y, written_class, written_feature)
+						;(create {AST_TYPE_OUTPUT_STRATEGY}).process (type, y, written_class, written_feature)
 						l.item.append_text (": " + u.string_32_to_utf_8_string_8 (y.stored_output), token_list)
 					end
-						-- Advance to the next declaration.
-					l.forth
 				end
 			end
 		end
 
 note
+	ca_ignore: "CA011", "CA011: many feature arguments"
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -546,7 +546,7 @@
 		</xs:complexContent>
 	</xs:complexType>
 
-	<xs:complexType name="group">
+	<xs:complexType name="group" abstract="true">
 		<xs:sequence>
 			<xs:element name="note" type="note" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="description" type="xs:string" minOccurs="0"/>
@@ -591,7 +591,7 @@
 		</xs:complexContent>
 	</xs:complexType>
 
-	<xs:complexType name="abstract_cluster">
+	<xs:complexType name="abstract_cluster" abstract="true">
 		<xs:complexContent>
 			<xs:extension base="group">
 				<xs:sequence>

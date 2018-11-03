@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Typed version of POINTER_I"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,7 +10,10 @@ class TYPED_POINTER_I
 inherit
 	POINTER_I
 		redefine
-			c_string, element_type, same_as, generate
+			c_string,
+			element_type,
+			same_as,
+			generate
 		end
 
 create
@@ -57,7 +60,7 @@ feature -- Comparison
 			-- Is Current same as other?
 		do
 			if attached {like Current} other as l_other then
-				Result := type.level = l_other.type.level
+				Result := type.same_as (l_other.type)
 			end
 		end
 
@@ -74,7 +77,7 @@ invariant
 	type_not_void: type /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -76,8 +76,8 @@ feature -- Cursor movement
 			-- Attempt to read a byte from the file and make it available in `byte` and `character`.
 		do
 			if {RAW_FILE}.file_fread ($byte, 1, 1, file_pointer) /= 1 then
-					-- There is an error of EOF, stop reading.
-				file_pointer := default_pointer
+					-- There is an error or EOF, stop reading.
+				close
 			end
 		end
 

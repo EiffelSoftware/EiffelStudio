@@ -41,7 +41,7 @@ feature -- Creation
 			if object /= Void then
 				Result := object.generating_type
 			else
-				Result := {NONE}
+				Result := {detachable NONE}
 			end
 		ensure
 			instance_free: class

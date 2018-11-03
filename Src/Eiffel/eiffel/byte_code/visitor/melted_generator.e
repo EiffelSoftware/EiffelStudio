@@ -1739,7 +1739,16 @@ feature {NONE} -- Visitors
 
 			make_expression_byte_code_for_type (a_node.expression, l_target_type)
 
-			if l_target_type.is_none then
+			if
+					-- Assignment on something of type NONE always fails.
+				l_target_type.is_none or else
+					-- Assignment to an expanded variable.
+				l_target_type.is_expanded and then
+					-- Assigning Void to expanded.
+				(l_source_type.is_none or else
+					-- Non-conforming expanded types.
+				l_source_type.is_expanded and then not l_source_type.conform_to (context.associated_class, l_target_type))
+			then
 					-- Remove expression value because it is not used.
 				ba.append (bc_pop)
 				ba.append_uint32_integer (1)
@@ -1747,30 +1756,21 @@ feature {NONE} -- Visitors
 				ba.append (bc_bool)
 				ba.append_boolean (False)
 			elseif l_target_type.is_expanded and then l_source_type.is_expanded then
-					-- NOOP if classes are different or normal assignment otherwise.
-				if
-					attached {CL_TYPE_A} l_source_type as l_source_class_type and then
-					attached {CL_TYPE_A} l_target_type as l_target_class_type and then
-					l_target_class_type.class_id = l_source_class_type.class_id
-				then
-						-- Do normal assignment.
-					if l_target_type.is_basic then
-						ba.append (a_node.target.assign_code)
-					else
-						ba.append (a_node.target.expanded_assign_code)
-					end
-					melted_assignment_generator.generate_assignment (ba, a_node.target)
-						-- Types conform.
-					ba.append (bc_bool)
-					ba.append_boolean (True)
-				else
-						-- Remove expression value because it is not used.
-					ba.append (bc_pop)
-					ba.append_uint32_integer (1)
-						-- Types do not conform.
-					ba.append (bc_bool)
-					ba.append_boolean (False)
+					-- Do normal assignment.
+				check
+					from_conformance_test_of_expanded_types:
+						l_source_type.conform_to (context.associated_class, l_target_type)
 				end
+				ba.append
+					(if l_target_type.is_basic then
+						a_node.target.assign_code
+					else
+						a_node.target.expanded_assign_code
+					end)
+				melted_assignment_generator.generate_assignment (ba, a_node.target)
+					-- Types conform.
+				ba.append (bc_bool)
+				ba.append_boolean (True)
 			else
 					-- Target is a reference, source is a reference, or both
 				if system.is_scoop and then not l_target_type.is_separate and then l_source_type.is_separate then
@@ -2679,7 +2679,7 @@ feature {NONE} -- SCOOP
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

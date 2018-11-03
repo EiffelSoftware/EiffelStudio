@@ -29,8 +29,11 @@ feature -- Status report
 	has_associated_class: BOOLEAN = False
 			-- <Precursor>
 
-	is_attached: BOOLEAN = True
+	is_attached: BOOLEAN
 			-- <Precursor>
+		do
+			Result := has_detachable_mark implies is_expanded
+		end
 
 	is_initialization_required: BOOLEAN = False
 			-- <Precursor>

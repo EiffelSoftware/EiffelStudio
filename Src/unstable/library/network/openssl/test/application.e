@@ -18,10 +18,11 @@ feature {NONE} -- Initialization
 	make
 			-- Run application.
 		do
-			initialize_ssl
-			test_ecc
-			test_encrypt_decrypt_set_keys
-			test_generate_keys
+--			initialize_ssl
+--			test_ecc
+--			test_encrypt_decrypt_set_keys
+--			test_generate_keys
+			test_sign_and_verify
 		end
 
 feature -- Tests
@@ -104,7 +105,45 @@ feature -- Tests
 			print (l_keys.private_key)
 		end
 
+	test_sign_and_verify
+		local
+			l_rsa: SSL_RSA
+			l_keypair: SSL_KEY_PAIR
+			l_text : STRING
+			l_priv_key: SSL_RSA_PRIVATE_KEY
+			l_pub_key: SSL_RSA_PUBLIC_KEY
+			l_digest: READABLE_STRING_8
+		do
+				-- Generate keypair (public and private key)
+			l_text := "Eiffel Programming Language"
 
+				-- Create an object SSL_RSA and set pkcs1 padding.
+			create l_rsa.make
+			l_rsa.mark_pkcs1_padding
+
+			public_key.adjust
+
+				-- Set public key using our generated key
+			create l_pub_key.make (public_key)
+
+				-- Set private key using our generated key
+			private_key.adjust
+			create l_priv_key.make (private_key)
+
+
+				-- Create a signed digest using RSA SHA 256
+			l_digest := l_rsa.sign_sha512 (l_priv_key, l_text)
+
+
+				-- Signature Verification
+			if attached l_digest then
+				check Expected_True: l_rsa.verify_sha512 (l_pub_key, l_text, l_digest) = True end
+			else
+				check Not_expected: False end
+			end
+
+
+		end
 
 	public_key: STRING = "[
 -----BEGIN PUBLIC KEY-----

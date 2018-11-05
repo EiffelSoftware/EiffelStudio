@@ -88,7 +88,7 @@ feature -- Access
 	sign_request (a_access_token: OAUTH_TOKEN; a_req: OAUTH_REQUEST)
 			-- Signs an OAuth request using an access token (obtained previously)
 		do
-			a_req.add_query_string_parameter ({OAUTH_CONSTANTS}.access_token, a_access_token.token)
+			a_req.add_header ("Authorization", "Bearer " + a_access_token.token)
 		end
 
 	authorization_url (a_request_token: detachable OAUTH_TOKEN): detachable STRING_8
@@ -114,7 +114,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2013-2015, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2018, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

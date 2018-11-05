@@ -2,7 +2,7 @@ note
 	description: "Summary description for {JWS}."
 	date: "$Date$"
 	revision: "$Revision$"
-
+	EIS: "name=JSON Web Token (JWT)", "src=https://tools.ietf.org/html/rfc7519", "protocol=uri"
 class
 	JWS
 

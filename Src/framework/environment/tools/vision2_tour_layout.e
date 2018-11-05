@@ -11,13 +11,15 @@ class
 inherit
 	EIFFEL_ENV
 		redefine
-			distribution_name
+			distribution_name,
+			product_name
 		end
 
 feature -- Access
 
 	application_name: STRING = "vision2_demo"
 	distribution_name: STRING = "vision2_demo";
+	product_name: STRING = "vision2_demo";
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software"

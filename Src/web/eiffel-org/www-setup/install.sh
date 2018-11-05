@@ -49,19 +49,20 @@ set -- "${POSITIONAL[@]}" # restore positional parameters
 while true; do
 	case $1 in
 		--*)
-			echo Ignore argument "$1"
+			echo >&2 Ignore argument "$1"
 			shift || break
 			;;
 		*)
 			if [ -z "$ISE_CHANNEL" ]; then
-				echo get ISE_CHANNEL
 				ISE_CHANNEL=$1
 				shift || break
 			fi
 			if [ -z "$ISE_PLATFORM" ]; then
-				echo get ISE_PLATFORM
 				ISE_PLATFORM=$1
 				shift || break
+			fi
+			if [ -z "$1" ]; then
+				break
 			fi
 		;;
 	esac

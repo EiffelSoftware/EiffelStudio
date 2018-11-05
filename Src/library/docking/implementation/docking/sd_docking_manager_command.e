@@ -637,17 +637,21 @@ feature {NONE}  -- Implementation
 			-- Unlock window update
 		local
 			l_last: detachable EV_WINDOW
+			l_key: INTEGER
 		do
 			if lock_call_time = 0 then
 				across
 					locked_windows as c
 				loop
+					l_key := c.key
 					l_last := c.item
 				end
-				if attached l_last and then not l_last.is_destroyed then
+				if
+					attached l_last and then not l_last.is_destroyed
+				then
 					l_last.unlock_update
 				end
-				locked_windows.remove (0)
+				locked_windows.remove (l_key)
 				remove_empty_split_area
 				check no_windows_in_locked_window: locked_windows.is_empty end
 			else

@@ -77,7 +77,7 @@ feature -- Commands
 			a_widget_not_void_when_not_main_window: not a_main_window implies a_widget /= Void
 		do
 			if not docking_manager.is_closing_all then
-				if lock_call_time /= 0 then
+				if lock_call_time = 0 then
 						-- The update has not been not locked yet.
 					if ev_application.locked_window /= Void then
 							-- We should ignore these lock window update calls.
@@ -594,15 +594,18 @@ feature {NONE}  -- Implementation
 		do
 			if lock_call_time = 0 then
 				if a_main_window then
-					locked_windows.extend (docking_manager.main_window, 0)
+					locked_windows.extend (docking_manager.main_window)
 				else
 					if attached a_widget then
-						locked_windows.extend (docking_manager.query.find_window_by_widget (a_widget), 0)
+						locked_windows.extend (docking_manager.query.find_window_by_widget (a_widget))
 					else
 						check attached a_widget end -- Implied by precondition `a_zone_not_void_when_not_main_window'
 					end
 				end
-				if attached locked_windows.item (0) as w then
+				if
+					not locked_windows.is_empty and then
+					attached locked_windows.item as w
+				then
 					w.lock_update
 				else
 					check False end -- Implied by `lock_call_time = 0', there must be a window stored
@@ -618,16 +621,14 @@ feature {NONE}  -- Implementation
 						l_lock_window := docking_manager.main_window
 					end
 				end
-				across
-					locked_windows as c
-				loop
-					l_last := c.item
+				if not locked_windows.is_empty then
+					l_last := locked_windows.item
 				end
-				if  l_lock_window /= l_last then
-					if attached l_last then
+				if l_lock_window /= l_last then
+					if l_last /= Void then
 						l_last.unlock_update
 					end
-					locked_windows.extend (l_lock_window, lock_call_time)
+					locked_windows.extend (l_lock_window)
 					l_lock_window.lock_update
 				end
 			end
@@ -635,37 +636,33 @@ feature {NONE}  -- Implementation
 
 	unlock_update_internal
 			-- Unlock window update
-		local
-			l_last: detachable EV_WINDOW
-			l_key: INTEGER
 		do
 			if lock_call_time = 0 then
-				across
-					locked_windows as c
-				loop
-					l_key := c.key
-					l_last := c.item
-				end
 				if
-					attached l_last and then not l_last.is_destroyed
+					not locked_windows.is_empty and then
+					attached locked_windows.item as l_last and then
+					not l_last.is_destroyed
 				then
 					l_last.unlock_update
 				end
-				locked_windows.remove (l_key)
+				check not_empty: not locked_windows.is_empty end
+				locked_windows.remove
 				remove_empty_split_area
 				check no_windows_in_locked_window: locked_windows.is_empty end
 			else
-				if attached locked_windows.item (lock_call_time) as l_item then
+				if
+					not locked_windows.is_empty and then
+					attached locked_windows.item as l_item
+				then
 					if not l_item.is_destroyed then
 						l_item.unlock_update
 					end
-					locked_windows.remove (lock_call_time)
-					across
-						locked_windows as c
-					loop
-						l_last := c.item
-					end
-					if attached l_last and then not l_last.is_destroyed then
+					locked_windows.remove
+					if
+						not locked_windows.is_empty and then
+						attached locked_windows.item as l_last and then
+						not l_last.is_destroyed
+					then
 						l_last.lock_update
 					end
 				end
@@ -696,7 +693,7 @@ feature {NONE}  -- Implementation
 			end
 		end
 
-	locked_windows: HASH_TABLE [EV_WINDOW, INTEGER]
+	locked_windows: ARRAYED_STACK [EV_WINDOW]
 			-- Which window is locked. Works like a stack
 			-- Used by lock_update and unlock_update
 

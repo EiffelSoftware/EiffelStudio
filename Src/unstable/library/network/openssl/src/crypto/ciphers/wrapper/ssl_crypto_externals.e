@@ -651,7 +651,7 @@ feature -- RSA
 			return rsa;
 		  }"
 		end
-		
+
 	c_set_rsapublickey (a_key_buffer: POINTER): POINTER
 			-- Call external PEM_read_bio_RSAPublicKey
 		external
@@ -676,11 +676,11 @@ feature -- RSA
 		 " return RSA_sign((int)$a_type, (const unsigned char *)$a_m, (unsigned int)$a_m_len, (unsigned char *)$a_sigret, (unsigned int *)$a_siglen, (RSA *)$a_rsa);"
 		end
 
-	c_rsa_verify (a_type: INTEGER; a_m: POINTER; a_m_len: INTEGER; a_sigbuf: POINTER; a_siglen: INTEGER; a_rsa:  POINTER): INTEGER
+	c_rsa_verify (a_type: INTEGER; a_m: POINTER; a_sigbuf: POINTER; a_siglen: INTEGER; a_rsa:  POINTER): INTEGER
 		external
 			"C inline use %"eif_openssl.h%""
 		alias
-		 " return RSA_verify((int)$a_type, (const unsigned char *)$a_m, (unsigned int )$a_m_len, (unsigned char *)$a_sigbuf, (unsigned int)$a_siglen, (RSA *)$a_rsa);"
+		 	"return RSA_verify((int)$a_type, (const unsigned char *)$a_m, (unsigned int )sizeof($a_m), (unsigned char *)$a_sigbuf, (unsigned int) $a_siglen, (RSA *)$a_rsa);"
 		end
 
 feature -- BIGNUM
@@ -787,19 +787,23 @@ feature -- BIO
 				]"
 		end
 
-	c_base64_decode (a_b64_message: POINTER; a_len: INTEGER; a_buffer: POINTER; a_length: TYPED_POINTER[INTEGER])
+	c_base64_encode (buffer: POINTER; length:INTEGER): POINTER
 		external
 			"C inline use %"eif_openssl.h%""
 		alias
-			"{
-				BIO *bio, *b64;	
-				bio = BIO_new_mem_buf($a_b64_message, -1);
- 				b64 = BIO_new(BIO_f_base64());
- 				bio = BIO_push(b64, bio);
- 			    *$a_length = BIO_read(bio, (void *)$a_buffer, strlen($a_b64_message));
-  				printf(" %d \n", *$a_length);
-  				BIO_free_all(bio);
-			}"
+			"[
+			  BIO *bio, *b64;
+			  BUF_MEM *bufferPtr;
+			  b64 = BIO_new(BIO_f_base64());
+			  bio = BIO_new(BIO_s_mem());
+			  bio = BIO_push(b64, bio);
+			  BIO_write(bio, $buffer, $length);
+			  BIO_flush(bio);
+			  BIO_get_mem_ptr(bio, &bufferPtr);
+			  BIO_set_close(bio, BIO_NOCLOSE);
+			  BIO_free_all(bio);
+			  return (*bufferPtr).data;
+			]"
 		end
 
 end

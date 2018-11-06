@@ -16,7 +16,7 @@ feature {NONE} -- Initialization
 			l_key: C_STRING
 		do
 			create l_key.make (a_key)
-			rsa := {SSL_CRYPTO_EXTERNALS}.c_set_rsapublickey (l_key.item)
+			rsa := {SSL_CRYPTO_EXTERNALS}.c_set_rsapubkey (l_key.item)
 		end
 
 feature -- Access

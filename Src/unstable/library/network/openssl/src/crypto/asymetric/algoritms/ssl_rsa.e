@@ -209,6 +209,9 @@ feature {NONE} -- Implementation
 			c_msg: C_STRING
 			l_count: INTEGER
 			c_encmsg: C_STRING
+			l_base64: POINTER
+			l_result: C_STRING
+			l_data: STRING
 		do
 				-- https://www.openssl.org/docs/man1.1.0/crypto/EVP_DigestInit.html
 			l_sign_ctx := {SSL_CRYPTO_EXTERNALS}.c_evp_md_ctx_new
@@ -247,8 +250,17 @@ feature {NONE} -- Implementation
 				if l_res <= 0 then
 					create last_error.make (({SSL_CRYPTO_EXTERNALS}.c_error_get_error))
 				else
-					create Result.make (l_count)
-				   	Result.append_string ((create {BASE64}).encoded_string (c_encmsg.string))
+						-- Build an string from the managed pointer
+					create l_data.make (l_count)
+					across c_encmsg.managed_data.read_array (0, l_count) as it loop
+						l_data.append_character (it.item.to_character_8)
+					end
+                    Result := (create {BASE64}).encoded_string (l_data)
+
+				   		-- Base64 encoding using OpenSSL http://doctrina.org/Base64-With-OpenSSL-C-API.html
+				   	-- l_base64 := {SSL_CRYPTO_EXTERNALS}.c_base64_encode (c_encmsg.item, l_count)
+				   	-- create l_result.make_by_pointer (l_base64)
+				    -- Result := l_result.string
 				end
 			end
 
@@ -267,6 +279,11 @@ feature {NONE} -- Implementation
 			l_origin: C_STRING
 			l_count : INTEGER
 			l_padding : INTEGER
+
+			l_b64message: C_STRING
+			l_buffer: C_STRING
+			l_ret: INTEGER
+			l_character: CHARACTER_8
 		do
 			Result := True
 
@@ -312,8 +329,8 @@ feature {NONE} -- Implementation
 
 			if not has_error then
 				create l_msg.make_empty ({SSL_CRYPTO_EXTERNALS}.c_rsa_size (a_pub_key.rsa))
+				l_decoded_sig.append_character ('%U')
 				l_msg.set_string (l_decoded_sig)
-
 				l_res := {SSL_CRYPTO_EXTERNALS}.c_evp_digestverifyfinal (l_verify_ctx, l_msg.item, {SSL_CRYPTO_EXTERNALS}.c_rsa_size (a_pub_key.rsa))
 				if l_res = 1 then
 					Result := True
@@ -327,5 +344,29 @@ feature {NONE} -- Implementation
 			end
 			{SSL_CRYPTO_EXTERNALS}.c_evp_md_ctx_free (l_verify_ctx)
 		end
+
+	verify_with_sha256_imp (a_text: READABLE_STRING_GENERAL; a_signed: READABLE_STRING_8; a_pub_key: SSL_RSA_PUBLIC_KEY): BOOLEAN
+		local
+			l_buffer: C_STRING
+			l_message: C_STRING
+			l_sign: C_STRING
+			l_res: INTEGER
+			l_temp: STRING
+		do
+			create l_buffer.make_empty ({SSL_CRYPTO_EXTERNALS}.SHA256_DIGEST_LENGTH)
+			create l_message.make (a_text)
+			{SSL_CRYPTO_EXTERNALS}.c_sha256 (l_message.item, l_message.count, l_buffer.item)
+
+			l_temp := (create {BASE64}).decoded_string (a_signed)
+			l_temp.append_character ('%U')
+			create l_sign.make (l_temp)
+			l_res := {SSL_CRYPTO_EXTERNALS}.c_rsa_verify ({SSL_CRYPTO_EXTERNALS}.nid_sha256, l_buffer.item, l_sign.item, {SSL_CRYPTO_EXTERNALS}.c_rsa_size (a_pub_key.rsa), a_pub_key.rsa);
+			if l_res /= 1 then
+				create last_error.make (({SSL_CRYPTO_EXTERNALS}.c_error_get_error))
+			else
+				Result := True
+			end
+		end
+
 
 end

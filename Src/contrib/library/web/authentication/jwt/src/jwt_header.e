@@ -94,10 +94,13 @@ feature -- Element change
 
 	set_algorithm (alg: detachable READABLE_STRING_8)
 		do
-			if alg = Void then
+			if 
+				alg = Void or else 
+				alg.is_case_insensitive_equal ("none") 
+			then
 				algorithm := "none"
 			else
-				algorithm := alg
+				algorithm := alg.as_upper
 			end
 		end
 

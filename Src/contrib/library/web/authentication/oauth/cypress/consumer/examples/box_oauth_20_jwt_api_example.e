@@ -2,11 +2,13 @@ note
 	description: "Summary description for {BOX_OAUTH_20_JWT_API_EXAMPLE}."
 	date: "$Date: 2015-06-18 16:46:10 -0300 (ju. 18 de jun. de 2015) $"
 	revision: "$Revision: 97507 $"
-	EIS: "name=OAuth 2.0 for Server to Server Applications", "src=https://developers.google.com/identity/protocols/OAuth2ServiceAccount", "protocol=uri"
+	EIS: "name=Box JWT", "src=https://developer.box.com/docs/construct-jwt-claim-manually", "protocol=uri"
+	EIS: "name=App Auth", "src=https://box-content.readme.io/v2.0/docs/app-auth", "procol=uri"
+	EIS: "name=Connecting Your Developer Enterprise", "src=https://box-content.readme.io/v2.0/docs/connecting-your-developer-enterprise", "procol=uri"
 
 
 class
-	GOOGLE_OAUTH_20_JWT_API_EXAMPLE
+	BOX_OAUTH_20_JWT_API_EXAMPLE
 
 create
 	make
@@ -23,12 +25,15 @@ feature -- Access
 		do
 			create oauth_jwt.make (authentication_url)
 			create config.make (jwt_signing, client_id)
+			config.set_api_secret (client_secret)
 			api_service := {OAUTH_20_JWT_SERVICE} / oauth_jwt.create_service (config)
 			print ("%N===Box OAuth Server to Server Workflow ===%N")
 
             if attached api_service then
 					-- client id and client secreat are required by BOX
-          		access_token := api_service.access_token_post (empty_token, Void)
+            	api_service.enable_client_id
+            	api_service.enable_client_secret
+	   			access_token := api_service.access_token_post (empty_token, Void)
 				if attached access_token as l_access_token then
 					print ("%NGot the Access Token!%N");
 					print ("%N(Token: " + l_access_token.debug_output + " )%N");
@@ -59,13 +64,18 @@ feature {NONE}	-- Implementation
 			l_date: DATE_TIME
 		do
 			create jwt.default_create
+			jwt.algorithms.register_algorithm (create {JWT_ALG_RS512})
+			jwt.algorithms.register_algorithm (create {JWT_ALG_RS384})
 			jwt.algorithms.register_algorithm (create {JWT_ALG_RS256})
-			jwt.set_algorithm ({JWT_ALG_RS256}.name)
+--			jwt.set_algorithm ({JWT_ALG_RS256}.name)
+			jwt.set_algorithm ({JWT_ALG_RS384}.name)
+--			jwt.set_algorithm ({JWT_ALG_RS512}.name)
 			jwt.header.set_private_key_id (private_key_id)
-			jwt.claimset.set_claim ("iss", client_email)
+			jwt.claimset.set_claim ("iss", client_id)
 			jwt.claimset.set_claim ("sub", sub)
+			jwt.claimset.set_claim ("box_sub_type", box_sub_type)
 			jwt.claimset.set_claim ("aud", authentication_url)
-			jwt.claimset.set_claim ("scope", "https://www.googleapis.com/auth/plus.me")
+			jwt.claimset.set_claim ("jti", jti)
 			jwt.claimset.set_issued_at_now_utc
 			create l_date.make_now_utc
 			l_date.second_add (45)
@@ -77,16 +87,22 @@ feature {NONE}	-- Implementation
 
 feature {NONE} -- Implementation
 
-	protected_resource_url : STRING = "https://www.googleapis.com/plus/v1/people/me"
+	protected_resource_url : STRING = "https://api.box.com/2.0/users/me"
 	empty_token: detachable OAUTH_TOKEN
 
+
+		-- TO BE Completed: Check BOX documentation.
+		-- https://developer.box.com/docs/construct-jwt-claim-manually#section-3-create-jwt-assertion
 	private_key: STRING =""
 	private_key_id: STRING = ""
 	client_email: STRING = ""
 	client_id: STRING = ""
+	client_secret: STRING = ""
 	sub: STRING = ""
-	authentication_url: STRING = "https://oauth2.googleapis.com/token"
-
+	box_sub_type:  STRING = ""
+	jti: STRING = ""
+			-- A universally unique identifier specified by the client for this JWT. A unique string of at least 16 characters and at most 128 characters.
+	authentication_url: STRING = "https://api.box.com/oauth2/token"
 
 note
 	copyright: "2013-2018, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"

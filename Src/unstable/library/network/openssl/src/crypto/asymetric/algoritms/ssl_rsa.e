@@ -277,8 +277,6 @@ feature {NONE} -- Implementation
 				-- EVP_MD_CTX
 			l_msg: C_STRING
 			l_origin: C_STRING
-			l_count : INTEGER
-			l_padding : INTEGER
 
 			l_b64message: C_STRING
 			l_buffer: C_STRING
@@ -286,16 +284,6 @@ feature {NONE} -- Implementation
 			l_character: CHARACTER_8
 		do
 			Result := True
-
-			l_count := a_signature.count
-					-- last two chars are =
-			if a_signature.at (l_count) = '=' and then a_signature.at (l_count - 1) = '=' then
-				l_padding := 2
-			else if a_signature.at (l_count) = '=' then
-				l_padding := 1
-			end
-				l_count := (l_count * 3) // 4 - l_padding
-			end
 
 			l_decoded_sig :=(create {BASE64}).decoded_string (a_signature)
 			l_pubkey := {SSL_CRYPTO_EXTERNALS}.c_evp_pkey_new

@@ -30,11 +30,12 @@ feature {NONE} -- Creation
 			after
 		end
 
-	make_open_read (name: MANAGED_POINTER)
-			-- Open a file of name `name` to iterate over.
+	make_open_read (info: SYSTEM_FILE_INFO)
+			-- Open a file identified by `name` to iterate over.
 		do
-				-- Initialize file handle.
-			file_pointer := {FILE}.file_open (name.item, 0)
+				-- Initialize file stream.
+			info.refresh
+			stream := info.open_read
 				-- Read first byte if possible.
 			forth
 		end
@@ -43,7 +44,7 @@ feature {NONE} -- Creation
 			-- Open standard input.
 		do
 				-- Initialize file handle.
-			file_pointer := {CONSOLE}.console_def (0)
+			stream := {SYSTEM_CONSOLE}.open_standard_input
 				-- Read first byte if possible.
 			forth
 		end
@@ -66,7 +67,7 @@ feature -- Status report
 	after: BOOLEAN
 			-- Are there no more items to iterate over?
 		do
-			Result := file_pointer = default_pointer
+			Result := not attached stream
 		end
 
 feature -- Cursor movement
@@ -74,10 +75,17 @@ feature -- Cursor movement
 	forth
 			-- <Precursor>
 			-- Attempt to read a byte from the file and make it available in `byte` and `character`.
+		local
+			value: INTEGER_32
 		do
-			if {RAW_FILE}.file_fread ($byte, 1, 1, file_pointer) /= 1 then
-					-- There is an error or EOF, stop reading.
-				close
+			if attached stream as s then
+				value := s.read_byte
+				if value = -1 then
+						-- End of file.
+					close
+				else
+					byte := value.as_natural_8
+				end
 			end
 		end
 
@@ -87,15 +95,15 @@ feature -- Disposal
 			-- <Precursor>
 			-- Release resources associated with the file.
 		do
-			if file_pointer /= default_pointer then
-				{FILE}.file_close (file_pointer)
-				file_pointer := default_pointer
+			if attached stream as s then
+				s.close
+				stream := Void
 			end
 		end
 
 feature {NONE} -- Access
 
-	file_pointer: POINTER
+	stream: detachable SYSTEM_STREAM
 			-- File pointer used by low-level C operations.
 
 invariant

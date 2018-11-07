@@ -1,6 +1,5 @@
 note
-	description: "Summary description for {JWT_ALG_HS256}."
-	author: ""
+	description: "JWT signature is based on HS256=HMAC+SHA256 algorithm."
 	date: "$Date$"
 	revision: "$Revision$"
 

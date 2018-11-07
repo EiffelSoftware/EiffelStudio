@@ -1829,7 +1829,7 @@ test	default-on-expanded-string		exec328 tcf fail execution expanded
 test	ieee-abs-minus-zero				exec329 tcf pass execution ieee
 test	catcall-in-expanded-class-invariant	exec330 tcf fail execution catcall
 test	once-string-seg-fault			exec331 tcf pass execution
-test	object-test-wrong-with-expanded-generic	exec332 tcf fail execution
+test	object-test-wrong-with-expanded-generic	exec332 tcf pass execution
 test	tracing-memory-corruption		exec333 tcf pass execution
 test	special-make-empty				exec334 tcf pass execution special
 test	standard-twin-on-formal			exec335 tcf pass execution
@@ -2261,7 +2261,7 @@ test	bad-c-code-on-debug-clause		ccomp078 tcf pass c_compilation
 test	missing-makefile-for-precompile		ccomp079 tcf pass c_compilation
 test	bad-c-code-from-argument-anchor-2	ccomp080 tcf pass c_compilation
 test	bad-c-code-for-expanded-definition	ccomp081 tcf pass c_compilation expanded
-test	expanded-generic-object-test	ccomp082 tcf fail c_compilation expanded
+test	expanded-generic-object-test		ccomp082 tcf pass c_compilation expanded
 test	c-header-mismatch-3				ccomp083 tcf pass c_compilation
 test	large-real-constant-c-compile-failure		ccomp084 tcf fail c_compilation
 test	c-header-sequence				ccomp085 tcf pass c_compilation
@@ -2270,6 +2270,7 @@ test	finalize-expanded-generic-c-error	ccomp087 tcf fail c_compilation
 test	finalize-inline-with-dollar-operator	ccomp088 tcf pass c_compilation
 test	real64-constant-zero			ccomp089 tcf pass c_compilation
 test	removing-type-c-compilation-error	ccomp090 tcf pass c_compilation incrementality
+test	object-test-on-basic-types		ccomp091 tcf pass c_compilation object_test execution
 
 -- Storable tests
 

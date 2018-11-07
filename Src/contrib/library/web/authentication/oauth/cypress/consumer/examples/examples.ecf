@@ -71,7 +71,8 @@
 	</target>
 	<target name="box_jwt_example" extends="oauth_examples">
 		<root class="BOX_OAUTH_20_JWT_API_EXAMPLE" feature="make"/>
-		<library name="jwt_openssl_dynamic" location="$ISE_LIBRARY\contrib\library\web\authentication\jwt\jwt_openssl_dynamic.ecf"/>
+		<library name="jwt" location="$ISE_LIBRARY\contrib\library\web\authentication\jwt\jwt.ecf"/>
+		<library name="jwt_openssl_dynamic" location="$ISE_LIBRARY\contrib\library\web\authentication\jwt_openssl_ext\jwt_openssl_dynamic.ecf"/>
 		<library name="login_with_jwt" location="..\..\login_with\jwt_token_flow\login_with_jwt.ecf" readonly="false"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<cluster name="examples" location=".\" recursive="true">
@@ -84,7 +85,8 @@
 	</target>
 	<target name="google_jwt_example" extends="oauth_examples">
 		<root class="GOOGLE_OAUTH_20_JWT_API_EXAMPLE" feature="make"/>
-		<library name="jwt_openssl_dynamic" location="$ISE_LIBRARY\contrib\library\web\authentication\jwt\jwt_openssl_dynamic.ecf"/>
+		<library name="jwt" location="$ISE_LIBRARY\contrib\library\web\authentication\jwt\jwt.ecf"/>
+		<library name="jwt_openssl_dynamic" location="$ISE_LIBRARY\contrib\library\web\authentication\jwt_openssl_ext\jwt_openssl_dynamic.ecf"/>
 		<library name="login_with_jwt" location="..\..\login_with\jwt_token_flow\login_with_jwt.ecf" readonly="false"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<cluster name="examples" location=".\" recursive="true">

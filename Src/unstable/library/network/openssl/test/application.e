@@ -119,7 +119,6 @@ feature -- Tests
 
 				-- Create an object SSL_RSA and set pkcs1 padding.
 			create l_rsa.make
-			l_rsa.mark_pkcs1_padding
 
 			public_key.adjust
 
@@ -132,12 +131,12 @@ feature -- Tests
 
 
 				-- Create a signed digest using RSA SHA 256
-			l_digest := l_rsa.sign_sha512 (l_priv_key, l_text)
+			l_digest := l_rsa.sign_sha256(l_priv_key, l_text)
 
 
 				-- Signature Verification
 			if attached l_digest then
-				check Expected_True: l_rsa.verify_sha512 (l_pub_key, l_text, l_digest) = True end
+				check Expected_True: l_rsa.verify_sha256 (l_pub_key, l_text, l_digest) = True end
 			else
 				check Not_expected: False end
 			end

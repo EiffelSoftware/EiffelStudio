@@ -5,12 +5,8 @@
 		<option warning="true">
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="crypto" location="$ISE_LIBRARY\unstable\library\text\encryption\crypto\crypto.ecf"/>
-		<library name="encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder.ecf"/>
-		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json.ecf"/>
+		<library name="json" location="$ISE_LIBRARY\contrib\library\web\authentication\jwt\jwt.ecf"/>
 		<library name="openssl_static" location="$ISE_LIBRARY\unstable\library\network\openssl\openssl.ecf"/>
-		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
-		<cluster name="ext" location="ext\openssl" recursive="true"/>
 		<cluster name="src" location="src\" recursive="true"/>
 	</target>
 </system>

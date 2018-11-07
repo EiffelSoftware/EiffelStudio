@@ -1,6 +1,5 @@
 note
-	description: "Summary description for {JWT_ALG_HS256}."
-	author: ""
+	description: "JWT signature is based on HS256=HMAC+SHA256 algorithm."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -12,7 +11,7 @@ inherit
 
 feature -- Access
 
-	name: STRING = "hs256"
+	name: STRING = "HS256"
 
 	encoded_string (a_message: READABLE_STRING_8; a_secret: READABLE_STRING_8): STRING
 		do

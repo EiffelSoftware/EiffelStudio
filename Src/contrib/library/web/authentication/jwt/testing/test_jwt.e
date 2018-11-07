@@ -57,6 +57,22 @@ feature -- Test
 			assert ("signature", jwt.encoded_string ("secret").same_string ("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.pcHcZspUvuiqIPVB_i_qmcvCJv63KLUgIAKIlXI1gY8"))
 		end
 
+	test_jwt_alg_caseless
+		local
+			jwt: JWS
+			ut: JWT_UTILITIES
+		do
+			create jwt
+			jwt.set_algorithm ("HS256")
+			assert("HS256", jwt.algorithm.same_string ("HS256"))
+			create jwt
+			jwt.set_algorithm ("hs256")
+			assert("hs256", jwt.algorithm.same_string ("HS256"))
+			create jwt
+			jwt.set_algorithm ("None")
+			assert("None", jwt.algorithm.same_string ("none"))
+		end
+
 	test_jwt
 		local
 			jwt: JWS

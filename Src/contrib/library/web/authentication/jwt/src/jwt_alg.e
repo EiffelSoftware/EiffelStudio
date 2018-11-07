@@ -1,6 +1,5 @@
 note
-	description: "Summary description for {JWT_ALG}."
-	author: ""
+	description: "JWT signature is based on Current algorithm"
 	date: "$Date$"
 	revision: "$Revision$"
 

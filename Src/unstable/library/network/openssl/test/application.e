@@ -18,7 +18,6 @@ feature {NONE} -- Initialization
 	make
 			-- Run application.
 		do
-			initialize_ssl
 			test_ecc
 			test_encrypt_decrypt_set_keys
 			test_generate_keys

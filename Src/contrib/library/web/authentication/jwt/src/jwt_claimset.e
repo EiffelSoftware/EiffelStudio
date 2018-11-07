@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {JWT_CLAIMSET}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

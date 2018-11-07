@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="jwt_openssl" uuid="52320402-C452-4FBA-9AA7-2B00F6AA72D5" library_target="jwt_openssl">
+	<target name="jwt_openssl">
+		<root all_classes="true"/>
+		<option warning="true">
+		</option>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="jwt" location="$ISE_LIBRARY\contrib\library\web\authentication\jwt\jwt.ecf"/>
+		<library name="openssl_dynamic" location="$ISE_LIBRARY\unstable\library\network\openssl\openssl_dynamic.ecf"/>
+		<cluster name="src" location="src\" recursive="true"/>
+	</target>
+</system>

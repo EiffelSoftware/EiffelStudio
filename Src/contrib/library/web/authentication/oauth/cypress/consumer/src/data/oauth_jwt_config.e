@@ -20,8 +20,7 @@ feature {NONE} -- Implementation
 
 	make (a_assertion: READABLE_STRING_8; a_api_key: READABLE_STRING_8)
 		do
-			create api_key.make_from_string (a_api_key)
-			create api_secret.make_empty
+			make_default (a_api_key, "")
 			set_grant_type ("urn:ietf:params:oauth:grant-type:jwt-bearer")
 			create assertion.make_from_string (a_assertion)
 		end
@@ -31,16 +30,14 @@ feature -- Access
 	assertion: IMMUTABLE_STRING_8
 			--  JWT bearer token, base64url-encoded.
 
-
 feature -- Change Element
-
 
 	set_api_secret (a_secret: READABLE_STRING_8)
 		do
 			create api_secret.make_from_string (a_secret)
 		end
 
-;note
+note
 	copyright: "2013-2018, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

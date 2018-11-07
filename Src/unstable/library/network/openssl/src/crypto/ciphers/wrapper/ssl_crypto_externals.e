@@ -56,6 +56,31 @@ feature -- Ciphers Modes
 			"EVP_MAX_IV_LENGTH"
 		end
 
+	NID_sha256: INTEGER = 672
+			-- defined as NID_sha256 672
+			--| obj_mac.h
+
+	NID_sha384: INTEGER =  673
+			-- defined as NID_sha384 673
+			--| obj_mac.h
+
+	NID_sha512: INTEGER =  674
+			-- #define NID_sha512 674
+			--| obj_mac.h
+
+
+	SHA256_DIGEST_LENGTH: INTEGER = 32
+			-- define SHA256_DIGEST_LENGTH    32
+			-- |sha.h		
+
+	SHA384_DIGEST_LENGTH: INTEGER = 48
+			-- define SHA384_DIGEST_LENGTH    48
+			-- |sha.h		
+
+	SHA512_DIGEST_LENGTH: INTEGER = 64
+			-- define SHA512_DIGEST_LENGTH    64
+			-- |sha.h		
+
 feature -- Ciphers
 
 	c_evp_aes_128_gcm: POINTER
@@ -124,14 +149,19 @@ feature -- Ciphers
 			"return EVP_sha256();"
 		end
 
-	c_evp_md_ctx_free (a_ctx: POINTER)
+	c_evp_sha384: POINTER
 		external
 			"C inline use %"eif_openssl.h%""
 		alias
-			"EVP_MD_CTX_free($a_ctx);"
+			"return EVP_sha384();"
 		end
 
-
+	c_evp_sha512: POINTER
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"return EVP_sha512();"
+		end
 
 feature -- Error
 
@@ -141,6 +171,7 @@ feature -- Error
 		alias
 			"return ERR_get_error ();"
 		end
+
 feature -- Access
 
 	c_evp_cipher_nid (a_cipher: POINTER): INTEGER
@@ -451,7 +482,7 @@ feature -- Access
 		end
 
 	c_evp_digestsigninit (a_ctx: POINTER; a_pctx: POINTER; a_type: POINTER; a_engine: POINTER; a_key: POINTER): INTEGER
-			-- --https://www.openssl.org/docs/man1.1.0/crypto/EVP_DigestSignInit.html
+			-- https://www.openssl.org/docs/man1.1.0/crypto/EVP_DigestSignInit.html
 		external
 			"C inline use %"eif_openssl.h%""
 		alias
@@ -459,7 +490,7 @@ feature -- Access
 		end
 
 	c_evp_digestsignupdate (a_ctx: POINTER; a_digest: POINTER; a_cnt: INTEGER): INTEGER
-			-- --https://www.openssl.org/docs/man1.1.0/crypto/EVP_DigestSignInit.html
+			-- https://www.openssl.org/docs/man1.1.0/crypto/EVP_DigestSignInit.html
 		external
 			"C inline use %"eif_openssl.h%""
 		alias
@@ -467,13 +498,67 @@ feature -- Access
 		end
 
 	c_evp_digestsignfinal (a_ctx: POINTER; a_signed: POINTER; a_count: TYPED_POINTER [INTEGER]): INTEGER
-			-- --https://www.openssl.org/docs/man1.1.0/crypto/EVP_DigestSignInit.html
+			-- https://www.openssl.org/docs/man1.1.0/crypto/EVP_DigestSignInit.html
 		external
 			"C inline use %"eif_openssl.h%""
 		alias
 			"return EVP_DigestSignFinal((EVP_MD_CTX *)$a_ctx, (unsigned char *)$a_signed, (size_t *)$a_count);"
 		end
 
+	c_evp_digestverifyinit (a_ctx: POINTER; a_pctx: POINTER; a_type: POINTER; a_engine: POINTER; a_pkey: POINTER): INTEGER
+			-- https://www.openssl.org/docs/man1.1.0/crypto/EVP_DigestVerifyInit.html
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"return EVP_DigestVerifyInit((EVP_MD_CTX *)$a_ctx, (EVP_PKEY_CTX **)$a_pctx, (const EVP_MD *)$a_type, (ENGINE *)$a_engine, (EVP_PKEY *)$a_pkey);"
+		end
+
+	c_evp_digestverifyupdate(a_ctx: POINTER; a_d: POINTER; a_cnt: INTEGER): INTEGER
+			-- https://www.openssl.org/docs/man1.1.0/crypto/EVP_DigestVerifyInit.html
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"return EVP_DigestVerifyUpdate((EVP_MD_CTX *)$a_ctx, (const void *)$a_d, (size_t)$a_cnt);"
+		end
+
+	c_evp_digestverifyfinal(a_ctx: POINTER; a_sig: POINTER; a_siglen: INTEGER): INTEGER
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"return EVP_DigestVerifyFinal((EVP_MD_CTX *)$a_ctx, (const unsigned char *)$a_sig, (size_t)$a_siglen);"
+		end
+
+	c_evp_digestverifyfinal_2(a_ctx: POINTER; a_sig: POINTER): INTEGER
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"return EVP_DigestVerifyFinal((EVP_MD_CTX *)$a_ctx, (const unsigned char *)$a_sig, sizeof($a_sig));"
+		end
+
+	c_evp_md_ctx_free(a_ctx: POINTER)
+			-- https://www.openssl.org/docs/man1.1.0/crypto/EVP_DigestInit.html
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"EVP_MD_CTX_free((EVP_MD_CTX *)$a_ctx);"
+		end
+
+	c_evp_digestinit_ex(a_ctx: POINTER; a_type: POINTER; a_impl: POINTER): INTEGER
+			-- https://www.openssl.org/docs/man1.1.0/crypto/EVP_DigestInit.html
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"return EVP_DigestInit_ex((EVP_MD_CTX *)$a_ctx, (const EVP_MD *)$a_type, (ENGINE *)$a_impl);"
+		end
+
+feature -- SHA
+
+	c_sha256 (a_d: POINTER; a_n: INTEGER; a_md: POINTER)
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"SHA256((const unsigned char *)$a_d, (size_t)$a_n, (unsigned char *)$a_md);"
+		end
 
 feature -- RSA
 
@@ -551,7 +636,6 @@ feature -- RSA
 			"return RSA_size((const RSA *)$a_rsa);"
 		end
 
-
 	c_set_rsaprivatekey	(a_key_buffer: POINTER): POINTER
 			-- Call external PEM_read_bio_RSAPrivateKey
 		external
@@ -562,7 +646,23 @@ feature -- RSA
 			RSA *rsa = NULL;
 	
 			kbio = BIO_new_mem_buf((void*)(const char *)$a_key_buffer, -1);
-			rsa = PEM_read_bio_RSAPrivateKey(kbio, &rsa, 0, NULL);
+			rsa = PEM_read_bio_RSAPrivateKey(kbio, &rsa, NULL, NULL);
+			BIO_free(kbio);
+			return rsa;
+		  }"
+		end
+
+	c_set_rsapubkey (a_key_buffer: POINTER): POINTER
+			-- Call external PEM_read_bio_RSAPublicKey
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+		 "{
+			BIO *kbio;
+			RSA *rsa = NULL;
+			
+			kbio = BIO_new_mem_buf((void*)(const char *)$a_key_buffer, -1);
+			rsa = PEM_read_bio_RSA_PUBKEY(kbio, &rsa, NULL, NULL);
 			BIO_free(kbio);
 			return rsa;
 		  }"
@@ -574,12 +674,29 @@ feature -- RSA
 			"C inline use %"eif_openssl.h%""
 		alias
 		 "{
-		 	RSA *rsa= NULL;
-		   	BIO *bio = BIO_new_mem_buf((void*)$a_key_buffer, -1);
-			rsa = PEM_read_bio_RSA_PUBKEY(bio, &rsa, 0, NULL);
-			BIO_free(bio);
+			BIO *kbio;
+			RSA *rsa = NULL;
+			
+			kbio = BIO_new_mem_buf((void*)(const char *)$a_key_buffer, -1);
+			rsa = PEM_read_bio_RSAPublicKey(kbio, &rsa, NULL, NULL);
+			BIO_free(kbio);
 			return rsa;
 		  }"
+		end
+
+
+	c_rsa_sign (a_type: INTEGER; a_m: POINTER; a_m_len: INTEGER; a_sigret: POINTER; a_siglen: TYPED_POINTER [INTEGER]; a_rsa:  POINTER): INTEGER
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+		 " return RSA_sign((int)$a_type, (const unsigned char *)$a_m, (unsigned int)$a_m_len, (unsigned char *)$a_sigret, (unsigned int *)$a_siglen, (RSA *)$a_rsa);"
+		end
+
+	c_rsa_verify (a_type: INTEGER; a_m: POINTER; a_sigbuf: POINTER; a_siglen: INTEGER; a_rsa:  POINTER): INTEGER
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+		 	"return RSA_verify((int)$a_type, (const unsigned char *)$a_m, (unsigned int )sizeof($a_m), (unsigned char *)$a_sigbuf, (unsigned int) $a_siglen, (RSA *)$a_rsa);"
 		end
 
 feature -- BIGNUM
@@ -655,6 +772,16 @@ feature -- BIO
 				]"
 		end
 
+
+	c_pem_write_bio_rsapubkey (a_bp: POINTER; a_x: POINTER): INTEGER
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"[
+				return  PEM_write_bio_PUBKEY((BIO *)$a_bp, (RSA *)$a_x);
+				]"
+		end
+
 	c_bio_pending (a_b: POINTER): INTEGER
 			--Bio_pending return the number of pending characters in the BIOs read and write buffers.
 		external
@@ -676,5 +803,23 @@ feature -- BIO
 				]"
 		end
 
+	c_base64_encode (buffer: POINTER; length:INTEGER): POINTER
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"[
+			  BIO *bio, *b64;
+			  BUF_MEM *bufferPtr;
+			  b64 = BIO_new(BIO_f_base64());
+			  bio = BIO_new(BIO_s_mem());
+			  bio = BIO_push(b64, bio);
+			  BIO_write(bio, $buffer, $length);
+			  BIO_flush(bio);
+			  BIO_get_mem_ptr(bio, &bufferPtr);
+			  BIO_set_close(bio, BIO_NOCLOSE);
+			  BIO_free_all(bio);
+			  return (*bufferPtr).data;
+			]"
+		end
 
 end

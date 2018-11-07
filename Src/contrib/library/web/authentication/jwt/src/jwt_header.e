@@ -52,6 +52,10 @@ feature -- Access
 			-- The issuer can freely set an algorithm to verify the signature on the token.
 			-- However, some supported algorithms are insecure.
 
+	private_key_id: detachable READABLE_STRING_8
+			-- For the kid field in the header, specify your service account's private key ID.
+			-- You can find this value in the private_key_id field of your service account JSON file. 		
+
 feature -- Conversion
 
 	string: STRING
@@ -67,7 +71,13 @@ feature -- Conversion
 			end
 			Result.append (",%"alg%":%"")
 			Result.append (algorithm)
-			Result.append ("%"}")
+			Result.append ("%"")
+			if attached private_key_id as kid then
+				Result.append (",%"kid%":%"")
+				Result.append (kid)
+				Result.append ("%"")
+			end
+			Result.append ("}")
 		end
 
 feature -- Element change
@@ -84,11 +94,19 @@ feature -- Element change
 
 	set_algorithm (alg: detachable READABLE_STRING_8)
 		do
-			if alg = Void then
+			if
+				alg = Void or else
+				alg.is_case_insensitive_equal ("none")
+			then
 				algorithm := "none"
 			else
-				algorithm := alg
+				algorithm := alg.as_upper
 			end
+		end
+
+	set_private_key_id (a_id: detachable READABLE_STRING_8)
+		do
+			private_key_id := a_id
 		end
 
 feature -- Element change
@@ -110,6 +128,9 @@ feature -- Element change
 				end
 				if attached {JSON_STRING} jo.item ("alg") as j_alg then
 					set_algorithm (j_alg.unescaped_string_8)
+				end
+				if attached {JSON_STRING} jo.item ("kid") as j_kid then
+					set_private_key_id (j_kid.unescaped_string_8)
 				end
 			end
 		end

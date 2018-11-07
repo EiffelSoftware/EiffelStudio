@@ -147,14 +147,61 @@ feature -- Access: Public Encrypt - Private Decrypt
 			create Result.make_from_string (l_decrypt.string)
 		end
 
-
 feature -- Sign
 
-	sign (a_priv_key: SSL_RSA_PRIVATE_KEY; a_message: READABLE_STRING_GENERAL): detachable STRING_8
+	sign_sha256 (a_priv_key: SSL_RSA_PRIVATE_KEY; a_message: READABLE_STRING_GENERAL): detachable STRING_8
+			-- Create a signed digest in a Base64 encoded string using the hash function sha256
+		do
+			Result := sign_implementation (a_priv_key, a_message, {SSL_CRYPTO_EXTERNALS}.c_evp_sha256)
+		end
+
+	sign_sha384 (a_priv_key: SSL_RSA_PRIVATE_KEY; a_message: READABLE_STRING_GENERAL): detachable STRING_8
+			-- Create a signed digest in a Base64 encoded string using the hash function sha384
+		do
+			Result := sign_implementation (a_priv_key, a_message, {SSL_CRYPTO_EXTERNALS}.c_evp_sha384)
+		end
+
+	sign_sha512 (a_priv_key: SSL_RSA_PRIVATE_KEY; a_message: READABLE_STRING_GENERAL): detachable STRING_8
+			-- Create a signed digest in a Base64 encoded string using the hash function sha512
+		do
+			Result := sign_implementation (a_priv_key, a_message, {SSL_CRYPTO_EXTERNALS}.c_evp_sha512)
+		end
+
+feature -- Verify
+
+	verify_sha256 (a_pub_key: SSL_RSA_PUBLIC_KEY; a_plain_text:READABLE_STRING_GENERAL; a_signature: READABLE_STRING_8): BOOLEAN
+			-- Ensures that the signature matches the original code.
+			-- Using the public key `a_pub_key' and the signature encoded in BASE64 with the origin text `a_plain_text'.
+			-- usign the same algorithm as the author of the signature.
+		do
+			Result := verify_implementation (a_pub_key, a_plain_text, a_signature, {SSL_CRYPTO_EXTERNALS}.c_evp_sha256)
+		end
+
+	verify_sha384 (a_pub_key: SSL_RSA_PUBLIC_KEY; a_plain_text:READABLE_STRING_GENERAL; a_signature: READABLE_STRING_8): BOOLEAN
+			-- Ensures that the signature matches the original code.
+			-- Using the public key `a_pub_key' and the signature encoded in BASE64 with the origin text `a_plain_text'.
+			-- usign the same algorithm as the author of the signature.
+		do
+			Result := verify_implementation (a_pub_key, a_plain_text, a_signature, {SSL_CRYPTO_EXTERNALS}.c_evp_sha384)
+		end
+
+	verify_sha512 (a_pub_key: SSL_RSA_PUBLIC_KEY; a_plain_text:READABLE_STRING_GENERAL; a_signature: READABLE_STRING_8): BOOLEAN
+			-- Ensures that the signature matches the original code.
+			-- Using the public key `a_pub_key' and the signature encoded in BASE64 with the origin text `a_plain_text'.
+			-- usign the same algorithm as the author of the signature.
+		do
+			Result := verify_implementation (a_pub_key, a_plain_text, a_signature, {SSL_CRYPTO_EXTERNALS}.c_evp_sha512)
+		end
+
+feature {NONE} -- Implementation
+
+	sign_implementation (a_priv_key: SSL_RSA_PRIVATE_KEY; a_message: READABLE_STRING_GENERAL; a_sha: POINTER): detachable STRING_8
 			-- Create a signed digest in a Base64 encoded string
 			--| Sing the message `a_message' with private key `a_priv_key'.
-			--| Using the hash function `sha_256'. (todo support other Hashes).
+			--| Using the hash function `sha_256/sha_384/sha_512
 			--| If the digital signature is ok, return it as Base64 encoded.
+		note
+				EIS:"name=EVP Signing", "src=https://wiki.openssl.org/index.php/EVP_Signing_and_Verifying#Signing", "protocol=uri"
 		local
 			l_sign_ctx: POINTER
 				-- EVP_MD_CTX*
@@ -164,6 +211,7 @@ feature -- Sign
 			c_msg: C_STRING
 			l_count: INTEGER
 			c_encmsg: C_STRING
+			l_data: STRING
 		do
 				-- https://www.openssl.org/docs/man1.1.0/crypto/EVP_DigestInit.html
 			l_sign_ctx := {SSL_CRYPTO_EXTERNALS}.c_evp_md_ctx_new
@@ -175,7 +223,7 @@ feature -- Sign
 			end
 
 			if not has_error then
-				l_res := {SSL_CRYPTO_EXTERNALS}.c_evp_digestsigninit (l_sign_ctx, default_pointer, {SSL_CRYPTO_EXTERNALS}.c_evp_sha256, default_pointer, l_prikey)
+				l_res := {SSL_CRYPTO_EXTERNALS}.c_evp_digestsigninit (l_sign_ctx, default_pointer, a_sha, default_pointer, l_prikey)
 				if l_res <= 0 then
 					create last_error.make (({SSL_CRYPTO_EXTERNALS}.c_error_get_error))
 				end
@@ -202,11 +250,112 @@ feature -- Sign
 				if l_res <= 0 then
 					create last_error.make (({SSL_CRYPTO_EXTERNALS}.c_error_get_error))
 				else
-					create Result.make_from_string ((create {BASE64}).encoded_string (c_encmsg.string))
+						-- Build an string from the managed pointer
+					create l_data.make (l_count)
+					across c_encmsg.managed_data.read_array (0, l_count) as it loop
+						l_data.append_character (it.item.to_character_8)
+					end
+                    Result := (create {BASE64}).encoded_string (l_data)
+
+				   		-- Base64 encoding using OpenSSL http://doctrina.org/Base64-With-OpenSSL-C-API.html
+				   	-- l_base64 := {SSL_CRYPTO_EXTERNALS}.c_base64_encode (c_encmsg.item, l_count)
+				   	-- create l_result.make_by_pointer (l_base64)
+				    -- Result := l_result.string
 				end
 			end
 
 			{SSL_CRYPTO_EXTERNALS}.c_evp_md_ctx_free (l_sign_ctx)
 		end
+
+	verify_implementation (a_pub_key: SSL_RSA_PUBLIC_KEY; a_plain_text:READABLE_STRING_GENERAL; a_signature: READABLE_STRING_8; a_alg: POINTER): BOOLEAN
+				-- Verify a message, require a public key `a_pub_key', the original plain text `a_plain_test' and the signed message `a_signature' with
+				-- a given algorithm `a_alg'.
+				--| EVP Verifying OpenSSL API using the new EVP API: EVP_DigestVerify* functions.
+		note
+			EIS:"name=EVP Verifying", "src=https://wiki.openssl.org/index.php/EVP_Signing_and_Verifying#Verifying", "protocol=uri"
+		local
+			l_decoded_sig: STRING_8
+			l_pubkey: POINTER
+				-- EVP_KEY
+			l_res: INTEGER
+			l_verify_ctx: POINTER
+				-- EVP_MD_CTX
+			l_msg: C_STRING
+			l_origin: C_STRING
+
+		do
+			Result := True
+
+			l_decoded_sig :=(create {BASE64}).decoded_string (a_signature)
+			l_pubkey := {SSL_CRYPTO_EXTERNALS}.c_evp_pkey_new
+			l_res := {SSL_CRYPTO_EXTERNALS}.c_evp_pkey_assign_rsa (l_pubkey, a_pub_key.rsa)
+			if l_res = 0 then
+				create last_error.make (({SSL_CRYPTO_EXTERNALS}.c_error_get_error))
+				Result := False
+			end
+
+			l_verify_ctx:= {SSL_CRYPTO_EXTERNALS}.c_evp_md_ctx_new
+			l_res := {SSL_CRYPTO_EXTERNALS}.c_evp_digestinit_ex (l_verify_ctx, a_alg, default_pointer)
+			if l_res /= 1 then
+				create last_error.make (({SSL_CRYPTO_EXTERNALS}.c_error_get_error))
+			end
+
+			if not has_error then
+				l_res := {SSL_CRYPTO_EXTERNALS}.c_evp_digestverifyinit (l_verify_ctx, default_pointer, a_alg, default_pointer, l_pubkey)
+				if l_res <= 0 then
+					create last_error.make (({SSL_CRYPTO_EXTERNALS}.c_error_get_error))
+					Result := False
+				end
+			end
+			if not has_error then
+				create l_origin.make (a_plain_text)
+				l_res := {SSL_CRYPTO_EXTERNALS}.c_evp_digestsignupdate (l_verify_ctx, l_origin.item, l_origin.count)
+				if l_res <= 0 then
+					create last_error.make (({SSL_CRYPTO_EXTERNALS}.c_error_get_error))
+					Result := False
+				end
+			end
+
+			if not has_error then
+				create l_msg.make_empty ({SSL_CRYPTO_EXTERNALS}.c_rsa_size (a_pub_key.rsa))
+				l_decoded_sig.append_character ('%U')
+				l_msg.set_string (l_decoded_sig)
+				l_res := {SSL_CRYPTO_EXTERNALS}.c_evp_digestverifyfinal (l_verify_ctx, l_msg.item, {SSL_CRYPTO_EXTERNALS}.c_rsa_size (a_pub_key.rsa))
+				if l_res = 1 then
+					Result := True
+				elseif l_res = 0  then
+					create last_error.make (({SSL_CRYPTO_EXTERNALS}.c_error_get_error))
+					Result := False
+				else
+					create last_error.make (({SSL_CRYPTO_EXTERNALS}.c_error_get_error))
+					Result := False
+				end
+			end
+			{SSL_CRYPTO_EXTERNALS}.c_evp_md_ctx_free (l_verify_ctx)
+		end
+
+	verify_with_sha256_imp (a_text: READABLE_STRING_GENERAL; a_signed: READABLE_STRING_8; a_pub_key: SSL_RSA_PUBLIC_KEY): BOOLEAN
+		local
+			l_buffer: C_STRING
+			l_message: C_STRING
+			l_sign: C_STRING
+			l_res: INTEGER
+			l_temp: STRING
+		do
+			create l_buffer.make_empty ({SSL_CRYPTO_EXTERNALS}.SHA256_DIGEST_LENGTH)
+			create l_message.make (a_text)
+			{SSL_CRYPTO_EXTERNALS}.c_sha256 (l_message.item, l_message.count, l_buffer.item)
+
+			l_temp := (create {BASE64}).decoded_string (a_signed)
+			l_temp.append_character ('%U')
+			create l_sign.make (l_temp)
+			l_res := {SSL_CRYPTO_EXTERNALS}.c_rsa_verify ({SSL_CRYPTO_EXTERNALS}.nid_sha256, l_buffer.item, l_sign.item, {SSL_CRYPTO_EXTERNALS}.c_rsa_size (a_pub_key.rsa), a_pub_key.rsa);
+			if l_res /= 1 then
+				create last_error.make (({SSL_CRYPTO_EXTERNALS}.c_error_get_error))
+			else
+				Result := True
+			end
+		end
+
 
 end

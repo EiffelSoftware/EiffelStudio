@@ -149,27 +149,27 @@ feature -- Access: Public Encrypt - Private Decrypt
 
 feature -- Sign
 
-	sign_sha256 (a_priv_key: SSL_RSA_PRIVATE_KEY; a_message: READABLE_STRING_GENERAL): detachable STRING_8
-			-- Create a signed digest in a Base64 encoded string using the hash function sha256
+	sha256_signed_message (a_priv_key: SSL_RSA_PRIVATE_KEY; a_message: READABLE_STRING_GENERAL): detachable STRING_8
+			-- Create a signed digest in a Base64 encoded string using the hash function sha256.
 		do
 			Result := sign_implementation (a_priv_key, a_message, {SSL_CRYPTO_EXTERNALS}.c_evp_sha256)
 		end
 
-	sign_sha384 (a_priv_key: SSL_RSA_PRIVATE_KEY; a_message: READABLE_STRING_GENERAL): detachable STRING_8
-			-- Create a signed digest in a Base64 encoded string using the hash function sha384
+	sha384_signed_message (a_priv_key: SSL_RSA_PRIVATE_KEY; a_message: READABLE_STRING_GENERAL): detachable STRING_8
+			-- Create a signed digest in a Base64 encoded string using the hash function sha384.
 		do
 			Result := sign_implementation (a_priv_key, a_message, {SSL_CRYPTO_EXTERNALS}.c_evp_sha384)
 		end
 
-	sign_sha512 (a_priv_key: SSL_RSA_PRIVATE_KEY; a_message: READABLE_STRING_GENERAL): detachable STRING_8
-			-- Create a signed digest in a Base64 encoded string using the hash function sha512
+	sha512_signed_message (a_priv_key: SSL_RSA_PRIVATE_KEY; a_message: READABLE_STRING_GENERAL): detachable STRING_8
+			-- Create a signed digest in a Base64 encoded string using the hash function sha512.
 		do
 			Result := sign_implementation (a_priv_key, a_message, {SSL_CRYPTO_EXTERNALS}.c_evp_sha512)
 		end
 
 feature -- Verify
 
-	verify_sha256 (a_pub_key: SSL_RSA_PUBLIC_KEY; a_plain_text:READABLE_STRING_GENERAL; a_signature: READABLE_STRING_8): BOOLEAN
+	is_sha256_verified (a_pub_key: SSL_RSA_PUBLIC_KEY; a_plain_text:READABLE_STRING_GENERAL; a_signature: READABLE_STRING_8): BOOLEAN
 			-- Ensures that the signature matches the original code.
 			-- Using the public key `a_pub_key' and the signature encoded in BASE64 with the origin text `a_plain_text'.
 			-- usign the same algorithm as the author of the signature.
@@ -177,7 +177,7 @@ feature -- Verify
 			Result := verify_implementation (a_pub_key, a_plain_text, a_signature, {SSL_CRYPTO_EXTERNALS}.c_evp_sha256)
 		end
 
-	verify_sha384 (a_pub_key: SSL_RSA_PUBLIC_KEY; a_plain_text:READABLE_STRING_GENERAL; a_signature: READABLE_STRING_8): BOOLEAN
+	is_sha384_verified (a_pub_key: SSL_RSA_PUBLIC_KEY; a_plain_text:READABLE_STRING_GENERAL; a_signature: READABLE_STRING_8): BOOLEAN
 			-- Ensures that the signature matches the original code.
 			-- Using the public key `a_pub_key' and the signature encoded in BASE64 with the origin text `a_plain_text'.
 			-- usign the same algorithm as the author of the signature.
@@ -185,7 +185,7 @@ feature -- Verify
 			Result := verify_implementation (a_pub_key, a_plain_text, a_signature, {SSL_CRYPTO_EXTERNALS}.c_evp_sha384)
 		end
 
-	verify_sha512 (a_pub_key: SSL_RSA_PUBLIC_KEY; a_plain_text:READABLE_STRING_GENERAL; a_signature: READABLE_STRING_8): BOOLEAN
+	is_sha512_verified (a_pub_key: SSL_RSA_PUBLIC_KEY; a_plain_text:READABLE_STRING_GENERAL; a_signature: READABLE_STRING_8): BOOLEAN
 			-- Ensures that the signature matches the original code.
 			-- Using the public key `a_pub_key' and the signature encoded in BASE64 with the origin text `a_plain_text'.
 			-- usign the same algorithm as the author of the signature.
@@ -296,7 +296,7 @@ feature {NONE} -- Implementation
 
 			l_verify_ctx:= {SSL_CRYPTO_EXTERNALS}.c_evp_md_ctx_new
 			l_res := {SSL_CRYPTO_EXTERNALS}.c_evp_digestinit_ex (l_verify_ctx, a_alg, default_pointer)
-			if l_res /= 1 then
+			if l_res <= 0 then
 				create last_error.make (({SSL_CRYPTO_EXTERNALS}.c_error_get_error))
 			end
 
@@ -333,29 +333,4 @@ feature {NONE} -- Implementation
 			end
 			{SSL_CRYPTO_EXTERNALS}.c_evp_md_ctx_free (l_verify_ctx)
 		end
-
-	verify_with_sha256_imp (a_text: READABLE_STRING_GENERAL; a_signed: READABLE_STRING_8; a_pub_key: SSL_RSA_PUBLIC_KEY): BOOLEAN
-		local
-			l_buffer: C_STRING
-			l_message: C_STRING
-			l_sign: C_STRING
-			l_res: INTEGER
-			l_temp: STRING
-		do
-			create l_buffer.make_empty ({SSL_CRYPTO_EXTERNALS}.SHA256_DIGEST_LENGTH)
-			create l_message.make (a_text)
-			{SSL_CRYPTO_EXTERNALS}.c_sha256 (l_message.item, l_message.count, l_buffer.item)
-
-			l_temp := (create {BASE64}).decoded_string (a_signed)
-			l_temp.append_character ('%U')
-			create l_sign.make (l_temp)
-			l_res := {SSL_CRYPTO_EXTERNALS}.c_rsa_verify ({SSL_CRYPTO_EXTERNALS}.nid_sha256, l_buffer.item, l_sign.item, {SSL_CRYPTO_EXTERNALS}.c_rsa_size (a_pub_key.rsa), a_pub_key.rsa);
-			if l_res /= 1 then
-				create last_error.make (({SSL_CRYPTO_EXTERNALS}.c_error_get_error))
-			else
-				Result := True
-			end
-		end
-
-
 end

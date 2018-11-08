@@ -1,8 +1,9 @@
 note
-	description: "Summary description for {JWT_ALGORITHMS}."
+	description: "JSON Web Algorithms (JWA)"
 	date: "$Date$"
 	revision: "$Revision$"
-	EIS: "name= JSON Web Algorithms", "src=https://tools.ietf.org/html/rfc7518#page-8", "protocol=uri"
+	EIS: "name= JSON Web Algorithms", "src=https://tools.ietf.org/html/rfc7518", "protocol=uri"
+
 
 class
 	JWT_ALGORITHMS

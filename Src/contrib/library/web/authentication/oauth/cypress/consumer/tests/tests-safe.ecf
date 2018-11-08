@@ -7,10 +7,10 @@
 			<exclude>/.svn$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option warning="true" full_class_checking="true" is_attached_by_default="true" is_obsolete_routine_type="true" syntax="standard">
+		<option warning="true" full_class_checking="true">
 		</option>
 		<capability>
-			<void_safety support="transitional" use="transitional"/>
+			<void_safety support="all"/>
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="crypto" location="$ISE_LIBRARY\unstable\library\text\encryption\crypto\crypto-safe.ecf"/>

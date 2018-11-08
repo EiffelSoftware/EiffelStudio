@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="examples" uuid="533DEB07-C4A6-4EEE-8EC1-4F09DC203A26">
 	<target name="oauth_examples" abstract="true">
-		<option warning="true" is_obsolete_routine_type="true" manifest_array_type="mismatch_warning">
+		<option warning="true">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
+		<file_rule>
+			<exclude>/.svn$</exclude>
+			<exclude>/CVS$</exclude>
+			<exclude>/EIFGENs$</exclude>
+		</file_rule>
 		<setting name="console_application" value="true"/>
 		<capability>
 			<concurrency support="none"/>
-			<void_safety support="transitional" use="transitional"/>
+			<void_safety support="all"/>
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="cypress_consumer" location="..\consumer-safe.ecf" readonly="false"/>
@@ -17,57 +22,27 @@
 	<target name="foursquare_example" extends="oauth_examples">
 		<root class="FOURSQUARE_20_API_EXAMPLE" feature="make"/>
 		<library name="login_with_foursquare" location="..\..\login_with\foursquare\login_with_foursquare.ecf" readonly="false"/>
-		<cluster name="examples" location=".\" recursive="true">
-			<file_rule>
-				<exclude>/.svn$</exclude>
-				<exclude>/CVS$</exclude>
-				<exclude>/EIFGENs$</exclude>
-			</file_rule>
-		</cluster>
+		<cluster name="examples" location=".\" recursive="true"/>
 	</target>
 	<target name="box_example" extends="oauth_examples">
 		<root class="BOX_20_API_EXAMPLE" feature="make"/>
 		<library name="login_with_box" location="..\..\login_with\box\login_with_box.ecf" readonly="false"/>
-		<cluster name="examples" location=".\" recursive="true">
-			<file_rule>
-				<exclude>/.svn$</exclude>
-				<exclude>/CVS$</exclude>
-				<exclude>/EIFGENs$</exclude>
-			</file_rule>
-		</cluster>
+		<cluster name="examples" location=".\" recursive="true"/>
 	</target>
 	<target name="campaign_example" extends="oauth_examples">
 		<root class="CAMPAING_MONITOR_20_API_EXAMPLE" feature="make"/>
 		<library name="login_with_campaign_monitor" location="..\..\login_with\campaign_monitor\login_with_campaign_monitor.ecf" readonly="false"/>
-		<cluster name="examples" location=".\" recursive="true">
-			<file_rule>
-				<exclude>/.svn$</exclude>
-				<exclude>/CVS$</exclude>
-				<exclude>/EIFGENs$</exclude>
-			</file_rule>
-		</cluster>
+		<cluster name="examples" location=".\" recursive="true"/>
 	</target>
 	<target name="geoloqi_example" extends="oauth_examples">
 		<root class="GEOLOQUI_20_API_EXAMPLE" feature="make"/>
 		<library name="login_with_geoloqi" location="..\..\login_with\geoloqi\login_with_geoloqi.ecf" readonly="false"/>
-		<cluster name="examples" location=".\" recursive="true">
-			<file_rule>
-				<exclude>/.svn$</exclude>
-				<exclude>/CVS$</exclude>
-				<exclude>/EIFGENs$</exclude>
-			</file_rule>
-		</cluster>
+		<cluster name="examples" location=".\" recursive="true"/>
 	</target>
 	<target name="google_example" extends="oauth_examples">
 		<root class="GOOGLE_OAUTH_20_API_EXAMPLE" feature="make"/>
 		<library name="login_with_google" location="..\..\login_with\google\login_with_google.ecf" readonly="false"/>
-		<cluster name="examples" location=".\" recursive="true">
-			<file_rule>
-				<exclude>/.svn$</exclude>
-				<exclude>/CVS$</exclude>
-				<exclude>/EIFGENs$</exclude>
-			</file_rule>
-		</cluster>
+		<cluster name="examples" location=".\" recursive="true"/>
 	</target>
 	<target name="box_jwt_example" extends="oauth_examples">
 		<root class="BOX_OAUTH_20_JWT_API_EXAMPLE" feature="make"/>
@@ -75,13 +50,7 @@
 		<library name="jwt_openssl_dynamic" location="$ISE_LIBRARY\contrib\library\web\authentication\jwt_openssl_ext\jwt_openssl_dynamic.ecf"/>
 		<library name="login_with_jwt" location="..\..\login_with\jwt_token_flow\login_with_jwt.ecf" readonly="false"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
-		<cluster name="examples" location=".\" recursive="true">
-			<file_rule>
-				<exclude>/.svn$</exclude>
-				<exclude>/CVS$</exclude>
-				<exclude>/EIFGENs$</exclude>
-			</file_rule>
-		</cluster>
+		<cluster name="examples" location=".\" recursive="true"/>
 	</target>
 	<target name="google_jwt_example" extends="oauth_examples">
 		<root class="GOOGLE_OAUTH_20_JWT_API_EXAMPLE" feature="make"/>
@@ -89,91 +58,43 @@
 		<library name="jwt_openssl_dynamic" location="$ISE_LIBRARY\contrib\library\web\authentication\jwt_openssl_ext\jwt_openssl_dynamic.ecf"/>
 		<library name="login_with_jwt" location="..\..\login_with\jwt_token_flow\login_with_jwt.ecf" readonly="false"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
-		<cluster name="examples" location=".\" recursive="true">
-			<file_rule>
-				<exclude>/.svn$</exclude>
-				<exclude>/CVS$</exclude>
-				<exclude>/EIFGENs$</exclude>
-			</file_rule>
-		</cluster>
+		<cluster name="examples" location=".\" recursive="true"/>
 	</target>
 	<target name="asana_example" extends="oauth_examples">
 		<root class="ASANA_OAUTH_20_API_EXAMPLE" feature="make"/>
 		<library name="login_with_asana" location="..\..\login_with\asana\login_with_asana.ecf" readonly="false"/>
-		<cluster name="examples" location=".\" recursive="true">
-			<file_rule>
-				<exclude>/.svn$</exclude>
-				<exclude>/CVS$</exclude>
-				<exclude>/EIFGENs$</exclude>
-			</file_rule>
-		</cluster>
+		<cluster name="examples" location=".\" recursive="true"/>
 	</target>
 	<target name="strava_example" extends="oauth_examples">
 		<root class="STRAVA_OAUTH_20_API_EXAMPLE" feature="make"/>
 		<library name="login_with_strave" location="..\..\login_with\strava\login_with_strava.ecf" readonly="false"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
-		<cluster name="examples" location=".\" recursive="true">
-			<file_rule>
-				<exclude>/.svn$</exclude>
-				<exclude>/CVS$</exclude>
-				<exclude>/EIFGENs$</exclude>
-			</file_rule>
-		</cluster>
+		<cluster name="examples" location=".\" recursive="true"/>
 	</target>
 	<target name="paypal_example" extends="oauth_examples">
 		<root class="PAYPAL_OAUTH_20_API_EXAMPLE" feature="make"/>
 		<library name="login_with_paypal" location="..\..\login_with\paypal\login_with_paypal.ecf" readonly="false"/>
-		<cluster name="examples" location=".\" recursive="true">
-			<file_rule>
-				<exclude>/.svn$</exclude>
-				<exclude>/CVS$</exclude>
-				<exclude>/EIFGENs$</exclude>
-			</file_rule>
-		</cluster>
+		<cluster name="examples" location=".\" recursive="true"/>
 	</target>
 	<target name="github_example" extends="oauth_examples">
 		<root class="GITHUB_OAUTH_20_API_EXAMPLE" feature="make"/>
 		<library name="login_with_github" location="..\..\login_with\github\github-safe.ecf" readonly="false"/>
-		<cluster name="examples" location=".\" recursive="true">
-			<file_rule>
-				<exclude>/.svn$</exclude>
-				<exclude>/CVS$</exclude>
-				<exclude>/EIFGENs$</exclude>
-			</file_rule>
-		</cluster>
+		<cluster name="examples" location=".\" recursive="true"/>
 	</target>
 	<target name="twitter_example" extends="oauth_examples">
 		<root class="TWITTER_10_API_EXAMPLE" feature="make"/>
 		<library name="login_with_twitter" location="..\..\login_with\twitter\login_with_twitter.ecf" readonly="false"/>
-		<cluster name="examples" location=".\" recursive="true">
-			<file_rule>
-				<exclude>/.svn$</exclude>
-				<exclude>/CVS$</exclude>
-				<exclude>/EIFGENs$</exclude>
-			</file_rule>
-		</cluster>
+		<cluster name="examples" location=".\" recursive="true"/>
 	</target>
 	<target name="flickr_example" extends="oauth_examples">
 		<root class="FLICKR_10_API_EXAMPLE" feature="make"/>
 		<library name="login_with_flickr" location="..\..\login_with\flickr\login_with_flickr.ecf" readonly="false"/>
-		<cluster name="examples" location=".\" recursive="true">
-			<file_rule>
-				<exclude>/.svn$</exclude>
-				<exclude>/CVS$</exclude>
-				<exclude>/EIFGENs$</exclude>
-			</file_rule>
-		</cluster>
+		<cluster name="examples" location=".\" recursive="true"/>
 	</target>
 	<target name="yahoo_example" extends="oauth_examples">
 		<root class="YAHOO_10_API_EXAMPLE" feature="make"/>
 		<library name="login_with_yahoo" location="..\..\login_with\yahoo\login_with_yahoo.ecf" readonly="false"/>
-		<cluster name="examples" location=".\" recursive="true">
-			<file_rule>
-				<exclude>/.svn$</exclude>
-				<exclude>/CVS$</exclude>
-				<exclude>/EIFGENs$</exclude>
-			</file_rule>
-		</cluster>
+		<cluster name="examples" location=".\" recursive="true"/>
 	</target>
 	<target name="bitbucket_example" extends="oauth_examples">
 		<root class="BITBUCKET_10_API_EXAMPLE" feature="make"/>
@@ -183,78 +104,36 @@
 			<debug name="proxy8888" enabled="true"/>
 		</option>
 		<library name="login_with_bitbucket" location="..\..\login_with\bitbucket\login_with_bitbucket.ecf" readonly="false"/>
-		<cluster name="examples" location=".\" recursive="true">
-			<file_rule>
-				<exclude>/.svn$</exclude>
-				<exclude>/CVS$</exclude>
-				<exclude>/EIFGENs$</exclude>
-			</file_rule>
-		</cluster>
+		<cluster name="examples" location=".\" recursive="true"/>
 	</target>
 	<target name="vimeo_example" extends="oauth_examples">
 		<root class="VIMEO_10_API_EXAMPLE" feature="make"/>
 		<library name="login_with_vimeo" location="..\..\login_with\vimeo\login_with_vimeo.ecf" readonly="false"/>
-		<cluster name="examples" location=".\" recursive="true">
-			<file_rule>
-				<exclude>/.svn$</exclude>
-				<exclude>/CVS$</exclude>
-				<exclude>/EIFGENs$</exclude>
-			</file_rule>
-		</cluster>
+		<cluster name="examples" location=".\" recursive="true"/>
 	</target>
 	<target name="tumblr_example" extends="oauth_examples">
 		<root class="TUMBLR_10_API_EXAMPLE" feature="make"/>
 		<library name="login_with_tumblr" location="..\..\login_with\tumblr\login_with_tumblr.ecf" readonly="false"/>
-		<cluster name="examples" location=".\" recursive="true">
-			<file_rule>
-				<exclude>/.svn$</exclude>
-				<exclude>/CVS$</exclude>
-				<exclude>/EIFGENs$</exclude>
-			</file_rule>
-		</cluster>
+		<cluster name="examples" location=".\" recursive="true"/>
 	</target>
 	<target name="linkedin_example" extends="oauth_examples">
 		<root class="LINKEDIN_10_API_EXAMPLE" feature="make"/>
 		<library name="login_with_linkedin" location="..\..\login_with\linkedin\login_with_linkedin.ecf" readonly="false"/>
-		<cluster name="examples" location=".\" recursive="true">
-			<file_rule>
-				<exclude>/.svn$</exclude>
-				<exclude>/CVS$</exclude>
-				<exclude>/EIFGENs$</exclude>
-			</file_rule>
-		</cluster>
+		<cluster name="examples" location=".\" recursive="true"/>
 	</target>
 	<target name="yelp_example" extends="oauth_examples">
 		<root class="YELP_10_API_EXAMPLE" feature="make"/>
 		<library name="login_with_yelp" location="..\..\login_with\yelp\login_with_yelp.ecf" readonly="false"/>
-		<cluster name="examples" location=".\" recursive="true">
-			<file_rule>
-				<exclude>/.svn$</exclude>
-				<exclude>/CVS$</exclude>
-				<exclude>/EIFGENs$</exclude>
-			</file_rule>
-		</cluster>
+		<cluster name="examples" location=".\" recursive="true"/>
 	</target>
 	<target name="facebook_example" extends="oauth_examples">
 		<root class="FACEBOOK_EXAMPLE" feature="make"/>
 		<library name="login_with_facebook" location="..\..\login_with\facebook\login_with_facebook.ecf" readonly="false"/>
-		<cluster name="examples" location=".\" recursive="true">
-			<file_rule>
-				<exclude>/.svn$</exclude>
-				<exclude>/CVS$</exclude>
-				<exclude>/EIFGENs$</exclude>
-			</file_rule>
-		</cluster>
+		<cluster name="examples" location=".\" recursive="true"/>
 	</target>
 	<target name="twitter_20_example" extends="oauth_examples">
 		<root class="TWITTER_OAUTH_20_API_EXAMPLE" feature="make"/>
 		<library name="login_with_twitter" location="..\..\login_with\twitter\login_with_twitter.ecf" readonly="false"/>
-		<cluster name="examples" location=".\" recursive="true">
-			<file_rule>
-				<exclude>/.svn$</exclude>
-				<exclude>/CVS$</exclude>
-				<exclude>/EIFGENs$</exclude>
-			</file_rule>
-		</cluster>
+		<cluster name="examples" location=".\" recursive="true"/>
 	</target>
 </system>

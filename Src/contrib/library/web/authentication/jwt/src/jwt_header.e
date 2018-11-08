@@ -6,7 +6,8 @@ note
 		]"
 	date: "$Date$"
 	revision: "$Revision$"
-
+	EIS: "name=JOSE Header", "src=https://tools.ietf.org/html/rfc7519#section-5", "protocol=uri"
+	
 class
 	JWT_HEADER
 

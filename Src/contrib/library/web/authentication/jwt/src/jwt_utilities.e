@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {JWT_UTILITIES}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

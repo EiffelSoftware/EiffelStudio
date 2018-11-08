@@ -2,6 +2,7 @@ note
 	description: "JSON Web Token"
 	date: "$Date$"
 	revision: "$Revision$"
+	EIS: "name=JSON Web Token (JWT)", "src=https://tools.ietf.org/html/rfc7519", "protocol=uri"
 
 deferred class
 	JWT

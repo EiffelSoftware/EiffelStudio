@@ -15,22 +15,22 @@ feature -- Access
 
 	encoded_string (a_message: READABLE_STRING_8; a_secret: READABLE_STRING_8): STRING
 		do
-			Result := sign_rsa256 (a_message, a_secret)
+			Result := rsa256_signed_message (a_message, a_secret)
 		end
 
 feature {NONE} -- Implementation		
 
-	sign_rsa256 (s: READABLE_STRING_8; a_secret: READABLE_STRING_8): STRING_8
+	rsa256_signed_message (s: READABLE_STRING_8; a_secret: READABLE_STRING_8): STRING_8
+			-- Sign the message `s' with a secret key `a_secret' using RSA with SHA256.
 		local
 			rsa: SSL_RSA
 			l_priv_key: SSL_RSA_PRIVATE_KEY
-			l_result: STRING_8
 		do
 				--| todo missing error handling.
 			create rsa.make
 			rsa.mark_pkcs1_padding
 			create l_priv_key.make (a_secret)
-			if attached rsa.sign_sha256 (l_priv_key, s) as l_signed_base64 then
+			if attached rsa.sha256_signed_message (l_priv_key, s) as l_signed_base64 then
 				Result := l_signed_base64
 			else
 			 	create Result.make_empty

@@ -2,7 +2,7 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="same_mach_server" uuid="D5EED05B-0716-4835-A63E-CEB8C4FC1572">
 	<target name="same_mach_server">
 		<root cluster="root_cluster" class="OUR_SERVER" feature="make"/>
-		<option warning="true" is_obsolete_routine_type="true" syntax="transitional">
+		<option warning="true">
 			<assertions precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>

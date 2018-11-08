@@ -7,7 +7,7 @@
 			<exclude>.svn</exclude>
 			<exclude>EIFGENs</exclude>
 		</file_rule>
-		<option warning="true" full_class_checking="false" is_obsolete_routine_type="true" syntax="transitional">
+		<option warning="true" full_class_checking="false">
 			<assertions precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>

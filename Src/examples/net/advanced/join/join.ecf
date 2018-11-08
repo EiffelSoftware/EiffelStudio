@@ -2,7 +2,7 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="join" uuid="80FD76A5-6929-45A5-A35E-7C446CAABA8A">
 	<target name="join">
 		<root cluster="root_cluster" class="JOIN" feature="make_join"/>
-		<option warning="true" is_obsolete_routine_type="true" syntax="transitional">
+		<option warning="true">
 			<assertions precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>

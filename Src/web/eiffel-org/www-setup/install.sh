@@ -63,9 +63,9 @@ while true; do
 					ISE_PLATFORM=$1
 					shift || break
 				else
-					if [ ! -z "$1" ]; then
+					#if [ ! -z "$1" ]; then
 						#echo >&2 "Ignore argument \"$1\""
-					fi
+					#fi
 					shift || break
 				fi
 			fi

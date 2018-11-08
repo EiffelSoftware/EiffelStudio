@@ -2,7 +2,7 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="file_encrypt" uuid="2F814FA3-3223-40CF-99FA-42A367FBCABF">
 	<target name="file_encrypt">
 		<root cluster="file_encrypt" class="FILE_ENCRYPT" feature="main"/>
-		<option full_class_checking="false" is_obsolete_routine_type="true" syntax="transitional">
+		<option full_class_checking="false">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>

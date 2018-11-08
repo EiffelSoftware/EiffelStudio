@@ -2,8 +2,6 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="basic" uuid="5156B9EE-0436-42A3-BDA1-74710DF05A35">
 	<target name="basic">
 		<root class="BASIC" feature="make"/>
-		<option is_obsolete_routine_type="true">
-		</option>
 		<setting name="console_application" value="true"/>
 		<capability>
 			<concurrency support="none"/>

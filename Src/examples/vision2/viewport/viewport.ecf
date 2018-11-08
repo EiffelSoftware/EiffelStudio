@@ -2,7 +2,7 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="viewport" uuid="80F72EDE-250F-4464-B1C7-F2EB79779CC7">
 	<target name="common" abstract="true">
 		<root class="VIEWPORT" feature="make_and_launch"/>
-		<option warning="true" is_obsolete_routine_type="true" syntax="transitional">
+		<option warning="true">
 			<assertions precondition="true"/>
 		</option>
 		<capability>

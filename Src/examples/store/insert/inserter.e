@@ -179,8 +179,7 @@ feature {NONE} -- Implementation
 
 feature {NONE}
 
-        Table_name: STRING =
-                "DB_BOOK";
+        Table_name: STRING = "DB_BOOK";
 
 note
 	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"

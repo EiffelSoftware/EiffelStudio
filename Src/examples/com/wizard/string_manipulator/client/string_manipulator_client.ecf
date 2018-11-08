@@ -3,7 +3,7 @@
 	<target name="string_manipulator_client">
 		<description>StringManipulator EiffelCOM component client.</description>
 		<root cluster="root_cluster" class="APPLICATION" feature="make"/>
-		<option warning="true" full_class_checking="false" is_obsolete_routine_type="true" syntax="transitional">
+		<option warning="true" full_class_checking="false">
 			<assertions precondition="true"/>
 		</option>
 		<setting name="platform" value="windows"/>

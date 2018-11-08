@@ -2,7 +2,7 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="eiffel2java" uuid="20FD9834-3FC9-4349-AD78-73ABA2C735D4">
 	<target name="classic">
 		<root class="ROOT_CLASS" feature="make"/>
-		<option warning="true" is_obsolete_routine_type="true" syntax="transitional">
+		<option warning="true">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true"/>
 		</option>
 		<setting name="console_application" value="true"/>

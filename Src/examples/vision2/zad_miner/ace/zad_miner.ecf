@@ -2,7 +2,7 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="zad_miner" uuid="89BD5624-DB84-488A-8689-243A34529193">
 	<target name="zad_miner">
 		<root class="ZAD_MINER" feature="make_and_launch"/>
-		<option trace="false" profile="false" debug="false" full_class_checking="false" is_obsolete_routine_type="true" syntax="transitional">
+		<option trace="false" profile="false" debug="false" full_class_checking="false">
 			<debug name="__unnamed_debug__" enabled="false"/>
 			<debug name="dlg_dispatcher" enabled="false"/>
 			<debug name="gdi_count" enabled="false"/>

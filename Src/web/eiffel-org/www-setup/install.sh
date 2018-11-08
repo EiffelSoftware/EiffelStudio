@@ -54,15 +54,20 @@ while true; do
 			;;
 		*)
 			if [ -z "$ISE_CHANNEL" ]; then
+				#echo >&2 "Set ISE_CHANNEL with $1"
 				ISE_CHANNEL=$1
 				shift || break
-			fi
-			if [ -z "$ISE_PLATFORM" ]; then
-				ISE_PLATFORM=$1
-				shift || break
-			fi
-			if [ -z "$1" ]; then
-				break
+			else
+				if [ -z "$ISE_PLATFORM" ]; then
+					#echo >&2 "Set ISE_PLATFORM with $1"
+					ISE_PLATFORM=$1
+					shift || break
+				else
+					if [ ! -z "$1" ]; then
+						#echo >&2 "Ignore argument \"$1\""
+					fi
+					shift || break
+				fi
 			fi
 		;;
 	esac

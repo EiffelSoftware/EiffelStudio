@@ -74,14 +74,28 @@ feature -- Status report
 		do
 			cl_id := associated_class_id
 			if eiffel_system.valid_class_id (cl_id) and then eiffel_system.class_of_id (cl_id) /= Void then
-				if cl_id /= written_in then
+				if cl_id = written_in then
+					Result := True
+				else
 					cl_id := written_in
 					Result := eiffel_system.valid_class_id (cl_id) and then eiffel_system.class_of_id (cl_id) /= Void
-				else
-					Result := True
 				end
 			end
 		end
+
+	valid_body_index: BOOLEAN
+			-- The use of this routine as precondition for real_body_id
+			-- allows the enhancement of the external functions
+			-- Indeed, if an external has to be encapsulated (macro, signature)
+			-- an EXECUTION_UNIT is created instead of an EXT_EXECUTION_UNIT
+		do
+			Result := associated_class.has_types
+			if Result then
+				Result := (is_constant and is_once) or
+					(not (is_attribute and then not is_attribute_with_body ) and then
+					not is_constant and then not is_deferred and then not is_unique)
+			end
+		end;
 
 feature -- Properties
 
@@ -198,6 +212,9 @@ feature -- Properties
 	is_class: BOOLEAN
 			-- Is current feature a class one, i.e. can be called on a class type rather than on object?
 
+	is_ghost: BOOLEAN
+			-- Is current feature a ghost one, i.e. cannot be used for execution?
+
 	is_constant: BOOLEAN
 			-- Is current feature a constant ?
 		do
@@ -308,18 +325,15 @@ feature -- Properties
 			-- Count of local variables
 		do
 			if attached locals as lst then
-				from
-					lst.start
-				until
-					lst.after
+				across
+					lst as l
 				loop
 					if
-						attached lst.item as l_dec and then
+						attached l.item as l_dec and then
 						attached l_dec.id_list as l_id_list
 					then
 						Result := Result + l_id_list.count
 					end
-					lst.forth
 				end
 			end
 		end
@@ -425,35 +439,28 @@ feature -- Access
 			-- Precursor definition of written in classes
 			-- of current feature defined in `from_c'
 		local
-			f: FEATURE_I;
-			inh_info: INH_ASSERT_INFO;
-			i, nb: INTEGER;
-			assert_id_set: ASSERT_ID_SET;
-			e_class: CLASS_C
+			i, nb: INTEGER
 		do
-			f := associated_feature_i;
-			if f /= Void then
-				assert_id_set := f.assert_id_set;
-				if assert_id_set /= Void then
-					nb := assert_id_set.count;
-					create Result.make (nb);
-					from
-						i := 1
-					until
-						i > nb
-					loop
-						inh_info := assert_id_set.item (i);
-						e_class := Eiffel_system.class_of_id (inh_info.written_in);
-						if e_class /= Void then
-							--| On the off chance that this information
-							--| is not upto date hence the check with void
-							Result.extend (e_class)
-						end;
-						i := i + 1
+			if
+				attached associated_feature_i as f and then
+				attached f.assert_id_set as assert_id_set
+			then
+				nb := assert_id_set.count
+				create Result.make (nb)
+				from
+					i := 1
+				until
+					i > nb
+				loop
+					if attached Eiffel_system.class_of_id (assert_id_set.item (i).written_in) as e_class then
+						--| On the off chance that this information
+						--| is not upto date hence the check with void
+						Result.extend (e_class)
 					end
+					i := i + 1
 				end
 			end
-		end;
+		end
 
 	is_debuggable: BOOLEAN
 			-- Is feature debuggable?
@@ -643,40 +650,30 @@ feature -- Access
 				a_flag = {DEPEND_UNIT}.is_in_invariant_flag or
 				a_flag = {DEPEND_UNIT}.is_in_require_flag
 		local
-			dep: CLASS_DEPENDANCE
-			fdep: detachable FEATURE_DEPENDANCE
 			l_depend_unit: DEPEND_UNIT
 			l_system: like eiffel_system
-			l_class_c: CLASS_C
-			l_e_feature: E_FEATURE
 		do
 			create Result.make
-			l_system := eiffel_system
-			if Depend_server.has (written_class.class_id) then
-				dep := Depend_server.item (written_class.class_id)
-				fdep := dep.item (body_index)
+			if
+				Depend_server.has (written_class.class_id) and then
 					-- It is possible detached when compilation is not finished. See bug#11409.
-				if fdep /= Void then
-					from
-						fdep.start
-					until
-						fdep.after
-					loop
-						l_depend_unit := fdep.item
-						if l_depend_unit.rout_id /= 0 then
-							if a_flag = 0 or else l_depend_unit.internal_flags.bit_xor (a_flag) = 0 then
-								l_class_c := l_system.class_of_id (l_depend_unit.class_id)
-								if l_class_c /= Void then
-									l_e_feature := l_class_c.feature_with_rout_id (l_depend_unit.rout_id)
-										-- We ignore inline agents because what they called are already
-										-- propagated to the enclosing feature.
-									if l_e_feature /= Void and then not l_e_feature.is_inline_agent then
-										Result.extend ([l_class_c, l_e_feature.name_32])
-									end
-								end
-							end
-						end
-						fdep.forth
+				attached Depend_server.item (written_class.class_id).item (body_index) as fdep
+			then
+				l_system := eiffel_system
+				across
+					fdep as d
+				loop
+					l_depend_unit := d.item
+					if
+						l_depend_unit.rout_id /= 0 and then
+						(a_flag = 0 or else l_depend_unit.internal_flags.bit_xor (a_flag) = 0) and then
+						attached l_system.class_of_id (l_depend_unit.class_id) as l_class_c and then
+						attached l_class_c.feature_with_rout_id (l_depend_unit.rout_id) as l_e_feature and then
+						not l_e_feature.is_inline_agent
+					then
+							-- We ignore inline agents because what they called are already
+							-- propagated to the enclosing feature.
+						Result.extend ([l_class_c, l_e_feature.name_32])
 					end
 				end
 			end
@@ -700,38 +697,33 @@ feature -- Access
 				a_flag = {DEPEND_UNIT}.is_in_invariant_flag or
 				a_flag = {DEPEND_UNIT}.is_in_require_flag
 		local
-			dep: CLASS_DEPENDANCE;
-			fdep: FEATURE_DEPENDANCE;
-			current_d, l_depend_unit: DEPEND_UNIT;
+			fdep: FEATURE_DEPENDANCE
+			current_d, l_depend_unit: DEPEND_UNIT
 			l_found: BOOLEAN
 		do
 			create Result.make
-			dep := Depend_server.item (cl_class.class_id)
 				-- No need to set the `flags' here since we do an explicit comparison.
-			create current_d.make (associated_class.class_id,associated_feature_i)
-			from
+			create current_d.make (associated_class.class_id, associated_feature_i)
 				-- Loop through the features of each client
 				-- of current_class.
-				dep.start
-			until
-				dep.after
+			across
+				Depend_server.item (cl_class.class_id) as d
 			loop
-				fdep := dep.item_for_iteration
+				fdep := d.item
+				across
+					fdep as f
 				from
 					l_found := False
-					fdep.start
 				until
-					l_found or fdep.after
+					l_found
 				loop
-					l_depend_unit := fdep.item
+					l_depend_unit := f.item
 					l_found := l_depend_unit.same_as (current_d) and then
 						l_depend_unit.internal_flags & a_flag = a_flag
-					fdep.forth
 				end
 				if l_found then
 					Result.put_front (fdep.feature_name_32)
 				end
-				dep.forth
 			end
 			if Result.is_empty then
 				Result := Void
@@ -805,40 +797,30 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 				a_flag = {DEPEND_UNIT}.is_in_invariant_flag or
 				a_flag = {DEPEND_UNIT}.is_in_require_flag
 		local
-			dep: CLASS_DEPENDANCE
-			fdep: detachable FEATURE_DEPENDANCE
 			l_depend_unit: DEPEND_UNIT
 			l_system: like eiffel_system
-			l_class_c: CLASS_C
-			l_e_feature: E_FEATURE
 		do
 			create Result.make
-			l_system := eiffel_system
-			if Depend_server.has (written_class.class_id) then
-				dep := Depend_server.item (written_class.class_id)
-				fdep := dep.item (body_index)
+			if
+				Depend_server.has (written_class.class_id) and then
 					-- It is possible detached when compilation is not finished. See bug#11409.
-				if fdep /= Void then
-					from
-						fdep.start
-					until
-						fdep.after
-					loop
-						l_depend_unit := fdep.item
-						if l_depend_unit.rout_id /= 0 then
-							if a_flag = 0 or else l_depend_unit.internal_flags.bit_xor (a_flag) = 0 then
-								l_class_c := l_system.class_of_id (l_depend_unit.class_id)
-								if l_class_c /= Void then
-									l_e_feature := l_class_c.feature_with_rout_id (l_depend_unit.rout_id)
-										-- We ignore inline agents because what they called are already
-										-- propagated to the enclosing feature.
-									if l_e_feature /= Void and then not l_e_feature.is_inline_agent then
-										Result.extend ([l_class_c, l_e_feature.name])
-									end
-								end
-							end
-						end
-						fdep.forth
+				attached Depend_server.item (written_class.class_id).item (body_index) as fdep
+			then
+				l_system := eiffel_system
+				across
+					fdep as d
+				loop
+					l_depend_unit := d.item
+					if
+						l_depend_unit.rout_id /= 0 and then
+						(a_flag = 0 or else l_depend_unit.internal_flags.bit_xor (a_flag) = 0) and then
+						attached l_system.class_of_id (l_depend_unit.class_id) as l_class_c and then
+						attached l_class_c.feature_with_rout_id (l_depend_unit.rout_id) as l_e_feature and then
+						not l_e_feature.is_inline_agent
+					then
+							-- We ignore inline agents because what they called are already
+							-- propagated to the enclosing feature.
+						Result.extend ([l_class_c, l_e_feature.name])
 					end
 				end
 			end
@@ -862,38 +844,32 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 				a_flag = {DEPEND_UNIT}.is_in_invariant_flag or
 				a_flag = {DEPEND_UNIT}.is_in_require_flag
 		local
-			dep: CLASS_DEPENDANCE;
-			fdep: FEATURE_DEPENDANCE;
-			current_d, l_depend_unit: DEPEND_UNIT;
+			fdep: FEATURE_DEPENDANCE
+			current_d, l_depend_unit: DEPEND_UNIT
 			l_found: BOOLEAN
 		do
 			create Result.make
-			dep := Depend_server.item (cl_class.class_id)
 				-- No need to set the `flags' here since we do an explicit comparison.
 			create current_d.make (associated_class.class_id,associated_feature_i)
-			from
-				-- Loop through the features of each client
-				-- of current_class.
-				dep.start
-			until
-				dep.after
+				-- Loop through the features of each client of current_class.
+			across
+				Depend_server.item (cl_class.class_id) as d
 			loop
-				fdep := dep.item_for_iteration
+				fdep := d.item
+				across
+					fdep as f
 				from
 					l_found := False
-					fdep.start
 				until
-					l_found or fdep.after
+					l_found
 				loop
-					l_depend_unit := fdep.item
+					l_depend_unit := f.item
 					l_found := l_depend_unit.same_as (current_d) and then
 						l_depend_unit.internal_flags & a_flag = a_flag
-					fdep.forth
 				end
 				if l_found then
 					Result.put_front (fdep.feature_name)
 				end
-				dep.forth
 			end
 			if Result.is_empty then
 				Result := Void
@@ -1083,7 +1059,7 @@ feature -- Output
 			alias_symbol_not_void: Result /= Void
 		end
 
-feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Output
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Output: operators
 
 	infix_symbol : STRING
 			--
@@ -1114,7 +1090,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Output
 			alias_symbol_not_void: Result /= Void
 		end
 
-feature -- Output
+feature -- Output: signature
 
 	feature_signature_32: STRING_32
 			-- Signature of Current feature
@@ -1128,22 +1104,16 @@ feature -- Output
 			-- Append arguments to `s'.
 		require
 			s_not_void: s /= Void
-		local
-			args: like arguments
 		do
-			args := arguments
-			if args /= Void then
+			if attached arguments as args then
 				s.append (" (")
-				from
-					args.start
-				until
-					args.after
+				across
+					args as a
 				loop
-					s.append (args.argument_names.i_th (args.index))
+					s.append (args.argument_names [a.target_index])
 					s.append (": ")
-					s.append (args.item.dump)
-					args.forth
-					if not args.after then
+					s.append (a.item.dump)
+					if not a.is_last then
 						s.append ("; ")
 					end
 				end
@@ -1151,21 +1121,7 @@ feature -- Output
 			end
 		end
 
-	valid_body_index: BOOLEAN
-			-- The use of this routine as precondition for real_body_id
-			-- allows the enhancement of the external functions
-			-- Indeed, if an external has to be encapsulated (macro, signature)
-			-- an EXECUTION_UNIT is created instead of an EXT_EXECUTION_UNIT
-		do
-			Result := associated_class.has_types
-			if Result then
-				Result := (is_constant and is_once) or
-					(not (is_attribute and then not is_attribute_with_body ) and then
-					not is_constant and then not is_deferred and then not is_unique)
-			end
-		end;
-
-feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Output
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Output: signature
 
 	feature_signature: STRING
 			-- Signature of Current feature
@@ -1192,13 +1148,6 @@ feature -- Implementation
 			end
 		end
 
-feature {E_FEATURE} -- Implementation
-
-	associated_class_id: INTEGER
-            -- Class id where the feature was evaluated in
-
-feature -- Implementation
-
 	associated_feature_i: FEATURE_I
 			-- Assocated feature_i
 		do
@@ -1214,6 +1163,11 @@ feature -- Implementation
 		do
 			Result := body_index
 		end
+
+feature {E_FEATURE} -- Implementation
+
+	associated_class_id: INTEGER
+            -- Class id where the feature was evaluated in
 
 feature {FEATURE_I} -- Setting
 
@@ -1241,6 +1195,14 @@ feature {FEATURE_I} -- Setting
 			is_class := value
 		ensure
 			is_class_set: is_class = value
+		end
+
+	set_ghost (value: BOOLEAN)
+			-- Set `is_ghost` to `value`.
+		do
+			is_ghost := value
+		ensure
+			is_ghost_set: is_ghost = value
 		end
 
 	set_is_origin (b: BOOLEAN)
@@ -1308,6 +1270,7 @@ invariant
 	written_class_not_void: is_valid implies written_class /= Void
 
 note
+	ca_ignore: "CA033", "CA033: very large class"
 	date: "$Date$"
 	revision: "$Revision$"
 	copyright:	"Copyright (c) 1984-2018, Eiffel Software"

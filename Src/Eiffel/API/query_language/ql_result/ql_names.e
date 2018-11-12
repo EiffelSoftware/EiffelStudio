@@ -122,6 +122,7 @@ feature -- Criterion names
 	ql_cri_is_infix: STRING = "is_infix"
 	ql_cri_is_once: STRING = "is_once"
 	ql_cri_is_class: STRING = "is_class"
+	ql_cri_is_ghost: STRING = "is_ghost"
 	ql_cri_is_origin: STRING = "is_origin"
 	ql_cri_is_prefix: STRING = "is_prefix"
 	ql_cri_is_procedure: STRING = "is_procedure"

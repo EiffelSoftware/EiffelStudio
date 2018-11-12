@@ -33,6 +33,7 @@ b2
 	a\	\	\	\	<exclude>/arguments.e</exclude>
 	a\	\	\	\	<exclude>/arguments_32.e</exclude>
 	a\	\	\	\	<exclude>/array.e</exclude>
+	a\	\	\	\	<exclude>/fibonacci.e</exclude>
 	a\	\	\	\	<exclude>/iterable.e</exclude>
 	a\	\	\	\	<exclude>/iteration_cursor.e</exclude>
 	a\	\	\	\	<exclude>/primes.e</exclude>

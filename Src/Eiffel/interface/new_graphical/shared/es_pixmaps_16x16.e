@@ -4,7 +4,7 @@
 	]"
 	generator: "Eiffel Matrix Generator"
 	command_line: "[
-		emcgen --frame $EIFFEL_SRC/tools/eiffel_matrix_code_generator/frames/studio.e.frame $EIFFEL_SRC/Delivery/studio/bitmaps/png/16x16.ini
+		emcgen --frame ..\..\..\..\tools\eiffel_matrix_code_generator\frames\studio.e.frame ..\..\..\..\Delivery\studio\bitmaps\png\16x16.ini
 		]"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -9204,6 +9204,26 @@ feature -- Icons
 			overlay_feature_left_icon_buffer_attached: Result /= Void
 		end
 
+	frozen overlay_verifier_right_icon: EV_PIXMAP
+			-- Access to 'verifier right' pixmap.
+		require
+			has_named_icon: has_named_icon (overlay_verifier_right_name)
+		once
+			Result := named_icon (overlay_verifier_right_name)
+		ensure
+			overlay_verifier_right_icon_attached: Result /= Void
+		end
+
+	frozen overlay_verifier_right_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'verifier right' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (overlay_verifier_right_name)
+		once
+			Result := named_icon_buffer (overlay_verifier_right_name)
+		ensure
+			overlay_verifier_right_icon_buffer_attached: Result /= Void
+		end
+
 	frozen errors_and_warnings_next_error_icon: EV_PIXMAP
 			-- Access to 'next error' pixmap.
 		require
@@ -10268,6 +10288,7 @@ feature -- Constants: Icon names
 	overlay_refresh_left_name: STRING = "overlay refresh left"
 	overlay_instance_free_name: STRING = "overlay instance free"
 	overlay_feature_left_name: STRING = "overlay feature left"
+	overlay_verifier_right_name: STRING = "overlay verifier right"
 	errors_and_warnings_next_error_name: STRING = "errors and warnings next error"
 	errors_and_warnings_previous_error_name: STRING = "errors and warnings previous error"
 	errors_and_warnings_next_warning_name: STRING = "errors and warnings next warning"
@@ -10759,6 +10780,7 @@ feature {NONE} -- Basic operations
 			a_table.put ([{NATURAL_8} 23, {NATURAL_8} 22], overlay_refresh_left_name)
 			a_table.put ([{NATURAL_8} 24, {NATURAL_8} 22], overlay_instance_free_name)
 			a_table.put ([{NATURAL_8} 25, {NATURAL_8} 22], overlay_feature_left_name)
+			a_table.put ([{NATURAL_8} 26, {NATURAL_8} 22], overlay_verifier_right_name)
 			a_table.put ([{NATURAL_8} 1, {NATURAL_8} 23], errors_and_warnings_next_error_name)
 			a_table.put ([{NATURAL_8} 2, {NATURAL_8} 23], errors_and_warnings_previous_error_name)
 			a_table.put ([{NATURAL_8} 3, {NATURAL_8} 23], errors_and_warnings_next_warning_name)

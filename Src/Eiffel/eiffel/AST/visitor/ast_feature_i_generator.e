@@ -84,6 +84,9 @@ feature -- Factory
 				if attached {ATTRIBUTE_I} Result as a and then i.is_transient then
 					a.set_is_transient (True)
 				end
+				if i.is_ghost then
+					Result.set_is_ghost (True)
+				end
 				if a_node.property_name /= Void then
 					Result.set_has_property (True)
 					if Result.type.is_void then

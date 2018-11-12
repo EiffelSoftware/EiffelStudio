@@ -99,13 +99,23 @@ feature -- Code generation
 					buf.exdent
 					buf.put_new_line
 					buf.put_character ('}')
-				elseif context.assertion_level.is_check then
-					buf.put_string ("if (~in_assertion) {")
-					buf.indent
-					check_list.generate
-					buf.exdent
-					buf.put_new_line
-					buf.put_character ('}')
+				else
+					check is_final_mode: context.final_mode end
+					if
+						system.keep_assertions and then
+						context.assertion_level.is_check
+					then
+						buf.put_string ("if (~in_assertion) {")
+						buf.indent
+						check_list.generate
+						buf.exdent
+						buf.put_new_line
+						buf.put_character ('}')
+					elseif context.system.exception_stack_managed then
+ 						if attached (create {ASSERTION_BREAKABLE_SLOT_STRATEGY}).breakable_slot_count (check_list, context) as nb then
+							context.set_breakpoint_slot (context.breakpoint_slots_number + nb)
+						end
+					end
 				end
 				context.set_assertion_type (0)
 			end
@@ -127,8 +137,8 @@ feature -- Array optimization
 	optimized_byte_node: like Current
 		do
 			Result := Current
-			if check_list /= Void then
-				check_list := check_list.optimized_byte_node
+			if attached check_list as c then
+				check_list := c.optimized_byte_node
 			end
 		end
 
@@ -144,27 +154,31 @@ feature -- Inlining
 	pre_inlined_code: like Current
 		do
 			Result := Current
-			if check_list /= Void then
-				check_list := check_list.pre_inlined_code
+			if attached check_list as c then
+				check_list := c.pre_inlined_code
 			end
 		end
 
 	inlined_byte_code: like Current
 		do
 			Result := Current
-			if context.final_mode and not system.keep_assertions then
+			if
+				context.final_mode and
+				not system.keep_assertions and
+				not context.system.exception_stack_managed
+			then
 					-- Nothing to be done, we do as if there has
 					-- been no expressions in `check_list'.
 				check_list := Void
 			else
-				if check_list /= Void then
-					check_list := check_list.inlined_byte_code
+				if attached check_list as c then
+					check_list := c.inlined_byte_code
 				end
 			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -177,22 +191,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -2,8 +2,8 @@
 	description	: "Standard Byte code generation for features"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2017-10-31 14:23:44 +0100 (mar., 31 oct. 2017) $"
+	revision: "$Revision: 100995 $"
 
 class STD_BYTE_CODE
 
@@ -1181,69 +1181,74 @@ end
 				-- Preconditions are always generated in workbench mode.
 				-- In finalized mode they are generated if requested by user
 				-- or when there are uncontrolled arguments.
-			if
-				have_assert and then
-				(workbench_mode or else context.system.keep_assertions or else has_wait_condition)
-			then
-				buf.put_new_line
-				if has_wait_condition then
-						-- The precondition has to be checked all the time if there is a wait condition.
-					buf.put_string (if workbench_mode or else context.system.keep_assertions then
-							-- If there is no wait condition, the precondition may still need to be checked if assertion monitoring is enabled.
-						"if (uarg || (RTAL & CK_REQUIRE) || RTAC) {"
+			if have_assert then
+				if workbench_mode or else context.system.keep_assertions or else has_wait_condition then
+					buf.put_new_line
+					if has_wait_condition then
+							-- The precondition has to be checked all the time if there is a wait condition.
+						buf.put_string (if workbench_mode or else context.system.keep_assertions then
+								-- If there is no wait condition, the precondition may still need to be checked if assertion monitoring is enabled.
+							"if (uarg || (RTAL & CK_REQUIRE) || RTAC) {"
+						else
+							"if (uarg) {"
+						end)
+						buf.indent
+							-- There are wait conditions.
+							-- If they fail, the precondition needs to be re-eveluated.
+							-- The generated code looks like
+							--    for (;;) {
+							--       int has_wait_condition = 0
+							--       ... // Allocate request chain (see below).
+							--       ... // Evaluate preconditions and set has_wait_condition if wait conditions are involved.
+							--       if (!has_wait_condition) break;
+							--       RTCK; // Remove a stack item pushed when entering a precondition.
+							--       RTS_SRF (Current); // Free request chain to let the scheduler reschedule this call.
+							--    }
+							--    RTCF; // Raise exception
+						buf.put_new_line
+						buf.put_string ("for (;;) {")
+						buf.indent
+						buf.put_new_line
+						buf.put_string ("int has_wait_condition = 0;")
 					else
-						"if (uarg) {"
-					end)
-					buf.indent
-						-- There are wait conditions.
-						-- If they fail, the precondition needs to be re-eveluated.
-						-- The generated code looks like
-						--    for (;;) {
-						--       int has_wait_condition = 0
-						--       ... // Allocate request chain (see below).
-						--       ... // Evaluate preconditions and set has_wait_condition if wait conditions are involved.
-						--       if (!has_wait_condition) break;
-						--       RTCK; // Remove a stack item pushed when entering a precondition.
-						--       RTS_SRF (Current); // Free request chain to let the scheduler reschedule this call.
-						--    }
-						--    RTCF; // Raise exception
-					buf.put_new_line
-					buf.put_string ("for (;;) {")
-					buf.indent
-					buf.put_new_line
-					buf.put_string ("int has_wait_condition = 0;")
-				else
-						-- The precondition is checked on demand only.
-					buf.put_string ("if ((RTAL & CK_REQUIRE) || RTAC) {")
-					buf.indent
-				end
+							-- The precondition is checked on demand only.
+						buf.put_string ("if ((RTAL & CK_REQUIRE) || RTAC) {")
+						buf.indent
+					end
 
-				if inh_assert.has_precondition then
-					inh_assert.generate_precondition
-				end
+					if inh_assert.has_precondition then
+						inh_assert.generate_precondition
+					end
 
-				if precondition /= Void then
-					Context.set_new_precondition_block (True)
-					precondition.generate
-				end
+					if precondition /= Void then
+						Context.set_new_precondition_block (True)
+						precondition.generate
+					end
 
-				buf.put_new_line
-				buf.put_string ("RTJB;")
-				Context.generate_current_label_definition
-
-				if has_wait_condition then
-						-- End part of the loop that checks wait conditions.
 					buf.put_new_line
-					buf.put_string ("if (!has_wait_condition) break;")
+					buf.put_string ("RTJB;")
+					Context.generate_current_label_definition
+
+					if has_wait_condition then
+							-- End part of the loop that checks wait conditions.
+						buf.put_new_line
+						buf.put_string ("if (!has_wait_condition) break;")
+						buf.put_new_line
+						buf.put_string ("RTCK;")
+						context.generate_request_chain_wait_condition_failure
+						buf.generate_block_close
+					end
 					buf.put_new_line
-					buf.put_string ("RTCK;")
-					context.generate_request_chain_wait_condition_failure
+					buf.put_string ("RTCF;")
+						-- Close on-demand check block.
 					buf.generate_block_close
+				elseif context.system.exception_stack_managed then
+					if precondition /= Void then
+						if attached (create {ASSERTION_BREAKABLE_SLOT_STRATEGY}).breakable_slot_count (precondition, context) as nb then
+							context.set_breakpoint_slot (context.breakpoint_slots_number + nb)
+						end
+					end
 				end
-				buf.put_new_line
-				buf.put_string ("RTCF;")
-					-- Close on-demand check block.
-				buf.generate_block_close
 			end
 			context.set_assertion_type (0)
 		end
@@ -1291,6 +1296,13 @@ end
 				buf := buffer
 				buf.put_new_line
 				buf.put_string ("RTEC (EN_POST);")
+
+			elseif context.system.exception_stack_managed then
+				if postcondition /= Void then
+					if attached (create {ASSERTION_BREAKABLE_SLOT_STRATEGY}).breakable_slot_count (postcondition, context) as nb then
+						context.set_breakpoint_slot (context.breakpoint_slots_number + nb)
+					end
+				end
 			end
 		end
 
@@ -2101,7 +2113,7 @@ feature {NONE} -- C code generation: wait conditions
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

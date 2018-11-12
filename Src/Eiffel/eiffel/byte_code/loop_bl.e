@@ -2,8 +2,8 @@
 	description: "Enlarged byte code for Eiffel loops."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2018-09-22 13:24:12 +0200 (Sat, 22 Sep 2018) $"
+	revision: "$Revision: 102214 $"
 
 class LOOP_BL
 
@@ -134,6 +134,13 @@ feature -- Access
 					generate_end_final_mode_test
 				end
 				context.set_assertion_type (0)
+			elseif context.system.exception_stack_managed then
+				if
+					invariant_part /= Void and then
+					attached (create {ASSERTION_BREAKABLE_SLOT_STRATEGY}).breakable_slot_count (invariant_part, context) as nb
+				then
+					context.set_breakpoint_slot (context.breakpoint_slots_number + nb)
+				end
 			end
 
 				-- Generate the "variant" part
@@ -149,6 +156,13 @@ feature -- Access
 					generate_end_final_mode_test
 				end
 				context.set_assertion_type (0)
+			elseif context.system.exception_stack_managed then
+				if
+					variant_part /= Void and then
+					attached (create {ASSERTION_BREAKABLE_SLOT_STRATEGY}).breakable_slot_count (variant_part, context) as nb
+				then
+					context.set_breakpoint_slot (context.breakpoint_slots_number + nb)
+				end
 			end
 		end
 

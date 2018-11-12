@@ -3,6 +3,7 @@ ANY_SRC=$(ISE_LIBRARY)/library/base/elks/kernel/any.e
 ARGUMENTS_SRC=$(ISE_LIBRARY)/library/base/elks/kernel/arguments.e
 ARGUMENTS_32_SRC=$(ISE_LIBRARY)/library/base/elks/kernel/arguments_32.e
 ARRAY_SRC=$(ISE_LIBRARY)/library/base/elks/kernel/array.e
+FIBONACCI_SRC=$(ISE_LIBRARY)/library/base/elks/support/fibonacci.e
 ITERABLE_SRC=$(ISE_LIBRARY)/library/base/elks/kernel/iterable.e
 ITERATION_CURSOR_SRC=$(ISE_LIBRARY)/library/base/elks/kernel/iteration_cursor.e
 PRIMES_SRC=$(ISE_LIBRARY)/library/base/elks/support/primes.e
@@ -15,6 +16,7 @@ GENERATED_FILES= \
 	eve/arguments.e \
 	eve/arguments_32.e \
 	eve/array.e \
+	eve/fibonacci.e \
 	eve/iterable.e \
 	eve/iteration_cursor.e \
 	eve/primes.e \
@@ -54,38 +56,52 @@ all:
 update: $(GENERATED_FILES)
 
 base.ecf: $(BASE_SRC) base.sed Makefile
+	echo Updating $@
 	sed -f base.sed $(BASE_SRC) > $@
 
 base-safe.ecf: base.ecf base-safe.sed Makefile
+	echo Updating $@
 	sed -f base-safe.sed base.ecf > $@
 
 eve/any.e: $(ANY_SRC) any.sed any.txt Makefile
+	echo Updating $@
 	sed -f any.sed $(ANY_SRC) > $@
 
 eve/arguments.e: $(ARGUMENTS_SRC) arguments.sed Makefile
+	echo Updating $@
 	sed -f arguments.sed $(ARGUMENTS_SRC) > $@
 
 eve/arguments_32.e: $(ARGUMENTS_32_SRC) arguments.sed Makefile
+	echo Updating $@
 	sed -f arguments.sed $(ARGUMENTS_32_SRC) > $@
 
 eve/array.e: $(ARRAY_SRC) Makefile
+	echo Updating $@
 	sed \
 		-e "s/\(make_from_cil ({NATIVE_ARRAY \[G\]})\)/\1$(ARRAY_CONVERSION)/" \
 		-e "/^invariant/i$(ARRAY_SPECIFICATION)" \
 		$(ARRAY_SRC) > $@
 
+eve/fibonacci.e: $(FIBONACCI_SRC) arguments.sed Makefile
+	echo Updating $@
+	sed -f arguments.sed $(FIBONACCI_SRC) > $@
+
 eve/iterable.e: $(ITERABLE_SRC) iterable.sed Makefile
+	echo Updating $@
 	sed -f iterable.sed $(ITERABLE_SRC) > $@
 
 eve/iteration_cursor.e: $(ITERATION_CURSOR_SRC) iteration_cursor.sed Makefile
+	echo Updating $@
 	sed -f iteration_cursor.sed $(ITERATION_CURSOR_SRC) > $@
 
 eve/primes.e: $(PRIMES_SRC) arguments.sed Makefile
+	echo Updating $@
 	sed -f arguments.sed $(PRIMES_SRC) > $@
 
 eve/std_files.e: $(STD_FILES_SRC) std_files.sed Makefile
+	echo Updating $@
 	sed -f std_files.sed $(STD_FILES_SRC) > $@
 
 clean:
-	-del base.ecf base-safe.ecf eve\any.e eve\arguments.e eve\arguments_32.e eve\array.e eve\iterable.e eve\iteration_cursor.e eve\std_files.e
+	-cmd /v/c "set GENERATED_FILES=$(GENERATED_FILES) && set FILES_TO_DELETE=!GENERATED_FILES:/=^\! && del !FILES_TO_DELETE!"
 	-rm $(GENERATED_FILES)

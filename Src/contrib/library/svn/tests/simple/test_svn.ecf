@@ -6,7 +6,7 @@
 			<exclude>/.svn$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option>
+		<option warning="true">
 			<debug name="svn_engine" enabled="true"/>
 			<assertions precondition="true"/>
 		</option>

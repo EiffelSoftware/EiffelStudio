@@ -1,6 +1,4 @@
-note
-	description: "Summary description for {CMS_OAUTH_20_MODULE_ADMINISTRATION}."
-	author: ""
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -47,11 +45,8 @@ feature -- Handle
 			s: STRING
 			f: CMS_FORM
 			fut: FILE_UTILITIES
-			cfg: INI_CONFIG
 			cons: CMS_OAUTH_20_CONSUMER
 			l_existing_cons: STRING_TABLE [READABLE_STRING_GENERAL]
-			v: detachable READABLE_STRING_8
-			v32: detachable READABLE_STRING_32
 			p: PATH
 		do
 			if a_api.has_permission (perm_admin_oauth2) then
@@ -122,7 +117,6 @@ feature -- Handle
 
 	predefined_consumer_from_path (a_path: PATH; api: CMS_API): detachable CMS_OAUTH_20_CONSUMER
 		local
-			fut: FILE_UTILITIES
 			cfg: INI_CONFIG
 			v: READABLE_STRING_8
 			v32: READABLE_STRING_32
@@ -283,8 +277,6 @@ feature -- Handle
 
 	new_consumer_form (a_action: READABLE_STRING_8; req: WSF_REQUEST; cons: CMS_OAUTH_20_CONSUMER; a_api: CMS_API): CMS_FORM
 		local
-			s: STRING
-			f: CMS_FORM
 			fset: WSF_FORM_FIELD_SET
 			tf: WSF_FORM_TEXT_INPUT
 			l_is_protect_predefined_fields: BOOLEAN

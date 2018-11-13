@@ -1,5 +1,4 @@
-note
-	description: "Summary description for {CMS_OAUTH_20_STORAGE_SQL}."
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -292,7 +291,6 @@ feature -- Change: User OAuth
 			-- <Precursor>
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
-			l_string: STRING
 		do
 			error_handler.reset
 

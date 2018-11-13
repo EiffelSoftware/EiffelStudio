@@ -1,7 +1,5 @@
-note
-	description: "[
-			API to manage CMS Nodes
-		]"
+﻿note
+	description: "API to manage CMS Nodes."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -315,8 +313,6 @@ feature -- Access: feeds
 			l_size: NATURAL_64
 			l_exhausted: BOOLEAN
 			lnk: FEED_LINK
-			mesg: CMS_CUSTOM_RESPONSE_MESSAGE
-			l_payload: STRING
 			l_feed_name: STRING_32
 		do
 			create l_feed_name.make_from_string (cms_api.setup.site_name)

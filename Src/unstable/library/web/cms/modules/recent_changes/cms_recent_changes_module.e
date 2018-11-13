@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "CMS module that brings support for recent changes."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -187,7 +187,6 @@ feature -- Handler
 			l_until_date: detachable DATE_TIME
 			l_until_date_timestamp: INTEGER_64
 			l_filter_source: detachable READABLE_STRING_8
-			l_filter_author: detachable READABLE_STRING_32
 			l_size: NATURAL_32
 			mesg: CMS_CUSTOM_RESPONSE_MESSAGE
 		do
@@ -513,6 +512,5 @@ feature -- Hook
 			lnk.set_permission_arguments (<<"view recent changes">>)
 			a_menu_system.navigation_menu.extend (lnk)
 		end
-
 
 end

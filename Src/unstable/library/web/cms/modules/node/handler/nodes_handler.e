@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Request handler related to /nodes."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -71,16 +71,9 @@ feature -- HTTP Methods
 	do_nodes_feed (a_content_type: CMS_CONTENT_TYPE; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			l_feed: FEED
-			l_feed_item: FEED_ITEM
-			l_params: CMS_DATA_QUERY_PARAMETERS
-			n: CMS_NODE
-			pg, nb: NATURAL_64
 			l_size: NATURAL_64
-			l_exhausted: BOOLEAN
-			lnk: FEED_LINK
 			mesg: CMS_CUSTOM_RESPONSE_MESSAGE
 			l_payload: STRING
-			l_feed_name: STRING_32
 		do
 			if attached {WSF_STRING} req.query_parameter ("size") as p_size and then p_size.is_integer then
 				l_size := p_size.integer_value.to_natural_64

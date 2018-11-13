@@ -1,16 +1,15 @@
 ﻿note
-	description:
-		"[
-		Binary search trees; left child item is less than current item,
-		right child item is greater
+	description: "[
+			Binary search trees; left child item is less than current item,
+			right child item is greater
 		]"
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	names: binary_search_tree, tree;
-	representation: recursive, array;
-	access: cursor, membership;
-	contents: generic;
+	names: binary_search_tree, tree
+	representation: recursive, array
+	access: cursor, membership
+	contents: generic
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -46,7 +45,6 @@ feature {NONE} -- Initialization
 			is_root: is_root
 			is_leaf: is_leaf
 		end
-
 
 feature -- Access
 
@@ -575,7 +573,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

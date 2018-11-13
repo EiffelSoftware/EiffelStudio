@@ -2271,8 +2271,7 @@ feature {TYPE_AS, AST_TYPE_A_GENERATOR, AST_FEATURE_CHECKER_GENERATOR} -- Actual
 							new_actuals.forth
 						end
 							-- Avoid changing original list of arguments.
-						new_actuals.start
-						new_actuals := new_actuals.duplicate (actual_count)
+						create new_actuals.make_from_iterable (new_actuals)
 							-- Replace extra arguments with a tuple.
 						create tuple_actual.make (system.tuple_id, wrapped_actuals)
 						if not lace_class.is_void_unsafe then

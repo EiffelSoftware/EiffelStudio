@@ -34,7 +34,7 @@ create
 
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (n: INTEGER; v: G)
 			-- Create node with item `v'.
@@ -43,7 +43,6 @@ feature -- Initialization
 			valid_number_of_children: n >= 0
 		do
 			create arrayed_list.make (n)
-			al_make (n)
 			replace (v)
 		ensure
 			node_item: item = v
@@ -478,9 +477,8 @@ feature {NONE} -- Implementation
 			-- Apply action to every child.
 		require
 			non_void_agent: an_agent /= Void
-			non_void_tree_node: a_tree_node /= Void
 		do
-			an_agent.call ([a_tree_node.item])
+			an_agent (a_tree_node.item)
 			from
 				a_tree_node.child_start
 			until
@@ -624,17 +622,18 @@ feature -- Access: children
 
 feature {NONE} -- private access arrayed_list
 
-	al_make (n: INTEGER)
-		do
-			arrayed_list.make (n)
-		end
-
 	al_extend (v: like Current)
 		do
 			arrayed_list.extend (v)
 		end
 
 	al_duplicate (n: INTEGER): ARRAYED_LIST [like Current]
+		obsolete
+			"[
+				Create a new container explicitly using `make_from_iterable` if available.
+				Otherwise, replace a call to the feature with code that creates and initializes container.
+				[2018-11-30]
+			]"
 		do
 			Result := arrayed_list.duplicate (n)
 		end
@@ -715,6 +714,7 @@ feature {NONE} -- private access arrayed_list
 		end
 
 note
+	ca_ignore: "CA033", "CA033: very large class"
 	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

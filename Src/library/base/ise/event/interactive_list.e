@@ -106,13 +106,10 @@ feature -- Element Change
 			if new_count > capacity then
 				grow (new_count)
 			end
-			from
-				s.start
-			until
-				s.after
+			across
+				if s = Current then s.twin else s end as c
 			loop
-				extend (s.item)
-				s.forth
+				extend (c.item)
 			end
 		end
 
@@ -361,7 +358,7 @@ feature {NONE} -- Implementation
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -371,11 +368,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-
-
-
-end -- class ACTIVE_LIST
-
+end

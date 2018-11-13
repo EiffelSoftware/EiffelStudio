@@ -43,14 +43,29 @@ class LINKED_CIRCULAR [G] inherit
 
 create
 
-	make
+	make,
+	make_from_iterable
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make
 			-- Create an empty list
 		do
 			create list.make
+		end
+
+	make_from_iterable (other: ITERABLE [G])
+			-- Create a circular chain with all items obtained from `other`.
+		local
+			l: like list
+		do
+			create l.make
+			list := l
+			across
+				other as o
+			loop
+				l.extend (o.item)
+			end
 		end
 
 feature -- Measurement
@@ -357,7 +372,7 @@ feature {LINKED_CIRCULAR} -- Implementation
 			end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

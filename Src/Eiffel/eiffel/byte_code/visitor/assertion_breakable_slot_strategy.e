@@ -32,20 +32,11 @@ inherit
 
 feature -- Status report
 
-	breakable_slot_count (a_node: BYTE_NODE; ctx: BYTE_CONTEXT): INTEGER
-			-- Does `a_node' contain an assignment to an attribute?
+	update_breakpoint_slot (a_node: BYTE_NODE; ctx: BYTE_CONTEXT)
 		do
 			counter := 0
 			a_node.process (Current)
-			Result := counter
-
-			print (ctx.class_type.associated_class.name)
-			print (".")
-			print (ctx.current_feature.e_feature.name_8)
-			print (" -> " + a_node.generator + ": ")
-			print (Result)
-			print ("%N")
-
+			context.set_breakpoint_slot (context.breakpoint_slots_number + counter)
 		end
 
 feature {NONE} -- Implementation: access
@@ -55,10 +46,12 @@ feature {NONE} -- Implementation: access
 	increment_counter (a_node: BYTE_NODE)
 		do
 			counter := counter + 1
-			if attached {ASSERT_B} a_node as a_assert and then attached a_assert.tag as t then
-				print (" - " + a_node.generator + " %"" + t + "%" [" + counter.out + "]%N")
-			else
-				print (" - " + a_node.generator + " [" + counter.out + "]%N")
+			debug ("dbg_assertion_in_trace")
+				if attached {ASSERT_B} a_node as a_assert and then attached a_assert.tag as t then
+					print (" - " + a_node.generator + " %"" + t + "%" [" + counter.out + "]%N")
+				else
+					print (" - " + a_node.generator + " [" + counter.out + "]%N")
+				end
 			end
 		end
 
@@ -347,25 +340,22 @@ feature -- Node processing
 			l_context.exit_hidden_code
 
 			v := a_node.variant_code
-			if v /= Void then
-			end
 
 				-- Record context.
 			invariant_breakpoint_slot := l_context.get_breakpoint_slot
 
 			i := a_node.invariant_code
-			if i /= Void or else v /= Void then
-				if i /= Void then
-					l_context.set_assertion_type ({ASSERT_TYPE}.in_loop_invariant)
-					i.process (Current)
-				end
-					-- Variant loop byte code
-				if v /= Void then
-					l_context.set_assertion_type ({ASSERT_TYPE}.in_loop_variant)
-					v.process (Current)
-				end
-				l_context.set_assertion_type (0)
+			if i /= Void then
+				l_context.set_assertion_type ({ASSERT_TYPE}.in_loop_invariant)
+				i.process (Current)
 			end
+				-- Variant loop byte code
+			if v /= Void then
+				l_context.set_assertion_type ({ASSERT_TYPE}.in_loop_variant)
+				v.process (Current)
+			end
+			l_context.set_assertion_type (0)
+
 				-- Generate byte code for iteration exit condition.
 			a_node.iteration_exit_condition_code.process (Current)
 
@@ -384,18 +374,16 @@ feature -- Node processing
 			body_breakpoint_slot := l_context.get_breakpoint_slot
 			l_context.set_breakpoint_slot (invariant_breakpoint_slot)
 
-			if i /= Void or else v /= Void then
-				if i /= Void then
-					l_context.set_assertion_type ({ASSERT_TYPE}.in_loop_invariant)
-					i.process (Current)
-				end
-					-- Variant loop byte code
-				if v /= Void then
-					l_context.set_assertion_type ({ASSERT_TYPE}.in_loop_variant)
-					v.process (Current)
-				end
-				l_context.set_assertion_type (0)
+			if i /= Void then
+				l_context.set_assertion_type ({ASSERT_TYPE}.in_loop_invariant)
+				i.process (Current)
 			end
+				-- Variant loop byte code
+			if v /= Void then
+				l_context.set_assertion_type ({ASSERT_TYPE}.in_loop_variant)
+				v.process (Current)
+			end
+			l_context.set_assertion_type (0)
 
 				-- Restore hook context
 			l_context.set_breakpoint_slot (body_breakpoint_slot)

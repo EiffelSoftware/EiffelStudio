@@ -1244,9 +1244,7 @@ end
 					buf.generate_block_close
 				elseif context.system.exception_stack_managed then
 					if precondition /= Void then
-						if attached (create {ASSERTION_BREAKABLE_SLOT_STRATEGY}).breakable_slot_count (precondition, context) as nb then
-							context.set_breakpoint_slot (context.breakpoint_slots_number + nb)
-						end
+						context.increment_breakpoint_slot_for_assertion (precondition)
 					end
 				end
 			end
@@ -1299,9 +1297,7 @@ end
 
 			elseif context.system.exception_stack_managed then
 				if postcondition /= Void then
-					if attached (create {ASSERTION_BREAKABLE_SLOT_STRATEGY}).breakable_slot_count (postcondition, context) as nb then
-						context.set_breakpoint_slot (context.breakpoint_slots_number + nb)
-					end
+					context.increment_breakpoint_slot_for_assertion (postcondition)
 				end
 			end
 		end

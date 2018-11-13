@@ -111,10 +111,8 @@ feature -- Code generation
 						buf.exdent
 						buf.put_new_line
 						buf.put_character ('}')
-					elseif context.system.exception_stack_managed then
- 						if attached (create {ASSERTION_BREAKABLE_SLOT_STRATEGY}).breakable_slot_count (check_list, context) as nb then
-							context.set_breakpoint_slot (context.breakpoint_slots_number + nb)
-						end
+					elseif system.exception_stack_managed then
+						context.increment_breakpoint_slot_for_assertion (check_list)
 					end
 				end
 				context.set_assertion_type (0)

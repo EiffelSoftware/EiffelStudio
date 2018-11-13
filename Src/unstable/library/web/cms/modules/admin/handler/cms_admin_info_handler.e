@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Display information about ROC CMS installation."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -8,7 +8,6 @@ class
 
 inherit
 	CMS_HANDLER
-
 	WSF_URI_HANDLER
 
 create
@@ -40,8 +39,6 @@ feature -- Execution
 		end
 
 	append_system_info_to (s: STRING)
-		local
-			n: INTEGER
 		do
 			s.append ("<ul>")
 			across

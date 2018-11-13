@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Single threaded echo server."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -10,7 +10,6 @@ class
 inherit
 
 	ARGUMENTS
-
 	INET_PROPERTIES
 
 create
@@ -25,7 +24,6 @@ feature {NONE} -- Initialization
 			listen_socket: SSL_NETWORK_STREAM_SOCKET
 			accept_timeout: INTEGER
 			l_address: detachable NETWORK_SOCKET_ADDRESS
-			a_file_name: FILE_NAME
 		do
 			port := 12111
 
@@ -86,21 +84,18 @@ feature {NONE} -- Implementation
 	perform_accept_serve_loop (socket: SSL_NETWORK_STREAM_SOCKET)
 		require
 			valid_socket: socket /= Void and then socket.is_bound
-		local
-			client_socket: detachable SSL_NETWORK_STREAM_SOCKET
 		do
 			socket.accept
-			client_socket := socket.accepted
-			if client_socket = Void then
+			if not attached socket.accepted as client_socket then
 					-- Some error occured, perhaps because of the timeout
 					-- We probably should provide some diagnostics here
 				io.put_string ("accept result = Void")
 				io.put_new_line
-			elseif attached client_socket as l_socket and then client_socket.was_error then
+			elseif attached client_socket and then client_socket.was_error then
 					-- Some error occured, not ssl client, ssl version not valid.
-				io.put_string (l_socket.error)
+				io.put_string (client_socket.error)
 				io.put_new_line
-				l_socket.close_socket
+				client_socket.close_socket
 			else
 				client_socket.set_non_blocking
 				perform_client_communication (client_socket)
@@ -172,7 +167,6 @@ feature {NONE} -- Implementation
 			client_socket.put_string (message + "%N")
 		end
 
-
 feature -- SSL Certificates
 
 			--| Chnage the following two path's to your own crt and key files.
@@ -184,41 +178,39 @@ feature -- SSL Certificates
 		-- ca key.
 
 	ca_crt_manifest: STRING = "[
-	-----BEGIN CERTIFICATE-----
-MIICWDCCAcGgAwIBAgIJAJnXGtV+PtiYMA0GCSqGSIb3DQEBBQUAMEUxCzAJBgNV
-BAYTAkFVMRMwEQYDVQQIDApTb21lLVN0YXRlMSEwHwYDVQQKDBhJbnRlcm5ldCBX
-aWRnaXRzIFB0eSBMdGQwHhcNMTUwNDAzMjIxNTA0WhcNMTYwNDAyMjIxNTA0WjBF
-MQswCQYDVQQGEwJBVTETMBEGA1UECAwKU29tZS1TdGF0ZTEhMB8GA1UECgwYSW50
-ZXJuZXQgV2lkZ2l0cyBQdHkgTHRkMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKB
-gQDFMK6ojzg+KlklhTossR13c51izMgGc3B0z9ttfHIcx2kxra3HtHcKIl5wSUvn
-G8zmSyFAyQTs5LUv65q46FM9qU8tP+vTeFCfNXvjRcIEpouta3J53K0xuUlxz4d4
-4D6qvdDWAez/0AkI4y5etW5zXtg7IQorJhsI9TmfGuruzwIDAQABo1AwTjAdBgNV
-HQ4EFgQUbWpk2HoHa0YqpEwr7CGEatBFTMkwHwYDVR0jBBgwFoAUbWpk2HoHa0Yq
-pEwr7CGEatBFTMkwDAYDVR0TBAUwAwEB/zANBgkqhkiG9w0BAQUFAAOBgQAi+h4/
-IgEocWkdRZBKHEcTrRxz5WhEDJMoVo9LhnXvCfn1G/4p6Un6sYv7Xzpi9NuSY8uV
-cjfJJXhtF3AtyZ70iTAxWaRWjGaZ03PYOjlledJ5rqJEt6CCn8m+JsfznduZvbxQ
-zQ6jCLXfyD/tvemB+yYEI3NntvRKx5/zt6Q26Q==
------END CERTIFICATE-----
-]"
+			-----BEGIN CERTIFICATE-----
+			MIICWDCCAcGgAwIBAgIJAJnXGtV+PtiYMA0GCSqGSIb3DQEBBQUAMEUxCzAJBgNV
+			BAYTAkFVMRMwEQYDVQQIDApTb21lLVN0YXRlMSEwHwYDVQQKDBhJbnRlcm5ldCBX
+			aWRnaXRzIFB0eSBMdGQwHhcNMTUwNDAzMjIxNTA0WhcNMTYwNDAyMjIxNTA0WjBF
+			MQswCQYDVQQGEwJBVTETMBEGA1UECAwKU29tZS1TdGF0ZTEhMB8GA1UECgwYSW50
+			ZXJuZXQgV2lkZ2l0cyBQdHkgTHRkMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKB
+			gQDFMK6ojzg+KlklhTossR13c51izMgGc3B0z9ttfHIcx2kxra3HtHcKIl5wSUvn
+			G8zmSyFAyQTs5LUv65q46FM9qU8tP+vTeFCfNXvjRcIEpouta3J53K0xuUlxz4d4
+			4D6qvdDWAez/0AkI4y5etW5zXtg7IQorJhsI9TmfGuruzwIDAQABo1AwTjAdBgNV
+			HQ4EFgQUbWpk2HoHa0YqpEwr7CGEatBFTMkwHwYDVR0jBBgwFoAUbWpk2HoHa0Yq
+			pEwr7CGEatBFTMkwDAYDVR0TBAUwAwEB/zANBgkqhkiG9w0BAQUFAAOBgQAi+h4/
+			IgEocWkdRZBKHEcTrRxz5WhEDJMoVo9LhnXvCfn1G/4p6Un6sYv7Xzpi9NuSY8uV
+			cjfJJXhtF3AtyZ70iTAxWaRWjGaZ03PYOjlledJ5rqJEt6CCn8m+JsfznduZvbxQ
+			zQ6jCLXfyD/tvemB+yYEI3NntvRKx5/zt6Q26Q==
+			-----END CERTIFICATE-----
+		]"
 
-ca_key_manifesst: STRING = "[
------BEGIN RSA PRIVATE KEY-----
-MIICXAIBAAKBgQDFMK6ojzg+KlklhTossR13c51izMgGc3B0z9ttfHIcx2kxra3H
-tHcKIl5wSUvnG8zmSyFAyQTs5LUv65q46FM9qU8tP+vTeFCfNXvjRcIEpouta3J5
-3K0xuUlxz4d44D6qvdDWAez/0AkI4y5etW5zXtg7IQorJhsI9TmfGuruzwIDAQAB
-AoGAR5efMg+dieRyLU8rieJcImxVbfOPg9gRsjdtIVkXTR+RL7ow59q7hXBo/Td/
-WU8cm1gXoJ/bK+71YYqWyB+BaLRIWvRWb7Gdw203tu4e136Ca5uuY+71qdbVTVcl
-NQ7J+T+eAQFP+a+DdT3ZQxu9eze87SMbu6i5YSpIk2kusOECQQDunv/DQ+nc+NgR
-DF+Td3sNYUVRT9a1CWi6abAG6reXwp8MS4NobWDf+Ps4JODhEEwlIdq5qL7qqYBZ
-Gc1TJJ53AkEA0404Fn6vAzzegBcS4RLlYTK7nMr0m4pMmDMCI6YzAYdMmKHp1e6f
-IwxSmQrmwyAgwcT01bc0+A8yipcC2BWQaQJBAJ01QZm635OGmos41KsKF5bsE8gL
-SpBBH69Yu/ECqGwie7iU84FUNnO4zIHjwghlPVVlZX3Vz9o4S+fn2N9DC+cCQGyZ
-QyCxGdC0r5fbwHJQS/ZQn+UGfvlVzqoXDVMVn3t6ZES6YZrT61eHnOM5qGqklIxE
-Old3vDZXPt/MU8Zvk3kCQBOgUx2VxvTrHN37hk9/QIDiM62+RenBm1M3ah8xTosf
-1mSeEb6d9Kwb3TgPBmA7YXzJuAQfRIvEPMPxT5SSr6Q=
------END RSA PRIVATE KEY-----
-]"
-
-
+	ca_key_manifesst: STRING = "[
+			-----BEGIN RSA PRIVATE KEY-----
+			MIICXAIBAAKBgQDFMK6ojzg+KlklhTossR13c51izMgGc3B0z9ttfHIcx2kxra3H
+			tHcKIl5wSUvnG8zmSyFAyQTs5LUv65q46FM9qU8tP+vTeFCfNXvjRcIEpouta3J5
+			3K0xuUlxz4d44D6qvdDWAez/0AkI4y5etW5zXtg7IQorJhsI9TmfGuruzwIDAQAB
+			AoGAR5efMg+dieRyLU8rieJcImxVbfOPg9gRsjdtIVkXTR+RL7ow59q7hXBo/Td/
+			WU8cm1gXoJ/bK+71YYqWyB+BaLRIWvRWb7Gdw203tu4e136Ca5uuY+71qdbVTVcl
+			NQ7J+T+eAQFP+a+DdT3ZQxu9eze87SMbu6i5YSpIk2kusOECQQDunv/DQ+nc+NgR
+			DF+Td3sNYUVRT9a1CWi6abAG6reXwp8MS4NobWDf+Ps4JODhEEwlIdq5qL7qqYBZ
+			Gc1TJJ53AkEA0404Fn6vAzzegBcS4RLlYTK7nMr0m4pMmDMCI6YzAYdMmKHp1e6f
+			IwxSmQrmwyAgwcT01bc0+A8yipcC2BWQaQJBAJ01QZm635OGmos41KsKF5bsE8gL
+			SpBBH69Yu/ECqGwie7iU84FUNnO4zIHjwghlPVVlZX3Vz9o4S+fn2N9DC+cCQGyZ
+			QyCxGdC0r5fbwHJQS/ZQn+UGfvlVzqoXDVMVn3t6ZES6YZrT61eHnOM5qGqklIxE
+			Old3vDZXPt/MU8Zvk3kCQBOgUx2VxvTrHN37hk9/QIDiM62+RenBm1M3ah8xTosf
+			1mSeEb6d9Kwb3TgPBmA7YXzJuAQfRIvEPMPxT5SSr6Q=
+			-----END RSA PRIVATE KEY-----
+		]"
 
 end

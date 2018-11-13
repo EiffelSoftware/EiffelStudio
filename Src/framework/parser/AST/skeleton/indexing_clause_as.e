@@ -433,15 +433,13 @@ feature {NONE} -- Implementation
 		require
 			tag_attached: tag /= Void
 			not_tag_is_empty: not tag.is_empty
-		local
-			list: EIFFEL_LIST [ATOMIC_AS]
 		do
 			if attached index_as_of_tag_name (tag) as i then
 				create Result.make (20)
 				across
 					i.index_list as l
 				loop
-					if attached {STRING_AS} list.item as s then
+					if attached {STRING_AS} l.item as s then
 						Result.append (s.value)
 						if not l.is_last and s /= Void then
 							Result.append (", ")

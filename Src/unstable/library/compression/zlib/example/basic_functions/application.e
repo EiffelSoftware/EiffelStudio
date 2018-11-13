@@ -1,7 +1,7 @@
-note
-	description : "basic_functions application: show proper use of zlib's inflate() and deflate()"
-	date        : "$Date$"
-	revision    : "$Revision$"
+﻿note
+	description: "basic_functions application: show proper use of zlib's inflate() and deflate()"
+	date: "$Date$"
+	revision: "$Revision$"
 	EIS: "name:zpipe", "src=http://www.zlib.net/zpipe.c", "protocol=uri"
 	EIS: "name:Zlib how-to", "src=http://www.zlib.net/zlib_how.html", "protocol=uri"
 
@@ -11,11 +11,8 @@ class
 inherit
 
 	ARGUMENTS
-
 	ZLIB_CONSTANTS
-
 	UTIL_EXTERNALS
-
 	PAYLOAD_DATA
 
 create
@@ -25,8 +22,8 @@ feature {NONE} -- Initialization
 
 	make
 			-- Run application.
-		local
-			l_start_time, l_finish_time: TIME
+--		local
+--			l_start_time, l_finish_time: TIME
 		do
 --			basic_example_without_streams
 --			stream_example_memory
@@ -60,22 +57,12 @@ feature -- Basic Example Using the ZLIB API
 			l_ret := deflate (l_source, l_dest, z_default_compression)
 			l_dest.close
 			create l_new_read.make_open_read (dest_file)
-			if l_ret /= z_ok then
-				print ("%NError:" + l_ret.out)
-			else
-				print ("%NCompress OK")
-			end
+			print (if l_ret = z_ok then "%NCompress OK" else "%NError:" + l_ret.out end)
 			l_ret := inflate (l_new_read, l_new_source)
-			if l_ret /= z_ok then
-				print ("%NError:" + l_ret.out)
-			else
-				print ("%NDempress OK")
-			end
+			print (if l_ret = z_ok then "%NDempress OK" else "%NError:" + l_ret.out end)
 		end
 
 feature -- Basic Examples using ZLIB STREAMS 		
-
-
 
 	stream_example_file_to_file2
 		local
@@ -98,9 +85,6 @@ feature -- Basic Examples using ZLIB STREAMS
 			print ("%NBytes uncompresses:" + zi.total_bytes_uncompressed.out)
 		end
 
-
-
-
 	stream_example_memory
 		local
 			zi: ZLIB_MEMORY_UNCOMPRESS
@@ -111,14 +95,14 @@ feature -- Basic Examples using ZLIB STREAMS
 			output: MANAGED_POINTER
 		do
 			input_buffer := {ARRAY [NATURAL_8]} <<1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,49,90,
-			1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,49,90,
-			1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,49,90,
-			1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,49,90,
-			1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,49,90,
-			1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,49,90,
-			1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,49,90,
-			1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,49,90
-						>>
+				1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,49,90,
+				1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,49,90,
+				1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,49,90,
+				1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,49,90,
+				1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,49,90,
+				1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,49,90,
+				1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,49,90
+			>>
 			create output_buffer.make (128)
 			create zo.memory_stream (output_buffer)
 			zo.put_memory (create {MANAGED_POINTER}.make_from_array (input_buffer))
@@ -143,12 +127,12 @@ feature -- Basic Examples using ZLIB STREAMS
 			output_string: STRING
 		do
 			input_string:= "[
-			zlib is designed to be a free, general-purpose, legally unencumbered -- that is, not covered by any patents -- lossless data-compression library for use on virtually any computer hardware and operating system. The zlib data format is itself portable across platforms. Unlike the LZW compression method used in Unix compress(1) and in the GIF image format, the compression method currently used in zlib essentially never expands the data. (LZW can double or triple the file size in extreme cases.) zlib's memory footprint is also independent of the input data and can be reduced, if necessary, at some cost in compression. A more precise, technical discussion of both points is available on another page.
-zlib was written by Jean-loup Gailly (compression) and Mark Adler (decompression). Jean-loup is also the primary author/maintainer of gzip(1), the author of the comp.compression FAQ list and the former maintainer of Info-ZIP's Zip; Mark is also the author of gzip's and UnZip's main decompression routines and was the original author of Zip. Not surprisingly, the compression algorithm used in zlib is essentially the same as that in gzip and Zip, namely, the `deflate' method that originated in PKWARE's PKZIP 2.x.
-Mark and Jean-loup can be reached by e-mail at zlib email address. Please read the FAQ and the manual before asking us for help. We are getting too many questions which already have an answer in the zlib documentation.
-Greg, Mark and/or Jean-loup will add some more stuff here when they think of something to add. For now this page is mainly a pointer to zlib itself and to related links. Note that the deflate and zlib specifications both achieved official Internet RFC status in May 1996, and zlib itself was adopted in version 1.1 of the Java Development Kit (JDK), both as a raw class and as a component of the JAR archive format.
-The lovely zlib-vise image above was provided courtesy of Bruce Gardner, art director of Dr. Dobb's Journal. It appears in Mark Nelson's article in the January 1997 issue (see below).
-]"
+				zlib is designed to be a free, general-purpose, legally unencumbered -- that is, not covered by any patents -- lossless data-compression library for use on virtually any computer hardware and operating system. The zlib data format is itself portable across platforms. Unlike the LZW compression method used in Unix compress(1) and in the GIF image format, the compression method currently used in zlib essentially never expands the data. (LZW can double or triple the file size in extreme cases.) zlib's memory footprint is also independent of the input data and can be reduced, if necessary, at some cost in compression. A more precise, technical discussion of both points is available on another page.
+				zlib was written by Jean-loup Gailly (compression) and Mark Adler (decompression). Jean-loup is also the primary author/maintainer of gzip(1), the author of the comp.compression FAQ list and the former maintainer of Info-ZIP's Zip; Mark is also the author of gzip's and UnZip's main decompression routines and was the original author of Zip. Not surprisingly, the compression algorithm used in zlib is essentially the same as that in gzip and Zip, namely, the `deflate' method that originated in PKWARE's PKZIP 2.x.
+				Mark and Jean-loup can be reached by e-mail at zlib email address. Please read the FAQ and the manual before asking us for help. We are getting too many questions which already have an answer in the zlib documentation.
+				Greg, Mark and/or Jean-loup will add some more stuff here when they think of something to add. For now this page is mainly a pointer to zlib itself and to related links. Note that the deflate and zlib specifications both achieved official Internet RFC status in May 1996, and zlib itself was adopted in version 1.1 of the Java Development Kit (JDK), both as a raw class and as a component of the JAR archive format.
+				The lovely zlib-vise image above was provided courtesy of Bruce Gardner, art director of Dr. Dobb's Journal. It appears in Mark Nelson's article in the January 1997 issue (see below).
+			]"
 			create output_string.make_empty
 			create dc.string_stream (output_string)
 			dc.put_string (input_string)
@@ -168,20 +152,12 @@ The lovely zlib-vise image above was provided courtesy of Bruce Gardner, art dir
 			dc: ZLIB_STRING_COMPRESS
 			input_string: STRING
 			output_string: STRING
-			l_array: ARRAY [NATURAL_8]
-			l_byte: SPECIAL [INTEGER_8]
 		do
 			input_string:= "Hello"
 			create output_string.make_empty
 			create dc.string_stream (output_string)
 			dc.mark_full_flush
 			dc.put_string (input_string)
-
-
-			l_array := string_to_array (output_string)
-			l_byte := byte_array (l_array)
-
-
 			create di.string_stream (output_string)
 			check
 				same_string: input_string.same_string (di.to_string)
@@ -190,7 +166,6 @@ The lovely zlib-vise image above was provided courtesy of Bruce Gardner, art dir
 			print ("%NBytes uncompresses:" + di.total_bytes_uncompressed.out)
 		end
 
-
 		stream_example_string_ws2
 				-- Using PPP defate.
 			local
@@ -198,27 +173,20 @@ The lovely zlib-vise image above was provided courtesy of Bruce Gardner, art dir
 				dc: ZLIB_STRING_COMPRESS
 				input_string: STRING
 				output_string: STRING
-				l_array: ARRAY [NATURAL_8]
-				l_byte: SPECIAL [INTEGER_8]
 			do
 				input_string:= payload_size_131072
 				create output_string.make_empty
 				create dc.string_stream (output_string)
 				dc.mark_full_flush
 				dc.put_string (input_string)
-
-				l_array := string_to_array (output_string)
-				l_byte := byte_array (l_array)
-
-
 				create di.string_stream (output_string)
 				check
 					same_string: input_string.same_string (di.to_string)
 				end
-				print ("%NBytes compresses:" + dc.total_bytes_compressed.out)
-				print ("%NBytes uncompresses:" + di.total_bytes_uncompressed.out)
+				print ("%NBytes compresses: " + dc.total_bytes_compressed.out)
+				print ("%NBytes uncompresses: " + di.total_bytes_uncompressed.out)
+				print ("%NCompressed size: " + output_string.count.out)
 			end
-
 
 feature -- Performance
 
@@ -252,7 +220,6 @@ feature -- Performance
 					i := i + 1
 				end
 				sw.stop
-
 				print ("Elapsed time:" + sw.elapsed_time.precise_time_out)
 			end
 
@@ -286,7 +253,6 @@ feature -- Performance
 					i := i + 1
 				end
 				sw.stop
-
 				print ("Elapsed time:" + sw.elapsed_time.precise_time_out)
 			end
 
@@ -310,11 +276,10 @@ feature -- Custom Deflate Implementation
 			l_in: ARRAY [CHARACTER]
 				-- Input buffer
 			l_out: ARRAY [CHARACTER]
-			-- output buffer
-
+				-- Output buffer
 		do
-				-- Initialize zlib for compression
-				-- Initialize zstream structure, default state
+				-- Initialize zlib for compression.
+				-- Initialize zstream structure, default state.
 			create l_stream.make
 			create l_zlib
 			l_zlib.deflate_init (l_stream, a_level)
@@ -326,7 +291,7 @@ feature -- Custom Deflate Implementation
 				create l_in.make_filled (create {CHARACTER}, 1, chunk)
 				create l_out.make_filled (create {CHARACTER}, 1, chunk)
 
-					--Compress until the end of the file
+					-- Compress until the end of the file.
 				from
 				until
 					a_source.end_of_file or Result = z_errno
@@ -338,8 +303,7 @@ feature -- Custom Deflate Implementation
 					else
 						l_flush := z_no_flush
 					end
-
-						-- run deflate on input until output buffer not full, finish compression if all of source has been read in
+						-- Run deflate on input until output buffer not full, finish compression if all of source has been read in.
 					from
 						l_stream.set_available_output (Chunk)
 						l_stream.set_next_output (character_array_to_external (l_out))
@@ -376,14 +340,11 @@ feature -- Custom Deflate Implementation
 				check
 					stream_end: l_zlib.last_operation = z_stream_end
 				end
-
-					-- clean up and return
+					-- Clean up and return.
 				l_zlib.deflate_end (l_stream)
 				Result := l_zlib.last_operation
 			end
 		end
-
-
 
 feature -- Custom Inflate Implementation
 
@@ -472,57 +433,6 @@ feature -- Custom Inflate Implementation
 					-- Clean up and return
 				l_zlib.inflate_end (l_stream)
 				Result := l_zlib.last_operation
-			end
-		end
-
-feature -- Byte Array
-
-	byte_array (a_bytes: SPECIAL [NATURAL_8]) : SPECIAL [INTEGER_8]
-		local
-			i: INTEGER
-		do
-
-			create Result.make_filled (0,a_bytes.count)
-			across a_bytes as c
-				loop
-   					Result.put(to_byte(c.item.as_integer_8), i)
-					i := i + 1
-				end
-		end
-
-	to_byte (a_val : INTEGER) : INTEGER_8
-			-- takes a value between 0 and 255
-			-- Result :-128 to 127
-		do
-			if a_val >= 128 then
-				Result := (-256 + a_val).to_integer_8
-			else
-				Result := a_val.to_integer_8
-			end
-		ensure
-			result_value :  127 >= Result and Result >= -128
-		end
-
-	string_to_array (s: STRING): ARRAY [NATURAL_8]
-		local
-			i, n: INTEGER
-			c: INTEGER
-		do
-			n := s.count
-			create Result.make_empty
-			if n > 0 then
-				from
-					i := 1
-				until
-					i > n
-				loop
-					c := s [i].code
-					check
-						c <= 0xFF
-					end
-					Result.force (c.as_natural_8, i)
-					i := i + 1
-				end
 			end
 		end
 

@@ -43,11 +43,6 @@ feature -- Execution
 			l_user_api: CMS_USER_API
 			u: CMS_TEMP_USER
 			l_exist: BOOLEAN
-
-			l_url_activate: STRING
-			l_url_reject: STRING
-			l_token: STRING
-			l_captcha_passed: BOOLEAN
 			l_email: READABLE_STRING_8
 		do
 			if

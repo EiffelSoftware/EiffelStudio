@@ -46,11 +46,9 @@ feature -- Blocks
 			-- Clear cache for block `a_block_id_list' if set,
 			-- otherwise clear all block caches if `a_block_id_list' is Void.
 		local
-			p,pb: PATH
-			dir: DIRECTORY
+			p: PATH
 			l_cache: CMS_FILE_STRING_8_CACHE
 			l_id, s: READABLE_STRING_GENERAL
-			idx: INTEGER
 			l_found: BOOLEAN
 		do
 			p := a_cms_api.cache_location.extended ("_blocks")
@@ -75,8 +73,7 @@ feature -- Blocks
 						l_found := s.is_case_insensitive_equal (l_id)
 					end
 					if l_found then
-						pb := p.extended (l_id).appended_with_extension ("html")
-						create l_cache.make (pb)
+						create l_cache.make (p.extended (l_id).appended_with_extension ("html"))
 						if l_cache.exists then
 							l_cache.delete
 						end

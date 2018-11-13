@@ -1,7 +1,5 @@
-note
-	description: "[
-			Module that provides messenger functionality.
-		]"
+﻿note
+	description: "Module that provides messenger functionality."
 	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -238,8 +236,6 @@ $(document).ready(function() {
 			r: CMS_RESPONSE
 			e: CMS_EMAIL
 			l_emails: ARRAYED_LIST [CMS_EMAIL]
-			vars: STRING_TABLE [READABLE_STRING_8]
-			l_messaging_email_address: READABLE_STRING_8
 			s: STRING
 			l_uid: READABLE_STRING_32
 			f: like new_messaging_form

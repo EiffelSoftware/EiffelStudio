@@ -1,7 +1,5 @@
-note
-	description: "[
-				DEMO application server.
-			]"
+﻿note
+	description: "DEMO application server."
 	date: "$Date$"
 	revision: "$Revision$"
 

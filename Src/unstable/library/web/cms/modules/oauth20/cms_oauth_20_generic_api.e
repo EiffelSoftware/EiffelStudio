@@ -1,5 +1,5 @@
-note
-	description: "Generic OAUTH2 API"
+﻿note
+	description: "Generic OAUTH2 API."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -65,7 +65,6 @@ feature -- Access
 	authorization_url (config: OAUTH_CONFIG): detachable STRING_8
 			-- Url where you should redirect your users to authneticate
 		local
-			l_result: STRING_8
 			l_api_key: STRING_8
 		do
 			l_api_key := config.api_key
@@ -90,6 +89,5 @@ feature -- Access
 feature -- Implementation
 
 	Scoped_authorize_url: STRING = "&scope=$SCOPE";
-
 
 end

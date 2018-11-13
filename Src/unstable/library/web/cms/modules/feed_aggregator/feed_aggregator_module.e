@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "CMS module bringing support for feed aggregation."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -352,10 +352,7 @@ feature -- Hook
 	feed_to_html (a_feed_id: READABLE_STRING_GENERAL; a_count: INTEGER; with_feed_info: BOOLEAN; a_response: CMS_RESPONSE): detachable STRING
 		local
 			nb: INTEGER
-			i: INTEGER
-			e: FEED_ITEM
 			l_cache: CMS_FILE_STRING_8_CACHE
-			lnk: detachable FEED_LINK
 			vis: FEED_TO_XHTML_VISITOR
 			s: STRING
 		do
@@ -410,11 +407,7 @@ feature -- Hook
 
 	feed_to_atom (a_feed_id: READABLE_STRING_GENERAL; a_count: INTEGER): detachable STRING
 		local
-			nb: INTEGER
-			i: INTEGER
-			e: FEED_ITEM
 			vis: ATOM_FEED_GENERATOR
-			s: STRING
 			l_cache: CMS_FILE_STRING_8_CACHE
 		do
 			if

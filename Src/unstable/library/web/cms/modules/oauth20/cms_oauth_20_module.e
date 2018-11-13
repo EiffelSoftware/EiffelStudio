@@ -105,8 +105,6 @@ feature {CMS_API} -- Module Initialization
 feature {CMS_API} -- Module management
 
 	install (api: CMS_API)
-		local
-			l_consumers: LIST [STRING]
 		do
 				-- Schema
 			if attached api.storage.as_sql_storage as l_sql_storage then
@@ -393,7 +391,6 @@ feature -- OAuth2 Login with Provider
 			r: CMS_RESPONSE
 			l_auth: CMS_OAUTH_20_WORKFLOW
 			l_user_api: CMS_USER_API
-			l_user: CMS_USER
 			l_cookie: WSF_COOKIE
 			l_oauth_id: READABLE_STRING_GENERAL
 			dt: DATE_TIME
@@ -678,7 +675,6 @@ feature -- Registration
 					f := new_empty_registration_form
 					f.submit_actions.extend (agent (fd: WSF_FORM_DATA; i_oauth20_api: CMS_OAUTH_20_API; i_res: WSF_RESPONSE; i_r: CMS_RESPONSE)
 							local
-								cons: CMS_OAUTH_20_CONSUMER
 								l_user: CMS_USER
 								l_max_age: INTEGER
 								l_cookie: WSF_COOKIE

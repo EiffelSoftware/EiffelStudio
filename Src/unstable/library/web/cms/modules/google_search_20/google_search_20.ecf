@@ -2,6 +2,8 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="google_search_20" uuid="3FAAD593-3428-43B9-8CE1-BC6E5FE81F19" library_target="google_search_20">
 	<target name="google_search_20">
 		<root all_classes="true"/>
+		<option warning="true">
+		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="cms" location="..\..\cms.ecf" readonly="false"/>
 		<library name="cms_app_env" location="..\..\library\app_env\app_env.ecf" readonly="false"/>

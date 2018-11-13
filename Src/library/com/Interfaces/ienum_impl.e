@@ -41,22 +41,34 @@ feature -- Basic Operations
 			-- `pcelt_fetched' [out] Reference to the number of
 			-- elements actually supplied in `rgelt'. Caller can
 			-- pass in Void if celt is one.
+		require
+			valid_celt: celt >= 0
+			valid_rgelt_lower: rgelt.lower = 1
+			valid_rgelt_capacity: rgelt.capacity >= celt
 		local
-			duplicate: like implementation
-			i: INTEGER
+			i, n: INTEGER
+			old_index: like {LIST [G]}.index
+			storage: like implementation
 		do
-			duplicate := implementation.duplicate (celt)
+			storage := implementation
+			old_index := storage.index
 			from
-				duplicate.start
+				n := celt
 				i := 1
 			until
-				duplicate.after
+				storage.after or else n <= 0
 			loop
-				rgelt.put (duplicate.item, i)
-				duplicate.forth
+				rgelt.put (storage.item, i)
+				storage.forth
 				i := i + 1
+				n := n - 1
+			variant
+				n
 			end
-			pcelt_fetched.set_item (duplicate.count)
+			storage.go_i_th (old_index)
+			if attached pcelt_fetched then
+				pcelt_fetched.set_item (i - 1)
+			end
 		end
 
 	skip (celt: INTEGER)
@@ -82,11 +94,8 @@ feature -- Basic Operations
 			-- The new enumerator supports the same interface
 			-- as the original one.
 			-- `ppenum' [out].
-		local
-			cloned: like Current
 		do
-			create cloned.make (implementation.twin)
-			ppenum.put (cloned)
+			ppenum.put (create {like Current}.make (implementation.twin))
 		end
 
 feature {NONE} -- Implementation
@@ -98,13 +107,15 @@ feature {NONE} -- Implementation
 			-- Does `implementation' exist?
 		do
 			Result := implementation /= Void
+		ensure
+			Result implies attached implementation
 		end
 
 invariant
 	implementation_exists: implementation_exists
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -114,8 +125,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- IENUM_IMPL
-
+end

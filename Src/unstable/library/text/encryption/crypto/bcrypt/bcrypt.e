@@ -23,7 +23,6 @@
 class
 	BCRYPT
 
-
 create
 	make,
 	make_with_salt_generator
@@ -143,7 +142,6 @@ feature -- Hash password
 			l_password, l_salt, l_hashed: SPECIAL [NATURAL_8]
 			rounds, off: INTEGER
 			minor: CHARACTER_8
-			utf: UTF_CONVERTER
 			pwd: STRING_8
 			l_substring: STRING_8
 			i,n: INTEGER
@@ -270,9 +268,7 @@ feature -- Generate Salt
 		end
 
 	is_valid_password_unicode (plaintext: READABLE_STRING_32; hashed: READABLE_STRING_32): BOOLEAN
-			-- Unicode version of is_valid_password.
-		local
-			h: READABLE_STRING_8			
+			-- Unicode version of is_valid_password.			
 		do
 			Result := hashed.same_string_general (hashed_password_unicode (plaintext, hashed))
 		end
@@ -580,7 +576,6 @@ feature {NONE} -- Implementations
 			-- the next word of material from data.
 		local
 			i: INTEGER
-			word: INTEGER
 			off: INTEGER
 		do
 			off := offp [0]

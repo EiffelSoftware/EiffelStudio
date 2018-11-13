@@ -1,8 +1,8 @@
 note
-	description: "Summary description for {FIREBASE_API}."
-	author: ""
+	description: "Simple example Firebase Database REST API"
 	date: "$Date$"
 	revision: "$Revision$"
+	EIS:"name=REST API", "src=https://firebase.google.com/docs/reference/rest/database/", "protocol=URI"
 
 class
 	FIREBASE_API
@@ -82,7 +82,8 @@ feature -- API
 
 feature -- Access
 
-	host: STRING = "samplechat.firebaseio-demo.com"
+	host: STRING = "[PROJECT_ID].firebaseio.com"
+			-- Update to use your [PROJECT-ID].
 
 	port: INTEGER = 443
 

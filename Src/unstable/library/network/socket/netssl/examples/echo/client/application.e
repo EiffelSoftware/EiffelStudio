@@ -1,4 +1,4 @@
-﻿note
+note
 	description: "Client side for processing echo via SSL connection."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -9,7 +9,9 @@ class
 inherit
 
 	ARGUMENTS_32
+
 	INET_ADDRESS_FACTORY
+
 	INET_PROPERTIES
 
 create
@@ -26,9 +28,10 @@ feature {NONE} -- Initialization
 			timeout: INTEGER
 			l_socket: SSL_NETWORK_STREAM_SOCKET
 		do
-			host := "requestb.in"
-			port := 443
-			if argument_count > 0 then
+			host := "localhost"
+			port := 12111
+
+			if argument_count > 0  then
 				host := argument (1)
 				if argument_count > 1 then
 					port := argument (2).to_integer
@@ -40,10 +43,12 @@ feature {NONE} -- Initialization
 					timeout := argument (4).to_integer
 				end
 			end
+
 			if prefer_ipv4_stack then
 				set_ipv4_stack_preferred (True)
 			end
-			io.put_string ("start ssl_client")
+
+			io.put_string ("start echo_client")
 			io.put_string (" host = ")
 			io.put_string (host.as_string_8)
 			io.put_string (", port = ")
@@ -57,32 +62,25 @@ feature {NONE} -- Initialization
 				io.put_new_line
 			else
 					-- Create the socket connection to the Echo Server.
-
 				create l_socket.make_client_by_address_and_port (address, port)
 					-- Set the connection timeout
-				if timeout > 0 then
-					l_socket.set_connect_timeout (timeout)
-				end
+				l_socket.set_connect_timeout (timeout)
 					-- Connect to the Server
-				l_socket.set_tls_server_name_indication ("www.requestb.in")
-
 				l_socket.connect
 				if not l_socket.is_connected then
 					io.put_string ("Unable to connect to host " + host + ":" + port.out)
 					io.put_new_line
 				else
+
 						-- Since this is the client, we will initiate the talking.
-					client_get.append ("%R%N")
-					client_get.append ("Host: requestb.in")
-					client_get.append ("%R%N")
-					client_get.append ("Cache-Control:max-age=0")
-					client_get.append ("%R%N")
-					client_get.append ("Accept:*/*;q=0.8")
-					client_get.append ("%R%N")
-					client_get.append ("upgrade-insecure-requests:1")
-					client_get.append ("%R%N")
-					client_get.append ("%R%N")
-					send_message_and_receive_reply (l_socket, client_get)
+					send_message_and_receive_reply (l_socket, "Hello")
+					send_message_and_receive_reply (l_socket, "This")
+					send_message_and_receive_reply (l_socket, "is")
+					send_message_and_receive_reply (l_socket, "a")
+					send_message_and_receive_reply (l_socket, "test")
+
+						-- Send the special string to tell server to quit.
+					send_message (l_socket, "quit")
 
 						-- Close the connection
 					l_socket.close
@@ -94,7 +92,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} --Implementation
 
-	send_message_and_receive_reply (a_socket: SSL_NETWORK_STREAM_SOCKET; message: STRING)
+	send_message_and_receive_reply (a_socket: SOCKET; message: STRING)
 		require
 			valid_socket: a_socket /= Void and then a_socket.is_open_read and then a_socket.is_open_write
 			valid_message: message /= Void and then not message.is_empty
@@ -103,45 +101,26 @@ feature {NONE} --Implementation
 			receive_reply (a_socket)
 		end
 
-	send_message (a_socket: SSL_NETWORK_STREAM_SOCKET; message: STRING)
+	send_message (a_socket: SOCKET; message: STRING)
 		require
 			valid_socket: a_socket /= Void and then a_socket.is_open_write
 			valid_message: message /= Void and then not message.is_empty
 		do
-			a_socket.put_string (message)
+			a_socket.put_string (message + "%N")
 		end
 
-	receive_reply (a_socket: SSL_NETWORK_STREAM_SOCKET)
+	receive_reply (a_socket: SOCKET)
 		require
 			valid_socket: a_socket /= Void and then a_socket.is_open_read
 		local
-			l_last_string: STRING
+			l_last_string: detachable STRING
 		do
-			l_last_string := receive_data (a_socket)
+			a_socket.read_line
+			l_last_string := a_socket.last_string
+			check l_last_string_attached: l_last_string /= Void end
 			io.put_string ("Server Says: ")
 			io.put_string (l_last_string)
 			io.put_new_line
 		end
-
-	receive_data (a_socket: SSL_NETWORK_STREAM_SOCKET): STRING
-		local
-			end_of_stream: BOOLEAN
-		do
-			from
-				a_socket.read_line
-				Result := ""
-			until
-				end_of_stream
-			loop
-				Result.append (a_socket.last_string)
-				if a_socket.last_string /= void and not a_socket.last_string.is_empty and a_socket.socket_ok then
-					a_socket.read_line
-				else
-					end_of_stream := True
-				end
-			end
-		end
-
-	client_get: STRING = "GET / HTTP/1.1"
 
 end

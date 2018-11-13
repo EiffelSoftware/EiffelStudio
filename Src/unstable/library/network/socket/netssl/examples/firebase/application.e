@@ -7,7 +7,7 @@ class
 	APPLICATION
 
 inherit
-	ARGUMENTS
+	ARGUMENTS_32
 
 create
 	make

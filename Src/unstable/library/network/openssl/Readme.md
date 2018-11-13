@@ -2,7 +2,9 @@
 
 Status: working on Windows and Linux
 
-Contributors:
+Maintainer: Eiffel Software
+
+Previous Contributors:
 - Guus Leeuw jr. (itpassion.com)
 - Jocelyn Fiat (eiffel.com)
 - Javier Velilla (eiffel.com)
@@ -14,33 +16,70 @@ OpenSSL version 1.1.0g.
 
 
 
-1. How to get precompiled OpenSSL
-================================
+1. How to get precompiled OpenSSL using a C++ Package Manager
+=============================================================
 
-To get the precompiled libraries for Windows check the following
-link https://www.npcglib.org/~stathis/blog/precompiled-openssl/
-It has 32 and 64 version for different versions of Microsoft Visual Studio.
+Ùsing `Conan` is a portable package manager, C and C++
+
+https://docs.conan.io/en/latest/introduction.html
+
+https://github.com/conan-community/conan-openssl
+
+$>conan install OpenSSL/1.1.0g@conan/stable
+
+You can change the project options depending on your needs (static or dynamic)
+
+For example
+OpenSSL:shared=false # true
+$>Take a look for all available options in conanfile.py
+
+
+
+Using `vcpkg`: A C++ package manager for Windows, Linux and MacOS
+Read: https://github.com/Microsoft/vcpkg/blob/master/docs/about/faq.md
+
+To generate static libraries using Vcpkg tool you can use one of following options
+x86-windows-static or x64-windows-static 
+
+Example
+
+$>vcpkg install <library_name>:x86-windows-static 
+$>vcpkg install <library_name>:x64-windows-static 
+
+It's also possible to build dynamic version. 
+
+$>vcpkg install <library_name>:x86-windows 
+$>vcpkg install <library_name>:x64-windows
+
+
+To learn more about Vcpkg https://docs.microsoft.com/en-us/cpp/vcpkg?view=vs-2017
+
+
+OpenSSL Binaries 
+================
+https://wiki.openssl.org/index.php/Binaries
 
 
 2. Static Library (/MT) or Dynamic Library(/MD)
 ================================================
 For static library use the configuration file `net_ssl-safe.ecf` or `net_ssl.ecf`
-Copy the static libraries (`libcryptoMT.lib` and `libsslMT.lib`) that you get from step 1
-to `$(ISE_LIBRARY)\unstable\library\network\socket\netssl\spec\$(ISE_PLATFORM)\lib\$(ISE_C_COMPILER)\`
+Copy the static libraries (`libcryptoMT.lib` and `libsslMT.lib`) that you get from step (1) or DIY as described
+in step (3) to `$(ISE_LIBRARY)\unstable\library\network\openssl\spec\$(ISE_PLATFORM)\lib\$(ISE_C_COMPILER)\`
+
 
 If you want to use the static version check if you have in your path `crypt32.lib`, 
 in other case check the following link to learn more about how to install Windows Platform SDK.
 https://msdn.microsoft.com/en-us/library/ms759194(v=vs.85).aspx.
 
 
-For dynamic library use the configuration file `net_ssl_dynamic.ecf`
-Copy the dynamic library (`libcryptoMT.lib` and `libsslMT.lib`) that you get from step 1
-to `$(ISE_LIBRARY)\unstable\library\network\socket\netssl\spec\$(ISE_PLATFORM)\lib\$(ISE_C_COMPILER)\` .
-When you use this option does not forget to have the dll in the PATH of the corresponding project,
-you can get the dll's files from step1.
+For dynamic library use the configuration file `net_ssl_dynamic.ecf`, dll's are part of the delivery 
+located at `%ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin`
+When you use this option does not forget to have the dll in the PATH of the corresponding project.
+
+
 
 3. How to complile OpenSSL
-===========================
+==========================
 
 How to build OpenSSL on Windows.
 ================================

@@ -484,7 +484,6 @@ feature -- Access: directory
 
 	system_info: STRING_TABLE [READABLE_STRING_32]
 		local
-			n: INTEGER
 			s: STRING_32
 		do
 			create Result.make (10)

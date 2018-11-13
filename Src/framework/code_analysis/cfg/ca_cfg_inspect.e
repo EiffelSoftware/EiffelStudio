@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Represents an Inspect block in the CFG."
 	author: "Stefan Zurfluh"
 	date: "$Date$"
@@ -44,31 +44,6 @@ feature -- Properties
 
 	intervals: detachable ARRAYED_LIST [EIFFEL_LIST [INTERVAL_AS]]
 			-- The inspect intervals, if existing.
-
-	when_branches: detachable LIST [CA_CFG_BASIC_BLOCK]
-			-- The when branches, if existing.
-		do
-			if n_when_branches > 0 then
-				out_edges.start
-				if has_else then
-					Result := out_edges.duplicate (n_when_branches)
-				else
-					Result := out_edges
-				end
-			else
-				Result := Void
-			end
-		end
-
-	else_branch: detachable CA_CFG_BASIC_BLOCK
-			-- The else branch, if existing.
-		do
-			if has_else then
-				Result := out_edges [n_when_branches + 1]
-			else
-				Result := Void
-			end
-		end
 
 	n_when_branches: INTEGER
 			-- Number of when branches.

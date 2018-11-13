@@ -15,48 +15,8 @@ Supported Version
 OpenSSL version 1.1.0g.
 
 
-
-1. How to get precompiled OpenSSL using a C++ Package Manager
-=============================================================
-
-Ùsing `Conan` is a portable package manager, C and C++
-
-https://docs.conan.io/en/latest/introduction.html
-
-https://github.com/conan-community/conan-openssl
-
-$>conan install OpenSSL/1.1.0g@conan/stable
-
-You can change the project options depending on your needs (static or dynamic)
-
-For example
-OpenSSL:shared=false # true
-$>Take a look for all available options in conanfile.py
-
-
-
-Using `vcpkg`: A C++ package manager for Windows, Linux and MacOS
-Read: https://github.com/Microsoft/vcpkg/blob/master/docs/about/faq.md
-
-To generate static libraries using Vcpkg tool you can use one of following options
-x86-windows-static or x64-windows-static 
-
-Example
-
-$>vcpkg install <library_name>:x86-windows-static 
-$>vcpkg install <library_name>:x64-windows-static 
-
-It's also possible to build dynamic version. 
-
-$>vcpkg install <library_name>:x86-windows 
-$>vcpkg install <library_name>:x64-windows
-
-
-To learn more about Vcpkg https://docs.microsoft.com/en-us/cpp/vcpkg?view=vs-2017
-
-
-OpenSSL Binaries 
-================
+1. OpenSSL Binaries 
+===================
 https://wiki.openssl.org/index.php/Binaries
 
 

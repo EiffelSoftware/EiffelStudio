@@ -11,7 +11,7 @@
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
-		<library name="net_ssl_dynamic" location="$ISE_LIBRARY\unstable\library\network\socket\netssl\net_ssl_dynamic.ecf">
+		<library name="net_ssl_static" location="$ISE_LIBRARY\unstable\library\network\socket\netssl\net_ssl.ecf">
 			<option debug="true">
 				<debug name="__unnamed_debug__" enabled="true"/>
 			</option>

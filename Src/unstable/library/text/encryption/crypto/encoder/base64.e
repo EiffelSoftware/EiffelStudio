@@ -110,11 +110,9 @@ feature -- Decoder
 			bytes: ARRAY [INTEGER]
 			tmp1, tmp2: INTEGER
 			done: BOOLEAN
-			l_map: READABLE_STRING_8
 			c: CHARACTER
 		do
 			has_error := False
-			l_map := character_map
 			n := v.count
 			from
 				nb_bytes := 4
@@ -172,10 +170,6 @@ feature -- Decoder
 feature {NONE} -- Implementation
 
 	append_triple_encoded_to (i1,i2,i3: INTEGER; a_map: READABLE_STRING_8; a_output: STRING)
-		local
-			i,j,n: INTEGER
-			c: INTEGER
-			t: INTEGER
 		do
 			--| [ 'f'  ][ 'o'  ][ 'o'  ]
 			--| [ 102  ][ 111  ][ 111  ]
@@ -189,7 +183,6 @@ feature {NONE} -- Implementation
 				if i3 >= 0 then
 					a_output.extend (a_map.item (1 + (i2 |<< 2 & 0b111111) + (i3 |>> 6 & 0b111111) ))
 					a_output.extend (a_map.item (1 + (i3 & 0b111111) ))
-					t := t + i3
 				else
 					a_output.extend (a_map.item (1 + (i2 |<< 2 & 0b111111) ))
 					a_output.append_character ('=')

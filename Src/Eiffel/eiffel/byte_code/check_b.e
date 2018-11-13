@@ -163,7 +163,7 @@ feature -- Inlining
 			if
 				context.final_mode and
 				not system.keep_assertions and
-				not context.system.exception_stack_managed
+				not system.exception_stack_managed
 			then
 					-- Nothing to be done, we do as if there has
 					-- been no expressions in `check_list'.

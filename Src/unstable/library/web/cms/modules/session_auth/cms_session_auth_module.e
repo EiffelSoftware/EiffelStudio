@@ -182,10 +182,9 @@ feature {NONE} -- Implementation: routes
 			end
 			if
 				attached {WSF_STRING} req.item ("destination") as p_destination and then
-				attached p_destination.value as v and then
-				v.is_valid_as_string_8
+				attached p_destination.url_encoded_value as v
 			then
-				r.set_redirection (secured_url_content (v.to_string_8))
+				r.set_redirection (secured_url_content (v))
 			else
 				r.set_redirection (req.absolute_script_url (""))
 			end
@@ -219,10 +218,9 @@ feature {NONE} -- Implementation: routes
 						create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 						if
 							attached {WSF_STRING} req.item ("destination") as p_destination and then
-							attached p_destination.value as v and then
-							v.is_valid_as_string_8
+							attached p_destination.url_encoded_value as v
 						then
-							r.set_redirection (secured_url_content (v.to_string_8))
+							r.set_redirection (secured_url_content (v))
 						else
 							r.set_redirection ("")
 						end

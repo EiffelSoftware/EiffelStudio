@@ -167,7 +167,7 @@ feature -- Hooks configuration
 			l_url_name: READABLE_STRING_GENERAL
 		do
 			if attached {WSF_STRING} a_response.request.item ("destination") as p_destination then
-				l_destination := secured_url_content (p_destination.value)
+				l_destination := secured_url_content (p_destination.url_encoded_value)
 			else
 				l_destination := a_response.location
 			end

@@ -9,7 +9,7 @@
 			<exclude>/\.svn$</exclude>
 			<exclude>/tests$</exclude>
 		</file_rule>
-		<option namespace="EiffelSoftware.Library">
+		<option warning="true" namespace="EiffelSoftware.Library">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>

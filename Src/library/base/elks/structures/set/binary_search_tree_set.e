@@ -21,7 +21,8 @@ class BINARY_SEARCH_TREE_SET [G -> COMPARABLE] inherit
 
 create
 
-	make
+	make,
+	make_from_iterable
 
 feature {NONE} -- Initialization
 
@@ -29,6 +30,17 @@ feature {NONE} -- Initialization
 			-- Create set.
 		do
 			before := True
+		end
+
+	make_from_iterable (other: ITERABLE [G])
+			-- Create a set with all items obtained from `other`.
+		do
+			make
+			across
+				other as o
+			loop
+				extend (o.item)
+			end
 		end
 
 feature -- Measurement

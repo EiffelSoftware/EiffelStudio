@@ -43,9 +43,10 @@ class ARRAYED_CIRCULAR [G] inherit
 
 create
 
-	make
+	make,
+	make_from_iterable
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (n: INTEGER)
 			-- Create a circular chain with `n' items.
@@ -53,6 +54,20 @@ feature -- Initialization
 			at_least_one: n >= 1
 		do
 			create list.make (n)
+		end
+
+	make_from_iterable (other: ITERABLE [G])
+			-- Create a circular chain with all items obtained from `other`.
+		local
+			l: like list
+		do
+			create l.make (estimated_count_of (other))
+			list := l
+			across
+				other as o
+			loop
+				l.extend (o.item)
+			end
 		end
 
 feature -- Access
@@ -371,7 +386,7 @@ invariant
 	valid_starter: starter >= 0 and starter <= count
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

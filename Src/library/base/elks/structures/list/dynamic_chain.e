@@ -175,6 +175,12 @@ feature -- Duplication
 			-- and having min (`n', `from_here') items,
 			-- where `from_here' is the number of items
 			-- at or to the right of current position.
+		obsolete
+			"[
+				Create a new container explicitly using `make_from_iterable` if available.
+				Otherwise, replace a call to the feature with code that creates and initializes container.
+				[2018-11-30]
+			]"
 		local
 			pos: CURSOR
 			counter: INTEGER
@@ -207,7 +213,7 @@ feature {DYNAMIC_CHAIN} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

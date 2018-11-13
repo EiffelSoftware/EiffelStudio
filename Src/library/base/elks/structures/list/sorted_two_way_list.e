@@ -3,10 +3,10 @@
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	names: sorted_two_way_list, sorted_struct, sequence;
-	representation: linked;
-	access: index, cursor, membership, min, max;
-	contents: generic;
+	names: sorted_two_way_list, sorted_struct, sequence
+	representation: linked
+	access: index, cursor, membership, min, max
+	contents: generic
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -28,7 +28,8 @@ class SORTED_TWO_WAY_LIST [G -> COMPARABLE] inherit
 		end
 
 create
-	make
+	make,
+	make_from_iterable
 
 create {SORTED_TWO_WAY_LIST}
 	make_sublist
@@ -152,7 +153,7 @@ feature {SORTED_TWO_WAY_LIST} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

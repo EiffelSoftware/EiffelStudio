@@ -262,6 +262,11 @@ feature -- Basic operations: Chain
 
 	duplicate (n: INTEGER_32): like Current
 			-- <Precursor>
+		obsolete "[
+				Create a new container explicitly using `make_from_iterable` if available.
+				Otherwise, replace a call to the feature with code that creates and initializes container.
+				[2018-11-30]
+			]"
 		do
 			create Result.make (title, pages.duplicate (n).to_array)
 		end

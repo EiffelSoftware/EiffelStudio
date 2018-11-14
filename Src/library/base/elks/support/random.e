@@ -138,44 +138,30 @@ feature -- Access
 
 	real_item: REAL_32
 			-- The current random number as a real between 0 and 1
-		local
-			r1, r2: REAL_32
 		do
-			r1 := item
-			r2 := modulus
-			Result := r1 / r2
+			Result := item.to_real / modulus.to_real
 		end
 
 	double_item: REAL_64
 			-- The current random number as a double between 0 and 1
-		local
-			d: REAL_64
 		do
-			d := item
-			Result := d / dmod
+			Result := item.to_double / dmod
 		end
 
 	real_i_th (i: INTEGER): REAL_32
 			-- The `i'-th random number as a real between 0 and 1
 		require
 			positive_argument: i > 0
-		local
-			r1, r2: REAL_32
 		do
-			r1 := i_th (i)
-			r2 := modulus
-			Result := r1 / r2
+			Result := i_th (i).to_real / modulus.to_real
 		end
 
 	double_i_th (i: INTEGER): REAL_64
 			-- The `i'-th random number as a double between 0 and 1
 		require
 			positive_argument: i > 0
-		local
-			d: REAL_64
 		do
-			d := i_th (i)
-			Result := d / dmod
+			Result := i_th (i).to_double / dmod
 		end
 
 feature -- Iteration
@@ -191,11 +177,8 @@ feature {NONE} -- Implementation
 
 	randomize (xn: INTEGER): INTEGER
 			-- Next item
-		local
-			x: REAL_64
 		do
-			x := double_mod (dmul * xn + dinc, dmod)
-			Result := x.truncated_to_integer
+			Result := double_mod (dmul * xn + dinc, dmod).truncated_to_integer
 		end
 
 	double_mod (x, m: REAL_64): REAL_64

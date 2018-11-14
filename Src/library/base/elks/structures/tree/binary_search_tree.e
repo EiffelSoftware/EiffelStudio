@@ -272,7 +272,10 @@ feature -- Element change
 				if i /= Void and then v < i then
 					c := left_child
 					if c = Void then
-						c := new_tree
+						create c.make (item)
+						if object_comparison then
+							c.compare_objects
+						end
 						put_left_child (c)
 						c.replace (v)
 					else
@@ -281,7 +284,10 @@ feature -- Element change
 				else
 					c := right_child
 					if c = Void then
-						c := new_tree
+						create c.make (item)
+						if object_comparison then
+							c.compare_objects
+						end
 						put_right_child (c)
 						c.replace (v)
 					else

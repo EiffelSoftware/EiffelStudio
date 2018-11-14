@@ -1,11 +1,11 @@
-note
+﻿note
 	description: "Dynamically modifiable chains"
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	names: dynamic_chain, sequence;
-	access: index, cursor, membership;
-	contents: generic;
+	names: dynamic_chain, sequence
+	access: index, cursor, membership
+	contents: generic
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -207,6 +207,7 @@ feature {DYNAMIC_CHAIN} -- Implementation
 			-- A newly created instance of the same type.
 			-- This feature may be redefined in descendants so as to
 			-- produce an adequately allocated and initialized object.
+		obsolete "Use explicit creation instead. See also explanations for `duplicate`. [2018-11-30]"
 		deferred
 		ensure
 			result_exists: Result /= Void

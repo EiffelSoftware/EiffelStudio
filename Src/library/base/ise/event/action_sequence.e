@@ -440,6 +440,7 @@ feature {NONE} -- Implementation
 
 	new_filled_list (n: INTEGER): like Current
 			-- New list with `n' elements.
+		obsolete "Use explicit creation instead. See also explanations for `duplicate`. [2018-11-30]"
 		do
 			create Result.make_filled (n)
 		end

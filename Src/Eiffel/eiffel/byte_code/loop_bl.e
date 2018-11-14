@@ -135,8 +135,8 @@ feature -- Access
 				end
 				context.set_assertion_type (0)
 			elseif context.system.exception_stack_managed then
-				if invariant_part /= Void then
-					context.increment_breakpoint_slot_for_assertion (invariant_part)
+				if attached invariant_part as l_inv_part then
+					context.increment_breakpoint_slot_for_assertion (l_inv_part)
 				end
 			end
 
@@ -154,8 +154,8 @@ feature -- Access
 				end
 				context.set_assertion_type (0)
 			elseif context.system.exception_stack_managed then
-				if variant_part /= Void then
-					context.increment_breakpoint_slot_for_assertion (variant_part)
+				if attached variant_part as l_variant_part then
+					context.increment_breakpoint_slot_for_assertion (l_variant_part)
 				end
 			end
 		end

@@ -1243,8 +1243,8 @@ end
 						-- Close on-demand check block.
 					buf.generate_block_close
 				elseif context.system.exception_stack_managed then
-					if precondition /= Void then
-						context.increment_breakpoint_slot_for_assertion (precondition)
+					if attached precondition as l_assertion then
+						context.increment_breakpoint_slot_for_assertion (l_assertion)
 					end
 				end
 			end
@@ -1296,8 +1296,8 @@ end
 				buf.put_string ("RTEC (EN_POST);")
 
 			elseif context.system.exception_stack_managed then
-				if postcondition /= Void then
-					context.increment_breakpoint_slot_for_assertion (postcondition)
+				if attached postcondition as l_assertion then
+					context.increment_breakpoint_slot_for_assertion (l_assertion)
 				end
 			end
 		end

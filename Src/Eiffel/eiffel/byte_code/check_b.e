@@ -87,7 +87,7 @@ feature -- Code generation
 			buf: GENERATION_BUFFER
 		do
 			generate_line_info
-			if check_list /= Void then
+			if attached check_list as l_check_list then
 				buf := buffer
 				workbench_mode := context.workbench_mode
 				context.set_assertion_type (In_check)
@@ -95,7 +95,7 @@ feature -- Code generation
 				if workbench_mode then
 					buf.put_string ("if (RTAL & CK_CHECK) {")
 					buf.indent
-					check_list.generate
+					l_check_list.generate
 					buf.exdent
 					buf.put_new_line
 					buf.put_character ('}')
@@ -107,12 +107,12 @@ feature -- Code generation
 					then
 						buf.put_string ("if (~in_assertion) {")
 						buf.indent
-						check_list.generate
+						l_check_list.generate
 						buf.exdent
 						buf.put_new_line
 						buf.put_character ('}')
 					elseif system.exception_stack_managed then
-						context.increment_breakpoint_slot_for_assertion (check_list)
+						context.increment_breakpoint_slot_for_assertion (l_check_list)
 					end
 				end
 				context.set_assertion_type (0)

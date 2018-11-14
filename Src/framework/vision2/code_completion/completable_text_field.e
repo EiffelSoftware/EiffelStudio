@@ -1,10 +1,7 @@
-note
-	description: "[
-					Completable text field
-				]"
+﻿note
+	description: "Completable text field."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -35,7 +32,6 @@ inherit
 			is_equal,
 			copy
 		end
-
 
 create
 	default_create,
@@ -94,17 +90,13 @@ feature -- Setting
 
 feature -- Status report
 
-	completing_word: BOOLEAN = true
+	completing_word: BOOLEAN = True
 			-- Has user requested to complete a word.
 
 	is_focus_back_needed: BOOLEAN
 			-- Should focus be set back after code completion?
 		do
-			if is_destroyed then
-				Result := False
-			else
-				Result := True
-			end
+			Result := not is_destroyed
 		end
 
 	is_char_activator_character (a_char: CHARACTER_32): BOOLEAN
@@ -216,34 +208,29 @@ feature{NONE} -- Implementation
 		require
 			a_key_not_void: a_key /= Void
 		do
-			if not {PLATFORM}.is_unix then
-				if caret_position > 1 then
-					if is_same_key (a_key, text.item_code (caret_position - 1)) then
-						back_delete_char
-					end
-				end
+			if
+				not {PLATFORM}.is_unix and then
+				caret_position > 1 and then
+				is_same_key (a_key, text.code (caret_position - 1))
+			then
+				back_delete_char
 			end
 		end
 
-	is_same_key (a_key: EV_KEY; a_char_code: INTEGER): BOOLEAN
+	is_same_key (a_key: EV_KEY; a_char_code: NATURAL_32): BOOLEAN
 			-- Is `a_key' a `a_char_code' character?
 		require
 			a_key_not_void: a_key /= Void
-		local
-			l_string: STRING_32
-			l_keys: EV_KEY_CONSTANTS
 		do
-			create l_keys
-			l_string := l_keys.key_strings.item (a_key.code)
-			if l_string /= Void then
+			if attached (create {EV_KEY_CONSTANTS}).key_strings.item (a_key.code) as l_string then
 				if l_string.count = 1 then
-					if l_string.item_code (1) = a_char_code and then a_char_code /= ('.').code then
+					if l_string.code (1) = a_char_code and then a_char_code /= ('.').natural_32_code then
 						Result := True
 					end
 				elseif l_string.is_equal ("Space") then
 					Result := True
 				elseif a_key.is_numpad then
-					if l_string.item_code (l_string.count) = a_char_code then
+					if l_string.code (l_string.count) = a_char_code then
 						Result := True
 					end
 				end
@@ -302,7 +289,7 @@ feature{NONE} -- Position calculation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

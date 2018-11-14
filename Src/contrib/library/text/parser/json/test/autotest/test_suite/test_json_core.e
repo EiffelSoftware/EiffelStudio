@@ -2,12 +2,6 @@
 	TEST_JSON_CORE
 
 inherit
-
-	SHARED_EJSON
-		undefine
-			default_create
-		end
-
 	EQA_TEST_SET
 
 	JSON_PARSER_ACCESS
@@ -15,24 +9,106 @@ inherit
 			default_create
 		end
 
+	EXCEPTIONS
+		undefine
+			default_create
+		end
+
+feature -- Factory
+
+	new_parser (a_string: STRING_8): JSON_PARSER
+		do
+			create Result.make_with_string (a_string)
+		end
+
+	new_empty_parser: JSON_PARSER
+		do
+			create Result.make
+		end
+
 feature -- Test
+
+	test_parser_reuse
+		local
+			jrep: STRING
+			parser: like new_parser
+		do
+			jrep := "{%"num%": 123, %"text%": %"abc%", %"true%": True, %"null%": null, %"empty-obj%": { }, %"arr%": [ 123, %"abc%", True, null] }"
+			parser := new_parser (jrep)
+			assert ("not parsed", not parser.is_parsed)
+			assert ("no error", not parser.has_error)
+			parser.parse_content
+			assert ("parsed", parser.is_parsed)
+			assert ("is valid", parser.is_valid)
+
+				-- Reuse with same content
+			parser.set_representation (jrep)
+			assert ("not parsed", not parser.is_parsed)
+			assert ("no error", not parser.has_error)
+			parser.parse_content
+			assert ("parsed", parser.is_parsed)
+			assert ("is valid", parser.is_valid)
+
+				-- Reuse with bad content
+			parser.set_representation ("{ bad content }")
+			assert ("not parsed", not parser.is_parsed)
+			assert ("no error", not parser.has_error)
+			parser.parse_content
+			assert ("parsed", parser.is_parsed)
+			assert ("is not valid", not parser.is_valid)
+
+				-- Reuse with first jrep content
+			parser.set_representation (jrep)
+			assert ("not parsed", not parser.is_parsed)
+			assert ("no error", not parser.has_error)
+			parser.parse_content
+			assert ("parsed", parser.is_parsed)
+			assert ("is valid", parser.is_valid)
+		end
+
+	test_parse_string
+		local
+			jrep: STRING
+			parser: like new_empty_parser
+		do
+			parser := new_empty_parser
+			jrep := "{%"num%": 123, %"text%": %"abc%", %"true%": True, %"null%": null, %"empty-obj%": { }, %"arr%": [ 123, %"abc%", True, null] }"
+			parser.parse_string (jrep)
+			assert ("parsed", parser.is_parsed)
+			assert ("is valid", parser.is_valid)
+
+				-- Reuse with same content
+			parser.parse_string (jrep)
+			assert ("parsed", parser.is_parsed)
+			assert ("is valid", parser.is_valid)
+
+				-- Reuse with bad content
+			parser.parse_string ("{ bad content }")
+			assert ("parsed", parser.is_parsed)
+			assert ("is not valid", not parser.is_valid)
+
+				-- Reuse with first jrep content
+			parser.parse_string (jrep)
+			assert ("parsed", parser.is_parsed)
+			assert ("is valid", parser.is_valid)
+		end
 
 	test_json_number_and_integer
 		local
 			i: INTEGER
 			jn: JSON_NUMBER
 			jrep: STRING
-			parser: JSON_PARSER
+			parser: like new_parser
 		do
 			i := 42
 				-- Eiffel value -> JSON value -> JSON representation
 			create jn.make_integer (i)
 			assert ("jn.representation.same_string (%"42%")", jn.representation.same_string ("42"))
 				-- Eiffel value -> JSON value -> JSON representation with factory
-			if attached {JSON_NUMBER} json.value (i) as l_jn then
+			if attached {JSON_NUMBER} json_value (i) as l_jn then
 				assert ("l_jn.representation.same_string (%"42%")", jn.representation.same_string ("42"))
 			else
-				assert ("json.value (i) is a JSON_NUMBER", False)
+				assert ("json_value (i) is a JSON_NUMBER", False)
 			end
 
 				-- JSON representation-> JSON value -> Eiffel value
@@ -40,12 +116,12 @@ feature -- Test
 				-- that can represent the value of the JSON number, in this case
 				-- we know it is INTEGER_8 since the value is 42
 			jrep := "42"
-			create parser.make_with_string (jrep)
+			parser := new_parser (jrep)
 			if attached {JSON_NUMBER} parser.next_parsed_json_value as l_jn then
-				if attached {INTEGER_8} json.object (jn, Void) as l_i8 then
+				if attached {INTEGER_8} json_object (jn, Void) as l_i8 then
 					assert ("l_i8 = 42", l_i8 = 42)
 				else
-					assert ("json.object (jn, Void) is a INTEGER_8", False)
+					assert ("json_object (jn, Void) is a INTEGER_8", False)
 				end
 			else
 				assert ("parser.next_parsed_json_value is a JSON_NUMBER", False)
@@ -57,17 +133,17 @@ feature -- Test
 			i8: INTEGER_8
 			jn: JSON_NUMBER
 			jrep: STRING
-			parser: JSON_PARSER
+			parser: like new_parser
 		do
 			i8 := 42
 				-- Eiffel value -> JSON value -> JSON representation
 			create jn.make_integer (i8)
 			assert ("jn.representation.same_string (%"42%")", jn.representation.same_string ("42"))
 				-- Eiffel value -> JSON value -> JSON representation with factory
-			if attached {JSON_NUMBER} json.value (i8) as l_jn then
+			if attached {JSON_NUMBER} json_value (i8) as l_jn then
 				assert ("l_jn.representation.same_string (%"42%")", jn.representation.same_string ("42"))
 			else
-				assert ("json.value (i8) is a JSON_NUMBER", False)
+				assert ("json_value (i8) is a JSON_NUMBER", False)
 			end
 
 				-- JSON representation -> JSON value -> Eiffel value
@@ -75,12 +151,12 @@ feature -- Test
 				-- that can represent the value of the JSON number, in this case
 				-- we know it is INTEGER_8 since the value is 42
 			jrep := "42"
-			create parser.make_with_string (jrep)
+			parser := new_parser (jrep)
 			if attached {JSON_NUMBER} parser.next_parsed_json_value as l_jn then
-				if attached {INTEGER_8} json.object (jn, Void) as l_i8 then
+				if attached {INTEGER_8} json_object (jn, Void) as l_i8 then
 					assert ("l_i8 = 42", l_i8 = 42)
 				else
-					assert ("json.object (jn, Void) is a INTEGER_8", False)
+					assert ("json_object (jn, Void) is a INTEGER_8", False)
 				end
 			else
 				assert ("parser.next_parsed_json_value is a JSON_NUMBER", False)
@@ -92,17 +168,17 @@ feature -- Test
 			i16: INTEGER_16
 			jn: JSON_NUMBER
 			jrep: STRING
-			parser: JSON_PARSER
+			parser: like new_parser
 		do
 			i16 := 300
 				-- Eiffel value -> JSON value -> JSON representation
 			create jn.make_integer (i16)
 			assert ("jn.representation.same_string (%"300%")", jn.representation.same_string ("300"))
 				-- Eiffel value -> JSON with factory
-			if attached {JSON_NUMBER} json.value (i16) as l_jn then
+			if attached {JSON_NUMBER} json_value (i16) as l_jn then
 				assert ("l_jn.representation.same_string (%"300%")", l_jn.representation.same_string ("300"))
 			else
-				assert ("json.value (i16) is a JSON_NUMBER", False)
+				assert ("json_value (i16) is a JSON_NUMBER", False)
 			end
 
 				-- JSON representation -> JSON value -> Eiffel value
@@ -110,12 +186,12 @@ feature -- Test
 				-- that can represent the value of the JSON number, in this case
 				-- we know it is INTEGER_16 since the value is 300
 			jrep := "300"
-			create parser.make_with_string (jrep)
+			parser := new_parser (jrep)
 			if attached {JSON_NUMBER} parser.next_parsed_json_value as l_jn then
-				if attached {INTEGER_16} json.object (jn, Void) as l_i16 then
+				if attached {INTEGER_16} json_object (jn, Void) as l_i16 then
 					assert ("l_i16 = 300", l_i16 = 300)
 				else
-					assert ("json.object (jn, Void) is a INTEGER_16", False)
+					assert ("json_object (jn, Void) is a INTEGER_16", False)
 				end
 			else
 				assert ("parser.next_parsed_json_value is a JSON_NUMBER", False)
@@ -127,17 +203,17 @@ feature -- Test
 			i32: INTEGER_32
 			jn: JSON_NUMBER
 			jrep: STRING
-			parser: JSON_PARSER
+			parser: like new_parser
 		do
 			i32 := 100000
 				-- Eiffel value -> JSON representation -> JSON value
 			create jn.make_integer (i32)
 			assert ("jn.representation.same_string (%"100000%")", jn.representation.same_string ("100000"))
 				-- Eiffel value -> JSON representation -> JSON value with factory
-			if attached {JSON_NUMBER} json.value (i32) as l_jn then
+			if attached {JSON_NUMBER} json_value (i32) as l_jn then
 				assert ("l_jn.representation.same_string (%"100000%")", l_jn.representation.same_string ("100000"))
 			else
-				assert ("json.value (i32) is a JSON_NUMBER", False)
+				assert ("json_value (i32) is a JSON_NUMBER", False)
 			end
 
 				-- JSON representation -> JSON value -> Eiffel value
@@ -145,12 +221,12 @@ feature -- Test
 				-- that can represent the value of the JSON number, in this case
 				-- we know it is INTEGER_32 since the value is 100000
 			jrep := "100000"
-			create parser.make_with_string (jrep)
+			parser := new_parser (jrep)
 			if attached {JSON_NUMBER} parser.next_parsed_json_value as l_jn then
-				if attached {INTEGER_32} json.object (jn, Void) as l_i32 then
+				if attached {INTEGER_32} json_object (jn, Void) as l_i32 then
 					assert ("l_i32 = 100000", l_i32 = 100000)
 				else
-					assert ("json.object (jn, Void) is a INTEGER_32", False)
+					assert ("json_object (jn, Void) is a INTEGER_32", False)
 				end
 			else
 				assert ("parser.next_parsed_json_value is a JSON_NUMBER", False)
@@ -162,17 +238,17 @@ feature -- Test
 			i64: INTEGER_64
 			jn: JSON_NUMBER
 			jrep: STRING
-			parser: JSON_PARSER
+			parser: like new_parser
 		do
 			i64 := 42949672960
 				-- Eiffel value -> JSON value -> JSON representation
 			create jn.make_integer (i64)
 			assert ("jn.representation.same_string (%"42949672960%")", jn.representation.same_string ("42949672960"))
 				-- Eiffel value -> JSON value -> JSON representation with factory
-			if attached {JSON_NUMBER} json.value (i64) as l_jn then
+			if attached {JSON_NUMBER} json_value (i64) as l_jn then
 				assert ("l_jn.representation.same_string (%"42949672960%")", l_jn.representation.same_string ("42949672960"))
 			else
-				assert ("json.value (i64) is a JSON_NUMBER", False)
+				assert ("json_value (i64) is a JSON_NUMBER", False)
 			end
 
 				-- JSON representation -> JSON value -> Eiffel value
@@ -180,12 +256,12 @@ feature -- Test
 				-- that can represent the value of the JSON number, in this case
 				-- we know it is INTEGER_32 since the value is 42949672960
 			jrep := "42949672960"
-			create parser.make_with_string (jrep)
+			parser := new_parser (jrep)
 			if attached {JSON_NUMBER} parser.next_parsed_json_value as l_jn then
-				if attached {INTEGER_64} json.object (jn, Void) as l_i64 then
+				if attached {INTEGER_64} json_object (jn, Void) as l_i64 then
 					assert ("l_i64 = 42949672960", l_i64 = 42949672960)
 				else
-					assert ("json.object (jn, Void) is a INTEGER_64", False)
+					assert ("json_object (jn, Void) is a INTEGER_64", False)
 				end
 			else
 				assert ("parser.next_parsed_json_value is a JSON_NUMBER", False)
@@ -197,17 +273,17 @@ feature -- Test
 			n8: NATURAL_8
 			jn: JSON_NUMBER
 			jrep: STRING
-			parser: JSON_PARSER
+			parser: like new_parser
 		do
 			n8 := 200
 				-- Eiffel value -> JSON value -> JSON representation
 			create jn.make_natural (n8)
 			assert ("jn.representation.same_string (%"200%")", jn.representation.same_string ("200"))
 				-- Eiffel value -> JSON value -> JSON representation with factory
-			if attached {JSON_NUMBER} json.value (n8) as l_jn then
+			if attached {JSON_NUMBER} json_value (n8) as l_jn then
 				assert ("l_jn.representation.same_string (%"200%")", l_jn.representation.same_string ("200"))
 			else
-				assert ("json.value (n8) is a JSON_NUMBER}", False)
+				assert ("json_value (n8) is a JSON_NUMBER}", False)
 			end
 
 				-- JSON representation -> JSON value -> Eiffel value
@@ -215,12 +291,12 @@ feature -- Test
 				-- that can represent the value of the JSON number, in this case
 				-- we know it is INTEGER_16 since the value is 200
 			jrep := "200"
-			create parser.make_with_string (jrep)
+			parser := new_parser (jrep)
 			if attached {JSON_NUMBER} parser.next_parsed_json_value as l_jn then
-				if attached {INTEGER_16} json.object (jn, Void) as i16 then
-					assert ("i16 = 200", i16 = 200)
+				if attached {NATURAL_8} json_object (jn, Void) as jn8 then
+					assert ("jn8 = 200", jn8 = 200)
 				else
-					assert ("json.object (jn, Void) is an INTEGER_16", False)
+					assert ("json_object (jn, Void) is an INTEGER_16", False)
 				end
 			else
 				assert ("parser.next_parsed_json_value is a JSON_NUMBER", False)
@@ -232,17 +308,17 @@ feature -- Test
 			n16: NATURAL_16
 			jn: JSON_NUMBER
 			jrep: STRING
-			parser: JSON_PARSER
+			parser: like new_parser
 		do
 			n16 := 32768
 				-- Eiffel value -> JSON value -> JSON representation
 			create jn.make_natural (n16)
 			assert ("jn.representation.same_string (%"32768%")", jn.representation.same_string ("32768"))
 				-- Eiffel value -> JSON value -> JSON representation with factory
-			if attached {JSON_NUMBER} json.value (n16) as l_jn then
+			if attached {JSON_NUMBER} json_value (n16) as l_jn then
 				assert ("l_jn.representation.same_string (%"32768%")", l_jn.representation.same_string ("32768"))
 			else
-				assert ("json.value (n16) is a JSON_NUMBER", False)
+				assert ("json_value (n16) is a JSON_NUMBER", False)
 			end
 
 				-- JSON representation -> JSON value -> Eiffel value
@@ -250,12 +326,12 @@ feature -- Test
 				-- that can represent the value of the JSON number, in this case
 				-- we know it is INTEGER_32 since the value is 32768
 			jrep := "32768"
-			create parser.make_with_string (jrep)
+			parser := new_parser (jrep)
 			if attached {JSON_NUMBER} parser.next_parsed_json_value as l_jn then
-				if attached {INTEGER_32} json.object (jn, Void) as i32 then
-					assert ("i32 = 32768", i32 = 32768)
+				if attached {NATURAL_16} json_object (jn, Void) as nat16 then
+					assert ("nat16 = 32768", nat16 = 32768)
 				else
-					assert ("json.object (jn, Void) is a INTEGER_32", False)
+					assert ("json_object (jn, Void) is a NATURAL_16", False)
 				end
 			else
 				assert ("parser.next_parsed_json_value is a JSON_NUMBER", False)
@@ -267,17 +343,17 @@ feature -- Test
 			n32: NATURAL_32
 			jn: JSON_NUMBER
 			jrep: STRING
-			parser: JSON_PARSER
+			parser: like new_parser
 		do
 			n32 := 2147483648
 				-- Eiffel value -> JSON value -> JSON representation
 			create jn.make_natural (n32)
 			assert ("jn.representation.same_string (%"2147483648%")", jn.representation.same_string ("2147483648"))
 				-- Eiffel value -> JSON value -> JSON representation with factory
-			if attached json.value (n32) as l_jn then
+			if attached json_value (n32) as l_jn then
 				assert ("l_jn.representation.same_string (%"2147483648%")", l_jn.representation.same_string ("2147483648"))
 			else
-				assert ("json.value (n32) is a JSON_NUMBER", False)
+				assert ("json_value (n32) is a JSON_NUMBER", False)
 			end
 
 				-- JSON representation -> JSON value -> Eiffel value
@@ -285,12 +361,12 @@ feature -- Test
 				-- that can represent the value of the JSON number, in this case
 				-- we know it is INTEGER_64 since the value is 2147483648
 			jrep := "2147483648"
-			create parser.make_with_string (jrep)
+			parser := new_parser (jrep)
 			if attached {JSON_NUMBER} parser.next_parsed_json_value as l_jn then
-				if attached {INTEGER_64} json.object (jn, Void) as i64 then
-					assert ("i64 = 2147483648", i64 = 2147483648)
+				if attached {NATURAL_32} json_object (jn, Void) as nat32 then
+					assert ("nat32 = 2147483648", nat32 = 2147483648)
 				else
-					assert ("json.object (jn, Void) is a INTEGER_64", False)
+					assert ("json_object (jn, Void) is a NATURAL_32", False)
 				end
 			else
 				assert ("parser.next_parsed_json_value is a JSON_NUMBER", False)
@@ -302,17 +378,17 @@ feature -- Test
 			jrep: STRING
 			n64: NATURAL_64
 			jn: JSON_NUMBER
-			parser: JSON_PARSER
+			parser: like new_parser
 		do
 			n64 := 9223372036854775808
 				-- Eiffel value -> JSON value -> JSON representation
 			create jn.make_natural (n64)
 			assert ("jn.representation.same_string (%"9223372036854775808%")", jn.representation.same_string ("9223372036854775808"))
 				-- Eiffel value -> JSON value -> JSON representation with factory
-			if attached {JSON_NUMBER} json.value (n64) as l_jn then
+			if attached {JSON_NUMBER} json_value (n64) as l_jn then
 				assert ("l_jn.representation.same_string (%"9223372036854775808%")", l_jn.representation.same_string ("9223372036854775808"))
 			else
-				assert ("json.value (n64) is a JSON_NUMBER", False)
+				assert ("json_value (n64) is a JSON_NUMBER", False)
 			end
 
 				-- JSON representation -> JSON value -> Eiffel value
@@ -320,12 +396,12 @@ feature -- Test
 				-- that can represent the value of the JSON number, in this case
 				-- we know it is INTEGER_32 since the value is 42949672960
 			jrep := "9223372036854775808" -- 1 higher than largest positive number that can be represented by INTEGER 64
-			create parser.make_with_string (jrep)
+			parser := new_parser (jrep)
 			if attached {JSON_NUMBER} parser.next_parsed_json_value as l_jn then
-				if attached {NATURAL_64} json.object (jn, Void) as l_n64 then
+				if attached {NATURAL_64} json_object (jn, Void) as l_n64 then
 					assert ("l_n64 = 9223372036854775808", l_n64 = 9223372036854775808)
 				else
-					assert ("json.object (jn, Void) is a NATURAL_64", False)
+					assert ("json_object (jn, Void) is a NATURAL_64", False)
 				end
 			else
 				assert ("parser.next_parsed_json_value is a JSON_NUMBER", False)
@@ -337,29 +413,29 @@ feature -- Test
 			r: REAL
 			jn: JSON_NUMBER
 			jrep: STRING
-			parser: JSON_PARSER
+			parser: like new_parser
 		do
 			r := 3.14
 				-- Eiffel value -> JSON value -> JSON representation
 			create jn.make_real (r)
 			assert ("jn.representation.same_string (%"3.1400001049041748%")", jn.representation.same_string ("3.1400001049041748"))
 				-- Eiffel value -> JSON value -> JSON representation with factory
-			if attached {JSON_NUMBER} json.value (r) as l_jn then
+			if attached {JSON_NUMBER} json_value (r) as l_jn then
 				assert ("l_jn.representation.same_string (%"3.1400001049041748%")", l_jn.representation.same_string ("3.1400001049041748"))
 			else
-				assert ("json.value (r) is a JSON_NUMBER", False)
+				assert ("json_value (r) is a JSON_NUMBER", False)
 			end
 
 				-- JSON representation -> JSON value -> Eiffel value
 				-- Note: The JSON_FACTORY will always return a REAL_64 if the value
 				-- of the JSON number is a floating point number
 			jrep := "3.14"
-			create parser.make_with_string (jrep)
+			parser := new_parser (jrep)
 			if attached {JSON_NUMBER} parser.next_parsed_json_value as l_jn then
-				if attached {REAL_64} json.object (jn, Void) as r64 then
+				if attached {REAL_64} json_object (jn, Void) as r64 then
 					assert ("3.14 <= r64 and r64 <= 3.141", 3.14 <= r64 and r64 <= 3.141)
 				else
-					assert ("json.object (jn, Void) is a REAL_64", False)
+					assert ("json_object (jn, Void) is a REAL_64", False)
 				end
 			else
 				assert ("parser.next_parsed_json_value is a JSON_NUMBER", False)
@@ -371,27 +447,27 @@ feature -- Test
 			r32: REAL_32
 			jn: JSON_NUMBER
 			jrep: STRING
-			parser: JSON_PARSER
+			parser: like new_parser
 		do
 			r32 := 3.14
 				-- Eiffel value -> JSON value -> JSON representation
 			create jn.make_real (r32)
 			assert ("jn.representation.same_string (%"3.1400001049041748%")", jn.representation.same_string ("3.1400001049041748"))
 				-- Eiffel value -> JSON value -> JSON representation with factory
-			if attached {JSON_NUMBER} json.value (r32) as l_jn then
+			if attached {JSON_NUMBER} json_value (r32) as l_jn then
 				assert ("l_jn.representation.same_string (%"3.1400001049041748%")", l_jn.representation.same_string ("3.1400001049041748"))
 			else
-				assert ("json.value (r32) is a JSON_NUMBER", False)
+				assert ("json_value (r32) is a JSON_NUMBER", False)
 			end
 
 				-- JSON representation -> JSON value -> Eiffel value
 			jrep := "3.1400001049041748"
-			create parser.make_with_string (jrep)
+			parser := new_parser (jrep)
 			if attached {JSON_NUMBER} parser.next_parsed_json_value as l_jn then
-				if attached {REAL_64} json.object (l_jn, Void) as r64 then
-					assert ("r64 = 3.1400001049041748", r64 = 3.1400001049041748)
+				if attached {REAL_64} json_object (l_jn, Void) as r then
+					assert ("r = 3.1400001049041748", r = 3.1400001049041748)
 				else
-					assert ("json.object (l_jn, Void) is a REAL_64", False)
+					assert ("json_object (l_jn, Void) is a REAL_64", False)
 				end
 			else
 				assert ("parser.next_parsed_json_value is a JSON_NUMBER", False)
@@ -403,28 +479,28 @@ feature -- Test
 			r64: REAL_64
 			jn: JSON_NUMBER
 			jrep: STRING
-			parser: JSON_PARSER
+			parser: like new_parser
 		do
-			r64 := 3.1415926535897931
+			r64 := 3.1415926535897931 + {REAL_32}.max_value
 				-- Eiffel value -> JSON value -> JSON representation
 			create jn.make_real (r64)
-			assert ("jn.representation.same_string (%"3.1415926535897931%")", jn.representation.same_string ("3.1415926535897931"))
+			assert ("jn.representation.same_string (%"" + r64.out + "%")", jn.representation.same_string (r64.out))
 
 				-- Eiffel value -> JSON value -> JSON representation with factory
-			if attached {JSON_NUMBER} json.value (r64) as l_jn then
-				assert ("l_jn.representation.same_string (%"3.1415926535897931%")", l_jn.representation.same_string ("3.1415926535897931"))
+			if attached {JSON_NUMBER} json_value (r64) as l_jn then
+				assert ("l_jn.representation.same_string (%""+r64.out+"%")", l_jn.representation.same_string (r64.out))
 			else
-				assert ("json.value (r64) is a JSON_NUMBER", False)
+				assert ("json_value (r64) is a JSON_NUMBER", False)
 			end
 
 				-- JSON representation -> JSON value -> Eiffel value
-			jrep := "3.1415926535897931"
-			create parser.make_with_string (jrep)
+			jrep := r64.out
+			parser := new_parser (jrep)
 			if attached {JSON_NUMBER} parser.next_parsed_json_value as l_jn then
-				if attached {REAL_64} json.object (jn, Void) as l_r64 then
-					assert ("l_r64 = 3.1415926535897931", l_r64 = 3.1415926535897931)
+				if attached {REAL_64} json_object (jn, Void) as r then
+					assert ("r = " + r64.out, r = r64)
 				else
-					assert ("json.object (jn, Void) is a REAL_64", False)
+					assert ("json_object (jn, Void) is a REAL_64", False)
 				end
 			else
 				assert ("parser.next_parsed_json_value is a JSON_NUMBER", False)
@@ -433,7 +509,7 @@ feature -- Test
 
 	test_json_boolean
 		local
-			parser: JSON_PARSER
+			parser: like new_parser
 			jb: JSON_BOOLEAN
 			b: BOOLEAN
 		do
@@ -442,19 +518,19 @@ feature -- Test
 			create jb.make (b)
 			assert ("jb.representation.is_equal (%"true%")", jb.representation.is_equal ("true"))
 				-- Eiffel value -> JSON value -> JSON representation with factory
-			if attached {JSON_BOOLEAN} json.value (b) as l_jb then
+			if attached {JSON_BOOLEAN} json_value (b) as l_jb then
 				assert ("l_jb.representation.same_string (%"true%")", l_jb.representation.same_string ("true"))
 			else
 				assert ("l_jb /= Void", False)
 			end
 
 				-- JSON representation -> JSON value -> Eiffel value
-			create parser.make_with_string ("true")
+			parser := new_parser ("true")
 			if attached {JSON_BOOLEAN} parser.next_parsed_json_value as l_jb then
-				if attached {BOOLEAN} json.object (l_jb, Void) as l_b then
+				if attached {BOOLEAN} json_object (l_jb, Void) as l_b then
 					assert ("l_b = True", l_b = True)
 				else
-					assert ("json.object (l_jb, Void) is BOOLEAN", False)
+					assert ("json_object (l_jb, Void) is BOOLEAN", False)
 				end
 			else
 				assert ("parser.next_parsed_json_value is a JSON_BOOLEAN", False)
@@ -465,19 +541,19 @@ feature -- Test
 			create jb.make (b)
 			assert ("jb.representation.same_string (%"false%")", jb.representation.same_string ("false"))
 				-- Eiffel value -> JSON value  -> JSON representation with factory
-			if attached {JSON_BOOLEAN} json.value (b) as l_jb then
+			if attached {JSON_BOOLEAN} json_value (b) as l_jb then
 				assert ("l_jb.representation.same_string (%"false%")", l_jb.representation.same_string ("false"))
 			else
-				assert ("json.value (b) is a JSON_BOOLEAN", False)
+				assert ("json_value (b) is a JSON_BOOLEAN", False)
 			end
 
 				-- JSON representation -> JSON value -> Eiffel value
-			create parser.make_with_string ("false")
+			parser := new_parser ("false")
 			if attached {JSON_BOOLEAN} parser.next_parsed_json_value as l_jb then
-				if attached {BOOLEAN} json.object (l_jb, Void) as l_b then
+				if attached {BOOLEAN} json_object (l_jb, Void) as l_b then
 					assert ("l_b = False", l_b = False)
 				else
-					assert ("json.object (l_jb, Void) is a BOOLEAN", False)
+					assert ("json_object (l_jb, Void) is a BOOLEAN", False)
 				end
 			else
 				assert ("parser.next_parsed_json_value is a JSON_BOOLEAN", False)
@@ -488,23 +564,23 @@ feature -- Test
 		local
 			jrep: STRING
 			jn: JSON_NULL
-			parser: JSON_PARSER
+			parser: like new_parser
 		do
 				-- Eiffel value -> JSON value -> JSON representation
 			create jn
 			jrep := "null"
 			assert ("jn.representation.is_equal (%"%"null%"%")", jn.representation.is_equal (jrep))
 				-- Eiffel value -> JSON value -> JSON representation with factory
-			if attached {JSON_NULL} json.value (Void) as l_json_null then
+			if attached {JSON_NULL} json_value (Void) as l_json_null then
 				assert ("jn.representation.is_equal (%"null%")", l_json_null.representation.is_equal ("null"))
 			else
-				assert ("json.value (Void) /= Void", False)
+				assert ("json_value (Void) /= Void", False)
 			end
 
 				-- JSON representation -> JSON value -> Eiffel value
-			create parser.make_with_string (jrep)
+			parser := new_parser (jrep)
 			if attached parser.next_parsed_json_value as l_json_null then
-				assert ("a = Void", json.object (l_json_null, Void) = Void)
+				assert ("a = Void", json_object (l_json_null, Void) = Void)
 			else
 				assert ("parser.next_parsed_json_value /= Void", False)
 			end
@@ -515,24 +591,24 @@ feature -- Test
 			c: CHARACTER
 			jrep: STRING
 			js: JSON_STRING
-			parser: JSON_PARSER
+			parser: like new_parser
 		do
 			c := 'a'
 				-- Eiffel value -> JSON value -> JSON representation
 			create js.make_from_string (c.out)
 			assert ("js.representation.is_equal (%"%"a%"%")", js.representation.is_equal ("%"a%""))
 				-- Eiffel value -> JSON value -> JSON representation with factory
-			if attached {JSON_STRING} json.value (c) as l_json_str then
+			if attached {JSON_STRING} json_value (c) as l_json_str then
 				assert ("js.representation.is_equal (%"%"a%"%")", l_json_str.representation.is_equal ("%"a%""))
 			else
-				assert ("json.value (c) /= Void", False)
+				assert ("json_value (c) /= Void", False)
 			end
 
 				-- JSON representation -> JSON value -> Eiffel value
 			jrep := "%"a%""
-			create parser.make_with_string (jrep)
+			parser := new_parser (jrep)
 			if attached {JSON_STRING} parser.next_parsed_json_value as l_json_str then
-				if attached {STRING_32} json.object (l_json_str, Void) as ucs then
+				if attached {STRING_32} json_object (l_json_str, Void) as ucs then
 					assert ("ucs.string.is_equal (%"a%")", ucs.string.is_equal ("a"))
 				end
 			else
@@ -545,7 +621,7 @@ feature -- Test
 			s: STRING
 			js: detachable JSON_STRING
 			jrep: STRING
-			parser: JSON_PARSER
+			parser: like new_parser
 		do
 			s := "foobar"
 			jrep := "%"foobar%""
@@ -554,16 +630,16 @@ feature -- Test
 			create js.make_from_string (s)
 			assert ("js.representation.is_equal (%"%"foobar%"%")", js.representation.is_equal (jrep))
 				-- Eiffel value -> JSON value -> JSON representation with factory
-			if attached {JSON_STRING} json.value (s) as l_js then
+			if attached {JSON_STRING} json_value (s) as l_js then
 				assert ("js.representation.is_equal (%"%"foobar%"%")", js.representation.is_equal (jrep))
 			else
-				assert ("json.value (s) /= Void", False)
+				assert ("json_value (s) /= Void", False)
 			end
 
 				-- JSON representation -> JSON value -> Eiffel value
-			create parser.make_with_string (jrep)
+			parser := new_parser (jrep)
 			if attached {JSON_STRING} parser.next_parsed_json_value as l_js then
-				if attached {STRING_32} json.object (l_js, Void) as l_ucs then
+				if attached {STRING_32} json_object (l_js, Void) as l_ucs then
 					assert ("ucs.string.is_equal (%"foo/bar%")", l_ucs.string.is_equal (s))
 				end
 			else
@@ -576,7 +652,7 @@ feature -- Test
 			s: STRING
 			js: detachable JSON_STRING
 			jrep: STRING
-			parser: JSON_PARSER
+			parser: like new_parser
 		do
 			s := "foo/bar"
 			jrep := "%"foo/bar%""
@@ -585,16 +661,16 @@ feature -- Test
 			create js.make_from_string (s)
 			assert ("js.representation.is_equal (%"%"foo/bar%"%")", js.representation.is_equal (jrep))
 				-- Eiffel value -> JSON value -> JSON representation with factory
-			if attached {JSON_STRING} json.value (s) as l_js then
+			if attached {JSON_STRING} json_value (s) as l_js then
 				assert ("js.representation.is_equal (%"%"foobar%"%")", js.representation.is_equal (jrep))
 			else
-				assert ("json.value (s) /= Void", False)
+				assert ("json_value (s) /= Void", False)
 			end
 
 				-- JSON representation -> JSON value -> Eiffel value
-			create parser.make_with_string (jrep)
+			parser := new_parser (jrep)
 			if attached {JSON_STRING} parser.next_parsed_json_value as l_js then
-				if attached {STRING_32} json.object (l_js, Void) as l_ucs then
+				if attached {STRING_32} json_object (l_js, Void) as l_ucs then
 					assert ("ucs.string.is_equal (%"foo/bar%")", l_ucs.string.is_equal (s))
 				end
 			else
@@ -603,9 +679,9 @@ feature -- Test
 
 				-- JSON representation with escaped slash -> JSON value -> Eiffel value
 			jrep := "%"foo\/bar%""
-			create parser.make_with_string (jrep)
+			parser := new_parser (jrep)
 			if attached {JSON_STRING} parser.next_parsed_json_value as l_js2 then
-				if attached {STRING_32} json.object (l_js2, Void) as l_ucs2 then
+				if attached {STRING_32} json_object (l_js2, Void) as l_ucs2 then
 					assert ("ucs.string.is_equal (%"foo/bar%")", l_ucs2.string.is_equal (s))
 				end
 			else
@@ -616,15 +692,14 @@ feature -- Test
 	test_json_string_and_escaped_slashes
 		local
 			s: STRING
-			js: detachable JSON_STRING
 			jrep: STRING
-			parser: JSON_PARSER
+			parser: like new_parser
 		do
 			s := "foo/bar"
 
 				-- JSON representation with escaped slash -> JSON value -> Eiffel value
 			jrep := "%"foo\/bar%""
-			create parser.make_with_string (jrep)
+			parser := new_parser (jrep)
 			if attached {JSON_STRING} parser.next_parsed_json_value as l_js2 then
 				assert ("l_js2.unesc.is_equal (%"foo/bar%")", l_js2.unescaped_string_32.same_string_general (s))
 			else
@@ -637,7 +712,7 @@ feature -- Test
 			js: detachable JSON_STRING
 			ucs: detachable STRING_32
 			jrep, s: STRING
-			parser: JSON_PARSER
+			parser: like new_parser
 		do
 			s := "foobar"
 			jrep := "%"foobar%""
@@ -648,19 +723,19 @@ feature -- Test
 			assert ("js.representation.is_equal (%"%"foobar%"%")", js.representation.is_equal (jrep))
 
 				-- Eiffel value -> JSON value -> JSON representation with factory
-			if attached {JSON_STRING} json.value (ucs) as l_js then
+			if attached {JSON_STRING} json_value (ucs) as l_js then
 				assert ("js.representation.is_equal (%"%"foobar%"%")", l_js.representation.is_equal (jrep))
 			else
-				assert ("json.value (ucs) /= Void", False)
+				assert ("json_value (ucs) /= Void", False)
 			end
 
 				-- JSON representation -> JSON value -> Eiffel value
-			create parser.make_with_string (jrep)
+			parser := new_parser (jrep)
 			if attached {JSON_STRING} parser.next_parsed_json_value as l_js then
-				if attached {STRING_32} json.object (l_js, Void) as l_ucs then
+				if attached {STRING_32} json_object (l_js, Void) as l_ucs then
 					assert ("ucs.string.is_equal (%"foobar%")", l_ucs.string.is_equal (s))
 				else
-					assert ("json.object (js, Void) /= Void", False)
+					assert ("json_object (js, Void) /= Void", False)
 				end
 			else
 				assert ("parser.next_parsed_json_value /= Void", False)
@@ -670,9 +745,7 @@ feature -- Test
 	test_json_string_8_and_unicode
 		local
 			js: detachable JSON_STRING
-			ucs: detachable STRING_32
 			jrep, s: STRING
-			parser: JSON_PARSER
 		do
 			s := "begin \u003e end"
 			jrep := "begin > end"
@@ -717,7 +790,7 @@ feature -- Test
 			js: detachable JSON_STRING
 			s: detachable STRING_8
 			jrep: STRING
-			parser: JSON_PARSER
+			parser: like new_parser
 		do
 			jrep := "%"foo\\bar%""
 			create s.make_from_string ("foo\bar")
@@ -725,23 +798,23 @@ feature -- Test
 			assert ("js.representation.same_string (%"%"foo\\bar%"%")", js.representation.same_string (jrep))
 
 				-- Eiffel value -> JSON value -> JSON representation with factory
-			if attached {JSON_STRING} json.value (s) as l_js then
+			if attached {JSON_STRING} json_value (s) as l_js then
 				assert ("js.representation.is_equal (%"%"foobar%"%")", l_js.representation.same_string (jrep))
 			else
-				assert ("json.value (s) /= Void", False)
+				assert ("json_value (s) /= Void", False)
 			end
 
 				-- JSON representation -> JSON value -> Eiffel value
-			create parser.make_with_string (jrep)
+			parser := new_parser (jrep)
 			if attached {JSON_STRING} parser.next_parsed_json_value as l_js then
-				if attached {STRING_32} json.object (l_js, Void) as l_ucs then
+				if attached {STRING_32} json_object (l_js, Void) as l_ucs then
 					assert ("ucs.same_string (%"foo\bar%")", l_ucs.same_string ("foo\bar"))
 				end
 			else
 				assert ("parser.next_parsed_json_value /= Void", False)
 			end
 			jrep := "%"foo\\bar%""
-			create parser.make_with_string (jrep)
+			parser := new_parser (jrep)
 			if attached {JSON_STRING} parser.next_parsed_json_value as jstring then
 				assert ("unescaped string %"foo\\bar%" to %"foo\bar%"", jstring.unescaped_string_8.same_string ("foo\bar"))
 			else
@@ -750,7 +823,7 @@ feature -- Test
 			create js.make_from_string_32 ({STRING_32} "你好")
 			assert ("escaping unicode string32 %"%%/20320/%%/22909/%" %"\u4F60\u597D%"", js.item.same_string ("\u4F60\u597D"))
 			jrep := "%"\u4F60\u597D%"" --| Ni hao
-			create parser.make_with_string (jrep)
+			parser := new_parser (jrep)
 			if attached {JSON_STRING} parser.next_parsed_json_value as jstring then
 				assert ("same unicode string32 %"%%/20320/%%/22909/%"", jstring.unescaped_string_32.same_string ({STRING_32} "你好"))
 			else
@@ -848,7 +921,7 @@ feature -- Test
 			ja: detachable JSON_ARRAY
 			jn: JSON_NUMBER
 			jrep: STRING
-			parser: JSON_PARSER
+			parser: like new_parser
 		do
 				-- Eiffel value -> JSON value -> JSON representation
 			create ll.make
@@ -873,10 +946,10 @@ feature -- Test
 			assert ("ja /= Void", ja /= Void)
 			assert ("ja.representation.is_equal (%"[0,1,1,2,3,5]%")", ja.representation.is_equal ("[0,1,1,2,3,5]"))
 				-- Eiffel value -> JSON value -> JSON representation with factory
-			if attached {JSON_ARRAY} json.value (ll) as l_ja then
+			if attached {JSON_ARRAY} json_value (ll) as l_ja then
 				assert ("ja.representation.is_equal (%"[0,1,1,2,3,5]%")", l_ja.representation.is_equal ("[0,1,1,2,3,5]"))
 			else
-				assert ("json.value (ll) /= Void", False)
+				assert ("json_value (ll) /= Void", False)
 			end
 
 				-- JSON representation -> JSON value -> Eiffel value
@@ -885,12 +958,12 @@ feature -- Test
 				-- it means we will get an LINKED_LIST [ANY] containing the INTEGER_8
 				-- values 0, 1, 1, 2, 3, 5
 			jrep := "[0,1,1,2,3,5]"
-			create parser.make_with_string (jrep)
+			parser := new_parser (jrep)
 			if attached {JSON_ARRAY} parser.next_parsed_json_value as l_ja then
-				if attached {LINKED_LIST [detachable ANY]} json.object (ja, Void) as l_ll2 then
-					assert ("ll2.is_equal (ll)", l_ll2.is_equal (ll))
+				if attached {LIST [detachable ANY]} json_object (ja, Void) as l_ll2 then
+					assert ("same iterable (ll2, ll)", same_iterable (l_ll2, ll))
 				else
-					assert ("json.object (ja, Void) /= Void", False)
+					assert ("json_object (ja, Void) /= Void", False)
 				end
 			else
 				assert ("parser.next_parsed_json_value /= Void", False)
@@ -899,7 +972,7 @@ feature -- Test
 
 	test_json_object
 		local
-			t: detachable HASH_TABLE [detachable ANY, STRING_GENERAL]
+			t: detachable STRING_TABLE [detachable ANY]
 			i: INTEGER
 			ucs_key, ucs: STRING_32
 			a: ARRAY [INTEGER]
@@ -908,7 +981,7 @@ feature -- Test
 			js_key, js: JSON_STRING
 			ja: JSON_ARRAY
 			jrep: STRING
-			parser: JSON_PARSER
+			parser: like new_parser
 		do
 				-- Eiffel value -> JSON value -> JSON representation
 				-- Note: Currently there is now way of creating a JSON_OBJECT from
@@ -950,27 +1023,68 @@ feature -- Test
 			create ucs_key.make_from_string ("contents")
 			a := <<0, 1, 1, 2, 3, 5>>
 			t.put (a, ucs_key)
-			if attached {JSON_OBJECT} json.value (t) as l_jo then
+			if attached {JSON_OBJECT} json_value (t) as l_jo then
 				assert ("jo.representation.is_equal (%"{%"name%":%"foobar%",%"size%":42,%"contents%":[0,1,1,2,3,5]}%")", l_jo.representation.is_equal ("{%"name%":%"foobar%",%"size%":42,%"contents%":[0,1,1,2,3,5]}"))
 			else
-				assert ("json.value (t) /= Void", False)
+				assert ("json_value (t) /= Void", False)
 			end
 
 				-- JSON representation -> JSON value -> Eiffel value -> JSON value -> JSON representation
 			jrep := "{%"name%":%"foobar%",%"size%":42,%"contents%":[0,1,1,2,3,5]}"
-			create parser.make_with_string (jrep)
+			parser := new_parser (jrep)
 			if attached {JSON_OBJECT} parser.next_parsed_json_value as l_jo then
-				if attached {HASH_TABLE [detachable ANY, STRING_GENERAL]} json.object (l_jo, Void) as l_t2 then
-					if attached json.value (l_t2) as l_jo_2 then
+				if attached {HASH_TABLE [detachable ANY, READABLE_STRING_GENERAL]} json_object (l_jo, Void) as l_t2 then
+					if attached json_value (l_t2) as l_jo_2 then
 						assert ("jrep.is_equal (jo.representation)", jrep.is_equal (l_jo_2.representation))
 					else
-						assert ("json.value (t2) /= Void", False)
+						assert ("json_value (t2) /= Void", False)
 					end
 				else
-					assert ("json.object (jo, Void) /= Void", False)
+					assert ("json_object (jo, Void) /= Void", False)
 				end
 			else
 				assert ("parser.next_parsed_json_value /= Void", jo /= Void)
+			end
+		end
+
+	test_json_chained_item
+		local
+			j: STRING
+			parser: like new_parser
+		do
+				-- Eiffel value -> JSON value -> JSON representation
+				-- Note: Currently there is now way of creating a JSON_OBJECT from
+				-- a HASH_TABLE, so we do it manually.
+				-- t = {"name": "foobar", "size": 42, "contents", [0, 1, 1, 2, 3, 5]}
+
+			j := "[
+						{
+							"name": "John Smith",
+							"address": {
+								"zip": 10001,
+								"city": "New York"
+							},
+							"notes": [
+								{
+									"title": "First note",
+									"text": "1st"
+								},
+								{
+									"title": "Second note",
+									"text": "2nd"
+								}									
+							]
+						}
+			]"
+			parser := new_parser (j)
+			parser.parse_content
+			assert ("parsing ok", parser.is_parsed and parser.is_valid)
+			if attached parser.parsed_json_value as j_value then
+				assert("name", (j_value@"name").same_string ("John Smith"))
+				assert("zip is number", (j_value@"address"@"zip").is_number)
+				assert("zip", (j_value@"address"@"zip").representation.same_string ("10001"))
+				assert("notes@2@title", (j_value@"notes"@"2"@"title").same_caseless_string ("second note"))
+				assert("notes@2@text", (j_value@"notes"@"2"@"text").same_string ("2nd"))
 			end
 		end
 
@@ -985,42 +1099,42 @@ feature -- Test
 			assert ("ht.has_key (jo)", ht.has_key (jo))
 		end
 
-	test_json_failed_json_conversion
-			-- Test converting an Eiffel object to JSON that is based on a class
-			-- for which no JSON converter has been registered.
+feature {NONE} -- Serialization
+
+	json_value (obj: detachable ANY): detachable JSON_VALUE
 		local
-			gv: OPERATING_ENVIRONMENT
-			jv: detachable JSON_VALUE
-			exception: BOOLEAN
+			conv: JSON_BASIC_SERIALIZATION
 		do
-			if not exception then
-				create gv
-				jv := json.value (gv)
-			else
-				assert ("exceptions.is_developer_exception", json.is_developer_exception)
-			end
-		rescue
-			exception := True
-			retry
+			create conv.make
+			Result := conv.to_json (obj)
 		end
 
-	test_json_failed_eiffel_conversion
-			-- Test converting from a JSON value to an Eiffel object based on a
-			-- class for which no JSON converter has been registered.
+	json_object (j: detachable JSON_VALUE; a_base_class: detachable READABLE_STRING_GENERAL): detachable ANY
 		local
-			gv: detachable ANY
-			jo: JSON_OBJECT
-			exception: BOOLEAN
+			conv: JSON_BASIC_SERIALIZATION
 		do
-			if not exception then
-				create jo.make
-				gv := json.object (jo, "OPERATING_ENVIRONMENT")
-			else
-				assert ("exceptions.is_developer_exception", json.is_developer_exception)
+			create conv.make
+			Result := conv.from_json (j)
+		end
+
+	same_iterable (i1, i2: ITERABLE [detachable ANY]): BOOLEAN
+		local
+			c1, c2: ITERATION_CURSOR [detachable ANY]
+		do
+			c1 := i1.new_cursor
+			c2 := i2.new_cursor
+			from
+				Result := True
+			until
+				not Result and c1.after or c2.after
+			loop
+				Result := c1.item ~ c2.item
+				c1.forth
+				c2.forth
 			end
-		rescue
-			exception := True
-			retry
+			if not (c1.after and c2.after) then
+				Result := False
+			end
 		end
 
 end -- class TEST_JSON_CORE

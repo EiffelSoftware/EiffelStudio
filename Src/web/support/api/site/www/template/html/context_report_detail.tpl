@@ -99,4 +99,64 @@
 	</div>
 </div>
 
-
+<div class="row">
+	<div class="col-xs-12">
+		<div class="panel panel-default">
+			<div class="panel-heading"><strong>Problem Report Interactions</strong></div>
+			<div class="panel-body">
+				<div class="form-horizontal">
+					<!--form -->
+					<div class="row">
+						<div class="span8">
+							{foreach from="$report.interactions" item="item"}
+							<div class="row">
+								<div class="col-xs-12">
+									{if condition="$item.private"}
+										<div class="panel panel-default private-panel-border">
+											<div class="panel-heading private-panel">
+									{/if}
+									{unless condition="$item.private"}
+										<div class="panel panel-default">
+											<div class="panel-heading">
+									{/unless}
+											<span class="label label-primary-api-interactions" itemprop="submitter">From:</span>{$item.contact.name/}&nbsp;&nbsp;&nbsp;
+											<span class="label label-primary-api-interactions" itemprop="date">Date:</span>{$item.date_output/}&nbsp;&nbsp;&nbsp;
+											{if isset="$item.status"}												
+											<span class="label label-primary-api-interactions" itemprop="status">Status:</span> {$item.status/}&nbsp;&nbsp;&nbsp;
+											{/if}
+											<span class="label-left label-primary-api-interactions" itemprop="download"><a href="{$host/}/report_interaction/{$item.id/}.txt">Download</a>&nbsp;&nbsp;&nbsp;</span>
+										</div>
+										<div class="panel-body" id="textarea_17">
+                                            {if isset="$item.content_truncated"}
+										 	<pre>{htmlentities}{$item.content_truncated/}{/htmlentities}</pre>
+											{/if}
+											{unless isset="$item.content_truncated"}
+										 	<pre>{htmlentities}{$item.content/}{/htmlentities}</pre>
+											{/unless}
+											
+											<br/>
+											{foreach from="$item.attachments" item="elem"}
+											<div class="row">
+												<div class="col-xs-1">
+													<div class="panel panel-default">
+														<div class="panel-heading">
+															<span class="label label-primary-api-interactions" itemprop="attachment">Attachment:</span>
+															<a href="{$host/}/report_interaction/{$elem.id/}/{$elem.name/}"	download="{$elem.name/}">{$elem.name/}</a>&nbsp;&nbsp;&nbsp;&nbsp;
+															<span class="label label-primary-api-interactions">Size:</span>{$elem.bytes_count/}
+														</div>
+													</div>
+												</div>
+											</div>
+											{/foreach}
+										</div>
+									</div>
+								</div>
+							</div>
+							{/foreach}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

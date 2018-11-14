@@ -189,7 +189,7 @@ feature -- New Report Problem
 			then
 					-- Logged in user with access to the given report id.
 				if attached current_media_type (req) as l_type then
-					if attached api_service.problem_report_details_guest (a_report_id) as l_report then
+					if attached api_service.problem_report_details (l_user, a_report_id) as l_report then
 						create l_form.make (api_service.status, api_service.all_categories)
 						l_form.set_report (l_report)
 						l_role := api_service.user_role (l_user)
@@ -266,7 +266,7 @@ feature -- Update Report Problem
 
 		end
 
-	update_report_problem_internal (req: WSF_REQUEST; a_form: ESA_INTERACTION_FORM_VIEW; a_type: READABLE_STRING_32)
+	update_report_problem_internal (req: WSF_REQUEST; a_form: ESA_INTERACTION_FORM_VIEW; a_type: READABLE_STRING_8)
 			-- Update problem report.
 		do
 			if attached a_form.description as l_description then
@@ -351,7 +351,7 @@ feature -- Initialize Report Problem
 
 feature {NONE} -- Implementation
 
-	extract_form_data (req: WSF_REQUEST; a_type: READABLE_STRING_32): ESA_INTERACTION_FORM_VIEW
+	extract_form_data (req: WSF_REQUEST; a_type: READABLE_STRING_8): ESA_INTERACTION_FORM_VIEW
 			-- Example form parameters.
 			--"category=5"
 			--"status=1"

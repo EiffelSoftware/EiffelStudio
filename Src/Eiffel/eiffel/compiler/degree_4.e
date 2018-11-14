@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description: "Degree 4 during Eiffel compilation"
 	legal: "See notice at end of class."
@@ -740,7 +740,6 @@ feature {NONE} -- Propagation to Degree 4
 			descendant: CLASS_C
 			desc: ARRAYED_LIST [CLASS_C]
 			chg3a: BOOLEAN
-			assert_prop_list: LINKED_LIST [INTEGER]
 		do
 							debug ("ACTIVITY")
 								io.error.put_string ("Propagate_pass2. real_pass2: ")
@@ -776,11 +775,9 @@ feature {NONE} -- Propagation to Degree 4
 					if a_class.expanded_modified then
 						Degree_4.set_expanded_modified (descendant)
 					end
-					assert_prop_list := a_class.assert_prop_list
-					if assert_prop_list /= Void then
-						assert_prop_list.start
+					if attached a_class.assert_prop_list as assert_prop_list then
 						Degree_4.set_assertion_prop_list
-							(descendant, assert_prop_list.duplicate (assert_prop_list.count))
+							(descendant, create {LINKED_LIST [INTEGER]}.make_from_iterable (assert_prop_list))
 					end
 
 	-- FIXME
@@ -1045,7 +1042,7 @@ invariant
 	delayed_classes_attached: attached delayed_classes
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

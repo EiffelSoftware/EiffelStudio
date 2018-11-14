@@ -103,14 +103,14 @@ feature {NONE} -- Template
 
 	smarty_template_login_block (a_request: WSF_REQUEST; a_module: CMS_MODULE; a_block_id: READABLE_STRING_8; a_cms_api: CMS_API): like smarty_template_block
 		local
-			l_destination: detachable READABLE_STRING_32
+			l_destination: detachable READABLE_STRING_8
 		do
 			Result := smarty_template_block (a_module, a_block_id, a_cms_api)
 			if Result /= Void then
 				if attached {WSF_STRING} a_request.query_parameter ("destination") as p_destination then
-					l_destination := p_destination.value
+					l_destination := p_destination.url_encoded_value
 				elseif attached {WSF_STRING} a_request.form_parameter ("destination") as p_destination then
-					l_destination := p_destination.value
+					l_destination := p_destination.url_encoded_value
 				end
 				if l_destination /= Void then
 					Result.set_value (secured_url_content (l_destination), "site_destination")

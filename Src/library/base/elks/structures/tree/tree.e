@@ -3,10 +3,10 @@
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	names: tree;
-	access: cursor, membership;
-	representation: recursive;
-	contents: generic;
+	names: tree
+	access: cursor, membership
+	representation: recursive
+	contents: generic
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -360,6 +360,7 @@ feature -- Element change
 			-- Fill with as many items of `other' as possible.
 			-- The representations of `other' and current node
 			-- need not be the same.
+		obsolete "Fill the tree explicitly. [2018-11-30]"
 		do
 			replace (other.item)
 			fill_subtree (other)
@@ -469,6 +470,7 @@ feature -- Duplication
 			-- Copy of sub-tree beginning at cursor position and
 			-- having min (`n', `arity' - `child_index' + 1)
 			-- children.
+		obsolete "Create and initialize a new tree explicitly. [2018-11-30]"
 		require
 			not_child_off: not child_off
 			valid_sublist: n >= 0
@@ -577,6 +579,7 @@ feature {NONE} -- Implementation
 
 	fill_subtree (s: TREE [G])
 			-- Fill children with children of `other'.
+		obsolete "Fill subtree explicitly. [2018-11-30]"
 		deferred
 		end
 

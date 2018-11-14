@@ -112,7 +112,7 @@ feature -- HTTP Methods
 		end
 
 
-	extract_data_from_request (req: WSF_REQUEST; a_type: READABLE_STRING_32): READABLE_STRING_32
+	extract_data_from_request (req: WSF_REQUEST; a_type: READABLE_STRING_8): READABLE_STRING_32
 			-- Is the form data populated?
 		do
 

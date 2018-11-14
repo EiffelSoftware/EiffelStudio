@@ -9,7 +9,7 @@
 			<exclude>/EIFGENs$</exclude>
 			<exclude>/tests$</exclude>
 		</file_rule>
-		<option namespace="EiffelSoftware.Library">
+		<option warning="true" namespace="EiffelSoftware.Library">
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>

@@ -7,8 +7,9 @@ class
 	JSON_REFLECTOR_DESERIALIZER
 
 inherit
-	JSON_DESERIALIZER
+	JSON_CORE_DESERIALIZER
 		redefine
+			from_json,
 			reset
 		end
 
@@ -18,18 +19,12 @@ feature -- Conversion
 
 	from_json (a_json: detachable JSON_VALUE; ctx: JSON_DESERIALIZER_CONTEXT; a_type: detachable TYPE [detachable ANY]): detachable ANY
 		do
-			if attached {JSON_STRING} a_json as s then
-				Result := string_from_json (s, a_type)
-			elseif attached {JSON_OBJECT} a_json as j_object then
+			if attached {JSON_OBJECT} a_json as j_object then
 				Result := reference_from_json_object (j_object, ctx, a_type)
 			elseif attached {JSON_ARRAY} a_json as j_array then
 				Result := reference_from_json_array (j_array, ctx, a_type)
-			elseif attached {JSON_BOOLEAN} a_json as b then
-				Result := boolean_from_json (b)
-			elseif attached {JSON_NULL} a_json then
-				Result := Void
-			elseif attached {JSON_NUMBER} a_json as n then
-				Result := number_from_json (n, a_type)
+			else
+				Result := Precursor (a_json, ctx, a_type)
 			end
 			if ctx.has_error then
 				Result := Void
@@ -282,99 +277,9 @@ feature {NONE} -- Helpers: Object
 			end
 		end
 
-feature {NONE} -- Helpers: Basic values		
-
-	boolean_from_json (v: JSON_VALUE): BOOLEAN
-		do
-			if attached {JSON_BOOLEAN} v as b then
-				Result := b.item
-			elseif attached {JSON_STRING} v as s then
-				Result := s.item.is_case_insensitive_equal_general ("true")
-			else
-				check is_boolean: False end
-			end
-		end
-
-	number_from_json (v: JSON_VALUE; a_type: detachable TYPE [detachable ANY]): detachable ANY
-		do
-			if attached {JSON_NUMBER} v as l_number then
-				if a_type = Void then
-					Result := l_number.integer_64_item
-				elseif a_type = {INTEGER_8} then
-					Result := l_number.integer_64_item.to_integer_8
-				elseif a_type = {INTEGER_16} then
-					Result := l_number.integer_64_item.to_integer_16
-				elseif a_type = {INTEGER_32} then
-					Result := l_number.integer_64_item.to_integer_32
-				elseif a_type = {INTEGER_64} then
-					Result := l_number.integer_64_item
-				elseif a_type = {NATURAL_8} then
-					Result := l_number.natural_64_item.to_natural_8
-				elseif a_type = {NATURAL_16} then
-					Result := l_number.natural_64_item.to_natural_16
-				elseif a_type = {NATURAL_32} then
-					Result := l_number.natural_64_item.to_natural_32
-				elseif a_type = {NATURAL_64} then
-					Result := l_number.natural_64_item
-				elseif a_type = {REAL_32} then
-					Result := l_number.natural_64_item.to_real_32
-				elseif a_type = {REAL_64} then
-					Result := l_number.natural_64_item
-				else
-					Result := l_number.integer_64_item
-				end
-			end
-		end
-
-	integer_from_json (v: JSON_VALUE): INTEGER_64
-		do
-			if attached {JSON_NUMBER} v as n then
-				Result := n.integer_64_item
-			elseif attached {JSON_STRING} v as s then
-				if s.item.is_integer_64 then
-					Result := s.item.to_integer_64
-				end
-			else
-				check is_integer: False end
-			end
-		end
-
-	natural_from_json (v: JSON_VALUE): NATURAL_64
-		do
-			if attached {JSON_NUMBER} v as n then
-				Result := n.natural_64_item
-			elseif attached {JSON_STRING} v as s then
-				if s.item.is_natural_64 then
-					Result := s.item.to_natural_64
-				end
-			else
-				check is_natural: False end
-			end
-		end
-
-	real_from_json (v: JSON_VALUE): REAL_64
-		do
-			if attached {JSON_NUMBER} v as n then
-				Result := n.real_64_item
-			else
-				check is_real: False end
-			end
-		end
-
-	string_from_json (v: JSON_VALUE; a_static_type: detachable TYPE [detachable ANY]): detachable READABLE_STRING_GENERAL
-		do
-			if attached {JSON_STRING} v as s then
-				if a_static_type /= Void then
-					Result := string_converted_to_type (s.unescaped_string_32, a_static_type)
-				else
-					Result := s.unescaped_string_32
-				end
-			else
-				check is_string: False end
-			end
-		end
-
 feature {NONE} -- Implementation
+
+	fields_infos_by_type_id: detachable STRING_TABLE [like fields_infos]
 
 	fields_infos (ref: REFLECTED_OBJECT): STRING_TABLE [TUPLE [field_index: INTEGER; field_type_id: INTEGER; static_type: detachable TYPE [detachable ANY]]]
 			-- Table indexed by field name of field_type (abstract type, basic types , ref type)
@@ -416,37 +321,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	fields_infos_by_type_id: detachable STRING_TABLE [like fields_infos]
-
-	string_converted_to_type (str: READABLE_STRING_GENERAL; a_static_type: TYPE [detachable ANY]): detachable READABLE_STRING_GENERAL
-		local
-			utf_conv: UTF_CONVERTER
-		do
-			if a_static_type.conforms_to (str.generating_type) then
-				Result := str
-			elseif
-				a_static_type = {STRING_32} or a_static_type = {detachable STRING_32}
-				or a_static_type = {READABLE_STRING_32} or a_static_type = {detachable READABLE_STRING_32}
-			then
-				create {STRING_32} Result.make_from_string_general (str)
-			elseif
-				a_static_type = {STRING_8} or a_static_type = {detachable STRING_8}
-				or a_static_type = {READABLE_STRING_8} or a_static_type = {detachable READABLE_STRING_8}
-			then
-				create {STRING_8} Result.make_from_string (utf_conv.utf_32_string_to_utf_8_string_8 (str))
-
-			elseif a_static_type = {IMMUTABLE_STRING_32} or a_static_type = {detachable IMMUTABLE_STRING_32} then
-				create {IMMUTABLE_STRING_32} Result.make_from_string_general (str)
-			elseif a_static_type = {IMMUTABLE_STRING_8} or a_static_type = {detachable IMMUTABLE_STRING_8} then
-				create {IMMUTABLE_STRING_8} Result.make_from_string (utf_conv.utf_32_string_to_utf_8_string_8 (str))
-
-			else
-				check known_type: False end
-				Result := str
-			end
-		end
-
 note
-	copyright: "2010-2016, Javier Velilla and others https://github.com/eiffelhub/json."
+	copyright: "2010-2018, Javier Velilla, Jocelyn Fiat, Eiffel Software and others https://github.com/eiffelhub/json."
 	license: "https://github.com/eiffelhub/json/blob/master/License.txt"
 end

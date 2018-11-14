@@ -1,17 +1,17 @@
 ﻿note
 	description: "[
-		Trees where each node has a fixed number of children
-		(The number of children is arbitrary but cannot be
-		changed once the node has been created
+			Trees where each node has a fixed number of children.
+			The number of children is arbitrary but cannot be
+			changed once the node has been created.
 		]"
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 
-	names: fixed_tree, tree, fixed_list;
-	representation: recursive, array;
-	access: cursor, membership;
-	contents: generic;
+	names: fixed_tree, tree, fixed_list
+	representation: recursive, array
+	access: cursor, membership
+	contents: generic
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -298,6 +298,7 @@ feature -- Duplication
 			-- Copy of sub-tree beginning at cursor position and
 			-- having min (`n', `arity' - `child_index' + 1)
 			-- children.
+		obsolete "Create and initialize a new tree explicitly. [2018-11-30]"
 		local
 			counter: INTEGER
 			pos: CURSOR
@@ -343,12 +344,14 @@ feature {FIXED_TREE} -- Implementation
 			-- Instance of class `like Current'.
 			-- New allocated node of arity `arity'
 			-- and node value `item'
+		obsolete "Create and initialize a new tree explicitly. [2018-11-30]"
 		do
 			create Result.make (arity, item)
 		end
 
 	duplicate_all: like Current
 			-- Copy of sub-tree including all children
+		obsolete "Create and initialize a new tree explicitly. [2018-11-30]"
 		local
 			pos: CURSOR
 			c: like child
@@ -373,6 +376,7 @@ feature {FIXED_TREE} -- Implementation
 
 	fill_subtree (other: TREE [G])
 			-- Fill children with children of `other'
+		obsolete "Fill subtree explicitly. [2018-11-30]"
 		local
 			temp: like parent
 			c: detachable TREE [G]
@@ -567,6 +571,12 @@ feature {NONE} -- private access fixed_list
 		end
 
 	fl_duplicate (n: INTEGER): FIXED_LIST [detachable like Current]
+		obsolete
+			"[
+				Create a new container explicitly using `make_from_iterable` if available.
+				Otherwise, replace a call to the feature with code that creates and initializes container.
+				[2018-11-30]
+			]"
 		do
 			Result := fixed_list.duplicate (n)
 		end

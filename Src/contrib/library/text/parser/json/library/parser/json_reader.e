@@ -84,6 +84,12 @@ feature -- Commands
 			Result := representation.substring (start_index, end_index)
 		end
 
+	has_json_substring (a_string: READABLE_STRING_GENERAL; start_index, end_index: INTEGER_32): BOOLEAN
+			-- Has JSON representation between `start_index' and `end_index' the substring `a_string'
+		do
+			Result := representation.same_caseless_characters_general (a_string, start_index, end_index, index)
+		end
+
 feature -- Status report
 
 	has_next: BOOLEAN
@@ -122,6 +128,6 @@ invariant
 	representation_not_void: representation /= Void
 
 note
-	copyright: "2010-2014, Javier Velilla and others https://github.com/eiffelhub/json."
+	copyright: "2010-2018, Javier Velilla, Jocelyn Fiat, Eiffel Software and others https://github.com/eiffelhub/json."
 	license: "https://github.com/eiffelhub/json/blob/master/License.txt"
 end

@@ -3,10 +3,10 @@
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	names: sorted_priority_queue, dispenser, heap;
-	representation: heap;
-	access: fixed, membership;
-	contents: generic;
+	names: sorted_priority_queue, dispenser, heap
+	representation: heap
+	access: fixed, membership
+	contents: generic
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -25,7 +25,8 @@ inherit
 		end
 
 create
-	make
+	make,
+	make_from_iterable
 
 feature {NONE} -- Initialization
 
@@ -33,6 +34,17 @@ feature {NONE} -- Initialization
 			-- Allocate heap space.
 		do
 			create area.make_empty (n)
+		end
+
+	make_from_iterable (other: ITERABLE [G])
+			-- Create a priority queue with all items obtained from `other`.
+		do
+			make (estimated_count_of (other))
+			across
+				other as o
+			loop
+				extend (o.item)
+			end
 		end
 
 feature -- Access
@@ -160,8 +172,8 @@ feature -- Comparison
 				object_comparison = other.object_comparison and then
 				count = other.count
 			then
-				l_current := duplicate (count)
-				l_other := other.duplicate (count)
+				l_current := twin
+				l_other := other.twin
 				from
 					Result := True
 				until
@@ -224,6 +236,12 @@ feature -- Duplication
 
 	duplicate (n: INTEGER): like Current
 			-- New priority queue containing `n' greatest items of Current.
+		obsolete
+			"[
+				Create a new container explicitly using `make_from_iterable` if available.
+				Otherwise, replace a call to the feature with code that creates and initializes container.
+				[2018-11-30]
+			]"
 		require
 			n_positive: n >= 0
 			n_in_bounds: n <= count

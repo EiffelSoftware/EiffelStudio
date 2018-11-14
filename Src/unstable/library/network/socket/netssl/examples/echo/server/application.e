@@ -9,7 +9,7 @@ class
 
 inherit
 
-	ARGUMENTS
+	ARGUMENTS_32
 
 	INET_PROPERTIES
 

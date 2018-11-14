@@ -1,6 +1,5 @@
 ﻿note
-	description:
-		"A sequence of actions to be performed on `call'"
+	description: "A sequence of actions to be performed on `call`."
 	legal: "See notice at end of class."
 
 	instructions: "[ 
@@ -28,12 +27,9 @@
 		]"
 
 	status: "See notice at end of class."
-	keywords:
-		"event, action"
-	date:
-		"$Date$"
-	revision:
-		"$Revision$"
+	keywords: event, action
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	ACTION_SEQUENCE [EVENT_DATA -> detachable TUPLE create default_create end]
@@ -444,6 +440,7 @@ feature {NONE} -- Implementation
 
 	new_filled_list (n: INTEGER): like Current
 			-- New list with `n' elements.
+		obsolete "Use explicit creation instead. See also explanations for `duplicate`. [2018-11-30]"
 		do
 			create Result.make_filled (n)
 		end
@@ -459,7 +456,7 @@ invariant
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

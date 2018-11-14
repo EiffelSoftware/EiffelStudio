@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			This module allows the use Session Based Authentication using Cookies to restrict access
 			by looking up users in the given providers.
@@ -182,10 +182,9 @@ feature {NONE} -- Implementation: routes
 			end
 			if
 				attached {WSF_STRING} req.item ("destination") as p_destination and then
-				attached p_destination.value as v and then
-				v.is_valid_as_string_8
+				attached p_destination.url_encoded_value as v
 			then
-				r.set_redirection (secured_url_content (v.to_string_8))
+				r.set_redirection (secured_url_content (v))
 			else
 				r.set_redirection (req.absolute_script_url (""))
 			end
@@ -196,9 +195,8 @@ feature {NONE} -- Implementation: routes
 	handle_login_with_session (api: CMS_API; a_session_api: CMS_SESSION_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
-			l_username, l_username_or_email, l_password: detachable READABLE_STRING_GENERAL
+			l_username_or_email, l_password: detachable READABLE_STRING_GENERAL
 			l_user: detachable CMS_USER
-			l_tmp_user: detachable CMS_TEMP_USER
 		do
 			if
 				attached {WSF_STRING} req.form_parameter ("username") as p_username and then
@@ -220,10 +218,9 @@ feature {NONE} -- Implementation: routes
 						create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
 						if
 							attached {WSF_STRING} req.item ("destination") as p_destination and then
-							attached p_destination.value as v and then
-							v.is_valid_as_string_8
+							attached p_destination.url_encoded_value as v
 						then
-							r.set_redirection (secured_url_content (v.to_string_8))
+							r.set_redirection (secured_url_content (v))
 						else
 							r.set_redirection ("")
 						end

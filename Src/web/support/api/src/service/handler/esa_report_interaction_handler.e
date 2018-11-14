@@ -76,7 +76,7 @@ feature -- HTTP Methods
 
 feature -- Report Interaction
 
-	process_report_interaction (req: WSF_REQUEST; res: WSF_RESPONSE; a_type: READABLE_STRING_32; a_user: detachable READABLE_STRING_32)
+	process_report_interaction (req: WSF_REQUEST; res: WSF_RESPONSE; a_type: READABLE_STRING_8; a_user: detachable READABLE_STRING_32)
 			-- Compute the report interaction `comment' or `attachment' if any.
 		local
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY

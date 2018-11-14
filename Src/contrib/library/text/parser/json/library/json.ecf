@@ -8,7 +8,7 @@
 			<exclude>/CVS$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option namespace="EJSON.Library">
+		<option warning="true" namespace="EJSON.Library">
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<cluster name="json" location=".\">

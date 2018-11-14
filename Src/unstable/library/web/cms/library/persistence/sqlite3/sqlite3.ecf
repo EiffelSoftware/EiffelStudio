@@ -8,6 +8,8 @@
 			<exclude>/\.git$</exclude>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
+		<option warning="true">
+		</option>
 		<library name="app_env" location="..\..\app_env\app_env.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="cms" location="..\..\..\cms.ecf"/>

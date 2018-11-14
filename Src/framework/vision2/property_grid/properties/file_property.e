@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Property to choose a file."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 			-- Initialize.
 		do
 			Precursor
-			ellipsis_actions.force_extend (agent show_dialog)
+			ellipsis_actions.extend (agent show_dialog)
 			enable_text_editing
 		end
 
@@ -71,7 +71,7 @@ feature {NONE} -- Agents
 			if attached value as l_value and then not l_value.is_empty then
 				create l_dir.make (directory_location_value)
 				if l_dir.exists then
-					l_dial.set_start_directory (l_dir.name)
+					l_dial.set_start_directory (l_dir.path.name)
 				end
 			end
 

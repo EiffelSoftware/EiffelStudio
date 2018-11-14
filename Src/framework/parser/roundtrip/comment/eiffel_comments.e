@@ -1,8 +1,8 @@
-note
+﻿note
 	description: "List of comment strings."
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
+	status: "See notice at end of class."
+	date: "$Date$"
 	revision: "$Revision $"
 
 class EIFFEL_COMMENTS
@@ -23,7 +23,8 @@ inherit
 		end
 
 create
-	make
+	make,
+	make_from_iterable
 
 create {EIFFEL_COMMENTS}
 	list_make, make_filled
@@ -124,13 +125,13 @@ feature -- Comparison
 				i := i + 1
 			end;
 			--is this needed
-			old_templ.compare_references;
+			old_templ.compare_references
 		ensure
 			valid_result: Result /= Void
-		end;
+		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -20,7 +20,9 @@ class
 inherit
 	JSON_VALUE
 		redefine
-			is_object
+			is_object,
+			chained_item,
+			has_key
 		end
 
 	TABLE_ITERABLE [JSON_VALUE, JSON_STRING]
@@ -47,7 +49,7 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize with default capacity.
 		do
-			make_with_capacity (3)
+			make_with_capacity (10)
 		end
 
 feature -- Status report			
@@ -229,10 +231,55 @@ feature -- Status report
 
 feature -- Access
 
-	item (a_key: JSON_STRING): detachable JSON_VALUE
-			-- the json_value associated with a key `a_key'.
+	item alias "[]" (a_key: JSON_STRING): detachable JSON_VALUE
+ 			-- the json_value associated with a key `a_key'.
+ 		do
+ 			Result := items.item (a_key)
+ 		end
+
+	string_item (a_key: JSON_STRING): detachable JSON_STRING
 		do
-			Result := items.item (a_key)
+			if attached {JSON_STRING} item (a_key) as js then
+				Result := js
+			end
+		end
+
+	number_item (a_key: JSON_STRING): detachable JSON_NUMBER
+		do
+			if attached {JSON_NUMBER} item (a_key) as jn then
+				Result := jn
+			end
+		end
+
+	boolean_item (a_key: JSON_STRING): detachable JSON_BOOLEAN
+		do
+			if attached {JSON_BOOLEAN} item (a_key) as jb then
+				Result := jb
+			end
+		end
+
+	object_item (a_key: JSON_STRING): detachable JSON_OBJECT
+		do
+			if attached {JSON_OBJECT} item (a_key) as jo then
+				Result := jo
+			end
+		end
+
+	array_item (a_key: JSON_STRING): detachable JSON_ARRAY
+		do
+			if attached {JSON_ARRAY} item (a_key) as ja then
+				Result := ja
+			end
+		end
+
+	chained_item alias "@" (a_key: JSON_STRING): JSON_VALUE
+			-- <Precursor>.
+		do
+			if attached item (a_key) as v then
+				Result := v
+			else
+				Result := Precursor (a_key)
+			end
 		end
 
 	current_keys: ARRAY [JSON_STRING]

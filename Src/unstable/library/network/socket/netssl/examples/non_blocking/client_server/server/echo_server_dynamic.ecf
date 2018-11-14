@@ -12,7 +12,11 @@
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
-		<library name="net_ssl" location="..\..\net_ssl.ecf"/>
+		<library name="net_ssl_dynamic" location="$ISE_LIBRARY\unstable\library\network\socket\netssl\net_ssl_dynamic.ecf">
+			<option debug="true">
+				<debug name="__unnamed_debug__" enabled="true"/>
+			</option>
+		</library>
 		<cluster name="echo_server" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/.svn$</exclude>

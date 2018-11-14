@@ -1,6 +1,5 @@
 ﻿note
-	description: "Representation of an export clause which lists to whom a feature%N%
-		%will be exported."
+	description: "Representation of an export clause which lists to whom a feature will be exported."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -21,6 +20,8 @@ inherit
 		rename
 			is_subset as ll_is_subset,
 			make as ll_make
+		redefine
+			make_from_iterable
 		end
 
 	SHARED_WORKBENCH
@@ -52,7 +53,8 @@ inherit
 		end
 
 create
-	make
+	make,
+	make_from_iterable
 
 create {EXPORT_SET_I}
 	ll_make
@@ -65,6 +67,13 @@ feature {NONE} -- Initialization
 			ll_make
 			compare_objects
 			put (a_client)
+		end
+
+	make_from_iterable (other: ITERABLE [CLIENT_I])
+			-- <Precursor>
+		do
+			compare_objects
+			Precursor (other)
 		end
 
 feature -- Property
@@ -177,7 +186,7 @@ feature {COMPILER_EXPORTER} -- Compiler features
 					Result := other
 				else
 						-- Duplication
-					new := duplicate_internal (count)
+					create new.make_from_iterable (Current)
 						-- Merge
 					new.merge (other_set)
 					Result := new
@@ -276,21 +285,8 @@ feature {COMPILER_EXPORTER} -- Compiler features
 			end
 		end
 
-feature {EXPORT_SET_I} -- Implementation
-
-	duplicate_internal (a_count: INTEGER): like Current
-			-- Duplicate current.
-		local
-			l_cursor: CURSOR
-		do
-			l_cursor := cursor
-			start
-			Result := duplicate (a_count)
-			go_to (l_cursor)
-		end
-
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

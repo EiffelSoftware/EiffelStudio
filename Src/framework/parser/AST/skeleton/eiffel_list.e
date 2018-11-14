@@ -1,9 +1,9 @@
-note
-	description	: "List used in abstract syntax trees. Version for Bench."
+﻿note
+	description: "List used in abstract syntax trees. Version for Bench."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class EIFFEL_LIST [reference T -> AST_EIFFEL]
 
@@ -23,7 +23,9 @@ inherit
 		end
 
 create
-	make, make_filled
+	make,
+	make_filled,
+	make_from_iterable
 
 feature {NONE} -- Initialization
 
@@ -199,7 +201,7 @@ feature -- Comparison
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -230,4 +232,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EIFFEL_LIST
+end

@@ -154,7 +154,7 @@ feature -- HTTP Methods
 		end
 
 
-	extract_data_from_request (req: WSF_REQUEST; a_type: READABLE_STRING_32): ESA_REGISTER_VIEW
+	extract_data_from_request (req: WSF_REQUEST; a_type: READABLE_STRING_8): ESA_REGISTER_VIEW
 			-- Is the form data populated?
 			-- first_name, last_name, user_email, user_name, password, check_password, question, answer_question.
 		do

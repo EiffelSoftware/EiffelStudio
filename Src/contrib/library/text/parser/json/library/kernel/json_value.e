@@ -51,6 +51,35 @@ feature -- Status report
 
 feature -- Access
 
+	has_key (a_key: JSON_STRING): BOOLEAN
+			-- Has Current an item associated with `a_key`?
+			-- relevant for object and array values!
+		do
+		end
+
+	chained_item alias "@" (a_key: JSON_STRING): JSON_VALUE
+			-- Item associated with key `a_key` if exists.
+			-- Note: if item does not exists, return also JSON_NULL.
+		do
+			create {JSON_NULL} Result
+		end
+
+feature -- Status report
+
+	same_string (a_string: READABLE_STRING_GENERAL): BOOLEAN
+			-- Current value is a string value, and same content as `a_string`?
+		do
+				-- To redefined in descendants.
+		end
+
+	same_caseless_string (a_string: READABLE_STRING_GENERAL): BOOLEAN
+			-- Current value is a string value, and same caseless content as `a_string`?	
+		do
+				-- To redefined in descendants.
+		end
+
+feature -- Conversion
+
 	representation: STRING
 			-- UTF-8 encoded Unicode string representation of Current
 		deferred
@@ -67,6 +96,6 @@ feature -- Visitor pattern
 		end
 
 note
-	copyright: "2010-2017, Javier Velilla and others https://github.com/eiffelhub/json."
+	copyright: "2010-2018, Javier Velilla, Jocelyn Fiat, Eiffel Software and others https://github.com/eiffelhub/json."
 	license: "https://github.com/eiffelhub/json/blob/master/License.txt"
 end

@@ -8,7 +8,7 @@ class
 
 inherit
 
-	ARGUMENTS
+	ARGUMENTS_32
 	INET_ADDRESS_FACTORY
 	INET_PROPERTIES
 
@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 
 	make
 		local
-			host: STRING
+			host: IMMUTABLE_STRING_32
 			port: INTEGER
 			prefer_ipv4_stack: BOOLEAN
 			address: detachable INET_ADDRESS
@@ -45,13 +45,13 @@ feature {NONE} -- Initialization
 			end
 			io.put_string ("start ssl_client")
 			io.put_string (" host = ")
-			io.put_string (host)
+			io.put_string (host.as_string_8)
 			io.put_string (", port = ")
 			io.put_integer (port)
 			io.put_new_line
 
 				-- Obtain the host address
-			address := create_from_name (host)
+			address := create_from_name (host.as_string_8)
 			if address = Void then
 				io.put_string ("Unknown host " + host)
 				io.put_new_line

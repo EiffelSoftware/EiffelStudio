@@ -9,14 +9,22 @@ class
 	JSON_PARSER
 
 inherit
+	ANY
+
 	JSON_READER
 		rename
 			make as make_reader
+		export
+			{NONE} all
+			{ANY} set_representation
 		redefine
 			reset
 		end
 
 	JSON_TOKENS
+		export
+			{NONE} all
+		end
 
 create
 	make,

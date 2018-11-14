@@ -16,7 +16,9 @@ inherit
 	JSON_VALUE
 		redefine
 			is_equal,
-			is_string
+			is_string,
+			same_string,
+			same_caseless_string
 		end
 
 create
@@ -114,6 +116,18 @@ feature -- Status report
 
 	is_string: BOOLEAN = True
 			-- <Precursor>
+
+	same_string (a_string: READABLE_STRING_GENERAL): BOOLEAN
+			-- Current value is a string value, and same content as `a_string`?
+		do
+			Result := unescaped_string_32.same_string_general (a_string)
+		end
+
+	same_caseless_string (a_string: READABLE_STRING_GENERAL): BOOLEAN
+			-- Current value is a string value, and same caseless content as `a_string`?	
+		do
+			Result := unescaped_string_32.is_case_insensitive_equal_general (a_string)
+		end
 
 feature -- Conversion
 

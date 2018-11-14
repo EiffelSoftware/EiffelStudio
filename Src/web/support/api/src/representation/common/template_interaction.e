@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 				template.add_value (a_form.id, "id")
 			end
 
-			if attached {STRING_32} a_user as l_user then
+			if attached {READABLE_STRING_32} a_user as l_user then
 				template.add_value (a_user, "user")
 				template.add_value (has_access (l_user, a_form), "has_access")
 			end

@@ -109,12 +109,12 @@ feature -- HTTP Methods
 			end
 		end
 
-	extract_data_from_request (req: WSF_REQUEST; a_type: READABLE_STRING_32): ESA_ACTIVATION_VIEW
+	extract_data_from_request (req: WSF_REQUEST; a_type: READABLE_STRING_8): ESA_ACTIVATION_VIEW
 			-- Is the form data populated?
 			-- Create a new activation view object based on request parameters, if any
 		do
 
-			if a_type.same_string ({STRING_32} "application/vnd.collection+json") then
+			if a_type.same_string ("application/vnd.collection+json") then
 				Result := extract_data_from_cj (req)
 			else
 				Result :=  extract_data_from_form (req)

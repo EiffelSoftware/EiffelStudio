@@ -123,13 +123,13 @@ feature -- Array optimization
 
 	calls_special_features (array_desc: INTEGER): BOOLEAN
 		do
-			Result := check_list /= Void and then
-						check_list.calls_special_features (array_desc)
+			Result := attached check_list as c and then
+						c.calls_special_features (array_desc)
 		end
 
 	is_unsafe: BOOLEAN
 		do
-			Result := check_list /= Void and then check_list.is_unsafe
+			Result := attached check_list as c and then c.is_unsafe
 		end
 
 	optimized_byte_node: like Current
@@ -144,8 +144,8 @@ feature -- Inlining
 
 	size: INTEGER
 		do
-			if check_list /= Void then
-				Result := check_list.size
+			if attached check_list as c then
+				Result := c.size
 			end
 		end
 

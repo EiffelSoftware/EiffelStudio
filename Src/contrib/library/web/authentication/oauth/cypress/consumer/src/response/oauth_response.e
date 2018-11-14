@@ -30,8 +30,6 @@ feature {NONE} --Initialization
 
 feature -- Access
 
-	EMPTY: STRING = "";
-
 	status: INTEGER
 
 	status_message: detachable READABLE_STRING_8
@@ -47,7 +45,7 @@ feature {NONE} -- Implementation
 	http_response: HTTP_CLIENT_RESPONSE
 
 ;note
-	copyright: "2013-2013, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2018, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

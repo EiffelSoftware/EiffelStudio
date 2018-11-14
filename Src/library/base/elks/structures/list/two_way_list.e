@@ -462,6 +462,7 @@ feature {TWO_WAY_LIST} -- Implementation
 			-- A newly created instance of the same type.
 			-- This feature may be redefined in descendants so as to
 			-- produce an adequately allocated and initialized object.
+		obsolete "Use explicit creation instead. See also explanations for `duplicate`. [2018-11-30]"
 		do
 			create Result.make
 		end

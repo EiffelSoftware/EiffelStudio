@@ -3,10 +3,10 @@
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	names: tree;
-	representation: recursive, array;
-	access: cursor, membership;
-	contents: generic;
+	names: tree
+	representation: recursive, array
+	access: cursor, membership
+	contents: generic
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -305,6 +305,7 @@ feature -- Duplication
 			-- Copy of sub-tree beginning at cursor position and
 			-- having min (`n', `arity' - `child_index' + 1)
 			-- children.
+		obsolete "Create and initialize a new tree explicitly. [2018-11-30]"
 		local
 			counter: INTEGER
 			pos: CURSOR
@@ -347,12 +348,14 @@ feature {ARRAYED_TREE} -- Implementation
 			-- with the same arity and node value.
 			-- This feature may be redefined in descendants so as to
 			-- produce an adequately allocated and initialized object.
+		obsolete "Create and initialize a new tree explicitly. [2018-11-30]"
 		do
 			create Result.make (arity, item)
 		end
 
 	duplicate_all: like Current
 			-- Copy of sub-tree including all children
+		obsolete "Create and initialize a new tree explicitly. [2018-11-30]"
 		local
 			pos: CURSOR
 			c: like child
@@ -377,6 +380,7 @@ feature {ARRAYED_TREE} -- Implementation
 
 	fill_subtree (other: TREE [G])
 			-- Fill children with children of `other'
+		obsolete "Fill subtree explicitly. [2018-11-30]"
 		local
 			temp: like parent
 			c: detachable TREE [G]
@@ -432,6 +436,7 @@ feature {NONE} -- Implementation
 
 	new_tree: like Current
 			-- A newly created instance of the same type.
+		obsolete "Create and initialize a new tree explicitly. [2018-11-30]"
 		do
 			create Result.make (0, item)
 		end

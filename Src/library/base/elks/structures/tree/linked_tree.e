@@ -3,10 +3,10 @@
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	names: linked_tree, tree, linked_list;
-	representation: recursive, linked;
-	access: cursor, membership;
-	contents: generic;
+	names: linked_tree, tree, linked_list
+	representation: recursive, linked
+	access: cursor, membership
+	contents: generic
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -304,7 +304,6 @@ feature {NONE} -- Inapplicable
 
 feature {LINKED_TREE} -- Implementation
 
-
 	new_cell (v: like item): like Current
 			-- New cell containing `v'
 		do
@@ -319,6 +318,7 @@ feature {LINKED_TREE} -- Implementation
 			-- A newly created instance of the same type.
 			-- This feature may be redefined in descendants so as to
 			-- produce an adequately allocated and initialized object.
+		obsolete "Use explicit creation instead. See also explanations for `duplicate`. [2018-11-30]"
 		do
 			create Result.make (item)
 		end

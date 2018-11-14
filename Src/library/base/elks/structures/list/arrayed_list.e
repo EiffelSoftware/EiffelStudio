@@ -3,11 +3,11 @@
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	names: sequence;
-	representation: array;
-	access: index, cursor, membership;
-	size: fixed;
-	contents: generic;
+	names: sequence
+	representation: array
+	access: index, cursor, membership
+	size: fixed
+	contents: generic
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -819,6 +819,7 @@ feature {NONE} -- Inapplicable
 
 	new_chain: like Current
 			-- Unused
+		obsolete "Use explicit creation instead. See also explanations for `duplicate`. [2018-11-30]"
 		do
 			Result := Current
 		end
@@ -853,6 +854,7 @@ feature {NONE} -- Implementation
 
 	new_filled_list (n: INTEGER): like Current
 			-- New list with `n' elements.
+		obsolete "Use explicit creation instead. See also explanations for `duplicate`. [2018-11-30]"
 		require
 			n_non_negative: n >=0
 		do

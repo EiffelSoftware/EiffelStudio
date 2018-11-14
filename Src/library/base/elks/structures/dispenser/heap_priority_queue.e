@@ -172,8 +172,8 @@ feature -- Comparison
 				object_comparison = other.object_comparison and then
 				count = other.count
 			then
-				l_current := duplicate (count)
-				l_other := other.duplicate (count)
+				l_current := twin
+				l_other := other.twin
 				from
 					Result := True
 				until
@@ -236,6 +236,12 @@ feature -- Duplication
 
 	duplicate (n: INTEGER): like Current
 			-- New priority queue containing `n' greatest items of Current.
+		obsolete
+			"[
+				Create a new container explicitly using `make_from_iterable` if available.
+				Otherwise, replace a call to the feature with code that creates and initializes container.
+				[2018-11-30]
+			]"
 		require
 			n_positive: n >= 0
 			n_in_bounds: n <= count

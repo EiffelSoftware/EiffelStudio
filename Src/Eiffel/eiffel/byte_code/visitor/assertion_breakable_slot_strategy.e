@@ -215,11 +215,6 @@ feature -- Node processing
 				-- Generate switch expression byte code
 			a_node.switch.process (Current)
 			if attached a_node.case_list as l_case_list then
-				across
-					l_case_list as c
-				loop
-					c.item.process (Current)
-				end
 					-- Generate code for the various inspect matches
 				l_case_list.process (Current)
 			end

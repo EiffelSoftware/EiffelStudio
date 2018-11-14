@@ -96,7 +96,7 @@ feature -- HTTP Methods
 
 feature -- Implementation
 
-	extract_data_from_request (req: WSF_REQUEST; a_type: READABLE_STRING_32): ESA_PASSWORD_VIEW
+	extract_data_from_request (req: WSF_REQUEST; a_type: READABLE_STRING_8): ESA_PASSWORD_VIEW
 			-- Is the form data populated?
 		do
 

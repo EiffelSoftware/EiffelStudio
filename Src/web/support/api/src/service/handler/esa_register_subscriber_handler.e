@@ -102,7 +102,7 @@ feature -- HTTP Methods
 
 feature -- Implementation
 
-	extract_data_from_request (req: WSF_REQUEST; a_type: READABLE_STRING_32): LIST [INTEGER]
+	extract_data_from_request (req: WSF_REQUEST; a_type: READABLE_STRING_8): LIST [INTEGER]
 			-- Is the form data populated?
 		do
 

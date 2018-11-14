@@ -115,7 +115,7 @@ feature -- HTTP Methods
 
 feature -- Implementation
 
-	extract_form_data (req: WSF_REQUEST; a_type: READABLE_STRING_32): INTEGER
+	extract_form_data (req: WSF_REQUEST; a_type: READABLE_STRING_8): INTEGER
 			-- Extract confirmation numnber.
 		local
 			l_parser: JSON_PARSER

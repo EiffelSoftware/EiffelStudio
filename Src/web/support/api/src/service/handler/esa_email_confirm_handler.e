@@ -112,7 +112,7 @@ feature -- HTTP Methods
 
 feature -- Implementation
 
-	extract_data_from_request (req: WSF_REQUEST; a_type: READABLE_STRING_32): detachable STRING
+	extract_data_from_request (req: WSF_REQUEST; a_type: READABLE_STRING_8): detachable STRING
 			-- Is the form data populated?
 		do
 

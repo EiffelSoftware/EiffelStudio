@@ -320,7 +320,7 @@ feature -- Implementation
 
 feature {NONE} --Implementation
 
-	extract_data_from_request (req: WSF_REQUEST; a_type: detachable READABLE_STRING_32): detachable STRING
+	extract_data_from_request (req: WSF_REQUEST; a_type: detachable READABLE_STRING_8): detachable STRING
 			-- Is the form data populated?
 		do
 

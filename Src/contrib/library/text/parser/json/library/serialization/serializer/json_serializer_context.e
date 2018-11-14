@@ -187,11 +187,14 @@ feature -- Helpers
 			check is_accepted_object: is_accepted_object (obj) end
 			if attached {READABLE_STRING_GENERAL} obj as str and then attached default_serializer as conv then
 				Result := conv.to_json (obj, Current)
-			elseif
-				attached serializer (obj) as conv and then
-				a_caller_serializer /= conv
-			then
-				Result := conv.to_json (obj, Current)
+			elseif attached serializer (obj) as conv then
+				if
+					a_caller_serializer = conv and then attached {JSON_REFLECTOR_SERIALIZER} a_caller_serializer
+				then
+						-- Stop cycle!
+				else
+					Result := conv.to_json (obj, Current)
+				end
 			end
 		end
 
@@ -278,6 +281,6 @@ feature {NONE} -- Implementation
 	serializers_cache: detachable HASH_TABLE [JSON_SERIALIZER, TYPE [detachable ANY]]
 
 ;note
-	copyright: "2010-2016, Javier Velilla and others https://github.com/eiffelhub/json."
+	copyright: "2010-2018, Javier Velilla, Jocelyn Fiat, Eiffel Software and others https://github.com/eiffelhub/json."
 	license: "https://github.com/eiffelhub/json/blob/master/License.txt"
 end

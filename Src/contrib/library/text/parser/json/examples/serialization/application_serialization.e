@@ -1,6 +1,6 @@
 note
 	description: "[
-			Enter class description here!
+			Collection of JSON serialization examples.
 		]"
 
 class
@@ -13,12 +13,31 @@ feature {NONE} -- Initialization
 
 	make
 		do
-			process_reflector_serialization
-			process_smart_serialization
-			process_custom_serialization
+			demonstrate_custom_serialization
+			demonstrate_basic_serialization
+			demonstrate_reflector_serialization
+			demonstrate_smart_serialization
 		end
 
-	process_reflector_serialization
+feature -- Example		
+
+	demonstrate_custom_serialization
+		local
+			l_custom: DEMO_CUSTOM_SERIALIZATION
+		do
+				-- Example of custom serialization
+			create l_custom.make
+		end
+
+	demonstrate_basic_serialization
+		local
+			l_basic: DEMO_BASIC_SERIALIZATION
+		do
+				-- Example of basic serialization
+			create l_basic.make
+		end
+
+	demonstrate_reflector_serialization
 			-- Use reflector serialization, mostly for storage since the serialized json contains internal attributes...
 			-- So not a simple json output.
 		local
@@ -56,7 +75,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	process_smart_serialization
+	demonstrate_smart_serialization
 			-- Use smart serialization, i.e use json array [ .. ] and json object { .. : .. }.
 			-- And deserialization is made possible thanks to specific callback.
 		local
@@ -103,12 +122,6 @@ feature {NONE} -- Initialization
 					end
 				end
 			end
-		end
-
-	process_custom_serialization
-		local
-		do
-			
 		end
 
 feature -- Object factory		

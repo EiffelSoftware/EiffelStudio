@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 	default_create
 		do
 			create deserializers.make (1)
-			set_default_deserializer (create {JSON_REFLECTOR_DESERIALIZER})
+			set_default_deserializer (create {JSON_CORE_DESERIALIZER})
 			create deserializer_location.make_empty
 		end
 
@@ -249,6 +249,6 @@ feature {NONE} -- Implementation
 	deserializers_cache: detachable HASH_TABLE [JSON_DESERIALIZER, TYPE [detachable ANY]]
 
 ;note
-	copyright: "2010-2016, Javier Velilla and others https://github.com/eiffelhub/json."
+	copyright: "2010-2018, Javier Velilla, Jocelyn Fiat, Eiffel Software and others https://github.com/eiffelhub/json."
 	license: "https://github.com/eiffelhub/json/blob/master/License.txt"
 end

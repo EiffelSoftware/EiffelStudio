@@ -8,6 +8,7 @@ note
 	revision: "$Revision$"
 	EIS: "name=gcm mode", "src=https://en.wikipedia.org/wiki/Galois/Counter_Mode", "protocol=uri"
 	EIS: "name=cryptography library doc", "src=https://cryptography.io/en/latest/hazmat/primitives/symmetric-encryption/?highlight=GCM#algorithms", "protocol=uri"
+
 class
 	SSL_GCM_MODE
 
@@ -69,4 +70,14 @@ feature -- Status Report
 			end
 		end
 
+note
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

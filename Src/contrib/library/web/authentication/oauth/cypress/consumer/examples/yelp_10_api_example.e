@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
   		  	 -- Looking for any restaurants
   				request.add_query_string_parameter("category", "restaurants")
 			  api_service.sign_request (access_token, request)
-	    	  if attached {OAUTH_RESPONSE} request.execute as l_response then
+	    	  if attached request.execute as l_response then
 					print ("%NOk, let see what we found...")
 					print ("%NResponse: STATUS" + l_response.status.out)
 					if attached l_response.body as l_body then

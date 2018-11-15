@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 			  request.add_query_string_parameter ("screen_name","twitterapi")
 
 	 		  api_service.sign_request (l_access_token, request)
-	    	  if attached {OAUTH_RESPONSE} request.execute as l_response then
+	    	  if attached request.execute as l_response then
 					print ("%NOk, let see what we found...")
 					print ("%NResponse: STATUS" + l_response.status.out)
 					if attached l_response.body as l_body then

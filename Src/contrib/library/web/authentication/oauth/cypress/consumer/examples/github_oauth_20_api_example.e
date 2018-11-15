@@ -47,7 +47,7 @@ feature -- Access
 				request.add_header ("Authorization", "Bearer " + l_access_token.token)
 				request.add_header ("User-Agent", "Cypress LoginExample") --Required by Github API.
 				api_service.sign_request (l_access_token, request)
-				if attached {OAUTH_RESPONSE} request.execute as l_response then
+				if attached request.execute as l_response then
 					print ("%NOk, let see what we found...")
 					print ("%NResponse: STATUS" + l_response.status.out)
 					if attached l_response.body as l_body then

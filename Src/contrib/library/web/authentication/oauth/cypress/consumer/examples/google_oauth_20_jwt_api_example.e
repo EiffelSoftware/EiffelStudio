@@ -51,7 +51,7 @@ feature -- Access
 					print ("%NNow we're going to access a protected resource...%N");
 					create request.make ("GET", protected_resource_url)
 					api_service.sign_request (access_token, request)
-					if attached {OAUTH_RESPONSE} request.execute as l_response then
+					if attached request.execute as l_response then
 						print ("%NOk, let see what we found...")
 						print ("%NResponse: STATUS" + l_response.status.out)
 						if attached l_response.body as l_body then
@@ -75,7 +75,6 @@ feature {NONE}	-- Implementation
 			-- Box API supports  the "RS256", "RS384", and "RS512" Algorithms.
 		local
 			jwt: JWS
-			l_jwt: STRING
 			l_date: DATE_TIME
 		do
 			create jwt.default_create
@@ -93,7 +92,6 @@ feature {NONE}	-- Implementation
 			private_key.adjust
 			Result := jwt.encoded_string (private_key)
 		end
-
 
 feature {NONE} -- Implementation
 

@@ -26,7 +26,7 @@ feature -- Access
 			create oauth_jwt.make (authentication_url)
 			create config.make (jwt_signing, client_id)
 			config.set_api_secret (client_secret)
-			api_service := {OAUTH_20_JWT_SERVICE} / oauth_jwt.create_service (config)
+			api_service := oauth_jwt.create_service (config)
 			print ("%N===Box OAuth Server to Server Workflow ===%N")
 
             if attached api_service then
@@ -42,7 +42,7 @@ feature -- Access
 					print ("%NNow we're going to access a protected resource...%N");
 					create request.make ("GET", protected_resource_url)
 					api_service.sign_request (l_access_token, request)
-					if attached {OAUTH_RESPONSE} request.execute as l_response then
+					if attached request.execute as l_response then
 						print ("%NOk, let see what we found...")
 						print ("%NResponse: STATUS" + l_response.status.out)
 						if attached l_response.body as l_body then

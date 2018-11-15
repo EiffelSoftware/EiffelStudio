@@ -8,7 +8,6 @@ deferred class
 	OAUTH_20_API
 
 inherit
-
 	OAUTH_API
 
 feature -- Access
@@ -44,7 +43,7 @@ feature -- Service
 		end
 
 note
-	copyright: "2013-2015, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2018, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

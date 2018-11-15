@@ -38,7 +38,7 @@ feature {NONE} -- Creation
 					print ("%NNow we're going to access a protected resource: " + protected_resource_url + "%N")
 					create request.make ("GET", protected_resource_url)
 					request.add_header ("Authorization", "Bearer " + l_access_token.token)
-					if attached {OAUTH_RESPONSE} request.execute as l_response then
+					if attached request.execute as l_response then
 						print ("%NOk, let see what we found...%N")
 						print ("%N%TResponse: STATUS" + l_response.status.out)
 						if attached l_response.body as l_body then

@@ -1242,10 +1242,15 @@ end
 					buf.put_string ("RTCF;")
 						-- Close on-demand check block.
 					buf.generate_block_close
-				elseif context.system.exception_stack_managed then
-					if attached precondition as l_assertion then
-						context.increment_breakpoint_slot_for_assertion (l_assertion)
+				elseif
+					context.system.exception_stack_managed and then
+					attached precondition as l_assertion
+				then
+					check
+						is_final_mode: context.final_mode
+						assertion_not_kept: not system.keep_assertions
 					end
+					context.increment_breakpoint_slot_for_assertion (l_assertion)
 				end
 			end
 			context.set_assertion_type (0)
@@ -1295,10 +1300,15 @@ end
 				buf.put_new_line
 				buf.put_string ("RTEC (EN_POST);")
 
-			elseif context.system.exception_stack_managed then
-				if attached postcondition as l_assertion then
-					context.increment_breakpoint_slot_for_assertion (l_assertion)
+			elseif
+				context.system.exception_stack_managed and then
+				attached postcondition as l_assertion
+			then
+				check
+					is_final_mode: context.final_mode
+					assertion_not_kept: not system.keep_assertions
 				end
+				context.increment_breakpoint_slot_for_assertion (l_assertion)
 			end
 		end
 

@@ -134,10 +134,13 @@ feature -- Access
 					generate_end_final_mode_test
 				end
 				context.set_assertion_type (0)
-			elseif context.system.exception_stack_managed then
-				if attached invariant_part as l_inv_part then
-					context.increment_breakpoint_slot_for_assertion (l_inv_part)
-				end
+			elseif
+				attached invariant_part as l_inv_part and then
+				context.system.exception_stack_managed and then
+				context.final_mode and then
+				not system.keep_assertions
+			then
+				context.increment_breakpoint_slot_for_assertion (l_inv_part)
 			end
 
 				-- Generate the "variant" part
@@ -153,10 +156,13 @@ feature -- Access
 					generate_end_final_mode_test
 				end
 				context.set_assertion_type (0)
-			elseif context.system.exception_stack_managed then
-				if attached variant_part as l_variant_part then
-					context.increment_breakpoint_slot_for_assertion (l_variant_part)
-				end
+			elseif
+				attached variant_part as l_variant_part and then
+				context.system.exception_stack_managed and then
+				context.final_mode and then
+				not system.keep_assertions
+			then
+				context.increment_breakpoint_slot_for_assertion (l_variant_part)
 			end
 		end
 

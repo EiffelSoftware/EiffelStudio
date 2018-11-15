@@ -32,6 +32,10 @@ inherit
 feature -- Status report
 
 	update_breakpoint_slot (a_node: BYTE_NODE; ctx: BYTE_CONTEXT)
+		require
+			final_mode: ctx.final_mode
+			assertion_not_kept: not ctx.system.keep_assertions
+			exception_stack_managed: ctx.system.exception_stack_managed
 		do
 			counter := 0
 			a_node.process (Current)

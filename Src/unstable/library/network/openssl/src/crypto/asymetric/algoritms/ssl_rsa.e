@@ -11,12 +11,12 @@ create
 	make
 
 feature {NONE} --Initialization
+
 	make
 		do
 				-- default padding	
 			padding := {SSL_CRYPTO_EXTERNALS}.rsa_pkcs1_oaep_padding
 		end
-
 
 	padding: INTEGER
 			-- padding mode that was used to encrypt the data.
@@ -73,7 +73,8 @@ feature -- Element  Change.
 		end
 
 	mark_no_padding
-			-- This mode should only be used to implement cryptographically sound padding modes in the application code. Encrypting user data directly with RSA is insecure.
+			-- This mode should only be used to implement cryptographically sound padding modes 
+			-- in the application code. Encrypting user data directly with RSA is insecure.
 		do
 			padding := {SSL_CRYPTO_EXTERNALS}.rsa_no_padding
 		ensure
@@ -81,7 +82,8 @@ feature -- Element  Change.
 		end
 
 	marl_pkcs1_oaep_padding
-			-- EME-OAEP as defined in PKCS #1 v2.0 with SHA-1, MGF1 and an empty encoding parameter. This mode is recommended for all new applications.
+			-- EME-OAEP as defined in PKCS #1 v2.0 with SHA-1, MGF1 and an empty encoding parameter.
+			-- This mode is recommended for all new applications.
 		do
 			padding := {SSL_CRYPTO_EXTERNALS}.rsa_pkcs1_oaep_padding
 		ensure
@@ -282,7 +284,6 @@ feature {NONE} -- Implementation
 				-- EVP_MD_CTX
 			l_msg: C_STRING
 			l_origin: C_STRING
-
 		do
 			Result := True
 
@@ -333,4 +334,15 @@ feature {NONE} -- Implementation
 			end
 			{SSL_CRYPTO_EXTERNALS}.c_evp_md_ctx_free (l_verify_ctx)
 		end
+
+note
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

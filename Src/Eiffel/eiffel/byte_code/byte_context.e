@@ -2993,6 +2993,24 @@ feature -- Debugger
 			ba.prepend (array)
 		end
 
+	increment_breakpoint_slot_for_assertion (a_node: BYTE_NODE)
+			-- Update breakpoint slot index when generating finalized C Code
+			-- if assertions are not kept, and exception stack enabled.
+		require
+			final_mode: final_mode
+			assertions_not_kept: not system.keep_assertions
+			exception_stack_managed: system.exception_stack_managed
+		do
+			assertion_breakable_slot_strategy.update_breakpoint_slot (a_node, Current)
+		end
+
+feature {NONE} -- Debugger		
+
+	assertion_breakable_slot_strategy: ASSERTION_BREAKABLE_SLOT_STRATEGY
+		once
+			create Result
+		end
+
 feature -- Inlining
 
 	in_inlined_code: BOOLEAN

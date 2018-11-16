@@ -687,7 +687,6 @@ feature -- Status reporting
 			-- otherwise return Void.
 		local
 			str: STRING_32
-			done: BOOLEAN
 			l_commands: HASH_TABLE [EB_EXTERNAL_COMMAND, INTEGER]
 			e_cmd: EB_EXTERNAL_COMMAND
 		do
@@ -713,7 +712,7 @@ feature -- Status reporting
 			Result := e_cmd
 		end
 
-	is_general: BOOLEAN = false;
+	is_general: BOOLEAN = False;
 
 feature -- State setting
 

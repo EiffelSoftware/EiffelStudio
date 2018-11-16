@@ -952,9 +952,6 @@ feature {EB_CUSTOM_WIDGETTED_EDITOR, EB_CONTEXT_MENU_FACTORY} -- Actions handler
 
 	notebook_veto_pebble (a_stone: ANY) : BOOLEAN
 			-- Notebook veto pebble
-		local
-			l_classi_stone: CLASSI_STONE
-			l_cluster_stone: CLUSTER_STONE
 		do
 			if notebook /= Void and then not notebook.is_destroyed then
 				inspect notebook.pointed_tab_index

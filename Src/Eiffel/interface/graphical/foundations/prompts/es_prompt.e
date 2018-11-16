@@ -135,10 +135,10 @@ feature {NONE} -- User interface initialization
 
 			a_container.extend (l_hbox)
 			a_container.parent.extend (create {EV_HORIZONTAL_SEPARATOR})
-			l_vbox ?= a_container.parent
-			check l_vbox_attached: l_vbox /= Void end
-			if l_vbox /= Void then
-				l_vbox.disable_item_expand (l_vbox.last)
+			if attached {EV_VERTICAL_BOX} a_container.parent as vb then
+				vb.disable_item_expand (vb.last)
+			else
+				check parent_is_vbox: False end
 			end
 
 			propagate_prompt_background_color (a_container, colors.prompt_banner_color)
@@ -461,26 +461,11 @@ feature {NONE} -- Query
 			not_is_recycled: not is_recycled
 			a_widget_attached: a_widget /= Void
 			not_a_widget_is_destroyed: not a_widget.is_destroyed
-		local
-			l_container: EV_CONTAINER
-			l_label: EV_LABEL
-			l_check: EV_CHECK_BUTTON
-			l_radio: EV_RADIO_BUTTON
 		do
-			l_container ?= a_widget
-			Result := l_container /= Void
-			if not Result then
-				l_label ?= a_widget
-				Result := l_label /= Void
-				if not Result then
-					l_check ?= a_widget
-					Result := l_check /= Void
-					if not Result then
-						l_radio ?= a_widget
-						Result := l_radio /= Void
-					end
-				end
-			end
+			Result := attached {EV_CONTAINER} a_widget
+						or attached {EV_LABEL} a_widget
+						or attached {EV_CHECK_BUTTON} a_widget
+						or attached {EV_RADIO_BUTTON} a_widget
 		end
 
 feature {NONE} -- Helpers
@@ -652,14 +637,15 @@ feature {NONE} -- Basic operations
 			a_source_widget_has_parent: a_source_widget.has_parent
 			a_color_attached: a_color /= Void
 			not_a_color_is_destroyed: not a_color.is_destroyed
-		local
-			l_widgets: EV_WIDGET_LIST
 		do
 			if can_propagate_background_color_to_widget (a_source_widget) then
 				a_source_widget.set_background_color (a_color)
-				l_widgets ?= a_source_widget
-				if l_widgets /= Void then
-					l_widgets.do_all (agent propagate_prompt_background_color (?, a_color))
+				if attached {EV_WIDGET_LIST} a_source_widget as l_widgets then
+					across
+						l_widgets as ic
+					loop
+						propagate_prompt_background_color (ic.item, a_color)
+					end
 				end
 			end
 		end
@@ -741,7 +727,7 @@ invariant
 	not_is_size_and_position_remembered: not is_size_and_position_remembered
 
 ;note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

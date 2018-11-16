@@ -136,8 +136,7 @@ feature
 			r_type: TYPE_A
 			reg_type: TYPE_C
 			local_is_current_temporary: BOOLEAN
-			a: ATTRIBUTE_BL
-			access: ACCESS_EXPR_B
+			l_curr_reg: like current_reg
 		do
 				-- First, standard analysis of the call
 			Precursor {FEATURE_BL} (reg)
@@ -166,23 +165,22 @@ feature
 				-- whether the register can be used during inlining, and to
 				-- redefine it in the appropriate descendants.
 
-				a ?= reg;
-				if a /= Void then
-					current_reg := a.register
-					if current_reg /= Void then
-						local_is_current_temporary := current_reg.is_temporary
+				if attached {ATTRIBUTE_BL} reg as l_attrib_bl then
+					l_curr_reg := l_attrib_bl.register
+					current_reg := l_curr_reg
+					if l_curr_reg /= Void then
+						local_is_current_temporary := l_curr_reg.is_temporary
 					end
 				else
 					-- There is the case where `reg' is of type ACCESS_EXPR_B (if the
 					-- feature is an infixed routine). The attribute is stored in
 					-- field `expr'.
-					access ?= reg
-					if access /= Void then
-						a ?= access.expr
-						if a /= Void then
-							current_reg := a.register
-							if current_reg /= Void then
-								local_is_current_temporary := current_reg.is_temporary
+					if attached {ACCESS_EXPR_B} reg as access then
+						if attached {ATTRIBUTE_BL} access.expr as l_attrib_bl then
+							l_curr_reg := l_attrib_bl.register
+							current_reg := l_curr_reg
+							if l_curr_reg /= Void then
+								local_is_current_temporary := l_curr_reg.is_temporary
 							end
 						end
 					end
@@ -198,11 +196,12 @@ feature
 			context.restore_class_type_context
 			context.put_inline_context (Current,
 				system.class_type_of_id (context_type_id), context_cl_type,
-				system.class_type_of_id (written_type_id), written_cl_type)
+				system.class_type_of_id (written_type_id), written_cl_type
+				)
 			Context.set_inlined_current_register (current_reg)
 
-			if compound /= Void then
-				compound.analyze
+			if attached compound as l_compound then
+				l_compound.analyze
 			end
 			inlined_dt_current := context.inlined_dt_current
 			inlined_dftype_current := context.inlined_dftype_current
@@ -216,7 +215,7 @@ feature
 
 			if not local_is_current_temporary then
 				current_reg.free_register
-			end;
+			end
 			context.remove_inline_context
 			Context.set_inlined_current_register (Void)
 		end
@@ -255,11 +254,11 @@ feature -- Generation
 				-- callstack is easy to debug.			
 			context.enter_hidden_code
 
-			if parameters /= Void then
+			p := parameters
+			if p /= Void then
 					-- Assign the parameter values to the registers.
 				from
 					b_area := temporary_parameters.area
-					p := parameters
 					l_area := p.area
 					count := p.count
 				until
@@ -282,25 +281,26 @@ feature -- Generation
 
 			Context.put_inline_context (Current,
 				context_class_type, context_cl_type,
-				written_class_type, written_cl_type)
+				written_class_type, written_cl_type
+				)
 			Context.set_inlined_current_register (current_reg)
 
-			if local_regs /= Void then
+			if attached local_regs as l_local_regs then
 					-- Set the value of the local registers to the default
 				from
 					i := 1
-					count := local_regs.count
+					count := l_local_regs.count
 				until
 					i > count
 				loop
-					reset_register_value (byte_code.locals.item (i), local_regs.item (i))
+					reset_register_value (byte_code.locals.item (i), l_local_regs.item (i))
 					i := i + 1
 				end
 			end
 
-			if result_reg /= Void then
+			if attached result_reg as l_result_reg then
 					-- Set the value of the result register to the default
-				reset_register_value (real_type (result_type), result_reg)
+				reset_register_value (real_type (result_type), l_result_reg)
 			end
 
 			if not is_current_temporary then
@@ -348,8 +348,8 @@ feature -- Generation
 				end
 			end
 
-			if compound /= Void then
-				compound.generate
+			if attached compound as l_compound then
+				l_compound.generate
 			end
 
 			if inlined_dt_current > 1 or inlined_dftype_current > 1 then
@@ -424,7 +424,7 @@ feature {NONE} -- Registers
 				until
 					i > count
 				loop
-					Result.put (get_inline_register(real_type (a.item (i))), i);
+					Result [i] := get_inline_register(real_type (a [i]))
 					i := i + 1
 				end
 			end
@@ -436,9 +436,8 @@ feature {NONE} -- Registers
 			is_param_temporary_reg: BOOLEAN
 			local_reg: REGISTRABLE
 			l_param: PARAMETER_B
-			expr: EXPR_B
-			nest, msg: NESTED_B
-			void_reg: VOID_REGISTER
+			expr, msg: EXPR_B
+			nest: NESTED_B
 		do
 			if a /= Void then
 				from
@@ -478,16 +477,16 @@ feature {NONE} -- Registers
 									-- We might have a nested call: `a.b.c.d'. The
 									-- register we're looking for is d's, but we have to
 									-- traverse the nested calls first:
-								nest ?= expr;
+								from
+									nest := Void
+									msg := expr
+								until
+									not attached {NESTED_B} msg as l_nested
+								loop
+									nest := l_nested
+									msg := l_nested.message
+								end
 								if nest /= Void then
-									from
-										msg := nest;
-									until
-										msg = Void
-									loop
-										nest := msg;
-										msg ?= msg.message
-									end;
 									local_reg := nest.register
 								end
 							end
@@ -497,8 +496,7 @@ feature {NONE} -- Registers
 					if local_reg /= Void then
 						is_param_temporary_reg := local_reg.is_temporary
 						if is_param_temporary_reg then
-							void_reg ?= local_reg
-							is_param_temporary_reg := void_reg = Void
+							is_param_temporary_reg := not attached {VOID_REGISTER} local_reg
 						else
 							is_param_temporary_reg := local_reg.is_predefined
 						end
@@ -607,7 +605,7 @@ feature -- Code to inline
 note
 	date: "$Date$"
 	version: "$Revision$"
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

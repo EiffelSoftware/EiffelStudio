@@ -14,7 +14,6 @@
 		</file_rule>
 		<option warning="true" full_class_checking="true">
 		</option>
-
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true">
 			<condition>
 				<custom name="GOBO_EIFFEL" excluded_value="ge"/>

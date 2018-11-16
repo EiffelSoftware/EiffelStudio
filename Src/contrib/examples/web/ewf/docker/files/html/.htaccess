@@ -1,0 +1,20 @@
+<IfModule mod_fcgid.c>
+AddHandler fcgid-script .ews
+FcgidWrapper /home/eifweb/www/html/service.fcgi .ews
+</IfModule>
+
+Options +ExecCGI +Includes +FollowSymLinks
+
+<IfModule mod_rewrite.c>
+RewriteEngine on
+
+#RewriteRule ^.*$ maintenance.html [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^$ service.ews/
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_URI} !=/favicon.ico
+RewriteRule ^(.*)$ service.ews/$1  [C]
+
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization},L]
+</IfModule>

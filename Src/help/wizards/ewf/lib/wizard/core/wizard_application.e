@@ -1,6 +1,5 @@
-﻿note
-	description: "Objects that ..."
-	author: "$Author$"
+note
+	description: "Abstract wizard application."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -8,7 +7,6 @@ deferred class
 	WIZARD_APPLICATION
 
 inherit
-
 	SHARED_EXECUTION_ENVIRONMENT
 
 feature {NONE} -- Initialization
@@ -16,24 +14,26 @@ feature {NONE} -- Initialization
 	initialize
 			-- Initialize `Current'.
 		local
-			i, n: INTEGER
+			i,n: INTEGER
 			s: READABLE_STRING_32
 			wizard_directory_name: detachable PATH
 			callback_file_name: detachable PATH
+			args: ARGUMENTS_32
 		do
 				-- Usage
-			n := {EXECUTION_ENVIRONMENT}.arguments.argument_count
+			args := execution_environment.arguments
+			n := args.argument_count
 			if n > 0 then
 				from
 					i := 1
 				until
 					i > n
 				loop
-					s := {EXECUTION_ENVIRONMENT}.arguments.argument (i)
-					if s.same_string ("-callback") or s.same_string ("--callback") then
+					s := args.argument (i)
+					if s.same_string_general ("-callback") or s.same_string_general ("--callback") then
 						i := i + 1
 						if i <= n then
-							create callback_file_name.make_from_string ({EXECUTION_ENVIRONMENT}.arguments.argument (i))
+							create callback_file_name.make_from_string (s)
 						end
 					elseif wizard_directory_name = Void then
 						create wizard_directory_name.make_from_string (s)
@@ -116,7 +116,7 @@ feature -- Helpers
 				p := Result
 				if
 					not ok and then
-					attached p.extension as ext
+					attached p.extension as ext 
 				then
 					l_ext := ext
 					l_name := p.name

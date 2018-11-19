@@ -547,7 +547,7 @@ feature -- Condition dialog
 	dial_cond_concurrency: STRING_32 do Result := locale.translation ("Concurrency")	end
 	dial_cond_concurrency_exclude: STRING_32 do Result := locale.translation ("Exclude value(s)")	end
 	dial_cond_concurrency_value (value: READABLE_STRING_GENERAL): STRING_32 do Result := locale.translation (value)	end
-	dial_cond_void_safety: STRING_32 do Result := locale.translation ("Void-safety")	end
+	dial_cond_void_safety: STRING_32 do Result := locale.translation ("Void safety")	end
 	dial_cond_void_safety_exclude: STRING_32 do Result := locale.translation ("Exclude value(s)")	end
 	dial_cond_void_safety_value (value: READABLE_STRING_GENERAL): STRING_32 do Result := locale.translation (value)	end
 

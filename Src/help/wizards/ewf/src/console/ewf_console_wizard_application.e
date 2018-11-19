@@ -1,5 +1,5 @@
-﻿note
-	author: "$Author$"
+note
+	description: "EiffelWeb console wizard application."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -20,6 +20,8 @@ feature {NONE} -- Initialization
 			initialize
 			on_start
 		end
+
+feature {NONE} -- Initialization
 
 	new_wizard: EWF_WIZARD
 		do

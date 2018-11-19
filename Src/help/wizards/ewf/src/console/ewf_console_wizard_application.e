@@ -1,16 +1,13 @@
-note
-	description : "Objects that ..."
-	author      : "$Author$"
-	date        : "$Date$"
-	revision    : "$Revision$"
+﻿note
+	author: "$Author$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EWF_CONSOLE_WIZARD_APPLICATION
 
 inherit
 	CONSOLE_WIZARD_APPLICATION
-
-	SHARED_EXECUTION_ENVIRONMENT
 
 create
 	make
@@ -23,8 +20,6 @@ feature {NONE} -- Initialization
 			initialize
 			on_start
 		end
-
-feature {NONE} -- Initialization
 
 	new_wizard: EWF_WIZARD
 		do

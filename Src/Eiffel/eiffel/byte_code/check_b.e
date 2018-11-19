@@ -101,16 +101,17 @@ feature -- Code generation
 					buf.put_character ('}')
 				else
 					check is_final_mode: context.final_mode end
-					if system.keep_assertions then
-						if context.assertion_level.is_check then
-							buf.put_string ("if (~in_assertion) {")
-							buf.indent
-							l_check_list.generate
-							buf.exdent
-							buf.put_new_line
-							buf.put_character ('}')
-						end
-					elseif system.exception_stack_managed then
+					if context.assertion_level.is_check then
+						buf.put_string ("if (~in_assertion) {")
+						buf.indent
+						l_check_list.generate
+						buf.exdent
+						buf.put_new_line
+						buf.put_character ('}')
+					elseif
+						not system.keep_assertions and then
+						system.exception_stack_managed
+					then
 						context.increment_breakpoint_slot_for_assertion (l_check_list)
 					end
 				end

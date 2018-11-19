@@ -1,8 +1,7 @@
-note
-	description : "Objects that ..."
-	author      : "$Author$"
-	date        : "$Date$"
-	revision    : "$Revision$"
+﻿note
+	author: "$Author$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	CONSOLE_WIZARD_APPLICATION
@@ -140,9 +139,6 @@ feature -- Execution
 		end
 
 	output_page_item (a_item: WIZARD_PAGE_ITEM)
-		local
-			b: BOOLEAN
-			s: detachable READABLE_STRING_32
 		do
 			if attached {WIZARD_PAGE_TEXT_ITEM} a_item as txt then
 				localized_print (txt.text)
@@ -314,6 +310,5 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-
 
 end

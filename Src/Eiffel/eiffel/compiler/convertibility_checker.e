@@ -151,7 +151,7 @@ feature -- Initialization/Checking
 											l_named_type.check_for_obsolete_class (a_class, Void)
 
 												-- We request that conversion type is attached only for the highest level
-												-- of void-safety.
+												-- of void safety.
 											if
 												a_class.lace_class.is_void_safe_call and then
 												not l_named_type.is_attached
@@ -338,7 +338,7 @@ feature -- Initialization/Checking
 
 				-- We do not allow conversion of the form `source.to_target' or
 				-- `create target.make_from (source)' if `source' is not attached
-				-- as otherwise this we would be breaking void-safety.
+				-- as otherwise this we would be breaking void safety.
 			if a_source_type.is_attached or else not a_context_class.lace_class.is_void_safe_call then
 				if a_target_type.has_associated_class then
 					l_target_class := a_target_type.base_class

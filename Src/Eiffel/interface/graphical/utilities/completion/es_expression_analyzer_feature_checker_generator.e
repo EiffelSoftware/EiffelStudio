@@ -37,7 +37,7 @@ feature {AST_FEATURE_CHECKER_GENERATOR} -- Status report
 	is_void_safe_call: BOOLEAN
 			-- <Precursor>
 		do
-				-- Ignore Void-Safety.
+				-- Ignore Void safety.
 		end
 
 feature -- Basic operations
@@ -99,7 +99,7 @@ feature {INSPECT_CONTROL} -- AST modification
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

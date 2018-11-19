@@ -1,6 +1,7 @@
 ﻿note
 	description: "Name strings for the Code Analyzer."
 	author: "Stefan Zurfluh"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -73,7 +74,7 @@ feature -- Rules
 		do Result := translation_in_context ("Change to comparison with {REAL}.is_nan", once "code_analyzer") end
 
 	useless_contract_title: STRING_32
-		do Result := translation_in_context ("Useless contract with void-safety", once "code_analyzer") end
+		do Result := translation_in_context ("Useless contract with void safety", once "code_analyzer") end
 
 	useless_contract_fix: STRING_32
 		do Result := translation_in_context ("Remove the useless contract", once "code_analyzer") end

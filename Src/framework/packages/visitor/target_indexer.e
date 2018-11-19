@@ -1,5 +1,4 @@
 note
-	description: "Summary description for {TARGET_INDEXER}."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -43,7 +42,7 @@ feature {NONE} -- Initialization
 				set_build (opts.item ("build"))
 				set_is_any_setting (attached opts.item ("is_any") as s and then s.is_case_insensitive_equal ("true"))
 				is_il_generation := attached opts.item ("is_il_generation") as s and then s.is_case_insensitive_equal ("True")
-					-- FIXME: missing void-safety !!!
+					-- FIXME: missing void safety !!!
 			end
 
 			make_observers (0)
@@ -157,7 +156,7 @@ feature -- Execution
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

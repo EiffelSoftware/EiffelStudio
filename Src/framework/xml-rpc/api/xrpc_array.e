@@ -1,7 +1,4 @@
 note
-	description: "[
-
-	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -95,8 +92,7 @@ feature {NONE} -- Element change
 			l_array: like internal_array
 			i, i_lower, i_upper: INTEGER
 		do
-				-- Precondition not_a_array_is_empty implies first element exists
-				-- Using `make_filled' for Void-safety reason
+				-- Precondition not_a_array_is_empty implies first element exists.
 			create l_array.make_filled (a_array [a_array.lower], 1, a_array.count)
 			from
 				i := 0
@@ -105,7 +101,7 @@ feature {NONE} -- Element change
 			until
 				i > i_upper
 			loop
-				l_array[i + 1] := a_array [i_lower + i]
+				l_array [i + 1] := a_array [i_lower + i]
 				i := i + 1
 			end
 			internal_array := l_array
@@ -155,7 +151,6 @@ feature -- Conversion
 				create Result.make_empty
 				Result.rebase (1)
 			else
-					-- using `make_filled with first item' for Void-safety reason
 				create Result.make_filled (l_array [l_array.lower], 1, l_array.count)
 				Result.copy (l_array)
 			end
@@ -179,7 +174,7 @@ invariant
 	internal_array_lower_is_default: not internal_array.is_empty implies internal_array.lower = 1
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

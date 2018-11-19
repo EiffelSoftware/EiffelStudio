@@ -301,7 +301,7 @@ feature {NONE} -- Implementation
 						if
 							a_required_valid_option and then
 							a_options /= Void and then
-							not across a_options as o some attached o.item.value as v and then Result.same_string (v) end
+							not across a_options as o some attached o.item.value as v and then Result.same_string_general (v) end
 						then
 							l_answered := False
 							Result := Void

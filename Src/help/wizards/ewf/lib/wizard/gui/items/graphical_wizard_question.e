@@ -1,6 +1,4 @@
-note
-	description: "Summary description for {GRAPHICAL_WIZARD_QUESTION}."
-	author: ""
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -41,7 +39,6 @@ feature {NONE} -- Implementation
 
 	append_indented_widget (w: EV_WIDGET; a_container: EV_BOX)
 		local
-			lab: EV_LABEL
 			hb: EV_HORIZONTAL_BOX
 		do
 			create hb

@@ -1,8 +1,7 @@
-note
-	description : "Objects that ..."
-	author      : "$Author$"
-	date        : "$Date$"
-	revision    : "$Revision$"
+﻿note
+	author: "$Author$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	GRAPHICAL_WIZARD_APPLICATION
@@ -53,8 +52,6 @@ feature {NONE} -- Widget
 feature -- Factory	
 
 	new_page (a_page_id: READABLE_STRING_8): GRAPHICAL_WIZARD_PAGE
-		local
-			lab: EV_LABEL
 		do
 			create Result.make (a_page_id)
 		end
@@ -89,7 +86,6 @@ feature {NONE} -- Implementation: UI
 			hb,hb2: EV_HORIZONTAL_BOX
 			mb, vb, headerb: EV_VERTICAL_BOX
 			lab: EV_LABEL
-			but: EV_BUTTON
 			cl: EV_CELL
 			fr: detachable EV_FRAME
 		do
@@ -182,7 +178,6 @@ feature {NONE} -- Implementation: UI
 
 				mb.extend (fr)
 				mb.disable_item_expand (fr)
-				fr := Void
 			end
 
 				-- ./Text part

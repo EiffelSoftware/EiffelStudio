@@ -63,7 +63,7 @@ feature -- Concurrency
 	concurrency_multithreaded_name: STRING = "thread"
 	concurrency_scoop_name: STRING = "scoop"
 
-feature -- Void-safety	
+feature -- Void safety	
 
 	void_safety_none: INTEGER = 0x1100
 	void_safety_conformance: INTEGER = 0x1200

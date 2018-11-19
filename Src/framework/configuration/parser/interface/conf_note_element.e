@@ -40,7 +40,7 @@ feature {NONE} -- Initialization
 			Precursor (n)
 			create attributes.make (0)
 			create content.make_empty
-			create element_name.make_empty -- Void-safety
+			create element_name.make_empty
 		end
 
 feature {CONF_ACCESS} -- Element Change
@@ -103,7 +103,7 @@ invariant
 	content_not_void: content /= Void
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -2,8 +2,8 @@ note
 	description: "Stone checker used by EB_DEVELOPMENT_WINDOW."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EB_STONE_CHECKER
@@ -932,7 +932,7 @@ feature {NONE} -- Implementation functions
 							attached opt_void_safety.item as l_void_safety and then
 							not l_void_safety.is_whitespace
 						then
-							l_format_context.process_indexing_tag_text ("void-safety: ")
+							l_format_context.process_indexing_tag_text ("void safety: ")
 							l_format_context.put_manifest_string (l_void_safety)
 							l_format_context.put_new_line
 							l_is_void_safe := opt_void_safety.index /= {CONF_OPTION}.void_safety_index_none

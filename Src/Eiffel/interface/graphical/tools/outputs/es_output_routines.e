@@ -139,7 +139,7 @@ feature -- Output
 			a_formatter.process_basic_text (l_project_location.target_path.name)
 			a_formatter.add_new_line
 
-				-- Void-safety
+				-- Void safety.
 			a_formatter.add_indent
 			a_formatter.process_indexing_tag_text (l_void_safety)
 			a_formatter.process_symbol_text ({SHARED_TEXT_ITEMS}.ti_colon)
@@ -296,7 +296,7 @@ feature {NONE} -- Internationalization
 	lb_more_info_on_compile: STRING = "More information available after a compilation!"
 
 ;note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

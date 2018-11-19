@@ -823,7 +823,7 @@ feature {NONE} -- Implementation
 					-- Target root option should be related to precompiled option as
 					-- 	• cat-call: both "none" or both not "none"
 					-- 	• concurrency: equal
-					-- 	• void-safety: both "none" or both not "none"
+					-- 	• void safety: both "none" or both not "none"
 				if attached t.precompile as precompiled and then attached precompiled.library_target as p then
 					if
 						(t.options.catcall_safety_capability.root_index = {CONF_TARGET_OPTION}.catcall_detection_index_none) /=

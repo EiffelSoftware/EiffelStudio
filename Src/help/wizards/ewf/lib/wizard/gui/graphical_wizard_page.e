@@ -1,6 +1,4 @@
-note
-	description: "Summary description for {GRAPHICAL_WIZARD_PAGE}."
-	author: ""
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -20,7 +18,7 @@ inherit
 create
 	make
 
-feature {WIZARD, WIZARD_ENGINE, WIZARD_PAGE} -- Implementation
+feature {WIZARD, WIZARD_PAGE} -- Implementation
 
 	reuse
 		do
@@ -95,10 +93,11 @@ feature {NONE} -- Implementation
 
 	unparent (i: WIZARD_PAGE_ITEM)
 		do
-			if attached {GRAPHICAL_WIZARD_PAGE_ITEM} i as gpi then
-				if attached gpi.widget.parent as l_parent then
-					l_parent.prune (gpi.widget)
-				end
+			if
+				attached {GRAPHICAL_WIZARD_PAGE_ITEM} i as gpi and then
+				attached gpi.widget.parent as l_parent
+			then
+				l_parent.prune (gpi.widget)
 			end
 		end
 

@@ -11,42 +11,47 @@ class
 feature -- Access
 
 	system_encoding: ENCODING
-			-- System encoding
+			-- System encoding.
 		once
 			create Result.make (system_encodings_i.system_code_page)
 		ensure
+			instance_free: class
 			console_encoding_not_void: Result /= Void
 		end
 
 	console_encoding: ENCODING
-			-- Console encoding
+			-- Console encoding.
 		once
 			create Result.make (system_encodings_i.console_code_page)
 		ensure
+			instance_free: class
 			console_encoding_not_void: Result /= Void
 		end
 
 	utf8: ENCODING
 			-- UTF8 Encoding.
 		once
-			create Result.make ((create {CODE_PAGE_CONSTANTS}).utf8)
+			create Result.make ({CODE_PAGE_CONSTANTS}.utf8)
 		ensure
+			instance_free: class
 			utf8_not_void: Result /= Void
 		end
 
 	utf16: ENCODING
 			-- UTF16 Encoding.
 		once
-			create Result.make ((create {CODE_PAGE_CONSTANTS}).utf16)
+			create Result.make ({CODE_PAGE_CONSTANTS}.utf16)
 		ensure
+			instance_free: class
 			utf16_not_void: Result /= Void
 		end
 
 	utf32: ENCODING
 			-- UTF32 Encoding.
 		once
-			create Result.make ((create {CODE_PAGE_CONSTANTS}).utf32)
+			create Result.make ({CODE_PAGE_CONSTANTS}.utf32)
 		ensure
+			instance_free: class
 			utf32_not_void: Result /= Void
 		end
 
@@ -54,6 +59,8 @@ feature -- Access
 			-- ISO-8859-1 encoding.
 		once
 			create Result.make (system_encodings_i.iso_8859_1_code_page)
+		ensure
+			instance_free: class
 		end
 
 feature {NONE} -- Implementation

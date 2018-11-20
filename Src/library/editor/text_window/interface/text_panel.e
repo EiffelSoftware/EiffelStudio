@@ -73,7 +73,7 @@ inherit
 
 	ENCODING_DETECTOR
 		rename
-			detected_encoding as system_encoding
+			detected_encoding as default_encoding
 		export
 			{NONE} all
 		undefine
@@ -1920,11 +1920,17 @@ feature {NONE} -- Encoding detector
 			encoding_detector_not_void: Result /= Void
 		end
 
+	default_encoding: ENCODING
+			-- <Precursor>
+		once
+			Result := system_encoding
+		end
+
 	detect (a_string: READABLE_STRING_GENERAL)
-			-- <precursor>
-			-- Current is used as simple encoding detector.
-			-- Only `system_encoding' is simply returned.
-			-- So `last_detection_successful' is always true.
+			-- <Precursor>
+			-- Current is used as a simple encoding detector
+			-- that returns `system_encoding`.
+			-- So, `last_detection_successful` is always true.
 		do
 			last_detection_successful := True
 		end

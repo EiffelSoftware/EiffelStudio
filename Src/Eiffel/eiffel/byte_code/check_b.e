@@ -162,16 +162,19 @@ feature -- Inlining
 			Result := Current
 			if
 				context.final_mode and
-				not system.keep_assertions and
-				not system.exception_stack_managed
+				not system.keep_assertions
 			then
-					-- Nothing to be done, we do as if there has
-					-- been no expressions in `check_list'.
-				check_list := Void
-			else
-				if attached check_list as c then
-					check_list := c.inlined_byte_code
+				if system.exception_stack_managed then
+					-- Keep `check_list` as it is,
+					-- for this case (final, no assertion, and exception trace) `check_list` is only used by `{BYTE_CONTEXT}.increment_breakpoint_slot_for_assertion`.
+					-- No C code will be generated for Current, then do not try to inline as `check_list` may rely on removed features (due to dead code removal).
+				else
+						-- Nothing to be done, we do as if there hase
+						-- been no expressions in `check_list'.
+					check_list := Void
 				end
+			elseif attached check_list as c then
+				check_list := c.inlined_byte_code
 			end
 		end
 

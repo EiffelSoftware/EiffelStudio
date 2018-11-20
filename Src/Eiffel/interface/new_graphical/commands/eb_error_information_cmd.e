@@ -1,8 +1,9 @@
-note
+﻿note
 	description: "Dialog used to display extended help concerning a compilation error."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "Xavier Rousselot"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -49,11 +50,15 @@ feature -- Basic operations
 			-- <Precursor>
 		do
 			if attached {ERROR_STONE} a_stone as l_error then
-				execute_with_text (l_error.help_text)
+				if attached l_error.uuid as u then
+					execute_with_uuid (u)
+				else
+					execute_with_text (l_error.help_text)
+				end
 			end
 		end
 
-feature -- Status report
+feature -- Access
 
 	description: STRING_GENERAL
 			-- Explanatory text for this command.
@@ -102,14 +107,21 @@ feature {NONE} -- Implementation
 	current_editor: SELECTABLE_TEXT_PANEL
 			-- Text in which the explanation texts are put.
 
+	execute_with_uuid (uuid: READABLE_STRING_32)
+			-- Open an URL associated with the specified `uuid`.
+		require
+			{UUID}.is_valid_uuid (uuid)
+		do
+			if attached (create {SERVICE_CONSUMER [HELP_PROVIDERS_S]}).service as s then
+				s.show_help (create {ES_HELP_CUSTOM_CONTEXT}.make (uuid, Void))
+			end
+		end
+
 	execute_with_text (a_text: STRING_32)
 			-- Pop up a new dialog and display `a_text' inside it.
-		local
-			l_sys_enc: SYSTEM_ENCODINGS
 		do
 			create_new_dialog
-			create l_sys_enc
-			current_editor.set_encoding (l_sys_enc.utf32)
+			current_editor.set_encoding ({SYSTEM_ENCODINGS}.utf32)
 			current_editor.load_text (a_text)
 			current_editor.disable_line_numbers
 			current_dialog.show_relative_to_window (Window_manager.last_focused_development_window.window)
@@ -181,7 +193,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -212,4 +224,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_ERROR_INFORMATION_DIALOG
+end

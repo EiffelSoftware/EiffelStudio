@@ -50,6 +50,13 @@ feature -- Access
 			help_file_name_not_void: Result /= Void
 		end
 
+	help_uuid: detachable READABLE_STRING_32
+			-- UUID of the page with explanations of the error/warning.
+		do
+		ensure
+			is_uuid: attached Result implies {UUID}.is_valid_uuid (Result)
+		end
+
 feature {NONE} -- Typing
 
 	associated_class_type: detachable ABSTRACT_CLASS_C
@@ -290,7 +297,7 @@ invariant
 	non_void_help_file_name: help_file_name /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

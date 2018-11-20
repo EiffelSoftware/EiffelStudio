@@ -1697,8 +1697,6 @@ feature {NONE} -- Action handlers
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
-		local
-			l_error: ERROR
 		do
 			if
 				grid_events.has_selected_row and then
@@ -1707,14 +1705,10 @@ feature {NONE} -- Action handlers
 				attached {ERROR} l_event.data as e
 			then
 					-- Retrieve error item.
-				l_error := e
-			end
-
-			if l_error = Void then
+				error_info_command.execute_with_stone (create {ERROR_STONE}.make (e))
+			else
 					-- No error found. This can happen when the expanded information row is selected.
 				error_info_command.execute
-			else
-				error_info_command.execute_with_stone (create {ERROR_STONE}.make (l_error))
 			end
 		end
 

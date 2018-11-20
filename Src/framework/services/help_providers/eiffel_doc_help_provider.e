@@ -1,7 +1,5 @@
-note
-	description: "[
-		The default EiffelSoftware Eiffel Documentation help provider.
-	]"
+﻿note
+	description: "	The default EiffelSoftware Eiffel Documentation help provider."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
@@ -39,13 +37,13 @@ feature {NONE} -- Access
 	base_url: STRING_32
 			-- <Precursor>
 		once
-			create Result.make_from_string ("https://eiffel.org/doc/uuid/")
+			Result := {STRING_32} "https://eiffel.org/doc/uuid/"
 		end
 
 	section_url_separator: CHARACTER_32
 			-- <Precursor>
 		once
-			Result := '/'
+			Result := {CHARACTER_32} '/'
 		end
 
 feature {NONE} -- Formatting
@@ -66,7 +64,7 @@ feature {NONE} -- Formatting
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

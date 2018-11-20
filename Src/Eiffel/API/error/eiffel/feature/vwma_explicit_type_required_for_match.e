@@ -19,6 +19,7 @@ class VWMA_EXPLICIT_TYPE_REQUIRED_FOR_MATCH
 inherit
 	VWMA_EXPLICIT_TYPE_REQUIRED
 		redefine
+			help_uuid,
 			print_short_help,
 			subcode
 		end
@@ -37,6 +38,14 @@ feature {COMPILER_ERROR_VISITOR} -- Visitor
 			-- <Precursor>
 		do
 			v.process_array_explicit_type_required_for_match (Current)
+		end
+
+feature -- Help
+
+	help_uuid: READABLE_STRING_32
+			-- <Precursor>
+		do
+			Result := "26E32CD7-7C68-4CDD-A29A-81343EC0DD3B"
 		end
 
 feature -- Output
@@ -64,6 +73,7 @@ feature -- Output
 						- (recommended) change options to always compute a manifest array type without checking it against a target type (In project settings, set "Advanced | Language | Manifest array type" to "Standard").
 				]", "compiler.error"),
 				<<agent target_array_type.append_to>>)
+			t.add_new_line
 			t.add_new_line
 		end
 

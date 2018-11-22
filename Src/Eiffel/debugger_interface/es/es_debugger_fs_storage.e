@@ -264,14 +264,18 @@ feature {NONE} -- Persistence
 			s: STRING_32
 			i,n: INTEGER
 			p: CHARACTER_32
+			l_usr_opts_factory: USER_OPTIONS_FACTORY
 		do
 			if cfg.is_generated_uuid then
 				fn := cfg.file_name
-				if attached (create {USER_OPTIONS_FACTORY}).mapped_uuid (fn) as l_mapped_uuid then
+				create l_usr_opts_factory
+				if attached l_usr_opts_factory.mapped_uuid (fn) as l_mapped_uuid then
 					Result := l_mapped_uuid.out
 				else
+					l_usr_opts_factory.set_mapped_uuid (cfg.uuid, fn)
 						-- Without any uuid to reuse,
 						-- let's generate a unique identifier based on compacted ecf filename.
+
 					from
 						i := 1
 						n := fn.count

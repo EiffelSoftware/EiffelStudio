@@ -180,18 +180,18 @@ feature {NONE} -- Names
 
 	l_tree_view: STRING_32						do Result := names.l_Tree_view						end
 	f_switch_to_tree_view: STRING_32 			do Result := names.f_switch_to_tree_view			end
-	l_flat_view: STRING_32						do Result := names.l_Flat_view 						end
-	f_switch_to_flat_view: STRING_32 			do Result := names.f_switch_to_flat_view			end
-	l_updating_the_view: STRING_32 			do Result := names.l_update_the_view				end
-	l_filter: STRING_32						do Result := names.l_filter 						end
-	l_tree_or_flat_view: STRING_32				do Result := names.l_tree_or_flat_view 				end
+	l_flat_view: STRING_32						do Result := names.l_search_view					end
+	f_switch_to_flat_view: STRING_32 			do Result := names.f_switch_to_search_view			end
+	l_updating_the_view: STRING_32	 			do Result := names.l_update_the_view				end
+	l_filter: STRING_32							do Result := names.l_filter 						end
+	l_tree_or_flat_view: STRING_32				do Result := names.l_tree_or_search_view 			end
 	l_restore_defaults: STRING_32 				do Result := names.l_restore_defaults 				end
 	l_restore_default: STRING_32				do Result := names.l_restore_default 				end
 	l_no_default_value: STRING_32 				do Result := names.l_no_default_value 				end
 	l_close: STRING_32							do Result := names.b_close 							end
 	l_display_window: STRING_32 				do Result := names.l_display_window 				end
 	l_description: STRING_32					do Result := names.l_description 					end
-	l_building_flat_view: STRING_32			do Result := names.l_building_flat_view 			end
+	l_building_flat_view: STRING_32			do Result := names.l_building_search_view 			end
 	l_building_tree_view: STRING_32			do Result := names.l_building_tree_view 			end
 
 	l_matches_of_total_preferences (a_count: INTEGER; a_total_count: INTEGER): STRING_32
@@ -354,7 +354,7 @@ feature {NONE} -- Widget initialization
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

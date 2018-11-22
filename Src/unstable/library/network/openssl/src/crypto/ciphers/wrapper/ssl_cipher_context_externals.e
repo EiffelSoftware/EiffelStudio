@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 						check
 							success: l_res /= 0
 						end
-						if attached l_mode.tag as l_tag then
+						if attached l_mode.tag as l_tag and then operation = DECRYPT_MODE then
 							l_res := {SSL_CRYPTO_EXTERNALS}.c_evp_cipher_ctx_ctrl (ctx, {SSL_CRYPTO_EXTERNALS}.C_EVP_CTRL_AEAD_SET_TAG, l_tag.count, l_tag.item)
 							check
 								success: l_res /= 0

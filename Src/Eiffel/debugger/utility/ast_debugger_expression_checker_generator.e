@@ -23,7 +23,8 @@ inherit
 			is_void_safe_initialization,
 			is_void_safe_conformance,
 			is_void_safe_construct,
-			set_routine_ids
+			set_routine_ids,
+			report_vucr
 		end
 
 	SHARED_INST_CONTEXT
@@ -492,6 +493,14 @@ feature {AST_FEATURE_CHECKER_GENERATOR}
 			-- Never check void safety for debugger's expressions.
 		do
 			-- Result := False
+		end
+
+feature {NONE} -- Instance-free checks
+
+	report_vucr (e: VUCR)
+			-- Report a VUCR error `e`.
+		do
+			-- Ignore VUCR cases when running inside debugger!
 		end
 
 feature {NONE} -- Implementation

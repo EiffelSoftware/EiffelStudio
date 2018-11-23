@@ -72,6 +72,7 @@ feature -- Tests
 			l_priv_key: SSL_RSA_PRIVATE_KEY
 			l_result: STRING
 		do
+			initialize_ssl
 				-- mark_pkcs1_padding
 			create l_rsa.make
 			l_rsa.mark_pkcs1_padding
@@ -97,6 +98,7 @@ feature -- Tests
 		local
 			l_keys: SSL_KEY_PAIR
 		do
+			initialize_ssl
 			create l_keys.make (2048)
 			print (l_keys.public_key)
 			io.put_new_line
@@ -148,4 +150,14 @@ fjIbXqHiJNWCTHY+f31V1h+sT2iibcXop/FvMsCZGpvr8KK3X4kHsA==
 -----END RSA PRIVATE KEY-----
 ]"
 
+note
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

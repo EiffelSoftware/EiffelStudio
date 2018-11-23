@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Translates Eiffel to IV AST nodes."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -22,7 +22,9 @@ feature {NONE} -- Initialization
 		do
 			translation_pool.reset
 				-- Add types and features used by every system
-			translation_pool.add_type (helper.set_any_type)
+			if attached helper.set_any_type as t then
+				translation_pool.add_type (t)
+			end
 		end
 
 feature -- Status report
@@ -79,14 +81,8 @@ feature -- Element change
 			-- Add `a_feature' to be translated.
 		require
 			a_feature_attached: attached a_feature
-		local
-			l_class: CLASS_C
-			l_context_type: CL_TYPE_A
 		do
-			l_class := system.class_of_id (a_feature.written_in)
-			l_context_type := l_class.actual_type
-
-			add_feature_of_type (a_feature, l_context_type)
+			add_feature_of_type (a_feature, system.class_of_id (a_feature.written_in).actual_type)
 		end
 
 	add_feature_of_type (a_feature: FEATURE_I; a_context_type: CL_TYPE_A)

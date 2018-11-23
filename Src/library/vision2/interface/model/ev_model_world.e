@@ -43,6 +43,7 @@ feature {NONE} -- Initialization
 			grid_x := default_grid_x
 			grid_y := default_grid_x
 			grid_visible := False
+			is_anti_aliasing_enabled := True
 			full_redraw
 		end
 
@@ -107,6 +108,9 @@ feature -- Access
 			half_grid := grid // 2
 			Result := ((a_y + half_grid) // grid) * grid
 		end
+
+	is_anti_aliasing_enabled: BOOLEAN
+			-- Should anti-aliasing be used when drawing pictures?
 
 feature -- Status report
 
@@ -234,23 +238,14 @@ invariant
 	background_color_exists: background_color /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_MODEL_WORLD
-
-
-
-
-
-
+end

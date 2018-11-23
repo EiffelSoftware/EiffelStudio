@@ -17,7 +17,7 @@ inherit
 		undefine
 			default_colors
 		end
-		
+
 	EV_MODEL_PROJECTION_ROUTINES
 
 	EV_SHARED_APPLICATION
@@ -156,6 +156,7 @@ feature -- Basic operations
 			l_world := world
 			check l_world /= Void then end
 			drawable.set_background_color (l_world.background_color)
+			drawable.set_anti_aliasing (l_world.is_anti_aliasing_enabled)
 			drawable.clear_rectangle (u.left, u.top, u.width, u.height)
 
 			if l_world.grid_visible then
@@ -658,8 +659,8 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA
@@ -668,12 +669,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_MODEL_WIDGET_PROJECTOR
-
-
-
-
-
+end

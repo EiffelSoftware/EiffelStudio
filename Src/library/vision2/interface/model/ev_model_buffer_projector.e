@@ -120,6 +120,7 @@ feature -- Access
 			u_x := rectangle.x
 			u_y := rectangle.y
 			drawable.set_background_color (world.background_color)
+			drawable.set_anti_aliasing (world.is_anti_aliasing_enabled)
 			drawable.clear_rectangle (u_x + offset_x, u_y + offset_y, rectangle.width, rectangle.height)
 			if world.is_show_requested then
 				project_figure_group_full (world)
@@ -181,6 +182,7 @@ feature -- Display updates
 			u_height := u.height
 			create l_rect.make (u_x, u_y, u_width, u_height)
 			drawable.set_background_color (world.background_color)
+			drawable.set_anti_aliasing (world.is_anti_aliasing_enabled)
 			drawable.clear_rectangle (u_x - drawable_position.x, u_y - drawable_position.y, u_width, u_height)
 
 			if world.grid_visible then
@@ -319,8 +321,8 @@ invariant
 	right_drawable_in_the_cell: drawable = drawable_in_the_cell
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA
@@ -329,12 +331,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_MODEL_BUFFER_PROJECTOR
-
-
-
-
-
+end

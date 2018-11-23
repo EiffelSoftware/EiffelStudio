@@ -14,11 +14,9 @@ inherit
 			make as make_data_observer
 		end
 
-	OBSERVER
-
-	EV_SHARED_SCALE_FACTORY
-
 	ES_TOOLBAR_PREFERENCE
+	EV_SHARED_SCALE_FACTORY
+	OBSERVER
 
 create
 	make
@@ -103,6 +101,12 @@ feature -- Value
 			--
 		do
 			Result := diagram_auto_scroll_speed_preference.value
+		end
+
+	enable_anti_aliasing: BOOLEAN
+			-- Should anti-aliasing be used if available?
+		do
+			Result := enable_anti_aliasing_preference.value
 		end
 
 			-- BON Class
@@ -383,6 +387,7 @@ feature {NONE} -- Preference
 	descendant_depth_preference: INTEGER_PREFERENCE
 	ignore_excluded_class_figures_preference: BOOLEAN_PREFERENCE
 	excluded_class_figures_preference: ARRAY_PREFERENCE
+	enable_anti_aliasing_preference: BOOLEAN_PREFERENCE
 
 			-- BON Class
 	bon_class_name_font_preference: IDENTIFIED_FONT_PREFERENCE
@@ -454,6 +459,7 @@ feature {NONE} -- Preference Strings
 	ignore_excluded_class_figures_string: STRING = "tools.diagram_tool.ignore_excluded_class_figures"
 	excluded_class_figures_string: STRING = "tools.diagram_tool.excluded_class_figures"
 	diagram_background_color_string: STRING = "tools.diagram_tool.diagram_background_color"
+	enable_anti_aliasing_string: STRING = "tools.diagram_tool.enable_anti-aliasing"
 
 		-- BON Class
 	bon_class_name_font_string: STRING = "tools.diagram_tool.bon.bon_class_name_font"
@@ -537,6 +543,7 @@ feature {NONE} -- Implementation
 			descendant_depth_preference := l_manager.new_integer_preference_value (l_manager, descendant_depth_string, 1)
 			ignore_excluded_class_figures_preference := l_manager.new_boolean_preference_value (l_manager, ignore_excluded_class_figures_string, False)
 			excluded_class_figures_preference := l_manager.new_array_preference_value (l_manager, excluded_class_figures_string,  <<>>)
+			enable_anti_aliasing_preference := l_manager.new_boolean_preference_value (l_manager, enable_anti_aliasing_string, True)
 
 					-- BON Class
 			bon_class_name_font_preference := l_manager.new_identified_font_preference_value (bon_class_name_font_string, font_factory.registered_font (l_default_font.twin))
@@ -597,8 +604,22 @@ feature {NONE} -- Implementation
 			diagram_auto_scroll_speed_preference := l_manager.new_integer_preference_value (l_manager, diagram_auto_scroll_speed_preference_string, 50)
 
 				-- Actions
-			l_update_agent := agent update
+			l_update_agent := agent
+				do
+					update
+					{EB_SHARED_WINDOW_MANAGER}.window_manager.for_all_development_windows (agent (d: EB_DEVELOPMENT_WINDOW)
+						do
+							if
+								attached d.shell_tools.tool ({ES_DIAGRAM_TOOL}) as t and then
+								attached {ES_DIAGRAM_TOOL_PANEL} t.panel as p
+							then
+								p.projector.full_project
+							end
+						end)
+				end
+
 			diagram_background_color_preference.change_actions.extend (l_update_agent)
+			enable_anti_aliasing_preference.change_actions.extend (l_update_agent)
 			bon_class_name_font_preference.change_actions.extend (l_update_agent)
 			bon_class_name_color_preference.change_actions.extend (l_update_agent)
 			bon_class_fill_color_preference.change_actions.extend (l_update_agent)
@@ -695,6 +716,7 @@ invariant
 	ancestor_depth_preference_not_void: ancestor_depth_preference /= Void
 	descendant_depth_preference_not_void: descendant_depth_preference /= Void
 	ignore_excluded_class_figures_preference_not_void: ignore_excluded_class_figures_preference /= Void
+	enable_anti_aliasing_preference_attached: attached enable_anti_aliasing_preference
 	excluded_class_figures_preference_not_void: excluded_class_figures_preference /= Void
 
 note

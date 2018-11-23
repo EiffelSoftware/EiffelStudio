@@ -203,6 +203,10 @@ feature -- Element change.
 				background_color := l_background_color
 				full_redraw
 			end
+			if is_anti_aliasing_enabled /= preferences.diagram_tool_data.enable_anti_aliasing then
+				is_anti_aliasing_enabled := not is_anti_aliasing_enabled
+				full_redraw
+			end
 			if is_statistics then
 				update_statistic
 			end

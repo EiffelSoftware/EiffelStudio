@@ -1,12 +1,12 @@
-note
+﻿note
 	description: "EiffelVision drawable. GTK implementation."
-	Implementation_details: "[
-		In Cairo, the coordinate system is not based on square pixels, but on the line
-		between pixels (aka sample points).
+	implementation_details: "[
+			In Cairo, the coordinate system is not based on square pixels, but on the line
+			between pixels (aka sample points).
 		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	keywords: "figures, primitives, drawing, line, point, ellipse"
+	keywords: figures, primitives, drawing, line, point, ellipse
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -300,6 +300,12 @@ feature -- Element change
 			if drawable /= default_pointer then
 				{CAIRO}.set_dashed_line_style (drawable, False)
 			end
+		end
+
+	set_anti_aliasing (value: BOOLEAN)
+			-- <Precursor>
+		do
+				-- TODO: provide implementation.
 		end
 
 feature -- Clearing operations
@@ -874,10 +880,10 @@ feature {NONE} -- Implementation
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
-	interface: detachable EV_DRAWABLE note option: stable attribute end;
+	interface: detachable EV_DRAWABLE note option: stable attribute end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -887,4 +893,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EV_DRAWABLE_IMP
+end

@@ -121,8 +121,6 @@ feature -- Access
 			reusable_dc.delete
 		end
 
-feature -- Access
-
 	background_color_internal: detachable EV_COLOR
 			-- Color used to fill figures.
 
@@ -159,7 +157,7 @@ feature -- Access
 	dashed_line_style: BOOLEAN
 			-- Are lines drawn dashed?
 
-feature {NONE} -- Implementation
+feature {NONE} -- Measurement
 
 	width: INTEGER
 			-- Width of the widget.
@@ -464,13 +462,16 @@ feature -- Drawing operations
 				reset_pen
 			end
 			get_dc
-			dc.move_to (x1, y1)
-
-			dc.line_to (x2, y2)
-				-- As `line_to' does not actually draw the final
-				-- pixel, we need to draw this ourselved, so ensure
-				-- that the line really does include `x2', `y2'.
-			dc.set_pixel (x2, y2, wel_fg_color)
+			if attached gdip_graphics as g then
+				g.draw_line (gdip_pen, x1, y1, x2, y2)
+			else
+				dc.move_to (x1, y1)
+				dc.line_to (x2, y2)
+					-- As `line_to' does not actually draw the final
+					-- pixel, we need to draw this ourselved, so ensure
+					-- that the line really does include `x2', `y2'.
+				dc.set_pixel (x2, y2, wel_fg_color)
+			end
 			release_dc
 		end
 
@@ -504,13 +505,13 @@ feature -- Drawing operations
 			tang_end := tangent (a_start_angle + an_aperture)
 				-- We must protect against both possible divides by 0.
 			if tang_start + semi_height /= 0 and semi_width /= 0 then
-				x_tmp := semi_height / (sqrt (tang_start * tang_start + (semi_height * semi_height) / (semi_width * semi_width)))
+				x_tmp := semi_height / sqrt (tang_start * tang_start + (semi_height * semi_height) / (semi_width * semi_width))
 			else
 				x_tmp := 0
 			end
 				-- We must protect against divide by 0.
 			if tang_start /= 0 and semi_width /= 0 then
-				y_tmp := semi_height / (sqrt (1 + (semi_height * semi_height) / (semi_width * semi_width * tang_start * tang_start)))
+				y_tmp := semi_height / sqrt (1 + (semi_height * semi_height) / (semi_width * semi_width * tang_start * tang_start))
 			else
 				y_tmp := 0
 			end
@@ -524,13 +525,13 @@ feature -- Drawing operations
 			y_start_arc := (y_tmp + top + semi_height).rounded
 				-- We must protect against both possible divides by 0.
 			if tang_end + semi_height /= 0 and semi_width /= 0 then
-				x_tmp := semi_height / (sqrt (tang_end * tang_end + (semi_height * semi_height) / (semi_width * semi_width)))
+				x_tmp := semi_height / sqrt (tang_end * tang_end + (semi_height * semi_height) / (semi_width * semi_width))
 			else
 				x_tmp := 0
 			end
 				-- We must ensure that we protect against divide by 0.
 			if tang_end /= 0 and semi_width /= 0 then
-				y_tmp := semi_height / (sqrt (1 + (semi_height * semi_height) / (semi_width * semi_width * tang_end * tang_end)))
+				y_tmp := semi_height / sqrt (1 + (semi_height * semi_height) / (semi_width * semi_width * tang_end * tang_end))
 			else
 				y_tmp := 0
 			end
@@ -547,11 +548,11 @@ feature -- Drawing operations
 				reset_pen
 			end
 			get_dc
-			if an_aperture /= 0.0 then
+			if an_aperture = 0.0 then
+				dc.set_pixel (x_start_arc, y_start_arc, wel_fg_color)
+			else
 				dc.arc (left, top, right, bottom, x_start_arc,
 					y_start_arc, x_end_arc, y_end_arc)
-			else
-				dc.set_pixel (x_start_arc, y_start_arc, wel_fg_color)
 			end
 			release_dc
 		end
@@ -681,7 +682,7 @@ feature -- Drawing operations
 						-- MSDN BLENDFUNCTION page say:
 						-- When the AlphaFormat parameter is AC_SRC_ALPHA, the source bitmap must be 32 bpp. If it is not, the AlphaBlend function will fail.
 						-- See bug#13828
-						l_is_src_bitmap_32bits := (source_bitmap.log_bitmap.bits_pixel = 32)
+						l_is_src_bitmap_32bits := source_bitmap.log_bitmap.bits_pixel = 32
 						create source_bitmap_dc.make_by_dc (s_dc)
 						source_bitmap_dc.select_bitmap (source_bitmap)
 						l_src_drawing_mode := src_drawing_mode
@@ -744,13 +745,19 @@ feature -- Drawing operations
 			-- Draw rectangle with upper-left corner on (`x', `y')
 			-- with size `a_width' and `a_height'.
 		do
-			remove_brush
-			if not internal_initialized_pen then
-				reset_pen
+			if a_width > 0 and then a_height > 0 then
+				remove_brush
+				if not internal_initialized_pen then
+					reset_pen
+				end
+				get_dc
+				if attached gdip_graphics as g then
+					g.draw_rectangle (gdip_pen, x, y, a_width - 1, a_height - 1)
+				else
+					dc.rectangle (x, y, x + a_width, y + a_height)
+				end
+				release_dc
 			end
-			get_dc
-			dc.rectangle (x, y, x + a_width, y + a_height)
-			release_dc
 		end
 
 	draw_ellipse (x, y, a_bounding_width, a_bounding_height: INTEGER)
@@ -758,13 +765,19 @@ feature -- Drawing operations
 			-- upper left corner at `x',`y', width `a_bounding_width' and height
 			-- `a_bounding_height'.
 		do
-			remove_brush
-			if not internal_initialized_pen then
-				reset_pen
+			if a_bounding_width > 0 and a_bounding_height > 0 and then line_width > 0 then
+				remove_brush
+				if not internal_initialized_pen then
+					reset_pen
+				end
+				get_dc
+				if attached gdip_graphics as g then
+					g.draw_ellipse (gdip_pen, x, y, a_bounding_width - 1, a_bounding_height - 1)
+				else
+					dc.ellipse (x, y, x + a_bounding_width, y + a_bounding_height)
+				end
+				release_dc
 			end
-			get_dc
-			dc.ellipse (x, y, x + a_bounding_width, y + a_bounding_height)
-			release_dc
 		end
 
 	draw_polyline (points: ARRAY [EV_COORDINATE]; is_closed: BOOLEAN)
@@ -807,7 +820,11 @@ feature -- Drawing operations
 				reset_pen
 			end
 			get_dc
-			dc.polyline (flat_points)
+			if attached gdip_graphics as g then
+				g.draw_lines (gdip_pen, flat_points)
+			else
+				dc.polyline (flat_points)
+			end
 			release_dc
 		end
 
@@ -844,13 +861,13 @@ feature -- Drawing operations
 
 				-- We must protect against both possible divides by 0.
 			if tang_start + semi_height /= 0 and semi_width /= 0 then
-				x_tmp := semi_height / (sqrt (tang_start * tang_start + (semi_height * semi_height) / (semi_width * semi_width)))
+				x_tmp := semi_height / sqrt (tang_start * tang_start + (semi_height * semi_height) / (semi_width * semi_width))
 			else
 				x_tmp := 0
 			end
 				-- We must ensure that we protect against divide by 0.
 			if tang_start /= 0 and semi_width /= 0 then
-				y_tmp := semi_height / (sqrt (1 + (semi_height * semi_height) / (semi_width * semi_width * tang_start * tang_start)))
+				y_tmp := semi_height / sqrt (1 + (semi_height * semi_height) / (semi_width * semi_width * tang_start * tang_start))
 			else
 				y_tmp := 0
 			end
@@ -865,13 +882,13 @@ feature -- Drawing operations
 
 				-- We must protect against both possible divides by 0.
 			if tang_end + semi_height /= 0 and semi_width /= 0 then
-				x_tmp := semi_height / (sqrt (tang_end * tang_end + (semi_height * semi_height) / (semi_width * semi_width)))
+				x_tmp := semi_height / sqrt (tang_end * tang_end + (semi_height * semi_height) / (semi_width * semi_width))
 			else
 				x_tmp := 0
 			end
 				-- We must ensure that we protect against divide by 0.
 			if semi_width /= 0 and tang_end /= 0 then
-				y_tmp := semi_height / (sqrt (1 + (semi_height * semi_height) / (semi_width * semi_width * tang_end * tang_end)))
+				y_tmp := semi_height / sqrt (1 + (semi_height * semi_height) / (semi_width * semi_width * tang_end * tang_end))
 			else
 				y_tmp := 0
 			end
@@ -889,30 +906,17 @@ feature -- Drawing operations
 				reset_pen
 			end
 			get_dc
-			if an_aperture /= 0.0 then
-				dc.pie (left, top, right, bottom, x_start_arc,
-					y_start_arc, x_end_arc, y_end_arc)
-			else
+			if an_aperture = 0.0 then
 				dc.move_to ((left.to_double + semi_width).rounded, (top.to_double + semi_height).rounded)
 				dc.line_to (x_start_arc, y_start_arc)
+			else
+				dc.pie (left, top, right, bottom, x_start_arc,
+					y_start_arc, x_end_arc, y_end_arc)
 			end
 			release_dc
 		end
 
 feature -- Filling operations
-
-	fill_rectangle (x, y, a_width, a_height: INTEGER)
-			-- Draw rectangle with upper-left corner on (`x', `y')
-			-- with size `a_width' and `a_height'. Fill with `foreground_color'.
-		do
-			remove_pen
-			if not internal_initialized_brush then
-				reset_brush
-			end
-			get_dc
-			dc.rectangle (x, y, x + a_width + 1, y + a_height + 1)
-			release_dc
-		end
 
 	fill_ellipse (x, y, a_bounding_width, a_bounding_height: INTEGER)
 			-- Fill an ellipse defined by a rectangular area with an
@@ -924,7 +928,11 @@ feature -- Filling operations
 				reset_brush
 			end
 			get_dc
-			dc.ellipse (x, y, x + a_bounding_width + 1, y + a_bounding_height + 1)
+			if attached gdip_graphics as g then
+				g.fill_ellipse (gdip_brush, x, y, a_bounding_width, a_bounding_height)
+			else
+				dc.ellipse (x, y, x + a_bounding_width + 1, y + a_bounding_height + 1)
+			end
 			release_dc
 		end
 
@@ -932,7 +940,7 @@ feature -- Filling operations
 			-- Draw line segments between subsequent points in `points'.
 			-- Fill all enclosed area's with `foreground_color'.
 		local
-			flat_points: ARRAY [INTEGER]
+			flat_points: ARRAY [INTEGER_32]
 			i, flat_i: INTEGER
 			coords: EV_COORDINATE
 		do
@@ -955,7 +963,11 @@ feature -- Filling operations
 				reset_brush
 			end
 			get_dc
-			dc.polygon (flat_points)
+			if attached gdip_graphics as g then
+				g.fill_polygon (gdip_brush, flat_points, {WEL_GDIP_FILL_MODE}.alternate)
+			else
+				dc.polygon (flat_points)
+			end
 			release_dc
 		end
 
@@ -1000,13 +1012,13 @@ feature -- Filling operations
 
 					-- We must protect against both possible divides by 0.
 				if tang_start + semi_height /= 0 and semi_width /= 0 then
-					x_tmp := semi_height / (sqrt (tang_start * tang_start + (semi_height * semi_height) / (semi_width * semi_width)))
+					x_tmp := semi_height / sqrt (tang_start * tang_start + (semi_height * semi_height) / (semi_width * semi_width))
 				else
 					x_tmp := 0
 				end
 					-- We must ensure that we protect against divide by 0.
 				if semi_width /= 0 and tang_start /= 0 then
-					y_tmp := semi_height / (sqrt (1 + (semi_height * semi_height) / (semi_width * semi_width * tang_start * tang_start)))
+					y_tmp := semi_height / sqrt (1 + (semi_height * semi_height) / (semi_width * semi_width * tang_start * tang_start))
 				else
 					y_tmp := 0
 				end
@@ -1021,13 +1033,13 @@ feature -- Filling operations
 
 					-- We must protect against both possible divides by 0.
 				if tang_end + semi_height /= 0 and semi_width /= 0 then
-					x_tmp := semi_height / (sqrt (tang_end * tang_end + (semi_height * semi_height) / (semi_width * semi_width)))
+					x_tmp := semi_height / sqrt (tang_end * tang_end + (semi_height * semi_height) / (semi_width * semi_width))
 				else
 					x_tmp := 0
 				end
 					-- We must ensure that we protect against divide by 0.
 				if semi_width /= 0 and tang_end /= 0 then
-					y_tmp := semi_height / (sqrt (1 + (semi_height * semi_height) / (semi_width * semi_width * tang_end * tang_end)))
+					y_tmp := semi_height / sqrt (1 + (semi_height * semi_height) / (semi_width * semi_width * tang_end * tang_end))
 				else
 					y_tmp := 0
 				end
@@ -1049,6 +1061,34 @@ feature -- Filling operations
 					y_start_arc, x_end_arc, y_end_arc)
 				release_dc
 			end
+		end
+
+	fill_rectangle (x, y, a_width, a_height: INTEGER)
+			-- Draw rectangle with upper-left corner on (`x', `y')
+			-- with size `a_width' and `a_height'. Fill with `foreground_color'.
+		do
+			remove_pen
+			if not internal_initialized_brush then
+				reset_brush
+			end
+			get_dc
+			dc.rectangle (x, y, x + a_width + 1, y + a_height + 1)
+			release_dc
+		end
+
+feature -- Drawing mode
+
+	is_anti_aliasing_enabled: BOOLEAN
+			-- Should anti-aliasing be used when drawing?
+			-- See also: `set_anti_aliasing`.
+
+	set_anti_aliasing (value: BOOLEAN)
+			-- <Precursor>
+			-- Set `is_anti_aliasing_enabled` to `value`.
+		do
+			is_anti_aliasing_enabled := value
+		ensure then
+			is_anti_aliasing_enabled = value
 		end
 
 feature {NONE} -- Implementation
@@ -1073,23 +1113,23 @@ feature {NONE} -- Implementation
 		end
 
 	wel_bg_color: WEL_COLOR_REF
-		local
-			l_result: detachable WEL_COLOR_REF
 		do
-			l_result ?= background_color.implementation
-			check l_result /= Void then end
-			Result := l_result
+			if attached {WEL_COLOR_REF} background_color.implementation as c then
+				Result := c
+			else
+				check False then end
+			end
 		ensure
 			not_void: Result /= Void
 		end
 
 	wel_fg_color: WEL_COLOR_REF
-		local
-			l_result: detachable WEL_COLOR_REF
 		do
-			l_result ?= foreground_color.implementation
-			check l_result /= Void then end
-			Result := l_result
+			if attached {WEL_COLOR_REF} foreground_color.implementation as c then
+				Result := c
+			else
+				check False then end
+			end
 		ensure
 			not_void: Result /= Void
 		end
@@ -1130,7 +1170,6 @@ feature {NONE} -- Implementation
 				l_internal_brush := internal_brush
 				if l_internal_brush /= Void then
 					l_internal_brush.decrement_reference
-					l_internal_brush := Void
 					internal_brush := Void
 				end
 
@@ -1144,7 +1183,6 @@ feature {NONE} -- Implementation
 				else
 					l_internal_brush := allocated_brushes.get(
 						Void, wel_fg_color)
-
 				end
 				internal_initialized_brush := True
 			end
@@ -1342,11 +1380,8 @@ feature {EV_DRAWABLE_IMP} -- Internal datas.
 
 	reusable_log_brush: WEL_LOG_BRUSH
 			-- Reusable logical brush for pen cache lookup.
-		local
-			l_color_ref: WEL_COLOR_REF
 		once
-			create l_color_ref.make
-			create Result.make (0, l_color_ref, 0)
+			create Result.make (0, create {WEL_COLOR_REF}.make, 0)
 		end
 
 feature {NONE} -- Non-applicable
@@ -1364,6 +1399,53 @@ feature {NONE} -- Constants
 			create Result
 		end
 
+feature {NONE} -- Drawing tools
+
+	is_gdip_installed: BOOLEAN
+			-- Is GDI+ installed?
+		once
+			Result := (create {WEL_GDIP_STARTER}).is_gdi_plus_installed
+		end
+
+	gdip_graphics: detachable WEL_GDIP_GRAPHICS
+			-- A GDI+ object for drawing if available, `Void` otherwise.
+		require
+			dc_exists: dc.exists
+		do
+			if is_anti_aliasing_enabled and then is_gdip_installed then
+				create Result.make_from_dc (dc)
+				Result.set_smoothing_mode ({WEL_GDIP_SMOOTHING_MODE}.smoothing_mode_anti_alias_8x8)
+			end
+		ensure
+			installed_if_attached: attached Result implies is_gdip_installed
+		end
+
+	gdip_brush: WEL_GDIP_BRUSH
+			-- A brush of the current color and style.
+		require
+			is_gdip_installed
+		local
+			c: WEL_COLOR_REF
+		do
+			c := wel_fg_color
+			create Result.make_solid (create {WEL_GDIP_COLOR}.make_from_rgb (c.red, c.green, c.blue))
+		end
+
+	gdip_pen: WEL_GDIP_PEN
+			-- A pen of the current color and style.
+		require
+			is_gdip_installed
+		local
+			c: WEL_COLOR_REF
+		do
+			c := wel_fg_color
+			create Result.make (create {WEL_GDIP_COLOR}.make_from_rgb (c.red, c.green, c.blue), line_width)
+			if dashed_line_style then
+				Result.set_dash_style ({WEL_GDIP_DASH_STYLE}.dash_style_dot)
+			end
+			Result.set_line_join ({WEL_GDIP_LINE_JOIN}.line_join_round)
+		end
+
 invariant
 	reference_tracked_on_brush:
 		attached internal_brush as l_brush implies l_brush.reference_tracked
@@ -1375,7 +1457,10 @@ invariant
 		attached internal_pen as l_pen implies l_pen.reference_tracked
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	ca_ignore:
+		"CA011", "CA011: too many arguments",
+		"CA033", "CA033: too large class"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -1385,18 +1470,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_DRAWABLE_IMP
-
-
-
-
-
-
-
-
-
-
-
+end

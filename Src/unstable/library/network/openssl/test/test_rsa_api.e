@@ -28,6 +28,7 @@ feature -- Tests
 			l_pub_key: SSL_RSA_PUBLIC_KEY
 			l_digest: READABLE_STRING_8
 		do
+			initialize_ssl
 				-- Generate keypair (public and private key)
 			create l_keypair.make (2048)
 
@@ -41,7 +42,7 @@ feature -- Tests
 				-- Set private key using our generated key
 			create l_priv_key.make (l_keypair.private_key)
 				-- Set public key using our generated key
-			create l_pub_key.make (l_keypair.public_key)
+			create l_pub_key.make_pkcs1 (l_keypair.public_key)
 
 
 				-- Create a signed digest using RSA SHA 256
@@ -125,4 +126,14 @@ fjIbXqHiJNWCTHY+f31V1h+sT2iibcXop/FvMsCZGpvr8KK3X4kHsA==
 		end
 
 
+note
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

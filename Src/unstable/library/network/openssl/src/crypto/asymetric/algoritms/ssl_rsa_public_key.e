@@ -7,11 +7,23 @@ class
 	SSL_RSA_PUBLIC_KEY
 
 create
-	make
+	make,
+	make_pkcs1
 
 feature {NONE} -- Initialization
 
 	make (a_key: READABLE_STRING_GENERAL)
+			-- Create a public key with `a_key' using default PEM format.
+			--
+		local
+			l_key: C_STRING
+		do
+			create l_key.make (a_key)
+			rsa := {SSL_CRYPTO_EXTERNALS}.c_set_rsapubkey (l_key.item)
+		end
+
+	make_pkcs1 (a_key: READABLE_STRING_GENERAL)
+			-- Create a public key with `a_key' using format PKCS#1.
 		local
 			l_key: C_STRING
 		do

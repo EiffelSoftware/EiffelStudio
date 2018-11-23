@@ -979,22 +979,34 @@ feature -- Graphical look
 			Result.set_shape ({EV_FONT_CONSTANTS}.shape_italic)
 		end
 
-	folder_label_item (s: STRING_GENERAL): EV_GRID_LABEL_ITEM
+	folder_label_item (s: READABLE_STRING_GENERAL): EV_GRID_LABEL_ITEM
 		do
 			create Result
 			grid_cell_set_text (Result, s)
 			Result.set_foreground_color (folder_row_fg_color)
 		end
 
-	name_label_item (s: STRING_GENERAL): EV_GRID_LABEL_ITEM
+	name_label_item (s: READABLE_STRING_GENERAL): EV_GRID_LABEL_ITEM
 		do
 			create Result
 			grid_cell_set_text (Result, s)
 		end
 
+	message_label_item (s: READABLE_STRING_GENERAL): EV_GRID_LABEL_ITEM
+		do
+			create Result
+			grid_cell_set_text (Result, s)
+			Result.set_foreground_color (folder_row_fg_color)
+		end
+
 	folder_row_fg_color: EV_COLOR
 		once
 			create Result.make_with_8_bit_rgb (60,60,190)
+		end
+
+	message_row_fg_color: EV_COLOR
+		once
+			create Result.make_with_8_bit_rgb (255, 106, 0)
 		end
 
 	object_folder_row_fg_color: EV_COLOR
@@ -1026,7 +1038,7 @@ feature -- Graphical look
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

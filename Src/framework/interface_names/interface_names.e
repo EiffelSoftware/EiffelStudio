@@ -1924,6 +1924,11 @@ feature -- Label texts
 			Result := locale.translation ("%N   + feature has a rescue clause")
 		end
 
+	l_feature_is_class: STRING_32
+		do
+			Result := locale.translation ("%N   + is a class feature")
+		end
+
 	l_module_is (a_module: READABLE_STRING_GENERAL): STRING_32
 		require
 			a_module_not_void: a_module /= Void

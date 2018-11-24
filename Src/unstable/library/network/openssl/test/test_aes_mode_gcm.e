@@ -75,7 +75,6 @@ feature -- Test routines
 			l_algo: SSL_AES
 			l_mode: SSL_GCM_MODE
 			l_encryptor: SSL_CIPHER_CONTEXT_I
-			l_ssl: SSL_CONTEXT
 		do
 			initialize_ssl
 			-- Code in Python

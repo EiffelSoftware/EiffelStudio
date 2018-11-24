@@ -42,7 +42,7 @@ feature -- Tests
 				-- Set private key using our generated key
 			create l_priv_key.make (l_keypair.private_key)
 				-- Set public key using our generated key
-			create l_pub_key.make_pkcs1 (l_keypair.public_key)
+			create l_pub_key.make (l_keypair.public_key)
 
 
 				-- Create a signed digest using RSA SHA 256

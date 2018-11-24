@@ -577,6 +577,17 @@ feature -- RSA
 			"return RSA_new();"
 		end
 
+	c_rsa_new_method (a_engine: POINTER): POINTER
+			-- RSA_new_method() allocates and initializes an RSA structure so that engine will be used for the RSA operations.
+			-- If engine is NULL, the default ENGINE for RSA operations is used, and if no default ENGINE is set,
+			-- the RSA_METHOD controlled by RSA_set_default_method() is used.
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"return RSA_new_method ($a_engine);"
+		end
+
+
 	RSA_F4: INTEGER
 		external
 			"C inline use %"eif_openssl.h%""
@@ -695,6 +706,13 @@ feature -- RSA
 		 	"return RSA_verify((int)$a_type, (const unsigned char *)$a_m, (unsigned int )sizeof($a_m), (unsigned char *)$a_sigbuf, (unsigned int) $a_siglen, (RSA *)$a_rsa);"
 		end
 
+	c_rsa_free (a_rsa: POINTER)
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+		 	"RSA_free((RSA *)$a_rsa);"
+		end
+
 feature -- BIGNUM
 
 	c_bn_new: POINTER
@@ -766,12 +784,21 @@ feature -- BIO
 		end
 
 
-	c_pem_write_bio_rsapubkey (a_bp: POINTER; a_x: POINTER): INTEGER
+	c_pem_write_bio_pubkey (a_bp: POINTER; a_x: POINTER): INTEGER
 		external
 			"C inline use %"eif_openssl.h%""
 		alias
 			"return PEM_write_bio_PUBKEY((BIO *)$a_bp, (RSA *)$a_x);"
 		end
+
+
+	c_pem_write_bio_private_key (a_bp: POINTER; a_x: POINTER; a_enc: POINTER; a_kstr: POINTER; a_klen: INTEGER; a_cb: POINTER; a_u: POINTER): INTEGER
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"return PEM_write_bio_PrivateKey((BIO *)$a_bp, (EVP_PKEY *)$a_x, (const EVP_CIPHER *)$a_enc, (unsigned char *)$a_kstr, (int)$a_klen, (pem_password_cb *)$a_cb, (void *)$a_u);	;"
+		end
+
 
 	c_bio_pending (a_b: POINTER): INTEGER
 			--Bio_pending return the number of pending characters in the BIOs read and write buffers.
@@ -789,6 +816,16 @@ feature -- BIO
 		alias
 			"return BIO_read((BIO *)$a_b, (void *)$a_buf, (int)$a_len); "
 		end
+
+	c_bio_free_all (a_b: POINTER)
+			-- BIO_free_all() frees up an entire BIO chain, it does not halt if an error occurs freeing up an individual BIO in the chain. If a is NULL nothing is done.
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"BIO_free_all((BIO *)$a_b);"
+		end
+
+feature -- OpenSSL base64 encoding.
 
 	c_base64_encode (buffer: POINTER; length:INTEGER): POINTER
 		external

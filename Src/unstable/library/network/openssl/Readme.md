@@ -12,7 +12,7 @@ Previous Contributors:
 
 Supported Version
 =================
-OpenSSL version 1.1.0g.
+OpenSSL version 1.1.1a.
 
 
 1. OpenSSL Binaries 
@@ -95,11 +95,11 @@ Documentation
 
 
 
-#How to use the latest OpenSSL 1.1.0g on Ubuntu
+#How to use the latest OpenSSL 1.1.1a on Ubuntu
 ================================================
 
 ```bash
-$>wget https://www.openssl.org/source/openssl-1.1.0g.tar.gz
+$>wget https://www.openssl.org/source/openssl-1.1.1a.tar.gz
 $>tar xzvf openssl-1.1.0f.tar.gz
 $>cd openssl-1.1.0g
 $>./config -Wl,--enable-new-dtags,-rpath,`$(LIBRPATH)`

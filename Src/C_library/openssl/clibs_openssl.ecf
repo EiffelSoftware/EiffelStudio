@@ -12,17 +12,31 @@
 				<platform excluded_value="windows"/>
 			</condition>
 		</external_include>
-		<external_object location="$(ISE_LIBRARY)\C_library\openssl\bin\$(ISE_PLATFORM)\lib\libcrypto.lib">
+		<external_object location="$(ISE_LIBRARY)\C_library\openssl\spec\$(ISE_PLATFORM)\lib\libcrypto.lib">
 			<condition>
 				<platform value="windows"/>
+				<custom name="openssl_static" value="true"/>
 			</condition>
 		</external_object>
-		<external_object location="$(ISE_LIBRARY)\C_library\openssl\bin\$(ISE_PLATFORM)\lib\libssl.lib">
+		<external_object location="$(ISE_LIBRARY)\C_library\openssl\spec\$(ISE_PLATFORM)\lib\libssl.lib">
 			<condition>
 				<platform value="windows"/>
+				<custom name="openssl_static" value="true"/>
 			</condition>
 		</external_object>
 
+		<external_object location="$(ISE_LIBRARY)\C_library\openssl\spec\$(ISE_PLATFORM)\bin\libcrypto.lib">
+			<condition>
+				<platform value="windows"/>
+				<custom name="openssl_static" excluded_value="true"/>
+			</condition>
+		</external_object>
+		<external_object location="$(ISE_LIBRARY)\C_library\openssl\spec\$(ISE_PLATFORM)\bin\libssl.lib">
+			<condition>
+				<platform value="windows"/>
+				<custom name="openssl_static" excluded_value="true"/>
+			</condition>
+		</external_object>
 		<external_linker_flag value="-lcrypto">
 			<condition>
 				<platform excluded_value="windows"/>

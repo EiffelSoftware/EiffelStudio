@@ -26,26 +26,6 @@
 				<platform value="windows"/>
 			</condition>
 		</external_object>
-		<external_object location="$(ISE_LIBRARY)\unstable\library\network\openssl\spec\$(ISE_PLATFORM)\lib\$(ISE_C_COMPILER)\libcrypto.lib">
-			<condition>
-				<platform value="windows"/>
-			</condition>
-		</external_object>
-		<external_object location="$(ISE_LIBRARY)\unstable\library\network\openssl\spec\$(ISE_PLATFORM)\lib\$(ISE_C_COMPILER)\libssl.lib">
-			<condition>
-				<platform value="windows"/>
-			</condition>
-		</external_object>
-		<external_linker_flag value="-lcrypto">
-			<condition>
-				<platform excluded_value="windows"/>
-			</condition>
-		</external_linker_flag>
-		<external_linker_flag value="-lssl">
-			<condition>
-				<platform excluded_value="windows"/>
-			</condition>
-		</external_linker_flag>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="clibs_openssl" location="$ISE_LIBRARY\C_library\openssl\clibs_openssl.ecf"/>
 		<library name="encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder.ecf"/>

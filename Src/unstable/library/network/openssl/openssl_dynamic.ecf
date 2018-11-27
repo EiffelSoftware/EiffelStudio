@@ -28,7 +28,7 @@
 			</condition>
 		</external_object>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="clibs_openssl_dynamic" location="$ISE_LIBRARY\C_library\openssl\clibs_openssl_dynamic.ecf"/>
+		<library name="clibs_openssl_dynamic" location="$ISE_LIBRARY\C_library\openssl\clibs_openssl.ecf"/>
 		<library name="encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder.ecf"/>
 		<cluster name="ssl" location="src\" recursive="true">
 			<file_rule>

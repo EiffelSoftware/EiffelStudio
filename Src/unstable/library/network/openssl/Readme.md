@@ -24,7 +24,7 @@ https://wiki.openssl.org/index.php/Binaries
 ================================================
 For static library use the configuration file `net_ssl-safe.ecf` or `net_ssl.ecf`
 Copy the static libraries (`libcryptoMT.lib` and `libsslMT.lib`) that you get from step (1) or DIY as described
-in step (3) to `$(ISE_LIBRARY)\unstable\library\network\openssl\spec\$(ISE_PLATFORM)\lib\$(ISE_C_COMPILER)\`
+in step (3) to `$(ISE_LIBRARY)\C_library\openssl\spec\$(ISE_PLATFORM)\lib\$(ISE_C_COMPILER)\`
 
 
 If you want to use the static version check if you have in your path `crypt32.lib`, 
@@ -33,7 +33,7 @@ https://msdn.microsoft.com/en-us/library/ms759194(v=vs.85).aspx.
 
 
 For dynamic library use the configuration file `net_ssl_dynamic.ecf`, dll's are part of the delivery 
-located at `%ISE_EIFFEL%\studio\spec\%ISE_PLATFORM%\bin`
+located at `%ISE_LIBRARY%\C_library\openssl\spec\%ISE_PLATFORM%\bin`
 When you use this option does not forget to have the dll in the PATH of the corresponding project.
 
 

@@ -1,5 +1,5 @@
 ﻿note
-	description: "External forward one-step iteration cursor for descendants of {TWO_WAY_TREE}."
+	description: "External forward iteration cursor for descendants of {TWO_WAY_TREE}."
 
 class
 	TWO_WAY_TREE_ITERATION_CURSOR [G]
@@ -71,11 +71,9 @@ feature -- Cursor movement
 	start
 			-- <Precursor>
 		local
-			t: like target
 			n: like first_index
 		do
-			t := target
-			n := t.count
+			n := target.count
 			if is_reversed then
 				first_index := n
 				target_index := n

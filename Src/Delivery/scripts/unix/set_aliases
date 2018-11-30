@@ -13,8 +13,12 @@ DOCUMENT_DIR=`pwd`
 # Where all.tar.bz2 files should be stored
 EXPORT_DIR=`pwd`/PorterPackage
 # What tag to use to CVS export everything
-DEFAULT_ISE_SVN=svn://$LOGNAME@svn.ise/ise_svn/trunk
-DEFAULT_ORIGO_SVN_ROOT=https://svn.eiffel.com/eiffelstudio
+if [ ! "$DEFAULT_ISE_SVN" ]; then
+	DEFAULT_ISE_SVN=svn://$LOGNAME@svn.ise/ise_svn/trunk
+fi
+if [ ! "$DEFAULT_ORIGO_SVN_ROOT" ]; then
+	DEFAULT_ORIGO_SVN_ROOT=https://svn.eiffel.com/eiffelstudio
+fi
 DEFAULT_ORIGO_SVN=$DEFAULT_ORIGO_SVN_ROOT/trunk
 # This section is commented out be cause it won't work on non-bash shell
 # we use the other one while waiting for a better solution

@@ -1,13 +1,17 @@
 #!/bin/sh
 
+if [ ! "$STUDIO_VERSION_MAJOR_MINOR" ]; then
+	STUDIO_VERSION_MAJOR_MINOR=18.11
+fi
+
 # File in which the status of the installation generation is logged
 INSTALL_LOG=`pwd`/install.log
 # File in which the status of the installation compilation is logged
 COMPILE_LOG=`pwd`/compile.log
 # Where the new delivery is set up. Warning: this directory is erased!
-INSTALL_DIR=`pwd`/Eiffel_18.11
+INSTALL_DIR=`pwd`/Eiffel_$STUDIO_VERSION_MAJOR_MINOR
 # Where the final delivery is set up (local machine). Warning: directory erased too!
-FINAL_INSTALL_DIR=`pwd`/Eiffel_18.11
+FINAL_INSTALL_DIR=`pwd`/Eiffel_$STUDIO_VERSION_MAJOR_MINOR
 # Where documentation will be generated
 DOCUMENT_DIR=`pwd`
 # Where all.tar.bz2 files should be stored

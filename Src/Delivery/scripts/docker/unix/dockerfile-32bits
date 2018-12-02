@@ -1,0 +1,47 @@
+FROM daald/ubuntu32:trusty
+
+LABEL maintainer="Jocelyn Fiat <jfiat@eiffel.com>"
+
+ENV SVN_EIFFELSTUDIO_REPO=https://svn.eiffel.com/eiffelstudio
+ENV SVN_ISE_REPO=svn://svn.ise/ise_svn
+
+RUN apt-get update && apt-get install -y --no-install-recommends --no-install-suggests \
+        ca-certificates curl \
+        bzip2 \
+        gcc make \
+        libxtst-dev \
+        libgtk2.0-dev \
+        libssl-dev \
+		pax \
+		dos2unix \
+		subversion \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN curl -sSL https://www.eiffel.org/setup/install.sh | bash -s -- nightly --platform linux-x86 --install-dir /usr/local/eiffel --dir /tmp
+
+# Define Eiffel environment variables
+ENV ISE_EIFFEL=/usr/local/eiffel \
+    ISE_PLATFORM=linux-x86 \
+	ISE_LIBRARY=$ISE_EIFFEL
+ENV	PATH=$PATH:$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin:$ISE_EIFFEL/tools/spec/$ISE_PLATFORM/bin:$ISE_EIFFEL/library/gobo/spec/$ISE_PLATFORM/bin:$ISE_EIFFEL/esbuilder/spec/$ISE_PLATFORM/bin
+
+RUN export uid=1000 gid=1000 && \
+    mkdir -p /home/eiffel && \
+    echo "eiffel:x:${uid}:${gid}:eiffel,,,:/home/eiffel:/bin/bash" >> /etc/passwd && \
+    echo "eiffel:x:${uid}:" >> /etc/group && \
+    chown ${uid}:${gid} -R /home/eiffel
+
+
+USER eiffel
+ENV HOME /home/eiffel
+COPY --chown=eiffel:eiffel  ./src/build_delivery.sh /home/eiffel/build_delivery.sh
+RUN mkdir -p /home/eiffel/deliv/output \
+	&& dos2unix /home/eiffel/build_delivery.sh
+
+VOLUME /home/eiffel/deliv/output
+
+WORKDIR $HOME
+#ENTRYPOINT ["/bin/bash", "/home/eiffel/build_delivery.sh", "/home/eiffel/deliv"]
+CMD /bin/bash /home/eiffel/build_delivery.sh /home/eiffel/deliv
+

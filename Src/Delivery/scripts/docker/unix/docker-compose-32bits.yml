@@ -1,0 +1,14 @@
+version: '3'
+services:
+    eiffel_deliv_32bits:
+        build:
+            context: .
+            dockerfile: dockerfile-32bits
+        volumes:
+            - ./var/deliv-output:/home/eiffel/deliv/output
+        environment:
+            - STUDIO_VERSION_MAJOR_MINOR=18.11
+              #- SVN_EIFFELSTUDIO_REPO=https://svn.eiffel.com/eiffelstudio
+              #- SVN_ISE_REPO=svn://$LOGNAME@svn.ise/ise_svn
+              #- ORIGO_SVN_REVISION=HEAD
+

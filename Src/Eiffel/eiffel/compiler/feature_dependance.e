@@ -14,7 +14,8 @@ inherit
 			{FEATURE_DEPENDANCE} all
 			{ANY} cursor, go_to, start, before, after, forth, item, active,
 				count, first_element, last_element, object_comparison, sublist,
-				extend, prunable, off, readable, valid_cursor, extendible
+				extend, prunable, off, readable, valid_cursor, extendible,
+				new_cursor
 		redefine
 			make, wipe_out, copy, is_equal
 		end
@@ -217,7 +218,7 @@ feature -- Debug
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

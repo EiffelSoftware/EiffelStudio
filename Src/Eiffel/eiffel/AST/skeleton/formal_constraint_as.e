@@ -33,7 +33,7 @@ inherit
 
 	SHARED_ERROR_HANDLER
 		export
-			{NONE} all
+			{ANY} error_handler
 		end
 
 	COMPILER_EXPORTER

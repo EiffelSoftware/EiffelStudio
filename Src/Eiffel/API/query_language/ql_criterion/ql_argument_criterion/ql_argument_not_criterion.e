@@ -27,8 +27,7 @@ inherit
 			require_compiled
 		redefine
 			wrapped_criterion,
-			intrinsic_domain,
-			item_type
+			intrinsic_domain
 		end
 
 create
@@ -54,7 +53,7 @@ feature -- Access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

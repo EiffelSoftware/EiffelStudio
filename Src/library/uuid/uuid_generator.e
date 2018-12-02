@@ -1,4 +1,4 @@
-﻿note
+note
 	description: "[
 		Generates uuids according to RFC 4122, Variant 1 0, Version 4.
 	]"
@@ -98,6 +98,8 @@ feature {NONE} -- Implementation
 			l_seed := l_seed + l_date.millisecond_now.to_natural_64
 				-- Use RFC 4122 trick to preserve as much meaning of `l_seed' onto an INTEGER_32.
 			Result := (l_seed |>> 32).bit_xor (l_seed).as_integer_32 & 0x7FFFFFFF
+		ensure
+			instance_free: class
 		end
 
 note

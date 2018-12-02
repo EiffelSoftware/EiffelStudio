@@ -10,6 +10,9 @@
 		<option warning="true">
 			<assertions/>
 		</option>
+		<capability>
+			<concurrency support="none"/>
+		</capability>
 		<setting name="cls_compliant" value="True"/>
 		<setting name="console_application" value="False"/>
 		<setting name="dead_code_removal" value="True"/>

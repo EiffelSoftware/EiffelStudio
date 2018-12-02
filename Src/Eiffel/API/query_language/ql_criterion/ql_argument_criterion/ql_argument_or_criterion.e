@@ -26,8 +26,7 @@ inherit
 		redefine
 			left,
 			right,
-			intrinsic_domain,
-			item_type
+			intrinsic_domain
 		end
 
 create

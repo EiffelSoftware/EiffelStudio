@@ -24,27 +24,35 @@ else
 	mkdir -p $DELIV_DIR/output
 fi
 
-if [ -d "$DELIV_DIR/scripts" ]; then
-	echo Clean $DELIV_DIR/scripts
-	\rm -rf $DELIV_DIR/scripts
+if [ -d "$DELIV_DIR/scripts-unix" ]; then
+	echo Clean $DELIV_DIR/scripts-unix
+	\rm -rf $DELIV_DIR/scripts-unix
 fi
 
 echo Build delivery for $ISE_PLATFORM
-echo svn checkout --config-option config:miscellany:use-commit-times=yes $SVN_EIFFELSTUDIO_REPO/trunk/Src/Delivery/scripts $DELIV_DIR/scripts
-svn checkout --config-option config:miscellany:use-commit-times=yes $SVN_EIFFELSTUDIO_REPO/trunk/Src/Delivery/scripts $DELIV_DIR/scripts
+echo svn checkout --config-option config:miscellany:use-commit-times=yes $SVN_EIFFELSTUDIO_REPO/trunk/Src/Delivery/scripts/unix $DELIV_DIR/scripts-unix
+svn checkout --config-option config:miscellany:use-commit-times=yes $SVN_EIFFELSTUDIO_REPO/trunk/Src/Delivery/scripts/unix $DELIV_DIR/scripts-unix
 
-cd $DELIV_DIR/scripts/unix
-if [ -f "$DELIV_DIR/output/PorterPackage.tgz" ]; then
-	echo Reuse $DELIV_DIR/output/PorterPackage.tgz
-	tar xzf "$DELIV_DIR/output/PorterPackage.tgz"
+if [ ! "$ORIGO_SVN_REVISION" ]; then
+	DELIV_REVISION=`$DELIV_DIR/scripts-unix/set_version.sh $DEFAULT_ORIGO_SVN_ROOT`
+else
+	DELIV_REVISION=`$DELIV_DIR/scripts-unix/set_version.sh -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN_ROOT`
+fi
+echo Building for revision $DELIV_REVISION
+
+cd $DELIV_DIR/scripts-unix
+STUDIO_PORTERPACKAGE_TGZ=$DELIV_DIR/output/PorterPackage-${STUDIO_VERSION_MAJOR_MINOR}.${DELIV_REVISION}.tgz
+if [ -f "$STUDIO_PORTERPACKAGE_TGZ" ]; then
+	echo Reuse $STUDIO_PORTERPACKAGE_TGZ
+	tar xzf "$STUDIO_PORTERPACKAGE_TGZ"
 fi
 if [ ! -d "PorterPackage" ]; then
 	echo Build PorterPackage ...
 	./make_delivery
 fi
 if [ -d "PorterPackage" ]; then
-	if [ ! -f "$DELIV_DIR/output/PorterPackage.tgz" ]; then
-		tar czvf $DELIV_DIR/output/PorterPackage.tgz PorterPackage
+	if [ ! -f "$STUDIO_PORTERPACKAGE_TGZ" ]; then
+		tar czvf $STUDIO_PORTERPACKAGE_TGZ PorterPackage
 	fi
 	cd PorterPackage
 	echo Use PorterPackage with ISE_PLATFORM=$ISE_PLATFORM ...

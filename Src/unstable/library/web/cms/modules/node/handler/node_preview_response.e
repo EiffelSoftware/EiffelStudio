@@ -96,9 +96,8 @@ feature -- Execution
 
 feature {NONE} -- Preview
 
-	previewed_content (a_format: READABLE_STRING_8; a_content: READABLE_STRING_GENERAL): detachable STRING
+	previewed_content (a_format: READABLE_STRING_GENERAL; a_content: READABLE_STRING_GENERAL): detachable STRING
 		local
-			l_preview: BOOLEAN
 			l_format: detachable CONTENT_FORMAT
 		do
 			if attached api.format (a_format) as f_format then

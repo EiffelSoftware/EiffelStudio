@@ -74,27 +74,21 @@ class RCMS_node_editor {
 	on_source_changed(event) {
 		event.data.update_requested = true;
 		if (event.data.preview_selected) {
-			event.data.update_preview(this);
+			event.data.update_preview(event.data);
 		}
 	}
 	on_format_changed(event) {
 		event.data.update_requested = true;
 		if (event.data.preview_selected) {
-			event.data.update_preview(this);
+			event.data.update_preview(event.data);
 		}
 	}
 	update_preview() {
 		var d = { format: $(this.format).val(), content: $(this.editor).val() } ;
-		//let fd = new FormData();
-		//fd.append("format", $(this.format).val());
-		//fd.append("content", $(this.editor).val());
-
 		var posting = $.ajax ({
 					url: this.endpoint,
 					type: 'POST',
-			        //enctype: 'multipart/form-data',
-			        //processData: false,  // Important!
-					data: d, // { format: $(this.format).val(), content: $(this.editor).val() },
+					data: d,
 					context: this
 				}
 			);
@@ -110,7 +104,7 @@ class RCMS_node_editor {
 				this.failures_count = 0;
 				this.update_requested = true;
 			} else {
-				$(this.preview).text("Error("+ this.failures_count +"): next try in 3 second!");
+				$(this.preview).text("Error("+ this.failures_count +"): next try in 5 second!");
 				setTimeout(this.update_preview(this), 5000); /* 5 sec */
 			}
 		});

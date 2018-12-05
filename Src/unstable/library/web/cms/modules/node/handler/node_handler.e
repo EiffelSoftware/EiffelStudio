@@ -180,11 +180,18 @@ feature -- HTTP Methods
 			-- <Precursor>
 		local
 			edit_response: NODE_FORM_RESPONSE
+			preview_response: NODE_PREVIEW_RESPONSE
 		do
 			fixme ("Refactor code: extract methods: edit_node and add_node")
 			if req.percent_encoded_path_info.ends_with ("/edit") then
 				create edit_response.make (req, res, api, node_api)
 				edit_response.execute
+			elseif
+				req.percent_encoded_path_info.ends_with ("/preview")
+				or else req.percent_encoded_path_info.starts_with ("/node/preview")
+			then
+				create preview_response.make (req, res, api, node_api)
+				preview_response.execute
 			elseif req.percent_encoded_path_info.ends_with ("/delete") then
 				if
 					attached {WSF_STRING} req.form_parameter ("op") as l_op and then

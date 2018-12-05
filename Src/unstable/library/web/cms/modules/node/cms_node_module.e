@@ -188,8 +188,10 @@ feature -- Access: router
 			a_router.map (l_uri_mapping, a_router.methods_get_post)
 
 			a_router.handle ("/node/add/{type}", l_node_handler, a_router.methods_get_post)
+			a_router.handle ("/node/preview/{type}", l_node_handler, a_router.methods_post)
 			a_router.handle ("/node/{id}/revision", l_node_handler, a_router.methods_get)
 			a_router.handle ("/node/{id}/edit", l_node_handler, a_router.methods_get_post)
+			a_router.handle ("/node/{id}/preview", l_node_handler, a_router.methods_post)
 			a_router.handle ("/node/{id}/delete", l_node_handler, a_router.methods_get_post)
 			a_router.handle ("/node/{id}/trash", l_node_handler, a_router.methods_get_post)
 
@@ -231,6 +233,9 @@ feature -- Hooks
 			-- <Precursor>
 		do
 			a_response.add_style (a_response.module_resource_url (Current, "/files/css/node.css", Void), Void)
+			if attached {NODE_FORM_RESPONSE} a_response then
+				a_response.add_javascript_url (a_response.module_resource_url (Current, "/files/js/node_form.js", Void))
+			end
 		end
 
 	block_list: ITERABLE [like {CMS_BLOCK}.name]

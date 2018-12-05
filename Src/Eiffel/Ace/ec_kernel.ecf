@@ -22,12 +22,12 @@
 				<platform excluded_value="windows"/>
 			</condition>
 		</external_include>
-		<external_include location="\$(EIFFEL_SRC)\C\bench">
+		<external_include location="$(EIFFEL_SRC)\C\bench">
 			<condition>
 				<platform value="windows"/>
 			</condition>
 		</external_include>
-		<external_include location="\$(EIFFEL_SRC)\C\platform">
+		<external_include location="$(EIFFEL_SRC)\C\platform">
 			<condition>
 				<platform value="windows"/>
 			</condition>

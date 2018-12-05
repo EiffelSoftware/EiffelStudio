@@ -297,16 +297,16 @@ feature -- Hooks configuration
 						a_menu_system.primary_tabs.extend (lnk)
 					end
 				end
-			elseif attached {WDOCS_EDIT_FORM_RESPONSE} a_response then
-				if a_response.has_permission (perm_edit_wdocs_page) then
-					a_response.add_javascript_url (a_response.module_resource_url (Current, "/files/js/wdocs_edit.js", Void))
-				end
 			end
 		end
 
 	response_alter (a_response: CMS_RESPONSE)
 		do
-
+			if attached {WDOCS_EDIT_FORM_RESPONSE} a_response then
+				if a_response.has_permission (perm_edit_wdocs_page) then
+					a_response.add_javascript_url (a_response.module_resource_url (Current, "/files/js/wdocs_edit.js", Void))
+				end
+			end
 		end
 
 end

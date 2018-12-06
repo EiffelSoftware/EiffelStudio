@@ -144,10 +144,11 @@ feature {NONE} -- Modifiable shortcuts
 			l_hash: HASH_TABLE [TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING], STRING]
 		do
 			create Result.make (1)
-			create l_hash.make (3)
+			create l_hash.make (4)
 			l_hash.put ([False, False, False, key_strings.item (Key_f6).twin.as_string_8], "focus_on_class_address")
 			l_hash.put ([False, True, False, key_strings.item (Key_f4).twin.as_string_8], "close_focusing_docking_tool_or_editor")
 			l_hash.put ([False, False, False, key_strings.item (Key_f1).twin.as_string_8], "show_context_help")
+			l_hash.put ([False, True, False, key_strings.item (Key_r).twin.as_string_8], "reload_current_tab")
 			Result.extend ([l_hash, main_window_group])
 		end
 
@@ -265,7 +266,7 @@ invariant
 	preferences_not_void: preferences /= Void
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -35,7 +35,7 @@ RUN export uid=1000 gid=1000 && \
 
 USER eiffel
 ENV HOME /home/eiffel
-COPY --chown=eiffel:eiffel  ./src/build_delivery.sh /home/eiffel/build_delivery.sh
+COPY --chown=eiffel:eiffel ./src/build_delivery.sh /home/eiffel/build_delivery.sh
 RUN mkdir -p /home/eiffel/deliv/output \
 	&& dos2unix /home/eiffel/build_delivery.sh
 

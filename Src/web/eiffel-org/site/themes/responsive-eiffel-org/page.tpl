@@ -13,7 +13,8 @@
 {if isset="$head"}{$head/}{/if}
 {if isset="$styles"}{$styles/}{/if}
 
-	<script type="text/javascript" src="{$theme_path/}js/jquery-3.3.1.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> 
+
 {if isset="$scripts"}{$scripts/}{/if}
 {if isset="$head_lines"}{$head_lines/}{/if}
 </head>

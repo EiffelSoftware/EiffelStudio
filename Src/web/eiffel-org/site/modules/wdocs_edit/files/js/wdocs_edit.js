@@ -80,6 +80,9 @@ class WDocsEditor {
 		posting.done(function(data) { 
 			this.failures_count = 0;
 			$(this.preview).html(data); 
+			if (typeof WDOCSMOD !== 'undefined') {
+				WDOCSMOD.prepareCode(this.preview);
+			}
 			this.update_requested = false;
 		});	
 		posting.fail(function(data) { 

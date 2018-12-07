@@ -11,20 +11,30 @@ function do_sed {
 
 echo Update EiffelStudio GUIDs
 
-# $EIFFEL_SRC/Delivery/scripts/windows/install/includes/Preprocessors.wxi
-svn revert "$EIFFEL_SRC/Delivery/scripts/windows/install/includes/Preprocessors.wxi"
+if [ -z "$EIFFEL_SRC"]; then
+	if [ -z "$EIF_DELIV_SCRIPTS_DIR" ]; then
+		EIF_DELIV_SCRIPTS_DIR_WINDOWS=`pwd -P`
+	else
+		EIF_DELIV_SCRIPTS_DIR_WINDOWS=$EIF_DELIV_SCRIPTS_DIR/windows
+	fi
+else
+	EIF_DELIV_SCRIPTS_DIR_WINDOWS=$EIFFEL_SRC/Delivery/scripts/windows
+fi
+
+# $EIF_DELIV_SCRIPTS_DIR_WINDOWS/install/includes/Preprocessors.wxi
+svn revert "$EIF_DELIV_SCRIPTS_DIR_WINDOWS/install/includes/Preprocessors.wxi"
 
 line=32
-do_sed "$((line+1))s/\(ProductGuid\s*=\s*\)\"[0-9A-Fa-f-]*\"/\1\"$(new_uuid)\"/g" $EIFFEL_SRC/Delivery/scripts/windows/install/includes/Preprocessors.wxi
-do_sed "$((line+2))s/\(RegistriesGuid\s*=\s*\)\"[0-9A-Fa-f-]*\"/\1\"$(new_uuid)\"/g" $EIFFEL_SRC/Delivery/scripts/windows/install/includes/Preprocessors.wxi
-do_sed "$((line+3))s/\(ShortcutsGuid\s*=\s*\)\"[0-9A-Fa-f-]*\"/\1\"$(new_uuid)\"/g" $EIFFEL_SRC/Delivery/scripts/windows/install/includes/Preprocessors.wxi
+do_sed "$((line+1))s/\(ProductGuid\s*=\s*\)\"[0-9A-Fa-f-]*\"/\1\"$(new_uuid)\"/g" $EIF_DELIV_SCRIPTS_DIR_WINDOWS/install/includes/Preprocessors.wxi
+do_sed "$((line+2))s/\(RegistriesGuid\s*=\s*\)\"[0-9A-Fa-f-]*\"/\1\"$(new_uuid)\"/g" $EIF_DELIV_SCRIPTS_DIR_WINDOWS/install/includes/Preprocessors.wxi
+do_sed "$((line+3))s/\(ShortcutsGuid\s*=\s*\)\"[0-9A-Fa-f-]*\"/\1\"$(new_uuid)\"/g" $EIF_DELIV_SCRIPTS_DIR_WINDOWS/install/includes/Preprocessors.wxi
 
 
-do_sed "$((line+5))s/\(ProductGuid\s*=\s*\)\"[0-9A-Fa-f-]*\"/\1\"$(new_uuid)\"/g" $EIFFEL_SRC/Delivery/scripts/windows/install/includes/Preprocessors.wxi
-do_sed "$((line+6))s/\(RegistriesGuid\s*=\s*\)\"[0-9A-Fa-f-]*\"/\1\"$(new_uuid)\"/g" $EIFFEL_SRC/Delivery/scripts/windows/install/includes/Preprocessors.wxi
-do_sed "$((line+7))s/\(ShortcutsGuid\s*=\s*\)\"[0-9A-Fa-f-]*\"/\1\"$(new_uuid)\"/g" $EIFFEL_SRC/Delivery/scripts/windows/install/includes/Preprocessors.wxi
+do_sed "$((line+5))s/\(ProductGuid\s*=\s*\)\"[0-9A-Fa-f-]*\"/\1\"$(new_uuid)\"/g" $EIF_DELIV_SCRIPTS_DIR_WINDOWS/install/includes/Preprocessors.wxi
+do_sed "$((line+6))s/\(RegistriesGuid\s*=\s*\)\"[0-9A-Fa-f-]*\"/\1\"$(new_uuid)\"/g" $EIF_DELIV_SCRIPTS_DIR_WINDOWS/install/includes/Preprocessors.wxi
+do_sed "$((line+7))s/\(ShortcutsGuid\s*=\s*\)\"[0-9A-Fa-f-]*\"/\1\"$(new_uuid)\"/g" $EIF_DELIV_SCRIPTS_DIR_WINDOWS/install/includes/Preprocessors.wxi
 
-do_sed "$((line+9))s/\(UpgradeGuid\s*=\s*\)\"[0-9A-Fa-f-]*\"/\1\"$(new_uuid)\"/g" $EIFFEL_SRC/Delivery/scripts/windows/install/includes/Preprocessors.wxi
+do_sed "$((line+9))s/\(UpgradeGuid\s*=\s*\)\"[0-9A-Fa-f-]*\"/\1\"$(new_uuid)\"/g" $EIF_DELIV_SCRIPTS_DIR_WINDOWS/install/includes/Preprocessors.wxi
 
-svn diff "$EIFFEL_SRC/Delivery/scripts/windows/install/includes/Preprocessors.wxi"
-echo Check the lines are still the same
+#svn diff "$EIF_DELIV_SCRIPTS_DIR_WINDOWS/install/includes/Preprocessors.wxi"
+#echo Check the lines are still the same

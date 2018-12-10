@@ -1,9 +1,9 @@
-note
+﻿note
 	description	: "Default widget for viewing and editing font preferences."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	IDENTIFIED_FONT_PREFERENCE_WIDGET
@@ -110,7 +110,11 @@ feature {NONE} -- Implementation
 		do
 			create change_item_widget
 			refresh
-			change_item_widget.pointer_double_press_actions.force_extend (agent show_change_item_widget)
+			change_item_widget.pointer_double_press_actions.extend
+				(agent (x, y, b: INTEGER_32; x_tilt, y_tilt, p: REAL_64; screen_x, screen_y: INTEGER_32)
+					do
+						show_change_item_widget
+					end)
 		end
 
 	show_change_item_widget
@@ -129,7 +133,7 @@ feature {NONE} -- Implementation
 			-- Default font height in points (for display only)
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -160,4 +164,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class IDENTIFIED_FONT_PREFERENCE_WIDGET
+end

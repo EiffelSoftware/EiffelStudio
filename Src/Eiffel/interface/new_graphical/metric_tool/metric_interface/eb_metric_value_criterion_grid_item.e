@@ -1,6 +1,5 @@
-note
+﻿note
 	description: "Grid item for metric value criterion"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -42,7 +41,7 @@ feature{NONE} -- Initialization
 		do
 			value := ["", False, create {EB_METRIC_VALUE_TESTER}.make]
 			old_make (create {EB_METRIC_DOMAIN}.make)
-			pointer_button_press_actions.force_extend (agent activate_grid_item (?, ?, ?, ?, ?, ?, ?, ?, Current))
+			pointer_button_press_actions.extend (agent activate_grid_item (?, ?, ?, ?, ?, ?, ?, ?, Current))
 			dialog_ok_actions.extend (agent change_actions.call (Void))
 			set_tooltip (metric_names.f_pick_and_drop_metric_and_items)
 			set_dialog_function (agent value_criterion_dialog)

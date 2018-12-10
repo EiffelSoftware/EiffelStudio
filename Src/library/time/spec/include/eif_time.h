@@ -24,7 +24,7 @@
 #ifdef EIF_WINDOWS
 /* This will include the definition of struct timeval. The implementation of gettimeofday is in class C_DATE. */
 #include <windows.h>
-#include <winsock.h>
+#include <winsock2.h>
 #else
 /* This will include the definition of gettimeofday and struct timeval. */
 #include <sys/time.h>

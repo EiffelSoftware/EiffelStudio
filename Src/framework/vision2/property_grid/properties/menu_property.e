@@ -1,6 +1,5 @@
-note
+﻿note
 	description: "Property that allows user to choose from a menu"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -32,7 +31,7 @@ feature{NONE} -- Initialization
 			-- Initialize.
 		do
 			Precursor
-			ellipsis_actions.force_extend (agent show_menu)
+			ellipsis_actions.extend (agent show_menu)
 		end
 
 feature -- Access
@@ -223,7 +222,7 @@ feature{NONE} -- Actions
 			-- Implementation of `on_menu_item_selected_agent'
 
 ;note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

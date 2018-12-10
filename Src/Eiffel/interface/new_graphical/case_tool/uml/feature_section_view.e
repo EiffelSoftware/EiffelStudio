@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that is a view for a FEATURE_SECTION."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -77,7 +77,11 @@ feature {NONE} -- Initialize
 			create section_text.make_with_text (" <<" + a_fs.name + ">>")
 			section_text.set_pointer_style (default_pixmaps.standard_cursor)
 			section_text.pointer_button_press_actions.extend (agent on_section_press)
-			section_text.pointer_double_press_actions.force_extend (agent on_double_press)
+			section_text.pointer_double_press_actions.extend
+				(agent (x_coordinate, y_coordinate, b: INTEGER_32; x_tilt, y_tilt, p: REAL_64; screen_x, screen_y: INTEGER_32)
+					do
+						on_double_press
+					end)
 			section_text.disable_events_sended_to_group
 
 			section_text.set_point_position (point_x, point_y)
@@ -300,7 +304,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -331,4 +335,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class FEATURE_SECTION_VIEW
+end

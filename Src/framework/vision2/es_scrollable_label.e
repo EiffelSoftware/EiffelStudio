@@ -32,7 +32,10 @@ feature {NONE} -- Initialization
 				-- Put `label' into the container.
 			extend (label)
 				-- Register an agent to recompute text area size and position.
-			resize_actions.force_extend (agent update_size)
+			resize_actions.extend (agent (x, y, w, h: INTEGER_32)
+				do
+					update_size
+				end)
 				-- Text is wrapped automatically, so no horizontal scrollbar is required.
 			hide_horizontal_scroll_bar
 		end
@@ -82,7 +85,7 @@ feature {NONE} -- Resizing
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

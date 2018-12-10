@@ -1,6 +1,5 @@
-note
+﻿note
 	description: "Dialog to setup tools in which a formatter is displayed"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -176,20 +175,14 @@ feature{NONE} -- Actions
 			a_key_attached: a_key /= Void
 		local
 			l_selected_items: LIST [EV_GRID_ITEM]
-			l_choice: EV_GRID_CHOICE_ITEM
-			l_check: EV_GRID_CHECKABLE_LABEL_ITEM
 		do
 			if a_key.code = {EV_KEY_CONSTANTS}.key_enter or a_key.code = {EV_KEY_CONSTANTS}.key_space then
 				l_selected_items := grid.selected_items
 				if l_selected_items.count = 1 then
-					l_check ?= l_selected_items.first
-					if l_check /= Void then
+					if attached {EV_GRID_CHECKABLE_LABEL_ITEM} l_selected_items.first as l_check then
 						l_check.set_is_checked (not l_check.is_checked)
-					else
-						l_choice ?= l_selected_items.first
-						if l_choice /= Void then
-							l_choice.activate
-						end
+					elseif attached {EV_GRID_CHOICE_ITEM} l_selected_items.first as l_choice then
+						l_choice.activate
 					end
 				end
 			end
@@ -210,11 +203,6 @@ feature{NONE} -- Implementation
 			l_row: EV_GRID_ROW
 			l_row_count: INTEGER
 			l_grid: like grid
-			l_checkbox: EV_GRID_CHECKABLE_LABEL_ITEM
-			l_view: EV_GRID_CHOICE_ITEM
-			l_tool_name: STRING
-			l_sorting: STRING
-			l_view_name: STRING
 		do
 			create Result.make (2)
 			from
@@ -225,13 +213,13 @@ feature{NONE} -- Implementation
 				i > l_row_count
 			loop
 				l_row := l_grid.row (i)
-				l_tool_name ?= l_row.data
-				l_checkbox ?= l_row.item (1)
-				l_view ?= l_row.item (3)
-				l_sorting ?= l_view.data
-				l_view_name ?= view_name_table.item (l_view.text)
-				if l_checkbox.is_checked then
-					Result.put ([l_view_name, l_sorting], l_tool_name)
+				if
+					attached {STRING} l_row.data as l_tool_name and then
+					attached {EV_GRID_CHECKABLE_LABEL_ITEM} l_row.item (1) as l_checkbox and then
+					attached {EV_GRID_CHOICE_ITEM} l_row.item (3) as l_view and then
+					l_checkbox.is_checked
+				then
+					Result.put ([{STRING} /view_name_table.item (l_view.text), {STRING} / l_view.data], l_tool_name)
 				end
 				i := i + 1
 			end
@@ -417,7 +405,11 @@ feature{NONE} -- Implementation/Binding
 			l_view.set_item_strings (view_name_list)
 			l_view.set_text (view_table.item (a_view).view_name)
 			l_view.set_tooltip (view_table.item (a_view).view_help)
-			l_view.pointer_button_press_actions.force_extend (agent l_view.activate)
+			l_view.pointer_button_press_actions.extend
+				(agent (x, y, b: INTEGER_32; x_tilt, y_tilt, p: REAL_64; s_x, s_y: INTEGER_32; c: EV_GRID_CHOICE_ITEM)
+					do
+						c.activate
+					end (?, ?, ?, ?, ?, ?, ?, ?, l_view))
 			l_view.deactivate_actions.extend (agent on_view_change (l_view))
 			l_view.set_data (a_sorting)
 			a_grid_row.set_data (a_tool)
@@ -425,7 +417,7 @@ feature{NONE} -- Implementation/Binding
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

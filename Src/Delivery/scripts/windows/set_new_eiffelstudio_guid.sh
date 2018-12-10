@@ -1,7 +1,29 @@
 #!/bin/bash
 
+function check_requirements() {
+	if ! [ -x "$(command -v svn)" ]; then
+		echo "error: svn is not installed! (on debian use > sudo apt install subversion)" >&2
+	fi
+	if ! [ -x "$(command -v uuidgen)" ]; then
+		echo "error: uuidgen is not installed! (on debian use > sudo apt install uuid-runtime)" >&2
+	fi
+	if ! [ -x "$(command -v awk)" ]; then
+		echo "error: awk is not installed!" >&2
+	fi
+	if ! [ -x "$(command -v sed)" ]; then
+		echo "error: sed is not installed!" >&2
+	fi
+}
+
 function new_uuid() {
-	echo $(od -x /dev/urandom | head -1 | awk '{OFS="-"; print $2$3,$4,$5,$6,$7$8$9}' | awk '{print toupper($0)}')
+	# note: on debian uuidgen comes with package "uuid-runtime"
+	#     > sudo apt-get install "uuid-runtime"
+	if [ -x "$(command -v uuidgen)" ]; then
+		echo $(uuidgen) | awk '{print toupper($0)}'
+	else
+		echo "error: uuidgen is not installed. (on debian use > sudo apt install uuid-runtime)" >&2
+		echo $(od -x /dev/urandom | head -1 | awk '{OFS="-"; print $2$3,$4,$5,$6,$7$8$9}' | awk '{print toupper($0)}')
+	fi
 }
 
 function do_sed {
@@ -10,6 +32,7 @@ function do_sed {
 }
 
 echo Update EiffelStudio GUIDs
+check_requirements
 
 if [ -z "$EIFFEL_SRC"]; then
 	if [ -z "$EIF_DELIV_SCRIPTS_DIR" ]; then

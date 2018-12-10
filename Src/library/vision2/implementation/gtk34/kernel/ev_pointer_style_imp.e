@@ -1,8 +1,8 @@
-note
+﻿note
 	description: "Windows implementation of EV_POINTER_STYLE_I."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	keywords: "mouse, pointer, cursor, arrow"
+	keywords: mouse, pointer, cursor, arrow
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -121,18 +121,6 @@ feature {NONE} -- Initlization
 			set_y_hotspot (l_y_hotspot)
 		end
 
-	init_from_cursor (a_cursor: EV_CURSOR)
-			-- Initialize from `a_cursor'
-		local
-			a_pix_imp: detachable EV_PIXMAP_IMP
-		do
-			a_pix_imp ?= a_cursor.implementation
-			check a_pix_imp /= Void then end
-			set_gdkpixbuf (a_pix_imp.pixbuf_from_drawable)
-			set_x_hotspot (a_cursor.x_hotspot)
-			set_y_hotspot (a_cursor.y_hotspot)
-		end
-
 	init_from_pixmap (a_pixmap: EV_PIXMAP; a_hotspot_x, a_hotspot_y: INTEGER_32)
 			-- Initalize from `a_pixmap'
 		local
@@ -172,21 +160,23 @@ feature -- Query
 	width: INTEGER
 			-- Width of pointer style.
 		do
-			if gdk_pixbuf /= default_pointer then
-				Result := {GTK}.gdk_pixbuf_get_width (gdk_pixbuf)
-			else
-				Result := {GDK_HELPERS}.default_cursor_size
-			end
+			Result :=
+				if gdk_pixbuf = default_pointer then
+					{GDK_HELPERS}.default_cursor_size
+				else
+					{GTK}.gdk_pixbuf_get_width (gdk_pixbuf)
+				end
 		end
 
 	height: INTEGER
 			-- Height of pointer style.
 		do
-			if gdk_pixbuf /= default_pointer then
-				Result := {GTK}.gdk_pixbuf_get_height (gdk_pixbuf)
-			else
-				Result := {GDK_HELPERS}.default_cursor_size
-			end
+			Result :=
+				if gdk_pixbuf = default_pointer then
+					{GDK_HELPERS}.default_cursor_size
+				else
+					{GTK}.gdk_pixbuf_get_height (gdk_pixbuf)
+				end
 		end
 
 	x_hotspot: INTEGER
@@ -293,7 +283,7 @@ feature -- Duplication
 
 feature {EV_ANY_HANDLER, EV_ANY_I} -- Implementation
 
-	predefined_cursor_code: INTEGER;
+	predefined_cursor_code: INTEGER
 		-- Predefined cursor code used for selecting platform cursors.
 
 feature {NONE} -- Implementation
@@ -305,7 +295,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -314,7 +304,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

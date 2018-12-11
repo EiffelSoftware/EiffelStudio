@@ -327,7 +327,7 @@ feature -- Access
 		end
 
 
-	min_proto_version: INTEGER_64
+	min_proto_version: NATURAL
 			-- Configured version or 0 for auto-configuration of lowest protocol.
 		do
 			Result := c_ssl_ctx_get_min_proto_version (ctx)

@@ -216,17 +216,6 @@ feature -- Status Report
 			end
 		end
 
-	protocol_version: INTEGER
-		do
-			if
-				attached context as l_context and then
-				attached l_context.last_ssl as l_ssl and then
-				not l_ssl.was_error
-			then
-				Result := l_context.version
-			end
-		end
-
 feature {NONE} -- Implementation
 
 	shutdown

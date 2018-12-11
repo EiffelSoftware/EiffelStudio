@@ -21,14 +21,16 @@ feature -- SSL
 		local
 			l_context: like context
 		do
-			if tls_protocol = {SSL_PROTOCOL}.ssl_23 then
+			if tls_protocol = {SSL_PROTOCOL}.ssl3_version then
 				create l_context.make_as_sslv23_client
-			elseif tls_protocol = {SSL_PROTOCOL}.tls_1_0 then
+			elseif tls_protocol = {SSL_PROTOCOL}.tls1_version then
 				create l_context.make_as_tlsv10_client
-			elseif tls_protocol = {SSL_PROTOCOL}.tls_1_1 then
+			elseif tls_protocol = {SSL_PROTOCOL}.tls1_1_version then
 				create l_context.make_as_tlsv11_client
-			elseif tls_protocol = {SSL_PROTOCOL}.dtls_1_0 then
+			elseif tls_protocol = {SSL_PROTOCOL}.dtls1_version then
 				create l_context.make_as_dtlsv1_client
+			elseif tls_protocol = {SSL_PROTOCOL}.TLS1_3_VERSION then
+				create l_context.make_as_tls_client
 			else
 					--| By default tlsv1.2
 				create l_context.make_as_tlsv12_client
@@ -40,9 +42,10 @@ feature -- SSL
 				-- Server name indication is only used by TLS protocol.
 			if
 				attached server_name as l_server_name and then (
-				tls_protocol = {SSL_PROTOCOL}.tls_1_0 or else
-				tls_protocol = {SSL_PROTOCOL}.tls_1_1 or else
-				tls_protocol = {SSL_PROTOCOL}.tls_1_2)
+				tls_protocol = {SSL_PROTOCOL}.tls1_version or else
+				tls_protocol = {SSL_PROTOCOL}.tls1_1_version or else
+				tls_protocol = {SSL_PROTOCOL}.tls1_2_version or else
+				tls_protocol = {SSL_PROTOCOL}.tls1_3_version)
 			then
 				l_context.ssl_set_tlsext_host_name (l_server_name)
 			end
@@ -112,21 +115,68 @@ feature -- SSL
 			end
 		end
 
-	get_server_context: SSL_CONTEXT
+	server_context, get_server_context: SSL_CONTEXT
 			--Server SSL context.
 		do
 			inspect tls_protocol
-			when {SSL_PROTOCOL}.ssl_23  then
+			when {SSL_PROTOCOL}.ssl3_version  then
 				create Result.make_as_sslv23_server
-			when {SSL_PROTOCOL}.tls_1_0 then
+			when {SSL_PROTOCOL}.tls1_version then
 				create Result.make_as_tlsv10_server
-			when {SSL_PROTOCOL}.tls_1_1 then
+			when {SSL_PROTOCOL}.tls1_1_version then
 				create Result.make_as_tlsv11_server
-			when {SSL_PROTOCOL}.dtls_1_0 then
+			when {SSL_PROTOCOL}.dtls1_2_version then
 				create Result.make_as_dtlsv1_server
+			when {SSL_PROTOCOL}.tls1_3_version then
+				create Result.make_as_tls_server
 			else
 					--| By default tlsv1.2
 				create Result.make_as_tlsv12_server
+			end
+		end
+
+	set_options (a_options: INTEGER_64)
+			-- adds the options `a_options' set via bitmask in options to ctx.
+			-- Options already set before are not cleared!
+		note
+			EIS: "name=CTX_set_options", "src=https://www.openssl.org/docs/man1.1.0/ssl/SSL_CTX_set_options.html", "protocol=uri"
+		do
+			if attached context as l_context then
+				l_context.set_options (a_options)
+			end
+		end
+
+	clear_options (a_options: INTEGER_64)
+			-- clears the options `a_options' set via bitmask in options to ctx.
+		note
+			EIS: "name=CTX_set_options", "src=https://www.openssl.org/docs/man1.1.0/ssl/SSL_CTX_set_options.html", "protocol=uri"
+		do
+			if attached context as l_context then
+				l_context.clear_options (a_options)
+			end
+		end
+
+	set_max_protocol_version (a_version: NATURAL)
+			-- Set the maximun version to `a_version'.
+			-- If the version is 0, will enable protocol versions up to the highest version supported by the library.
+			--| Currently supported versions are SSL3_VERSION, TLS1_VERSION, TLS1_1_VERSION, TLS1_2_VERSION, TLS1_3_VERSION for TLS and DTLS1_VERSION, DTLS1_2_VERSION for DTLS.
+		require
+			is_valid_version: {SSL_PROTOCOL}.is_valid_protocol (a_version)
+		do
+			if attached context as l_context then
+				l_context.set_max_proto_version (a_version)
+			end
+		end
+
+	set_min_protocol_version (a_version: NATURAL)
+			-- Set the minimum version to `a_version'.
+			-- If the version is 0, will enable protocol versions down to the lowest version supported by the library.
+			--| Currently supported versions are SSL3_VERSION, TLS1_VERSION, TLS1_1_VERSION, TLS1_2_VERSION, TLS1_3_VERSION for TLS and DTLS1_VERSION, DTLS1_2_VERSION for DTLS.
+		require
+			is_valid_version: {SSL_PROTOCOL}.is_valid_protocol (a_version)
+		do
+			if attached context as l_context then
+				l_context.set_min_proto_version (a_version)
 			end
 		end
 
@@ -276,7 +326,7 @@ feature {NONE} -- Attributes
 			-- The name of the hostname used by TLS extension.		
 
 ;note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

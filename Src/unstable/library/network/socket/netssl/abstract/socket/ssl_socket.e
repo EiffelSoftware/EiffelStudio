@@ -194,6 +194,34 @@ feature -- Status report
 			end
 		end
 
+	max_proto_version: NATURAL
+			-- Configured version or 0 for auto-configuration of highest protocol.
+		do
+			if attached context as l_context then
+				Result := l_context.max_proto_version
+			end
+		end
+
+	min_proto_version: NATURAL
+			-- Configured version or 0 for auto-configuration of lowest protocol.
+		do
+			if attached context as l_context then
+				Result := l_context.min_proto_version
+			end
+		end
+
+	protocol_version: INTEGER
+			-- protocol version used for the connection.
+		do
+			if
+				attached context as l_context and then
+				attached l_context.last_ssl as l_ssl and then
+				not l_ssl.was_error
+			then
+				Result := l_context.version
+			end
+		end
+
 feature -- Access
 
 	certificate_x509_string: detachable IMMUTABLE_STRING_8

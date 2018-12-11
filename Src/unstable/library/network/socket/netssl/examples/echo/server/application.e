@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 
 				-- Create the Server socket
 			create listen_socket.make_server_by_port (port)
-
+			listen_socket.set_tls_protocol (TLS1_3_VERSION)
 				-- Using certificates and key from manifests
 			ca_crt_manifest.adjust
 			ca_key_manifesst.adjust
@@ -120,6 +120,7 @@ feature {NONE} -- Implementation
 				l_address_attached: l_address /= Void
 				l_peer_address_attached: l_peer_address /= Void
 			end
+			io.put_string ("Protocol Version:" + socket.protocol_version.out)
 			io.put_string ("Accepted client on the listen socket address = "+ l_address.host_address.host_address + " port = " + l_address.port.out +".")
 			io.put_new_line
 			io.put_string ("%T Accepted client address = " + l_peer_address.host_address.host_address + " , port = " + l_peer_address.port.out)
@@ -170,6 +171,8 @@ feature {NONE} -- Implementation
 		do
 			client_socket.put_string (message + "%N")
 		end
+
+	TLS1_3_VERSION: NATURAL = 0x0304
 
 
 feature -- SSL Certificates

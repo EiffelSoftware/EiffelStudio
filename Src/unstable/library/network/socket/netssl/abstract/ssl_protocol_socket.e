@@ -9,9 +9,9 @@ deferred class
 feature -- Access
 
 	default_tls_protocol: NATURAL
-			-- Set tls_1_2 as default.
+			-- Set tls1_2_version as default.
 		do
-			Result := {SSL_PROTOCOL}.tls_1_2
+			Result := {SSL_PROTOCOL}.tls1_2_version
 		end
 
 	tls_protocol: NATURAL
@@ -28,7 +28,7 @@ feature -- Change Element
 			tls_protocol_set:  tls_protocol = a_protocol
 		end
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

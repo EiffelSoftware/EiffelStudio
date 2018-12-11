@@ -41,6 +41,9 @@ feature {NONE} -- Initialization
 				end
 				if argument_count > 3 then
 					timeout := argument (4).to_integer
+				else
+						-- default timeout
+					timeout := 100
 				end
 			end
 
@@ -65,12 +68,14 @@ feature {NONE} -- Initialization
 				create l_socket.make_client_by_address_and_port (address, port)
 					-- Set the connection timeout
 				l_socket.set_connect_timeout (timeout)
+				l_socket.set_tls_protocol (TLS1_3_VERSION)
 					-- Connect to the Server
 				l_socket.connect
 				if not l_socket.is_connected then
 					io.put_string ("Unable to connect to host " + host + ":" + port.out)
 					io.put_new_line
 				else
+					send_message_and_receive_reply (l_socket, l_socket.protocol_version.out)
 
 						-- Since this is the client, we will initiate the talking.
 					send_message_and_receive_reply (l_socket, "Hello")
@@ -91,6 +96,8 @@ feature {NONE} -- Initialization
 		end
 
 feature {NONE} --Implementation
+
+	TLS1_3_VERSION: NATURAL = 0x0304
 
 	send_message_and_receive_reply (a_socket: SOCKET; message: STRING)
 		require

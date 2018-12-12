@@ -9,13 +9,13 @@ def safe_rmtree(dn):
 	if os.path.exists (dn):
 		shutil.rmtree (dn)
 	else:
-		print "Folder not found: %s" (dn)
+		print "Folder not found: %s" % (dn)
 
 def safe_rmfile(fn):
 	if os.path.exists (fn):
 		os.remove (fn)
 	else:
-		print "File not found: %s" (fn)
+		print "File not found: %s" % (fn)
 
 def get_ise_libraries(basedir, br, v):
 	if br == 'trunk':

@@ -670,6 +670,7 @@ feature {NONE} -- Settings
 		do
 			last_type := context.current_class_type
 			is_controlled := False
+			is_qualified_call := False
 		end
 
 	set_is_checking_postcondition (b: BOOLEAN)

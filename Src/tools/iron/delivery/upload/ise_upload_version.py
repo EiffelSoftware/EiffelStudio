@@ -5,6 +5,18 @@ import shutil;
 from subprocess import call
 from upload_version import upload_version, iron_config;
 
+def safe_rmtree(dn):
+	if os.path.exists (dn):
+		shutil.rmtree (dn)
+	else:
+		print "Folder not found: %s" (dn)
+
+def safe_rmfile(fn):
+	if os.path.exists (fn):
+		os.remove (fn)
+	else:
+		print "File not found: %s" (fn)
+
 def get_ise_libraries(basedir, br, v):
 	if br == 'trunk':
 		branch_dir="https://svn.eiffel.com/eiffelstudio/trunk"
@@ -16,33 +28,33 @@ def get_ise_libraries(basedir, br, v):
 		call(["svn", "update", d ])
 	else:
 		call(["svn", "checkout", "%s/Src/library" % (branch_dir), d ])
-	shutil.rmtree (os.path.join (d, "obsolete"))
-	shutil.rmtree (os.path.join (d, "wizard"))
-	shutil.rmtree (os.path.join (d, "base", "test"))
-	shutil.rmtree (os.path.join (d, "base", "testing"))
+	safe_rmtree (os.path.join (d, "obsolete"))
+	safe_rmtree (os.path.join (d, "wizard"))
+	safe_rmtree (os.path.join (d, "base", "test"))
+	safe_rmtree (os.path.join (d, "base", "testing"))
 	d = os.path.join (basedir, "C_library")
 	if os.path.exists (d):
 		call(["svn", "update", d ])
 	else:
 		call(["svn", "checkout", "%s/Src/C_library" % (branch_dir), d ])
-	shutil.rmtree (os.path.join (d, "openssl"))
-	shutil.rmtree (os.path.join (d, "curl"))
-	os.remove (os.path.join (d, "build.eant"))
+	safe_rmtree (os.path.join (d, "openssl"))
+	safe_rmtree (os.path.join (d, "curl"))
+	safe_rmfile (os.path.join (d, "build.eant"))
 	d = os.path.join (basedir, "contrib")
 	if os.path.exists (d):
 		call(["svn", "update", d ])
 	else:
 		call(["svn", "checkout", "%s/Src/contrib" % (branch_dir), d ])
-	shutil.rmtree (os.path.join (d, "examples"))
-	shutil.rmtree (os.path.join (d, "library", "network", "authentication"))
-	shutil.rmtree (os.path.join (d, "library", "web", "framework", "ewf", "obsolete"))
+	safe_rmtree (os.path.join (d, "examples"))
+	safe_rmtree (os.path.join (d, "library", "network", "authentication"))
+	safe_rmtree (os.path.join (d, "library", "web", "framework", "ewf", "obsolete"))
 
             # Do not include sub packages.
-	os.remove (os.path.join (d, "library", "web", "framework", "ewf", "libfcgi", "package.iron"))
-	os.remove (os.path.join (d, "library", "web", "framework", "ewf", "text", "encoder", "package.iron"))
-	os.remove (os.path.join (d, "library", "web", "framework", "ewf", "wsf_html", "package.iron"))
-	os.remove (os.path.join (d, "library", "web", "framework", "ewf", "ewsgi", "package.iron"))
-	os.remove (os.path.join (d, "library", "web", "framework", "ewf", "wsf", "package.iron"))
+	safe_rmfile (os.path.join (d, "library", "web", "framework", "ewf", "libfcgi", "package.iron"))
+	safe_rmfile (os.path.join (d, "library", "web", "framework", "ewf", "text", "encoder", "package.iron"))
+	safe_rmfile (os.path.join (d, "library", "web", "framework", "ewf", "wsf_html", "package.iron"))
+	safe_rmfile (os.path.join (d, "library", "web", "framework", "ewf", "ewsgi", "package.iron"))
+	safe_rmfile (os.path.join (d, "library", "web", "framework", "ewf", "wsf", "package.iron"))
 
 	d = os.path.join (basedir, "unstable")
 	if os.path.exists (d):

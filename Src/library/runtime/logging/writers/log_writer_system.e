@@ -247,7 +247,7 @@ feature {NONE} -- Externals
 				ReportEventA($l_data, wType, (WORD) $priority, dwEventId, NULL, 1, 0, lpStrings, NULL);
 
 			#elif EIF_OS == EIF_OS_LINUX
-				syslog($priority, "%s", $msg);
+				syslog($priority, "%s", (char *) $msg);
 			#else
 				/* Nothing to be done here. */
 			#endif

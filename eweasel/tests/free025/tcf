@@ -5,6 +5,6 @@ copy_sub 	 Ace $TEST Ace
 copy_raw 	 test.e $CLUSTER test.e
 
 compile_melted
-compile_result 	 validity_error TEST VUCR:11
+compile_result 	 validity_error TEST VUCR:13 VUCR:14 VUCR:15
 
 test_end

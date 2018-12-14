@@ -31,7 +31,11 @@ feature -- Access
 		require
 			not_is_recycled: not is_recycled
 		do
-			Result ?= develop_window.shell_tools.tool ({ES_CLASS_TOOL}).panel
+			if attached {ES_CLASS_TOOL} develop_window.shell_tools.tool ({ES_CLASS_TOOL}) as l_tool then
+				Result := l_tool.panel
+			else
+				check tool_not_found: False end
+			end
 		ensure
 			result_attached: Result /= Void
 		end
@@ -41,7 +45,11 @@ feature -- Access
 		require
 			not_is_recycled: not is_recycled
 		do
-			Result ?= develop_window.shell_tools.tool ({ES_GROUPS_TOOL}).panel
+			if attached {ES_GROUPS_TOOL} develop_window.shell_tools.tool ({ES_GROUPS_TOOL}) as l_tool then
+				Result := l_tool.panel
+			else
+				check tool_not_found: False end
+			end
 		ensure
 			result_attached: Result /= Void
 		end
@@ -51,7 +59,11 @@ feature -- Access
 		require
 			not_is_recycled: not is_recycled
 		do
-			Result ?= develop_window.shell_tools.tool ({ES_DEPENDENCY_TOOL}).panel
+			if attached {ES_DEPENDENCY_TOOL} develop_window.shell_tools.tool ({ES_DEPENDENCY_TOOL}) as l_tool then
+				Result := l_tool.panel
+			else
+				check tool_not_found: False end
+			end
 		ensure
 			result_attached: Result /= Void
 		end
@@ -62,7 +74,11 @@ feature -- Access
 		require
 			not_is_recycled: not is_recycled
 		do
-			Result ?= develop_window.shell_tools.tool ({ES_DIAGRAM_TOOL}).panel
+			if attached {ES_DIAGRAM_TOOL} develop_window.shell_tools.tool ({ES_DIAGRAM_TOOL}) as l_tool then
+				Result := l_tool.panel
+			else
+				check tool_not_found: False end
+			end
 		ensure
 			result_attached: Result /= Void
 		end
@@ -73,7 +89,11 @@ feature -- Access
 		require
 			not_is_recycled: not is_recycled
 		do
-			Result ?= develop_window.shell_tools.tool ({ES_CONSOLE_TOOL}).panel
+			if attached {ES_CONSOLE_TOOL} develop_window.shell_tools.tool ({ES_CONSOLE_TOOL}) as l_tool then
+				Result := l_tool.panel
+			else
+				check tool_not_found: False end
+			end
 		ensure
 			result_attached: Result /= Void
 		end
@@ -83,7 +103,11 @@ feature -- Access
 		require
 			not_is_recycled: not is_recycled
 		do
-			Result ?= develop_window.shell_tools.tool ({ES_FAVORITES_TOOL}).panel
+			if attached {ES_FAVORITES_TOOL} develop_window.shell_tools.tool ({ES_FAVORITES_TOOL}) as l_tool then
+				Result := l_tool.panel
+			else
+				check tool_not_found: False end
+			end
 		ensure
 			result_attached: Result /= Void
 		end
@@ -94,7 +118,11 @@ feature -- Access
 		require
 			not_is_recycled: not is_recycled
 		do
-			Result ?= develop_window.shell_tools.tool ({ES_FEATURE_RELATION_TOOL}).panel
+			if attached {ES_FEATURE_RELATION_TOOL} develop_window.shell_tools.tool ({ES_FEATURE_RELATION_TOOL}) as l_tool then
+				Result := l_tool.panel
+			else
+				check tool_not_found: False end
+			end
 		ensure
 			result_attached: Result /= Void
 		end
@@ -105,7 +133,11 @@ feature -- Access
 		require
 			not_is_recycled: not is_recycled
 		do
-			Result ?= develop_window.shell_tools.tool ({ES_METRICS_TOOL}).panel
+			if attached {ES_METRICS_TOOL} develop_window.shell_tools.tool ({ES_METRICS_TOOL}) as l_tool then
+				Result := l_tool.panel
+			else
+				check tool_not_found: False end
+			end
 		ensure
 			result_attached: Result /= Void
 		end
@@ -115,7 +147,11 @@ feature -- Access
 		require
 			not_is_recycled: not is_recycled
 		do
-			Result ?= develop_window.shell_tools.tool ({ES_PROPERTIES_TOOL}).panel
+			if attached {ES_PROPERTIES_TOOL} develop_window.shell_tools.tool ({ES_PROPERTIES_TOOL}) as l_tool then
+				Result := l_tool.panel
+			else
+				check tool_not_found: False end
+			end
 		ensure
 			result_attached: Result /= Void
 		end
@@ -125,7 +161,11 @@ feature -- Access
 		require
 			not_is_recycled: not is_recycled
 		do
-			Result ?= develop_window.shell_tools.tool ({ES_SEARCH_REPORT_TOOL}).panel
+			if attached {ES_SEARCH_REPORT_TOOL} develop_window.shell_tools.tool ({ES_SEARCH_REPORT_TOOL}) as l_tool then
+				Result := l_tool.panel
+			else
+				check tool_not_found: False end
+			end
 		ensure
 			result_attached: Result /= Void
 		end
@@ -135,7 +175,11 @@ feature -- Access
 		require
 			not_is_recycled: not is_recycled
 		do
-			Result ?= develop_window.shell_tools.tool ({ES_SEARCH_TOOL}).panel
+			if attached {ES_SEARCH_TOOL} develop_window.shell_tools.tool ({ES_SEARCH_TOOL}) as l_tool then
+				Result := l_tool.panel
+			else
+				check tool_not_found: False end
+			end
 		ensure
 			result_attached: Result /= Void
 		end
@@ -145,7 +189,7 @@ feature -- Access
 		require
 			not_is_recycled: not is_recycled
 		do
-			if attached {like cloud_account_tool} develop_window.shell_tools.tool ({ES_CLOUD_ACCOUNT_TOOL}) as l_tool then
+			if attached {ES_CLOUD_ACCOUNT_TOOL} develop_window.shell_tools.tool ({ES_CLOUD_ACCOUNT_TOOL}) as l_tool then
 				Result := l_tool
 			else
 					-- Cloud service is not activated!
@@ -157,7 +201,7 @@ feature -- Access
 		require
 			not_is_recycled: not is_recycled
 		do
-			if attached {like info_tool} develop_window.shell_tools.tool ({ES_INFORMATION_TOOL}) as l_tool then
+			if attached {ES_INFORMATION_TOOL} develop_window.shell_tools.tool ({ES_INFORMATION_TOOL}) as l_tool then
 				Result := l_tool
 			else
 				check tool_not_found: False end
@@ -171,7 +215,11 @@ feature -- Access
 		require
 			not_is_recycled: not is_recycled
 		do
-			Result ?= develop_window.shell_tools.tool ({ES_BREAKPOINTS_TOOL})
+			if attached {ES_BREAKPOINTS_TOOL} develop_window.shell_tools.tool ({ES_BREAKPOINTS_TOOL}) as l_tool then
+				Result := l_tool
+			else
+				check tool_not_found: False end
+			end
 		ensure
 			result_attached: Result /= Void
 		end
@@ -180,7 +228,6 @@ feature -- Access
 			-- Access to list of tools that can be customized
 		local
 			l_tools: DS_ARRAYED_LIST_CURSOR [ES_TOOL [EB_TOOL]]
-			l_format_tool: ES_FORMATTER_TOOL [ES_FORMATTER_TOOL_PANEL_BASE]
 			l_customized_tools: like customized_tools
 		do
 			create Result.make (3)
@@ -189,8 +236,10 @@ feature -- Access
 				-- Fetch list of shell tool and extract the customizable ones.
 			l_tools := develop_window.shell_tools.all_tools.new_cursor
 			from l_tools.start until l_tools.after loop
-				l_format_tool ?= l_tools.item
-				if l_format_tool /= Void and then l_format_tool.is_customizable then
+				if
+					attached {ES_FORMATTER_TOOL [ES_FORMATTER_TOOL_PANEL_BASE]} l_tools.item as l_format_tool and then
+					l_format_tool.is_customizable
+				then
 						-- The tool is customizable so activate the tool instance
 					if attached {EB_CUSTOMIZED_TOOL} l_format_tool.panel as l_tool and then not l_customized_tools.has (l_tool) then
 							-- Only add the tool if it's not a customized tool because these will be added later
@@ -225,7 +274,11 @@ feature -- Access
 		require
 			not_is_recycled: not is_recycled
 		do
-			Result ?= develop_window.shell_tools.tool ({ES_WEB_BROWSER_TOOL}).panel
+			if attached {ES_WEB_BROWSER_TOOL} develop_window.shell_tools.tool ({ES_WEB_BROWSER_TOOL}) as l_tool then
+				Result := l_tool.panel
+			else
+				check tool_not_found: False end
+			end
 		ensure
 			result_attached: Result /= Void
 		end
@@ -268,17 +321,12 @@ feature -- Commands
 
 	set_stone_and_pop_tool (a_stone: STONE)
 			-- Set stone and show proper tool as context.
-		local
-			l_class_stone: CLASSI_STONE
-			l_feature_stone: FEATURE_STONE
 		do
 			set_stone (a_stone)
 			if a_stone /= Void then
-				l_class_stone ?= a_stone
-				l_feature_stone ?= a_stone
-				if l_feature_stone /= Void then
+				if attached {FEATURE_STONE} a_stone then
 					show_default_tool_of_feature
-				elseif l_class_stone /= Void then
+				elseif attached {CLASSI_STONE} a_stone then
 					show_default_tool_of_class
 				end
 			end
@@ -414,7 +462,6 @@ feature -- Custom tools
 			a_tools_valid: not a_tools.has (Void)
 		local
 			l_cursor: CURSOR
-			l_customized_tool: EB_CUSTOMIZED_TOOL
 		do
 			create {LINKED_LIST [EB_CUSTOMIZED_TOOL]} Result.make
 			l_cursor := a_tools.cursor
@@ -424,8 +471,11 @@ feature -- Custom tools
 				a_tools.after
 			loop
 				if a_tools.item.is_customized_tool then
-					l_customized_tool ?= a_tools.item
-					Result.extend (l_customized_tool)
+					if attached {EB_CUSTOMIZED_TOOL} a_tools.item as l_customized_tool then
+						Result.extend (l_customized_tool)
+					else
+						check is_customized_tool: False end
+					end
 				end
 				a_tools.forth
 			end
@@ -513,7 +563,7 @@ feature {NONE} -- Internal implementation cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -63,14 +63,15 @@ feature -- Useful query
 		require
 			w_not_void: w /= Void
 		do
-			Result ?= w
-			if Result = Void and w.parent /= Void then
-				Result := parent_window_from (w.parent)
+			if attached {EV_WINDOW} w as win then
+				Result := win
+			elseif attached w.parent as p then
+				Result := parent_window_from (p)
 			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -33,11 +33,8 @@ feature {NONE} -- Implementation
 
 	veto_pebble_function (a_any: ANY): BOOLEAN
 			-- Veto pebble function
-		local
-			l_feature_stone: FEATURE_STONE
 		do
-			l_feature_stone ?= a_any
-			if l_feature_stone /= Void then
+			if attached {FEATURE_STONE} a_any as l_feature_stone then
 				Result := Precursor {EB_FORMATTER}(a_any)
 			end
 		end
@@ -75,7 +72,7 @@ feature {NONE} -- Implementation
 		-- Does it make sense to show line numbers in Current?
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

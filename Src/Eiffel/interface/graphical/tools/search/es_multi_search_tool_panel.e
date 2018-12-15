@@ -2033,6 +2033,14 @@ feature {EB_SEARCH_REPORT_GRID, EB_CUSTOM_WIDGETTED_EDITOR} -- Implementation
 			saved_cursor := multi_search_performer.index
 		end
 
+feature {NONE} -- Implementation
+
+	default_pixmaps: EV_STOCK_PIXMAPS
+			-- Default pixmaps and cursors.
+		once
+			create Result
+		end
+
 invariant
 	multi_search_performer_not_void: multi_search_performer /= Void
 

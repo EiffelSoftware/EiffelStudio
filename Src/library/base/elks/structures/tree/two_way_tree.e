@@ -17,7 +17,6 @@ class TWO_WAY_TREE [G] inherit
 			child_after, child_before, child_item,
 			child_off, child_islast
 		redefine
-			clone_node,
 			new_cursor,
 			parent
 		select

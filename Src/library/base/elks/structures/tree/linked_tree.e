@@ -23,7 +23,6 @@ class LINKED_TREE [G] inherit
 			child_item,
 			child_off
 		redefine
-			clone_node,
 			new_cursor,
 			parent
 		select

@@ -39,6 +39,11 @@ inherit
 			{NONE} all
 		end
 
+	EV_SHARED_APPLICATION
+		export
+			{NONE} all
+		end
+
 	SD_ACCESS
 
 create
@@ -1037,6 +1042,28 @@ feature -- Basic operations
 			show_formatting_marks := not show_formatting_marks
 		end
 
+feature -- Status setting
+
+	load_fully
+			-- Wait until all editors finish loading.
+		local
+			a: like ev_application
+		do
+			development_window.window.set_pointer_style (default_pixmaps.wait_cursor)
+			from
+				a := ev_application
+			until
+				full_loaded
+			loop
+					-- As editor text is loaded on idle, unless idle_actions are called EiffelStudio
+					-- stays in an infinite loop.
+				a.process_events
+			end
+			development_window.window.set_pointer_style (default_pixmaps.standard_cursor)
+		ensure
+			full_loaded
+		end
+
 feature -- Memory management
 
 	internal_recycle
@@ -1796,6 +1823,15 @@ feature {NONE} -- Implementation
 				a_editors.forth
 			end
 		end
+
+feature {NONE} -- Implementation
+
+	default_pixmaps: EV_STOCK_PIXMAPS
+			-- Default pixmaps and cursors.
+		once
+			create Result
+		end
+
 note
 	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

@@ -953,7 +953,10 @@ feature -- Warning messages
 				"[
 					Applying selected fixes causes changes to the source code that cannot be undone automatically.
 					
-					Click OK to apply fixes.
+					Classes can be open in the editor before applying fixes.
+					
+					Click Yes to open classes in the editor and apply fixes.
+					Click No to apply fixes without opening classes.
 					Click Cancel to abort.
 				]", "fix")
 		end
@@ -1167,7 +1170,7 @@ feature -- Warning messages
 
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

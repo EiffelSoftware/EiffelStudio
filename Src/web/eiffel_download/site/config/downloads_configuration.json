@@ -5,11 +5,11 @@
         {
             "id": "eiffelstudio_ent",
             "name": "EiffelStudio",
-            "version": "18.07 Enterprise Evaluation Edition",
+            "version": "18.11 Enterprise Evaluation Edition",
             "release": "Official Release",
             "date": "Winter 2018",
-            "sub_directory": "18.07",
-            "number": "18.07",
+            "sub_directory": "18.11",
+            "number": "18.11",
             "build" : "Build_101981",
             "icon": "eiffelstudio_ent.png",
             "public": "true",
@@ -21,21 +21,24 @@
             },
             "blerb": "<h2>EiffelStudio: A Contract for Success</h2>\n<p>\nTake full advantage of the power of Object Technology ... and more\n<p>\nEiffelStudio is more than just an IDE. With EiffelStudio you can model your\nsystem as you think - capturing your requirements and your thought processes in\nEiffel. Then, when you are ready to design, you build upon the model you just\ncreated, still with EiffelStudio. And then you implement, in EiffelStudio. You\nnever need to throw anything out and start over. You don't need extra tools to\nbe able to go back and make changes in architecture safely. Roundtrip\nengineering? It's built in by design. Testing, metrics and productivity tools?\nThey're built in. What about debugging? EiffelStudio native Design by Contract™\nmechanism prevents 90% of the bugs from ever occurring - and what bugs remain\nare easily traced and fixed. If you are using other languages and tools chances\nare that EiffelStudio will interface with the code you already have.\n<p>\nWe thank you for downloading EiffelStudio. If you have questions please post\nthem to our <a href=\"http://groups.eiffel.com\">user mailing-list</a>.\n<p>\nEnjoy EiffelStudio and if you do let your friends know!\n<p>",
             "download": [
-            {"filename":"Eiffel_18.07_ent_101981-solaris-sparc.tar.bz2", "size":"118496091", "hash":"5c8ff79b115ab4113ec85fc1c4b45ea3f4a876d8daeb1b89d678813023233784", "platform":"solaris-sparc", "cdkey" : "18487-77310-53381-22132-19128-11058" },
-            {"filename":"Eiffel_18.07_ent_101981-win64.msi", "size":"152998412", "hash":"207e3cb91af2ab5934e14c1c4f5ec22180d3ebec5f51f2c433286383c6c1028e", "platform":"win64", "cdkey" : "18487-77310-53381-22132-19128-11058" },
-            {"filename":"Eiffel_18.07_ent_101981-linux-x86-64.tar.bz2", "size":"110951607", "hash":"54f05d5ba6b764e7defdd15c6c7f14982cc14ecb7ac18352dcae4db25b5032a1", "platform":"linux-x86-64", "cdkey" : "18487-77310-53381-22132-19128-11058" },
-            {"filename":"Eiffel_18.07_ent_101981-linux-armv6.tar.bz2", "size":"101467971", "hash":"0096c1d9333a03b4e463265b9182088fa85af34438beae3ec9d1ead6c8a5f307", "platform":"linux-armv6", "cdkey" : "18487-77310-53381-22132-19128-11058" },
-            {"filename":"Eiffel_18.07_ent_101981-freebsd-x86.tar.bz2", "size":"102750777", "hash":"364218d94e2b1d54fa6dfb221894b7c75ee8c562c273af191346915ec8d1d2c3", "platform":"freebsd-x86", "cdkey" : "18487-77310-53381-22132-19128-11058" },
-            {"filename":"Eiffel_18.01_ent_101424-solaris-sparc-64.tar.bz2", "size":"119241676", "hash":"94c87669e61896c565bf1f25e50a2485e3121010c7fb65041fff51f2e9b18bb7", "platform":"solaris-sparc-64", "cdkey" : "18487-77310-53381-22132-19128-11058" },
-            {"filename":"Eiffel_18.07_ent_101981-freebsd-x86-64.tar.bz2", "size":"104247305", "hash":"3a50213d2161470e1fb8ee450e640b2d2303435dd105bcf7d6e796b85e6bac1d", "platform":"freebsd-x86-64", "cdkey" : "18487-77310-53381-22132-19128-11058" },
-            {"filename":"Eiffel_18.07_ent_101981-linux-x86-64-suncc.tar.bz2", "size":"101484259", "hash":"12fb9659ae4d281de720da26646b4bc6701654d14292dd970427c6d70c69d980", "platform":"linux-x86-64-suncc", "cdkey" : "18487-77310-53381-22132-19128-11058" },
-            {"filename":"Eiffel_18.07_ent_101981-linux-x86-suncc.tar.bz2", "size":"90627165", "hash":"512f07380c2d0796e68996c49a7c716d582e79b308417689acfdfc3f869b1a81", "platform":"linux-x86-suncc", "cdkey" : "18487-77310-53381-22132-19128-11058" },
-            {"filename":"Eiffel_18.07_ent_101981-linux-x86.tar.bz2", "size":"97840882", "hash":"e6e5c78d94854b46856dd04c7644c907afd0aa53c17b6d2e3d83b0916a06ec36", "platform":"linux-x86", "cdkey" : "18487-77310-53381-22132-19128-11058" },
-            {"filename":"Eiffel_18.07_ent_101981-windows.msi", "size":"138863323", "hash":"99e5ac59c157e430ece1475dd746ba55575eca450cac65645ba0e33c67683be7", "platform":"windows", "cdkey" : "18487-77310-53381-22132-19128-11058" },
-            {"filename":"Eiffel_18.07_ent_101981-openbsd-x86-64.tar.bz2", "size":"121150347", "hash":"e7819443a9edb9aa8aac71d84945644ec11cb9db9c16f95510a324d154e723fa", "platform":"openbsd-x86-64", "cdkey" : "18487-77310-53381-22132-19128-11058" },
-            {"filename":"Eiffel_18.07_ent_101981-macosx-x86-64.tar.bz2", "size":"97044485", "hash":"a087ababf6d6b06ee761344217bd5e401a5623cb35bf4956c32d681ce9581b0b", "platform":"macosx-x86-64", "cdkey" : "18487-77310-53381-22132-19128-11058" }
+                {"name":"Eiffel_18.11_ent_102592-linux-x86.tar.bz2", "size":"99596838", "hash":"f3f5e2a0706e411dc9539e18e895a37dc901b8fd9bac614ced59fc771f0e8e6e", "platform":"linux-x86", "cdkey" : "12913-10368-21575-06118-19898-41102"},
+                {"name":"Eiffel_18.11_ent_102592-solaris-sparc.tar.bz2", "size":"118921595", "hash":"ffdbad311f95ae679d226d53efd82c51d36cae2452425480d3e68c863896270f","platform":"solaris-sparc", "cdkey" : "12913-10368-21575-06118-19898-41102"},
+                {"name":"Eiffel_18.11_ent_102592-openbsd-x86-64.tar.bz2", "size":"123309243", "hash":"6fe70fcc16813aa72a4dd59a7998c6fdd161418e89b34f89bcd3c3ccd6e0c4f3", "platform":"openbsd-x86-64", "cdkey" : "12913-10368-21575-06118-19898-41102"},
+                {"name":"Eiffel_18.11_ent_102592-freebsd-x86-64.tar.bz2", "size":"106484216", "hash":"faa558abf8db5f9fe37d4a4130ab19865233aa55a63a90edc69d01169b37551a", "platform":"freebsd-x86-64","cdkey" : "12913-10368-21575-06118-19898-41102"},
+                {"name":"Eiffel_18.11_ent_102592-win64.msi", "size":"155606796", "hash":"4edd31ea84be4628153b2205478fc1f5113a27bacced28792e996ec8ae9d8015", "platform":"win64", "cdkey" : "12913-10368-21575-06118-19898-41102"},
+                {"name":"Eiffel_18.11_ent_102592-linux-x86-64-suncc.tar.bz2", "size":"103618917", "hash":"af7ee45112e049bf52fbb078485a33768b2f45eb59694c7fd00b5100152a1cdb", "platform":"linux-x86-64-suncc","cdkey" : "12913-10368-21575-06118-19898-41102"},
+                {"name":"Eiffel_18.11_ent_102592-macosx-x86-64.tar.bz2", "size":"98886481", "hash":"da34949fac6c9885231670d7ad09ba028a736af89b4cbf334b16edb8368475f3","platform":"macosx-x86-64", "cdkey" : "12913-10368-21575-06118-19898-41102"},
+                {"name":"Eiffel_18.11_ent_102592-linux-x86-64.tar.bz2", "size":"113281547", "hash":"3bfa2b7df40586503b5dd7c2e27fbc5a062579b751eb91b2a89046a097218d3e","platform":"linux-x86-64", "cdkey" : "12913-10368-21575-06118-19898-41102"},
+                {"name":"Eiffel_18.11_ent_102592-linux-armv6.tar.bz2", "size":"103576904", "hash":"365804fbc83963f9a2a80772f197f83282a3eac945c370bd67d42cf851a5226f", "platform":"linux-armv6", "cdkey" : "12913-10368-21575-06118-19898-41102"},
+                {"name":"Eiffel_18.11_ent_102592-freebsd-x86.tar.bz2", "size":"104849601", "hash":"7bcf04b5643b0cf1d492ef19aeae40d853d1475a89536315cebdbe4098b74251", "platform":"freebsd-x86", "cdkey" : "12913-10368-21575-06118-19898-41102"},
+                {"name":"Eiffel_18.11_ent_102592-linux-x86-suncc.tar.bz2", "size":"92634078", "hash":"fa262cf3f095c2cf4b21745e88fd70f35c5e4549abc4dc89fb34927b10866703",  "platform":"linux-x86-suncc", "cdkey" : "12913-10368-21575-06118-19898-41102"},
+                {"name":"Eiffel_18.11_ent_102592-solaris-sparc-64.tar.bz2", "size":"120905341", "hash":"3b87d7f7609a174c2fb3afc5a14e8469271176925e5cf7d13fc78cd83144d4b1",  "platform":"solaris-sparc-64", "cdkey" : "12913-10368-21575-06118-19898-41102"},
+                {"name":"Eiffel_18.11_ent_102592-windows.msi", "size":"141242844", "hash":"7dcc93d7d04c2695bf3857dd628b9c5ea6ce69d67a6372c91dfe9b8f4453e361", "platform":"windows", "cdkey" : "12913-10368-21575-06118-19898-41102"}
             ]
         }
     ]
 }
+
+
+
 

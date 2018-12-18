@@ -144,7 +144,7 @@ feature {NONE} -- Implemenation
 				-- Create our message.
 			create l_email.make_with_entry (admin_email, download_email)
 			l_email.set_message (a_content)
-			l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, a_subject)
+			l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, a_subject.to_string_8)
 			send_email (l_email)
 		end
 

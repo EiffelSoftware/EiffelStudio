@@ -652,14 +652,12 @@ feature -- Create library dialog
 				Result := locale.formatted_string (locale.translation ("[
 Search paths for libraries are specified in the configuration file:
    $1
-
-and could be overwridden by user configuration file:
+and could be overridden by user configuration file:
    $2
 
 Search paths for precompiled libraries are specified in the configuration file:
    $3
-
-and could be overwridden by user configuration file:
+and could be overridden by user configuration file:
    $4
 						]"),
 						[a_lib_cfg, a_user_lib_cfg, a_pre_cfg, a_user_pre_cfg]

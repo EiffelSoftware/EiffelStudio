@@ -363,7 +363,6 @@ feature -- Validity checking
 		local
 			l_cluster: CONF_GROUP
 			l_type: TYPE_AS
-			l_rename_clause: RENAME_CLAUSE_AS
 			l_constraints: like constraints
 			l_constraint_position: INTEGER
 			l_constraining_type: CONSTRAINING_TYPE_AS
@@ -409,14 +408,10 @@ feature -- Validity checking
 					l_compiled_class := l_class_i.compiled_class
 					a_context_class.constraint_classes (Current).put (l_compiled_class, l_constraint_position)
 
-					l_rename_clause := l_constraints.item.renaming
-					if l_rename_clause /= Void then
+					if attached l_constraints.item.renaming as l_rename_clause then
 							-- After this call a RENAMING_A object will be stored into the cache
 							-- if there were no errors.
-						check_rename_clause (a_context_class, l_class_i.compiled_class, l_rename_clause,
-							l_constraint_position)
-					else
-						-- no renaming to check
+						check_rename_clause (a_context_class, l_class_i.compiled_class, l_rename_clause, l_constraint_position)
 					end
 				end
 				l_constraints.forth
@@ -464,12 +459,10 @@ feature -- Validity checking
 			loop
 				l_original_feature_name_id := creation_feature_list.item.feature_name.name_id
 				l_result := l_flat_constraints.feature_i_state_by_name_id (l_original_feature_name_id)
-				if l_result.features_found_count = 1 then
-					-- Ok, we found exactly one feature, this means our constraint is met and we're fine.
-				else
+					-- Exactly one feature means the constraint is met.
+				if l_result.features_found_count /= 1 then
 						-- This is certainly an error: Let's spend some time finding out what exactly is wrong.
 					l_error_info := l_constraints.info_about_feature_by_name_id (l_original_feature_name_id, position, a_context_class)
-
 					create l_vtgc3
 					l_vtgc3.set_constraints (l_constraints)
 					l_vtgc3.set_class (a_context_class)

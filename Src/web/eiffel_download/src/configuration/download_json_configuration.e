@@ -20,7 +20,7 @@ feature -- Access
 			create Result
 			if attached json_file_from (a_path) as json_file then
 				l_parser := new_json_parser (json_file)
-				if attached {JSON_OBJECT} l_parser.parse as jv and then l_parser.is_parsed then
+				if attached {JSON_OBJECT} l_parser.next_parsed_json_value as jv and then l_parser.is_valid then
 					if attached {JSON_STRING} jv.item ("mirror") as l_mirror then
 						Result.set_mirror (l_mirror.unescaped_string_32)
 					end

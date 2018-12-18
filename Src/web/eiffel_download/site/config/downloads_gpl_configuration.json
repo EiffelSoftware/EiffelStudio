@@ -4,26 +4,28 @@
      {
             "id": "eiffelstudio",
             "name": "EiffelStudio",
-            "version": "18.07 GPL",
-            "number": "18.07",
-            "build": "Build_101981",
+            "version": "18.11 GPL",
+            "number": "18.11",
+            "build": "Build_102592",
             "download": [
-                {"filename":"Eiffel_18.07_gpl_101981-linux-armv6.tar.bz2", "size":"99838651", "hash":"aa6b12fcc2da249b78bf129354dc2deab1022ba5a71f3eb4f0cd546492cd1735","platform":"linux-armv6"},
-                {"filename":"Eiffel_18.07_gpl_101981-windows.msi", "size":"138794083", "hash":"850fb28cf2579dce568cff3cc0bcb3f6dc3ea298919480fc75b60f60f18815aa", "platform":"windows"},
-                {"filename":"Eiffel_18.07_gpl_101981-win64.7z", "size":"89645871", "hash":"bfc8e7bb32f50fb7512d300c7d97b86285aa523c5c327a6a1b98627c279d67c4","platform":"win64"},
-                {"filename":"Eiffel_18.07_gpl_101981-openbsd-x86-64.tar.bz2", "size":"119038816", "hash":"f574c9618a9db06987b50400bee27153df1e6f8fc3b5822c38e9278ced80a27f","platform":"openbsd-x86-64"},
-                {"filename":"Eiffel_18.07_gpl_101981-macosx-x86-64.tar.bz2", "size":"95710918", "hash":"9fbb07b70ade9db317e639acf3e58bc2b4f3a3ddafce2aca49a76eb7e73428c3", "platform":"macosx-x86-64"},
-                {"filename":"Eiffel_18.07_gpl_101981-windows.7z", "size":"78375449", "hash":"a250625576d6c2094ce033b637ad5caf3245e78acaec24d7853d467656334c4d","platform":"windows"},
-                {"filename":"Eiffel_18.07_gpl_101981-freebsd-x86-64.tar.bz2", "size":"102632071", "hash":"4bd5d45d1d60fc752525a13e7a71c83bd6b97980de091c999fbe8c406c13d065","platform":"freebsd-x86-64"},
-                {"filename":"Eiffel_18.07_gpl_101981-solaris-sparc-64.tar.bz2", "size":"116663646", "hash":"4dadae25513976c08b46d63a605076a0e29f5e51ece40abc5e2e38e57cb84285","platform":"solaris-sparc-64"},
-                {"filename":"Eiffel_18.07_gpl_101981-solaris-sparc.tar.bz2", "size":"114790217", "hash":"2fbf27aca4603b4e69b2f4996408b4718bfc79fccca7b4e2873eb88f372f1a39", "platform":"solaris-sparc"},
-                {"filename":"Eiffel_18.07_gpl_101981-linux-x86-suncc.tar.bz2", "size":"89031797", "hash":"d710ba24a77498f5afff5ba1821cc9b94c985b2c005ed5bbdcfb6a972ebd80cc","platform":"linux-x86-suncc"},
-                {"filename":"Eiffel_18.07_gpl_101981-linux-x86-64.tar.bz2", "size":"109394141", "hash":"a59951c1409a0554d2d068303651e3569465cbf88dfb548932a4638ad77f7a50","platform":"linux-x86-64"},
-                {"filename":"Eiffel_18.07_gpl_101981-linux-x86.tar.bz2", "size":"96017796", "hash":"8604bb612fae8ca7d94758129db8ddeba20ddffa1204db2c1e5b4aa25f75809d","platform":"linux-x86"},
-                {"filename":"Eiffel_18.07_gpl_101981-linux-x86-64-suncc.tar.bz2", "size":"99883798", "hash":"8a02b1882a26fbbe9ef7f8856929f2d066d53b7ea7a6ae8b75896cd7ecdab4df","platform":"linux-x86-64-suncc"},
-                {"filename":"Eiffel_18.07_gpl_101981-win64.msi", "size":"152936816", "hash":"ebef4280be72c6ec60c4e61c8929a901cc2a87a2ff40afd2d94156189061be32","platform":"win64"},
-                {"filename":"Eiffel_18.07_gpl_101981-freebsd-x86.tar.bz2", "size":"101000595", "sha256":"c2921db057fb41770b41b6cc26a3c7926aec8f00f8e7fc337adb65f516980254","platform":"freebsd-x86"}]}         
+                    {"name":"Eiffel_18.11_gpl_102592-windows.msi", "size":"141205824", "hash":"cabab099361e1480c00d5c69b48da54f880d22aed82b72b601d03f182c4267b9", "platform":"windows"},
+                    {"name":"Eiffel_18.11_gpl_102592-macosx-x86-64.tar.bz2", "size":"97683435", "hash":"9cd73e840d3834725e9475e5f14bb76c70bbc58b572d09f38bdee19d3d02e057",  "platform":"macosx-x86-64"},
+                    {"name":"Eiffel_18.11_gpl_102592-win64.msi", "size":"155521172", "hash":"ec637f0ee524388182c5100f9cd6fddc8bf887fb59018635b2537104b2a2367c", "platform":"win64"},
+                    {"name":"Eiffel_18.11_gpl_102592-openbsd-x86-64.tar.bz2", "size":"121279702", "hash":"361a5e5798bbd45d0c36125ab9257d68cf42c6cb465bf3df6186a708fa0e508a", "platform":"openbsd-x86-64"},
+                    {"name":"Eiffel_18.11_gpl_102592-solaris-sparc.tar.bz2", "size":"117143964", "hash":"7fcb959cfd6392da8d959a34d61a23fecbbeebf6b0d596e7283a210108d36a7b", "platform":"solaris-sparc"},
+                    {"name":"Eiffel_18.11_gpl_102592-linux-armv6.tar.bz2", "size":"101775724", "hash":"e90075ca1d7fbeaf733aabec91145b11f227b6e05a8e43f56f6171702811aa9c", "platform":"linux-armv6"},
+                    {"name":"Eiffel_18.11_gpl_102592-linux-x86-64-suncc.tar.bz2", "size":"101786608", "hash":"0877fc41e8fb077021bda240c2d2926a67534972e72fcb0683986df17ba132cb", "platform":"linux-x86-64-suncc"},
+                    {"name":"Eiffel_18.11_gpl_102592-linux-x86-suncc.tar.bz2", "size":"91219557", "hash":"71758870ce853d63c65d3ffd7d26af3186e444aff49545931c4e91166554253a", "platform":"linux-x86-suncc"},
+                    {"name":"Eiffel_18.11_gpl_102592-linux-x86-64.tar.bz2", "size":"111420819", "hash":"aa0a77ee74f3d6a490e24202ba2311260678e2800b18e6e685bd430fb3ea8c19", "platform":"linux-x86-64"},
+                    {"name":"Eiffel_18.11_gpl_102592-linux-x86.tar.bz2", "size":"98264180", "hash":"1c5aa2305421839991c171af6c747c920344ecab7590cf67f54b131cf58e8b1f", "platform":"linux-x86"},
+                    {"name":"Eiffel_18.11_gpl_102592-freebsd-x86-64.tar.bz2", "size":"104810872", "hash":"e821bec212c082b705f5be1110570b6e114b4756a711c570447dbb085c044000", "platform":"freebsd-x86-64"},
+                    {"name":"Eiffel_18.11_gpl_102592-freebsd-x86.tar.bz2", "size":"103206700", "hash":"6e1552fbccbb3e1b424608da63b2af9183e2b4475b603aee11cf6140e52e0978", "platform":"freebsd-x86"},
+                    {"name":"Eiffel_18.11_gpl_102592-win64.7z", "size":"91780287", "hash":"4d5b825395d08608553ca5146a2b23cbc010d29f610312bb7b7d38c76d7c371f", "platform":"win64"},
+                    {"name":"Eiffel_18.11_gpl_102592-solaris-sparc-64.tar.bz2", "size":"119001943", "hash":"574a837e5a5674be2f05160cebdcdceb5467d47e05fc4f6fe5671de83461fcf0","platform":"solaris-sparc-64"},
+                    {"name":"Eiffel_18.11_gpl_102592-windows.7z", "size":"80308331", "hash":"b544d6156314f01ac924b5cc869aaafabeb2511f7b408c7d22a0a2a91b17fc2a", "platform":"windows"}
              ]
         }        
     ]
 }
+
+

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "List Item Cocoa Implementation"
 	author: "Daniel Furrer"
 	date: "$Date$"
@@ -155,7 +155,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_LIST_ITEM note option: stable attribute end;
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -164,4 +164,4 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-end -- class EV_LIST_ITEM_IMP
+end

@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"[
 			EiffelVision toolbar. Can only contain tool bar items.
@@ -26,8 +26,7 @@ inherit
 			is_equal,
 			is_in_default_state
 		redefine
-			implementation,
-			is_in_default_state
+			implementation
 		end
 
 	EV_ITEM_LIST [EV_TOOL_BAR_ITEM]
@@ -140,25 +139,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- Platform dependent access.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_TOOL_BAR
-
-
-
-
-
-
-
-
+end

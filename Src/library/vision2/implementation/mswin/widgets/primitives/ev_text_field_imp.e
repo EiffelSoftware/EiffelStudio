@@ -1,6 +1,5 @@
-note
-	description:
-		"EiffelVision text field. Mswindows implementation."
+﻿note
+	description: "EiffelVision text field. MS Windows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -31,7 +30,6 @@ inherit
 	EV_FONTABLE_IMP
 		redefine
 			interface,
-			make,
 			set_font
 		end
 
@@ -400,8 +398,8 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_TEXT_FIELD note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA
@@ -410,4 +408,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EV_TEXT_FIELD_IMP
+end

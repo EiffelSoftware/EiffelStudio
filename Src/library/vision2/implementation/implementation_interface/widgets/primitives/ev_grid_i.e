@@ -19,8 +19,6 @@ inherit
 			interface,
 			drop_actions,
 			set_default_key_processing_handler,
-			has_focus,
-			set_focus,
 			set_pebble,
 			set_pebble_function,
 			conforming_pick_actions,
@@ -28,9 +26,6 @@ inherit
 			pick_ended_actions,
 			set_accept_cursor,
 			set_deny_cursor,
-			enable_capture,
-			disable_capture,
-			has_capture,
 			set_pick_and_drop_mode,
 			set_drag_and_drop_mode,
 			set_target_menu_mode,
@@ -6754,7 +6749,7 @@ invariant
 	tree_node_connector_color_not_void: is_initialized implies tree_node_connector_color /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Eiffel Vision tree node. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,6 @@ inherit
 		undefine
 			copy, is_equal
 		redefine
-			parent_imp,
 			interface
 		end
 
@@ -24,7 +23,6 @@ inherit
 			parent,
 			copy, is_equal
 		redefine
-			parent_imp,
 			destroy,
 			interface,
 			set_pixmap,
@@ -46,8 +44,7 @@ inherit
 			copy, is_equal
 		redefine
 			interface,
-			set_tooltip,
-			destroy
+			set_tooltip
 		end
 
 	EV_ITEM_LIST_IMP [EV_TREE_NODE, EV_TREE_NODE_IMP]
@@ -743,8 +740,8 @@ invariant
 	internal_children_not_void_when_not_parented: is_initialized and top_parent_imp = Void implies internal_children /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA
@@ -753,18 +750,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_TREE_NODE_IMP
-
-
-
-
-
-
-
-
-
-
-
+end

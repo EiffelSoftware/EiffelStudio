@@ -130,7 +130,9 @@ feature {NONE} -- Search by name
 			valid_n: names_heap.has (n)
 			c_attached: attached c
 		do
-			Result := c.feature_of_name_id (n)
+			if c.has_feature_table then
+				Result := c.feature_of_name_id (n)
+			end
 		end
 
 	find_in_renamed_type_a_by_name (n: like {FEATURE_I}.feature_name_id; t: RENAMED_TYPE_A)
@@ -206,7 +208,12 @@ feature -- Search
 			found_features.wipe_out
 			context_class := c
 			formal_generics := Void
-			feature_in_class := agent {CLASS_C}.feature_of_alias_id (n)
+			feature_in_class := agent (name: like {FEATURE_I}.alias_name_id; lookup: CLASS_C): detachable FEATURE_I
+				do
+					if lookup.has_feature_table then
+						Result := lookup.feature_of_alias_id (name)
+					end
+				end (n, ?)
 			find_in_renamed_type_a := agent find_in_renamed_type_a_by_name (n, ?)
 			t.process (Current)
 		ensure
@@ -238,7 +245,9 @@ feature -- Search
 					valid_f: f > 0 -- and then system.routine_id_counter.is_feature_routine_id (f)
 					s_attached: attached s
 				do
-					Result := s.feature_of_rout_id (f)
+					if s.has_feature_table then
+						Result := s.feature_of_rout_id (f)
+					end
 				end
 				(r, ?)
 			find_in_renamed_type_a := agent (renamed_type: RENAMED_TYPE_A)
@@ -279,8 +288,8 @@ feature {TYPE_A} -- Visitor
 		do
 			if
 				attached t.base_class as c and then
-				attached feature_in_class.item ([c]) as f and then
-				(not attached found_feature as h or else
+				attached feature_in_class.item (c) as f and then
+				(attached found_feature as h implies
 					h.code_id /= f.code_id or else not h.rout_id_set.intersect (f.rout_id_set))
 			then
 					-- Found next feature.

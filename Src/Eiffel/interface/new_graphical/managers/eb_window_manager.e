@@ -1547,11 +1547,11 @@ feature {EB_DEVELOPMENT_WINDOW} -- Implementation
 			-- Find an empty titled not yet used.
 		local
 			l_index: INTEGER
-			empty_title: STRING_GENERAL
+			empty_title: STRING_32
 			window_titles: ARRAYED_LIST [STRING_GENERAL]
 			i: INTEGER
 			l_found: BOOLEAN
-			l_name, l_target_name: detachable STRING_32
+			l_name, l_target_name: READABLE_STRING_32
 		do
 				-- Remember the title of all windows.
 			create window_titles.make (managed_windows.count)
@@ -1569,29 +1569,26 @@ feature {EB_DEVELOPMENT_WINDOW} -- Implementation
 			managed_windows.go_i_th (l_index)
 
 				-- Look for a title not yet used.
-			if eiffel_project.system_defined then
+			if eiffel_project.system_defined and then attached eiffel_universe.target then
 				l_name := eiffel_system.name
 				l_target_name := eiffel_universe.target_name
 			elseif attached eiffel_project.workbench.lace as l_lace then
 				l_name := l_lace.conf_system.name
 				l_target_name := l_lace.target_name
 			end
-			if l_name /= Void and l_target_name /= Void then
-				empty_title := Interface_names.l_empty_development_window_header (
-															l_name,
-															l_target_name
-													).string
-			else
-				empty_title := Interface_names.t_Empty_development_window.string
-			end
-			empty_title.append (" #")
+			empty_title :=
+				if l_name /= Void and l_target_name /= Void then
+					interface_names.l_empty_development_window_header (l_name, l_target_name)
+				else
+					interface_names.t_empty_development_window
+				end +
+				" #"
 			from
 				i := 1
 			until
 				l_found
 			loop
-				Result := empty_title.twin
-				Result.append (i.out)
+				Result := empty_title + i.out
 				if not window_titles.has (Result) then
 					l_found := True
 				end

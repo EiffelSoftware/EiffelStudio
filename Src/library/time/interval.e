@@ -12,7 +12,6 @@ class INTERVAL [G -> ABSOLUTE] inherit
 			is_equal,
 			is_less_equal,
 			is_greater_equal,
-			is_less,
 			is_greater,
 			out
 		select
@@ -61,16 +60,16 @@ feature -- Initialization
 
 feature -- Access
 
-	start_bound: attached G
-			-- Start bound of the current interval
+	start_bound: G
+			-- Start bound of the current interval.
 
-	end_bound: attached G
-			-- End bound of the current interval
+	end_bound: G
+			-- End bound of the current interval.
 
 feature -- Measurement
 
 	duration: DURATION
-			-- Length of the interval
+			-- Length of the interval.
 		do
 			Result := end_bound.duration - start_bound.duration
 		end
@@ -281,7 +280,7 @@ feature -- Element change
 feature -- Basic operations
 
 	union (other: like Current): like Current
-			-- Union with `other'
+			-- Union with `other'.
 		require
 			other_exists: other /= Void
 			intersects: intersects (other)
@@ -295,7 +294,7 @@ feature -- Basic operations
 		end
 
 	intersection (other: like Current): detachable like Current
-			-- Intersection with `other'
+			-- Intersection with `other'.
 		require
 			other_exists: other /= Void
 		local
@@ -315,7 +314,7 @@ feature -- Basic operations
 
 	gather (other: like Current): like Current
 			-- Union of `other' and current interval if `other' meets
-			-- current interval
+			-- current interval.
 		require
 			other_exist: other /= Void
 			meeting_interval: meets (other)
@@ -329,7 +328,7 @@ feature -- Basic operations
 feature -- Output
 
 	out: STRING
-			-- Printable representation of the current interval
+			-- Printable representation of the current interval.
 		do
 			Result := "["
 			Result.append (start_bound.out)
@@ -349,7 +348,7 @@ invariant
 	between_bound: after (start_bound) and before (end_bound)
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

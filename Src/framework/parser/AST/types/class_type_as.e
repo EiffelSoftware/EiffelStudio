@@ -11,7 +11,6 @@ inherit
 	TYPE_AS
 		redefine
 			first_token,
-			is_equivalent,
 			is_fixed,
 			last_token
 		end
@@ -48,7 +47,7 @@ feature -- Status
 feature -- Visitor
 
 	process (v: AST_VISITOR)
-			-- process current element.
+			-- Process current element.
 		do
 			v.process_class_type_as (Current)
 		end
@@ -56,10 +55,10 @@ feature -- Visitor
 feature -- Attributes
 
 	class_name: ID_AS
-			-- Class type name
+			-- Class type name.
 
 	generics: detachable TYPE_LIST_AS
-			-- Possible generical parameters
+			-- Possible generical parameters.
 		do
 		ensure
 			generic_class_type: attached Result implies attached {GENERIC_CLASS_TYPE_AS} Current
@@ -116,7 +115,7 @@ feature -- Roundtrip/Token
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN
-			-- Is `other' equivalent to the current object ?
+			-- Is `other' equivalent to the current object?
 		do
 			Result := equivalent (class_name, other.class_name) and then
 				equivalent (generics, other.generics) and then
@@ -127,7 +126,7 @@ feature -- Comparison
 feature -- Output
 
 	dump: STRING
-			-- Dumped string
+			-- Dumped string.
 		do
 			create Result.make (class_name.name.count)
 			dump_marks (Result)

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Abstract syntax node representing a conversion feature."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,9 +10,6 @@ class
 
 inherit
 	AST_EIFFEL
-		redefine
-			is_equivalent
-		end
 
 create
 	initialize
@@ -58,7 +55,7 @@ feature {NONE} -- Initialization
 feature -- Visitor
 
 	process (v: AST_VISITOR)
-			-- process current element.
+			-- Process current element.
 		do
 			v.process_convert_feat_as (Current)
 		end
@@ -66,16 +63,16 @@ feature -- Visitor
 feature -- Roundtrip
 
 	colon_symbol_index: INTEGER
-			-- Index of symbol colon associated with this structure
+			-- Index of symbol colon associated with this structure.
 
 	lcurly_symbol_index, rcurly_symbol_index: INTEGER
-			-- Index in a match list for symbol '{' and '}' associated with current AST
+			-- Index in a match list for symbol '{' and '}' associated with current AST.
 
 	lparan_symbol_index, rparan_symbol_index: INTEGER
-			-- Index of symbol "(" and ")" associated with this structure
+			-- Index of symbol "(" and ")" associated with this structure.
 
 	colon_symbol (a_list: LEAF_AS_LIST): detachable SYMBOL_AS
-			-- Symbol colon associated with this structure
+			-- Symbol colon associated with this structure.
 		require
 			a_list_not_void: a_list /= Void
 		do
@@ -99,7 +96,7 @@ feature -- Roundtrip
 		end
 
 	lparan_symbol (a_list: LEAF_AS_LIST): detachable SYMBOL_AS
-			-- Symbol "(" associated with this structure
+			-- Symbol "(" associated with this structure.
 		require
 			a_list_not_void: a_list /= Void
 		do
@@ -107,7 +104,7 @@ feature -- Roundtrip
 		end
 
 	rparan_symbol (a_list: LEAF_AS_LIST): detachable SYMBOL_AS
-			-- Symbol ")" associated with this structure
+			-- Symbol ")" associated with this structure.
 		require
 			a_list_not_void: a_list /= Void
 		do
@@ -152,7 +149,7 @@ feature -- Roundtrip/Token
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN
-			-- Is `other' equivalent to the current object ?
+			-- Is `other' equivalent to the current object?
 		do
 			Result := is_creation_procedure = other.is_creation_procedure and
 				feature_name.is_equivalent (other.feature_name) and
@@ -165,7 +162,7 @@ invariant
 	conversion_types_not_empty: not conversion_types.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -196,4 +193,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class CONVERT_FEAT_AS
+end

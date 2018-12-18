@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Abstract description of an Eiffel infixed or prefixed feature name."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,10 +16,7 @@ inherit
 		export
 			{AST_VISITOR} frozen_keyword
 		redefine
-			alias_name,
-			is_equivalent,
 			is_infix, is_prefix, visual_name
-
 		end
 
 create
@@ -85,7 +82,7 @@ feature -- Properties
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN
-			-- Is `other' equivalent to the current object ?
+			-- Is `other' equivalent to the current object?
 		do
 			Result := equal (internal_name, other.internal_name) and
 				is_infix = other.is_infix and
@@ -95,15 +92,15 @@ feature -- Comparison
 feature -- Access
 
 	alias_name: STRING_AS
-			-- Operator name associated with the feature
+			-- Operator name associated with the feature.
 
 	internal_name: ID_AS
-			-- Internal name used by the compiler
+			-- Internal name used by the compiler.
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 
 	visual_name: STRING
-			-- Visual name of fix operator
+			-- Visual name of fix operator.
 		do
 			Result := alias_name.value
 		end
@@ -141,7 +138,7 @@ invariant
 	alias_name_not_void: alias_name /= Void
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

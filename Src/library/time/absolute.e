@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Absolute temporal values"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,14 +11,11 @@ deferred class
 
 inherit
 	COMPARABLE
-		redefine
-			is_less
-		end
 
 feature -- Access
 
 	origin: like Current
-			-- Place of start for recording objects
+			-- Place of start for recording objects.
 		deferred
 		ensure
 			result_exists: Result /= Void
@@ -27,7 +24,7 @@ feature -- Access
 feature -- Measurement
 
 	duration: DURATION
-			-- Length of the interval of time since `origin'
+			-- Length of the interval of time since `origin'.
 		deferred
 		end
 
@@ -42,7 +39,7 @@ feature -- Comparison
 feature -- Basic operations
 
 	minus alias "-" (other: like Current): INTERVAL [like Current]
-			-- Interval between current object and `other'
+			-- Interval between current object and `other'.
 		require
 			other_exists: other /= Void
 			other_smaller_than_current: other <= Current
@@ -55,7 +52,7 @@ feature -- Basic operations
 		end
 
 	relative_duration (other: like Current): DURATION
-			-- Relative duration from `Current' to `other'
+			-- Relative duration from `Current' to `other'.
 		require
 			other_exists: other /= Void
 		deferred
@@ -64,18 +61,14 @@ feature -- Basic operations
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class ABSOLUTE
-
+end

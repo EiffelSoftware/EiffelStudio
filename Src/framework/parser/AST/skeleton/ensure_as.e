@@ -3,15 +3,12 @@
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
-	revision	: "$Revision$"
+	revision: "$Revision$"
 
 class ENSURE_AS
 
 inherit
 	ASSERT_LIST_AS
-		redefine
-			process
-		end
 
 create
 	make
@@ -55,7 +52,7 @@ feature -- Roundtrip
 feature -- Visitor
 
 	process (v: AST_VISITOR)
-			-- process current element.
+			-- Process current element.
 		do
 			v.process_ensure_as (Current)
 		end
@@ -63,7 +60,7 @@ feature -- Visitor
 feature -- Properties
 
 	is_then: BOOLEAN
-			-- Is the assertion list an ensure then part ?
+			-- Is the assertion list an ensure then part?
 		do
 			-- Do nothing
 		end
@@ -107,7 +104,7 @@ invariant
 	is_class_consistent: is_class = (attached  full_assertion_list as a and then across a as p some p.item.is_class end)
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

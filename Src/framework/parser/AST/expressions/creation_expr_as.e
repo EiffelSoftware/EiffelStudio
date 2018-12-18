@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Abstract description of an Eiffel creation expression call."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,9 +10,6 @@ deferred class
 
 inherit
 	CALL_AS
-		redefine
-			is_equivalent
-		end
 
 feature {NONE} -- Initialization
 
@@ -33,7 +30,7 @@ feature {NONE} -- Initialization
 feature -- Visitor
 
 	process (v: AST_VISITOR)
-			-- process current element.
+			-- Process current element.
 		do
 			v.process_creation_expr_as (Current)
 		end
@@ -54,7 +51,7 @@ feature -- Access
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN
-			-- Is `other' equivalent to the current object ?
+			-- Is `other' equivalent to the current object?
 		do
 			Result :=
 				is_active = other.is_active and then
@@ -67,7 +64,7 @@ invariant
 	type_exists: type /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -98,4 +95,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class CREATION_EXPR_AS
+end

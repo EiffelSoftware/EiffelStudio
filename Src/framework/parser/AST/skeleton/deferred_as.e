@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "AST representation of a deferred routine."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,8 +12,7 @@ inherit
 		undefine
 			text
 		redefine
-			is_deferred, has_instruction, index_of_instruction,
-			is_equivalent
+			is_deferred, has_instruction, index_of_instruction
 		end
 
 	KEYWORD_AS
@@ -28,7 +27,7 @@ create
 feature -- Visitor
 
 	process (v: AST_VISITOR)
-			-- process current element.
+			-- Process current element.
 		do
 			v.process_deferred_as (Current)
 		end
@@ -36,7 +35,7 @@ feature -- Visitor
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN
-			-- Is `other' equivalent to the current object ?
+			-- Is `other' equivalent to the current object?
 		do
 			Result := True
 		end
@@ -44,7 +43,7 @@ feature -- Comparison
 feature -- Properties
 
 	is_deferred: BOOLEAN = True
-			-- Is the current routine body a defferred one ?
+			-- Is the current routine body a defferred one?
 
 	has_instruction (i: INSTRUCTION_AS): BOOLEAN
 			-- Has the current routine body an instruction `i'?
@@ -60,7 +59,7 @@ feature -- Properties
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -73,22 +72,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class DEFERRED_AS
+end

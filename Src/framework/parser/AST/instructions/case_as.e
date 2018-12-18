@@ -1,18 +1,14 @@
-note
-	description	: "Abstract description ao an alternative of a multi_branch %
-				  %instruction. Version for Bench."
+﻿note
+	description	: "Abstract description ao an alternative of a multi_branch instruction.."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class CASE_AS
 
 inherit
 	AST_EIFFEL
-		redefine
-			is_equivalent
-		end
 
 create
 	initialize
@@ -42,7 +38,7 @@ feature {NONE} -- Initialization
 feature -- Visitor
 
 	process (v: AST_VISITOR)
-			-- process current element.
+			-- Process current element.
 		do
 			v.process_case_as (Current)
 		end
@@ -50,10 +46,10 @@ feature -- Visitor
 feature -- Roundtrip
 
 	when_keyword_index, then_keyword_index: INTEGER
-			-- Index of keyword "when" and "then" associated with this structure
+			-- Index of keyword "when" and "then" associated with this structure.
 
 	when_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
-			-- Keyword "when" associated with this structure
+			-- Keyword "when" associated with this structure.
 		require
 			a_list_not_void: a_list /= Void
 		do
@@ -61,7 +57,7 @@ feature -- Roundtrip
 		end
 
 	then_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
-			-- Keyword "then" ssociated with this structure
+			-- Keyword "then" ssociated with this structure.
 		require
 			a_list_not_void: a_list /= Void
 		do
@@ -77,10 +73,10 @@ feature -- Roundtrip
 feature -- Attributes
 
 	interval: EIFFEL_LIST [INTERVAL_AS]
-			-- Interval of the alternative
+			-- Interval of the alternative.
 
 	compound: detachable EIFFEL_LIST [INSTRUCTION_AS]
-			-- Compound
+			-- Compound.
 
 feature -- Roundtrip/Token
 
@@ -107,7 +103,7 @@ feature -- Roundtrip/Token
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN
-			-- Is `other' equivalent to the current object ?
+			-- Is `other' equivalent to the current object?
 		do
 			Result := equivalent (compound, other.compound) and
 				equivalent (interval, other.interval)
@@ -131,7 +127,7 @@ invariant
 	interval_not_void: interval /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -162,4 +158,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class CASE_AS
+end

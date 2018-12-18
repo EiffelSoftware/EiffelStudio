@@ -1,18 +1,15 @@
-note
-
-	description:
-		"Invalid Once key."
+﻿note
+	description: "Invalid Once key."
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
-	revision: "$Revision $"
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class VVOK
 
 inherit
 	VALIDITY_ERROR
 		redefine
-			process,
 			has_associated_file
 		end
 
@@ -22,7 +19,7 @@ create
 feature -- Properties
 
 	code: STRING = "VVOK"
-			-- Error code	
+			-- Error code.
 
 feature -- Status report
 
@@ -36,7 +33,7 @@ feature -- Visitor
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

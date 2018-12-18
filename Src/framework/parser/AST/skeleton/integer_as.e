@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Node for integer constant."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -38,8 +38,6 @@ inherit
 	ATOMIC_AS
 		undefine
 			text
-		redefine
-			is_equivalent
 		end
 
 	INTEGER_TYPE_MASKS
@@ -135,10 +133,10 @@ feature {NONE} -- Initialization
 feature -- Roundtrip
 
 	sign_symbol_index: INTEGER
-			-- Index of symbol "+" or "-" associated with this structure
+			-- Index of symbol "+" or "-" associated with this structure.
 
 	sign_symbol (a_list: LEAF_AS_LIST): detachable SYMBOL_AS
-			-- Symbol "+" or "-" associated with this structure
+			-- Symbol "+" or "-" associated with this structure.
 		require
 			a_list_not_void: a_list /= Void
 		local
@@ -210,7 +208,7 @@ feature -- Properties
 feature -- Visitor
 
 	process (v: AST_VISITOR)
-			-- process current element.
+			-- Process current element.
 		do
 			v.process_integer_as (Current)
 		end
@@ -218,7 +216,7 @@ feature -- Visitor
 feature -- Status report
 
 	natural_8_value: NATURAL_8
-			-- 8-bit natural value
+			-- 8-bit natural value.
 		require
 			has_natural: has_natural (8)
 		do
@@ -226,7 +224,7 @@ feature -- Status report
 		end
 
 	natural_16_value: NATURAL_16
-			-- 16-bit natural value
+			-- 16-bit natural value.
 		require
 			has_natural: has_natural (16)
 		do
@@ -234,7 +232,7 @@ feature -- Status report
 		end
 
 	natural_32_value: NATURAL_32
-			-- 32-bit natural value
+			-- 32-bit natural value.
 		require
 			has_natural: has_natural (32)
 		do
@@ -242,7 +240,7 @@ feature -- Status report
 		end
 
 	natural_64_value: NATURAL_64
-			-- 64-bit natural value
+			-- 64-bit natural value.
 		require
 			has_natural: has_natural (64)
 		do
@@ -250,7 +248,7 @@ feature -- Status report
 		end
 
 	integer_8_value: INTEGER_8
-			-- 8-bit integer value
+			-- 8-bit integer value.
 		require
 			has_integer: has_integer (8)
 		do
@@ -261,7 +259,7 @@ feature -- Status report
 		end
 
 	integer_16_value: INTEGER_16
-			-- 16-bit integer value
+			-- 16-bit integer value.
 		require
 			has_integer: has_integer (16)
 		do
@@ -272,7 +270,7 @@ feature -- Status report
 		end
 
 	integer_32_value: INTEGER
-			-- 32-bit integer value
+			-- 32-bit integer value.
 		require
 			has_integer: has_integer (32)
 		do
@@ -283,7 +281,7 @@ feature -- Status report
 		end
 
 	integer_64_value: INTEGER_64
-			-- 64-bit integer value
+			-- 64-bit integer value.
 		require
 			has_integer: has_integer (64)
 		do
@@ -324,7 +322,7 @@ feature -- Status report
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN
-			-- Is `other' equivalent to the current object ?
+			-- Is `other' equivalent to the current object?
 		do
 			Result := value = other.value and then default_type = other.default_type and then
 				types = other.types and then equivalent (constant_type, other.constant_type)
@@ -350,7 +348,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Output
 feature {INTEGER_AS} -- Storage
 
 	value: NATURAL_64
-			-- Constant value without sign
+			-- Constant value without sign.
 
 	has_minus: BOOLEAN
 			-- Has constant a minus sign?
@@ -358,10 +356,10 @@ feature {INTEGER_AS} -- Storage
 feature {INTEGER_AS} -- Types
 
 	default_type: INTEGER
-			-- Default type of integer constant
+			-- Default type of integer constant.
 
 	types: like default_type
-			-- Possible types of integer constant
+			-- Possible types of integer constant.
 			-- (Combination of bit masks `integer_..._mask' and `natural_..._mask')
 
 feature {NONE} -- Translation
@@ -553,7 +551,7 @@ feature {NONE} -- Translation
 		end
 
 	largest_natural_64: STRING = "18446744073709551615"
-			-- Largest string representation of 2^64 - 1
+			-- Largest string representation of `2^64 - 1`.
 
 	read_decimal_value (is_neg: BOOLEAN; s: STRING)
 			-- Read integer or natural expressed in decimal representation.
@@ -710,7 +708,7 @@ invariant
 	non_negative_natural: (has_natural (8) or has_natural (16) or has_natural (32) or has_natural (64)) implies not has_minus
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

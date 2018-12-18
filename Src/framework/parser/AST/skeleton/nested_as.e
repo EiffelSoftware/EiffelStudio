@@ -1,7 +1,5 @@
-note
-	description:
-			"Abstract description of a nested call `target.message' %
-			%Version for Bench."
+﻿note
+	description: "Abstract description of a nested call `target.message'"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -11,9 +9,6 @@ class NESTED_AS
 
 inherit
 	CALL_AS
-		redefine
-			is_equivalent
-		end
 
 create
 	initialize
@@ -40,7 +35,7 @@ feature {NONE} -- Initialization
 feature -- Visitor
 
 	process (v: AST_VISITOR)
-			-- process current element.
+			-- Process current element.
 		do
 			v.process_nested_as (Current)
 		end
@@ -48,10 +43,10 @@ feature -- Visitor
 feature -- Roundtrip
 
 	dot_symbol_index: INTEGER
-			-- Index of symbol "." associated with this structure
+			-- Index of symbol "." associated with this structure.
 
 	dot_symbol (a_list: LEAF_AS_LIST): detachable SYMBOL_AS
-			-- Symbol "." associated with this structure
+			-- Symbol "." associated with this structure.
 		require
 			a_list_not_void: a_list /= Void
 		do
@@ -67,10 +62,10 @@ feature -- Roundtrip
 feature -- Attributes
 
 	target: ACCESS_AS
-			-- Target of the call
+			-- Target of the call.
 
 	message: CALL_AS
-			-- Message send to the target
+			-- Message send to the target.
 
 feature -- Roundtrip/Token
 
@@ -87,7 +82,7 @@ feature -- Roundtrip/Token
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN
-			-- Is `other' equivalent to the current object ?
+			-- Is `other' equivalent to the current object?
 		do
 			Result := equivalent (message, other.message) and
 				equivalent (target, other.target)
@@ -114,7 +109,7 @@ invariant
 	target_not_void: target /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -145,4 +140,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class NESTED_AS
+end

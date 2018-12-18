@@ -1,6 +1,5 @@
-note
-	description: "Text fragment factory"
-	author: ""
+﻿note
+	description: "Text fragment factory."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -410,10 +409,10 @@ feature{NONE} -- Implementation
 		require
 			a_text_attached: a_text /= Void
 		do
-			if workbench.system_defined then
-				Result := universe.target_name.twin
+			if workbench.system_defined and then attached universe.target then
+				Result := universe.target_name.as_string_32.string
 			else
-				Result := a_text.twin
+				Result := a_text.string
 			end
 		ensure
 			result_attached: Result /= Void
@@ -443,7 +442,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

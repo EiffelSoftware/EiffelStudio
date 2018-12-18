@@ -13,8 +13,8 @@
 				<img src="https://www.eiffel.com/wp-content/themes/eiffeldesign/images/logo.png" alt="Eiffel Software Logo"/></a>
 		</header>
 		<section>
-			<h2>Thank you for downloading EiffelStudio.</h2>
-
+			<h2>Thank you for downloading EiffelStudio.</h2> <h4> Release {$number/} </h4>
+ 
 			<p>
 				This is an evaluation version. It will expire 30 days after your first use. It requires a CD Key which is provided below.
 			</p>

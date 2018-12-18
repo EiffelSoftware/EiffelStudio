@@ -10,7 +10,7 @@ class ONCE_AS
 inherit
 	INTERNAL_AS
 		redefine
-			process, is_once, as_once,
+			is_once, as_once,
 			is_equivalent
 		end
 
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 feature -- Visitor
 
 	process (v: AST_VISITOR)
-			-- process current element.
+			-- Process current element.
 		do
 			v.process_once_as (Current)
 		end
@@ -44,10 +44,10 @@ feature -- Visitor
 feature -- Roundtrip
 
 	once_keyword_index: INTEGER
-			-- Index of keyword "once" associated with this structure
+			-- Index of keyword "once" associated with this structure.
 
 	once_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
-			-- Keyword "once" associated with this structure
+			-- Keyword "once" associated with this structure.
 		require
 			a_list_not_void: a_list /= Void
 		do
@@ -55,7 +55,7 @@ feature -- Roundtrip
 		end
 
 	internal_keys: detachable KEY_LIST_AS
-			-- Internal once keys, in which "(" and ")" are stored
+			-- Internal once keys, in which "(" and ")" are stored.
 
 	index: INTEGER
 			-- <Precursor>
@@ -66,7 +66,7 @@ feature -- Roundtrip
 feature -- Properties
 
 	is_once: BOOLEAN = True
-			-- Is the current routine body a once one ?
+			-- Is the current routine body a once one?
 
 	as_once: detachable ONCE_AS
 			-- See `content' as an instance of ONCE_AS.
@@ -75,7 +75,7 @@ feature -- Properties
 		end
 
 	keys: detachable EIFFEL_LIST [STRING_AS]
-			-- Once keys
+			-- Once keys.
 		do
 			if attached internal_keys as k then
 				Result := k.keys
@@ -224,7 +224,7 @@ feature -- Roundtrip/Token
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN
-			-- Is `other' equivalent to the current object ?
+			-- Is `other' equivalent to the current object?
 		do
 				--| We might be smarter, and be flexible on keys' case and order
 				--| which does not really matters.
@@ -238,7 +238,7 @@ feature {NONE} -- Constants
 	once_key_object: STRING = "OBJECT"
 
 ;note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

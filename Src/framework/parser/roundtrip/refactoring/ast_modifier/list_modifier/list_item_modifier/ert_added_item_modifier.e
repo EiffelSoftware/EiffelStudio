@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Object that represents an added item in EIFFEL_LIST"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,14 +10,11 @@ deferred class
 
 inherit
 	ERT_LIST_ITEM_MODIFIER
-		redefine
-			is_removed
-		end
 
 feature
 
 	attached_ast: AST_EIFFEL
-			-- AST node to which current modification is attached
+			-- AST node to which current modification is attached.
 
 feature	-- Status reporting
 
@@ -29,7 +25,7 @@ invariant
 	attached_ast_not_void: attached_ast /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

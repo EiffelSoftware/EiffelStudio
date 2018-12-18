@@ -11,9 +11,6 @@ class ITERATION_AS
 
 inherit
 	AST_EIFFEL
-		redefine
-			is_equivalent
-		end
 
 create
 	initialize
@@ -22,8 +19,8 @@ feature {NONE} -- Initialization
 
 	initialize (a: like across_keyword; e: like expression; b: like as_keyword; i: like identifier; r: BOOLEAN)
 			-- Create a new ITERATION AST node for an iteration part of a loop in the form
-			-- across e as i -- when `not r`
-			-- across e is i -- when `r`
+			-- across e as i -- when `not r`;
+			-- across e is i -- when `r`.
 		require
 			e_attached: e /= Void
 			i_attached: i /= Void
@@ -79,7 +76,7 @@ feature {NONE} -- Initialization
 
 	create_access_feat_as (n: STRING; i: like identifier): ACCESS_FEAT_AS
 			-- Create a new node for a feature call of name `n'
-			-- using the given ID `i' for location information
+			-- using the given ID `i' for location information.
 		require
 			i_attached: attached i
 		local
@@ -95,7 +92,7 @@ feature {NONE} -- Initialization
 feature -- Visitor
 
 	process (v: AST_VISITOR)
-			-- process current element.
+			-- Process current element.
 		do
 			v.process_iteration_as (Current)
 		end
@@ -103,10 +100,10 @@ feature -- Visitor
 feature -- Roundtrip
 
 	across_keyword_index, as_keyword_index: INTEGER
-			-- Index of keyword "across" and "as" associated with this structure
+			-- Index of keyword "across" and "as" associated with this structure.
 
 	across_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
-			-- Keyword "across" associated with this structure
+			-- Keyword "across" associated with this structure.
 		require
 			a_list_attached: a_list /= Void
 		local
@@ -119,7 +116,7 @@ feature -- Roundtrip
 		end
 
 	as_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
-			-- Keyword "as" associated with this structure
+			-- Keyword "as" associated with this structure.
 		require
 			a_list_attached: a_list /= Void
 		local
@@ -140,10 +137,10 @@ feature -- Roundtrip
 feature -- Attributes
 
 	expression: EXPR_AS
-			-- Expression of iteration
+			-- Expression of iteration.
 
 	identifier: ID_AS
-			-- Cursor of iteration
+			-- Cursor of iteration.
 
 	is_restricted: BOOLEAN
 			-- Does the iteration use a restricted form for an iteration variable?
@@ -195,7 +192,7 @@ feature -- Roundtrip/Token
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN
-			-- Is `other' equivalent to the current object ?
+			-- Is `other' equivalent to the current object?
 		do
 			Result := equivalent (expression, other.expression) and then
 				equivalent (identifier, other.identifier) and then
@@ -243,4 +240,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class ITERATION_AS
+end

@@ -1,8 +1,8 @@
-note
+﻿note
 	description: "AST representation of an attribute body."
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
+	status: "See notice at end of class."
+	date: "$Date$"
 	revision: "$Revision$"
 
 class ATTRIBUTE_AS
@@ -10,8 +10,7 @@ class ATTRIBUTE_AS
 inherit
 	INTERNAL_AS
 		redefine
-			is_attribute,
-			process
+			is_attribute
 		end
 
 create
@@ -38,7 +37,7 @@ feature -- Properties
 feature -- Visitor
 
 	process (v: AST_VISITOR)
-			-- process current element.
+			-- Process current element.
 		do
 			v.process_attribute_as (Current)
 		end
@@ -46,10 +45,10 @@ feature -- Visitor
 feature -- Roundtrip
 
 	attribute_keyword_index: INTEGER
-			-- Index of keyword "do" associated with this structure
+			-- Index of keyword "do" associated with this structure.
 
 	attribute_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
-			-- Keyword "do" associated with this structure
+			-- Keyword "do" associated with this structure.
 		require
 			a_list_not_void: a_list /= Void
 		do
@@ -88,7 +87,7 @@ feature -- Roundtrip/Token
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

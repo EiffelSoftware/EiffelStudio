@@ -11,8 +11,6 @@ inherit
 	AST_EIFFEL
 		undefine
 			copy, is_equal
-		redefine
-			is_equivalent
 		end
 
 	CONSTRUCT_LIST [T]
@@ -30,14 +28,14 @@ create
 feature {NONE} -- Initialization
 
 	make (n: INTEGER)
-			-- Creation of the list with the comparison set on object
+			-- Creation of the list with the comparison set on object.
 		do
 			Precursor (n)
 			object_comparison := True
 		end
 
 	make_filled (n: INTEGER)
-			-- Creation of the list with the comparison set on object
+			-- Creation of the list with the comparison set on object.
 		do
 			Precursor (n)
 			object_comparison := True
@@ -102,7 +100,7 @@ feature -- Roundtrip
 feature -- Visitor
 
 	process (v: AST_VISITOR)
-			-- process current element.
+			-- Process current element.
 		do
 			v.process_eiffel_list (Current)
 		end
@@ -180,7 +178,7 @@ feature -- Element change
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN
-			-- Is `other' equivalent to the current object ?
+			-- Is `other' equivalent to the current object?
 		local
 			l_area, o_area: SPECIAL [T]
 			i, nb: INTEGER

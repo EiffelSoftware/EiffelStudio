@@ -1,8 +1,6 @@
-note
+﻿note
 
-	description:
-			"Abstract node for alternative values of a multi-branch %
-			%instruction. Version for Bench."
+	description: "Abstract node for alternative values of a multi-branch instruction."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -12,9 +10,6 @@ class INTERVAL_AS
 
 inherit
 	AST_EIFFEL
-		redefine
-			is_equivalent
-		end
 
 create
 	initialize
@@ -38,7 +33,7 @@ feature {NONE} -- Initialization
 feature -- Visitor
 
 	process (v: AST_VISITOR)
-			-- process current element.
+			-- Process current element.
 		do
 			v.process_interval_as (Current)
 		end
@@ -46,7 +41,7 @@ feature -- Visitor
 feature -- Roundtrip
 
 	dotdot_symbol: detachable SYMBOL_AS
-			-- Symbol ".." associated with this structure
+			-- Symbol ".." associated with this structure.
 
 	index: INTEGER
 			-- <Precursor>
@@ -61,11 +56,11 @@ feature -- Roundtrip
 feature -- Attributes
 
 	lower: ATOMIC_AS
-			-- Lower bound
+			-- Lower bound.
 
 	upper: detachable ATOMIC_AS
-			-- Upper bound
-			-- Void if constant rather than interval
+			-- Upper bound.
+			-- Void if constant rather than interval.
 
 feature -- Roundtrip/Token
 
@@ -86,7 +81,7 @@ feature -- Roundtrip/Token
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN
-			-- Is `other' equivalent to the current object ?
+			-- Is `other' equivalent to the current object?
 		do
 			Result := equivalent (lower, other.lower) and
 				equivalent (upper, other.upper)
@@ -112,7 +107,7 @@ invariant
 	lower_not_void: lower /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -143,4 +138,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class INTERVAL_AS
+end

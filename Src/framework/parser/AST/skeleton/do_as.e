@@ -1,17 +1,14 @@
-note
+﻿note
 	description: "AST representation of a non-deferred routine."
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
+	status: "See notice at end of class."
+	date: "$Date$"
 	revision: "$Revision$"
 
 class DO_AS
 
 inherit
 	INTERNAL_AS
-		redefine
-			process
-		end
 
 create
 	make
@@ -32,7 +29,7 @@ feature{NONE} -- Initialization
 feature -- Visitor
 
 	process (v: AST_VISITOR)
-			-- process current element.
+			-- Process current element.
 		do
 			v.process_do_as (Current)
 		end
@@ -40,10 +37,10 @@ feature -- Visitor
 feature -- Roundtrip
 
 	do_keyword_index: INTEGER
-			-- Index of keyword "do" associated with this structure
+			-- Index of keyword "do" associated with this structure.
 
 	do_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
-			-- Keyword "do" associated with this structure
+			-- Keyword "do" associated with this structure.
 		require
 			a_list_not_void: a_list /= Void
 		do
@@ -82,7 +79,7 @@ feature -- Roundtrip/Token
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -113,4 +110,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class DO_AS
+end

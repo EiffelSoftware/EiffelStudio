@@ -5,9 +5,6 @@ class LIST_DEC_AS
 
 inherit
 	AST_EIFFEL
-		redefine
-			is_equivalent
-		end
 
 	SHARED_NAMES_HEAP
 
@@ -29,7 +26,7 @@ feature {NONE} -- Initialization
 feature -- Visitor
 
 	process (v: AST_VISITOR)
-			-- process current element.
+			-- Process current element.
 		do
 			v.process_list_dec_as (Current)
 		end
@@ -75,7 +72,7 @@ feature -- Access
 feature -- Roundtrip/Token
 
 	first_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
-			-- First token in current AST nodE
+			-- First token in current AST node.
 		do
 			if
 				attached a_list and then
@@ -88,7 +85,7 @@ feature -- Roundtrip/Token
 		end
 
 	last_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
-			-- Last token in current AST node
+			-- Last token in current AST node.
 		do
 			if
 				attached a_list and then
@@ -103,7 +100,7 @@ feature -- Roundtrip/Token
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN
-			-- Is `other' equivalent to the current object ?
+			-- Is `other' equivalent to the current object?
 		do
 			Result := equal (id_list, other.id_list)
 		end
@@ -114,7 +111,7 @@ invariant
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -15,9 +15,6 @@ class
 inherit
 
   		I18N_FILE
-  			redefine
-  				valid
-  			end
 
 		IMPORTED_UTF8_READER_WRITER
 
@@ -46,7 +43,7 @@ feature {NONE} -- Initialization
 feature
 
 	open
-			-- opens file and intialises parser
+			-- Open file and intialise parser.
 		do
 			if file.exists and file.is_plain then
 				file.open_read
@@ -76,7 +73,7 @@ feature
 		end
 
 	close
-			-- closes file
+			-- Closes file.
 		do
 			file.close
 			opened := False
@@ -85,7 +82,7 @@ feature
 feature -- Access
 
 	valid_index (i:INTEGER): BOOLEAN
-			-- is this index valid?
+			-- Is this index valid?
 		do
 			Result := i >= 1 and i <= entry_count
 		ensure then
@@ -93,14 +90,14 @@ feature -- Access
 		end
 
 	entry_has_plurals (i:INTEGER): BOOLEAN
-			-- does `i'-th entry have a plural?
+			-- Does `i'-th entry have a plural?
 		do
 			get_original_entries (i)
 			Result := last_original.list.count > 1
 		end
 
 	original_singular_string (i: INTEGER): STRING_32
-			-- `i'-th original string
+			-- `i'-th original string.
 		local
 			l_list: LIST [STRING_32]
 		do
@@ -114,7 +111,7 @@ feature -- Access
 		end
 
 	original_plural_string (i: INTEGER): STRING_32
-			-- `i'-th original plural
+			-- `i'-th original plural.
 		local
 			l_list: LIST [STRING_32]
 		do
@@ -125,7 +122,7 @@ feature -- Access
 		end
 
 	context_string (i: INTEGER): detachable STRING_32
-			-- `i'-th original string
+			-- `i'-th original string.
 		local
 			l_list: LIST [STRING_32]
 			l_index: INTEGER
@@ -144,7 +141,7 @@ feature -- Access
 		end
 
 	translated_singular_string (i: INTEGER): STRING_32
-			-- singular translation of `i'-th entry
+			-- Singular translation of `i'-th entry.
 		local
 			red: INTEGER
 			l_list: LIST [STRING_32]
@@ -157,7 +154,7 @@ feature -- Access
 		end
 
 	translated_plural_strings (i: INTEGER): ARRAY [STRING_32]
-			-- plural translations of `i'-th entry
+			-- Plural translations of `i'-th entry.
 		local
 			counter: INTEGER
 			l_list: LIST [STRING_32]
@@ -204,7 +201,7 @@ feature --Entries
 	last_translated: TUPLE [i: INTEGER; list: LIST [STRING_32]]
 
 	get_original_entries (i_th: INTEGER)
-			-- get `i_th' original entry in the file
+			-- Get `i_th' original entry in the file.
 		do
 			if last_original.i /= i_th then
 				last_original.i := i_th
@@ -224,7 +221,7 @@ feature --Entries
 feature -- Status
 
 	valid: BOOLEAN
-			-- Is the file a valid .mo file? This is a silly check
+			-- Is the file a valid .mo file? This is a silly check.
 		do
 			Result := is_little_endian_file xor is_big_endian_file
 		end
@@ -232,7 +229,8 @@ feature -- Status
 feature {NONE} -- Implementation
 
 	read_magic_number
-			-- reads the magic number and sets big/little endianness of machine and file  -> This will, hopefully, make valid true
+			-- Read the magic number and set big/little endianness of machine and file.
+			-- This will, hopefully, make `valid` true.
 		require
 			file_opened: file.is_open_read
 		local
@@ -266,7 +264,7 @@ feature {NONE} -- Implementation
 		end
 
 	read_plural_form
-			-- Reads the Plural-Form header
+			-- Read the Plural-Form header.
 		require
 			correct_file: file.is_open_read and valid
 		local
@@ -338,8 +336,8 @@ feature {NONE} -- Implementation (helpers)
 		end
 
 	read_integer: INTEGER
-			-- read an integer from the current
-			-- position in the mo file, taking care of the endianness of the file
+			-- Read an integer from the current
+			-- position in the mo file, taking care of the endianness of the file.
 		require
 			file_open: file.is_open_read
 		do
@@ -351,7 +349,7 @@ feature {NONE} -- Implementation (helpers)
 		end
 
 	read_integer_same_endianness: INTEGER
-			-- Reading an integer on the same architecture where the MO file was created
+			-- Reading an integer on the same architecture where the MO file was created.
 		require
 			file_open: file.is_open_read
 		do
@@ -360,7 +358,7 @@ feature {NONE} -- Implementation (helpers)
 		end
 
 	read_integer_opposite_endianness: INTEGER
-			-- Reading an integer on the opposite architecture of which where the MO file was created
+			-- Reading an integer on the opposite architecture of which where the MO file was created.
 		require
 			file_open: file.is_open_read
 		local
@@ -380,10 +378,10 @@ feature {NONE} -- Implementation (helpers)
 		end
 
 	get_integer: ARRAY[NATURAL_8]
-			-- read an integer byte to byte
+			-- Read an integer byte to byte
 			-- and put them a tuple in the
 			-- order they where encountered
-			-- it moves the cursor of the file
+			-- it moves the cursor of the file.
 		local
 			b0, b1, b2, b3 : NATURAL_8
 		do
@@ -401,25 +399,25 @@ feature {NONE} -- Implementation (helpers)
 feature {NONE} -- Implementation (parameters)
 
 	is_big_endian_file,	is_little_endian_file: BOOLEAN
-		-- File endianness
+		-- File endianness.
 
 	is_big_endian_machine, is_little_endian_machine: BOOLEAN
-		-- Machine endianness
+		-- Machine endianness.
 
 	version: INTEGER
-		-- Version of the mo file
+		-- Version of the mo file.
 
 	original_table_offset: INTEGER
-		-- Offset of the table containing the original strings
+		-- Offset of the table containing the original strings.
 
 	translated_table_offset: INTEGER
-		-- Offset of the table containing the translated strings
+		-- Offset of the table containing the translated strings.
 
 	hash_table_size: INTEGER
-		-- Size of the hash table
+		-- Size of the hash table.
 
 	hash_table_offset: INTEGER
-		-- Offset of the hash table
+		-- Offset of the hash table.
 
 invariant
 	last_translated /= Void
@@ -428,8 +426,8 @@ invariant
 	last_original.i > 0 implies last_original.list /= Void
 
 note
-	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	library:  "Internationalization library"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

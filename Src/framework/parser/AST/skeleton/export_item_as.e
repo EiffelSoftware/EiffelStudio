@@ -1,13 +1,11 @@
 note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+
 class EXPORT_ITEM_AS
 
 inherit
 	AST_EIFFEL
-		redefine
-			is_equivalent
-		end
 
 create
 	initialize
@@ -29,7 +27,7 @@ feature {NONE} -- Initialization
 feature -- Visitor
 
 	process (v: AST_VISITOR)
-			-- process current element.
+			-- Process current element.
 		do
 			v.process_export_item_as (Current)
 		end
@@ -37,10 +35,10 @@ feature -- Visitor
 feature -- Attributes
 
 	clients: CLIENT_AS
-			-- Client list
+			-- Client list.
 
 	features: detachable FEATURE_SET_AS
-			-- Feature set
+			-- Feature set.
 
 feature -- Roundtrip/Token
 
@@ -81,7 +79,7 @@ feature -- Roundtrip
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN
-			-- Is `other' equivalent to the current object ?
+			-- Is `other' equivalent to the current object?
 		do
 			Result := equivalent (clients, other.clients) and
 				equivalent (features, other.features)
@@ -91,7 +89,7 @@ invariant
 	clients_not_void: clients /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -122,4 +120,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EXPORT_ITEM_AS
+end

@@ -1,7 +1,5 @@
 ﻿note
-	description:
-		"Abstract description of an access to the precursor of%
-		%an Eiffel feature. Version for Bench."
+	description: "Abstract description of an access to the precursor of an Eiffel feature."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -11,9 +9,6 @@ class PRECURSOR_AS
 
 inherit
 	ACCESS_AS
-		redefine
-			is_equivalent
-		end
 
 	CLICKABLE_AST
 		redefine
@@ -47,7 +42,7 @@ feature {NONE} -- Initialization
 feature -- Visitor
 
 	process (v: AST_VISITOR)
-			-- process current element.
+			-- Process current element.
 		do
 			v.process_precursor_as (Current)
 		end
@@ -55,13 +50,13 @@ feature -- Visitor
 feature -- Attributes
 
 	precursor_keyword: KEYWORD_AS
-			-- Position of Precursor keyword
+			-- Position of Precursor keyword.
 
 	parent_base_class: detachable CLASS_TYPE_AS
-			-- Optional name of the parent
+			-- Optional name of the parent.
 
 	parameters: detachable EIFFEL_LIST [EXPR_AS]
-			-- List of parameters
+			-- List of parameters.
 		do
 			if attached internal_parameters as l_internal_paran then
 				Result := l_internal_paran.parameters
@@ -73,7 +68,7 @@ feature -- Attributes
 		end
 
 	parameter_count: INTEGER
-			-- Number of parameters
+			-- Number of parameters.
 		do
 			if attached parameters as l_params then
 				Result := l_params.count
@@ -81,7 +76,7 @@ feature -- Attributes
 		end
 
 	is_precursor: BOOLEAN = True
-			-- Precursor makes reference to a class
+			-- Precursor makes reference to a class.
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Attributes
 
@@ -94,7 +89,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Attributes
 feature -- Roundtrip
 
 	internal_parameters: detachable PARAMETER_LIST_AS
-			-- Internal list of parameters			
+			-- Internal list of parameters.
 
 	index: INTEGER
 			-- <Precursor>
@@ -137,7 +132,7 @@ feature -- Roundtrip/Token
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN
-			-- Is `other' equivalent to the current object ?
+			-- Is `other' equivalent to the current object?
 		do
 			Result := equivalent (parent_base_class, other.parent_base_class) and
 				equivalent (parameters, other.parameters)
@@ -182,4 +177,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class PRECURSOR_AS
+end

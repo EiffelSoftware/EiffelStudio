@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Abstract description of an elseif clause of a conditional expression."
 
 class ELSIF_EXPRESSION_AS
@@ -6,8 +6,7 @@ class ELSIF_EXPRESSION_AS
 inherit
 	EXPR_AS
 		redefine
-			is_detachable_expression,
-			is_equivalent
+			is_detachable_expression
 		end
 
 create
@@ -39,7 +38,7 @@ feature {NONE} -- Initialization
 feature -- Visitor
 
 	process (v: AST_VISITOR)
-			-- process current element.
+			-- Process current element.
 		do
 			v.process_elseif_expression_as (Current)
 		end
@@ -52,10 +51,10 @@ feature -- Status report
 feature -- Roundtrip
 
 	elseif_keyword_index, then_keyword_index: INTEGER
-			-- Index of keyword "elseif" and "then" assoicated with this structure
+			-- Index of keyword "elseif" and "then" assoicated with this structure.
 
 	elseif_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
-			-- Keyword "elseif" assoicated with this structure
+			-- Keyword "elseif" assoicated with this structure.
 		require
 			a_list_attached: attached a_list
 		local
@@ -68,7 +67,7 @@ feature -- Roundtrip
 		end
 
 	then_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
-			-- Keyword "then" assoicated with this structure
+			-- Keyword "then" assoicated with this structure.
 		require
 			a_list_attached: attached a_list
 		local
@@ -113,7 +112,7 @@ feature -- Roundtrip/Token
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN
-			-- Is `other' equivalent to the current object ?
+			-- Is `other' equivalent to the current object?
 		do
 			Result := equivalent (condition, other.condition) and
 				equivalent (expression, other.expression)
@@ -126,7 +125,7 @@ invariant
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

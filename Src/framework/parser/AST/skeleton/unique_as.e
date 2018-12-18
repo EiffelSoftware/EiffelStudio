@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description: "Description of a unique value. Version for Bench."
 	legal: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 		undefine
 			text
 		redefine
-			is_unique, is_equivalent
+			is_unique
 		end
 
 	KEYWORD_AS
@@ -36,7 +36,7 @@ feature -- Visitor
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN
-			-- Is `other' equivalent to the current object ?
+			-- Is `other' equivalent to the current object?
 		do
 			Result := True
 		end
@@ -51,7 +51,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Output
 	string_value: STRING = "";
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -82,4 +82,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class UNIQUE_AS
+end

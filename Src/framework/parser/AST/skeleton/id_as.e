@@ -18,7 +18,6 @@ inherit
 			string_value as name
 		redefine
 			is_id,
-			is_equivalent,
 			is_equal,
 			is_detachable_expression
 		end
@@ -94,7 +93,7 @@ feature -- Update
 		end
 
 	to_upper
-			-- Make sure `name' is in upper case
+			-- Make sure `name' is in upper case.
 		local
 			l_code: CHARACTER_8
 			l_area: SPECIAL [CHARACTER_8]
@@ -124,7 +123,7 @@ feature -- Update
 		end
 
 	to_lower
-			-- Make sure `name' is in upper case
+			-- Make sure `name' is in upper case.
 		local
 			l_code: CHARACTER_8
 			l_area: SPECIAL [CHARACTER_8]
@@ -228,7 +227,7 @@ feature -- Comparison
 		end
 
 	is_equivalent (other: like Current): BOOLEAN
-			-- Is `other' equivalent to the current object ?
+			-- Is `other' equivalent to the current object?
 		do
 			Result := is_equal (other)
 		end

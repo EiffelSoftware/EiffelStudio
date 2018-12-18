@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "AST representation of a feature clause structure."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -9,9 +9,6 @@ class FEATURE_CLAUSE_AS
 
 inherit
 	AST_EIFFEL
-		redefine
-			is_equivalent
-		end
 
 create
 	initialize
@@ -38,7 +35,7 @@ feature {NONE} -- Initialization
 feature -- Visitor
 
 	process (v: AST_VISITOR)
-			-- process current element.
+			-- Process current element.
 		do
 			v.process_feature_clause_as (Current)
 		end
@@ -59,21 +56,21 @@ feature -- Attributes
 			-- Position after `feature' keyword.
 
 	clients: detachable CLIENT_AS
-			-- Client list
+			-- Client list.
 
 	features: EIFFEL_LIST [FEATURE_AS]
-			-- Features
+			-- Features.
 
 feature -- Roundtrip/Token
 
 	first_token (a_list: detachable LEAF_AS_LIST): LEAF_AS
-			-- First token in current AST node
+			-- First token in current AST node.
 		do
 			Result := feature_keyword.first_token (a_list)
 		end
 
 	last_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
-			-- Last token in current AST node
+			-- Last token in current AST node.
 		do
 			if a_list /= Void then
 				Result := a_list.item_by_end_position (feature_clause_end_position)
@@ -92,7 +89,7 @@ feature -- Roundtrip/Token
 feature -- Roundtrip/Comments
 
 	comment (a_list: LEAF_AS_LIST): EIFFEL_COMMENTS
-			-- First line of comments on `Current'
+			-- First line of comments on `Current'.
 		require
 			a_list_not_void: a_list /= Void
 		local
@@ -142,7 +139,7 @@ feature -- Roundtrip/Comments
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN
-			-- Is `other' equivalent to the current object ?
+			-- Is `other' equivalent to the current object?
 		do
 			Result := equivalent (clients, other.clients) and
 				equivalent (features, other.features)
@@ -151,7 +148,7 @@ feature -- Comparison
 feature -- Access
 
 	feature_with_name (n: INTEGER): detachable FEATURE_AS
-			-- Feature ast with internal name `n'
+			-- Feature ast with internal name `n'.
 		local
 			l_area: SPECIAL [FEATURE_AS]
 			i, l_count: INTEGER
@@ -263,7 +260,7 @@ invariant
 	feature_location_not_void: feature_keyword /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -294,4 +291,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class FEATURE_CLAUSE_AS
+end

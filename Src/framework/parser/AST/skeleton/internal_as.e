@@ -1,9 +1,9 @@
-note
+﻿note
 	description	: "Abstract class representing routines that have a body."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class INTERNAL_AS
 
@@ -11,8 +11,7 @@ inherit
 	ROUT_BODY_AS
 		redefine
 			is_empty,
-			has_instruction, index_of_instruction,
-			is_equivalent
+			has_instruction, index_of_instruction
 		end
 
 feature {AST_FACTORY} -- Initialization
@@ -28,12 +27,12 @@ feature {AST_FACTORY} -- Initialization
 feature -- Attributes
 
 	compound: detachable EIFFEL_LIST [INSTRUCTION_AS]
-			-- Compound
+			-- Compound.
 
 	first_breakpoint_slot_index: INTEGER
-			-- Index of the first breakpoint slot. Set during semantic check (AST_FEATURE_CHECKER_GENERATOR)
+			-- Index of the first breakpoint slot. Set during semantic check (AST_FEATURE_CHECKER_GENERATOR).
 
-feature -- test for empty body
+feature -- Status report
 
 	is_empty : BOOLEAN
 		do
@@ -43,7 +42,7 @@ feature -- test for empty body
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN
-			-- Is `other' equivalent to the current object ?
+			-- Is `other' equivalent to the current object?
 		do
 			Result := equivalent (compound, other.compound)
 		end
@@ -96,10 +95,10 @@ feature {INTERNAL_AS} -- Replication
 	set_compound (c: like compound)
 		do
 			compound := c
-		end;
+		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -130,4 +129,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class INTERNAL_AS
+end

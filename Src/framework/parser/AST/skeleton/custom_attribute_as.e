@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Description of a custom attribute."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -9,9 +9,6 @@ class CUSTOM_ATTRIBUTE_AS
 
 inherit
 	ATOMIC_AS
-		redefine
-			is_equivalent
-		end
 
 create
 	initialize
@@ -45,10 +42,10 @@ feature -- Visitor
 feature -- Roundtrip
 
 	end_keyword_index: INTEGER
-			-- Keyword "end" associated with this structure
+			-- Keyword "end" associated with this structure.
 
 	end_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
-			-- Keyword "end" associated with this structure
+			-- Keyword "end" associated with this structure.
 		require
 			a_list_not_void: a_list /= Void
 		do
@@ -90,7 +87,7 @@ feature -- Roundtrip/Token
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN
-			-- Is `other' equivalent to the current object ?
+			-- Is `other' equivalent to the current object?
 		do
 			Result := creation_expr.is_equivalent (other.creation_expr) and then equivalent (tuple, other.tuple)
 		end
@@ -103,7 +100,7 @@ invariant
 	creation_expr_not_void: creation_expr /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -134,4 +131,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class CUSTOM_ATTRIBUTE_AS
+end

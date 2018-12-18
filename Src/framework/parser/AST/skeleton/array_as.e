@@ -3,15 +3,12 @@
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class ARRAY_AS
 
 inherit
 	EXPR_AS
-		redefine
-			is_equivalent
-		end
 
 create
 	initialize
@@ -40,7 +37,7 @@ feature {NONE} -- Initialization
 feature -- Visitor
 
 	process (v: AST_VISITOR)
-			-- process current element.
+			-- Process current element.
 		do
 			v.process_array_as (Current)
 		end
@@ -54,7 +51,7 @@ feature -- Roundtrip
 			-- Index of symbol ">>" associated with this structure.
 
 	larray_symbol (a_list: detachable LEAF_AS_LIST): detachable SYMBOL_AS
-			-- Symbol "<<" associated with this structure
+			-- Symbol "<<" associated with this structure.
 			--| We do not require `a_list' to be attached because we save the token.
 		local
 			i: INTEGER
@@ -71,7 +68,7 @@ feature -- Roundtrip
 		end
 
 	rarray_symbol (a_list: LEAF_AS_LIST): detachable SYMBOL_AS
-			-- Symbol ">>" associated with this structure
+			-- Symbol ">>" associated with this structure.
 		require
 			a_list_not_void: a_list /= Void
 		local
@@ -92,7 +89,7 @@ feature -- Roundtrip
 feature -- Attributes
 
 	expressions: EIFFEL_LIST [EXPR_AS]
-			-- Expression list symbolizing the manifest array
+			-- Expression list symbolizing the manifest array.
 
 	type: detachable TYPE_AS
 			-- Specified array type (if any).
@@ -137,7 +134,7 @@ feature -- Roundtrip/Token
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN
-			-- Is `other' equivalent to the current object ?
+			-- Is `other' equivalent to the current object?
 		do
 			Result :=
 				equivalent (type, other.type) and then
@@ -158,7 +155,7 @@ invariant
 	expressions_not_void: expressions /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

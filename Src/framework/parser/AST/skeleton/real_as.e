@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description: "Node for real constant. Version for Bench."
 	legal: "See notice at end of class."
@@ -12,8 +12,6 @@ inherit
 	ATOMIC_AS
 		undefine
 			text
-		redefine
-			is_equivalent
 		end
 
 	LEAF_AS
@@ -55,10 +53,10 @@ feature -- Visitor
 feature -- Roundtrip
 
 	sign_symbol_index: INTEGER
-			-- Index of symbol "+" or "-" associated with this structure
+			-- Index of symbol "+" or "-" associated with this structure.
 
 	sign_symbol (a_list: LEAF_AS_LIST): detachable SYMBOL_AS
-			-- Symbol "+" or "-" associated with this structure
+			-- Symbol "+" or "-" associated with this structure.
 		require
 			a_list_not_void: a_list /= Void
 		local
@@ -120,7 +118,7 @@ feature -- Access
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN
-			-- Is `other' equivalent to the current object ?
+			-- Is `other' equivalent to the current object?
 		do
 			Result := value.is_equal (other.value) and then equivalent (constant_type, other.constant_type)
 		end
@@ -133,7 +131,7 @@ feature {AST_EIFFEL} -- Output
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -164,4 +162,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class REAL_AS
+end

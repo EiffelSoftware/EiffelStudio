@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "[
-					Eiffel Vision2 Internet Web Browser Widget
-
-																		]"
+			Eiffel Vision2 Internet Web Browser Widget
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "application, accelerator, event loop"
@@ -15,8 +14,7 @@ class
 inherit
 	EV_PRIMITIVE
 		redefine
-			implementation,
-			create_implementation
+			implementation
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
@@ -84,7 +82,7 @@ feature -- Command
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -94,5 +92,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-end -- class EV_WEB_BROWSER
+end

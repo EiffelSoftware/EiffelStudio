@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that is a cluster figure that can be resized by moving one of its edges."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,7 +12,6 @@ inherit
 	EG_CLUSTER_FIGURE
 		redefine
 			default_create,
-			update,
 			xml_node_name,
 			xml_element,
 			set_with_xml_element,
@@ -313,8 +312,8 @@ invariant
 	risizers_not_void: resizer_top_left /= Void and resizer_top_right /= Void and resizer_bottom_right /= Void and resizer_bottom_left /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA
@@ -323,8 +322,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EG_RESIZABLE_CLUSTER_FIGURE
-
+end

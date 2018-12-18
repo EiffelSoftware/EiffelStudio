@@ -18,7 +18,7 @@ deferred class NETWORK_SOCKET inherit
 			put_real, putreal, put_double, putdouble, put_managed_pointer,
 			set_blocking, set_non_blocking
 		redefine
-			exists, make_socket, address_type, is_valid_peer_address, connect, is_valid_family
+			exists, address_type, is_valid_peer_address, is_valid_family
 		end
 
 	SOCKET_TIMEOUT_UTILITIES

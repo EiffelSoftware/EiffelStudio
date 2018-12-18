@@ -15,8 +15,6 @@ inherit
 	DISPOSABLE
 		undefine
 			default_create
-		redefine
-			dispose
 		end
 
 	LOG_FACILITY_CONSTANTS

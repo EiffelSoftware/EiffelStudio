@@ -5,9 +5,6 @@ deferred class
 inherit
 
 	DISPOSABLE
-		redefine
-			dispose
-		end
 
 feature -- Initialization
 

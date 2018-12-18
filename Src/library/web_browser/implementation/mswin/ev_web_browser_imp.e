@@ -28,8 +28,7 @@ inherit
 
 	EV_SIZEABLE_PRIMITIVE_IMP
 		redefine
-			interface,
-			make
+			interface
 		end
 
 	EV_PRIMITIVE_IMP

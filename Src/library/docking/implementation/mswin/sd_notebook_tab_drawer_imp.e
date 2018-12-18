@@ -12,8 +12,6 @@ inherit
 	SD_NOTEBOOK_TAB_DRAWER_I
 		redefine
 			make,
-			draw_pixmap_text_selected,
-			draw_pixmap_text_unselected,
 			expose_selected,
 			expose_unselected,
 			expose_hot,
@@ -611,7 +609,7 @@ feature {NONE} -- Attributes
 
 ;note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

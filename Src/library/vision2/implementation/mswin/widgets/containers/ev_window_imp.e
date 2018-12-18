@@ -34,9 +34,6 @@ inherit
 			client_y,
 			parent_ask_resize,
 			set_default_minimum_size,
-			compute_minimum_width,
-			compute_minimum_height,
-			compute_minimum_size,
 			on_destroy,
 			interface,
 			on_size,
@@ -108,7 +105,6 @@ inherit
 			default_style,
 			on_size,
 			on_get_min_max_info,
-			on_destroy,
 			on_show,
 			on_hide,
 			on_move,
@@ -1523,8 +1519,8 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA
@@ -1534,4 +1530,3 @@ note
 		]"
 
 end
-

@@ -1,6 +1,5 @@
-note
-	description:
-		"Eiffel Vision frame. Mswindows implementation."
+﻿note
+	description: "Eiffel Vision frame. MS Windows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -30,9 +29,6 @@ inherit
 			client_width,
 			client_height,
 			set_default_minimum_size,
-			compute_minimum_width,
-			compute_minimum_height,
-			compute_minimum_size,
 			interface,
 			enable_sensitive,
 			disable_sensitive,
@@ -520,8 +516,8 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_FRAME note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA
@@ -530,4 +526,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EV_FRAME_IMP
+end

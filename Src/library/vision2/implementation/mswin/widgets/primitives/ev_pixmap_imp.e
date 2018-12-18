@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"Eiffel Vision pixmap. Mswindows implementation for a%N%
 		%simple pixmap (not drawable, not self-displayable)"
@@ -17,7 +17,6 @@ inherit
 		redefine
 			interface,
 			on_parented,
-			set_with_default,
 			set_pebble,
 			set_actual_drop_target_agent,
 			set_pebble_function,

@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"Graphical picture stored as a two dimensional map of pixels.%N%
 		%Can be modified and displayed."
@@ -16,7 +16,6 @@ inherit
 		redefine
 			is_in_default_state,
 			implementation,
-			create_implementation,
 			is_equal,
 			copy
 		end
@@ -289,8 +288,8 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA
@@ -299,18 +298,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_PIXMAP
-
-
-
-
-
-
-
-
-
-
-
+end

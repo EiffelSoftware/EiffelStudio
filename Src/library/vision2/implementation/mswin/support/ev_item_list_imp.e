@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 			" EiffelVision item container. This class%
 			% has been created to centralise the%
@@ -16,7 +16,6 @@ deferred class
 inherit
 	EV_ITEM_LIST_I [G]
 		redefine
-			make,
 			interface
 		end
 
@@ -128,7 +127,7 @@ feature {NONE} -- Implementation
 		-- Internal storage for `new_item_actions' and `remove_item_actions'.
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -138,4 +137,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EV_ITEM_LIST_IMP
+end

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "EiffelVision primitive, mswin implementation.%N%
 			%This class would be the equivalent of a wel_control in%N%
 			% the wel hierarchy."
@@ -19,7 +19,6 @@ inherit
 
 	EV_WIDGET_IMP
 		redefine
-			update_for_pick_and_drop,
 			interface,
 			destroy,
 			is_tabable_from
@@ -33,8 +32,7 @@ inherit
 	EV_TOOLTIPABLE_IMP
 		redefine
 			interface,
-			tooltip_window,
-			destroy
+			tooltip_window
 		end
 
 feature -- Access
@@ -162,8 +160,8 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_PRIMITIVE note option: stable attribute end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA
@@ -172,18 +170,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_PRIMITIVE_IMP
-
-
-
-
-
-
-
-
-
-
-
+end

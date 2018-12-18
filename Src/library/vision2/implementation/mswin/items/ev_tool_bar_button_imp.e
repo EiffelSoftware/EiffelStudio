@@ -1,4 +1,4 @@
-note
+﻿note
 	description: " EiffelVision Toolbar button, mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,15 +11,14 @@ class
 inherit
 	EV_TOOL_BAR_BUTTON_I
 		redefine
-			parent_imp, interface
+			interface
 		end
 
 	EV_TOOL_BAR_ITEM_IMP
 		undefine
 			parent
 		redefine
-			set_pixmap, parent_imp,
-			interface, pixmap,
+			set_pixmap, interface, pixmap,
 			remove_pixmap, destroy
 		end
 
@@ -35,7 +34,7 @@ inherit
 
 	EV_TOOLTIPABLE_IMP
 		redefine
-			interface, set_tooltip, destroy
+			interface, set_tooltip
 		end
 
 	WEL_ILC_CONSTANTS
@@ -537,8 +536,8 @@ feature {EV_ANY, EV_ANY_I} -- Interface
 	interface: detachable EV_TOOL_BAR_BUTTON note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA
@@ -547,4 +546,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EV_TOOL_BAR_BUTTON_IMP
+end

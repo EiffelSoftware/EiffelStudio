@@ -1,8 +1,8 @@
-note
+﻿note
 	description: "EiffelVision vertical separator. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$";
+	date: "$Date$"
 	revision: "$Revision$"
 
 class
@@ -16,7 +16,6 @@ inherit
 
 	EV_SEPARATOR_IMP
 		redefine
-			set_default_minimum_size,
 			interface
 		end
 
@@ -93,8 +92,8 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_VERTICAL_SEPARATOR note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA
@@ -103,4 +102,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EV_VERTICAL_SEPARATOR_IMP
+end

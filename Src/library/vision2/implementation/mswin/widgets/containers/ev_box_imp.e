@@ -1,7 +1,7 @@
-note
+﻿note
 	description: "[
 		EiffelVision box, deferred class, parent of vertical and
-		horizontal boxes. Mswindows implementation.
+		horizontal boxes. MS Windows implementation.
 
 		Note: We use `create with coordinates' to allow the notebook
 			as containers. They are wel_windows and not
@@ -31,8 +31,6 @@ inherit
 			client_width,
 			client_height
 		redefine
-			enable_sensitive,
-			disable_sensitive,
 			interface,
 			make
 		end
@@ -418,8 +416,8 @@ feature {EV_ANY, EV_ANY_I} -- Interface
 	interface: detachable EV_BOX note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA
@@ -428,18 +426,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_BOX_IMP
-
-
-
-
-
-
-
-
-
-
-
+end

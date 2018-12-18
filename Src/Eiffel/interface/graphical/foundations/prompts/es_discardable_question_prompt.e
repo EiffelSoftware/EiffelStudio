@@ -167,14 +167,16 @@ feature {NONE} -- Event handling
 			-- <Precursor>
 		do
 			if attached choice as c then
+				if b /= {ES_DIALOG_BUTTONS}.cancel_button then
+					c.set_value (b = {ES_DIALOG_BUTTONS}.yes_button)
+					c.commit
+				end
 				Precursor {ES_PROMPT} (b)
 				if
 					not is_shown and
 					is_discard_requested and
-					dialog_result /= {ES_DIALOG_BUTTONS}.cancel_button
+					b /= {ES_DIALOG_BUTTONS}.cancel_button
 				then
-					c.set_value (dialog_result = {ES_DIALOG_BUTTONS}.yes_button)
-					c.commit
 					discard_future_dialogs
 				else
 					undiscard_future_dialogs

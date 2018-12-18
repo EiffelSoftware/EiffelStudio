@@ -1,11 +1,11 @@
-note
+﻿note
 	description: "[
 		A dialog prompt base, to inform the user or to ask them as question.
 	]"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$date$";
-	revision: "$revision$"
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	ES_PROMPT
@@ -496,7 +496,6 @@ feature {NONE} -- Basic operations
 			l_keys: EV_KEY_CONSTANTS
 			l_buttons: DS_SET_CURSOR [INTEGER]
 			l_dialog_buttons: like dialog_window_buttons
-			l_button_id: INTEGER
 			l_button: EV_BUTTON
 			l_string: STRING_32
 			l_text: STRING_32
@@ -516,8 +515,7 @@ feature {NONE} -- Basic operations
 					l_dialog_buttons := dialog_window_buttons
 					from l_buttons.start until l_buttons.after or l_stop loop
 							-- Locate button
-						l_button_id := l_buttons.item
-						l_button := l_dialog_buttons.item (l_button_id)
+						l_button := l_dialog_buttons.item (l_buttons.item)
 						check l_button_attached: l_button /= Void end
 
 							-- Retrieve and search text
@@ -525,15 +523,16 @@ feature {NONE} -- Basic operations
 						l_count := l_text.count
 						from i := 1 until i > l_count or l_stop loop
 							l_bc := l_text.item (i).as_lower
-							if l_bc.is_alpha_numeric then
-								if not l_used_character.has (l_bc) then
-										-- Usable character
-									l_stop := l_bc = c
-									if not l_stop then
-										l_used_character.force_last (l_bc)
-											-- Force exit in searching text, as we have found a usable character
-										i := l_count
-									end
+							if
+								l_bc.is_alpha_numeric and then
+								not l_used_character.has (l_bc)
+							then
+									-- Usable character
+								l_stop := l_bc = c
+								if not l_stop then
+									l_used_character.force_last (l_bc)
+										-- Force exit in searching text, as we have found a usable character
+									i := l_count
 								end
 							end
 							i := i + 1

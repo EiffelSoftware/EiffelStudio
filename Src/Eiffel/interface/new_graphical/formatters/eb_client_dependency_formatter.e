@@ -1,8 +1,7 @@
-note
-	description: "Client dependency formatter"
+﻿note
+	description: "Client dependency formatter."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -20,9 +19,7 @@ feature -- Access
 	symbol: ARRAY [EV_PIXMAP]
 			-- Graphical representation of the command.
 		once
-			create Result.make (1, 2)
-			Result.put (pixmaps.icon_pixmaps.class_clients_icon, 1)
-			Result.put (pixmaps.icon_pixmaps.class_clients_icon, 2)
+			Result := <<pixmaps.icon_pixmaps.class_clients_icon, pixmaps.icon_pixmaps.class_clients_icon>>
 		end
 
 	pixel_buffer: EV_PIXEL_BUFFER
@@ -76,7 +73,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

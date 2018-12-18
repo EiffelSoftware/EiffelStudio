@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Oracle specification"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -11,7 +11,6 @@ class
 inherit
 	DATABASE
 		redefine
-			normal_parse,
 			parse,
 			bind_arguments,
 			convert_string_type,
@@ -1006,7 +1005,7 @@ feature {NONE} -- External features
 	Concat_string: STRING_32 = "'||'";
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -1016,9 +1015,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class ORACLE
-
-
+end

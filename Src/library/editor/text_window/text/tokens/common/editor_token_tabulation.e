@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Token that describe one or several tabulations."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,7 +12,6 @@ class
 inherit
 	EDITOR_TOKEN_BLANK
 		redefine
-			process,
 			is_tabulation
 		end
 
@@ -190,21 +189,18 @@ feature {NONE} -- Private characteristics & constants
 			Result := font.string_width (tabulation_symbol)
 		end
 
-	tabulation_symbol: STRING = "�";
+	tabulation_symbol: STRING = "»";
 			-- Symbol for tabulation when formatting marks are shown.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EDITOR_TOKEN_TABULATION
+end

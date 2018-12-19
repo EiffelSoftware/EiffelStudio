@@ -5,7 +5,6 @@ image: Visual Studio 2015
 clone_folder: c:\dev\%APPVEYOR_BUILD_ID%\trunk
 
 init:
-    - cmd: rd /q/s c:\dev\trunk
     - cmd: nuget install 7ZipCLI -ExcludeVersion
     - cmd: set PATH=%appveyor_build_folder%\7ZipCLI\tools;%PATH%
     - cmd: mkdir -p c:\dev\eiffel

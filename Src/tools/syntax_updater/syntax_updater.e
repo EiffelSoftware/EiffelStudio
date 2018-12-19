@@ -1,5 +1,5 @@
 note
-	description	: "System's root class"
+	description: "System's root class."
 
 class
 	SYNTAX_UPDATER
@@ -11,17 +11,10 @@ inherit
 			execute as argument_execute
 		end
 
-	SHARED_ERROR_HANDLER
-
-	STRING_HANDLER
-
-	SYSTEM_ENCODINGS
-
-	LOCALIZED_PRINTER
-
-	KL_SHARED_EXECUTION_ENVIRONMENT
-
 	CONF_ACCESS
+	LOCALIZED_PRINTER
+	SHARED_ERROR_HANDLER
+	STRING_HANDLER
 
 create
 	make
@@ -53,10 +46,9 @@ feature {NONE} -- File discovering and processing
 			-- Process all files under directories specified on the command line arguments.
 		local
 			dir: DIRECTORY
-			l_dir: STRING
-			l_values: LIST [STRING]
+			l_dir: STRING_32
 			l_has_error: BOOLEAN
-			l_processed_values: ARRAYED_LIST [STRING]
+			l_processed_values: like values
 		do
 				-- Set settings from command line
 			visitor.set_is_updating_agents (is_updating_agents)
@@ -66,14 +58,11 @@ feature {NONE} -- File discovering and processing
 			is_eiffel_class_updated := False
 
 				-- Ensure directories exist.
-			from
-				l_values := values
-				create l_processed_values.make (l_values.count)
-				l_values.start
-			until
-				l_values.after
+			create l_processed_values.make (values.count)
+			across
+				values as v
 			loop
-				l_dir := execution_environment.interpreted_string (l_values.item)
+				l_dir := environment.interpreted_string_32 (v.item)
 				create dir.make (l_dir)
 				if not dir.exists then
 					if not l_dir.is_empty and then (l_dir.item (l_dir.count) = '/' or l_dir.item (l_dir.count) = '\') then
@@ -82,35 +71,30 @@ feature {NONE} -- File discovering and processing
 						create dir.make (l_dir)
 						if not dir.exists then
 							l_has_error := True
-							io.error.put_string ("directory: " + l_dir + " is not accessible%N")
+							localized_print_error ({STRING_32} "directory: " + l_dir + {STRING_32} " is not accessible%N")
 						end
 					else
 						l_has_error := True
-						io.error.put_string ("directory: " + l_dir + " is not accessible%N")
+						localized_print_error ({STRING_32} "directory: " + l_dir + {STRING_32} " is not accessible%N")
 					end
 				else
 					l_processed_values.extend (l_dir)
 				end
-				l_values.forth
 			end
 
 				-- All directories seem to exist, let's process them.
 			if not l_has_error then
-				from
-					l_values := l_processed_values
-					l_values.start
-				until
-					l_values.after
+				across
+					l_processed_values as v
 				loop
-					create dir.make (l_values.item)
+					create dir.make (v.item)
 					if dir.exists then
 						test_recursive (dir)
 					else
-						io.error.put_string ("Error trying to access directory: ")
-						io.error.put_string (l_values.item)
+						localized_print_error ("Error trying to access directory: ")
+						localized_print_error (v.item)
 						io.error.put_new_line
 					end
-					l_values.forth
 				end
 			end
 		end
@@ -218,7 +202,7 @@ feature {NONE} -- Implementation
 		local
 			file: RAW_FILE
 			outfile: RAW_FILE
-			count, nb: INTEGER
+			count: INTEGER
 			l_text: STRING
 			l_generate_output: BOOLEAN
 			l_converted: BOOLEAN
@@ -235,8 +219,7 @@ feature {NONE} -- Implementation
 						string_buffer.resize (count)
 					end
 					string_buffer.set_count (count)
-					nb := file.read_to_string (string_buffer, 1, count)
-					string_buffer.set_count (nb)
+					string_buffer.set_count (file.read_to_string (string_buffer, 1, count))
 					file.close
 						-- Fast parsing using our `fast_factory' to detect old constructs.
 					fast_factory.reset
@@ -477,6 +460,13 @@ feature {NONE} -- Arguments processing
 			Result.extend (create {ARGUMENT_SWITCH}.make (agents_switch, agents_swith_description, True, False))
 		end
 
+feature {NONE} -- Environment
+
+	environment: ENV_INTERP
+		once
+			create Result
+		end
+
 invariant
 	parser_not_void: parser /= Void
 	fast_parser_not_void: fast_parser /= Void
@@ -486,7 +476,7 @@ invariant
 	string_buffer_not_void: string_buffer /= Void
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

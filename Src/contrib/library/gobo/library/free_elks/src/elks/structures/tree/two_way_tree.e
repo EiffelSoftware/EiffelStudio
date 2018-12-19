@@ -17,7 +17,7 @@ class TWO_WAY_TREE [G] inherit
 			child_after, child_before, child_item,
 			child_off, child_islast
 		redefine
-			parent, clone_node
+			parent
 		select
 			has
 		end

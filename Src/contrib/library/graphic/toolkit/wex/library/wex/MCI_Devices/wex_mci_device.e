@@ -1,7 +1,8 @@
-note
+﻿note
 	description: "Abstract notions of a MCI device."
 	status: "See notice at end of class."
 	author: "Robin van Ommeren"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -10,9 +11,6 @@ deferred class
 
 inherit
 	WEL_ANY
-		redefine
-			destroy_item
-		end
 
 	WEL_MESSAGE_BOX
 		export
@@ -1053,7 +1051,7 @@ invariant
 	device_name_not_void: device_name /= Void
 	device_name_not_empty: not device_name.is_empty
 
-end -- class WEX_MCI_DEVICE
+end
 
 --|-------------------------------------------------------------------------
 --| WEX, Windows Eiffel library eXtension

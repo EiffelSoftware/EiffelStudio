@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -21,8 +21,7 @@ inherit
 
 	DS_BILINEAR_CURSOR [K]
 		redefine
-			next_cursor,
-			before
+			next_cursor
 		end
 
 create {DS_SPARSE_TABLE_KEYS}

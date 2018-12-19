@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			Serializer to ignore a specific type of object.
 			
@@ -12,9 +12,6 @@ class
 
 inherit
 	JSON_SERIALIZER
-		redefine
-			to_json
-		end
 
 feature -- Conversion
 
@@ -24,6 +21,6 @@ feature -- Conversion
 		end
 
 note
-	copyright: "2016-2016, Jocelyn Fiat and Eiffel Software"
-	license: "Eiffel Forum License v2 (see https://www.eiffel.com/licensing/forum.txt)"
+	copyright: "2010-2018, Javier Velilla, Jocelyn Fiat, Eiffel Software and others https://github.com/eiffelhub/json."
+	license: "https://github.com/eiffelhub/json/blob/master/License.txt"
 end

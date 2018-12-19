@@ -31,7 +31,7 @@ class FIXED_TREE [G] inherit
 			child_off, child_after, child_before,
 			child_item
 		redefine
-			parent, attach_to_parent, child_capacity, clone_node
+			parent, attach_to_parent, child_capacity
 		end
 
 create

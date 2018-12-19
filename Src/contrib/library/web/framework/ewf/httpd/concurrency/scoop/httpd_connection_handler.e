@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			Implementation of HTTPD_CONNECTION_HANDLER_I for concurrency mode: SCOOP
 		]"
@@ -10,9 +10,6 @@ class
 
 inherit
 	HTTPD_CONNECTION_HANDLER_I
-		redefine
-			initialize
-		end
 
 create
 	make
@@ -134,7 +131,7 @@ invariant
 	pool_attached: pool /= Void
 
 note
-	copyright: "2011-2016, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

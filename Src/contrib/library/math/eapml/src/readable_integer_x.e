@@ -1,6 +1,7 @@
 ﻿note
 	description: "Functionality to query the status of an arbitrary precision integer"
 	author: "Colin LeMahieu"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 	quote: "The urge to save humanity is almost always a false front for the urge to rule. - H.L. Mencken"
@@ -26,8 +27,6 @@ inherit
 			is_equal,
 			copy,
 			out
-		redefine
-			debug_output
 		end
 
 	NUMERIC

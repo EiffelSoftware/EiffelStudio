@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -16,7 +16,6 @@ inherit
 
 	ET_DYNAMIC_TYPE_SET
 		redefine
-			dynamic_type,
 			index_of,
 			is_expanded,
 			put_target,

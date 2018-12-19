@@ -14,7 +14,7 @@ deferred class RECURSIVE_CURSOR_TREE [G] inherit
 
 	CURSOR_TREE [G]
 		redefine
-			is_empty, extendible, extend
+			extendible, extend
 		end
 
 feature -- Access

@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -17,8 +17,7 @@ inherit
 
 	DS_LIST_CURSOR [G]
 		redefine
-			next_cursor,
-			before
+			next_cursor
 		end
 
 	MISMATCH_CORRECTOR

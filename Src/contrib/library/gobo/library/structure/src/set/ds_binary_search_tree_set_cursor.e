@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -19,7 +19,6 @@ inherit
 		undefine
 			item
 		redefine
-			container,
 			next_cursor
 		end
 

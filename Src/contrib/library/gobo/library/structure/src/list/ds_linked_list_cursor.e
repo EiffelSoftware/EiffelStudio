@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -18,8 +18,6 @@ inherit
 		redefine
 			item,
 			off,
-			after,
-			before,
 			same_position,
 			next_cursor
 		end

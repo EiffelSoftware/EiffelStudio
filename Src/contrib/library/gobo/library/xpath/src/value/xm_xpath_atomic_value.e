@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -26,7 +26,7 @@ inherit
 
 	XM_XPATH_ITEM
 		redefine
-			as_item_value, is_atomic_value, as_atomic_value
+			is_atomic_value, as_atomic_value
 		end
 
 	HASHABLE

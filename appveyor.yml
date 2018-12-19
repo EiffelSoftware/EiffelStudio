@@ -2,25 +2,28 @@ version: 1.0.{build}
 
 image: Visual Studio 2015
 
-clone_folder: c:\dev\trunk
+clone_folder: c:\dev\%APPVEYOR_BUILD_ID%\trunk
 
 init:
-- cmd: mkdir -p C:\dev\eiffel
+- cmd: >-
+    nuget install 7ZipCLI -ExcludeVersion
+    set PATH=%appveyor_build_folder%\7ZipCLI\tools;%PATH%
+    mkdir -p c:\dev\eiffel
 
 environment:
   ISE_C_COMPILER: msc_vc140
   ISE_PLATFORM: win64
-  EIFFEL_SRC: c:\dev\trunk\Src
-  ISE_LIBRARY: c:\dev\trunk\Src
-  XEBRA_LIBRARY: c:\dev\trunk\Src\framework\web\xebra\eiffel_projects\library
-  EWEASEL: c:\dev\trunk\eweasel
+  EIFFEL_SRC: c:\dev\%APPVEYOR_BUILD_ID%\trunk\Src
+  ISE_LIBRARY: c:\dev\%APPVEYOR_BUILD_ID%\trunk\Src
+  XEBRA_LIBRARY: c:\dev\%APPVEYOR_BUILD_ID%\trunk\Src\framework\web\xebra\eiffel_projects\library
+  EWEASEL: c:\dev\%APPVEYOR_BUILD_ID%\trunk\eweasel
 
 install:
 - cmd: >-
-    cd C:\dev\eiffel
+    cd c:\dev\eiffel
     appveyor DownloadFile https://www.eiffel.org/setup/install.bat -FileName %TEMP%\get-eiffelstudio.bat
-    %TEMP%\get-eiffelstudio.bat nightly > C:\dev\eiffel\eiffel_nightly.bat
-    call C:\dev\eiffel\eiffel_nightly.bat
+    %TEMP%\get-eiffelstudio.bat nightly > c:\dev\eiffel\eiffel_nightly.bat
+    call c:\dev\eiffel\eiffel_nightly.bat
     echo EiffelStudio versions...
     ec -version
     compile_all -version

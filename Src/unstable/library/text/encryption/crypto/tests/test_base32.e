@@ -1,6 +1,4 @@
 ﻿note
-	description: "Summary description for {TEST_BASE32}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -43,16 +41,12 @@ feature -- Test routines
 		end
 
 	test_cases_bytes_encoding
-		local
-			expected: STRING
 		do
 			assert("test cases#b01", base32_bytes_encoded_string (<<('f').code.to_natural_8, ('o').code.to_natural_8>>).same_string ("MZXQ===="))
 			assert("test cases#b02", base32_bytes_encoded_string (<<('f').code.to_natural_8, ('o').code.to_natural_8, ('o').code.to_natural_8>>).same_string ("MZXW6==="))
 		end
 
 	test_cases_encoding
-		local
-			expected: STRING
 		do
 			assert ("test case#1", base32_encoded_string ("").same_string (""))
 			assert ("test case#2", base32_encoded_string ("f").same_string ("MY======"))
@@ -64,8 +58,6 @@ feature -- Test routines
 		end
 
 	test_cases_decoding
-		local
-			expected: STRING
 		do
 			assert ("test case#1", base32_decoded_string ("").same_string (""))
 			assert ("test case#2", base32_decoded_string ("MY======").same_string ("f"))
@@ -77,8 +69,6 @@ feature -- Test routines
 		end
 
 	test_cases_decoding_paddingless
-		local
-			expected: STRING
 		do
 			assert ("test case#2", base32_decoded_string ("MY").same_string ("f"))
 			assert ("test case#3", base32_decoded_string ("MZXQ").same_string ("fo"))
@@ -117,7 +107,7 @@ feature -- Helpers
 
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -17,7 +17,7 @@ feature -- Test routines
 
 	test_make_from_hex_string
 		local
-			hex,bin: STRING
+			hex: STRING
 			ba: BYTE_ARRAY_CONVERTER
 			i,n: INTEGER
 		do

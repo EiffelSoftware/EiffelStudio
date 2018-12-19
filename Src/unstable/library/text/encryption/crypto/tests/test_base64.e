@@ -1,6 +1,4 @@
 ﻿note
-	description: "Summary description for {TEST_BASE64}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -43,16 +41,12 @@ feature -- Test routines
 		end
 
 	test_cases_bytes_encoding
-		local
-			expected: STRING
 		do
 			assert("test cases#b01", base64_bytes_encoded_string (<<('f').code.to_natural_8, ('o').code.to_natural_8>>).same_string ("Zm8="))
 			assert("test cases#b02", base64_bytes_encoded_string (<<('f').code.to_natural_8, ('o').code.to_natural_8, ('o').code.to_natural_8>>).same_string ("Zm9v"))
 		end
 
 	test_cases_encoding
-		local
-			expected: STRING
 		do
 --			assert("test cases#01", base64_encoded_string ("").same_string (""))
 			assert("test cases#02", base64_encoded_string ("f").same_string ("Zg=="))
@@ -64,8 +58,6 @@ feature -- Test routines
 		end
 
 	test_cases_decoding
-		local
-			expected: STRING
 		do
 			assert("test cases#01", base64_decoded_string ("").same_string (""))
 			assert("test cases#02", base64_decoded_string ("Zg==").same_string ("f"))
@@ -77,8 +69,6 @@ feature -- Test routines
 		end
 
 	test_cases_decoding_paddingless
-		local
-			expected: STRING
 		do
 			assert("test cases#02", base64_decoded_string ("Zg").same_string ("f"))
 			assert("test cases#03", base64_decoded_string ("Zm8").same_string ("fo"))
@@ -114,9 +104,8 @@ feature -- Helpers
 			Result := base64.decoded_string (s)
 		end
 
-
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -163,26 +163,34 @@ goto POST_CHANNEL
 	goto:eof
 
 :CHECK_CONFLICT
-	call:CHECK_COMMAND ecb.exe ECB_PATH
+	rem call:CHECK_COMMAND ecb.exe ECB_PATH
+	for %%f in (ecb.exe) do (
+	   if exist "%%~dp$PATH:f" set ECB_PATH=%%~dp$PATH:fecb.exe
+	)
 	if "%ECB_PATH%" == "" goto CHECK_TOOLS
-		echo >&2 Warning: the "ecb" command appears to already exist on this system.
-		echo >&2 If you already have EiffelStudio installed, this script can cause trouble, which is
-		echo >&2 why we are displaying this warning and provide the opportunity to cancel the installation.
-		echo >&2 If you installed the current EiffelStudio package using this script and are using it
-		echo >&2 again to update EiffelStudio, you can safely ignore this message.
-		echo >&2 You may press Ctrl+C now to abort this script.
+	echo >&2 Warning: the "ecb" command appears to already exist on this system.
+	echo >&2 If you already have EiffelStudio installed, this script can cause trouble, which is
+	echo >&2 why we are displaying this warning and provide the opportunity to cancel the installation.
+	echo >&2 If you installed the current EiffelStudio package using this script and are using it
+	echo >&2 again to update EiffelStudio, you can safely ignore this message.
+	echo >&2 You may press Ctrl+C now to abort this script.
 
-		choice /T %TMP_SAFETY_DELAY% /C cyn /N /D y /M "Press [C] to cancel, Press [Y] to continue now, or wait %TMP_SAFETY_DELAY% seconds ..."
-		if %ERRORLEVEL% NEQ 2 goto ABORT
-		goto CHECK_TOOLS
+	choice /T %TMP_SAFETY_DELAY% /C cyn /N /D y /M "Press [C] to cancel, Press [Y] to continue now, or wait %TMP_SAFETY_DELAY% seconds ..."
+	if %ERRORLEVEL% NEQ 2 goto ABORT
+	goto CHECK_TOOLS
 
 :CHECK_TOOLS
 
-
 :CHECK_7z
-	call:CHECK_COMMAND 7z.exe S7Z_PATH
+	rem call:CHECK_COMMAND 7z.exe S7Z_PATH
+	for %%f in (7z.exe) do (
+	   if exist "%%~dp$PATH:f" set S7Z_PATH=%%~dp$PATH:f7z.exe
+	)
 	if "%S7Z_PATH%" == "" (
-		call:CHECK_COMMAND 7za.exe S7Z_PATH
+		rem call:CHECK_COMMAND 7za.exe S7Z_PATH
+		for %%f in (7za.exe) do (
+		   if exist "%%~dp$PATH:f" set S7Z_PATH=%%~dp$PATH:f7za.exe
+		)
 	)
 	if "%S7Z_PATH%" NEQ "" (
 		set extract_cmd="%S7Z_PATH%"
@@ -193,8 +201,12 @@ goto POST_CHANNEL
 	)
 
 :CHECK_DOWNLOAD
-	call:CHECK_COMMAND curl.exe CURL_PATH
-	if NOT "%CURL_PATH%" == "" (
+echo >&2 check for curl.exe
+	rem call:CHECK_COMMAND curl.exe CURL_PATH
+	for %%f in (curl.exe) do (
+	   if exist "%%~dp$PATH:f" set CURL_PATH=%%~dp$PATH:fcurl.exe
+	)
+	if "%CURL_PATH%" NEQ "" (
 		echo >&2 Use %CURL_PATH%
 		set download_cmd="%CURL_PATH%" -fsSL 
 		:: -H 'Cache-Control: no-cache'
@@ -203,8 +215,11 @@ goto POST_CHANNEL
 		call:CHECK_WGET
 	)
 :CHECK_WGET
-	call:CHECK_COMMAND wget.exe WGET_PATH
-	if NOT "%WGET_PATH%" == "" (
+	rem call:CHECK_COMMAND wget.exe WGET_PATH
+	for %%f in (wget.exe) do (
+	   if exist "%%~dp$PATH:f" set WGETL_PATH=%%~dp$PATH:fwget.exe
+	)
+	if "%WGET_PATH%" NEQ "" (
 		set download_cmd="%WGET_PATH%" -qO-
 		goto GET_DOWNLOAD
 	) else (
@@ -257,7 +272,10 @@ goto POST_CHANNEL
 	call %ISE_RC_FILE%
 
 	set ECB_PATH=
-	call:CHECK_COMMAND ecb.exe ECB_PATH
+	rem call:CHECK_COMMAND ecb.exe ECB_PATH
+	for %%f in (ecb.exe) do (
+	   if exist "%%~dp$PATH:f" set ECB_PATH=%%~dp$PATH:fecb.exe
+	)
 	if "%ECB_PATH%" == "" (
 			echo >&2 ERROR: Installation failed !!!
 			echo >&2 Check inside %ISE_EIFFEL%

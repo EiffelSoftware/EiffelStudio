@@ -4,9 +4,9 @@ image: Visual Studio 2015
 
 init:
     - git config --global core.autocrlf input
-    - nuget install 7ZipCLI -ExcludeVersion
-    - set PATH=%appveyor_build_folder%\7ZipCLI\tools;%PATH%
     - mkdir -p c:\dev\eiffel
+    - nuget install 7ZipCLI -ExcludeVersion -OutputDirectory c:\dev\eiffel\bin
+    - set PATH=c:\dev\eiffel\bin\7ZipCLI\tools;%PATH%
 
 clone_folder: c:\dev\%APPVEYOR_BUILD_ID%\trunk
 
@@ -21,16 +21,16 @@ environment:
     EWEASEL: c:\dev\%APPVEYOR_BUILD_ID%\trunk\eweasel
 
 install:
-    - cmd: appveyor DownloadFile https://www.eiffel.org/setup/install.bat -FileName %TEMP%\get-eiffelstudio.bat 
-    - cmd: call %TEMP%\get-eiffelstudio.bat nightly > c:\dev\eiffel\eiffel_nightly.bat 
-    - cmd: call c:\dev\eiffel\eiffel_nightly.bat 
-    - cmd: echo EiffelStudio versions... 
-    - cmd: cd c:\dev\eiffel && ec -version && compile_all -version
+    - appveyor DownloadFile https://www.eiffel.org/setup/install.bat -FileName %TEMP%\get-eiffelstudio.bat 
+    - call %TEMP%\get-eiffelstudio.bat nightly > c:\dev\eiffel\eiffel_nightly.bat 
+    - call c:\dev\eiffel\eiffel_nightly.bat 
+    - echo EiffelStudio versions... 
+    - cd c:\dev\eiffel && ec -version && compile_all -version
 
 build_script:
-    - cmd: set COMPILE_ALL_CMD=compile_all -ecb -clean -melt -list_failures -options dotnet=false -log_verbose
-    - cmd: cd %EIFFEL_SRC%\Eiffel && %COMPILE_ALL_CMD% &&
-    - cmd: cd %EIFFEL_SRC%\tools && %COMPILE_ALL_CMD% &&
-    - cmd: cd %EIFFEL_SRC%\framework && %COMPILE_ALL_CMD% &&
-    - cmd: cd %EIFFEL_SRC%\library && %COMPILE_ALL_CMD%
+    - set COMPILE_ALL_CMD=compile_all -ecb -clean -melt -list_failures -options dotnet=false -log_verbose
+    - cd %EIFFEL_SRC%\Eiffel && %COMPILE_ALL_CMD% &&
+    - cd %EIFFEL_SRC%\tools && %COMPILE_ALL_CMD% &&
+    - cd %EIFFEL_SRC%\framework && %COMPILE_ALL_CMD% &&
+    - cd %EIFFEL_SRC%\library && %COMPILE_ALL_CMD%
 

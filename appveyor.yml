@@ -5,37 +5,30 @@ image: Visual Studio 2015
 clone_folder: c:\dev\%APPVEYOR_BUILD_ID%\trunk
 
 init:
-- cmd: >-
-    nuget install 7ZipCLI -ExcludeVersion
-    set PATH=%appveyor_build_folder%\7ZipCLI\tools;%PATH%
-    mkdir -p c:\dev\eiffel
+    - cmd: rd /q/s c:\dev\trunk
+    - cmd: nuget install 7ZipCLI -ExcludeVersion
+    - cmd: set PATH=%appveyor_build_folder%\7ZipCLI\tools;%PATH%
+    - cmd: mkdir -p c:\dev\eiffel
 
 environment:
-  ISE_C_COMPILER: msc_vc140
-  ISE_PLATFORM: win64
-  EIFFEL_SRC: c:\dev\%APPVEYOR_BUILD_ID%\trunk\Src
-  ISE_LIBRARY: c:\dev\%APPVEYOR_BUILD_ID%\trunk\Src
-  XEBRA_LIBRARY: c:\dev\%APPVEYOR_BUILD_ID%\trunk\Src\framework\web\xebra\eiffel_projects\library
-  EWEASEL: c:\dev\%APPVEYOR_BUILD_ID%\trunk\eweasel
+    ISE_C_COMPILER: msc_vc140
+    ISE_PLATFORM: win64
+    EIFFEL_SRC: c:\dev\%APPVEYOR_BUILD_ID%\trunk\Src
+    ISE_LIBRARY: c:\dev\%APPVEYOR_BUILD_ID%\trunk\Src
+    XEBRA_LIBRARY: c:\dev\%APPVEYOR_BUILD_ID%\trunk\Src\framework\web\xebra\eiffel_projects\library
+    EWEASEL: c:\dev\%APPVEYOR_BUILD_ID%\trunk\eweasel
 
 install:
-- cmd: >-
-    cd c:\dev\eiffel
-    appveyor DownloadFile https://www.eiffel.org/setup/install.bat -FileName %TEMP%\get-eiffelstudio.bat
-    %TEMP%\get-eiffelstudio.bat nightly > c:\dev\eiffel\eiffel_nightly.bat
-    call c:\dev\eiffel\eiffel_nightly.bat
-    echo EiffelStudio versions...
-    ec -version
-    compile_all -version
+    - cmd: appveyor DownloadFile https://www.eiffel.org/setup/install.bat -FileName %TEMP%\get-eiffelstudio.bat 
+    - cmd: %TEMP%\get-eiffelstudio.bat nightly > c:\dev\eiffel\eiffel_nightly.bat 
+    - cmd: call c:\dev\eiffel\eiffel_nightly.bat 
+    - cmd: echo EiffelStudio versions... 
+    - cmd: cd c:\dev\eiffel && ec -version && compile_all -version
 
 build_script:
-- cmd: >-
-    set COMPILE_ALL_CMD=compile_all -ecb -clean -melt -list_failures -options dotnet=false -log_verbose
-    cd %EIFFEL_SRC%\Eiffel
-    %COMPILE_ALL_CMD%
-    cd %EIFFEL_SRC%\tools
-    %COMPILE_ALL_CMD%
-    cd %EIFFEL_SRC%\framework
-    %COMPILE_ALL_CMD%
-    cd %EIFFEL_SRC%\library
-    %COMPILE_ALL_CMD%
+    - cmd: set COMPILE_ALL_CMD=compile_all -ecb -clean -melt -list_failures -options dotnet=false -log_verbose
+    - cmd: cd %EIFFEL_SRC%\Eiffel && %COMPILE_ALL_CMD% &&
+    - cmd: cd %EIFFEL_SRC%\tools && %COMPILE_ALL_CMD% &&
+    - cmd: cd %EIFFEL_SRC%\framework && %COMPILE_ALL_CMD% &&
+    - cmd: cd %EIFFEL_SRC%\library && %COMPILE_ALL_CMD%
+

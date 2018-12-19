@@ -1,6 +1,4 @@
-note
-	description: "Summary description for {STRING_TABLE_OF_STRING_INSPECTOR}."
-	author: ""
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,9 +7,6 @@ class
 
 inherit
 	TEMPLATE_INSPECTOR
-		redefine
-			internal_data
-		end
 
 create
 	register
@@ -44,7 +39,7 @@ feature {TEMPLATE_ROUTINES}
 		end
 
 note
-	copyright: "2011-2014, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

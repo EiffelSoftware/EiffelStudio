@@ -1,9 +1,9 @@
-note
-	description:	"SSL enabled network socket"
-	legal:			"See notice at end of class"
-	status:			"See notice at end of class"
-	date:			"$Date$"
-	revision:		"$Revision$"
+﻿note
+	description: "SSL enabled network socket."
+	legal: "See notice at end of class"
+	status: "See notice at end of class"
+	date:	 "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	SSL_NETWORK_SOCKET
@@ -27,7 +27,7 @@ inherit
 			set_blocking, set_non_blocking,
 			exists, address_type, is_valid_peer_address, is_valid_family
 		redefine
-			connect, shutdown
+			shutdown
 		end
 
 feature
@@ -58,7 +58,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source:		"[
 			Eiffel Software

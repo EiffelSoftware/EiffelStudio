@@ -5,6 +5,7 @@ note
 		The logical size of array is the same as the physical size of the underlying memory area.
 		]"
 	author: "Nadia Polikarpova"
+	revised_by: "Alexander Kogtenkov"
 	model: map
 
 class
@@ -13,7 +14,6 @@ class
 inherit
 	V_MUTABLE_SEQUENCE [G]
 		redefine
-			item,
 			copy,
 			is_equal,
 			put,

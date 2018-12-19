@@ -6,6 +6,7 @@ note
 			Iteration produces a sorted sequence.
 		]"
 	author: "Nadia Polikarpova"
+	revised_by: "Alexander Kogtenkov"
 	model: set, order
 
 class
@@ -14,8 +15,7 @@ class
 inherit
 	V_SET [G]
 		redefine
-			copy,
-			new_cursor
+			copy
 		end
 
 	V_DEFAULT [G]

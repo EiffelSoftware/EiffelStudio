@@ -1,6 +1,7 @@
 note
 	description: "Cursors storing a position in a linked container."
 	author: "Nadia Polikarpova"
+	revised_by: "Alexander Kogtenkov"
 	model: box
 
 deferred class

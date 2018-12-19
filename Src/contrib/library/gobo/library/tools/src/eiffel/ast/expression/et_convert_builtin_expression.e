@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -15,9 +15,6 @@ class ET_CONVERT_BUILTIN_EXPRESSION
 inherit
 
 	ET_CONVERT_EXPRESSION
-		redefine
-			process
-		end
 
 create
 

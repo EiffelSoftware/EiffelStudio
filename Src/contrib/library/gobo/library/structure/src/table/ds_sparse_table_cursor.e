@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -25,7 +25,6 @@ inherit
 		undefine
 			off
 		redefine
-			container,
 			next_cursor
 		end
 

@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 	"[
@@ -39,7 +39,6 @@ inherit
 			cursor_search_back,
 			has_void
 		redefine
-			new_cursor,
 			equality_tester,
 			root_node
 		end

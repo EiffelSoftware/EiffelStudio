@@ -1,9 +1,9 @@
-note
+﻿note
 
 	description: "[
-						Policy-driven handlers.
-						Implementers only need to concentrate on creating content.
-						]"
+			Policy-driven handlers.
+			Implementers only need to concentrate on creating content.
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -12,9 +12,6 @@ deferred class WSF_SKELETON_HANDLER
 inherit
 
 	WSF_URI_TEMPLATE_HANDLER
-		redefine
-			execute
-		end
 
 	WSF_OPTIONS_POLICY
 
@@ -584,7 +581,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2014, Colin Adams, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
+	copyright: "2011-2018, Colin Adams, Jocelyn Fiat, Javier Velilla, Olivier Ligot, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -14,10 +14,10 @@ deferred class CIRCULAR [G] inherit
 	CHAIN [G]
 		redefine
 			remove,
-			forth, back, before, after, off,
+			off,
 			move, go_i_th,
 			valid_cursor_index, exhausted,
-			first, last, index
+			first, last
 		end
 
 feature -- Access

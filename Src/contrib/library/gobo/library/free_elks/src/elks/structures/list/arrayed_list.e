@@ -36,11 +36,10 @@ class ARRAYED_LIST [G] inherit
 		redefine
 			first, last, swap, wipe_out, i_th, at,
 			go_i_th, move, prunable, start, finish,
-			count, prune, remove, new_cursor,
+			prune, new_cursor,
 			put_left, merge_left,
 			merge_right, duplicate, prune_all, has, search,
-			append, valid_index, is_equal, copy,
-			for_all, there_exists, do_all, do_if
+			append, valid_index, is_equal, for_all, there_exists, do_all, do_if
 		end
 
 	MISMATCH_CORRECTOR

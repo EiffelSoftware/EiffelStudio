@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -17,8 +17,6 @@ inherit
 	ET_CONVERT_EXPRESSION
 		undefine
 			is_never_void
-		redefine
-			process
 		end
 
 	ET_CREATION_EXPRESSION

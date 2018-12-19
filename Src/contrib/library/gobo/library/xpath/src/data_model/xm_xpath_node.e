@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -16,7 +16,7 @@ inherit
 
 	XM_XPATH_ITEM
 		redefine
-			as_item_value, is_node, as_node
+			is_node, as_node
 		end
 
 	XM_XPATH_SHARED_TYPE_FACTORY

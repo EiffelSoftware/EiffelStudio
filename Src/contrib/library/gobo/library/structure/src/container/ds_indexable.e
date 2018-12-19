@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -27,9 +27,7 @@ inherit
 			put_last,
 			force_last,
 			extend_last,
-			append_last,
-			do_until,
-			do_if_until
+			append_last
 		end
 
 feature -- Access

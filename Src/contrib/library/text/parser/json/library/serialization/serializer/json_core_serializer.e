@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "JSON Serialization for basic types."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -8,9 +8,6 @@ class
 
 inherit
 	JSON_SERIALIZER
-		redefine
-			to_json
-		end
 
 feature -- Conversion
 

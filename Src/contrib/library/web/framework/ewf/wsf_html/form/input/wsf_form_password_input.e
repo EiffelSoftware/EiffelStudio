@@ -1,6 +1,4 @@
-note
-	description: "Summary description for {WSF_FORM_PASSWORD_INPUT}."
-	author: ""
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,9 +7,6 @@ class
 
 inherit
 	WSF_FORM_INPUT
-		redefine
-			input_type
-		end
 
 create
 	make,

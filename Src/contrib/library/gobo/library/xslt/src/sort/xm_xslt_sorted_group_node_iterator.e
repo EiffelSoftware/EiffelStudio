@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -22,7 +22,6 @@ inherit
 			is_reversible_iterator,
 			is_singleton_iterator, as_singleton_iterator
 		redefine
-			current_group_iterator,
 			is_error, error_value, index
 		end
 

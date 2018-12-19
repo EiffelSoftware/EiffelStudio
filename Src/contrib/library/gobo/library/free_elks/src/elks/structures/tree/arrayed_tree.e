@@ -27,7 +27,7 @@ class ARRAYED_TREE [G] inherit
 			writable_child, child_off, child_before
 		redefine
 			parent, attach_to_parent, duplicate, extend,
-			duplicate_all, fill_subtree, clone_node
+			duplicate_all, fill_subtree
 		end
 
 create

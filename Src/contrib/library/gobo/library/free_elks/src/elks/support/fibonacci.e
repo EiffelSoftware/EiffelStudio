@@ -13,7 +13,7 @@ class FIBONACCI inherit
 		rename
 			has as is_fibonacci
 		redefine
-			i_th, is_fibonacci
+			is_fibonacci
 		end
 
 feature -- Access

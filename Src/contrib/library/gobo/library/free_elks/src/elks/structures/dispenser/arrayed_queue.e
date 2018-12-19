@@ -16,7 +16,7 @@ class ARRAYED_QUEUE [G]
 inherit
 	QUEUE [G]
 		redefine
-			linear_representation, has, is_empty,
+			is_empty,
 			is_equal, copy, prune_all
 		end
 

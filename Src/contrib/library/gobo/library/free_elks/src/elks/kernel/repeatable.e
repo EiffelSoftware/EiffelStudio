@@ -11,9 +11,6 @@ deferred class REPEATABLE
 inherit
 
 	ITERATION_CURSOR [REPEATABLE]
-		redefine
-			item
-		end
 
 feature -- Access
 

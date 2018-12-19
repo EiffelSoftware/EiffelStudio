@@ -13,7 +13,6 @@ class
 inherit
 	HELP_CONTEXT_I
 		redefine
-			help_provider,
 			is_help_available
 		end
 
@@ -82,7 +81,7 @@ invariant
 		(attached help_context_description as l_description) implies not l_description.is_empty
 
 ;note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

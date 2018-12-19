@@ -16,7 +16,6 @@ inherit
 			is_assembly,
 			class_by_name,
 			name_by_class,
-			options,
 			is_group_equivalent,
 			is_readonly,
 			accessible_groups,

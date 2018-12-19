@@ -1,6 +1,4 @@
-note
-	description: "Summary description for {CONF_LOCAL_TARGET_REFERENCE}."
-	author: ""
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,9 +7,6 @@ class
 
 inherit
 	CONF_TARGET_REFERENCE
-		redefine
-			is_remote
-		end
 
 create
 	make

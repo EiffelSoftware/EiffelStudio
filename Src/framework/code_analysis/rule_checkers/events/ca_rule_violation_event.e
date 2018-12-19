@@ -9,9 +9,6 @@ class
 inherit
 
 	EVENT_LIST_ITEM_I
-		redefine
-			data
-		end
 
 create
 	make

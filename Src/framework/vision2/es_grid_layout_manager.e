@@ -20,9 +20,6 @@ class
 
 inherit
 	DEBUG_OUTPUT
-		redefine
-			debug_output
-		end
 
 	EV_SHARED_APPLICATION
 

@@ -20,9 +20,6 @@ inherit
 		export {NONE}
 			expand_string_internal,
 			expand_string_32_internal
-		redefine
-			variable,
-			variable_32
 		end
 
 feature {NONE} -- Access
@@ -90,7 +87,7 @@ feature {NONE} -- Query
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

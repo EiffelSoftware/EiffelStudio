@@ -15,8 +15,6 @@ inherit
 		rename
 			make as make_request,
 			feature_to_call as creation_procedure
-		redefine
-			creation_procedure
 		end
 
 	INTERNAL_COMPILER_STRING_EXPORTER
@@ -100,7 +98,7 @@ invariant
 --	is_default_creatable: default_creation implies is_default_creatable (type.base_class, system)
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

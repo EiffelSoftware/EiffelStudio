@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "A project cluster."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,7 +12,6 @@ inherit
 	CONF_PHYSICAL_GROUP
 		redefine
 			make,
-			options,
 			is_group_equivalent,
 			process,
 			class_by_name,

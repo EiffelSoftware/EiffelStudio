@@ -12,8 +12,6 @@ inherit
 	EVS_GRID_ORDERED_ITERATOR
 		rename
 			comparator as comparator_by_column
-		redefine
-			comparator_by_column
 		end
 
 create

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Objects that print source code for extracted test sets.
 	]"
@@ -12,7 +12,6 @@ class
 inherit
 	TEST_CLASS_SOURCE_WRITER
 		redefine
-			root_feature_name,
 			ancestor_names,
 			put_indexing
 		end
@@ -534,7 +533,7 @@ feature {NONE} -- Constants
 	extracted_ancestor_name: STRING = "EQA_EXTRACTED_TEST_SET"
 
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

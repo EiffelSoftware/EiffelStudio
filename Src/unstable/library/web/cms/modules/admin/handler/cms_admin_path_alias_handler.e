@@ -48,6 +48,7 @@ feature -- Execution
 				if attached api.storage.path_aliases as tb then
 					create s.make_empty
 					s.append ("<h1>Path aliases</h1>%N")
+					s.append ("<a href=%"#manage-aliases%">&gt;&gt; Manage aliases ...</a><br/>")
 					s.append ("<ul class=%"path_aliases%">")
 					create l_sources.make (tb.count)
 					l_sources.compare_objects
@@ -79,10 +80,20 @@ feature -- Execution
 						s.append ("</li>")
 					end
 					s.append ("</ul>")
+
+					s.append ("<a name=%"manage-aliases%"></a><h1>Manage aliases</h1>%N")
+
 						-- New Alias?
 					s.append ("<fieldset><legend>New alias</legend>")
-					s.append ("<form action=%"%" method=%"POST%">Alias:<input type=%"text%" name=%"path_alias%" value=%"%"/><br/>Target:<input type=%"text%" name=%"source%" value=%"%"/><br/><input type=%"submit%" name=%"op%" value=%"Set Alias%"/></form>")
+					s.append ("<form action=%"%" method=%"POST%">Alias: <input type=%"text%" name=%"path_alias%" value=%"%"/><br/>Target: <input type=%"text%" name=%"source%" value=%"%"/><br/><input type=%"submit%" name=%"op%" value=%"Set Alias%"/></form>")
 					s.append ("</fieldset>")
+
+						-- Remove Alias?					
+					s.append ("<fieldset><legend>Remove existing alias</legend>")
+					s.append ("<form action=%"%" method=%"POST%">Alias: <input type=%"text%" name=%"path_alias%" value=%"%"/><br/>Target: <input type=%"text%" name=%"source%" value=%"%"/><br/><input type=%"submit%" name=%"op%" value=%"unset%"/></form>")
+					s.append ("</fieldset>")
+
+
 				end
 				l_response.set_main_content (s)
 				l_response.execute

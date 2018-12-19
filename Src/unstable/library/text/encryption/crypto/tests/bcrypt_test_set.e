@@ -290,7 +290,6 @@ feature -- Test routines
 	decoding_chars_outside_ascii_gives_no_results
 		local
 			l_bcrypt : BCRYPT
-			rs : STRING_32
 			ba : SPECIAL[NATURAL_8]
 		do
 			create l_bcrypt.make
@@ -413,7 +412,6 @@ feature -- Test routines
 	hash_password_fails_when_salt_specifies_too_few_rounds
 		local
 			l_bcrypt: BCRYPT
-			l_no_retry: BOOLEAN
 		do
 			create l_bcrypt.make
 			print (l_bcrypt.hashed_password ("password", "$2a$03$......................"))
@@ -424,7 +422,6 @@ feature -- Test routines
     hash_password_fails_when_salt_specifies_too_many_rounds
 		local
 			l_bcrypt: BCRYPT
-			l_no_retry: BOOLEAN
 			l_salt: READABLE_STRING_8
 		do
 			create l_bcrypt.make
@@ -488,7 +485,7 @@ feature -- Test data
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

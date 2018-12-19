@@ -181,11 +181,14 @@ goto POST_CHANNEL
 
 :CHECK_7z
 	call:CHECK_COMMAND 7z.exe S7Z_PATH
+	if "%S7Z_PATH%" == "" (
+		call:CHECK_COMMAND 7za.exe S7Z_PATH
+	)
 	if "%S7Z_PATH%" NEQ "" (
 		set extract_cmd="%S7Z_PATH%" x
 		goto CHECK_DOWNLOAD
 	) else (
-		echo >&2 Can not find a 7z extract utility: 7z.exe, ...
+		echo >&2 Can not find a 7z or 7za extract utility
 		goto FAILURE
 	)
 

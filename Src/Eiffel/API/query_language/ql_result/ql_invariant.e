@@ -5,7 +5,6 @@ note
 				]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -17,10 +16,7 @@ inherit
 		redefine
 			is_real_feature,
 			is_invariant_feature,
-			process,
-			class_c,
-			written_class,
-			ast
+			process
 		end
 
 create
@@ -144,7 +140,7 @@ invariant
 	parent_valid: parent /= Void implies parent.is_class and parent.is_valid_domain_item and parent.is_compiled
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -2,7 +2,6 @@ note
 	description: "Object that represents a class item used in Eiffel query language"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,12 +13,7 @@ inherit
 		undefine
 			is_equal
 		redefine
-			name,
-			wrapped_domain,
-			ast,
-			is_compiled,
 			text,
-			is_visible,
 			parent_with_real_path
 		end
 
@@ -392,4 +386,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

@@ -18,9 +18,6 @@ inherit
 		end
 
 	EIFNET_ABSTRACT_DEBUG_VALUE
-		redefine
-			dump_value
-		end
 
 create {DEBUG_VALUE_EXPORTER}
 	make --, make_attribute
@@ -48,7 +45,7 @@ feature -- Access : Redefinition of dump_value
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

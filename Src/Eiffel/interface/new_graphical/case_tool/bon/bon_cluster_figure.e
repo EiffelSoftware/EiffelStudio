@@ -2,7 +2,6 @@ note
 	description: "Objects that is a BON view for an EIFFEL_CLUSTER."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -19,7 +18,6 @@ inherit
 			recursive_transform,
 			set_name_label_text,
 			minimum_size,
-			set_is_selected,
 			xml_node_name,
 			xml_element,
 			set_with_xml_element,
@@ -781,7 +779,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -812,4 +810,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class BON_CLUSTER_FIGURE
+end

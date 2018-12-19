@@ -31,7 +31,6 @@ inherit
 			is_help_available,
 			help_provider,
 			help_context_section,
-			help_context_id,
 			help_context_description
 		end
 

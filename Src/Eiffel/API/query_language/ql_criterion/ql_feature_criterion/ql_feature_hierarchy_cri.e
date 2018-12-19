@@ -2,7 +2,6 @@ note
 	description: "Object that represents a criterion for feature hierarchy relationship"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,9 +10,6 @@ deferred class
 
 inherit
 	QL_INTRINSIC_DOMAIN_CRITERION
-		redefine
-			is_satisfied_by
-		end
 
 	QL_FEATURE_CRITERION
 		undefine
@@ -253,7 +249,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

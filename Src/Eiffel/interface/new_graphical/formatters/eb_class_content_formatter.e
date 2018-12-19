@@ -2,7 +2,6 @@ note
 	description: "Command to display hierarchy information or feature information concerning a compiled class."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -20,8 +19,6 @@ inherit
 			retrieve_sorting_order,
 			is_browser_formatter
 		redefine
-			line_numbers_allowed,
-			widget,
 			internal_recycle
 		select
 			internal_recycle
@@ -168,7 +165,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

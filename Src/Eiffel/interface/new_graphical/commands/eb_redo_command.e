@@ -1,9 +1,9 @@
 note
-	description	: "Command to perform a redo operation"
+	description: "Command to perform a redo operation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision $"
+	date: "$Date$"
+	revision: "$Revision $"
 
 class
 	EB_REDO_COMMAND
@@ -12,8 +12,7 @@ inherit
 	EB_UNDO_REDO_COMMAND
 		redefine
 			executable,
-			tooltext,
-			pixel_buffer
+			tooltext
 		end
 
 create
@@ -82,7 +81,7 @@ feature {NONE} -- Implementation
 			-- preferences.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -113,4 +112,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_REDO_COMMAND
+end

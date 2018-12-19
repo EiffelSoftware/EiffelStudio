@@ -2,7 +2,6 @@ note
 	description: "Command to display the callees of a feature."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,7 +13,6 @@ inherit
 		rename
 			make as feature_formatter_make
 		redefine
-			is_dotnet_formatter,
 			result_data,
 			browser,
 			generate_result

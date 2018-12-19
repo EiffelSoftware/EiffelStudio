@@ -1,19 +1,17 @@
 note
-	description	: "Initial State for the profiler wizard"
+	description: "Initial State for the profiler wizard"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr]"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	author: "Arnaud PICHERY [ aranud@mail.dotcom.fr]"
+	revised_by: "Alexander Kogtenkov"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EB_PROFILER_WIZARD_INITIAL_STATE
 
 inherit
 	EB_WIZARD_INITIAL_STATE_WINDOW
-		redefine
-			proceed_with_current_info
-		end
 		
 	EB_CONSTANTS
 		export
@@ -38,7 +36,7 @@ feature -- basic Operations
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -69,4 +67,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_PROFILER_WIZARD_INITIAL_STATE
+end

@@ -7,7 +7,6 @@
 			3) Tool name: [Met -> [Metrics]
 			4) placeholder: $pa -> $path, $fil -> $file (list not complete)
 		]"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -18,7 +17,6 @@ inherit
 	COMPLETION_POSSIBILITIES_PROVIDER
 		redefine
 			code_completable,
-			completion_possibilities,
 			prepare_completion
 		end
 

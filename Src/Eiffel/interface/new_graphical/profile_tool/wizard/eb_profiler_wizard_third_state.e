@@ -1,10 +1,11 @@
 note
-	description	: "Third state of the profiler wizard (Choose input file)"
+	description: "Third state of the profiler wizard (Choose input file)"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	author: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
+	revised_by: "Alexander Kogtenkov"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EB_PROFILER_WIZARD_THIRD_STATE
@@ -12,9 +13,7 @@ class
 inherit
 	EB_WIZARD_INTERMEDIARY_STATE_WINDOW
 		redefine
-			update_state_information,
-			proceed_with_current_info,
-			build
+			update_state_information
 		end
 
 	EB_PROFILER_WIZARD_SHARED_INFORMATION
@@ -181,7 +180,7 @@ feature {NONE} -- Vision2 controls
 			-- Type of the profiler used to generate the record.
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -212,5 +211,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_PROFILER_WIZARD_THIRD_STATE
-
+end

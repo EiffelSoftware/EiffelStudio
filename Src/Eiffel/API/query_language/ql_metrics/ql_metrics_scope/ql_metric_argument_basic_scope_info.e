@@ -12,8 +12,7 @@ inherit
 	QL_METRIC_BASIC_SCOPE_INFO
 		redefine
 			calculate_function,
-			domain_generator,
-			evaluate_item
+			domain_generator
 		end
 
 create

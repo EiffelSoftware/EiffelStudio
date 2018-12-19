@@ -2,7 +2,6 @@ note
 	description: "Formatter that uses an editor as its display"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,7 +13,6 @@ inherit
 		undefine
 			veto_pebble_function
 		redefine
-			displayer,
 			is_editor_formatter
 		end
 
@@ -98,7 +96,7 @@ feature -- Positioning
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -2,7 +2,6 @@ note
 	description: "Object that represents a line domain"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -15,9 +14,7 @@ inherit
 			copy,
 			is_equal
 		redefine
-			content,
 			item_type,
-			domain_generator,
 			is_line_domain
 		end
 
@@ -121,7 +118,7 @@ feature{NONE} -- Type ancher
 			-- Anchor type for items in current domain
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -151,7 +148,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

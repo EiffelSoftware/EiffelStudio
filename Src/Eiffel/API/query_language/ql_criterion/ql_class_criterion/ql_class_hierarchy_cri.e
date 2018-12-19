@@ -2,7 +2,6 @@ note
 	description: "Object that represents a criterion to evaluate class hierarchy/relationship"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,8 +12,6 @@ inherit
 	QL_INTRINSIC_DOMAIN_CRITERION
 		rename
 			make as old_make
-		redefine
-			is_satisfied_by
 		end
 
 	QL_CLASS_CRITERION
@@ -198,7 +195,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

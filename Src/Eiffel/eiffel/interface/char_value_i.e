@@ -9,7 +9,6 @@ inherit
 	VALUE_I
 		redefine
 			append_signature,
-			generate,
 			inspect_value,
 			is_character,
 			set_real_type,
@@ -164,7 +163,7 @@ invariant
 	consistent_type: is_character_8 xor is_character_32
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -2,7 +2,6 @@ note
 	description: "Object that represents a group item used in Eiffel query language"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,11 +10,6 @@ class
 
 inherit
 	QL_ITEM
-		redefine
-			name,
-			is_compiled,
-			wrapped_domain
-		end
 
 create
 	make,

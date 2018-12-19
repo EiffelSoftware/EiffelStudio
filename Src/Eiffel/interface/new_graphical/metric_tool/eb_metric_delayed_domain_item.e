@@ -2,7 +2,6 @@ note
 	description: "Metric delayed domain item"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -24,8 +23,6 @@ inherit
 			is_delayed_item,
 			is_real_delayed_item,
 			is_input_domain_item
-		redefine
-			string_representation
 		end
 
 	EB_METRIC_SHARED
@@ -91,7 +88,7 @@ feature -- Process
 		end
 
 note
-        copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2018, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

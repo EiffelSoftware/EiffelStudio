@@ -2,7 +2,6 @@ note
 	description: "Object that represents an assertion used in Eiffel query language"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -12,9 +11,6 @@ class
 inherit
 	QL_FEATURE_COMPONENT
 		redefine
-			ast,
-			wrapped_domain,
-			written_class,
 			path_name,
 			is_equal
 		end

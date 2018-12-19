@@ -2,7 +2,6 @@ note
 	description: "Stone that represents a line in a class"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,10 +10,6 @@ deferred class
 
 inherit
 	FILED_STONE
-		redefine
-			stone_cursor,
-			x_stone_cursor
-		end
 
 feature -- Access
 
@@ -91,7 +86,7 @@ invariant
 	column_number_non_negative: column_number >= 0
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

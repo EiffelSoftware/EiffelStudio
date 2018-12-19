@@ -20,7 +20,6 @@ inherit
 		undefine
 			address
 		redefine
-			output_value, kind, expandable,
 			reset_children
 		end
 
@@ -180,7 +179,7 @@ feature -- Output
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -211,5 +210,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EIFNET_DEBUG_STRING_VALUE
-
+end

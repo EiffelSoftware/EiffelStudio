@@ -2,7 +2,6 @@ note
 	description: "Object that represents a group domain"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -15,9 +14,7 @@ inherit
 			copy,
 			is_equal
 		redefine
-			content,
 			item_type,
-			domain_generator,
 			is_group_domain,
 			prepare_before_new_domain_generation,
 			cleanup_after_new_domain_generation,
@@ -247,7 +244,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

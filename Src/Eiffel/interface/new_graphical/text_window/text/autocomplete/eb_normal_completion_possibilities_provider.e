@@ -5,7 +5,6 @@ note
 			]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -20,8 +19,7 @@ inherit
 		redefine
 			reset,
 			text_field,
-			prepare_completion,
-			cursor_token_provider
+			prepare_completion
 		end
 
 	EB_COMPLETE_INFO_ANALYZER

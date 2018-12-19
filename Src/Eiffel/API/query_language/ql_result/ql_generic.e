@@ -2,7 +2,6 @@ note
 	description: "Object that represents a class generic item in Eiffel query language"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,10 +12,6 @@ inherit
 	QL_CODE_STRUCTURE_ITEM
 		undefine
 			is_equal
-		redefine
-			wrapped_domain,
-			name,
-			ast
 		end
 
 	QL_SHARED_SCOPES

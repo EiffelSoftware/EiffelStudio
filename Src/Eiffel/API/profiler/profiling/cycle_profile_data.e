@@ -14,7 +14,7 @@ inherit
 		rename
 			make as p_d_make
 		redefine
-			function, int_function
+			int_function
 		end
 
 create
@@ -75,7 +75,7 @@ feature {NONE} -- Attributes
 		-- Functions in this cycle
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -106,4 +106,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class CYCLE
+end

@@ -1,6 +1,5 @@
 note
 	description: "Text fragment which delegates tasks to agents"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,9 +8,6 @@ class
 
 inherit
 	EB_TEXT_FRAGMENT
-		redefine
-			is_replacement_prepared
-		end
 
 create
 	make

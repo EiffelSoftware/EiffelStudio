@@ -12,8 +12,6 @@ class
 inherit
 	STONE
 		redefine
-			stone_cursor,
-			x_stone_cursor,
 			is_storable
 		end
 
@@ -453,4 +451,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class BREAKABLE_STONE
+end

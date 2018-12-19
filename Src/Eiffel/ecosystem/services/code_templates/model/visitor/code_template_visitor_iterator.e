@@ -12,12 +12,6 @@ deferred class
 
 inherit
 	CODE_TEMPLATE_VISITOR_I
-		redefine
-			process_code_category_collection,
-			process_code_declaration_collection,
-			process_code_template_collection,
-			process_code_template_definition
-		end
 
 feature {CODE_NODE} -- Processing
 
@@ -54,7 +48,7 @@ feature {CODE_NODE} -- Processing
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

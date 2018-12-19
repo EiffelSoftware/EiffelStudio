@@ -5,14 +5,14 @@ note
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class VHPR1
 
 inherit
 	COMPILER_ERROR
 		redefine
-			build_explain, subcode
+			subcode
 		end
 
 	SHARED_EIFFEL_PROJECT
@@ -67,7 +67,7 @@ feature {COMPILER_EXPORTER} -- Setting
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -98,4 +98,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class VHPR1
+end

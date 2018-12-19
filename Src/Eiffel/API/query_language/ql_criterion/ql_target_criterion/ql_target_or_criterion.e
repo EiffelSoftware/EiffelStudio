@@ -2,7 +2,6 @@ note
 	description: "Object that represents an OR operation on two target criteria"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -25,8 +24,7 @@ inherit
 	QL_OR_CRITERION
 		redefine
 			left,
-			right,
-			intrinsic_domain
+			right
 		end
 
 create
@@ -87,7 +85,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

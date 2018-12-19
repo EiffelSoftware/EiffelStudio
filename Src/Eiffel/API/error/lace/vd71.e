@@ -2,18 +2,15 @@ note
 	description:
 		"General error during the building of a configuration system."
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
-	revision: "$Revision $"
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class VD71
 
 inherit
 
-	LACE_ERROR
-		redefine
-			build_explain
-		end;
+	LACE_ERROR;
 
 create
 	make
@@ -43,7 +40,7 @@ feature -- Output
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -74,4 +71,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class VD71
+end

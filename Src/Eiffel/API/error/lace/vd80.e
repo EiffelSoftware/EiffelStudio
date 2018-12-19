@@ -2,7 +2,6 @@ note
 	description: "General configuration warning"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -12,7 +11,7 @@ class
 inherit
 	LACE_WARNING
 		redefine
-			build_explain, print_single_line_error_message
+			print_single_line_error_message
 		end;
 
 feature -- Properties
@@ -58,7 +57,7 @@ feature {SYSTEM_I, LACE_I} -- Setting
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

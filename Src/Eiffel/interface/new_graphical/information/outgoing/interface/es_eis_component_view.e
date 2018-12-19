@@ -40,7 +40,6 @@ inherit
 
 	HELP_CONTEXT_I
 		redefine
-			help_provider,
 			is_help_available
 		end
 

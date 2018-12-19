@@ -2,7 +2,6 @@ note
 	description: "Target domain item"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,8 +12,7 @@ inherit
 	EB_DOMAIN_ITEM
 		redefine
 			is_target_item,
-			is_valid,
-			string_representation
+			is_valid
 		end
 
 	QL_SHARED

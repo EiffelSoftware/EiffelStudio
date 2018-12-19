@@ -15,7 +15,7 @@ inherit
 			has_expanded, internal_is_valid_for_class, convert_to,
 			description, description_with_detachable_type,
 			is_full_named_type, is_external, is_enum, is_conformant_to,
-			hash_code, sk_value, is_optimized_as_frozen, generated_id,
+			sk_value, is_optimized_as_frozen, generated_id,
 			generate_cecil_value, element_type, adapted_in, has_reference,
 			il_type_name, generate_gen_type_il, is_generated_as_single_type,
 			generic_derivation, associated_class_type, has_associated_class_type,

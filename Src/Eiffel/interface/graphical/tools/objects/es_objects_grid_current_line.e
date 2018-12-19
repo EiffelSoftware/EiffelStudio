@@ -10,10 +10,6 @@ class
 
 inherit
 	ES_OBJECTS_GRID_SPECIFIC_LINE
-		redefine
-			compute_grid_display_for,
-			text_data_for_clipboard
-		end
 
 create
 	make

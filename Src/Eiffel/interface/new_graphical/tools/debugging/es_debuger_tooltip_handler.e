@@ -12,7 +12,6 @@ inherit
 	ES_TOOLTIP_HANDLER
 		redefine
 			show_tooltip_possible,
-			show_tooltip,
 			hide_tooltip
 		end
 
@@ -271,7 +270,7 @@ feature {NONE} -- Shortcuts
 	goto_end_shortcut: ES_KEY_SHORTCUT
 
 ;note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

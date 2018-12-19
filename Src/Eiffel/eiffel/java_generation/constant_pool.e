@@ -16,7 +16,6 @@ inherit
 
 	JVM_BYTE_CODE_EMITTOR
 		redefine
-			emit,
 			close
 		end
 
@@ -488,7 +487,7 @@ invariant
 	count_bc_not_void: count_bc /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

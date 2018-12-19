@@ -10,9 +10,6 @@ deferred class
 
 inherit
 	QL_CRITERION
-		redefine
-			require_compiled
-		end
 
 feature{NONE} -- Initialization
 

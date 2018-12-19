@@ -2,7 +2,6 @@ note
 	description: "Object that represents an assertion scope"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -12,11 +11,6 @@ class
 inherit
 	QL_SCOPE
 		redefine
-			domain_generator,
-			path_domain_generator,
-			basic_scope,
-			empty_domain,
-			delayed_domain,
 			is_code_structure_scope
 		end
 
@@ -87,7 +81,7 @@ feature -- Metric support
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

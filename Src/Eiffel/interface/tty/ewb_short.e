@@ -1,11 +1,10 @@
 note
 
-	description:
-		"Displays short of a class in output_window."
+	description: "Displays short of a class in output_window."
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
-	revision: "$Revision $"
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class EWB_SHORT
 
@@ -13,8 +12,6 @@ inherit
 	EWB_COMPILED_CLASS
 		rename
 			make as compiled_class_make
-		redefine
-			help_message, name, abbreviation
 		end;
 
 	EC_SHARED_PREFERENCES
@@ -64,7 +61,7 @@ feature {NONE} -- Execution
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -95,4 +92,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EWB_SHORT
+end

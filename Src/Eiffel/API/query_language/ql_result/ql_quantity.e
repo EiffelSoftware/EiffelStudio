@@ -2,7 +2,6 @@ note
 	description: "Object that represents a quantity item used in Eiffel query language"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -12,9 +11,7 @@ class
 inherit
 	QL_ITEM
 		redefine
-			is_compiled,
-			is_valid_domain_item,
-			wrapped_domain
+			is_valid_domain_item
 		end
 
 create
@@ -134,7 +131,7 @@ invariant
 	parent_not_attached: parent = Void
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

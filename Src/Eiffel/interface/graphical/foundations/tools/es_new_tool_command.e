@@ -19,7 +19,6 @@ inherit
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
 			new_sd_toolbar_item,
-			pixel_buffer,
 			mini_pixmap,
 			mini_pixel_buffer
 		end
@@ -157,7 +156,7 @@ invariant
 	tool_type_attached: not is_recycled implies tool_type /= Void
 
 ;note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

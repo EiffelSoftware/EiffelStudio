@@ -2,7 +2,6 @@ note
 	description: "Criterion list auto-completion provider"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -12,8 +11,7 @@ class
 inherit
 	COMPLETION_POSSIBILITIES_PROVIDER
 		redefine
-			code_completable,
-			completion_possibilities
+			code_completable
 		end
 
 create
@@ -86,7 +84,7 @@ invariant
 	completion_possibilities_attached: completion_possibilities /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

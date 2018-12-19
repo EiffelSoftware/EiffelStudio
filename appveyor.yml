@@ -2,12 +2,15 @@ version: 1.0.{build}
 
 image: Visual Studio 2015
 
+init:
+    - git config --global core.autocrlf input
+    - nuget install 7ZipCLI -ExcludeVersion
+    - set PATH=%appveyor_build_folder%\7ZipCLI\tools;%PATH%
+    - mkdir -p c:\dev\eiffel
+
 clone_folder: c:\dev\%APPVEYOR_BUILD_ID%\trunk
 
-init:
-    - cmd: nuget install 7ZipCLI -ExcludeVersion
-    - cmd: set PATH=%appveyor_build_folder%\7ZipCLI\tools;%PATH%
-    - cmd: mkdir -p c:\dev\eiffel
+shallow_clone: true
 
 environment:
     ISE_C_COMPILER: msc_vc140

@@ -20,7 +20,7 @@ environment:
 
 install:
     - cmd: appveyor DownloadFile https://www.eiffel.org/setup/install.bat -FileName %TEMP%\get-eiffelstudio.bat 
-    - cmd: %TEMP%\get-eiffelstudio.bat nightly > c:\dev\eiffel\eiffel_nightly.bat 
+    - cmd: call %TEMP%\get-eiffelstudio.bat nightly > c:\dev\eiffel\eiffel_nightly.bat 
     - cmd: call c:\dev\eiffel\eiffel_nightly.bat 
     - cmd: echo EiffelStudio versions... 
     - cmd: cd c:\dev\eiffel && ec -version && compile_all -version

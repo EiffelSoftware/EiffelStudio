@@ -1,8 +1,5 @@
-note
-	description: "[
-		Widget showing state of a single test session.
-	]"
-	author: ""
+﻿note
+	description: "Widget showing state of a single test session."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -76,7 +73,11 @@ feature {NONE} -- Initialization
 			create l_frame
 			l_pixmap := stock_pixmaps.debug_stop_icon.twin
 			l_pixmap.set_pointer_style (hyperlink_cursor)
-			l_pixmap.pointer_button_release_actions.force_extend (agent on_stop)
+			l_pixmap.pointer_button_release_actions.extend
+				(agent (x, y, b: INTEGER_32; x_tilt, y_tilt, p: REAL_64; s_x, s_y: INTEGER_32)
+					do
+						on_stop
+					end)
 			l_frame.extend (l_pixmap)
 			a_widget.extend (l_frame)
 			a_widget.disable_item_expand (l_frame)
@@ -168,7 +169,7 @@ feature {NONE} -- Factory
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

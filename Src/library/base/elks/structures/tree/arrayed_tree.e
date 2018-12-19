@@ -3,10 +3,10 @@
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	names: tree;
-	representation: recursive, array;
-	access: cursor, membership;
-	contents: generic;
+	names: tree
+	representation: recursive, array
+	access: cursor, membership
+	contents: generic
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -27,14 +27,14 @@ class ARRAYED_TREE [G] inherit
 			writable_child, child_off, child_before
 		redefine
 			parent, attach_to_parent, duplicate, extend,
-			duplicate_all, fill_subtree, clone_node
+			duplicate_all, fill_subtree
 		end
 
 create
 
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (n: INTEGER; v: G)
 			-- Create node with item `v'.
@@ -43,7 +43,6 @@ feature -- Initialization
 			valid_number_of_children: n >= 0
 		do
 			create arrayed_list.make (n)
-			al_make (n)
 			replace (v)
 		ensure
 			node_item: item = v
@@ -306,6 +305,7 @@ feature -- Duplication
 			-- Copy of sub-tree beginning at cursor position and
 			-- having min (`n', `arity' - `child_index' + 1)
 			-- children.
+		obsolete "Create and initialize a new tree explicitly. [2018-11-30]"
 		local
 			counter: INTEGER
 			pos: CURSOR
@@ -348,12 +348,14 @@ feature {ARRAYED_TREE} -- Implementation
 			-- with the same arity and node value.
 			-- This feature may be redefined in descendants so as to
 			-- produce an adequately allocated and initialized object.
+		obsolete "Create and initialize a new tree explicitly. [2018-11-30]"
 		do
 			create Result.make (arity, item)
 		end
 
 	duplicate_all: like Current
 			-- Copy of sub-tree including all children
+		obsolete "Create and initialize a new tree explicitly. [2018-11-30]"
 		local
 			pos: CURSOR
 			c: like child
@@ -378,6 +380,7 @@ feature {ARRAYED_TREE} -- Implementation
 
 	fill_subtree (other: TREE [G])
 			-- Fill children with children of `other'
+		obsolete "Fill subtree explicitly. [2018-11-30]"
 		local
 			temp: like parent
 			c: detachable TREE [G]
@@ -433,6 +436,7 @@ feature {NONE} -- Implementation
 
 	new_tree: like Current
 			-- A newly created instance of the same type.
+		obsolete "Create and initialize a new tree explicitly. [2018-11-30]"
 		do
 			create Result.make (0, item)
 		end
@@ -478,9 +482,8 @@ feature {NONE} -- Implementation
 			-- Apply action to every child.
 		require
 			non_void_agent: an_agent /= Void
-			non_void_tree_node: a_tree_node /= Void
 		do
-			an_agent.call ([a_tree_node.item])
+			an_agent (a_tree_node.item)
 			from
 				a_tree_node.child_start
 			until
@@ -603,14 +606,6 @@ feature -- Access: children
 			arrayed_list.wipe_out
 		end
 
-	move (i: INTEGER)
-			-- Move child
-		obsolete
-			"Use feature `child_move' instead. [2017-05-31]"
-		do
-			child_move (i)
-		end
-
 	child_move (i: INTEGER)
 		do
 			arrayed_list.move (i)
@@ -624,17 +619,18 @@ feature -- Access: children
 
 feature {NONE} -- private access arrayed_list
 
-	al_make (n: INTEGER)
-		do
-			arrayed_list.make (n)
-		end
-
 	al_extend (v: like Current)
 		do
 			arrayed_list.extend (v)
 		end
 
 	al_duplicate (n: INTEGER): ARRAYED_LIST [like Current]
+		obsolete
+			"[
+				Create a new container explicitly using `make_from_iterable` if available.
+				Otherwise, replace a call to the feature with code that creates and initializes container.
+				[2018-11-30]
+			]"
 		do
 			Result := arrayed_list.duplicate (n)
 		end
@@ -715,6 +711,7 @@ feature {NONE} -- private access arrayed_list
 		end
 
 note
+	ca_ignore: "CA033", "CA033: very large class"
 	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

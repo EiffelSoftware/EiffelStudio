@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Eiffel Vision list item list. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,8 +11,7 @@ deferred class
 inherit
 	EV_LIST_ITEM_LIST_I
 		redefine
-			interface,
-			pixmaps_size_changed
+			interface
 		end
 
 	EV_ITEM_LIST_IMP [EV_LIST_ITEM, EV_LIST_ITEM_IMP]
@@ -186,8 +185,8 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_LIST_ITEM_LIST note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA
@@ -196,18 +195,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_LIST_ITEM_LIST_IMP
-
-
-
-
-
-
-
-
-
-
-
+end

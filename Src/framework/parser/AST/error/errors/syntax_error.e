@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Syntax error."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,9 +11,7 @@ class
 inherit
 	ERROR
 		redefine
-			file_name,
-			has_associated_file,
-			process
+			has_associated_file
 		end
 
 create
@@ -52,13 +50,13 @@ feature -- Properties
 			-- Specify syntax issue message.
 
 	file_name: like {ERROR}.file_name
-			-- Path to file where syntax issue happened
+			-- Path to file where syntax issue happened.
 
 	code: STRING = "Syntax Error"
-			-- Error code
+			-- Error code.
 
 	has_associated_file: BOOLEAN = True
-			-- Current is associated to a file/class
+			-- Current is associated to a file/class.
 
 	syntax_message: STRING
 			-- Specific syntax message.
@@ -81,7 +79,7 @@ invariant
 	attached_error_message: error_message /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -112,4 +110,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class SYNTAX_ERROR
+end

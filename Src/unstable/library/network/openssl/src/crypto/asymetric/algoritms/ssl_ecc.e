@@ -7,7 +7,6 @@ note
 class
 	SSL_ECC
 
-
 feature -- C externals
 
 	c_ec_key_new: POINTER
@@ -125,5 +124,16 @@ feature -- C externals
 		alias
 			"ECDSA_SIG_get0($a_sig, $a_pr, $a_ps)"
 		end
+
+note
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end
 

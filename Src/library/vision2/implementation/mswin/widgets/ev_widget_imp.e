@@ -24,10 +24,7 @@ deferred class
 inherit
 	EV_WIDGET_I
 		redefine
-			interface,
-			set_default_colors,
-			refresh_now,
-			init_file_drop_actions
+			interface
 		end
 
 	EV_SIZEABLE_IMP
@@ -46,9 +43,6 @@ inherit
 		end
 
 	EV_WIDGET_ACTION_SEQUENCES_I
-		redefine
-			init_file_drop_actions
-		end
 
 	EV_WEL_KEY_CONVERSION
 		rename
@@ -1669,8 +1663,8 @@ feature -- Feature that should be directly implemented by externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

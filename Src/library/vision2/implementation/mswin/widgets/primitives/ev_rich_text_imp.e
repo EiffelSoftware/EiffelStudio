@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		EiffelVision2 rich text. Windows implementation.
 		]"
@@ -149,7 +149,6 @@ inherit
 		redefine
 			default_style,
 			default_ex_style,
-			class_name,
 			text_stream_in,
 			insert_rtf_stream_in,
 			rtf_stream_in,
@@ -1642,8 +1641,8 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_RICH_TEXT note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA
@@ -1652,4 +1651,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EV_RICH_TEXT_IMP
+end

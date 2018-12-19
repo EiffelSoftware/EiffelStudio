@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Generate a warning for an obsolete syntax."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,8 +11,7 @@ class
 inherit
 	WARNING
 		redefine
-			file_name, has_associated_file,
-			process
+			has_associated_file
 		end
 
 create
@@ -45,13 +44,13 @@ feature -- Properties
 		end
 
 	file_name: like {ERROR}.file_name
-			-- Path to file where syntax issue happened
+			-- Path to file where syntax issue happened.
 
 	code: STRING = "Syntax Warning"
-			-- Error code
+			-- Error code.
 
 	has_associated_file: BOOLEAN = True
-			-- Current is associated to a file/class
+			-- Current is associated to a file/class.
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Properties
 
@@ -69,7 +68,7 @@ invariant
 	warning_message_not_void: warning_message /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -100,4 +99,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class SYNTAX_WARNING
+end

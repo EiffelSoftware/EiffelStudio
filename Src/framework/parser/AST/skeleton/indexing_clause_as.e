@@ -62,14 +62,12 @@ feature -- Access
 		local
 			l_list: detachable EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 		do
+			l_list := internal_custom_attributes (Attribute_header)
 			Result := internal_custom_attributes (Metadata_header)
-			if Result /= Void then
-				l_list := internal_custom_attributes (Attribute_header)
-				if l_list /= Void then
-					Result.append (l_list)
-				end
-			else
-				Result := internal_custom_attributes (Attribute_header)
+			if not attached Result then
+				Result := l_list
+			elseif attached l_list then
+				Result.append (l_list)
 			end
 		end
 
@@ -78,14 +76,12 @@ feature -- Access
 		local
 			l_list: detachable EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 		do
+			l_list := internal_custom_attributes (Class_attribute_header)
 			Result := internal_custom_attributes (Class_metadata_header)
-			if Result /= Void then
-				l_list := internal_custom_attributes (Class_attribute_header)
-				if l_list /= Void then
-					Result.append (l_list)
-				end
-			else
-				Result := internal_custom_attributes (Class_attribute_header)
+			if not attached Result then
+				Result := l_list
+			elseif attached l_list then
+				Result.append (l_list)
 			end
 		end
 
@@ -94,14 +90,12 @@ feature -- Access
 		local
 			l_list: detachable EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 		do
+			l_list := internal_custom_attributes (Interface_attribute_header)
 			Result := internal_custom_attributes (Interface_metadata_header)
-			if Result /= Void then
-				l_list := internal_custom_attributes (Interface_attribute_header)
-				if l_list /= Void then
-					Result.append (l_list)
-				end
-			else
-				Result := internal_custom_attributes (Interface_attribute_header)
+			if not attached Result then
+				Result := l_list
+			elseif attached l_list then
+				Result.append (l_list)
 			end
 		end
 
@@ -110,14 +104,12 @@ feature -- Access
 		local
 			l_list: detachable EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 		do
+			l_list := internal_custom_attributes (Assembly_attribute_header)
 			Result := internal_custom_attributes (Assembly_metadata_header)
-			if Result /= Void then
-				l_list := internal_custom_attributes (Assembly_attribute_header)
-				if l_list /= Void then
-					Result.append (l_list)
-				end
-			else
-				Result := internal_custom_attributes (Assembly_attribute_header)
+			if not attached Result then
+				Result := l_list
+			elseif attached l_list then
+				Result.append (l_list)
 			end
 		end
 
@@ -154,6 +146,12 @@ feature -- Access
 			Result := has_tag_value (debugger_header, is_hidden_in_debugger_call_stack_value)
 		end
 
+	is_ghost: BOOLEAN
+			-- Is class or feature a ghost one?
+		do
+			Result := has_tag_values (verification_status_header, verification_ghost_statuses)
+		end
+
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 
 	description: detachable STRING
@@ -162,27 +160,19 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 			Result := string_value (Description_header)
 		end
 
-	assembly_name: detachable ARRAY [STRING_32]
+	assembly_name: detachable ARRAYED_LIST [STRING_32]
 			-- Assembly name (for external classes only)
 			-- Name, Version, Culture and Public key in that order
-		local
-			i: detachable INDEX_AS
-			list: EIFFEL_LIST [ATOMIC_AS]
 		do
-			i := index_as_of_tag_name (Assembly_header)
-
-			if i /= Void then
-				list := i.index_list
+			if attached index_as_of_tag_name (Assembly_header) as i then
+				across
+					i.index_list as l
 				from
-					list.start
-					create Result.make_filled ({STRING_32} "", 1, list.count)
-				until
-					list.after
+					create Result.make (4)
 				loop
-					if attached {STRING_AS} list.item as l_string then
-						Result.put (l_string.value_32, list.index)
+					if attached {STRING_AS} l.item as s then
+						Result.extend (s.value_32)
 					end
-					list.forth
 				end
 			end
 		end
@@ -218,25 +208,20 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
 	dotnet_constructors: detachable ARRAYED_LIST [STRING]
 			-- Dotnet constructors indexing clause value
 		local
-			l_index: detachable INDEX_AS
 			l_list: EIFFEL_LIST [ATOMIC_AS]
 		do
-			l_index := index_as_of_tag_name (Dotnet_constructors_header)
-			if l_index /= Void then
+			if attached index_as_of_tag_name (Dotnet_constructors_header) as l_index then
 				l_list := l_index.index_list
 				if not l_list.is_empty then
 					create Result.make (l_list.count)
-					from
-						l_list.start
-					until
-						l_list.after
+					across
+						l_list as l
 					loop
-						if attached {STRING_AS} l_list.item as l_string then
+						if attached {STRING_AS} l.item as l_string then
 							Result.extend (l_string.value)
-						elseif attached {ID_AS} l_list.item as l_id then
+						elseif attached {ID_AS} l.item as l_id then
 							Result.extend (l_id.name)
 						end
-						l_list.forth
 					end
 					Result.compare_objects
 				end
@@ -362,7 +347,7 @@ feature {NONE} -- Constants
 			-- Index name under which globalness of a once is specified.
 
 	option_header: STRING = "option"
-			-- Note name under which the attribute may be marked as stable.
+			-- Note name under which the attribute may be marked as stable or transient.
 
 	Property_name_header: STRING = "property"
 			-- Index name which holds name of an associated property.
@@ -376,6 +361,9 @@ feature {NONE} -- Constants
 	Debugger_header: STRING = "debugger"
 			-- Note name under which the attribute may be marked as hidden from debugger.
 
+	verification_status_header: STRING = "status"
+			-- Note tag under which verification status is encoded.
+
 	global_value: STRING = "global"
 			-- Value name of `Once_status_header'.
 
@@ -387,6 +375,18 @@ feature {NONE} -- Constants
 
 	is_hidden_in_debugger_call_stack_value: STRING = "is_hidden_in_call_stack"
 			-- Predefined value of `Debugger_header'.			
+
+	verification_ghost_value: STRING = "ghost"
+			-- Predefined value of `verification_status_header`.
+
+	verification_lemma_value: STRING = "lemma"
+			-- Predefined value of `verification_status_header`.
+
+	verification_ghost_statuses: SPECIAL [READABLE_STRING_8]
+			-- Predefined value of `verification_status_header` indicating ghost status.
+		once
+			Result := (<<verification_ghost_value, verification_lemma_value>>).area
+		end
 
 	obsolete_tags: HASH_TABLE [STRING, STRING]
 			-- Table indexed by obsoleted indexing tag, where key is new indexing tag that
@@ -406,27 +406,22 @@ feature {NONE} -- Implementation
 	internal_custom_attributes (tag: STRING): detachable EIFFEL_LIST [CUSTOM_ATTRIBUTE_AS]
 			-- Expression representing custom attributes.
 		local
-			i: detachable INDEX_AS
 			list: EIFFEL_LIST [ATOMIC_AS]
 		do
-			i := index_as_of_tag_name (tag)
-
-			if i /= Void then
+			if attached index_as_of_tag_name (tag) as i then
 					-- Do not care if more than one element has been added
 					-- to current INDEX_AS list, we take the first one and
 					-- forget about the remaining ones.
 				list := i.index_list
 				if not list.is_empty then
+					across
+						list as l
 					from
-						list.start
 						create Result.make (list.count)
-					until
-						list.after
 					loop
-						if attached {CUSTOM_ATTRIBUTE_AS} list.item as ca then
+						if attached {CUSTOM_ATTRIBUTE_AS} l.item as ca then
 							Result.extend (ca)
 						end
-						list.forth
 					end
 				end
 			end
@@ -438,28 +433,17 @@ feature {NONE} -- Implementation
 		require
 			tag_attached: tag /= Void
 			not_tag_is_empty: not tag.is_empty
-		local
-			i: detachable INDEX_AS
-			list: EIFFEL_LIST [ATOMIC_AS]
 		do
-			i := index_as_of_tag_name (tag)
-
-			if i /= Void then
-				list := i.index_list
+			if attached index_as_of_tag_name (tag) as i then
 				create Result.make (20)
-				from
-					list.start
-				until
-					list.after
+				across
+					i.index_list as l
 				loop
-					if attached {STRING_AS} list.item as s then
+					if attached {STRING_AS} l.item as s then
 						Result.append (s.value)
-						list.forth
-						if not list.after and s /= Void then
+						if not l.is_last and s /= Void then
 							Result.append (", ")
 						end
-					else
-						list.forth
 					end
 				end
 			end
@@ -467,24 +451,36 @@ feature {NONE} -- Implementation
 
 	has_tag_value (a_tag, a_value: READABLE_STRING_8): BOOLEAN
 			-- Does current have an indexing clause tag `a_tag' with value `a_value' as either identifier or string.
-		local
-			i: detachable INDEX_AS
-			list: EIFFEL_LIST [ATOMIC_AS]
 		do
-			i := index_as_of_tag_name (a_tag)
-			if i /= Void then
-				list := i.index_list
-				if not list.is_empty then
-					from
-						list.start
-					until
-						list.after or Result
-					loop
-						Result :=
-							(attached {STRING_AS} list.item as s and then s.value.is_case_insensitive_equal (a_value)) or else
-							(attached {ID_AS} list.item as id and then id.name.is_case_insensitive_equal (a_value))
-						list.forth
-					end
+			if attached index_as_of_tag_name (a_tag) as i then
+				across
+					i.index_list as l
+				until
+					Result
+				loop
+					Result :=
+						(attached {STRING_AS} l.item as s and then s.value.is_case_insensitive_equal (a_value)) or else
+						(attached {ID_AS} l.item as id and then id.name.is_case_insensitive_equal (a_value))
+				end
+			end
+		end
+
+	has_tag_values (tag: READABLE_STRING_8; values: ITERABLE [READABLE_STRING_8]): BOOLEAN
+			-- Does current have an indexing clause tag `tag` with value any element from `values` as either an identifier or a string.
+		local
+			tag_value: READABLE_STRING_8
+		do
+			if attached index_as_of_tag_name (tag) as i then
+				across
+					i.index_list as l
+				until
+					Result
+				loop
+					tag_value :=
+						if attached {STRING_AS} l.item as s then s.value
+						elseif attached {ID_AS} l.item as id then id.name
+						else once "" end
+					Result := across values as v some v.item.is_case_insensitive_equal (tag_value) end
 				end
 			end
 		end
@@ -534,7 +530,7 @@ feature -- Roundtrip
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

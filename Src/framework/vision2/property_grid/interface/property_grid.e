@@ -1,5 +1,5 @@
 ﻿note
-	description: "Property grid"
+	description: "Property grid."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -95,7 +95,7 @@ feature -- Update
 			enable_last_column_use_all_width
 			clear_description
 
-			sections.clear_all
+			sections.wipe_out
 			create expanded_section_store.make (5)
 			if not is_destroyed then
 				hide_horizontal_scroll_bar
@@ -214,24 +214,18 @@ feature -- Update
 			-- Store for the expanded sections, will get updated if sections are expanded or collapsed.
 		require
 			a_store_not_void: a_store /= Void
-		local
-			l_section: detachable EV_GRID_ROW
 		do
 			expanded_section_store := a_store
-			from
-				a_store.start
-			until
-				a_store.after
+			across
+				a_store as s
 			loop
-				l_section := sections.item (a_store.key_for_iteration)
-				if l_section /= Void and then l_section.is_expandable then
-					if a_store.item_for_iteration then
+				if attached sections.item (s.key) as l_section and then l_section.is_expandable then
+					if s.item then
 						l_section.expand
 					else
 						l_section.collapse
 					end
 				end
-				a_store.forth
 			end
 		ensure
 			expanded_section_store_set: expanded_section_store = a_store
@@ -243,12 +237,10 @@ feature -- Update
 			l_section: EV_GRID_ROW
 			cnt, i: INTEGER
 		do
-			from
-				sections.start
-			until
-				sections.after
+			across
+				sections as s
 			loop
-				l_section := sections.item_for_iteration
+				l_section := s.item
 				from
 					cnt := l_section.subrow_count
 					i := 1
@@ -260,7 +252,6 @@ feature -- Update
 					end
 					i := i + 1
 				end
-				sections.forth
 			end
 		end
 
@@ -393,12 +384,12 @@ feature {NONE} -- Actions
 		do
 			l_y := y_pos + virtual_y_position
 			remove_selection
-			if l_y >= 0 and l_y <= virtual_height then
-				if attached {like row_type} row_at_virtual_position (l_y, False) as l_row then
-					if attached l_row.item (name_column) as l_item then
-						l_item.enable_select
-					end
-				end
+			if
+				l_y >= 0 and l_y <= virtual_height and then
+				attached {like row_type} row_at_virtual_position (l_y, False) as l_row and then
+				attached l_row.item (name_column) as l_item
+			then
+				l_item.enable_select
 			end
 		end
 
@@ -461,6 +452,7 @@ invariant
 	expanded_section_store_not_void: expanded_section_store /= Void
 
 note
+	ca_ignore: "CA011", "CA011: too many arguments"
 	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

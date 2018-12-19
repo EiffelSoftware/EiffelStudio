@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "The XFORM structure specifies a world-space to page-space transformation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,9 +10,6 @@ class
 
 inherit
 	WEL_STRUCTURE
-		redefine
-			structure_size
-		end
 
 create
 	make,
@@ -22,34 +19,34 @@ feature -- Access
 
 	em11: REAL
 			-- Specifies the following:
-			-- Scaling: Horizontal scaling component
-			-- Rotation: Cosine of rotation angle
-			-- Reflection: Horizontal component
+			-- Scaling: Horizontal scaling component.
+			-- Rotation: Cosine of rotation angle.
+			-- Reflection: Horizontal component.
 		do
 			Result := cwel_paraformat_get_em11 (item)
 		end
 
 	em12: REAL
 			-- Specifies the following:
-			-- Shear: Horizontal proportionality constant
-			-- Rotation: Sine of the rotation angle
+			-- Shear: Horizontal proportionality constant.
+			-- Rotation: Sine of the rotation angle.
 		do
 			Result := cwel_paraformat_get_em12 (item)
 		end
 
 	em21: REAL
 			-- Specifies the following:
-			-- Shear: Vertical proportionality constant
-			-- Rotation: Negative sine of the rotation angle
+			-- Shear: Vertical proportionality constant.
+			-- Rotation: Negative sine of the rotation angle.
 		do
 			Result := cwel_paraformat_get_em21 (item)
 		end
 
 	em22: REAL
 			-- Specifies the following:
-			-- Scaling: Vertical scaling component
-			-- Rotation: Cosine of rotation angle
-			-- Reflection: Vertical reflection component
+			-- Scaling: Vertical scaling component.
+			-- Rotation: Cosine of rotation angle.
+			-- Reflection: Vertical reflection component.
 		do
 			Result := cwel_paraformat_get_em22 (item)
 		end
@@ -113,7 +110,7 @@ feature -- Element change
 feature -- Measurement
 
 	structure_size: INTEGER
-			-- Size to allocate (in bytes)
+			-- Size to allocate (in bytes).
 		once
 			Result := c_size_of_xform
 		end
@@ -212,14 +209,14 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

@@ -67,7 +67,7 @@ feature {NONE} -- Initialization
 						check
 							success: l_res /= 0
 						end
-						if attached l_mode.tag as l_tag then
+						if attached l_mode.tag as l_tag and then operation = DECRYPT_MODE then
 							l_res := {SSL_CRYPTO_EXTERNALS}.c_evp_cipher_ctx_ctrl (ctx, {SSL_CRYPTO_EXTERNALS}.C_EVP_CTRL_AEAD_SET_TAG, l_tag.count, l_tag.item)
 							check
 								success: l_res /= 0
@@ -352,4 +352,14 @@ feature -- Clean context
 			end
 		end
 
+note
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

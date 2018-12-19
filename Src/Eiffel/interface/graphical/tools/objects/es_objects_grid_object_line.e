@@ -834,7 +834,6 @@ feature {NONE} -- Filling
 			es_glab: EV_GRID_LABEL_ITEM
 
 			vlist: DEBUG_VALUE_LIST
-			list_cursor: like {DEBUG_VALUE_LIST}.new_cursor
 
 			l_row_index: INTEGER
 			dcl: like object_dynamic_class
@@ -921,14 +920,14 @@ feature {NONE} -- Filling
 							debugger_manager.is_classic_project and then
 							dcl.conform_to (debugger_manager.compiler_data.special_class_c)
 						then
-							fill_extra_attributes_for_special (a_row, list_cursor)
+							fill_extra_attributes_for_special (a_row, vlist)
 						elseif l_is_tuple then
-							fill_extra_attributes_for_tuple (a_row, list_cursor)
+							fill_extra_attributes_for_tuple (a_row, vlist)
 						elseif
 							Eb_debugger_manager.display_agent_details
 							and then dcl.conform_to (debugger_manager.compiler_data.routine_class_c)
 						then
-							fill_extra_attributes_for_agent (a_row, list_cursor)
+							fill_extra_attributes_for_agent (a_row, vlist)
 						end
 					end
 				end
@@ -1088,15 +1087,16 @@ feature {NONE} -- Agent filling
 			result_attached: Result /= Void
 		end
 
-	fill_extra_attributes_for_special (a_row: EV_GRID_ROW; list_cursor: like {DEBUG_VALUE_LIST}.new_cursor)
+	fill_extra_attributes_for_special (a_row: EV_GRID_ROW; lst: ITERABLE [ABSTRACT_DEBUG_VALUE])
 		require
 			a_row /= Void
-			list_cursor /= Void
+			lst /= Void
 		local
 			lrow: EV_GRID_ROW
 			glab: EV_GRID_LABEL_ITEM
+			list_cursor: ITERATION_CURSOR [ABSTRACT_DEBUG_VALUE]
 		do
-			list_cursor.start
+			list_cursor := lst.new_cursor
 
 			a_row.insert_subrow (1)
 			lrow := a_row.subrow (1)
@@ -1119,18 +1119,19 @@ feature {NONE} -- Agent filling
 			lrow.set_item (Col_value_index, glab)
 		end
 
-	fill_extra_attributes_for_tuple (a_row: EV_GRID_ROW; list_cursor: like {DEBUG_VALUE_LIST}.new_cursor)
+	fill_extra_attributes_for_tuple (a_row: EV_GRID_ROW; lst: ITERABLE [ABSTRACT_DEBUG_VALUE])
 		require
 			a_row /= Void
-			list_cursor /= Void
+			lst /= Void
 		local
 			lrow: EV_GRID_ROW
 			r: INTEGER
 			glab: EV_GRID_LABEL_ITEM
 			gf: EB_GRID_EDITOR_TOKEN_ITEM
 			f: E_FEATURE
+			list_cursor: ITERATION_CURSOR [ABSTRACT_DEBUG_VALUE]
 		do
-			list_cursor.start
+			list_cursor := lst.new_cursor
 			if
 				not list_cursor.after and then
 				attached {DEBUG_BASIC_VALUE [BOOLEAN]} list_cursor.item as vitem
@@ -1158,10 +1159,10 @@ feature {NONE} -- Agent filling
 			end
 		end
 
-	fill_extra_attributes_for_agent (a_row: EV_GRID_ROW; list_cursor: like {DEBUG_VALUE_LIST}.new_cursor)
+	fill_extra_attributes_for_agent (a_row: EV_GRID_ROW; lst: ITERABLE [ABSTRACT_DEBUG_VALUE])
 		require
 			a_row /= Void
-			list_cursor /= Void
+			lst /= Void
 		local
 			lrow: EV_GRID_ROW
 			v_routine_id: detachable DEBUG_BASIC_VALUE [INTEGER]
@@ -1171,12 +1172,12 @@ feature {NONE} -- Agent filling
 			glab: EV_GRID_LABEL_ITEM
 			gf: EB_GRID_EDITOR_TOKEN_ITEM
 		do
-			from
-				list_cursor.start
+			across
+				lst as ic
 			until
-				list_cursor.after or v_routine_id /= Void
+				v_routine_id /= Void
 			loop
-				if attached list_cursor.item as v_item and then
+				if attached ic.item as v_item and then
 					attached v_item.name as n and then
 					n.count > 3 and then
 					attached {DEBUG_BASIC_VALUE [INTEGER]} v_item as vi and then
@@ -1187,7 +1188,6 @@ feature {NONE} -- Agent filling
 				then
 					v_routine_id := vi
 				end
-				list_cursor.forth
 			end
 			if v_routine_id /= Void then
 				rid := v_routine_id.value

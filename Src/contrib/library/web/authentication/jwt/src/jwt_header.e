@@ -4,9 +4,9 @@ note
 			
 			See https://tools.ietf.org/html/rfc7515
 		]"
-	date: "$Date: 2017-06-20 13:16:59 -0300 (ma. 20 de jun. de 2017) $"
-	revision: "$Revision: 100534 $"
-
+	date: "$Date$"
+	revision: "$Revision$"
+	EIS: "name=JOSE Header", "src=https://tools.ietf.org/html/rfc7519#section-5", "protocol=uri"
 class
 	JWT_HEADER
 
@@ -94,9 +94,9 @@ feature -- Element change
 
 	set_algorithm (alg: detachable READABLE_STRING_8)
 		do
-			if 
-				alg = Void or else 
-				alg.is_case_insensitive_equal ("none") 
+			if
+				alg = Void or else
+				alg.is_case_insensitive_equal ("none")
 			then
 				algorithm := "none"
 			else

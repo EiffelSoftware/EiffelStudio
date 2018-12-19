@@ -1,6 +1,5 @@
-note
+﻿note
 	description: "Grid item for metric client/supplier criterion"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -29,7 +28,7 @@ feature{NONE} -- Initialization
 			-- Initialize.
 		do
 			old_make (create {EB_METRIC_DOMAIN}.make)
-			pointer_button_press_actions.force_extend (agent activate_grid_item (?, ?, ?, ?, ?, ?, ?, ?, Current))
+			pointer_button_press_actions.extend (agent activate_grid_item (?, ?, ?, ?, ?, ?, ?, ?, Current))
 			dialog_ok_actions.extend (agent change_actions.call (Void))
 			set_tooltip (metric_names.f_pick_and_drop_items)
 			set_dialog_function (agent dialog_getter)

@@ -1,6 +1,4 @@
-note
-	description: "Summary description for {CONSOLE_WIZARD_PAGE}."
-	author: ""
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,7 +11,7 @@ inherit
 create
 	make
 
-feature {WIZARD, WIZARD_ENGINE, WIZARD_PAGE} -- Implementation
+feature {WIZARD, WIZARD_PAGE} -- Implementation
 
 	reuse
 		do

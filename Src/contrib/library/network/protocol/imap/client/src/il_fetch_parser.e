@@ -72,40 +72,40 @@ feature -- Basic operations
 
 feature {NONE} -- Constants
 
-	Bodyb_pattern: STRING = ".*(BODY(\.PEEK)?(\[.*])|RFC822|RFC822\.HEADER|RFC822.TEXT) {(\d+)}%R%N"
+	Bodyb_pattern: STRING = "(BODY(\.PEEK)?(\[.*])|RFC822|RFC822\.HEADER|RFC822.TEXT) {(\d+)}%R%N"
 			-- Captures the beginning of a data item which will have its value on the following lines
 			-- Match example : BODY[TEXT] {6}
 			-- Could be matched in : * 3 FETCH (FLAGS (\Seen \Draft) UID 16 BODY[TEXT] {6}
 
-	Body_pattern: STRING = ".*(BODY) \((((?![A-Z] \().)*)\)"
+	Body_pattern: STRING = "(BODY) \((((?![A-Z] \().)*)\)"
 			-- Represents a BODY data item with its value.
 			-- Match example : BODY ("text" "plain" ("charset" "utf-8" "format" "flowed") NIL NIL "7bit" 6 1)
 			-- Could be matched in : * 3 FETCH (BODY ("text" "plain" ("charset" "utf-8" "format" "flowed") NIL NIL "7bit" 6 1) UID 16)
 
-	Flags_pattern: STRING = ".*(FLAGS) \(([^)]*)\)"
+	Flags_pattern: STRING = "(FLAGS) \(([^)]*)\)"
 			-- Represents a FLAGS data item with its value
 			-- Match example : FLAGS (\Seen \Draft)
 			-- Could be matched in : * 3 FETCH (FLAGS (\Seen \Draft) UID 16 BODY[TEXT] {6}
 
-	Bodystructure_pattern: STRING = ".*(BODYSTRUCTURE) \((((?![A-Z] \().)*)\)"
+	Bodystructure_pattern: STRING = "(BODYSTRUCTURE) \((((?![A-Z] \().)*)\)"
 			-- Represents a BODYSTRUCTURE data item with its value
 			-- Match example : BODYSTRUCTURE ("text" "plain" ("charset" "utf-8" "format" "flowed") NIL NIL "7bit" 6 1 NIL NIL NIL NIL)
 			-- Could be matched in : * 3 FETCH (BODYSTRUCTURE ("text" "plain" ("charset" "utf-8" "format" "flowed") NIL NIL "7bit" 6 1 NIL NIL NIL NIL) UID 16)
 
-	Envelope_pattern: STRING = ".*(ENVELOPE) \(((%"[^%"]*%" ?|\((\((%"[^%"]*%" ?|NIL ?)+\))+\) ?|NIL ?)+)\)"
+	Envelope_pattern: STRING = "(ENVELOPE) \(((%"[^%"]*%" ?|\((\((%"[^%"]*%" ?|NIL ?)+\))+\) ?|NIL ?)+)\)"
 			-- Represents an ENVELOPE data item with its value
 			-- Match example : ENVELOPE ("Mon, 16 Nov 2015 11:52:34 +0100" "subject" (("Basile Maret" NIL "basile.maret" "server.ch")) (("Basile Maret" NIL "basile.maret" "server.ch")) (("Basile Maret" NIL "basile.maret" "server.ch")) ((NIL NIL "someone.else" "server.com")) NIL NIL NIL "<5649B572.1070608@server.ch>"))
 
-	Internaldate_pattern: STRING = ".*(INTERNALDATE) %"([^%"]*)%""
+	Internaldate_pattern: STRING = "(INTERNALDATE) %"([^%"]*)%""
 			-- Represents an INTERNALDATE data item with its value
 			-- Match example : INTERNALDATE "16-Nov-2015 11:52:34 +0100"
 
-	Size_pattern: STRING = ".*(RFC822\.SIZE) (\d+)"
+	Size_pattern: STRING = "(RFC822\.SIZE) (\d+)"
 			-- Represents a RFC822.SIZE data item with its value
 			-- Match example : RFC822.SIZE 559
 			-- Could be matched in : * 3 FETCH (UID 16 RFC822.SIZE 559)
 
-	Uid_pattern: STRING = ".*(UID) (\d+)"
+	Uid_pattern: STRING = "(UID) (\d+)"
 			-- Represents a UID data item with its value
 			-- Match example : UID 16
 			-- Could be matched in : * 3 FETCH (FLAGS (\Seen \Draft) UID 16 BODY[TEXT] {6}
@@ -249,6 +249,6 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2015-2016, Maret Basile, Eiffel Software"
+	copyright: "2015-2018, Maret Basile, Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

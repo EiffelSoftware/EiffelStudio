@@ -3,12 +3,12 @@
 	instruction: "[
 			The following violations are detected:
 			1. Class void safety level is less than the level of its cluster.
-			2. Class cat-call detected level is less than the level of its cluster.
-			3. Target capability option should be less than capability option of
+			2. Class cat-call detection level is less than the level of its cluster.
+			3. Target capability option is greater than capability option of
 				a) a target (if any) it extends (reported as warning because 5 will catch actual issues)
 				b) any group it depends on
-			4. Target root option should be less than target capability option.
-			5. Root target root option should be less than any dependent target capability option.
+			4. Target root option is greater than target capability option.
+			5. Target root option is greater than any dependent target capability option.
 		]"
 
 class CONF_CAPABILITY_CHECKER
@@ -65,14 +65,14 @@ feature {CONF_VISITABLE} -- Visitor
 			old_target: CONF_TARGET
 			old_condition: CONF_CONDITION_LIST
 		do
+				-- Check usage of a parent target or of a library target in the current target.
+			if t /= root_target and then not is_precompile then
+				check_target (t, target)
+			end
 			if not targets.has (t) then
+					-- Perform checks in the context of supplied target.
 				targets.force (t)
 				old_target := target
-					-- Check usage of a parent target or of a library target in the current target.
-				if t /= root_target and then not is_precompile then
-					check_target (t, old_target)
-				end
-					-- Perform checks in the context of supplied target.
 				target := t
 				if attached t.extends as parent then
 						-- Recurse to parent.

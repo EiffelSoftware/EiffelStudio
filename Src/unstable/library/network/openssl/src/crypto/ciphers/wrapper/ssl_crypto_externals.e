@@ -60,9 +60,25 @@ feature -- Ciphers Modes
 			-- defined as NID_sha256 672
 			--| obj_mac.h
 
+	NID_sha384: INTEGER =  673
+			-- defined as NID_sha384 673
+			--| obj_mac.h
 
-	SHA256_DIGEST_LENGTH: INTEGER= 32
+	NID_sha512: INTEGER =  674
+			-- #define NID_sha512 674
+			--| obj_mac.h
+
+
+	SHA256_DIGEST_LENGTH: INTEGER = 32
 			-- define SHA256_DIGEST_LENGTH    32
+			-- |sha.h		
+
+	SHA384_DIGEST_LENGTH: INTEGER = 48
+			-- define SHA384_DIGEST_LENGTH    48
+			-- |sha.h		
+
+	SHA512_DIGEST_LENGTH: INTEGER = 64
+			-- define SHA512_DIGEST_LENGTH    64
 			-- |sha.h		
 
 feature -- Ciphers
@@ -561,6 +577,17 @@ feature -- RSA
 			"return RSA_new();"
 		end
 
+	c_rsa_new_method (a_engine: POINTER): POINTER
+			-- RSA_new_method() allocates and initializes an RSA structure so that engine will be used for the RSA operations.
+			-- If engine is NULL, the default ENGINE for RSA operations is used, and if no default ENGINE is set,
+			-- the RSA_METHOD controlled by RSA_set_default_method() is used.
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"return RSA_new_method ($a_engine);"
+		end
+
+
 	RSA_F4: INTEGER
 		external
 			"C inline use %"eif_openssl.h%""
@@ -625,15 +652,14 @@ feature -- RSA
 		external
 			"C inline use %"eif_openssl.h%""
 		alias
-		 "{
-			BIO *kbio;
-			RSA *rsa = NULL;
-	
-			kbio = BIO_new_mem_buf((void*)(const char *)$a_key_buffer, -1);
-			rsa = PEM_read_bio_RSAPrivateKey(kbio, &rsa, NULL, NULL);
-			BIO_free(kbio);
-			return rsa;
-		  }"
+			"[
+				BIO *kbio;
+				RSA *rsa = NULL;
+				kbio = BIO_new_mem_buf((void*)(const char *)$a_key_buffer, -1);
+				rsa = PEM_read_bio_RSAPrivateKey(kbio, &rsa, NULL, NULL);
+				BIO_free(kbio);
+				return rsa;
+			]"
 		end
 
 	c_set_rsapubkey (a_key_buffer: POINTER): POINTER
@@ -641,15 +667,14 @@ feature -- RSA
 		external
 			"C inline use %"eif_openssl.h%""
 		alias
-		 "{
-			BIO *kbio;
-			RSA *rsa = NULL;
-			
-			kbio = BIO_new_mem_buf((void*)(const char *)$a_key_buffer, -1);
-			rsa = PEM_read_bio_RSA_PUBKEY(kbio, &rsa, NULL, NULL);
-			BIO_free(kbio);
-			return rsa;
-		  }"
+			"[
+				BIO *kbio;
+				RSA *rsa = NULL;
+				kbio = BIO_new_mem_buf((void*)(const char *)$a_key_buffer, -1);
+				rsa = PEM_read_bio_RSA_PUBKEY(kbio, &rsa, NULL, NULL);
+				BIO_free(kbio);
+				return rsa;
+			]"
 		end
 
 	c_set_rsapublickey (a_key_buffer: POINTER): POINTER
@@ -657,15 +682,35 @@ feature -- RSA
 		external
 			"C inline use %"eif_openssl.h%""
 		alias
-		 "{
-			BIO *kbio;
-			RSA *rsa = NULL;
-			
-			kbio = BIO_new_mem_buf((void*)(const char *)$a_key_buffer, -1);
-			rsa = PEM_read_bio_RSAPublicKey(kbio, &rsa, NULL, NULL);
-			BIO_free(kbio);
-			return rsa;
-		  }"
+			"[
+				BIO *kbio;
+				RSA *rsa = NULL;
+				kbio = BIO_new_mem_buf((void*)(const char *)$a_key_buffer, -1);
+				rsa = PEM_read_bio_RSAPublicKey(kbio, &rsa, NULL, NULL);
+				BIO_free(kbio);
+				return rsa;
+			]"
+		end
+
+	c_rsa_sign (a_type: INTEGER; a_m: POINTER; a_m_len: INTEGER; a_sigret: POINTER; a_siglen: TYPED_POINTER [INTEGER]; a_rsa:  POINTER): INTEGER
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"return RSA_sign((int)$a_type, (const unsigned char *)$a_m, (unsigned int)$a_m_len, (unsigned char *)$a_sigret, (unsigned int *)$a_siglen, (RSA *)$a_rsa);"
+		end
+
+	c_rsa_verify (a_type: INTEGER; a_m: POINTER; a_sigbuf: POINTER; a_siglen: INTEGER; a_rsa:  POINTER): INTEGER
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+		 	"return RSA_verify((int)$a_type, (const unsigned char *)$a_m, (unsigned int )sizeof($a_m), (unsigned char *)$a_sigbuf, (unsigned int) $a_siglen, (RSA *)$a_rsa);"
+		end
+
+	c_rsa_free (a_rsa: POINTER)
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+		 	"RSA_free((RSA *)$a_rsa);"
 		end
 
 
@@ -699,7 +744,6 @@ feature -- BIGNUM
 		alias
 			"return BN_set_word((BIGNUM *)$a_bn, (BN_ULONG)$a_w);"
 		end
-
 
 feature -- BIO
 
@@ -742,38 +786,41 @@ feature -- BIO
 		alias
 			"[
 				return  PEM_write_bio_RSAPrivateKey((BIO *)$a_bp, (RSA *)$a_x, (const EVP_CIPHER *)$a_enc,
-                                 (unsigned char *)$a_kstr, (int)$a_klen,
-                                 (pem_password_cb *)$a_cb, (void *)$a_u);
-                                 ]"
+								(unsigned char *)$a_kstr, (int)$a_klen,
+								(pem_password_cb *)$a_cb, (void *)$a_u);
+			]"
 		end
 
 	c_pem_write_bio_rsapublickey (a_bp: POINTER; a_x: POINTER): INTEGER
 		external
 			"C inline use %"eif_openssl.h%""
 		alias
-			"[
-				return  PEM_write_bio_RSAPublicKey((BIO *)$a_bp, (RSA *)$a_x);
-				]"
+			"return PEM_write_bio_RSAPublicKey((BIO *)$a_bp, (RSA *)$a_x);"
 		end
 
 
-	c_pem_write_bio_rsapubkey (a_bp: POINTER; a_x: POINTER): INTEGER
+	c_pem_write_bio_pubkey (a_bp: POINTER; a_x: POINTER): INTEGER
 		external
 			"C inline use %"eif_openssl.h%""
 		alias
-			"[
-				return  PEM_write_bio_PUBKEY((BIO *)$a_bp, (RSA *)$a_x);
-				]"
+			"return PEM_write_bio_PUBKEY((BIO *)$a_bp, (RSA *)$a_x);"
 		end
+
+
+	c_pem_write_bio_private_key (a_bp: POINTER; a_x: POINTER; a_enc: POINTER; a_kstr: POINTER; a_klen: INTEGER; a_cb: POINTER; a_u: POINTER): INTEGER
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"return PEM_write_bio_PrivateKey((BIO *)$a_bp, (EVP_PKEY *)$a_x, (const EVP_CIPHER *)$a_enc, (unsigned char *)$a_kstr, (int)$a_klen, (pem_password_cb *)$a_cb, (void *)$a_u);	;"
+		end
+
 
 	c_bio_pending (a_b: POINTER): INTEGER
 			--Bio_pending return the number of pending characters in the BIOs read and write buffers.
 		external
 			"C inline use %"eif_openssl.h%""
 		alias
-			"[
-				return BIO_pending((BIO *)$a_b);
-				]"
+			"return BIO_pending((BIO *)$a_b); "
 		end
 
 
@@ -782,28 +829,46 @@ feature -- BIO
 		external
 			"C inline use %"eif_openssl.h%""
 		alias
-			"[
-				return BIO_read((BIO *)$a_b, (void *)$a_buf, (int)$a_len);
-				]"
+			"return BIO_read((BIO *)$a_b, (void *)$a_buf, (int)$a_len); "
 		end
+
+	c_bio_free_all (a_b: POINTER)
+			-- BIO_free_all() frees up an entire BIO chain, it does not halt if an error occurs freeing up an individual BIO in the chain. If a is NULL nothing is done.
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"BIO_free_all((BIO *)$a_b);"
+		end
+
+feature -- OpenSSL base64 encoding.
 
 	c_base64_encode (buffer: POINTER; length:INTEGER): POINTER
 		external
 			"C inline use %"eif_openssl.h%""
 		alias
 			"[
-			  BIO *bio, *b64;
-			  BUF_MEM *bufferPtr;
-			  b64 = BIO_new(BIO_f_base64());
-			  bio = BIO_new(BIO_s_mem());
-			  bio = BIO_push(b64, bio);
-			  BIO_write(bio, $buffer, $length);
-			  BIO_flush(bio);
-			  BIO_get_mem_ptr(bio, &bufferPtr);
-			  BIO_set_close(bio, BIO_NOCLOSE);
-			  BIO_free_all(bio);
-			  return (*bufferPtr).data;
+				BIO *bio, *b64;
+				BUF_MEM *bufferPtr;
+				b64 = BIO_new(BIO_f_base64());
+				bio = BIO_new(BIO_s_mem());
+				bio = BIO_push(b64, bio);
+				BIO_write(bio, $buffer, $length);
+				BIO_flush(bio);
+				BIO_get_mem_ptr(bio, &bufferPtr);
+				BIO_set_close(bio, BIO_NOCLOSE);
+				BIO_free_all(bio);
+				return (*bufferPtr).data;
 			]"
 		end
 
+note
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

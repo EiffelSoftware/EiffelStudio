@@ -804,6 +804,26 @@ feature -- Icons
 			callstack_has_rescue_icon_buffer_attached: Result /= Void
 		end
 
+	frozen callstack_is_non_object_call_icon: EV_PIXMAP
+			-- Access to 'is non object call' pixmap.
+		require
+			has_named_icon: has_named_icon (callstack_is_non_object_call_name)
+		once
+			Result := named_icon (callstack_is_non_object_call_name)
+		ensure
+			callstack_is_non_object_call_icon_attached: Result /= Void
+		end
+
+	frozen callstack_is_non_object_call_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'is non object call' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (callstack_is_non_object_call_name)
+		once
+			Result := named_icon_buffer (callstack_is_non_object_call_name)
+		ensure
+			callstack_is_non_object_call_icon_buffer_attached: Result /= Void
+		end
+
 	frozen execution_record_icon: EV_PIXMAP
 			-- Access to 'record' pixmap.
 		require
@@ -1468,6 +1488,7 @@ feature -- Constants: Icon names
 	callstack_send_to_external_editor_name: STRING = "callstack send to external editor"
 	callstack_is_melted_name: STRING = "callstack is melted"
 	callstack_has_rescue_name: STRING = "callstack has rescue"
+	callstack_is_non_object_call_name: STRING = "callstack is non object call"
 	execution_record_name: STRING = "execution record"
 	execution_replay_name: STRING = "execution replay"
 	execution_object_storage_name: STRING = "execution object storage"
@@ -1542,14 +1563,15 @@ feature {NONE} -- Basic operations
 			a_table.put ([{NATURAL_8} 1, {NATURAL_8} 4], callstack_send_to_external_editor_name)
 			a_table.put ([{NATURAL_8} 2, {NATURAL_8} 4], callstack_is_melted_name)
 			a_table.put ([{NATURAL_8} 3, {NATURAL_8} 4], callstack_has_rescue_name)
-			a_table.put ([{NATURAL_8} 4, {NATURAL_8} 4], execution_record_name)
-			a_table.put ([{NATURAL_8} 5, {NATURAL_8} 4], execution_replay_name)
-			a_table.put ([{NATURAL_8} 6, {NATURAL_8} 4], execution_object_storage_name)
-			a_table.put ([{NATURAL_8} 7, {NATURAL_8} 4], hidden_show_in_callstack_name)
-			a_table.put ([{NATURAL_8} 8, {NATURAL_8} 4], hidden_hide_in_callstack_name)
-			a_table.put ([{NATURAL_8} 9, {NATURAL_8} 4], reserved_reserved_1_name)
-			a_table.put ([{NATURAL_8} 10, {NATURAL_8} 4], reserved_reserved_2_name)
-			a_table.put ([{NATURAL_8} 11, {NATURAL_8} 4], evaluation_refresh_name)
+			a_table.put ([{NATURAL_8} 4, {NATURAL_8} 4], callstack_is_non_object_call_name)
+			a_table.put ([{NATURAL_8} 5, {NATURAL_8} 4], execution_record_name)
+			a_table.put ([{NATURAL_8} 6, {NATURAL_8} 4], execution_replay_name)
+			a_table.put ([{NATURAL_8} 7, {NATURAL_8} 4], execution_object_storage_name)
+			a_table.put ([{NATURAL_8} 8, {NATURAL_8} 4], hidden_show_in_callstack_name)
+			a_table.put ([{NATURAL_8} 9, {NATURAL_8} 4], hidden_hide_in_callstack_name)
+			a_table.put ([{NATURAL_8} 10, {NATURAL_8} 4], reserved_reserved_1_name)
+			a_table.put ([{NATURAL_8} 11, {NATURAL_8} 4], reserved_reserved_2_name)
+			a_table.put ([{NATURAL_8} 12, {NATURAL_8} 4], evaluation_refresh_name)
 			a_table.put ([{NATURAL_8} 1, {NATURAL_8} 5], new_feature_name)
 			a_table.put ([{NATURAL_8} 2, {NATURAL_8} 5], new_class_name)
 			a_table.put ([{NATURAL_8} 3, {NATURAL_8} 5], new_cluster_name)
@@ -1575,7 +1597,7 @@ feature {NONE} -- Basic operations
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

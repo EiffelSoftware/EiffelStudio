@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			This module allows the use Session Based Authentication using Cookies to restrict access
 			by looking up users in the given providers.
@@ -196,9 +196,8 @@ feature {NONE} -- Implementation: routes
 	handle_login_with_session (api: CMS_API; a_session_api: CMS_SESSION_API; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
-			l_username, l_username_or_email, l_password: detachable READABLE_STRING_GENERAL
+			l_username_or_email, l_password: detachable READABLE_STRING_GENERAL
 			l_user: detachable CMS_USER
-			l_tmp_user: detachable CMS_TEMP_USER
 		do
 			if
 				attached {WSF_STRING} req.form_parameter ("username") as p_username and then

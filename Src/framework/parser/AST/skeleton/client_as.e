@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Representation of an export clause"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -9,9 +9,6 @@ class CLIENT_AS
 
 inherit
 	AST_EIFFEL
-		redefine
-			is_equivalent
-		end
 
 create
 	initialize
@@ -32,7 +29,7 @@ feature {NONE} -- Initialization
 feature -- Visitor
 
 	process (v: AST_VISITOR)
-			-- process current element.
+			-- Process current element.
 		do
 			v.process_client_as (Current)
 		end
@@ -40,7 +37,7 @@ feature -- Visitor
 feature -- Attributes
 
 	clients: CLASS_LIST_AS
-			-- Client list
+			-- Client list.
 
 feature -- Roundtrip/Token
 
@@ -78,7 +75,7 @@ feature -- Roundtrip
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN
-			-- Is `other' equivalent to the current object ?
+			-- Is `other' equivalent to the current object?
 		do
 				-- FIXME: use mechanism similar to `is_equiv'!!!!
 			Result := equivalent (clients, other.clients)
@@ -143,7 +140,7 @@ invariant
 	clients_not_empty: not clients.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -174,4 +171,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class CLIENT_AS
+end

@@ -78,7 +78,7 @@ feature {NONE} -- Creation
 
 	make_7_3
 			-- Initialize options to the defaults of 7.3.
-			-- Difference fom `make_7_0': transitional void-safety, full class checking.
+			-- Difference fom `make_7_0': transitional void safety, full class checking.
 		do
 			make_7_0
 			void_safety.put_default_index (void_safety_index_transitional)
@@ -87,7 +87,7 @@ feature {NONE} -- Creation
 
 	make_14_05
 			-- Initialize options to the defaults of 14.05.
-			-- Difference from `make_7_3': complete void-safety.
+			-- Difference from `make_7_3': complete void safety.
 		do
 			make_7_3
 			void_safety.put_default_index (void_safety_index_all)

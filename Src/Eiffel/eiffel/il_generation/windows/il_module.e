@@ -1000,7 +1000,6 @@ feature -- Code generation
 			l_meth_sig: like method_sig
 			l_type_id: INTEGER
 			l_nb_args: INTEGER
-			l_creation_type: CREATE_TYPE
 		do
 			l_type_id := a_class_type.implementation_id
 
@@ -1072,8 +1071,7 @@ feature -- Code generation
 			end
 
 				-- Create root object and call creation procedure.
-			create l_creation_type.make (system.root_type)
-			l_creation_type.generate_il
+			;(create {CREATE_TYPE}.make (system.root_type)).generate_il
 			if creation_type.is_expanded then
 					-- Box expanded object.
 				il_code_generator.generate_metamorphose (creation_type.type)
@@ -1389,18 +1387,16 @@ feature -- Metadata description
 			interface_class_type: CLASS_TYPE
 		do
 			parents := class_c.conforming_parents
-			from
-				create l_list.make (parents.count)
-				parents.start
-				create l_parents.make_filled (0, 0, parents.count)
-				l_single_inheritance_parent_id := 0
-			until
-				parents.after
+			create l_list.make (parents.count)
+			create l_parents.make_filled (0, 0, parents.count)
+			l_single_inheritance_parent_id := 0
+			across
+				parents as p
 			loop
 					-- We need to reset context at each iteration because calls to
 					-- `xxx_class_type_token' might trigger a recursive call to `update_parents'
 					-- thus changing the context.
-				l_parent_type := parents.item.associated_class_type (class_type.type)
+				l_parent_type := p.item.associated_class_type (class_type.type)
 				l_has_an_eiffel_parent := l_has_an_eiffel_parent or else not l_parent_type.is_external
 				id := l_parent_type.static_type_id
 				if not l_list.has (id) then
@@ -1436,7 +1432,6 @@ feature -- Metadata description
 							-- parents than can be included as interfaces.
 					end
 				end
-				parents.forth
 			end
 
 				-- Element after last added should be 0.
@@ -1733,7 +1728,6 @@ feature -- Metadata description
 			l_creators_count: INTEGER
 			l_feature: FEATURE_I
 			l_define_default_ctor: BOOLEAN
-			l_feat_arg: FEAT_ARG
 			l_creators_table: HASH_TABLE [EXPORT_I, STRING]
 			i: INTEGER
 			l_constructors: LIST [STRING]
@@ -1773,14 +1767,10 @@ feature -- Metadata description
 								l_sig.set_parameter_count (l_feature.argument_count)
 							end
 							l_sig.set_return_type ({MD_SIGNATURE_CONSTANTS}.element_type_void, 0)
-							from
-								l_feat_arg := l_feature.arguments
-								l_feat_arg.start
-							until
-								l_feat_arg.after
+							across
+								l_feature.arguments as a
 							loop
-								set_signature_type (l_sig, argument_actual_type (l_feat_arg.item), class_type)
-								l_feat_arg.forth
+								set_signature_type (l_sig, argument_actual_type (a.item), class_type)
 							end
 							if l_is_generic then
 								l_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, ise_generic_type_token)
@@ -1839,27 +1829,18 @@ feature -- Local saving
 		local
 			l_sig: like local_sig
 			l_count: INTEGER
-			l_loc_token: INTEGER
 		do
 			l_count := a_local_types.count
-
 			if l_count > 0 then
 				l_sig := local_sig
 				l_sig.reset
-
 				l_sig.set_local_count (l_count)
-
-				from
-					a_local_types.start
-				until
-					a_local_types.after
+				across
+					a_local_types as t
 				loop
-					set_signature_type (l_sig, a_local_types.item.first, a_context_type)
-					a_local_types.forth
+					set_signature_type (l_sig, t.item.first, a_context_type)
 				end
-
-				l_loc_token := md_emit.define_signature (l_sig)
-				il_code_generator.method_body.set_local_token (l_loc_token)
+				il_code_generator.method_body.set_local_token (md_emit.define_signature (l_sig))
 			end
 
 			if is_debug_info_enabled then
@@ -1997,7 +1978,6 @@ feature -- Mapping between Eiffel compiler and generated tokens
 			l_feature: FEATURE_I
 			l_meth_sig: MD_METHOD_SIGNATURE
 			l_argument_count: INTEGER
-			l_arguments: FEAT_ARG
 			l_type_i: TYPE_A
 		do
 			l_tokens := internal_constructors [a_type_id]
@@ -2018,15 +1998,11 @@ feature -- Mapping between Eiffel compiler and generated tokens
 				l_meth_sig.set_return_type (
 					{MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 				if l_argument_count > 0 then
-					from
-						l_arguments := l_feature.arguments
-						l_arguments.start
-					until
-						l_arguments.after
+					across
+						l_feature.arguments as a
 					loop
-						l_type_i := il_code_generator.argument_actual_type_in (l_arguments.item, l_class_type)
+						l_type_i := il_code_generator.argument_actual_type_in (a.item, l_class_type)
 						il_code_generator.set_signature_type (l_meth_sig, l_type_i, l_class_type)
-						l_arguments.forth
 					end
 				end
 				if l_class_type.is_generic and then not l_class_type.is_external then
@@ -2804,8 +2780,6 @@ feature -- Mapping between Eiffel compiler and generated tokens
 		local
 			l_token: INTEGER
 			l_id: INTEGER
-			l_indexes: INDEXING_CLAUSE_AS
-			l_info: ARRAY [STRING_32]
 			l_name, l_key_string, l_culture, l_version_string: READABLE_STRING_32
 			l_assembly: ASSEMBLY_I
 			l_precompiled_assembly: ASSEMBLY_INFO
@@ -2837,31 +2811,34 @@ feature -- Mapping between Eiffel compiler and generated tokens
 						l_version_string := l_assembly.assembly_version
 						l_culture := l_assembly.assembly_culture
 						l_key_string := l_assembly.assembly_public_key_token
-					else
+					elseif
+						attached a_class_type.associated_class.ast.top_indexes as l_indexes and then
+						attached l_indexes.assembly_name as l_info
+					then
 							-- When it is an actual Eiffel class encapsulating
 							-- an external class.
-						l_indexes := a_class_type.associated_class.ast.top_indexes
-						check
-							l_indexes_not_void: l_indexes /= Void
-						end
-						l_info := l_indexes.assembly_name
-						l_name := l_info.item (1)
+						l_name := l_info [1]
 						if l_info.valid_index (2) then
-							l_version_string := l_info.item (2)
+							l_version_string := l_info [2]
 						end
 						if l_info.valid_index (4) then
-							l_key_string := l_info.item (4)
+							l_key_string := l_info [4]
 						end
 					end
 				end
-				l_token := define_assembly_reference (l_name, l_version_string, l_culture, l_key_string)
+				if attached l_name then
+					l_token := define_assembly_reference (l_name, l_version_string, l_culture, l_key_string)
+				end
 			end
-			if is_used_as_external then
-				l_id := a_class_type.external_id
-			else
-				l_id := a_class_type.implementation_id
+			l_id :=
+				if is_used_as_external then
+					a_class_type.external_id
+				else
+					a_class_type.implementation_id
+				end
+			if l_token /= 0 then
+				internal_assemblies.put (l_token, l_id)
 			end
-			internal_assemblies.put (l_token, l_id)
 		ensure
 			updated:  (is_used_as_external or else internal_assemblies.item (a_class_type.implementation_id) /= 0) and
 				(is_used_as_external implies internal_assemblies.item (a_class_type.external_id) /= 0)

@@ -1,6 +1,4 @@
-note
-	description: "Summary description for {GRAPHICAL_WIZARD_STYLER}."
-	author: ""
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -42,9 +40,7 @@ feature -- Style
 					lab.align_text_top
 				end
 			end
-			if attached {EV_COLORIZABLE} w as l_colorizable then
-				l_colorizable.set_foreground_color (colors.black)
-			end
+			w.set_foreground_color (colors.black)
 			if attached {EV_FONTABLE} w as l_fontable then
 				l_fontable.set_font (text_font)
 			end
@@ -82,9 +78,7 @@ feature -- Style
 	apply_field_description_style (w: EV_WIDGET)
 		do
 			apply_text_style (w)
-			if attached {EV_COLORIZABLE} w as l_colorizable then
-				l_colorizable.set_foreground_color (colors.dark_gray)
-			end
+			w.set_foreground_color (colors.dark_gray)
 			if attached {EV_FONTABLE} w as l_fontable then
 				l_fontable.set_font (field_description_font)
 			end

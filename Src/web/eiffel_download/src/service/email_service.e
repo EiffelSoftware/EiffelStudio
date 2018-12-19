@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 
 feature -- Basic Operations
 
-	send_download_email (a_to, a_content, a_host: STRING)
+	send_download_email (a_to, a_content, a_host, a_release: STRING)
 			-- Send successful download message containing token code (use to validate the download and give it an expiration of 30 days) `a_token' to `a_to'.
 		require
 			attached_to: a_to /= Void
@@ -61,7 +61,7 @@ feature -- Basic Operations
 				-- Create our message.
 			create l_email.make_with_entry (admin_email, a_to)
 			l_email.set_message (a_content)
-			l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, "Your EiffelStudio Download")
+			l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, "Your EiffelStudio "+ a_release +" Download")
 			l_email.add_header_entry ("MIME-Version:", "1.0")
 			l_email.add_header_entry ("Content-Type", "text/html; charset=ISO-8859-1")
 			send_email (l_email)
@@ -144,7 +144,7 @@ feature {NONE} -- Implemenation
 				-- Create our message.
 			create l_email.make_with_entry (admin_email, download_email)
 			l_email.set_message (a_content)
-			l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, a_subject)
+			l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, a_subject.to_string_8)
 			send_email (l_email)
 		end
 

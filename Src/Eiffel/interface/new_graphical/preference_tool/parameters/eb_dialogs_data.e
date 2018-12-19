@@ -1,9 +1,9 @@
 note
-	description	: "All shared attributes specific to dialogs."
+	description: "All shared attributes specific to dialogs."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EB_DIALOGS_DATA
@@ -357,6 +357,9 @@ feature {EB_SHARED_PREFERENCES, EB_TOOL} -- Preference
 	confirm_save_metric_preference: BOOLEAN_PREFERENCE
 			-- Should we save requested metric?
 
+	open_class_on_fix_preference: BOOLEAN_PREFERENCE
+			-- A preference to open an editor for a class to be fixed.
+
 	confirm_fix_without_undo_preference: BOOLEAN_PREFERENCE
 			-- A preference to discard a fix undo warning.
 
@@ -432,6 +435,7 @@ feature -- Preference strings
 	confirm_replace_all_string: STRING = "interface.dialogs.confirm_replace_all"
 	confirm_remove_metric_string: STRING = "interface.dialogs.confirm_remove_metric"
 	confirm_save_metric_string: STRING = "interface.dialogs.confirm_save_metric"
+	open_class_on_fix_string: STRING = "interface.dialogs.open_class_on_fix"
 	confirm_fix_without_undo_string: STRING = "interface.dialogs.confirm_fix_without_undo"
 	acknowledge_not_loaded_string: STRING = "interface.dialogs.acknowledge_not_loaded"
 	confirm_finalize_precompile_string: STRING = "interface.dialogs.confirm_finalize_precompile"
@@ -506,6 +510,7 @@ feature {NONE} -- Implementation
 			confirm_acknowledge_eis_affected_items_preference := l_manager.new_boolean_preference_value (l_manager, confirm_acknowledge_eis_affected_items_string, True)
 			confirm_remove_metric_preference := l_manager.new_boolean_preference_value (l_manager, confirm_remove_metric_string, True)
 			confirm_save_metric_preference := l_manager.new_boolean_preference_value (l_manager, confirm_save_metric_string, True)
+			open_class_on_fix_preference :=  l_manager.new_boolean_preference_value (l_manager, open_class_on_fix_string, True)
 			confirm_fix_without_undo_preference := l_manager.new_boolean_preference_value (l_manager, confirm_fix_without_undo_string, True)
 			acknowledge_not_loaded_preference := l_manager.new_boolean_preference_value (l_manager, acknowledge_not_loaded_string, True)
 			confirm_finalize_precompile_preference := l_manager.new_boolean_preference_value (l_manager, confirm_finalize_precompile_string, True)
@@ -573,6 +578,7 @@ invariant
 	confirm_build_precompile_preference_not_void: confirm_build_precompile_preference /= Void
 	confirm_iron_packages_installation_preference_not_void: confirm_iron_packages_installation_preference /= Void
 	confirm_delete_eis_entries_preference_not_void: confirm_delete_eis_entries_preference /= Void
+	confirm_fix_open_preference_attached: attached open_class_on_fix_preference
 	confirm_fix_undo_preference_attached: attached confirm_fix_without_undo_preference
 	acknowledge_not_loaded_preference_not_void: acknowledge_not_loaded_preference /= Void
 	confirm_finalize_precompile_preference_not_void: confirm_finalize_precompile_preference /= Void
@@ -598,9 +604,9 @@ invariant
 	last_saved_basic_project_directory_preference_not_void: last_saved_basic_project_directory_preference /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -629,4 +635,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_DIALOGS_DATA
+end

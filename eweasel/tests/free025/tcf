@@ -1,0 +1,10 @@
+test_name 	 instance_free-qualified-call-argument
+test_description A qualified call argument should be checked with the assumption that it is not qualified.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 test.e $CLUSTER test.e
+
+compile_melted
+compile_result 	 validity_error TEST VUCR:13 VUCR:14 VUCR:15
+
+test_end

@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Objects that represents an editable grid label with ellipsis button."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -108,7 +107,11 @@ feature {NONE} -- Implementation
 				tf.return_actions.extend (agent return_pressed)
 				tf.focus_out_actions.extend (agent focus_lost)
 				but.focus_out_actions.extend (agent focus_lost)
-				but.pointer_button_release_actions.force_extend (agent call_ellipsis_actions)
+				but.pointer_button_release_actions.extend
+					(agent (x, y, b: INTEGER_32; x_tilt, y_tilt, p: REAL_64; screen_x, screen_y: INTEGER_32)
+						do
+							call_ellipsis_actions
+						end)
 
 				tf.set_focus
 				tf.key_press_actions.extend (agent handle_key)
@@ -340,8 +343,8 @@ invariant
 	ellipsis_actions_not_void: ellipsis_actions /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

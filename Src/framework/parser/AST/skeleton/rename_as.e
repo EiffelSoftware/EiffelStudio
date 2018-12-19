@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description: "Abstract description of a renaming pair. Version for Bench."
 	legal: "See notice at end of class."
@@ -10,9 +10,6 @@ class RENAME_AS
 
 inherit
 	AST_EIFFEL
-		redefine
-			is_equivalent
-		end
 
 create
 	initialize
@@ -39,7 +36,7 @@ feature {NONE} -- Initialization
 feature -- Visitor
 
 	process (v: AST_VISITOR)
-			-- process current element.
+			-- Process current element.
 		do
 			v.process_rename_as (Current)
 		end
@@ -66,10 +63,10 @@ feature -- Roundtrip
 feature -- Attributes
 
 	old_name: FEATURE_NAME
-			-- Name of the renamed feature
+			-- Name of the renamed feature.
 
 	new_name: FEATURE_NAME
-			-- New name
+			-- New name.
 
 feature -- Roundtrip/Token
 
@@ -86,7 +83,7 @@ feature -- Roundtrip/Token
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN
-			-- Is `other' equivalent to the current object ?
+			-- Is `other' equivalent to the current object?
 		do
 			Result := equivalent (old_name, other.old_name) and
 				equivalent (new_name, other.new_name)
@@ -97,7 +94,7 @@ invariant
 	new_name_not_void: new_name /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -128,4 +125,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class RENAME_AS
+end

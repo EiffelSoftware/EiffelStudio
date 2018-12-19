@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # Default values
-ISE_MAJOR_MINOR_LATEST=18.07
-ISE_BUILD_LATEST=101981
+ISE_MAJOR_MINOR_LATEST=18.11
+ISE_BUILD_LATEST=102592
 
-ISE_MAJOR_MINOR_NIGHTLY=18.07
-ISE_BUILD_NIGHTLY=101981
+ISE_MAJOR_MINOR_NIGHTLY=18.11
+ISE_BUILD_NIGHTLY=102592
 
 ISE_MAJOR_MINOR_BETA=$ISE_MAJOR_MINOR_LATEST
 ISE_BUILD_BETA=$ISE_BUILD_LATEST
@@ -54,15 +54,20 @@ while true; do
 			;;
 		*)
 			if [ -z "$ISE_CHANNEL" ]; then
+				#echo >&2 "Set ISE_CHANNEL with $1"
 				ISE_CHANNEL=$1
 				shift || break
-			fi
-			if [ -z "$ISE_PLATFORM" ]; then
-				ISE_PLATFORM=$1
-				shift || break
-			fi
-			if [ -z "$1" ]; then
-				break
+			else
+				if [ -z "$ISE_PLATFORM" ]; then
+					#echo >&2 "Set ISE_PLATFORM with $1"
+					ISE_PLATFORM=$1
+					shift || break
+				else
+					#if [ ! -z "$1" ]; then
+						#echo >&2 "Ignore argument \"$1\""
+					#fi
+					shift || break
+				fi
 			fi
 		;;
 	esac

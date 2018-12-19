@@ -62,19 +62,13 @@ feature -- Router
 			a_router.handle ("/doc/version/{version_id}/{bookid}/{wikipageid}/source", h, a_router.methods_get)
 
 			create h.make (agent handle_wikipage_editing (a_api, ?, ?))
---			a_router.handle ("/doc/{bookid}/{wikipageid}/edit", h, a_router.methods_get_post)
 			a_router.handle ("/doc/version/{version_id}/{bookid}/{wikipageid}/edit", h, a_router.methods_get_post)
-
---			create h.make (agent handle_wikipage_editing (a_api, ?, ?))
---			a_router.handle ("/doc/{bookid}/{wikipageid}/add-child", h, a_router.methods_get_post)
 			a_router.handle ("/doc/version/{version_id}/{bookid}/{wikipageid}/add-child", h, a_router.methods_get_post)
 
 			create h.make (agent handle_wikipage_deletion (a_api, ?, ?))
---			a_router.handle ("/doc/{bookid}/{wikipageid}/delete", h, a_router.methods_get_post)
 			a_router.handle ("/doc/version/{version_id}/{bookid}/{wikipageid}/delete", h, a_router.methods_get_post)
 
 			create h.make (agent handle_wikipage_html_preview (a_api, ?, ?))
---			a_router.handle ("/doc/{bookid}/{wikipageid}/preview", h, a_router.methods_post)
 			a_router.handle ("/doc/version/{version_id}/{bookid}/{wikipageid}/preview", h, a_router.methods_post)
 		end
 
@@ -88,6 +82,7 @@ feature -- Access
 			Result.force (perm_edit_wdocs_page)
 			Result.force (perm_create_wdocs_page)
 			Result.force (perm_delete_wdocs_page)
+--			Result.force (perm_modify_non_default_wdocs_page)
 
 			Result.force ("edit any wdocs page")
 			Result.force ("delete any wdocs page")
@@ -100,6 +95,7 @@ feature -- Access
 	perm_edit_wdocs_page: STRING = "edit wdocs page"
 	perm_create_wdocs_page: STRING = "create wdocs page"
 	perm_delete_wdocs_page: STRING = "delete wdocs page"
+--	perm_modify_non_default_wdocs_page: STRING = "modify non-default wdocs page"
 
 feature -- Helper
 
@@ -235,7 +231,7 @@ feature -- Handlers
 					attached pg.path as l_path --and then
 --					attached wiki_text (l_path) as l_wiki_text
 				then
-					l_xhtml := wiki_to_xhtml (wdocs_api, pg.title, p_source.value, pg, l_manager)
+					l_xhtml := wiki_to_xhtml (wdocs_api, "", p_source.value, pg, l_manager) -- Empty title, to skip title
 					res.header.put_content_type_text_html
 					res.header.put_content_length (l_xhtml.count)
 					res.put_string (l_xhtml)
@@ -306,7 +302,11 @@ feature -- Hooks configuration
 
 	response_alter (a_response: CMS_RESPONSE)
 		do
-
+			if attached {WDOCS_EDIT_FORM_RESPONSE} a_response then
+				if a_response.has_permission (perm_edit_wdocs_page) then
+					a_response.add_javascript_url (a_response.module_resource_url (Current, "/files/js/wdocs_edit.js", Void))
+				end
+			end
 		end
 
 end

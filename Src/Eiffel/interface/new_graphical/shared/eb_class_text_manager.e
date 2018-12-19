@@ -1,7 +1,5 @@
-note
-	description:
-		"Provides access to a class text, where it does not matter whether%N%
-		%it is 0, 1 or more class edit tools."
+﻿note
+	description: "Provides access to a class text, where it does not matter whether it is 0, 1 or more class edit tools."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -14,11 +12,6 @@ inherit
 	ANY
 
 	EB_SHARED_WINDOW_MANAGER
-		export
-			{NONE} all
-		end
-
-	EV_SHARED_APPLICATION
 		export
 			{NONE} all
 		end
@@ -39,12 +32,10 @@ feature -- Access
 			l: LIST [EB_DEVELOPMENT_WINDOW]
 			unchanged_editor, changed_editor: EB_SMART_EDITOR
 			editor: ARRAYED_LIST [EB_SMART_EDITOR]
-			l_app: like ev_application
 		do
 			l := Window_manager.development_windows_with_class (a_class)
 			if not l.is_empty then
 				from
-					l_app := ev_application
 					l.start
 				until
 					l.after
@@ -52,17 +43,7 @@ feature -- Access
 						-- Wait for the editor to read class text.
 					editor := l.item.editors_manager.editor_editing (a_class)
 					if not editor.is_empty then
-						from
-							l.item.window.set_pointer_style (default_pixmaps.wait_cursor)
-						until
-							l.item.editors_manager.full_loaded
-						loop
-								-- As editor text is loaded on idle, unless idle_actions are called EiffelStudio
-								-- stays in an infinite loop.
-							l_app.process_events
-						end
-						l.item.window.set_pointer_style (default_pixmaps.standard_cursor)
-
+						l.item.editors_manager.load_fully
 						if editor.first.is_editable then
 							if l.item.changed then
 								changed_editor := editor.first
@@ -132,16 +113,8 @@ feature -- Element change
 			end
 		end
 
-feature {NONE} -- Implementation
-
-	default_pixmaps: EV_STOCK_PIXMAPS
-			-- Default pixmaps and cursors.
-		once
-			create Result
-		end
-
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -172,4 +145,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_CLASS_TEXT_MANAGER
+end

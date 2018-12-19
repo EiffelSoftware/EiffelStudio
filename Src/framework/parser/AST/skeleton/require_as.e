@@ -1,4 +1,4 @@
-note
+﻿note
 	description	: "AST representation of a require statement."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -9,9 +9,6 @@ class REQUIRE_AS
 
 inherit
 	ASSERT_LIST_AS
-		redefine
-			process
-		end
 
 create
 	make
@@ -32,7 +29,7 @@ feature -- Initialization
 feature -- Visitor
 
 	process (v: AST_VISITOR)
-			-- process current element.
+			-- Process current element.
 		do
 			v.process_require_as (Current)
 		end
@@ -59,7 +56,7 @@ feature -- Roundtrip
 feature -- Properties
 
 	is_else: BOOLEAN
-			-- Is the assertion list a require else ?
+			-- Is the assertion list a require else?
 		do
 			-- Do nothing
 		end
@@ -97,7 +94,7 @@ feature -- Roundtrip/Location
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -128,4 +125,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class REQUIRE_AS
+end

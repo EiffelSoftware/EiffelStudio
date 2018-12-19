@@ -1,9 +1,8 @@
 note
-	description: "Summary description for {JWT_ALG_NONE}."
-	author: ""
+	description: "Object representing algorithm `NONE'"
 	date: "$Date$"
 	revision: "$Revision$"
-
+	EIS: "name=Algorithm none", "src=https://tools.ietf.org/html/rfc7518#section-3.6", "protocol=uri"
 class
 	JWT_ALG_NONE
 

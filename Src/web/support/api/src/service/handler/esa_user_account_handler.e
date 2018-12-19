@@ -103,7 +103,7 @@ feature -- Update User Information
 
 feature -- Implementation
 
-	extract_data_from_request (req: WSF_REQUEST; a_type: READABLE_STRING_32; a_user: READABLE_STRING_32): ESA_ACCOUNT_VIEW
+	extract_data_from_request (req: WSF_REQUEST; a_type: READABLE_STRING_8; a_user: READABLE_STRING_32): ESA_ACCOUNT_VIEW
 			-- Is the form data populated?
 			-- first_name, last_name, user_email, country, user_region, user_position, user_city, user_address, user_postal_code, user_phone, user_fax
 		do

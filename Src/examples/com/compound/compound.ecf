@@ -3,7 +3,7 @@
 	<target name="compound">
 		<description>EiffelCOM Compound Files Viewer example</description>
 		<root cluster="root_cluster" class="COMPOUND_FILE_VIEWER" feature="make"/>
-		<option warning="true" full_class_checking="false" is_obsolete_routine_type="true" syntax="transitional">
+		<option warning="true" full_class_checking="false">
 			<assertions precondition="true"/>
 		</option>
 		<setting name="platform" value="windows"/>

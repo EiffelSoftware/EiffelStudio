@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			-- Initialize.
 		do
 			Precursor
-			ellipsis_actions.force_extend (agent show_dialog)
+			ellipsis_actions.extend (agent show_dialog)
 		end
 
 feature -- Status

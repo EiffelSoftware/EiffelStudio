@@ -1,6 +1,5 @@
 note
-	description: "Summary description for {EWF_WIZARD}."
-	author: ""
+	description: "Wizard for EiffelWeb projects."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -89,7 +88,7 @@ Select connectors you want to support:
 			Result.add_boolean_question ("Standalone", "use_standalone", "Using the standalone Eiffel Web server")
 			Result.add_boolean_question ("CGI", "use_cgi", "Require to setup associated httpd server")
 			Result.add_boolean_question ("libFCGI", "use_libfcgi", "Require to setup associated httpd server, and have libfcgi dynamic libraries in the path")
-
+			
 			Result.data.force ("yes", "use_standalone")
 			Result.data.force ("yes", "use_cgi")
 			Result.data.force ("yes", "use_libfcgi")
@@ -100,7 +99,7 @@ Select connectors you want to support:
 			Result := new_page ("standalone_connector")
 			Result.set_title ("Standalone connector")
 			Result.set_subtitle ("Set options .")
-			Result.add_integer_question ("Port number", "port", "It happens port 8080 is already taken, thus choose another one.")
+			Result.add_integer_question ("Port number", "port", "If port 8080 is already taken, then choose another one.")
 			Result.add_boolean_question ("Verbose", "verbose", "Verbose output")
 
 			Result.data.force ("8080", "port")

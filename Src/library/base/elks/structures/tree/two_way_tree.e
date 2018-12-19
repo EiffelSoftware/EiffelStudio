@@ -3,10 +3,10 @@
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	names: two_way_tree, tree, two_way_list;
-	representation: recursive, linked;
-	access: cursor, membership;
-	contents: generic;
+	names: two_way_tree, tree, two_way_list
+	representation: recursive, linked
+	access: cursor, membership
+	contents: generic
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -17,7 +17,8 @@ class TWO_WAY_TREE [G] inherit
 			child_after, child_before, child_item,
 			child_off, child_islast
 		redefine
-			parent, clone_node
+			new_cursor,
+			parent
 		select
 			has,
 			new_cursor
@@ -129,6 +130,14 @@ feature -- Access
 			-- Current cursor position
 		do
 			create Result.make (child, child_after, child_before)
+		end
+
+feature -- Iteration
+
+	new_cursor: TWO_WAY_TREE_ITERATION_CURSOR [G]
+			-- <Precursor>
+		do
+			create Result.make (Current)
 		end
 
 feature -- Status report
@@ -323,12 +332,14 @@ feature {TWO_WAY_TREE} -- Implementation
 			-- the same node value.
 			-- This feature may be redefined in descendants so as to
 			-- produce an adequately allocated and initialized object.
+		obsolete "Create and initialize a new tree explicitly. [2018-11-30]"
 		do
 			create Result.make (item)
 		end
 
 	new_chain: like Current
 			-- <Precursor>
+		obsolete "Use explicit creation instead. See also explanations for `duplicate`. [2018-11-30]"
 		do
 			Result := new_tree
 		end

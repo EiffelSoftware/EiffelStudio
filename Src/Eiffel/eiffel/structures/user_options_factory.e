@@ -40,6 +40,27 @@ feature -- Query
 			result_not_default: Result /= Void implies not Result.is_equal (create {UUID}.make (0, 0, 0, 0, 0))
 		end
 
+feature -- Element change
+
+	set_mapped_uuid	(a_uuid: UUID; a_file_path: READABLE_STRING_32)
+			-- Set a_uuid as mapped UUID for a given `a_file_path`.
+		require
+			not_mapped: mapped_uuid (a_file_path) = Void
+			a_file_path_attached: a_file_path /= Void
+			not_a_file_path_is_empty: not a_file_path.is_empty
+		local
+			fn: STRING_32
+			l_mapping: like mapping
+		do
+			fn := a_file_path.as_string_32
+			l_mapping := mapping
+			l_mapping.force (a_uuid.string, fn)
+			store_mapping (l_mapping)
+		ensure
+			mapped: attached mapped_uuid (a_file_path) as l_uuid and then
+					a_uuid.string.same_string (l_uuid.string)
+		end
+
 feature -- Store/Retrieve
 
 	store (a_options: USER_OPTIONS)
@@ -144,7 +165,7 @@ feature -- Store/Retrieve
 
 feature {NONE} -- Implementation
 
-	mapping: HASH_TABLE [STRING_32, STRING_32]
+	mapping: STRING_TABLE [STRING_32]
 			-- Mapping between path to a config file and its associated user option file.
 		local
 			l_file: RAW_FILE
@@ -220,7 +241,7 @@ feature {NONE} -- Implementation
 			-- Name of file where `mapping' is stored.
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

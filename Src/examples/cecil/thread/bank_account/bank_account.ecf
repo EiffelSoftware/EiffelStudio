@@ -2,7 +2,7 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="bank_account" uuid="4D8A50AE-6363-4159-93A0-6724537F09B6">
 	<target name="classic">
 		<root cluster="root_cluster" class="BANK_ACCOUNT" feature="make"/>
-		<option warning="true" full_class_checking="false" is_obsolete_routine_type="true" syntax="transitional">
+		<option warning="true" full_class_checking="false">
 			<assertions precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>

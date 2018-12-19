@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="openssl" uuid="22EE78DC-1AC1-4EBC-8AA9-9E8D6B8C3989" library_target="openssl">
 	<target name="openssl">
-		<description>Eiffel OpenSSL Wrap library.
-      Copyright (c) 1984-2018, Eiffel Software and others.
-      Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
+		<description>
+			Eiffel OpenSSL Wrap library.
+			Copyright (c) 1984-2018, Eiffel Software and others.
+			Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).
+
+			note: set custom variable "openssl_static" to "true", in order to link with static OpenSSL C lib.
+  		</description>
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/\.svn</exclude>
@@ -26,26 +30,6 @@
 				<platform value="windows"/>
 			</condition>
 		</external_object>
-		<external_object location="$(ISE_LIBRARY)\unstable\library\network\openssl\spec\$(ISE_PLATFORM)\lib\$(ISE_C_COMPILER)\libcrypto.lib">
-			<condition>
-				<platform value="windows"/>
-			</condition>
-		</external_object>
-		<external_object location="$(ISE_LIBRARY)\unstable\library\network\openssl\spec\$(ISE_PLATFORM)\lib\$(ISE_C_COMPILER)\libssl.lib">
-			<condition>
-				<platform value="windows"/>
-			</condition>
-		</external_object>
-		<external_linker_flag value="-lcrypto">
-			<condition>
-				<platform excluded_value="windows"/>
-			</condition>
-		</external_linker_flag>
-		<external_linker_flag value="-lssl">
-			<condition>
-				<platform excluded_value="windows"/>
-			</condition>
-		</external_linker_flag>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="clibs_openssl" location="$ISE_LIBRARY\C_library\openssl\clibs_openssl.ecf"/>
 		<library name="encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder.ecf"/>

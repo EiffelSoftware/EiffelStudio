@@ -112,7 +112,7 @@ feature -- Loading
 			if f.exists and then f.is_readable then
 				build_xml_parser
 				if attached xml_parser as p then
-					p.parse_from_filename (fn)
+					p.parse_from_path (f.path)
 				else
 					check xml_parser_built: False end
 				end
@@ -139,15 +139,12 @@ feature {NONE} -- Xml parser implementation
 			-- XML parser.
 
 	build_xml_parser
-			-- Build `xml_parser'
+			-- Build `xml_parser`.
 		local
-			l_fact: XML_PARSER_FACTORY
 			p: like xml_parser
 		do
-			p := xml_parser
-			if p = Void then
-				create l_fact
-				p := l_fact.new_parser
+			if not attached xml_parser then
+				p := (create {XML_PARSER_FACTORY}).new_parser
 				p.set_callbacks (Current)
 				xml_parser := p
 			end
@@ -411,7 +408,7 @@ feature -- Properties
 			info_pixmap := new_pixmap ("i", w, h, info_color, bg, ft)
 		end
 
-	new_pixmap (a_text: STRING; w,h: INTEGER; fg,bg: EV_COLOR; ft: EV_FONT): EV_PIXMAP
+	new_pixmap (a_text: STRING; w,h: INTEGER; fg, bg: EV_COLOR; ft: EV_FONT): EV_PIXMAP
 		local
 			sw, tw: INTEGER
 		do
@@ -601,20 +598,11 @@ feature {NONE} -- Row management
 		end
 
 	new_row: EV_GRID_ROW
-		local
-			p: detachable EV_GRID_ROW
-			r: EV_GRID_ROW
 		do
-			if grid.row_count = 0 then
-				grid.insert_new_row (1)
+			if grid.row_count > 0 and then attached last_row.parent_row as p then
+				p.insert_subrow (p.subrow_count + 1)
 			else
-				r := last_row
-				p := r.parent_row
-				if p /= Void then
-					p.insert_subrow (p.subrow_count + 1)
-				else
-					grid.insert_new_row (grid.row_count + 1)
-				end
+				grid.insert_new_row (grid.row_count + 1)
 			end
 			Result := last_row
 		end

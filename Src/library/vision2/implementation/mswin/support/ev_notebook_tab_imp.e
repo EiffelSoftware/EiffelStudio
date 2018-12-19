@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that represent a tab associated with a notebook item. MsWindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,9 +16,7 @@ inherit
 
 	EV_TEXTABLE_IMP
 		redefine
-			interface,
-			wel_set_text,
-			wel_text
+			interface
 		end
 
 	EV_PIXMAPABLE_IMP
@@ -128,8 +126,8 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_NOTEBOOK_TAB note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA
@@ -138,17 +136,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_NOTEBOOK_TAB_IMP
-
-
-
-
-
-
-
-
-
-
+end

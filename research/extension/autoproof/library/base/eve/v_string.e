@@ -207,13 +207,13 @@ feature -- Operations
 		require
 			other_not_void: other /= Void
 			closed: closed
-			modify ([])
 		do
 			Result := internal_string + other.out
 		ensure
 			fresh: Result.is_fresh
 			wrapped: Result.is_wrapped
 			definition: Result.sequence = sequence + other.sequence
+			modify ([])
 		end
 
 feature -- Hashing

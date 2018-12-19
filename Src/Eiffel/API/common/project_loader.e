@@ -173,7 +173,8 @@ feature -- Loading
 
 								lace.check_precompile
 								if lace.is_precompile_invalid then
--- print error message
+									-- FIXME: handle invalid precompile !
+									-- print ("precompile is invalid!!!%N")
 								elseif lace.is_precompilation_needed then
 									ask_compile_precompile (lace.precompile)
 									if is_user_wants_precompile then
@@ -1140,7 +1141,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

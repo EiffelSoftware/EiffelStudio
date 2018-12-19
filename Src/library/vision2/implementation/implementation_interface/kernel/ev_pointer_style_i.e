@@ -1,8 +1,8 @@
-note
+﻿note
 	description: "Implementation interface for EV_POINTER_STYLE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	keywords: "mouse, pointer, cursor, arrow"
+	keywords: mouse, pointer, cursor, arrow
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -24,13 +24,6 @@ feature {EV_POINTER_STYLE} -- Initlization
 
 	init_from_pixmap (a_pixmap: EV_PIXMAP; a_hotspot_x, a_hotspot_y:INTEGER)
 			-- Initalize from `a_pixmap'
-		deferred
-		end
-
-	init_from_cursor (a_cursor: EV_CURSOR)
-			-- Initialize from `a_cursor'
-		obsolete
-			"Use EV_POINTER_STYLE directly now. [2017-05-31]"
 		deferred
 		end
 
@@ -89,7 +82,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_POINTER_STYLE note option: stable attribute end;
 			-- Interface
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

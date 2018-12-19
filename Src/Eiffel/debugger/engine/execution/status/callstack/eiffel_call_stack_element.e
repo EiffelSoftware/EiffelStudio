@@ -51,6 +51,11 @@ feature -- Properties
 			-- Only in that case can we request the locals
 			-- and the arguments.
 
+	is_class_feature: BOOLEAN
+		do
+			Result := attached routine_i as f and then f.is_class
+		end
+
 	dynamic_class: CLASS_C
 			-- Dynamic class where routine is called from
 
@@ -335,7 +340,7 @@ invariant
 note
 	date        : "$Date$"
 	revision    : "$Revision$"
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

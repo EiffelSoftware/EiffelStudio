@@ -13,7 +13,6 @@ inherit
 		redefine
 			first_token,
 			has_anchor,
-			is_equivalent,
 			is_fixed,
 			last_token
 		end
@@ -46,7 +45,7 @@ feature {NONE} -- Initialization
 feature -- Visitor
 
 	process (v: AST_VISITOR)
-			-- process current element.
+			-- Process current element.
 		do
 			v.process_named_tuple_type_as (Current)
 		end
@@ -78,10 +77,10 @@ feature -- Status
 feature -- Attributes
 
 	class_name: ID_AS
-			-- Class type name
+			-- Class type name.
 
 	generics: EIFFEL_LIST [TYPE_DEC_AS]
-			-- Direct access to generic parameters
+			-- Direct access to generic parameters.
 		do
 				-- Per invariant
 			Result := parameters.arguments
@@ -90,7 +89,7 @@ feature -- Attributes
 		end
 
 	parameters: FORMAL_ARGU_DEC_LIST_AS
-			-- Generic parameters
+			-- Generic parameters.
 
 	is_class: BOOLEAN = True
 			-- Does the Current AST represent a class?
@@ -174,7 +173,7 @@ feature -- Roundtrip/Token
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN
-			-- Is `other' equivalent to the current object ?
+			-- Is `other' equivalent to the current object?
 		do
 			Result := equivalent (class_name, other.class_name) and then
 				equivalent (parameters, other.parameters) and then
@@ -190,7 +189,7 @@ feature {AST_FACTORY, COMPILER_EXPORTER} -- Conveniences
 		end
 
 	dump: STRING
-			-- Dumped string
+			-- Dumped string.
 		local
 			i, nb: INTEGER
 			l_generics: like generics
@@ -233,7 +232,7 @@ invariant
 		not parameters.arguments.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

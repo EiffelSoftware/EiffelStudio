@@ -17,10 +17,31 @@ inherit
 	EB_DEVELOPMENT_WINDOW_COMMAND
 		rename
 			target as develop_window
+		redefine
+			make
 		end
 
 create
 	make
+
+feature {NONE} -- Creation method
+
+	make (a_develop_window: EB_DEVELOPMENT_WINDOW)
+			-- Creation method
+		local
+			l_preference: EB_SHARED_PREFERENCES
+			l_shortcut: SHORTCUT_PREFERENCE
+		do
+			Precursor {EB_DEVELOPMENT_WINDOW_COMMAND}(a_develop_window)
+
+			create l_preference
+			l_shortcut := l_preference.preferences.misc_shortcut_data.Shortcuts.item ("reload_current_tab")
+			create accelerator.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift)
+			accelerator.actions.extend (agent execute)
+			set_referred_shortcut (l_shortcut)
+
+			update_accelerator (develop_window.window)
+		end
 
 feature -- Query
 
@@ -48,8 +69,6 @@ feature -- Command
 		do
 			l_content := current_focused_content
 			if l_content /= Void then
---				disable_all_focus_command
-
 				if l_content.type = {SD_ENUMERATION}.editor then
 					l_manager := window_manager.last_focused_development_window.editors_manager
 					l_smart_editor := l_manager.editor_with_content (l_content)

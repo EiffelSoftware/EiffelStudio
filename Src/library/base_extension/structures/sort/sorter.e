@@ -153,8 +153,6 @@ feature -- Sort
 		require
 			valid_container: is_sortable_container (a_container)
 			a_comparator_not_void: a_comparator /= Void
-		local
-			l_index_set: INTEGER_INTERVAL
 		do
 			if not a_container.is_empty then
 				subsort_with_comparator (a_container, a_comparator, a_container.lower, a_container.upper)
@@ -212,7 +210,7 @@ invariant
 	comparator_not_void: comparator /= Void
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

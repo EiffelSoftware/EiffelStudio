@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {SSL_SOCKET_CONNECTION}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

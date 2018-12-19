@@ -2,7 +2,7 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="predef_client" uuid="970609FD-9868-4F51-BD28-D7F7C11C18A7">
 	<target name="predef_client">
 		<root class="OUR_CLIENT" feature="make_client"/>
-		<option warning="true" is_obsolete_routine_type="true" syntax="transitional">
+		<option warning="true">
 			<assertions precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>

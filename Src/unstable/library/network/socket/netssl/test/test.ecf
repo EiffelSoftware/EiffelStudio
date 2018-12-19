@@ -8,7 +8,7 @@
 		<setting name="console_application" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
-		<library name="net_ssl" location="..\net_ssl.ecf" readonly="false"/>
+		<library name="net_ssl" location="..\net_ssl_dynamic.ecf" readonly="false"/>
 		<cluster name="test" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/.svn$</exclude>

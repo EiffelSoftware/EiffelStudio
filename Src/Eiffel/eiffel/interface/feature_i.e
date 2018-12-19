@@ -635,6 +635,12 @@ feature -- Status
 			Result := a_class.class_id = written_in or else is_replicated_directly
 		end
 
+	is_ghost: BOOLEAN
+			-- Is this a ghost feature, i.e. the one that should not be generated?
+		do
+			Result := feature_flags & is_ghost_mask /= 0
+		end
+
 feature -- Setting
 
 	set_feature_id (i: INTEGER)
@@ -1032,6 +1038,14 @@ feature -- Setting
 			feature_flags := feature_flags.set_bit_with_mask (v, is_type_evaluation_delayed_mask)
 		end
 
+	set_is_ghost (v: BOOLEAN)
+			-- Set `is_ghost' to `v'.
+		do
+			feature_flags := feature_flags.set_bit_with_mask (v, is_ghost_mask)
+		ensure
+			is_ghost_set: is_ghost = v
+		end
+
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Setting
 
 	set_feature_name (s: STRING)
@@ -1085,6 +1099,7 @@ feature -- Incrementality
 				and then (has_property implies property_name.is_equal (other.property_name))
 				and then has_property_getter = other.has_property_getter
 				and then has_property_setter = other.has_property_setter
+				and then is_ghost = other.is_ghost
 debug ("ACTIVITY")
 	if not Result then
 			io.error.put_boolean (written_in = other.written_in) io.error.put_new_line;
@@ -1168,55 +1183,34 @@ end
 			-- [Semantics for second pass is `old_feat.same_interface (new)']
 		require
 			good_argument: other /= Void
---			export_statuses_exist: not (export_status = Void
---										or else	other.export_status = Void)
 		do
-				-- Still an attribute
-			Result := is_attribute = other.is_attribute
-
-				-- Same alias
-			if Result then
-				Result := alias_name_id = other.alias_name_id
-				if Result then
-					Result := has_convert_mark = other.has_convert_mark
-				end
-			end
-
-				-- Same assigner procedure
-			if Result then
-				Result := assigner_name_id = other.assigner_name_id
-			end
-
-				-- Same return type
-			Result := Result and then type.same_as (other.type)
---						and then export_status.equiv (other.export_status)
-
-				-- Same arguments if any
-			if Result then
-				if argument_count = 0 then
-					Result := other.argument_count = 0
-				else
-					Result := argument_count = other.argument_count
-							and then arguments.same_interface (other.arguments)
-				end
-			end
-
-				-- Still a once
-			Result := Result and then is_once = other.is_once
-				-- Still the same kind of once
-			Result := Result and then
-						is_process_or_thread_relative_once = other.is_process_or_thread_relative_once and then
-						is_process_relative = other.is_process_relative and then
-						is_object_relative_once = other.is_object_relative_once
-
-				-- Of the same stability.
-			Result := Result and then is_stable = other.is_stable
-
-				-- Of the same use of current object.
-			Result := Result and then is_class = other.is_class
-
-				-- Of the same volatility.
-			Result := Result and then is_transient = other.is_transient
+			Result :=
+					-- Still an attribute.
+				is_attribute = other.is_attribute and then
+					-- Same alias.
+				alias_name_id = other.alias_name_id and then
+				has_convert_mark = other.has_convert_mark and then
+					-- Same assigner procedure.
+				assigner_name_id = other.assigner_name_id and then
+					-- Same return type.
+				type.same_as (other.type) and then
+					-- Same arguments if any.
+				argument_count = other.argument_count and then
+				(argument_count /= 0 implies arguments.same_interface (other.arguments)) and then
+					-- Still a once.
+				is_once = other.is_once and then
+					-- Still the same kind of once.
+				is_process_or_thread_relative_once = other.is_process_or_thread_relative_once and then
+				is_process_relative = other.is_process_relative and then
+				is_object_relative_once = other.is_object_relative_once and then
+					-- Of the same stability.
+				is_stable = other.is_stable and then
+					-- Of the same use of current object.
+				is_class = other.is_class and then
+					-- Of the same volatility.
+				is_transient = other.is_transient and then
+					-- Of the same ghost status.
+				is_ghost = other.is_ghost
 		end
 
 feature -- creation of default rescue clause
@@ -3075,6 +3069,7 @@ feature -- Undefinition
 			Result.set_has_rescue_clause (has_rescue_clause)
 			Result.set_is_type_evaluation_delayed (is_type_evaluation_delayed)
 			Result.set_has_replicated_ast (has_replicated_ast)
+			Result.set_is_ghost (is_ghost)
 		ensure
 			Result_exists: Result /= Void
 			Result_is_deferred: Result.is_deferred
@@ -3198,6 +3193,7 @@ feature -- Replication
 			other.set_is_hidden_in_debugger_call_stack (is_hidden_in_debugger_call_stack)
 			other.set_body_index (body_index)
 			other.set_is_type_evaluation_delayed (is_type_evaluation_delayed)
+			other.set_is_ghost (is_ghost)
 		end
 
 	transfer_from (other: FEATURE_I)
@@ -3544,6 +3540,7 @@ feature -- Api creation
 			Result.set_is_prefix (is_prefix)
 			Result.set_rout_id_set (rout_id_set)
 			Result.set_is_il_external (is_il_external)
+			Result.set_ghost (is_ghost)
 			if is_inline_agent then
 				if attached {E_ROUTINE} Result as r then
 					r.set_enclosing_body_id (enclosing_body_id)
@@ -3594,6 +3591,7 @@ feature {FEATURE_I} -- Feature flags
 	has_non_object_call_mask: NATURAL_64 =				0x0002_0000_0000
 	has_non_object_call_in_assertion_mask: NATURAL_64 =				0x0004_0000_0000
 	has_unqualified_call_in_assertion_mask: NATURAL_64 =				0x0008_0000_0000
+	is_ghost_mask: NATURAL_64 =				0x0010_0000_0000
 			-- Mask used for each feature property.
 
 feature {FEATURE_I} -- Implementation
@@ -3661,8 +3659,8 @@ invariant
 
 note
 	ca_ignore:
-		"CA033", "CA033 — very long class",
-		"CA082", "CA082 — missing redeclaration of `is_equal`"
+		"CA033", "CA033: very long class",
+		"CA082", "CA082: missing redeclaration of `is_equal`"
 	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

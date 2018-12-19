@@ -5,14 +5,13 @@ note
 
 class
 	OAUTH_20_JWT_API
-inherit
 
+inherit
 	OAUTH_20_API
 		redefine
 			access_token_extractor,
 			access_token_verb,
 			create_service
-
 		end
 
 create
@@ -54,12 +53,11 @@ feature -- Access
 
 feature -- Service
 
-	create_service (config: OAUTH_JWT_CONFIG): OAUTH_SERVICE_I
+	create_service (config: OAUTH_JWT_CONFIG): OAUTH_20_JWT_SERVICE
 			-- Create an instance of OAUTH service using OAUTH_20 version.
 		do
-			create {OAUTH_20_JWT_SERVICE} Result.make (Current, config)
+			create Result.make (Current, config)
 		end
-
 
 feature -- Implementation
 

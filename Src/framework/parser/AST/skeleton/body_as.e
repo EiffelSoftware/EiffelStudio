@@ -3,15 +3,12 @@
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
-	revision	: "$Revision$"
+	revision: "$Revision$"
 
 class BODY_AS
 
 inherit
 	AST_EIFFEL
-		redefine
-			is_equivalent
-		end
 
 create
 	initialize
@@ -49,7 +46,7 @@ feature {NONE} -- Initialization
 feature -- Visitor
 
 	process (v: AST_VISITOR)
-			-- process current element.
+			-- Process current element.
 		do
 			v.process_body_as (Current)
 		end
@@ -57,16 +54,16 @@ feature -- Visitor
 feature -- Roundtrip
 
 	colon_symbol_index: INTEGER
-			-- Index of symbol colon associated with this structure
+			-- Index of symbol colon associated with this structure.
 
 	is_keyword_index: INTEGER
-			-- Index of keyword "is" or equal sign associated with this structure
+			-- Index of keyword "is" or equal sign associated with this structure.
 
 	assign_keyword_index: INTEGER
-			-- Index of keyword "assign" associated with this structure
+			-- Index of keyword "assign" associated with this structure.
 
 	colon_symbol (a_list: LEAF_AS_LIST): detachable SYMBOL_AS
-			-- Symbol colon associated with this structure
+			-- Symbol colon associated with this structure.
 		require
 			a_list_not_void: a_list /= Void
 		do
@@ -74,7 +71,7 @@ feature -- Roundtrip
 		end
 
 	is_keyword (a_list: LEAF_AS_LIST): detachable LEAF_AS
-			-- Keyword "is" or equal sign associated with this structure
+			-- Keyword "is" or equal sign associated with this structure.
 		require
 			a_list_not_void: a_list /= Void
 		local
@@ -87,7 +84,7 @@ feature -- Roundtrip
 		end
 
 	assign_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
-			-- Keyword "assign" associated with this structure
+			-- Keyword "assign" associated with this structure.
 		require
 			a_list_not_void: a_list /= Void
 		do
@@ -95,10 +92,10 @@ feature -- Roundtrip
 		end
 
 	internal_arguments: detachable FORMAL_ARGU_DEC_LIST_AS
-			-- Internal list (of list) of arguments, in which "(" and ")" are stored
+			-- Internal list (of list) of arguments, in which "(" and ")" are stored.
 
 	indexing_clause: detachable INDEXING_CLAUSE_AS
-			-- Indexing clause in this structure
+			-- Indexing clause in this structure.
 
 	index: INTEGER
 			-- <Precursor>
@@ -111,7 +108,7 @@ feature -- Roundtrip
 feature -- Attributes
 
 	arguments: detachable EIFFEL_LIST [TYPE_DEC_AS]
-			-- List (of list) of arguments
+			-- List (of list) of arguments.
 		do
 			if attached internal_arguments as l_internal_arguments then
 				Result := l_internal_arguments.arguments
@@ -122,13 +119,13 @@ feature -- Attributes
 		end
 
 	type: detachable TYPE_AS
-			-- Type if any
+			-- Type if any.
 
 	assigner: detachable ID_AS
-			-- Assigner mark if any
+			-- Assigner mark if any.
 
 	content: detachable CONTENT_AS
-			-- Content of the body: constant or regular body
+			-- Content of the body: constant or regular body.
 
 	as_routine: detachable ROUTINE_AS
 			-- See `content' as an instance of ROUTINE_AS.
@@ -208,7 +205,7 @@ feature -- Roundtrip/Token
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN
-			-- Is `other' equivalent to the current object ?
+			-- Is `other' equivalent to the current object?
 		do
 			Result := equivalent (arguments, other.arguments) and
 				equivalent (content, other.content) and
@@ -269,7 +266,7 @@ feature -- Access
 			end
 		end
 
-feature -- empty body
+feature -- Status report
 
 	is_empty : BOOLEAN
 				-- Is body empty?
@@ -280,7 +277,7 @@ feature -- empty body
 feature -- default rescue
 
 	create_default_rescue (def_resc_name_id: INTEGER)
-				-- Create default rescue if necessary
+				-- Create default rescue if necessary.
 		require
 			valid_feature_name_id: def_resc_name_id > 0
 		do
@@ -384,7 +381,7 @@ feature {BODY_AS, FEATURE_AS} -- Replication
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

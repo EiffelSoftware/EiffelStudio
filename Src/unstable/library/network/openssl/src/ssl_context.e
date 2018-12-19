@@ -23,7 +23,10 @@ create
 	make_as_tlsv12_server,
 	make_as_dtlsv1_client,
 	make_as_dtlsv1_server,
-	make_from_context_pointer
+	make_from_context_pointer,
+	make_as_tls_server,
+	make_as_tls_client
+
 
 feature {NONE} -- Initialization
 
@@ -74,7 +77,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_as_tlsv12_client
-			-- Make an DTLSv1 capable client context.
+			-- Make an TLSv1 capable client context.
 		local
 			method_pointer: POINTER
 		do
@@ -84,6 +87,22 @@ feature {NONE} -- Initialization
 			method_pointer := c_tlsv12_client_method
 			ctx := c_ssl_ctx_new (method_pointer)
 		end
+
+	make_as_tls_client
+			-- Make a flexible capable client context.
+			--| The actual protocol version used will be negotiated to the highest version mutually supported by the client and the server.
+			--| The supported protocols are SSLv3, TLSv1, TLSv1.1, TLSv1.2 and TLSv1.3.
+			--| Applications should use these methods, and avoid the version-specific methods described below.
+		local
+			method_pointer: POINTER
+		do
+				--| Initialize SSL, as this may be one of the entry points into SSL where it is
+				--| useful to initialize the SSL Library
+			initialize_ssl
+			method_pointer := c_tls_client_method
+			ctx := c_ssl_ctx_new (method_pointer)
+		end
+
 
 	make_as_sslv23_server
 			-- Make an SSLv2 and SSLv3 capable server context.	
@@ -131,6 +150,22 @@ feature {NONE} -- Initialization
 			ctx := c_ssl_ctx_new (method_pointer)
 		end
 
+	make_as_tls_server
+		-- Make a flexible TLS capable server context.
+		--| The actual protocol version used will be negotiated to the highest version mutually supported by the client and the server.
+		--| The supported protocols are SSLv3, TLSv1, TLSv1.1, TLSv1.2 and TLSv1.3.
+		--| Applications should use these methods, and avoid the version-specific methods described below.
+
+		local
+			method_pointer: POINTER
+		do
+				--| Initialize SSL, as this may be one of the entry points into SSL where it is
+				--| useful to initialize the SSL Library
+			initialize_ssl
+			method_pointer := c_tls_server_method
+			ctx := c_ssl_ctx_new (method_pointer)
+		end
+
 	make_as_dtlsv1_server
 			-- Make an DTLSv1 capable server context.
 		local
@@ -152,6 +187,12 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	options: INTEGER_64
+			-- Current options set for ctx as a bitmask.
+		do
+			Result := c_ssl_ctx_get_options (ctx);
+		end
 
 	create_ssl
 			-- Create an SSL object from the current context.
@@ -252,7 +293,76 @@ feature -- Access
 			end
 		end
 
+	set_options (a_options: INTEGER_64)
+			-- adds the options `a_options' set via bitmask in options to ctx.
+			-- Options already set before are not cleared!
+		note
+			EIS: "name=CTX_set_options", "src=https://www.openssl.org/docs/man1.1.0/ssl/SSL_CTX_set_options.html", "protocol=uri"
+		local
+			l_options: INTEGER_64
+		do
+			l_options := c_ssl_ctx_set_options (ctx, a_options);
+		end
+
+	clear_options (a_options: INTEGER_64)
+			-- clears the options `a_options' set via bitmask in options to ctx.
+		local
+			l_options: INTEGER_64
+		do
+			l_options := c_ssl_ctx_clear_options (ctx, a_options);
+		end
+
+	set_min_proto_version (a_version: NATURAL)
+			-- Set the minimum version to `a_version'.
+			-- If the version is 0, will enable protocol versions down to the lowest version supported by the library.
+			--| Currently supported versions are SSL3_VERSION, TLS1_VERSION, TLS1_1_VERSION, TLS1_2_VERSION, TLS1_3_VERSION for TLS and DTLS1_VERSION, DTLS1_2_VERSION for DTLS.
+		require
+			is_valid_version: {SSL_PROTOCOL}.is_valid_protocol (a_version)
+		local
+			l_res: INTEGER_64
+		do
+			l_res := c_ssl_ctx_set_min_proto_version (ctx, a_version)
+		ensure
+			min_proto_version_setted: a_version = min_proto_version
+		end
+
+
+	min_proto_version: NATURAL
+			-- Configured version or 0 for auto-configuration of lowest protocol.
+		do
+			Result := c_ssl_ctx_get_min_proto_version (ctx)
+		end
+
+
+	set_max_proto_version (a_version: NATURAL)
+			-- Set the maximun version to `a_version'.
+			-- If the version is 0, will enable protocol versions up to the highest version supported by the library.
+			--| Currently supported versions are SSL3_VERSION, TLS1_VERSION, TLS1_1_VERSION, TLS1_2_VERSION, TLS1_3_VERSION for TLS and DTLS1_VERSION, DTLS1_2_VERSION for DTLS.
+		require
+			is_valid_version: {SSL_PROTOCOL}.is_valid_protocol (a_version)
+		local
+			l_res: INTEGER_64
+		do
+			l_res := ssl_ctx_set_max_proto_version (ctx, a_version)
+		ensure
+			max_proto_version_setted: a_version = max_proto_version
+		end
+
+	max_proto_version: NATURAL
+			-- Configured version or 0 for auto-configuration of highest protocol.
+		do
+			Result := c_ssl_ctx_get_max_proto_version (ctx)
+		end
+
 feature -- Status Report
+
+	version: INTEGER
+			-- returns the numeric protocol version used for the connection.
+		do
+			if attached last_ssl as l_ssl then
+				Result := c_ssl_version (l_ssl.ptr)
+			end
+		end
 
 	last_ssl: detachable SSL
 			-- The SSL Structure created by `create_ssl'.
@@ -375,12 +485,29 @@ feature {NONE} -- Externals
 			"TLSv1_2_client_method"
 		end
 
+
 	c_tlsv12_server_method: POINTER
 			-- External call to TLSv1_2_server_method.
 		external
 			"C use %"eif_openssl.h%""
 		alias
 			"TLSv1_2_server_method"
+		end
+
+	c_tls_client_method: POINTER
+			-- External call to TLS_client_method.
+		external
+			"C use %"eif_openssl.h%""
+		alias
+			"TLS_client_method"
+		end
+
+	c_tls_server_method: POINTER
+			-- External call to TLS_server_method.
+		external
+			"C use %"eif_openssl.h%""
+		alias
+			"TLS_server_method"
 		end
 
 	c_dtlsv1_client_method: POINTER
@@ -407,9 +534,71 @@ feature {NONE} -- Externals
 			"SSL_set_tlsext_host_name((SSL *)$a_ssl,(char *)$a_name)"
 		end
 
+	c_ssl_ctx_set_options (a_ctx: POINTER; a_options: INTEGER_64): INTEGER_64
+			-- External call to SSL_CTX_set_options(SSL_CTX *ctx, long options).
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"return SSL_CTX_set_options((SSL_CTX *)$a_ctx, (long)$a_options);"
+		end
+
+	c_ssl_ctx_clear_options (a_ctx: POINTER; a_options: INTEGER_64): INTEGER_64
+			-- External call to SSL_CTX_clear_options(SSL_CTX *ctx, long options).
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"return SSL_CTX_clear_options((SSL_CTX *)$a_ctx, (long)$a_options);"
+		end
+
+	c_ssl_ctx_get_options (a_ctx: POINTER): INTEGER_64
+			-- External call to SSL_CTX_get_options(SSL_CTX *ctx).
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"return SSL_CTX_get_options((SSL_CTX *)$a_ctx);"
+		end
+
+	c_ssl_ctx_set_min_proto_version (a_ctx: POINTER; a_version: NATURAL): INTEGER_64
+			-- External call to SSL_CTX_set_min_proto_version(SSL_CTX *ctx, int version);
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"return SSL_CTX_set_min_proto_version((SSL_CTX *)$a_ctx, (int) $a_version);"
+		end
+
+	ssl_ctx_set_max_proto_version (a_ctx: POINTER; a_version: NATURAL): INTEGER_64
+			-- External call to SSL_CTX_set_max_proto_version(SSL_CTX *ctx, int version);
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"return SSL_CTX_set_max_proto_version((SSL_CTX *)$a_ctx, (int) $a_version);"
+		end
+
+	c_ssl_ctx_get_min_proto_version (a_ctx: POINTER): NATURAL
+			-- External call to SSL_CTX_get_min_proto_version(SSL_CTX *ctx).
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"return (EIF_NATURAL) SSL_CTX_get_min_proto_version((SSL_CTX *)$a_ctx);"
+		end
+
+	c_ssl_ctx_get_max_proto_version (a_ctx: POINTER): NATURAL
+			-- External call to SSL_CTX_get_max_proto_version(SSL_CTX *ctx).
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"return (EIF_NATURAL) SSL_CTX_get_max_proto_version((SSL_CTX *)$a_ctx);"
+		end
+
+	c_ssl_version (a_ctx: POINTER): INTEGER
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"return SSL_version((const SSL *)$a_ctx);"
+		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

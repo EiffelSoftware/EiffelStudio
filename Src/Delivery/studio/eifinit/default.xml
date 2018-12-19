@@ -101,6 +101,7 @@
 	<PREF NAME="tools.diagram_tool.client_depth" DESCRIPTION="Show clients of a class up to a level of preference value."><INTEGER>0</INTEGER></PREF>
 	<PREF NAME="tools.diagram_tool.descendant_depth" DESCRIPTION="Show descendants of a class down to a level of preference value."><INTEGER>1</INTEGER></PREF>
 	<PREF NAME="tools.diagram_tool.diagram_toolbar_layout" HIDDEN="true" DESCRIPTION="The visible toolbar items for the Diagram Tool toolbar."><LIST>Center_diagram__visible;Separator;New_links__visible;Create_class__visible;Class_header_hole__visible;Delete_item__visible;Separator;Undo_command__visible;History_tool__visible;Redo_command__visible;Separator;Delete_hole__visible;Separator;Force_directed__visible;UML_visibility__visible;Force_settings__visible;Context_depth__visible;Separator;Inherit_visibility__visible;Supplier_visibility__visible;Labels_visibility__visible;Separator;Fit_to_screen__visible;Link_tool__hidden;Color__hidden;High_quality__hidden;Clusters_visibility__hidden;Anchor_remove__hidden;Display_legend__hidden;Diagram_to_png__hidden;Cluster_filling__hidden;Zoom_out__hidden;Zoom_in__hidden</LIST></PREF>
+	<PREF NAME="tools.diagram_tool.enable_anti-aliasing" DESCRIPTION="Should anti-aliasing be used when drawing figures and connectors?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="tools.diagram_tool.excluded_class_figures" DESCRIPTION="Names of classes that should not appear in generated diagrams."><LIST>INTEGER;BOOLEAN;STRING;CHARACTER;REAL;DOUBLE</LIST></PREF>
 	<PREF NAME="tools.diagram_tool.ignore_excluded_class_figures" DESCRIPTION="Show ALL classes in the diagram (ignore the following list)?"><BOOLEAN>False</BOOLEAN></PREF>
 	<PREF NAME="tools.diagram_tool.subcluster_depth" DESCRIPTION="Show subclusters of a cluster down to a level of preference value."><INTEGER>1</INTEGER></PREF>
@@ -228,6 +229,7 @@
 	<PREF NAME="interface.dialogs.project_settings_split_position" DESCRIPTION="Position of the split area." HIDDEN="True"><INTEGER>220</INTEGER></PREF>
 	<PREF NAME="interface.dialogs.starting_dialog_width" DESCRIPTION="Width of the starting dialog." HIDDEN="True"><INTEGER>500</INTEGER></PREF>
 	<PREF NAME="interface.dialogs.starting_dialog_height" DESCRIPTION="Height of the starting dialog." HIDDEN="True"><INTEGER>500</INTEGER></PREF>
+	<PREF NAME="interface.dialogs.open_class_on_fix" DESCRIPTION="Should the fixed class open automatically in the editor?"><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.open_project_dialog_width" DESCRIPTION="Width of the open project dialog." HIDDEN="True"><INTEGER>500</INTEGER></PREF>
 	<PREF NAME="interface.dialogs.open_project_dialog_height" DESCRIPTION="Height of the open project dialog." HIDDEN="True"><INTEGER>300</INTEGER></PREF>
 	<PREF NAME="interface.dialogs.discard_target_scope_customized_formatter" DESCRIPTION="Display confirmation dialog of discarding target scope customized formatter."><BOOLEAN>True</BOOLEAN></PREF>

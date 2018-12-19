@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 	    	  create request.make ("POST", protected_resource_url)
 			  request.add_body_parameter ("status", "testing!!!")
 	 		  api_service.sign_request (l_access_token, request)
-	    	  if attached {OAUTH_RESPONSE} request.execute as l_response then
+	    	  if attached request.execute as l_response then
 					print ("%NOk, let see what we found...")
 					print ("%NResponse: STATUS" + l_response.status.out)
 					if attached l_response.body as l_body then

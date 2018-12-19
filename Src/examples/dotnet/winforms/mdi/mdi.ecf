@@ -2,7 +2,7 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="mdi" uuid="5AF9A623-AD56-48EC-B4AF-31802B54B22A">
 	<target name="mdi">
 		<root cluster="root_cluster" class="MAIN_FORM" feature="make"/>
-		<option warning="true" full_class_checking="false" is_obsolete_routine_type="true" syntax="transitional">
+		<option warning="true" full_class_checking="false">
 			<assertions precondition="true"/>
 		</option>
 		<setting name="msil_generation" value="true"/>

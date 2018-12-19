@@ -47,6 +47,7 @@
 				<exclude>/arguments.e</exclude>
 				<exclude>/arguments_32.e</exclude>
 				<exclude>/array.e</exclude>
+				<exclude>/fibonacci.e</exclude>
 				<exclude>/iterable.e</exclude>
 				<exclude>/iteration_cursor.e</exclude>
 				<exclude>/primes.e</exclude>
@@ -72,6 +73,7 @@
 				<exclude>/kernel/exceptions/void_target.e$</exclude>
 				<exclude>/kernel/file.e$</exclude>
 				<exclude>/kernel/file_info.e$</exclude>
+				<exclude>/kernel/file_iteration_cursor.e$</exclude>
 				<exclude>/kernel/file_name.e$</exclude>
 				<exclude>/kernel/function.e$</exclude>
 				<exclude>/kernel/gc_info.e$</exclude>

@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"[
 			Drop down menu containing EV_MENU_ITEMs
@@ -29,7 +29,6 @@ inherit
 			default_identifier_name
 		redefine
 			implementation,
-			create_implementation,
 			is_in_default_state
 		end
 
@@ -103,28 +102,14 @@ invariant
 	one_selected_radio_item_per_separator: is_usable implies one_selected_radio_item_per_separator
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_MENU
-
-
-
-
-
-
-
-
-
-
-
+end

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="openssl" uuid="22EE78DC-1AC1-4EBC-8AA9-9E8D6B8C3989" library_target="openssl">
+	<target name="openssl">
+		<description>Eiffel OpenSSL Wrap library.
+      Copyright (c) 1984-2018, Eiffel Software and others.
+      Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/\.svn</exclude>
+		</file_rule>
+		<option warning="true" namespace="EiffelSoftware.Library.OpenSSL">
+			<assertions check="true"/>
+		</option>
+		<setting name="dotnet_naming_convention" value="true"/>
+		<external_include location="$(ISE_LIBRARY)/unstable/library/network/openssl/spec/include">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_include>
+		<external_include location="$(ISE_LIBRARY)\unstable\library\network\openssl\spec\include">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</external_include>
+		<external_object location="Crypt32.lib">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</external_object>
+		<variable name="openssl_static" value="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="clibs_openssl" location="$ISE_LIBRARY\C_library\openssl\clibs_openssl.ecf"/>
+		<library name="encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder.ecf"/>
+		<cluster name="ssl" location="src\" recursive="true">
+			<file_rule>
+				<exclude>/mt$</exclude>
+				<exclude>/none$</exclude>
+				<exclude>/scoop$</exclude>
+			</file_rule>
+			<cluster name="scoop" location="$|scoop\" recursive="true">
+				<condition>
+					<concurrency value="scoop"/>
+				</condition>
+			</cluster>
+			<cluster name="mt" location="$|mt\" recursive="true">
+				<condition>
+					<concurrency value="thread"/>
+				</condition>
+			</cluster>
+			<cluster name="none" location="$|scoop\" recursive="true">
+				<condition>
+					<concurrency value="none"/>
+				</condition>
+			</cluster>
+		</cluster>
+		<cluster name="support" location="support\" recursive="true" hidden="true"/>
+	</target>
+	<target name="openssl_tests" extends="openssl">
+		<root class="APPLICATION" feature="make"/>
+		<option warning="true">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf"/>
+		<cluster name="test" location=".\test\" recursive="true"/>
+	</target>
+</system>

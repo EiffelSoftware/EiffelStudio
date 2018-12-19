@@ -155,11 +155,11 @@ feature -- Decoder
 					pos := next_encoded_character_position (v, pos)
 					if pos <= n then
 						c := v [pos]
-						if c /= '=' then
-							bytes[i] := character_to_value (c)
-							byte_count := byte_count + 1
+						if c = '=' then
+							bytes [i] := 0
 						else
-							bytes[i] := 0
+							bytes [i] := character_to_value (c)
+							byte_count := byte_count + 1
 						end
 					else
 						has_error := True
@@ -201,10 +201,6 @@ feature -- Decoder
 feature {NONE} -- Implementation
 
 	append_quintuple_encoded_to (i1,i2,i3,i4,i5: INTEGER; a_map: READABLE_STRING_8; a_output: STRING)
-		local
-			i,j,n: INTEGER
-			c: INTEGER
-			t: INTEGER
 		do
 			--| [ 'f'  ][ 'o'  ][ 'o'  ][      ][      ]
 			--| [ 102  ][ 111  ][ 111  ][   0  ][   0  ]

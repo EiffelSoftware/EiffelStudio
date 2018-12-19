@@ -1,6 +1,4 @@
-note
-	description: "Summary description for {GRAPHICAL_WIZARD_INTEGER_QUESTION}."
-	author: ""
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -94,8 +92,6 @@ feature -- Element change
 				set_value (0)
 			elseif t.is_integer then
 				set_value (t.to_integer)
-			else
-				-- ignore !
 			end
 		end
 

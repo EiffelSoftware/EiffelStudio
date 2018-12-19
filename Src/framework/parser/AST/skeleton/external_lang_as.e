@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "AST representation of an external structure."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,9 +10,6 @@ class
 
 inherit
 	AST_EIFFEL
-		redefine
-			is_equivalent
-		end
 
 create
 	initialize
@@ -32,7 +29,7 @@ feature {NONE} -- Initialization
 feature -- Visitor
 
 	process (v: AST_VISITOR)
-			-- process current element.
+			-- Process current element.
 		do
 			v.process_external_lang_as (Current)
 		end
@@ -60,7 +57,7 @@ feature -- Roundtrip/Token
 feature -- Attributes
 
 	language_name: STRING_AS;
-			-- Language name
+			-- Language name.
 			-- might be replaced by external_declaration or external_definition
 
 feature -- Status report
@@ -73,13 +70,13 @@ feature -- Status report
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN
-			-- Is `other' equivalent to the current object ?
+			-- Is `other' equivalent to the current object?
 		do
 			Result := language_name.is_equivalent (other.language_name)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -110,4 +107,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EXTERNAL_LANG_AS
+end

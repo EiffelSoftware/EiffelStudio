@@ -798,7 +798,7 @@ feature -- Accelerator, focus label and menu name
 	f_show: STRING_32 do Result := locale.translation ("Show ") end
 	f_hide: STRING_32 do Result := locale.translation ("Hide ") end
 	f_switch_to_tree_view: STRING_32		do Result := locale.translation ("Switch to Tree View") end
-	f_switch_to_flat_view: STRING_32 	do Result := locale.translation ("Switch to Flat View") end
+	f_switch_to_search_view: STRING_32 	do Result := locale.translation ("Switch to search mode") end
 	l_choose_class_version: STRING_32	do Result := locale.translation ("Choose one version from the following:") end
 	m_restart_application: STRING_32		do Result := locale.translation ("Restart application") end
 	f_restart_application: STRING_32		do Result := locale.translation ("Restart application") end
@@ -1181,7 +1181,7 @@ feature -- Label texts
 	l_Available_features: STRING_32		do Result := locale.translation("Available features:")	end
 	l_Basic_application: STRING_32		do Result := locale.translation("Basic application (no graphics library included)")	end
 	l_Basic_text: STRING_32				do Result := locale.translation("Basic text view")	end
-	l_building_flat_view: STRING_32		do Result := locale.translation ("Building flat view ...") end
+	l_building_search_view: STRING_32		do Result := locale.translation ("Building search view ...") end
 	l_building_tree_view: STRING_32		do Result := locale.translation ("Building tree view ...") end
 	l_capture: STRING_32 				do Result := locale.translation ("Capture") end
 	l_Callers: STRING_32					do Result := locale.translation("Callers")	end
@@ -1464,6 +1464,7 @@ feature -- Label texts
 	l_finish_to_generate: STRING_32 		do Result := locale.translation("Click `Finish' to generate the documentation.")	end
 	l_first_chance: STRING_32 			do Result := locale.translation ("First chance") end
 	l_Flat_view: STRING_32				do Result := locale.translation ("Flat view") end
+	l_search_view: STRING_32				do Result := locale.translation ("Search...") end
 	l_Flatshort: STRING_32				do Result := locale.translation("Interface view")	end
 	l_found: STRING_32 					do Result := locale.translation ("Found") end
 	l_freeze: STRING_32					do Result := locale.translation("Freeze")	end
@@ -1767,7 +1768,7 @@ feature -- Label texts
 
 	l_there_is_already_a_class_with_the_same_name: STRING_32 do Result := locale.translation("There is already a class with the same name.")	end
 	l_Three_dots: STRING_32				do Result := locale.translation("...")	end
-	l_tree_or_flat_view: STRING_32		do Result := locale.translation ("Tree/Flat View") end
+	l_tree_or_search_view: STRING_32	do Result := locale.translation ("Tree/Search View") end
 	l_Tree_view: STRING_32				do Result := locale.translation ("Tree View") end
 	l_true: STRING_32					do Result := locale.translation ("True") end
 	l_try_saving_file_and_searching: STRING_32 	do Result := locale.translation ("Item expires. Try saving file and searching again.") end
@@ -1921,6 +1922,11 @@ feature -- Label texts
 	l_feature_has_rescue_clause: STRING_32
 		do
 			Result := locale.translation ("%N   + feature has a rescue clause")
+		end
+
+	l_feature_is_class: STRING_32
+		do
+			Result := locale.translation ("%N   + is a class feature")
 		end
 
 	l_module_is (a_module: READABLE_STRING_GENERAL): STRING_32

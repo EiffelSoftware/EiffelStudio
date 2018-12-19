@@ -2,7 +2,7 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="multiclass_example" uuid="D57B873E-EB8F-401B-8918-FAFA539A6124">
 	<target name="multiclass_example">
 		<root class="APPLICATION" feature="make"/>
-		<option warning="true" is_obsolete_routine_type="true" syntax="transitional">
+		<option warning="true">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<capability>

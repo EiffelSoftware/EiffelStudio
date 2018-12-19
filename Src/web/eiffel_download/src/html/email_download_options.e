@@ -28,6 +28,12 @@ feature {NONE} --Initialization
 			template.add_value (a_host, "host")
 			template.add_value (l_url.encoded_string (a_token), "token")
 			template.add_value (a_form.platform, "platform")
+			if attached a_download_service.configuration.products as l_products and then
+				attached l_products[1].number as l_number
+			then
+				template.add_value (l_number, "number")
+			end
+
 			if
 				attached a_download_service.retrieve_product_enterprise as l_product
 			then

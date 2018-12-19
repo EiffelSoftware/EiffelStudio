@@ -2,7 +2,7 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="code-analysis-tests" uuid="B9FC6CC3-5F19-4CE1-9131-56A0455E9004">
 	<target name="tests">
 		<root all_classes="true"/>
-		<option warning="true" full_class_checking="false" is_obsolete_routine_type="true" syntax="transitional">
+		<option warning="true" full_class_checking="false">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>

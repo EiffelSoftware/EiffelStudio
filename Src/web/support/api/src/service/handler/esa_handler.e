@@ -36,11 +36,11 @@ feature -- User
 
 feature -- Media Type
 
-	current_media_type (req: WSF_REQUEST): detachable READABLE_STRING_32
+	current_media_type (req: WSF_REQUEST): detachable READABLE_STRING_8
 			-- Current media type or Void if it's not acceptable.
 		do
 			if attached {READABLE_STRING_8} req.execution_variable ("media_type") as l_type then
-				Result := l_type.to_string_32
+				Result := l_type
 			end
 		end
 

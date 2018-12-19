@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Abstract description of a parent. Version for Bench."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -9,9 +9,6 @@ class PARENT_AS
 
 inherit
 	AST_EIFFEL
-		redefine
-			is_equivalent
-		end
 
 create
 	initialize
@@ -46,7 +43,7 @@ feature {NONE} -- Initialization
 feature -- Visitor
 
 	process (v: AST_VISITOR)
-			-- process current element.
+			-- Process current element.
 		do
 			v.process_parent_as (Current)
 		end
@@ -54,10 +51,10 @@ feature -- Visitor
 feature -- Attributes
 
 	type: CLASS_TYPE_AS
-			-- Parent type
+			-- Parent type.
 
 	renaming: detachable EIFFEL_LIST [RENAME_AS]
-			-- Rename clause
+			-- Rename clause.
 		do
 			if attached internal_renaming as l_internal_renaming then
 				Result := l_internal_renaming.content
@@ -68,7 +65,7 @@ feature -- Attributes
 		end
 
 	exports: detachable EIFFEL_LIST [EXPORT_ITEM_AS]
-			-- Exports for parent
+			-- Exports for parent.
 		do
 			if attached internal_exports as l_internal_exports then
 				Result := l_internal_exports.content
@@ -80,7 +77,7 @@ feature -- Attributes
 )		end
 
 	undefining: detachable EIFFEL_LIST [FEATURE_NAME]
-			-- Undefine clause
+			-- Undefine clause.
 		do
 			if attached internal_undefining as l_internal_undefining then
 				Result := l_internal_undefining.content
@@ -91,7 +88,7 @@ feature -- Attributes
 		end
 
 	redefining: detachable EIFFEL_LIST [FEATURE_NAME]
-			-- Redefining clause
+			-- Redefining clause.
 		do
 			if attached internal_redefining as l_internal_redefining then
 				Result := l_internal_redefining.content
@@ -102,7 +99,7 @@ feature -- Attributes
 		end
 
 	selecting: detachable EIFFEL_LIST [FEATURE_NAME]
-			-- Select clause
+			-- Select clause.
 		do
 			if attached internal_selecting as l_internal_selecting then
 				Result := l_internal_selecting.content
@@ -114,11 +111,11 @@ feature -- Attributes
 
 	end_keyword_index: INTEGER
 			-- End of clause if any of the `rename', `export', `redefine', `undefine'
-			-- and `select' is present
+			-- and `select' is present.
 
 	end_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- End of clause if any of the `rename', `export', `redefine', `undefine'
-			-- and `select' is present
+			-- and `select' is present.
 		require
 			a_list_not_void: a_list /= Void
 		do
@@ -128,19 +125,19 @@ feature -- Attributes
 feature -- Roundtrip
 
 	internal_exports: detachable EXPORT_CLAUSE_AS
-			-- Internal exports for parent
+			-- Internal exports for parent.
 
 	internal_renaming: detachable RENAME_CLAUSE_AS
-			-- Internal rename clause
+			-- Internal rename clause.
 
 	internal_redefining: detachable REDEFINE_CLAUSE_AS
-			-- Internal redefining clause
+			-- Internal redefining clause.
 
 	internal_undefining: detachable UNDEFINE_CLAUSE_AS
-			-- Internal undefine clause
+			-- Internal undefine clause.
 
 	internal_selecting: detachable SELECT_CLAUSE_AS
-			-- Internal select clause
+			-- Internal select clause.
 
 	index: INTEGER
 			-- <Precursor>
@@ -154,13 +151,13 @@ feature -- Roundtrip
 feature -- Roundtrip/Token
 
 	first_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
-			-- First token in current AST node
+			-- First token in current AST node.
 		do
 			Result := type.first_token (a_list)
 		end
 
 	last_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
-			-- Last token in current AST node
+			-- Last token in current AST node.
 		do
 			if a_list /= Void and end_keyword_index /= 0 then
 				Result := end_keyword (a_list)
@@ -172,7 +169,7 @@ feature -- Roundtrip/Token
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN
-			-- Is `other' equivalent to the current object ?
+			-- Is `other' equivalent to the current object?
 		do
 			Result := equivalent (exports, other.exports) and
 				equivalent (redefining, other.redefining) and
@@ -193,7 +190,7 @@ feature -- Status report
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -224,4 +221,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class PARENT_AS
+end

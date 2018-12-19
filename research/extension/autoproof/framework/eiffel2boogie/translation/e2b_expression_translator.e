@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		TODO
 	]"
@@ -54,6 +54,7 @@ inherit
 			process_nat64_val_b,
 			process_nat_val_b,
 			process_nested_b,
+			process_null_conversion_b,
 			process_object_test_b,
 			process_object_test_local_b,
 			process_parameter_b,
@@ -888,6 +889,11 @@ feature -- Visitors
 --				helper.set_up_byte_context (Void, current_target_type)
 --				helper.set_up_byte_context_type (current_target_type, context_type)
 			end
+		end
+
+	process_null_conversion_b (b: NULL_CONVERSION_B)
+		do
+			safe_process (b.expr)
 		end
 
 	process_object_test_b (a_node: OBJECT_TEST_B)

@@ -5,7 +5,7 @@
 		<file_rule>
 			<exclude>/.svn$</exclude>
 		</file_rule>
-		<option namespace="EiffelSoftware.Framework">
+		<option warning="true" namespace="EiffelSoftware.Framework">
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>

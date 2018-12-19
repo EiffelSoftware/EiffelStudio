@@ -1,8 +1,9 @@
-note
+﻿note
 	description: "Shared window manager"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "Xavier Rousselot"
+	reviewed_by: "Alexander kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -15,10 +16,12 @@ feature -- Access
 			-- Window manager for ebench windows
 		once
 			create Result.make
+		ensure
+			instance_free: class
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -49,4 +52,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_SHARED_WINDOW_MANAGER
+end

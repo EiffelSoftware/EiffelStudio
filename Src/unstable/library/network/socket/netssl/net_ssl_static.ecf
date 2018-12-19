@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="net_ssl" uuid="3370D53A-9D26-4B56-AF04-DC590C0739FA" library_target="net_ssl">
+	<target name="net_ssl">
+		<description>Net library: Networking library with serialization facilities.
+      Copyright (c) 1984-2006, Eiffel Software and others.
+      Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
+		<root all_classes="true"/>
+		<file_rule>
+			<exclude>/\.svn</exclude>
+		</file_rule>
+		<option warning="true" namespace="EiffelSoftware.Library.NetSSL">
+		</option>
+		<setting name="dotnet_naming_convention" value="true"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="net" location="$ISE_LIBRARY\library\net\net.ecf"/>
+		<library name="openssl" location="$ISE_LIBRARY\unstable\library\network\openssl\openssl_static.ecf"/>
+		<cluster name="abstract" location="abstract\" recursive="true"/>
+		<cluster name="network" location="network\" recursive="true"/>
+	</target>
+</system>

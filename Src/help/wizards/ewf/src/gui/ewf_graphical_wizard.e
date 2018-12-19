@@ -1,7 +1,4 @@
-note
-	description: "[
-			Objects that ...
-		]"
+﻿note
 	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,21 +22,18 @@ feature {NONE} -- Initialization
 	make_and_launch
 		local
 			w: like main_window
-			cons: EWF_CONSOLE_WIZARD_APPLICATION
-			env: EC_EIFFEL_LAYOUT
 		do
 			default_create
 
 				-- Initialize ISE_PROJECTS variable with expected EiffelStudio value.
 			if not attached execution_environment.item ("ISE_PROJECTS") as v or else v.is_whitespace then
 					-- ISE_PROJECTS is not defined, so let's defined it to expected ISE default.
-				create env
-				execution_environment.put (env.user_projects_path.name, "ISE_PROJECTS")
+				execution_environment.put ((create {EC_EIFFEL_LAYOUT}).user_projects_path.name, "ISE_PROJECTS")
 			end
 
 				-- Initialize wizard.			
 			if execution_environment.arguments.index_of_word_option ("-console") > 0 then
-				create cons.make
+				(create {EWF_CONSOLE_WIZARD_APPLICATION}.make).do_nothing
 			else
 				create w
 				main_window := w

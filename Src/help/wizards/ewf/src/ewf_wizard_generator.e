@@ -1,4 +1,4 @@
-﻿note
+note
 	description: "Summary description for {EWF_WIZARD_GENERATOR}."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -104,8 +104,8 @@ feature -- Templates
 				end
 				template_context.set_template_folder (application.layout.templates_location)
 				create inspectors.make (2)
-				inspectors.force (create {WIZARD_DATA_TEMPLATE_INSPECTOR}.register (({detachable WIZARD_DATA}).name_32.as_string_8))
-				inspectors.force (create {WIZARD_PAGE_DATA_TEMPLATE_INSPECTOR}.register (({detachable WIZARD_PAGE_DATA}).name_32.as_string_8))
+				inspectors.force (create {WIZARD_DATA_TEMPLATE_INSPECTOR}.register (({detachable WIZARD_DATA}).name))
+				inspectors.force (create {WIZARD_PAGE_DATA_TEMPLATE_INSPECTOR}.register (({detachable WIZARD_PAGE_DATA}).name))
 				tpl.analyze
 				tpl.get_output
 				across

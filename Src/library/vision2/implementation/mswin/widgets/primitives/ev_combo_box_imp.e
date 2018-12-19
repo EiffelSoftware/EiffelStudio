@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "EiffelVision Combo-box. Implementation interface"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,6 @@ inherit
 			text_length
 		redefine
 			interface,
-			make,
 			initialize_hints
 		end
 
@@ -1161,8 +1160,8 @@ invariant
 	text_field_not_void: text_field /= Void implies is_editable
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

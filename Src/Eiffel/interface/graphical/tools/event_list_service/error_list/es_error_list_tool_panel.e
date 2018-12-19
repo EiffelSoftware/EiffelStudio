@@ -1257,6 +1257,7 @@ feature {NONE} -- Fixing
 
 	apply_single_fix_without_undo_prompt (r: EV_GRID_ROW)
 			-- Attempt to apply a fix chosen for row `r' without notification about "undo" behaviour.
+			-- Open an editor for the affected class if `is_editor_requested`.
 		local
 			i: INTEGER
 		do
@@ -1318,7 +1319,7 @@ feature {NONE} -- Fixing
 		end
 
 	apply_fixes (f: ARRAYED_LIST [ES_FIX]; c: CLASS_C)
-			-- Apply fixes `f` to class `c`.
+			-- Apply fixes `f` to class `c` opening a new editor if `is_editor_requested`.
 		local
 			m: ES_CLASS_TEXT_AST_MODIFIER
 		do
@@ -1331,6 +1332,16 @@ feature {NONE} -- Fixing
 				prompts.show_error_prompt (locale.formatted_string
 					(locale.translation_in_context ("Class $1 has been changed and should be recompiled before applying fixes.", once "tool.error"), c.name) , develop_window.window, Void)
 			elseif m.is_modifiable then
+				if preferences.dialog_data.open_class_on_fix_preference.value then
+						-- Make sure there are editors with the class.
+					develop_window.commands.new_tab_cmd.execute_with_stone (create {CLASSC_STONE}.make (c))
+						-- Make sure all editors associated with the class finish loading of the text.
+					across
+						develop_window.editors_manager.editor_editing (c.lace_class) as e
+					loop
+						e.item.flush
+					end
+				end
 				m.execute_batch_modifications (agent (modifier: ES_CLASS_TEXT_AST_MODIFIER; fixes: ARRAYED_LIST [ES_FIX])
 					local
 						a: CLASS_AS
@@ -1355,16 +1366,27 @@ feature {NONE} -- Fixing
 		end
 
 	fix_undo_promt (action: PROCEDURE)
-			-- Raise a discardable prompt about performing fixes by `action' with the description of "undo" behaviour.
+			-- Raise a discardable prompt about performing fixes by `action` with the description of "undo" behaviour
+			-- and call the action with the flag indicating whether a new editor for every class should be open.
 		local
-			p: ES_DISCARDABLE_WARNING_PROMPT
+			p: ES_DISCARDABLE_QUESTION_WARNING_PROMPT
 		do
-			create p.make_standard_with_cancel
+			create p.make_standard_persistent
 				(warning_messages.w_fix_undo_warning,
 				interface_names.l_discard_fix_undo_warning,
-				create {ES_BOOLEAN_PREFERENCE_SETTING}.make (preferences.dialog_data.confirm_fix_without_undo_preference, False))
+				create {ES_BOOLEAN_PREFERENCE_SETTING}.make (preferences.dialog_data.confirm_fix_without_undo_preference, False),
+				create {ES_BOOLEAN_PREFERENCE_SETTING}.make (preferences.dialog_data.open_class_on_fix_preference, True))
 			p.set_button_action
-				(p.default_confirm_button,
+				({ES_DIALOG_BUTTONS}.yes_button,
+				agent (a: PROCEDURE)
+					do
+							-- Perform original action.
+						a.call
+							-- Update toolbar buttons state that may be changed by the previous instruction.
+						update_content_applicable_widgets (grid_events.row_count > 0)
+					end (action))
+			p.set_button_action
+				({ES_DIALOG_BUTTONS}.no_button,
 				agent (a: PROCEDURE)
 					do
 							-- Perform original action.
@@ -1415,9 +1437,7 @@ feature {NONE} -- Event handlers: event list
 					set_warning_count (warning_count + 1)
 				elseif is_hint_event (a_event_item) then
 					set_hint_count (hint_count + 1)
-				elseif is_ok_event (a_event_item) then
-						-- Nothing to do.
-				else
+				elseif not is_ok_event (a_event_item) then
 					check from_is_appliable_event_postcondition: False end
 				end
 			end
@@ -1445,9 +1465,7 @@ feature {NONE} -- Event handlers: event list
 					set_warning_count (warning_count - 1)
 				elseif is_hint_event (a_event_item) then
 					set_hint_count (hint_count - 1)
-				elseif is_ok_event (a_event_item) then
-						-- Nothing to do.
-				else
+				elseif not is_ok_event (a_event_item) then
 					check from_is_appliable_event_postcondition: False end
 				end
 			end
@@ -1697,8 +1715,6 @@ feature {NONE} -- Action handlers
 		require
 			is_interface_usable: is_interface_usable
 			is_initialized: is_initialized
-		local
-			l_error: ERROR
 		do
 			if
 				grid_events.has_selected_row and then
@@ -1707,14 +1723,10 @@ feature {NONE} -- Action handlers
 				attached {ERROR} l_event.data as e
 			then
 					-- Retrieve error item.
-				l_error := e
-			end
-
-			if l_error = Void then
+				error_info_command.execute_with_stone (create {ERROR_STONE}.make (e))
+			else
 					-- No error found. This can happen when the expanded information row is selected.
 				error_info_command.execute
-			else
-				error_info_command.execute_with_stone (create {ERROR_STONE}.make (l_error))
 			end
 		end
 

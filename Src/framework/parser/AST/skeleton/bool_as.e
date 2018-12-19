@@ -1,9 +1,10 @@
-note
+﻿note
 
 	description: "Node for boolean constant. Version for Bench."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"; revision: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class BOOL_AS
 
@@ -11,8 +12,6 @@ inherit
 	ATOMIC_AS
 		undefine
 			text
-		redefine
-			is_equivalent
 		end
 
 	KEYWORD_AS
@@ -38,7 +37,7 @@ feature {NONE} -- Initialization
 feature -- Visitor
 
 	process (v: AST_VISITOR)
-			-- process current element.
+			-- Process current element.
 		do
 			v.process_bool_as (Current)
 		end
@@ -46,12 +45,12 @@ feature -- Visitor
 feature -- Properties
 
 	value: BOOLEAN
-			-- Integer value
+			-- Integer value.
 
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN
-			-- Is `other' equivalent to the current object ?
+			-- Is `other' equivalent to the current object?
 		do
 			Result := value = other.value
 		end
@@ -64,7 +63,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Output
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -95,4 +94,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class BOOL_AS
+end

@@ -1,6 +1,5 @@
-note
+﻿note
 	description: "Pick-and-drop support for grid items"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -98,10 +97,10 @@ feature -- Setting
 			-- actions in `pick_end_actions' will be invoked when pick ends.
 		do
 			if not grid.pick_actions.has (on_pick_start_action) then
-				grid.pick_actions.force_extend (on_pick_start_action)
+				grid.pick_actions.extend (on_pick_start_action)
 			end
 			if not grid.pick_ended_actions.has (on_pick_ended_action) then
-				grid.pick_ended_actions.force_extend (on_pick_ended_action)
+				grid.pick_ended_actions.extend (on_pick_ended_action)
 			end
 			old_item_pebble_function := grid.item_pebble_function
 			grid.set_item_pebble_function (on_pick_function)
@@ -232,8 +231,8 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
-	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

@@ -2815,6 +2815,7 @@ test	instance_free-invalid-explicit-merging		free021 tcf pass instance_free decl
 test	instance_free-invalid-implicit-merging		free022 tcf pass instance_free declaration adaptation validity
 test	instance_free-valid-explicit-joining		free023 tcf pass instance_free declaration adaptation validity
 test	instance_free-invalid-explicit-joining		free024 tcf pass instance_free declaration adaptation validity
+test	instance_free-qualified-call-argument		free025 tcf pass instance_free call argument validity
 
 -- Tests for platform specific results
 test	print-large-pointer				platform001 tcf pass platform

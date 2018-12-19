@@ -803,17 +803,17 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Query
 						l_steps.after
 					loop
 						if l_steps.item then
-							if False then --| Do not include assignments
-								if l_values = Void then
-									--| l_values can be Void if `is_flat' is True
-								else
---| Keep comment, if ever we want to show in the debugger, one entry by assignment step.
---									if l_steps.index = i then
---										subs.append_character ('!')
---									end
-									l_values.move (1)
-								end
-							end
+--							if False then --| Do not include assignments
+--								if l_values = Void then
+--									--| l_values can be Void if `is_flat' is True
+--								else
+----| Keep comment, if ever we want to show in the debugger, one entry by assignment step.
+----									if l_steps.index = i then
+----										subs.append_character ('!')
+----									end
+--									l_values.move (1)
+--								end
+--							end
 							v := v + 1
 						else
 							if l_calls = Void then
@@ -1170,7 +1170,7 @@ invariant
 
 note
 	library:   "EiffelBase: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

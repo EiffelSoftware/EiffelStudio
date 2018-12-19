@@ -1,4 +1,4 @@
-﻿note
+note
 	description: "Summary description for {WIZARD_GENERATOR}."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -27,6 +27,8 @@ feature -- Access
 		do
 			Result := wizard.application
 		end
+
+feature -- Access
 
 	variables: STRING_TABLE [READABLE_STRING_32]
 			-- Variables used for template and file name resolved string.
@@ -125,7 +127,7 @@ feature -- Templates
 		require
 			a_src_is_a_template_file: is_template_file (a_src)
 		local
-			f, t: PLAIN_TEXT_FILE
+			f,t: PLAIN_TEXT_FILE
 		do
 			create f.make_with_path (a_src)
 			if f.exists and f.is_readable then

@@ -66,7 +66,7 @@ feature -- Conversion
 
 	text: STRING_32
 		do
-			Result := input_widget.text
+			Result := input_widget.file_path.name
 		end
 
 	value: detachable PATH
@@ -92,11 +92,7 @@ feature -- Element change
 
 	set_value (p: like value)
 		do
-			if p = Void then
-				input_widget.set_text ("")
-			else
-				input_widget.set_text (p.name)
-			end
+			input_widget.set_file_path (if attached p then p else create {PATH}.make_empty end)
 		end
 
 end

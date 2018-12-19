@@ -1,8 +1,10 @@
 note
-	description: "Summary description for {JWS}."
+	description: "JSON Web Signature (JWS)"
 	date: "$Date$"
 	revision: "$Revision$"
+	EIS: "name=JSON Web Signature", "src=https://tools.ietf.org/html/rfc7515", "protocol=uri"
 	EIS: "name=JSON Web Token (JWT)", "src=https://tools.ietf.org/html/rfc7519", "protocol=uri"
+
 class
 	JWS
 

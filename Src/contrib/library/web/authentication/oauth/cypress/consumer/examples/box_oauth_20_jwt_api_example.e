@@ -1,7 +1,7 @@
 note
 	description: "Summary description for {BOX_OAUTH_20_JWT_API_EXAMPLE}."
-	date: "$Date: 2015-06-18 16:46:10 -0300 (ju. 18 de jun. de 2015) $"
-	revision: "$Revision: 97507 $"
+	date: "$Date$"
+	revision: "$Revision$"
 	EIS: "name=Box JWT", "src=https://developer.box.com/docs/construct-jwt-claim-manually", "protocol=uri"
 	EIS: "name=App Auth", "src=https://box-content.readme.io/v2.0/docs/app-auth", "procol=uri"
 	EIS: "name=Connecting Your Developer Enterprise", "src=https://box-content.readme.io/v2.0/docs/connecting-your-developer-enterprise", "procol=uri"
@@ -26,7 +26,7 @@ feature -- Access
 			create oauth_jwt.make (authentication_url)
 			create config.make (jwt_signing, client_id)
 			config.set_api_secret (client_secret)
-			api_service := {OAUTH_20_JWT_SERVICE} / oauth_jwt.create_service (config)
+			api_service := oauth_jwt.create_service (config)
 			print ("%N===Box OAuth Server to Server Workflow ===%N")
 
             if attached api_service then
@@ -42,7 +42,7 @@ feature -- Access
 					print ("%NNow we're going to access a protected resource...%N");
 					create request.make ("GET", protected_resource_url)
 					api_service.sign_request (l_access_token, request)
-					if attached {OAUTH_RESPONSE} request.execute as l_response then
+					if attached request.execute as l_response then
 						print ("%NOk, let see what we found...")
 						print ("%NResponse: STATUS" + l_response.status.out)
 						if attached l_response.body as l_body then

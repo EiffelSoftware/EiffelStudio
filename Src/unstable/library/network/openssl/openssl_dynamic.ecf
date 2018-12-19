@@ -27,28 +27,8 @@
 				<platform value="windows"/>
 			</condition>
 		</external_object>
-		<external_object location="$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\bin\libcrypto.lib">
-			<condition>
-				<platform value="windows"/>
-			</condition>
-		</external_object>
-		<external_object location="$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\bin\libssl.lib">
-			<condition>
-				<platform value="windows"/>
-			</condition>
-		</external_object>
-		<external_linker_flag value="-lcrypto">
-			<condition>
-				<platform excluded_value="windows"/>
-			</condition>
-		</external_linker_flag>
-		<external_linker_flag value="-lssl">
-			<condition>
-				<platform excluded_value="windows"/>
-			</condition>
-		</external_linker_flag>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="clibs_openssl" location="$ISE_LIBRARY\C_library\openssl\clibs_openssl.ecf"/>
+		<library name="clibs_openssl_dynamic" location="$ISE_LIBRARY\C_library\openssl\clibs_openssl.ecf"/>
 		<library name="encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder.ecf"/>
 		<cluster name="ssl" location="src\" recursive="true">
 			<file_rule>

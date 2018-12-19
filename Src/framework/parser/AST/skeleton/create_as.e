@@ -1,13 +1,11 @@
 note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+
 class CREATE_AS
 
 inherit
 	AST_EIFFEL
-		redefine
-			is_equivalent
-		end
 
 create
 	initialize
@@ -31,7 +29,7 @@ feature {NONE} -- Initialization
 feature -- Visitor
 
 	process (v: AST_VISITOR)
-			-- process current element.
+			-- Process current element.
 		do
 			v.process_create_as (Current)
 		end
@@ -39,10 +37,10 @@ feature -- Visitor
 feature -- Roundtrip
 
 	create_creation_keyword_index: INTEGER
-			-- Index of keyword "create" or "creation" associated with this structure
+			-- Index of keyword "create" or "creation" associated with this structure.
 
 	create_creation_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
-			-- Keyword "create" or "creation" associated with this structure
+			-- Keyword "create" or "creation" associated with this structure.
 		require
 			a_list_not_void: a_list /= Void
 		do
@@ -58,10 +56,10 @@ feature -- Roundtrip
 feature -- Attributes
 
 	clients: detachable CLIENT_AS
-			-- Client list
+			-- Client list.
 
 	feature_list: detachable EIFFEL_LIST [FEATURE_NAME]
-			-- Feature list
+			-- Feature list.
 
 feature -- Roundtrip/Token
 
@@ -94,7 +92,7 @@ feature -- Roundtrip/Token
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN
-			-- Is `other' equivalent to the current object ?
+			-- Is `other' equivalent to the current object?
 		do
 			Result := equivalent (clients, other.clients) and
 				equivalent (feature_list, other.feature_list)
@@ -136,7 +134,7 @@ feature {COMPILER_EXPORTER} -- Convenience
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -167,4 +165,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class CREATE_AS
+end

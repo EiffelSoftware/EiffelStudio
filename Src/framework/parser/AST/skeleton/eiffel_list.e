@@ -1,9 +1,9 @@
-note
-	description	: "List used in abstract syntax trees. Version for Bench."
+﻿note
+	description: "List used in abstract syntax trees. Version for Bench."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class EIFFEL_LIST [reference T -> AST_EIFFEL]
 
@@ -11,8 +11,6 @@ inherit
 	AST_EIFFEL
 		undefine
 			copy, is_equal
-		redefine
-			is_equivalent
 		end
 
 	CONSTRUCT_LIST [T]
@@ -23,19 +21,21 @@ inherit
 		end
 
 create
-	make, make_filled
+	make,
+	make_filled,
+	make_from_iterable
 
 feature {NONE} -- Initialization
 
 	make (n: INTEGER)
-			-- Creation of the list with the comparison set on object
+			-- Creation of the list with the comparison set on object.
 		do
 			Precursor (n)
 			object_comparison := True
 		end
 
 	make_filled (n: INTEGER)
-			-- Creation of the list with the comparison set on object
+			-- Creation of the list with the comparison set on object.
 		do
 			Precursor (n)
 			object_comparison := True
@@ -100,7 +100,7 @@ feature -- Roundtrip
 feature -- Visitor
 
 	process (v: AST_VISITOR)
-			-- process current element.
+			-- Process current element.
 		do
 			v.process_eiffel_list (Current)
 		end
@@ -178,7 +178,7 @@ feature -- Element change
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN
-			-- Is `other' equivalent to the current object ?
+			-- Is `other' equivalent to the current object?
 		local
 			l_area, o_area: SPECIAL [T]
 			i, nb: INTEGER
@@ -199,7 +199,7 @@ feature -- Comparison
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -230,4 +230,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EIFFEL_LIST
+end

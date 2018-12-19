@@ -1,10 +1,10 @@
-note
-	description	: "Evaluates (adapts) source and target feature_i for a feature%
+﻿note
+	description: "Evaluates (adapts) source and target feature_i for a feature%
 				  %ast structure which is used in the format context."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$";
-	revision	: "$Revision $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class FEATURE_ADAPTER
 
@@ -56,7 +56,7 @@ feature -- Element change
 			-- with ast `feature_ast' and evaluate the source and target
 			-- feature. Also set comments to `c'.
 		require
-			valid_ast: feature_as /= Void;
+			valid_ast: feature_as /= Void
 			valid_format_reg: format_reg /= Void
 		local
 			same_class: BOOLEAN
@@ -69,23 +69,23 @@ feature -- Element change
 			rep_table: HASH_TABLE [ARRAYED_LIST [FEATURE_I], INTEGER]
 			is_precompiled: BOOLEAN
 		do
-			names := feature_as.feature_names;
+			names := feature_as.feature_names
 			if names.count > 1 then
-				is_precompiled := format_reg.current_class.is_precompiled;
+				is_precompiled := format_reg.current_class.is_precompiled
 				from
 					--| Separate all the feature names
 					--| i.e. one feature name per ast
 					i := 1;
-					l_count := names.count;
+					l_count := names.count
 				until
 					i > l_count
 				loop
-					create eiffel_list.make (1);
-					eiffel_list.extend (names.i_th (i));
+					create eiffel_list.make (1)
+					eiffel_list.extend (names.i_th (i))
 					new_feature_as := feature_as.twin
-					new_feature_as.set_feature_names (eiffel_list);
-					create adapter;
-					adapter.register (new_feature_as, format_reg);
+					new_feature_as.set_feature_names (eiffel_list)
+					create adapter
+					adapter.register (new_feature_as, format_reg)
 					if not new_feature_as.is_attribute then
 						adapter.add_comment (
 							synonym_comment (
@@ -93,23 +93,22 @@ feature -- Element change
 								new_feature_as.body /= Void and then new_feature_as.body.is_unique
 							),
 							is_precompiled
-						);
+						)
 					end
 					i := i + 1
-				end;
+				end
 			else
-				ast := feature_as;
-				same_class := (format_reg.current_class
-								= format_reg.target_class);
+				ast := feature_as
+				same_class := (format_reg.current_class = format_reg.target_class)
 				if same_class then
 					immediate_adapt (ast.feature_names.first, format_reg)
 				else
-					adapt (ast.feature_names.first, format_reg);
+					adapt (ast.feature_names.first, format_reg)
 					if source_feature /= Void then
-						rep_table := format_reg.target_replicated_feature_table;
-						list := rep_table.item (source_feature.body_index);
+						rep_table := format_reg.target_replicated_feature_table
+						list := rep_table.item (source_feature.body_index)
 					end
-				end;
+				end
 				if list /= Void then
 						--| Also register replicated and unselected routines
 					from
@@ -117,24 +116,23 @@ feature -- Element change
 					until
 						list.after
 					loop
-						t_feat := list.item;
+						t_feat := list.item
 							-- If target feature has been registered, we do not register it twice.
 						if t_feat /= target_feature then
-							create adapter;
+							create adapter
 							new_feature_as := feature_as.twin
 							new_feature_as := replace_name_from_feature (new_feature_as, names.first.twin, source_feature)
-							adapter.replicate_feature (source_feature,
-											t_feat, new_feature_as, format_reg);
+							adapter.replicate_feature (source_feature, t_feat, new_feature_as, format_reg)
 
 						end
 						list.forth
-					end;
+					end
 						-- Reset entry just in case we have
 						-- synomyn features
-					rep_table.force (Void, source_feature.body_index);
+					rep_table.force (Void, source_feature.body_index)
 				end
-			end;
-		end;
+			end
+		end
 
 feature {NONE} -- Implementation
 
@@ -204,15 +202,14 @@ feature -- Output
 		local
 			format_reg: FORMAT_REGISTRATION
 		do
-			format_reg := ctxt.format_registration;
+			format_reg := ctxt.format_registration
 			if target_feature /= Void then
-				format_reg.assert_server.update_current_assertion (Current);
-				ctxt.init_feature_context (source_feature,
-							target_feature, ast);
+				format_reg.assert_server.update_current_assertion (Current)
+				ctxt.init_feature_context (source_feature, target_feature, ast)
 			else
-				format_reg.assert_server.reset_current_assertion;
-				ctxt.init_uncompiled_feature_context (source_class, ast);
-			end;
+				format_reg.assert_server.reset_current_assertion
+				ctxt.init_uncompiled_feature_context (source_class, ast)
+			end
 			ctxt.set_feature_comments (comments)
 			ctxt.format_ast (ast)
 		end
@@ -224,42 +221,42 @@ feature {FEATURE_ADAPTER} -- Implementation
 			-- Replicated feature information from `feat_adapter'
 			-- with target_feature `t_feat' in `format_reg'.
 		require
-			valid_features: s_feat /= Void and then t_feat /= Void;
+			valid_features: s_feat /= Void and then t_feat /= Void
 			valid_ast: f_ast /= Void
 			valid_format_reg: format_reg /= Void
 		do
-			ast := f_ast;
-			source_feature := s_feat;
-			target_feature := t_feat;
-			body_index := s_feat.body_index;
+			ast := f_ast
+			source_feature := s_feat
+			target_feature := t_feat
+			body_index := s_feat.body_index
 			register_feature (t_feat, True, format_reg)
-		end;
+		end
 
 feature {NONE} -- Implementation
 
 	adapt (old_name: FEATURE_NAME; format_reg: FORMAT_REGISTRATION)
 			-- Adaptation for feature defined in current class being analyzed.
 		require
-			diff_class: format_reg.current_class /= format_reg.target_class;
+			diff_class: format_reg.current_class /= format_reg.target_class
 			valid_format_reg: format_reg /= Void
 		local
-			t_feat, s_feat: FEATURE_I;
-			rout_id: INTEGER;
+			t_feat, s_feat: FEATURE_I
+			rout_id: INTEGER
 			feature_as, new_feature_as: FEATURE_AS
 			adapter: like Current
 			l_match_list: LEAF_AS_LIST
 		do
 			s_feat := format_reg.current_feature_table.item_id (old_name.internal_name.name_id)
 			if s_feat /= Void then
-				rout_id := s_feat.rout_id_set.first;
+				rout_id := s_feat.rout_id_set.first
 				t_feat := format_reg.target_feature_table.feature_of_rout_id (rout_id)
 				if t_feat /= Void then
-					body_index := s_feat.body_index;
-					source_feature := s_feat;
-					target_feature := t_feat;
+					body_index := s_feat.body_index
+					source_feature := s_feat
+					target_feature := t_feat
 
 						-- Register into assert server.
-					format_reg.assert_server.register_adapter (Current);
+					format_reg.assert_server.register_adapter (Current)
 
 						-- Only register if the target and source
 						-- feature are written in the same class
@@ -270,43 +267,43 @@ feature {NONE} -- Implementation
 						if t_feat.is_deferred and then not s_feat.is_deferred then
 								-- If target feature is undefined, we give it a deferred body.
 							l_match_list := match_list_server.item (t_feat.written_in)
-							create adapter;
+							create adapter
 							feature_as := t_feat.body
 							new_feature_as := replace_name_from_feature (feature_as.deep_twin, feature_as.feature_names.first, target_feature)
 							new_feature_as := normal_to_deferred_feature_as (new_feature_as, l_match_list)
 							adapter.replicate_feature (source_feature,
-											t_feat, new_feature_as, format_reg);
+											t_feat, new_feature_as, format_reg)
 						else
-							register_feature (t_feat, False, format_reg);
+							register_feature (t_feat, False, format_reg)
 						end
 					end
 				end
 			else
 					-- Newly added feature which hasn't been compiled
 				register_uncompiled_feature (format_reg)
-			end;
-		end;
+			end
+		end
 
 	immediate_adapt (name: FEATURE_NAME; format_reg: FORMAT_REGISTRATION)
 			-- Adaptation for feature defined in target_class.
 		require
-			same_class: format_reg.current_class = format_reg.target_class;
+			same_class: format_reg.current_class = format_reg.target_class
 			valid_format_reg: format_reg /= Void
 		local
 			feat: FEATURE_I
 		do
-			feat := format_reg.target_feature_table.item_id (name.internal_name.name_id);
+			feat := format_reg.target_feature_table.item_id (name.internal_name.name_id)
 			if feat = Void then
 					-- Newly added feature which hasn't been compiled
 				register_uncompiled_feature (format_reg)
 			else
-				body_index := feat.body_index;
-				source_feature := feat;
-				target_feature := feat;
-				format_reg.assert_server.register_adapter (Current);
-				register_feature (feat, False, format_reg);
-			end;
-		end;
+				body_index := feat.body_index
+				source_feature := feat
+				target_feature := feat
+				format_reg.assert_server.register_adapter (Current)
+				register_feature (feat, False, format_reg)
+			end
+		end
 
 	register_feature (feat: FEATURE_I;
 				is_replicated: BOOLEAN;
@@ -330,25 +327,25 @@ feature {NONE} -- Implementation
 				if not is_short or else not feat.is_obsolete then
 					--| VB 06/13/2000 (Moved up) comments := format_reg.feature_comments (ast)
 					if is_replicated then
-						format_reg.record_replicated_feature (Current);
+						format_reg.record_replicated_feature (Current)
 					else
-						format_reg.record_feature (Current);
-					end;
-				end;
-			end;
+						format_reg.record_feature (Current)
+					end
+				end
+			end
 				-- Record as creation feature.
 				-- `record_creation_feature' checks if `Current' is
 				-- a creation procedure and if so, adds it to format_reg.creation_table.
 			format_reg.record_creation_feature (Current)
-		end;
+		end
 
 	register_uncompiled_feature (format_reg: FORMAT_REGISTRATION)
 			-- Register uncompiled feature.
 		do
-			comments := format_reg.feature_comments (ast);
-			source_class := format_reg.current_class;
+			comments := format_reg.feature_comments (ast)
+			source_class := format_reg.current_class
 			format_reg.record_feature (Current)
-		end;
+		end
 
 feature {FEATURE_ADAPTER} -- Element change
 
@@ -362,11 +359,10 @@ feature {FEATURE_ADAPTER} -- Element change
 			elseif is_precompiled then
 					-- Duplicate the result since it could be referencing
 					-- the same comments of other synonym precompiled feature asts.
-				comments.start;
-				comments := comments.duplicate (comments.count)
-			end;
+				create comments.make_from_iterable (comments)
+			end
 			comments.extend (create {EIFFEL_COMMENT_LINE}.make_from_string_32 (comment))
-		end;
+		end
 
 feature {FORMAT_REGISTRATION} -- Element chage
 
@@ -376,13 +372,13 @@ feature {FORMAT_REGISTRATION} -- Element chage
 		require
 			valid_s_feature: s_feature /= Void
 		do
-			source_feature := s_feature;
-			ast := s_feature.body;
-			body_index := s_feature.body_index;
-		end;
+			source_feature := s_feature
+			ast := s_feature.body
+			body_index := s_feature.body_index
+		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -413,4 +409,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class FEATURE_ADAPTER
+end

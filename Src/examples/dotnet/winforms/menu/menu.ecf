@@ -2,7 +2,7 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="menu" uuid="0539D250-A01D-4AEB-939D-1C18BFFCE422">
 	<target name="menu">
 		<root cluster="root_cluster" class="MENU" feature="make"/>
-		<option warning="true" full_class_checking="false" is_obsolete_routine_type="true" syntax="transitional">
+		<option warning="true" full_class_checking="false">
 			<assertions precondition="true"/>
 		</option>
 		<setting name="msil_generation" value="true"/>

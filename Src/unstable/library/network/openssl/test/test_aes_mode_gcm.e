@@ -13,6 +13,14 @@ class
 
 inherit
 	EQA_TEST_SET
+		select
+			default_create
+		end
+	SSL_SHARED
+		rename
+			default_create as ssl_create
+		end
+
 
 feature -- Test routines
 
@@ -68,6 +76,7 @@ feature -- Test routines
 			l_mode: SSL_GCM_MODE
 			l_encryptor: SSL_CIPHER_CONTEXT_I
 		do
+			initialize_ssl
 			-- Code in Python
 			--  def test_gcm_tag_with_only_aad(self, backend):
 			--        key = binascii.unhexlify(b"5211242698bed4774a090620a6ca56f3")
@@ -84,8 +93,10 @@ feature -- Test routines
 			--        encryptor.authenticate_additional_data(aad)
 			--        encryptor.finalize()
 			--        assert encryptor.tag == tag		
+
 			create l_algo.make ("5211242698bed4774a090620a6ca56f3")
 			create l_mode.make ("b1e1349120b6e832ef976f5d", "0f247e7f9c2505de374006738018493b" )
+			check is_valid: l_mode.is_valid_aes_key (l_algo) end
 			create cipher.make (l_algo, l_mode)
 			l_encryptor := cipher.encryptor
 			if attached {SSL_AEAD_CIPHER_CONTEXT} l_encryptor as ll_encryptor then
@@ -170,6 +181,16 @@ feature -- Test routines
 		end
 
 
+note
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end
 
 

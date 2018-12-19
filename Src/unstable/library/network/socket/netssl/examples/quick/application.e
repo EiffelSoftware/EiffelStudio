@@ -8,10 +8,8 @@ class
 
 inherit
 
-	ARGUMENTS
-
+	ARGUMENTS_32
 	INET_ADDRESS_FACTORY
-
 	INET_PROPERTIES
 
 create
@@ -21,13 +19,12 @@ feature {NONE} -- Initialization
 
 	make
 		local
-			host: STRING
+			host: IMMUTABLE_STRING_32
 			port: INTEGER
 			prefer_ipv4_stack: BOOLEAN
 			address: detachable INET_ADDRESS
 			timeout: INTEGER
 			l_socket: SSL_NETWORK_STREAM_SOCKET
-			a_file_name: FILE_NAME
 		do
 			host := "requestb.in"
 			port := 443
@@ -48,13 +45,13 @@ feature {NONE} -- Initialization
 			end
 			io.put_string ("start ssl_client")
 			io.put_string (" host = ")
-			io.put_string (host)
+			io.put_string (host.as_string_8)
 			io.put_string (", port = ")
 			io.put_integer (port)
 			io.put_new_line
 
 				-- Obtain the host address
-			address := create_from_name (host)
+			address := create_from_name (host.as_string_8)
 			if address = Void then
 				io.put_string ("Unknown host " + host)
 				io.put_new_line
@@ -63,7 +60,9 @@ feature {NONE} -- Initialization
 
 				create l_socket.make_client_by_address_and_port (address, port)
 					-- Set the connection timeout
-					--				l_socket.set_connect_timeout (100)
+				if timeout > 0 then
+					l_socket.set_connect_timeout (timeout)
+				end
 					-- Connect to the Server
 				l_socket.set_tls_server_name_indication ("www.requestb.in")
 
@@ -116,12 +115,9 @@ feature {NONE} --Implementation
 		require
 			valid_socket: a_socket /= Void and then a_socket.is_open_read
 		local
-			l_last_string: detachable STRING
+			l_last_string: STRING
 		do
 			l_last_string := receive_data (a_socket)
-			check
-				l_last_string_attached: l_last_string /= Void
-			end
 			io.put_string ("Server Says: ")
 			io.put_string (l_last_string)
 			io.put_new_line
@@ -147,48 +143,5 @@ feature {NONE} --Implementation
 		end
 
 	client_get: STRING = "GET / HTTP/1.1"
-
-
-	ca_crt: STRING = "..\ca-bundle.crt"
-		-- seff signed certificate.
-
-
-
-ca_crt_manifest: STRING = "[
-	-----BEGIN CERTIFICATE-----
-MIICWDCCAcGgAwIBAgIJAJnXGtV+PtiYMA0GCSqGSIb3DQEBBQUAMEUxCzAJBgNV
-BAYTAkFVMRMwEQYDVQQIDApTb21lLVN0YXRlMSEwHwYDVQQKDBhJbnRlcm5ldCBX
-aWRnaXRzIFB0eSBMdGQwHhcNMTUwNDAzMjIxNTA0WhcNMTYwNDAyMjIxNTA0WjBF
-MQswCQYDVQQGEwJBVTETMBEGA1UECAwKU29tZS1TdGF0ZTEhMB8GA1UECgwYSW50
-ZXJuZXQgV2lkZ2l0cyBQdHkgTHRkMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKB
-gQDFMK6ojzg+KlklhTossR13c51izMgGc3B0z9ttfHIcx2kxra3HtHcKIl5wSUvn
-G8zmSyFAyQTs5LUv65q46FM9qU8tP+vTeFCfNXvjRcIEpouta3J53K0xuUlxz4d4
-4D6qvdDWAez/0AkI4y5etW5zXtg7IQorJhsI9TmfGuruzwIDAQABo1AwTjAdBgNV
-HQ4EFgQUbWpk2HoHa0YqpEwr7CGEatBFTMkwHwYDVR0jBBgwFoAUbWpk2HoHa0Yq
-pEwr7CGEatBFTMkwDAYDVR0TBAUwAwEB/zANBgkqhkiG9w0BAQUFAAOBgQAi+h4/
-IgEocWkdRZBKHEcTrRxz5WhEDJMoVo9LhnXvCfn1G/4p6Un6sYv7Xzpi9NuSY8uV
-cjfJJXhtF3AtyZ70iTAxWaRWjGaZ03PYOjlledJ5rqJEt6CCn8m+JsfznduZvbxQ
-zQ6jCLXfyD/tvemB+yYEI3NntvRKx5/zt6Q26Q==
------END CERTIFICATE-----
-]"
-
-ca_key_manifesst: STRING = "[
------BEGIN RSA PRIVATE KEY-----
-MIICXAIBAAKBgQDFMK6ojzg+KlklhTossR13c51izMgGc3B0z9ttfHIcx2kxra3H
-tHcKIl5wSUvnG8zmSyFAyQTs5LUv65q46FM9qU8tP+vTeFCfNXvjRcIEpouta3J5
-3K0xuUlxz4d44D6qvdDWAez/0AkI4y5etW5zXtg7IQorJhsI9TmfGuruzwIDAQAB
-AoGAR5efMg+dieRyLU8rieJcImxVbfOPg9gRsjdtIVkXTR+RL7ow59q7hXBo/Td/
-WU8cm1gXoJ/bK+71YYqWyB+BaLRIWvRWb7Gdw203tu4e136Ca5uuY+71qdbVTVcl
-NQ7J+T+eAQFP+a+DdT3ZQxu9eze87SMbu6i5YSpIk2kusOECQQDunv/DQ+nc+NgR
-DF+Td3sNYUVRT9a1CWi6abAG6reXwp8MS4NobWDf+Ps4JODhEEwlIdq5qL7qqYBZ
-Gc1TJJ53AkEA0404Fn6vAzzegBcS4RLlYTK7nMr0m4pMmDMCI6YzAYdMmKHp1e6f
-IwxSmQrmwyAgwcT01bc0+A8yipcC2BWQaQJBAJ01QZm635OGmos41KsKF5bsE8gL
-SpBBH69Yu/ECqGwie7iU84FUNnO4zIHjwghlPVVlZX3Vz9o4S+fn2N9DC+cCQGyZ
-QyCxGdC0r5fbwHJQS/ZQn+UGfvlVzqoXDVMVn3t6ZES6YZrT61eHnOM5qGqklIxE
-Old3vDZXPt/MU8Zvk3kCQBOgUx2VxvTrHN37hk9/QIDiM62+RenBm1M3ah8xTosf
-1mSeEb6d9Kwb3TgPBmA7YXzJuAQfRIvEPMPxT5SSr6Q=
------END RSA PRIVATE KEY-----
-]"
-
 
 end

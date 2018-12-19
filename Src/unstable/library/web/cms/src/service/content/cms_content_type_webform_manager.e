@@ -41,14 +41,10 @@ feature -- Conversion
 	append_formatted_content_to (a_content: READABLE_STRING_GENERAL; a_format: CONTENT_FORMAT; a_output: STRING)
 			-- Format string `a_content' with format `a_format', and append to `a_output'.
 		do
-			if a_content.is_valid_as_string_8 then
-				a_output.append (a_format.formatted_output (a_content.to_string_8))
-			else
-				a_format.append_formatted_to (a_content, a_output)
-			end
+			a_format.append_formatted_to (a_content, a_output)
 		end
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

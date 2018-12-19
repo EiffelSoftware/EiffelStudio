@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Metric validity visitor"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -724,7 +723,7 @@ feature{NONE} -- Implementation
 			l_name: STRING
 		do
 			if not has_error then
-				l_metric_stack := metric_stack.duplicate (metric_stack.count)
+				create l_metric_stack.make_from_iterable (metric_stack)
 				if l_metric_stack.count > 1 then
 					l_metric_stack.remove
 					l_linear := l_metric_stack.linear_representation
@@ -848,7 +847,7 @@ feature{NONE} -- Implementation
 	store_location_stack
 			-- Store `location_stack' into `original_location_stack'.
 		do
-			original_location_stack := location_stack.duplicate (location_stack.count)
+			create original_location_stack.make_from_iterable (location_stack)
 		end
 
 	location: STRING_GENERAL
@@ -857,44 +856,34 @@ feature{NONE} -- Implementation
 			has_error: has_error
 		local
 			l_level: INTEGER
-			l_last_error_loc: STRING_GENERAL
-			l_relative_loc_stack: like location_stack
 			l_loc_list: LINKED_LIST [STRING_GENERAL]
-			l_cnt: INTEGER
 		do
 			l_level := original_location_stack.count - location_stack.count + 1
 			if l_level > 0 then
-				from
-					l_relative_loc_stack := original_location_stack.duplicate (l_level)
-					create l_loc_list.make
+				create l_loc_list.make
+				across
+					original_location_stack as s
 				until
-					l_relative_loc_stack.is_empty
+					l_level <= 0
 				loop
-					l_loc_list.put_front (l_relative_loc_stack.item)
-					l_relative_loc_stack.remove
+					l_loc_list.put_front (s.item)
+					l_level := l_level - 1
 				end
+				across
+					l_loc_list as l
 				from
-					l_loc_list.start
-					l_cnt := l_loc_list.count
-				until
-					l_loc_list.after
+					Result := {STRING_32} ""
 				loop
-					if l_last_error_loc = Void then
-						l_last_error_loc := l_loc_list.item.twin
-					else
-						l_last_error_loc.append (l_loc_list.item)
+					Result.append (l.item)
+					if not l.is_last then
+						Result.append (metric_names.location_connector)
 					end
-					if l_loc_list.index < l_cnt then
-						l_last_error_loc.append (metric_names.location_connector)
-					end
-					l_loc_list.forth
 				end
 				if last_error.location /= Void then
-					l_last_error_loc.append (metric_names.location_connector)
-					l_last_error_loc.append (last_error.location)
+					Result.append (metric_names.location_connector)
+					Result.append (last_error.location)
 				end
 			end
-			Result := l_last_error_loc
 		ensure
 			result_attached: Result /= Void
 		end
@@ -970,7 +959,7 @@ invariant
 
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

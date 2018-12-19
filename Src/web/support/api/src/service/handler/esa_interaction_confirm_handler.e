@@ -127,7 +127,7 @@ feature -- HTTP Methods
 
 feature {NONE} -- Implementation
 
-	extract_form_data (req: WSF_REQUEST; a_type: READABLE_STRING_32): INTEGER
+	extract_form_data (req: WSF_REQUEST; a_type: READABLE_STRING_8): INTEGER
 			-- Extract data from a post request (form in text/html or template in CJ).
 		local
 			l_parser: JSON_PARSER

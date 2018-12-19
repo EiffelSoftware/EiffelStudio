@@ -366,8 +366,8 @@ feature {NONE} -- Implementation
 						send_email_gpl_download_notification (l_info)
 					end
 						-- Build Link
-					create l_link.make_from_string (l_mirror)
-					l_link.append (l_filename)
+					create l_link.make_from_string (l_mirror.to_string_8)
+					l_link.append (l_filename.to_string_8)
 					--compute_response_redirect (req, res, l_link)
 					direct_download (req, res, l_link, l_filename, l_options.size.out )
 				else
@@ -512,7 +512,7 @@ feature -- Response
 			create h.make
 			h.put_content_type_text_html
 			h.put_current_date
-			h.put_location (a_location)
+			h.put_location (a_location.to_string_8)
 			res.set_status_code ({HTTP_STATUS_CODE}.see_other)
 			res.put_header_text (h.string)
 		end
@@ -607,20 +607,26 @@ feature -- Send Email
 			then
 				create l_hp.make (layout.html_template_path, req.absolute_script_url (""), a_form,a_token, l_service)
 				if attached l_hp.representation as l_html_download_options then
-					l_email_service.send_download_email (a_form.email, l_html_download_options, a_host)
+					if attached l_service.configuration.products as l_products and then
+						attached l_products[1].number as l_number
+					then
+						l_email_service.send_download_email (a_form.email, l_html_download_options, a_host, l_number.out)
+					else
+						l_email_service.send_download_email (a_form.email, l_html_download_options, a_host, "")
+					end
 
 						-- Wait 5 seconds before to send the video resource emails
 					create e
 					e.sleep (1_000_000_000 * 5)
 					create l_html.make (layout.html_template_path)
 					if attached l_html.representation as l_html_resource then
-						l_email_service.send_email_resources (a_form.email, l_html_resource)
+						l_email_service.send_email_resources (a_form.email.to_string_8, l_html_resource)
 					else
 						l_email_service.send_email_internal_server_error ("Internal server error sending video resource email")
 					end
 
 				else
-					l_email_service.send_download_email (a_form.email, "Internal Server Error", a_host)
+					l_email_service.send_download_email (a_form.email, "Internal Server Error", a_host, "")
 				end
 			end
 		end

@@ -6,7 +6,7 @@
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="json" location="$ISE_LIBRARY\contrib\library\web\authentication\jwt\jwt.ecf"/>
-		<library name="openssl_static" location="$ISE_LIBRARY\unstable\library\network\openssl\openssl.ecf"/>
+		<library name="openssl_static" location="$ISE_LIBRARY\unstable\library\network\openssl\openssl_static.ecf"/>
 		<cluster name="src" location="src\" recursive="true"/>
 	</target>
 </system>

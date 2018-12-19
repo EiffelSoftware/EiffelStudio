@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Topological sort on classes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			n_positive: n >= 0
 		do
 			order.conservative_resize (1, n)
-			precursor_count.conservative_resize (1, n)
+			precursor_count.conservative_resize_with_default (0, 1, n)
 			successors.conservative_resize (1, n)
 			original.conservative_resize (1, n)
 			outsides1.wipe_out
@@ -553,7 +553,7 @@ invariant
 	outsides2_not_void: outsides2 /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

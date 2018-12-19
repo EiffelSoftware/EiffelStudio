@@ -670,6 +670,7 @@ feature {NONE} -- Settings
 		do
 			last_type := context.current_class_type
 			is_controlled := False
+			is_qualified_call := False
 		end
 
 	set_is_checking_postcondition (b: BOOLEAN)
@@ -1618,8 +1619,7 @@ feature {NONE} -- Implementation
 							if error_level = l_error_level then
 									-- Put source expression of the assigner instruction as a first actual argument.
 								if attached l_parameters then
-									l_parameters.start
-									l_parameters := l_parameters.duplicate (l_actual_count)
+									create l_parameters.make_from_iterable (l_parameters)
 								else
 									create l_parameters.make (1)
 								end
@@ -1702,8 +1702,7 @@ feature {NONE} -- Implementation
 											l_parameters.forth
 										end
 											-- Avoid changing original list of arguments.
-										l_parameters.start
-										l_parameters := l_parameters.duplicate (l_actual_count)
+										create l_parameters.make_from_iterable (l_parameters)
 											-- Replace extra arguments with a tuple.
 										l_parameters.put_i_th (create {TUPLE_AS}.initialize (l_wrapped_actuals, Void, Void), tuple_argument_number)
 											-- Remove extra arguments.

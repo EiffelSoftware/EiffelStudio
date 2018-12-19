@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="eapml" uuid="3E9258E1-383A-40BF-864B-231FC8F25ADF" library_target="eapml">
 	<description>Eiffel Arbitrary Precision Mathematics Library
-			
 			Note: you should set 'eapml_scan_type' to 'gcc' or 'vc'
 			and 'eapml_limb_type' to 'natural_32' (or 'natural_64')
-
 			If not, default values will be used depending on the platform</description>
 	<target name="eapml">
 		<description>Eiffel Arbitrary Precision Mathematics</description>

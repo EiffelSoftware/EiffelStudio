@@ -507,7 +507,7 @@ feature {NONE} -- User interaction
 					a_targets.after
 				loop
 					create l_item.make_with_text (a_targets.item_for_iteration)
-					l_item.pointer_double_press_actions.force_extend (agent on_target_selected (l_dialog, l_item))
+					l_item.pointer_double_press_actions.extend (agent on_target_selected (l_dialog, l_item, ?,?,?,?,?,?,?,?))
 					l_list.extend (l_item)
 					a_targets.forth
 				end
@@ -656,7 +656,7 @@ feature {NONE} -- Actions
 			target_name_set: old a_list.selected_item /= Void implies (target_name /= Void)
 		end
 
-	on_target_selected (a_dlg: EV_DIALOG; a_item: EV_LIST_ITEM)
+	on_target_selected (a_dlg: EV_DIALOG; a_item: EV_LIST_ITEM; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Action when user select a target with a double click.
 		require
 			a_dlg_not_void: a_dlg /= Void

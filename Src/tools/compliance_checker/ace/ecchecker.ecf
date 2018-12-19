@@ -2,7 +2,7 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="ecchecker" uuid="E67360E2-5309-4993-A4EF-8DF437D4428A" library_target="ecchecker_library">
 	<target name="ecchecker_library">
 		<root all_classes="true"/>
-		<version major="1" minor="1207" release="0" build="0" company="Eiffel Software" product="Eiffel for .NET Compliance Checker" copyright="2005 Eiffel Software. All Rights Reserved"/>
+		<version major="1" minor="1207" release="0" build="0" company="Eiffel Software" product="Eiffel for .NET Compliance Checker" copyright="2005-2018 Eiffel Software. All Rights Reserved"/>
 		<file_rule>
 			<exclude>/.svn$</exclude>
 			<exclude>/EIFGENs$</exclude>
@@ -20,6 +20,9 @@
 		<setting name="msil_key_file_name" value="${EIFFEL_SRC}\dotnet\helpers\isekey.snk"/>
 		<setting name="use_all_cluster_name_as_namespace" value="True"/>
 		<setting name="use_cluster_name_as_namespace" value="True"/>
+		<capability>
+			<concurrency support="none"/>
+		</capability>
 		<library name="assembly_resolver" location="$EIFFEL_SRC\dotnet\helpers\assembly_resolver\assembly_resolver.ecf" readonly="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>

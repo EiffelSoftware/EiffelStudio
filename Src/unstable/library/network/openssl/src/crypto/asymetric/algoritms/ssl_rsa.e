@@ -11,12 +11,12 @@ create
 	make
 
 feature {NONE} --Initialization
+
 	make
 		do
 				-- default padding	
 			padding := {SSL_CRYPTO_EXTERNALS}.rsa_pkcs1_oaep_padding
 		end
-
 
 	padding: INTEGER
 			-- padding mode that was used to encrypt the data.
@@ -73,7 +73,8 @@ feature -- Element  Change.
 		end
 
 	mark_no_padding
-			-- This mode should only be used to implement cryptographically sound padding modes in the application code. Encrypting user data directly with RSA is insecure.
+			-- This mode should only be used to implement cryptographically sound padding modes 
+			-- in the application code. Encrypting user data directly with RSA is insecure.
 		do
 			padding := {SSL_CRYPTO_EXTERNALS}.rsa_no_padding
 		ensure
@@ -81,7 +82,8 @@ feature -- Element  Change.
 		end
 
 	marl_pkcs1_oaep_padding
-			-- EME-OAEP as defined in PKCS #1 v2.0 with SHA-1, MGF1 and an empty encoding parameter. This mode is recommended for all new applications.
+			-- EME-OAEP as defined in PKCS #1 v2.0 with SHA-1, MGF1 and an empty encoding parameter.
+			-- This mode is recommended for all new applications.
 		do
 			padding := {SSL_CRYPTO_EXTERNALS}.rsa_pkcs1_oaep_padding
 		ensure
@@ -149,27 +151,28 @@ feature -- Access: Public Encrypt - Private Decrypt
 
 feature -- Sign
 
-	sign_sha256 (a_priv_key: SSL_RSA_PRIVATE_KEY; a_message: READABLE_STRING_GENERAL): detachable STRING_8
-			-- Create a signed digest in a Base64 encoded string using the hash function sha256
+	sha256_signed_message (a_priv_key: SSL_RSA_PRIVATE_KEY; a_message: READABLE_STRING_GENERAL): detachable STRING_8
+			-- Create a signed digest in a Base64 encoded string using the hash function sha256.
 		do
 			Result := sign_implementation (a_priv_key, a_message, {SSL_CRYPTO_EXTERNALS}.c_evp_sha256)
 		end
 
-	sign_sha384 (a_priv_key: SSL_RSA_PRIVATE_KEY; a_message: READABLE_STRING_GENERAL): detachable STRING_8
-			-- Create a signed digest in a Base64 encoded string using the hash function sha384
+	sha384_signed_message (a_priv_key: SSL_RSA_PRIVATE_KEY; a_message: READABLE_STRING_GENERAL): detachable STRING_8
+			-- Create a signed digest in a Base64 encoded string using the hash function sha384.
 		do
 			Result := sign_implementation (a_priv_key, a_message, {SSL_CRYPTO_EXTERNALS}.c_evp_sha384)
 		end
 
-	sign_sha512 (a_priv_key: SSL_RSA_PRIVATE_KEY; a_message: READABLE_STRING_GENERAL): detachable STRING_8
-			-- Create a signed digest in a Base64 encoded string using the hash function sha512
+	sha512_signed_message (a_priv_key: SSL_RSA_PRIVATE_KEY; a_message: READABLE_STRING_GENERAL): detachable STRING_8
+			-- Create a signed digest in a Base64 encoded string using the hash function sha512.
 		do
 			Result := sign_implementation (a_priv_key, a_message, {SSL_CRYPTO_EXTERNALS}.c_evp_sha512)
 		end
 
 feature -- Verify
 
-	verify_sha256 (a_pub_key: SSL_RSA_PUBLIC_KEY; a_plain_text:READABLE_STRING_GENERAL; a_signature: READABLE_STRING_8): BOOLEAN
+
+	is_sha256_verified (a_pub_key: SSL_RSA_PUBLIC_KEY; a_plain_text:READABLE_STRING_GENERAL; a_signature: READABLE_STRING_8): BOOLEAN
 			-- Ensures that the signature matches the original code.
 			-- Using the public key `a_pub_key' and the signature encoded in BASE64 with the origin text `a_plain_text'.
 			-- usign the same algorithm as the author of the signature.
@@ -177,7 +180,8 @@ feature -- Verify
 			Result := verify_implementation (a_pub_key, a_plain_text, a_signature, {SSL_CRYPTO_EXTERNALS}.c_evp_sha256)
 		end
 
-	verify_sha384 (a_pub_key: SSL_RSA_PUBLIC_KEY; a_plain_text:READABLE_STRING_GENERAL; a_signature: READABLE_STRING_8): BOOLEAN
+
+	is_sha384_verified (a_pub_key: SSL_RSA_PUBLIC_KEY; a_plain_text:READABLE_STRING_GENERAL; a_signature: READABLE_STRING_8): BOOLEAN
 			-- Ensures that the signature matches the original code.
 			-- Using the public key `a_pub_key' and the signature encoded in BASE64 with the origin text `a_plain_text'.
 			-- usign the same algorithm as the author of the signature.
@@ -185,7 +189,8 @@ feature -- Verify
 			Result := verify_implementation (a_pub_key, a_plain_text, a_signature, {SSL_CRYPTO_EXTERNALS}.c_evp_sha384)
 		end
 
-	verify_sha512 (a_pub_key: SSL_RSA_PUBLIC_KEY; a_plain_text:READABLE_STRING_GENERAL; a_signature: READABLE_STRING_8): BOOLEAN
+
+	is_sha512_verified (a_pub_key: SSL_RSA_PUBLIC_KEY; a_plain_text:READABLE_STRING_GENERAL; a_signature: READABLE_STRING_8): BOOLEAN
 			-- Ensures that the signature matches the original code.
 			-- Using the public key `a_pub_key' and the signature encoded in BASE64 with the origin text `a_plain_text'.
 			-- usign the same algorithm as the author of the signature.
@@ -200,6 +205,8 @@ feature {NONE} -- Implementation
 			--| Sing the message `a_message' with private key `a_priv_key'.
 			--| Using the hash function `sha_256/sha_384/sha_512
 			--| If the digital signature is ok, return it as Base64 encoded.
+		note
+				EIS:"name=EVP Signing", "src=https://wiki.openssl.org/index.php/EVP_Signing_and_Verifying#Signing", "protocol=uri"
 		local
 			l_sign_ctx: POINTER
 				-- EVP_MD_CTX*
@@ -209,8 +216,6 @@ feature {NONE} -- Implementation
 			c_msg: C_STRING
 			l_count: INTEGER
 			c_encmsg: C_STRING
-			l_base64: POINTER
-			l_result: C_STRING
 			l_data: STRING
 		do
 				-- https://www.openssl.org/docs/man1.1.0/crypto/EVP_DigestInit.html
@@ -268,6 +273,11 @@ feature {NONE} -- Implementation
 		end
 
 	verify_implementation (a_pub_key: SSL_RSA_PUBLIC_KEY; a_plain_text:READABLE_STRING_GENERAL; a_signature: READABLE_STRING_8; a_alg: POINTER): BOOLEAN
+				-- Verify a message, require a public key `a_pub_key', the original plain text `a_plain_test' and the signed message `a_signature' with
+				-- a given algorithm `a_alg'.
+				--| EVP Verifying OpenSSL API using the new EVP API: EVP_DigestVerify* functions.
+		note
+			EIS:"name=EVP Verifying", "src=https://wiki.openssl.org/index.php/EVP_Signing_and_Verifying#Verifying", "protocol=uri"
 		local
 			l_decoded_sig: STRING_8
 			l_pubkey: POINTER
@@ -277,11 +287,6 @@ feature {NONE} -- Implementation
 				-- EVP_MD_CTX
 			l_msg: C_STRING
 			l_origin: C_STRING
-
-			l_b64message: C_STRING
-			l_buffer: C_STRING
-			l_ret: INTEGER
-			l_character: CHARACTER_8
 		do
 			Result := True
 
@@ -295,7 +300,7 @@ feature {NONE} -- Implementation
 
 			l_verify_ctx:= {SSL_CRYPTO_EXTERNALS}.c_evp_md_ctx_new
 			l_res := {SSL_CRYPTO_EXTERNALS}.c_evp_digestinit_ex (l_verify_ctx, a_alg, default_pointer)
-			if l_res /= 1 then
+			if l_res <= 0 then
 				create last_error.make (({SSL_CRYPTO_EXTERNALS}.c_error_get_error))
 			end
 
@@ -333,28 +338,15 @@ feature {NONE} -- Implementation
 			{SSL_CRYPTO_EXTERNALS}.c_evp_md_ctx_free (l_verify_ctx)
 		end
 
-	verify_with_sha256_imp (a_text: READABLE_STRING_GENERAL; a_signed: READABLE_STRING_8; a_pub_key: SSL_RSA_PUBLIC_KEY): BOOLEAN
-		local
-			l_buffer: C_STRING
-			l_message: C_STRING
-			l_sign: C_STRING
-			l_res: INTEGER
-			l_temp: STRING
-		do
-			create l_buffer.make_empty ({SSL_CRYPTO_EXTERNALS}.SHA256_DIGEST_LENGTH)
-			create l_message.make (a_text)
-			{SSL_CRYPTO_EXTERNALS}.c_sha256 (l_message.item, l_message.count, l_buffer.item)
 
-			l_temp := (create {BASE64}).decoded_string (a_signed)
-			l_temp.append_character ('%U')
-			create l_sign.make (l_temp)
-			l_res := {SSL_CRYPTO_EXTERNALS}.c_rsa_verify ({SSL_CRYPTO_EXTERNALS}.nid_sha256, l_buffer.item, l_sign.item, {SSL_CRYPTO_EXTERNALS}.c_rsa_size (a_pub_key.rsa), a_pub_key.rsa);
-			if l_res /= 1 then
-				create last_error.make (({SSL_CRYPTO_EXTERNALS}.c_error_get_error))
-			else
-				Result := True
-			end
-		end
-
-
+note
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

@@ -50,7 +50,7 @@ feature -- Status report
 
 feature -- Properties
 
-	target_name: STRING_32
+	target_name: READABLE_STRING_32
 			-- Name of the universe target.
 		require
 			target_not_void: target /= Void

@@ -42,12 +42,9 @@ WDOCSMOD.replaceTagName = function(elt, replaceWith) {
         }
         return $(tags);
     };
-
-$(document).ready(function() {
-	$("#wdocs-tree.menu li").each(function() { WDOCSMOD.prepareTreeMenuItem($(this));});
-
+WDOCSMOD.prepareCode = function(elt) {
 	/* Prepare <code> for prettyPrint */
-	$('code').each(function(i, block) {
+	$(elt).find('code').each(function(i, block) {
 		var codelang = $(block).attr("lang");
 		if (codelang !== undefined) {
 			$(block).addClass("lang-"+codelang);
@@ -57,13 +54,22 @@ $(document).ready(function() {
 		$(block).addClass("prettyprint");
 	});
 	/* Also support <eiffel> and <e> */
-	$('eiffel,e').each(function(i, block) {
-		var elt = WDOCSMOD.replaceTagName($(block), 'code');
-		elt.addClass("lang-eiffel");
-		elt.addClass("prettyprint");
+	$(elt).find('eiffel,e').each(function(i, block) {
+		var l_code = WDOCSMOD.replaceTagName($(block), 'code');
+		l_code.addClass("lang-eiffel");
+		l_code.addClass("prettyprint");
 	});
+	/* if already loaded, call right away */
+	if (typeof PR.prettyPrint === 'function') {
+		PR.prettyPrint();
+	}
+}
 
-	//prettyPrint();
+$(document).ready(function() {
+	$("#wdocs-tree.menu li").each(function() { WDOCSMOD.prepareTreeMenuItem($(this));});
+
+	/* Prepare <code> for prettyPrint */
+	WDOCSMOD.prepareCode($(document.body));
 
 	}
 )

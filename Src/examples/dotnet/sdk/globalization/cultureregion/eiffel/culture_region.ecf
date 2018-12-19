@@ -2,7 +2,7 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="culture_region" uuid="937FFAE8-2D24-4B6D-BF51-B56864408768">
 	<target name="culture_region">
 		<root cluster="culture_region" class="CULTURE_REGION" feature="main"/>
-		<option full_class_checking="false" is_obsolete_routine_type="true" syntax="transitional">
+		<option full_class_checking="false">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" supplier_precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>

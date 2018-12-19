@@ -1,7 +1,5 @@
-note
-	description:
-			"Abstract description of a elsif clause of a condition %
-			%instruction. Version for Bench."
+﻿note
+	description: "Abstract description of a elsif clause of a condition instruction."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -11,9 +9,6 @@ class ELSIF_AS
 
 inherit
 	AST_EIFFEL
-		redefine
-			is_equivalent
-		end
 
 create
 	initialize
@@ -43,7 +38,7 @@ feature {NONE} -- Initialization
 feature -- Visitor
 
 	process (v: AST_VISITOR)
-			-- process current element.
+			-- Process current element.
 		do
 			v.process_elseif_as (Current)
 		end
@@ -51,10 +46,10 @@ feature -- Visitor
 feature -- Roundtrip
 
 	elseif_keyword_index, then_keyword_index: INTEGER
-			-- Index of keyword "elseif" and "then" assoicated with this structure
+			-- Index of keyword "elseif" and "then" assoicated with this structure.
 
 	elseif_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
-			-- Keyword "elseif" assoicated with this structure
+			-- Keyword "elseif" assoicated with this structure.
 		require
 			a_list_not_void: a_list /= Void
 		do
@@ -62,7 +57,7 @@ feature -- Roundtrip
 		end
 
 	then_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
-			-- Keyword "then" assoicated with this structure
+			-- Keyword "then" assoicated with this structure.
 		require
 			a_list_not_void: a_list /= Void
 		do
@@ -78,10 +73,10 @@ feature -- Roundtrip
 feature -- Attributes
 
 	expr: EXPR_AS
-			-- Conditional expression
+			-- Conditional expression.
 
 	compound: detachable EIFFEL_LIST [INSTRUCTION_AS]
-			-- Compound
+			-- Compound.
 
 feature -- Roundtrip/Token
 
@@ -108,7 +103,7 @@ feature -- Roundtrip/Token
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN
-			-- Is `other' equivalent to the current object ?
+			-- Is `other' equivalent to the current object?
 		do
 			Result := equivalent (expr, other.expr) and
 				equivalent (compound, other.compound)
@@ -132,7 +127,7 @@ invariant
 	expr_not_void: expr /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -163,4 +158,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class ELSIF_AS
+end

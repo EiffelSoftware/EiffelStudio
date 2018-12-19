@@ -1,8 +1,7 @@
-note
-	description : "Objects that ..."
-	author      : "$Author$"
-	date        : "$Date$"
-	revision    : "$Revision$"
+﻿note
+	author: "$Author$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	TEST_SVN
@@ -31,7 +30,6 @@ feature {NONE} -- Initialization
 
 	test_working_copy
 		local
-			g: UUID_GENERATOR
 			id: STRING
 			rn: STRING_32
 			res: SVN_RESULT
@@ -40,8 +38,7 @@ feature {NONE} -- Initialization
 			f: PLAIN_TEXT_FILE
 			sh: SHARED_PROCESS_MISC
 		do
-			create g
-			id := g.generate_uuid.out
+			id := {UUID_GENERATOR}.generate_uuid.out
 
 			create p.make_current
 			p := p.extended ("test-" + id)
@@ -60,7 +57,7 @@ feature {NONE} -- Initialization
 				l_admin_res.exit_code = 0
 			then
 				wc := p.extended ("wc")
-				res := svn.checkout (rn, wc.name, Void, Void)
+				svn.checkout (rn, wc.name, Void, Void).do_nothing
 
 				create d.make_with_path (wc.extended ("dir"))
 				d.recursive_create_dir
@@ -107,11 +104,12 @@ feature {NONE} -- Initialization
 									end
 								else
 									res := svn.commit (wc.name, "delete file", Void)
-									if res.failed then
-										if attached res.message as msg then
-											print (msg)
-											print ("%N")
-										end
+									if
+										res.failed and then
+										attached res.message as msg
+									then
+										print (msg)
+										print ("%N")
 									end
 								end
 							end
@@ -168,30 +166,21 @@ feature -- Test
 				l_src := execution_environment.current_working_path.name
 			end
 			if attached svn.statuses (l_src, True, False, False, Void) as lst then
-				from
-					lst.start
-				until
-					lst.after
+				across
+					lst as l
 				loop
-					display_status (lst.item_for_iteration)
-					lst.forth
+					display_status (l.item)
 				end
 			end
 		end
 
 	test_logs
-		local
-			rev: like svn.logs.item_for_iteration
 		do
 			if attached svn.logs ("https://svn.eiffel.com/eiffelstudio/trunk", True, Void, Void, 10, Void) as lst then
-				from
-					lst.start
-				until
-					lst.after
+				across
+					lst as l
 				loop
-					rev := lst.item_for_iteration
-					display_revision (rev)
-					lst.forth
+					display_revision (l.item)
 				end
 			end
 		end
@@ -213,13 +202,10 @@ feature -- Test
 					l_logs := svn.logs (l_url, True, 0, 0, 100, Void)
 				end
 				if l_logs /= Void then
-					from
-						l_logs.start
-					until
-						l_logs.after
+					across
+						l_logs as l
 					loop
-						store_rev (l_logs.item)
-						l_logs.forth
+						store_rev (l.item)
 					end
 				end
 			end
@@ -236,12 +222,9 @@ feature -- Test
 					d.start
 					d.readentry
 				until
-					d.lastentry = Void
+					not attached d.last_entry_32 as s
 				loop
-					if
-						attached d.last_entry_32 as s and then
-						s.is_integer
-					then
+					if s.is_integer then
 						Result := Result.max (s.to_integer)
 					end
 					d.readentry
@@ -252,7 +235,6 @@ feature -- Test
 
 	store_rev (r: SVN_REVISION_INFO)
 		local
-			fn: PATH
 			d: DIRECTORY
 			f: RAW_FILE
 		do
@@ -260,8 +242,7 @@ feature -- Test
 			if not d.exists then
 				d.recursive_create_dir
 			end
-			fn := d.path.extended (r.revision.out)
-			create f.make_with_path (fn)
+			create f.make_with_path (d.path.extended (r.revision.out))
 			if not f.exists then
 				f.create_read_write
 				f.put_string ("revision=" + r.revision.out + "%N")
@@ -269,13 +250,10 @@ feature -- Test
 				f.put_string ("author=" + r.author + "%N")
 				f.put_string ("parent=" + r.common_parent_path + "%N")
 				if attached r.paths as l_paths and then not l_paths.is_empty then
-					from
-						l_paths.start
-					until
-						l_paths.after
+					across
+						l_paths as p
 					loop
-						f.put_string ("path[]=" + l_paths.item.path + "%N")
-						l_paths.forth
+						f.put_string ("path[]=" + p.item.path + "%N")
 					end
 				end
 				f.put_string ("message=" + r.log_message + "%N")
@@ -285,8 +263,6 @@ feature -- Test
 				print ("Log for rev#" + r.revision.out + " already fetched%N")
 			end
 		end
-
-feature -- Status
 
 feature -- Access
 
@@ -321,20 +297,15 @@ feature -- Access
 					print ("%N")
 				end
 
-				from
-					lst.start
-				until
-					lst.after
+				across
+					lst as l
 				loop
-					if attached lst.item_for_iteration as p_data then
+					if attached l.item as p_data then
 						print ("%T[" + p_data.action + "] <" + r.kind_to_string (p_data.kind) + "> " + p_data.path + "%N")
 					end
-					lst.forth
 				end
 			end
 			print ("%N")
 		end
-
-feature -- Change
 
 end

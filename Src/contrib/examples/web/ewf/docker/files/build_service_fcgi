@@ -1,0 +1,25 @@
+#!/bin/bash
+
+web_dir=$1
+
+mkdir $web_dir/bin
+mkdir $web_dir/html
+
+# Install latest EiffelStudio suite.
+curl -sSL https://www.eiffel.org/setup/install.sh > install_eiffel.sh \
+        && bash ./install_eiffel.sh  latest > $HOME/eiffel.rc
+
+# Setup Eiffel environment
+source $HOME/eiffel.rc
+
+# Get source code
+git clone https://github.com/EiffelWebFramework/EWF.git $web_dir/src
+
+# Build executable
+eiffel build -v --target debug_libfcgi $web_dir/src/examples/debug/debug.ecf $web_dir/html/service.fcgi
+
+# Clean files
+rm -rf $ISE_EIFFEL
+rm -rf $web_dir/src
+
+exit $?

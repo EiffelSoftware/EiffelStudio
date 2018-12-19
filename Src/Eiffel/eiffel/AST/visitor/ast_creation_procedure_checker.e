@@ -13,6 +13,7 @@ inherit
 			process_access_inv_as,
 			process_address_current_as,
 			process_assign_as,
+			process_assigner_call_as,
 			process_bin_eq_as,
 			process_bin_ne_as,
 			process_binary_as,
@@ -341,6 +342,7 @@ feature {AST_EIFFEL} -- Visitor: access to features
 			f: FEATURE_I
 			i: INTEGER
 		do
+			process_assigner_source
 			safe_process (a.internal_parameters)
 			if not a.is_local and then not a.is_argument then
 				if not is_qualified then
@@ -843,6 +845,14 @@ feature {AST_EIFFEL} -- Visitor: compound
 
 feature {AST_EIFFEL} -- Visitor: nested call
 
+	process_assigner_call_as (a: ASSIGNER_CALL_AS)
+			-- <Precursor>
+		do
+			assigner_source := a.source
+			a.target.process (Current)
+			assigner_source := Void
+		end
+
 	process_bin_eq_as (a: BIN_EQ_AS)
 			-- <Precursor>
 		do
@@ -861,9 +871,11 @@ feature {AST_EIFFEL} -- Visitor: nested call
 			-- <Precursor>
 		do
 			debug ("to_implement") -- TODO
-				(create {REFACTORING_HELPER}).to_implement ("Exclude expanded and separate types from qualified calls.")
+				(create {REFACTORING_HELPER}).to_implement ("Exclude expanded types from qualified calls if they do not involve references.")
 			end
-			Precursor (a)
+			a.left.process (Current)
+			process_assigner_source
+			a.right.process (Current)
 			record_qualified_call (a)
 		end
 
@@ -894,12 +906,16 @@ feature {AST_EIFFEL} -- Visitor: nested call
 		local
 			q: BOOLEAN
 			c: BOOLEAN
+			s: like assigner_source
 		do
 			q := is_qualified
 			c := is_creation
+			s := assigner_source
+			assigner_source := Void
 			a.target.process (Current)
 			is_qualified := True
 			is_creation := False
+			assigner_source := s
 			a.message.process (Current)
 			is_creation := c
 			is_qualified := q
@@ -911,12 +927,16 @@ feature {AST_EIFFEL} -- Visitor: nested call
 		local
 			q: BOOLEAN
 			c: BOOLEAN
+			s: like assigner_source
 		do
 			q := is_qualified
 			c := is_creation
+			s := assigner_source
+			assigner_source := Void
 			a.target.process (Current)
 			is_qualified := True
 			is_creation := False
+			assigner_source := s
 			a.message.process (Current)
 			is_creation := c
 			is_qualified := q
@@ -937,6 +957,7 @@ feature {AST_EIFFEL} -- Visitor: nested call
 				(create {REFACTORING_HELPER}).to_implement ("Exclude expanded and separate types from qualified calls.")
 			end
 			Precursor (a)
+			process_assigner_source
 			record_qualified_call (a)
 		end
 
@@ -953,6 +974,24 @@ feature {AST_EIFFEL} -- Visitor: nested call
 			Precursor (a)
 			is_creation := c
 			is_qualified := q
+		end
+
+	process_assigner_source
+			-- Process assigner source (if available).
+		local
+			q: BOOLEAN
+			c: BOOLEAN
+		do
+			if attached assigner_source as s then
+				assigner_source := Void
+				q := is_qualified
+				is_qualified := False
+				c := is_creation
+				is_creation := False
+				s.process (Current)
+				is_creation := c
+				is_qualified := q
+			end
 		end
 
 feature {NONE} -- Visitor: qualified calls
@@ -989,6 +1028,9 @@ feature {NONE} -- Status report
 			-- Is there a qualified call?
 
 feature {NONE} -- Access
+
+	assigner_source: detachable EXPR_AS
+			-- A source of an assigner command (if any).
 
 	is_unset: BOOLEAN
 			-- Is attribute passed to `check_attribute' unset?
@@ -1036,7 +1078,7 @@ feature {NONE} -- Access
 ;note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

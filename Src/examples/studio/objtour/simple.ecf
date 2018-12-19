@@ -2,7 +2,7 @@
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="simple" uuid="F7344A74-7059-402A-8AAE-199112459F7C">
 	<target name="common" abstract="true">
 		<root cluster="root_cluster" class="STARTER" feature="make"/>
-		<option full_class_checking="false" is_obsolete_routine_type="true" syntax="transitional">
+		<option full_class_checking="false">
 		</option>
 		<capability>
 			<concurrency support="none"/>

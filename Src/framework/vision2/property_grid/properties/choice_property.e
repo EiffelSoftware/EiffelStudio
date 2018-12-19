@@ -154,7 +154,7 @@ feature {NONE} -- Agents
 					create l_item.make_with_text (to_displayed_value (item_strings.item))
 					l_item.set_value (item_strings.item)
 					l_combo_grid.set_item (1, item_strings.index, l_item)
-					l_item.pointer_enter_actions.force_extend (agent combo_select (l_item))
+					l_item.pointer_enter_actions.extend (agent combo_select (l_item))
 					if l_item.text.is_equal (displayed_value) then
 						l_item.enable_select
 					end

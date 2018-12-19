@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Widget that allows you to add a Windows as your child if you know its HANDLE."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -73,8 +73,6 @@ inherit
 			default_process_message,
 			on_getdlgcode,
 			on_wm_dropfiles
-		redefine
-			default_style
 		end
 
 create
@@ -118,7 +116,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_PLUG note option: stable attribute end;
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

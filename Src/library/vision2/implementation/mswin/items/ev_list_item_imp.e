@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Eiffel Vision list item. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 		export
 			{EV_LIST_IMP, EV_COMBO_BOX_IMP} select_actions_internal, deselect_actions_internal
 		redefine
-			parent_imp, interface
+			interface
 		end
 
 	EV_ITEM_IMP
@@ -25,7 +25,7 @@ inherit
 			parent, pixmap_equal_to
 		redefine
 			set_pixmap, pixmap, remove_pixmap, on_parented, on_orphaned,
-			parent_imp, interface, destroy
+			interface, destroy
 		end
 
 	EV_TEXTABLE_IMP
@@ -38,8 +38,7 @@ inherit
 	EV_TOOLTIPABLE_IMP
 		redefine
 			interface,
-			set_tooltip,
-			destroy
+			set_tooltip
 		end
 
 	WEL_LVM_CONSTANTS
@@ -477,7 +476,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_LIST_ITEM note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -487,17 +486,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_LIST_ITEM_IMP
-
-
-
-
-
-
-
-
-
-
+end

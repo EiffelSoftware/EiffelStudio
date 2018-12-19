@@ -547,7 +547,7 @@ feature -- Condition dialog
 	dial_cond_concurrency: STRING_32 do Result := locale.translation ("Concurrency")	end
 	dial_cond_concurrency_exclude: STRING_32 do Result := locale.translation ("Exclude value(s)")	end
 	dial_cond_concurrency_value (value: READABLE_STRING_GENERAL): STRING_32 do Result := locale.translation (value)	end
-	dial_cond_void_safety: STRING_32 do Result := locale.translation ("Void-safety")	end
+	dial_cond_void_safety: STRING_32 do Result := locale.translation ("Void safety")	end
 	dial_cond_void_safety_exclude: STRING_32 do Result := locale.translation ("Exclude value(s)")	end
 	dial_cond_void_safety_value (value: READABLE_STRING_GENERAL): STRING_32 do Result := locale.translation (value)	end
 
@@ -652,14 +652,12 @@ feature -- Create library dialog
 				Result := locale.formatted_string (locale.translation ("[
 Search paths for libraries are specified in the configuration file:
    $1
-
-and could be overwridden by user configuration file:
+and could be overridden by user configuration file:
    $2
 
 Search paths for precompiled libraries are specified in the configuration file:
    $3
-
-and could be overwridden by user configuration file:
+and could be overridden by user configuration file:
    $4
 						]"),
 						[a_lib_cfg, a_user_lib_cfg, a_pre_cfg, a_user_pre_cfg]

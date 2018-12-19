@@ -1,16 +1,13 @@
 note
-	description : "Objects that ..."
-	author      : "$Author$"
-	date        : "$Date$"
-	revision    : "$Revision$"
+	description: "EiffelWeb console wizard application."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EWF_CONSOLE_WIZARD_APPLICATION
 
 inherit
 	CONSOLE_WIZARD_APPLICATION
-
-	SHARED_EXECUTION_ENVIRONMENT
 
 create
 	make

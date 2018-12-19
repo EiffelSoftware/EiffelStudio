@@ -1,9 +1,8 @@
 note
-	description: "Summary description for {JWT_CLAIMSET}."
-	author: ""
+	description: "Object representing a JWT claim set"
 	date: "$Date$"
 	revision: "$Revision$"
-
+	EIS: "name=JWT claims", "src=https://tools.ietf.org/html/rfc7519#section-4", "protocol=uri"
 class
 	JWT_CLAIMSET
 

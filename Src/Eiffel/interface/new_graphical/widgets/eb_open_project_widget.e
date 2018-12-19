@@ -162,7 +162,6 @@ feature -- Actions
 			has_selected_item: has_selected_item
 		local
 			l_loader: EB_GRAPHICAL_PROJECT_LOADER
-			l_item: EV_GRID_LABEL_ITEM
 			l_project_initialized: BOOLEAN
 		do
 				-- Remove data associated to user file for selected project/target if any.
@@ -180,40 +179,41 @@ feature -- Actions
 			if l_project_initialized then
 				l_loader.enable_project_creation_or_opening_not_requested
 			end
-			l_item ?= projects_list.selected_rows.first.item (path_column_index)
-			check l_item_not_void: l_item /= Void end
+			if attached {EV_GRID_LABEL_ITEM} projects_list.selected_rows.first.item (path_column_index) as l_item then
+					-- Open selected project.
+				l_loader.open_project_file (create {PATH}.make_from_string (l_item.text),
+					selected_target,
+					create {PATH}.make_from_string (location_combo.text),
+					clean_button.is_selected,
+					Void)
 
-				-- Open selected project.
-			l_loader.open_project_file (create {PATH}.make_from_string (l_item.text),
-				selected_target,
-				create {PATH}.make_from_string (location_combo.text),
-				clean_button.is_selected,
-				Void)
-
-			if not l_loader.has_error then
-					-- No error occurred, we can now perform action selected in `action_combo'.
-					-- Note that if `l_project_initialized' is set a new EiffelStudio instance
-					-- will be launched.
-				if action_combo.selected_item = compile_action_item then
-					l_loader.set_is_compilation_requested (True)
-					l_loader.melt_project (l_project_initialized)
-				elseif action_combo.selected_item = freeze_action_item then
-					l_loader.set_is_compilation_requested (True)
-					l_loader.freeze_project (l_project_initialized)
-				elseif action_combo.selected_item = finalize_action_item then
-					l_loader.set_is_compilation_requested (True)
-					l_loader.finalize_project (l_project_initialized)
-				elseif action_combo.selected_item = precompile_action_item then
-					l_loader.set_is_compilation_requested (True)
-					l_loader.precompile_project (l_project_initialized)
-				elseif action_combo.selected_item = open_action_item then
-					if l_project_initialized and l_loader.is_project_ok then
-							-- Open a new EiffelStudio session for sure since current
-							-- system is already initialized.
-						l_loader.open_project (True)
+				if not l_loader.has_error then
+						-- No error occurred, we can now perform action selected in `action_combo'.
+						-- Note that if `l_project_initialized' is set a new EiffelStudio instance
+						-- will be launched.
+					if action_combo.selected_item = compile_action_item then
+						l_loader.set_is_compilation_requested (True)
+						l_loader.melt_project (l_project_initialized)
+					elseif action_combo.selected_item = freeze_action_item then
+						l_loader.set_is_compilation_requested (True)
+						l_loader.freeze_project (l_project_initialized)
+					elseif action_combo.selected_item = finalize_action_item then
+						l_loader.set_is_compilation_requested (True)
+						l_loader.finalize_project (l_project_initialized)
+					elseif action_combo.selected_item = precompile_action_item then
+						l_loader.set_is_compilation_requested (True)
+						l_loader.precompile_project (l_project_initialized)
+					elseif action_combo.selected_item = open_action_item then
+						if l_project_initialized and l_loader.is_project_ok then
+								-- Open a new EiffelStudio session for sure since current
+								-- system is already initialized.
+							l_loader.open_project (True)
+						end
 					end
+					parent_window.destroy
 				end
-				parent_window.destroy
+			else
+				check is_grid_label_item: False end
 			end
 		end
 
@@ -263,12 +263,9 @@ feature {NONE} -- State information
 
 	selected_target: STRING_32
 			-- Selected target if any, empty string otherwise.
-		local
-			l_item: EV_GRID_CHOICE_ITEM
 		do
 			if has_selected_item then
-				l_item ?= projects_list.selected_rows.first.item (target_column_index)
-				if l_item /= Void then
+				if attached {EV_GRID_CHOICE_ITEM} projects_list.selected_rows.first.item (target_column_index) as l_item then
 					Result := l_item.text
 				end
 			end
@@ -281,12 +278,9 @@ feature {NONE} -- State information
 
 	selected_path: STRING_32
 			-- Path of selected configuration if any, empty string otherwise.
-		local
-			l_item: EV_GRID_LABEL_ITEM
 		do
 			if has_selected_item then
-				l_item ?= projects_list.selected_rows.first.item (path_column_index)
-				if l_item /= Void then
+				if attached {EV_GRID_LABEL_ITEM} projects_list.selected_rows.first.item (path_column_index) as l_item then
 					Result := l_item.text
 				end
 			end
@@ -571,8 +565,6 @@ feature {NONE} -- Implementation
 			target_item_not_void: a_row.item (target_column_index) /= Void
 			path_item_not_void: a_row.item (path_column_index) /= Void
 		local
-			ln, lp: EV_GRID_LABEL_ITEM
-			lt: EV_GRID_CHOICE_ITEM
 			l_filepath: like {EV_GRID_LABEL_ITEM}.text
 			l_conf: CONF_LOAD
 			l_project_location: PROJECT_DIRECTORY
@@ -585,161 +577,165 @@ feature {NONE} -- Implementation
 			l_targets: ARRAYED_LIST [READABLE_STRING_GENERAL]
 			l_force_clean: BOOLEAN
 		do
-			ln ?= a_row.item (name_column_index)
-			lt ?= a_row.item (target_column_index)
-			lp ?= a_row.item (path_column_index)
-			check
-				ln_not_void: ln /= Void
-				lt_not_void: lt /= Void
-				lp_not_void: lp /= Void
-			end
-			l_filepath := lp.text
+			if
+				attached {EV_GRID_LABEL_ITEM} a_row.item (name_column_index) as ln and
+				attached {EV_GRID_CHOICE_ITEM} a_row.item (target_column_index) as lt and
+				attached {EV_GRID_LABEL_ITEM} a_row.item (path_column_index) as lp
+			then
+				l_filepath := lp.text
 
-			if is_new_selection then
-				create l_conf.make (create {CONF_COMP_FACTORY})
-				l_conf.retrieve_configuration (l_filepath)
-				if not l_conf.is_error then
-					last_state.has_system_error := False
-					last_state.system := l_conf.last_system
-					read_user_options (l_conf.last_system.file_name)
-					if not has_error then
-						l_options := last_state.options
+				if is_new_selection then
+					create l_conf.make (create {CONF_COMP_FACTORY})
+					l_conf.retrieve_configuration (l_filepath)
+					if not l_conf.is_error then
+						last_state.has_system_error := False
+						last_state.system := l_conf.last_system
+						read_user_options (l_conf.last_system.file_name)
+						if not has_error then
+							l_options := last_state.options
+						end
+					else
+						last_state.last_error_message := l_conf.last_error.text
+						last_state.has_system_error := True
 					end
+						-- Reset last chosen target.
+					last_state.target_name := Void
 				else
-					last_state.last_error_message := l_conf.last_error.text
-					last_state.has_system_error := True
+					l_options := last_state.options
 				end
-					-- Reset last chosen target.
-				last_state.target_name := Void
-			else
-				l_options := last_state.options
-			end
 
-			if last_state.has_system_error then
-				l_pixmap := icon_pixmaps.general_error_icon
-				l_tooltip := last_state.last_error_message
-			else
-				if is_new_selection or is_initializing then
-					if l_options /= Void and then attached l_options.target.last_location as l_options_last_location then
-						l_last_location := l_options_last_location
-					else
-						create l_last_location.make_from_string (last_state.system.file_name)
-						l_last_location := l_last_location.parent
-					end
-					l_targets := available_targets (last_state.system)
-					if l_targets.is_empty then
-						last_state.has_missing_target_error := True
-					else
-						last_state.has_missing_target_error := False
-						if l_options /= Void then
-							l_last_target := l_options.target_name
-							if not l_targets.has (l_last_target) then
+				if last_state.has_system_error then
+					l_pixmap := icon_pixmaps.general_error_icon
+					l_tooltip := last_state.last_error_message
+				else
+					if is_new_selection or is_initializing then
+						if l_options /= Void and then attached l_options.target.last_location as l_options_last_location then
+							l_last_location := l_options_last_location
+						else
+							create l_last_location.make_from_string (last_state.system.file_name)
+							l_last_location := l_last_location.parent
+						end
+						l_targets := available_targets (last_state.system)
+						if l_targets.is_empty then
+							last_state.has_missing_target_error := True
+						else
+							last_state.has_missing_target_error := False
+							if l_options /= Void then
+								l_last_target := l_options.target_name
+								if not l_targets.has (l_last_target) then
+									l_last_target := l_targets.first
+								end
+							else
 								l_last_target := l_targets.first
 							end
-						else
-							l_last_target := l_targets.first
 						end
+					else
+						create l_last_location.make_from_string (location_combo.text)
+						l_last_target := selected_target
 					end
-				else
-					create l_last_location.make_from_string (location_combo.text)
-					l_last_target := selected_target
-				end
-				last_state.target_name := l_last_target
-				if last_state.has_missing_target_error then
-						-- No compilable targets specified. It is an error and we cannot
-						-- compile project.
-					l_pixmap := icon_pixmaps.general_error_icon
-					l_tooltip := warning_messages.w_no_compilable_target
-				else
-					create l_project_location.make (l_last_location, l_last_target)
-					if l_project_location.is_compiled then
-						l_project_file := l_project_location.project_file
-						l_project_file.check_version_number (0)
-						if l_project_file.has_error then
-							l_pixmap := pixmaps.icon_pixmaps.general_warning_icon
+					last_state.target_name := l_last_target
+					if last_state.has_missing_target_error then
+							-- No compilable targets specified. It is an error and we cannot
+							-- compile project.
+						l_pixmap := icon_pixmaps.general_error_icon
+						l_tooltip := warning_messages.w_no_compilable_target
+					else
+						create l_project_location.make (l_last_location, l_last_target)
+						if l_project_location.is_compiled then
+							l_project_file := l_project_location.project_file
+							l_project_file.check_version_number (0)
+							if l_project_file.has_error then
+								l_pixmap := pixmaps.icon_pixmaps.general_warning_icon
+								l_force_clean := True
+								if not is_initializing and not is_new_action then
+									action_combo.select_actions.block
+									compile_action_item.enable_select
+									action_combo.select_actions.resume
+								end
+								if l_project_file.is_corrupted then
+									l_tooltip := warning_messages.w_project_corrupted (l_project_location.location.name)
+								elseif l_project_file.is_incompatible then
+									l_tooltip := warning_messages.w_project_incompatible (
+										l_project_location.location.name, version_number,
+										l_project_file.project_version_number)
+								else
+										-- We don't really know the cause, we assume it is somewhat corrupted.
+									l_tooltip := warning_messages.w_project_corrupted (l_project_location.location.name)
+								end
+							else
+								if not is_initializing and not is_new_action then
+									action_combo.select_actions.block
+									open_action_item.enable_select
+									action_combo.select_actions.resume
+								end
+								l_pixmap := icon_pixmaps.document_eiffel_project_compiled_icon
+							end
+						else
 							l_force_clean := True
 							if not is_initializing and not is_new_action then
 								action_combo.select_actions.block
 								compile_action_item.enable_select
 								action_combo.select_actions.resume
 							end
-							if l_project_file.is_corrupted then
-								l_tooltip := warning_messages.w_project_corrupted (l_project_location.location.name)
-							elseif l_project_file.is_incompatible then
-								l_tooltip := warning_messages.w_project_incompatible (
-									l_project_location.location.name, version_number,
-									l_project_file.project_version_number)
-							else
-									-- We don't really know the cause, we assume it is somewhat corrupted.
-								l_tooltip := warning_messages.w_project_corrupted (l_project_location.location.name)
-							end
-						else
-							if not is_initializing and not is_new_action then
-								action_combo.select_actions.block
-								open_action_item.enable_select
-								action_combo.select_actions.resume
-							end
-							l_pixmap := icon_pixmaps.document_eiffel_project_compiled_icon
+							l_pixmap := icon_pixmaps.document_eiffel_project_icon
 						end
-					else
-						l_force_clean := True
-						if not is_initializing and not is_new_action then
-							action_combo.select_actions.block
-							compile_action_item.enable_select
-							action_combo.select_actions.resume
-						end
-						l_pixmap := icon_pixmaps.document_eiffel_project_icon
-					end
-					if not is_initializing then
-						if
-							l_force_clean or else
-							is_new_action and then action_combo.selected_item = precompile_action_item
-						then
-							last_clean_state := clean_button.is_selected
-							clean_button.select_actions.block
-							clean_button.enable_select
-							clean_button.select_actions.resume
-							clean_button.disable_sensitive
-						else
-							if is_new_selection or not last_clean_state then
-								clean_button.disable_select
-							else
+						if not is_initializing then
+							if
+								l_force_clean or else
+								is_new_action and then action_combo.selected_item = precompile_action_item
+							then
+								last_clean_state := clean_button.is_selected
+								clean_button.select_actions.block
 								clean_button.enable_select
+								clean_button.select_actions.resume
+								clean_button.disable_sensitive
+							else
+								if is_new_selection or not last_clean_state then
+									clean_button.disable_select
+								else
+									clean_button.enable_select
+								end
+								clean_button.enable_sensitive
 							end
-							clean_button.enable_sensitive
 						end
 					end
 				end
-			end
 
-			ln.set_pixmap (l_pixmap)
-			ln.set_tooltip (l_tooltip)
-			lt.set_tooltip (l_tooltip)
-			lp.set_tooltip (l_tooltip)
+				ln.set_pixmap (l_pixmap)
+				ln.set_tooltip (l_tooltip)
+				lt.set_tooltip (l_tooltip)
+				lp.set_tooltip (l_tooltip)
 
-			if not last_state.has_system_error then
-				if is_new_selection or is_initializing then
-					ln.set_text (last_state.system.name)
-					if not last_state.has_missing_target_error then
-						lt.pointer_button_press_actions.wipe_out
-						lt.pointer_button_press_actions.extend (agent on_choose_target (?,?,?,?,?,?,?,?,lt))
-						lt.deactivate_actions.wipe_out
-						lt.deactivate_actions.extend (agent on_target_selected (lt.row))
-						update_targets (lt)
-						a_row.set_foreground_color (default_color)
-					else
-						a_row.set_foreground_color (red_color)
+				if not last_state.has_system_error then
+					if is_new_selection or is_initializing then
+						ln.set_text (last_state.system.name)
+						if not last_state.has_missing_target_error then
+							lt.pointer_button_press_actions.wipe_out
+							lt.pointer_button_press_actions.extend (agent on_choose_target (?,?,?,?,?,?,?,?,lt))
+							lt.deactivate_actions.wipe_out
+							lt.deactivate_actions.extend (agent on_target_selected (lt.row))
+							update_targets (lt)
+							a_row.set_foreground_color (default_color)
+						else
+							a_row.set_foreground_color (red_color)
+						end
 					end
+				else
+					ln.set_text (interface_names.l_error)
+					lt.remove_text
+
+					a_row.set_foreground_color (red_color)
+				end
+
+				if has_error and not is_initializing then
+					sensitive_container.disable_sensitive
 				end
 			else
-				ln.set_text (interface_names.l_error)
-				lt.remove_text
-
-				a_row.set_foreground_color (red_color)
-			end
-
-			if has_error and not is_initializing then
-				sensitive_container.disable_sensitive
+				check
+					ln_not_void: False
+					lt_not_void: False
+					lp_not_void: False
+				end
 			end
 		end
 
@@ -872,8 +868,6 @@ feature {NONE} -- Implementation
 	save_projects_list
 			-- Save current list of projects directly to preferences.
 		local
-			l_item: EV_GRID_LABEL_ITEM
-			l_target: EV_GRID_CHOICE_ITEM
 			i, nb: INTEGER
 			l_projects: ARRAYED_LIST [TUPLE [PATH, READABLE_STRING_32]]
 			p: TUPLE [PATH, READABLE_STRING_32]
@@ -889,18 +883,22 @@ feature {NONE} -- Implementation
 			until
 				i > nb
 			loop
-				l_item ?= projects_list.row (i).item (path_column_index)
-				l_target ?= projects_list.row (i).item (target_column_index)
-				check l_item_attached: l_item /= Void end
-				check l_target_attached: l_target /= Void end
-				t := l_target.text
-				if t = Void then
-					t := ""
+				if
+					attached {EV_GRID_LABEL_ITEM} projects_list.row (i).item (path_column_index) as l_item and then
+					attached {EV_GRID_CHOICE_ITEM} projects_list.row (i).item (target_column_index) as l_target
+				then
+					t := l_target.text
+					if t = Void then
+						t := ""
+					end
+						-- Ensure the type of tuple by using locals.
+					p := [create {PATH}.make_from_string (l_item.text), t]
+					p.compare_objects
+					l_projects.extend (p)
+				else
+					check l_item_attached: False end
+					check l_target_attached: False end
 				end
-					-- Ensure the type of tuple by using locals.
-				p := [create {PATH}.make_from_string (l_item.text), t]
-				p.compare_objects
-				l_projects.extend (p)
 				i := i + 1
 			end
 
@@ -1006,7 +1004,6 @@ feature {NONE} -- Actions
 			a_dlg_not_destroyed: not a_dlg.is_destroyed
 		local
 			l_filename: PATH
-			l_item: EV_GRID_LABEL_ITEM
 			l_has_file: BOOLEAN
 			i, nb: INTEGER
 			l_conf: CONF_LOAD
@@ -1032,12 +1029,14 @@ feature {NONE} -- Actions
 				until
 					i > nb or l_has_file
 				loop
-					l_item ?= projects_list.row (i).item (path_column_index)
-					check l_item_not_void: l_item /= Void end
-					l_has_file := l_item.text.is_case_insensitive_equal (l_filename.name)
-					if l_has_file then
-						projects_list.row (i).ensure_visible
-						projects_list.row (i).enable_select
+					if attached {EV_GRID_LABEL_ITEM} projects_list.row (i).item (path_column_index) as l_item then
+						l_has_file := l_item.text.is_case_insensitive_equal (l_filename.name)
+						if l_has_file then
+							projects_list.row (i).ensure_visible
+							projects_list.row (i).enable_select
+						end
+					else
+						check is_grid_label_item: False end
 					end
 					i := i + 1
 				end
@@ -1170,17 +1169,17 @@ feature {NONE} -- Actions
 			-- Action when user press a key in `projects_list'.
 			-- At the moment only handle F4 to enable user to chose a target if more than one is available
 			-- for currently selected project.
-		local
-			l_item: EV_GRID_CHOICE_ITEM
 		do
 			if
 				a_key /= Void and then a_key.code = {EV_KEY_CONSTANTS}.key_f4 and then
 				not ev_application.alt_pressed and then not ev_application.ctrl_pressed and then
 				not ev_application.shift_pressed and then has_selected_item
 			then
-				l_item ?= projects_list.selected_rows.first.item (target_column_index)
-				check l_item /= Void end
-				l_item.activate
+				if attached {EV_GRID_CHOICE_ITEM} projects_list.selected_rows.first.item (target_column_index) as l_item then
+					l_item.activate
+				else
+					check is_grid_choice_item: False end
+				end
 			end
 		end
 

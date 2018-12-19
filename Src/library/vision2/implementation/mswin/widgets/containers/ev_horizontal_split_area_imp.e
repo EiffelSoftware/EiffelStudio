@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Displays up to two widgets side by side, separated by an%
 		%adjustable divider."
 	legal: "See notice at end of class."
@@ -19,13 +19,9 @@ inherit
 	EV_SPLIT_AREA_IMP
 		redefine
 			interface,
-			compute_minimum_size,
-			compute_minimum_width,
-			compute_minimum_height,
 			on_size,
 			class_cursor,
-			on_mouse_move,
-			on_left_button_down
+			on_mouse_move
 		end
 
 create
@@ -414,8 +410,8 @@ feature {NONE} -- WEL internal
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

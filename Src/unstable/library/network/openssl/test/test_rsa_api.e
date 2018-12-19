@@ -28,6 +28,7 @@ feature -- Tests
 			l_pub_key: SSL_RSA_PUBLIC_KEY
 			l_digest: READABLE_STRING_8
 		do
+			initialize_ssl
 				-- Generate keypair (public and private key)
 			create l_keypair.make (2048)
 
@@ -45,17 +46,15 @@ feature -- Tests
 
 
 				-- Create a signed digest using RSA SHA 256
-			l_digest := l_rsa.sign_sha256 (l_priv_key, l_text)
+			l_digest := l_rsa.sha256_signed_message (l_priv_key, l_text)
 
 
 				-- Signature Verification
 			if attached l_digest then
-				assert ("Expected True", l_rsa.verify_sha256 (l_pub_key, l_text, l_digest) = True)
+				assert ("Expected True", l_rsa.is_sha256_verified (l_pub_key, l_text, l_digest) = True)
 			else
 				assert ("Not expected", False)
 			end
-
-
 		end
 
 
@@ -102,4 +101,39 @@ fjIbXqHiJNWCTHY+f31V1h+sT2iibcXop/FvMsCZGpvr8KK3X4kHsA==
 -----END RSA PRIVATE KEY-----
 ]"
 
+	verify_with_sha256_imp (a_text: READABLE_STRING_GENERAL; a_signed: READABLE_STRING_8; a_pub_key: SSL_RSA_PUBLIC_KEY): BOOLEAN
+		local
+			l_buffer: C_STRING
+			l_message: C_STRING
+			l_sign: C_STRING
+			l_res: INTEGER
+			l_temp: STRING
+			l_error: SSL_ERROR
+		do
+			create l_buffer.make_empty ({SSL_CRYPTO_EXTERNALS}.SHA256_DIGEST_LENGTH)
+			create l_message.make (a_text)
+			{SSL_CRYPTO_EXTERNALS}.c_sha256 (l_message.item, l_message.count, l_buffer.item)
+
+			l_temp := (create {BASE64}).decoded_string (a_signed)
+			l_temp.append_character ('%U')
+			create l_sign.make (l_temp)
+			l_res := {SSL_CRYPTO_EXTERNALS}.c_rsa_verify ({SSL_CRYPTO_EXTERNALS}.nid_sha256, l_buffer.item, l_sign.item, {SSL_CRYPTO_EXTERNALS}.c_rsa_size (a_pub_key.rsa), a_pub_key.rsa);
+			if l_res /= 1 then
+				create l_error.make (({SSL_CRYPTO_EXTERNALS}.c_error_get_error))
+			else
+				Result := True
+			end
+		end
+
+
+note
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

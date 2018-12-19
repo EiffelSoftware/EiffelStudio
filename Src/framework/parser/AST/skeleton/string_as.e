@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description: "Node for string constants. Version for Bench."
 	legal: "See notice at end of class."
@@ -13,7 +13,6 @@ inherit
 		undefine
 			text
 		redefine
-			is_equivalent,
 			string_value_32
 		end
 
@@ -61,7 +60,7 @@ feature -- Properties
 			-- Is current preceded by `once' keyword?
 
 	value_32: STRING_32
-			-- Real string value in UTF-32
+			-- Real string value in UTF-32.
 		do
 			Result := encoding_converter.utf8_to_utf32 (value)
 		ensure
@@ -78,12 +77,12 @@ feature -- Properties
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Properties
 
 	value: STRING
-			-- Real string value in UTF-8
+			-- Real string value in UTF-8.
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Roundtrip/Text
 
 	string_text (a_match_list: LEAF_AS_LIST): STRING
-			-- Text of the string part (not including the type)
+			-- Text of the string part (not including the type).
 		require
 			a_match_list_attached: a_match_list /= Void
 		do
@@ -103,7 +102,7 @@ feature -- Settings
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN
-			-- Is `other' equivalent to the current object ?
+			-- Is `other' equivalent to the current object?
 		do
 				-- `value' cannot be Void
 			Result := is_once_string = other.is_once_string and then value.is_equal (other.value) and then
@@ -147,7 +146,7 @@ feature -- Roundtrip
 			-- Once string keyword.
 
 	once_string_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
-			-- Once string keyword
+			-- Once string keyword.
 		require
 			a_list_not_void: a_list /= Void
 		local
@@ -199,7 +198,7 @@ invariant
 	value_not_void: value /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -230,4 +229,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class STRING_AS
+end

@@ -1,11 +1,11 @@
-note
+﻿note
 	description: "[
 		A dialog prompt base, to inform the user or to ask them as question.
 	]"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$date$";
-	revision: "$revision$"
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	ES_PROMPT
@@ -135,10 +135,10 @@ feature {NONE} -- User interface initialization
 
 			a_container.extend (l_hbox)
 			a_container.parent.extend (create {EV_HORIZONTAL_SEPARATOR})
-			l_vbox ?= a_container.parent
-			check l_vbox_attached: l_vbox /= Void end
-			if l_vbox /= Void then
-				l_vbox.disable_item_expand (l_vbox.last)
+			if attached {EV_VERTICAL_BOX} a_container.parent as vb then
+				vb.disable_item_expand (vb.last)
+			else
+				check parent_is_vbox: False end
 			end
 
 			propagate_prompt_background_color (a_container, colors.prompt_banner_color)
@@ -461,26 +461,11 @@ feature {NONE} -- Query
 			not_is_recycled: not is_recycled
 			a_widget_attached: a_widget /= Void
 			not_a_widget_is_destroyed: not a_widget.is_destroyed
-		local
-			l_container: EV_CONTAINER
-			l_label: EV_LABEL
-			l_check: EV_CHECK_BUTTON
-			l_radio: EV_RADIO_BUTTON
 		do
-			l_container ?= a_widget
-			Result := l_container /= Void
-			if not Result then
-				l_label ?= a_widget
-				Result := l_label /= Void
-				if not Result then
-					l_check ?= a_widget
-					Result := l_check /= Void
-					if not Result then
-						l_radio ?= a_widget
-						Result := l_radio /= Void
-					end
-				end
-			end
+			Result := attached {EV_CONTAINER} a_widget
+						or attached {EV_LABEL} a_widget
+						or attached {EV_CHECK_BUTTON} a_widget
+						or attached {EV_RADIO_BUTTON} a_widget
 		end
 
 feature {NONE} -- Helpers
@@ -511,7 +496,6 @@ feature {NONE} -- Basic operations
 			l_keys: EV_KEY_CONSTANTS
 			l_buttons: DS_SET_CURSOR [INTEGER]
 			l_dialog_buttons: like dialog_window_buttons
-			l_button_id: INTEGER
 			l_button: EV_BUTTON
 			l_string: STRING_32
 			l_text: STRING_32
@@ -531,8 +515,7 @@ feature {NONE} -- Basic operations
 					l_dialog_buttons := dialog_window_buttons
 					from l_buttons.start until l_buttons.after or l_stop loop
 							-- Locate button
-						l_button_id := l_buttons.item
-						l_button := l_dialog_buttons.item (l_button_id)
+						l_button := l_dialog_buttons.item (l_buttons.item)
 						check l_button_attached: l_button /= Void end
 
 							-- Retrieve and search text
@@ -540,15 +523,16 @@ feature {NONE} -- Basic operations
 						l_count := l_text.count
 						from i := 1 until i > l_count or l_stop loop
 							l_bc := l_text.item (i).as_lower
-							if l_bc.is_alpha_numeric then
-								if not l_used_character.has (l_bc) then
-										-- Usable character
-									l_stop := l_bc = c
-									if not l_stop then
-										l_used_character.force_last (l_bc)
-											-- Force exit in searching text, as we have found a usable character
-										i := l_count
-									end
+							if
+								l_bc.is_alpha_numeric and then
+								not l_used_character.has (l_bc)
+							then
+									-- Usable character
+								l_stop := l_bc = c
+								if not l_stop then
+									l_used_character.force_last (l_bc)
+										-- Force exit in searching text, as we have found a usable character
+									i := l_count
 								end
 							end
 							i := i + 1
@@ -652,14 +636,15 @@ feature {NONE} -- Basic operations
 			a_source_widget_has_parent: a_source_widget.has_parent
 			a_color_attached: a_color /= Void
 			not_a_color_is_destroyed: not a_color.is_destroyed
-		local
-			l_widgets: EV_WIDGET_LIST
 		do
 			if can_propagate_background_color_to_widget (a_source_widget) then
 				a_source_widget.set_background_color (a_color)
-				l_widgets ?= a_source_widget
-				if l_widgets /= Void then
-					l_widgets.do_all (agent propagate_prompt_background_color (?, a_color))
+				if attached {EV_WIDGET_LIST} a_source_widget as l_widgets then
+					across
+						l_widgets as ic
+					loop
+						propagate_prompt_background_color (ic.item, a_color)
+					end
 				end
 			end
 		end
@@ -741,7 +726,7 @@ invariant
 	not_is_size_and_position_remembered: not is_size_and_position_remembered
 
 ;note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

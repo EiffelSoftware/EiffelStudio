@@ -1,0 +1,13 @@
+test_name 	 validity-vdrs4-merge-same-seed
+test_description A deferred feature that is merged should not be redefined.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 a.e $CLUSTER a.e
+copy_raw 	 b.e $CLUSTER b.e
+copy_raw 	 c.e $CLUSTER c.e
+copy_raw 	 test.e $CLUSTER test.e
+
+compile_melted
+compile_result 	 validity_error TEST VDRS(4):7
+
+test_end

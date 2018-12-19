@@ -17,8 +17,7 @@ inherit
 			is_constant_expression,
 			is_external,
 			is_unsafe,
-			need_target,
-			same
+			need_target
 		end
 
 	SHARED_INCLUDE
@@ -284,7 +283,7 @@ invariant
 	static_if_instance_free: is_instance_free implies is_static_call
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -10,10 +10,6 @@ class
 
 inherit
 	ES_OBJECTS_GRID_SPECIFIC_LINE
-		redefine
-			compute_grid_display_for,
-			text_data_for_clipboard
-		end
 
 create
 	make
@@ -158,7 +154,7 @@ feature -- Query
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

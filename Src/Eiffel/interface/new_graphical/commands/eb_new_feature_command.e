@@ -1,9 +1,9 @@
 note
-	description	: "Command to create a new feature."
+	description: "Command to create a new feature."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EB_NEW_FEATURE_COMMAND
@@ -13,8 +13,7 @@ inherit
 		redefine
 			mini_pixmap,
 			mini_pixel_buffer,
-			tooltext,
-			pixel_buffer
+			tooltext
 		end
 
 	EB_DEVELOPMENT_WINDOW_COMMAND
@@ -112,7 +111,7 @@ feature {NONE} -- Implementation
 			-- preferences.
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -143,4 +142,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_NEW_FEATURE_COMMAND
+end

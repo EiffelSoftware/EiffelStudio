@@ -2,7 +2,6 @@ note
 	description: "Object that represents a target item used in Eiffel query language"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,8 +12,6 @@ inherit
 	QL_ITEM
 		redefine
 			is_valid_domain_item,
-			is_compiled,
-			wrapped_domain,
 			nearest_parent_with_scope
 		end
 

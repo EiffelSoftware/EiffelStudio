@@ -2,7 +2,6 @@ note
 	description: "Object that represents a tooltip in which drop-and-pickable editor tokens are displayed"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,8 +13,7 @@ inherit
 		redefine
 			set_tooltip_maximum_width,
 			set_tooltip_maximum_height,
-			set_tooltip_maximum_size,
-			tooltip_widget
+			set_tooltip_maximum_size
 		end
 
 	EB_EDITOR_TOKEN_TEXT
@@ -301,7 +299,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-        copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2018, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

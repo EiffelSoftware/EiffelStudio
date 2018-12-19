@@ -2,8 +2,8 @@ note
 	description:
 		"Finalize precompiled eiffel system."
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
+	status: "See notice at end of class."
+	date: "$Date$"
 	revision: "$Revision$"
 
 class
@@ -16,7 +16,7 @@ inherit
 			loop_action
 		redefine
 			name, help_message, abbreviation,
-			execute, loop_action, perform_compilation,
+			execute, perform_compilation,
 			process_finish_freezing
 		select
 			save_project_again
@@ -133,7 +133,7 @@ feature {NONE} -- Execution
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -164,4 +164,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class EWB_FINALIZE_PRECOMP
+end

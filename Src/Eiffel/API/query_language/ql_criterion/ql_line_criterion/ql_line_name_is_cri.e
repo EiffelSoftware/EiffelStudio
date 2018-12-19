@@ -2,7 +2,6 @@ note
 	description: "Object that represents a criterion to decide whether or not an line's name is equal to another name"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,14 +10,8 @@ class
 
 inherit
 	QL_NAME_CRITERION
-		redefine
-			is_satisfied_by
-		end
 
 	QL_LINE_CRITERION
-		redefine
-			is_satisfied_by
-		end
 
 create
 	make,
@@ -33,7 +26,7 @@ feature -- Evaluate
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -63,7 +56,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

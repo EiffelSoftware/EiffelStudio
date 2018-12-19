@@ -12,7 +12,6 @@ note
 				]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -26,9 +25,6 @@ inherit
 		end
 
 	QL_OBSERVER
-		redefine
-			update
-		end
 
 feature -- Status report
 
@@ -85,7 +81,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

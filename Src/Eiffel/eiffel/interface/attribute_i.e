@@ -27,8 +27,7 @@ inherit
 			transfer_from,
 			transfer_to,
 			type,
-			undefinable,
-			unselected
+			undefinable
 		end
 
 	SHARED_DECLARATIONS

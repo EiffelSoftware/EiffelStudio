@@ -2,7 +2,6 @@ note
 	description: "Representation of group basic scope of a metric"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,8 +12,7 @@ inherit
 	QL_METRIC_BASIC_SCOPE_INFO
 		redefine
 			calculate_function,
-			domain_generator,
-			evaluate_item
+			domain_generator
 		end
 
 create
@@ -97,7 +95,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
 end
-

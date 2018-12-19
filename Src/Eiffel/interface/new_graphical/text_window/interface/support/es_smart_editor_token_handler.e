@@ -16,7 +16,6 @@ inherit
 	ES_EDITOR_TOKEN_HANDLER
 		redefine
 			can_perform_exit,
-			is_applicable_token,
 			perform_exit,
 			perform_on_token_with_mouse_coords
 		end
@@ -379,7 +378,7 @@ feature {NONE} -- Action handlers
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

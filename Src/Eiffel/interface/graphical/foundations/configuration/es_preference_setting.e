@@ -13,8 +13,7 @@ deferred class
 inherit
 	ES_ABSTRACT_SETTING [G]
 		redefine
-			is_interface_usable,
-			internal_recycle
+			is_interface_usable
 		end
 
 	EB_SHARED_PREFERENCES
@@ -174,7 +173,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

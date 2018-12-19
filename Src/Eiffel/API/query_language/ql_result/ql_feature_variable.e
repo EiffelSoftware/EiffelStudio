@@ -7,10 +7,7 @@ deferred class
 inherit
 	QL_FEATURE_COMPONENT
 		redefine
-			name,
-			ast,
-			is_equal,
-			written_class
+			is_equal
 		end
 
 feature{NONE} -- Initialization

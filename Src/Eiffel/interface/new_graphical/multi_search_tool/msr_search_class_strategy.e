@@ -11,7 +11,6 @@ class
 inherit
 	MSR_SEARCH_STRATEGY
 		redefine
-			launch,
 			reset_all,
 			is_search_prepared
 		end
@@ -157,7 +156,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

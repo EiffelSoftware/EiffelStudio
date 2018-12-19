@@ -20,8 +20,7 @@ inherit
 		undefine
 			address
 		redefine
-			reset_children,
-			kind
+			reset_children
 		end
 
 	SHARED_EIFNET_DEBUGGER
@@ -424,7 +423,7 @@ feature {NONE} -- Implementation
 	internal_dynamic_class_type: like dynamic_class_type;
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -455,4 +454,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EIFNET_DEBUG_REFERENCE_VALUE
+end

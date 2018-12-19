@@ -11,7 +11,7 @@ class
 inherit
 	MSR_SEARCH_STRATEGY
 		redefine
-			reset_all, launch, is_search_prepared
+			reset_all, is_search_prepared
 		end
 
 	EC_ENCODING_UTILITIES
@@ -341,7 +341,7 @@ invariant
 	is_launched implies (class_name_internal /= Void)
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

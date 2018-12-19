@@ -2,7 +2,6 @@ note
 	description: "Object that represents a line criterion in Eiffel query lanagage"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,10 +12,6 @@ inherit
 	QL_CRITERION
 		redefine
 			is_satisfied_by,
-			require_compiled,
-			compiled_criterion,
-			intrinsic_domain,
-			domain_generator,
 			item_type
 		end
 
@@ -99,7 +94,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -129,7 +124,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

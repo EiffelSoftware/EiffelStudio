@@ -21,8 +21,7 @@ inherit
 	ES_OUTPUT_PANE_I
 		redefine
 			icon_active,
-			icon_active_pixmap,
-			activate
+			icon_active_pixmap
 		end
 
 	ES_RECYCLABLE
@@ -414,7 +413,7 @@ invariant
 	notifier_formatter_attached: notifier_formatter /= Void
 
 ;note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

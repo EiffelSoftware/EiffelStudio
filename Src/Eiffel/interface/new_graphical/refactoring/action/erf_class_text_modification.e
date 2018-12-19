@@ -11,8 +11,6 @@ class
 inherit
 	ERF_TEXT_MODIFICATION
 		redefine
-			load_text,
-			save_text,
 			discard_text
 		end
 
@@ -482,7 +480,7 @@ invariant
 	associated_to_class: class_i /= void
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

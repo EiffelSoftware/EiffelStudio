@@ -12,7 +12,6 @@ inherit
 	DEANCHORED_TYPE_A
 		redefine
 			c_type,
-			dump,
 			generate_gen_type_il,
 			generated_id,
 			has_reference,

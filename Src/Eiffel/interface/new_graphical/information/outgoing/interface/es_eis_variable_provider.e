@@ -9,8 +9,7 @@ class
 inherit
 	COMPLETION_POSSIBILITIES_PROVIDER
 		redefine
-			code_completable,
-			completion_possibilities
+			code_completable
 		end
 
 	ES_EIS_SHARED
@@ -111,7 +110,7 @@ feature {NONE} -- Access
 			-- <Precursor>
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

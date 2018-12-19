@@ -16,8 +16,6 @@ inherit
 	OUTPUT_WINDOW
 		redefine
 			start_processing,
-			put_string,
-			put_new_line,
 			clear_window
 		end
 
@@ -153,7 +151,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

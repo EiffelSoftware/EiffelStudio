@@ -3,6 +3,7 @@ note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "Xavier Rousselot"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -12,7 +13,6 @@ class
 inherit
 	EB_FEATURE_CONTENT_FORMATTER
 		redefine
-			is_dotnet_formatter,
 			format,
 			browser
 		end
@@ -174,5 +174,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_HOMONYMS_FORMATTER
-
+end

@@ -4,7 +4,7 @@ note
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class VD00
 
@@ -12,8 +12,7 @@ inherit
 	LACE_ERROR
 		redefine
 			file_name,
-			has_associated_file,
-			build_explain
+			has_associated_file
 		end
 
 create
@@ -81,7 +80,7 @@ feature -- Setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -112,4 +111,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class VD00
+end

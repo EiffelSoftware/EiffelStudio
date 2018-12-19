@@ -2,7 +2,6 @@ note
 	description: "Object that represents a target domain"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -15,11 +14,9 @@ inherit
 			copy,
 			is_equal
 		redefine
-			content,
 			item_type,
 			prepare_before_new_domain_generation,
 			cleanup_after_new_domain_generation,
-			domain_generator,
 			is_target_domain,
 			clear_cache
 		end
@@ -259,7 +256,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

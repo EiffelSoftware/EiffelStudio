@@ -14,8 +14,7 @@ inherit
 			class_cmd,
 			generate_text,
 			set_stone,
-			is_dotnet_formatter,
-			line_numbers_allowed
+			is_dotnet_formatter
 		end
 
 	EB_SHARED_FORMAT_TABLES

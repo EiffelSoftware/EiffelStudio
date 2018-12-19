@@ -15,8 +15,7 @@ inherit
 			process_assertion_tag_text, process_indexing_tag_text,
 			process_generic_text, process_character_text, process_local_text,
 			process_number_text, process_reserved_word_text,
-			process_feature_error, process_feature_dec_item, add_new_line, add_string, add,
-			process_target_name_text
+			process_feature_error, process_feature_dec_item, add_new_line, add_string, add
 		end
 
 	EV_SHARED_APPLICATION
@@ -749,4 +748,4 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-end -- class EDITOR_TOKEN_WRITER
+end

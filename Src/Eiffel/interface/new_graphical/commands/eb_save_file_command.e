@@ -1,9 +1,9 @@
 note
-	description	: "Command to save a file. Used by the development window and the dynamic lib window"
+	description: "Command to save a file. Used by the development window and the dynamic lib window"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EB_SAVE_FILE_COMMAND
@@ -23,8 +23,7 @@ inherit
 
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
 		redefine
-			tooltext,
-			pixel_buffer
+			tooltext
 		end
 
 	EB_SHARED_WINDOW_MANAGER
@@ -213,7 +212,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -244,4 +243,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_SAVE_FILE_COMMAND
+end

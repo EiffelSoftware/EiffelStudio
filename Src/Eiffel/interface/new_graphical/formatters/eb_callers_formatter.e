@@ -3,6 +3,7 @@ note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "Xavier Rousselot"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -15,7 +16,6 @@ inherit
 			make as feature_formatter_make
 		redefine
 			browser,
-			is_dotnet_formatter,
 			result_data,
 			generate_result
 		end
@@ -227,5 +227,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_CALLERS_FORMATTER
-
+end

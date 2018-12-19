@@ -11,7 +11,6 @@ class
 inherit
 	EB_CLASS_HIERARCHY_FORMATTER
 		redefine
-			is_tree_node_highlight_enabled,
 			is_inheritance_formatter,
 			browser
 		end
@@ -138,4 +137,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_DESCENDANTS_FORMATTER
+end

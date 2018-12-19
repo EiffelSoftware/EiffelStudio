@@ -10,9 +10,6 @@ class
 
 inherit
 	HELP_CONTEXT_I
-		redefine
-			help_provider
-		end
 
 	ES_EIS_HELP_PROVIDER_HELPER
 		export
@@ -118,7 +115,7 @@ invariant
 	help_context_section_set: help_context_section /= Void
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

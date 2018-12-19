@@ -2,7 +2,6 @@ note
 	description: "Object that represents a group scope"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,13 +10,6 @@ class
 
 inherit
 	QL_SCOPE
-		redefine
-			basic_scope,
-			domain_generator,
-			path_domain_generator,
-			empty_domain,
-			delayed_domain
-		end
 
 create
 	make
@@ -105,7 +97,7 @@ feature -- Access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -2,18 +2,15 @@ note
 	description:
 		"Error when a precompiled file or directory cannot be read."
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
-	revision: "$Revision $"
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class VD42
 
 inherit
 
 	LACE_ERROR
-		redefine
-			build_explain
-		end
 
 feature -- Properties
 
@@ -49,7 +46,7 @@ feature {REMOTE_PROJECT_DIRECTORY} -- Setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -80,4 +77,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class VD42
+end

@@ -1,11 +1,10 @@
 note
 	description: "[
-					Object that represents a real feature (compared to feature item that represents a class invariant) 
-					item used in Eiffel query language
-				]"
+			Object that represents a real feature (compared to feature item that represents a class invariant) 
+			item used in Eiffel query language
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -18,7 +17,6 @@ inherit
 			is_real_feature,
 			is_invariant_feature,
 			process,
-			ast,
 			return_type
 		end
 
@@ -171,7 +169,7 @@ invariant
 	e_feature_attached: e_feature /= Void
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -201,7 +199,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

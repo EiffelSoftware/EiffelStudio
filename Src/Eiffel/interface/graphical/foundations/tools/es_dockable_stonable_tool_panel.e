@@ -21,15 +21,12 @@ inherit
 	ES_STONABLE_I
 		export
 			{ES_STONABLE_I, ES_TOOL} all
-		redefine
-			set_stone
 		end
 
 	ES_STONABLE_SYNCHRONIZED_I
 		export
 			{ES_STONABLE_I, ES_TOOL} all
 		redefine
-			set_stone,
 			synchronize
 		end
 
@@ -274,7 +271,7 @@ invariant
 	tool_descriptor_is_stonable: is_interface_usable implies attached {ES_STONABLE_I} tool_descriptor
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,10 +1,11 @@
 note
-	description	: "Command to create a new development window."
+	description: "Command to create a new development window."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
-	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
+	date: "$Date$"
+	revision: "$Revision$"
+	author: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
+	revised_by: "Alexander Kogtenkov"
 
 class
 	EB_NEW_DEVELOPMENT_WINDOW_COMMAND
@@ -14,7 +15,6 @@ inherit
 		redefine
 			new_sd_toolbar_item,
 			tooltext,
-			pixel_buffer,
 			mini_pixmap,
 			mini_pixel_buffer
 		end
@@ -147,7 +147,7 @@ feature -- Access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -178,4 +178,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_NEW_DEVELOPMENT_WINDOW_COMMAND
+end

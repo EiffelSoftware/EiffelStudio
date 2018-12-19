@@ -13,7 +13,7 @@ inherit
 
 	EIFNET_ABSTRACT_DEBUG_VALUE
 		redefine
-			kind, address
+			address
 		end
 
 	EIFNET_EXPORTER
@@ -142,7 +142,7 @@ feature {DEBUGGER_TEXT_FORMATTER_VISITOR} -- Debug value type id
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -174,4 +174,3 @@ note
 		]"
 
 end
-

@@ -2,7 +2,6 @@ note
 	description: "Object to generate group domains used in Eiffel query language"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,7 +12,6 @@ inherit
 	QL_DOMAIN_GENERATOR
 		redefine
 			criterion,
-			domain,
 			item_type
 		end
 
@@ -239,7 +237,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

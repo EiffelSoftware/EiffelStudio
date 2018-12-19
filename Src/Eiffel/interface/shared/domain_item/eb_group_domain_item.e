@@ -2,7 +2,6 @@ note
 	description: "Group domain item"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,8 +12,7 @@ inherit
 	EB_DOMAIN_ITEM
 		redefine
 			is_group_item,
-			is_valid,
-			string_representation
+			is_valid
 		end
 
 create
@@ -126,7 +124,7 @@ feature{NONE} -- Implemenation
 			-- Query language group represented by Current
 
 note
-        copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2018, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

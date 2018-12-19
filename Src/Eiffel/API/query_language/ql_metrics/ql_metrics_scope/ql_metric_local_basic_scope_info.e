@@ -2,7 +2,6 @@ note
 	description: "Representation of local basic scope of a metric"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,7 +12,6 @@ inherit
 	QL_METRIC_BASIC_SCOPE_INFO
 		redefine
 			calculate_function,
-			evaluate_item,
 			domain_generator
 		end
 
@@ -67,7 +65,7 @@ invariant
 	scope_valid: scope.is_equal (local_scope)
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -97,7 +95,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

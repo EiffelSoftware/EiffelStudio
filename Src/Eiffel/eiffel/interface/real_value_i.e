@@ -14,7 +14,7 @@ class
 inherit
 	VALUE_I
 		redefine
-			generate, is_real_64, is_real_32, unary_minus, set_real_type, is_real
+			is_real_64, is_real_32, unary_minus, set_real_type, is_real
 		end
 
 create
@@ -157,7 +157,7 @@ invariant
 	is_real_64_or_real_32: is_real_64 = not is_real_32
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -14,7 +14,7 @@ inherit
 		rename
 			make as p_d_make
 		redefine
-			function, int_function
+			int_function
 		end
 
 create
@@ -43,7 +43,7 @@ feature {C_PROFILE_DATA} -- Attributes
 		-- The profiled function
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -74,4 +74,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class C_PROFILE_DATA
+end

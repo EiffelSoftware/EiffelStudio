@@ -2,8 +2,8 @@ note
 	description:
 		"Error for invalid precompiled systems used for a project."
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
+	status: "See notice at end of class."
+	date: "$Date$"
 	revision: "$Revision$"
 
 class VD53
@@ -12,7 +12,7 @@ inherit
 
 	LACE_ERROR
 		redefine
-			build_explain, is_defined
+			is_defined
 		end
 
 feature -- Access
@@ -73,7 +73,7 @@ feature {PRECOMP_R, REMOTE_PROJECT_DIRECTORY} -- Setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -104,4 +104,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class VD53
+end

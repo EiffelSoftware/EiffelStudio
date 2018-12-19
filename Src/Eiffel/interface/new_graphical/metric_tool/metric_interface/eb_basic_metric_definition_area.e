@@ -17,8 +17,6 @@ inherit
 			is_equal,
 			copy,
 			default_create
-		redefine
-			metric
 		end
 
 	EB_CONSTANTS
@@ -463,7 +461,7 @@ invariant
 	alt_right_shortcut_attached: or_indent_shortcut /= Void
 
 note
-        copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2018, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[
@@ -494,5 +492,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_BASIC_METRIC_DEFINITION_AREA
-
+end

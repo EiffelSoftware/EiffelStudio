@@ -12,7 +12,6 @@ inherit
 	ES_TOOLTIP_HANDLER
 		redefine
 			show_tooltip_possible,
-			show_tooltip,
 			hide_tooltip
 		end
 

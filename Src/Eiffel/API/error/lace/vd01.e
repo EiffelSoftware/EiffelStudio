@@ -3,15 +3,12 @@ note
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class VD01
 
 inherit
 	LACE_ERROR
-		redefine
-			build_explain
-		end
 
 create
 	make
@@ -69,4 +66,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class VD00
+end

@@ -2,7 +2,6 @@ note
 	description: "Object that represents a feature local variable used in Eiffel query language"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,9 +10,6 @@ class
 
 inherit
 	QL_FEATURE_VARIABLE
-		redefine
-			wrapped_domain
-		end
 
 create
 	make,
@@ -111,7 +107,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

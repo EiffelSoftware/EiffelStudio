@@ -2,7 +2,6 @@ note
 	description: "Object that represents a feature item used in Eiffel query language"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -12,9 +11,7 @@ deferred class
 inherit
 	QL_CODE_STRUCTURE_ITEM
 		redefine
-			is_equal,
-			is_compiled,
-			wrapped_domain
+			is_equal
 		end
 
 feature -- Access

@@ -1,9 +1,9 @@
 note
-	description	: "Command that can be added in a toolbar."
+	description: "Command that can be added in a toolbar."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	EB_TOOLBARABLE_COMMAND
@@ -15,9 +15,6 @@ inherit
 		end
 
 	EB_TOOLBARABLE
-		redefine
-			new_sd_toolbar_item
-		end
 
 feature -- Access
 
@@ -291,7 +288,7 @@ feature {NONE} -- Implementation
 	Closing_parenthesis: STRING = ")";
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -322,4 +319,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_TOOLBARABLE_COMMAND
+end

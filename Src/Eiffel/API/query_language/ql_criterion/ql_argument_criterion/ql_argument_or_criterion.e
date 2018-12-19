@@ -2,7 +2,6 @@ note
 	description: "Object that represents an OR operation on two argument criteria"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -26,7 +25,6 @@ inherit
 		redefine
 			left,
 			right,
-			intrinsic_domain,
 			item_type
 		end
 
@@ -88,7 +86,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

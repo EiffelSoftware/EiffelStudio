@@ -12,9 +12,6 @@ deferred class COMPARING_FILTER
 
 inherit
 	PROFILE_FILTER
-		redefine
-			filtering_is_allowed
-		end
 
 feature -- Checking
 
@@ -155,7 +152,7 @@ feature {NONE} -- Hidden features
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -186,4 +183,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class COMPARING_FILTER
+end

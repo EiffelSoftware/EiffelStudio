@@ -11,7 +11,7 @@ inherit
 
 	POLY_TABLE [ROUT_ENTRY]
 		redefine
-			is_attribute_table, is_routine_table, tmp_poly_table, extend, merge
+			is_attribute_table, is_routine_table, extend, merge
 		end
 
 	SHARED_GENERATOR
@@ -752,7 +752,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

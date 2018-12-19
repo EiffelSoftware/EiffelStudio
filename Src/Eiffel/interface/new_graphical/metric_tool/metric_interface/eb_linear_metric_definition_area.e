@@ -15,8 +15,6 @@ inherit
 			is_equal,
 			copy,
 			default_create
-		redefine
-			metric
 		end
 
 	EB_CONSTANTS

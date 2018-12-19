@@ -2439,6 +2439,10 @@ test	validity-vcch-add-del		vcch001	 tcf pass validity vcch
 
 test	validity-vdjr2-basic		vdjr201  tcf pass validity vdjr
 
+test	validity-vdrs4-merge-same-seed	vdrs401  tcf fail validity vdrs vdrs4
+test	validity-vdrs4-merge-other-seed	vdrs402  tcf fail validity vdrs vdrs4
+test	validity-vdrs4-merge-undefined	vdrs403  tcf fail validity vdrs vdrs4
+
 test	validity-vcch1-no-def-header	vcch101	 tcf pass validity vcch
 test	validity-vcch1-add-def-feat	vcch102	 tcf pass validity vcch
 test	validity-vcch1-del-def-header	vcch103	 tcf pass validity vcch

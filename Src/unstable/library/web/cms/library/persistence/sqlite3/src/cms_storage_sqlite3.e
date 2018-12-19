@@ -1,5 +1,4 @@
-note
-	description: "Summary description for {CMS_STORAGE_MYSQL}."
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,19 +8,16 @@ class
 inherit
 	CMS_STORAGE_SQL
 		redefine
-			sql_read_date_time, sql_read_integer_32,
 			sql_read_string_32
 		end
 
 	CMS_CORE_STORAGE_SQL_I
 		redefine
-			sql_read_date_time, sql_read_integer_32,
 			sql_read_string_32
 		end
 
 	CMS_USER_STORAGE_SQL_I
 		redefine
-			sql_read_date_time, sql_read_integer_32,
 			sql_read_string_32
 		end
 

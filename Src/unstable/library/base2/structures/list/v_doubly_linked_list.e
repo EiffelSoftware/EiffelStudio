@@ -6,6 +6,7 @@ note
 		and doesn't require reallocation of other elements.
 		]"
 	author: "Nadia Polikarpova"
+	revised_by: "Alexander Kogtenkov"
 	model: sequence
 
 class
@@ -19,7 +20,6 @@ inherit
 			first,
 			last,
 			put,
-			prepend,
 			reverse
 		end
 

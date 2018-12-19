@@ -10,7 +10,6 @@ class
 inherit
 	V_CELL_CURSOR [G]
 		redefine
-			active,
 			copy,
 			is_equal
 		end

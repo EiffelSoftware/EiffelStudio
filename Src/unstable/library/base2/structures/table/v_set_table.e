@@ -1,6 +1,7 @@
 note
 	description: "Tables implemented as sets of key-value pairs."
 	author: "Nadia Polikarpova"
+	revised_by: "Alexander Kogtenkov"
 	model: map, key_equivalence
 
 deferred class
@@ -8,9 +9,6 @@ deferred class
 
 inherit
 	V_TABLE [K, V]
-		redefine
-			has_key
-		end
 
 feature -- Access
 

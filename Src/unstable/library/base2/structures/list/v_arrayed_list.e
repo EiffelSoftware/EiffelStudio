@@ -6,6 +6,7 @@ note
 		Inserting or removing elements in the middle is linear time.
 		]"
 	author: "Nadia Polikarpova"
+	revised_by: "Alexander Kogtenkov"
 	model: sequence
 
 class
@@ -14,11 +15,9 @@ class
 inherit
 	V_LIST [G]
 		redefine
-			item,
 			default_create,
 			put,
-			copy,
-			prepend
+			copy
 		end
 
 feature {NONE} -- Initialization

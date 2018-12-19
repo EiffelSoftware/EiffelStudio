@@ -1,7 +1,7 @@
 note
 	description: "Iterators over doubly-linked lists."
 	author: "Nadia Polikarpova"
-	updated_by: "Alexander Kogtenkov"
+	revised_by: "Alexander Kogtenkov"
 	model: target, sequence, index
 
 class
@@ -21,7 +21,6 @@ inherit
 			is_equal,
 			box
 		redefine
-			active,
 			copy
 		end
 

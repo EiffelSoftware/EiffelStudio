@@ -195,8 +195,7 @@ feature -- Pattern generation
 			i, nb: INTEGER;
 			temp: STRING
 		do
-			create Result.make (1, argument_count + 1)
-			Result.put ("Current", 1)
+			create Result.make_filled ({C_CONST}.current_name, 1, argument_count + 1)
 			from
 				i := 1;
 				nb := argument_count
@@ -212,22 +211,9 @@ feature -- Pattern generation
 
 	workbench_argument_type_array: ARRAY [STRING]
 			-- Argument types for code generation
-		local
-			i, j, nb: INTEGER
 		do
-			nb := argument_count
-			create Result.make (1, nb + 1)
-			Result.put ("EIF_REFERENCE", 1)
-			j := 2
-			from
-				i := 1;
-			until
-				i > nb
-			loop
-				Result.put ("EIF_TYPED_VALUE", j)
-				i := i + 1;
-				j := j + 1;
-			end
+			create Result.make_filled ({C_CONST}.eif_typed_value, 1, argument_count + 1)
+			Result.put ({C_CONST}.eif_reference, 1)
 		ensure
 			workench_argument_type_array_not_void: Result /= Void
 		end
@@ -238,18 +224,17 @@ feature -- Pattern generation
 			i, j, nb: INTEGER
 		do
 			nb := argument_count
-			create Result.make (1, nb + 1)
-			Result.put ("EIF_REFERENCE", 1)
+			create Result.make_filled ({C_CONST}.eif_reference, 1, nb + 1)
 			j := 2
 			from
-				i := 0;
+				i := 0
 			until
 				i = nb
 			loop
 				Result.put (argument_types.item (i).c_string, j)
-				i := i + 1;
-				j := j + 1;
-			end;
+				i := i + 1
+				j := j + 1
+			end
 		end
 
 	generate_argument_declaration (buffer: GENERATION_BUFFER)
@@ -492,7 +477,7 @@ invariant
 	result_type_exists: result_type /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

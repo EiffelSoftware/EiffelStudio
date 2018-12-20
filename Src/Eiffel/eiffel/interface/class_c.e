@@ -1047,7 +1047,7 @@ feature {NONE} -- Private access
 	any_parent: PARENT_C
 			-- Default compiled parent.
 		once
-			create Result
+			create Result.make (create {ID_AS}.initialize_from_id (names_heap.any_name_id))
 			Result.set_parent_type (Any_type)
 		ensure
 			any_parent_not_void: Result /= Void
@@ -3453,7 +3453,7 @@ feature -- Properties
 			end
 		end
 
-	constraint_classes (a_formal_dec: FORMAL_DEC_AS) : ARRAY [CLASS_C]
+	constraint_classes (a_formal_dec: FORMAL_DEC_AS) : ARRAY [detachable CLASS_C]
 			-- Computed constraint classes for every formal of the current class.
 			-- Only class types are put into this cache so every item in the cache is error free.
 			-- All other positions are void especially those of formals.
@@ -3480,19 +3480,19 @@ feature -- Properties
 					-- Check if it is Void (case where `constraint_renaming'
 					-- was already called for `a_formal_dec').
 				if Result = Void then
-					create Result.make (1, a_formal_dec.constraints.count)
+					create Result.make_filled (Void, 1, a_formal_dec.constraints.count)
 					l_formal_cache.constraint_classes := Result
 				end
 			else
 					-- Insert `a_formal_dec'.
-				create Result.make (1, a_formal_dec.constraints.count)
+				create Result.make_filled (Void, 1, a_formal_dec.constraints.count)
 				l_cache.put ([Result, l_default_array], l_pos)
 			end
 		ensure
 			constraint_classes_not_void: Result /= Void
 		end
 
-	constraint_renaming (a_formal_dec: FORMAL_DEC_AS): ARRAY [RENAMING_A]
+	constraint_renaming (a_formal_dec: FORMAL_DEC_AS): ARRAY [detachable RENAMING_A]
 			-- Computed renamings for every formal of the current class.
 			-- Only sane renamings are put into this cache so every item in the cache is error free.
 			-- All other positions are void especially those of formal constraints as they are not allowed to have renamings.
@@ -3518,12 +3518,12 @@ feature -- Properties
 					-- Check if it is Void (case where `constraint_classes'
 					-- was already called for `a_formal_dec').
 				if Result = Void then
-					create Result.make (1, a_formal_dec.constraints.count)
+					create Result.make_filled (Void, 1, a_formal_dec.constraints.count)
 					l_formal_cache.constraint_renaming := Result
 				end
 			else
 					-- Insert `a_formal_dec'.
-				create Result.make (1, a_formal_dec.constraints.count)
+				create Result.make_filled (Void, 1, a_formal_dec.constraints.count)
 				l_cache.put ([l_default_array, Result], l_pos)
 			end
 		ensure

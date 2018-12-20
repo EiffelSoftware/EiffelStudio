@@ -1,7 +1,7 @@
 note
+	description: "Compiled representation of a parent."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
--- Compiled representation of a parent
 
 class PARENT_C
 
@@ -24,25 +24,41 @@ inherit
 	COMPILER_EXPORTER
 	INTERNAL_COMPILER_STRING_EXPORTER
 
-feature
+create
+	make
+
+feature {NONE} -- Creation
+
+	make (l: like class_name_token)
+			-- Initialize a parent with location `l`.
+		do
+			class_name_token := l
+		end
+
+feature -- Access
+
+	class_name_token: ID_AS
+			-- Location of the parent class name.
 
 	parent_type: CL_TYPE_A
-			-- Actual type of the parent
+			-- Actual type of the parent.
 
 	renaming: HASH_TABLE [RENAMING, INTEGER]
-			-- Rename pairs with alias names (if any)
+			-- Rename pairs with alias names (if any).
 
 	redefining: SEARCH_TABLE [INTEGER]
-			-- Redefinitions
+			-- Redefinitions.
 
 	undefining: SEARCH_TABLE [INTEGER]
-			-- Definitions
+			-- Definitions.
 
 	selecting: SEARCH_TABLE [INTEGER]
-			-- Selections
+			-- Selections.
 
 	exports: EXPORT_ADAPTATION
 			-- Export adaptation
+
+feature
 
 	is_non_conforming: BOOLEAN
 			-- Is `Current' from a non-conforming inheritance branch?
@@ -166,7 +182,6 @@ feature
 			old_name_id: INTEGER
 			old_name: STRING
 			feature_renaming: RENAMING
-			new_name_id: INTEGER
 			new_name: STRING
 			alias_name_id: INTEGER
 			alias_name: STRING
@@ -189,8 +204,7 @@ feature
 					old_name_id := local_renaming.key_for_iteration
 					old_name := names_heap.item (old_name_id)
 					feature_renaming := local_renaming.item_for_iteration
-					new_name_id := feature_renaming.feature_name_id
-					new_name := names_heap.item (new_name_id)
+					new_name := names_heap.item (feature_renaming.feature_name_id)
 					alias_name_id := feature_renaming.alias_name_id
 					check_inherited_name (old_name_id, parent_table)
 					if not has_inherited_name then
@@ -535,7 +549,7 @@ feature {NONE} -- Implementation
 			has_inherited_name := inherited_feature /= Void
 			if not has_inherited_name then
 				l_name := names_heap.item (a_name_id)
-				if (is_mangled_infix (l_name) or is_mangled_prefix (l_name)) then
+				if is_mangled_infix (l_name) or is_mangled_prefix (l_name) then
 					inherited_feature := a_feat_tbl.item_alias_id (a_name_id)
 					has_inherited_name := inherited_feature /= Void
 					if has_inherited_name then
@@ -563,7 +577,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -172,8 +172,8 @@ feature -- Initialization
 		end
 
 	make_temporary_open
-			-- Create a unique temporary file name.
-			-- and return an open file.
+			-- Create a file object with a unique temporary file name,
+			-- with read/write mode.
 		do
 			make_temporary_open_with_prefix("tfn")
 		ensure
@@ -183,8 +183,8 @@ feature -- Initialization
 		end
 
 	make_temporary_open_with_prefix (a_prefix: READABLE_STRING_GENERAL)
-			-- Create a unique temporary file name with prefix `a_prefix'.
-			-- and return an open file.
+			-- Create a file object with a unique temporary file name with prefix `a_prefix',
+			-- with read/write mode.
 		local
 			l_temp: C_STRING
 			l_res: INTEGER

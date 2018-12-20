@@ -18,12 +18,14 @@ feature -- Access
 			Result := rsa256_signed_message (a_message, a_secret)
 		end
 
-feature {NONE} -- Implementation		
+feature {NONE} -- Implementation
+
 	rsa256_signed_message (s: READABLE_STRING_8; a_secret: READABLE_STRING_8): STRING_8
 			-- Sign the message `s' with a secret key `a_secret' using RSA with SHA256.
 		local
 			rsa: SSL_RSA
 			l_priv_key: SSL_RSA_PRIVATE_KEY
+		do	
 			if attached rsa.sha256_signed_message (l_priv_key, s) as l_signed_base64 then
 				Result := l_signed_base64
 			else

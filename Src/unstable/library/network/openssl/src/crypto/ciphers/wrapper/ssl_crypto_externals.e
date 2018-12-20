@@ -692,27 +692,12 @@ feature -- RSA
 			]"
 		end
 
-	c_rsa_sign (a_type: INTEGER; a_m: POINTER; a_m_len: INTEGER; a_sigret: POINTER; a_siglen: TYPED_POINTER [INTEGER]; a_rsa:  POINTER): INTEGER
-		external
-			"C inline use %"eif_openssl.h%""
-		alias
-			"return RSA_sign((int)$a_type, (const unsigned char *)$a_m, (unsigned int)$a_m_len, (unsigned char *)$a_sigret, (unsigned int *)$a_siglen, (RSA *)$a_rsa);"
-		end
-
-	c_rsa_verify (a_type: INTEGER; a_m: POINTER; a_sigbuf: POINTER; a_siglen: INTEGER; a_rsa:  POINTER): INTEGER
-		external
-			"C inline use %"eif_openssl.h%""
-		alias
-		 	"return RSA_verify((int)$a_type, (const unsigned char *)$a_m, (unsigned int )sizeof($a_m), (unsigned char *)$a_sigbuf, (unsigned int) $a_siglen, (RSA *)$a_rsa);"
-		end
-
 	c_rsa_free (a_rsa: POINTER)
 		external
 			"C inline use %"eif_openssl.h%""
 		alias
 		 	"RSA_free((RSA *)$a_rsa);"
 		end
-
 
 	c_rsa_sign (a_type: INTEGER; a_m: POINTER; a_m_len: INTEGER; a_sigret: POINTER; a_siglen: TYPED_POINTER [INTEGER]; a_rsa:  POINTER): INTEGER
 		external

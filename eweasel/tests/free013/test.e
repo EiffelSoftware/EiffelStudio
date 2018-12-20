@@ -4,8 +4,6 @@ inherit
 	A
 		undefine
 			c1, e1, f1
-		redefine
-			c2, e2, f2
 		end
 	B
 

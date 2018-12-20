@@ -412,15 +412,15 @@ feature {NONE}
 
 feature {NONE} -- Registers
 
-	get_inlined_registers (a: ARRAY [TYPE_A]): ARRAY [REGISTER]
+	get_inlined_registers (a: detachable ARRAY [TYPE_A]): detachable ARRAY [REGISTER]
 		local
 			i, count: INTEGER
 		do
-			if a /= Void then
+			if attached a and then not a.is_empty then
 				from
-					i := 1
-					count := a.count;
-					create Result.make (1, count)
+					count := a.count
+					create Result.make_filled (get_inline_register(real_type (a [1])), 1, count)
+					i := 2
 				until
 					i > count
 				loop
@@ -428,7 +428,7 @@ feature {NONE} -- Registers
 					i := i + 1
 				end
 			end
-		end;
+		end
 
 	get_inlined_param_registers (a: ARRAY [TYPE_A]): ARRAY [REGISTRABLE]
 		local
@@ -441,18 +441,18 @@ feature {NONE} -- Registers
 		do
 			if a /= Void then
 				from
-					i := 1;
-					count := a.count;
+					i := 1
+					count := a.count
 					check
 						same_count: count = parameters.count
-					end;
-					create Result.make (1, count);
-					create temporary_parameters.make (1, count);
+					end
+					create Result.make_filled (no_register, 1, count)
+					create temporary_parameters.make_filled (False, 1, count)
 					parameters.start
 				until
 					i > count
 				loop
-					is_param_temporary_reg := False;
+					is_param_temporary_reg := False
 
 					l_param := parameters.item
 					expr := l_param
@@ -462,7 +462,7 @@ feature {NONE} -- Registers
 						local_reg := expr;
 						is_param_temporary_reg := True
 					else
-						local_reg := expr.register;
+						local_reg := expr.register
 						if local_reg = Void then
 								-- We have a parameter.
 							expr := l_param.expression;

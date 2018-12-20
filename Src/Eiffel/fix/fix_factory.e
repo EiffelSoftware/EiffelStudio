@@ -28,26 +28,10 @@ feature -- Basic operation
 
 feature {NONE} -- Access
 
-	fix: detachable SPECIAL [FIX [TEXT_FORMATTER]]
+	fix: detachable ARRAYED_LIST [FIX [TEXT_FORMATTER]]
 			-- A collection of fixes to be returned by `fix_option`.
 
 feature {COMPILER_ERROR} -- Visitor
-
-	process_missing_local_type (e: MISSING_LOCAL_TYPE_ERROR)
-			-- <Precursor>
-		do
-			if attached e.suggested_type and then not e.written_class.lace_class.is_read_only then
-				record_fix (create {FIX_MISSING_LOCAL_TYPE}.make (e))
-			end
-		end
-
-	process_unused_local (e: UNUSED_LOCAL_WARNING)
-			-- <Precursor>
-		do
-			if not e.associated_class.lace_class.is_read_only then
-				record_fix (create {FIX_UNUSED_LOCAL}.make (e))
-			end
-		end
 
 	process_array_explicit_type_required_for_conformance (e: VWMA_EXPLICIT_TYPE_REQUIRED_FOR_CONFORMANCE)
 			-- <Precursor>
@@ -62,6 +46,38 @@ feature {COMPILER_ERROR} -- Visitor
 		do
 			if not e.source_class.is_read_only then
 				record_fix (create {FIX_MANIFEST_ARRAY_TYPE_ADDER}.make (e))
+			end
+		end
+
+	process_missing_local_type (e: MISSING_LOCAL_TYPE_ERROR)
+			-- <Precursor>
+		do
+			if attached e.suggested_type and then not e.written_class.lace_class.is_read_only then
+				record_fix (create {FIX_MISSING_LOCAL_TYPE}.make (e))
+			end
+		end
+
+	process_redefinition_for_effecting (e: VDRS4_EFFECTING)
+			-- <Precursor>
+		do
+			if e.parent.class_name_token.index /= 0 and then not e.class_c.lace_class.is_read_only then
+				record_fix (create {FIX_UNNECESSARY_REDEFINE}.make (e))
+			end
+		end
+
+	process_redefinition_without_redeclaration (e: VDRS4_NO_REDECLARATION)
+			-- <Precursor>
+		do
+			if e.parent.class_name_token.index /= 0 and then not e.class_c.lace_class.is_read_only then
+				record_fix (create {FIX_UNNECESSARY_REDEFINE}.make (e))
+			end
+		end
+
+	process_unused_local (e: UNUSED_LOCAL_WARNING)
+			-- <Precursor>
+		do
+			if not e.associated_class.lace_class.is_read_only then
+				record_fix (create {FIX_UNUSED_LOCAL}.make (e))
 			end
 		end
 
@@ -124,17 +140,23 @@ feature {ERROR} -- Visitor
 
 feature {NONE} -- Helper
 
-	record_fix (f: FIX_FEATURE)
+	record_fix (f: FIX_CLASS)
 			-- Make `f` available via `fix_option`.
+		local
+			list: like fix
 		do
-				-- TODO: Support multiple fix options.
-			create fix.make_filled (f, 1)
+			list := fix
+			if not attached list then
+				create list.make (1)
+				fix := list
+			end
+			list.extend (f)
 		end
 
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

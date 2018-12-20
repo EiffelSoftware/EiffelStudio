@@ -11,9 +11,6 @@ note
 deferred class INFINITE [G] inherit
 
 	BOX [G]
-		redefine
-			is_empty
-		end
 
 feature -- Status report
 

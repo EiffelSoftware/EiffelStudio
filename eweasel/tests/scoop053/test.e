@@ -2,9 +2,6 @@ class TEST
 
 inherit
 	DISPOSABLE
-		redefine
-			dispose
-		end
 
 create
 	make,

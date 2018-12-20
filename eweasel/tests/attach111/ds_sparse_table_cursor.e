@@ -8,9 +8,6 @@ inherit
 		end
 
 	DS_LINEAR_CURSOR [G]
-		redefine
-			container
-		end
 
 create
 

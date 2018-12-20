@@ -48,8 +48,7 @@ class ARRAYED_LIST [G] inherit
 		redefine
 			first, last, swap, wipe_out,
 			go_i_th, move, prunable, start, finish,
-			count, prune, remove,
-			put_left, merge_left,
+			prune, put_left, merge_left,
 			merge_right, duplicate, prune_all, has, search
 		select
 			count, index_set

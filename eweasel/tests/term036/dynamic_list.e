@@ -29,7 +29,7 @@ deferred class DYNAMIC_LIST [G] inherit
 		undefine
 			is_equal
 		redefine
-			put_left, put_right,
+			put_right,
 			remove_left, remove_right
 		end
 
@@ -37,7 +37,7 @@ deferred class DYNAMIC_LIST [G] inherit
 		undefine
 			is_equal
 		redefine
-			put_left, put_right,
+			put_right,
 			remove_left, remove_right, wipe_out
 		select
 			wipe_out

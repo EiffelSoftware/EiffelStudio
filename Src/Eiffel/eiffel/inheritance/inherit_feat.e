@@ -88,6 +88,14 @@ feature {NONE} -- Creation
 			create rout_id_set.make
 		end
 
+feature -- Status report
+
+	has_deferred: BOOLEAN
+			-- Are there deferred features?
+		do
+			Result := attached deferred_features_internal as d and then not d.is_empty
+		end
+
 feature
 
 	deferred_features: ARRAYED_LIST [INHERIT_INFO]
@@ -158,7 +166,7 @@ feature
 	is_empty: BOOLEAN
 			-- Are the feature info lists empty ?
 		do
-			Result := features.count = 0 and then deferred_features.count = 0
+			Result := features.is_empty and then not has_deferred
 		end
 
 	insert (info: INHERIT_INFO)
@@ -201,42 +209,41 @@ feature
 			cl_not_void: cl /= Void
 			positive_feature_name_id: feature_name_id > 0
 		local
-			info, new_info: INHERIT_INFO;
-			a_feature: FEATURE_I;
-			vdus2: VDUS2;
-			vdus3: VDUS3;
+			info, new_info: INHERIT_INFO
+			a_feature: FEATURE_I
+			vdus2: VDUS2
+			vdus3: VDUS3
 		do
-			from
-					-- Check unvalid undefinitions of deferred features
-				deferred_features.start
-			until
-				deferred_features.after
-			loop
-				info := deferred_features.item;
-				if info.parent.is_undefining (feature_name_id) then
-					create vdus3;
-					vdus3.set_class (System.current_class);
-					vdus3.set_parent (info.parent.parent);
-					vdus3.set_a_feature (info.a_feature);
-					Error_handler.insert_error (vdus3);
+			if has_deferred then
+					-- Check unvalid undefinitions of deferred features.
+				across
+					deferred_features as d
+				loop
+					info := d.item
+					if info.parent.is_undefining (feature_name_id) then
+						create vdus3
+						vdus3.set_class (System.current_class)
+						vdus3.set_parent (info.parent.parent)
+						vdus3.set_a_feature (info.a_feature)
+						Error_handler.insert_error (vdus3)
+					end
 				end
-				deferred_features.forth;
-			end;
+			end
 			from
 				features.start
 			until
 				features.after
 			loop
-				info := features.item;
+				info := features.item
 				if info.parent.is_undefining (feature_name_id) then
-					a_feature := info.internal_a_feature;
+					a_feature := info.internal_a_feature
 					if not a_feature.undefinable then
-						create vdus2;
-						vdus2.set_class (System.current_class);
-						vdus2.set_parent (info.parent.parent);
-						vdus2.set_a_feature (info.a_feature);
-						Error_handler.insert_error (vdus2);
-						features.forth;
+						create vdus2
+						vdus2.set_class (System.current_class)
+						vdus2.set_parent (info.parent.parent)
+						vdus2.set_a_feature (info.a_feature)
+						Error_handler.insert_error (vdus2)
+						features.forth
 					else
 						if info.a_feature_needs_instantiation then
 							info.delayed_instantiate_a_feature
@@ -257,14 +264,14 @@ feature
 								(new_info.internal_a_feature, a_feature)
 							)
 						end
-						insert (new_info);
-						features.remove;
-					end;
+						insert (new_info)
+						features.remove
+					end
 				else
-					features.forth;
-				end;
-			end;
-		end;
+					features.forth
+				end
+			end
+		end
 
 	check_deferred (cl: CLASS_C)
 			-- Process the deferred features
@@ -290,27 +297,27 @@ feature
 				rout_id_set.update (features);
 			elseif features_all_the_same then
 					-- Shared features from the same parent.
-				if features.count > 1 and then features.first.internal_a_feature.can_be_encapsulated then
-					if 
-						attached {ENCAPSULATED_I} features.first.internal_a_feature as encapsulated_i and then
-						encapsulated_i.generate_in = 0 
-					then
-						from
-								-- Go to the second item as the first has already been checked.
-							features.start
-							features.forth
-						until
-							features.after or else l_exit_loop
-						loop
-							if 
-								attached {ENCAPSULATED_I} features.item.internal_a_feature as l_item_encapsulated_i and then
-								l_item_encapsulated_i.generate_in /= 0 
-							then
-								inherited_info := features.item
-								l_exit_loop := True
-							end
-							features.forth
+				if
+					features.count > 1 and then
+					features.first.internal_a_feature.can_be_encapsulated and then
+					attached {ENCAPSULATED_I} features.first.internal_a_feature as encapsulated_i and then
+					encapsulated_i.generate_in = 0
+				then
+					from
+							-- Go to the second item as the first has already been checked.
+						features.start
+						features.forth
+					until
+						features.after or else l_exit_loop
+					loop
+						if
+							attached {ENCAPSULATED_I} features.item.internal_a_feature as l_item_encapsulated_i and then
+							l_item_encapsulated_i.generate_in /= 0
+						then
+							inherited_info := features.item
+							l_exit_loop := True
 						end
+						features.forth
 					end
 				end
 				if inherited_info = Void then
@@ -426,18 +433,18 @@ feature
 	all_attributes: BOOLEAN
 			-- Are all the inherited features non-deferred attributes ?
 		do
-			if deferred_features.count = 0 then
+			if not has_deferred then
 				from
-					Result := True;
+					Result := True
 					features.start
 				until
 					features.after or else not Result
 				loop
-					Result := features.item.internal_a_feature.is_attribute;
-					features.forth;
-				end;
-			end;
-		end;
+					Result := features.item.internal_a_feature.is_attribute
+					features.forth
+				end
+			end
+		end
 
 	exports (feature_name_id: INTEGER): EXPORT_I
 			-- Concatenation of all the export statuses of the inherited

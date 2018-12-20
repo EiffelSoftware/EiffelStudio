@@ -18,7 +18,6 @@ copy_sub 	test1.e $CLUSTER test1.e
 compile_melted
 compile_result 	ok
 
-define REDEFINITION "redefine make end"
 define FEATURE "make (args: ARRAY [STRING]) is once precursor end"
 define FEATURE1 "make (args: ARRAY [ANY]) is deferred end"
 copy_sub 	test.e $CLUSTER test.e
@@ -26,7 +25,9 @@ copy_sub 	test1.e $CLUSTER test1.e
 compile_melted
 compile_result 	validity_error TEST VDPR(3)
 
+define REDEFINITION "redefine make end"
 define FEATURE1 "make2 (args: ARRAY [ANY]) is external "C" rescue end"
+copy_sub 	test.e $CLUSTER test.e
 copy_sub 	test1.e $CLUSTER test1.e
 resume_compile
 compile_result 	validity_error TEST VDRS(1)

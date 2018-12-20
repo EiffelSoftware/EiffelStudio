@@ -86,9 +86,9 @@ feature {NONE} -- Implementation
 		do
 			if is_non_conforming then
 					-- If non-conforming then we will we create the appropriate non conforming parent c class
-				create {NON_CONFORMING_PARENT_C} last_parent_c
+				create {NON_CONFORMING_PARENT_C} last_parent_c.make (l_as.type.class_name)
 			else
-				create {PARENT_C} last_parent_c
+				create {PARENT_C} last_parent_c.make (l_as.type.class_name)
 			end
 			if attached {CL_TYPE_A} type_a_generator.evaluate_type (l_as.type, current_class) as l_parent_type then
 				last_parent_c.set_parent_type (l_parent_type.as_normally_attached (current_class))

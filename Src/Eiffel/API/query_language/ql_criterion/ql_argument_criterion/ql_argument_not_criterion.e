@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Object that represents an No operation on another argument criterion"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -26,8 +25,7 @@ inherit
 		undefine
 			require_compiled
 		redefine
-			wrapped_criterion,
-			item_type
+			wrapped_criterion
 		end
 
 create

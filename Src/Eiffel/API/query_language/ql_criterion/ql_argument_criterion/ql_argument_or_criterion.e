@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Object that represents an OR operation on two argument criteria"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -24,8 +24,7 @@ inherit
 	QL_OR_CRITERION
 		redefine
 			left,
-			right,
-			item_type
+			right
 		end
 
 create

@@ -1,65 +1,106 @@
-note
-
-	description:
-		"Error when the compiler cannot find an effective redefinition."
+﻿note
+	description: "Error when the compiler cannot find an effective redefinition."
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
+	status: "See notice at end of class."
+	date: "$Date$"
 	revision: "$Revision $"
 
-class VDRS4
+deferred class VDRS4
 
 inherit
 
 	EIFFEL_ERROR
+		undefine
+			print_single_line_error_message,
+			process_issue
 		redefine
 			build_explain, subcode, print_single_line_error_message
 		end
 
+	SHARED_NAMES_HEAP
+
+feature {NONE} -- Creation
+
+	make (f: like feature_name_id; p: PARENT_C; c: CLASS_C)
+			-- Initialize an error for a feature name ID `f` of parent `p` in class `c`.
+		local
+			i: like {ID_AS}.index
+			l: ID_AS
+		do
+			feature_name_id := f
+			parent := p
+			set_class (c)
+				-- Unless the feature is found, use the class name location.
+			l := p.class_name_token
+			if attached c.ast as ast then
+				i := l.index
+				across
+					ast.parents as a
+				until
+					i = 0
+				loop
+					if a.item.type.class_name.index = i then
+							-- The parent is found.
+							-- Stop iteration.
+						i := 0
+						if attached a.item.redefining as rs then
+							across
+								rs as r
+							loop
+								if r.item.internal_name.name_id = f then
+										-- The feature name is found, use its location.
+									l := r.item.internal_name
+								end
+							end
+						end
+					end
+				end
+			end
+			set_location (l)
+		ensure
+			feature_name_id = f
+			parent = p
+			class_c = c
+		end
+
 feature -- Properties
 
-	code: STRING = "VDRS";
+	code: STRING = "VDRS"
 			-- Error code
 
-	subcode: INTEGER = 4;
+	subcode: INTEGER = 4
 
-feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Properties
+feature -- Access
 
-	feature_name: STRING;
-			-- Feature name involved
+	feature_name_id: like {NAMES_HEAP}.id_of_32
+			-- Name ID of the feature
+
+	feature_name: READABLE_STRING_32
+			-- Name of the feature.
+		do
+			Result := names_heap.item_32 (feature_name_id)
+		end
+
+	parent: PARENT_C
+			-- Parent clause.
 
 feature -- Output
 
-	build_explain (a_text_formatter: TEXT_FORMATTER)
-			-- Build specific explanation explain for current error
-			-- in `a_text_formatter'.
+	build_explain (t: TEXT_FORMATTER)
+			-- Build specific explanation explain for current error in `t`.
 		do
-			a_text_formatter.add ("Feature name: ");
-			a_text_formatter.add (encoding_converter.utf8_to_utf32 (feature_name));
-			a_text_formatter.add_new_line;
-		end;
-
-feature {NONE} -- Output
-
-	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER)
-			-- Displays single line help in `a_text_formatter'.
-		do
-			Precursor {EIFFEL_ERROR} (a_text_formatter)
-			a_text_formatter.add ("Redefined feature `" + feature_name + "'.")
+			t.add ("Feature name: ")
+			t.add (feature_name)
+			t.add_new_line
+			t.add ("Parent class: ")
+			parent.parent.append_name (t)
+			t.add_new_line
 		end
 
-feature {COMPILER_EXPORTER} -- Setting
-
-	set_feature_name (fn: STRING)
-			-- Assign `fn' to `feature_name'.
-		do
-			feature_name := fn;
-		end;
-
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			
@@ -88,4 +129,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class VDRS4
+end

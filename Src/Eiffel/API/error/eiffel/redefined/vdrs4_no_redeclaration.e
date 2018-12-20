@@ -1,48 +1,39 @@
 ﻿note
-	description: "Visitor for compiler errors."
-	todo: "Add processing for all error types."
+	description: "An error for redefinition without redeclaration."
+	author: "Alexander Kogtenkov"
 
-deferred class
-	COMPILER_ERROR_VISITOR
+class
+	VDRS4_NO_REDECLARATION
 
 inherit
-	ERROR_VISITOR
+	VDRS4
 
-feature {COMPILER_ERROR} -- Visitor
+create
+	make
 
-	process_array_explicit_type_required_for_conformance (e: VWMA_EXPLICIT_TYPE_REQUIRED_FOR_CONFORMANCE)
-			-- Visit `e`.
-		deferred
+feature {COMPILER_ERROR_VISITOR} -- Visitor
+
+	process_issue (v: COMPILER_ERROR_VISITOR)
+			-- <Precursor>
+		do
+			v.process_redefinition_without_redeclaration (Current)
 		end
 
-	process_array_explicit_type_required_for_match (e: VWMA_EXPLICIT_TYPE_REQUIRED_FOR_MATCH)
-			-- Visit `e`.
-		deferred
-		end
+feature {NONE} -- Output
 
-	process_missing_local_type (e: MISSING_LOCAL_TYPE_ERROR)
-			-- Visit `e`.
-		deferred
-		end
-
-	process_redefinition_for_effecting (e: VDRS4_EFFECTING)
-			-- Visit `e`.
-		deferred
-		end
-
-	process_redefinition_without_redeclaration (e: VDRS4_NO_REDECLARATION)
-			-- Visit `e`.
-		deferred
-		end
-
-	process_unused_local (e: UNUSED_LOCAL_WARNING)
-			-- Visit `e`.
-		deferred
+	print_single_line_error_message (t: TEXT_FORMATTER)
+			-- <Precursor>
+		do
+			format_elements
+				(t,
+				locale.translation_in_context ({STRING_32} "Redefine subclause lists feature {1}, but the class does not declare it.", once "compiler.error"),
+				<<agent {TEXT_FORMATTER}.add_feature_name (feature_name, class_c)>>)
 		end
 
 note
 	date: "$Date$"
 	revision: "$Revision$"
+	author: "Alexander Kogtenkov"
 	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
@@ -73,4 +64,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

@@ -26,7 +26,7 @@ create
 	make, make_with_path,
 	make_with_name, make_open_read, make_open_write, make_open_append,
 	make_open_read_write, make_create_read_write,
-	make_open_read_append
+	make_open_read_append, make_temporary_open
 
 feature -- Status report
 
@@ -371,7 +371,7 @@ invariant
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

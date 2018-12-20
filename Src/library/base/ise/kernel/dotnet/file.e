@@ -165,6 +165,22 @@ feature -- Initialization
 			open_append: is_open_append
 		end
 
+	make_temporary_open
+			-- Create a temporary file name.
+		local
+			l_temp: STRING
+		do
+			create l_temp.make_from_cil ({SYSTEM_PATH}.get_temp_file_name)
+			create last_string.make_empty
+			set_name (l_temp)
+			open_read_write
+		ensure
+			exists: exists
+			open_read: is_open_read
+			open_write: is_open_write
+		end
+
+
 feature -- Access
 
 	path: PATH

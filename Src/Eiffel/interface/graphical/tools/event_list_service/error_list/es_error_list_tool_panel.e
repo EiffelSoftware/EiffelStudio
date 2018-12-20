@@ -1216,7 +1216,7 @@ feature {NONE} -- Fixing
 	add_fix_component (e: EVENT_LIST_ITEM_I; i: EB_GRID_EDITOR_TOKEN_ITEM)
 			-- Add a fix option of `e' to the item `i'.
 		local
-			fix_component: detachable ES_FIX
+			fix_component: ES_FIX
 			f: ITERABLE [FIX [TEXT_FORMATTER]]
 		do
 			if attached {COMPILER_ERROR} e.data as ce then
@@ -1232,13 +1232,7 @@ feature {NONE} -- Fixing
 					attached fix_component
 				loop
 						-- Associate fix option with the grid item.
-						-- TODO: Handle other types of fixes by adding a factory class based on a visitor pattern,
-						-- so that adding a new fix class does not pass unnoticed.
-					if attached {FIX_FEATURE} o.item as u then
-						create {ES_FIX_FEATURE} fix_component.make (u)
-					elseif attached {CA_FIX} o.item as u then
-						create {ES_CA_FIX_EXECUTOR} fix_component.make (u)
-					end
+					fix_component := {ES_FIX_FACTORY}.create_component (o.item)
 					if attached fix_component then
 							-- Augment `i'  with a notification that a fix is available.
 						i.append_component (fix_component)
@@ -1360,6 +1354,7 @@ feature {NONE} -- Fixing
 							modifier.replace_code (s.start_position, s.end_position, modifier.ast_match_list.text_32 (r))
 						end
 					end (m, f), True, True)
+				;(create {ES_CLASS_LICENSER}).relicense (c.lace_class)
 			else
 				prompts.show_error_prompt (interface_names.l_class_is_not_writable (c.name), develop_window.window, Void)
 			end
@@ -1370,31 +1365,26 @@ feature {NONE} -- Fixing
 			-- and call the action with the flag indicating whether a new editor for every class should be open.
 		local
 			p: ES_DISCARDABLE_QUESTION_WARNING_PROMPT
+			a: PROCEDURE
 		do
 			create p.make_standard_persistent
 				(warning_messages.w_fix_undo_warning,
 				interface_names.l_discard_fix_undo_warning,
 				create {ES_BOOLEAN_PREFERENCE_SETTING}.make (preferences.dialog_data.confirm_fix_without_undo_preference, False),
 				create {ES_BOOLEAN_PREFERENCE_SETTING}.make (preferences.dialog_data.open_class_on_fix_preference, True))
-			p.set_button_action
-				({ES_DIALOG_BUTTONS}.yes_button,
-				agent (a: PROCEDURE)
-					do
-							-- Perform original action.
-						a.call
-							-- Update toolbar buttons state that may be changed by the previous instruction.
-						update_content_applicable_widgets (grid_events.row_count > 0)
-					end (action))
-			p.set_button_action
-				({ES_DIALOG_BUTTONS}.no_button,
-				agent (a: PROCEDURE)
-					do
-							-- Perform original action.
-						a.call
-							-- Update toolbar buttons state that may be changed by the previous instruction.
-						update_content_applicable_widgets (grid_events.row_count > 0)
-					end (action))
+			a := agent apply_fixes_and_update_toolbar (action)
+			p.set_button_action ({ES_DIALOG_BUTTONS}.yes_button, a)
+			p.set_button_action ({ES_DIALOG_BUTTONS}.no_button, a)
 			p.show_on_active_window
+		end
+
+	apply_fixes_and_update_toolbar (action: PROCEDURE)
+			-- Apply fixes by calling `action` and update toolbar.
+		do
+				-- Perform original action.
+			action.call
+				-- Update toolbar buttons state that may be changed by the previous instruction.
+			update_content_applicable_widgets (grid_events.row_count > 0)
 		end
 
 	fix_factory: FIX_FACTORY

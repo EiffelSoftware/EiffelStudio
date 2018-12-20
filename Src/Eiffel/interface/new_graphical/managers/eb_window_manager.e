@@ -1572,8 +1572,8 @@ feature {EB_DEVELOPMENT_WINDOW} -- Implementation
 			if eiffel_project.system_defined and then attached eiffel_universe.target then
 				l_name := eiffel_system.name
 				l_target_name := eiffel_universe.target_name
-			elseif attached eiffel_project.workbench.lace as l_lace then
-				l_name := l_lace.conf_system.name
+			elseif attached eiffel_project.workbench.lace as l_lace and then attached l_lace.conf_system as s then
+				l_name := s.name
 				l_target_name := l_lace.target_name
 			end
 			empty_title :=
@@ -1582,7 +1582,7 @@ feature {EB_DEVELOPMENT_WINDOW} -- Implementation
 				else
 					interface_names.t_empty_development_window
 				end +
-				" #"
+				{STRING_32} " #"
 			from
 				i := 1
 			until

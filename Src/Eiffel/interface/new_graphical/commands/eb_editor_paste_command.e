@@ -1,9 +1,9 @@
-note
+﻿note
 	description	: "Command to perform a clipboard-paste operation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EB_EDITOR_PASTE_COMMAND
@@ -13,7 +13,6 @@ inherit
 		redefine
 			executable,
 			tooltext,
-			pixel_buffer,
 			mini_pixmap,
 			mini_pixel_buffer
 		end
@@ -107,7 +106,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2008, Eiffel Software"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -138,4 +137,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_EDITOR_PASTE_COMMAND
+end

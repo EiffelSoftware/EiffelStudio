@@ -27,8 +27,7 @@ inherit
 			generate_access,
 			generate_end,
 			generate_on,
-			parent,
-			set_register
+			parent
 		end
 
 	ROUTINE_BL
@@ -476,7 +475,7 @@ feature {NONE} -- Status report
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

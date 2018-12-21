@@ -10,7 +10,7 @@
 			  </header>
 			{/if}
 			  <div>{$page.region_content/}</div>
-{include file="3rd/doc-disqus.tpl"/}			  
+{include file="3rd/doc-comments.tpl"/}			  
 {/if}
 {unless isset="$page.region_content"}
 				<header class="head">

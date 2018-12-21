@@ -10,18 +10,17 @@ class
 inherit
 
 	EW_CODE_ANALYSIS_CONSTANTS
-		undefine
+		redefine
 			is_equal
 		end
 
 	COMPARABLE
 		redefine
-			is_less,
 			is_equal
 		end
 
 	EW_STRING_UTILITIES
-		undefine
+		redefine
 			is_equal
 		end
 
@@ -189,9 +188,10 @@ invariant
 	valid_type: is_valid_violation_type (type)
 
 note
-	ca_ignore: "CA011", "CA011 — too many arguments"
+	ca_ignore: "CA011", "CA011: too many arguments"
 	date: "$Date$"
 	revision: "$Revision$"
+	author: "Alexander Kogtenkov"
 	copyright: "[
 			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.

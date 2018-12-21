@@ -22,10 +22,10 @@
 			{if isset="$page.region_content"}{$page.region_content/}{/if}
 		{/unless}
 		{if condition="$page.type ~ $blog_page_type"}
-			{include file="3rd/node-disqus.tpl"/}
+			{include file="3rd/node-comments.tpl"/}
 		{/if}
 		{assign name="myprojectsname" value="myprojects"/}
-		{if condition="$node.link.location ~ $myprojectsname"}{include file="3rd/node-disqus.tpl"/}{/if}
+		{if condition="$node.link.location ~ $myprojectsname"}{include file="3rd/node-comments.tpl"/}{/if}
 		</section>
 	</div>
 

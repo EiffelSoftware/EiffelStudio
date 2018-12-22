@@ -1,9 +1,9 @@
-note
+﻿note
 	description: "[
-		Doubly linked lists.
-		Random access takes linear time.
-		Once a position is found, inserting or removing elements to the left and right of it takes constant time
-		and doesn't require reallocation of other elements.
+			Doubly linked lists.
+			Random access takes linear time.
+			Once a position is found, inserting or removing elements to the left and right of it takes constant time
+			and doesn't require reallocation of other elements.
 		]"
 	author: "Nadia Polikarpova"
 	revised_by: "Alexander Kogtenkov"
@@ -20,8 +20,6 @@ inherit
 			first,
 			last,
 			is_equal_,
-			put,
-			prepend,
 			reverse
 		end
 
@@ -813,6 +811,8 @@ invariant
 
 note
 	explicit: observers
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

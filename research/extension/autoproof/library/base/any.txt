@@ -38,11 +38,10 @@ feature -- Output (verified)
 			-- of current object
 		note
 			status: impure, skip
-		require
-			modify ([])
 		do
 			create Result.make_from_string (out)
 		ensure
+			modify ([])
 			out_fresh: Result.is_fresh
 			out_wrapped: Result.is_wrapped
 		end

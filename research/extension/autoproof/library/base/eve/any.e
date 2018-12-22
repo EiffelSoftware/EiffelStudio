@@ -286,13 +286,12 @@ feature -- Output
 		note
 			status: impure
 			explicit: contracts
-		require
-			modify ([])
 		once
 			create Result
 			Result.set_output_default
 		ensure
 			instance_free: class
+			modify ([])
 			io_not_void: Result /= Void
 			is_writable: Result.is_fully_writable
 		end
@@ -320,14 +319,13 @@ feature -- Output
 			-- on standard output.
 		note
 			explicit: contracts
-		require
-			modify ([])
 		do
 			if o /= Void then
 				io.put_string (o.out)
 			end
 		ensure
 			instance_free: class
+			modify ([])
 		end
 
 feature -- Platform
@@ -363,11 +361,10 @@ feature -- Basic operations
 			-- Execute a null action.
 		note
 			explicit: contracts, wrapping
-		require
-			modify ([])
 		do
 		ensure
 			instance_free: class
+			modify ([])
 		end
 
 	frozen default: detachable like Current
@@ -434,11 +431,10 @@ feature -- Output (verified)
 			-- of current object
 		note
 			status: impure, skip
-		require
-			modify ([])
 		do
 			create Result.make_from_string (out)
 		ensure
+			modify ([])
 			out_fresh: Result.is_fresh
 			out_wrapped: Result.is_wrapped
 		end
@@ -653,7 +649,7 @@ feature -- Verification: ownership fields
 		do
 		end
 
-	owns: MML_SET [separate ANY] assign set_owns
+	owns: MML_SET [ANY] assign set_owns
 			-- Owns set of this object.
 		note
 			status: ghost
@@ -662,7 +658,7 @@ feature -- Verification: ownership fields
 			check is_executable: False then end
 		end
 
-	frozen set_owns (a: MML_SET [separate ANY])
+	frozen set_owns (a: MML_SET [ANY])
 			-- Set owns set of this object.
 		do
 		end

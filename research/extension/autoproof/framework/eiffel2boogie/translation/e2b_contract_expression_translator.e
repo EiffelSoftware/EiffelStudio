@@ -1,7 +1,4 @@
-note
-	description: "[
-		TODO
-	]"
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -17,8 +14,7 @@ inherit
 			set_context,
 			class_type_in_current_context,
 			process_creation_expr_b,
-			process_un_old_b,
-			process_attribute_call
+			process_un_old_b
 		end
 
 create

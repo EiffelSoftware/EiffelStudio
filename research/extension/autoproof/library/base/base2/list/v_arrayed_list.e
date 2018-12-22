@@ -1,9 +1,9 @@
-note
+﻿note
 	description: "[
-		Lists implemented as ring buffers.
-		The size of list might be smaller than the size of underlying array.
-		Random access is constant time. Inserting or removing elements at front or back is amortized constant time.
-		Inserting or removing elements in the middle is linear time.
+			Lists implemented as ring buffers.
+			The size of list might be smaller than the size of underlying array.
+			Random access is constant time. Inserting or removing elements at front or back is amortized constant time.
+			Inserting or removing elements in the middle is linear time.
 		]"
 	author: "Nadia Polikarpova"
 	revised_by: "Alexander Kogtenkov"
@@ -17,11 +17,8 @@ class
 inherit
 	V_LIST [G]
 		redefine
-			item,
 			default_create,
-			is_equal_,
-			put,
-			prepend
+			is_equal_
 		end
 
 feature {NONE} -- Initialization
@@ -480,6 +477,8 @@ invariant
 
 note
 	explicit: observers
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

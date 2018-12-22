@@ -1,7 +1,7 @@
-note
+﻿note
 	description: "[
-		Two-dimensional arrays.
-		Indexing of rows and columns starts from 1.
+			Two-dimensional arrays.
+			Indexing of rows and columns starts from 1.
 		]"
 	author: "Nadia Polikarpova"
 	revised_by: "Alexander Kogtenkov"
@@ -21,7 +21,6 @@ inherit
 		redefine
 			upper,
 			is_equal_,
-			flat_put,
 			is_model_equal
 		end
 
@@ -262,6 +261,8 @@ invariant
 	row_count_definition: row_count * column_count = sequence.count
 
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

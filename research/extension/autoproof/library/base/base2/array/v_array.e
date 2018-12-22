@@ -1,8 +1,8 @@
-note
+﻿note
 	description: "[
-		Indexable containers with arbitrary bounds, whose elements are stored in a continuous memory area.
-		Random access is constant time, but resizing requires memory reallocation and copying elements, and takes linear time.
-		The logical size of array is the same as the physical size of the underlying memory area.
+			Indexable containers with arbitrary bounds, whose elements are stored in a continuous memory area.
+			Random access is constant time, but resizing requires memory reallocation and copying elements, and takes linear time.
+			The logical size of array is the same as the physical size of the underlying memory area.
 		]"
 	author: "Nadia Polikarpova"
 	revised_by: "Alexander Kogtenkov"
@@ -17,10 +17,7 @@ inherit
 	V_MUTABLE_SEQUENCE [G]
 		redefine
 			is_equal_,
-			lower,
 			upper,
-			item,
-			put,
 			fill,
 			clear,
 			is_model_equal
@@ -357,6 +354,8 @@ invariant
 
 note
 	explicit: observers
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

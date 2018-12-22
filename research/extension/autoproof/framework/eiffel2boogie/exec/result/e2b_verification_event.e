@@ -1,5 +1,4 @@
-note
-	description: "Summary description for {E2B_VERIFICATION_EVENT}."
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,9 +8,6 @@ class
 inherit
 
 	EVENT_LIST_ITEM_I
-		redefine
-			data
-		end
 
 create
 	make

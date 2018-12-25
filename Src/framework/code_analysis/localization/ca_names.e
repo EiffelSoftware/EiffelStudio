@@ -747,7 +747,7 @@ feature -- Preferences
 			-- A namespace used for translations.
 
 	preferences_window_title: STRING_32
-		do Result := translation_in_context ("Eiffel Inspector Preferences", once "code_analysis.preference") end
+		do Result := translation_in_context ("Code Analyzer Preferences", once "code_analysis.preference") end
 
 feature -- GUI
 
@@ -813,7 +813,7 @@ feature -- GUI
 		do Result := translation_in_context ("Go to next rule violation", once "code_analyzer.toolbar.item.tooltip") end
 
 	options_tooltip: STRING_32
-		do Result := translation_in_context ("Eiffel Inspector options", once "code_analyzer.toolbar.item.tooltip") end
+		do Result := translation_in_context ("Code Analyzer options", once "code_analyzer.toolbar.item.tooltip") end
 
 	description_column: STRING_32
 		do Result := translation_in_context ("Description", once "code_analyzer.column") end

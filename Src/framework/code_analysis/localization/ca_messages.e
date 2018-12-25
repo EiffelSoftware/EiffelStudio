@@ -612,7 +612,7 @@ feature -- Command Line
 		do Result := translation_in_context ("%NIn class '", once "code_analyzer.command") end
 
 	cmd_help_message: STRING_32
-		do Result := translation_in_context ("Eiffel Inspector performs static analyses on the source code and %
+		do Result := translation_in_context ("Code Analyzer performs static analyses on the source code and %
 			           %outputs a list of issues found according to a set of rules.", once "code_analyzer.command") end
 
 	cmd_class_not_found_1: STRING_32

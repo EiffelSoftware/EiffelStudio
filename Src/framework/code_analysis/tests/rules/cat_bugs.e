@@ -1,5 +1,5 @@
 note
-	description: "For testing bugs of the Eiffel Inspector"
+	description: "For testing bugs of the Code Analyzer"
 
 class
 	CAT_BUGS [G]

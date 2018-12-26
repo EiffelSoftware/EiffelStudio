@@ -313,6 +313,44 @@ feature -- Access
 			Result := c_retrieved (descriptor)
 		end
 
+	null_path: PATH
+			-- Null device path.
+		note
+			EIS: "name=Null Device", "src=https://en.wikipedia.org/wiki/Null_device", "protocol=uri"
+		do
+			-- TODO check vxWorks null device.
+			-- /null?
+			if {PLATFORM}.is_windows then
+				create Result.make_from_string ("nul")
+			elseif {PLATFORM}.is_vms then
+				create Result.make_from_string ("NL:")
+			else
+					-- On Unix or Unix like systems.
+				create Result.make_from_string ("/dev/null")
+			end
+		ensure
+			instance_free: class
+		end
+
+	null_name: STRING
+			-- Null device name.
+		note
+			EIS: "name=Null Device", "src=https://en.wikipedia.org/wiki/Null_device", "protocol=uri"
+		do
+			-- TODO check vxWorks null device.
+			-- /null?
+			if {PLATFORM}.is_windows then
+				Result := "nul"
+			elseif {PLATFORM}.is_vms then
+				Result := "NL:"
+			else
+					-- On Unix or Unix like systems.
+				Result := "/dev/null"
+			end
+		ensure
+			instance_free: class
+		end
+
 feature -- Measurement
 
 	count: INTEGER

@@ -314,7 +314,7 @@ test	none-as-formal-generic		valid015 tcf pass validity
 test	require-else-ensure-then	valid016 tcf pass validity
 test	void-as-bool-or-int		valid017 tcf pass validity
 test	illegal-address-use		valid018 tcf pass validity
-test	redefine-subclause-violation	valid019 tcf fail validity
+test	redefine-subclause-violation	valid019 tcf pass validity
 test	expanded-type-violation2	valid020 tcf pass validity
 test	expanded-type-avail-viol	valid021 tcf pass validity
 test	anchored-formal-generic		valid022 tcf pass validity
@@ -523,7 +523,7 @@ test	bogus-vevi-on-inspect-empty-interval	valid229 tcf pass validity inspect
 test	inline-c-external-without-alias		valid230 tcf fail validity
 test	validity-in-empty-case			valid231 tcf pass validity
 test	redefine-deferred-to-effective		valid232 tcf fail validity
-test	redefine-2-deferred-to-effective	valid233 tcf fail validity
+test	redefine-2-deferred-to-effective	valid233 tcf pass validity
 test	redefine-effective-to-deferred		valid234 tcf fail used_to_pass validity
 test	undefine-renamed-deferred		valid235 tcf pass validity
 test	undefine-redefine-to-effective		valid236 tcf fail validity
@@ -2439,9 +2439,9 @@ test	validity-vcch-add-del		vcch001	 tcf pass validity vcch
 
 test	validity-vdjr2-basic		vdjr201  tcf pass validity vdjr
 
-test	validity-vdrs4-merge-same-seed	vdrs401  tcf fail validity vdrs vdrs4
-test	validity-vdrs4-merge-other-seed	vdrs402  tcf fail validity vdrs vdrs4
-test	validity-vdrs4-merge-undefined	vdrs403  tcf fail validity vdrs vdrs4
+test	validity-vdrs4-merge-same-seed	vdrs401  tcf pass validity vdrs vdrs4
+test	validity-vdrs4-merge-other-seed	vdrs402  tcf pass validity vdrs vdrs4
+test	validity-vdrs4-merge-undefined	vdrs403  tcf pass validity vdrs vdrs4
 
 test	validity-vcch1-no-def-header	vcch101	 tcf pass validity vcch
 test	validity-vcch1-add-def-feat	vcch102	 tcf pass validity vcch

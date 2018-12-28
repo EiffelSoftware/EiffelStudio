@@ -11,7 +11,7 @@ note
 	false_guards: true
 
 deferred class
-	V_MAP [K -> separate ANY, V]
+	V_MAP [K -> ANY, V]
 
 inherit
 	V_CONTAINER [V]

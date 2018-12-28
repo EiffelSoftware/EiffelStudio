@@ -10,7 +10,7 @@ note
 	false_guards: true
 
 deferred class
-	V_SET [G-> separate ANY]
+	V_SET [G-> ANY]
 
 inherit
 	V_CONTAINER [G]

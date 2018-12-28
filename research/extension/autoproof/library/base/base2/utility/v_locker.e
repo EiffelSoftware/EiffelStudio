@@ -10,7 +10,7 @@ note
 	false_guards: true
 
 deferred class
-	V_LOCKER [G -> separate ANY]
+	V_LOCKER [G -> ANY]
 
 feature -- Specification
 

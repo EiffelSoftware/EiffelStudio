@@ -11,7 +11,7 @@ note
 	explicit: "all"
 
 class
-	V_LOCK [G -> separate ANY]
+	V_LOCK [G -> ANY]
 
 feature -- Access	
 

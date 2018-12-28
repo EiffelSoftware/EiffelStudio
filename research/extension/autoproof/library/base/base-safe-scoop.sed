@@ -1,0 +1,9 @@
+s/7E3F646A-A9FB-4511-A77A-0C335F8E10E5/811FCDBD-E4AF-463C-A79F-FF77B8BD5E0C/
+/capability>/d
+/<concurrency/d
+s/="base-safe"/="base-safe-scoop"/g
+/<\/target>/{
+	N
+	N
+	/<\/target>/d
+}

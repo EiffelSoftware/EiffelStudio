@@ -7,7 +7,7 @@ note
 	false_guards: true
 
 deferred class
-	V_SET_ITERATOR [G -> separate ANY]
+	V_SET_ITERATOR [G -> ANY]
 
 inherit
 	V_ITERATOR [G]

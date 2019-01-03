@@ -2,7 +2,7 @@
 
 /* Code elements */
 
-code, eiffel {
+code {
 	@include border-radius(4px);
 	display: block;
 	font-family: monospace;
@@ -12,6 +12,7 @@ code, eiffel {
 	-o-tab-size: 4; /* Code for Opera 10.6-12.1 */
 
 	border: solid 1px #ccc;
+	color: #1a1a1a;
 	background-color: #fff;
 	line-height: 1.3;
 	padding: 10px;
@@ -20,21 +21,16 @@ code, eiffel {
 		@include border-radius(0);
 		border: dotted 1px #ddd;
 		display: inline-block;
-		padding: 0 2px 0 2px;
+		padding: 0 .3em 0 .3em !important;
+		color: #1a1a1a !important;
+		background-color: #e0e0e0 !important;
 		margin: 0;
 	}
-	.typ {
-		color: #00f;
-	}
-	.atg {
-		color: #000;
-	}
-	.fcl {
-		font-style: normal;
-		color: #000;
-	}
-	.com {
-		font-style: italic;
+	.lang-eiffel {
+		.typ { color: #00f; }
+		.atg { color: #000; }
+		.fcl { color: #000; font-style: normal; }
+		.com { font-style: italic; }
 	}
 }
 

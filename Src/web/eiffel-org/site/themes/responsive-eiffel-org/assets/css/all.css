@@ -3309,7 +3309,7 @@ ul.is-unstyled, ul.unstyled {
 /* Code/Eiffel related */
 /* Code elements */
 /* line 5, ../scss/site/code.scss */
-code, eiffel {
+code {
   -webkit-border-radius: 4px;
   border-radius: 4px;
   display: block;
@@ -3321,43 +3321,46 @@ code, eiffel {
   -o-tab-size: 4;
   /* Code for Opera 10.6-12.1 */
   border: solid 1px #ccc;
+  color: #1a1a1a;
   background-color: #fff;
   line-height: 1.3;
   padding: 10px;
   margin: 2px 0 2px 0; }
-  /* line 19, ../scss/site/code.scss */
-  code.inline, eiffel.inline {
+  /* line 20, ../scss/site/code.scss */
+  code.inline {
     -webkit-border-radius: 0;
     border-radius: 0;
     border: dotted 1px #ddd;
     display: inline-block;
-    padding: 0 2px 0 2px;
+    padding: 0 .3em 0 .3em !important;
+    color: #1a1a1a !important;
+    background-color: #e0e0e0 !important;
     margin: 0; }
-  /* line 26, ../scss/site/code.scss */
-  code .typ, eiffel .typ {
+  /* line 30, ../scss/site/code.scss */
+  code .lang-eiffel .typ {
     color: #00f; }
-  /* line 29, ../scss/site/code.scss */
-  code .atg, eiffel .atg {
+  /* line 31, ../scss/site/code.scss */
+  code .lang-eiffel .atg {
     color: #000; }
   /* line 32, ../scss/site/code.scss */
-  code .fcl, eiffel .fcl {
-    font-style: normal;
-    color: #000; }
-  /* line 36, ../scss/site/code.scss */
-  code .com, eiffel .com {
+  code .lang-eiffel .fcl {
+    color: #000;
+    font-style: normal; }
+  /* line 33, ../scss/site/code.scss */
+  code .lang-eiffel .com {
     font-style: italic; }
 
 /* ... */
 /* Contents ... */
-/* line 48, ../scss/site/code.scss */
+/* line 44, ../scss/site/code.scss */
 #primary-tabs ul.horizontal {
   list-style-type: none; }
-  /* line 50, ../scss/site/code.scss */
+  /* line 46, ../scss/site/code.scss */
   #primary-tabs ul.horizontal li {
     display: inline;
     padding: 2px 5px;
     border: solid 1px #ccf; }
-  /* line 55, ../scss/site/code.scss */
+  /* line 51, ../scss/site/code.scss */
   #primary-tabs ul.horizontal li.active {
     border-color: #99f #99f #ddd;
     border-style: solid solid none;

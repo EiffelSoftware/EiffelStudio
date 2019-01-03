@@ -171,22 +171,22 @@ feature -- Initialization
 			open_append: is_open_append
 		end
 
-	make_temporary_open
+	make_open_temporary
 			-- Create a file object with a unique temporary file name,
 			-- with read/write mode.
 		do
-			make_temporary_open_with_prefix("tfn")
+			make_open_temporary_with_prefix("tfn")
 		ensure
 			exists: exists
 			open_read: is_open_read
-			open_append: is_open_write
+			open_write: is_open_write
 		end
 
-	make_temporary_open_with_prefix (a_prefix: READABLE_STRING_GENERAL)
+	make_open_temporary_with_prefix (a_prefix: READABLE_STRING_GENERAL)
 			-- Create a file object with a unique temporary file name with prefix `a_prefix`,
 			-- with read/write mode.
 		note
-			EIS:"name=mkstemp", "src=ttp://man7.org/linux/man-pages/man3/mkstemp.3.html", "protocol=uri"
+			EIS:"name=mkstemp", "src=http://man7.org/linux/man-pages/man3/mkstemp.3.html", "protocol=uri"
 		local
 			l_temp: C_STRING
 			l_fd: INTEGER
@@ -201,7 +201,7 @@ feature -- Initialization
 		ensure
 			exists: exists
 			open_read: is_open_read
-			open_append: is_open_write
+			open_write: is_open_write
 		end
 
 feature -- Access
@@ -2128,19 +2128,14 @@ feature {NONE} -- Implementation
 
 	eif_temp_file (a_name_template: POINTER): INTEGER
 			-- Create a unique temporary file name and return a file descriptor.
-			--| UX platforms: The `mkstemp()` function generates a unique temporary filename from
-       		--|	template, creates and opens the file, and returns an open file descriptor for the file.
 		note
 			EIS: "name=Creates a unique temporary file", "src=http://man7.org/linux/man-pages/man3/mkstemp.3.html", "protocol=uri"
 		external
-			"C inline use %"eif_file.h%""
+			"C inline use %"eif_file.h%", %"fcntl.h%" "
 		alias
 			"[
 			#ifdef EIF_WINDOWS
-				#include <fcntl.h>
 				#ifdef _MSC_VER
-				#define open _open
-				#define close _close
 				#define EINVAL 22 /* Invalid argument  */
 				#define EEXIST 17 /* File exists */
 
@@ -2218,7 +2213,7 @@ feature {NONE} -- Implementation
 					v /= 62;
 					XXXXXX[5] = letters[v % 62];
 
-					fd = open (tmpl, O_RDWR | O_CREAT | O_EXCL | O_BINARY, _S_IREAD | _S_IWRITE);
+					fd = _open (tmpl, O_RDWR | O_CREAT | O_EXCL | O_BINARY, _S_IREAD | _S_IWRITE);
 					if (fd >= 0)  {
 						errno = save_errno;
 						return fd;
@@ -2231,6 +2226,8 @@ feature {NONE} -- Implementation
 				return -1;
 			#endif // _MSC_VER
 		#else
+			/* nix platforms: The `mkstemp()` function generates a unique temporary filename from
+			template, creates and opens the file, and returns an open file descriptor for the file. */
 			return mkstemp ($a_name_template);
 		#endif
 			]"

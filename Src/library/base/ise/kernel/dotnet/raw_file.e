@@ -27,7 +27,8 @@ create
 	make_with_name, make_open_read, make_open_write, make_open_append,
 	make_open_read_write, make_create_read_write,
 	make_open_read_append,
-	make_temporary_open
+	make_open_temporary,
+	make_open_temporary_with_prefix
 
 feature -- Status report
 

@@ -318,16 +318,7 @@ feature -- Access
 		note
 			EIS: "name=Null Device", "src=https://en.wikipedia.org/wiki/Null_device", "protocol=uri"
 		do
-			-- TODO check vxWorks null device.
-			-- /null?
-			if {PLATFORM}.is_windows then
-				create Result.make_from_string ("nul")
-			elseif {PLATFORM}.is_vms then
-				create Result.make_from_string ("NL:")
-			else
-					-- On Unix or Unix like systems.
-				create Result.make_from_string ("/dev/null")
-			end
+			create Result.make_from_string (null_name)
 		ensure
 			instance_free: class
 		end
@@ -2186,7 +2177,7 @@ invariant
 	name_not_empty: not internal_name.is_empty
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

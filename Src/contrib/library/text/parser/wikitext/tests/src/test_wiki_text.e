@@ -1445,6 +1445,23 @@ e := "{
 			t.structure.process (gen)
 			assert ("o", not o.is_empty)
 			assert ("as e", o.same_string (e))
+
+			create t.make_from_string ("[
+Test [/path-to-page a page].
+			]")
+
+e := "{
+<p>Test <a href="/path-to-page" class="wiki_ext_link">a page</a>.
+</p>
+
+}"
+
+			create o.make_empty
+
+			gen := new_xhtml_generator (o)
+			t.structure.process (gen)
+			assert ("o", not o.is_empty)
+			assert ("as e", o.same_string (e))
 		end
 
 	test_bracket_text_without_url

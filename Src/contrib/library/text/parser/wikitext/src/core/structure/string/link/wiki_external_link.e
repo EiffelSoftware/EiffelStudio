@@ -99,6 +99,7 @@ feature -- Status report
 			--|		mailto:foo@bar.com
 			--|		foo:bar
 			--|		#anchor_name
+			--| Also accept absolute path such as /foo/bar as it may be convenient when using wikitext feature in a non full wiki site.
 			--| But "foo: bar", "foo:", ":bar" will return False.
 		local
 			l_url: like url
@@ -106,22 +107,28 @@ feature -- Status report
 			s: STRING
 		do
 			l_url := url
-			i := l_url.index_of (':', 1)
-			if i > 1 and i < l_url.count then
-					-- Has ':', and does not ends with it.
-				s := l_url.head (i - 1)
-				Result := across s as ic all ic.item.is_alpha_numeric end
-				if Result then
-						-- This should not be usefull to check, since `make' is extracting
-						-- the `url', thanks to the first whitespace.
-						-- But in case, someone update the `url' in a different manner.!
-					check l_url.valid_index (i + 1) end
-					Result := not l_url[i + 1].is_space
-				end
-			elseif l_url.starts_with_general ("#") then
+			if l_url.is_whitespace then
+				Result := False
+			elseif l_url [1] = '#' then
+				Result := True
+			elseif l_url [1] = '/' then
 				Result := True
 			else
-				Result := False
+				i := l_url.index_of (':', 1)
+				if i > 1 and i < l_url.count then
+						-- Has ':', and does not ends with it.
+					s := l_url.head (i - 1)
+					Result := across s as ic all ic.item.is_alpha_numeric end
+					if Result then
+							-- This should not be usefull to check, since `make' is extracting
+							-- the `url', thanks to the first whitespace.
+							-- But in case, someone update the `url' in a different manner.!
+						check l_url.valid_index (i + 1) end
+						Result := not l_url[i + 1].is_space
+					end
+				else
+					Result := False
+				end
 			end
 		end
 
@@ -149,7 +156,7 @@ feature -- Visitor
 		end
 
 note
-	copyright: "2011-2018, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2019, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

@@ -255,7 +255,7 @@ feature {NONE} -- Error reporting
 
 feature {NONE} -- User interaction
 
-	ask_for_target_name (a_target: READABLE_STRING_GENERAL; a_targets: ARRAYED_LIST [READABLE_STRING_GENERAL])
+	ask_for_target_name (a_target: READABLE_STRING_GENERAL; a_targets: ARRAYED_LIST [READABLE_STRING_GENERAL]; a_info: detachable STRING_TABLE [TUPLE [text: READABLE_STRING_GENERAL; is_error: BOOLEAN]])
 			-- Ask user to choose one target among `a_targets'.
 			-- If not Void, `a_target' is the one selected by user.
 		local
@@ -263,12 +263,14 @@ feature {NONE} -- User interaction
 			l_answered: BOOLEAN
 			l_need_choice: BOOLEAN
 			i: INTEGER
+			t: READABLE_STRING_GENERAL
 		do
 			l_need_choice := True
 			if a_targets.count = 1 then
 				a_targets.start
-				if a_target = Void or else a_target.is_equal (a_targets.item_for_iteration) then
-					create target_name.make_from_string_general (a_targets.item_for_iteration)
+				t := a_targets.item_for_iteration
+				if a_target = Void or else a_target.is_equal (t) then
+					create target_name.make_from_string_general (t)
 					l_need_choice := False
 				end
 			end
@@ -293,10 +295,18 @@ feature {NONE} -- User interaction
 				until
 					a_targets.after
 				loop
+					t := a_targets.item_for_iteration
 					io.put_string (" [")
 					io.put_integer (i)
 					io.put_string ("] ")
-					localized_print (a_targets.item_for_iteration)
+					localized_print (t)
+					if a_info /= Void and then attached a_info.item (t) as inf then
+						io.put_string (" -- ")
+						if inf.is_error then
+							io.put_string ("Error: ")
+						end
+						localized_print (inf.text)
+					end
 					io.put_new_line
 					i := i + 1
 					a_targets.forth
@@ -457,7 +467,7 @@ feature {NONE} -- User interaction
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

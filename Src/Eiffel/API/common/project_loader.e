@@ -111,7 +111,7 @@ feature -- Loading
 						-- Unknown extension, let's try as an ecf.
 					config_file_name := a_file_name
 					create l_load_config.make (l_factory)
-					l_load_config.retrieve_configuration (config_file_name.name)
+					l_load_config.retrieve_and_check_configuration (config_file_name.name)
 					if l_load_config.is_error and l_load_config.is_invalid_xml then
 							-- Could not load the file, but it was not XML.
 						l_load_config := Void
@@ -130,7 +130,7 @@ feature -- Loading
 				if l_load_config = Void then
 						-- We try to load it as a normal config file.
 					create l_load_config.make (l_factory)
-					l_load_config.retrieve_configuration (config_file_name.name)
+					l_load_config.retrieve_and_check_configuration (config_file_name.name)
 				end
 				if l_load_config.is_error then
 					report_cannot_read_config_file (config_file_name, l_load_config.last_error)
@@ -231,7 +231,7 @@ feature -- Loading
 			if l_file.exists then
 					-- ecf exists, load it
 				create l_load.make (l_factory)
-				l_load.retrieve_configuration (l_config_file_name.name)
+				l_load.retrieve_and_check_configuration (l_config_file_name.name)
 				if l_load.is_error then
 						-- ecf could not be loaded, an error will be triggered
 						-- later when the config file will be loaded again by
@@ -781,60 +781,86 @@ feature {NONE} -- Settings
 		local
 			l_not_found: BOOLEAN
 			l_list: ARRAYED_LIST [READABLE_STRING_GENERAL]
+			l_infos: detachable STRING_TABLE [TUPLE [text: READABLE_STRING_GENERAL; is_error: BOOLEAN]]
 			l_targets: STRING_TABLE [CONF_TARGET]
 			l_user_options_factory: USER_OPTIONS_FACTORY
 			l_last_target: READABLE_STRING_GENERAL
 			l_last_target_matched: BOOLEAN
 			l_sorter: QUICK_SORTER [READABLE_STRING_GENERAL]
+			l_parent_checker: detachable CONF_PARENT_TARGET_CHECKER
+			t: READABLE_STRING_GENERAL
+			obs: CONF_ERROR_CONTAINER
 		do
-			l_targets := a_system.compilable_targets
-			if a_proposed_target /= Void then
-				target_name := a_proposed_target.as_lower
-
-				l_targets.search (target_name)
-				if not l_targets.found then
-					l_not_found := True
-					target_name := Void
-				end
+				-- `a_system.compilable_targets` needs to know the eventual parent of target.
+				-- mostly to know about the root entry point if any.
+			create obs
+			create l_parent_checker.make_with_observer (create {CONF_PARSE_FACTORY}, obs)
+			l_parent_checker.resolve_system (a_system)
+			if l_parent_checker.has_cycle_error then
+				report_cannot_read_config_file (a_system.file_path, obs.last_errors.last)
+				set_has_error
 			else
-				l_not_found := True
-			end
-			if l_not_found then
-					-- Try and find the previously used target.
-				create l_user_options_factory
-				l_user_options_factory.load (a_system.file_name)
-				if
-					l_user_options_factory.successful and then
-					attached l_user_options_factory.last_options as l_options
-				then
-					l_last_target := l_options.target_name
-				else
-					l_last_target := ""
-				end
+				l_targets := a_system.compilable_targets
+				if a_proposed_target /= Void then
+					target_name := a_proposed_target.as_lower
 
-					-- Order targets in alphabetical order after last selected target (if any)
-				from
-					create l_list.make (l_targets.count)
-					l_targets.start
-				until
-					l_targets.after
-				loop
-					if l_last_target ~ l_targets.key_for_iteration then
-							-- We want the last target first in the list.
-						l_last_target_matched := True
-					else
-						l_list.extend (l_targets.key_for_iteration)
+					l_targets.search (target_name)
+					if not l_targets.found then
+						l_not_found := True
+						target_name := Void
 					end
-					l_targets.forth
+				else
+					l_not_found := True
 				end
-				create l_sorter.make (create {COMPARABLE_COMPARATOR [READABLE_STRING_GENERAL]})
-				l_sorter.sort (l_list)
-				if l_last_target_matched then
-						-- Set the last used target as first in the list.
-					l_list.start
-					l_list.put_left (l_last_target)
+				if l_not_found then
+						-- Try and find the previously used target.
+					create l_user_options_factory
+					l_user_options_factory.load (a_system.file_name)
+					if
+						l_user_options_factory.successful and then
+						attached l_user_options_factory.last_options as l_options
+					then
+						l_last_target := l_options.target_name
+					else
+						l_last_target := ""
+					end
+
+						-- Order targets in alphabetical order after last selected target (if any)
+					from
+						create l_list.make (l_targets.count)
+						l_targets.start
+					until
+						l_targets.after
+					loop
+						t := l_targets.key_for_iteration
+						if t.same_string (l_last_target) then
+								-- We want the last target first in the list.
+							l_last_target_matched := True
+						else
+							l_list.extend (t)
+						end
+						if attached l_targets.item_for_iteration.parent_reference as par and then attached par.associated_error as err then
+							if l_infos = Void then
+								create l_infos.make (1)
+							end
+							l_infos.force ([err.text, True], t)
+						elseif attached l_targets.item_for_iteration.description as desc then
+							if l_infos = Void then
+								create l_infos.make (1)
+							end
+							l_infos.force ([desc, False], t)
+						end
+						l_targets.forth
+					end
+					create l_sorter.make (create {COMPARABLE_COMPARATOR [READABLE_STRING_GENERAL]})
+					l_sorter.sort (l_list)
+					if l_last_target_matched then
+							-- Set the last used target as first in the list.
+						l_list.start
+						l_list.put_left (l_last_target)
+					end
+					ask_for_target_name (a_proposed_target, l_list, l_infos)
 				end
-				ask_for_target_name (a_proposed_target, l_list)
 			end
 		ensure
 			target_name_set: not has_error implies target_name /= Void and then not target_name.is_empty
@@ -957,7 +983,7 @@ feature {NONE} -- Error reporting
 
 feature {NONE} -- User interaction
 
-	ask_for_target_name (a_target: READABLE_STRING_GENERAL; a_targets: ARRAYED_LIST [READABLE_STRING_GENERAL])
+	ask_for_target_name (a_target: READABLE_STRING_GENERAL; a_targets: ARRAYED_LIST [READABLE_STRING_GENERAL]; a_info: detachable STRING_TABLE [TUPLE [text: READABLE_STRING_GENERAL; is_error: BOOLEAN]])
 			-- Ask user to choose one target among `a_targets'.
 			-- If not Void, `a_target' is the one selected by user.
 		require
@@ -1141,7 +1167,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

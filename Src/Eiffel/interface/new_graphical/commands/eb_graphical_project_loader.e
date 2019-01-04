@@ -463,24 +463,28 @@ feature {NONE} -- Error reporting
 
 feature {NONE} -- User interaction
 
-	ask_for_target_name (a_target: READABLE_STRING_GENERAL; a_targets: ARRAYED_LIST [READABLE_STRING_GENERAL])
+	ask_for_target_name (a_target: READABLE_STRING_GENERAL; a_targets: ARRAYED_LIST [READABLE_STRING_GENERAL]; a_info: detachable STRING_TABLE [TUPLE [text: READABLE_STRING_GENERAL; is_error: BOOLEAN]])
 			-- Ask user to choose one target among `a_targets'.
 			-- If not Void, `a_target' is the one selected by user.
 		local
 			l_dialog: EV_DIALOG
-			l_list: EV_LIST
+			l_grid: ES_GRID
 			l_vbox: EV_VERTICAL_BOX
 			l_hbox: EV_HORIZONTAL_BOX
 			l_select_button, l_button: EV_BUTTON
-			l_item: EV_LIST_ITEM
+			l_grid_item: EV_GRID_LABEL_ITEM
 			l_label: EV_LABEL
 			l_need_choice: BOOLEAN
+			t: READABLE_STRING_GENERAL
+			l_has_information: BOOLEAN
+			s: STRING_32
 		do
 			l_need_choice := True
 			if a_targets.count = 1 then
 				a_targets.start
-				if a_target = Void or else a_target.is_equal (a_targets.item_for_iteration) then
-					create target_name.make_from_string_general (a_targets.item_for_iteration)
+				t := a_targets.item_for_iteration
+				if a_target = Void or else a_target.is_equal (t) then
+					create target_name.make_from_string_general (t)
 					l_need_choice := False
 				end
 			end
@@ -500,27 +504,68 @@ feature {NONE} -- User interaction
 					create l_label.make_with_text (interface_names.l_target_does_not_exist (a_target))
 				end
 				l_label.align_text_left
-				create l_list
+
+				create l_grid
+				l_grid.enable_single_row_selection
+				l_grid.disable_tree
+				l_grid.hide_header
+				l_grid.set_column_count_to (2)
+				l_grid.enable_row_height_fixed
+				l_grid.enable_row_separators
+				l_grid.enable_column_separators
+				l_grid.enable_border
+
 				from
 					a_targets.start
 				until
 					a_targets.after
 				loop
-					create l_item.make_with_text (a_targets.item_for_iteration)
-					l_item.pointer_double_press_actions.extend (agent on_target_selected (l_dialog, l_item, ?,?,?,?,?,?,?,?))
-					l_list.extend (l_item)
+					t := a_targets.item_for_iteration
+					if attached l_grid.extended_new_row as l_row then
+						l_row.set_data (t)
+
+						create l_grid_item.make_with_text (t)
+						l_grid_item.set_data (t)
+						l_grid_item.pointer_double_press_actions.extend (agent on_target_double_pressed (l_dialog, l_row, ?,?,?,?,?,?,?,?))
+						l_row.set_item (1, l_grid_item)
+
+						if a_info /= Void and then attached a_info.item (t) as inf then
+							l_has_information := True
+							l_grid_item.set_tooltip (inf.text)
+							create s.make_from_string_general (inf.text)
+							s.replace_substring_all ("%N", " ")
+							create l_grid_item.make_with_text (s)
+							if inf.is_error then
+								l_grid_item.set_pixmap (pixmaps.configuration_pixmaps.general_error_icon)
+							end
+						else
+							create l_grid_item
+						end
+						l_row.set_item (2, l_grid_item)
+						l_grid_item.pointer_double_press_actions.extend (agent on_target_double_pressed (l_dialog, l_row, ?,?,?,?,?,?,?,?))
+					end
+
 					a_targets.forth
 				end
 					-- Select first item by default.
-				l_list.first.enable_select
-				l_list.set_minimum_size (100, 150)
+				l_grid.set_minimum_size (100, 150)
+				if l_grid.row_count > 0 then
+					l_grid.select_row (1)
+				end
+				if l_has_information then
+					l_grid.safe_resize_column_to_content (l_grid.column (1), True, False)
+					l_grid.request_columns_auto_resizing
+				elseif attached l_grid.column (2) as col then
+					col.hide
+				end
+
 
 				create l_vbox
 				l_vbox.set_border_width (default_border_size)
 				l_vbox.set_padding (small_padding_size)
 
 				l_vbox.extend (l_label)
-				l_vbox.extend (l_list)
+				l_vbox.extend (l_grid)
 
 				create l_hbox
 				l_hbox.set_padding (default_padding_size)
@@ -528,7 +573,7 @@ feature {NONE} -- User interaction
 				l_vbox.disable_item_expand (l_hbox)
 
 				l_hbox.extend (create {EV_CELL})
-				create l_select_button.make_with_text_and_action (interface_names.b_select_target, agent on_select_button_pushed (l_dialog, l_list))
+				create l_select_button.make_with_text_and_action (interface_names.b_select_target, agent on_select_button_pushed (l_dialog, l_grid))
 				set_default_width_for_button (l_select_button)
 				l_hbox.extend (l_select_button)
 				l_hbox.disable_item_expand (l_select_button)
@@ -544,12 +589,12 @@ feature {NONE} -- User interaction
 				l_dialog.set_default_cancel_button (l_button)
 				l_dialog.set_default_push_button (l_select_button)
 
-				l_dialog.show_actions.extend (agent (a_list: EV_LIST)
+				l_dialog.show_actions.extend (agent (a_widget: EV_WIDGET)
 					require
-						a_list_not_void: a_list /= Void
+						a_widget_not_void: a_widget /= Void
 					do
-						a_list.set_focus
-					end (l_list))
+						a_widget.set_focus
+					end (l_grid))
 				l_dialog.show_modal_to_window (parent_window)
 			end
 		end
@@ -640,7 +685,7 @@ feature {NONE} -- Actions
 			Result := is_deletion_cancelled
 		end
 
-	on_select_button_pushed (a_dlg: EV_DIALOG; a_list: EV_LIST)
+	on_select_button_pushed (a_dlg: EV_DIALOG; a_list: EV_GRID)
 			-- Action when user click Select button for a target.
 		require
 			a_dlg_not_void: a_dlg /= Void
@@ -648,15 +693,18 @@ feature {NONE} -- Actions
 			a_list_not_void: a_list /= Void
 			a_list_not_destroyed: not a_list.is_destroyed
 		do
-			if a_list.selected_item /= Void then
-				target_name := a_list.selected_item.text
-				a_dlg.destroy
+			if
+				attached a_list.selected_rows as l_rows and then
+				attached l_rows.first as l_row and then
+				attached l_row.item (1) as l_item
+			then
+				on_target_selected (a_dlg, l_item)
 			end
 		ensure
-			target_name_set: old a_list.selected_item /= Void implies (target_name /= Void)
+			target_name_set: old a_list.has_selected_item /= Void implies (target_name /= Void)
 		end
 
-	on_target_selected (a_dlg: EV_DIALOG; a_item: EV_LIST_ITEM; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
+	on_target_double_pressed (a_dlg: EV_DIALOG; a_item: EV_ANY; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
 			-- Action when user select a target with a double click.
 		require
 			a_dlg_not_void: a_dlg /= Void
@@ -664,7 +712,25 @@ feature {NONE} -- Actions
 			a_item_not_void: a_item /= Void
 			a_item_not_destroyed: not a_item.is_destroyed
 		do
-			target_name := a_item.text
+			on_target_selected (a_dlg, a_item)
+			a_dlg.destroy
+		end
+
+	on_target_selected (a_dlg: EV_DIALOG; a_item: EV_ANY)
+			-- Action when user select a target with a double click.
+		require
+			a_dlg_not_void: a_dlg /= Void
+			a_dlg_not_destroyed: not a_dlg.is_destroyed
+			a_item_not_void: a_item /= Void
+			a_item_not_destroyed: not a_item.is_destroyed
+		do
+			if attached {READABLE_STRING_GENERAL} a_item.data as l_name then
+				target_name := l_name.as_string_32
+			elseif attached {EV_TEXTABLE} a_item as l_textable then
+				target_name := l_textable.text
+			elseif attached {EV_GRID_LABEL_ITEM} a_item as l_glab then
+				target_name := l_glab.text
+			end
 			a_dlg.destroy
 		end
 
@@ -714,7 +780,7 @@ invariant
 	parent_window_not_destroyed: not parent_window.is_destroyed
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

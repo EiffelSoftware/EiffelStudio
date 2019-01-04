@@ -171,7 +171,8 @@ feature -- Visit nodes
 				if attached a_target.extends as l_parent then
 					l_parent.process (Current)
 				else
-					check a_target.parent_reference = Void end
+					check not a_target.has_unresolved_parent end
+					-- It can occur if the location of the parent_reference is bad.
 				end
 --				Precursor (a_target)
 				if not is_checking_stopped then
@@ -358,7 +359,7 @@ feature {NONE} -- Execution
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

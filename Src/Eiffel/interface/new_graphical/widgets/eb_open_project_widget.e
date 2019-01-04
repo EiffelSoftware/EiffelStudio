@@ -586,7 +586,7 @@ feature {NONE} -- Implementation
 
 				if is_new_selection then
 					create l_conf.make (create {CONF_COMP_FACTORY})
-					l_conf.retrieve_configuration (l_filepath)
+					l_conf.retrieve_and_check_configuration (l_filepath)
 					if not l_conf.is_error then
 						last_state.has_system_error := False
 						last_state.system := l_conf.last_system
@@ -938,7 +938,7 @@ feature {NONE} -- Actions
 		do
 			create l_fact
 			create l_load.make (l_fact)
-			l_load.retrieve_configuration (selected_path)
+			l_load.retrieve_and_check_configuration (selected_path)
 			if l_load.is_error then
 				(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (l_load.last_error.text, parent_window, Void)
 			else
@@ -1262,7 +1262,7 @@ invariant
 	post_project_selected_actions_not_void: post_project_selected_actions /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

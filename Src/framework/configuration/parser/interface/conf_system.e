@@ -209,7 +209,10 @@ feature {CONF_ACCESS} -- Access, in compiled only
 feature -- Access queries
 
 	compilable_targets: like targets
-			-- The compilable targets.
+			-- Compilable targets.
+			--| note: in order to satisfy precondition, see {CONF_PARENT_TARGET_CHECKER}.resolve_system to resolve the eventual parent.
+		require
+			no_unresolved_parents: across targets as ic all not ic.item.has_unresolved_parent end
 		local
 			l_target: CONF_TARGET
 		do
@@ -527,7 +530,7 @@ invariant
 	valid_level: valid_level
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -81,6 +81,13 @@ feature -- Access, stored in configuration file
 	extends: detachable CONF_TARGET
 			-- If we extend another target, this is the other target.
 
+	has_unresolved_parent: BOOLEAN
+			-- Has unresolved parent in `parent_reference`?
+			-- note: check CONF_PARENT_TARGET_CHECKER to resolve them, if any.
+		do
+			Result := extends = Void and attached parent_reference as par and then not par.has_error
+		end
+
 	parent_reference: detachable CONF_TARGET_REFERENCE
 			-- Optional target reference as parent.
 			-- Mainly use for remote target (i.e target from another Eiffel Configuration File).
@@ -1260,7 +1267,7 @@ invariant
 	environ_variables_not_void: environ_variables /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -40,6 +40,9 @@ feature -- Access
 
 	report_conf_error (e: CONF_ERROR)
 		do
+			if attached {CONF_ERROR_CYCLE_IN_PARENTS} e then
+				last_cycle_error := e
+			end
 			last_error := e
 			if attached observer as obs then
 				if error_reported_as_warning then
@@ -61,6 +64,17 @@ feature -- Access
 		end
 
 	last_error: detachable CONF_ERROR
+
+	has_cycle_error: BOOLEAN
+		do
+			Result := last_cycle_error /= Void
+		end
+
+	last_cycle_error: detachable CONF_ERROR
+			-- Last error related to cycle (in remote parent, or direct parent).
+			-- Keep this kind of error in specific attribute, as current checker may report
+			-- more than one error, and as cycle error can be dangerous, it is important to be able
+			-- to handling of them if needed.
 
 feature -- Settings
 
@@ -95,14 +109,28 @@ feature -- Basic operation
 	resolve_system (a_system: CONF_SYSTEM)
 			-- Check all target from `a_system` for parent target validity, especially remote parent target issues,
 			-- and update the `CONF_TARGET.extends` attribute with resolved remote target.
+		local
+			l_last_error: like last_error
 		do
 			reset
 			across
 				a_system.targets as ic
-			until
-				has_error
 			loop
-				process_target (ic.item)
+				if error_reported_as_error and has_error then
+						-- Stop processing
+				elseif has_cycle_error then
+						-- Stop processing to avoid infinite cycle.
+				else
+					if l_last_error = Void then
+						l_last_error := last_error
+					end
+					last_error := Void
+					process_target (ic.item)
+					if last_error = Void then
+							-- Restore eventual error.
+						last_error := l_last_error
+					end
+				end
 			end
 		end
 
@@ -112,6 +140,7 @@ feature {NONE} -- Execution
 		do
 			targets.wipe_out
 			last_error := Void
+			last_cycle_error := Void
 		ensure
 			no_target_recorded: targets.count = 0
 			no_error: last_error = Void
@@ -126,6 +155,8 @@ feature {NONE} -- Execution
 			tgt, par: detachable CONF_TARGET
 			loc: CONF_FILE_LOCATION
 			l_load: CONF_LOAD
+			l_conf_error: CONF_ERROR
+			l_has_error: BOOLEAN
 		do
 			tgt := a_target
 			cfg := a_target.system
@@ -139,11 +170,13 @@ feature {NONE} -- Execution
 			elseif attached tgt.parent_reference as l_parent_ref then
 				enter_target (tgt)
 				if attached {CONF_REMOTE_TARGET_REFERENCE} l_parent_ref as l_remote then
+					l_remote.set_associated_error (Void)
 						-- Remote parent
 					loc := factory.new_file_location_from_path (l_remote.location, tgt)
 					create l_load.make (factory)
 					l_load.retrieve_configuration (loc.evaluated_path.name) -- Follow redirection.
 					if attached l_load.last_error as err then
+						l_remote.set_associated_error (err)
 						report_conf_error (err)
 					end
 					if not has_error and attached l_load.last_system as l_remote_cfg then
@@ -153,7 +186,9 @@ feature {NONE} -- Execution
 							par := l_remote_cfg.library_target
 						end
 						if par = Void then
-							report_conf_error (create {CONF_ERROR_PARSE}.make ({STRING_32} "Unable to find parent target of '" + tgt.name + {STRING_32} "' (" + tgt.system.file_path.name + {STRING_32} ")!"))
+							create {CONF_ERROR_PARSE} l_conf_error.make ({STRING_32} "Unable to find parent target of '" + tgt.name + {STRING_32} "' (" + tgt.system.file_path.name + {STRING_32} ")!")
+							l_remote.set_associated_error (l_conf_error)
+							report_conf_error (l_conf_error)
 						else
 							par.system.set_readonly (l_remote.is_readonly)
 							tgt.set_remote_parent (par)
@@ -222,7 +257,7 @@ feature {NONE} -- Events
 
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

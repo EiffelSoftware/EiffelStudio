@@ -46,6 +46,15 @@ feature -- Status report
 
 	is_remote: BOOLEAN = True
 
+feature -- Error report
+
+	associated_error: detachable CONF_ERROR
+
+	set_associated_error (e: like associated_error)
+		do
+			associated_error := e
+		end
+
 feature -- Element change
 
 	set_name (a_name: like name)
@@ -63,7 +72,7 @@ feature -- Element change
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

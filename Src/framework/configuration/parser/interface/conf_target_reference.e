@@ -21,12 +21,24 @@ feature -- Status report
 		deferred
 		end
 
+feature -- Error report
+
+	associated_error: detachable CONF_ERROR
+		deferred
+		end
+
+	has_error: BOOLEAN
+			-- Check reported error, such as file not found,...
+		do
+			Result := associated_error /= Void
+		end
+
 invariant
 
-	location_or_name_set: has_location or has_name 
+	location_or_name_set: has_location or has_name
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -48,11 +48,8 @@ feature -- Access
 		require
 			a_stone_attached: a_stone /= Void
 			a_stone_valid: is_stone_valid (a_stone)
-		local
-			l_feature_stone: FEATURE_STONE
 		do
-			l_feature_stone ?= a_stone
-			if l_feature_stone /= Void then
+			if attached {FEATURE_STONE} a_stone as l_feature_stone then
 				create {CLASSC_STONE} Result.make (l_feature_stone.e_class)
 			else
 				Result := a_stone
@@ -64,7 +61,7 @@ feature -- Access
 	displayer_generator: TUPLE [any_generator: FUNCTION [like displayer]; name: STRING]
 			-- Generator to generate proper `displayer' for Current formatter
 		do
-			Result := [ agent displayer_generators.new_dependency_displayer, displayer_generators.dependency_displayer]
+			Result := [agent displayer_generators.new_dependency_displayer, displayer_generators.dependency_displayer]
 		end
 
 	sorting_status_preference: STRING_PREFERENCE
@@ -89,21 +86,12 @@ feature -- Properties
 
 	is_stone_valid (a_stone: STONE): BOOLEAN
 			-- Is `a_stone' valid for current formatter?
-		local
-			l_target_stone: TARGET_STONE
-			l_group_stone: CLUSTER_STONE
-			l_class_stone: CLASSC_STONE
-			l_feature_stone: FEATURE_STONE
 		do
 			if a_stone /= Void then
-				l_feature_stone ?= a_stone
-				l_class_stone ?= a_stone
-				l_group_stone ?= a_stone
-				l_target_stone ?= a_stone
-				Result := l_feature_stone /= Void or else
-						  l_class_stone /= Void or else
-						  l_group_stone /= Void or else
-						  l_target_stone /= Void
+				Result := attached {FEATURE_STONE} a_stone or else
+						  attached {CLASSC_STONE} a_stone or else
+						  attached {CLUSTER_STONE} a_stone or else
+						  attached {TARGET_STONE} a_stone
 			end
 		end
 
@@ -158,11 +146,8 @@ feature {NONE} -- Implementation
 
 	veto_pebble_function (a_any: ANY): BOOLEAN
 			-- Veto pebble function
-		local
-			l_stone: STONE
 		do
-			l_stone ?= a_any
-			if l_stone /= Void then
+			if attached {STONE} a_any as l_stone then
 				Result := l_stone.is_storable
 			end
 		end
@@ -206,7 +191,6 @@ feature {NONE} -- Implementation
 		local
 			l_domain_generator: QL_CLASS_DOMAIN_GENERATOR
 			l_domain_item: EB_DOMAIN_ITEM
-			l_folder_item: EB_FOLDER_DOMAIN_ITEM
 			l_criterion: QL_CLASS_CRITERION
 		do
 			l_criterion := class_criterion_factory.criterion_with_name (query_language_names.ql_cri_is_compiled, [])
@@ -216,18 +200,25 @@ feature {NONE} -- Implementation
 			l_domain_item := domain_item_from_stone (final_stone_from_stone (stone))
 			if l_domain_item /= Void then
 				if l_domain_item.is_folder_item then
-					l_folder_item ?= l_domain_item
-					if browser.recursive_button.is_selected then
-						l_folder_item.enable_search_for_class_recursive
+					if attached {EB_FOLDER_DOMAIN_ITEM} l_domain_item as l_folder_item then
+						if browser.recursive_button.is_selected then
+							l_folder_item.enable_search_for_class_recursive
+						else
+							l_folder_item.disable_search_for_class_recursive
+						end
 					else
-						l_folder_item.disable_search_for_class_recursive
+						check is_folder_item: False end
 					end
 				elseif l_domain_item.is_group_item then
 					if not browser.recursive_button.is_selected then
 						l_criterion := l_criterion and create {QL_CLASS_PATH_IN_CRI}.make_with_flag ("", False)
 					end
 				end
-				Result ?= l_domain_item.domain_without_scope.new_domain (l_domain_generator)
+				if attached {QL_CLASS_DOMAIN} l_domain_item.domain_without_scope.new_domain (l_domain_generator) as cl then
+					Result := cl
+				else
+					check is_class_domain: False end
+				end
 			else
 					-- If domain item is Void this is likely due to an incomplete compilation
 					-- We return an empty domain to satisfy the post-condition.
@@ -257,9 +248,7 @@ feature {NONE} -- Implementation
 		local
 			l_dep: HASH_TABLE [HASH_TABLE [DS_HASH_SET [QL_CLASS], QL_CLASS], QL_GROUP]
 			l_target_domain: QL_TARGET_DOMAIN
-			l_dep_domain: QL_CLASS_DOMAIN
 			l_generator: QL_CLASS_DOMAIN_GENERATOR
-			l_group: QL_GROUP
 			l_class_tbl: HASH_TABLE [DS_HASH_SET [QL_CLASS], QL_CLASS]
 			l_class_set: DS_HASH_SET [QL_CLASS]
 			l_source_domain: QL_CLASS_DOMAIN
@@ -282,30 +271,33 @@ feature {NONE} -- Implementation
 					l_source_domain.after
 				loop
 					l_generator.set_criterion (dependency_criterion (l_source_domain.item.wrapped_domain))
-					l_dep_domain ?= l_target_domain.new_domain (l_generator)
-					check l_dep_domain /= Void end
-					from
-						l_dep_domain.start
-					until
-						l_dep_domain.after
-					loop
-						l_group ?= l_dep_domain.item.parent
-						check l_group /= Void end
-						l_class_tbl := l_dep.item (l_group)
+					if attached {QL_CLASS_DOMAIN} l_target_domain.new_domain (l_generator) as l_dep_domain then
+						from
+							l_dep_domain.start
+						until
+							l_dep_domain.after
+						loop
+							if attached {QL_GROUP} l_dep_domain.item.parent as l_group then
+								l_class_tbl := l_dep.item (l_group)
+								if l_class_tbl = Void then
+									create l_class_tbl.make (64)
+									l_dep.force (l_class_tbl, l_group)
+								end
 
-						if l_class_tbl = Void then
-							create l_class_tbl.make (64)
-							l_dep.force (l_class_tbl, l_group)
+								l_class_set := l_class_tbl.item (l_dep_domain.item)
+								if l_class_set = Void then
+									create l_class_set.make (64)
+									l_class_set.set_equality_tester (create {AGENT_BASED_EQUALITY_TESTER [QL_CLASS]}.make (agent is_class_equal))
+									l_class_tbl.force (l_class_set, l_dep_domain.item)
+								end
+								l_class_set.force (l_source_domain.item)
+							else
+								check parent_is_group: False end
+							end
+							l_dep_domain.forth
 						end
-
-						l_class_set := l_class_tbl.item (l_dep_domain.item)
-						if l_class_set = Void then
-							create l_class_set.make (64)
-							l_class_set.set_equality_tester (create {AGENT_BASED_EQUALITY_TESTER [QL_CLASS]}.make (agent is_class_equal))
-							l_class_tbl.force (l_class_set, l_dep_domain.item)
-						end
-						l_class_set.force (l_source_domain.item)
-						l_dep_domain.forth
+					else
+						check is_new_dep_domain: False end
 					end
 					l_source_domain.forth
 				end
@@ -318,7 +310,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

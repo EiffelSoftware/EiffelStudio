@@ -313,6 +313,35 @@ feature -- Access
 			Result := c_retrieved (descriptor)
 		end
 
+	null_path: PATH
+			-- Null device path.
+		note
+			EIS: "name=Null Device", "src=https://en.wikipedia.org/wiki/Null_device", "protocol=uri"
+		do
+			create Result.make_from_string (null_name)
+		ensure
+			instance_free: class
+		end
+
+	null_name: STRING
+			-- Null device name.
+		note
+			EIS: "name=Null Device", "src=https://en.wikipedia.org/wiki/Null_device", "protocol=uri"
+		do
+			if {PLATFORM}.is_windows then
+				Result := "nul"
+			elseif {PLATFORM}.is_vms then
+				Result := "NL:"
+			elseif {PLATFORM}.is_vxworks  then
+				Result := "/null"
+			else
+					-- On Unix or Unix like systems.
+				Result := "/dev/null"
+			end
+		ensure
+			instance_free: class
+		end
+
 feature -- Measurement
 
 	count: INTEGER
@@ -2148,7 +2177,7 @@ invariant
 	name_not_empty: not internal_name.is_empty
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

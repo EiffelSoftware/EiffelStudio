@@ -16,9 +16,6 @@ class
 
 inherit
 	ES_PIXMAPS
-		redefine
-			matrix_pixel_border
-		end
 
 create
 	make

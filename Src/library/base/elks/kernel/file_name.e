@@ -9,6 +9,8 @@ note
 class
 	FILE_NAME
 
+obsolete "This class is obsolete, use PATH instead [2019-05-31]"
+
 inherit
 	PATH_NAME
 
@@ -24,6 +26,11 @@ feature {NONE} -- Initialization
 
 	make_temporary_name
 			-- Create a temporary filename.
+		note
+			EIS:"name={FILE}.make_open_temporary", "src=eiffel:?class=FILE&feature=make_open_temporary","protocol=uri"
+			EIS:"name={FILE}.make_open_temporary_with_prefix", "src=eiffel:?class=FILE&feature=make_open_temporary_with_prefix","protocol=uri"
+		obsolete
+			"Use `{FILE}.make_open_temporary or {FILE}.make_open_temporary_with_prefix` instead. [2019-05-31]"
 		local
 			p: POINTER
 		do
@@ -133,7 +140,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

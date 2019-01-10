@@ -699,7 +699,11 @@ feature -- Status setting
 			is_closed: is_closed
 		do
 			internal_file.refresh
-			internal_stream := internal_file.open_read
+			if internal_name.same_string (null_name) then
+				internal_stream := {SYSTEM_STREAM}.null
+			else
+				internal_stream := internal_file.open_read
+			end
 			mode := Read_file
 		ensure
 			exists: exists
@@ -711,8 +715,12 @@ feature -- Status setting
 			-- create it if it does not exist.
 		do
 			internal_file.refresh
-			internal_stream := internal_file.open_file_mode_file_access (
-				{FILE_MODE}.create_, {FILE_ACCESS}.write)
+			if internal_name.same_string (null_name) then
+				internal_stream := {SYSTEM_STREAM}.null
+			else
+				internal_stream := internal_file.open_file_mode_file_access (
+					{FILE_MODE}.create_, {FILE_ACCESS}.write)
+			end
 			mode := Write_file
 		ensure
 			exists: exists
@@ -726,8 +734,12 @@ feature -- Status setting
 			is_closed: is_closed
 		do
 			internal_file.refresh
-			internal_stream := internal_file.open_file_mode_file_access (
-				{FILE_MODE}.append, {FILE_ACCESS}.write)
+			if internal_name.same_string (null_name) then
+				internal_stream := {SYSTEM_STREAM}.null
+			else
+				internal_stream := internal_file.open_file_mode_file_access (
+					{FILE_MODE}.append, {FILE_ACCESS}.write)
+			end
 			mode := Append_file
 		ensure
 			exists: exists
@@ -740,8 +752,12 @@ feature -- Status setting
 			is_closed: is_closed
 		do
 			internal_file.refresh
-			internal_stream := internal_file.open_file_mode_file_access (
-				{FILE_MODE}.open, {FILE_ACCESS}.read_write)
+			if internal_name.same_string (null_name) then
+				internal_stream := {SYSTEM_STREAM}.null
+			else
+				internal_stream := internal_file.open_file_mode_file_access (
+					{FILE_MODE}.open, {FILE_ACCESS}.read_write)
+			end
 			mode := Read_write_file
 		ensure
 			exists: exists
@@ -756,8 +772,12 @@ feature -- Status setting
 			is_closed: is_closed
 		do
 			internal_file.refresh
-			internal_stream := internal_file.open_file_mode_file_access (
-				{FILE_MODE}.create_, {FILE_ACCESS}.read_write)
+			if internal_name.same_string (null_name) then
+				internal_stream := {SYSTEM_STREAM}.null
+			else
+				internal_stream := internal_file.open_file_mode_file_access (
+					{FILE_MODE}.create_, {FILE_ACCESS}.read_write)
+			end
 			mode := Read_write_file
 		ensure
 			exists: exists

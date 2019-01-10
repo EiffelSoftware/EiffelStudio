@@ -131,12 +131,11 @@ feature -- Properties
 			-- Local value at position `i'
 		require
 			routine_attached: routine /= Void
-		local
-			locs: like locals
 		do
-			locs := locals
-			if locs /= Void then
-				Result := locs.i_th (i)
+			if attached locals as locs then
+				if locs.valid_index (i) then
+					Result := locs.i_th (i)
+				end
 			end
 		end
 
@@ -144,15 +143,10 @@ feature -- Properties
 			-- Local value at position `i'
 		require
 			routine_attached: routine /= Void
-		local
-			locs: like locals
-			pos: INTEGER
 		do
-			locs := locals
-			if locs /= Void then
-				pos := routine.locals_count + i
-				if locs.valid_index (pos) then
-					Result := locs.i_th (pos)
+			if attached object_test_locals as locs then
+				if locs.valid_index (i) then
+					Result := locs.i_th (i)
 				end
 			end
 		end
@@ -222,6 +216,15 @@ feature -- Properties
 			end
 		end
 
+	object_test_locals: LIST [ABSTRACT_DEBUG_VALUE]
+			-- Value of object_test_local variables
+		do
+			if not initialized then
+				initialize_stack
+			end
+			Result := private_object_test_locals
+		end
+
 	arguments: LIST [ABSTRACT_DEBUG_VALUE]
 			-- Value of arguments
 		local
@@ -267,6 +270,7 @@ feature -- Stack reset
 			initialized := False
 			private_arguments := Void
 			private_locals := Void
+			private_object_test_locals := Void
 			private_result := Void
 			private_object_test_locals_info := Void
 		ensure
@@ -294,6 +298,9 @@ feature {NONE} -- Implementation Properties
 
 	private_locals: ARRAYED_LIST [ABSTRACT_DEBUG_VALUE]
 			-- Associated locals
+
+	private_object_test_locals: ARRAYED_LIST [ABSTRACT_DEBUG_VALUE]
+			-- Associated object test locals
 
 	private_arguments: FIXED_LIST [ABSTRACT_DEBUG_VALUE]
 			-- Associated arguments
@@ -340,7 +347,7 @@ invariant
 note
 	date        : "$Date$"
 	revision    : "$Revision$"
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

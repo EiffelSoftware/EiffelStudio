@@ -11,6 +11,8 @@ class
 inherit
 	ES_OBJECTS_GRID_SPECIFIC_LINE
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 create
 	make
 
@@ -19,6 +21,47 @@ feature {NONE} -- Initialization
 	make
 		do
 			make_as (arguments_id)
+		end
+
+feature -- Access
+
+	argument_ast_stone (a_name: READABLE_STRING_GENERAL): detachable ACCESS_ID_FEATURE_STONE
+			-- AST Stone for argument named `a_name`, if any.
+		local
+			l_list_dec_as: EIFFEL_LIST [TYPE_DEC_AS]
+			l_type_dec: TYPE_DEC_AS
+			i, nb: INTEGER
+			l_leaf_as: LEAF_AS
+		do
+			if
+				attached call_stack_element as cse and then
+				attached cse.routine as l_routine and then
+				attached cse.routine_i as l_routine_i and then
+				attached l_routine_i.match_list_server.item (l_routine_i.written_in) as l_match_list and then
+				attached l_routine_i.real_body as l_body_ast
+			then
+				l_list_dec_as := l_body_ast.arguments
+				across
+					l_list_dec_as as ic
+				until
+					Result /= Void
+				loop
+					l_type_dec := ic.item
+					across
+						l_type_dec.id_list as id_ic
+					until
+						Result /= Void
+					loop
+						if
+							attached l_type_dec.item_name_32 (id_ic.target_index) as l_name and then
+							a_name.is_case_insensitive_equal (l_name)
+						then
+							create Result.make_with_feature (l_routine, l_type_dec)
+							Result.set_associated_text (l_name)
+						end
+					end
+				end
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -43,7 +86,7 @@ feature {NONE} -- Implementation
 				until
 					list.after
 				loop
-					parent_grid.attach_debug_value_to_grid_row (parent_grid.row (r), list.item, Void)
+					parent_grid.attach_debug_value_from_line_to_grid_row (parent_grid.row (r), list.item, Current ,Void)
 					r := r + 1
 					list.forth
 				end
@@ -62,7 +105,7 @@ feature -- Query
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

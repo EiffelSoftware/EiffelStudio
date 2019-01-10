@@ -360,40 +360,23 @@ feature -- Call stack
 
 			local_names: SORTED_TWO_WAY_LIST [ABSTRACT_DEBUG_VALUE]
 			local_decl_grps: EIFFEL_LIST [LIST_DEC_AS]
-			locals_list: LIST [ABSTRACT_DEBUG_VALUE]
+			locals_list, ot_locals_list: LIST [ABSTRACT_DEBUG_VALUE]
 		do
 			if attached {EIFFEL_CALL_STACK_ELEMENT} cse as ecse then
 				locals_list := ecse.locals
+				ot_locals_list := ecse.object_test_locals
 				resval := ecse.result_value
 
-				if locals_list /= Void or else resval /= Void then
+				if locals_list /= Void or else ot_locals_list /= Void or else resval /= Void then
 					st.add_new_line
 					st.add_string ("Local entities:")
 					st.add_new_line
 				end
 				if locals_list /= Void then
-					create local_names.make
-					from
-						locals_list.start
-					until
-						locals_list.after
-					loop
-						local_names.put_front (locals_list.item)
-						locals_list.forth
-					end
-					local_names.sort
-					local_decl_grps := ecse.routine.locals
-					if local_decl_grps /= Void then
-						from
-							local_names.start
-						until
-							local_names.after
-						loop
-							st.add_indent
-							append_to (local_names.item, st, 0)
-							local_names.forth
-						end
-					end
+					append_eiffel_locals_list (ecse, locals_list, st)
+				end
+				if ot_locals_list /= Void then
+					append_eiffel_locals_list (ecse, ot_locals_list, st)
 				end
 				if resval /= Void then
 						-- Display the Result entity value.
@@ -401,6 +384,31 @@ feature -- Call stack
 					append_to (resval, st, 0)
 				end
 
+			end
+		end
+
+	append_eiffel_locals_list (ecse: EIFFEL_CALL_STACK_ELEMENT; lst: LIST [ABSTRACT_DEBUG_VALUE]; st: TEXT_FORMATTER)
+			-- Display the local entities and result (if it exists) of
+			-- the routine associated with Current call.
+		local
+			l_names: SORTED_TWO_WAY_LIST [ABSTRACT_DEBUG_VALUE]
+			local_decl_grps: EIFFEL_LIST [LIST_DEC_AS]
+		do
+			create l_names.make
+			across
+				lst as ic
+			loop
+				l_names.put_front (ic.item)
+			end
+			l_names.sort
+			local_decl_grps := ecse.routine.locals
+			if local_decl_grps /= Void then
+				across
+					l_names as ic
+				loop
+					st.add_indent
+					append_to (ic.item, st, 0)
+				end
 			end
 		end
 
@@ -886,7 +894,7 @@ feature {NONE} -- Constants
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

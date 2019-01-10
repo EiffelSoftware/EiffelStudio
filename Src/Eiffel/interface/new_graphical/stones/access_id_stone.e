@@ -18,33 +18,19 @@ inherit
 			stone_name
 		end
 
---	FEATURE_STONE
-
 create
 	make
---	,
---	make_with_feature
 
 feature {NONE} -- Initialization
 
 	make (a_class_c: CLASS_C; a_ast: detachable AST_EIFFEL)
 		do
 			ast_stone_make (a_class_c, a_ast)
---			ast_stone_make (a_feature.written_class, a_ast)
---			feature_stone_make (a_feature)
 			set_stone_cursor (cursors.cur_metric_local)
 			set_x_stone_cursor (cursors.cur_x_metric_local)
 		end
 
---	make_with_feature (a_feature: E_FEATURE; a_ast: detachable AST_EIFFEL)
---		do
---			make (a_feature.written_class, a_ast)
---			create feature_stone.make (a_feature)
---		end
-
 feature -- Access
-
---	feature_stone: detachable FEATURE_STONE
 
 	local_name: STRING_32
 			-- Variable name.
@@ -135,7 +121,7 @@ feature -- dragging
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -438,7 +438,7 @@ feature -- Change
 
 feature {ES_OBJECTS_TOOL_PANEL, ES_OBJECTS_GRID_MANAGER, ES_OBJECTS_GRID_LINE, ES_OBJECTS_GRID_SLICES_CMD} -- EiffelStudio specific
 
-	attach_debug_value_from_line_to_grid_row (a_row: EV_GRID_ROW; dv: ABSTRACT_DEBUG_VALUE; a_line: ES_OBJECTS_GRID_OBJECT_LINE; a_title: STRING_GENERAL)
+	attach_debug_value_from_line_to_grid_row (a_row: EV_GRID_ROW; dv: ABSTRACT_DEBUG_VALUE; a_line: ES_OBJECTS_GRID_LINE; a_title: STRING_GENERAL)
 		require
 			dv /= Void
 		local
@@ -812,13 +812,10 @@ feature {ES_OBJECTS_GRID_MANAGER} -- Layout managment
 		end
 
 	grid_objects_id_name_from_row (a_row: EV_GRID_ROW): STRING_32
-		local
-			lab: EV_GRID_LABEL_ITEM
 		do
 			if a_row.parent /= Void then
 				if Col_name_index <= a_row.count then
-					lab ?= a_row.item (Col_name_index)
-					if lab /= Void then
+					if attached {EV_GRID_LABEL_ITEM} a_row.item (Col_name_index) as lab then
 						Result := lab.text
 					end
 				end
@@ -1038,7 +1035,7 @@ feature -- Graphical look
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

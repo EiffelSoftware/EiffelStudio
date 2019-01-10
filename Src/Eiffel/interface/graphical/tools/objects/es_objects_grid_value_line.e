@@ -91,20 +91,18 @@ feature {NONE} -- Object stone
 			cl: detachable CLASS_C
 			fst: FEATURE_STONE
 			fost: FEATURE_ON_OBJECT_STONE
-			ostn: detachable STRING
 			feat: E_FEATURE
 			t: like internal_item_stone_data_i_th
 		do
 			Precursor
-			if related_line /= Void then
-				ostn := object_name
-				if ostn /= Void then
-					cl := related_line.object_dynamic_class
+			if attached {ES_OBJECTS_GRID_OBJECT_LINE} related_line as l_rel_obj_line then
+				if attached object_name as ostn then
+					cl := l_rel_obj_line.object_dynamic_class
 					if cl /= Void then
 						feat := cl.feature_with_name (ostn)
 						if feat /= Void then
-								--| Note: `related_line.object_address' can be Void
-							create fost.make (related_line.object_address, feat)
+								--| Note: `l_rel_obj_line.object_address' can be Void
+							create fost.make (l_rel_obj_line.object_address, feat)
 							t := internal_item_stone_data_i_th (0)
 							if t /= Void then
 								if attached {OBJECT_STONE} t.pebble as objst then
@@ -121,7 +119,37 @@ feature {NONE} -- Object stone
 							if internal_items_stone_data [0] = Void then
 								internal_items_stone_data [0] := t
 							end
+						else
+							-- TODO: look for local variable!
 						end
+					end
+				end
+			elseif attached {ES_OBJECTS_GRID_LOCALS_LINE} related_line as l_rel_loc_line then
+				if
+					attached object_name as ostn and then
+					attached l_rel_loc_line.local_ast_stone (ostn) as l_ast_st
+				then
+					create t
+					t.pebble := l_ast_st
+					t.accept_cursor := l_ast_st.stone_cursor
+					t.deny_cursor := l_ast_st.X_stone_cursor
+					internal_items_stone_data[col_name_index] := t
+					if internal_items_stone_data [0] = Void then
+						internal_items_stone_data [0] := t
+					end
+				end
+			elseif attached {ES_OBJECTS_GRID_ARGUMENTS_LINE} related_line as l_rel_arg_line then
+				if
+					attached object_name as ostn and then
+					attached l_rel_arg_line.argument_ast_stone (ostn) as l_ast_st
+				then
+					create t
+					t.pebble := l_ast_st
+					t.accept_cursor := l_ast_st.stone_cursor
+					t.deny_cursor := l_ast_st.X_stone_cursor
+					internal_items_stone_data[col_name_index] := t
+					if internal_items_stone_data [0] = Void then
+						internal_items_stone_data [0] := t
 					end
 				end
 			end
@@ -134,7 +162,7 @@ feature -- Related line if precised
 			related_line := v
 		end
 
-	related_line: ES_OBJECTS_GRID_OBJECT_LINE
+	related_line: ES_OBJECTS_GRID_LINE
 
 feature -- Query
 
@@ -287,7 +315,7 @@ invariant
 	object_not_void: object /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

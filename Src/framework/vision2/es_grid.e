@@ -425,7 +425,7 @@ feature -- Resizing
 			end
 		end
 
-	safe_resize_column_to_content (col: EV_GRID_COLUMN; include_header_text, only_visible_part: BOOLEAN)
+	safe_resize_column_to_content (col: detachable EV_GRID_COLUMN; include_header_text, only_visible_part: BOOLEAN)
 			-- similar to resize_column_to_content but check input first
 		do
 			if col /= Void and row_count > 0 then
@@ -1393,7 +1393,7 @@ invariant
 	selected_rows_agent_attached: selected_rows_function /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

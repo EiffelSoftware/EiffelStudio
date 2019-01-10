@@ -511,6 +511,7 @@ feature {NONE} -- Implementation
 			l_count: INTEGER
 			value: ABSTRACT_DEBUG_VALUE
 			locals_list: like private_locals
+			ot_locals_list: like private_object_test_locals
 			rout: like routine
 			rout_i: like routine_i
 			counter: INTEGER
@@ -640,6 +641,7 @@ feature {NONE} -- Implementation
 								--| Remaining locals, should be OT locals
 							l_ot_locals := object_test_locals_info
 							if l_ot_locals /= Void and then not l_ot_locals.is_empty then
+								create ot_locals_list.make (l_ot_locals.count)
 								from
 									l_ot_locals.start
 								until
@@ -655,7 +657,7 @@ feature {NONE} -- Implementation
 											value.set_static_class (l_stat_class)
 										end
 									end
-									locals_list.extend (value)
+									ot_locals_list.extend (value)
 									l_ot_locals.forth
 									l_list.forth
 								end
@@ -690,6 +692,7 @@ feature {NONE} -- Implementation
 
 					--| Associate to private list |--
 				private_locals := locals_list
+				private_object_test_locals := ot_locals_list
 				initialized_locals := True
 
 				debug ("debugger_trace_callstack_data")
@@ -829,7 +832,7 @@ invariant
 note
 	date		: "$Date$"
 	revision	: "$Revision $"
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

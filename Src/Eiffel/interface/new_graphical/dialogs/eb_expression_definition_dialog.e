@@ -442,6 +442,11 @@ feature -- Status report
 	new_expression: DBG_EXPRESSION
 			-- Expression defined  by `Current', if any.
 
+	has_class_text: BOOLEAN
+		do
+			Result := not class_field.text.is_whitespace
+		end
+
 feature -- Change
 
 	set_class_text (cl: CLASS_C)
@@ -467,7 +472,7 @@ feature -- Status setting
 			-- Display `Current' modally to window `w'.
 		require
 			not_destroyed: not is_destroyed
-			w_not_void: w /= void
+			w_not_void: w /= Void
 		do
 			dialog.show_modal_to_window (w)
 		end
@@ -476,7 +481,7 @@ feature -- Status setting
 			-- Display `Current' modally to window `w'.
 		require
 			not_destroyed: not is_destroyed
-			w_not_void: w /= void
+			w_not_void: w /= Void
 		do
 			dialog.show_relative_to_window (w)
 		end

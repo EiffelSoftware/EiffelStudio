@@ -165,6 +165,39 @@ feature -- Initialization
 			open_append: is_open_append
 		end
 
+	make_open_temporary
+			-- Create a file object with a unique temporary file name,
+			-- with read/write mode.
+		local
+			l_temp: STRING_32
+		do
+			create l_temp.make_from_cil ({SYSTEM_PATH}.get_temp_file_name)
+			create last_string.make_empty
+			set_name (l_temp)
+			open_read_write
+		ensure
+			exists: exists
+			open_read: is_open_read
+			open_write: is_open_write
+		end
+
+	make_open_temporary_with_prefix (a_prefix: READABLE_STRING_GENERAL)
+			-- Create a file object with a unique temporary file name with prefix `a_prefix`,
+			-- with read/write mode.
+		local
+			l_temp: STRING_32
+		do
+			create l_temp.make_from_cil ({SYSTEM_PATH}.get_temp_file_name)
+			create last_string.make_empty
+			l_temp.prepend (a_prefix.to_string_32)
+			set_name (l_temp)
+			open_read_write
+		ensure
+			exists: exists
+			open_read: is_open_read
+			open_write: is_open_write
+		end
+
 feature -- Access
 
 	path: PATH

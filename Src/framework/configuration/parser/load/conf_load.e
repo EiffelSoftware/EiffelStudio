@@ -117,7 +117,7 @@ feature -- Basic operation
 
 	retrieve_and_check_configuration (a_file: READABLE_STRING_32)
 			-- Retrieve the configuration in `a_file' and make it available in `last_system'.
-			-- Also report as warning any validity issue such as cycle in parent target.
+			-- Also report as warning any validity issue, and as error cycle in (non remote) parent target.
 		require
 			a_file_ok: a_file /= Void and then not a_file.is_empty
 		local
@@ -130,7 +130,9 @@ feature -- Basic operation
 					create l_parent_checker.make (factory)
 					l_parent_checker.report_issue_as_warning
 					l_parent_checker.resolve_system (syst)
-					if attached l_parent_checker.last_error as err then
+					if attached l_parent_checker.last_cycle_error as l_cycle_err then
+						report_error (l_cycle_err)
+					elseif attached l_parent_checker.last_error as err then
 						is_warning := True
 						add_warning (err)
 					end
@@ -621,7 +623,7 @@ invariant
 	factory_not_void: factory /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,6 +1,4 @@
 note
-	description: "Summary description for {TEST_TEMPORARY_FILE}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,7 +7,6 @@ class
 
 inherit
 	EQA_TEST_SET
-
 
 feature -- Test
 
@@ -36,7 +33,6 @@ feature -- Test
 			l_file.delete
 		end
 
-
 	test_temporary_plain_text_file_with_prefix
 		local
 			l_file: PLAIN_TEXT_FILE
@@ -59,8 +55,6 @@ feature -- Test
 
 			l_file.delete
 		end
-
-
 
 	test_temporary_raw_file
 		local
@@ -85,7 +79,6 @@ feature -- Test
 			l_file.delete
 		end
 
-
 	test_temporary_raw_file_with_prefix
 		local
 			l_file: RAW_FILE
@@ -108,9 +101,6 @@ feature -- Test
 
 			l_file.delete
 		end
-
-
-
 
 note
 	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"

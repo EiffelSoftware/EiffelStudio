@@ -2165,95 +2165,132 @@ feature {NONE} -- Implementation
 			"[
 			#ifdef EIF_WINDOWS
 				#ifdef _MSC_VER
-				#define EINVAL 22 /* Invalid argument  */
-				#define EEXIST 17 /* File exists */
+					#define EINVAL 22 /* Invalid argument  */
+					#define EEXIST 17 /* File exists */
 
-				static const char letters[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+					static const char letters[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
-				/* Generate a temporary file name based on TMPL.  TMPL must match the
-				rules for mk[s]temp (i.e. end in "XXXXXX").  The name constructed
-				does not exist at the time of the call to mkstemp.  TMPL is
-				overwritten with the result.  */
-				int len;
-				char *tmpl;
-				char *XXXXXX;
-				tmpl = $a_name_template;
-				static unsigned long long value;
-				unsigned long long random_time_bits;
-				unsigned int count;
-				int fd = -1;
-				int save_errno = errno;
+					/* Generate a temporary file name based on TMPL.  TMPL must match the
+					rules for mk[s]temp (i.e. end in "XXXXXX").  The name constructed
+					does not exist at the time of the call to mkstemp.  TMPL is
+					overwritten with the result.  */
+					int len;
+					char *tmpl;
+					char *XXXXXX;
+					tmpl = $a_name_template;
+					static unsigned long long value;
+					unsigned long long random_time_bits;
+					unsigned int count;
+					int fd = -1;
+					int save_errno = errno;
 
-				/* A lower bound on the number of temporary files to attempt to
-				generate.  The maximum total number of temporary file names that
-				can exist for a given template is 62**6.  It should never be
-				necessary to try all these combinations.  Instead if a reasonable
-				number of names is tried (we define reasonable as 62**3) fail to
-				give the system administrator the chance to remove the problems.  */
-				#define ATTEMPTS_MIN (62 * 62 * 62)
+					/* A lower bound on the number of temporary files to attempt to
+					generate.  The maximum total number of temporary file names that
+					can exist for a given template is 62**6.  It should never be
+					necessary to try all these combinations.  Instead if a reasonable
+					number of names is tried (we define reasonable as 62**3) fail to
+					give the system administrator the chance to remove the problems.  */
+					#define ATTEMPTS_MIN (62 * 62 * 62)
 
-				/* The number of times to attempt to generate a temporary file.  To
-				conform to POSIX, this must be no smaller than TMP_MAX.  */
-				#if ATTEMPTS_MIN < TMP_MAX
-					unsigned int attempts = TMP_MAX;
-				#else
-					unsigned int attempts = ATTEMPTS_MIN;
-				#endif
+					/* The number of times to attempt to generate a temporary file.  To
+					conform to POSIX, this must be no smaller than TMP_MAX.  */
+					#if ATTEMPTS_MIN < TMP_MAX
+						unsigned int attempts = TMP_MAX;
+					#else
+						unsigned int attempts = ATTEMPTS_MIN;
+					#endif
 
-				len = strlen (tmpl);
-				if (len < 6 || strcmp (&tmpl[len - 6], "XXXXXX")){
-					errno = EINVAL;
-					return -1;
-				}
-
-				/* This is where the Xs start.  */
-				XXXXXX = &tmpl[len - 6];
-
-				/* Get some more or less random data.  */
-				{
-					SYSTEMTIME    stNow;
-					FILETIME ftNow;
-
-					// get system time
-					GetSystemTime(&stNow);
-					stNow.wMilliseconds = 500;
-					if (!SystemTimeToFileTime(&stNow, &ftNow))  {
-						errno = -1;
+					len = strlen (tmpl);
+					if (len < 6 || strcmp (&tmpl[len - 6], "XXXXXX")){
+						errno = EINVAL;
 						return -1;
 					}
-					random_time_bits = (((unsigned long long)ftNow.dwHighDateTime << 32)
+
+					/* This is where the Xs start.  */
+					XXXXXX = &tmpl[len - 6];
+
+					/* Get some more or less random data.  */
+					{
+						SYSTEMTIME    stNow;
+						FILETIME ftNow;
+
+						// get system time
+						GetSystemTime(&stNow);
+						stNow.wMilliseconds = 500;
+						if (!SystemTimeToFileTime(&stNow, &ftNow))  {
+							errno = -1;
+							return -1;
+						}
+						random_time_bits = (((unsigned long long)ftNow.dwHighDateTime << 32)
 				                        | (unsigned long long)ftNow.dwLowDateTime);
-				}
-				value += random_time_bits ^ (unsigned long long)GetCurrentThreadId ();
+					}
+					value += random_time_bits ^ (unsigned long long)GetCurrentThreadId ();
 
-				for (count = 0; count < attempts; value += 7777, ++count) {
-					unsigned long long v = value;
+					for (count = 0; count < attempts; value += 7777, ++count) {
+						unsigned long long v = value;
 
-					/* Fill in the random bits.  */
-					XXXXXX[0] = letters[v % 62];
-					v /= 62;
-					XXXXXX[1] = letters[v % 62];
-					v /= 62;
-					XXXXXX[2] = letters[v % 62];
-					v /= 62;
-					XXXXXX[3] = letters[v % 62];
-					v /= 62;
-					XXXXXX[4] = letters[v % 62];
-					v /= 62;
-					XXXXXX[5] = letters[v % 62];
+						/* Fill in the random bits.  */
+						XXXXXX[0] = letters[v % 62];
+						v /= 62;
+						XXXXXX[1] = letters[v % 62];
+						v /= 62;
+						XXXXXX[2] = letters[v % 62];
+						v /= 62;
+						XXXXXX[3] = letters[v % 62];
+						v /= 62;
+						XXXXXX[4] = letters[v % 62];
+						v /= 62;
+						XXXXXX[5] = letters[v % 62];
 
-					fd = _open (tmpl, O_RDWR | O_CREAT | O_EXCL | O_BINARY, _S_IREAD | _S_IWRITE);
-					if (fd >= 0)  {
-						errno = save_errno;
-						return fd;
-					} else if (errno != EEXIST){
+						fd = _open (tmpl, O_RDWR | O_CREAT | O_EXCL | O_BINARY, _S_IREAD | _S_IWRITE);
+						if (fd >= 0)  {
+							errno = save_errno;
+							return fd;
+						} else if (errno != EEXIST){
+							return -1;
+				   	 }
+					}
+					/* We got out of the loop because we ran out of combinations to try.  */
+					errno = EEXIST;
+					return -1;
+				#else // _MSC_VER
+					#ifdef __MINGW32__
+						// https://github.com/mirror/mingw-w64/blob/master/mingw-w64-crt/misc/mkstemp.c
+						int i, j, fd, len, index;
+
+						/* These are the (62) characters used in temporary filenames. */
+    					static const char letters[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    					char *template_name;
+						template_name = $a_name_template;
+
+						/* The last six characters of template must be "XXXXXX" */
+						if (template_name == NULL || (len = strlen (template_name)) < 6
+							|| memcmp (template_name + (len - 6), "XXXXXX", 6)) {
+						errno = EINVAL;
 						return -1;
-				    }
-				}
-				/* We got out of the loop because we ran out of combinations to try.  */
-				errno = EEXIST;
-				return -1;
-			#endif // _MSC_VER
+						}
+
+						/* User may supply more than six trailing Xs */
+						for (index = len - 6; index > 0 && template_name[index - 1] == 'X'; index--);
+
+						/*
+						Like OpenBSD, mkstemp() will try at least 2 ** 31 combinations before
+						giving up.
+						*/
+						for (i = 0; i >= 0; i++) {
+							for(j = index; j < len; j++) {
+								template_name[j] = letters[rand () % 62];
+						}
+						fd = _sopen(template_name,
+								_O_RDWR | _O_CREAT | _O_EXCL | _O_BINARY,
+								_SH_DENYRW, _S_IREAD | _S_IWRITE);
+							if (fd != -1) return fd;
+							if (fd == -1 && errno != EEXIST) return -1;
+						}
+
+						return -1;
+					#endif //__MINGW32__
+				#endif
 		#else
 			/* nix platforms: The `mkstemp()` function generates a unique temporary filename from
 			template, creates and opens the file, and returns an open file descriptor for the file. */

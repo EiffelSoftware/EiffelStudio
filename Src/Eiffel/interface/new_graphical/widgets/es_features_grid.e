@@ -955,8 +955,8 @@ feature {NONE} -- Tree item factory
 			if a_row.count > 0 then
 				if is_editor_token_enabled then
 					if not attached {EB_GRID_EDITOR_TOKEN_ITEM} a_row.item (1) then
-						a_row.clear
 						if attached {EV_GRID_LABEL_ITEM} a_row.item (1) as lab then
+							a_row.clear
 							add_tree_item_for_e_feature (a_row, ef, lab.pixmap)
 						else
 							check is_label_item: False end
@@ -968,8 +968,8 @@ feature {NONE} -- Tree item factory
 					if attached {EV_GRID_LABEL_ITEM} a_row.item (1) as lab then
 						lab.set_text (feature_name (ef))
 					else
-						a_row.clear
 						if attached {EB_GRID_EDITOR_TOKEN_ITEM} a_row.item (1) as gf then
+							a_row.clear
 							add_tree_item_for_e_feature (a_row, ef, gf.pixmap)
 						else
 							check is_editor_item: False end

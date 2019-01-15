@@ -713,7 +713,7 @@ feature {NONE} -- Validation and warning generation
 			l_targets: STRING_TABLE [CONF_TARGET]
 		do
 			l_targets := conf_system.targets
-			l_targets.search (a_name.as_lower)
+			l_targets.search (a_name)
 			if not (create {EIFFEL_SYNTAX_CHECKER}).is_valid_target_name (a_name) then
 				prompts.show_error_prompt (conf_interface_names.target_name_invalid, window, Void)
 			elseif l_targets.found and then l_targets.found_item /= current_target then

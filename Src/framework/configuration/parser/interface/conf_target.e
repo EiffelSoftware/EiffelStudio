@@ -465,16 +465,13 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			-- Set `name' to `a_name'.
 		require
 			a_name_ok: a_name /= Void and then not a_name.is_empty
-		local
-			l_lowered_name: like name
 		do
-			l_lowered_name := a_name.as_lower
 			if attached system as l_system then
-				l_system.targets.replace_key (l_lowered_name, name)
+				l_system.targets.replace_key (a_name, name)
 			end
-			name := l_lowered_name
+			name := a_name.string
 		ensure
-			name_set: name.is_case_insensitive_equal (a_name) and name.is_equal (name.as_lower)
+			name_set: name.is_equal (a_name)
 		end
 
 	set_description (a_description: like description)

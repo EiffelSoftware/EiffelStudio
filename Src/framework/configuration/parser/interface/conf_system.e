@@ -102,7 +102,7 @@ feature -- Access, stored in configuration file
 	target (a_name: READABLE_STRING_GENERAL): detachable CONF_TARGET
 			-- Configuration target named `a_name`, if any.
 		do
-			Result := targets.item (a_name.as_lower)
+			Result := targets.item (a_name)
 		end
 
 	library_target: detachable CONF_TARGET
@@ -458,7 +458,7 @@ feature -- Equality
 				l_library_target := library_target
 				l_other_library_target := other.library_target
 				Result := (l_library_target = Void and l_other_library_target = Void) or
-					((l_library_target /= Void and l_other_library_target /= Void) and then l_library_target.name.is_equal (l_other_library_target.name) )
+					((l_library_target /= Void and l_other_library_target /= Void) and then l_library_target.name.is_case_insensitive_equal (l_other_library_target.name) )
 				from
 					targets.start
 					l_o_targets := other.targets

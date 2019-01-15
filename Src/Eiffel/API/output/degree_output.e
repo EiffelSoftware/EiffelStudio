@@ -3,9 +3,9 @@ note
 		"Degree messages output during compilation. %
 		%By default, all output is redirected to `io'."
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
-	revision: "$Revision $"
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	DEGREE_OUTPUT
@@ -17,19 +17,19 @@ inherit
 
 feature -- Access
 
-	degree: INTEGER;
+	degree: INTEGER
 			-- Current degree being processed.
 
-	last_degree: INTEGER;
+	last_degree: INTEGER
 			-- Current degree being processed if a compilation is under way,
 			-- or else the degree that was attained during the last compilation.
 
 feature -- Measurement
 
-	processed: INTEGER;
+	processed: INTEGER
 			-- Number of processed elements.
 
-	total_number: INTEGER;
+	total_number: INTEGER
 			-- Number of entities being processed.
 
 feature -- Status Report
@@ -158,7 +158,7 @@ feature {NONE} -- Query
 			check
 				total_number_not_zero: total_number > 0
 			end
-			Result := 100 - (100 * a_to_go) // (total_number).max (1);
+			Result := 100 - (100 * a_to_go) // (total_number).max (1)
 			if Result = 100 and then a_to_go /= 0 then
 				Result := 99
 			end
@@ -175,16 +175,16 @@ feature {NONE} -- Query
 		require
 			positive_total_nbr: total_number > 0
 		local
-			l_percent: INTEGER;
+			l_percent: INTEGER
 			l_to_go: STRING
 			l_total_nbr: STRING
 			l_two_spaces: STRING
 		do
-			l_total_nbr := total_number.out;
+			l_total_nbr := total_number.out
 
-			create Result.make (7);
-			Result.extend ('[');
-			l_percent := calculate_percentage (a_to_go);
+			create Result.make (7)
+			Result.extend ('[')
+			l_percent := calculate_percentage (a_to_go)
 			if l_percent < 10 then
 				Result.extend (' ')
 			end
@@ -192,7 +192,7 @@ feature {NONE} -- Query
 				Result.extend (' ')
 			end
 			Result.append_integer (l_percent)
-			Result.append_string_general ("%% - ");
+			Result.append_string_general ("%% - ")
 
 			create l_two_spaces.make_filled (' ', 2)
 			l_to_go := a_to_go.out
@@ -207,7 +207,7 @@ feature {NONE} -- Query
 				Result.append_string_general (l_two_spaces)
 				Result.extend (' ')
 			else
-			end;
+			end
 
 			Result.append_string_general (l_to_go)
 			Result.extend (']')
@@ -340,7 +340,7 @@ feature -- Basic operations: Degrees
 			total_number := a_to_go + processed
 			put_degree (degree_message (5), a_to_go, a_class.name)
 			processed := processed + 1
-		end;
+		end
 
 	put_degree_4 (a_class: CLASS_C; a_to_go: INTEGER)
 			-- Put message to indicate that `a_class' is being
@@ -353,7 +353,7 @@ feature -- Basic operations: Degrees
 		do
 			total_number := a_to_go + processed
 			put_degree (degree_message (4), a_to_go, a_class.name)
-			processed := processed + 1;
+			processed := processed + 1
 		end
 
 	put_degree_3 (a_class: CLASS_C; a_to_go: INTEGER)
@@ -361,7 +361,7 @@ feature -- Basic operations: Degrees
 			-- compiled during degree three with `a_to_go'
 			-- classes to go.
 		require
-			a_class_attached: a_class /= Void;
+			a_class_attached: a_class /= Void
 			a_to_go_non_negative: a_to_go >= 0
 			in_degree_3: degree = 3
 		do
@@ -375,7 +375,7 @@ feature -- Basic operations: Degrees
 			-- compiled during degree two with `a_to_go'
 			-- classes to go.
 		require
-			a_class_attached: a_class /= Void;
+			a_class_attached: a_class /= Void
 			a_to_go_non_negative: a_to_go >= 0
 			in_degree_2: degree = 2
 		do
@@ -387,7 +387,7 @@ feature -- Basic operations: Degrees
 			-- compiled during degree one with `a_to_go'
 			-- classes to go.
 		require
-			a_class_attached: a_class /= Void;
+			a_class_attached: a_class /= Void
 			a_to_go_non_negative: a_to_go >= 0
 			in_degree_1: degree = 1
 		do
@@ -400,7 +400,6 @@ feature -- Basic operations: Degrees
 			not_is_abort_requested: not is_abort_requested
 		do
 			put_string (translate (lb_removing_dead_code_message, Void))
-			put_new_line
 		end
 
 	put_end_dead_code_removal_message
@@ -414,7 +413,7 @@ feature -- Basic operations: Degrees
 			-- compiled during degree minus one with `a_to_go'
 			-- classes to go.
 		require
-			a_class_attached: a_class /= Void;
+			a_class_attached: a_class /= Void
 			a_to_go_non_negative: a_to_go >= 0
 			in_degree_minus_1: degree = -1
 		do
@@ -601,8 +600,7 @@ feature -- Output on per class
 	put_consume_assemblies
 			-- Put message to indicate that assemblies are consumed.
 		do
-			put_string (lb_consume_assemblies_message);
-			put_new_line
+			put_string (lb_consume_assemblies_message)
 		end
 
 	put_process_group (a_group: CONF_GROUP)
@@ -645,7 +643,7 @@ feature -- Output on per class
 			a_class_attached: a_class /= Void
 		do
 			put_degree (lb_case_class_message, total_number - processed, a_class.name)
-			processed := processed + 1;
+			processed := processed + 1
 		end
 
 	put_class_document_message (a_class: CONF_CLASS)
@@ -655,13 +653,13 @@ feature -- Output on per class
 			a_class_attached: a_class /= Void
 		do
 			put_degree (lb_document_class_message, total_number - processed, a_class.name)
-			processed := processed + 1;
+			processed := processed + 1
 		end
 
 	skip_case_class
 			-- Process the skipping of a case class.
 		do
-			processed := processed + 1;
+			processed := processed + 1
 		end
 
 	flush_output
@@ -675,9 +673,9 @@ feature {SYSTEM_I} -- Implementation
 	put_degree_output (deg_nbr: STRING; to_go: INTEGER; total: INTEGER)
 			-- Display degree `deg_nbr' with entity `a_class'.
 		do
-			total_number := total;
+			total_number := total
 			if is_verbose then
-				put_message (percentage_prefix (to_go) + deg_nbr);
+				put_message (percentage_prefix (to_go) + deg_nbr)
 				put_new_line
 			end
 		end
@@ -713,8 +711,8 @@ feature {NONE} -- Internationalization
 	lb_case_cluster_message: STRING = "Analyzing Cluster "
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

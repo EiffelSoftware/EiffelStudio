@@ -11,7 +11,7 @@ create
 
 feature -- Access
 
-	test_g: FILE_NAME
+	test_g: DIRECTORY_NAME
 		-- Used for testing
 
 end

@@ -9,7 +9,7 @@ feature -- Initialization
 	make is
 			-- Creation procedure.
 		local
-			l_f: FILE_NAME
+			l_f: DIRECTORY_NAME
 			l_a: ANY
 			a: ROUTINE [ANY, TUPLE]
 		do

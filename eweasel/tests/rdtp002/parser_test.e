@@ -18,11 +18,12 @@ feature
 		local
 			l_parser: EIFFEL_PARSER
 			l_input_file: PLAIN_TEXT_FILE
-			l_file_name: FILE_NAME
+			l_file_name: PATH
 		do
 			create l_file_name.make_from_string ("$TEST")
-			l_file_name.set_file_name ("test")
-			create l_input_file.make_open_read (l_file_name)
+			l_file_name := l_file_name.extended ("test")
+			create l_input_file.make_with_path (l_file_name)
+			l_input_file.open_read
 			l_input_file.read_stream (l_input_file.count)
 			l_input_file.close
 

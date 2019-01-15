@@ -11,9 +11,9 @@ create
 feature
 	 make
 	 	do
-	 		new_tuple (create {FILE_NAME}.make_from_string ("Manu"))
+	 		new_tuple (create {DIRECTORY_NAME}.make_from_string ("Manu"))
 	 	end
 
-	string: FILE_NAME
+	string: DIRECTORY_NAME
 
 end

@@ -1,40 +1,37 @@
-note
-
-	description:
-		"Error when a generic type has not the exact number %
-		%of generic parameters."
+﻿note
+	description: "Error when a generic type has not the exact number of generic parameters."
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
-	revision: "$Revision $"
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
-class VTUG
+deferred class VTUG
 
 inherit
 
 	EIFFEL_ERROR
 		redefine
 			build_explain, is_defined, trace_primary_context
-		end;
+		end
 
 feature -- Properties
 
-	code: STRING = "VTUG";
+	code: STRING = "VTUG"
 
-	e_feature: E_FEATURE;
+	e_feature: E_FEATURE
 
-	type: TYPE_A;
-			-- Type violating the rule
+	type: TYPE_A
+			-- Type violating the rule.
 
-	base_class: CLASS_C;
+	base_class: CLASS_C
 
 	is_in_class_constraint: BOOLEAN
 			-- Did the invalid type appeared in a constraint of a generic class?
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Properties
 
-	entity_name: STRING;
-			-- I-th argument of the involved feature ?
+	entity_name: STRING
+			-- I-th argument of the involved feature?
 
 feature -- Access
 
@@ -54,30 +51,30 @@ feature -- Output
 	build_explain (a_text_formatter: TEXT_FORMATTER)
 		do
 			if e_feature /= Void then
-				a_text_formatter.add ("In feature: ");
-				e_feature.append_name (a_text_formatter);
+				a_text_formatter.add ("In feature: ")
+				e_feature.append_name (a_text_formatter)
 			elseif is_class_defined then
 				if is_in_class_constraint then
-					a_text_formatter.add ("In generic constraint");
+					a_text_formatter.add ("In generic constraint")
 				else
-					a_text_formatter.add ("In inheritance clause");
+					a_text_formatter.add ("In inheritance clause")
 				end
 			else
 				a_text_formatter.add ("In Eiffel Configuration File")
-			end;
-			a_text_formatter.add_new_line;
+			end
+			a_text_formatter.add_new_line
 			if entity_name /= Void then
-				a_text_formatter.add ("Entity name: ");
-				a_text_formatter.add (encoding_converter.utf8_to_utf32 (entity_name));
-				a_text_formatter.add_new_line;
-			end;
-			a_text_formatter.add ("Invalid type: ");
-			type.append_to (a_text_formatter);
-			a_text_formatter.add_new_line;
-			a_text_formatter.add ("Base class: ");
-			base_class.append_signature (a_text_formatter, False);
-			a_text_formatter.add_new_line;
-		end;
+				a_text_formatter.add ("Entity name: ")
+				a_text_formatter.add (encoding_converter.utf8_to_utf32 (entity_name))
+				a_text_formatter.add_new_line
+			end
+			a_text_formatter.add ("Invalid type: ")
+			type.append_to (a_text_formatter)
+			a_text_formatter.add_new_line
+			a_text_formatter.add ("Base class: ")
+			base_class.append_signature (a_text_formatter, False)
+			a_text_formatter.add_new_line
+		end
 
 	trace_primary_context (a_text_formatter: TEXT_FORMATTER)
 			-- Build the primary context string so errors can be navigated to
@@ -100,28 +97,28 @@ feature {COMPILER_EXPORTER}
 			valid_c: c /= Void
 		do
 			base_class := c
-		end;
+		end
 
 	set_type (t: TYPE_A)
 			-- Assign `t' to `type'.
 		require
 			valid_t: t /= Void
 		do
-			type := t;
-		end;
+			type := t
+		end
 
 	set_feature (f: FEATURE_I)
 		do
 			if f /= Void then
-				e_feature := f.enclosing_feature.api_feature (f.written_in);
+				e_feature := f.enclosing_feature.api_feature (f.written_in)
 			end
-		end;
+		end
 
 	set_entity_name (i: STRING)
-			-- Assign `i' to `entity_name' ?
+			-- Assign `i' to `entity_name'?
 		do
-			entity_name := i;
-		end;
+			entity_name := i
+		end
 
 	set_is_in_class_constraint (v: like is_in_class_constraint)
 			-- Assign `v' to `is_in_class_constraint'.
@@ -132,7 +129,7 @@ feature {COMPILER_EXPORTER}
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -163,4 +160,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class VTUG
+end

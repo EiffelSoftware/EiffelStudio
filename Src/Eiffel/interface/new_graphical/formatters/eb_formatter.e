@@ -1,6 +1,5 @@
 ﻿note
-	description:
-		"Objects that display class information in a widget."
+	description: "Objects that display class information in a widget."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -621,17 +620,6 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	file_name: FILE_NAME
-			-- Name of the file in which displayed information may be stored
-		require
-			element_name_attached: element_name /= Void
-		do
-			create Result.make_from_string (element_name)
-			Result.add_extension (post_fix)
-		ensure
-			result_attached: Result /= Void
-		end
-
 	post_fix: STRING
 			-- Postfix name of current format.
 			-- Used as an extension while saving.
@@ -680,7 +668,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

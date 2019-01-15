@@ -707,23 +707,20 @@ feature {NONE} -- Implementation attribute processing
 			last_system_not_void: last_system /= Void
 		local
 			l_parent_target: detachable CONF_TARGET
-			l_lower_name: STRING_32
 			l_current_target: like current_target
 			l_extends, l_extends_location: detachable READABLE_STRING_32
 			l_parent_system: detachable CONF_SYSTEM
 		do
 			if attached last_system as l_last_system then
 				if attached current_attributes.item (at_name) as l_name then
-						-- We will use `l_lower_name' for lookup, but `l_name' for error messages.
-					l_lower_name := l_name.as_lower
-					if not is_valid_target_name (l_lower_name) then
+					if not is_valid_target_name (l_name) then
 						set_parse_error_message (conf_interface_names.e_parse_incorrect_target_invalid_name (l_name))
 					end
-					if l_last_system.targets.has (l_lower_name) then
+					if l_last_system.targets.has (l_name) then
 						set_parse_error_message (conf_interface_names.e_parse_multiple_target_with_name (l_name))
 					end
 
-					l_current_target := factory.new_target (l_lower_name, l_last_system)
+					l_current_target := factory.new_target (l_name, l_last_system)
 					current_target := l_current_target
 					if attached current_attributes.item (at_abstract) as l_abstract then
 						if l_abstract.is_boolean then
@@ -732,7 +729,7 @@ feature {NONE} -- Implementation attribute processing
 							set_parse_error_message (conf_interface_names.e_parse_invalid_value (ta_abstract))
 						end
 					end
-					if attached current_library_target as l_current_library_target and then l_lower_name.same_string_general (l_current_library_target) then
+					if attached current_library_target as l_current_library_target and then l_name.is_case_insensitive_equal_general (l_current_library_target) then
 						l_last_system.set_library_target (l_current_target)
 						current_library_target := Void
 					end

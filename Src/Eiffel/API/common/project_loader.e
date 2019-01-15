@@ -652,6 +652,8 @@ feature {NONE} -- Settings
 					eiffel_project.make_new (l_dir, compiler_project_location, True, deletion_agent, cancel_agent)
 					if is_deletion_cancelled then
 						set_has_error
+					elseif workbench.system_defined then
+						system.reset_all
 					end
 				end
 			else
@@ -802,8 +804,7 @@ feature {NONE} -- Settings
 			else
 				l_targets := a_system.compilable_targets
 				if a_proposed_target /= Void then
-					target_name := a_proposed_target.as_lower
-
+					target_name := a_proposed_target
 					l_targets.search (target_name)
 					if not l_targets.found then
 						l_not_found := True
@@ -833,7 +834,7 @@ feature {NONE} -- Settings
 						l_targets.after
 					loop
 						t := l_targets.key_for_iteration
-						if t.same_string (l_last_target) then
+						if t.is_case_insensitive_equal (l_last_target) then
 								-- We want the last target first in the list.
 							l_last_target_matched := True
 						else
@@ -1167,8 +1168,8 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

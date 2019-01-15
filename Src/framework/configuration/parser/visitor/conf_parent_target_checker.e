@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Check the validity of parent target (detect cycle, and missing target)."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -156,7 +156,6 @@ feature {NONE} -- Execution
 			loc: CONF_FILE_LOCATION
 			l_load: CONF_LOAD
 			l_conf_error: CONF_ERROR
-			l_has_error: BOOLEAN
 		do
 			tgt := a_target
 			cfg := a_target.system
@@ -254,7 +253,6 @@ feature {NONE} -- Events
 				check is_created: False end
 			end
 		end
-
 
 note
 	copyright: "Copyright (c) 1984-2019, Eiffel Software"

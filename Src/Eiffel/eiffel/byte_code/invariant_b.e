@@ -28,7 +28,7 @@ feature -- Visitor
 
 feature -- Access
 
-	byte_list: BYTE_LIST [BYTE_NODE]
+	byte_list: BYTE_LIST [ASSERT_B]
 			-- Invariant byte code list
 
 	once_manifest_string_count: INTEGER
@@ -276,9 +276,9 @@ invariant
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			

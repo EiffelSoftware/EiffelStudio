@@ -234,7 +234,6 @@ feature -- Type checking
 			a_feature_not_void: a_feature /= Void
 			a_clause_not_void: a_clause /= Void
 		local
-			l_list: BYTE_LIST [BYTE_NODE]
 			l_invariant: INVARIANT_B
 		do
 			set_is_replicated (False)
@@ -248,11 +247,13 @@ feature -- Type checking
 				-- There are no locals, but we need to initialize the structures that are used for scope tests.
 			context.init_local_scopes
 			a_clause.process (Current)
-			if a_generate_code then
-				l_list ?= last_byte_node
+			if
+				a_generate_code and then
+				attached {BYTE_LIST [ASSERT_B]} last_byte_node as l
+			then
 				create l_invariant
 				l_invariant.set_class_id (context.current_class.class_id)
-				l_invariant.set_byte_list (l_list)
+				l_invariant.set_byte_list (l)
 				l_invariant.set_once_manifest_string_count (a_clause.once_manifest_string_count)
 				context.init_invariant_byte_code (l_invariant)
 				last_byte_node := l_invariant
@@ -8180,12 +8181,12 @@ feature {NONE} -- Visitor
 			s: INTEGER
 		do
 			break_point_slot_count := 0
-			if l_as.assertion_list /= Void then
+			if attached l_as.assertion_list as l then
 				reset_for_unqualified_call_checking
 				set_is_checking_invariant (True)
 				context.enter_realm
 				s := context.scope
-				process_eiffel_list_with_matcher (l_as.assertion_list, create {AST_SCOPE_ASSERTION}.make (context), Void)
+				process_eiffel_list_with_matcher (l, create {AST_SCOPE_ASSERTION}.make (context), create {BYTE_LIST [ASSERT_B]}.make (l.count))
 				context.set_scope (s)
 				context.leave_optional_realm
 				set_is_checking_invariant (False)
@@ -12033,8 +12034,8 @@ note
 		"CA033", "CA033 — too long class"
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

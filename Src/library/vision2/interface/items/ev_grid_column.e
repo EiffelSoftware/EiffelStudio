@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Column of an EV_GRID, containing EV_GRID_ITEMs."
 	date: "$Date$"
 	legal: "See notice at end of class."
@@ -279,7 +279,7 @@ feature -- Status setting
 		require
 			not_destroyed: not is_destroyed
 			parented: attached parent as l_parent
-			valid_rows: start_row >= 1 and end_row <= l_parent.row_count and start_row <= end_row
+			valid_rows: start_row >= 1 and end_row <= l_parent.row_count and start_row - 1 <= end_row
 		do
 			Result := implementation.required_width_of_item_span (start_row, end_row)
 		ensure
@@ -514,7 +514,7 @@ invariant
 	virtual_position_and_virtual_position_unlocked_equal_when_not_locked: not is_locked implies virtual_x_position = virtual_x_position_unlocked
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

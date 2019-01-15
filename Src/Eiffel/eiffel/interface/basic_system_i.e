@@ -354,6 +354,50 @@ feature -- Status report
 
 feature -- Settings
 
+	reset_all
+			-- Reset all information about the system.
+		do
+			any_class := Void
+			arguments_class := Void
+			array_class := Void
+			boolean_class := Void
+			character_32_class := Void
+			character_8_class := Void
+			disposable_class := Void
+			exception_class := Void
+			function_class := Void
+			integer_16_class := Void
+			integer_32_class := Void
+			integer_64_class := Void
+			integer_8_class := Void
+			ise_exception_manager_class := Void
+			native_array_class := Void
+			natural_16_class := Void
+			natural_32_class := Void
+			natural_64_class := Void
+			natural_8_class := Void
+			pointer_class := Void
+			predicate_class := Void
+			procedure_class := Void
+			real_32_class := Void
+			real_64_class := Void
+			routine_class := Void
+			rt_extension_class := Void
+			special_class := Void
+			string_32_class := Void
+			string_8_class := Void
+			system_exception_type_class := Void
+			system_object_class := Void
+			system_string_class := Void
+			system_type_class := Void
+			system_value_type_class := Void
+			tuple_class := Void
+			type_class := Void
+			typed_pointer_class := Void
+		ensure
+			not attached any_class
+		end
+
 	set_any_class (c: CLASS_I)
 			-- Assign `c' to `any_class'.
 		require
@@ -706,7 +750,7 @@ feature -- Settings: Exception
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

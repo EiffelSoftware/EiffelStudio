@@ -1,6 +1,6 @@
 ﻿note
 	description: "[
-			RULE #63: Manifest array type
+			RULE #93: Manifest array type
 			
 			The type of the manifest array does not match the array type of the target.
 			This may lead to cat-calls.

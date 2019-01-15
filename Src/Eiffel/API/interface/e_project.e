@@ -405,7 +405,7 @@ feature -- Update
 			if not Compilation_modes.is_precompiling then
 				is_compiling_ref.put (True)
 				workbench.start_compilation
-				workbench.recompile (a_syntax_analysis, a_system_check, a_generate_code)
+				workbench.recompile (is_for_finalization, a_syntax_analysis, a_system_check, a_generate_code)
 				if not is_for_finalization then
 					workbench.stop_compilation
 				end
@@ -581,7 +581,7 @@ feature -- Update
 			Compilation_modes.set_is_precompiling (True)
 			Compilation_modes.set_is_freezing
 			workbench.start_compilation
-			workbench.recompile (True, True, True)
+			workbench.recompile (is_for_finalization, True, True, True)
 			if not is_for_finalization then
 				workbench.stop_compilation
 			end
@@ -1046,7 +1046,7 @@ invariant
 	degree_output_not_void: degree_output /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1622,7 +1622,7 @@ feature -- Recompilation
 			has_potential_class_name_mismatch_set: has_potential_class_name_mismatch
 		end
 
-	recompile (a_syntax_analysis, a_system_check, a_generate_code: BOOLEAN)
+	recompile (is_for_finalization, a_syntax_analysis, a_system_check, a_generate_code: BOOLEAN)
 			-- Incremetal recompilation of the system.
 		require
 			no_error: not Error_handler.has_error
@@ -1639,7 +1639,7 @@ feature -- Recompilation
 
 			has_been_changed := is_config_changed
 			lace.check_shared_library_definition_stamp
-			do_recompilation (a_syntax_analysis, a_system_check, a_generate_code)
+			do_recompilation (is_for_finalization, a_syntax_analysis, a_system_check, a_generate_code)
 
 			successful := True
 		rescue
@@ -1718,7 +1718,7 @@ feature -- Recompilation
 			missing_classes_void: missing_classes = Void
 		end
 
-	do_recompilation (a_syntax_analysis, a_system_check, a_generate_code: BOOLEAN)
+	do_recompilation (is_for_finalization, a_syntax_analysis, a_system_check, a_generate_code: BOOLEAN)
 			-- Incremental recompilation of the system.
 		require
 			valid_options: (a_generate_code implies a_system_check) and then (a_system_check implies a_syntax_analysis)
@@ -2056,7 +2056,7 @@ end
 					check_full_class_name_unicity
 				end
 
-				if not il_generation and then freeze then
+				if not il_generation and then freeze and then not is_for_finalization then
 					Degree_output.put_freezing_message
 					freeze_system
 					is_freeze_requested := False
@@ -6194,7 +6194,7 @@ feature {NONE} -- External features
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

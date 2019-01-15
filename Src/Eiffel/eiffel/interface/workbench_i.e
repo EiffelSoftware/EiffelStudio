@@ -339,7 +339,7 @@ feature -- Commands
 			end
 		end
 
-	recompile (a_syntax_analysis, a_system_check, a_generate_code: BOOLEAN)
+	recompile (is_for_finalization, a_syntax_analysis, a_system_check, a_generate_code: BOOLEAN)
 			-- Incremental recompilation
 		local
 			retried: INTEGER
@@ -389,7 +389,7 @@ feature -- Commands
 					if Lace.has_group_changed or missing_class_error or compilation_modes.is_discover then
 						system.set_rebuild (True)
 					end
-					System.recompile (a_syntax_analysis, a_system_check, a_generate_code)
+					System.recompile (is_for_finalization, a_syntax_analysis, a_system_check, a_generate_code)
 
 					process_actions (universe.conf_system.all_post_compile_action)
 				else
@@ -699,7 +699,7 @@ feature {NONE} -- Implementation
 			-- Was there a problem during running the pre and post compile actions?
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

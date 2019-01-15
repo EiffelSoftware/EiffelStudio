@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Provide access to eiffel environment information."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,6 +14,8 @@ feature -- Status
 			-- Has the layout been defined?
 		do
 			Result := eiffel_layout_cell.item /= Void
+		ensure
+			instance_free: class
 		end
 
 feature -- Update
@@ -25,6 +27,7 @@ feature -- Update
 		do
 			eiffel_layout_cell.put (a_layout)
 		ensure
+			instance_free: class
 			is_eiffel_layout_defined: is_eiffel_layout_defined
 		end
 
@@ -43,6 +46,7 @@ feature -- Access
 				create {EC_EIFFEL_LAYOUT} Result
 			end
 		ensure
+			instance_free: class
 			Result_not_void: Result /= Void
 		end
 
@@ -53,11 +57,12 @@ feature {NONE} -- Implementation
 		once
 			create Result.put (Void)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Project searcher. Search project that match given system name or system UUID or target name or target UUID in given pathes."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -178,7 +178,7 @@ feature {NONE} -- Implemetation
 							l_error := not l_target.name.is_case_insensitive_equal (target_name)
 						else
 								-- Get target from the system.
-							l_conf_system.targets.search (target_name.as_lower)
+							l_conf_system.targets.search (target_name)
 							if not l_conf_system.targets.found then
 								l_all_libs := l_conf_system.all_libraries
 								if l_all_libs /= Void then
@@ -240,7 +240,7 @@ invariant
 	project_found_implies_project_not_void: project_found implies (found_project /= Void)
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -270,7 +270,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

@@ -192,7 +192,7 @@ feature -- Initialization
 			l_fd: INTEGER
 		do
 			create l_temp.make (a_prefix + "XXXXXX")
-			l_fd := eif_temp_file (l_temp.item)
+			l_fd := temp_file_impl (l_temp.item)
 			make_with_name (l_temp.string)
 			fd_open_read_write (l_fd)
 		ensure
@@ -2152,8 +2152,9 @@ feature {NONE} -- Implementation
 			"eif_file_access_date"
 		end
 
-	eif_temp_file (a_name_template: POINTER): INTEGER
-			-- Create a unique temporary file name with template `a_name_template` and return a file descriptor.
+	eif_temp_file (a_name_template: POINTER; a_text_mode: BOOLEAN): INTEGER
+			-- Create a unique temporary file name with template `a_name_template` with mode
+			-- `a_text_mode`, True: TEXT MODE, False: Binary Mode and return a file descriptor.
 		note
 			EIS: "name=Creates a unique temporary file", "src=http://man7.org/linux/man-pages/man3/mkstemp.3.html", "protocol=uri"
 		external
@@ -2192,8 +2193,11 @@ feature {NONE} -- Implementation
 					for(j = index; j < len; j++) {
 						template_name[j] = letters[rand () % 62];
 					}
-					 
-					fd = _sopen( template_name, _O_CREAT | _O_EXCL | _O_RDWR | _O_BINARY,_SH_DENYRW, _S_IREAD | _S_IWRITE );
+					if ($a_text_mode) { 
+						fd = _sopen( template_name, _O_CREAT | _O_EXCL | _O_RDWR | _O_TEXT | _O_NOINHERIT,_SH_DENYRW, _S_IREAD | _S_IWRITE );
+					} else {
+						fd = _sopen( template_name, _O_CREAT | _O_EXCL | _O_RDWR | _O_BINARY | _O_NOINHERIT,_SH_DENYRW, _S_IREAD | _S_IWRITE );
+					}
 					if (fd != -1) return fd;
 				    if (fd == -1 && errno != EEXIST) return -1;
 				}
@@ -2205,6 +2209,14 @@ feature {NONE} -- Implementation
 			#endif
 			]"
 		end
+
+	temp_file_impl (a_name: POINTER): INTEGER
+			-- Create a temporary file from `a_name` template
+			-- and return a file descriptor.
+		do
+			Result := eif_temp_file (a_name, is_plain_text)
+		end
+
 
 feature {NONE} -- Inapplicable
 

@@ -2157,10 +2157,12 @@ feature {NONE} -- Implementation
 		note
 			EIS: "name=Creates a unique temporary file", "src=http://man7.org/linux/man-pages/man3/mkstemp.3.html", "protocol=uri"
 		external
-			"C inline use %"eif_file.h%", %"fcntl.h%", %"share.h%" "
+			"C inline use %"eif_file.h%", %"fcntl.h%" "
 		alias
 			"[
 			#ifdef EIF_WINDOWS
+				// added constant so no need to add shared.h header.
+				#define _SH_DENYRW 0x10 
 				// https://github.com/mirror/mingw-w64/blob/master/mingw-w64-crt/misc/mkstemp.c
 				#ifdef _MSC_VER
 					#define EINVAL 22 /* Invalid argument  */

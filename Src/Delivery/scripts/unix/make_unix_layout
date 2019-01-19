@@ -67,6 +67,7 @@ cp -r $ISE_EIFFEL/library $LIB_DIR
 cp -r $ISE_EIFFEL/experimental $LIB_DIR
 cp -r $ISE_EIFFEL/contrib $LIB_DIR
 cp -r $ISE_EIFFEL/unstable $LIB_DIR
+cp -r $ISE_EIFFEL/C_library $LIB_DIR
 
 # Copy precompile without EIFGENs and remove WEL files
 mkdir -p $SHARE_DIR/precomp/spec/$UNIX_PLATFORM

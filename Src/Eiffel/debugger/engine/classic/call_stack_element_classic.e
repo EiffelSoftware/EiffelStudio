@@ -335,7 +335,7 @@ feature {NONE} -- Implementation
 			l_count: INTEGER
 			value: ABSTRACT_DEBUG_VALUE
 			args_locs_info: like retrieved_locals_and_arguments
-			l_args, l_locals, l_object_test_locals: detachable SPECIAL [ABSTRACT_DEBUG_VALUE]
+			l_args, l_locals: detachable SPECIAL [ABSTRACT_DEBUG_VALUE]
 			l_ot_locals: like private_object_test_locals_info
 			l_type: detachable TYPE_A
 			l_index, l_upper: detachable INTEGER

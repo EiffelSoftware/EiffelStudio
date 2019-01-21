@@ -357,9 +357,6 @@ feature -- Call stack
 			-- the routine associated with Current call.
 		local
 			resval: ABSTRACT_DEBUG_VALUE
-
-			local_names: SORTED_TWO_WAY_LIST [ABSTRACT_DEBUG_VALUE]
-			local_decl_grps: EIFFEL_LIST [LIST_DEC_AS]
 			locals_list, ot_locals_list: LIST [ABSTRACT_DEBUG_VALUE]
 		do
 			if attached {EIFFEL_CALL_STACK_ELEMENT} cse as ecse then

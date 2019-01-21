@@ -150,6 +150,7 @@ rt_private int rt_rmdir(EIF_FILENAME path);
 rt_private int rt_mkdir(EIF_FILENAME path, int mode);
 rt_private int rt_unlink(EIF_FILENAME path);
 rt_private int rt_utime(EIF_FILENAME path, struct utimbuf *times);
+rt_private int rt_temp_file (char *tmpl, int is_text_mode);
 
 /* Some system routine calls can be interrupted by a signal, we reemit
  * them until they are not interrupted anymore . */
@@ -220,13 +221,15 @@ rt_private EIF_FILENAME rt_file_open_mode (int how, char mode)
 	/* We make sure that files created in Eiffel are not inheritable
 	 * by default as otherwise it makes things too complicated for the
 	 * end user when spawing child processes. */
-	if (file_type [1] == '\0') {
-		file_type [1] = 'N';
-	} else if (file_type [2] == '\0') {
-		file_type [2] = 'N';
-	} else {
-		file_type [3] = 'N';
-	}
+	#ifdef _MSC_VER
+		if (file_type [1] == '\0') {
+			file_type [1] = 'N';
+		} else if (file_type [2] == '\0') {
+			file_type [2] = 'N';
+		} else {
+			file_type [3] = 'N';
+		}
+	#endif	
 #endif
 	return file_type;
 }
@@ -2249,3 +2252,84 @@ rt_private int rt_unlink(EIF_FILENAME path)
 /*
 doc:</file>
 */
+
+
+/*
+doc:	<routine name="eif_file_mkstemp" return_type="integer" export="public">
+doc:		<summary>Return the associated file descriptor of `a_pattern'.</summary>
+doc:		<param name="a_pattern" type="char *">Template pattern used to generate a temporary file.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None.</synchronization>
+doc:	</routine>
+*/
+rt_public EIF_INTEGER eif_file_mkstemp(char *a_pattern, EIF_BOOLEAN is_text_mode )
+{
+	int res;
+#ifdef EIF_WINDOWS
+	res = rt_temp_file (a_pattern, is_text_mode); 
+	if (res == -1) {
+		res = 0;
+		eraise("error occurred, invalid argument or file exists", EN_EXT);
+	} 
+#else
+	res = mkstemp (a_pattern); 
+	if (res == -1) {
+		res = 0;
+		eraise("error occurred, invalid argument or file exists", EN_EXT);
+	}
+#endif
+	return (EIF_INTEGER) res;
+}
+
+
+
+/* Generate a temporary file name based on TMPL.  TMPL must match the
+   rules for mk[s]temp (i.e. end in "XXXXXX").  The name constructed
+   does not exist at the time of the call to mkstemp.  TMPL is
+   overwritten with the result.  */
+rt_private int  rt_temp_file (char *tmpl, int is_text_mode) {
+#ifdef EIF_WINDOWS
+	/* added constant so no need to add shared.h header.*/
+	#define _SH_DENYRW 0x10 
+	/* https://github.com/mirror/mingw-w64/blob/master/mingw-w64-crt/misc/mkstemp.c */
+	#ifdef _MSC_VER
+		#define EINVAL 22 /* Invalid argument  */
+		#define EEXIST 17 /* File exists */
+	#endif
+
+
+	int i, j, fd, len, index;
+
+	/* These are the (62) characters used in temporary filenames. */
+	static const char letters[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+	
+
+	/* The last six characters of template must be "XXXXXX" */
+	if (tmpl == NULL || (len = strlen (tmpl)) < 6
+		|| memcmp (tmpl + (len - 6), "XXXXXX", 6)) {
+		errno = EINVAL;
+		return -1;
+	}
+
+	/* User may supply more than six trailing Xs */
+	for (index = len - 6; index > 0 && tmpl[index - 1] == 'X'; index--);
+				
+	/*
+	 * Like OpenBSD, mkstemp() will try at least 2 ** 31 combinations before
+	 * giving up.
+	 */
+	for (i = 0; i >= 0; i++) {
+		for(j = index; j < len; j++) {
+			tmpl[j] = letters[rand () % 62];
+		}
+		if (is_text_mode) { 
+			fd = _sopen( tmpl, _O_CREAT | _O_EXCL | _O_RDWR | _O_TEXT | _O_NOINHERIT,_SH_DENYRW, _S_IREAD | _S_IWRITE );
+		} else {
+			fd = _sopen( tmpl, _O_CREAT | _O_EXCL | _O_RDWR | _O_BINARY | _O_NOINHERIT,_SH_DENYRW, _S_IREAD | _S_IWRITE );
+		}
+		if (fd != -1) return fd;
+		if (fd == -1 && errno != EEXIST) return -1;
+	}
+#endif	
+	 return -1;
+}

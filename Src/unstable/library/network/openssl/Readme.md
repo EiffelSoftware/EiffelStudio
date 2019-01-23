@@ -100,8 +100,8 @@ Documentation
 
 ```bash
 $>wget https://www.openssl.org/source/openssl-1.1.1a.tar.gz
-$>tar xzvf openssl-1.1.0f.tar.gz
-$>cd openssl-1.1.0g
+$>tar xzvf openssl-1.1.1a.tar.gz
+$>cd openssl-1.1.1a
 $>./config -Wl,--enable-new-dtags,-rpath,`$(LIBRPATH)`
 $>make
 $>sudo make install

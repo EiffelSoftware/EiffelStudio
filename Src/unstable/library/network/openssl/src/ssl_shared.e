@@ -13,13 +13,19 @@ feature {NONE} -- Initialization
 	initialize_ssl
 			-- Initialize the SSL Library.
 			-- with libcrypto.
+		note
+			EIS: "name=Library Initialization", "src=https://wiki.openssl.org/index.php/Library_Initialization", "protocol=uri"
 		do
 			if ssl_initialized.item = False then
-				c_openssl_init_ssl
-				c_openssl_add_ssl_algorithms
-				c_openssl_add_all_algorithms
-				process_exclusive_execution (exclusive_access)
-				process_crypto_exclusive_execution (exclusive_access)
+					--Using OpenSSL 1.1.0 or above, the library will initialize itself automatically,
+					--if not we initialize it explicitly.
+				if c_version_number < ssl_api_version then
+					c_openssl_init_ssl
+					c_openssl_add_ssl_algorithms
+					c_openssl_add_all_algorithms
+					process_exclusive_execution (exclusive_access)
+					process_crypto_exclusive_execution (exclusive_access)
+				end
 				ssl_initialized.put (True)
 			end
 		end
@@ -120,8 +126,20 @@ feature {NONE} -- External
 			"SSL_get_SSL_CTX"
 		end
 
+
+	c_version_number: INTEGER
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"OpenSSL_version_num()"
+		end
+
+
+	ssl_api_version: INTEGER = 269484032
+			-- Defined as  0x10100000L
+
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

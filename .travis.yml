@@ -20,12 +20,12 @@ git:
   depth: 1
 env:
   matrix:
-  - COMPILEALL_DIR=Src/Eiffel
-  - COMPILEALL_DIR=Src/framework
-  - COMPILEALL_DIR=Src/tools
-  - COMPILEALL_DIR=Src/library
+  #- COMPILEALL_DIR=Src/Eiffel
+  #- COMPILEALL_DIR=Src/framework
+  #- COMPILEALL_DIR=Src/tools
+  #- COMPILEALL_DIR=Src/library
   - COMPILEALL_DIR=Src/unstable/library
-  - COMPILEALL_DIR=Src/contrib/library
+  #- COMPILEALL_DIR=Src/contrib/library
 script:
 - compile_all -ecb -melt -list_failures -log_verbose -clean -options dotnet=false -l $COMPILEALL_DIR
 group: stable

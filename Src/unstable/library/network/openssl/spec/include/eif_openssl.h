@@ -25,3 +25,4 @@
 # include <openssl/ssl.h>
 # include <openssl/evp.h>
 # include <openssl/tls1.h>
+# include <openssl/opensslv.h>

@@ -13,6 +13,18 @@ before_script:
 - export XEBRA_LIBRARY=$EIFFEL_SRC/framework/web/xebra/eiffel_projects/library
 - echo Check projects compilation status...
 - echo `openssl version -a`
+- cd /usr/local/src
+- curl --remote-name https://www.openssl.org/source/openssl-1.1.1a.tar.gz  
+- tar -xzvf openssl-1.1.1a.tar.gz
+- cd openssl-1.1.1a
+- ./config --prefix=/usr/local/mac-dev-env/openssl-1.1.1a
+- make
+- make install
+- sudo ln -s mac-dev-env/openssl-1.1.1a /usr/local/openssl
+- echo 'export PATH=/usr/local/openssl/bin:$PATH' >> ~/.bash_profile
+- echo 'export MANPATH=/usr/local/openssl/share/man:$MANPATH' >> ~/.bash_profile
+- source ~/.bash_profile
+- echo `openssl version -a`
 branches:
   only:
   - es_mac
@@ -30,3 +42,4 @@ script:
 - compile_all -ecb -melt -list_failures -log_verbose -clean -options dotnet=false -l $COMPILEALL_DIR
 group: stable
 os: osx
+sudo: required

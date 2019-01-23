@@ -6,24 +6,22 @@ before_script:
 - curl -sSL https://ftp.eiffel.com/pub/download/18.11/Eiffel_18.11_gpl_102592-macosx-x86-64.tar.bz2 | tar -x --bzip2 
 - export PATH=$PATH:$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin:$PATH:$ISE_EIFFEL/tools/spec/$ISE_PLATFORM/bin 
 - echo `ec -version`
+- curl --remote-name https://www.openssl.org/source/openssl-1.1.1a.tar.gz  
+- tar -xzvf openssl-1.1.1a.tar.gz
+- cd openssl-1.1.1a
+- ./config --prefix=$PWD/openssl-1.1.1a
+- make
+- make install
+- sudo ln -s $PWD/openssl-1.1.1a /usr/local/openssl
+- echo 'export PATH=/usr/local/openssl/bin:$PATH' >> ~/.bash_profile
+- echo 'export MANPATH=/usr/local/openssl/share/man:$MANPATH' >> ~/.bash_profile
+- source ~/.bash_profile
 - cd $current_dir
 - export EIFFEL_SRC=$PWD/Src
 - export EWEASEL=$PWD/eweasel
 - export ISE_LIBRARY=$EIFFEL_SRC
 - export XEBRA_LIBRARY=$EIFFEL_SRC/framework/web/xebra/eiffel_projects/library
 - echo Check projects compilation status...
-- echo `openssl version -a`
-- cd /usr/local/src
-- curl --remote-name https://www.openssl.org/source/openssl-1.1.1a.tar.gz  
-- tar -xzvf openssl-1.1.1a.tar.gz
-- cd openssl-1.1.1a
-- ./config --prefix=/usr/local/mac-dev-env/openssl-1.1.1a
-- make
-- make install
-- sudo ln -s mac-dev-env/openssl-1.1.1a /usr/local/openssl
-- echo 'export PATH=/usr/local/openssl/bin:$PATH' >> ~/.bash_profile
-- echo 'export MANPATH=/usr/local/openssl/share/man:$MANPATH' >> ~/.bash_profile
-- source ~/.bash_profile
 - echo `openssl version -a`
 branches:
   only:

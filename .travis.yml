@@ -1,8 +1,10 @@
 language: eiffel
 before_script:
 - export current_dir=$PWD ; echo current_dir=$current_dir ; cd ..
-- curl -sSL https://www.eiffel.org/setup/install.sh | bash -s nightly > eiffel.rc
-- source ./eiffel.rc
+- export ISE_EIFFEL=$PWD/Eiffel_18.11;
+- export ISE_PLATFORM=macosx-x86-64
+- curl -sSL https://ftp.eiffel.com/pub/download/18.11/Eiffel_18.11_gpl_102592-macosx-x86-64.tar.bz2 | tar -x --bzip2 
+- export PATH=$PATH:$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin:$PATH:$ISE_EIFFEL/tools/spec/$ISE_PLATFORM/bin 
 - echo `ec -version`
 - cd $current_dir
 - export EIFFEL_SRC=$PWD/Src
@@ -10,10 +12,10 @@ before_script:
 - export ISE_LIBRARY=$EIFFEL_SRC
 - export XEBRA_LIBRARY=$EIFFEL_SRC/framework/web/xebra/eiffel_projects/library
 - echo Check projects compilation status...
+- echo openssl version -a
 branches:
   only:
-  - master
-  - develop
+  - es_mac
 git:
   depth: 1
 env:
@@ -27,7 +29,4 @@ env:
 script:
 - compile_all -ecb -melt -list_failures -log_verbose -clean -options dotnet=false -l $COMPILEALL_DIR
 group: stable
-os: linux
-notifications:
-  slack:
-    secure: mjmAWAHOgpFz9NN0JDDO9n20PZ/aiXJ6lIaVaK3wyuyMhOQm39Lr/KGGgEfhnEMzjZW44mskj8t2BxplZaCznL3Ogk/KGiBBnQbKY10GzZQBNfMqZDS49+WYicc1onIbT1r0bHDr2VZL/OZfKlhttkToDV43/pwuArggaS8DHTywVWa1v5A3NdIcyLYASYOEslCHyc/Xlx7aat3E8oodlHhqTZ1g9GwdVRdzV65BhCZGWXtR9duRn5AoTcxS108ER7mPJbmBsj2UaUahyOSbmjjEy1b0h+lcjUiOyGXXxQAQlYtIZ4+aCJ/OA5tFe+AYd915TmsikvSFsRvuP5Vh0W/tY0mST8YDYpljcEe3T8pYZgUN2nvmcPn/Sv52p4xfrrW1XBGno0f4sv2l4me3ApHHIA2ZMYAvSwteDjMOf3u9/BxsbOWPFQuEB6Qe1Q+h9wfj22T7FA89LIHG8UrciLJYbhyFaJeROfw/cj1ACPROPj/yC6gXrCpsIWQxgtefIstFySvohR1Hq3Ugz/+ziBD2X1jxE4eQV/n8L/SAcjzOUWe3Mpu4kkMPsJGbhnFmKaVU7BKYP2azwxOEnYfndPlT5jDkXFZ09EBbMkP4Ablvex0MwFYQYJdeYC+8kpAut2bpqvWaK2KnEwg93TmW2LepZ9HpTgb2IZShfH11fcg=
+os: osx

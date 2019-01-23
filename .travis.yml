@@ -12,7 +12,7 @@ before_script:
 - export ISE_LIBRARY=$EIFFEL_SRC
 - export XEBRA_LIBRARY=$EIFFEL_SRC/framework/web/xebra/eiffel_projects/library
 - echo Check projects compilation status...
-- echo openssl version -a
+- echo `openssl version -a`
 branches:
   only:
   - es_mac

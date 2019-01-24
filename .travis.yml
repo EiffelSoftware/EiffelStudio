@@ -37,7 +37,8 @@ env:
   - COMPILEALL_DIR=Src/unstable/library
   #- COMPILEALL_DIR=Src/contrib/library
 script:
-- compile_all -ecb -melt -list_failures -log_verbose -clean -options dotnet=false -l $COMPILEALL_DIR
+- cd $COMPILEALL_DIR/unstable/library/network/socket/netssl/examples/echo/client/
+- ec -config echo_client.ecf
 group: stable
 os: osx
 sudo: required

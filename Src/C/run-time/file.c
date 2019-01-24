@@ -57,6 +57,7 @@ doc:<file name="file.c" header="eif_file.h" version="$Id$" summary="Externals fo
 	/* <unistd.h> doesn't exist under Windows */
 #include <io.h>			/* %%ss added for access, chmod */
 #include <direct.h>		/* %%ss added for (ch|mk|rm)dir */
+#include <share.h>      /* added for temporary file */
 #else
 #include <unistd.h>
 #endif
@@ -150,7 +151,6 @@ rt_private int rt_rmdir(EIF_FILENAME path);
 rt_private int rt_mkdir(EIF_FILENAME path, int mode);
 rt_private int rt_unlink(EIF_FILENAME path);
 rt_private int rt_utime(EIF_FILENAME path, struct utimbuf *times);
-rt_private int rt_temp_file (char *tmpl, int is_text_mode);
 
 /* Some system routine calls can be interrupted by a signal, we reemit
  * them until they are not interrupted anymore . */
@@ -2254,43 +2254,12 @@ doc:</file>
 */
 
 
-/*
-doc:	<routine name="eif_file_mkstemp" return_type="integer" export="public">
-doc:		<summary>Return the associated file descriptor of `a_pattern'.</summary>
-doc:		<param name="a_pattern" type="char *">Template pattern used to generate a temporary file.</param>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>None.</synchronization>
-doc:	</routine>
-*/
-rt_public EIF_INTEGER eif_file_mkstemp(char *a_pattern, EIF_BOOLEAN is_text_mode )
-{
-	int res;
 #ifdef EIF_WINDOWS
-	res = rt_temp_file (a_pattern, is_text_mode); 
-	if (res == -1) {
-		res = 0;
-		eraise("error occurred, invalid argument or file exists", EN_EXT);
-	} 
-#else
-	res = mkstemp (a_pattern); 
-	if (res == -1) {
-		res = 0;
-		eraise("error occurred, invalid argument or file exists", EN_EXT);
-	}
-#endif
-	return (EIF_INTEGER) res;
-}
-
-
-
 /* Generate a temporary file name based on TMPL.  TMPL must match the
    rules for mk[s]temp (i.e. end in "XXXXXX").  The name constructed
    does not exist at the time of the call to mkstemp.  TMPL is
    overwritten with the result.  */
 rt_private int  rt_temp_file (char *tmpl, int is_text_mode) {
-#ifdef EIF_WINDOWS
-	/* added constant so no need to add shared.h header.*/
-	#define _SH_DENYRW 0x10 
 	/* https://github.com/mirror/mingw-w64/blob/master/mingw-w64-crt/misc/mkstemp.c */
 	#ifdef _MSC_VER
 		#define EINVAL 22 /* Invalid argument  */
@@ -2330,6 +2299,34 @@ rt_private int  rt_temp_file (char *tmpl, int is_text_mode) {
 		if (fd != -1) return fd;
 		if (fd == -1 && errno != EEXIST) return -1;
 	}
-#endif	
 	 return -1;
+}
+#endif	
+
+
+/*
+doc:	<routine name="eif_file_mkstemp" return_type="integer" export="public">
+doc:		<summary>Return the associated file descriptor of `a_pattern'.</summary>
+doc:		<param name="a_pattern" type="char *">Template pattern used to generate a temporary file.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None.</synchronization>
+doc:	</routine>
+*/
+rt_public EIF_INTEGER eif_file_mkstemp(char *a_pattern, EIF_BOOLEAN is_text_mode )
+{
+	int res;
+#ifdef EIF_WINDOWS
+	res = rt_temp_file (a_pattern, is_text_mode); 
+	if (res == -1) {
+		res = 0;
+		eraise("error occurred, invalid argument or file exists", EN_EXT);
+	} 
+#else
+	res = mkstemp (a_pattern); 
+	if (res == -1) {
+		res = 0;
+		eraise("error occurred, invalid argument or file exists", EN_EXT);
+	}
+#endif
+	return (EIF_INTEGER) res;
 }

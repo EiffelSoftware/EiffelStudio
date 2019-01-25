@@ -47,7 +47,6 @@ feature -- Test
 			l_file.close
 
 			create l_file.make_open_read (l_name)
-			l_file.open_read
 			l_file.read_stream (l_file.count)
 			l_data := l_file.last_string.twin
 			assert ("Expected data: ", l_data.same_string_general ("Example: how to write text to a file"))
@@ -99,6 +98,7 @@ feature -- Test
 
 			l_file.delete
 		end
+
 
 note
 	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"

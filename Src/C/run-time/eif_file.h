@@ -155,7 +155,7 @@ RT_LNK EIF_REFERENCE eif_file_group(int gid);
 RT_LNK EIF_INTEGER eif_file_date (EIF_FILENAME  name);
 RT_LNK EIF_INTEGER eif_file_access_date (EIF_FILENAME  name);
 
-RT_LNK EIF_INTEGER eif_file_mkstemp (char *a_pattern, EIF_BOOLEAN is_text_mode);
+RT_LNK EIF_INTEGER eif_file_mkstemp (EIF_FILENAME name, EIF_BOOLEAN is_text_mode);
 
 #ifdef __cplusplus
 }

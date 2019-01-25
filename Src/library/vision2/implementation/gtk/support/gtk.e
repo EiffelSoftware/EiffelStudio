@@ -3110,7 +3110,7 @@ feature
 			is_class: class
 		end
 
-	frozen gtk_widget_is_focus (a_widget: POINTER)
+	frozen gtk_widget_is_focus (a_widget: POINTER): BOOLEAN
 		external
 			"C (GtkWidget*): EIF_BOOLEAN | <ev_gtk.h>"
 		ensure

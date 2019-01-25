@@ -32,11 +32,12 @@ feature {NONE} -- Initialization
 		obsolete
 			"Use `{FILE}.make_open_temporary or {FILE}.make_open_temporary_with_prefix` instead. [2019-05-31]"
 		local
-			p: POINTER
+			l_file: PLAIN_TEXT_FILE
 		do
-			p := c_tempnam (p, p)
-			make_from_c (p)
-			p.memory_free
+			create l_file.make_open_temporary
+			make_from_string (l_file.path.name.to_string_8)
+			l_file.close
+			l_file.delete
 		end
 
 feature -- Status report
@@ -130,13 +131,6 @@ feature {NONE} -- Externals
 	eif_is_file_valid (p: POINTER): BOOLEAN
 		external
 			"C signature (EIF_CHARACTER *): EIF_BOOLEAN use %"eif_path_name.h%""
-		end
-
-	c_tempnam (d, n: POINTER): POINTER
-		external
-			"C signature (char *, char *): EIF_POINTER use <stdio.h>"
-		alias
-			"tempnam"
 		end
 
 note

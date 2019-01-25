@@ -188,12 +188,13 @@ feature -- Initialization
 		note
 			EIS:"name=mkstemp", "src=http://man7.org/linux/man-pages/man3/mkstemp.3.html", "protocol=uri"
 		local
-			l_temp: C_STRING
+			l_temp: STRING_32
 			l_fd: INTEGER
 		do
-			create l_temp.make (a_prefix + "XXXXXX")
-			l_fd := temp_file_impl (l_temp.item)
-			make_with_name (l_temp.string)
+			set_name (a_prefix + "XXXXXX")
+			l_fd := temp_file_impl (internal_name_pointer.item)
+			l_temp := {UTF_CONVERTER}.utf_16_0_pointer_to_string_32 (internal_name_pointer)
+			make_with_name (l_temp)
 			fd_open_read_write (l_fd)
 		ensure
 			exists: exists
@@ -2156,7 +2157,7 @@ feature {NONE} -- Implementation
 	eif_temp_file (a_name_template: POINTER; a_text_mode: BOOLEAN): INTEGER
 			-- Access date of a file named `a_path'.
 		external
-			"C signature (char *, EIF_BOOLEAN): EIF_INTEGER use %"eif_file.h%""
+			"C signature (EIF_FILENAME, EIF_BOOLEAN): EIF_INTEGER use %"eif_file.h%""
 		alias
 			"eif_file_mkstemp"
 		end

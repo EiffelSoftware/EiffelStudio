@@ -190,10 +190,11 @@ feature -- Initialization
 		local
 			l_temp: STRING_32
 			l_fd: INTEGER
+			l_utf: UTF_CONVERTER
 		do
 			set_name (a_prefix + "XXXXXX")
 			l_fd := temp_file_impl (internal_name_pointer.item)
-			l_temp := {UTF_CONVERTER}.utf_16_0_pointer_to_string_32 (internal_name_pointer)
+			l_temp := l_utf.utf_16_0_pointer_to_string_32 (internal_name_pointer)
 			make_with_name (l_temp)
 			fd_open_read_write (l_fd)
 		ensure

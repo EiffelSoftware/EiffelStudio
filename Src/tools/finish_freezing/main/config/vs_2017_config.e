@@ -47,6 +47,12 @@ feature -- Access
 			end
 		end
 
+	vs_version: INTEGER
+			-- Internal version of Visual Studio
+		do
+			Result := 15
+		end
+
 feature {NONE} -- Implementation
 
 	on_initialize
@@ -57,7 +63,7 @@ feature {NONE} -- Implementation
 			u: FILE_UTILITIES
 			l_parser: ENV_PARSER
 		do
-			if attached c_vs_get_installation_path (15) as l_str8 then
+			if attached c_vs_get_installation_path (vs_version) as l_str8 then
 				create l_c_str.make (l_str8)
 				create l_str.make_by_pointer_and_count (l_c_str.item, l_str8.count * 2)
 				create internal_install_path.make_from_string (l_str.string)
@@ -88,7 +94,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

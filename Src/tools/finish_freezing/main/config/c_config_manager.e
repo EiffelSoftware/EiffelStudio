@@ -192,6 +192,12 @@ feature {NONE} -- Access
 
 				-- Group of compatible C compilers.
 			create l_configs.make (1)
+
+				-- VS 16.0 (aka VS 2019 all editions)
+			create {VS_2019_CONFIG} l_c_config.make (a_use_32bit, "VC160", "Microsoft Visual Studio 2019 VC++ (19.0)", "2019-VS")
+			l_configs.extend (l_c_config)
+			compatibility_configs.put (l_configs, l_c_config.code)
+
 				-- VS 15.0 (aka VS 2017 all editions)
 			create {VS_2017_CONFIG} l_c_config.make (a_use_32bit, "VC150", "Microsoft Visual Studio 2017 VC++ (15.0)", "2017-VS")
 			l_configs.extend (l_c_config)
@@ -285,7 +291,7 @@ feature {NONE} -- Internal implementation cache
 			-- Map C configs code to the list of compatible C configs.
 
 ;note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

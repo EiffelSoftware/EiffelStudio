@@ -193,7 +193,7 @@ feature -- Initialization
 			l_utf: UTF_CONVERTER
 		do
 			set_name (a_prefix + "XXXXXX")
-			l_fd := temp_file_impl (internal_name_pointer.item)
+			l_fd := eif_temp_file (internal_name_pointer.item, is_plain_text)
 			l_temp := l_utf.utf_16_0_pointer_to_string_32 (internal_name_pointer)
 			make_with_name (l_temp)
 			fd_open_read_write (l_fd)
@@ -2154,7 +2154,6 @@ feature {NONE} -- Implementation
 			"eif_file_access_date"
 		end
 
-
 	eif_temp_file (a_name_template: POINTER; a_text_mode: BOOLEAN): INTEGER
 			-- Access date of a file named `a_path'.
 		external
@@ -2162,14 +2161,6 @@ feature {NONE} -- Implementation
 		alias
 			"eif_file_mkstemp"
 		end
-
-	temp_file_impl (a_name: POINTER): INTEGER
-			-- Create a temporary file from `a_name` template
-			-- and return a file descriptor.
-		do
-			Result := eif_temp_file (a_name, is_plain_text)
-		end
-
 
 feature {NONE} -- Inapplicable
 

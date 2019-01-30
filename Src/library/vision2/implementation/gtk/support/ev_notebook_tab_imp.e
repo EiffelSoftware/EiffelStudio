@@ -21,10 +21,7 @@ inherit
 
 	EV_PIXMAPABLE_I
 		redefine
-			interface,
-			remove_pixmap,
-			set_pixmap,
-			pixmap
+			interface
 		end
 
 create
@@ -115,7 +112,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_NOTEBOOK_TAB note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -175,7 +175,7 @@ feature -- Initialization
 			-- Create a file object with a unique temporary file name,
 			-- with read/write mode.
 		do
-			make_open_temporary_with_prefix("tfn")
+			make_open_temporary_with_prefix("eiftmp")
 		ensure
 			exists: exists
 			open_read: is_open_read
@@ -194,7 +194,11 @@ feature -- Initialization
 		do
 			set_name (a_prefix + "XXXXXX")
 			l_fd := eif_temp_file (internal_name_pointer.item, is_plain_text)
-			l_temp := l_utf.utf_16_0_pointer_to_string_32 (internal_name_pointer)
+			if {PLATFORM}.is_windows then
+				l_temp := l_utf.utf_16_0_pointer_to_string_32 (internal_name_pointer)
+			else
+				create l_temp.make_from_c (internal_name_pointer.item)
+			end
 			make_with_name (l_temp)
 			fd_open_read_write (l_fd)
 		ensure

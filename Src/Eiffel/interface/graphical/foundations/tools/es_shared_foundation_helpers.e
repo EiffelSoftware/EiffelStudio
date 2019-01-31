@@ -38,20 +38,20 @@ feature {NONE} -- Helpers: User interface
 			create Result
 		end
 
-	frozen stock_pixmaps: attached ES_PIXMAPS_16X16
+	frozen stock_pixmaps: attached ES_ICON
 			-- Shared access to stock 16x16 EiffelStudio pixmaps
 		once
 			Result := (create {EB_SHARED_PIXMAPS}).icon_pixmaps
 		end
 
-	frozen mini_stock_pixmaps: attached ES_PIXMAPS_10X10
+	frozen mini_stock_pixmaps: attached ES_MINI_ICON
 			-- Shared access to stock 10x10 EiffelStudio pixmaps
 		once
 			Result := (create {EB_SHARED_PIXMAPS}).mini_pixmaps
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -28,6 +28,7 @@ description: "WEL: library of reusable components for Windows."
 #include <windows.h>
 #include <commctrl.h>
 #include <Shellapi.h>
+#include <ShellScalingAPI.h>
 
 #include "eif_eiffel.h"
 #include "wel_lang.h"

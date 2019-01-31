@@ -977,8 +977,177 @@ feature -- API
 			is_class: class
 		end
 
+feature -- Monitor DPI
+
+	monitor_scale (hwnd: POINTER): TUPLE [scalex: DOUBLE; scaley: DOUBLE]
+			-- Return the scale DIP (device independent pixels) size, based on the current DPI
+			-- (Dots per inch).
+			-- examples
+			-- DPI Size             DIP size
+			--   96                    1 pixel
+			--  120                    1.25 pixel
+		note
+			EIS:"name=", "protocol=https://docs.microsoft.com/en-us/windows/desktop/learnwin32/dpi-and-device-independent-pixels", "protocol=src"
+		local
+			l_monitor: POINTER
+			l_dpi_x: INTEGER
+			l_dpi_y: INTEGER
+			l_value: INTEGER
+			l_val_res: INTEGER
+		do
+			l_val_res := {WEL_API}.cwin_get_process_dpi_awareness (default_pointer, $l_value )
+			Result := [1.0, 1.0]
+			l_monitor := monitor_from_window (get_window (hwnd, {WEL_GW_CONSTANTS}.gw_owner), Monitor_defaulttonearest)
+			if l_monitor /= default_pointer then
+				cwin_get_dpi_for_monitor (l_monitor, Mdt_effective_dpi, $l_dpi_x, $l_dpi_y)
+				Result := [l_dpi_x/default_dpi, l_dpi_y/default_dpi]
+			end
+		ensure
+			is_class: class
+		end
+
+	dpi_for_monitor (hwnd: POINTER): INTEGER
+			-- Return the dots per inch (dpi) of a display `hwnd`.
+			-- DPI sizes 96, 120, 144, 192, etc.
+		local
+			l_monitor: POINTER
+			l_dpi_x: INTEGER
+			l_dpi_y: INTEGER
+		do
+			l_monitor := monitor_from_window (get_window (hwnd, {WEL_GW_CONSTANTS}.gw_owner), Monitor_defaulttonearest)
+			if l_monitor /= default_pointer then
+				cwin_get_dpi_for_monitor (l_monitor, Mdt_effective_dpi, $l_dpi_x, $l_dpi_y)
+				Result := l_dpi_x
+			end
+		ensure
+			is_class: class
+		end
+
+
+	set_process_dpi_awaerness_per_monitor
+			-- Set ProcessDPIAwareness to PROCESS_PER_MONITOR_DPI_AWARE
+			-- PROCESS_PER_MONITOR_DPI_AWARE	
+			--|	Per monitor DPI aware. This app checks for the DPI when it is created and adjusts the scale factor whenever the DPI changes.
+			--| These applications are not automatically scaled by the system.		
+		local
+			l_res: BOOLEAN
+			l_value: INTEGER
+			l_val_res: INTEGER
+		do
+			l_res := {WEL_API}.cwin_set_process_dpi_awareness ({WEL_API}.process_per_monitor_dpi_aware)
+			debug
+				l_val_res := {WEL_API}.cwin_get_process_dpi_awareness (default_pointer, $l_value )
+				check process_dpi_awarness: l_value = {WEL_API}.process_per_monitor_dpi_aware  end
+			end
+		ensure
+			is_class: class
+		end
+
+
+feature -- Externals DPI
+
+	cwin_get_dpi_for_window (hwnd: POINTER): INTEGER
+				-- Returns the dots per inch (dpi) value for the associated window.
+				-- `hwnd` The window you want to get information about.
+		note
+			EIS:"name=GetDpiForWindow", "src=https://msdn.microsoft.com/en-us/library/windows/desktop/mt748624(v=vs.85).aspx", "protocol=uri"
+		external
+			"C [macro %"wel.h%"] (HWND): EIF_INTEGER"
+		alias
+			"GetDpiForWindow"
+		end
+
+	cwin_mul_div (a_number, a_numerator, a_denominator: INTEGER): INTEGER
+				-- Multiplies two 32-bit values and then divides the 64-bit result by a third 32-bit value. The final result is rounded to the nearest integer.
+				-- `a_number`: The multiplicand.
+				-- `a_numerator`: The multiplier
+				-- `a_denominator`: The number by which the result of the multiplication operation is to be divided
+		note
+			EIS: "name=MulDiv", "src=https://msdn.microsoft.com/en-us/library/windows/desktop/aa383718(v=vs.85).aspx", "protocol=uri"
+		external
+			"C [macro %"wel.h%"] (int, int, int): EIF_INTEGER"
+		alias
+			"MulDiv"
+		end
+
+
+	mul_div (a_number, a_numerator, a_denominator: INTEGER): INTEGER
+			-- Multiplies two 32-bit values and then divides the 64-bit result by a third 32-bit value. The final result is rounded to the nearest integer.
+			-- `a_number`: The multiplicand.
+			-- `a_numerator`: The multiplier
+			-- `a_denominator`: The number by which the result of the multiplication operation is to be divided
+		do
+			Result := (a_number.as_integer_64 * a_numerator / a_denominator).rounded
+		end
+
+	Mdt_effective_dpi: INTEGER  = 0
+
+	Monitor_defaulttonearest: INTEGER = 0x00000002
+
+	cwin_get_dpi_for_monitor (a_hwnd: POINTER; a_flags: INTEGER_32; dpi_x, dpi_y: TYPED_POINTER[INTEGER])
+			-- SDK MonitorFromWindow
+		external
+			"C inline use <wel.h>"
+		alias
+			"GetDpiForMonitor($a_hwnd, $a_flags, $dpi_x, $dpi_y);"
+		ensure
+			is_class: class
+		end
+
+	Process_per_monitor_dpi_aware: INTEGER  = 2
+
+	cwin_set_process_dpi_awareness (a_level: INTEGER): BOOLEAN
+			-- SDK MonitorFromWindow
+		note
+				EIS:"name=SetProcessDpiAwareness function", "src=https://docs.microsoft.com/en-us/windows/desktop/api/shellscalingapi/nf-shellscalingapi-setprocessdpiawareness", "protocol=uri"
+		external
+			"C inline use <wel.h>"
+		alias
+			"return (EIF_BOOLEAN) SetProcessDpiAwareness($a_level);"
+		ensure
+			is_class: class
+		end
+
+	cwin_get_process_dpi_awareness	(a_process: POINTER; a_value: TYPED_POINTER [INTEGER]): INTEGER
+		external
+			"C inline use <wel.h>"
+		alias
+			"return (EIF_INTEGER) GetProcessDpiAwareness($a_process, $a_value);"
+		ensure
+			is_class: class
+		end
+
+	cwin_set_thread_dpi_awareness_context (a_level: INTEGER): INTEGER
+			-- SDK MonitorFromWindow
+		note
+				EIS:"name=SetProcessDpiAwareness function", "src=https://docs.microsoft.com/en-us/windows/desktop/api/shellscalingapi/nf-shellscalingapi-setprocessdpiawareness", "protocol=uri"
+		external
+			"C inline use <wel.h>"
+		alias
+			"return (EIF_INTEGER) SetThreadDpiAwarenessContext($a_level);"
+		ensure
+			is_class: class
+		end
+
+
+	cwin_get_thread_dpi_awareness_context: INTEGER
+		external
+			"C inline use <Winuser.h>"
+		alias
+			"return (EIF_INTEGER) GetThreadDpiAwarenessContext();"
+		ensure
+			is_class: class
+		end
+
+feature -- Constants
+
+	Default_dpi: INTEGER = 96
+			-- Default DPI value of 96
+			-- known as DPI unawre, the application render as if the screen that they are on has a DPI value of 96
+
+
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

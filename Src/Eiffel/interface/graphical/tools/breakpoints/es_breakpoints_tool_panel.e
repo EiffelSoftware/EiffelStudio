@@ -1370,7 +1370,7 @@ feature {NONE} -- Implementation, cosmetic
 	Disabled_conditional_bp_symbol: STRING = "*-"
 			-- Disable conditional breakpoint symbol.
 
-	Breakable_icons: ES_PIXMAPS_12X12
+	Breakable_icons: ES_SMALL_ICON
 			-- Breakable icons.
 		local
 			l_shared: EB_SHARED_PIXMAPS
@@ -1413,7 +1413,7 @@ feature {NONE} -- Implementation, cosmetic
 			-- Row highlight background color.
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -73,7 +73,7 @@ feature {NONE} -- Pixmap resources
 			create Result
 		end
 
-	frozen icons: ES_PIXMAPS_12X12
+	frozen icons: ES_SMALL_ICON
 			-- Breakpoint icon resources
 		once
 			Result := shared_pixmaps.small_pixmaps
@@ -122,7 +122,7 @@ feature {NONE} -- Pixmap resources
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {EIFFEL_UPLOAD_JSON_CONFIGURATION}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 

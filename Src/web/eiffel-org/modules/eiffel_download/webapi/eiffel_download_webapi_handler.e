@@ -62,6 +62,11 @@ feature -- Execution GET
 						rep := new_error_response ("Release [" + l_value + "] invalid" , req, res)
 						rep.set_status_code ({HTTP_STATUS_CODE}.bad_request)
 					end
+				elseif
+					req.path_info.same_string_general ("/api/downloads/beta/channel")
+				then
+						-- Beta Channel Release
+					rep := retrieve_all_beta_products (req, res)
 				else
 						-- retrieve all available products by default using the latst release.
 					rep := retrieve_all_products (req, res)
@@ -272,15 +277,16 @@ feature {NONE} -- Implementation
 					l_link.append (url_encoded (l_build))
 					l_link.append_character ('/')
 
-					if attached l_download.selected_platform (l_product.downloads, a_platform) as l_selected then
-						if attached l_selected.filename as l_filename then
-							l_link.append (url_encoded (l_filename))
-							Result.add_string_field ("name", l_name)
-							Result.add_string_field ("build", l_build)
-							Result.add_string_field ("version", l_version)
-							Result.add_string_field ("number", l_number)
-							Result.add_link ("download", utf_8_encoded (l_filename), l_link)
-						end
+					if
+						attached l_download.selected_platform (l_product.downloads, a_platform) as l_selected and then
+						attached l_selected.filename as l_filename
+					then
+						l_link.append (url_encoded (l_filename))
+						Result.add_string_field ("name", l_name)
+						Result.add_string_field ("build", l_build)
+						Result.add_string_field ("version", l_version)
+						Result.add_string_field ("number", l_number)
+						Result.add_link ("download", utf_8_encoded (l_filename), l_link)
 					end
 				end
 			else
@@ -359,6 +365,55 @@ feature {NONE} -- Implementation
 			if
 				attached {EIFFEL_DOWNLOAD_API} api.module_api ({EIFFEL_DOWNLOAD_MODULE}) as l_download and then
 				attached l_download.download_configuration as cfg and then
+				attached l_download.retrieve_product_gpl (cfg) as l_product and then
+				attached l_product.build as l_build and then
+				attached l_product.name as l_name and then
+				attached l_product.version as l_version and then
+				attached l_product.number as l_number and then
+				attached l_download.retrieve_mirror_gpl (cfg) as l_mirror
+			then
+				Result.add_string_field ("name", l_name)
+				Result.add_string_field ("build", l_build)
+				Result.add_string_field ("version", l_version)
+				Result.add_string_field ("number", l_number)
+				if attached l_product.downloads as l_downloads then
+					l_link := l_mirror
+					l_link.append (url_encoded (l_name))
+					l_link.append_character (' ')
+					l_link.append (url_encoded (l_number))
+					l_link.append_character ('/')
+					l_link.append (url_encoded (l_build))
+					l_link.append_character ('/')
+					create {ARRAYED_LIST [EIFFEL_DOWNLOAD_RESOURCE]} l_list.make (1)
+					across l_downloads as ic  loop
+						if
+							attached ic.item.filename as l_filename and then
+							attached ic.item.platform as l_platform
+						then
+							create l_url.make_from_string (l_link)
+							l_url.append (url_encoded (l_filename))
+							l_list.force (create {EIFFEL_DOWNLOAD_RESOURCE}.make (l_filename, l_url, ic.item.size, l_platform))
+						end
+					end
+					Result.add_iterator_field ("downloads", l_list)
+				end
+			else
+				Result := new_error_response ("Internal Server Error, module not available", req, res)
+				Result.set_status_code ({HTTP_STATUS_CODE}.internal_server_error)
+			end
+		end
+
+	retrieve_all_beta_products (req: WSF_REQUEST; res: WSF_RESPONSE): HM_WEBAPI_RESPONSE
+				-- Retrieve all EiffelStudio available beta downloads.
+		local
+			l_list: LIST [EIFFEL_DOWNLOAD_RESOURCE]
+			l_link: STRING_8
+			l_url: STRING_8
+		do
+			Result := new_response (req, res)
+			if
+				attached {EIFFEL_DOWNLOAD_API} api.module_api ({EIFFEL_DOWNLOAD_MODULE}) as l_download and then
+				attached l_download.download_channel_configuration as cfg and then
 				attached l_download.retrieve_product_gpl (cfg) as l_product and then
 				attached l_product.build as l_build and then
 				attached l_product.name as l_name and then

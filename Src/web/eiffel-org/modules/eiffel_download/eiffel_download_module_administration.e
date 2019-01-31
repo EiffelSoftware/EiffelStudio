@@ -43,6 +43,8 @@ feature {NONE} -- Router/administration
 		do
 			a_router.handle ("/update_download/", create {WSF_URI_AGENT_HANDLER}.make (agent handle_update_download_admin (a_api, ?, ?)), a_router.methods_head_get)
 			a_router.handle ("/process_update/", create {WSF_URI_AGENT_HANDLER}.make (agent handle_process_update_admin (a_api, ?, ?)), a_router.methods_post)
+			a_router.handle ("/update_beta_download/", create {WSF_URI_AGENT_HANDLER}.make (agent handle_update_beta_download_admin (a_api, ?, ?)), a_router.methods_head_get)
+			a_router.handle ("/process_beta_update/", create {WSF_URI_AGENT_HANDLER}.make (agent handle_process_beta_update_admin (a_api, ?, ?)), a_router.methods_post)
 		end
 
 feature -- Handle
@@ -135,6 +137,93 @@ feature -- Handle
 
 		end
 
+	handle_update_beta_download_admin (a_api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+		local
+			r: CMS_RESPONSE
+		do
+			write_debug_log (generator + ".handle_update_beta_download_admin")
+			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, a_api)
+			r.values.force ("download_area_update", "download_area_update")
+			r.execute
+		end
+
+	handle_process_beta_update_admin (a_api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+		local
+			r: CMS_RESPONSE
+			l_tmp: WSF_UPLOADED_FILE
+			vars: STRING_TABLE [READABLE_STRING_8]
+			l_dir: DIRECTORY
+			l_file: FILE
+		do
+			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, a_api)
+			create vars.make_caseless (5)
+			vars.put (safe_html_encoded (a_api.setup.site_url), "siteurl")
+			vars.put (safe_html_encoded (a_api.setup.site_name), "sitename")
+
+			if req.has_uploaded_file then
+				across req.uploaded_files as c loop
+					l_tmp := c.item
+				end
+			end
+			if attached l_tmp then
+				if attached process_uploaded_file (l_tmp) as l_uploaded then
+						-- save the file
+						-- send a valid response
+						-- TODO extract code to save_file with retry a few times in case we can save it.
+					create l_dir.make_with_path (a_api.module_location_by_name ("eiffel_download"))
+					if l_dir.exists then
+						create {RAW_FILE} l_file.make_open_write (l_dir.path.extended("channel").extended ("downloads_configuration_" + l_uploaded.number + ".json").name.out)
+						l_file.put_string (l_uploaded.to_json_representation)
+						l_file.close
+					end
+					write_debug_log (generator + ".handle_process_beta_update_admin:  Success")
+					r.values.force (False, "has_error")
+					vars.put ("False", "has_error")
+					r.set_status_code ({HTTP_CONSTANTS}.ok)
+					if attached smarty_template_block_with_values (module, "post_update_beta_download", a_api, vars) as l_tpl_block then
+					across
+						r.values as tb
+					loop
+						l_tpl_block.set_value (tb.item, tb.key)
+					end
+						r.set_main_content (l_tpl_block.to_html (r.theme))
+					end
+					r.execute
+				else
+						-- send bad input file
+					write_error_log (generator + ".handle_process_beta_update_admin:  Bad upload file")
+					r.values.force (True, "has_error")
+					vars.put ("True", "has_error")
+					r.set_status_code ({HTTP_CONSTANTS}.bad_request)
+					if attached smarty_template_block_with_values (module, "post_update_beta_download", a_api, vars) as l_tpl_block then
+					across
+						r.values as tb
+					loop
+						l_tpl_block.set_value (tb.item, tb.key)
+					end
+						r.set_main_content (l_tpl_block.to_html (r.theme))
+					end
+					r.execute
+				end
+			else
+					-- No file.
+					-- send Internal Server Error response.
+				write_error_log (generator + ".handle_process_update_admin:  Internal Server Error")
+				r.values.force (True, "has_error")
+				vars.put ("True", "has_error")
+				r.set_status_code ({HTTP_CONSTANTS}.internal_server_error)
+				if attached smarty_template_block_with_values (module, "post_update_download", a_api, vars) as l_tpl_block then
+				across
+					r.values as tb
+				loop
+					l_tpl_block.set_value (tb.item, tb.key)
+				end
+					r.set_main_content (l_tpl_block.to_html (r.theme))
+				end
+				r.execute
+			end
+		end
+
 feature -- Hook
 
 	setup_hooks (a_hooks: CMS_HOOK_CORE_MANAGER)
@@ -158,10 +247,10 @@ feature -- Hook
 			-- Hook execution on collection of menu contained by `a_menu_system'
 			-- for related response `a_response'.
 		do
-			if a_response.is_authenticated then
-				if a_response.has_permission ("upload download") then
-					a_menu_system.management_menu.extend_into (a_response.api.administration_link ("Update Download", "update_download/"), "Admin", "admin")
-				end
+			if a_response.is_authenticated and then	a_response.has_permission ("upload download")
+			then
+				a_menu_system.management_menu.extend_into (a_response.api.administration_link ("Update Download", "update_download/"), "Admin", "admin")
+				a_menu_system.management_menu.extend_into (a_response.api.administration_link ("Update Beta Download", "update_beta_download/"), "Admin", "admin")
 			end
 		end
 
@@ -184,10 +273,13 @@ feature -- Hook
 		do
 			write_debug_log (generator + ".get_block_view with block_id:`" + a_block_id + "'")
 			if
-				a_block_id.is_case_insensitive_equal_general ("download_area_update") and then
-				a_response.request.path_info.same_string ("/admin/update_download/")
+				a_block_id.is_case_insensitive_equal_general ("download_area_update")
 			then
-				get_block_view_update_download (a_block_id, a_response)
+				if a_response.request.path_info.same_string ("/admin/update_download/")	then
+					get_block_view_update_download (a_block_id, a_response)
+				elseif a_response.request.path_info.same_string ("/admin/update_beta_download/")	then
+					get_block_view_update_beta_download (a_block_id, a_response)
+				end
 			end
 		end
 
@@ -201,6 +293,38 @@ feature -- Hook
 			create res.make_from_string ("templates")
 				-- Note: template name harcoded.
 			res := res.extended ("block_update_download").appended_with_extension ("tpl")
+			p := a_response.api.module_theme_resource_location (module, res)
+
+			if p /= Void then
+				write_debug_log (generator + ".get_block_view with template_path:" + p.out)
+				if attached p.entry as e then
+					create l_tpl_block.make_raw (a_block_id, Void, p.parent, e)
+				else
+					create l_tpl_block.make_raw (a_block_id, Void, p.parent, p)
+				end
+				if l_tpl_block /= Void then
+					write_debug_log (generator + ".get_block_view with template_block:" + l_tpl_block.out)
+				else
+					write_debug_log (generator + ".get_block_view with template_block: Void")
+				end
+				a_response.add_block (l_tpl_block, "content")
+
+			else
+				a_response.add_warning_message ("Error with block [" + a_block_id + "]")
+				write_warning_log ("Error with block [" + a_block_id + "]")
+			end
+		end
+
+	get_block_view_update_beta_download (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
+				--  Get block view update object identified by `a_block_id' and associate with `a_response'.
+		local
+			l_tpl_block: detachable CMS_SMARTY_TEMPLATE_BLOCK
+			res: PATH
+			p: detachable PATH
+		do
+			create res.make_from_string ("templates")
+				-- Note: template name harcoded.
+			res := res.extended ("block_update_beta_download").appended_with_extension ("tpl")
 			p := a_response.api.module_theme_resource_location (module, res)
 
 			if p /= Void then

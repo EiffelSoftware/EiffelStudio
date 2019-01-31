@@ -34,7 +34,7 @@ note
 						                                                                           
 		DELETE /api/download/{release}						: Delete a release download configuration file.	It's not possible to use all as valid release parameter.
 		
-		GET /api/downloads/beta/channel                     : Get the latest intermediate release
+		GET /api/downloads/channel/beta                     : Get the latest intermediate release
 
 	]"
 	date: "$Date$"
@@ -75,7 +75,7 @@ feature {NONE} -- Router/administration
 			l_root.set_router (a_router)
 			a_router.handle ("/downloads/{release}", create {EIFFEL_DOWNLOAD_WEBAPI_HANDLER}.make (a_api), a_router.methods_get_put_delete)
 			a_router.handle ("/downloads/", create {EIFFEL_DOWNLOAD_WEBAPI_HANDLER}.make (a_api), a_router.methods_get_post)
-			a_router.handle ("/downloads/beta/channel", create {EIFFEL_DOWNLOAD_WEBAPI_HANDLER}.make (a_api), a_router.methods_get)
+			a_router.handle ("/downloads/channel/beta", create {EIFFEL_DOWNLOAD_WEBAPI_HANDLER}.make (a_api), a_router.methods_get)
 		end
 
 feature -- Access: filter

@@ -90,9 +90,8 @@ feature -- Router
 			-- Router configuration.
 		do
 			a_router.handle ("/download", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_download (a_api, ?, ?)), a_router.methods_head_get)
-			a_router.handle ("/downloads/channel/beta", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_download_channel_beta (a_api, ?, ?)), a_router.methods_head_get)
 			a_router.handle ("/downloads", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_download_options (a_api, ?, ?)), a_router.methods_head_get)
-
+			a_router.handle ("/downloads/channel/beta", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_download_channel_beta (a_api, ?, ?)), a_router.methods_head_get)
 		end
 
 feature -- Hooks configuration
@@ -334,23 +333,24 @@ feature {NONE} -- Block view implementation
 					l_tpl_block.set_value (ic.item, ic.key)
 				end
 
-				if
-					attached eiffel_download_api as l_api and then
-					attached l_api.download_configuration as cfg
-				then
-					vals.force (l_api.retrieve_product_gpl (cfg), "product")
-					vals.force (l_api.retrieve_products (cfg), "products")
-					vals.force (l_api.retrieve_mirror_gpl (cfg), "mirror")
+				if attached eiffel_download_api as l_api then
+					if
+						attached l_api.download_channel_configuration as cfg
+					then
+						vals.force (l_api.retrieve_product_gpl (cfg), "product")
+						vals.force (l_api.retrieve_products (cfg), "products")
+						vals.force (l_api.retrieve_mirror_gpl (cfg), "mirror")
 
-					across
-						vals as ic
-					loop
-						l_tpl_block.set_value (ic.item, ic.key)
-					end
-					if l_tpl_block /= Void then
-						write_debug_log (generator + ".get_block_view with template_block:" + l_tpl_block.out)
-					else
-						write_debug_log (generator + ".get_block_view with template_block: Void")
+						across
+							vals as ic
+						loop
+							l_tpl_block.set_value (ic.item, ic.key)
+						end
+						if l_tpl_block /= Void then
+							write_debug_log (generator + ".get_block_view with template_block:" + l_tpl_block.out)
+						else
+							write_debug_log (generator + ".get_block_view with template_block: Void")
+						end
 					end
 					a_response.add_block (l_tpl_block, "content")
 				else

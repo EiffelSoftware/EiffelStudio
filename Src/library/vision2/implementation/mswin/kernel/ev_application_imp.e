@@ -66,6 +66,7 @@ feature -- Initialization
 			l_result: INTEGER
 			l_process: POINTER
 		do
+			{WEL_API}.set_process_dpi_awaerness_per_monitor
 			create reusable_message.make
 			init_instance
 			init_application
@@ -734,7 +735,7 @@ invariant
 	process_handle_valid: not is_destroyed implies process_handle /= default_pointer
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

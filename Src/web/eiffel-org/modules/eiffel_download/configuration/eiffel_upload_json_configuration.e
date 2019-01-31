@@ -24,7 +24,7 @@ feature
 				if attached {JSON_OBJECT} l_parser.parsed_json_value as jv and then l_parser.is_parsed then
 					create l_conf
 					if attached {JSON_STRING} jv.item ("location") as l_location then
-						l_conf.set_location (l_location.unescaped_string_32)
+						l_conf.set_location (l_location.unescaped_string_8)
 					end
 					if	attached {JSON_ARRAY} jv.item ("files") as l_files then
 						across l_files as  ic

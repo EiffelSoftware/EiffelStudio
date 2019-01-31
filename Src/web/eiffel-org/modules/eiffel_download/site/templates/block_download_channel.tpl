@@ -3,6 +3,7 @@
 		If you are new to Eiffel, please check the <a href="{$site_url/}doc/eiffelstudio/EiffelStudio tutorials">tutorials </a> and <a href="https://www.youtube.com/playlist?list=PLhVybat45jE9TObIY8nkkA5OejGnW5yby" target="_blank">videos</a>.
 	</p>
 
+  	 {if isset="$last_release"}
 	  <div class="promo-area">
 		<div class="holder">
 			<div class="btn-holder">
@@ -15,9 +16,13 @@
 	  </div>
 	<br/>  
 	<h2>{$product.name/}</h2>
-
+	{/if}
+	{unless isset="$products"}
+	<h3>Beta versions: Not available </h3>
+	{/unless}
+	{if isset="$products"}
 	<h3>Beta versions</h3>
-
+	{/if}
 	{foreach item="ic" from="$products"}
 	  <div class="toggle">
         <div class="less">

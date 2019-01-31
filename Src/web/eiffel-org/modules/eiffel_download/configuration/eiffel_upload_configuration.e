@@ -50,179 +50,183 @@ feature -- Element Change
 			-- [win64, windows, linux-x86-64, linux-x86, linux-x86-64-suncc, linux-armv6, macosx-x86-64, solaris-sparc-64, solaris-sparc, freebsd-x86-64, freebsd-x86, openbsd-x86-64]
 		local
 			is_inserted: BOOLEAN
+			l_file: ARRAYED_LIST [TUPLE [name: STRING; size: INTEGER_64; sha256: STRING; version: STRING; major: STRING; minor: STRING; revision: INTEGER_64; platform: STRING]]
+			l_element: TUPLE [name: STRING; size: INTEGER_64; sha256: STRING; version: STRING; major: STRING; minor: STRING; revision: INTEGER_64; platform: STRING]
 		do
+			l_file := a_file
+			l_element := a_element
 			from
-				a_file.start
+				l_file.start
 			until
-				a_file.after or is_inserted
+				l_file.after or is_inserted
 			loop
-				if a_element.platform.is_case_insensitive_equal_general ("win64") then
-					a_file.put_front (a_element)
+				if l_element.platform.is_case_insensitive_equal_general ("win64") then
+					l_file.put_front (l_element)
 					is_inserted := True
-				elseif a_element.platform.is_case_insensitive_equal_general ("windows") and then
-					not a_file.item.platform.is_case_insensitive_equal_general ("win64")
+				elseif l_element.platform.is_case_insensitive_equal_general ("windows") and then
+					not l_file.item.platform.is_case_insensitive_equal_general ("win64")
 				then
-					a_file.put_left (a_element)
+					l_file.put_left (l_element)
 					is_inserted := True
-				elseif a_element.platform.is_case_insensitive_equal_general ("linux-x86-64") and then not (
-					 a_file.item.platform.is_case_insensitive_equal_general ("win64") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("windows"))
+				elseif l_element.platform.is_case_insensitive_equal_general ("linux-x86-64") and then not (
+					l_file.item.platform.is_case_insensitive_equal_general ("win64") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("windows"))
 				then
-					a_file.put_left (a_element)
+					l_file.put_left (l_element)
 					is_inserted := True
-				elseif a_element.platform.is_case_insensitive_equal_general ("linux-x86") and then not (
-					a_file.item.platform.is_case_insensitive_equal_general ("win64") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("windows") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-x86-64"))
+				elseif l_element.platform.is_case_insensitive_equal_general ("linux-x86") and then not (
+					l_file.item.platform.is_case_insensitive_equal_general ("win64") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("windows") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-x86-64"))
 				then
-					a_file.put_left (a_element)
+					l_file.put_left (l_element)
 					is_inserted := True
-				elseif a_element.platform.is_case_insensitive_equal_general ("linux-x86-64-suncc") and then not (
-					a_file.item.platform.is_case_insensitive_equal_general ("win64") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("windows") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-x86-64") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-x86"))
+				elseif l_element.platform.is_case_insensitive_equal_general ("linux-x86-64-suncc") and then not (
+					l_file.item.platform.is_case_insensitive_equal_general ("win64") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("windows") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-x86-64") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-x86"))
 				then
-					a_file.put_left (a_element)
+					l_file.put_left (l_element)
 					is_inserted := True
-				elseif a_element.platform.is_case_insensitive_equal_general ("linux-x86-suncc") and then not (
-					a_file.item.platform.is_case_insensitive_equal_general ("win64") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("windows") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-x86-64") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-x86") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-x86-64-suncc"))
+				elseif l_element.platform.is_case_insensitive_equal_general ("linux-x86-suncc") and then not (
+					l_file.item.platform.is_case_insensitive_equal_general ("win64") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("windows") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-x86-64") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-x86") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-x86-64-suncc"))
 				then
-					a_file.put_left (a_element)
+					l_file.put_left (l_element)
 					is_inserted := True
-				elseif a_element.platform.is_case_insensitive_equal_general ("linux-armv6") and then not (
-					a_file.item.platform.is_case_insensitive_equal_general ("win64") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("windows") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-x86-64") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-x86") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-x86-64-suncc") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-x86-suncc"))
+				elseif l_element.platform.is_case_insensitive_equal_general ("linux-armv6") and then not (
+					l_file.item.platform.is_case_insensitive_equal_general ("win64") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("windows") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-x86-64") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-x86") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-x86-64-suncc") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-x86-suncc"))
 				then
-					a_file.put_left (a_element)
+					l_file.put_left (l_element)
 					is_inserted := True
-				elseif a_element.platform.is_case_insensitive_equal_general ("macosx-x86-64") and then not (
-					a_file.item.platform.is_case_insensitive_equal_general ("win64") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("windows") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-x86-64") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-x86") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-x86-64-suncc") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-x86-suncc") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-armv6"))
+				elseif l_element.platform.is_case_insensitive_equal_general ("macosx-x86-64") and then not (
+					l_file.item.platform.is_case_insensitive_equal_general ("win64") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("windows") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-x86-64") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-x86") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-x86-64-suncc") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-x86-suncc") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-armv6"))
 				then
-					a_file.put_left (a_element)
+					l_file.put_left (l_element)
 					is_inserted := True
-				elseif a_element.platform.is_case_insensitive_equal_general ("solaris-sparc-64") and then not(
-					a_file.item.platform.is_case_insensitive_equal_general ("win64") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("windows") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-x86-64") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-x86") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-x86-64-suncc") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-x86-suncc") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-armv6") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("macosx-x86-64"))
+				elseif l_element.platform.is_case_insensitive_equal_general ("solaris-sparc-64") and then not(
+					l_file.item.platform.is_case_insensitive_equal_general ("win64") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("windows") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-x86-64") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-x86") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-x86-64-suncc") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-x86-suncc") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-armv6") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("macosx-x86-64"))
 				then
-					a_file.put_left (a_element)
+					l_file.put_left (l_element)
 					is_inserted := True
-				elseif a_element.platform.is_case_insensitive_equal_general ("solaris-sparc") and then not (
-					a_file.item.platform.is_case_insensitive_equal_general ("win64") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("windows") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-x86-64") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-x86") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-x86-64-suncc") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-x86-suncc") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-armv6") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("macosx-x86-64") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("solaris-sparc-64"))
+				elseif l_element.platform.is_case_insensitive_equal_general ("solaris-sparc") and then not (
+					l_file.item.platform.is_case_insensitive_equal_general ("win64") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("windows") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-x86-64") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-x86") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-x86-64-suncc") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-x86-suncc") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-armv6") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("macosx-x86-64") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("solaris-sparc-64"))
 				then
-					a_file.put_left (a_element)
+					l_file.put_left (l_element)
 					is_inserted := True
-				elseif a_element.platform.is_case_insensitive_equal_general ("solaris-x86-64") and then not (
-					a_file.item.platform.is_case_insensitive_equal_general ("win64") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("windows") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-x86-64") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-x86") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-x86-64-suncc") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-x86-suncc") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-armv6") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("macosx-x86-64") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("solaris-sparc-64"))
+				elseif l_element.platform.is_case_insensitive_equal_general ("solaris-x86-64") and then not (
+					l_file.item.platform.is_case_insensitive_equal_general ("win64") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("windows") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-x86-64") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-x86") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-x86-64-suncc") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-x86-suncc") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-armv6") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("macosx-x86-64") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("solaris-sparc-64"))
 				then
-					a_file.put_left (a_element)
+					l_file.put_left (l_element)
 					is_inserted := True
-				elseif a_element.platform.is_case_insensitive_equal_general ("solaris-x86") and then not (
-					a_file.item.platform.is_case_insensitive_equal_general ("win64") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("windows") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-x86-64") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-x86") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-x86-64-suncc") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-x86-suncc") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-armv6") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("macosx-x86-64") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("solaris-sparc-64")or else
-					a_file.item.platform.is_case_insensitive_equal_general ("solaris-x86-64"))
+				elseif l_element.platform.is_case_insensitive_equal_general ("solaris-x86") and then not (
+					l_file.item.platform.is_case_insensitive_equal_general ("win64") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("windows") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-x86-64") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-x86") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-x86-64-suncc") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-x86-suncc") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-armv6") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("macosx-x86-64") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("solaris-sparc-64")or else
+					l_file.item.platform.is_case_insensitive_equal_general ("solaris-x86-64"))
 				then
-					a_file.put_left (a_element)
+					l_file.put_left (l_element)
 					is_inserted := True
 
-				elseif a_element.platform.is_case_insensitive_equal_general ("freebsd-x86-64") and then not(
-					a_file.item.platform.is_case_insensitive_equal_general ("win64") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("windows") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-x86-64") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-x86") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-x86-64-suncc") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-armv6") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("macosx-x86-64") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("solaris-sparc-64") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("solaris-sparc") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("solaris-x86-64") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("solaris-x86"))
+				elseif l_element.platform.is_case_insensitive_equal_general ("freebsd-x86-64") and then not(
+					l_file.item.platform.is_case_insensitive_equal_general ("win64") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("windows") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-x86-64") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-x86") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-x86-64-suncc") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-armv6") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("macosx-x86-64") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("solaris-sparc-64") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("solaris-sparc") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("solaris-x86-64") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("solaris-x86"))
 				then
-					a_file.put_left (a_element)
+					l_file.put_left (l_element)
 					is_inserted := True
-				elseif a_element.platform.is_case_insensitive_equal_general ("freebsd-x86") and then not(
-					a_file.item.platform.is_case_insensitive_equal_general ("win64") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("windows") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-x86-64") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-x86") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-x86-64-suncc") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-x86-suncc") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-armv6") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("macosx-x86-64") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("solaris-sparc-64") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("solaris-sparc") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("solaris-x86-64") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("solaris-x86") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("freebsd-x86-64"))
+				elseif l_element.platform.is_case_insensitive_equal_general ("freebsd-x86") and then not(
+					l_file.item.platform.is_case_insensitive_equal_general ("win64") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("windows") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-x86-64") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-x86") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-x86-64-suncc") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-x86-suncc") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-armv6") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("macosx-x86-64") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("solaris-sparc-64") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("solaris-sparc") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("solaris-x86-64") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("solaris-x86") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("freebsd-x86-64"))
 				then
-					a_file.put_left (a_element)
+					l_file.put_left (l_element)
 					is_inserted := True
-				elseif a_element.platform.is_case_insensitive_equal_general ("openbsd-x86-64") and then not(
-					a_file.item.platform.is_case_insensitive_equal_general ("win64") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("windows") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-x86-64") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-x86") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-x86-64-suncc") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-x86-suncc") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("linux-armv6") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("macosx-x86-64") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("solaris-sparc-64") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("solaris-sparc") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("solaris-x86-64") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("solaris-x86") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("freebsd-x86-64") or else
-					a_file.item.platform.is_case_insensitive_equal_general ("freebsd-x86"))
+				elseif l_element.platform.is_case_insensitive_equal_general ("openbsd-x86-64") and then not(
+					l_file.item.platform.is_case_insensitive_equal_general ("win64") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("windows") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-x86-64") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-x86") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-x86-64-suncc") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-x86-suncc") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("linux-armv6") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("macosx-x86-64") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("solaris-sparc-64") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("solaris-sparc") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("solaris-x86-64") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("solaris-x86") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("freebsd-x86-64") or else
+					l_file.item.platform.is_case_insensitive_equal_general ("freebsd-x86"))
 				then
-					a_file.put_left (a_element)
+					l_file.put_left (l_element)
 					is_inserted := True
 				end
-				a_file.forth
+				l_file.forth
 			end
 			if not is_inserted then
-				a_file.force (a_element)
+				l_file.force (l_element)
 			end
 		end
 

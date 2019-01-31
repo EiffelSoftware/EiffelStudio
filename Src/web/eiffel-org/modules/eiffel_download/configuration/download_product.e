@@ -183,15 +183,7 @@ feature -- Comparision
 	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is current object less than `other'?
 		do
-			if
-				attached number as l_number and then
-				attached other.number as l_other_number and then
-		 		l_number < l_other_number
-			then
-				Result := True
-			else
-			   Result := False
-			end
+			Result := attached number as l_number and then attached other.number as l_other_number and then l_number < l_other_number
 		end
 
 end

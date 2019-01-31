@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {EIFFEL_DOWNLOAD_API}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -30,6 +29,24 @@ feature -- Access: config
 				create l_dir.make_with_path (cms_api.module_location_by_name ("eiffel_download"))
 				if l_dir.exists then
 					retrieve_download_configuration_from_dir (create {DIRECTORY}.make_with_path (cms_api.module_location_by_name ("eiffel_download")))
+				end
+			end
+			Result := internal_download_configuration
+		end
+
+
+	download_channel_configuration: detachable DOWNLOAD_CONFIGURATION
+			-- Get `download_channel_configuration' value.
+			-- from a list of files.
+		local
+			l_dir: DIRECTORY
+		do
+			write_debug_log (generator + ".get_download_channel_configuration")
+			if internal_download_configuration = Void then
+				create l_dir.make_with_path (cms_api.module_location_by_name ("eiffel_download"))
+				if l_dir.exists then
+						-- the file it's located at {module_name}/channel/file_name
+					retrieve_download_configuration_from_dir (create {DIRECTORY}.make_with_path (cms_api.module_location_by_name ("eiffel_download").extended ("channel")))
 				end
 			end
 			Result := internal_download_configuration

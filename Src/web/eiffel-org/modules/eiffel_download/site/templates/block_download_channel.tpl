@@ -16,7 +16,7 @@
 	<br/>  
 	<h2>{$product.name/}</h2>
 
-	<h3>Stable versions</h3>
+	<h3>Beta versions</h3>
 
 	{foreach item="ic" from="$products"}
 	  <div class="toggle">
@@ -26,7 +26,7 @@
 	    </div>
 		
 		<div class="more">
-			<h2> {$ic.name/} {$ic.number/}</h2>   <h4><a class="" href="{$site_url/}doc/eiffelstudio/Release_notes_for_{$ic.name/}_{$ic.number/}">Release Notes</a></h4>
+			<h2> {$ic.name/} {$ic.number/}</h2> 
         	<table class="download_decorator">
 				<thead>
 					<tr class="first">
@@ -51,5 +51,4 @@
 	</div>
   	{/foreach}
 
-
-	<h3>Beta Releases <a class="" href="{$site_url/}downloads/channel/beta">channel beta</a></h3>
+	<h3>Stable Releases <a class="" href="{$site_url/}downloads">channel stable</a></h3>

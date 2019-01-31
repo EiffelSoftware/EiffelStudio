@@ -175,7 +175,7 @@ feature -- Initialization
 			-- Create a file object with a unique temporary file name,
 			-- with read/write mode.
 		do
-			make_open_temporary_with_prefix("eiftmp")
+			make_open_temporary_with_prefix ("eiftmp")
 		ensure
 			exists: exists
 			open_read: is_open_read
@@ -188,18 +188,11 @@ feature -- Initialization
 		note
 			EIS:"name=mkstemp", "src=http://man7.org/linux/man-pages/man3/mkstemp.3.html", "protocol=uri"
 		local
-			l_temp: STRING_32
 			l_fd: INTEGER
-			l_utf: UTF_CONVERTER
 		do
 			set_name (a_prefix + "XXXXXX")
 			l_fd := eif_temp_file (internal_name_pointer.item, is_plain_text)
-			if {PLATFORM}.is_windows then
-				l_temp := l_utf.utf_16_0_pointer_to_string_32 (internal_name_pointer)
-			else
-				create l_temp.make_from_c (internal_name_pointer.item)
-			end
-			make_with_name (l_temp)
+			make_with_name (buffered_file_info.pointer_to_file_name_32 (internal_name_pointer.item))
 			fd_open_read_write (l_fd)
 		ensure
 			exists: exists

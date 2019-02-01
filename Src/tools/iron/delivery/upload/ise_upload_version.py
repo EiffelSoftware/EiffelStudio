@@ -23,14 +23,16 @@ def get_ise_libraries(basedir, br, v, rev):
 	else:
 		branch_dir="https://svn.eiffel.com/eiffelstudio/branches/Eiffel_%s" % (v)
 	if rev:
-		branch_dir=" -r %s %s" % (rev, branch_dir)
+		l_revision=rev
+	else:
+		l_revision="HEAD"
 
 	print "Getting source code from %s ..." % (branch_dir)
 	d = os.path.join (basedir, "library")
 	if os.path.exists (d):
 		call(["svn", "update", d ])
 	else:
-		call(["svn", "checkout", "%s/Src/library" % (branch_dir), d ])
+		call(["svn", "checkout", "-r", l_revision, "%s/Src/library" % (branch_dir), d ])
 	safe_rmtree (os.path.join (d, "obsolete"))
 	safe_rmtree (os.path.join (d, "wizard"))
 	safe_rmtree (os.path.join (d, "base", "test"))
@@ -39,7 +41,7 @@ def get_ise_libraries(basedir, br, v, rev):
 	if os.path.exists (d):
 		call(["svn", "update", d ])
 	else:
-		call(["svn", "checkout", "%s/Src/C_library" % (branch_dir), d ])
+		call(["svn", "checkout", "-r", l_revision, "%s/Src/C_library" % (branch_dir), d ])
 	safe_rmtree (os.path.join (d, "openssl"))
 	safe_rmtree (os.path.join (d, "curl"))
 	safe_rmfile (os.path.join (d, "build.eant"))
@@ -47,7 +49,7 @@ def get_ise_libraries(basedir, br, v, rev):
 	if os.path.exists (d):
 		call(["svn", "update", d ])
 	else:
-		call(["svn", "checkout", "%s/Src/contrib" % (branch_dir), d ])
+		call(["svn", "checkout", "-r", l_revision, "%s/Src/contrib" % (branch_dir), d ])
 	safe_rmtree (os.path.join (d, "examples"))
 	safe_rmtree (os.path.join (d, "library", "network", "authentication"))
 	safe_rmtree (os.path.join (d, "library", "web", "framework", "ewf", "obsolete"))
@@ -63,7 +65,7 @@ def get_ise_libraries(basedir, br, v, rev):
 	if os.path.exists (d):
 		call(["svn", "update", d ])
 	else:
-		call(["svn", "checkout", "%s/Src/unstable" % (branch_dir), d ])
+		call(["svn", "checkout", "-r", l_revision, "%s/Src/unstable" % (branch_dir), d ])
 	alter_folder_with (basedir, os.path.join (basedir, "..", "..", "alter"))
 	alter_folder_with (basedir, os.path.join (basedir, "..", "alter"))
 

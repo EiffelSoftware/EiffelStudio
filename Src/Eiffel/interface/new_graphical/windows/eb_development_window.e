@@ -489,8 +489,8 @@ feature -- Status setting
 	set_focus_to_main_editor
 			-- Set focus to main current editor.
 		do
-			if editors_manager /= Void and then editors_manager.current_editor /= Void then
-				editors_manager.select_editor (editors_manager.current_editor, True)
+			if attached editors_manager as edmgr and then attached edmgr.current_editor as ed then
+				edmgr.select_editor (ed, True)
 			end
 		end
 
@@ -2549,7 +2549,7 @@ invariant
 	window_id_positive: window_id > 0
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

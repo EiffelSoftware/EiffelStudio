@@ -17,11 +17,14 @@ def safe_rmfile(fn):
 	else:
 		print "File not found: %s" % (fn)
 
-def get_ise_libraries(basedir, br, v):
+def get_ise_libraries(basedir, br, v, rev):
 	if br == 'trunk':
 		branch_dir="https://svn.eiffel.com/eiffelstudio/trunk"
 	else:
 		branch_dir="https://svn.eiffel.com/eiffelstudio/branches/Eiffel_%s" % (v)
+	if rev:
+		branch_dir="%s@%s" % (branch_dir, rev)
+
 	print "Getting source code from %s ..." % (branch_dir)
 	d = os.path.join (basedir, "library")
 	if os.path.exists (d):
@@ -92,12 +95,13 @@ def main():
 	config = iron_config (cfg_location)
 	l_version = config['version']
 	l_branch = config['branch']
+	l_revision = config['revision']
 	l_base_dir = os.path.normpath(os.path.abspath (os.path.join ("VERSIONS", l_version)))
 	l_sources_dir = os.path.join (l_base_dir, "sources")
 	#l_packages_dir = os.path.join (l_base_dir, "packages")
 	if not os.path.exists (l_sources_dir):
 		os.makedirs(l_sources_dir)
-	get_ise_libraries(l_sources_dir, l_branch, l_version)
+	get_ise_libraries(l_sources_dir, l_branch, l_version, l_revision)
 
 	print "Upload ISE packages ..."
 	upload_version(l_sources_dir, cfg_location)

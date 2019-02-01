@@ -27,21 +27,15 @@ feature -- Access
 	mini_pixmaps: attached ES_MINI_ICON
 			-- Title bar pixmaps (10px)
 		local
-			ev: EV_SCREEN_IMP
-			l_dpi: INTEGER
+			l_dpi: NATURAL
 		once
-			if {PLATFORM}.is_windows then
-				create ev.make
-				l_dpi := {WEL_API}.dpi_for_monitor (ev.dc.item)
-				if l_dpi > 108 and then l_dpi <= 120 then
-					create Result.make ("mini_12x12", 12, 12)
-				elseif l_dpi > 132 and then l_dpi <= 144 then
-					create Result.make ("mini_15x15", 15, 15)
-				elseif l_dpi > 144 then
-					create Result.make ("mini_20x20", 20, 20)
-				else
-					create Result.make ("10x10", 10, 10)
-				end
+			l_dpi := (create {EV_MONITOR_DPI_DETECTOR_IMP}).dpi
+			if l_dpi > 108 and then l_dpi <= 120 then
+				create Result.make ("mini_12x12", 12, 12)
+			elseif l_dpi > 132 and then l_dpi <= 144 then
+				create Result.make ("mini_15x15", 15, 15)
+			elseif l_dpi > 144 then
+				create Result.make ("mini_20x20", 20, 20)
 			else
 				create Result.make ("10x10", 10, 10)
 			end
@@ -50,21 +44,15 @@ feature -- Access
 	small_pixmaps: attached ES_SMALL_ICON
 			-- Small icon pixmaps (12px)
 		local
-			ev: EV_SCREEN_IMP
-			l_dpi: INTEGER
+			l_dpi: NATURAL
 		once
-			if {PLATFORM}.is_windows then
-				create ev.make
-				l_dpi := {WEL_API}.dpi_for_monitor (ev.dc.item)
-				if l_dpi > 108 and then l_dpi <= 120 then
-					create Result.make ("small_15x15", 15, 15)
-				elseif l_dpi > 132 and then l_dpi <= 144 then
-					create Result.make ("small_18x18", 18, 18)
-				elseif l_dpi > 144 then
-					create Result.make ("small_24x24", 24, 24)
-				else
-					create Result.make ("12x12", 12, 12)
-				end
+			l_dpi := (create {EV_MONITOR_DPI_DETECTOR_IMP}).dpi
+			if l_dpi > 108 and then l_dpi <= 120 then
+				create Result.make ("small_15x15", 15, 15)
+			elseif l_dpi > 132 and then l_dpi <= 144 then
+				create Result.make ("small_18x18", 18, 18)
+			elseif l_dpi > 144 then
+				create Result.make ("small_24x24", 24, 24)
 			else
 				create Result.make ("12x12", 12, 12)
 			end
@@ -73,21 +61,16 @@ feature -- Access
 	icon_pixmaps: attached ES_ICON
 			-- Normal sized icon pixmaps (16px)
 		local
-			ev: EV_SCREEN_IMP
-			l_dpi: INTEGER
+			l_dpi: NATURAL
 		once
-			if {PLATFORM}.is_windows then
-				create ev.make
-				l_dpi := {WEL_API}.dpi_for_monitor (ev.dc.item)
-				if l_dpi > 108 and then l_dpi <= 120 then
-					create Result.make ("icons_20x20", 20, 20)
-				elseif l_dpi > 132 and then l_dpi <= 144 then
-					create Result.make ("icons_24x24", 24, 24)
-				elseif l_dpi > 144 then
-					create Result.make ("icons_32x32", 32, 32)
-				else
-					create Result.make ("16x16", 16, 16)
-				end
+
+			l_dpi := (create {EV_MONITOR_DPI_DETECTOR_IMP}).dpi
+			if l_dpi > 108 and then l_dpi <= 120 then
+				create Result.make ("icons_20x20", 20, 20)
+			elseif l_dpi > 132 and then l_dpi <= 144 then
+				create Result.make ("icons_24x24", 24, 24)
+			elseif l_dpi > 144 then
+				create Result.make ("icons_32x32", 32, 32)
 			else
 				create Result.make ("16x16", 16, 16)
 			end

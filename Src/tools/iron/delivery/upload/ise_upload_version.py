@@ -27,10 +27,10 @@ def get_ise_libraries(basedir, br, v, rev):
 	else:
 		l_revision="HEAD"
 
-	print "Getting source code from %s ..." % (branch_dir)
+	print "Getting source code from %s  (revision:%s)..." % (branch_dir, l_revision)
 	d = os.path.join (basedir, "library")
 	if os.path.exists (d):
-		call(["svn", "update", d ])
+		call(["svn", "update", "-r", l_revision, d ])
 	else:
 		call(["svn", "checkout", "-r", l_revision, "%s/Src/library" % (branch_dir), d ])
 	safe_rmtree (os.path.join (d, "obsolete"))
@@ -39,7 +39,7 @@ def get_ise_libraries(basedir, br, v, rev):
 	safe_rmtree (os.path.join (d, "base", "testing"))
 	d = os.path.join (basedir, "C_library")
 	if os.path.exists (d):
-		call(["svn", "update", d ])
+		call(["svn", "update", "-r", l_revision, d ])
 	else:
 		call(["svn", "checkout", "-r", l_revision, "%s/Src/C_library" % (branch_dir), d ])
 	safe_rmtree (os.path.join (d, "openssl"))
@@ -47,7 +47,7 @@ def get_ise_libraries(basedir, br, v, rev):
 	safe_rmfile (os.path.join (d, "build.eant"))
 	d = os.path.join (basedir, "contrib")
 	if os.path.exists (d):
-		call(["svn", "update", d ])
+		call(["svn", "update", "-r", l_revision, d ])
 	else:
 		call(["svn", "checkout", "-r", l_revision, "%s/Src/contrib" % (branch_dir), d ])
 	safe_rmtree (os.path.join (d, "examples"))
@@ -63,7 +63,7 @@ def get_ise_libraries(basedir, br, v, rev):
 
 	d = os.path.join (basedir, "unstable")
 	if os.path.exists (d):
-		call(["svn", "update", d ])
+		call(["svn", "update", "-r", l_revision, d ])
 	else:
 		call(["svn", "checkout", "-r", l_revision, "%s/Src/unstable" % (branch_dir), d ])
 	alter_folder_with (basedir, os.path.join (basedir, "..", "..", "alter"))

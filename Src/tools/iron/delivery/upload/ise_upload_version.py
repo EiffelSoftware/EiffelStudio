@@ -23,7 +23,7 @@ def get_ise_libraries(basedir, br, v, rev):
 	else:
 		branch_dir="https://svn.eiffel.com/eiffelstudio/branches/Eiffel_%s" % (v)
 	if rev:
-		branch_dir="%s@%s" % (branch_dir, rev)
+		branch_dir=" -r %s %s" % (rev, branch_dir)
 
 	print "Getting source code from %s ..." % (branch_dir)
 	d = os.path.join (basedir, "library")

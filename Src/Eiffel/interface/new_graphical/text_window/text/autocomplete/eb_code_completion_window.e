@@ -32,6 +32,7 @@ inherit
 			on_key_released,
 			set_expanded_row_icon,
 			show,
+			hide,
 			is_applicable_item,
 			exit,
 			on_scroll,
@@ -680,6 +681,15 @@ feature -- Status change
 		do
 			Precursor {CODE_COMPLETION_WINDOW}
 			setup_accelerators
+		end
+
+	hide
+			-- <Precursor>
+		do
+			if attached tooltip_window as w then
+				w.hide
+			end
+			Precursor {CODE_COMPLETION_WINDOW}
 		end
 
 feature {NONE} -- Option Preferences

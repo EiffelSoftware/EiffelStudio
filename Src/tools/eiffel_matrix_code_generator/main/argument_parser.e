@@ -123,7 +123,7 @@ feature {NONE} -- Usage
 	version: STRING = "1.5.0"
 			-- <Precursor>
 
-	copyright: STRING = "Copyright Eiffel Software 1996-2018. All Rights Reserved."
+	copyright: STRING = "Copyright Eiffel Software 1996-2019. All Rights Reserved."
 			-- <Precursor>
 
 	non_switched_argument_name: STRING = "cfg_file"

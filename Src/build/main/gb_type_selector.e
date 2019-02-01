@@ -24,15 +24,11 @@ inherit
 			{NONE} all
 		undefine
 			default_create, copy, is_equal
-		redefine
-			default_create
 		end
 
 	GB_STORABLE_TOOL
 		undefine
 			default_create, copy, is_equal
-		redefine
-			default_create
 		end
 
 	GB_CONSTANTS
@@ -40,8 +36,6 @@ inherit
 			{NONE} all
 		undefine
 			default_create, copy, is_equal
-		redefine
-			default_create
 		end
 
 	GB_DEFAULT_STATE

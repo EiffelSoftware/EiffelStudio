@@ -20,8 +20,7 @@ inherit
 		undefine
 			attribute_editor
 		redefine
-			modify_from_xml_after_build,
-			ev_type
+			modify_from_xml_after_build
 		end
 
 	GB_EV_VIEWPORT_EDITOR_CONSTRUCTOR

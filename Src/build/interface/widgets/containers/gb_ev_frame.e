@@ -13,8 +13,6 @@ inherit
 	GB_EV_ANY
 		undefine
 			attribute_editor
-		redefine
-			ev_type
 		end
 		
 	GB_EV_FRAME_EDITOR_CONSTRUCTOR

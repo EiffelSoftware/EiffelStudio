@@ -23,7 +23,6 @@ inherit
 		undefine
 			attribute_editor			
 		redefine
-			ev_type,
 			modify_from_xml_after_build
 		end
 		

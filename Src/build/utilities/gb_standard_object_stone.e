@@ -11,9 +11,6 @@ class
 	
 inherit
 	GB_OBJECT_STONE
-		redefine
-			object
-		end
 		
 create
 	make_with_object

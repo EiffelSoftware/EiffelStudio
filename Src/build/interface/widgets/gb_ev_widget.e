@@ -18,8 +18,6 @@ inherit
 	GB_EV_ANY
 		undefine
 			attribute_editor
-		redefine
-			ev_type
 		end
 
 

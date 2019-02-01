@@ -16,8 +16,6 @@ inherit
 	GB_EV_ANY
 		undefine
 			attribute_editor
-		redefine
-			ev_type
 		end
 
 	GB_EV_TEXT_COMPONENT_EDITOR_CONSTRUCTOR

@@ -12,9 +12,6 @@ inherit
 	GB_GRAPHICAL_COMMAND
 
 	GB_TOOLBARABLE
-		redefine
-			new_toolbar_item
-		end
 
 feature -- Access
 

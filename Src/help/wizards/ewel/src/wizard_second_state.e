@@ -13,8 +13,7 @@ inherit
 	BENCH_WIZARD_INTERMEDIARY_STATE_WINDOW
 		redefine
 			update_state_information,
-			proceed_with_current_info,
-			build
+			proceed_with_current_info
 		end
 
 	WIZARD_PROJECT_SHARED

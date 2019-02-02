@@ -13,8 +13,7 @@ inherit
 	BENCH_WIZARD_INTERMEDIARY_STATE_WINDOW
 		redefine
 			update_state_information,
-			proceed_with_current_info,
-			build
+			proceed_with_current_info
 		end
 
 	BENCH_WIZARD_CONSTANTS
@@ -41,6 +40,8 @@ feature -- Basic Operation
 			project_location.set_textfield_string (wizard_information.project_location.name)
 			project_location.enable_directory_browse_button
 			project_location.generate
+
+				-- FIXME: remember project location??
 
 			create is_scoop.make_with_text (bench_interface_names.l_support_scoop)
 			if wizard_information.is_scoop then

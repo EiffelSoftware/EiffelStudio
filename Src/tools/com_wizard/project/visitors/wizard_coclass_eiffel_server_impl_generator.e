@@ -11,14 +11,10 @@ class
 inherit
 	WIZARD_COCLASS_EIFFEL_GENERATOR
 		redefine
-			generate,
-			set_default_ancestors
+			generate
 		end
 
 	WIZARD_COMPONENT_EIFFEL_SERVER_GENERATOR
-		redefine
-			set_default_ancestors
-		end
 
 feature -- Basic operation
 
@@ -174,7 +170,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

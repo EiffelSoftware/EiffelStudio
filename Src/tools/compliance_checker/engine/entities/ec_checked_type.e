@@ -10,10 +10,6 @@ class
 
 inherit
 	EC_CACHABLE_CHECKED_ENTITY
-		redefine
-			check_extended_compliance,
-			check_eiffel_compliance
-		end
 
 create
 	make
@@ -187,7 +183,7 @@ invariant
 	element_checked_type_not_void: type.has_element_type implies element_checked_type /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

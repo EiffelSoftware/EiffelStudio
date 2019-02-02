@@ -13,10 +13,6 @@ class
 
 inherit
 	EC_CHECKED_ENTITY
-		redefine
-			check_extended_compliance,
-			check_eiffel_compliance
-		end
 
 	EC_CHECKED_ENTITY_FACTORY
 		export
@@ -115,7 +111,7 @@ invariant
 	member_not_void: member /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

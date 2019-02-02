@@ -10,9 +10,6 @@ class
 
 inherit
 	ARGUMENT_VALUE_VALIDATOR
-		redefine
-			validate_value
-		end
 
 	SHARED_ASSEMBLY_LOADER
 		export

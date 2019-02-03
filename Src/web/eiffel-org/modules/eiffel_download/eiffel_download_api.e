@@ -17,41 +17,48 @@ create
 
 feature -- Access: config
 
+	channel_file_location (a_channel: detachable READABLE_STRING_GENERAL): PATH
+		do
+			Result := cms_api.module_location_by_name ("eiffel_download").extended ("channel")
+			if a_channel = Void then
+				Result := Result.extended ("stable")
+			else
+				Result := Result.extended (a_channel)
+			end
+		end
 
-	download_configuration: detachable DOWNLOAD_CONFIGURATION
+	download_stable_configuration: detachable DOWNLOAD_CONFIGURATION
 			-- Get `download_configuration' value.
 			-- from a list of files.
 		local
 			l_dir: DIRECTORY
 		do
-			write_debug_log (generator + ".get_download_configuration")
+			write_debug_log (generator + ".download_configuration")
 			if internal_download_configuration = Void then
-				create l_dir.make_with_path (cms_api.module_location_by_name ("eiffel_download"))
+				create l_dir.make_with_path (channel_file_location ("stable"))
 				if l_dir.exists then
-					retrieve_download_configuration_from_dir (create {DIRECTORY}.make_with_path (cms_api.module_location_by_name ("eiffel_download")))
+					retrieve_download_configuration_from_dir (l_dir)
 				end
 			end
 			Result := internal_download_configuration
 		end
 
-
-	download_channel_configuration: detachable DOWNLOAD_CONFIGURATION
+	download_channel_configuration (a_channel: READABLE_STRING_GENERAL): detachable DOWNLOAD_CONFIGURATION
 			-- Get `download_channel_configuration' value.
 			-- from a list of files.
 		local
 			l_dir: DIRECTORY
 		do
-			write_debug_log (generator + ".get_download_channel_configuration")
+			write_debug_log (generator + ".download_channel_configuration")
 			if internal_download_configuration = Void then
-				create l_dir.make_with_path (cms_api.module_location_by_name ("eiffel_download"))
+				create l_dir.make_with_path (channel_file_location (a_channel))
 				if l_dir.exists then
-						-- the file it's located at {module_name}/channel/file_name
-					retrieve_download_configuration_from_dir (create {DIRECTORY}.make_with_path (cms_api.module_location_by_name ("eiffel_download").extended ("channel")))
+						-- the file it's located at {module_name}/channel/$a_channel/file_name
+					retrieve_download_configuration_from_dir (l_dir)
 				end
 			end
 			Result := internal_download_configuration
 		end
-
 
 feature -- Access
 

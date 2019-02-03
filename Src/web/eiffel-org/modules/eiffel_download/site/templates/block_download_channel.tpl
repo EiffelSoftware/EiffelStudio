@@ -18,10 +18,10 @@
 	<h2>{$product.name/}</h2>
 	{/if}
 	{unless isset="$products"}
-	<h3>Beta versions: Not available </h3>
+	<h3>{$download_channel/} versions: not available </h3>
 	{/unless}
 	{if isset="$products"}
-	<h3>Beta versions</h3>
+	<h3>{$download_channel/} versions</h3>
 	{/if}
 	{foreach item="ic" from="$products"}
 	  <div class="toggle">
@@ -55,5 +55,10 @@
 	    </div>
 	</div>
   	{/foreach}
-
-	<h3>Stable Releases <a class="" href="{$site_url/}downloads">channel stable</a></h3>
+{assign name="stable_channel" value="stable"/}
+{if condition="$download_channel ~ $stable_channel"}
+    <h3>Beta Releases <a class="" href="{$site_url/}downloads/channel/beta">channel beta</a></h3>	
+{/if}
+{unless condition="$download_channel ~ $stable_channel"}
+    <h3>Stable Releases <a class="" href="{$site_url/}downloads/channel/stable">channel stable</a></h3>
+{/unless}

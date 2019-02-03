@@ -90,8 +90,8 @@ feature -- Router
 			-- Router configuration.
 		do
 			a_router.handle ("/download", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_download (a_api, ?, ?)), a_router.methods_head_get)
-			a_router.handle ("/downloads", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_download_options (a_api, ?, ?)), a_router.methods_head_get)
-			a_router.handle ("/downloads/channel/beta", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_download_channel_beta (a_api, ?, ?)), a_router.methods_head_get)
+			a_router.handle ("/downloads", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_download_channel (a_api, "stable", ?, ?)), a_router.methods_head_get)
+			a_router.handle ("/downloads/channel/{channel}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_download_channel (a_api, Void, ?, ?)), a_router.methods_head_get)
 		end
 
 feature -- Hooks configuration
@@ -110,39 +110,22 @@ feature -- Hooks
 			-- <Precursor>
 		local
 			l_ua: CMS_USER_AGENT
+			l_channel: STRING
+			l_loc: STRING
+			i: INTEGER
 		do
-			if a_response.request.path_info.same_string ("/downloads") then
-				if
-					attached eiffel_download_api as l_api and then
-					attached l_api.download_configuration as cfg then
-					if
-						attached l_api.retrieve_product_gpl (cfg) as l_product and then
-						attached l_product.name as l_name and then
-						attached l_product.version  as l_version and then
-						attached l_api.retrieve_mirror_gpl (cfg) as l_mirror
-					then
-						a_value.force (l_name +" " + l_version, "last_release")
-						a_value.force (l_mirror, "mirror")
-						a_value.force (create {CMS_LOCAL_LINK}.make ("download link", "download"), "link")
-					end
-
-
-					create l_ua.make_from_string (a_response.request.http_user_agent)
-					a_value.force (get_platform (l_ua), "platform")
-
-					if
-						attached l_api.retrieve_product_gpl (cfg) as l_product and then
-						attached l_api.selected_platform (l_product.downloads, get_platform (l_ua)) as l_selected
-					then
-						a_value.force (l_selected.filename, "filename")
-					end
+			l_loc := a_response.location
+			if l_loc.starts_with_general ("downloads") then
+				if l_loc.starts_with_general ("downloads/channel/") then
+					i := l_loc.substring_index ("/channel/", 1)
+					i := l_loc.index_of ('/', i + 1)
+					l_channel := l_loc.substring (i + 1, l_loc.count)
+				else
+					l_channel := "stable"
 				end
-			elseif a_response.request.path_info.same_string ("/downloads/channel/beta")
-			then
-					-- Beta releases.
 				if
 					attached eiffel_download_api as l_api and then
-					attached l_api.download_channel_configuration as cfg then
+					attached l_api.download_channel_configuration (l_channel) as cfg then
 					if
 						attached l_api.retrieve_product_gpl (cfg) as l_product and then
 						attached l_product.name as l_name and then
@@ -173,7 +156,7 @@ feature -- Hooks
 		local
 			l_string: STRING
 		do
-			Result := <<"?download_area", "?download_options", "?download_channel">>
+			Result := <<"?download_area", "?download_channel">>
 			create l_string.make_empty
 			across Result as ic loop
 				l_string.append (ic.item)
@@ -184,6 +167,9 @@ feature -- Hooks
 
 	get_block_view (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
 				-- <Precursor>
+		local
+			l_loc: READABLE_STRING_8
+			i: INTEGER
 		do
 			write_debug_log (generator + ".get_block_view with block_id:`" + a_block_id + "'")
 				-- Download header
@@ -191,16 +177,16 @@ feature -- Hooks
 				if a_response.is_front then
 					get_block_view_download_area (a_block_id, a_response)
 				end
-			elseif
-				a_block_id.is_case_insensitive_equal_general ("download_options") and then
-				a_response.request.path_info.same_string ("/downloads")
-			then
-				get_block_view_download_options (a_block_id, a_response)
-			elseif
-				a_block_id.is_case_insensitive_equal_general ("download_channel") and then
-				a_response.request.path_info.same_string ("/downloads/channel/beta")
-			then
-				get_block_view_download_channel (a_block_id, a_response)
+			else
+				l_loc := a_response.location
+				if
+					a_block_id.is_case_insensitive_equal_general ("download_channel") and then
+					l_loc.starts_with_general ("downloads/channel/")
+				then
+					i := l_loc.substring_index ("/channel/", 1)
+					i := l_loc.index_of ('/', i + 1)
+					get_block_view_download_channel (a_block_id, l_loc.substring (i + 1, l_loc.count), a_response)
+				end
 			end
 		end
 
@@ -248,63 +234,7 @@ feature {NONE} -- Block view implementation
 			end
 		end
 
-
-	get_block_view_download_options (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
-				--  Get block download options object identified by `a_block_id' and associate with `a_response'.
-		local
-			l_tpl_block: detachable CMS_SMARTY_TEMPLATE_BLOCK
-			vals: CMS_VALUE_TABLE
-			res: PATH
-			p: detachable PATH
-		do
-			create res.make_from_string ("templates")
-				-- Note: template name harcoded.
-			res := res.extended ("block_download_options").appended_with_extension ("tpl")
-			p := a_response.api.module_theme_resource_location (Current, res)
-
-			if p /= Void then
-				write_debug_log (generator + ".get_block_view with template_path:" + p.out)
-				if attached p.entry as e then
-					create l_tpl_block.make_raw (a_block_id, Void, p.parent, e)
-				else
-					create l_tpl_block.make_raw (a_block_id, Void, p.parent, p)
-				end
-
-				create vals.make (8)
-				value_table_alter (vals, a_response)
-				across
-					vals as ic
-				loop
-					l_tpl_block.set_value (ic.item, ic.key)
-				end
-
-				if
-					attached eiffel_download_api as l_api and then
-					attached l_api.download_configuration as cfg
-				then
-					vals.force (l_api.retrieve_product_gpl (cfg), "product")
-					vals.force (l_api.retrieve_products (cfg), "products")
-					vals.force (l_api.retrieve_mirror_gpl (cfg), "mirror")
-
-					across
-						vals as ic
-					loop
-						l_tpl_block.set_value (ic.item, ic.key)
-					end
-					if l_tpl_block /= Void then
-						write_debug_log (generator + ".get_block_view with template_block:" + l_tpl_block.out)
-					else
-						write_debug_log (generator + ".get_block_view with template_block: Void")
-					end
-					a_response.add_block (l_tpl_block, "content")
-				else
-					a_response.add_warning_message ("Error with block [" + a_block_id + "]")
-					write_warning_log ("Error with block [" + a_block_id + "]")
-				end
-			end
-		end
-
-	get_block_view_download_channel (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
+	get_block_view_download_channel (a_block_id: READABLE_STRING_8; a_channel: READABLE_STRING_GENERAL; a_response: CMS_RESPONSE)
 				--  Get block download channel object identified by `a_block_id' and associate with `a_response'.
 		local
 			l_tpl_block: detachable CMS_SMARTY_TEMPLATE_BLOCK
@@ -335,11 +265,12 @@ feature {NONE} -- Block view implementation
 
 				if attached eiffel_download_api as l_api then
 					if
-						attached l_api.download_channel_configuration as cfg
+						attached l_api.download_channel_configuration (a_channel) as cfg
 					then
 						vals.force (l_api.retrieve_product_gpl (cfg), "product")
 						vals.force (l_api.retrieve_products (cfg), "products")
 						vals.force (l_api.retrieve_mirror_gpl (cfg), "mirror")
+						vals.force (a_channel, "download_channel")
 
 						across
 							vals as ic
@@ -362,23 +293,19 @@ feature {NONE} -- Block view implementation
 
 feature -- Handler	
 
-	handle_download_options (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
+	handle_download_channel (api: CMS_API; a_channel: detachable READABLE_STRING_GENERAL; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
 		do
-			write_debug_log (generator + ".handle_download_options")
+			write_debug_log (generator + ".handle_download_channel")
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-			r.values.force ("download_options", "download_options")
-			r.execute
-		end
-
-	handle_download_channel_beta (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)
-		local
-			r: CMS_RESPONSE
-		do
-			write_debug_log (generator + ".handle_download_channel_beta")
-			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
-			r.values.force ("download_channel", "download_channel")
+			if a_channel /= Void then
+				r.values.force (a_channel, "download_channel")
+			elseif attached {WSF_STRING} req.path_parameter ("channel") as p_channel then
+				r.values.force (p_channel.value, "download_channel")
+			else
+				r.values.force ("stable", "download_channel")
+			end
 			r.execute
 		end
 
@@ -392,7 +319,7 @@ feature -- Handler
 			write_debug_log (generator + ".handle_download")
 			if
 				attached eiffel_download_api as l_api and then
-				attached l_api.download_configuration as cfg
+				attached l_api.download_stable_configuration as cfg
 			then
 				create l_ua.make_from_string (req.http_user_agent)
 				write_debug_log (generator + ".handle_download [ User_agent: " + l_ua.user_agent  + " ]")

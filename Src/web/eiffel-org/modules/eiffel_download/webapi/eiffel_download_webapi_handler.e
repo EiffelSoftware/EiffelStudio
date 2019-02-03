@@ -179,7 +179,7 @@ feature {NONE} -- Implementation
 				if
 					a_release.is_case_insensitive_equal ("all") and then
 					a_platform.is_case_insensitive_equal ("all") and then
-					attached l_download.download_configuration as cfg and then
+					attached l_download.download_stable_configuration as cfg and then
 					attached l_download.retrieve_products (cfg) as l_all_products  and then
 					attached l_download.retrieve_mirror_gpl (cfg) as l_mirror
 				then
@@ -217,7 +217,7 @@ feature {NONE} -- Implementation
 						-- specific release all platforms
 					a_release.is_case_insensitive_equal ("all") and then
 					not a_platform.is_case_insensitive_equal ("all") and then
-					attached l_download.download_configuration as cfg and then
+					attached l_download.download_stable_configuration as cfg and then
 					attached l_download.retrieve_mirror_gpl (cfg) as l_mirror and then
 					attached l_download.retrieve_products (cfg) as l_all_products
 				then
@@ -256,7 +256,7 @@ feature {NONE} -- Implementation
 						-- specific release and specific platform
 					not a_release.is_case_insensitive_equal ("all") and then
 					not a_platform.is_case_insensitive_equal ("all") and then
-					attached l_download.download_configuration as cfg and then
+					attached l_download.download_stable_configuration as cfg and then
 					attached l_download.retrieve_product_gpl_by_version (cfg, a_release) as l_product and then
 					attached l_download.retrieve_mirror_gpl (cfg) as l_mirror and then
 					attached l_product.build as l_build and then
@@ -310,7 +310,7 @@ feature {NONE} -- Implementation
 				if a_release.is_case_insensitive_equal ("all") then
 					Result := retrieve_by_release_and_platform (req, res, "all", "all")
 				elseif
-					attached l_download.download_configuration as cfg and then
+					attached l_download.download_stable_configuration as cfg and then
 					attached l_download.retrieve_product_gpl_by_version (cfg, a_release) as l_product and then
 				   	attached l_product.build as l_build and then
 				  	attached l_product.name as l_name and then
@@ -364,7 +364,7 @@ feature {NONE} -- Implementation
 			Result := new_response (req, res)
 			if
 				attached {EIFFEL_DOWNLOAD_API} api.module_api ({EIFFEL_DOWNLOAD_MODULE}) as l_download and then
-				attached l_download.download_configuration as cfg and then
+				attached l_download.download_stable_configuration as cfg and then
 				attached l_download.retrieve_product_gpl (cfg) as l_product and then
 				attached l_product.build as l_build and then
 				attached l_product.name as l_name and then
@@ -415,7 +415,7 @@ feature {NONE} -- Implementation
 				attached {EIFFEL_DOWNLOAD_API} api.module_api ({EIFFEL_DOWNLOAD_MODULE}) as l_download
 			then
 				if
-					attached l_download.download_channel_configuration as cfg and then
+					attached l_download.download_channel_configuration ("beta") as cfg and then
 					attached l_download.retrieve_product_gpl (cfg) as l_product and then
 					attached l_product.build as l_build and then
 					attached l_product.name as l_name and then

@@ -2152,7 +2152,10 @@ feature {NONE} -- Implementation
 		end
 
 	eif_temp_file (a_name_template: POINTER; a_text_mode: BOOLEAN): INTEGER
-			-- Access date of a file named `a_path'.
+			-- Generate a temporary file and return an file descriptor to the file.
+			-- `a_name_template`: pattern used to create the temporary file.
+			-- `a_text_mode`:, if text mode is True, the temporary file is created in text mode,
+			-- otherwise in binary mode.
 		external
 			"C signature (EIF_FILENAME, EIF_BOOLEAN): EIF_INTEGER use %"eif_file.h%""
 		alias

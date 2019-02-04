@@ -7,19 +7,30 @@ class
 	DOWNLOAD_PRODUCT
 
 inherit
-
 	COMPARABLE
 
 feature -- Access
 
-	blerb: detachable READABLE_STRING_32
-			-- blerb
+	associated_configuration: detachable DOWNLOAD_CONFIGURATION
+
+	mirror: like default_mirror
+		do
+			Result := default_mirror
+			if Result = Void and attached associated_configuration as cfg then
+				Result := cfg.mirror
+			end
+		end
+
+feature -- Access
 
 	license: detachable TUPLE [name: READABLE_STRING_32; url: READABLE_STRING_32]
 			-- Product License
 
-	mirrors: detachable READABLE_STRING_32
+	mirrors: detachable  LIST [READABLE_STRING_32]
 			-- Product mirrors
+
+	default_mirror: detachable READABLE_STRING_32
+			-- Default mirror
 
 	evaluation: BOOLEAN
 			-- Is for evaluation?
@@ -54,18 +65,17 @@ feature -- Access
 	build: detachable READABLE_STRING_32
 			-- Build description 		
 
+	download_link_pattern: detachable READABLE_STRING_32
+			-- Download link pattern.
 
 	downloads: detachable LIST [DOWNLOAD_PRODUCT_OPTIONS]
 			-- Possible list of download options.
 
 feature -- Element change
 
-	set_blerb (a_blerb: like blerb)
-			-- Assign `blerb' with `a_blerb'.
+	set_associated_configuration (cfg: like associated_configuration)
 		do
-			blerb := a_blerb
-		ensure
-			blerb_assigned: blerb = a_blerb
+			associated_configuration := cfg
 		end
 
 	set_license (a_license: like license)
@@ -76,12 +86,29 @@ feature -- Element change
 			license_assigned: license = a_license
 		end
 
-	set_mirrors (a_mirrors: like mirrors)
-			-- Assign `mirrors' with `a_mirrors'.
+	set_mirrors (a_mirrors: READABLE_STRING_32)
+			-- Assign `mirrors' with tab separated `a_mirrors'.
 		do
-			mirrors := a_mirrors
-		ensure
-			mirrors_assigned: mirrors = a_mirrors
+			across
+				a_mirrors.split ('%T') as ic
+			loop
+				add_mirror (ic.item)
+			end
+		end
+
+	add_mirror (a_mirror: READABLE_STRING_32)
+		local
+			l_mirrors: LIST [READABLE_STRING_32]
+		do
+			l_mirrors := mirrors
+			if l_mirrors = Void then
+				create {ARRAYED_LIST [READABLE_STRING_32]} l_mirrors.make (1)
+				mirrors := l_mirrors
+			end
+			l_mirrors.extend (a_mirror)
+			if default_mirror = Void then
+				default_mirror := a_mirror
+			end
 		end
 
 	set_evaluation (an_evaluation: like evaluation)
@@ -172,11 +199,15 @@ feature -- Element change
 			build_assigned: build = a_build
 		end
 
+	set_download_link_pattern (p: like download_link_pattern)
+		do
+			download_link_pattern := p
+		end
+
 	set_downloads (a_downloads: like downloads)
 		do
 			downloads := a_downloads
 		end
-
 
 feature -- Comparision
 

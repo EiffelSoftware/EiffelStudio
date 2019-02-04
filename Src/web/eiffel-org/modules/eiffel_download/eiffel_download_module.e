@@ -24,6 +24,8 @@ inherit
 
 	CMS_HOOK_BLOCK
 
+	CMS_HOOK_BLOCK_HELPER
+
 	SHARED_EXECUTION_ENVIRONMENT
 		export
 			{NONE} all
@@ -133,7 +135,11 @@ feature -- Hooks
 						attached l_api.retrieve_mirror_gpl (cfg) as l_mirror
 					then
 						a_value.force (l_name +" " + l_version, "last_release")
-						a_value.force (l_mirror, "mirror")
+						if attached l_product.default_mirror as dft_mirror then
+							a_value.force (dft_mirror, "mirror")
+						else
+							a_value.force (l_mirror, "mirror")
+						end
 						a_value.force (create {CMS_LOCAL_LINK}.make ("download link", "download"), "link")
 					end
 
@@ -153,40 +159,31 @@ feature -- Hooks
 
 	block_list: ITERABLE [like {CMS_BLOCK}.name]
 				-- <Precursor>
-		local
-			l_string: STRING
 		do
 			Result := <<"?download_area", "?download_channel">>
-			create l_string.make_empty
-			across Result as ic loop
-				l_string.append (ic.item)
-				l_string.append_character (' ')
-			end
-			write_debug_log (generator + ".block_list:" + l_string )
 		end
 
 	get_block_view (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
 				-- <Precursor>
 		local
-			l_loc: READABLE_STRING_8
 			i: INTEGER
+			l_loc: READABLE_STRING_8
+			ch: detachable READABLE_STRING_GENERAL
 		do
 			write_debug_log (generator + ".get_block_view with block_id:`" + a_block_id + "'")
 				-- Download header
 			if a_block_id.is_case_insensitive_equal_general ("download_area") then
-				if a_response.is_front then
-					get_block_view_download_area (a_block_id, a_response)
-				end
-			else
+				get_block_view_download_area (a_block_id, a_response)
+			elseif a_block_id.is_case_insensitive_equal_general ("download_channel") then
 				l_loc := a_response.location
-				if
-					a_block_id.is_case_insensitive_equal_general ("download_channel") and then
-					l_loc.starts_with_general ("downloads/channel/")
-				then
+				if l_loc.starts_with_general ("downloads/channel/") then
 					i := l_loc.substring_index ("/channel/", 1)
 					i := l_loc.index_of ('/', i + 1)
-					get_block_view_download_channel (a_block_id, l_loc.substring (i + 1, l_loc.count), a_response)
+					ch := l_loc.substring (i + 1, l_loc.count)
+				else
+					ch := "stable"
 				end
+				get_block_view_download_channel (a_block_id, ch, a_response)
 			end
 		end
 
@@ -195,24 +192,9 @@ feature {NONE} -- Block view implementation
 	get_block_view_download_area (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
 				--  Get block download area object identified by `a_block_id' and associate with `a_response'.
 		local
-			l_tpl_block: detachable CMS_SMARTY_TEMPLATE_BLOCK
 			vals: CMS_VALUE_TABLE
-			res: PATH
-			p: detachable PATH
 		do
-			create res.make_from_string ("templates")
-				-- Note: template name harcoded.
-			res := res.extended ("block_download_area").appended_with_extension ("tpl")
-			p := a_response.api.module_theme_resource_location (Current, res)
-			if p /= Void then
-				write_debug_log (generator + ".get_block_view with template_path:" + p.out)
-
-				if attached p.entry as e then
-					create l_tpl_block.make (a_block_id, Void, p.parent, e)
-				else
-					create l_tpl_block.make (a_block_id, Void, p.parent, p)
-				end
-
+			if attached smarty_template_block (Current, a_block_id, a_response.api) as l_tpl_block then
 				create vals.make (5)
 				value_table_alter (vals, a_response)
 				across
@@ -220,14 +202,7 @@ feature {NONE} -- Block view implementation
 				loop
 					l_tpl_block.set_value (ic.item, ic.key)
 				end
-
-				if l_tpl_block /= Void then
-					write_debug_log (generator + ".get_block_view with template_block:" + l_tpl_block.out)
-				else
-					write_debug_log (generator + ".get_block_view with template_block: Void")
-				end
 				a_response.add_block (l_tpl_block, "header")
-
 			else
 				a_response.add_warning_message ("Error with block [" + a_block_id + "]")
 				write_warning_log ("Error with block [" + a_block_id + "]")
@@ -236,58 +211,12 @@ feature {NONE} -- Block view implementation
 
 	get_block_view_download_channel (a_block_id: READABLE_STRING_8; a_channel: READABLE_STRING_GENERAL; a_response: CMS_RESPONSE)
 				--  Get block download channel object identified by `a_block_id' and associate with `a_response'.
-		local
-			l_tpl_block: detachable CMS_SMARTY_TEMPLATE_BLOCK
-			vals: CMS_VALUE_TABLE
-			res: PATH
-			p: detachable PATH
 		do
-			create res.make_from_string ("templates")
-				-- Note: template name harcoded.
-			res := res.extended ("block_download_channel").appended_with_extension ("tpl")
-			p := a_response.api.module_theme_resource_location (Current, res)
-
-			if p /= Void then
-				write_debug_log (generator + ".get_block_view with template_path:" + p.out)
-				if attached p.entry as e then
-					create l_tpl_block.make_raw (a_block_id, Void, p.parent, e)
-				else
-					create l_tpl_block.make_raw (a_block_id, Void, p.parent, p)
-				end
-
-				create vals.make (8)
-				value_table_alter (vals, a_response)
-				across
-					vals as ic
-				loop
-					l_tpl_block.set_value (ic.item, ic.key)
-				end
-
-				if attached eiffel_download_api as l_api then
-					if
-						attached l_api.download_channel_configuration (a_channel) as cfg
-					then
-						vals.force (l_api.retrieve_product_gpl (cfg), "product")
-						vals.force (l_api.retrieve_products (cfg), "products")
-						vals.force (l_api.retrieve_mirror_gpl (cfg), "mirror")
-						vals.force (a_channel, "download_channel")
-
-						across
-							vals as ic
-						loop
-							l_tpl_block.set_value (ic.item, ic.key)
-						end
-						if l_tpl_block /= Void then
-							write_debug_log (generator + ".get_block_view with template_block:" + l_tpl_block.out)
-						else
-							write_debug_log (generator + ".get_block_view with template_block: Void")
-						end
-					end
-					a_response.add_block (l_tpl_block, "content")
-				else
-					a_response.add_warning_message ("Error with block [" + a_block_id + "]")
-					write_warning_log ("Error with block [" + a_block_id + "]")
-				end
+			if attached downloads_channel_block (a_block_id, a_channel, a_response) as l_block then
+				a_response.add_block (l_block, "content")
+			else
+				a_response.add_warning_message ("Error with block [block_download_channel]")
+				write_warning_log ("Error with block [block_download_channel]")
 			end
 		end
 
@@ -296,17 +225,80 @@ feature -- Handler
 	handle_download_channel (api: CMS_API; a_channel: detachable READABLE_STRING_GENERAL; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			r: CMS_RESPONSE
+			ch: READABLE_STRING_GENERAL
 		do
 			write_debug_log (generator + ".handle_download_channel")
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, api)
+
 			if a_channel /= Void then
-				r.values.force (a_channel, "download_channel")
+				ch := a_channel
 			elseif attached {WSF_STRING} req.path_parameter ("channel") as p_channel then
-				r.values.force (p_channel.value, "download_channel")
+				ch := p_channel.value
 			else
-				r.values.force ("stable", "download_channel")
+				ch := "stable"
+			end
+			if attached downloads_channel_block ("download_channel", ch, r) as l_block then
+				l_block.set_weight (10)
+				r.add_block (l_block, "content")
+			else
+				r.add_warning_message ("Error with block [block_download_channel]")
+				write_warning_log ("Error with block [block_download_channel]")
 			end
 			r.execute
+		end
+
+	downloads_channel_block (a_block_id: READABLE_STRING_8; a_channel: READABLE_STRING_GENERAL; a_response: CMS_RESPONSE): detachable CMS_BLOCK
+		local
+			vals: CMS_VALUE_TABLE
+		do
+			if attached smarty_template_block (Current, a_block_id, a_response.api) as l_tpl_block then
+				create vals.make (8)
+				across
+					a_response.values as ic
+				loop
+					l_tpl_block.set_value (ic.item, ic.key)
+				end
+				value_table_alter (vals, a_response)
+				across
+					vals as ic
+				loop
+					l_tpl_block.set_value (ic.item, ic.key)
+				end
+				l_tpl_block.set_value (a_channel, "download_channel")
+
+				if attached eiffel_download_api as l_api then
+					if
+						attached l_api.download_channel_configuration (a_channel) as cfg
+					then
+						vals.force (l_api.retrieve_product_gpl (cfg), "product")
+						if attached l_api.retrieve_products (cfg) as l_products then
+								-- Compute download links if needed.
+							across
+								l_products as ic
+							loop
+								if attached ic.item.downloads as l_downloads then
+									across
+										l_downloads as d_ic
+									loop
+										d_ic.item.get_link
+									end
+								end
+							end
+							vals.force (l_products, "products")
+						else
+							vals.force (Void, "products")
+						end
+						vals.force (l_api.retrieve_mirror_gpl (cfg), "mirror")
+						across
+							vals as ic
+						loop
+							l_tpl_block.set_value (ic.item, ic.key)
+						end
+					end
+
+					Result := l_tpl_block
+				end
+			end
 		end
 
 	handle_download (api: CMS_API; req: WSF_REQUEST; res: WSF_RESPONSE)

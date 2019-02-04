@@ -44,7 +44,22 @@
 				<tbody>
 					{foreach item="item" from="$ic.downloads"}
 			    	<tr>
-					  <td class="filename"><a id="link" class="download_link" href="{$mirror/}{$ic.name/} {$ic.number/}/{$ic.build/}/{$item.filename/}/download" target="_blank">{$item.filename/}</a></td>
+                      <td class="filename">
+
+                      {assign name="itemlink" expression="$item.link" /}
+                      {unless isempty="$itemlink"}
+                        <a id="link" class="download_link" href="{$itemlink/}" target="_blank">
+                      {/unless}
+                      {if isempty="$itemlink"}
+                        {if isempty="$ic.default_mirror"}
+                          {assign name="prod_mirror" expression="$ic.default_mirror"/}
+                        {/if}
+                        {unless isempty="$ic.default_mirror"}
+                          {assign name="prod_mirror" expression="$mirror"/}
+                        {/unless}
+                        <a id="link" class="download_link" href="{$prod_mirror/}{$ic.name/} {$ic.number/}/{$ic.build/}/{$item.filename/}/download" target="_blank">
+                      {/if}
+                      {$item.filename/}</a></td>                        
 					  <td>{$item.platform/}</td>
 					  <td>{$item.size/}</td>
 					  <td><tt>{$item.hash/}</tt></td>

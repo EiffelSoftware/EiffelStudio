@@ -104,7 +104,7 @@ feature {NONE} -- JSON
 
 	json_file_from (a_fn: PATH): detachable STRING
 		do
-			Result := (create {JSON_FILE_READER}).read_json_from (a_fn.name.out)
+			Result := (create {JSON_FILE_READER}).read_json_from (a_fn.name)
 		end
 
 	new_json_parser (a_string: STRING): JSON_PARSER
@@ -113,7 +113,7 @@ feature {NONE} -- JSON
 		end
 
 note
-	copyright: "2011-2015, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2019, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 
 end

@@ -510,7 +510,7 @@ feature {NONE} -- Implementation
 			-- process the uploaded file.
 		do
 			if attached a_uploaded_file.tmp_path as l_path then
-				Result := (create {EIFFEL_UPLOAD_JSON_CONFIGURATION}).upload_json_configuration (l_path)
+				Result := (create {EIFFEL_UPLOAD_JSON_CONFIGURATION}).configuration_from_uploaded_json_file (l_path)
 				delete_uploaded_file (l_path)
 			end
 

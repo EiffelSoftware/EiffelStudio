@@ -28,6 +28,6 @@
 </div>
 {/if}
 {unless condition="$has_error"}
-<p class="message success">Your uploaded file was saved <br/>
+<p class="message success">Your uploaded data was saved <br/>
 {/unless}
 </div>

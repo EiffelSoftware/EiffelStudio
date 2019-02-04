@@ -14,8 +14,28 @@ inherit
 create
 	make
 
-
 feature -- Access: config
+
+	configuration_files (a_channel: detachable READABLE_STRING_GENERAL): LIST [PATH]
+		local
+			p: PATH
+			fut: FILE_UTILITIES
+			lst: detachable LIST [READABLE_STRING_32]
+		do
+			create {ARRAYED_LIST [PATH]} Result.make (10)
+			p := channel_file_location (a_channel)
+			lst := fut.file_names (p.name)
+			if lst /= Void then
+				across
+					lst as ic
+				loop
+					create p.make_from_string (ic.item)
+					if attached p.extension as ext and then ext.same_string_general ("json") then
+						Result.force (p)
+					end
+				end
+			end
+		end
 
 	channel_file_location (a_channel: detachable READABLE_STRING_GENERAL): PATH
 		do
@@ -43,7 +63,7 @@ feature -- Access: config
 			Result := internal_download_configuration
 		end
 
-	download_channel_configuration (a_channel: READABLE_STRING_GENERAL): detachable DOWNLOAD_CONFIGURATION
+	download_channel_configuration (a_channel: detachable READABLE_STRING_GENERAL): detachable DOWNLOAD_CONFIGURATION
 			-- Get `download_channel_configuration' value.
 			-- from a list of files.
 		local
@@ -58,6 +78,64 @@ feature -- Access: config
 				end
 			end
 			Result := internal_download_configuration
+		end
+
+feature -- Persistency
+
+	save_uploaded_configuration (a_channel: READABLE_STRING_GENERAL; a_uploaded_cfg: EIFFEL_UPLOAD_CONFIGURATION)
+		local
+			l_dir: DIRECTORY
+			b: BOOLEAN
+			p: PATH
+			l_file: FILE
+		do
+			create l_dir.make_with_path (channel_file_location (a_channel))
+			if not l_dir.exists then
+				b := (create {CMS_FILE_SYSTEM_UTILITIES}).safe_create_parent_directory (l_dir.path.extended ("dummy-cfg.json"))
+			end
+			if l_dir.exists then
+				p := l_dir.path.extended ("downloads_configuration_" + a_uploaded_cfg.number + ".json")
+				create {PLAIN_TEXT_FILE} l_file.make_with_path (p)
+				l_file.open_write
+				l_file.put_string (a_uploaded_cfg.to_json_representation)
+				l_file.close
+			end
+		end
+
+	uploaded_configuration_exists (a_channel: READABLE_STRING_GENERAL; a_uploaded_cfg: EIFFEL_UPLOAD_CONFIGURATION): BOOLEAN
+		local
+			p: PATH
+			f: FILE
+		do
+			p := channel_file_location (a_channel).extended ("downloads_configuration_" + a_uploaded_cfg.number + ".json")
+			create {RAW_FILE} f.make_with_path (p)
+			Result := f.exists
+		end
+
+	save_configuration (a_channel: READABLE_STRING_GENERAL; cfg: DOWNLOAD_CONFIGURATION)
+		local
+			l_dir: DIRECTORY
+			b: BOOLEAN
+			p: PATH
+			l_file: FILE
+		do
+			create l_dir.make_with_path (channel_file_location (a_channel))
+			if not l_dir.exists then
+				b := (create {CMS_FILE_SYSTEM_UTILITIES}).safe_create_parent_directory (l_dir.path.extended ("dummy-cfg.json"))
+			end
+			if l_dir.exists then
+				if
+					attached cfg.products as prods and then
+					prods.count = 1 and then
+					attached prods.first.number as l_number
+				then
+					p := l_dir.path.extended ("downloads_configuration_" + l_number + ".json")
+					create {PLAIN_TEXT_FILE} l_file.make_with_path (p)
+					l_file.open_write
+					l_file.put_string (cfg.to_json_representation)
+					l_file.close
+				end
+			end
 		end
 
 feature -- Access
@@ -151,19 +229,22 @@ feature {NONE} -- Implementation
 			exists: a_dir.exists
 		local
 			file: FILE
+			p: PATH
 			l_download: DOWNLOAD_CONFIGURATION
 		do
 			if internal_download_configuration = Void then
 				across
 					a_dir.entries as ic
 				loop
-					check not_empty_file: not a_dir.path.extended_path (ic.item).is_empty  end
-					create {RAW_FILE} file.make_with_path (a_dir.path.extended_path (ic.item))
+					p := a_dir.path.extended_path (ic.item)
+					check not_empty_file: not p.is_empty  end
+					create {RAW_FILE} file.make_with_path (p)
 					if
-						not file.is_directory  and then
-					   	file.exists
+						not file.is_directory and then
+					   	file.exists and then
+						attached p.extension as ext and then ext.same_string_general ("json")
 					then
-						l_download := (create {DOWNLOAD_JSON_CONFIGURATION}).build_download_configuration (a_dir.path.extended_path (ic.item), l_download)
+						l_download := (create {DOWNLOAD_JSON_CONFIGURATION}).configuration_from_file (p, l_download)
 					end
 				end
 				internal_download_configuration := l_download

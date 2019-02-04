@@ -18,11 +18,12 @@ inherit
 
 	CMS_WITH_WEBAPI
 
-	CMS_HOOK_VALUE_TABLE_ALTER
-
 	CMS_HOOK_AUTO_REGISTER
 
 	CMS_HOOK_BLOCK
+		redefine
+			setup_block
+		end
 
 	CMS_HOOK_BLOCK_HELPER
 
@@ -38,8 +39,6 @@ inherit
 	REFACTORING_HELPER
 
 	SHARED_LOGGER
-
-	CMS_HOOK_RESPONSE_ALTER
 
 	CMS_ADMINISTRABLE
 
@@ -102,29 +101,10 @@ feature -- Hooks configuration
 			-- Module hooks configuration.
 		do
 			auto_subscribe_to_hooks (a_hooks)
-			a_hooks.subscribe_to_value_table_alter_hook (Current)
 			a_hooks.subscribe_to_block_hook (Current)
 		end
 
 feature -- Hooks
-
-	value_table_alter (a_value: CMS_VALUE_TABLE; a_response: CMS_RESPONSE)
-			-- <Precursor>
-		local
---			l_channel: detachable READABLE_STRING_GENERAL
---			l_loc: STRING
---			i: INTEGER
-		do
---			l_loc := a_response.location
---			if l_loc.starts_with_general ("downloads") then
---				if l_loc.starts_with_general ("downloads/channel/") then
---					i := l_loc.substring_index ("/channel/", 1)
---					i := l_loc.index_of ('/', i + 1)
---					l_channel := l_loc.substring (i + 1, l_loc.count)
---				end
---				populate_values (a_value, l_channel, a_response)
---			end
-		end
 
 	populate_values (vals: CMS_VALUE_TABLE; a_channel: detachable READABLE_STRING_GENERAL; a_response: CMS_RESPONSE)
 		local
@@ -194,6 +174,12 @@ feature -- Hooks
 			elseif a_block_id.is_case_insensitive_equal_general ("download_channel") then
 				get_block_view_download_channel (a_block_id, ch, a_response)
 			end
+		end
+
+	setup_block (a_block: CMS_BLOCK; a_response: CMS_RESPONSE)
+			-- <Precursor>
+		do
+			a_response.add_style (a_response.module_resource_url (Current, "/files/css/download.css", Void), Void)
 		end
 
 feature {NONE} -- Block view implementation
@@ -412,23 +398,4 @@ feature {NONE}  -- Helper
 			write_debug_log (generator + ".get_platform [ platform inferred "+  Result  + " ]")
 		end
 
-feature -- Hook
-
-	response_alter (a_response: CMS_RESPONSE)
-		do
-			if a_response.location.starts_with_general ("downloads") then
-				a_response.add_style (a_response.module_resource_url (Current, "/files/css/download.css", Void), Void)
-			end
-		end
-
-note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
-	source: "[
-			Eiffel Software
-			5949 Hollister Ave., Goleta, CA 93117 USA
-			Telephone 805-685-1006, Fax 805-685-6869
-			Website http://www.eiffel.com
-			Customer support http://support.eiffel.com
-		]"
 end

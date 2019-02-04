@@ -1,4 +1,4 @@
-	  
+{assign name="stable_channel" value="stable"/}
 	<p> After downloading a release suitable for your system, please follow the <a href="{$site_url/}doc/eiffelstudio/Setup and installation">installation instructions</a> and <a href="https://www.youtube.com/channel/UCT6IcRZAfa-uFD0k3Dbi_7A">installation videos</a>.
 		If you are new to Eiffel, please check the <a href="{$site_url/}doc/eiffelstudio/EiffelStudio tutorials">tutorials </a> and <a href="https://www.youtube.com/playlist?list=PLhVybat45jE9TObIY8nkkA5OejGnW5yby" target="_blank">videos</a>.
 	</p>
@@ -32,6 +32,9 @@
 		
 		<div class="more">
 			<h2> {$ic.name/} {$ic.number/}</h2> 
+{if condition="$download_channel ~ $stable_channel"}
+			<h4><a class="" href="{$site_url/}doc/eiffelstudio/Release_notes_for_{$ic.name/}_{$ic.number/}">Release Notes</a></h4>
+{/if}
         	<table class="download_decorator">
 				<thead>
 					<tr class="first">
@@ -70,7 +73,6 @@
 	    </div>
 	</div>
   	{/foreach}
-{assign name="stable_channel" value="stable"/}
 {if condition="$download_channel ~ $stable_channel"}
     <h3>Beta Releases <a class="" href="{$site_url/}downloads/channel/beta">channel beta</a></h3>	
 {/if}

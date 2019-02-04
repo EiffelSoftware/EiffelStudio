@@ -4,13 +4,15 @@
 	</p>
 
   	 {if isset="$last_release"}
-	  <div class="promo-area">
+	  <div class="promo-area download-{$download_channel/}">
 		<div class="holder">
 			<div class="btn-holder">
 				<div class="row">
 					<span class="release">{$last_release/} - {$platform/}</span>
 				</div>
-				<a class="btn-download" href="{$site_url/}download">Download Now</a>
+				<a class="btn-download" href="{$site_url/}download">Download 
+                    {unless condition="$download_channel ~ $stable_channel"}{$download_channel/}{/unless}
+                    Now</a>
 			</div>
 		</div>
 	  </div>

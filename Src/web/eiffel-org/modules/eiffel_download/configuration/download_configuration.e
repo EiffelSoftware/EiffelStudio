@@ -56,7 +56,6 @@ feature -- Conversion
 			jdl, jlic: JSON_OBJECT
 			prod: DOWNLOAD_PRODUCT
 			dl: DOWNLOAD_PRODUCT_OPTIONS
-			s: STRING_32
 			vis: JSON_PRETTY_STRING_VISITOR
 			l_cfg_mirror: READABLE_STRING_GENERAL
 		do

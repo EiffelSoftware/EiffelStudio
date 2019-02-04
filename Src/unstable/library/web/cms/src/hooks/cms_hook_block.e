@@ -36,7 +36,7 @@ feature -- Blocks
 		end
 
 	setup_block (a_block: CMS_BLOCK; a_response: CMS_RESPONSE)
-			-- Setup block `a_block` and perform additional setup on `a_respnse` if needed
+			-- Setup block `a_block` and perform additional setup on `a_response` if needed
 			-- (such as linking with css, js, ...).
 			--| To be redefined if needed.
 		do
@@ -85,6 +85,6 @@ feature -- Blocks
 		end
 
 note
-	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2019, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

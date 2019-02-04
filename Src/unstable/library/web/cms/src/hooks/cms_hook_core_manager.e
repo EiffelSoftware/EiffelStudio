@@ -209,6 +209,9 @@ feature -- Hook: block
 									l_origin_block := a_response.blocks.item (bl)
 									if l_origin_block = Void then
 										h.get_block_view (bl, a_response)
+										if attached a_response.blocks.item (bl) as l_block then
+											h.setup_block (l_block, a_response)
+										end
 										l_origin_block := a_response.blocks.item (bl)
 										if l_origin_block /= Void then
 												-- Previously, it was not included.
@@ -339,6 +342,6 @@ feature -- Hook: import
 
 
 note
-	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2019, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

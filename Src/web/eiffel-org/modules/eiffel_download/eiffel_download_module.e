@@ -111,47 +111,58 @@ feature -- Hooks
 	value_table_alter (a_value: CMS_VALUE_TABLE; a_response: CMS_RESPONSE)
 			-- <Precursor>
 		local
-			l_ua: CMS_USER_AGENT
-			l_channel: STRING
-			l_loc: STRING
-			i: INTEGER
+--			l_channel: detachable READABLE_STRING_GENERAL
+--			l_loc: STRING
+--			i: INTEGER
 		do
-			l_loc := a_response.location
-			if l_loc.starts_with_general ("downloads") then
-				if l_loc.starts_with_general ("downloads/channel/") then
-					i := l_loc.substring_index ("/channel/", 1)
-					i := l_loc.index_of ('/', i + 1)
-					l_channel := l_loc.substring (i + 1, l_loc.count)
-				else
-					l_channel := "stable"
-				end
-				if
-					attached eiffel_download_api as l_api and then
-					attached l_api.download_channel_configuration (l_channel) as cfg then
+--			l_loc := a_response.location
+--			if l_loc.starts_with_general ("downloads") then
+--				if l_loc.starts_with_general ("downloads/channel/") then
+--					i := l_loc.substring_index ("/channel/", 1)
+--					i := l_loc.index_of ('/', i + 1)
+--					l_channel := l_loc.substring (i + 1, l_loc.count)
+--				end
+--				populate_values (a_value, l_channel, a_response)
+--			end
+		end
+
+	populate_values (vals: CMS_VALUE_TABLE; a_channel: detachable READABLE_STRING_GENERAL; a_response: CMS_RESPONSE)
+		local
+			ch: READABLE_STRING_GENERAL
+			l_ua: CMS_USER_AGENT
+			l_platform: READABLE_STRING_GENERAL
+		do
+			if a_channel = Void then
+				ch := "stable"
+			else
+				ch := a_channel
+			end
+			if
+				attached eiffel_download_api as l_api and then
+				attached l_api.download_channel_configuration (ch) as cfg
+			then
+				create l_ua.make_from_string (a_response.request.http_user_agent)
+				l_platform := get_platform (l_ua)
+				vals.force (l_platform, "platform")
+
+				if attached l_api.retrieve_product_gpl (cfg) as l_product then
 					if
-						attached l_api.retrieve_product_gpl (cfg) as l_product and then
 						attached l_product.name as l_name and then
 						attached l_product.version  as l_version and then
 						attached l_api.retrieve_mirror_gpl (cfg) as l_mirror
 					then
-						a_value.force (l_name +" " + l_version, "last_release")
+						vals.force (l_name + " " + l_version, "last_release")
 						if attached l_product.default_mirror as dft_mirror then
-							a_value.force (dft_mirror, "mirror")
+							vals.force (dft_mirror, "mirror")
 						else
-							a_value.force (l_mirror, "mirror")
+							vals.force (l_mirror, "mirror")
 						end
-						a_value.force (create {CMS_LOCAL_LINK}.make ("download link", "download"), "link")
+						vals.force (create {CMS_LOCAL_LINK}.make ("download link", "download"), "link")
 					end
-
-
-					create l_ua.make_from_string (a_response.request.http_user_agent)
-					a_value.force (get_platform (l_ua), "platform")
-
 					if
-						attached l_api.retrieve_product_gpl (cfg) as l_product and then
-						attached l_api.selected_platform (l_product.downloads, get_platform (l_ua)) as l_selected
+						attached l_api.selected_platform (l_product.downloads, l_platform) as l_selected
 					then
-						a_value.force (l_selected.filename, "filename")
+						vals.force (l_selected.filename, "filename")
 					end
 				end
 			end
@@ -170,39 +181,39 @@ feature -- Hooks
 			l_loc: READABLE_STRING_8
 			ch: detachable READABLE_STRING_GENERAL
 		do
-			write_debug_log (generator + ".get_block_view with block_id:`" + a_block_id + "'")
-				-- Download header
+			l_loc := a_response.location
+			if l_loc.starts_with_general ("downloads/channel/") then
+				i := l_loc.substring_index ("/channel/", 1)
+				i := l_loc.index_of ('/', i + 1)
+				ch := l_loc.substring (i + 1, l_loc.count)
+			else
+				ch := "stable"
+			end
 			if a_block_id.is_case_insensitive_equal_general ("download_area") then
-				get_block_view_download_area (a_block_id, a_response)
+				get_block_view_download_area (a_block_id, ch, a_response)
 			elseif a_block_id.is_case_insensitive_equal_general ("download_channel") then
-				l_loc := a_response.location
-				if l_loc.starts_with_general ("downloads/channel/") then
-					i := l_loc.substring_index ("/channel/", 1)
-					i := l_loc.index_of ('/', i + 1)
-					ch := l_loc.substring (i + 1, l_loc.count)
-				else
-					ch := "stable"
-				end
 				get_block_view_download_channel (a_block_id, ch, a_response)
 			end
 		end
 
 feature {NONE} -- Block view implementation
 
-	get_block_view_download_area (a_block_id: READABLE_STRING_8; a_response: CMS_RESPONSE)
+	get_block_view_download_area (a_block_id: READABLE_STRING_8; a_channel: READABLE_STRING_GENERAL; a_response: CMS_RESPONSE)
 				--  Get block download area object identified by `a_block_id' and associate with `a_response'.
 		local
 			vals: CMS_VALUE_TABLE
+			bl: CMS_CONTENT_BLOCK
 		do
 			if attached smarty_template_block (Current, a_block_id, a_response.api) as l_tpl_block then
 				create vals.make (5)
-				value_table_alter (vals, a_response)
+				populate_values (vals, a_channel, a_response)
 				across
 					vals as ic
 				loop
 					l_tpl_block.set_value (ic.item, ic.key)
 				end
-				a_response.add_block (l_tpl_block, "header")
+				create bl.make (a_block_id, Void, l_tpl_block.to_html (a_response.theme), Void)
+				a_response.add_block (bl, "header")
 			else
 				a_response.add_warning_message ("Error with block [" + a_block_id + "]")
 				write_warning_log ("Error with block [" + a_block_id + "]")
@@ -258,7 +269,7 @@ feature -- Handler
 				loop
 					l_tpl_block.set_value (ic.item, ic.key)
 				end
-				value_table_alter (vals, a_response)
+				populate_values (vals, a_channel, a_response)
 				across
 					vals as ic
 				loop
@@ -405,8 +416,10 @@ feature -- Hook
 
 	response_alter (a_response: CMS_RESPONSE)
 		do
+			if a_response.location.starts_with_general ("downloads") then
+				a_response.add_style (a_response.module_resource_url (Current, "/files/css/download.css", Void), Void)
+			end
 		end
-
 
 note
 	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"

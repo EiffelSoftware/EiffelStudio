@@ -1,4 +1,4 @@
-<div class="holder" >
+<div class="holder" class="eiffel_download_area" >
 	<div class="btn-holder">
 		<div class="row"><span class="release">{$last_release/} - {$platform/}</span></div>
 		<a class="btn-download" href="{$site_url/}download">Download Now</a>

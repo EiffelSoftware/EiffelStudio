@@ -195,27 +195,25 @@ feature -- Access
 			end
 		end
 
-	selected_platform (a_downloads: detachable LIST[DOWNLOAD_PRODUCT_OPTIONS]; a_platform: READABLE_STRING_32): detachable DOWNLOAD_PRODUCT_OPTIONS
+	selected_platform (a_downloads: detachable LIST [DOWNLOAD_PRODUCT_OPTIONS]; a_platform: READABLE_STRING_GENERAL): detachable DOWNLOAD_PRODUCT_OPTIONS
 		local
 			l_found: BOOLEAN
 		do
-			if
-				attached a_downloads
-			then
-				from
-					a_downloads.start
+			if a_downloads /= Void then
+				across
+					a_downloads as ic
 				until
-					a_downloads.after or l_found
+					l_found
 				loop
-					if a_downloads.item.platform ~ a_platform then
-						Result := a_downloads.item
+					if
+						attached ic.item.platform as pf and then
+					 	a_platform.is_case_insensitive_equal (pf)
+					then
+						Result := ic.item
 					end
-					a_downloads.forth
 				end
 			end
 		end
-
-
 
 feature {NONE} -- Implementation
 

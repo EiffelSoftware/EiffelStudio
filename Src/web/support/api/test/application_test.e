@@ -15,7 +15,6 @@ feature -- Initialization
 		l_list: ARRAYED_LIST[READABLE_STRING_GENERAL]
 		l_old_dir : STRING
 		l_env: EXECUTION_ENVIRONMENT
-		l_clean: ESA_CLEAN_DB
 	do
 		create l_env
 		l_old_dir := l_env.current_working_directory
@@ -30,9 +29,6 @@ feature -- Initialization
 
 
 	current_dir: STRING
-		local
-			l_path: PATH
-			l_env: EXECUTION_ENVIRONMENT
 		do
 			Result := (create {EXECUTION_ENVIRONMENT}).current_working_directory
 			Result.append_character ((create {OPERATING_ENVIRONMENT}).directory_separator)

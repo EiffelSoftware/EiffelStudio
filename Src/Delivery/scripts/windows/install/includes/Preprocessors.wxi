@@ -30,15 +30,15 @@
         <?define LicenseFile = "gpl.rtf"?>
       <?endif?>
       <?ifdef x64?>
-        <?define ProductGuid = "98154003-230A-CA6E-4416-00B9D15036A5" ?>
-        <?define RegistriesGuid = "A65080C7-55E9-626A-E608-5049B455ADA6" ?>
-        <?define ShortcutsGuid = "45F98FA9-80F8-C3A0-A9EF-FDDFD5BFA4EC" ?>
+        <?define ProductGuid = "C1902827-4F79-4EFA-97A3-2BE47E86E2F2" ?>
+        <?define RegistriesGuid = "4C921013-E185-47D6-91B7-80E6FCE99168" ?>
+        <?define ShortcutsGuid = "8F3DEFCA-7486-44CF-9206-E96433E867CC" ?>
       <?else?>
-        <?define ProductGuid = "C9E9C54F-54E4-8C16-B76B-EA264869C4C5" ?>
-        <?define RegistriesGuid = "6B39426B-A50D-86E1-DA81-66E518C7F0D8" ?>
-        <?define ShortcutsGuid = "8804A315-15DE-63CE-284C-5C242E88CD83" ?>
+        <?define ProductGuid = "DED44659-9348-40C5-BA7E-988866C8A923" ?>
+        <?define RegistriesGuid = "B4D553E8-8490-4BA8-8B32-A068E497FA58" ?>
+        <?define ShortcutsGuid = "80E04E74-CD0B-4253-B5BB-24A6293BB13E" ?>
       <?endif?>
-      <?define UpgradeGuid = "96F6706A-A0E3-B755-ACFB-6F9D5B3D5774" ?>
+      <?define UpgradeGuid = "4938C1A2-D22C-4FEB-A3ED-D71C70F18FBF" ?>
       <?define Product = "EiffelStudio" ?>
       <?define ProductVersion = "19.01" ?>
       <?define ProductDescription = "EiffelStudio 19.01" Integrated Development Environment (IDE) Installer" ?>

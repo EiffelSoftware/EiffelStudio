@@ -20,10 +20,10 @@
 	<h2>{$product.name/}</h2>
 	{/if}
 	{unless isset="$products"}
-	<h3>{$download_channel/} versions: not available </h3>
+	<h3>{$download_channel/} Releases: not available </h3>
 	{/unless}
 	{if isset="$products"}
-	<h3>{$download_channel/} versions</h3>
+	<h3>{$download_channel/} Releases</h3>
 	{/if}
 	{foreach item="ic" from="$products"}
 	  <div class="toggle">

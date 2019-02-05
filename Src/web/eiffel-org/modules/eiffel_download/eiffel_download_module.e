@@ -254,6 +254,7 @@ feature -- Handler
 				r.add_warning_message ("Error with block [block_download_channel]")
 				write_warning_log ("Error with block [block_download_channel]")
 			end
+			r.add_style (r.module_resource_url (Current, "/files/css/download.css", Void), Void)
 			r.execute
 		end
 

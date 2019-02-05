@@ -10,7 +10,7 @@
 				<div class="row">
 					<span class="release">{$last_release/} - {$platform/}</span>
 				</div>
-				<a class="btn-download" href="{$site_url/}download">Download 
+				<a class="btn-download" href="{$download_link/}">Download 
                     {unless condition="$download_channel ~ $stable_channel"}{$download_channel/}{/unless}
                     Now</a>
 			</div>
@@ -76,8 +76,8 @@
 	</div>
   	{/foreach}
 {if condition="$download_channel ~ $stable_channel"}
-    <h3>Beta Releases <a class="" href="{$site_url/}downloads/channel/beta">channel beta</a></h3>	
+    <h3>Go to <a class="" href="{$site_url/}downloads/channel/beta">Beta Releases</a></h3>	
 {/if}
 {unless condition="$download_channel ~ $stable_channel"}
-    <h3>Stable Releases <a class="" href="{$site_url/}downloads/channel/stable">channel stable</a></h3>
+    <h3>Go to <a class="" href="{$site_url/}downloads/channel/stable">Stable Releases</a></h3>
 {/unless}

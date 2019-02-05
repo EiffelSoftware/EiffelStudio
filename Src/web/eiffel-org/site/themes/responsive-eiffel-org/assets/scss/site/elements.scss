@@ -102,6 +102,23 @@
 		}
 	}
 
+	#block-downloads_area {
+		padding: 10px 20px 10px 20px;
+		min-width: 350px;
+		width: 10%;
+		min-height: 0px;
+		margin: 20px;
+		margin-right: auto;
+		border: solid 1px $green-light;
+		background-color: $green-light-bg;
+		@include border-radius(10px);
+		.row {
+			text-transform: uppercase;
+			border-bottom: solid 1px $green-light;
+			margin: 0 0 15px 0;
+		}
+	}
+
 	.info-block {
 		overflow: hidden;
 		position: relative;

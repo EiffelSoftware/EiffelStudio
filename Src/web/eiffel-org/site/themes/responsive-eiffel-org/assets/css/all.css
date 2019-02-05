@@ -2786,10 +2786,27 @@ ul.is-unstyled, ul.unstyled {
     border-bottom: solid 1px #99cc33;
     margin: 0 0 15px 0; }
 /* line 105, ../scss/site/elements.scss */
+#content #block-downloads_area {
+  padding: 10px 20px 10px 20px;
+  min-width: 350px;
+  width: 10%;
+  min-height: 0px;
+  margin: 20px;
+  margin-right: auto;
+  border: solid 1px #99cc33;
+  background-color: #d4ebb0;
+  -webkit-border-radius: 10px;
+  border-radius: 10px; }
+  /* line 115, ../scss/site/elements.scss */
+  #content #block-downloads_area .row {
+    text-transform: uppercase;
+    border-bottom: solid 1px #99cc33;
+    margin: 0 0 15px 0; }
+/* line 122, ../scss/site/elements.scss */
 #content .info-block {
   overflow: hidden;
   position: relative; }
-  /* line 108, ../scss/site/elements.scss */
+  /* line 125, ../scss/site/elements.scss */
   #content .info-block:after {
     background: url(../images/sep.png) no-repeat;
     width: 22px;
@@ -2798,70 +2815,70 @@ ul.is-unstyled, ul.unstyled {
     bottom: 1px;
     left: 0;
     content: ""; }
-  /* line 117, ../scss/site/elements.scss */
+  /* line 134, ../scss/site/elements.scss */
   #content .info-block h2 {
     color: #99cc33;
     margin: 0 0 19px;
     padding: 0 0 14px;
     border-bottom: 1px solid #bfd1da;
     font: 28px/28px "museo_slab500", Arial, Helvetica, sans-serif; }
-  /* line 124, ../scss/site/elements.scss */
+  /* line 141, ../scss/site/elements.scss */
   #content .info-block .post {
     overflow: hidden;
     margin: 0 0 13px; }
-    /* line 127, ../scss/site/elements.scss */
+    /* line 144, ../scss/site/elements.scss */
     #content .info-block .post h3 {
       color: #0d4143;
       margin: 0 0 9px;
       font: 24px/24px "museo_sans500", Arial, Helvetica, sans-serif; }
-      /* line 131, ../scss/site/elements.scss */
+      /* line 148, ../scss/site/elements.scss */
       #content .info-block .post h3 a {
         color: #0d4143; }
-        /* line 133, ../scss/site/elements.scss */
+        /* line 150, ../scss/site/elements.scss */
         #content .info-block .post h3 a:hover {
           color: #4c6877; }
-    /* line 138, ../scss/site/elements.scss */
+    /* line 155, ../scss/site/elements.scss */
     #content .info-block .post .date {
       display: block;
       text-transform: uppercase;
       color: #0fa096;
       margin: 0 0 2px;
       font: 12px "museo_sans500", Arial, Helvetica, sans-serif; }
-    /* line 145, ../scss/site/elements.scss */
+    /* line 162, ../scss/site/elements.scss */
     #content .info-block .post p {
       margin: 0 0 10px; }
-      /* line 147, ../scss/site/elements.scss */
+      /* line 164, ../scss/site/elements.scss */
       #content .info-block .post p a {
         font: 12px "museo_sans500", Arial, Helvetica, sans-serif;
         color: #1f3d4d;
         text-transform: uppercase; }
-        /* line 151, ../scss/site/elements.scss */
+        /* line 168, ../scss/site/elements.scss */
         #content .info-block .post p a:hover {
           color: #4c6877; }
 
-/* line 161, ../scss/site/elements.scss */
+/* line 178, ../scss/site/elements.scss */
 #nav {
   font-family: "museo_sans500", Arial, Helvetica, sans-serif;
   font-size: 18px;
   text-transform: uppercase;
   padding: 54px 0 0; }
-  /* line 168, ../scss/site/elements.scss */
+  /* line 185, ../scss/site/elements.scss */
   #nav ul {
     margin: 0 -11px;
     text-align: left;
     letter-spacing: 1px; }
-    /* line 174, ../scss/site/elements.scss */
+    /* line 191, ../scss/site/elements.scss */
     #nav ul li {
       display: inline-block;
       vertical-align: top;
       margin: 0 3px 0 4px;
       position: relative;
       font-size: 15px; }
-      /* line 180, ../scss/site/elements.scss */
+      /* line 197, ../scss/site/elements.scss */
       #nav ul li a {
         color: white;
         padding: 2px; }
-      /* line 184, ../scss/site/elements.scss */
+      /* line 201, ../scss/site/elements.scss */
       #nav ul li:hover > a {
         color: black;
         -webkit-border-radius: 3px;
@@ -2870,30 +2887,30 @@ ul.is-unstyled, ul.unstyled {
         background-color: rgba(255, 255, 255, 0.6);
         -webkit-box-shadow: 0 0 10px 0 rgba(17, 41, 53, 0.25);
         box-shadow: 0 0 10px 0 rgba(17, 41, 53, 0.25); }
-    /* line 193, ../scss/site/elements.scss */
+    /* line 210, ../scss/site/elements.scss */
     #nav ul .active a {
       color: white; }
-    /* line 197, ../scss/site/elements.scss */
+    /* line 214, ../scss/site/elements.scss */
     #nav ul a {
       color: #112935;
       display: block; }
-      /* line 200, ../scss/site/elements.scss */
+      /* line 217, ../scss/site/elements.scss */
       #nav ul a:hover {
         color: white; }
-    /* line 202, ../scss/site/elements.scss */
+    /* line 219, ../scss/site/elements.scss */
     #nav ul .drop-slide-wrapper {
       left: 50% !important;
       top: 100%;
       margin: 0 0 0 -86px; }
-    /* line 208, ../scss/site/elements.scss */
+    /* line 225, ../scss/site/elements.scss */
     #nav ul .dropdown {
       width: 100%;
       text-align: left;
       padding: 16px 0 0; }
-    /* line 213, ../scss/site/elements.scss */
+    /* line 230, ../scss/site/elements.scss */
     #nav ul:hover .dropdown {
       display: block; }
-    /* line 216, ../scss/site/elements.scss */
+    /* line 233, ../scss/site/elements.scss */
     #nav ul ul {
       background: #4a6d82;
       border: 1px solid #abc4d4;
@@ -2905,7 +2922,7 @@ ul.is-unstyled, ul.unstyled {
       margin: 0;
       -webkit-box-shadow: 0 0 10px 0 rgba(17, 41, 53, 0.25);
       box-shadow: 0 0 10px 0 rgba(17, 41, 53, 0.25); }
-      /* line 226, ../scss/site/elements.scss */
+      /* line 243, ../scss/site/elements.scss */
       #nav ul ul:after, #nav ul ul:before {
         bottom: 100%;
         left: 50%;
@@ -2915,28 +2932,28 @@ ul.is-unstyled, ul.unstyled {
         width: 0;
         position: absolute;
         pointer-events: none; }
-      /* line 237, ../scss/site/elements.scss */
+      /* line 254, ../scss/site/elements.scss */
       #nav ul ul:after {
         border-color: rgba(74, 109, 130, 0);
         border-bottom-color: #4a6d82;
         border-width: 9px 6px;
         margin-left: -6px; }
-      /* line 243, ../scss/site/elements.scss */
+      /* line 260, ../scss/site/elements.scss */
       #nav ul ul:before {
         border-color: rgba(171, 196, 212, 0);
         border-bottom-color: #abc4d4;
         border-width: 10px 7px;
         margin-left: -7px; }
-      /* line 249, ../scss/site/elements.scss */
+      /* line 266, ../scss/site/elements.scss */
       #nav ul ul li {
         display: block;
         margin: 0; }
-      /* line 253, ../scss/site/elements.scss */
+      /* line 270, ../scss/site/elements.scss */
       #nav ul ul a {
         color: #abc4d4;
         padding: 3px 0 3px;
         position: relative; }
-        /* line 257, ../scss/site/elements.scss */
+        /* line 274, ../scss/site/elements.scss */
         #nav ul ul a:after, #nav ul ul a:before {
           width: 4px;
           height: 100%;
@@ -2946,22 +2963,22 @@ ul.is-unstyled, ul.unstyled {
           left: -4px;
           display: none;
           content: ''; }
-        /* line 268, ../scss/site/elements.scss */
+        /* line 285, ../scss/site/elements.scss */
         #nav ul ul a:before {
           left: auto;
           right: -4px; }
-        /* line 272, ../scss/site/elements.scss */
+        /* line 289, ../scss/site/elements.scss */
         #nav ul ul a:hover {
           color: white;
           background: #1a3d50; }
-        /* line 276, ../scss/site/elements.scss */
+        /* line 293, ../scss/site/elements.scss */
         #nav ul ul a:hover:after, #nav ul ul a:hover:before {
           display: block; }
 
-/* line 288, ../scss/site/elements.scss */
+/* line 305, ../scss/site/elements.scss */
 .social-networks li {
   margin: 0 0 0 10px; }
-  /* line 290, ../scss/site/elements.scss */
+  /* line 307, ../scss/site/elements.scss */
   .social-networks li a {
     display: block;
     width: 35px;
@@ -2969,48 +2986,48 @@ ul.is-unstyled, ul.unstyled {
     background: url(../images/ico-social.png) no-repeat;
     overflow: hidden;
     text-indent: -9999px; }
-    /* line 296, ../scss/site/elements.scss */
+    /* line 313, ../scss/site/elements.scss */
     .social-networks li a:hover {
       background: url(../images/ico-social-h.png) no-repeat; }
-  /* line 298, ../scss/site/elements.scss */
+  /* line 315, ../scss/site/elements.scss */
   .social-networks li .facebook {
     width: 34px; }
-  /* line 301, ../scss/site/elements.scss */
+  /* line 318, ../scss/site/elements.scss */
   .social-networks li .linkedin {
     background-position: -44px 0; }
-    /* line 303, ../scss/site/elements.scss */
+    /* line 320, ../scss/site/elements.scss */
     .social-networks li .linkedin:hover {
       background-position: -44px 0; }
-  /* line 305, ../scss/site/elements.scss */
+  /* line 322, ../scss/site/elements.scss */
   .social-networks li .youtube {
     background-position: -89px 0; }
-    /* line 307, ../scss/site/elements.scss */
+    /* line 324, ../scss/site/elements.scss */
     .social-networks li .youtube:hover {
       background-position: -89px 0; }
-  /* line 309, ../scss/site/elements.scss */
+  /* line 326, ../scss/site/elements.scss */
   .social-networks li .twitter {
     background-position: -134px 0; }
-    /* line 311, ../scss/site/elements.scss */
+    /* line 328, ../scss/site/elements.scss */
     .social-networks li .twitter:hover {
       background-position: -134px 0; }
-  /* line 313, ../scss/site/elements.scss */
+  /* line 330, ../scss/site/elements.scss */
   .social-networks li .googleplus {
     background-position: -179px 0;
     width: 34px; }
-    /* line 316, ../scss/site/elements.scss */
+    /* line 333, ../scss/site/elements.scss */
     .social-networks li .googleplus:hover {
       background-position: -179px 0; }
 
-/* line 321, ../scss/site/elements.scss */
+/* line 338, ../scss/site/elements.scss */
 #breadcrumb {
   margin-bottom: 10px;
   font-size: smaller; }
 
-/* line 326, ../scss/site/elements.scss */
+/* line 343, ../scss/site/elements.scss */
 .btn-holder {
   margin-left: 0px;
   margin-right: 0px; }
-  /* line 329, ../scss/site/elements.scss */
+  /* line 346, ../scss/site/elements.scss */
   .btn-holder .btn-download {
     background-color: #769830;
     background-image: -webkit-linear-gradient(top, #99cc33, #769830);
@@ -3028,7 +3045,7 @@ ul.is-unstyled, ul.unstyled {
     position: relative;
     padding: 15px 42px 0px 14px;
     font: 16px/16px "museo_sans500", Arial, Helvetica, sans-serif; }
-    /* line 340, ../scss/site/elements.scss */
+    /* line 357, ../scss/site/elements.scss */
     .btn-holder .btn-download:after {
       width: 30px;
       height: 30px;
@@ -3036,10 +3053,10 @@ ul.is-unstyled, ul.unstyled {
       right: 10px;
       top: 8px;
       content: ''; }
-    /* line 349, ../scss/site/elements.scss */
+    /* line 366, ../scss/site/elements.scss */
     .btn-holder .btn-download:after {
       background: url(../images/download_b_30x30.png) no-repeat; }
-    /* line 352, ../scss/site/elements.scss */
+    /* line 369, ../scss/site/elements.scss */
     .btn-holder .btn-download:hover {
       background-color: #6a8c28;
       background-image: -webkit-linear-gradient(top, #89bc2b, #6a8c28);
@@ -3337,31 +3354,43 @@ code {
     background-color: #fff !important;
     border: dotted 1px #ddd !important;
     margin: 0; }
-  /* line 31, ../scss/site/code.scss */
+    /* line 31, ../scss/site/code.scss */
+    code.inline.lang-eiffel .typ, code.inline.lang-eiffel .str, code.inline.lang-eiffel .atg, code.inline.lang-eiffel .fcl, code.inline.lang-eiffel .lit, code.inline.lang-eiffel .pln, code.inline.lang-eiffel .tag, code.inline.lang-eiffel .atn, code.inline.lang-eiffel .atvm .dec, code.inline.lang-eiffel .var, code.inline.lang-eiffel .fun {
+      color: #00f;
+      font-style: normal; }
+    /* line 32, ../scss/site/code.scss */
+    code.inline.lang-eiffel .pun, code.inline.lang-eiffel .opn, code.inline.lang-eiffel .clo, code.inline.lang-eiffel .kwd {
+      color: #00f;
+      font-weight: bold; }
+    /* line 33, ../scss/site/code.scss */
+    code.inline.lang-eiffel .com {
+      color: #00f;
+      font-style: italic; }
+  /* line 38, ../scss/site/code.scss */
   code .lang-eiffel .typ {
     color: #00f; }
-  /* line 32, ../scss/site/code.scss */
+  /* line 39, ../scss/site/code.scss */
   code .lang-eiffel .atg {
     color: #000; }
-  /* line 33, ../scss/site/code.scss */
+  /* line 40, ../scss/site/code.scss */
   code .lang-eiffel .fcl {
     color: #000;
     font-style: normal; }
-  /* line 34, ../scss/site/code.scss */
+  /* line 41, ../scss/site/code.scss */
   code .lang-eiffel .com {
     font-style: italic; }
 
 /* ... */
 /* Contents ... */
-/* line 45, ../scss/site/code.scss */
+/* line 52, ../scss/site/code.scss */
 #primary-tabs ul.horizontal {
   list-style-type: none; }
-  /* line 47, ../scss/site/code.scss */
+  /* line 54, ../scss/site/code.scss */
   #primary-tabs ul.horizontal li {
     display: inline;
     padding: 2px 5px;
     border: solid 1px #ccf; }
-  /* line 52, ../scss/site/code.scss */
+  /* line 59, ../scss/site/code.scss */
   #primary-tabs ul.horizontal li.active {
     border-color: #99f #99f #ddd;
     border-style: solid solid none;

@@ -26,6 +26,13 @@ code {
 		background-color: #fff !important;
 		border: dotted 1px #ddd !important;
 		margin: 0;
+
+		&.lang-eiffel {
+			.typ, .str, .atg, .fcl, .lit, .pln, .tag, .atn, .atvm .dec, .var, .fun { color: #00f; font-style: normal; }
+			.pun, .opn, .clo, .kwd { color: #00f; font-weight: bold; }
+			.com { color: #00f; font-style: italic; }
+		}
+
 	}
 	.lang-eiffel {
 		.typ { color: #00f; }

@@ -91,6 +91,7 @@ feature -- Router
 			-- Router configuration.
 		do
 			a_router.handle ("/download", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_download (a_api, ?, ?)), a_router.methods_head_get)
+			a_router.handle ("/download/channel/{channel}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_download (a_api, ?, ?)), a_router.methods_head_get)
 			a_router.handle ("/downloads", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_download_channel (a_api, "stable", ?, ?)), a_router.methods_head_get)
 			a_router.handle ("/downloads/channel/{channel}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_download_channel (a_api, Void, ?, ?)), a_router.methods_head_get)
 		end
@@ -111,6 +112,7 @@ feature -- Hooks
 			ch: READABLE_STRING_GENERAL
 			l_ua: CMS_USER_AGENT
 			l_platform: READABLE_STRING_GENERAL
+			lnk: CMS_LOCAL_LINK
 		do
 			if a_channel = Void then
 				ch := "stable"
@@ -137,7 +139,12 @@ feature -- Hooks
 						else
 							vals.force (l_mirror, "mirror")
 						end
-						vals.force (create {CMS_LOCAL_LINK}.make ("download link", "download"), "link")
+						if ch.same_string ("stable") then
+							create lnk.make ("download", "download")
+						else
+							create lnk.make ("download", "download/channel/" + ch)
+						end
+						vals.force (a_response.absolute_url (lnk.location, Void), "download_link")
 					end
 					if
 						attached l_api.selected_platform (l_product.downloads, l_platform) as l_selected
@@ -304,11 +311,17 @@ feature -- Handler
 			l_ua: CMS_USER_AGENT
 			err: INTERNAL_SERVER_ERROR_CMS_RESPONSE
 			done: BOOLEAN
+			ch: READABLE_STRING_GENERAL
 		do
+			if attached {WSF_STRING} req.path_parameter ("channel") as p_channel then
+				ch := p_channel.value
+			else
+				ch := "stable"
+			end
 			write_debug_log (generator + ".handle_download")
 			if
 				attached eiffel_download_api as l_api and then
-				attached l_api.download_stable_configuration as cfg
+				attached l_api.download_channel_configuration (ch) as cfg
 			then
 				create l_ua.make_from_string (req.http_user_agent)
 				write_debug_log (generator + ".handle_download [ User_agent: " + l_ua.user_agent  + " ]")

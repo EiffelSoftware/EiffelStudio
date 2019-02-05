@@ -4,6 +4,6 @@
 		<a class="btn-download" href="{$download_link/}">Download Now</a>
 	</div>
 	<div class="btn-holder">
-		<a class="link-platforms row" href="{$site_url/}downloads"><span class="release">LOOKING FOR OTHER PLATFORMS? </span></a>
+		<a class="link-platforms row" href="{$download_other_link/}"><span class="release">LOOKING FOR OTHER PLATFORMS? </span></a>
 	</div>
 </div>

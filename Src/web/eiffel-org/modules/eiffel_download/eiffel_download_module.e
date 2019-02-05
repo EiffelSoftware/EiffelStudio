@@ -145,6 +145,12 @@ feature -- Hooks
 							create lnk.make ("download", "download/channel/" + ch)
 						end
 						vals.force (a_response.absolute_url (lnk.location, Void), "download_link")
+						if ch.same_string ("stable") then
+							create lnk.make ("download others", "downloads/channel/stable")
+						else
+							create lnk.make ("download others", "downloads/channel/" + ch)
+						end
+						vals.force (a_response.absolute_url (lnk.location, Void), "download_other_link")
 					end
 					if
 						attached l_api.selected_platform (l_product.downloads, l_platform) as l_selected
@@ -326,28 +332,35 @@ feature -- Handler
 				create l_ua.make_from_string (req.http_user_agent)
 				write_debug_log (generator + ".handle_download [ User_agent: " + l_ua.user_agent  + " ]")
 
-				if attached l_api.retrieve_product_gpl (cfg) as l_product and then
-				   attached l_product.build as l_build and then
-				   attached l_product.name as l_name and then
-				   attached l_product.number as l_number and then
-				   attached l_api.retrieve_mirror_gpl (cfg) as l_mirror
-				then
-				    l_link := l_mirror
-				    l_link.append (url_encoded (l_name))
-				    l_link.append_character (' ')
-				    l_link.append (url_encoded (l_number))
-				    l_link.append_character ('/')
-				    l_link.append (url_encoded (l_build))
-				    l_link.append_character ('/')
-				    write_debug_log (generator + ".handle_download [ Link: " + l_link  + " ]")
+				if attached l_api.retrieve_product_gpl (cfg) as l_product then
 					if
 						attached l_api.selected_platform (l_product.downloads, get_platform (l_ua)) as l_selected and then
 						attached l_selected.filename as l_filename
 					then
 						write_debug_log (generator + ".handle_download [ Filename: " + url_encoded (l_filename)  + " ]")
-						l_link.append (url_encoded (l_filename))
-						file_download (req, res, l_link)
-						done := True
+						l_selected.get_link
+						if attached l_selected.link as lnk then
+							l_link := lnk
+						elseif
+							attached l_product.build as l_build and then
+							attached l_product.name as l_name and then
+							attached l_product.number as l_number and then
+							attached l_api.retrieve_mirror_gpl (cfg) as l_mirror
+						then
+						    create l_link.make_from_string (l_mirror)
+						    l_link.append (url_encoded (l_name))
+						    l_link.append_character (' ')
+						    l_link.append (url_encoded (l_number))
+						    l_link.append_character ('/')
+						    l_link.append (url_encoded (l_build))
+						    l_link.append_character ('/')
+							l_link.append (url_encoded (l_filename))
+						    write_debug_log (generator + ".handle_download [ Link: " + l_link  + " ]")
+						end
+						if l_link /= Void then
+							file_download (req, res, l_link)
+							done := True
+						end
 					end
 				end
 			end

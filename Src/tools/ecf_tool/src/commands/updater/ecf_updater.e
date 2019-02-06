@@ -363,7 +363,6 @@ feature -- Variable expansions
 		local
 			s: STRING_32
 			i,n: INTEGER
-			b: BOOLEAN
 		do
 			if attached variable_expansions as l_variable_expansions then
 				if a_string.starts_with_general ("${") then
@@ -1084,7 +1083,6 @@ feature {NONE} -- Path manipulation
 	reduced_path_using_separator (fn: READABLE_STRING_GENERAL; a_sep: READABLE_STRING_GENERAL; a_depth: INTEGER): STRING_32
 		local
 			lst: like segments_from_string
-			sep: READABLE_STRING_GENERAL
 		do
 			create Result.make (fn.count)
 			lst := segments_from_string (fn, False)

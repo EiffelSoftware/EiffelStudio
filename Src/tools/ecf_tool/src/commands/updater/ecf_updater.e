@@ -690,20 +690,20 @@ feature {NONE} -- Implementation
 		do
 			warnings.extend (m)
 			localized_print ({STRING_32} "[Warning] " + m.to_string_32)
-			io.error.put_new_line
+			localized_print ("%N")
 		end
 
 	report_progress (m: READABLE_STRING_GENERAL)
 		do
 			localized_print (m)
-			io.output.put_new_line
+			localized_print ("%N")
 		end
 
 	report_error (m: READABLE_STRING_GENERAL)
 		do
 			errors.extend (m)
 			localized_print_error ({STRING_32} "[Error] " + m.to_string_32)
-			io.error.put_new_line
+			localized_print_error ("%N")
 		end
 
 	last_ecf_location_had_multiple_solution: BOOLEAN

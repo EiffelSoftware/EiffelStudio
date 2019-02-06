@@ -215,6 +215,21 @@ feature -- Access
 			elseif has_option (base_switch) and then attached option_of_name (base_switch) as o and then o.has_value then
 				Result := o.value
 			end
+			if
+				Result /= Void and then
+				has_option (use_var_brackets_switch)
+			then
+				if Result.count > 1 and then Result[1] = '$' then
+					if Result[2] = '{' then
+							-- Done
+					else
+						Result.remove_head (1)
+						Result := {STRING_32} "${" + Result + "}"
+					end
+				else
+					Result := {STRING_32} "${" + Result + "}"
+				end
+			end
 		end
 
 feature {NONE} -- Usage
@@ -266,6 +281,7 @@ feature {NONE} -- Switches
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (base_variable_switch, "Base variable name", True, False, base_variable_switch, "Could be ISE_LIBRARY", False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (ise_library_switch, "Use $ISE_LIBRARY for 'base'", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (eiffel_library_switch, "Use $EIFFEL_LIBRARY for 'base'", True, False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (use_var_brackets_switch, "Use ${ABC} instead of $ABC", True, False))
 
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (replace_switch, "Replace ", True, True, replace_switch, "use FOO=BAR to replace FOO with BAR (case sensitive)", False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (variable_expansions_switch, "Expand variable VAR with value", True, True, replace_switch, "use VAR=value to expand VAR environment variable with 'value'", False))
@@ -290,6 +306,7 @@ feature {NONE} -- Switches
 	base_variable_switch: STRING = "base_variable"
 	eiffel_library_switch: STRING = "eiffel_library"
 	ise_library_switch: STRING = "ise_library"
+	use_var_brackets_switch: STRING = "use-var-brackets"
 	replace_switch: STRING = "replace"
 	variable_expansions_switch: STRING = "x|expand-variable-with"
 
@@ -306,7 +323,7 @@ feature {NONE} -- Implementation
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

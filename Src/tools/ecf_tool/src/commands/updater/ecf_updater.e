@@ -309,8 +309,83 @@ feature -- Variable expansions
 			p := s.index_of_code (('=').natural_32_code, 1)
 			if p > 0 then
 				l_expansions.extend ([s.substring (1, p-1), s.substring (p+1, s.count)])
-			else
+			elseif attached execution_environment.item (s) as v then
+				l_expansions.extend ([s, v])
 				check wrong_syntax: False end
+			end
+		end
+
+	next_variable_name (s: STRING_32): detachable READABLE_STRING_32
+		local
+			i,j,n: INTEGER
+			b: BOOLEAN
+		do
+			n := s.count
+			if n > 1 then
+				i := s.index_of ('$', 1)
+				if i > 0 then
+					i := i + 1
+					if s[i] = '{' then
+						j := s.index_of ('}', i + 1)
+						if j > i then
+							i := i + 1
+							j := j - 1
+						end
+					else
+						from
+							j := i
+							b := False
+						until
+							j > n or b
+						loop
+							if is_valid_variable_name_character (s[j]) then
+								j := j + 1
+							else
+								b := True
+							end
+						end
+					end
+					if j > i then
+						Result := s.substring (i, j)
+					end
+				end
+			end
+		end
+
+	is_valid_variable_name_character (c: CHARACTER_32): BOOLEAN
+		do
+			Result := c.is_alpha_numeric or c = '_'
+		end
+
+	apply_variable_expansions_except_first_variable (a_string: STRING_32)
+		require
+			a_string.starts_with_general ("$")
+		local
+			s: STRING_32
+			i,n: INTEGER
+			b: BOOLEAN
+		do
+			if attached variable_expansions as l_variable_expansions then
+				if a_string.starts_with_general ("${") then
+					i := a_string.index_of ('}', 2)
+					if i > 0 then
+						s := a_string.substring (i + 1, a_string.count)
+						a_string.keep_head (i)
+					end
+				else
+					from
+						i := 2 -- after the '$'
+						n := a_string.count
+					until
+						i > n or not is_valid_variable_name_character (a_string [i])
+					loop
+						i := i + 1
+					end
+					s := a_string.substring (i, n)
+					a_string.keep_head (i - 1)
+				end
+				apply_variable_expansions (s)
+				a_string.append (s)
 			end
 		end
 
@@ -345,7 +420,8 @@ feature -- Substitutions
 			p := s.index_of_code (('=').natural_32_code, 1)
 			if p > 0 then
 				l_replacements.extend ([s.substring (1, p-1), s.substring (p+1, s.count)])
-			else
+			elseif attached execution_environment.item (s) as v then
+				l_replacements.extend ([s, v])
 				check wrong_syntax: False end
 			end
 		end
@@ -419,7 +495,13 @@ feature -- Basic operation
 								l_ecf := l_line.substring (q + 1, p + 3)
 								create l_origin_location.make_from_string_32 (l_ecf)
 								if l_line [q + 1] = '$' then
-									if root_base_name /= Void then
+									if
+										attached root_base_name as rbn and then
+										attached next_variable_name (l_line) as var and then
+										var.same_string (rbn)
+									then
+										apply_variable_expansions_except_first_variable (l_ecf)
+									else
 										apply_variable_expansions (l_ecf)
 									end
 
@@ -437,7 +519,9 @@ feature -- Basic operation
 											report_warning ({STRING_32} "Multiple option to replace %"" + l_ecf.to_string_32 + {STRING_32} "%" in file %"" + fn.name + {STRING_32} "%"")
 										end
 										l_new_path := relative_path (l_location, fn.name, l_rn, root_base_name)
-										l_new_path := harmonized_path_with (l_new_path, l_ecf)
+										if not l_new_path.is_empty then
+											l_new_path := harmonized_path_with (l_new_path, l_ecf)
+										end
 									else
 										if not u.file_exists (l_ecf) then
 											report_warning ({STRING_32} "Unable to find %"" + l_ecf.to_string_32 + {STRING_32} "%" from file %"" + fn.name + {STRING_32} "%"")
@@ -824,13 +908,13 @@ feature {NONE} -- Implementation
 				create s.make (a_lib_ecf.count)
 				append_segments_to_string (lst, s, sep)
 			else
-				s := reduced_path (a_lib_ecf, 0)
-				t := reduced_path (rn, 0)
+				s := reduced_path_using_separator (a_lib_ecf, sep, 0)
+				t := reduced_path_using_separator (rn, sep, 0)
 				if path_starts_with (s, t) then
 					s.replace_substring (bn.to_string_32, 1, t.count)
 				elseif bn.starts_with ("$") then
 					if attached execution_environment.item (bn.tail (bn.count - 1)) as l_bn_value then
-						t := reduced_path (l_bn_value, 0)
+						t := reduced_path_using_separator (l_bn_value, sep, 0)
 						if path_starts_with (s, t) then
 							s.replace_substring (bn.to_string_32, 1, t.count)
 						end
@@ -842,6 +926,8 @@ feature {NONE} -- Implementation
 		end
 
 	harmonized_path_with (v: READABLE_STRING_GENERAL; ref: READABLE_STRING_GENERAL): STRING_32
+		require
+			not v.is_empty
 		local
 			sep: READABLE_STRING_GENERAL
 		do
@@ -977,6 +1063,8 @@ feature {NONE} -- Path manipulation
 
 	segment_separator_from (fn: READABLE_STRING_GENERAL): STRING
 			-- Segment separator used in `fn` if any, otherwise default is '\'.
+		require
+			not fn.is_empty
 		local
 			i,j: INTEGER
 		do
@@ -989,11 +1077,15 @@ feature {NONE} -- Path manipulation
 		end
 
 	reduced_path (fn: READABLE_STRING_GENERAL; a_depth: INTEGER): STRING_32
+		do
+			Result := reduced_path_using_separator (fn, segment_separator_from (fn), a_depth)
+		end
+
+	reduced_path_using_separator (fn: READABLE_STRING_GENERAL; a_sep: READABLE_STRING_GENERAL; a_depth: INTEGER): STRING_32
 		local
 			lst: like segments_from_string
 			sep: READABLE_STRING_GENERAL
 		do
-			sep := segment_separator_from (fn)
 			create Result.make (fn.count)
 			lst := segments_from_string (fn, False)
 			if a_depth > 0 then
@@ -1008,7 +1100,7 @@ feature {NONE} -- Path manipulation
 			if fn.starts_with ({STRING_32} "/") then
 				Result.append_character ('/')
 			end
-			append_segments_to_string (lst, Result, sep)
+			append_segments_to_string (lst, Result, a_sep)
 		end
 
 	common_segment_count (p1, p2: detachable READABLE_STRING_GENERAL): INTEGER

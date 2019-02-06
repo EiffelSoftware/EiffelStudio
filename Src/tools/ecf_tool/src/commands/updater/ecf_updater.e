@@ -320,6 +320,7 @@ feature -- Variable expansions
 				across
 					l_variable_expansions as rpl
 				loop
+					s.replace_substring_all ({STRING_32} "${" + rpl.item.src.to_string_32 + "}", rpl.item.new.to_string_32)
 					s.replace_substring_all ({STRING_32} "$" + rpl.item.src.to_string_32, rpl.item.new.to_string_32)
 				end
 			end
@@ -1102,7 +1103,7 @@ feature {NONE} -- Path manipulation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

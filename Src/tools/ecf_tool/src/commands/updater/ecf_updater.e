@@ -525,8 +525,11 @@ feature -- Basic operation
 										if not u.file_exists (l_ecf) then
 											report_warning ({STRING_32} "Unable to find %"" + l_ecf.to_string_32 + {STRING_32} "%" from file %"" + fn.name + {STRING_32} "%"")
 										end
-
-										l_new_path := relative_path (l_ecf, fn.name, l_rn, root_base_name)
+										if is_relative_location (l_origin_location) then
+											l_new_path := relative_path (l_ecf, fn.name, l_rn, Void)
+										else
+											l_new_path := relative_path (l_ecf, fn.name, l_rn, root_base_name)
+										end
 									end
 									debug
 										print ("%T")
@@ -860,6 +863,18 @@ feature {NONE} -- Implementation
 						end
 					end
 				end
+			end
+		end
+
+	is_relative_location (s: READABLE_STRING_GENERAL): BOOLEAN
+		local
+			p: PATH
+		do
+			if s.starts_with ("$") then
+				Result := False
+			else
+				create p.make_from_string (s)
+				Result := p.is_relative
 			end
 		end
 

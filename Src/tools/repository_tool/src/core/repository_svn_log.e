@@ -9,9 +9,6 @@ class
 
 inherit
 	REPOSITORY_LOG
-		redefine
-			parent
-		end
 
 	SVN_DATE_UTILITIES
 		undefine

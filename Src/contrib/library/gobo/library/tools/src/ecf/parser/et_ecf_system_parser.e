@@ -5,7 +5,7 @@ note
 		"ECF Eiffel system parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,89 +15,91 @@ class ET_ECF_SYSTEM_PARSER
 inherit
 
 	ET_ECF_PARSER
-		redefine
-			parse_file
-		end
 
 create
 
 	make, make_standard, make_with_factory
 
-feature -- Status report
-
-	finalize_mode: BOOLEAN
-			-- Is system to be compiled in finalize mode?
-
-feature -- Status setting
-
-	set_finalize_mode (b: BOOLEAN)
-			-- Set `finalize_mode' to `b'.
-		do
-			finalize_mode := b
-		ensure
-			finalize_mode_set: finalize_mode = b
-		end
-
 feature -- Access
 
 	last_system: detachable ET_ECF_SYSTEM
 			-- Eiffel system being parsed
+			--
+			-- Note that when the ECF version of the file is old, the parsed
+			-- ECF system will contain old options/settings/capabilities
+			-- as well as their equivalents in the most recent version of ECF.
+
+	override_settings: detachable ET_ECF_SETTINGS
+			-- Settings overriding those specified for the selected target
+
+	override_capabilities: detachable ET_ECF_CAPABILITIES
+			-- Capabilities overriding those specified for the selected target
+
+	override_variables: detachable ET_ECF_VARIABLES
+			-- Variables overriding those specified for the selected target
+
+feature -- Setting
+
+	set_override_settings (a_settings: like override_settings)
+			-- Set `override_settings' to `a_settings'.
+		do
+			override_settings := a_settings
+		ensure
+			override_settings_set: override_settings = a_settings
+		end
+
+	set_override_capabilities (a_capabilities: like override_capabilities)
+			-- Set `override_capabilities' to `a_capabilities'.
+		do
+			override_capabilities := a_capabilities
+		ensure
+			override_capabilities_set: override_capabilities = a_capabilities
+		end
+
+	set_override_variables (a_variables: like override_variables)
+			-- Set `override_variables' to `a_variables'.
+		do
+			override_variables := a_variables
+		ensure
+			override_variables_set: override_variables = a_variables
+		end
 
 feature -- Parsing
 
-	parse_file (a_file: KI_CHARACTER_INPUT_STREAM)
+	parse_file (a_file: KI_CHARACTER_INPUT_STREAM; a_target_name: detachable STRING)
 			-- Parse ECF file `a_file'.
+			-- Select `a_target_name' if specified, the last target parsed otherwise.
+			--
+			-- Note that when the ECF version of the file is old, the parsed
+			-- ECF system will contain old options/settings/capabilities
+			-- as well as their equivalents in the most recent version of ECF.
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_read: a_file.is_open_read
+		local
+			l_result: DS_CELL [detachable ET_ECF_SYSTEM]
 		do
 			last_system := Void
-			precursor (a_file)
-			parsed_libraries.wipe_out
-			parsed_dotnet_assemblies.wipe_out
+			create l_result.make (Void)
+			parse_file_with_action (a_file, agent build_system (?, ?, ?, a_target_name, agent override_target, l_result))
+			last_system := l_result.item
 		end
 
 feature {NONE} -- Element change
 
-	build_system_config (an_element: XM_ELEMENT; a_position_table: detachable XM_POSITION_TABLE; a_filename: STRING)
-			-- Build system config from `an_element'.
-		local
-			l_system: detachable ET_ECF_SYSTEM
-			l_state: ET_ECF_STATE
-			l_targets: detachable ET_ECF_TARGETS
-			l_target: detachable ET_ECF_TARGET
+	override_target (a_target: ET_ECF_TARGET)
+			-- Override some settings/capabilities/variables in `a_target'.
+		require
+			a_target_not_void: a_target /= Void
 		do
-			l_system := new_system (an_element, a_position_table, a_filename)
-			if l_system = Void then
-					-- Error already reported in `new_system'.
-			else
-				l_targets := l_system.targets
--- TODO: we need to be able to select the target.
-				if l_targets /= Void and then not l_targets.is_empty then
-						-- Use last target as default target.
-					l_target := l_targets.target (l_targets.count)
-				else
-						-- No target found in the ECF file.
-						-- Error already reported in `fill_system_config'.
-				end
-				if l_target /= Void then
-					create l_state.make (l_target, ise_version)
-					l_state.set_finalize_mode (finalize_mode)
-					l_target.update_state (l_state)
-					l_system.select_target (l_target, l_state)
-					parse_libraries (l_system, l_state)
-					from parsed_libraries.start until parsed_libraries.after loop
-						parse_libraries (parsed_libraries.item_for_iteration, l_state)
-						parsed_libraries.forth
-					end
-					l_system.libraries.do_adapted (agent {ET_ADAPTED_LIBRARY}.propagate_read_only)
-					l_target.fill_root (l_system)
-					l_target.fill_settings (l_system)
-					l_target.fill_options (l_system)
-					parse_dotnet_assemblies (l_system, l_state)
-					from parsed_libraries.start until parsed_libraries.after loop
-						parse_dotnet_assemblies (parsed_libraries.item_for_iteration, l_state)
-						parsed_libraries.forth
-					end
-					last_system := l_system
-				end
+			if attached override_settings as l_override_settings then
+				a_target.override_settings (l_override_settings)
+			end
+			if attached override_capabilities as l_override_capabilities then
+				a_target.override_capabilities (l_override_capabilities)
+			end
+			if attached override_variables as l_override_variables then
+				a_target.override_variables (l_override_variables)
 			end
 		end
 

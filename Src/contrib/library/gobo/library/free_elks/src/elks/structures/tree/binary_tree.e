@@ -1,12 +1,12 @@
-note
+﻿note
 	description: "Binary tree: each node may have a left child and a right child"
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	names: binary_tree, tree, fixed_tree;
-	representation: recursive, array;
-	access: cursor, membership;
-	contents: generic;
+	names: binary_tree, tree, fixed_tree
+	representation: recursive, array
+	access: cursor, membership
+	contents: generic
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -34,7 +34,7 @@ inherit
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (v: like item)
 			-- Create a root node with value `v'.
@@ -426,6 +426,7 @@ feature -- Duplication
 			-- Copy of sub-tree beginning at cursor position and
 			-- having min (`n', `arity' - `child_index' + 1)
 			-- children.
+		obsolete "Create and initialize a new tree explicitly. [2018-11-30]"
 		local
 			c: like left_child
 		do
@@ -441,6 +442,7 @@ feature -- Duplication
 		end
 
 	duplicate_all: like Current
+		obsolete "Create and initialize a new tree explicitly. [2018-11-30]"
 		local
 			c: like child
 		do
@@ -473,8 +475,6 @@ feature {BINARY_TREE} -- Implementation
 				c.fill_list (al)
 			end
 		end
-
-feature {BINARY_TREE} -- Implementation
 
 	clone_node (n: like Current): like Current
 			-- Clone node `n'.
@@ -527,6 +527,7 @@ feature {NONE} -- Implementation
 
 	fill_subtree (other: TREE [G])
 			-- Copy `other' to subtree.
+		obsolete "Fill subtree explicitly. [2018-11-30]"
 		local
 			c: like left_child
 		do
@@ -548,6 +549,7 @@ feature {NONE} -- Implementation
 
 	new_tree: like Current
 			-- New tree node
+		obsolete "Create and initialize a new tree explicitly. [2018-11-30]"
 		do
 			create Result.make (item)
 			if object_comparison then
@@ -560,7 +562,7 @@ invariant
 	tree_is_binary: child_capacity = 2
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

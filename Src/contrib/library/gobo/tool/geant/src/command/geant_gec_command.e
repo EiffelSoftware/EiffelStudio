@@ -5,7 +5,7 @@ note
 		"Gec commands"
 
 	library: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2005-2012, Sven Ehrke and others"
+	copyright: "Copyright (c) 2005-2018, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			-- Create a new 'gec' command.
 		do
 			precursor (a_project)
-			c_compile := True
+			c_compile := "gecc"
 			split_mode := True
 		end
 
@@ -41,38 +41,41 @@ feature -- Status report
 	is_executable: BOOLEAN
 			-- Can command be executed?
 		do
-			Result := is_ace_configuration or is_cleanable
-			Result := Result and then (exit_code_variable_name = Void or else exit_code_variable_name.count > 0)
+			Result := is_ecf_configuration or is_cleanable
+			Result := Result and then (not attached exit_code_variable_name as l_exit_code_variable_name or else l_exit_code_variable_name.count > 0)
 		ensure then
-			definition: Result implies (is_ace_configuration or is_cleanable)
-			exit_code_variable_name_void_or_not_empty: Result implies (exit_code_variable_name = Void or else exit_code_variable_name.count > 0)
+			definition: Result implies (is_ecf_configuration or is_cleanable)
+			exit_code_variable_name_void_or_not_empty: Result implies (not attached exit_code_variable_name as l_exit_code_variable_name or else l_exit_code_variable_name.count > 0)
 		end
 
-	is_ace_configuration: BOOLEAN
+	is_ecf_configuration: BOOLEAN
 			-- Does ace file configuration apply?
 		do
-			Result := (ace_filename /= Void and then ace_filename.count > 0)
+			Result := (attached ecf_filename as l_ecf_filename and then l_ecf_filename.count > 0)
 		ensure
-			ace_filename_not_void: Result implies ace_filename /= Void
-			ace_filename_not_empty: Result implies ace_filename.count > 0
+			ecf_filename_not_void_and_not_empty: Result implies attached ecf_filename as l_ecf_filename and then l_ecf_filename.count > 0
 		end
 
 	is_cleanable: BOOLEAN
 			-- Can system be cleaned?
 		do
-			Result := clean /= Void and then clean.count > 0
+			Result := attached clean as l_clean and then l_clean.count > 0
 		ensure
-			clean_not_void: Result implies clean /= Void
-			clean_not_empty: Result implies clean.count > 0
+			clean_not_void: Result implies attached clean as l_clean and then l_clean.count > 0
 		end
 
 feature -- Access
 
-	ace_filename: STRING
-			-- Ace filename
+	ecf_filename: detachable STRING
+			-- ECF filename
 
-	c_compile: BOOLEAN
-			-- Should C compilation be launched?
+	target_name: detachable STRING
+			-- Name of target to be used in ECF file.
+			-- Use last target in ECF file if not specified.
+
+	c_compile: detachable STRING
+			-- Should the back-end C compiler be invoked on the generated C code, and if yes with what method?
+			-- (default: gecc)
 
 	finalize: BOOLEAN
 			-- Should system be compiled in finalized mode?
@@ -80,7 +83,7 @@ feature -- Access
 	gelint: BOOLEAN
 			-- Should gelint be run on the full content of each class being compiled?
 
-	catcall_mode: STRING
+	catcall_mode: detachable STRING
 			-- Should CAT-calls be considered as fatal errors, as warnings or just ignored?
 
 	split_mode: BOOLEAN
@@ -89,34 +92,67 @@ feature -- Access
 	split_size: INTEGER
 			-- Size (in bytes) of generated C files in bytes when in split mode
 
-	garbage_collector: STRING
+	garbage_collector: detachable STRING
 			-- Name of GC being used
 
-	clean: STRING
+	thread_count: INTEGER
+			-- Number of threads to be used to run gec.
+			-- Negative numbers -N mean "number of CPUs - N".
+			-- (default: number of CPUs)
+
+	new_instance_types_filename: detachable STRING
+			-- Filename containing the list of types which can have instances
+			-- created by 'TYPE.new_instance' or 'TYPE.new_special_any_instance'.
+
+	silent_mode: BOOLEAN
+			-- Should gec be run in silent mode?
+
+	verbose_mode: BOOLEAN
+			-- Should gec be run in verbose mode?
+
+	no_benchmark_mode: BOOLEAN
+			-- Should no benchmark information be displayed?
+			-- (default: display non-nested benchmark information)
+
+	nested_benchmark_mode: BOOLEAN
+			-- Should nested benchmark information be displayed?
+
+	metrics_mode: BOOLEAN
+			-- Should metrics information be displayed?
+
+	clean: detachable STRING
 			-- Name of system to be cleaned
 
-	exit_code_variable_name: STRING
+	exit_code_variable_name: detachable STRING
 			-- Name of variable holding exit code of gec compilation process
 
 feature -- Setting
 
-	set_ace_filename (a_filename: like ace_filename)
-			-- Set `ace_filename' to `a_filename'.
+	set_ecf_filename (a_filename: like ecf_filename)
+			-- Set `ecf_filename' to `a_filename'.
 		require
 			a_filename_not_void: a_filename /= Void
 			a_filename_not_empty: a_filename.count > 0
 		do
-			ace_filename := a_filename
+			ecf_filename := a_filename
 		ensure
-			ace_filename_set: ace_filename = a_filename
+			ecf_filename_set: ecf_filename = a_filename
 		end
 
-	set_c_compile (b: BOOLEAN)
-			-- Set `c_compile' to `b'.
+	set_target_name (a_target_name: like target_name)
+			-- Set `target_name' to `a_target_name'.
 		do
-			c_compile := b
+			target_name := a_target_name
 		ensure
-			c_compile_set: c_compile = b
+			target_name_set: target_name = a_target_name
+		end
+
+	set_c_compile (a_c_compile: like c_compile)
+			-- Set `c_compile' to `a_c_compile'.
+		do
+			c_compile := a_c_compile
+		ensure
+			c_compile_set: c_compile = a_c_compile
 		end
 
 	set_finalize (b: BOOLEAN)
@@ -172,6 +208,62 @@ feature -- Setting
 			garbage_collector_set: garbage_collector = s
 		end
 
+	set_thread_count (a_thread_count: like thread_count)
+			-- Set `thread_count' to `a_thread_count'.
+		do
+			thread_count := a_thread_count
+		ensure
+			thread_count_set: thread_count = a_thread_count
+		end
+
+	set_new_instance_types_filename (a_filename: like new_instance_types_filename)
+			-- Set `new_instance_types_filename' to `a_filename'.
+		do
+			new_instance_types_filename := a_filename
+		ensure
+			new_instance_types_filename_set: new_instance_types_filename = a_filename
+		end
+
+	set_silent_mode (b: BOOLEAN)
+			-- Set `silent_mode' to `b'.
+		do
+			silent_mode := b
+		ensure
+			silent_mode_set: silent_mode = b
+		end
+
+	set_verbose_mode (b: BOOLEAN)
+			-- Set `verbose_mode' to `b'.
+		do
+			verbose_mode := b
+		ensure
+			verbose_mode_set: verbose_mode = b
+		end
+
+	set_no_benchmark_mode (b: BOOLEAN)
+			-- Set `no_benchmark_mode' to `b'.
+		do
+			no_benchmark_mode := b
+		ensure
+			no_benchmark_mode_set: no_benchmark_mode = b
+		end
+
+	set_nested_benchmark_mode (b: BOOLEAN)
+			-- Set `nested_benchmark_mode' to `b'.
+		do
+			nested_benchmark_mode := b
+		ensure
+			nested_benchmark_mode_set: nested_benchmark_mode = b
+		end
+
+	set_metrics_mode (b: BOOLEAN)
+			-- Set `metrics_mode' to `b'.
+		do
+			metrics_mode := b
+		ensure
+			metrics_mode_set: metrics_mode = b
+		end
+
 	set_clean (a_clean: like clean)
 			-- Set `clean' to `a_clean'.
 		do
@@ -202,15 +294,15 @@ feature -- Execution
 			stop: BOOLEAN
 		do
 			exit_code := 0
-			if is_cleanable then
-				a_name := clean + ".c"
+			if is_cleanable and then attached clean as l_clean then
+				a_name := l_clean + ".c"
 				if file_system.file_exists (a_name) then
 					project.trace (<<"  [gec] delete ", a_name>>)
 					if not project.options.no_exec then
 						file_system.delete_file (a_name)
 					end
 				end
-				a_name := clean + ".cpp"
+				a_name := l_clean + ".cpp"
 				if file_system.file_exists (a_name) then
 					project.trace (<<"  [gec] delete ", a_name>>)
 					if not project.options.no_exec then
@@ -219,7 +311,7 @@ feature -- Execution
 				end
 				from i := 1 until stop loop
 					stop := True
-					a_name := clean + i.out + ".c"
+					a_name := l_clean + i.out + ".c"
 					if file_system.file_exists (a_name) then
 						project.trace (<<"  [gec] delete ", a_name>>)
 						if not project.options.no_exec then
@@ -227,7 +319,7 @@ feature -- Execution
 						end
 						stop := False
 					end
-					a_name := clean + i.out + ".cpp"
+					a_name := l_clean + i.out + ".cpp"
 					if file_system.file_exists (a_name) then
 						project.trace (<<"  [gec] delete ", a_name>>)
 						if not project.options.no_exec then
@@ -237,14 +329,14 @@ feature -- Execution
 					end
 					i := i + 1
 				end
-				a_name := clean + ".h"
+				a_name := l_clean + ".h"
 				if file_system.file_exists (a_name) then
 					project.trace (<<"  [gec] delete ", a_name>>)
 					if not project.options.no_exec then
 						file_system.delete_file (a_name)
 					end
 				end
-				a_name := clean + ".obj"
+				a_name := l_clean + ".obj"
 				if file_system.file_exists (a_name) then
 					project.trace (<<"  [gec] delete ", a_name>>)
 					if not project.options.no_exec then
@@ -253,7 +345,7 @@ feature -- Execution
 				end
 				stop := False
 				from i := 1 until stop loop
-					a_name := clean + i.out + ".obj"
+					a_name := l_clean + i.out + ".obj"
 					if file_system.file_exists (a_name) then
 						project.trace (<<"  [gec] delete ", a_name>>)
 						if not project.options.no_exec then
@@ -264,7 +356,7 @@ feature -- Execution
 					end
 					i := i + 1
 				end
-				a_name := clean + ".o"
+				a_name := l_clean + ".o"
 				if file_system.file_exists (a_name) then
 					project.trace (<<"  [gec] delete ", a_name>>)
 					if not project.options.no_exec then
@@ -273,7 +365,7 @@ feature -- Execution
 				end
 				stop := False
 				from i := 1 until stop loop
-					a_name := clean + i.out + ".o"
+					a_name := l_clean + i.out + ".o"
 					if file_system.file_exists (a_name) then
 						project.trace (<<"  [gec] delete ", a_name>>)
 						if not project.options.no_exec then
@@ -284,41 +376,48 @@ feature -- Execution
 					end
 					i := i + 1
 				end
-				a_name := clean + ".tds"
+				a_name := l_clean + ".tds"
 				if file_system.file_exists (a_name) then
 					project.trace (<<"  [gec] delete ", a_name>>)
 					if not project.options.no_exec then
 						file_system.delete_file (a_name)
 					end
 				end
-				a_name := clean + ".res"
+				a_name := l_clean + ".res"
 				if file_system.file_exists (a_name) then
 					project.trace (<<"  [gec] delete ", a_name>>)
 					if not project.options.no_exec then
 						file_system.delete_file (a_name)
 					end
 				end
-				a_name := clean + ".bat"
+				a_name := l_clean + ".bat"
 				if file_system.file_exists (a_name) then
 					project.trace (<<"  [gec] delete ", a_name>>)
 					if not project.options.no_exec then
 						file_system.delete_file (a_name)
 					end
 				end
-				a_name := clean + ".sh"
+				a_name := l_clean + ".sh"
 				if file_system.file_exists (a_name) then
 					project.trace (<<"  [gec] delete ", a_name>>)
 					if not project.options.no_exec then
 						file_system.delete_file (a_name)
 					end
 				end
-			elseif is_ace_configuration then
-				cmd := new_ace_cmdline
+				a_name := l_clean + ".make"
+				if file_system.file_exists (a_name) then
+					project.trace (<<"  [gec] delete ", a_name>>)
+					if not project.options.no_exec then
+						file_system.delete_file (a_name)
+					end
+				end
+			elseif is_ecf_configuration then
+				cmd := new_ecf_cmdline
 				project.trace (<<"  [gec] ", cmd>>)
 				execute_shell (cmd)
-				if exit_code_variable_name /= Void then
+				if attached exit_code_variable_name as l_exit_code_variable_name then
 						-- Store return_code of compilation process:
-					project.set_variable_value (exit_code_variable_name, exit_code.out)
+					project.set_variable_value (l_exit_code_variable_name, exit_code.out)
 						-- Reset `exit_code' since return_code of process is available through
 						-- variable 'exit_code_variable_name':
 					exit_code := 0
@@ -332,27 +431,34 @@ feature -- Execution
 
 feature -- Command-line
 
-	new_ace_cmdline: STRING
-			-- Execution commandline for Ace configuration
+	new_ecf_cmdline: STRING
+			-- Execution commandline for ECF configuration
 		require
-			is_ace_configuration: is_ace_configuration
+			is_ecf_configuration: is_ecf_configuration
 		local
 			a_filename: STRING
 		do
 			create Result.make (50)
 			Result.append_string ("gec ")
+			if attached target_name as l_target_name and then not l_target_name.is_empty then
+				Result.append_string ("--target=")
+				Result.append_string (l_target_name)
+				Result.append_character (' ')
+			end
 			if finalize then
 				Result.append_string ("--finalize ")
 			end
 			if gelint then
 				Result.append_string ("--gelint ")
 			end
-			if not c_compile then
-				Result.append_string ("--cc=no ")
+			if attached c_compile as l_c_compile and then not l_c_compile.is_empty then
+				Result.append_string ("--cc=")
+				Result.append_string (l_c_compile)
+				Result.append_character (' ')
 			end
-			if catcall_mode /= Void and then not catcall_mode.is_empty then
+			if attached catcall_mode as l_catcall_mode and then not l_catcall_mode.is_empty then
 				Result.append_string ("--catcall=")
-				Result.append_string (catcall_mode)
+				Result.append_string (l_catcall_mode)
 				Result.append_character (' ')
 			end
 			if not split_mode then
@@ -363,13 +469,40 @@ feature -- Command-line
 				INTEGER_.append_decimal_integer (split_size, Result)
 				Result.append_character (' ')
 			end
-			if garbage_collector /= Void and then not garbage_collector.is_empty then
+			if attached garbage_collector as l_garbage_collector and then not l_garbage_collector.is_empty then
 				Result.append_string ("--gc=")
 				Result.append_string (garbage_collector)
 				Result.append_character (' ')
 			end
-			a_filename := file_system.pathname_from_file_system (ace_filename, unix_file_system)
-			Result := STRING_.appended_string (Result, a_filename)
+			if attached new_instance_types_filename as l_new_instance_types_filename and then not l_new_instance_types_filename.is_empty then
+				Result.append_string ("--new-instance-types=")
+				Result.append_string (l_new_instance_types_filename)
+				Result.append_character (' ')
+			end
+			if thread_count /= 0 then
+				Result.append_string ("--thread=")
+				INTEGER_.append_decimal_integer (thread_count, Result)
+				Result.append_character (' ')
+			end
+			if silent_mode then
+				Result.append_string ("--silent ")
+			end
+			if verbose_mode then
+				Result.append_string ("--verbose ")
+			end
+			if no_benchmark_mode then
+				Result.append_string ("--no-benchmark ")
+			end
+			if nested_benchmark_mode then
+				Result.append_string ("--nested-benchmark ")
+			end
+			if metrics_mode then
+				Result.append_string ("--metrics ")
+			end
+			check is_ecf_configuration: attached ecf_filename as l_ecf_filename then
+				a_filename := file_system.pathname_from_file_system (l_ecf_filename, unix_file_system)
+				Result := STRING_.appended_string (Result, a_filename)
+			end
 		ensure
 			command_line_not_void: Result /= Void
 			command_line_not_empty: Result.count > 0

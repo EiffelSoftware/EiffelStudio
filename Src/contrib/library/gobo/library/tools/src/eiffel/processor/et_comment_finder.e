@@ -5,7 +5,7 @@ note
 		"Eiffel AST comment finders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -55,6 +55,7 @@ inherit
 			process_choice_list,
 			process_choice_range,
 			process_class,
+			process_class_assertion,
 			process_class_type,
 			process_client,
 			process_client_comma,
@@ -73,6 +74,7 @@ inherit
 			process_convert_to_expression,
 			process_create_expression,
 			process_create_instruction,
+			process_creation_region,
 			process_creator,
 			process_creator_list,
 			process_current_address,
@@ -87,6 +89,8 @@ inherit
 			process_dot_feature_name,
 			process_dotnet_function,
 			process_dotnet_procedure,
+			process_elseif_expression,
+			process_elseif_expression_list,
 			process_elseif_part,
 			process_elseif_part_list,
 			process_equality_expression,
@@ -116,6 +120,7 @@ inherit
 			process_hexadecimal_integer_constant,
 			process_identifier_colon,
 			process_identifier_comma,
+			process_if_expression,
 			process_if_instruction,
 			process_indexing,
 			process_indexing_semicolon,
@@ -593,6 +598,14 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
+	process_class_assertion (a_assertion: ET_CLASS_ASSERTION)
+			-- Process `a_assertion'.
+		do
+			if not excluded_nodes.has (a_assertion) then
+				precursor (a_assertion)
+			end
+		end
+
 	process_class_type (a_type: ET_CLASS_TYPE)
 			-- Process `a_type'.
 		do
@@ -737,6 +750,14 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
+	process_creation_region (a_region: ET_CREATION_REGION)
+			-- Process `a_region'.
+		do
+			if not excluded_nodes.has (a_region) then
+				precursor (a_region)
+			end
+		end
+
 	process_creator (a_list: ET_CREATOR)
 			-- Process `a_list'.
 		do
@@ -846,6 +867,22 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if not excluded_nodes.has (a_feature) then
 				precursor (a_feature)
+			end
+		end
+
+	process_elseif_expression (an_elseif_part: ET_ELSEIF_EXPRESSION)
+			-- Process `an_elseif_part'.
+		do
+			if not excluded_nodes.has (an_elseif_part) then
+				precursor (an_elseif_part)
+			end
+		end
+
+	process_elseif_expression_list (a_list: ET_ELSEIF_EXPRESSION_LIST)
+			-- Process `a_list'.
+		do
+			if not excluded_nodes.has (a_list) then
+				precursor (a_list)
 			end
 		end
 
@@ -1081,6 +1118,14 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if not excluded_nodes.has (an_identifier) then
 				precursor (an_identifier)
+			end
+		end
+
+	process_if_expression (a_expression: ET_IF_EXPRESSION)
+			-- Process `a_expression'.
+		do
+			if not excluded_nodes.has (a_expression) then
+				precursor (a_expression)
 			end
 		end
 

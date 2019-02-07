@@ -5,7 +5,7 @@ note
 		"Eiffel features"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -34,7 +34,8 @@ inherit
 	ET_STANDALONE_CLOSURE
 		redefine
 			is_feature,
-			as_feature
+			as_feature,
+			first_indexing
 		end
 
 	DEBUG_OUTPUT
@@ -340,8 +341,28 @@ feature -- Status report
 			-- Result := False
 		end
 
-	is_once: BOOLEAN
-			-- Is current feature a once feature?
+	is_static: BOOLEAN
+			-- Can feature be used as a static feature (i.e. in a call of the form {A}.f)?
+		do
+			Result := has_static_mark
+		end
+
+	has_static_mark: BOOLEAN
+			-- Has feature been explicitly marked as static?
+		do
+			Result := has_class_postcondition_recursive
+		end
+
+	is_transient_attribute: BOOLEAN
+			-- Is feature a transient attribute
+			-- (i.e. not taken into account by Storable)?
+		do
+			-- Result := False
+		end
+
+	is_stable_attribute: BOOLEAN
+			-- Is feature a stable attribute
+			-- (i.e. cannot be set to Void in void-safe mode)?
 		do
 			-- Result := False
 		end
@@ -380,6 +401,111 @@ feature -- Status report
 			Result := attached arguments as l_arguments and then l_arguments.count > 0
 		ensure
 			definition: Result = (attached arguments as l_arguments and then l_arguments.count > 0)
+		end
+
+	are_preconditions_instance_free_recursive: BOOLEAN
+			-- Are all precondition expressions, if any, instance-free (i.e. not dependent
+			-- on 'Current' or its attributes)?
+			-- Take into account inherited preconditions recursively.
+			-- Note that we do not consider unqualified calls and Precursors as
+			-- instance-free because it's not always possible syntactically
+			-- to determine whether the feature being called is a class feature
+			-- or not.
+		local
+			i, nb: INTEGER
+			l_other_precursor: ET_FEATURE
+		do
+			Result := True
+			if attached preconditions as l_preconditions and then not l_preconditions.is_instance_free then
+				Result := False
+			elseif attached first_precursor as l_first_precursor then
+				if not l_first_precursor.are_preconditions_instance_free_recursive then
+					Result := False
+				elseif attached other_precursors as l_other_precursors then
+					from
+						i := 1
+						nb := l_other_precursors.count
+					until
+						i > nb
+					loop
+						l_other_precursor := l_other_precursors.item (i)
+						if not l_other_precursor.are_preconditions_instance_free_recursive then
+							Result := False
+								 -- Jump out of the loop
+							i := nb
+						end
+						i := i + 1
+					end
+				end
+			end
+		end
+
+	are_postconditions_instance_free_recursive: BOOLEAN
+			-- Are all postcondition expressions, if any, instance-free (i.e. not dependent
+			-- on 'Current' or its attributes)?
+			-- Take into account inherited preconditions recursively.
+			-- Note that we do not consider unqualified calls and Precursors as
+			-- instance-free because it's not always possible syntactically
+			-- to determine whether the feature being called is a class feature
+			-- or not.
+		local
+			i, nb: INTEGER
+			l_other_precursor: ET_FEATURE
+		do
+			Result := True
+			if attached postconditions as l_postconditions and then not l_postconditions.is_instance_free then
+				Result := False
+			elseif attached first_precursor as l_first_precursor then
+				if not l_first_precursor.are_postconditions_instance_free_recursive then
+					Result := False
+				elseif attached other_precursors as l_other_precursors then
+					from
+						i := 1
+						nb := l_other_precursors.count
+					until
+						i > nb
+					loop
+						l_other_precursor := l_other_precursors.item (i)
+						if not l_other_precursor.are_postconditions_instance_free_recursive then
+							Result := False
+								 -- Jump out of the loop
+							i := nb
+						end
+						i := i + 1
+					end
+				end
+			end
+		end
+
+	has_class_postcondition_recursive: BOOLEAN
+			-- Is one of the postconditions a 'class' assertion?
+			-- Take into account inherited postconditions recursively.
+		local
+			i, nb: INTEGER
+			l_other_precursor: ET_FEATURE
+		do
+			if attached postconditions as l_postconditions and then l_postconditions.has_class_assertion then
+				Result := True
+			elseif attached first_precursor as l_first_precursor then
+				if l_first_precursor.has_class_postcondition_recursive then
+					Result := True
+				elseif attached other_precursors as l_other_precursors then
+					from
+						i := 1
+						nb := l_other_precursors.count
+					until
+						i > nb
+					loop
+						l_other_precursor := l_other_precursors.item (i)
+						if l_other_precursor.has_class_postcondition_recursive then
+							Result := True
+								 -- Jump out of the loop
+							i := nb
+						end
+						i := i + 1
+					end
+				end
+			end
 		end
 
 	is_flattened_immediate: BOOLEAN = True
@@ -459,14 +585,15 @@ feature -- Measurement
 
 feature -- Export status
 
-	is_exported_to (a_client: ET_CLASS): BOOLEAN
+	is_exported_to (a_client: ET_CLASS; a_system_processor: ET_SYSTEM_PROCESSOR): BOOLEAN
 			-- Is current feature exported to `a_client'?
-			-- (Note: Use `current_system.ancestor_builder' on the classes whose ancestors
+			-- (Note: Use `a_system_processor.ancestor_builder' on the classes whose ancestors
 			-- need to be built in order to check for descendants.)
 		require
 			a_client_not_void: a_client /= Void
+			a_system_processor_not_void: a_system_processor /= Void
 		do
-			Result := clients.has_descendant (a_client)
+			Result := clients.has_descendant (a_client, a_system_processor)
 		end
 
 	is_directly_exported_to (a_client: ET_CLASS): BOOLEAN
@@ -481,23 +608,24 @@ feature -- Export status
 			Result := clients.has_class (a_client)
 		end
 
-	is_creation_exported_to (a_client, a_class: ET_CLASS): BOOLEAN
+	is_creation_exported_to (a_client, a_class: ET_CLASS; a_system_processor: ET_SYSTEM_PROCESSOR): BOOLEAN
 			-- Is current feature listed in the creation clauses of `a_class'
 			-- and exported to `a_client', or is current feature the version of
 			-- 'default_create' in `a_class' with `a_class' being a non-deferred
 			-- class with no creation clauses?
-			-- (Note: Use `current_system.ancestor_builder' on the classes whose ancestors
+			-- (Note: Use `a_system_processor.ancestor_builder' on the classes whose ancestors
 			-- need to be built in order to check for descendants. Also use
-			-- `current_system.feature_flattener' on `a_class' if needed to determine
+			-- `a_system_processor.feature_flattener' on `a_class' if needed to determine
 			-- whether current feature is the version of 'default_create' in `a_class'.)
 		require
 			a_client_not_void: a_client /= Void
 			a_class_not_void: a_class /= Void
+			a_system_processor_not_void: a_system_processor /= Void
 		do
-			if a_class.is_creation_exported_to (name, a_client) then
+			if a_class.is_creation_exported_to (name, a_client, a_system_processor) then
 				Result := True
 			elseif a_class.creators = Void and not a_class.is_deferred and a_class.is_preparsed then
-				a_class.process (a_class.current_system.feature_flattener)
+				a_class.process (a_system_processor.feature_flattener)
 				Result := has_seed (a_class.current_system.default_create_seed)
 			end
 		end

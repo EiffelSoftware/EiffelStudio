@@ -5,7 +5,7 @@ note
 		"Null error handlers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -140,8 +140,11 @@ inherit
 			reportable_vuar1_error,
 			reportable_vuar2_error,
 			reportable_vuar4_error,
+			reportable_vucr_error,
 			reportable_vuex1_error,
 			reportable_vuex2_error,
+			reportable_vuno3_error,
+			reportable_vuno5_error,
 			reportable_vuot1_error,
 			reportable_vuot3_error,
 			reportable_vuot4_error,
@@ -149,7 +152,10 @@ inherit
 			reportable_vvok1_error,
 			reportable_vvok2_error,
 			reportable_vwbe_error,
+			reportable_vwce_error,
 			reportable_vweq_error,
+			reportable_vwma1_error,
+			reportable_vwma2_error,
 			reportable_vwmq_error,
 			reportable_vwst1_error,
 			reportable_vwst2_error,
@@ -1055,6 +1061,13 @@ feature -- Validity error status
 			Result := False
 		end
 
+	reportable_vucr_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VUCR error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
 	reportable_vuex1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VUEX-1 error be reported when it
 			-- appears in `a_class'?
@@ -1064,6 +1077,20 @@ feature -- Validity error status
 
 	reportable_vuex2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VUEX-2 error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
+	reportable_vuno3_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VUNO-3 error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
+	reportable_vuno5_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VUNO-5 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
@@ -1118,8 +1145,29 @@ feature -- Validity error status
 			Result := False
 		end
 
+	reportable_vwce_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VWCE error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
 	reportable_vweq_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VWEQ error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
+	reportable_vwma1_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VWMA-1 error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
+	reportable_vwma2_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VWMA-2 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False

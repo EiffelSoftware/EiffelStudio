@@ -5,7 +5,7 @@ note
 
 		"Parsers for 'gepp' preprocessors"
 
-	copyright: "Copyright (c) 1999-2007, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -155,6 +155,7 @@ feature {NONE} -- Initialization
 			create defined_values.make (10)
 			create line_nb_stack.make (Max_include_depth)
 			create include_stack.make (Max_include_depth)
+			last_string_value := ""
 		ensure
 			error_handler_set: error_handler = a_handler
 		end
@@ -242,11 +243,9 @@ feature -- Error handling
 			-- Report a syntax error.
 		local
 			an_error: UT_SYNTAX_ERROR
-			file_buffer: YY_FILE_BUFFER
 			filename: STRING
 		do
-			file_buffer ?= input_buffer
-			if file_buffer /= Void then
+			if attached {YY_FILE_BUFFER} input_buffer as file_buffer then
 				filename := file_buffer.file.name
 			else
 				filename := "string"
@@ -354,6 +353,6 @@ invariant
 
 	error_handler_not_void: error_handler /= Void
 	defined_values_not_void: defined_values /= Void
-	no_void_defined_value: not defined_values.has_item (Void)
+	no_void_defined_value: not defined_values.has_void_item
 
 end

@@ -5,7 +5,7 @@ note
 		"Eiffel classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -79,6 +79,9 @@ feature {NONE} -- Initialization
 			class_keyword := tokens.class_keyword
 			end_keyword := tokens.end_keyword
 			group := tokens.unknown_group
+			create status_mutex.make
+			create processing_mutex.make
+			create formal_parameter_types_mutex.make
 			named_base_class := Current
 			time_stamp := no_time_stamp
 			class_code := class_codes.class_code (a_name)
@@ -107,7 +110,7 @@ feature -- Initialization
 			reset_parsed
 			reset_preparsed
 			index := 0
-			is_marked := False
+			unprotected_is_marked := False
 		ensure
 			same_name: name = old name
 			same_id: id = old id
@@ -185,7 +188,7 @@ feature -- Initialization
 			procedures.reset
 			if attached formal_parameters as l_formal_parameters then
 				l_formal_parameters.reset
-				create l_unfolded_tuple_actual_parameters_resolver.make
+				create l_unfolded_tuple_actual_parameters_resolver.make (tokens.null_system_processor)
 				nb := l_formal_parameters.count
 				from i := 1 until i > nb loop
 					if attached l_formal_parameters.formal_parameter (i).constraint as l_constraint then
@@ -197,7 +200,7 @@ feature -- Initialization
 			if attached parent_clauses as l_parent_clauses then
 				l_parent_clauses.reset
 				if l_unfolded_tuple_actual_parameters_resolver = Void then
-					create l_unfolded_tuple_actual_parameters_resolver.make
+					create l_unfolded_tuple_actual_parameters_resolver.make (tokens.null_system_processor)
 				end
 				nb := l_parent_clauses.count
 				from i := 1 until i > nb loop
@@ -374,10 +377,88 @@ feature -- Status report
 			Result := class_code = class_codes.boolean_class_code
 		end
 
+	is_character_8_class: BOOLEAN
+			-- Is current class the "CHARACTER_8" class?
+		do
+			Result := class_code = class_codes.character_8_class_code
+		end
+
+	is_character_32_class: BOOLEAN
+			-- Is current class the "CHARACTER_32" class?
+		do
+			Result := class_code = class_codes.character_32_class_code
+		end
+
+	is_integer_8_class: BOOLEAN
+			-- Is current class the "INTEGER_8" class?
+		do
+			Result := class_code = class_codes.integer_8_class_code
+		end
+
+	is_integer_16_class: BOOLEAN
+			-- Is current class the "INTEGER_16" class?
+		do
+			Result := class_code = class_codes.integer_16_class_code
+		end
+
+	is_integer_32_class: BOOLEAN
+			-- Is current class the "INTEGER_32" class?
+		do
+			Result := class_code = class_codes.integer_32_class_code
+		end
+
+	is_integer_64_class: BOOLEAN
+			-- Is current class the "INTEGER_64" class?
+		do
+			Result := class_code = class_codes.integer_64_class_code
+		end
+
+	is_natural_8_class: BOOLEAN
+			-- Is current class the "NATURAL_8" class?
+		do
+			Result := class_code = class_codes.natural_8_class_code
+		end
+
+	is_natural_16_class: BOOLEAN
+			-- Is current class the "NATURAL_16" class?
+		do
+			Result := class_code = class_codes.natural_16_class_code
+		end
+
+	is_natural_32_class: BOOLEAN
+			-- Is current class the "NATURAL_32" class?
+		do
+			Result := class_code = class_codes.natural_32_class_code
+		end
+
+	is_natural_64_class: BOOLEAN
+			-- Is current class the "NATURAL_64" class?
+		do
+			Result := class_code = class_codes.natural_64_class_code
+		end
+
+	is_pointer_class: BOOLEAN
+			-- Is current class the "POINTER" class?
+		do
+			Result := class_code = class_codes.pointer_class_code
+		end
+
 	is_disposable_class: BOOLEAN
 			-- Is current class the "DISPOSABLE" class?
 		do
 			Result := class_code = class_codes.disposable_class_code
+		end
+
+	is_real_32_class: BOOLEAN
+			-- Is current class the "REAL_32" class?
+		do
+			Result := class_code = class_codes.real_32_class_code
+		end
+
+	is_real_64_class: BOOLEAN
+			-- Is current class the "REAL_64" class?
+		do
+			Result := class_code = class_codes.real_64_class_code
 		end
 
 	is_function_class: BOOLEAN
@@ -962,14 +1043,34 @@ feature -- Parsing status
 			-- Note that when reporting VTCT errors on a class,
 			-- `is_parsed' is set to True even if it was not
 			-- preparsed (and hence not actually parsed).
+		do
+			status_mutex.lock
+			Result := unprotected_is_parsed
+			status_mutex.unlock
+		end
+
+	is_parsed_successfully: BOOLEAN
+			-- Has current class been successfully parsed?
+		do
+			status_mutex.lock
+			Result := unprotected_is_parsed and then not unprotected_has_syntax_error
+			status_mutex.unlock
+		end
 
 	has_syntax_error: BOOLEAN
 			-- Has a fatal syntax error been detected?
+		do
+			status_mutex.lock
+			Result := unprotected_has_syntax_error
+			status_mutex.unlock
+		end
 
 	set_parsed
 			-- Set `is_parsed' to True.
 		do
-			is_parsed := True
+			status_mutex.lock
+			unprotected_is_parsed := True
+			status_mutex.unlock
 		ensure
 			is_parsed: is_parsed
 		end
@@ -977,16 +1078,21 @@ feature -- Parsing status
 	set_syntax_error
 			-- Set `has_syntax_error' to True.
 		do
-			has_syntax_error := True
+			status_mutex.lock
+			unprotected_is_parsed := True
+			unprotected_has_syntax_error := True
+			status_mutex.unlock
 		ensure
+			is_parsed: is_parsed
 			syntax_error_set: has_syntax_error
 		end
 
 	reset_parsed
 			-- Set `is_parsed' to False.
 		do
-			has_syntax_error := False
-			is_parsed := False
+			status_mutex.lock
+			unprotected_has_syntax_error := False
+			unprotected_is_parsed := False
 			class_keyword := tokens.class_keyword
 			end_keyword := tokens.end_keyword
 			external_keyword := Void
@@ -1004,12 +1110,30 @@ feature -- Parsing status
 			parent_clauses := Void
 			queries := tokens.empty_queries
 			procedures := tokens.empty_procedures
+			registered_feature_count := 0
+			registered_inline_constant_count := 0
 			leading_break := Void
 			providers := Void
+			status_mutex.unlock
 		ensure
 			not_parsed: not is_parsed
 			no_syntax_error: not has_syntax_error
 		end
+
+feature {NONE} -- Parsing status
+
+	unprotected_is_parsed: BOOLEAN
+			-- Has current class been parsed?
+			-- Note that when reporting VTCT errors on a class,
+			-- `is_parsed' is set to True even if it was not
+			-- preparsed (and hence not actually parsed).
+			--
+			-- This is not protected by a mutex in case of multi-threading.
+
+	unprotected_has_syntax_error: BOOLEAN
+			-- Has a fatal syntax error been detected?
+			--
+			-- This is not protected by a mutex in case of multi-threading.
 
 feature -- Class header
 
@@ -1048,7 +1172,7 @@ feature -- Class header
 				Result := l_class_mark.is_attached_mark
 			elseif attached universe.implicit_attachment_type_mark as l_type_mark and then l_type_mark.is_attachment_mark then
 				Result := l_type_mark.is_attached_mark
-			elseif universe.attachment_type_conformance_mode then
+			elseif current_system.attachment_type_conformance_mode then
 				Result := True
 			else
 				Result := False
@@ -1260,9 +1384,10 @@ feature -- Genericity
 			if attached formal_parameters as l_formal_parameters and then i <= l_formal_parameters.count then
 				Result := l_formal_parameters.formal_parameter (i)
 			else
+				formal_parameter_types_mutex.lock
 				l_formal_parameter_types := formal_parameter_types
 				if l_formal_parameter_types = Void then
-					create l_formal_parameter_types.make (10)
+					create l_formal_parameter_types.make (i.max (10))
 					formal_parameter_types := l_formal_parameter_types
 				end
 				nb := l_formal_parameter_types.count
@@ -1282,6 +1407,7 @@ feature -- Genericity
 					create Result.make (Void, l_name, i, Current)
 					l_formal_parameter_types.replace (Result, i)
 				end
+				formal_parameter_types_mutex.unlock
 			end
 		ensure
 			formal_parameter_type_not_void: Result /= Void
@@ -1306,7 +1432,7 @@ feature -- Genericity
 			tuple_actual_parameters_unfolded_2 := True
 		end
 
-	resolve_unfolded_tuple_actual_parameters_2 (a_context, a_constraint_context: ET_TYPE_CONTEXT)
+	resolve_unfolded_tuple_actual_parameters_2 (a_context, a_constraint_context: ET_TYPE_CONTEXT; a_system_processor: ET_SYSTEM_PROCESSOR)
 			-- Second phase of Tuple-type-unfolding in actual parameters of current class type.
 			-- Perform transformations which require conformance checking:
 			-- * Resolve the case: "FOO [A, B, C]" -> "FOO [A, TUPLE [B], C]".
@@ -1327,6 +1453,10 @@ feature {NONE} -- Genericity
 			-- Note that some entries in the list may be Void if
 			-- the corresponding formal parameter type has not
 			-- been requested yet.
+
+	formal_parameter_types_mutex: MUTEX
+			-- Mutex to get exclusive access to `formal_parameter_types'
+			-- in a multi-threaded environment
 
 feature -- Ancestors
 
@@ -1602,7 +1732,7 @@ feature -- Ancestors
 		end
 
 	add_base_class_of_parents_exported_to (a_client: ET_CLASS; a_set: DS_HASH_SET [ET_CLASS])
-			-- Add to `a_set' the base class of the parents which are exported 
+			-- Add to `a_set' the base class of the parents which are exported
 			-- to `a_client' (all conforming parents, and if `a_client' is "NONE"
 			-- then the non-conforming parents as well).
 		require
@@ -1636,32 +1766,56 @@ feature -- Ancestor building status
 
 	ancestors_built: BOOLEAN
 			-- Have `ancestors' been built?
+		do
+			status_mutex.lock
+			Result := unprotected_ancestors_built
+			status_mutex.unlock
+		end
+
+	ancestors_built_successfully: BOOLEAN
+			-- Have `ancestors' been successfully built?
+		do
+			status_mutex.lock
+			Result := unprotected_ancestors_built and then not unprotected_has_ancestors_error
+			status_mutex.unlock
+		end
 
 	has_ancestors_error: BOOLEAN
 			-- Has a fatal error occurred when building `ancestors'?
+		do
+			status_mutex.lock
+			Result := unprotected_has_ancestors_error
+			status_mutex.unlock
+		end
 
 	set_ancestors_built
 			-- Set `ancestors_built' to True.
 		do
-			ancestors_built := True
+			status_mutex.lock
+			unprotected_ancestors_built := True
+			status_mutex.unlock
 		ensure
 			ancestors_built: ancestors_built
 		end
 
 	set_ancestors_error
 			-- Set `has_ancestors_error' to True.
-		require
-			ancestors_built: ancestors_built
 		do
-			has_ancestors_error := True
+			status_mutex.lock
+			unprotected_ancestors_built := True
+			unprotected_has_ancestors_error := True
+			status_mutex.unlock
 		ensure
+			ancestors_built: ancestors_built
 			has_ancestors_error: has_ancestors_error
 		end
 
 	unset_ancestors_error
 			-- Set `has_ancestors_error' to False.
 		do
-			has_ancestors_error := False
+			status_mutex.lock
+			unprotected_has_ancestors_error := False
+			status_mutex.unlock
 		ensure
 			not_has_ancestors_error: not has_ancestors_error
 		end
@@ -1669,28 +1823,43 @@ feature -- Ancestor building status
 	reset_ancestors_built
 			-- Set `ancestors_built' to False.
 		do
-			has_ancestors_error := False
-			ancestors_built := False
+			status_mutex.lock
+			unprotected_has_ancestors_error := False
+			unprotected_ancestors_built := False
 			ancestors := tokens.empty_ancestors
 			conforming_ancestors := tokens.empty_ancestors
+			status_mutex.unlock
 		ensure
 			ancestors_not_built: not ancestors_built
 			no_ancestors_error: not has_ancestors_error
 		end
 
+feature {NONE} -- Ancestor building status
+
+	unprotected_ancestors_built: BOOLEAN
+			-- Have `ancestors' been built?
+			--
+			-- This is not protected by a mutex in case of multi-threading.
+
+	unprotected_has_ancestors_error: BOOLEAN
+			-- Has a fatal error occurred when building `ancestors'?
+			--
+			-- This is not protected by a mutex in case of multi-threading.
+
 feature -- Creation
 
-	is_creation_exported_to (a_name: ET_FEATURE_NAME; a_client: ET_CLASS): BOOLEAN
+	is_creation_exported_to (a_name: ET_FEATURE_NAME; a_client: ET_CLASS; a_system_processor: ET_SYSTEM_PROCESSOR): BOOLEAN
 			-- Is feature name listed in current creation clauses
 			-- and is it exported to `a_client'?
-			-- (Note: Use `current_system.ancestor_builder' on the classes whose ancestors
+			-- (Note: Use `a_system_processor.ancestor_builder' on the classes whose ancestors
 			-- need to be built in order to check for descendants.)
 		require
 			a_name_not_void: a_name /= Void
 			a_client_not_void: a_client /= Void
+			a_system_processor_not_void: a_system_processor /= Void
 		do
 			if attached creators as l_creators then
-				Result := l_creators.is_exported_to (a_name, a_client)
+				Result := l_creators.is_exported_to (a_name, a_client, a_system_processor)
 			end
 		end
 
@@ -1710,16 +1879,19 @@ feature -- Creation
 			end
 		end
 
-	add_creations_exported_to (a_client: ET_CLASS; a_set: DS_HASH_SET [ET_FEATURE_NAME])
+	add_creations_exported_to (a_client: ET_CLASS; a_set: DS_HASH_SET [ET_FEATURE_NAME]; a_system_processor: ET_SYSTEM_PROCESSOR)
 			-- Add to `a_set' the feature name of creation procedures which are
 			-- exported to `a_client'.
+			-- (Note: Use `a_system_processor.ancestor_builder' on the classes
+			-- whose ancestors need to be built in order to check for descendants.)
 		require
 			a_client_not_void: a_client /= Void
 			a_set_not_void: a_set /= Void
 			no_void_names: not a_set.has_void
+			a_system_processor_not_void: a_system_processor /= Void
 		do
 			if attached creators as l_creators then
-				l_creators.add_creations_exported_to (a_client, a_set)
+				l_creators.add_creations_exported_to (a_client, a_set, a_system_processor)
 			end
 		end
 
@@ -2145,6 +2317,38 @@ feature -- Features
 			end
 		end
 
+feature -- Feature registration
+
+	register_feature (a_feature: ET_FEATURE)
+			-- Register `a_feature'.
+		require
+			a_feature_not_void: a_feature /= Void
+		do
+			registered_feature_count := registered_feature_count + 1
+			a_feature.set_id (id |<< 14 | registered_feature_count)
+		ensure
+			a_feature_registered: a_feature.is_registered
+		end
+
+feature -- Feature registration
+
+	registered_feature_count: INTEGER
+			-- Number of features already registered
+
+feature -- Inline constant registration
+
+	register_inline_constant (a_constant: ET_INLINE_CONSTANT)
+			-- Register `a_constant'.
+		require
+			a_constant_not_void: a_constant /= Void
+		do
+			registered_inline_constant_count := registered_inline_constant_count + 1
+			a_constant.set_id (id |<< 14 | registered_inline_constant_count)
+		end
+
+	registered_inline_constant_count: INTEGER
+			-- Number of inline constants already registered
+
 feature -- Redeclared signature conformance checking
 
 	redeclared_signatures_checked: BOOLEAN
@@ -2168,32 +2372,56 @@ feature -- Feature flattening status
 
 	features_flattened: BOOLEAN
 			-- Have features been flattened?
+		do
+			status_mutex.lock
+			Result := unprotected_features_flattened
+			status_mutex.unlock
+		end
+
+	features_flattened_successfully: BOOLEAN
+			-- Have features been successfully flattened?
+		do
+			status_mutex.lock
+			Result := unprotected_features_flattened and then not unprotected_has_flattening_error
+			status_mutex.unlock
+		end
 
 	has_flattening_error: BOOLEAN
 			-- Has a fatal error occurred during feature flattening?
+		do
+			status_mutex.lock
+			Result := unprotected_has_flattening_error
+			status_mutex.unlock
+		end
 
 	set_features_flattened
 			-- Set `features_flattened' to True.
 		do
-			features_flattened := True
+			status_mutex.lock
+			unprotected_features_flattened := True
+			status_mutex.unlock
 		ensure
 			features_flattened: features_flattened
 		end
 
 	set_flattening_error
 			-- Set `has_flattening_error' to True.
-		require
-			features_flattened: features_flattened
 		do
-			has_flattening_error := True
+			status_mutex.lock
+			unprotected_features_flattened := True
+			unprotected_has_flattening_error := True
+			status_mutex.unlock
 		ensure
+			features_flattened: features_flattened
 			has_flattening_error: has_flattening_error
 		end
 
 	unset_flattening_error
 			-- Set `has_flattening_error' to False.
 		do
-			has_flattening_error := False
+			status_mutex.lock
+			unprotected_has_flattening_error := False
+			status_mutex.unlock
 		ensure
 			not_has_flattening_error: not has_flattening_error
 		end
@@ -2201,45 +2429,84 @@ feature -- Feature flattening status
 	reset_features_flattened
 			-- Set `features_flattened' to False.
 		do
-			has_flattening_error := False
-			features_flattened := False
+			status_mutex.lock
+			unprotected_has_flattening_error := False
+			unprotected_features_flattened := False
 			has_deferred_features := False
 			redeclared_signatures_checked := False
+			registered_feature_count := queries.declared_count + procedures.declared_count
+			status_mutex.unlock
 		ensure
 			features_not_flattened: not features_flattened
 			no_flattening_error: not has_flattening_error
 		end
 
+feature {NONE} -- Feature flattening status
+
+	unprotected_features_flattened: BOOLEAN
+			-- Have features been flattened?
+			--
+			-- This is not protected by a mutex in case of multi-threading.
+
+	unprotected_has_flattening_error: BOOLEAN
+			-- Has a fatal error occurred during feature flattening?
+			--
+			-- This is not protected by a mutex in case of multi-threading.
+
 feature -- Interface checking status
 
 	interface_checked: BOOLEAN
 			-- Has the interface of current class been checked?
+		do
+			status_mutex.lock
+			Result := unprotected_interface_checked
+			status_mutex.unlock
+		end
+
+	interface_checked_successfully: BOOLEAN
+			-- Has the interface of current class been successfully checked?
+		do
+			status_mutex.lock
+			Result := unprotected_interface_checked and then not unprotected_has_interface_error
+			status_mutex.unlock
+		end
 
 	has_interface_error: BOOLEAN
 			-- Has a fatal error occurred during interface checking?
+		do
+			status_mutex.lock
+			Result := unprotected_has_interface_error
+			status_mutex.unlock
+		end
 
 	set_interface_checked
 			-- Set `interface_checked' to True.
 		do
-			interface_checked := True
+			status_mutex.lock
+			unprotected_interface_checked := True
+			status_mutex.unlock
 		ensure
 			interface_checked: interface_checked
 		end
 
 	set_interface_error
 			-- Set `has_interface_error' to True.
-		require
-			interface_checked: interface_checked
 		do
-			has_interface_error := True
+			status_mutex.lock
+			unprotected_interface_checked := True
+			unprotected_has_interface_error := True
+			status_mutex.unlock
 		ensure
+			interface_checked: interface_checked
 			has_interface_error: has_interface_error
 		end
 
 	unset_interface_error
 			-- Set `has_interface_error' to False.
 		do
-			has_interface_error := False
+			status_mutex.lock
+			unprotected_has_interface_error := False
+			status_mutex.unlock
 		ensure
 			not_has_interface_error: not has_interface_error
 		end
@@ -2247,12 +2514,26 @@ feature -- Interface checking status
 	reset_interface_checked
 			-- Set `interface_checked' to False.
 		do
-			has_interface_error := False
-			interface_checked := False
+			status_mutex.lock
+			unprotected_has_interface_error := False
+			unprotected_interface_checked := False
+			status_mutex.unlock
 		ensure
 			interface_not_checked: not interface_checked
 			no_interface_error: not has_interface_error
 		end
+
+feature {NONE} -- Interface checking status
+
+	unprotected_interface_checked: BOOLEAN
+			-- Has the interface of current class been checked?
+			--
+			-- This is not protected by a mutex in case of multi-threading.
+
+	unprotected_has_interface_error: BOOLEAN
+			-- Has a fatal error occurred during interface checking?
+			--
+			-- This is not protected by a mutex in case of multi-threading.
 
 feature -- Suppliers/Providers
 
@@ -2334,32 +2615,56 @@ feature -- Implementation checking status
 			-- Has the implementation of current class been checked?
 			-- Immediate and redefined (and possibly inherited when in flat mode)
 			-- features and invariant have been checked.
+		do
+			status_mutex.lock
+			Result := unprotected_implementation_checked
+			status_mutex.unlock
+		end
+
+	implementation_checked_successfully: BOOLEAN
+			-- Has the implementation of current class been successfully checked?
+		do
+			status_mutex.lock
+			Result := unprotected_implementation_checked and then not unprotected_has_implementation_error
+			status_mutex.unlock
+		end
 
 	has_implementation_error: BOOLEAN
 			-- Has a fatal error occurred during implementation checking?
+		do
+			status_mutex.lock
+			Result := unprotected_has_implementation_error
+			status_mutex.unlock
+		end
 
 	set_implementation_checked
 			-- Set `implementation_checked' to True.
 		do
-			implementation_checked := True
+			status_mutex.lock
+			unprotected_implementation_checked := True
+			status_mutex.unlock
 		ensure
 			implementation_checked: implementation_checked
 		end
 
 	set_implementation_error
 			-- Set `has_implementation_error' to True.
-		require
-			implementation_checked: implementation_checked
 		do
-			has_implementation_error := True
+			status_mutex.lock
+			unprotected_implementation_checked := True
+			unprotected_has_implementation_error := True
+			status_mutex.unlock
 		ensure
+			implementation_checked: implementation_checked
 			has_implementation_error: has_implementation_error
 		end
 
 	unset_implementation_error
 			-- Set `has_implementation_error' to False.
 		do
-			has_implementation_error := False
+			status_mutex.lock
+			unprotected_has_implementation_error := False
+			status_mutex.unlock
 		ensure
 			not_has_implementation_error: not has_implementation_error
 		end
@@ -2367,14 +2672,45 @@ feature -- Implementation checking status
 	reset_implementation_checked
 			-- Set `implementation_checked' to False.
 		do
-			has_implementation_error := False
-			implementation_checked := False
+			status_mutex.lock
+			unprotected_has_implementation_error := False
+			unprotected_implementation_checked := False
 			suppliers := Void
+			status_mutex.unlock
 		ensure
 			implementation_not_checked: not implementation_checked
 			no_implementation_error: not has_implementation_error
 			suppliers_reset: suppliers = Void
 		end
+
+feature {ET_IMPLEMENTATION_CHECKER, ET_FEATURE_CHECKER} -- Implementation checking status
+
+	is_checking_implementation: BOOLEAN
+			-- Is the implementation of current class being checked?
+			-- (This is to avoid infinite loop in ET_IMPLEMENTATION_CHECKER
+			-- in case of a cycle in the parents.)
+
+	set_checking_implementation (b: BOOLEAN)
+			-- Set `is_checking_implementation' to `b'.
+		do
+			is_checking_implementation := b
+		ensure
+			checking_implementation_set: is_checking_implementation = b
+		end
+
+feature {NONE} -- Implementation checking status
+
+	unprotected_implementation_checked: BOOLEAN
+			-- Has the implementation of current class been checked?
+			-- Immediate and redefined (and possibly inherited when in flat mode)
+			-- features and invariant have been checked.
+			--
+			-- This is not protected by a mutex in case of multi-threading.
+
+	unprotected_has_implementation_error: BOOLEAN
+			-- Has a fatal error occurred during implementation checking?
+			--
+			-- This is not protected by a mutex in case of multi-threading.
 
 feature -- Invariant
 
@@ -2548,5 +2884,6 @@ invariant
 	no_void_supplier: attached suppliers as l_suppliers implies not l_suppliers.has_void
 	no_void_provider: attached providers as l_providers implies not l_providers.has_void
 	tuple_constraint_position: tuple_constraint_position /= 0 implies attached formal_parameters as l_formal_parameters and then (tuple_constraint_position >= 1 and tuple_constraint_position <= l_formal_parameters.count)
+	formal_parameter_types_mutex_not_void: formal_parameter_types_mutex /= Void
 
 end

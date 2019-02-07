@@ -1,7 +1,5 @@
 note
-	description: "[
-		Exception manager factory.
-		]"
+	description: "Exception manager factory."
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -16,13 +14,14 @@ feature -- Access
 	exception_manager: EXCEPTION_MANAGER
 			-- Exception manager
 		external
-			"built_in"
+			"built_in static"
 		ensure
+			instance_free: class
 			exception_manager_not_void: Result /= Void
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

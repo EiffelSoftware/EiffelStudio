@@ -1,16 +1,15 @@
-note
-	description:
-		"[
-		Binary search trees; left child item is less than current item,
-		right child item is greater
+﻿note
+	description: "[
+			Binary search trees; left child item is less than current item,
+			right child item is greater
 		]"
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	names: binary_search_tree, tree;
-	representation: recursive, array;
-	access: cursor, membership;
-	contents: generic;
+	names: binary_search_tree, tree
+	representation: recursive, array
+	access: cursor, membership
+	contents: generic
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -46,7 +45,6 @@ feature {NONE} -- Initialization
 			is_root: is_root
 			is_leaf: is_leaf
 		end
-
 
 feature -- Access
 
@@ -274,7 +272,10 @@ feature -- Element change
 				if i /= Void and then v < i then
 					c := left_child
 					if c = Void then
-						c := new_tree
+						create c.make (item)
+						if object_comparison then
+							c.compare_objects
+						end
 						put_left_child (c)
 						c.replace (v)
 					else
@@ -283,7 +284,10 @@ feature -- Element change
 				else
 					c := right_child
 					if c = Void then
-						c := new_tree
+						create c.make (item)
+						if object_comparison then
+							c.compare_objects
+						end
 						put_right_child (c)
 						c.replace (v)
 					else
@@ -330,7 +334,7 @@ feature -- Transformation
 				temp.extend (heap.item)
 				heap.remove
 			end
-			replace (temp.item ((temp.count) // 2))
+			replace (temp.item (temp.count // 2))
 			fill_from_sorted_special (temp, 0, temp.upper)
 		ensure
 			is_sorted: sorted
@@ -575,7 +579,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

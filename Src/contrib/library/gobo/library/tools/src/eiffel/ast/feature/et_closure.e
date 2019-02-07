@@ -5,7 +5,7 @@ note
 		"Eiffel closures, e.g. features, invariants, inline agents"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,6 +15,38 @@ deferred class ET_CLOSURE
 inherit
 
 	ANY
+
+feature -- Status report
+
+	is_once: BOOLEAN
+			-- Is current closure a once feature?
+		do
+			-- Result := False
+		end
+
+	is_once_per_process: BOOLEAN
+			-- Is current closure a once-per-process feature?
+		do
+			-- Result := False
+		ensure
+			is_once: Result implies is_once
+		end
+
+	is_once_per_thread: BOOLEAN
+			-- Is current closure a once-per-thread feature?
+		do
+			-- Result := False
+		ensure
+			is_once: Result implies is_once
+		end
+
+	is_once_per_object: BOOLEAN
+			-- Is current closure a once-per-object feature?
+		do
+			-- Result := False
+		ensure
+			is_once: Result implies is_once
+		end
 
 feature -- Access
 
@@ -27,6 +59,11 @@ feature -- Access
 	arguments: detachable ET_FORMAL_ARGUMENT_LIST
 			-- Formal arguments;
 			-- Void if no arguments
+		do
+		end
+
+	first_indexing: detachable ET_INDEXING_LIST
+			-- Note clause at the beginning of the closure
 		do
 		end
 

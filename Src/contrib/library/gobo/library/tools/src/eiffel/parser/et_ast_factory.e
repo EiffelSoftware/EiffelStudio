@@ -5,7 +5,7 @@ note
 		"Eiffel Abstract Syntax Tree factories"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -130,7 +130,8 @@ feature -- Eiffel keywords
 			a_scanner_not_void: a_scanner /= Void
 			last_literal_not_empty: a_scanner.last_literal_count > 0
 		do
-			Result := tokens.class_keyword
+			create Result.make_class
+			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
 	new_convert_keyword (a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_KEYWORD
@@ -1674,6 +1675,15 @@ feature -- AST nodes
 			end
 		end
 
+	new_class_assertion (a_class_keyword: detachable ET_KEYWORD): detachable ET_CLASS_ASSERTION
+			-- New 'class' assertion
+		do
+			create Result.make
+			if a_class_keyword /= Void then
+				Result.set_class_keyword (a_class_keyword)
+			end
+		end
+
 	new_class_type (a_type_mark: detachable ET_TYPE_MARK; a_name: detachable ET_CLASS_NAME;
 		a_base_class: detachable ET_NAMED_CLASS): detachable ET_CLASS_TYPE
 			-- New Eiffel class type
@@ -1887,7 +1897,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_create_expression (a_create: detachable ET_KEYWORD; a_type: detachable ET_TARGET_TYPE;
+	new_create_expression (a_create: detachable ET_KEYWORD; a_region: detachable ET_CREATION_REGION; a_type: detachable ET_TARGET_TYPE;
 		a_call: detachable ET_QUALIFIED_CALL): detachable ET_CREATE_EXPRESSION
 			-- New create expression
 		do
@@ -1895,11 +1905,14 @@ feature -- AST nodes
 				create Result.make (a_type, a_call)
 				if a_create /= Void and then not a_create.position.is_null then
 					Result.set_create_keyword (a_create)
+					if a_region /= Void then
+						Result.set_creation_region (a_region)
+					end
 				end
 			end
 		end
 
-	new_create_instruction (a_create: detachable ET_KEYWORD; a_type: detachable ET_TARGET_TYPE;
+	new_create_instruction (a_create: detachable ET_KEYWORD; a_region: detachable ET_CREATION_REGION; a_type: detachable ET_TARGET_TYPE;
 		a_target: detachable ET_WRITABLE; a_call: detachable ET_QUALIFIED_CALL): detachable ET_CREATE_INSTRUCTION
 			-- New create instruction
 		do
@@ -1907,6 +1920,24 @@ feature -- AST nodes
 				create Result.make (a_type, a_target, a_call)
 				if a_create /= Void and then not a_create.position.is_null then
 					Result.set_create_keyword (a_create)
+					if a_region /= Void then
+						Result.set_creation_region (a_region)
+					end
+				end
+			end
+		end
+
+	new_creation_region (l: detachable ET_SYMBOL; a_name: detachable ET_CLASS_NAME;
+		r: detachable ET_SYMBOL): detachable ET_CREATION_REGION
+			-- New creation region
+		do
+			if a_name /= Void then
+				create Result.make (a_name)
+				if l /= Void then
+					Result.set_left_symbol (l)
+				end
+				if r /= Void then
+					Result.set_right_symbol (r)
 				end
 			end
 		end
@@ -2125,6 +2156,25 @@ feature -- AST nodes
 			if a_compound /= Void then
 				Result := a_compound
 				Result.set_keyword (tokens.else_keyword)
+			end
+		end
+
+	new_elseif_expression (a_conditional: detachable ET_CONDITIONAL;
+		a_then_keyword: detachable ET_KEYWORD; a_then_expression: detachable ET_EXPRESSION): detachable ET_ELSEIF_EXPRESSION
+			-- New 'elseif' part of 'if' expression
+		do
+			if a_conditional /= Void and a_then_expression /= Void then
+				create Result.make (a_conditional, a_then_expression)
+			end
+		end
+
+	new_elseif_expression_list (nb: INTEGER): detachable ET_ELSEIF_EXPRESSION_LIST
+			-- New 'elseif' expression list with capacity `nb'
+		require
+			nb_positive: nb >= 0
+		do
+			if nb > 0 then
+				create Result.make_with_capacity (nb)
 			end
 		end
 
@@ -2440,10 +2490,21 @@ feature -- AST nodes
 			end
 		end
 
+	new_if_expression (a_conditional: detachable ET_CONDITIONAL; a_then_keyword: detachable ET_KEYWORD; a_then_expression: detachable ET_EXPRESSION;
+		a_elseif_parts: detachable ET_ELSEIF_EXPRESSION_LIST; a_else_keyword: detachable ET_KEYWORD; a_else_expression: detachable ET_EXPRESSION;
+		a_end_keyword: detachable ET_KEYWORD): detachable ET_IF_EXPRESSION
+			-- New 'if' expression
+		do
+			if a_conditional /= Void and a_then_expression /= Void and a_else_expression /= Void then
+				create Result.make (a_conditional, a_then_expression, a_else_expression)
+				Result.set_elseif_parts (a_elseif_parts)
+			end
+		end
+
 	new_if_instruction (a_conditional: detachable ET_CONDITIONAL; a_then_compound: detachable ET_COMPOUND;
 		an_elseif_parts: detachable ET_ELSEIF_PART_LIST; an_else_compound: detachable ET_COMPOUND;
 		an_end: detachable ET_KEYWORD): detachable ET_IF_INSTRUCTION
-			-- New if instruction
+			-- New 'if' instruction
 		do
 			if a_conditional /= Void then
 				create Result.make (a_conditional, a_then_compound)
@@ -2455,7 +2516,9 @@ feature -- AST nodes
 	new_indexing (a_terms: detachable ET_INDEXING_TERM_LIST): detachable ET_INDEXING
 			-- New indexing clause
 		do
-			-- Do nothing.
+			if a_terms /= Void then
+				create Result.make (a_terms)
+			end
 		end
 
 	new_indexing_semicolon (an_indexing: detachable ET_INDEXING_ITEM; a_semicolon: detachable ET_SYMBOL): detachable ET_INDEXING_ITEM
@@ -2475,7 +2538,7 @@ feature -- AST nodes
 		require
 			nb_positive: nb >= 0
 		do
-			-- Do nothing.
+			create Result.make_with_capacity (nb)
 		end
 
 	new_indexings (an_indexing: detachable ET_KEYWORD; nb: INTEGER): detachable ET_INDEXING_LIST
@@ -2483,7 +2546,10 @@ feature -- AST nodes
 		require
 			nb_positive: nb >= 0
 		do
-			-- Do nothing.
+			create Result.make_with_capacity (nb)
+			if an_indexing /= Void then
+				Result.set_indexing_keyword (an_indexing)
+			end
 		end
 
 	new_infix_and_name (an_infix: detachable ET_KEYWORD; an_operator: detachable ET_MANIFEST_STRING): detachable ET_INFIX_NAME
@@ -3175,7 +3241,7 @@ feature -- AST nodes
 		do
 			create Result.make_with_capacity (nb)
 		end
-		
+
 	new_parent_semicolon (a_parent: detachable ET_PARENT; a_semicolon: detachable ET_SYMBOL): detachable ET_PARENT_ITEM
 			-- New parent-semicolon
 		do
@@ -3495,7 +3561,9 @@ feature -- AST nodes
 	new_tagged_indexing (a_tag: detachable ET_TAG; a_terms: detachable ET_INDEXING_TERM_LIST): detachable ET_TAGGED_INDEXING
 			-- New tagged indexing clause
 		do
-			-- Do nothing.
+			if a_tag /= Void and a_terms /= Void then
+				create Result.make (a_tag, a_terms)
+			end
 		end
 
 	new_target_type (l: detachable ET_SYMBOL; a_type: detachable ET_TYPE; r: detachable ET_SYMBOL): detachable ET_TARGET_TYPE

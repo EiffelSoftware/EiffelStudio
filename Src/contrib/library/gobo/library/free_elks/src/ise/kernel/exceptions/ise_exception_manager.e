@@ -2,7 +2,7 @@ note
 	description: "[
 		Exception manager. 
 		The manager handles all common operations of exception mechanism and interaction with the ISE runtime.
-		]"
+	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -75,11 +75,8 @@ feature -- Status setting
 
 	catch (a_exception: TYPE [detachable EXCEPTION])
 			-- Set type of `a_exception' `is_ignored'.
-		local
-			l_type: INTEGER
 		do
-			l_type := a_exception.type_id
-			ignored_exceptions.remove (l_type)
+			ignored_exceptions.remove (a_exception.type_id)
 		end
 
 	set_is_ignored (a_exception: TYPE [detachable EXCEPTION]; a_ignored: BOOLEAN)
@@ -297,6 +294,8 @@ feature {NONE} -- Access
 			-- which is used to create exception object later.
 		do
 			Result := exception_data_cell.item
+		ensure
+			instance_free: class
 		end
 
 feature {NONE} -- Element change
@@ -306,6 +305,7 @@ feature {NONE} -- Element change
 		do
 			last_exception_cell.put (a_last_exception)
 		ensure
+			instance_free: class
 			last_exception_set: last_exception_cell.item = a_last_exception
 		end
 
@@ -329,6 +329,8 @@ feature {NONE} -- Element change
 					l_exception.set_type_name (eclass)
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 feature {NONE} -- Implementation, ignoring
@@ -337,6 +339,8 @@ feature {NONE} -- Implementation, ignoring
 			-- Ignored exceptions
 		once
 			create Result.make (0)
+		ensure
+			instance_free: class
 		end
 
 	unignorable_exceptions: HASH_TABLE [INTEGER, INTEGER]
@@ -347,6 +351,8 @@ feature {NONE} -- Implementation, ignoring
 			create Result.make (1)
 			l_type := ({VOID_TARGET}).type_id
 			Result.force (l_type, l_type)
+		ensure
+			instance_free: class
 		end
 
 	unraisable_exceptions: HASH_TABLE [INTEGER, INTEGER]
@@ -359,6 +365,39 @@ feature {NONE} -- Implementation, ignoring
 			Result.force (l_type, l_type)
 			l_type := ({OLD_VIOLATION}).type_id
 			Result.force (l_type, l_type)
+		ensure
+			instance_free: class
+		end
+
+feature {NONE} -- Cells
+
+	exception_data_cell: CELL [detachable TUPLE [code: INTEGER; signal_code: INTEGER; error_code: INTEGER; tag, recipient, eclass: STRING; rf_routine, rf_class: STRING; trace: STRING; line_number: INTEGER; is_invariant_entry: BOOLEAN]]
+			-- Cell to hold current exception data
+		once
+			create Result.put (Void)
+		ensure
+			instance_free: class
+		end
+
+	last_exception_cell: CELL [detachable EXCEPTION]
+			-- Cell to hold last exception
+		once
+			create Result.put (Void)
+		ensure
+			instance_free: class
+		end
+
+	no_memory_exception_object_cell: CELL [NO_MORE_MEMORY]
+			-- No more memory exception object.
+		local
+			l_nomem: NO_MORE_MEMORY
+		once
+				-- Reserve memory for no more memory exception object.
+			create l_nomem
+			l_nomem.set_exception_trace (create {STRING_8}.make (4096))
+			create Result.put (l_nomem)
+		ensure
+			instance_free: class
 		end
 
 feature {NONE} -- Implementation
@@ -371,34 +410,9 @@ feature {NONE} -- Implementation
 			else
 				Result := True
 			end
+		ensure
+			instance_free: class
 		end
-
-feature {NONE} -- Cells
-
-	exception_data_cell: CELL [detachable TUPLE [code: INTEGER; signal_code: INTEGER; error_code: INTEGER; tag, recipient, eclass: STRING; rf_routine, rf_class: STRING; trace: STRING; line_number: INTEGER; is_invariant_entry: BOOLEAN]]
-			-- Cell to hold current exception data
-		once
-			create Result.put (Void)
-		end
-
-	last_exception_cell: CELL [detachable EXCEPTION]
-			-- Cell to hold last exception
-		once
-			create Result.put (Void)
-		end
-
-	no_memory_exception_object_cell: CELL [NO_MORE_MEMORY]
-			-- No more memory exception object.
-		local
-			l_nomem: NO_MORE_MEMORY
-		once
-				-- Reserve memory for no more memory exception object.
-			create l_nomem
-			l_nomem.set_exception_trace (create {STRING_8}.make (4096))
-			create Result.put (l_nomem)
-		end
-
-feature {NONE} -- Implementation
 
 	exception_from_data: detachable EXCEPTION
 			-- Create an exception object `exception_data'
@@ -448,6 +462,8 @@ feature {NONE} -- Implementation
 				e.set_type_name (l_data.eclass)
 				Result := e
 			end
+		ensure
+			instance_free: class
 		end
 
 	once_raise (a_exception: EXCEPTION)
@@ -473,25 +489,24 @@ feature {NONE} -- Implementation
 				end
 				developer_raise (a_exception.code, p_meaning, p_message)
 			end
+		ensure
+			instance_free: class
 		end
 
 	frozen init_exception_manager
 			-- Call once routines to create objects beforehand,
 			-- in case it goes into critical session (Stack overflow, no memory etc.)
 			-- The creations doesn't fail.
-		local
-			arr: like ignored_exceptions
-			l_data: like exception_data_cell
-			l_ex: like last_exception_cell
-			l_nomem: like no_memory_exception_object_cell
 		do
-			arr := ignored_exceptions
-			arr := unignorable_exceptions
-			arr := unraisable_exceptions
-			l_data := exception_data_cell
-			l_ex := last_exception_cell
+			ignored_exceptions.do_nothing
+			unignorable_exceptions.do_nothing
+			unraisable_exceptions.do_nothing
+			exception_data_cell.do_nothing
+			last_exception_cell.do_nothing
 				-- Reserve memory for no more memory exception object.
-			l_nomem := no_memory_exception_object_cell
+			no_memory_exception_object_cell.do_nothing
+		ensure
+			instance_free: class
 		end
 
 	frozen free_preallocated_trace
@@ -502,12 +517,16 @@ feature {NONE} -- Implementation
 			if e /= Void then
 				e.set_description (Void)
 			end
+		ensure
+			instance_free: class
 		end
 
 	developer_raise (a_code: INTEGER; a_meaning, a_message: POINTER)
 			-- Raise an exception
 		external
-			"built_in"
+			"built_in static"
+		ensure
+			instance_free: class
 		end
 
 	frozen in_rescue: BOOLEAN
@@ -516,18 +535,20 @@ feature {NONE} -- Implementation
 			"C use %"eif_except.h%""
 		alias
 			"eif_is_in_rescue"
+		ensure
+			instance_free: class
 		end
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

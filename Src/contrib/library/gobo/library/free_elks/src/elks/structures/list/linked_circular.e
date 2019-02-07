@@ -1,12 +1,12 @@
-note
+﻿note
 	description: "Circular chains implemented as linked lists"
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	names: linked_circular, ring, sequence;
-	representation: linked;
-	access: index, cursor, membership;
-	contents: generic;
+	names: linked_circular, ring, sequence
+	representation: linked
+	access: index, cursor, membership
+	contents: generic
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -43,14 +43,29 @@ class LINKED_CIRCULAR [G] inherit
 
 create
 
-	make
+	make,
+	make_from_iterable
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make
 			-- Create an empty list
 		do
 			create list.make
+		end
+
+	make_from_iterable (other: ITERABLE [G])
+			-- Create a circular chain with all items obtained from `other`.
+		local
+			l: like list
+		do
+			create l.make
+			list := l
+			across
+				other as o
+			loop
+				l.extend (o.item)
+			end
 		end
 
 feature -- Measurement
@@ -162,7 +177,7 @@ feature -- Status report
 				if starter = 0 then
 					Result := list.isfirst
 				else
-					Result := (standard_index = starter)
+					Result := standard_index = starter
 				end
 			end
 		end
@@ -171,10 +186,10 @@ feature -- Status report
 			-- Is cursor on last item?
 		do
 			if not is_empty then
-				if (starter = 0) or (starter = 1) then
+				if starter = 0 or starter = 1 then
 					Result := standard_islast
 				else
-					Result := (standard_index = starter - 1)
+					Result := standard_index = starter - 1
 				end
 			end
 		end
@@ -270,6 +285,7 @@ feature {LINKED_CIRCULAR} -- Implementation
 			-- A newly created instance of the same type.
 			-- This feature may be redefined in descendants so as to
 			-- produce an adequately allocated and initialized object.
+		obsolete "Use explicit creation instead. See also explanations for `duplicate`. [2018-11-30]"
 		do
 			create Result.make
 		end
@@ -357,7 +373,7 @@ feature {LINKED_CIRCULAR} -- Implementation
 			end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

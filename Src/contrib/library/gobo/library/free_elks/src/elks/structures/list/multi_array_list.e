@@ -1,16 +1,16 @@
-note
+﻿note
 	description: "[
 		Lists implemented as sequences of arrays, the last of which may
 		be non-full. No limit on size (a new array is allocated if list
 		outgrows its initial allocation).
-		]"
+	]"
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	names: list, sequence;
-	representation: array, linked;
-	access: index, cursor, membership;
-	contents: generic;
+	names: list, sequence
+	representation: array, linked
+	access: index, cursor, membership
+	contents: generic
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -25,7 +25,7 @@ class MULTI_ARRAY_LIST [G] inherit
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (b: INTEGER)
 			-- Create an empty list, setting block_size to b
@@ -140,14 +140,15 @@ feature -- Cursor movement
 			if not is_empty then
 				current_array := active.item
 				current_array.forth
-				if current_array.after then
-					if active /= last_element then
-						a := active.right
-						if a /= Void then
-							active := a
-						end
-						active.item.start
+				if
+					current_array.after and then
+					active /= last_element
+				then
+					a := active.right
+					if a /= Void then
+						active := a
 					end
+					active.item.start
 				end
 			end
 			index := index + 1
@@ -162,14 +163,15 @@ feature -- Cursor movement
 			if not is_empty then
 				current_array := active.item
 				current_array.back
-				if current_array.before then
-					if active /= first_element then
-						a := active.left
-						if a /= Void then
-							active := a
-						end
-						active.item.finish
+				if
+					current_array.before and then
+					active /= first_element
+				then
+					a := active.left
+					if a /= Void then
+						active := a
 					end
+					active.item.finish
 				end
 			end
 			index := index - 1
@@ -198,7 +200,6 @@ feature -- Cursor movement
 					end
 				end
 				if cell = Void then
-					cell := last_element
 					current_array.finish
 					current_array.forth
 				else
@@ -227,7 +228,6 @@ feature -- Cursor movement
 					end
 				end
 				if cell = Void then
-					cell := first_element
 					current_array.go_i_th (0)
 				else
 					active := cell
@@ -365,8 +365,10 @@ feature -- Element change
 		local
 			cell: like first_element
 			current_array: ARRAYED_LIST [G]
+			new_array: ARRAYED_LIST [G]
 			pos, cut: INTEGER
 			l: detachable like first_element
+			i, n: like {ARRAYED_LIST [G]}.count
 		do
 			current_array := active_array
 			check is_empty implies after end
@@ -384,7 +386,18 @@ feature -- Element change
 					pos := current_array.index
 					current_array.go_i_th (block_size // 2 + 1)
 					cut := index
-					cell := new_cell (current_array.duplicate (count))
+					from
+						i := current_array.index
+						n := if current_array.after then 0 else count.min (current_array.count - i + 1) end
+						create new_array.make (n)
+					until
+						n <= 0
+					loop
+						new_array.extend (current_array [i])
+						i := i + 1
+						n := n - 1
+					end
+					cell := new_cell (new_array)
 					cell.put_right (active.right)
 					cell.put_left (active)
 					if last_element = active then
@@ -501,9 +514,8 @@ feature -- Removal
 	prune_all (v: like item)
 		local
 			cell: detachable like active
-			new_active: detachable like active
+			new_active: like active
 			array: ARRAYED_LIST [G]
-			e: detachable like first_element
 		do
 			from
 				cell := first_element
@@ -521,19 +533,17 @@ feature -- Removal
 				count := count + array.count
 				if array.is_empty then
 					if cell = first_element then
-						if cell /= last_element then
-							e := cell.right
-							if e /= Void then
+						if cell = last_element then
+							cell := Void
+						else
+							if attached cell.right as e then
 								first_element := e
 							end
 							cell := first_element
 							cell.forget_left
-						else
-							cell := Void
 						end
 					elseif cell = last_element then
-						e := cell.left
-						if e /= Void then
+						if attached cell.left as e then
 							last_element := e
 						end
 						last_element.forget_right
@@ -542,11 +552,11 @@ feature -- Removal
 							-- `put_left' modifies `cell.right', so we need to remeber it
 							-- as it will become the new value for `cell'.
 						new_active := cell.right
-						if new_active /= Void then
-							e := cell.left
-							if e /= Void then
-								new_active.put_left (e)
-							end
+						if
+							attached new_active and then
+							attached cell.left as e
+						then
+							new_active.put_left (e)
 						end
 						cell := new_active
 					end
@@ -563,6 +573,12 @@ feature -- Duplication
 	duplicate (n: INTEGER): like Current
 			-- Copy of sub-list beginning at cursor position
 			-- and having min (`n', `count' - `index' + 1) items
+		obsolete
+			"[
+				Create a new container explicitly using `make_from_iterable` if available.
+				Otherwise, replace a call to the feature with code that creates and initializes container.
+				[2018-11-30]
+			]"
 		local
 			pos: CURSOR
 			counter: INTEGER
@@ -586,6 +602,7 @@ feature {MULTI_ARRAY_LIST} -- Implementation
 			-- A newly created instance of the same type.
 			-- This feature may be redefined in descendants so as to
 			-- produce an adequately allocated and initialized object.
+		obsolete "Use explicit creation instead. See also explanations for `duplicate`. [2018-11-30]"
 		do
 			create Result.make (block_size)
 		end
@@ -616,7 +633,7 @@ invariant
 	extendible_definition: extendible
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

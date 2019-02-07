@@ -3,8 +3,6 @@ note
 	library: "EiffelBase: Library of reusable components for Eiffel."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -59,7 +57,7 @@ feature -- Access
 	step: INTEGER
 			-- <Precursor>
 
-	new_cursor: READABLE_INDEXABLE_ITERATION_CURSOR [G]
+	new_cursor: like Current
 			-- <Precursor>
 		do
 			Result := twin
@@ -188,7 +186,7 @@ feature {TYPED_INDEXABLE_ITERATION_CURSOR} -- Access
 			-- <Precursor>
 
 ;note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

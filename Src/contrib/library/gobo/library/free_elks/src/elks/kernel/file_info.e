@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Internal file information"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
@@ -160,7 +160,7 @@ feature -- Access
 			-- File name as a STRING_8 instance. The value might be truncated
 			-- from the original name used to create the current FILE instance.
 		obsolete
-			"Use `file_entry' to ensure that filenames are not truncated."
+			"Use `file_entry' to ensure that filenames are not truncated. [2017-05-31]"
 		do
 			if attached internal_file_name as l_name then
 				Result := l_name.as_string_8
@@ -186,47 +186,43 @@ feature {NATIVE_STRING_HANDLER} -- Access
 		local
 			u: UTF_CONVERTER
 			l_c_string: C_STRING
-			l_ptr: detachable MANAGED_POINTER
-			l_count: INTEGER
 		do
-			l_ptr := a_ptr
+			Result := a_ptr
 			if {PLATFORM}.is_windows then
 					-- We generate a UTF-16 encoding of the filename
 				if attached {READABLE_STRING_32} a_name then
-					if l_ptr = Void then
-						create l_ptr.make ((a_name.count + 1) * 2)
+					if attached Result then
+						Result.resize ((a_name.count + 1) * 2)
 					else
-						l_ptr.resize ((a_name.count + 1) * 2)
+						create Result.make ((a_name.count + 1) * 2)
 					end
-					u.escaped_utf_32_substring_into_utf_16_0_pointer (a_name, 1, a_name.count, l_ptr, 0, Void)
+					u.escaped_utf_32_substring_into_utf_16_0_pointer (a_name, 1, a_name.count, Result, 0, Void)
 				else
 						-- Our Windows API only handles Unicode characters, no encoding, so
 						-- we are going to convert `a_name' from the local code page encoding
 						-- to Unicode and then use the resulting pointer for `a_ptr'.
 					create l_c_string.make (a_name)
-					if l_ptr = Void then
-						create l_ptr.make (multi_byte_to_utf_16 (l_c_string.item, default_pointer, 0))
+					if attached Result then
+						Result.resize (multi_byte_to_utf_16 (l_c_string.item, default_pointer, 0))
 					else
-						l_ptr.resize (multi_byte_to_utf_16 (l_c_string.item, default_pointer, 0))
+						create Result.make (multi_byte_to_utf_16 (l_c_string.item, default_pointer, 0))
 					end
-					l_count := multi_byte_to_utf_16 (l_c_string.item, l_ptr.item, l_ptr.count)
+					multi_byte_to_utf_16 (l_c_string.item, Result.item, Result.count).do_nothing
 				end
 			else
-				if l_ptr = Void then
-					create l_ptr.make (a_name.count + 1)
+				if attached Result then
+					Result.resize (a_name.count + 1)
 				else
-					l_ptr.resize (a_name.count + 1)
+					create Result.make (a_name.count + 1)
 				end
 				if attached {READABLE_STRING_32} a_name then
 						-- We generate a UTF-8 encoding of the filename
-					u.escaped_utf_32_substring_into_utf_8_0_pointer (a_name, 1, a_name.count, l_ptr, 0, Void)
+					u.escaped_utf_32_substring_into_utf_8_0_pointer (a_name, 1, a_name.count, Result, 0, Void)
 				else
 						-- We leave the sequence as is.
-					create l_c_string.make_shared_from_pointer_and_count (l_ptr.item, a_name.count)
-					l_c_string.set_string (a_name)
+					;(create {C_STRING}.make_shared_from_pointer_and_count (Result.item, a_name.count)).set_string (a_name)
 				end
 			end
-			Result := l_ptr
 		end
 
 	pointer_to_file_name_32 (a_ptr: POINTER): STRING_32
@@ -478,7 +474,7 @@ feature -- Conversion
 	to_unix_file_info: UNIX_FILE_INFO
 			-- Convert current to old format UNIX_FILE_INFO for backward compatibility.
 		obsolete
-			"Use `FILE_INFO' as type instead of `UNIX_FILE_INFO'."
+			"Use `FILE_INFO' as type instead of `UNIX_FILE_INFO'. [2017-05-31]"
 		do
 			create Result.make
 			if attached internal_file_name as l_name then
@@ -625,7 +621,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

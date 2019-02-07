@@ -5,7 +5,7 @@ note
 		"Eiffel AST processors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -319,6 +319,13 @@ feature {ET_AST_NODE} -- Processing
 		deferred
 		end
 
+	process_class_assertion (a_assertion: ET_CLASS_ASSERTION)
+			-- Process `a_assertion'.
+		require
+			a_assertion_not_void: a_assertion /= Void
+		deferred
+		end
+
 	process_class_type (a_type: ET_CLASS_TYPE)
 			-- Process `a_type'.
 		require
@@ -445,6 +452,13 @@ feature {ET_AST_NODE} -- Processing
 		deferred
 		end
 
+	process_creation_region (a_region: ET_CREATION_REGION)
+			-- Process `a_region'.
+		require
+			a_region_not_void: a_region /= Void
+		deferred
+		end
+
 	process_creator (a_list: ET_CREATOR)
 			-- Process `a_list'.
 		require
@@ -563,6 +577,20 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_feature'.
 		require
 			a_feature_not_void: a_feature /= Void
+		deferred
+		end
+
+	process_elseif_expression (an_elseif_part: ET_ELSEIF_EXPRESSION)
+			-- Process `an_elseif_part'.
+		require
+			an_elseif_part_not_void: an_elseif_part /= Void
+		deferred
+		end
+
+	process_elseif_expression_list (a_list: ET_ELSEIF_EXPRESSION_LIST)
+			-- Process `a_list'.
+		require
+			a_list_not_void: a_list /= Void
 		deferred
 		end
 
@@ -782,6 +810,13 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_identifier'.
 		require
 			an_identifier_not_void: an_identifier /= Void
+		deferred
+		end
+
+	process_if_expression (a_expression: ET_IF_EXPRESSION)
+			-- Process `a_expression'.
+		require
+			a_expression_not_void: a_expression /= Void
 		deferred
 		end
 

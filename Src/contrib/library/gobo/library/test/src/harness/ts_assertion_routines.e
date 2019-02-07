@@ -5,7 +5,7 @@ note
 		"Assertion routines"
 
 	library: "Gobo Eiffel Test Library"
-	copyright: "Copyright (c) 2000-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -731,6 +731,118 @@ feature {TS_TEST_HANDLER} -- Files
 			assertions.set_exception_on_error (l_fatal)
 		end
 
+	assert_file_equal_to_string (a_tag: STRING; a_filename, a_string: STRING)
+			-- Assert that there is no difference between the
+			-- content of the file named `a_filename' and `a_string'.
+			-- (Expand environment variables in filename.)
+			-- Violation of this assertion is not fatal.
+		require
+			a_tag_not_void: a_tag /= Void
+			a_filename_not_void: a_filename /= Void
+			a_filename_not_empty: a_filename.count > 0
+			a_string_not_void: a_string /= Void
+		local
+			a_file: KL_TEXT_INPUT_FILE
+			a_message: detachable STRING
+			done: BOOLEAN
+			i: INTEGER
+			l_start, l_end, l_actual_end, l_count: INTEGER
+		do
+			assertions.add_assertion
+			create a_file.make (Execution_environment.interpreted_string (a_filename))
+			a_file.open_read
+			if a_file.is_open_read then
+				from
+					l_count := a_string.count
+				until
+					done
+				loop
+					a_file.read_line
+					l_start := l_end + 1
+					l_end := a_string.index_of ('%N', l_start)
+					if l_end = 0 then
+						l_end := l_count + 1
+					end
+					l_actual_end := l_end
+					if l_start < l_end and then a_string.item (l_end - 1) = '%R' then
+						l_actual_end := l_actual_end - 1
+					end
+					i := i + 1
+					if a_file.end_of_file then
+						if l_start <= l_count then
+							create a_message.make (50)
+							a_message.append_string (a_tag)
+							a_message.append_string (" (diff between files '")
+							a_message.append_string (a_filename)
+							a_message.append_string ("' and string at line ")
+							INTEGER_.append_decimal_integer (i, a_message)
+							a_message.append_string (")")
+							a_file.close
+							done := True
+						else
+							a_file.close
+							done := True
+						end
+					elseif l_start > l_count then
+						create a_message.make (50)
+						a_message.append_string (a_tag)
+						a_message.append_string (" (diff between files '")
+						a_message.append_string (a_filename)
+						a_message.append_string ("' and string at line ")
+						INTEGER_.append_decimal_integer (i, a_message)
+						a_message.append_string (")")
+						a_file.close
+						done := True
+					elseif a_file.last_string.is_equal (a_string.substring (l_start, l_actual_end - 1)) then
+						-- OK.
+					elseif i = 1 and then a_file.last_string.starts_with (bom) and then a_file.last_string.substring (bom.count + 1, a_file.last_string.count).is_equal (a_string.substring (l_start, l_actual_end - 1)) then
+						-- OK.
+					else
+						create a_message.make (50)
+						a_message.append_string (a_tag)
+						a_message.append_string (" (diff between files '")
+						a_message.append_string (a_filename)
+						a_message.append_string ("' and string at line ")
+						INTEGER_.append_decimal_integer (i, a_message)
+						a_message.append_string (")")
+						a_file.close
+						done := True
+					end
+				end
+			else
+				create a_message.make (50)
+				a_message.append_string (a_tag)
+				a_message.append_string (" (cannot read file '")
+				a_message.append_string (a_filename)
+				a_message.append_string ("')")
+			end
+			if a_message /= Void then
+				logger.report_failure (a_tag, a_message)
+				assertions.report_error (a_message)
+			else
+				logger.report_success (a_tag)
+			end
+		end
+
+	check_file_equal_to_string (a_tag: STRING; a_filename, a_string: STRING)
+			-- Check that there is no difference between the
+			-- content of the file named `a_filename' and `a_string'.
+			-- (Expand environment variables in filename.)
+			-- Violation of this assertion is not fatal.
+		require
+			a_tag_not_void: a_tag /= Void
+			a_filename_not_void: a_filename /= Void
+			a_filename_not_empty: a_filename.count > 0
+			a_string_not_void: a_string /= Void
+		local
+			l_fatal: BOOLEAN
+		do
+			l_fatal := assertions.exception_on_error
+			assertions.set_exception_on_error (False)
+			assert_file_equal_to_string (a_tag, a_filename, a_string)
+			assertions.set_exception_on_error (l_fatal)
+		end
+
 	assert_filenames_equal (a_tag: STRING; a_filename1, a_filename2: STRING)
 			-- Assert that filenames `a_filename1' and `a_filename2'
 			-- only differ by the letters '/' and '\'.
@@ -1015,6 +1127,76 @@ feature {TS_TEST_HANDLER} -- Containers
 			assertions.set_exception_on_error (l_fatal)
 		end
 
+	assert_barrays_same (a_tag: STRING; expected, actual: ARRAY [BOOLEAN])
+			-- Assert that `expected' and `actual' have the same items
+			-- in the same order (use '=' for item comparison).
+		require
+			a_tag_not_void: a_tag /= Void
+			expected_not_void: expected /= Void
+			actual_not_void: actual /= Void
+		local
+			i, nb: INTEGER
+			i1, i2: INTEGER
+			new_tag: STRING
+			a_message: detachable STRING
+			expected_item, actual_item: BOOLEAN
+		do
+			assertions.add_assertion
+			if expected.count /= actual.count then
+				create new_tag.make (15)
+				new_tag.append_string (a_tag)
+				new_tag.append_string ("-count")
+				a_message := assert_strings_equal_message (new_tag, expected.count.out, actual.count.out)
+			else
+				i1 := expected.lower
+				i2 := actual.lower
+				nb := expected.count
+				from
+					i := 1
+				until
+					i > nb
+				loop
+					expected_item := expected.item (i1)
+					actual_item := actual.item (i2)
+					if expected_item /= actual_item then
+						create new_tag.make (15)
+						new_tag.append_string (a_tag)
+						new_tag.append_string ("-item #")
+						INTEGER_.append_decimal_integer (i, new_tag)
+						a_message := assert_strings_equal_message (new_tag, expected_item.out, actual_item.out)
+						i := nb + 1
+					else
+						i1 := i1 + 1
+						i2 := i2 + 1
+						i := i + 1
+					end
+				end
+			end
+			if a_message /= Void then
+				logger.report_failure (a_tag, a_message)
+				assertions.report_error (a_message)
+			else
+				logger.report_success (a_tag)
+			end
+		end
+
+	check_barrays_same (a_tag: STRING; expected, actual: ARRAY [BOOLEAN])
+			-- Check that `expected' and `actual' have the same items
+			-- in the same order (use '=' for item comparison).
+			-- Violation of this assertion is not fatal.
+		require
+			a_tag_not_void: a_tag /= Void
+			expected_not_void: expected /= Void
+			actual_not_void: actual /= Void
+		local
+			l_fatal: BOOLEAN
+		do
+			l_fatal := assertions.exception_on_error
+			assertions.set_exception_on_error (False)
+			assert_barrays_same (a_tag, expected, actual)
+			assertions.set_exception_on_error (l_fatal)
+		end
+
 feature {TS_TEST_HANDLER} -- Exception
 
 	assert_exception (a_tag: STRING; a_routine: ROUTINE)
@@ -1060,7 +1242,7 @@ feature {TS_TEST_HANDLER} -- Exception
 		do
 			assertions.add_assertion
 			if attached raised_exception (a_routine) as l_exception then
-				l_message := assert_strings_equal_message (a_tag, "No exception", l_exception.generating_type)
+				l_message := assert_strings_equal_message (a_tag, "No exception", l_exception.generating_type.name)
 				logger.report_failure (a_tag, l_message)
 				assertions.report_error (l_message)
 			else
@@ -1099,7 +1281,7 @@ feature {TS_TEST_HANDLER} -- Exception
 				logger.report_failure (a_tag, l_message)
 				assertions.report_error (l_message)
 			elseif not attached {DEVELOPER_EXCEPTION} l_exception as l_developer_exception then
-				l_message := assert_strings_equal_message (a_tag, ({DEVELOPER_EXCEPTION}).name, l_exception.generating_type)
+				l_message := assert_strings_equal_message (a_tag, ({DEVELOPER_EXCEPTION}).name, l_exception.generating_type.name)
 				logger.report_failure (a_tag, l_message)
 				assertions.report_error (l_message)
 			elseif not attached l_developer_exception.description as l_description then
@@ -1343,5 +1525,10 @@ feature {NONE} -- Messages
 		ensure
 			message_not_void: Result /= Void
 		end
+
+feature {NONE} -- Implementation
+
+	bom: STRING = "%/239/%/187/%/191/"
+			-- Byte Order Mark
 
 end

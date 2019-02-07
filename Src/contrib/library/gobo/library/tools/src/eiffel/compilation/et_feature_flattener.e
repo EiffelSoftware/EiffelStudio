@@ -5,7 +5,7 @@ note
 		"Eiffel class feature flatteners"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,8 +20,8 @@ inherit
 		end
 
 	ET_AST_NULL_PROCESSOR
-		undefine
-			make
+		rename
+			make as make_ast_processor
 		redefine
 			process_class
 		end
@@ -41,10 +41,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_system_processor: like system_processor)
 			-- Create a new feature flattener for given classes.
 		do
-			precursor {ET_CLASS_PROCESSOR}
+			precursor (a_system_processor)
 			create named_features.make_map (400)
 			named_features.set_key_equality_tester (feature_name_tester)
 			create queries.make (400)
@@ -53,16 +53,16 @@ feature {NONE} -- Initialization
 			aliased_features.set_key_equality_tester (alias_name_tester)
 			create clients_list.make (20)
 			create client_classes.make_map (20)
-			create feature_adaptation_resolver.make
-			create dotnet_feature_adaptation_resolver.make
-			create identifier_type_resolver.make
-			create unfolded_tuple_actual_parameters_resolver.make
-			create anchored_type_checker.make
-			create signature_checker.make
-			create parent_checker.make
-			create formal_parameter_checker.make
-			create builtin_feature_checker.make
-			create precursor_checker.make
+			create feature_adaptation_resolver.make (a_system_processor)
+			create dotnet_feature_adaptation_resolver.make (a_system_processor)
+			create identifier_type_resolver.make (a_system_processor)
+			create unfolded_tuple_actual_parameters_resolver.make (a_system_processor)
+			create anchored_type_checker.make (a_system_processor)
+			create signature_checker.make (a_system_processor)
+			create parent_checker.make (a_system_processor)
+			create formal_parameter_checker.make (a_system_processor)
+			create builtin_feature_checker.make (a_system_processor)
+			create precursor_checker.make (a_system_processor)
 			create precursors.make_map (20)
 		end
 
@@ -73,7 +73,6 @@ feature -- Error handling
 		require
 			a_class_not_void: a_class /= Void
 		do
-			a_class.set_features_flattened
 			a_class.set_flattening_error
 		ensure
 			features_flattened: a_class.features_flattened
@@ -97,7 +96,7 @@ feature -- Processing
 					-- Internal error (recursive call)
 					-- This internal error is not fatal.
 				error_handler.report_giaaa_error
-				create a_processor.make
+				create a_processor.make (system_processor)
 				a_processor.process_class (a_class)
 			elseif a_class.is_unknown then
 				set_fatal_error (a_class)
@@ -133,8 +132,8 @@ feature {NONE} -- Processing
 			current_class := a_class
 			if not current_class.features_flattened then
 					-- Build ancestors of `current_class' if not already done.
-				current_class.process (current_system.ancestor_builder)
-				if current_class.ancestors_built and then not current_class.has_ancestors_error then
+				current_class.process (system_processor.ancestor_builder)
+				if current_class.ancestors_built_successfully then
 					current_class.set_features_flattened
 						-- Process parents first.
 					nb1 := current_class.parents_count
@@ -160,7 +159,7 @@ feature {NONE} -- Processing
 						i1 := i1 + 1
 					end
 					if not current_class.has_flattening_error then
-						error_handler.report_compilation_status (Current, current_class)
+						error_handler.report_compilation_status (Current, current_class, system_processor)
 							-- Check validity rules of the parents and of formal
 							-- generic parameters of `current_class'.
 						if not current_class.is_dotnet then
@@ -385,7 +384,7 @@ feature {NONE} -- Feature flattening
 							end
 						end
 					end
-					if l_query.is_once then
+					if l_query.is_once and then not l_query.is_once_per_object then
 						a_type := l_query.type
 							-- The type of a once function should not contain
 							-- a formal generic parameter or an anchored type.
@@ -941,7 +940,7 @@ feature {NONE} -- Feature processing
 				l_duplicated := True
 			end
 			if l_duplicated then
-				current_system.register_feature (l_flattened_feature)
+				current_class.register_feature (l_flattened_feature)
 				if l_keep_same_version then
 					l_flattened_feature.set_version (l_parent_feature.precursor_feature.version)
 				else
@@ -1112,7 +1111,7 @@ feature {NONE} -- Clients
 			j, nb2: INTEGER
 			l_largest_clients: detachable ET_CLIENT_LIST
 		do
-			l_ise := current_system.is_ise
+			l_ise := system_processor.is_ise
 			from
 				l_parent_feature := a_feature.parent_feature
 			until
@@ -1633,7 +1632,7 @@ feature {NONE} -- Built-in feature validity
 		require
 			a_feature_not_void: a_feature /= Void
 		do
-			builtin_feature_checker.check_builtin_feature_validity (a_feature)
+			builtin_feature_checker.check_feature_validity (a_feature)
 			if builtin_feature_checker.has_fatal_error then
 				set_fatal_error (current_class)
 			end
@@ -1971,14 +1970,14 @@ feature -- Assigner validity
 									l_other_type := l_procedure_arguments.formal_argument (1).type
 									l_arg_offset := 1
 								end
-								if current_system.is_ise then
+								if system_processor.is_ise then
 										-- ECMA 367-2 says that the type of the query and of the first formal argument
 										-- of the assigner procedure should have the same deanchored form.
 										-- But EiffelStudio 6.8.8.6542 actually only checks that the type of the
 										-- formal argument of the assigner procedure conforms to the type of the query.
 										-- The conformance in the other direction is checked in the client code,
 										-- which is not what ECMA 367-2 suggests (see rules VFAC-3 and VBAC-1).
-									if not l_other_type.conforms_to_type (l_type, current_class, current_class) then
+									if not l_other_type.conforms_to_type (l_type, current_class, current_class, system_processor) then
 										set_fatal_error (current_class)
 										error_handler.report_vfac3a_error (current_class, l_query.implementation_class, l_feature_name, l_query, l_procedure)
 									end
@@ -2062,14 +2061,14 @@ feature -- Assigner validity
 									l_other_type := l_procedure_arguments.formal_argument (1).type
 									l_arg_offset := 1
 								end
-								if current_system.is_ise then
+								if system_processor.is_ise then
 										-- ECMA 367-2 says that the type of the query and of the first formal argument
 										-- of the assigner procedure should have the same deanchored form.
 										-- But EiffelStudio 6.8.8.6542 actually only checks that the type of the
 										-- formal argument of the assigner procedure conforms to the type of the query.
 										-- The conformance in the other direction is checked in the client code,
 										-- which is not what ECMA 367-2 suggests (see rules VFAC-3 and VBAC-1).
-									if not l_other_type.conforms_to_type (l_type, current_class, current_class) then
+									if not l_other_type.conforms_to_type (l_type, current_class, current_class, system_processor) then
 										set_fatal_error (current_class)
 										error_handler.report_vfac3a_error (current_class, l_query.implementation_class, l_feature_name, l_query, l_procedure)
 									end

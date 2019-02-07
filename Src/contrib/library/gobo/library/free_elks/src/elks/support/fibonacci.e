@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "The Fibonacci number sequence"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
@@ -15,6 +15,8 @@ class FIBONACCI inherit
 		redefine
 			is_fibonacci
 		end
+
+	ITERATION_CURSOR [INTEGER]
 
 feature -- Access
 
@@ -37,6 +39,8 @@ feature -- Access
 					Result := Result + 1
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 	lower_fibonacci (n: INTEGER): INTEGER
@@ -56,6 +60,8 @@ feature -- Access
 					Result := Result - 1
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 	all_lower_fibonacci (n: INTEGER): ARRAY [BOOLEAN]
@@ -76,6 +82,8 @@ feature -- Access
 				j := j + 1
 				i := i_th (j)
 			end
+		ensure
+			instance_free: class
 		end
 
 	is_fibonacci (n: INTEGER): BOOLEAN
@@ -99,6 +107,8 @@ feature -- Access
 				end
 				Result := to_test = n
 			end
+		ensure then
+			instance_free: class
 		end
 
 	i_th (i: INTEGER): INTEGER
@@ -125,10 +135,23 @@ feature -- Access
 					count := count + 1
 				end
 			end
+		ensure then
+			instance_free: class
+		end
+
+feature -- Iteration
+
+	new_cursor: FIBONACCI
+			-- <Precursor>
+		do
+			create Result
+			Result.start
+		ensure then
+			instance_free: class
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -4,7 +4,7 @@
 		"C functions used to implement type information"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2016-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,6 +18,9 @@
 
 #ifndef GE_EIFFEL_H
 #include "ge_eiffel.h"
+#endif
+#ifndef GE_EXCEPTION_H
+#include "ge_exception.h"
 #endif
 
 #ifdef __cplusplus
@@ -153,7 +156,8 @@ typedef struct {
 	EIF_INTEGER type_id; /* Type id of the type "X" */
 	EIF_BOOLEAN is_special;
 	void (*dispose)(GE_context*, EIF_REFERENCE);
-	EIF_REFERENCE a1; /* runtime_name */
+	EIF_REFERENCE a1; /* internal_name */
+	EIF_REFERENCE a2; /* internal_name_32 */
 } EIF_TYPE_OBJ;
 
 /*
@@ -197,7 +201,7 @@ extern EIF_TYPE GE_new_type(EIF_TYPE_INDEX a_id, EIF_TYPE_INDEX a_annotations);
 /*
  * Attachment status of `a_type'.
  */
-#define GE_is_attached_type(a_type) EIF_TEST((a_type).annotations & ATTACHED_FLAG)
+#define GE_is_attached_type(a_type) EIF_TEST(((a_type).annotations & ATTACHED_FLAG) || GE_is_expanded_type_index((a_type).id))
 #define GE_is_attached_encoded_type(a_type) GE_is_attached_type(GE_decoded_type(a_type))
 
 /*
@@ -476,13 +480,13 @@ extern EIF_BOOLEAN GE_is_field_expanded_of_type_index(EIF_INTEGER i, EIF_TYPE_IN
  * Get a lock on `GE_mark_object' and `GE_unmark_object' routines so that
  * 2 threads cannot `GE_mark_object' and `GE_unmark_object' at the same time.
  */
-extern void GE_lock_marking();
+extern void GE_lock_marking(void);
 
 /*
  * Release a lock on `GE_mark_object' and `GE_unmark_object', so that another
  * thread can use `GE_mark_object' and `GE_unmark_object'.
  */
-extern void GE_unlock_marking();
+extern void GE_unlock_marking(void);
 
 /*
  * Is `obj' marked?

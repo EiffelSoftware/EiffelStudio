@@ -1,29 +1,46 @@
 #!/bin/sh
 
 # description: "Install Gobo Eiffel tools"
-# copyright: "Copyright (c) 2007-2017, Eric Bezault and others"
+# copyright: "Copyright (c) 2007-2018, Eric Bezault and others"
 # license: "MIT License"
 # date: "$Date$"
 # revision: "$Revision$"
 
 
-# usage: install.sh [-v] <c_compiler>
+# usage: install.sh [-v][-t][--thread=N] <c_compiler>
 
+echo "Executing install.sh..."
 
 gobo_usage() {
-	echo "usage: install.sh [-v] <c_compiler>"
-	echo "   c_compiler:  msc | lcc-win32 | bcc | gcc | mingw | cc | icc | tcc | no_c"
+	echo "usage: install.sh [-v][-t][--thread=N] <c_compiler>"
+	echo "   c_compiler:  msc | lcc-win32 | lcc-win64 | bcc | gcc | mingw | cc | icc | tcc | no_c"
 }
 
-if [ "$1" = "-v" ]; then
-	VERBOSE=-v
-	CC=$2
-	EIF=ge
-else
-	VERBOSE=
-	CC=$1
-	EIF=ge
-fi
+VERBOSE=
+TEST_ONLY=
+THREAD_OPTION=
+while [ $# -gt 1 ]
+do
+	case $1 in
+		-v)
+			VERBOSE=-v
+			shift
+			;;
+		-t)
+			TEST_ONLY=-t
+			shift
+			;;
+		--thread=*)
+			THREAD_OPTION=$1
+			shift
+			;;
+		*)
+			shift
+			;;
+	esac
+done
+CC=$1
+EIF=ge
 
 if [ "$GOBO" = "" ]; then
 	echo "Environment variable GOBO must be set"
@@ -64,28 +81,61 @@ BOOTSTRAP_DIR=$GOBO/tool/gec/bootstrap
 PATH=$BIN_DIR:$PATH
 export PATH
 cd $BIN_DIR
-$BOOTSTRAP_DIR/bootstrap.sh $VERBOSE $CC
+if [ "$VERBOSE" = "-v" ]; then
+	echo "Bootstraping gec..."
+fi
+$BOOTSTRAP_DIR/bootstrap.sh $VERBOSE $THREAD_OPTION $CC
 
 if [ "$EIF" = "ge" ]; then
 	cd $BIN_DIR
-	$BIN_DIR/gec$EXE --finalize $GOBO/tool/geant/src/ge.xace
+	if [ "$VERBOSE" = "-v" ]; then
+		echo "Compiling geant..."
+	fi
+	$BIN_DIR/gec$EXE --finalize --no-benchmark $THREAD_OPTION $GOBO/tool/geant/src/system.ecf
 	$STRIP geant${EXE}
-	$BIN_DIR/gec$EXE --finalize $GOBO/tool/gexace/src/ge.xace
+	if [ "$VERBOSE" = "-v" ]; then
+		echo "Compiling gexace..."
+	fi
+	$BIN_DIR/gec$EXE --finalize --no-benchmark $THREAD_OPTION $GOBO/tool/gexace/src/system.ecf
 	$STRIP gexace${EXE}
-	$BIN_DIR/gec$EXE --finalize $GOBO/tool/gelex/src/ge.xace
-	$STRIP gelex${EXE}
-	$BIN_DIR/gec$EXE --finalize $GOBO/tool/geyacc/src/ge.xace
-	$STRIP geyacc${EXE}
-	$BIN_DIR/gec$EXE --finalize $GOBO/tool/gepp/src/ge.xace
-	$STRIP gepp${EXE}
-	$BIN_DIR/gec$EXE --finalize $GOBO/tool/getest/src/ge.xace
-	$STRIP getest${EXE}
-	$BIN_DIR/gec$EXE --finalize $GOBO/tool/gelint/src/ge.xace
-	$STRIP gelint${EXE}
-	$BIN_DIR/gec$EXE --finalize $GOBO/tool/gedoc/src/ge.xace
+	if [ "$VERBOSE" = "-v" ]; then
+		echo "Compiling gedoc..."
+	fi
+	$BIN_DIR/gec$EXE --finalize --no-benchmark $THREAD_OPTION $GOBO/tool/gedoc/src/system.ecf
 	$STRIP gedoc${EXE}
-	$BIN_DIR/geant$EXE --buildfilename=$GOBO/tool/gexslt/src/build.eant compile_ge
-	$STRIP gexslt${EXE}
+	if [ "$VERBOSE" = "-v" ]; then
+		echo "Compiling getest..."
+	fi
+	$BIN_DIR/gec$EXE --finalize --no-benchmark $THREAD_OPTION $GOBO/tool/getest/src/system.ecf
+	$STRIP getest${EXE}
+	if [ "$VERBOSE" = "-v" ]; then
+		echo "Compiling gelint..."
+	fi
+	$BIN_DIR/gec$EXE --finalize --no-benchmark $THREAD_OPTION $GOBO/tool/gelint/src/system.ecf
+	$STRIP gelint${EXE}
+	if [ "$TEST_ONLY" = "" ]; then
+		if [ "$VERBOSE" = "-v" ]; then
+			echo "Compiling gelex..."
+		fi
+		$BIN_DIR/gec$EXE --finalize --no-benchmark $THREAD_OPTION $GOBO/tool/gelex/src/system.ecf
+		$STRIP gelex${EXE}
+		if [ "$VERBOSE" = "-v" ]; then
+			echo "Compiling geyacc..."
+		fi
+		$BIN_DIR/gec$EXE --finalize --no-benchmark $THREAD_OPTION $GOBO/tool/geyacc/src/system.ecf
+		$STRIP geyacc${EXE}
+		if [ "$VERBOSE" = "-v" ]; then
+			echo "Compiling gepp..."
+		fi
+		$BIN_DIR/gec$EXE --finalize --no-benchmark $THREAD_OPTION $GOBO/tool/gepp/src/system.ecf
+		$STRIP gepp${EXE}
+		if [ "$VERBOSE" = "-v" ]; then
+			echo "Compiling gexlt..."
+		fi
+		$BIN_DIR/gec$EXE --finalize --no-benchmark --cc=no $THREAD_OPTION $GOBO/tool/gexslt/src/system.ecf
+		$BIN_DIR/gecc$EXE $THREAD_OPTION gexslt.sh
+		$STRIP gexslt${EXE}
+	fi
 else
 	echo "Unknown Eiffel compiler: $EIF"
 	exit 1
@@ -93,12 +143,15 @@ fi
 
 cd $BIN_DIR
 geant$EXE $VERBOSE --buildfilename=$GOBO/tool/gec/src/build.eant clean
+geant$EXE $VERBOSE --buildfilename=$GOBO/tool/gecc/src/build.eant clean
 geant$EXE $VERBOSE --buildfilename=$GOBO/tool/geant/src/build.eant clean
 geant$EXE $VERBOSE --buildfilename=$GOBO/tool/gexace/src/build.eant clean
-geant$EXE $VERBOSE --buildfilename=$GOBO/tool/gelex/src/build.eant clean
-geant$EXE $VERBOSE --buildfilename=$GOBO/tool/geyacc/src/build.eant clean
-geant$EXE $VERBOSE --buildfilename=$GOBO/tool/gepp/src/build.eant clean
+geant$EXE $VERBOSE --buildfilename=$GOBO/tool/gedoc/src/build.eant clean
 geant$EXE $VERBOSE --buildfilename=$GOBO/tool/getest/src/build.eant clean
 geant$EXE $VERBOSE --buildfilename=$GOBO/tool/gelint/src/build.eant clean
-geant$EXE $VERBOSE --buildfilename=$GOBO/tool/gedoc/src/build.eant clean
-geant$EXE $VERBOSE --buildfilename=$GOBO/tool/gexslt/src/build.eant clean
+if [ "$TEST_ONLY" = "" ]; then
+	geant$EXE $VERBOSE --buildfilename=$GOBO/tool/gelex/src/build.eant clean
+	geant$EXE $VERBOSE --buildfilename=$GOBO/tool/geyacc/src/build.eant clean
+	geant$EXE $VERBOSE --buildfilename=$GOBO/tool/gepp/src/build.eant clean
+	geant$EXE $VERBOSE --buildfilename=$GOBO/tool/gexslt/src/build.eant clean
+fi

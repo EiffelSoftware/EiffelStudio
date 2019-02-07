@@ -119,7 +119,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -158,11 +158,15 @@ create
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_system_processor: like system_processor)
 			-- Create a new system feature marker.
+		require
+			a_system_processor_not_void: a_system_processor /= Void
 		do
 			create used_features.make (500000)
-			make_feature_call_handler
+			make_feature_call_handler (a_system_processor)
+		ensure
+			system_processor_set: system_processor = a_system_processor
 		end
 
 feature -- Processing
@@ -205,7 +209,7 @@ feature -- Processing
 			l_system := l_class.current_system
 			unmark_all (l_system)
 			create l_redeclared_features.make (500000)
-			l_system.classes_do_if_recursive (agent add_redeclarations (?, l_redeclared_features), agent {ET_CLASS}.in_system)
+			l_system.classes_do_if_recursive (agent add_redeclarations (?, l_redeclared_features), agent {ET_CLASS}.is_marked)
 			nb := l_redeclared_features.count
 			used_features.wipe_out
 			l_feature := a_feature.implementation_feature
@@ -381,7 +385,7 @@ feature -- Processing
 			j, nb2: INTEGER
 			l_redeclared_features: detachable DS_ARRAYED_LIST [ET_FEATURE]
 		do
-			if not a_callee_feature.implementation_class.in_system then
+			if not a_callee_feature.implementation_class.is_marked then
 				Result := False
 			else
 				l_callee_feature_impl := a_callee_feature.implementation_feature
@@ -409,7 +413,7 @@ feature -- Processing
 							-- which have themselves already been marked.
 						if l_redeclared_features = Void then
 							create l_redeclared_features.make (500000)
-							l_system.classes_do_if_recursive (agent add_redeclarations (?, l_redeclared_features), agent {ET_CLASS}.in_system)
+							l_system.classes_do_if_recursive (agent add_redeclarations (?, l_redeclared_features), agent {ET_CLASS}.is_marked)
 							nb := l_redeclared_features.count
 						end
 						from i := 1 until i > nb or Result loop

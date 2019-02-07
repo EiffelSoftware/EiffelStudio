@@ -16,7 +16,6 @@ feature {NONE} -- Initialization
 		local
 			api: API_BUILDER
 			request_token, access_token: detachable OAUTH_TOKEN
-			verifier: OAUTH_VERIFIER
 			request: OAUTH_REQUEST
 			service: OAUTH_SERVICE_I
 		do
@@ -79,7 +78,7 @@ invariant
 
 
 note
-	copyright: "2013-2017, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2019, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

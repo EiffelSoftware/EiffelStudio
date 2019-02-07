@@ -1044,6 +1044,17 @@ feature -- Monitor DPI
 		end
 
 
+	enable_non_client_dpi_scaling  (hwnd: POINTER)
+			-- In high-DPI displays, enables automatic display scaling of the non-client area portions of the specified top-level window.
+			-- Must be called during the initialization of that window.
+		local
+			l_res: BOOLEAN
+		do
+			l_res := cwin_enable_non_client_dpi_scaling (hwnd)
+		ensure
+			is_class: class
+		end
+
 feature -- Externals DPI
 
 	cwin_get_dpi_for_window (hwnd: POINTER): INTEGER
@@ -1138,6 +1149,19 @@ feature -- Externals DPI
 		ensure
 			is_class: class
 		end
+
+
+	cwin_enable_non_client_dpi_scaling  (hwnd: POINTER): BOOLEAN
+		note
+			EIS:"name=EnableNonClientDpiScaling", "src=https://docs.microsoft.com/en-us/windows/desktop/api/winuser/nf-winuser-enablenonclientdpiscaling", "protocol=uri"
+		external
+			"C inline use <Winuser.h>"
+		alias
+			"return (EIF_BOOLEAN) EnableNonClientDpiScaling($hwnd);"
+		ensure
+			is_class: class
+		end
+
 
 feature -- Constants
 

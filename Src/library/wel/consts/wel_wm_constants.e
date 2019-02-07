@@ -156,7 +156,7 @@ feature -- Access
 
 	Wm_getobject: INTEGER = 61
 			-- Declared in Windows as WM_GETOBJECT
-			
+
 	Wm_compacting: INTEGER = 65
 			-- Declared in Windows as WM_COMPACTING
 
@@ -180,7 +180,7 @@ feature -- Access
 
 	Wm_notify: INTEGER = 78
 			-- Declared in Windows as WM_NOTIFY
-		
+
 	Wm_inputlangchangerequest: INTEGER = 80
 			-- Declared in Windows as WM_INPUTLANGCHANGEREQUEST
 
@@ -237,7 +237,7 @@ feature -- Access
 
 	Wm_getdlgcode: INTEGER = 135
 			-- Declared in Windows as WM_GETDLGCODE
-			
+
 	Wm_syncpaint: INTEGER = 136
 			-- Declared in Windows as WM_SYNCPAINT
 
@@ -307,7 +307,7 @@ feature -- Access
 	Wm_sysdeadchar: INTEGER = 263
 			-- Declared in Windows as WM_SYSDEADCHAR
 
-	Wm_keylast: INTEGER 
+	Wm_keylast: INTEGER
 			-- Declared in Windows as WM_KEYLAST
 		external
 			"C [macro <winuser.h>]"
@@ -324,7 +324,7 @@ feature -- Access
 	Wm_ime_composition: INTEGER = 271
 			-- Declared in Windows as WM_IME_COMPOSITION
 
-	Wm_ime_keylast: INTEGER 
+	Wm_ime_keylast: INTEGER
 			-- Declared in Windows as WM_IME_KEYLAST
 		external
 			"C [macro <winuser.h>]"
@@ -388,7 +388,7 @@ feature -- Access
 
 	Wm_queryuistate: INTEGER = 297
 			-- Declared in Windows as WM_QUERYUISTATE
-			
+
 	Wm_ctlcolordialog: INTEGER = 310
 			-- Declared in Windows as WM_CTLCOLORDIALOG
 
@@ -437,7 +437,7 @@ feature -- Access
 	Wm_xbuttondblclk: INTEGER = 525
 			-- Declared in Windows as WM_XBUTTONDBLCLK
 
-	Wm_mouselast: INTEGER 
+	Wm_mouselast: INTEGER
 			-- Declared in Windows as WM_MOUSELAST
 		external
 			"C [macro <winuser.h>]"
@@ -625,7 +625,7 @@ feature -- Access
 
 	Wm_appcommand: INTEGER = 793
 			-- Declared in Windows as WM_APPCOMMAND
-			
+
 	Wm_themechanged: INTEGER = 794
 			-- Declared in Windows as WM_THEMECHANGED
 
@@ -654,15 +654,17 @@ feature -- Access
 			-- Declared in Windows as WM_USER
 
 
+	Wm_dpichanged: INTEGER = 736
+			-- Declared in Windows as WM_DPICHANGED
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

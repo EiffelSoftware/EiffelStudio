@@ -57,7 +57,6 @@ feature {NONE} -- Initialization
 
 	make
 		local
-			config: OAUTH_CONFIG
 			api_service: OAUTH_SERVICE_I
 			request: OAUTH_REQUEST
 			access_token, request_token: detachable OAUTH_TOKEN

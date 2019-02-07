@@ -20,15 +20,13 @@ create
 feature {NONE} -- Custom
 
 	api_key : STRING = ""
-	
+
 	api_secret :STRING = ""
 
 feature {NONE} -- Initialization
 
 	make
 		local
-			box: OAUTH_10_TWITTER_API
-			config : OAUTH_CONFIG
 			api_service : OAUTH_SERVICE_I
 			request : OAUTH_REQUEST
 			access_token,request_token : detachable OAUTH_TOKEN
@@ -89,7 +87,7 @@ feature {NONE} -- Implementation
  	empty_token : detachable  OAUTH_TOKEN
 
 ;note
-	copyright: "2013-2017, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2019, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

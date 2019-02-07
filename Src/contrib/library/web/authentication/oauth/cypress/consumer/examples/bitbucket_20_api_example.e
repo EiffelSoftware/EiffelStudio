@@ -1,11 +1,14 @@
 note
-	description: "Summary description for {VIMEO_10_API_EXAMPLE}."
-	author: ""
+	description: "Summary description for {BITBUCKET_20_API_EXAMPLE}."
 	date: "$Date$"
 	revision: "$Revision$"
+	EIS: "name=BitBucket OAuth2.0 API tutorial ", "src=https://developer.atlassian.com/bitbucket/api/2/reference/meta/authentication#app-pw", "protocol=uri"
 
 class
-	VIMEO_10_API_EXAMPLE
+	BITBUCKET_20_API_EXAMPLE
+
+inherit
+	ARGUMENTS
 
 create
 	make
@@ -14,25 +17,21 @@ feature {NONE} -- Initialization
 
 	make
 		local
+			bitbucket : OAUTH_20_BITBUCKET_API
+			config : OAUTH_CONFIG
 			api_service : OAUTH_SERVICE_I
 			request : OAUTH_REQUEST
-			access_token,request_token : detachable OAUTH_TOKEN
-			api_builder: API_BUILDER
+			access_token : detachable OAUTH_TOKEN
 		do
-			create api_builder
-			api_service := api_builder.with_api (create {OAUTH_10_VIMEO_API})
-												.with_api_key (api_key)
-												.with_api_secret (api_secret)
-												.build
-			print ("%N===Twitter OAuth Workflow ===%N")
-
-		 	-- Obtain the Request Token
-		 	print ("%NGet the request token%N")
-			request_token := api_service.request_token
+			create config.make_default (api_key, api_secret)
+			config.set_callback ("http://127.0.0.1:9090")
+			create bitbucket
+			api_service := bitbucket.create_service (config)
+			print ("%N=== Altassian's OAuth Workflow ===%N")
 
 			-- Obtain the Authorization URL
     		print("%NFetching the Authorization URL...");
-    		if attached api_service.authorization_url (request_token) as lauthorization_url then
+    		if attached api_service.authorization_url (empty_token) as lauthorization_url then
 			    print("%NGot the Authorization URL!%N");
 			    print("%NNow go and authorize here:%N");
 			    print(lauthorization_url);
@@ -40,7 +39,7 @@ feature {NONE} -- Initialization
 			    io.read_line
 			end
 
-		   access_token := api_service.access_token_get (request_token, create {OAUTH_VERIFIER}.make (io.last_string))
+		   access_token := api_service.access_token_post (empty_token, create {OAUTH_VERIFIER}.make (io.last_string))
 		   if attached access_token as l_access_token then
 		   		print("%NGot the Access Token!%N");
     	   		print("%N(Token: " + l_access_token.debug_output + " )%N");
@@ -48,9 +47,8 @@ feature {NONE} -- Initialization
 
 	      	  --Now let's go and ask for a protected resource!
 	    	  print("%NNow we're going to access a protected resource...%N");
-	    	  create request.make ("POST", protected_resource_url)
-			  request.add_body_parameter ("status", "testing!!!")
-	 		  api_service.sign_request (l_access_token, request)
+	    	  create request.make ("GET", protected_resource_url)
+			  request.add_header("Authorization", "Bearer " + l_access_token.token )
 	    	  if attached request.execute as l_response then
 					print ("%NOk, let see what we found...")
 					print ("%NResponse: STATUS" + l_response.status.out)
@@ -65,9 +63,10 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	api_key : STRING =""
-	api_secret :STRING =""
-	protected_resource_url : STRING = ""
+	api_key : STRING ="API-KEY"
+	api_secret :STRING ="API-SECRET"
+	protected_resource_url : STRING = "https://api.bitbucket.org/2.0/repositories/{user-name}"
+		-- Repla
  	empty_token : detachable  OAUTH_TOKEN
 
 ;note
@@ -81,6 +80,5 @@ feature {NONE} -- Implementation
 			Customer support http://support.eiffel.com
 		]"
 end
-
 
 

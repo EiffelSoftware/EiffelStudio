@@ -19,7 +19,6 @@ feature {NONE} -- Creation
 			api_service: OAUTH_SERVICE_I
 			request: OAUTH_REQUEST
 			access_token: detachable OAUTH_TOKEN
-			current_code: detachable STRING
 			encode: UTF8_URL_ENCODER
 			l_string: STRING
 		do
@@ -66,7 +65,7 @@ feature {NONE} -- Configuration
 	protected_resource_url : STRING = "https://app.asana.com/api/1.0/users/me"
 
 note
-	copyright: "2013-2017, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2019, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

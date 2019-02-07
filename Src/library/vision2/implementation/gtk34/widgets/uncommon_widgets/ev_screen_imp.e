@@ -30,7 +30,6 @@ inherit
 	EV_DRAWABLE_IMP
 		redefine
 			interface,
-			make,
 			supports_pixbuf_alpha,
 			device_x_offset,
 			device_y_offset
@@ -570,7 +569,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_SCREEN note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

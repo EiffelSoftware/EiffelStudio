@@ -28,7 +28,7 @@ feature -- Initialization
 			io.put_string ("Eiffel cURL simple example.")
 			io.put_new_line
 
-			if curl_easy.is_dynamic_library_exists then
+			if curl_easy.is_api_available then
 				curl_handle := curl_easy.init
 
 					-- First we specify which URL we would like to download.

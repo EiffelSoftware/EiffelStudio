@@ -20,7 +20,6 @@ inherit
 			make,
 			call_pebble_function,
 			wipe_out,
-			pixmaps_size_changed,
 			remove_row_pixmap
 		end
 
@@ -48,9 +47,6 @@ inherit
 		redefine
 			i_th,
 			count,
-			insert_i_th,
-			remove_i_th,
-			destroy,
 			interface,
 			wipe_out,
 			make
@@ -1222,7 +1218,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_MULTI_COLUMN_LIST note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

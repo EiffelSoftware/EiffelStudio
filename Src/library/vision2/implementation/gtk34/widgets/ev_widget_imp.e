@@ -20,7 +20,6 @@ inherit
 		redefine
 			interface,
 			make,
-			call_button_event_actions,
 			destroy,
 			x_position,
 			y_position
@@ -46,9 +45,6 @@ inherit
 				pointer_leave_actions,
 				pointer_leave_actions_internal,
 				pointer_enter_actions_internal
-		redefine
-			init_resize_actions,
-			init_file_drop_actions
 		end
 
 	EV_DOCKABLE_SOURCE_IMP
@@ -532,7 +528,7 @@ feature {EV_ANY, EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 	interface: detachable EV_WIDGET note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

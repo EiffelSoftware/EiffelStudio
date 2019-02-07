@@ -16,8 +16,7 @@ deferred class
 inherit
 	EV_DRAWABLE_I
 		redefine
-			interface,
-			draw_sub_pixel_buffer
+			interface
 		end
 
 feature {NONE} -- Initialization
@@ -883,7 +882,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_DRAWABLE note option: stable attribute end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

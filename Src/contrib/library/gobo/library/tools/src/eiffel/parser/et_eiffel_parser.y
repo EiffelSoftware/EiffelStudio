@@ -6,7 +6,7 @@ note
 		"Eiffel parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,7 +19,8 @@ inherit
 		undefine
 			read_token
 		redefine
-			yyparse
+			yyparse,
+			system_processor
 		end
 
 	ET_EIFFEL_SCANNER
@@ -27,6 +28,8 @@ inherit
 			make as make_eiffel_scanner
 		undefine
 			reset, set_syntax_error
+		redefine
+			system_processor
 		end
 
 create
@@ -144,9 +147,12 @@ create
 %type <detachable ET_CONVERT_FEATURE_ITEM> Convert_feature_comma
 %type <detachable ET_CONVERT_FEATURE_LIST> Convert_clause_opt Convert_clause Convert_list
 %type <detachable ET_CREATE_EXPRESSION> Create_expression
+%type <detachable ET_CREATION_REGION> Creation_region
 %type <detachable ET_CREATOR> Creation_clause Creation_procedure_list
 %type <detachable ET_CREATOR_LIST> Creators_opt Creators_list
 %type <detachable ET_DEBUG_INSTRUCTION> Debug_instruction
+%type <detachable ET_ELSEIF_EXPRESSION> Elseif_expression
+%type <detachable ET_ELSEIF_EXPRESSION_LIST> Elseif_expressions Elseif_expression_list
 %type <detachable ET_ELSEIF_PART> Elseif_part
 %type <detachable ET_ELSEIF_PART_LIST> Elseif_list Elseif_part_list
 %type <detachable ET_EXPORT> New_export_item
@@ -171,7 +177,8 @@ create
 %type <detachable ET_FORMAL_PARAMETER_ITEM> Formal_parameter_comma
 %type <detachable ET_FORMAL_PARAMETER_LIST> Formal_parameters_opt Formal_parameter_list
 %type <detachable ET_IDENTIFIER> Identifier Class_name
-%type <detachable ET_IF_INSTRUCTION> Conditional
+%type <detachable ET_IF_EXPRESSION> Conditional_expression
+%type <detachable ET_IF_INSTRUCTION> Conditional_instruction
 %type <detachable ET_INDEXING_LIST> Indexing_clause Indexing_clause_opt Index_list Note_list
 %type <detachable ET_INDEXING_ITEM> Index_clause Index_clause_semicolon Index_clause_impl Note_item Note_item_semicolon Note_item_impl
 %type <detachable ET_INDEXING_TERM> Index_value
@@ -190,10 +197,10 @@ create
 %type <detachable ET_LOCAL_VARIABLE_ITEM> Local_variable Local_variable_semicolon
 %type <detachable ET_LOCAL_VARIABLE_LIST> Local_declarations_opt Local_variable_list
 %type <detachable ET_LOOP_INVARIANTS> Loop_invariant_clause Loop_invariant_clause_opt
-%type <detachable ET_MANIFEST_ARRAY> Manifest_array Manifest_array_expression_list
+%type <detachable ET_MANIFEST_ARRAY> Typed_manifest_array Untyped_manifest_array Manifest_array_expression_list
 %type <detachable ET_MANIFEST_STRING> Manifest_string Typed_manifest_string Untyped_manifest_string
-%type <detachable ET_MANIFEST_STRING_ITEM> Manifest_string_comma
-%type <detachable ET_MANIFEST_STRING_LIST> Manifest_string_list Parenthesized_manifest_string_list_opt
+%type <detachable ET_MANIFEST_STRING_ITEM> Untyped_manifest_string_comma
+%type <detachable ET_MANIFEST_STRING_LIST> Untyped_manifest_string_list Parenthesized_untyped_manifest_string_list_opt
 %type <detachable ET_MANIFEST_TUPLE> Manifest_tuple Manifest_tuple_expression_list
 %type <detachable ET_OBSOLETE> Obsolete_opt
 %type <detachable ET_PARENTHESIZED_EXPRESSION> Parenthesized_expression
@@ -221,7 +228,7 @@ create
 %type <detachable ET_WHEN_PART_LIST> When_list When_list_opt
 %type <detachable ET_WRITABLE> Writable
 
-%expect 81
+%expect 82
 %start Class_declarations
 
 %%
@@ -251,7 +258,7 @@ Class_declaration: Indexing_clause_opt Class_to_end
 Class_declaration_opt: -- Empty
 	|
 		{
-			if not current_system.preparse_multiple_mode then
+			if not system_processor.preparse_multiple_mode then
 					-- Raise syntax error: it is not valid to have more
 					-- than one class text in the same file.
 				raise_error
@@ -918,7 +925,7 @@ Constraint_tuple_labeled_actual_parameter_semicolon: Identifier ':' Constraint_t
 
 Obsolete_opt: -- Empty
 		-- { $$ := Void }
-	| E_OBSOLETE Manifest_string
+	| E_OBSOLETE Untyped_manifest_string
 		{ $$ := ast_factory.new_obsolete_message ($1, $2) }
 	;
 
@@ -1521,7 +1528,7 @@ Creation_procedure_list: Identifier
 	| Creation_procedure_comma
 		-- TODO: syntax error.
 		{
-			if current_system.is_ise then
+			if system_processor.is_ise then
 				raise_error
 			else
 				$$ := ast_factory.new_creator (last_keyword, last_clients, counter_value)
@@ -1829,7 +1836,7 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 		{ $$ := ast_factory.new_constant_attribute ($1, ast_factory.new_colon_type ($2, $3), $4, $5, $6, $7, last_clients, last_feature_clause, last_class) }
 	| Extended_feature_name ':' Type Assigner_opt '=' Manifest_constant Semicolon_opt
 		{
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
+			if system_processor.older_ise_version (ise_5_7_59914) then
 				raise_error
 			else
 				$$ := ast_factory.new_constant_attribute ($1, ast_factory.new_colon_type ($2, $3), $4, $5, $6, $7, last_clients, last_feature_clause, last_class)
@@ -1839,7 +1846,7 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 		{ $$ := ast_factory.new_unique_attribute ($1, ast_factory.new_colon_type ($2, $3), $4, $5, $6, $7, last_clients, last_feature_clause, last_class) }
 	| Extended_feature_name ':' Type Assigner_opt '=' E_UNIQUE Semicolon_opt
 		{
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
+			if system_processor.older_ise_version (ise_5_7_59914) then
 				raise_error
 			else
 				$$ := ast_factory.new_unique_attribute ($1, ast_factory.new_colon_type ($2, $3), $4, $5, $6, $7, last_clients, last_feature_clause, last_class)
@@ -1851,7 +1858,7 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 	| Extended_feature_name ':' Type Assigner_opt Indexing_clause_opt Obsolete_opt Precondition_opt Local_declarations_opt
 	Do_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
+			if system_processor.older_ise_version (ise_5_7_59914) then
 				raise_error
 			else
 				$$ := ast_factory.new_do_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, Void, $5, $6, $7, $8, $9, $10, $11, $12, $13, last_clients, last_feature_clause, last_class)
@@ -1865,19 +1872,19 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 	Obsolete_opt Precondition_opt Local_declarations_opt
 	Do_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
+			if system_processor.older_ise_version (ise_5_7_59914) then
 				raise_error
 			else
 				$$ := ast_factory.new_do_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, Void, $6, $7, $8, $9, $10, $11, $12, $13, $14, last_clients, last_feature_clause, last_class)
 			end
 		}
 	| Extended_feature_name ':' Type Assigner_opt E_IS Indexing_clause_opt Obsolete_opt Precondition_opt Local_declarations_opt
-	E_ONCE Parenthesized_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END Semicolon_opt
+	E_ONCE Parenthesized_untyped_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{ $$ := ast_factory.new_once_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, $5, $6, $7, $8, $9, $11, ast_factory.new_once_compound ($10, $12), $13, $14, $15, $16, last_clients, last_feature_clause, last_class) }	
 	| Extended_feature_name ':' Type Assigner_opt Indexing_clause_opt Obsolete_opt Precondition_opt Local_declarations_opt
-	E_ONCE Parenthesized_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END Semicolon_opt
+	E_ONCE Parenthesized_untyped_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
+			if system_processor.older_ise_version (ise_5_7_59914) then
 				raise_error
 			else
 				$$ := ast_factory.new_once_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, Void, $5, $6, $7, $8, $10, ast_factory.new_once_compound ($9, $11), $12, $13, $14, $15, last_clients, last_feature_clause, last_class)
@@ -1885,13 +1892,13 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 		}
 	| Extended_feature_name Feature_formal_arguments ':' Type Assigner_opt E_IS Indexing_clause_opt
 	Obsolete_opt Precondition_opt Local_declarations_opt
-	E_ONCE Parenthesized_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END Semicolon_opt
+	E_ONCE Parenthesized_untyped_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{ $$ := ast_factory.new_once_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, $6, $7, $8, $9, $10, $12, ast_factory.new_once_compound ($11, $13), $14, $15, $16, $17, last_clients, last_feature_clause, last_class) }
 	| Extended_feature_name Feature_formal_arguments ':' Type Assigner_opt Indexing_clause_opt
 	Obsolete_opt Precondition_opt Local_declarations_opt
-	E_ONCE Parenthesized_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END Semicolon_opt
+	E_ONCE Parenthesized_untyped_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
+			if system_processor.older_ise_version (ise_5_7_59914) then
 				raise_error
 			else
 				$$ := ast_factory.new_once_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, Void, $6, $7, $8, $9, $11, ast_factory.new_once_compound ($10, $12), $13, $14, $15, $16, last_clients, last_feature_clause, last_class)
@@ -1901,7 +1908,7 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 		{ $$ := ast_factory.new_deferred_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, $5, $6, $7, $8, $9, $10, $11, $12, last_clients, last_feature_clause, last_class) }
 	| Extended_feature_name ':' Type Assigner_opt Indexing_clause_opt Obsolete_opt Precondition_opt E_DEFERRED Postcondition_opt E_END Semicolon_opt
 		{
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
+			if system_processor.older_ise_version (ise_5_7_59914) then
 				raise_error
 			else
 				$$ := ast_factory.new_deferred_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, Void, $5, $6, $7, $8, $9, $10, $11, last_clients, last_feature_clause, last_class)
@@ -1913,7 +1920,7 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 	| Extended_feature_name Feature_formal_arguments ':' Type Assigner_opt Indexing_clause_opt
 	Obsolete_opt Precondition_opt E_DEFERRED Postcondition_opt E_END Semicolon_opt
 		{
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
+			if system_processor.older_ise_version (ise_5_7_59914) then
 				raise_error
 			else
 				$$ := ast_factory.new_deferred_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, Void, $6, $7, $8, $9, $10, $11, $12, last_clients, last_feature_clause, last_class)
@@ -1925,7 +1932,7 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 	| Extended_feature_name ':' Type Assigner_opt Indexing_clause_opt Obsolete_opt Precondition_opt E_EXTERNAL Untyped_manifest_string
 	External_name_opt Postcondition_opt E_END Semicolon_opt
 		{
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
+			if system_processor.older_ise_version (ise_5_7_59914) then
 				raise_error
 			else
 				$$ := new_external_function ($1, Void, ast_factory.new_colon_type ($2, $3), $4, Void, $5, $6, $7, ast_factory.new_external_language ($8, $9), $10, $11, $12, $13, last_clients, last_feature_clause, last_class)
@@ -1939,7 +1946,7 @@ Single_query_declaration: Extended_feature_name ':' Type Assigner_opt
 	Obsolete_opt Precondition_opt E_EXTERNAL Untyped_manifest_string
 	External_name_opt Postcondition_opt E_END Semicolon_opt
 		{
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
+			if system_processor.older_ise_version (ise_5_7_59914) then
 				raise_error
 			else
 				$$ := new_external_function ($1, $2, ast_factory.new_colon_type ($3, $4), $5, Void, $6, $7, $8, ast_factory.new_external_language ($9, $10), $11, $12, $13, $14, last_clients, last_feature_clause, last_class)
@@ -1955,11 +1962,11 @@ Single_procedure_declaration: Extended_feature_name Is_opt Indexing_clause_opt O
 	Do_compound Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{ $$ := ast_factory.new_do_procedure ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, last_clients, last_feature_clause, last_class) }
 	| Extended_feature_name Is_opt Indexing_clause_opt Obsolete_opt Precondition_opt Local_declarations_opt
-	E_ONCE Parenthesized_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END Semicolon_opt
+	E_ONCE Parenthesized_untyped_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{ $$ := ast_factory.new_once_procedure ($1, Void, $2, $3, $4, $5, $6, $8, ast_factory.new_once_compound ($7, $9), $10, $11, $12, $13, last_clients, last_feature_clause, last_class) }
 	| Extended_feature_name Feature_formal_arguments Is_opt Indexing_clause_opt
 	Obsolete_opt Precondition_opt Local_declarations_opt
-	E_ONCE Parenthesized_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END Semicolon_opt
+	E_ONCE Parenthesized_untyped_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END Semicolon_opt
 		{ $$ := ast_factory.new_once_procedure ($1, $2, $3, $4, $5, $6, $7, $9, ast_factory.new_once_compound ($8, $10), $11, $12, $13, $14, last_clients, last_feature_clause, last_class) }
 	| Extended_feature_name Is_opt Indexing_clause_opt Obsolete_opt Precondition_opt E_DEFERRED Postcondition_opt E_END Semicolon_opt
 		{ $$ := ast_factory.new_deferred_procedure ($1, Void, $2, $3, $4, $5, $6, $7, $8, $9, last_clients, last_feature_clause, last_class) }
@@ -1977,7 +1984,7 @@ Single_procedure_declaration: Extended_feature_name Is_opt Indexing_clause_opt O
 
 Is_opt: -- Empty
 		{
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
+			if system_processor.older_ise_version (ise_5_7_59914) then
 				raise_error
 			else
 				$$ := Void
@@ -2391,6 +2398,24 @@ Assertions: Expression
 		{ add_tagged_assertion ($1, $2, Void) }
 	| Identifier ':' ';'
 		{ add_tagged_assertion ($1, $2, $3) }
+	| E_CLASS
+		{
+			if assertion_kind = assertion_kind_postcondition then
+					-- 'class' assertions only allowed in postconditions.
+				add_class_assertion (ast_factory.new_class_assertion ($1), Void)
+			else
+				raise_error
+			end
+		}
+	| E_CLASS ';'
+		{
+			if assertion_kind = assertion_kind_postcondition then
+					-- 'class' assertions only allowed in postconditions.
+				add_class_assertion (ast_factory.new_class_assertion ($1), $2)
+			else
+				raise_error
+			end
+		}
 	| Assertions Expression
 		{ add_expression_assertion ($2, Void) }
 	| Assertions Expression ';'
@@ -2399,34 +2424,60 @@ Assertions: Expression
 		{ add_tagged_assertion ($2, $3, Void) }
 	| Assertions Identifier ':' ';'
 		{ add_tagged_assertion ($2, $3, $4) }
+	| Assertions E_CLASS
+		{
+			if assertion_kind = assertion_kind_postcondition then
+					-- 'class' assertions only allowed in postconditions.
+				add_class_assertion (ast_factory.new_class_assertion ($2), Void)
+			else
+				raise_error
+			end
+		}
+	| Assertions E_CLASS ';'
+		{
+			if assertion_kind = assertion_kind_postcondition then
+					-- 'class' assertions only allowed in postconditions.
+				add_class_assertion (ast_factory.new_class_assertion ($2), $3)
+			else
+				raise_error
+			end
+		}
 	;
 
-Start_assertions:
-		{ start_assertions }
+Start_precondition:
+		{ start_precondition }
 	;
 	
 Precondition_opt: -- Empty
 		-- { $$ := Void }
-	| E_REQUIRE Start_assertions
+	| E_REQUIRE Start_precondition
 		{ $$ := new_preconditions ($1, Void) }
-	| E_REQUIRE E_ELSE Start_assertions
+	| E_REQUIRE E_ELSE Start_precondition
 		{ $$ := new_preconditions ($1, $2) }
-	| E_REQUIRE Start_assertions Assertions
+	| E_REQUIRE Start_precondition Assertions
 		{ $$ := new_preconditions ($1, Void) }
-	| E_REQUIRE E_ELSE Start_assertions Assertions
+	| E_REQUIRE E_ELSE Start_precondition Assertions
 		{ $$ := new_preconditions ($1, $2) }
 	;
 
+Start_postcondition:
+		{ start_postcondition }
+	;
+	
 Postcondition_opt: -- Empty
 		-- { $$ := Void }
-	| E_ENSURE Start_assertions
+	| E_ENSURE Start_postcondition
 		{ $$ := new_postconditions ($1, Void) }
-	| E_ENSURE E_THEN Start_assertions
+	| E_ENSURE E_THEN Start_postcondition
 		{ $$ := new_postconditions ($1, $2) }
-	| E_ENSURE Start_assertions Assertions
+	| E_ENSURE Start_postcondition Assertions
 		{ $$ := new_postconditions ($1, Void) }
-	| E_ENSURE E_THEN Start_assertions Assertions
+	| E_ENSURE E_THEN Start_postcondition Assertions
 		{ $$ := new_postconditions ($1, $2) }
+	;
+
+Start_invariant:
+		{ start_invariant }
 	;
 
 Invariant_clause_opt: -- Empty
@@ -2435,9 +2486,9 @@ Invariant_clause_opt: -- Empty
 		{ $$ := $1 }
 	;
 
-Invariant_clause: E_INVARIANT Start_assertions Invariant_start_closure
+Invariant_clause: E_INVARIANT Start_invariant Invariant_start_closure
 		{ $$ := new_invariants ($1) }
-	| E_INVARIANT Start_assertions Invariant_start_closure Assertions
+	| E_INVARIANT Start_invariant Invariant_start_closure Assertions
 		{ $$ := new_invariants ($1) }
 	;
 
@@ -2445,15 +2496,19 @@ Invariant_start_closure: -- Empty
 		{ set_start_closure (Void) }
 	;
 
+Start_loop_invariant:
+		{ start_loop_invariant }
+	;
+	
 Loop_invariant_clause_opt: -- Empty
 		-- { $$ := Void }
 	| Loop_invariant_clause
 		{ $$ := $1 }
 	;
 
-Loop_invariant_clause: E_INVARIANT Start_assertions
+Loop_invariant_clause: E_INVARIANT start_loop_invariant
 		{ $$ := new_loop_invariants ($1) }
-	| E_INVARIANT Start_assertions Assertions
+	| E_INVARIANT start_loop_invariant Assertions
 		{ $$ := new_loop_invariants ($1) }
 	;
 
@@ -2872,7 +2927,7 @@ Qualified_anchored_type: Qualified_anchored_type_with_no_type_mark
 		{$$ := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_separate_keywords ($1, $2), $3, $4, $5, $6, new_dot_feature_name ($7, $8))}
 	| '!' E_LIKE '{' Type '}' '.' Identifier
 		{
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_1_0 then
+			if system_processor.older_ise_version (ise_6_1_0) then
 				raise_error
 			else
 				$$ := ast_factory.new_qualified_like_braced_type ($1, $2, $3, $4, $5, new_dot_feature_name ($6, $7))
@@ -2880,7 +2935,7 @@ Qualified_anchored_type: Qualified_anchored_type_with_no_type_mark
 		}
 	| '!' E_SEPARATE E_LIKE '{' Type '}' '.' Identifier
 		{
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_1_0 then
+			if system_processor.older_ise_version (ise_6_1_0) then
 				raise_error
 			else
 				$$ := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4, $5, $6, new_dot_feature_name ($7, $8))
@@ -2888,7 +2943,7 @@ Qualified_anchored_type: Qualified_anchored_type_with_no_type_mark
 		}
 	| '?' E_LIKE '{' Type '}' '.' Identifier
 		{
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_1_0 then
+			if system_processor.older_ise_version (ise_6_1_0) then
 				raise_error
 			else
 				$$ := ast_factory.new_qualified_like_braced_type ($1, $2, $3, $4, $5, new_dot_feature_name ($6, $7))
@@ -2896,7 +2951,7 @@ Qualified_anchored_type: Qualified_anchored_type_with_no_type_mark
 		}
 	| '?' E_SEPARATE E_LIKE '{' Type '}' '.' Identifier
 		{
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_1_0 then
+			if system_processor.older_ise_version (ise_6_1_0) then
 				raise_error
 			else
 				$$ := ast_factory.new_qualified_like_braced_type (ast_factory.new_attachment_symbol_separate_keyword ($1, $2), $3, $4, $5, $6, new_dot_feature_name ($7, $8))
@@ -3031,7 +3086,7 @@ Instruction: Creation_instruction
 		{ $$ := ast_factory.new_assignment ($1, $2, $3) }
 	| Writable E_REVERSE Expression
 		{ $$ := ast_factory.new_assignment_attempt ($1, $2, $3) }
-	| Conditional
+	| Conditional_instruction
 		{ $$ := $1 }
 	| Multi_branch
 		{ $$ := $1 }
@@ -3039,7 +3094,7 @@ Instruction: Creation_instruction
 		{ $$ := ast_factory.new_loop_instruction_old_syntax ($1, $2, $3, ast_factory.new_conditional ($4, $5), $6, $7) }
 	| From_compound Loop_invariant_clause_opt E_UNTIL Expression Loop_compound E_END
 		{
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_3_7_4554 then
+			if system_processor.older_ise_version (ise_6_3_7_4554) then
 				$$ := ast_factory.new_loop_instruction_old_syntax ($1, $2, Void, ast_factory.new_conditional ($3, $4), $5, $6)
 			else
 				$$ := ast_factory.new_loop_instruction ($1, $2, ast_factory.new_conditional ($3, $4), $5, Void, $6)
@@ -3047,7 +3102,7 @@ Instruction: Creation_instruction
 		}
 	| From_compound Loop_invariant_clause_opt E_UNTIL Expression Loop_compound Variant_clause E_END
 		{
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_3_7_4554 then
+			if system_processor.older_ise_version (ise_6_3_7_4554) then
 				raise_error
 			else
 				$$ := ast_factory.new_loop_instruction ($1, $2, ast_factory.new_conditional ($3, $4), $5, $6, $7)
@@ -3072,13 +3127,17 @@ Instruction: Creation_instruction
 	
 ------------------------------------------------------------------------------------
 
-Check_instruction: E_CHECK Start_assertions E_END
+Start_check_instruction:
+		{ start_check_instruction }
+	;
+	
+Check_instruction: E_CHECK Start_check_instruction E_END
 		{ $$ := new_check_instruction ($1, Void, $3) }
-	| E_CHECK Start_assertions Assertions E_END
+	| E_CHECK Start_check_instruction Assertions E_END
 		{ $$ := new_check_instruction ($1, Void, $4) }
-	| E_CHECK Start_assertions Explicit_then_compound E_END
+	| E_CHECK Start_check_instruction Explicit_then_compound E_END
 		{ $$ := new_check_instruction ($1, $3, $4) }
-	| E_CHECK Start_assertions Assertions Explicit_then_compound E_END
+	| E_CHECK Start_check_instruction Assertions Explicit_then_compound E_END
 		{ $$ := new_check_instruction ($1, $4, $5) }
 	;
 	
@@ -3095,28 +3154,29 @@ Creation_instruction: '!' Type_no_bang_identifier '!' Writable
 	;
 
 Create_instruction: E_CREATE Creation_region '{' Type '}' Writable
-		{ $$ := ast_factory.new_create_instruction ($1, ast_factory.new_target_type ($3, $4, $5), $6, Void) }
+		{ $$ := ast_factory.new_create_instruction ($1, $2, ast_factory.new_target_type ($3, $4, $5), $6, Void) }
 	| E_CREATE Creation_region '{' Type '}' Writable '.' Identifier Actuals_opt
-		{ $$ := ast_factory.new_create_instruction ($1, ast_factory.new_target_type ($3, $4, $5), $6, ast_factory.new_qualified_call (new_dot_feature_name ($7, $8), $9)) }
+		{ $$ := ast_factory.new_create_instruction ($1, $2, ast_factory.new_target_type ($3, $4, $5), $6, ast_factory.new_qualified_call (new_dot_feature_name ($7, $8), $9)) }
 	| E_CREATE Creation_region Writable
-		{ $$ := ast_factory.new_create_instruction ($1, Void, $3, Void) }
+		{ $$ := ast_factory.new_create_instruction ($1, $2, Void, $3, Void) }
 	| E_CREATE Creation_region Writable '.' Identifier Actuals_opt
-		{ $$ := ast_factory.new_create_instruction ($1, Void, $3, ast_factory.new_qualified_call (new_dot_feature_name ($4, $5), $6)) }
+		{ $$ := ast_factory.new_create_instruction ($1, $2, Void, $3, ast_factory.new_qualified_call (new_dot_feature_name ($4, $5), $6)) }
 	;
 
 Create_expression: E_CREATE Creation_region '{' Type '}' 
-		{ $$ := ast_factory.new_create_expression ($1, ast_factory.new_target_type ($3, $4, $5), Void) }
+		{ $$ := ast_factory.new_create_expression ($1, $2, ast_factory.new_target_type ($3, $4, $5), Void) }
 	| E_CREATE Creation_region '{' Type '}' '.' Identifier Actuals_opt
-		{ $$ := ast_factory.new_create_expression ($1, ast_factory.new_target_type ($3, $4, $5), ast_factory.new_qualified_call (new_dot_feature_name ($6, $7), $8)) }
+		{ $$ := ast_factory.new_create_expression ($1, $2, ast_factory.new_target_type ($3, $4, $5), ast_factory.new_qualified_call (new_dot_feature_name ($6, $7), $8)) }
 	;
 
 Creation_region: -- Empty
 	| '<' Class_name '>'
+		{ $$ := ast_factory.new_creation_region ($1, $2, $3) }
 	;
 
 ------------------------------------------------------------------------------------
 
-Conditional: E_IF Expression Then_compound E_END
+Conditional_instruction: E_IF Expression Then_compound E_END
 		{ $$ := ast_factory.new_if_instruction (ast_factory.new_conditional ($1, $2), $3, Void, Void, $4) }
 	| E_IF Expression Then_compound Else_compound E_END
 		{ $$ := ast_factory.new_if_instruction (ast_factory.new_conditional ($1, $2), $3, Void, $4, $5) }
@@ -3158,6 +3218,46 @@ Elseif_part: E_ELSEIF Expression Then_compound
 		}
 	;
 
+------------------------------------------------------------------------------------
+
+Conditional_expression: E_IF Expression E_THEN Expression E_ELSE Expression E_END
+		{ $$ := ast_factory.new_if_expression (ast_factory.new_conditional ($1, $2), $3, $4, Void, $5, $6, $7) }
+	| E_IF Expression E_THEN Expression Elseif_expressions E_ELSE Expression E_END
+		{ $$ := ast_factory.new_if_expression (ast_factory.new_conditional ($1, $2), $3, $4, $5, $6, $7, $8) }
+	;
+
+Elseif_expressions: Add_counter Elseif_expression_list
+		{
+			$$ := $2
+			remove_counter
+		}
+	;
+
+Elseif_expression_list: Elseif_expression
+		{
+			$$ := ast_factory.new_elseif_expression_list (counter_value)
+			if $$ /= Void and attached $1 as l_elseif_part then
+				$$.put_first (l_elseif_part)
+			end
+		}
+	| Elseif_expression Elseif_expression_list
+		{
+			$$ := $2
+			if $$ /= Void and attached $1 as l_elseif_part then
+				$$.put_first (l_elseif_part)
+			end
+		}
+	;
+
+Elseif_expression: E_ELSEIF Expression E_THEN Expression
+		{
+			$$ := ast_factory.new_elseif_expression (ast_factory.new_conditional ($1, $2), $3, $4)
+			if $$ /= Void then
+				increment_counter
+			end
+		}
+	;
+	
 ------------------------------------------------------------------------------------
 
 Multi_branch: E_INSPECT Expression When_list_opt Explicit_else_compound E_END
@@ -3282,11 +3382,11 @@ Until_expression_opt: -- Empty
 	
 ------------------------------------------------------------------------------------
 
-Debug_instruction: E_DEBUG Parenthesized_manifest_string_list_opt Compound_opt E_END
+Debug_instruction: E_DEBUG Parenthesized_untyped_manifest_string_list_opt Compound_opt E_END
 		{ $$ := ast_factory.new_debug_instruction ($2, ast_factory.new_debug_compound ($1, $3), $4) }
 	;
 
-Parenthesized_manifest_string_list_opt: -- Empty
+Parenthesized_untyped_manifest_string_list_opt: -- Empty
 		-- { $$ := Void }
 	| '(' ')'
 		{ $$ := ast_factory.new_manifest_string_list ($1, $2, 0) }
@@ -3295,7 +3395,7 @@ Parenthesized_manifest_string_list_opt: -- Empty
 			add_symbol ($1)
 			add_counter
 		}
-	  Manifest_string_list
+	  Untyped_manifest_string_list
 		{
 			$$ := $3
 			remove_symbol
@@ -3303,7 +3403,7 @@ Parenthesized_manifest_string_list_opt: -- Empty
 		}
 	;
 
-Manifest_string_list: Untyped_manifest_string ')'
+Untyped_manifest_string_list: Untyped_manifest_string ')'
 		{
 			if attached $1 as l_manifest_string then
 				$$ := ast_factory.new_manifest_string_list (last_symbol, $2, counter_value + 1)
@@ -3314,7 +3414,7 @@ Manifest_string_list: Untyped_manifest_string ')'
 				$$ := ast_factory.new_manifest_string_list (last_symbol, $2, counter_value)
 			end
 		}
-	| Manifest_string_comma Manifest_string_list
+	| Untyped_manifest_string_comma Untyped_manifest_string_list
 		{
 			$$ := $2
 			if $$ /= Void and attached $1 as l_manifest_string then
@@ -3323,7 +3423,7 @@ Manifest_string_list: Untyped_manifest_string ')'
 		}
 	;
 
-Manifest_string_comma: Untyped_manifest_string ','
+Untyped_manifest_string_comma: Untyped_manifest_string ','
 		{
 			$$ := ast_factory.new_manifest_string_comma ($1, $2)
 			if $$ /= Void then
@@ -3390,7 +3490,7 @@ Untyped_call_chain: Identifier Actuals_opt
 		{ $$ := $1 }
 	| Untyped_bracket_expression
 		{
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
+			if system_processor.older_ise_version (ise_5_7_59914) then
 				raise_error
 			else
 				$$ := $1
@@ -3404,7 +3504,7 @@ Untyped_call_chain: Identifier Actuals_opt
 
 Typed_call_chain: Typed_bracket_expression
 		{
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_5_7_59914 then
+			if system_processor.older_ise_version (ise_5_7_59914) then
 				raise_error
 			else
 				$$ := $1
@@ -3567,6 +3667,8 @@ Non_binary_and_typed_expression: Untyped_bracket_target
 		{ $$ := $1 }
 	| Across_all_expression
 		{ $$ := $1 }
+	| Conditional_expression
+		{ $$ := $1 }
 	| Manifest_tuple
 		{ $$ := $1 }
 	| E_INTEGER
@@ -3585,7 +3687,7 @@ Non_binary_and_typed_expression: Untyped_bracket_target
 		{ $$ := ast_factory.new_old_expression ($1, $2) }
 	| '{' Identifier ':' Type '}' Non_binary_expression %prec E_NOT
 		{
-			if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_1_0 then
+			if system_processor.older_ise_version (ise_6_1_0) then
 				raise_error
 			else
 				$$ := new_old_object_test ($1, $2, $3, $4, $5, $6)
@@ -3658,7 +3760,7 @@ Untyped_bracket_target: Untyped_call_expression
 --      end
 --
 		{ $$ := new_once_manifest_string ($1, $2) }
-	| Manifest_array
+	| Untyped_manifest_array
 		{ $$ := $1 }
 	| Strip_expression
 		{ $$ := $1 }
@@ -3670,6 +3772,14 @@ Typed_bracket_target: Typed_call_expression
 		{ $$ := $1 }
 	| Typed_manifest_string
 		{ $$ := $1 }
+	| Typed_manifest_array
+		{
+			if system_processor.older_ise_version (ise_17_11_0) then
+				raise_error
+			else
+				$$ := $1
+			end
+		}
 	| Typed_character_constant
 		{ $$ := $1 }
 	;
@@ -3742,7 +3852,7 @@ Parenthesized_expression: Left_parenthesis Expression ')'
 		 }
 	;
 
-Manifest_array: E_LARRAY E_RARRAY
+Untyped_manifest_array: E_LARRAY E_RARRAY
 		{ $$ := ast_factory.new_manifest_array ($1, $2, 0) }
 	| E_LARRAY
 		{
@@ -3757,6 +3867,15 @@ Manifest_array: E_LARRAY E_RARRAY
 		}
 	;
 
+Typed_manifest_array: '{' Type '}' Untyped_manifest_array
+		{
+			$$ := $4
+			if $$ /= Void then
+				$$.set_cast_type (ast_factory.new_target_type ($1, $2, $3))
+			end
+		}
+	;
+	
 Manifest_array_expression_list: Expression E_RARRAY
 		{
 			if attached $1 as l_expression then
@@ -3929,13 +4048,13 @@ Inline_agent_no_actual_arguments:
 			register_inline_agent ($$)
 		}
 	| E_AGENT No_inline_agent_formal_arguments ':' Type
-	Precondition_opt Local_declarations_opt E_ONCE Parenthesized_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END
+	Precondition_opt Local_declarations_opt E_ONCE Parenthesized_untyped_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END
 		{
 			$$ := ast_factory.new_once_function_inline_agent ($1, Void, ast_factory.new_colon_type ($3, $4), $5, $6, $8, ast_factory.new_once_compound ($7, $9), $10, $11, $12, Void)
 			register_inline_agent ($$)
 		}
 	| E_AGENT Inline_agent_formal_arguments ':' Type
-	Precondition_opt Local_declarations_opt E_ONCE Parenthesized_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END
+	Precondition_opt Local_declarations_opt E_ONCE Parenthesized_untyped_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END
 		{
 			$$ := ast_factory.new_once_function_inline_agent ($1, $2, ast_factory.new_colon_type ($3, $4), $5, $6, $8, ast_factory.new_once_compound ($7, $9), $10, $11, $12, Void)
 			register_inline_agent ($$)
@@ -3965,13 +4084,13 @@ Inline_agent_no_actual_arguments:
 			register_inline_agent ($$)
 		}
 	| E_AGENT No_inline_agent_formal_arguments
-	Precondition_opt Local_declarations_opt E_ONCE Parenthesized_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END
+	Precondition_opt Local_declarations_opt E_ONCE Parenthesized_untyped_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END
 		{
 			$$ := ast_factory.new_once_procedure_inline_agent ($1, Void, $3, $4, $6, ast_factory.new_once_compound ($5, $7), $8, $9, $10, Void)
 			register_inline_agent ($$)
 		}
 	| E_AGENT Inline_agent_formal_arguments
-	Precondition_opt Local_declarations_opt E_ONCE Parenthesized_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END
+	Precondition_opt Local_declarations_opt E_ONCE Parenthesized_untyped_manifest_string_list_opt Compound_opt Postcondition_opt Rescue_opt E_END
 		{
 			$$ := ast_factory.new_once_procedure_inline_agent ($1, $2, $3, $4, $6, ast_factory.new_once_compound ($5, $7), $8, $9, $10, Void)
 		}
@@ -4075,7 +4194,7 @@ Agent_actual: Expression
 	;
 
 ------------------------------------------------------------------------------------
-
+	
 Manifest_string: Untyped_manifest_string
 		{ $$ := $1 }
 	| Typed_manifest_string
@@ -4257,6 +4376,11 @@ Add_counter: { add_counter }
 	
 --------------------------------------------------------------------------------
 %%
+
+feature -- Access
+
+	system_processor: ET_SYSTEM_PROCESSOR
+			-- System processor currently used
 
 feature -- Parsing
 

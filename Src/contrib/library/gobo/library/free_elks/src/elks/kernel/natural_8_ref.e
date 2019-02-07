@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "References to objects containing an unsigned integer value coded on 8 bits."
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
@@ -69,7 +69,7 @@ feature -- Access
 	ascii_char: CHARACTER_8
 			-- ASCII character corresponding to `item' value.
 		obsolete
-			"Use `to_character_8' instead."
+			"Use `to_character_8' instead. [2017-05-31]"
 		require
 			valid_character_code: is_valid_character_8_code
 		do
@@ -140,7 +140,7 @@ feature -- Status report
 	is_valid_character_code: BOOLEAN
 			-- Does current object represent a {CHARACTER_8}?
 		obsolete
-			"Use `is_valid_character_8_code' instead."
+			"Use `is_valid_character_8_code' instead. [2017-05-31]"
 		do
 			Result := is_valid_character_8_code
 		end
@@ -383,18 +383,15 @@ feature -- Conversion
 			-- `item' converted into a hexadecimal string.
 		local
 			i, val: INTEGER
-			a_digit: INTEGER
 		do
 			from
-				i := 2
-				create Result.make (i)
-				Result.fill_blank
+				i := {PLATFORM}.natural_8_bits // 4
+				create Result.make_filled ('0', i)
 				val := item
 			until
 				i = 0
 			loop
-				a_digit := (val & 15)
-				Result.put (a_digit.to_hex_character, i)
+				Result.put ((val & 0xF).to_hex_character, i)
 				val := val |>> 4
 				i := i - 1
 			end
@@ -408,10 +405,10 @@ feature -- Conversion
 		require
 			in_bounds: 0 <= item and item <= 15
 		local
-			tmp: INTEGER
+			i: INTEGER_32
 		do
-			tmp := item
-			Result := tmp.to_hex_character
+			i := item.to_integer_32
+			Result := if i <= 9 then '0' else 'A' - 10 end + i
 		ensure
 			valid_character: ("0123456789ABCDEF").has (Result)
 		end
@@ -419,7 +416,7 @@ feature -- Conversion
 	to_character: CHARACTER
 			-- ASCII character corresponding to `item' value.
 		obsolete
-			"Use `to_character_8' instead."
+			"Use `to_character_8' instead. [2017-05-31]"
 		require
 			valid_character: is_valid_character_8_code
 		do
@@ -568,7 +565,7 @@ feature -- Output
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

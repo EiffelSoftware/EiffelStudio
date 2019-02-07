@@ -5,7 +5,7 @@ note
 		"Common properties for GEANT"
 
 	library: "Gobo Eiffel Ant"
-	copyright:"Copyright (c) 2001-2005, Sven Ehrke and others"
+	copyright:"Copyright (c) 2001-2018, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -200,7 +200,7 @@ feature -- Status report
 
 feature -- Processing
 
-	exit_application (a_code: INTEGER; a_message: ARRAY [STRING])
+	exit_application (a_code: INTEGER; a_message: detachable ARRAY [STRING])
 			-- Exit application with code `a_code';
 			-- if a_message /= Void log it.
 		require
@@ -462,7 +462,7 @@ feature -- Processing
 
 feature {NONE} -- Implemenation
 
-	log_messages (a_message: ARRAY [STRING])
+	log_messages (a_message: detachable ARRAY [STRING])
 			-- if a_message /= Void log it.
 		require
 			-- Note: ARRAY.has is not portable:

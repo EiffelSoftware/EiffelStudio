@@ -1,8 +1,8 @@
-note
+﻿note
 	description: "[
 		Objects representing delayed calls to a routine,
 		with some operands possibly still open
-		]"
+	]"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -23,6 +23,13 @@ inherit
 		export
 			{NONE} all
 		redefine
+			copy,
+			is_equal
+		end
+
+	MISMATCH_CORRECTOR
+		redefine
+			correct_mismatch,
 			copy,
 			is_equal
 		end
@@ -93,7 +100,7 @@ feature -- Access
 
 	empty_operands: attached OPEN_ARGS
 			-- Empty tuple matching open operands.
-		obsolete "This function will be removed as non-void-safe. [22.07.2013]"
+		obsolete "This function will be removed as non-void-safe. [2017-05-31]"
 		do
 			create Result
 		ensure
@@ -130,7 +137,7 @@ feature -- Status report
 			if args = Void then
 					-- Void operands are only allowed
 					-- if object has no open operands.
-				Result := (open_count = 0)
+				Result := open_count = 0
 			elseif args.count >= open_count then
 				from
 					Result := True
@@ -294,17 +301,17 @@ feature -- Extended operations
 			end
 		end
 
-feature -- Obsolete
+feature -- Correction
 
-	adapt_from (other: like Current)
-			-- Adapt from `other'. Useful in descendants.
-		obsolete
-			"Please use `adapt' instead (it's also a creation procedure)"
-		require
-			other_exists: other /= Void
-			conforming: conforms_to (other)
+	correct_mismatch
+			-- <Precursor>
 		do
-			adapt (other)
+			-- For the time being, even if the schema of agents changes, we will still retrieve them (without
+			-- properly initializing all the fields.) This is acceptable as agents without schema change can
+			-- be retrieved and are also invalid objects.
+
+			-- Note: This implementation of `correct_mismath` should have been introduced in 14.05, but it was
+			-- missed and introduced in 17.05 to help retrieve storables made by 13.11 and older.
 		end
 
 feature {ROUTINE} -- Implementation
@@ -439,29 +446,40 @@ feature {NONE} -- Implementation
 
 feature -- Obsolete
 
+	adapt_from (other: like Current)
+			-- Adapt from `other'. Useful in descendants.
+		obsolete
+			"Please use `adapt' instead (it's also a creation procedure).  [2017-05-31]"
+		require
+			other_exists: other /= Void
+			conforming: conforms_to (other)
+		do
+			adapt (other)
+		end
+
 	arguments: detachable OPEN_ARGS
 		obsolete
-			"use operands"
+			"Use `operands`. [2017-05-31]"
 		do
 			Result := operands
 		end
 
 	set_arguments (args: detachable OPEN_ARGS)
 		obsolete
-			"use set_operands"
+			"Use `set_operands`. [2017-05-31]"
 		do
 			set_operands (args)
 		end
 
 	valid_arguments (args: detachable OPEN_ARGS): BOOLEAN
 		obsolete
-			"use valid_operands"
+			"Use `valid_operands`. [2017-05-31]"
 		do
 			Result := valid_operands (args)
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

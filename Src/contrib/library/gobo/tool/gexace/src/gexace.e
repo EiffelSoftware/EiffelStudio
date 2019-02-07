@@ -5,7 +5,7 @@ note
 		"Gobo Eiffel Xace"
 
 	system: "Gobo Eiffel Xace"
-	copyright: "Copyright (c) 2001-2008, Andreas Leitner and others"
+	copyright: "Copyright (c) 2001-2018, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -216,18 +216,12 @@ feature {NONE} -- Command-line processing
 					create {ET_XACE_XACE_GENERATOR} g.make (a_compiler, variables, error_handler)
 				elseif l_format.same_string ("xace") then
 					create {ET_XACE_XACE_GENERATOR} g.make (a_compiler, variables, error_handler)
-				elseif l_format.same_string ("ace") then
-					create {ET_XACE_ACE_GENERATOR} g.make (a_compiler, variables, error_handler)
 				elseif l_format.same_string ("ecf") then
 					create {ET_XACE_ECF_GENERATOR} g.make (a_compiler, variables, error_handler)
 				end
 			elseif a_compiler.is_equal ("ise") then
 				if l_format = Void then
 					create {ET_XACE_ECF_GENERATOR} g.make (a_compiler, variables, error_handler)
-				elseif l_format.same_string ("xace") then
-					create {ET_XACE_XACE_GENERATOR} g.make (a_compiler, variables, error_handler)
-				elseif l_format.same_string ("ace") then
-					create {ET_XACE_ACE_GENERATOR} g.make (a_compiler, variables, error_handler)
 				elseif l_format.same_string ("ecf") then
 					create {ET_XACE_ECF_GENERATOR} g.make (a_compiler, variables, error_handler)
 				end
@@ -289,16 +283,16 @@ feature {NONE} -- Command-line processing
 			s_not_void: s /= Void
 		local
 			a_cursor: DS_LINKED_LIST_CURSOR [STRING]
-			a_definition: DS_PAIR [STRING, STRING]
+			a_definition: DS_PAIR [STRING, detachable STRING]
 		do
 			a_cursor := split_string (s, ' ').new_cursor
 			from a_cursor.start until a_cursor.after loop
 				if a_cursor.item.count /= 0 then
 					a_definition := split_on_first (a_cursor.item, '=')
-					if a_definition.second = Void then
+					if not attached a_definition.second as l_second then
 						variables.force_last ("", a_cursor.item)
 					else
-						variables.force_last (a_definition.second, a_definition.first)
+						variables.force_last (l_second, a_definition.first)
 					end
 				end
 				a_cursor.forth
@@ -335,8 +329,8 @@ feature {NONE} -- Usage message
 			create Result.make ("[defines][options] command [xace-file]%N%
 				%%Tdefines:  --define=%"VAR_NAME[=VALUE]( VAR_NAME[=VALUE])*%"%N%
 				%%Toptions:  --verbose|--shallow%N%
-				%%Tcommand:  --system=(ge|ise) [--format=(ace|ecf|xace)][--output=<filename>]%N%
-				%%Tcommand:  --library=(ge|ise) [--format=(ace|ecf|xace)][--output=<filename>]%N%
+				%%Tcommand:  --system=(ge|ise) [--format=(ecf|xace)][--output=<filename>]%N%
+				%%Tcommand:  --library=(ge|ise) [--format=(ecf|xace)][--output=<filename>]%N%
 				%%Tcommand:  --validate")
 		ensure
 			usage_message_not_void: Result /= Void
@@ -346,7 +340,7 @@ invariant
 
 	variables_not_void: variables /= Void
 	commands_not_void: commands /= Void
-	no_void_command: not commands.has (Void)
+	no_void_command: not commands.has_void
 	error_handler_not_void: error_handler /= Void
 
 end

@@ -3,7 +3,7 @@
 <!--
 	description: "Eiffel Ant RelaxNG specification"
 	system: "Gobo Eiffel Ant"
-	copyright: "Copyright (c) 2002-2009, Sven Ehrke and others"
+	copyright: "Copyright (c) 2002-2018, Sven Ehrke and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -289,7 +289,10 @@
 			</optional>
 			<choice>
 				<group>
-					<attribute name="ace"/>
+					<attribute name="ecf"/>
+					<optional>
+						<attribute name="target"/>
+					</optional>
 					<optional>
 						<attribute name="finalize"/>
 					</optional>
@@ -297,7 +300,7 @@
 						<attribute name="gelint"/>
 					</optional>
 					<optional>
-						<attribute name="cat"/>
+						<attribute name="catcall"/>
 					</optional>
 					<optional>
 						<attribute name="split"/>
@@ -310,6 +313,27 @@
 					</optional>
 					<optional>
 						<attribute name="gc"/>
+					</optional>
+					<optional>
+						<attribute name="thread"/>
+					</optional>
+					<optional>
+						<attribute name="new_instance_types"/>
+					</optional>
+					<optional>
+						<attribute name="silent"/>
+					</optional>
+					<optional>
+						<attribute name="verbose"/>
+					</optional>
+					<optional>
+						<attribute name="no_benchmark"/>
+					</optional>
+					<optional>
+						<attribute name="nested_benchmark"/>
+					</optional>
+					<optional>
+						<attribute name="metrics"/>
 					</optional>
 				</group>
 				<attribute name="clean"/>
@@ -485,7 +509,10 @@
 				<group>
 					<attribute name="system"/>
 					<optional>
-						<attribute name="ace"/>
+						<attribute name="ecf"/>
+					</optional>
+					<optional>
+						<attribute name="target"/>
 					</optional>
 					<optional>
 						<attribute name="finalize"/>

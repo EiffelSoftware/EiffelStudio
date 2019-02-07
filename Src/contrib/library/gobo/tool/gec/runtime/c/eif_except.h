@@ -4,7 +4,7 @@
 		"C functions used to implement class EXCEPTIONS"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,9 +16,13 @@
 #pragma once
 #endif
 
+#ifndef GE_EIFFEL_H
+#include "ge_eiffel.h"
+#endif
 #ifndef GE_EXCEPTION_H
 #include "ge_exception.h"
 #endif
+
 #include <errno.h>
 
 #ifdef __cplusplus
@@ -125,7 +129,7 @@ extern EIF_BOOLEAN eif_is_in_rescue(void);
 /*
  * Set default exception handler.
  */
-extern void set_windows_exception_filter();
+extern void set_windows_exception_filter(void);
 #endif
 
 /*

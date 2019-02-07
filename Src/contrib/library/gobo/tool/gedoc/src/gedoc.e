@@ -4,7 +4,7 @@ note
 
 		"Gobo Eiffel Doc"
 
-	copyright: "Copyright (c) 2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -68,8 +68,11 @@ feature -- Access
 
 feature -- Argument parsing
 
+	target_option: AP_STRING_OPTION
+			-- Option for '--target=<target_name>'
+
 	format_option: AP_ENUMERATION_OPTION
-			-- Option for '--format=<pretty_print|html_ise_stylesheet>'
+			-- Option for '--format=<pretty_print|html_ise_stylesheet|ecf_pretty_print|available_targets>'
 
 	class_option: AP_STRING_OPTION
 			-- Option for '--class=<class_name>'
@@ -89,14 +92,35 @@ feature -- Argument parsing
 	verbose_flag: AP_FLAG
 			-- Flag for '--verbose'
 
+	nested_benchmark_flag: AP_FLAG
+			-- Flag for '--nested-benchmark'
+
+	no_benchmark_flag: AP_FLAG
+			-- Flag for '--no-benchmark'
+
+	metrics_flag: AP_FLAG
+			-- Flag for '--metrics'
+
 	silent_flag: AP_FLAG
 			-- Flag for '--silent'
 
 	ise_option: AP_STRING_OPTION
 			-- Option for '--ise[=major[.minor[.revision[.build]]]]'
 
-	define_option: AP_STRING_OPTION
-			-- Option for '--define=FOO=BAR'
+	ecf_option: AP_STRING_OPTION
+			-- Option for '--ecf=<latest|major.minor.revision>'
+
+	setting_option: AP_STRING_OPTION
+			-- Option for '--setting=name=value'
+
+	capability_option: AP_STRING_OPTION
+			-- Option for '--capability=name=value'
+
+	variable_option: AP_STRING_OPTION
+			-- Option for '--variable=FOO=BAR'
+
+	thread_option: AP_INTEGER_OPTION
+			-- Option for '--thread=<thread_count>'
 
 	version_flag: AP_FLAG
 			-- Flag for '--version'
@@ -111,19 +135,26 @@ feature -- Argument parsing
 			create l_parser.make
 			l_parser.set_application_description ("Gobo Eiffel Doc, generate Eiffel documentation.")
 			l_parser.set_parameters_description ("filename")
+				-- target.
+			create target_option.make_with_long_form ("target")
+			target_option.set_description ("Name of target to be used in ECF file. (default: last target in ECF file)")
+			target_option.set_parameter_description ("target_name")
+			l_parser.options.force_last (target_option)
 				-- format.
 			create format_option.make_with_long_form ("format")
 			format_option.set_description ("Format for the output. (default: pretty_print)")
 			format_option.extend ("pretty_print")
 			format_option.extend ("html_ise_stylesheet")
-			format_option.set_parameter_description ("pretty_print|html_ise_stylesheet")
+			format_option.extend ("ecf_pretty_print")
+			format_option.extend ("available_targets")
+			format_option.set_parameter_description ("pretty_print|html_ise_stylesheet|ecf_pretty_print|available_targets")
 			l_parser.options.force_last (format_option)
 				-- class.
 			create class_option.make ('c', "class")
 			class_option.set_description ("Name (with wildcards) of classes to be processed.")
 			class_option.set_parameter_description ("class_name")
 			l_parser.options.force_last (class_option)
-				-- output_directory.
+				-- output directory.
 			create output_option.make ('o', "output")
 			output_option.set_description ("Directory for generated files. (default: next to each class file)")
 			output_option.set_parameter_description ("directory_name")
@@ -144,6 +175,18 @@ feature -- Argument parsing
 			create verbose_flag.make_with_long_form ("verbose")
 			verbose_flag.set_description ("Should detailed informative messages be displayed?")
 			l_parser.options.force_last (verbose_flag)
+				-- no-benchmark.
+			create no_benchmark_flag.make_with_long_form ("no-benchmark")
+			no_benchmark_flag.set_description ("Should no benchmark information be displayed? (default: display non-nested benchmark information)")
+			l_parser.options.force_last (no_benchmark_flag)
+				-- nested-benchmark.
+			create nested_benchmark_flag.make_with_long_form ("nested-benchmark")
+			nested_benchmark_flag.set_description ("Should nested benchmark information be displayed?")
+			l_parser.options.force_last (nested_benchmark_flag)
+				-- metrics.
+			create metrics_flag.make_with_long_form ("metrics")
+			metrics_flag.set_description ("Should metrics information be displayed?")
+			l_parser.options.force_last (metrics_flag)
 				-- silent.
 			create silent_flag.make_with_long_form ("silent")
 			silent_flag.set_description ("Should no informative messages be displayed?")
@@ -154,11 +197,33 @@ feature -- Argument parsing
 			ise_option.set_parameter_description ("major[.minor[.revision[.build]]]")
 			ise_option.set_default_parameter (ise_latest.out)
 			l_parser.options.force_last (ise_option)
-				-- define.
-			create define_option.make_with_long_form ("define")
-			define_option.set_description ("Define variables to be used when reading Xace files.")
-			define_option.set_parameter_description ("NAME=VALUE")
-			l_parser.options.force_last (define_option)
+				-- ecf.
+			create ecf_option.make_with_long_form ("ecf")
+			ecf_option.set_description ("Version of ECF to be used when converting ECF files. (default: version of the ECF input file)")
+			ecf_option.set_parameter_description ("latest|major.minor.revision")
+			l_parser.options.force_last (ecf_option)
+				-- setting.
+			create setting_option.make_with_long_form ("setting")
+			setting_option.set_description ("Override settings defined in ECF file.")
+			setting_option.set_parameter_description ("name=value")
+			l_parser.options.force_last (setting_option)
+				-- capability.
+			create capability_option.make_with_long_form ("capability")
+			capability_option.set_description ("Override capability usage defined in ECF file.")
+			capability_option.set_parameter_description ("name=value")
+			l_parser.options.force_last (capability_option)
+				-- variable.
+			create variable_option.make_with_long_form ("variable")
+			variable_option.set_description ("Override variables defined in ECF file.")
+			variable_option.set_parameter_description ("NAME=VALUE")
+			l_parser.options.force_last (variable_option)
+				-- thread.
+			create thread_option.make_with_long_form ("thread")
+			thread_option.set_description ("Number of threads to be used. Negative numbers -N mean %"number of CPUs - N%". (default: number of CPUs)")
+			thread_option.set_parameter_description ("thread_count")
+			if {PLATFORM}.is_thread_capable then
+				l_parser.options.force_last (thread_option)
+			end
 				-- version.
 			create version_flag.make ('V', "version")
 			version_flag.set_description ("Print the version number of gedoc and exit.")
@@ -166,6 +231,9 @@ feature -- Argument parsing
 			l_parser.alternative_options_lists.force_first (l_list)
 				-- Parsing.
 			l_parser.parse_arguments
+			if silent_flag.was_found then
+				create {ET_NULL_ERROR_HANDLER} error_handler.make_null
+			end
 			if version_flag.was_found then
 				report_version_number
 				Exceptions.die (0)
@@ -173,19 +241,30 @@ feature -- Argument parsing
 				report_usage_message (l_parser)
 				Exceptions.die (1)
 			elseif not format_option.was_found or format_option.parameter ~ "pretty_print" then
-				create {GEDOC_PRETTY_PRINT_FORMAT} l_format.make (l_input_filename, error_handler)
+				create {GEDOC_PRETTY_PRINT_FORMAT} l_format.make (l_input_filename, new_system_processor (thread_option))
 			elseif format_option.parameter ~ "html_ise_stylesheet" then
-				create {GEDOC_HTML_ISE_STYLESHEET_FORMAT} l_format.make (l_input_filename, error_handler)
+				create {GEDOC_HTML_ISE_STYLESHEET_FORMAT} l_format.make (l_input_filename, new_system_processor (thread_option))
+			elseif format_option.parameter ~ "ecf_pretty_print" then
+				create {GEDOC_ECF_PRETTY_PRINT_FORMAT} l_format.make (l_input_filename, new_system_processor (thread_option))
+			elseif format_option.parameter ~ "available_targets" then
+				create {GEDOC_AVAILABLE_TARGETS_FORMAT} l_format.make (l_input_filename, new_system_processor (thread_option))
 			end
 			if l_format /= Void then
+				set_target_name (target_option, l_parser, l_format)
 				set_ise_version (ise_option, l_parser, l_format)
-				set_defined_variables (define_option, l_parser, l_format)
+				set_ecf_version (ecf_option, l_parser, l_format)
+				set_override_settings (setting_option, l_parser, l_format)
+				set_override_capabilities (capability_option, l_parser, l_format)
+				set_override_variables (variable_option, l_parser, l_format)
 				set_class_filters (class_option, l_parser, l_format)
 				set_output_directory (output_option, l_parser, l_format)
 				l_format.set_force_flag (force_flag.was_found)
 				l_format.set_interactive_flag (interactive_flag.was_found)
 				l_format.set_library_prefix_flag (library_prefix_flag.was_found)
 				l_format.set_verbose_flag (verbose_flag.was_found)
+				l_format.set_benchmark_flag (not no_benchmark_flag.was_found)
+				l_format.set_nested_benchmark_flag (nested_benchmark_flag.was_found)
+				l_format.set_metrics_flag (metrics_flag.was_found)
 				l_format.set_silent_flag (silent_flag.was_found)
 				format := l_format
 			end
@@ -197,10 +276,31 @@ feature -- Argument parsing
 			force_flag_not_void: force_flag /= Void
 			interactive_flag_not_void: interactive_flag /= Void
 			verbose_flag_not_void: verbose_flag /= Void
+			no_benchmark_flag_not_void: no_benchmark_flag /= Void
+			nested_benchmark_flag_not_void: nested_benchmark_flag /= Void
+			metrics_flag_not_void: metrics_flag /= Void
 			silent_flag_not_void: silent_flag /= Void
 			ise_option_not_void: ise_option /= Void
-			define_option_not_void: define_option /= Void
+			ecf_option_not_void: ecf_option /= Void
+			setting_option_not_void: setting_option /= Void
+			capability_option_not_void: capability_option /= Void
+			variable_option_not_void: variable_option /= Void
+			thread_option_not_void: thread_option /= Void
 			version_flag_not_void: version_flag /= Void
+		end
+
+	set_target_name (a_option: like target_option; a_parser: AP_PARSER; a_format: GEDOC_FORMAT)
+			-- Set 'target_name' of `a_format' with information passed in `a_option'.
+		require
+			a_option_not_void: a_option /= Void
+			a_parser_not_void: a_parser /= Void
+			a_format_not_void: a_format /= Void
+		do
+			if a_option.was_found then
+				a_format.set_target_name (a_option.parameter)
+			else
+				a_format.set_target_name (Void)
+			end
 		end
 
 	set_ise_version (a_option: like ise_option; a_parser: AP_PARSER; a_format: GEDOC_FORMAT)
@@ -212,7 +312,7 @@ feature -- Argument parsing
 			a_format_not_void: a_format /= Void
 		local
 			l_ise_regexp: RX_PCRE_REGULAR_EXPRESSION
-			l_ise_version: UT_VERSION
+			l_ise_version: detachable UT_VERSION
 		do
 			if not a_option.was_found then
 				l_ise_version := ise_latest
@@ -243,51 +343,157 @@ feature -- Argument parsing
 					Exceptions.die (1)
 				end
 			end
-			a_format.set_ise_version (l_ise_version)
+			if l_ise_version /= Void then
+				a_format.set_ise_version (l_ise_version)
+			end
 		end
 
-	set_defined_variables (a_option: like define_option; a_parser: AP_PARSER; a_format: GEDOC_FORMAT)
-			-- Set 'defined_variables' of `a_format' with information passed in `a_option'.
+	set_ecf_version (a_option: like ecf_option; a_parser: AP_PARSER; a_format: GEDOC_FORMAT)
+			-- Set 'ecf_version' of `a_format' with information passed in `a_option'.
 			-- Report usage message and exit in case of invalid input.
 		require
 			a_option_not_void: a_option /= Void
 			a_parser_not_void: a_parser /= Void
 			a_format_not_void: a_format /= Void
 		local
-			l_defined_variables: DS_HASH_TABLE [STRING, STRING]
-			l_splitter: ST_SPLITTER
+			l_ecf_regexp: RX_PCRE_REGULAR_EXPRESSION
+			l_ecf_version: detachable UT_VERSION
+		do
+			if not a_option.was_found then
+				l_ecf_version := Void
+			elseif not attached a_option.parameter as l_parameter then
+				report_usage_message (a_parser)
+				Exceptions.die (1)
+			elseif STRING_.same_string (l_parameter, "latest") then
+				l_ecf_version := {UT_SHARED_ECF_VERSIONS}.ecf_last_known
+			else
+				create l_ecf_regexp.make
+				l_ecf_regexp.compile ("([0-9]+)(\.([0-9]+))?(\.([0-9]+))?")
+				if l_ecf_regexp.recognizes (l_parameter) then
+					inspect l_ecf_regexp.match_count
+					when 6 then
+						create l_ecf_version.make (l_ecf_regexp.captured_substring (1).to_integer, l_ecf_regexp.captured_substring (3).to_integer, l_ecf_regexp.captured_substring (5).to_integer, 0)
+					else
+						report_usage_message (a_parser)
+						Exceptions.die (1)
+					end
+				else
+					report_usage_message (a_parser)
+					Exceptions.die (1)
+				end
+			end
+			if l_ecf_version /= Void then
+				a_format.set_ecf_version (l_ecf_version)
+			end
+		end
+
+	set_override_settings (a_option: like setting_option; a_parser: AP_PARSER; a_format: GEDOC_FORMAT)
+			-- Set 'override_settings' of `a_format' with information passed in `a_option'.
+			-- Report usage message and exit in case of invalid input.
+		require
+			a_option_not_void: a_option /= Void
+			a_parser_not_void: a_parser /= Void
+			a_format_not_void: a_format /= Void
+		local
+			l_override_settings: detachable ET_ECF_SETTINGS
 			l_definition: STRING
 			l_index: INTEGER
-			l_gobo_eiffel: detachable STRING
 		do
-			create l_defined_variables.make_default
-			l_gobo_eiffel := Execution_environment.variable_value ("GOBO_EIFFEL")
-			if l_gobo_eiffel /= Void and then not l_gobo_eiffel.is_empty then
-				l_defined_variables.force_last (l_gobo_eiffel, "GOBO_EIFFEL")
-			elseif ise_option.was_found then
-				l_defined_variables.force_last ("ise", "GOBO_EIFFEL")
-			else
-				l_defined_variables.force_last ("ge", "GOBO_EIFFEL")
-			end
 			if not a_option.parameters.is_empty then
-				create l_splitter.make
-				across a_option.parameters as l_variables loop
-					across l_splitter.split (l_variables.item) as l_variable loop
-						l_definition := l_variable.item
+				create l_override_settings.make
+				across a_option.parameters as l_settings loop
+					if attached l_settings.item as l_setting then
+						l_definition := l_setting
 						if l_definition.count > 0 then
 							l_index := l_definition.index_of ('=', 1)
 							if l_index = 0 then
-								l_defined_variables.force_last ("", l_definition)
+								l_override_settings.set_primary_value (l_definition, "")
 							elseif l_index = l_definition.count then
-								l_defined_variables.force_last ("", l_definition.substring (1, l_index - 1))
+								l_override_settings.set_primary_value (l_definition.substring (1, l_index - 1), "")
 							elseif l_index /= 1 then
-								l_defined_variables.force_last (l_definition.substring (l_index + 1, l_definition.count), l_definition.substring (1, l_index - 1))
+								l_override_settings.set_primary_value (l_definition.substring (1, l_index - 1), l_definition.substring (l_index + 1, l_definition.count))
 							end
 						end
 					end
 				end
 			end
-			a_format.set_defined_variables (l_defined_variables)
+			a_format.set_override_settings (l_override_settings)
+		end
+
+	set_override_capabilities (a_option: like capability_option; a_parser: AP_PARSER; a_format: GEDOC_FORMAT)
+			-- Set 'override_capabilities' of `a_format' with information passed in `a_option'.
+			-- Report usage message and exit in case of invalid input.
+		require
+			a_option_not_void: a_option /= Void
+			a_parser_not_void: a_parser /= Void
+			a_format_not_void: a_format /= Void
+		local
+			l_override_capabilities: detachable ET_ECF_CAPABILITIES
+			l_definition: STRING
+			l_index: INTEGER
+		do
+			if not a_option.parameters.is_empty then
+				create l_override_capabilities.make
+				across a_option.parameters as l_capabilities loop
+					if attached l_capabilities.item as l_capability then
+						l_definition := l_capability
+						if l_definition.count > 0 then
+							l_index := l_definition.index_of ('=', 1)
+							if l_index = 0 then
+								l_override_capabilities.set_primary_use_value (l_definition, "")
+							elseif l_index = l_definition.count then
+								l_override_capabilities.set_primary_use_value (l_definition.substring (1, l_index - 1), "")
+							elseif l_index /= 1 then
+								l_override_capabilities.set_primary_use_value (l_definition.substring (1, l_index - 1), l_definition.substring (l_index + 1, l_definition.count))
+							end
+						end
+					end
+				end
+			end
+			a_format.set_override_capabilities (l_override_capabilities)
+		end
+
+	set_override_variables (a_option: like variable_option; a_parser: AP_PARSER; a_format: GEDOC_FORMAT)
+			-- Set 'override_variables' of `a_format' with information passed in `a_option'.
+			-- Report usage message and exit in case of invalid input.
+		require
+			a_option_not_void: a_option /= Void
+			a_parser_not_void: a_parser /= Void
+			a_format_not_void: a_format /= Void
+		local
+			l_override_variables: ET_ECF_VARIABLES
+			l_definition: STRING
+			l_index: INTEGER
+			l_gobo_eiffel: detachable STRING
+		do
+			l_gobo_eiffel := Execution_environment.variable_value ("GOBO_EIFFEL")
+			if l_gobo_eiffel = Void or else l_gobo_eiffel.is_empty then
+				if ise_option.was_found then
+					l_gobo_eiffel := "ise"
+				else
+					l_gobo_eiffel := "ge"
+				end
+				Execution_environment.set_variable_value ("GOBO_EIFFEL", l_gobo_eiffel)
+			end
+			if not a_option.parameters.is_empty then
+				create l_override_variables.make
+				across a_option.parameters as l_variables loop
+					if attached l_variables.item as l_variable then
+						l_definition := l_variable
+						if l_definition.count > 0 then
+							l_index := l_definition.index_of ('=', 1)
+							if l_index = 0 then
+								l_override_variables.set_primary_value (l_definition, "")
+							elseif l_index = l_definition.count then
+								l_override_variables.set_primary_value (l_definition.substring (1, l_index - 1), "")
+							elseif l_index /= 1 then
+								l_override_variables.set_primary_value (l_definition.substring (1, l_index - 1), l_definition.substring (l_index + 1, l_definition.count))
+							end
+						end
+					end
+				end
+			end
+			a_format.set_override_variables (l_override_variables)
 		end
 
 	set_class_filters (a_option: like class_option; a_parser: AP_PARSER; a_format: GEDOC_FORMAT)
@@ -336,9 +542,34 @@ feature -- Argument parsing
 			end
 		end
 
+	new_system_processor (a_thread_option: AP_INTEGER_OPTION): ET_SYSTEM_PROCESSOR
+			-- New system processor, using the number of threads
+			-- specified in `a_thread_option'
+		require
+			a_thread_option_not_void: a_thread_option /= Void
+		local
+			l_thread_count: INTEGER
+		do
+			l_thread_count := {EXECUTION_ENVIRONMENT}.available_cpu_count.as_integer_32
+			if thread_option.was_found then
+				l_thread_count := thread_option.parameter
+				if l_thread_count <= 0 then
+					l_thread_count := {EXECUTION_ENVIRONMENT}.available_cpu_count.as_integer_32 + l_thread_count
+				end
+			end
+			if l_thread_count > 1 and {PLATFORM}.is_thread_capable then
+				create {ET_SYSTEM_MULTIPROCESSOR} Result.make (l_thread_count)
+			else
+				create Result.make
+			end
+			Result.set_error_handler (error_handler)
+		ensure
+			new_system_processor_not_void: Result /= Void
+		end
+
 feature -- Error handling
 
-	error_handler: UT_ERROR_HANDLER
+	error_handler: ET_ERROR_HANDLER
 			-- Error handler
 
 	has_error: BOOLEAN
@@ -397,6 +628,7 @@ feature -- Error handling
 invariant
 
 	error_handler_not_void: error_handler /= Void
+	target_option_not_void: target_option /= Void
 	format_option_not_void: format_option /= Void
 	class_option_not_void: class_option /= Void
 	output_option_not_void: output_option /= Void
@@ -404,9 +636,16 @@ invariant
 	force_flag_not_void: force_flag /= Void
 	interactive_flag_not_void: interactive_flag /= Void
 	verbose_flag_not_void: verbose_flag /= Void
+	no_benchmark_flag_not_void: no_benchmark_flag /= Void
+	nested_benchmark_flag_not_void: nested_benchmark_flag /= Void
+	metrics_flag_not_void: metrics_flag /= Void
 	silent_flag_not_void: silent_flag /= Void
 	ise_option_not_void: ise_option /= Void
-	define_option_not_void: define_option /= Void
+	ecf_option_not_void: ecf_option /= Void
+	setting_option_not_void: setting_option /= Void
+	capability_option_not_void: capability_option /= Void
+	variable_option_not_void: variable_option /= Void
+	thread_option_not_void: thread_option /= Void
 	version_flag_not_void: version_flag /= Void
 
 end

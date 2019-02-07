@@ -1,9 +1,9 @@
-note
+﻿note
 	description: "[
 		Commonly used input and output mechanisms.
 		This class may be used as either ancestor or supplier
 		by classes needing its facilities.
-		]"
+	]"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -20,6 +20,7 @@ feature -- Access
 		once
 			create {CONSOLE} Result.make_open_stdin ("stdin")
 		ensure
+			instance_free: class
 			input_not_void: Result /= Void
 		end
 
@@ -28,6 +29,7 @@ feature -- Access
 		once
 			create {CONSOLE} Result.make_open_stdout ("stdout")
 		ensure
+			instance_free: class
 			output_not_void: Result /= Void
 		end
 
@@ -36,6 +38,7 @@ feature -- Access
 		once
 			create {CONSOLE} Result.make_open_stderr ("stderr")
 		ensure
+			instance_free: class
 			error_not_void: Result /= Void
 		end
 
@@ -47,14 +50,11 @@ feature -- Access
 			-- if `default_output' is Void.
 			--| Useful if a class inherits from STD_FILES and
 			--| and a `putint' is applied without standard setting.
-		local
-			r: detachable PLAIN_TEXT_FILE
 		do
-			r := default_output
-			if r = Void then
-				r := output
+			Result := default_output
+			if Result = Void then
+				Result := output
 			end
-			Result := r
 		end
 
 feature -- Status report
@@ -63,60 +63,80 @@ feature -- Status report
 			-- Last character read by `read_character'
 		do
 			Result := input.last_character
+		ensure
+			instance_free: class
 		end
 
 	last_integer, lastint, last_integer_32: INTEGER
 			-- Last integer read by `read_integer'
 		do
 			Result := input.last_integer
+		ensure
+			instance_free: class
 		end
 
 	last_integer_8: INTEGER_8
 			-- Last 8-bit integer read by `read_integer_8'
 		do
 			Result := input.last_integer_8
+		ensure
+			instance_free: class
 		end
 
 	last_integer_16: INTEGER_16
 			-- Last 16-bit integer read by `read_integer_16'
 		do
 			Result := input.last_integer_16
+		ensure
+			instance_free: class
 		end
 
 	last_integer_64: INTEGER_64
 			-- Last 8-bit integer read by `read_integer_64'
 		do
 			Result := input.last_integer_64
+		ensure
+			instance_free: class
 		end
 
 	last_natural_8: NATURAL_8
 			-- Last 8-bit natural read by `read_natural_8'
 		do
 			Result := input.last_natural_8
+		ensure
+			instance_free: class
 		end
 
 	last_natural_16: NATURAL_16
 			-- Last 16-bit natural read by `read_natural_16'
 		do
 			Result := input.last_natural_16
+		ensure
+			instance_free: class
 		end
 
 	last_natural, last_natural_32: NATURAL_32
 			-- Last 32-bit natural read by `read_natural_32'
 		do
 			Result := input.last_natural_32
+		ensure
+			instance_free: class
 		end
 
 	last_natural_64: NATURAL_64
 			-- Last 64-bit natural read by `read_natural_64'
 		do
 			Result := input.last_natural_64
+		ensure
+			instance_free: class
 		end
 
-	last_real, lastreal: REAL
+	last_real, lastreal: REAL_32
 			-- Last real read by `read_real'
 		do
 			Result := input.last_real
+		ensure
+			instance_free: class
 		end
 
 	last_string, laststring: STRING
@@ -124,12 +144,16 @@ feature -- Status report
 			-- `read_stream', or `read_word'
 		do
 			Result := input.last_string
+		ensure
+			instance_free: class
 		end
 
-	last_double, lastdouble: DOUBLE
+	last_double, lastdouble: REAL_64
 			-- Last double read by `read_double'
 		do
 			Result := input.last_double
+		ensure
+			instance_free: class
 		end
 
 feature -- Element change
@@ -169,13 +193,13 @@ feature -- Element change
 			standard_default.put_string (s)
 		end
 
-	put_real, putreal (r: REAL)
+	put_real, putreal (r: REAL_32)
 			-- Write `r' at end of default output.
 		do
 			standard_default.put_real (r)
 		end
 
-	put_double, putdouble (d: DOUBLE)
+	put_double, putdouble (d: REAL_64)
 			-- Write `d' at end of default output.
 		do
 			standard_default.put_double (d)
@@ -252,6 +276,8 @@ feature -- Input
 			-- Make result available in `last_integer'.
 		do
 			input.read_integer
+		ensure
+			instance_free: class
 		end
 
 	read_integer_8
@@ -259,6 +285,8 @@ feature -- Input
 			-- Make result available in `last_integer_8'.
 		do
 			input.read_integer_8
+		ensure
+			instance_free: class
 		end
 
 	read_integer_16
@@ -266,6 +294,8 @@ feature -- Input
 			-- Make result available in `last_integer_16'.
 		do
 			input.read_integer_16
+		ensure
+			instance_free: class
 		end
 
 	read_integer_64
@@ -273,6 +303,8 @@ feature -- Input
 			-- Make result available in `last_integer_64'.
 		do
 			input.read_integer_64
+		ensure
+			instance_free: class
 		end
 
 	read_natural_8
@@ -280,6 +312,8 @@ feature -- Input
 			-- Make result available in `last_natural_8'.
 		do
 			input.read_natural_8
+		ensure
+			instance_free: class
 		end
 
 	read_natural_16
@@ -287,6 +321,8 @@ feature -- Input
 			-- Make result available in `last_natural_16'.
 		do
 			input.read_natural_16
+		ensure
+			instance_free: class
 		end
 
 	read_natural, read_natural_32
@@ -294,6 +330,8 @@ feature -- Input
 			-- Make result available in `last_natural'.
 		do
 			input.read_natural_32
+		ensure
+			instance_free: class
 		end
 
 	read_natural_64
@@ -301,6 +339,8 @@ feature -- Input
 			-- Make result available in `last_natural_64'.
 		do
 			input.read_natural_64
+		ensure
+			instance_free: class
 		end
 
 	read_real, readreal
@@ -308,6 +348,8 @@ feature -- Input
 			-- Make result available in `last_real'.
 		do
 			input.read_real
+		ensure
+			instance_free: class
 		end
 
 	read_double, readdouble
@@ -315,6 +357,8 @@ feature -- Input
 			-- Make result available in `last_double'.
 		do
 			input.read_double
+		ensure
+			instance_free: class
 		end
 
 	read_line, readline
@@ -323,6 +367,7 @@ feature -- Input
 		do
 			input.read_line
 		ensure
+			instance_free: class
 			last_string_not_void: last_string /= Void
 		end
 
@@ -333,6 +378,7 @@ feature -- Input
 		do
 			input.read_stream (nb_char)
 		ensure
+			instance_free: class
 			last_string_not_void: last_string /= Void
 		end
 
@@ -342,6 +388,7 @@ feature -- Input
 		do
 			input.read_word
 		ensure
+			instance_free: class
 			last_string_not_void: last_string /= Void
 		end
 
@@ -354,16 +401,20 @@ feature -- Input
 			-- specific newline character.
 		do
 			input.read_character
+		ensure
+			instance_free: class
 		end
 
 	to_next_line, next_line
 			-- Move to next input line on standard input.
 		do
 			input.next_line
+		ensure
+			instance_free: class
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic systems at run-time"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -28,15 +28,17 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_system: like current_system)
+	make (a_system: like current_system; a_system_processor: like system_processor)
 			-- Create a new dynamic system.
 		require
 			a_system_not_void: a_system /= Void
+			a_system_processor_not_void: a_system_processor /= Void
 		local
 			nb: INTEGER
 		do
 			catcall_error_mode := True
 			current_system := a_system
+			system_processor := a_system_processor
 			make_basic_types
 			nb := current_system.master_classes.capacity
 			create dynamic_types.make (nb)
@@ -46,6 +48,7 @@ feature {NONE} -- Initialization
 			set_dynamic_type_set_builder (null_dynamic_type_set_builder)
 		ensure
 			current_system_set: current_system = a_system
+			system_processor_set: system_processor = a_system_processor
 		end
 
 	make_basic_types
@@ -115,6 +118,9 @@ feature -- Access
 			-- Surrounding Eiffel system
 			-- (Note: there is a frozen feature called `system' in
 			-- class GENERAL of SmartEiffel 1.0)
+
+	system_processor: ET_SYSTEM_PROCESSOR
+			-- System processor currently used
 
 feature -- Status report
 
@@ -261,6 +267,7 @@ feature -- Types
 			l_result: detachable ET_DYNAMIC_TYPE
 			l_is_reentrant: BOOLEAN
 			l_old_dynamic_types_count: INTEGER
+			l_implicit_type_mark: detachable ET_TYPE_MARK
 		do
 			if in_dynamic_type then
 				l_is_reentrant := True
@@ -274,7 +281,7 @@ feature -- Types
 				l_type := dynamic_types.item (i)
 				if l_type.base_class /= l_base_class then
 					-- Wrong index.
-				elseif not l_base_class.is_generic and not l_base_class.is_tuple_class then
+				elseif not current_system.attachment_type_conformance_mode and not l_base_class.is_generic and not l_base_class.is_tuple_class then
 					if a_type.is_type_expanded (a_context) = l_type.is_expanded then
 						l_result := l_type
 					elseif not attached l_type.next_type as l_next_type then
@@ -289,10 +296,15 @@ feature -- Types
 						-- Traverse all dynamic types with the same base class.
 						-- If not found then add this new dynamic type.
 					l_any := current_system.any_type
+					if current_system.attachment_type_conformance_mode then
+						l_implicit_type_mark := tokens.implicit_separate_type_mark
+					else
+						l_implicit_type_mark := tokens.implicit_attached_separate_type_mark
+					end
 					from until
 						l_result /= Void
 					loop
-						if l_type.base_type.same_base_type_with_type_marks (a_type, tokens.implicit_attached_separate_type_mark, a_context, tokens.implicit_attached_separate_type_mark, l_any) then
+						if l_type.base_type.same_base_type_with_type_marks (a_type, l_implicit_type_mark, a_context, l_implicit_type_mark, l_any) then
 							l_result := l_type
 						elseif not attached l_type.next_type as l_next_type then
 							l_result := new_dynamic_type (a_type, a_context)
@@ -309,12 +321,12 @@ feature -- Types
 					-- Add the new dynamic type and keep track
 					-- of its associated index.
 				if full_class_checking then
-					l_base_class.process (current_system.implementation_checker)
+					l_base_class.process (system_processor.implementation_checker)
 					if not l_base_class.implementation_checked or else l_base_class.has_implementation_error then
 						set_fatal_error
 					end
 				else
-					l_base_class.process (current_system.interface_checker)
+					l_base_class.process (system_processor.interface_checker)
 					if not l_base_class.interface_checked or else l_base_class.has_interface_error then
 						set_fatal_error
 					end
@@ -982,35 +994,39 @@ feature -- New instance types
 
 feature -- Compilation
 
-	compile
+	compile (a_system_processor: ET_SYSTEM_PROCESSOR)
 			-- Compile current system.
 			-- Set `has_fatal_error' if a fatal error occurred.
 			--
 			-- Note that this operation will be interrupted if a stop request
-			-- is received, i.e. `current_system.stop_request' starts returning
-			-- True. No interruption if `current_system.stop_request' is Void.
+			-- is received, i.e. `a_system_processor.stop_request' starts returning
+			-- True. No interruption if `a_system_processor.stop_request' is Void.
+		require
+			a_system_processor_not_void: a_system_processor /= Void
 		local
 			l_root_type: detachable ET_BASE_TYPE
 		do
 			l_root_type := current_system.root_type
 			if l_root_type = Void then
-				compile_all
+				compile_all (a_system_processor)
 			elseif l_root_type.same_named_type (current_system.none_type, tokens.unknown_class, tokens.unknown_class) then
-				compile_all
+				compile_all (a_system_processor)
 			elseif l_root_type.same_named_type (current_system.any_type, tokens.unknown_class, tokens.unknown_class) then
-				compile_all
+				compile_all (a_system_processor)
 			else
-				compile_system
+				compile_system (a_system_processor)
 			end
 		end
 
-	compile_system
+	compile_system (a_system_processor: ET_SYSTEM_PROCESSOR)
 			-- Compile all code reachable from the root creation procedure of the root class.
 			-- Set `has_fatal_error' if a fatal error occurred.
 			--
 			-- Note that this operation will be interrupted if a stop request
-			-- is received, i.e. `current_system.stop_request' starts returning
-			-- True. No interruption if `current_system.stop_request' is Void.
+			-- is received, i.e. `a_system_processor.stop_request' starts returning
+			-- True. No interruption if `a_system_processor.stop_request' is Void.
+		require
+			a_system_processor_not_void: a_system_processor /= Void
 		local
 			l_root_type: detachable ET_BASE_TYPE
 			l_dynamic_root_type: like root_type
@@ -1018,23 +1034,13 @@ feature -- Compilation
 			l_procedure: detachable ET_PROCEDURE
 			l_query: detachable ET_QUERY
 			l_root_creation_procedure: like root_creation_procedure
-			l_clock: DT_SHARED_SYSTEM_CLOCK
-			dt1: detachable DT_DATE_TIME
 			l_class: ET_CLASS
 		do
 			has_fatal_error := False
-			current_system.activate_processors
-			activate_dynamic_type_set_builder
-			if error_handler.benchmark_shown then
-				create l_clock
-				dt1 := l_clock.system_clock.date_time_now
-			end
-			current_system.preparse_recursive
-			if dt1 /= Void then
-				current_system.print_time (dt1, "Degree 6")
-			end
-			compile_kernel
-			if not current_system.stop_requested then
+			activate_dynamic_type_set_builder (a_system_processor)
+			a_system_processor.compile_degree_6 (current_system)
+			compile_kernel (a_system_processor)
+			if not a_system_processor.stop_requested then
 				l_root_type := current_system.root_type
 				if l_root_type = Void then
 						-- Error: missing root class.
@@ -1051,7 +1057,7 @@ feature -- Compilation
 					error_handler.report_gvsrc6a_error (l_root_type.base_class, l_name)
 				else
 					l_class := l_root_type.base_class
-					l_class.process (current_system.eiffel_parser)
+					l_class.process (a_system_processor.eiffel_parser)
 					if not l_class.is_preparsed then
 							-- Error: unknown root class.
 						set_fatal_error
@@ -1118,67 +1124,54 @@ feature -- Compilation
 			end
 		end
 
-	compile_all
+	compile_all (a_system_processor: ET_SYSTEM_PROCESSOR)
 			-- Compile all classes in the Eiffel system.
 			-- Set `has_fatal_error' if a fatal error occurred.
 			--
 			-- Note that this operation will be interrupted if a stop request
-			-- is received, i.e. `current_system.stop_request' starts returning
-			-- True. No interruption if `current_system.stop_request' is Void.
+			-- is received, i.e. `a_system_processor.stop_request' starts returning
+			-- True. No interruption if `a_system_processor.stop_request' is Void.
+		require
+			a_system_processor_not_void: a_system_processor /= Void
 		local
-			l_clock: DT_SHARED_SYSTEM_CLOCK
 			dt1: detachable DT_DATE_TIME
 		do
 			has_fatal_error := False
-			activate_dynamic_type_set_builder
-			current_system.compile_all
-			if not current_system.stop_requested and then error_handler.benchmark_shown then
-				create l_clock
-				dt1 := l_clock.system_clock.date_time_now
-			end
-			compile_kernel
-			current_system.classes_do_recursive_until (agent compile_all_features, current_system.stop_request)
+			activate_dynamic_type_set_builder (a_system_processor)
+			a_system_processor.compile_all (current_system)
+			dt1 := a_system_processor.benchmark_start_time
+			compile_kernel (a_system_processor)
+			current_system.classes_do_recursive_until (agent compile_all_features, a_system_processor.stop_request)
 			build_dynamic_type_sets
-			if not current_system.stop_requested and then dt1 /= Void then
-				current_system.print_time (dt1, "Degree Dynamic Type Set")
-			end
+			a_system_processor.record_end_time (dt1, "Degree Dynamic Type Set")
 		end
 
-	compile_feature (a_feature_name: ET_FEATURE_NAME; a_class: ET_CLASS)
+	compile_feature (a_feature_name: ET_FEATURE_NAME; a_class: ET_CLASS; a_system_processor: ET_SYSTEM_PROCESSOR)
 			-- Compile all code reachable from the feature `a_feature_name' from `a_class'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 			--
 			-- Note that this operation will be interrupted if a stop request
-			-- is received, i.e. `current_system.stop_request' starts returning
-			-- True. No interruption if `current_system.stop_request' is Void.
+			-- is received, i.e. `a_system_processor.stop_request' starts returning
+			-- True. No interruption if `a_system_processor.stop_request' is Void.
 		require
 			a_feature_name_not_void: a_feature_name /= Void
 			a_class_not_void: a_class /= Void
+			a_system_processor_not_void: a_system_processor /= Void
 		local
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
-			l_clock: DT_SHARED_SYSTEM_CLOCK
-			dt1: detachable DT_DATE_TIME
 		do
 			has_fatal_error := False
-			current_system.activate_processors
-			activate_dynamic_type_set_builder
-			if error_handler.benchmark_shown then
-				create l_clock
-				dt1 := l_clock.system_clock.date_time_now
-			end
-			current_system.preparse_recursive
-			if dt1 /= Void then
-				current_system.print_time (dt1, "Degree 6")
-			end
-			compile_kernel
-			if not current_system.stop_requested then
+			activate_dynamic_type_set_builder (a_system_processor)
+			a_system_processor.compile_degree_6 (current_system)
+			compile_kernel (a_system_processor)
+			if not a_system_processor.stop_requested then
 				if not a_class.is_preparsed then
 						-- Error: unknown class.
 					set_fatal_error
 					error_handler.report_gvsrc4a_error (a_class)
 				else
-					a_class.process (current_system.eiffel_parser)
+					a_class.process (a_system_processor.eiffel_parser)
 					if not a_class.is_parsed or else a_class.has_syntax_error then
 							-- Error already reported.
 						set_fatal_error
@@ -1212,12 +1205,14 @@ feature -- Compilation
 
 feature {NONE} -- Compilation
 
-	compile_kernel
+	compile_kernel (a_system_processor: ET_SYSTEM_PROCESSOR)
 			-- Compile kernel classes.
 			--
 			-- Note that this operation will be interrupted if a stop request
-			-- is received, i.e. `current_system.stop_request' starts returning
-			-- True. No interruption if `current_system.stop_request' is Void.
+			-- is received, i.e. `a_system_processor.stop_request' starts returning
+			-- True. No interruption if `a_system_processor.stop_request' is Void.
+		require
+			a_system_processor_not_void: a_system_processor /= Void
 		local
 			l_any: ET_CLASS_TYPE
 			l_actual_parameters: ET_ACTUAL_PARAMETER_LIST
@@ -1226,7 +1221,7 @@ feature {NONE} -- Compilation
 			l_class: ET_CLASS
 			l_dynamic_feature: ET_DYNAMIC_FEATURE
 		do
-			if not current_system.stop_requested then
+			if not a_system_processor.stop_requested then
 				dynamic_types.wipe_out
 				l_any := current_system.any_type
 					-- Type "BOOLEAN".
@@ -1349,7 +1344,7 @@ feature {NONE} -- Compilation
 					set_fatal_error
 					error_handler.report_gvknl1a_error (l_class)
 				else
-					l_class.process (current_system.interface_checker)
+					l_class.process (a_system_processor.interface_checker)
 					if not l_class.interface_checked or else l_class.has_interface_error then
 							-- Error already reported by the previous
 							-- processing on `l_class'.
@@ -1591,7 +1586,7 @@ feature {NONE} -- Compilation
 					set_fatal_error
 					error_handler.report_gvknl1a_error (l_class)
 				else
-					l_class.process (current_system.interface_checker)
+					l_class.process (a_system_processor.interface_checker)
 					if not l_class.interface_checked or else l_class.has_interface_error then
 							-- Error already reported by the previous
 							-- processing on `l_class'.
@@ -1658,14 +1653,14 @@ feature {NONE} -- Compilation
 					set_fatal_error
 					error_handler.report_gvknl1a_error (l_class)
 				else
-					l_class.process (current_system.interface_checker)
+					l_class.process (a_system_processor.interface_checker)
 					if not l_class.interface_checked or else l_class.has_interface_error then
 							-- Error already reported by the previous
 							-- processing on `l_class'.
 						set_fatal_error
 					else
 							-- Check feature 'to_pointer' of class "TYPED_POINTER".
-						if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version < ise_6_0_6_7057 then
+						if a_system_processor.older_ise_version (ise_6_0_6_7057) then
 							typed_pointer_to_pointer_feature := l_class.named_query (tokens.pointer_item_feature_name)
 						else
 							typed_pointer_to_pointer_feature := l_class.named_query (tokens.to_pointer_feature_name)
@@ -1683,7 +1678,10 @@ feature {NONE} -- Compilation
 							error_handler.report_gvkfe3a_error (l_class, l_typed_pointer_to_pointer_feature, current_system.pointer_type)
 							typed_pointer_to_pointer_feature := Void
 						elseif not l_typed_pointer_to_pointer_feature.is_attribute then
-							if not attached {ET_EXTERNAL_FUNCTION} l_typed_pointer_to_pointer_feature as l_external_function or else l_external_function.builtin_code /= tokens.builtin_pointer_feature (tokens.builtin_pointer_item) then
+							if
+								not attached {ET_EXTERNAL_FUNCTION} l_typed_pointer_to_pointer_feature as l_external_function or else
+								not (l_external_function.builtin_class_code = tokens.builtin_pointer_ref_class and then l_external_function.builtin_feature_code = tokens.builtin_pointer_ref_item)
+							then
 								set_fatal_error
 								error_handler.report_gvkfe2a_error (l_class, l_typed_pointer_to_pointer_feature)
 								typed_pointer_to_pointer_feature := Void
@@ -1700,7 +1698,7 @@ feature {NONE} -- Compilation
 					set_fatal_error
 					error_handler.report_gvknl1a_error (l_class)
 				else
-					l_class.process (current_system.interface_checker)
+					l_class.process (a_system_processor.interface_checker)
 					if not l_class.interface_checked or else l_class.has_interface_error then
 							-- Error already reported by the previous
 							-- processing on `l_class'.
@@ -1779,6 +1777,8 @@ feature {NONE} -- Compilation
 				end
 					-- Type "ISE_EXCEPTION_MANAGER".
 				ise_exception_manager_init_exception_manager_feature := Void
+				ise_exception_manager_last_exception_feature := Void
+				ise_exception_manager_once_raise_feature := Void
 				ise_exception_manager_set_exception_data_feature := Void
 				l_class_type := current_system.ise_exception_manager_type
 				l_class := l_class_type.base_class
@@ -1788,7 +1788,7 @@ feature {NONE} -- Compilation
 					ise_exception_manager_type := unknown_type
 				else
 					ise_exception_manager_type := dynamic_type (l_class_type, l_any)
-					l_class.process (current_system.interface_checker)
+					l_class.process (a_system_processor.interface_checker)
 					if not l_class.interface_checked or else l_class.has_interface_error then
 							-- Error already reported by the previous
 							-- processing on `l_class'.
@@ -1801,7 +1801,7 @@ feature {NONE} -- Compilation
 								error_handler.report_gvkfe4a_error (l_class, l_query)
 							else
 								set_fatal_error
-								error_handler.report_gvkfe1a_error (l_class, tokens.set_exception_data_feature_name)
+								error_handler.report_gvkfe1a_error (l_class, tokens.init_exception_manager_feature_name)
 							end
 						elseif attached l_procedure.arguments as l_formal_arguments and then l_formal_arguments.count /= 0 then
 							set_fatal_error
@@ -1810,6 +1810,46 @@ feature {NONE} -- Compilation
 							l_dynamic_feature := ise_exception_manager_type.dynamic_procedure (l_procedure, Current)
 							l_dynamic_feature.set_regular (True)
 							ise_exception_manager_init_exception_manager_feature := l_dynamic_feature
+						end
+							-- Check feature 'last_exception' of class "ISE_EXCEPTION_MANAGER".
+						if not attached l_class.named_query (tokens.last_exception_feature_name) as l_query then
+							if attached l_class.named_procedure (tokens.last_exception_feature_name) as l_procedure then
+								set_fatal_error
+								error_handler.report_gvkfe4a_error (l_class, l_procedure)
+							else
+								set_fatal_error
+								error_handler.report_gvkfe1a_error (l_class, tokens.last_exception_feature_name)
+							end
+						elseif attached l_query.arguments as l_formal_arguments and then l_formal_arguments.count /= 0 then
+							set_fatal_error
+							error_handler.report_gvkfe6a_error (l_class, l_query, Void, current_system.universe.detachable_exception_type)
+						elseif not l_query.type.type.same_named_type (current_system.universe.detachable_exception_type, l_class, l_class) then
+							set_fatal_error
+							error_handler.report_gvkfe6a_error (l_class, l_query, Void, current_system.universe.detachable_exception_type)
+						else
+							l_dynamic_feature := ise_exception_manager_type.dynamic_query (l_query, Current)
+							l_dynamic_feature.set_regular (True)
+							ise_exception_manager_last_exception_feature := l_dynamic_feature
+						end
+							-- Check feature 'once_raise' of class "ISE_EXCEPTION_MANAGER".
+						if not attached l_class.named_procedure (tokens.once_raise_feature_name) as l_procedure then
+							if attached l_class.named_query (tokens.once_raise_feature_name) as l_query then
+								set_fatal_error
+								error_handler.report_gvkfe4a_error (l_class, l_query)
+							else
+								set_fatal_error
+								error_handler.report_gvkfe1a_error (l_class, tokens.once_raise_feature_name)
+							end
+						elseif not attached l_procedure.arguments as l_formal_arguments or else l_formal_arguments.count /= 1 then
+							set_fatal_error
+							error_handler.report_gvkfe6a_error (l_class, l_procedure, <<current_system.universe.exception_type.type>>, Void)
+						elseif not l_formal_arguments.formal_argument (1).type.same_named_type (current_system.universe.exception_type, l_class, l_class) then
+							set_fatal_error
+							error_handler.report_gvkfe6a_error (l_class, l_procedure, <<current_system.universe.exception_type.type>>, Void)
+						else
+							l_dynamic_feature := ise_exception_manager_type.dynamic_procedure (l_procedure, Current)
+							l_dynamic_feature.set_regular (True)
+							ise_exception_manager_once_raise_feature := l_dynamic_feature
 						end
 							-- Check feature 'set_exception_data' of class "ISE_EXCEPTION_MANAGER".
 						if not attached l_class.named_procedure (tokens.set_exception_data_feature_name) as l_procedure then
@@ -1915,12 +1955,12 @@ feature {NONE} -- Compilation
 			-- Build dynamic type sets for current system.
 			--
 			-- Note that this operation will be interrupted if a stop request
-			-- is received, i.e. `current_system.stop_request' starts returning
-			-- True. No interruption if `current_system.stop_request' is Void.
+			-- is received, i.e. `system_processor.stop_request' starts returning
+			-- True. No interruption if `system_processor.stop_request' is Void.
 		local
 			l_builder: ET_DYNAMIC_TYPE_SET_BUILDER
 		do
-			if not current_system.stop_requested then
+			if not system_processor.stop_requested then
 				l_builder := dynamic_type_set_builder
 				l_builder.set_no_debug (True)
 				l_builder.set_no_assertion (True)
@@ -1949,7 +1989,7 @@ feature -- Error handling
 	error_handler: ET_ERROR_HANDLER
 			-- Error handler
 		do
-			Result := current_system.error_handler
+			Result := system_processor.error_handler
 		ensure
 			error_handler_not_void: Result /= Void
 		end
@@ -1962,11 +2002,13 @@ feature -- Processors
 	null_dynamic_type_set_builder: ET_DYNAMIC_NULL_TYPE_SET_BUILDER
 			-- Null builder of dynamic type sets
 
-	activate_dynamic_type_set_builder
+	activate_dynamic_type_set_builder (a_system_processor: ET_SYSTEM_PROCESSOR)
 			-- Activate dynamic type set builder.
+		require
+			a_system_processor_not_void: a_system_processor /= Void
 		do
 			if dynamic_type_set_builder = null_dynamic_type_set_builder then
-				create {ET_DYNAMIC_PUSH_TYPE_SET_BUILDER} dynamic_type_set_builder.make (Current)
+				create {ET_DYNAMIC_PUSH_TYPE_SET_BUILDER} dynamic_type_set_builder.make (Current, a_system_processor)
 				dynamic_type_set_builder.set_catcall_error_mode (catcall_error_mode)
 				dynamic_type_set_builder.set_catcall_warning_mode (catcall_warning_mode)
 			end
@@ -1988,6 +2030,12 @@ feature -- Features
 
 	ise_exception_manager_init_exception_manager_feature: detachable ET_DYNAMIC_FEATURE
 			-- Expected procedure 'init_exception_manager' in class "ISE_EXCEPTION_MANAGER"
+
+	ise_exception_manager_last_exception_feature: detachable ET_DYNAMIC_FEATURE
+			-- Expected procedure 'last_exception' in class "ISE_EXCEPTION_MANAGER"
+
+	ise_exception_manager_once_raise_feature: detachable ET_DYNAMIC_FEATURE
+			-- Expected procedure 'once_raise' in class "ISE_EXCEPTION_MANAGER"
 
 	ise_exception_manager_set_exception_data_feature: detachable ET_DYNAMIC_FEATURE
 			-- Expected procedure 'set_exception_data' in class "ISE_EXCEPTION_MANAGER"
@@ -2201,5 +2249,6 @@ invariant
 	root_creation_procedure: attached root_creation_procedure as l_root_creation_procedure implies l_root_creation_procedure.is_procedure
 	dynamic_type_set_builder_not_void: dynamic_type_set_builder /= Void
 	null_dynamic_type_set_builder_not_void: null_dynamic_type_set_builder /= Void
+	system_processor_not_void: system_processor /= Void
 
 end

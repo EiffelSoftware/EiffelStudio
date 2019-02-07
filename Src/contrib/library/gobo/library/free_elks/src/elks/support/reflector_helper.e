@@ -17,6 +17,8 @@ feature -- Status report
 			-- Redefine in descendants of REFLECTOR to modify the behavior of inspection queries of REFLECTOR.
 		do
 			Result := False
+		ensure
+			instance_free: class
 		end
 
 	is_valid_type_string (s: READABLE_STRING_GENERAL): BOOLEAN
@@ -29,8 +31,7 @@ feature -- Status report
 		do
 			if s /= Void and then not s.is_empty then
 				create l_class_type_name.make_from_string_general (s)
-				l_class_type_name.left_adjust
-				l_class_type_name.right_adjust
+				l_class_type_name.adjust
 
 					-- Let's see if it is a generic type.
 				l_start_pos := l_class_type_name.index_of ('[', 1)
@@ -47,8 +48,7 @@ feature -- Status report
 					then
 							-- A well formed generic class.
 						l_type_name := l_class_type_name.substring (1, l_start_pos - 1)
-						l_type_name.left_adjust
-						l_type_name.right_adjust
+						l_type_name.adjust
 
 						if is_valid_identifier (l_type_name) then
 							l_parameters := parameters_decomposition (
@@ -71,6 +71,8 @@ feature -- Status report
 					Result := is_valid_identifier (l_class_type_name)
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 	mapped_type (a_type: READABLE_STRING_GENERAL): READABLE_STRING_GENERAL
@@ -80,20 +82,19 @@ feature -- Status report
 			a_type_not_void: a_type /= Void
 		local
 			l_table: like pre_ecma_type_mapping
-			r: detachable READABLE_STRING_GENERAL
 		do
 			if not is_pre_ecma_mapping_disabled then
 				l_table := pre_ecma_type_mapping
 				l_table.search (a_type)
 				if l_table.found then
-					r := l_table.found_item
+					Result := l_table.found_item
 				end
 			end
-			if r = Void then
-				r := a_type
+			if Result = Void then
+				Result := a_type
 			end
-			Result := r
 		ensure
+			instance_free: class
 			mapped_type_not_void: Result /= Void
 		end
 
@@ -145,6 +146,8 @@ feature {NONE} -- Implementation: status report
 					end
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 feature {NONE} -- Decompose string type
@@ -191,6 +194,8 @@ feature {NONE} -- Decompose string type
 			else
 				Result := Void
 			end
+		ensure
+			instance_free: class
 		end
 
 feature {NONE} -- ECMA mapping helper
@@ -211,6 +216,7 @@ feature {NONE} -- ECMA mapping helper
 			Result.put ("REAL_64", "DOUBLE")
 			Result.put ("REAL_64_REF", "DOUBLE_REF")
 		ensure
+			instance_free: class
 			pre_ecma_type_mapping_not_void: Result /= Void
 		end
 
@@ -226,7 +232,7 @@ feature {NONE} -- Type creation
 	type_keyword: STRING = "TYPE";
 			-- Used for creating type objects.
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

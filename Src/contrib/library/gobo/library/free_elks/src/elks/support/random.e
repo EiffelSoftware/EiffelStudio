@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Pseudo-random number sequence, linear congruential method
 		
@@ -9,7 +9,7 @@ note
 		Example 7.12 p 266 which is from
 		IMSL Scientific Subroutine Package [1978],
 		written in Fortran for IBM 360/370 computers.
-		
+
 		]"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
@@ -29,6 +29,8 @@ class RANDOM inherit
 		export
 			{NONE} all
 		end
+
+	ITERATION_CURSOR [INTEGER]
 
 create
 	make, set_seed
@@ -134,60 +136,52 @@ feature -- Access
 			in_range: (Result < modulus) and (Result >= 0)
 		end
 
-	real_item: REAL
+	real_item: REAL_32
 			-- The current random number as a real between 0 and 1
-		local
-			r1, r2: REAL
 		do
-			r1 := item
-			r2 := modulus
-			Result := r1 / r2
+			Result := item.to_real / modulus.to_real
 		end
 
-	double_item: DOUBLE
+	double_item: REAL_64
 			-- The current random number as a double between 0 and 1
-		local
-			d: DOUBLE
 		do
-			d := item
-			Result := d / dmod
+			Result := item.to_double / dmod
 		end
 
-	real_i_th (i: INTEGER): REAL
+	real_i_th (i: INTEGER): REAL_32
 			-- The `i'-th random number as a real between 0 and 1
 		require
 			positive_argument: i > 0
-		local
-			r1, r2: REAL
 		do
-			r1 := i_th (i)
-			r2 := modulus
-			Result := r1 / r2
+			Result := i_th (i).to_real / modulus.to_real
 		end
 
-	double_i_th (i: INTEGER): DOUBLE
+	double_i_th (i: INTEGER): REAL_64
 			-- The `i'-th random number as a double between 0 and 1
 		require
 			positive_argument: i > 0
-		local
-			d: DOUBLE
 		do
-			d := i_th (i)
-			Result := d / dmod
+			Result := i_th (i).to_double / dmod
+		end
+
+feature -- Iteration
+
+	new_cursor: RANDOM
+			-- <Precursor>
+		do
+			create Result.set_seed (seed)
+			Result.start
 		end
 
 feature {NONE} -- Implementation
 
 	randomize (xn: INTEGER): INTEGER
 			-- Next item
-		local
-			x: DOUBLE
 		do
-			x := double_mod (dmul * xn + dinc, dmod)
-			Result := x.truncated_to_integer
+			Result := double_mod (dmul * xn + dinc, dmod).truncated_to_integer
 		end
 
-	double_mod (x, m: DOUBLE): DOUBLE
+	double_mod (x, m: REAL_64): REAL_64
 			-- `x' modulo `m'
 		do
 			Result := x - (floor (x / m) * m)
@@ -201,19 +195,19 @@ feature {NONE} -- Implementation
 	last_result: INTEGER
 			-- Value from last call to `item'
 
-	dmod: DOUBLE
+	dmod: REAL_64
 			-- Double value for modulus
 		once
 			Result := modulus
 		end
 
-	dmul: DOUBLE
+	dmul: REAL_64
 			-- Double value for multiplier
 		once
 			Result := multiplier
 		end
 
-	dinc: DOUBLE
+	dinc: REAL_64
 			-- Double value for increment
 		once
 			Result := increment
@@ -226,7 +220,7 @@ invariant
 	modulus_constraint: modulus > 1
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

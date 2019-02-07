@@ -5,7 +5,7 @@ note
 		"Eiffel validity errors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -249,10 +249,22 @@ create
 	make_vuar2a,
 	make_vuar2b,
 	make_vuar4a,
+	make_vucr0a,
+	make_vucr0b,
+	make_vucr0c,
+	make_vucr0d,
+	make_vucr0e,
+	make_vucr0f,
+	make_vucr0g,
+	make_vucr0h,
+	make_vucr0i,
+	make_vucr0j,
 	make_vuex1a,
 	make_vuex2a,
 	make_vuex2b,
 	make_vuno3a,
+	make_vuno5a,
+	make_vuno5b,
 	make_vuot1a,
 	make_vuot1b,
 	make_vuot1c,
@@ -266,10 +278,16 @@ create
 	make_vuta2a,
 	make_vuta2b,
 	make_vvok1a,
+	make_vvok1b,
+	make_vvok1c,
 	make_vvok2a,
+	make_vvok2b,
 	make_vwbe0a,
+	make_vwce0a,
 	make_vweq0a,
 	make_vweq0b,
+	make_vwma1a,
+	make_vwma2a,
 	make_vwmq0a,
 	make_vwmq0b,
 	make_vwmq0c,
@@ -3784,7 +3802,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_vevi0e (a_class, a_class_impl: ET_CLASS; a_attribute: ET_EXTENDED_ATTRIBUTE)
-			-- Report VEVI error: the 'Result' entity declared of attached type
+			-- Create a new VEVI error: the 'Result' entity declared of attached type
 			-- is not initialized at the end of the attribute body of `a_attribute'
 			-- declared in class `a_class_impl' and viewed from one of its descendants
 			-- `a_class' (possibly itself).
@@ -6586,7 +6604,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_vjaw0b (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_feature: ET_FEATURE)
-			-- Report VJAW error: `a_name' is supposed to be a Writable but
+			-- Create a new VJAW error: `a_name' is supposed to be a Writable but
 			-- it is a formal argument name of `a_feature'.
 			--
 			-- Only in ISE Eiffel.
@@ -6629,7 +6647,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_vjaw0c (a_class: ET_CLASS; a_name: ET_IDENTIFIER; an_agent: ET_INLINE_AGENT)
-			-- Report VJAW error: `a_name' is supposed to be a Writable but
+			-- Create a new VJAW error: `a_name' is supposed to be a Writable but
 			-- it is a formal argument name of inline agent `an_agent'.
 			--
 			-- Only in ISE Eiffel.
@@ -10775,6 +10793,423 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = feature name in the Address form
 		end
 
+	make_vucr0a (a_class: ET_CLASS; a_feature: ET_FEATURE)
+			-- Create a new VUCR error: attributes cannot be used in static calls.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_attribute: a_feature.is_attribute
+			a_feature_static: a_feature.is_static
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			code := template_code (vucr0a_template_code)
+			etl_code := vucr_etl_code
+			default_template := default_message_template (vucr0a_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_feature.lower_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name
+		end
+
+	make_vucr0b (a_class: ET_CLASS; a_feature: ET_FEATURE)
+			-- Create a new VUCR error: once-per-object features cannot be used in static calls.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_once_per_object: a_feature.is_once_per_object
+			a_feature_static: a_feature.is_static
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			code := template_code (vucr0b_template_code)
+			etl_code := vucr_etl_code
+			default_template := default_message_template (vucr0b_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_feature.lower_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name
+		end
+
+	make_vucr0c (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_attribute: ET_FEATURE)
+			-- Create a new VUCR error: `a_name', appearing as target of an assignment or a creation instruction
+			-- in a feature written in `a_class_impl' and viewed from `a_class' where this feature is marked
+			-- as static, is the name of an attribute `a_attribute'.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_attribute_not_void: a_attribute /= Void
+			a_attribute_is_attribute: a_attribute.is_attribute
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			code := template_code (vucr0c_template_code)
+			etl_code := vucr_etl_code
+			default_template := default_message_template (vucr0c_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = attribute name
+		end
+
+	make_vucr0d (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE)
+			-- Create a new VUCR error: the unqualified call `a_name' written in `a_class_impl'
+			-- is a call to the non-static feature `a_feature' from a static feature
+			-- when viewed from `a_class'.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_feature_not_static: not a_feature.is_static
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			code := template_code (vucr0d_template_code)
+			etl_code := vucr_etl_code
+			default_template := default_message_template (vucr0d_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name
+		end
+
+	make_vucr0e (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_attribute: ET_FEATURE)
+			-- Create a new VUCR error: the access to the address of `a_name' written in `a_class_impl'
+			-- if the access to the address of attribute `a_attribute' from a static feature
+			-- when viewed from `a_class'.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_a_attribute_not_void: a_attribute /= Void
+			a_attribute_is_attribute: a_attribute.is_attribute
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			code := template_code (vUCR0e_template_code)
+			etl_code := vucr_etl_code
+			default_template := default_message_template (vucr0e_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = attribute name
+		end
+
+	make_vucr0f (a_class, a_class_impl: ET_CLASS; a_current: ET_CURRENT)
+			-- Create a new VUCR error: `a_current' written in `a_class_impl' is
+			-- used in a static feature when viewed from `a_class'.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_current_not_void: a_current /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_current.position
+			code := template_code (vucr0f_template_code)
+			etl_code := vucr_etl_code
+			default_template := default_message_template (vucr0f_default_template)
+			create parameters.make_filled (empty_string, 1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+		end
+
+	make_vucr0g (a_class, a_class_impl: ET_CLASS; a_current_address: ET_CURRENT_ADDRESS)
+			-- Create a new VUCR error: `a_current' written in `a_class_impl' is
+			-- used in a static feature when viewed from `a_class'.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_current_address_not_void: a_current_address /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_current_address.position
+			code := template_code (vucr0g_template_code)
+			etl_code := vucr_etl_code
+			default_template := default_message_template (vucr0g_default_template)
+			create parameters.make_filled (empty_string, 1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+		end
+
+	make_vucr0h (a_class, a_class_impl: ET_CLASS; a_precursor: ET_PRECURSOR_KEYWORD; a_feature: ET_FEATURE)
+			-- Create a new VUCR error: the call to `a_precursor' written in `a_class_impl'
+			-- is a call to the non-static feature `a_feature' from a static feature
+			-- when viewed from `a_class'.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_precursor_not_void: a_precursor /= Void
+			a_feature_not_void: a_feature /= Void
+			a_feature_not_static: not a_feature.is_static
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_precursor.position
+			code := template_code (vucr0h_template_code)
+			etl_code := vucr_etl_code
+			default_template := default_message_template (vucr0h_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_precursor.name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = precursor keyword
+		end
+
+	make_vucr0i (a_class, a_class_impl: ET_CLASS; a_agent: ET_INLINE_AGENT)
+			-- Create a new VUCR error: the inline agent `a_agent' written in `a_class_impl'
+			-- appears in a static feature when viewed from `a_class'.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_agent_not_void: a_agent /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_agent.position
+			code := template_code (vucr0i_template_code)
+			etl_code := vucr_etl_code
+			default_template := default_message_template (vucr0i_default_template)
+			create parameters.make_filled (empty_string, 1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+		end
+
+	make_vucr0j (a_class, a_class_impl: ET_CLASS; a_agent: ET_CALL_AGENT)
+			-- Create a new VUCR error: the unqualified call agent `a_agent' written in `a_class_impl'
+			-- appears in a static feature when viewed from `a_class'.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_agent_not_void: a_agent /= Void
+			a_unqualified_call_agent: not a_agent.is_qualified_call
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_agent.position
+			code := template_code (vucr0j_template_code)
+			etl_code := vucr_etl_code
+			default_template := default_message_template (vucr0j_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.name.name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_agent.name.name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = agent feature name
+		end
+
 	make_vuex1a (a_class: ET_CLASS; a_name: ET_CALL_NAME)
 			-- Create a new VUEX-1 error: `a_name', appearing in an unqualified
 			-- call in `a_class', is not the final name of a feature
@@ -10956,6 +11391,95 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = feature name of the call
 			-- dollar8: $8 = name of corresponding feature in class $9
 			-- dollar9: $9 = base class of target of the call
+		end
+
+	make_vuno5a (a_class, a_class_impl: ET_CLASS; a_target_type: ET_TYPE; a_target_class: ET_CLASS)
+			-- Create a new VUNO-5 error: base class `a_target_class' of a static call with
+			-- target type `a_target_type' is deferred when called from `a_class', one
+			-- of the descendants of `a_class_impl' (possibly itself) where the static
+			-- call appears.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_target_type_not_void: a_target_type /= Void
+			a_target_class_not_void: a_target_class /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_target_type.position
+			code := template_code (vuno5a_template_code)
+			etl_code := vuno5_etl_code
+			default_template := default_message_template (vuno5a_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_target_type.to_text, 7)
+			parameters.put (a_target_class.upper_name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = target type of the call
+			-- dollar8: $8 = base class of target of the call
+		end
+
+	make_vuno5b (a_class, a_class_impl: ET_CLASS; a_target_type: ET_TYPE)
+			-- Create a new VUNO-5 error: the target type `a_target_type' of a static call
+			-- is of the form 'like Current' when called from `a_class', one of
+			-- the descendants of `a_class_impl' (possibly itself) where the static
+			-- call appears.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_target_type_not_void: a_target_type /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_target_type.position
+			code := template_code (vuno5b_template_code)
+			etl_code := vuno5_etl_code
+			default_template := default_message_template (vuno5b_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_target_type.to_text, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = target type of the call
 		end
 
 	make_vuot1a (a_class: ET_CLASS; a_object_test: ET_NAMED_OBJECT_TEST; a_feature: ET_FEATURE)
@@ -11491,6 +12015,90 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = second once key
 		end
 
+	make_vvok1b (a_class: ET_CLASS; a_indexing_term1: ET_INDEXING_TERM; a_once_key2: ET_MANIFEST_STRING)
+			-- Create a new VVOK-1 error: `a_indexing_term1' and `a_once_key2' cannot be
+			-- combined. The supported once keys "PROCESS", "THREAD" and "OBJECT"
+			-- cannot be combined.
+			--
+			-- Not in ECMA, only in ISE
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_indexing_term1_not_void: a_indexing_term1 /= Void
+			a_once_key2_not_void: a_once_key2 /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_once_key2.position
+			code := template_code (vvok1b_template_code)
+			etl_code := vvok1_etl_code
+			default_template := default_message_template (vvok1b_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_indexing_term1.indexing_term_value, 6)
+			parameters.put (a_once_key2.value, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = first once indexing term
+			-- dollar7: $7 = second once key
+		end
+
+	make_vvok1c (a_class: ET_CLASS; a_indexing_term1, a_indexing_term2: ET_INDEXING_TERM)
+			-- Create a new VVOK-1 error: `a_indexing_term1' and `a_indexing_term2' cannot be
+			-- combined. The supported once keys "PROCESS", "THREAD" and "OBJECT"
+			-- cannot be combined.
+			--
+			-- Not in ECMA, only in ISE
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_indexing_term1_not_void: a_indexing_term1 /= Void
+			a_indexing_term2_not_void: a_indexing_term2 /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_indexing_term2.position
+			code := template_code (vvok1c_template_code)
+			etl_code := vvok1_etl_code
+			default_template := default_message_template (vvok1c_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_indexing_term1.indexing_term_value, 6)
+			parameters.put (a_indexing_term2.indexing_term_value, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = first once indexing term
+			-- dollar7: $7 = second once indexing term
+		end
+
 	make_vvok2a (a_class: ET_CLASS; a_once_key: ET_MANIFEST_STRING)
 			-- Create a new VVOK-2 error: `a_once_key' is not one of the supported
 			-- once keys. The supported once keys are "PROCESS", "THREAD" and "OBJECT".
@@ -11527,6 +12135,44 @@ feature {NONE} -- Initialization
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = once key
+		end
+
+	make_vvok2b (a_class: ET_CLASS; a_indexing_term: ET_INDEXING_TERM)
+			-- Create a new VVOK-2 error: `a_indexing_term' is not one of the supported
+			-- once keys. The supported once keys are "PROCESS", "THREAD" and "OBJECT".
+			--
+			-- Not in ECMA, only in ISE
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_indexing_term_not_void: a_indexing_term /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_indexing_term.position
+			code := template_code (vvok2b_template_code)
+			etl_code := vvok2_etl_code
+			default_template := default_message_template (vvok2b_default_template)
+			create parameters.make_filled (empty_string, 1, 6)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (a_indexing_term.indexing_term_value, 6)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = once indexing term
 		end
 
 	make_vwbe0a (a_class, a_class_impl: ET_CLASS; an_expression: ET_EXPRESSION; a_type: ET_NAMED_TYPE)
@@ -11571,6 +12217,52 @@ feature {NONE} -- Initialization
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = implementation class name
 			-- dollar7: $7 = base type of expression
+		end
+
+	make_vwce0a (a_class, a_class_impl: ET_CLASS; a_expression: ET_EXPRESSION; a_type, a_other_type: ET_NAMED_TYPE)
+			-- Create a new VWCE error: the expression `a_expression' appearing
+			-- in a conditional expression in `a_class_impl' and viewed
+			-- from one of its descendants `a_class' (possibly itself) is
+			-- of type `a_type' which does not conform to the type `a_other_type'
+			-- of some other expression in this conditional expression.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_expression_not_void: a_expression /= Void
+			a_type_not_void: a_type /= Void
+			a_other_type_not_void: a_other_type /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_expression.position
+			code := template_code (vwce0a_template_code)
+			etl_code := vwce_etl_code
+			default_template := default_message_template (vwce0a_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_type.to_text, 7)
+			parameters.put (a_other_type.to_text, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = base type of expression
+			-- dollar8: $8 = base type of other expression
 		end
 
 	make_vweq0a (a_class, a_class_impl: ET_CLASS; an_expression: ET_EQUALITY_EXPRESSION; a_type1, a_type2: ET_NAMED_TYPE)
@@ -11669,6 +12361,101 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = object-equality operator
 			-- dollar8: $8 = base type of left operand
 			-- dollar9: $9 = base type of right operand
+		end
+
+	make_vwma1a (a_class, a_class_impl: ET_CLASS; a_manifest_array: ET_MANIFEST_ARRAY)
+			-- Create a new VWMA-1 error: the cast type of `a_manifest_array' appearing in
+			-- `a_class_impl' and viewed from one of its descendants `a_class'
+			-- (possibly itself) is not an "ARRAY" type.
+			--
+			-- See https://www.eiffel.org/doc/version/trunk/eiffel/Manifest%20array
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_manifest_array_not_void: a_manifest_array /= Void
+			a_cast_type_not_void: a_manifest_array.cast_type /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := ast_position (a_manifest_array.cast_type)
+			code := template_code (vwma1a_template_code)
+			etl_code := vwma1_etl_code
+			default_template := default_message_template (vwma1a_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (type_name (a_manifest_array.cast_type), 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = cast type
+		end
+
+	make_vwma2a (a_class, a_class_impl: ET_CLASS; a_manifest_array_item: ET_EXPRESSION; i: INTEGER; a_item_type, a_array_parameter_type: ET_NAMED_TYPE)
+			-- Create a new VWMA-2 error: the type `a_item_type' of the `i'-th item
+			-- `a_manifest_array_item' in manifest array appearing in `a_class_impl'
+			-- and viewed from one of its descendants `a_class' (possibly itself),
+			-- does not conform nor convert to the generic parameter
+			-- `a_array_parameter_type' of the array type specified
+			-- for the manifest array.
+			--
+			-- See https://www.eiffel.org/doc/version/trunk/eiffel/Manifest%20array
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_manifest_array_item_not_void: a_manifest_array_item /= Void
+			a_item_type_type_not_void: a_item_type /= Void
+			a_item_type_type_is_named_type: a_item_type.is_named_type
+			a_array_parameter_type_not_void: a_array_parameter_type /= Void
+			a_array_parameter_type_is_named_type: a_array_parameter_type.is_named_type
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_manifest_array_item.position
+			code := template_code (vwma2a_template_code)
+			etl_code := vwma2_etl_code
+			default_template := default_message_template (vwma2a_default_template)
+			create parameters.make_filled (empty_string, 1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (i.out, 7)
+			parameters.put (a_item_type.to_text, 8)
+			parameters.put (a_array_parameter_type.to_text, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = type of manifest array item
+			-- dollar8: $8 = type of generic parameter of array type
 		end
 
 	make_vwmq0a (a_class, a_class_impl: ET_CLASS; a_constant: ET_INTEGER_CONSTANT)
@@ -13972,10 +14759,22 @@ feature {NONE} -- Implementation
 	vuar2a_default_template: STRING = "the $10-th actual argument (of type '$11') does not conform to the corresponding formal argument (of type '$12') of feature `$8' in class $9."
 	vuar2b_default_template: STRING = "the $9-th actual argument (of type '$10') does not conform to the corresponding formal argument (of type '$11') of feature `$8'."
 	vuar4a_default_template: STRING = "`$7' is not the final name of a feature in class $5."
+	vucr0a_default_template: STRING = "feature `$7' is an attribute, so it cannot be used in static calls."
+	vucr0b_default_template: STRING = "feature `$7' is a once-per-object feature, so it cannot be used in static calls."
+	vucr0c_default_template: STRING = "attribute '$7' cannot be used as target of an assignment or creation instruction in a static feature."
+	vucr0d_default_template: STRING = "static feature contains an unqualified call to non-static feature '$7'."
+	vucr0e_default_template: STRING = "the address of attribute '$7' cannot be accessed from a static feature."
+	vucr0f_default_template: STRING = "'Current' cannot be used in a static feature."
+	vucr0g_default_template: STRING = "'$Current' cannot be used in a static feature."
+	vucr0h_default_template: STRING = "static feature contains a call to non-static '$7'."
+	vucr0i_default_template: STRING = "static feature contains an inline agent."
+	vucr0j_default_template: STRING = "static feature contains an agent with an unqualified call to '$7'."
 	vuex1a_default_template: STRING = "`$7' is not the final name of a feature in class $5."
 	vuex2a_default_template: STRING = "`$7' is not the final name of a feature in class $8."
 	vuex2b_default_template: STRING = "feature `$8' of class $9 is not exported to class $5."
 	vuno3a_default_template: STRING = "feature `$8' of class $9 is not valid for static call."
+	vuno5a_default_template: STRING = "class $8 is deferred, so it cannot be used as target in a static call."
+	vuno5b_default_template: STRING = "'like Current' cannot be used as target in a static call."
 	vuot1a_default_template: STRING = "object-test local name '$6' is also the final name of a feature."
 	vuot1b_default_template: STRING = "object-test local name '$6' is also the name of a formal argument of an enclosing feature or inline agent."
 	vuot1c_default_template: STRING = "object-test local name '$6' is also the name of a local variable of an enclosing feature or inline agent."
@@ -13989,10 +14788,16 @@ feature {NONE} -- Implementation
 	vuta2a_default_template: STRING = "the target (of type '$9') of the call to feature `$8' is not attached."
 	vuta2b_default_template: STRING = "the target (of type '$8') of the call to Tuple label `$7' is not attached."
 	vvok1a_default_template: STRING = "once keys %"$6%" and %"$7%" cannot be combined."
+	vvok1b_default_template: STRING = "indexing once status %"$6%" and once key %"$7%" cannot be combined."
+	vvok1c_default_template: STRING = "indexing once status %"$6%" and %"$7%" cannot be combined."
 	vvok2a_default_template: STRING = "once key %"$6%" is not supported. The supported once keys are %"THREAD%", %"PROCESS%" and %"OBJECT%"."
+	vvok2b_default_template: STRING = "indexing once status %"$6%" is not supported. Use one of the supported once keys %"THREAD%", %"PROCESS%" or %"OBJECT%"."
 	vwbe0a_default_template: STRING = "boolean expression of non-BOOLEAN type '$7'."
-	vweq0a_default_template: STRING = "none of the operands of '$7' (of types '$8' and '$9') conforms or converts to the other."
-	vweq0b_default_template: STRING = "none of the operands of '$7' (of types '$8' and '$9') conforms or converts to the other."
+	vwce0a_default_template: STRING = "expressions of types '$8' and '$7' in branches of conditional expression do not conform to each other."
+	vweq0a_default_template: STRING = "none of the operands of '$7' (of types '$8' and '$9') conforms nor converts to the other."
+	vweq0b_default_template: STRING = "none of the operands of '$7' (of types '$8' and '$9') conforms nor converts to the other."
+	vwma1a_default_template: STRING = "type '$7' in the manifest array is not an ARRAY type."
+	vwma2a_default_template: STRING = "the $7-th item (of type '$8') in manifest array does not conform nor convert to the array's generic parameter (of type '$9')."
 	vwmq0a_default_template: STRING = "type '$7' in the integer constant is not one of the sized variants of INTEGER."
 	vwmq0b_default_template: STRING = "type '$7' in the real constant is not one of the sized variants of REAL."
 	vwmq0c_default_template: STRING = "type '$7' in the character constant is not one of the sized variants of CHARACTER."
@@ -14153,9 +14958,11 @@ feature {NONE} -- Implementation
 	vuar1_etl_code: STRING = "VUAR-1"
 	vuar2_etl_code: STRING = "VUAR-2"
 	vuar4_etl_code: STRING = "VUAR-4"
+	vucr_etl_code: STRING = "VUCR"
 	vuex1_etl_code: STRING = "VUEX-1"
 	vuex2_etl_code: STRING = "VUEX-2"
 	vuno3_etl_code: STRING = "VUNO-3"
+	vuno5_etl_code: STRING = "VUNO-5"
 	vuot1_etl_code: STRING = "VUOT-1"
 	vuot3_etl_code: STRING = "VUOT-3"
 	vuot4_etl_code: STRING = "VUOT-4"
@@ -14163,7 +14970,10 @@ feature {NONE} -- Implementation
 	vvok1_etl_code: STRING = "VVOK-1"
 	vvok2_etl_code: STRING = "VVOK-2"
 	vwbe_etl_code: STRING = "VWBE"
+	vwce_etl_code: STRING = "VWCE"
 	vweq_etl_code: STRING = "VWEQ"
+	vwma1_etl_code: STRING = "VWMA-1"
+	vwma2_etl_code: STRING = "VWMA-2"
 	vwmq_etl_code: STRING = "VWMQ"
 	vwst1_etl_code: STRING = "VWST-1"
 	vwst2_etl_code: STRING = "VWST-2"
@@ -14436,10 +15246,22 @@ feature {NONE} -- Implementation
 	vuar2a_template_code: STRING = "vuar2a"
 	vuar2b_template_code: STRING = "vuar2b"
 	vuar4a_template_code: STRING = "vuar4a"
+	vucr0a_template_code: STRING = "vucr0a"
+	vucr0b_template_code: STRING = "vucr0b"
+	vucr0c_template_code: STRING = "vucr0c"
+	vucr0d_template_code: STRING = "vucr0d"
+	vucr0e_template_code: STRING = "vucr0e"
+	vucr0f_template_code: STRING = "vucr0f"
+	vucr0g_template_code: STRING = "vucr0g"
+	vucr0h_template_code: STRING = "vucr0h"
+	vucr0i_template_code: STRING = "vucr0i"
+	vucr0j_template_code: STRING = "vucr0j"
 	vuex1a_template_code: STRING = "vuex1a"
 	vuex2a_template_code: STRING = "vuex2a"
 	vuex2b_template_code: STRING = "vuex2b"
 	vuno3a_template_code: STRING = "vuno3a"
+	vuno5a_template_code: STRING = "vuno5a"
+	vuno5b_template_code: STRING = "vuno5b"
 	vuot1a_template_code: STRING = "vuot1a"
 	vuot1b_template_code: STRING = "vuot1b"
 	vuot1c_template_code: STRING = "vuot1c"
@@ -14453,10 +15275,16 @@ feature {NONE} -- Implementation
 	vuta2a_template_code: STRING = "vuta2a"
 	vuta2b_template_code: STRING = "vuta2b"
 	vvok1a_template_code: STRING = "vvok1a"
+	vvok1b_template_code: STRING = "vvok1b"
+	vvok1c_template_code: STRING = "vvok1c"
 	vvok2a_template_code: STRING = "vvok2a"
+	vvok2b_template_code: STRING = "vvok2b"
 	vwbe0a_template_code: STRING = "vwbe0a"
+	vwce0a_template_code: STRING = "vwce0a"
 	vweq0a_template_code: STRING = "vweq0a"
 	vweq0b_template_code: STRING = "vweq0b"
+	vwma1a_template_code: STRING = "vwma1a"
+	vwma2a_template_code: STRING = "vwma2a"
 	vwmq0a_template_code: STRING = "vwmq0a"
 	vwmq0b_template_code: STRING = "vwmq0b"
 	vwmq0c_template_code: STRING = "vwmq0c"

@@ -5,7 +5,7 @@ note
 		"Eiffel AST null processors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -232,6 +232,11 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
+	process_class_assertion (a_assertion: ET_CLASS_ASSERTION)
+			-- Process `a_assertion'.
+		do
+		end
+
 	process_class_type (a_type: ET_CLASS_TYPE)
 			-- Process `a_type'.
 		do
@@ -322,6 +327,11 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
+	process_creation_region (a_region: ET_CREATION_REGION)
+			-- Process `a_region'.
+		do
+		end
+
 	process_creator (a_list: ET_CREATOR)
 			-- Process `a_list'.
 		do
@@ -404,6 +414,16 @@ feature {ET_AST_NODE} -- Processing
 
 	process_dotnet_procedure (a_feature: ET_DOTNET_PROCEDURE)
 			-- Process `a_feature'.
+		do
+		end
+
+	process_elseif_expression (an_elseif_part: ET_ELSEIF_EXPRESSION)
+			-- Process `an_elseif_part'.
+		do
+		end
+
+	process_elseif_expression_list (a_list: ET_ELSEIF_EXPRESSION_LIST)
+			-- Process `a_list'.
 		do
 		end
 
@@ -559,6 +579,11 @@ feature {ET_AST_NODE} -- Processing
 
 	process_identifier_comma (an_identifier: ET_IDENTIFIER_COMMA)
 			-- Process `an_identifier'.
+		do
+		end
+
+	process_if_expression (a_expression: ET_IF_EXPRESSION)
+			-- Process `a_expression'.
 		do
 		end
 

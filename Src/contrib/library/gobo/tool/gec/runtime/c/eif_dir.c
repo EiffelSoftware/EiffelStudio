@@ -4,7 +4,7 @@
 		"C functions used to implement class DIRECTORY"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -12,7 +12,15 @@
 
 #ifndef EIF_DIR_C
 #define EIF_DIR_C
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
 
+#ifndef EIF_DIR_H
+#include "eif_dir.h"
+#endif
+
+#include <sys/stat.h>
 #ifdef EIF_WINDOWS
 #ifdef __cplusplus
 extern "C" {
@@ -32,7 +40,6 @@ typedef struct {
 #include <dirent.h>
 #include <unistd.h>
 #endif
-#include <sys/stat.h>
 #include <string.h>
 
 #ifndef PATH_MAX
@@ -71,6 +78,11 @@ typedef struct {
 #endif
 #ifndef S_IFCHR
 #define S_IFCHR 0020000
+#endif
+#ifdef __LCC__
+#ifndef _S_IFCHR
+#define _S_IFCHR S_IFCHR
+#endif
 #endif
 #ifndef S_IFBLK
 #define S_IFBLK 0060000
@@ -129,7 +141,9 @@ extern "C" {
 #endif
 
 #ifdef EIF_WINDOWS
-#	ifdef EIF_64_BITS
+#	ifdef __LCC__
+#		define rt_stat_buf	struct stat
+#	elif defined EIF_64_BITS
 #		define rt_stat_buf	struct _stat64
 #	else
 #		define rt_stat_buf	struct _stat64i32
@@ -139,7 +153,10 @@ extern "C" {
 #endif
 
 #ifdef EIF_WINDOWS
-#	ifdef EIF_64_BITS
+#	ifdef __LCC__
+#		define rt_stat		_wstat
+#		define rt_fstat		fstat
+#	elif defined(EIF_64_BITS)
 #		define rt_stat		_wstat64
 #		define rt_fstat		_fstat64
 #	else
@@ -149,12 +166,12 @@ extern "C" {
 #	define rt_access		_waccess
 #else
 #	define rt_stat			stat
-#	define rt_lstat			lstat
 #	define rt_fstat			fstat
 #	define rt_access		access
 #endif
 
-EIF_POINTER eif_dir_open(EIF_FILENAME dirname) {
+EIF_POINTER eif_dir_open(EIF_FILENAME dirname)
+{
 #ifdef EIF_WINDOWS
 	GE_directory* result = (GE_directory*)malloc(sizeof(GE_directory));
 	result->name = dirname;
@@ -165,7 +182,8 @@ EIF_POINTER eif_dir_open(EIF_FILENAME dirname) {
 #endif
 }
 
-EIF_POINTER eif_dir_next(EIF_POINTER dir) {
+EIF_POINTER eif_dir_next(EIF_POINTER dir)
+{
 #ifdef EIF_WINDOWS
 	BOOL r;
 	size_t a_name_length;
@@ -190,7 +208,7 @@ EIF_POINTER eif_dir_next(EIF_POINTER dir) {
 				wcscat(wname , L"\\*");
 			}
 			h = FindFirstFileW(wname, &(GE_dir->last_entry));
-			free (wname);
+			free(wname);
 			if (h != INVALID_HANDLE_VALUE) {
 				GE_dir->handle = h;
 				r = EIF_TRUE;
@@ -212,7 +230,8 @@ EIF_POINTER eif_dir_next(EIF_POINTER dir) {
 #endif
 }
 
-EIF_POINTER eif_dir_rewind(EIF_POINTER dir, EIF_FILENAME a_name) {
+EIF_POINTER eif_dir_rewind(EIF_POINTER dir, EIF_FILENAME a_name)
+{
 #ifdef EIF_WINDOWS
 	GE_directory* GE_dir = (GE_directory*)dir;
 	HANDLE h = GE_dir->handle;
@@ -228,7 +247,8 @@ EIF_POINTER eif_dir_rewind(EIF_POINTER dir, EIF_FILENAME a_name) {
 	return GE_dir;
 }
 
-void eif_dir_close(EIF_POINTER dir) {
+void eif_dir_close(EIF_POINTER dir)
+{
 #ifdef EIF_WINDOWS
 	GE_directory* GE_dir = (GE_directory*)dir;
 	HANDLE h = GE_dir->handle;
@@ -243,15 +263,17 @@ void eif_dir_close(EIF_POINTER dir) {
 #endif
 }
 
-EIF_BOOLEAN eif_dir_exists(EIF_FILENAME dirname) {
+EIF_BOOLEAN eif_dir_exists(EIF_FILENAME dirname)
+{
 	rt_stat_buf buf;
 
-	return (EIF_BOOLEAN) ((!rt_stat (dirname, &buf) && S_ISDIR(buf.st_mode)) ? EIF_TRUE : EIF_FALSE);
+	return (EIF_BOOLEAN)((!rt_stat (dirname, &buf) && S_ISDIR(buf.st_mode)) ? EIF_TRUE : EIF_FALSE);
 }
 
-EIF_BOOLEAN eif_dir_is_readable(EIF_FILENAME dirname) {
+EIF_BOOLEAN eif_dir_is_readable(EIF_FILENAME dirname)
+{
 #ifdef EIF_WINDOWS
-	return (EIF_BOOLEAN) (_waccess (dirname, R_OK) != -1);
+	return (EIF_BOOLEAN)(_waccess (dirname, R_OK) != -1);
 #else
 	int uid, gid;
 	int euid, egid;
@@ -272,16 +294,17 @@ EIF_BOOLEAN eif_dir_is_readable(EIF_FILENAME dirname) {
 		return ((mode & S_IRGRP) ? EIF_TRUE : EIF_FALSE);
 #ifdef HAS_GETGROUPS
 	else if (eif_group_in_list(gid))
-		return (EIF_BOOLEAN) ((mode & S_IRGRP) ? EIF_TRUE : EIF_FALSE);
+		return ((mode & S_IRGRP) ? EIF_TRUE : EIF_FALSE);
 #endif
 	else
 		return ((mode & S_IROTH) ? EIF_TRUE : EIF_FALSE);
 #endif
 }
 
-EIF_BOOLEAN eif_dir_is_executable(EIF_FILENAME dirname) {
+EIF_BOOLEAN eif_dir_is_executable(EIF_FILENAME dirname)
+{
 #ifdef EIF_WINDOWS
-	return (EIF_BOOLEAN) (_waccess (dirname, F_OK) != -1);
+	return (EIF_BOOLEAN)(_waccess(dirname, F_OK) != -1);
 #else
 	int uid, gid;
 	int euid, egid;
@@ -302,16 +325,17 @@ EIF_BOOLEAN eif_dir_is_executable(EIF_FILENAME dirname) {
 		return ((mode & S_IXGRP) ? EIF_TRUE : EIF_FALSE);
 #ifdef HAS_GETGROUPS
 	else if (eif_group_in_list(gid))
-		return (EIF_BOOLEAN) ((mode & S_IXGRP) ? EIF_TRUE : EIF_FALSE);
+		return ((mode & S_IXGRP) ? EIF_TRUE : EIF_FALSE);
 #endif
 	else
 		return ((mode & S_IXOTH) ? EIF_TRUE : EIF_FALSE);
 #endif
 }
 
-EIF_BOOLEAN eif_dir_is_writable(EIF_FILENAME dirname) {
+EIF_BOOLEAN eif_dir_is_writable(EIF_FILENAME dirname)
+{
 #ifdef EIF_WINDOWS
-	return (EIF_BOOLEAN) (_waccess (dirname, W_OK) != -1);
+	return (EIF_BOOLEAN)(_waccess(dirname, W_OK) != -1);
 #else
 	int uid, gid;
 	int euid, egid;
@@ -332,19 +356,20 @@ EIF_BOOLEAN eif_dir_is_writable(EIF_FILENAME dirname) {
 		return ((mode & S_IWGRP) ? EIF_TRUE : EIF_FALSE);
 #ifdef HAS_GETGROUPS
 	else if (eif_group_in_list(gid))
-		return (EIF_BOOLEAN) ((mode & S_IWGRP) ? EIF_TRUE : EIF_FALSE);
+		return ((mode & S_IWGRP) ? EIF_TRUE : EIF_FALSE);
 #endif
 	else
 		return ((mode & S_IWOTH) ? EIF_TRUE : EIF_FALSE);
 #endif
 }
 
-EIF_BOOLEAN eif_dir_is_deletable (EIF_FILENAME name)
+EIF_BOOLEAN eif_dir_is_deletable(EIF_FILENAME name)
 {
-	return eif_dir_is_writable (name);
+	return eif_dir_is_writable(name);
 }
 
-EIF_CHARACTER_8 eif_dir_separator(void) {
+EIF_CHARACTER_8 eif_dir_separator(void)
+{
 #ifdef EIF_WINDOWS
 	return (EIF_CHARACTER_8)'\\';
 #else
@@ -352,7 +377,8 @@ EIF_CHARACTER_8 eif_dir_separator(void) {
 #endif
 }
 
-EIF_INTEGER eif_dir_current (EIF_FILENAME a_buffer, EIF_INTEGER a_count) {
+EIF_INTEGER eif_dir_current(EIF_FILENAME a_buffer, EIF_INTEGER a_count)
+{
 	EIF_INTEGER l_nbytes;
 
 #ifdef EIF_WINDOWS
@@ -361,26 +387,25 @@ EIF_INTEGER eif_dir_current (EIF_FILENAME a_buffer, EIF_INTEGER a_count) {
 	drive [0] = '.';
 	drive [1] = '\0';
 		/* First calculate the length of the buffer we need to hold the current working directory. */
-	l_nbytes = (GetFullPathNameW (drive, 0, NULL, &subpart) + 1) * sizeof(wchar_t) ;
+	l_nbytes = (GetFullPathNameW(drive, 0, NULL, &subpart) + 1) * sizeof(wchar_t);
 
 	if (l_nbytes == 0) {
 			/* Failure: we cannot retrieve our current directory. */
 		l_nbytes = -1;
 	} else {
 		if (a_buffer && (a_count >= l_nbytes)) {
-			l_nbytes = (GetFullPathNameW (drive, l_nbytes / sizeof(wchar_t), a_buffer, &subpart) + 1) * sizeof(wchar_t);
+			l_nbytes = (GetFullPathNameW(drive, l_nbytes / sizeof(wchar_t), a_buffer, &subpart) + 1) * sizeof(wchar_t);
 		}
 	}
 	return l_nbytes;
-
 #else
 	char *cwd;
-	cwd = getcwd (NULL, PATH_MAX);
+	cwd = getcwd(NULL, PATH_MAX);
 
 	if (cwd) {
 		l_nbytes = (strlen(cwd) + 1) * sizeof(char);
 		if (a_buffer && (a_count >= l_nbytes)) {
-			memcpy (a_buffer, cwd, l_nbytes);
+			memcpy(a_buffer, cwd, l_nbytes);
 		}
 		free(cwd);	/* Not `eif_free', getcwd() call malloc in POSIX.1 */
 	} else {
@@ -392,11 +417,12 @@ EIF_INTEGER eif_dir_current (EIF_FILENAME a_buffer, EIF_INTEGER a_count) {
 #endif
 }
 
-EIF_INTEGER eif_chdir(EIF_FILENAME path) {
+EIF_INTEGER eif_chdir(EIF_FILENAME path)
+{
 #ifdef EIF_WINDOWS
-	return _wchdir (path);
+	return _wchdir(path);
 #else
-	return chdir (path);
+	return chdir(path);
 #endif
 }
 

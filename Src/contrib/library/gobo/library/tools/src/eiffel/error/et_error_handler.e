@@ -5,7 +5,7 @@ note
 		"Error handlers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,6 +16,8 @@ inherit
 
 	UT_ERROR_HANDLER
 		redefine
+			make_standard,
+			make_null,
 			is_verbose,
 			report_error_message
 		end
@@ -25,6 +27,22 @@ inherit
 create
 
 	make_standard, make_null
+
+feature {NONE} -- Initialization
+
+	make_standard
+			-- <Precursor>
+		do
+			create mutex.make
+			precursor
+		end
+
+	make_null
+			-- <Precursor>
+		do
+			create mutex.make
+			precursor
+		end
 
 feature -- Status report
 
@@ -38,9 +56,6 @@ feature -- Status report
 
 	is_verbose: BOOLEAN
 			-- Should status be reported for each class processed?
-
-	benchmark_shown: BOOLEAN
-			-- Should benchmark be shown for each Degree?
 
 	has_error: BOOLEAN
 			-- Has an error been reported?
@@ -74,14 +89,6 @@ feature -- Status setting
 			verbose_set: is_verbose = b
 		end
 
-	set_benchmark_shown (b: BOOLEAN)
-			-- Set `benchmark_shown' to `b'.
-		do
-			benchmark_shown := b
-		ensure
-			benchmark_shown_set: benchmark_shown = b
-		end
-
 	set_has_error (b: BOOLEAN)
 			-- Set `has_error' to `b'.
 		do
@@ -92,6 +99,8 @@ feature -- Status setting
 			end
 		ensure
 			has_error_set: has_error = b
+			not_has_eiffel_error: not b implies not has_eiffel_error
+			not_has_internal_error: not b implies not has_internal_error
 		end
 
 	set_has_eiffel_error (b: BOOLEAN)
@@ -103,6 +112,7 @@ feature -- Status setting
 			end
 		ensure
 			has_eiffel_error_set: has_eiffel_error = b
+			has_error: b implies has_error
 		end
 
 	set_has_internal_error (b: BOOLEAN)
@@ -114,6 +124,7 @@ feature -- Status setting
 			end
 		ensure
 			has_internal_error_set: has_internal_error = b
+			has_error: b implies has_error
 		end
 
 feature -- Compilation report
@@ -125,45 +136,48 @@ feature -- Compilation report
 		do
 			if is_verbose then
 				if info_file /= Void then
+					mutex.lock
 					info_file.put_string ("Degree 6 ")
 					info_file.put_string (a_group.kind_lower_name)
 					info_file.put_character (' ')
 					info_file.put_line (a_group.full_lower_name ('/'))
+					mutex.unlock
 				end
 			end
 		end
 
-	report_compilation_status (a_processor: ET_AST_PROCESSOR; a_class: ET_CLASS)
+	report_compilation_status (a_processor: ET_AST_PROCESSOR; a_class: ET_CLASS; a_system_processor: ET_SYSTEM_PROCESSOR)
 			-- Report that `a_processor' is currently processing `a_class'.
 		require
 			a_processor_not_void: a_processor /= Void
 			a_class_not_void: a_class /= Void
 			a_class_is_preparsed: a_class.is_preparsed
-		local
-			l_system: ET_SYSTEM
+			a_system_processor_not_void: a_system_processor /= Void
 		do
 			if is_verbose then
 				if info_file /= Void then
-					l_system := a_class.current_system
-					if a_processor = l_system.eiffel_parser then
+					mutex.lock
+					if a_processor = a_system_processor.eiffel_parser then
 						info_file.put_string ("Degree 5 class ")
 						info_file.put_line (a_class.upper_name)
-					elseif a_processor = l_system.ancestor_builder then
+					elseif a_processor = a_system_processor.ancestor_builder then
 						info_file.put_string ("Degree 4.3 class ")
 						info_file.put_line (a_class.upper_name)
-					elseif a_processor = l_system.feature_flattener then
+					elseif a_processor = a_system_processor.feature_flattener then
 						info_file.put_string ("Degree 4.2 class ")
 						info_file.put_line (a_class.upper_name)
-					elseif a_processor = l_system.interface_checker then
+					elseif a_processor = a_system_processor.interface_checker then
 						info_file.put_string ("Degree 4.1 class ")
 						info_file.put_line (a_class.upper_name)
-					elseif a_processor = l_system.implementation_checker then
-						info_file.put_string ("Degree 3 class ")
-						info_file.put_line (a_class.upper_name)
-					elseif a_processor = l_system.flat_implementation_checker then
-						info_file.put_string ("Degree 3 (flat) class ")
+					elseif a_processor = a_system_processor.implementation_checker then
+						if a_system_processor.flat_mode then
+							info_file.put_string ("Degree 3 (flat) class ")
+						else
+							info_file.put_string ("Degree 3 class ")
+						end
 						info_file.put_line (a_class.upper_name)
 					end
+					mutex.unlock
 				end
 			end
 		end
@@ -175,11 +189,13 @@ feature -- Cluster errors
 		require
 			an_error_not_void: an_error /= Void
 		do
-			set_has_eiffel_error (True)
+			mutex.lock
 			report_info (an_error)
+			set_has_eiffel_error (True)
 			if info_file = std.output then
 				info_file.put_line ("----")
 			end
+			mutex.unlock
 		end
 
 	report_gcaaa_error (a_cluster: ET_CLUSTER; a_dirname: STRING)
@@ -322,11 +338,13 @@ feature -- Universe errors
 		require
 			an_error_not_void: an_error /= Void
 		do
-			set_has_eiffel_error (True)
+			mutex.lock
 			report_info (an_error)
+			set_has_eiffel_error (True)
 			if info_file = std.output then
 				info_file.put_line ("----")
 			end
+			mutex.unlock
 		end
 
 	report_vscn0a_error (a_universe: ET_UNIVERSE; a_current_class: ET_MASTER_CLASS; a_class1, a_class2: ET_NAMED_CLASS)
@@ -423,11 +441,13 @@ feature -- .NET assembly errors
 		require
 			an_error_not_void: an_error /= Void
 		do
-			set_has_eiffel_error (True)
+			mutex.lock
 			report_info (an_error)
+			set_has_eiffel_error (True)
 			if info_file = std.output then
 				info_file.put_line ("----")
 			end
+			mutex.unlock
 		end
 
 	report_gaaaa_error (an_assembly: ET_DOTNET_ASSEMBLY)
@@ -487,9 +507,11 @@ feature -- Syntax errors
 		local
 			an_error: ET_SYNTAX_ERROR
 		do
-			set_has_eiffel_error (True)
+			mutex.lock
 			create an_error.make (a_filename, p)
 			report_info (an_error)
+			set_has_eiffel_error (True)
+			mutex.unlock
 		end
 
 	report_SCAC_error (a_filename: STRING; p: ET_POSITION)
@@ -703,11 +725,13 @@ feature -- System errors
 		require
 			an_error_not_void: an_error /= Void
 		do
-			set_has_eiffel_error (True)
+			mutex.lock
 			report_info (an_error)
+			set_has_eiffel_error (True)
 			if info_file = std.output then
 				info_file.put_line ("----")
 			end
+			mutex.unlock
 		end
 
 	report_catcall_error (an_error: STRING)
@@ -715,8 +739,10 @@ feature -- System errors
 		require
 			an_error_not_void: an_error /= Void
 		do
+			mutex.lock
 			set_has_eiffel_error (True)
 			report_info_message (an_error)
+			mutex.unlock
 		end
 
 	report_vsrc1a_error (a_class: ET_CLASS)
@@ -866,11 +892,13 @@ feature -- Validity errors
 				(is_ise and an_error.ise_reported) or
 				(is_ge and an_error.ge_reported)
 			then
-				set_has_eiffel_error (True)
+				mutex.lock
 				report_info (an_error)
+				set_has_eiffel_error (True)
 				if info_file = std.output then
 					info_file.put_line ("----")
 				end
+				mutex.unlock
 			end
 		end
 
@@ -3125,7 +3153,7 @@ feature -- Validity errors
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
-			if reportable_vffd6_error (a_class) then
+			if reportable_vffd7_error (a_class) then
 				create an_error.make_vffd7a (a_class, a_feature)
 				report_validity_error (an_error)
 			end
@@ -3133,7 +3161,7 @@ feature -- Validity errors
 
 	report_vffd7b_error (a_class: ET_CLASS; a_feature: ET_FEATURE)
 			-- Report VFFD-7 error: the type of the once function `a_feature'
-			-- contains an formal generic parameter.
+			-- contains a formal generic parameter.
 			--
 			-- ETL2: p.69
 		require
@@ -3145,7 +3173,7 @@ feature -- Validity errors
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
-			if reportable_vffd6_error (a_class) then
+			if reportable_vffd7_error (a_class) then
 				create an_error.make_vffd7b (a_class, a_feature)
 				report_validity_error (an_error)
 			end
@@ -5701,6 +5729,209 @@ feature -- Validity errors
 			end
 		end
 
+	report_vucr0a_error (a_class: ET_CLASS; a_feature: ET_FEATURE)
+			-- Report VUCR error: attributes cannot be used in static calls.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_attribute: a_feature.is_attribute
+			a_feature_static: a_feature.is_static
+		local
+			a_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vucr_error (a_class) then
+				create a_error.make_vucr0a (a_class, a_feature)
+				report_validity_error (a_error)
+			end
+		end
+
+	report_vucr0b_error (a_class: ET_CLASS; a_feature: ET_FEATURE)
+			-- Report VUCR error: once-per-object features cannot be used in static calls.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_deferred: a_feature.is_deferred
+			a_feature_static: a_feature.is_static
+		local
+			a_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vucr_error (a_class) then
+				create a_error.make_vucr0b (a_class, a_feature)
+				report_validity_error (a_error)
+			end
+		end
+
+	report_vucr0c_error (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_attribute: ET_FEATURE)
+			-- Report VUCR error: `a_name', appearing as target of an assignment or a creation instruction
+			-- in a feature written in `a_class_impl' and viewed from `a_class' where this feature is marked
+			-- as static, is the name of an attribute `a_attribute'.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_attribute_not_void: a_attribute /= Void
+			a_attribute_is_attribute: a_attribute.is_attribute
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vucr_error (a_class) then
+				create an_error.make_vucr0c (a_class, a_class_impl, a_name, a_attribute)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vucr0d_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE)
+			-- Report VUCR error: the unqualified call `a_name' written in `a_class_impl'
+			-- is a call to the non-static feature `a_feature' from a static feature
+			-- when viewed from `a_class'.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_feature_not_void: a_feature /= Void
+			a_feature_not_static: not a_feature.is_static
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vucr_error (a_class) then
+				create an_error.make_vucr0d (a_class, a_class_impl, a_name, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vucr0e_error (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_attribute: ET_FEATURE)
+			-- Report VUCR error: the access to the address of `a_name' written in `a_class_impl'
+			-- if the access to the address of attribute `a_attribute' from a static feature
+			-- when viewed from `a_class'.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_a_attribute_not_void: a_attribute /= Void
+			a_attribute_is_attribute: a_attribute.is_attribute
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vucr_error (a_class) then
+				create an_error.make_vucr0e (a_class, a_class_impl, a_name, a_attribute)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vucr0f_error (a_class, a_class_impl: ET_CLASS; a_current: ET_CURRENT)
+			-- Report VUCR error: `a_current' written in `a_class_impl' is
+			-- used in a static feature when viewed from `a_class'.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_current_not_void: a_current /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vucr_error (a_class) then
+				create an_error.make_vucr0f (a_class, a_class_impl, a_current)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vucr0g_error (a_class, a_class_impl: ET_CLASS; a_current_address: ET_CURRENT_ADDRESS)
+			-- Report VUCR error: `a_current_address' written in `a_class_impl'
+			-- is used in a static feature when viewed from `a_class'.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_current_address_not_void: a_current_address /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vucr_error (a_class) then
+				create an_error.make_vucr0g (a_class, a_class_impl, a_current_address)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vucr0h_error (a_class, a_class_impl: ET_CLASS; a_precursor: ET_PRECURSOR_KEYWORD; a_feature: ET_FEATURE)
+			-- Report VUCR error: the call to `a_precursor' written in `a_class_impl'
+			-- is a call to the non-static feature `a_feature' from a static feature
+			-- when viewed from `a_class'.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_precursor_not_void: a_precursor /= Void
+			a_feature_not_void: a_feature /= Void
+			a_feature_not_static: not a_feature.is_static
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vucr_error (a_class) then
+				create an_error.make_vucr0h (a_class, a_class_impl, a_precursor, a_feature)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vucr0i_error (a_class, a_class_impl: ET_CLASS; a_agent: ET_INLINE_AGENT)
+			-- Report VUCR error: the inline agent `a_agent' written in `a_class_impl'
+			-- appears in a static feature when viewed from `a_class'.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_agent_not_void: a_agent /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vucr_error (a_class) then
+				create an_error.make_vucr0i (a_class, a_class_impl, a_agent)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vucr0j_error (a_class, a_class_impl: ET_CLASS; a_agent: ET_CALL_AGENT)
+			-- Report VUCR error: the unqualified call agent `a_agent' written in `a_class_impl'
+			-- appears in a static feature when viewed from `a_class'.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_agent_not_void: a_agent /= Void
+			a_unqualified_call_agent: not a_agent.is_qualified_call
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vucr_error (a_class) then
+				create an_error.make_vucr0j (a_class, a_class_impl, a_agent)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vuex1a_error (a_class: ET_CLASS; a_name: ET_CALL_NAME)
 			-- Report VUEX-1 error: `a_name', appearing in an unqualified
 			-- call in `a_class', is not the final name of a feature
@@ -5786,6 +6017,49 @@ feature -- Validity errors
 		do
 			if reportable_vuno3_error (a_class) then
 				create an_error.make_vuno3a (a_class, a_class_impl, a_name, a_feature, a_target)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vuno5a_error (a_class, a_class_impl: ET_CLASS; a_target_type: ET_TYPE; a_target_class: ET_CLASS)
+			-- Report VUNO-5 error: base class `a_target_class' of a static call with
+			-- target type `a_target_type' is deferred when called from `a_class', one
+			-- of the descendants of `a_class_impl' (possibly itself) where the static
+			-- call appears.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_target_type_not_void: a_target_type /= Void
+			a_target_class_not_void: a_target_class /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vuno5_error (a_class) then
+				create an_error.make_vuno5a (a_class, a_class_impl, a_target_type, a_target_class)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vuno5b_error (a_class, a_class_impl: ET_CLASS; a_target_type: ET_TYPE)
+			-- Report VUNO-5 error: the target type `a_target_type' of a static call
+			-- is of the form 'like Current' when called from `a_class', one of
+			-- the descendants of `a_class_impl' (possibly itself) where the static
+			-- call appears.
+			--
+			-- Only in ISE Eiffel
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_target_type_not_void: a_target_type /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vuno5_error (a_class) then
+				create an_error.make_vuno5b (a_class, a_class_impl, a_target_type)
 				report_validity_error (an_error)
 			end
 		end
@@ -6049,6 +6323,46 @@ feature -- Validity errors
 			end
 		end
 
+	report_vvok1b_error (a_class: ET_CLASS; a_indexing_term1: ET_INDEXING_TERM; a_once_key2: ET_MANIFEST_STRING)
+			-- Report VVOK-1 error: `a_indexing_term1' and `a_once_key2' cannot be
+			-- combined. The supported once keys "PROCESS", "THREAD" and "OBJECT"
+			-- cannot be combined.
+			--
+			-- Not in ECMA, only in ISE
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_indexing_term1_not_void: a_indexing_term1 /= Void
+			a_once_key2_not_void: a_once_key2 /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vvok1_error (a_class) then
+				create an_error.make_vvok1b (a_class, a_indexing_term1, a_once_key2)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vvok1c_error (a_class: ET_CLASS; a_indexing_term1, a_indexing_term2: ET_INDEXING_TERM)
+			-- Report VVOK-1 error: `a_indexing_term1' and `a_indexing_term2' cannot be
+			-- combined. The supported once keys "PROCESS", "THREAD" and "OBJECT"
+			-- cannot be combined.
+			--
+			-- Not in ECMA, only in ISE
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_indexing_term1_not_void: a_indexing_term1 /= Void
+			a_indexing_term2_not_void: a_indexing_term2 /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vvok1_error (a_class) then
+				create an_error.make_vvok1c (a_class, a_indexing_term1, a_indexing_term2)
+				report_validity_error (an_error)
+			end
+		end
+
 	report_vvok2a_error (a_class: ET_CLASS; a_once_key: ET_MANIFEST_STRING)
 			-- Report VVOK-2 error: `a_once_key' is not one of the supported
 			-- once keys. The supported once keys are "PROCESS", "THREAD" and "OBJECT".
@@ -6063,6 +6377,24 @@ feature -- Validity errors
 		do
 			if reportable_vvok2_error (a_class) then
 				create an_error.make_vvok2a (a_class, a_once_key)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vvok2b_error (a_class: ET_CLASS; a_indexing_term: ET_INDEXING_TERM)
+			-- Report VVOK-2 error: `a_indexing_term' is not one of the supported
+			-- once keys. The supported once keys are "PROCESS", "THREAD" and "OBJECT".
+			--
+			-- Not in ECMA, only in ISE
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_indexing_term_not_void: a_indexing_term /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vvok2_error (a_class) then
+				create an_error.make_vvok2b (a_class, a_indexing_term)
 				report_validity_error (an_error)
 			end
 		end
@@ -6086,6 +6418,28 @@ feature -- Validity errors
 			if reportable_vwbe_error (a_class) then
 				create an_error.make_vwbe0a (a_class, a_class_impl, an_expression, a_type)
 				report_validity_error (an_error)
+			end
+		end
+
+	report_vwce0a_error (a_class, a_class_impl: ET_CLASS; a_expression: ET_EXPRESSION; a_type, a_other_type: ET_NAMED_TYPE)
+			-- Report VWCE error: the expression `a_expression' appearing
+			-- in a conditional expression in `a_class_impl' and viewed
+			-- from one of its descendants `a_class' (possibly itself) is
+			-- of type `a_type' which does not conform to the type `a_other_type'
+			-- of some other expression in this conditional expression.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_expression_not_void: a_expression /= Void
+			a_type_not_void: a_type /= Void
+			a_other_type_not_void: a_other_type /= Void
+		local
+			a_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vwce_error (a_class) then
+				create a_error.make_vwce0a (a_class, a_class_impl, a_expression, a_type, a_other_type)
+				report_validity_error (a_error)
 			end
 		end
 
@@ -6131,6 +6485,54 @@ feature -- Validity errors
 		do
 			if reportable_vweq_error (a_class) then
 				create an_error.make_vweq0b (a_class, a_class_impl, an_expression, a_type1, a_type2)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vwma1a_error (a_class, a_class_impl: ET_CLASS; a_manifest_array: ET_MANIFEST_ARRAY)
+			-- Report VWMA-1 error: the cast type of `a_manifest_array' appearing in
+			-- `a_class_impl' and viewed from one of its descendants `a_class'
+			-- (possibly itself) is not an "ARRAY" type.
+			--
+			-- See https://www.eiffel.org/doc/version/trunk/eiffel/Manifest%20array
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_manifest_array_not_void: a_manifest_array /= Void
+			a_cast_type_not_void: a_manifest_array.cast_type /= Void
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vwma1_error (a_class) then
+				create an_error.make_vwma1a (a_class, a_class_impl, a_manifest_array)
+				report_validity_error (an_error)
+			end
+		end
+
+	report_vwma2a_error (a_class, a_class_impl: ET_CLASS; a_manifest_array_item: ET_EXPRESSION; i: INTEGER; a_item_type, a_array_parameter_type: ET_NAMED_TYPE)
+			-- Report VWMA-2 error: the type `a_item_type' of the `i'-th item
+			-- `a_manifest_array_item' in manifest array appearing in `a_class_impl'
+			-- and viewed from one of its descendants `a_class' (possibly itself),
+			-- does not conform nor convert to the generic parameter
+			-- `a_array_parameter_type' of the array type specified
+			-- for the manifest array.
+			--
+			-- See https://www.eiffel.org/doc/version/trunk/eiffel/Manifest%20array
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_manifest_array_item_not_void: a_manifest_array_item /= Void
+			a_item_type_type_not_void: a_item_type /= Void
+			a_item_type_type_is_named_type: a_item_type.is_named_type
+			a_array_parameter_type_not_void: a_array_parameter_type /= Void
+			a_array_parameter_type_is_named_type: a_array_parameter_type.is_named_type
+		local
+			an_error: ET_VALIDITY_ERROR
+		do
+			if reportable_vwma2_error (a_class) then
+				create an_error.make_vwma2a (a_class, a_class_impl, a_manifest_array_item, i, a_item_type, a_array_parameter_type)
 				report_validity_error (an_error)
 			end
 		end
@@ -8148,6 +8550,16 @@ feature -- Validity error status
 			Result := True
 		end
 
+	reportable_vucr_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VUCR error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
 	reportable_vuex1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VUEX-1 error be reported when it
 			-- appears in `a_class'?
@@ -8170,6 +8582,16 @@ feature -- Validity error status
 
 	reportable_vuno3_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VUNO-3 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vuno5_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VUNO-5 error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void
@@ -8248,8 +8670,38 @@ feature -- Validity error status
 			Result := True
 		end
 
+	reportable_vwce_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VWCE error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
 	reportable_vweq_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VWEQ error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vwma1_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VWMA-1 error be reported when it
+			-- appears in `a_class'?
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		do
+			Result := True
+		end
+
+	reportable_vwma2_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VWMA-2 error be reported when it
 			-- appears in `a_class'?
 		require
 			a_class_not_void: a_class /= Void
@@ -8535,11 +8987,13 @@ feature -- Internal errors
 		require
 			an_error_not_void: an_error /= Void
 		do
-			set_has_internal_error (True)
+			mutex.lock
 			report_error (an_error)
+			set_has_internal_error (True)
 			if error_file = std.error then
 				error_file.put_line ("----")
 			end
+			mutex.unlock
 		end
 
 	report_giaaa_error
@@ -8556,9 +9010,16 @@ feature -- Reporting
 	report_error_message (an_error: STRING)
 			-- Report `an_error'.
 		do
+			mutex.lock
 			precursor (an_error)
 			set_has_error (True)
+			mutex.unlock
 		end
+
+feature {NONE} -- Concurrency
+
+	mutex: MUTEX
+			-- Mutex to report errors in a multi-threaded environment
 
 invariant
 
@@ -8566,5 +9027,6 @@ invariant
 	has_internal_error: has_internal_error implies has_error
 	not_has_eiffel_error: not has_error implies not has_eiffel_error
 	not_has_internal_error: not has_error implies not has_internal_error
+	mutex_not_void: mutex /= Void
 
 end

@@ -16,7 +16,7 @@ note
 		the given name when viewed from the surrounding universe using `actual_class'.
 	]"
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -64,6 +64,8 @@ feature {NONE} -- Initialization
 			other_imported_classes := tokens.empty_master_classes
 			other_overriding_classes := tokens.empty_master_classes
 			intrinsic_class := tokens.unknown_class
+			create status_mutex.make
+			create processing_mutex.make
 		ensure
 			name_set: name = a_name
 			universe_set: universe = a_universe
@@ -646,6 +648,20 @@ feature -- Parsing status
 			end
 		end
 
+	is_parsed_successfully: BOOLEAN
+			-- Has current class been successfully parsed?
+		do
+			if not is_modified then
+				if attached mapped_class as l_mapped_class then
+					Result := l_mapped_class.is_parsed_successfully
+				elseif attached first_overriding_class as l_first_overriding_class then
+					Result := l_first_overriding_class.is_parsed_successfully
+				else
+					Result := intrinsic_class.is_parsed_successfully
+				end
+			end
+		end
+
 	has_syntax_error: BOOLEAN
 			-- Has a fatal syntax error been detected?
 		do
@@ -672,6 +688,20 @@ feature -- Ancestor building status
 					Result := l_first_overriding_class.ancestors_built
 				else
 					Result := intrinsic_class.ancestors_built
+				end
+			end
+		end
+
+	ancestors_built_successfully: BOOLEAN
+			-- Have `ancestors' been successfully built?
+		do
+			if not is_modified then
+				if attached mapped_class as l_mapped_class then
+					Result := l_mapped_class.ancestors_built_successfully
+				elseif attached first_overriding_class as l_first_overriding_class then
+					Result := l_first_overriding_class.ancestors_built_successfully
+				else
+					Result := intrinsic_class.ancestors_built_successfully
 				end
 			end
 		end
@@ -706,6 +736,20 @@ feature -- Feature flattening status
 			end
 		end
 
+	features_flattened_successfully: BOOLEAN
+			-- Have features been successfully flattened?
+		do
+			if not is_modified then
+				if attached mapped_class as l_mapped_class then
+					Result := l_mapped_class.features_flattened_successfully
+				elseif attached first_overriding_class as l_first_overriding_class then
+					Result := l_first_overriding_class.features_flattened_successfully
+				else
+					Result := intrinsic_class.features_flattened_successfully
+				end
+			end
+		end
+
 	has_flattening_error: BOOLEAN
 			-- Has a fatal error occurred during feature flattening?
 		do
@@ -732,6 +776,20 @@ feature -- Interface checking status
 					Result := l_first_overriding_class.interface_checked
 				else
 					Result := intrinsic_class.interface_checked
+				end
+			end
+		end
+
+	interface_checked_successfully: BOOLEAN
+			-- Has the interface of current class been successfully checked?
+		do
+			if not is_modified then
+				if attached mapped_class as l_mapped_class then
+					Result := l_mapped_class.interface_checked_successfully
+				elseif attached first_overriding_class as l_first_overriding_class then
+					Result := l_first_overriding_class.interface_checked_successfully
+				else
+					Result := intrinsic_class.interface_checked_successfully
 				end
 			end
 		end
@@ -764,6 +822,20 @@ feature -- Implementation checking status
 					Result := l_first_overriding_class.implementation_checked
 				else
 					Result := intrinsic_class.implementation_checked
+				end
+			end
+		end
+
+	implementation_checked_successfully: BOOLEAN
+			-- Has the implementation of current class been successfully checked?
+		do
+			if not is_modified then
+				if attached mapped_class as l_mapped_class then
+					Result := l_mapped_class.implementation_checked_successfully
+				elseif attached first_overriding_class as l_first_overriding_class then
+					Result := l_first_overriding_class.implementation_checked_successfully
+				else
+					Result := intrinsic_class.implementation_checked_successfully
 				end
 			end
 		end
@@ -1804,7 +1876,7 @@ feature -- Iteration
 
 feature -- Initialization
 
-	reset_local_modified_classes
+	reset_local_modified_classes (a_system_processor: ET_SYSTEM_PROCESSOR)
 			-- Reset appropriately classes that have been declared in groups of `universe'
 			-- (i.e. classes that can be found in `first_local_override_class', `other_local_override_classes',
 			-- `first_local_non_override_class', `other_local_non_override_classes',
@@ -1823,22 +1895,24 @@ feature -- Initialization
 			-- re(pre)parse will give inconsistent results and will need to be
 			-- rerun again.
 			--
-			-- The queries `current_system.preparse_*_mode' govern the way
+			-- The queries `a_system_processor.preparse_*_mode' govern the way
 			-- preparsing works. Read the header comments of these features
 			-- for more details.
+		require
+			a_system_processor_not_void: a_system_processor /= Void
 		do
-			local_override_classes_do_all (agent reset_local_modified_class)
-			if not current_system.preparse_override_mode then
-				local_non_override_classes_do_all (agent reset_local_modified_class)
-				local_ignored_classes_do_all (agent reset_local_modified_class)
+			local_override_classes_do_all (agent reset_local_modified_class (?, a_system_processor))
+			if not a_system_processor.preparse_override_mode then
+				local_non_override_classes_do_all (agent reset_local_modified_class (?, a_system_processor))
+				local_ignored_classes_do_all (agent reset_local_modified_class (?, a_system_processor))
 			else
-				local_ignored_classes_do_if (agent reset_local_modified_class, agent {ET_CLASS}.is_in_override_group)
+				local_ignored_classes_do_if (agent reset_local_modified_class (?, a_system_processor), agent {ET_CLASS}.is_in_override_group)
 			end
 		end
 
 feature {NONE} -- Initialization
 
-	reset_local_modified_class (a_class: ET_CLASS)
+	reset_local_modified_class (a_class: ET_CLASS; a_system_processor: ET_SYSTEM_PROCESSOR)
 			-- Reset `a_class' appropriately if it has been modified and possibly removed (either
 			-- its old file does not exist anymore, or it has been modified and may contain another
 			-- class) so that it will be (pre)parsed again.
@@ -1853,11 +1927,12 @@ feature {NONE} -- Initialization
 			-- re(pre)parse will give inconsistent results and will need to be
 			-- rerun again.
 			--
-			-- The queries `current_system.preparse_*_mode' govern the way
+			-- The queries `a_system_processor.preparse_*_mode' govern the way
 			-- preparsing works. Read the header comments of these features
 			-- for more details.
 		require
 			a_class_not_void: a_class /= Void
+			a_system_processor_not_void: a_system_processor /= Void
 		local
 			l_cluster: ET_CLUSTER
 			l_override_mode: BOOLEAN
@@ -1866,9 +1941,9 @@ feature {NONE} -- Initialization
 			l_time_stamp, l_new_timestamp: INTEGER
 			l_actual_class: ET_CLASS
 		do
-			l_override_mode := current_system.preparse_override_mode
-			l_readonly_mode := current_system.preparse_readonly_mode
-			l_shallow_mode := current_system.preparse_shallow_mode
+			l_override_mode := a_system_processor.preparse_override_mode
+			l_readonly_mode := a_system_processor.preparse_readonly_mode
+			l_shallow_mode := a_system_processor.preparse_shallow_mode
 			l_actual_class := actual_class
 			if a_class /= l_actual_class then
 				a_class.reset_after_parsed_and_errors
@@ -1953,7 +2028,9 @@ feature -- System
 		local
 			l_class: ET_CLASS
 		do
-			is_marked := b
+			status_mutex.lock
+			unprotected_is_marked := b
+			status_mutex.unlock
 			if b then
 				l_class := actual_class
 				if not l_class.is_unknown then

@@ -2,7 +2,7 @@
 	description: "[
 		Special objects: homogeneous sequences of values,
 		used to represent arrays and strings
-		]"
+	]"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -65,14 +65,14 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	item alias "[]" (i: INTEGER): T assign put
-			-- Item at `i'-th position
+			-- Item at `i'-th position.
 			-- (indices begin at 0)
 		external
 			"built_in"
 		end
 
 	at alias "@" (i: INTEGER): T
-			-- Item at `i'-th position
+			-- Item at `i'-th position.
 			-- (indices begin at 0)
 		require
 			valid_index: valid_index (i)
@@ -129,7 +129,7 @@ feature -- Access
 		end
 
 	native_array: NATIVE_ARRAY [T]
-			-- Only for compatibility with .NET
+			-- Only for compatibility with .NET.
 		require
 			is_dotnet: {PLATFORM}.is_dotnet
 		do
@@ -155,22 +155,22 @@ feature -- Access
 feature -- Measurement
 
 	lower: INTEGER = 0
-			-- Minimum index of Current
+			-- Minimum index of Current.
 
 	upper: INTEGER
-			-- Maximum index of Current
+			-- Maximum index of Current.
 		do
 			Result := count - 1
 		end
 
 	count: INTEGER
-			-- Count of special area
+			-- Count of special area.
 		external
 			"built_in"
 		end
 
 	capacity: INTEGER
-			-- Capacity of special area
+			-- Capacity of special area.
 		external
 			"built_in"
 		end
@@ -231,13 +231,13 @@ feature -- Status report
 				end
 			end
 		ensure
-			valid_on_empty_area: (n = 0) implies Result
+			valid_on_empty_area: n = 0 implies Result
 		end
 
 	valid_index (i: INTEGER): BOOLEAN
 			-- Is `i' within the bounds of Current?
 		do
-			Result := (0 <= i) and (i < count)
+			Result := 0 <= i and i < count
 		end
 
 feature -- Element change
@@ -486,7 +486,7 @@ feature -- Element change
 					i := source_index + n - 1
 					nb := source_index - 1
 					l_offset := destination_index - source_index
-					if (destination_index + n >= count) then
+					if destination_index + n >= count then
 							-- Initialize elements above `count' to a dummy item.
 						fill_with (item (source_index), count, destination_index + n - 1)
 					end
@@ -605,7 +605,7 @@ feature -- Resizing
 		end
 
 	resized_area (n: INTEGER): like Current
-			-- Create a copy of Current with a count of `n'
+			-- A copy of Current with a count of `n'.
 		require
 			n_non_negative: n >= 0
 		do
@@ -642,7 +642,7 @@ feature -- Resizing
 
 	aliased_resized_area (n: INTEGER): like Current
 			-- Try to resize `Current' with a count of `n', if not
-			-- possible a new copy
+			-- possible a new copy.
 		require
 			n_non_negative: n >= 0
 		external
@@ -700,7 +700,7 @@ feature -- Removal
 	clear_all
 			-- Reset all items to default values.
 		obsolete
-			"Because of the new precondition, it is recommended to use `fill_with' instead."
+			"Because of the new precondition, it is recommended to use `fill_with' instead. [2017-05-31]"
 		require
 			has_default: ({T}).has_default
 		do
@@ -854,7 +854,7 @@ feature -- Output
 feature {NONE} -- Implementation
 
 	element_size: INTEGER
-			-- Size of elements
+			-- Size of elements.
 		external
 			"built_in"
 		ensure
@@ -874,12 +874,11 @@ feature {NONE} -- Implementation
 		end
 
 invariant
-	count_less_than_capacity: count <= capacity
-	consistent_index_boundaries: lower <= upper + 1
+	consistent_count: count = upper - lower + 1
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
-	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

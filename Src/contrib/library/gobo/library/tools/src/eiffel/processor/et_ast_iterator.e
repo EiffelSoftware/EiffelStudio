@@ -5,7 +5,7 @@ note
 		"Eiffel AST iterators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -472,6 +472,12 @@ feature {ET_AST_NODE} -- Processing
 			a_class.end_keyword.process (Current)
 		end
 
+	process_class_assertion (a_assertion: ET_CLASS_ASSERTION)
+			-- Process `a_assertion'.
+		do
+			process_keyword (a_assertion.class_keyword)
+		end
+
 	process_class_type (a_type: ET_CLASS_TYPE)
 			-- Process `a_type'.
 		do
@@ -645,6 +651,9 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_expression'.
 		do
 			an_expression.create_keyword.process (Current)
+			if attached an_expression.creation_region as l_creation_region then
+				l_creation_region.process (Current)
+			end
 			an_expression.creation_type.process (Current)
 			if attached an_expression.creation_call as l_creation_call then
 				l_creation_call.process (Current)
@@ -655,6 +664,9 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_instruction'.
 		do
 			an_instruction.create_keyword.process (Current)
+			if attached an_instruction.creation_region as l_creation_region then
+				l_creation_region.process (Current)
+			end
 			if attached an_instruction.creation_type as l_creation_type then
 				l_creation_type.process (Current)
 			end
@@ -662,6 +674,14 @@ feature {ET_AST_NODE} -- Processing
 			if attached an_instruction.creation_call as l_creation_call then
 				l_creation_call.process (Current)
 			end
+		end
+
+	process_creation_region (a_region: ET_CREATION_REGION)
+			-- Process `a_region'.
+		do
+			a_region.left_symbol.process (Current)
+			a_region.class_name.process (Current)
+			a_region.right_symbol.process (Current)
 		end
 
 	process_creator (a_list: ET_CREATOR)
@@ -1057,6 +1077,26 @@ feature {ET_AST_NODE} -- Processing
 			a_feature.end_keyword.process (Current)
 			if attached a_feature.semicolon as l_semicolon then
 				l_semicolon.process (Current)
+			end
+		end
+
+	process_elseif_expression (an_elseif_part: ET_ELSEIF_EXPRESSION)
+			-- Process `an_elseif_part'.
+		do
+			an_elseif_part.conditional.process (Current)
+			an_elseif_part.then_keyword.process (Current)
+			an_elseif_part.then_expression.process (Current)
+		end
+
+	process_elseif_expression_list (a_list: ET_ELSEIF_EXPRESSION_LIST)
+			-- Process `a_list'.
+		local
+			i, nb: INTEGER
+		do
+			nb := a_list.count
+			from i := 1 until i > nb loop
+				a_list.item (i).process (Current)
+				i := i + 1
 			end
 		end
 
@@ -1566,6 +1606,20 @@ feature {ET_AST_NODE} -- Processing
 			an_identifier.comma.process (Current)
 		end
 
+	process_if_expression (a_expression: ET_IF_EXPRESSION)
+			-- Process `a_expression'.
+		do
+			a_expression.conditional.process (Current)
+			a_expression.then_keyword.process (Current)
+			a_expression.then_expression.process (Current)
+			if attached a_expression.elseif_parts as l_elseif_parts then
+				l_elseif_parts.process (Current)
+			end
+			a_expression.else_keyword.process (Current)
+			a_expression.else_expression.process (Current)
+			a_expression.end_keyword.process (Current)
+		end
+
 	process_if_instruction (an_instruction: ET_IF_INSTRUCTION)
 			-- Process `an_instruction'.
 		do
@@ -1861,6 +1915,9 @@ feature {ET_AST_NODE} -- Processing
 		local
 			i, nb: INTEGER
 		do
+			if attached an_expression.cast_type as l_type then
+				l_type.process (Current)
+			end
 			an_expression.left_symbol.process (Current)
 			nb := an_expression.count
 			from i := 1 until i > nb loop
@@ -2576,8 +2633,8 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_assertion'.
 		do
 			an_assertion.tag.process (Current)
-			if attached an_assertion.expression as l_expression then
-				l_expression.process (Current)
+			if attached an_assertion.untagged_assertion as l_untagged_assertion then
+				l_untagged_assertion.process (Current)
 			end
 		end
 

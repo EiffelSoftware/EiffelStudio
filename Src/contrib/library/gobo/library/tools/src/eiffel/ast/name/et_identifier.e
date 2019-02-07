@@ -5,7 +5,7 @@ note
 		"Eiffel identifiers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -52,6 +52,7 @@ inherit
 			is_equal,
 			break
 		redefine
+			is_instance_free,
 			is_never_void
 		end
 
@@ -63,6 +64,7 @@ inherit
 			is_equal,
 			break
 		redefine
+			is_instance_free,
 			is_never_void
 		end
 
@@ -72,8 +74,10 @@ inherit
 			last_position,
 			reset,
 			is_equal,
-			is_never_void,
 			break
+		redefine
+			is_instance_free,
+			is_never_void
 		end
 
 	ET_LABEL
@@ -98,8 +102,10 @@ inherit
 			last_position,
 			reset,
 			is_equal,
-			is_never_void,
 			break
+		redefine
+			is_instance_free,
+			is_never_void
 		end
 
 	ET_CHOICE_CONSTANT
@@ -108,8 +114,10 @@ inherit
 			last_position,
 			reset,
 			is_equal,
-			is_never_void,
 			break
+		redefine
+			is_instance_free,
+			is_never_void
 		end
 
 	ET_INDEXING_TERM
@@ -140,8 +148,10 @@ inherit
 			is_tuple_label,
 			reset,
 			is_equal,
-			is_never_void,
 			break
+		redefine
+			is_instance_free,
+			is_never_void
 		end
 
 	ET_UNQUALIFIED_FEATURE_CALL_INSTRUCTION
@@ -155,6 +165,8 @@ inherit
 			reset,
 			is_equal,
 			break
+		redefine
+			is_instance_free
 		end
 
 	KL_IMPORTED_STRING_ROUTINES
@@ -273,6 +285,12 @@ feature -- Access
 			Result := Current
 		end
 
+	indexing_term_value: STRING
+			-- Value of current indexing term
+		do
+			Result := name
+		end
+
 feature -- Status report
 
 	is_identifier: BOOLEAN = True
@@ -337,6 +355,24 @@ feature -- Status report
 			-- Can current expression never be void?
 		do
 			Result := is_object_test_local
+		end
+
+	is_instance_free: BOOLEAN
+			-- Does current expression not depend on 'Current' or its attributes?
+			-- Note that we do not consider unqualified calls and Precursors as
+			-- instance-free because it's not always possible syntactically
+			-- to determine whether the feature being called is a class feature
+			-- or not.
+		do
+			Result := status_code /= no_code and
+				not is_feature_name and not is_tuple_label
+		end
+
+	has_indexing_term_value (a_value: STRING): BOOLEAN
+			-- Does current indexing term have value `a_value'?
+			-- (case-insensitive comparison)
+		do
+			Result := STRING_.same_case_insensitive (name, a_value)
 		end
 
 feature -- Status setting

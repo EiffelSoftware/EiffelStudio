@@ -5,7 +5,7 @@ note
 		"'library' commands for 'gexace'"
 
 	system: "Gobo Eiffel Xace"
-	copyright: "Copyright (c) 2002, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -49,17 +49,13 @@ feature -- Execution
 		do
 			create a_parser.make_with_variables (variables, error_handler)
 			a_parser.set_shallow (is_shallow)
-			a_parser.set_ve (is_ve)
 			create a_file.make (xace_filename)
 			a_file.open_read
 			if a_file.is_open_read then
 				a_parser.parse_file (a_file)
 				a_file.close
 				a_library := a_parser.last_library
-				if
-					a_library /= Void and then
-					a_library.name /= Void and then a_library.name.count > 0
-				then
+				if a_library /= Void then
 					execute_generators (a_library)
 				end
 			else
@@ -71,8 +67,6 @@ feature -- Execution
 			-- Execute Ace file generators.
 		require
 			a_library_not_void: a_library /= Void
-			a_library_name_not_void: a_library.name /= Void
-			a_library_name_not_empty: a_library.name.count > 0
 		local
 			a_cursor: DS_LINKED_LIST_CURSOR [ET_XACE_GENERATOR]
 			a_generator: ET_XACE_GENERATOR
@@ -82,8 +76,8 @@ feature -- Execution
 			a_cursor := generators.new_cursor
 			from a_cursor.start until a_cursor.after loop
 				a_generator := a_cursor.item
-				if output_filename /= Void then
-					a_filename := output_filename
+				if attached output_filename as l_output_filename then
+					a_filename := l_output_filename
 				else
 					a_filename := a_generator.default_library_output_filename
 				end

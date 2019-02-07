@@ -5,7 +5,7 @@ note
 		"Eiffel feature call handlers: traverse features and report when feature calls are found."
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,8 +20,8 @@ inherit
 		end
 
 	ET_AST_NULL_PROCESSOR
-		undefine
-			make
+		rename
+			make as make_ast_processor
 		redefine
 			process_across_expression,
 			process_across_instruction,
@@ -63,6 +63,8 @@ inherit
 			process_dotnet_constant_attribute,
 			process_dotnet_function,
 			process_dotnet_procedure,
+			process_elseif_expression,
+			process_elseif_expression_list,
 			process_elseif_part,
 			process_elseif_part_list,
 			process_equality_expression,
@@ -76,6 +78,7 @@ inherit
 			process_formal_argument,
 			process_formal_argument_list,
 			process_hexadecimal_integer_constant,
+			process_if_expression,
 			process_if_instruction,
 			process_infix_cast_expression,
 			process_infix_expression,
@@ -140,12 +143,12 @@ create
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_system_processor: like system_processor)
 			-- Create a new feature call handler.
 		do
-			create expression_type_finder.make
+			precursor (a_system_processor)
+			create expression_type_finder.make (a_system_processor)
 			expression_type_finder.set_internal_error_enabled (internal_error_enabled)
-			current_class := tokens.unknown_class
 			current_type := current_class
 			current_feature := dummy_feature
 			current_feature_impl := dummy_feature.implementation_feature
@@ -156,7 +159,7 @@ feature {NONE} -- Initialization
 
 feature -- Processing
 
-	process_feature (a_feature: ET_FEATURE; a_current_type: ET_BASE_TYPE)
+	process_feature (a_feature: ET_STANDALONE_CLOSURE; a_current_type: ET_BASE_TYPE)
 			-- Traverse `a_feature' in `a_current_type' and report when feature calls
 			-- are found using 'report_*'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -171,7 +174,7 @@ feature -- Processing
 			a_current_type_valid: a_current_type.is_valid_context
 			a_current_class_preparsed: a_current_type.base_class.is_preparsed
 		local
-			l_feature_impl: ET_FEATURE
+			l_feature_impl: ET_STANDALONE_CLOSURE
 			l_class_impl: ET_CLASS
 			old_feature: ET_STANDALONE_CLOSURE
 			old_feature_impl: ET_STANDALONE_CLOSURE
@@ -218,12 +221,18 @@ feature -- Status report
 			-- Note that in the current implementation, inherited assertions
 			-- and class invariants are not taken into account even when
 			-- this boolean query is set to True.
+			-- For invariants, one needs to call `process_feature' explicitly
+			-- on the corresponding class invariants.
 
 	debug_instructions_enabled: BOOLEAN
 			-- Should feature calls appearing in debug instructions be reported?
 
 	anchored_types_enabled: BOOLEAN
 			-- Should feature appearing as anchor of an anchored type be reported?
+
+	assigner_queries_enabled: BOOLEAN
+			-- Should the query associated with an assigner instruction be reported?
+			-- For example 'item' in 'a.item := 5'
 
 	internal_error_enabled: BOOLEAN
 			-- Should an internal error be reported even when errors have already
@@ -253,6 +262,14 @@ feature -- Status setting
 			anchored_types_enabled := b
 		ensure
 			anchored_types_enabled_set: anchored_types_enabled = b
+		end
+
+	set_assigner_queries_enabled (b: BOOLEAN)
+			-- Set `assigner_queries_enabled' to `b'.
+		do
+			assigner_queries_enabled := b
+		ensure
+			assigner_queries_enabled_set: assigner_queries_enabled = b
 		end
 
 	set_internal_error_enabled (b: BOOLEAN)
@@ -822,8 +839,15 @@ feature {ET_AST_NODE} -- Processing
 	process_assigner_instruction (an_instruction: ET_ASSIGNER_INSTRUCTION)
 			-- Process `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
+		local
+			l_had_error: BOOLEAN
 		do
 			process_qualified_feature_call_instruction (an_instruction)
+			if assigner_queries_enabled then
+				l_had_error := has_fatal_error
+				process_qualified_feature_call_expression (an_instruction.call)
+				reset_fatal_error (l_had_error or has_fatal_error)
+			end
 		end
 
 	process_assignment (an_instruction: ET_ASSIGNMENT)
@@ -1302,6 +1326,34 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
+	process_elseif_expression (an_elseif_part: ET_ELSEIF_EXPRESSION)
+			-- Process `an_elseif_part'.
+		local
+			had_error: BOOLEAN
+		do
+			reset_fatal_error (False)
+			process_expression (an_elseif_part.conditional_expression)
+			had_error := has_fatal_error
+			process_expression (an_elseif_part.then_expression)
+			reset_fatal_error (had_error or has_fatal_error)
+		end
+
+	process_elseif_expression_list (a_list: ET_ELSEIF_EXPRESSION_LIST)
+			-- Process `a_list'.
+		local
+			i, nb: INTEGER
+			had_error: BOOLEAN
+		do
+			reset_fatal_error (False)
+			nb := a_list.count
+			from i := 1 until i > nb loop
+				a_list.item (i).process (Current)
+				had_error := had_error or has_fatal_error
+				i := i + 1
+			end
+			reset_fatal_error (had_error)
+		end
+
 	process_elseif_part (an_elseif_part: ET_ELSEIF_PART)
 			-- Process `an_elseif_part'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -1607,6 +1659,25 @@ feature {ET_AST_NODE} -- Processing
 			process_integer_constant (a_constant)
 		end
 
+	process_if_expression (a_expression: ET_IF_EXPRESSION)
+			-- Process `a_expression'.
+		local
+			had_error: BOOLEAN
+		do
+			reset_fatal_error (False)
+			process_expression (a_expression.conditional_expression)
+			had_error := has_fatal_error
+			process_expression (a_expression.then_expression)
+			had_error := had_error or has_fatal_error
+			if attached a_expression.elseif_parts as l_elseif_parts then
+				process_elseif_expression_list (l_elseif_parts)
+				had_error := had_error or has_fatal_error
+			end
+			process_expression (a_expression.else_expression)
+			had_error := had_error or has_fatal_error
+			reset_fatal_error (had_error)
+		end
+
 	process_if_instruction (an_instruction: ET_IF_INSTRUCTION)
 			-- Process `an_instruction'.
 			-- Set `has_fatal_error' if a fatal error occurred.
@@ -1873,8 +1944,18 @@ feature {ET_AST_NODE} -- Processing
 	process_manifest_array (an_expression: ET_MANIFEST_ARRAY)
 			-- Process `an_expression'.
 			-- Set `has_fatal_error' if a fatal error occurred.
+		local
+			had_error: BOOLEAN
 		do
+			reset_fatal_error (False)
+			if anchored_types_enabled then
+				if attached an_expression.cast_type as l_type then
+					process_type (l_type.type)
+					had_error := has_fatal_error
+				end
+			end
 			process_expression_list (an_expression)
+			reset_fatal_error (had_error or has_fatal_error)
 		end
 
 	process_manifest_string (a_string: ET_MANIFEST_STRING)

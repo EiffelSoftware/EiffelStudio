@@ -1,9 +1,9 @@
-note
+﻿note
 	description: "Prime number properties"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	names: primes;
+	names: primes
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -15,6 +15,8 @@ class PRIMES inherit
 		redefine
 			is_prime
 		end
+
+	ITERATION_CURSOR [INTEGER]
 
 feature -- Access
 
@@ -44,6 +46,8 @@ feature -- Access
 					Result := Result + Smallest_prime
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 	lower_prime (n: INTEGER): INTEGER
@@ -68,6 +72,8 @@ feature -- Access
 					Result := Result - Smallest_prime
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 	all_lower_primes (n: INTEGER): ARRAY [BOOLEAN]
@@ -109,6 +115,8 @@ feature -- Access
 				end
 				i := i + Smallest_prime
 			end
+		ensure
+			instance_free: class
 		end
 
 	is_prime (n: INTEGER): BOOLEAN
@@ -132,6 +140,8 @@ feature -- Access
 					Result := True
 				end
 			end
+		ensure then
+			instance_free: class
 		end
 
 	i_th (i: INTEGER): INTEGER
@@ -166,6 +176,19 @@ feature -- Access
 					i * i - Result
 				end
 			end
+		ensure then
+			instance_free: class
+		end
+
+feature -- Iteration
+
+	new_cursor: PRIMES
+			-- <Precursor>
+		do
+			create Result
+			Result.start
+		ensure then
+			instance_free: class
 		end
 
 feature {NONE} -- Implementation
@@ -194,6 +217,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 		ensure
+			instance_free: class
 			internal_precomputed_primes_not_void: Result /= Void
 			lower_valid: Result.lower = 1
 			upper_valid: Result.upper = Precomputed_primes_count
@@ -205,12 +229,12 @@ feature {NONE} -- Implementation
 			n_positive: n > 0
 		local
 			l_double_math: DOUBLE_MATH
-			ln_n, ln_ln_n: DOUBLE
+			ln_n, ln_ln_n: REAL_64
 		do
 			if n >= 13 then
 					-- Using math formula from J. Massias and G. Robin,
 					-- "Bornes effectives pour certaines fonctions concernant les nombres premiers,"
-					-- J. Théorie Nombres Bordeaux, 8 (1996) 215-242.  MR 97g:11099:
+					-- J. ThÃ©orie Nombres Bordeaux, 8 (1996) 215-242.  MR 97g:11099:
 					-- n (ln n + ln (ln n) - 1 + 1.8 ln (ln n) / ln n)
 				create l_double_math
 				ln_n := l_double_math.log (n)
@@ -220,11 +244,12 @@ feature {NONE} -- Implementation
 				Result := n * n
 			end
 		ensure
+			instance_free: class
 			approximation_valid: i_th (n) <= Result
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

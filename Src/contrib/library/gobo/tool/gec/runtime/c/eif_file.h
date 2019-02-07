@@ -4,7 +4,7 @@
 		"C functions used to implement class FILE"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2006-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -12,6 +12,13 @@
 
 #ifndef EIF_FILE_H
 #define EIF_FILE_H
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#pragma once
+#endif
+
+#ifndef GE_EIFFEL_H
+#include "ge_eiffel.h"
+#endif
 
 #include <time.h>
 #include <sys/stat.h>
@@ -23,7 +30,9 @@ extern "C" {
 /* Let's define the stat structure for our platforms. */
 /* The definition is the same for both ANSI and Unicode versions on Windows. */
 #ifdef EIF_WINDOWS
-#	ifdef EIF_64_BITS
+#	ifdef __LCC__
+#		define rt_stat_buf	struct stat
+#	elif defined EIF_64_BITS
 #		define rt_stat_buf	struct _stat64
 #	else
 #		define rt_stat_buf	struct _stat64i32
@@ -67,7 +76,7 @@ extern EIF_POINTER eif_file_dopen(int fd, int how);
  * to the old stream described by `old'. This is useful to redirect 'stdout'
  * to another place, for instance.
  */
-extern EIF_POINTER eif_file_reopen( EIF_FILENAME name, int how, FILE *old);
+extern EIF_POINTER eif_file_reopen(EIF_FILENAME name, int how, FILE *old);
 
 /*
  * Close the file.
@@ -352,13 +361,13 @@ extern void eif_file_pdb(FILE* f, EIF_REAL_64 val);
  * Modification time of a file.
  * Seconds since epoch (01 January 1970) in UTC or 0 if time cannot be retrieved.
  */
-extern EIF_INTEGER eif_file_date (EIF_FILENAME  name);
+extern EIF_INTEGER eif_file_date(EIF_FILENAME  name);
 
 /*
  * Access time of a file.
  * Seconds since epoch (01 January 1970) in UTC or 0 if time cannot be retrieved.
  */
-extern EIF_INTEGER eif_file_access_date (EIF_FILENAME  name);
+extern EIF_INTEGER eif_file_access_date(EIF_FILENAME  name);
 
 #ifdef __cplusplus
 }

@@ -5,7 +5,7 @@ note
 		"Eiffel classes with a given name."
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -149,8 +149,7 @@ feature -- Parsing status
 
 	is_parsed_successfully: BOOLEAN
 			-- Has current class been successfully parsed?
-		do
-			Result := is_parsed and then not has_syntax_error
+		deferred
 		ensure
 			definition: Result = (is_parsed and then not has_syntax_error)
 		end
@@ -169,8 +168,7 @@ feature -- Ancestor building status
 
 	ancestors_built_successfully: BOOLEAN
 			-- Have `ancestors' been successfully built?
-		do
-			Result := ancestors_built and then not has_ancestors_error
+		deferred
 		ensure
 			definition: Result = (ancestors_built and then not has_ancestors_error)
 		end
@@ -189,8 +187,7 @@ feature -- Feature flattening status
 
 	features_flattened_successfully: BOOLEAN
 			-- Have features been successfully flattened?
-		do
-			Result := features_flattened and then not has_flattening_error
+		deferred
 		ensure
 			definition: Result = (features_flattened and then not has_flattening_error)
 		end
@@ -209,8 +206,7 @@ feature -- Interface checking status
 
 	interface_checked_successfully: BOOLEAN
 			-- Has the interface of current class been successfully checked?
-		do
-			Result := interface_checked and then not has_interface_error
+		deferred
 		ensure
 			definition: Result = (interface_checked and then not has_interface_error)
 		end
@@ -241,8 +237,7 @@ feature -- Implementation checking status
 
 	implementation_checked_successfully: BOOLEAN
 			-- Has the implementation of current class been successfully checked?
-		do
-			Result := implementation_checked and then not has_implementation_error
+		deferred
 		ensure
 			definition: Result = (implementation_checked and then not has_implementation_error)
 		end
@@ -271,28 +266,40 @@ feature -- System
 			-- Has current class been marked?
 			--
 			-- For example it can be marked as being reachable from the root class.
+		do
+			status_mutex.lock
+			Result := unprotected_is_marked
+			status_mutex.unlock
+		end
 
 	set_marked (b: BOOLEAN)
 			-- Set `is_marked' to `b'.
 		do
-			is_marked := b
+			status_mutex.lock
+			unprotected_is_marked := b
+			status_mutex.unlock
 		ensure
 			marked_set: is_marked = b
 		end
 
-	in_system: BOOLEAN
-			-- Is current class reachable from the root class?
-		do
-			Result := is_marked
-		end
+feature {NONE} -- System
 
-	set_in_system (b: BOOLEAN)
-			-- Set `in_system' to `b'.
-		do
-			set_marked (b)
-		ensure
-			in_system_set: in_system = b
-		end
+	unprotected_is_marked: BOOLEAN
+			-- Has current class been marked?
+			--
+			-- For example it can be marked as being reachable from the root class.
+			--
+			-- This is not protected by a mutex in case of multi-threading.
+
+feature -- Concurrency
+
+	status_mutex: MUTEX
+			-- Mutex to get exclusive status access to current class
+			-- in a multi-threaded environment
+
+	processing_mutex: MUTEX
+			-- Mutex to get exclusive processing access to current class
+			-- in a multi-threaded environment
 
 invariant
 
@@ -303,5 +310,7 @@ invariant
 	flattening_error: has_flattening_error implies features_flattened
 	interface_error: has_interface_error implies interface_checked
 	implementation_error: has_implementation_error implies implementation_checked
+	status_mutex_not_void: status_mutex /= Void
+	processing_mutex_not_void: processing_mutex /= Void
 
 end

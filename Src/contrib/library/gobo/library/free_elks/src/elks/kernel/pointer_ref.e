@@ -1,8 +1,8 @@
-note
+﻿note
 	description: "[
 		References to objects containing reference to object
 		meant to be exchanged with non-Eiffel software.
-		]"
+	]"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -50,6 +50,15 @@ feature -- Comparison
 			-- as current object and identical to it?
 		do
 			Result := other.item = item
+		end
+
+	memory_compare (other: POINTER; a_size: INTEGER): BOOLEAN
+			-- True if `Current' and `other' are identical on `a_size' bytes.
+		require
+			valid_size: a_size > 0
+			valid_other: other /= default_pointer
+		do
+			Result := c_memcmp (item, other, a_size) = 0
 		end
 
 feature -- Status report
@@ -151,6 +160,8 @@ feature -- Allocation/free
 			valid_size: a_size > 0
 		do
 			Result := c_malloc (a_size)
+		ensure
+			instance_free: class
 		end
 
 	memory_calloc (a_count, a_element_size: INTEGER): POINTER
@@ -160,6 +171,8 @@ feature -- Allocation/free
 			valid_element_size: a_element_size > 0
 		do
 			Result := c_calloc (a_count, a_element_size)
+		ensure
+			instance_free: class
 		end
 
 	memory_realloc (a_size: INTEGER): POINTER
@@ -175,17 +188,6 @@ feature -- Allocation/free
 		do
 			c_free (item)
 			set_item (default_pointer)
-		end
-
-feature -- Comparison
-
-	memory_compare (other: POINTER; a_size: INTEGER): BOOLEAN
-			-- True if `Current' and `other' are identical on `a_size' bytes.
-		require
-			valid_size: a_size > 0
-			valid_other: other /= default_pointer
-		do
-			Result := c_memcmp (item, other, a_size) = 0
 		end
 
 feature -- Output
@@ -263,7 +265,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

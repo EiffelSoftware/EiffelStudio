@@ -5,7 +5,7 @@ note
 		"ECF settings"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2011-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2011-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -85,7 +85,6 @@ feature -- Setting
 	set_secondary_settings (a_settings: like secondary_settings)
 			-- Set `secondary_settings' to `a_settings'.
 		require
-			a_settings_not_void: a_settings /= Void
 --			no_cycle: `a_settings', or recursively its secondary settings, does not already have `Current' as secondary settings
 		do
 			secondary_settings := a_settings

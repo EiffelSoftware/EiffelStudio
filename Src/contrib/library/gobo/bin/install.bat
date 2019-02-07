@@ -1,7 +1,7 @@
 @echo off
 
 rem description: "Install Gobo Eiffel tools"
-rem copyright: "Copyright (c) 2007-2017, Eric Bezault and others"
+rem copyright: "Copyright (c) 2007-2018, Eric Bezault and others"
 rem license: "MIT License"
 rem date: "$Date$"
 rem revision: "$Revision$"
@@ -60,21 +60,22 @@ goto no_verbose
 
 :ge
 	cd %BIN_DIR%
-	%BIN_DIR%\gec%EXE% --finalize %GOBO%\tool\geant\src\ge.xace
-	%BIN_DIR%\gec%EXE% --finalize %GOBO%\tool\gexace\src\ge.xace
-	%BIN_DIR%\gec%EXE% --finalize %GOBO%\tool\gelex\src\ge.xace
-	%BIN_DIR%\gec%EXE% --finalize %GOBO%\tool\geyacc\src\ge.xace
-	%BIN_DIR%\gec%EXE% --finalize %GOBO%\tool\gepp\src\ge.xace
-	%BIN_DIR%\gec%EXE% --finalize %GOBO%\tool\getest\src\ge.xace
-	%BIN_DIR%\gec%EXE% --finalize %GOBO%\tool\gelint\src\ge.xace
-	%BIN_DIR%\gec%EXE% --finalize %GOBO%\tool\gedoc\src\ge.xace
-	%BIN_DIR%\gec%EXE% --finalize %GOBO%\tool\gexslt\src\ge.xace
+	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\geant\src\system.ecf
+	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\gexace\src\system.ecf
+	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\gelex\src\system.ecf
+	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\geyacc\src\system.ecf
+	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\gepp\src\system.ecf
+	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\getest\src\system.ecf
+	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\gelint\src\system.ecf
+	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\gedoc\src\system.ecf
+	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\gexslt\src\system.ecf
 	goto clean
 
 :clean
 	set PATH=%BIN_DIR%;%PATH%
 	cd %BIN_DIR%
 	geant%EXE% %VERBOSE% --buildfilename=%GOBO%\tool\gec\src\build.eant clean
+	geant%EXE% %VERBOSE% --buildfilename=%GOBO%\tool\gecc\src\build.eant clean
 	geant%EXE% %VERBOSE% --buildfilename=%GOBO%\tool\geant\src\build.eant clean
 	geant%EXE% %VERBOSE% --buildfilename=%GOBO%\tool\gexace\src\build.eant clean
 	geant%EXE% %VERBOSE% --buildfilename=%GOBO%\tool\gelex\src\build.eant clean
@@ -88,7 +89,7 @@ goto no_verbose
 
 :usage
 	echo usage: install.bat [-v] ^<c_compiler^>
-	echo    c_compiler:  msc ^| lcc-win32 ^| bcc ^| gcc ^| mingw ^| cc ^| icc ^| tcc ^| no_c
+	echo    c_compiler:  msc ^| lcc-win32 ^| lcc-win64 ^| bcc ^| gcc ^| mingw ^| cc ^| icc ^| tcc ^| no_c
 	goto exit
 
 :exit

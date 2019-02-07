@@ -5,7 +5,7 @@ note
 		"Eiffel formal parameter validity checkers, first pass"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,8 +20,8 @@ inherit
 		end
 
 	ET_AST_NULL_PROCESSOR
-		undefine
-			make
+		rename
+			make as make_ast_processor
 		redefine
 			process_class,
 			process_class_type,
@@ -42,10 +42,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_system_processor: like system_processor)
 			-- Create a new formal parameter first pass checker.
 		do
-			precursor {ET_CLASS_SUBPROCESSOR}
+			precursor (a_system_processor)
 			create formal_parameter_sorter.make_default
 			create direct_formal_parameter_sorter.make_default
 		end
@@ -143,7 +143,7 @@ feature {NONE} -- Constraint validity
 			l_actual: ET_TYPE
 		do
 			a_class := a_type.base_class
-			a_class.process (current_system.eiffel_parser)
+			a_class.process (system_processor.eiffel_parser)
 			if not a_class.is_preparsed then
 				set_fatal_error
 				error_handler.report_vtct0a_error (current_class, a_type)
@@ -240,7 +240,7 @@ feature {NONE} -- Constraint validity
 						-- considered as a fatal error by gelint. The
 						-- base class of this formal parameter will be
 						-- considered to be "detachable ANY".
-					if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version <= ise_6_1_latest then
+					if system_processor.older_or_same_ise_version (ise_6_1_latest) then
 						error_handler.report_vcfg3b_error (current_class, a_formal, a_type)
 					end
 				elseif index1 < index2 then
@@ -253,7 +253,7 @@ feature {NONE} -- Constraint validity
 					other_formal := a_parameters.formal_parameter (index1)
 					direct_formal_parameter_sorter.force_relation (other_formal, a_formal)
 					formal_parameter_sorter.force_relation (other_formal, a_formal)
-					if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version <= ise_6_1_latest then
+					if system_processor.older_or_same_ise_version (ise_6_1_latest) then
 						error_handler.report_vcfg3c_error (current_class, a_formal, a_type)
 					end
 				else
@@ -267,7 +267,7 @@ feature {NONE} -- Constraint validity
 					other_formal := a_parameters.formal_parameter (index1)
 					direct_formal_parameter_sorter.force_relation (other_formal, a_formal)
 					formal_parameter_sorter.force_relation (other_formal, a_formal)
-					if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version <= ise_6_1_latest then
+					if system_processor.older_or_same_ise_version (ise_6_1_latest) then
 						error_handler.report_vcfg3d_error (current_class, a_formal, a_type)
 					end
 				end
@@ -282,7 +282,7 @@ feature {NONE} -- Constraint validity
 						-- as a fatal error by gelint. The base class of this
 						-- formal parameter will be the base class of its
 						-- constraint ("ARRAY" in the example above).
-					if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version <= ise_6_1_latest then
+					if system_processor.older_or_same_ise_version (ise_6_1_latest) then
 						error_handler.report_vcfg3f_error (current_class, a_formal, a_type)
 					end
 				elseif index1 > index2 then
@@ -291,7 +291,7 @@ feature {NONE} -- Constraint validity
 						-- considered as a fatal error by gelint. The base class of this
 						-- formal parameter will be the base class of its constraint
 						-- ("ARRAY" in the example above).
-					if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version <= ise_6_1_latest then
+					if system_processor.older_or_same_ise_version (ise_6_1_latest) then
 						error_handler.report_vcfg3g_error (current_class, a_formal, a_type)
 					end
 						-- Check for cycles (e.g. "A [G -> ARRAY [H], H -> LIST [G]").
@@ -388,7 +388,7 @@ feature {NONE} -- Constraint cycles
 						-- base class of the formal parameters involved in
 						-- this cycle will be considered to be "detachable ANY".
 					has_cycle := True
-					if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version <= ise_6_1_latest then
+					if system_processor.older_or_same_ise_version (ise_6_1_latest) then
 						error_handler.report_vcfg3e_error (current_class, l_cycle)
 					end
 				end
@@ -446,7 +446,7 @@ feature {NONE} -- Constraint cycles
 						-- took care of the case were the cycle only involves formal
 						-- parameters) the base class of its constraint if the
 						-- constraint is itself a formal parameter.
-					if current_system.is_ise and then attached current_system.ise_version as l_ise_version and then l_ise_version <= ise_6_1_latest then
+					if system_processor.older_or_same_ise_version (ise_6_1_latest) then
 						error_handler.report_vcfg3h_error (current_class, l_cycle)
 					end
 				end

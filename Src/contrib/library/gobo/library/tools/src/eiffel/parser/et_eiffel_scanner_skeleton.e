@@ -5,7 +5,7 @@ note
 		"Scanner skeletons for Eiffel parsers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -40,12 +40,14 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make (a_filename: STRING)
+	make (a_filename: STRING; a_system_processor: like system_processor)
 			-- Create a new Eiffel scanner.
 		require
 			a_filename_not_void: a_filename /= Void
 			a_filename_not_empty: not a_filename.is_empty
+			a_system_processor_not_void: a_system_processor /= Void
 		do
+			system_processor := a_system_processor
 			make_with_buffer (Empty_buffer)
 			last_text_count := 1
 			last_literal_start := 1
@@ -56,6 +58,7 @@ feature {NONE} -- Initialization
 			verbatim_close_white_characters := no_verbatim_marker
 		ensure
 			filename_set: filename = a_filename
+			system_processor_set: system_processor = a_system_processor
 		end
 
 feature -- Initialization
@@ -107,10 +110,13 @@ feature -- Access
 	ast_factory: ET_AST_FACTORY
 			-- Abstract Syntax Tree factory
 		do
-			Result := current_system.ast_factory
+			Result := system_processor.ast_factory
 		ensure
 			ast_factory_not_void: Result /= Void
 		end
+
+	system_processor: ET_SYSTEM_PROCESSOR
+			-- System processor currently used
 
 feature -- Status report
 
@@ -118,7 +124,7 @@ feature -- Status report
 			-- Should 'attached' be considered as
 			-- a keyword (otherwise identifier)?
 		do
-			Result := current_system.use_attached_keyword
+			Result := system_processor.use_attached_keyword
 		end
 
 	use_attribute_keyword: BOOLEAN
@@ -128,7 +134,7 @@ feature -- Status report
 			if group.use_obsolete_syntax then
 				Result := False
 			else
-				Result := current_system.use_attribute_keyword
+				Result := system_processor.use_attribute_keyword
 			end
 		end
 
@@ -136,7 +142,7 @@ feature -- Status report
 			-- Should 'detachable' be considered as
 			-- a keyword (otherwise identifier)?
 		do
-			Result := current_system.use_detachable_keyword
+			Result := system_processor.use_detachable_keyword
 		end
 
 	use_note_keyword: BOOLEAN
@@ -146,7 +152,7 @@ feature -- Status report
 			if group.use_obsolete_syntax then
 				Result := False
 			else
-				Result := current_system.use_note_keyword
+				Result := system_processor.use_note_keyword
 			end
 		end
 
@@ -154,7 +160,7 @@ feature -- Status report
 			-- Should 'reference' be considered as
 			-- a keyword (otherwise identifier)?
 		do
-			Result := current_system.use_reference_keyword
+			Result := system_processor.use_reference_keyword
 		end
 
 feature -- Error handling
@@ -162,7 +168,7 @@ feature -- Error handling
 	error_handler: ET_ERROR_HANDLER
 			-- Error handler
 		do
-			Result := current_system.error_handler
+			Result := system_processor.error_handler
 		ensure
 			error_handler_not_void: Result /= Void
 		end
@@ -207,7 +213,7 @@ feature -- Cluster dependences
 		do
 			old_group := group
 			group := a_cluster
-			if current_system.cluster_dependence_enabled then
+			if system_processor.cluster_dependence_enabled then
 				l_filename := Execution_environment.interpreted_string (file_system.pathname (a_cluster.full_pathname, "providers.txt"))
 				create l_file.make (l_filename)
 				l_file.open_read
@@ -226,7 +232,7 @@ feature -- Cluster dependences
 					l_splitter.set_separators (" %T%R%N")
 					l_names := l_splitter.split (l_string)
 					create l_cluster_names.make_from_linear (l_names)
-					if current_system.use_cluster_dependence_pathnames then
+					if system_processor.use_cluster_dependence_pathnames then
 						if not current_system.is_dotnet then
 								-- Remove assembly dlls from the list.
 							from
@@ -274,7 +280,7 @@ feature -- Cluster dependences
 		do
 			old_group := group
 			group := a_cluster
-			if current_system.cluster_dependence_enabled then
+			if system_processor.cluster_dependence_enabled then
 				l_filename := Execution_environment.interpreted_string (file_system.pathname (a_cluster.full_pathname, "dependants.txt"))
 				create l_file.make (l_filename)
 				l_file.open_read
@@ -293,7 +299,7 @@ feature -- Cluster dependences
 					l_splitter.set_separators (" %T%R%N")
 					l_names := l_splitter.split (l_string)
 					create l_cluster_names.make_from_linear (l_names)
-					if current_system.use_cluster_dependence_pathnames then
+					if system_processor.use_cluster_dependence_pathnames then
 						if not current_system.is_dotnet then
 								-- Remove assembly dlls from the list.
 							from
@@ -955,6 +961,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.integer_bytes_name)
 			Result.force_new (-1, tokens.integer_quotient_name)
 			Result.force_new (-1, tokens.integer_remainder_name)
+			Result.force_new (-1, tokens.is_64_bits_name)
 			Result.force_new (-1, tokens.is_attached_name)
 			Result.force_new (-1, tokens.is_attached_type_name)
 			Result.force_new (-1, tokens.is_caught_name)
@@ -1028,6 +1035,7 @@ feature {NONE} -- String handler
 			Result.force_new (-1, tokens.object_comparison_name)
 			Result.force_new (-1, tokens.object_size_name)
 			Result.force_new (-1, tokens.once_objects_name)
+			Result.force_new (-1, tokens.once_raise_name)
 			Result.force_new (-1, tokens.opposite_name)
 			Result.force_new (-1, tokens.out_name)
 			Result.force_new (-1, tokens.persistent_field_count_of_type_name)
@@ -3934,5 +3942,6 @@ invariant
 	last_literal_start_large_enough: last_literal_start >= 1
 	last_literal_start_small_enough: last_literal_start <= last_literal_end + 1
 	last_literal_end_small_enough: last_literal_end <= text_count
+	system_processor_not_void: system_processor /= Void
 
 end

@@ -118,4 +118,21 @@ feature -- Window Bits
 	Z_default_window_bits: INTEGER = 15
 			-- default value, use with deflateInit.
 
+
+feature -- Status Report
+
+	is_valid_flush (a_value: NATURAL): BOOLEAN
+			-- Is value `a_value` a valid flush value?
+		do
+			Result := a_value  = Z_no_flush or else
+						a_value = Z_partial_flush or else
+						a_value = Z_sync_flush or else
+						a_value = Z_full_flush or else
+						a_value = Z_finish or else
+						a_value = Z_block or else
+						a_value = Z_trees
+		ensure
+			is_instance_free: class
+		end
+
 end

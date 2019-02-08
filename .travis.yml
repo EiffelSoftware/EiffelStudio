@@ -79,7 +79,6 @@ env:
   - COMPILEALL_DIR=Src/unstable/library/text
   - COMPILEALL_DIR=Src/unstable/library/web
   - COMPILEALL_DIR=Src/contrib/examples
-  - COMPILEALL_DIR=Src/contrib/library/gobo
   - COMPILEALL_DIR=Src/contrib/library/graphic
   - COMPILEALL_DIR=Src/contrib/library/math
   - COMPILEALL_DIR=Src/contrib/library/network
@@ -184,6 +183,7 @@ env:
   - COMPILEALL_DIR=Src/tools/vsafeconv
 script:
 - compile_all -ecb -melt -list_failures -log_verbose -clean -options dotnet=false -l $COMPILEALL_DIR
+- compile_all -ecb -melt -list_failures -log_verbose -clean -options dotnet=false -ignore Src/contrib/library/gobo/.compile_all.ini -l Src/contrib/library/gobo
 group: stable
 os: linux
 notifications:

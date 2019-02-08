@@ -31,6 +31,8 @@ feature -- Conversion
 	representation: STRING
 		do
 			Result := "null"
+		ensure then
+			instance_free: class
 		end
 
 feature -- Visitor pattern
@@ -55,6 +57,6 @@ feature {NONE} -- Implementation
 	null_value: STRING = "null"
 
 note
-	copyright: "2010-2017, Javier Velilla and others https://github.com/eiffelhub/json."
+	copyright: "2010-2019, Javier Velilla, Jocelyn Fiat, Eiffel Software and others https://github.com/eiffelhub/json."
 	license: "https://github.com/eiffelhub/json/blob/master/License.txt"
 end

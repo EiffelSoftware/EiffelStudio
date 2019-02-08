@@ -11,20 +11,20 @@ Manu Stapf. In 2009 Paul Cohen joined the project as an active developer and
 later Jocelyn Fiat.
 
 The current active maintainers:
-- Javier Velilla
 - Jocelyn Fiat
+- Javier Velilla
 
-The formal name of the project is “eJSON”.
+The formal name of the project is "eJSON".
 
 For questions regarding eJSON please contact
-- <javier.hector at gmail.com> 
 - <jfiat at eiffel.com>
+- <javier.hector at gmail.com> 
 - or directly on [https://github.com/eiffelhub/json/issues]
 
 === Current version and status ===
 
-The latest release is 0.6.0. eJSON has been improved and cleaned.
-The converters are not obsolete.
+The latest release is 0.8.0. eJSON has been improved and cleaned.
+The converters are not obsolete and replaced by the "serialization" interfaces.
 
 
 == Introduction ==
@@ -52,16 +52,15 @@ JSON can be used as a general serialization format for Eiffel objects. As such i
 
 === Prerequisites ===
 
-eJSON works today with EiffelStudio 13.11
-There is an optional extension that requires the latest snapshot of the Gobo Eiffel libraries (a working snapshot is distributed with EiffelStudio). The depencencies on Gobo are on Gobo's unicode
-and regex libraries and for some of the extra features in eJSON, on Gobos structure classes DS_HASH_TABLE and DS_LINKED_LIST.
+eJSON works today with EiffelStudio 17.05
+There is an optional extension that requires the latest snapshot of the Gobo Eiffel libraries (a working snapshot is distributed with EiffelStudio). The depencencies on Gobo are on Gobo's unicode and regex libraries and for some of the extra features in eJSON, on Gobos structure classes DS_HASH_TABLE and DS_LINKED_LIST.
 
 eJSON is intended to work with all ECMA compliant Eiffel compilers.
 
 === Installation ===
 
 You can either download a given release and install on your machine or you can get the latest snapshot of the code.
-To download go to the [http://ejson.origo.ethz.ch/download download page]. 
+To download latest source code: [https://github.com/eiffelhub/json/archive/master.zip master archive file]. 
 To get the latest snapshot of the code do:
 
 :   $ git clone https://github.com/eiffelhub/json.git json
@@ -97,20 +96,12 @@ Note that the latest json release is also delivered with EiffelStudio installati
 			json_iterator.e
 			json_pretty_string_visitor.e
 			print_json_visitor.e
+		serialization/
+		  deserializer/...
+		  serializer/...
+		  ...
 	    converters/ (JSON core converter classes !OBSOLETE!)
- 		  json_converter.e
- 		  json_hash_table_converter.e
- 		  json_list_converter.e
- 		  json_linked_list_converter.e
- 		  json_arrayed_list_converter.e
-		  support/
-		    ejson.e
-			shared_ejson.e
 	    gobo_converters/ (JSON core converter classes support for GOBO !OBSOLETE!)
-		  converters/
- 			json_ds_hash_table_converter.e
- 			json_ds_linked_list_converter.e
-		  shared_gobo_ejson.e
  	  test/ (Contains autotest suite)
  		autotest/ (AutoTest based unit test).
  	  examples/ (Example code)
@@ -118,32 +109,12 @@ Note that the latest json release is also delivered with EiffelStudio installati
 === Future development ===
 
 Here is a list of suggestions for future development of eJSON.
-* Ongoing: Provide a JSON_FACTORY class for easy conversion between arbitrary JSON and Eiffel values.
-* Ongoing: Provide a mechanism for users to add custom converters between JSON values and user space Eiffel classes.
-* Ongoing: Implement a full test framework for eJSON.
 * Suggestion: Investigate performance and improve it if neccessary.
 * Suggestion: Support JSON references. See [http://www.json.com/2007/10/19/json-referencing-proposal-and-library JSON Referencing Proposal and Library] and [http://www.sitepen.com/blog/2008/06/17/json-referencing-in-dojo JSON referencing in Dojo] for more information.
 * Suggestion: Support JSON path. See [http://goessner.net/articles/JsonPath JSONPath - XPath for JSON] for more information.
 * Suggestion: Support JSON schema validation. See [http://json-schema.org JSON Schema Proposal] for more information.
 * Suggestion: Support RDF JSON serialization. See [http://n2.talis.com/wiki/RDF_JSON_Specification RDF JSON Specification] for more information.
 * Suggestion: Add support to JSON classes for conversion from Eiffel manifest values. So one can write things like:
-
-== A simple example ==
-
-There are two basic approaches to using eJSON; either you use the basic JSON_VALUE classes, converting to and from JSON values to corresponding Eiffel instances or you use the high level eJSON interface class SHARED_EJSON. Of course you can use a mix of both approaches if you find it appropriate!
-
-Here is an example of how to create a JSON number value from an INTEGER and then obtain the JSON representation for that value.
-
- 	simple_example is
- 		local
- 			i: INTEGER
- 			jn: JSON_NUMBER
- 			s: STRING
- 		do
- 			i := 42
- 			create jn.make_integer (i)
- 			s := jn.representation -- s.is_equal ("42")
- 		end
 
 == Mapping of JSON values to Eiffel values == 
 
@@ -254,28 +225,6 @@ Note: JSON escape unicode characters, as well a other specific characters, to ge
 
 The JSON null value is represented by the class JSON_NULL. The JSON null value can be converted to/from Void.
 
- 	eiffel_to_json_null_representation is
- 		local
- 			a: ANY
- 			jn: JSON_NULL
- 		do
- 			create jn
- 			print ("JSON representation for JSON null value: '")
- 			print (jn.representation)
- 			print ("'%N")
- 			a := Void
- 			if attached {JSON_NULL} json.value (a) as l_jn then -- json from SHARED_EJSON!
- 				print ("JSON representation of Eiffel Void reference: '")
- 				print (l_jn.representation)
- 				print ("'%N")
- 			end
- 		end
-
-The output of the above code will be: 
-
- 	JSON representation for JSON null value: 'null'
- 	JSON representation of Eiffel Void reference: 'null'
-
 === JSON array ===
 
 JSON array is represented by the class JSON_ARRAY. 
@@ -292,4 +241,11 @@ TBD. See examples.
 == The eJSON file reader class ==
 
 TBD.
+
+== The serialization interfaces ==
+- JSON_SERIALIZER: convert Eiffel object to JSON string
+- JSON_DESERIALIZER: convert JSON string to Eiffel object 
+- JSON_SERIALIZATION: convert in both way, serializer and deserializer
+- JSON_*_CONTEXT: used to register custom (de)serializer, and set various settings.
+
 

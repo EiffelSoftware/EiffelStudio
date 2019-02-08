@@ -23,14 +23,14 @@ feature {NONE} -- initialization
 	make_integer (an_argument: INTEGER_64)
 			-- Initialize an instance of JSON_NUMBER from the integer value of `an_argument'.
 		do
-			create item.make_from_string (an_argument.out)
+			item := an_argument.out
 			numeric_type := integer_type
 		end
 
 	make_natural (an_argument: NATURAL_64)
 			-- Initialize an instance of JSON_NUMBER from the unsigned integer value of `an_argument'.
 		do
-			create item.make_from_string (an_argument.out)
+			item := an_argument.out
 			numeric_type := natural_type
 		end
 
@@ -44,7 +44,7 @@ feature {NONE} -- initialization
 			elseif an_argument.is_positive_infinity then
 				item := positive_infinity_real_value
 			else
-				create item.make_from_string (an_argument.out)
+				item := an_argument.out
 			end
 			numeric_type := double_type
 		end
@@ -60,6 +60,7 @@ feature {NONE} -- REAL constants
 		once
 			create Result.make_from_string ("NaN")
 		end
+
 	negative_infinity_real_value: IMMUTABLE_STRING_8
 		once
 			create Result.make_from_string ("-Infinity")
@@ -72,7 +73,7 @@ feature {NONE} -- REAL constants
 
 feature -- Access
 
-	item: IMMUTABLE_STRING_8
+	item: READABLE_STRING_8
 			-- Content
 
 	numeric_type: INTEGER

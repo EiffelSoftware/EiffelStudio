@@ -49,10 +49,10 @@ feature {NONE} -- Initialization
 
 feature -- Implementation
 
-	source_file: STRING = "test.pdf"
+	source_file: STRING = "text_to_compress_2.txt"
 
 	output_file: STRING = "test.gz"
 
-	new_file: STRING = "new.pdf"
+	new_file: STRING = "new_text.txt"
 
 end

@@ -1,4 +1,5 @@
-language: eiffel
+# Eiffel (generating C code).
+language: c
 before_script:
 - export current_dir=$PWD ; echo current_dir=$current_dir ; cd ..
 - curl -sSL https://www.eiffel.org/setup/install.sh | bash -s nightly > eiffel.rc
@@ -180,8 +181,6 @@ env:
   - COMPILEALL_DIR=Src/tools/visitor_factory
   - COMPILEALL_DIR=Src/tools/vms
   - COMPILEALL_DIR=Src/tools/vsafeconv
-matrix:
-    fast_finish: true
 script:
   - sh $EIFFEL_SRC/scripts/CI/travis-ci-compile_all.sh $COMPILEALL_DIR $COMPILEALL_IGNORE
 group: stable

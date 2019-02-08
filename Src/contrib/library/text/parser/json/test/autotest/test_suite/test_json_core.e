@@ -507,6 +507,39 @@ feature -- Test
 			end
 		end
 
+	test_json_number_and_eiffel_real_nan
+		local
+			r64: REAL_64
+			jn: JSON_NUMBER
+		do
+			r64 := {REAL_64}.nan
+			create jn.make_real (r64)
+			assert ("jn.representation.same_string (%"" + r64.out + "%")", jn.representation.same_string ({JSON_NULL}.representation))
+			if attached {JSON_NUMBER} json_value (r64) as l_jn then
+				assert ("l_jn.representation.same_string (%""+r64.out+"%")", l_jn.representation.same_string ({JSON_NULL}.representation))
+			else
+				assert ("json_value (r64) is a JSON_NUMBER", False)
+			end
+
+			r64 := {REAL_64}.negative_infinity
+			create jn.make_real (r64)
+			assert ("jn.representation.same_string (%"" + r64.out + "%")", jn.representation.same_string ({JSON_NULL}.representation))
+			if attached {JSON_NUMBER} json_value (r64) as l_jn then
+				assert ("l_jn.representation.same_string (%""+r64.out+"%")", l_jn.representation.same_string ({JSON_NULL}.representation))
+			else
+				assert ("json_value (r64) is a JSON_NUMBER", False)
+			end
+
+			r64 := {REAL_64}.positive_infinity
+			create jn.make_real (r64)
+			assert ("jn.representation.same_string (%"" + r64.out + "%")", jn.representation.same_string ({JSON_NULL}.representation))
+			if attached {JSON_NUMBER} json_value (r64) as l_jn then
+				assert ("l_jn.representation.same_string (%""+r64.out+"%")", l_jn.representation.same_string ({JSON_NULL}.representation))
+			else
+				assert ("json_value (r64) is a JSON_NUMBER", False)
+			end
+		end
+
 	test_json_boolean
 		local
 			parser: like new_parser

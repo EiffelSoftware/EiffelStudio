@@ -23,21 +23,29 @@ feature {NONE} -- initialization
 	make_integer (an_argument: INTEGER_64)
 			-- Initialize an instance of JSON_NUMBER from the integer value of `an_argument'.
 		do
-			item := an_argument.out
+			create item.make_from_string (an_argument.out)
 			numeric_type := integer_type
 		end
 
 	make_natural (an_argument: NATURAL_64)
 			-- Initialize an instance of JSON_NUMBER from the unsigned integer value of `an_argument'.
 		do
-			item := an_argument.out
+			create item.make_from_string (an_argument.out)
 			numeric_type := natural_type
 		end
 
 	make_real (an_argument: REAL_64)
 			-- Initialize an instance of JSON_NUMBER from the floating point value of `an_argument'.
 		do
-			item := an_argument.out
+			if an_argument.is_nan then
+				item := nan_real_value
+			elseif an_argument.is_negative_infinity then
+				item := negative_infinity_real_value
+			elseif an_argument.is_positive_infinity then
+				item := positive_infinity_real_value
+			else
+				create item.make_from_string (an_argument.out)
+			end
 			numeric_type := double_type
 		end
 
@@ -46,9 +54,25 @@ feature -- Status report
 	is_number: BOOLEAN = True
 			-- <Precursor>
 
+feature {NONE} -- REAL constants
+
+	nan_real_value: IMMUTABLE_STRING_8
+		once
+			create Result.make_from_string ("NaN")
+		end
+	negative_infinity_real_value: IMMUTABLE_STRING_8
+		once
+			create Result.make_from_string ("-Infinity")
+		end
+
+	positive_infinity_real_value: IMMUTABLE_STRING_8
+		once
+			create Result.make_from_string ("Infinity")
+		end
+
 feature -- Access
 
-	item: STRING
+	item: IMMUTABLE_STRING_8
 			-- Content
 
 	numeric_type: INTEGER
@@ -61,8 +85,22 @@ feature -- Access
 		end
 
 	representation: STRING
+		local
+			l_item: like item
 		do
-			Result := item
+			l_item := item
+			if
+				is_real and then
+				(
+					l_item = nan_real_value or else
+					l_item = negative_infinity_real_value or else
+					l_item = positive_infinity_real_value
+				)
+			then
+				Result := {JSON_NULL}.representation
+			else
+				Result := l_item
+			end
 		end
 
 feature -- Conversion
@@ -88,7 +126,15 @@ feature -- Conversion
 		require
 			is_real: is_real
 		do
-			Result := item.to_real_64
+			if item = nan_real_value then
+				Result := {REAL_64}.nan
+			elseif item = negative_infinity_real_value then
+				Result := {REAL_64}.negative_infinity
+			elseif item = positive_infinity_real_value then
+				Result := {REAL_64}.positive_infinity
+			else
+				Result := item.to_real_64
+			end
 		end
 
 feature -- Status report
@@ -146,9 +192,12 @@ feature -- Implementation
 	natural_type: INTEGER = 3
 
 invariant
-	item_not_void: item /= Void
+	item_not_void: attached item as inv_item
+	nan_only_for_real: inv_item.is_case_insensitive_equal_general (nan_real_value) implies is_real
+	neg_inf_only_for_real: inv_item.is_case_insensitive_equal_general (negative_infinity_real_value) implies is_real
+	inf_only_for_real: inv_item.is_case_insensitive_equal_general (positive_infinity_real_value) implies is_real
 
 note
-	copyright: "2010-2017, Javier Velilla and others https://github.com/eiffelhub/json."
+	copyright: "2010-2019, Javier Velilla, Jocelyn Fiat, Eiffel Software and others https://github.com/eiffelhub/json."
 	license: "https://github.com/eiffelhub/json/blob/master/License.txt"
 end

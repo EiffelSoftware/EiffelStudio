@@ -66,7 +66,7 @@ feature -- Initialization
 			l_result: INTEGER
 			l_process: POINTER
 		do
-			{WEL_API}.set_process_dpi_awaerness_per_monitor
+			{WEL_API}.set_process_per_monitor_dpi_aware
 			create reusable_message.make
 			init_instance
 			init_application

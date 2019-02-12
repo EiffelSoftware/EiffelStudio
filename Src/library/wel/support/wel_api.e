@@ -1024,7 +1024,7 @@ feature -- Monitor DPI
 		end
 
 
-	set_process_dpi_awaerness_per_monitor
+	set_process_per_monitor_dpi_aware
 			-- Set ProcessDPIAwareness to PROCESS_PER_MONITOR_DPI_AWARE
 			-- PROCESS_PER_MONITOR_DPI_AWARE	
 			--|	Per monitor DPI aware. This app checks for the DPI when it is created and adjusts the scale factor whenever the DPI changes.

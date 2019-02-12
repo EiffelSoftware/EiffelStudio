@@ -18,7 +18,8 @@ background="transparent"
 #background="rgb(0,255,0)"
 
 #comment following line, to have transparent background, instead of green background, for remaining PNG icons!
-background_png="#0f0"
+missing_background_png="#0f0"
+existing_background_png="#009"
 
 # Arguments
 rootdir=$1
@@ -125,13 +126,17 @@ do
 		x=$(( $x + $wsep + $svg_width ))
 		if [ -e $d/$c.svg ] 
 		then
+			if [ ! -z "$existing_background_png" ]
+			then
+				echo "<rect x=\"$x\" y=\"$y\" width=\"$svg_width\" height=\"$svg_height\" fill=\"$existing_background_png\" />" >> $target
+			fi
 			echo "<image x=\"$x\" y=\"$y\" width=\"$svg_width\" height=\"$svg_height\" xlink:href=\"$d/$c.svg\" />" >> $target
 		else
 			if [ -e $d/$c.png ]
 			then
-				if [ ! -z "$background_png" ]
+				if [ ! -z "$missing_background_png" ]
 				then
-					echo "<rect x=\"$x\" y=\"$y\" width=\"$svg_width\" height=\"$svg_height\" fill=\"$background_png\" />" >> $target
+					echo "<rect x=\"$x\" y=\"$y\" width=\"$svg_width\" height=\"$svg_height\" fill=\"$missing_background_png\" />" >> $target
 				fi
 				echo "<image x=\"$x\" y=\"$y\" width=\"$svg_width\" height=\"$svg_height\" xlink:href=\"$d/$c.png\" />" >> $target
 			fi

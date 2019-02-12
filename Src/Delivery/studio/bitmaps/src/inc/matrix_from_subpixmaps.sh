@@ -11,7 +11,7 @@
 #
 # notes:
 # - for now, using imagemagick convert to generate PNG from SVG
-#   but inkscape should produce nicer png.
+#   but inkscape may produce nicer png.
 
 rootdir=$1
 #w=$( basename -- $rootdir | cut -d'x' -f 1)

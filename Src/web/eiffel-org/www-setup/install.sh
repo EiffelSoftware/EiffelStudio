@@ -24,6 +24,11 @@ do
 			shift
 			shift
 		;;
+		--url)
+			ISE_CUSTOM_URL=$2
+			shift
+			shift
+		;;
 		--platform)
 			ISE_PLATFORM=$2
 			shift
@@ -197,8 +202,12 @@ do_install() {
 			echo >&2 $major.$minor.$build
 			ISE_MAJOR_MINOR=$major.$minor
 			ISE_BUILD=$build
-			ISE_DOWNLOAD_FILE=Eiffel_${ISE_MAJOR_MINOR}_gpl_${ISE_BUILD}-${ISE_PLATFORM}.tar.bz2
-			ISE_DOWNLOAD_URL=https://ftp.eiffel.com/pub/download/$ISE_MAJOR_MINOR/$ISE_DOWNLOAD_FILE
+			if [ -z "$ISE_CUSTOM_URL" ]; then
+				ISE_DOWNLOAD_FILE=Eiffel_${ISE_MAJOR_MINOR}_gpl_${ISE_BUILD}-${ISE_PLATFORM}.tar.bz2
+				ISE_DOWNLOAD_URL=https://ftp.eiffel.com/pub/download/$ISE_MAJOR_MINOR/$ISE_DOWNLOAD_FILE
+			else
+				ISE_DOWNLOAD_URL=$ISE_CUSTOM_URL
+			fi
 			;;
 	esac
 
@@ -277,13 +286,6 @@ do_install() {
 		#Should be inside $ISE_EIFFEL=$T_CURRENT_DIR/Eiffel_$ISE_MAJOR_MINOR
 		$curl $ISE_DOWNLOAD_URL | tar -x -p -s --bzip2
 	fi
-        #if [ -f "$ISE_DOWNLOAD_FILE" ]; then
-	#	echo >&2 Already there.
-        #else
-	#	$curl -o $ISE_DOWNLOAD_FILE $ISE_DOWNLOAD_URL
-        #fi
-	#echo Extracting ...
-	#tar -xv --bzip2 -f $ISE_DOWNLOAD_FILE
 
 	ISE_RC_FILE="$ISE_EIFFEL/setup.rc"
 	echo \# Setup for EiffelStudio ${ISE_MAJOR_MINOR}.${ISE_BUILD} > $ISE_RC_FILE

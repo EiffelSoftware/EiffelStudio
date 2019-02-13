@@ -14,13 +14,16 @@ inherit
 
 feature -- Test
 
-	test
+	test_temporary_paht
 		local
 			l_temp: STRING
 		do
 			if {PLATFORM}.is_windows then
 				l_temp := {OPERATING_ENVIRONMENT}.temporary_directory_path
 				assert ("Ends with Temp", l_temp.ends_with_general ("Temp\"))
+			elseif {PLATFORM}.is_unix then
+				l_temp := {OPERATING_ENVIRONMENT}.temporary_directory_path
+				assert ("Ends with /tmp", l_temp.ends_with_general ("/tmp"))
 			end
 		end
 

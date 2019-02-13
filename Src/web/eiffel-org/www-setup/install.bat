@@ -10,6 +10,7 @@ set ISE_BUILD_NIGHTLY=102771
 
 set ISE_MAJOR_MINOR_BETA=19.01
 set ISE_BUILD_BETA=102771
+set ISE_BETA_DOWNLOAD_URL=https://downloads.sourceforge.net/eiffelstudio/beta
 
 REM Overview:
 REM
@@ -134,7 +135,11 @@ goto POST_CHANNEL
 			set ISE_BUILD=%ISE_BUILD_BETA%
 
 			set ISE_DOWNLOAD_FILE=Eiffel_%ISE_MAJOR_MINOR%_gpl_%ISE_BUILD%-%ISE_PLATFORM%.7z
-			set ISE_DOWNLOAD_URL=https://ftp.eiffel.com/pub/beta/%ISE_MAJOR_MINOR%/%ISE_DOWNLOAD_FILE%
+			if "%ISE_BETA_DOWNLOAD_URL%" NEQ "" (
+				set ISE_DOWNLOAD_URL=%ISE_BETA_DOWNLOAD_URL%/%ISE_MAJOR_MINOR%/%ISE_DOWNLOAD_FILE%
+			) else (
+				set ISE_DOWNLOAD_URL=https://ftp.eiffel.com/pub/beta/%ISE_MAJOR_MINOR%/%ISE_DOWNLOAD_FILE%
+			)
 			call:iseverParse %ISE_MAJOR_MINOR%.%ISE_BUILD%
 			echo >&2 Version=%major%.%minor%.%build%
 

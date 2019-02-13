@@ -713,5 +713,40 @@ rt_public EIF_REFERENCE eif_extracted_paths(EIF_CHARACTER_8 *p)
 
 
 /*
+doc:	<routine name="eif_temporary_path_name" return_type="EIF_FILENAME" export="public">
+doc:		<summary>Returns the representation of the user directory temporary path</summary>
+doc:		<return>Temporary directory path.</return>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None.</synchronization>
+doc:	</routine>
+*/
+
+rt_public EIF_FILENAME eif_temporary_directory_path (void)
+{
+#if defined EIF_WINDOWS 
+	DWORD ret = 0;
+	TCHAR temp_buffer [MAX_PATH];
+	ret = GetTempPath (MAX_PATH, temp_buffer);
+	if (ret == 0) {
+		eraise("error occurred, could not get temporary directory path", EN_EXT);
+	}
+	EIF_FILENAME result[MAX_PATH];
+	memcpy (result, temp_buffer, wcslen(temp_buffer) + 1);
+	return result;
+#elif defined (EIF_VMS)
+	/* To implement */
+#else
+	/*Unix and Mac */
+	const EIF_FILENAME val = 0;
+	(val = getenv("TMPDIR" )) ||
+	(val = getenv("TMP"    )) ||
+    (val = getenv("TEMP"   )) ||
+	(val = getenv("TEMPDIR"));
+	const EIF_FILENAME default_tmp = "/tmp";
+	return  (val != 0) ? val : default_tmp
+#endif
+}
+
+/*
 doc:</file>
 */

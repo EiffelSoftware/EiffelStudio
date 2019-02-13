@@ -77,7 +77,7 @@ feature {NONE} -- Implementation
 	c_temporary_directory_path: POINTER
 			-- Reperesentation of the temporary directory.
 		external
-				"C use %"eif_path_name.h%""
+			"C use %"eif_path_name.h%""
 		alias
 			"eif_temporary_directory_path"
 		ensure

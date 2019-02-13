@@ -18,51 +18,51 @@ branches:
 git:
   depth: 1
 env:
-  - COMPILEALL_DIR=Src/Eiffel
-  - COMPILEALL_DIR=Src/library/base
-  - COMPILEALL_DIR=Src/library/base_extension
-  - COMPILEALL_DIR=Src/library/docking
-  - COMPILEALL_DIR=Src/library/editor
-  - COMPILEALL_DIR=Src/library/encoding
-  - COMPILEALL_DIR=Src/library/net
-  - COMPILEALL_DIR=Src/library/preferences
-  - COMPILEALL_DIR=Src/library/process
-  - COMPILEALL_DIR=Src/library/store
-  - COMPILEALL_DIR=Src/library/testing
-  - COMPILEALL_DIR=Src/library/text
-  - COMPILEALL_DIR=Src/library/thread
-  - COMPILEALL_DIR=Src/library/time
-  - COMPILEALL_DIR=Src/library/uuid
-  - COMPILEALL_DIR=Src/library/vision2
-  - COMPILEALL_DIR=Src/library/wel
-  - COMPILEALL_DIR=Src/examples
-  - COMPILEALL_DIR=Src/tools/compile_all
-  - COMPILEALL_DIR=Src/tools/eiffel_make
-  - COMPILEALL_DIR=Src/tools/espawn
-  - COMPILEALL_DIR=Src/tools/estudio
-  - COMPILEALL_DIR=Src/tools/finish_freezing
-  - COMPILEALL_DIR=Src/tools/iron
-  - COMPILEALL_DIR=Src/tools/syntax_updater
-  - COMPILEALL_DIR=Src/tools/quick_finalize
-  - COMPILEALL_DIR=Src/unstable/library/network
-  - COMPILEALL_DIR=Src/unstable/library/pattern
-  - COMPILEALL_DIR=Src/unstable/library/persistency
-  - COMPILEALL_DIR=Src/unstable/library/scoop_patterns
-  - COMPILEALL_DIR=Src/unstable/library/text
-  - COMPILEALL_DIR=Src/unstable/library/web
-  - COMPILEALL_DIR=Src/framework/configuration
-  - COMPILEALL_DIR=Src/framework/interface_names
-  - COMPILEALL_DIR=Src/framework/iron
-  - COMPILEALL_DIR=Src/contrib/examples
-  - COMPILEALL_DIR=Src/contrib/library/network
-  - COMPILEALL_DIR=Src/contrib/library/text
-  - COMPILEALL_DIR=Src/contrib/library/web
-  - COMPILEALL_DIR=Src/contrib/library/gobo COMPILEALL_IGNORE=Src/contrib/library/gobo/.compile_all.ini
-  - COMPILEALL_DIR=Src/library COMPILEALL_IGNORE=Src/scripts/CI/compile_all/stable_others.ini
-  - COMPILEALL_DIR=Src/unstable COMPILEALL_IGNORE=Src/scripts/CI/compile_all/unstable_others.ini
-  - COMPILEALL_DIR=Src/contrib/library COMPILEALL_IGNORE=Src/scripts/CI/compile_all/contrib_others.ini
-  - COMPILEALL_DIR=Src/framework COMPILEALL_IGNORE=Src/scripts/CI/compile_all/framework_others.ini
-  - COMPILEALL_DIR=Src/tools COMPILEALL_IGNORE=Src/scripts/CI/compile_all/tools_others.ini
+  - COMPILEALL_DIR=$EIFFEL_SRC/Eiffel
+  - COMPILEALL_DIR=$EIFFEL_SRC/library/base
+  - COMPILEALL_DIR=$EIFFEL_SRC/library/base_extension
+  - COMPILEALL_DIR=$EIFFEL_SRC/library/docking
+  - COMPILEALL_DIR=$EIFFEL_SRC/library/editor
+  - COMPILEALL_DIR=$EIFFEL_SRC/library/encoding
+  - COMPILEALL_DIR=$EIFFEL_SRC/library/net
+  - COMPILEALL_DIR=$EIFFEL_SRC/library/preferences
+  - COMPILEALL_DIR=$EIFFEL_SRC/library/process
+  - COMPILEALL_DIR=$EIFFEL_SRC/library/store
+  - COMPILEALL_DIR=$EIFFEL_SRC/library/testing
+  - COMPILEALL_DIR=$EIFFEL_SRC/library/text
+  - COMPILEALL_DIR=$EIFFEL_SRC/library/thread
+  - COMPILEALL_DIR=$EIFFEL_SRC/library/time
+  - COMPILEALL_DIR=$EIFFEL_SRC/library/uuid
+  - COMPILEALL_DIR=$EIFFEL_SRC/library/vision2
+  - COMPILEALL_DIR=$EIFFEL_SRC/library/wel
+  - COMPILEALL_DIR=$EIFFEL_SRC/examples
+  - COMPILEALL_DIR=$EIFFEL_SRC/tools/compile_all
+  - COMPILEALL_DIR=$EIFFEL_SRC/tools/eiffel_make
+  - COMPILEALL_DIR=$EIFFEL_SRC/tools/espawn
+  - COMPILEALL_DIR=$EIFFEL_SRC/tools/estudio
+  - COMPILEALL_DIR=$EIFFEL_SRC/tools/finish_freezing
+  - COMPILEALL_DIR=$EIFFEL_SRC/tools/iron
+  - COMPILEALL_DIR=$EIFFEL_SRC/tools/syntax_updater
+  - COMPILEALL_DIR=$EIFFEL_SRC/tools/quick_finalize
+  - COMPILEALL_DIR=$EIFFEL_SRC/unstable/library/network
+  - COMPILEALL_DIR=$EIFFEL_SRC/unstable/library/pattern
+  - COMPILEALL_DIR=$EIFFEL_SRC/unstable/library/persistency
+  - COMPILEALL_DIR=$EIFFEL_SRC/unstable/library/scoop_patterns
+  - COMPILEALL_DIR=$EIFFEL_SRC/unstable/library/text
+  - COMPILEALL_DIR=$EIFFEL_SRC/unstable/library/web
+  - COMPILEALL_DIR=$EIFFEL_SRC/framework/configuration
+  - COMPILEALL_DIR=$EIFFEL_SRC/framework/interface_names
+  - COMPILEALL_DIR=$EIFFEL_SRC/framework/iron
+  - COMPILEALL_DIR=$EIFFEL_SRC/contrib/examples
+  - COMPILEALL_DIR=$EIFFEL_SRC/contrib/library/network
+  - COMPILEALL_DIR=$EIFFEL_SRC/contrib/library/text
+  - COMPILEALL_DIR=$EIFFEL_SRC/contrib/library/web
+  - COMPILEALL_DIR=$EIFFEL_SRC/contrib/library/gobo COMPILEALL_IGNORE=$EIFFEL_SRC/contrib/library/gobo/.compile_all.ini
+  - COMPILEALL_DIR=$EIFFEL_SRC/library COMPILEALL_IGNORE=$EIFFEL_SRC/scripts/CI/compile_all/stable_others.ini
+  - COMPILEALL_DIR=$EIFFEL_SRC/unstable COMPILEALL_IGNORE=$EIFFEL_SRC/scripts/CI/compile_all/unstable_others.ini
+  - COMPILEALL_DIR=$EIFFEL_SRC/contrib/library COMPILEALL_IGNORE=$EIFFEL_SRC/scripts/CI/compile_all/contrib_others.ini
+  - COMPILEALL_DIR=$EIFFEL_SRC/framework COMPILEALL_IGNORE=$EIFFEL_SRC/scripts/CI/compile_all/framework_others.ini
+  - COMPILEALL_DIR=$EIFFEL_SRC/tools COMPILEALL_IGNORE=$EIFFEL_SRC/scripts/CI/compile_all/tools_others.ini
 script:
   - sh $EIFFEL_SRC/scripts/CI/travis-ci-compile_all.sh $COMPILEALL_DIR $COMPILEALL_IGNORE
 group: stable

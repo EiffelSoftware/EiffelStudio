@@ -18,53 +18,53 @@ branches:
 git:
   depth: 1
 env:
-  - COMPILEALL_DIR=$EIFFEL_SRC/Eiffel
-  - COMPILEALL_DIR=$EIFFEL_SRC/library/base
-  - COMPILEALL_DIR=$EIFFEL_SRC/library/base_extension
-  - COMPILEALL_DIR=$EIFFEL_SRC/library/docking
-  - COMPILEALL_DIR=$EIFFEL_SRC/library/editor
-  - COMPILEALL_DIR=$EIFFEL_SRC/library/encoding
-  - COMPILEALL_DIR=$EIFFEL_SRC/library/net
-  - COMPILEALL_DIR=$EIFFEL_SRC/library/preferences
-  - COMPILEALL_DIR=$EIFFEL_SRC/library/process
-  - COMPILEALL_DIR=$EIFFEL_SRC/library/store
-  - COMPILEALL_DIR=$EIFFEL_SRC/library/testing
-  - COMPILEALL_DIR=$EIFFEL_SRC/library/text
-  - COMPILEALL_DIR=$EIFFEL_SRC/library/thread
-  - COMPILEALL_DIR=$EIFFEL_SRC/library/time
-  - COMPILEALL_DIR=$EIFFEL_SRC/library/uuid
-  - COMPILEALL_DIR=$EIFFEL_SRC/library/vision2
-  - COMPILEALL_DIR=$EIFFEL_SRC/library/wel
-  - COMPILEALL_DIR=$EIFFEL_SRC/examples
-  - COMPILEALL_DIR=$EIFFEL_SRC/tools/compile_all
-  - COMPILEALL_DIR=$EIFFEL_SRC/tools/eiffel_make
-  - COMPILEALL_DIR=$EIFFEL_SRC/tools/espawn
-  - COMPILEALL_DIR=$EIFFEL_SRC/tools/estudio
-  - COMPILEALL_DIR=$EIFFEL_SRC/tools/finish_freezing
-  - COMPILEALL_DIR=$EIFFEL_SRC/tools/iron
-  - COMPILEALL_DIR=$EIFFEL_SRC/tools/syntax_updater
-  - COMPILEALL_DIR=$EIFFEL_SRC/tools/quick_finalize
-  - COMPILEALL_DIR=$EIFFEL_SRC/unstable/library/network
-  - COMPILEALL_DIR=$EIFFEL_SRC/unstable/library/pattern
-  - COMPILEALL_DIR=$EIFFEL_SRC/unstable/library/persistency
-  - COMPILEALL_DIR=$EIFFEL_SRC/unstable/library/scoop_patterns
-  - COMPILEALL_DIR=$EIFFEL_SRC/unstable/library/text
-  - COMPILEALL_DIR=$EIFFEL_SRC/unstable/library/web
-  - COMPILEALL_DIR=$EIFFEL_SRC/framework/configuration
-  - COMPILEALL_DIR=$EIFFEL_SRC/framework/interface_names
-  - COMPILEALL_DIR=$EIFFEL_SRC/framework/iron
-  - COMPILEALL_DIR=$EIFFEL_SRC/contrib/examples
-  - COMPILEALL_DIR=$EIFFEL_SRC/contrib/library/network
-  - COMPILEALL_DIR=$EIFFEL_SRC/contrib/library/text
-  - COMPILEALL_DIR=$EIFFEL_SRC/contrib/library/web
-  - COMPILEALL_DIR=$EIFFEL_SRC/contrib/library/gobo COMPILEALL_IGNORE=$EIFFEL_SRC/contrib/library/gobo/.compile_all.ini
-  - COMPILEALL_DIR=$EIFFEL_SRC/library COMPILEALL_IGNORE=$EIFFEL_SRC/scripts/CI/compile_all/stable_others.ini
-  - COMPILEALL_DIR=$EIFFEL_SRC/unstable COMPILEALL_IGNORE=$EIFFEL_SRC/scripts/CI/compile_all/unstable_others.ini
-  - COMPILEALL_DIR=$EIFFEL_SRC/contrib/library COMPILEALL_IGNORE=$EIFFEL_SRC/scripts/CI/compile_all/contrib_others.ini
-  - COMPILEALL_DIR=$EIFFEL_SRC/framework COMPILEALL_IGNORE=$EIFFEL_SRC/scripts/CI/compile_all/framework_others.ini
-  - COMPILEALL_DIR=$EIFFEL_SRC/tools COMPILEALL_IGNORE=$EIFFEL_SRC/scripts/CI/compile_all/tools_others.ini
+  - COMPILEALL_DIR=Eiffel
+  - COMPILEALL_DIR=library/base
+  - COMPILEALL_DIR=library/base_extension
+  - COMPILEALL_DIR=library/docking
+  - COMPILEALL_DIR=library/editor
+  - COMPILEALL_DIR=library/encoding
+  - COMPILEALL_DIR=library/net
+  - COMPILEALL_DIR=library/preferences
+  - COMPILEALL_DIR=library/process
+  - COMPILEALL_DIR=library/store
+  - COMPILEALL_DIR=library/testing
+  - COMPILEALL_DIR=library/text
+  - COMPILEALL_DIR=library/thread
+  - COMPILEALL_DIR=library/time
+  - COMPILEALL_DIR=library/uuid
+  - COMPILEALL_DIR=library/vision2
+  - COMPILEALL_DIR=library/wel
+  - COMPILEALL_DIR=examples
+  - COMPILEALL_DIR=tools/compile_all
+  - COMPILEALL_DIR=tools/eiffel_make
+  - COMPILEALL_DIR=tools/espawn
+  - COMPILEALL_DIR=tools/estudio
+  - COMPILEALL_DIR=tools/finish_freezing
+  - COMPILEALL_DIR=tools/iron
+  - COMPILEALL_DIR=tools/syntax_updater
+  - COMPILEALL_DIR=tools/quick_finalize
+  - COMPILEALL_DIR=unstable/library/network
+  - COMPILEALL_DIR=unstable/library/pattern
+  - COMPILEALL_DIR=unstable/library/persistency
+  - COMPILEALL_DIR=unstable/library/scoop_patterns
+  - COMPILEALL_DIR=unstable/library/text
+  - COMPILEALL_DIR=unstable/library/web
+  - COMPILEALL_DIR=framework/configuration
+  - COMPILEALL_DIR=framework/interface_names
+  - COMPILEALL_DIR=framework/iron
+  - COMPILEALL_DIR=contrib/examples
+  - COMPILEALL_DIR=contrib/library/network
+  - COMPILEALL_DIR=contrib/library/text
+  - COMPILEALL_DIR=contrib/library/web
+  - COMPILEALL_DIR=contrib/library/gobo COMPILEALL_IGNORE=contrib/library/gobo/.compile_all.ini
+  - COMPILEALL_DIR=library COMPILEALL_IGNORE=scripts/CI/compile_all/stable_others.ini
+  - COMPILEALL_DIR=unstable COMPILEALL_IGNORE=scripts/CI/compile_all/unstable_others.ini
+  - COMPILEALL_DIR=contrib/library COMPILEALL_IGNORE=scripts/CI/compile_all/contrib_others.ini
+  - COMPILEALL_DIR=framework COMPILEALL_IGNORE=scripts/CI/compile_all/framework_others.ini
+  - COMPILEALL_DIR=tools COMPILEALL_IGNORE=scripts/CI/compile_all/tools_others.ini
 script:
-  - sh $EIFFEL_SRC/scripts/CI/travis-ci-compile_all.sh $COMPILEALL_DIR $COMPILEALL_IGNORE
+  - sh $EIFFEL_SRC/scripts/CI/travis-ci-compile_all.sh $EIFFEL_SRC/$COMPILEALL_DIR $EIFFEL_SRC/$COMPILEALL_IGNORE
 group: stable
 os: linux
 notifications:

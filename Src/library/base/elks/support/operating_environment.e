@@ -59,7 +59,30 @@ feature -- Status report
 			is_class: class
 		end
 
+
+	temporary_directory_path: STRING
+			-- Reperesentation of the temporary directory.
+		local
+			cs: C_STRING
+		once
+			create cs.make_by_pointer (c_temporary_directory_path)
+			Result := cs.string
+		ensure
+			is_class: class
+		end
+
+
 feature {NONE} -- Implementation
+
+	c_temporary_directory_path: POINTER
+			-- Reperesentation of the temporary directory.
+		external
+				"C use %"eif_path_name.h%""
+		alias
+			"eif_temporary_directory_path"
+		ensure
+			is_class: class
+		end
 
 	c_dir_separator: CHARACTER
 		external

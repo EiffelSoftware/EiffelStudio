@@ -563,7 +563,7 @@ rt_public EIF_BOOLEAN eif_root_dir_supported(void)
 doc:	<routine name="eif_home_directory_name_ptr" return_type="EIF_INTEGER" export="public">
 doc:		<summary>Store the representation of the home directory in `a_buffer' as a null-terminated path in UTF-16 encoding on Windows and a byte sequence otherwise.</summary>
 doc:		<return>Size in bytes actually required in `a_buffer' including the terminating null character. If `a_count' is less than the returned value or if `a_buffer' is NULL, nothing is done to `a_buffer'.</return>
-doc:		<param name="a_buffer" type="EIF_POINTER">Pointer to a buffer that will hold the current working directory, or NULL if lengþh of buffer is required.</param>
+doc:		<param name="a_buffer" type="EIF_POINTER">Pointer to a buffer that will hold the current working directory, or NULL if leng\FEh of buffer is required.</param>
 doc:		<param name="a_count" type="EIF_INTEGER">Length of `a_buffer' in bytes.</param>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None.</synchronization>
@@ -635,7 +635,7 @@ rt_public EIF_INTEGER eif_home_directory_name_ptr(EIF_FILENAME a_buffer, EIF_INT
 doc:	<routine name="eif_user_directory_name_ptr" return_type="EIF_INTEGER" export="public">
 doc:		<summary>Store the representation of the user directory in `a_buffer' as a null-terminated path in UTF-16 encoding on Windows and a byte sequence otherwise.</summary>
 doc:		<return>Size in bytes actually required in `a_buffer' including the terminating null character. If `a_count' is less than the returned value or if `a_buffer' is NULL, nothing is done to `a_buffer'.</return>
-doc:		<param name="a_buffer" type="EIF_POINTER">Pointer to a buffer that will hold the current working directory, or NULL if lengþh of buffer is required.</param>
+doc:		<param name="a_buffer" type="EIF_POINTER">Pointer to a buffer that will hold the current working directory, or NULL if leng\FEh of buffer is required.</param>
 doc:		<param name="a_count" type="EIF_INTEGER">Length of `a_buffer' in bytes.</param>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None.</synchronization>
@@ -737,13 +737,13 @@ rt_public EIF_FILENAME eif_temporary_directory_path (void)
 	/* To implement */
 #else
 	/*Unix and Mac */
-	const EIF_FILENAME val = 0;
+	EIF_FILENAME val = 0;
 	(val = getenv("TMPDIR" )) ||
 	(val = getenv("TMP"    )) ||
-    (val = getenv("TEMP"   )) ||
+    	(val = getenv("TEMP"   )) ||
 	(val = getenv("TEMPDIR"));
 	const EIF_FILENAME default_tmp = "/tmp";
-	return  (val != 0) ? val : default_tmp
+	return  (val != 0) ? val : default_tmp;
 #endif
 }
 

@@ -734,13 +734,13 @@ rt_public EIF_FILENAME eif_temporary_directory_path (void)
 	memcpy (result, temp_buffer, wcslen(temp_buffer) + 1);
 	return result;
 #elif defined (EIF_VMS)
-	/* To implement */
+	return getenv ("SYS$SCRATCH");
 #else
 	/*Unix and Mac */
 	EIF_FILENAME val = 0;
 	(val = getenv("TMPDIR" )) ||
 	(val = getenv("TMP"    )) ||
-    	(val = getenv("TEMP"   )) ||
+	(val = getenv("TEMP"   )) ||
 	(val = getenv("TEMPDIR"));
 	const EIF_FILENAME default_tmp = "/tmp";
 	return  (val != 0) ? val : default_tmp;

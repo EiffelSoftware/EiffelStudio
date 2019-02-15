@@ -382,6 +382,30 @@ feature -- Access
 			instance_free: class
 		end
 
+	temporary_directory_path: detachable PATH
+			-- Temporary directory name
+			-- On Windows:  C:\Users\User Name\AppData\Local\Temp (%USERPROFILE%\AppData\Local\Temp).
+			-- On Unix: /tmp and /var/tmp.
+			-- On VMS: /sys$scratch	
+			-- Otherwise Void	
+		note
+			EIS: "name=temporary path", "src=https://en.wikipedia.org/wiki/Temporary_folder", "protocol=Uri"
+		local
+			l_ptr: POINTER
+			l_str: C_STRING
+		do
+
+			l_ptr := eif_temporary_directory_path
+			if l_ptr /= default_pointer then
+				create l_str.make_by_pointer (l_ptr)
+				if not l_str.string.is_empty then
+					create Result.make_from_string (l_str.string)
+				end
+			end
+		ensure
+			instance_free: class
+		end
+
 feature -- Status
 
 	return_code: INTEGER
@@ -646,8 +670,20 @@ feature {NONE} -- External
 			instance_free: class
 		end
 
+
+	eif_temporary_directory_path: POINTER
+			-- Representation of the temporary directory.
+		external
+			"C use %"eif_path_name.h%""
+		alias
+			"eif_temporary_directory_path"
+		ensure
+			is_class: class
+		end
+
+
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

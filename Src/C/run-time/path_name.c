@@ -724,29 +724,27 @@ doc:	</routine>
 rt_public EIF_FILENAME eif_temporary_directory_path (void)
 {
 #if defined EIF_WINDOWS 
-	DWORD ret = 0;
-	TCHAR temp_buffer [MAX_PATH];
-	ret = GetTempPath (MAX_PATH, temp_buffer);
-	if (ret == 0) {
-		eraise("error occurred, could not get temporary directory path", EN_EXT);
-	}
-	EIF_FILENAME result[MAX_PATH];
-	memcpy (result, temp_buffer, wcslen(temp_buffer) + 1);
-	return result;
+    EIF_NATIVE_CHAR* temp_buffer [MAX_PATH];
+    EIF_FILENAME result [MAX_PATH];
+    if (GetTempPath (MAX_PATH, temp_buffer) == 0) {
+        /*eraise("error occurred, could not get temporary directory path", EN_EXT);*/
+        return (EIF_FILENAME) "";
+    }
+    memcpy (result, temp_buffer, wcslen(temp_buffer) + 1);
+    return (EIF_FILENAME) result;
 #elif defined (EIF_VMS)
-	return getenv ("SYS$SCRATCH");
+    return (EIF_FILENAME) "/sys$scratch";
 #else
-	/*Unix and Mac */
-	EIF_FILENAME val = 0;
-	(val = getenv("TMPDIR" )) ||
-	(val = getenv("TMP"    )) ||
-	(val = getenv("TEMP"   )) ||
-	(val = getenv("TEMPDIR"));
-	const EIF_FILENAME default_tmp = "/tmp";
-	return  (val != 0) ? val : default_tmp;
+    /*Unix and Mac */
+    EIF_FILENAME val = 0;
+    (val = getenv("TMPDIR" )) ||
+    (val = getenv("TMP"    )) ||
+    (val = getenv("TEMP"   )) ||
+    (val = getenv("TEMPDIR"));
+    const EIF_FILENAME default_tmp = "/tmp";
+    return  (val != 0) ? val : default_tmp;
 #endif
 }
-
 /*
 doc:</file>
 */

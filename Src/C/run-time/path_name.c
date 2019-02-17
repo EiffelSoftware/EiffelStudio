@@ -724,13 +724,15 @@ doc:	</routine>
 rt_public EIF_FILENAME eif_temporary_directory_path (void)
 {
 #if defined EIF_WINDOWS 
-    EIF_NATIVE_CHAR* temp_buffer [MAX_PATH];
-    EIF_FILENAME result [MAX_PATH];
+    char* temp_buffer;
+    EIF_FILENAME result;
+     temp_buffer = (char*) cmalloc(MAX_PATH * sizeof(char));
     if (GetTempPath (MAX_PATH, temp_buffer) == 0) {
         /*eraise("error occurred, could not get temporary directory path", EN_EXT);*/
         return (EIF_FILENAME) "";
     }
-    memcpy (result, temp_buffer, wcslen(temp_buffer) + 1);
+    result = (char*) cmalloc((strlen(temp_buffer) + 1) * sizeof(char));
+    memcpy (result, temp_buffer, strlen(temp_buffer) + 1);
     return (EIF_FILENAME) result;
 #elif defined (EIF_VMS)
     return (EIF_FILENAME) "/sys$scratch";

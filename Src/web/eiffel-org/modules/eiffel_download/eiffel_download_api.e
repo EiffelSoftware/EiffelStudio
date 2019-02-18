@@ -196,14 +196,12 @@ feature -- Access
 		end
 
 	selected_platform (a_downloads: detachable LIST [DOWNLOAD_PRODUCT_OPTIONS]; a_platform: READABLE_STRING_GENERAL): detachable DOWNLOAD_PRODUCT_OPTIONS
-		local
-			l_found: BOOLEAN
 		do
 			if a_downloads /= Void then
 				across
 					a_downloads as ic
 				until
-					l_found
+					Result /= Void
 				loop
 					if
 						attached ic.item.platform as pf and then

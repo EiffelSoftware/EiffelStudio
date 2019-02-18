@@ -45,6 +45,9 @@
 
 #include "eif_portable.h"
 #include "eif_file.h"
+#ifdef EIF_WINDOWS
+#include <fileapi.h>
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -69,8 +72,8 @@ RT_LNK EIF_BOOLEAN eif_root_dir_supported(void);
 RT_LNK EIF_REFERENCE eif_home_directory_name(void);
 RT_LNK EIF_INTEGER eif_home_directory_name_ptr(EIF_FILENAME a_buffer, EIF_INTEGER a_count);
 RT_LNK EIF_INTEGER eif_user_directory_name_ptr(EIF_FILENAME a_buffer, EIF_INTEGER a_count);
+RT_LNK EIF_INTEGER eif_temporary_directory_name_ptr(EIF_FILENAME a_buffer, EIF_INTEGER a_count);
 RT_LNK EIF_REFERENCE eif_root_directory_name(void);
-RT_LNK EIF_FILENAME eif_temporary_directory_path  (void);
 
 #ifdef __cplusplus
 }

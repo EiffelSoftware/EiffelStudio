@@ -9,7 +9,7 @@ note
 class
 	FILE_NAME
 
-obsolete "This class is obsolete, use PATH instead [2019-05-31]"
+obsolete "This class is obsolete, use PATH, or FILE instead [2019-05-31]"
 
 inherit
 	PATH_NAME
@@ -34,8 +34,8 @@ feature {NONE} -- Initialization
 		local
 			l_file: PLAIN_TEXT_FILE
 		do
-			create l_file.make_open_temporary
-			make_from_string (l_file.path.name.to_string_8)
+			create l_file.make_open_temporary_with_prefix ({EXECUTION_ENVIRONMENT}.temporary_directory_path.extended ("tmp-").name)
+			make_from_string (l_file.path.utf_8_name)
 			l_file.close
 			l_file.delete
 		end

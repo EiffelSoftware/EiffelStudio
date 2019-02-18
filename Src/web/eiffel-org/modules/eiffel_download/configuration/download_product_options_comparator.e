@@ -21,8 +21,8 @@ feature -- Status report
 			up := u.platform
 			vp := v.platform
 			if up.same_string (vp) then
-				uw := platform_weight (extension (u.filename))
-				vw := platform_weight (extension (v.filename))
+				uw := extension_weight (extension (u.filename))
+				vw := extension_weight (extension (v.filename))
 				if uw = vw then
 					Result := u.filename < v.filename
 				else
@@ -43,7 +43,7 @@ feature -- Status report
 		local
 			i: INTEGER
 		do
-			i := fn.index_of ('.', 1)
+			i := fn.last_index_of ('.', fn.count)
 			if i > 0 then
 				Result := fn.substring (i + 1, fn.count)
 			else
@@ -66,6 +66,8 @@ feature -- Status report
 					Result := 1
 				elseif e.is_case_insensitive_equal ("7z") then
 					Result := 2
+				elseif e.is_case_insensitive_equal ("tar.bz2") then
+					Result := 3
 				else
 					Result := 10
 				end

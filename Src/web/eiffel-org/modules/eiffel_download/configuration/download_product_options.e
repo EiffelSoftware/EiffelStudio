@@ -11,14 +11,22 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_product: DOWNLOAD_PRODUCT)
+	make (a_product: DOWNLOAD_PRODUCT; a_platform: like platform; a_filename: like filename)
 		do
 			associated_product := a_product
+			filename := a_filename
+			platform := a_platform
 		end
 
 feature -- Access
 
 	associated_product: DOWNLOAD_PRODUCT
+
+	filename: READABLE_STRING_32
+			-- Product filename.
+
+	platform: READABLE_STRING_32
+			-- Product platform.
 
 	key: detachable READABLE_STRING_32
 			-- Associated key
@@ -28,12 +36,6 @@ feature -- Access
 
 	size: INTEGER_64
 			-- Product size.
-
-	filename: detachable READABLE_STRING_32
-			-- Product filename.
-
-	platform: detachable READABLE_STRING_32
-			-- Product platform.
 
 	link: detachable READABLE_STRING_32
 

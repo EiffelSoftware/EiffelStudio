@@ -287,6 +287,7 @@ feature -- Handler
 							across
 								l_products as ic
 							loop
+								l_api.sort_downloads (ic.item)
 								if attached ic.item.downloads as l_downloads then
 									across
 										l_downloads as d_ic

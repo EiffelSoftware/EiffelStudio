@@ -1,6 +1,6 @@
 /*
 	description: "[
-			Externals for classes PATH_NAME, DIRECTORY_NAME and FILE_NAME,
+			Externals for classes EXECUTION_ENVIRONMENT, PATH_NAME, DIRECTORY_NAME and FILE_NAME,
 			platform independent manipulation of path names
 			]"
 	date:		"$Date$"
@@ -660,6 +660,57 @@ rt_public EIF_INTEGER eif_user_directory_name_ptr(EIF_FILENAME a_buffer, EIF_INT
 #endif
 }
 
+/*
+doc:	<routine name="eif_temporary_directory_name_ptr" return_type="EIF_INTEGER" export="public">
+doc:		<summary>Store the representation of the temporary directory in `a_buffer' as a null-terminated path in UTF-16 encoding on Windows and a byte sequence otherwise.</summary>
+doc:		<return>Size in bytes actually required in `a_buffer' including the terminating null character. If `a_count' is less than the returned value or if `a_buffer' is NULL, nothing is done to `a_buffer'.</return>
+doc:		<param name="a_buffer" type="EIF_POINTER">Pointer to a buffer that will hold the temporary directory, or NULL if leng\FEh of buffer is required.</param>
+doc:		<param name="a_count" type="EIF_INTEGER">Length of `a_buffer' in bytes.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None.</synchronization>
+doc:	</routine>
+*/
+rt_public EIF_INTEGER eif_temporary_directory_name_ptr(EIF_FILENAME a_buffer, EIF_INTEGER a_count)
+{
+		/* String representation of $HOME */
+#ifdef EIF_WINDOWS
+	EIF_INTEGER l_nbytes;
+	if (a_buffer && (a_count >= (MAX_PATH * sizeof(wchar_t)))) {
+			/* Buffer is large enough for the call to GetTempPathW. */
+		l_nbytes = (EIF_INTEGER) GetTempPathW (a_count, a_buffer);
+		if (l_nbytes == 0) {
+			/* Failure ... use GetLastError for more information */
+			return 0;
+		} else if (l_nbytes > a_count) {
+			return l_nbytes;
+		} else {
+			return (EIF_INTEGER) ((wcslen(a_buffer) + 1) * sizeof (wchar_t));
+		}
+	} else {
+			/* Buffer is NULL or not large enough we ask for more. */
+		return MAX_PATH * sizeof(wchar_t);
+	}
+#else
+	char *l_env_value;
+	EIF_INTEGER l_nbytes;
+
+#if defined EIF_VMS
+	l_env_value = getenv("SYS$SCRATCH");
+#else
+    (l_env_value = getenv("TMPDIR" )) ||
+    (l_env_value = getenv("TMP"    )) ||
+    (l_env_value = getenv("TEMP"   )) ||
+    (l_env_value = getenv("TEMPDIR")) ||
+	(l_env_value = "/tmp");
+#endif
+	l_nbytes = (strlen(l_env_value) + 1) * sizeof(char);
+	if (a_buffer && (a_count >= l_nbytes)) {
+		memcpy (a_buffer, l_env_value, l_nbytes);
+	}
+	return l_nbytes;
+#endif
+}
+
 rt_public EIF_REFERENCE eif_root_directory_name(void)
 {
 		/* String representation of the root directory */
@@ -712,41 +763,6 @@ rt_public EIF_REFERENCE eif_extracted_paths(EIF_CHARACTER_8 *p)
 }
 
 
-/*
-doc:	<routine name="eif_temporary_path_name" return_type="EIF_FILENAME" export="public">
-doc:		<summary>Returns the representation of the user directory temporary path</summary>
-doc:		<return>Temporary directory path.</return>
-doc:		<thread_safety>Safe</thread_safety>
-doc:		<synchronization>None.</synchronization>
-doc:	</routine>
-*/
-
-rt_public EIF_FILENAME eif_temporary_directory_path (void)
-{
-#if defined EIF_WINDOWS 
-    char* temp_buffer;
-    EIF_FILENAME result;
-     temp_buffer = (char*) cmalloc(MAX_PATH * sizeof(char));
-    if (GetTempPath (MAX_PATH, temp_buffer) == 0) {
-        /*eraise("error occurred, could not get temporary directory path", EN_EXT);*/
-        return (EIF_FILENAME) "";
-    }
-    result = (char*) cmalloc((strlen(temp_buffer) + 1) * sizeof(char));
-    memcpy (result, temp_buffer, strlen(temp_buffer) + 1);
-    return (EIF_FILENAME) result;
-#elif defined (EIF_VMS)
-    return (EIF_FILENAME) "/sys$scratch";
-#else
-    /*Unix and Mac */
-    EIF_FILENAME val = 0;
-    (val = getenv("TMPDIR" )) ||
-    (val = getenv("TMP"    )) ||
-    (val = getenv("TEMP"   )) ||
-    (val = getenv("TEMPDIR"));
-    const EIF_FILENAME default_tmp = "/tmp";
-    return  (val != 0) ? val : default_tmp;
-#endif
-}
 /*
 doc:</file>
 */

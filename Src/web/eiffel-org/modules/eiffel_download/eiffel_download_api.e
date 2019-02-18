@@ -213,6 +213,19 @@ feature -- Access
 			end
 		end
 
+	sort_downloads (prod: DOWNLOAD_PRODUCT)
+		local
+			l_sort: QUICK_SORTER [DOWNLOAD_PRODUCT_OPTIONS]
+			l_comp: DOWNLOAD_PRODUCT_OPTIONS_COMPARATOR
+		do
+			if attached prod.downloads as lst then
+				create l_comp
+				create l_sort.make (l_comp)
+				l_sort.sort (lst)
+--				l_sort.reverse_sort (lst)
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	internal_download_configuration: detachable DOWNLOAD_CONFIGURATION

@@ -68,11 +68,24 @@ feature -- Access
 						prod.add_mirror (l_mirror)
 					end
 					Result.add_product (prod)
+					sort_product_downloads (prod)
 				end
 			end
 		end
 
 feature {NONE} -- Implemenation: Platforms
+
+	sort_product_downloads (prod: DOWNLOAD_PRODUCT)
+		local
+			l_sort: QUICK_SORTER [DOWNLOAD_PRODUCT_OPTIONS]
+			l_comp: DOWNLOAD_PRODUCT_OPTIONS_COMPARATOR
+		do
+			if attached prod.downloads as lst then
+				create l_comp
+				create l_sort.make (l_comp)
+				l_sort.sort (lst)
+			end
+		end
 
 	new_platforms (a_platforms: JSON_ARRAY): LIST [DOWNLOAD_PLATFORM]
 		local
@@ -239,14 +252,12 @@ feature {NONE} -- Implemenation: Products
 			across
 				a_downloads as c
 			loop
-				if attached {JSON_OBJECT} c.item as ji then
-					create l_item.make (a_product)
-					if attached {JSON_STRING} ji.item ("platform") as l_platform then
-						l_item.set_platform (l_platform.unescaped_string_32)
-					end
-					if attached {JSON_STRING} ji.item ("filename") as l_filename then
-						l_item.set_filename (l_filename.unescaped_string_32)
-					end
+				if
+					attached {JSON_OBJECT} c.item as ji and then
+					attached {JSON_STRING} ji.item ("platform") as l_platform and then
+					attached {JSON_STRING} ji.item ("filename") as l_filename
+				then
+					create l_item.make (a_product, l_platform.unescaped_string_32, l_filename.unescaped_string_32)
 					if attached {JSON_STRING} ji.item ("size") as l_size and then l_size.item.is_integer then
 						l_item.set_size (l_size.item.to_integer)
 					end

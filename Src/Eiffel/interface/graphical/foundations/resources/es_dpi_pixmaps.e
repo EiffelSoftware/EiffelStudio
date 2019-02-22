@@ -1,37 +1,45 @@
 note
-	description: "Summary description for {ES_PIXMAPS_16X16}."
+	description: "Summary description for {ES_DPI_PIXMAPS}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
-	ES_PIXMAPS_16X16
+deferred class
+	ES_DPI_PIXMAPS
 
 inherit
-	ES_ICONS
+	ES_PIXMAPS
 		rename
-			make as make_icons
+			make as make_pixmaps
 		end
-
-create
-	make
 
 feature {NONE} -- Initialization
 
-	make (a_name: READABLE_STRING_GENERAL)
-			-- Initialize 16x16 matrix from a moniker.
+	make (a_name: READABLE_STRING_GENERAL; a_icon_width: NATURAL_8; a_icon_height: NATURAL_8)
+			-- Initialize matrix from a moniker.
 			--
 			-- `a_name': An identifier/moniker used to load a pixmap image.
+			-- using `a_icon_width` and `a_icon_height` for width and height value.
 		require
 			not_a_name_is_empty: not a_name.is_empty
 		do
-			make_icons (a_name, 16, 16)
+			make_pixmaps (a_name)
+			icon_width := a_icon_width
+			icon_height := a_icon_height
 		ensure
-			icon_width_set: icon_width = 16
-			icon_height_set: icon_height = 16
+			icon_width_set: icon_width = a_icon_width
+			icon_height_set: icon_height = a_icon_height
 		end
 
-note
+feature -- Access
+
+	icon_width: NATURAL_8
+			-- <Precursor>
+
+	icon_height: NATURAL_8
+			-- <Precursor>		
+
+;note
 	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

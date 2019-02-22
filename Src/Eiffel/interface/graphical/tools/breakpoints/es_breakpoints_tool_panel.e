@@ -1370,7 +1370,7 @@ feature {NONE} -- Implementation, cosmetic
 	Disabled_conditional_bp_symbol: STRING = "*-"
 			-- Disable conditional breakpoint symbol.
 
-	Breakable_icons: ES_SMALL_ICON
+	Breakable_icons: ES_SMALL_ICONS
 			-- Breakable icons.
 		local
 			l_shared: EB_SHARED_PIXMAPS

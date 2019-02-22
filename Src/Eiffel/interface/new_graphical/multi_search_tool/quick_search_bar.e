@@ -273,7 +273,7 @@ feature -- Destroy
 
 feature {NONE} -- Helpers
 
-    frozen stock_pixmaps: ES_ICON
+    frozen stock_pixmaps: ES_ICONS
             -- Shared access to stock 16x16 EiffelStudio pixmaps
         once
             Result := (create {EB_SHARED_PIXMAPS}).icon_pixmaps

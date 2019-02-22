@@ -1,10 +1,10 @@
-note
+﻿note
 	description: "[
-		Generic Pixmaps class based on automatically generated class for EiffelStudio
+		Automatically generated class for EiffelStudio ES_ICONS icons.
 	]"
 	generator: "Eiffel Matrix Generator"
 	command_line: "[
-		emcgen --frame ..\..\..\..\tools\eiffel_matrix_code_generator\frames\studio.e.frame ..\..\..\..\Delivery\studio\bitmaps\png\16x16.ini
+		emcgen %EIFFEL_SRC%\Delivery\studio\bitmaps\png\icons.ini -f %EIFFEL_SRC%\tools\eiffel_matrix_code_generator\frames\studio_dpi.e.frame --output_file %EIFFEL_SRC%\Eiffel\interface\new_graphical\shared\es_icons.e
 		]"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -12,41 +12,15 @@ note
 	revision: "$Revision$"
 
 class
-	ES_ICON
+	ES_ICONS
 
 inherit
-
-	ES_PIXMAPS
-		rename
-			make as make_pixmaps
-		end
+	ES_DPI_PIXMAPS
 
 create
 	make
 
-feature {NONE} -- Initialization
-
-	make (a_name: READABLE_STRING_GENERAL; a_icon_width: NATURAL_8; a_icon_height: NATURAL_8)
-			-- Initialize matrix from a moniker.
-			-- `a_name': An identifier/moniker used to load a pixmap image.
-		require
-			not_a_name_is_empty: not a_name.is_empty
-		do
-			make_pixmaps (a_name)
-			icon_width := a_icon_width
-			icon_height := a_icon_height
-		ensure
-			icon_width_set: icon_width = a_icon_width
-			icon_height_set: icon_height = a_icon_height
-		end
-
 feature -- Access
-
-	icon_width: NATURAL_8
-			-- <Precursor>
-
-	icon_height: NATURAL_8
-			-- <Precursor>
 
 	width: NATURAL_8 = 33
 			-- <Precursor>
@@ -60,7 +34,7 @@ feature {NONE} -- Access
 			-- <Precursor>
 
 feature -- Icons
-
+	
 	frozen expanded_normal_icon: EV_PIXMAP
 			-- Access to 'normal' pixmap.
 		require
@@ -9782,7 +9756,7 @@ feature -- Icons
 		end
 
 feature -- Icons: Animations
-
+	
 	frozen compile_animation_anim: ARRAY [EV_PIXMAP]
 			-- Access to 'compile_animation' pixmap animation items.
 		once

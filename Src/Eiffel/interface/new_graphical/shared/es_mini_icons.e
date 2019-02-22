@@ -1,10 +1,10 @@
 ﻿note
 	description: "[
-		Automatically generated class for EiffelStudio 10x10 icons.
+		Automatically generated class for EiffelStudio ES_MINI_ICONS icons.
 	]"
 	generator: "Eiffel Matrix Generator"
 	command_line: "[
-		emcgen %EIFFEL_SRC%\Delivery\studio\bitmaps\png\10x10.ini -f %EIFFEL_SRC%\tools\eiffel_matrix_code_generator\frames\studio.e.frame --output_file %EIFFEL_SRC%\Eiffel\interface\new_graphical\shared\es_pixmaps_10x10.e
+		emcgen %EIFFEL_SRC%\Delivery\studio\bitmaps\png\mini_icons.ini -f %EIFFEL_SRC%\tools\eiffel_matrix_code_generator\frames\studio_dpi.e.frame --output_file %EIFFEL_SRC%\Eiffel\interface\new_graphical\shared\es_mini_icons.e
 		]"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -12,21 +12,15 @@
 	revision: "$Revision$"
 
 class
-	ES_PIXMAPS_10X10
+	ES_MINI_ICONS
 
 inherit
-	ES_PIXMAPS
+	ES_DPI_PIXMAPS
 
 create
 	make
 
 feature -- Access
-
-	icon_width: NATURAL_8 = 10
-			-- <Precursor>
-
-	icon_height: NATURAL_8 = 10
-			-- <Precursor>
 
 	width: NATURAL_8 = 12
 			-- <Precursor>
@@ -1341,6 +1335,26 @@ feature -- Icons
 			completion_show_target_class_icon_buffer_attached: Result /= Void
 		end
 
+	frozen completion_show_unicode_symbol_icon: EV_PIXMAP
+			-- Access to 'show unicode symbol' pixmap.
+		require
+			has_named_icon: has_named_icon (completion_show_unicode_symbol_name)
+		once
+			Result := named_icon (completion_show_unicode_symbol_name)
+		ensure
+			completion_show_unicode_symbol_icon_attached: Result /= Void
+		end
+
+	frozen completion_show_unicode_symbol_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'show unicode symbol' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (completion_show_unicode_symbol_name)
+		once
+			Result := named_icon_buffer (completion_show_unicode_symbol_name)
+		ensure
+			completion_show_unicode_symbol_icon_buffer_attached: Result /= Void
+		end
+
 	frozen bon_persistent_icon: EV_PIXMAP
 			-- Access to 'persistent' pixmap.
 		require
@@ -1512,6 +1526,7 @@ feature -- Constants: Icon names
 	completion_show_assigner_name: STRING = "completion show assigner"
 	completion_show_obsolete_name: STRING = "completion show obsolete"
 	completion_show_target_class_name: STRING = "completion show target class"
+	completion_show_unicode_symbol_name: STRING = "completion show unicode symbol"
 	bon_persistent_name: STRING = "bon persistent"
 	bon_interfaces_name: STRING = "bon interfaces"
 	bon_effective_name: STRING = "bon effective"
@@ -1587,6 +1602,7 @@ feature {NONE} -- Basic operations
 			a_table.put ([{NATURAL_8} 7, {NATURAL_8} 6], completion_show_assigner_name)
 			a_table.put ([{NATURAL_8} 8, {NATURAL_8} 6], completion_show_obsolete_name)
 			a_table.put ([{NATURAL_8} 9, {NATURAL_8} 6], completion_show_target_class_name)
+			a_table.put ([{NATURAL_8} 10, {NATURAL_8} 6], completion_show_unicode_symbol_name)
 			a_table.put ([{NATURAL_8} 1, {NATURAL_8} 7], bon_persistent_name)
 			a_table.put ([{NATURAL_8} 2, {NATURAL_8} 7], bon_interfaces_name)
 			a_table.put ([{NATURAL_8} 3, {NATURAL_8} 7], bon_effective_name)
@@ -1594,7 +1610,7 @@ feature {NONE} -- Basic operations
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

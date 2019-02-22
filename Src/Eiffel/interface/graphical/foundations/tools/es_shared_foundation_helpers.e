@@ -18,7 +18,7 @@ inherit
 
 feature {NONE} -- Helpers
 
-	frozen tool_utilities: attached ES_TOOL_UTILITIES
+	frozen tool_utilities: ES_TOOL_UTILITIES
 			-- Shared access to the tool utilities.
 		once
 			create Result
@@ -26,25 +26,25 @@ feature {NONE} -- Helpers
 
 feature {NONE} -- Helpers: User interface
 
-	frozen helpers: attached EVS_HELPERS
+	frozen helpers: EVS_HELPERS
 			-- Helpers to extend the operations of EiffelVision2
 		once
 			create Result
 		end
 
-	frozen interface_names: attached INTERFACE_NAMES
+	frozen interface_names: INTERFACE_NAMES
 			-- Access to EiffelStudio's interface names
 		once
 			create Result
 		end
 
-	frozen stock_pixmaps: attached ES_ICON
+	frozen stock_pixmaps: ES_ICONS
 			-- Shared access to stock 16x16 EiffelStudio pixmaps
 		once
 			Result := (create {EB_SHARED_PIXMAPS}).icon_pixmaps
 		end
 
-	frozen mini_stock_pixmaps: attached ES_MINI_ICON
+	frozen mini_stock_pixmaps: ES_MINI_ICONS
 			-- Shared access to stock 10x10 EiffelStudio pixmaps
 		once
 			Result := (create {EB_SHARED_PIXMAPS}).mini_pixmaps

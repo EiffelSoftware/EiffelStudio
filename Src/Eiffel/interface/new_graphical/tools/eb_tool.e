@@ -230,19 +230,19 @@ feature -- Status setting
 
 feature {NONE} -- Helpers
 
-	frozen stock_pixmaps: attached ES_ICON
+	frozen stock_pixmaps: ES_ICONS
 			-- Shared access to stock 16x16 EiffelStudio pixmaps
 		once
 			Result := (create {EB_SHARED_PIXMAPS}).icon_pixmaps
 		end
 
-	frozen stock_mini_pixmaps: attached ES_MINI_ICON
+	frozen stock_mini_pixmaps: ES_MINI_ICONS
 			-- Shared access to stock 10x10 EiffelStudio pixmaps
 		once
 			Result := (create {EB_SHARED_PIXMAPS}).mini_pixmaps
 		end
 
-	frozen stone_director: attached ES_TOOL_STONE_REDIRECT_HELPER
+	frozen stone_director: ES_TOOL_STONE_REDIRECT_HELPER
 			-- Shared access to a stone redirection helper
 		require
 			develop_window_is_interface_usable: internal_stone_director = Void implies develop_window.is_interface_usable

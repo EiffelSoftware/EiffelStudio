@@ -73,7 +73,7 @@ feature {NONE} -- Pixmap resources
 			create Result
 		end
 
-	frozen icons: ES_SMALL_ICON
+	frozen icons: ES_SMALL_ICONS
 			-- Breakpoint icon resources
 		once
 			Result := shared_pixmaps.small_pixmaps

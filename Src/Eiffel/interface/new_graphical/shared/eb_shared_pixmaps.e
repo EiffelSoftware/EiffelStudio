@@ -24,7 +24,7 @@ feature -- Access
 			create Result
 		end
 
-	mini_pixmaps: attached ES_MINI_ICON
+	mini_pixmaps: ES_MINI_ICONS
 			-- Title bar pixmaps (10px)
 		local
 			l_dpi: NATURAL
@@ -41,7 +41,7 @@ feature -- Access
 			end
 		end
 
-	small_pixmaps: attached ES_SMALL_ICON
+	small_pixmaps: ES_SMALL_ICONS
 			-- Small icon pixmaps (12px)
 		local
 			l_dpi: NATURAL
@@ -58,7 +58,7 @@ feature -- Access
 			end
 		end
 
-	icon_pixmaps: attached ES_ICON
+	icon_pixmaps: ES_ICONS
 			-- Normal sized icon pixmaps (16px)
 		local
 			l_dpi: NATURAL
@@ -77,7 +77,7 @@ feature -- Access
 		end
 
 
-	configuration_pixmaps: attached ES_CONFIGURATION_PIXMAPS
+	configuration_pixmaps: ES_CONFIGURATION_PIXMAPS
 			-- Configuration system pixmaps (16px)
 		once
 			create Result.make ("16x16")
@@ -85,7 +85,7 @@ feature -- Access
 
 feature -- Helpers
 
-	resource_handler: attached ES_PIXMAP_RESOURCE_HANDLER
+	resource_handler: ES_PIXMAP_RESOURCE_HANDLER
 			-- Shared access to an icon resource handled
 		once
 			create Result.make

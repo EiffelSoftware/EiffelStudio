@@ -1,30 +1,26 @@
 ﻿note
 	description: "[
-		Automatically generated class for EiffelStudio 12x12 icons.
+		Automatically generated class for EiffelStudio ES_SMALL_ICONS icons.
 	]"
 	generator: "Eiffel Matrix Generator"
-	command_line: "emcgen.exe $EIFFEL_SRC/Delivery/studio/bitmaps/png/12x12.ini -f $EIFFEL_SRC/tools/eiffel_matrix_code_generator/frames/studio.e.frame"
+	command_line: "[
+		emcgen %EIFFEL_SRC%\Delivery\studio\bitmaps\png\small_icons.ini -f %EIFFEL_SRC%\tools\eiffel_matrix_code_generator\frames\studio_dpi.e.frame --output_file %EIFFEL_SRC%\Eiffel\interface\new_graphical\shared\es_small_icons.e
+		]"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ES_PIXMAPS_12X12
+	ES_SMALL_ICONS
 
 inherit
-	ES_PIXMAPS
+	ES_DPI_PIXMAPS
 
 create
 	make
 
 feature -- Access
-
-	icon_width: NATURAL_8 = 12
-			-- <Precursor>
-
-	icon_height: NATURAL_8 = 12
-			-- <Precursor>
 
 	width: NATURAL_8 = 12
 			-- <Precursor>
@@ -318,7 +314,7 @@ feature {NONE} -- Basic operations
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

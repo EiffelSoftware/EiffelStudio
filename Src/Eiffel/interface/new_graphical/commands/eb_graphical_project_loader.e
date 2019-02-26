@@ -701,7 +701,7 @@ feature {NONE} -- Actions
 				on_target_selected (a_dlg, l_item)
 			end
 		ensure
-			target_name_set: old a_list.has_selected_item /= Void implies (target_name /= Void)
+			target_name_set: old a_list.has_selected_item implies (target_name /= Void)
 		end
 
 	on_target_double_pressed (a_dlg: EV_DIALOG; a_item: EV_ANY; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)

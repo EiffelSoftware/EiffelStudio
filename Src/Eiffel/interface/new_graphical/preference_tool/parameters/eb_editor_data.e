@@ -265,6 +265,12 @@ feature -- Value
 			Result := show_completion_disambiguated_name_preference.value
 		end
 
+	show_completion_unicode_symbols: BOOLEAN
+			-- Should unicode symbols be shown in feature completion list?
+		do
+			Result := show_completion_unicode_symbols_preference.value
+		end
+
 	show_completion_obsolete_items: BOOLEAN
 			-- Should obsolete items be shown in completion list?
 		do
@@ -440,6 +446,9 @@ feature -- Preference
 	show_completion_disambiguated_name_preference: BOOLEAN_PREFERENCE
 			-- Should disambiguated name be shown in completion list?
 
+	show_completion_unicode_symbols_preference: BOOLEAN_PREFERENCE
+			-- Should unicode symbols be shown in feature completion list?
+
 	show_completion_obsolete_items_preference: BOOLEAN_PREFERENCE
 			-- Should obsolete items be shown in completion list?
 
@@ -545,6 +554,9 @@ feature {NONE} -- Preference Strings
 
 	show_completion_disambiguated_name_string: STRING = "editor.eiffel.show_completion_disambiguated_name"
 			-- Should disambiguated name be shown in completion list?
+
+	show_completion_unicode_symbols_string: STRING = "editor.eiffel.show_completion_unicode_symbols"
+			-- Should unicode symbols be shown in feature completion list?
 
 	show_completion_obsolete_items_string: STRING = "editor.eiffel.show_obsolete_items"
 			-- Should obsolete items be shown in completion list?
@@ -689,6 +701,7 @@ feature {NONE} -- Initialization
 			show_completion_target_class_preference := l_manager.new_boolean_preference_value (l_manager, show_completion_target_class_string, True)
 			show_completion_type_preference := l_manager.new_boolean_preference_value (l_manager, show_completion_type_string, True)
 			show_completion_disambiguated_name_preference := l_manager.new_boolean_preference_value (l_manager, show_completion_disambiguated_name_string, False)
+			show_completion_unicode_symbols_preference := l_manager.new_boolean_preference_value (l_manager, show_completion_unicode_symbols_string, True)
 			show_completion_obsolete_items_preference := l_manager.new_boolean_preference_value (l_manager, show_completion_obsolete_items_string, False)
 			show_completion_tooltip_preference := l_manager.new_boolean_preference_value (l_manager, show_completion_tooltip_string, True)
 			customized_string_1_preference := l_manager.new_string_preference_value (l_manager, customized_string_1_string, "")
@@ -771,6 +784,7 @@ feature {NONE} -- Initialization
 			show_completion_target_class_preference.change_actions.extend (agent update)
 			show_completion_type_preference.change_actions.extend (agent update)
 			show_completion_disambiguated_name_preference.change_actions.extend (agent update)
+			show_completion_unicode_symbols_preference.change_actions.extend (agent update)
 			show_completion_obsolete_items_preference.change_actions.extend (agent update)
 			show_completion_tooltip_preference.change_actions.extend (agent update)
 			customized_string_1_preference.change_actions.extend (agent update)
@@ -1241,11 +1255,12 @@ feature -- Keybord shortcuts Customization
 			Result.extend ([l_hash, main_window_group])
 
 				-- Shortcuts for completion window group
-			create l_hash.make (5)
+			create l_hash.make (8)
 			l_hash.put ([False, False, False, key_strings.item (Key_F1).twin.as_string_8], "toggle_filter")
 			l_hash.put ([False, False, False, key_strings.item (Key_F2).twin.as_string_8], "toggle_show_type")
 			l_hash.put ([False, False, False, key_strings.item (Key_F3).twin.as_string_8], "toggle_show_signature")
 			l_hash.put ([False, False, False, key_strings.item (Key_F4).twin.as_string_8], "toggle_show_disambiguated_name")
+			l_hash.put ([False, False, False, key_strings.item (Key_F8).twin.as_string_8], "toggle_show_unicode_symbols")
 			l_hash.put ([False, False, False, key_strings.item (Key_F5).twin.as_string_8], "toggle_show_obsolete_items")
 			l_hash.put ([False, False, False, key_strings.item (Key_F6).twin.as_string_8], "toggle_show_tooltip")
 			l_hash.put ([False, False, False, key_strings.item (Key_F7).twin.as_string_8], "toggle_remember_size")
@@ -1308,6 +1323,7 @@ invariant
 	show_completion_target_class_preference_not_void: show_completion_target_class_preference /= Void
 	show_completion_type_preference_not_void: show_completion_type_preference /= Void
 	show_completion_disambiguated_name_preference_not_void: show_completion_disambiguated_name_preference /= Void
+	show_completion_unicode_symbols_preference_not_void: show_completion_unicode_symbols_preference /= Void
 	show_completion_obsolete_items_preference_not_void: show_completion_obsolete_items_preference /= Void
 	show_completion_tooltip_string_attached: show_completion_tooltip_string /= Void
 	syntax_complete_enabled_preference_not_void: syntax_complete_enabled_preference /= Void
@@ -1324,7 +1340,7 @@ invariant
 
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,42 +1,43 @@
 note
-	description: "Wild cards matcher for completion names."
+	description: "Wild cards matcher for completion unicode symbols."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	WILD_COMPLETION_NAME_MATCHER
+	UNICODE_SYMBOL_COMPLETION_NAME_MATCHER
 
 inherit
-	COMPLETION_NAME_MATCHER
+	WILD_COMPLETION_NAME_MATCHER
 		redefine
 			prefix_string,
 			binary_searchable
 		end
 
+create
+	make_with_minimum_count
+
+feature {NONE} -- Initialization
+
+	make_with_minimum_count (nb: INTEGER)
+		require
+			nb >= 0
+		do
+			min_count := nb
+		end
+
+feature -- Access
+
+	min_count: INTEGER
+
 feature -- Match
 
 	prefix_string (a_prefix: STRING_32; a_string: STRING_32): BOOLEAN
 			-- Is `a_prefix' start of `a_string'?
-		local
-			l_pattern: STRING_32
-			l_char: CHARACTER_32
 		do
-			if a_prefix.is_empty then
-				l_pattern := "*"
-			else
-				l_pattern := a_prefix.twin.as_lower
-				l_char := l_pattern.item (l_pattern.count)
-				if l_char /= '*' and then l_char /= '?'  then
-					l_pattern.extend ('*')
-				end
-			end
-			wild_matcher.set_pattern (l_pattern)
-			wild_matcher.set_text (a_string.as_lower)
-			if wild_matcher.pattern_matches then
-				Result := True
+			if a_prefix.count >= min_count or else a_string.count < min_count then
+				Result := Precursor (a_prefix, a_string)
 			end
 		end
 
@@ -44,21 +45,14 @@ feature -- Status report
 
 	binary_searchable (a_str: STRING_32): BOOLEAN
 		do
-			wild_matcher.set_pattern (a_str)
-			Result := not wild_matcher.has_wild_cards
-		end
-
-feature {NONE} -- Implementation
-
-	wild_matcher: KMP_WILD
-			-- Wild card matcher
-		once
-			create Result.make_empty
+			if a_str.count >= min_count then
+				Result := Precursor (a_str)
+			end
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
-	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

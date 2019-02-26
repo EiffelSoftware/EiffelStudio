@@ -43,6 +43,8 @@ feature -- Access
 				end
 				i := i + 1
 			end
+		ensure
+			instance_free: class
 		end
 
 	hex_to_integer_64 (s: STRING): INTEGER_64
@@ -74,6 +76,8 @@ feature -- Access
 				end
 				i := i + 1
 			end
+		ensure
+			instance_free: class
 		end
 
 	hex_to_pointer (s: STRING): POINTER
@@ -91,6 +95,8 @@ feature -- Access
 				val_32 := hex_to_integer_32 (s)
 				($Result).memory_copy ($val_32, Pointer_bytes)
 			end
+		ensure
+			instance_free: class
 		end
 
 note

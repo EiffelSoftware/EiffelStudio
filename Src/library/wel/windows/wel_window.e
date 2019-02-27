@@ -1694,6 +1694,7 @@ feature {NONE} -- Messages
 				-- When we handle the WM_DPICHANGED, the app it's
 				-- responsible to call SetWindowsPos and scale windows controls
 				-- and resources, at the moment only SetWindowsPos is handled.
+			--l_tuple := {WEL_SCALING_API}.monitor_scale (item)
 			l_dpi := c_mouse_wheel_delta (a_wparam)
 			create l_rect.make_by_pointer (a_lparam)
 			move_and_resize_internal (l_rect.left, l_rect.top, l_rect.width, l_rect.height, True, 0)
@@ -1732,7 +1733,7 @@ feature {WEL_WINDOW} -- Implementation
 					-- Workaround until we can scale the windows resource
 					-- when we get a WM_dpichange.
 					-- Here Windows will scale the non-client area (title bar etc) of the windows.
-				{WEL_API}.enable_non_client_dpi_scaling (item)
+				--{WEL_SCALING_API}.enable_non_client_dpi_scaling (item)
 				register_current_window
 				set_default_window_procedure
 			else

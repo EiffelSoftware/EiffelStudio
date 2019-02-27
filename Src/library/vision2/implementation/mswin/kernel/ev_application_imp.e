@@ -65,8 +65,12 @@ feature -- Initialization
 		local
 			l_result: INTEGER
 			l_process: POINTER
+			scaling: WEL_SCALING_EXTERNALS
 		do
-			{WEL_API}.set_process_per_monitor_dpi_aware
+			create scaling
+			if scaling.is_api_available then
+				scaling.set_process_per_monitor_dpi_aware
+			end
 			create reusable_message.make
 			init_instance
 			init_application

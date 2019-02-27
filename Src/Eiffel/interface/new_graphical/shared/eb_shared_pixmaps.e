@@ -15,6 +15,7 @@ inherit
 		export
 			{NONE} all
 		end
+	EB_CACHED_PIXMAPS
 
 feature -- Access
 
@@ -63,17 +64,8 @@ feature -- Access
 		local
 			l_dpi: NATURAL
 		once
-
 			l_dpi := (create {EV_MONITOR_DPI_DETECTOR_IMP}).dpi
-			if l_dpi > 108 and then l_dpi <= 120 then
-				create Result.make ("icons_20x20", 20, 20)
-			elseif l_dpi > 132 and then l_dpi <= 144 then
-				create Result.make ("icons_24x24", 24, 24)
-			elseif l_dpi > 144 then
-				create Result.make ("icons_32x32", 32, 32)
-			else
-				create Result.make ("16x16", 16, 16)
-			end
+			Result := icon_by_dpi (l_dpi)
 		end
 
 

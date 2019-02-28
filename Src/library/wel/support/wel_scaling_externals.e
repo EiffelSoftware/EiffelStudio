@@ -50,12 +50,11 @@ feature -- Access
 		do
 			Result := [1.0, 1.0]
 			l_monitor := {WEL_API}.monitor_from_window ({WEL_API}.get_window (hwnd, {WEL_GW_CONSTANTS}.gw_owner), Monitor_defaulttonearest)
-			if l_monitor /= default_pointer then
+			if l_monitor /= default_pointer and then get_dpi_for_monitor_ptr /= default_pointer then
 				c_get_dpi_for_monitor (get_dpi_for_monitor_ptr, l_monitor, Mdt_effective_dpi, $l_dpi_x, $l_dpi_y)
 				Result := [l_dpi_x/default_dpi, l_dpi_y/default_dpi]
 			end
 		end
-
 
 	dpi_for_monitor (hwnd: POINTER): INTEGER
 			-- Return the dots per inch (dpi) of a display `hwnd`.
@@ -68,7 +67,7 @@ feature -- Access
 			l_dpi_y: INTEGER
 		do
 			l_monitor := {WEL_API}.monitor_from_window ({WEL_API}.get_window (hwnd, {WEL_GW_CONSTANTS}.gw_owner), Monitor_defaulttonearest)
-			if l_monitor /= default_pointer then
+			if l_monitor /= default_pointer and then get_dpi_for_monitor_ptr /=default_pointer then
 				c_get_dpi_for_monitor (get_dpi_for_monitor_ptr, l_monitor, Mdt_effective_dpi, $l_dpi_x, $l_dpi_y)
 				Result := l_dpi_x
 			end
@@ -84,10 +83,12 @@ feature -- Access
 			l_value: INTEGER
 			l_val_res: INTEGER
 		do
-			l_res := c_set_process_dpi_awareness (set_process_dpi_awareness_ptr, process_per_monitor_dpi_aware)
-			debug
-				l_val_res := c_get_process_dpi_awareness (get_process_dpi_awareness_ptr, default_pointer, $l_value )
-				check process_dpi_awarness: l_value = process_per_monitor_dpi_aware  end
+			if set_process_dpi_awareness_ptr /= default_pointer  then
+				l_res := c_set_process_dpi_awareness (set_process_dpi_awareness_ptr, process_per_monitor_dpi_aware)
+				debug
+					l_val_res := c_get_process_dpi_awareness (get_process_dpi_awareness_ptr, default_pointer, $l_value )
+					check process_dpi_awarness: l_value = process_per_monitor_dpi_aware  end
+				end
 			end
 		end
 

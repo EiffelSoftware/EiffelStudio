@@ -1128,7 +1128,7 @@ feature {NONE} -- Drawing
 			mode_valid: {WEL_GDIP_SMOOTHING_MODE}.is_valid (mode)
 		external
 			"[
-				C++ inline use "wel_gdi_plus.h", "GdiPlusTypes.h"
+				C++ inline use "wel_gdi_plus.h"
 			]"
 		alias
 			"[
@@ -1140,9 +1140,9 @@ feature {NONE} -- Drawing
 					GdipSetSmoothingMode = GetProcAddress ((HMODULE) $handle, "GdipSetSmoothingMode");
 				}
 				if (GdipSetSmoothingMode) {
-					*(EIF_INTEGER *) $status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpGraphics *, enum SmoothingMode)) GdipSetSmoothingMode)
+					*(EIF_INTEGER *) $status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpGraphics *, INT)) GdipSetSmoothingMode)
 								((GpGraphics *) $graphics,
-								(enum SmoothingMode) $mode);
+								(INT) $mode);
 				}
 			}
 			]"
@@ -1190,7 +1190,7 @@ feature -- Obsolete
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

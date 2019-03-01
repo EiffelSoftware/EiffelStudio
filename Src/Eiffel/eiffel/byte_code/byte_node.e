@@ -1,10 +1,10 @@
 note
-	description	: "Main description of a byte code tree node. All the classes which %
+	description: "Main description of a byte code tree node. All the classes which %
 				  %describe the byte code inherit from us."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class BYTE_NODE
 
@@ -369,7 +369,7 @@ feature -- Inlining
 
 	size: INTEGER
 		do
-			Result := 0
+				-- Zero by default.
 		ensure
 			Result_greater_or_equal_to_one: Result >= 0
 		end
@@ -393,7 +393,7 @@ feature -- Inlining
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

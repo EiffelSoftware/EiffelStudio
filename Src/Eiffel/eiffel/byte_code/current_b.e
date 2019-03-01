@@ -1,5 +1,5 @@
 ﻿note
-	description: "Access to Current"
+	description: "Access to Current."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 
@@ -9,6 +9,7 @@ inherit
 
 	ACCESS_B
 		redefine
+			c_type,
 			enlarged,
 			is_current,
 			is_fast_as_local,
@@ -17,6 +18,8 @@ inherit
 			print_register,
 			register_name
 		end
+
+	SHARED_TYPE_I
 
 feature -- Visitor
 
@@ -38,6 +41,13 @@ feature
 			Result.set_frozen_mark
 		end
 
+	c_type: TYPE_C
+			-- <Precursor>
+			-- Current is always of a reference type.
+		once
+			Result := reference_c_type
+		end
+
 	is_current: BOOLEAN
 			-- This is an access to Current
 		do
@@ -55,8 +65,8 @@ feature
 			-- new enlarged tree node.
 		do
 				-- This is the root of the call tree
-			create {CURRENT_BL} Result;
-		end;
+			create {CURRENT_BL} Result
+		end
 
 	register_name: STRING
 			-- The "Current" string
@@ -87,12 +97,13 @@ feature -- IL code generation
 feature -- Inlining
 
 	pre_inlined_code: CURRENT_B
+			-- <Precursor>
 		do
 			create {INLINED_CURRENT_B} Result
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

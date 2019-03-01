@@ -890,8 +890,8 @@ feature {NONE} -- Implementation
 								end
 								if attached suppliers as s then
 										-- There is a dependance between `current_feature' and `f'.
-										-- Record it for the propagation of the recompilations
-									s.extend_depend_unit_with_level (current_class.class_id, f, 0)
+										-- Record it for the propagation of the recompilations.
+									s.extend_depend_unit_with_level (c.class_id, f, 0)
 								end
 							end
 						elseif has_error_reporting then
@@ -1087,7 +1087,7 @@ invariant
 
 note
 	ca_ignore: "CA033", "CA033 — very long class"
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

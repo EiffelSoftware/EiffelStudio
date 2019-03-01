@@ -92,7 +92,7 @@ feature -- Macros
 	rtcw_arg: STRING = "RTCW(arg"
 	rtcw_earg: STRING = "RTCW(earg"
 	rtcw_loc: STRING = "RTCW(loc"
-	rtnr: STRING = "RTNR"
+	open_rtnr: STRING = "(RTNR"
 	rtar_open: STRING = "RTAR("
 	rtal: STRING = "RTAL"
 	rtgc: STRING = "RTGC"
@@ -216,7 +216,7 @@ feature -- C language
 	volatile: STRING = "volatile"
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

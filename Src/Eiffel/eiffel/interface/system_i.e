@@ -5,6 +5,11 @@ class SYSTEM_I
 
 inherit
 	BASIC_SYSTEM_I
+	CLASS_ID_VALIDATOR
+		rename
+			has as has_existing_class_of_id,
+			is_valid as has_class_of_id
+		end
 
 	SYSTEM_SERVER
 		rename
@@ -859,6 +864,12 @@ end
 			Result := classes.valid_index (id)
 		end
 
+	has_existing_class_of_id (class_id: like {CLASS_C}.class_id): BOOLEAN
+			-- Is class of ID `id` in the system?
+		do
+			Result := attached classes [class_id]
+		end
+
 	class_of_id (id: INTEGER): CLASS_C
 			-- Class of id `id'
 		require
@@ -1398,6 +1409,74 @@ end
 			end
 				-- Update capability settings used during compilation.
 			lace.update_capability_root
+		end
+
+feature -- Modification
+
+	set_remover_off (b: BOOLEAN)
+			-- Assign `b' to `remover_off'
+		do
+			remover_off := b
+			if b then
+				remover := Void
+			end
+		ensure
+			remover_off_set: remover_off = b
+			remover_set: b implies not attached remover
+		end
+
+feature -- Final code geneation
+
+	has_trampoline (e: ROUT_ENTRY; p: like {ROUT_ENTRY}.pattern_id; t: ROUT_TABLE): BOOLEAN
+			-- Is there a trampoline for a routine entry `e` with the pattern of ID `p`
+			-- associated with a routine table `t`.
+		do
+			if attached trampoline_table [t.rout_id] as s then
+				Result := s.has (e.type_id.as_natural_64 |<< 32 + p.as_natural_64)
+			end
+		end
+
+	request_trampoline (e, c: ROUT_ENTRY; t: ROUT_TABLE)
+			-- Request generation of a trampoline for a routine entry `e`
+			-- called in the context identified by `c` associated with a routine table `t`.
+		require
+			e.pattern_id /= c.pattern_id
+		local
+			s: like trampoline_table.item
+		do
+			s := trampoline_table [t.rout_id]
+			if not attached s then
+				create s.make (1)
+				trampoline_table [t.rout_id] := s
+			end
+			s.extend (e.type_id.as_natural_64 |<< 32 + c.pattern_id.as_natural_64)
+		ensure
+			has_trampoline (e, c.pattern_id, t)
+		end
+
+	remove_trampoline (e: ROUT_ENTRY; p: like {ROUT_ENTRY}.pattern_id; t: ROUT_TABLE)
+			-- Remove the trampoline for a routine entry `e` with the pattern of ID `p`
+			-- associated with a routine table `t`.
+		require
+			has_trampoline (e, p, t)
+		do
+			if attached trampoline_table [t.rout_id] as s then
+				s.prune (e.type_id.as_natural_64 |<< 32 + p.as_natural_64)
+				if s.is_empty then
+					trampoline_table.remove (t.rout_id)
+				end
+			end
+		ensure
+			not has_trampoline (e, p, t)
+		end
+
+feature {NONE} -- Final code geneation
+
+	trampoline_table: HASH_TABLE [ARRAYED_SET [NATURAL_64], like {ROUT_TABLE}.rout_id]
+			-- Trampolines to be generated, indexed by routine ID,
+			-- with sets of values built from pairs of type IDs and context pattern IDs.
+		once
+			create Result.make (0)
 		end
 
 feature -- ANY.default_rescue routine id
@@ -2871,7 +2950,7 @@ feature -- IL code generation
 				externals.freeze
 				freezing_occurred := True
 				old_remover_off := remover_off
-				remover_off := True
+				set_remover_off (True)
 
 				if in_final_mode then
 					create {FINAL_MAKER} makefile_generator.make
@@ -2882,7 +2961,7 @@ feature -- IL code generation
 				externals.generate_il (makefile_generator)
 				close_log_files
 
-				remover_off := old_remover_off
+				set_remover_off (old_remover_off)
 
 				if not in_final_mode then
 					is_freeze_requested := False
@@ -3110,6 +3189,7 @@ feature -- Final mode generation
 		do
 			eiffel_project.terminate_c_compilation
 			if not retried and then is_finalization_needed then
+				trampoline_table.wipe_out
 				create skeleton_table.make (400)
 				if not il_generation then
 					internal_retrieved_finalized_type_mapping := Void
@@ -3175,8 +3255,8 @@ feature -- Final mode generation
 					old_array_optimization_on := array_optimization_on
 
 						-- Should dead code be removed?
-					if not remover_off then
-						remover_off := keep_assertions
+					if not old_remover_off then
+						set_remover_off (keep_assertions)
 					end
 
 					if not exception_stack_managed then
@@ -3258,7 +3338,7 @@ feature -- Final mode generation
 					Server_controler.set_remove_right_away (False)
 
 						-- Restore previous value
-					remover_off := old_remover_off
+					set_remover_off (old_remover_off)
 					exception_stack_managed := old_exception_stack_managed
 					inlining_on := old_inlining_on
 					array_optimization_on := old_array_optimization_on
@@ -3290,7 +3370,7 @@ feature -- Final mode generation
 			successful := False
 
 				-- Restore previous value.
-			remover_off := old_remover_off
+			set_remover_off (old_remover_off)
 			exception_stack_managed := old_exception_stack_managed
 			inlining_on := old_inlining_on
 			array_optimization_on := old_array_optimization_on
@@ -3648,14 +3728,22 @@ feature {NONE} -- Finalization implementation
 
 feature -- Dead code removal
 
+	is_basic_class_alive: BOOLEAN = True
+			-- Is basic class included in the system?
+
+	is_string_class_alive: BOOLEAN = True
+			-- Are string classes for manifest strings included in the system?
+
+	is_array_class_alive: BOOLEAN = True
+			-- Is array class included in the system?
+
+	is_tuple_class_alive: BOOLEAN = True
+			-- Is tuple class included in the system?
+
 	remove_dead_code
 			-- Dead code removal
 		local
-			class_array: ARRAY [CLASS_C]
-			i, nb: INTEGER
-			l_class: CLASS_C
-			ct: CLASS_TYPE
-			l_feature_table: FEATURE_TABLE
+			visible_classes: ARRAYED_LIST [CLASS_C]
 		do
 				-- Note: To have dead code removal working when assertions are enabled
 				-- we need to perform two things:
@@ -3665,170 +3753,204 @@ feature -- Dead code removal
 
 			create remover.make
 
+				-- Mark classes that are known by the run-time.
+			if is_basic_class_alive then
+				remover.mark_class_alive (boolean_class.compiled_class.class_id)
+				remover.mark_class_alive (character_8_class.compiled_class.class_id)
+				remover.mark_class_alive (character_32_class.compiled_class.class_id)
+				remover.mark_class_alive (integer_8_class.compiled_class.class_id)
+				remover.mark_class_alive (integer_16_class.compiled_class.class_id)
+				remover.mark_class_alive (integer_32_class.compiled_class.class_id)
+				remover.mark_class_alive (integer_64_class.compiled_class.class_id)
+				remover.mark_class_alive (natural_8_class.compiled_class.class_id)
+				remover.mark_class_alive (natural_16_class.compiled_class.class_id)
+				remover.mark_class_alive (natural_32_class.compiled_class.class_id)
+				remover.mark_class_alive (natural_64_class.compiled_class.class_id)
+				remover.mark_class_alive (pointer_class.compiled_class.class_id)
+				remover.mark_class_alive (real_32_class.compiled_class.class_id)
+				remover.mark_class_alive (real_64_class.compiled_class.class_id)
+				remover.mark_class_alive (typed_pointer_class.compiled_class.class_id)
+			end
+			if is_string_class_alive then
+				remover.mark_class_alive (string_8_id)
+				remover.mark_class_alive (string_32_id)
+			end
+			if is_array_class_alive then
+				remover.mark_class_alive (array_id)
+			end
+			if is_tuple_class_alive then
+				remover.mark_class_alive (tuple_id)
+			end
+
+			remover.mark_class_alive (exception_class_id)
+			remover.mark_class_alive (ise_exception_manager_class_id)
+
 			if array_optimization_on then
 				remover.record_array_descendants
+			end
+
+				-- It is more efficient to mark classes before marking features.
+			create visible_classes.make (0)
+			across
+				classes as cc
+			loop
+				if
+					attached cc.item as c and then
+					(c.is_precompiled implies c.is_in_system) and then
+					c.visible_level.has_visible
+				then
+					c.mark_visible_class (remover)
+					visible_classes.extend (c)
+				end
 			end
 
 				-- First, inspection of the Eiffel code
 			root_creators.do_all (
 				agent (a_root: SYSTEM_ROOT)
 					local
-						l_cl: CLASS_C
-						l_ft: FEATURE_I
+						f: FEATURE_I
+						c: CLASS_C
 					do
 						if not a_root.procedure_name.is_empty and not a_root.is_explicit then
 							check
 								valid_root: a_root.is_class_type_set
 							end
-							l_cl := a_root.class_type.base_class
-							l_ft := l_cl.feature_table.item (a_root.procedure_name)
-							remover.record (l_ft, l_cl)
+							c := a_root.class_type.base_class
+								-- An object of a root class is created automatically.
+							remover.mark_class_alive (c.class_id)
+							f := c.feature_table.item (a_root.procedure_name)
+							if f.argument_count > 0 then
+									-- Arguments are created automatically.
+								remover.mark_class_alive (array_id)
+								remover.mark_class_alive (string_8_id)
+							end
+							remover.register_monomorphic (f, c.class_id)
 						end
 					end)
 
-			remover.mark_dispose
-			remover.mark_copy
-			class_array := classes
-			nb := class_counter.count
-			from i := 1 until i > nb loop
-				l_class := class_array.item (i)
-				if
-					l_class /= Void and then
-					(not l_class.is_precompiled or else l_class.is_in_system)
-				then
-					if l_class.visible_level.has_visible then
-						l_class.mark_visible (remover)
-					end
-				end
-				i := i + 1
+			register_polymorphic ({PREDEFINED_NAMES}.dispose_name_id, disposable_class)
+			register_polymorphic ({PREDEFINED_NAMES}.copy_name_id, any_class)
+			register_polymorphic ({PREDEFINED_NAMES}.is_equal_name_id, any_class)
+
+			across
+				visible_classes as c
+			loop
+				c.item.mark_visible_features (remover)
 			end
 
 			if has_expanded then
-				from
-					i := 1
-					nb := Type_id_counter.value
-				until
-					i > nb
+				across
+					class_types as cc
 				loop
-					ct := class_types.item (i)
-					if ct /= Void then
-						ct.mark_creation_routine (remover)
+					if attached cc.item as c then
+						c.mark_creation_routine (remover)
 					end
-					i := i + 1
 				end
 			end
 
-				-- Protection of `make' from ARRAY
-			l_class := array_class.compiled_class
-			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.Make_name_id), l_class)
+				-- Protection of `make' from ARRAY.
+			register_monomorphic ({PREDEFINED_NAMES}.Make_name_id, array_class)
 
-				-- Protection of `to_array' from SPECIAL
-			l_class := special_class.compiled_class
-			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.to_array_name_id), l_class)
+				-- Protection of `to_array' from SPECIAL.
+			register_monomorphic ({PREDEFINED_NAMES}.to_array_name_id, special_class)
 
 				-- Protection of feature `make' of class STRING.
-			l_class := string_8_class.compiled_class
-			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.Make_name_id), l_class)
+			register_monomorphic ({PREDEFINED_NAMES}.Make_name_id, string_8_class)
 
 				-- Protection of feature `make' of class STRING_32.
-			l_class := string_32_class.compiled_class
-			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.Make_name_id), l_class)
+			register_monomorphic ({PREDEFINED_NAMES}.Make_name_id, string_32_class)
 
-				-- Protection of ROUTINE class features
-			l_class := routine_class.compiled_class
-			l_feature_table := l_class.feature_table
-			remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.set_rout_disp_name_id), l_class)
-			remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.set_rout_disp_final_name_id), l_class)
+				-- Protection of ROUTINE class features.
+			register_polymorphic ({PREDEFINED_NAMES}.set_rout_disp_final_name_id, routine_class)
 
-				-- Protection of ISE_EXCEPTION_MANAGER class features
-			l_class := ise_exception_manager_class.compiled_class
-			l_feature_table := l_class.feature_table
-			remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.last_exception_name_id), l_class)
-			remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.set_last_exception_name_id), l_class)
-			remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.set_exception_data_name_id), l_class)
-			remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.is_code_ignored_name_id), l_class)
-			remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.once_raise_name_id), l_class)
-			remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.init_exception_manager_name_id), l_class)
-			remover.record (l_feature_table.item_id ({PREDEFINED_NAMES}.free_preallocated_trace_name_id), l_class)
+				-- Protection of ISE_EXCEPTION_MANAGER class features.
+			register_monomorphic ({PREDEFINED_NAMES}.last_exception_name_id, ise_exception_manager_class)
+			register_monomorphic ({PREDEFINED_NAMES}.set_last_exception_name_id, ise_exception_manager_class)
+			register_monomorphic ({PREDEFINED_NAMES}.set_exception_data_name_id, ise_exception_manager_class)
+			register_monomorphic ({PREDEFINED_NAMES}.is_code_ignored_name_id, ise_exception_manager_class)
+			register_monomorphic ({PREDEFINED_NAMES}.once_raise_name_id, ise_exception_manager_class)
+			register_monomorphic ({PREDEFINED_NAMES}.init_exception_manager_name_id, ise_exception_manager_class)
+			register_monomorphic ({PREDEFINED_NAMES}.free_preallocated_trace_name_id, ise_exception_manager_class)
 
-				-- Protection of feature `is_equal' of ANY
-			l_class := any_class.compiled_class
-			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.is_equal_name_id), l_class)
+				-- Protection of feature `internal_correct_mismatch' of ANY.
+			register_polymorphic ({PREDEFINED_NAMES}.Internal_correct_mismatch_name_id, any_class)
 
-				-- Protection of feature `internal_correct_mismatch' of ANY
-			l_class := any_class.compiled_class
-			if attached l_class.feature_table.item_id ({PREDEFINED_NAMES}.Internal_correct_mismatch_name_id) as l_feat then
-				remover.record (l_feat, l_class)
-			end
+				-- Protection of feature `twin' of ANY.
+			register_polymorphic ({PREDEFINED_NAMES}.twin_name_id, any_class)
 
-				-- Protection of feature `twin' of ANY
-			l_class := any_class.compiled_class
-			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.twin_name_id), l_class)
+				-- Protection of feature `set_item' of `reference BOOLEAN'.
+			register_polymorphic ({PREDEFINED_NAMES}.set_item_name_id, boolean_class)
 
-				-- Protection of feature `set_item' of `reference BOOLEAN'
-			l_class := boolean_class.compiled_class
-			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id), l_class)
+				-- Protection of feature `set_item' of `reference CHARACTER'.
+			register_polymorphic ({PREDEFINED_NAMES}.set_item_name_id, character_8_class)
 
-				-- Protection of feature `set_item' of `reference CHARACTER'
-			l_class := character_8_class.compiled_class
-			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id), l_class)
+				-- Protection of feature `set_item' of `reference WIDE_CHARACTER'.
+			register_polymorphic ({PREDEFINED_NAMES}.set_item_name_id, character_32_class)
 
-				-- Protection of feature `set_item' of `reference WIDE_CHARACTER'
-			l_class := character_32_class.compiled_class
-			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id), l_class)
+				-- Protection of feature `set_item' of `reference POINTER'.
+			register_polymorphic ({PREDEFINED_NAMES}.set_item_name_id, pointer_class)
 
-				-- Protection of feature `set_item' of `reference POINTER'
-			l_class := pointer_class.compiled_class
-			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id), l_class)
+				-- Protection of feature `set_item' of `reference TYPED_POINTER_ [G]'.
+			register_polymorphic ({PREDEFINED_NAMES}.set_item_name_id, typed_pointer_class)
 
-				-- Protection of feature `set_item' of `reference TYPED_POINTER_ [G]'
-			l_class := typed_pointer_class.compiled_class
-			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id), l_class)
+				-- Protection of feature `set_item' of `reference REAL'.
+			register_polymorphic ({PREDEFINED_NAMES}.set_item_name_id, real_32_class)
 
-				-- Protection of feature `set_item' of `reference REAL'
-			l_class := real_32_class.compiled_class
-			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id), l_class)
+				-- Protection of feature `set_item' of `reference DOUBLE'.
+			register_polymorphic ({PREDEFINED_NAMES}.set_item_name_id, real_64_class)
 
-				-- Protection of feature `set_item' of `reference DOUBLE'
-			l_class := real_64_class.compiled_class
-			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id), l_class)
+				-- Protection of feature `set_item' of `reference NATURAL_8'.
+			register_polymorphic ({PREDEFINED_NAMES}.set_item_name_id, natural_8_class)
 
-				-- Protection of feature `set_item' of `reference NATURAL_8'
-			l_class := natural_8_class.compiled_class
-			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id), l_class)
+				-- Protection of feature `set_item' of `reference NATURAL_16'.
+			register_polymorphic ({PREDEFINED_NAMES}.set_item_name_id, natural_16_class)
 
-				-- Protection of feature `set_item' of `reference NATURAL_16'
-			l_class := natural_16_class.compiled_class
-			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id), l_class)
+				-- Protection of feature `set_item' of `reference NATURAL_32'.
+			register_polymorphic ({PREDEFINED_NAMES}.set_item_name_id, natural_32_class)
 
-				-- Protection of feature `set_item' of `reference NATURAL_32'
-			l_class := natural_32_class.compiled_class
-			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id), l_class)
+				-- Protection of feature `set_item' of `reference NATURAL_64'.
+			register_polymorphic ({PREDEFINED_NAMES}.set_item_name_id, natural_64_class)
 
-				-- Protection of feature `set_item' of `reference NATURAL_64'
-			l_class := natural_64_class.compiled_class
-			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id), l_class)
+				-- Protection of feature `set_item' of `reference INTEGER_8'.
+			register_polymorphic ({PREDEFINED_NAMES}.set_item_name_id, integer_8_class)
 
-				-- Protection of feature `set_item' of `reference INTEGER_8'
-			l_class := integer_8_class.compiled_class
-			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id), l_class)
+				-- Protection of feature `set_item' of `reference INTEGER_16'.
+			register_polymorphic ({PREDEFINED_NAMES}.set_item_name_id, integer_16_class)
 
-				-- Protection of feature `set_item' of `reference INTEGER_16'
-			l_class := integer_16_class.compiled_class
-			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id), l_class)
+				-- Protection of feature `set_item' of `reference INTEGER_32'.
+			register_polymorphic ({PREDEFINED_NAMES}.set_item_name_id, integer_32_class)
 
-				-- Protection of feature `set_item' of `reference INTEGER_32'
-			l_class := integer_32_class.compiled_class
-			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id), l_class)
+				-- Protection of feature `set_item' of `reference INTEGER_64'.
+			register_polymorphic ({PREDEFINED_NAMES}.set_item_name_id, integer_64_class)
 
-				-- Protection of feature `set_item' of `reference INTEGER_64'
-			l_class := integer_64_class.compiled_class
-			remover.record (l_class.feature_table.item_id ({PREDEFINED_NAMES}.set_item_name_id), l_class)
-
+			remover.analyze
 debug ("DEAD_CODE")
 			remover.dump_alive
-			remover.dump_marked
 end
+		end
+
+	register_monomorphic  (n: INTEGER; i: detachable CLASS_I)
+			-- Register a non-polymorphic call to a feature of name `n` on a target of class `i`.
+		do
+			if
+				attached i and then
+				attached i.compiled_class as c and then
+				attached c.feature_table.item_id (n) as f
+			then
+				remover.register_monomorphic (f, c.class_id)
+			end
+		end
+
+	register_polymorphic (n: INTEGER; i: detachable CLASS_I)
+			-- Register a polymorphic call to a feature of name `n` on a target of a type with a base class `i`.
+		do
+			if
+				attached i and then
+				attached i.compiled_class as c and then
+				attached c.feature_table.item_id (n) as f
+			then
+				remover.register_polymorphic (f, c.class_id)
+			end
 		end
 
 	is_used (f: FEATURE_I): BOOLEAN
@@ -3836,7 +3958,23 @@ end
 		require
 			good_argument: f /= Void
 		do
-			Result := remover_off or else remover.is_alive (f.body_index)
+			Result := attached remover as r implies remover.is_code_reachable (f.body_index)
+		end
+
+	is_class_reachable (c: CLASS_C): BOOLEAN
+			-- Are features of the class `c` potentially reachable during execution?
+			-- E.g., are there live decendants (including the class itself) or is the class used in a non-object call?
+		require
+			in_final_mode
+		do
+			Result :=
+				if attached system.remover as r then
+						-- Use reachability information from the remover.
+					r.is_class_reachable (c.class_id)
+				else
+						-- Use general information about class usage.
+					c.is_precompiled implies c.is_in_system
+				end
 		end
 
 feature -- Generation
@@ -4176,6 +4314,7 @@ feature -- Generation
 			l_encoder: like encoder
 			l_processed: HASH_TABLE [BOOLEAN, INTEGER]
 			l_done: BOOLEAN
+			trampoline_code: NATURAL_64
 		do
 			l_buf := generation_buffer
 			l_header_buf := header_generation_buffer
@@ -4183,8 +4322,9 @@ feature -- Generation
 			l_encoder := encoder
 
 				-- Generate tables and their initialization routines.
-			Attr_generator.init (l_buf)
-			Rout_generator.init (l_header_buf)
+			attr_generator.init (l_buf)
+			rout_generator.init (l_header_buf)
+			rout_generator.reset_counter
 
 			used := Eiffel_table.used
 			used_for_types := Eiffel_table.used_for_types
@@ -4226,8 +4366,23 @@ feature -- Generation
 			generate_copy_table
 			generate_is_equal_table
 
-			Attr_generator.finish
-			Rout_generator.finish
+			attr_generator.finish
+			rout_generator.finish
+
+			trampoline_generator.init (l_buf)
+			across
+				trampoline_table.twin as t
+			loop
+				if attached {ROUT_TABLE} l_tmp_poly_server.item (t.key) as r then
+					across
+						t.item.twin as s
+					loop
+						trampoline_code := s.item
+						r.generate_trampoline ((trampoline_code |>> 32).as_integer_32, (trampoline_code & 0xFFFFFFFF).as_integer_32, trampoline_generator)
+					end
+				end
+			end
+			trampoline_generator.finish
 
 				-- Call initialization routines for all tables used in system.
 
@@ -4825,19 +4980,18 @@ feature -- Generation
 		end
 
 	generate_initialization_table
-			-- Generate table of initialization routines for composite objects
+			-- Generate table of initialization routines for composite objects.
 		local
 			rout_table: ROUT_TABLE
 			rout_entry: ROUT_ENTRY
 			i, nb: INTEGER
-			class_type: CLASS_TYPE
 			l_void: VOID_A
 			l_c_pattern_id: INTEGER
 			l_arg_types: SPECIAL [TYPE_C]
 		do
-			if remover /= Void then
+			if attached remover as r then
 					-- Ensure that initialization routines are marked `used'.
-				remover.used_table.put (True, body_index_counter.initialization_body_index)
+				r.mark_code_reachable (body_index_counter.initialization_body_index)
 			end
 			i := 1
 			nb := Type_id_counter.value
@@ -4856,22 +5010,28 @@ feature -- Generation
 				until
 					i > nb
 				loop
-					class_type := class_types.item (i)
-					if class_type /= Void and then class_type.has_creation_routine then
-						create rout_entry
-						rout_entry.set_type_id (i)
-						rout_entry.set_type (l_void)
-						rout_entry.set_access_type_id (i)
-						rout_entry.set_pattern_id (l_c_pattern_id)
-						rout_entry.set_body_index (body_index_counter.initialization_body_index)
+					if
+						attached class_types.item (i) as class_type
+						and then class_type.has_creation_routine
+					then
+						create rout_entry.make
+							(l_void,
+							i,
+							0,
+							False,
+							body_index_counter.initialization_body_index,
+							l_c_pattern_id,
+							i,
+							class_type.associated_class.class_id,
+							class_type.associated_class.class_id,
+							class_type.associated_class.class_id)
 						rout_table.extend (rout_entry)
 					end
 					i := i + 1
 				end
 				rout_table.sort
 			end
-			rout_table.generate_full (routine_id_counter.initialization_rout_id,
-				header_generation_buffer)
+			rout_table.generate_full (routine_id_counter.initialization_rout_id, header_generation_buffer)
 		end
 
 	generate_expanded_creation_table
@@ -4880,42 +5040,31 @@ feature -- Generation
 			rout_table: ROUT_TABLE
 			rout_entry: ROUT_ENTRY
 			i, nb: INTEGER
-			class_type: CLASS_TYPE
 			l_class: CLASS_C
-			l_void: VOID_A
 		do
 			from
 				create rout_table.make (routine_id_counter.creation_rout_id)
-				create l_void
 				i := 1
 				nb := Type_id_counter.value
 				rout_table.create_block (nb)
 			until
 				i > nb
 			loop
-				class_type := class_types.item (i)
-				if class_type /= Void then
+				if attached class_types.item (i) as class_type then
 					l_class := class_type.associated_class
 					if
-						(l_class.is_used_as_expanded and l_class.creation_feature /= Void) and then
-						(l_class.creation_feature.is_external or else not l_class.creation_feature.is_empty)
+						l_class.is_used_as_expanded and then
+						attached l_class.creation_feature as f and then
+						(f.is_external or else not f.is_empty)
 					then
-						create rout_entry
-						rout_entry.set_type_id (i)
-						rout_entry.set_type (l_void)
-						rout_entry.set_access_type_id (
-							class_type.type.implemented_type (l_class.creation_feature.written_in).type_id (Void))
-						rout_entry.set_pattern_id (pattern_table.c_pattern_id_in (l_class.creation_feature.pattern_id,
-							rout_entry.access_class_type))
-						rout_entry.set_body_index (l_class.creation_feature.body_index)
+						rout_entry := l_class.creation_feature.new_rout_entry (class_type, l_class.class_id)
 						rout_table.extend (rout_entry)
 					end
 				end
 				i := i + 1
 			end
 			rout_table.sort
-			rout_table.generate_full (routine_id_counter.creation_rout_id,
-													header_generation_buffer)
+			rout_table.generate_full (routine_id_counter.creation_rout_id, header_generation_buffer)
 		end
 
 feature -- Dispose routine
@@ -6190,6 +6339,9 @@ feature {NONE} -- External features
 		alias
 			"time"
 		end
+
+invariant
+	attached remover implies not remover_off
 
 note
 	date: "$Date$"

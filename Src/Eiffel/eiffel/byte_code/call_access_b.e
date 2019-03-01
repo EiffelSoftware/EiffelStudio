@@ -16,7 +16,8 @@ inherit
 			generate_parameters,
 			generate_finalized_separate_call_args,
 			generate_workbench_separate_call_args,
-			generate_workbench_separate_call_get_result
+			generate_workbench_separate_call_get_result,
+			pre_inlined_code
 		end
 
 	SHARED_NAMES_HEAP
@@ -254,7 +255,7 @@ feature -- Byte code generation
 			type_i := context_type
 				-- Special provision is made for calls on basic types
 				-- (they have to be themselves known by the compiler).
-				-- Note: Manu 08/08/2002: if `precursor_type' is not Void, it can only means
+				-- Note: Manu 08/08/2002: if `precursor_type' is not Void, it can only mean
 				-- that we are currently performing a static access call on a feature
 				-- from a basic class. Assuming otherwise is not correct as you
 				-- cannot seriously inherit from a basic class.
@@ -342,6 +343,31 @@ feature -- Byte code generation
 				basic_type.c_type.generate_access_cast (buf)
 			end
 			generate_end (gen_reg, class_type)
+		end
+
+feature {NONE} -- Finalized C code generation: inlining
+
+	pre_inlined_code: CALL_B
+			-- <Precursor>
+		local
+			inlined_current_b: INLINED_CURRENT_B
+		do
+			if attached parent then
+					-- Inlining is done by updating the parent.
+				Result := Current
+			else
+					-- Use an inline current instead of the regular one.
+				create parent
+				create inlined_current_b
+				parent.set_target (inlined_current_b)
+				inlined_current_b.set_parent (parent)
+				parent.set_message (Current)
+				Result := parent
+			end
+			if attached parameters as p then
+					-- Update paramaters.
+				set_parameters (p.pre_inlined_code)
+			end
 		end
 
 feature {NONE} -- C code generation
@@ -494,7 +520,7 @@ feature {NONE} -- Separate call
 				-- Generate the feature name.
 			buf := buffer
 			target_type := context_type
-			array_index := Eiffel_table.is_polymorphic (routine_id, target_type, Context.context_class_type, True)
+			array_index := Eiffel_table.is_polymorphic_for_body (routine_id, target_type, Context.context_class_type)
 			if array_index = -2 then
 					-- Call to a deferred feature without implementation
 				buf.put_string ("NULL")
@@ -594,14 +620,15 @@ feature {NONE} -- Debug
 
 feature {NONE} -- Implementation
 
-	byte_node (f: FEATURE_I; a_context_type: TYPE_A): ACCESS_B
-			-- Byte node for the context feature `f' called on type `a_context_type'
+	byte_node (f: FEATURE_I; is_separate: BOOLEAN): ACCESS_B
+			-- Byte node for the context feature `f` called on a type
+			-- that is separate or not depending on `is_separate`.
 		require
 			f_not_void: f /= Void
 		local
 			p: like parent
 		do
-			Result := f.access (type, p /= Void, a_context_type.is_separate)
+			Result := f.access (type, p /= Void, is_separate)
 			p := parent
 			if p /= Void then
 				Result.set_parent (p)
@@ -618,7 +645,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -12,9 +12,12 @@ class
 	EIFFEL_HISTORY
 
 inherit
-	SHARED_SERVER
-
 	COMPILER_EXPORTER
+	INTERNAL_COMPILER_STRING_EXPORTER
+	SHARED_BYTE_CONTEXT
+	SHARED_DECLARATIONS
+	SHARED_GENERATION
+	SHARED_SERVER
 
 create
 	make
@@ -54,7 +57,8 @@ feature -- Process
 	start_degree_minus_3 (count: INTEGER)
 			-- Create the data structures which are going to be used at degree -3.
 		do
-			create is_polymorphic_table.make_filled (Void, 0, count)
+			create is_polymorphic_offset_table.make_filled (count)
+			create is_polymorphic_body_table.make_filled (count)
 			create min_id_table.make_filled (0, 0, count)
 		end
 
@@ -68,20 +72,19 @@ feature -- Status
 			Result := tmp_poly_server.has (a_rout_id)
 		end
 
-	is_polymorphic (rout_id: INTEGER; class_type: TYPE_A; a_context_type: CLASS_TYPE; used_requested: BOOLEAN): INTEGER
-			-- If the entry <`rout_id',`class_type'> is polymorphic, we return
+	is_polymorphic_for_offset (rout_id: INTEGER; class_type: TYPE_A; a_context_type: CLASS_TYPE): INTEGER
+			-- If the entry <`rout_id',`class_type'> is polymorphic to access an attribute, we return
 			-- `min_used' if `used_requested', `min_type_id' otherwise.
 			-- If the entry is not polymorphic we return `-1'.
 			-- If the entry does not have a polymorphic table, we return `-2'
 		require
-			is_polymorphic_table_exists: is_polymorphic_table /= Void
+			is_polymorphic_table_exists: attached is_polymorphic_offset_table
 			positive_rout_id: rout_id > 0
 		local
 			bool_array: PACKED_BOOLEANS
-			status: BOOLEAN
-			entry: POLY_TABLE [ENTRY]
 			min_id: INTEGER
 			class_type_id: INTEGER
+			is_generic: BOOLEAN
 		do
 			if class_type.is_expanded then
 					-- Call on an expanded type is not polymorphic.
@@ -95,14 +98,13 @@ feature -- Status
 					-- for non-generic ancestor/descendants implementing `rout_id'.
 					-- As for storing the information we could use the buffered information
 					-- if the actuals were all expanded.
-				if rout_id <= is_polymorphic_table.upper and class_type.generics = Void then
-					bool_array := is_polymorphic_table.item (rout_id)
+				is_generic := attached class_type.generics
+				if not is_generic and then rout_id <= is_polymorphic_offset_table.upper then
+					bool_array := is_polymorphic_offset_table [rout_id]
 				end
-
-				if bool_array /= Void then
+				if attached bool_array then
 						-- Compute minimum class type id for current `rout_id'.
 					min_id := min_id_table.item (rout_id)
-
 						-- We already have computed something for this polymorphic
 						-- table, we just need to search for the requested `class_type_id'
 						-- to know if we can retrieve the value or if we had to compute it.
@@ -112,72 +114,157 @@ feature -- Status
 					else
 						Result := is_feature_not_yet_computed
 					end
-
 					if Result = is_feature_not_yet_computed then
 							-- The entry has not yet been computed
-						entry := poly_table (rout_id)
-						status := entry.is_polymorphic (class_type, a_context_type)
-						if class_type_id >= min_id then
-							put_value (bool_array, class_type_id - min_id, status)
-						end
-						if status then
-							Result := min_id
+						if attached {ATTR_TABLE [ATTR_ENTRY]} tmp_poly_server.item (rout_id) as t then
+							Result := t.polymorphic_status_for_offset (class_type, a_context_type)
+							if Result /= -2 then
+								if class_type_id >= min_id then
+									put_value (bool_array, class_type_id - min_id, Result = 0)
+								end
+								if Result = 0 then
+									Result := min_id
+								end
+							end
 						else
-							Result := - 1
+							Result := -1
 						end
 					elseif Result = is_feature_polymorphic then
 						Result := min_id
 					else
 						Result := -1
 					end
-				elseif has_poly_table (rout_id) then
+				elseif attached {ATTR_TABLE [ATTR_ENTRY]} tmp_poly_server.item (rout_id) as t then
 						-- First time, the information for <`rout_id',`class_type_id'> is requested
-					entry := poly_table (rout_id)
-
-					if entry.is_deferred then
-							-- All routines of the table are deferred.
-						Result := -2
-					else
+					Result := t.polymorphic_status_for_offset (class_type, a_context_type)
+					if Result /= -2 then
 							-- Store the polymorphic status of the searched entry.
-						status := entry.is_polymorphic (class_type, a_context_type)
-
 							-- When we are handling with a ROUT_TABLE, we need to store
 							-- the `min_used' id, otherwise its enough to store the
 							-- `min_type_id'.
-						if used_requested then
-							min_id := entry.min_used - 1
-						else
-							min_id := entry.min_type_id - 1
-						end
+						min_id := t.min_type_id - 1
 						min_id_table.put (min_id, rout_id)
-
 							-- We can only buffer when the target of the call is not generic.
-							--| Fixme: we could still buffer if all the actual generic parameters are expanded.
-						if class_type.generics = Void then
+							-- TODO: we could still buffer if all the actual generic parameters are expanded.
+						if not is_generic then
 								-- Create packed booleans array with bounds `2 * min_id'
 								-- to `2 * entry.max_type_id'. `2' is because for each entry we store
 								-- two informations: `is_computed' and then `is_polymorphic'.
-							create bool_array.make (2 * (entry.max_type_id - min_id))
-
+							create bool_array.make (2 * (t.max_type_id - min_id))
 								-- Store the value in the C array.
 							class_type_id := class_type.type_id (a_context_type.type)
 							if class_type_id >= min_id then
-								put_value (bool_array, class_type_id - min_id, status)
+								put_value (bool_array, class_type_id - min_id, Result = 0)
 							end
-
 								-- Insert the new computed table in the array of computed tables.
-							is_polymorphic_table.put (bool_array, rout_id)
+							is_polymorphic_offset_table [rout_id] := bool_array
 						end
-
 							-- Return the result
-						if status then
+						if Result = 0 then
 							Result := min_id
-						else
-							Result := -1
 						end
 					end
 				else
-						--| Note: it might occurs with object relative once
+						-- Note: it might occur with object relative once.
+					Result := -1
+				end
+			end
+		end
+
+	is_polymorphic_for_body (rout_id: INTEGER; class_type: TYPE_A; a_context_type: CLASS_TYPE): INTEGER
+			-- If the entry <`rout_id',`class_type'> is polymorphic to access a routine, we return
+			-- `min_used' if `used_requested', `min_type_id' otherwise.
+			-- If the entry is not polymorphic we return `-1'.
+			-- If the entry does not have a polymorphic table, we return `-2'
+		require
+			is_polymorphic_table_exists: attached is_polymorphic_body_table
+			positive_rout_id: rout_id > 0
+		local
+			bool_array: PACKED_BOOLEANS
+			min_id: INTEGER
+			class_type_id: INTEGER
+			is_generic: BOOLEAN
+		do
+			if class_type.is_expanded then
+					-- Call on an expanded type is not polymorphic.
+				Result := -1
+			else
+					-- Get the array corresponding to the searched value
+					-- if it is a valid `rout_id'.
+					--
+					-- Note: we check for voidness of `class_type.generics' as we cannot
+					-- used the buffered information in that case which could exist
+					-- for non-generic ancestor/descendants implementing `rout_id'.
+					-- As for storing the information we could use the buffered information
+					-- if the actuals were all expanded.
+				is_generic := attached class_type.generics
+				if not is_generic and then rout_id <= is_polymorphic_body_table.upper then
+					bool_array := is_polymorphic_body_table [rout_id]
+				end
+				if attached bool_array then
+						-- Compute minimum class type id for current `rout_id'.
+					min_id := min_id_table.item (rout_id)
+						-- We already have computed something for this polymorphic
+						-- table, we just need to search for the requested `class_type_id'
+						-- to know if we can retrieve the value or if we had to compute it.
+					class_type_id := class_type.type_id (a_context_type.type)
+					if class_type_id >= min_id then
+						Result := get_value (bool_array, class_type_id - min_id)
+					else
+						Result := is_feature_not_yet_computed
+					end
+					if Result = is_feature_not_yet_computed then
+							-- The entry has not yet been computed
+						if attached {ROUT_TABLE} tmp_poly_server.item (rout_id) as t then
+							Result := t.polymorphic_status_for_body (class_type, a_context_type)
+							if Result /= -2 then
+								if class_type_id >= min_id then
+									put_value (bool_array, class_type_id - min_id, Result = 0)
+								end
+								if Result = 0 then
+									Result := min_id
+								end
+							end
+						else
+							Result := -1
+						end
+					elseif Result = is_feature_polymorphic then
+						Result := min_id
+					else
+						Result := -1
+					end
+				elseif attached {ROUT_TABLE} tmp_poly_server.item (rout_id) as t then
+						-- First time, the information for <`rout_id',`class_type_id'> is requested
+					Result := t.polymorphic_status_for_body (class_type, a_context_type)
+					if Result /= -2 then
+							-- Store the polymorphic status of the searched entry.
+							-- When we are handling with a ROUT_TABLE, we need to store
+							-- the `min_used' id, otherwise its enough to store the
+							-- `min_type_id'.
+						min_id := t.min_used - 1
+						min_id_table.put (min_id, rout_id)
+							-- We can only buffer when the target of the call is not generic.
+							-- TODO: we could still buffer if all the actual generic parameters are expanded.
+						if not is_generic then
+								-- Create packed booleans array with bounds `2 * min_id'
+								-- to `2 * entry.max_type_id'. `2' is because for each entry we store
+								-- two informations: `is_computed' and then `is_polymorphic'.
+							create bool_array.make (2 * (t.max_type_id - min_id))
+								-- Store the value in the C array.
+							class_type_id := class_type.type_id (a_context_type.type)
+							if class_type_id >= min_id then
+								put_value (bool_array, class_type_id - min_id, Result = 0)
+							end
+								-- Insert the new computed table in the array of computed tables.
+							is_polymorphic_body_table [rout_id] := bool_array
+						end
+							-- Return the result
+						if Result = 0 then
+							Result := min_id
+						end
+					end
+				else
+						-- Note: it might occur with object relative once.
 					Result := -1
 				end
 			end
@@ -207,17 +294,65 @@ feature -- Element change
 			-- Wipe out the structure
 		do
 			min_id_table := Void
-			is_polymorphic_table := Void
+			is_polymorphic_offset_table := Void
+			is_polymorphic_body_table := Void
 			used.clear_all
 			used_for_routines.clear_all
 			used_for_types.clear_all
 		end
 
-feature -- Implementation
+feature -- C code generation
 
-	is_polymorphic_table: ARRAY [detachable PACKED_BOOLEANS]
-			-- Array of arrays which knows if a certain
-			-- routine id in a certain type id is polymorphic or not.
+	generate_offset (routine_id: like {ROUT_TABLE}.rout_id; register: REGISTRABLE; target_type: TYPE_A; context_type: CLASS_TYPE; buffer: GENERATION_BUFFER)
+			-- Generate an expression that adds the offset of the attribute of routine ID `routine_id`
+			-- called on the register `register`of the type `target_type` in the context `context_type` into `buffer`.
+		local
+			array_index: like is_polymorphic_for_offset
+			table_name: like encoder.attribute_table_name
+		do
+			array_index := is_polymorphic_for_offset (routine_id, target_type, context_type)
+			if array_index >= 0 then
+					-- The access is polymorphic, which means the offset
+					-- is not a constant and has to be computed.
+				table_name := encoder.attribute_table_name (routine_id)
+					-- Generate following dispatch:
+					-- table [Actual_offset - base_offset]
+				buffer.put_three_character (' ', '+', ' ')
+				buffer.put_string (table_name)
+				buffer.put_character ('[')
+				if register.is_current then
+					context.generate_current_dtype
+				else
+					buffer.put_string ({C_CONST}.dtype)
+					buffer.put_character ('(')
+					register.print_register
+					buffer.put_character (')')
+				end
+				buffer.put_character ('-')
+				buffer.put_integer (array_index)
+				buffer.put_character (']')
+					-- Mark attribute offset table used.
+				mark_used (routine_id)
+					-- Remember external attribute offset declaration.
+				extern_declarations.add_attribute_table (table_name)
+			elseif array_index = -2 then
+					-- No instances of the type are created, leave the offset empty.
+			elseif attached {ATTR_TABLE [ATTR_ENTRY]} tmp_poly_server.item (routine_id) as t then
+					-- The offset is fixed for all conforming types, hardwire it.
+				t.generate_attribute_offset (buffer, target_type, context_type)
+			else
+				check is_attribute_table: False end
+			end
+		end
+
+feature -- Cache
+
+	is_polymorphic_offset_table: ARRAYED_LIST [detachable PACKED_BOOLEANS]
+			-- Array of arrays which knows if a certain attribute id in a certain type id is polymorphic or not.
+			--| They are created on the fly during the degree -5.
+
+	is_polymorphic_body_table: ARRAYED_LIST [detachable PACKED_BOOLEANS]
+			-- Array of arrays which knows if a certain routine id in a certain type id is polymorphic or not.
 			--| They are created on the fly during the degree -5.
 
 feature {NONE} -- Implementation
@@ -226,9 +361,9 @@ feature {NONE} -- Implementation
 			-- Array of INTEGER which contains for each
 			-- Poly_table its `min_type_id' and `min_used_id'.
 
-	put_value (bool_array: PACKED_BOOLEANS; index: INTEGER; status: BOOLEAN)
+	put_value (bool_array: PACKED_BOOLEANS; index: INTEGER; is_polymorphic: BOOLEAN)
 			-- Mark feature call to routine represented by `bool_array' with
-			-- `status' polymorphic for `index'.
+			-- `is_polymorphic' value for `index'.
 		require
 			bool_array_not_void: bool_array /= Void
 			valid_index: index >= 0
@@ -237,11 +372,11 @@ feature {NONE} -- Implementation
 		do
 			i := 2 * index
 			bool_array.force (True, i)
-			bool_array.force (status, i + 1)
+			bool_array.force (is_polymorphic, i + 1)
 		ensure
-			status_implies: status implies
+			status_implies: is_polymorphic implies
 				get_value (bool_array, index) = is_feature_polymorphic
-			not_status_implies: not status implies
+			not_status_implies: not is_polymorphic implies
 				get_value (bool_array, index) = is_feature_not_polymorphic
 		end
 
@@ -293,7 +428,7 @@ invariant
 	used_for_types_not_void: used_for_types /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

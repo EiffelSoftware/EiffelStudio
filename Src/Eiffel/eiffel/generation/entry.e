@@ -1,8 +1,7 @@
 note
+	description: "Abstract description of an entry in a routine table (instance of POLY_TABLE)."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
--- Abstract description of an entry in a routine table (instance of
--- POLY_TABLE)
 
 deferred class ENTRY
 
@@ -32,24 +31,12 @@ feature -- comparison
 feature -- from ENTRY
 
 	type_id: INTEGER
-			-- Type id of the entry
+			-- Type id of the entry.
 
 	type: TYPE_A
-			-- Result type fo the entry
+			-- Result type of the entry.
 
-	set_type_id (i: INTEGER)
-			-- Assign `i' to `type_id'.
-		do
-			type_id := i;
-		end;
-
-	set_type (t: TYPE_A)
-			-- Assign `t' to `type'.
-		do
-			type := t;
-		end;
-
-feature -- for dead code removal
+feature -- Status report
 
 	is_attribute: BOOLEAN
 			-- is the feature_i associated an attribute ?
@@ -60,6 +47,18 @@ feature -- for dead code removal
 			-- Is the feature_i associated a deferred routine?
 		do
 		end
+
+	used_for_offset: BOOLEAN
+			-- Is an attribute entry used?
+		do
+			Result :=
+					-- Check if dead code removal is in place.
+				attached system.remover as r implies
+					-- Check if the class is alive when dead code removal takes place.
+				r.is_class_alive (class_id)
+		end
+
+feature -- Access
 
 	feature_id: INTEGER
 			-- feature id of the feature associated to the entry
@@ -72,63 +71,15 @@ feature -- for dead code removal
 feature -- Previously in POLY_UNIT
 
 	class_id: INTEGER
-			-- Id of the class associated to the current_unit
-
-	type_a: TYPE_A
-			-- Result type of the polymorphic entry
+			-- Id of the class associated to the current_unit.
 
 	set_class_id (i: INTEGER)
-			-- Assign `i' to `class_id'
+			-- Assign `i' to `class_id'.
 		do
 			class_id := i
 		end
 
-	set_type_a (t: TYPE_A)
-			-- Assign `t' to `type_a'.
-		do
-			type_a := t
-		end
-
-feature -- previously in POLY_UNIT
-
-	entry (class_type: CLASS_TYPE; a_alias: BOOLEAN): ENTRY
-			-- Entry in a poly-table for final mode
-		require
-			class_type_not_void: class_type /= Void
-		deferred
-		end;
-
-	feature_type (class_type: CLASS_TYPE): TYPE_A
-			-- Type id of the result type in `class_type'.
-		require
-			good_argument: class_type /= Void
-		do
-			Result := type_a
-			if Result.is_like_current then
-					-- We need to instantiate `like Current' in the context of `class_type'
-					-- to fix eweasel test#exec035.
-					-- Associated actual type is always attached.
-				Result := Result.instantiated_in (class_type.type.as_attached_in (class_type.associated_class))
-			end
-		end
-
-feature -- updates
-
-	update (class_type: CLASS_TYPE)
-			-- Enlarged current entry to manage correctly polymorphism with generics.
-		require
-			class_type_not_void: class_type /= Void
-		do
-			set_type_id (class_type.type_id)
-			set_type (feature_type (class_type))
-		end
-
-feature -- from ENTRY
-
-	used: BOOLEAN
-			-- Is the entry used ?
-		deferred
-		end;
+feature -- Access
 
 	static_feature_type_id: INTEGER
 			-- Type id of the Result type
@@ -145,7 +96,7 @@ feature -- from ENTRY
 		end
 
 	feature_type_id: INTEGER
-			-- Type id of the Result type
+			-- Type id of the Result type.
 		local
 			l_context_type: CL_TYPE_A
 		do
@@ -202,7 +153,7 @@ feature -- Status report
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

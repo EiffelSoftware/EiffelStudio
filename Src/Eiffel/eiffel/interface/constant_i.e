@@ -23,7 +23,6 @@ inherit
 			is_once,
 			is_target_free,
 			melt,
-			new_rout_entry,
 			redefinable,
 			set_type,
 			to_generate_in,
@@ -46,7 +45,6 @@ inherit
 			is_once,
 			is_target_free,
 			melt,
-			new_rout_entry,
 			redefinable,
 			set_type,
 			to_generate_in,
@@ -166,32 +164,6 @@ feature -- Settings
 					Error_handler.insert_error (vqmc)
 				end
 			end
-		end
-
-	new_rout_entry: ROUT_ENTRY
-			-- New routine unit
-		require else
-			has_to_be_generated: generate_in > 0
-		do
-			create Result
-			Result.set_body_index (body_index)
-			Result.set_type_a (type)
-
-			if
-				not byte_context.workbench_mode and then generate_in /= 0
-			then
-				Result.set_written_in (generate_in)
-				Result.set_access_in (generate_in)
-			else
-				if has_replicated_ast then
-					Result.set_access_in (access_in)
-				else
-					Result.set_access_in (written_in)
-				end
-				Result.set_written_in (written_in)
-			end
-			Result.set_pattern_id (pattern_id)
-			Result.set_feature_id (feature_id)
 		end
 
 feature -- Status
@@ -542,7 +514,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

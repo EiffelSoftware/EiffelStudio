@@ -112,7 +112,7 @@ feature -- Visitor
 						v.process_feature_b (Current)
 					else
 							-- Create new byte node and process it instead of the current one.
-						l_node := byte_node (f, c)
+						l_node := byte_node (f, c.is_separate)
 						if attached {like Current} l_node as l_feat then
 							v.process_feature_b (l_feat)
 						else
@@ -199,7 +199,7 @@ feature -- Access
 				end
 			else
 					-- Create new byte node and process it instead of the current one.
-				l_access_b := byte_node (f, type_i).enlarged
+				l_access_b := byte_node (f, type_i.is_separate).enlarged
 				if attached {like enlarged_on} l_access_b as c then
 					Result := c
 				else
@@ -287,9 +287,10 @@ feature -- Inlining
 			f: FEATURE_I
 			context_class_type, written_class_type: CLASS_TYPE
 			has_separate: BOOLEAN
+			context_type_id: INTEGER
 		do
 				-- We have to disable inlining if target is a multi constraint. This fixes eweasel
-				-- test#final0978 and test#final094.
+				-- test#final078 and test#final094.
 			type_i := context_type
 			if system.is_scoop then
 					-- Evaluate if the feature is called on a separate target
@@ -299,37 +300,38 @@ feature -- Inlining
 					attached parameters as p and then
 					across p as parameter some context.real_type (parameter.item.attachment_type).is_separate end
 			end
-			if not is_once and then not has_separate and then not type_i.is_basic then
-					-- Inline only if it is not polymorphic and if it can be inlined.
-				if Eiffel_table.is_polymorphic (routine_id, type_i, context.context_class_type, True) = -1 then
-					if attached {ROUT_TABLE} eiffel_table.poly_table (routine_id) as l_rout_table then
-						l_rout_table.goto_implemented (type_i, context.context_class_type)
-							-- Only if it is implemented that we can inline it.
-						if l_rout_table.is_implemented then
-							inliner := System.remover.inliner
-							entry := l_rout_table.item
-							l_body_index := entry.body_index
-								-- We need to instantiate `type' in current context to fix eweasel test#final065.
-							inline := inliner.inline (context.real_type (type), l_body_index)
-
-								-- Special handling of deferred routine with one implementation in more than one
-								-- descendants which do not conform to each other. To avoid the expensive cost of
-								-- the computation we check first that the context type is deferred. This fixes
-								-- eweasel test#final087.
-							if inline and type_i.base_class.is_deferred then
-									-- The routine in the deferred class could be deferred and we need to
-									-- ensure that all implementations of Current are forming an inheritance
-									-- line, not a tree as if it is a tree, inlining has to be done from the top
-									-- of the tree not from the first implemented version we found.
-									-- Ideally we could figure it out, but it is more complicated, for the time
-									-- being we disallow inlining in those rare cases. See eweasel test#final087.
-								l_is_deferred_inlinable := l_rout_table.is_inlinable (type_i, context.context_class_type)
-							else
-								l_is_deferred_inlinable := True
-							end
-						end
-					else
-						check poly_table_is_rout_table: False end
+			if
+				not is_once and then
+				not has_separate and then
+				not type_i.is_basic and then
+					-- Inline only if it is not polymorphic and if it can be inlined (there is a reachable effective entry).
+				(attached precursor_type or else
+					eiffel_table.is_polymorphic_for_body (routine_id, type_i, context.context_class_type) = -1) and then
+				attached {ROUT_TABLE} tmp_poly_server.item (routine_id) as l_rout_table
+			then
+				context_type_id := type_i.type_id (context.context_cl_type)
+				entry := effective_entry (type_i, context_type_id, l_rout_table)
+					-- Avoid inlining if pattern IDs are different because it means some adaptation of arguments or result.
+				if attached entry and then entry.pattern_id = l_rout_table.context_item.pattern_id then
+					inliner := System.remover.inliner
+					l_body_index := entry.body_index
+						-- We need to instantiate `type` in current context to fix eweasel test#final065.
+					if inliner.inline (context.real_type (type), l_body_index) then
+						inline := True
+							-- Special handling of deferred routine with one implementation in more than one
+							-- descendants which do not conform to each other. To avoid the expensive cost of
+							-- the computation we check first that the context type is deferred. This fixes
+							-- eweasel test#final087.
+						l_is_deferred_inlinable :=
+							attached precursor_type or else
+							type_i.base_class.simple_conform_to (entry.written_class) or else
+								-- The routine in the deferred class could be deferred and we need to
+								-- ensure that all implementations of Current are forming an inheritance
+								-- line, not a tree as if it is a tree, inlining has to be done from the top
+								-- of the tree not from the first implemented version we found.
+								-- Ideally we could figure it out, but it is more complicated, for the time
+								-- being we disallow inlining in those rare cases. See eweasel test#final087.
+							l_rout_table.is_inlinable (type_i, context.context_class_type)
 					end
 				end
 			end
@@ -348,15 +350,18 @@ feature -- Inlining
 						-- an attached type in some descendant that declares an explicit body for it.
 						-- This is necessary because if the attribute requires a wrapper, often the wrapper
 						-- is only known to the descendant, not the ancestor. This fixes test#final076.
-					if not Eiffel_table.poly_table (f.rout_id_set.first).is_initialization_required (type_i, context.context_class_type) then
-							-- Create new byte node and process it instead of the current one
-						Result := byte_node (f, type_i).inlined_byte_code
-					else
-						Result := Current
-					end
+						-- The wrapper is also required if a function has been redeclared into an attribute with a different type.
+					Result :=
+						if entry.is_initialization_required then
+								-- Use a wrapper to access the attribute.
+							Current
+						else
+								-- Create new byte node and process it instead of the current one
+							byte_node (f, False).inlined_byte_code
+						end
 				elseif f.is_external or else f.is_constant then
 						-- Create new byte node and process it instead of the current one
-					Result := byte_node (f, type_i).inlined_byte_code
+					Result := byte_node (f, False).inlined_byte_code
 				elseif l_is_deferred_inlinable then
 							-- Adapt context type `type_i' to the appropriate context.
 							-- For example, inlining SPECIAL [G#2] from HASH_TABLE [G#1, G#2] when
@@ -366,7 +371,10 @@ feature -- Inlining
 							-- not care about them and actually they can cause trouble (see eweasel
 							-- test#final047).
 					if attached {CL_TYPE_A} type_i.instantiated_in (context.context_cl_type).deep_actual_type as l_actual_cl_type then
-						cl_type := l_actual_cl_type
+							-- The target type could have attachment marks.
+							-- They should be ignored because some preconditions expect a correct context type that has no attachment marks.
+							-- See `{CL_TYPE_A}.generic_derivation`.
+						cl_type := l_actual_cl_type.as_attachment_mark_free
 							-- When the feature being inlined is implemented in a descendant or ancestor
 							-- class of `cl_type' then we can perform inlining by providing two different
 							-- contests (the target type/ the written type).
@@ -375,10 +383,14 @@ feature -- Inlining
 							-- it the same would yield a wrong result) by not really inlining, but
 							-- by generating the code from the context in which it is defined (see eweasel test#final048
 							-- for an example of the `else' part).
-						if
-							cl_type.base_class.simple_conform_to (f.written_class) or
-							f.written_class.simple_conform_to (cl_type.base_class)
-						then
+						if cl_type.base_class.simple_conform_to (f.written_class) then
+								-- Keep using `cl_type` as a target class type
+								-- because there could be several descendants that do not conform to each other.
+								-- Compute `written_cl_type`.
+							context_class_type := cl_type.associated_class_type (context.context_cl_type)
+							written_class_type := f.written_type (context_class_type)
+							written_cl_type := written_class_type.type
+						elseif f.written_class.simple_conform_to (cl_type.base_class) then
 								-- Now try to find a proper descendant type for the candidate for inlining. There is
 								-- two possibility here: The class associated with `entry' is the same as `cl_type'
 								-- (case of a routine implemented in an ancestor), or `entry' is a descendant of `cl_type'
@@ -620,7 +632,7 @@ feature {NONE} -- Normalization of types
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

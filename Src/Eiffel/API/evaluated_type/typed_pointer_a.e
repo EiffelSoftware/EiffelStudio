@@ -44,6 +44,7 @@ inherit
 			has_reference,
 			instantiated_description,
 			is_basic,
+			is_expanded_creation_possible,
 			is_processor_attachable_to,
 			meta_type,
 			sk_value
@@ -143,7 +144,7 @@ feature {COMPILER_EXPORTER} -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

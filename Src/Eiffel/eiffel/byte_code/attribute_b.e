@@ -17,7 +17,7 @@ inherit
 		redefine
 			reverse_code, expanded_assign_code, assign_code,
 			enlarged, is_creatable, is_attribute, read_only,
-			assigns_to, pre_inlined_code, size,
+			assigns_to, pre_inlined_code,
 			need_target, set_is_attachment
 		end
 
@@ -93,36 +93,16 @@ feature
 			end
 		end
 
-	wrapper: FEATURE_B
-			-- A wrapper to be called for an attribute that may need to be initialized
-			-- (Void if none)
-		local
-			is_initialization_required: BOOLEAN
-			p: like parent
+	wrapper: detachable FEATURE_B
+			-- A wrapper (if needed) to be called for an attribute that may need to be initialized.
 		do
-			if context.workbench_mode and then context_type.is_separate then
-					-- Wrap a separate call in workbench mode.
-				is_initialization_required := True
-			elseif not is_attachment and then not real_type (type).is_basic then
-					-- No need to wrap a target of an attachment as well as
-					-- access to an attribute of a basic type that is always initialized.
-				if context.workbench_mode then
-						-- Attribute may be redeclared to become of an attached type and to have a body.
-					is_initialization_required := True
-				else
-						-- Check if attribute is of an attached type in some descendant
-						-- that declares an explicit body for it.
-					is_initialization_required := Eiffel_table.poly_table (routine_id).is_initialization_required (context_type, context.context_class_type)
-				end
-			end
 			if is_initialization_required then
 					-- Call a wrapper that performs the required initialization.
 				create {FEATURE_B} Result.make (context_type.base_class.feature_of_rout_id (routine_id), type, Void, False)
 				if has_multi_constraint_static then
 					Result.set_multi_constraint_static (multi_constraint_static)
 				end
-				p := parent
-				if p /= Void then
+				if attached parent as p then
 					Result.set_parent (p)
 					if p.message = Current then
 						p.set_message (Result)
@@ -156,6 +136,28 @@ feature
 			end
 		end
 
+feature {NONE} -- Status report
+
+	is_initialization_required: BOOLEAN
+			-- Is it potentially required to evaluate an associated attribute body before the value can be read?
+		do
+			if context.workbench_mode and then context_type.is_separate then
+					-- Wrap a separate call in workbench mode.
+				Result := True
+			elseif not is_attachment and then not real_type (type).is_basic then
+					-- No need to wrap a target of an attachment as well as
+					-- access to an attribute of a basic type that is always initialized.
+				if context.workbench_mode then
+						-- Attribute may be redeclared to become of an attached type and to have a body.
+					Result := True
+				else
+						-- Check if attribute is of an attached type in some descendant
+						-- that declares an explicit body for it.
+					Result := Eiffel_table.poly_table (routine_id).is_initialization_required (context_type, context.context_class_type)
+				end
+			end
+		end
+
 feature -- Byte code generation
 
 	assign_code: CHARACTER
@@ -185,26 +187,25 @@ feature -- Array optimization
 
 feature -- Inlining
 
-	size: INTEGER
+	pre_inlined_code: CALL_B
 		do
-			if False then
-				(create {REFACTORING_HELPER}).to_implement ("Check if attribute has to be initialized.")
-					-- Inlining will not be done if the attribute has to be initialized
-				Result := 101	-- equal to maximum size of inlining + 1 (Found in FREE_OPTION_SD)
-			end
-		end
-
-	pre_inlined_code: ATTRIBUTE_B
-		do
-			if parent /= Void then
+			if attached parent then
+					-- Inlining is performed by adapting the target of the call.
 				Result := Current
-			else
+			elseif not is_initialization_required then
+					-- No initialization is required, use inlined attribute access.
 				create {INLINED_ATTR_B} Result.fill_from (Current)
+			else
+					-- Adapt access to the attribute using the standard procedure
+					-- that may later wrap the attribute into a function to initialize it accordingly.
+				Result := Precursor
 			end
+		ensure then
+			is_attachment implies attached {like {ASSIGN_B}.target} Result
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -26,8 +26,12 @@ class
 inherit
 	FEATURE_I
 		redefine
-			new_rout_entry, is_type_feature, check_expanded, is_valid,
-			is_function, type, set_type
+			check_expanded,
+			is_function, type,
+			is_type_feature,
+			is_valid,
+			rout_entry_type,
+			set_type
 		end
 
 feature -- Access
@@ -141,21 +145,10 @@ feature -- Settings
 
 feature -- Polymorphism
 
-	new_rout_entry: FORMAL_ENTRY
-			-- New type feature unit.
+	rout_entry_type: FORMAL_ENTRY
+			-- <Precursor>
 		do
-			create Result
-			Result.set_body_index (body_index)
-			Result.set_type_a (type)
-			if has_replicated_ast then
-				Result.set_access_in (access_in)
-			else
-				Result.set_access_in (written_in)
-			end
-			Result.set_written_in (written_in)
-			Result.set_pattern_id (pattern_id)
-			Result.set_feature_id (feature_id)
-			Result.set_is_deferred (is_deferred)
+			check from_precondition: false then end
 		end
 
 feature {NONE} -- Implementation
@@ -197,7 +190,7 @@ feature {NONE} -- Replication
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -36,6 +36,8 @@ inherit
 
 	ROUTINE_BL
 		redefine
+			generate_access,
+			generate_on,
 			parent
 		end
 
@@ -62,6 +64,7 @@ feature {NONE} --Initialisation
 			call_kind := call_kind_qualified
 			feature_name_id := f.feature_name_id
 			feature_id := f.feature_id
+			written_in := f.written_in
 			type := f.type
 			set_parameters (f.parameters)
 			precursor_type := f.precursor_type
@@ -172,27 +175,19 @@ end
 	generate_access
 			-- Generate access call of feature in current on `current_register'
 		do
-				-- Reset value of variables.
-			is_right_parenthesis_needed.put (False)
-			is_deferred.put (False)
+				-- Reset variables.
 			is_direct_once.put (False)
-			do_generate
-				(if attached instance_free_creation as c then
-					c.register
-				else
-					current_register
-				end)
+				-- Generate code.
+			Precursor {ROUTINE_BL}
 		end
 
 	generate_on (reg: REGISTRABLE)
 			-- Generate access call of feature in current on `current_register'
 		do
-				-- Reset value of variables.
-			is_right_parenthesis_needed.put (False)
-			is_deferred.put (False)
+				-- Reset variables.
 			is_direct_once.put (False)
-
-			do_generate (reg)
+				-- Generate code.
+			Precursor {ROUTINE_BL} (reg)
 		end
 
 	check_dt_current (reg: REGISTRABLE)
@@ -207,7 +202,7 @@ end
 			is_polymorphic_access :=
 				not type_i.is_basic and then
 				precursor_type = Void and then
-				Eiffel_table.is_polymorphic (routine_id, type_i, context.context_class_type, True) >= 0
+				Eiffel_table.is_polymorphic_for_body (routine_id, type_i, context.original_class_type) >= 0
 			if reg.is_current and is_polymorphic_access then
 				context.add_dt_current
 			end
@@ -230,7 +225,6 @@ end
 			-- Generate final portion of C code.
 		local
 			buf: GENERATION_BUFFER
-			l_type_c: TYPE_C
 			has_generated: BOOLEAN
 		do
 			buf := buffer
@@ -339,19 +333,8 @@ end
 							buf.put_character (')')
 						end
 					end
-				else
-						-- The line below can be removed when the RTNR macro
-						-- doesn't take an argument anymore.
-					buf.put_string ("(NULL)")
-					l_type_c := real_type (type).c_type
-					if not l_type_c.is_void then
-						buf.put_two_character (',', ' ')
-						l_type_c.generate_default_value (buf)
-					end
+				elseif is_right_parenthesis_needed.item then
 					buf.put_character (')')
-					if is_right_parenthesis_needed.item then
-						buf.put_character (')')
-					end
 				end
 			end
 		end
@@ -365,32 +348,32 @@ end
 			type_c: TYPE_C
 			buf: GENERATION_BUFFER
 			array_index: INTEGER
-			local_argument_types: ARRAY [STRING]
-			entry: ROUT_ENTRY
+			context_entry: ROUT_ENTRY
 			f: FEATURE_I
 			l_index: INTEGER
-			l_keep, is_nested: BOOLEAN
-			return_type_string: STRING
+			is_trampoline: BOOLEAN
+			context_type_id: INTEGER
 		do
-			l_keep := context.final_mode and then system.keep_assertions
-			is_nested := not is_first
-			array_index := Eiffel_table.is_polymorphic (routine_id, typ, context.context_class_type, True)
+			check
+				final_mode: context.final_mode
+			end
 			buf := buffer
-				-- Tell if we need the extra parenthesis in `generate_end'.
-			is_right_parenthesis_needed.put (l_keep)
 			type_i := real_type (type)
 			type_c := type_i.c_type
-			if array_index = -2 then
-					-- Call to a deferred feature without implementation
-				is_deferred.put (True)
-				if l_keep then
-					buf.put_character ('(')
+			array_index :=
+				if attached precursor_type then
+					-1
+				else
+					Eiffel_table.is_polymorphic_for_body (routine_id, typ, context.original_class_type)
 				end
-				buf.put_string ("(RTNR")
+			if array_index = -2 then
+					-- There is no feature to call.
+				generate_no_call
 			elseif array_index >= 0  and then not is_target_type_fixed then
 					-- The call is polymorphic, so generate access to the
 					-- routine table. The dereferenced function pointer has
 					-- to be enclosed in parenthesis.
+				generate_nested_flag (True)
 				table_name := Encoder.routine_table_name (routine_id)
 					-- It is pretty important that we use `actual_type.is_formal' and not
 					-- just `is_formal' because otherwise if you have `like x' and `x: G'
@@ -400,24 +383,15 @@ end
 					type_i.is_basic and then not has_one_signature
 				then
 						-- Feature returns a reference that needs to be used as a basic one.
-					is_right_parenthesis_needed.put (True)
-					buf.put_character ('*')
+					if not is_right_parenthesis_needed.item then
+						is_right_parenthesis_needed.put (True)
+						buf.put_character ('(')
+					end
+					buf.put_string ("eif_optimize_return = 1, *")
 					type_c.generate_access_cast (buf)
 					type_c := reference_c_type
-					buf.put_string ("(eif_optimize_return = 1, ")
-				elseif l_keep then
-					buf.put_character ('(')
 				end
 
-				if l_keep then
-					if is_nested or else call_kind = call_kind_creation then
-						buf.put_string ("nstcall = ")
-						buf.put_integer (call_kind)
-						buf.put_two_character (',', ' ')
-					else
-						buf.put_string ("nstcall = 0, ")
-					end
-				end
 				buf.put_character ('(')
 				type_c.generate_function_cast (buf, argument_types, False)
 
@@ -428,83 +402,68 @@ end
 				if reg.is_current then
 					context.generate_current_dtype
 				else
-					buf.put_string ({C_CONST}.dtype);
+					buf.put_string ({C_CONST}.dtype)
 					buf.put_character ('(')
 					reg.print_register
 					buf.put_character (')')
 				end
 				buf.put_character ('-')
 				buf.put_integer (array_index)
-				buf.put_string ("])")
+				buf.put_two_character (']', ')')
 
-					-- Mark routine id used
+					-- Mark routine id used.
 				Eiffel_table.mark_used (routine_id)
-					-- Remember extern declaration
+					-- Remember routine table declaration.
 				Extern_declarations.add_routine_table (table_name)
-			else
+			elseif attached {ROUT_TABLE} Eiffel_table.poly_table (routine_id) as rout_table then
 					-- The call is not polymorphic in the given context,
 					-- so the name can be hardwired, unless we access a
 					-- deferred feature in which case we have to be careful
 					-- and get the routine name of the first entry in the
 					-- routine table.
-				if attached {ROUT_TABLE} Eiffel_table.poly_table (routine_id) as rout_table then
-					rout_table.goto_implemented (typ, context.context_class_type)
-					if rout_table.is_implemented then
-						internal_name := rout_table.feature_name
+				context_type_id := typ.type_id (context.context_cl_type.generic_derivation)
+				if attached effective_entry (typ, context_type_id, rout_table) as entry then
+					context_entry := rout_table.context_item
+					if entry.pattern_id /= context_entry.pattern_id then
+							-- A trampoline is required to adapt argument and/or result type.
+						is_trampoline := True
+						internal_name := rout_table.trampoline_name (entry, context_entry)
+						system.request_trampoline (entry, context_entry, rout_table)
+					else
+						internal_name := entry.routine_name
+					end
 
-						entry := rout_table.item
+					f := system.class_of_id (entry.class_id).feature_of_feature_id (entry.feature_id)
+					if f.is_process_or_thread_relative_once and then context.is_once_call_optimized then
+							-- Routine contracts (require, ensure, invariant) should not be checked
+							-- and value of already called once routine can be retrieved from memory
+						is_direct_once.put (True)
 						l_index := entry.body_index
-
-						f := system.class_of_id (entry.class_id).feature_of_feature_id (entry.feature_id)
-						if f.is_process_or_thread_relative_once and then context.is_once_call_optimized then
-								-- Routine contracts (require, ensure, invariant) should not be checked
-								-- and value of already called once routine can be retrieved from memory
-							is_direct_once.put (True)
-							context.generate_once_optimized_call_start (type_c, l_index, is_process_relative, is_object_relative, buf)
-						end
-
-						local_argument_types := argument_types
-						if rout_table.item.access_type_id /= Context.original_class_type.type_id then
-								-- Remember extern routine declaration
-							if context.workbench_mode then
-								return_type_string := "EIF_TYPED_VALUE"
-							else
-								return_type_string := type_c.c_string
-							end
-							Extern_declarations.add_routine_with_signature (return_type_string,
-									internal_name, local_argument_types)
-							if f.is_process_or_thread_relative_once and then context.is_once_call_optimized then
-								Extern_declarations.add_once (type_c, l_index, is_process_relative, is_object_relative)
-							end
-						end
-					else
-							-- Call to a deferred feature without implementation
-						is_deferred.put (True)
+						context.generate_once_optimized_call_start (type_c, l_index, is_process_relative, is_object_relative, buf)
 					end
-				else
-						-- Call to a deferred feature without implementation
-					is_deferred.put (True)
-				end
-				if l_keep then
-					buf.put_character ('(')
-					if is_nested or else call_kind = call_kind_creation then
-						buf.put_string ("nstcall = ")
-						buf.put_integer (call_kind)
-						buf.put_two_character (',', ' ')
-					else
-						buf.put_string ("nstcall = 0, ")
+
+					if entry.access_type_id /= Context.original_class_type.type_id or else is_trampoline then
+							-- Remember extern routine declaration if not written in the same class or if a trampoline is used.
+						Extern_declarations.add_routine_with_signature
+							(type_c.c_string, internal_name, argument_types)
+						if l_index > 0 then
+							Extern_declarations.add_once (type_c, l_index, is_process_relative, is_object_relative)
+						end
 					end
-				end
-				if is_deferred.item then
-					buf.put_string ("(RTNR")
-				else
+					generate_nested_flag (True)
 					buf.put_string (internal_name)
+				else
+						-- There is no feature to call.
+					generate_no_call
 				end
+			else
+					-- There is no feature to call.
+				generate_no_call
 			end
 		end
 
 	generate_parameters_list
-			-- Generate the parameters list for C function call
+			-- Generate the parameters list for C function call.
 		local
 			buf: GENERATION_BUFFER
 			l_area: SPECIAL [EXPR_B]
@@ -548,29 +507,12 @@ end
 
 feature {NONE} -- Implementation
 
-	is_deferred: CELL [BOOLEAN]
-			-- Is current feature call a deferred feature without implementation?
-		once
-			create Result.put (False)
-		ensure
-			is_deferred_not_void: Result /= Void
-		end
-
 	is_direct_once: CELL [BOOLEAN]
 			-- Is current call done on a once which value can be accessed directly?
 		once
 			create Result.put (False)
 		ensure
 			is_direct_once_not_void: Result /= Void
-		end
-
-	is_right_parenthesis_needed: CELL [BOOLEAN]
-			-- Does current call require to close a parenthesis?
-			-- Case when one use `nstcall' or `eif_optimize_return'.
-		once
-			create Result.put (False)
-		ensure
-			is_right_parenthesis_needed_not_void: Result /= Void
 		end
 
 feature {NONE} -- Inlining of calls to features from SPECIAL
@@ -982,7 +924,7 @@ feature {NONE} -- Inlining of calls to features from SPECIAL
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

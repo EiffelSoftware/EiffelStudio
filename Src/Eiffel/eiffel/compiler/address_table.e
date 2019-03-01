@@ -30,6 +30,11 @@ inherit
 			is_equal, copy
 		end
 
+	SHARED_TMP_SERVER
+		undefine
+			is_equal, copy
+		end
+
 	SHARED_DECLARATIONS
 		undefine
 			is_equal, copy
@@ -313,7 +318,7 @@ feature -- Generation
 				l_class := System.class_of_id (class_id)
 				System.set_current_class (l_class)
 				if l_class /= Void then
-					if final_mode implies (l_class.is_precompiled implies l_class.is_in_system) then
+					if final_mode implies system.is_class_reachable (l_class) then
 						l_table_of_class := item_for_iteration
 						from
 							l_table_of_class.start
@@ -336,21 +341,13 @@ feature -- Generation
 									-- from a routine to an attribute.
 								l_table_of_class.remove (feature_id)
 							else
-									-- Feature exists
-								if l_feature.used then
+									-- The information whether a feature is used in final mode is accurate only for inline agents.
+									-- For other features, a redeclaration may be used instead.
+								if l_feature.is_inline_agent implies l_feature.used then
 										-- Feature is not dead code removed
-
-		debug ("DOLLAR")
-		io.put_string ("ADDRESS_TABLE.generate_feature ")
-		io.put_string (l_class.name)
-		io.put_character (' ')
-		io.put_string (l_feature.feature_name)
-		io.put_new_line
-		end
 									if table_entry.has_dollar_op then
 										generate_feature (l_class, l_feature, final_mode, buffer, False, False, Void, False)
 									end
-
 									from
 										table_entry.start
 									until
@@ -1046,58 +1043,51 @@ feature {NONE} -- Generation
 						   c_return_type: TYPE_C; a_type: CLASS_TYPE; a_types: like arg_types): BOOLEAN
 		local
 			l_table_name, l_function_name: STRING
-			l_entry: POLY_TABLE [ENTRY]
 			l_rout_id: INTEGER
 		do
 				-- Routine is always implemented unless found otherwise (Deferred routine
 				-- with no implementation).
-
 			Result := True
-
 			l_rout_id := a_feature.rout_id_set.first
-			l_entry :=  Eiffel_table.poly_table (l_rout_id)
-
 			buffer.put_character ('(')
-			if l_entry.is_deferred then
+			if attached {ROUT_TABLE} tmp_poly_server.item (l_rout_id) as t implies t.is_deferred then
 					-- Function pointer associated to a deferred feature
 					-- without any implementation
 				c_return_type.generate_function_cast (buffer, <<"EIF_REFERENCE">>, False)
 				buffer.put_string ("RTNR) (")
 				buffer.put_string (a_current_name)
 				Result := False
+			elseif t.polymorphic_status_for_body (a_type.type, a_type) = 0 then
+				l_table_name := Encoder.routine_table_name (l_rout_id)
+				c_return_type.generate_function_cast (buffer, a_types, False)
+				buffer.put_string (l_table_name)
+				buffer.put_string ("[Dtype(")
+				buffer.put_string (a_current_name)
+				buffer.put_string (") - ")
+				buffer.put_type_id (t.min_used)
+				buffer.put_string ("])(")
+					-- Remember extern declarations
+				Extern_declarations.add_routine_table (l_table_name)
+					-- Mark table used.
+				Eiffel_table.mark_used (l_rout_id)
 			else
-				if l_entry.is_polymorphic (a_type.type, a_type) then
-					l_table_name := Encoder.routine_table_name (l_rout_id)
+				t.goto_implemented (a_type.type, a_type)
+				if t.is_implemented then
 					c_return_type.generate_function_cast (buffer, a_types, False)
-					buffer.put_string (l_table_name)
-					buffer.put_string ("[Dtype(")
+					l_function_name := t.feature_name
+					buffer.put_string (l_function_name)
+					buffer.put_string (")(")
+					extern_declarations.add_routine_with_signature (c_return_type.c_string,
+						l_function_name, a_types)
+				else
+						-- Function pointer associated to a deferred feature
+						-- without any implementation. We mark `l_is_implemented'
+						-- to False to not generate the argument list since
+						-- RTNR takes only one argument.
+					Result := False
+					c_return_type.generate_function_cast (buffer, <<"EIF_REFERENCE">>, False)
+					buffer.put_string ("RTNR) (")
 					buffer.put_string (a_current_name)
-					buffer.put_string (") - ")
-					buffer.put_type_id (l_entry.min_used)
-					buffer.put_string ("])(")
-						-- Remember extern declarations
-					Extern_declarations.add_routine_table (l_table_name)
-						-- Mark table used.
-					Eiffel_table.mark_used (l_rout_id)
-				elseif attached {ROUT_TABLE} l_entry as l_rout_table then
-					l_rout_table.goto_implemented (a_type.type, a_type)
-					if l_rout_table.is_implemented then
-						c_return_type.generate_function_cast (buffer, a_types, False)
-						l_function_name := l_rout_table.feature_name
-						buffer.put_string (l_function_name)
-						buffer.put_string (")(")
-						extern_declarations.add_routine_with_signature (c_return_type.c_string,
-							l_function_name, a_types)
-					else
-							-- Function pointer associated to a deferred feature
-							-- without any implementation. We mark `l_is_implemented'
-							-- to False to not generate the argument list since
-							-- RTNR takes only one argument.
-						Result := False
-						c_return_type.generate_function_cast (buffer, <<"EIF_REFERENCE">>, False)
-						buffer.put_string ("RTNR) (")
-						buffer.put_string (a_current_name)
-					end
 				end
 			end
 		end
@@ -1112,19 +1102,18 @@ feature {NONE} -- Generation
 		local
 			l_rout_id_set: ROUT_ID_SET
 			i, nb: INTEGER
-			l_entry: POLY_TABLE [ENTRY]
-			l_tables: like eiffel_table
 		do
 			from
 				l_rout_id_set := a_feature.rout_id_set
-				l_tables := eiffel_table
 				i := l_rout_id_set.lower
 				nb := l_rout_id_set.count
 			until
 				i > nb or Result
 			loop
-				l_entry :=  l_tables.poly_table (l_rout_id_set.item (i))
-				if l_entry.is_polymorphic (a_type.type, a_type) then
+				if
+					attached {ROUT_TABLE} tmp_poly_server.item (l_rout_id_set.item (i)) as t and then
+					t.polymorphic_status_for_body (a_type.type, a_type) = 0
+				then
 					Result := True
 				end
 				i := i + 1
@@ -1384,7 +1373,7 @@ feature {NONE}	--implementation
 	new_frozen_age: INTEGER;
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -3050,8 +3050,20 @@ feature -- default_create routine
 
 feature -- Dead code removal
 
-	mark_visible (remover: REMOVER)
-			-- Dead code removal from the visible features.
+	mark_visible_class (remover: REMOVER)
+			-- Mark class as visible for dead code removal.
+		require
+			visible_level.has_visible
+		do
+			if is_deferred then
+				remover.mark_class_reachable (class_id)
+			else
+				remover.mark_class_alive (class_id)
+			end
+		end
+
+	mark_visible_features (remover: REMOVER)
+			-- Mark features as visible for dead code removal.
 		require
 			visible_level.has_visible
 		do
@@ -5290,7 +5302,7 @@ invariant
 	-- has_ast: has_ast
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

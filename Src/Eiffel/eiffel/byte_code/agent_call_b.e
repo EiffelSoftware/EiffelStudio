@@ -68,10 +68,11 @@ feature -- Status report
 
 	is_polymorphic: BOOLEAN
 		do
-			if context.final_mode then
-				if precursor_type = Void then
-					Result := Eiffel_table.is_polymorphic (routine_id, context_type, context.context_class_type, True) >= 0
-				end
+			if
+				context.final_mode and then
+				not attached precursor_type
+			then
+				Result := Eiffel_table.is_polymorphic_for_body (routine_id, context_type, context.context_class_type) >= 0
 			end
 		end
 
@@ -108,7 +109,7 @@ feature -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,7 +1,7 @@
-note
+﻿note
 	description: "[
-		Abstract representation of a routine-or-attribute offset table for
-		the final Eiffel executable.
+			Abstract representation of a routine-or-attribute offset table for
+			the final Eiffel executable.
 		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -81,6 +81,7 @@ feature -- Initialization
 			is_deferred := True
 			has_body := False
 			pattern_id := -2
+			position := 1
 		end
 
 	create_block (n: INTEGER)
@@ -104,17 +105,8 @@ feature -- Initialization
 
 feature
 
-	new_entry (f: FEATURE_I; c: INTEGER): ENTRY
-			-- New entry corresponding to `f' in class of class ID `c'
-		deferred
-		end
-
-	is_polymorphic (a_type: TYPE_A; a_context_type: CLASS_TYPE): BOOLEAN
-			-- Is the table polymorphic from entry indexed by `a_type' to
-			-- the maximum entry id ?
-		require
-			a_type_not_void: a_type /= Void
-			a_context_type_not_void: a_context_type /= Void
+	new_entry (f: FEATURE_I; t: CLASS_TYPE; c: INTEGER): ENTRY
+			-- New entry corresponding to `f` for the target type `t` of the class of ID `c`.
 		deferred
 		end
 
@@ -149,66 +141,6 @@ feature
 			Result := array_item (max_position).type_id
 		end
 
-	min_used: INTEGER
-			-- Minimum used type id ?
-		require
-			not_empty: count > 0
-			is_used: used
-		local
-			entry: T
-			i: INTEGER
-		do
-			from
-				i := lower
-			until
-				Result > 0
-			loop
-				entry := array_item (i)
-				if entry.used then
-					Result := entry.type_id
-				end
-				i := i + 1
-			end
-		end
-
-	max_used: INTEGER
-			-- Minimum used type id ?
-		require
-			not_empty: count > 0
-			is_used: used
-		local
-			entry: T
-			i: INTEGER
-		do
-			from
-				i := max_position
-			until
-				Result > 0
-			loop
-				entry := array_item (i)
-				if entry.used then
-					Result := entry.type_id
-				end
-				i := i - 1
-			end
-		end
-
-	used: BOOLEAN
-			-- Is the table effectively used ?
-		local
-			i, nb: INTEGER
-		do
-			from
-				i := lower
-				nb := max_position
-			until
-				Result or else i > nb
-			loop
-				Result := array_item(i).used
-				i := i + 1
-			end;
-		end
-
 	is_deferred: BOOLEAN
 			-- Is the table only containing deferred routines?
 
@@ -228,51 +160,16 @@ feature
 		end
 
 	goto (type_id: INTEGER)
-			-- Move cursor to the first entry of type_id `type_id'
-			-- associated to an effective class (non-deferred).
-		require
-			positive: type_id > 0
-		do
-			position := binary_search (type_id)
-		end
-
-	goto_used (type_id: INTEGER)
-			-- Move cursor to the first entry of type_id `type_id'
-			-- associated to an used effective class (non-deferred).
+			-- Move cursor to the entry of type ID `type_id'.
+			-- Set `context_position` to the entry of `type_id`.
 		require
 			positive: type_id > 0
 		local
-			i, nb: INTEGER
+			p: like position
 		do
-			from
-				i := binary_search (type_id)
-				nb := max_position
-			until
-				array_item(i).used or else i = nb
-			loop
-				i := i + 1
-			end
-			position := i
-		end
-
-	goto_used_from_position (a_pos: INTEGER)
-			-- Move cursor to the first entry after position `a_pos'
-			-- associated to an used effective class (non-deferred).
-		require
-			a_pos_positive: a_pos >= 0
-			not_too_big: a_pos <= max_position
-		local
-			i, nb: INTEGER
-		do
-			from
-				i := a_pos
-				nb := max_position
-			until
-				array_item(i).used or else i = nb
-			loop
-				i := i + 1
-			end
-			position := i
+			p := binary_search (type_id)
+			position := p
+			context_position := p
 		end
 
 	has_one_type: BOOLEAN
@@ -475,6 +372,8 @@ feature
 			buffer.put_new_line_only
 		end
 
+feature -- Status report
+
 	is_routine_table: BOOLEAN
 			-- Is the current table a routine table ?
 		do
@@ -487,11 +386,64 @@ feature
 			-- Do nothing
 		end
 
+	is_empty: BOOLEAN
+			-- Is there an element?
+		do
+			Result := max_position = 0
+		end
+
+	is_initialization_required (t: TYPE_A; context_class_type: CLASS_TYPE): BOOLEAN
+			-- Is initialization required for an attribute from `t` or a descendant?
+		local
+			type_id: INTEGER
+			i: INTEGER
+			nb: INTEGER
+			entry: ENTRY
+			old_position: like position
+			system_i: SYSTEM_I
+		do
+			if has_body then
+				type_id := t.type_id (context_class_type.type)
+				old_position := position
+				goto_used_for_offset (type_id)
+				if not item.type.is_expanded then
+						-- Expanded types are initialized elsewhere.
+					if t.is_expanded then
+							-- Check current type only
+						Result := item.is_initialization_required
+					else
+							-- Check all conforming descendants
+						system_i := system
+						from
+							i := position
+							nb := max_position
+						until
+							Result or else i > nb
+						loop
+							entry := array_item (i)
+							if entry.used_for_offset and then system_i.class_type_of_id (entry.type_id).dynamic_conform_to (t, type_id, context_class_type.type) then
+								Result := entry.is_initialization_required
+							end
+							i := i + 1
+						end
+					end
+				end
+				position := old_position
+			end
+		end
+
 feature -- Iteration
 
 	start
+			-- Go to the first position.
 		do
 			position := lower
+		end
+
+	finish
+			-- Go to the last position.
+		do
+			position := max_position
 		end
 
 	forth
@@ -501,7 +453,7 @@ feature -- Iteration
 
 	after: BOOLEAN
 		do
-			Result := (position > max_position)
+			Result := position > max_position
 		end
 
 	go_to (pos: INTEGER)
@@ -519,6 +471,32 @@ feature -- Iteration
 		do
 			Result := array_item (lower)
 		end
+
+	goto_used_for_offset (type_id: INTEGER)
+			-- Move cursor to the first entry of type_id `type_id`
+			-- associated to a used effective class (non-deferred).
+		require
+			positive: type_id > 0
+		local
+			i, nb: INTEGER
+			a: like area
+		do
+			from
+				i := binary_search (type_id) - 1
+				nb := max_position - 1
+				a := area
+			until
+				i = nb or else a [i].used_for_offset
+			loop
+				i := i + 1
+			end
+			position := i + 1
+		end
+
+feature {NONE} -- Access
+
+	context_position: INTEGER
+			-- Position of the starting item found by `goto`, `goto_used`, `goto_implemented`.
 
 feature -- Insertion
 
@@ -563,12 +541,12 @@ feature -- Insertion
 				has_body := True
 			end
 
-			if (nb > upper) then
+			if nb > upper then
 				increase_size (nb - i)
 			end
 
 			tmp ?= tmp_poly_table
-			if (nb > tmp.upper) then
+			if nb > tmp.upper then
 				increase_tmp_size (nb - tmp.upper)
 			end
 			tmp.subcopy (Current, 1, i, 1)
@@ -584,7 +562,7 @@ feature -- Insertion
 					if j <= o_max then
 						t_item := tmp.item (i)
 						o_item := other.array_item (j)
-						if (t_item.type_id > o_item.type_id) then
+						if t_item.type_id > o_item.type_id then
 							put (o_item, k)
 							j := j + 1
 						else
@@ -613,57 +591,6 @@ feature -- Insertion
 						k := k + 1
 					end
 				end
-			end
-		end
-
-feature -- Status
-
-	is_empty: BOOLEAN
-			-- Is there an element?
-		do
-			Result := max_position = 0
-		end
-
-	is_initialization_required (t: TYPE_A; context_class_type: CLASS_TYPE): BOOLEAN
-			-- Is initialization required for an attribute from `t' or a descendant?
-		require
-			t_attached: t /= Void
-			context_class_type_attached: context_class_type /= Void
-		local
-			type_id: INTEGER
-			i: INTEGER
-			nb: INTEGER
-			entry: ENTRY
-			old_position: like position
-			system_i: SYSTEM_I
-		do
-			if has_body then
-				type_id := t.type_id (context_class_type.type)
-				old_position := position
-				goto_used (type_id)
-				if not item.type.is_expanded then
-						-- Expanded types are initialized elsewhere.
-					if t.is_expanded then
-							-- Check current type only
-						Result := item.is_initialization_required
-					else
-							-- Check all conforming descendants
-						system_i := system
-						from
-							i := position
-							nb := max_position
-						until
-							Result or else i > nb
-						loop
-							entry := array_item (i)
-							if entry.used and then system_i.class_type_of_id (entry.type_id).dynamic_conform_to (t, type_id, context_class_type.type) then
-								Result := entry.is_initialization_required
-							end
-							i := i + 1
-						end
-					end
-				end
-				position := old_position
 			end
 		end
 
@@ -852,8 +779,11 @@ feature {NONE} -- Implementation
 			end
 		end
 
+invariant
+	position >= lower
+
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

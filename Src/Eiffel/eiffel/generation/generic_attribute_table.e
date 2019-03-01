@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			Representation of a table of attributes originated from an attribute
 			of a formal generic type for the final Eiffel executable.
@@ -18,13 +18,12 @@ inherit
 			generate as generate_attribute_table,
 			make as make_poly
 		undefine
-			is_routine_table,
 			tmp_poly_table,
 			merge,
 			extend
 		redefine
 			generate_initialization,
-			is_polymorphic,
+			is_routine_table,
 			new_entry,
 			write
 		end
@@ -37,7 +36,7 @@ inherit
 			is_attribute_table, write_for_type
 		redefine
 			generate_initialization,
-			is_polymorphic,
+			is_routine_table,
 			new_entry,
 			write
 		end
@@ -47,35 +46,36 @@ create
 
 feature {NONE} -- Creation
 
-	make (routine_id: INTEGER; has_formal: BOOLEAN)
-			-- Create table with associated `routine_id' that corresponds to an attribute
-			-- with of a formal generic type if `has_formal = True'
+	make (routine_id: INTEGER; is_based_on_formal_generic: BOOLEAN)
+			-- Create table with associated `routine_id` that corresponds to an attribute
+			-- of a formal generic type if `is_based_on_formal_generic`.
 	do
 		make_poly (routine_id)
-		is_routine_table_used := has_formal
+		is_formal_generic_base := is_based_on_formal_generic
+	ensure
+		rout_id = routine_id
+		is_formal_generic_base = is_based_on_formal_generic
 	end
 
 feature -- Status report
 
-	is_polymorphic (a_type: TYPE_A; a_context_type: CLASS_TYPE): BOOLEAN
-			-- Is the table polymorphic from entry indexed by `type_id' to
-			-- the maximum entry id?
+	is_routine_table: BOOLEAN
+			-- <Precursor>
 		do
-			Result := Precursor {ATTR_TABLE} (a_type, a_context_type) or else Precursor {ROUT_TABLE} (a_type, a_context_type)
+			Result := is_formal_generic_base or has_body
 		end
 
 feature {NONE} -- Status report
 
-	is_routine_table_used: BOOLEAN
-			-- Is routine table unconditionally used?
+	is_formal_generic_base: BOOLEAN
+			-- Is base type a formal generic?
 
 feature -- Access
 
-	new_entry (f: FEATURE_I; c: INTEGER): ENTRY
-			-- New entry corresponding to `f' in class of class ID `c'
+	new_entry (f: FEATURE_I; t: CLASS_TYPE; c: INTEGER): ENTRY
+			-- <Precursor>
 		do
-			Result := f.new_rout_entry
-			Result.set_class_id (c)
+			Result := f.new_rout_entry (t, c)
 		end
 
 feature -- Code generation
@@ -84,7 +84,7 @@ feature -- Code generation
 			-- <Precursor>
 		do
 			Precursor {ATTR_TABLE} (buf, header_buf)
-			if is_routine_table_used or else has_body then
+			if is_formal_generic_base or else has_body then
 					-- Generate routine table if routine table is unconditionally used or there is a self_initializing attribute.
 				Precursor {ROUT_TABLE} (buf, header_buf)
 			end
@@ -94,14 +94,14 @@ feature -- Code generation
 			-- Generate table using writer.
 		do
 			generate_attribute_table (Attr_generator)
-			if is_routine_table_used or else has_body then
+			if is_formal_generic_base or else has_body then
 					-- Generate routine table if routine table is unconditionally used or there is a self_initializing attribute.
 				generate_routine_table (Rout_generator)
 			end
 		end
 
 note
-	copyright:	"Copyright (c) 2007-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -114,22 +114,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

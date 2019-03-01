@@ -1105,6 +1105,9 @@ feature {NONE} -- Implementation
 	process_integer_as (l_as: INTEGER_CONSTANT)
 		do
 			set_type (l_as.manifest_type, l_as)
+			if not {SYSTEM_I}.is_basic_class_alive and then not is_inherited then
+				record_creation_dependence (l_as.manifest_type)
+			end
 			if is_byte_node_enabled then
 				last_byte_node := l_as
 			end
@@ -1130,6 +1133,8 @@ feature {NONE} -- Implementation
 					instantiator.dispatch (l_type, context.current_class)
 					if is_inherited then
 						l_feature := last_type.base_class.feature_of_rout_id (l_as.routine_ids.first)
+					else
+						record_non_object_call_dependence (l_type)
 					end
 					l_error_level := error_level
 					process_call (l_type, Void, l_as.feature_name, l_feature, l_as.parameters, True, False, True, False, True)
@@ -2001,33 +2006,35 @@ feature {NONE} -- Implementation
 								error_handler.insert_error (l_vape)
 							end
 
-								-- Supplier dependances update only for non-inherited code
-							if l_is_target_of_creation_instruction then
-								if not is_inherited then
-									context.supplier_ids.extend_depend_unit_with_level (l_last_id, l_feature,
-										{DEPEND_UNIT}.is_in_creation_flag | depend_unit_level)
-								end
-							else
-								if not is_inherited then
-									if is_precursor then
-										context.supplier_ids.extend_depend_unit_with_level (a_precursor_type.base_class.class_id, l_feature,
-											depend_unit_level)
+								-- Supplier dependances update only for non-inherited code.
+							if not is_inherited then
+								context.supplier_ids.extend_depend_unit_with_level
+									(l_last_id,
+									l_feature,
+									depend_unit_level |
+									if l_is_target_of_creation_instruction then {DEPEND_UNIT}.is_in_creation_flag else {NATURAL_16} 0 end |
+									if
+										is_precursor or else
+										is_static and then attached {CL_TYPE_A} l_last_type or else
+										is_agent and then l_feature.is_inline_agent
+									then
+										{DEPEND_UNIT}.is_uniform_flag
 									else
-										context.supplier_ids.extend_depend_unit_with_level (l_last_id, l_feature, depend_unit_level)
-									end
-								end
-								if
-									not is_qualified and then
-									l_feature.is_replicated_directly and then
-									not l_feature.from_non_conforming_parent and then
-										-- We are unqualified-calling an inherited conforming feature that is replicated in the current class.
-										-- Therefore the calling feature must also be replicated in the current class.
-									not current_feature.is_replicated_directly and then
-									current_feature.written_class /= System.current_class
-								then
-										-- Invalid call to replicated feature, raise VMCS.
-									Error_handler.insert_warning (create {REPLICATED_FEATURE_CALL_WARNING}.make (System.current_class, current_feature, l_feature))
-								end
+										{NATURAL_16} 0
+									end)
+							end
+							if
+								not l_is_target_of_creation_instruction and then
+								not is_qualified and then
+								l_feature.is_replicated_directly and then
+								not l_feature.from_non_conforming_parent and then
+									-- We are unqualified-calling an inherited conforming feature that is replicated in the current class.
+									-- Therefore the calling feature must also be replicated in the current class.
+								not current_feature.is_replicated_directly and then
+								current_feature.written_class /= System.current_class
+							then
+									-- Invalid call to replicated feature, raise VMCS.
+								Error_handler.insert_warning (create {REPLICATED_FEATURE_CALL_WARNING}.make (System.current_class, current_feature, l_feature))
 							end
 
 								-- Check if cat-call detection only for qualified calls and if enabled for current context class and
@@ -2286,7 +2293,10 @@ feature {NONE} -- Visitor
 				end
 				last_tuple_type := l_tuple_type
 				set_type (l_tuple_type, l_as)
-                                if is_byte_node_enabled then
+				if not {SYSTEM_I}.is_tuple_class_alive and then not is_inherited then
+					record_creation_dependence (l_tuple_type)
+				end
+				if is_byte_node_enabled then
 					l_list ?= last_byte_node
 					create {TUPLE_CONST_B} last_byte_node.make (l_list, l_tuple_type, l_tuple_type.create_info)
 				end
@@ -2316,14 +2326,22 @@ feature {NONE} -- Visitor
 					end
 				end
 			end
-			if last_type /= Void and is_byte_node_enabled then
-				create {REAL_CONST_B} last_byte_node.make (l_as.value, last_type)
+			if attached last_type as t then
+				if not {SYSTEM_I}.is_basic_class_alive and then not is_inherited then
+					record_creation_dependence (t)
+				end
+				if is_byte_node_enabled then
+					create {REAL_CONST_B} last_byte_node.make (l_as.value, t)
+				end
 			end
 		end
 
 	process_bool_as (l_as: BOOL_AS)
 		do
 			set_type (Boolean_type, l_as)
+			if not {SYSTEM_I}.is_basic_class_alive and then not is_inherited then
+				record_creation_dependence (boolean_type)
+			end
 			if is_byte_node_enabled then
 				create {BOOL_CONST_B} last_byte_node.make (l_as.value)
 			end
@@ -2524,6 +2542,9 @@ feature {NONE} -- Visitor
 					end
 						-- Update type stack.
 					set_type (l_array_type, l_as)
+					if not {SYSTEM_I}.is_array_class_alive and then not is_inherited then
+						record_creation_dependence (l_array_type)
+					end
 					l_as.set_array_type (last_type)
 					if attached l_list then
 						create {ARRAY_CONST_B} last_byte_node.make (l_list, l_array_type)
@@ -2535,14 +2556,16 @@ feature {NONE} -- Visitor
 		end
 
 	process_char_as (l_as: CHAR_AS)
+		local
+			t: TYPE_A
 		do
-			if l_as.value.is_character_8 then
-				set_type (character_type, l_as)
-			else
-				set_type (Wide_char_type, l_as)
+			t := if l_as.value.is_character_8 then character_type else wide_char_type end
+			set_type (t, l_as)
+			if not {SYSTEM_I}.is_basic_class_alive and then not is_inherited then
+				record_creation_dependence (t)
 			end
 			if is_byte_node_enabled then
-				create {CHAR_CONST_B} last_byte_node.make (l_as.value, last_type)
+				create {CHAR_CONST_B} last_byte_node.make (l_as.value, t)
 			end
 		end
 
@@ -2570,6 +2593,9 @@ feature {NONE} -- Visitor
 					-- Constants are always of an attached type.
 				l_simplified_string_type := l_simplified_string_type.as_normally_attached (context.current_class)
 				set_type (l_simplified_string_type, l_as)
+				if not {SYSTEM_I}.is_string_class_alive and then not is_inherited then
+					record_creation_dependence (l_simplified_string_type)
+				end
 				class_id := l_simplified_string_type.base_class.class_id
 				if attached system.string_8_class as c then
 					s8 := c.compiled_class
@@ -3666,6 +3692,13 @@ feature {NONE} -- Visitor
 					end
 
 					l_feat_type := f.type
+					if
+						(l_feat_type.is_basic implies not {SYSTEM_I}.is_basic_class_alive) and then
+						not is_inherited and then
+						l_feat_type.is_expanded_creation_possible
+					then
+						record_expanded_dependence (l_feat_type)
+					end
 					if l_feat_type.is_initialization_required then
 							-- Verify that result is properly set in internal routine if required.
 						if
@@ -4019,6 +4052,9 @@ feature {NONE} -- Visitor
 			end
 				-- Type of strip expression is always attached.
 			set_type (strip_type.as_attached_in (context.current_class), l_as)
+			if not {SYSTEM_I}.is_array_class_alive and then not is_inherited then
+				record_creation_dependence (strip_type)
+			end
 			if l_needs_byte_node then
 				last_byte_node := l_strip
 			end
@@ -4383,6 +4419,9 @@ feature {NONE} -- Visitor
 				l_type_type := l_type_type.as_attached_in (context.current_class)
 				instantiator.dispatch (l_type_type, context.current_class)
 				set_type (l_type_type, l_as)
+				if not is_inherited then
+					record_creation_dependence (l_type_type)
+				end
 				if is_byte_node_enabled then
 					create {TYPE_EXPR_B} last_byte_node.make (l_type_type)
 				end
@@ -4514,10 +4553,18 @@ feature {NONE} -- Visitor
 								set_type (unknown_type, l_as)
 							end
 						else
+								-- Subsequent code that computes the type of the agent uses information about the corresponding class.
+								-- Therefore, class ID should be set before that.
 							if not is_inherited then
 								l_as.set_class_id (l_class.class_id)
-								if l_feature /= Void then
+								if attached l_feature then
+										-- This is a real agent rather than a named tuple access.
+										-- Remember the corresponding routine IDs and the dependency.
 									set_routine_ids (l_feature.rout_id_set, l_as)
+									context.supplier_ids.extend_depend_unit_with_level
+										(l_class.class_id,
+										l_feature,
+										depend_unit_level | if l_feature.is_inline_agent then {DEPEND_UNIT}.is_uniform_flag else {NATURAL_16} 0 end)
 								end
 							end
 							l_access ?= last_byte_node
@@ -4554,6 +4601,11 @@ feature {NONE} -- Visitor
 							end
 							if last_type.is_known then
 								instantiator.dispatch (last_type, context.current_class)
+							end
+							if not is_inherited then
+									-- `last_type` was computed by the previous calls only,
+									-- and could not be recorded earlier.
+								record_creation_dependence (last_type)
 							end
 						end
 					end
@@ -6441,9 +6493,7 @@ feature {NONE} -- Visitor
 
 							if not l_is_formal_creation then
 									-- Check if creation routine is non-once procedure
-								if
-									not l_creation_class.valid_creation_procedure (last_feature_name)
-								then
+								if not l_creation_class.valid_creation_procedure (last_feature_name) then
 									create l_vgcc5
 									context.init_error (l_vgcc5)
 									l_vgcc5.set_target_name (a_name)
@@ -6537,7 +6587,6 @@ feature {NONE} -- Visitor
 			t: TYPE_A
 			l_creation_expr: CREATION_EXPR_B
 			l_assign: ASSIGN_B
-			l_attribute: ATTRIBUTE_B
 			l_create_info: CREATE_INFO
 		do
 			t := l_creation_type
@@ -6553,13 +6602,11 @@ feature {NONE} -- Visitor
 				else
 					create {CREATE_TYPE} l_create_info.make (t)
 				end
-			elseif l_access.is_attribute and then l_explicit_type = Void then
+			elseif not attached l_explicit_type and then attached {ATTRIBUTE_B} l_access as l_attribute then
 					-- When we create an attribute without a type specification,
 					-- then we need to create an instance matching the possible redeclared
 					-- type of the attribute in descendant classes.
-				l_attribute ?= l_access
-				create {CREATE_FEAT} l_create_info.make (l_attribute.attribute_id,
-					l_attribute.routine_id)
+				create {CREATE_FEAT} l_create_info.make (l_attribute.attribute_id, l_attribute.routine_id)
 			else
 				l_create_info := t.create_info
 			end
@@ -6598,7 +6645,6 @@ feature {NONE} -- Visitor
 	process_creation_as (l_as: CREATION_AS)
 		local
 			l_access: ACCESS_B
-			l_assign: ASSIGN_B
 			l_target_type, l_explicit_type, l_creation_type: TYPE_A
 			l_vgcc3: VGCC3
 			l_vgcc31: VGCC31
@@ -6696,15 +6742,31 @@ feature {NONE} -- Visitor
 							end
 
 								-- Check call validity for creation.
-							process_abstract_creation (l_creation_type, l_as.call,
-								l_as.target.access_name, l_as.target.start_location)
+							process_abstract_creation (l_creation_type, l_as.call, l_as.target.access_name, l_as.target.start_location)
+							if not is_inherited then
+								record_creation_dependence
+									(if
+										not attached l_explicit_type and then
+										attached {ACCESS_FEAT_AS} l_as.target as a and then
+										a.is_feature and then
+										attached context.current_class.feature_of_name_id (a.feature_name.name_id) as f and then
+										attached type_a_checker.check_and_solved (create {LIKE_FEATURE}.make (f, context.current_class.class_id), Void) as t
+									then
+											-- Use `attached like feature_name` type for creation on a feature without explicit type.
+										t.as_attached_in (context.current_class)
+									else
+											-- Use type of the target otherwise.
+										l_creation_type
+									end)
+							end
 
 							if l_needs_byte_node then
 								generate_creation (l_as.is_active, l_access, {ROUTINE_B} / last_byte_node, l_creation_type, l_explicit_type,
 									l_as.target.start_location)
 									-- Set line information for instruction.
-								l_assign ?= last_byte_node
-								l_assign.set_line_pragma (l_as.line_pragma)
+								if attached {ASSIGN_B} last_byte_node as l_assign then
+									l_assign.set_line_pragma (l_as.line_pragma)
+								end
 							end
 						end
 					end
@@ -6765,8 +6827,10 @@ feature {NONE} -- Visitor
 
 						-- Check call validity for creation.
 					is_in_creation_expression := True
-					process_abstract_creation (l_creation_type, l_as.call, Void,
-						l_as.type.start_location)
+					process_abstract_creation (l_creation_type, l_as.call, Void, l_as.type.start_location)
+					if not is_inherited then
+						record_creation_dependence (l_creation_type)
+					end
 
 					if l_needs_byte_node then
 						l_call_access ?= last_byte_node
@@ -10406,7 +10470,7 @@ feature {NONE} -- Agents
 				end
 
 					-- Initialize ROUTINE_CREATION_B instance
-					-- We need to use the conformence_type since it could be a like_current type which would
+					-- We need to use the conformance_type since it could be a like_current type which would
 					-- be a problem with inherited assertions. See eweasel test execX10
 				l_routine_creation.init (a_target_type.conformance_type,
 					a_feature, l_result_type, l_tuple_node, l_array_of_opens, l_last_open_positions,
@@ -10486,7 +10550,6 @@ feature {NONE} -- Agents
 			l_tuple_type: TUPLE_TYPE_A
 			l_target_closed: BOOLEAN
 			l_rout_creation: ROUTINE_CREATION_B
-			l_depend_unit: DEPEND_UNIT
 			l_generics: ARRAYED_LIST [TYPE_A]
 		do
 			l_target_closed := not (a_rc.target /= Void and then a_rc.target.is_open)
@@ -10593,11 +10656,9 @@ feature {NONE} -- Agents
 					False)
 			end
 
-				-- We need to record a dependance between the fake inline agent and the
-				-- enclosing routine being analyzed.
 			if not is_inherited then
-				create l_depend_unit.make_with_level (l_cur_class.class_id, l_func, depend_unit_level)
-				context.supplier_ids.extend (l_depend_unit)
+					-- Record a dependance between the fake inline agent and the enclosing routine being analyzed.
+				context.supplier_ids.extend_depend_unit_with_level (l_cur_class.class_id, l_enclosing_feature, depend_unit_level | {DEPEND_UNIT}.is_uniform_flag)
 			end
 
 			last_byte_node := l_rout_creation
@@ -10739,11 +10800,7 @@ feature {NONE} -- Agents
 			not_inherited: not is_inherited
 			a_feat_not_void: a_feat /= Void
 			a_new_feat_dep_not_void: a_new_feat_dep /= Void
-		local
-			l_cur_class: EIFFEL_CLASS_C
-
 		do
-			l_cur_class ?= context.current_class
 			from
 				a_new_feat_dep.start
 			until
@@ -10752,8 +10809,15 @@ feature {NONE} -- Agents
 				context.supplier_ids.extend (a_new_feat_dep.item)
 				a_new_feat_dep.forth
 			end
+			if attached a_new_feat_dep.instance_suppliers as s then
+				across
+					s as i
+				loop
+					context.supplier_ids.add_instance_supplier (i.item)
+				end
+			end
 			a_feat.process_pattern
-			l_cur_class.insert_changed_assertion (a_feat)
+			context.current_class.insert_changed_assertion (a_feat)
 		end
 
 	check_agent_call_validity (a_feature: FEATURE_I; a_last_type: TYPE_A; a_parameters: EIFFEL_LIST [EXPR_AS]; a_arg_types: ARRAYED_LIST [TYPE_A])
@@ -11297,6 +11361,12 @@ feature {NONE} -- Implementation: checking locals
 						if not is_inherited then
 								-- No need to recheck for obsolete classes when checking inherited code.
 							l_solved_type.check_for_obsolete_class (context.current_class, context.current_feature)
+							if
+								(l_solved_type.is_basic implies not {SYSTEM_I}.is_basic_class_alive) and then
+								l_solved_type.is_expanded_creation_possible
+							then
+								record_expanded_dependence (l_solved_type)
+							end
 						end
 					end
 					l_as.locals.forth
@@ -12002,6 +12072,46 @@ feature {NONE} -- Type recording
 				r.call ([t, a, context.written_class, current_feature, context.current_class])
 			end
 			last_type := t
+		end
+
+	record_creation_dependence (t: TYPE_A)
+			-- Record that current feature depends on type `t` used to create an object.
+		require
+			not is_inherited
+		do
+			dependence_generator.generate (t, {INSTANCE_DEPENDENCE_GENERATOR}.regular_creation_kind, context.current_class)
+			if attached dependence_generator.dependence as d then
+				context.supplier_ids.add_instance_supplier (d)
+			end
+		end
+
+	record_expanded_dependence (t: TYPE_A)
+			-- Record that current feature depends on type `t` used to create an object if it is expanded.
+		require
+			not is_inherited
+			t.is_expanded_creation_possible
+		do
+			dependence_generator.generate (t, {INSTANCE_DEPENDENCE_GENERATOR}.expanded_creation_kind, context.current_class)
+			if attached dependence_generator.dependence as d then
+				context.supplier_ids.add_instance_supplier (d)
+			end
+		end
+
+	record_non_object_call_dependence (t: TYPE_A)
+			-- Record that current feature depends on type `t` used as a target of a non-object call.
+		require
+			not is_inherited
+		do
+			dependence_generator.generate (t, {INSTANCE_DEPENDENCE_GENERATOR}.call_kind, context.current_class)
+			if attached dependence_generator.dependence as d then
+				context.supplier_ids.add_instance_supplier (d)
+			end
+		end
+
+	dependence_generator: INSTANCE_DEPENDENCE_GENERATOR
+			-- A generator to compute instance dependencies for given creation or non-object call types.
+		once
+			create Result
 		end
 
 feature {INSPECT_CONTROL} -- Checks for obsolete features

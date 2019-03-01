@@ -24,23 +24,23 @@ feature -- C code generation
 			-- and call context.add_dt_current accordingly. The parameter
 			-- `reg' is the entity on which the access is made.
 		do
-				-- Do nothing if `reg' is not the current entity
-			if reg.is_current then
-				if attached {CL_TYPE_A} context_type as class_type then
-					context.add_dt_current
-				end
+				-- Do nothing if `reg' is not the current entity.
+			if
+				reg.is_current and then
+				attached {CL_TYPE_A} context_type as class_type
+			then
+				context.add_dt_current
 			end
 		end
 
-	is_polymorphic: BOOLEAN = True;
-			-- Is the attribute access polymorphic ?
+	is_polymorphic: BOOLEAN = True
+			-- Is the attribute access polymorphic?
 
 	generate_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_A)
 			-- Generate attribute access in a `typ' context
 		local
-			is_nested: BOOLEAN;
-			type_i: TYPE_A;
-			type_c: TYPE_C;
+			is_nested: BOOLEAN
+			type_i: TYPE_A
 			buf: GENERATION_BUFFER
 		do
 			if not reg.c_type.is_reference then
@@ -50,27 +50,22 @@ feature -- C code generation
 				buf := buffer
 				is_nested := not is_first
 				type_i := real_type (type)
-				type_c := type_i.c_type
 				if not type_i.is_true_expanded then
 						-- For dereferencing, we need a star...
 					buf.put_character ('*')
 						-- ...followed by the appropriate access cast
-					type_c.generate_access_cast (buf)
+					type_i.c_type.generate_access_cast (buf)
 				end
 				buf.put_character ('(')
 				reg.print_register
+				buf.put_two_character (' ', '+')
 				if reg.is_predefined or reg.register /= No_register then
-					buf.put_three_character (' ', '+', ' ')
+					buf.put_character (' ')
 				else
-					buf.put_two_character (' ', '+')
 					buf.put_new_line
-					buf.indent
 				end
-				if is_nested then
-					buf.put_string ("RTVA(")
-				else
-					buf.put_string ("RTWA(")
-				end;
+				buf.indent
+				buf.put_string (if is_nested then "RTVA(" else"RTWA(" end)
 				buf.put_integer (routine_id)
 				buf.put_string ({C_CONST}.comma_space)
 				if is_nested then
@@ -81,14 +76,12 @@ feature -- C code generation
 					context.generate_current_dtype
 				end
 				buf.put_string ("))")
-				if not (reg.is_predefined or reg.register /= No_register) then
-				  buf.exdent
-				end
+				buf.exdent
 			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

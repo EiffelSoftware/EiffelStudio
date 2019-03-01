@@ -1,7 +1,7 @@
-note
+﻿note
+	description: "Representation for an attribute entry in an instance of ATTR_TABLE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
--- Representation for an attribute entry in an instance of ATTR_TABLE
 
 class ATTR_ENTRY
 
@@ -11,7 +11,30 @@ inherit
 			is_attribute
 		end
 
-feature -- for dead code removal
+create
+	make
+
+feature {NONE} -- Creation
+
+	make (t: like type; tid: like type_id; fid: like feature_id; cid: like class_id)
+			--	Initialize an object using
+			--	• result type `t`
+			--	• type ID `tid`
+			--	• feature ID `fid`
+			--	• class ID `cid`
+		do
+			type := t
+			type_id := tid
+			feature_id := fid
+			class_id := cid
+		ensure
+			type = t
+			type_id = tid
+			feature_id = fid
+			class_id = cid
+		end
+
+feature -- Dead code removal
 
 	is_attribute: BOOLEAN
 			-- Is the entry associated with an attribute?
@@ -19,44 +42,19 @@ feature -- for dead code removal
 			Result := True
 		end
 
-feature -- previously in ATTR_UNIT
-
-	entry (class_type: CLASS_TYPE; a_alias: BOOLEAN): ATTR_ENTRY
-			-- Attribute entry in an attribute offset table.
-			-- If `a_alias' then we can safely reuse `Current'.
-		do
-			if a_alias then
-				Result := Current
-			else
-				create Result
-			end
-			Result.set_type_id (class_type.type_id)
-			Result.set_feature_id (feature_id)
-			Result.set_type (feature_type (class_type))
-			if has_body then
-				Result.set_has_body
-			end
-		end
-
 feature -- from ATTR_ENTRY
-
-	used: BOOLEAN
-			-- Is an attribute entry used?
-		do
-			Result := True
-		end
 
 	workbench_offset: INTEGER
 			-- Offset of attribute in object structure
 		require
 			is_attribute: is_attribute
 		local
-			skel: SKELETON
+			s: SKELETON
 		do
-			skel := System.class_type_of_id (type_id).skeleton;
-			skel.search_feature_id (feature_id);
-			Result := skel.workbench_offset
-		end;
+			s := System.class_type_of_id (type_id).skeleton
+			s.search_feature_id (feature_id)
+			Result := s.workbench_offset
+		end
 
 feature -- Status report
 
@@ -78,7 +76,7 @@ feature -- Status setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

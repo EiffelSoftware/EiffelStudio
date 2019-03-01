@@ -14,10 +14,12 @@ feature -- Access
 
 	dpi: NATURAL
 			-- <Precursor>
+		local
+			ev: EV_SCREEN_IMP
 		do
-			Result := 96
+			create ev.make
+			Result := ev.horizontal_resolution.to_natural_32
 		end
-
 
 note
 	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"

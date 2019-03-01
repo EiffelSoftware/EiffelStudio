@@ -17,10 +17,10 @@ feature
 	fill_from (a: ATTRIBUTE_B)
 		do
 			parent := a.parent
-			attribute_name_id := a.attribute_name_id;
-			attribute_id := a.attribute_id;
+			attribute_name_id := a.attribute_name_id
+			attribute_id := a.attribute_id
 			routine_id := a.routine_id
-			type := a.type;
+			type := a.type
 			is_attachment := a.is_attachment
 		end
 
@@ -35,7 +35,7 @@ feature
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

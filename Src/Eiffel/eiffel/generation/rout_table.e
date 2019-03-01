@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Representation of a table of routine pointer for the final Eiffel executable"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,8 +10,12 @@ class ROUT_TABLE
 inherit
 
 	POLY_TABLE [ROUT_ENTRY]
+		export
+			{ANY} has
 		redefine
-			is_attribute_table, is_routine_table, extend, merge
+			extend,
+			is_routine_table,
+			merge
 		end
 
 	SHARED_GENERATOR
@@ -49,6 +53,11 @@ inherit
 			copy, is_equal
 		end
 
+	SHARED_TABLE
+		undefine
+			copy, is_equal
+		end
+
 	INTERNAL_COMPILER_STRING_EXPORTER
 		undefine
 			copy, is_equal
@@ -63,11 +72,28 @@ feature -- Insertion
 			-- <Precursor>
 		do
 			Precursor {POLY_TABLE} (v)
-				-- Now compute the new value of `pattern_id'.
+				-- Update `pattern_id`.
 			if pattern_id = -2 then
 				pattern_id := v.pattern_id
 			elseif pattern_id /= v.pattern_id then
 				pattern_id := -1
+			end
+				-- Update `body_index`.
+			if body_index /= body_index_various and then not v.is_deferred then
+				if body_index = body_index_unknown then
+						-- There were no implementations registered yet.
+					body_index :=
+						if v.written_class.is_generic then
+								-- If the seed is a generic class, there could be different generic derivations.
+							body_index_various
+						else
+								-- Record the only implementation so far.
+							v.body_index
+						end
+				elseif body_index /= v.body_index then
+						-- There are different implementations.
+					body_index := body_index_various
+				end
 			end
 		end
 
@@ -75,11 +101,19 @@ feature -- Insertion
 			-- <Precursor>
 		do
 			Precursor {POLY_TABLE} (other)
-				-- Now compute the new value of `pattern_id'.
+				-- Update `pattern_id`.
 			if pattern_id = -2 then
 				pattern_id := other.pattern_id
 			elseif pattern_id /= other.pattern_id then
 				pattern_id := - 1
+			end
+				-- Update `body_index`.
+			if body_index /= body_index_various and then other.body_index /= body_index_unknown then
+				if body_index = body_index_unknown then
+					body_index := other.body_index
+				elseif body_index /= other.body_index then
+					body_index := body_index_various
+				end
 			end
 		end
 
@@ -89,12 +123,6 @@ feature -- Status report
 			-- Is the table a routine table?
 		do
 			Result := True
-		end
-
-	is_attribute_table: BOOLEAN
-			-- Is the current table an attribute table ?
-		do
-				-- False here.
 		end
 
 	is_implemented: BOOLEAN
@@ -118,31 +146,39 @@ feature -- Status report
 			Result := array_item (position).routine_name
 		end
 
-	new_entry (f: FEATURE_I; c: INTEGER): ENTRY
-			-- New entry corresponding to `f' in class of class ID `c'
+	new_entry (f: FEATURE_I; t: CLASS_TYPE; c: INTEGER): ENTRY
+			-- <Precursor>
 		do
-			Result := f.new_rout_entry
-			Result.set_class_id (c)
+			Result := f.new_rout_entry (t, c)
 		end
 
-	is_polymorphic (a_type: TYPE_A; a_context_type: CLASS_TYPE): BOOLEAN
-			-- Is the table polymorphic from entry indexed by `type_id' to
-			-- the maximum entry id ?
+	polymorphic_status_for_body (a_type: TYPE_A; a_context_type: CLASS_TYPE): INTEGER_8
+			-- Polymorphic status is the table from entry indexed by `a_type` relative to `a_context_type`
+			-- to the maximum entry id:
+			-- 0 - polymorphic
+			-- -1 - non-polymorphic with a suitable implementation
+			-- -2 - non-polymorphic without any suitable implementation
+		require
+			a_type_not_void: a_type /= Void
+			a_context_type_not_void: a_context_type /= Void
 		local
 			first_real_body_index, first_body_index, first_pattern_id: INTEGER;
-			entry: ROUT_ENTRY;
-			found: BOOLEAN;
+			entry: ROUT_ENTRY
 			i, nb, old_position: INTEGER
 			system_i: SYSTEM_I
 			type_id: INTEGER
+			storage: like area
 		do
-			nb := max_position
-
-			if nb > 1 then
+			Result := -2
+			system_i := System
+			inspect
+				body_index
+			when body_index_unknown then
+				check Result = -2 end
+			when body_index_various then
+				nb := max_position
 				old_position := position
 				type_id := a_type.type_id (a_context_type.type)
-				system_i := System
-
 				from
 						-- Go to the entry of type id equal to `type_id'
 					goto (type_id)
@@ -153,32 +189,58 @@ feature -- Status report
 					goto_used_from_position (i)
 					i := position
 				until
-					Result or else i > nb
+					Result = 0 or else i > nb
 				loop
 					entry := array_item (i)
-					if entry.used then
-						if system_i.class_type_of_id (entry.type_id).dynamic_conform_to (a_type, type_id, a_context_type.type) then
-							if found then
-								Result := entry.real_body_index /= first_real_body_index or
-									entry.body_index /= first_body_index or
-									entry.pattern_id /= first_pattern_id
-							else
-								found := True
-									-- If the pattern ID is does not match the one from the current type
-									-- then the call has to be polymorphic. See eweasel test#ccomp040 and test#ccomp083.
-								Result := first_pattern_id /= entry.pattern_id
-								first_real_body_index := entry.real_body_index
-								first_body_index := entry.body_index
-							end
+					if
+						entry.used and then
+						system_i.class_type_of_id (entry.type_id).dynamic_conform_to (a_type, type_id, a_context_type.type)
+					then
+						if entry.pattern_id /= first_pattern_id then
+								-- If the pattern ID is does not match the one from the current type
+								-- then the call has to be polymorphic. See eweasel test#ccomp040 and test#ccomp083.
+							Result := 0
+						elseif Result = -2 then
+							Result := -1
+							first_real_body_index := entry.real_body_index
+							first_body_index := entry.body_index
+						elseif
+							entry.real_body_index /= first_real_body_index or else
+							entry.body_index /= first_body_index
+						then
+							Result := 0
 						end
 					end
 					i := i + 1
 				end
 				position := old_position
 			else
-					-- Only one entry, it is clearly non-polymorphic.
-				Result := False
+					-- There is a single body index.
+					-- Still, return -2 if there are no used entries.
+				if not attached system_i.remover as r then
+						-- There was no dead code removal and the feature is not deferred.
+					Result := -1
+				elseif r.is_code_reachable (body_index) then
+						-- The feature is reachable, check if there are live classes.
+					from
+						storage := area
+						i := 0
+						nb := count
+					until
+						i >= nb
+					loop
+						if r.is_class_alive (storage [i].class_id) then
+								-- There are used entries in the table.
+							Result := -1
+							i := nb - 1
+						end
+						i := i + 1
+					end
+				end
 			end
+		ensure
+			valid_result: Result = 0 or Result = -1 or Result = -2
+			Result >= -1 implies used
 		end
 
 	is_inlinable (a_type: TYPE_A; a_context_type: CLASS_TYPE): BOOLEAN
@@ -213,7 +275,7 @@ feature -- Status report
 				i := position
 				if array_item (i).is_deferred then
 						-- This is a deferred entry so we need to check
-						-- that all descendant of the first implemetnation are in one single
+						-- that all descendant of the first implementation are in one single
 						-- branch of inheritance. To do so we check that two consecutive
 						-- types (`l_parent_type' and `l_child_type') conforming to `a_type'
 						-- are conforming.
@@ -250,6 +312,83 @@ feature -- Status report
 				end
 				position := old_position
 			end
+		end
+
+	used: BOOLEAN
+			-- Is the table effectively used?
+		local
+			i, nb: INTEGER
+		do
+			from
+				i := lower
+				nb := max_position
+			until
+				Result or else i > nb
+			loop
+				Result := array_item(i).used
+				i := i + 1
+			end;
+		end
+
+feature -- Access
+
+	body_index: like {FEATURE_I}.body_index
+			-- A single body index used in the table, or `body_index_unknown`, or `body_index_various`.
+
+	body_index_unknown: like body_index = 0
+			-- A value of `body_index` indicating that there are no effective features in the table.
+
+	body_index_various: like body_index = -1
+			-- A value of `body_index` indicating that there are more than one effective features in the table.
+
+	min_used: INTEGER
+			-- Minimum used type id ?
+		require
+			not_empty: count > 0
+			is_used: used
+		local
+			entry: ROUT_ENTRY
+			i: INTEGER
+		do
+			from
+				i := lower
+			until
+				Result > 0
+			loop
+				entry := array_item (i)
+				if entry.used then
+					Result := entry.type_id
+				end
+				i := i + 1
+			end
+		end
+
+	max_used: INTEGER
+			-- Minimum used type id ?
+		require
+			not_empty: count > 0
+			is_used: used
+		local
+			entry: ROUT_ENTRY
+			i: INTEGER
+		do
+			from
+				i := max_position
+			until
+				Result > 0
+			loop
+				entry := array_item (i)
+				if entry.used then
+					Result := entry.type_id
+				end
+				i := i - 1
+			end
+		end
+
+	context_item: ROUT_ENTRY
+			-- The entry found by `goto`, `goto_used`, `goto_implemented`.
+		do
+			Result := array_item (context_position)
 		end
 
 feature -- Code generation
@@ -320,7 +459,8 @@ feature -- Code generation
 
 	goto_implemented (a_type: TYPE_A; a_context_type: CLASS_TYPE)
 			-- Go to first implemented feature available in
-			-- a static type greater than `type_id'.
+			-- a static type greater than `a_type.type_id (a_context_type.type)`.
+			-- Set `context_position` to the entry of type ID `a_type.type_id (a_context_type.type)`.
 		require
 			a_type_not_void: a_type /= Void
 			a_context_type_not_void: a_context_type /= Void
@@ -330,9 +470,11 @@ feature -- Code generation
 			l_done: BOOLEAN
 			entry: ROUT_ENTRY
 			system_i: like system
+			context_cl_type: CL_TYPE_A
 		do
 			system_i := system
-			type_id := a_type.type_id (a_context_type.type)
+			context_cl_type := a_context_type.type
+			type_id := a_type.type_id (context_cl_type)
 			goto_used (type_id)
 			i := position
 			from
@@ -342,7 +484,7 @@ feature -- Code generation
 			loop
 				entry := array_item (i)
 				if entry.used then
-					l_done := system_i.class_type_of_id (entry.type_id).dynamic_conform_to (a_type, type_id, a_context_type.type)
+					l_done := system_i.class_type_of_id (entry.type_id).dynamic_conform_to (a_type, type_id, context_cl_type)
 				end
 				i := i + 1
 			end
@@ -353,6 +495,96 @@ feature -- Code generation
 			end
 		ensure
 			is_implemented: position <= max_position implies is_implemented
+		end
+
+	trampoline_name (e, c: ROUT_ENTRY): READABLE_STRING_8
+			-- The name of a trampoline for the entry `e` when called in the context where `c` is expected.
+		require
+			has (e)
+			has (c)
+			e.pattern_id /= c.pattern_id
+		do
+			Result := trampoline_name_from_routine_name (e.routine_name, c.pattern_id)
+		end
+
+	generate_trampoline (type_id: INTEGER; trampoline_pattern_id: INTEGER; writer: TABLE_GENERATOR)
+			-- Generate trampoline for type ID `type_id` with the signature corresponding to `trampoline_pattern_id`
+			-- using the specified `writer` for output.
+		local
+			n: like feature_name
+			e: ROUT_ENTRY
+		do
+			goto (type_id)
+			e := item
+			if e.pattern_id /= trampoline_pattern_id then
+				n := e.routine_name
+				generate_wrapper
+					(writer.current_buffer,
+					item,
+					trampoline_pattern_id,
+					item.pattern_id,
+					trampoline_name_from_routine_name (n, trampoline_pattern_id),
+					n)
+			end
+		end
+
+feature {NONE} -- Naming
+
+	trampoline_name_from_routine_name (n: READABLE_STRING_8; p: INTEGER): READABLE_STRING_8
+			-- The name of a trampoline built from the given routine name `n`
+			-- when called in the context where the pattern of ID `p` is expected.
+		local
+			s: STRING_8
+		do
+			create s.make_from_string (n)
+			s.append_character ('_')
+			s.append_integer (rout_id)
+			s.append_character ('_')
+			s.append_integer (p)
+			Result := s
+		end
+
+feature -- Iteration
+
+	goto_used (type_id: INTEGER)
+			-- Move cursor to the first entry of type_id `type_id'
+			-- associated to an used effective class (non-deferred).
+			-- Set `context_position` to the entry of `type_id`.
+		require
+			positive: type_id > 0
+		local
+			i, nb: INTEGER
+		do
+			from
+				i := binary_search (type_id)
+				context_position := i
+				nb := max_position
+			until
+				i = nb or else array_item (i).used
+			loop
+				i := i + 1
+			end
+			position := i
+		end
+
+	goto_used_from_position (a_pos: INTEGER)
+			-- Move cursor to the first entry after position `a_pos'
+			-- associated to an used effective class (non-deferred).
+		require
+			a_pos_positive: a_pos >= 0
+			not_too_big: a_pos <= max_position
+		local
+			i, nb: INTEGER
+		do
+			from
+				i := a_pos
+				nb := max_position
+			until
+				array_item(i).used or else i = nb
+			loop
+				i := i + 1
+			end
+			position := i
 		end
 
 feature {POLY_TABLE} -- Special data
@@ -412,7 +644,10 @@ feature {NONE} -- Implementation
 				check
 					consistent: not system.routine_id_counter.is_feature_routine_id (rout_id) implies has_one_signature
 				end
-				if not has_one_signature then
+				if has_one_signature then
+					l_seed_pattern_id := pattern_id
+					l_c_pattern := pattern_table.c_pattern_of_id (l_seed_pattern_id)
+				else
 					l_seed := system.seed_of_routine_id (rout_id)
 					if l_seed.has_formal then
 							-- The most generic parameter we can get which can be used for the various kind
@@ -428,9 +663,6 @@ feature {NONE} -- Implementation
 						l_seed_pattern_id := array_item (lower).pattern_id
 						l_c_pattern := pattern_table.c_pattern_of_id (l_seed_pattern_id)
 					end
-				else
-					l_seed_pattern_id := pattern_id
-					l_c_pattern := pattern_table.c_pattern_of_id (l_seed_pattern_id)
 				end
 				check
 					l_seed_pattern_id_positive: l_seed_pattern_id > 0
@@ -469,13 +701,12 @@ feature {NONE} -- Implementation
 					if l_rout_entry /= Void then
 						l_routine_name := l_rout_entry.routine_name
 						l_pattern_id := l_rout_entry.pattern_id
-						if l_seed_pattern_id /= l_pattern_id then
+						if l_seed_pattern_id = l_pattern_id then
+								-- Remember external routine declaration
+							extern_declarations.add_routine_with_signature (l_c_pattern.result_type.c_string, l_routine_name, l_c_pattern_args)
+						else
 								-- A wrapper needs to be used/generated.
-							create l_wrapped_name.make (l_routine_name.count + 6)
-							l_wrapped_name.append (l_routine_name)
-							l_wrapped_name.append_character ('_')
-							l_wrapped_name.append_integer (rout_id)
-
+							l_wrapped_name := trampoline_name_from_routine_name (l_routine_name, l_seed_pattern_id)
 							if l_wrappers = Void then
 								create l_wrappers.make (10)
 							end
@@ -485,9 +716,6 @@ feature {NONE} -- Implementation
 								l_wrappers.put (l_wrapped_name)
 							end
 							l_routine_name := l_wrapped_name
-						else
-								-- Remember external routine declaration
-							extern_declarations.add_routine_with_signature (l_c_pattern.result_type.c_string, l_routine_name, l_c_pattern_args)
 						end
 						generate_loop_initialization (buffer, l_table_name, l_routine_name, l_start, l_end)
 
@@ -503,13 +731,12 @@ feature {NONE} -- Implementation
 			if l_rout_entry /= Void then
 				l_routine_name := l_rout_entry.routine_name
 				l_pattern_id := l_rout_entry.pattern_id
-				if l_seed_pattern_id /= l_pattern_id then
+				if l_seed_pattern_id = l_pattern_id then
+						-- Remember external routine declaration
+					extern_declarations.add_routine_with_signature (l_c_pattern.result_type.c_string, l_routine_name, l_c_pattern_args)
+				else
 						-- A wrapper needs to be used/generated.
-					create l_wrapped_name.make (l_routine_name.count + 6)
-					l_wrapped_name.append (l_routine_name)
-					l_wrapped_name.append_character ('_')
-					l_wrapped_name.append_integer (rout_id)
-
+					l_wrapped_name := trampoline_name_from_routine_name (l_routine_name, l_seed_pattern_id)
 					if l_wrappers = Void then
 						create l_wrappers.make (10)
 					end
@@ -519,9 +746,6 @@ feature {NONE} -- Implementation
 						l_wrappers.put (l_wrapped_name)
 					end
 					l_routine_name := l_wrapped_name
-				else
-						-- Remember external routine declaration
-					extern_declarations.add_routine_with_signature (l_c_pattern.result_type.c_string, l_routine_name, l_c_pattern_args)
 				end
 				generate_loop_initialization (buffer, l_table_name, l_routine_name, l_start, l_end)
 			end
@@ -551,10 +775,10 @@ feature {NONE} -- Implementation
 			l_seed_type, l_type: TYPE_C
 			l_is_return_value_boxed: BOOLEAN
 			l_type_a: TYPE_A
-			l_basic_type: BASIC_A
 			i, nb: INTEGER
 			l_feat: FEATURE_I
 			l_old_buffer: GENERATION_BUFFER
+			is_extern: BOOLEAN
 		do
 			l_seed_c_pattern := pattern_table.c_pattern_of_id (a_seed_pattern_id)
 			l_c_pattern := pattern_table.c_pattern_of_id (a_pattern_id)
@@ -563,10 +787,19 @@ feature {NONE} -- Implementation
 			l_result_string := l_seed_c_pattern.result_type.c_string
 			l_arg_names := l_seed_c_pattern.argument_name_array
 			l_arg_types := l_seed_c_pattern.argument_type_array
-			extern_declarations.add_wrapper_with_signature (l_result_string, a_wrapped_name, l_arg_types)
+			if system.has_trampoline (a_entry, a_seed_pattern_id, Current) then
+					-- Declare the function as visible to outer modules.
+				extern_declarations.add_routine_with_signature (l_result_string, a_wrapped_name, l_arg_types)
+				is_extern := True
+					-- Remove the trampoline because it is going to be generated now.
+				system.remove_trampoline (a_entry, a_seed_pattern_id, Current)
+			else
+					-- Declare the function as invisible to outer modules.
+				extern_declarations.add_wrapper_with_signature (l_result_string, a_wrapped_name, l_arg_types)
+			end
 			extern_declarations.add_routine_with_signature (l_c_pattern.result_type.c_string, a_routine_name, l_c_pattern.argument_type_array)
 
-			buffer.generate_function_signature (l_result_string, a_wrapped_name, False, Void, l_arg_names, l_arg_types)
+			buffer.generate_function_signature (l_result_string, a_wrapped_name, is_extern, Void, l_arg_names, l_arg_types)
 			buffer.generate_block_open
 			l_seed_type := l_seed_c_pattern.result_type
 			l_type := l_c_pattern.result_type
@@ -667,17 +900,19 @@ feature {NONE} -- Implementation
 				if l_type_a.is_like_current then
 					l_type_a := l_type_a.conformance_type
 				end
-				l_basic_type ?= l_type_a
-				check is_basic_type: l_basic_type /= Void end
-					-- Because `metamorphose' indirectly uses BYTE_CONTEXT.buffer we need to configure
-					-- it to use `buffer' instead.
-				l_old_buffer := context.buffer
-				context.set_buffer (buffer)
-				l_basic_type.metamorphose (
-					create {NAMED_REGISTER}.make ("Result", l_seed_type),
-					create {NAMED_REGISTER}.make ("r", l_type), buffer)
-				context.set_buffer (l_old_buffer)
-				buffer.put_character (';')
+				if attached {BASIC_A} l_type_a as l_basic_type then
+						-- Because `metamorphose' indirectly uses BYTE_CONTEXT.buffer we need to configure
+						-- it to use `buffer' instead.
+					l_old_buffer := context.buffer
+					context.set_buffer (buffer)
+					l_basic_type.metamorphose (
+						create {NAMED_REGISTER}.make ("Result", l_seed_type),
+						create {NAMED_REGISTER}.make ("r", l_type), buffer)
+					context.set_buffer (l_old_buffer)
+					buffer.put_character (';')
+				else
+					check False end
+				end
 				buffer.put_new_line
 				buffer.put_string ("return Result;")
 				buffer.exdent
@@ -704,8 +939,8 @@ feature {NONE} -- Implementation
 				buffer.put_character ('[')
 				buffer.put_integer (a_lower)
 				buffer.put_string ("] = ")
-				buffer.put_string (function_ptr_cast_string);
-				buffer.put_string (a_routine_name);
+				buffer.put_string (function_ptr_cast_string)
+				buffer.put_string (a_routine_name)
 				buffer.put_character (';')
 			else
 					-- FIXME: Manu: 03/23/2004: The following line should be used.
@@ -728,7 +963,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	function_ptr_cast_string: STRING = "(char *(*)()) ";
+	function_ptr_cast_string: STRING = "(char *(*)()) "
 			-- String representing cast to type of function pointer
 
 	write
@@ -752,7 +987,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

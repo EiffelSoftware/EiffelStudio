@@ -35,18 +35,25 @@ feature -- Status report
 			Result := True
 		end
 
-feature
+feature -- Creation
 
-	new_entry (f: FEATURE_I; c: INTEGER): ENTRY
-			-- New entry corresponding to `f' in class of class ID `c'
+	new_entry (f: FEATURE_I; t: CLASS_TYPE; c: INTEGER): ENTRY
+			-- <Precursor>
 		do
-			Result := f.new_attr_entry
-			Result.set_class_id (c)
+			Result := f.new_attr_entry (t, c)
 		end
 
-	is_polymorphic (a_type: TYPE_A; a_context_type: CLASS_TYPE): BOOLEAN
-			-- Is the table polymorphic from entry indexed by `type_id' to
-			-- the maximum entry id ?
+feature -- Status report
+
+	polymorphic_status_for_offset (a_type: TYPE_A; a_context_type: CLASS_TYPE): INTEGER_8
+			-- Polymorphic status is the table from entry indexed by `a_type` relative to `a_context_type`
+			-- to the maximum entry id:
+			-- 0 - polymorphic
+			-- -1 - non-polymorphic with a suitable implementation
+			-- -2 - non-polymorphic without any suitable implementation
+		require
+			a_type_not_void: a_type /= Void
+			a_context_type_not_void: a_context_type /= Void
 		local
 			entry: ATTR_ENTRY;
 			cl_type: CLASS_TYPE;
@@ -56,49 +63,59 @@ feature
 			l_buffer: GENERATION_BUFFER
 			type_id: INTEGER
 		do
+			Result := -2
 			nb := max_position
-
-			if nb > 1 then
-				type_id := a_type.type_id (a_context_type.type)
-				old_position := position
-				system_i := System
-				goto_used (type_id);
-				i := position
-				if i <= nb then
-					from
-						create l_buffer.make (50)
-						entry := array_item (i)
-						system_i.class_type_of_id (entry.type_id).skeleton.generate_offset (l_buffer, entry.feature_id, False, False)
-						l_offset := l_buffer.as_string
-							-- We have computed the first element, we go directly to the next one.
-						i := i + 1
-					until
-						Result or else i > nb
-					loop
-						entry := array_item (i)
-						cl_type := system_i.class_type_of_id (entry.type_id);
+			type_id := a_type.type_id (a_context_type.type)
+			old_position := position
+			system_i := System
+			goto_used_for_offset (type_id)
+			i := position
+			if i <= nb then
+				from
+					create l_buffer.make (50)
+					entry := array_item (i)
+					if entry.used_for_offset then
+						Result := -1
+					end
+					system_i.class_type_of_id (entry.type_id).skeleton.generate_offset (l_buffer, entry.feature_id, False, False)
+					l_offset := l_buffer.as_string
+						-- We have computed the first element, we go directly to the next one.
+					i := i + 1
+				until
+					Result = 0 or else i > nb
+				loop
+					entry := array_item (i)
+					if entry.used_for_offset then
+						Result := -1
+						cl_type := system_i.class_type_of_id (entry.type_id)
 						if cl_type.dynamic_conform_to (a_type, type_id, a_context_type.type) then
 							l_buffer.clear_all
 							cl_type.skeleton.generate_offset (l_buffer, entry.feature_id, False, False)
-							Result := not l_buffer.as_string.is_equal (l_offset)
+							if not l_buffer.as_string.is_equal (l_offset) then
+								Result := 0
+							end
 						end
-						i := i + 1
-					end;
+					end
+					i := i + 1
 				end
-				position := old_position
 			end
+			position := old_position
+		ensure
+			valid_result: Result = 0 or Result = -1 or Result = -2
 		end
+
+feature -- Code generation
 
 	generate_attribute_offset (buf: GENERATION_BUFFER; a_type: TYPE_A; a_context_type: CLASS_TYPE)
 			-- Generate offset for a static attribute access.
 		require
-			not_is_polymorphic: not is_polymorphic (a_type, a_context_type)
+			not_is_polymorphic: polymorphic_status_for_offset (a_type, a_context_type) = -1
 		local
 			type_id: INTEGER
 			l_entry: G
 		do
 			type_id := a_type.type_id (a_context_type.type)
-			goto_used (type_id)
+			goto_used_for_offset (type_id)
 				--| In this instruction, we put `False' as third
 				--| arguments. This means we won't generate anything if there is nothing
 				--| to generate. Remember that `True' is used in the generation of attributes
@@ -106,8 +123,6 @@ feature
 			l_entry := array_item (position)
 			system.class_type_of_id (l_entry.type_id).skeleton.generate_offset (buf, l_entry.feature_id, False, True)
 		end
-
-feature -- Code generation
 
 	generate_initialization (buf: GENERATION_BUFFER; header_buf: GENERATION_BUFFER)
 			-- <Precursor>
@@ -276,7 +291,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -225,7 +225,7 @@ feature {NONE} --Implementation
 		do
 			check attached {ATTRIBUTE_I} rout_class.feature_table.item_id (id) as l_feat then
 				create Result.make (l_feat)
-				Result.set_type (context.real_type_in (l_feat.type, cl_type.associated_class_type (context.context_class_type.type).type))
+				Result.set_type (context.real_type_in (l_feat.type, cl_type))
 			end
 			Result ?= Result.enlarged
 			check
@@ -314,7 +314,7 @@ feature {NONE} --Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

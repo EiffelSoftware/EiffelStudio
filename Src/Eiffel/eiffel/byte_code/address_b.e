@@ -1,5 +1,5 @@
-note
-	description: "Result of applying `$' on an Eiffel routine"
+﻿note
+	description: "Result of applying `$' on an Eiffel routine."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -135,7 +135,7 @@ feature -- C code generation
 				buf.put_character (')')
 			else
 				l_rout_id := routine_id
-				array_index := Eiffel_table.is_polymorphic (l_rout_id, class_type.type, class_type, True)
+				array_index := Eiffel_table.is_polymorphic_for_body (l_rout_id, class_type.type, class_type)
 				if array_index = -2 then
 						-- Function pointer associated to a deferred feature
 						-- without any implementation
@@ -196,7 +196,7 @@ feature {NONE} -- Address table
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -227,4 +227,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class ADDRESS_B
+end

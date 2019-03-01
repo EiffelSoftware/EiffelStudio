@@ -1971,7 +1971,7 @@ feature -- Polymorphism
 	 			if seed.has_formal then
 	 					-- This is an attribute with a seed of a formal generic type that may become expanded.
 	 				create {GENERIC_ATTRIBUTE_TABLE} Result.make (rout_id, True)
-	 			elseif not  seed.type.actual_type.is_expanded then
+	 			elseif not seed.type.actual_type.is_expanded then
 	 					-- This is an attribute with a seed of a non-expanded type that may require initialization.
 	 				create {GENERIC_ATTRIBUTE_TABLE} Result.make (rout_id, False)
 	 			else
@@ -1981,55 +1981,77 @@ feature -- Polymorphism
 	 		end
  		end
 
- 	new_entry (rout_id: INTEGER): ENTRY
- 			-- New polymorphic unit
+ 	new_entry (context_type: CLASS_TYPE; rout_id: INTEGER; class_id: like {CLASS_C}.class_id): ENTRY
+ 			-- New polymorphic unit for the version of routine ID `rout_id` in the context type `class_type` of the class of ID `class_id`.
  		require
 			rout_id_not_void: rout_id /= 0
+			rout_id_valid: rout_id_set.has (rout_id)
 		local
 			r: like new_rout_entry
  		do
- 			if is_attribute and then Routine_id_counter.is_attribute (rout_id) then
- 				if byte_context.workbench_mode or else has_formal  then
-	 				r := new_rout_entry
-	 				r.set_is_attribute
-	 				Result := r
- 				else
-	 				Result := new_attr_entry
- 				end
- 			else
- 				Result := new_rout_entry
+ 			if not is_attribute or else not Routine_id_counter.is_attribute (rout_id) then
+ 				Result := new_rout_entry (context_type, class_id)
+ 			elseif byte_context.workbench_mode or else has_formal then
+				r := new_rout_entry (context_type, class_id)
+				r.set_is_attribute
+				Result := r
+			else
+				Result := new_attr_entry (context_type, class_id)
  			end
  		end
 
- 	new_rout_entry: ROUT_ENTRY
- 			-- New routine unit
- 		do
- 			create Result
- 			Result.set_body_index (body_index)
-			Result.set_type_a (type)
+	rout_entry_type: ROUT_ENTRY
+			-- A type to be returned by `new_rout_entry`.
+		require
+			false
+		do
+			check from_precondition: false then end
+		ensure
+			class
+			false
+		end
 
+ 	new_rout_entry (t: CLASS_TYPE; c: like {CLASS_C}.class_id): like rout_entry_type
+ 			-- New routine unit for a target type `t` of the class of ID `c`.
+ 		local
+ 			access_class_id: like access_in
+ 			access_type_id: INTEGER
+ 			written_type_id: INTEGER
+ 			entry_written_type: CLASS_TYPE
+ 		do
+ 			entry_written_type := written_class.meta_type (t)
+			written_type_id := entry_written_type.type_id
  			if has_replicated_ast then
  					-- If AST has been replicated, then we must use `access_in'
  					-- as this is the new written in value.
- 				Result.set_access_in (access_in)
+ 				access_class_id := access_in
+				access_type_id := access_class.meta_type (t).type_id
  			else
- 				Result.set_access_in (written_in)
+ 				access_class_id := written_in
+				access_type_id := written_type_id
  			end
-			Result.set_written_in (written_in)
-
- 			Result.set_pattern_id (pattern_id)
-			Result.set_feature_id (feature_id)
-			Result.set_is_deferred (is_deferred)
+ 			create Result.make
+ 				(result_type_in (t),
+ 				t.type_id,
+ 				feature_id,
+ 				is_deferred,
+ 				body_index,
+ 				pattern_table.c_pattern_id_in (pattern_id, entry_written_type),
+ 				access_type_id,
+ 				access_class_id,
+ 				written_in,
+ 				c)
  		end
 
- 	new_attr_entry: ATTR_ENTRY
- 			-- New attribute unit
+ 	new_attr_entry (t: CLASS_TYPE; c: like {CLASS_C}.class_id): ATTR_ENTRY
+ 			-- New attribute unit for a target type `t` of the class of ID `c`.
  		require
  			is_attribute: is_attribute
+ 			valid_class_id: system.has_existing_class_of_id (c)
+ 			known_feature: attached system.class_of_id (c) as compiled_class and then attached compiled_class.feature_of_feature_id (feature_id)
+ 			consistent_target_type: t.associated_class.class_id = c
  		do
- 			create Result
-			Result.set_type_a (type)
- 			Result.set_feature_id (feature_id)
+ 			create Result.make (result_type_in (t), t.type_id, feature_id, c)
  		end
 
  	poly_equiv (other: FEATURE_I): BOOLEAN
@@ -2144,6 +2166,18 @@ feature -- Signature instantiation
 					l_arguments.put_i_th (new_type, i)
 				end
 				i := i + 1
+			end
+		end
+
+	result_type_in (t: CLASS_TYPE): TYPE_A
+			-- Result type adapted to the target type `t`.
+		do
+			Result := type
+			if Result.is_like_current then
+					-- We need to instantiate `like Current' in the context of `class_type'
+					-- to fix eweasel test#exec035.
+					-- Associated actual type is always attached.
+				Result := Result.instantiated_in (t.type.as_attached_in (t.associated_class))
 			end
 		end
 
@@ -3661,7 +3695,7 @@ note
 	ca_ignore:
 		"CA033", "CA033: very long class",
 		"CA082", "CA082: missing redeclaration of `is_equal`"
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

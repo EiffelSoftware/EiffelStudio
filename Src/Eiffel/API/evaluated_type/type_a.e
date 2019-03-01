@@ -427,9 +427,9 @@ feature -- Properties
 		do
 			if a_type /= Void then
 				Result :=
-						-- First type should be the one from a generic derivation.
+						-- First, type should be the one from a generic derivation.
 					a_type.generic_derivation.same_as (a_type) and then
-						-- Second it should be valid for Current type.
+						-- Second, it should be valid for Current type.
 					(a_type.has_associated_class and then is_valid_for_class (a_type.base_class))
 			else
 				Result := True
@@ -488,6 +488,11 @@ feature -- Properties
 			-- Is the current actual type an expanded one ?
 		do
 			-- Do nothing
+		end
+
+	is_expanded_creation_possible: BOOLEAN
+			-- Can this type become expanded in a descendant or generic derivation?
+		do
 		end
 
 	is_enum: BOOLEAN
@@ -2121,7 +2126,7 @@ invariant
 	separate_mark_consistency: not is_expanded implies (has_separate_mark implies is_separate)
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

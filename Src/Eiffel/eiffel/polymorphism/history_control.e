@@ -60,8 +60,6 @@ feature -- Settings
 			poly_table: POLY_TABLE [ENTRY]
 			associated_class: CLASS_C
 			types: TYPE_LIST
-			entry: ENTRY
-			modified_entry: ENTRY
 		do
 			poly_table := new_units.item (rout_id)
 			if poly_table = Void then
@@ -78,14 +76,11 @@ feature -- Settings
 					else
 						poly_table.extend_block (types.count)
 					end
-					entry := poly_table.new_entry (f, id)
 					types.start
 				until
 					types.after
 				loop
-					modified_entry := entry.twin
-					modified_entry.update (types.item)
-					poly_table.extend (modified_entry)
+					poly_table.extend (poly_table.new_entry (f, types.item, id))
 					types.forth
 				end
 			end
@@ -169,7 +164,7 @@ invariant
 	new_units_not_void: new_units /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

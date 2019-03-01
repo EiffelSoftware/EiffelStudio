@@ -83,25 +83,23 @@ feature -- Insertion
 
 	put_invariant (f: INVARIANT_FEAT_I)
 		local
-			u: ENTRY
 			local_class_types: TYPE_LIST
 			i: INTEGER
 			l_area: SPECIAL [DESCRIPTOR]
+			class_id: like {CLASS_C}.class_id
 		do
-			u := f.new_entry (System.routine_id_counter.invariant_rout_id)
-			if u /= Void then
-				from
-					local_class_types := class_types
-					l_area := area
-					i := count - 1
-				until
-					i < 0
-				loop
-						-- `i = 0' is used to signify last iteration so that the entry
-						-- object may be aliased without side effect.
-					l_area.item (i).set_invariant_entry (u.entry (local_class_types.i_th (i + 1), i = 0))
-					i := i - 1
-				end
+			class_id := base_class.class_id
+			from
+				local_class_types := class_types
+				l_area := area
+				i := count - 1
+			until
+				i < 0
+			loop
+					-- `i = 0' is used to signify last iteration so that the entry
+					-- object may be aliased without side effect.
+				l_area.item (i).set_invariant_entry (f.new_entry (local_class_types.i_th (i + 1), System.routine_id_counter.invariant_rout_id, class_id))
+				i := i - 1
 			end
 		end
 
@@ -114,7 +112,6 @@ feature -- Insertion
 			--|is found in the global system table Rout_info_table
 			--|which is built during pass 2.
 		local
-			u: ENTRY
 			ri: ROUT_INFO
 			origin: INTEGER
 			offset, nb_routines, i: INTEGER
@@ -122,55 +119,53 @@ feature -- Insertion
 			desc: DESCRIPTOR
 			du: DESC_UNIT
 			local_class_types: TYPE_LIST
+			class_id: like {CLASS_C}.class_id
 		do
 				-- Get the polymorphical unit corresponding to `f'
-			u := f.new_entry (r_id)
-			if u /= Void then
+			class_id := base_class.class_id
+				-- Get the origin of the routine of id `r_id' and
+				-- the offset of that routine in the origin class.
+				-- Also get the number of routines introduced in the
+				-- origin class.
 
-					-- Get the origin of the routine of id `r_id' and
-					-- the offset of that routine in the origin class.
-					-- Also get the number of routines introduced in the
-					-- origin class.
+			ri := System.rout_info_table.item (r_id)
+			origin := ri.origin
+			offset := ri.offset
+			nb_routines := System.rout_info_table.descriptor_size (origin)
 
-				ri := System.rout_info_table.item (r_id)
-				origin := ri.origin
-				offset := ri.offset
-				nb_routines := System.rout_info_table.descriptor_size (origin)
+				-- For each class type, create the appropriate
+				-- entry, and insert it into the appropriate
+				-- DESC_UNIT structure.
 
-					-- For each class type, create the appropriate
-					-- entry, and insert it into the appropriate
-					-- DESC_UNIT structure.
-
-				from
-					local_class_types := class_types
-					local_class_types.start
-					l_area := area
-					i := count - 1
-				until
-					i < 0
-				loop
-						-- Get the descriptor of the class type.
-					desc := l_area.item (i)
-						-- Create a desc_unit if an origin is encountered
-						-- for the first time and insert it in the
-						-- descriptor,  (otherwise recuperate existing one).
-					du := desc.table_item (origin)
-					if du = Void then
-						create du.make (origin, nb_routines)
-						desc.table_put (du, origin)
-					end
-						-- Insert the polymorphical entry correponding to
-						-- the current class type and routine of id `r_id'
-						-- into the descriptor unit, at the position
-						-- `offset'.
-					check
-						du.valid_index (offset)
-					end
-						-- `i = 0' is used to signify last iteration so that the entry
-						-- object may be aliased without side effect.
-					du.put (u.entry (local_class_types.i_th (i + 1), i = 0), offset)
-					i := i - 1
+			from
+				local_class_types := class_types
+				local_class_types.start
+				l_area := area
+				i := count - 1
+			until
+				i < 0
+			loop
+					-- Get the descriptor of the class type.
+				desc := l_area.item (i)
+					-- Create a desc_unit if an origin is encountered
+					-- for the first time and insert it in the
+					-- descriptor,  (otherwise recuperate existing one).
+				du := desc.table_item (origin)
+				if du = Void then
+					create du.make (origin, nb_routines)
+					desc.table_put (du, origin)
 				end
+					-- Insert the polymorphical entry correponding to
+					-- the current class type and routine of id `r_id'
+					-- into the descriptor unit, at the position
+					-- `offset'.
+				check
+					du.valid_index (offset)
+				end
+					-- `i = 0' is used to signify last iteration so that the entry
+					-- object may be aliased without side effect.
+				du.put (f.new_entry (local_class_types.i_th (i + 1), r_id, class_id), offset)
+				i := i - 1
 			end
 		end
 
@@ -262,7 +257,7 @@ feature -- Melting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -27,6 +27,7 @@ inherit
 			internal_is_valid_for_class,
 			internal_same_generic_derivation_as,
 			is_basic,
+			is_expanded_creation_possible,
 			is_processor_attachable_to,
 			make,
 			meta_type,
@@ -63,6 +64,12 @@ feature -- Status Report
 
 	has_reference: BOOLEAN = False
 			-- <Precursor>
+
+	is_expanded_creation_possible: BOOLEAN
+			-- <Precursor>
+		do
+			Result := not {SYSTEM_I}.is_basic_class_alive
+		end
 
 feature -- Access
 
@@ -237,7 +244,7 @@ invariant
 	is_base_class_expanded: class_declaration_mark = expanded_mark
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

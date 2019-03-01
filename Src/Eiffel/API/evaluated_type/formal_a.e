@@ -37,6 +37,7 @@ inherit
 			is_full_named_type,
 			is_initialization_required,
 			is_loose,
+			is_expanded_creation_possible,
 			is_reference,
 			is_separate,
 			make_type_byte_code,
@@ -139,6 +140,12 @@ feature -- Property
 	is_expanded: BOOLEAN
 			-- Is current constrained to be always an expanded?
 
+	is_expanded_creation_possible: BOOLEAN
+			-- <Precursor>
+		do
+			Result := not is_reference
+		end
+
 	is_separate: BOOLEAN
 			-- Is current constrained to be always separate?
 
@@ -171,10 +178,12 @@ feature -- Property
 				-- a mark and if it is which one. When there are no mark at runtime, we will
 				-- use the mark of the actual generic parameter.
 
-			if has_attached_mark then
-				Result := {SHARED_GEN_CONF_LEVEL}.attached_type
-			elseif has_detachable_mark then
-				Result := {SHARED_GEN_CONF_LEVEL}.detachable_type
+			if lace.is_void_safe then
+				if has_attached_mark then
+					Result := {SHARED_GEN_CONF_LEVEL}.attached_type
+				elseif has_detachable_mark then
+					Result := {SHARED_GEN_CONF_LEVEL}.detachable_type
+				end
 			end
 
 			if system.is_scoop and then has_separate_mark then
@@ -756,7 +765,7 @@ feature {NONE} -- Status adaptation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

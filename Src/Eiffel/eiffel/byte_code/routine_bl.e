@@ -107,6 +107,29 @@ feature -- Code generation
 			end
 		end
 
+	generate_access
+			-- Generate access call of feature on `current_register` or a special register to call instance-free feature.
+		do
+				-- Reset variables.
+			is_right_parenthesis_needed.put (False)
+			is_deferred.put (False)
+			do_generate
+				(if attached instance_free_creation as c then
+					c.register
+				else
+					current_register
+				end)
+		end
+
+	generate_on (reg: REGISTRABLE)
+			-- Generate call of feature on `reg`.
+		do
+				-- Reset variables
+			is_right_parenthesis_needed.put (False)
+			is_deferred.put (False)
+			do_generate (reg)
+		end
+
 	generate_parameters (reg: REGISTRABLE)
 			-- <Precursor>
 			-- Prepare an instance-free target if needed.
@@ -117,16 +140,66 @@ feature -- Code generation
 			end
 		end
 
+feature {NONE} -- Code generation
+
+	generate_nested_flag (has_target: BOOLEAN)
+			-- Setup a flag that indicates whether a subsequent call is nested,
+			-- so that class invariant should be checked on the target that is present if `has_target` is set.
+			-- Update `is_right_parenthesis_needed` if the flag is generated and has to be closed after the call.
+		require
+			is_final_mode: context.final_mode
+			is_right_parenthesis_unneeded: not is_right_parenthesis_needed.item
+		local
+			buf: like buffer
+		do
+			if system.keep_assertions then
+				is_right_parenthesis_needed.put (True)
+				buf := buffer
+				buf.put_string ("(nstcall = ")
+				buf.put_integer (if not is_first and has_target or else call_kind = call_kind_creation then call_kind else 0 end)
+				buf.put_two_character (',', ' ')
+			end
+		end
+
+	generate_no_call
+			-- Generate code for the case when there is no suitable routine to call.
+			-- This may happen for calls on void target.
+		require
+			is_final_mode: context.final_mode
+			is_effective: not is_deferred.item
+		local
+			buf: like buffer
+			l_type_c: TYPE_C
+		do
+			buf := buffer
+			buf.put_string ({C_CONST}.open_rtnr)
+				-- The line below can be removed when the RTNR macro
+				-- doesn't take an argument anymore.
+			buf.put_string ("(NULL)")
+			l_type_c := real_type (type).c_type
+			if not l_type_c.is_void then
+				buf.put_two_character (',', ' ')
+				l_type_c.generate_default_value (buf)
+			end
+			buf.put_character (')')
+			is_deferred.put (True)
+		ensure
+			is_deferred: is_deferred.item
+		end
+
 feature -- Optimization
 
 	is_polymorphic: BOOLEAN
-			-- Is access polymorphic ?
+			-- Is access polymorphic?
 		local
 			type_i: TYPE_A
 		do
 			type_i := context_type
-			if not type_i.is_basic and then precursor_type = Void then
-				Result := Eiffel_table.is_polymorphic (routine_id, type_i, context.context_class_type, True) >= 0
+			if
+				not type_i.is_basic and then
+				not attached precursor_type
+			then
+				Result := Eiffel_table.is_polymorphic_for_body (routine_id, type_i, context.original_class_type) >= 0
 			end
 		end
 
@@ -136,10 +209,30 @@ feature -- Optimization
 			Result := Eiffel_table.poly_table (routine_id).has_one_signature
 		end
 
+feature {NONE} -- Access
+
+	is_deferred: CELL [BOOLEAN]
+			-- Is current feature call a deferred feature without implementation?
+			-- This may happen even when there is an implementation, but no suitable object is ever created.
+		once
+			create Result.put (False)
+		ensure
+			is_deferred_not_void: Result /= Void
+		end
+
+	is_right_parenthesis_needed: CELL [BOOLEAN]
+			-- Does current call require to close a parenthesis?
+			-- Case when one use `nstcall' or `eif_optimize_return'.
+		once
+			create Result.put (False)
+		ensure
+			is_right_parenthesis_needed_attached: attached Result
+		end
+
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -14,7 +14,6 @@ inherit
 			is_target_type_fixed,
 			optimized_byte_node,
 			parameters,
-			pre_inlined_code,
 			set_parameters,
 			size
 		end
@@ -150,30 +149,32 @@ feature -- Inlining
 			end
 		end
 
-	pre_inlined_code: CALL_B
-			-- <Precursor>
-		local
-			inlined_current_b: INLINED_CURRENT_B
+feature {NONE} -- Access
+
+	effective_entry (target_type: TYPE_A; target_type_id: INTEGER; routine_table: ROUT_TABLE): detachable ROUT_ENTRY
+			-- An entry to call (if any) when there is only one reachable version of the feature
+			-- for the type `target_type` of ID `target_type_id` in the table `routine_table`.
+		require
+			target_type_id = target_type.type_id (context.context_cl_type)
 		do
-			if parent /= Void then
-				Result := Current
+			if attached precursor_type then
+					-- The feature to call is fixed.
+				routine_table.goto (target_type_id)
 			else
-				create parent
-				create inlined_current_b
-				parent.set_target (inlined_current_b)
-				inlined_current_b.set_parent (parent)
-				parent.set_message (Current)
-				Result := parent
+					-- The feature to call corresponds to the target type or a conforming descendant.
+				routine_table.goto_implemented (target_type, context.context_class_type)
 			end
-			if parameters /= Void then
-				parameters := parameters.pre_inlined_code
+			if routine_table.is_implemented then
+				Result := routine_table.item
 			end
+		ensure
+			attached Result implies attached routine_table.context_item
 		end
 
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

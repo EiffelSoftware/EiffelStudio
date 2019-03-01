@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "C Pattern of a feature: it is constitued of the meta types of the %
 		%arguments and result."
 	legal: "See notice at end of class."
@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 	make (t: TYPE_C; a_args: like argument_types)
 			-- Creation of a pattern with a result meta type
 		require
-			valid_type: t /= Void;
+			valid_type: t /= Void
 		do
 			result_type := t
 			argument_types := a_args
@@ -56,7 +56,7 @@ feature {PATTERN} -- Update
 	update (t: TYPE_C; a_args: like argument_types)
 			-- Creation of a pattern with a result meta type
 		require
-			valid_type: t /= Void;
+			valid_type: t /= Void
 		do
 			result_type := t
 			argument_types := a_args
@@ -69,51 +69,49 @@ feature
 
 	duplicate: C_PATTERN
 			-- Duplicate of `Current'.
-		local
-			l_arg_types: like argument_types
 		do
-			l_arg_types := argument_types
-			if l_arg_types /= Void and then l_arg_types.count > 0 then
-				create Result.make (result_type, argument_types.resized_area (l_arg_types.count))
-			else
-				create Result.make (result_type, Void)
-			end
+			create Result.make (result_type,
+				if attached argument_types as t and then t.count > 0 then
+					t.resized_area (t.count)
+				else
+					Void
+				end)
 		end
 
-	result_type: TYPE_C;
+	result_type: TYPE_C
 			-- Meta type of the result
 
-	argument_types: SPECIAL [TYPE_C];
+	argument_types: SPECIAL [TYPE_C]
 			-- Meta types of the arguments
 
 	argument_count: INTEGER
 			-- Number of arguments
 		do
-			if argument_types /= Void then
-				Result := argument_types.count;
-			end;
-		end;
+			if attached argument_types as ts then
+				Result := ts.count
+			end
+		end
 
 	is_equal (other: C_PATTERN): BOOLEAN
-			-- Is `other' equal to Current ?
+			-- Is `other` equal to Current?
 		local
-			n, i: INTEGER;
+			n, i: INTEGER
 		do
 			Result := other = Current
 			if not Result then
-				n := argument_count;
+				n := argument_count
 				Result :=  n = other.argument_count and then
 						result_type.same_as (other.result_type)
 				from
-					i := 0;
+					i := 0
 				until
 					i = n or else not Result
 				loop
-					Result := argument_types [i].same_as (other.argument_types [i]);
-					i := i + 1;
+					Result := argument_types [i].same_as (other.argument_types [i])
+					i := i + 1
 				end
 			end
-		end;
+		end
 
 	hash_code: INTEGER
 			-- Hash code for pattern
@@ -144,55 +142,10 @@ feature
 
 feature -- Pattern generation
 
-	nb_hooks: INTEGER
-			-- Number of garbage collector hooks needed
-		local
-			i, nb: INTEGER;
-		do
-			from
-				Result := 1;
-				i := 0;
-				nb := argument_count;
-			until
-				i = nb
-			loop
-				if argument_types.item (i).is_reference then
-					Result := Result + 1;
-				end;
-				i := i + 1;
-			end;
-			if result_type.is_reference then
-				Result := Result + 1;
-			end;
-		end;
-
-	argument_hook_index (j: INTEGER): INTEGER
-			-- Hook index for i-th argument
-		require
-			index_small_enough: j <= argument_count;
-			index_large_enough: j >= 1;
-			consistency: argument_types.item (j).is_reference;
-		local
-			i: INTEGER;
-		do
-			from
-				i := 0;
-			until
-				i = j
-			loop
-				if argument_types.item (i).is_reference then
-					Result := Result + 1;
-				end;
-				i := i + 1
-			end;
-		ensure
-			Result > 0
-		end;
-
 	argument_name_array: ARRAY [STRING]
 			-- Argument names for code generation
 		local
-			i, nb: INTEGER;
+			i, nb: INTEGER
 			temp: STRING
 		do
 			create Result.make_filled ({C_CONST}.current_name, 1, argument_count + 1)
@@ -205,9 +158,9 @@ feature -- Pattern generation
 				temp := "arg"
 				temp.append_integer (i)
 				Result.put (temp, i+1)
-				i := i + 1;
-			end;
-		end;
+				i := i + 1
+			end
+		end
 
 	workbench_argument_type_array: ARRAY [STRING]
 			-- Argument types for code generation
@@ -219,7 +172,7 @@ feature -- Pattern generation
 		end
 
 	argument_type_array: ARRAY [STRING]
-			-- Argument types for code generation
+			-- Argument types for code generation.
 		local
 			i, j, nb: INTEGER
 		do
@@ -238,12 +191,12 @@ feature -- Pattern generation
 		end
 
 	generate_argument_declaration (buffer: GENERATION_BUFFER)
-			-- Generate argument declarations
+			-- Generate argument declarations.
 		local
-			i, nb: INTEGER;
+			i, nb: INTEGER
 		do
 			from
-				i := 1;
+				i := 1
 				nb := argument_count
 			until
 				i > nb
@@ -323,8 +276,8 @@ feature -- Pattern generation
 			result_string: STRING
 			arg_types: ARRAY [STRING]
 		do
-			f_name := "toi";
-			f_name.append_integer (id);
+			f_name := "toi"
+			f_name.append_integer (id)
 
 			if result_type.is_void then
 				result_string := result_type.c_string
@@ -371,12 +324,12 @@ feature -- Pattern generation
 			-- Generates stack pushing instruction for the patterns
 			-- going from C to the interpreter
 		local
-			i, nb: INTEGER;
-			arg: TYPE_C;
+			i, nb: INTEGER
+			arg: TYPE_C
 		do
 			from
-				i := 1;
-				nb := argument_count;
+				i := 1
+				nb := argument_count
 			until
 				i > nb
 			loop
@@ -388,15 +341,15 @@ feature -- Pattern generation
 					buffer.put_integer (i)
 				else
 						-- Basic value might need to be unboxed.
-					buffer.put_string ("it = iget();");
+					buffer.put_string ("it = iget();")
 					buffer.put_new_line
-					buffer.put_string ("it->type = ");
-					arg.generate_sk_value (buffer);
+					buffer.put_string ("it->type = ")
+					arg.generate_sk_value (buffer)
 					buffer.put_character (';')
-					buffer.put_string ("it->");
-					arg.generate_typed_field (buffer);
-					buffer.put_string (" = ((arg");
-					buffer.put_integer (i);
+					buffer.put_string ("it->")
+					arg.generate_typed_field (buffer)
+					buffer.put_string (" = ((arg")
+					buffer.put_integer (i)
 					buffer.put_string (".type & SK_HEAD) == SK_REF)? * ")
 					arg.generate_access_cast (buffer)
 					buffer.put_string ("arg")
@@ -409,13 +362,13 @@ feature -- Pattern generation
 					arg.generate_typed_field (buffer)
 				end
 				buffer.put_character (';')
-				i := i + 1;
-			end;
+				i := i + 1
+			end
 			buffer.put_string ("%N%
 				%%Tit = iget();%N%
 				%%Tit->type = SK_REF;%N%
-				%%Tit->it_ref = Current;%N");
-		end;
+				%%Tit->it_ref = Current;%N")
+		end
 
 	generate_toc_pop (buffer: GENERATION_BUFFER)
 			-- Generate poping instructions for pattern from interpreter
@@ -466,7 +419,7 @@ feature -- Pattern generation
 				buffer.put_integer (i)
 				if i < nb then
 					buffer.put_character (',')
-				end;
+				end
 				i := i + 1
 			end
 			buffer.put_string (");")
@@ -477,7 +430,7 @@ invariant
 	result_type_exists: result_type /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

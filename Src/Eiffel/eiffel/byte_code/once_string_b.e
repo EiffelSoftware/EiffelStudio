@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description: "Byte code for once manifest string (pre-allocated)."
 	legal: "See notice at end of class."
@@ -126,7 +126,7 @@ feature -- Properties
 		do
 				-- Inlining will not be done for once string as they need to
 				-- be generated in the context of the feature were they are defined.
-			Result := 101	-- equal to maximum size of inlining + 1 (Found in FREE_OPTION_SD)
+			Result := {LACE_I}.inlining_threshold
 		end
 
 feature -- Settings
@@ -179,7 +179,7 @@ invariant
 	value_not_void: value /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

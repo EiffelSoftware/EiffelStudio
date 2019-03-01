@@ -1,7 +1,7 @@
 note
+	description: "Byte code for a nested call."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
--- Byte code for nested call
 
 class NESTED_B
 
@@ -219,7 +219,6 @@ feature -- Inlining
 		local
 			inlined_current_b: INLINED_CURRENT_B
 			access: like target
-			access_expr_b: ACCESS_EXPR_B
 		do
 			if parent /= Void then
 				Result := Current
@@ -227,13 +226,12 @@ feature -- Inlining
 					-- First call
 				access := target;
 
-				access_expr_b ?= access;
 				if
 					access.is_argument or else
 					access.is_local or else
 					access.is_result or else
 					access.is_current or else
-					access_expr_b /= Void
+					attached {ACCESS_EXPR_B} access
 				then
 						-- `pre_inlined_code' in the target will take
 						-- care of the special byte code
@@ -246,11 +244,11 @@ feature -- Inlining
 
 					create parent;
 
-					parent.set_message (Current);
+					parent.set_message (Current)
 
-					create inlined_current_b;
-					parent.set_target (inlined_current_b);
-					inlined_current_b.set_parent (parent);
+					create inlined_current_b
+					parent.set_target (inlined_current_b)
+					inlined_current_b.set_parent (parent)
 
 					Result := parent
 				end;
@@ -264,23 +262,12 @@ feature -- Inlining
 	inlined_byte_code: NESTED_B
 		do
 			Result := Current
-				-- FIXME
-				-- FIXME
-				-- FIXME
-				-- Done to avoid a bug when both a and f are inlined
-				-- in a a.f call.
-				-- Xavier
-				-- Note: Manu 4/10/2003: I don't know what was the bug, but it seems
-				-- to work with inlining size of `0' that inline calls to `item' from
-				-- SPECIAL.
-			if System.inlining_size = 0 then
-				target := target.inlined_byte_code
-			end
-			message := message.inlined_byte_code;
+			target := target.inlined_byte_code
+			message := message.inlined_byte_code
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

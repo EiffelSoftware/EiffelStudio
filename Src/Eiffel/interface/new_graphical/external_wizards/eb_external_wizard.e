@@ -1,9 +1,9 @@
-note
+﻿note
 	description	: "Command to execute an external wizard"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	EB_EXTERNAL_WIZARD
@@ -41,14 +41,11 @@ feature -- Execution
 	execute
 			-- Execute the wizard.
 		local
-			temp_filename: FILE_NAME
 			temp_file: PLAIN_TEXT_FILE
 			wizard_launched: BOOLEAN
 		do
 				-- Create callback file.
-			create temp_filename.make_temporary_name
-			create temp_file.make_with_name (temp_filename)
-			temp_file.open_write
+			create temp_file.make_open_temporary
 				-- Fill callback file with input data.
 			temp_file.put_string ("Success=%"<SUCCESS>%"%N")
 			if Additional_parameters /= Void then
@@ -57,7 +54,7 @@ feature -- Execution
 			temp_file.close
 				-- Request wizard to fill callback file with output data
 				-- and load the data into memory.
-			launch_wizard (temp_filename)
+			launch_wizard (temp_file.path.name)
 			wizard_launched := True
 				-- Remove callback file.
 			temp_file.delete

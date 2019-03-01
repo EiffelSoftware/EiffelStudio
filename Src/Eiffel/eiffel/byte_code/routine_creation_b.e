@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Byte code associated to agent creation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -180,13 +180,12 @@ feature -- Inlining
 
 	size: INTEGER
 		do
-				-- Inlining will not be done if the feature
-				-- has a creation instruction
-			Result := 101	-- equal to maximum size of inlining + 1 (Found in FREE_OPTION_SD)
+				-- Inlining will not be done if the feature has a creation instruction.
+			Result := {LACE_I}.inlining_threshold
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -217,4 +216,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class ROUTINE_CREATION_B
+end

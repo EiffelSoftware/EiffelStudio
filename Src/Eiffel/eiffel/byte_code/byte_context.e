@@ -1341,7 +1341,7 @@ feature -- Access
 			else
 				Result := type.formal_instantiated_in (a_context_type)
 				if Result.is_formal then
-					Result := constrained_type_in (Result, a_context_type)
+					Result := constrained_type_in (Result, original_class_type.type)
 				end
 			end
 		ensure
@@ -3162,7 +3162,7 @@ invariant
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

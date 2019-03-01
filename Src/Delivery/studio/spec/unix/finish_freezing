@@ -40,7 +40,7 @@ fi
 
 if [ "$nologo" = "" ]; then
 	echo "Eiffel C/C++ Compilation Tool - Version 19.02"
-	echo "Copyright Eiffel Software 1985-2017. All Rights Reserved"
+	echo "Copyright Eiffel Software 1985-2019. All Rights Reserved"
 	echo
 fi
 

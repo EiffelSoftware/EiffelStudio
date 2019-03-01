@@ -30,12 +30,12 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Element change
 			put_character ('%T')
 			put_string (encoded_name)
 			put_character ('%T')
-			put_string (class_type.relative_file_name)
+			put_string (u.utf_32_string_to_utf_8_string_8 (class_type.relative_file_name))
 			put_new_line
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

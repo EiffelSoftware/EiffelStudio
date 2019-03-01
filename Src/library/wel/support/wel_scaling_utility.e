@@ -8,30 +8,34 @@ note
 class
 	WEL_SCALING_UTILITY
 
-feature -- Query
 
-	api_loader: DYNAMIC_MODULE
-				-- API dynamic loader
-		local
-			l_platform: PLATFORM
+feature -- Command
+
+	scaling_handle: POINTER
+			-- Handle for `Shcore.dll' if present.
 		once
-			create l_platform
-			check is_window: l_platform.is_windows end
-			create {DYNAMIC_MODULE} Result.make (module_name)
-		ensure
-			not_void: Result /= Void
+			Result := c_load_shcore_dll
 		end
 
-	module_name: STRING
-			-- Module name.
-		once
-			Result := "Shcore"
-		ensure
-			not_void: Result /= Void
+feature -- Status
+
+	is_scaling_installed: BOOLEAN
+			-- Can "Shcore.dll" be found on user's machine?
+		do
+			Result := scaling_handle /= default_pointer
 		end
 
+feature {NONE} -- Externals
 
-note
+	c_load_shcore_dll: POINTER
+			-- Try to load Shcore.dll, if fount return 1.
+		external
+			"C inline use <shellscalingapi.h>"
+		alias
+			"return (EIF_POINTER) LoadLibrary (L%"Shcore.dll%");"
+		end
+
+	note
 	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[

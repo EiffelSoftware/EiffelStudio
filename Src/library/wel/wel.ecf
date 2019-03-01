@@ -44,7 +44,6 @@
 			<renaming old_name="WEAK_REFERENCE" new_name="SYSTEM_WEAK_REFERENCE"/>
 		</assembly>
 		<assembly name="system_windows_forms" location="$ISE_DOTNET_FRAMEWORK\System.Windows.Forms.dll" prefix="WINFORMS_"/>
-		<library name="api_wrapper" location="$ISE_LIBRARY\library\api_wrapper\api_wrapper.ecf"/>
 		<cluster name="wel" location=".\" recursive="true">
 			<condition>
 				<platform value="windows"/>

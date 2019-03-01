@@ -55,6 +55,7 @@ inherit
 
 	WEL_SHARED_METRICS
 
+
 create
 	make
 
@@ -65,12 +66,9 @@ feature -- Initialization
 		local
 			l_result: INTEGER
 			l_process: POINTER
-			scaling: WEL_SCALING_EXTERNALS
+
 		do
-			create scaling
-			if scaling.is_api_available then
-				scaling.set_process_per_monitor_dpi_aware
-			end
+			(create {WEL_SCALING_EXTERNALS}).set_process_per_monitor_dpi_aware
 			create reusable_message.make
 			init_instance
 			init_application

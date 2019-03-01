@@ -169,7 +169,6 @@ feature
 			result_used: BOOLEAN
 			source_type: TYPE_A
 			target_type: TYPE_A
-			call_b: CALL_B
 			expr_b: EXPR_B
 			saved_context: like context
 		do
@@ -218,9 +217,9 @@ feature
 							-- is used in the source, do not propagate.
 							-- Case: p := p.right in a list and p becomes
 							-- void...
-						not ((context.workbench_mode or else
-							context.assertion_level.is_invariant) and
-							source.used (target))
+						not context.workbench_mode and then
+						not context.assertion_level.is_invariant and then
+						not source.used (target)
 					then
 						source.propagate (target)
 						target_propagated := context.propagated
@@ -268,47 +267,42 @@ feature
 			if
 				not target.is_predefined and then
 				(attached {STRING_B} source as string_b and then string_b.register = No_register or else
-				target_type.is_reference and then source_type.is_reference and then source.is_dynamic_clone_required (source_type))
+				target_type.is_reference and then source_type.is_reference and then source.is_dynamic_clone_required (source_type)) or else
+				target_type.is_true_expanded
 			then
 					-- Take a register to hold the value of the string or of a cloned expanded object.
-				get_register
-				register.free_register
-			end
-			if target_type.is_true_expanded then
-					-- Take a register to hold the value of the cloned expanded object.
 				get_register
 				register.free_register
 			end
 				-- If source has GCable variables and is not a single call or
 				-- access, then we cannot expand that in a return after the
 				-- GC hooks have been removed.
-			call_b ?= source
-			if call_b /= Void and then call_b.is_single then
-				source_has_gcable := call_b.has_gcable_variable and not
-					call_b.is_simple_expr
+			if attached {CALL_B} source as call_b and then call_b.is_single then
+				source_has_gcable := call_b.has_gcable_variable and then not call_b.is_simple_expr
 			else
 				expr_b := source
- 				source_has_gcable := expr_b.has_call or expr_b.allocates_memory
+ 				source_has_gcable := expr_b.has_call or else expr_b.allocates_memory
 			end
 
 				-- Mark Result used only if not the last instruction (in which
 				-- case we'll generate a direct return, hence Result won't be
 				-- needed).
-			if last_in_result and target.is_result and not source_has_gcable then
+			if last_in_result and not source_has_gcable then
+				check from_find_assign_result: target.is_result end
 				context.restore (saved_context)
 				source.unanalyze
 				context.init_propagation
-				source.propagate (No_register)
 					-- If Result is already used, then propagate it. Otherwise,
 					-- we won't need it. Note that if the result is an expanded
 					-- entity, we need it.
-				if context.result_used then
+				if context.result_used and then not source.used (target) then
 						-- Propagation of Result may avoid a register allocation
-					context.init_propagation
 					source.propagate (target)
+					target_propagated := context.propagated
 				else
 						-- We won't need Result after all...
 					result_used := False
+					source.propagate (No_register)
 				end
 				source.analyze
 				source.free_register
@@ -721,7 +715,7 @@ feature
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

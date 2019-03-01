@@ -45,7 +45,7 @@ feature -- Access
 			l_same_class := written_in = access_in
 			if
 				(attached {EIFFEL_CLASS_C} system.class_of_id (written_in) as l_written_class and
-					(l_same_class or else system.has_class_of_id (access_in))) and then
+					(l_same_class or else system.has_class_of_id (access_in) and then attached system.class_of_id (access_in))) and then
 				System.class_type_of_id (type_id) = class_type and then
 				class_type.associated_class.inherits_from (l_written_class) and then
 				l_written_class.has_inline_agent_with_body_index (body_index)
@@ -80,7 +80,7 @@ feature	{NONE}-- Implementation
 	enclosing_feature: FEATURE_I
 
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

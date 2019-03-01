@@ -332,27 +332,21 @@ feature {NONE} -- Visitors
 
 	process_attribute_b (a_node: ATTRIBUTE_B)
 			-- Process `a_node'.
-		local
-			f: FEATURE_B
 		do
-			f := a_node.wrapper
-			if f /= Void then
+			if attached a_node.wrapper as f then
 				process_feature_b (f)
-			else
-				if a_node.context_type.is_basic then
-						-- Access to `item' from basic types.
-						-- Nothing to be done since the right value is already on the stack.
+			elseif not a_node.context_type.is_basic then
+					-- Access to `item' from non-basic types
+					-- when the right value is not yet on the stack.
+				if a_node.is_first then
+					ba.append (bc_current)
+					ba.append (bc_attribute)
 				else
-					if a_node.is_first then
-						ba.append (bc_current)
-						ba.append (bc_attribute)
-					else
-						ba.append (bc_attribute_inv)
-						ba.append_raw_string (a_node.attribute_name)
-					end
-					ba.append_integer (a_node.routine_id)
-					ba.append_natural_32 (context.real_type (a_node.type).sk_value (context.context_class_type.type))
+					ba.append (bc_attribute_inv)
+					ba.append_raw_string (a_node.attribute_name)
 				end
+				ba.append_integer (a_node.routine_id)
+				ba.append_natural_32 (context.real_type (a_node.type).sk_value (context.context_class_type.type))
 			end
 		end
 
@@ -2679,7 +2673,7 @@ feature {NONE} -- SCOOP
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

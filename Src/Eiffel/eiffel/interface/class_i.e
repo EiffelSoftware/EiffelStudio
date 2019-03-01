@@ -1,8 +1,8 @@
 ﻿note
 	description:"[
-				Abstract class that is used for the internal representation
-				of a class.
-			]"
+			Abstract class that is used for the internal representation
+			of a class.
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -183,44 +183,35 @@ feature -- Access
 	visible_level: VISIBLE_I
 			-- Visible level
 		local
-			l_vis: STRING_TABLE [READABLE_STRING_32]
 			l_sel: VISIBLE_SELEC_I
 			l_ren: HASH_TABLE [STRING, STRING]
 			l_vis_feat: SEARCH_TABLE [STRING]
-			l_feat, l_ren_feat: STRING
+			l_feat: STRING
 			u: UTF_CONVERTER
 		do
-			if visible /= Void then
-				l_vis := visible.features
-				if l_vis = Void then
-					Result := create {VISIBLE_EXPORT_I}
-				else
-					from
-						create l_ren.make (l_vis.count)
-						create l_vis_feat.make (l_vis.count)
-						l_vis.start
-					until
-						l_vis.after
-					loop
-							-- We encode Unicode feature names into UTF-8 since that's what the compiler parse.
-						l_feat := u.utf_32_string_to_utf_8_string_8 (l_vis.key_for_iteration)
-						if l_feat /= Void then
-								-- We encode Unicode feature names into UTF-8 since that's what the compiler parse.							
-							l_ren_feat := u.utf_32_string_to_utf_8_string_8 (l_vis.item_for_iteration)
-							if l_ren_feat /= Void then
-								l_ren.force (l_ren_feat, l_feat)
-							end
-							l_vis_feat.force (l_feat)
-						end
-						l_vis.forth
-					end
-					l_sel := create {VISIBLE_SELEC_I}
-					l_sel.set_visible_features (l_vis_feat)
-					Result := l_sel
-					Result.set_renamings (l_ren)
-				end
-			else
+			if not attached visible as v then
 				create Result
+			elseif not attached v.features as l_vis then
+				create {VISIBLE_EXPORT_I} Result
+			else
+				from
+					create l_ren.make (l_vis.count)
+					create l_vis_feat.make (l_vis.count)
+					l_vis.start
+				until
+					l_vis.after
+				loop
+						-- We encode Unicode feature names into UTF-8 since that's what the compiler parse.
+					l_feat := u.utf_32_string_to_utf_8_string_8 (l_vis.key_for_iteration)
+						-- We encode Unicode feature names into UTF-8 since that's what the compiler parse.							
+					l_ren.force (u.utf_32_string_to_utf_8_string_8 (l_vis.item_for_iteration), l_feat)
+					l_vis_feat.force (l_feat)
+					l_vis.forth
+				end
+				create l_sel
+				l_sel.set_visible_features (l_vis_feat)
+				Result := l_sel
+				Result.set_renamings (l_ren)
 			end
 		end
 
@@ -731,7 +722,7 @@ invariant
 	compiled_class_connection: is_compiled implies compiled_class.original_class = Current
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

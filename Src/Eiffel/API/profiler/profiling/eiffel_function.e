@@ -47,12 +47,10 @@ feature -- Creation
 
 feature -- Output
 
-	class_c: CLASS_C
+	class_c: detachable CLASS_C
 			-- CLASS_C associated with `Current'.
 		do
-			Result := Eiffel_system.class_of_id (class_id);
-		ensure
-			class_c_not_void: Eiffel_system.valid_class_id (class_id) implies Result /= Void
+			Result := Eiffel_system.class_of_id (class_id)
 		end
 
 	e_feature: E_FEATURE
@@ -112,7 +110,7 @@ feature -- Output
 				st.add (int_class_name);
 				st.add (feature_name);
 			else
-				if Eiffel_system.valid_class_id (class_id) then
+				if eiffel_system.valid_class_id (class_id) and then attached eiffel_system.class_of_id (class_id) then
 					l_class_c := class_c
 					st.add ("<");
 					st.add_group (l_class_c.group, l_class_c.group.name)

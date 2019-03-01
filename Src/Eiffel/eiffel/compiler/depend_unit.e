@@ -1,5 +1,5 @@
-note
-	description: "Abstraction of a dependance between a feature and Current"
+﻿note
+	description: "Abstraction of a dependance between features."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -48,7 +48,9 @@ feature {NONE} -- Initialization
 			-- Create new instance of a traditional DEPEND_UNIT. Used for computing
 			-- feature dependences.
 		require
-			f_attached: f /= Void
+			valid_class_id: system.has_existing_class_of_id (c_id)
+			f_attached: attached f
+			valid_feature: attached system.class_of_id (c_id) as c and then attached c.feature_of_rout_id_set (f.rout_id_set)
 		do
 			make_with_level (c_id, f, 0)
 		end
@@ -57,7 +59,9 @@ feature {NONE} -- Initialization
 			-- Create new instance of a traditional DEPEND_UNIT. Used for computing
 			-- feature dependences in a given context.
 		require
-			f_attached: f /= Void
+			valid_class_id: system.has_existing_class_of_id (c_id)
+			f_attached: attached f
+			valid_feature: attached system.class_of_id (c_id) as c and then attached c.feature_of_rout_id_set (f.rout_id_set)
 		do
 			class_id := c_id
 			if f.is_attribute and then f.rout_id_set.count > 1 then
@@ -83,7 +87,10 @@ feature {NONE} -- Initialization
 
 	make_no_dead_code (c_id: INTEGER; r_id: INTEGER)
 			-- Creation of a depend unit with just a `routine_id'
-			-- cannot be used during dead code removal
+			-- cannot be used during dead code removal.
+		require
+			valid_class_id: system.has_existing_class_of_id (c_id)
+			valid_feature: attached system.class_of_id (c_id) as c and then attached c.feature_of_rout_id (r_id)
 		do
 			class_id := c_id
 			rout_id := r_id
@@ -135,35 +142,41 @@ feature -- Access
 	is_external: BOOLEAN
 			-- Is Current an external feature?
 		do
-			Result := internal_flags & is_external_flag = is_external_flag
+			Result := internal_flags & is_external_flag /= 0
 		end
 
 	is_special: BOOLEAN
 			-- Is `Current' a special depend_unit, i.e. used
 			-- for propagations
 		do
-			Result := internal_flags & is_special_flag = is_special_flag
+			Result := internal_flags & is_special_flag /= 0
+		end
+
+	is_polymorphic: BOOLEAN
+			-- Is dependency polymorphic rather than bound to `class_id`?
+		do
+			Result := internal_flags & is_uniform_flag = 0
 		end
 
 	is_needed_for_dead_code_removal: BOOLEAN
 			-- Is `Current' needed for dead code removal?
 			-- True if not used in assertions (and no assertions
 			-- are kept) and not marked as special.
-		local
-			l_flags: like internal_flags
 		do
-			l_flags := internal_flags
-			if System.keep_assertions then
-				Result := (l_flags & is_special_flag) = 0
-			elseif system.is_scoop then
-					-- Include code that is used in wait conditions in traversal.
-				Result := ((l_flags & (is_special_flag | is_in_assertion_mask)) = 0)
-			else
-					-- Special optimization when no assertions are
-					-- generated, we only traverse code that is reachable
-					-- from outside assertions.
-				Result := ((l_flags & (is_special_flag | is_in_assertion_mask | is_in_wait_condition_flag)) = 0)
-			end
+			Result :=
+				internal_flags &
+				if system.keep_assertions then
+					is_special_flag
+				elseif system.is_scoop then
+						-- Include code that is used in wait conditions in traversal.
+					is_special_flag | is_in_assertion_mask
+				else
+						-- Special optimization when no assertions are
+						-- generated, we only traverse code that is reachable
+						-- from outside assertions.
+					is_special_flag | is_in_assertion_mask | is_in_wait_condition_flag
+				end
+				= 0
 		end
 
 feature -- Comparison
@@ -181,7 +194,14 @@ feature -- Comparison
 				l_id := rout_id
 				l_oid := other.rout_id
 				if l_id = l_oid then
-					Result := internal_flags < other.internal_flags
+					l_id := internal_flags
+					l_oid := other.internal_flags
+					if l_id = l_oid and then l_id & is_uniform_flag /= {NATURAL_16} 0 then
+							-- Take into account body index for non-polymorphic dependence (non-object or precursor call).
+						Result := body_index < other.body_index
+					else
+						Result := l_id < l_oid
+					end
 				else
 					Result := l_id < l_oid
 				end
@@ -193,8 +213,12 @@ feature -- Comparison
 	is_equal (other: like Current): BOOLEAN
 			-- Are `other' and `Current' equal?
 		do
-			Result := class_id = other.class_id and rout_id = other.rout_id and
-				internal_flags = other.internal_flags
+			Result :=
+				class_id = other.class_id and then
+				rout_id = other.rout_id and then
+				internal_flags = other.internal_flags and then
+					-- Take into account body index for non-polymorphic dependence (non-object or precursor call).
+				(internal_flags & is_uniform_flag /= {NATURAL_16} 0 implies body_index = other.body_index)
 		end
 
 	same_as (other: DEPEND_UNIT): BOOLEAN
@@ -225,6 +249,9 @@ feature -- Flags
 	is_in_wait_condition_flag: NATURAL_16 = 0x0100
 			-- Flag that indicates a use in wait conditions
 
+	is_uniform_flag: NATURAL_16 = 0x0200
+			-- Flag that indicates a use for a non-polymorphic call.
+
 feature -- Debug
 
 	trace
@@ -240,18 +267,25 @@ feature {NONE} -- Debug
 
 	debug_output: STRING
 			-- Display info about current routine.
-		local
-			l_class: CLASS_C
-			l_feat: FEATURE_I
 		do
-			l_class := System.class_of_id (class_id)
-			if l_class /= Void and l_class.has_feature_table then
-				l_feat := l_class.feature_of_body_index (body_index)
-				if l_feat /= Void then
-					Result := l_class.name_in_upper + ": " + l_feat.feature_name
-				else
-					Result := "Feature not in class."
-				end
+			if attached System.class_of_id (class_id) as c and then c.has_feature_table then
+				Result := c.name_in_upper + ": " +
+					if attached c.feature_of_rout_id (rout_id) as f then
+						 f.feature_name +
+						 if written_in = class_id then
+						 	""
+						 else
+						 	" (from " +
+					 		if attached system.class_of_id (written_in) as w then
+					 			w.name_in_upper
+					 		else
+					 			" unknown class"
+					 		end +
+						 	")"
+						 end
+					else
+						" unknown feature."
+					end
 			else
 				Result := "Class not in system or not compiled yet."
 			end
@@ -261,7 +295,7 @@ invariant
 	valid_class_id: class_id > 0
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -292,4 +326,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- end class DEPEND_UNIT
+end

@@ -16,13 +16,10 @@ feature -- Access
 			-- <Precursor>
 		local
 			ev: EV_SCREEN_IMP
-			scaling: WEL_SCALING_EXTERNALS
 		do
 			create ev.make
-			create scaling
-			if scaling.is_api_available then
-				Result := scaling.dpi_for_monitor (ev.dc.item).to_natural_32
-			end
+			Result := ev.vertical_resolution.to_natural_32
+			Result := (create {WEL_SCALING_EXTERNALS}).dpi_for_monitor (ev.dc.item).to_natural_32
 		end
 
 

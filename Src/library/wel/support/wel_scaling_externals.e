@@ -8,6 +8,27 @@ note
 class
 	WEL_SCALING_EXTERNALS
 
+inherit
+
+	WEL_ANY
+		redefine
+			default_create
+		end
+
+feature {NONE} -- Initialization
+
+	frozen default_create
+			-- Default creation method.
+		do
+			initialize_scaling
+		end
+
+	initialize_scaling
+			-- Properly initialize Current.
+		do
+			scaling_handle := scaling_utility.scaling_handle
+		end
+
 
 feature -- Constants
 
@@ -23,14 +44,18 @@ feature -- Constants
 
 feature -- Status report
 
-	is_api_available: BOOLEAN
-			-- <Precursor>.
-			-- i.e if dll/so file exists.
+	is_scaling_installed: BOOLEAN
+			-- i.e if Schore.dll present.
 		do
-			Result := api_loader.is_interface_usable
+			Result := scaling_utility.is_scaling_installed
 		end
 
+
 feature -- Access
+
+	scaling_handle: POINTER
+			-- Handle to Schore.dll if present.	
+
 
 	monitor_scale (hwnd: POINTER): TUPLE [scalex: DOUBLE; scaley: DOUBLE]
 			-- Return the scale DIP (device independent pixels) size, based on the current DPI
@@ -50,8 +75,8 @@ feature -- Access
 		do
 			Result := [1.0, 1.0]
 			l_monitor := {WEL_API}.monitor_from_window ({WEL_API}.get_window (hwnd, {WEL_GW_CONSTANTS}.gw_owner), Monitor_defaulttonearest)
-			if l_monitor /= default_pointer and then get_dpi_for_monitor_ptr /= default_pointer then
-				c_get_dpi_for_monitor (get_dpi_for_monitor_ptr, l_monitor, Mdt_effective_dpi, $l_dpi_x, $l_dpi_y)
+			if l_monitor /= default_pointer and then scaling_handle /= default_pointer then
+				c_get_dpi_for_monitor (scaling_handle, l_monitor, Mdt_effective_dpi, $l_dpi_x, $l_dpi_y)
 				Result := [l_dpi_x/default_dpi, l_dpi_y/default_dpi]
 			end
 		end
@@ -67,8 +92,8 @@ feature -- Access
 			l_dpi_y: INTEGER
 		do
 			l_monitor := {WEL_API}.monitor_from_window ({WEL_API}.get_window (hwnd, {WEL_GW_CONSTANTS}.gw_owner), Monitor_defaulttonearest)
-			if l_monitor /= default_pointer and then get_dpi_for_monitor_ptr /=default_pointer then
-				c_get_dpi_for_monitor (get_dpi_for_monitor_ptr, l_monitor, Mdt_effective_dpi, $l_dpi_x, $l_dpi_y)
+			if l_monitor /= default_pointer and then scaling_handle /= default_pointer then
+				c_get_dpi_for_monitor (scaling_handle, l_monitor, Mdt_effective_dpi, $l_dpi_x, $l_dpi_y)
 				Result := l_dpi_x
 			end
 		end
@@ -83,84 +108,107 @@ feature -- Access
 			l_value: INTEGER
 			l_val_res: INTEGER
 		do
-			if set_process_dpi_awareness_ptr /= default_pointer  then
-				l_res := c_set_process_dpi_awareness (set_process_dpi_awareness_ptr, process_per_monitor_dpi_aware)
+			if scaling_handle /= default_pointer  then
+				l_res := c_set_process_dpi_awareness (scaling_handle, process_per_monitor_dpi_aware)
 				debug
-					l_val_res := c_get_process_dpi_awareness (get_process_dpi_awareness_ptr, default_pointer, $l_value )
+					l_val_res := c_get_process_dpi_awareness (scaling_handle, default_pointer, $l_value )
 					check process_dpi_awarness: l_value = process_per_monitor_dpi_aware  end
 				end
 			end
 		end
 
-feature -- Function pointer
+feature -- Destroy
 
-	get_dpi_for_monitor_ptr: POINTER
+	destroy_item
+			-- Free Current Scaling object memory.
+		local
+			l_null: POINTER
 		do
-			Result := api_loader.api_pointer ("GetDpiForMonitor")
+			check
+				item_valid: item /= l_null implies scaling_handle /= l_null
+			end
+			if scaling_handle /= l_null then
+				item := default_pointer
+			end
 		end
-
-	set_process_dpi_awareness_ptr: POINTER
-		do
-			Result := api_loader.api_pointer ("SetProcessDpiAwareness")
-		end
-
-	get_process_dpi_awareness_ptr: POINTER
-		do
-			Result := api_loader.api_pointer ("GetProcessDpiAwareness")
-		end
-
 
 feature {NONE} --C externals
 
-	c_get_dpi_for_monitor (a_api: POINTER; a_hwnd: POINTER; a_flags: INTEGER_32; dpi_x, dpi_y: TYPED_POINTER[INTEGER])
+
+
+	c_get_dpi_for_monitor (a_scaling_handle: POINTER; a_hwnd: POINTER; a_flags: INTEGER_32; dpi_x, dpi_y: TYPED_POINTER[INTEGER])
 			-- Declared as HRESULT GetDpiForMonitor( HMONITOR hmonitor, MONITOR_DPI_TYPE dpiType, UINT *dpiX, UINT *dpiY );
 		require
-			a_api_exists: not a_api.is_default_pointer
+			a_api_exists: a_scaling_handle /= default_pointer
 		external
 			"C inline use <shellscalingapi.h>"
 		alias
 			"[
-		
-				(FUNCTION_CAST(void , (HMONITOR, MONITOR_DPI_TYPE, UINT *, UINT * )) $a_api) ($a_hwnd, $a_flags, $dpi_x, $dpi_y );
+				FARPROC GetDpiForMonitor = NULL;
+				HMODULE user32_module = (HMODULE) $a_scaling_handle;
+				
+				GetDpiForMonitor = GetProcAddress (user32_module, "GetDpiForMonitor");
+				if (GetDpiForMonitor) {
+					(FUNCTION_CAST(void , (HMONITOR, MONITOR_DPI_TYPE, UINT *, UINT * )) GetDpiForMonitor) ($a_hwnd, $a_flags, $dpi_x, $dpi_y );
+				}	
 			]"
 		end
 
-	c_set_process_dpi_awareness	(a_api: POINTER; a_level: INTEGER): BOOLEAN
+	c_set_process_dpi_awareness	(a_scaling_handle: POINTER; a_level: INTEGER): BOOLEAN
 			-- Declated as HRESULT SetProcessDpiAwareness(PROCESS_DPI_AWARENESS value);
 		require
-			a_api_exists: not a_api.is_default_pointer
+			a_api_exists: a_scaling_handle /= default_pointer
 		external
 			"C inline use <shellscalingapi.h>"
 		alias
 			"[
-		
-				return (FUNCTION_CAST(HRESULT , (PROCESS_DPI_AWARENESS)) $a_api) ($a_level);
+				FARPROC SetProcessDpiAwareness = NULL;
+				HMODULE user32_module = (HMODULE) $a_scaling_handle;
+						
+				SetProcessDpiAwareness = GetProcAddress (user32_module, "SetProcessDpiAwareness");
+				if (SetProcessDpiAwareness) {
+					return (FUNCTION_CAST(HRESULT , (PROCESS_DPI_AWARENESS)) SetProcessDpiAwareness) ($a_level);
+				} else {
+					return 	0;
+				}			
 			]"
 		end
 
-	c_get_process_dpi_awareness	(a_api:POINTER; a_process: POINTER; a_value: TYPED_POINTER [INTEGER]): INTEGER
+	c_get_process_dpi_awareness	(a_scaling_handle:POINTER; a_process: POINTER; a_value: TYPED_POINTER [INTEGER]): INTEGER
 			-- Declated as HRESULT GetProcessDpiAwareness(HANDLE hprocess, PROCESS_DPI_AWARENESS *value);
 		require
-			a_api_exists: not a_api.is_default_pointer
+			a_api_exists: a_scaling_handle /= default_pointer
 		external
 			"C inline use <shellscalingapi.h>"
 		alias
 			"[
-		
-				return (FUNCTION_CAST(HRESULT , (HANDLE, PROCESS_DPI_AWARENESS * )) $a_api) ($a_process, $a_value);
+				FARPROC GetProcessDpiAwareness = NULL;
+				HMODULE user32_module = (HMODULE) $a_scaling_handle;
+								
+				GetProcessDpiAwareness = GetProcAddress (user32_module, "GetProcessDpiAwareness");
+				if (GetProcessDpiAwareness) {
+					return (FUNCTION_CAST(HRESULT , (HANDLE, PROCESS_DPI_AWARENESS * )) GetProcessDpiAwareness) ($a_process, $a_value);
+				} else {
+					return 0;
+				}
 			]"
 		end
 
-feature {NONE} -- Implementation
+feature {WEL_SCALING_EXTERNALS} -- Convenience
 
-	api_loader: DYNAMIC_MODULE
-			-- Module name.
-		local
-			l_utility: WEL_SCALING_UTILITY
+	scaling_utility: WEL_SCALING_UTILITY
+			-- Control loading of Scaling API used by High DPI.
 		once
-			create l_utility
-			Result := l_utility.api_loader
+			create Result
+		ensure
+			scaling_not_void: Result /= Void
 		end
+
+invariant
+	support: is_scaling_installed
+
+
+
 note
 	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

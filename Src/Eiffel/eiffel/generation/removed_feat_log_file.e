@@ -13,10 +13,26 @@ create
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Element change
 
+	add_removed_class_type (class_type: CLASS_TYPE)
+			-- Record that `class_type` is removed from the system.
+		require
+			class_type_attached: attached class_type
+		do
+			add (class_type, "(removed)")
+		end
+
+	add_empty_class_type (class_type: CLASS_TYPE)
+			-- Record that `class_type` has no features to generate.
+		require
+			class_type_attached: attached class_type
+		do
+			add (class_type, "(empty)")
+		end
+
 	add (class_type: CLASS_TYPE; feature_name: STRING)
 			-- Add `class_type', `feature_name' in REMOVED file.
 		require
-			class_type_not_void: class_type /= Void
+			class_type_attached: attached class_type
 			feature_name_not_void: feature_name /= Void
 		local
 			u: UTF_CONVERTER
@@ -30,7 +46,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Element change
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -62,4 +78,3 @@ note
 		]"
 
 end
-

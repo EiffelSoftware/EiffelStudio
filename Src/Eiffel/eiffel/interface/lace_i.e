@@ -183,6 +183,9 @@ feature -- Access
 	is_void_safe: BOOLEAN
 			-- Is current system void-safe, i.e. preserving types attachment status?
 
+	inlining_threshold: INTEGER = 101
+			-- The value of inlining measure that should not be reached for inlined code.
+
 feature -- Modification
 
 	set_settings (s: like settings)
@@ -1258,7 +1261,7 @@ feature {NONE} -- Implementation
 
 			l_s := l_settings.item (s_inlining_size)
 			if l_s /= Void then
-				if l_s.is_integer and then l_s.to_integer >= 0 and l_s.to_integer <= 100 then
+				if l_s.is_integer and then l_s.to_integer >= 0 and l_s.to_integer < inlining_threshold then
 					system.set_inlining_size (l_s.to_integer)
 				else
 					create vd15
@@ -1696,7 +1699,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

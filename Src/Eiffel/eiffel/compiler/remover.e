@@ -477,10 +477,15 @@ feature {NONE} -- Dependency propagation
 						end
 						t.forth
 					end
-				elseif b /= {ROUT_TABLE}.body_index_unknown then
+				elseif b = {ROUT_TABLE}.body_index_unknown then
+						-- There are no entries with an effective body.
+						-- Mark the routine as processed.
+					is_fresh [routine_id] := False
+					polymorphic_calls.put (polymorphic_key (routine_id, target_class_id))
+				else
 						-- All entries are either processed or are going to be registered, so the routine ID can be marked as processed.
 					is_fresh [routine_id] := False
-					if reachable_code.item (b) then
+					if reachable_code [b] then
 							-- The body has been taken into account, mark the corresponding routine as processed.
 						polymorphic_calls.put (polymorphic_key (routine_id, target_class_id))
 					else

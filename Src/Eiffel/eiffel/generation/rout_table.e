@@ -168,6 +168,7 @@ feature -- Status report
 			system_i: SYSTEM_I
 			type_id: INTEGER
 			storage: like area
+			context_type: CL_TYPE_A
 		do
 			Result := -2
 			system_i := System
@@ -178,7 +179,8 @@ feature -- Status report
 			when body_index_various then
 				nb := max_position
 				old_position := position
-				type_id := a_type.type_id (a_context_type.type)
+				context_type := a_context_type.type
+				type_id := a_type.type_id (context_type)
 				from
 						-- Go to the entry of type id equal to `type_id'
 					goto (type_id)
@@ -194,7 +196,7 @@ feature -- Status report
 					entry := array_item (i)
 					if
 						entry.used and then
-						system_i.class_type_of_id (entry.type_id).dynamic_conform_to (a_type, type_id, a_context_type.type)
+						system_i.class_type_of_id (entry.type_id).dynamic_conform_to (a_type, type_id, context_type)
 					then
 						if entry.pattern_id /= first_pattern_id then
 								-- If the pattern ID is does not match the one from the current type
@@ -216,21 +218,28 @@ feature -- Status report
 				position := old_position
 			else
 					-- There is a single body index.
-					-- Still, return -2 if there are no used entries.
+					-- Still, return -2 if there are no used conforming entries.
 				if not attached system_i.remover as r then
 						-- There was no dead code removal and the feature is not deferred.
 					Result := -1
 				elseif r.is_code_reachable (body_index) then
-						-- The feature is reachable, check if there are live classes.
+						-- The feature is reachable, check if there are conforming types of live classes.
+					context_type := a_context_type.type
+					type_id := a_type.type_id (context_type)
 					from
+						goto (type_id)
 						storage := area
-						i := 0
-						nb := count
+						i := position - lower + {like area}.lower
+						nb := max_position
 					until
 						i >= nb
 					loop
-						if r.is_class_alive (storage [i].class_id) then
-								-- There are used entries in the table.
+						entry := storage [i]
+						if
+							r.is_class_alive (entry.class_id) and then
+							system_i.class_type_of_id (entry.type_id).dynamic_conform_to (a_type, type_id, context_type)
+						then
+								-- There are used conforming entries in the table.
 							Result := -1
 							i := nb - 1
 						end

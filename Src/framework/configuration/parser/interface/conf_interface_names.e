@@ -1285,7 +1285,7 @@ feature -- Capability errors
 		do
 			Result := locale.formatted_string (locale.translation_in_context
 				("[
-					Capability "$1" of supplier target has value "$2" insuffient for client value "$6".
+					Capability "$1" of supplier target has value "$2" insuffcient for client value "$6".
 					Client/child target
 						Name: $7
 						System: $8
@@ -1363,7 +1363,7 @@ feature -- Boolean values
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

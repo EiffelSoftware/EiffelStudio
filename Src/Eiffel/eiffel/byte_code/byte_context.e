@@ -1341,7 +1341,17 @@ feature -- Access
 			else
 				Result := type.formal_instantiated_in (a_context_type)
 				if Result.is_formal then
-					Result := constrained_type_in (Result, original_class_type.type)
+					Result := constrained_type_in (Result,
+							-- TODO: unify IL and classic evaluation of types.
+						if system.il_generation then
+								-- In IL code, types are sometimes computed in the context of a parent.
+								-- `a_context_type` is where the type is declared.
+							a_context_type
+						else
+								-- In classic code, types are computed in the context of the class being generated.
+								-- `original_class_type` is where the type can be computed.
+							original_class_type.type
+						end)
 				end
 			end
 		ensure

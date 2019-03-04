@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 	initialize_scaling
 			-- Properly initialize Current.
 		do
-			scaling_handle := scaling_utility.scaling_handle
+			scaling_handle := {WEL_SCALING_UTILITY}.scaling_handle
 		end
 
 
@@ -47,7 +47,7 @@ feature -- Status report
 	is_scaling_installed: BOOLEAN
 			-- i.e if Schore.dll present.
 		do
-			Result := scaling_utility.is_scaling_installed
+			Result := {WEL_SCALING_UTILITY}.is_scaling_installed
 		end
 
 
@@ -128,6 +128,7 @@ feature -- Destroy
 				item_valid: item /= l_null implies scaling_handle /= l_null
 			end
 			if scaling_handle /= l_null then
+				{WEL_SCALING_UTILITY}.free_module
 				item := default_pointer
 			end
 		end
@@ -150,7 +151,7 @@ feature {NONE} --C externals
 				GetDpiForMonitor = GetProcAddress (user32_module, "GetDpiForMonitor");
 				if (GetDpiForMonitor) {
 					(FUNCTION_CAST(void , (HMONITOR, MONITOR_DPI_TYPE, UINT *, UINT * )) GetDpiForMonitor) ($a_hwnd, $a_flags, $dpi_x, $dpi_y );
-				}	
+				}
 			]"
 		end
 
@@ -170,7 +171,7 @@ feature {NONE} --C externals
 					return (FUNCTION_CAST(HRESULT , (PROCESS_DPI_AWARENESS)) SetProcessDpiAwareness) ($a_level);
 				} else {
 					return 	0;
-				}			
+				}
 			]"
 		end
 
@@ -194,15 +195,6 @@ feature {NONE} --C externals
 			]"
 		end
 
-feature {WEL_SCALING_EXTERNALS} -- Convenience
-
-	scaling_utility: WEL_SCALING_UTILITY
-			-- Control loading of Scaling API used by High DPI.
-		once
-			create Result
-		ensure
-			scaling_not_void: Result /= Void
-		end
 
 invariant
 	support: is_scaling_installed

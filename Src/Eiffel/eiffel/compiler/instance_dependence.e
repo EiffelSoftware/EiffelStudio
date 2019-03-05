@@ -42,7 +42,19 @@ feature {NONE} -- Traversal
 			-- Record class ID `c` in `r` according to the dependency kind `kind`.
 		do
 			if kind = {INSTANCE_DEPENDENCE_GENERATOR}.call_kind then
-				r.mark_class_reachable (c)
+					-- TODO: this should be `r.mark_class_reachable (c)`,
+					-- but the remover does distinguish between qualified and unqualified calls.
+					-- As a result, when an instance-free feature makes an unqualified call, it is considered polymorphic,
+					-- and is not marked as reachable if the class is only reachable, but not alive.
+				if
+					attached workbench.system as s and then
+					attached s.class_of_id (c) as compiled_class and then
+					not compiled_class.is_deferred
+				then
+					r.mark_class_alive (c)
+				else
+					r.mark_class_reachable (c)
+				end
 			elseif
 				kind = {INSTANCE_DEPENDENCE_GENERATOR}.expanded_creation_kind implies
 				attached workbench.system as s and then

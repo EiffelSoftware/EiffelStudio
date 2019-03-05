@@ -11,7 +11,7 @@
 			<assertions precondition="true"/>
 		</option>
 		<capability>
-			<concurrency support="none" use="none"/>
+			<concurrency support="thread" use="thread"/>
 			<void_safety support="none"/>
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>

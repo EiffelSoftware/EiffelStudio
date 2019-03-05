@@ -45,9 +45,6 @@
 
 #include "eif_portable.h"
 #include "eif_file.h"
-#ifdef EIF_WINDOWS
-#include <fileapi.h>
-#endif
 
 #ifdef __cplusplus
 extern "C" {

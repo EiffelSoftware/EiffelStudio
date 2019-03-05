@@ -534,7 +534,7 @@ feature {NONE} -- Settings
 				Eiffel_project.make (compiler_project_location)
 
 				if not eiffel_project.error_occurred then
-					check_used_environemnt
+					check_used_environment
 					report_project_loaded_successfully
 				else
 					if Eiffel_project.retrieval_error then
@@ -580,7 +580,7 @@ feature {NONE} -- Settings
 			end
 		end
 
-	check_used_environemnt
+	check_used_environment
 			-- Check if the current environment values still have the same values as the ones stored in the project settings.
 		local
 			l_envs: STRING_TABLE [READABLE_STRING_GENERAL]
@@ -609,7 +609,7 @@ feature {NONE} -- Settings
 					if
 						not l_key.is_case_insensitive_equal (eiffel_layout.default_il_environment.ise_dotnet_framework_env) and then
 						not l_key.is_case_insensitive_equal ({EIFFEL_CONSTANTS}.ise_precomp_env) and then
-						not equal (l_new_val, l_old_val)
+						not same_environment_variable_value (l_new_val, l_old_val)
 					then
 						ask_environment_update (l_key, l_old_val, l_new_val)
 						if is_update_environment then
@@ -625,6 +625,19 @@ feature {NONE} -- Settings
 					end
 					l_envs.forth
 				end
+			end
+		end
+
+	same_environment_variable_value (v1,v2: detachable READABLE_STRING_GENERAL): BOOLEAN
+			-- Are `v1` and `v2` represent the same variable value?
+			-- note: empty or Void value are considered the same.
+		do
+			if v1 = Void then
+				Result := v2 = Void or else v2.is_empty
+			elseif v2 = Void then
+				Result := v1.is_empty
+			else
+				Result := v1.same_string (v2)
 			end
 		end
 

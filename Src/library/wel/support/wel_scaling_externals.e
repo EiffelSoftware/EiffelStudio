@@ -1,6 +1,6 @@
-note
+﻿note
 	description: "[
-		Eiffel wrapper to load the Windows Scaling API dynamically
+			Eiffel wrapper to load the Windows Scaling API dynamically.
 		]"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -29,7 +29,6 @@ feature {NONE} -- Initialization
 			scaling_handle := {WEL_SCALING_UTILITY}.scaling_handle
 		end
 
-
 feature -- Constants
 
 	Mdt_effective_dpi: INTEGER  = 0
@@ -50,12 +49,10 @@ feature -- Status report
 			Result := {WEL_SCALING_UTILITY}.is_scaling_installed
 		end
 
-
 feature -- Access
 
 	scaling_handle: POINTER
 			-- Handle to Schore.dll if present.	
-
 
 	monitor_scale (hwnd: POINTER): TUPLE [scalex: DOUBLE; scaley: DOUBLE]
 			-- Return the scale DIP (device independent pixels) size, based on the current DPI
@@ -70,8 +67,6 @@ feature -- Access
 			l_monitor: POINTER
 			l_dpi_x: INTEGER
 			l_dpi_y: INTEGER
-			l_value: INTEGER
-			l_val_res: INTEGER
 		do
 			Result := [1.0, 1.0]
 			l_monitor := {WEL_API}.monitor_from_window ({WEL_API}.get_window (hwnd, {WEL_GW_CONSTANTS}.gw_owner), Monitor_defaulttonearest)
@@ -135,8 +130,6 @@ feature -- Destroy
 
 feature {NONE} --C externals
 
-
-
 	c_get_dpi_for_monitor (a_scaling_handle: POINTER; a_hwnd: POINTER; a_flags: INTEGER_32; dpi_x, dpi_y: TYPED_POINTER[INTEGER])
 			-- Declared as HRESULT GetDpiForMonitor( HMONITOR hmonitor, MONITOR_DPI_TYPE dpiType, UINT *dpiX, UINT *dpiY );
 		require
@@ -194,12 +187,6 @@ feature {NONE} --C externals
 				}
 			]"
 		end
-
-
-invariant
-	support: is_scaling_installed
-
-
 
 note
 	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"

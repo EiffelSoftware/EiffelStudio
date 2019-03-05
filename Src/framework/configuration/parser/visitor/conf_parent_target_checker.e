@@ -189,7 +189,7 @@ feature {NONE} -- Execution
 							l_remote.set_associated_error (l_conf_error)
 							report_conf_error (l_conf_error)
 						else
-							par.system.set_readonly (l_remote.is_readonly)
+							par.system.set_readonly (False) -- remote parent target is not readonly  -- set_readonly (l_remote.is_readonly)
 							tgt.set_remote_parent (par)
 							process_target (par)
 							if attached l_load.last_error as err then

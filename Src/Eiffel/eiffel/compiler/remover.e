@@ -477,54 +477,53 @@ feature {NONE} -- Dependency propagation
 						end
 						t.forth
 					end
-				elseif b = {ROUT_TABLE}.body_index_unknown then
-						-- There are no entries with an effective body.
+				elseif
+					b = {ROUT_TABLE}.body_index_unknown or else
+					reachable_code [b]
+				then
+						-- There are no entries with an effective body, or
+						-- the body has been taken into account.
 						-- Mark the routine as processed.
 					is_fresh [routine_id] := False
 					polymorphic_calls.put (polymorphic_key (routine_id, target_class_id))
 				else
-						-- All entries are either processed or are going to be registered, so the routine ID can be marked as processed.
-					is_fresh [routine_id] := False
-					if reachable_code [b] then
-							-- The body has been taken into account, mark the corresponding routine as processed.
-						polymorphic_calls.put (polymorphic_key (routine_id, target_class_id))
-					else
-							-- The routine is not reachable yet.
-							-- Record classes that can make this routine reachable.
-						c := system.class_of_id (target_class_id)
-						from
-							t.start
-						until
-							t.after
-						loop
-							e := t.item
-							i := e.class_id
-							k := polymorphic_key (routine_id, i)
-							if
-								not polymorphic_calls.has (k) and then
-								attached system.class_of_id (i) as d and then
-								d.simple_conform_to (c)
-							then
-									-- Mark all calls on conforming targets as processed.
-								polymorphic_calls.put (k)
-								if live_classes [i] then
-										-- The class is alive and the call has not been registered yet, do it now.
-									register_monomorphic_call (b, e.written_in, i)
-										-- Stop traversal because there are no other routine bodies.
-									t.finish
-								else
-										-- Remember that there is a call that is currently dead because the class is dead.
-										-- It will be processed as soon as the class becomes alive. See `mark_class_alive`.
-									m := dead_monomorphic_calls [i]
-									if not attached m then
-										create m.make (1)
-										dead_monomorphic_calls [i] := m
-									end
-									m.extend (monomorphic_item (b, e.written_in))
+						-- The routine has only one body that can be executed and it has not been reached yet.
+						-- Record classes that can make this routine reachable.
+					c := system.class_of_id (target_class_id)
+					from
+						t.start
+					until
+						t.after
+					loop
+						e := t.item
+						i := e.class_id
+						k := polymorphic_key (routine_id, i)
+						if
+							not polymorphic_calls.has (k) and then
+							attached system.class_of_id (i) as d and then
+							d.simple_conform_to (c)
+						then
+								-- Mark all calls on conforming targets as processed.
+							polymorphic_calls.put (k)
+							if live_classes [i] then
+									-- The routine is going to be processed now, mark the routine ID as processed.
+								is_fresh [routine_id] := False
+									-- The class is alive and the call has not been registered yet, do it now.
+								register_monomorphic_call (b, e.written_in, i)
+									-- Stop traversal because there are no other routine bodies.
+								t.finish
+							else
+									-- Remember that there is a call that is currently dead because the class is dead.
+									-- It will be processed as soon as the class becomes alive. See `mark_class_alive`.
+								m := dead_monomorphic_calls [i]
+								if not attached m then
+									create m.make (1)
+									dead_monomorphic_calls [i] := m
 								end
+								m.extend (monomorphic_item (b, e.written_in))
 							end
-							t.forth
 						end
+						t.forth
 					end
 				end
 			elseif

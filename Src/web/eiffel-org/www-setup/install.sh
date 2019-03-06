@@ -9,11 +9,11 @@ ISE_BUILD_NIGHTLY=102933
 
 ISE_MAJOR_MINOR_BETA=19.02
 ISE_BUILD_BETA=102933
-ISE_BETA_DOWNLOAD_URL=https://master.dl.sourceforge.net/project/eiffelstudio/beta/19.02
+ISE_BETA_DOWNLOAD_URL=http://downloads.sourceforge.net/eiffelstudio
 
 # predefined
 T_CURRENT_DIR=$(pwd)
-ISE_SF_DOWNLOAD_URL=https://master.dl.sourceforge.net/project/eiffelstudio
+ISE_SF_DOWNLOAD_URL=http://downloads.sourceforge.net/eiffelstudio
 
 # Arguments
 POSITIONAL=()
@@ -175,7 +175,7 @@ do_install() {
 			ISE_MAJOR_MINOR=$ISE_MAJOR_MINOR_LATEST
 			ISE_BUILD=$ISE_BUILD_LATEST
 			ISE_DOWNLOAD_FILE=Eiffel_${ISE_MAJOR_MINOR}_gpl_${ISE_BUILD}-${ISE_PLATFORM}.tar.bz2
-			ISE_DOWNLOAD_URL=${ISE_SF_DOWNLOAD_URL}/EiffelStudio%%20$ISE_MAJOR_MINOR/Build_${ISE_BUILD}/$ISE_DOWNLOAD_FILE
+			ISE_DOWNLOAD_URL=${ISE_SF_DOWNLOAD_URL}/$ISE_DOWNLOAD_FILE
 			iseverParse $ISE_MAJOR_MINOR.$ISE_BUILD
 			echo >&2 Version=$major.$minor.$build
 			;;

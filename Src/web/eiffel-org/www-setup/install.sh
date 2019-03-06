@@ -9,7 +9,7 @@ ISE_BUILD_NIGHTLY=102933
 
 ISE_MAJOR_MINOR_BETA=19.02
 ISE_BUILD_BETA=102933
-ISE_BETA_DOWNLOAD_URL=https://downloads.sourceforge.net/eiffelstudio/beta/19.02
+ISE_BETA_DOWNLOAD_URL=https://master.dl.sourceforge.net/project/eiffelstudio/beta/19.02
 
 # predefined
 T_CURRENT_DIR=$(pwd)

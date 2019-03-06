@@ -43,6 +43,7 @@ RUN mkdir -p /home/eiffel/deliv/output \
 
 
 VOLUME /home/eiffel/deliv/output
+
 WORKDIR $HOME
 #ENTRYPOINT ["/bin/bash", "/home/eiffel/build_delivery.sh", "/home/eiffel/deliv"]
 CMD /bin/bash /home/eiffel/build_delivery.sh /home/eiffel/deliv

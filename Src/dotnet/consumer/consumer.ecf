@@ -71,6 +71,7 @@
 				<exclude>/.svn$</exclude>
 				<exclude>/EIFGENs$</exclude>
 			</file_rule>
+			<visible class="CACHE_INFO" feature="intentionally_absent_feature"/>
 			<visible class="CONSUMED_ARGUMENT" feature="intentionally_absent_feature"/>
 			<visible class="CONSUMED_ARRAY_TYPE" feature="intentionally_absent_feature"/>
 			<visible class="CONSUMED_ASSEMBLY" feature="intentionally_absent_feature"/>

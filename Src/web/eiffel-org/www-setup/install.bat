@@ -6,11 +6,11 @@ set ISE_MAJOR_MINOR_LATEST=18.11
 set ISE_BUILD_LATEST=102592
 
 set ISE_MAJOR_MINOR_NIGHTLY=19.02
-set ISE_BUILD_NIGHTLY=102933
+set ISE_BUILD_NIGHTLY=102945
 
 set ISE_MAJOR_MINOR_BETA=19.02
-set ISE_BUILD_BETA=102933
-set ISE_BETA_DOWNLOAD_URL=https://downloads.sourceforge.net/eiffelstudio/beta
+set ISE_BUILD_BETA=102945
+set ISE_BETA_DOWNLOAD_URL=http://downloads.sourceforge.net/eiffelstudio
 
 set ISE_SF_DOWNLOAD_URL=http://downloads.sourceforge.net/eiffelstudio
 

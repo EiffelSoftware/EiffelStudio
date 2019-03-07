@@ -160,6 +160,12 @@
 		</external_object>
 		<variable name="batch_framework" value="false"/>
 		<library name="auto_test" location="$EIFFEL_SRC\framework\auto_test\auto_test.ecf" readonly="false" use_application_options="true"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf" readonly="false" use_application_options="true">
+			<visible class="EQA_PARTIAL_RESULT" feature="default_create"/>
+			<visible class="EQA_RESULT" feature="default_create"/>
+			<visible class="EQA_TEST_INVOCATION_RESPONSE" feature="default_create"/>
+			<visible class="EQA_TEST_INVOCATION_EXCEPTION" feature="default_create"/>
+		</library>
 		<library name="com_light" location="$EIFFEL_SRC\framework\com_light\com_light.ecf" readonly="false" use_application_options="true"/>
 		<library name="command_tunnel" location="$EIFFEL_SRC\framework\command_tunnel\command_tunnel.ecf" readonly="false" use_application_options="true"/>
 		<library name="compiler_kernel" location="$EIFFEL_SRC\Eiffel\Ace\ec_kernel.ecf" readonly="false" use_application_options="true"/>

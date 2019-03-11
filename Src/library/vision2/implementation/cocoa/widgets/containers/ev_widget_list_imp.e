@@ -20,8 +20,7 @@ inherit
 	EV_CONTAINER_IMP
 		redefine
 			interface,
-			initialize,
-			make
+			initialize
 		end
 
 	EV_DYNAMIC_LIST_IMP [EV_WIDGET, EV_WIDGET_IMP]
@@ -118,7 +117,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- functionality implemented by `Current'
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

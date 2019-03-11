@@ -28,8 +28,7 @@ inherit
 		undefine
 			item_by_data
 		redefine
-			interface,
-			make
+			interface
 		end
 
 	EV_SIZEABLE_CONTAINER_IMP
@@ -289,7 +288,7 @@ feature {EV_ANY, EV_ANY_I} -- Interface
 	interface: detachable EV_TOOL_BAR note option: stable attribute end;
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

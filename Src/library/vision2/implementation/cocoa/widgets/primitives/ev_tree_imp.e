@@ -30,8 +30,7 @@ inherit
 
 	EV_ITEM_LIST_IMP [EV_TREE_NODE, EV_TREE_NODE_IMP]
 		redefine
-			interface,
-			make
+			interface
 		end
 
 	EV_PND_DEFERRED_ITEM_PARENT
@@ -288,7 +287,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_TREE note option: stable attribute end;
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

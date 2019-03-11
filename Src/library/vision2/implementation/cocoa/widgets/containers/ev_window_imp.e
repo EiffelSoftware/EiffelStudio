@@ -32,15 +32,12 @@ inherit
 			show
 		redefine
 			interface,
-			make,
 			is_sensitive,
 			hide,
-			destroy,
 			has_focus,
 			set_minimum_size,
 			set_minimum_width,
 			set_minimum_height,
-			set_top_level_window_imp,
 			ev_apply_new_size,
 			cocoa_set_size,
 			dispose,
@@ -616,7 +613,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 		-- Interface object of `Current'
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

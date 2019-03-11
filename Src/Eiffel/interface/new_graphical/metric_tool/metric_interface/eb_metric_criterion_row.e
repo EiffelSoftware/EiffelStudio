@@ -682,23 +682,21 @@ feature{NONE} -- Implementation
 			-- Pixmap of criterion named `a_name'.
 		require
 			a_name_attached: a_name /= Void
-		local
-			l_criterion: EB_METRIC_CRITERION
 		do
 			if a_name.is_equal (query_language_names.ql_cri_and) then
 				Result := pixmaps.icon_pixmaps.metric_and_icon
 			elseif a_name.is_equal (query_language_names.ql_cri_or) then
 				Result := pixmaps.icon_pixmaps.metric_or_icon
-			else
-				l_criterion := criterion_factory.metric_criterion (scope, a_name)
-				if l_criterion /= Void then
-					if l_criterion.is_normal_criterion then
-						Result := pixmaps.icon_pixmaps.metric_common_criteria_icon
-					elseif l_criterion.is_text_criterion then
-						Result := pixmaps.icon_pixmaps.metric_text_criteria_icon
-					elseif l_criterion.is_domain_criterion then
-						Result := pixmaps.icon_pixmaps.metric_relational_criteria_icon
-					end
+			elseif
+				criterion_factory.has_criterion (a_name, scope) and then
+				attached criterion_factory.metric_criterion (scope, a_name) as l_criterion
+			then
+				if l_criterion.is_normal_criterion then
+					Result := pixmaps.icon_pixmaps.metric_common_criteria_icon
+				elseif l_criterion.is_text_criterion then
+					Result := pixmaps.icon_pixmaps.metric_text_criteria_icon
+				elseif l_criterion.is_domain_criterion then
+					Result := pixmaps.icon_pixmaps.metric_relational_criteria_icon
 				end
 			end
 		end
@@ -845,7 +843,7 @@ invariant
 	subrows_attached: subrows /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

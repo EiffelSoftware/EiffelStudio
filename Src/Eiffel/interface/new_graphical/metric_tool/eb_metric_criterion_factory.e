@@ -403,6 +403,7 @@ feature{NONE} -- Initialization
 			l_hash_table.put (agent new_normal_criterion (feature_scope, query_language_names.ql_cri_is_feature), query_language_names.ql_cri_is_feature)
 			l_hash_table.put (agent new_normal_criterion (feature_scope, query_language_names.ql_cri_is_frozen), query_language_names.ql_cri_is_frozen)
 			l_hash_table.put (agent new_normal_criterion (feature_scope, query_language_names.ql_cri_is_function), query_language_names.ql_cri_is_function)
+			l_hash_table.put (agent new_normal_criterion (feature_scope, query_language_names.ql_cri_is_ghost), query_language_names.ql_cri_is_ghost)
 			l_hash_table.put (agent new_normal_criterion (feature_scope, query_language_names.ql_cri_is_hidden), query_language_names.ql_cri_is_hidden)
 			l_hash_table.put (agent new_normal_criterion (feature_scope, query_language_names.ql_cri_is_immediate), query_language_names.ql_cri_is_immediate)
 			l_hash_table.put (agent new_normal_criterion (feature_scope, query_language_names.ql_cri_is_infix), query_language_names.ql_cri_is_infix)
@@ -559,7 +560,7 @@ invariant
 	criterion_table_attached: criterion_table /= Void
 
 note
-        copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2019, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

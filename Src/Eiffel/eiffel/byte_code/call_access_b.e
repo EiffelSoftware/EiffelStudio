@@ -196,13 +196,79 @@ feature -- Byte code generation
 			buf.put_character (')')
 		end
 
-	generate_workbench_address (reg: REGISTRABLE; typ: CL_TYPE_A)
-			-- Generate workbench address of a routine that is called on `reg' of type `typ'.
+	generate_workbench_address (t: REGISTRABLE; c: CL_TYPE_A)
+			-- Generate workbench address of a routine that is called on target `t` of type `c`.
 		require
-			reg_attached: attached reg
-			typ_attached: attached typ
+			t_attached: attached t
+			c_attached: attached c
+		local
+			is_nested: BOOLEAN
+			buf: GENERATION_BUFFER
+			cl_type_i: CL_TYPE_A
+			l_type: TYPE_A
+			macro: STRING
 		do
-			generate_call_macro (routine_macro, reg, typ)
+			is_nested := not is_first
+			buf := buffer
+			if
+				attached precursor_type as p and then
+				is_target_type_fixed
+			then
+				l_type := context.real_type (p)
+				if l_type.is_multi_constrained then
+					check
+						has_multi_constraint_static: has_multi_constraint_static
+					end
+					l_type := context.real_type (multi_constraint_static)
+				end
+				check attached {CL_TYPE_A} l_type as ct then
+					cl_type_i := ct
+				end
+			else
+				cl_type_i := c
+			end
+			if is_nested then
+				inspect call_kind
+				when call_kind_creation then
+					macro := routine_macro.creation_call
+				when call_kind_qualified then
+					macro := routine_macro.qualified_call
+				else
+					macro := routine_macro.unqualified_call
+				end
+			else
+				macro := routine_macro.unqualified_call
+			end
+			buf.put_string (macro)
+			buf.put_character ('(')
+			buf.put_integer (routine_id)
+			buf.put_two_character (',', ' ')
+			if not is_nested then
+				if not attached precursor_type then
+					context.generate_current_dtype
+				elseif is_target_type_fixed then
+						-- Use dynamic type of parent instead
+						-- of dynamic type of Current.
+					buf.put_static_type_id (cl_type_i.static_type_id (context.context_class_type.type))
+				else
+					buf.put_string ({C_CONST}.dtype)
+					buf.put_character ('(')
+					t.print_register
+					buf.put_character (')')
+				end
+			elseif call_kind = call_kind_qualified then
+					-- Feature name is used to report a call on a void target.
+					-- This cannot happen with an unqualified call or a creation procedure call.
+				buf.put_string_literal (feature_name)
+				buf.put_two_character (',', ' ')
+				t.print_register
+			else
+				buf.put_string ({C_CONST}.dtype)
+				buf.put_character ('(')
+				t.print_register
+				buf.put_character (')')
+			end
+			buf.put_character (')')
 		end
 
 	generate_workbench_end (result_register: REGISTER)
@@ -412,83 +478,6 @@ feature {NONE} -- C code generation
 				buf.put_character ('.')
 				return_type.generate_typed_field (buf)
 			end
-		end
-
-	generate_call_macro (m: like routine_macro; t: REGISTRABLE; c: CL_TYPE_A)
-			-- Generate a call macro identified by `m' to a feature
-			-- assuming that `t' contains a target of a call of type `c'.
-		require
-			m_attached: attached m
-			t_attached: attached t
-			c_attached: attached c
-		local
-			is_nested: BOOLEAN
-			buf: GENERATION_BUFFER
-			cl_type_i: CL_TYPE_A
-			l_type: TYPE_A
-			macro: STRING
-		do
-			is_nested := not is_first
-			buf := buffer
-			if
-				attached precursor_type as p and then
-				is_target_type_fixed
-			then
-				l_type := context.real_type (p)
-				if l_type.is_multi_constrained then
-					check
-						has_multi_constraint_static: has_multi_constraint_static
-					end
-					l_type := context.real_type (multi_constraint_static)
-				end
-				check attached {CL_TYPE_A} l_type as ct then
-					cl_type_i := ct
-				end
-			else
-				cl_type_i := c
-			end
-			if is_nested then
-				inspect call_kind
-				when call_kind_creation then
-					macro := m.creation_call
-				when call_kind_qualified then
-					macro := m.qualified_call
-				else
-					macro := m.unqualified_call
-				end
-			else
-				macro := m.unqualified_call
-			end
-			buf.put_string (macro)
-			buf.put_character ('(')
-			buf.put_integer (routine_id)
-			buf.put_two_character (',', ' ')
-			if not is_nested then
-				if not attached precursor_type then
-					context.generate_current_dtype
-				elseif is_target_type_fixed then
-						-- Use dynamic type of parent instead
-						-- of dynamic type of Current.
-					buf.put_static_type_id (cl_type_i.static_type_id (context.context_class_type.type))
-				else
-					buf.put_string ({C_CONST}.dtype)
-					buf.put_character ('(')
-					t.print_register
-					buf.put_character (')')
-				end
-			elseif call_kind = call_kind_qualified then
-					-- Feature name is used to report a call on a void target.
-					-- This cannot happen with unqualified call or a creation procedure call.
-				buf.put_string_literal (feature_name)
-				buf.put_two_character (',', ' ')
-				t.print_register
-			else
-				buf.put_string ({C_CONST}.dtype)
-				buf.put_character ('(')
-				t.print_register
-				buf.put_character (')')
-			end
-			buf.put_character (')')
 		end
 
 	routine_macro: TUPLE [unqualified_call, qualified_call, creation_call: STRING]

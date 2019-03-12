@@ -6,9 +6,11 @@ services:
             dockerfile: dockerfile
         volumes:
             - ./var/deliv-output:/home/eiffel/deliv/output
-        #environment:
-            #- STUDIO_VERSION_MAJOR_MINOR=19.01
+        environment:
+            - STUDIO_VERSION_MAJOR_MINOR=19.03
+            #- SVN_EIFFELSTUDIO_REPO_REVISION=102945
+            #- ORIGO_SVN_REVISION=102919
             #- SVN_EIFFELSTUDIO_REPO=https://svn.eiffel.com/eiffelstudio
             #- SVN_ISE_REPO=svn://$LOGNAME@svn.ise/ise_svn
-            #- ORIGO_SVN_REVISION=HEAD
+            #- ONLY_PORTERPACKAGE=true
 

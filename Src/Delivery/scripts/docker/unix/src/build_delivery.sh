@@ -40,32 +40,38 @@ echo Get revision from source code
 if [ ! "$ORIGO_SVN_REVISION" ]; then
 	DELIV_REVISION=`$DELIV_DIR/scripts-unix/set_version.sh $DEFAULT_ORIGO_SVN_ROOT`
 else
-	DELIV_REVISION=$ORIGO_SVN_REVISION
+	if [ "$ORIGO_SVN_REVISION" = "HEAD" ]; then
+		DELIV_REVISION=`$DELIV_DIR/scripts-unix/set_version.sh $DEFAULT_ORIGO_SVN_ROOT`
+	else
+		DELIV_REVISION=$ORIGO_SVN_REVISION
+	fi
 fi
+
 echo Building for revision $DELIV_REVISION
 
 cd $DELIV_DIR/scripts-unix
-STUDIO_PORTERPACKAGE_TGZ=$DELIV_DIR/output/PorterPackage-${STUDIO_VERSION_MAJOR_MINOR}.${DELIV_REVISION}.tgz
-if [ -f "$STUDIO_PORTERPACKAGE_TGZ" ]; then
-	echo Reuse $STUDIO_PORTERPACKAGE_TGZ
-	tar xzf "$STUDIO_PORTERPACKAGE_TGZ"
+STUDIO_PORTERPACKAGE_TAR=$DELIV_DIR/output/PorterPackage_${DELIV_REVISION}.tar
+if [ -f "$STUDIO_PORTERPACKAGE_TAR" ]; then
+	echo Reuse $STUDIO_PORTERPACKAGE_TAR
+	tar xf "$STUDIO_PORTERPACKAGE_TAR"
 fi
 if [ ! -d "PorterPackage" ]; then
 	echo Build PorterPackage ...
 	./make_delivery
 fi
 if [ -d "PorterPackage" ]; then
-	if [ ! -f "$STUDIO_PORTERPACKAGE_TGZ" ]; then
-		tar czvf $STUDIO_PORTERPACKAGE_TGZ PorterPackage
+	if [ ! -f "$STUDIO_PORTERPACKAGE_TAR" ]; then
+		tar cvf $STUDIO_PORTERPACKAGE_TAR PorterPackage
 	fi
 	if [ "$ONLY_PORTERPACKAGE" == "true" ]; then
-		echo PorterPackage is ready: $STUDIO_PORTERPACKAGE_TGZ
+		echo PorterPackage is ready: $STUDIO_PORTERPACKAGE_TAR
 	else
 		cd PorterPackage
 		echo Use PorterPackage with ISE_PLATFORM=$ISE_PLATFORM ...
 		ls -la
 		./compile_exes $ISE_PLATFORM
 		./make_images $ISE_PLATFORM
+		cp compile.log $DELIV_DIR/output
 		mv Eiffel*.tar.bz2 $DELIV_DIR/output
 	fi
 else

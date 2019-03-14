@@ -11,10 +11,24 @@ class
 inherit
 	ACCESS_B
 		redefine
-			analyze, unanalyze, parameters,
-			generate, register, get_register, propagate,
-			enlarged, size, is_simple_expr, is_single, is_type_fixed,
-			line_number, set_line_number, has_call, allocates_memory
+			allocates_memory,
+			analyze,
+			generate,
+			get_register,
+			enlarged,
+			has_call,
+--			, inlined_byte_code
+			is_simple_expr,
+			is_single,
+			is_type_fixed,
+			line_number,
+			parameters,
+			pre_inlined_code,
+			propagate,
+			register,
+			set_line_number,
+			size,
+			unanalyze
 		end
 
 	SHARED_TYPE_I
@@ -38,15 +52,30 @@ feature -- Register
 	get_register
 			-- Get a register
 		do
-			create {REGISTER} register.make (Reference_c_type)
+			if register = Void then
+				create {REGISTER} register.make (Reference_c_type)
+			end
 		end
 
-	count_register: REGISTER
-			-- Store size of SPECIAL instance to create is stored if needed.
-
 	propagate (r: REGISTRABLE)
-			-- Do nothing
+			-- <Precursor>
+		local
+			t: TYPE_A
 		do
+			if not context.propagated then
+				t := real_type (type)
+				if
+					register = Void and then
+					(r.is_predefined and then not context.has_rescue or else not attached call) and then
+					t.c_type.same_class_type (r.c_type) and then
+					(r.is_result implies not context.current_feature.is_once)
+				then
+					register := r
+					Context.set_propagated
+				elseif attached call as c and then not t.is_basic then
+					c.propagate (r)
+				end
+			end
 		end
 
 feature -- C code generation
@@ -129,7 +158,7 @@ feature -- Analyze
 						l_call.set_parent (Void)
 					end
 				end
-			else
+			elseif not attached register then
 				create {REGISTER} register.make (l_type.c_type)
 			end
 			if system.is_scoop and then l_type.is_separate then
@@ -153,6 +182,7 @@ feature -- Analyze
 					l_call.unanalyze
 				end
 			end
+			register := Void
 		end
 
 feature -- Status report
@@ -416,9 +446,54 @@ feature -- Inlining
 	size: INTEGER
 			-- <Precursor>
 		do
-				-- Inlining will not be done if the feature
-				-- has a creation instruction
-			Result := 101	-- equal to maximum size of inlining + 1 (Found in FREE_OPTION_SD)
+				-- Inline if creation type is known at compile time.
+			Result :=
+				if
+					info.is_explicit implies
+					system.is_scoop and then type.is_separate
+				then
+						-- The type depends on the context or the call is separate: no inlining.
+					{LACE_I}.inlining_threshold
+				elseif attached call as c then
+						-- Non-separate call on a fixed type.
+					c.size + 1
+				else
+						-- Creation with a fixed type.
+					1
+				end
+		end
+
+--	inlined_byte_code: like Current
+--		local
+--			l_type: like type
+--		do
+--			Result := Current
+--			if attached call as l_call then
+--				l_type := real_type (type)
+--				if
+--					not l_type.is_basic and then
+--					l_type.is_explicit and then
+--					not is_simple_special_creation and then
+--					(system.is_scoop implies not l_type.is_separate)
+--				then
+--					l_call.set_parent (nested_b)
+--					l_call.set_register (register)
+--					l_call.set_call_kind (call_kind_creation)
+--					if attached {ROUTINE_B} l_call.inlined_byte_code as r then
+--						call := r
+--					end
+--					l_call.set_parent (Void)
+--				end
+--			end
+--		end
+
+	pre_inlined_code: CALL_B
+		do
+			Result := Current
+			if attached call as c and then attached c.parameters as p then
+					-- Update paramaters.
+				c.set_parameters (p.pre_inlined_code)
+			end
 		end
 
 feature {BYTE_NODE_VISITOR} -- Assertion support
@@ -435,7 +510,7 @@ feature {BYTE_NODE_VISITOR} -- Assertion support
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -466,4 +541,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class CREATION_EXPR_B
+end

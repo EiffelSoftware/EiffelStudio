@@ -1,5 +1,5 @@
-note
-	description: "Dependance between features"
+﻿note
+	description: "Dependance between featuresю."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -66,18 +66,31 @@ feature -- Access
 	suppliers: TWO_WAY_SORTED_SET [INTEGER]
 			-- Set of all the syntactical suppliers of the feature
 
+	instance_suppliers: detachable LINKED_SET [INSTANCE_DEPENDENCE]
+			-- Set of types used to create objects.
+
+	feature_name_32: STRING_32
+			-- Final name of the feature
+		require
+			feature_name_id_set: feature_name_id >= 1
+		do
+			Result := encoding_converter.utf8_to_utf32 (feature_name)
+		ensure
+			Result_not_void: Result /= Void
+			Result_not_empty: not Result.is_empty
+		end
+
+	feature_name_id: INTEGER
+			-- name ID of the feature for which we have the dependances
+
+feature -- Modification
+
 	add_supplier (a_class: CLASS_C)
 			-- Add the class to the list of suppliers
 		require
 			good_argument: a_class /= Void
 		do
 			suppliers.extend (a_class.class_id)
-		end;
-
-	reusable_depend_unit: DEPEND_UNIT
-			-- Reusable depend unit for optimized addition by `extend_depend_unit_with_level'.
-		once
-			create Result.make_creation_unit (system.any_id)
 		end
 
 	extend_depend_unit_with_level (a_class_id: INTEGER; a_feature: FEATURE_I; a_context: NATURAL_16)
@@ -96,38 +109,24 @@ feature -- Access
 			end
 		end
 
-	wipe_out
-		do
-			Precursor {TWO_WAY_SORTED_SET}
-			suppliers.wipe_out
-		end;
-
-	copy (other: like Current)
-		do
-			if other /= Current then
-				Precursor {TWO_WAY_SORTED_SET} (other)
-				set_suppliers (suppliers.twin)
-			end
-		end
-
 	set_suppliers (new_suppliers: like suppliers)
 		do
 			suppliers := new_suppliers
-		end;
-
-	feature_name_32: STRING_32
-			-- Final name of the feature
-		require
-			feature_name_id_set: feature_name_id >= 1
-		do
-			Result := encoding_converter.utf8_to_utf32 (feature_name)
-		ensure
-			Result_not_void: Result /= Void
-			Result_not_empty: not Result.is_empty
 		end
 
-	feature_name_id: INTEGER
-			-- name ID of the feature for which we have the dependances
+	add_instance_supplier (d: INSTANCE_DEPENDENCE)
+			-- Add instance dependence `d` to the set of creation suppliers.
+		local
+			s: like instance_suppliers
+		do
+			s := instance_suppliers
+			if not attached s then
+				create s.make
+				s.compare_objects
+				instance_suppliers := s
+			end
+			s.extend (d)
+		end
 
 	set_feature_name_id (id: INTEGER)
 			-- Assign `id' to `feature_name_id'.
@@ -137,6 +136,36 @@ feature -- Access
 			feature_name_id := id
 		ensure
 			feature_name_id_set: feature_name_id = id
+		end
+
+feature {NONE} -- Modification
+
+	reusable_depend_unit: DEPEND_UNIT
+			-- Reusable depend unit for optimized addition by `extend_depend_unit_with_level'.
+		once
+			create Result.make_creation_unit (system.any_id)
+		end
+
+feature -- Removal
+
+	wipe_out
+		do
+			Precursor {TWO_WAY_SORTED_SET}
+			suppliers.wipe_out
+			instance_suppliers := Void
+		end
+
+feature -- Duplication
+
+	copy (other: like Current)
+		do
+			if other /= Current then
+				Precursor {TWO_WAY_SORTED_SET} (other)
+				set_suppliers (suppliers.twin)
+				if attached instance_suppliers as s then
+					instance_suppliers := s.twin
+				end
+			end
 		end
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
@@ -158,7 +187,10 @@ feature -- Comparison
 			-- Is `other' attached to an object considered
 			-- equal to current object?
 		do
-			Result := Precursor {TWO_WAY_SORTED_SET} (other) and then equal (suppliers, other.suppliers)
+			Result :=
+				Precursor {TWO_WAY_SORTED_SET} (other) and then
+				equal (suppliers, other.suppliers) and then
+				instance_suppliers ~ other.instance_suppliers
 		end
 
 feature -- Incrementality
@@ -169,55 +201,29 @@ feature -- Incrementality
 			l_system: like system
 		do
 			l_system := system
-			from
-				suppliers.start
-			until
-				suppliers.after or else Result
-			loop
-				if l_system.class_of_id (suppliers.item) = Void then
-					Result := True
-				end;
-				suppliers.forth
-			end;
-			from
-				start
-			until
-				after or else Result
-			loop
-				if l_system.class_of_id (item.class_id) = Void then
-					Result := True
-				end;
-				forth
-			end;
-		end;
+			Result :=
+				across suppliers as s some not attached l_system.class_of_id (s.item) end or else
+				attached instance_suppliers as cs and then across cs as s some s.item.has_removed_class (l_system) end or else
+				across Current as d some not attached l_system.class_of_id (d.item.class_id) end
+		end
 
 feature -- Debug
 
 	trace
 		do
-			io.error.put_string("Suppliers%N");
-			from
-				suppliers.start
-			until
-				suppliers.after
+			io.error.put_string("Suppliers%N")
+			across
+				suppliers as s
 			loop
-				io.error.put_string ("Supplier id: ");
-				io.error.put_integer (suppliers.item);
-				io.error.put_new_line;
-				suppliers.forth
-			end;
-			from
-				start
-			until
-				after
-			loop
-				item.trace;
-				forth
-			end;
-		end;
+				io.error.put_string ("Supplier id: ")
+				io.error.put_integer (s.item)
+				io.error.put_new_line
+			end
+			do_all (agent {DEPEND_UNIT}.trace)
+		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -4,14 +4,16 @@
 ISE_MAJOR_MINOR_LATEST=18.11
 ISE_BUILD_LATEST=102592
 
-ISE_MAJOR_MINOR_NIGHTLY=18.11
-ISE_BUILD_NIGHTLY=102592
+ISE_MAJOR_MINOR_NIGHTLY=19.02
+ISE_BUILD_NIGHTLY=102945
 
-ISE_MAJOR_MINOR_BETA=$ISE_MAJOR_MINOR_LATEST
-ISE_BUILD_BETA=$ISE_BUILD_LATEST
+ISE_MAJOR_MINOR_BETA=19.02
+ISE_BUILD_BETA=102945
+ISE_BETA_DOWNLOAD_URL=http://downloads.sourceforge.net/eiffelstudio
 
 # predefined
 T_CURRENT_DIR=$(pwd)
+ISE_SF_DOWNLOAD_URL=http://downloads.sourceforge.net/eiffelstudio
 
 # Arguments
 POSITIONAL=()
@@ -21,6 +23,11 @@ do
 	case $key in
 		--channel)
 			ISE_CHANNEL=$2
+			shift
+			shift
+		;;
+		--url)
+			ISE_CUSTOM_URL=$2
 			shift
 			shift
 		;;
@@ -168,7 +175,7 @@ do_install() {
 			ISE_MAJOR_MINOR=$ISE_MAJOR_MINOR_LATEST
 			ISE_BUILD=$ISE_BUILD_LATEST
 			ISE_DOWNLOAD_FILE=Eiffel_${ISE_MAJOR_MINOR}_gpl_${ISE_BUILD}-${ISE_PLATFORM}.tar.bz2
-			ISE_DOWNLOAD_URL=https://downloads.sourceforge.net/eiffelstudio/$ISE_DOWNLOAD_FILE
+			ISE_DOWNLOAD_URL=${ISE_SF_DOWNLOAD_URL}/$ISE_DOWNLOAD_FILE
 			iseverParse $ISE_MAJOR_MINOR.$ISE_BUILD
 			echo >&2 Version=$major.$minor.$build
 			;;
@@ -176,7 +183,12 @@ do_install() {
 			echo >&2 Use beta release.
 			ISE_MAJOR_MINOR=$ISE_MAJOR_MINOR_BETA
 			ISE_BUILD=$ISE_BUILD_BETA
-			ISE_DOWNLOAD_URL=https://ftp.eiffel.com/pub/beta/${ISE_MAJOR_MINOR}/$ISE_DOWNLOAD_FILE
+			ISE_DOWNLOAD_FILE=Eiffel_${ISE_MAJOR_MINOR}_gpl_${ISE_BUILD}-${ISE_PLATFORM}.tar.bz2
+			if [ -z "$ISE_BETA_DOWNLOAD_URL" ]; then
+				ISE_DOWNLOAD_URL=https://ftp.eiffel.com/pub/beta/$ISE_MAJOR_MINOR/$ISE_DOWNLOAD_FILE
+			else
+				ISE_DOWNLOAD_URL=$ISE_BETA_DOWNLOAD_URL/$ISE_DOWNLOAD_FILE
+			fi
 			iseverParse $ISE_MAJOR_MINOR.$ISE_BUILD
 			echo >&2 Version=$major.$minor.$build
 			;;
@@ -185,7 +197,6 @@ do_install() {
 			echo >&2 Use nighlty release.
 			ISE_MAJOR_MINOR=$ISE_MAJOR_MINOR_NIGHTLY
 			ISE_BUILD=$ISE_BUILD_NIGHTLY
-
 			ISE_DOWNLOAD_FILE=Eiffel_${ISE_MAJOR_MINOR}_gpl_${ISE_BUILD}-${ISE_PLATFORM}.tar.bz2
 			ISE_DOWNLOAD_URL=https://ftp.eiffel.com/pub/beta/nightly/$ISE_DOWNLOAD_FILE
 			iseverParse $ISE_MAJOR_MINOR.$ISE_BUILD
@@ -197,8 +208,12 @@ do_install() {
 			echo >&2 $major.$minor.$build
 			ISE_MAJOR_MINOR=$major.$minor
 			ISE_BUILD=$build
-			ISE_DOWNLOAD_FILE=Eiffel_${ISE_MAJOR_MINOR}_gpl_${ISE_BUILD}-${ISE_PLATFORM}.tar.bz2
-			ISE_DOWNLOAD_URL=https://ftp.eiffel.com/pub/download/$ISE_MAJOR_MINOR/$ISE_DOWNLOAD_FILE
+			if [ -z "$ISE_CUSTOM_URL" ]; then
+				ISE_DOWNLOAD_FILE=Eiffel_${ISE_MAJOR_MINOR}_gpl_${ISE_BUILD}-${ISE_PLATFORM}.tar.bz2
+				ISE_DOWNLOAD_URL=https://ftp.eiffel.com/pub/download/$ISE_MAJOR_MINOR/$ISE_DOWNLOAD_FILE
+			else
+				ISE_DOWNLOAD_URL=$ISE_CUSTOM_URL
+			fi
 			;;
 	esac
 
@@ -277,13 +292,6 @@ do_install() {
 		#Should be inside $ISE_EIFFEL=$T_CURRENT_DIR/Eiffel_$ISE_MAJOR_MINOR
 		$curl $ISE_DOWNLOAD_URL | tar -x -p -s --bzip2
 	fi
-        #if [ -f "$ISE_DOWNLOAD_FILE" ]; then
-	#	echo >&2 Already there.
-        #else
-	#	$curl -o $ISE_DOWNLOAD_FILE $ISE_DOWNLOAD_URL
-        #fi
-	#echo Extracting ...
-	#tar -xv --bzip2 -f $ISE_DOWNLOAD_FILE
 
 	ISE_RC_FILE="$ISE_EIFFEL/setup.rc"
 	echo \# Setup for EiffelStudio ${ISE_MAJOR_MINOR}.${ISE_BUILD} > $ISE_RC_FILE

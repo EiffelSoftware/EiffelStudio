@@ -26,9 +26,7 @@ inherit
 
 	EV_ITEM_IMP
 		redefine
-			interface,
-			width,
-			height
+			interface
 		end
 
 create
@@ -175,7 +173,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 		-- Interface object of `Current'.
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

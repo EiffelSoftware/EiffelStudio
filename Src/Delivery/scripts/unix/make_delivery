@@ -231,8 +231,8 @@ if [ ! "$NO_COMPILE" ]; then
 		chmod +x $INSTALL_DIR/studio/spec/unix/finish_freezing 
 	fi
 
-	remtrace ISE specific files for enterprise edition
 	if [ "$MULTIPLE_EDITIONS" ]; then
+		remtrace ISE specific files: enterprise edition
 		cd $EIFFEL_SRC
 		exprt $DEFAULT_ISE_SVN/Src/library/keygen library/keygen
 		cd tools

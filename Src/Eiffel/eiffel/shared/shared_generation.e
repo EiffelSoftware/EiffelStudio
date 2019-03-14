@@ -17,7 +17,7 @@ feature {NONE} -- Buffers
 
 	generation_ext_inline_buffer: GENERATION_BUFFER
 			-- Buffer used for the generation of inlined externals
-			-- Default size is 2KB, it will be rezized when needed.
+			-- Default size is 2KB, it will be resized when needed.
 		once
 			create Result.make (2048)
 		end
@@ -37,7 +37,7 @@ feature {NONE} -- Buffers
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

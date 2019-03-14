@@ -2,13 +2,10 @@ FROM ubuntu:14.04
 
 LABEL maintainer="Jocelyn Fiat <jfiat@eiffel.com>"
 
-ENV SVN_EIFFELSTUDIO_REPO=https://svn.eiffel.com/eiffelstudio
-ENV SVN_ISE_REPO=svn://svn.ise/ise_svn
-
 RUN apt-get update && apt-get install -y --no-install-recommends --no-install-suggests \
         ca-certificates curl \
         bzip2 \
-        gcc make \
+        gcc make dist \
         libxtst-dev \
         libgtk2.0-dev \
         libssl-dev \
@@ -26,6 +23,11 @@ ENV ISE_EIFFEL=/usr/local/eiffel \
 	ISE_LIBRARY=$ISE_EIFFEL
 ENV	PATH=$PATH:$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin:$ISE_EIFFEL/tools/spec/$ISE_PLATFORM/bin:$ISE_EIFFEL/library/gobo/spec/$ISE_PLATFORM/bin:$ISE_EIFFEL/esbuilder/spec/$ISE_PLATFORM/bin
 
+#Define delivery variables
+ENV SVN_EIFFELSTUDIO_REPO=https://svn.eiffel.com/eiffelstudio
+ENV SVN_ISE_REPO=svn://svn.ise/ise_svn
+#ENV SVN_EIFFELSTUDIO_REPO_REVISION=HEAD
+
 RUN export uid=1000 gid=1000 && \
     mkdir -p /home/eiffel && \
     echo "eiffel:x:${uid}:${gid}:eiffel,,,:/home/eiffel:/bin/bash" >> /etc/passwd && \
@@ -38,6 +40,7 @@ ENV HOME /home/eiffel
 COPY --chown=eiffel:eiffel ./src/build_delivery.sh /home/eiffel/build_delivery.sh
 RUN mkdir -p /home/eiffel/deliv/output \
 	&& dos2unix /home/eiffel/build_delivery.sh
+
 
 VOLUME /home/eiffel/deliv/output
 

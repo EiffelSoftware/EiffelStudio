@@ -3,9 +3,9 @@ note
 		Base implementation for all root or localized service containers.
 	]"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
-	revision: "$Revision $"
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	SERVICE_PROVIDER_CONTAINER
@@ -75,11 +75,7 @@ feature {NONE} -- Query
 			-- `a_type': The service type to retrieve a hashable object for.
 			-- `Result': A hashable object to use with `services'.
 		do
-			if attached {HASHABLE} a_type as l_hashable then
-				Result := l_hashable
-			else
-				Result := a_type.generating_type
-			end
+			Result := a_type
 		ensure
 			result_attached: Result /= Void
 		end
@@ -157,7 +153,7 @@ invariant
 		not l_service.has (Void)
 
 ;note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -188,4 +184,4 @@ invariant
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class {SERVICE_PROVIDER_CONTAINER}
+end

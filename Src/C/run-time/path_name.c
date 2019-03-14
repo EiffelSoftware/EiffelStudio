@@ -1,6 +1,6 @@
 /*
 	description: "[
-			Externals for classes PATH_NAME, DIRECTORY_NAME and FILE_NAME,
+			Externals for classes EXECUTION_ENVIRONMENT, PATH_NAME, DIRECTORY_NAME and FILE_NAME,
 			platform independent manipulation of path names
 			]"
 	date:		"$Date$"
@@ -563,7 +563,7 @@ rt_public EIF_BOOLEAN eif_root_dir_supported(void)
 doc:	<routine name="eif_home_directory_name_ptr" return_type="EIF_INTEGER" export="public">
 doc:		<summary>Store the representation of the home directory in `a_buffer' as a null-terminated path in UTF-16 encoding on Windows and a byte sequence otherwise.</summary>
 doc:		<return>Size in bytes actually required in `a_buffer' including the terminating null character. If `a_count' is less than the returned value or if `a_buffer' is NULL, nothing is done to `a_buffer'.</return>
-doc:		<param name="a_buffer" type="EIF_POINTER">Pointer to a buffer that will hold the current working directory, or NULL if lengþh of buffer is required.</param>
+doc:		<param name="a_buffer" type="EIF_POINTER">Pointer to a buffer that will hold the current working directory, or NULL if leng\FEh of buffer is required.</param>
 doc:		<param name="a_count" type="EIF_INTEGER">Length of `a_buffer' in bytes.</param>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None.</synchronization>
@@ -635,7 +635,7 @@ rt_public EIF_INTEGER eif_home_directory_name_ptr(EIF_FILENAME a_buffer, EIF_INT
 doc:	<routine name="eif_user_directory_name_ptr" return_type="EIF_INTEGER" export="public">
 doc:		<summary>Store the representation of the user directory in `a_buffer' as a null-terminated path in UTF-16 encoding on Windows and a byte sequence otherwise.</summary>
 doc:		<return>Size in bytes actually required in `a_buffer' including the terminating null character. If `a_count' is less than the returned value or if `a_buffer' is NULL, nothing is done to `a_buffer'.</return>
-doc:		<param name="a_buffer" type="EIF_POINTER">Pointer to a buffer that will hold the current working directory, or NULL if lengþh of buffer is required.</param>
+doc:		<param name="a_buffer" type="EIF_POINTER">Pointer to a buffer that will hold the current working directory, or NULL if leng\FEh of buffer is required.</param>
 doc:		<param name="a_count" type="EIF_INTEGER">Length of `a_buffer' in bytes.</param>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>None.</synchronization>
@@ -657,6 +657,57 @@ rt_public EIF_INTEGER eif_user_directory_name_ptr(EIF_FILENAME a_buffer, EIF_INT
 	}
 #else
 	return 0;
+#endif
+}
+
+/*
+doc:	<routine name="eif_temporary_directory_name_ptr" return_type="EIF_INTEGER" export="public">
+doc:		<summary>Store the representation of the temporary directory in `a_buffer' as a null-terminated path in UTF-16 encoding on Windows and a byte sequence otherwise.</summary>
+doc:		<return>Size in bytes actually required in `a_buffer' including the terminating null character. If `a_count' is less than the returned value or if `a_buffer' is NULL, nothing is done to `a_buffer'.</return>
+doc:		<param name="a_buffer" type="EIF_POINTER">Pointer to a buffer that will hold the temporary directory, or NULL if leng\FEh of buffer is required.</param>
+doc:		<param name="a_count" type="EIF_INTEGER">Length of `a_buffer' in bytes.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None.</synchronization>
+doc:	</routine>
+*/
+rt_public EIF_INTEGER eif_temporary_directory_name_ptr(EIF_FILENAME a_buffer, EIF_INTEGER a_count)
+{
+		/* String representation of $HOME */
+#ifdef EIF_WINDOWS
+	EIF_INTEGER l_nbytes;
+	if (a_buffer && (a_count >= (MAX_PATH * sizeof(wchar_t)))) {
+			/* Buffer is large enough for the call to GetTempPathW. */
+		l_nbytes = (EIF_INTEGER) GetTempPathW (a_count, a_buffer);
+		if (l_nbytes == 0) {
+			/* Failure ... use GetLastError for more information */
+			return 0;
+		} else if (l_nbytes > a_count) {
+			return l_nbytes;
+		} else {
+			return (EIF_INTEGER) ((wcslen(a_buffer) + 1) * sizeof (wchar_t));
+		}
+	} else {
+			/* Buffer is NULL or not large enough we ask for more. */
+		return MAX_PATH * sizeof(wchar_t);
+	}
+#else
+	char *l_env_value;
+	EIF_INTEGER l_nbytes;
+
+#if defined EIF_VMS
+	l_env_value = getenv("SYS$SCRATCH");
+#else
+    (l_env_value = getenv("TMPDIR" )) ||
+    (l_env_value = getenv("TMP"    )) ||
+    (l_env_value = getenv("TEMP"   )) ||
+    (l_env_value = getenv("TEMPDIR")) ||
+	(l_env_value = "/tmp");
+#endif
+	l_nbytes = (strlen(l_env_value) + 1) * sizeof(char);
+	if (a_buffer && (a_count >= l_nbytes)) {
+		memcpy (a_buffer, l_env_value, l_nbytes);
+	}
+	return l_nbytes;
 #endif
 }
 

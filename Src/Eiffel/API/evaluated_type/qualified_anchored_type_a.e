@@ -26,6 +26,7 @@ inherit
 			formal_instantiated_in,
 			instantiated_in,
 			instantiation_in,
+			is_expanded_creation_possible,
 			is_explicit,
 			is_loose,
 			is_syntactically_equal,
@@ -124,6 +125,14 @@ feature -- Status Report
 			-- <Precursor>
 		do
 			Result := qualifier.has_like
+		end
+
+	is_expanded_creation_possible: BOOLEAN
+			-- <Precursor>
+		do
+			Result :=
+				qualifier.is_loose and then (attached actual_type as a and then a.is_expanded implies a.is_expanded_creation_possible) or else
+				attached actual_type as a and then a.is_expanded_creation_possible
 		end
 
 feature -- Comparison
@@ -643,7 +652,7 @@ feature {NONE} -- Lookup
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

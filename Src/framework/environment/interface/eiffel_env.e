@@ -110,8 +110,8 @@ feature -- Access
 			not_result_is_empty: not Result.is_empty
 		end
 
-	copyright_year: STRING = "2018"
-			-- Copyright year
+	copyright_year: STRING = "2019"
+			-- Copyright year.
 
 feature -- Access
 
@@ -2377,7 +2377,7 @@ feature {NONE} -- Helper
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

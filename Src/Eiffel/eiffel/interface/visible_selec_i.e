@@ -27,24 +27,19 @@ feature
 		end;
 
 	mark_visible (remover: REMOVER; feat_table: FEATURE_TABLE)
-			-- Mark visible features from `feat_table'.
+			-- Mark visible features from `feat_table` in class with ID `class_id` with `remover`.
 		local
-			a_feature: FEATURE_I;
+			class_id: like {CLASS_C}.class_id
 		do
-			from
-				visible_features.start
-			until
-				visible_features.after
+			class_id := feat_table.feat_tbl_id
+			across
+				visible_features as fs
 			loop
-				a_feature := feat_table.item (visible_features.item_for_iteration);
-
-				if a_feature /= Void then
-					remover.record (a_feature, a_feature.written_class)
-				end;
-
-				visible_features.forth;
-			end;
-		end;
+				if attached feat_table.item (fs.item) as f then
+					remover.register_monomorphic (f, class_id)
+				end
+			end
+		end
 
 	has_visible: BOOLEAN = True
 			-- Has the current object some visible features ?
@@ -121,7 +116,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER}
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

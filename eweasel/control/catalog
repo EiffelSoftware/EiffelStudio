@@ -191,7 +191,7 @@ test repeated-non-conforming-inheritance-of-generic-type-from-parents	noncon012 
 test feature-inherits-export-status				noncon013 tcf pass non-conforming
 test non-conform-once-inheritance				noncon014 tcf pass non-conforming
 test non-conform-generic-class					noncon015 tcf pass non-conforming
-test non-conform-arguments						noncon016 tcf pass non-conforming
+test non-conform-arguments						noncon016 tcf fail used_to_pass non-conforming
 test non-conform-infinite-loop					noncon017 tcf pass non-conforming
 test non-conform-precondition-inheritance			noncon019 tcf pass non-conforming
 test incorrect-vrle-error						noncon020 tcf pass non-conforming
@@ -1374,6 +1374,7 @@ test	inline-internal-locals			final123 tcf pass finalizing inlining loop iterati
 test	inline-attribute-with-body		final124 tcf fail finalizing inlining attribute
 test	agent-call-gc-corruption		final125 tcf pass finalizing runtime
 test	reference-equality-gc-protection	final126 tcf pass finalizing gc
+test	optimized-is_equal-call			final127 tcf fail finalizing
 
 -- Runtime
 test	gc-tracking-001					runtime001	tcf pass runtime

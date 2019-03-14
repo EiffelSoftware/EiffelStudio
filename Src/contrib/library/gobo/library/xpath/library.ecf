@@ -1,37 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="xpath" uuid="E1FFE100-60B0-0018-0001-000020160220" library_target="xpath">
-	<description>
-		description: "ECF file for the Gobo Eiffel XML XPath Library"
-		library: "Gobo Eiffel XML XPath Library"
-		copyright: "Copyright (c) 2001-2016, Eric Bezault and others"
-		license: "MIT License"
-	</description>
-	<target name="xpath">
-		<root all_classes="true"/>
-		<file_rule>
-			<exclude>/\.git$</exclude>
-			<exclude>/\.svn$</exclude>
-		</file_rule>
-		<option warning="true">
-		</option>
-		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true">
-			<condition>
-				<custom name="GOBO_EIFFEL" excluded_value="ge"/>
-			</condition>
-		</library>
-		<library name="free_elks" location="..\free_elks\library.ecf" readonly="true">
-			<condition>
-				<custom name="GOBO_EIFFEL" value="ge"/>
-			</condition>
-		</library>
-		<library name="kernel" location="..\kernel\library.ecf" readonly="true"/>
-		<library name="math" location="..\math\library.ecf" readonly="true"/>
-		<library name="regexp" location="..\regexp\library.ecf" readonly="true"/>
-		<library name="string" location="..\string\library.ecf" readonly="true"/>
-		<library name="structure" location="..\structure\library.ecf" readonly="true"/>
-		<library name="time" location="..\time\library.ecf" readonly="true"/>
-		<library name="utility" location="..\utility\library.ecf" readonly="true"/>
-		<library name="xml" location="..\xml\library.ecf" readonly="true"/>
-		<cluster name="xpath" location=".\src\" recursive="true"/>
-	</target>
-</system>
+<redirection
+	xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd"
+	location="src/library.ecf">
+</redirection>

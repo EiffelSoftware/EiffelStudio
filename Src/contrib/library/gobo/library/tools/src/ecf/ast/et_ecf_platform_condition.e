@@ -5,7 +5,7 @@ note
 		"ECF platform conditions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,7 +14,7 @@ class ET_ECF_PLATFORM_CONDITION
 
 inherit
 
-	ET_ECF_CONDITION
+	ET_ECF_CONDITION_ITEM
 
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
@@ -69,12 +69,12 @@ feature -- Status report
 			l_splitter: ST_SPLITTER
 		do
 			if operating_system.is_windows then
-				l_expected_value := "windows"
+				l_expected_value := {ET_ECF_SETTING_NAMES}.windows_setting_value
 			else
-				l_expected_value := "unix"
+				l_expected_value := {ET_ECF_SETTING_NAMES}.unix_setting_value
 			end
-			if value.has (' ') then
-				create l_splitter.make_with_separators (" ")
+			if value.has ({ET_ECF_CAPABILITY_NAMES}.value_separator) then
+				create l_splitter.make_with_separators ({ET_ECF_CAPABILITY_NAMES}.value_separators)
 				Result := l_splitter.split (value).there_exists (agent STRING_.same_case_insensitive (?, l_expected_value))
 			else
 				Result := STRING_.same_case_insensitive (value, l_expected_value)

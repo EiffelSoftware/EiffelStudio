@@ -8,6 +8,7 @@
 class
 	WEL_API
 
+
 feature -- Windows
 
 	window_from_point (point: POINTER): POINTER
@@ -977,8 +978,9 @@ feature -- API
 			is_class: class
 		end
 
+
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

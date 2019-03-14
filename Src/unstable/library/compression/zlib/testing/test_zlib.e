@@ -143,7 +143,7 @@ feature -- Test deflate
 			l_inf_zstream.set_next_output (character_array_to_external (l_buff_inf))
 
 			l_zlib.inflate_init (l_inf_zstream)
-			l_zlib.inflate (l_inf_zstream, False)
+			l_zlib.inflate (l_inf_zstream, {ZLIB_CONSTANTS}.z_no_flush) -- False
 			l_zlib.inflate_end (l_inf_zstream)
 
 			l_inflated := buffer_to_string (l_buff_inf, l_inf_zstream.total_output)

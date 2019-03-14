@@ -9,9 +9,6 @@ class
 
 inherit
 	TEMPLATE_INSPECTOR
-		redefine
-			internal_data
-		end
 
 create
 	register

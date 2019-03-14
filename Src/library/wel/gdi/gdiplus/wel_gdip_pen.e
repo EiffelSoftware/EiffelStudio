@@ -135,7 +135,7 @@ feature {NONE} -- C externals
 			style_valid: {WEL_GDIP_DASH_STYLE}.is_valid (style)
 		external
 			"[
-				C++ inline use "wel_gdi_plus.h", "GdiPlus.h"
+				C++ inline use "wel_gdi_plus.h"
 			]"
 		alias
 			"[
@@ -147,9 +147,9 @@ feature {NONE} -- C externals
 					GdipSetPenDashStyle = GetProcAddress ((HMODULE) $handle, "GdipSetPenDashStyle");
 				}
 				if (GdipSetPenDashStyle) {
-					*(EIF_INTEGER *) $status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpPen *, enum DashStyle)) GdipSetPenDashStyle)
+					*(EIF_INTEGER *) $status = (FUNCTION_CAST_TYPE (GpStatus, WINGDIPAPI, (GpPen *, INT)) GdipSetPenDashStyle)
 								((GpPen *) $pen,
-								(enum DashStyle) $style);
+								(INT) $style);
 				}
 			}
 			]"
@@ -184,7 +184,7 @@ feature {NONE} -- C externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

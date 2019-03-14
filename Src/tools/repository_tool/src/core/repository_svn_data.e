@@ -12,7 +12,6 @@ inherit
 		redefine
 			make,
 			repository,
-			fetch_diff,
 			logs,
 			log,
 			storage

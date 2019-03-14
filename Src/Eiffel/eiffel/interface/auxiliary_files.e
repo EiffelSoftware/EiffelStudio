@@ -1,6 +1,5 @@
-note
-	description: "Generate the auxiliary files at the end%
-				%of a C generation"
+﻿note
+	description: "Generate the auxiliary files at the end of a C generation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -34,7 +33,7 @@ inherit
 create
 	make
 
-feature -- Initialisation
+feature {NONE} -- Initialisation
 
 	make (current_system: SYSTEM_I; current_context: BYTE_CONTEXT)
 		do
@@ -54,7 +53,6 @@ feature -- Dynamic Library file
 			-- generate dynamic_lib.
 		local
 			dynamic_lib_exports: HASH_TABLE [LINKED_LIST[DYNAMIC_LIB_EXPORT_FEATURE],INTEGER]
-			dl_exp: DYNAMIC_LIB_EXPORT_FEATURE
 			dynamic_lib_def_file: INDENT_FILE
 			dynamic_lib_def_file_name: PATH
 			C_dynamic_lib_file: INDENT_FILE
@@ -85,14 +83,15 @@ feature -- Dynamic Library file
 						--| what has been stored in E_DYNAMIC_LIB is not valid anymore.
 			dynamic_lib := system.eiffel_dynamic_lib
 			is_dll_generated := dynamic_lib /= Void
-			if not is_dll_generated then
+			if
+				not is_dll_generated and then
 					-- Check if a `.def' file has been specified in the Ace file.
-				if System.dynamic_def_file /= Void then
-						-- Create for the first time the dynamic library.
-					Eiffel_project.create_dynamic_lib
-					dynamic_lib := system.eiffel_dynamic_lib
-					is_dll_generated := True
-				end
+				attached system.dynamic_def_file
+			then
+					-- Create for the first time the dynamic library.
+				eiffel_project.create_dynamic_lib
+				dynamic_lib := system.eiffel_dynamic_lib
+				is_dll_generated := True
 			end
 			if is_dll_generated then
 				dynamic_lib.update
@@ -125,35 +124,34 @@ feature -- Dynamic Library file
 				until
 					dynamic_lib_exports.after
 				loop
-					if (dynamic_lib_exports.item_for_iteration /= Void) then
+					if attached dynamic_lib_exports.item_for_iteration as e then
 						def_buffer.put_string( "%N; CLASS [" )
 
 						from
-							dynamic_lib_exports.item_for_iteration.start
-							class_name := dynamic_lib_exports.item_for_iteration.item.compiled_class.name_in_upper.string
+							e.start
+							class_name := e.item.compiled_class.name_in_upper.string
 							def_buffer.put_string(class_name)
 							def_buffer.put_string( "]%N" )
 						until
-							dynamic_lib_exports.item_for_iteration.after
+							e.after
 						loop
-							if (dynamic_lib_exports.item_for_iteration.item /=Void) then
+							if attached e.item as dl_exp then
 								internal_creation_name := Void
 
-								dl_exp := dynamic_lib_exports.item_for_iteration.item
 								buffer.put_string ("/***************************%N * ")
 								buffer.put_string (class_name)
 
-								if (dl_exp.creation_routine /= Void) and then (dl_exp.routine.feature_id /= dl_exp.creation_routine.feature_id) then
+								if attached dl_exp.creation_routine and then dl_exp.routine.feature_id /= dl_exp.creation_routine.feature_id then
 										buffer.put_string (" (")
 										buffer.put_string (dl_exp.creation_routine.name)
 										buffer.put_string (")")
 										internal_creation_name := Encoder.feature_name (
 													System.class_of_id (dl_exp.creation_routine.written_in).types.first.type_id,
 													dl_exp.creation_routine.body_index).string
-								elseif (dl_exp.creation_routine = Void) then
+								elseif not attached dl_exp.creation_routine then
 										buffer.put_string (" (!!)")
 								end
-								if (dl_exp.routine /= Void) then
+								if attached dl_exp.routine then
 									if dl_exp.has_alias then
 										feature_name := dl_exp.alias_name.string
 									else
@@ -351,7 +349,7 @@ feature -- Dynamic Library file
 									buffer.put_string ("%N}%N")
 
 								end
-								if (dl_exp.index /= 0) then
+								if dl_exp.index /= 0 then
 									def_buffer.put_string (" @ ")
 									def_buffer.put_integer (dl_exp.index)
 								end
@@ -359,7 +357,7 @@ feature -- Dynamic Library file
 								buffer.put_string ("%N")
 							end
 
-							dynamic_lib_exports.item_for_iteration.forth
+							e.forth
 						end
 					end
 					dynamic_lib_exports.forth
@@ -386,7 +384,7 @@ feature -- Plug and Makefile file
 	generate_plug
 			-- Generate plug with run-time
 		local
-			any_cl, string_cl, string32_cl, array_cl, rout_cl, exception_manager_cl: CLASS_C
+			any_cl, string_cl, string32_cl, array_cl, exception_manager_cl: CLASS_C
 			arr_type_id: INTEGER
 			id: INTEGER
 			count_feat, internal_hash_code_feat: ATTRIBUTE_I
@@ -460,7 +458,7 @@ feature -- Plug and Makefile file
 				buffer.put_string (correct_mismatch_name)
 				buffer.put_string ("();%N")
 			else
-				correct_mismatch_name := "NULL";
+				correct_mismatch_name := "NULL"
 			end
 
 			twin_name :=
@@ -484,7 +482,7 @@ feature -- Plug and Makefile file
 				count_feat ?= string_cl.feature_table.item_id (Names_heap.count_name_id)
 				internal_hash_code_feat ?= string_cl.feature_table.item_id (Names_heap.internal_hash_code_name_id)
 			else
-				if attached {FEATURE_I} string_cl.feature_table.item_id (Names_heap.set_count_name_id) as set_count_feat then
+				if attached string_cl.feature_table.item_id (Names_heap.set_count_name_id) as set_count_feat then
 					set_count_name := Encoder.feature_name (set_count_feat.written_class.types.first.type_id,
 						set_count_feat.body_index).string
 					buffer.put_string ("extern void ")
@@ -523,7 +521,7 @@ feature -- Plug and Makefile file
 			if (system.array_make_name = Void) or not System.uses_precompiled or final_mode then
 				array_cl := System.class_of_id (System.array_id)
 					--! Array ref type (i.e. ARRAY[ANY])
-				cl_type := System.Instantiator.array_type_a.associated_class_type (Void);
+				cl_type := System.Instantiator.array_type_a.associated_class_type (Void)
 				id := cl_type.type_id
 				arr_type_id := cl_type.type_id
 				creation_feature := array_cl.feature_table.item_id ({PREDEFINED_NAMES}.make_name_id)
@@ -547,18 +545,19 @@ feature -- Plug and Makefile file
 			buffer.put_string ("();%N")
 
 				-- Make ROUTINE declaration.
-			rout_cl := system.routine_class.compiled_class
-
-			if rout_cl.types /= Void and then not rout_cl.types.is_empty then
-				cl_type := rout_cl.types.first
-				id := cl_type.type_id
-				if final_mode then
-					feat := rout_cl.feature_table.item_id (Names_heap.set_rout_disp_final_name_id)
-					set_rout_disp_name := Encoder.feature_name (id, feat.body_index).string
+			if
+				attached system.routine_class as r and then
+				attached r.compiled_class as c and then
+				attached c.types as ts and then
+				not ts.is_empty and then
+				attached c.feature_of_name_id (if final_mode then
+					{PREDEFINED_NAMES}.set_rout_disp_final_name_id
 				else
-					feat := rout_cl.feature_table.item_id (Names_heap.set_rout_disp_name_id)
-					set_rout_disp_name := Encoder.feature_name (id, feat.body_index).string
-				end
+					{PREDEFINED_NAMES}.set_rout_disp_name_id
+				end) as f and then
+				f.used
+			then
+				set_rout_disp_name := encoder.feature_name (ts.first.type_id, f.body_index).string
 				buffer.put_string ("extern void ")
 				buffer.put_string (set_rout_disp_name)
 				buffer.put_string ("();%N")
@@ -794,15 +793,16 @@ feature -- Plug and Makefile file
 				buffer.put_string (";%N")
 			end
 
-				--Pointer on `set_rout_disp' or 'set_rout_disp_final' of class ROUTINE
-			if set_rout_disp_name /= Void then
-				if final_mode then
-					buffer.put_string ("%Tegc_routdisp_fl = (void (*)(EIF_REFERENCE, EIF_POINTER, EIF_POINTER, EIF_POINTER, EIF_REFERENCE, EIF_BOOLEAN, EIF_INTEGER)) ")
-				else
-					buffer.put_string ("%Tegc_routdisp_wb = (void (*)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE)) ")
-				end
+				--Pointer on `set_rout_disp' or 'set_rout_disp_final' of class ROUTINE.
+			if attached set_rout_disp_name then
+				buffer.put_string
+					(if final_mode then
+						"%Tegc_routdisp_fl = (void (*)(EIF_REFERENCE, EIF_POINTER, EIF_POINTER, EIF_POINTER, EIF_REFERENCE, EIF_BOOLEAN, EIF_INTEGER)) "
+					else
+						"%Tegc_routdisp_wb = (void (*)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE)) "
+					end)
 				buffer.put_string (set_rout_disp_name)
-				buffer.put_string (";%N")
+				buffer.put_two_character (';', '%N')
 			end
 
 				-- Record whether the system is SCOOP-aware.
@@ -1292,7 +1292,7 @@ feature -- Plug and Makefile file
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

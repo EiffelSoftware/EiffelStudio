@@ -5,7 +5,7 @@ note
 		"Eiffel adapted class universes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -77,6 +77,19 @@ feature -- Access
 	universe: ET_UNIVERSE
 			-- Eiffel class universe being adapted
 
+feature -- Setting
+
+	set_name (a_name: STRING)
+			-- Set `name' to `a_name'.
+		require
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: not a_name.is_empty
+		do
+			name := a_name
+		ensure
+			name_set: name = a_name
+		end
+
 feature -- Status setting
 
 	set_read_only (b: BOOLEAN)
@@ -106,8 +119,8 @@ feature -- Setting
 	set_class_renamings (a_renamings: like class_renamings)
 			-- Set `class_renamings' to `a_renamings'.
 		require
-			no_void_old_class_renamings: a_renamings /= Void implies not a_renamings.has_void
-			no_void_new_class_renamings: a_renamings /= Void implies not a_renamings.has_void_item
+			no_void_old_class_renaming: a_renamings /= Void implies not a_renamings.has_void
+			no_void_new_class_renaming: a_renamings /= Void implies not a_renamings.has_void_item
 		do
 			class_renamings := a_renamings
 		ensure
@@ -164,8 +177,8 @@ invariant
 
 	name_not_void: name /= Void
 	name_not_empty: not name.is_empty
-	no_void_old_class_renamings: attached class_renamings as l_class_renamings implies not l_class_renamings.has_void
-	no_void_new_class_renamings: attached class_renamings as l_class_renamings implies not l_class_renamings.has_void_item
+	no_void_old_class_renaming: attached class_renamings as l_class_renamings implies not l_class_renamings.has_void
+	no_void_new_class_renaming: attached class_renamings as l_class_renamings implies not l_class_renamings.has_void_item
 	universe_not_void: universe /= Void
 
 end

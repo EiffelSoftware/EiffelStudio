@@ -75,7 +75,6 @@ cd $EIFFEL_SRC/build/Constants
 set -- $EIFFEL_SRC 0000 gb_about_dialog_constants.e
 . $INIT_DIR/set_version.sh
 cd $EIFFEL_SRC/build
-remtrace Enterprise Build
 clean_project
 finalize esbuilder.ecf esbuilder
 tgz_ccode esbuilder esbuilder.tar.bz2

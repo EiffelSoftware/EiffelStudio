@@ -36,6 +36,7 @@
 		<library name="environment" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
 		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
 		<library name="gobo_parse" location="$ISE_LIBRARY\library\gobo\gobo_parse.ecf"/>
+		<library name="gobo_parse_skl" location="$ISE_LIBRARY\library\gobo\gobo_parse_skl.ecf"/>
 		<library name="parser" location="$EIFFEL_SRC\framework\parser\parser.ecf" readonly="false" use_application_options="true"/>
 		<cluster name="root_cluster" location=".\"/>
 		<override name="syntax_parser" location="parser\"/>

@@ -13,6 +13,8 @@ inherit
 			analyze,
 			basic_register,
 			free_register,
+			generate_access,
+			generate_on,
 			generate_parameters,
 			has_one_signature,
 			is_polymorphic,
@@ -24,9 +26,7 @@ inherit
 			current_needed_for_access,
 			generate_access_on_type,
 			generate_parameters_list,
-			generate_access,
 			generate_end,
-			generate_on,
 			parent
 		end
 
@@ -102,7 +102,7 @@ feature
 			is_polymorphic_access :=
 				not is_static_call and then
 				not type_i.is_basic and then
-				Eiffel_table.is_polymorphic (routine_id, type_i, context.context_class_type, True) >= 0;
+				Eiffel_table.is_polymorphic_for_body (routine_id, type_i, context.context_class_type) >= 0
 			if reg.is_current and is_polymorphic_access then
 				context.add_dt_current
 				context.mark_current_used
@@ -122,82 +122,50 @@ feature
 			end
 		end
 
-	generate_access
-			-- Generate the external C call.
-		do
-				-- Reset value of variables.
-			is_right_parenthesis_needed.put (False)
-			do_generate
-				(if attached instance_free_creation as c then
-					c.register
-				else
-					current_register
-				end)
-		end
-
-	generate_on (reg: REGISTRABLE)
-			-- Generate call of feature on `reg`.
-		do
-				-- Reset value of variables
-			is_right_parenthesis_needed.put (False)
-			do_generate (reg)
-		end
-
 	generate_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_A)
 			-- Generate external call in a `typ' context
 		local
-			table_name: STRING;
+			internal_name: STRING
+			table_name: STRING
+			type_i: TYPE_A
 			type_c: TYPE_C
-			l_type_i: TYPE_A
 			buf: GENERATION_BUFFER
 			array_index: INTEGER
-			local_argument_types, real_arg_types: like argument_types
-			internal_name: STRING
-			l_keep, is_nested: BOOLEAN
+			context_entry: ROUT_ENTRY
+			local_argument_types: like argument_types
+			real_arg_types: like argument_types
+			is_trampoline: BOOLEAN
+			context_type_id: INTEGER
 		do
 			check
 				final_mode: context.final_mode
 			end
-
-			l_type_i := real_type (type)
-			type_c := l_type_i.c_type
 			buf := buffer
-			l_keep := context.final_mode and then system.keep_assertions
-			is_right_parenthesis_needed.put (l_keep)
-			is_nested := not is_static_call and then not is_first
-
-			if is_static_call then
-					-- No polymorphic here, set `array_index' to not go to the
-					-- polymorphic call handling.
-				array_index := -1
-			else
-				array_index := Eiffel_table.is_polymorphic (routine_id, typ, context.context_class_type, True)
-			end
-			if array_index >= 0 then
+			type_i := real_type (type)
+			type_c := type_i.c_type
+			array_index :=
+				if is_static_call then
+					-1
+				else
+					Eiffel_table.is_polymorphic_for_body (routine_id, typ, context.context_class_type)
+				end
+			if array_index = -2 then
+					-- There is no feature to call.
+				generate_no_call
+			elseif array_index >= 0 then
 					-- The call is polymorphic, so generate access to the
 					-- routine table. The dereferenced function pointer has
 					-- to be enclosed in parenthesis.
+				generate_nested_flag (not is_static_call)
 				table_name := Encoder.routine_table_name (routine_id)
-
-				if l_keep then
-					buf.put_character ('(')
-					if is_nested or else call_kind = call_kind_creation then
-						buf.put_string ("nstcall = ")
-						buf.put_integer (call_kind)
-						buf.put_two_character (',' , ' ')
-					else
-						buf.put_string ("nstcall = 0, ")
-					end
-				end
-
 					-- It is pretty important that we use `actual_type.is_formal' and not
 					-- just `is_formal' because otherwise if you have `like x' and `x: G'
 					-- then we would fail to detect that.
 				if
 					system.seed_of_routine_id (routine_id).type.actual_type.is_formal and then
-					l_type_i.is_basic and then not has_one_signature
+					type_i.is_basic and then not has_one_signature
 				then
-						-- Feature returns a reference that need to be used as a basic one.
+						-- Feature returns a reference that needs to be used as a basic one.
 					buf.put_character ('*')
 					type_c.generate_access_cast (buf)
 					type_c := reference_c_type
@@ -220,36 +188,41 @@ feature
 				end
 				buf.put_character ('-')
 				buf.put_integer (array_index)
-				buf.put_character (']')
+				buf.put_two_character (']', ')')
 
-				buf.put_character (')')
-
-					-- Mark routine table used.
+					-- Mark routine id used.
 				Eiffel_table.mark_used (routine_id)
-					-- Remember external routine table declaration
+					-- Remember routine table declaration.
 				Extern_declarations.add_routine_table (table_name)
-			else
+			elseif
+				attached {ROUT_TABLE} Eiffel_table.poly_table (routine_id) as rout_table and then
+				(is_encapsulation_required or else extension.is_inline)
+			then
 					-- The call is not polymorphic in the given context,
 					-- so the name can be hardwired. If we check assertions, we need
 					-- to call associated encapsulation.
-
 					-- In the case of encapsulated externals, we call the associated
 					-- encapsulation.
-				if
-					(is_encapsulation_required or else extension.is_inline) and then
-					attached {ROUT_TABLE} Eiffel_table.poly_table (routine_id) as rout_table
-				then
-					rout_table.goto_implemented (typ, context.context_class_type)
-					check
-						is_valid_routine: rout_table.is_implemented
+				context_type_id := typ.type_id (context.context_cl_type.generic_derivation)
+				if attached effective_entry (typ, context_type_id, rout_table) as entry then
+					context_entry := rout_table.context_item
+					if entry.pattern_id /= context_entry.pattern_id then
+							-- A trampoline is required to adapt argument and/or result type.
+						is_trampoline := True
+						internal_name := rout_table.trampoline_name (entry, context_entry)
+						system.request_trampoline (entry, context_entry, rout_table)
+					else
+						internal_name := entry.routine_name
 					end
-					internal_name := rout_table.feature_name
 
 					local_argument_types := argument_types
 
 					if
 						inline_needed (typ) and then
-						attached {INLINE_EXTENSION_I} extension as inline_ext
+							-- Obtain the extension of the found entry, not of the original feature
+						attached system.class_of_id (entry.class_id) as c and then
+						attached c.feature_of_feature_id (entry.feature_id) as f and then
+						attached {INLINE_EXTENSION_I} f.extension as inline_ext
 					then
 						if local_argument_types.count > 1 then
 							real_arg_types := local_argument_types.subarray (local_argument_types.lower + 1, local_argument_types.upper)
@@ -257,38 +230,26 @@ feature
 						else
 							create real_arg_types.make_empty
 						end
-						inline_ext.force_inline_def (l_type_i, internal_name, real_arg_types)
+						inline_ext.force_inline_def (type_i, internal_name, real_arg_types)
 							-- No need for a function cast since the inline routine is defined
 							-- prior to the call.
 						internal_name := inline_ext.inline_name (internal_name)
-					elseif rout_table.item.access_type_id /= Context.original_class_type.type_id then
-							-- Remember extern routine declaration if not written in same class. But no need
-							-- doing this for an inline C/C++ since the code of the inline routine will be
-							-- generated again.
+					elseif entry.access_type_id /= Context.original_class_type.type_id or else is_trampoline then
+							-- Remember extern routine declaration if not written in the same class or if a trampoline is used.
+							-- No need doing this for an inline C/C++ since the code of the inline routine will be generated again.
 						Extern_declarations.add_routine_with_signature
-							(if context.workbench_mode then "EIF_TYPED_VALUE" else type_c.c_string end,
-								internal_name, local_argument_types)
+							(type_c.c_string, internal_name, local_argument_types)
 					end
-
-					if l_keep then
-						buf.put_character ('(')
-						if is_nested or else call_kind = call_kind_creation then
-							buf.put_string ("nstcall = ")
-							buf.put_integer (call_kind)
-							buf.put_two_character (',', ' ')
-						else
-							buf.put_string ("nstcall = 0, ")
-						end
-					end
-
+					generate_nested_flag (not is_static_call)
 					buf.put_string (internal_name)
 				else
-					if not l_type_i.is_void then
-						type_c.generate_cast (buf)
-					end
-						 -- Nothing to be done now. Remaining of code generation will be done
-						 -- in `generate_end'.
+						-- There is no feature to call.
+					generate_no_call
 				end
+			elseif not type_i.is_void then
+				type_c.generate_cast (buf)
+					 -- Nothing to be done now. Remaining of code generation will be done
+					 -- in `generate_end'.
 			end
 		end
 
@@ -296,7 +257,7 @@ feature
 		do
 			Result := context.final_mode and
 				not is_encapsulation_required and (is_static_call or
-				Eiffel_table.is_polymorphic (routine_id, typ, context.context_class_type, True) < 0)
+				Eiffel_table.is_polymorphic_for_body (routine_id, typ, context.context_class_type) < 0)
 		end
 
 	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_A)
@@ -315,41 +276,42 @@ feature
 			end
 			generate_access_on_type (gen_reg, class_type)
 				-- Now generate the parameters of the call, if needed.
-			if inline_needed (class_type) then
-				check
-					not_dll: not extension.is_dll
-				end
-				if attached {MACRO_EXTENSION_I} extension as macro_ext then
-					macro_ext.generate_access (external_name, parameters, l_type)
-				elseif attached {STRUCT_EXTENSION_I} extension as struct_ext then
-					struct_ext.generate_access (external_name, parameters, l_type)
-				elseif extension.is_inline then
-					buf.put_character ('(')
-					generate_parameters_list
-					buf.put_character (')')
-				elseif attached {CPP_EXTENSION_I} extension as cpp_ext then
-					cpp_ext.generate_access (external_name, parameters, l_type)
-				elseif attached {BUILT_IN_EXTENSION_I} extension as built_in_ext then
-					built_in_ext.generate_access (external_name, written_in, gen_reg, parameters, l_type)
-				elseif attached {C_EXTENSION_I} extension as c_ext then
-						-- Remove `Current' from argument types.
-					l_args := argument_types
-					if argument_types.count > 1 then
-						l_args := l_args.subarray (l_args.lower + 1, l_args.upper)
-					else
-						create l_args.make_empty
-					end
-					c_ext.generate_access (external_name, parameters, l_args, l_type)
-				else
+			if not is_deferred.item then
+				if inline_needed (class_type) then
 					check
-						is_expected_extension: False
+						not_dll: not extension.is_dll
 					end
+					if attached {MACRO_EXTENSION_I} extension as macro_ext then
+						macro_ext.generate_access (external_name, parameters, l_type)
+					elseif attached {STRUCT_EXTENSION_I} extension as struct_ext then
+						struct_ext.generate_access (external_name, parameters, l_type)
+					elseif extension.is_inline then
+						buf.put_character ('(')
+						generate_parameters_list
+						buf.put_character (')')
+					elseif attached {CPP_EXTENSION_I} extension as cpp_ext then
+						cpp_ext.generate_access (external_name, parameters, l_type)
+					elseif attached {BUILT_IN_EXTENSION_I} extension as built_in_ext then
+						built_in_ext.generate_access (external_name, written_in, gen_reg, parameters, l_type)
+					elseif attached {C_EXTENSION_I} extension as c_ext then
+							-- Remove `Current' from argument types.
+						l_args := argument_types
+						if argument_types.count > 1 then
+							l_args := l_args.subarray (l_args.lower + 1, l_args.upper)
+						else
+							create l_args.make_empty
+						end
+						c_ext.generate_access (external_name, parameters, l_args, l_type)
+					else
+						check
+							is_expected_extension: False
+						end
+					end
+				else
+						-- Call is done like a normal Eiffel routine call.
+					generate_parameters_part (gen_reg)
 				end
-			else
-					-- Call is done like a normal Eiffel routine call.
-				generate_parameters_part (gen_reg)
 			end
-
 			if put_eif_test then
 				buf.put_character (')')
 			end
@@ -373,26 +335,31 @@ feature
 		end
 
 	generate_parameters_list
-			-- Generate the parameters list for C function call
+			-- Generate the parameters list for C function call.
 		local
 			buf: GENERATION_BUFFER
-			first: BOOLEAN
+			l_area: SPECIAL [EXPR_B]
+			i, nb: INTEGER
+			has_delimiter: BOOLEAN
 		do
-			if parameters /= Void then
+			if
+				not is_deferred.item and then
+				attached parameters as p
+			then
+				buf := buffer
+				l_area := p.area
+				nb := p.count
 				from
-					buf := buffer
-					parameters.start
-					first := True
 				until
-					parameters.after
+					i = nb
 				loop
-					if not first then
+					if has_delimiter then
 						buf.put_string ({C_CONST}.comma_space)
 					else
-						first := False
+						has_delimiter := True
 					end
-					parameters.item.print_register
-					parameters.forth
+					l_area [i].print_register
+					i := i + 1
 				end
 			end
 		end
@@ -465,17 +432,8 @@ feature {NONE} -- Status report
 			end
 		end
 
-	is_right_parenthesis_needed: CELL [BOOLEAN]
-			-- Does current call require to close a parenthesis?
-			-- Case when one use `nstcall' or `eif_optimize_return'.
-		once
-			create Result.put (False)
-		ensure
-			is_right_parenthesis_needed_not_void: Result /= Void
-		end
-
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

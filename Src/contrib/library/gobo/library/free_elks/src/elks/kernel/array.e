@@ -2,7 +2,7 @@
 	description: "[
 		Sequences of values, all of the same type or of a conforming one,
 		accessible through integer indices in a contiguous interval.
-		]"
+	]"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -85,7 +85,7 @@ feature -- Initialization
 			-- `min_index' .. `max_index'; set all values to default.
 			-- (Make array empty if `min_index' = `max_index' + 1).
 		obsolete
-			" `make' is not void-safe statically. Use `make_empty' or `make_filled' instead. [07-2010]"
+			" `make' is not void-safe statically. Use `make_empty' or `make_filled' instead. [2017-05-31]"
 		require
 			valid_bounds: min_index <= max_index + 1
 			has_default: min_index <= max_index implies ({G}).has_default
@@ -147,13 +147,13 @@ feature -- Initialization
 feature -- Access
 
 	item alias "[]", at alias "@" (i: INTEGER): G assign put
-			-- Entry at index `i', if in index interval
+			-- Entry at index `i', if in index interval.
 		do
 			Result := area.item (i - lower)
 		end
 
 	entry (i: INTEGER): G
-			-- Entry at index `i', if in index interval
+			-- Entry at index `i', if in index interval.
 		require
 			valid_key: valid_index (i)
 		do
@@ -198,13 +198,13 @@ feature -- Access
 feature -- Measurement
 
 	lower: INTEGER
-			-- Minimum index
+			-- Minimum index.
 
 	upper: INTEGER
-			-- Maximum index
+			-- Maximum index.
 
 	count, capacity: INTEGER
-			-- Number of available indices
+			-- Number of available indices.
 		do
 			Result := upper - lower + 1
 		ensure then
@@ -212,7 +212,7 @@ feature -- Measurement
 		end
 
 	occurrences (v: G): INTEGER
-			-- Number of times `v' appears in structure
+			-- Number of times `v' appears in structure.
 		local
 			i: INTEGER
 		do
@@ -295,7 +295,8 @@ feature -- Status report
 		end
 
 	full: BOOLEAN
-			-- Is structure filled to capacity? (Answer: yes)
+			-- Is structure filled to capacity?
+			-- (Answer: yes)
 		do
 			Result := True
 		end
@@ -329,7 +330,8 @@ feature -- Status report
 		end
 
 	prunable: BOOLEAN
-			-- May items be removed? (Answer: no.)
+			-- May items be removed?
+			-- (Answer: no.)
 		do
 			Result := False
 		end
@@ -360,7 +362,7 @@ feature -- Element change
 			-- Assign item `v' to `i'-th entry.
 			-- Resize the array if `i' falls out of currently defined bounds; preserve existing items.
 			-- In void-safe mode, if ({G}).has_default does not hold, then you can only insert between
-			-- `lower - 1' or `upper + 1' position in the ARRAY.
+			-- `lower - 1' and `upper + 1' positions in the ARRAY.
 		require
 			has_default_if_too_low:
 				(i < lower - 1 and lower /= {like lower}.min_value) implies ({G}).has_default
@@ -377,13 +379,23 @@ feature -- Element change
 			new_size := new_upper - new_lower + 1
 			l_increased_by_one := (i = upper + 1) or (i = lower - 1)
 			if empty_area then
-					-- List is empty. First we create an empty SPECIAL of the right capacity.
+					-- The array is empty. First we create an empty SPECIAL of the right capacity.
 				make_empty_area (new_size.max (additional_space))
-				if not l_increased_by_one then
-						-- We need to fill the SPECIAL for `0' to `new_size - 2' with the default value.
-					area.fill_with (({G}).default, 0, new_size - 2)
+				if new_lower < lower then
+						-- The array is extended below lower.
+					area.extend (v)
+					if not l_increased_by_one then
+							-- We need to fill the SPECIAL for `1' to `new_size - 1' with the default value.
+						area.fill_with (({G}).default, 1, new_size - 1)
+					end
+				else
+						-- The array is extended above upper.
+					if not l_increased_by_one then
+							-- We need to fill the SPECIAL for `0' to `new_size - 2' with the default value.
+						area.fill_with (({G}).default, 0, new_size - 2)
+					end
+					area.extend (v)
 				end
-				area.extend (v)
 			else
 				old_size := area.capacity
 				if new_size > old_size then
@@ -428,6 +440,56 @@ feature -- Element change
 			upper := new_upper
 		ensure
 			inserted: item (i) = v
+			higher_count: count >= old count
+			lower_set: lower = (old lower).min (i)
+			upper_set: upper = (old upper).max (i)
+		end
+
+	force_and_fill (v: like item; i: INTEGER)
+			-- Assign item `v` to `i`-th entry.
+			-- If `i` falls out of currently defined bounds:
+			-- 	- Resize array as needed.
+			-- 	- Fill in any new entry (in addition to the one at position `i` with value `v`).
+			-- 	- Preserve existing items.
+		local
+			old_size, new_size: INTEGER
+			new_lower, new_upper: INTEGER
+			l_offset: INTEGER
+		do
+			new_lower := lower.min (i)
+			new_upper := upper.max (i)
+			new_size := new_upper - new_lower + 1
+			old_size := area.capacity
+			if old_size = 0 then
+					-- The array is empty. First, create an empty SPECIAL of the right capacity.
+				make_empty_area (new_size.max (additional_space))
+					-- Fill the SPECIAL from `0` to `new_size - 1` with `v`.
+				area.fill_with (v, 0, new_size - 1)
+			else
+				if new_size > old_size then
+					set_area (area.aliased_resized_area (new_size.max (old_size + additional_space)))
+				end
+				if new_lower < lower then
+						-- New items are below the previous `lower`.
+						-- Shift entries towards `upper` before inserting `v`.
+					l_offset := lower - new_lower
+					area.move_data (0, l_offset, capacity)
+						-- Fill new items with `v`.
+					area.fill_with (v, 0, l_offset - 1)
+				elseif new_size > area.count then
+						-- Add new items above old `upper` position.
+					area.fill_with (v, area.count, new_size - 1)
+				else
+						-- The item is changed inside the old boundaries.
+					area.put (v, i - lower)
+				end
+			end
+			lower := new_lower
+			upper := new_upper
+		ensure
+			inserted: item (i) = v
+			filled_below_lower: across i |..| old lower as c all c.item < old lower implies item (c.item) = v end
+			filled_above_upper: across old upper |..| i as c all c.item > old upper implies item (c.item) = v end
 			higher_count: count >= old count
 			lower_set: lower = (old lower).min (i)
 			upper_set: upper = (old upper).max (i)
@@ -552,7 +614,7 @@ feature -- Removal
 	wipe_out
 			-- Make array empty.
 		obsolete
-			"Not applicable since not `prunable'. Use `discard_items' instead."
+			"Not applicable since not `prunable'. Use `discard_items' instead. [2017-05-31]"
 		do
 			discard_items
 		end
@@ -620,7 +682,7 @@ feature -- Removal
 			n_non_negative: n >= 0
 		do
 			if n > count then
-				upper := lower - 1
+				lower := upper + 1
 				area := area.aliased_resized_area (0)
 			else
 				keep_tail (count - n)
@@ -662,7 +724,7 @@ feature -- Resizing
 			-- indices down to `min_index' and up to `max_index'.
 			-- Do not lose any previously entered item.
 		obsolete
-			" `conservative_resize' is not void-safe statically. Use `conservative_resize_with_default' instead. [07-2010]"
+			" `conservative_resize' is not void-safe statically. Use `conservative_resize_with_default' instead. [2017-05-31]"
 		require
 			good_indices: min_index <= max_index
 			has_default: ({G}).has_default
@@ -713,7 +775,7 @@ feature -- Resizing
 			-- indices down to `min_index' and up to `max_index'.
 			-- Do not lose any previously entered item.
 		obsolete
-			"Use `conservative_resize_with_default' instead as future versions will implement `resize' as specified in ELKS."
+			"Use `conservative_resize_with_default' instead as future versions will implement `resize' as specified in ELKS. [2017-05-31]"
 		require
 			good_indices: min_index <= max_index
 			has_default: ({G}).has_default
@@ -782,7 +844,7 @@ feature -- Conversion
 		end
 
 	linear_representation: LINEAR [G]
-			-- Representation as a linear structure
+			-- Representation as a linear structure.
 		local
 			temp: ARRAYED_LIST [G]
 			i: INTEGER
@@ -817,7 +879,7 @@ feature -- Duplication
 			-- Array made of items of current array within
 			-- bounds `start_pos' and `end_pos'.
 		require
-			valid_start_pos: valid_index (start_pos)
+			valid_start_pos: lower <= start_pos
 			valid_end_pos: end_pos <= upper
 			valid_bounds: (start_pos <= end_pos) or (start_pos = end_pos + 1)
 		do
@@ -856,7 +918,7 @@ feature {NONE} -- Implementation
 	empty_area: BOOLEAN
 			-- Is `area' empty?
 		do
-			Result := area = Void or else area.capacity = 0
+			Result := area.capacity = 0
 		end
 
 invariant
@@ -869,7 +931,7 @@ invariant
 --				(index_set.upper = lower + count - 1))
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

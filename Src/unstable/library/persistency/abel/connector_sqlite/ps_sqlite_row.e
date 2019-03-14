@@ -26,7 +26,7 @@ feature {PS_ABEL_EXPORT} -- Status report
 	is_null (column_name: STRING): BOOLEAN
 			-- Is `column_name' NULL?
 		do
-			Result := attached values.item (name_to_index_map [column_name])
+			Result := not attached values.item (name_to_index_map [column_name])
 		end
 
 feature {PS_ABEL_EXPORT} -- Access

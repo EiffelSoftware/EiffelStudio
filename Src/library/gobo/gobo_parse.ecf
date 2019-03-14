@@ -1,32 +1,3 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="gobo_parse" uuid="5E943C16-EA74-475D-8346-1C763357F03D" library_target="gobo_parse">
-	<target name="gobo_parse">
-		<description>gobo parse library</description>
-		<root all_classes="true"/>
-		<file_rule>
-			<exclude>/Documentation$</exclude>
-			<exclude>/EIFGENs$</exclude>
-			<exclude>/\.svn</exclude>
-			<exclude>/base$</exclude>
-			<exclude>/cvs$</exclude>
-			<exclude>/free_elks$</exclude>
-			<exclude>/ge$</exclude>
-			<exclude>/hact$</exclude>
-			<exclude>/se$</exclude>
-			<exclude>/ve$</exclude>
-		</file_rule>
-		<option namespace="Gobo.Library">
-		</option>
-		<setting name="dotnet_naming_convention" value="true"/>
-		<library name="eiffelbase" location="$ISE_LIBRARY\library\base\base.ecf"/>
-		<library name="eiffeltime" location="$ISE_LIBRARY\library\time\time.ecf"/>
-		<library name="gobo_kernel" location="gobo_kernel.ecf"/>
-		<cluster name="parse" location="$ISE_LIBRARY\contrib\library\gobo\library\parse\src\skeleton\" recursive="true">
-			<option namespace="Parse">
-			</option>
-			<file_rule>
-				<exclude>/yy_old_parser_skeleton.e$</exclude>
-			</file_rule>
-		</cluster>
-	</target>
-</system>
+<redirection xmlns="http://www.eiffel.com/developers/xml/configuration-1-19-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-19-0 http://www.eiffel.com/developers/xml/configuration-1-19-0.xsd" location="$ISE_LIBRARY/contrib/library/gobo/library/parse/library.ecf">
+</redirection>

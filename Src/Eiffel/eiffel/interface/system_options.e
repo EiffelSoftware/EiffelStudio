@@ -405,14 +405,6 @@ feature -- Update
 			array_optimization_on_set: array_optimization_on = b
 		end
 
-	set_remover_off (b: BOOLEAN)
-			-- Assign `b' to `remover_off'
-		do
-			remover_off := b
-		ensure
-			remover_off_set: remover_off = b
-		end
-
 	set_exception_stack_managed (b: BOOLEAN)
 		do
 			exception_stack_managed := b
@@ -637,7 +629,7 @@ feature {SYSTEM_I} -- Implementation
 			-- Is the system a multithreaded one?
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

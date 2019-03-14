@@ -10,8 +10,13 @@ class LIKE_ARGUMENT
 inherit
 	LIKE_TYPE_A
 		redefine
-			actual_argument_type, is_like_argument, has_like_argument, evaluated_type_in_descendant,
-			initialize_info, annotation_flags
+			actual_argument_type,
+			annotation_flags,
+			evaluated_type_in_descendant,
+			has_like_argument,
+			initialize_info,
+			is_expanded_creation_possible,
+			is_like_argument
 		end
 
 feature -- Visitor
@@ -29,6 +34,12 @@ feature -- Properties
 
 	has_like_argument: BOOLEAN = True
 			-- Has the type like argument in its definition? (True)
+
+	is_expanded_creation_possible: BOOLEAN
+			-- <Precursor>
+		do
+			Result := actual_type.is_expanded_creation_possible
+		end
 
 feature -- Comparison
 
@@ -68,7 +79,7 @@ feature -- Generic conformance
 			-- <Precursor>
 		do
 			Result := Precursor
-			if not compiler_profile.is_experimental_mode then
+			if not compiler_profile.is_experimental_mode and then lace.is_void_safe then
 					-- Unlike {LIKE_TYPE_A} and {FORMAL_A}, if the type is declared without an attachment
 					-- mark but the `actual_type' is attached we will need to declare the attachment mark,
 					-- this is needed as in non-experimental mode, the type of an object is always detachable
@@ -167,7 +178,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

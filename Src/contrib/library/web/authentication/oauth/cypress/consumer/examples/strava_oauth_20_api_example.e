@@ -19,7 +19,6 @@ feature {NONE} -- Creation
 			api_service: OAUTH_SERVICE_I
 			request: OAUTH_REQUEST
 			access_token: detachable OAUTH_TOKEN
-			current_code: detachable STRING
 			encode: UTF8_URL_ENCODER
 			l_string: STRING
 		do
@@ -55,14 +54,14 @@ feature {NONE} -- Implementation
 			-- The authorization token as computed by calling `a_request_url'
 		local
 			socket: NETWORK_STREAM_SOCKET
-			callback_string, code: STRING
+			callback_string: STRING
 			code_index: INTEGER
 		do
 			(create {EXECUTION_ENVIRONMENT}).system ("open -a Google\ Chrome '" + a_request_url + "'")
 			Result := ""
 	    	create socket.make_server_by_port(9991)
 			socket.listen(5)
-			socket.set_timeout (10)
+			socket.set_timeout_ns (10)
 			socket.accept
 			if attached socket.accepted as accepted_socket then
 				from
@@ -96,7 +95,7 @@ feature {NONE} -- Configuration
 	protected_resource_url : STRING = "https://www.strava.com/api/v3/athlete"
 
 note
-	copyright: "2013-2017, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2019, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

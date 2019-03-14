@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic type builders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -54,6 +54,7 @@ inherit
 			report_formal_argument,
 			report_formal_argument_declaration,
 			report_function_address,
+			report_if_expression,
 			report_inline_agent_formal_argument_declaration,
 			report_inline_agent_local_variable_declaration,
 			report_inline_agent_result_declaration,
@@ -107,9 +108,6 @@ inherit
 			feature_checker
 		end
 
-	ET_TOKEN_CODES
-		export {NONE} all end
-
 	KL_IMPORTED_STRING_ROUTINES
 		export {NONE} all end
 
@@ -122,14 +120,15 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_system: like current_dynamic_system)
+	make (a_system: like current_dynamic_system; a_system_processor: like system_processor)
 			-- Create a new dynamic type set builder.
 		require
 			a_system_not_void: a_system /= Void
+			a_system_processor_not_void: a_system_processor /= Void
 		do
 			current_dynamic_system := a_system
-			make_feature_checker
-			create feature_checker.make
+			make_feature_checker (a_system_processor)
+			create feature_checker.make (a_system_processor)
 			current_dynamic_type := dummy_dynamic_type
 			current_dynamic_feature := dummy_dynamic_feature
 			create dynamic_type_sets.make_with_capacity (1000)
@@ -141,6 +140,7 @@ feature {NONE} -- Initialization
 			catcall_error_mode := True
 		ensure
 			current_dynamic_system_set: current_dynamic_system = a_system
+			system_processor_set: system_processor = a_system_processor
 		end
 
 feature -- Factory
@@ -948,102 +948,99 @@ feature {NONE} -- Feature validity
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_builtin: a_feature.is_builtin
 			builtin_feature_known: not a_feature.is_builtin_unknown
-		local
-			l_builtin_class: INTEGER
 		do
-			l_builtin_class := a_feature.builtin_code // builtin_capacity
-			inspect l_builtin_class
-			when builtin_any_class then
-				inspect a_feature.builtin_code \\ builtin_capacity
-				when builtin_any_twin then
+			inspect a_feature.builtin_class_code
+			when {ET_TOKEN_CODES}.builtin_any_class then
+				inspect a_feature.builtin_feature_code
+				when {ET_TOKEN_CODES}.builtin_any_twin then
 					report_builtin_any_twin (a_feature)
 				else
 					report_builtin_function (a_feature)
 				end
-			when builtin_function_class then
-				inspect a_feature.builtin_code \\ builtin_capacity
-				when builtin_function_item then
-					report_builtin_function_item (a_feature)
-				else
-					report_builtin_function (a_feature)
-				end
-			when builtin_identified_class then
-				inspect a_feature.builtin_code \\ builtin_capacity
-				when builtin_identified_eif_id_object then
-					report_builtin_identified_eif_id_object (a_feature)
-				when builtin_identified_eif_object_id then
-					report_builtin_identified_eif_object_id (a_feature)
-				else
-					report_builtin_function (a_feature)
-				end
-			when builtin_ise_runtime_class then
-				inspect a_feature.builtin_code \\ builtin_capacity
-				when builtin_ise_runtime_new_instance_of then
-					report_builtin_ise_runtime_new_instance_of (a_feature)
-				when builtin_ise_runtime_new_special_of_reference_instance_of then
-					report_builtin_ise_runtime_new_special_of_reference_instance_of (a_feature)
-				when builtin_ise_runtime_new_tuple_instance_of then
-					report_builtin_ise_runtime_new_tuple_instance_of (a_feature)
-				when builtin_ise_runtime_new_type_instance_of then
-					report_builtin_ise_runtime_new_type_instance_of (a_feature)
-				when builtin_ise_runtime_reference_field then
-					report_builtin_ise_runtime_reference_field (a_feature)
-				when builtin_ise_runtime_reference_field_at then
-					report_builtin_ise_runtime_reference_field_at (a_feature)
-				when builtin_ise_runtime_reference_field_at_offset then
-					report_builtin_ise_runtime_reference_field_at_offset (a_feature)
-				when builtin_ise_runtime_storable_version_of_type then
-					report_builtin_ise_runtime_storable_version_of_type (a_feature)
-				when builtin_ise_runtime_type_conforms_to then
-					report_builtin_ise_runtime_type_conforms_to (a_feature)
-				else
-					report_builtin_function (a_feature)
-				end
-			when builtin_exception_manager_class then
-				inspect a_feature.builtin_code \\ builtin_capacity
-				when builtin_exception_manager_exception_from_code then
+			when {ET_TOKEN_CODES}.builtin_exception_manager_class then
+				inspect a_feature.builtin_feature_code
+				when {ET_TOKEN_CODES}.builtin_exception_manager_exception_from_code then
 					report_builtin_exception_manager_exception_from_code (a_feature)
-				when builtin_exception_manager_is_caught then
+				when {ET_TOKEN_CODES}.builtin_exception_manager_is_caught then
 					report_builtin_exception_manager_is_caught (a_feature)
-				when builtin_exception_manager_is_ignorable then
+				when {ET_TOKEN_CODES}.builtin_exception_manager_is_ignorable then
 					report_builtin_exception_manager_is_ignorable (a_feature)
-				when builtin_exception_manager_is_ignored then
+				when {ET_TOKEN_CODES}.builtin_exception_manager_is_ignored then
 					report_builtin_exception_manager_is_ignored (a_feature)
-				when builtin_exception_manager_is_raisable then
+				when {ET_TOKEN_CODES}.builtin_exception_manager_is_raisable then
 					report_builtin_exception_manager_is_raisable (a_feature)
-				when builtin_exception_manager_last_exception then
+				when {ET_TOKEN_CODES}.builtin_exception_manager_last_exception then
 					report_builtin_exception_manager_last_exception (a_feature)
-				when builtin_exception_manager_type_of_code then
+				when {ET_TOKEN_CODES}.builtin_exception_manager_type_of_code then
 					report_builtin_exception_manager_type_of_code (a_feature)
 				else
 					report_builtin_function (a_feature)
 				end
-			when builtin_exception_manager_factory_class then
-				inspect a_feature.builtin_code \\ builtin_capacity
-				when builtin_exception_manager_factory_exception_manager then
+			when {ET_TOKEN_CODES}.builtin_exception_manager_factory_class then
+				inspect a_feature.builtin_feature_code
+				when {ET_TOKEN_CODES}.builtin_exception_manager_factory_exception_manager then
 					report_builtin_exception_manager_factory_exception_manager (a_feature)
 				else
 					report_builtin_function (a_feature)
 				end
-			when builtin_special_class then
-				inspect a_feature.builtin_code \\ builtin_capacity
-				when builtin_special_item then
+			when {ET_TOKEN_CODES}.builtin_function_class then
+				inspect a_feature.builtin_feature_code
+				when {ET_TOKEN_CODES}.builtin_function_item then
+					report_builtin_function_item (a_feature)
+				else
+					report_builtin_function (a_feature)
+				end
+			when {ET_TOKEN_CODES}.builtin_identified_routines_class then
+				inspect a_feature.builtin_feature_code
+				when {ET_TOKEN_CODES}.builtin_identified_routines_eif_id_object then
+					report_builtin_identified_routines_eif_id_object (a_feature)
+				when {ET_TOKEN_CODES}.builtin_identified_routines_eif_object_id then
+					report_builtin_identified_routines_eif_object_id (a_feature)
+				else
+					report_builtin_function (a_feature)
+				end
+			when {ET_TOKEN_CODES}.builtin_ise_runtime_class then
+				inspect a_feature.builtin_feature_code
+				when {ET_TOKEN_CODES}.builtin_ise_runtime_new_instance_of then
+					report_builtin_ise_runtime_new_instance_of (a_feature)
+				when {ET_TOKEN_CODES}.builtin_ise_runtime_new_special_of_reference_instance_of then
+					report_builtin_ise_runtime_new_special_of_reference_instance_of (a_feature)
+				when {ET_TOKEN_CODES}.builtin_ise_runtime_new_tuple_instance_of then
+					report_builtin_ise_runtime_new_tuple_instance_of (a_feature)
+				when {ET_TOKEN_CODES}.builtin_ise_runtime_new_type_instance_of then
+					report_builtin_ise_runtime_new_type_instance_of (a_feature)
+				when {ET_TOKEN_CODES}.builtin_ise_runtime_reference_field then
+					report_builtin_ise_runtime_reference_field (a_feature)
+				when {ET_TOKEN_CODES}.builtin_ise_runtime_reference_field_at then
+					report_builtin_ise_runtime_reference_field_at (a_feature)
+				when {ET_TOKEN_CODES}.builtin_ise_runtime_reference_field_at_offset then
+					report_builtin_ise_runtime_reference_field_at_offset (a_feature)
+				when {ET_TOKEN_CODES}.builtin_ise_runtime_storable_version_of_type then
+					report_builtin_ise_runtime_storable_version_of_type (a_feature)
+				when {ET_TOKEN_CODES}.builtin_ise_runtime_type_conforms_to then
+					report_builtin_ise_runtime_type_conforms_to (a_feature)
+				else
+					report_builtin_function (a_feature)
+				end
+			when {ET_TOKEN_CODES}.builtin_special_class then
+				inspect a_feature.builtin_feature_code
+				when {ET_TOKEN_CODES}.builtin_special_item then
 					report_builtin_special_item (a_feature)
 				else
 					report_builtin_function (a_feature)
 				end
-			when builtin_tuple_class then
-				inspect a_feature.builtin_code \\ builtin_capacity
-				when builtin_tuple_reference_item then
+			when {ET_TOKEN_CODES}.builtin_tuple_class then
+				inspect a_feature.builtin_feature_code
+				when {ET_TOKEN_CODES}.builtin_tuple_reference_item then
 					report_builtin_tuple_reference_item (a_feature)
 				else
 					report_builtin_function (a_feature)
 				end
-			when builtin_type_class then
-				inspect a_feature.builtin_code \\ builtin_capacity
-				when builtin_type_default then
+			when {ET_TOKEN_CODES}.builtin_type_class then
+				inspect a_feature.builtin_feature_code
+				when {ET_TOKEN_CODES}.builtin_type_default then
 					report_builtin_type_default (a_feature)
-				when builtin_type_generic_parameter_type then
+				when {ET_TOKEN_CODES}.builtin_type_generic_parameter_type then
 					report_builtin_type_generic_parameter_type (a_feature)
 				else
 					report_builtin_function (a_feature)
@@ -1073,27 +1070,24 @@ feature {NONE} -- Feature validity
 			a_feature_not_void: a_feature /= Void
 			a_feature_is_builtin: a_feature.is_builtin
 			builtin_feature_known: not a_feature.is_builtin_unknown
-		local
-			l_builtin_class: INTEGER
 		do
-			l_builtin_class := a_feature.builtin_code // builtin_capacity
-			inspect l_builtin_class
-			when builtin_exception_manager_class then
-				inspect a_feature.builtin_code \\ builtin_capacity
-				when builtin_exception_manager_catch then
+			inspect a_feature.builtin_class_code
+			when {ET_TOKEN_CODES}.builtin_exception_manager_class then
+				inspect a_feature.builtin_feature_code
+				when {ET_TOKEN_CODES}.builtin_exception_manager_catch then
 					report_builtin_exception_manager_catch (a_feature)
-				when builtin_exception_manager_ignore then
+				when {ET_TOKEN_CODES}.builtin_exception_manager_ignore then
 					report_builtin_exception_manager_ignore (a_feature)
-				when builtin_exception_manager_raise then
+				when {ET_TOKEN_CODES}.builtin_exception_manager_raise then
 					report_builtin_exception_manager_raise (a_feature)
-				when builtin_exception_manager_set_is_ignored then
+				when {ET_TOKEN_CODES}.builtin_exception_manager_set_is_ignored then
 					report_builtin_exception_manager_set_is_ignored (a_feature)
 				else
 					report_builtin_procedure (a_feature)
 				end
-			when builtin_tuple_class then
-				inspect a_feature.builtin_code \\ builtin_capacity
-				when builtin_tuple_put_reference then
+			when {ET_TOKEN_CODES}.builtin_tuple_class then
+				inspect a_feature.builtin_feature_code
+				when {ET_TOKEN_CODES}.builtin_tuple_put_reference then
 					report_builtin_tuple_put_reference (a_feature)
 				else
 					report_builtin_procedure (a_feature)
@@ -1260,7 +1254,7 @@ feature {NONE} -- Event handling
 					error_handler.report_giaaa_error
 				else
 					l_source_type := l_source_type_set.static_type
-					if l_source_type.base_type.conforms_to_type (a_target_type, current_type, current_type) then
+					if l_source_type.base_type.conforms_to_type (a_target_type, current_type, current_type, system_processor) then
 -- TODO: built-in feature with formal generic parameter? Should not be needed with ECMA Eiffel.
 						set_dynamic_type_set (l_source_type_set, an_expression)
 					else
@@ -1423,6 +1417,55 @@ feature {NONE} -- Event handling
 				l_dynamic_query.set_address (True)
 -- TODO: the dynamic type set of the formal arguments of `l_dynamic_query'
 -- may be altered when its address is passed to an external routine.
+			end
+		end
+
+	report_if_expression (a_expression: ET_IF_EXPRESSION; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT)
+			-- Report that a 'if' epxression of type `a_type' in context
+			-- of `a_context' has been processed.
+		local
+			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_sub_expression: ET_EXPRESSION
+			i, nb: INTEGER
+		do
+			if current_type = current_dynamic_type.base_type then
+				l_dynamic_type := current_dynamic_system.dynamic_type (a_type, a_context)
+				l_dynamic_type_set := new_dynamic_type_set (l_dynamic_type)
+				set_dynamic_type_set (l_dynamic_type_set, a_expression)
+				l_sub_expression := a_expression.then_expression
+				if attached dynamic_type_set (l_sub_expression) as l_then_dynamic_type_set then
+					propagate_if_expression_dynamic_types (a_expression, l_sub_expression, l_then_dynamic_type_set, l_dynamic_type_set)
+				else
+						-- Internal error: the dynamic type set of the sub-expressions
+						-- of `a_expression' should be known at this stage.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				end
+				if attached a_expression.elseif_parts as l_elseif_parts then
+					nb := l_elseif_parts.count
+					from i := 1 until i > nb loop
+						l_sub_expression := l_elseif_parts.item (i).then_expression
+						if attached dynamic_type_set (l_sub_expression) as l_then_dynamic_type_set then
+							propagate_if_expression_dynamic_types (a_expression, l_sub_expression, l_then_dynamic_type_set, l_dynamic_type_set)
+						else
+								-- Internal error: the dynamic type set of the sub-expressions
+								-- of `a_expression' should be known at this stage.
+							set_fatal_error
+							error_handler.report_giaaa_error
+						end
+						i := i + 1
+					end
+				end
+				l_sub_expression := a_expression.else_expression
+				if attached dynamic_type_set (l_sub_expression) as l_else_dynamic_type_set then
+					propagate_if_expression_dynamic_types (a_expression, l_sub_expression, l_else_dynamic_type_set, l_dynamic_type_set)
+				else
+						-- Internal error: the dynamic type set of the sub-expressions
+						-- of `a_expression' should be known at this stage.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				end
 			end
 		end
 
@@ -2215,7 +2258,6 @@ feature {NONE} -- Event handling
 			if current_type = current_dynamic_type.base_type then
 				l_dynamic_type := current_dynamic_system.dynamic_type (a_type, current_type)
 				l_dynamic_query := l_dynamic_type.dynamic_query (a_query, current_dynamic_system)
-				l_dynamic_query.set_static (True)
 				l_dynamic_type.set_static (True)
 				if attached an_expression.arguments as l_actuals then
 					nb := l_actuals.count
@@ -2247,7 +2289,6 @@ feature {NONE} -- Event handling
 			if current_type = current_dynamic_type.base_type then
 				l_dynamic_type := current_dynamic_system.dynamic_type (a_type, current_type)
 				l_dynamic_procedure := l_dynamic_type.dynamic_procedure (a_procedure, current_dynamic_system)
-				l_dynamic_procedure.set_static (True)
 				l_dynamic_type.set_static (True)
 				if attached an_instruction.arguments as l_actuals then
 					nb := l_actuals.count
@@ -2867,7 +2908,7 @@ feature {NONE} -- Built-in features
 		do
 			if current_type = current_dynamic_type.base_type then
 					-- Feature 'ISE_EXCEPTION_MANAGER.catch' is called internally.
-				if not attached current_dynamic_system.ise_exception_manager_type.seeded_dynamic_query (a_feature.first_seed, current_dynamic_system) as l_ise_exception_manager_feature then
+				if not attached current_dynamic_system.ise_exception_manager_type.seeded_dynamic_procedure (a_feature.first_seed, current_dynamic_system) as l_ise_exception_manager_feature then
 						-- Internal error: "ISE_EXCEPTION_MANAGER" is a descendant of
 						-- "EXCEPTION_MANAGER". So it should have a feature with the
 						-- same seed as `a_feature'. Otherwise we get an error when
@@ -2918,7 +2959,7 @@ feature {NONE} -- Built-in features
 		do
 			if current_type = current_dynamic_type.base_type then
 					-- Feature 'ISE_EXCEPTION_MANAGER.ignore' is called internally.
-				if not attached current_dynamic_system.ise_exception_manager_type.seeded_dynamic_query (a_feature.first_seed, current_dynamic_system) as l_ise_exception_manager_feature then
+				if not attached current_dynamic_system.ise_exception_manager_type.seeded_dynamic_procedure (a_feature.first_seed, current_dynamic_system) as l_ise_exception_manager_feature then
 						-- Internal error: "ISE_EXCEPTION_MANAGER" is a descendant of
 						-- "EXCEPTION_MANAGER". So it should have a feature with the
 						-- same seed as `a_feature'. Otherwise we get an error when
@@ -3084,7 +3125,7 @@ feature {NONE} -- Built-in features
 		do
 			if current_type = current_dynamic_type.base_type then
 					-- Feature 'ISE_EXCEPTION_MANAGER.raise' is called internally.
-				if not attached current_dynamic_system.ise_exception_manager_type.seeded_dynamic_query (a_feature.first_seed, current_dynamic_system) as l_ise_exception_manager_feature then
+				if not attached current_dynamic_system.ise_exception_manager_type.seeded_dynamic_procedure (a_feature.first_seed, current_dynamic_system) as l_ise_exception_manager_feature then
 						-- Internal error: "ISE_EXCEPTION_MANAGER" is a descendant of
 						-- "EXCEPTION_MANAGER". So it should have a feature with the
 						-- same seed as `a_feature'. Otherwise we get an error when
@@ -3106,7 +3147,7 @@ feature {NONE} -- Built-in features
 		do
 			if current_type = current_dynamic_type.base_type then
 					-- Feature 'ISE_EXCEPTION_MANAGER.set_is_ignored' is called internally.
-				if not attached current_dynamic_system.ise_exception_manager_type.seeded_dynamic_query (a_feature.first_seed, current_dynamic_system) as l_ise_exception_manager_feature then
+				if not attached current_dynamic_system.ise_exception_manager_type.seeded_dynamic_procedure (a_feature.first_seed, current_dynamic_system) as l_ise_exception_manager_feature then
 						-- Internal error: "ISE_EXCEPTION_MANAGER" is a descendant of
 						-- "EXCEPTION_MANAGER". So it should have a feature with the
 						-- same seed as `a_feature'. Otherwise we get an error when
@@ -3188,8 +3229,8 @@ feature {NONE} -- Built-in features
 			end
 		end
 
-	report_builtin_identified_eif_id_object (a_feature: ET_EXTERNAL_FUNCTION)
-			-- Report that built-in feature 'IDENTIFIED.eif_id_object' is being analyzed.
+	report_builtin_identified_routines_eif_id_object (a_feature: ET_EXTERNAL_FUNCTION)
+			-- Report that built-in feature 'IDENTIFIED_ROUTINES.eif_id_object' is being analyzed.
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
@@ -3197,8 +3238,8 @@ feature {NONE} -- Built-in features
 			-- Do nothing.
 		end
 
-	report_builtin_identified_eif_object_id (a_feature: ET_EXTERNAL_FUNCTION)
-			-- Report that built-in feature 'IDENTIFIED.eif_object_id' is being analyzed.
+	report_builtin_identified_routines_eif_object_id (a_feature: ET_EXTERNAL_FUNCTION)
+			-- Report that built-in feature 'IDENTIFIED_ROUTINES.eif_object_id' is being analyzed.
 		require
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
@@ -3569,6 +3610,20 @@ feature {NONE} -- Implementation
 		require
 			a_creation_type_not_void: a_creation_type /= Void
 			a_creation_not_void: a_creation /= Void
+		do
+			-- Do nothing.
+		end
+
+	propagate_if_expression_dynamic_types (a_if_expression: ET_IF_EXPRESSION; a_sub_expression: ET_EXPRESSION; a_source_type_set, a_target_type_set: ET_DYNAMIC_TYPE_SET)
+			-- Propagate dynamic types of `a_source_type_set' (which is the dynamic
+			-- type set of the sub-expressions `a_sub_expression' within `a_if_expression')
+			-- to the dynamic type set `a_target_type_set' (which is the dynamic
+			-- type set of `a_if_expression').
+		require
+			a_if_expression_not_void: a_if_expression /= Void
+			a_sub_expression_not_void: a_sub_expression /= Void
+			a_source_type_set_not_void: a_source_type_set /= Void
+			a_target_type_set_not_void: a_target_type_set /= Void
 		do
 			-- Do nothing.
 		end

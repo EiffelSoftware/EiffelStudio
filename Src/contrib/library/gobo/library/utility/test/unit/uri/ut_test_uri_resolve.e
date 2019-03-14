@@ -4,9 +4,8 @@ note
 
 		"Test resolving using examples from RFC2396, appendix C"
 
-	test_status: "ok_to_run"
 	library: "Gobo Eiffel Utility Library"
-	copyright:"Copyright (c) 2004, Berend de Boer and others"
+	copyright:"Copyright (c) 2004-2018, Berend de Boer and others"
 	license: "MIT License"
 	revision: "$Revision$"
 	date: "$Date$"
@@ -57,6 +56,7 @@ feature -- Tests
 
 			create uri.make_resolve (base, "#s")
 			check_uri (uri, "http", "a", "/b/c/d;p", "q", "s", "http://a/b/c/d;p?q#s")
+			check_query_items (uri, <<"q">>, <<"">>)
 
 			create uri.make_resolve (base, "g#s")
 			check_uri (uri, "http", "a", "/b/c/g", Void, "s", "http://a/b/c/g#s")
@@ -188,7 +188,7 @@ feature -- Tests
 
 feature {NONE} -- Implementation
 
-	check_uri (uri: UT_URI; scheme, authority, path, query, fragment, a_reference: STRING)
+	check_uri (uri: UT_URI; scheme, authority: detachable STRING; path: STRING; query, fragment, a_reference: detachable STRING)
 			-- Check parsed URI.
 		require
 			uri_not_void: uri /= Void
@@ -212,6 +212,43 @@ feature {NONE} -- Implementation
 			assert ("has_fragment", uri.has_fragment = (fragment /= Void))
 			if uri.has_fragment then
 				assert_equal ("fragment", uri.fragment, fragment)
+			end
+		end
+
+	check_query_items (a_uri: UT_URI; a_names, a_values: ARRAY [STRING])
+			-- Check parsed query items.
+		require
+			a_uri_not_void: a_uri /= Void
+			a_names_not_void: a_names /= Void
+			a_values_not_void: a_values /= Void
+			same_number_of_names_as_values: a_names.count = a_values.count
+		local
+			i: INTEGER
+		do
+			if attached a_uri.query_items as l_query_items then
+				assert_integers_equal ("Query items detected", a_names.count, l_query_items.count)
+				if attached l_query_items.keys.to_array as l_array then
+					i := l_array.lower
+					across a_names as a_name
+					loop
+						assert_equal ("Query name found", a_name.item, l_array.item (i))
+						i := i + 1
+				  variant
+					 a_names.count - i + 1
+					end
+				end
+				if attached l_query_items.to_array as l_array then
+					i := l_array.lower
+					across a_values as a_value
+					loop
+						assert_equal ("Query value found", a_value.item, l_array.item (i))
+						i := i + 1
+				  variant
+					 a_values.count - i + 1
+					end
+				end
+			else
+				assert_integers_equal ("Query items detected", a_names.count, 0)
 			end
 		end
 

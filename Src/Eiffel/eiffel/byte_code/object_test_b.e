@@ -150,8 +150,8 @@ feature -- Inlining
 				-- Ideally, it should be `expression.size' unfortunately doing so
 				-- has a major compiler impact (about 25% slow down for just a little
 				-- bit less than 1% speed-up in the speed of generated code).
-				-- Until we can improve our inlining mechanism, we are disabling it.
-			Result := 101
+				-- Until we can improve our inlining mechanism, we are disabling it unless this is a void check.
+			Result := {LACE_I}.inlining_threshold
 		end
 
 	pre_inlined_code: like Current
@@ -172,7 +172,7 @@ invariant
 	target_not_void: target /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

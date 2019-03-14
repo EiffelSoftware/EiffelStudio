@@ -1,8 +1,8 @@
-note
+﻿note
 	description: "[
 		Objects that may be stored and retrieved along with all their dependents.
 		This class may be used as ancestor by classes needing its facilities.
-		]"
+	]"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
@@ -31,9 +31,11 @@ feature -- Access
 			medium_supports_storable: medium.support_storable
 		do
 			Result := medium.retrieved
+		ensure
+			instance_free: class
 		end
 
-	retrieve_by_name (file_name: STRING): detachable ANY
+	retrieve_by_name (file_name: READABLE_STRING_GENERAL): detachable ANY
 			-- Retrieve object structure, from external
 			-- representation previously stored in a file
 			-- called `file_name'.
@@ -55,6 +57,8 @@ feature -- Access
 				Result := file.retrieved
 				file.close
 			end
+		ensure
+			instance_free: class
 		end
 
 feature -- Setting
@@ -72,7 +76,7 @@ feature -- Setting
 			-- If `v' it will use ISE Eiffel 5.0 storable format for
 			-- storing.
 		obsolete
-			"It is now the new format. Use former version of EiffelStudio to store in the old format."
+			"It is now the new format. Use former version of EiffelStudio to store in the old format. [2017-05-31]"
 		do
 		end
 
@@ -80,7 +84,7 @@ feature -- Setting
 			-- If `v' it will use ISE Eiffel 5.3 storable format for
 			-- storing with ability to recover when there is a type mismatch.
 		obsolete
-			"It is now the new format. Use former version of EiffelStudio to store in the old format."
+			"It is now the new format. Use former version of EiffelStudio to store in the old format. [2017-05-31]"
 		do
 		end
 
@@ -108,7 +112,7 @@ feature -- Element change
 			--| in the `visible' clause of the Ace file. This makes it
 			--| possible to overcome class name clashes.
 		obsolete
-			"Use `independent_store'."
+			"Use `independent_store'. [2017-05-31]"
 		require
 			medium_not_void: medium /= Void
 			medium_exists: medium.exists
@@ -132,7 +136,7 @@ feature -- Element change
 			medium.independent_store (Current)
 		end
 
-	store_by_name (file_name: STRING)
+	store_by_name (file_name: READABLE_STRING_GENERAL)
 			-- Produce on file called `file_name' an external
 			-- representation of the entire object structure
 			-- reachable from current object.
@@ -147,7 +151,8 @@ feature -- Element change
 		do
 			create file.make_with_name (file_name)
 			if (file.exists and then file.is_writable) or else
-				(file.is_creatable) then
+				file.is_creatable
+			then
 				file.open_write
 				file.independent_store (Current)
 				file.close
@@ -159,7 +164,7 @@ feature -- Element change
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

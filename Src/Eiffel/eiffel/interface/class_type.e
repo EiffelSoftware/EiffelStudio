@@ -705,6 +705,7 @@ feature -- Generation
 			i, l_count: INTEGER
 			l_byte_context: like byte_context
 			l_obj_once_info_table: detachable OBJECT_RELATIVE_ONCE_INFO_TABLE
+			is_reachable: BOOLEAN
 		do
 			final_mode := byte_context.final_mode
 
@@ -734,12 +735,15 @@ feature -- Generation
 
 			l_feature_table := current_class.feature_table.features
 			l_feature_table_area := l_feature_table.area
-			if final_mode then
-					-- Check to see if there is really something to generate
-
-				generate_c_code := has_creation_routine or else
-						(current_class.has_invariant and then
-						 system.keep_assertions)
+			if not final_mode then
+				generate_c_code := is_modifiable
+			elseif system.is_class_reachable (associated_class) then
+					-- Record that the class is reachable for diagnostics.
+				is_reachable := True
+					-- Check to see if there is really something to generate.
+				generate_c_code :=
+					has_creation_routine or else
+					current_class.has_invariant and then system.keep_assertions
 				from
 					i := 0
 					l_count := l_feature_table.count
@@ -765,8 +769,6 @@ feature -- Generation
 						l_inline_agent_table.forth
 					end
 				end
-			else
-				generate_c_code := is_modifiable
 			end
 
 			if generate_c_code then
@@ -956,8 +958,15 @@ feature -- Generation
 				file.close
 
 			else
-					-- The file hasn't been generated
+					-- The file hasn't been generated.
 				System.makefile_generator.record_empty_class_type (static_type_id)
+				if final_mode then
+					if is_reachable then
+						system.removed_log_file.add_empty_class_type (Current)
+					else
+						system.removed_log_file.add_removed_class_type (Current)
+					end
+				end
 			end
 
 				-- clean the list of shared include files
@@ -1084,21 +1093,15 @@ feature -- Generation
 			Result := static_type_id_counter.packet_number (static_type_id)
 		end
 
-	relative_file_name: STRING
-			-- Relative path of the generation file
-		local
-			f_name: FILE_NAME
-			temp: STRING
+	relative_file_name: READABLE_STRING_32
+			-- Relative path of the generation file.
 		do
-				-- Subdirectory
-			create f_name.make_from_string (packet_name (C_prefix, packet_number))
-
-				-- File name
-			temp := base_file_name
-			temp.append (Dot_c)
-
-			f_name.set_file_name (temp)
-			Result := f_name
+			Result :=
+					-- Subdirectory
+				(create {PATH}.make_from_string (packet_name (C_prefix, packet_number))).extended
+					-- File name
+				(base_file_name).appended
+				(dot_c).name
 		end
 
 	has_creation_routine: BOOLEAN
@@ -1213,17 +1216,12 @@ feature -- Generation
 	mark_creation_routine (r: REMOVER)
 			-- Mark all the routines called in the creation routine
 		local
-			cl: CLASS_C
-			creation_feature: FEATURE_I
+			c: CLASS_C
 		do
-				-- Mark the creation procedure if the class
-				-- is used as expanded
-			cl := associated_class
-			if cl.is_used_as_expanded then
-				creation_feature := cl.creation_feature
-				if creation_feature /= Void then
-					r.record (creation_feature, cl)
-				end
+				-- Mark the creation procedure if the class is used as expanded.
+			c := associated_class
+			if c.is_used_as_expanded and then attached c.creation_feature as creation_feature then
+				r.register_monomorphic (creation_feature, c.class_id)
 			end
 		end
 
@@ -2037,7 +2035,7 @@ invariant
 	valid_implementation_id: System.il_generation implies implementation_id > 0
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

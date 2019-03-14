@@ -28,11 +28,13 @@ inherit
 			sorted_names,
 			name_type,
 			choice_list,
+			build_full_list,
 			on_key_down,
 			on_key_released,
 			set_expanded_row_icon,
 			show,
-			is_applicable_item,
+			hide,
+			is_applicable_item, is_applicable_item_with_name,
 			exit,
 			on_scroll,
 			initialize_completion_possibilities
@@ -204,6 +206,14 @@ feature {NONE} -- Initialization
 			end
 			option_bar.extend (show_disambiguated_name_button)
 
+			create show_completion_unicode_symbols_button
+			show_completion_unicode_symbols_button.set_pixmap (pixmaps.mini_pixmaps.completion_show_unicode_symbol_icon)
+			l_tooltip := preferences.editor_data.show_completion_unicode_symbols_preference.description
+			if l_tooltip /= Void then
+				show_completion_unicode_symbols_button.set_tooltip (locale.translation (l_tooltip))
+			end
+			option_bar.extend (show_completion_unicode_symbols_button)
+
 			create show_obsolete_items_button
 			show_obsolete_items_button.set_pixmap (pixmaps.mini_pixmaps.completion_show_obsolete_icon)
 			l_tooltip := preferences.editor_data.show_completion_obsolete_items_preference.description
@@ -352,6 +362,11 @@ feature {NONE} -- Initialization
 			else
 				show_disambiguated_name_button.disable_select
 			end
+			if show_completion_unicode_symbols then
+				show_completion_unicode_symbols_button.enable_select
+			else
+				show_completion_unicode_symbols_button.disable_select
+			end
 			if show_obsolete_items then
 				show_obsolete_items_button.enable_select
 			else
@@ -378,6 +393,7 @@ feature {NONE} -- Initialization
 			register_action (show_return_type_button.select_actions, agent on_option_button_selected (show_return_type_button))
 			register_action (show_signature_button.select_actions, agent on_option_button_selected (show_signature_button))
 			register_action (show_disambiguated_name_button.select_actions, agent on_option_button_selected (show_disambiguated_name_button))
+			register_action (show_completion_unicode_symbols_button.select_actions, agent on_option_button_selected (show_completion_unicode_symbols_button))
 			register_action (show_obsolete_items_button.select_actions, agent on_option_button_selected (show_obsolete_items_button))
 			register_action (show_tooltip_button.select_actions, agent on_option_button_selected (show_tooltip_button))
 			register_action (show_target_class_button.select_actions, agent on_option_button_selected (show_target_class_button))
@@ -387,6 +403,7 @@ feature {NONE} -- Initialization
 			register_action (preferences.editor_data.show_completion_type_preference.change_actions, agent on_option_preferenced_changed (show_return_type_button))
 			register_action (preferences.editor_data.show_completion_signature_preference.change_actions, agent on_option_preferenced_changed (show_signature_button))
 			register_action (preferences.editor_data.show_completion_disambiguated_name_preference.change_actions, agent on_option_preferenced_changed (show_disambiguated_name_button))
+			register_action (preferences.editor_data.show_completion_unicode_symbols_preference.change_actions, agent on_option_preferenced_changed (show_completion_unicode_symbols_button))
 			register_action (preferences.editor_data.show_completion_obsolete_items_preference.change_actions, agent on_option_preferenced_changed (show_obsolete_items_button))
 			register_action (preferences.editor_data.show_completion_tooltip_preference.change_actions, agent on_option_preferenced_changed (show_tooltip_button))
 			register_action (preferences.editor_data.show_completion_target_class_preference.change_actions, agent on_option_preferenced_changed (show_target_class_button))
@@ -405,6 +422,8 @@ feature {NONE} -- Initialization
 			l_pre := preferences.editor_data.shortcuts.item ("toggle_show_signature")
 			l_pre.change_actions.extend (setup_accelerators_agent)
 			l_pre := preferences.editor_data.shortcuts.item ("toggle_show_disambiguated_name")
+			l_pre.change_actions.extend (setup_accelerators_agent)
+			l_pre := preferences.editor_data.shortcuts.item ("toggle_show_unicode_symbols")
 			l_pre.change_actions.extend (setup_accelerators_agent)
 			l_pre := preferences.editor_data.shortcuts.item ("toggle_show_obsolete_items")
 			l_pre.change_actions.extend (setup_accelerators_agent)
@@ -524,7 +543,7 @@ feature -- Initialization
 			template_sorted_names := l_templates
 		end
 
-	add_item (a_item: EB_NAME_FOR_COMPLETION)
+	add_item (a_item: like name_type)
 			-- Add item `a_item' to the list of sorted_names.
 		local
 			l_sorted_names: like sorted_names
@@ -546,7 +565,7 @@ feature -- Access
 	code_completable: EB_TAB_CODE_COMPLETABLE
 			-- Associated window.
 
-	sorted_names: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION]
+	sorted_names: SORTABLE_ARRAY [like name_type]
 			-- List of possible feature names sorted alphabetically.
 
 	target_class_c: detachable CLASS_C
@@ -579,7 +598,7 @@ feature -- Access
 			end
 		end
 
-	template_sorted_names: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION]
+	template_sorted_names: SORTABLE_ARRAY [like name_type]
 			-- List of possible template names sorted alphabetically.
 
 	filter_button: EV_TOOL_BAR_TOGGLE_BUTTON
@@ -629,6 +648,9 @@ feature -- Widget
 	show_disambiguated_name_button: EV_TOOL_BAR_TOGGLE_BUTTON
 			-- Button to show disambiguated name.
 
+	show_completion_unicode_symbols_button: EV_TOOL_BAR_TOGGLE_BUTTON
+			-- Button to show unicode symbols.
+
 	show_obsolete_items_button: EV_TOOL_BAR_TOGGLE_BUTTON
 			-- Button to show obsolete features/classes.
 
@@ -644,12 +666,35 @@ feature -- Query
 			-- Determines if `a_item' is an applicable item to show in the completion list
 		do
 			Result := Precursor {CODE_COMPLETION_WINDOW} (a_item)
+			if Result and then a_item /= Void then
+				if
+					not show_obsolete_items and then
+					attached {EB_NAME_FOR_COMPLETION} a_item as eb_item and then eb_item.is_obsolete
+				then
+					Result := False
+				elseif
+					not show_completion_unicode_symbols and then
+					attached {EB_UNICODE_FOR_COMPLETION} a_item
+				then
+					Result := False
+				end
+			end
+		end
+
+	is_applicable_item_with_name (a_item: like name_type; a_name: detachable READABLE_STRING_GENERAL): BOOLEAN
+			-- Determines if `a_item' is an applicable item to show in the completion list
+			-- when name is `a_name`.
+		do
+			Result := Precursor (a_item, a_name)
 			if
 				Result and then
-				attached a_item and then
-				show_obsolete_items
+				(a_name = Void or else a_name.is_whitespace)
 			then
-				Result := not a_item.is_obsolete
+					-- Do not display unicode symbols when no prefix is typed.
+					-- otherwise all unicode symbols will be listed for any feature completion!
+				if attached {EB_UNICODE_FOR_COMPLETION} a_item as l_uc_item then
+					Result := l_uc_item.begins_with (if a_name = Void then "" else a_name end)
+				end
 			end
 		end
 
@@ -682,6 +727,15 @@ feature -- Status change
 			setup_accelerators
 		end
 
+	hide
+			-- <Precursor>
+		do
+			if attached tooltip_window as w then
+				w.hide
+			end
+			Precursor {CODE_COMPLETION_WINDOW}
+		end
+
 feature {NONE} -- Option Preferences
 
 	filter_completion_list: BOOLEAN
@@ -707,6 +761,11 @@ feature {NONE} -- Option Preferences
 	show_completion_disambiguated_name: BOOLEAN
 		do
 			Result := preferences.editor_data.show_completion_disambiguated_name
+		end
+
+	show_completion_unicode_symbols: BOOLEAN
+		do
+			Result := preferences.editor_data.show_completion_unicode_symbols
 		end
 
 	show_obsolete_items: BOOLEAN
@@ -747,15 +806,20 @@ feature {NONE} -- Option behaviour
 				apply_filter_completion_list (a_button.is_selected)
 			elseif a_button = show_return_type_button then
 				l_preference := preferences.editor_data.show_completion_type_preference
-				apply_show_return_type (a_button.is_selected)
+				apply_option_changes (a_button.is_selected)
 			elseif a_button = show_signature_button then
 				l_preference := preferences.editor_data.show_completion_signature_preference
 				apply_show_completion_signature (a_button.is_selected)
 			elseif a_button = show_disambiguated_name_button then
 				l_preference := preferences.editor_data.show_completion_disambiguated_name_preference
 				apply_show_completion_disambiguated_name (a_button.is_selected)
+			elseif a_button = show_completion_unicode_symbols_button then
+				l_preference := preferences.editor_data.show_completion_unicode_symbols_preference
+				l_preference.set_value (a_button.is_selected)
+				apply_show_completion_unicode_symbols (a_button.is_selected)
 			elseif a_button = show_obsolete_items_button then
 				l_preference := preferences.editor_data.show_completion_obsolete_items_preference
+				l_preference.set_value (a_button.is_selected)
 				apply_show_obsolete_items (a_button.is_selected)
 			elseif a_button = show_tooltip_button then
 				l_preference := preferences.editor_data.show_completion_tooltip_preference
@@ -789,13 +853,16 @@ feature {NONE} -- Option behaviour
 					apply_filter_completion_list (l_preference.value)
 				elseif a_button = show_return_type_button then
 					l_preference := preferences.editor_data.show_completion_type_preference
-					apply_show_return_type (l_preference.value)
+					apply_option_changes (l_preference.value)
 				elseif a_button = show_signature_button then
 					l_preference := preferences.editor_data.show_completion_signature_preference
 					apply_show_completion_signature (l_preference.value)
 				elseif a_button = show_disambiguated_name_button then
 					l_preference := preferences.editor_data.show_completion_disambiguated_name_preference
 					apply_show_completion_disambiguated_name (l_preference.value)
+				elseif a_button = show_completion_unicode_symbols_button then
+					l_preference := preferences.editor_data.show_completion_unicode_symbols_preference
+					apply_show_completion_unicode_symbols (l_preference.value)
 				elseif a_button = show_obsolete_items_button then
 					l_preference := preferences.editor_data.show_completion_obsolete_items_preference
 					apply_show_obsolete_items (l_preference.value)
@@ -855,8 +922,8 @@ feature {NONE} -- Option behaviour
 			resize_column_to_window_width
 		end
 
-	apply_show_return_type (a_b: BOOLEAN)
-			-- Apply showing return type.
+	apply_option_changes (a_b: BOOLEAN)
+			-- Apply options changes.
 		local
 			local_index: INTEGER
 			l_row: EV_GRID_ROW
@@ -867,6 +934,9 @@ feature {NONE} -- Option behaviour
 				local_index := l_list.selected_rows.first.index
 			end
 			build_displayed_list (buffered_input)
+			if local_index > l_list.row_count then
+				local_index := 0
+			end
 			if local_index > 0 and then l_list.row_count > 0 then
 				check
 					local_index_valid: local_index <= l_list.row_count
@@ -892,19 +962,24 @@ feature {NONE} -- Option behaviour
 	apply_show_completion_signature (a_b: BOOLEAN)
 			-- Apply showing completion signature.
 		do
-			apply_show_return_type (a_b)
+			apply_option_changes (a_b)
 		end
 
 	apply_show_completion_disambiguated_name (a_b: BOOLEAN)
 			-- Apply showing completion disambiguated name.
 		do
-			apply_show_return_type (a_b)
+			apply_option_changes (a_b)
+		end
+
+	apply_show_completion_unicode_symbols (b: BOOLEAN)
+		do
+			apply_option_changes (b)
 		end
 
 	apply_show_obsolete_items (a_b: BOOLEAN)
 			-- Apply showing completion obsolete items.
 		do
-			apply_show_return_type (a_b)
+			apply_option_changes (a_b)
 		end
 
 	apply_show_tooltip (a_b: BOOLEAN)
@@ -959,7 +1034,7 @@ feature {NONE} -- Option behaviour
 				full_list := l_names
 			else
 					-- Empty full list if we don't have templates to show.
-				create full_list.make_empty
+				reset_full_list
 			end
 		ensure
 			full_list_not_void: full_list /= Void
@@ -985,6 +1060,8 @@ feature {NONE} -- Recyclable
 			l_pre := preferences.editor_data.shortcuts.item ("toggle_show_signature")
 			l_pre.change_actions.prune_all (setup_accelerators_agent)
 			l_pre := preferences.editor_data.shortcuts.item ("toggle_show_disambiguated_name")
+			l_pre.change_actions.prune_all (setup_accelerators_agent)
+			l_pre := preferences.editor_data.shortcuts.item ("toggle_show_unicode_symbols")
 			l_pre.change_actions.prune_all (setup_accelerators_agent)
 			l_pre := preferences.editor_data.shortcuts.item ("toggle_show_obsolete_items")
 			l_pre.change_actions.prune_all (setup_accelerators_agent)
@@ -1100,6 +1177,65 @@ feature {NONE} -- Action handlers
 			then
 				show_tooltip (l_row)
 			end
+		end
+
+feature {NONE} -- String matching		
+
+	build_full_list
+		local
+			cnt: INTEGER
+			l_sorted_names: like sorted_names
+		do
+				-- For feature completion, also include unicode symbols if completion is requested.
+			if
+				feature_mode and then
+				show_completion_unicode_symbols and then
+				ev_application.ctrl_pressed and then -- Only on demand!
+				attached unicode_symbol_list as lst and then
+				not lst.is_empty
+			then
+				l_sorted_names := sorted_names
+				cnt := l_sorted_names.upper
+				l_sorted_names.conservative_resize_with_default (lst [lst.lower], l_sorted_names.lower, cnt + lst.count)
+				across
+					lst as ic
+				loop
+					cnt := cnt + 1
+					l_sorted_names.force (ic.item, cnt)
+				end
+				l_sorted_names.sort
+			end
+			Precursor
+		end
+
+	unicode_symbol_list: SORTABLE_ARRAY [EB_UNICODE_FOR_COMPLETION]
+			-- Unicode symbols for completion.
+		local
+			cnt: INTEGER
+			tb: like unicode_symbols
+		do
+			Result := internal_unicode_symbol_list
+			if
+				Result = Void
+			then
+				tb := unicode_symbols
+				create Result.make_filled (create {EB_UNICODE_FOR_COMPLETION}.make ("_", '_'), 1, tb.count)
+				internal_unicode_symbol_list := Result
+				cnt := 0
+				across
+					tb as ic
+				loop
+					cnt := cnt + 1
+					Result.force (create {EB_UNICODE_FOR_COMPLETION}.make (ic.key, ic.item.to_character_32), cnt)
+				end
+			end
+		end
+
+	internal_unicode_symbol_list: like unicode_symbol_list
+
+	unicode_symbols: EB_COMPLETION_UNICODE_SYMBOLS
+		once
+			create Result.make
 		end
 
 feature {NONE} -- Implementation
@@ -1268,8 +1404,10 @@ feature {NONE} -- Implementation
 				l_tt_text := l_completion_template.tooltip_text
 			elseif attached {EB_CLASS_FOR_COMPLETION} a_row.data as l_completion_class then
 				l_tt_text := l_completion_class.tooltip_text
+			elseif attached {NAME_FOR_COMPLETION} a_row.data as l_completion_name then
+				l_tt_text := l_completion_name.tooltip_text
 			end
-			if l_tt_text /= Void and then not l_tt_text.is_empty then
+			if l_tt_text /= Void and then not l_tt_text.is_whitespace then
 				l_tt_text.prune_all_trailing ('%N')
 				if l_tt_text.count > 150 then
 					l_tt_text.keep_head (147)
@@ -1533,14 +1671,18 @@ feature {NONE} -- Implementation
 					else
 						-- Complete feature
 						if ev_application.ctrl_pressed or else show_completion_disambiguated_name then
-							if l_name_item.has_dot then
+							if attached {EB_NAME_FOR_COMPLETION} l_name_item as eb_name_item and then eb_name_item.has_dot then
 								local_name := l_name_item.full_insert_name
+							elseif attached {EB_UNICODE_FOR_COMPLETION} l_name_item as eb_uc_item then
+								local_name := eb_uc_item.full_insert_name
 							else
 								local_name := {STRING_32} " " + l_name_item.full_insert_name
 							end
 						else
-							if l_name_item.has_dot then
+							if attached {EB_NAME_FOR_COMPLETION} l_name_item as eb_name_item and then eb_name_item.has_dot then
 								local_name := l_name_item.insert_name
+							elseif attached {EB_UNICODE_FOR_COMPLETION} l_name_item as eb_uc_item then
+								local_name := eb_uc_item.insert_name
 							else
 								local_name := {STRING_32} " " + l_name_item.insert_name
 							end
@@ -1612,7 +1754,7 @@ feature {NONE} -- Implementation
 	show_timer: EV_TIMEOUT
 			-- Timer to show the tooltip
 
-	name_type: EB_NAME_FOR_COMPLETION
+	name_type: NAME_FOR_COMPLETION
 			-- <Precursor>
 		do
 		end
@@ -1621,7 +1763,7 @@ note
 	ca_ignore:
 		"CA011", "CA011: too many arguments",
 		"CA033", "CA033: too large class"
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

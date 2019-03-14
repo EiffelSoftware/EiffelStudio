@@ -57,6 +57,8 @@ doc:<file name="file.c" header="eif_file.h" version="$Id$" summary="Externals fo
 	/* <unistd.h> doesn't exist under Windows */
 #include <io.h>			/* %%ss added for access, chmod */
 #include <direct.h>		/* %%ss added for (ch|mk|rm)dir */
+#include <share.h>      /* added for temporary file */
+#include <wchar.h>      /* added for temporary file */
 #else
 #include <unistd.h>
 #endif
@@ -220,13 +222,15 @@ rt_private EIF_FILENAME rt_file_open_mode (int how, char mode)
 	/* We make sure that files created in Eiffel are not inheritable
 	 * by default as otherwise it makes things too complicated for the
 	 * end user when spawing child processes. */
-	if (file_type [1] == '\0') {
-		file_type [1] = 'N';
-	} else if (file_type [2] == '\0') {
-		file_type [2] = 'N';
-	} else {
-		file_type [3] = 'N';
-	}
+	#ifdef _MSC_VER
+		if (file_type [1] == '\0') {
+			file_type [1] = 'N';
+		} else if (file_type [2] == '\0') {
+			file_type [2] = 'N';
+		} else {
+			file_type [3] = 'N';
+		}
+	#endif	
 #endif
 	return file_type;
 }
@@ -2247,5 +2251,60 @@ rt_private int rt_unlink(EIF_FILENAME path)
 }
 
 /*
+doc:	<routine name="eif_file_mkstemp" return_type="EIF_INTEGER" export="private">
+doc:		<summary>Generate a temporary file with a name based on a template and return a file descriptor to the file. The template is overwritten with the name of the new file.</summary>
+doc:		<return>A non-zero file descriptor for the temporary file upon success, -1 otherwise.</return>
+doc:		<param name="template" type="EIF_FILENAME">Template to use for creating the temporary file. It must match the rules for mk[s]temp (i.e. end in "XXXXXX"). On exit, it is updated with the new name.</param>
+doc:		<param name="is_text_mode" type="EIF_BOOLEAN">If non-zero, the temporary file is created in text mode, otherwise in binary mode.<param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None.</synchronization>
+doc:		<note>Code was inspired from https://github.com/mirror/mingw-w64/blob/master/mingw-w64-crt/misc/mkstemp.c</note>
+doc:	</routine>
+*/
+rt_public EIF_INTEGER eif_file_mkstemp (EIF_FILENAME template, EIF_BOOLEAN is_text_mode )
+{
+	int fd;
+
+	REQUIRE ("Template is defined", template);
+	REQUIRE ("Template is at least 6 characters", wcslen(template) >= 6);
+	REQUIRE ("Template ends with XXXXXX", wmemcmp(template + (wcslen(template) - 6), L"XXXXXX", 6));
+
+#ifdef EIF_WINDOWS
+	{
+		size_t len = wcslen(template);
+		size_t j, index;
+		int32 i;
+
+		/* These are the (62) characters used in temporary filenames. */
+		static const wchar_t letters[] = L"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+		
+		/* User may supply more than six trailing Xs */
+		for (index = len - 6; index > 0 && template[index - 1] == L'X'; index--);
+					
+		/* Like OpenBSD, mkstemp() will try at least 2 ** 31 combinations before * giving up. */
+		for (i = 0; i < INT32_MAX; i++) {
+			for (j = index; j < len; j++) {
+				template[j] = letters[rand () % 62];
+			}
+			fd = _wsopen( template, _O_CREAT | _O_EXCL | _O_RDWR | (is_text_mode ? _O_TEXT : _O_BINARY) | _O_NOINHERIT,_SH_DENYRW, _S_IREAD | _S_IWRITE);
+			/* Success, if the file descriptor is valid or if there is a creation error that is not due to a file already existing. */
+			if ((fd != -1) || (fd == -1 && errno != EEXIST)) {
+				break;
+			}
+		}
+	}
+#else
+	fd = mkstemp (template); 
+#endif
+
+	if (fd == -1) {
+		eraise("error occurred, invalid argument or file exists", EN_EXT);
+	} 
+
+	return (EIF_INTEGER) fd;
+}
+
+/*
 doc:</file>
 */
+

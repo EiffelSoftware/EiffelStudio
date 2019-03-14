@@ -55,38 +55,20 @@ feature -- Access
 	extension: IL_EXTENSION_I
 			-- Deferred external information
 
-	new_rout_entry: ROUT_ENTRY
-			-- New routine unit
+ 	new_rout_entry (t: CLASS_TYPE; c: like {CLASS_C}.class_id): ROUT_ENTRY
+			-- <Precursor>
 		do
-			create Result
-			Result.set_body_index (body_index)
-			Result.set_type_a (type)
-
-			if generate_in = 0 then
-				if has_replicated_ast then
-					Result.set_access_in (access_in)
-				else
-					Result.set_access_in (written_in)
-				end
-				Result.set_written_in (written_in)
-			else
-				Result.set_written_in (generate_in)
-				Result.set_access_in (generate_in)
-			end
-			Result.set_pattern_id (pattern_id)
-			Result.set_feature_id (feature_id)
+			Result := Precursor (t, c)
 			Result.set_is_attribute
 			if has_body then
 				Result.set_has_body
 			end
 		end
 
- 	new_attr_entry: ATTR_ENTRY
- 			-- New attribute unit
+ 	new_attr_entry (t: CLASS_TYPE; c: like {CLASS_C}.class_id): ATTR_ENTRY
+ 			-- <Precursor>
  		do
- 			create Result
-			Result.set_type_a (type)
- 			Result.set_feature_id (feature_id)
+ 			Result := Precursor (t, c)
  			if has_body then
  				Result.set_has_body
  			end
@@ -463,14 +445,12 @@ feature -- Element Change
 			end
 		end
 
-	generate_hidden_attribute_access, generate_attribute_access (class_type: CLASS_TYPE; buffer: GENERATION_BUFFER)
+	generate_attribute_access (class_type: CLASS_TYPE; buffer: GENERATION_BUFFER)
 			-- Generates attribute access.
 			-- [Redeclaration of a function into an attribute]
 		local
 			result_type: TYPE_A
-			table_name: STRING
 			rout_id: INTEGER
-			array_index: INTEGER
 		do
 			result_type := type.adapted_in (class_type)
 
@@ -485,37 +465,14 @@ feature -- Element Change
 			byte_context.current_register.print_register
 			rout_id := rout_id_set.first
 			if byte_context.final_mode then
-				array_index := Eiffel_table.is_polymorphic (rout_id, class_type.type, class_type, False)
-				if array_index >= 0 then
-					table_name := Encoder.attribute_table_name (rout_id)
-
-						-- Generate following dispatch:
-						-- table [Actual_offset - base_offset]
-					buffer.put_three_character (' ', '+', ' ')
-					buffer.put_string (table_name)
-					buffer.put_character ('[')
-					byte_context.generate_current_dtype
-					buffer.put_three_character (' ', '-', ' ')
-					buffer.put_integer (array_index)
-					buffer.put_character (']')
-						-- Mark attribute offset table used.
-					Eiffel_table.mark_used (rout_id)
-						-- Remember external attribute offset declaration
-					Extern_declarations.add_attribute_table (table_name)
-				else
-						--| In this instruction, we put `False' as second
-						--| arguments. This means we won't generate anything if there is nothing
-						--| to generate. Remember that `True' is used in the generation of attributes
-						--| table in Final mode.
-					class_type.skeleton.generate_offset (buffer, feature_id, False, True)
-				end
+				eiffel_table.generate_offset (rout_id, byte_context.current_register, class_type.type, class_type, buffer)
 			else
 				buffer.put_string (" + RTWA(")
 				buffer.put_integer (rout_id)
 				buffer.put_character (',')
 				byte_context.generate_current_dtype
 				buffer.put_character (')')
-			end;
+			end
 			buffer.put_character(')')
 		end
 
@@ -685,7 +642,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

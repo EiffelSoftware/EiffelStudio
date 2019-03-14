@@ -7,11 +7,7 @@ class
 	CMS_MOTION_LIST_CATEGORY_INSPECTOR
 
 inherit
-
 	TEMPLATE_INSPECTOR
-		redefine
-			internal_data
-		end
 
 create
 	register

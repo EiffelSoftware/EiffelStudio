@@ -24,25 +24,58 @@ feature -- Access
 			create Result
 		end
 
-	mini_pixmaps: attached ES_PIXMAPS_10X10
+	mini_pixmaps: ES_MINI_ICONS
 			-- Title bar pixmaps (10px)
+		local
+			l_dpi: NATURAL
 		once
-			create Result.make ("10x10")
+			l_dpi := (create {EV_MONITOR_DPI_DETECTOR_IMP}).dpi
+			if l_dpi > 108 and then l_dpi <= 120 then
+				create Result.make ("mini_12x12", 12, 12)
+			elseif l_dpi > 132 and then l_dpi <= 144 then
+				create Result.make ("mini_15x15", 15, 15)
+			elseif l_dpi > 144 then
+				create Result.make ("mini_20x20", 20, 20)
+			else
+				create Result.make ("10x10", 10, 10)
+			end
 		end
 
-	small_pixmaps: attached ES_PIXMAPS_12X12
+	small_pixmaps: ES_SMALL_ICONS
 			-- Small icon pixmaps (12px)
+		local
+			l_dpi: NATURAL
 		once
-			create Result.make ("12x12")
+			l_dpi := (create {EV_MONITOR_DPI_DETECTOR_IMP}).dpi
+			if l_dpi > 108 and then l_dpi <= 120 then
+				create Result.make ("small_15x15", 15, 15)
+			elseif l_dpi > 132 and then l_dpi <= 144 then
+				create Result.make ("small_18x18", 18, 18)
+			elseif l_dpi > 144 then
+				create Result.make ("small_24x24", 24, 24)
+			else
+				create Result.make ("12x12", 12, 12)
+			end
 		end
 
-	icon_pixmaps: attached ES_PIXMAPS_16X16
+	icon_pixmaps: ES_ICONS
 			-- Normal sized icon pixmaps (16px)
+		local
+			l_dpi: NATURAL
 		once
-			create Result.make ("16x16")
+			l_dpi := (create {EV_MONITOR_DPI_DETECTOR_IMP}).dpi
+			if l_dpi > 108 and then l_dpi <= 120 then
+				create Result.make ("icons_20x20", 20, 20)
+			elseif l_dpi > 132 and then l_dpi <= 144 then
+				create Result.make ("icons_24x24", 24, 24)
+			elseif l_dpi > 144 then
+				create Result.make ("icons_32x32", 32, 32)
+			else
+				create Result.make ("16x16", 16, 16)
+			end
 		end
 
-	configuration_pixmaps: attached ES_CONFIGURATION_PIXMAPS
+	configuration_pixmaps: ES_CONFIGURATION_PIXMAPS
 			-- Configuration system pixmaps (16px)
 		once
 			create Result.make ("16x16")
@@ -50,7 +83,7 @@ feature -- Access
 
 feature -- Helpers
 
-	resource_handler: attached ES_PIXMAP_RESOURCE_HANDLER
+	resource_handler: ES_PIXMAP_RESOURCE_HANDLER
 			-- Shared access to an icon resource handled
 		once
 			create Result.make
@@ -95,7 +128,7 @@ feature -- Pngs
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -5,7 +5,7 @@ note
 		"Data structures whose items are accessible through keys"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2000-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2000-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -41,8 +41,8 @@ feature -- Access
 				Result := item (k)
 			end
 		ensure then
-			item_if_has: has (k) implies Result = item (k)
-			default_if_not_has: not has (k) implies Result = ({G}).default_detachable_value
+			item_if_has: has (k) implies {KL_TYPE [G]}.same_detachable_objects (Result, item (k))
+			default_if_not_has: not has (k) implies {KL_TYPE [G]}.same_detachable_objects (Result, ({G}).default_detachable_value)
 		end
 
 feature -- Status report
@@ -74,7 +74,7 @@ feature -- Status report
 		local
 			k: detachable K
 		do
-			if attached {DS_TABLE [G, detachable K]} Current as l_current and k = Void then
+			if not ({K}).is_attached and then attached {DS_TABLE [G, detachable K]} Current as l_current and k = Void then
 				Result := l_current.has (k)
 			end
 		ensure
@@ -89,7 +89,7 @@ feature -- Element change
 			has_k: has (k)
 		deferred
 		ensure
-			replaced: item (k) = v
+			replaced: {KL_TYPE [G]}.same_objects (item (k), v)
 			same_count: count = old count
 		end
 
@@ -99,7 +99,7 @@ feature -- Element change
 			valid_key: valid_key (k)
 		deferred
 		ensure
-			inserted: has (k) and then item (k) = v
+			inserted: has (k) and then {KL_TYPE [G]}.same_objects (item (k), v)
 			same_count: (old has (k)) implies (count = old count)
 			one_more: (not old has (k)) implies (count = old count + 1)
 		end
@@ -112,7 +112,7 @@ feature -- Element change
 		deferred
 		ensure
 			one_more: count = old count + 1
-			inserted: has (k) and then item (k) = v
+			inserted: has (k) and then {KL_TYPE [G]}.same_objects (item (k), v)
 		end
 
 	swap (k, l: K)
@@ -128,8 +128,8 @@ feature -- Element change
 			replace (v, l)
 		ensure
 			same_count: count = old count
-			new_k: item (k) = old item (l)
-			new_l: item (l) = old item (k)
+			new_k: {KL_TYPE [G]}.same_objects (item (k), old item (l))
+			new_l: {KL_TYPE [G]}.same_objects (item (l), old item (k))
 		end
 
 feature -- Removal

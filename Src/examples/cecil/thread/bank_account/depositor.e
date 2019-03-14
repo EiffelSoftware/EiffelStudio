@@ -13,8 +13,6 @@ inherit
 	CUSTOMER
 		rename 
 			make_transaction as deposit
-		redefine
-			deposit
 		end
 create
 	make

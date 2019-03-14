@@ -498,6 +498,7 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			-- Set `extends' to `a_target'.
 		require
 			a_target_not_void: a_target /= Void
+			a_target_not_readonly: not a_target.system.is_readonly
 			has_remote_reference: attached {CONF_REMOTE_TARGET_REFERENCE} parent_reference
 		do
 			extends := a_target

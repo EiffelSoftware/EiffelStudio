@@ -22,6 +22,7 @@ function do_sed {
 	sed -i -e "$1" "$2" 
 	svn diff "$2"
 	echo $2 >> file_to_commit.log
+	#read -p "Press ENTER key..."
 }
 
 function doall_sed {
@@ -52,14 +53,15 @@ do_sed "s/\(STUDIO_VERSION_MAJOR_MINOR\)=[0-9][0-9]\.[0-9][0-9]/\1=$to_version/g
 do_sed "s/Eiffel_[0-9][0-9]\.[0-9][0-9]/Eiffel_$to_version/g" ${EIF_DELIV_SCRIPTS_DIR}/windows/set_aliases.btm
 do_sed "s/[0-9][0-9]\.[0-9][0-9]_deliv/${to_version}_deliv/g" ${EIF_DELIV_SCRIPTS_DIR}/windows/set_aliases.btm
 
+pushd ${EIF_DELIV_SCRIPTS_DIR}/windows
+do_sed "s/\r//g" ${EIF_DELIV_SCRIPTS_DIR}/windows/set_new_eiffelstudio_guid.sh
+./set_new_eiffelstudio_guid.sh
+popd
+
 do_sed "s/\"$from_version\"/\"$to_version\"/g" ${EIF_DELIV_SCRIPTS_DIR}/windows/install/includes/Preprocessors.wxi
 do_sed "s/Eiffel_[0-9][0-9]\.[0-9][0-9]/Eiffel_$to_version/g" ${EIF_DELIV_SCRIPTS_DIR}/windows/install/includes/Preprocessors.wxi
 do_sed "s/EiffelStudio [0-9][0-9]\.[0-9][0-9]/EiffelStudio $to_version/g" ${EIF_DELIV_SCRIPTS_DIR}/windows/install/includes/Preprocessors.wxi
 
-pushd ${EIF_DELIV_SCRIPTS_DIR}/windows
-do_set "s/\r//g" ${EIF_DELIV_SCRIPTS_DIR}/windows/set_new_eiffelstudio_guid.sh
-./set_new_eiffelstudio_guid.sh
-popd
 
 # - unix
 do_sed "s/Eiffel_[0-9][0-9]\.[0-9][0-9]/Eiffel_$to_version/g" ${EIF_DELIV_SCRIPTS_DIR}/unix/README.unix
@@ -69,12 +71,17 @@ do_sed "s/Eiffel_[0-9][0-9]\.[0-9][0-9]/Eiffel_$to_version/g" ${EIF_DELIV_SCRIPT
 do_sed "s/Eiffel_[0-9][0-9]\.[0-9][0-9]/Eiffel_$to_version/g" ${EIF_DELIV_SCRIPTS_DIR}/unix/set_aliases
 do_sed "s/\(STUDIO_VERSION_MAJOR_MINOR\)=[0-9][0-9]\.[0-9][0-9]/\1=$to_version/g" ${EIF_DELIV_SCRIPTS_DIR}/unix/set_aliases
 
+# - docker
+do_sed "s/\(STUDIO_VERSION_MAJOR_MINOR\)=[0-9][0-9]\.[0-9][0-9]/\1=$to_version/g" ${EIF_DELIV_SCRIPTS_DIR}/docker/unix/docker-compose.yml
+do_sed "s/\(STUDIO_VERSION_MAJOR_MINOR\)=[0-9][0-9]\.[0-9][0-9]/\1=$to_version/g" ${EIF_DELIV_SCRIPTS_DIR}/docker/unix/docker-compose-32bits.yml
+
 # $EIFFEL_SRC/Delivery/studio/config/windows/esvars.bat
 do_sed "s/Eiffel_[0-9][0-9]\.[0-9][0-9]/Eiffel_$to_version/g" $EIFFEL_SRC/Delivery/studio/config/windows/esvars.bat
 
 # $EIFFEL_SRC/Delivery/studio/spec/unix/finish_freezing
 do_sed "s/Version [0-9][0-9]\.[0-9][0-9]/Version $to_version/g" $EIFFEL_SRC/Delivery/studio/spec/unix/finish_freezing
 do_sed "s/=[0-9][0-9]\.[0-9][0-9]/=$to_version/g" $EIFFEL_SRC/Delivery/studio/spec/unix/finish_freezing
+
 
 
 # Run-time 

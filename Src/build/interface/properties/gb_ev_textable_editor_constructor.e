@@ -12,8 +12,6 @@ inherit
 	GB_EV_EDITOR_CONSTRUCTOR
 		undefine
 			default_create
-		redefine
-			ev_type
 		end
 
 	GB_CONSTANTS

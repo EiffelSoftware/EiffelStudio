@@ -17,7 +17,6 @@ feature {NONE} -- Initialization
 			api_service : OAUTH_SERVICE_I
 			request : OAUTH_REQUEST
 			access_token,request_token : detachable OAUTH_TOKEN
-			signature: OAUTH_SIGNATURE_TYPE
 			api_builder: API_BUILDER
 		do
 			create api_builder
@@ -72,7 +71,7 @@ feature {NONE} -- Implementation
  	empty_token : detachable  OAUTH_TOKEN
 
 ;note
-	copyright: "2013-2013, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2019, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

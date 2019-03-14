@@ -5,7 +5,7 @@ note
 		"Filesystem's directories"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -275,7 +275,6 @@ feature -- Basic operations
 			if not rescued then
 				old_close
 				old_end_of_input := True
-				last_entry_pointer := default_pointer
 				entry_buffer := Void
 				last_entry := Dummy_entry
 			end
@@ -630,6 +629,7 @@ feature {NONE} -- Implementation
 		do
 			Result := a_buffer /= Void implies valid_unread_entry (a_buffer.item)
 		ensure
+			instance_free: class
 			definition: Result = (a_buffer /= Void implies valid_unread_entry (a_buffer.item))
 		end
 
@@ -652,6 +652,7 @@ feature {NONE} -- Implementation
 		once
 			create Result.make (dummy_name)
 		ensure
+			instance_free: class
 			file_not_void: Result /= Void
 			file_closed: Result.is_closed
 		end
@@ -661,6 +662,7 @@ feature {NONE} -- Implementation
 		once
 			create Result.make (dummy_name)
 		ensure
+			instance_free: class
 			directory_not_void: Result /= Void
 			directory_closed: Result.is_closed
 		end

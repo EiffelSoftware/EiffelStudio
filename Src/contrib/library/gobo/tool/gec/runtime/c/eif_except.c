@@ -4,7 +4,7 @@
 		"C functions used to implement class EXCEPTIONS"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2007-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -105,14 +105,15 @@ EIF_REFERENCE eename(long code)
  */
 char eedefined(long ex)
 {
-	return (char) ((ex > 0 && ex <= GE_EX_NEX)? 1 : 0);
+	return (char)((ex > 0 && ex <= GE_EX_NEX)? 1 : 0);
 }
 
 /*
  * Enable/diable printing of the exception trace.
  * Per thead information.
  */
-void eetrace(char b) {
+void eetrace(char b)
+{
 	GE_context* context;
 
 	context = GE_current_context();
@@ -134,7 +135,7 @@ EIF_BOOLEAN eif_is_in_rescue(void)
 /*
  * Set default exception handler.
  */
-void set_windows_exception_filter()
+void set_windows_exception_filter(void)
 {
 	GE_set_windows_exception_filter();
 }

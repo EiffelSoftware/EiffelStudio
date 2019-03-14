@@ -1798,6 +1798,7 @@ feature {TYPE, REFLECTOR, REFLECTED_OBJECT} -- Implementation
 			create Result.put (internal_chunk_size)
 		ensure
 			array_upper_cell: Result /= Void
+			instance_free: class
 		end
 
 	internal_empty_string: IMMUTABLE_STRING_8
@@ -1845,7 +1846,7 @@ feature {TYPE, REFLECTOR, REFLECTED_OBJECT} -- Implementation
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

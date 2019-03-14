@@ -19,7 +19,7 @@ inherit
 
 	REFACTORING_HELPER
 
-feature{NONE} -- Initialization
+feature {NONE} -- Initialization
 
 	make_empty
 			-- Create empty node.

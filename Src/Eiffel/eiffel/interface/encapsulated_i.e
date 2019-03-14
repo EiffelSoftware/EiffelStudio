@@ -16,6 +16,7 @@ inherit
 			generation_class_id,
 			has_code,
 			new_deferred_anchor,
+			new_rout_entry,
 			set_assert_id_set,
 			to_melt_in,
 			to_generate_in,
@@ -124,8 +125,31 @@ feature -- Setting
 			generate_in_set: generate_in = class_id
 		end
 
+feature -- Final code generation
+
+ 	new_rout_entry (t: CLASS_TYPE; c: like {CLASS_C}.class_id): ROUT_ENTRY
+			-- <Precursor>
+		require else
+			has_to_be_generated: generate_in > 0
+		local
+			old_written_in: like written_in
+		do
+			old_written_in := written_in
+			if
+				generate_in /= 0 and then
+				(is_constant implies not byte_context.workbench_mode)
+			then
+					-- Assume the constant or variable attribute is written in and accessed on the class with ID `generate_in`.
+					-- This is because real code generation happens in that class except when generating constants in workbench mode.
+				written_in := generate_in
+			end
+			Result := Precursor (t, c)
+				-- Restore original state.
+			written_in := old_written_in
+		end
+
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "References to objects containing a real value"
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
@@ -67,18 +67,24 @@ feature -- Access
 			-- Representation of not a number (NaN)
 		external
 			"built_in static"
+		ensure
+			is_class: class
 		end
 
 	negative_infinity: REAL_32
 			-- Representation of negative infinity
 		external
 			"built_in static"
+		ensure
+			is_class: class
 		end
 
 	positive_infinity: REAL_32
 			-- Representation of positive infinity
 		external
 			"built_in static"
+		ensure
+			is_class: class
 		end
 
 	min_value: REAL_32 = -3.4028234663852885981170e+038
@@ -229,9 +235,9 @@ feature -- Conversion
 	rounded: INTEGER_32
 			-- Rounded integral value
 		do
-			Result := sign * ((abs + 0.5).floor)
+			Result := sign * (abs + 0.5).floor
 		ensure
-			definition: Result = sign * ((abs + 0.5).floor)
+			definition: Result = sign * (abs + 0.5).floor
 		end
 
 	ceiling_real_32: REAL_32
@@ -255,9 +261,9 @@ feature -- Conversion
 	rounded_real_32: REAL_32
 			-- Rounded integral value
 		do
-			Result := sign * ((abs + {REAL_32} 0.5).floor_real_32)
+			Result := sign * (abs + {REAL_32} 0.5).floor_real_32
 		ensure
-			definition: Result = sign * ((abs + {REAL_32} 0.5).floor_real_32)
+			definition: Result = sign * (abs + {REAL_32} 0.5).floor_real_32
 		end
 
 feature -- Basic operations
@@ -349,7 +355,7 @@ invariant
 	sign_times_abs: not item.is_nan implies sign * abs = item
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

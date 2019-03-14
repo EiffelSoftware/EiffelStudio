@@ -12,8 +12,7 @@ class
 inherit
 	MAIN_WINDOW_IMP
 		redefine
-			create_interface_objects,
-			user_initialization
+			create_interface_objects
 		end
 
 create

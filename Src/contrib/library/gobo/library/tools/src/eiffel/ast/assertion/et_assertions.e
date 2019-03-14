@@ -5,7 +5,7 @@ note
 		"Eiffel assertion lists"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -35,7 +35,7 @@ feature -- Initialization
 feature -- Status report
 
 	are_all_true: BOOLEAN
-			-- Are all assertion expressions the 'True' entity (possibly parenthesized)?
+			-- Are all assertion expressions, if any, the 'True' entity (possibly parenthesized)?
 		local
 			i, nb: INTEGER
 		do
@@ -48,6 +48,46 @@ feature -- Status report
 							-- Jump out of the loop.
 						i := nb
 					end
+				end
+				i := i + 1
+			end
+		end
+
+	is_instance_free: BOOLEAN
+			-- Are all assertion expressions instance-free (i.e. not dependent
+			-- on 'Current' or its attributes)?
+			-- Note that we do not consider unqualified calls and Precursors as
+			-- instance-free because it's not always possible syntactically
+			-- to determine whether the feature being called is a class feature
+			-- or not.
+		local
+			i, nb: INTEGER
+		do
+			Result := True
+			nb := count
+			from i := 1 until i > nb loop
+				if attached assertion (i).expression as l_expression then
+					if not l_expression.is_instance_free then
+						Result := False
+							-- Jump out of the loop.
+						i := nb
+					end
+				end
+				i := i + 1
+			end
+		end
+
+	has_class_assertion: BOOLEAN
+			-- Is one of the assertions a 'class' assertion?
+		local
+			i, nb: INTEGER
+		do
+			nb := count
+			from i := 1 until i > nb loop
+				if assertion (i).is_class_assertion then
+					Result := True
+						-- Jump out of the loop.
+					i := nb
 				end
 				i := i + 1
 			end

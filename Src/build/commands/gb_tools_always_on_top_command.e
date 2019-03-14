@@ -13,9 +13,6 @@ class
 inherit
 
 	GB_TWO_STATE_COMMAND
-		redefine
-			execute
-		end
 
 	GB_CONSTANTS
 		export

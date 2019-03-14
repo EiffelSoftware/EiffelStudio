@@ -34,7 +34,7 @@ function do_sed {
 echo Update EiffelStudio GUIDs
 check_requirements
 
-if [ -z "$EIFFEL_SRC"]; then
+if [ -z "$EIFFEL_SRC" ]; then
 	if [ -z "$EIF_DELIV_SCRIPTS_DIR" ]; then
 		EIF_DELIV_SCRIPTS_DIR_WINDOWS=`pwd -P`
 	else

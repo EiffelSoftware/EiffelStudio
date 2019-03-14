@@ -5,7 +5,7 @@ note
 		"Eiffel unique attributes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,9 +14,10 @@ class ET_UNIQUE_ATTRIBUTE
 
 inherit
 
-	ET_QUERY
+	ET_CONSTANT_QUERY
 		redefine
 			is_unique_attribute,
+			is_static,
 			is_prefixable
 		end
 
@@ -39,6 +40,7 @@ feature {NONE} -- Initialization
 			is_keyword := tokens.is_keyword
 			unique_keyword := tokens.unique_keyword
 			clients := tokens.empty_clients
+			create constant.make ("1")
 			implementation_class := a_class
 			implementation_feature := Current
 		ensure
@@ -53,6 +55,40 @@ feature -- Status report
 	is_unique_attribute: BOOLEAN = True
 			-- Is feature a unique attribute?
 
+	is_static: BOOLEAN
+			-- Can feature be used as a static feature (i.e. in a call of the form {A}.f)?
+			--
+			-- True even if not explicitly declared as static provided that the inherited
+			-- pre- and postconditions of the unique attribute are instance-free (i.e.
+			-- not dependent on 'Current' or its attributes).
+			-- Note that we do not consider unqualified calls and Precursors as
+			-- instance-free because it's not always possible syntactically
+			-- to determine whether the feature being called is a class feature
+			-- or not. This slightly differs from ECMA-367 2nd Edition which does not
+			-- put constraints on unique attributes.
+		do
+			Result := Precursor or is_implicitly_static
+		end
+
+	is_implicitly_static: BOOLEAN
+			-- A unique attribute is considered as a static feature, even if not explicitly
+			-- declared as such, provided that its inherited pre- and postconditions are
+			-- instance-free (i.e. not dependent on 'Current' or its attributes).
+			-- Note that we do not consider unqualified calls and Precursors as
+			-- instance-free because it's not always possible syntactically
+			-- to determine whether the feature being called is a class feature
+			-- or not. This slightly differs from ECMA-367 2nd Edition which does not
+			-- put constraints on unique attributes.
+		do
+			if not are_preconditions_instance_free_recursive then
+				Result := False
+			elseif not are_postconditions_instance_free_recursive then
+				Result := False
+			else
+				Result := True
+			end
+		end
+
 	is_prefixable: BOOLEAN = True
 			-- Can current feature have a name of
 			-- the form 'prefix ...'?
@@ -64,6 +100,9 @@ feature -- Access
 
 	unique_keyword: ET_KEYWORD
 			-- 'unique' keyword
+
+	constant: ET_REGULAR_INTEGER_CONSTANT
+			-- Constant value
 
 	header_break: detachable ET_BREAK
 			-- Break which appears where the header comment is expected
@@ -120,6 +159,18 @@ feature -- Setting
 			unique_keyword_set: unique_keyword = a_unique
 		end
 
+	set_constant (a_constant: like constant)
+			-- Set `constant' to `a_constant'.
+		require
+			a_constant_not_void: a_constant /= Void
+			a_constant_is_integer_32: a_constant.is_integer_32
+			a_constant_positive: a_constant.to_integer_32 > 0
+		do
+			constant := a_constant
+		ensure
+			constant_set: constant = a_constant
+		end
+
 feature -- Duplication
 
 	new_synonym (a_name: like extended_name): like Current
@@ -135,6 +186,7 @@ feature -- Duplication
 			Result.set_first_indexing (first_indexing)
 			Result.set_object_tests (object_tests)
 			Result.set_across_components (across_components)
+			Result.set_constant (constant)
 			Result.set_synonym (Current)
 		end
 
@@ -158,6 +210,7 @@ feature -- Conversion
 			Result.set_first_indexing (first_indexing)
 			Result.set_object_tests (object_tests)
 			Result.set_across_components (across_components)
+			Result.set_constant (constant)
 			Result.set_first_seed (first_seed)
 			Result.set_other_seeds (other_seeds)
 		end
@@ -175,5 +228,7 @@ invariant
 	is_keyword_not_void: is_keyword /= Void
 	unique_keyword_not_void: unique_keyword /= Void
 	is_unique_attribute: arguments = Void
+	constant_is_integer_32: constant.is_integer_32
+	constant_positive: constant.to_integer_32 > 0
 
 end

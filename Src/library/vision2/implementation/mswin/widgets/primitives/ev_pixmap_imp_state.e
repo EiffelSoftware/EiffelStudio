@@ -264,6 +264,8 @@ feature -- Misc.
 					)
 						-- If mask color is 1 then pixel is opaque, so we use 255 for the mask value.
 					array_area.put (if get_rvalue (col_ref_item) = 0 then 0 else 255 end, array_offset + 3)
+				else
+					array_area.put (255, array_offset + 3)
 				end
 				array_offset := array_offset + 4
 			end
@@ -468,7 +470,7 @@ feature {
 	interface: detachable EV_PIXMAP note option: stable attribute end;
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

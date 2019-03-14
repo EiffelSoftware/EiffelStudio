@@ -8,7 +8,6 @@ class ATTRIBUTE_BL
 inherit
 	ATTRIBUTE_B
 		redefine
-			free_register,
 			generate_access_on_type,
 			generate_parameters,
 			is_polymorphic,
@@ -55,12 +54,6 @@ feature
 			-- Set current register to `r'
 		do
 			register := r
-		end
-
-	free_register
-			-- Free registers
-		do
-			Precursor {ATTRIBUTE_B}
 		end
 
 	analyze
@@ -117,21 +110,22 @@ end
 			-- `reg' is the entity on which the access is made.
 		do
 				-- Do nothing if `reg' is not the current entity
-			if reg.is_current then
-				if Eiffel_table.is_polymorphic (routine_id, context_type, context.context_class_type, False) >= 0 then
-					context.add_dt_current
-				end
+			if
+				reg.is_current and then
+				eiffel_table.is_polymorphic_for_offset (routine_id, context_type, context.context_class_type) >= 0
+			then
+				context.add_dt_current
 			end
 		end
 
 	is_polymorphic: BOOLEAN
-			-- Is access polymorphic ?
+			-- Is access polymorphic?
 		local
 			type_i: TYPE_A
 		do
 			type_i := context_type
 			if not type_i.is_basic then
-				Result := Eiffel_table.is_polymorphic (routine_id, type_i, context.context_class_type, False) >= 0
+				Result := eiffel_table.is_polymorphic_for_offset (routine_id, type_i, context.original_class_type) >= 0
 			end
 		end
 
@@ -144,16 +138,11 @@ end
 	generate_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_A)
 			-- Generate attribute in a `typ' context
 		local
-			table_name: STRING
 			type_c: TYPE_C
 			type_i: TYPE_A
 			buf: GENERATION_BUFFER
-			array_index: INTEGER
 		do
-			if not reg.c_type.is_reference then
-					-- This is an access on a value of an object of basic type.
-				reg.print_register
-			else
+			if reg.c_type.is_reference then
 				buf := buffer
 				type_i := real_type (type)
 				type_c := type_i.c_type
@@ -167,43 +156,11 @@ end
 				end
 				buf.put_character ('(')
 				reg.print_target_register
-				array_index := Eiffel_table.is_polymorphic (routine_id, typ, context.context_class_type, False)
-				if array_index >= 0 then
-						-- The access is polymorphic, which means the offset
-						-- is not a constant and has to be computed.
-					table_name := Encoder.attribute_table_name (routine_id)
-
-						-- Generate following dispatch:
-						-- table [Actual_offset - base_offset]
-					buf.put_string (" + ")
-					buf.put_string (table_name)
-					buf.put_character ('[')
-					if reg.is_current then
-						context.generate_current_dtype
-					else
-						buf.put_string ({C_CONST}.dtype);
-						buf.put_character ('(')
-						reg.print_register
-						buf.put_character (')')
-					end
-					buf.put_character ('-')
-					buf.put_integer (array_index)
-					buf.put_character (']')
-
-						-- Mark attribute offset table used.
-					Eiffel_table.mark_used (routine_id)
-						-- Remember external attribute offset declaration
-					Extern_declarations.add_attribute_table (table_name)
-				else
-
-						-- Hardwire the offset
-					check
-						is_attribute_table: attached {ATTR_TABLE [ATTR_ENTRY]} eiffel_table.poly_table (routine_id) as l_attr
-					then
-						l_attr.generate_attribute_offset (buf, typ, context.context_class_type)
-					end
-				end
+				eiffel_table.generate_offset (routine_id, reg, typ, context.original_class_type, buf)
 				buf.put_character (')')
+			else
+					-- This is an access on a value of an object of basic type.
+				reg.print_register
 			end
 		end
 
@@ -224,58 +181,20 @@ feature {NONE} -- Separate call
 			-- <Precursor>
 		local
 			buf: GENERATION_BUFFER
-			array_index: INTEGER_32
-			target_type: TYPE_A
-			name: STRING
 		do
 			buf := buffer
-
 				-- Generate the feature name.
 			buf.put_string ({C_CONST}.null)
-
 				-- Generate the feature pattern.
 			buf.put_two_character (',', ' ')
 			system.separate_patterns.put (Current)
-
 				-- Generate the offset.
-			buf.put_two_character (',', ' ')
-
-			target_type := context_type
-			array_index := Eiffel_table.is_polymorphic (routine_id, target_type, Context.context_class_type, True)
-			if array_index >= 0 then
-					-- The access is polymorphic, which means the offset
-					-- is not a constant and has to be computed.
-				name := Encoder.attribute_table_name (routine_id)
-					-- Generate following dispatch:
-					-- table [Actual_offset - base_offset]
-				buf.put_string (name)
-				buf.put_character ('[')
-				buf.put_string ({C_CONST}.dtype);
-				buf.put_character ('(')
-				a_target.print_register
-				buf.put_character (')')
-				buf.put_character ('-')
-				buf.put_integer (array_index)
-				buf.put_character (']')
-					-- Mark attribute offset table used.
-				Eiffel_table.mark_used (routine_id)
-					-- Remember external attribute offset declaration
-				Extern_declarations.add_attribute_table (name)
-			else
-					-- Hardwire the offset
-				check
-					attached {ATTR_TABLE [ATTR_ENTRY]} eiffel_table.poly_table (routine_id) as attr_table
-				then
-						-- Offset is not generated if it is zero, so to make the generated code valid,
-						-- the base value "0" has to be generated.
-					buf.put_character ('0')
-					attr_table.generate_attribute_offset (buf, target_type, context.context_class_type)
-				end
-			end
+			buf.put_three_character (',', ' ', '0')
+			eiffel_table.generate_offset (routine_id, a_target, context_type, context.context_class_type, buf)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

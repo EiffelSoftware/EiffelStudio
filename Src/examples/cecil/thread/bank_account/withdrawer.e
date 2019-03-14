@@ -14,8 +14,6 @@ inherit
 	CUSTOMER
 		rename 
 			make_transaction as withdraw
-		redefine
-			withdraw
 		end
 	
 create

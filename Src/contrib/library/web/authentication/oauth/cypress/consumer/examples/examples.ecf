@@ -14,6 +14,7 @@
 			<concurrency support="none"/>
 			<void_safety support="all"/>
 		</capability>
+		<external_resource location="new"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="cypress_consumer" location="..\consumer-safe.ecf" readonly="false"/>
 		<library name="encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder-safe.ecf"/>
@@ -46,19 +47,51 @@
 	</target>
 	<target name="box_jwt_example" extends="oauth_examples">
 		<root class="BOX_OAUTH_20_JWT_API_EXAMPLE" feature="make"/>
-		<library name="jwt" location="$ISE_LIBRARY\contrib\library\web\authentication\jwt\jwt.ecf"/>
-		<library name="jwt_openssl_dynamic" location="$ISE_LIBRARY\contrib\library\web\authentication\jwt_openssl_ext\jwt_openssl_dynamic.ecf"/>
+		<capability>
+			<concurrency support="none"/>
+		</capability>
+		<library name="jwt" location="$ISE_LIBRARY\contrib\library\web\authentication\jwt\jwt.ecf">
+			<condition>
+				<version type="compiler" min="18.11.0.0000"/>
+			</condition>
+		</library>		
+		<library name="jwt_openssl_dynamic" location="$ISE_LIBRARY\contrib\library\web\authentication\jwt_openssl_ext\jwt_openssl_dynamic.ecf">
+				<condition>
+					<version type="compiler" min="18.11.0.0000"/>
+				</condition>
+		</library>
 		<library name="login_with_jwt" location="..\..\login_with\jwt_token_flow\login_with_jwt.ecf" readonly="false"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
-		<cluster name="examples" location=".\" recursive="true"/>
+		<cluster name="examples" location=".\">
+			<cluster name="jwt_mock" location="$|jwt_mock\">
+				<condition>
+					<version type="compiler" max="18.07.10.1981"/>
+				</condition>
+			</cluster>
+		</cluster>
 	</target>
+
 	<target name="google_jwt_example" extends="oauth_examples">
 		<root class="GOOGLE_OAUTH_20_JWT_API_EXAMPLE" feature="make"/>
-		<library name="jwt" location="$ISE_LIBRARY\contrib\library\web\authentication\jwt\jwt.ecf"/>
-		<library name="jwt_openssl_dynamic" location="$ISE_LIBRARY\contrib\library\web\authentication\jwt_openssl_ext\jwt_openssl_dynamic.ecf"/>
+		<library name="jwt" location="$ISE_LIBRARY\contrib\library\web\authentication\jwt\jwt.ecf">
+				<condition>
+					<version type="compiler" min="18.11.0.0000"/>
+				</condition>
+		</library>
+		<library name="jwt_openssl_dynamic" location="$ISE_LIBRARY\contrib\library\web\authentication\jwt_openssl_ext\jwt_openssl_dynamic.ecf">
+				<condition>
+					<version type="compiler" min="18.11.0.0000"/>
+				</condition>
+		</library>
 		<library name="login_with_jwt" location="..\..\login_with\jwt_token_flow\login_with_jwt.ecf" readonly="false"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
-		<cluster name="examples" location=".\" recursive="true"/>
+		<cluster name="examples" location=".\">
+			<cluster name="jwt_mock" location="$|jwt_mock\">
+				<condition>
+					<version type="compiler" max="18.07.10.1981"/>
+				</condition>
+			</cluster>
+		</cluster>	
 	</target>
 	<target name="asana_example" extends="oauth_examples">
 		<root class="ASANA_OAUTH_20_API_EXAMPLE" feature="make"/>
@@ -106,6 +139,12 @@
 		<library name="login_with_bitbucket" location="..\..\login_with\bitbucket\login_with_bitbucket.ecf" readonly="false"/>
 		<cluster name="examples" location=".\" recursive="true"/>
 	</target>
+	<target name="bitbucket_20_example" extends="oauth_examples">
+		<root class="BITBUCKET_20_API_EXAMPLE" feature="make"/>
+		<library name="login_with_bitbucket_20" location="..\..\login_with\bitbucket\login_with_bitbucket.ecf" readonly="false"/>
+		<cluster name="examples" location=".\" recursive="true"/>
+	</target>
+
 	<target name="vimeo_example" extends="oauth_examples">
 		<root class="VIMEO_10_API_EXAMPLE" feature="make"/>
 		<library name="login_with_vimeo" location="..\..\login_with\vimeo\login_with_vimeo.ecf" readonly="false"/>

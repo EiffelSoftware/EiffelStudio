@@ -3111,7 +3111,7 @@ msgid "Address Expression"
 msgstr ""
 
 #. Source code: locale.translation_in_context ("Address of a cursor variable of {1} form of a loop is not supported.", "compiler.error"),
-#: ast_feature_checker_generator.e:4281
+#: ast_feature_checker_generator.e:4318
 msgctxt "compiler.error"
 msgid "Address of a cursor variable of {1} form of a loop is not supported."
 msgstr ""
@@ -3168,7 +3168,7 @@ msgid "Age in days for an archive item to be considered old"
 msgstr ""
 
 #. Source code: ("Agent creation on {1} is not supported because it is either an attribute, a constant or an external feature.",
-#: ast_feature_checker_generator.e:4507
+#: ast_feature_checker_generator.e:4547
 msgctxt "compiler.error"
 msgid ""
 "Agent creation on {1} is not supported because it is either an attribute, a "
@@ -3879,17 +3879,17 @@ msgid "Analyzer Preferences..."
 msgstr ""
 
 #. Source code: lb_case_class_message: STRING = "Analyzing Class "
-#: degree_output.e:712
+#: degree_output.e:710
 msgid "Analyzing Class "
 msgstr ""
 
 #. Source code: lb_case_cluster_message: STRING = "Analyzing Cluster "
-#: degree_output.e:713
+#: degree_output.e:711
 msgid "Analyzing Cluster "
 msgstr ""
 
 #. Source code: lb_degree_4: STRING = "Analyzing Inheritance"
-#: degree_output.e:692
+#: degree_output.e:690
 msgid "Analyzing Inheritance"
 msgstr ""
 
@@ -7544,7 +7544,7 @@ msgstr ""
 #: conf_interface_names.e:1287
 msgctxt "configuration"
 msgid ""
-"Capability \"$1\" of supplier target has value \"$2\" insuffient for client "
+"Capability \"$1\" of supplier target has value \"$2\" insuffcient for client "
 "value \"$6\".\n"
 "Client/child target\n"
 "\tName: $7\n"
@@ -7784,7 +7784,7 @@ msgid "Check the validity of the library definition"
 msgstr ""
 
 #. Source code: lb_degree_3: STRING = "Checking Types"
-#: degree_output.e:693
+#: degree_output.e:691
 msgid "Checking Types"
 msgstr ""
 
@@ -10374,7 +10374,7 @@ msgid "Constants"
 msgstr ""
 
 #. Source code: lb_degree_minus_2: STRING = "Constructing Polymorphic Table"
-#: degree_output.e:698
+#: degree_output.e:696
 msgid "Constructing Polymorphic Table"
 msgstr ""
 
@@ -13691,7 +13691,7 @@ msgid "Definition:"
 msgstr ""
 
 #. Source code: lb_degree_6: STRING = "Examining System"
-#: degree_output.e:689
+#: degree_output.e:687
 msgid "Degree"
 msgstr ""
 
@@ -17907,7 +17907,7 @@ msgid "Eiffel Compilation Failed"
 msgstr ""
 
 #. Source code: lb_compiler_header_1: STRING = "Eiffel Compilation Manager%NVersion $1"
-#: degree_output.e:701
+#: degree_output.e:699
 msgid ""
 "Eiffel Compilation Manager\n"
 "Version $1"
@@ -19493,7 +19493,7 @@ msgid "Ex&ported"
 msgstr ""
 
 #. Source code: lb_degree_6: STRING = "Examining System"
-#: degree_output.e:690
+#: degree_output.e:688
 msgid "Examining System"
 msgstr ""
 
@@ -20777,7 +20777,7 @@ msgid "Features To Test"
 msgstr ""
 
 #. Source code: lb_dead_code_done_to_go_2: STRING = "Features done: $1%TFeatures to go: $2"
-#: degree_output.e:707
+#: degree_output.e:705
 msgid "Features done: $1\tFeatures to go: $2"
 msgstr ""
 
@@ -21658,7 +21658,7 @@ msgid "Freeze..."
 msgstr ""
 
 #. Source code: lb_freezing_system_message: STRING = "Freezing System Changes"
-#: degree_output.e:704
+#: degree_output.e:702
 msgid "Freezing System Changes"
 msgstr ""
 
@@ -22165,22 +22165,22 @@ msgid "Generate text form of all classes in system"
 msgstr ""
 
 #. Source code: lb_generating_1: STRING = "Generating $1"
-#: degree_output.e:710
+#: degree_output.e:708
 msgid "Generating $1"
 msgstr ""
 
 #. Source code: lb_degree_2: STRING = "Generating Byte Code"
-#: degree_output.e:694
+#: degree_output.e:692
 msgid "Generating Byte Code"
 msgstr ""
 
 #. Source code: lb_document_class_message: STRING = "Generating Class "
-#: degree_output.e:711
+#: degree_output.e:709
 msgid "Generating Class "
 msgstr ""
 
 #. Source code: lb_degree_minus_1: STRING = "Generating Code"
-#: degree_output.e:697
+#: degree_output.e:695
 msgid "Generating Code"
 msgstr ""
 
@@ -22190,12 +22190,12 @@ msgid "Generating INI file failed"
 msgstr ""
 
 #. Source code: lb_degree_1: STRING = "Generating Metadata"
-#: degree_output.e:695
+#: degree_output.e:693
 msgid "Generating Metadata"
 msgstr ""
 
 #. Source code: lb_degree_minus_3: STRING = "Generating Optimized Code"
-#: degree_output.e:699
+#: degree_output.e:697
 msgid "Generating Optimized Code"
 msgstr ""
 
@@ -23778,12 +23778,12 @@ msgid "Initialization"
 msgstr ""
 
 #. Source code: lb_initialize_documentation: STRING = "Initializing Documentation."
-#: degree_output.e:709
+#: degree_output.e:707
 msgid "Initializing Documentation."
 msgstr ""
 
 #. Source code: locale.translation_in_context ("Inline agent with the body other than a {1} form is not supported.", "compiler.error"),
-#: ast_feature_checker_generator.e:886
+#: ast_feature_checker_generator.e:887
 msgctxt "compiler.error"
 msgid "Inline agent with the body other than a {1} form is not supported."
 msgstr ""
@@ -26706,7 +26706,7 @@ msgid "Maximum processors usage"
 msgstr ""
 
 #. Source code: lb_melting_changes_message: STRING = "Melting System Changes"
-#: degree_output.e:702
+#: degree_output.e:700
 msgid "Melting System Changes"
 msgstr ""
 
@@ -29568,7 +29568,7 @@ msgid "Parse error:"
 msgstr ""
 
 #. Source code: lb_degree_5: STRING = "Parsing Classes"
-#: degree_output.e:691
+#: degree_output.e:689
 msgid "Parsing Classes"
 msgstr ""
 
@@ -30101,7 +30101,7 @@ msgid "Pre Compilation Tasks"
 msgstr ""
 
 #. Source code: lb_consume_assemblies_message: STRING = "Pre-consuming Assembly Types"
-#: degree_output.e:703
+#: degree_output.e:701
 msgid "Pre-consuming Assembly Types"
 msgstr ""
 
@@ -30307,7 +30307,7 @@ msgid "Processes"
 msgstr ""
 
 #. Source code: lb_degree_0: STRING = "Processing"
-#: degree_output.e:696
+#: degree_output.e:694
 msgid "Processing"
 msgstr ""
 
@@ -31471,7 +31471,7 @@ msgid "Removed"
 msgstr ""
 
 #. Source code: lb_removing_dead_code_message: STRING = "Removing Unused Code"
-#: degree_output.e:705
+#: degree_output.e:703
 msgid "Removing Unused Code"
 msgstr ""
 
@@ -37127,7 +37127,7 @@ msgid "System Info"
 msgstr ""
 
 #. Source code: lb_system_recompiled: STRING = "System Recompiled."
-#: degree_output.e:706
+#: degree_output.e:704
 msgid "System Recompiled."
 msgstr ""
 
@@ -37662,7 +37662,7 @@ msgid "Thank you for the bug report"
 msgstr ""
 
 #. Source code: (locale.translation_in_context ("The $ operator is not supported on externals.", "compiler.error"),
-#: ast_feature_checker_generator.e:4321
+#: ast_feature_checker_generator.e:4358
 msgctxt "compiler.error"
 msgid "The $ operator is not supported on externals."
 msgstr ""
@@ -39980,7 +39980,7 @@ msgid "Type of compilation."
 msgstr ""
 
 #. Source code: (locale.translation_in_context ("Type of target in a agent call may not be a basic type or a formal.", "compiler.error"),
-#: ast_feature_checker_generator.e:4450
+#: ast_feature_checker_generator.e:4490
 msgctxt "compiler.error"
 msgid "Type of target in a agent call may not be a basic type or a formal."
 msgstr ""
@@ -43226,7 +43226,7 @@ msgid "change the boolean operator"
 msgstr ""
 
 #. Source code: lb_degree: STRING = "Degree"
-#: degree_output.e:688
+#: degree_output.e:686
 msgid "class"
 msgstr ""
 
@@ -43537,7 +43537,7 @@ msgid "go back to parent menu"
 msgstr ""
 
 #. Source code: lb_class: STRING = "class"
-#: degree_output.e:687
+#: degree_output.e:685
 msgid "group"
 msgstr ""
 

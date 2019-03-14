@@ -1,6 +1,7 @@
 note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+
 class VISIBLE_EXPORT_I
 
 inherit
@@ -9,9 +10,9 @@ inherit
 		redefine
 			is_visible, mark_visible, has_visible,
 			generate_cecil_table
-		end;
-	SHARED_SERVER;
-	SHARED_CECIL;
+		end
+	SHARED_SERVER
+	SHARED_CECIL
 	COMPILER_EXPORTER
 
 feature
@@ -32,10 +33,10 @@ feature
 					Result := creators.has (feat.feature_name)
 				end
 			end
-		end;
+		end
 
 	has_visible: BOOLEAN = True
-			-- Has the current object some visible features ?
+			-- Has the current object some visible features?
 
 	mark_visible (remover: REMOVER; feat_table: FEATURE_TABLE)
 			-- Mark visible features from `feat_table'.
@@ -49,36 +50,13 @@ feature
 			until
 				feat_table.after
 			loop
-				a_feature := feat_table.item_for_iteration;
-
+				a_feature := feat_table.item_for_iteration
 				if is_visible (a_feature, class_id) then
-debug ("DEAD_CODE_REMOVAL")
-	io.error.put_string (generator);
-	io.error.put_string (": Recording feature ");
-	io.error.put_string (a_feature.feature_name);
-	io.error.put_string (" of class ");
-	io.error.put_string (a_feature.written_class.name);
-	io.error.put_new_line;
-end;
-					remover.record (a_feature, a_feature.written_class)
-else
-debug ("DEAD_CODE_REMOVAL")
-	io.error.put_string (generator);
-	io.error.put_string ("Export	status of: ");
-	io.error.put_string (a_feature.feature_name);
-	io.error.put_string (" of class ");
-	io.error.put_string (a_feature.written_class.name);
-	io.error.put_string (" is ");
-	io.error.put_string (a_feature.export_status.generator);
-	io.error.put_string (" ");
-	a_feature.export_status.trace;
-	io.error.put_new_line;
-end;
-				end;
-
-				feat_table.forth;
-			end;
-		end;
+					remover.register_monomorphic (a_feature, class_id)
+				end
+				feat_table.forth
+			end
+		end
 
 	generate_cecil_table (a_class: CLASS_C; generated_wrappers: SEARCH_TABLE [STRING])
 			-- Generate cecil table
@@ -99,27 +77,27 @@ end;
 			class_id: INTEGER
 			nb: INTEGER
 		do
-			a_class := feat_table.associated_class;
+			a_class := feat_table.associated_class
 			class_id := a_class.class_id
-			cecil_routine_table.wipe_out;
+			cecil_routine_table.wipe_out
 
 			from
 				feat_table.start
 			until
 				feat_table.after
 			loop
-				a_feature := feat_table.item_for_iteration;
+				a_feature := feat_table.item_for_iteration
 				if
 					not (a_feature.is_deferred or else a_feature.is_attribute)
 					and then is_visible (a_feature, class_id)
 				then
-					nb := nb + 1;
-				end;
-				feat_table.forth;
-			end;
+					nb := nb + 1
+				end
+				feat_table.forth
+			end
 				-- Insertion in the cecil table of the effective features
 			from
-				cecil_routine_table.init (nb.max (1));
+				cecil_routine_table.init (nb.max (1))
 				a_class.set_visible_table_size (cecil_routine_table.capacity)
 				feat_table.start
 			until
@@ -130,14 +108,14 @@ end;
 					not (a_feature.is_deferred or else a_feature.is_attribute)
 					and then is_visible (a_feature, class_id)
 				then
-					cecil_routine_table.put (a_feature, real_name (a_feature, class_id));
-				end;
+					cecil_routine_table.put (a_feature, real_name (a_feature, class_id))
+				end
 				feat_table.forth;
 			end
-		end;
+		end
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

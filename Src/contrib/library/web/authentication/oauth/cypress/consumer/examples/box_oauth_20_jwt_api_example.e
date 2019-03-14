@@ -60,7 +60,6 @@ feature {NONE}	-- Implementation
 			-- Box API supports  the "RS256", "RS384", and "RS512" Algorithms.
 		local
 			jwt: JWS
-			l_jwt: STRING
 			l_date: DATE_TIME
 		do
 			create jwt.default_create
@@ -105,7 +104,7 @@ feature {NONE} -- Implementation
 	authentication_url: STRING = "https://api.box.com/oauth2/token"
 
 note
-	copyright: "2013-2018, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2013-2019, Javier Velilla, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

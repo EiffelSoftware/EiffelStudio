@@ -5,7 +5,7 @@ note
 		"Eiffel qualified anchored type checkers when they appear in signatures"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2008-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2008-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,8 +20,8 @@ inherit
 		end
 
 	ET_AST_NULL_PROCESSOR
-		undefine
-			make
+		rename
+			make as make_ast_processor
 		redefine
 			process_class,
 			process_class_type,
@@ -37,10 +37,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_system_processor: like system_processor)
 			-- Create a new qualified anchored type checker.
 		do
-			precursor {ET_CLASS_SUBPROCESSOR}
+			precursor (a_system_processor)
 			current_class_impl := current_class
 		end
 
@@ -141,7 +141,7 @@ feature {NONE} -- Type validity
 							args := l_feature.arguments
 							l_index := a_type.index
 							if args /= Void and then l_index <= args.count then
-								if current_system.qualified_anchored_types_cycle_detection_enabled then
+								if system_processor.qualified_anchored_types_cycle_detection_enabled then
 									if args.item (l_index).type.depends_on_qualified_anchored_type (current_class) then
 											-- Error: the type of the anchor appearing in a qualified
 											-- anchored type should not depend on a qualified anchored type.
@@ -165,7 +165,7 @@ feature {NONE} -- Type validity
 						end
 					else
 						if attached current_class.seeded_query (l_seed) as l_query then
-							if current_system.qualified_anchored_types_cycle_detection_enabled then
+							if system_processor.qualified_anchored_types_cycle_detection_enabled then
 								if  l_query.type.depends_on_qualified_anchored_type (current_class) then
 										-- Error: the type of the anchor appearing in a qualified
 										-- anchored type should not depend on a qualified anchored type.
@@ -209,7 +209,7 @@ feature {NONE} -- Type validity
 			l_target_type.process (Current)
 			if not has_fatal_error then
 				l_class := l_target_type.base_class (current_class)
-				l_class.process (current_system.feature_flattener)
+				l_class.process (system_processor.feature_flattener)
 				if not l_class.features_flattened or else l_class.has_flattening_error then
 					set_fatal_error
 				else
@@ -233,7 +233,7 @@ feature {NONE} -- Type validity
 									-- will check the validity of its signature again.
 								a_type.resolve_identifier_type (l_query.first_seed)
 -- TODO: check that `l_query' is exported to `current_class'.
-								if current_system.qualified_anchored_types_cycle_detection_enabled then
+								if system_processor.qualified_anchored_types_cycle_detection_enabled then
 									if  l_query.type.depends_on_qualified_anchored_type (l_class) then
 											-- Error: the type of the anchor appearing in a qualified
 											-- anchored type should not depend on a qualified anchored type.
@@ -258,7 +258,7 @@ feature {NONE} -- Type validity
 								-- of feature whose signature contains `a_type', we
 								-- will check the validity of its signature again.
 -- TODO: check that `l_query' is exported to `current_class'.
-							if current_system.qualified_anchored_types_cycle_detection_enabled then
+							if system_processor.qualified_anchored_types_cycle_detection_enabled then
 								if  l_query.type.depends_on_qualified_anchored_type (l_class) then
 										-- Error: the type of the anchor appearing in a qualified
 										-- anchored type should not depend on a qualified anchored type.

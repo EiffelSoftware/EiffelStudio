@@ -228,7 +228,7 @@ feature {NONE} -- JSON
 
 	json_file_from (a_fn: PATH): detachable STRING
 		do
-			Result := (create {JSON_FILE_READER}).read_json_from (a_fn.name.out)
+			Result := (create {JSON_FILE_READER}).read_json_from (a_fn.name)
 		end
 
 	new_json_parser (a_string: STRING): JSON_PARSER

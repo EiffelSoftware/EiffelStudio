@@ -17,34 +17,39 @@ def safe_rmfile(fn):
 	else:
 		print "File not found: %s" % (fn)
 
-def get_ise_libraries(basedir, br, v):
+def get_ise_libraries(basedir, br, v, rev):
 	if br == 'trunk':
 		branch_dir="https://svn.eiffel.com/eiffelstudio/trunk"
 	else:
 		branch_dir="https://svn.eiffel.com/eiffelstudio/branches/Eiffel_%s" % (v)
-	print "Getting source code from %s ..." % (branch_dir)
+	if rev:
+		l_revision=rev
+	else:
+		l_revision="HEAD"
+
+	print "Getting source code from %s  (revision:%s)..." % (branch_dir, l_revision)
 	d = os.path.join (basedir, "library")
 	if os.path.exists (d):
-		call(["svn", "update", d ])
+		call(["svn", "update", "-r", l_revision, d ])
 	else:
-		call(["svn", "checkout", "%s/Src/library" % (branch_dir), d ])
+		call(["svn", "checkout", "-r", l_revision, "%s/Src/library" % (branch_dir), d ])
 	safe_rmtree (os.path.join (d, "obsolete"))
 	safe_rmtree (os.path.join (d, "wizard"))
 	safe_rmtree (os.path.join (d, "base", "test"))
 	safe_rmtree (os.path.join (d, "base", "testing"))
 	d = os.path.join (basedir, "C_library")
 	if os.path.exists (d):
-		call(["svn", "update", d ])
+		call(["svn", "update", "-r", l_revision, d ])
 	else:
-		call(["svn", "checkout", "%s/Src/C_library" % (branch_dir), d ])
+		call(["svn", "checkout", "-r", l_revision, "%s/Src/C_library" % (branch_dir), d ])
 	safe_rmtree (os.path.join (d, "openssl"))
 	safe_rmtree (os.path.join (d, "curl"))
 	safe_rmfile (os.path.join (d, "build.eant"))
 	d = os.path.join (basedir, "contrib")
 	if os.path.exists (d):
-		call(["svn", "update", d ])
+		call(["svn", "update", "-r", l_revision, d ])
 	else:
-		call(["svn", "checkout", "%s/Src/contrib" % (branch_dir), d ])
+		call(["svn", "checkout", "-r", l_revision, "%s/Src/contrib" % (branch_dir), d ])
 	safe_rmtree (os.path.join (d, "examples"))
 	safe_rmtree (os.path.join (d, "library", "network", "authentication"))
 	safe_rmtree (os.path.join (d, "library", "web", "framework", "ewf", "obsolete"))
@@ -58,9 +63,9 @@ def get_ise_libraries(basedir, br, v):
 
 	d = os.path.join (basedir, "unstable")
 	if os.path.exists (d):
-		call(["svn", "update", d ])
+		call(["svn", "update", "-r", l_revision, d ])
 	else:
-		call(["svn", "checkout", "%s/Src/unstable" % (branch_dir), d ])
+		call(["svn", "checkout", "-r", l_revision, "%s/Src/unstable" % (branch_dir), d ])
 	alter_folder_with (basedir, os.path.join (basedir, "..", "..", "alter"))
 	alter_folder_with (basedir, os.path.join (basedir, "..", "alter"))
 
@@ -92,12 +97,13 @@ def main():
 	config = iron_config (cfg_location)
 	l_version = config['version']
 	l_branch = config['branch']
+	l_revision = config['revision']
 	l_base_dir = os.path.normpath(os.path.abspath (os.path.join ("VERSIONS", l_version)))
 	l_sources_dir = os.path.join (l_base_dir, "sources")
 	#l_packages_dir = os.path.join (l_base_dir, "packages")
 	if not os.path.exists (l_sources_dir):
 		os.makedirs(l_sources_dir)
-	get_ise_libraries(l_sources_dir, l_branch, l_version)
+	get_ise_libraries(l_sources_dir, l_branch, l_version, l_revision)
 
 	print "Upload ISE packages ..."
 	upload_version(l_sources_dir, cfg_location)

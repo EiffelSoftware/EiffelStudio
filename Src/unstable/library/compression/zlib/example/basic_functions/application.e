@@ -393,7 +393,7 @@ feature -- Custom Inflate Implementation
 						l_stream.set_next_input (character_array_to_external (l_in))
 						l_stream.set_available_output (Chunk)
 						l_stream.set_next_output (character_array_to_external (l_out))
-						l_zlib.inflate (l_stream, False)
+						l_zlib.inflate (l_stream, {ZLIB_CONSTANTS}.z_no_flush) -- False
 						inspect l_zlib.last_operation
 						when z_need_dict, z_data_error then
 							Result := z_data_error
@@ -413,7 +413,7 @@ feature -- Custom Inflate Implementation
 					loop
 						l_stream.set_available_output (Chunk)
 						l_stream.set_next_output (character_array_to_external (l_out))
-						l_zlib.inflate (l_stream, False)
+						l_zlib.inflate (l_stream, {ZLIB_CONSTANTS}.z_no_flush) -- False
 						inspect l_zlib.last_operation
 						when z_need_dict, z_data_error then
 							Result := z_data_error

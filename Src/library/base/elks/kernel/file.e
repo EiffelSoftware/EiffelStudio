@@ -175,7 +175,7 @@ feature -- Initialization
 			-- Create a file object with a unique temporary file name,
 			-- with read/write mode.
 		do
-			make_open_temporary_with_prefix("tfn")
+			make_open_temporary_with_prefix ("eiftmp")
 		ensure
 			exists: exists
 			open_read: is_open_read
@@ -188,12 +188,11 @@ feature -- Initialization
 		note
 			EIS:"name=mkstemp", "src=http://man7.org/linux/man-pages/man3/mkstemp.3.html", "protocol=uri"
 		local
-			l_temp: C_STRING
 			l_fd: INTEGER
 		do
-			create l_temp.make (a_prefix + "XXXXXX")
-			l_fd := temp_file_impl (l_temp.item)
-			make_with_name (l_temp.string)
+			set_name (a_prefix + "XXXXXX")
+			l_fd := eif_temp_file (internal_name_pointer.item, is_plain_text)
+			make_with_name (buffered_file_info.pointer_to_file_name_32 (internal_name_pointer.item))
 			fd_open_read_write (l_fd)
 		ensure
 			exists: exists
@@ -2153,70 +2152,15 @@ feature {NONE} -- Implementation
 		end
 
 	eif_temp_file (a_name_template: POINTER; a_text_mode: BOOLEAN): INTEGER
-			-- Create a unique temporary file name with template `a_name_template` with mode
-			-- `a_text_mode`, True: TEXT MODE, False: Binary Mode and return a file descriptor.
-		note
-			EIS: "name=Creates a unique temporary file", "src=http://man7.org/linux/man-pages/man3/mkstemp.3.html", "protocol=uri"
+			-- Generate a temporary file and return an file descriptor to the file.
+			-- `a_name_template`: pattern used to create the temporary file.
+			-- `a_text_mode`:, if text mode is True, the temporary file is created in text mode,
+			-- otherwise in binary mode.
 		external
-			"C inline use %"eif_file.h%", %"fcntl.h%" "
+			"C signature (EIF_FILENAME, EIF_BOOLEAN): EIF_INTEGER use %"eif_file.h%""
 		alias
-			"[
-			#ifdef EIF_WINDOWS
-				// added constant so no need to add shared.h header.
-				#define _SH_DENYRW 0x10 
-				// https://github.com/mirror/mingw-w64/blob/master/mingw-w64-crt/misc/mkstemp.c
-				#ifdef _MSC_VER
-					#define EINVAL 22 /* Invalid argument  */
-					#define EEXIST 17 /* File exists */
-				#endif
-				
-				int i, j, fd, len, index;
-				char *template_name;
-				template_name = $a_name_template;
-				/* These are the (62) characters used in temporary filenames. */
-				static const char letters[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-
-				/* The last six characters of template must be "XXXXXX" */
-				if (template_name == NULL || (len = strlen (template_name)) < 6
-					|| memcmp (template_name + (len - 6), "XXXXXX", 6)) {
-					errno = EINVAL;
-					return -1;
-				}
-
-				/* User may supply more than six trailing Xs */
-				 for (index = len - 6; index > 0 && template_name[index - 1] == 'X'; index--);
-				/*
-				 * Like OpenBSD, mkstemp() will try at least 2 ** 31 combinations before
-				 * giving up.
-				 */
-				for (i = 0; i >= 0; i++) {
-					for(j = index; j < len; j++) {
-						template_name[j] = letters[rand () % 62];
-					}
-					if ($a_text_mode) { 
-						fd = _sopen( template_name, _O_CREAT | _O_EXCL | _O_RDWR | _O_TEXT | _O_NOINHERIT,_SH_DENYRW, _S_IREAD | _S_IWRITE );
-					} else {
-						fd = _sopen( template_name, _O_CREAT | _O_EXCL | _O_RDWR | _O_BINARY | _O_NOINHERIT,_SH_DENYRW, _S_IREAD | _S_IWRITE );
-					}
-					if (fd != -1) return fd;
-				    if (fd == -1 && errno != EEXIST) return -1;
-				}
-			  return -1;
-			#else
-				/* nix platforms: The `mkstemp()` function generates a unique temporary filename from
-				template, creates and opens the file, and returns an open file descriptor for the file. */
-				return mkstemp ($a_name_template);
-			#endif
-			]"
+			"eif_file_mkstemp"
 		end
-
-	temp_file_impl (a_name: POINTER): INTEGER
-			-- Create a temporary file from `a_name` template
-			-- and return a file descriptor.
-		do
-			Result := eif_temp_file (a_name, is_plain_text)
-		end
-
 
 feature {NONE} -- Inapplicable
 

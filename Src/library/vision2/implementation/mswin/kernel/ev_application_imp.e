@@ -55,6 +55,7 @@ inherit
 
 	WEL_SHARED_METRICS
 
+
 create
 	make
 
@@ -65,7 +66,9 @@ feature -- Initialization
 		local
 			l_result: INTEGER
 			l_process: POINTER
+
 		do
+			(create {WEL_SCALING_EXTERNALS}).set_process_per_monitor_dpi_aware
 			create reusable_message.make
 			init_instance
 			init_application
@@ -734,7 +737,7 @@ invariant
 	process_handle_valid: not is_destroyed implies process_handle /= default_pointer
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

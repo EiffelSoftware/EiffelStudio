@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			create footer_box
 			create option_bar_box
 			create choice_list
-			create full_list.make_empty
+			reset_full_list
 			create matches.make_empty
 			create code_template_label
 
@@ -236,6 +236,13 @@ feature -- Query
 			-- Determines if `a_item' is an applicable item to show in the completion list
 		do
 			Result := a_item /= Void
+		end
+
+	is_applicable_item_with_name (a_item: like name_type; a_name: detachable READABLE_STRING_GENERAL): BOOLEAN
+			-- Determines if `a_item' is an applicable item to show in the completion list
+			-- when name is `a_name`.
+		do
+			Result := is_applicable_item (a_item)
 		end
 
 feature {NONE} -- Events handling
@@ -734,11 +741,11 @@ feature {NONE} -- Implementation
 
 			l_list.wipe_out
 			if rebuild_list_during_matching then
-				matches := matches_based_on_name (name)
+				l_matches := matches_based_on_name (name)
 			else
-				matches := full_list.twin
+				l_matches := full_list.twin
 			end
-			l_matches := matches
+			matches := l_matches
 
 			l_list.set_column_count_to (1)
 			l_list.set_row_count_to (top_node_count_of (l_matches))
@@ -757,7 +764,7 @@ feature {NONE} -- Implementation
 				l_count > l_upper
 			loop
 				match_item := l_matches.item (l_count)
-				if is_applicable_item (match_item) then
+				if is_applicable_item_with_name (match_item, name) then
 					parent_item := Void
 					if attached match_item.parent as l_match_item_parent then
 						parent_item := l_match_item_parent
@@ -877,6 +884,10 @@ feature {NONE} -- Implementation
 	full_list: like sorted_names
 			-- Sorted full list of name.
 
+	reset_full_list
+		do
+			create full_list.make_empty
+		end
 
 	has_child_node: BOOLEAN
 			-- Any child node?
@@ -1530,7 +1541,7 @@ invariant
 	choice_list_attached: choice_list /= Void
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

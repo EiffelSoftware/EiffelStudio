@@ -11,14 +11,8 @@ class
 
 inherit
 	QL_NAME_CRITERION
-		redefine
-			is_satisfied_by
-		end
 
 	QL_QUANTITY_CRITERION
-		redefine
-			is_satisfied_by
-		end
 
 create
 	make,
@@ -33,7 +27,7 @@ feature -- Evaluate
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

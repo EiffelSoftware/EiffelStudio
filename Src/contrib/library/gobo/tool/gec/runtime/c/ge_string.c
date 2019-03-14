@@ -4,7 +4,7 @@
 		"C functions used to manipulate strings"
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2016-2017, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,10 +19,10 @@
 #ifndef GE_STRING_H
 #include "ge_string.h"
 #endif
-#ifndef GE_STRING_H
+#ifndef GE_NATIVE_STRING_H
 #include "ge_native_string.h"
 #endif
-#ifndef GE_STRING_H
+#ifndef GE_GC_H
 #include "ge_gc.h"
 #endif
 
@@ -84,7 +84,7 @@ static int GE_nstr_str32len(EIF_NATIVE_CHAR* s, EIF_INTEGER n)
 			} else {
 				j += 3;
 			}
-		} else if ((c1 & 0xF0) == 0xE0 ) {
+		} else if ((c1 & 0xF0) == 0xE0) {
 			if (i + 2 < n) {
 				c2 = (uint8_t)s[i + 1];
 				c3 = (uint8_t)s[i + 2];
@@ -182,6 +182,9 @@ static void GE_uint16_to_escaped_str32(uint16_t c, EIF_CHARACTER_32* a_buffer)
 	a_buffer[i] = (EIF_CHARACTER_32)GE_to_hex(c & 0x000F);
 }
 
+#ifndef __LCC__
+/* lcc-win32 complains about this used static function. */
+
 /*
  * Copy escaped version of `c' to `a_buffer'.
  * `a_buffer' is expected to have enough space for 3 characters.
@@ -196,6 +199,7 @@ static void GE_uint8_to_escaped_str32(uint8_t c, EIF_CHARACTER_32* a_buffer)
 	i++;
 	a_buffer[i] = (EIF_CHARACTER_32)GE_to_hex((uint16_t)(c & 0x0F));
 }
+#endif
 
 /*
  * Copy to `a_buffer' the EIF_CHARACTER_32 characters corresponding to the
@@ -256,7 +260,7 @@ static void GE_nstr_to_str32(EIF_NATIVE_CHAR* s, EIF_CHARACTER_32* a_buffer, EIF
 				GE_uint8_to_escaped_str32(c1, a_buffer + j);
 				j += 3;
 			}
-		} else if ((c1 & 0xF0) == 0xE0 ) {
+		} else if ((c1 & 0xF0) == 0xE0) {
 			if (i + 2 < n) {
 				c2 = (uint8_t)s[i + 1];
 				c3 = (uint8_t)s[i + 2];

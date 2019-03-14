@@ -1,5 +1,6 @@
 : Makefile.SH generated from Jmake.tmpl and Jmakefile [jmake 3.5 PL0]
 : $X-Id: Jmake.tmpl 91075 2005-12-28 23:58:23Z manus $
+: note: on debian, to install jmake "sudo apt install dist"
 
 case $CONFIG in
 '')

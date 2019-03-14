@@ -55,10 +55,6 @@ do_update_copyright_eiffel_software $EIFFEL_SRC/tools/visitor_factory/main/argum
 do_update_copyright_eiffel_software $EIFFEL_SRC/tools/vsafeconv/main/argument_parser.e
 
 
-
-
-
-
 # $EIFFEL_SRC/web/eiffel-org/modules/eiffel_community/site/templates/block_eiffel_copyright.tpl
 do_sed "s/\(Copyright \)[0-9][0-9][0-9][0-9]/\1$curr_year/g" $EIFFEL_SRC/web/eiffel-org/modules/eiffel_community/site/templates/block_eiffel_copyright.tpl
 do_sed "s/\(Copyright \)[0-9][0-9][0-9][0-9]/\1$curr_year/g" $EIFFEL_SRC/web/eiffel-org/site/modules/eiffel_community/templates/block_eiffel_copyright.tpl
@@ -84,4 +80,7 @@ do_sed "s/\(Copyright (C) [0-9][0-9][0-9][0-9]-\)[0-9][0-9][0-9][0-9]/\1$curr_ye
 
 # dotnet consumer
 do_update_copyright_eiffel_software $EIFFEL_SRC/dotnet/consumer/main/argument_parser.e
+
+# finish_freezing
+do_sed "s/\(Copyright Eiffel Software [0-9][0-9][0-9][0-9]-\)[0-9][0-9][0-9][0-9]/\1$curr_year/g" $EIFFEL_SRC/Delivery/studio/spec/unix/finish_freezing
 

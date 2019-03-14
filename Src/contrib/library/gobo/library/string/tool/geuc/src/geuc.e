@@ -4,7 +4,7 @@ note
 
 		"Gobo Eiffel generator for Unicode Classes"
 
-	copyright: "Copyright (c) 2005-2013, Colin Adams and others"
+	copyright: "Copyright (c) 2005-2018, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -73,6 +73,8 @@ feature -- Processing
 					if arg.substring (14, arg.count).is_integer then
 						l_version := arg.substring (14, arg.count).to_integer
 						if l_version < 100 then
+							kernel_file_name_prefix := ""
+							file_name_prefix := ""
 							report_usage_message
 						else
 							kernel_file_name_prefix := "uc_v" + arg.substring (14, arg.count).as_lower + "_"
@@ -82,16 +84,23 @@ feature -- Processing
 							minor_version := (l_version - major_version * 100 - update_version) // 10
 						end
 					else
+						kernel_file_name_prefix := ""
+						file_name_prefix := ""
 						report_usage_message
 					end
 				else
+					kernel_file_name_prefix := ""
+					file_name_prefix := ""
 					report_usage_message
 				end
 			else
+				kernel_file_name_prefix := ""
+				file_name_prefix := ""
 				report_usage_message
 			end
 		ensure
-			kernel_file_name_prefix_void: kernel_file_name_prefix /= Void
+			kernel_file_name_prefix_not_void: kernel_file_name_prefix /= Void
+			file_name_prefix_nit_void: file_name_prefix /= Void
 		end
 
 	parse_character_classes
@@ -156,10 +165,10 @@ feature -- Processing
 			l_line, l_property: STRING
 			l_hash: INTEGER
 		do
+			initialize_derived_core_properties
 			create l_file.make (Derived_core_properties)
 			l_file.open_read
 			if l_file.is_open_read then
-				initialize_derived_core_properties
 				from  until l_file.end_of_file loop
 					l_file.read_line
 					if not l_file.end_of_file then
@@ -218,10 +227,10 @@ feature -- Processing
 			l_line, l_property: STRING
 			l_hash: INTEGER
 		do
+			initialize_derived_normalization_properties
 			create l_file.make (Derived_normalization_properties)
 			l_file.open_read
 			if l_file.is_open_read then
-				initialize_derived_normalization_properties
 				from until l_file.end_of_file loop
 					l_file.read_line
 					if not l_file.end_of_file then
@@ -627,7 +636,7 @@ feature -- Access
 	Nfkc_quick_check_property: STRING = "NFKC_QC"
 			-- Property names
 
-	codes: ARRAY [GEUC_UNICODE_DATA]
+	codes: ARRAY [detachable GEUC_UNICODE_DATA]
 			-- Parsed data from `Unicode_data' for each code point;
 			-- Note that Unicode does not assign most of the code points
 			-- to characters, so many will be `Void'.
@@ -892,9 +901,9 @@ feature {NONE} -- Implementation
 			l_empty_plane_written, l_empty_segment_written: BOOLEAN
 			l_plane_array_name, l_segment_array_name: STRING
 		do
-			create l_plane_names.make_filled (Void, 0, 16)
+			create l_plane_names.make_filled ("", 0, 16)
 			from i := 0 until i > 16 loop
-				create l_segment_names.make_filled (Void, 0, 255)
+				create l_segment_names.make_filled ("", 0, 255)
 				l_plane_all_absent := True
 				from j := 0 until j > 255 loop
 					create l_segment.make_filled (0, 0, 255)
@@ -974,9 +983,9 @@ feature {NONE} -- Implementation
 			l_empty_plane_written, l_empty_segment_written: BOOLEAN
 			l_plane_array_name, l_segment_array_name: STRING
 		do
-			create l_plane_names.make_filled (Void, 0, 16)
+			create l_plane_names.make_filled ("", 0, 16)
 			from i := 0 until i > 16 loop
-				create l_segment_names.make_filled (Void, 0, 255)
+				create l_segment_names.make_filled ("", 0, 255)
 				l_plane_all_absent := True
 				from j := 0 until j > 255 loop
 					create l_segment.make_filled (0, 0, 255)
@@ -1207,9 +1216,9 @@ feature {NONE} -- Implementation
 			l_segment: ARRAY [BOOLEAN]
 			l_plane_array_name, l_segment_array_name: STRING
 		do
-			create l_plane_names.make_filled (Void, 0, 16)
+			create l_plane_names.make_filled ("", 0, 16)
 			from i := 0 until i > 16 loop
-				create l_segment_names.make_filled (Void, 0, 255)
+				create l_segment_names.make_filled ("", 0, 255)
 				l_plane_all_false := True
 				from j := 0 until j > 255 loop
 					create l_segment.make_filled (False, 0, 255)
@@ -1292,9 +1301,9 @@ feature {NONE} -- Implementation
 			l_segment: ARRAY [INTEGER_8]
 			l_data_point: GEUC_UNICODE_DATA
 		do
-			create l_plane_names.make_filled (Void, 0, 16)
+			create l_plane_names.make_filled ("", 0, 16)
 			from i := 0 until i > 16 loop
-				create l_segment_names.make_filled (Void, 0, 255)
+				create l_segment_names.make_filled ("", 0, 255)
 				l_plane_all_zero := True
 				from j := 0 until j > 255 loop
 					create l_segment.make_filled (0, 0, 255)
@@ -1373,9 +1382,9 @@ feature {NONE} -- Implementation
 			l_segment: ARRAY [INTEGER_8]
 			l_data_point: GEUC_UNICODE_DATA
 		do
-			create l_plane_names.make_filled (Void, 0, 16)
+			create l_plane_names.make_filled ("", 0, 16)
 			from i := 0 until i > 16 loop
-				create l_segment_names.make_filled (Void, 0, 255)
+				create l_segment_names.make_filled ("", 0, 255)
 				l_plane_all_zero := True
 				from j := 0 until j > 255 loop
 					create l_segment.make_filled (0, 0, 255)
@@ -1450,13 +1459,13 @@ feature {NONE} -- Implementation
 			l_segment_names, l_plane_names: ARRAY [STRING]
 			l_plane_all_empty, l_segment_all_empty: BOOLEAN
 			l_all_empty_plane_written, l_all_empty_segment_written: BOOLEAN
-			l_value: DS_ARRAYED_LIST [INTEGER]
-			l_segment: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+			l_value: detachable DS_ARRAYED_LIST [INTEGER]
+			l_segment: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			l_data_point: GEUC_UNICODE_DATA
 		do
-			create l_plane_names.make_filled (Void, 0, 16)
+			create l_plane_names.make_filled ("", 0, 16)
 			from i := 0 until i > 16 loop
-				create l_segment_names.make_filled (Void, 0, 255)
+				create l_segment_names.make_filled ("", 0, 255)
 				l_plane_all_empty := True
 				from j := 0 until j > 255 loop
 					create l_segment.make_filled (Void, 0, 255)
@@ -1537,13 +1546,13 @@ feature {NONE} -- Implementation
 			l_segment_names, l_plane_names: ARRAY [STRING]
 			l_plane_all_empty, l_segment_all_empty: BOOLEAN
 			l_all_empty_plane_written, l_all_empty_segment_written: BOOLEAN
-			l_value: DS_ARRAYED_LIST [INTEGER]
-			l_segment: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+			l_value: detachable DS_ARRAYED_LIST [INTEGER]
+			l_segment: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			l_data_point: GEUC_UNICODE_DATA
 		do
-			create l_plane_names.make_filled (Void, 0, 16)
+			create l_plane_names.make_filled ("", 0, 16)
 			from i := 0 until i > 16 loop
-				create l_segment_names.make_filled (Void, 0, 255)
+				create l_segment_names.make_filled ("", 0, 255)
 				l_plane_all_empty := True
 				from j := 0 until j > 255 loop
 					create l_segment.make_filled (Void, 0, 255)
@@ -1617,13 +1626,13 @@ feature {NONE} -- Implementation
 			l_segment_names, l_plane_names: ARRAY [STRING]
 			l_plane_all_empty, l_segment_all_empty: BOOLEAN
 			l_all_empty_plane_written, l_all_empty_segment_written: BOOLEAN
-			l_value: DS_ARRAYED_LIST [INTEGER]
-			l_segment: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+			l_value: detachable DS_ARRAYED_LIST [INTEGER]
+			l_segment: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			l_data_point: GEUC_UNICODE_DATA
 		do
-			create l_plane_names.make_filled (Void, 0, 16)
+			create l_plane_names.make_filled ("", 0, 16)
 			from i := 0 until i > 16 loop
-				create l_segment_names.make_filled (Void, 0, 255)
+				create l_segment_names.make_filled ("", 0, 255)
 				l_plane_all_empty := True
 				from j := 0 until j > 255 loop
 					create l_segment.make_filled (Void, 0, 255)
@@ -1697,13 +1706,13 @@ feature {NONE} -- Implementation
 			l_segment_names, l_plane_names: ARRAY [STRING]
 			l_plane_all_empty, l_segment_all_empty: BOOLEAN
 			l_all_empty_plane_written, l_all_empty_segment_written: BOOLEAN
-			l_value: DS_ARRAYED_LIST [INTEGER]
-			l_segment: ARRAY [DS_ARRAYED_LIST [INTEGER]]
+			l_value: detachable DS_ARRAYED_LIST [INTEGER]
+			l_segment: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]
 			l_data_point: GEUC_UNICODE_DATA
 		do
-			create l_plane_names.make_filled (Void, 0, 16)
+			create l_plane_names.make_filled ("", 0, 16)
 			from i := 0 until i > 16 loop
-				create l_segment_names.make_filled (Void, 0, 255)
+				create l_segment_names.make_filled ("", 0, 255)
 				l_plane_all_empty := True
 				from j := 0 until j > 255 loop
 					create l_segment.make_filled (Void, 0, 255)
@@ -1952,7 +1961,7 @@ feature {NONE} -- Implementation
 			l_plane_names: ARRAY [STRING]
 			l_all_true_plane_written, l_all_false_segment_written, l_all_undefined_segment_written, l_all_true_segment_written: DS_CELL [BOOLEAN]
 		do
-			create l_plane_names.make_filled (Void, 0, 16)
+			create l_plane_names.make_filled ("", 0, 16)
 			create l_all_true_plane_written.make (False)
 			create l_all_false_segment_written.make (False)
 			create l_all_undefined_segment_written.make (False)
@@ -2020,10 +2029,10 @@ feature {NONE} -- Implementation
 			l_plane_all_true, l_segment_all_false, l_segment_all_undefined, l_segment_all_true: DS_CELL [BOOLEAN]
 			l_value: UT_TRISTATE
 		do
-			create l_segment_names.make_filled (Void, 0, 255)
+			create l_segment_names.make_filled ("", 0, 255)
 			create l_plane_all_true.make (True)
 			from j := 0 until j > 255 loop
-				create l_segment.make_filled (Void, 0, 255)
+				create l_segment.make_filled (create {UT_TRISTATE}.make_undefined, 0, 255)
 				create l_segment_all_false.make (True)
 				create l_segment_all_true.make (True)
 				create l_segment_all_undefined.make (True)
@@ -2112,6 +2121,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tinstance_free: class%N")
 			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
 			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True --not Result.has (Void)%N")
 			a_output_file.put_string ("%T%Tend%N%N")
@@ -2138,6 +2148,7 @@ feature {NONE} -- Implementation
 			a_output_file.put_string (a_segment_name)
 			a_output_file.put_string (", 256)%N")
 			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tinstance_free: class%N")
 			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
 			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True --not Result.has (Void)%N")
 			a_output_file.put_string ("%T%Tend%N%N")
@@ -2159,9 +2170,9 @@ feature {NONE} -- Implementation
 			l_segment: ARRAY [INTEGER]
 			l_plane_array_name, l_segment_array_name: STRING
 		do
-			create l_plane_names.make_filled (Void, 0, 16)
+			create l_plane_names.make_filled ("", 0, 16)
 			from i := 0 until i > 16 loop
-				create l_segment_names.make_filled (Void, 0, 255)
+				create l_segment_names.make_filled ("", 0, 255)
 				from l_plane_all_absent := True; j := 0 until j > 255 loop
 					create l_segment.make_filled (0, 0, 255)
 					l_segment_all_absent := True
@@ -2220,6 +2231,8 @@ feature {NONE} -- Implementation
 				a_output_file.put_string (")%N")
 				i := i + 1
 			end
+			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tinstance_free: class%N")
 			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
 			file_still_open: a_output_file.is_open_write
@@ -2239,9 +2252,9 @@ feature {NONE} -- Implementation
 			l_segment: ARRAY [INTEGER]
 			l_plane_array_name, l_segment_array_name: STRING
 		do
-			create l_plane_names.make_filled (Void, 0, 16)
+			create l_plane_names.make_filled ("", 0, 16)
 			from i := 0 until i > 16 loop
-				create l_segment_names.make_filled (Void, 0, 255)
+				create l_segment_names.make_filled ("", 0, 255)
 				l_plane_all_absent := True
 				from j := 0 until j > 255 loop
 					create l_segment.make_filled (0, 0, 255)
@@ -2301,6 +2314,8 @@ feature {NONE} -- Implementation
 				a_output_file.put_string (")%N")
 				i := i + 1
 			end
+			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tinstance_free: class%N")
 			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
 			file_still_open: a_output_file.is_open_write
@@ -2320,9 +2335,9 @@ feature {NONE} -- Implementation
 			l_segment: ARRAY [INTEGER]
 			l_plane_array_name, l_segment_array_name: STRING
 		do
-			create l_plane_names.make_filled (Void, 0, 16)
+			create l_plane_names.make_filled ("", 0, 16)
 			from i := 0 until i > 16 loop
-				create l_segment_names.make_filled (Void, 0, 255)
+				create l_segment_names.make_filled ("", 0, 255)
 				l_plane_all_absent := True
 				from j := 0 until j > 255 loop
 					create l_segment.make_filled (0, 0, 255)
@@ -2382,6 +2397,8 @@ feature {NONE} -- Implementation
 				a_output_file.put_string (")%N")
 				i := i + 1
 			end
+			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tinstance_free: class%N")
 			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
 			file_still_open: a_output_file.is_open_write
@@ -2415,6 +2432,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tinstance_free: class%N")
 			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
 			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True --not Result.has (Void)%N")
 			a_output_file.put_string ("%T%Tend%N%N")
@@ -2441,6 +2459,7 @@ feature {NONE} -- Implementation
 			a_output_file.put_string (a_segment_name)
 			a_output_file.put_string (", 256)%N")
 			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tinstance_free: class%N")
 			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
 			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True --not Result.has (Void)%N")
 			a_output_file.put_string ("%T%Tend%N%N")
@@ -2471,6 +2490,7 @@ feature {NONE} -- Implementation
 			end
 			a_output_file.put_string ("%")%N")
 			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tinstance_free: class%N")
 			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
 			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
@@ -2505,6 +2525,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tinstance_free: class%N")
 			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
 			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True --not Result.has (Void)%N")
 			a_output_file.put_string ("%T%Tend%N%N")
@@ -2531,6 +2552,7 @@ feature {NONE} -- Implementation
 			a_output_file.put_string (a_segment_name)
 			a_output_file.put_string (", 256)%N")
 			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tinstance_free: class%N")
 			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
 			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True --not Result.has (Void)%N")
 			a_output_file.put_string ("%T%Tend%N%N")
@@ -2571,6 +2593,7 @@ feature {NONE} -- Implementation
 			end
 			a_output_file.put_string ("%N")
 			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tinstance_free: class%N")
 			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
 			a_output_file.put_string ("%T%Tend%N%N")
 
@@ -2597,6 +2620,7 @@ feature {NONE} -- Implementation
 			a_output_file.put_string (a_segment_name)
 			a_output_file.put_string (", 256)%N")
 			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tinstance_free: class%N")
 			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
 			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True --not Result.has (Void)%N")
 			a_output_file.put_string ("%T%Tend%N%N")
@@ -2632,6 +2656,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tinstance_free: class%N")
 			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
 			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True --not Result.has (Void)%N")
 			a_output_file.put_string ("%T%Tend%N%N")
@@ -2639,7 +2664,7 @@ feature {NONE} -- Implementation
 			file_still_open: a_output_file.is_open_write
 		end
 
-	write_integer_list_segment (a_segment: ARRAY [DS_ARRAYED_LIST [INTEGER]]; a_segment_array_name: STRING; a_output_file: KL_TEXT_OUTPUT_FILE; all_empty: BOOLEAN)
+	write_integer_list_segment (a_segment: ARRAY [detachable DS_ARRAYED_LIST [INTEGER]]; a_segment_array_name: STRING; a_output_file: KL_TEXT_OUTPUT_FILE; all_empty: BOOLEAN)
 			-- Write code for `a_segment', named `a_segment_array_name' to `a_output_file'.
 		require
 			file_not_void: a_output_file /= Void
@@ -2814,6 +2839,7 @@ feature {NONE} -- Implementation
 				end
 			end
 			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tinstance_free: class%N")
 			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
 			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
@@ -2848,6 +2874,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tinstance_free: class%N")
 			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
 			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True --not Result.has (Void)%N")
 			a_output_file.put_string ("%T%Tend%N%N")
@@ -2872,6 +2899,7 @@ feature {NONE} -- Implementation
 			a_output_file.put_string ("%T%Tonce%N")
 			a_output_file.put_string ("%T%T%Tcreate Result.make_filled (create {ARRAY [BOOLEAN]}.make_filled (False, 1, 256), 256)%N")
 			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tinstance_free: class%N")
 			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
 			a_output_file.put_string ("%T%T%Tsub_arrays_not_void: True --not Result.has (Void)%N")
 			a_output_file.put_string ("%T%Tend%N%N")
@@ -2909,6 +2937,7 @@ feature {NONE} -- Implementation
 			end
 			a_output_file.put_string ("%N")
 			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tinstance_free: class%N")
 			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
 			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
@@ -2954,6 +2983,7 @@ feature {NONE} -- Implementation
 			end
 			a_output_file.put_string ("%N")
 			a_output_file.put_string ("%T%Tensure%N")
+			a_output_file.put_string ("%T%T%Tinstance_free: class%N")
 			a_output_file.put_string ("%T%T%Tresult_not_void: Result /= Void%N")
 			a_output_file.put_string ("%T%Tend%N%N")
 		ensure
@@ -2985,11 +3015,8 @@ feature {NONE} -- Implementation
 			a_lower_not_void: a_lower /= Void
 			a_title_not_void: a_title /= Void
 			a_upper_not_void: a_upper /= Void
-		local
-			l_data_point: GEUC_UNICODE_DATA
 		do
-			if codes.valid_index (a_code) then
-				l_data_point := codes.item (a_code)
+			if codes.valid_index (a_code) and then attached codes.item (a_code) as l_data_point then
 				l_data_point.set_special_case_mappings (a_lower, a_title, a_upper)
 				if not l_data_point.is_valid then
 					report_general_message ("Invalid special case mappings for code point: " + a_code.out)
@@ -3043,10 +3070,10 @@ feature {NONE} -- Implementation
 	initialize_derived_core_properties
 			-- Create arrays for derived core properties.
 		require
-			upper_case_array_void: upper_case_array = Void
-			lower_case_array_void: lower_case_array = Void
-			alphabetic_array_void: alphabetic_array = Void
-			math_array_void: math_array = Void
+			-- upper_case_array_void: upper_case_array = Void
+			-- lower_case_array_void: lower_case_array = Void
+			-- alphabetic_array_void: alphabetic_array = Void
+			-- math_array_void: math_array = Void
 		do
 			create upper_case_array.make_filled (False, minimum_unicode_character_code, maximum_unicode_character_code)
 			create lower_case_array.make_filled (False, minimum_unicode_character_code, maximum_unicode_character_code)
@@ -3062,15 +3089,15 @@ feature {NONE} -- Implementation
 	initialize_derived_normalization_properties
 			-- Create arrays for derived normalization properties.
 		require
-			full_composition_exclusion_array_void: full_composition_exclusion_array = Void
-			expands_on_nfc_array_void: expands_on_nfc_array = Void
-			expands_on_nfd_array_void: expands_on_nfd_array = Void
-			expands_on_nfkc_array_void: expands_on_nfkc_array = Void
-			expands_on_nfkd_array_void: expands_on_nfkd_array = Void
-			nfd_quick_check_array_void: nfd_quick_check_array = Void
-			nfc_quick_check_array_void: nfc_quick_check_array = Void
-			nfkd_quick_check_array_void: nfkd_quick_check_array = Void
-			nfkc_quick_check_array_void: nfkc_quick_check_array = Void
+			-- full_composition_exclusion_array_void: full_composition_exclusion_array = Void
+			-- expands_on_nfc_array_void: expands_on_nfc_array = Void
+			-- expands_on_nfd_array_void: expands_on_nfd_array = Void
+			-- expands_on_nfkc_array_void: expands_on_nfkc_array = Void
+			-- expands_on_nfkd_array_void: expands_on_nfkd_array = Void
+			-- nfd_quick_check_array_void: nfd_quick_check_array = Void
+			-- nfc_quick_check_array_void: nfc_quick_check_array = Void
+			-- nfkd_quick_check_array_void: nfkd_quick_check_array = Void
+			-- nfkc_quick_check_array_void: nfkc_quick_check_array = Void
 		local
 			l_false_tristate: UT_TRISTATE
 		do

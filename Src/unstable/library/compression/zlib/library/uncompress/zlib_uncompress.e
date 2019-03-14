@@ -135,7 +135,7 @@ feature {NONE} -- Inflate Implementation
 					zstream.set_next_input (input_buffer.item)
 					zstream.set_available_output (chunk_size)
 					zstream.set_next_output (output_buffer.item)
-					zlib.inflate (zstream, False)
+					zlib.inflate (zstream, {ZLIB_CONSTANTS}.Z_no_flush) -- False
 					l_have := chunk_size - zstream.available_output
 					write (l_have)
 					if last_write_elements /= l_have then
@@ -146,7 +146,7 @@ feature {NONE} -- Inflate Implementation
 				loop
 					zstream.set_available_output (chunk_size)
 					zstream.set_next_output (output_buffer.item)
-					zlib.inflate (zstream, False)
+					zlib.inflate (zstream, {ZLIB_CONSTANTS}.Z_no_flush) -- False
 						-- Z_BUF_ERROR is just an indication that there was nothing for inflate() to do on that call.
 						-- Simply continue and provide more input data and more output space for the next inflate() call.
 					if zlib.last_operation /= zlib.z_buf_error then
@@ -194,7 +194,7 @@ feature {NONE} -- Inflate Implementation
 						zstream.set_next_input (input_buffer.item)
 						zstream.set_available_output (chunk_size)
 						zstream.set_next_output (output_buffer.item)
-						zlib.inflate (zstream, False)
+						zlib.inflate (zstream, {ZLIB_CONSTANTS}.Z_no_flush)  -- False
 						l_have := chunk_size - zstream.available_output
 						write (l_have)
 						if last_write_elements /= l_have then
@@ -205,7 +205,7 @@ feature {NONE} -- Inflate Implementation
 					loop
 						zstream.set_available_output (chunk_size)
 						zstream.set_next_output (output_buffer.item)
-						zlib.inflate (zstream, False)
+						zlib.inflate (zstream, {ZLIB_CONSTANTS}.Z_no_flush) -- False
 							-- Z_BUF_ERROR is just an indication that there was nothing for inflate() to do on that call.
 							-- Simply continue and provide more input data and more output space for the next inflate() call.
 						if zlib.last_operation /= zlib.z_buf_error then

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that represent the data of a objects grid row."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -30,8 +30,6 @@ feature -- Access
 		local
 			l_list_dec_as: EIFFEL_LIST [TYPE_DEC_AS]
 			l_type_dec: TYPE_DEC_AS
-			i, nb: INTEGER
-			l_leaf_as: LEAF_AS
 		do
 			if
 				attached call_stack_element as cse and then

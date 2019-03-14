@@ -66,9 +66,10 @@ feature -- Status report
 feature -- Measurement
 
 	structure_size: INTEGER
-			-- Size to allocate (in bytes)
+			-- Size to allocate (in bytes).
 		deferred
 		ensure
+			is_class: class
 			positive_result: Result > 0
 		end
 
@@ -85,7 +86,7 @@ invariant
 	internal_item_valid: shared implies internal_item /= default_pointer
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

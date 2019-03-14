@@ -273,7 +273,7 @@ feature -- Destroy
 
 feature {NONE} -- Helpers
 
-    frozen stock_pixmaps: ES_PIXMAPS_16X16
+    frozen stock_pixmaps: ES_ICONS
             -- Shared access to stock 16x16 EiffelStudio pixmaps
         once
             Result := (create {EB_SHARED_PIXMAPS}).icon_pixmaps
@@ -428,7 +428,7 @@ invariant
 	option_manager_not_void: not is_recycled implies option_manager /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

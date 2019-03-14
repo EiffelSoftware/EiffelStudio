@@ -15,8 +15,7 @@ inherit
 	ES_ABSTRACT_SETTING [G]
 		redefine
 			is_interface_usable,
-			is_valid_value,
-			internal_recycle
+			is_valid_value
 		end
 
 convert
@@ -174,7 +173,7 @@ invariant
 	not_identifier_is_empty: not identifier.is_empty
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

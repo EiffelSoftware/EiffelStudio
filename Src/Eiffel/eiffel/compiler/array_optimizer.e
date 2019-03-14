@@ -29,21 +29,18 @@ inherit
 create
 	make
 
-feature
+feature {NONE} -- Creation
 
 	make
 		local
 			nb: INTEGER
 		do
 			array_optimization_on := System.array_optimization_on
-
 			create optimized_features.make (300)
-
 			nb := System.body_index_counter.count
-			create unsafe_body_indexes.make_filled (False, 1, nb)
-
+			create marked_table.make_filled (Void, 1, nb)
+			create unsafe_body_indexes.make (nb)
 			Precursor {FEAT_ITERATOR}
-
 			create context_stack.make
 		end
 
@@ -196,7 +193,7 @@ debug ("OPTIMIZATION")
 	io.error.put_new_line
 end
 						create dep.make (a_class.class_id, a_feature)
-						mark_alive (a_feature.body_index)
+						mark_code_reachable (a_feature.body_index)
 					end
 					ftable.forth
 				end
@@ -209,7 +206,7 @@ end
 			a_feature := a_class.feature_table.item_id (Names_heap.clone_name_id)
 			create dep.make (a_class.class_id, a_feature)
 			unsafe_body_indexes.put (True, a_feature.body_index)
-			mark_alive (a_feature.body_index)
+			mark_code_reachable (a_feature.body_index)
 		end
 
 	record_descendants (a_class: CLASS_C)
@@ -330,6 +327,132 @@ feature
 			current_feature_optimized := True
 		end
 
+feature {NONE} -- Modification
+
+	mark_and_record (body_index: INTEGER; actual_class_id: INTEGER; written_class_id: INTEGER)
+			-- Mark feature `feat' alive.
+		local
+			depend_list: FEATURE_DEPENDANCE
+			just_born: BOOLEAN
+			-- DEBUG
+			a_class: CLASS_C
+		do
+			just_born := not is_code_reachable (body_index);
+				-- Mark feature alive
+
+DEBUG("DEAD_CODE")
+	------------------------------------------
+	--		DEBUG			--
+
+	io.put_string ("MARKING: ")
+	a_class := System.class_of_id (actual_class_id)
+	io.put_string (a_class.feature_of_body_index (body_index).feature_name)
+	io.put_string (" (bid: ")
+	io.put_integer (body_index)
+	io.put_string (") of ")
+	io.put_string (a_class.lace_class.name)
+	io.put_string (" (")
+	io.put_integer (a_class.class_id)
+	io.put_string (") originally in ")
+	a_class := System.class_of_id (written_class_id)
+	io.put_string (a_class.lace_class.name)
+	io.put_string (" (")
+	io.put_integer (a_class.class_id)
+	io.put_string (")%N")
+	------------------------------------------
+end
+
+			if just_born then
+				mark_code_reachable (body_index);
+
+					-- Take care of dependances
+				depend_list := Depend_server.item (written_class_id).item (body_index)
+				if depend_list /= Void then
+					propagate_feature (written_class_id, body_index, depend_list);
+				end
+				a_class := System.class_of_id (actual_class_id)
+				if a_class /= Void then
+					depend_list := a_class.object_relative_once_dependances  (body_index)
+					if depend_list /= Void then
+						propagate_feature (written_class_id, body_index, depend_list)
+					end
+				end
+
+DEBUG ("DEAD_CODE")
+	io.put_string ("La depend_list contient ")
+	if depend_list /= Void then
+		io.put_integer (depend_list.count)
+	else
+		io.put_string ("aucun")
+	end
+	io.put_string (" elements.%N")
+	io.put_string ("-----------------------------------------------------%N%N%N")
+end
+			end
+DEBUG ("DEAD_CODE")
+	if not just_born then
+		io.put_string ("already alive%N")
+	end
+end
+		end
+
+	mark (body_index: INTEGER; static_class_id: INTEGER; original_class_id: INTEGER; rout_id_val: INTEGER)
+			-- Mark feature and its redefinitions
+		local
+			old_position: INTEGER
+			unit: ROUT_ENTRY
+		do
+			mark_and_record (body_index, static_class_id, original_class_id)
+
+			if attached {ROUT_TABLE} tmp_poly_server.item (rout_id_val) as table and then table.count > 1 then
+					-- If routine id available: this is not a deferred feature
+					-- without any implementation
+				from
+					table.start
+				until
+					table.after
+				loop
+					unit := table.item
+					if
+						system.remover.is_class_alive (unit.class_id) and then
+						System.class_of_id (unit.class_id).simple_conform_to (System.class_of_id (original_class_id))
+					then
+						old_position := table.position
+						if not is_code_reachable (unit.body_index) then
+							mark (unit.body_index, unit.class_id, unit.access_in, rout_id_val)
+						end
+						table.go_to (old_position)
+					end
+					table.forth
+				end
+			end
+		end
+
+	mark_treated (body_index: INTEGER; rout_id: INTEGER)
+			-- record feature of body_index
+		local
+			tmp: ROUT_ID_SET
+		do
+			tmp := marked_table.item (body_index)
+			if tmp = Void then
+				create tmp.make
+				marked_table.put (tmp, body_index)
+			end
+			tmp.extend (rout_id)
+		end
+
+feature {NONE} -- Status report
+
+	is_treated (body_index: INTEGER; rout_id: INTEGER): BOOLEAN
+		do
+			Result := attached marked_table.item (body_index) as s and then s.has (rout_id)
+		end
+
+feature {NONE} -- State
+
+	marked_table: ARRAY [detachable ROUT_ID_SET]
+				-- table of marked rout_ids indexed by body_indexes
+
 feature -- Contexts
 
 	optimization_context: OPTIMIZATION_CONTEXT
@@ -413,7 +536,7 @@ feature {NONE} -- Contexts
 
 feature -- Detection of safe/unsafe features
 
-	unsafe_body_indexes: ARRAY [BOOLEAN]
+	unsafe_body_indexes: BOOL_STRING
 
 	test_safety (a_feature: FEATURE_I; a_class: CLASS_C)
 			-- Insert the feature in the safe or unsafe set
@@ -506,7 +629,7 @@ feature {NONE} -- Detection of safe/unsafe features
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

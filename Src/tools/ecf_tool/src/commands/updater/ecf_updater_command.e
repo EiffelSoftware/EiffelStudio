@@ -17,7 +17,7 @@ feature {NONE} -- Initialization
 
 	make (a_name: detachable READABLE_STRING_8)
 		do
-			if a_name = void then
+			if a_name = Void then
 				create name.make_from_string (default_name)
 			else
 				create name.make_from_string (a_name)
@@ -30,7 +30,7 @@ feature -- Access
 
 	synopsis: STRING_32
 		do
-			Result := {STRING_32} "Update ecf files content for location and various data according to given parameters."
+			Result := {STRING_32} "Update ecf files content for location and various data according to given parameters (... " + default_name + " --help for more information)."
 		end
 
 feature -- Execution
@@ -52,7 +52,7 @@ feature -- Execution
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -149,7 +149,7 @@ feature -- Basic Functions
 			last_operation := c_deflate_end (a_stream.item)
 		end
 
-	inflate (a_stream: ZLIB_STREAM; a_flush: BOOLEAN)
+	inflate (a_stream: ZLIB_STREAM; a_flush: NATURAL)
 			--   inflate decompresses as much data as possible, and stops when the input
 			--  buffer becomes empty or the output buffer becomes full.  It may introduce
 			--  some output latency (reading input without producing any output) except when
@@ -264,7 +264,7 @@ feature -- Basic Functions
 		require
 			non_void_stream: a_stream /= Void
 		do
-			last_operation := c_inflate (a_stream.item, a_flush.to_integer)
+			last_operation := c_inflate (a_stream.item, a_flush.to_integer_32)
 		end
 
 	inflate_end (a_stream: ZLIB_STREAM)

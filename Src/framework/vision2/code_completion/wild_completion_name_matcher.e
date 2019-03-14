@@ -56,9 +56,6 @@ feature {NONE} -- Implementation
 			create Result.make_empty
 		end
 
-invariant
-	invariant_clause: True -- Your invariant here
-
 note
 	copyright: "Copyright (c) 1984-2009, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

@@ -5,7 +5,7 @@ note
 		"Eiffel create expressions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,7 +16,8 @@ inherit
 
 	ET_CREATION_EXPRESSION
 		redefine
-			reset
+			reset,
+			is_instance_free
 		end
 
 create
@@ -53,6 +54,9 @@ feature -- Access
 
 	create_keyword: ET_KEYWORD
 			-- 'create' keyword
+
+	creation_region: detachable ET_CREATION_REGION
+			-- Creation region (for SCOOP)
 
 	creation_type: ET_TARGET_TYPE
 			-- Creation type surrounded by braces
@@ -115,6 +119,18 @@ feature -- Access
 			end
 		end
 
+feature -- Status report
+
+	is_instance_free: BOOLEAN
+			-- Does current expression not depend on 'Current' or its attributes?
+			-- Note that we do not consider unqualified calls and Precursors as
+			-- instance-free because it's not always possible syntactically
+			-- to determine whether the feature being called is a class feature
+			-- or not.
+		do
+			Result := attached arguments as l_arguments implies l_arguments.is_instance_free
+		end
+
 feature -- Setting
 
 	set_create_keyword (a_create: like create_keyword)
@@ -125,6 +141,14 @@ feature -- Setting
 			create_keyword := a_create
 		ensure
 			create_keyword_set: create_keyword = a_create
+		end
+
+	set_creation_region (a_region: like creation_region)
+			-- Set `creation_region' to `a_region'.
+		do
+			creation_region := a_region
+		ensure
+			creation_region_set: creation_region = a_region
 		end
 
 feature -- Processing

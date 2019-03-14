@@ -5,11 +5,14 @@ setlocal
 set ISE_MAJOR_MINOR_LATEST=18.11
 set ISE_BUILD_LATEST=102592
 
-set ISE_MAJOR_MINOR_NIGHTLY=18.11
-set ISE_BUILD_NIGHTLY=102592
+set ISE_MAJOR_MINOR_NIGHTLY=19.02
+set ISE_BUILD_NIGHTLY=102945
 
-set ISE_MAJOR_MINOR_BETA=%ISE_MAJOR_MINOR_LATEST%
-set ISE_BUILD_BETA=%ISE_BUILD_LATEST%
+set ISE_MAJOR_MINOR_BETA=19.02
+set ISE_BUILD_BETA=102945
+set ISE_BETA_DOWNLOAD_URL=http://downloads.sourceforge.net/eiffelstudio
+
+set ISE_SF_DOWNLOAD_URL=http://downloads.sourceforge.net/eiffelstudio
 
 REM Overview:
 REM
@@ -122,7 +125,7 @@ goto POST_CHANNEL
 			set ISE_BUILD=%ISE_BUILD_LATEST%
 
 			set ISE_DOWNLOAD_FILE=Eiffel_%ISE_MAJOR_MINOR%_gpl_%ISE_BUILD%-%ISE_PLATFORM%.7z
-			set ISE_DOWNLOAD_URL=https://downloads.sourceforge.net/eiffelstudio/%ISE_DOWNLOAD_FILE%
+			set ISE_DOWNLOAD_URL=%ISE_SF_DOWNLOAD_URL%/%ISE_DOWNLOAD_FILE%
 			call:iseverParse %ISE_MAJOR_MINOR%.%ISE_BUILD%
 			echo >&2 Version=%major%.%minor%.%build%
 			;;
@@ -134,7 +137,11 @@ goto POST_CHANNEL
 			set ISE_BUILD=%ISE_BUILD_BETA%
 
 			set ISE_DOWNLOAD_FILE=Eiffel_%ISE_MAJOR_MINOR%_gpl_%ISE_BUILD%-%ISE_PLATFORM%.7z
-			set ISE_DOWNLOAD_URL=https://ftp.eiffel.com/pub/beta/%ISE_MAJOR_MINOR%/%ISE_DOWNLOAD_FILE%
+			if "%ISE_BETA_DOWNLOAD_URL%" NEQ "" (
+				set ISE_DOWNLOAD_URL=%ISE_BETA_DOWNLOAD_URL%/%ISE_DOWNLOAD_FILE%
+			) else (
+				set ISE_DOWNLOAD_URL=https://ftp.eiffel.com/pub/beta/%ISE_MAJOR_MINOR%/%ISE_DOWNLOAD_FILE%
+			)
 			call:iseverParse %ISE_MAJOR_MINOR%.%ISE_BUILD%
 			echo >&2 Version=%major%.%minor%.%build%
 

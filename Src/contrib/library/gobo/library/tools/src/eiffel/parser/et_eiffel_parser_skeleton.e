@@ -5,7 +5,7 @@ note
 		"Eiffel parser skeletons"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -26,7 +26,8 @@ inherit
 		rename
 			make as make_eiffel_scanner
 		redefine
-			reset, set_syntax_error
+			reset, set_syntax_error,
+			system_processor
 		end
 
 	ET_CLASS_PROCESSOR
@@ -38,17 +39,17 @@ inherit
 		undefine
 			error_handler, current_universe, current_system
 		redefine
-			make
+			make,
+			system_processor
 		end
 
 	ET_AST_NULL_PROCESSOR
 		rename
+			make as make_ast_processor,
 			process_identifier as process_ast_identifier,
 			process_c1_character_constant as process_ast_c1_character_constant,
 			process_c2_character_constant as process_ast_c2_character_constant,
 			process_regular_manifest_string as process_ast_regular_manifest_string
-		undefine
-			make
 		redefine
 			process_class, process_cluster
 		end
@@ -61,10 +62,10 @@ inherit
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_system_processor: like system_processor)
 			-- Create a new Eiffel parser.
 		do
-			precursor {ET_CLASS_PROCESSOR}
+			precursor (a_system_processor)
 			create eiffel_buffer.make_with_size (std.input, Initial_eiffel_buffer_size)
 			create counters.make (Initial_counters_capacity)
 			create last_formal_arguments_stack.make (Initial_last_formal_arguments_stack_capacity)
@@ -77,11 +78,13 @@ feature {NONE} -- Initialization
 			create last_across_components_pool.make (Initial_last_across_components_capacity)
 			create assertions.make (Initial_assertions_capacity)
 			create assertion_counters.make (Initial_assertion_counters_capacity)
+			create assertion_kinds.make (Initial_assertion_counters_capacity)
+			assertion_kind := assertion_kind_none
 			create queries.make (Initial_queries_capacity)
 			create procedures.make (Initial_procedures_capacity)
 			create constraints.make (Initial_constraints_capacity)
 			create providers.make (Initial_providers_capacity)
-			make_eiffel_scanner ("unknown file")
+			make_eiffel_scanner ("unknown file", a_system_processor)
 			make_parser_skeleton
 		end
 
@@ -102,6 +105,8 @@ feature -- Initialization
 			providers.wipe_out
 			assertions.wipe_out
 			assertion_counters.wipe_out
+			assertion_kinds.wipe_out
+			assertion_kind := assertion_kind_none
 			queries.wipe_out
 			procedures.wipe_out
 			constraints.wipe_out
@@ -116,12 +121,15 @@ feature -- Access
 	time_stamp: INTEGER
 			-- Time stamp of file being parsed
 
+	system_processor: ET_SYSTEM_PROCESSOR
+			-- System processor currently used
+
 feature -- Status report
 
 	providers_enabled: BOOLEAN
 			-- Should providers be built when parsing a class?
 		do
-			Result := current_system.providers_enabled
+			Result := system_processor.providers_enabled
 		end
 
 feature -- Parsing
@@ -156,6 +164,10 @@ feature -- Parsing
 			eiffel_buffer.set_file (a_file)
 			yy_load_input_buffer
 			yyparse
+			if attached last_class as l_last_class and then l_last_class /= current_class then
+				l_last_class.processing_mutex.unlock
+				last_class := Void
+			end
 			reset
 			group := old_group
 		rescue
@@ -195,7 +207,7 @@ feature -- Parsing
 				std.error.put_string (a_cluster.full_pathname)
 				std.error.put_line ("%'")
 			end
-			if not a_cluster.is_abstract and then (not l_already_preparsed or else ((current_system.preparse_readonly_mode or else not a_cluster.is_read_only) and then (current_system.preparse_override_mode implies a_cluster.is_override))) then
+			if not a_cluster.is_abstract and then (not l_already_preparsed or else ((system_processor.preparse_readonly_mode or else not a_cluster.is_read_only) and then (system_processor.preparse_override_mode implies a_cluster.is_override))) then
 				dir_name := Execution_environment.interpreted_string (a_cluster.full_pathname)
 				dir_name := file_system.canonical_pathname (dir_name)
 				dir := tmp_directory
@@ -298,8 +310,8 @@ feature -- Parsing
 			l_override_mode: BOOLEAN
 			l_dir_name: STRING
 		do
-			l_readonly_mode := current_system.preparse_readonly_mode
-			l_override_mode := current_system.preparse_override_mode
+			l_readonly_mode := system_processor.preparse_readonly_mode
+			l_override_mode := system_processor.preparse_override_mode
 			l_clusters := a_clusters.clusters
 			nb := l_clusters.count
 			from i := 1 until i > nb loop
@@ -331,18 +343,14 @@ feature -- AST processing
 			-- The queries `current_system.preparse_*_mode' govern the way
 			-- parsing works. Read the header comments of these features
 			-- for more details.
-		local
-			a_time_stamp: INTEGER
-			a_cluster: ET_CLUSTER
-			a_file: KL_TEXT_INPUT_FILE
-			old_class: ET_CLASS
-			old_group: ET_PRIMARY_GROUP
-			l_class_text: KL_STRING_INPUT_STREAM
-			a_text_filename: STRING
-			l_class_filename: detachable STRING
+			--
+			-- Note that in multi-threaded mode, when several system processors
+			-- are processing a Eiffel system together, the AST of `a_class' may
+			-- still not be parsed at the end of this routine if it is currently
+			-- being processed by another system processor.
 		do
 			if a_class.is_none then
-				a_class.set_parsed
+				process_none_class (a_class)
 			elseif not current_class.is_unknown then
 					-- Internal error (recursive call)
 					-- This internal error is fatal.
@@ -351,92 +359,10 @@ feature -- AST processing
 			elseif not a_class.is_preparsed then
 				set_fatal_error (a_class)
 			else
-				old_class := current_class
-				current_class := a_class
-				old_group := group
-				group := current_class.group
-				if not current_class.is_parsed then
-					if current_class.is_in_cluster and then attached current_class.filename as a_filename then
-						a_cluster := current_class.group.cluster
-						current_class.reset_after_preparsed
-						a_file := tmp_file
-						a_file.reset (a_filename)
-						a_time_stamp := a_file.time_stamp
-						a_file.open_read
-						if a_file.is_open_read then
-								-- Note that `parse_file' may change the value of `current_class'
-								-- if `a_file' contains a class other than `a_class'.
-							parse_file (a_file, a_filename, a_time_stamp, a_cluster)
-							a_file.close
-							if not a_class.is_preparsed then
-									-- Make sure that `current_class' is as it was
-									-- after it was last preparsed when the file
-									-- does not contain this class anymore.
-								a_class.set_filename (a_filename)
-								a_class.set_group (a_cluster)
-							end
-							if not a_class.is_parsed then
-								if not syntax_error and current_system.preparse_multiple_mode then
-										-- The file contains other classes, but not `current_class'.
-									set_fatal_error (a_class)
-									error_handler.report_gvscn1b_error (a_class, a_filename)
-								end
-							end
-						else
-								-- Make sure that `current_class' is as it was
-								-- after it was last preparsed when the file
-								-- cannot be read.
-							current_class.set_filename (a_filename)
-							current_class.set_group (a_cluster)
-							set_fatal_error (current_class)
-							error_handler.report_gcaab_error (a_cluster, a_filename)
-						end
-					elseif current_class.is_in_dotnet_assembly then
-						current_system.dotnet_assembly_consumer.consume_class (current_class)
-					elseif attached {ET_TEXT_GROUP} current_class.group as l_text_group then
-						l_class_filename := current_class.filename
-						if l_class_filename /= Void and then not l_class_filename.is_empty then
-							a_text_filename := l_class_filename
-						else
-							a_text_filename := current_class.lower_name + ".e"
-						end
-						current_class.reset_after_preparsed
-						if attached l_text_group.class_text (current_class) as l_text then
-							create l_class_text.make (l_text)
-						else
-							create l_class_text.make ("")
-						end
-							-- Note that `parse_file' may change the value of `current_class'
-							-- if `l_class_text' contains a class other than `a_class'.
-						parse_file (l_class_text, a_text_filename, -1, l_text_group)
-						if not a_class.is_preparsed then
-								-- Make sure that `current_class' is as it was
-								-- after it was last preparsed when the file
-								-- does not contain this class anymore.
-							if l_class_filename /= Void and then not l_class_filename.is_empty then
-								a_class.set_filename (l_class_filename)
-							else
-								a_class.reset_preparsed
-							end
-							a_class.set_group (l_text_group)
-						end
-						if not a_class.is_parsed then
-							if not syntax_error and current_system.preparse_multiple_mode then
-									-- The class text contains other classes, but not `current_class'.
-								set_fatal_error (a_class)
-								error_handler.report_gvscn1b_error (a_class, a_text_filename)
-							end
-						end
-					end
-					if not a_class.is_parsed then
-						set_fatal_error (a_class)
-					end
-				end
-				current_class := old_class
-				group := old_group
+				internal_process_class (a_class)
 			end
 		ensure then
-			is_parsed: a_class.is_parsed
+			is_parsed: not {PLATFORM}.is_thread_capable implies a_class.is_parsed
 		end
 
 	process_cluster (a_cluster: ET_CLUSTER)
@@ -450,13 +376,145 @@ feature -- AST processing
 			parse_cluster (a_cluster)
 		end
 
+feature {NONE} -- AST processing
+
+	internal_process_class (a_class: ET_CLASS)
+			-- Parse `a_class'.
+			-- The class may end up with a syntax error status if its
+			-- `filename' didn't contain this class after all (i.e.
+			-- if the preparsing phase gave errouneous result).
+			--
+			-- The queries `current_system.preparse_*_mode' govern the way
+			-- parsing works. Read the header comments of these features
+			-- for more details.
+			--
+			-- Note that in multi-threaded mode, when several system processors
+			-- are processing a Eiffel system together, the AST of `a_class' may
+			-- still not be parsed at the end of this routine if it is currently
+			-- being processed by another system processor.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+		local
+			a_time_stamp: INTEGER
+			a_cluster: ET_CLUSTER
+			a_file: KL_TEXT_INPUT_FILE
+			old_class: ET_CLASS
+			old_group: ET_PRIMARY_GROUP
+			l_class_text: KL_STRING_INPUT_STREAM
+			a_text_filename: STRING
+			l_class_filename: detachable STRING
+		do
+			old_class := current_class
+			current_class := a_class
+			old_group := group
+			group := current_class.group
+			if not {PLATFORM}.is_thread_capable or else current_class.processing_mutex.try_lock then
+				if not current_class.is_parsed then
+					if current_class.is_in_cluster and then attached current_class.filename as a_filename then
+						a_cluster := current_class.group.cluster
+						current_class.reset_after_preparsed
+						a_file := tmp_file
+						a_file.reset (a_filename)
+						a_time_stamp := a_file.time_stamp
+						a_file.open_read
+						if a_file.is_open_read then
+							parse_file (a_file, a_filename, a_time_stamp, a_cluster)
+							a_file.close
+							if not current_class.is_preparsed then
+									-- Make sure that `current_class' is as it was
+									-- after it was last preparsed when the file
+									-- does not contain this class anymore.
+								current_class.set_filename (a_filename)
+								current_class.set_group (a_cluster)
+							end
+							if not current_class.is_parsed then
+								if not syntax_error and system_processor.preparse_multiple_mode then
+										-- The file contains other classes, but not `current_class'.
+									set_fatal_error (current_class)
+									error_handler.report_gvscn1b_error (current_class, a_filename)
+								end
+							end
+						else
+								-- Make sure that `current_class' is as it was
+								-- after it was last preparsed when the file
+								-- cannot be read.
+							current_class.set_filename (a_filename)
+							current_class.set_group (a_cluster)
+							set_fatal_error (current_class)
+							error_handler.report_gcaab_error (a_cluster, a_filename)
+						end
+					elseif current_class.is_in_dotnet_assembly then
+						system_processor.dotnet_assembly_consumer.consume_class (current_class)
+					elseif attached {ET_TEXT_GROUP} current_class.group as l_text_group then
+						l_class_filename := current_class.filename
+						if l_class_filename /= Void and then not l_class_filename.is_empty then
+							a_text_filename := l_class_filename
+						else
+							a_text_filename := current_class.lower_name + ".e"
+						end
+						current_class.reset_after_preparsed
+						if attached l_text_group.class_text (current_class) as l_text then
+							create l_class_text.make (l_text)
+						else
+							create l_class_text.make ("")
+						end
+						parse_file (l_class_text, a_text_filename, -1, l_text_group)
+						if not current_class.is_preparsed then
+								-- Make sure that `current_class' is as it was
+								-- after it was last preparsed when the file
+								-- does not contain this class anymore.
+							if l_class_filename /= Void and then not l_class_filename.is_empty then
+								current_class.set_filename (l_class_filename)
+							else
+								current_class.reset_preparsed
+							end
+							current_class.set_group (l_text_group)
+						end
+						if not current_class.is_parsed then
+							if not syntax_error and system_processor.preparse_multiple_mode then
+									-- The class text contains other classes, but not `current_class'.
+								set_fatal_error (current_class)
+								error_handler.report_gvscn1b_error (current_class, a_text_filename)
+							end
+						end
+					end
+					if not current_class.is_parsed then
+						set_fatal_error (current_class)
+					end
+					system_processor.report_class_processed (current_class)
+				end
+				current_class.processing_mutex.unlock
+			end
+			current_class := old_class
+			group := old_group
+		ensure
+			is_parsed: not {PLATFORM}.is_thread_capable implies a_class.is_parsed
+		end
+
+	process_none_class (a_class: ET_CLASS)
+			-- Process class "NONE".
+		require
+			a_class_not_void: a_class /= Void
+			a_class_is_none: a_class.is_none
+		do
+			if not {PLATFORM}.is_thread_capable or else a_class.processing_mutex.try_lock then
+				if not a_class.is_parsed then
+					a_class.set_parsed
+					system_processor.report_class_processed (a_class)
+				end
+				a_class.processing_mutex.unlock
+			end
+		ensure
+			is_parsed: not {PLATFORM}.is_thread_capable implies a_class.is_parsed
+		end
+
 feature {NONE} -- Basic operations
 
 	register_query (a_query: detachable ET_QUERY)
 			-- Register `a_query' in `last_class'.
 		do
 			if a_query /= Void then
-				current_system.register_feature (a_query)
 				queries.force_last (a_query)
 				queries.finish
 				if attached last_object_tests as l_last_object_tests then
@@ -478,7 +536,6 @@ feature {NONE} -- Basic operations
 			-- Register `a_query' in `last_class'.
 		do
 			if a_query /= Void then
-				current_system.register_feature (a_query)
 				if queries.before then
 					queries.forth
 				end
@@ -491,7 +548,6 @@ feature {NONE} -- Basic operations
 			-- Register `a_procedure' in `last_class'.
 		do
 			if a_procedure /= Void then
-				current_system.register_feature (a_procedure)
 				procedures.force_last (a_procedure)
 				procedures.finish
 				if attached last_object_tests as l_last_object_tests then
@@ -513,7 +569,6 @@ feature {NONE} -- Basic operations
 			-- Register `a_procedure' in `last_class'.
 		do
 			if a_procedure /= Void then
-				current_system.register_feature (a_procedure)
 				if procedures.before then
 					procedures.forth
 				end
@@ -599,7 +654,9 @@ feature {NONE} -- Basic operations
 		local
 			a_class: like last_class
 			l_queries: ET_QUERY_LIST
+			l_query: ET_QUERY
 			l_procedures: ET_PROCEDURE_LIST
+			l_procedure: ET_PROCEDURE
 			i, nb: INTEGER
 		do
 			a_class := last_class
@@ -610,12 +667,25 @@ feature {NONE} -- Basic operations
 					l_queries.put_first (queries.item (i))
 					i := i - 1
 				end
+					-- Register the queries in the order they have
+					-- been written in `a_class' so that unique attribute
+					-- synonyms get their values in the right order.
+				from i := 1 until i > nb loop
+					l_query := queries.item (i)
+					a_class.register_feature (l_query)
+					if attached {ET_UNIQUE_ATTRIBUTE} l_query as l_unique_attribute then
+						l_unique_attribute.constant.set_value (l_unique_attribute.id.to_natural_64)
+					end
+					i := i + 1
+				end
 				l_queries.set_declared_count (nb)
 				a_class.set_queries (l_queries)
 				nb := procedures.count
 				create l_procedures.make_with_capacity (nb)
 				from i := nb until i < 1 loop
-					l_procedures.put_first (procedures.item (i))
+					l_procedure := procedures.item (i)
+					l_procedures.put_first (l_procedure)
+					a_class.register_feature (l_procedure)
 					i := i - 1
 				end
 				l_procedures.set_declared_count (nb)
@@ -662,6 +732,7 @@ feature {NONE} -- Basic operations
 				if an_end /= Void then
 					a_class.set_end_keyword (an_end)
 				end
+				a_class.set_parsed
 			end
 		end
 
@@ -676,6 +747,20 @@ feature {NONE} -- Basic operations
 	add_expression_assertion (an_expression: detachable ET_EXPRESSION; a_semicolon: detachable ET_SYMBOL)
 			-- Add `an_expression' assertion, optionally followed
 			-- by `a_semicolon', to `assertions'.
+		do
+			add_untagged_assertion (an_expression, a_semicolon)
+		end
+
+	add_class_assertion (a_class_assertion: detachable ET_CLASS_ASSERTION; a_semicolon: detachable ET_SYMBOL)
+			-- Add `a_class_assertion' assertion, optionally followed
+			-- by `a_semicolon', to `assertions'.
+		do
+			add_untagged_assertion (a_class_assertion, a_semicolon)
+		end
+
+	add_untagged_assertion (a_untagged_assertion: detachable ET_UNTAGGED_ASSERTION; a_semicolon: detachable ET_SYMBOL)
+			-- Add `a_untagged_assertion' assertion, optionally followed
+			-- by `a_semicolon', to `assertions'.
 		local
 			l_old_count: INTEGER
 			an_assertion: detachable ET_ASSERTION_ITEM
@@ -685,9 +770,9 @@ feature {NONE} -- Basic operations
 				l_old_count := assertion_counters.last
 			end
 			if assertions.count > l_old_count then
-				if attached {ET_TAGGED_ASSERTION} assertions.last as l_tagged and then l_tagged.expression = Void then
-					if an_expression /= Void then
-						l_tagged.set_expression (an_expression)
+				if attached {ET_TAGGED_ASSERTION} assertions.last as l_tagged and then l_tagged.untagged_assertion = Void then
+					if a_untagged_assertion /= Void then
+						l_tagged.set_untagged_assertion (a_untagged_assertion)
 						if a_semicolon /= Void then
 							an_assertion := ast_factory.new_assertion_semicolon (l_tagged, a_semicolon)
 							if an_assertion /= Void then
@@ -704,9 +789,9 @@ feature {NONE} -- Basic operations
 			end
 			if not done then
 				if a_semicolon /= Void then
-					an_assertion := ast_factory.new_assertion_semicolon (an_expression, a_semicolon)
+					an_assertion := ast_factory.new_assertion_semicolon (a_untagged_assertion, a_semicolon)
 				else
-					an_assertion := an_expression
+					an_assertion := a_untagged_assertion
 				end
 				if an_assertion /= Void then
 					assertions.force_last (an_assertion)
@@ -724,7 +809,7 @@ feature {NONE} -- Basic operations
 			l_file_position: ET_FILE_POSITION
 			l_old_count: INTEGER
 		do
-			if current_system.is_ise then
+			if system_processor.is_ise then
 					-- ISE does not accept assertions of the form:
 					--      a_tag: -- a comment assertion
 					-- when followed by another tagged assertion.
@@ -732,7 +817,7 @@ feature {NONE} -- Basic operations
 					l_old_count := assertion_counters.last
 				end
 				if assertions.count > l_old_count then
-					if attached {ET_TAGGED_ASSERTION} assertions.last as l_tagged and then l_tagged.expression = Void then
+					if attached {ET_TAGGED_ASSERTION} assertions.last as l_tagged and then l_tagged.untagged_assertion = Void then
 						if a_tag = Void then
 							l_position := current_position
 						else
@@ -835,10 +920,54 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	start_assertions
-			-- Indicate that we start parsing a list of assertions.
+	start_precondition
+			-- Indicate that we start parsing a precondition.
+		do
+			start_assertions (assertion_kind_precondition)
+		ensure
+			assertion_kind_set: assertion_kind = assertion_kind_precondition
+		end
+
+	start_postcondition
+			-- Indicate that we start parsing a postcondition.
+		do
+			start_assertions (assertion_kind_postcondition)
+		ensure
+			assertion_kind_set: assertion_kind = assertion_kind_postcondition
+		end
+
+	start_invariant
+			-- Indicate that we start parsing an invariant.
+		do
+			start_assertions (assertion_kind_invariant)
+		ensure
+			assertion_kind_set: assertion_kind = assertion_kind_invariant
+		end
+
+	start_loop_invariant
+			-- Indicate that we start parsing a loop invariant.
+		do
+			start_assertions (assertion_kind_loop_invariant)
+		ensure
+			assertion_kind_set: assertion_kind = assertion_kind_loop_invariant
+		end
+
+	start_check_instruction
+			-- Indicate that we start parsing a check instruction.
+		do
+			start_assertions (assertion_kind_check_instruction)
+		ensure
+			assertion_kind_set: assertion_kind = assertion_kind_check_instruction
+		end
+
+	start_assertions (a_assertion_kind: INTEGER)
+			-- Indicate that we start parsing a list of assertions of `a_assertion_kind'.
 		do
 			assertion_counters.force_last (assertions.count)
+			assertion_kinds.force_last (assertion_kind)
+			assertion_kind := a_assertion_kind
+		ensure
+			assertion_kind_set: assertion_kind = a_assertion_kind
 		end
 
 feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIST} -- Generic constraints
@@ -879,7 +1008,7 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 				if providers_enabled then
 					providers.force_last (a_base_class)
 				end
-				a_base_class.set_in_system (True)
+				a_base_class.set_marked (True)
 				l_type_mark := a_type_mark
 				if l_type_mark = Void then
 					l_type_mark := current_universe.implicit_attachment_type_mark
@@ -939,7 +1068,7 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 					if providers_enabled then
 						providers.force_last (a_base_class)
 					end
-					a_base_class.set_in_system (True)
+					a_base_class.set_marked (True)
 					l_type_mark := a_type_mark
 					if l_type_mark = Void then
 						l_type_mark := current_universe.implicit_attachment_type_mark
@@ -1270,6 +1399,12 @@ feature {NONE} -- AST factory
 					end
 				end
 			end
+			if not assertion_kinds.is_empty then
+				assertion_kind := assertion_kinds.last
+				assertion_kinds.remove_last
+			else
+				assertion_kind := assertion_kind_none
+			end
 		end
 
 	new_choice_attribute_constant (a_name: detachable ET_IDENTIFIER): detachable ET_CHOICE_CONSTANT
@@ -1505,6 +1640,12 @@ feature {NONE} -- AST factory
 					end
 				end
 			end
+			if not assertion_kinds.is_empty then
+				assertion_kind := assertion_kinds.last
+				assertion_kinds.remove_last
+			else
+				assertion_kind := assertion_kind_none
+			end
 			if Result /= Void then
 				if attached last_object_tests as l_last_object_tests then
 					Result.set_object_tests (l_last_object_tests.cloned_object_test_list)
@@ -1572,6 +1713,12 @@ feature {NONE} -- AST factory
 					end
 				end
 			end
+			if not assertion_kinds.is_empty then
+				assertion_kind := assertion_kinds.last
+				assertion_kinds.remove_last
+			else
+				assertion_kind := assertion_kind_none
+			end
 		end
 
 	new_named_object_test (a_attached: detachable ET_KEYWORD; a_type: detachable ET_TARGET_TYPE;
@@ -1600,15 +1747,13 @@ feature {NONE} -- AST factory
 		a_generics: detachable ET_ACTUAL_PARAMETER_LIST): detachable ET_TYPE
 			-- New Eiffel class type or formal generic paramater
 		local
-			a_parameter: detachable ET_FORMAL_PARAMETER
 			a_last_class: like last_class
 			l_class: ET_MASTER_CLASS
 			l_type_mark: detachable ET_TYPE_MARK
 		do
-			a_last_class := last_class
-			if a_last_class /= Void and a_name /= Void then
-				a_parameter := a_last_class.formal_parameter (a_name)
-				if a_parameter /= Void then
+			if a_name /= Void then
+				a_last_class := last_class
+				if a_last_class /= Void and then attached a_last_class.formal_parameter (a_name) as a_parameter then
 					if a_generics /= Void then
 						-- TODO: Error
 					end
@@ -1621,7 +1766,7 @@ feature {NONE} -- AST factory
 					if providers_enabled then
 						providers.force_last (l_class)
 					end
-					l_class.set_in_system (True)
+					l_class.set_marked (True)
 					l_type_mark := a_type_mark
 					if l_type_mark = Void then
 						l_type_mark := current_universe.implicit_attachment_type_mark
@@ -1662,7 +1807,7 @@ feature {NONE} -- AST factory
 		do
 			Result := ast_factory.new_once_manifest_string (a_once, a_string)
 			if Result /= Void then
-				current_system.register_inline_constant (Result)
+				current_class.register_inline_constant (Result)
 			end
 		end
 
@@ -1684,7 +1829,7 @@ feature {NONE} -- AST factory
 				if providers_enabled then
 					providers.force_last (l_class)
 				end
-				l_class.set_in_system (True)
+				l_class.set_marked (True)
 				if a_generic_parameters /= Void then
 					a_type := ast_factory.new_generic_class_type (Void, a_name, a_generic_parameters, l_class)
 				else
@@ -1727,6 +1872,12 @@ feature {NONE} -- AST factory
 					end
 				end
 			end
+			if not assertion_kinds.is_empty then
+				assertion_kind := assertion_kinds.last
+				assertion_kinds.remove_last
+			else
+				assertion_kind := assertion_kind_none
+			end
 		end
 
 	new_preconditions (a_require: detachable ET_KEYWORD; an_else: detachable ET_KEYWORD): detachable ET_PRECONDITIONS
@@ -1760,6 +1911,12 @@ feature {NONE} -- AST factory
 						i := i - 1
 					end
 				end
+			end
+			if not assertion_kinds.is_empty then
+				assertion_kind := assertion_kinds.last
+				assertion_kinds.remove_last
+			else
+				assertion_kind := assertion_kind_none
 			end
 		end
 
@@ -1823,7 +1980,7 @@ feature {NONE} -- AST factory
 		a_generics: detachable ET_ACTUAL_PARAMETER_LIST): detachable ET_TUPLE_TYPE
 			-- New 'TUPLE' type
 		local
-			a_class: ET_NAMED_CLASS
+			a_class: ET_MASTER_CLASS
 			l_type_mark: detachable ET_TYPE_MARK
 		do
 			if a_tuple /= Void then
@@ -1831,7 +1988,7 @@ feature {NONE} -- AST factory
 				if providers_enabled then
 					providers.force_last (a_class)
 				end
-				a_class.set_in_system (True)
+				a_class.set_marked (True)
 				l_type_mark := a_type_mark
 				if l_type_mark = Void then
 					l_type_mark := current_universe.implicit_attachment_type_mark
@@ -1954,14 +2111,19 @@ feature {NONE} -- AST factory
 	new_class (a_name: detachable ET_IDENTIFIER): detachable ET_CLASS
 			-- New Eiffel class
 		local
-			old_current_class: ET_CLASS
 			l_basename: STRING
 			l_class_name: ET_IDENTIFIER
 			l_master_class: ET_MASTER_CLASS
 			l_new_class: ET_CLASS
+			l_reset_needed: BOOLEAN
 		do
+			if attached last_class as l_last_class and then l_last_class /= current_class then
+				l_last_class.processing_mutex.unlock
+				last_class := Void
+			end
 			if a_name /= Void then
 				l_master_class := current_universe.master_class (a_name)
+				l_master_class.processing_mutex.lock
 				if current_class.name.same_class_name (a_name) then
 					Result := current_class
 				elseif l_master_class.has_local_class (current_class) then
@@ -1971,13 +2133,13 @@ feature {NONE} -- AST factory
 				else
 					Result := tokens.unknown_class
 				end
-				if not current_system.preparse_multiple_mode and then not current_class.is_unknown and then Result /= current_class then
+				if not system_processor.preparse_multiple_mode and then not current_class.is_unknown and then Result /= current_class then
 						-- We are parsing another class than the one we want to parse.
 					set_fatal_error (current_class)
 					error_handler.report_gvscn1a_error (current_class, a_name, filename)
 						-- Stop the parsing.
 					accept
-				elseif current_system.preparse_shallow_mode and then current_class.is_unknown and then not file_system.basename (filename).as_lower.same_string (a_name.lower_name + ".e") then
+				elseif system_processor.preparse_shallow_mode and then current_class.is_unknown and then not file_system.basename (filename).as_lower.same_string (a_name.lower_name + ".e") then
 						-- The file does not contain the expected class
 						-- (whose name is supposed to match the filename).
 					l_basename := file_system.basename (filename).as_lower
@@ -2000,30 +2162,45 @@ feature {NONE} -- AST factory
 							if Result = l_master_class.actual_class then
 								l_master_class.set_modified (True)
 							end
-							Result.reset
+							l_reset_needed := True
 						end
-						Result.set_name (a_name)
-						Result.set_group (group)
+						if Result /= current_class then
+							if {PLATFORM}.is_thread_capable and then not Result.processing_mutex.try_lock then
+									-- 'Result' already processed by another thread.
+									-- Continue the parsing but do not build the AST.
+								Result := Void
+							end
+						end
+						if Result /= Void then
+							if l_reset_needed then
+								Result.reset
+							end
+							Result.set_name (a_name)
+							Result.set_group (group)
+						end
 					else
 						create Result.make (a_name)
+						Result.processing_mutex.lock
 						current_system.register_class (Result)
 						Result.set_group (group)
 						if group.is_cluster then
 							l_master_class.add_last_local_class (Result)
 						end
 					end
-					Result.set_filename (filename)
-					Result.set_parsed
-					Result.set_time_stamp (time_stamp)
-					Result.set_in_system (True)
-					old_current_class := current_class
-					current_class := Result
-					error_handler.report_compilation_status (Current, current_class)
-					current_class := old_current_class
-					queries.wipe_out
-					procedures.wipe_out
+					if Result /= Void then
+						Result.set_filename (filename)
+						Result.set_time_stamp (time_stamp)
+						Result.set_marked (True)
+						error_handler.report_compilation_status (Current, Result, system_processor)
+						if Result /= current_class then
+							system_processor.report_class_processed (Result)
+						end
+					end
 				end
+				l_master_class.processing_mutex.unlock
 			end
+			queries.wipe_out
+			procedures.wipe_out
 		end
 
 	new_query_synonym (a_name: detachable ET_EXTENDED_FEATURE_NAME; a_query: detachable ET_QUERY): detachable ET_QUERY
@@ -2063,7 +2240,6 @@ feature -- Error handling
 		require
 			a_class_not_void: a_class /= Void
 		do
-			a_class.set_parsed
 			a_class.set_syntax_error
 		ensure
 			is_parsed: a_class.is_parsed
@@ -2089,6 +2265,12 @@ feature {NONE} -- Access
 
 	assertion_counters: DS_ARRAYED_LIST [INTEGER]
 			-- List of counters when we start parsing assertions
+
+	assertion_kinds: DS_ARRAYED_LIST [INTEGER]
+			-- List of kinds of assertions when we start parsing assertions
+
+	assertion_kind: INTEGER
+			-- Kind of assertions currently parsed
 
 	queries: DS_ARRAYED_LIST [ET_QUERY]
 			-- List of queries currently being parsed
@@ -2406,7 +2588,7 @@ feature {NONE} -- Constants
 			-- Initial capacity for `assertions'
 
 	Initial_assertion_counters_capacity: INTEGER = 10
-			-- Initial capacity for `assertion_counters'
+			-- Initial capacity for `assertion_counters' and `assertion_kinds'
 
 	Initial_queries_capacity: INTEGER = 100
 			-- Initial capacity for `queries'
@@ -2419,6 +2601,24 @@ feature {NONE} -- Constants
 
 	Initial_providers_capacity: INTEGER = 100
 			-- Initial capacity for `providers'
+
+	assertion_kind_none: INTEGER = 0
+			-- No assertion being parsed
+
+	assertion_kind_precondition: INTEGER = 1
+			-- Precondition being parsed
+
+	assertion_kind_postcondition: INTEGER = 2
+			-- Postcondition being parsed
+
+	assertion_kind_invariant: INTEGER = 3
+			-- Invariant being parsed
+
+	assertion_kind_check_instruction: INTEGER = 4
+			-- Check instruction being parsed
+
+	assertion_kind_loop_invariant: INTEGER = 5
+			-- Loop invariant being parsed
 
 	dummy_type: ET_TYPE
 			-- Dummy type
@@ -2460,6 +2660,7 @@ invariant
 	assertions_not_void: assertions /= Void
 	no_void_assertion: not assertions.has_void
 	assertion_counters_not_void: assertion_counters /= Void
+	assertion_kinds_not_void: assertion_kinds /= Void
 	queries_not_void: queries /= Void
 	no_void_query: not queries.has_void
 	-- queries_registered: forall f in queries, f.is_registered

@@ -8,7 +8,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2007-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 2007-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -23,8 +23,8 @@ inherit
 		end
 
 	ET_AST_NULL_PROCESSOR
-		undefine
-			make
+		rename
+			make as make_ast_processor
 		redefine
 			process_class
 		end
@@ -35,10 +35,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_system_processor: like system_processor)
 			-- Create a new ancestor builder status checker for given classes.
 		do
-			precursor {ET_CLASS_PROCESSOR}
+			precursor (a_system_processor)
 			create class_type_checker.make
 		end
 
@@ -63,7 +63,7 @@ feature -- Processing
 					-- Internal error (recursive call)
 					-- This internal error is not fatal.
 				error_handler.report_giaaa_error
-				create a_processor.make
+				create a_processor.make (system_processor)
 				a_processor.process_class (a_class)
 			elseif a_class.is_unknown then
 				set_fatal_error (a_class)
@@ -114,7 +114,7 @@ feature {NONE} -- Processing
 		do
 			old_class := current_class
 			current_class := a_class
-			if current_class.ancestors_built and then current_class.has_ancestors_error then
+			if current_class.has_ancestors_error then
 					-- The class has been marked with an ancestors error to indicate that we
 					-- need to check whether its ancestor tables need to be rebuilt or not.
 					-- It might happen if other classes on which it depends have been

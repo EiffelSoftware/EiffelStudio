@@ -10,7 +10,7 @@ class CL_TYPE_A
 inherit
 	DEANCHORED_TYPE_A
 		redefine
-			is_expanded, is_reference, valid_generic,
+			is_expanded, is_reference, valid_generic, is_expanded_creation_possible,
 			meta_type, same_as, good_generics, error_generics,
 			has_expanded, internal_is_valid_for_class, convert_to,
 			description, description_with_detachable_type,
@@ -105,7 +105,7 @@ feature -- Properties
 			end
 		end
 
-	is_expanded: BOOLEAN
+	is_expanded, is_expanded_creation_possible: BOOLEAN
 			-- Is the type expanded?
 		local
 			l_mark: like declaration_mark
@@ -1080,7 +1080,7 @@ invariant
 		class_declaration_mark = no_mark or class_declaration_mark = expanded_mark
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -12,7 +12,6 @@ inherit
 		redefine
 			interface,
 			make,
-			pixmaps_size_changed,
 			remove_row_pixmap,
 			ev_children
 		end
@@ -33,9 +32,7 @@ inherit
 
 	EV_ITEM_LIST_IMP [EV_MULTI_COLUMN_LIST_ROW, EV_MULTI_COLUMN_LIST_ROW_IMP]
 		redefine
-			destroy,
 			interface,
-			make,
 			ev_children
 		end
 
@@ -543,7 +540,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_MULTI_COLUMN_LIST note option: stable attribute end;
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

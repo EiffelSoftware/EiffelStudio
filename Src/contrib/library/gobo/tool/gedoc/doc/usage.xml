@@ -6,7 +6,7 @@
 		"Using gedoc"
 
 	tool: "Gobo Eiffel Doc"
-	copyright: "Copyright (c) 2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,14 +15,14 @@
 <chapter xmlns="http://www.gobosoft.com/eiffel/gobo/documentation" id="gedoc/usage">
 <chapterinfo>
 	<copyright>
-		<year>2017</year>
+		<year>2017-2018</year>
 		<holder>Eric Bezault</holder>
 	</copyright>
 	<author>
 		<firstname>Eric</firstname><surname>Bezault</surname>
 	</author>
 	<email>ericb@gobosoft.com</email>
-	<date>25 March 2017</date>
+	<date>28 October 2018</date>
 </chapterinfo>
 
 <title>Using gedoc</title>
@@ -57,15 +57,28 @@ Here is the list of options that can be used with <projectname>gedoc</projectnam
 	</varlistentry>
 	<varlistentry>
 		<term>
-			<filename>--format=&lt;pretty_print|html_ise_stylesheet&gt;</filename>
+			<filename>--target=&lt;target_name&gt;</filename>
+		</term>
+		<listitem><para>
+			Name of target to be used in ECF file.
+			(default: last target in ECF file)
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>--format=&lt;pretty_print|html_ise_stylesheet|ecf_pretty_print|available_targets&gt;</filename>
 		</term>
 		<listitem><para>
 			Format for the output. (default: <filename>pretty_print</filename>) The formats currently supported are
 			<filename>pretty_print</filename> to use <projectname>gedoc</projectname> as an 
-			<link linkend="pretty_printer">Eiffel pretty-printer</link>, and 
+			<link linkend="pretty_printer">Eiffel pretty-printer</link>, 
 			<filename>html_ise_stylesheet</filename> to generate
 			<link linkend="html_ise_stylesheet">HTML documentation using
-			ISE's stylesheet</link>.
+			ISE's stylesheet</link>,
+			<link linkend="ecf_pretty_printer">ECF pretty-printer</link> to format or
+			convert ECF files, and
+			<link linkend="available_targets">ECF available targets</link> to
+			figure out the list of available targets in an ECF file.
 		</para></listitem>
 	</varlistentry>
 	<varlistentry>
@@ -94,7 +107,6 @@ Here is the list of options that can be used with <projectname>gedoc</projectnam
 			Directory for generated files. (default: next to each class file)
 		</para></listitem>
 	</varlistentry>
-
 	<varlistentry>
 		<term>
 			<filename>--library-prefix</filename>
@@ -135,13 +147,49 @@ Here is the list of options that can be used with <projectname>gedoc</projectnam
 	</varlistentry>
 	<varlistentry>
 		<term>
-			<filename>--define=NAME=VALUE</filename>
+			<filename>--ecf=&lt;latest|major.minor.revision&gt;</filename>
 		</term>
 		<listitem><para>
-			Define variables to be used when reading Xace files. This option can be used several
-			times to define several variables.
+			Version of ECF to be used when converting ECF files. (default: version of the ECF input file)
 		</para></listitem>
-	</varlistentry>		
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>--setting=name=value</filename>
+		</term>
+		<listitem><para>
+			Override settings defined in ECF file. This option can be used several
+			times to override several settings.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>--capability=name=value</filename>
+		</term>
+		<listitem><para>
+			Override capability usage defined in ECF file. This option can be used several
+			times to override several capabilities.
+		</para></listitem>
+	</varlistentry>	
+	<varlistentry>
+		<term>
+			<filename>--variable=NAME=VALUE</filename>
+		</term>
+		<listitem><para>
+			Override variables defined in ECF file. This option can be used several
+			times to override several variables.
+		</para></listitem>
+	</varlistentry>	
+	<varlistentry>
+		<term>
+			<filename>--thread=&lt;thread_count&gt;</filename>
+		</term>
+		<listitem><para>
+			Number of threads to be used to run <projectname>gedoc</projectname>.
+			Negative numbers -N mean &quot;number of CPUs - N&quot;.
+			(default: number of CPUs)
+		</para></listitem>
+	</varlistentry>
 	<varlistentry>
 		<term>
 			<filename>--silent</filename>
@@ -156,6 +204,31 @@ Here is the list of options that can be used with <projectname>gedoc</projectnam
 		</term>
 		<listitem><para>
 			Run <projectname>gedoc</projectname> in verbose mode.
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>--no-benchmark</filename>
+		</term>
+		<listitem><para>
+			Should no benchmark information be displayed?
+			(default: display non-nested benchmark information)
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>--nested-benchmark</filename>
+		</term>
+		<listitem><para>
+			Should nested benchmark information be displayed?
+		</para></listitem>
+	</varlistentry>
+	<varlistentry>
+		<term>
+			<filename>--metrics</filename>
+		</term>
+		<listitem><para>
+			Should metrics information be displayed?
 		</para></listitem>
 	</varlistentry>
 	<varlistentry>

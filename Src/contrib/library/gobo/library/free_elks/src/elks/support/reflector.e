@@ -26,6 +26,8 @@ feature -- Conformance
 			type2_nonnegative: type2 >= 0
 		do
 			Result := {ISE_RUNTIME}.type_conforms_to (type1, type2)
+		ensure
+			instance_free: class
 		end
 
 	field_conforms_to (a_source_type, a_field_type: INTEGER): BOOLEAN
@@ -37,6 +39,8 @@ feature -- Conformance
 			a_field_type_non_negative: a_field_type >= 0
 		do
 			Result := {ISE_RUNTIME}.type_conforms_to (a_source_type, {ISE_RUNTIME}.detachable_type (a_field_type))
+		ensure
+			instance_free: class
 		end
 
 feature -- Creation
@@ -67,6 +71,7 @@ feature -- Creation
 				l_table.put (Result, class_type)
 			end
 		ensure
+			instance_free: class
 			dynamic_type_from_string_valid: Result = -1 or Result = none_type or Result >= 0
 		end
 
@@ -79,11 +84,13 @@ feature -- Creation
 		require
 			type_id_nonnegative: type_id >= 0
 			not_special_type: not is_special_type (type_id)
+			not_deferred: not type_of_type (type_id).is_deferred
 		do
 			Result := {ISE_RUNTIME}.new_instance_of (type_id)
 		ensure
+			instance_free: class
 			not_special_type: not attached {SPECIAL [detachable ANY]} Result
-			dynamic_type_set: Result.generating_type.type_id = type_id
+			dynamic_type_set: attached_type (Result.generating_type.type_id) = attached_type (type_id)
 		end
 
 	new_special_any_instance (type_id, a_capacity: INTEGER): SPECIAL [detachable ANY]
@@ -97,6 +104,7 @@ feature -- Creation
 		do
 			Result := {ISE_RUNTIME}.new_special_of_reference_instance_of (type_id)
 		ensure
+			instance_free: class
 			dynamic_type_set: Result.generating_type.type_id = type_id
 			count_set: Result.count = 0
 			capacity_set: Result.capacity = a_capacity
@@ -136,6 +144,7 @@ feature -- Creation
 				Result := Void
 			end
 		ensure
+			instance_free: class
 			dynamic_type_set: attached Result implies Result.generating_type.type_id = type_id
 			values_set: attached Result implies across 1 |..| Result.count as k all Result.item (k.item) = values [k.item - 1] end
 		end
@@ -177,6 +186,7 @@ feature -- Creation
 				Result := Void
 			end
 		ensure
+			instance_free: class
 			dynamic_type_set: attached Result implies Result.generating_type.type_id = type_id
 			object_comparison_set: attached Result implies Result.object_comparison = source.object_comparison
 			values_set: attached Result implies across 1 |..| Result.count as k all Result.item (k.item) = source [k.item] end
@@ -189,6 +199,7 @@ feature -- Creation
 		do
 			Result := {ISE_RUNTIME}.new_type_instance_of (type_id)
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -201,6 +212,8 @@ feature -- Status report
 			type_id_nonnegative: type_id >= 0
 		do
 			Result := {ISE_RUNTIME}.is_special_of_reference_type (type_id)
+		ensure
+			instance_free: class
 		end
 
 	is_special_type (type_id: INTEGER): BOOLEAN
@@ -212,6 +225,8 @@ feature -- Status report
 			type_id_nonnegative: type_id >= 0
 		do
 			Result := {ISE_RUNTIME}.is_special_of_reference_or_basic_type (type_id)
+		ensure
+			instance_free: class
 		end
 
 	is_tuple_type (type_id: INTEGER): BOOLEAN
@@ -220,6 +235,8 @@ feature -- Status report
 			type_id_nonnegative: type_id >= 0
 		do
 			Result := {ISE_RUNTIME}.is_tuple_type (type_id)
+		ensure
+			instance_free: class
 		end
 
 	is_attached_type (a_type_id: INTEGER): BOOLEAN
@@ -228,6 +245,8 @@ feature -- Status report
 			a_type_non_negative: a_type_id >= 0
 		do
 			Result := {ISE_RUNTIME}.is_attached_type (a_type_id)
+		ensure
+			instance_free: class
 		end
 
 	is_field_transient_of_type (i: INTEGER; a_type_id: INTEGER): BOOLEAN
@@ -239,6 +258,8 @@ feature -- Status report
 			index_small_enough: i <= field_count_of_type (a_type_id)
 		do
 			Result := {ISE_RUNTIME}.is_field_transient_of_type (i, a_type_id)
+		ensure
+			instance_free: class
 		end
 
 	is_field_expanded_of_type (i: INTEGER; a_type_id: INTEGER): BOOLEAN
@@ -249,6 +270,8 @@ feature -- Status report
 			index_small_enough: i <= field_count_of_type (a_type_id)
 		do
 			Result := {ISE_RUNTIME}.is_field_expanded_of_type (i, a_type_id)
+		ensure
+			instance_free: class
 		end
 
 feature -- Access
@@ -259,6 +282,8 @@ feature -- Access
 			type_id_nonnegative: type_id >= 0
 		do
 			Result := {ISE_RUNTIME}.generator_of_type (type_id)
+		ensure
+			instance_free: class
 		end
 
 	type_name_of_type (type_id: INTEGER): STRING
@@ -268,6 +293,8 @@ feature -- Access
 			type_id_nonnegative: type_id >= 0
 		do
 			Result := {ISE_RUNTIME}.generating_type_of_type (type_id)
+		ensure
+			instance_free: class
 		end
 
 	attached_type (type_id: INTEGER): INTEGER
@@ -277,6 +304,7 @@ feature -- Access
 		do
 			Result := {ISE_RUNTIME}.attached_type (type_id)
 		ensure
+			instance_free: class
 			unchanged_if_attached: is_attached_type (type_id) implies type_id = Result
 		end
 
@@ -287,6 +315,7 @@ feature -- Access
 		do
 			Result := {ISE_RUNTIME}.detachable_type (type_id)
 		ensure
+			instance_free: class
 			unchanged_if_detachable: not is_attached_type (type_id) implies type_id = Result
 		end
 
@@ -296,6 +325,8 @@ feature -- Access
 			type_id_nonnegative: type_id >= 0
 		do
 			Result := {ISE_RUNTIME}.generic_parameter_count (type_id)
+		ensure
+			instance_free: class
 		end
 
 	generic_dynamic_type_of_type (type_id: INTEGER; i: INTEGER): INTEGER
@@ -307,6 +338,7 @@ feature -- Access
 		do
 			Result := {ISE_RUNTIME}.eif_gen_param_id (type_id, i)
 		ensure
+			instance_free: class
 			dynamic_type_nonnegative: Result >= 0
 		end
 
@@ -327,6 +359,8 @@ feature -- Access
 				end
 				id_to_storable_version.put (Result, a_type_id)
 			end
+		ensure
+			instance_free: class
 		end
 
 	field_name_of_type (i: INTEGER; type_id: INTEGER): STRING
@@ -337,6 +371,8 @@ feature -- Access
 			index_small_enought: i <= field_count_of_type (type_id)
 		do
 			create Result.make_from_c ({ISE_RUNTIME}.field_name_of_type (i, type_id))
+		ensure
+			instance_free: class
 		end
 
 	field_type_of_type (i: INTEGER; type_id: INTEGER): INTEGER
@@ -348,6 +384,7 @@ feature -- Access
 		do
 			Result := {ISE_RUNTIME}.field_type_of_type (i, type_id)
 		ensure
+			instance_free: class
 			field_type_nonnegative: Result >= 0
 		end
 
@@ -360,6 +397,7 @@ feature -- Access
 		do
 			Result := {ISE_RUNTIME}.field_static_type_of_type (i, type_id)
 		ensure
+			instance_free: class
 			field_type_nonnegative: Result >= 0
 		end
 
@@ -368,6 +406,8 @@ feature -- Version
 	compiler_version: INTEGER
 		do
 			Result := 0
+		ensure
+			instance_free: class
 		end
 
 feature -- Measurement
@@ -379,6 +419,8 @@ feature -- Measurement
 
 		do
 			Result := {ISE_RUNTIME}.field_count_of_type (type_id)
+		ensure
+			instance_free: class
 		end
 
 	persistent_field_count_of_type (a_type_id: INTEGER): INTEGER
@@ -387,6 +429,8 @@ feature -- Measurement
 			a_type_non_negative: a_type_id >= 0
 		do
 			Result := {ISE_RUNTIME}.persistent_field_count_of_type (a_type_id)
+		ensure
+			instance_free: class
 		end
 
 feature {NONE} -- Implementation
@@ -396,6 +440,7 @@ feature {NONE} -- Implementation
 		once
 			create Result.make (100)
 		ensure
+			instance_free: class
 			internal_dynamic_type_string_table_not_void: Result /= Void
 		end
 
@@ -404,11 +449,12 @@ feature {NONE} -- Implementation
 		once
 			create Result.make (100)
 		ensure
+			instance_free: class
 			id_to_storable_version_not_void: Result /= Void
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -19,8 +19,7 @@ inherit
 
 	GB_EV_ANY
 		redefine
-			attribute_editor,
-			ev_type
+			attribute_editor
 		end
 
 	GB_XML_UTILITIES

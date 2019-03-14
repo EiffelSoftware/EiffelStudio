@@ -1,5 +1,5 @@
 ﻿note
-	description	: "Standard Byte code generation for features"
+	description: "Standard Byte code generation for features."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -1653,11 +1653,7 @@ end
 			buf.put_string ({C_CONST}.comma_space)
 			buf.put_integer (context.local_list.count)
 			buf.put_string ({C_CONST}.comma_space)
-			if arguments /= Void then
-				buf.put_integer (arguments.count)
-			else
-				buf.put_integer (0)
-			end
+			buf.put_integer (if arguments /= Void then arguments.count else 0 end)
 			buf.put_string ({C_CONST}.comma_space)
 			buf.put_real_body_id (real_body_id)
 			buf.put_two_character (')', ';')
@@ -2119,7 +2115,7 @@ feature {NONE} -- C code generation: wait conditions
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

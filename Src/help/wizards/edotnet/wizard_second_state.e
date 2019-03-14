@@ -11,7 +11,6 @@ inherit
 		redefine
 			update_state_information,
 			proceed_with_current_info,
-			build,
 			make
 		end
 

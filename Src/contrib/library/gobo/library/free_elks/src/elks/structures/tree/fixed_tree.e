@@ -1,17 +1,17 @@
-note
+﻿note
 	description: "[
-		Trees where each node has a fixed number of children
-		(The number of children is arbitrary but cannot be
-		changed once the node has been created
+			Trees where each node has a fixed number of children.
+			The number of children is arbitrary but cannot be
+			changed once the node has been created.
 		]"
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 
-	names: fixed_tree, tree, fixed_list;
-	representation: recursive, array;
-	access: cursor, membership;
-	contents: generic;
+	names: fixed_tree, tree, fixed_list
+	representation: recursive, array
+	access: cursor, membership
+	contents: generic
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -38,7 +38,7 @@ create
 	make,
 	make_filled
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (n: INTEGER; v: G)
 			-- Create node with `n' void children and item `v'.
@@ -80,10 +80,10 @@ feature -- Initialization
 feature -- Access
 
 	parent: detachable like Current
-			-- Parent of current node
+			-- Parent of current node.
 
 	child_item: like item
-			-- Item of active child
+			-- Item of active child.
 		do
 			check attached child as c then
 				Result := c.item
@@ -91,7 +91,7 @@ feature -- Access
 		end
 
 	left_sibling: like parent
-			-- Left neighbor, if any
+			-- Left neighbor, if any.
 		do
 			if position_in_parent > 1 and then attached parent as p then
 				Result := p.array_item (position_in_parent - 1)
@@ -99,7 +99,7 @@ feature -- Access
 		end
 
 	right_sibling: like parent
-			-- Right neighbor, if any
+			-- Right neighbor, if any.
 		do
 			if attached parent as p and then position_in_parent < p.arity then
 				Result := p.array_item (position_in_parent + 1)
@@ -298,6 +298,7 @@ feature -- Duplication
 			-- Copy of sub-tree beginning at cursor position and
 			-- having min (`n', `arity' - `child_index' + 1)
 			-- children.
+		obsolete "Create and initialize a new tree explicitly. [2018-11-30]"
 		local
 			counter: INTEGER
 			pos: CURSOR
@@ -321,18 +322,36 @@ feature -- Duplication
 			child_go_to (pos)
 		end
 
+feature {NONE} -- Implementation
+
+	position_in_parent: INTEGER
+			-- Position of current node in parent
+
+	extendible: BOOLEAN = False;
+			-- May new items be added?
+
+feature -- Redefinition
+
+	child_capacity: INTEGER
+			-- Maximal number of children
+		do
+			Result := fixed_list.count
+		end
+
 feature {FIXED_TREE} -- Implementation
 
 	new_node: like Current
 			-- Instance of class `like Current'.
 			-- New allocated node of arity `arity'
 			-- and node value `item'
+		obsolete "Create and initialize a new tree explicitly. [2018-11-30]"
 		do
 			create Result.make (arity, item)
 		end
 
 	duplicate_all: like Current
 			-- Copy of sub-tree including all children
+		obsolete "Create and initialize a new tree explicitly. [2018-11-30]"
 		local
 			pos: CURSOR
 			c: like child
@@ -357,6 +376,7 @@ feature {FIXED_TREE} -- Implementation
 
 	fill_subtree (other: TREE [G])
 			-- Fill children with children of `other'
+		obsolete "Fill subtree explicitly. [2018-11-30]"
 		local
 			temp: like parent
 			c: detachable TREE [G]
@@ -390,16 +410,6 @@ feature {FIXED_TREE} -- Implementation
 			end
 		end
 
-feature {NONE} -- Implementation
-
-	position_in_parent: INTEGER
-			-- Position of current node in parent
-
-	extendible: BOOLEAN = False;
-			-- May new items be added?
-
-feature {FIXED_TREE} -- Implementation
-
 	fixed_list: FIXED_LIST [detachable like Current]
 
 	set_fixed_list (a_list: like fixed_list)
@@ -411,16 +421,6 @@ feature {FIXED_TREE} -- Implementation
 		ensure
 			fixed_list_set: fixed_list = a_list
 		end
-
-feature -- Redefinition
-
-	child_capacity: INTEGER
-			-- Maximal number of children
-		do
-			Result := fixed_list.count
-		end
-
-feature {FIXED_TREE} -- Implementation
 
 	clone_node (n: like Current): like Current
 			-- Clone node `n'.
@@ -445,7 +445,7 @@ feature {FIXED_TREE} -- Implementation
 			parent := Void
 		end
 
-feature -- Access
+feature -- Access: chilldren
 
 	child: like parent
 		do
@@ -548,13 +548,6 @@ feature -- Access
 			fixed_list.put_i_th (v, n)
 		end
 
-	array_make (min_index: INTEGER; max_index: INTEGER)
-		obsolete
-			"Should not be used."
-		do
-			fixed_list.make (max_index - min_index + 1)
-		end
-
 	capacity: INTEGER
 		do
 			Result := fixed_list.capacity
@@ -578,6 +571,12 @@ feature {NONE} -- private access fixed_list
 		end
 
 	fl_duplicate (n: INTEGER): FIXED_LIST [detachable like Current]
+		obsolete
+			"[
+				Create a new container explicitly using `make_from_iterable` if available.
+				Otherwise, replace a call to the feature with code that creates and initializes container.
+				[2018-11-30]
+			]"
 		do
 			Result := fixed_list.duplicate (n)
 		end
@@ -628,7 +627,7 @@ feature {NONE} -- private access fixed_list
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

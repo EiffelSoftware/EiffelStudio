@@ -21,8 +21,6 @@ inherit
 			attribute_editor,
 			set_up_user_events,
 			has_user_events
-		redefine
-			ev_type
 		end
 		
 	GB_EV_GAUGE_EDITOR_CONSTRUCTOR

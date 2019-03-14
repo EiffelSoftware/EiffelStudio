@@ -19,7 +19,7 @@ note
 		the binary search tree container classes.
 	]"
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 2008-2017, Daniel Tuser and others"
+	copyright: "Copyright (c) 2008-2018, Daniel Tuser and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -288,7 +288,7 @@ feature {NONE} -- Status report
 		local
 			k: detachable K
 		do
-			if attached {DS_BINARY_SEARCH_TREE_CONTAINER [G, detachable K]} Current as l_current and k = Void then
+			if not ({K}).is_attached and then  attached {DS_BINARY_SEARCH_TREE_CONTAINER [G, detachable K]} Current as l_current and k = Void then
 				Result := l_current.has_key (k)
 			end
 		end
@@ -1304,7 +1304,7 @@ feature {NONE} -- Element change
 				end
 			end
 		ensure
-			inserted: has_key (k) and then item (k) = v
+			inserted: has_key (k) and then {KL_TYPE [G]}.same_objects (item (k), v)
 			same_count: (old has_key (k)) implies (count = old count)
 			one_more: (not old has_key (k)) implies (count = old count + 1)
 		end
@@ -1352,7 +1352,7 @@ feature {NONE} -- Element change
 			on_node_added (l_newest_tree_node)
 		ensure
 			one_more: count = old count + 1
-			inserted: has_key (k) and then item (k) = v
+			inserted: has_key (k) and then {KL_TYPE [G]}.same_objects (item (k), v)
 		end
 
 feature {NONE} -- Element change

@@ -12,9 +12,6 @@ class
 
 inherit
 	EV_RIBBON_APPLICATION_MENU
-		redefine
-			create_interface_objects
-		end
 		
 create
 	make_with_command_list

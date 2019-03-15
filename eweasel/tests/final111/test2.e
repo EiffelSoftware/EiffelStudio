@@ -1,5 +1,11 @@
-
 class TEST2 [G -> TEST4]
+
+inherit
+	TEST1
+		redefine
+			try
+		end
+
 feature
 	try
 		do

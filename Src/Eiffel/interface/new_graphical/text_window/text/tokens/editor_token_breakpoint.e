@@ -85,7 +85,7 @@ feature -- Miscellaneous
 		local
 			a_background_color: like background_color
 		do
-			width := default_visible_width
+			width := (default_visible_width * ((create {EV_MONITOR_DPI_DETECTOR_IMP}).dpi/96)).rounded
  				-- Change drawing style here.
 			a_background_color := background_color
 			if a_background_color /= Void then
@@ -150,7 +150,7 @@ invariant
 		breakpoint_is_first: previous = Void
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

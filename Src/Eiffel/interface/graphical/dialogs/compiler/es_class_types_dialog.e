@@ -98,6 +98,12 @@ feature {NONE} -- Initialization: User interface
 					class_types_list.column (class_column).set_width (ia_width)
 				end)
 
+			register_action (class_types_list.dpi_changed_actions, agent (a_dpi,ia_1, ia_2, ia_width, ia_4: INTEGER)
+				do
+					class_types_list.column (class_column).set_width (ia_width)
+				end)
+
+
 			grid_token_support.synchronize_color_or_font_change_with_editor
 			grid_token_support.enable_grid_item_pnd_support
 			grid_token_support.enable_ctrl_right_click_to_open_new_window

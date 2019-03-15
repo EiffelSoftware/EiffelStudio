@@ -71,6 +71,7 @@ feature -- Command
 			l_docking_manager.zones.zones.add_actions.extend (agent on_added_zone)
 			l_docking_manager.zones.zones.remove_actions.extend (agent on_pruned_zone)
 			l_docking_manager.internal_viewport.resize_actions.extend (agent on_resize (?, ?, ?, ?, False))
+			l_docking_manager.internal_viewport.dpi_changed_actions.extend (agent on_dpi_change_resize (?, ?, ?, ?, ?, False))
 
 			ev_application.pointer_button_press_actions.extend (widget_pointer_press_handler)
 			ev_application.pointer_button_press_actions.extend (widget_pointer_press_for_upper_zone_handler)
@@ -159,6 +160,57 @@ feature  -- Agents
 		end
 
 	on_resize (a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER; a_force: BOOLEAN)
+			-- Handle resize zone event. Resize all the widgets in fixed_area (EV_FIXED)
+		require
+			not_destroyed: not is_destroyed
+		local
+			l_width, l_height: INTEGER
+			l_main_container: SD_MULTI_DOCK_AREA
+			l_docking_manager: like docking_manager
+		do
+			debug ("docking")
+				io.put_string ("%N SD_DOCKING_MANAGER on_resize ~~~~~~~~~~~~~~~~~~~~")
+			end
+			l_docking_manager := docking_manager
+			l_docking_manager.command.remove_auto_hide_zones (False)
+
+			-- This is to make sure item in `fixed_area' is resized, otherwise zone's size is incorrect when maximize a zone
+			l_docking_manager.fixed_area.set_minimum_size (0, 0)
+
+			if a_width > 0 then
+				l_width := l_docking_manager.internal_viewport.width
+				if l_width > 0 then
+					l_docking_manager.internal_viewport.set_item_width (l_width)
+				end
+
+				-- We have to make sure `l_width' not smaller than the minimum width of `l_main_container''s item
+				-- Otherwise, it will cause bug#12065. This bug ONLY happens on Solaris (both CDE and JDS), not happens on Windows, Ubuntu
+				-- And we don't need to care about the height of `l_main_container''s item since it works fine
+				l_main_container := l_docking_manager.query.inner_container_main
+				l_width := l_docking_manager.fixed_area.width
+				if l_main_container.readable and then l_main_container.item /= Void and then l_width < l_main_container.item.minimum_width then
+					l_width := l_main_container.item.minimum_width
+				end
+
+				if l_width > 0 then
+					l_docking_manager.fixed_area.set_item_width (l_main_container , l_width)
+				end
+			end
+			if a_height > 0 then
+				l_height := l_docking_manager.internal_viewport.height
+				if l_height > 0 then
+					l_docking_manager.internal_viewport.set_item_height (l_height)
+				end
+				l_height := l_docking_manager.fixed_area.height
+				if l_height > 0 then
+					l_docking_manager.fixed_area.set_item_height (l_docking_manager.query.inner_container_main, l_height)
+				end
+			end
+			l_docking_manager.tool_bar_manager.on_resize (a_x, a_y, l_docking_manager.internal_viewport.width, l_docking_manager.internal_viewport.height, a_force)
+		end
+
+
+	on_dpi_change_resize (a_dpi,a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER; a_force: BOOLEAN)
 			-- Handle resize zone event. Resize all the widgets in fixed_area (EV_FIXED)
 		require
 			not_destroyed: not is_destroyed
@@ -451,6 +503,7 @@ feature -- Destory
 			if attached docking_manager as l_docking_manager then
 				if attached l_docking_manager.internal_viewport as l_viewport then
 					l_viewport.resize_actions.wipe_out
+					l_viewport.dpi_changed_actions.wipe_out
 				else
 					check viewport_attached: False end
 				end

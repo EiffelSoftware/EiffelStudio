@@ -30,6 +30,7 @@ feature {NONE} -- Implementation
 	initialize
 		local
 			agt: like update_agent
+			dagt: like dpi_update_agent
 		do
 			Precursor
 			agt := update_agent
@@ -43,9 +44,22 @@ feature {NONE} -- Implementation
 			elseif not resize_actions.has (agt) then
 				resize_actions.extend (agt)
 			end
+
+			dagt :=dpi_update_agent
+			if dagt = Void then
+				dagt := agent (i_dpi: INTEGER; i_x: INTEGER; i_y: INTEGER; i_width: INTEGER; i_height: INTEGER)
+						do
+							update
+						end
+				dpi_update_agent := dagt
+				dpi_changed_actions.extend (dagt)
+			elseif not dpi_changed_actions.has (dagt) then
+				dpi_changed_actions.extend (dagt)
+			end
 		end
 
 	update_agent: detachable PROCEDURE [TUPLE [i_x: INTEGER; i_y: INTEGER; i_width: INTEGER; i_height: INTEGER]]
+	dpi_update_agent: detachable PROCEDURE [TUPLE [i_dpi:INTEGER; i_x: INTEGER; i_y: INTEGER; i_width: INTEGER; i_height: INTEGER]]
 
 feature -- Settings
 

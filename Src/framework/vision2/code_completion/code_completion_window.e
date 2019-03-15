@@ -80,6 +80,11 @@ feature {NONE} -- Initialization
 					do
 						resize_column_to_window_width
 					end)
+			dpi_changed_actions.extend (agent (a_dpi, i_x, i_y, i_width, i_height: INTEGER)
+					do
+						resize_column_to_window_width
+					end)
+
 		end
 
 feature -- Initialization

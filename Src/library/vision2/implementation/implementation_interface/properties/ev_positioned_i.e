@@ -58,6 +58,12 @@ feature -- Measurement
 		deferred
 		end
 
+	dpi: INTEGER
+			-- Window dpi.
+		do
+			Result := (create {EV_MONITOR_DPI_DETECTOR_IMP}).dpi.to_integer_32
+		end
+
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_POSITIONED note option: stable attribute end;

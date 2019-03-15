@@ -104,6 +104,10 @@ feature -- Event handling
 		do
 		end
 
+	init_dpi_changed_actions (a_dpi_changed_actions: like dpi_changed_actions)
+		do
+		end
+
 feature -- Basic Operation
 
 	refresh_now

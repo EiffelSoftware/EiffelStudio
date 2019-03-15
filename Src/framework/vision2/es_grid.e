@@ -80,6 +80,7 @@ feature {NONE} -- Initialization
 			build_delayed_last_column_auto_resizing
 
 			resize_actions.extend (agent on_resize_events)
+			dpi_changed_actions.extend (agent on_dpi_resize_events)
 			virtual_size_changed_actions.extend (agent on_resize_events (0,0, ?,?))
 			last_column_use_all_width_enabled := True
 
@@ -929,6 +930,11 @@ feature {NONE} -- Auto Events
 					d.request_call
 				end
 			end
+		end
+
+	on_dpi_resize_events (a_dpi, ax, ay, aw, ah: INTEGER)
+		do
+			on_resize_events (ax, ay, aw, ah)
 		end
 
 feature -- Grid helpers

@@ -1419,6 +1419,15 @@ feature {WEL_WINDOW} -- Messages
 
 feature {NONE} -- Messages
 
+	on_dpi_changed (a_dpi: INTEGER)
+			-- WM_dpichange message.
+			-- This message is sent to a window whose dpi changed,
+		require
+			exists: exists
+		do
+		end
+
+
 	on_window_pos_changed (window_pos: WEL_WINDOW_POS)
 			-- Wm_windowpschanged message.
 			-- This message is sent to a window whose size,
@@ -1683,7 +1692,7 @@ feature {NONE} -- Messages
 		do
 		end
 
-	on_dpi_changed (a_wparam: POINTER; a_lparam: POINTER)
+	on_wm_dpi_changed (a_wparam: POINTER; a_lparam: POINTER)
 			-- Called when a window receives WM_DPICHANGED message.
 		require
 			exists: exists
@@ -1694,10 +1703,15 @@ feature {NONE} -- Messages
 				-- When we handle the WM_DPICHANGED, the app it's
 				-- responsible to call SetWindowsPos and scale windows controls
 				-- and resources, at the moment only SetWindowsPos is handled.
-			--l_tuple := {WEL_SCALING_API}.monitor_scale (item)
-			l_dpi := c_mouse_wheel_delta (a_wparam)
+				-- a_wparam new dpi setting
+				-- need to use the new DPI retrieved from the a_wparam to calculate the new scale factor.
+			l_dpi := cwin_hi_word (a_wparam)
+
+				-- a_lparam windows rectangle scaled for the new DPI.
 			create l_rect.make_by_pointer (a_lparam)
 			move_and_resize_internal (l_rect.left, l_rect.top, l_rect.width, l_rect.height, True, 0)
+
+			on_dpi_changed (l_dpi)
 		end
 
 feature {WEL_WINDOW, WEL_DISPATCHER} -- Implementation
@@ -2097,7 +2111,7 @@ feature {WEL_ABSTRACT_DISPATCHER, WEL_WINDOW} -- Implementation
 					-- controls.
 				disable_default_processing
 			when wm_dpichanged then
-				on_dpi_changed (wparam, lparam)
+				on_wm_dpi_changed (wparam, lparam)
 			else
 				default_process_message (msg, wparam, lparam)
 			end

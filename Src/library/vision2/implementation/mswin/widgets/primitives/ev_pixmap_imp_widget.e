@@ -28,7 +28,7 @@ inherit
 			internal_enable_dockable, internal_disable_dockable,
 			update_buttons, refresh_now, init_file_drop_actions, update_for_pick_and_drop,
 			is_tabable_from, is_tabable_to, enable_tabable_from, enable_tabable_to,
-			disable_tabable_from, disable_tabable_to, init_resize_actions
+			disable_tabable_from, disable_tabable_to, init_resize_actions, init_dpi_changed_actions
 		redefine
 			interface, make,
 			read_from_named_path,

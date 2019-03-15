@@ -135,6 +135,7 @@ feature {NONE} -- Initialization
 			register_action (choice_list.pointer_motion_item_actions, agent (i_x, i_y: INTEGER; i_item: detachable EV_GRID_ITEM) do on_pointer_hovering_item (i_item) end)
 			register_action (choice_list.pointer_button_press_actions, agent mouse_selection)
 			register_action (resize_actions, agent on_window_resize)
+			register_action (dpi_changed_actions, agent on_dpi_window_resize)
 			set_title (Interface_names.t_Autocomplete_window)
 			setup_option_buttons
 			setup_accelerators
@@ -1162,6 +1163,12 @@ feature {NONE} -- Action handlers
 			then
 				show_tooltip (l_row)
 			end
+		end
+
+	on_dpi_window_resize (a_dpi, a_x, a_y, a_width, a_height: INTEGER)
+			-- React on window resizing.
+		do
+			on_window_resize (a_x, a_y, a_width, a_height)
 		end
 
 	on_scroll (a_x, a_y: INTEGER)

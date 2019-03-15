@@ -91,6 +91,7 @@ feature {NONE} -- Initlization
 			internal_notebook.drop_actions.extend (agent on_notebook_drop)
 
 			resize_actions.extend (agent internal_notebook.on_resize)
+			dpi_changed_actions.extend (agent internal_notebook.on_dpi_changed )
 
 			set_minimum_width (internal_shared.zone_minimum_width)
 			set_minimum_height (internal_shared.zone_minimum_height)

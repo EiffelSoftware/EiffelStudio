@@ -927,11 +927,11 @@ feature {NONE} -- Factory
 				-- Selection list
 			create l_combo
 			l_combo.set_tooltip (locale_formatter.translation (tt_output_list))
-			l_combo.set_minimum_width (220)
+			l_combo.set_minimum_width ( 220 * (((create {EV_MONITOR_DPI_DETECTOR_IMP}).dpi/96)).rounded)
 			l_combo.disable_edit
 			l_box.extend (l_combo)
 			selection_combo := l_combo
-
+	
 			create l_widget.make (l_box)
 			Result.extend (l_widget)
 

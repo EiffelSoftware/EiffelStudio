@@ -65,6 +65,12 @@ feature {NONE} -- Initialization
 						ensure_popup_window_visible_on_screen
 					end
 				end)
+			register_action (popup_window.dpi_changed_actions, agent (a_dpi,a_ia_x: INTEGER; a_ia_y: INTEGER; a_ia_w: INTEGER; a_ia_h: INTEGER)
+				do
+					if is_interface_usable and then not is_allowed_off_screen and then is_shown then
+						ensure_popup_window_visible_on_screen
+					end
+				end)
 		ensure
 			is_initialized: is_initialized
 		end

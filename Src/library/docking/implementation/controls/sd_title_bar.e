@@ -100,6 +100,7 @@ feature {NONE} -- Initlization
 			-- default setting
 		 	disable_focus_color
 		 	viewport.resize_actions.extend (agent on_fixed_resize)
+		 	viewport.dpi_changed_actions.extend (agent on_dpi_change_fixed_resize)
 
 		 	add_title_bar (Current)
 		end
@@ -433,6 +434,76 @@ feature {NONE} -- Agents
 		end
 
 	on_fixed_resize (a_x: INTEGER_32; a_y: INTEGER_32; a_width: INTEGER_32; a_height: INTEGER_32)
+			-- Handle fixed resize actions
+		local
+			l_custom_widget: like internal_custom_widget
+		do
+			if a_width > 0 and a_height > 0 and not fixed.is_destroyed and not internal_tool_bar.is_destroyed then
+				fixed.set_minimum_width (a_width)
+				viewport.set_item_width (a_width)
+
+				l_custom_widget := internal_custom_widget
+				if l_custom_widget /= Void  then
+					-- We have to check if `internal_custome_widget' is_destroyed, it makes sense while an application is exiting.
+					-- See bug#13731
+					if not l_custom_widget.is_destroyed then
+						if a_width >= tool_bar_width + l_custom_widget.minimum_width + (internal_shared.highlight_before_width + internal_shared.highlight_tail_width) then
+							-- There is enough space for mini tool bar.
+							if internal_tool_bar.has (mini_tool_bar_indicator) then
+								internal_tool_bar.prune (mini_tool_bar_indicator)
+								internal_tool_bar.compute_minimum_size
+							end
+
+							if not fixed.has (l_custom_widget) then
+								if attached l_custom_widget.parent as l_parent then
+									l_parent.prune (l_custom_widget)
+								end
+								fixed.extend (l_custom_widget)
+							end
+							if internal_title.minimum_height < a_height then
+								internal_title.set_minimum_height (a_height)
+							end
+							fixed.set_item_x_position (l_custom_widget, a_width - tool_bar_width - l_custom_widget.minimum_width)
+							fixed.set_item_size (internal_title, a_width - tool_bar_width - l_custom_widget.minimum_width, a_height)
+						else
+							-- There is not enough space for mini tool bar.
+							if not internal_tool_bar.has (mini_tool_bar_indicator) then
+								internal_tool_bar.force (mini_tool_bar_indicator, 1)
+								internal_tool_bar.compute_minimum_size
+							end
+
+							if fixed.has (l_custom_widget) then
+								fixed.prune (l_custom_widget)
+							end
+							if a_width - tool_bar_width >= 0 then
+								if internal_title.minimum_height < a_height then
+									internal_title.set_minimum_height (a_height)
+								end
+								fixed.set_item_size (internal_title, a_width - tool_bar_width, a_height)
+							end
+						end
+					end
+				else
+					if a_width - tool_bar_width >= 0 then
+						if internal_title.minimum_height < a_height then
+							internal_title.set_minimum_height (a_height)
+						end
+						fixed.set_item_size (internal_title, a_width - tool_bar_width, a_height)
+						if internal_tool_bar.has (mini_tool_bar_indicator) then
+							internal_tool_bar.prune (mini_tool_bar_indicator)
+							internal_tool_bar.compute_minimum_size
+						end
+					end
+				end
+
+				fixed.set_item_x_position (internal_title, 0)
+				if fixed.has (internal_tool_bar) then
+					fixed.set_item_x_position (internal_tool_bar, a_width - tool_bar_width)
+				end
+			end
+		end
+
+	on_dpi_change_fixed_resize (a_dpi, a_x: INTEGER_32; a_y: INTEGER_32; a_width: INTEGER_32; a_height: INTEGER_32)
 			-- Handle fixed resize actions
 		local
 			l_custom_widget: like internal_custom_widget

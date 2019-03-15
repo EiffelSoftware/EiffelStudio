@@ -50,6 +50,9 @@ feature {NONE} -- Implementation
 			resize_actions.extend
 				(agent (a_x, a_y, a_width, a_height: INTEGER_32)
 					do remember_top_resize_split_area (Current) end)
+			dpi_changed_actions.extend
+					(agent (a_dpi,a_x, a_y, a_width, a_height: INTEGER_32)
+						do remember_top_resize_split_area (Current) end)
 		end
 
 	set_half

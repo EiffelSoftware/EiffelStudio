@@ -349,6 +349,21 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
+
+	dpi_changed_actions: EV_DPI_ACTION_SEQUENCE
+			-- Actions to be performed when dpi changes.
+		do
+			if attached dpi_changed_actions_internal as l_result then
+				Result := l_result
+			else
+				create Result
+				init_dpi_changed_actions (Result)
+				dpi_changed_actions_internal := Result
+			end
+		ensure
+			not_void: Result /= Void
+		end
+
 feature {EV_ANY_I} -- Implementation
 
 	resize_actions_internal: detachable EV_GEOMETRY_ACTION_SEQUENCE
@@ -360,6 +375,19 @@ feature {EV_ANY_I} -- Implementation
 
 	init_resize_actions (a_resize_actions: like resize_actions)
 			-- Initialize `a_resize_actions' accordingly to the current widget.
+		deferred
+		end
+
+
+	dpi_changed_actions_internal: detachable EV_DPI_ACTION_SEQUENCE
+			-- Implementation of once per object `dpi_changed_actions'.
+		note
+			option: stable
+		attribute
+		end
+
+	init_dpi_changed_actions (a_dpi_changed_actions: like dpi_changed_actions)
+			-- Initialize `a_dpi_changed_actions' accordingly to the current widget.
 		deferred
 		end
 

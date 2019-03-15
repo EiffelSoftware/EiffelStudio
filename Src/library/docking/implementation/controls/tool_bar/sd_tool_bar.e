@@ -186,8 +186,8 @@ feature -- Command
 				print ("%N             items.count: " + l_items.count.out)
 			end
 
-			set_minimum_width (l_minimum_width)
-			set_minimum_height (l_minimum_height)
+			set_minimum_width ( l_minimum_width )
+			set_minimum_height ( l_minimum_height )
 		end
 
 	update_size
@@ -959,7 +959,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

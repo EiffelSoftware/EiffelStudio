@@ -287,6 +287,7 @@ feature {NONE} -- Initialization
 				end
 				register_action (l_bar.expose_actions, agent redraw_statistic_bars (?, ?, ?, ?, l_bar, l_id, l_new))
 				register_action (l_bar.resize_actions, agent redraw_statistic_bars (?, ?, ?, ?, l_bar, l_id, l_new))
+				register_action (l_bar.dpi_changed_actions, agent dpi_redraw_statistic_bars (?, ?, ?, ?, ?, l_bar, l_id, l_new))
 				i := i + 1
 			end
 			register_action (grid.row_expand_actions, agent (a_row: EV_GRID_ROW) do grid.request_columns_auto_resizing end)
@@ -546,6 +547,15 @@ feature {NONE} -- Events
 				a_bar.set_foreground_color (statistic_color (an_id))
 				a_bar.fill_rectangle (0, l_height - l_prop, l_width, l_height)
 			end
+		end
+
+	dpi_redraw_statistic_bars (a_dpi,a_x, a_y, a_width, a_height: INTEGER; a_bar: EV_DRAWING_AREA; an_id: like statistic_count; a_new: BOOLEAN)
+			-- Request status bar redraw.
+		require
+			a_bar_attached: a_bar /= Void
+			an_id_valid: 0 < an_id and an_id <= statistic_count
+		do
+			redraw_statistic_bars (a_x, a_y, a_width, a_height, a_bar, an_id, a_new)
 		end
 
 	request_statistic_bars_redraw

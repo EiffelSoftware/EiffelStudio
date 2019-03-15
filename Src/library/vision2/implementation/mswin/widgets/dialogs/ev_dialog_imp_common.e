@@ -65,7 +65,7 @@ inherit
 			show as show_internal
 		undefine
 			has_focus, on_middle_button_up, show_internal, on_right_button_down,
-			on_move, on_size, default_ex_style, on_sys_key_down, on_key_up,
+			on_move, on_size, default_ex_style, on_sys_key_down, on_key_up,on_dpi_changed,
 			window_process_message, on_middle_button_down, on_kill_focus,
 			on_right_button_up, on_accelerator_command, on_menu_command,
 			on_middle_button_double_click, on_destroy, on_left_button_up,

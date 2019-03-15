@@ -122,6 +122,7 @@ feature {NONE} -- Initialization
 
 			register_action (status_bar.expose_actions, agent redraw_status_bar)
 			register_action (status_bar.resize_actions, agent redraw_status_bar)
+			register_action (status_bar.dpi_changed_actions, agent dpi_redraw_status_bar)
 
 			perform_with_test_suite (
 				agent (a_test_suite: TEST_SUITE_S)
@@ -255,6 +256,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	dpi_redraw_status_bar (a_dpi,a_x, a_y, a_width, a_height: INTEGER)
+			-- Called when `status_bar' must be redrawn.
+		do
+			redraw_status_bar (a_x, a_y, a_width, a_height)
+		end
+
+
 feature {NONE} -- Factory
 
 	create_widget: EV_VERTICAL_BOX
@@ -311,7 +319,7 @@ feature {NONE} -- Constants
 	fail_filter: STRING = "^result/fail"
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

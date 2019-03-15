@@ -2,8 +2,8 @@ note
 	description: "[
 		Dialog that submit exception as bug report to http://support.eiffel.com
 	]"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2018-11-16 10:41:11 -0300 (Fri, 16 Nov 2018) $"
+	revision: "$Revision: 102480 $"
 
 class
 	ES_EXCEPTION_SUBMIT_DIALOG
@@ -169,6 +169,13 @@ feature {NONE} -- Initialization
 			shrink_widget := l_shrinkable
 
 			l_shrinkable.resize_actions.extend (agent (a_x: INTEGER_32; a_y: INTEGER_32; a_width: INTEGER_32; a_height: INTEGER_32)
+				do
+					if a_width > 0 and a_height > 0 then
+						shrink_widget.set_item_size (login_frame, a_width, a_height)
+					end
+				end)
+
+			l_shrinkable.dpi_changed_actions.extend (agent (a_dpi, a_x: INTEGER_32; a_y: INTEGER_32; a_width: INTEGER_32; a_height: INTEGER_32)
 				do
 					if a_width > 0 and a_height > 0 then
 						shrink_widget.set_item_size (login_frame, a_width, a_height)
@@ -1054,7 +1061,7 @@ invariant
 	shrink_interval_positive: shrink_interval > 0
 
 ;note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

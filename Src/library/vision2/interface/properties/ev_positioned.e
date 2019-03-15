@@ -102,6 +102,17 @@ feature -- Measurement
 			positive_or_zero: Result >= 0
 		end
 
+	dpi: INTEGER
+			-- Window dpi
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.dpi
+		ensure
+			positive_or_zero: Result >= 0
+		end
+
+
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	implementation: EV_POSITIONED_I

@@ -1075,7 +1075,7 @@ rt_private struct sig_desc sig_name[] = {
 
 rt_public char *signame(int sig)
 {
-	/* Returns a description of a signal given its number. If sys_siglist[]
+	/* Returns a description of a signal given its number. If strsignal()
 	 * is available and gives a non-null description, then use it. Otherwise
 	 * use our own description as found in the sig_name array.
 	 */
@@ -1083,8 +1083,8 @@ rt_public char *signame(int sig)
 	int i;
 
 #ifdef HAS_SYS_SIGLIST
-	if (sig >= 0 && sig < EIF_NSIG && 0 < (unsigned int)strlen(sys_siglist[sig]))
-		return (char *) sys_siglist[sig];
+	if (sig >= 0 && sig < EIF_NSIG && 0 < (unsigned int)strlen(strsignal(sig)))
+		return (char *) strsignal(sig);
 #endif
 
 	for (i = 0; /*empty */; i++)
@@ -1109,9 +1109,7 @@ rt_public long esigmap(long int idx)
 
 rt_public char *esigname(long int sig)
 {
-	/* Returns a description of a signal given its number. If sys_siglist[]
-	 * is available and gives a non-null description, then use it. Otherwise
-	 * use our own description as found in the sig_name array.
+	/* Returns a description of a signal given its number.
 	 * Same as `signame' with proper casting for Eiffel.
 	 */
 

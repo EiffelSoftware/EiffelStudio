@@ -12,9 +12,6 @@ class
 
 inherit
 	EV_RIBBON_MINI_TOOLBAR
-		redefine
-			create_interface_objects
-		end
 		
 create
 	make_with_command_list

@@ -1083,8 +1083,8 @@ rt_public char *signame(int sig)
 	int i;
 
 #ifdef HAS_SYS_SIGLIST
-	if (sig >= 0 && sig < EIF_NSIG && 0 < (unsigned int)strlen(sys_siglist[sig]))
-		return (char *) sys_siglist[sig];
+	if (sig >= 0 && sig < EIF_NSIG && 0 < (unsigned int)strlen(strsignal(sig)))
+		return (char *) strsignal(sig);
 #endif
 
 	for (i = 0; /*empty */; i++)

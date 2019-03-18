@@ -288,7 +288,10 @@ feature -- Access queries
 	settings: STRING_TABLE [READABLE_STRING_32]
 			-- Settings.
 		do
-			if attached extends as l_extends then
+			if
+				attached extends as l_extends and then
+				l_extends /= Current
+			then
 				Result := l_extends.settings.twin
 				Result.merge (Precursor)
 			else

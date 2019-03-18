@@ -21,6 +21,9 @@
 			<exclude>/\.git$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
+		<capability>
+			<concurrency support="none"/>
+		</capability>
 		<option warning="true"/>
 		<variable name="GOBO_LIBRARY" value="../../.."/>
 		<library name="free_elks" location="${GOBO_LIBRARY}/library/free_elks/library_${GOBO_EIFFEL}.ecf" readonly="true"/>

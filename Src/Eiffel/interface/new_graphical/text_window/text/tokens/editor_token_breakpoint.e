@@ -85,7 +85,7 @@ feature -- Miscellaneous
 		local
 			a_background_color: like background_color
 		do
-			width := (default_visible_width * ((create {EV_MONITOR_DPI_DETECTOR_IMP}).dpi/96)).rounded
+			width := (create {EV_MONITOR_DPI_DETECTOR_IMP}).scaled_size (default_visible_width)
  				-- Change drawing style here.
 			a_background_color := background_color
 			if a_background_color /= Void then

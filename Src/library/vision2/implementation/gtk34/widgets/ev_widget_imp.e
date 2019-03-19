@@ -96,6 +96,12 @@ feature -- Event handling
 			end
 		end
 
+	init_dpi_changed_actions (a_dpi_changed_actions: like dpi_changed_actions)
+		do
+			-- TODO
+		end
+
+
 	init_file_drop_actions (a_file_drop_actions: like file_drop_actions)
 			-- <Precursor>
 		do

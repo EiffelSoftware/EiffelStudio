@@ -13,6 +13,12 @@ feature --Access
 			-- DPI sizes 96, 120, 144, 192, etc.
 		deferred
 		end
+
+	scaled_size (a_size: INTEGER): INTEGER
+			-- Return the scale size of input `a_size`.
+		do
+			Result := (a_size * (dpi/96)).rounded
+		end
 note
 	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

@@ -927,11 +927,11 @@ feature {NONE} -- Factory
 				-- Selection list
 			create l_combo
 			l_combo.set_tooltip (locale_formatter.translation (tt_output_list))
-			l_combo.set_minimum_width ( 220 * (((create {EV_MONITOR_DPI_DETECTOR_IMP}).dpi/96)).rounded)
+			l_combo.set_minimum_width ((create {EV_MONITOR_DPI_DETECTOR_IMP}).scaled_size (220))
 			l_combo.disable_edit
 			l_box.extend (l_combo)
 			selection_combo := l_combo
-	
+
 			create l_widget.make (l_box)
 			Result.extend (l_widget)
 
@@ -991,7 +991,7 @@ feature {NONE} -- Internationalization
 	tt_show_modified_output_1: STRING = "Show the modified $1 output"
 
 ;note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

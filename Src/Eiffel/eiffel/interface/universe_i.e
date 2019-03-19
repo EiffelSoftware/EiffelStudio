@@ -119,7 +119,7 @@ feature -- Properties
 			-- Type of void_safety (none, conformance, initialization, transitional, all).
 		do
 			if
-				workbench.system_defined or else
+				workbench.system_defined and then
 				{CONF_TARGET_OPTION}.is_void_safety_index (system.void_safety_index)
 			then
 				Result := {CONF_TARGET_OPTION}.void_safety_mode_from_index (system.void_safety_index)
@@ -928,7 +928,7 @@ invariant
 	target_in_conf_system: (conf_system /= Void and new_target = Void) implies target.system = conf_system
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

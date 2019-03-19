@@ -65,7 +65,27 @@
 		</capability>
 		<variable name="batch_preferences" value="true"/>
 		<variable name="batch_framework" value="true"/>
-		<library name="compiler_kernel" location="$EIFFEL_SRC\Eiffel\Ace\ec_kernel.ecf" readonly="false" use_application_options="true"/>
+		<library name="compiler_kernel" location="$EIFFEL_SRC\Eiffel\Ace\ec_kernel.ecf" readonly="false" use_application_options="true">
+			<visible class="CAT_CALL_WARNING" feature="intentionally_absent_feature"/>
+			<visible class="OBS_CLASS_WARN" feature="intentionally_absent_feature"/>
+			<visible class="OBS_FEAT_WARN" feature="intentionally_absent_feature"/>
+			<visible class="SYNTAX_WARNING" feature="intentionally_absent_feature"/>
+			<visible class="UNUSED_LOCAL_WARNING" feature="intentionally_absent_feature"/>
+			<visible class="C_COMPILER_WARNING" feature="intentionally_absent_feature"/>
+			<visible class="VTCM" feature="intentionally_absent_feature"/>
+			<visible class="VD43" feature="intentionally_absent_feature"/>
+			<visible class="VD80" feature="intentionally_absent_feature"/>
+			<visible class="VD83" feature="intentionally_absent_feature"/>
+			<visible class="VD85" feature="intentionally_absent_feature"/>
+			<visible class="VIAC" feature="intentionally_absent_feature"/>
+			<visible class="VICF" feature="intentionally_absent_feature"/>
+			<visible class="VIIK" feature="intentionally_absent_feature"/>
+			<visible class="VIOP" feature="intentionally_absent_feature"/>
+			<visible class="VIRC" feature="intentionally_absent_feature"/>
+			<visible class="VJRV" feature="intentionally_absent_feature"/>
+			<visible class="VWEQ" feature="intentionally_absent_feature"/>
+			<visible class="VWAB" feature="intentionally_absent_feature"/>
+		</library>
 		<library name="dotnet_assembly_information" location="$EIFFEL_SRC\dotnet\assembly_info\dotnet_assembly_information.ecf" readonly="false"/>
 		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf"/>
 		<library name="gobo_xml" location="$ISE_LIBRARY\library\gobo\gobo_xml.ecf"/>
@@ -165,6 +185,7 @@
 			<visible class="EQA_RESULT" feature="intentionally_absent_feature"/>
 			<visible class="EQA_TEST_INVOCATION_RESPONSE" feature="intentionally_absent_feature"/>
 			<visible class="EQA_TEST_INVOCATION_EXCEPTION" feature="intentionally_absent_feature"/>
+			<visible class="EQA_TEST_EVALUATOR" feature="intentionally_absent_feature"/>
 		</library>
 		<library name="com_light" location="$EIFFEL_SRC\framework\com_light\com_light.ecf" readonly="false" use_application_options="true"/>
 		<library name="command_tunnel" location="$EIFFEL_SRC\framework\command_tunnel\command_tunnel.ecf" readonly="false" use_application_options="true"/>

@@ -7696,7 +7696,7 @@ msgstr ""
 #: conf_interface_names.e:1287
 msgctxt "configuration"
 msgid ""
-"Capability \"$1\" of supplier target has value \"$2\" insuffcient for client "
+"Capability \"$1\" of supplier target has value \"$2\" insufficient for client "
 "value \"$6\".\n"
 "Client/child target\n"
 "\tName: $7\n"

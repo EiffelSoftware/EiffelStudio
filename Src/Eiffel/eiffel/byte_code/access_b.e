@@ -345,17 +345,17 @@ feature -- C generation
 			-- Generate C code for the access.
 		local
 			buf: GENERATION_BUFFER
+			r: like register
 		do
 			generate_parameters (current_register)
-			if register /= No_register then
+			r := register
+			if r /= No_register then
 				buf := buffer
-						-- Procedures have a void return type
-				if register /= Void then
-					buf.put_new_line
-					register.print_register
+				buf.put_new_line
+					-- Procedures have a void return type.
+				if attached r then
+					r.print_register
 					buf.put_three_character (' ', '=', ' ')
-				else
-					buf.put_new_line
 				end
 				generate_access
 				buf.put_character (';')
@@ -787,7 +787,7 @@ feature -- Inlining
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

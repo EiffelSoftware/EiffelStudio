@@ -150,6 +150,10 @@ feature -- Analyzis
 				context.add_dt_current
 				context.add_dt_current
 			end
+			if workbench_mode then
+					-- Dynamic type of Current is used by `generate_monitoring_start`.
+				context.add_dt_current
+			end
 
 				-- Local variables should be recorded because their types
 				-- are used to evaluate types of object test locals.
@@ -162,6 +166,8 @@ feature -- Analyzis
 					have_precond := precondition /= Void or else inh_assert.has_precondition
 				end
 				have_postcond := postcondition /= Void or else inh_assert.has_postcondition
+					-- Dynamic type of Current is used by `generate_save_assertion_level`.
+				context.add_dt_current
 			end
 
 				-- Check if there is a wait condition.

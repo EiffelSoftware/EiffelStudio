@@ -2109,17 +2109,11 @@ feature {NONE} -- Implementation
 										check not l_last_constrained.is_formal end
 										l_access.set_multi_constraint_static (l_last_constrained)
 									end
-									if attached {EXTERNAL_B} l_access as l_ext then
-										l_ext.enable_static_call
-									end
 								elseif is_precursor then
 									l_cl_type_i ?= a_precursor_type
 									l_access := l_feature.access_for_feature (l_generated_result_type, l_cl_type_i, False, False, False)
 										-- Strange situation where Precursor is an external, then we do as if
 										-- it was a static call.
-									if attached {EXTERNAL_B} l_access as l_ext then
-										l_ext.enable_static_call
-									end
 								else
 									if l_is_multiple_constraint_case then
 										check not l_last_constrained.is_formal end

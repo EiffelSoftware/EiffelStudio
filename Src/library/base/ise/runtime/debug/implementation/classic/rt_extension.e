@@ -235,6 +235,7 @@ feature {NONE} -- Execution replay
 		require
 			a_data_attached: a_data /= Void
 			execution_recording_not_void: execution_recorder /= Void
+			no_ref: a_data.ref = Void
 		do
 			if
 				attached execution_recorder as r and then
@@ -388,7 +389,7 @@ invariant
 
 note
 	library:   "EiffelBase: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -6,7 +6,7 @@ note
 	revision: "$Revision$"
 
 class
-	EB_UNICODE_FOR_COMPLETION
+	EB_SYMBOLS_FOR_COMPLETION
 
 inherit
 
@@ -173,10 +173,10 @@ feature {NONE} -- Implementation
 	name_matcher: COMPLETION_NAME_MATCHER
 			-- Name matcher
 		once
-			create {UNICODE_SYMBOL_COMPLETION_NAME_MATCHER} Result.make_with_minimum_count (1)
+			create Result
 		end
 
-	child_type: EB_UNICODE_FOR_COMPLETION
+	child_type: EB_SYMBOLS_FOR_COMPLETION
 			-- Child type
 
 invariant

@@ -1327,7 +1327,7 @@ test	finalize-inline-attribute-body	final076 tcf pass finalizing inlining attrib
 test	finalize-creation-expression-corruption	final077 tcf pass finalizing
 test	finalize-inline-precursor-2	final078 tcf pass finalizing multiconstraint inlining
 test	finalize-attribute-access-crash	final079 tcf pass finalizing attribute
-test	finalize-inline-attribute-body-2	final080 tcf fail used_to_pass finalizing inlining attribute
+test	finalize-inline-attribute-body-2	final080 tcf pass finalizing inlining attribute
 test	finalize-inline-external-redef-constant	final081 tcf fail used_to_pass finalizing inlining
 test	finalize-inherited-agent-redef-routine	final082 tcf fail used_to_pass finalizing agents
 test	finalize-inline-with-generic	final083 tcf pass finalizing inlining
@@ -1335,7 +1335,7 @@ test	finalize-wrong-type			final084 tcf pass finalizing
 test	finalize-min-used-crash		final085 tcf pass finalizing
 test	finalize-object-test-side-effects	final086 tcf pass finalizing
 test	finalize-inline-merged-routine	final087 tcf pass finalizing inlining
-test	finalize-inline-check-void-target	final088 tcf fail finalizing inlining
+test	finalize-inline-check-void-target	final088 tcf pass finalizing inlining
 test	finalize-qat-object-test		final089 tcf pass finalizing anchored_type
 test	finalize-attached-dcr-missing	final090 tcf pass finalizing
 test	finalize-inline-same-generic-derivation-crash	final091 tcf pass finalizing inlining
@@ -1360,7 +1360,7 @@ test	inline-manifest-type			final109 tcf pass finalizing
 test	profile-once-per-process-function	final110 tcf pass finalizing
 test	inline-qat-static-external		final111 tcf fail finalizing inlining anchored_type
 test	finalize-keep-once-strings		final112 tcf pass finalizing
-test	finalize-inline-attribute-with-body	final113 tcf fail finalizing inlining attribute
+test	finalize-inline-attribute-with-body	final113 tcf pass finalizing inlining attribute
 test	finalize-inline-across-loop		final114 tcf pass finalizing inlining
 test	finalize-inline-none-generic-derivation	final115 tcf fail finalizing
 test	profile-crash-on-override		final116 tcf pass finalizing profile
@@ -1371,7 +1371,7 @@ test	comparison-involving-allocation	final120 tcf pass finalizing
 test	bracket-wrong-dispatch			final121 tcf pass finalizing bracket_expression assigner
 test	wrong-boolean-branch-optimization	final122 tcf pass finalizing
 test	inline-internal-locals			final123 tcf pass finalizing inlining loop iteration object_test scoop
-test	inline-attribute-with-body		final124 tcf fail finalizing inlining attribute
+test	inline-attribute-with-body		final124 tcf pass finalizing inlining attribute
 test	agent-call-gc-corruption		final125 tcf pass finalizing runtime
 test	reference-equality-gc-protection	final126 tcf pass finalizing gc
 test	optimized-is_equal-call			final127 tcf fail finalizing
@@ -1895,7 +1895,7 @@ test once-per-object-rescue-gc			once017 tcf pass once
 test once-per-object-nonconforming-inheritance	once018 tcf pass once
 test once-per-object-redefined-precursor	once019 tcf fail once
 test once-per-object-nonconforming-2		once020 tcf fail once non-conforming
-test once-per-object-generic-precursor		once021 tcf fail once
+test once-per-object-generic-precursor		once021 tcf pass once
 test once-per-object-array-of-expanded		once022 tcf fail once
 test once-per-object-inherited-twice		once023 tcf fail once
 

@@ -85,13 +85,12 @@ feature -- C code generation
 		local
 			l_type: CL_TYPE_A
 			has_creation_call: BOOLEAN
-			precursor_type: CL_TYPE_A
 		do
 			create Result
 			Result.set_is_active (is_active)
 			Result.set_info (info)
 			Result.set_type (type)
-			if call /= Void then
+			if attached call as creation_call then
 				if context.final_mode and then info.is_explicit then
 						-- Special handling of creation when type is monomorphic:
 						-- 1 - if body of `call' is empty then we do not generate the call at all
@@ -108,9 +107,9 @@ feature -- C code generation
 							-- Type is not fixed, is separate or class invariant should be checked.
 							-- The latter is done inside the creation procedure.
 						has_creation_call := True
-					elseif not l_type.base_class.feature_of_rout_id (call.routine_id).is_empty then
+					elseif not l_type.base_class.feature_of_rout_id (creation_call.routine_id).is_empty then
 						has_creation_call := True
-						precursor_type := l_type
+						creation_call.set_precursor_type (l_type)
 					elseif is_simple_special_creation then
 							-- We cannot optimize the empty routine `{SPECIAL}.make' as otherwise
 							-- it will simply generate a normal creation in `generate' below.
@@ -119,15 +118,12 @@ feature -- C code generation
 				else
 					has_creation_call := True
 				end
-			end
-			if
-				has_creation_call and then
-				attached {ROUTINE_B} call.enlarged_on (context.real_type (type)) as c
-			then
-				if attached precursor_type then
-					c.set_precursor_type (precursor_type)
+				if
+					has_creation_call and then
+					attached {ROUTINE_B} creation_call.enlarged_on (context.real_type (type)) as c
+				then
+					Result.set_call (c)
 				end
-				Result.set_call (c)
 			end
 			Result.set_creation_instruction (is_creation_instruction)
 		end

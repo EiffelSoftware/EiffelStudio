@@ -1285,7 +1285,7 @@ feature -- Capability errors
 		do
 			Result := locale.formatted_string (locale.translation_in_context
 				("[
-					Capability "$1" of supplier target has value "$2" insuffcient for client value "$6".
+					Capability "$1" of supplier target has value "$2" insufficient for client value "$6".
 					Client/child target
 						Name: $7
 						System: $8

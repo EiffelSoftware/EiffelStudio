@@ -435,6 +435,21 @@ feature {CONF_ACCESS} -- Update, stored in configuration file
 			option_set: internal_options = a_option
 		end
 
+	merge_options (an_option: like options)
+			-- If `internal_options` is already set, merge `an_option` with it,
+			-- otherwise set the options to `an_option`.
+		require
+			an_option_not_void: an_option /= Void
+		do
+			if attached internal_options as l_opts then
+				l_opts.merge (an_option)
+			else
+				internal_options := an_option
+			end
+		ensure
+			option_set: internal_options /= Void
+		end
+
 	set_class_options (a_options: like class_options)
 			-- Set `a_options'.
 		do
@@ -697,7 +712,7 @@ invariant
 	is_error_same_as_last_error: is_error = (last_error /= Void)
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

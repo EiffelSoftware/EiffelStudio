@@ -1800,10 +1800,10 @@ feature {NONE} -- Implementation attribute processing
 				end
 			else
 				if attached current_group as l_current_group then
-					l_current_group.set_options (l_current_option)
+					l_current_group.merge_options (l_current_option)
 				elseif attached current_target as l_target then
 					if attached l_target_option then
-						l_target.set_options (l_target_option)
+						l_target.merge_options (l_target_option)
 					else
 						check attached_target_option: False end
 					end
@@ -3312,7 +3312,7 @@ invariant
 	factory_not_void: factory /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

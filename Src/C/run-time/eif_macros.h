@@ -1476,11 +1476,14 @@ RT_LNK void eif_exit_eiffel_code(void);
 		struct stpchunk * EIF_VOLATILE saved_prof_chunk;    /* Declare saved trace and profile */ \
 		struct prof_info * EIF_VOLATILE l_saved_prof_top
 #else
-/* In final mode, an Eiffel call to a deferred feature without any actual
- * implementation could be generated anyway because of the statical dead code
- * removal process; so we need a funciton pointer trigeering an exception
+/* RTNA - a macro generated in final mode for a call to a non-existing or removed feature.
+ *        It evaluates arguments to take any associated side effects into account,
+ *        and then calls a funtion that raises an exception "access on void target".
+ * RTNR - similar to RTNA, but it is used to generate calls to routines, associated with agents,
+ *        and should have no explicit arguments (one implicit argument is passed by the generated code).
  */
-#define RTNR rt_norout
+#define RTNA(x) ((x),rt_norout(NULL))
+#define RTNR    rt_norout
 
 /* In final mode, we have two macros for E-TRACE called RTTR (start trace) and RTXT (stop trace).
  * We have also two macros for E-PROFILE in final mode, called RTPR (start profile) and RTXP (stop profile).

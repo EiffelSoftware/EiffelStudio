@@ -849,6 +849,7 @@ feature {NONE} -- Visitors
 			l_pos: INTEGER
 			l_is_in_creation_call: like is_in_creation_call
 			l_is_active_region: like is_active_region
+			creation_expression: CREATION_EXPR_B
 		do
 			l_is_in_creation_call := is_in_creation_call
 			is_in_creation_call := False
@@ -910,8 +911,16 @@ feature {NONE} -- Visitors
 				end
 			end
 
-			if a_node.is_static_call then
-				ba.append (bc_current)
+			if attached a_node.static_class_type as p then
+				if a_node.is_class_target_needed then
+						-- Generate an empty object to be used as a target of the call.
+					create creation_expression
+					creation_expression.set_info (p.create_info)
+					creation_expression.set_type (p)
+					process_creation_expr_b (creation_expression)
+				else
+					ba.append (bc_current)
+				end
 				ba.append (bc_extern)
 				ba.append_integer (a_node.routine_id)
 				make_precursor_byte_code (a_node)

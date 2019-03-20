@@ -111,7 +111,7 @@ feature {NONE} -- Initialization
 			sep: EV_VERTICAL_SEPARATOR
 		do
 			Precursor {CODE_COMPLETION_WINDOW}
-			mode_template := False
+			current_panel_id := features_panel_id
 
 			create hb
 			header_box.extend (hb)
@@ -247,13 +247,6 @@ feature {NONE} -- Initialization
 				remember_size_button.set_tooltip (locale.translation (l_tooltip))
 			end
 			option_bar.extend (remember_size_button)
-
-				-- Show templates Label (code for bottom right label)
---			create l_label.make_with_text (interface_names.l_show_templates)
---			l_label.align_text_right
---			l_hbox.extend (l_label)
---				-- Callback
---			register_action (l_label.select_actions, agent on_option_label_selected (l_label))
 		end
 
 	build_info_associated_class_box (a_box: EV_BOX)
@@ -328,13 +321,13 @@ feature {NONE} -- Initialization
 			l_tpl_box.extend (l_hbox)
 			l_tpl_box.disable_item_expand (l_hbox)
 
-				-- Show template label
-			code_template_label.set_text (interface_names.l_show_templates)
-			l_hbox.extend (code_template_label)
-			l_hbox.disable_item_expand (code_template_label)
+				-- Show next panel label
+			next_panel_label.set_text (next_panel_title)
+			l_hbox.extend (next_panel_label)
+			l_hbox.disable_item_expand (next_panel_label)
 
 				-- Callback
-			register_action (code_template_label.select_actions, agent on_option_label_selected (code_template_label))
+			register_action (next_panel_label.select_actions, agent on_option_label_selected (next_panel_label))
 		end
 
 	setup_option_buttons
@@ -465,9 +458,9 @@ feature {NONE} -- Initialization
 			l_acc.actions.extend (agent toggle_button (remember_size_button))
 			accelerators.extend (l_acc)
 
-				--toggle_show_template
-			create l_acc.make_with_key_combination (create {EV_KEY}.make_with_code ({EV_KEY_CONSTANTS}.key_space), True, False, False)
-			l_acc.actions.extend (agent show_template)
+			l_pre := preferences.editor_data.shortcuts.item ("next_completion_panel")
+			create l_acc.make_with_key_combination (l_pre.key, l_pre.is_ctrl, l_pre.is_alt, l_pre.is_shift)
+			l_acc.actions.extend (agent show_next_panel)
 			accelerators.extend (l_acc)
 		end
 
@@ -516,7 +509,7 @@ feature -- Initialization
 	initialize_completion_possibilities (a_completion_possibilities: like sorted_names)
 			-- Initialize `sorted_names'  to completion possiblities.
 		do
-			code_template_label.set_text (interface_names.l_show_templates)
+			next_panel_label.set_text (next_panel_title)
 			sorted_names := Void
 			template_sorted_names := Void
 			across a_completion_possibilities as ic loop
@@ -674,7 +667,7 @@ feature -- Query
 					Result := False
 				elseif
 					not show_completion_unicode_symbols and then
-					attached {EB_UNICODE_FOR_COMPLETION} a_item
+					attached {EB_SYMBOLS_FOR_COMPLETION} a_item
 				then
 					Result := False
 				end
@@ -692,7 +685,7 @@ feature -- Query
 			then
 					-- Do not display unicode symbols when no prefix is typed.
 					-- otherwise all unicode symbols will be listed for any feature completion!
-				if attached {EB_UNICODE_FOR_COMPLETION} a_item as l_uc_item then
+				if attached {EB_SYMBOLS_FOR_COMPLETION} a_item as l_uc_item then
 					Result := l_uc_item.begins_with (if a_name = Void then "" else a_name end)
 				end
 			end
@@ -790,7 +783,7 @@ feature {NONE} -- Option behaviour
 		require
 			a_label_not_void: a_label /= Void
 		do
-			show_template
+			show_next_panel
 		end
 
 	on_option_button_selected (a_button: EV_TOOL_BAR_TOGGLE_BUTTON)
@@ -1020,26 +1013,6 @@ feature {NONE} -- Option behaviour
 			end
 		end
 
-	apply_template_completion_list
-			-- Apply filtering by template completion list.
-		do
-			build_template_list
-			resize_column_to_window_width
-		end
-
-	build_template_list
-			-- Build template list.
-		do
-			if attached template_sorted_names as l_names then
-				full_list := l_names
-			else
-					-- Empty full list if we don't have templates to show.
-				reset_full_list
-			end
-		ensure
-			full_list_not_void: full_list /= Void
-		end
-
 feature {NONE} -- Recyclable
 
 	internal_recycle
@@ -1066,6 +1039,8 @@ feature {NONE} -- Recyclable
 			l_pre := preferences.editor_data.shortcuts.item ("toggle_show_obsolete_items")
 			l_pre.change_actions.prune_all (setup_accelerators_agent)
 			l_pre := preferences.editor_data.shortcuts.item ("toggle_remember_size")
+			l_pre.change_actions.prune_all (setup_accelerators_agent)
+			l_pre := preferences.editor_data.shortcuts.item ("next_completion_panel")
 			l_pre.change_actions.prune_all (setup_accelerators_agent)
 		end
 
@@ -1191,7 +1166,7 @@ feature {NONE} -- String matching
 				feature_mode and then
 				show_completion_unicode_symbols and then
 				ev_application.ctrl_pressed and then -- Only on demand!
-				attached unicode_symbol_list as lst and then
+				attached unicode_symbol_list (True) as lst and then
 				not lst.is_empty
 			then
 				l_sorted_names := sorted_names
@@ -1208,29 +1183,46 @@ feature {NONE} -- String matching
 			Precursor
 		end
 
-	unicode_symbol_list: SORTABLE_ARRAY [EB_UNICODE_FOR_COMPLETION]
+	unicode_symbol_list (a_is_delayed: BOOLEAN): SORTABLE_ARRAY [EB_SYMBOLS_FOR_COMPLETION]
 			-- Unicode symbols for completion.
+			-- if `a_is_delayed` then symbol are suggested after N inserted characters.
 		local
 			cnt: INTEGER
 			tb: like unicode_symbols
+			n: EB_SYMBOLS_FOR_COMPLETION
 		do
-			Result := internal_unicode_symbol_list
+			if a_is_delayed then
+				Result := internal_delayed_unicode_symbol_list
+			else
+				Result := internal_unicode_symbol_list
+			end
 			if
 				Result = Void
 			then
 				tb := unicode_symbols
-				create Result.make_filled (create {EB_UNICODE_FOR_COMPLETION}.make ("_", '_'), 1, tb.count)
-				internal_unicode_symbol_list := Result
+				create Result.make_filled (create {EB_SYMBOLS_FOR_COMPLETION}.make ("_", '_'), 1, tb.count)
+				if a_is_delayed then
+					internal_delayed_unicode_symbol_list := Result
+				else
+					internal_unicode_symbol_list := Result
+				end
 				cnt := 0
 				across
 					tb as ic
 				loop
 					cnt := cnt + 1
-					Result.force (create {EB_UNICODE_FOR_COMPLETION}.make (ic.key, ic.item.to_character_32), cnt)
+
+					if a_is_delayed then
+						create {EB_SYMBOLS_FOR_DELAYED_COMPLETION} n.make (ic.key, ic.item.to_character_32)
+					else
+						create {EB_SYMBOLS_FOR_COMPLETION} n.make (ic.key, ic.item.to_character_32)
+					end
+					Result.force (n, cnt)
 				end
 			end
 		end
 
+	internal_delayed_unicode_symbol_list,
 	internal_unicode_symbol_list: like unicode_symbol_list
 
 	unicode_symbols: EB_COMPLETION_UNICODE_SYMBOLS
@@ -1238,10 +1230,130 @@ feature {NONE} -- String matching
 			create Result.make
 		end
 
-feature {NONE} -- Implementation
+feature -- Panel
 
-	mode_template: BOOLEAN
-		-- True if we are displaying templates, False in other case.
+	show_next_panel
+			-- Display next panel (features, templates, symbols, ...)
+		do
+			show_panel_by_id (next_panel_id (current_panel_id))
+		end
+
+	show_panel_by_id (a_panel_id: INTEGER)
+		do
+			inspect a_panel_id
+			when template_panel_id then
+				show_template_panel
+			when symbols_panel_id then
+				show_symbol_panel
+			when features_panel_id then
+				show_features_panel
+			else
+				show_features_panel
+			end
+			resize_column_to_window_width
+			show
+		end
+
+	show_features_panel
+		do
+			current_panel_id := features_panel_id
+			next_panel_label.set_text (panel_title (next_panel_id (current_panel_id)))
+			next_panel_label.refresh_now
+
+			option_bar_box.show
+			if show_completion_target_class then
+				show_info_associated_target_class
+			end
+			build_full_list
+
+			resize_column_to_window_width
+			show
+		end
+
+	show_template_panel
+		do
+			current_panel_id := template_panel_id
+			next_panel_label.set_text (panel_title (next_panel_id (current_panel_id)))
+			next_panel_label.refresh_now
+
+			option_bar_box.hide
+			hide_info_associated_target_class
+
+				-- Build template list.
+			if attached template_sorted_names as l_names then
+				full_list := l_names
+			else
+					-- Empty full list if we don't have templates to show.
+				reset_full_list
+			end
+
+			resize_column_to_window_width
+			show
+		end
+
+	show_symbol_panel
+		do
+			current_panel_id := symbols_panel_id
+			next_panel_label.set_text (panel_title (next_panel_id (current_panel_id)))
+			next_panel_label.refresh_now
+
+			option_bar_box.hide
+			hide_info_associated_target_class
+
+				-- Build template list.
+			if attached unicode_symbol_list (False) as l_names then
+				full_list := l_names
+			else
+					-- Empty full list if we don't have templates to show.
+				reset_full_list
+			end
+			resize_column_to_window_width
+			show
+		end
+
+	current_panel_id: INTEGER
+
+	next_panel_id (a_id: INTEGER): INTEGER
+		do
+			inspect a_id
+			when features_panel_id then
+				Result := template_panel_id
+			when template_panel_id then
+				Result := symbols_panel_id
+			when symbols_panel_id then
+				Result := features_panel_id
+			else
+				Result := features_panel_id
+			end
+		end
+
+	next_panel_title: STRING_32
+		do
+			Result := panel_title (next_panel_id (current_panel_id))
+		end
+
+	panel_title (a_panel_id: INTEGER): STRING_32
+		do
+			inspect a_panel_id
+			when features_panel_id then
+				Result := interface_names.l_show_features
+			when template_panel_id then
+				Result := interface_names.l_show_templates
+			when symbols_panel_id then
+				Result := interface_names.l_show_symbols
+			else
+				Result := "../.."
+			end
+			if attached preferences.editor_data.shortcuts.item ("next_completion_panel") as l_pref then
+				Result := Result + {STRING_32} " (" + l_pref.display_string + {STRING_32} ")"
+			end
+		end
+
+	features_panel_id: INTEGER = 1
+	template_panel_id: INTEGER = 2
+	symbols_panel_id: INTEGER = 3
+
+feature {NONE} -- Implementation
 
 	contract_widget: TUPLE [widget: EV_WIDGET; comment: EVS_LABEL; viewer: ES_CONTRACT_VIEWER_WIDGET]
 			-- Reference to the tooltip widget.
@@ -1555,36 +1667,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	show_template
-			-- Display code template
-		do
-				-- Render the templates.
-			    --| Should we disable the actions and accelerators?
-			if mode_template then
-				mode_template := False
-
-				option_bar_box.show
-				if show_completion_target_class then
-					show_info_associated_target_class
-				end
-				code_template_label.set_text (interface_names.l_show_templates)
-				code_template_label.refresh_now
-				build_full_list
-				resize_column_to_window_width
-				show
-			else
-				mode_template := True
-
-				option_bar_box.hide
-				hide_info_associated_target_class
-
-				code_template_label.set_text (interface_names.l_show_features)
-				code_template_label.refresh_now
-				apply_template_completion_list
-				show
-			end
-		end
-
 	show_tooltip (a_row: EV_GRID_ROW)
 			-- Show the floating tooltip
 		require
@@ -1673,7 +1755,7 @@ feature {NONE} -- Implementation
 						if ev_application.ctrl_pressed or else show_completion_disambiguated_name then
 							if attached {EB_NAME_FOR_COMPLETION} l_name_item as eb_name_item and then eb_name_item.has_dot then
 								local_name := l_name_item.full_insert_name
-							elseif attached {EB_UNICODE_FOR_COMPLETION} l_name_item as eb_uc_item then
+							elseif attached {EB_SYMBOLS_FOR_COMPLETION} l_name_item as eb_uc_item then
 								local_name := eb_uc_item.full_insert_name
 							else
 								local_name := {STRING_32} " " + l_name_item.full_insert_name
@@ -1681,7 +1763,7 @@ feature {NONE} -- Implementation
 						else
 							if attached {EB_NAME_FOR_COMPLETION} l_name_item as eb_name_item and then eb_name_item.has_dot then
 								local_name := l_name_item.insert_name
-							elseif attached {EB_UNICODE_FOR_COMPLETION} l_name_item as eb_uc_item then
+							elseif attached {EB_SYMBOLS_FOR_COMPLETION} l_name_item as eb_uc_item then
 								local_name := eb_uc_item.insert_name
 							else
 								local_name := {STRING_32} " " + l_name_item.insert_name

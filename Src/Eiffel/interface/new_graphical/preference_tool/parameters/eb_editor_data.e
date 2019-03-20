@@ -1255,7 +1255,7 @@ feature -- Keybord shortcuts Customization
 			Result.extend ([l_hash, main_window_group])
 
 				-- Shortcuts for completion window group
-			create l_hash.make (8)
+			create l_hash.make (9)
 			l_hash.put ([False, False, False, key_strings.item (Key_F1).twin.as_string_8], "toggle_filter")
 			l_hash.put ([False, False, False, key_strings.item (Key_F2).twin.as_string_8], "toggle_show_type")
 			l_hash.put ([False, False, False, key_strings.item (Key_F3).twin.as_string_8], "toggle_show_signature")
@@ -1264,6 +1264,7 @@ feature -- Keybord shortcuts Customization
 			l_hash.put ([False, False, False, key_strings.item (Key_F5).twin.as_string_8], "toggle_show_obsolete_items")
 			l_hash.put ([False, False, False, key_strings.item (Key_F6).twin.as_string_8], "toggle_show_tooltip")
 			l_hash.put ([False, False, False, key_strings.item (Key_F7).twin.as_string_8], "toggle_remember_size")
+			l_hash.put ([False, True, False, key_strings.item (key_space).twin.as_string_8], "next_completion_panel")
 			Result.extend ([l_hash, completion_window_group])
 		end
 

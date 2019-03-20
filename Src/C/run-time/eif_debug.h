@@ -159,14 +159,14 @@ RT_LNK EIF_REFERENCE rt_dbg_stack_value (uint32 stack_depth, uint32 loc_type, ui
 #define RTDBGH(d, bp_i, bp_ni)	\
 		rt_ext_notify_event (RTDBG_EVENT_RT_HOOK, (EIF_REFERENCE) 0, d, bp_i, bp_ni);
 
-#define RTDBGA_LOCAL(curr,n,t,x,m)		\
-		rt_ext_notify_assign (RTDBG_EVENT_RT_ASSIGN_LOCAL, db_cstack, curr, n, 0,0, t, x,0,m);
-		/* curr=object; n=position; t=type; x=(1:expanded; 0:normal) */
+#define RTDBGA_LOCAL(n,t,x,m)		\
+		rt_ext_notify_assign (RTDBG_EVENT_RT_ASSIGN_LOCAL, db_cstack, (EIF_REFERENCE) 0, n, 0,0, t, x,0,m);
+		/* n=position; t=type; x=(1:expanded; 0:normal) */
 #define RTDBGA_ATTRB(curr,n,t,x,p)	\
 		rt_ext_notify_assign (RTDBG_EVENT_RT_ASSIGN_ATTRIB, db_cstack, curr, n, 0,0, t, x,p,0);
 		/* curr=object; n=offset; t=type; x=(1:expanded; 0:normal) p=(1:precomp; 0:normal) */
 
-#define RTDBGAL(curr,n,t,x,m)	RTDBGA_LOCAL(curr,n,t,x,m)
+#define RTDBGAL(n,t,x,m)	RTDBGA_LOCAL(n,t,x,m)
 #define RTDBGAA(curr,d,rid,t,x)	\
 		rt_ext_notify_assign (RTDBG_EVENT_RT_ASSIGN_ATTRIB, db_cstack, curr, 0, rid, d, t, x,0,0);
 		/* curr=object; n=offset; t=type; x=(1:expanded; 0:normal) */
@@ -174,9 +174,9 @@ RT_LNK EIF_REFERENCE rt_dbg_stack_value (uint32 stack_depth, uint32 loc_type, ui
 #else
 /* Exec replay disabled for this current integration */
 #define RTDBGH(bp_i, bp_ni)	
-#define RTDBGA_LOCAL(curr,n,t,x,m)
+#define RTDBGA_LOCAL(n,t,x,m)
 #define RTDBGA_ATTRB(curr,n,t,x,p)	
-#define RTDBGAL(curr,n,t,x,m)	
+#define RTDBGAL(n,t,x,m)	
 #define RTDBGAA(curr,d,s,f,t,x)
 #endif
 

@@ -2274,8 +2274,9 @@ feature -- Label texts
 		end
 
 
-	l_show_features: STRING_32 	do Result := locale.translation ("Show Features (Ctrl+Space)") end
-	l_show_templates: STRING_32 do Result := locale.translation ("Show Templates (Ctrl+Space)") end
+	l_show_features: STRING_32 	do Result := locale.translation ("Show Features") end
+	l_show_templates: STRING_32 do Result := locale.translation ("Show Templates") end
+	l_show_symbols: STRING_32 do Result := locale.translation ("Show Symbols") end
 
 feature -- Label text, no translation (for the editor)
 

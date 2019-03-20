@@ -135,8 +135,6 @@ feature -- Eiffel source line information
 					if attached {LOCAL_B} a_target as locb then
 						buf.put_new_line
 						buf.put_string ("RTDBGAL(")
-						context.current_register.print_register
-						buf.put_string ({C_CONST}.comma_space)
 						buf.put_integer (locb.position)
 						buf.put_string ({C_CONST}.comma_space)
 						buf.put_hex_natural_32 (l_sk_type)
@@ -157,8 +155,6 @@ feature -- Eiffel source line information
 					if attached {RESULT_B} a_target as resb then
 						buf.put_new_line
 						buf.put_string ("RTDBGAL(")
-						context.current_register.print_register
-						buf.put_string ({C_CONST}.comma_space)
 						buf.put_integer (0) --| Let's say Result's position = 0
 						buf.put_string ({C_CONST}.comma_space)
 						buf.put_hex_natural_32 (l_sk_type)

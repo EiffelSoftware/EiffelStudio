@@ -1339,29 +1339,8 @@ feature {NONE} -- Display functions
 
 	on_dpi_change_viewport_size (a_dpi, a_x, a_y: INTEGER; a_width, a_height: INTEGER)
 			-- Viewport was resized.
-		local
-			l_int_v: INTEGER
 		do
-			if is_initialized then
-					-- Do not ever make the buffered line smaller, only larger.
-				if (a_width + offset) > buffered_line.width then
-					buffered_line.set_size (a_width + offset, line_height)
-				end
-				update_vertical_scrollbar
-				update_horizontal_scrollbar
-				update_viewport_after_resize
-				last_viewport_height := a_height
-				l_int_v := vertical_scrollbar.value
-				set_first_line_displayed (first_line_displayed.min (maximum_top_line_index), False)
-				if l_int_v = vertical_scrollbar.value then
-						-- Even though the scrollbar value has not changed, its size has
-						-- changed and we need to update the viewport offset.
-						-- Not doing so would mess up scrolling if you are at the end of the
-						-- text and make the editor bigger, then content will be messed up when
-						-- you scroll up with the mousewheel.
-					on_vertical_scroll (first_line_displayed.min (maximum_top_line_index))
-				end
-			end
+			on_viewport_size (a_x, a_y, a_width, a_height)
 		end
 
 

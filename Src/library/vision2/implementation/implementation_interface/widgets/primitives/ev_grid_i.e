@@ -4861,35 +4861,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			a_width_non_negative: a_width >= 0
 			a_height_non_negative: a_height >= 0
 		do
-				-- Set the internal client dimensions for
-				-- quick retrieval later. This reduces the dependencies on
-				-- `viewport' within other code.
-			viewable_width := a_width
-			viewable_height := a_height
-
-
-				-- We set the computation required to the final column and row as this
-				-- triggers re-computation of the scroll bars, with the minimal recompute performed.
-					-- Update horizontal scroll bar size and position.
-			set_horizontal_computation_required (columns.count + 1)
-			set_vertical_computation_required (row_count + 1)
-				-- Flag that we have triggered a recompute/redraw as the result of
-				-- the viewport resizing. In this situation, extra procssing is performed
-				-- to ensure that the scroll bars update correctly.
-			horizontal_redraw_triggered_by_viewport_resize := True
-			vertical_redraw_triggered_by_viewport_resize := True
-
-				-- Now flag to redraw the complete client area.
-				-- On Windows, the complete client area is redrawn each time a move occurs
-				-- and on Gtk this does not happen. By calling `redraw_client_area', we ensure the
-				-- behavior is the same on both platforms.
-			redraw_client_area
-
-			reposition_locked_items
-		ensure
-			viewable_dimensions_set: viewable_width = a_width and viewable_height = a_height
-			viewport_item_at_least_as_big_as_viewport: viewport.readable implies (viewport.item.width >= viewable_width and
-				viewport.item.height >= viewable_height)
+			viewport_resized (an_x, a_y, a_width, a_height)
 		end
 
 	reposition_locked_items
@@ -6787,7 +6759,7 @@ invariant
 	tree_node_connector_color_not_void: is_initialized implies tree_node_connector_color /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -195,12 +195,6 @@ feature {NONE} -- Implementation for agents
 
 		end
 
-	eiffel_view_frame_dpi_size_change (a_dpi, a_x, a_y, a_width, a_height: INTEGER)
-			-- Handle frame change.
-		do
-
-		end
-
 	retreive_states
 			-- Retreive object states from a file.
 		do
@@ -349,27 +343,11 @@ feature {NONE} -- Implementation for agents
 			analyze_gc.resize (a_x, a_y, a_width, a_height)
 		end
 
-	dpi_resize_histogram (a_dpi, a_x, a_y, a_width, a_height: INTEGER)
-			-- Do things when the eiffel_histogram size change.
-		require else
-			a_height_valid: a_height >= 0 and a_height <= 800
-		do
-			analyze_gc.resize (a_x, a_y, a_width, a_height)
-		end
-
-
 	resize_history (a_x, a_y, a_width, a_height: INTEGER)
 			-- Do things when the eiffel_histogram size change.
 		do
 			analyze_gc.resize_history (a_x, a_y, a_width, a_height)
 		end
-
-	dpi_resize_history (a_dpi, a_x, a_y, a_width, a_height: INTEGER)
-			-- Do things when the eiffel_histogram size change.
-		do
-			analyze_gc.resize_history (a_x, a_y, a_width, a_height)
-		end
-
 
 	timer_event
 			-- The event request by the timer.

@@ -6,7 +6,7 @@ note
 class
 	EV_DPI_ACTION_SEQUENCE
 inherit
-	EV_ACTION_SEQUENCE [TUPLE [dpi:INTEGER; x: INTEGER; y: INTEGER; width: INTEGER; height: INTEGER]]
+	EV_ACTION_SEQUENCE [TUPLE [dpi: INTEGER; x: INTEGER; y: INTEGER; width: INTEGER; height: INTEGER]]
 
 create
 	default_create

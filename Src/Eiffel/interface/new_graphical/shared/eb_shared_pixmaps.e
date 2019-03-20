@@ -29,7 +29,7 @@ feature -- Access
 		local
 			l_dpi: NATURAL
 		once
-			l_dpi := (create {EV_MONITOR_DPI_DETECTOR_IMP}).dpi
+			l_dpi := {EV_MONITOR_DPI_DETECTOR_IMP}.dpi
 			if l_dpi > 108 and then l_dpi <= 120 then
 				create Result.make ("mini_12x12", 12, 12)
 			elseif l_dpi > 132 and then l_dpi <= 144 then
@@ -46,7 +46,7 @@ feature -- Access
 		local
 			l_dpi: NATURAL
 		once
-			l_dpi := (create {EV_MONITOR_DPI_DETECTOR_IMP}).dpi
+			l_dpi := {EV_MONITOR_DPI_DETECTOR_IMP}.dpi
 			if l_dpi > 108 and then l_dpi <= 120 then
 				create Result.make ("small_15x15", 15, 15)
 			elseif l_dpi > 132 and then l_dpi <= 144 then
@@ -63,7 +63,7 @@ feature -- Access
 		local
 			l_dpi: NATURAL
 		once
-			l_dpi := (create {EV_MONITOR_DPI_DETECTOR_IMP}).dpi
+			l_dpi := {EV_MONITOR_DPI_DETECTOR_IMP}.dpi
 			if l_dpi > 108 and then l_dpi <= 120 then
 				create Result.make ("icons_20x20", 20, 20)
 			elseif l_dpi > 132 and then l_dpi <= 144 then

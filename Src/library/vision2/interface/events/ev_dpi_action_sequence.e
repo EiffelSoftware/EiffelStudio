@@ -33,7 +33,7 @@ feature -- Access
 		do
 			action.call ([a_dpi, a_x, a_y, a_width, a_height])
 		end
-		
+
 feature {NONE} -- Implementation
 
 	new_filled_list (n: INTEGER): like Current
@@ -52,9 +52,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
 end
 

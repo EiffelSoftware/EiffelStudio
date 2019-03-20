@@ -1427,7 +1427,6 @@ feature {NONE} -- Messages
 		do
 		end
 
-
 	on_window_pos_changed (window_pos: WEL_WINDOW_POS)
 			-- Wm_windowpschanged message.
 			-- This message is sent to a window whose size,

@@ -1017,7 +1017,7 @@ feature {NONE} -- Factory
             l_top_padding.set_minimum_height (2)
 
             create l_container
-            l_container.set_minimum_height ((create {EV_MONITOR_DPI_DETECTOR_IMP}).scaled_size (26))
+            l_container.set_minimum_height ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (26))
 
                 -- Add left tool bar
             if l_tool_bar /= Void then

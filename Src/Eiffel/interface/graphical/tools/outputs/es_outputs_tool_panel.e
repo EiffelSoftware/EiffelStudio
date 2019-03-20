@@ -927,7 +927,7 @@ feature {NONE} -- Factory
 				-- Selection list
 			create l_combo
 			l_combo.set_tooltip (locale_formatter.translation (tt_output_list))
-			l_combo.set_minimum_width ((create {EV_MONITOR_DPI_DETECTOR_IMP}).scaled_size (220))
+			l_combo.set_minimum_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (220))
 			l_combo.disable_edit
 			l_box.extend (l_combo)
 			selection_combo := l_combo

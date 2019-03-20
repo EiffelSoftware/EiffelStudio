@@ -262,7 +262,6 @@ feature {NONE} -- Implementation
 			redraw_status_bar (a_x, a_y, a_width, a_height)
 		end
 
-
 feature {NONE} -- Factory
 
 	create_widget: EV_VERTICAL_BOX

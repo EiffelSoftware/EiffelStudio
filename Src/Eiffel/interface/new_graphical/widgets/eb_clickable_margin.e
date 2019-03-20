@@ -59,7 +59,7 @@ feature -- Access
 		do
 		    Result := Precursor
 			if not hidden_breakpoints then
-				Result := Result + (create {EV_MONITOR_DPI_DETECTOR_IMP}).scaled_size (breakpoint_token_width) + separator_width
+				Result := Result + {EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (breakpoint_token_width) + separator_width
 			end
 		end
 

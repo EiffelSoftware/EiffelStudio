@@ -110,7 +110,6 @@ feature {NONE} -- Initialization
 					a_split.set_proportion (0.9)
 				end (?, ?, ?, ?, ?, hsp))
 
-
 			l_service.set_associated_widget (Current)
 		end
 
@@ -857,7 +856,7 @@ invariant
 	target_set_in_boxes: search_results_box.target = target
 
 ;note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

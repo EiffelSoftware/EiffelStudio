@@ -127,7 +127,7 @@ feature -- Setting
 
 feature -- Final code generation
 
- 	new_rout_entry (t: CLASS_TYPE; c: like {CLASS_C}.class_id): ROUT_ENTRY
+ 	new_rout_entry (t: CLASS_TYPE; d: BOOLEAN; c: like {CLASS_C}.class_id): ROUT_ENTRY
 			-- <Precursor>
 		require else
 			has_to_be_generated: generate_in > 0
@@ -143,7 +143,7 @@ feature -- Final code generation
 					-- This is because real code generation happens in that class except when generating constants in workbench mode.
 				written_in := generate_in
 			end
-			Result := Precursor (t, c)
+			Result := Precursor (t, d, c)
 				-- Restore original state.
 			written_in := old_written_in
 		end

@@ -79,7 +79,7 @@ feature -- Insertion
 				pattern_id := -1
 			end
 				-- Update `body_index`.
-			if body_index /= body_index_various and then not v.is_deferred then
+			if body_index /= body_index_various and then v.is_polymorphic then
 				if body_index = body_index_unknown then
 						-- There were no implementations registered yet.
 					body_index :=
@@ -146,10 +146,10 @@ feature -- Status report
 			Result := array_item (position).routine_name
 		end
 
-	new_entry (f: FEATURE_I; t: CLASS_TYPE; c: INTEGER): ENTRY
+	new_entry (f: FEATURE_I; t: CLASS_TYPE; d: BOOLEAN; c: INTEGER): ENTRY
 			-- <Precursor>
 		do
-			Result := f.new_rout_entry (t, c)
+			Result := f.new_rout_entry (t, d, c)
 		end
 
 	polymorphic_status_for_body (a_type: TYPE_A; a_context_type: CLASS_TYPE): INTEGER_8
@@ -796,7 +796,7 @@ feature {NONE} -- Implementation
 			l_result_string := l_seed_c_pattern.result_type.c_string
 			l_arg_names := l_seed_c_pattern.argument_name_array
 			l_arg_types := l_seed_c_pattern.argument_type_array
-			if system.has_trampoline (a_entry, a_seed_pattern_id, Current) then
+			if system.has_trampoline (a_entry, a_seed_pattern_id, rout_id) then
 					-- Declare the function as visible to outer modules.
 				extern_declarations.add_routine_with_signature (l_result_string, a_wrapped_name, l_arg_types)
 				is_extern := True

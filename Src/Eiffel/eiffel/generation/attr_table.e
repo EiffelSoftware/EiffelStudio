@@ -37,10 +37,10 @@ feature -- Status report
 
 feature -- Creation
 
-	new_entry (f: FEATURE_I; t: CLASS_TYPE; c: INTEGER): ENTRY
+	new_entry (f: FEATURE_I; t: CLASS_TYPE; d: BOOLEAN; c: INTEGER): ENTRY
 			-- <Precursor>
 		do
-			Result := f.new_attr_entry (t, c)
+			Result := f.new_attr_entry (t, d, c)
 		end
 
 feature -- Status report

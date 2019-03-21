@@ -82,9 +82,9 @@ feature -- Code generation
 			l_cl_type := cl_type.instantiated_in (context.context_class_type.type)
 				-- Initialize variable being caried from `generate_on' to `generate_parameters_list'.
 			is_deferred.put (False)
-			if is_function then
+			if is_function and then register /= no_register then
 				register.print_register
-				buffer.put_string (" = ")
+				buffer.put_three_character (' ', '=', ' ')
 			end
 			buffer.put_character ('(')
 			generate_function_cast (l_cl_type)
@@ -97,34 +97,36 @@ feature -- Code generation
 			buffer.put_new_line
 			closed_operands_b.generate_access_on_type (reg, l_cl_type)
 			generate_parameters_list
-			buffer.put_two_character (')', ';')
+			buffer.put_character (')')
 			buffer.exdent
-			buffer.put_new_line
 
-				-- if it is a call on a function object we need to set the last_result
+				-- If it is a call on a function object we need to set the last_result.
 			if is_function and then not is_item then
+				buffer.put_character (';')
+				buffer.put_new_line
 				last_result_b.generate_access_on_type (reg, l_cl_type)
 				buffer.put_string (" = ")
 				register.print_register
-				buffer.put_character (';')
-				buffer.put_new_line
 					-- If function return type is a reference we need an aging test.
 				if register.c_type.is_reference then
+					buffer.put_character (';')
+					buffer.put_new_line
 					buffer.put_string ({C_CONST}.rtar_open)
 					reg.print_register
 					buffer.put_string ({C_CONST}.comma_space)
 					register.print_register
 					buffer.put_character (')')
-					buffer.put_character (';')
-					buffer.put_new_line
 				end
 			end
 		end
 
-	analyze_on (reg: REGISTRABLE)
-			-- Analyze agent call on `reg'
+	analyze_on (r: REGISTRABLE)
+			-- Analyze agent call on `r`.
+		local
+			reg: REGISTRABLE
 		do
-			Precursor{FEATURE_BL}(reg)
+			Precursor {FEATURE_BL} (r)
+			reg := target_register (r)
 			if is_manifest_optimizable then
 				rout_disp_b := init_attribute ({PREDEFINED_NAMES}.rout_disp_name_id, reg)
 			else
@@ -132,12 +134,8 @@ feature -- Code generation
 			end
 			closed_operands_b := init_attribute ({PREDEFINED_NAMES}.closed_operands_name_id, reg)
 			calc_rout_addr_b := init_attribute ({PREDEFINED_NAMES}.calc_rout_addr_name_id, reg)
-
 			if is_function then
 				last_result_b := init_attribute ({PREDEFINED_NAMES}.last_result_name_id, reg)
-			end
-
-			if is_function then
 				if is_item then
 					get_register
 				else
@@ -168,15 +166,14 @@ feature -- Code generation
 			is_predicate := rout_class.class_id = system.predicate_class_id
 			is_function := rout_class.class_id = system.function_class_id or is_predicate
 
-			if is_function then
-				if is_predicate then
-					type := create {BOOLEAN_A}
+			type :=
+				if not is_function then
+					void_type
+				elseif is_predicate then
+					boolean_type
 				else
-					type := cl_type.generics.last
+					cl_type.generics.last
 				end
-			else
-				type := create {VOID_A}
-			end
 
 			if attached {AGENT_CALL_BL} a as a_bl then
 				optimized_parameters := a_bl.optimized_parameters
@@ -278,20 +275,16 @@ feature {NONE} --Implementation
 			l_ret_type: TYPE_C
 			i: INTEGER
 		do
-			if is_function then
-				if is_predicate then
-					l_ret_type := boolean_type.c_type
+			l_ret_type :=
+				if not is_function then
+					void_type.c_type
+				elseif is_predicate then
+					boolean_type.c_type
 				else
-					l_ret_type := a_type.generics.last.c_type
+					a_type.generics.last.c_type
 				end
-			else
-				l_ret_type := void_type.c_type
-			end
-			if is_manifest_optimizable then
-				create l_arg_types.make_filled ("EIF_REFERENCE", 1, optimized_parameters.count + 2)
-			else
-				create l_arg_types.make_filled ("EIF_REFERENCE", 1, 3)
-			end
+			create l_arg_types.make_filled ("EIF_REFERENCE", 1,
+				if is_manifest_optimizable then optimized_parameters.count + 2 else 3 end)
 			l_arg_types.put ("EIF_POINTER", 1)
 				-- "EIF_REFERENCE" is used by default.
 				-- l_arg_types.put ("EIF_REFERENCE", 2)

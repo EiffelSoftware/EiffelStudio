@@ -9,8 +9,10 @@ inherit
 			calls_special_features,
 			context_type,
 			enlarged,
+			enlarged_on,
 			has_call,
 			is_feature_special,
+			is_instance_free,
 			is_target_type_fixed,
 			optimized_byte_node,
 			parameters,
@@ -21,17 +23,27 @@ inherit
 feature -- Status report
 
 	is_instance_free: BOOLEAN
-			-- Is the call instance-free, i.e. does not need a target object?
+			-- <Precursor>
 
 	is_target_free: BOOLEAN
-			-- Is the feature independent on the target type of the call?
-			-- (An instance-free feature can depend on the target type if it makes unqualifed calls to features that are redeclared in descendants.)
+			-- Is the feature independent of the target type of the call?
+			-- (A non-object feature call can depend on the target type
+			-- if the type is not bound to a specific class type (e.g., it's a formal, or an anchored type), or
+			-- if it's a call to an internal feature or to an external with unqualifed calls to internal features.)
+		require
+			is_instance_free
 		do
-			Result :=
-				attached precursor_type as p and then
-				(p.is_basic or else
-				attached p.base_class as b and then b.feature_of_rout_id (routine_id).is_target_free or else
-				attached multi_constraint_static as t and then attached t.base_class as b and then b.feature_of_rout_id (routine_id).is_target_free)
+			if attached precursor_type as p then
+				Result :=
+					p.is_basic or else
+					not p.is_formal and then
+					not p.is_like and then
+					attached p.base_class as b and then b.feature_of_rout_id (routine_id).is_target_free
+			else
+				check
+					from_precondition: False
+				end
+			end
 		end
 
 	is_class_target_needed: BOOLEAN
@@ -49,9 +61,9 @@ feature -- Status report
 		do
 			Result :=
 				attached precursor_type as p and then
-					(not is_class_target_needed or else
-					p.is_basic or else
-					p.is_standalone)
+				(not is_class_target_needed or else
+				p.is_basic or else
+				p.is_standalone)
 		end
 
 	has_call: BOOLEAN = True
@@ -64,6 +76,26 @@ feature -- Status report
 			-- Otherwize, return false
 		do
 			Result := special_routines.has (feature_name_id, compilation_type, target_type)
+		end
+
+	is_once: BOOLEAN
+			-- Is the current feature a once feature?
+			--| Used when inlining is turned on in final mode
+			--| to avoid inlining once routines.
+		do
+				-- False by default.
+		end
+
+	is_process_relative: BOOLEAN
+			-- Is current feature process-relative?
+		do
+				-- False by default.
+		end
+
+	is_object_relative: BOOLEAN
+			-- Is current feature object-relative?
+		do
+				-- False by default.
 		end
 
 feature -- Access
@@ -79,12 +111,23 @@ feature -- Context type
 			if precursor_type = Void then
 				Result := Precursor
 			else
-				Result := Context.real_type (precursor_type)
-				if Result.is_multi_constrained then
-					check
-						has_multi_constraint_static: has_multi_constraint_static
-					end
-					Result := context.real_type (multi_constraint_static)
+				Result := real_precursor_type
+			end
+		end
+
+feature {NONE} -- Target type
+
+	real_precursor_type: TYPE_A
+			-- A real type of precursor type.
+		require
+			attached precursor_type
+		do
+			Result := context.real_type (precursor_type)
+			if Result.is_multi_constrained then
+				if attached multi_constraint_static as s then
+					Result := context.real_type (s)
+				else
+					check has_multiconstraint_static: False end
 				end
 			end
 		end
@@ -120,6 +163,120 @@ feature -- C code generation
 			Result := enlarged_on (context_type)
 		end
 
+	enlarged_on (type_i: TYPE_A): CALL_ACCESS_B
+			-- Enlarged byte node evaluated in the context of `type_i'.
+		local
+			array_index: INTEGER
+			target_type_id: INTEGER
+			context_entry: ROUT_ENTRY
+			target_type: TYPE_A
+		do
+				-- If this is a call to a precursor or a static call on a fixed type,
+				-- the feature is known at compile time.
+				-- Otherwise, even if `precursor_type` is set, it could be a static call on a variable type,
+				-- e.g., "{G}.foo", that should be dealt with using dynamic dispatch.
+			if
+				attached precursor_type as p and then
+				(is_instance_free implies not p.is_formal and then (p.is_like implies p.is_expanded))
+			then
+				array_index := -1
+			end
+			if context.workbench_mode then
+--				if array_index >= 0 then
+						-- Call the feature polymorphically.
+					if
+						not context.is_written_context and then
+						attached type_i.base_class as c and then
+						attached c.feature_of_rout_id (routine_id) as f and then
+						f.is_attribute and then
+						(call_kind = call_kind_qualified implies not system.seed_of_routine_id (f.rout_id_set.first).has_formal)
+					then
+							-- The function is redeclared into an attribute.
+						create {ATTRIBUTE_BW} Result.fill_from_access (Current, f)
+					else
+						create {FEATURE_BW} Result.fill_from (Current)
+					end
+--				else
+--						-- Perform a direct call.
+--						-- TODO: add classes to handle direct internal and external calls.
+--				end
+			else
+				target_type := type_i
+				if target_type.is_multi_constrained and then attached multi_constraint_static as c then
+					target_type := real_type (c)
+				end
+				if array_index >= 0 then
+					array_index := eiffel_table.is_polymorphic_for_body (routine_id, target_type, context.original_class_type)
+				end
+				if array_index = -2 then
+						-- There is no feature to call.
+					create {VOID_CALL_BL} Result.make (Current)
+				elseif array_index >= 0 then
+						-- The call is polymorphic.
+						-- Check whether this is a call to a routine or to an attribute.
+					if
+						not context.is_written_context and then
+						attached {CL_TYPE_A} target_type as c and then
+						attached c.base_class.feature_of_rout_id (routine_id) as f and then
+						f.is_attribute and then
+						(system.seed_of_routine_id (routine_id).type.is_expanded or else
+							not
+								(context.has_expanded_descendants_information and then
+								context.has_expanded_descendants
+									(context.real_type (type).type_id (context.context_class_type.type))))
+					then
+						create {ATTRIBUTE_BL} Result.fill_from_access (Current, f)
+					else
+							-- Make a polymorphic call.
+						create {POLYMORPHIC_CALL_BL} Result.make (Current, array_index)
+					end
+				elseif attached {ROUT_TABLE} eiffel_table.poly_table (routine_id) as rout_table then
+						-- The call is not polymorphic in the given context.
+					target_type_id := target_type.type_id (context.context_cl_type.generic_derivation)
+					if attached effective_entry (target_type, target_type_id, rout_table) as entry then
+						context_entry := rout_table.context_item
+						if entry.pattern_id /= context_entry.pattern_id then
+								-- A trampoline is required to adapt argument and/or result type.
+							create {TRAMPOLINE_CALL_BL} Result.make (Current, entry, context_entry, rout_table)
+						else
+								-- Figure out what type of a direct call should be performed.
+							if entry.is_attribute then
+								if entry.is_initialization_required then
+										-- Call a wrapper.
+									create {INTERNAL_CALL_BL} Result.make (Current, entry)
+								else
+										-- Access the attribute directly.
+									create {ATTRIBUTE_BL} Result.fill_from_access
+										(Current, system.class_of_id (entry.class_id).feature_of_feature_id (entry.feature_id))
+								end
+							elseif
+								attached system.class_of_id (entry.class_id).feature_of_feature_id (entry.feature_id) as f and then
+								(f.is_constant and then not f.is_once or else f.is_external)
+							then
+									-- TODO: review type structure to make `CONSTANT_B` a descendant of `CALL_ACCESS_B`
+									-- and remove the type cast.
+								if attached {EXTERNAL_B} direct_byte_node (f, type_i.is_separate) as e then
+									create {EXTERNAL_CALL_BL} Result.make (e, entry)
+								else
+										-- Call a wrapper.
+									create {INTERNAL_CALL_BL} Result.make (Current, entry)
+								end
+							else
+									-- Call the internal feature directly.
+								create {INTERNAL_CALL_BL} Result.make (Current, entry)
+							end
+						end
+					else
+							-- There is no feature to call.
+						create {VOID_CALL_BL} Result.make (Current)
+					end
+				else
+						-- There is no feature to call.
+					create {VOID_CALL_BL} Result.make (Current)
+				end
+			end
+		end
+
 feature -- Array optimization
 
 	optimized_byte_node: like Current
@@ -147,28 +304,6 @@ feature -- Inlining
 			else
 				Result := 1
 			end
-		end
-
-feature {NONE} -- Access
-
-	effective_entry (target_type: TYPE_A; target_type_id: INTEGER; routine_table: ROUT_TABLE): detachable ROUT_ENTRY
-			-- An entry to call (if any) when there is only one reachable version of the feature
-			-- for the type `target_type` of ID `target_type_id` in the table `routine_table`.
-		require
-			target_type_id = target_type.type_id (context.context_cl_type)
-		do
-			if attached precursor_type then
-					-- The feature to call is fixed.
-				routine_table.goto (target_type_id)
-			else
-					-- The feature to call corresponds to the target type or a conforming descendant.
-				routine_table.goto_implemented (target_type, context.context_class_type)
-			end
-			if routine_table.is_implemented then
-				Result := routine_table.item
-			end
-		ensure
-			attached Result implies attached routine_table.context_item
 		end
 
 note

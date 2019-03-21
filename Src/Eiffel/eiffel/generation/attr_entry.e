@@ -16,21 +16,25 @@ create
 
 feature {NONE} -- Creation
 
-	make (t: like type; tid: like type_id; fid: like feature_id; cid: like class_id)
+	make (t: like type; tid: like type_id; fid: like feature_id; d: BOOLEAN; cid: like class_id)
 			--	Initialize an object using
 			--	• result type `t`
 			--	• type ID `tid`
 			--	• feature ID `fid`
+			--	• `d` tells if the associated class is deferred
 			--	• class ID `cid`
 		do
 			type := t
 			type_id := tid
 			feature_id := fid
+			is_polymorphic := not d
 			class_id := cid
 		ensure
 			type = t
 			type_id = tid
 			feature_id = fid
+			not is_deferred
+			is_polymorphic /= d
 			class_id = cid
 		end
 

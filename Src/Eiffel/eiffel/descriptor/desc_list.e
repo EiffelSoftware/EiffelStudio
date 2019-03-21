@@ -87,8 +87,10 @@ feature -- Insertion
 			i: INTEGER
 			l_area: SPECIAL [DESCRIPTOR]
 			class_id: like {CLASS_C}.class_id
+			is_deferred: BOOLEAN
 		do
 			class_id := base_class.class_id
+			is_deferred := base_class.is_deferred
 			from
 				local_class_types := class_types
 				l_area := area
@@ -98,7 +100,7 @@ feature -- Insertion
 			loop
 					-- `i = 0' is used to signify last iteration so that the entry
 					-- object may be aliased without side effect.
-				l_area.item (i).set_invariant_entry (f.new_entry (local_class_types.i_th (i + 1), System.routine_id_counter.invariant_rout_id, class_id))
+				l_area.item (i).set_invariant_entry (f.new_entry (local_class_types.i_th (i + 1), System.routine_id_counter.invariant_rout_id, is_deferred, class_id))
 				i := i - 1
 			end
 		end
@@ -120,9 +122,11 @@ feature -- Insertion
 			du: DESC_UNIT
 			local_class_types: TYPE_LIST
 			class_id: like {CLASS_C}.class_id
+			is_deferred: BOOLEAN
 		do
 				-- Get the polymorphical unit corresponding to `f'
 			class_id := base_class.class_id
+			is_deferred := base_class.is_deferred
 				-- Get the origin of the routine of id `r_id' and
 				-- the offset of that routine in the origin class.
 				-- Also get the number of routines introduced in the
@@ -164,7 +168,7 @@ feature -- Insertion
 				end
 					-- `i = 0' is used to signify last iteration so that the entry
 					-- object may be aliased without side effect.
-				du.put (f.new_entry (local_class_types.i_th (i + 1), r_id, class_id), offset)
+				du.put (f.new_entry (local_class_types.i_th (i + 1), r_id, is_deferred, class_id), offset)
 				i := i - 1
 			end
 		end

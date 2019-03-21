@@ -37,10 +37,11 @@ feature {NONE} -- Creation
 		a_access_type_id: like access_type_id;
 		a_access_in: like access_in;
 		a_written_in: like written_in;
+		a_is_class_deferred: BOOLEAN;
 		a_class_id: like class_id)
 			--	Initialize an object with the corresponding data.
 		do
-			make_attr (a_type, a_type_id, a_feature_id, a_class_id)
+			make_attr (a_type, a_type_id, a_feature_id, a_is_deferred or a_is_class_deferred, a_class_id)
 			is_deferred := a_is_deferred
 			body_index := a_body_index
 			pattern_id := a_pattern_id
@@ -57,6 +58,7 @@ feature {NONE} -- Creation
 			access_type_id = a_access_type_id
 			access_in = a_access_in
 			written_in = a_written_in
+			is_polymorphic = not a_is_deferred and not a_is_class_deferred
 			class_id = a_class_id
 		end
 
@@ -143,7 +145,7 @@ feature -- Status report
 	used: BOOLEAN
 			-- Is the entry used?
 		do
-			if not is_deferred then
+			if is_polymorphic then
 				Result :=
 						-- Check if dead code removal is in place.
 					attached system.remover as r implies

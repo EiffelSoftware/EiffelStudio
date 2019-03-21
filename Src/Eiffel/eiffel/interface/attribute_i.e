@@ -12,6 +12,7 @@ inherit
 		redefine
 			assigner_name_id,
 			check_expanded,
+			direct_access_for_feature,
 			extension,
 			generate,
 			has_code,
@@ -55,27 +56,27 @@ feature -- Access
 	extension: IL_EXTENSION_I
 			-- Deferred external information
 
- 	new_rout_entry (t: CLASS_TYPE; c: like {CLASS_C}.class_id): ROUT_ENTRY
+ 	new_rout_entry (t: CLASS_TYPE; d: BOOLEAN; c: like {CLASS_C}.class_id): ROUT_ENTRY
 			-- <Precursor>
 		do
-			Result := Precursor (t, c)
+			Result := Precursor (t, d, c)
 			Result.set_is_attribute
 			if has_body then
 				Result.set_has_body
 			end
 		end
 
- 	new_attr_entry (t: CLASS_TYPE; c: like {CLASS_C}.class_id): ATTR_ENTRY
+ 	new_attr_entry (t: CLASS_TYPE; d: BOOLEAN; c: like {CLASS_C}.class_id): ATTR_ENTRY
  			-- <Precursor>
  		do
- 			Result := Precursor (t, c)
+ 			Result := Precursor (t, d, c)
  			if has_body then
  				Result.set_has_body
  			end
  		end
 
 	undefinable: BOOLEAN
-			-- Is an attribute undefinable ?
+			-- Is an attribute undefinable?
 		do
 			-- Do nothing
 		end
@@ -230,17 +231,32 @@ feature -- Element Change
 
 	access_for_feature (access_type: TYPE_A; static_type: TYPE_A; is_qualified: BOOLEAN; is_separate: BOOLEAN; is_free: BOOLEAN): ACCESS_B
 			-- Byte code access for current feature
+		do
+			if
+				extension = Void and then
+				is_qualified and then
+				system.seed_of_routine_id (rout_id_set.first).has_formal
+			then
+					-- Call a generic wrapper.
+				Result := Precursor (access_type, static_type, is_qualified, is_separate, False)
+			else
+				Result := direct_access_for_feature (access_type, static_type, is_qualified, is_separate, is_free)
+			end
+		end
+
+	direct_access_for_feature (access_type: TYPE_A; static_type: TYPE_A; is_qualified: BOOLEAN; is_separate: BOOLEAN; is_free: BOOLEAN): ACCESS_B
+			-- <Precursor>
 		local
 			attribute_b: ATTRIBUTE_B
 			external_b: EXTERNAL_B
-			l_type: TYPE_A
+			result_type: TYPE_A
 		do
 			if is_qualified then
 					-- To fix eweasel test#term155 we remove all anchors from
 					-- calls after the first dot in a call chain.
-				l_type := access_type.context_free_type
+				result_type := access_type.context_free_type
 			else
-				l_type := access_type
+				result_type := access_type
 			end
 			if extension /= Void then
 				create external_b
@@ -248,16 +264,13 @@ feature -- Element Change
 				if static_type /= Void then
 					external_b.set_static_class_type (static_type)
 				end
-				external_b.set_type (l_type)
+				external_b.set_type (result_type)
 				external_b.set_external_name_id (external_name_id)
 				external_b.set_extension (extension)
 				Result := external_b
-			elseif is_qualified and then system.seed_of_routine_id (rout_id_set.first).has_formal then
-					-- Call a generic wrapper.
-				Result := Precursor (access_type, static_type, is_qualified, is_separate, False)
 			else
 				create attribute_b.make (Current)
-				attribute_b.set_type (l_type)
+				attribute_b.set_type (result_type)
 				Result := attribute_b
 			end
 		end

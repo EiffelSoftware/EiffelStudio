@@ -70,6 +70,12 @@ feature -- Access
 
 feature -- Status report
 
+	is_instance_free: BOOLEAN
+			-- Is the call instance-free, i.e. does not need a target object?
+		do
+				-- False by default.
+		end
+
 	is_target_type_fixed: BOOLEAN
 			-- Is target type known at compile time?
 		do
@@ -170,121 +176,6 @@ feature -- Byte code generation
 			reg_not_void: reg /= Void
 			typ_not_void: typ /= Void
 		do
-		end
-
-	generate_workbench_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_A; result_register: REGISTER)
-			-- Generate feature call in a `typ' context
-			-- in workbench mode.
-		require
-			result_register_attached: c_type.is_reference implies result_register /= Void
-		local
-			buf: GENERATION_BUFFER
-			return_type: TYPE_C
-		do
-			buf := buffer
-			return_type := c_type
-			if not return_type.is_void then
-				buf.put_two_character ('(', '(')
-				if return_type.is_reference then
-					context.print_argument_register (result_register, buf)
-					buf.put_string (" = ")
-				end
-			end
-			buf.put_character ('(')
-			return_type.generate_function_cast (buf, argument_types, True)
-			generate_workbench_address (reg, typ)
-			buf.put_character (')')
-		end
-
-	generate_workbench_address (t: REGISTRABLE; c: CL_TYPE_A)
-			-- Generate workbench address of a routine that is called on target `t` of type `c`.
-		require
-			t_attached: attached t
-			c_attached: attached c
-		local
-			is_nested: BOOLEAN
-			buf: GENERATION_BUFFER
-			cl_type_i: CL_TYPE_A
-			l_type: TYPE_A
-			macro: STRING
-		do
-			is_nested := not is_first
-			buf := buffer
-			if
-				attached precursor_type as p and then
-				is_target_type_fixed
-			then
-				l_type := context.real_type (p)
-				if l_type.is_multi_constrained then
-					check
-						has_multi_constraint_static: has_multi_constraint_static
-					end
-					l_type := context.real_type (multi_constraint_static)
-				end
-				check attached {CL_TYPE_A} l_type as ct then
-					cl_type_i := ct
-				end
-			else
-				cl_type_i := c
-			end
-			if is_nested then
-				inspect call_kind
-				when call_kind_creation then
-					macro := routine_macro.creation_call
-				when call_kind_qualified then
-					macro := routine_macro.qualified_call
-				else
-					macro := routine_macro.unqualified_call
-				end
-			else
-				macro := routine_macro.unqualified_call
-			end
-			buf.put_string (macro)
-			buf.put_character ('(')
-			buf.put_integer (routine_id)
-			buf.put_two_character (',', ' ')
-			if not is_nested then
-				if not attached precursor_type then
-					context.generate_current_dtype
-				elseif is_target_type_fixed then
-						-- Use dynamic type of parent instead
-						-- of dynamic type of Current.
-					buf.put_static_type_id (cl_type_i.static_type_id (context.context_class_type.type))
-				else
-					buf.put_string ({C_CONST}.dtype)
-					buf.put_character ('(')
-					t.print_register
-					buf.put_character (')')
-				end
-			elseif call_kind = call_kind_qualified then
-					-- Feature name is used to report a call on a void target.
-					-- This cannot happen with an unqualified call or a creation procedure call.
-				buf.put_string_literal (feature_name)
-				buf.put_two_character (',', ' ')
-				t.print_register
-			else
-				buf.put_string ({C_CONST}.dtype)
-				buf.put_character ('(')
-				t.print_register
-				buf.put_character (')')
-			end
-			buf.put_character (')')
-		end
-
-	generate_workbench_end (result_register: REGISTER)
-			-- Generate final portion of C code in workbench mode.
-		require
-			result_register_attached: c_type.is_reference implies result_register /= Void
-		local
-			buf: GENERATION_BUFFER
-		do
-			if not c_type.is_void then
-					-- This is a query. The result value may need conversion.
-				buf := buffer
-				buf.put_character (')')
-				generate_return_value_conversion (result_register)
-				buf.put_character (')')
-			end
 		end
 
 	special_routines: SPECIAL_FEATURES
@@ -617,8 +508,10 @@ feature {NONE} -- Implementation
 		local
 			p: like parent
 		do
-			Result := f.access (type, p /= Void, is_separate)
 			p := parent
+			Result := f.access_for_feature (type, precursor_type, p /= Void, is_separate, is_instance_free)
+			Result.set_parameters (parameters)
+			Result.set_multi_constraint_static (multi_constraint_static)
 			if p /= Void then
 				Result.set_parent (p)
 				if p.message = Current then
@@ -628,9 +521,62 @@ feature {NONE} -- Implementation
 					p.set_target (Result)
 				end
 			end
-			Result.set_parameters (parameters)
 		ensure
 			result_not_void: Result /= Void
+		end
+
+	direct_byte_node (f: FEATURE_I; is_separate: BOOLEAN): ACCESS_B
+			-- Byte node for the context feature `f` called on a type
+			-- that is separate or not depending on `is_separate`.
+			-- The byte node is not supposed to be a wrapper
+			-- (i.e. it should not produce feature byte node when `f` describes an attribute).
+		require
+			f_not_void: f /= Void
+			not_is_once: not f.is_once
+		local
+			p: like parent
+		do
+			p := parent
+			Result := f.direct_access_for_feature (type, precursor_type, p /= Void, is_separate, is_instance_free)
+			Result.set_parameters (parameters)
+			Result.set_multi_constraint_static (multi_constraint_static)
+			if p /= Void then
+				Result.set_parent (p)
+				if p.message = Current then
+					p.set_message (Result)
+				else
+					check p.target = Current end
+					p.set_target (Result)
+				end
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
+
+feature {NONE} -- Access
+
+	effective_entry (target_type: TYPE_A; target_type_id: INTEGER; routine_table: ROUT_TABLE): detachable ROUT_ENTRY
+			-- An entry to call (if any) when there is only one reachable version of the feature
+			-- for the type `target_type` of ID `target_type_id` in the table `routine_table`.
+		require
+			target_type_id = target_type.type_id (context.context_cl_type)
+		do
+			if
+				attached precursor_type as p and then
+				(is_instance_free implies not p.is_formal and then (p.is_like implies p.is_expanded))
+			then
+					-- The feature to call is fixed.
+					-- This is true even for calls on generic types with formal generics because the code is generated for a particular class type.
+				routine_table.goto (target_type_id)
+			else
+					-- The feature to call corresponds to the target type or a conforming descendant.
+				routine_table.goto_implemented (target_type, context.context_class_type)
+			end
+			if routine_table.is_implemented then
+				Result := routine_table.item
+			end
+		ensure
+			attached Result implies attached routine_table.context_item
 		end
 
 note

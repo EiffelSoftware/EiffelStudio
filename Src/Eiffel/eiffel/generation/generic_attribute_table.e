@@ -72,10 +72,10 @@ feature {NONE} -- Status report
 
 feature -- Access
 
-	new_entry (f: FEATURE_I; t: CLASS_TYPE; c: INTEGER): ENTRY
+	new_entry (f: FEATURE_I; t: CLASS_TYPE; d: BOOLEAN; c: INTEGER): ENTRY
 			-- <Precursor>
 		do
-			Result := f.new_rout_entry (t, c)
+			Result := f.new_rout_entry (t, d, c)
 		end
 
 feature -- Code generation

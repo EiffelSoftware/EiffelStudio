@@ -9,29 +9,15 @@ inherit
 
 	ATTRIBUTE_BL
 		redefine
-			check_dt_current,
 			generate_access_on_type,
 			is_polymorphic
 		end
 
 create
-	fill_from
+	fill_from,
+	fill_from_access
 
 feature -- C code generation
-
-	check_dt_current (reg: REGISTRABLE)
-			-- Check whether we need to compute the dynamic type of current
-			-- and call context.add_dt_current accordingly. The parameter
-			-- `reg' is the entity on which the access is made.
-		do
-				-- Do nothing if `reg' is not the current entity.
-			if
-				reg.is_current and then
-				attached {CL_TYPE_A} context_type as class_type
-			then
-				context.add_dt_current
-			end
-		end
 
 	is_polymorphic: BOOLEAN = True
 			-- Is the attribute access polymorphic?

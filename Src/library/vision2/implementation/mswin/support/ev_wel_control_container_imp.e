@@ -72,7 +72,8 @@ inherit
 			class_style,
 			on_erase_background,
 			on_window_pos_changing,
-			on_window_pos_changed
+			on_window_pos_changed,
+			on_dpi_changed
 		end
 
 feature {NONE} -- Initialization
@@ -223,6 +224,15 @@ feature {NONE} -- WEL Implementation
 			internal_wm_size_called := True
 		end
 
+
+	on_dpi_changed (a_dpi: INTEGER)
+			-- WM_dpichange message.
+			-- This message is sent to a window whose dpi changed.
+		do
+			-- We don't need to handle `on_move' as descendents do not use it.
+		end
+
+
 	ev_redraw_children
 			-- Redraw all children.  Used for resizing optimizations.
 		require
@@ -313,7 +323,7 @@ feature {NONE} -- Features that should be directly implemented by externals.
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

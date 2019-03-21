@@ -28,7 +28,7 @@ inherit
 			internal_enable_dockable, internal_disable_dockable,
 			update_buttons, refresh_now, init_file_drop_actions, update_for_pick_and_drop,
 			is_tabable_from, is_tabable_to, enable_tabable_from, enable_tabable_to,
-			disable_tabable_from, disable_tabable_to, init_resize_actions
+			disable_tabable_from, disable_tabable_to, init_resize_actions, init_dpi_changed_actions
 		redefine
 			interface, make,
 			read_from_named_path,
@@ -683,7 +683,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- Interface for the bridge pattern.
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

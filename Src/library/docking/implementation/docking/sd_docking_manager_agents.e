@@ -71,6 +71,7 @@ feature -- Command
 			l_docking_manager.zones.zones.add_actions.extend (agent on_added_zone)
 			l_docking_manager.zones.zones.remove_actions.extend (agent on_pruned_zone)
 			l_docking_manager.internal_viewport.resize_actions.extend (agent on_resize (?, ?, ?, ?, False))
+			l_docking_manager.internal_viewport.dpi_changed_actions.extend (agent on_dpi_change_resize (?, ?, ?, ?, ?, False))
 
 			ev_application.pointer_button_press_actions.extend (widget_pointer_press_handler)
 			ev_application.pointer_button_press_actions.extend (widget_pointer_press_for_upper_zone_handler)
@@ -206,6 +207,15 @@ feature  -- Agents
 				end
 			end
 			l_docking_manager.tool_bar_manager.on_resize (a_x, a_y, l_docking_manager.internal_viewport.width, l_docking_manager.internal_viewport.height, a_force)
+		end
+
+
+	on_dpi_change_resize (a_dpi,a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER; a_force: BOOLEAN)
+			-- Handle dpi change zone event. Resize all the widgets in fixed_area (EV_FIXED)
+		require
+			not_destroyed: not is_destroyed
+		do
+			on_resize (a_x, a_y, a_width, a_height, a_force)
 		end
 
 	on_added_zone (a_zone: SD_ZONE)
@@ -451,6 +461,7 @@ feature -- Destory
 			if attached docking_manager as l_docking_manager then
 				if attached l_docking_manager.internal_viewport as l_viewport then
 					l_viewport.resize_actions.wipe_out
+					l_viewport.dpi_changed_actions.wipe_out
 				else
 					check viewport_attached: False end
 				end
@@ -596,7 +607,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

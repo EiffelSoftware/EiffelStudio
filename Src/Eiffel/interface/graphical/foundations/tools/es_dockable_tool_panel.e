@@ -702,6 +702,12 @@ feature {NONE} -- User interface elements
 											ia_tool_bar.update_size
 										end
 									end (Result, ?, ?, ?, ?))
+								register_action (l_widget.widget.dpi_changed_actions, agent (ia_tool_bar: attached SD_GENERIC_TOOL_BAR; a_dpi: INTEGER; ia_x: INTEGER_32; ia_y: INTEGER_32; ia_width: INTEGER_32; ia_height: INTEGER_32)
+									do
+										if is_interface_usable then
+											ia_tool_bar.update_size
+										end
+									end (Result, ?, ?, ?, ?, ?))
 							end
 							l_items.forth
 						end
@@ -778,6 +784,13 @@ feature {NONE} -- User interface elements
 										ia_tool_bar.update_size
 									end
 								end (Result, ?, ?, ?, ?))
+							register_action (l_widget.widget.dpi_changed_actions, agent (ia_tool_bar: attached SD_GENERIC_TOOL_BAR; a_dpi:INTEGER_32; ia_x: INTEGER_32; ia_y: INTEGER_32; ia_width: INTEGER_32; ia_height: INTEGER_32)
+								do
+									if is_interface_usable then
+										ia_tool_bar.update_size
+									end
+								end (Result, ?, ?, ?, ?, ?))
+
 						end
 						l_items.forth
 					end
@@ -1004,7 +1017,7 @@ feature {NONE} -- Factory
             l_top_padding.set_minimum_height (2)
 
             create l_container
-            l_container.set_minimum_height (26)
+            l_container.set_minimum_height ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (26))
 
                 -- Add left tool bar
             if l_tool_bar /= Void then
@@ -1118,7 +1131,7 @@ invariant
     not_is_initialized: is_initializing implies not is_initialized
 
 ;note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

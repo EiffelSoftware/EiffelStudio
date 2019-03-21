@@ -53,6 +53,12 @@ feature {NONE} -- Initialization
 					do
 						refresh_wrapped_text
 					end)
+			dpi_changed_actions.extend
+				(agent (a_dpi,x, y, w, h: INTEGER_32)
+					do
+						refresh_wrapped_text
+					end)
+
 		end
 
 feature -- Element change

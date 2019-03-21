@@ -140,9 +140,11 @@ feature {NONE} -- Initialization
 				-- Viewport Events
 			editor_drawing_area.expose_actions.extend (agent on_repaint)
 			editor_drawing_area.resize_actions.extend (agent on_size)
+			editor_drawing_area.dpi_changed_actions.extend (agent on_dpi_change)
 			editor_drawing_area.mouse_wheel_actions.extend (agent on_mouse_wheel)
 			editor_drawing_area.focus_in_actions.extend (agent on_focus)
 			editor_viewport.resize_actions.extend (agent on_viewport_size)
+			editor_viewport.dpi_changed_actions.extend (agent on_dpi_change_viewport_size)
 
 				-- Scrollbar Events		
 			vertical_scrollbar.change_actions.extend (agent on_vertical_scroll)
@@ -1299,6 +1301,15 @@ feature {NONE} -- Display functions
 			update_horizontal_scrollbar
 		end
 
+	on_dpi_change (a_dpi, a_x, a_y: INTEGER; a_width, a_height: INTEGER)
+			-- Refresh the panel after it has been resized (and moved) to new coordinates (`a_x', `a_y') and
+			-- new size (`a_width', `a_height').
+			--| Note: This feature is called during the creation of the window
+		do
+			on_size (a_x, a_y, a_width, a_height)
+		end
+
+
 	on_viewport_size (a_x, a_y: INTEGER; a_width, a_height: INTEGER)
 			-- Viewport was resized.
 		local
@@ -1325,6 +1336,13 @@ feature {NONE} -- Display functions
 				end
 			end
 		end
+
+	on_dpi_change_viewport_size (a_dpi, a_x, a_y: INTEGER; a_width, a_height: INTEGER)
+			-- Viewport was resized.
+		do
+			on_viewport_size (a_x, a_y, a_width, a_height)
+		end
+
 
 	last_viewport_height: INTEGER
 
@@ -1940,7 +1958,7 @@ invariant
 	buffered_line_not_void: is_initialized implies buffered_line /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

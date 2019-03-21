@@ -86,6 +86,7 @@ feature {NONE} -- Initialization
 			init_commands
 			build_interface
 			resize_actions.extend (agent resize_columns)
+			dpi_changed_actions.extend (agent dpi_resize_columns)
 		end
 
 	init_commands
@@ -100,6 +101,13 @@ feature {NONE} -- Initialization
 			active_query_window.set_column_width (active_query_window.width, 1)
 			inactive_subqueries_window.set_column_width (inactive_subqueries_window.width, 1)
 		end
+
+	dpi_resize_columns (a_dpi, a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER)
+			-- Resize the columns for the active & inactive query lists
+		do
+			resize_columns (a_x, a_y, a_width, a_height)
+		end
+
 
 	build_interface
 			-- Build the user interfac			-- Initialize the commands
@@ -2001,7 +2009,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

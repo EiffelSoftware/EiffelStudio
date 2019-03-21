@@ -131,8 +131,16 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
+	dpi_changed_actions: EV_DPI_ACTION_SEQUENCE
+			-- Actions to be performed when size changes.
+		do
+			Result := implementation.dpi_changed_actions
+		ensure
+			not_void: Result /= Void
+		end
+
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -141,5 +149,4 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 end

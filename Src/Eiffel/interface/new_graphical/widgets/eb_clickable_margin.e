@@ -59,7 +59,7 @@ feature -- Access
 		do
 		    Result := Precursor
 			if not hidden_breakpoints then
-				Result := Result + breakpoint_token_width + separator_width
+				Result := Result + {EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (breakpoint_token_width) + separator_width
 			end
 		end
 
@@ -263,7 +263,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

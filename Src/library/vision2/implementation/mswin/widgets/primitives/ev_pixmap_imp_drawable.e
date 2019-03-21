@@ -540,6 +540,10 @@ feature -- Event handling
 		do
 		end
 
+	init_dpi_changed_actions (a_dpi_changed_actions: like dpi_changed_actions)
+		do
+		end
+
 feature -- Navigation
 
 	internal_tabable_info: NATURAL_8
@@ -1155,7 +1159,7 @@ invariant
 		attached mask_dc as l_mask_dc implies l_mask_dc.reference_tracked;
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

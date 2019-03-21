@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 				a_drawing_area)
 			a_drawing_area.expose_actions.extend (agent on_paint)
 			a_drawing_area.resize_actions.extend (agent resize_buffer)
-
+			a_drawing_area.dpi_changed_actions.extend (agent dpi_resize_buffer)
 
 			recenter_agent := agent
 				do
@@ -294,6 +294,13 @@ feature {NONE} -- Implementation
 			update
 		end
 
+	dpi_resize_buffer (a_dpi,a_x, a_y, area_width, area_height: INTEGER)
+			-- Resize buffer if it is smaller than `Buffer_scale_factor' times
+			-- the size given by `area_width' and `area_height'.
+		do
+			resize_buffer (a_x, a_y, area_width, area_height)
+		end
+
 	buffer_covers_area: BOOLEAN
 			-- Is `area' still in the surface covered by buffer ?
 		local
@@ -321,7 +328,7 @@ invariant
 	right_drawable_in_the_cell: drawable = drawable_in_the_cell
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -100,6 +100,7 @@ feature {NONE} -- Initlization
 			-- default setting
 		 	disable_focus_color
 		 	viewport.resize_actions.extend (agent on_fixed_resize)
+		 	viewport.dpi_changed_actions.extend (agent on_dpi_change_fixed_resize)
 
 		 	add_title_bar (Current)
 		end
@@ -502,6 +503,12 @@ feature {NONE} -- Agents
 			end
 		end
 
+	on_dpi_change_fixed_resize (a_dpi, a_x: INTEGER_32; a_y: INTEGER_32; a_width: INTEGER_32; a_height: INTEGER_32)
+			-- Handle dpi changed actions.
+		do
+			on_fixed_resize (a_x, a_y, a_width, a_height)
+		end
+
 	on_stick_select
 			-- Notify clients when user click stick button
 		do
@@ -741,7 +748,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

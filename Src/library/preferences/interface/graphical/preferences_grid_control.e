@@ -216,6 +216,7 @@ feature {NONE} -- Initialization
 			description_location.key_press_actions.extend (agent on_description_key_pressed)
 			description_text.key_press_actions.extend (agent on_description_key_pressed)
 			widget.resize_actions.extend (agent (x, y, w, h: INTEGER_32) do on_resize end)
+			widget.dpi_changed_actions.extend (agent (dpi, x, y, w, h: INTEGER_32) do on_resize end)
 			view_toggle_button.select_actions.extend (agent toggle_view)
 
 				--| Filter
@@ -1725,7 +1726,7 @@ note
 	ca_ignore:
 		"CA011", "CA011: too many arguments",
 		"CA033", "CA033: very large class"
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

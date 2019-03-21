@@ -488,6 +488,10 @@ feature -- Event handling
 		do
 		end
 
+	init_dpi_changed_actions (a_dpi_changed_actions: like dpi_changed_actions)
+		do
+		end
+
 feature {EV_CONTAINER_IMP, EV_PRIMITIVE_IMP, EV_INTERNAL_COMBO_BOX_IMP, EV_WEL_CONTROL_CONTAINER_IMP, EV_THEME_DRAWER_IMP, EV_WIDGET_IMP} -- Implementation
 
 	background_color_imp: detachable EV_COLOR_IMP
@@ -1340,6 +1344,16 @@ feature -- Deferred features
 			end
 		end
 
+	frozen trigger_dpi_actions (a_dpi, a_width, a_height: INTEGER)
+			-- `Current' has been resized.
+		require
+			exists: exists
+		do
+			if attached dpi_changed_actions_internal as l_actions then
+				l_actions.call ([a_dpi, screen_x, screen_y, a_width, a_height])
+			end
+		end
+
 	wel_parent: detachable WEL_WINDOW
 			-- The wel parent of `Current'.
 		deferred
@@ -1663,7 +1677,7 @@ feature -- Feature that should be directly implemented by externals
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

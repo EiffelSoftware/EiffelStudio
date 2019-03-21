@@ -845,8 +845,12 @@ feature {NONE}-- Initialization
 			eiffel_histogram.expose_actions.extend (agent redraw_histogram (?, ?, ?, ?))
 			eiffel_histogram.resize_actions.extend (agent resize_histogram (?, ?, ?, ?))
 			eiffel_view_frame.resize_actions.extend (agent eiffel_view_frame_size_change (?, ?, ?, ?))
+			eiffel_histogram.dpi_changed_actions.extend (agent dpi_resize_histogram (?, ?, ?, ?, ?))
+			eiffel_view_frame.dpi_changed_actions.extend (agent eiffel_view_frame_dpi_size_change (?, ?, ?, ?, ?))
+
 			eiffel_history.expose_actions.extend (agent redraw_history (?, ?, ?, ?))
 			eiffel_history.resize_actions.extend (agent resize_history (?, ?, ?, ?))
+			eiffel_history.dpi_changed_actions.extend (agent dpi_resize_history (?, ?, ?, ?, ?))
 			c_histogram.expose_actions.extend (agent redraw_histogram (?, ?, ?, ?))
 			c_history.expose_actions.extend (agent redraw_history (?, ?, ?, ?))
 			total_histogram.expose_actions.extend (agent redraw_histogram (?, ?, ?, ?))
@@ -1026,9 +1030,21 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
+	dpi_resize_histogram (a_dpi, a_x, a_y, a_width, a_height: INTEGER)
+			-- Called by `dpi_changed_actions' of `eiffel_histogram'.
+		do
+			resize_histogram (a_x, a_y, a_width, a_height)
+		end
+
 	eiffel_view_frame_size_change (a_x, a_y, a_width, a_height: INTEGER)
 			-- Called by `resize_actions' of `eiffel_view_frame'.
 		deferred
+		end
+
+	eiffel_view_frame_dpi_size_change (a_dpi, a_x, a_y, a_width, a_height: INTEGER)
+			-- Called by `dpi_changed_actions' of `eiffel_view_frame'.
+		do
+			eiffel_view_frame_size_change (a_x, a_y, a_width, a_height)
 		end
 
 	redraw_history (a_x, a_y, a_width, a_height: INTEGER)
@@ -1039,6 +1055,12 @@ feature {NONE} -- Implementation
 	resize_history (a_x, a_y, a_width, a_height: INTEGER)
 			-- Called by `resize_actions' of `eiffel_history'.
 		deferred
+		end
+
+	dpi_resize_history (a_dpi, a_x, a_y, a_width, a_height: INTEGER)
+			-- Called by `dpi_changed_actions' of `eiffel_history'.
+		do
+			resize_history (a_x, a_y, a_width, a_height)
 		end
 
 	split_incre_hori_double_clicked (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER)
@@ -1093,7 +1115,7 @@ feature {NONE} -- Implementation
 
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

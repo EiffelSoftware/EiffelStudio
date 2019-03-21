@@ -12,6 +12,16 @@ feature --Access
 			-- Return the dots per inch (dpi) of the monitor
 			-- DPI sizes 96, 120, 144, 192, etc.
 		deferred
+		ensure
+			instance_free: class
+		end
+
+	scaled_size (a_size: INTEGER): INTEGER
+			-- Scaled size of `a_size`.
+		do
+			Result := (a_size * (dpi/96)).rounded
+		ensure
+			instance_free: class
 		end
 note
 	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"

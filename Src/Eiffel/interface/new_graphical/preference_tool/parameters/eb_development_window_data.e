@@ -13,6 +13,9 @@ feature -- Value
 	width, height: INTEGER
 			-- Width and height for the development window.
 
+	dpi: NATURAL
+			-- Dpi for the development window. 		
+
 	x_position, y_position: INTEGER
 			-- X and Y position for development window.
 
@@ -32,6 +35,17 @@ feature -- Element change
 		do
 			width := a_width
 			height := a_height
+		ensure
+			width_set: width = a_width
+			height_set: height = a_height
+		end
+
+	save_size_and_dpi (a_dpi: NATURAL; a_width, a_height: INTEGER)
+			-- Save width and height of window and dpi.
+		do
+			width := a_width
+			height := a_height
+			dpi := a_dpi
 		ensure
 			width_set: width = a_width
 			height_set: height = a_height
@@ -68,7 +82,7 @@ feature -- Element change
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

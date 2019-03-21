@@ -1536,6 +1536,19 @@ feature {EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Window manage
 			end
 		end
 
+	save_size_and_dpi
+			-- Save window size abd dpi.
+		do
+			if not window.is_minimized then
+				if not window.is_maximized then
+						-- Only save the size of the window if not maximized,
+						-- since if maximized we know the size of the window, it is
+						-- the size of the screen.
+					development_window_data.save_size_and_dpi (window.dpi, window.width, window.height)
+				end
+			end
+		end
+
 	save_position
 			-- Save window position.
 		do

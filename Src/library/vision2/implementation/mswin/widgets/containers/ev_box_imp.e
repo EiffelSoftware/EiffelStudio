@@ -77,9 +77,9 @@ feature -- Access
 			-- Width of the client area of `Current'.
 		do
 			if is_show_requested then
-				Result := (client_rect.width - 2 * border_width).max (0)
+				Result := (client_rect.width  - 2 * border_width).max (0)
 			else
-				Result := (child_cell.width - 2 * border_width).max (0)
+				Result := (child_cell.width   - 2 * border_width).max (0)
 			end
 		end
 
@@ -89,7 +89,7 @@ feature -- Access
 			if is_show_requested then
 				Result := (client_rect.height  - 2 * border_width).max (0)
 			else
-				Result := (child_cell.height  - 2 * border_width).max (0)
+				Result := (child_cell.height   - 2 * border_width).max (0)
 			end
 		end
 
@@ -416,7 +416,7 @@ feature {EV_ANY, EV_ANY_I} -- Interface
 	interface: detachable EV_BOX note option: stable attribute end;
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

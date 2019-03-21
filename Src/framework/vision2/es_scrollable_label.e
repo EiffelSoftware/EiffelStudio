@@ -36,6 +36,11 @@ feature {NONE} -- Initialization
 				do
 					update_size
 				end)
+			dpi_changed_actions.extend (agent (a_dpi, x, y, w, h: INTEGER_32)
+				do
+					update_size
+				end)
+
 				-- Text is wrapped automatically, so no horizontal scrollbar is required.
 			hide_horizontal_scroll_bar
 		end

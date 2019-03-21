@@ -66,6 +66,12 @@ feature {NONE} -- Initialization
 					resize_text (True)
 					resize_actions.resume
 				end)
+			dpi_changed_actions.extend (agent (a_dpi,a,b,c,d: INTEGER_32)
+						do
+							dpi_changed_actions.block
+							resize_text (True)
+							dpi_changed_actions.resume
+						end)
 			maximum_height := -1
 			maximum_width := -1
 		end
@@ -512,7 +518,7 @@ feature {NONE} -- Line rendering
 							end
 						end
 
-							-- Set height of label accordingly to 
+							-- Set height of label accordingly to
 						l_size := l_font.string_size (l_text)
 						if is_maximum_height_set_by_user then
 								-- Because user requested a maximum height, we
@@ -559,7 +565,7 @@ invariant
 			attached text_lines as inv_text_lines) implies inv_text_lines.count = inv_text_sizes.count
 
 ;note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

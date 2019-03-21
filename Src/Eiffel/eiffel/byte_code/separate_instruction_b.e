@@ -53,7 +53,7 @@ feature -- Access
 	arguments: BYTE_LIST [ASSIGN_B]
 			-- Instructions to initialize arguments.
 
-	compound: 	detachable BYTE_LIST [BYTE_NODE]
+	compound: detachable BYTE_LIST [BYTE_NODE]
 			-- Compound of the instruction.
 
 	end_location: LOCATION_AS
@@ -110,11 +110,11 @@ feature -- Code generation
 				buf:= buffer
 				if system.is_scoop then
 						-- Generate computation of whether a request chain is required in the form
+						--		RTS_SD;
 						--		int uarg;
 						--		int uarg1 = RTS_OU (loc1);
 						--		...
 						--		int uargN = RTS_OU (locN);
-						--		RTS_SD
 						--		uarg = uarg1 || uarg2 || ... || uargN;
 					across
 						arguments as arg
@@ -128,6 +128,10 @@ feature -- Code generation
 									buf.put_new_line
 									buf.put_character ('{')
 									buf.indent
+									buf.put_new_line
+										-- Declare and initialize variables for processor and region.
+										-- (They are used by the macro RTS_OU.)
+									buf.put_string ("RTS_SD;")
 										-- Declare a variable that tells whether a request chain is required.
 									buf.put_new_line
 									buf.put_string ("int uarg;")
@@ -146,8 +150,6 @@ feature -- Code generation
 				end
 				if has_request_chain then
 						-- Initialize variables.
-					buf.put_new_line
-					buf.put_string ("RTS_SD;")
 					buf.put_new_line
 					buf.put_string ("uarg =")
 					across
@@ -279,7 +281,7 @@ feature -- Inlining
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

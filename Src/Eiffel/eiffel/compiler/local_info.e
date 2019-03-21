@@ -163,10 +163,10 @@ invariant
 	has_expression_if_cursor: is_cursor implies attached expression
 	consistent_is_used_flag: is_used_flag = {NATURAL_8} 1 |<< is_used_position
 	consistent_is_controlled_flag: is_controlled_flag = {NATURAL_8} 1 |<< is_controlled_position
-	consistent_is_cursor_flag: is_used_flag = {NATURAL_8} 1 |<< is_cursor_position
+	consistent_is_cursor_flag: is_cursor_flag  = {NATURAL_8} 1 |<< is_cursor_position
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -9,6 +9,7 @@ feature
 		local
 			a: ANY
 		do
+			create internal
 			a := internal.dup (x)
 		end
 

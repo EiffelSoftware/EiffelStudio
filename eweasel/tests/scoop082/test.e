@@ -25,7 +25,7 @@ feature {TEST} -- Test
 			-- A feature that takes a separate argument.
 		do
 			if t = Current then
-				print ("OK")
+				print ("OK%N")
 			end
 		end
 

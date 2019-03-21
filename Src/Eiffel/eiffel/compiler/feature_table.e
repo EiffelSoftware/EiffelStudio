@@ -1590,8 +1590,8 @@ feature -- Code generation
 			l_once_info: OBJECT_RELATIVE_ONCE_INFO
 		do
 			create Result.make (c)
-			if c.has_invariant then
-				Result.put_invariant (c.invariant_feature)
+			if attached c.invariant_feature as f then
+				Result.put_invariant (f)
 			end
 
 			from
@@ -1676,7 +1676,7 @@ invariant
 	related_select_table: is_computed implies select_table.feature_table = Current
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

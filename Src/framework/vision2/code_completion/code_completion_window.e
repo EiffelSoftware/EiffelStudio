@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			create choice_list
 			reset_full_list
 			create matches.make_empty
-			create code_template_label
+			create next_panel_label
 
 			docking_make
 
@@ -153,8 +153,8 @@ feature -- Access
 	remainder: INTEGER
 			-- Number chars to remove on completion	
 
-	code_template_label: EVS_LINK_LABEL
-			-- Label code  template.
+	next_panel_label: EVS_LINK_LABEL
+			-- Label for next_panel.
 
 feature -- Settings
 

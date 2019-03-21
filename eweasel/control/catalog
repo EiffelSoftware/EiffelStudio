@@ -1328,7 +1328,7 @@ test	finalize-creation-expression-corruption	final077 tcf pass finalizing
 test	finalize-inline-precursor-2	final078 tcf pass finalizing multiconstraint inlining
 test	finalize-attribute-access-crash	final079 tcf pass finalizing attribute
 test	finalize-inline-attribute-body-2	final080 tcf pass finalizing inlining attribute
-test	finalize-inline-external-redef-constant	final081 tcf fail used_to_pass finalizing inlining
+test	finalize-inline-external-redef-constant	final081 tcf pass finalizing inlining
 test	finalize-inherited-agent-redef-routine	final082 tcf fail used_to_pass finalizing agents
 test	finalize-inline-with-generic	final083 tcf pass finalizing inlining
 test	finalize-wrong-type			final084 tcf pass finalizing
@@ -1358,7 +1358,7 @@ test	finalize-argument-anchors-formal	final107 tcf fail finalizing anchored_type
 test	finalize-external-invariant-skipped	final108 tcf pass finalizing assertions external
 test	inline-manifest-type			final109 tcf pass finalizing
 test	profile-once-per-process-function	final110 tcf pass finalizing
-test	inline-qat-static-external		final111 tcf fail finalizing inlining anchored_type
+test	inline-qat-static-external		final111 tcf pass finalizing inlining anchored_type
 test	finalize-keep-once-strings		final112 tcf pass finalizing
 test	finalize-inline-attribute-with-body	final113 tcf pass finalizing inlining attribute
 test	finalize-inline-across-loop		final114 tcf pass finalizing inlining
@@ -1374,7 +1374,7 @@ test	inline-internal-locals			final123 tcf pass finalizing inlining loop iterati
 test	inline-attribute-with-body		final124 tcf pass finalizing inlining attribute
 test	agent-call-gc-corruption		final125 tcf pass finalizing runtime
 test	reference-equality-gc-protection	final126 tcf pass finalizing gc
-test	optimized-is_equal-call			final127 tcf fail finalizing
+test	optimized-is_equal-call			final127 tcf pass finalizing
 
 -- Runtime
 test	gc-tracking-001					runtime001	tcf pass runtime
@@ -1811,7 +1811,7 @@ test	expanded-object-test-creates-objects	exec309 tcf fail execution
 test	out-on-long-attribute-buffer-overflow	exec310 tcf pass execution multithreaded
 test	profile-with-invariant				exec311 tcf pass execution profile
 test	small-eif-memory-scavenge		exec312	tcf pass execution
-test	static-access-on-like-current		exec313	tcf fail used_to_pass execution
+test	static-access-on-like-current		exec313	tcf pass execution
 test	manifest-type-expr-generating-type	exec314	tcf fail used_to_pass execution
 test	manifest-type-singletons		exec315	tcf pass execution
 test	wrong-type-creation				exec316	tcf fail execution

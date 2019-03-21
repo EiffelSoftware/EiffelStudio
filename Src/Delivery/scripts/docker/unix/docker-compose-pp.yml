@@ -1,0 +1,15 @@
+version: '3'
+services:
+    eiffel_deliv:
+        build:
+            context: .
+            dockerfile: dockerfile
+        volumes:
+            - ./var/deliv-output:/home/eiffel/deliv/output
+        environment:
+            - STUDIO_VERSION_MAJOR_MINOR=19.03
+            - ONLY_PORTERPACKAGE=true
+            #- SVN_EIFFELSTUDIO_REPO=https://svn.eiffel.com/eiffelstudio
+            #- SVN_ISE_REPO=svn://$LOGNAME@svn.ise/ise_svn
+            #- ORIGO_SVN_REVISION=102761
+

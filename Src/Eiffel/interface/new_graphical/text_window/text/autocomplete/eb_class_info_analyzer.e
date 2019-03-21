@@ -803,7 +803,7 @@ feature {NONE} -- Implementation (`type_from')
 						-- There's no feature with the name `a_name' in the type set.
 					feat := Void
 				elseif	l_feature_state.features_found_count = 1 then
-						-- We found exactly one feautre, this is good.
+						-- We found exactly one feature, this is good.
 						-- Let's store the class type to which the feature belongs into `last_target_type'.
 					feat := l_feature_state.feature_item
 					last_target_type := l_feature_state.class_type_of_feature

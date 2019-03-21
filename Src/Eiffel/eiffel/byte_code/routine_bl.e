@@ -8,7 +8,6 @@ inherit
 		undefine
 			allocates_memory,
 			analyze_on,
-			call_kind,
 			current_needed_for_access,
 			enlarged,
 			enlarged_on,
@@ -24,17 +23,18 @@ inherit
 			is_feature_call,
 			is_special_feature,
 			is_unsafe,
-			need_target,
-			set_call_kind
+			need_target
 		redefine
 			analyze,
 			basic_register,
+			call_kind,
 			free_register,
 			generate_parameters,
 			has_one_signature,
 			is_polymorphic,
 			parent,
 			register,
+			set_call_kind,
 			set_parent,
 			set_register
 		end
@@ -67,31 +67,25 @@ feature -- Modification
 			parent := p
 		end
 
+feature {CALL_B} -- Kind of a call: status
+
+	call_kind: INTEGER
+			-- <Precursor>
+
+feature {CALL_B} -- Kind of a call: modification
+
+	set_call_kind (value: like call_kind)
+			-- <Precursor>
+		do
+			call_kind := value
+		end
+
 feature -- Code generation
 
 	analyze
 			-- Build a proper context for code generation.
-		local
-			c: like instance_free_creation
 		do
-			if is_class_target_needed then
-					-- Generate an empty object to be used as a target of the call.
-				check
-					instance_free_call_has_precursor_type: attached precursor_type as p
-				then
-					create c
-					c.set_info (p.create_info)
-					c.set_type (p)
-					if attached multi_constraint_static as t then
-						c.set_multi_constraint_static (t)
-					end
-					c.analyze
-					analyze_on (c.register)
-					instance_free_creation := c
-				end
-			else
-				analyze_on (Current_register)
-			end
+			analyze_on (current_register)
 			get_register
 		end
 
@@ -110,24 +104,16 @@ feature -- Code generation
 	generate_access
 			-- Generate access call of feature on `current_register` or a special register to call instance-free feature.
 		do
-				-- Reset variables.
-			is_right_parenthesis_needed.put (False)
-			is_deferred.put (False)
-			do_generate
-				(if attached instance_free_creation as c then
-					c.register
-				else
-					current_register
-				end)
+			generate_on (current_register)
 		end
 
 	generate_on (reg: REGISTRABLE)
-			-- Generate call of feature on `reg`.
+			-- Generate call of the feature on `reg`.
 		do
 				-- Reset variables
 			is_right_parenthesis_needed.put (False)
 			is_deferred.put (False)
-			do_generate (reg)
+			do_generate (target_register (reg))
 		end
 
 	generate_parameters (reg: REGISTRABLE)
@@ -137,6 +123,38 @@ feature -- Code generation
 			Precursor (reg)
 			if attached instance_free_creation as c then
 				instance_free_creation.generate
+			end
+		end
+
+feature {NONE} -- Target register
+
+	target_register (r: REGISTRABLE): REGISTRABLE
+			-- A target register of the feature call performed on the target `r`.
+			-- It may be different for instance-free calls that depend on `r` indirectly.
+		do
+			Result := if attached instance_free_creation as c then c.register else r end
+		end
+
+	analyze_non_object_call_target
+			-- Analyze non-object call target (if any), initialize associated target creation code
+			-- and allocate a necessary target register.
+		local
+			c: like instance_free_creation
+		do
+			if is_class_target_needed then
+					-- Generate an empty object to be used as a target of the call.
+				check
+					instance_free_call_has_precursor_type: attached precursor_type as p
+				then
+					create c
+					c.set_info (p.create_info)
+					c.set_type (p)
+					if attached multi_constraint_static as t then
+						c.set_multi_constraint_static (t)
+					end
+					c.analyze
+					instance_free_creation := c
+				end
 			end
 		end
 
@@ -172,8 +190,8 @@ feature {NONE} -- Code generation
 			l_type_c: TYPE_C
 		do
 			buf := buffer
-			buf.put_string ({C_CONST}.open_rtnr)
-				-- The line below can be removed when the RTNR macro
+			buf.put_string ({C_CONST}.open_rtna)
+				-- The line below can be removed when the RTNA macro
 				-- doesn't take an argument anymore.
 			buf.put_string ("(NULL)")
 			l_type_c := real_type (type).c_type

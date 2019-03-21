@@ -1981,8 +1981,9 @@ feature -- Polymorphism
 	 		end
  		end
 
- 	new_entry (context_type: CLASS_TYPE; rout_id: INTEGER; class_id: like {CLASS_C}.class_id): ENTRY
- 			-- New polymorphic unit for the version of routine ID `rout_id` in the context type `class_type` of the class of ID `class_id`.
+ 	new_entry (context_type: CLASS_TYPE; rout_id: INTEGER; is_class_deferred: BOOLEAN; class_id: like {CLASS_C}.class_id): ENTRY
+ 			-- New polymorphic unit for the version of routine ID `rout_id` in the context type `class_type` of the class of ID `class_id`
+ 			-- that is deferred or not according to `is_class_deferred`.
  		require
 			rout_id_not_void: rout_id /= 0
 			rout_id_valid: rout_id_set.has (rout_id)
@@ -1990,13 +1991,13 @@ feature -- Polymorphism
 			r: like new_rout_entry
  		do
  			if not is_attribute or else not Routine_id_counter.is_attribute (rout_id) then
- 				Result := new_rout_entry (context_type, class_id)
+ 				Result := new_rout_entry (context_type, is_class_deferred, class_id)
  			elseif byte_context.workbench_mode or else has_formal then
-				r := new_rout_entry (context_type, class_id)
+				r := new_rout_entry (context_type, is_class_deferred, class_id)
 				r.set_is_attribute
 				Result := r
 			else
-				Result := new_attr_entry (context_type, class_id)
+				Result := new_attr_entry (context_type, is_class_deferred, class_id)
  			end
  		end
 
@@ -2011,8 +2012,15 @@ feature -- Polymorphism
 			false
 		end
 
- 	new_rout_entry (t: CLASS_TYPE; c: like {CLASS_C}.class_id): like rout_entry_type
- 			-- New routine unit for a target type `t` of the class of ID `c`.
+ 	new_rout_entry (t: CLASS_TYPE; d: BOOLEAN; c: like {CLASS_C}.class_id): like rout_entry_type
+ 			-- New routine unit for a target type `t` of the class of ID `c`
+ 			-- that is deferred according to `d`.
+ 		require
+ 			valid_class_id: system.has_existing_class_of_id (c)
+ 			known_class: attached system.class_of_id (c) as compiled_class
+ 			known_feature: attached compiled_class.feature_of_feature_id (feature_id)
+ 			consistent_target_type: t.associated_class.class_id = c
+ 			consistent_deferred_status: compiled_class.is_deferred = d
  		local
  			access_class_id: like access_in
  			access_type_id: INTEGER
@@ -2040,18 +2048,22 @@ feature -- Polymorphism
  				access_type_id,
  				access_class_id,
  				written_in,
+ 				d,
  				c)
  		end
 
- 	new_attr_entry (t: CLASS_TYPE; c: like {CLASS_C}.class_id): ATTR_ENTRY
- 			-- New attribute unit for a target type `t` of the class of ID `c`.
+ 	new_attr_entry (t: CLASS_TYPE; d: BOOLEAN; c: like {CLASS_C}.class_id): ATTR_ENTRY
+ 			-- New attribute unit for a target type `t` of the class of ID `c`
+ 			-- that is deferred according to `d`.
  		require
  			is_attribute: is_attribute
  			valid_class_id: system.has_existing_class_of_id (c)
- 			known_feature: attached system.class_of_id (c) as compiled_class and then attached compiled_class.feature_of_feature_id (feature_id)
+ 			known_class: attached system.class_of_id (c) as compiled_class
+ 			known_feature: attached compiled_class.feature_of_feature_id (feature_id)
  			consistent_target_type: t.associated_class.class_id = c
+ 			consistent_deferred_status: compiled_class.is_deferred = d
  		do
- 			create Result.make (result_type_in (t), t.type_id, feature_id, c)
+ 			create Result.make (result_type_in (t), t.type_id, feature_id, d, c)
  		end
 
  	poly_equiv (other: FEATURE_I): BOOLEAN
@@ -3362,7 +3374,7 @@ feature -- Byte code access
 	access_for_feature (access_type: TYPE_A; static_type: TYPE_A; is_qualified: BOOLEAN; is_separate: BOOLEAN; is_free: BOOLEAN): ACCESS_B
 			-- Byte code access for current feature. Dynamic binding if
 			-- `static_type' is Void, otherwise static binding on `static_type'.
-			-- • is_free – Is the access instance-free?
+			-- • `is_free` – Is it a non-object call?
 		require
 			access_type_not_void: access_type /= Void
 			-- is_separate_meaningful: is_separate implies (is_qualified or is_creation) -- Creation calls are not marked as qualified.
@@ -3400,6 +3412,15 @@ feature -- Byte code access
 			end
 		ensure
 			Result_exists: Result /= Void
+		end
+
+	direct_access_for_feature (access_type: TYPE_A; static_type: TYPE_A; is_qualified: BOOLEAN; is_separate: BOOLEAN; is_free: BOOLEAN): ACCESS_B
+			-- Byte code access for this feature that is known to be called without any wrappers.
+			-- Dynamic binding if `static_type` is Void, otherwise static binding on `static_type`.
+			-- • `is_free` – Is it a non-object call?
+			-- See also: `access_for_feature`.
+		do
+			Result := access_for_feature (access_type, static_type, is_qualified, is_separate, is_free)
 		end
 
 feature {NONE} -- log file

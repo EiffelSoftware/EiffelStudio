@@ -11,9 +11,11 @@ inherit
 	ROUTINE_B
 		redefine
 			allocates_memory,
-			enlarged_on,
 			inlined_byte_code,
 			is_feature,
+			is_object_relative,
+			is_once,
+			is_process_relative,
 			is_special_feature,
 			is_unsafe
 		end
@@ -39,7 +41,6 @@ feature {NONE} -- Initialization
 			feat_tbl: FEATURE_TABLE
 		do
 			feature_name_id := f.feature_name_id
-			body_index := f.body_index
 			routine_id := f.rout_id_set.first
 			is_once := f.is_once
 			is_process_relative := f.is_process_relative
@@ -127,9 +128,6 @@ feature -- Visitor
 
 feature -- Access
 
-	body_index: INTEGER
-			-- Body Index of the feature
-
 	is_once: BOOLEAN
 			-- Is the current feature a once feature?
 			--| Used when inlining is turned on in final mode, because we are not
@@ -160,51 +158,6 @@ feature -- Access
 		do
 			if attached {FEATURE_B} other as feature_b then
 				Result := feature_id = feature_b.feature_id
-			end
-		end
-
-	enlarged_on (type_i: TYPE_A): CALL_ACCESS_B
-			-- Enlarged byte node evaluated in the context of `type_i'.
-		local
-			l_type: TYPE_A
-			f: FEATURE_I
-			l_access_b: ACCESS_B
-		do
-			if
-				not context.is_written_context and then
-				attached {CL_TYPE_A} type_i as c
-			then
-				-- Ensure the feature is not redeclared into attribute if inherited.
-				f := c.base_class.feature_of_rout_id (routine_id)
-				if not f.is_attribute then
-					f := Void
-				elseif context.final_mode and then system.seed_of_routine_id (routine_id).has_formal then
-						-- It was originally a FEATURE_B because its seed had a formal, we still need
-						-- to call the FEATURE_B if and only if it has a conforming expanded descendant.
-					l_type := context.real_type (type)
-					if
-						context.has_expanded_descendants_information and then
-						context.has_expanded_descendants (l_type.type_id (context.context_class_type.type))
-					then
-						f := Void
-					end
-				end
-			end
-			if f = Void then
-					-- Process feature as an internal routine.
-				if context.final_mode then
-					create {FEATURE_BL} Result.fill_from (Current)
-				else
-					create {FEATURE_BW} Result.fill_from (Current)
-				end
-			else
-					-- Create new byte node and process it instead of the current one.
-				l_access_b := byte_node (f, type_i.is_separate).enlarged
-				if attached {like enlarged_on} l_access_b as c then
-					Result := c
-				else
-					check is_call_access: False end
-				end
 			end
 		end
 
@@ -287,7 +240,7 @@ feature -- Inlining
 			f: FEATURE_I
 			context_class_type, written_class_type: CLASS_TYPE
 			has_separate: BOOLEAN
-			context_type_id: INTEGER
+			target_type_id: INTEGER
 		do
 				-- We have to disable inlining if target is a multi constraint. This fixes eweasel
 				-- test#final078 and test#final094.
@@ -305,12 +258,12 @@ feature -- Inlining
 				not has_separate and then
 				not type_i.is_basic and then
 					-- Inline only if it is not polymorphic and if it can be inlined (there is a reachable effective entry).
-				(attached precursor_type or else
-					eiffel_table.is_polymorphic_for_body (routine_id, type_i, context.context_class_type) = -1) and then
+				(attached precursor_type as p and then (is_instance_free implies not p.is_formal and then (p.is_like implies p.is_expanded)) or else
+				eiffel_table.is_polymorphic_for_body (routine_id, type_i, context.context_class_type) = -1) and then
 				attached {ROUT_TABLE} tmp_poly_server.item (routine_id) as l_rout_table
 			then
-				context_type_id := type_i.type_id (context.context_cl_type)
-				entry := effective_entry (type_i, context_type_id, l_rout_table)
+				target_type_id := type_i.type_id (context.context_cl_type)
+				entry := effective_entry (type_i, target_type_id, l_rout_table)
 					-- Avoid inlining if pattern IDs are different because it means some adaptation of arguments or result.
 				if attached entry and then entry.pattern_id = l_rout_table.context_item.pattern_id then
 					inliner := System.remover.inliner
@@ -357,11 +310,11 @@ feature -- Inlining
 							Current
 						else
 								-- Create new byte node and process it instead of the current one
-							byte_node (f, False).inlined_byte_code
+							direct_byte_node (f, False).inlined_byte_code
 						end
 				elseif f.is_external or else f.is_constant then
 						-- Create new byte node and process it instead of the current one
-					Result := byte_node (f, False).inlined_byte_code
+					Result := direct_byte_node (f, False).inlined_byte_code
 				elseif l_is_deferred_inlinable then
 							-- Adapt context type `type_i' to the appropriate context.
 							-- For example, inlining SPECIAL [G#2] from HASH_TABLE [G#1, G#2] when
@@ -502,11 +455,10 @@ feature -- Inlining
 
 								-- Create inlined byte node.
 							if cl_type.base_class.is_special then
-								create {SPECIAL_INLINED_FEAT_B} inlined_feat_b
+								create {SPECIAL_INLINED_FEAT_B} inlined_feat_b.fill_from (Current)
 							else
-								create inlined_feat_b
+								create inlined_feat_b.fill_from (Current)
 							end
-							inlined_feat_b.fill_from (Current)
 
 							if attached {STD_BYTE_CODE} Byte_server.disk_item (l_body_index) as l_byte_code then
 								bc := l_byte_code

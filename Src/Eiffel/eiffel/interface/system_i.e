@@ -1427,38 +1427,38 @@ feature -- Modification
 
 feature -- Final code geneation
 
-	has_trampoline (e: ROUT_ENTRY; p: like {ROUT_ENTRY}.pattern_id; t: ROUT_TABLE): BOOLEAN
+	has_trampoline (e: ROUT_ENTRY; p: like {ROUT_ENTRY}.pattern_id; r: like {ROUT_TABLE}.rout_id): BOOLEAN
 			-- Is there a trampoline for a routine entry `e` with the pattern of ID `p`
-			-- associated with a routine table `t`.
+			-- associated with a routine ID `r`.
 		do
-			if attached trampoline_table [t.rout_id] as s then
+			if attached trampoline_table [r] as s then
 				Result := s.has (e.type_id.as_natural_64 |<< 32 + p.as_natural_64)
 			end
 		end
 
-	request_trampoline (e, c: ROUT_ENTRY; t: ROUT_TABLE)
+	request_trampoline (e, c: ROUT_ENTRY; r: like {ROUT_TABLE}.rout_id)
 			-- Request generation of a trampoline for a routine entry `e`
-			-- called in the context identified by `c` associated with a routine table `t`.
+			-- called in the context identified by `c` associated with a routine ID `r`.
 		require
 			e.pattern_id /= c.pattern_id
 		local
 			s: like trampoline_table.item
 		do
-			s := trampoline_table [t.rout_id]
+			s := trampoline_table [r]
 			if not attached s then
 				create s.make (1)
-				trampoline_table [t.rout_id] := s
+				trampoline_table [r] := s
 			end
 			s.extend (e.type_id.as_natural_64 |<< 32 + c.pattern_id.as_natural_64)
 		ensure
-			has_trampoline (e, c.pattern_id, t)
+			has_trampoline (e, c.pattern_id, r)
 		end
 
 	remove_trampoline (e: ROUT_ENTRY; p: like {ROUT_ENTRY}.pattern_id; t: ROUT_TABLE)
 			-- Remove the trampoline for a routine entry `e` with the pattern of ID `p`
 			-- associated with a routine table `t`.
 		require
-			has_trampoline (e, p, t)
+			has_trampoline (e, p, t.rout_id)
 		do
 			if attached trampoline_table [t.rout_id] as s then
 				s.prune (e.type_id.as_natural_64 |<< 32 + p.as_natural_64)
@@ -1467,7 +1467,7 @@ feature -- Final code geneation
 				end
 			end
 		ensure
-			not has_trampoline (e, p, t)
+			not has_trampoline (e, p, t.rout_id)
 		end
 
 feature {NONE} -- Final code geneation
@@ -5000,9 +5000,8 @@ feature -- Generation
 				create l_arg_types.make_empty (2)
 				l_arg_types.extend (create {REFERENCE_I})
 				l_arg_types.extend (create {REFERENCE_I})
-				l_c_pattern_id := pattern_table.c_pattern_id (
-					create {C_PATTERN}.make (create {VOID_I},
-						l_arg_types))
+				l_c_pattern_id := pattern_table.c_pattern_id
+					(create {C_PATTERN}.make (create {VOID_I}, l_arg_types))
 				from
 					create rout_table.make (routine_id_counter.initialization_rout_id)
 					create l_void
@@ -5024,6 +5023,7 @@ feature -- Generation
 							i,
 							class_type.associated_class.class_id,
 							class_type.associated_class.class_id,
+							False,
 							class_type.associated_class.class_id)
 						rout_table.extend (rout_entry)
 					end
@@ -5057,7 +5057,7 @@ feature -- Generation
 						attached l_class.creation_feature as f and then
 						(f.is_external or else not f.is_empty)
 					then
-						rout_entry := l_class.creation_feature.new_rout_entry (class_type, l_class.class_id)
+						rout_entry := l_class.creation_feature.new_rout_entry (class_type, l_class.is_deferred, l_class.class_id)
 						rout_table.extend (rout_entry)
 					end
 				end

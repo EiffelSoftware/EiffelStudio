@@ -14,7 +14,6 @@ inherit
 			analyze_on,
 			check_dt_current,
 			free_register,
-			generate_access_on_type,
 			generate_end,
 			is_polymorphic,
 			has_one_signature,
@@ -26,26 +25,20 @@ create
 
 feature -- Status Report
 
-	is_polymorphic: BOOLEAN
+	is_polymorphic: BOOLEAN = True
 			-- <Precursor>
-		do
-			Result := True
-		end
 
-	has_one_signature: BOOLEAN
+	has_one_signature: BOOLEAN = False
 			-- <Precursor>
-		do
-			Result := False
-		end
 
 feature -- C code generation
 
-	analyze_on (reg: REGISTRABLE)
-			-- Analyze feature call on `reg'.
+	analyze_on (r: REGISTRABLE)
+			-- Analyze feature call on `reg`.
 		local
 			return_type: like c_type
 		do
-			Precursor (reg)
+			Precursor (r)
 			return_type := c_type
 			if return_type.is_reference then
 					-- Do not use reference type because this register should not be tracked by GC.
@@ -73,52 +66,144 @@ feature -- C code generation
 			-- Check whether we need to compute the dynamic type of current
 			-- and call context.add_dt_current accordingly. The parameter
 			-- `reg' is the entity on which the access is made.
-		local
-			class_type: CL_TYPE_A;
-			type_i: TYPE_A;
-			access: ACCESS_B;
 		do
-			type_i := context_type;
-			class_type ?= type_i;
-			if not (type_i.is_basic or else class_type = Void) then
+			if
+				not (attached precursor_type as p and then is_target_type_fixed) and then
+				not context_type.is_basic
+			then
 				if reg.is_current then
-					context.add_dt_current;
-				end;
-				if not reg.is_predefined then
+					context.add_dt_current
+				end
+				if
+					not reg.is_predefined and then
+					attached {ACCESS_B} reg as access and then
+					access.register = No_register
+				then
 						-- BEWARE!! The function call is polymorphic hence we'll
 						-- need to evaluate `reg' twice: once to get its dynamic
 						-- type and once as a parameter for Current. Hence we
 						-- must make sure it is not held in a No_register--RAM.
-				 	access ?= reg;	  -- Cannot fail
-					if access.register = No_register then
-						access.set_register (Void)
-						access.get_register
-					end
+					access.set_register (Void)
+					access.get_register
 				end
 			end
 		end
 
-	generate_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_A)
-			-- Generate feature call in a `typ' context.
-		do
-			generate_workbench_access_on_type (reg, typ, result_register)
-		end
-
-	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_A)
+	generate_end (reg: REGISTRABLE; class_type: CL_TYPE_A)
 			-- Generate final portion of C code.
+		local
+			buf: like buffer
+			return_type: TYPE_C
 		do
-			Precursor (gen_reg, class_type)
-			generate_workbench_end (result_register)
+			check
+				result_register_attached: c_type.is_reference implies result_register /= Void
+			end
+			buf := buffer
+			return_type := c_type
+			if not return_type.is_void then
+				buf.put_two_character ('(', '(')
+				if return_type.is_reference then
+					context.print_argument_register (result_register, buf)
+					buf.put_string (" = ")
+				end
+			end
+			buf.put_character ('(')
+			return_type.generate_function_cast (buf, argument_types, True)
+			generate_workbench_address (reg, class_type)
+			buf.put_character (')')
+			generate_arguments (reg, not is_polymorphic)
+			if not return_type.is_void then
+					-- This is a query. The result value may need conversion.
+				buf := buffer
+				buf.put_character (')')
+				generate_return_value_conversion (result_register)
+				buf.put_character (')')
+			end
 		end
 
 feature {NONE} -- Implementation
 
-	result_register: REGISTER;
+	generate_workbench_address (t: REGISTRABLE; c: CL_TYPE_A)
+			-- Generate workbench address of a routine that is called on target `t` of type `c`.
+		require
+			t_attached: attached t
+			c_attached: attached c
+		local
+			is_nested: BOOLEAN
+			buf: GENERATION_BUFFER
+			cl_type_i: CL_TYPE_A
+			l_type: TYPE_A
+			macro: STRING
+		do
+			is_nested := not is_first
+			buf := buffer
+			if
+				attached precursor_type as p and then
+				is_target_type_fixed
+			then
+				l_type := context.real_type (p)
+				if l_type.is_multi_constrained then
+					check
+						has_multi_constraint_static: has_multi_constraint_static
+					end
+					l_type := context.real_type (multi_constraint_static)
+				end
+				check attached {CL_TYPE_A} l_type as ct then
+					cl_type_i := ct
+				end
+			else
+				cl_type_i := c
+			end
+			if is_nested then
+				inspect call_kind
+				when call_kind_creation then
+					macro := routine_macro.creation_call
+				when call_kind_qualified then
+					macro := routine_macro.qualified_call
+				else
+					macro := routine_macro.unqualified_call
+				end
+			else
+				macro := routine_macro.unqualified_call
+			end
+			buf.put_string (macro)
+			buf.put_character ('(')
+			buf.put_integer (routine_id)
+			buf.put_two_character (',', ' ')
+			if not is_nested then
+				if not attached precursor_type then
+					context.generate_current_dtype
+				elseif is_target_type_fixed then
+						-- Use dynamic type of parent instead
+						-- of dynamic type of Current.
+					buf.put_static_type_id (cl_type_i.static_type_id (context.context_class_type.type))
+				else
+					buf.put_string ({C_CONST}.dtype)
+					buf.put_character ('(')
+					t.print_register
+					buf.put_character (')')
+				end
+			elseif call_kind = call_kind_qualified then
+					-- Feature name is used to report a call on a void target.
+					-- This cannot happen with an unqualified call or a creation procedure call.
+				buf.put_string_literal (feature_name)
+				buf.put_two_character (',', ' ')
+				t.print_register
+			else
+				buf.put_string ({C_CONST}.dtype)
+				buf.put_character ('(')
+				t.print_register
+				buf.put_character (')')
+			end
+			buf.put_character (')')
+		end
+
+	result_register: REGISTER
 			-- A register to hold return value
 			-- to be normalized before use.
 
-note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+;note
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

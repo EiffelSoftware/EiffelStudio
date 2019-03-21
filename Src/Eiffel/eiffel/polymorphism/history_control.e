@@ -60,6 +60,7 @@ feature -- Settings
 			poly_table: POLY_TABLE [ENTRY]
 			associated_class: CLASS_C
 			types: TYPE_LIST
+			is_deferred: BOOLEAN
 		do
 			poly_table := new_units.item (rout_id)
 			if poly_table = Void then
@@ -68,7 +69,8 @@ feature -- Settings
 			end
 			associated_class := System.class_of_id (id)
 			if associated_class /= Void and then associated_class.has_types then
-					-- Classes could have been removed
+				is_deferred := associated_class.is_deferred
+					-- Classes could have been removed.
 				from
 					types := associated_class.types
 					if poly_table.is_empty then
@@ -80,7 +82,7 @@ feature -- Settings
 				until
 					types.after
 				loop
-					poly_table.extend (poly_table.new_entry (f, types.item, id))
+					poly_table.extend (poly_table.new_entry (f, types.item, is_deferred, id))
 					types.forth
 				end
 			end

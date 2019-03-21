@@ -5,7 +5,7 @@
 	date: "$Date$"
 	revision: "$Revision$"
 
-class FEATURE_BL
+deferred class FEATURE_BL
 
 inherit
 	FEATURE_B
@@ -14,29 +14,32 @@ inherit
 		undefine
 			analyze,
 			basic_register,
+			call_kind,
 			free_register,
+			generate_access,
 			generate_parameters,
 			has_one_signature,
 			is_polymorphic,
 			register,
+			set_call_kind,
 			set_parent,
 			set_register
 		redefine
 			analyze_on,
-			call_kind,
-			generate_access,
 			generate_access_on_type,
 			generate_end,
 			generate_on,
 			generate_parameters_list,
 			is_feature_call,
-			parent,
-			set_call_kind
+			parent
 		end
 
 	ROUTINE_BL
+		undefine
+			is_object_relative,
+			is_once,
+			is_process_relative
 		redefine
-			generate_access,
 			generate_on,
 			parent
 		end
@@ -53,23 +56,23 @@ inherit
 			{NONE} all
 		end
 
-create
-	fill_from
-
 feature {NONE} --Initialisation
 
-	fill_from (f: FEATURE_B)
-			-- Fill in node with feature `f'
+	fill_from (f: ROUTINE_B)
+			-- Fill in node with feature `f`.
 		do
-			call_kind := call_kind_qualified
+			if attached f.precursor_type as p then
+				precursor_type := p
+				call_kind := call_kind_unqualified
+			else
+				call_kind := call_kind_qualified
+			end
 			feature_name_id := f.feature_name_id
 			feature_id := f.feature_id
 			written_in := f.written_in
 			type := f.type
 			set_parameters (f.parameters)
-			precursor_type := f.precursor_type
 			routine_id := f.routine_id
-			body_index := f.body_index
 			is_once := f.is_once
 			is_process_relative := f.is_process_relative
 			is_object_relative := f.is_object_relative
@@ -88,29 +91,15 @@ feature
 	is_feature_call: BOOLEAN = True
 			-- Access is a feature call
 
-feature {CALL_B} -- C code generation: kind of a call
-
-	call_kind: INTEGER
-			-- <Precursor>
-
-	set_call_kind (value: like call_kind)
-			-- <Precursor>
-		do
-			call_kind := value
-		end
-
 feature -- C code generation
 
-	analyze_on (reg: REGISTRABLE)
-			-- Analyze feature call on `reg'
+	analyze_on (r: REGISTRABLE)
+			-- Analyze feature call on `r`.
 		local
-			l_optimizable: BOOLEAN
+			reg: REGISTRABLE
 		do
-debug
-io.error.put_string ("In feature_bl [analyze_on]: ")
-io.error.put_string (feature_name)
-io.error.put_new_line
-end
+			analyze_non_object_call_target
+			reg := target_register (r)
 			if attached {BASIC_A} context_type as basic_i and then not is_feature_special (True, basic_i) then
 					-- Get a register to store the metamorphosed basic type,
 					-- on which the attribute access is made. The lifetime of
@@ -120,26 +109,9 @@ end
 					-- are handling BIT objects.
 				create {REGISTER} basic_register.make (Reference_c_type)
 			end
-			if parameters /= Void then
-				-- If we have only one parameter and it is a single access to
-				-- an attribute, then expand it in-line.
-				from
-					l_optimizable := True
-					parameters.start
-				until
-					parameters.after
-				loop
-					if
-						(attached {ACCESS_B} parameters.item.expression as access_b implies not access_b.is_attribute) and then
-						(attached {NESTED_B} parameters.item.expression as l_nested implies
-							(not (l_nested.target.is_predefined or l_nested.target.is_attribute) or not l_nested.message.is_attribute))
-					then
-						l_optimizable := False
-						parameters.finish
-					end
-					parameters.forth
-				end
-				if l_optimizable then
+			if attached parameters as arguments then
+					-- If no arguments allocate memory, they can be generated inline.
+				if not across arguments as a some a.item.allocates_memory end then
 					from
 						parameters.start
 					until
@@ -165,20 +137,6 @@ end
 			if reg.is_current then
 				context.mark_current_used
 			end
-debug
-io.error.put_string ("Out feature_bl [analyze_on]: ")
-io.error.put_string (feature_name)
-io.error.put_new_line
-end
-		end
-
-	generate_access
-			-- Generate access call of feature in current on `current_register'
-		do
-				-- Reset variables.
-			is_direct_once.put (False)
-				-- Generate code.
-			Precursor {ROUTINE_BL}
 		end
 
 	generate_on (reg: REGISTRABLE)
@@ -315,20 +273,10 @@ end
 							buf.put_character (')')
 						end
 						buf.put_character (',')
-						buf.put_character ('(')
-						gen_reg.print_target_register
-						if parameters /= Void then
-							generate_parameters_list
-						end
-						buf.put_character (')')
+						generate_arguments (gen_reg, True)
 						buf.put_character (')')
 					else
-						buf.put_character ('(')
-						gen_reg.print_target_register
-						if parameters /= Void then
-							generate_parameters_list
-						end
-						buf.put_character (')')
+						generate_arguments (gen_reg, not is_polymorphic)
 						if is_right_parenthesis_needed.item then
 							buf.put_character (')')
 						end
@@ -428,7 +376,7 @@ end
 							-- A trampoline is required to adapt argument and/or result type.
 						is_trampoline := True
 						internal_name := rout_table.trampoline_name (entry, context_entry)
-						system.request_trampoline (entry, context_entry, rout_table)
+						system.request_trampoline (entry, context_entry, routine_id)
 					else
 						internal_name := entry.routine_name
 					end
@@ -460,6 +408,27 @@ end
 					-- There is no feature to call.
 				generate_no_call
 			end
+		end
+
+feature {NONE} -- C code generation: actual arguments
+
+	generate_arguments (r: REGISTRABLE; v: BOOLEAN)
+			-- Generate a list of arguments, including target `r`, enclosed in parentheses.
+			-- Add a check for voidness of `r` iff `v`.
+		local
+			buf: like buffer
+		do
+			buf := buffer
+			buf.put_character ('(')
+			if v then
+				r.print_checked_target_register
+			else
+				r.print_register
+			end
+			if attached parameters then
+				generate_parameters_list
+			end
+			buf.put_character (')')
 		end
 
 	generate_parameters_list
@@ -537,9 +506,9 @@ feature {NONE} -- Inlining of calls to features from SPECIAL
 			end
 		end
 
-	generate_special_base_address (result_register: detachable REGISTER; target_register: REGISTRABLE)
-			-- Generate code for "{SPECIAL}.base_address" with target stored in `target_register'.
-			-- Generate an instruction that stores result in `result_register' if it is attached.
+	generate_special_base_address (r: detachable REGISTER; t: REGISTRABLE)
+			-- Generate code for "{SPECIAL}.base_address" with target stored in `t`.
+			-- Generate an instruction that stores result in `r` if it is attached.
 			-- Generate an expression otherwise.
 		local
 			buf: GENERATION_BUFFER
@@ -548,20 +517,20 @@ feature {NONE} -- Inlining of calls to features from SPECIAL
 			buf.put_new_line
 			buf.put_string ("/* INLINED CODE (SPECIAL.base_address) */")
 			buf.put_new_line
-			if attached result_register then
-				result_register.print_register
+			if attached r then
+				r.print_register
 				buf.put_three_character (' ', '=', ' ')
 			end
-			target_register.print_target_register
-			if attached result_register then
+			t.print_target_register
+			if attached r then
 				buf.put_character (';')
 			end
 			buf.put_new_line
 			buf.put_string ("/* END INLINED CODE */")
 		end
 
-	generate_special_clear_all (target_register: REGISTRABLE; actual_generic: TYPE_A)
-			-- Generate code for "{SPECIAL}.clear_all" with target stored in `target_register' and actual generic `actual_generic'.
+	generate_special_clear_all (t: REGISTRABLE; actual_generic: TYPE_A)
+			-- Generate code for "{SPECIAL}.clear_all" with target stored in `t` and actual generic `actual_generic'.
 			-- The actual generic should not be user-defined expanded because it may require initialization.
 		require
 			actual_generic_is_basic: not actual_generic.is_true_expanded
@@ -573,16 +542,16 @@ feature {NONE} -- Inlining of calls to features from SPECIAL
 			buf.put_string ("/* INLINED CODE (SPECIAL.clear_all) */")
 			buf.put_new_line
 			buf.put_string ("memset (")
-			target_register.print_target_register
+			t.print_target_register
 			buf.put_string (", 0, RT_SPECIAL_VISIBLE_SIZE(")
-			target_register.print_target_register
+			t.print_target_register
 			buf.put_three_character (')', ')', ';')
 			buf.put_new_line
 			buf.put_string ("/* END INLINED CODE */")
 		end
 
-	generate_special_copy_data (target_register: REGISTRABLE; actual_generic: TYPE_A)
-			-- Generate code for "{SPECIAL}.copy_data" with target stored in `target_register' and actual generic `actual_generic'.
+	generate_special_copy_data (t: REGISTRABLE; actual_generic: TYPE_A)
+			-- Generate code for "{SPECIAL}.copy_data" with target stored in `t` and actual generic `actual_generic'.
 		require
 			actual_generic_not_expanded_with_references: not is_special_actual_expanded_with_references (actual_generic)
 		local
@@ -597,7 +566,7 @@ feature {NONE} -- Inlining of calls to features from SPECIAL
 			if actual_generic.is_true_expanded then
 				skeleton := actual_generic.associated_class_type (context.context_class_type.type).skeleton
 				buf.put_string ("memmove((char *)")
-				target_register.print_target_register
+				t.print_target_register
 				buf.put_string (" + (rt_uint_ptr)")
 				parameters [3].print_register
 				buf.put_string (" * (rt_uint_ptr)")
@@ -618,7 +587,7 @@ feature {NONE} -- Inlining of calls to features from SPECIAL
 						-- Because we need to do the aging test in case `source' and `target' are
 						-- not the same SPECIAL, we call the run-time helper function `sp_copy_data'.
 					buf.put_string ("sp_copy_data(")
-					target_register.print_target_register
+					t.print_target_register
 					buf.put_character (',')
 					parameters [1].print_register
 					buf.put_character (',')
@@ -630,7 +599,7 @@ feature {NONE} -- Inlining of calls to features from SPECIAL
 				else
 					buf.put_string ("memmove(")
 					type_c.generate_access_cast (buf)
-					target_register.print_target_register
+					t.print_target_register
 					buf.put_string (" + (")
 					parameters [3].print_register
 					buf.put_string ("),")
@@ -649,9 +618,9 @@ feature {NONE} -- Inlining of calls to features from SPECIAL
 			shared_include_queue_put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
 			buf.put_new_line
 			buf.put_string("RT_SPECIAL_COUNT(");
-			target_register.print_register
+			t.print_register
 			buf.put_string (") = eif_max_int32(RT_SPECIAL_COUNT(")
-			target_register.print_register
+			t.print_register
 			buf.put_three_character (')', ',', ' ')
 			parameters [3].print_register
 			buf.put_three_character (' ', '+', ' ')
@@ -661,9 +630,9 @@ feature {NONE} -- Inlining of calls to features from SPECIAL
 			buf.put_string ("/* END INLINED CODE */")
 		end
 
-	generate_special_count (result_register: detachable REGISTER; target_register: REGISTRABLE)
-			-- Generate code for "{SPECIAL}.count" with target stored in `target_register'.
-			-- Generate an instruction that stores result in `result_register' if it is attached.
+	generate_special_count (r: detachable REGISTER; t: REGISTRABLE)
+			-- Generate code for "{SPECIAL}.count" with target stored in `t`.
+			-- Generate an instruction that stores result in `r` if it is attached.
 			-- Generate an expression otherwise.
 		local
 			buf: GENERATION_BUFFER
@@ -672,23 +641,23 @@ feature {NONE} -- Inlining of calls to features from SPECIAL
 			buf.put_new_line
 			buf.put_string ("/* INLINED CODE (SPECIAL.count) */")
 			buf.put_new_line
-			if attached result_register then
-				result_register.print_register
+			if attached r then
+				r.print_register
 				buf.put_three_character (' ', '=', ' ')
 			end
 			buf.put_string ("RT_SPECIAL_COUNT(")
-			target_register.print_target_register
+			t.print_target_register
 			buf.put_character (')')
-			if attached result_register then
+			if attached r then
 				buf.put_character (';')
 			end
 			buf.put_new_line
 			buf.put_string ("/* END INLINED CODE */")
 		end
 
-	generate_special_item_basic (result_register: detachable REGISTER; target_register: REGISTRABLE; actual_generic: TYPE_A)
-			-- Generate code for "{SPECIAL}.item" with target stored in `target_register' and actual generic `actual_generic'.
-			-- Generate an instruction that stores result in `result_register' if it is attached.
+	generate_special_item_basic (r: detachable REGISTER; t: REGISTRABLE; actual_generic: TYPE_A)
+			-- Generate code for "{SPECIAL}.item" with target stored in `t` and actual generic `actual_generic'.
+			-- Generate an instruction that stores result in `r` if it is attached.
 			-- Generate an expression otherwise.
 		require
 			actual_generic_is_basic: not actual_generic.is_true_expanded
@@ -699,26 +668,26 @@ feature {NONE} -- Inlining of calls to features from SPECIAL
 			buf.put_new_line
 			buf.put_string ("/* INLINED CODE (SPECIAL.item) */")
 			buf.put_new_line
-			if attached result_register then
-				result_register.print_register
+			if attached r then
+				r.print_register
 				buf.put_three_character (' ', '=', ' ')
 			end
 			buf.put_two_character ('*', '(')
 			actual_generic.c_type.generate_access_cast (buf)
-			target_register.print_target_register
+			t.print_target_register
 			buf.put_string (" + (")
 			parameters [1].print_register
 			buf.put_two_character (')', ')')
-			if attached result_register then
+			if attached r then
 				buf.put_character (';')
 			end
 			buf.put_new_line
 			buf.put_string ("/* END INLINED CODE */")
 		end
 
-	generate_special_item_with_references (result_register: detachable REGISTER; target_register: REGISTRABLE; actual_generic_class_type: CLASS_TYPE)
-			-- Generate code for "{SPECIAL}.item" with target stored in `target_register' and result type `actual_generic_class_type'.
-			-- Generate an instruction that stores result in `result_register' if it is attached.
+	generate_special_item_with_references (r: detachable REGISTER; t: REGISTRABLE; actual_generic_class_type: CLASS_TYPE)
+			-- Generate code for "{SPECIAL}.item" with target stored in `t` and result type `actual_generic_class_type'.
+			-- Generate an instruction that stores result in `r` if it is attached.
 			-- Generate an expression otherwise.
 		require
 			actual_generic_class_type_has_references: actual_generic_class_type.skeleton.has_references
@@ -729,27 +698,27 @@ feature {NONE} -- Inlining of calls to features from SPECIAL
 			buf.put_new_line
 			buf.put_string ("/* INLINED CODE (SPECIAL.item) */")
 			buf.put_new_line
-			if attached result_register then
-				result_register.print_register
+			if attached r then
+				r.print_register
 				buf.put_three_character (' ', '=', ' ')
 			end
 			buf.put_string ("RTCL(")
-			target_register.print_target_register
+			t.print_target_register
 			buf.put_string (" + OVERHEAD + (rt_uint_ptr)")
 			parameters [1].print_register
 			buf.put_string (" * (rt_uint_ptr)(")
 			actual_generic_class_type.skeleton.generate_size (buf, True)
 			buf.put_string (" + OVERHEAD))")
-			if attached result_register then
+			if attached r then
 				buf.put_character (';')
 			end
 			buf.put_new_line
 			buf.put_string ("/* END INLINED CODE */")
 		end
 
-	generate_special_item_address (result_register: detachable REGISTER; target_register: REGISTRABLE; actual_generic: TYPE_A)
-			-- Generate code for "{SPECIAL}.item_address" with target stored in `target_register' and actual generic `actual_generic'.
-			-- Generate an instruction that stores result in `result_register' if it is attached.
+	generate_special_item_address (r: detachable REGISTER; t: REGISTRABLE; actual_generic: TYPE_A)
+			-- Generate code for "{SPECIAL}.item_address" with target stored in `t` and actual generic `actual_generic'.
+			-- Generate an instruction that stores result in `r` if it is attached.
 			-- Generate an expression otherwise.
 		local
 			buf: GENERATION_BUFFER
@@ -759,11 +728,11 @@ feature {NONE} -- Inlining of calls to features from SPECIAL
 			buf.put_new_line
 			buf.put_string ("/* INLINED CODE (SPECIAL.item_address) */")
 			buf.put_new_line
-			if attached result_register then
-				result_register.print_register
+			if attached r then
+				r.print_register
 				buf.put_three_character (' ', '=', ' ')
 			end
-			target_register.print_target_register
+			t.print_target_register
 			if actual_generic.is_true_expanded then
 				skeleton := actual_generic.associated_class_type (context.context_class_type.type).skeleton
 				if skeleton.has_references then
@@ -784,16 +753,16 @@ feature {NONE} -- Inlining of calls to features from SPECIAL
 				buf.put_three_character (' ', '*', ' ')
 				actual_generic.c_type.generate_size (buffer)
 			end
-			if attached result_register then
+			if attached r then
 				buf.put_character (';')
 			end
 			buf.put_new_line
 			buf.put_string ("/* END INLINED CODE */")
 		end
 
-	generate_special_move (target_register: REGISTRABLE; actual_generic: TYPE_A; is_overlapping: BOOLEAN)
+	generate_special_move (t: REGISTRABLE; actual_generic: TYPE_A; is_overlapping: BOOLEAN)
 			-- Generate code for "{SPECIAL}.move_data" or "{SPECIAL}.overlapping_move" depending on `is_overlapping'
-			-- with target stored in `target_register' and argument of type `argument_type'.
+			-- with target stored in `t` and argument of type `argument_type'.
 		require
 			actual_generic_not_expanded_with_references: not is_special_actual_expanded_with_references (actual_generic)
 		local
@@ -815,13 +784,13 @@ feature {NONE} -- Inlining of calls to features from SPECIAL
 			if actual_generic.is_true_expanded then
 				skeleton := actual_generic.associated_class_type (context.context_class_type.type).skeleton
 				buf.put_string ("((char *)")
-				target_register.print_target_register
+				t.print_target_register
 				buf.put_string (" + (rt_uint_ptr)")
 				parameters [2].print_register
 				buf.put_string (" * (rt_uint_ptr)")
 				skeleton.generate_size (buf, True)
 				buf.put_string (", (char *) ")
-				target_register.print_target_register
+				t.print_target_register
 				buf.put_string (" + (rt_uint_ptr)")
 				parameters [1].print_register
 				buf.put_string (" * (rt_uint_ptr)")
@@ -834,12 +803,12 @@ feature {NONE} -- Inlining of calls to features from SPECIAL
 				type_c := actual_generic.c_type
 				buf.put_character ('(')
 				type_c.generate_access_cast (buf)
-				target_register.print_target_register
+				t.print_target_register
 				buf.put_string (" + (")
 				parameters [2].print_register
 				buf.put_two_character (')', ',')
 				type_c.generate_access_cast (buf)
-				target_register.print_target_register
+				t.print_target_register
 				buf.put_three_character (' ', '+', ' ')
 				parameters [1].print_register
 				buf.put_string (", (rt_uint_ptr)")
@@ -852,9 +821,9 @@ feature {NONE} -- Inlining of calls to features from SPECIAL
 			shared_include_queue_put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
 			buf.put_new_line
 			buf.put_string ("RT_SPECIAL_COUNT(")
-			target_register.print_register
+			t.print_register
 			buf.put_string (") = eif_max_int32(RT_SPECIAL_COUNT(")
-			target_register.print_register
+			t.print_register
 			buf.put_three_character (')', ',', ' ')
 			parameters [2].print_register
 			buf.put_three_character (' ', '+', ' ')
@@ -864,8 +833,8 @@ feature {NONE} -- Inlining of calls to features from SPECIAL
 			buf.put_string ("/* END INLINED CODE */")
 		end
 
-	generate_special_put (target_register: REGISTRABLE; argument_type: TYPE_A)
-			-- Generate code for "{SPECIAL}.put" with target stored in `target_register' and argument of type `argument_type'.
+	generate_special_put (t: REGISTRABLE; argument_type: TYPE_A)
+			-- Generate code for "{SPECIAL}.put" with target stored in `t` and argument of type `argument_type'.
 		local
 			buf: GENERATION_BUFFER
 			skeleton: SKELETON
@@ -881,7 +850,7 @@ feature {NONE} -- Inlining of calls to features from SPECIAL
 					buf.put_string ("ecopy(")
 					parameters [1].print_register
 					buf.put_two_character (',', ' ')
-					target_register.print_target_register
+					t.print_target_register
 					buf.put_string (" + OVERHEAD + (rt_uint_ptr)")
 					parameters [2].print_register
 					buf.put_string (" * (rt_uint_ptr)(")
@@ -889,7 +858,7 @@ feature {NONE} -- Inlining of calls to features from SPECIAL
 					buf.put_string (" + OVERHEAD));")
 				else
 					buf.put_string ("memcpy(")
-					target_register.print_target_register
+					t.print_target_register
 					buf.put_string (" + (rt_uint_ptr)")
 					parameters [2].print_register
 					buf.put_string (" * (rt_uint_ptr)")
@@ -904,7 +873,7 @@ feature {NONE} -- Inlining of calls to features from SPECIAL
 				type_c := argument_type.c_type
 				buf.put_two_character ('*', '(')
 				type_c.generate_access_cast (buf)
-				target_register.print_target_register
+				t.print_target_register
 				buf.put_string (" + (")
 				parameters [2].print_register
 				buf.put_string (")) = ")
@@ -913,7 +882,7 @@ feature {NONE} -- Inlining of calls to features from SPECIAL
 				if type_c.level = C_ref then
 					buf.put_new_line
 					buf.put_string ({C_CONST}.rtar_open)
-					target_register.print_register
+					t.print_register
 					buf.put_character (',')
 					parameters [1].print_register
 					buf.put_two_character (')', ';')

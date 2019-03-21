@@ -39,45 +39,37 @@ feature -- from ENTRY
 feature -- Status report
 
 	is_attribute: BOOLEAN
-			-- is the feature_i associated an attribute ?
+			-- is the feature_i associated an attribute?
 		do
 		end
 
 	is_deferred: BOOLEAN
-			-- Is the feature_i associated a deferred routine?
-		do
-		end
+			-- Is the associated feature deferred?
+
+	is_polymorphic: BOOLEAN
+			-- Should the feature be taken into account for polymorphic calls?
+			-- (E.g., this attribute is `False` is the associated class is deferred.)
 
 	used_for_offset: BOOLEAN
-			-- Is an attribute entry used?
+			-- Is the attribute entry used?
 		do
-			Result :=
-					-- Check if dead code removal is in place.
-				attached system.remover as r implies
-					-- Check if the class is alive when dead code removal takes place.
-				r.is_class_alive (class_id)
+				-- Take into account only polymorphic entries.
+			if is_polymorphic then
+				Result :=
+						-- Check if dead code removal is in place.
+					attached system.remover as r implies
+						-- Check if the class is alive when dead code removal takes place.
+					r.is_class_alive (class_id)
+			end
 		end
 
 feature -- Access
 
 	feature_id: INTEGER
-			-- feature id of the feature associated to the entry
-
-	set_feature_id (i: INTEGER)
-		do
-			feature_id := i
-		end
-
-feature -- Previously in POLY_UNIT
+			-- Feature ID of the feature associated to the entry.
 
 	class_id: INTEGER
 			-- Id of the class associated to the current_unit.
-
-	set_class_id (i: INTEGER)
-			-- Assign `i' to `class_id'.
-		do
-			class_id := i
-		end
 
 feature -- Access
 

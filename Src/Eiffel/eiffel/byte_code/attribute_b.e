@@ -123,7 +123,7 @@ feature
 			if attached wrapper as f then
 					-- Call a wrapper that performs the required initialization.
 				if context.final_mode then
-					create {FEATURE_BL} Result.fill_from (f)
+					Result := f.enlarged
 				else
 					create {FEATURE_BW} Result.fill_from (f)
 				end

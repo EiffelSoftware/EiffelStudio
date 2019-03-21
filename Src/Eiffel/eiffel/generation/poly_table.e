@@ -105,8 +105,9 @@ feature -- Initialization
 
 feature
 
-	new_entry (f: FEATURE_I; t: CLASS_TYPE; c: INTEGER): ENTRY
-			-- New entry corresponding to `f` for the target type `t` of the class of ID `c`.
+	new_entry (f: FEATURE_I; t: CLASS_TYPE; d: BOOLEAN; c: INTEGER): ENTRY
+			-- New entry corresponding to `f` for the target type `t` of the class of ID `c`
+			-- that is deferred or not according to `d`.
 		deferred
 		end
 
@@ -504,7 +505,7 @@ feature -- Insertion
 			-- Add `v' to the end of `Current'.
 		do
 			max_position := max_position + 1
-			if not v.is_deferred then
+			if v.is_polymorphic then
 				is_deferred := False
 			end
 			if v.is_initialization_required then
@@ -514,7 +515,7 @@ feature -- Insertion
 		ensure
 			max_position_updated: max_position = old max_position + 1
 			inserted: array_item (max_position) = v
-			is_deferred_set: not v.is_deferred implies not is_deferred
+			is_deferred_set: not v.is_polymorphic implies not is_deferred
 		end
 
 	merge (other: like Current)

@@ -22,6 +22,38 @@ inherit
 			unanalyze
 		end
 
+create
+	fill_from
+
+feature {NONE} -- Creation
+
+	fill_from (f: FEATURE_B)
+			-- Fill in node with feature `f`.
+		do
+			if attached f.precursor_type as p then
+				precursor_type := p
+				call_kind := call_kind_unqualified
+			else
+				call_kind := call_kind_qualified
+			end
+			feature_name_id := f.feature_name_id
+			feature_id := f.feature_id
+			written_in := f.written_in
+			type := real_type (f.type)
+			routine_id := f.routine_id
+			parameters := f.parameters
+			if parameters /= Void then
+				set_parameters (parameters.inlined_byte_code)
+			end
+			is_once := f.is_once
+			is_process_relative := f.is_process_relative
+			is_object_relative := f.is_object_relative
+			is_instance_free := f.is_instance_free
+			if f.has_multi_constraint_static then
+				multi_constraint_static := real_type (f.multi_constraint_static)
+			end
+		end
+
 feature
 
 	perused: BOOLEAN = True;
@@ -52,29 +84,6 @@ feature
 			-- Type of an inlined feature
 		do
 			Result := byte_code.result_type
-		end
-
-	fill_from (f: FEATURE_B)
-		do
-			call_kind := Call_kind_qualified
-			feature_name_id := f.feature_name_id
-			feature_id := f.feature_id
-			written_in := f.written_in
-			type := real_type (f.type)
-			routine_id := f.routine_id
-			parameters := f.parameters
-			if parameters /= Void then
-				set_parameters (parameters.inlined_byte_code)
-			end
-			precursor_type := f.precursor_type
-			body_index := f.body_index
-			is_once := f.is_once
-			is_process_relative := f.is_process_relative
-			is_object_relative := f.is_object_relative
-			is_instance_free := f.is_instance_free
-			if f.has_multi_constraint_static then
-				multi_constraint_static := real_type (f.multi_constraint_static)
-			end
 		end
 
 	set_context_type (context_class_type: CLASS_TYPE; a_context_cl_type: CL_TYPE_A; written_class_type: CLASS_TYPE; a_written_cl_type: CL_TYPE_A)
@@ -144,15 +153,18 @@ feature
 			end
 		end
 
-	analyze_on (reg: REGISTRABLE)
+	analyze_on (r: REGISTRABLE)
+			-- <Precursor>
 		local
 			r_type: TYPE_A
 			reg_type: TYPE_C
 			local_is_current_temporary: BOOLEAN
 			l_curr_reg: like current_reg
+			reg: REGISTRABLE
 		do
-				-- First, standard analysis of the call
-			Precursor {FEATURE_BL} (reg)
+				-- First, standard analysis of the call.
+			Precursor (r)
+			reg := target_register (r)
 			reg_type := reg.c_type
 
 			context.change_class_type_context

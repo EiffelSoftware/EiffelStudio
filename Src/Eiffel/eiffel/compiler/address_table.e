@@ -1045,16 +1045,17 @@ feature {NONE} -- Generation
 			l_table_name, l_function_name: STRING
 			l_rout_id: INTEGER
 		do
-				-- Routine is always implemented unless found otherwise (Deferred routine
-				-- with no implementation).
+				-- Routine is always implemented unless found otherwise.
 			Result := True
 			l_rout_id := a_feature.rout_id_set.first
 			buffer.put_character ('(')
 			if attached {ROUT_TABLE} tmp_poly_server.item (l_rout_id) as t implies t.is_deferred then
-					-- Function pointer associated to a deferred feature
-					-- without any implementation
+					-- A call to a non-exiting (deferred) or removed feature
+					-- because no instance of the target type is ever created.
+					-- The function behind RTNR macro takes only one argument.
 				c_return_type.generate_function_cast (buffer, <<"EIF_REFERENCE">>, False)
-				buffer.put_string ("RTNR) (")
+				buffer.put_string ({C_CONST}.rtnr_close)
+				buffer.put_two_character (' ', '(')
 				buffer.put_string (a_current_name)
 				Result := False
 			elseif t.polymorphic_status_for_body (a_type.type, a_type) = 0 then
@@ -1080,13 +1081,13 @@ feature {NONE} -- Generation
 					extern_declarations.add_routine_with_signature (c_return_type.c_string,
 						l_function_name, a_types)
 				else
-						-- Function pointer associated to a deferred feature
-						-- without any implementation. We mark `l_is_implemented'
-						-- to False to not generate the argument list since
-						-- RTNR takes only one argument.
+						-- A call to a non-exiting (deferred) or removed feature
+						-- because no instance of the target type is ever created.
+						-- The function behind RTNR macro takes only one argument.
 					Result := False
 					c_return_type.generate_function_cast (buffer, <<"EIF_REFERENCE">>, False)
-					buffer.put_string ("RTNR) (")
+					buffer.put_string ({C_CONST}.rtnr_close)
+					buffer.put_two_character (' ', '(')
 					buffer.put_string (a_current_name)
 				end
 			end

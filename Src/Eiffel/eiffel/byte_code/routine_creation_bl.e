@@ -321,12 +321,12 @@ feature
 						extern_declarations.add_routine_with_signature (
 							l_return_type_string, l_function_name, l_args)
 					else
-							-- Function pointer associated to a deferred feature
-							-- without any implementation. We mark `l_is_implemented'
-							-- to False to not generate the argument list since
-							-- RTNR takes only one argument.
+							-- A call to a non-exiting (deferred) or removed feature
+							-- because no instance of the target type is ever created.
+							-- The function behind RTNR macro takes only one argument.
 						l_c_return_type.generate_function_cast (l_buffer, <<"EIF_REFERENCE">>, False)
-						l_buffer.put_string ("RTNR),")
+						l_buffer.put_string ({C_CONST}.rtnr_close)
+						l_buffer.put_character (',')
 					end
 				end
 			end

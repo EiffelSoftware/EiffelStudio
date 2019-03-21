@@ -1535,7 +1535,7 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_RASSIGN\n");
 #endif
 
-		RTDBGA_LOCAL(icurrent->it_ref,0,rtype,0,1);
+		RTDBGA_LOCAL(0,rtype,0,1);
 		memcpy (iresult, eif_opstack_pop_address(&op_stack), ITEM_SZ);
 		/* Register once function if needed. This has to be done constantly
 		 * whenever the Result is changed, in case the once calls another
@@ -1559,7 +1559,7 @@ rt_private void interpret(int flag, int where)
 			if (ref == NULL)
 				xraise(EN_VEXP);	/* Void assigned to expanded */
 
-			RTDBGA_LOCAL(icurrent->it_ref,0,rtype,1,1);
+			RTDBGA_LOCAL(0,rtype,1,1);
 			eif_std_ref_copy(ref, iresult->it_ref);
 			if (is_process_or_thread_relative_once) {
 				last = iresult;
@@ -1583,7 +1583,7 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_LASSIGN\n");
 #endif
 		code = get_int16(&IC);		/* Get the local number (from 1 to locnum) */
-		RTDBGA_LOCAL(icurrent->it_ref,code,loc (code)->type,0,1);
+		RTDBGA_LOCAL(code,loc (code)->type,0,1);
 		memcpy (loc (code) , eif_opstack_pop_address(&op_stack), ITEM_SZ);
 		break;
 
@@ -1600,7 +1600,7 @@ rt_private void interpret(int flag, int where)
 				xraise(EN_VEXP);	/* Void assigned to expanded */
 			}
 			code = get_int16(&IC);		/* Get the local # (from 1 to locnum) */
-			RTDBGA_LOCAL(icurrent->it_ref,code,loc(code)->type,1,1);
+			RTDBGA_LOCAL(code,loc(code)->type,1,1);
 			eif_std_ref_copy(ref, loc(code)->it_ref);		/* Copy */
 		}
 		break;

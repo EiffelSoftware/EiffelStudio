@@ -2018,7 +2018,8 @@ feature -- Polymorphism
  		require
  			valid_class_id: system.has_existing_class_of_id (c)
  			known_class: attached system.class_of_id (c) as compiled_class
- 			known_feature: attached compiled_class.feature_of_feature_id (feature_id)
+ 			known_invariant: is_invariant implies compiled_class.invariant_feature.feature_id = feature_id
+ 			known_feature: not is_invariant implies attached compiled_class.feature_of_feature_id (feature_id)
  			consistent_target_type: t.associated_class.class_id = c
  			consistent_deferred_status: compiled_class.is_deferred = d
  		local

@@ -1,14 +1,14 @@
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2019 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General Public
 --| License version 2.
 
-Installation instructions (copy of the page at http://eiffelsoftware.origo.ethz.ch/index.php/Eweasel_How_To)
+Installation instructions (copy of the page at https://dev.eiffel.com/Eweasel_How_To)
 
 ==Getting eweasel==
 First you need to get the source code of eweasel. It is part of the EiffelStudio SVN repository under trunk/eweasel. Let's suppose you have a '''Test''' directory available, here is what you need to do in this directory:
 
- svn co https://eiffelsoftware.origo.ethz.ch/svn/es/trunk/eweasel eweasel
+ svn co https://svn.eiffel.com/eiffelstudio/trunk/eweasel
 
 ==Setting up an EiffelStudio delivery for eweasel==
 To perform testing, you need a modified version of the EiffelStudio delivery, refer to those [[Building_a_delivery|instructions]] for building one. Note that you need as many deliveries as platforms you are testing (thankfully the deliveries can be all done in the same location since we distinguish them through the spec/$ISE_PLATFORM/ paradigm).

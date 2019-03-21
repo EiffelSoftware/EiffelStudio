@@ -15,17 +15,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends --no-install-su
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-RUN curl -sSL https://www.eiffel.org/setup/install.sh | bash -s -- nightly --install-dir /usr/local/eiffel --dir /tmp
-
-# Define Eiffel environment variables
-ENV ISE_EIFFEL=/usr/local/eiffel \
-    ISE_PLATFORM=linux-x86-64 \
-	ISE_LIBRARY=$ISE_EIFFEL
-ENV	PATH=$PATH:$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin:$ISE_EIFFEL/tools/spec/$ISE_PLATFORM/bin:$ISE_EIFFEL/library/gobo/spec/$ISE_PLATFORM/bin:$ISE_EIFFEL/esbuilder/spec/$ISE_PLATFORM/bin
-
 #Define delivery variables
+ENV ISE_PLATFORM=linux-x86-64
 ENV SVN_EIFFELSTUDIO_REPO=https://svn.eiffel.com/eiffelstudio
 ENV SVN_ISE_REPO=svn://svn.ise/ise_svn
+ENV EIFFEL_SETUP_CHANNEL=nightly
 #ENV SVN_EIFFELSTUDIO_REPO_REVISION=HEAD
 
 RUN export uid=1000 gid=1000 && \
@@ -40,7 +34,6 @@ ENV HOME /home/eiffel
 COPY --chown=eiffel:eiffel ./src/build_delivery.sh /home/eiffel/build_delivery.sh
 RUN mkdir -p /home/eiffel/deliv/output \
 	&& dos2unix /home/eiffel/build_delivery.sh
-
 
 VOLUME /home/eiffel/deliv/output
 

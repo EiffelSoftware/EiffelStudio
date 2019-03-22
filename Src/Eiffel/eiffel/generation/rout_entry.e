@@ -58,7 +58,7 @@ feature {NONE} -- Creation
 			access_type_id = a_access_type_id
 			access_in = a_access_in
 			written_in = a_written_in
-			is_polymorphic = not a_is_deferred and not a_is_class_deferred
+			is_polymorphic /= (a_is_deferred or a_is_class_deferred)
 			class_id = a_class_id
 		end
 

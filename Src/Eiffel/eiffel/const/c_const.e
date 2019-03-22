@@ -92,7 +92,7 @@ feature -- Macros
 	rtcw_arg: STRING = "RTCW(arg"
 	rtcw_earg: STRING = "RTCW(earg"
 	rtcw_loc: STRING = "RTCW(loc"
-	open_rtna: STRING = "(RTNA"
+	open_rtna_open: STRING = "(RTNA("
 	rtnr_close: STRING = "RTNR)"
 	rtar_open: STRING = "RTAR("
 	rtal: STRING = "RTAL"

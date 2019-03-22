@@ -50,9 +50,10 @@ feature -- C code generation
 			l_type_c: TYPE_C
 		do
 			buf := buffer
-			buf.put_string ({C_CONST}.open_rtna)
+			buf.put_string ({C_CONST}.open_rtna_open)
 				-- Generate arguments to take into account any side effects they can produce.
 			generate_arguments (gen_reg, True)
+			buf.put_character (')')
 			l_type_c := real_type (type).c_type
 				-- Generate a default value to make code compilable.
 			if not l_type_c.is_void then

@@ -190,10 +190,8 @@ feature {NONE} -- Code generation
 			l_type_c: TYPE_C
 		do
 			buf := buffer
-			buf.put_string ({C_CONST}.open_rtna)
-				-- The line below can be removed when the RTNA macro
-				-- doesn't take an argument anymore.
-			buf.put_string ("(NULL)")
+			buf.put_string ({C_CONST}.open_rtna_open)
+			buf.put_string ("NULL))")
 			l_type_c := real_type (type).c_type
 			if not l_type_c.is_void then
 				buf.put_two_character (',', ' ')

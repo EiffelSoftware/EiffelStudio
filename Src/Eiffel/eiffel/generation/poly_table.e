@@ -515,7 +515,7 @@ feature -- Insertion
 		ensure
 			max_position_updated: max_position = old max_position + 1
 			inserted: array_item (max_position) = v
-			is_deferred_set: not v.is_polymorphic implies not is_deferred
+			is_deferred_set: v.is_polymorphic implies not is_deferred
 		end
 
 	merge (other: like Current)

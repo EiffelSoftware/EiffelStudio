@@ -1292,7 +1292,7 @@ test	oms-ec-precondition-violation	final041 tcf pass finalizing ec_precondition
 test	inlining-finalization-crash	final042 tcf pass finalizing inlining
 test	inlining-on-named-tuple-crash	final043 tcf pass finalizing tuple inlining
 test	wrong-dynamic-dispatch-on-generic	final044 tcf pass finalizing
-test	change-generic-finalization-crash	final045 tcf fail used_to_pass finalizing
+test	change-generic-finalization-crash	final045 tcf pass finalizing
 test	polymorphic-call-leak		final046 tcf pass finalizing
 test	inlining-with-anchor		final047 tcf pass finalizing inlining
 test	inlining-deferred-from-other-branch	final048 tcf pass finalizing inlining

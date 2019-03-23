@@ -1,4 +1,3 @@
-
 class TEST
 
 create
@@ -6,8 +5,9 @@ create
 
 feature
 
-	make is
+	make
 		do
+			create x
 			x.try
 		end
 

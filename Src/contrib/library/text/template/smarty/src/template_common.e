@@ -60,16 +60,18 @@ feature {NONE} -- Nested and Internal
 
 	resolved_nested_message (obj: detachable ANY; mesg: STRING): detachable ANY
 			-- `e' should be "$var_name"
-			-- to improve .. later
 		do
 			if obj = Void then
-				Result := "Call on Void"
-			else
-				Result := Template_routines.internal_field_value (obj, mesg)
+				if attached template_context.expression_error_report_function as fct then
+					Result := fct (obj, mesg)
+				else
+--					Result := "Call on Void"
+				end
+			elseif attached Template_routines.internal_field_value (obj, mesg) as cl then
+				Result := cl.item
+			elseif attached template_context.expression_error_report_function as fct then
+				Result := fct (obj, mesg) -- "ERROR{$" + mesg + "}"
 			end
---			if Result = Void then
---				Result := "R[" + mesg + "]"
---			end
 		end
 
 	Template_routines: TEMPLATE_ROUTINES

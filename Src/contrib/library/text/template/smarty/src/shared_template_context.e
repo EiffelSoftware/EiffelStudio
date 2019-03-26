@@ -7,12 +7,14 @@ note
 class
 	SHARED_TEMPLATE_CONTEXT
 
-feature {NONE} -- Template context
+feature -- Template context
 
 	template_context: TEMPLATE_CONTEXT
 		once
 			create Result.make
 		end
+
+feature {NONE} -- Template context helper
 
 	template_custom_action_by_id (a_id: detachable STRING): detachable TEMPLATE_CUSTOM_ACTION
 		do

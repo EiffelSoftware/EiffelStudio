@@ -178,6 +178,18 @@ feature -- Option
 
 	verbose: BOOLEAN
 
+	expression_error_report_function: detachable FUNCTION [TUPLE [obj: detachable ANY; mesg: STRING], detachable ANY]
+			-- Function handling expression `mesg` on object `obj`, when an error occurs,
+			-- by returning a specific value for the expected result.
+			-- useful to return either a blank string, or an error message 
+			--     (such as missing field, or Call on Void target).
+			-- Default: Void.
+
+	set_expression_error_report_function (fct: like expression_error_report_function)
+		do
+			expression_error_report_function := fct
+		end
+
 feature -- Caching
 
 	Files: STRING_TABLE [TEMPLATE_FILE]

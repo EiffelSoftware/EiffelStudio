@@ -12,13 +12,14 @@ inherit
 
 feature
 
-	internal_field_value (obj: ANY; fdn: STRING): detachable ANY
+	internal_field_value (obj: ANY; fdn: STRING): detachable CELL [detachable ANY]
 		require
 			obj_not_void: obj /= Void
 			field_name_not_void: fdn /= Void
 		local
 			otn: STRING
 			obj_fields: detachable STRING_TABLE [INTEGER]
+			l_any: detachable ANY
 		do
 			otn := type_name (obj)
 			if
@@ -26,7 +27,7 @@ feature
 				attached Template_inspectors.item (otn) as tpl_inspector and then
 				attached tpl_inspector.internal_data (fdn, obj) as cl -- If Void, this is not handled by tpl_inspector
 			then
-				Result := cl.item
+				Result := cl
 			else
 				if internal_info.has (otn) then
 					obj_fields := internal_info.item (otn)
@@ -37,14 +38,14 @@ feature
 					obj_fields /= Void and then
 					obj_fields.has (fdn)
 				then
-					Result := field (obj_fields.item (fdn), obj)
+					create Result.put (field (obj_fields.item (fdn), obj))
 				elseif attached {HASH_TABLE [detachable ANY, READABLE_STRING_GENERAL]} obj as htb then
 					if htb.has_key (fdn) then
-						Result := htb.found_item
+						create Result.put (htb.found_item)
 					end
 				elseif attached {TABLE [detachable ANY, READABLE_STRING_GENERAL]} obj as tb then
 					if tb.valid_key (fdn) then
-						Result := tb.item (fdn)
+						create Result.put (tb.item (fdn))
 					end
 				end
 			end

@@ -145,7 +145,6 @@ feature -- Object relative once
 			l_ISE_EXCEPTION_MANAGER_last_exception_feature_b: FEATURE_B
 
 			l_nested_b: NESTED_B
-			l_assign_b: ASSIGN_B
 			l_access_expr_b: ACCESS_EXPR_B
 			l_creation_expr_b: CREATION_EXPR_B
 			l_result_attr_b: ATTRIBUTE_B
@@ -189,10 +188,8 @@ feature -- Object relative once
 					create l_called_attr_b.make (l_obj_once_info.called_attribute_i)
 					l_called_attr_b.set_type (l_obj_once_info.called_type_a)
 					l_called_attr_b.set_is_attachment
-					create l_assign_b
-					l_assign_b.set_target (l_called_attr_b)
-					l_assign_b.set_source (create {BOOL_CONST_B}.make (True))
-					l_body_compound.extend (create {HIDDEN_B}.make_wrapper (l_assign_b))
+					l_body_compound.extend (create {HIDDEN_B}.make_wrapper
+						(create {ASSIGN_B}.make (l_called_attr_b, create {BOOL_CONST_B}.make (True))))
 						--| reuse existing compound	/ body				
 					if l_compound /= Void and then not l_compound.is_empty then
 						if l_compound.count = 1 then
@@ -206,11 +203,8 @@ feature -- Object relative once
 						create l_result_attr_b.make (l_obj_once_info.result_attribute_i)
 						l_result_attr_b.set_type (a_byte_code.real_type (l_obj_once_info.result_type_a))
 						l_result_attr_b.set_is_attachment
-						create l_assign_b
-						l_assign_b.set_target (l_result_attr_b)
-						l_assign_b.set_source (create {RESULT_B})
-
-						l_body_compound.extend (create {HIDDEN_B}.make_wrapper (l_assign_b))	--| attr_result := Result
+						l_body_compound.extend (create {HIDDEN_B}.make_wrapper
+							(create {ASSIGN_B}.make (l_result_attr_b, create {RESULT_B})))	--| attr_result := Result
 					end
 
 					--|
@@ -295,10 +289,7 @@ feature -- Object relative once
 
 						create l_result_attr_b.make (l_obj_once_info.result_attribute_i)
 						l_result_attr_b.set_type (a_byte_code.real_type (l_obj_once_info.result_type_a))
-						create l_assign_b
-						l_assign_b.set_target (create {RESULT_B})
-						l_assign_b.set_source (l_result_attr_b)
-						l_then_compound.extend (l_assign_b)
+						l_then_compound.extend (create {ASSIGN_B}.make (create {RESULT_B}, l_result_attr_b))
 					else
 						create l_then_compound.make_wrapper (l_if_b)
 					end
@@ -339,10 +330,7 @@ feature -- Object relative once
 						l_nested_b.set_message (l_ISE_EXCEPTION_MANAGER_last_exception_feature_b)
 						l_ISE_EXCEPTION_MANAGER_last_exception_feature_b.set_parent (l_nested_b)
 
-						create l_assign_b
-						l_assign_b.set_target (l_excep_attr_b)
-						l_assign_b.set_source (l_nested_b)
-						l_compound.extend (l_assign_b)
+						l_compound.extend (create {ASSIGN_B}.make (l_excep_attr_b, l_nested_b))
 					else
 						l_compound := Void
 						check False end
@@ -387,7 +375,7 @@ invariant
 				(not is_process_relative and not is_thread_relative and     is_object_relative)
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

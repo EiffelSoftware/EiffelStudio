@@ -103,7 +103,7 @@ feature -- Status report
 					-- Avoid dynamic check of object type if we know
 					-- in advance that the type cannot be expanded.
 				if attached {CL_TYPE_A} source_type as cl_type_i then
-					Result := context.has_expanded_descendants (cl_type_i.type_id (context.context_class_type.type))
+					Result := context.has_expanded_descendants (cl_type_i.type_id (context.original_class_type.type))
 				end
 			end
 		end
@@ -378,7 +378,7 @@ feature -- Inlining
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

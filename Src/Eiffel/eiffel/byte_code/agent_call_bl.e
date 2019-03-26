@@ -253,7 +253,7 @@ feature {NONE} --Implementation
 						l_exprs := l_manifest_tuple.expressions
 						l_exprs.start
 						create optimized_parameters.make (l_exprs.count)
-						l_cl_type := context.class_type.type
+						l_cl_type := context.context_cl_type
 					until
 						optimized_parameters.full or else l_exprs.after
 					loop

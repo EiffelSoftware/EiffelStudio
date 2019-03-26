@@ -9,7 +9,7 @@ inherit
 
 	ACCESS_B
 		redefine
-			enlarged, is_argument, is_local, is_creatable,
+			enlarged, is_argument, is_local,
 			register_name, array_descriptor,
 			pre_inlined_code, print_register, print_checked_target_register,
 			is_fast_as_local, is_predefined
@@ -49,11 +49,8 @@ feature
 			Result := True
 		end
 
-	is_local: BOOLEAN = False;
+	is_local: BOOLEAN = False
 			-- Is Current an access to a local variable ?
-
-	is_creatable: BOOLEAN = False;
-			-- Can an access to an argument be the taget of a creation ?
 
 	same (other: ACCESS_B): BOOLEAN
 			-- Is `other' the same access as Current ?
@@ -132,7 +129,7 @@ feature -- Inlining
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

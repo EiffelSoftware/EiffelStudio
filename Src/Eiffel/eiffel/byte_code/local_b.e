@@ -11,8 +11,8 @@ class
 inherit
 	ACCESS_B
 		redefine
-			enlarged, read_only, is_local, is_creatable,
-			register_name,
+			enlarged, read_only, is_local, is_assignable,
+			register_name, is_writable,
 			print_register, print_checked_target_register,
 			assign_code, expanded_assign_code, reverse_code,
 			assigns_to, array_descriptor,
@@ -67,12 +67,14 @@ feature
 			Result := True
 		end
 
-	is_creatable: BOOLEAN
-			-- Can an access to a local variable be the target for
-			-- a creation?
+	is_assignable: BOOLEAN
+			-- <Precursor>
 		do
 			Result := True
 		end
+
+	is_writable: BOOLEAN = True
+			-- <Precursor>
 
 	same (other: ACCESS_B): BOOLEAN
 			-- Is `other' the same access as Current ?
@@ -173,7 +175,7 @@ feature -- Setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

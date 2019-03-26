@@ -15,7 +15,7 @@ inherit
 		undefine
 			array_descriptor,
 			assigns_to,
-			is_creatable,
+			is_assignable,
 			pre_inlined_code,
 			process,
 			register_name,

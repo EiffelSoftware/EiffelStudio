@@ -259,7 +259,7 @@ feature -- Inlining
 				not type_i.is_basic and then
 					-- Inline only if it is not polymorphic and if it can be inlined (there is a reachable effective entry).
 				(attached precursor_type as p and then (is_instance_free implies not p.is_formal and then (p.is_like implies p.is_expanded)) or else
-				eiffel_table.is_polymorphic_for_body (routine_id, type_i, context.context_class_type) = -1) and then
+				eiffel_table.is_polymorphic_for_body (routine_id, type_i, context.original_class_type) = -1) and then
 				attached {ROUT_TABLE} tmp_poly_server.item (routine_id) as l_rout_table
 			then
 				target_type_id := type_i.type_id (context.context_cl_type)
@@ -312,6 +312,10 @@ feature -- Inlining
 								-- Create new byte node and process it instead of the current one
 							direct_byte_node (f, False).inlined_byte_code
 						end
+				elseif f.is_once then
+						-- Once features (including constant attributes) are not inlined
+						-- because they are executed at most once and it makes no sense to inline their code.
+					inline := False
 				elseif f.is_external or else f.is_constant then
 						-- Create new byte node and process it instead of the current one
 					Result := direct_byte_node (f, False).inlined_byte_code

@@ -17,7 +17,7 @@ inherit
 			array_descriptor,
 			assigns_to,
 			enlarged,
-			is_creatable,
+			is_assignable,
 			pre_inlined_code,
 			process,
 			register_name,

@@ -200,7 +200,7 @@ feature -- Status
 	is_polymorphic: BOOLEAN
 			-- Is the access polymorphic ?
 		do
-			Result := False
+				-- False by default
 		end
 
 	has_one_signature: BOOLEAN
@@ -208,6 +208,52 @@ feature -- Status
 			-- being called polymorphically?
 		do
 			Result := True
+		end
+
+	is_message: BOOLEAN
+			-- is the access a message ?
+		require
+			parent_exists: parent /= Void
+		do
+			Result := parent.message.canonical = Current
+		end
+
+	is_feature: BOOLEAN
+			-- Is Current an access to an Eiffel feature?
+		do
+		end
+
+	is_assignable: BOOLEAN
+			-- Can the access be a target of an assignment or of a creation instruction?
+		do
+		end
+
+	is_writable: BOOLEAN
+			-- Can the associated entity change its value during execution?
+		do
+				-- False by default.
+		end
+
+	is_first: BOOLEAN
+			-- Is the access the first one in a multi-dot expression?
+		local
+			p: like parent
+			p_target: ACCESS_B
+		do
+			p := parent
+			if p = Void then
+				Result := True
+			else
+				p_target := p.target
+				if p_target = Current and then p.parent = Void then
+					Result := True
+				else
+						-- Bug fix: CONSTANT_B has a special construct
+						-- for nested calls
+					Result := attached {CONSTANT_B} p_target as constant_b and then
+						constant_b.access = Current and then p.parent = Void
+				end
+			end
 		end
 
 feature -- Element change
@@ -629,57 +675,11 @@ feature {ACCESS_B} -- C code generation: separate call
 		do
 		end
 
-feature -- Conveniences
+feature -- Comparison
 
 	same (other: ACCESS_B): BOOLEAN
 			-- Is `other' the same access as Current ?
 		deferred
-		end
-
-	is_assignable: BOOLEAN
-			-- Can current be assigned to?
-		do
-			Result := is_local or is_current or is_attribute or is_result
-		end
-
-	is_message: BOOLEAN
-			-- is the access a message ?
-		require
-			parent_exists: parent /= Void
-		do
-			Result := parent.message.canonical = Current
-		end
-
-	is_feature: BOOLEAN
-			-- Is Current an access to an Eiffel feature ?
-		do
-		end
-
-	is_creatable: BOOLEAN
-			-- Can the access be a target of a creation ?
-		do
-		end
-
-	is_first: BOOLEAN
-			-- Is the access the first one in a multi-dot expression ?
-		local
-			p: like parent
-			p_target: ACCESS_B
-		do
-			p := parent
-			if p = Void then
-				Result := True
-			else
-				p_target := p.target
-				if p_target = Current and then p.parent = Void then
-					Result := True
-				else
-						-- Bug fix: CONSTANT_B has a special construct
-						-- for nested calls
-					Result := attached {CONSTANT_B} p_target as constant_b and then
-						constant_b.access = Current and then p.parent = Void
-				end
-			end
 		end
 
 feature -- Code generation

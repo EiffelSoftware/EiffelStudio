@@ -12017,11 +12017,17 @@ feature {NONE} -- Conversion
 			create p.make (i)
 			if
 				not is_inherited and then
-				not p.is_null_conversion and then
-				attached system.class_of_id (p.class_id) as c and then
-				attached c.feature_of_rout_id (p.routine_id) as f
+				not p.is_null_conversion
 			then
-				check_obsolescence (f, c, e.start_location)
+				if p.is_from_conversion then
+					record_creation_dependence (p.creation_type)
+				end
+				if
+					attached system.class_of_id (p.class_id) as c and then
+					attached c.feature_of_rout_id (p.routine_id) as f
+				then
+					check_obsolescence (f, c, e.start_location)
+				end
 			end
 			Result := e.converted_expression (p)
 		end

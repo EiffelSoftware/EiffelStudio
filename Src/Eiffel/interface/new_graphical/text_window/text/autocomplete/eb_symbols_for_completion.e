@@ -10,7 +10,7 @@ class
 
 inherit
 
-	NAME_FOR_COMPLETION
+	WILD_NAME_FOR_COMPLETION
 		rename
 			make as make_with_name
 		export
@@ -173,7 +173,7 @@ feature {NONE} -- Implementation
 	name_matcher: COMPLETION_NAME_MATCHER
 			-- Name matcher
 		once
-			create Result
+			create {WILD_COMPLETION_NAME_MATCHER} Result
 		end
 
 	child_type: EB_SYMBOLS_FOR_COMPLETION

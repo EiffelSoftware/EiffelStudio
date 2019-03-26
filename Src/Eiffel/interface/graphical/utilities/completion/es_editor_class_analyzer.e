@@ -289,7 +289,7 @@ feature {NONE} -- Query
 						is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.end_keyword) or else
 						is_keyword_token (l_token, {EIFFEL_KEYWORD_CONSTANTS}.feature_keyword)
 					then
-							-- We have gone beyond the feautre declaration, so stop
+							-- We have gone beyond the feature declaration, so stop.
 						l_stop := True
 					end
 				else

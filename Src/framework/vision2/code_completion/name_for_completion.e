@@ -147,7 +147,7 @@ feature -- Status report
 
 feature -- Element change
 
-	set_name_matcher (a_matcher: COMPLETION_NAME_MATCHER)
+	set_name_matcher (a_matcher: like name_matcher)
 			-- Set `name_matcher' with `a_matcher'.
 		do
 			name_matcher_internal := a_matcher
@@ -174,12 +174,12 @@ feature -- Element change
 		do
 			l_children := children
 			if l_children = Void then
-				create l_children.make (1, 10)
+				create l_children.make (1, 1)
 				children := l_children
 			end
 			children_index := children_index + 1
 			if children_index > l_children.upper then
-				l_children.grow (l_children.capacity + 10)
+				l_children.conservative_resize_with_default (a_child, l_children.lower, children_index)
 			end
 			l_children.put (a_child, children_index)
 			a_child.set_parent (Current)
@@ -327,7 +327,7 @@ feature {NONE} -- Implementation
 	name_matcher_internal: detachable like name_matcher;
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

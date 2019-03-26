@@ -11,7 +11,7 @@ class
 
 inherit
 
-	NAME_FOR_COMPLETION
+	WILD_NAME_FOR_COMPLETION
 		export
 			{NONE} set_icon
 		redefine
@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 	make (a_name: like name)
 			-- Create feature name with value `name'
 		do
-			Precursor {NAME_FOR_COMPLETION} (a_name)
+			Precursor (a_name)
 			has_dot := True
 		ensure then
 			name_set: name = a_name
@@ -274,7 +274,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

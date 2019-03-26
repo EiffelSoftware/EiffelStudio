@@ -1,39 +1,42 @@
-note
-	description: "Name of unicode symbol to be inserted by autocomplete after N=2 character(s) are typed."
+﻿note
+	description: "Name to be inserted by auto-completion"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	EB_SYMBOLS_FOR_DELAYED_COMPLETION
+	WILD_NAME_FOR_COMPLETION
 
 inherit
-	EB_SYMBOLS_FOR_COMPLETION
+	NAME_FOR_COMPLETION
 		redefine
-			name_matcher
+			name_matcher,
+			child_type
 		end
 
 create
-	make,
-	make_parent
+	make
 
-create {NAME_FOR_COMPLETION}
-	make_with_name
+feature -- Access
 
-
-feature {NONE} -- Implementation
+	child_type: WILD_NAME_FOR_COMPLETION;
+			-- Child type
 
 	name_matcher: COMPLETION_NAME_MATCHER
-			-- Name matcher
-		once
-			create {UNICODE_SYMBOL_COMPLETION_NAME_MATCHER} Result.make_with_minimum_count (2)
+			-- Matcher
+		do
+			if attached name_matcher_internal as l_matcher then
+				Result := l_matcher
+			else
+				create {WILD_COMPLETION_NAME_MATCHER} Result
+			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
 			

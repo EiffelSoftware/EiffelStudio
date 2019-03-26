@@ -1843,7 +1843,7 @@ feature {NONE} -- Implementation
 	show_timer: EV_TIMEOUT
 			-- Timer to show the tooltip
 
-	name_type: NAME_FOR_COMPLETION
+	name_type: WILD_NAME_FOR_COMPLETION
 			-- <Precursor>
 		do
 		end

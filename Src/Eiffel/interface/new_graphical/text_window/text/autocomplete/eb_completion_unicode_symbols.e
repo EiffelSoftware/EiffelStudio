@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			Table of unicode symbols indexed by title, for code completion purpose.
 			See 	https://en.wikipedia.org/wiki/Mathematical_Operators
@@ -143,7 +143,6 @@ feature {NONE} -- Persistency
 			i: INTEGER
 			s32: STRING_32
 			utf: UTF_CONVERTER
-			hexconv: HEXADECIMAL_STRING_CONVERTER
 		do
 			if s.starts_with_general ("0x") then
 				i := {HEXADECIMAL_STRING_CONVERTER}.hex_to_integer_32 (s.substring (3, s.count))

@@ -52,9 +52,7 @@ feature -- Byte node generation
 			a_target_attached: a_target /= Void
 			a_source_attached: a_source /= Void
 		do
-			create Result
-			Result.set_source (a_source)
-			Result.set_target (a_target)
+			create Result.make (a_target, a_source)
 			Result.set_info (a_target.type.create_info)
 		ensure
 			result_attached: Result /= Void
@@ -67,9 +65,7 @@ feature -- Byte node generation
 			a_target_attached: a_target /= Void
 			a_source_attached: a_source /= Void
 		do
-			create Result
-			Result.set_source (a_source)
-			Result.set_target (a_target)
+			create Result.make (a_target, a_source)
 		ensure
 			result_attached: Result /= Void
 			good_result: Result.source = a_source and then Result.target = a_target
@@ -177,7 +173,7 @@ feature -- Byte node generation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

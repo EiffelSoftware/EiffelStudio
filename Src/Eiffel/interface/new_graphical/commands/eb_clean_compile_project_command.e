@@ -67,25 +67,25 @@ feature -- Execution
 			dlg: ES_QUESTION_WARNING_PROMPT
 		do
 			create dlg.make_standard (interface_names.h_clean_compile)
-			dlg.set_button_action (dlg.default_confirm_button, agent process_clean_compile)
 			dlg.show_on_active_window
+			if dlg.dialog_result = {ES_DIALOG_BUTTONS}.yes_button then
+				process_clean_compile
+			end
 		end
 
 	process_clean_compile
 		local
 			p_ecf: PATH
+			cmd: READABLE_STRING_GENERAL
+			exit: EB_EXIT_APPLICATION_COMMAND
 		do
 			if attached workbench as wb then
 				create p_ecf.make_from_string (wb.lace.file_name)
-				{COMMAND_EXECUTOR}.execute (eiffel_layout.studio_command_line (p_ecf, wb.lace.target_name, wb.lace.project_path, True, True) + " -melt")
-				on_quit
+				cmd := eiffel_layout.studio_command_line (p_ecf, wb.lace.target_name, wb.lace.project_path, True, True) + " -melt"
+				create exit
+				exit.execute_with_confirmation (False)
+				{COMMAND_EXECUTOR}.execute (cmd)
 			end
-		end
-
-	on_quit
-			-- Called when the user selects the Quit button
-		do
-			{EXCEPTIONS}.die (-1)
 		end
 
 feature -- Access
@@ -152,7 +152,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

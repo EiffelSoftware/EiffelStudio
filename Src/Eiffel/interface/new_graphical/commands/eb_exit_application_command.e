@@ -48,11 +48,17 @@ feature -- Basic operations
 	execute
 			-- Exit application. Ask the user to save unsaved files and ask for
 			-- confirmation on exit.
+		do
+			execute_with_confirmation (True)
+		end
+
+	execute_with_confirmation (a_ask_for_confirmation: BOOLEAN)
+			-- Execute, and ask for confirmation if `a_ask_for_confirmation`is True.
 		local
 			l_warning: ES_WARNING_PROMPT
 			l_exit: BOOLEAN
 		do
-			already_confirmed := False
+			already_confirmed := not a_ask_for_confirmation
 
 			if Workbench.is_compiling then
 				create l_warning.make_standard_with_cancel (warning_messages.w_exiting_stops_compilation)
@@ -238,7 +244,7 @@ feature {NONE} -- Attributes
 			--| We shouldn't ask again then.
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

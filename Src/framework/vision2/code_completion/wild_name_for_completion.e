@@ -20,8 +20,11 @@ create
 
 feature -- Access
 
-	child_type: WILD_NAME_FOR_COMPLETION;
+	child_type: WILD_NAME_FOR_COMPLETION
 			-- Child type
+		do
+			check False then end
+		end
 
 	name_matcher: COMPLETION_NAME_MATCHER
 			-- Matcher

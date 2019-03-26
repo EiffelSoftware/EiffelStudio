@@ -17,9 +17,8 @@ create
 feature {NONE} --Initialisation
 
 	make (other: ROUTINE_B; i: like array_index)
-			-- Fill in node with feature `f` and polymorphic array index `array_index`.
+			-- Fill in node with feature `other` and polymorphic array index `array_index`.
 		require
-			other.is_polymorphic
 			i >= 0
 		do
 			fill_from (other)

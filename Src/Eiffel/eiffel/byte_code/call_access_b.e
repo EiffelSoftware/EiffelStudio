@@ -570,7 +570,7 @@ feature {NONE} -- Access
 				routine_table.goto (target_type_id)
 			else
 					-- The feature to call corresponds to the target type or a conforming descendant.
-				routine_table.goto_implemented (target_type, context.context_class_type)
+				routine_table.goto_implemented (target_type, context.original_class_type)
 			end
 			if routine_table.is_implemented then
 				Result := routine_table.item

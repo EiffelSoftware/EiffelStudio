@@ -5923,11 +5923,9 @@ feature {NONE} -- Visitor
 
 				if l_error_level = error_handler.error_level and is_byte_node_enabled then
 						-- Only create BYTE code if there is no error.
-					create l_assign
-					l_assign.set_target (l_target_node)
-					l_assign.set_line_number (l_as.target.start_location.line)
 					l_source_expr ?= last_byte_node
-					l_assign.set_source (l_source_expr)
+					create l_assign.make (l_target_node, l_source_expr)
+					l_assign.set_line_number (l_as.target.start_location.line)
 					l_assign.set_line_pragma (l_as.line_pragma)
 					last_byte_node := l_assign
 				end
@@ -6091,11 +6089,9 @@ feature {NONE} -- Visitor
 				if l_source_type /= Void then
 					if is_byte_node_enabled then
 						l_source_expr ?= last_byte_node
-						create l_reverse
-						l_reverse.set_target (l_target_node)
+						create l_reverse.make (l_target_node, l_source_expr)
 						l_reverse.set_line_number (l_as.target.start_location.line)
 						l_reverse.set_line_pragma (l_as.line_pragma)
-						l_reverse.set_source (l_source_expr)
 						if l_target_node.is_attribute then
 							l_attribute ?= l_target_node
 							create {CREATE_FEAT} l_create_info.make (l_attribute.attribute_id,
@@ -6625,9 +6621,7 @@ feature {NONE} -- Visitor
 			l_creation_expr.set_creation_instruction (True)
 			l_creation_expr.set_line_number (l.line)
 
-			create l_assign
-			l_assign.set_target (l_access)
-			l_assign.set_source (l_creation_expr)
+			create l_assign.make (l_access, l_creation_expr)
 			l_assign.set_line_number (l.line)
 			check
 				l_assign.is_creation_instruction
@@ -7887,15 +7881,13 @@ feature {NONE} -- Visitor
 							new_cursor_b.message.set_parent (new_cursor_b)
 
 							create initialization_code.make (2)
-							create assign_b
-							assign_b.set_source (new_cursor_b)
-							assign_b.set_target (
-								create {OBJECT_TEST_LOCAL_B}.make (
+							create assign_b.make
+								(create {OBJECT_TEST_LOCAL_B}.make (
 									local_info.position,
 									current_feature.body_index,
 									local_type
-								)
-							)
+								),
+								new_cursor_b)
 							assign_b.set_line_number (l_as.start_location.line)
 							initialization_code.extend (assign_b)
 						end
@@ -8014,9 +8006,7 @@ feature {NONE} -- Visitor
 					context.add_object_test_local (local_info, local_id)
 				end
 				if attached argument_code and then attached {EXPR_B} last_byte_node as b then
-					create assign_b
-					assign_b.set_source (b)
-					assign_b.set_target (create {OBJECT_TEST_LOCAL_B}.make (local_info.position, current_feature.body_index, local_type))
+					create assign_b.make (create {OBJECT_TEST_LOCAL_B}.make (local_info.position, current_feature.body_index, local_type), b)
 					assign_b.set_line_number (c.item.expression.start_location.line)
 					argument_code.extend (assign_b)
 				end
@@ -10534,7 +10524,6 @@ feature {NONE} -- Agents
 			l_byte_list: BYTE_LIST [BYTE_NODE]
 			l_nested: NESTED_B
 			l_argument: ARGUMENT_B
-			l_assign: ASSIGN_B
 			l_tuple_node: TUPLE_CONST_B
 			l_closed_args: BYTE_LIST [EXPR_B]
 			l_agent_type: GEN_TYPE_A
@@ -10560,9 +10549,6 @@ feature {NONE} -- Agents
 			create l_byte_list.make (1)
 			l_byte_list.start
 
-			create l_assign
-			l_assign.set_target (create {RESULT_B})
-
 			create l_argument
 			l_argument.set_position (1)
 
@@ -10571,9 +10557,7 @@ feature {NONE} -- Agents
 			l_nested.set_message (a_feature)
 			a_feature.set_parent (l_nested)
 
-			l_assign.set_source (l_nested)
-
-			l_byte_list.extend (l_assign)
+			l_byte_list.extend (create {ASSIGN_B}.make (create {RESULT_B}, l_nested))
 			create l_code
 			l_code.set_compound (l_byte_list)
 

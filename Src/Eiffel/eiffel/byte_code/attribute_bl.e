@@ -49,18 +49,18 @@ feature {NONE} -- Creation
 			f.rout_id_set.has (a.routine_id)
 		do
 			attribute_name_id := a.attribute_name_id
-			attribute_id := a.attribute_id
-			type := a.type
 			routine_id := a.routine_id
+			attribute_id := a.attribute_id
 			written_in := a.written_in
+			type := a.type
 			multi_constraint_static := a.multi_constraint_static
 			is_attachment := a.is_attachment
 		ensure
 			attribute_name_id = a.attribute_name_id
-			attribute_id = a.attribute_id
-			type = a.type
 			routine_id = a.routine_id
+			attribute_id = a.attribute_id
 			written_in = a.written_in
+			type = a.type
 			multi_constraint_static = a.multi_constraint_static
 			is_attachment = a.is_attachment
 		end
@@ -69,20 +69,24 @@ feature {NONE} -- Creation
 			-- Fill in node with attribute `f` originally represented by `a`.
 		require
 			f.is_attribute
+			system.has_class_of_id (f.written_in)
+			attached system.class_of_id (f.written_in) as c
+				-- `f` could come from a descendant and originate from an unrelated class.
+			f.rout_id_set.has (a.routine_id)
 		do
-			attribute_name_id := a.feature_name_id
-			attribute_id := a.feature_id
-			type := a.type
+			attribute_name_id := f.feature_name_id
 			routine_id := f.rout_id_set.first
-			written_in := a.written_in
+			attribute_id := f.feature_id
+			written_in := f.written_in
+			type := a.type
 			multi_constraint_static := a.multi_constraint_static
-			is_attachment := False
+				-- `is_attachment` is `False` by default.
 		ensure
-			attribute_name_id = a.feature_name_id
-			attribute_id = a.feature_id
-			type = a.type
+			attribute_name_id = f.feature_name_id
 			routine_id = f.rout_id_set.first
-			written_in = a.written_in
+			attribute_id = f.feature_id
+			written_in = f.written_in
+			type = a.type
 			multi_constraint_static = a.multi_constraint_static
 			not is_attachment
 		end

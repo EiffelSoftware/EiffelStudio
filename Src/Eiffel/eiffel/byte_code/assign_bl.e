@@ -10,6 +10,8 @@ class ASSIGN_BL
 inherit
 
 	ASSIGN_B
+		rename
+			make as make_b
 		redefine
 			analyze, generate,
 			last_all_in_result, find_assign_result,

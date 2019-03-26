@@ -232,7 +232,7 @@ feature -- C code generation
 					end
 				elseif attached {ROUT_TABLE} eiffel_table.poly_table (routine_id) as rout_table then
 						-- The call is not polymorphic in the given context.
-					target_type_id := target_type.type_id (context.context_cl_type.generic_derivation)
+					target_type_id := target_type.type_id (context.original_class_type.type)
 					if attached effective_entry (target_type, target_type_id, rout_table) as entry then
 						context_entry := rout_table.context_item
 						if entry.pattern_id /= context_entry.pattern_id then

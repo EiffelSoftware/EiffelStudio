@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Main description of a byte code tree node. All the classes which %
 				  %describe the byte code inherit from us."
 	legal: "See notice at end of class."
@@ -168,11 +168,6 @@ feature -- Eiffel source line information
 						buf.put_two_character (')', ';')
 						buf.put_string (" /* Result */")
 					end
---| Keep comment for later.					
---				elseif a_target.is_current then
---					if {curb: !CURRENT_B} a_target then
---						buf.put_string ("/* RTDBGA CURRENT .. */")
---					end
 				end
 			end
 		end

@@ -9,8 +9,8 @@ inherit
 
 	ACCESS_B
 		redefine
-			enlarged, read_only, is_result, is_creatable,
-			register_name,
+			enlarged, read_only, is_result, is_assignable,
+			register_name, is_writable,
 			assign_code, expanded_assign_code, reverse_code,
 			assigns_to, pre_inlined_code,
 			is_fast_as_local, is_predefined
@@ -45,8 +45,11 @@ feature
 			Result := True
 		end
 
-	is_creatable: BOOLEAN = True
-			-- Can an access to Result be a target for a creation?
+	is_assignable: BOOLEAN = True
+			-- <Precursor>
+
+	is_writable: BOOLEAN = True
+			-- <Precursor>
 
 	same (other: ACCESS_B): BOOLEAN
 			-- Is `other' the same access as Current?
@@ -107,7 +110,7 @@ feature -- Inlining
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

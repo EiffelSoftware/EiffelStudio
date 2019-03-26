@@ -15,7 +15,7 @@ inherit
 			array_descriptor,
 			assigns_to,
 			enlarged,
-			is_creatable,
+			is_assignable,
 			pre_inlined_code,
 			process,
 			register_name,
@@ -50,9 +50,8 @@ feature -- Visitor
 
 feature -- Status report
 
-	is_creatable: BOOLEAN = False
-			-- Can an access to a local variable be the target for
-			-- a creation ?
+	is_assignable: BOOLEAN = False
+			-- <Precursor>
 
 feature -- Access
 
@@ -109,7 +108,7 @@ feature -- Inlining
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

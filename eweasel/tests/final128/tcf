@@ -1,0 +1,16 @@
+test_name 	 dead-code-removal-with-conversion
+test_description A class should not be marked as dead when it is created as a result of conversion.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 a.e $CLUSTER a.e
+copy_raw 	 test.e $CLUSTER test.e
+
+compile_final
+compile_result	ok
+c_compile_final
+c_compile_result	ok
+execute_final	NONE	exec_output_f
+execute_result	ok
+compare		exec_output_f output
+
+test_end

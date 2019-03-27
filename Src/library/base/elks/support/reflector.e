@@ -212,9 +212,7 @@ feature -- Status report
 		require
 			type_id_nonnegative: type_id >= 0
 		external
-			"C signature (EIF_INTEGER): EIF_BOOLEAN use %"eif_internal.h%""
-		alias
-			"eif_special_any_type"
+			"built_in static"
 		ensure
 			instance_free: class
 		end
@@ -226,9 +224,7 @@ feature -- Status report
 		require
 			type_id_nonnegative: type_id >= 0
 		external
-			"C signature (EIF_INTEGER): BOOLEAN use %"eif_internal.h%""
-		alias
-			"eif_is_special_type"
+			"built_in static"
 		ensure
 			instance_free: class
 		end
@@ -238,9 +234,7 @@ feature -- Status report
 		require
 			type_id_nonnegative: type_id >= 0
 		external
-			"C signature (EIF_INTEGER): BOOLEAN use %"eif_internal.h%""
-		alias
-			"eif_is_tuple_type"
+			"built_in static"
 		ensure
 			instance_free: class
 		end
@@ -423,9 +417,7 @@ feature -- Measurement
 		require
 			type_id_nonnegative: type_id >= 0
 		external
-			"C macro signature (EIF_INTEGER): EIF_INTEGER use %"eif_internal.h%""
-		alias
-			"ei_count_field_of_type"
+			"built_in static"
 		ensure
 			instance_free: class
 		end
@@ -467,9 +459,7 @@ feature {NONE} -- Implementation
 			-- `type_id' cannot represent a SPECIAL type, use
 			-- `new_special_any_instance' instead.	
 		external
-			"C inline use %"eif_macros.h%""
-		alias
-			"return RTLNSMART(eif_decoded_type($type_id).id);"
+			"built_in static"
 		ensure
 			instance_free: class
 		end
@@ -479,9 +469,7 @@ feature {NONE} -- Implementation
 			-- Note: returned object is not initialized and may
 			-- hence violate its invariant.
 		external
-			"C inline use %"eif_macros.h%""
-		alias
-			"return RTLNT(eif_decoded_type($type_id).id);"
+			"built_in static"
 		ensure
 			instance_free: class
 		end
@@ -489,9 +477,7 @@ feature {NONE} -- Implementation
 	c_new_type_instance_of (type_id: INTEGER): TYPE [detachable ANY]
 			-- New instance of TYPE for object of type `type_id'.
 		external
-			"C inline use %"eif_macros.h%""
-		alias
-			"return eif_type_malloc(eif_decoded_type($type_id), 0);"
+			"built_in static"
 		ensure
 			instance_free: class
 		end
@@ -505,7 +491,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

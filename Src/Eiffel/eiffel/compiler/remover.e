@@ -31,10 +31,8 @@ feature {NONE} -- Creation
 	make
 			-- Initialization.
 		local
-			c: CL_TYPE_A
-			d: like derivations
-			e: like derivations
-			i: like {CLASS_C}.class_id
+			ct: CL_TYPE_A
+			j: INTEGER
 			r: like {ROUT_TABLE}.rout_id
 		do
 			Precursor
@@ -49,24 +47,54 @@ feature {NONE} -- Creation
 			create live_classes.make_filled (False, system.classes.upper + (1 - {like live_classes}.lower))
 			create reachable_classes.make_filled (False, system.classes.upper + (1 - {like reachable_classes}.lower))
 				-- Retrieve derived types for classes.
-			create e.make (0)
 				-- Take into account that indexes in `{SPECIAL}` do not start at `1`.
-			create derived_types.make_filled (e, system.class_counter.count + (1 - {like derived_types}.lower))
+			create actual_generics.make_filled (Void, system.class_counter.count + (1 - {like actual_generics}.lower))
+				-- Register actual generics from class types and filters.
+			across
+				system.classes as cs
+			loop
+				if
+					attached cs.item as c and then
+					c.is_valid and then
+					attached c.generics as g
+				then
+					from
+						j := g.count
+					until
+						j <= 0
+					loop
+							-- Take into account only types with creation constraint.
+						if attached g [j].creation_feature_list then
+							allocate_actuals (j, g.count, c.class_id)
+						end
+						j := j - 1
+					end
+				end
+			end
 			across
 				system.instantiator as t
 			loop
-				c := t.item
-				if attached c.generics then
-						-- Ignore non-generic types.
-					i := c.class_id
-					d := derived_types [i]
-					if d = e then
-							-- Use a dedicated list for the class.
-						create d.make (1)
-						derived_types [i] := d
+				ct := t.item
+					-- Take into account only types with creation constraint.
+				if
+					attached actual_generics [ct.class_id] as actuals and then
+					attached ct.generics as g
+				then
+						-- Some actual generics are involved in creation, record them.
+					from
+						j := g.count
+					until
+						j <= 0
+					loop
+						if
+							attached actuals [j - 1] and then
+							attached g [j].base_class as b and then
+							not b.is_deferred
+						then
+							record_and_propagate_actual_generic (b, j, ct.base_class)
+						end
+						j := j - 1
 					end
-						-- Add a new type to the list.
-					d.extend (c)
 				end
 			end
 				-- Take into account only routines and attributes with bodies.
@@ -86,6 +114,74 @@ feature {NONE} -- Creation
 				end
 				r := r - 1
 			end
+		end
+
+feature {NONE} -- Initialization
+
+	allocate_actuals (p: like {FORMAL_A}.position; n: like {FORMAL_A}.position; c: like {CLASS_C}.class_id)
+			-- Allocate storage to store actuals for a class of ID `c` with `n` formal generics
+			-- where `p` is a position of a creation-involved one.
+		local
+			actuals: like actual_generics.item
+			actual: like actual_generics.item.item
+		do
+			actuals := actual_generics [c]
+			if not attached actuals then
+				create actuals.make_filled (Void, n)
+				actual_generics [c] := actuals
+			end
+			actual := actuals [p - 1]
+			if not attached actual then
+				create actual.make (1)
+				actuals [p - 1] := actual
+			end
+		end
+
+	record_and_propagate_actual_generic (a: CLASS_C; p: like {FORMAL_A}.position; c: CLASS_C)
+			-- Record that a formal of a class `c` at position `p` is used with an actual value `a`
+			-- and propagate it (recursively) to derivations, instantiated by `c`.
+		require
+			not a.is_deferred
+			attached c.generics as g
+			g.valid_index (p)
+		local
+			j: like {FORMAL_A}.position
+			f: CL_TYPE_A
+			n: like actual_generics.item.item.count
+		do
+			n := actual_generics [c.class_id] [p - 1].count
+			actual_generics [c.class_id] [p - 1].extend (a.class_id)
+				-- Avoid recursion by testing that the new element has been added.
+			if actual_generics [c.class_id] [p - 1].count /= n then
+				across
+					c.filters as fs
+				loop
+					f := fs.item
+						-- Take into account only types with creation-involved generics.
+					if
+						attached actual_generics [f.class_id] as actuals and then
+						attached f.generics as g
+					then
+						from
+							j := g.count
+						until
+							j <= 0
+						loop
+								-- Take into account only creation-involved generics.
+							if
+								attached actuals [j - 1] and then
+								attached {FORMAL_A} g [j] as h and then
+								h.position = p
+							then
+								record_and_propagate_actual_generic (a, j, f.base_class)
+							end
+							j := j - 1
+						end
+					end
+				end
+			end
+		ensure
+			actual_generics [c.class_id] [p - 1].has (a.class_id)
 		end
 
 feature -- Status report
@@ -130,6 +226,15 @@ feature -- Status report
 			Result := live_classes [class_id] or else reachable_classes [class_id]
 		end
 
+	is_valid_generic (position: like {FORMAL_A}.position; class_id: like {CLASS_C}.class_id): BOOLEAN
+			-- <Precursor>
+		do
+			Result :=
+				attached system.class_of_id (class_id) as c and then
+				attached c.generics as g and then
+				g.valid_index (position)
+		end
+
 feature {NONE} -- Status report
 
 	is_fresh: SPECIAL [BOOLEAN]
@@ -142,16 +247,20 @@ feature {NONE} -- Status report
 
 feature -- Access
 
-	derivations (class_id: like {CLASS_C}.class_id): ARRAYED_LIST [CL_TYPE_A]
+	parameter_instances (position: like {FORMAL_A}.position; class_id: like {CLASS_C}.class_id): ARRAYED_LIST [like {CLASS_C}.class_id]
 			-- <Precursor>
 		do
-			Result := derived_types [class_id]
+			if attached actual_generics [class_id] as actuals then
+				Result := actuals [position - 1]
+			end
 		end
 
 feature {NONE} -- Access
 
-	derived_types: SPECIAL [ARRAYED_LIST [CL_TYPE_A]]
-			-- Storage for `derivations` indexed by class ID.
+	actual_generics: SPECIAL [detachable SPECIAL [detachable ARRAYED_SET [like {CLASS_C}.class_id]]]
+			-- IDs of classes of class types used as actual generics in derivations indexed by class ID.
+			-- For example, if a class "X" has generic derivations "X [A, B]" and "X [A, C]" with generics used in creation,
+			-- the item of `actual_generics` at ID of class "X" is "[[A], [B, C]]".
 
 feature -- Modification
 
@@ -269,22 +378,24 @@ feature -- Modification
 		local
 			n: like live_classes_count
 			m: like live_classes_count
+			i: like instance_dependencies
 		do
-				-- Re-evaluate polymorhic calls until there are no new classes.
+				-- Re-evaluate polymorhic calls until there are no new classes and no new instance dependencies.
 			from
-				m := live_classes_count
+				i := instance_dependencies
+				m := live_classes_count + i.count.as_natural_32
 			until
 				n = m
 			loop
 				n := m
 					-- Re-evaluate instance dependencies that rely on live classes.
 				across
-					instance_dependencies as d
+					i as d
 				loop
 					d.item.record (Current)
 				end
 				discharge_dependencies
-				m := live_classes_count
+				m := live_classes_count + i.count.as_natural_32
 			end
 		ensure
 			dependencies.is_empty

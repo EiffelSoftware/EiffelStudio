@@ -2,7 +2,7 @@
 	description: "Descriptor of a dependence of a feature (or class invariant) on a type."
 	author: "Alexander Kogtenkov"
 	date: "$Date$"
-	revision: "$Revision: ор$"
+	revision: "$Revision$"
 
 deferred class
 	INSTANCE_DEPENDENCE
@@ -43,7 +43,7 @@ feature {NONE} -- Traversal
 		do
 			if kind = {INSTANCE_DEPENDENCE_GENERATOR}.call_kind then
 					-- TODO: this should be `r.mark_class_reachable (c)`,
-					-- but the remover does distinguish between qualified and unqualified calls.
+					-- but the remover does not distinguish between qualified and unqualified calls.
 					-- As a result, when an instance-free feature makes an unqualified call, it is considered polymorphic,
 					-- and is not marked as reachable if the class is only reachable, but not alive.
 				if
@@ -66,7 +66,7 @@ feature {NONE} -- Traversal
 		end
 
 	record_formal (p: like {FORMAL_A}.position; i: like {CLASS_C}.class_id; r: CLASS_RECORDER)
-			-- Record, in `r`, classes that can be used to instantiate an object or be instances themselves for a formal generic parameter at position `p` in the class if ID `i`.
+			-- Record, in `r`, classes that can be used to instantiate an object or be instances themselves for a formal generic parameter at position `p` in the class of ID `i`.
 		do
 			if
 				attached workbench.system as s and then
@@ -84,28 +84,12 @@ feature {NONE} -- Traversal
 						record_class_id (a.class_id, r)
 					end
 				end
-					-- Look through all instantiated types.
-				across
-					r.derivations (i) as t
-				loop
-					if
-						attached t.item.generics as gs and then
-						attached {CL_TYPE_A} gs [p] as a
-					then
-						record_class_id (a.class_id, r)
-					end
-				end
-				if attached c.filters as ts then
+					-- Record creation-involved actual generics.
+				if attached r.parameter_instances (p, i) as actuals then
 					across
-						ts as t
+						actuals as a
 					loop
-						if
-							t.item.class_id = i and then
-							attached t.item.generics as gs and then
-							attached {CL_TYPE_A} gs [p] as a
-						then
-							record_class_id (a.class_id, r)
-						end
+						record_class_id (a.item, r)
 					end
 				end
 			end
@@ -133,6 +117,7 @@ invariant
 	{INSTANCE_DEPENDENCE_GENERATOR}.is_valid_kind (kind)
 
 note
+	ca_ignore: "CA082", "CA082: `is_equal` is not redefined for `{HASHABLE}`"
 	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

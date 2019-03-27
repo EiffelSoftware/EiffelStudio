@@ -46,15 +46,22 @@ feature -- Status report
 		deferred
 		end
 
-feature -- Access
-
-	derivations (class_id: like {CLASS_C}.class_id): ARRAYED_LIST [CL_TYPE_A]
-			-- All known derivations of the class of ID `class_id`.
+	is_valid_generic (position: like {FORMAL_A}.position; class_id: like {CLASS_C}.class_id): BOOLEAN
+			-- Is `position` a valid generic parameter position for the class of ID `class_id`?
 		require
 			is_valid (class_id)
 		deferred
-		ensure
-			across Result as t all t.item.class_id = class_id end
+		end
+
+feature -- Access
+
+	parameter_instances (position: like {FORMAL_A}.position; class_id: like {CLASS_C}.class_id): ARRAYED_LIST [like {CLASS_C}.class_id]
+			-- Class IDs of all known actual generics parameters associated with the formal generic parameter
+			-- of the class of ID `class_id` at position `position`.
+		require
+			is_valid (class_id)
+			is_valid_generic (position, class_id)
+		deferred
 		end
 
 feature -- Modification

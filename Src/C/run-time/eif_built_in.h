@@ -94,7 +94,6 @@ extern "C" {
 #define eif_builtin_REFLECTOR_c_new_tuple_instance_of(type_id)			RTLNT(eif_decoded_type(type_id).id)
 #define eif_builtin_REFLECTOR_c_new_instance_of(type_id)			RTLNSMART(eif_decoded_type(type_id).id)
 #define eif_builtin_REFLECTOR_field_count_of_type(type_id)			ei_count_field_of_type(type_id)
-#define eif_builtin_REFLECTOR_field_count_of_type(type_id)			ei_count_field_of_type(type_id)
 #define eif_builtin_REFLECTOR_is_tuple_type(type_id)				eif_is_tuple_type(type_id)
 #define eif_builtin_REFLECTOR_is_special_type(type_id)				eif_is_special_type(type_id)
 #define eif_builtin_REFLECTOR_is_special_any_type(type_id)			eif_special_any_type(type_id)
@@ -205,12 +204,10 @@ rt_private rt_inline EIF_BOOLEAN rt_is_special_copy_semantics_item (EIF_INTEGER_
 #define eif_builtin_ISE_RUNTIME_set_pointer_field_at(field_offs,obj,offs,val)		*(EIF_POINTER *) (eif_obj_at(obj,offs) + field_offs) = (EIF_POINTER) (val)
 
 #define eif_builtin_ISE_RUNTIME_unlock_marking							eif_unlock_marking
-#define eif_builtin_ISE_RUNTIME_lock_marking							eif_lock_marking
 #define eif_builtin_ISE_RUNTIME_eif_gen_param_id(a_type_id, i)			eif_gen_param_id(a_type_id, i)
 #define eif_builtin_ISE_RUNTIME_generic_parameter_count(a_type_id)		eif_gen_count_with_dftype(eif_decoded_type(a_type_id).id)
 #define eif_builtin_ISE_RUNTIME_field_offset_of_type(i,a_type_id)		ei_offset_of_type(i,a_type_id)
 #define eif_builtin_ISE_RUNTIME_field_count_of_type(a_type_id)			ei_count_field_of_type(a_type_id)
-#define eif_builtin_ISE_RUNTIME_compiler_version						egc_compiler_tag
 
 #define eif_builtin_ISE_RUNTIME_persistent_field_count_of_type(a_type_id)	(System(To_dtype(eif_decoded_type(a_type_id).id)).cn_persistent_nbattr)
 #define eif_builtin_ISE_RUNTIME_is_field_expanded_of_type(i,a_type_id)		((System(To_dtype(eif_decoded_type(a_type_id).id)).cn_types[i - 1] & SK_HEAD) == SK_EXP)
@@ -328,7 +325,6 @@ rt_private rt_inline EIF_BOOLEAN rt_is_special_copy_semantics_item (EIF_INTEGER_
 
 
 /*REFLECTED_COPY_SEMANTICS_OBJECT class*/
-#define eif_builtin_REFLECTED_COPY_SEMANTICS_OBJECT_dereference(ptr, offset)	*(EIF_REFERENCE *) eif_obj_at(ptr, offset)
 #define eif_builtin_REFLECTED_COPY_SEMANTICS_OBJECT_object_from_address(ptr)	(EIF_REFERENCE) ptr
 
 #ifdef __cplusplus

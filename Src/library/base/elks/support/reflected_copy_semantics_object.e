@@ -117,8 +117,8 @@ feature {REFLECTED_COPY_SEMANTICS_OBJECT} -- Access
 feature {NONE} -- Implementation
 
 	dereference (ptr: POINTER; offset: INTEGER): POINTER
-		external
-			"built_in static"
+		do
+			Result :=  {ISE_RUNTIME}.raw_reference_field_at_offset (ptr, offset)
 		end
 
 	object_from_address (ptr: POINTER): ANY

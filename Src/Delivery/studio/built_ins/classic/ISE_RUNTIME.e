@@ -77,5 +77,21 @@ feature -- Internal C routines
 				}
 			]"
 		end
+
+	compiler_version: INTEGER
+		external
+			"C macro use %"eif_project.h%""
+		alias
+			"egc_compiler_tag"
+		end
+
+feature -- Object marking
+
+	lock_marking
+		external
+			"C blocking use %"eif_traverse.h%""
+		alias
+			"eif_lock_marking"
+		end
 	
 end	

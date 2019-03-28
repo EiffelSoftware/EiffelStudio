@@ -57,7 +57,7 @@ if [ "$ONLY_PORTERPACKAGE" = "true" ]; then
 else
 	echo Build delivery in $DELIV_DIR
 fi
-echo Use EiffelStudio svn repository: $DEFAULT_ORIGO_SVN_ROOT
+echo Use EiffelStudio svn repository: $DEFAULT_ORIGO_SVN_ROOT$SVN_EIFFELSTUDIO_BRANCH
 
 # Main
 
@@ -73,10 +73,10 @@ svn checkout --config-option config:miscellany:use-commit-times=yes $SVN_EIFFELS
 
 echo Get revision from source code
 if [ ! "$ORIGO_SVN_REVISION" ]; then
-	DELIV_REVISION=`$DELIV_DIR/scripts-unix/set_version.sh $DEFAULT_ORIGO_SVN_ROOT`
+	DELIV_REVISION=`$DELIV_DIR/scripts-unix/set_version.sh $DEFAULT_ORIGO_SVN_ROOT$SVN_EIFFELSTUDIO_BRANCH`
 else
 	if [ "$ORIGO_SVN_REVISION" = "HEAD" ]; then
-		DELIV_REVISION=`$DELIV_DIR/scripts-unix/set_version.sh $DEFAULT_ORIGO_SVN_ROOT`
+		DELIV_REVISION=`$DELIV_DIR/scripts-unix/set_version.sh $DEFAULT_ORIGO_SVN_ROOT$SVN_EIFFELSTUDIO_BRANCH`
 	else
 		DELIV_REVISION=$ORIGO_SVN_REVISION
 	fi

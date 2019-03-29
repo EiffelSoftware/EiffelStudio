@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="refbuild" uuid="BF0BE787-18FA-419C-9A5B-FB6C46FD42D1">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd" name="refbuild" uuid="BF0BE787-18FA-419C-9A5B-FB6C46FD42D1">
 	<target name="refbuild">
 		<root cluster="refbuild" class="APPLICATION" feature="make"/>
 		<version major="1" minor="0" release="0" build="0" company="Eiffel Software" product="refbuild" copyright="Eiffel Software"/>
@@ -13,6 +13,7 @@
 		<setting name="console_application" value="true"/>
 		<setting name="msil_generation" value="True"/>
 		<setting name="msil_generation_type" value="exe"/>
+		<setting name="dead_code_removal" value="all"/>
 		<capability>
 			<concurrency support="none"/>
 			<void_safety support="none"/>

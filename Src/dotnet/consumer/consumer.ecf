@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-19-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-19-0 http://www.eiffel.com/developers/xml/configuration-1-19-0.xsd" name="eiffelsoftware.metadataconsumer" uuid="03FEA2AF-7282-4F0F-9E4B-57317B1620DA" library_target="consumer_library">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd" name="eiffelsoftware.metadataconsumer" uuid="03FEA2AF-7282-4F0F-9E4B-57317B1620DA" library_target="consumer_library">
 	<target name="consumer_library">
 		<root all_classes="true"/>
-		<version major="7" minor="2" release="9" build="376" company="Eiffel Software" product="Eiffel Assembly Metadata Consumer" copyright="Copyright Eiffel Software 2006-2018. All Rights Reserved."/>
+		<version major="7" minor="2" release="9" build="376" company="Eiffel Software" product="Eiffel Assembly Metadata Consumer" copyright="Copyright Eiffel Software 2006-2019. All Rights Reserved."/>
 		<file_rule>
-			<exclude>/.svn$</exclude>
+			<exclude>/\.svn$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
 		<option warning="true" namespace="EiffelSoftware.MetadataConsumer">
@@ -12,7 +12,6 @@
 		</option>
 		<setting name="cls_compliant" value="false"/>
 		<setting name="console_application" value="true"/>
-		<setting name="dead_code_removal" value="true"/>
 		<setting name="dotnet_naming_convention" value="false"/>
 		<setting name="executable_name" value="EiffelSoftware.MetadataConsumer"/>
 		<setting name="line_generation" value="true"/>
@@ -22,6 +21,7 @@
 		<setting name="msil_key_file_name" value="$EIFFEL_SRC\dotnet\helpers\isekey.snk"/>
 		<setting name="use_all_cluster_name_as_namespace" value="false"/>
 		<setting name="use_cluster_name_as_namespace" value="false"/>
+		<setting name="dead_code_removal" value="all"/>
 		<capability>
 			<concurrency support="none" use="thread"/>
 			<void_safety support="all"/>

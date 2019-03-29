@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="wizard" uuid="0A049049-FB91-4227-8782-5FA68C5B3750" readonly="false">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd" name="wizard" uuid="0A049049-FB91-4227-8782-5FA68C5B3750" readonly="false">
 	<target name="wizard">
 		<root class="WIZARD_MANAGER" feature="make_and_launch"/>
-		<setting name="dead_code_removal" value="True"/>
 		<setting name="exception_trace" value="True"/>
 		<setting name="inlining" value="True"/>
 		<setting name="inlining_size" value="0"/>
+		<setting name="dead_code_removal" value="all"/>
 		<capability>
 			<concurrency support="none"/>
 			<void_safety support="none"/>

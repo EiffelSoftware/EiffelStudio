@@ -486,9 +486,6 @@ feature -- Implementation
 
 
 	current_dir: STRING
-		local
-			l_path: PATH
-			l_env: EXECUTION_ENVIRONMENT
 		do
 			Result := (create {EXECUTION_ENVIRONMENT}).current_working_directory
 			Result.append_character ((create {OPERATING_ENVIRONMENT}).directory_separator)

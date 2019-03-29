@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="eiffel_community_app" uuid="133EFD54-F660-4F6A-975C-6599394C8917">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd" name="eiffel_community_app" uuid="133EFD54-F660-4F6A-975C-6599394C8917">
 	<target name="eiffel_community_app">
 		<description>Desktop Wikidocs Editor for eiffel_community_app</description>
 		<root class="WDOCS_APP" feature="make_and_launch"/>
 		<file_rule>
-			<exclude>/.git$</exclude>
-			<exclude>/.svn$</exclude>
+			<exclude>/\.git$</exclude>
+			<exclude>/\.svn$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
 		<option warning="true">
@@ -14,6 +14,7 @@
 		<setting name="console_application" value="true"/>
 		<setting name="exception_trace" value="true"/>
 		<setting name="executable_name" value="eiffel_community_app"/>
+		<setting name="dead_code_removal" value="all"/>
 		<capability>
 			<concurrency support="scoop" use="scoop"/>
 		</capability>

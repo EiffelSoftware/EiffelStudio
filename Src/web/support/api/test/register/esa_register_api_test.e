@@ -59,14 +59,14 @@ feature -- Test
 		{
 		"template": {
 	      "data": [
-	        {"name": "first_name", "prompt": "Frist Name", "value": "test"},
-	        {"name": "last_name", "prompt": "Last Name", "value": "test"},
-	        {"name": "email", "prompt": "Email", "value": "test@gmail.com"},
-	        {"name": "user_name", "prompt": "User Name", "value": "test"},
-	        {"name": "password", "prompt": "Password", "value": "test"},
-	        {"name": "check_password", "prompt": "Re-Type Password", "value": "test"},
+	        {"name": "first_name", "prompt": "Frist Name", "value": "test103"},
+	        {"name": "last_name", "prompt": "Last Name", "value": "test103"},
+	        {"name": "email", "prompt": "Email", "value": "test103@gmail.com"},
+	        {"name": "user_name", "prompt": "User Name", "value": "test103"},
+	        {"name": "password", "prompt": "Password", "value": "test103"},
+	        {"name": "check_password", "prompt": "Re-Type Password", "value": "test103"},
 	        {"name": "question", "prompt": "Question", "value": "1"},
-	        {"name": "answer", "prompt": "Answer", "value": "test"}
+	        {"name": "answer", "prompt": "Answer", "value": "test103"}
 	      ]
 	      }
 		}

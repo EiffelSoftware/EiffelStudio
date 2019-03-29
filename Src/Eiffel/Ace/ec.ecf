@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-19-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-19-0 http://www.eiffel.com/developers/xml/configuration-1-19-0.xsd" name="ec" uuid="D398E904-E3C8-4F8A-B9E7-6FE493CEA02F">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd" name="ec" uuid="D398E904-E3C8-4F8A-B9E7-6FE493CEA02F">
 	<target name="common">
 		<file_rule>
 			<exclude>/EIFGENs$</exclude>
@@ -12,6 +12,7 @@
 		</option>
 		<setting name="console_application" value="true"/>
 		<setting name="exception_trace" value="true"/>
+		<setting name="dead_code_removal" value="all"/>
 		<capability>
 			<concurrency support="none"/>
 			<void_safety support="none"/>
@@ -39,7 +40,9 @@
 		<library name="i18n" location="$ISE_LIBRARY\library\i18n\i18n.ecf" readonly="false"/>
 		<library name="interface_names" location="$EIFFEL_SRC\framework\interface_names\interface_names.ecf" readonly="false" use_application_options="true"/>
 		<library name="kmp_matcher" location="$ISE_LIBRARY\library\text\regexp\kmp_matcher\kmp_matcher.ecf"/>
-		<library name="parser" location="$EIFFEL_SRC\framework\parser\parser.ecf" readonly="false" use_application_options="true"/>
+		<library name="parser" location="$EIFFEL_SRC\framework\parser\parser.ecf" readonly="false" use_application_options="true">
+			<visible class="SYNTAX_WARNING" feature="intentionally_absent_feature"/>
+		</library>
 		<library name="parser_extension" location="$EIFFEL_SRC\framework\parser_extension\parser_extension.ecf" readonly="false" use_application_options="true"/>
 		<library name="pe_reader" location="$EIFFEL_SRC\framework\file_formats\pe\pe.ecf" readonly="false" use_application_options="true"/>
 		<library name="resources" location="$EIFFEL_SRC\framework\resources\resources.ecf" readonly="false" use_application_options="true"/>
@@ -160,20 +163,12 @@
 		</external_object>
 		<variable name="batch_framework" value="false"/>
 		<library name="auto_test" location="$EIFFEL_SRC\framework\auto_test\auto_test.ecf" readonly="false" use_application_options="true"/>
-		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf" readonly="false" use_application_options="true">
-			<visible class="EQA_PARTIAL_RESULT" feature="intentionally_absent_feature"/>
-			<visible class="EQA_RESULT" feature="intentionally_absent_feature"/>
-			<visible class="EQA_TEST_INVOCATION_RESPONSE" feature="intentionally_absent_feature"/>
-			<visible class="EQA_TEST_INVOCATION_EXCEPTION" feature="intentionally_absent_feature"/>
-			<visible class="EQA_TEST_EVALUATOR" feature="intentionally_absent_feature"/>
-		</library>
 		<library name="com_light" location="$EIFFEL_SRC\framework\com_light\com_light.ecf" readonly="false" use_application_options="true"/>
 		<library name="command_tunnel" location="$EIFFEL_SRC\framework\command_tunnel\command_tunnel.ecf" readonly="false" use_application_options="true"/>
 		<library name="compiler_kernel" location="$EIFFEL_SRC\Eiffel\Ace\ec_kernel.ecf" readonly="false" use_application_options="true">
 			<visible class="CAT_CALL_WARNING" feature="intentionally_absent_feature"/>
 			<visible class="OBS_CLASS_WARN" feature="intentionally_absent_feature"/>
 			<visible class="OBS_FEAT_WARN" feature="intentionally_absent_feature"/>
-			<visible class="SYNTAX_WARNING" feature="intentionally_absent_feature"/>
 			<visible class="UNUSED_LOCAL_WARNING" feature="intentionally_absent_feature"/>
 			<visible class="C_COMPILER_WARNING" feature="intentionally_absent_feature"/>
 			<visible class="VTCM" feature="intentionally_absent_feature"/>
@@ -235,6 +230,13 @@
 		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
 		<library name="tagging" location="$EIFFEL_SRC\framework\tagging\tagging.ecf" readonly="false" use_application_options="true"/>
 		<library name="tagging-ev" location="$EIFFEL_SRC\framework\tagging\ev\tagging-ev.ecf" readonly="false" use_application_options="true"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf" readonly="false" use_application_options="true">
+			<visible class="EQA_PARTIAL_RESULT" feature="intentionally_absent_feature"/>
+			<visible class="EQA_RESULT" feature="intentionally_absent_feature"/>
+			<visible class="EQA_TEST_INVOCATION_RESPONSE" feature="intentionally_absent_feature"/>
+			<visible class="EQA_TEST_INVOCATION_EXCEPTION" feature="intentionally_absent_feature"/>
+			<visible class="EQA_TEST_EVALUATOR" feature="intentionally_absent_feature"/>
+		</library>
 		<library name="testing_engine" location="$EIFFEL_SRC\framework\testing\testing.ecf" readonly="false" use_application_options="true"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf" readonly="false"/>
 		<library name="uri" location="$EIFFEL_SRC\library\text\uri\uri.ecf"/>

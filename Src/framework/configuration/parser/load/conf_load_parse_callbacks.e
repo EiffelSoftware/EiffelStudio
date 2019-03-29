@@ -875,69 +875,82 @@ feature {NONE} -- Implementation attribute processing
 		require
 			current_target_set: current_target /= Void
 		do
-			if attached current_attributes.item (at_name) as l_name then
-				if attached current_attributes.item (at_value) as l_value then
-					if not valid_setting (l_name, current_namespace) then
-						set_parse_error_message (conf_interface_names.e_parse_incorrect_setting (l_name))
-					else
-						if attached current_target as l_current_target then
-							if l_name.same_string (s_multithreaded) then
-									-- Translate "multithreaded" setting into "concurrency" setting.
-								if includes_this_or_before (namespace_1_6_0) then
-										-- The setting is allowed.
-									if l_value.is_boolean then
-											-- SCOOP is not supported in old projects.
-										if l_value.to_boolean then
-											l_current_target.changeable_internal_options.concurrency_capability.value.put_index ({CONF_TARGET_OPTION}.concurrency_index_thread)
-											l_current_target.changeable_internal_options.concurrency_capability.put_root_index ({CONF_TARGET_OPTION}.concurrency_index_thread)
-										else
-											l_current_target.changeable_internal_options.concurrency_capability.value.put_index ({CONF_TARGET_OPTION}.concurrency_index_none)
-											l_current_target.changeable_internal_options.concurrency_capability.put_root_index ({CONF_TARGET_OPTION}.concurrency_index_none)
-										end
-									else
-											-- Boolean value is expected.
-										set_parse_error_message (conf_interface_names.e_parse_incorrect_setting_value (l_name))
-									end
-								else
-										-- The setting is not available in this XML schema.
-									set_parse_error_message (conf_interface_names.e_parse_incorrect_setting (l_name))
-								end
-							elseif l_name.same_string (s_concurrency) then
-									-- Process "concurrency" setting.
-								if includes_this_or_after (namespace_1_7_0) and then includes_this_or_before (namespace_1_15_0) then
-										-- The setting is allowed.
-									if l_current_target.changeable_internal_options.concurrency_capability.is_valid_item (l_value) then
-											-- Enable associated capability.
-										l_current_target.changeable_internal_options.concurrency_capability.value.put (l_value)
-											-- Update setting with this value.
-										l_current_target.changeable_internal_options.concurrency_capability.put_root (l_value)
-									else
-											-- The value is invalid.
-										set_parse_error_message (conf_interface_names.e_parse_incorrect_setting_value (l_name))
-									end
-								else
-										-- The setting is not available in this XML schema.
-									set_parse_error_message (conf_interface_names.e_parse_incorrect_setting (l_name))
-								end
-							elseif l_name.same_string (s_manifest_array_type) then
-								if l_current_target.changeable_internal_options.array_override.is_valid_item (l_value) then
-									l_current_target.changeable_internal_options.array_override.put (l_value)
-								else
-										-- The value is invalid.
-									set_parse_error_message (conf_interface_names.e_parse_incorrect_setting_value (l_name))
-								end
-							else
-								l_current_target.add_setting (l_name, l_value)
-							end
+			if not attached current_attributes.item (at_name) as l_name then
+				set_parse_error_message (conf_interface_names.e_parse_incorrect_setting_no_name)
+			elseif not attached current_attributes.item (at_value) as l_value then
+				set_parse_error_message (conf_interface_names.e_parse_incorrect_setting_value (l_name))
+			elseif not valid_setting (l_name, current_namespace) then
+				set_parse_error_message (conf_interface_names.e_parse_incorrect_setting (l_name))
+			elseif not attached current_target as l_current_target then
+				check precondition__current_target_set: False end
+			elseif l_name.same_string (s_multithreaded) then
+					-- Translate "multithreaded" setting into "concurrency" setting.
+				if includes_this_or_before (namespace_1_6_0) then
+						-- The setting is allowed.
+					if l_value.is_boolean then
+							-- SCOOP is not supported in old projects.
+						if l_value.to_boolean then
+							l_current_target.changeable_internal_options.concurrency_capability.value.put_index ({CONF_TARGET_OPTION}.concurrency_index_thread)
+							l_current_target.changeable_internal_options.concurrency_capability.put_root_index ({CONF_TARGET_OPTION}.concurrency_index_thread)
 						else
-							check precondition__current_target_set: False end
+							l_current_target.changeable_internal_options.concurrency_capability.value.put_index ({CONF_TARGET_OPTION}.concurrency_index_none)
+							l_current_target.changeable_internal_options.concurrency_capability.put_root_index ({CONF_TARGET_OPTION}.concurrency_index_none)
 						end
+					else
+							-- Boolean value is expected.
+						set_parse_error_message (conf_interface_names.e_parse_incorrect_setting_value (l_name))
 					end
 				else
+						-- The setting is not available in this XML schema.
+					set_parse_error_message (conf_interface_names.e_parse_incorrect_setting (l_name))
+				end
+			elseif l_name.same_string (s_concurrency) then
+					-- Process "concurrency" setting.
+				if includes_this_or_after (namespace_1_7_0) and then includes_this_or_before (namespace_1_15_0) then
+						-- The setting is allowed.
+					if l_current_target.changeable_internal_options.concurrency_capability.is_valid_item (l_value) then
+							-- Enable associated capability.
+						l_current_target.changeable_internal_options.concurrency_capability.value.put (l_value)
+							-- Update setting with this value.
+						l_current_target.changeable_internal_options.concurrency_capability.put_root (l_value)
+					else
+							-- The value is invalid.
+						set_parse_error_message (conf_interface_names.e_parse_incorrect_setting_value (l_name))
+					end
+				else
+						-- The setting is not available in this XML schema.
+					set_parse_error_message (conf_interface_names.e_parse_incorrect_setting (l_name))
+				end
+			elseif l_name.same_string (s_manifest_array_type) then
+				if l_current_target.changeable_internal_options.array_override.is_valid_item (l_value) then
+					l_current_target.changeable_internal_options.array_override.put (l_value)
+				else
+						-- The value is invalid.
+					set_parse_error_message (conf_interface_names.e_parse_incorrect_setting_value (l_name))
+				end
+			elseif l_name.same_string (s_dead_code_removal) then
+					-- The setting is boolean in 18.11 and earlier, an enumaration afterwards.
+				if includes_this_or_before (namespace_1_19_0) then
+					if l_value.is_boolean then
+							-- In 18.11 and earlier, dead code removal involved only features.
+						l_current_target.changeable_internal_options.dead_code.put_index
+							(if l_value.to_boolean then
+								{CONF_TARGET_OPTION}.dead_code_index_feature
+							else
+								{CONF_TARGET_OPTION}.dead_code_index_none
+							end)
+					else
+							-- Boolean value is expected.
+						set_parse_error_message (conf_interface_names.e_parse_incorrect_setting_value (l_name))
+					end
+				elseif l_current_target.changeable_internal_options.dead_code.is_valid_item (l_value) then
+					l_current_target.changeable_internal_options.dead_code.put (l_value)
+				else
+						-- The value is invalid.
 					set_parse_error_message (conf_interface_names.e_parse_incorrect_setting_value (l_name))
 				end
 			else
-				set_parse_error_message (conf_interface_names.e_parse_incorrect_setting_no_name)
+				l_current_target.add_setting (l_name, l_value)
 			end
 		end
 
@@ -2418,6 +2431,11 @@ feature {NONE} -- Processing of options
 			new_options: CONF_TARGET_OPTION
 		do
 			if
+				a_namespace.same_string (namespace_1_20_0)
+			then
+					-- Use the defaults of ES 19.05.
+				default_options := default_options_19_05
+			elseif
 				a_namespace.same_string (namespace_1_19_0) or else
 				a_namespace.same_string (namespace_1_18_0)
 			then
@@ -3236,6 +3254,14 @@ feature {NONE} -- Implementation state transitions
 		end
 
 feature {NONE} -- Default options
+
+	default_options_19_05: CONF_TARGET_OPTION
+			-- Default options of 19.05.
+		once
+			create Result.make_19_05
+		ensure
+			result_attached: Result /= Void
+		end
 
 	default_options_18_01: CONF_TARGET_OPTION
 			-- Default options of 18.01.

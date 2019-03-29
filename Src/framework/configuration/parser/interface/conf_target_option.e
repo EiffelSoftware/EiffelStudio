@@ -16,6 +16,7 @@ inherit
 			is_empty,
 			make_6_3,
 			make_16_11,
+			make_19_05,
 			merge
 		end
 
@@ -28,14 +29,15 @@ create
 	make_14_05,
 	make_15_11,
 	make_16_11,
-	make_18_01
+	make_18_01,
+	make_19_05
 
 feature {NONE} -- Creation
 
 	default_create
 			-- <Precursor>
 		do
-			make_18_01
+			make_19_05
 		end
 
 	make_6_3
@@ -44,6 +46,7 @@ feature {NONE} -- Creation
 			Precursor
 			create concurrency.make (concurrency_name, concurrency_index_none)
 			create array_override.make (array_override_name, array_override_index_default)
+			create dead_code.make (dead_code_name, dead_code_index_feature)
 			create void_safety_capability.make (void_safety)
 			create catcall_safety_capability.make (catcall_detection)
 			create concurrency_capability.make (concurrency)
@@ -57,6 +60,14 @@ feature {NONE} -- Creation
 			concurrency.put_default_index (concurrency_index_scoop)
 		end
 
+	make_19_05
+			-- <Precursor>
+			-- Difference from `make_18_01`: "all" for dead code removal.
+		do
+			Precursor
+			dead_code.put_default_index (dead_code_index_all)
+		end
+
 feature -- Status report
 
 	is_empty: BOOLEAN
@@ -66,6 +77,7 @@ feature -- Status report
 				not catcall_safety_capability.is_root_set and then
 				not concurrency.is_set and then
 				not array_override.is_set and then
+				not dead_code.is_set and then
 				not concurrency_capability.is_root_set and then
 				not void_safety_capability.is_root_set
 		end
@@ -226,6 +238,20 @@ feature -- Access: manifest array type checks
 	array_override_index_mismatch_error: NATURAL_8 = 4
 			-- Option index for override with mismatch error.
 
+feature -- Access: dead code removal
+
+	dead_code: CONF_VALUE_CHOICE
+			-- Manifest artray type checks override.
+
+	dead_code_index_none: NATURAL_8 = 1
+			-- Option index for no dead code removal.
+
+	dead_code_index_feature: NATURAL_8 = 2
+			-- Option index for feature-only dead code removal.
+
+	dead_code_index_all: NATURAL_8 = 3
+			-- Option index for feature and class dead code removal.
+
 feature -- Merging
 
 	merge (other: like Current)
@@ -237,8 +263,9 @@ feature -- Merging
 				-- Merge CAT-call and void safety: only root settings need to be merged because capabilities are merged by precursor.
 			catcall_safety_capability.set_safely_root (other.catcall_safety_capability)
 			void_safety_capability.set_safely_root (other.void_safety_capability)
-				-- Merge manifest array type settings.
+				-- Merge manifest array type and dead code removal settings.
 			array_override.set_safely (other.array_override)
+			dead_code.set_safely (other.dead_code)
 		end
 
 feature -- Duplication
@@ -256,6 +283,7 @@ feature -- Duplication
 				create void_safety_capability.make (void_safety)
 				void_safety_capability.put_root_index (other.void_safety_capability.custom_root_index)
 				array_override := other.array_override.twin
+				dead_code := other.dead_code.twin
 			end
 		end
 
@@ -288,13 +316,27 @@ feature {NONE} -- Access: manifest array type
 			result_attached: Result /= Void
 		end
 
+feature {NONE} -- Access: dead code removal
+
+	dead_code_name: ARRAY [READABLE_STRING_32]
+			-- Available values for "dead_code_removal" setting.
+		once
+			Result := <<
+					{CONF_CONSTANTS}.sv_dead_code_none,
+					{CONF_CONSTANTS}.sv_dead_code_feature,
+					{CONF_CONSTANTS}.sv_dead_code_all
+				>>
+		ensure
+			result_attached: Result /= Void
+		end
+
 invariant
 	consistent_catcall_detection: catcall_safety_capability.value = catcall_detection
 	consistent_concurrency: concurrency_capability.value = concurrency
 	consistent_void_safety: void_safety_capability.value = void_safety
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

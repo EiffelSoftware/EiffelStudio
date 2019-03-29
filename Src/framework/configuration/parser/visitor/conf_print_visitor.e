@@ -240,6 +240,24 @@ feature -- Visit nodes
 					append_tag_close_empty
 				end
 			end
+				-- Add a dead code removal setting.
+			if
+				attached a_target.internal_options as o and then
+				attached o.dead_code as dead_code and then
+				dead_code.is_set
+			then
+				append_tag_open ({STRING_32} "setting")
+				append_text_attribute ("name", s_dead_code_removal)
+				append_text_attribute ("value",
+					if includes_this_or_after (namespace_1_20_0) then
+							-- Enumeration in 19.05 and later.
+						dead_code.item
+					else
+							-- Boolean in 18.11 and earlier.
+						configuration_boolean_value (dead_code.index /= {CONF_TARGET_OPTION}.dead_code_index_none)
+					end)
+				append_tag_close_empty
+			end
 				-- Add a manifest array type setting.
 			if
 				attached a_target.internal_options as o and then
@@ -1417,7 +1435,7 @@ feature {NONE} -- Match attribute
 
 note
 	ca_ignore: "CA033", "CA033 — very long class"
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

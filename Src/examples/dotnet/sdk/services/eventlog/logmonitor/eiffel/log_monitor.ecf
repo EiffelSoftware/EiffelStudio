@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="log_monitor" uuid="2664DFB8-CD0C-4F78-A1BD-4060AED1A95F">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd" name="log_monitor" uuid="2664DFB8-CD0C-4F78-A1BD-4060AED1A95F">
 	<target name="log_monitor">
 		<root cluster="log_monitor" class="LOG_MONITOR" feature="main"/>
 		<option full_class_checking="false" namespace="EiffelSoftware.Samples">
@@ -11,6 +11,7 @@
 		<setting name="msil_generation_type" value="exe"/>
 		<setting name="use_all_cluster_name_as_namespace" value="False"/>
 		<setting name="use_cluster_name_as_namespace" value="False"/>
+		<setting name="dead_code_removal" value="all"/>
 		<capability>
 			<concurrency support="none"/>
 			<void_safety support="none"/>

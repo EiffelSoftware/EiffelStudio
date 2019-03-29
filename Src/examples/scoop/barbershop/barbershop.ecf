@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="barbershop" uuid="33DF365C-9B25-4F7B-8574-C4E480DAD8FA">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd" name="barbershop" uuid="33DF365C-9B25-4F7B-8574-C4E480DAD8FA">
 	<target name="barbershop">
 		<note>
 			<eis name="Barbershop" protocol="" src="$(ISE_DOC)/book/solutions/Barbershop"/>
 		</note>
 		<root class="BARBERSHOP" feature="make"/>
 		<setting name="console_application" value="true"/>
+		<setting name="dead_code_removal" value="all"/>
 		<precompile name="base_pre" location="$ISE_PRECOMP\base-scoop-safe.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<cluster name="barbershop" location=".\" recursive="true">

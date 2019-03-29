@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="monitor" uuid="A8EFE6A9-6402-445D-9C40-BB780EF1CDD6">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd" name="monitor" uuid="A8EFE6A9-6402-445D-9C40-BB780EF1CDD6">
 	<target name="monitor">
 		<root class="MONITOR_SYNCHRONIZATION" feature="make"/>
 		<option warning="true" full_class_checking="false">
@@ -7,6 +7,7 @@
 		</option>
 		<setting name="console_application" value="true"/>
 		<setting name="msil_generation" value="true"/>
+		<setting name="dead_code_removal" value="all"/>
 		<capability>
 			<concurrency support="none"/>
 			<void_safety support="none"/>

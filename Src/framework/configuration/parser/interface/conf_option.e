@@ -116,6 +116,13 @@ feature {NONE} -- Creation
 			array.put_default_index (array_index_standard)
 		end
 
+	make_19_05
+			-- Initialize options to the defaults of 19.05.
+			-- Difference from `make_18_01`: none. See `{CONF_TARGET_OPTION}`.
+		do
+			make_18_01
+		end
+
 feature -- Status
 
 	is_profile_configured: BOOLEAN
@@ -864,7 +871,7 @@ invariant
 	debugs_compare_objects: attached debugs as l_d implies l_d.object_comparison
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

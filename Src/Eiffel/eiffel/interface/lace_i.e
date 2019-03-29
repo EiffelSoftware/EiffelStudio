@@ -1154,19 +1154,14 @@ feature {NONE} -- Implementation
 				system.set_32bits (not {PLATFORM}.is_64_bits)
 			end
 
-			l_s := l_settings.item (s_dead_code_removal)
-			if l_s /= Void then
-				if l_s.is_boolean then
-					system.set_remover_off (not l_s.to_boolean)
-				else
-					create vd15
-					vd15.set_option_name (s_dead_code_removal)
-					vd15.set_option_value (l_s)
-					Error_handler.insert_error (vd15)
-				end
-			else
-				system.set_remover_off (False)
+			if
+				workbench.has_compilation_started and then
+				a_target.options.dead_code.index /= system.dead_code
+			then
+					-- The optimization option has changed, request finalization.
+				system.set_finalize
 			end
+			system.set_dead_code (a_target.options.dead_code.index)
 
 				-- see cls_compliant comment above
 			l_s := l_settings.item (s_dotnet_naming_convention)

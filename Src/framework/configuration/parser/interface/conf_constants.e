@@ -63,7 +63,7 @@ feature -- Concurrency
 	concurrency_multithreaded_name: STRING = "thread"
 	concurrency_scoop_name: STRING = "scoop"
 
-feature -- Void safety	
+feature -- Void safety
 
 	void_safety_none: INTEGER = 0x1100
 	void_safety_conformance: INTEGER = 0x1200
@@ -77,6 +77,12 @@ feature -- Void safety
 	void_safety_initialization_name: STRING = "initialization"
 	void_safety_transitional_name: STRING = "transitional"
 	void_safety_all_name: STRING = "all"
+
+feature -- Dead code removal
+
+	sv_dead_code_none: STRING_32 = "none"
+	sv_dead_code_feature: STRING_32 = "feature"
+	sv_dead_code_all: STRING_32 = "all"
 
 feature -- Version types
 
@@ -267,7 +273,7 @@ feature -- Extension
 			-- File extension for an Eiffel source file without the dot
 
 ;note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

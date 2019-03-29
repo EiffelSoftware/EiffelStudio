@@ -354,6 +354,29 @@ feature {NONE} -- Onces
 			Result_not_void: Result /= Void
 		end
 
+	dead_code_names: HASH_TABLE [READABLE_STRING_32, INTEGER]
+			-- The dead code removal values mapped to their integer values.
+		once
+			create Result.make (3)
+			Result.force (sv_dead_code_none, {CONF_TARGET_OPTION}.dead_code_index_none)
+			Result.force (sv_dead_code_feature, {CONF_TARGET_OPTION}.dead_code_index_feature)
+			Result.force (sv_dead_code_all, {CONF_TARGET_OPTION}.dead_code_index_all)
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	array_override_names: HASH_TABLE [READABLE_STRING_32, INTEGER]
+			-- The manifest array type override values mapped to their integer values.
+		once
+			create Result.make (4)
+			Result.force (sv_array_default, {CONF_TARGET_OPTION}.array_override_index_default)
+			Result.force (sv_array_standard, {CONF_TARGET_OPTION}.array_override_index_standard)
+			Result.force (sv_array_mismatch_warning, {CONF_TARGET_OPTION}.array_override_index_mismatch_warning)
+			Result.force (sv_array_mismatch_error, {CONF_TARGET_OPTION}.array_override_index_mismatch_error)
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 	msil_generation_type_values: ARRAYED_LIST [READABLE_STRING_32]
 			-- Valid values for setting named `s_msil_generation_type'.
 		do
@@ -570,7 +593,6 @@ feature {NONE} -- Implementation
 			Result.force (True, s_check_vape)
 			Result.force (True, s_cls_compliant)
 			Result.force (True, s_console_application)
-			Result.force (True, s_dead_code_removal)
 			Result.force (True, s_dotnet_naming_convention)
 			Result.force (True, s_dynamic_runtime)
 			Result.force (True, s_enforce_unique_class_names)
@@ -601,7 +623,6 @@ feature {NONE} -- Implementation
 			Result.force (s_check_for_void_target)
 			Result.force (s_check_for_catcall_at_runtime)
 			Result.force (s_cls_compliant)
-			Result.force (s_dead_code_removal)
 			Result.force (s_inlining)
 			Result.force (s_il_verifiable)
 			Result.force (s_use_cluster_name_as_namespace)
@@ -770,7 +791,7 @@ feature {NONE} -- Option names
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

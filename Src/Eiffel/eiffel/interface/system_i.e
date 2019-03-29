@@ -1413,16 +1413,16 @@ end
 
 feature -- Modification
 
-	set_remover_off (b: BOOLEAN)
-			-- Assign `b' to `remover_off'
+	set_dead_code (v: like {CONF_TARGET_OPTION}.dead_code_index_all)
+			-- Set `dead_code` to `v`.
 		do
-			remover_off := b
-			if b then
+			dead_code := v
+			if v = {CONF_TARGET_OPTION}.dead_code_index_none then
 				remover := Void
 			end
 		ensure
-			remover_off_set: remover_off = b
-			remover_set: b implies not attached remover
+			dead_code_set: dead_code = v
+			remover_set: v = {CONF_TARGET_OPTION}.dead_code_index_none implies not attached remover
 		end
 
 feature -- Final code geneation
@@ -2942,15 +2942,15 @@ feature -- IL code generation
 			il_generation: il_generation
 		local
 			il_generator: CIL_GENERATOR
-			old_remover_off: BOOLEAN
+			old_dead_code: like dead_code
 		do
 			create il_generator.make (Degree_output)
 			il_generator.generate
 			if (in_final_mode or freeze) and then externals.count > 0 then
 				externals.freeze
 				freezing_occurred := True
-				old_remover_off := remover_off
-				set_remover_off (True)
+				old_dead_code := dead_code
+				set_dead_code ({CONF_TARGET_OPTION}.dead_code_index_none)
 
 				if in_final_mode then
 					create {FINAL_MAKER} makefile_generator.make
@@ -2961,7 +2961,7 @@ feature -- IL code generation
 				externals.generate_il (makefile_generator)
 				close_log_files
 
-				set_remover_off (old_remover_off)
+				set_dead_code (old_dead_code)
 
 				if not in_final_mode then
 					is_freeze_requested := False
@@ -3178,7 +3178,7 @@ feature -- Final mode generation
 		require
 			root_classes_compiled: are_root_classes_compiled
 		local
-			old_remover_off: BOOLEAN
+			old_dead_code: like dead_code
 			old_exception_stack_managed: BOOLEAN
 			old_inlining_on, old_array_optimization_on: BOOLEAN
 			deg_output: DEGREE_OUTPUT
@@ -3249,14 +3249,17 @@ feature -- Final mode generation
 
 						-- Save the value of `remover_off'
 						-- and `exception_stack_managed'
-					old_remover_off := remover_off
+					old_dead_code := dead_code
 					old_exception_stack_managed := exception_stack_managed
 					old_inlining_on := inlining_on
 					old_array_optimization_on := array_optimization_on
 
 						-- Should dead code be removed?
-					if not old_remover_off then
-						set_remover_off (keep_assertions)
+					if
+						old_dead_code /= {CONF_TARGET_OPTION}.dead_code_index_none and then
+						keep_assertions
+					then
+						set_dead_code ({CONF_TARGET_OPTION}.dead_code_index_none)
 					end
 
 					if not exception_stack_managed then
@@ -3265,8 +3268,13 @@ feature -- Final mode generation
 
 						-- Inlining is disabled when dead code removal is off or when checking
 						-- for catcalls.
-					inlining_on := inlining_on and not remover_off and not check_for_catcall_at_runtime
-					array_optimization_on := array_optimization_on and not remover_off
+					inlining_on :=
+						inlining_on and
+						dead_code /= {CONF_TARGET_OPTION}.dead_code_index_none and
+						not check_for_catcall_at_runtime
+					array_optimization_on :=
+						array_optimization_on and
+						dead_code /= {CONF_TARGET_OPTION}.dead_code_index_none
 
 					byte_context.clear_system_data
 					process_degree_minus_2
@@ -3282,7 +3290,7 @@ feature -- Final mode generation
 					address_table.update_ids
 
 						-- Dead code removal
-					if not remover_off then
+					if dead_code /= {CONF_TARGET_OPTION}.dead_code_index_none then
 						deg_output := Degree_output
 						deg_output.put_start_dead_code_removal_message
 						remove_dead_code
@@ -3338,7 +3346,7 @@ feature -- Final mode generation
 					Server_controler.set_remove_right_away (False)
 
 						-- Restore previous value
-					set_remover_off (old_remover_off)
+					set_dead_code (old_dead_code)
 					exception_stack_managed := old_exception_stack_managed
 					inlining_on := old_inlining_on
 					array_optimization_on := old_array_optimization_on
@@ -3370,7 +3378,7 @@ feature -- Final mode generation
 			successful := False
 
 				-- Restore previous value.
-			set_remover_off (old_remover_off)
+			set_dead_code (old_dead_code)
 			exception_stack_managed := old_exception_stack_managed
 			inlining_on := old_inlining_on
 			array_optimization_on := old_array_optimization_on
@@ -3787,6 +3795,25 @@ feature -- Dead code removal
 
 			if array_optimization_on then
 				remover.record_array_descendants
+			end
+
+			if dead_code = {CONF_TARGET_OPTION}.dead_code_index_feature then
+					-- Mark all classes as alive.
+				across
+					classes as cc
+				loop
+					if
+						attached cc.item as c and then
+						c.is_valid and then
+						(c.is_precompiled implies c.is_in_system)
+					then
+						if c.is_deferred then
+							remover.mark_class_reachable (c.class_id)
+						else
+							remover.mark_class_alive (c.class_id)
+						end
+					end
+				end
 			end
 
 				-- It is more efficient to mark classes before marking features.
@@ -6341,7 +6368,7 @@ feature {NONE} -- External features
 		end
 
 invariant
-	attached remover implies not remover_off
+	attached remover implies dead_code /= {CONF_TARGET_OPTION}.dead_code_index_none
 
 note
 	date: "$Date$"

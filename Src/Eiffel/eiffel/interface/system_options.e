@@ -13,8 +13,8 @@ inherit
 
 feature -- Access
 
-	remover_off: BOOLEAN
-			-- Is the remover off (by specifying the Ace option)
+	dead_code: like {CONF_TARGET_OPTION}.dead_code_index_all
+			-- The index indicating what code should be removed.
 
 	absent_explicit_assertion: BOOLEAN
 			-- Can assertions be derived from the code rather than taken solely from the assertion clauses?
@@ -22,8 +22,8 @@ feature -- Access
 	array_optimization_on: BOOLEAN
 			-- Is array optimization on?
 
-	inlining_on: BOOLEAN;
-			-- Is inlining on ?
+	inlining_on: BOOLEAN
+			-- Is inlining on?
 
 	inlining_size: INTEGER
 			-- Size of the feature which will be inlined.
@@ -82,10 +82,10 @@ feature -- Access
 	has_old_feature_replication: BOOLEAN
 			-- Is old semantics for feature replication used?
 
-	exception_stack_managed: BOOLEAN;
+	exception_stack_managed: BOOLEAN
 			-- Is the exception stack managed in final mode
 
-	has_expanded: BOOLEAN;
+	has_expanded: BOOLEAN
 			-- Is there an expanded declaration in the system,
 			--| i.e. some extra check must be done after pass2 ?
 

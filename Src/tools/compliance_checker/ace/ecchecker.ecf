@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="ecchecker" uuid="E67360E2-5309-4993-A4EF-8DF437D4428A" library_target="ecchecker_library">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd" name="ecchecker" uuid="E67360E2-5309-4993-A4EF-8DF437D4428A" library_target="ecchecker_library">
 	<target name="ecchecker_library">
 		<root all_classes="true"/>
 		<version major="1" minor="1207" release="0" build="0" company="Eiffel Software" product="Eiffel for .NET Compliance Checker" copyright="2005-2018 Eiffel Software. All Rights Reserved"/>
@@ -12,7 +12,6 @@
 		</option>
 		<setting name="cls_compliant" value="True"/>
 		<setting name="console_application" value="False"/>
-		<setting name="dead_code_removal" value="True"/>
 		<setting name="dotnet_naming_convention" value="True"/>
 		<setting name="il_verifiable" value="True"/>
 		<setting name="msil_generation" value="True"/>
@@ -20,6 +19,7 @@
 		<setting name="msil_key_file_name" value="${EIFFEL_SRC}\dotnet\helpers\isekey.snk"/>
 		<setting name="use_all_cluster_name_as_namespace" value="True"/>
 		<setting name="use_cluster_name_as_namespace" value="True"/>
+		<setting name="dead_code_removal" value="all"/>
 		<capability>
 			<concurrency support="none"/>
 		</capability>

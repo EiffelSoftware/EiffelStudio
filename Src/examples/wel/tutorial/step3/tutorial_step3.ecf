@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="tutorial_step3" uuid="0F1F34C1-18FE-431F-9DE7-30542EA58E7F">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd" name="tutorial_step3" uuid="0F1F34C1-18FE-431F-9DE7-30542EA58E7F">
 	<target name="common" abstract="true">
 		<root cluster="root_cluster" class="TUTORIAL_STEP3" feature="make"/>
 		<option warning="true">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
 		<setting name="platform" value="windows"/>
+		<setting name="dead_code_removal" value="all"/>
 		<capability>
 			<concurrency support="none"/>
 			<void_safety support="none"/>

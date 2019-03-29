@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="mclist_example" uuid="C6096013-C6B1-44D9-BB54-2865AF70A06E">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd" name="mclist_example" uuid="C6096013-C6B1-44D9-BB54-2865AF70A06E">
 	<target name="classic">
 		<root cluster="root_cluster" class="MULTICOLUMN_LIST_EXAMPLE" feature="make_and_launch"/>
 		<option warning="true" full_class_checking="false" is_obsolete_routine_type="true" syntax="transitional">
 			<assertions precondition="true"/>
 		</option>
+		<setting name="dead_code_removal" value="all"/>
 		<capability>
 			<concurrency support="none"/>
 			<void_safety support="none"/>

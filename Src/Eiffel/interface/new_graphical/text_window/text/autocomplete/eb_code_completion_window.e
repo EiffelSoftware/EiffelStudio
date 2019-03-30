@@ -512,6 +512,8 @@ feature -- Initialization
 		do
 			next_panel_label.set_text (next_panel_title)
 			sorted_names := Void
+			internal_delayed_unicode_symbol_list := Void
+			internal_unicode_symbol_list := Void
 			template_sorted_names := Void
 			across a_completion_possibilities as ic loop
 				if attached {EB_TEMPLATE_FOR_COMPLETION} ic.item as l_item then
@@ -1167,25 +1169,32 @@ feature {NONE} -- String matching
 		local
 			cnt: INTEGER
 			l_sorted_names: like sorted_names
+			lst: like unicode_symbol_list
 		do
 				-- For feature completion, also include unicode symbols if completion is requested.
 			if
 				feature_mode and then
 				show_completion_unicode_symbols and then
-				ev_application.ctrl_pressed and then -- Only on demand!
-				attached unicode_symbol_list (True) as lst and then
-				not lst.is_empty
+				ev_application.ctrl_pressed -- Only on demand!
 			then
-				l_sorted_names := sorted_names
-				cnt := l_sorted_names.upper
-				l_sorted_names.conservative_resize_with_default (lst [lst.lower], l_sorted_names.lower, cnt + lst.count)
-				across
-					lst as ic
-				loop
-					cnt := cnt + 1
-					l_sorted_names.force (ic.item, cnt)
+				lst := internal_delayed_unicode_symbol_list
+				if lst = Void then
+						-- Only once!
+					lst := unicode_symbol_list (True)
+					internal_delayed_unicode_symbol_list := lst
+					if not lst.is_empty then
+						l_sorted_names := sorted_names
+						cnt := l_sorted_names.upper
+						l_sorted_names.conservative_resize_with_default (lst [lst.lower], l_sorted_names.lower, cnt + lst.count)
+						across
+							lst as ic
+						loop
+							cnt := cnt + 1
+							l_sorted_names.force (ic.item, cnt)
+						end
+						l_sorted_names.sort
+					end
 				end
-				l_sorted_names.sort
 			end
 			Precursor
 		end
@@ -1198,34 +1207,20 @@ feature {NONE} -- String matching
 			tb: like unicode_symbols
 			n: EB_SYMBOLS_FOR_COMPLETION
 		do
-			if a_is_delayed then
-				Result := internal_delayed_unicode_symbol_list
-			else
-				Result := internal_unicode_symbol_list
-			end
-			if
-				Result = Void
-			then
-				tb := unicode_symbols
-				create Result.make_filled (create {EB_SYMBOLS_FOR_COMPLETION}.make ("_", '_'), 1, tb.count)
-				if a_is_delayed then
-					internal_delayed_unicode_symbol_list := Result
-				else
-					internal_unicode_symbol_list := Result
-				end
-				cnt := 0
-				across
-					tb as ic
-				loop
-					cnt := cnt + 1
+			tb := unicode_symbols
+			create Result.make_filled (create {EB_SYMBOLS_FOR_COMPLETION}.make ("_", '_'), 1, tb.count)
+			cnt := 0
+			across
+				tb as ic
+			loop
+				cnt := cnt + 1
 
-					if a_is_delayed then
-						create {EB_SYMBOLS_FOR_DELAYED_COMPLETION} n.make (ic.key, ic.item.to_character_32)
-					else
-						create {EB_SYMBOLS_FOR_COMPLETION} n.make (ic.key, ic.item.to_character_32)
-					end
-					Result.force (n, cnt)
+				if a_is_delayed then
+					create {EB_SYMBOLS_FOR_DELAYED_COMPLETION} n.make (ic.key, ic.item.to_character_32)
+				else
+					create {EB_SYMBOLS_FOR_COMPLETION} n.make (ic.key, ic.item.to_character_32)
 				end
+				Result.force (n, cnt)
 			end
 		end
 
@@ -1299,6 +1294,8 @@ feature -- Panel
 		end
 
 	show_symbol_panel
+		local
+			l_names: like unicode_symbol_list
 		do
 			current_panel_id := symbols_panel_id
 			next_panel_label.set_text (panel_title (next_panel_id (current_panel_id)))
@@ -1308,7 +1305,13 @@ feature -- Panel
 			hide_info_associated_target_class
 
 				-- Build template list.
-			if attached unicode_symbol_list (False) as l_names then
+			l_names := internal_unicode_symbol_list
+			if l_names = Void then
+				l_names := unicode_symbol_list (False)
+				l_names.sort
+				internal_unicode_symbol_list := l_names
+			end
+			if l_names /= Void then
 				full_list := l_names
 			else
 					-- Empty full list if we don't have templates to show.

@@ -45,7 +45,7 @@ feature -- Execution
 			wizard_launched: BOOLEAN
 		do
 				-- Create callback file.
-			create temp_file.make_open_temporary
+			create temp_file.make_open_temporary_with_prefix (eiffel_layout.temporary_path.extended ("eifwizard-").name)
 				-- Fill callback file with input data.
 			temp_file.put_string ("Success=%"<SUCCESS>%"%N")
 			if Additional_parameters /= Void then
@@ -212,7 +212,7 @@ feature {NONE} -- Private attributes
 			-- Location of this wizard.
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

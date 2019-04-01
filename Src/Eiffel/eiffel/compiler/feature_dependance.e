@@ -13,7 +13,7 @@ inherit
 		export
 			{FEATURE_DEPENDANCE} all
 			{ANY} cursor, go_to, start, before, after, forth, item, active,
-				count, first_element, last_element, object_comparison, sublist,
+				count, first_element, last_element, new_cursor, object_comparison, sublist,
 				extend, prunable, off, readable, valid_cursor, extendible
 		redefine
 			make, wipe_out, copy, is_equal

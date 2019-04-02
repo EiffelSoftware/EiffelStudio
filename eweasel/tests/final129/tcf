@@ -1,0 +1,23 @@
+test_name 	 dead-code-removal-qat-and-generic
+test_description A class should not be marked as dead when it is used in a qualified anchored type supplied as an actual generic for the formal generic that is created.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 aa.e $CLUSTER aa.e
+copy_raw 	 bb1.e $CLUSTER bb1.e
+copy_raw 	 bb2.e $CLUSTER bb2.e
+copy_raw 	 cc1.e $CLUSTER cc1.e
+copy_raw 	 cc2.e $CLUSTER cc2.e
+copy_raw 	 xx.e $CLUSTER xx.e
+copy_raw 	 zz1.e $CLUSTER zz1.e
+copy_raw 	 zz2.e $CLUSTER zz2.e
+copy_raw 	 zz3.e $CLUSTER zz3.e
+
+compile_final
+compile_result	ok
+c_compile_final
+c_compile_result	ok
+execute_final	NONE	exec_output_f
+execute_result	ok
+compare		exec_output_f output
+
+test_end

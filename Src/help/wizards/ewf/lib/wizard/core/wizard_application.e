@@ -33,6 +33,7 @@ feature {NONE} -- Initialization
 					if s.same_string_general ("-callback") or s.same_string_general ("--callback") then
 						i := i + 1
 						if i <= n then
+							s := args.argument (i)
 							create callback_file_name.make_from_string (s)
 						end
 					elseif wizard_directory_name = Void then
@@ -116,7 +117,7 @@ feature -- Helpers
 				p := Result
 				if
 					not ok and then
-					attached p.extension as ext 
+					attached p.extension as ext
 				then
 					l_ext := ext
 					l_name := p.name

@@ -31,8 +31,7 @@ feature {NONE} -- Creation
 	make
 			-- Initialization.
 		local
-			ct: CL_TYPE_A
-			j: INTEGER
+			i: like {FORMAL_A}.position
 			r: like {ROUT_TABLE}.rout_id
 		do
 			Precursor
@@ -49,7 +48,8 @@ feature {NONE} -- Creation
 				-- Retrieve derived types for classes.
 				-- Take into account that indexes in `{SPECIAL}` do not start at `1`.
 			create actual_generics.make_filled (Void, system.class_counter.count + (1 - {like actual_generics}.lower))
-				-- Register actual generics from class types and filters.
+				-- Register actual generics.
+				-- Firstly, find out what generics have creation constraints, and allocate the corresponding structure.
 			across
 				system.classes as cs
 			loop
@@ -59,44 +59,21 @@ feature {NONE} -- Creation
 					attached c.generics as g
 				then
 					from
-						j := g.count
+						i := g.count
 					until
-						j <= 0
+						i <= 0
 					loop
 							-- Take into account only types with creation constraint.
-						if attached g [j].creation_feature_list then
-							allocate_actuals (j, g.count, c.class_id)
+						if attached g [i].creation_feature_list then
+							allocate_actuals (i, g.count, c.class_id)
 						end
-						j := j - 1
+						i := i - 1
 					end
 				end
 			end
-			across
-				system.instantiator as t
-			loop
-				ct := t.item
-					-- Take into account only types with creation constraint.
-				if
-					attached actual_generics [ct.class_id] as actuals and then
-					attached ct.generics as g
-				then
-						-- Some actual generics are involved in creation, record them.
-					from
-						j := g.count
-					until
-						j <= 0
-					loop
-						if
-							attached actuals [j - 1] and then
-							attached g [j].base_class as b and then
-							not b.is_deferred
-						then
-							record_and_propagate_actual_generic (b, j, ct.base_class)
-						end
-						j := j - 1
-					end
-				end
-			end
+				-- Secondly, register actual generics from standalone class types.
+				-- Actual generics from filters are registered by `mark_class_reachable`.
+			record_actual_generics (system.instantiator)
 				-- Take into account only routines and attributes with bodies.
 			from
 				r := system.routine_id_counter.count
@@ -134,6 +111,41 @@ feature {NONE} -- Initialization
 			if not attached actual then
 				create actual.make (1)
 				actuals [p - 1] := actual
+			end
+		end
+
+	record_actual_generics (fs: FILTER_LIST)
+			-- Record actual generics of class types found in `fs` in `actual_generics`
+			-- if the corresponding formal generic has a creation constraint.
+		local
+			i: like {FORMAL_A}.position
+			t: CL_TYPE_A
+		do
+			across
+				fs as f
+			loop
+				t := f.item
+					-- Take into account only types with creation constraint.
+				if
+					attached actual_generics [t.class_id] as actuals and then
+					attached t.generics as g
+				then
+						-- Some actual generics are involved in creation, record them.
+					from
+						i := g.count
+					until
+						i <= 0
+					loop
+						if
+							attached actuals [i - 1] and then
+							attached g [i].base_class as b and then
+							not b.is_deferred
+						then
+							record_and_propagate_actual_generic (b, i, t.base_class)
+						end
+						i := i - 1
+					end
+				end
 			end
 		end
 
@@ -321,15 +333,22 @@ feature -- Modification
 
 	mark_class_reachable (class_id: like {CLASS_C}.class_id)
 			-- Mark class of ID `class_id` as reachable, i.e. having live descendants or used in non-object calls.
+		local
+			c: CLASS_C
 		do
 			if not reachable_classes [class_id] then
 				reachable_classes [class_id] := True
-				if attached system.class_of_id (class_id).parents as ps then
+				c := system.class_of_id (class_id)
+				if attached c.parents as ps then
 					across
 						ps as p
 					loop
 						mark_class_reachable (p.item.class_id)
 					end
+				end
+					-- Add actual generics from the filters.
+				if attached c.filters as fs then
+					record_actual_generics (fs)
 				end
 			end
 		ensure then

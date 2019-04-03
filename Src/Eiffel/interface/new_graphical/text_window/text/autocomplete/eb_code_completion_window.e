@@ -728,6 +728,9 @@ feature -- Status change
 		do
 			if attached tooltip_window as w then
 				w.hide
+				contract_widget := Void
+				template_widget := Void
+				w.reset_pop_widget
 			end
 			Precursor {CODE_COMPLETION_WINDOW}
 		end
@@ -1076,39 +1079,39 @@ feature {NONE} -- Action handlers
 			end
 			show_timer.actions.wipe_out
 			show_timer.actions.extend_kamikaze (
-			agent (a_r: EV_GRID_ROW)
-			do
-				if show_completion_tooltip and then a_r.parent /= Void then
-						-- We check for row parent incase it has been subsequently removed from grid
+				agent (a_r: EV_GRID_ROW)
+					do
+						if show_completion_tooltip and then a_r.parent /= Void then
+								-- We check for row parent incase it has been subsequently removed from grid
 
-					if attached {EB_TEMPLATE_FOR_COMPLETION} a_r.data then
-							-- Template tooltip
-						if attached template_widget_from_row (a_r) as l_widget then
-								-- Tooltip window
-							if tooltip_window = Void then
-								create tooltip_window.make
-							end
-							tooltip_window.set_popup_widget (l_widget.widget)
-							if is_displayed then
-								show_tooltip (a_r)
+							if attached {EB_TEMPLATE_FOR_COMPLETION} a_r.data then
+									-- Template tooltip
+								if attached template_widget_from_row (a_r) as l_widget then
+										-- Tooltip window
+									if tooltip_window = Void then
+										create tooltip_window.make
+									end
+									tooltip_window.set_popup_widget (l_widget.widget)
+									if is_displayed then
+										show_tooltip (a_r)
+									end
+								end
+							else
+								if attached contract_widget_from_row (a_r) as l_widget then
+										-- Tooltip window
+									if tooltip_window = Void then
+										create tooltip_window.make
+									end
+									tooltip_window.set_popup_widget (l_widget.widget)
+									if is_displayed then
+										show_tooltip (a_r)
+									end
+								end
 							end
 						end
-					else
-						if attached contract_widget_from_row (a_r) as l_widget then
-								-- Tooltip window
-							if tooltip_window = Void then
-								create tooltip_window.make
-							end
-							tooltip_window.set_popup_widget (l_widget.widget)
-							if is_displayed then
-								show_tooltip (a_r)
-							end
-						end
-					end
-				end
-				show_timer.set_interval (0)
-			end (a_row)
-			)
+						show_timer.set_interval (0)
+					end (a_row)
+				)
 		end
 
 	on_key_released (ev_key: EV_KEY)

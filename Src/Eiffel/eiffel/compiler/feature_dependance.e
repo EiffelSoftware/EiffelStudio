@@ -1,5 +1,5 @@
 ﻿note
-	description: "Dependance between featuresю."
+	description: "Dependance between features."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"

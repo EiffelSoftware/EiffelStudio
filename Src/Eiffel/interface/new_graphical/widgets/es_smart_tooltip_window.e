@@ -100,6 +100,12 @@ feature -- Access
 
 feature -- Element change
 
+	reset_pop_widget
+			-- Reset `popup_widget`.
+		do
+			internal_popup_widget := Void
+		end
+
 	set_popup_widget (a_widget: like popup_widget)
 			-- Assign popup widget to be displayed when the popup button is select
 			-- Note: Already displayed widgets will have the UI replaced and reshown.

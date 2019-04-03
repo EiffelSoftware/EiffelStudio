@@ -12,7 +12,7 @@
 		<setting name="exception_trace" value="True"/>
 		<setting name="inlining" value="True"/>
 		<setting name="inlining_size" value="0"/>
-		<setting name="dead_code_removal" value="all"/>
+		<setting name="dead_code_removal" value="feature"/>
 		<capability>
 			<concurrency support="none"/>
 			<void_safety support="none"/>

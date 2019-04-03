@@ -5,7 +5,7 @@
 		<option warning="true" full_class_checking="false">
 			<assertions precondition="true"/>
 		</option>
-		<setting name="dead_code_removal" value="all"/>
+		<setting name="dead_code_removal" value="feature"/>
 		<capability>
 			<concurrency support="none"/>
 			<void_safety support="none"/>

@@ -59,7 +59,7 @@ feature -- Basic Operations
 				io.error.put_character (' ')
 				localized_print_error (a_err.description)
 			end
-			io.new_line
+			io.error.put_new_line
 		end
 
 feature {NONE} -- Output
@@ -164,7 +164,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

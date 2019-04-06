@@ -1,11 +1,11 @@
-note
+﻿note
 	description: "[
 		Arguments for ECF_RESAVE objects
 	]"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$date$";
-	revision: "$revision$"
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	ECF_RESAVE_ARGUMENT_PARSER
@@ -149,6 +149,14 @@ feature -- Access
 			Result := has_option (reset_uuid_switch)
 		end
 
+	is_quiet: BOOLEAN
+			-- Should only errors be reported?
+		require
+			is_successful: is_successful
+		once
+			Result := has_option (quiet_switch)
+		end
+
 feature {NONE} -- Usage
 
 	non_switched_argument_name: STRING = "path"
@@ -182,6 +190,7 @@ feature {NONE} -- Switches
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (schema_switch, "Eiffel Configuration File schema", True, False, "schema", "URL of the schema", False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (ecf_version_switch, "Eiffel Configuration File schema version (schema and namespace will be set from this version)", True, False, "version", "ECF schema version (formatted like [0-9]-[0-9][0-9]*-[0-9])", False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (reset_uuid_switch, "Reset UUID for *.ecf", True, False))
+			Result.extend (create {ARGUMENT_SWITCH}.make (quiet_switch, "Suppress output except for errors", True, False))
 		end
 
 	recursive_switch: STRING = "r|recursive"
@@ -194,8 +203,10 @@ feature {NONE} -- Switches
 
 	reset_uuid_switch: STRING = "reset_uuid"
 
+	quiet_switch: STRING = "quiet"
+
 ;note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

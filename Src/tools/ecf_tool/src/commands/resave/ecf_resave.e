@@ -1,17 +1,16 @@
-note
+﻿note
 	description: "[
 		Application to resave ECFs using the configuration library.
 	]"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$date$";
-	revision: "$revision$"
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	ECF_RESAVE
 
 inherit
-	ANY
 
 	ECF_SHARED_CONF_HELPERS
 
@@ -47,6 +46,7 @@ feature {NONE} -- Execution
 			namespace := a_options.namespace
 			schema := a_options.schema
 			reset_uuid_requested := a_options.reset_uuid_requested
+			is_quiet := a_options.is_quiet
 
 				-- Add specified files
 			create l_files.make (0)
@@ -90,11 +90,9 @@ feature {NONE} -- Execution
 			if attached conf_helpers.error_handler as l_eh then
 				create l_eprinter
 				if l_eh.has_warnings then
-					print ("%N")
 					l_eh.trace_warnings (l_eprinter)
 				end
 				if not l_eh.is_successful then
-					print ("%N")
 					l_eh.trace_errors (l_eprinter)
 					(create {EXCEPTIONS}).die (1)
 				end
@@ -106,6 +104,9 @@ feature {NONE} -- Execution
 	reset_uuid_requested: BOOLEAN
 			-- Reset ECF UUID?
 
+	is_quiet: BOOLEAN
+			-- Should only errors be printed?
+
 feature {NONE} -- Basic operations
 
 	resave_config (a_file_name: READABLE_STRING_32)
@@ -115,46 +116,48 @@ feature {NONE} -- Basic operations
 			l_cfg: detachable CONF_SYSTEM
 		do
 			if a_file_name /= Void and then not a_file_name.is_empty and then conf_helpers.is_file_readable (a_file_name) then
-				print ("Loading configuration file '")
-				localized_print (a_file_name)
-				print ("'... ")
+				print_message ("Loading configuration file '")
+				print_message (a_file_name)
+				print_message ("'... ")
 				l_cfg := config_system_from (a_file_name)
 				if attached config_redirection_from (a_file_name) as redir then
-					print ("Done%N")
-					print ("Saving redirection file... ")
+					print_message ("Done%N")
+					print_message ("Saving redirection file... ")
 					if reset_uuid_requested then
-						print (" (reset UUID) ")
+						print_message (" (reset UUID) ")
 						redir.set_uuid (Void) -- As we don't know if targetted ecf file is going to be resaved with new uuid, just remove UUID on redirection.
 					end
 					b := save_conf_file_with_namespace_and_schema (redir, a_file_name, namespace, schema)
-					if b then
-						print ("Done%N")
-					else
-						print ("Failed!%N")
-					end
+					print_message (if b then "Done%N" else "Failed!%N" end)
 				elseif l_cfg /= Void then
-					print ("Done%N")
-					print ("Saving configuration file... ")
+					print_message ("Done%N")
+					print_message ("Saving configuration file... ")
 					if reset_uuid_requested and not l_cfg.is_generated_uuid then
-						print (" (reset UUID) ")
+						print_message (" (reset UUID) ")
 						l_cfg.set_uuid ((create {UUID_GENERATOR}).generate_uuid)
 					end
 					b := save_conf_file_with_namespace_and_schema (l_cfg, a_file_name, namespace, schema)
-					if b then
-						print ("Done%N")
-					else
-						print ("Failed!%N")
-					end
+					print_message (if b then "Done%N" else "Failed!%N" end)
 				else
-					print ("Failed!%N")
+					print_message ("Failed!%N")
 				end
 			else
-				print ("Invalid file!%N")
+				print_message ("Invalid file!%N")
+			end
+		end
+
+feature {NONE} -- Output
+
+	print_message (m: READABLE_STRING_GENERAL)
+			-- Print `m` to standard output if enabled.
+		do
+			if not is_quiet then
+				localized_print (m)
 			end
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -21,8 +21,8 @@ feature {NONE} -- Initialization
 			end
 		end
 
-	func: FUNCTION [ANY, TUPLE, STRING]
-	func2: FUNCTION [ANY, TUPLE, INTEGER]
+	func: FUNCTION [STRING]
+	func2: FUNCTION [INTEGER]
 
 	new_string: STRING is
 		do

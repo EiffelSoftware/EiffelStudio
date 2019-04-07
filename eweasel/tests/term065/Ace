@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="test" uuid="668b649c-2e05-48dd-8ee5-d546317de7d1">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd" name="test">
 	<target name="test">
 		<description>--| Copyright (c) 1993-2006 University of Southern California and contributors.
 --| All rights reserved.
@@ -7,16 +8,20 @@
 -- Used to be 1000000 but compiler won't
 -- accept number that large any more
 </description>
-		<root cluster="root_cluster" class="test" feature="make"/>
-		<option warning="true">
-			<assertions precondition="false" postcondition="false" check="false" invariant="false" loop="false"/>
-			<warning name="vjrv" enabled="false"/>
+		<root cluster="root_cluster" class="TEST" feature="make"/>
+		<option warning="true" full_class_checking="false" syntax="obsolete" manifest_array_type="mismatch_warning">
+			<assertions/>
 			<warning name="syntax" enabled="false"/>
+			<warning name="vjrv" enabled="false"/>
 		</option>
+		<setting name="console_application" value="true"/>
 		<setting name="inlining" value="true"/>
 		<setting name="inlining_size" value="100"/>
-		<setting name="console_application" value="true"/>
 		$EWEASEL_DOTNET_SETTING
+		<capability>
+			<concurrency support="none"/>
+			<void_safety support="none"/>
+		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>
 		<cluster name="root_cluster" location="$CLUSTER\"/>
 	</target>

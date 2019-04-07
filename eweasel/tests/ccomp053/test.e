@@ -8,7 +8,7 @@ feature {NONE} -- Creation
 	make is
 			-- Run tests.
 		local
-			q: FUNCTION [TEST, TUPLE [], INTEGER]
+			q: FUNCTION [INTEGER]
 		do
 				-- Section 1: constants
 

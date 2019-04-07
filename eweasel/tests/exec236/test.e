@@ -66,10 +66,10 @@ feature -- Initialization
 
 	reordering_procedure_tests is
 		local
-			r1: ROUTINE [ANY, TUPLE [INTEGER, STRING]]
-			p1: PROCEDURE [ANY, TUPLE [INTEGER, STRING]]
-			r2: ROUTINE [ANY, TUPLE [TEST, STRING, BOOLEAN]]
-			p2: PROCEDURE [ANY, TUPLE [TEST, STRING, BOOLEAN]]
+			r1: ROUTINE [INTEGER, STRING]
+			p1: PROCEDURE [INTEGER, STRING]
+			r2: ROUTINE [TEST, STRING, BOOLEAN]
+			p2: PROCEDURE [TEST, STRING, BOOLEAN]
 			t1: TUPLE [INTEGER, STRING]
 			t2: TUPLE [TEST, STRING, BOOLEAN]
 		do
@@ -132,10 +132,10 @@ feature -- Initialization
 
 	reordering_function_tests is
 		local
-			l_f1: FUNCTION [ANY, TUPLE [INTEGER, STRING], INTEGER]
-			l_f2: FUNCTION [ANY, TUPLE [TEST, STRING, BOOLEAN], INTEGER]
-			l_r1: ROUTINE [ANY, TUPLE [INTEGER, STRING]]
-			l_r2: ROUTINE [ANY, TUPLE [TEST, STRING, BOOLEAN]]
+			l_f1: FUNCTION [INTEGER, STRING, INTEGER]
+			l_f2: FUNCTION [TEST, STRING, BOOLEAN, INTEGER]
+			l_r1: ROUTINE [INTEGER, STRING]
+			l_r2: ROUTINE [TEST, STRING, BOOLEAN]
 			t1: TUPLE [INTEGER, STRING]
 			t2: TUPLE [TEST, STRING, BOOLEAN]
 		do
@@ -191,8 +191,8 @@ feature -- Initialization
 
 	reordering_function_tests2 is
 		local
-			l_f1: FUNCTION [ANY, TUPLE [INTEGER, STRING], INTEGER]
-			l_f2: FUNCTION [ANY, TUPLE [TEST, STRING, BOOLEAN], INTEGER]
+			l_f1: FUNCTION [INTEGER, STRING, INTEGER]
+			l_f2: FUNCTION [TEST, STRING, BOOLEAN, INTEGER]
 			t1: TUPLE [INTEGER, STRING]
 			t2: TUPLE [TEST, STRING, BOOLEAN]
 			i: INTEGER
@@ -243,7 +243,7 @@ feature -- Initialization
 		local
 		do
 			print ("test1: expecting 1111 and get:   " + (
-			agent (i1, i3: INTEGER): FUNCTION [ANY, TUPLE [INTEGER, INTEGER], INTEGER]
+			agent (i1, i3: INTEGER): FUNCTION [INTEGER, INTEGER, INTEGER]
 				do
 					result := agent (a_i1, a_i2,a_i3,a_i4: INTEGER): INTEGER
 						do
@@ -279,7 +279,7 @@ feature -- Initialization
 				agent incr_test_1_p (?, False, ?, 2))
 		end
 
-	incr_1_caller (a_f: FUNCTION [ANY, TUPLE [INTEGER, STRING], STRING]; a_p: PROCEDURE [ANY, TUPLE [BOOLEAN, INTEGER]]) is
+	incr_1_caller (a_f: FUNCTION [INTEGER, STRING, STRING]; a_p: PROCEDURE [BOOLEAN, INTEGER]) is
 		local
 			t1: TUPLE [INTEGER, STRING]
 			t2: TUPLE [BOOLEAN, INTEGER]
@@ -302,7 +302,7 @@ feature -- Initialization
 
 	test_precond is
 		local
-			p: PROCEDURE [ANY, TUPLE]
+			p: PROCEDURE
 			level: INTEGER
 		do
 			neutral ($MELT13)
@@ -329,7 +329,7 @@ feature -- Initialization
 		end
 
 
-	pebble_function: FUNCTION [ANY, TUPLE, ANY]
+	pebble_function: FUNCTION [ANY]
 
 	test_member_agent_call is
 		do

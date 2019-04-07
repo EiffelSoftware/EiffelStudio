@@ -152,7 +152,7 @@ feature {NONE} -- Output
 			count_incremented: count = old count + 1
 		end
 
-	report_violation (a: PROCEDURE [ANY, TUPLE])
+	report_violation (a: PROCEDURE)
 		require
 			a_attached: a /= Void
 		local

@@ -9,9 +9,9 @@ feature {NONE} -- Creation
 			-- Run test.
 		local
 			h: HASH_TABLE [INTEGER, INTEGER]
-			p: PROCEDURE [ANY, TUPLE]
-			f: FUNCTION [ANY, TUPLE, INTEGER]
-			i: PROCEDURE [ANY, TUPLE [INTEGER]]
+			p: PROCEDURE
+			f: FUNCTION [INTEGER]
+			i: PROCEDURE [INTEGER]
 		do
 			$REGISTER_TYPES
 			create h.make (1)

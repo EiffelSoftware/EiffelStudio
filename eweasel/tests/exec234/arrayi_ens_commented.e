@@ -433,7 +433,7 @@ feature -- Element change
 
 feature -- Iteration
 
-	do_all (action: PROCEDURE [ANY, TUPLE [G]]) is
+	do_all (action: PROCEDURE [G]) is
 			-- Apply `action' to every non-void item.
 			-- Semantics not guaranteed if `action' changes the structure;
 			-- in such a case, apply iterator to clone of structure instead.
@@ -457,7 +457,7 @@ feature -- Iteration
 			end
 		end
 
-	do_if (action: PROCEDURE [ANY, TUPLE [G]]; test: FUNCTION [ANY, TUPLE [G], BOOLEAN]) is
+	do_if (action: PROCEDURE [G]; test: FUNCTION [G, BOOLEAN]) is
 			-- Apply `action' to every non-void item that satisfies `test'.
 			-- Semantics not guaranteed if `action' or `test' changes the structure;
 			-- in such a case, apply iterator to clone of structure instead.
@@ -484,7 +484,7 @@ feature -- Iteration
 			end
 		end
 
-	there_exists (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN is
+	there_exists (test: FUNCTION [G, BOOLEAN]): BOOLEAN is
 			-- Is `test' true for at least one item?
 		require
 			test_not_void: test /= Void
@@ -506,7 +506,7 @@ feature -- Iteration
 			end
 		end
 
-	for_all (test: FUNCTION [ANY, TUPLE [G], BOOLEAN]): BOOLEAN is
+	for_all (test: FUNCTION [G, BOOLEAN]): BOOLEAN is
 			-- Is `test' true for all non-void items?
 		require
 			test_not_void: test /= Void
@@ -800,7 +800,7 @@ invariant
 
 indexing
 	library:	"EiffelBase: Library of reusable components for Eiffel."
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2019 University of Southern California and contributors.
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -810,10 +810,4 @@ indexing
 			 Customer support http://support.eiffel.com
 		]"
 
-
-
-
-
-
-
-end -- class ARRAY
+end

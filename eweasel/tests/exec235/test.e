@@ -1,5 +1,4 @@
 indexing
-	description: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -108,9 +107,9 @@ feature
 				10, "92"])
 		end
 
-	gen_caller (t: TUPLE; p: PROCEDURE [ANY, TUPLE]) is
+	gen_caller (t: TUPLE; p: PROCEDURE) is
 		local
-			l_p: PROCEDURE [ANY, TUPLE]
+			l_p: PROCEDURE
 		do
 			neutral ($MELT9)
 			l_p := p
@@ -120,9 +119,9 @@ feature
 			end
 		end
 
-	gen_item (t: TUPLE; p: FUNCTION [ANY, TUPLE, STRING]): STRING is
+	gen_item (t: TUPLE; p: FUNCTION [STRING]): STRING is
 		local
-			l_f: FUNCTION [ANY, TUPLE, STRING]
+			l_f: FUNCTION [STRING]
 		do
 			neutral ($MELT10)
 			l_f := p

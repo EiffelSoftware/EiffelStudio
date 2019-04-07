@@ -1,5 +1,6 @@
 
 --| Copyright (c) 1993, David Hollenberg, USC Information Sciences Institute
+--| Copyright (c) 2019, Eiffel Software
 --| All rights reserved.
 
 class 
@@ -12,10 +13,10 @@ feature -- Initialization
 
 	make
 		local
-			procedure: PROCEDURE[ANY,TUPLE[G]]
-			function: FUNCTION[ANY,TUPLE[G],G]
-			query: FUNCTION[ANY,TUPLE,G]
-			predicate: PREDICATE[ANY,TUPLE]
+			procedure: PROCEDURE[G]
+			function: FUNCTION[G,G]
+			query: FUNCTION[G]
+			predicate: PREDICATE
 			l_g: G
 		do
 			create l_g.default_create

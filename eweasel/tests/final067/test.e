@@ -7,7 +7,7 @@ feature {NONE} -- Initialization
 
 	make
 		local
-			f: FUNCTION [ANY, TUPLE, ANY]
+			f: FUNCTION [ANY]
 		do
 			f := agent : INTEGER do Result := -1 end
 			io.put_string (f.item (Void).out)

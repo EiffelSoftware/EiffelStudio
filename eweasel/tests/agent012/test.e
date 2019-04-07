@@ -27,12 +27,12 @@ feature
 			io.put_new_line
 		end
 
-	do_it_s (a_action: PROCEDURE [ANY, TUPLE [STRING]])
+	do_it_s (a_action: PROCEDURE [STRING])
 		do
 			a_action.call (["foo"])
 		end
 
-	do_it_i (a_action: PROCEDURE [ANY, TUPLE [INTEGER]])
+	do_it_i (a_action: PROCEDURE [INTEGER])
 		do
 			a_action.call ([3])
 		end

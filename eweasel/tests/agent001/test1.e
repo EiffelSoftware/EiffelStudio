@@ -11,6 +11,6 @@ feature
 			query.call (Void)
 		end
 
-	query: FUNCTION [ANY, TUPLE, ANY]
+	query: FUNCTION [ANY]
 
 end

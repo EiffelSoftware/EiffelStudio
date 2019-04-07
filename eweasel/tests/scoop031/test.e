@@ -19,10 +19,10 @@ feature {NONE} -- Creation
 
 feature {NONE} -- Access
 
-	item: separate FUNCTION [ANY, TUPLE, INTEGER]
-	next: separate FUNCTION [ANY, TUPLE, INTEGER]
-	move: separate PROCEDURE [ANY, TUPLE]
-	real: separate FUNCTION [ANY, TUPLE, REAL_64]
+	item: separate FUNCTION [INTEGER]
+	next: separate FUNCTION [INTEGER]
+	move: separate PROCEDURE
+	real: separate FUNCTION [REAL_64]
 
 	initialize (a: separate A)
 		do

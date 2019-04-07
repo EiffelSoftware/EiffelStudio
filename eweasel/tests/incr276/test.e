@@ -8,7 +8,7 @@ feature -- Initialization
 
 	make is
 		local
-			p: PROCEDURE [ANY, TUPLE]
+			p: PROCEDURE
 		do
 			p := agent f (1, ?)
 --			p := agent f
@@ -20,5 +20,4 @@ feature -- Initialization
 
 		end
 
-end -- class ROOT_CLASS
-
+end

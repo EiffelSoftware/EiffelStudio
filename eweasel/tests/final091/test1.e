@@ -5,7 +5,7 @@ inherit
 feature
 	try
 		local
-			l_action: PROCEDURE [ANY, TUPLE]
+			l_action: PROCEDURE
 		do
 			l_action := agent
 				do

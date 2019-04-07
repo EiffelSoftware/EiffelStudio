@@ -102,7 +102,7 @@ feature {NONE} -- Test
 	test_number: INTEGER
 			-- Number of the test
 
-	test (c: attached FUNCTION [attached ANY, TUPLE [detachable TEST], detachable TEST]; e: BOOLEAN)
+	test (c: attached FUNCTION [detachable TEST, detachable TEST]; e: BOOLEAN)
 		local
 			i: INTEGER
 		do

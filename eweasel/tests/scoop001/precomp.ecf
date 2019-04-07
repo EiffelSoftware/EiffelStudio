@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-7-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-7-0 http://www.eiffel.com/developers/xml/configuration-1-7-0.xsd" name="precomp" uuid="E22AC482-DD2A-43DD-BCAB-83C9C9B90F70" library_target="precomp">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd" name="precomp" uuid="E22AC482-DD2A-43DD-BCAB-83C9C9B90F70" library_target="precomp">
 	<target name="precomp">
 		<root class="A"/>
-		<option full_class_checking="true" is_attached_by_default="true" void_safety="all">
+		<option syntax="transitional" manifest_array_type="mismatch_warning">
 			<assertions precondition="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
-		<setting name="concurrency" value="scoop"/>
 		$EWEASEL_DOTNET_SETTING
-		<library name="base" location="$ISE_LIBRARY/library/base/base-safe.ecf"/>
-		<cluster name="precomp" location="$CLUSTER/precomp"/>
+		<capability>
+			<void_safety support="transitional" use="transitional"/>
+		</capability>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<cluster name="precomp" location="$CLUSTER\precomp\"/>
 	</target>
 </system>

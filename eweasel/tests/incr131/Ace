@@ -1,18 +1,23 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="test" uuid="42fa988f-1406-4bf2-b2a2-7a56f5ec7aaf">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd" name="test">
 	<target name="test">
 		<description>--| Copyright (c) 1993-2006 University of Southern California and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
 </description>
-		<root cluster="root_cluster" class="test" feature="make"/>
-		<option warning="true">
-			<assertions precondition="false" postcondition="false" check="false" invariant="false" loop="false"/>
-			<warning name="vjrv" enabled="false"/>
+		<root cluster="root_cluster" class="TEST" feature="make"/>
+		<option warning="true" full_class_checking="false" syntax="obsolete" manifest_array_type="mismatch_warning">
+			<assertions/>
 			<warning name="syntax" enabled="false"/>
+			<warning name="vjrv" enabled="false"/>
 		</option>
 		<setting name="console_application" value="true"/>
 		$EWEASEL_DOTNET_SETTING
+		<capability>
+			<concurrency support="none"/>
+			<void_safety support="none"/>
+		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>
 		<cluster name="root_cluster" location="$CLUSTER\"/>
 	</target>

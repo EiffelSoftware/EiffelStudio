@@ -1,5 +1,4 @@
 indexing
-	description: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -21,7 +20,7 @@ feature
 			io.new_line
 		end
 
-	for_all (action: PROCEDURE [ANY, TUPLE]) is
+	for_all (action: PROCEDURE) is
 			-- Iterate `action' on every managed window.
 		do
 			action.call ([managed_windows.item])

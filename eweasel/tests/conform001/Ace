@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="test" uuid="94afd127-a2eb-4816-9fb5-c13e497fa435">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd" name="test">
 	<target name="test">
 		<root class="TEST" feature="make"/>
-		<option warning="false" is_void_safe="true" is_attached_by_default="false" syntax_level="1">
+		<option full_class_checking="false" is_attached_by_default="false" syntax="transitional" manifest_array_type="mismatch_warning">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
-		<precompile name="precompile" location="$PRECOMPILED_BASE_SAFE"/>
 		$EWEASEL_DOTNET_SETTING
+		<capability>
+			<concurrency support="none"/>
+			<void_safety support="transitional" use="transitional"/>
+		</capability>
+		<precompile name="precompile" location="$PRECOMPILED_BASE_SAFE"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<cluster name="root_cluster" location="$CLUSTER\"/>
 	</target>

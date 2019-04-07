@@ -1,5 +1,5 @@
 indexing
-	description	: "System's root class"
+	description: "System's root class"
 
 class
 	TEST
@@ -40,10 +40,10 @@ feature -- Initialization
 	
 	tests_simple is
 		local
-			f1: FUNCTION [ANY, TUPLE, INTEGER]
-			f2: FUNCTION [ANY, TUPLE [STRING, STRING], STRING]
-			p1: PROCEDURE [ANY, TUPLE]
-			p2: PROCEDURE [ANY, TUPLE [STRING, STRING]]
+			f1: FUNCTION [INTEGER]
+			f2: FUNCTION [STRING, STRING, STRING]
+			p1: PROCEDURE
+			p2: PROCEDURE [STRING, STRING]
 		do
 			f1 := agent: INTEGER
 				do
@@ -80,7 +80,7 @@ feature -- Initialization
 	test_function_hard is
 		do
 			print (
-				(agent: FUNCTION [ANY, TUPLE [STRING], STRING]
+				(agent: FUNCTION [STRING, STRING]
 							do
 								Result := (agent (s1, s2: STRING): STRING
 									do
@@ -151,7 +151,7 @@ feature -- Initialization
 
 	test_procedure_with_locals is
 		local
-			p: PROCEDURE [ANY, TUPLE [INTEGER, STRING]]
+			p: PROCEDURE [INTEGER, STRING]
 		do
 			p := agent (a_1, a_2: INTEGER; a_3, a_4: STRING) 
 				require 
@@ -208,6 +208,4 @@ feature -- Initialization
 			print ("hallo from agent created in agent_on_parameter%N")
 		end
 		
-
-end -- class TEST
-
+end

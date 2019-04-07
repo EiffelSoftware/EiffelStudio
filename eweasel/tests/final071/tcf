@@ -9,7 +9,7 @@
 test_name 	finalize-all-classes-true
 test_description Finalizing a system when the configuration file specifies all_classes="true" causes the compiler to crash, whether dead code removal is enabled or not
 
-define		DEAD_CODE_REMOVAL "true"
+define		DEAD_CODE_REMOVAL "none"
 copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e
 compile_final
@@ -20,7 +20,7 @@ c_compile_result ok
 
 cleanup_compile
 
-define		DEAD_CODE_REMOVAL "false"
+define		DEAD_CODE_REMOVAL "all"
 copy_sub 	Ace $TEST Ace
 compile_final
 compile_result 	ok

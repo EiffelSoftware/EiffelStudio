@@ -1,5 +1,5 @@
 indexing
-	description	: "System's root class"
+	description: "System's root class"
 
 class
 	TEST
@@ -16,10 +16,10 @@ feature -- Initialization
 	
 	tests_simple is
 		local
-			f1: FUNCTION [ANY, TUPLE, INTEGER]
-			f2: FUNCTION [ANY, TUPLE [STRING, STRING], STRING]
-			p1: PROCEDURE [ANY, TUPLE]
-			p2: PROCEDURE [ANY, TUPLE [STRING, STRING]]
+			f1: FUNCTION [INTEGER]
+			f2: FUNCTION [STRING, STRING, STRING]
+			p1: PROCEDURE
+			p2: PROCEDURE [STRING, STRING]
 		do
 		end
 	
@@ -43,7 +43,7 @@ feature -- Initialization
 
 	test_procedure_with_locals is
 		local
-			p: PROCEDURE [ANY, TUPLE [INTEGER, STRING]]
+			p: PROCEDURE [INTEGER, STRING]
 		do
 		end
 		
@@ -54,6 +54,4 @@ feature -- Initialization
 		do
 		end
 		
-
-end -- class ROOT_CLASS
-
+end

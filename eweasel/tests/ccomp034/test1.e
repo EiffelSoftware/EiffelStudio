@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2019 University of Southern California and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -12,7 +12,7 @@ feature
 			p := agent wimp
 		end
 
-	p: PROCEDURE [TEST1, TUPLE]
+	p: PROCEDURE
 
 	wimp is
 		deferred

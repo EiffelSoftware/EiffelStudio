@@ -1,5 +1,4 @@
 indexing
-	description: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -35,7 +34,7 @@ feature
 			io.new_line
 		end
 
-	receive_f (a_f: FUNCTION [ANY, TUPLE [INTEGER, G], G]; a1: INTEGER; a2: G) is
+	receive_f (a_f: FUNCTION [INTEGER, G, G]; a1: INTEGER; a2: G) is
 		local
 			t: TUPLE [INTEGER, G]
 		do
@@ -52,7 +51,7 @@ feature
 			io.new_line
 		end
 
-	receive_p (a_p: PROCEDURE [ANY, TUPLE [INTEGER, G]]; a1: INTEGER; a2: G) is
+	receive_p (a_p: PROCEDURE [INTEGER, G]; a1: INTEGER; a2: G) is
 		local
 			t: TUPLE [INTEGER, G]
 		do

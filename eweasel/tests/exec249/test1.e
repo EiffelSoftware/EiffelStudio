@@ -31,7 +31,7 @@ feature
 			Result := True
 		end
 
-	func: FUNCTION [ANY, TUPLE [STRING, BOOLEAN, BOOLEAN, BOOLEAN], BOOLEAN]
+	func: FUNCTION [STRING, BOOLEAN, BOOLEAN, BOOLEAN, BOOLEAN]
 
 	can_complete (a_key: STRING; b1, b2, b3: BOOLEAN): BOOLEAN is
 			--

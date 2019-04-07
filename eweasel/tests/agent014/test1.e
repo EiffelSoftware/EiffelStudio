@@ -8,7 +8,7 @@ feature
 
 	make
 		local
-			p: PROCEDURE [ANY, TUPLE [K]]
+			p: PROCEDURE [K]
 			l_node: K
 		do
 			p.call ([l_node])

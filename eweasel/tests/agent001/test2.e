@@ -12,6 +12,6 @@ create
 
 feature
 
-	query: FUNCTION [ANY, TUPLE, INTEGER]
+	query: FUNCTION [INTEGER]
 
 end

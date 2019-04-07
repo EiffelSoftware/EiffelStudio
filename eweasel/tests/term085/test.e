@@ -1,5 +1,4 @@
-
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2019 University of Southern California and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -14,7 +13,7 @@ feature
 			try (agent weasel)
   		end
 	
-	try (p: PROCEDURE [ANY, TUPLE]) is
+	try (p: PROCEDURE) is
 		local
 			s: ARRAY [STRING]
 		do

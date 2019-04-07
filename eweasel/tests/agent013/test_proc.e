@@ -1,8 +1,8 @@
 class
-	TEST_PROC [BASE_TYPE, OPEN_ARGS -> TUPLE create default_create end]
+	TEST_PROC [OPEN_ARGS -> TUPLE create default_create end]
 
 inherit
-	PROCEDURE [BASE_TYPE, OPEN_ARGS]
+	PROCEDURE [OPEN_ARGS]
 		redefine
 			call
 		end
@@ -24,7 +24,7 @@ feature -- Initialization
 feature -- Access
 
 	unbound_arguments: TUPLE
-	unbound_procedure: PROCEDURE [ANY, TUPLE]
+	unbound_procedure: PROCEDURE
 
 feature -- Basic operations
 

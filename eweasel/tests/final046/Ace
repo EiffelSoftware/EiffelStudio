@@ -1,23 +1,28 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-0-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-0-0 http://www.eiffel.com/developers/xml/configuration-1-0-0.xsd" name="test" uuid="4fe764c2-5db4-4bc7-99fd-e5bb1128e137">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd" name="test">
 	<target name="test">
 		<description>--| Copyright (c) 1993-2006 University of Southern California and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
 </description>
-		<root cluster="root_cluster" class="test" feature="make"/>
-		<option warning="true">
-			<assertions precondition="true" postcondition="false" check="false" invariant="false" loop="false"/>
+		<root cluster="root_cluster" class="TEST" feature="make"/>
+		<option warning="true" full_class_checking="false" syntax="obsolete" manifest_array_type="mismatch_warning">
+			<assertions precondition="true"/>
 			<warning name="syntax" enabled="false"/>
 		</option>
-		<setting name="inlining" value="false"/>
-		<setting name="multithreaded" value="true"/>
 		<setting name="console_application" value="true"/>
-		<precompile name="precompile" location="$PRECOMPILED_BASE_MT"/>
+		<setting name="inlining" value="false"/>
 		$EWEASEL_DOTNET_SETTING
+		<capability>
+			<concurrency support="thread" use="thread"/>
+			<void_safety support="none"/>
+		</capability>
+		<precompile name="precompile" location="$PRECOMPILED_BASE_MT"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf" use_application_options="true">
-			<option warning="false"/>
+			<option>
+			</option>
 		</library>
 		<cluster name="root_cluster" location="$CLUSTER\"/>
 	</target>

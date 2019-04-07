@@ -7,12 +7,9 @@ feature -- Access
 			interface (<<agent f, agent g>>,  << pid($f), pid($g) >>)
 		end
 
-	interface (b: ARRAY [FUNCTION [ANY, TUPLE, INTEGER]]; a: ARRAY [POINTER]) is
-			--
+	interface (b: ARRAY [FUNCTION [INTEGER]]; a: ARRAY [POINTER]) is
 		do
-
 		end
-
 
 	f: INTEGER is
 		do

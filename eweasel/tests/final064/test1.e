@@ -13,9 +13,8 @@ feature
 
 feature {NONE} -- Implementation
 
-	bad: FUNCTION [ANY, TUPLE [REAL_64], INTEGER]
+	bad: FUNCTION [REAL_64, INTEGER]
 			-- Agent used to compute the hash-code
-
 
 	g 
 		deferred

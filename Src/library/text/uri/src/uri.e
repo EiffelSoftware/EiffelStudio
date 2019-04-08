@@ -299,6 +299,37 @@ feature -- Access
 			-- Host name.
 			--| RFC3986: host = IP-literal / IPv4address / reg-name
 
+	unicode_host: detachable STRING_32
+		local
+			lst: LIST [READABLE_STRING_8]
+			s: READABLE_STRING_8
+			l_is_first: BOOLEAN
+		do
+			if attached host as h then
+				create Result.make (h.count)
+				lst := h.split ('.')
+				l_is_first := True
+				across
+					lst as ic
+				loop
+					s := ic.item
+					if l_is_first then
+						l_is_first := False
+					else
+						Result.append_character ('.')
+					end
+					if
+						s.count > 4 and then s.head (4).is_case_insensitive_equal_general ("xn--") and then
+						attached {PUNYCODE}.decoded_string (s.substring (5, s.count)) as pc
+					then
+						Result.append_string (pc)
+					else
+						Result.append_string_general (s)
+					end
+				end
+			end
+		end
+
 	port: INTEGER
 			-- Associated port, if `0' this is not defined.
 			-- RFC3986: port = *DIGIT
@@ -691,6 +722,69 @@ feature -- Element Change
 			end
 		ensure
 			hostname_set: is_same_string (v, host)
+		end
+
+	set_unicode_hostname (v: detachable READABLE_STRING_GENERAL)
+			-- Set `host' to `v'
+		require
+			is_valid_host (v)
+		local
+			pc: STRING_8
+			l_is_first: BOOLEAN
+			h: STRING_32
+			s: READABLE_STRING_GENERAL
+			i,n: INTEGER
+			l_has_unicode: BOOLEAN
+		do
+			if v = Void then
+				host := Void
+			else
+					-- Check if `v` has non ascii character.
+				from
+					i := 1
+					n := v.count
+					l_has_unicode := False
+				until
+					i > n or l_has_unicode
+				loop
+					l_has_unicode := v.code (i) > 127 --| note: 127 = {CHARACTER_8}.max_ascii_value
+					i := i + 1
+				end
+				if l_has_unicode then
+					l_is_first := True
+					create h.make (v.count)
+					across
+						v.split ('.') as ic
+					loop
+						if l_is_first then
+							l_is_first := False
+						else
+							h.append_character ('.')
+						end
+						s := ic.item
+						from
+							i := 1
+							n := s.count
+							l_has_unicode := False
+						until
+							i > n or l_has_unicode
+						loop
+							l_has_unicode := s.code (i) >= 128
+							i := i + 1
+						end
+						if l_has_unicode then
+							pc := {PUNYCODE}.encoded_string (s)
+							h.append ("xn--")
+							h.append (pc)
+						else
+							h.append_string_general (s)
+						end
+					end
+					create host.make_from_string (h)
+				else
+					create host.make_from_string (v.to_string_8)
+				end
+			end
 		end
 
 	set_port (v: like port)
@@ -1186,7 +1280,7 @@ feature -- Status report
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

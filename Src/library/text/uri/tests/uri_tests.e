@@ -457,8 +457,31 @@ feature -- Tests
 
 			uri.set_unencoded_path ({STRING_32} "/summer/été/message/上海/extra/")
 			assert ("http://foo.com/summer/%%C3%%A9t%%C3%%A9/message/%%E4%%B8%%8A%%E6%%B5%%B7/extra/", uri.string.same_string ("http://foo.com/summer/%%C3%%A9t%%C3%%A9/message/%%E4%%B8%%8A%%E6%%B5%%B7/extra/"))
+		end
+
+	test_unicode_host
+		local
+			uri: URI
+		do
+			create uri.make_from_string ("http://xn--bcher-kva.xn--p1ai/")
+			assert ("unicode hostname", attached uri.unicode_host as h and then h.same_string_general ({STRING_32} "bücher.рф"))
+
+			create uri.make_from_string ("http://foo.bar.com/")
+			assert ("unicode hostname", attached uri.unicode_host as h and then h.same_string_general ({STRING_32} "foo.bar.com"))
 
 
+			create uri.make_from_string ("http://foo.com")
+			uri.set_unicode_hostname ({STRING_32} "bücher.рф")
+			assert ("hostname", attached uri.host as h and then h.same_string ("xn--bcher-kva.xn--p1ai"))
+			assert ("unicode hostname", attached uri.unicode_host as h and then h.same_string_general ({STRING_32} "bücher.рф"))
+
+			uri.set_unicode_hostname ({STRING_32} "foo.рф.com")
+			assert ("hostname", attached uri.host as h and then h.same_string ("foo.xn--p1ai.com"))
+			assert ("unicode hostname", attached uri.unicode_host as h and then h.same_string_general ({STRING_32} "foo.рф.com"))
+
+			uri.set_unicode_hostname ({STRING_32} "foo.bar.com")
+			assert ("hostname", attached uri.host as h and then h.same_string ("foo.bar.com"))
+			assert ("unicode hostname", attached uri.unicode_host as h and then h.same_string_general ({STRING_32} "foo.bar.com"))
 		end
 
 	test_nuts

@@ -300,6 +300,9 @@ feature -- Access
 			--| RFC3986: host = IP-literal / IPv4address / reg-name
 
 	unicode_host: detachable STRING_32
+			-- Unicode host (following IDNA specification).
+		note
+			EIS: "name=RFC3490 Internationalizing Domain Names in Applications (IDNA)", "protocol=URI", "src=https://tools.ietf.org/html/rfc3490"
 		local
 			lst: LIST [READABLE_STRING_8]
 			s: READABLE_STRING_8
@@ -725,7 +728,9 @@ feature -- Element Change
 		end
 
 	set_unicode_hostname (v: detachable READABLE_STRING_GENERAL)
-			-- Set `host' to `v'
+			-- Set `host' based on encoded value from `v'.
+		note
+			EIS: "name=RFC3490 Internationalizing Domain Names in Applications (IDNA)", "protocol=URI", "src=https://tools.ietf.org/html/rfc3490"
 		require
 			is_valid_host (v)
 		local

@@ -355,7 +355,7 @@ feature {NONE} -- Implementation
 					else
 						n := n + (i / (di + 1)).truncated_to_integer_64.to_natural_32
 						i := i \\ (di + 1)
-						dst.insert_code (n, i.to_integer_32 + 1)
+						dst.insert_character (n.to_character_32, i.to_integer_32 + 1)
 						i := i + 1
 					end
 					di := di + 1

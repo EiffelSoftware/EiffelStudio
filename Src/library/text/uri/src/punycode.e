@@ -1,8 +1,11 @@
 note
-	description: "Summary description for {PUNYCODE}."
-	author: ""
+	description: "[
+			Punycode: A Bootstring encoding of Unicode
+       		for Internationalized Domain Names in Applications (IDNA)
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
+	EIS: "name=RFC3492 Punycode: A Bootstring encoding of Unicode for Internationalized Domain Names in Applications (IDNA)", "protocol=URI", "src=https://tools.ietf.org/html/rfc3492"
 
 class
 	PUNYCODE
@@ -10,6 +13,7 @@ class
 feature -- Access
 
 	decoded_string (s: READABLE_STRING_GENERAL): STRING_32
+			-- String decoded from punycode `s`.
 		local
 			n: NATURAL_32
 		do
@@ -20,6 +24,7 @@ feature -- Access
 		end
 
 	encoded_string (s: READABLE_STRING_GENERAL): STRING_8
+			-- Encoded string `s` using punycode encoding.
 		local
 			n: NATURAL_32
 		do
@@ -29,7 +34,7 @@ feature -- Access
 			instance_free: class
 		end
 
-feature -- Constants
+feature {NONE} -- Constants
 
 	base: NATURAL_32 = 36
 	tmin: NATURAL_32 = 1
@@ -43,6 +48,7 @@ feature -- Constants
 feature {NONE} -- Implementation
 
 	adapt_bias (delta: NATURAL_32; n_points: NATURAL_32; is_first: BOOLEAN): NATURAL_32
+			-- Bias adaptation function.
 		local
   			k: NATURAL_32
   			d: REAL_64
@@ -73,6 +79,7 @@ feature {NONE} -- Implementation
 		end
 
 	encoded_digit (c: NATURAL_32): CHARACTER_8
+			-- Encoded character from code `c`.
 		require
 			c >= 0 and c <= base - tmin
 		local
@@ -127,6 +134,7 @@ feature {NONE} -- Implementation
 		end
 
 	punycode_encode (src: READABLE_STRING_GENERAL; dst: STRING_8): NATURAL_32
+			-- Encode `src` into `dst` using PUNYCODE encoding, and return the number of written ASCII characters.
 		local
 			srclen: NATURAL_32
 			b,h: NATURAL_32
@@ -229,6 +237,7 @@ feature {NONE} -- Implementation
 		end
 
 	decoded_digit (v: NATURAL_32): NATURAL_32
+			-- Decoded character code from digit `v`.
 		local
 			c: CHARACTER_32
 		do
@@ -247,6 +256,7 @@ feature {NONE} -- Implementation
 		end
 
 	punycode_decode (src: READABLE_STRING_GENERAL; dst: STRING_32): NATURAL_32
+			-- Decode `src` into `dst` using PUNYCODE encoding, and return the number of written bytes.	
 		local
   			b, n, t: NATURAL_32
   			i, k, w: NATURAL_32

@@ -28,6 +28,7 @@ note
 	EIS: "name=mailto-RFC2368", "protocol=URI", "src=http://tools.ietf.org/html/rfc2368"
 	EIS: "name=ipv6-RFC2373", "protocol=URI", "src=http://tools.ietf.org/html/rfc2373"
 	EIS: "name=ipv6-RFC2373 in URL", "protocol=URI", "src=http://tools.ietf.org/html/rfc2732"
+	EIS: "name=RFC3490 Internationalizing Domain Names in Applications (IDNA)", "protocol=URI", "src=https://tools.ietf.org/html/rfc3490"
 
 class
 	URI
@@ -157,19 +158,13 @@ feature {NONE} -- Initialization
 			if is_valid then
 				check_validity (True)
 			end
-		ensure
-			same_if_valid: is_valid and not is_corrected implies a_string.starts_with (string)
 		end
 
-	make_with_details (a_scheme: READABLE_STRING_8; a_host: detachable READABLE_STRING_8; a_path: READABLE_STRING_8)
+	make_with_details (a_scheme: READABLE_STRING_8; a_host: detachable READABLE_STRING_GENERAL; a_path: READABLE_STRING_8)
 			-- Create Current uri from scheme `a_scheme', host `a_host' and path `a_path'.
 		do
 			create scheme.make_from_string (a_scheme)
-			if a_host /= Void then
-				create host.make_from_string (a_host)
-			else
-				host := Void
-			end
+			set_hostname (a_host)
 			create path.make_from_string (a_path)
 		end
 
@@ -299,8 +294,17 @@ feature -- Access
 			-- Host name.
 			--| RFC3986: host = IP-literal / IPv4address / reg-name
 
-	unicode_host: detachable STRING_32
-			-- Unicode host (following IDNA specification).
+	idn_hostname: detachable IMMUTABLE_STRING_8
+			-- Hostname, formatted with Punycode according to the IDN standard (RFC 3490).
+			--| RFC3490 Internationalizing Domain Names in Applications (IDNA):
+			--| see https://tools.ietf.org/html/rfc3490
+		do
+			Result := host
+		end
+
+	hostname: detachable STRING_32
+			-- Unicode hostname.
+			-- Decoded IDN value from `host`.
 		note
 			EIS: "name=RFC3490 Internationalizing Domain Names in Applications (IDNA)", "protocol=URI", "src=https://tools.ietf.org/html/rfc3490"
 		local
@@ -713,22 +717,8 @@ feature -- Element Change
 			userinfo_set: is_same_string (v, userinfo)
 		end
 
-	set_hostname (v: detachable READABLE_STRING_8)
-			-- Set `host' to `v'
-		require
-			is_valid_host (v)
-		do
-			if v = Void then
-				host := Void
-			else
-				create host.make_from_string (v)
-			end
-		ensure
-			hostname_set: is_same_string (v, host)
-		end
-
-	set_unicode_hostname (v: detachable READABLE_STRING_GENERAL)
-			-- Set `host' based on encoded value from `v'.
+	set_hostname (v: detachable READABLE_STRING_GENERAL)
+			-- Set `host` from string `v` formatted with Punycode according to the IDN standard if needed.
 		note
 			EIS: "name=RFC3490 Internationalizing Domain Names in Applications (IDNA)", "protocol=URI", "src=https://tools.ietf.org/html/rfc3490"
 		require
@@ -736,58 +726,41 @@ feature -- Element Change
 		local
 			pc: STRING_8
 			l_is_first: BOOLEAN
-			h: STRING_32
+			h: STRING_8
 			s: READABLE_STRING_GENERAL
-			i,n: INTEGER
-			l_has_unicode: BOOLEAN
 		do
-			if v = Void then
-				host := Void
-			else
-					-- Check if `v` has non ascii character.
-				from
-					i := 1
-					n := v.count
-					l_has_unicode := False
-				until
-					i > n or l_has_unicode
-				loop
-					l_has_unicode := v.code (i) > 127 --| note: 127 = {CHARACTER_8}.max_ascii_value
-					i := i + 1
-				end
-				if l_has_unicode then
-					l_is_first := True
-					create h.make (v.count)
-					across
-						v.split ('.') as ic
-					loop
-						if l_is_first then
-							l_is_first := False
-						else
-							h.append_character ('.')
-						end
-						s := ic.item
-						from
-							i := 1
-							n := s.count
-							l_has_unicode := False
-						until
-							i > n or l_has_unicode
-						loop
-							l_has_unicode := s.code (i) >= 128
-							i := i + 1
-						end
-						if l_has_unicode then
-							pc := {PUNYCODE}.encoded_string (s)
-							h.append ("xn--")
-							h.append (pc)
-						else
-							h.append_string_general (s)
-						end
-					end
-					create host.make_from_string (h)
+			host := Void
+			if v /= Void then
+				if v.starts_with ("xn--") and then is_ascii_string (v) then
+						-- note: if starts with xn-- and has non ASCII character ...
+						--       this is wrong, consider it as normal domain name.
+					create host.make_from_string (v.to_string_8.as_lower)
 				else
-					create host.make_from_string (v.to_string_8)
+					if is_ascii_string (v) then
+						create host.make_from_string (v.to_string_8.as_lower)
+					else
+						l_is_first := True
+						create h.make (v.count)
+						across
+							v.split ('.') as ic
+						loop
+							if l_is_first then
+								l_is_first := False
+							else
+								h.append_character ('.')
+							end
+							s := ic.item
+							if is_ascii_string (s) then
+								h.append (s.to_string_8)
+							else
+								pc := {PUNYCODE}.encoded_string (s)
+								h.append ("xn--")
+								h.append (pc)
+							end
+						end
+						check h_is_lower_case: h.same_string (h.as_lower) end
+						create host.make_from_string (h)
+					end
 				end
 			end
 		end
@@ -1197,6 +1170,23 @@ feature -- Status report
 					end
 					i := i + 1
 				end
+			end
+		end
+
+	is_ascii_string (a_string: READABLE_STRING_GENERAL): BOOLEAN
+			-- Is `a_string` containing only ASCII characters?
+		local
+			i,n: INTEGER
+		do
+			from
+				i := 1
+				n := a_string.count
+				Result := True
+			until
+				i > n or not Result
+			loop
+				Result := a_string.code (i) <= 127 --| note: 127 = {CHARACTER_8}.max_ascii_value
+				i := i + 1
 			end
 		end
 

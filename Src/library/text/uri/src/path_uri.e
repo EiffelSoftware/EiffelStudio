@@ -88,7 +88,7 @@ feature {NONE} -- Initialization
 			p := a_path
 			if a_path.is_absolute then
 				is_abs := True
-				create host.make_empty
+				set_hostname ("")
 			end
 			file_path := p
 			set_scheme ("file")
@@ -246,7 +246,7 @@ feature -- Access
 invariant
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -14,6 +14,8 @@ feature -- Tests
 		local
 			uri: URI
 		do
+			create uri.make_from_string ("http://www.été.test")
+
 			create uri.make_from_string ("file:/foo/bar")
 			assert ("scheme", uri.scheme.same_string ("file"))
 			assert ("no authority", same_string (uri.authority, Void))
@@ -394,7 +396,7 @@ feature -- Tests
 			print (uri_split_to_string (uri) + "%N")
 
 			create uri.make_from_string ("http://[A:b:c:DE:fF:0:1:aC]")
-			assert ("host", same_string (uri.host, "[A:b:c:DE:fF:0:1:aC]"))
+			assert ("host", same_string (uri.host, "[a:b:c:de:ff:0:1:ac]"))
 			print (uri_split_to_string (uri) + "%N")
 
 			create uri.make_from_string ("http://user:pass@[000:01:02:003:004:5:6:007]:8080/foo/bar")
@@ -403,10 +405,6 @@ feature -- Tests
 			assert ("userinfo", same_string (uri.userinfo, "user:pass"))
 			assert ("path", same_string (uri.path, "/foo/bar"))
 			print (uri_split_to_string (uri) + "%N")
-
-			-- reg-name
-
-
 		end
 
 	test_unicode
@@ -464,24 +462,39 @@ feature -- Tests
 			uri: URI
 		do
 			create uri.make_from_string ("http://xn--bcher-kva.xn--p1ai/")
-			assert ("unicode hostname", attached uri.unicode_host as h and then h.same_string_general ({STRING_32} "bücher.рф"))
+			assert ("unicode hostname", attached uri.hostname as h and then h.same_string_general ({STRING_32} "bücher.рф"))
+
+			create uri.make_from_string ("http://foo.test")
+			assert ("unicode hostname", attached uri.hostname as h and then h.same_string_general ({STRING_32} "foo.test"))
 
 			create uri.make_from_string ("http://foo.bar.com/")
-			assert ("unicode hostname", attached uri.unicode_host as h and then h.same_string_general ({STRING_32} "foo.bar.com"))
+			assert ("unicode hostname", attached uri.hostname as h and then h.same_string_general ({STRING_32} "foo.bar.com"))
+
+			uri.set_hostname ({STRING_32} "bücher.рф")
+			assert ("unicode hostname", attached uri.hostname as h and then h.same_string_general ({STRING_32} "bücher.рф"))
+			assert ("rfc host", attached uri.host as h and then h.same_string_general ("xn--bcher-kva.xn--p1ai"))
+
+			uri.set_hostname ("xn--bcher-kva.xn--p1ai")
+			assert ("unicode hostname", attached uri.hostname as h and then h.same_string_general ({STRING_32} "bücher.рф"))
+			assert ("rfc host", attached uri.host as h and then h.same_string_general ("xn--bcher-kva.xn--p1ai"))
+
+			uri.set_hostname ("xn--été.test")
+			assert ("unicode hostname", attached uri.hostname as h and then h.same_string_general ({STRING_32} "xn--été.test"))
+			assert ("rfc host", attached uri.host as h and then h.same_string_general ("xn--xn--t-esab.test"))
 
 
 			create uri.make_from_string ("http://foo.com")
-			uri.set_unicode_hostname ({STRING_32} "bücher.рф")
+			uri.set_hostname ({STRING_32} "bücher.рф")
 			assert ("hostname", attached uri.host as h and then h.same_string ("xn--bcher-kva.xn--p1ai"))
-			assert ("unicode hostname", attached uri.unicode_host as h and then h.same_string_general ({STRING_32} "bücher.рф"))
+			assert ("unicode hostname", attached uri.hostname as h and then h.same_string_general ({STRING_32} "bücher.рф"))
 
-			uri.set_unicode_hostname ({STRING_32} "foo.рф.com")
+			uri.set_hostname ({STRING_32} "foo.рф.com")
 			assert ("hostname", attached uri.host as h and then h.same_string ("foo.xn--p1ai.com"))
-			assert ("unicode hostname", attached uri.unicode_host as h and then h.same_string_general ({STRING_32} "foo.рф.com"))
+			assert ("unicode hostname", attached uri.hostname as h and then h.same_string_general ({STRING_32} "foo.рф.com"))
 
-			uri.set_unicode_hostname ({STRING_32} "foo.bar.com")
+			uri.set_hostname ({STRING_32} "foo.bar.com")
 			assert ("hostname", attached uri.host as h and then h.same_string ("foo.bar.com"))
-			assert ("unicode hostname", attached uri.unicode_host as h and then h.same_string_general ({STRING_32} "foo.bar.com"))
+			assert ("unicode hostname", attached uri.hostname as h and then h.same_string_general ({STRING_32} "foo.bar.com"))
 		end
 
 	test_nuts

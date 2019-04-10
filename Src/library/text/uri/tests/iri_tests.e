@@ -109,6 +109,19 @@ feature -- Tests
 			assert ("uri:fragment", same_string (uri.fragment, "%%C3%%A9t%%C3%%A9"))
 		end
 
+	test_unicode
+		local
+			iri: IRI
+		do
+			create iri.make_from_string ({STRING_32} "http://été.summer/wiki/%%u4E0A%%u6D77")
+			assert ("host", same_string (iri.host, "xn--t-9fab.summer"))
+			assert ("string", same_string (iri.string, {STRING_32} "http://été.summer/wiki/%/19978/%/28023/"))
+
+			create iri.make_from_string ({STRING_32} "http://%%u4E0A%%u6D77.test/")
+			assert ("host", same_string (iri.host, "xn--fhqz97e.test"))
+			assert ("string", same_string (iri.string, {STRING_32} "http://%/19978/%/28023/.test/"))
+		end
+
 	test_files
 		local
 			iri: IRI

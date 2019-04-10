@@ -48,22 +48,30 @@ feature -- Basic operations
 			l_received: STRING
 		do
 				-- Accept a new message. In case of a timeout the accepted socket is Void.
+			debug
+				print (".")
+			end
 			socket.accept
 			if attached socket.accepted as l_answer_socket then
-
 					-- Read the message.
 				l_answer_socket.read_line
 				l_received := l_answer_socket.last_string
+				debug
+					print ("%NReceived: " + l_received + "%N")
+				end
 
 					-- Check if the client wants us to stop.
 				if l_received.starts_with ("stop") then
 					is_stopped := True
+
+						-- Generate and send the answer.
+					l_answer_socket.put_string ("stopping")
 				else
 						-- Generate and send the answer.
 					l_answer_socket.put_string (l_received)
-					l_answer_socket.put_new_line
-					l_answer_socket.close
 				end
+				l_answer_socket.put_new_line
+				l_answer_socket.close
 			end
 		end
 

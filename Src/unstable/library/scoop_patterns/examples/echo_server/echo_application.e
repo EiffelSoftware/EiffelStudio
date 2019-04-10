@@ -1,5 +1,8 @@
 note
-	description: "Example application that starts an ECHO_SERVER on a separate processor and tears it down after 10 seconds."
+	description: "[
+		Example application that starts an ECHO_SERVER on a separate processor and tears it down after 10 seconds.
+		Using telnet, it is possible to send message on port 2000, including message "stop" to shutdown the server.
+	]"
 	author: "Roman Schmocker"
 	date: "$Date$"
 	revision: "$Revision$"

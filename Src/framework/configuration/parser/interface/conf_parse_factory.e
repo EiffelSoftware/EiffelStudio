@@ -43,43 +43,6 @@ feature -- Factory: system and redirection
 			Result_not_void: Result /= Void
 		end
 
-feature -- Factory: system and redirection OBSOLETE
-
-	new_redirection (a_location: READABLE_STRING_GENERAL; a_uuid: detachable UUID): CONF_REDIRECTION
-			-- Create a {CONF_REDIRECTION} object with `a_location' and optional `a_uuid'.
-		obsolete
-			"Use new_redirection_with_file_name [Jan/2014]"
-		require
-			a_location_ok: a_location /= Void and then not a_location.is_empty
-		do
-			Result := new_redirection_with_file_name ("dummy-redirection-file-name.ecf", a_location, a_uuid)
-		end
-
-	new_system_generate_uuid (a_name: STRING_32): CONF_SYSTEM
-			-- Create a {CONF_SYSTEM} object with an automatically generated UUID.
-		obsolete
-			"Use new_system_generate_uuid_with_file_name [Jan/2014]"
-		require
-			a_name_ok: a_name /= Void and then not a_name.is_empty
-		do
-			Result := new_system_generate_uuid_with_file_name ("dummy-system-file-name.ecf", a_name)
-		ensure
-			Result_not_void: Result /= Void
-		end
-
-	new_system (a_name: STRING_32; an_uuid: UUID): CONF_SYSTEM
-			-- Create a `CONF_SYSTEM' object.
-		obsolete
-			"Use new_system_file_name [Jan/2014]"
-		require
-			a_name_ok: a_name /= Void and then not a_name.is_empty
-			an_uuid_not_void: an_uuid /= Void
-		do
-			Result := new_system_with_file_name ("dummy-system-file-name.ecf", a_name, an_uuid)
-		ensure
-			Result_not_void: Result /= Void
-		end
-
 feature -- Factory			
 
 	new_target (a_name: STRING_32; a_system: CONF_SYSTEM): CONF_TARGET
@@ -376,7 +339,7 @@ feature -- Factory
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

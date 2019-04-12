@@ -1,7 +1,5 @@
-note
-	description: "[
-			Tool to create ecf redirection
-		]"
+﻿note
+	description: "Tool to create ecf redirection"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -150,14 +148,14 @@ feature {NONE} -- Initialization
 					execute_help (op)
 				end
 			elseif op.is_case_insensitive_equal_general ("delete") then
-				if (l_redirection_ecf /= Void and then not l_redirection_ecf.is_empty) then
+				if l_redirection_ecf /= Void and then not l_redirection_ecf.is_empty then
 					unset_redirection (l_redirection_ecf)
 				else
 					localized_print_error ({STRING_32} "Missing or invalid parameter for operation: " + op + {STRING_32} " -> ERROR!%N")
 					execute_help (op)
 				end
 			elseif op.is_case_insensitive_equal_general ("check") then
-				if (l_redirection_ecf /= Void and then not l_redirection_ecf.is_empty) then
+				if l_redirection_ecf /= Void and then not l_redirection_ecf.is_empty then
 					check_redirection (l_target, l_redirection_ecf)
 				else
 					localized_print_error ({STRING_32} "Missing or invalid parameter for operation: " + op + {STRING_32} " -> ERROR!%N")
@@ -419,35 +417,35 @@ feature -- Change
 					has_error := True
 				end
 
-				if not has_error then
-					if l_location /= Void then
-						redir := conf_factory.new_redirection (l_location, l_uuid)
-						redir.set_file_name (a_redirection)
-						if not file_utilities.file_exists (a_redirection) or else a_update then
-							if redir.is_storable then
-								redir.store
-								has_error := not redir.store_successful
-								if has_error then
-									localized_print_error ("[ERROR] Redirection creation: failed!%N")
+				if
+					not has_error and then
+					l_location /= Void
+				then
+					redir := conf_factory.new_redirection_with_file_name (a_redirection, l_location, l_uuid)
+					if not file_utilities.file_exists (a_redirection) or else a_update then
+						if redir.is_storable then
+							redir.store
+							has_error := not redir.store_successful
+							if has_error then
+								localized_print_error ("[ERROR] Redirection creation: failed!%N")
+							else
+								print ("[OK] Redirection created: ")
+								localized_print (a_redirection)
+								print (" -> ")
+								if a_target_ecf.same_string_general (l_location) then
+									localized_print (l_location)
 								else
-									print ("[OK] Redirection created: ")
-									localized_print (a_redirection)
-									print (" -> ")
-									if a_target_ecf.same_string_general (l_location) then
-										localized_print (l_location)
-									else
-										localized_print (a_target_ecf)
-										localized_print (" = ")
-										localized_print (l_location)
-									end
-									print ("%N")
+									localized_print (a_target_ecf)
+									localized_print (" = ")
+									localized_print (l_location)
 								end
+								print ("%N")
 							end
-						else
-							print ("[WARNING] Redirection already exists!%N")
-							print ("Use flag [--force] to force the update!%N")
-							has_error := True
 						end
+					else
+						print ("[WARNING] Redirection already exists!%N")
+						print ("Use flag [--force] to force the update!%N")
+						has_error := True
 					end
 				end
 			end
@@ -459,13 +457,10 @@ feature -- Change
 			-- Unset redirection `a_redirection' if this is really a redirection
 		require
 			no_error: not has_error
-		local
-			f: RAW_FILE
 		do
 			conf_loader.retrieve_configuration (a_redirection)
 			if attached conf_loader.last_redirection as l_redir then
-				create f.make_with_name (a_redirection)
-				f.delete
+				(create {RAW_FILE}.make_with_name (a_redirection)).delete
 				localized_print ({STRING_32} "[OK] Redirection %"" + a_redirection + {STRING_32} "%" deleted!%N")
 			else
 				localized_print_error ({STRING_32} "[ERROR] File %"" + a_redirection + {STRING_32} "%" is not a redirection: file not deleted!%N")
@@ -484,13 +479,14 @@ feature -- Change
 					if attached l_redirection_ecf_system.file_name as fn then
 						localized_print_error ({STRING_32} "  to  `" + fn + "'%N")
 					end
-					if a_target_ecf /= Void then
-						if attached conf_system (evaluated_location (a_target_ecf)) as l_target_ecf_system then
-							if same_strings (l_target_ecf_system.file_name, l_redirection_ecf_system.file_name) then
-								localized_print_error ({STRING_32} "File `" + a_redirection + "' is a valid redirection.%N")
-							else
-								localized_print_error ({STRING_32} "  but does not point to same system as `" + a_target_ecf + "'%N")
-							end
+					if
+						a_target_ecf /= Void and then
+						attached conf_system (evaluated_location (a_target_ecf)) as l_target_ecf_system
+					then
+						if same_strings (l_target_ecf_system.file_name, l_redirection_ecf_system.file_name) then
+							localized_print_error ({STRING_32} "File `" + a_redirection + "' is a valid redirection.%N")
+						else
+							localized_print_error ({STRING_32} "  but does not point to same system as `" + a_target_ecf + "'%N")
 						end
 					end
 				else
@@ -534,17 +530,12 @@ feature -- Change
 			no_error: not has_error
 		end
 
-feature -- Change
-
 feature {NONE} -- Implementation
 
 	evaluated_location (p: READABLE_STRING_32): READABLE_STRING_32
-		local
-			exp: STRING_ENVIRONMENT_EXPANDER
 		do
 			if p.has ('$') then
-				create exp
-				Result := exp.expand_string_32 (p, True)
+				Result := (create {STRING_ENVIRONMENT_EXPANDER}).expand_string_32 (p, True)
 			else
 				Result := p
 			end
@@ -582,7 +573,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

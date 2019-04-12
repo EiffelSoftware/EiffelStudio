@@ -326,12 +326,6 @@ feature -- Access: settings
 			Result_not_void: Result /= Void
 		end
 
-	setting_total_order_on_reals: BOOLEAN
-			-- Value for the total_order_on_reals setting.
-		do
-			Result := setting_boolean (s_total_order_on_reals)
-		end
-
 	setting_use_cluster_name_as_namespace: BOOLEAN
 			-- Value for the use_cluster_name_as_namespace setting.
 		do

@@ -1,0 +1,30 @@
+FROM daald/ubuntu32:trusty
+
+LABEL maintainer="Jocelyn Fiat <jfiat@eiffel.com>"
+
+RUN apt-get update && apt-get install -y --no-install-recommends --no-install-suggests \
+        ca-certificates curl \
+        bzip2 \
+        gcc make dist \
+        libxtst-dev \
+        libgtk2.0-dev \
+        libssl-dev \
+		pax \
+		dos2unix \
+		subversion \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+
+RUN mkdir -p /home/eiffel
+COPY ./src/build.sh /home/eiffel/build.sh
+RUN mkdir -p /home/eiffel/deliv/output \
+	&& dos2unix /home/eiffel/build.sh
+
+# Define Eiffel environment variables
+ENV ISE_PLATFORM=linux-x86
+ENV PORTERPACKAGE_TAR=/home/eiffel/deliv/output/PorterPackage.tar
+VOLUME /home/eiffel/deliv/image
+
+WORKDIR /home/eiffel
+CMD /bin/bash /home/eiffel/build.sh /home/eiffel/deliv $PORTERPACKAGE_TAR

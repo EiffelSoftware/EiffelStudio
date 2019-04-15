@@ -16,14 +16,19 @@ echo Install EiffelStudio
 if [ -z "$EIFFEL_SETUP_CHANNEL" ]; then
 	export EIFFEL_SETUP_CHANNEL=nightly
 fi
-if [ -d /home/eiffel/Eiffel-${EIFFEL_SETUP_CHANNEL}/studio ]; then
+if [ -d /home/eiffel/Eiffel ]; then
+	ls -la  /home/eiffel/Eiffel
+else
+	mkdir -p /home/eiffel/Eiffel
+fi
+if [ -d /home/eiffel/Eiffel/${EIFFEL_SETUP_CHANNEL}/studio ]; then
 	echo "Already installed!"
 else
-	curl -sSL https://www.eiffel.org/setup/install.sh | bash -s -- --channel ${EIFFEL_SETUP_CHANNEL} --platform ${ISE_PLATFORM} --install-dir /home/eiffel/Eiffel-${EIFFEL_SETUP_CHANNEL} --dir /home/eiffel
+	curl -sSL https://www.eiffel.org/setup/install.sh | bash -s -- --channel ${EIFFEL_SETUP_CHANNEL} --platform ${ISE_PLATFORM} --install-dir /home/eiffel/Eiffel/${EIFFEL_SETUP_CHANNEL} --dir /home/eiffel
 fi
 
 # Define Eiffel environment variables
-export ISE_EIFFEL=/home/eiffel/Eiffel-${EIFFEL_SETUP_CHANNEL}
+export ISE_EIFFEL=/home/eiffel/Eiffel/${EIFFEL_SETUP_CHANNEL}
 export ISE_LIBRARY=$ISE_EIFFEL
 export PATH=$PATH:$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin:$ISE_EIFFEL/tools/spec/$ISE_PLATFORM/bin:$ISE_EIFFEL/library/gobo/spec/$ISE_PLATFORM/bin:$ISE_EIFFEL/esbuilder/spec/$ISE_PLATFORM/bin
 
@@ -53,11 +58,7 @@ if [ -n "$SVN_ISE_REPO" ]; then
 fi
 
 
-if [ "$ONLY_PORTERPACKAGE" = "true" ]; then
-	echo Build PorterPackage in $DELIV_DIR
-else
-	echo Build delivery in $DELIV_DIR
-fi
+echo Build PorterPackage in $DELIV_DIR
 echo Use EiffelStudio svn repository: $DEFAULT_ORIGO_SVN_ROOT$SVN_EIFFELSTUDIO_BRANCH
 
 # Main
@@ -85,8 +86,17 @@ fi
 
 echo Building for revision $DELIV_REVISION
 DELIV_OUTPUT=$DELIV_DIR/output/${DELIV_REVISION}
+
+# Clean previous porterpackage building
+if [ -e "${DELIV_DIR}/output/last_revision_built" ]; then
+	\rm -f $DELIV_DIR/output/last_revision_built
+fi
+if [ -d "${DELIV_OUTPUT}" ]; then
+	\rm -rf ${DELIV_OUTPUT}
+fi
+
+# Create output folder
 mkdir -p ${DELIV_OUTPUT}
-echo ${DELIV_REVISION} > $DELIV_DIR/output/last_revision_built
 
 DELIV_LOGDIR=$DELIV_OUTPUT/${DELIV_REVISION}_${ISE_PLATFORM}_logs/
 if [ -d "$DELIV_LOGDIR" ]; then
@@ -112,20 +122,13 @@ if [ ! -d "PorterPackage" ]; then
 fi
 if [ -d "PorterPackage" ]; then
 	if [ ! -f "$STUDIO_PORTERPACKAGE_TAR" ]; then
+		echo Create tar archive $STUDIO_PORTERPACKAGE_TAR .
 		tar cvf $STUDIO_PORTERPACKAGE_TAR PorterPackage
 	fi
-	if [ "$ONLY_PORTERPACKAGE" == "true" ]; then
-		echo PorterPackage is ready: $STUDIO_PORTERPACKAGE_TAR
-	else
-		cd PorterPackage
-		echo Use PorterPackage with ISE_PLATFORM=$ISE_PLATFORM ...
-		ls -la
-		./compile_exes $ISE_PLATFORM
-		./make_images $ISE_PLATFORM
-		cp compile.log $DELIV_LOGDIR/.
-		mv Eiffel*.tar.bz2 $DELIV_OUTPUT/.
-	fi
+	echo PorterPackage is ready: $STUDIO_PORTERPACKAGE_TAR
+	ls -la $DELIV_OUTPUT
+	echo ${DELIV_REVISION} > $DELIV_DIR/output/last_revision_built
+	ls -la $DELIV_DIR/output/
 else
 	echo Missing PorterPackage!
 fi
-

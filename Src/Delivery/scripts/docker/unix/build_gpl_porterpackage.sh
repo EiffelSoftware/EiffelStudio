@@ -1,13 +1,24 @@
 #!/bin/bash
 
-docker rmi local/eiffel-deliv
-docker build -t local/eiffel-deliv -f ./dockerfile  .
-docker run --rm -it \
-	--name=eiffel-deliv-pp \
-       	-v `pwd`/var/deliv-output:/home/eiffel/deliv/output \
-       	--network host \
-	-e SVN_EIFFELSTUDIO_REPO=svn://svn.ise/mirrors/eiffelstudio \
-	-e SVN_ISE_REPO=svn://svn.ise/ise_svn \
-	-e ONLY_PORTERPACKAGE=true \
-	local/eiffel-deliv
+if [ "$SVN_EIFFELSTUDIO_REPO_REVISION" = "" ]; then
+        set SVN_EIFFELSTUDIO_REPO_REVISION=HEAD
+fi
+
+var_dir=`pwd`/var
+docker_image_name=local/eiffel-deliv-porterpackage
+docker rmi ${docker_image_name}
+docker build -t ${docker_image_name} -f ./porterpackage/dockerfile porterpackage
+if [ -d "$var_dir/eiffel" ]; then
+        t_docker_vol_opts="-v $var_dir/eiffel:/home/eiffel/Eiffel"
+fi
+docker run --rm \
+        --name=eiffel-deliv-pp \
+        -v $var_dir/deliv-output:/home/eiffel/deliv/output \
+        ${t_docker_vol_opts} \
+        --network host \
+        -e SVN_EIFFELSTUDIO_REPO=svn://svn.ise/mirrors/eiffelstudio \
+        -e SVN_ISE_REPO=svn://svn.ise/ise_svn \
+        -e SVN_EIFFELSTUDIO_REPO_REVISION=$SVN_EIFFELSTUDIO_REPO_REVISION \
+        ${docker_image_name}
+#docker rmi ${docker_image_name}
 

@@ -9,6 +9,7 @@ docker_image_name=local/eiffel-deliv-porterpackage
 docker rmi ${docker_image_name}
 docker build -t ${docker_image_name} -f ./porterpackage/dockerfile porterpackage
 if [ -d "$var_dir/eiffel" ]; then
+	echo USe Eiffel installation from $var_dir/eiffel/...
         t_docker_vol_opts="-v $var_dir/eiffel:/home/eiffel/Eiffel"
 fi
 docker run --rm \

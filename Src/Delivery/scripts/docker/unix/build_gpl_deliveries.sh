@@ -32,7 +32,7 @@ if [ "$SVN_EIFFELSTUDIO_REPO_REVISION" = "" ]; then
 fi
 
 echo Build the GPL PorterPackage
-#sh ./build_gpl_porterpackage.sh
+sh ./build_gpl_porterpackage.sh
 if [ -e "$var_dir/deliv-output/last_revision_built" ]; then
 	deliv_revision=`head -n 1 $var_dir/deliv-output/last_revision_built`
 	porterpackage_tar=$var_dir/deliv-output/$deliv_revision/PorterPackage_${deliv_revision}.tar

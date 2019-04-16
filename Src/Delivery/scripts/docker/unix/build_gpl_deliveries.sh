@@ -31,7 +31,9 @@ if [ "$SVN_EIFFELSTUDIO_REPO_REVISION" = "" ]; then
 	set SVN_EIFFELSTUDIO_REPO_REVISION=HEAD
 fi
 
-echo Build the GPL PorterPackage
+echo "===================================="
+echo "= Build the GPL PorterPackage ======"
+echo "===================================="
 sh ./build_gpl_porterpackage.sh
 if [ -e "$var_dir/deliv-output/last_revision_built" ]; then
 	deliv_revision=`head -n 1 $var_dir/deliv-output/last_revision_built`
@@ -39,13 +41,17 @@ if [ -e "$var_dir/deliv-output/last_revision_built" ]; then
 	share_deliv_folder $var_dir/deliv-output/${deliv_revision} "New Porterpackage for revision ${deliv_revision}"
 	if [ -e "$porterpackage_tar" ]; then
 		if [ "$include_64bits" = "true" ]; then
-			echo Build the GPL 64bits 
+			echo "===================================="
+			echo "= Build the GPL 64bits ============="
+			echo "===================================="
 			sh ./build_gpl_images_from.sh $porterpackage_tar $var_dir/deliv-output/${deliv_revision} 64
 			share_deliv_folder $var_dir/deliv-output/${deliv_revision} "New linux-x86-64 release for revision ${deliv_revision}"
 		fi
 
 		if [ "$include_32bits" = "true" ]; then
-			echo Build the GPL 32bits 
+			echo "===================================="
+			echo "= Build the GPL 32bits ============="
+			echo "===================================="
 			sh ./build_gpl_images_from.sh $porterpackage_tar $var_dir/deliv-output/${deliv_revision} 32
 			share_deliv_folder $var_dir/deliv-output/${deliv_revision} "New linux-x86 release for revision ${deliv_revision}"
 		fi 

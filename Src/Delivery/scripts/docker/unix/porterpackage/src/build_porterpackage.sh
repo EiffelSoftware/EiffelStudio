@@ -24,6 +24,7 @@ fi
 if [ -d /home/eiffel/Eiffel/${EIFFEL_SETUP_CHANNEL}/studio ]; then
 	echo "Already installed!"
 else
+	echo Installing nighlty release from eiffel.org/setup.
 	curl -sSL https://www.eiffel.org/setup/install.sh | bash -s -- --channel ${EIFFEL_SETUP_CHANNEL} --platform ${ISE_PLATFORM} --install-dir /home/eiffel/Eiffel/${EIFFEL_SETUP_CHANNEL} --dir /home/eiffel
 fi
 
@@ -38,6 +39,7 @@ if [ -z "$SVN_EIFFELSTUDIO_BRANCH" ]; then
 	export SVN_EIFFELSTUDIO_BRANCH=/trunk
 fi
 
+echo ISE_EIFFEL=$ISE_EIFFEL
 echo SVN_EIFFELSTUDIO_BRANCH=$SVN_EIFFELSTUDIO_BRANCH
 echo SVN_ISE_BRANCH=$SVN_ISE_BRANCH
 echo ONLY_PORTERPACKAGE=$ONLY_PORTERPACKAGE

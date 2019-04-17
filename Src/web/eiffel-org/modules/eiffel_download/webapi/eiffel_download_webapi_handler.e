@@ -39,37 +39,47 @@ feature -- Execution GET
 		local
 			rep: HM_WEBAPI_RESPONSE
 			l_value: STRING
+			l_channel: STRING
 		do
 			if api.has_permissions (<<"view downloads">>) then
-				if attached {WSF_STRING} req.path_parameter ("release") as l_release then
-					l_value := l_release.value
-					if is_valid_version (l_value) then
-						if attached {WSF_STRING} req.query_parameter ("platform") as l_platform then
-							if is_valid_platform (l_platform.value) then
-									-- retrieve product by platform and release.
-								rep := retrieve_by_release_and_platform (req, res, l_value, l_platform.value)
+				if attached {WSF_STRING} req.path_parameter ("channel") as ll_channel and then
+					is_valid_channel (ll_channel.value)
+				then
+					l_channel := ll_channel.value
+					if  attached {WSF_STRING} req.path_parameter ("release") as l_release then
+						l_value := l_release.value
+						if is_valid_version (l_value) then
+							if attached {WSF_STRING} req.query_parameter ("platform") as l_platform then
+								if is_valid_platform (l_platform.value) then
+										-- retrieve product by platform and release.
+									rep := retrieve_by_release_and_platform (req, res, l_value, l_platform.value)
+								else
+										-- Invalid Platform
+									rep := new_error_response ("Platform [" + l_platform.value + "] invalid", req, res)
+									rep.set_status_code ({HTTP_STATUS_CODE}.bad_request)
+								end
 							else
-									-- Invalid Platform
-								rep := new_error_response ("Platform [" + l_platform.value + "] invalid", req, res)
-								rep.set_status_code ({HTTP_STATUS_CODE}.bad_request)
+									-- retrieve product by release
+								rep := retrieve_by_release (req, res, l_value)
 							end
 						else
-								-- retrieve product by release
-							rep := retrieve_by_release (req, res, l_value)
+								-- Invalid Release
+							rep := new_error_response ("Release [" + l_value + "] invalid" , req, res)
+							rep.set_status_code ({HTTP_STATUS_CODE}.bad_request)
 						end
+					elseif
+						l_channel.same_string_general ("beta")
+					then
+							-- Beta Channel Release
+						rep := retrieve_all_beta_products (req, res)
 					else
-							-- Invalid Release
-						rep := new_error_response ("Release [" + l_value + "] invalid" , req, res)
-						rep.set_status_code ({HTTP_STATUS_CODE}.bad_request)
+							-- retrieve all available products by default using the latst release.
+						rep := retrieve_all_products (req, res)
 					end
-				elseif
-					req.path_info.same_string_general ("/api/downloads/channel/beta")
-				then
-						-- Beta Channel Release
-					rep := retrieve_all_beta_products (req, res)
 				else
-						-- retrieve all available products by default using the latst release.
-					rep := retrieve_all_products (req, res)
+						-- Invalid Channel
+					rep := new_error_response ("Invalid channel, valid values are: [stable|beta]" , req, res)
+					rep.set_status_code ({HTTP_STATUS_CODE}.bad_request)
 				end
 				rep.execute
 			end
@@ -88,28 +98,36 @@ feature -- Execute Delete
 			if
 				api.has_permissions (<<"delete download">>)
 			then
-				if
-					attached {WSF_STRING} req.path_parameter ("release") as l_release and then
-					req.query_string.is_empty and then
-					is_valid_version (l_release.value) and then
-					not l_release.value.is_case_insensitive_equal ("all")
+				if attached {WSF_STRING} req.path_parameter ("channel") as l_channel and then
+					is_valid_channel (l_channel.value)
 				then
-					create l_dir.make_with_path (api.module_location_by_name ("eiffel_download"))
+					if
+						attached {WSF_STRING} req.path_parameter ("release") as l_release and then
+						req.query_string.is_empty and then
+						is_valid_version (l_release.value) and then
+						not l_release.value.is_case_insensitive_equal ("all")
+					then
+						create l_dir.make_with_path (api.module_location_by_name ("eiffel_download"))
 
-					if l_dir.exists  then
-						create {RAW_FILE} l_file.make_open_write (l_dir.path.extended ("downloads_configuration_" + l_release.value+ ".json").name.out)
-						if l_file.exists then
-							l_file.close
-							delete_uploaded_file (l_file.path)
-							rep.set_status_code ({HTTP_STATUS_CODE}.no_content)
-						else
-							-- File does not exist.
-							rep := new_error_response ("Bad request [" + req.absolute_script_url ("") + "] does not exist" , req, res)
-							rep.set_status_code ({HTTP_STATUS_CODE}.bad_request)
+						if l_dir.exists  then
+							create {RAW_FILE} l_file.make_open_write (l_dir.path.extended("channel").extended (l_channel.value).extended ("downloads_configuration_" + release_version_dot_format (l_release.value)+ ".json").name.out)
+							if l_file.exists then
+								l_file.close
+								delete_uploaded_file (l_file.path)
+								rep.set_status_code ({HTTP_STATUS_CODE}.no_content)
+							else
+								-- File does not exist.
+								rep := new_error_response ("Bad request [" + req.absolute_script_url ("") + "] does not exist" , req, res)
+								rep.set_status_code ({HTTP_STATUS_CODE}.bad_request)
+							end
 						end
+					else
+						rep := new_error_response ("Bad request [" + req.absolute_script_url ("") + "] invalid" , req, res)
+						rep.set_status_code ({HTTP_STATUS_CODE}.bad_request)
 					end
 				else
-					rep := new_error_response ("Bad request [" + req.absolute_script_url ("") + "] invalid" , req, res)
+						-- Invalid Channel
+					rep := new_error_response ("Invalid channel, valid values are: [stable|beta]" , req, res)
 					rep.set_status_code ({HTTP_STATUS_CODE}.bad_request)
 				end
 			else
@@ -128,32 +146,57 @@ feature -- Execute POST
 			l_tmp: WSF_UPLOADED_FILE
 			l_file: FILE
 			l_dir: DIRECTORY
+			l_data: STRING
 		do
 			if
 				api.has_permissions (<<"update download">>)
 			then
-				rep := new_response (req, res)
-				if req.has_uploaded_file then
-					across req.uploaded_files as c loop
-						l_tmp := c.item
-					end
-				end
-				if l_tmp /= Void then
-					if attached  process_uploaded_file (l_tmp) as l_uploaded then
-						create l_dir.make_with_path (api.module_location_by_name ("eiffel_download"))
-						if l_dir.exists then
-							create {RAW_FILE} l_file.make_open_write (l_dir.path.extended ("downloads_configuration_" + l_uploaded.number + ".json").name.out)
-							l_file.put_string (l_uploaded.to_json_representation)
-							l_file.close
+				if attached {WSF_STRING} req.path_parameter ("channel") as l_channel and then
+					is_valid_channel (l_channel.value)
+				then
+					rep := new_response (req, res)
+					if req.has_uploaded_file then
+						across req.uploaded_files as c loop
+							l_tmp := c.item
 						end
-						rep.add_string_field ("Success", "File uploaded")
-						rep.add_string_field ("Filename", "downloads_configuration_" + l_uploaded.number + ".json")
 					else
-						rep := new_error_response ("Bad file format" , req, res)
+						create l_data.make_empty
+						req.read_input_data_into (l_data)
+					end
+					if l_tmp /= Void then
+						if attached  process_uploaded_file (l_tmp) as l_uploaded then
+							create l_dir.make_with_path (api.module_location_by_name ("eiffel_download").extended ("channel").extended(l_channel.value))
+							if l_dir.exists then
+								create {RAW_FILE} l_file.make_open_write (l_dir.path.extended ("downloads_configuration_" + l_uploaded.number + ".json").name.out)
+								l_file.put_string (l_uploaded.to_json_representation)
+								l_file.close
+							end
+							rep.add_string_field ("Success", "File uploaded")
+							rep.add_string_field ("Filename", "downloads_configuration_" + l_uploaded.number + ".json")
+						else
+							rep := new_error_response ("Bad file format" , req, res)
+							rep.set_status_code ({HTTP_STATUS_CODE}.bad_request)
+						end
+					elseif l_data /= void then
+						if attached  process_uploaded_data (l_data) as l_uploaded then
+							create l_dir.make_with_path (api.module_location_by_name ("eiffel_download").extended ("channel").extended(l_channel.value))
+							if l_dir.exists then
+								create {RAW_FILE} l_file.make_open_write (l_dir.path.extended ("downloads_configuration_" + l_uploaded.number + ".json").name.out)
+								l_file.put_string (l_uploaded.to_json_representation)
+								l_file.close
+							end
+							rep.add_string_field ("Success", "File uploaded")
+							rep.add_string_field ("Filename", "downloads_configuration_" + l_uploaded.number + ".json")
+						else
+
+						end
+					else
+						rep := new_error_response ("File not found or Missing data content" , req, res)
 						rep.set_status_code ({HTTP_STATUS_CODE}.bad_request)
 					end
 				else
-					rep := new_error_response ("File not found" , req, res)
+					-- Invalid Channel
+					rep := new_error_response ("Invalid channel, valid values are: [stable|beta]" , req, res)
 					rep.set_status_code ({HTTP_STATUS_CODE}.bad_request)
 				end
 			else
@@ -363,39 +406,41 @@ feature {NONE} -- Implementation
 		do
 			Result := new_response (req, res)
 			if
-				attached {EIFFEL_DOWNLOAD_API} api.module_api ({EIFFEL_DOWNLOAD_MODULE}) as l_download and then
-				attached l_download.download_stable_configuration as cfg and then
-				attached l_download.retrieve_product_gpl (cfg) as l_product and then
-				attached l_product.build as l_build and then
-				attached l_product.name as l_name and then
-				attached l_product.version as l_version and then
-				attached l_product.number as l_number and then
-				attached l_download.retrieve_mirror_gpl (cfg) as l_mirror
+				attached {EIFFEL_DOWNLOAD_API} api.module_api ({EIFFEL_DOWNLOAD_MODULE}) as l_download
 			then
-				Result.add_string_field ("name", l_name)
-				Result.add_string_field ("build", l_build)
-				Result.add_string_field ("version", l_version)
-				Result.add_string_field ("number", l_number)
-				if attached l_product.downloads as l_downloads then
-					l_link := l_mirror
-					l_link.append (url_encoded (l_name))
-					l_link.append_character (' ')
-					l_link.append (url_encoded (l_number))
-					l_link.append_character ('/')
-					l_link.append (url_encoded (l_build))
-					l_link.append_character ('/')
-					create {ARRAYED_LIST [EIFFEL_DOWNLOAD_RESOURCE]} l_list.make (1)
-					across l_downloads as ic  loop
-						if
-							attached ic.item.filename as l_filename and then
-							attached ic.item.platform as l_platform
-						then
-							create l_url.make_from_string (l_link)
-							l_url.append (url_encoded (l_filename))
-							l_list.force (create {EIFFEL_DOWNLOAD_RESOURCE}.make (l_filename, l_url, ic.item.size, l_platform))
+				if attached l_download.download_stable_configuration as cfg and then
+					attached l_download.retrieve_product_gpl (cfg) as l_product and then
+					attached l_product.build as l_build and then
+					attached l_product.name as l_name and then
+					attached l_product.version as l_version and then
+					attached l_product.number as l_number and then
+					attached l_download.retrieve_mirror_gpl (cfg) as l_mirror
+				then
+					Result.add_string_field ("name", l_name)
+					Result.add_string_field ("build", l_build)
+					Result.add_string_field ("version", l_version)
+					Result.add_string_field ("number", l_number)
+					if attached l_product.downloads as l_downloads then
+						l_link := l_mirror
+						l_link.append (url_encoded (l_name))
+						l_link.append_character (' ')
+						l_link.append (url_encoded (l_number))
+						l_link.append_character ('/')
+						l_link.append (url_encoded (l_build))
+						l_link.append_character ('/')
+						create {ARRAYED_LIST [EIFFEL_DOWNLOAD_RESOURCE]} l_list.make (1)
+						across l_downloads as ic  loop
+							if
+								attached ic.item.filename as l_filename and then
+								attached ic.item.platform as l_platform
+							then
+								create l_url.make_from_string (l_link)
+								l_url.append (url_encoded (l_filename))
+								l_list.force (create {EIFFEL_DOWNLOAD_RESOURCE}.make (l_filename, l_url, ic.item.size, l_platform))
+							end
 						end
+						Result.add_iterator_field ("downloads", l_list)
 					end
-					Result.add_iterator_field ("downloads", l_list)
 				end
 			else
 				Result := new_error_response ("Internal Server Error, module not available", req, res)
@@ -516,6 +561,15 @@ feature {NONE} -- Implementation
 
 		end
 
+	process_uploaded_data (a_uploaded_data: STRING): detachable EIFFEL_UPLOAD_CONFIGURATION
+			-- process the uploaded data.
+		local
+			s: STRING
+		do
+			s := (create {CMS_ENCODERS}).utf_8_encoded (a_uploaded_data)
+			Result := (create {EIFFEL_UPLOAD_JSON_CONFIGURATION}).configuration_from_uploaded_json_string (a_uploaded_data)
+		end
+
 	delete_uploaded_file (p: PATH)
 			-- Remove uploaded temporal file at path `p'.
 		local
@@ -536,5 +590,26 @@ feature {NONE} -- Implementation
 			retried := True
 			retry
 		end
+
+	release_version_dot_format (a_version: READABLE_STRING_32): READABLE_STRING_32
+			-- Release version XY_ZW as XY.ZW
+		require
+			 is_valid: is_valid_version (a_version)
+		local
+			l_result: STRING
+		do
+			create l_result.make_from_string (a_version)
+			l_result.replace_substring_all ("_", ".")
+			Result := l_result
+		end
+
+feature {NONE} --NONE
+
+	is_valid_channel (a_channel: READABLE_STRING_GENERAL): BOOLEAN
+			-- Is channel a `a_channel` stable or beta?
+		do
+			Result := a_channel.is_case_insensitive_equal ("stable") or else  a_channel.is_case_insensitive_equal ("beta")
+		end
+
 
 end

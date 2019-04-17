@@ -5,6 +5,7 @@ note
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
+	EIS: "name=Predefined metrics configuration", "src=https://svn.eiffel.com/eiffelstudio/trunk/Src/Delivery/studio/metrics/predefined_metrics.xml", "tag=Metrics"
 
 deferred class
 	QL_CRITERION_FACTORY
@@ -199,7 +200,7 @@ invariant
 	index_name_table_attached: name_table /= Void
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

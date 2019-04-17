@@ -26,7 +26,7 @@ feature{NONE} -- Initialization
 	make
 			-- Initialize.
 		do
-			create agent_table.make (54)
+			create agent_table.make (55)
 			agent_table.put (agent new_false_criterion, c_false)
 			agent_table.put (agent new_has_arguments_criterion, c_has_argument)
 			agent_table.put (agent new_has_assertion_criterion, c_has_assertion)
@@ -83,7 +83,7 @@ feature{NONE} -- Initialization
 			agent_table.put (agent new_value_criterion, c_value_of_metric_is)
 			agent_table.put (agent new_value_criterion, c_is_satisfied_by)
 
-			create name_table.make (54)
+			create name_table.make (55)
 			name_table.put (c_false, query_language_names.ql_cri_false)
 			name_table.put (c_has_argument, query_language_names.ql_cri_has_argument)
 			name_table.put (c_has_assertion, query_language_names.ql_cri_has_assertion)
@@ -658,7 +658,7 @@ feature -- Criterion index
 	c_value_of_metric_is: INTEGER = 50
 	c_is_effective: INTEGER = 51
 	c_is_satisfied_by: INTEGER = 52
-	c_is_class: INTEGER = 53 -- FIXME jfiat [2017/11/30] : is it safe to change value to insert it upper?
+	c_is_class: INTEGER = 53
 	c_has_class_postcondition: INTEGER = 54
 	c_is_ghost: INTEGER = 55
 
@@ -1128,7 +1128,7 @@ feature {NONE} -- Implementation: agents
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

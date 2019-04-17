@@ -101,6 +101,11 @@ echo rows=$rows
 svg_page_width=$(( $cols * $svg_width + $cols * $wsep + $wsep ))
 svg_page_height=$(( $rows * $svg_height + $rows * $hsep + $hsep ))
 
+echo $target > ${target}.txt
+echo rows=$rows cols=$cols >> ${target}.txt
+echo svg_page_size=$svg_page_width x $svg_page_height >> ${target}.txt
+
+
 function svg_to_png { # icons.svg icons.png width height
 	echo " - SVG to ${2}"
 	convert -resize ${3}x${4} -background $background $1 $2

@@ -551,18 +551,18 @@
 			</and_criterion>
 		</criterion>
 	</basic_metric>	
-	<basic_metric name="Instance-free features" unit="feature">
-		<description>Number of instance-free features</description>
+	<basic_metric name="Class features" unit="feature">
+		<description>Number of class features</description>
 		<criterion>
-			<normal_criterion name="is_instance_free" unit="feature" negation="False"></normal_criterion>
+			<normal_criterion name="is_class" unit="feature" negation="False"></normal_criterion>
 		</criterion>
 	</basic_metric>
-	<basic_metric name="Imm. instance-free features" unit="feature">
-		<description>Number of immediate instance-free features</description>
+	<basic_metric name="Imm. class features" unit="feature">
+		<description>Number of immediate class features</description>
 		<criterion>
 			<and_criterion name="and" unit="feature" negation="False">				
 				<normal_criterion name="is_immediate" unit="feature" negation="False"></normal_criterion>
-				<normal_criterion name="is_instance_free" unit="feature" negation="False"></normal_criterion>
+				<normal_criterion name="is_class" unit="feature" negation="False"></normal_criterion>
 			</and_criterion>
 		</criterion>
 	</basic_metric>	

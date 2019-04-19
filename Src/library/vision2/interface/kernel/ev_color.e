@@ -180,6 +180,44 @@ feature -- Access
 			end
 		end
 
+	hue_as_degrees: INTEGER
+			-- Hue of the color in degree.
+		local
+			H: REAL
+		do
+			H := hue
+				-- The Hue value needs to be multiplied by 60 to convert it to degrees on the color circle
+				-- If Hue becomes negative we need to add 360 to, because a circle has 360 degrees.
+			H := H * 60
+			if H < 0 then
+				 H := H + 360
+			end
+
+			Result := H.rounded
+		ensure
+			in_range: Result >= 0 and Result <= 360
+		end
+
+	hue_as_segments: REAL
+			  -- Hue of the color in 6ths of a circle (each a vertex
+	          -- of a hexagon, a common abstraction)
+		local
+			H: REAL
+		do
+			Result := hue
+				-- Hue values are cyclical (like values of sin or cos functions).
+				-- What does it mean if Hue value is less than 0? It means that we "rotated our hue past 0 degrees
+				-- So to avoid negative values we need to add 6, because we have the hue of the color in 6ths
+				-- of a circle.
+			if Result < 0 then
+				 Result := Result + {REAL_32}6.0
+			end
+
+			Result := H.rounded
+		ensure
+			in_range: Result >= 0 and Result <= 6
+		end
+
 feature -- Element change
 
 	set_rgb (a_red, a_green, a_blue: REAL)
@@ -544,7 +582,7 @@ invariant
 		delta * Max_8_bit
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

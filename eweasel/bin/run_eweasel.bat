@@ -1,5 +1,5 @@
-set TMP_PATH=%cd%
 @echo off
+set TMP_PATH=%cd%
 call %~dp0set_eweasel_env.bat
 
 if "%~3" == "nosvn" (

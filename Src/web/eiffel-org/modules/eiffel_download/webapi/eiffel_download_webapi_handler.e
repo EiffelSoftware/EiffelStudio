@@ -237,6 +237,7 @@ feature {NONE} -- Implementation
 						then
 							create {ARRAYED_LIST [EIFFEL_DOWNLOAD_RESOURCE]} l_list.make (1)
 							l_link := l_mirror
+							l_link.append_character ('/')
 							l_link.append (url_encoded (l_name))
 							l_link.append_character (' ')
 							l_link.append (url_encoded (l_number))
@@ -275,6 +276,7 @@ feature {NONE} -- Implementation
 						then
 							create {ARRAYED_LIST [EIFFEL_DOWNLOAD_RESOURCE]} l_list.make (1)
 							l_link := l_mirror
+							l_link.append_character ('/')
 							l_link.append (url_encoded (l_name))
 							l_link.append_character (' ')
 							l_link.append (url_encoded (l_number))
@@ -313,6 +315,7 @@ feature {NONE} -- Implementation
 					Result.add_string_field ("number", l_number)
 						-- filter by plarform
 					l_link := l_mirror
+					l_link.append_character ('/')
 					l_link.append (url_encoded (l_name))
 					l_link.append_character (' ')
 					l_link.append (url_encoded (l_number))
@@ -368,6 +371,7 @@ feature {NONE} -- Implementation
 					Result.add_string_field ("number", l_number)
 					if attached l_product.downloads as l_downloads then
 						l_link := l_mirror
+						l_link.append_character ('/')
 						l_link.append (url_encoded (l_name))
 						l_link.append_character (' ')
 						l_link.append (url_encoded (l_number))
@@ -422,6 +426,7 @@ feature {NONE} -- Implementation
 					Result.add_string_field ("number", l_number)
 					if attached l_product.downloads as l_downloads then
 						l_link := l_mirror
+						l_link.append_character ('/')
 						l_link.append (url_encoded (l_name))
 						l_link.append_character (' ')
 						l_link.append (url_encoded (l_number))
@@ -474,6 +479,7 @@ feature {NONE} -- Implementation
 					Result.add_string_field ("number", l_number)
 					if attached l_product.downloads as l_downloads then
 						l_link := l_mirror
+						l_link.append_character ('/')
 						l_link.append (url_encoded (l_name))
 						l_link.append_character (' ')
 						l_link.append (url_encoded (l_number))

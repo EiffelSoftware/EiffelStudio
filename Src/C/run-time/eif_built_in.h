@@ -2,7 +2,7 @@
 	description: "Declarations for `built_in' externals."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2018, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2019, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -49,6 +49,7 @@
 #include "eif_object_id.h"
 #include "eif_traverse.h"
 #include "eif_macros.h"
+#include <math.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -226,13 +227,27 @@ rt_private rt_inline EIF_BOOLEAN rt_is_special_copy_semantics_item (EIF_INTEGER_
 #define eif_builtin_PLATFORM_double_bytes 				sizeof(EIF_REAL_64)
 #define eif_builtin_PLATFORM_pointer_bytes 				sizeof(EIF_POINTER)
 
-#define eif_builtin_REAL_32_REF_nan						eif_real_32_nan
+#define eif_builtin_REAL_32_REF_nan				eif_real_32_nan
 #define eif_builtin_REAL_32_REF_negative_infinity		eif_real_32_negative_infinity
 #define eif_builtin_REAL_32_REF_positive_infinity		eif_real_32_positive_infinity
+#define eif_builtin_REAL_32_ieee_is_equal(x,y)			(*(EIF_REAL_32 *)(x) == (y))
+#define eif_builtin_REAL_32_ieee_is_greater(x,y)		isgreater(*(EIF_REAL_32 *)(x),(y))
+#define eif_builtin_REAL_32_ieee_is_greater_equal(x,y)		isgreaterequal(*(EIF_REAL_32 *)(x),(y))
+#define eif_builtin_REAL_32_ieee_is_less(x,y)			isless(*(EIF_REAL_32 *)(x),(y))
+#define eif_builtin_REAL_32_ieee_is_less_equal(x,y)		islessequal(*(EIF_REAL_32 *)(x),(y))
+#define eif_builtin_REAL_32_ieee_maximum_number(x,y)		fmaxf(*(EIF_REAL_32 *)(x),(y))
+#define eif_builtin_REAL_32_ieee_minimum_number(x,y)		fminf(*(EIF_REAL_32 *)(x),(y))
 
-#define eif_builtin_REAL_64_REF_nan						eif_real_64_nan
+#define eif_builtin_REAL_64_REF_nan				eif_real_64_nan
 #define eif_builtin_REAL_64_REF_negative_infinity		eif_real_64_negative_infinity
 #define eif_builtin_REAL_64_REF_positive_infinity		eif_real_64_positive_infinity
+#define eif_builtin_REAL_64_ieee_is_equal(x,y)			(*(EIF_REAL_64 *)(x) == (y))
+#define eif_builtin_REAL_64_ieee_is_greater(x,y)		isgreater(*(EIF_REAL_64 *)(x),(y))
+#define eif_builtin_REAL_64_ieee_is_greater_equal(x,y)		isgreaterequal(*(EIF_REAL_64 *)(x),(y))
+#define eif_builtin_REAL_64_ieee_is_less(x,y)			isless(*(EIF_REAL_64 *)(x),(y))
+#define eif_builtin_REAL_64_ieee_is_less_equal(x,y)		islessequal(*(EIF_REAL_64 *)(x),(y))
+#define eif_builtin_REAL_64_ieee_maximum_number(x,y)		fmax(*(EIF_REAL_64 *)(x),(y))
+#define eif_builtin_REAL_64_ieee_minimum_number(x,y)		fmin(*(EIF_REAL_64 *)(x),(y))
 
 /* SPECIAL class */
 #define eif_builtin_SPECIAL_aliased_resized_area(area, n)	arycpy (area, n, RT_SPECIAL_COUNT (area))

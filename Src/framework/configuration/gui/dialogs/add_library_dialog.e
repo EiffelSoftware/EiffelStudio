@@ -27,6 +27,12 @@ inherit
 			default_create
 		end
 
+	CONF_FILE_CONSTANTS
+		undefine
+			copy,
+			default_create
+		end
+
 	CONF_VALIDITY
 		undefine
 			copy,
@@ -732,7 +738,7 @@ feature {NONE} -- Action handlers
 						last_group := g
 							-- add an empty classes list that it get's displayed in the classes tree
 						g.set_classes (create {STRING_TABLE [CONF_CLASS]}.make (0))
-						l_sys := factory.new_system_generate_uuid_with_file_name ("dummy_location", "dummy")
+						l_sys := factory.new_system_generate_uuid_with_file_name ("dummy_location", "dummy", latest_namespace)
 						l_sys.set_application_target (target)
 						g.set_library_target (factory.new_target ("dummy", l_sys))
 						target.add_library (g)

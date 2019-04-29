@@ -44,10 +44,11 @@ feature -- Access
 
 feature -- Access: settings
 
-	setting_boolean (a_name: STRING): BOOLEAN
-			-- Get value of boolean setting with `a_name'.
+	setting_boolean (a_name: READABLE_STRING_8; n: like {CONF_FILE_CONSTANTS}.latest_namespace): BOOLEAN
+			-- Get value of boolean setting with `a_name` in the namespace `n`.
 		require
 			a_name_valid: is_boolean_setting_known (a_name)
+			is_namespace_known (n)
 		local
 			l_settings: like settings
 		do
@@ -58,86 +59,8 @@ feature -- Access: settings
 					Result := l_found_item.to_boolean
 				end
 			else
-				Result := true_boolean_settings.has (a_name)
+				Result := is_boolean_setting_true (a_name, n)
 			end
-		end
-
-	setting_absent_explicit_assertion: BOOLEAN
-			-- Value of the setting "absent_explicit_assertion".
-		do
-			Result := setting_boolean (s_absent_explicit_assertion)
-		end
-
-	setting_address_expression: BOOLEAN
-			-- Value of the address_expression setting.
-		do
-			Result := setting_boolean (s_address_expression)
-		end
-
-	setting_array_optimization: BOOLEAN
-			-- Value of the array_optimization setting.
-		do
-			Result := setting_boolean (s_array_optimization)
-		end
-
-	setting_automatic_backup: BOOLEAN
-			-- Value for the automatic_backup setting.
-		do
-			Result := setting_boolean (s_automatic_backup)
-		end
-
-	setting_check_for_void_target: BOOLEAN
-			-- Value for the `check_for_void_target' setting.
-		do
-			Result := setting_boolean (s_check_for_void_target)
-		end
-
-	setting_check_for_catcall_at_runtime: BOOLEAN
-			-- Value for the `check_for_catcall_at_runtime' setting.
-		do
-			Result := setting_boolean (s_check_for_catcall_at_runtime)
-		end
-
-	setting_check_generic_creation_constraint: BOOLEAN
-			-- Value of the check_generic_creation_constraint setting.
-		do
-			Result := setting_boolean (s_check_generic_creation_constraint)
-		end
-
-	setting_check_vape: BOOLEAN
-			-- Value for the check_vape setting.
-		do
-			Result := setting_boolean (s_check_vape)
-		end
-
-	setting_console_application: BOOLEAN
-			-- Value for the console_application setting.
-		do
-			Result := setting_boolean (s_console_application)
-		end
-
-	setting_cls_compliant: BOOLEAN
-			-- Value for the cls_compliant setting.
-		do
-			Result := setting_boolean (s_cls_compliant)
-		end
-
-	setting_dead_code_removal: BOOLEAN
-			-- Value for the dead_code_removal setting.
-		do
-			Result := setting_boolean (s_dead_code_removal)
-		end
-
-	setting_dotnet_naming_convention: BOOLEAN
-			-- Value for the dotnet_naming_convention setting.
-		do
-			Result := setting_boolean (s_dotnet_naming_convention)
-		end
-
-	setting_dynamic_runtime: BOOLEAN
-			-- Value for the dynamic_runtime setting.
-		do
-			Result := setting_boolean (s_dynamic_runtime)
 		end
 
 	setting_executable_name: STRING_32
@@ -152,36 +75,6 @@ feature -- Access: settings
 			Result_not_void: Result /= Void
 		end
 
-	setting_enforce_unique_class_names: BOOLEAN
-			-- Valeu for the enforce_unique_class_names setting.
-		do
-			Result := setting_boolean (s_enforce_unique_class_names)
-		end
-
-	setting_exception_trace: BOOLEAN
-			-- Value for the exception_trace setting.
-		do
-			Result := setting_boolean (s_exception_trace)
-		end
-
-	setting_force_32bits: BOOLEAN
-			-- Value for the force_32bits setting.
-		do
-			Result := setting_boolean (s_force_32bits)
-		end
-
-	setting_il_verifiable: BOOLEAN
-			-- Value for the console_application setting.
-		do
-			Result := setting_boolean (s_il_verifiable)
-		end
-
-	setting_inlining: BOOLEAN
-			-- Value for the inlining setting.
-		do
-			Result := setting_boolean (s_inlining)
-		end
-
 	setting_inlining_size: NATURAL_8
 			-- Value for the inlining_size setting.
 		do
@@ -191,18 +84,6 @@ feature -- Access: settings
 			else
 				Result := 4
 			end
-		end
-
-	setting_java_generation: BOOLEAN
-			-- Value for the java_generation setting.
-		do
-			Result := setting_boolean (s_java_generation)
-		end
-
-	setting_line_generation: BOOLEAN
-			-- Value for the line_generation setting.
-		do
-			Result := setting_boolean (s_line_generation)
 		end
 
 	setting_metadata_cache_path: STRING_32
@@ -252,12 +133,6 @@ feature -- Access: settings
 			Result_not_void: Result /= Void
 		end
 
-	setting_msil_generation: BOOLEAN
-			-- Value for the msil_generation setting.
-		do
-			Result := setting_boolean (s_msil_generation)
-		end
-
 	setting_msil_generation_type: STRING_32
 			-- Value for the msil_generation_type setting.
 		do
@@ -281,12 +156,6 @@ feature -- Access: settings
 			end
 		ensure
 			Result_not_void: Result /= Void
-		end
-
-	setting_msil_use_optimized_precompile: BOOLEAN
-			-- Value for the msil_use_optimized_precompile setting.
-		do
-			Result := setting_boolean (s_msil_use_optimized_precompile)
 		end
 
 	setting_platform: STRING_32
@@ -324,24 +193,6 @@ feature -- Access: settings
 			end
 		ensure
 			Result_not_void: Result /= Void
-		end
-
-	setting_total_order_on_reals: BOOLEAN
-			-- Value for the total_order_on_reals setting.
-		do
-			Result := setting_boolean (s_total_order_on_reals)
-		end
-
-	setting_use_cluster_name_as_namespace: BOOLEAN
-			-- Value for the use_cluster_name_as_namespace setting.
-		do
-			Result := setting_boolean (s_use_cluster_name_as_namespace)
-		end
-
-	setting_use_all_cluster_name_as_namespace: BOOLEAN
-			-- Value for the use_all_cluster_name_as_namespace setting.
-		do
-			Result := setting_boolean (s_use_all_cluster_name_as_namespace)
 		end
 
 feature -- Modification

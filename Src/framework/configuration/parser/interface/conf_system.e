@@ -19,6 +19,8 @@ inherit
 
 	CONF_FILE
 
+	CONF_FILE_CONSTANTS
+
 	DEBUG_OUTPUT
 
 create {CONF_PARSE_FACTORY}
@@ -26,12 +28,13 @@ create {CONF_PARSE_FACTORY}
 
 feature {NONE} -- Initialization
 
-	make_with_uuid (a_file_name: READABLE_STRING_GENERAL; a_name: like name; a_uuid: UUID)
+	make_with_uuid (a_file_name: READABLE_STRING_GENERAL; a_name: like name; a_uuid: UUID; a_namespace: READABLE_STRING_32)
 			-- Creation with `a_name' and `a_uuid'.
 		require
 			a_file_name_valid: a_file_name /= Void and then not a_file_name.is_empty
 			a_name_ok: a_name /= Void and not a_name.is_empty
 			a_uuid_ok: a_uuid /= Void
+			a_namespace_valid: is_namespace_known (a_namespace)
 		do
 				-- TODO: remove case conversion when working with keys of `targets`.
 			create targets.make_caseless (1)
@@ -40,11 +43,13 @@ feature {NONE} -- Initialization
 			name := a_name.as_lower
 			set_file_name (a_file_name)
 			uuid := a_uuid
+			namespace := a_namespace
 			is_readonly := True
 		ensure
 			name_set: name /= Void and then name.is_equal (a_name.as_lower)
 			file_name_set: a_file_name.same_string (file_name)
 			uuid_set: uuid = a_uuid
+			namespace_set: namespace = a_namespace
 			is_readonly: is_readonly
 		end
 
@@ -92,6 +97,10 @@ feature -- Access, stored in configuration file
 	is_generated_uuid: BOOLEAN
 			-- Is `uuid' internally generated?
 			-- i.e the original ecf has no uuid value.
+
+	namespace: READABLE_STRING_32
+			-- The namespace used when loading the system.
+			-- It is used to compute settings with different defaults in different versions.
 
 	is_readonly: BOOLEAN
 			-- Is this system readonly per default if it is used as a library?

@@ -979,8 +979,9 @@ end
 					w.after
 				loop
 					if
-						w.item.generating_type = {VD01} or else
-						w.item.generating_type = {VD80}
+						attached {VD01} w.item or else
+						attached {VD80} w.item or else
+						attached {VD81} w.item
 					then
 						w.remove
 					else

@@ -66,6 +66,8 @@ inherit
 
 	CONF_ACCESS
 
+	CONF_FILE_CONSTANTS
+
 	SHARED_COMPILER_PROFILE
 
 feature -- Loading
@@ -261,7 +263,7 @@ feature -- Loading
 					-- ecf does not exist, create it
 
 					-- Configuration system
-				l_system := l_factory.new_system_generate_uuid_with_file_name (l_config_file_name.name, l_target_name)
+				l_system := l_factory.new_system_generate_uuid_with_file_name (l_config_file_name.name, l_target_name, latest_namespace)
 				l_system.set_file_name (l_config_file_name.name)
 
 					-- Add the target for single file compilation

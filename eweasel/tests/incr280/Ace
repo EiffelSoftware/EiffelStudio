@@ -9,6 +9,7 @@
 		<precompile name="precompile" location="$PRECOMPILED_BASE"/>
 		$EWEASEL_DOTNET_SETTING
 		<setting name="console_application" value="$CONSOLE_APPLICATION"/>
+		<setting name="total_order_on_reals" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>
 		<cluster name="root_cluster" location="$CLUSTER\"/>
 	</target>

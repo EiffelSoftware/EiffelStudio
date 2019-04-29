@@ -8,6 +8,7 @@
 		<setting name="concurrency" value="scoop"/>
 		<library name="base" location="$EIFFEL_SRC\framework\mini_base\base.ecf" readonly="false"/>
 		<setting name="console_application" value="true"/>
+		<setting name="total_order_on_reals" value="true"/>
 		$EWEASEL_DOTNET_SETTING
 		<cluster name="root_cluster" location="$CLUSTER"/>
 	</target>

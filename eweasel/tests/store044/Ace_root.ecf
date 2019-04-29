@@ -4,6 +4,7 @@
 		<description>Precompile is not used to make sure type IDs of writer and reader are different.</description>
 		<root class="TEST" feature="retrieve"/>
 		<setting name="console_application" value="true"/>
+		<setting name="total_order_on_reals" value="true"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<cluster name="root_cluster" location="$CLUSTER\"/>

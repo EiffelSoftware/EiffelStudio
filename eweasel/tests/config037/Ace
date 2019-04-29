@@ -3,6 +3,7 @@
 	<target name="test">
 		<root class="TEST" feature="make"/>
 		<setting name="console_application" value="true"/>
+		<setting name="total_order_on_reals" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="liba" location="$CLUSTER\liba.ecf"/>
 		<cluster name="test" location="$CLUSTER\" recursive="false"/>

@@ -3,6 +3,8 @@
 	<target name="pre-foo-thread">
 		<root all_classes="true"/>
 		<setting name="concurrency" value="thread"/>
+		<setting name="console_application" value="true"/>
+		<setting name="total_order_on_reals" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="foo" location="foo.ecf"/>
 	</target>

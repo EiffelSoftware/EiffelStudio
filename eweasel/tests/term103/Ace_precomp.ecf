@@ -7,6 +7,7 @@
 	 library_target="pre">
 	<target name="pre">
 		<setting name="console_application" value="true"/>
+		<setting name="total_order_on_reals" value="true"/>
 		<cluster name="root_cluster" location="$CLUSTER\"/>
 	</target>
 </system>

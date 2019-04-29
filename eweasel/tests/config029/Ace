@@ -4,6 +4,7 @@
 		<root all_classes="true"/>
 		<option warning="false" is_attached_by_default="true" void_safety="all"/>
 		<setting name="console_application" value="true"/>
+		<setting name="total_order_on_reals" value="true"/>
 		<setting name="concurrency" value="thread"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="true"/>

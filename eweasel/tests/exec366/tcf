@@ -53,7 +53,7 @@ copy_sub	Ace $TEST Ace
 copy_sub	test_rev0.e $CLUSTER test.e
 
 compile_melted
-compile_result	ok
+compile_result	validity_warning NONE VD81
 
 c_compile_work
 c_compile_result ok
@@ -65,7 +65,7 @@ compare		exec_output2.1 output
 copy_sub	test.e $CLUSTER test.e
 
 compile_melted
-compile_result	ok
+compile_result	validity_warning NONE VD81
 
 execute_work	NONE exec_output2.2
 execute_result	ok

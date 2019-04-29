@@ -1,91 +1,242 @@
 REAL_32: 1 1
-  = std: 1 ieee: 1
- <= std: 1 ieee: 1
- <  std: 0 ieee: 0
- >  std: 0 ieee: 0
- >= std: 1 ieee: 1
+  =  std: 1 ieee: 1
+ <=  std: 1 ieee: 1
+ <   std: 0 ieee: 0
+ >   std: 0 ieee: 0
+ >=  std: 1 ieee: 1
+ max std: 1 ieee: 1
+ min std: 1 ieee: 1
 REAL_32: -1 1
-  = std: 0 ieee: 0
- <= std: 1 ieee: 1
- <  std: 1 ieee: 1
- >  std: 0 ieee: 0
- >= std: 0 ieee: 0
+  =  std: 0 ieee: 0
+ <=  std: 1 ieee: 1
+ <   std: 1 ieee: 1
+ >   std: 0 ieee: 0
+ >=  std: 0 ieee: 0
+ max std: 1 ieee: 1
+ min std: -1 ieee: -1
 REAL_32: 1 -1
-  = std: 0 ieee: 0
- <= std: 0 ieee: 0
- <  std: 0 ieee: 0
- >  std: 1 ieee: 1
- >= std: 1 ieee: 1
+  =  std: 0 ieee: 0
+ <=  std: 0 ieee: 0
+ <   std: 0 ieee: 0
+ >   std: 1 ieee: 1
+ >=  std: 1 ieee: 1
+ max std: 1 ieee: 1
+ min std: -1 ieee: -1
 REAL_32: -1 -1
-  = std: 1 ieee: 1
- <= std: 1 ieee: 1
- <  std: 0 ieee: 0
- >  std: 0 ieee: 0
- >= std: 1 ieee: 1
+  =  std: 1 ieee: 1
+ <=  std: 1 ieee: 1
+ <   std: 0 ieee: 0
+ >   std: 0 ieee: 0
+ >=  std: 1 ieee: 1
+ max std: -1 ieee: -1
+ min std: -1 ieee: -1
 REAL_32: 1 NaN
-  = std: 0 ieee: 0
- <= std: 0 ieee: 0
- <  std: 0 ieee: 0
- >  std: 1 ieee: 0
- >= std: 1 ieee: 0
+  =  std: 0 ieee: 0
+ <=  std: 0 ieee: 0
+ <   std: 0 ieee: 0
+ >   std: 1 ieee: 0
+ >=  std: 1 ieee: 0
+ max std: 1 ieee: 1
+ min std: NaN ieee: 1
 REAL_32: NaN 1
-  = std: 0 ieee: 0
- <= std: 1 ieee: 0
- <  std: 1 ieee: 0
- >  std: 0 ieee: 0
- >= std: 0 ieee: 0
+  =  std: 0 ieee: 0
+ <=  std: 1 ieee: 0
+ <   std: 1 ieee: 0
+ >   std: 0 ieee: 0
+ >=  std: 0 ieee: 0
+ max std: 1 ieee: 1
+ min std: NaN ieee: 1
 REAL_32: NaN NaN
-  = std: 1 ieee: 0
- <= std: 1 ieee: 0
- <  std: 0 ieee: 0
- >  std: 0 ieee: 0
- >= std: 1 ieee: 0
+  =  std: 1 ieee: 0
+ <=  std: 1 ieee: 0
+ <   std: 0 ieee: 0
+ >   std: 0 ieee: 0
+ >=  std: 1 ieee: 0
+ max std: NaN ieee: NaN
+ min std: NaN ieee: NaN
 REAL_32: Infinity Infinity
-  = std: 1 ieee: 1
- <= std: 1 ieee: 1
- <  std: 0 ieee: 0
- >  std: 0 ieee: 0
- >= std: 1 ieee: 1
+  =  std: 1 ieee: 1
+ <=  std: 1 ieee: 1
+ <   std: 0 ieee: 0
+ >   std: 0 ieee: 0
+ >=  std: 1 ieee: 1
+ max std: Infinity ieee: Infinity
+ min std: Infinity ieee: Infinity
 REAL_32: -Infinity Infinity
-  = std: 0 ieee: 0
- <= std: 1 ieee: 1
- <  std: 1 ieee: 1
- >  std: 0 ieee: 0
- >= std: 0 ieee: 0
+  =  std: 0 ieee: 0
+ <=  std: 1 ieee: 1
+ <   std: 1 ieee: 1
+ >   std: 0 ieee: 0
+ >=  std: 0 ieee: 0
+ max std: Infinity ieee: Infinity
+ min std: -Infinity ieee: -Infinity
 REAL_32: Infinity -Infinity
-  = std: 0 ieee: 0
- <= std: 0 ieee: 0
- <  std: 0 ieee: 0
- >  std: 1 ieee: 1
- >= std: 1 ieee: 1
+  =  std: 0 ieee: 0
+ <=  std: 0 ieee: 0
+ <   std: 0 ieee: 0
+ >   std: 1 ieee: 1
+ >=  std: 1 ieee: 1
+ max std: Infinity ieee: Infinity
+ min std: -Infinity ieee: -Infinity
 REAL_32: -Infinity -Infinity
-  = std: 1 ieee: 1
- <= std: 1 ieee: 1
- <  std: 0 ieee: 0
- >  std: 0 ieee: 0
- >= std: 1 ieee: 1
+  =  std: 1 ieee: 1
+ <=  std: 1 ieee: 1
+ <   std: 0 ieee: 0
+ >   std: 0 ieee: 0
+ >=  std: 1 ieee: 1
+ max std: -Infinity ieee: -Infinity
+ min std: -Infinity ieee: -Infinity
 REAL_32: Infinity NaN
-  = std: 0 ieee: 0
- <= std: 0 ieee: 0
- <  std: 0 ieee: 0
- >  std: 1 ieee: 0
- >= std: 1 ieee: 0
+  =  std: 0 ieee: 0
+ <=  std: 0 ieee: 0
+ <   std: 0 ieee: 0
+ >   std: 1 ieee: 0
+ >=  std: 1 ieee: 0
+ max std: Infinity ieee: Infinity
+ min std: NaN ieee: Infinity
 REAL_32: NaN Infinity
-  = std: 0 ieee: 0
- <= std: 1 ieee: 0
- <  std: 1 ieee: 0
- >  std: 0 ieee: 0
- >= std: 0 ieee: 0
+  =  std: 0 ieee: 0
+ <=  std: 1 ieee: 0
+ <   std: 1 ieee: 0
+ >   std: 0 ieee: 0
+ >=  std: 0 ieee: 0
+ max std: Infinity ieee: Infinity
+ min std: NaN ieee: Infinity
 REAL_32: -Infinity NaN
-  = std: 0 ieee: 0
- <= std: 0 ieee: 0
- <  std: 0 ieee: 0
- >  std: 1 ieee: 0
- >= std: 1 ieee: 0
+  =  std: 0 ieee: 0
+ <=  std: 0 ieee: 0
+ <   std: 0 ieee: 0
+ >   std: 1 ieee: 0
+ >=  std: 1 ieee: 0
+ max std: -Infinity ieee: -Infinity
+ min std: NaN ieee: -Infinity
 REAL_32: NaN -Infinity
-  = std: 0 ieee: 0
- <= std: 1 ieee: 0
- <  std: 1 ieee: 0
- >  std: 0 ieee: 0
- >= std: 0 ieee: 0
+  =  std: 0 ieee: 0
+ <=  std: 1 ieee: 0
+ <   std: 1 ieee: 0
+ >   std: 0 ieee: 0
+ >=  std: 0 ieee: 0
+ max std: -Infinity ieee: -Infinity
+ min std: NaN ieee: -Infinity
+
+REAL_64: 1 1
+  =  std: 1 ieee: 1
+ <=  std: 1 ieee: 1
+ <   std: 0 ieee: 0
+ >   std: 0 ieee: 0
+ >=  std: 1 ieee: 1
+ max std: 1 ieee: 1
+ min std: 1 ieee: 1
+REAL_64: -1 1
+  =  std: 0 ieee: 0
+ <=  std: 1 ieee: 1
+ <   std: 1 ieee: 1
+ >   std: 0 ieee: 0
+ >=  std: 0 ieee: 0
+ max std: 1 ieee: 1
+ min std: -1 ieee: -1
+REAL_64: 1 -1
+  =  std: 0 ieee: 0
+ <=  std: 0 ieee: 0
+ <   std: 0 ieee: 0
+ >   std: 1 ieee: 1
+ >=  std: 1 ieee: 1
+ max std: 1 ieee: 1
+ min std: -1 ieee: -1
+REAL_64: -1 -1
+  =  std: 1 ieee: 1
+ <=  std: 1 ieee: 1
+ <   std: 0 ieee: 0
+ >   std: 0 ieee: 0
+ >=  std: 1 ieee: 1
+ max std: -1 ieee: -1
+ min std: -1 ieee: -1
+REAL_64: 1 NaN
+  =  std: 0 ieee: 0
+ <=  std: 0 ieee: 0
+ <   std: 0 ieee: 0
+ >   std: 1 ieee: 0
+ >=  std: 1 ieee: 0
+ max std: 1 ieee: 1
+ min std: NaN ieee: 1
+REAL_64: NaN 1
+  =  std: 0 ieee: 0
+ <=  std: 1 ieee: 0
+ <   std: 1 ieee: 0
+ >   std: 0 ieee: 0
+ >=  std: 0 ieee: 0
+ max std: 1 ieee: 1
+ min std: NaN ieee: 1
+REAL_64: NaN NaN
+  =  std: 1 ieee: 0
+ <=  std: 1 ieee: 0
+ <   std: 0 ieee: 0
+ >   std: 0 ieee: 0
+ >=  std: 1 ieee: 0
+ max std: NaN ieee: NaN
+ min std: NaN ieee: NaN
+REAL_64: Infinity Infinity
+  =  std: 1 ieee: 1
+ <=  std: 1 ieee: 1
+ <   std: 0 ieee: 0
+ >   std: 0 ieee: 0
+ >=  std: 1 ieee: 1
+ max std: Infinity ieee: Infinity
+ min std: Infinity ieee: Infinity
+REAL_64: -Infinity Infinity
+  =  std: 0 ieee: 0
+ <=  std: 1 ieee: 1
+ <   std: 1 ieee: 1
+ >   std: 0 ieee: 0
+ >=  std: 0 ieee: 0
+ max std: Infinity ieee: Infinity
+ min std: -Infinity ieee: -Infinity
+REAL_64: Infinity -Infinity
+  =  std: 0 ieee: 0
+ <=  std: 0 ieee: 0
+ <   std: 0 ieee: 0
+ >   std: 1 ieee: 1
+ >=  std: 1 ieee: 1
+ max std: Infinity ieee: Infinity
+ min std: -Infinity ieee: -Infinity
+REAL_64: -Infinity -Infinity
+  =  std: 1 ieee: 1
+ <=  std: 1 ieee: 1
+ <   std: 0 ieee: 0
+ >   std: 0 ieee: 0
+ >=  std: 1 ieee: 1
+ max std: -Infinity ieee: -Infinity
+ min std: -Infinity ieee: -Infinity
+REAL_64: Infinity NaN
+  =  std: 0 ieee: 0
+ <=  std: 0 ieee: 0
+ <   std: 0 ieee: 0
+ >   std: 1 ieee: 0
+ >=  std: 1 ieee: 0
+ max std: Infinity ieee: Infinity
+ min std: NaN ieee: Infinity
+REAL_64: NaN Infinity
+  =  std: 0 ieee: 0
+ <=  std: 1 ieee: 0
+ <   std: 1 ieee: 0
+ >   std: 0 ieee: 0
+ >=  std: 0 ieee: 0
+ max std: Infinity ieee: Infinity
+ min std: NaN ieee: Infinity
+REAL_64: -Infinity NaN
+  =  std: 0 ieee: 0
+ <=  std: 0 ieee: 0
+ <   std: 0 ieee: 0
+ >   std: 1 ieee: 0
+ >=  std: 1 ieee: 0
+ max std: -Infinity ieee: -Infinity
+ min std: NaN ieee: -Infinity
+REAL_64: NaN -Infinity
+  =  std: 0 ieee: 0
+ <=  std: 1 ieee: 0
+ <   std: 1 ieee: 0
+ >   std: 0 ieee: 0
+ >=  std: 0 ieee: 0
+ max std: -Infinity ieee: -Infinity
+ min std: NaN ieee: -Infinity
 Execution completed

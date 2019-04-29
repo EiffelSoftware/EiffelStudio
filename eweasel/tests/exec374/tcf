@@ -1,20 +1,44 @@
 test_name 	floating-point-comparison
 test_description Floating point comparison should be total by default, and dedicated features can be used to support IEEE standard.
 
-define TOTAL_ORDER false
+define TOTAL_ORDER true
 define PRECOMPILE <precompile name="precompile" location="$PRECOMPILED_BASE_SAFE"/>
 
 copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e
 
 compile_melted
-compile_result 	validity_warning NONE VD81
-execute_work 	NONE 	exec_output_m-unordered
+compile_result 	ok
+execute_work 	NONE 	exec_output_m-default
 execute_result 	ok
-compare		exec_output_m-unordered output-unordered
+compare		exec_output_m-default output-default
 
 compile_frozen
-compile_result 	 ok
+compile_result 	ok
+c_compile_work
+c_compile_result ok
+execute_work 	NONE 	exec_output_w-default
+execute_result 	ok
+compare		exec_output_w-default output-default
+
+compile_final
+compile_result 	ok
+c_compile_final
+c_compile_result ok
+execute_final 	NONE 	exec_output_f-default
+execute_result 	ok
+compare		exec_output_f-default output-default
+
+cleanup_compile
+
+define TOTAL_ORDER false
+define PRECOMPILE ""
+
+copy_sub 	Ace $TEST Ace
+copy_raw 	test.e $CLUSTER test.e
+
+compile_melted
+compile_result 	validity_warning NONE VD81
 c_compile_work
 c_compile_result ok
 execute_work 	NONE 	exec_output_w-unordered
@@ -28,29 +52,5 @@ c_compile_result ok
 execute_final 	NONE 	exec_output_f-unordered
 execute_result 	ok
 compare		exec_output_f-unordered output-unordered
-
-cleanup_compile
-
-define TOTAL_ORDER true
-define PRECOMPILE ""
-
-copy_sub 	Ace $TEST Ace
-copy_raw 	test.e $CLUSTER test.e
-
-compile_melted
-compile_result 	 ok
-c_compile_work
-c_compile_result ok
-execute_work 	NONE 	exec_output_w-default
-execute_result 	ok
-compare		exec_output_w-default output-default
-
-compile_final
-compile_result 	 ok
-c_compile_final
-c_compile_result ok
-execute_final 	NONE 	exec_output_f-default
-execute_result 	ok
-compare		exec_output_f-default output-default
 
 test_end

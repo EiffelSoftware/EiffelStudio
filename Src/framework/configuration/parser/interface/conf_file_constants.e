@@ -8,7 +8,7 @@
 class
 	CONF_FILE_CONSTANTS
 
-feature {NONE} -- Constants
+feature -- Constants
 
 	Header: STRING = "<?xml version=%"1.0%" encoding=%"ISO-8859-1%"?>"
 			-- xml header
@@ -197,6 +197,8 @@ feature {NONE} -- Constants
 			-- Latest configuration namespace.
 		once
 			Result := namespace_1_20_0
+		ensure
+			class
 		end
 
 	Latest_schema: STRING_32

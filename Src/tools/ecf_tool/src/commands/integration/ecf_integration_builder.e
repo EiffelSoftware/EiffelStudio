@@ -149,7 +149,7 @@ feature {NONE} -- Initialization
 			else
 				l_system_name := "all"
 			end
-			conf := conf_fac.new_system_with_file_name (a_output.name, l_system_name, uuidgen.generate_uuid)
+			conf := conf_fac.new_system_with_file_name (a_output.name, l_system_name, uuidgen.generate_uuid, {CONF_FILE_CONSTANTS}.latest_namespace)
 			tgt := conf_fac.new_target (l_system_name, conf)
 			tgt.set_root (conf_fac.new_root (Void, Void, Void, True))
 			conf.add_target (tgt)
@@ -532,7 +532,7 @@ feature {NONE} -- Path manipulation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

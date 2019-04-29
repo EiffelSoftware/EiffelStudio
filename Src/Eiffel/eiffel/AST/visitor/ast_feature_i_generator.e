@@ -263,10 +263,6 @@ feature {NONE} -- Implementation
 									create {DYN_FUNC_I} l_func
 								end
 							end
-						elseif current_class.is_basic then
-								-- All built_in in basic classes are empty routines if not specified otherwise
-								-- as they are inlined by SPECIAL_FEATURES/IL_SPECIAL_FEATURES
-							create {DYN_FUNC_I} l_func
 						end
 					end
 					if l_result = Void and l_func = Void then
@@ -388,7 +384,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -192,7 +192,7 @@ feature {NONE} -- Access
 		local
 			l_result: DS_ARRAYED_LIST [TUPLE [type: TYPE [ANY]; exact_only: BOOLEAN]]
 		once
-			create l_result.make (19)
+			create l_result.make (20)
 			l_result.put_last ([{CAT_CALL_WARNING}, True])
 			l_result.put_last ([{OBS_CLASS_WARN}, True])
 			l_result.put_last ([{OBS_FEAT_WARN}, True])
@@ -202,6 +202,7 @@ feature {NONE} -- Access
 			l_result.put_last ([{VTCM}, True])
 			l_result.put_last ([{VD43}, True])
 			l_result.put_last ([{VD80}, True])
+			l_result.put_last ([{VD81}, True])
 			l_result.put_last ([{VD83}, True])
 			l_result.put_last ([{VD85}, True])
 			l_result.put_last ([{VIAC}, True])

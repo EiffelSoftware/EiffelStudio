@@ -980,7 +980,7 @@ feature {NONE} -- Implementation
 					if attached l_s then
 						l_s.to_boolean
 					else
-						true_boolean_settings.has (s_absent_explicit_assertion)
+						is_boolean_setting_true (s_absent_explicit_assertion, a_target.system.namespace)
 					end
 				if l_b = system.absent_explicit_assertion or else not workbench.has_compilation_started then
 						-- Set the value of the setting for fresh compilation.
@@ -1506,7 +1506,7 @@ feature {NONE} -- Implementation
 							Error_handler.insert_warning (vd83)
 						end
 					else
-						system.set_total_order_on_reals (l_b)
+						set_total_order_on_reals (l_b, a_target)
 					end
 				else
 					create vd15
@@ -1516,7 +1516,7 @@ feature {NONE} -- Implementation
 				end
 			else
 				if a_target.precompile = Void and then not workbench.has_compilation_started then
-					system.set_total_order_on_reals (true_boolean_settings.has (s_total_order_on_reals))
+					set_total_order_on_reals (is_boolean_setting_true (s_total_order_on_reals, a_target.system.namespace), a_target)
 				end
 			end
 
@@ -1565,6 +1565,20 @@ feature {NONE} -- Implementation
 			end
 
 			Error_handler.checksum
+		end
+
+	set_total_order_on_reals (v: BOOLEAN; t: CONF_TARGET)
+			-- Update system setting for total order on reals to `v` for a target `t`.
+		require
+			no_precompile: attached t.precompile implies system.total_order_on_reals = v
+			first_compilation: workbench.has_compilation_started implies system.total_order_on_reals = v
+		do
+			if not v then
+				error_handler.insert_warning (create {VD81}.make (t))
+			end
+			system.set_total_order_on_reals (v)
+		ensure
+			system.total_order_on_reals = v
 		end
 
 	conf_state_for_precompile_checking (a_target: CONF_TARGET): CONF_STATE

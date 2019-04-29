@@ -8,6 +8,9 @@ note
 class
 	CONF_PARSE_FACTORY
 
+inherit
+	CONF_FILE_CONSTANTS
+
 feature -- Factory: system and redirection
 
 	new_redirection_with_file_name (a_file_name: READABLE_STRING_GENERAL; a_location: READABLE_STRING_GENERAL; a_uuid: detachable UUID): CONF_REDIRECTION
@@ -19,26 +22,28 @@ feature -- Factory: system and redirection
 			create Result.make (a_file_name, a_location, a_uuid)
 		end
 
-	new_system_generate_uuid_with_file_name (a_file_name: READABLE_STRING_GENERAL; a_name: STRING_32): CONF_SYSTEM
+	new_system_generate_uuid_with_file_name (a_file_name: READABLE_STRING_GENERAL; a_name: STRING_32; a_namespace: READABLE_STRING_32): CONF_SYSTEM
 			-- Create a {CONF_SYSTEM} object with an automatically generated UUID.
 		require
 			a_file_name_valid: a_file_name /= Void and then not a_file_name.is_empty
 			a_name_ok: a_name /= Void and then not a_name.is_empty
+			a_namespace_valid: is_namespace_known (a_namespace)
 		do
-			create Result.make_with_uuid (a_file_name, a_name, uuid_generator.generate_uuid)
+			create Result.make_with_uuid (a_file_name, a_name, uuid_generator.generate_uuid, a_namespace)
 			Result.set_is_generated_uuid (True)
 		ensure
 			Result_not_void: Result /= Void
 		end
 
-	new_system_with_file_name (a_file_name: READABLE_STRING_GENERAL; a_name: STRING_32; an_uuid: UUID): CONF_SYSTEM
+	new_system_with_file_name (a_file_name: READABLE_STRING_GENERAL; a_name: STRING_32; an_uuid: UUID; a_namespace: READABLE_STRING_32): CONF_SYSTEM
 			-- Create a `CONF_SYSTEM' object.
 		require
 			a_file_name_valid: a_file_name /= Void and then not a_file_name.is_empty
 			a_name_ok: a_name /= Void and then not a_name.is_empty
 			an_uuid_not_void: an_uuid /= Void
+			a_namespace_valid: is_namespace_known (a_namespace)
 		do
-			create Result.make_with_uuid (a_file_name, a_name, an_uuid)
+			create Result.make_with_uuid (a_file_name, a_name, an_uuid, a_namespace)
 		ensure
 			Result_not_void: Result /= Void
 		end

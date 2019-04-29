@@ -614,10 +614,11 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	true_boolean_settings: SEARCH_TABLE [STRING]
-			-- Settings that have a boolean value True by default if not specified in configuration.
+	true_boolean_settings_1_19_0_and_below: SEARCH_TABLE [STRING]
+			-- Settings that have a boolean value True by default if not specified in configuration
+			-- in namespace `namespace_1_19_0` and below.
 		once
-			create Result.make (23)
+			create Result.make (9)
 			Result.force (s_check_generic_creation_constraint)
 			Result.force (s_check_vape)
 			Result.force (s_check_for_void_target)
@@ -629,6 +630,31 @@ feature {NONE} -- Implementation
 			Result.force (s_use_all_cluster_name_as_namespace)
 		ensure
 			Result_not_void: Result /= Void
+		end
+
+	true_boolean_settings_1_20_0_and_above: SEARCH_TABLE [STRING]
+			-- Settings that have a boolean value True by default if not specified in configuration
+			-- in namespace `namespace_1_20_0` and above.
+		once
+			Result := true_boolean_settings_1_19_0_and_below.twin
+			Result.force (s_total_order_on_reals)
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	is_boolean_setting_true (name: like s_check_for_void_target; namespace: like latest_namespace): BOOLEAN
+			-- Is boolean setting of name `name` True by default if not specified
+			-- in configuration of namespace `namespace`.
+		require
+			is_setting_name_known: boolean_settings.has (name)
+			is_namespace_known: is_namespace_known (namespace)
+		do
+			Result :=
+				(if is_before_or_equal (namespace, namespace_1_19_0) then
+					true_boolean_settings_1_19_0_and_below
+				else
+					true_boolean_settings_1_20_0_and_above
+				end).has (name)
 		end
 
 	setting_name (string: READABLE_STRING_32; start_index, end_index: INTEGER): detachable READABLE_STRING_32

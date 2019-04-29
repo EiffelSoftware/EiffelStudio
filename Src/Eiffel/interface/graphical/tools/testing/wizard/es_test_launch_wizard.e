@@ -25,6 +25,8 @@ inherit
 
 	CONF_ACCESS
 
+	CONF_FILE_CONSTANTS
+
 	EB_SHARED_GRAPHICAL_COMMANDS
 
 create
@@ -279,7 +281,7 @@ feature {NONE} -- Implementation
 			end
 			l_library := l_factory.new_library (l_name, l_location, l_target)
 			l_library.set_classes (create {STRING_TABLE [CONF_CLASS]}.make (0))
-			l_system := l_factory.new_system_generate_uuid_with_file_name ("dummy-system-file-name.ecf", "temp")
+			l_system := l_factory.new_system_generate_uuid_with_file_name ("dummy-system-file-name.ecf", "temp", latest_namespace)
 			l_system.set_application_target (l_target)
 			l_library.set_library_target (l_factory.new_target ("temp", l_system))
 			l_target.add_library (l_library)

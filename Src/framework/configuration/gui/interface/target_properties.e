@@ -594,7 +594,7 @@ feature {NONE} -- Implementation helper
 		do
 			a_property.set_refresh_action (agent current_target.setting_boolean (a_name))
 			a_property.refresh
-			a_property.change_value_actions.extend (agent set_boolean_setting (a_name, true_boolean_settings.has (a_name), ?))
+			a_property.change_value_actions.extend (agent set_boolean_setting (a_name, is_boolean_setting_true (a_name, current_target.system.namespace), ?))
 			a_property.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent update_inheritance_setting (a_name, a_property)))
 			a_property.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
 			a_property.use_inherited_actions.extend (agent current_target.update_setting (a_name, Void))

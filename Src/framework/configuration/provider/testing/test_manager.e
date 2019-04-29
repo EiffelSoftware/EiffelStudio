@@ -85,11 +85,11 @@ feature -- Access
 			fac: CONF_PARSE_FACTORY
 		do
 			create fac
-			Result := fac.new_target ("test_" + a_name, fac.new_system_generate_uuid_with_file_name ("no_test_file_for_"+ a_name +".ecf", "test_" + a_name))
+			Result := fac.new_target ("test_" + a_name, fac.new_system_generate_uuid_with_file_name ("no_test_file_for_"+ a_name +".ecf", "test_" + a_name, {CONF_FILE_CONSTANTS}.latest_namespace))
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

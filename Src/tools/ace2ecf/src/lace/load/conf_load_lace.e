@@ -109,7 +109,7 @@ feature -- Basic operation
 				l_error.set_ace_parse_mode
 				set_error (l_error)
 			else
-				last_system := factory.new_system_generate_uuid_with_file_name (a_file.name, mask_special_characters_config (l_ast.system_name.as_lower))
+				last_system := factory.new_system_generate_uuid_with_file_name (a_file.name, mask_special_characters_config (l_ast.system_name.as_lower), {CONF_FILE_CONSTANTS}.latest_namespace)
 				current_target := factory.new_target (mask_special_characters_config (l_ast.system_name.as_lower), last_system)
 				last_system.add_target (current_target)
 
@@ -926,7 +926,7 @@ invariant
 	extension_name_not_empty: not extension_name.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

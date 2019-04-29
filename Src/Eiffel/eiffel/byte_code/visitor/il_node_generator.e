@@ -3534,10 +3534,14 @@ feature {NONE} -- Implementation: binary operators
 					end
 				else
 					if l_same_type then
-						il_generator.generate_binary_operator (an_opcode, l_left_type.is_natural)
-					else
-						il_generator.generate_binary_operator (an_opcode, l_type.is_natural)
+						l_type := l_left_type
 					end
+					il_generator.generate_binary_operator (an_opcode,
+							-- Generate unsigned comparison for natural numbers.
+						l_type.is_natural or else
+							-- Generate unordered comparison for real numbers with equality because the result will be inverted,
+							-- and IEEE 754 standard behavior is expected.
+						((an_opcode = il_ge or an_opcode = il_le) and then (l_type.is_real_32 or else l_type.is_real_64)))
 				end
 			else
 				a_node.nested_b.process (Current)
@@ -4921,7 +4925,7 @@ feature {NONE} -- Convenience
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

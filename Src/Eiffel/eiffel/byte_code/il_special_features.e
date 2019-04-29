@@ -394,6 +394,40 @@ feature -- IL code generation
 				il_generator.put_default_value (type)
 				il_generator.generate_binary_operator (il_eq, True)
 
+			when ieee_is_equal_type then
+				parameters.process (a_generator)
+				il_generator.generate_binary_operator (il_eq, False)
+
+			when ieee_is_greater_type then
+				parameters.process (a_generator)
+				il_generator.generate_binary_operator (il_gt, False)
+
+			when ieee_is_greater_equal_type then
+				parameters.process (a_generator)
+				il_generator.generate_binary_operator (il_ge, True)
+
+			when ieee_is_less_type then
+				parameters.process (a_generator)
+				il_generator.generate_binary_operator (il_lt, False)
+
+			when ieee_is_less_equal_type then
+				parameters.process (a_generator)
+				il_generator.generate_binary_operator (il_le, True)
+
+			when ieee_maximum_number_type then
+				check
+					parameters_not_void: parameters /= Void
+					valid_count: parameters.count = 1
+				end
+				generate_extremum_number ({MD_OPCODES}.bge_un, parameters [1], type, a_generator)
+
+			when ieee_minimum_number_type then
+				check
+					parameters_not_void: parameters /= Void
+					valid_count: parameters.count = 1
+				end
+				generate_extremum_number ({MD_OPCODES}.ble_un, parameters [1], type, a_generator)
+
 			else
 
 			end
@@ -486,6 +520,13 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (positive_infinity_type, positive_infinity_name_id)
 			Result.put (do_nothing_type, do_nothing_name_id)
 			Result.put (is_default_pointer_type, is_default_pointer_name_id)
+			Result.put (ieee_is_equal_type, ieee_is_equal_name_id)
+			Result.put (ieee_is_greater_type, ieee_is_greater_name_id)
+			Result.put (ieee_is_greater_equal_type, ieee_is_greater_equal_name_id)
+			Result.put (ieee_is_less_type, ieee_is_less_name_id)
+			Result.put (ieee_is_less_equal_type, ieee_is_less_equal_name_id)
+			Result.put (ieee_maximum_number_type, ieee_maximum_number_name_id)
+			Result.put (ieee_minimum_number_type, ieee_minimum_number_name_id)
 
 -- FIXME: Manu 10/24/2001. Not yet implemented.
 -- 			Result.put (memory_copy, memory_copy_name_id)
@@ -561,7 +602,15 @@ feature -- Fast access to feature name
 	positive_infinity_type: INTEGER = 63
 	do_nothing_type: INTEGER = 64
 	is_default_pointer_type: INTEGER = 65
-	max_type_id: INTEGER = 65
+	ieee_is_equal_type: INTEGER = 66
+	ieee_is_greater_type: INTEGER = 67
+	ieee_is_greater_equal_type: INTEGER = 68
+	ieee_is_less_type: INTEGER = 69
+	ieee_is_less_equal_type: INTEGER = 70
+	ieee_maximum_number_type: INTEGER = 71
+	ieee_minimum_number_type: INTEGER = 72
+
+	max_type_id: INTEGER = 72
 
 feature {NONE} -- IL code generation
 
@@ -619,6 +668,54 @@ feature {NONE} -- IL code generation
 					-- proper computation to get a positive hash-code.
 				il_generator.generate_hash_code
 			end
+		end
+
+	generate_extremum_number (c: like {MD_OPCODES}.ble; e: EXPR_B; t: CL_TYPE_A; g: IL_NODE_GENERATOR)
+			-- Generate code for "ieee_maximum_number" (when `c = {MD_OPCODES}.bge_un`) or "ieee_minimum_number" (when `c = {MD_OPCODES}.ble_un`)
+			-- for the value on stack and the value of `e` of type `t` using generator `g`.
+		require
+			valid_comparison_opcode: c = {MD_OPCODES}.bge_un or c = {MD_OPCODES}.ble_un
+			valid_generator: g.is_valid
+		local
+			other_variable_number: INTEGER
+			elseif_label, else_label, end_label: IL_LABEL
+		do
+				-- Generate code for "ieee_minimum_number" like
+				--    if Current > other then
+				--       other
+				--    elseif Current /= Current then
+				--       other
+				--    else
+				--       Current
+				--    end
+				--
+				-- Initialize labels for branching.
+				-- Because "Current" in the "else" part is already on the stack, no code or label for the "else" part is required.
+			elseif_label := il_generator.create_label
+			end_label := il_generator.create_label
+				-- Compute and save operands.
+			il_generator.duplicate_top
+			e.process (g)
+			il_generator.duplicate_top
+			context.add_local (t)
+			other_variable_number := context.local_list.count
+			il_generator.put_dummy_local_info (t, other_variable_number)
+			il_generator.generate_local_assignment (other_variable_number)
+				-- Generate "if Current > other then other".
+			il_generator.branch_on_condition (c, elseif_label)
+			il_generator.pop
+			il_generator.generate_local (other_variable_number)
+			il_generator.branch_to (end_label)
+				-- Generate "elseif Current /= Current then other".
+			il_generator.mark_label (elseif_label)
+			il_generator.duplicate_top
+			il_generator.duplicate_top
+			il_generator.branch_on_condition ({MD_OPCODES}.beq, end_label)
+			il_generator.pop
+			il_generator.generate_local (other_variable_number)
+				-- Generate "else Current": the result is already on the top of the stack, nothing to do.
+				-- Generate end label.
+			il_generator.mark_label (end_label)
 		end
 
 	generate_three_way_comparison (a_generator: IL_NODE_GENERATOR; a_type: CL_TYPE_A; a_expr: EXPR_B)
@@ -904,7 +1001,7 @@ invariant
 	il_generation: System.il_generation
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

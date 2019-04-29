@@ -3,6 +3,7 @@
 	<target name="test">
 		<root class="TEST" feature="make"/>
 		<setting name="console_application" value="true"/>
+		<setting name="total_order_on_reals" value="true"/>
 		<capability>
 			<concurrency support="thread"/>
 			<void_safety support="none"/>

@@ -7,6 +7,7 @@
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<setting name="console_application" value="true"/>
+		<setting name="total_order_on_reals" value="true"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE"/>
 		$EWEASEL_DOTNET_SETTING
 		<cluster name="except014" location=".\" recursive="true"/>

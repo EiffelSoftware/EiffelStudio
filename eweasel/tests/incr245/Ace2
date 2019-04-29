@@ -7,6 +7,7 @@
 	<target name="test">
 		<root class="test" feature="make"/>
 		<setting name="console_application" value="true"/>
+		<setting name="total_order_on_reals" value="true"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE"/>
 		<cluster name="a" location="$CLUSTER\a\"/>
 	</target>

@@ -3,6 +3,8 @@
 	<target name="test">
 		<root cluster="root_cluster" class="TEST" feature="make"/>
 		<option warning="true"/>
+		<setting name="console_application" value="true"/>
+		<setting name="total_order_on_reals" value="true"/>
 		<setting name="multithreaded" value="$MULTITHREADED"/>
 		<precompile name="precompile" location="$PRECOMPILE"/>
 		$EWEASEL_DOTNET_SETTING

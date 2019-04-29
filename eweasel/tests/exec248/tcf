@@ -1,7 +1,7 @@
 test_name nan-min-max
 test_description Using NaN in min or max doesn't trigger the right resut when it is the target of a call.
 
-define TOTAL_ORDER "false"
+define TOTAL_ORDER "true"
 copy_sub 	Ace $TEST Ace
 copy_sub	test.e $CLUSTER test.e
 
@@ -10,7 +10,7 @@ compile_result ok
 
 execute_work	NONE exec_output1
 execute_result ok
-compare		exec_output1 ieee_output
+compare		exec_output1 output
 
 compile_frozen
 compile_result	ok
@@ -20,31 +20,31 @@ c_compile_result	ok
 
 execute_work	NONE exec_output2
 execute_result	ok
-compare		exec_output2 ieee_output
+compare		exec_output2 output
 
 cleanup_compile
-define TOTAL_ORDER "true"
+define TOTAL_ORDER "false"
 copy_sub 	Ace_2 $TEST Ace
 
 compile_frozen
-compile_result	ok
+compile_result	validity_warning NONE VD81
 
 c_compile_work
 c_compile_result	ok
 
 execute_work	NONE exec_output3
 execute_result	ok
-compare		exec_output3 output
+compare		exec_output3 ieee_output
 
 -- Let's force a melt here.
 define DATA "TOTO"
 copy_sub	test.e $CLUSTER test.e
 
 compile_melted
-compile_result ok
+compile_result validity_warning NONE VD81
 
 execute_work	NONE exec_output4
 execute_result ok
-compare		exec_output4 output
+compare		exec_output4 ieee_output
 
 test_end

@@ -3,6 +3,7 @@
 	<target name="library">
 		<root all_classes="true"/>
 		<setting name="console_application" value="true"/>
+		<setting name="total_order_on_reals" value="true"/>
 		<capability>
 			<void_safety support="none"/>
 		</capability>

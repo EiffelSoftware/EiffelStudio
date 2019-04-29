@@ -3,6 +3,8 @@
 	<target name="library" abstract="true">
 		<root all_classes="true"/>
 		<setting name="console_application" value="true"/>
+		<setting name="total_order_on_reals" value="true"/>
+		<setting name="total_order_on_reals" value="true"/>
 		<capability>
 			<concurrency support="none"/>
 			<void_safety support="$LIBRARY_VOID_SAFETY"/>
@@ -13,6 +15,8 @@
 	<target name="test" extends="library">
 		<root class="TEST" feature="make"/>
 		<setting name="console_application" value="true"/>
+		<setting name="total_order_on_reals" value="true"/>
+		<setting name="total_order_on_reals" value="true"/>
 		<capability>
 			<concurrency support="none"/>
 			<void_safety support="$VOID_SAFETY" use="$USE_VOID_SAFETY"/>

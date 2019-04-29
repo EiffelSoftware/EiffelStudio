@@ -3,6 +3,8 @@
 	<target name="test">
 		<root class="TEST" feature="make"/>
 		<setting name="console_application" value="true"/>
+		<setting name="total_order_on_reals" value="true"/>
+		<setting name="total_order_on_reals" value="true"/>
 		<setting name="concurrency" value="scoop"/>
 		<precompile name="pre-foo" location="precomp-scoop.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
@@ -13,6 +15,8 @@
 	<target name="test_thread">
 		<root class="TEST" feature="make"/>
 		<setting name="console_application" value="true"/>
+		<setting name="total_order_on_reals" value="true"/>
+		<setting name="total_order_on_reals" value="true"/>
 		<setting name="concurrency" value="thread"/>
 		<precompile name="pre-foo_thread" location="precomp-thread.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>

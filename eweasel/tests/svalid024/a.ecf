@@ -3,6 +3,8 @@
 	<target name="default">
 		<option full_class_checking="true" void_safety="all">
 		</option>
+		<setting name="console_application" value="true"/>
+		<setting name="total_order_on_reals" value="true"/>
 		<library name="base-safe" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<library name="lib_b" location="$LIB_B\b.ecf"/>
 		<cluster name="A" location="$LIB_A"/>

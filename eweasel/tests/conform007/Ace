@@ -4,6 +4,7 @@
 		<option warning="true" is_void_safe="true" is_attached_by_default="true"/>
 		$EWEASEL_DOTNET_SETTING
 		<setting name="console_application" value="true"/>
+		<setting name="total_order_on_reals" value="true"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE_SAFE"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" use_application_options="false"/>
 		<cluster name="root_cluster" location="$CLUSTER"/>

@@ -5,6 +5,7 @@
 		<option void_safety="none"/>
 		<setting name="inlining_size" value="100"/>
 		<setting name="console_application" value="true"/>
+		<setting name="total_order_on_reals" value="true"/>
 		<setting name="concurrency" value="thread"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE_MT"/>
 		$EWEASEL_DOTNET_SETTING

@@ -5,6 +5,7 @@
 		<option warning="false" full_class_checking="true" is_attached_by_default="false" void_safety="none" syntax="standard"/>
 		<setting name="shared_library_definition" value="$CLUSTER/test.def"/>
 		<setting name="console_application" value="true"/>
+		<setting name="total_order_on_reals" value="true"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>

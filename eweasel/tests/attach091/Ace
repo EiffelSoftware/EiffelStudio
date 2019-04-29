@@ -4,6 +4,7 @@
 		<root class="TEST" feature="make"/>
 		<option warning="false" full_class_checking="true" is_attached_by_default="$ATTACHED_BY_DEFAULT" void_safety="$VOID_SAFETY"/>
 		<setting name="console_application" value="true"/>
+		<setting name="total_order_on_reals" value="true"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<cluster name="root_cluster" location="$CLUSTER\"/>

@@ -680,9 +680,11 @@ feature {NONE} -- Implementation attribute processing
 					end
 					if not is_error then
 						if l_uu = Void then
-							l_last_system := factory.new_system_generate_uuid_with_file_name (file_name, l_lower_name, current_namespace)
+							l_last_system := factory.new_system_generate_uuid_with_file_name (file_name, l_lower_name,
+								if attached current_namespace as n then n else latest_namespace end)
 						else
-							l_last_system := factory.new_system_with_file_name (file_name, l_lower_name, l_uu, current_namespace)
+							l_last_system := factory.new_system_with_file_name (file_name, l_lower_name, l_uu,
+								if attached current_namespace as n then n else latest_namespace end)
 						end
 						last_system := l_last_system
 						if attached current_attributes.item (at_readonly) as l_readonly then

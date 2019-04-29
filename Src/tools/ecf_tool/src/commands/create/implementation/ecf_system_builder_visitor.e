@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 
 	new_conf_system (ecf: ECF; a_ecf_location: PATH): CONF_SYSTEM
 		do
-			Result := factory.new_system_with_file_name (a_ecf_location.name, ecf.name, create {UUID}.make_from_string (ecf.uuid))
+			Result := factory.new_system_with_file_name (a_ecf_location.name, ecf.name, create {UUID}.make_from_string (ecf.uuid), {CONF_FILE_CONSTANTS}.latest_namespace)
 		end
 
 	current_conf_target: detachable CONF_TARGET
@@ -229,7 +229,7 @@ feature -- Helpers
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

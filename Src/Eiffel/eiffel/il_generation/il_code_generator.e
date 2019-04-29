@@ -1077,9 +1077,16 @@ feature -- Binary operator generation
 			-- Generate a binary operator comparison for REAL_XX types when
 			-- user chose to have a total order on REALs.
 		require
-			a_code_valid: a_code = {IL_CONST}.il_ne or a_code = {IL_CONST}.il_eq or
-				a_code = {IL_CONST}.il_le or a_code = {IL_CONST}.il_lt or
-				a_code = {IL_CONST}.il_ge or a_code = {IL_CONST}.il_gt
+			a_code_valid:
+				a_code = {IL_CONST}.il_ne or
+				a_code = {IL_CONST}.il_eq or
+				a_code = {IL_CONST}.il_le or
+				a_code = {IL_CONST}.il_lt or
+				a_code = {IL_CONST}.il_ge or
+				a_code = {IL_CONST}.il_gt or
+				a_code = {IL_CONST}.il_max or
+				a_code = {IL_CONST}.il_min or
+				a_code = {IL_CONST}.il_three_way_comparison
 			a_return_type_not_void: a_return_type /= Void
 			a_return_type_valid: a_return_type.is_boolean or a_return_type.is_integer or
 				a_return_type.is_real_32 or a_return_type.is_real_64
@@ -1284,7 +1291,7 @@ feature -- Generic conformance
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

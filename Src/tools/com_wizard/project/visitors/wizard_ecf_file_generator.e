@@ -238,7 +238,7 @@ feature {NONE} -- Implementation
 				end
 			end
 			if not attached Result then
-				Result := conf_factory.new_system_generate_uuid_with_file_name (p.name, a_name)
+				Result := conf_factory.new_system_generate_uuid_with_file_name (p.name, a_name, {CONF_FILE_CONSTANTS}.latest_namespace)
 			end
 		end
 
@@ -298,7 +298,7 @@ feature {NONE} -- Onces
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

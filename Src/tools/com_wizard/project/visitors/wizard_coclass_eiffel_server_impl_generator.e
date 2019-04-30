@@ -1,7 +1,7 @@
-note
+﻿note
 	description: "Coclass eiffel server generator"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 

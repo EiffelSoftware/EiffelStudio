@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "HASH_TABLE of tests and their results for a given compilor version"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,25 +14,28 @@ inherit
 			make as table_make
 		end
 
+	LOCALIZED_PRINTER
+		undefine
+			copy,
+			is_equal
+		end
+
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
-	make (name: STRING)
+	make (name: READABLE_STRING_32)
 			-- Open an Output file for reading, select useful information
 			-- Build a Hash Table for tests : code, name, result.
-		local
-			file_path_name: STRING
 		do
-			file_path_name := name
-			create file.make (file_path_name)
+			create file.make_with_name (name)
 			table_make (10)
 			if file.exists then
 				file.open_read
 				build_test_hash_table (file)
 			else
-				io.error.put_string ("Could not read file %"" + name + "%".%N")
+				localized_print_error ({STRING_32} "Could not read file %"" + name + {STRING_32} "%".%N")
 			end
 		end
 
@@ -49,7 +52,6 @@ feature -- Measurement
 		local
 			line_test_info, test, name, l_key, test_result : STRING
 			index1, index2 : INTEGER
-			test_info : TEST_INFO
 		do
 
 			from
@@ -78,8 +80,7 @@ feature -- Measurement
 						test_result := line_test_info.substring (index1 + 2, index2)
 					end
 
-					create test_info.make(test_result, name, l_key)
-					force_last (test_info, l_key)
+					force_last (create {TEST_INFO}.make(test_result, name, l_key), l_key)
 				end
 
 			end
@@ -100,7 +101,7 @@ feature
 		end
 
 note
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -124,11 +125,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class COMPILER_RESULTS
+end

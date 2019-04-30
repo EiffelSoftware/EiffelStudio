@@ -26,10 +26,10 @@ feature -- Access
 	license: detachable TUPLE [name: READABLE_STRING_32; url: READABLE_STRING_32]
 			-- Product License
 
-	mirrors: detachable  LIST [READABLE_STRING_32]
+	mirrors: detachable  LIST [READABLE_STRING_8]
 			-- Product mirrors
 
-	default_mirror: detachable READABLE_STRING_32
+	default_mirror: detachable READABLE_STRING_8
 			-- Default mirror
 
 	evaluation: BOOLEAN
@@ -86,7 +86,7 @@ feature -- Element change
 			license_assigned: license = a_license
 		end
 
-	set_mirrors (a_mirrors: READABLE_STRING_32)
+	set_mirrors (a_mirrors: READABLE_STRING_8)
 			-- Assign `mirrors' with tab separated `a_mirrors'.
 		do
 			across
@@ -96,13 +96,13 @@ feature -- Element change
 			end
 		end
 
-	add_mirror (a_mirror: READABLE_STRING_32)
+	add_mirror (a_mirror: READABLE_STRING_8)
 		local
-			l_mirrors: LIST [READABLE_STRING_32]
+			l_mirrors: LIST [READABLE_STRING_8]
 		do
 			l_mirrors := mirrors
 			if l_mirrors = Void then
-				create {ARRAYED_LIST [READABLE_STRING_32]} l_mirrors.make (1)
+				create {ARRAYED_LIST [READABLE_STRING_8]} l_mirrors.make (1)
 				mirrors := l_mirrors
 			end
 			l_mirrors.extend (a_mirror)

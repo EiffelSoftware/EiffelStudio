@@ -199,13 +199,33 @@ feature {NONE} -- Implementation (preparation of all widgets)
 		end
 
 	launch_interface
+		local
+			cfg: ES_UPDATE_CLIENT_CONFIGURATION
+			api: ES_UPDATE_MANAGER
 		do
-			if preferences.dialog_data.show_first_launching_dialog then
+			create cfg.make ({ES_UPDATE_CONSTANTS}.update_service_url)
+			create api.make (cfg)
+
+			if is_eiffel_layout_defined and then
+				preferences.dialog_data.show_update_manager_dialog and then
+				attached api.has_update_release_by_channel_and_platform ({ES_UPDATE_CONSTANTS}.stable_channel, eiffel_layout.eiffel_platform, eiffel_layout.version_name) as l_release
+			then
+				if preferences.dialog_data.show_beta_update_manager_dialog and then
+					attached api.has_update_release_by_channel_and_platform ({ES_UPDATE_CONSTANTS}.beta_channel, eiffel_layout.eiffel_platform, eiffel_layout.version_name) as l_beta_release
+ 				then
+ 					display_update_manager_dialog (l_release, agent display_update_manager_dialog (l_beta_release, agent display_first_launching_dialog  (agent display_startup_page) ))
+				elseif preferences.dialog_data.show_first_launching_dialog then
+					display_update_manager_dialog (l_release, agent display_first_launching_dialog  (agent display_startup_page) )
+				else
+					display_update_manager_dialog (l_release, agent display_startup_page)
+				end
+			elseif preferences.dialog_data.show_first_launching_dialog then
 				display_first_launching_dialog (agent display_startup_page)
 			else
 				display_startup_page
 			end
 		end
+
 
 feature {NONE} -- Welcome dialog
 
@@ -372,6 +392,33 @@ feature {NONE} -- Implementation: interface loading
 			end
 		end
 
+	display_update_manager_dialog (a_release: ES_UPDATE_RELEASE; cb: detachable PROCEDURE [TUPLE])
+			-- Show the starting dialog letting the user choose where
+			-- his project is (or will be).
+			-- And call `cb` when dialog is closed (cancelled or not).
+		local
+			dlg: ES_UPDATE_MANAGER_DIALOG
+			first_window: EB_DEVELOPMENT_WINDOW
+		do
+			if
+				is_eiffel_layout_defined and then
+				eiffel_layout.installed_version_names.count > 1
+			then
+				first_window := window_manager.last_created_window
+				check
+					first_window_not_void: first_window /= Void
+				end
+
+				create dlg.make (a_release)
+				if cb /= Void then
+					dlg.next_actions.extend (cb)
+				end
+				dlg.show_on_active_window
+			elseif cb /= Void then
+				cb.call (Void)
+			end
+		end
+
 feature {NONE} -- Exception handling
 
 	handle_exception (a_exception: EXCEPTION)
@@ -465,7 +512,7 @@ feature {NONE} -- Factory
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

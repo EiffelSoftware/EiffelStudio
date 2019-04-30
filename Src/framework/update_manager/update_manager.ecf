@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd" name="update_manager" uuid="B018F118-5BDB-4BB8-B68D-565560AF3467" library_target="update_manager">
+	<target name="update_manager">
+		<root all_classes="true"/>
+		<setting name="console_application" value="true"/>
+		<setting name="dead_code_removal" value="all"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
+		<library name="framework" location="$ISE_LIBRARY\framework\environment\environment.ecf"/>
+		<library name="http_authorization" location="$ISE_LIBRARY\contrib\library\web\authentication\http_authorization\http_authorization.ecf"/>
+		<library name="http_client" location="$ISE_LIBRARY\contrib\library\network\http_client\http_client.ecf"/>
+		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json.ecf"/>
+		<cluster name="src" location=".\src\" recursive="true">
+			<file_rule>
+				<exclude>/CVS$</exclude>
+				<exclude>/EIFGENs$</exclude>
+				<exclude>/\.svn$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+</system>

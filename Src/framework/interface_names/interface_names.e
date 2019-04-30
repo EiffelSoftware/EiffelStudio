@@ -268,6 +268,7 @@ feature -- Button texts
 	b_Disable_catcall_console_warnings: STRING_32	do Result := locale.translation ("Disable Catcall Console Warning?") end
 	b_Disable_catcall_debugger_warnings: STRING_32	do Result := locale.translation ("Disable Catcall Debugger Warning?") end
 	b_import_settings: STRING_32	do Result := locale.translation ("Import Settings") end
+	b_try_it_now: STRING_32 do Result := locale.translation ("Try it now!") end
 
 feature -- Choices
 
@@ -2273,6 +2274,21 @@ feature -- Label texts
 					]"), [a_version_name])
 		end
 
+	l_update_manager_estudio_beta_help (a_version_name: READABLE_STRING_GENERAL): STRING_32
+		do
+			Result := locale.formatted_string (locale.translation ("[
+				A new beta version of EiffelStudio is available: $1. This is an unstable version released towards the official one.
+					]"), [a_version_name])
+		end
+
+
+	l_update_manager_estudio_stable_help (a_version_name: READABLE_STRING_GENERAL): STRING_32
+		do
+			Result := locale.formatted_string (locale.translation ("[
+				A newer version of EiffelStudio is available: $1. This is the stable version that superseeds the installed one.
+					]"), [a_version_name])
+		end
+
 
 	l_show_features: STRING_32 	do Result := locale.translation ("Show Features") end
 	l_show_templates: STRING_32 do Result := locale.translation ("Show Templates") end
@@ -3045,7 +3061,7 @@ feature -- String escape
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Coclass descriptor"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -74,7 +74,7 @@ feature -- Access
 			Result.append (name)
 			Result.append ("%R%N")
 		end
-	
+
 	feature_c_names: ARRAYED_LIST [STRING]
 			-- List of feature C names
 
@@ -90,7 +90,7 @@ feature -- Element Change
 		do
 			source_interface_descriptors := some_descriptors
 		ensure
-			valid_descriptors: source_interface_descriptors /= Void and 
+			valid_descriptors: source_interface_descriptors /= Void and
 				source_interface_descriptors = some_descriptors
 		end
 
@@ -282,6 +282,4 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_COCLASS_DESCRIPTOR
-
-
+end

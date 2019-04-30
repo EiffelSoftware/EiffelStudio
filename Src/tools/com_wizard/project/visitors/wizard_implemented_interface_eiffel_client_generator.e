@@ -1,7 +1,7 @@
-note
+﻿note
 	description: "Implemented interface Eiffel client generator"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -21,7 +21,7 @@ inherit
 feature -- Basic operations
 
 	generate (a_descriptor: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR)
-			-- Generate 
+			-- Generate
 		local
 			a_class_name: STRING
 			inherit_clause: WIZARD_WRITER_INHERIT_CLAUSE
@@ -156,6 +156,4 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_IMPLEMENTED_INTERFACE_EIFFEL_CLIENT_GENERATOR
-
-
+end

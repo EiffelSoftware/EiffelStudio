@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Structure descriptor"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -152,6 +152,4 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-end -- class WIZARD_RECORD_DESCRIPTOR
-
-
+end

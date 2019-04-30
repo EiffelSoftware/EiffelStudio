@@ -678,7 +678,7 @@ feature {NONE} -- IL code generation
 			valid_generator: g.is_valid
 		local
 			other_variable_number: INTEGER
-			elseif_label, else_label, end_label: IL_LABEL
+			elseif_label, end_label: IL_LABEL
 		do
 				-- Generate code for "ieee_minimum_number" like
 				--    if Current > other then

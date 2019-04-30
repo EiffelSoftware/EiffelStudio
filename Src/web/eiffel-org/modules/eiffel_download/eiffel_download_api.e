@@ -14,6 +14,27 @@ inherit
 create
 	make
 
+feature -- Channels
+
+	default_channel: STRING = "stable"
+
+	beta_channel: STRING = "beta"
+
+	channels: ARRAYED_LIST [READABLE_STRING_GENERAL]
+		do
+			create Result.make (2)
+			Result.extend (default_channel)
+			Result.extend (beta_channel)
+		end
+
+	is_channel_available (ch: READABLE_STRING_GENERAL): BOOLEAN
+			-- Is channel `ch` available?
+		local
+			fut: FILE_UTILITIES
+		do
+			Result := fut.directory_path_exists (channel_file_location (ch))
+		end
+
 feature -- Access: config
 
 	configuration_files (a_channel: detachable READABLE_STRING_GENERAL): LIST [PATH]
@@ -41,26 +62,10 @@ feature -- Access: config
 		do
 			Result := cms_api.module_location_by_name ("eiffel_download").extended ("channel")
 			if a_channel = Void then
-				Result := Result.extended ("stable")
+				Result := Result.extended (default_channel)
 			else
 				Result := Result.extended (a_channel)
 			end
-		end
-
-	download_stable_configuration: detachable DOWNLOAD_CONFIGURATION
-			-- Get `download_configuration' value.
-			-- from a list of files.
-		local
-			l_dir: DIRECTORY
-		do
-			write_debug_log (generator + ".download_configuration")
-			if internal_download_configuration = Void then
-				create l_dir.make_with_path (channel_file_location ("stable"))
-				if l_dir.exists then
-					retrieve_download_configuration_from_dir (l_dir)
-				end
-			end
-			Result := internal_download_configuration
 		end
 
 	download_channel_configuration (a_channel: detachable READABLE_STRING_GENERAL): detachable DOWNLOAD_CONFIGURATION
@@ -140,12 +145,10 @@ feature -- Persistency
 
 feature -- Access
 
-	retrieve_mirror_gpl (cfg: DOWNLOAD_CONFIGURATION): detachable READABLE_STRING_32
+	retrieve_mirror_gpl (cfg: DOWNLOAD_CONFIGURATION): detachable READABLE_STRING_8
 			-- Get mirror.
 		do
-			if attached cfg.mirror as l_mirror then
-				Result := l_mirror
-			end
+			Result := cfg.mirror
 		end
 
 	retrieve_product_gpl (cfg: DOWNLOAD_CONFIGURATION): detachable DOWNLOAD_PRODUCT

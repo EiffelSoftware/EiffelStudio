@@ -64,7 +64,11 @@ feature -- Link
 						if j > i then
 							k := s32.substring (i + 2, j - 1).as_lower
 							if k.same_string_general ("mirror") then
-								v := associated_product.mirror
+								if attached associated_product.mirror as m then
+									v := m.to_string_32
+								else
+									v := Void
+								end
 							elseif k.same_string_general ("name") then
 								v := associated_product.name
 							elseif k.same_string_general ("id") then

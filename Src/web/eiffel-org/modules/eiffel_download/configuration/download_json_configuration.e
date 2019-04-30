@@ -26,7 +26,8 @@ feature -- Access
 			-- Build a new download configuration.
 		local
 			l_parser: JSON_PARSER
-			l_mirror: detachable READABLE_STRING_32
+			s32: READABLE_STRING_32
+			l_mirror: detachable READABLE_STRING_8
 			prod: like new_product
 		do
 			if a_configuration /= Void then
@@ -38,8 +39,14 @@ feature -- Access
 			l_parser.parse_content
 			if attached {JSON_OBJECT} l_parser.parsed_json_value as jv and then l_parser.is_parsed then
 				if attached {JSON_STRING} jv.item ("mirror") as j_mirror then
-					l_mirror := j_mirror.unescaped_string_32
-					if l_mirror.is_whitespace then
+					s32 := j_mirror.unescaped_string_32
+					if s32.is_valid_as_string_8 then
+						l_mirror := s32.to_string_8
+						if l_mirror.is_whitespace then
+							l_mirror := Void
+						end
+					else
+							-- Invalid mirror value in configuration!
 						l_mirror := Void
 					end
 					if l_mirror /= Void and Result.mirror = Void then
@@ -214,20 +221,31 @@ feature {NONE} -- Implemenation: Products
 			then
 				Result.set_evaluation (l_evaluation.item.to_boolean)
 			end
-			if attached {JSON_STRING} j_product.item ("mirror") as l_mirror then
-				Result.add_mirror (l_mirror.item)
+			if
+				attached {JSON_STRING} j_product.item ("mirror") as l_mirror and then
+				attached l_mirror.unescaped_string_32 as m and then
+				m.is_valid_as_string_8
+			then
+				Result.add_mirror (m.to_string_8)
 			end
 			if attached {JSON_ARRAY} j_product.item ("mirrors") as l_mirrors then
 				across
 					l_mirrors as ic
 				loop
-					if attached {JSON_STRING} ic.item as m then
-						Result.add_mirror (m.unescaped_string_32
-						)
+					if
+						attached {JSON_STRING} ic.item as jm and then
+						attached jm.unescaped_string_32 as m and then
+						m.is_valid_as_string_8
+					then
+						Result.add_mirror (m.to_string_8)
 					end
 				end
-			elseif attached {JSON_STRING} j_product.item ("mirrors") as l_mirrors then
-				Result.set_mirrors (l_mirrors.item)
+			elseif
+				attached {JSON_STRING} j_product.item ("mirrors") as l_mirrors and then
+				attached l_mirrors.unescaped_string_32 as ms and then
+				ms.is_valid_as_string_8
+			then
+				Result.set_mirrors (ms.to_string_8)
 			end
 			if
 				attached {JSON_OBJECT} j_product.item ("license") as l_license and then

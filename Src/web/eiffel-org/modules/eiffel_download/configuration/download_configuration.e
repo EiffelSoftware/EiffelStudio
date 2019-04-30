@@ -8,7 +8,7 @@ class
 
 feature -- Access
 
-	mirror: detachable READABLE_STRING_32
+	mirror: detachable READABLE_STRING_8
 		-- url mirror.
 
 	products: detachable ARRAYED_LIST [DOWNLOAD_PRODUCT]

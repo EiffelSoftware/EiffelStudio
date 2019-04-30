@@ -56,11 +56,11 @@ feature -- Output
 			format_elements (t,
 				locale.translation_in_context ("[
 					Non-total order on real numbers specified for the target '{1}' is now obsolete.
-					Consider changing the setting to "True" and use features with the names starting from "ieee" of the classes REAL_32 and REAL_64 if needed.
+					Consider changing the setting to "True" and using features with the names starting from "ieee" of the classes REAL_32 and REAL_64 if needed.
 					
 					How to change the setting?
 						1. Open the project settings dialog: Project | Project Settings...
-						2. For every affected target navigate to Target | Advanced.
+						2. For every affected target, navigate to Target | Advanced.
 						3. In the section "Language" in the pane on the right, set the value of the setting "Total Order on REALs" to "True".
 				]", "compiler.warning"),
 				<<agent {TEXT_FORMATTER}.process_target_name_text (target.name, target)>>)

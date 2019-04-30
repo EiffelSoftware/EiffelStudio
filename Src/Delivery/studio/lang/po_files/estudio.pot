@@ -301,7 +301,7 @@ msgid " and "
 msgstr ""
 
 #. Source code: t_contract_syntax_error_2: STRING_32 			do Result := locale.translation (" because it contains syntax errors") end
-#: interface_names.e:2691
+#: interface_names.e:2692
 msgid " because it contains syntax errors"
 msgstr ""
 
@@ -488,7 +488,7 @@ msgid ""
 msgstr ""
 
 #. Source code: e_file_not_valid: STRING = "$1%Nis not a valid test result file"
-#: es_test_comparison_widget.e:797
+#: es_test_comparison_widget.e:807
 msgid ""
 "$1\n"
 "is not a valid test result file"
@@ -2198,7 +2198,7 @@ msgid ""
 msgstr ""
 
 #. Source code: unknown_string: STRING_32 do Result := locale.translation ("???") end
-#: interface_names.e:2948
+#: interface_names.e:2949
 msgid "???"
 msgstr ""
 
@@ -2267,7 +2267,7 @@ msgid ""
 msgstr ""
 
 #. Source code: e_Diagram_add_class_figure_relations: STRING_32 do Result := locale.translation("A class figure(s) must either be selected%N%
-#: interface_names.e:2824
+#: interface_names.e:2825
 msgid ""
 "A class figure(s) must either be selected\n"
 "or dropped on this button via right clicking."
@@ -2519,7 +2519,7 @@ msgid "Aborted"
 msgstr ""
 
 #. Source code: Result := locale.formatted_string (locale.translation ("About $1"), [workbench_name])
-#: interface_names.e:2324
+#: interface_names.e:2325
 msgid "About $1"
 msgstr ""
 
@@ -2549,7 +2549,7 @@ msgid "Account"
 msgstr ""
 
 #. Source code: t_account_access: STRING = "Account Access"
-#: es_exception_submit_dialog.e:995
+#: es_exception_submit_dialog.e:1002
 msgid "Account Access"
 msgstr ""
 
@@ -2575,7 +2575,7 @@ msgid "Acknowledge not loaded"
 msgstr ""
 
 #. Source code: t_acknowledge_change: STRING_32				do Result := locale.translation("Acknowledge selected affected items.") end
-#: interface_names.e:2331
+#: interface_names.e:2332
 msgid "Acknowledge selected affected items."
 msgstr ""
 
@@ -2634,12 +2634,12 @@ msgid "Activate Replay Mode"
 msgstr ""
 
 #. Source code: e_Activate_execution_recording: STRING_32	do Result := locale.translation("Activate execution recording")	end
-#: interface_names.e:2926
+#: interface_names.e:2927
 msgid "Activate execution recording"
 msgstr ""
 
 #. Source code: e_Activate_execution_replay_mode: STRING_32	do Result := locale.translation("Activate execution replay mode")	end
-#: interface_names.e:2929
+#: interface_names.e:2930
 msgid "Activate execution replay mode"
 msgstr ""
 
@@ -2704,7 +2704,7 @@ msgid "Add C&luster..."
 msgstr ""
 
 #. Source code: Result := locale.formatted_string(locale.translation("Add Client-Supplier Relation Between '$1' and '$2'"), [client_name, supplier_name])
-#: interface_names.e:2487
+#: interface_names.e:2488
 msgid "Add Client-Supplier Relation Between '$1' and '$2'"
 msgstr ""
 
@@ -2714,7 +2714,7 @@ msgid "Add Cluster"
 msgstr ""
 
 #. Source code: t_Existing_class: STRING_32					do Result := locale.translation("Add Existing Class")	end
-#: interface_names.e:2386
+#: interface_names.e:2387
 msgid "Add Existing Class"
 msgstr ""
 
@@ -2729,7 +2729,7 @@ msgid "Add Info to $1 '$2'"
 msgstr ""
 
 #. Source code: Result := locale.formatted_string(locale.translation("Add Inheritance Relation Between '$1' and '$2'"), [ancestor_name, descendant_name])
-#: interface_names.e:2495
+#: interface_names.e:2496
 msgid "Add Inheritance Relation Between '$1' and '$2'"
 msgstr ""
 
@@ -2749,12 +2749,12 @@ msgid "Add Make"
 msgstr ""
 
 #. Source code: t_New_class: STRING_32						do Result := locale.translation("Add New Class")	end
-#: interface_names.e:2385
+#: interface_names.e:2386
 msgid "Add New Class"
 msgstr ""
 
 #. Source code: Result := locale.formatted_string(locale.translation("Add Non-conforming Inheritance Relation Between '$1' and '$2'"), [ancestor_name, descendant_name])
-#: interface_names.e:2497
+#: interface_names.e:2498
 msgid "Add Non-conforming Inheritance Relation Between '$1' and '$2'"
 msgstr ""
 
@@ -2804,7 +2804,7 @@ msgid "Add Resource"
 msgstr ""
 
 #. Source code: t_Add_search_scope: STRING_32				do Result := locale.translation("Add Search Scope")	end
-#: interface_names.e:2333
+#: interface_names.e:2334
 msgid "Add Search Scope"
 msgstr ""
 
@@ -2854,12 +2854,12 @@ msgid "Add a new command"
 msgstr ""
 
 #. Source code: t_contract_add_contract: STRING_32				do Result := locale.translation ("Add a new contract") end
-#: interface_names.e:2681
+#: interface_names.e:2682
 msgid "Add a new contract"
 msgstr ""
 
 #. Source code: t_Add_eis_entry: STRING_32					do Result := locale.translation("Add a new entry in the list.")	end
-#: interface_names.e:2332
+#: interface_names.e:2333
 msgid "Add a new entry in the list."
 msgstr ""
 
@@ -2869,12 +2869,12 @@ msgid "Add a new feature"
 msgstr ""
 
 #. Source code: e_Add_exported_feature: STRING_32	do Result := locale.translation("Add a new feature to this dynamic library definition")	end
-#: interface_names.e:2788
+#: interface_names.e:2789
 msgid "Add a new feature to this dynamic library definition"
 msgstr ""
 
 #. Source code: t_New_manual_test_case: STRING_32			do Result := locale.translation("Add a new test case")	end
-#: interface_names.e:2390
+#: interface_names.e:2391
 msgid "Add a new test case"
 msgstr ""
 
@@ -3101,7 +3101,7 @@ msgid "Address"
 msgstr ""
 
 #. Source code: t_Address_toolbar: STRING_32					do Result := locale.translation ("Address Bar") end
-#: interface_names.e:2644
+#: interface_names.e:2645
 msgid "Address Bar"
 msgstr ""
 
@@ -3111,7 +3111,7 @@ msgid "Address Expression"
 msgstr ""
 
 #. Source code: locale.translation_in_context ("Address of a cursor variable of {1} form of a loop is not supported.", "compiler.error"),
-#: ast_feature_checker_generator.e:4318
+#: ast_feature_checker_generator.e:4312
 msgctxt "compiler.error"
 msgid "Address of a cursor variable of {1} form of a loop is not supported."
 msgstr ""
@@ -3168,7 +3168,7 @@ msgid "Age in days for an archive item to be considered old"
 msgstr ""
 
 #. Source code: ("Agent creation on {1} is not supported because it is either an attribute, a constant or an external feature.",
-#: ast_feature_checker_generator.e:4547
+#: ast_feature_checker_generator.e:4541
 msgctxt "compiler.error"
 msgid ""
 "Agent creation on {1} is not supported because it is either an attribute, a "
@@ -3186,7 +3186,7 @@ msgid "Albanian (Albania)"
 msgstr ""
 
 #. Source code: t_Alias: STRING_32							do Result := locale.translation("Alias")	end
-#: interface_names.e:2334
+#: interface_names.e:2335
 msgid "Alias"
 msgstr ""
 
@@ -3222,6 +3222,12 @@ msgstr ""
 #. Source code: l_Alias_name: STRING_32				do Result := locale.translation("Alias:")	end
 #: interface_names.e:1172
 msgid "Alias:"
+msgstr ""
+
+#. Source code: locale.translation_in_context ("All", "configuration.option.dead_code")
+#: target_properties.e:369
+msgctxt "configuration.option.dead_code"
+msgid "All"
 msgstr ""
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
@@ -3683,7 +3689,7 @@ msgid ""
 msgstr ""
 
 #. Source code: e_external_command_is_running: STRING_32 do Result := locale.translation("An external command is running now. %NPlease wait until it exits.")	end
-#: interface_names.e:2914
+#: interface_names.e:2915
 msgid ""
 "An external command is running now. \n"
 "Please wait until it exits."
@@ -3952,7 +3958,7 @@ msgid "Application exited"
 msgstr ""
 
 #. Source code: e_Not_running: STRING_32				do Result := locale.translation("Application is not running")	end
-#: interface_names.e:2856
+#: interface_names.e:2857
 msgid "Application is not running"
 msgstr ""
 
@@ -4218,7 +4224,7 @@ msgid "Are you sure you want to quit $1?"
 msgstr ""
 
 #. Source code: e_refactoring_redo_sure: STRING_32 do Result := locale.translation("Are you sure you want to redo the refactoring?%N If classes have been modified since the undo of the refactoring this can lead to corrupt classes and lost information!")	end
-#: interface_names.e:2922
+#: interface_names.e:2923
 msgid ""
 "Are you sure you want to redo the refactoring?\n"
 " If classes have been modified since the undo of the refactoring this can "
@@ -4256,7 +4262,7 @@ msgid "Are you sure you want to stop the execution?"
 msgstr ""
 
 #. Source code: e_refactoring_undo_sure: STRING_32 do Result := locale.translation("Are you sure you want to undo the refactoring?%N If classes have been modified since the refactoring this can lead to corrupt classes and lost information!")	end
-#: interface_names.e:2921
+#: interface_names.e:2922
 msgid ""
 "Are you sure you want to undo the refactoring?\n"
 " If classes have been modified since the refactoring this can lead to "
@@ -4383,7 +4389,7 @@ msgid "Assembly"
 msgstr ""
 
 #. Source code: s_Assembly_stone: STRING_32			do Result := locale.translation("Assembly ")	end
-#: interface_names.e:2301
+#: interface_names.e:2302
 msgid "Assembly "
 msgstr ""
 
@@ -4475,7 +4481,7 @@ msgid "Attach Debuggee"
 msgstr ""
 
 #. Source code: e_Exec_attach: STRING_32			do Result := locale.translation("Attach debuggee ...")	end
-#: interface_names.e:2838
+#: interface_names.e:2839
 msgid "Attach debuggee ..."
 msgstr ""
 
@@ -4485,7 +4491,7 @@ msgid "Attach debuggee execution"
 msgstr ""
 
 #. Source code: e_Exec_attach_on_port: STRING_32	do Result := locale.translation("Attach debuggee on port")	end
-#: interface_names.e:2839
+#: interface_names.e:2840
 msgid "Attach debuggee on port"
 msgstr ""
 
@@ -4678,7 +4684,7 @@ msgid "Auto show feature contract tooltip"
 msgstr ""
 
 #. Source code: t_Autocomplete_window: STRING_32				do Result := locale.translation("Auto-Complete")	end
-#: interface_names.e:2454
+#: interface_names.e:2455
 msgid "Auto-Complete"
 msgstr ""
 
@@ -6218,7 +6224,7 @@ msgid "BON cluster name font."
 msgstr ""
 
 #. Source code: next_text: STRING = "Next"
-#: es_test_launch_wizard.e:337
+#: es_test_launch_wizard.e:339
 msgid "Back"
 msgstr ""
 
@@ -6238,32 +6244,32 @@ msgid "Back to previous menu"
 msgstr ""
 
 #. Source code: e_C_compilation_failed: STRING_32 	do Result := locale.translation("Background C Compilation Failed")	end
-#: interface_names.e:2804
+#: interface_names.e:2805
 msgid "Background C Compilation Failed"
 msgstr ""
 
 #. Source code: e_C_compilation_launch_failed: STRING_32 do Result := locale.translation("Background C Compilation Launch Failed")	end
-#: interface_names.e:2805
+#: interface_names.e:2806
 msgid "Background C Compilation Launch Failed"
 msgstr ""
 
 #. Source code: e_C_compilication_launched: STRING_32 do Result := locale.translation("Background C Compilation Launched")	end
-#: interface_names.e:2807
+#: interface_names.e:2808
 msgid "Background C Compilation Launched"
 msgstr ""
 
 #. Source code: e_C_compilation_succeeded: STRING_32 do Result := locale.translation("Background C Compilation Succeeded")	end
-#: interface_names.e:2808
+#: interface_names.e:2809
 msgid "Background C Compilation Succeeded"
 msgstr ""
 
 #. Source code: e_C_compilation_terminated: STRING_32 do Result := locale.translation("Background C Compilation Terminated")	end
-#: interface_names.e:2806
+#: interface_names.e:2807
 msgid "Background C Compilation Terminated"
 msgstr ""
 
 #. Source code: e_C_compilation_running: STRING_32	do Result := locale.translation("Background C Compilation in Progress")	end
-#: interface_names.e:2809
+#: interface_names.e:2810
 msgid "Background C Compilation in Progress"
 msgstr ""
 
@@ -6274,52 +6280,52 @@ msgid "Background Color for Diagram Tool"
 msgstr ""
 
 #. Source code: e_finalizing_launch_failed: STRING_32	do Result := locale.translation("Background Finalized C Compilation Launch Failed")	end
-#: interface_names.e:2797
+#: interface_names.e:2798
 msgid "Background Finalized C Compilation Launch Failed"
 msgstr ""
 
 #. Source code: e_finalizing_launched: STRING_32 	do Result := locale.translation("Background Finalized C Compilation Launched")	end
-#: interface_names.e:2799
+#: interface_names.e:2800
 msgid "Background Finalized C Compilation Launched"
 msgstr ""
 
 #. Source code: e_finalizing_succeeded: STRING_32	do Result := locale.translation("Background Finalized C Compilation Succeeded")	end
-#: interface_names.e:2801
+#: interface_names.e:2802
 msgid "Background Finalized C Compilation Succeeded"
 msgstr ""
 
 #. Source code: e_finalizing_terminated: STRING_32 	do Result := locale.translation("Background Finalized C Compilation Terminated")	end
-#: interface_names.e:2803
+#: interface_names.e:2804
 msgid "Background Finalized C Compilation Terminated"
 msgstr ""
 
 #. Source code: e_finalizing_failed: STRING_32		do Result := locale.translation("Background Finalized C compilation Failed")	end
-#: interface_names.e:2794
+#: interface_names.e:2795
 msgid "Background Finalized C compilation Failed"
 msgstr ""
 
 #. Source code: e_freezing_failed: STRING_32 		do Result := locale.translation("Background Workbench C Compilation Failed")	end
-#: interface_names.e:2793
+#: interface_names.e:2794
 msgid "Background Workbench C Compilation Failed"
 msgstr ""
 
 #. Source code: e_freezing_launch_failed: STRING_32 	do Result := locale.translation("Background Workbench C Compilation Launch Failed")	end
-#: interface_names.e:2796
+#: interface_names.e:2797
 msgid "Background Workbench C Compilation Launch Failed"
 msgstr ""
 
 #. Source code: e_freezing_launched: STRING_32 		do Result := locale.translation("Background Workbench C Compilation Launched")	end
-#: interface_names.e:2798
+#: interface_names.e:2799
 msgid "Background Workbench C Compilation Launched"
 msgstr ""
 
 #. Source code: e_freezing_succeeded: STRING_32 		do Result := locale.translation("Background Workbench C Compilation Succeeded")	end
-#: interface_names.e:2800
+#: interface_names.e:2801
 msgid "Background Workbench C Compilation Succeeded"
 msgstr ""
 
 #. Source code: e_freezing_terminated: STRING_32 	do Result := locale.translation("Background Workbench C Compilation Terminated")	end
-#: interface_names.e:2802
+#: interface_names.e:2803
 msgid "Background Workbench C Compilation Terminated"
 msgstr ""
 
@@ -6592,7 +6598,7 @@ msgid "Background color used to highlight lines."
 msgstr ""
 
 #. Source code: t_Open_backup: STRING_32						do Result := locale.translation("Backup Found")	end
-#: interface_names.e:2406
+#: interface_names.e:2407
 msgid "Backup Found"
 msgstr ""
 
@@ -6900,7 +6906,7 @@ msgid "Bosnian (Bosnia and Herzegovina, Latin)"
 msgstr ""
 
 #. Source code: t_bottom_reached: STRING_32 	do Result := locale.translation("Bottom reached.")	end
-#: interface_names.e:2606
+#: interface_names.e:2607
 msgid "Bottom reached."
 msgstr ""
 
@@ -7011,7 +7017,7 @@ msgid "Browser"
 msgstr ""
 
 #. Source code: t_bug_information: STRING = "Bug Information"
-#: es_exception_submit_dialog.e:996
+#: es_exception_submit_dialog.e:1003
 msgid "Bug Information"
 msgstr ""
 
@@ -7193,7 +7199,7 @@ msgid "Callers from client class"
 msgstr ""
 
 #. Source code: t_Calling_convention: STRING_32				do Result := locale.translation("Calling Convention")	end
-#: interface_names.e:2336
+#: interface_names.e:2337
 msgid "Calling Convention"
 msgstr ""
 
@@ -7267,7 +7273,7 @@ msgid "Can't delete selected item"
 msgstr ""
 
 #. Source code: note
-#: es_test_launch_wizard.e:342
+#: es_test_launch_wizard.e:344
 msgid "Cancel"
 msgstr ""
 
@@ -7298,7 +7304,7 @@ msgid "Cannot add target because there is already a target with the same name."
 msgstr ""
 
 #. Source code: Result := locale.formatted_string (locale.translation("Cannot change to directory %"$1%"."), [a_directory])
-#: interface_names.e:2918
+#: interface_names.e:2919
 msgid "Cannot change to directory \"$1\"."
 msgstr ""
 
@@ -7544,8 +7550,8 @@ msgstr ""
 #: conf_interface_names.e:1287
 msgctxt "configuration"
 msgid ""
-"Capability \"$1\" of supplier target has value \"$2\" insufficient for client "
-"value \"$6\".\n"
+"Capability \"$1\" of supplier target has value \"$2\" insufficient for "
+"client value \"$6\".\n"
 "Client/child target\n"
 "\tName: $7\n"
 "\tSystem: $8\n"
@@ -7656,7 +7662,7 @@ msgid "Change"
 msgstr ""
 
 #. Source code: t_Diagram_change_color_cmd: STRING_32		do Result := locale.translation("Change Class Color")	end
-#: interface_names.e:2524
+#: interface_names.e:2525
 msgid "Change Class Color"
 msgstr ""
 
@@ -7677,7 +7683,7 @@ msgid "Change feature export to {NONE}"
 msgstr ""
 
 #. Source code: e_Project_settings: STRING_32		do Result := locale.translation("Change project settings, right click to open external editor")	end
-#: interface_names.e:2865
+#: interface_names.e:2866
 msgid "Change project settings, right click to open external editor"
 msgstr ""
 
@@ -7688,12 +7694,12 @@ msgid "Change to comparison with {REAL}.is_nan"
 msgstr ""
 
 #. Source code: t_Changed_after_last_run: STRING_32			do Result := locale.translation("Changed After Last Run")	end
-#: interface_names.e:2337
+#: interface_names.e:2338
 msgid "Changed After Last Run"
 msgstr ""
 
 #. Source code: t_Changed_time: STRING_32					do Result := locale.translation("Changed Time")	end
-#: interface_names.e:2338
+#: interface_names.e:2339
 msgid "Changed Time"
 msgstr ""
 
@@ -7779,7 +7785,7 @@ msgid "Check recursively"
 msgstr ""
 
 #. Source code: e_Check_exports: STRING_32			do Result := locale.translation("Check the validity of the library definition")	end
-#: interface_names.e:2790
+#: interface_names.e:2791
 msgid "Check the validity of the library definition"
 msgstr ""
 
@@ -7832,7 +7838,7 @@ msgid "Chinese (Taiwan)"
 msgstr ""
 
 #. Source code: t_Diagram_delete_client_link: STRING_32 		do Result := locale.translation("Choose Feature(s) to Delete")	end
-#: interface_names.e:2464
+#: interface_names.e:2465
 msgid "Choose Feature(s) to Delete"
 msgstr ""
 
@@ -7842,32 +7848,32 @@ msgid "Choose Libraries to precompile"
 msgstr ""
 
 #. Source code: t_Slice_limits: STRING_32					do Result := locale.translation("Choose New Slice Limits for Special Objects")	end
-#: interface_names.e:2436
+#: interface_names.e:2437
 msgid "Choose New Slice Limits for Special Objects"
 msgstr ""
 
 #. Source code: t_Choose_directory: STRING_32 				do Result := locale.translation("Choose Your Directory")	end
-#: interface_names.e:2341
+#: interface_names.e:2342
 msgid "Choose Your Directory"
 msgstr ""
 
 #. Source code: t_Choose_project_and_directory: STRING_32 	do Result := locale.translation("Choose Your Project Name and Directory")	end
-#: interface_names.e:2344
+#: interface_names.e:2345
 msgid "Choose Your Project Name and Directory"
 msgstr ""
 
 #. Source code: t_Choose_class: STRING_32					do Result := locale.translation("Choose a Class")	end
-#: interface_names.e:2339
+#: interface_names.e:2340
 msgid "Choose a Class"
 msgstr ""
 
 #. Source code: t_Choose_cluster: STRING_32					do Result := locale.translation("Choose a Cluster")	end
-#: interface_names.e:2340
+#: interface_names.e:2341
 msgid "Choose a Cluster"
 msgstr ""
 
 #. Source code: t_Choose_folder_name: STRING_32				do Result := locale.translation("Choose a Folder Name")	end
-#: interface_names.e:2342
+#: interface_names.e:2343
 msgid "Choose a Folder Name"
 msgstr ""
 
@@ -7882,7 +7888,7 @@ msgid "Choose an icon for you project."
 msgstr ""
 
 #. Source code: t_choose_name_for_new_configuration_file: STRING_32 do Result := locale.translation ("Choose name for new configuration file") end
-#: interface_names.e:2343
+#: interface_names.e:2344
 msgid "Choose name for new configuration file"
 msgstr ""
 
@@ -7932,19 +7938,19 @@ msgid "Class"
 msgstr ""
 
 #. Source code: t_context_menu_class: STRING_32							do Result := locale.translation_in_context ("Class", "eiffelstudio.context_menu")	end
-#: interface_names.e:2345
+#: interface_names.e:2346
 msgctxt "eiffelstudio.context_menu"
 msgid "Class"
 msgstr ""
 
 #. Source code: t_dynamic_lib_window_class: STRING_32					do Result := locale.translation_in_context ("Class", "eiffelstudio.dynamic_library_builder_window.export_column_name")	end
-#: interface_names.e:2346
+#: interface_names.e:2347
 msgctxt "eiffelstudio.dynamic_library_builder_window.export_column_name"
 msgid "Class"
 msgstr ""
 
 #. Source code: t_expression_definition_dialog_class: STRING_32			do Result := locale.translation_in_context ("Class", "eiffelstudio.expression_definition_dialog_class")	end
-#: interface_names.e:2347
+#: interface_names.e:2348
 msgctxt "eiffelstudio.expression_definition_dialog_class"
 msgid "Class"
 msgstr ""
@@ -7984,7 +7990,7 @@ msgid "Class"
 msgstr ""
 
 #. Source code: s_Class_stone: STRING_32				do Result := locale.translation("Class ")	end
-#: interface_names.e:2297
+#: interface_names.e:2298
 msgid "Class "
 msgstr ""
 
@@ -8001,7 +8007,7 @@ msgid "Class \"$1\" (ID = \"$2\") is invalid."
 msgstr ""
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Class %"$1%" has been modified by another editor."), [a_class_name])
-#: interface_names.e:2451
+#: interface_names.e:2452
 msgid "Class \"$1\" has been modified by another editor."
 msgstr ""
 
@@ -8063,7 +8069,7 @@ msgid "Class '"
 msgstr ""
 
 #. Source code: t_Diagram_class_header: STRING_32			do Result := locale.translation("Class Header")	end
-#: interface_names.e:2455
+#: interface_names.e:2456
 msgid "Class Header"
 msgstr ""
 
@@ -8564,12 +8570,12 @@ msgid "Clean routine"
 msgstr ""
 
 #. Source code: t_clean_up_affected_items: STRING_32			do Result := locale.translation("Clean up affected items.")	end
-#: interface_names.e:2348
+#: interface_names.e:2349
 msgid "Clean up affected items."
 msgstr ""
 
 #. Source code: st_cleaning_project: STRING_32		do Result := locale.translation ("Cleaning project...") end
-#: interface_names.e:2707
+#: interface_names.e:2708
 msgid "Cleaning project..."
 msgstr ""
 
@@ -8615,7 +8621,7 @@ msgid "Cli&ents"
 msgstr ""
 
 #. Source code: wb_Click_back_and_correct_error: STRING_32 do Result := locale.translation("Click Back if you can correct the problem or Click Abort.")	end
-#: interface_names.e:2995
+#: interface_names.e:2996
 msgid "Click Back if you can correct the problem or Click Abort."
 msgstr ""
 
@@ -8686,12 +8692,12 @@ msgid "Click to open"
 msgstr ""
 
 #. Source code: tt_show_help: STRING = "Click to show the $1 tool help documentation."
-#: es_dockable_tool_panel.e:1115
+#: es_dockable_tool_panel.e:1128
 msgid "Click to show the $1 tool help documentation."
 msgstr ""
 
 #. Source code: e_show_help: STRING_32 do Result := locale.translation("Click to show the help documentation.")	end
-#: interface_names.e:2923
+#: interface_names.e:2924
 msgid "Click to show the help documentation."
 msgstr ""
 
@@ -8745,7 +8751,7 @@ msgid "Clients"
 msgstr ""
 
 #. Source code: t_Clients_of: STRING_32						do Result := locale.translation("Clients of Class ")	end
-#: interface_names.e:2349
+#: interface_names.e:2350
 msgid "Clients of Class "
 msgstr ""
 
@@ -8822,7 +8828,7 @@ msgid ""
 msgstr ""
 
 #. Source code: fs_close_window: STRING_32				do Result := locale.translation ("Close window") end
-#: interface_names.e:2311
+#: interface_names.e:2312
 msgid "Close window"
 msgstr ""
 
@@ -8837,7 +8843,7 @@ msgid "Cluster"
 msgstr ""
 
 #. Source code: s_Cluster_stone: STRING_32			do Result := locale.translation("Cluster ")	end
-#: interface_names.e:2298
+#: interface_names.e:2299
 msgid "Cluster "
 msgstr ""
 
@@ -8986,7 +8992,7 @@ msgid "Code Results:"
 msgstr ""
 
 #. Source code: t_code_template_evaluator: STRING_32			do Result := locale.translation ("Code Template Evaluator") end
-#: interface_names.e:2677
+#: interface_names.e:2678
 msgid "Code Template Evaluator"
 msgstr ""
 
@@ -9088,7 +9094,7 @@ msgid "Collapse All"
 msgstr ""
 
 #. Source code: Result := locale.formatted_string(locale.translation("Collapse Cluster '$1'"), [a_name])
-#: interface_names.e:2598
+#: interface_names.e:2599
 msgid "Collapse Cluster '$1'"
 msgstr ""
 
@@ -9732,7 +9738,7 @@ msgid "Compare"
 msgstr ""
 
 #. Source code: t_compare_with_expected_result: STRING_32	do Result := locale.translation ("Compare With Expected Result") end
-#: interface_names.e:2641
+#: interface_names.e:2642
 msgid "Compare With Expected Result"
 msgstr ""
 
@@ -9776,7 +9782,7 @@ msgid "Comparison to boolean constant"
 msgstr ""
 
 #. Source code: t_compatible: STRING = "Compatible"
-#: eb_development_window.e:2540
+#: eb_development_window.e:2553
 msgid "Compatible"
 msgstr ""
 
@@ -9791,7 +9797,7 @@ msgid "Compilation Error &Wizard..."
 msgstr ""
 
 #. Source code: t_Extended_explanation: STRING_32			do Result := locale.translation("Compilation Error Wizard")	end
-#: interface_names.e:2372
+#: interface_names.e:2373
 msgid "Compilation Error Wizard"
 msgstr ""
 
@@ -9811,7 +9817,7 @@ msgid "Compilation failed"
 msgstr ""
 
 #. Source code: wt_Compilation_mode: STRING_32 do Result := locale.translation("Compilation mode")	end
-#: interface_names.e:2968
+#: interface_names.e:2969
 msgid "Compilation mode"
 msgstr ""
 
@@ -10093,12 +10099,12 @@ msgid "Config and cluster details"
 msgstr ""
 
 #. Source code: t_configuration_loading_error: STRING_32		do Result := locale.translation("Configuration Loading Error")	end
-#: interface_names.e:2351
+#: interface_names.e:2352
 msgid "Configuration Loading Error"
 msgstr ""
 
 #. Source code: t_configuration_loading_message: STRING_32	do Result := locale.translation("Configuration Loading Message")	end
-#: interface_names.e:2352
+#: interface_names.e:2353
 msgid "Configuration Loading Message"
 msgstr ""
 
@@ -10321,7 +10327,7 @@ msgid "Confirm save metric"
 msgstr ""
 
 #. Source code: t_confirmation: STRING_32					do Result := locale.translation ("Confirmation") end
-#: interface_names.e:2353
+#: interface_names.e:2354
 msgid "Confirmation"
 msgstr ""
 
@@ -10446,7 +10452,7 @@ msgid "Continue execution"
 msgstr ""
 
 #. Source code: e_Exec_debug_continue: STRING_32	do Result := locale.translation("Continue execution and stop at breakpoints")	end
-#: interface_names.e:2836
+#: interface_names.e:2837
 msgid "Continue execution and stop at breakpoints"
 msgstr ""
 
@@ -10487,7 +10493,7 @@ msgid "Contract view"
 msgstr ""
 
 #. Source code: e_Exec_ignore_contract_violation: STRING_32	do Result := locale.translation("Contract violation occurred. Do you want to%N - [break] into debugger,%N - or [continue] to let the application handle the violation,%N - or [ignore] the violation and continue as if it was not violated? %N%NNote: You can always ignore contract violation later using the drop down menu from %"Run%" button.")	end
-#: interface_names.e:2844
+#: interface_names.e:2845
 msgid ""
 "Contract violation occurred. Do you want to\n"
 " - [break] into debugger,\n"
@@ -10509,7 +10515,7 @@ msgid "Control Debuggee Object Storage"
 msgstr ""
 
 #. Source code: e_Control_debuggee_object_storage: STRING_32	do Result := locale.translation("Control debuggee object storage")	end
-#: interface_names.e:2938
+#: interface_names.e:2939
 msgid "Control debuggee object storage"
 msgstr ""
 
@@ -10846,7 +10852,7 @@ msgid "Copy URI of $1 '$2'"
 msgstr ""
 
 #. Source code: e_Copy_call_stack_to_clipboard: STRING_32 do Result := locale.translation("Copy call stack to clipboard")	end
-#: interface_names.e:2811
+#: interface_names.e:2812
 msgid "Copy call stack to clipboard"
 msgstr ""
 
@@ -11023,12 +11029,12 @@ msgid "Create New watch"
 msgstr ""
 
 #. Source code: e_New_dynamic_lib_definition: STRING_32	do Result := locale.translation("Create a new dynamic library definition")	end
-#: interface_names.e:2853
+#: interface_names.e:2854
 msgid "Create a new dynamic library definition"
 msgstr ""
 
 #. Source code: e_New_expression: STRING_32			do Result := locale.translation("Create a new expression")	end
-#: interface_names.e:2855
+#: interface_names.e:2856
 msgid "Create a new expression"
 msgstr ""
 
@@ -11117,7 +11123,7 @@ msgid "Creation"
 msgstr ""
 
 #. Source code: t_Creation_routine: STRING_32				do Result := locale.translation("Creation Procedure")	end
-#: interface_names.e:2350
+#: interface_names.e:2351
 msgid "Creation Procedure"
 msgstr ""
 
@@ -11201,7 +11207,7 @@ msgid "Criterion unit \"$1\" is different from basic metric unit \"$2\"."
 msgstr ""
 
 #. Source code: 
-#: es_exception_submit_dialog.e:1021
+#: es_exception_submit_dialog.e:1028
 msgid "Critical"
 msgstr ""
 
@@ -11253,7 +11259,7 @@ msgid "Culture of the assembly."
 msgstr ""
 
 #. Source code: 
-#: es_test_comparison_widget.e:790
+#: es_test_comparison_widget.e:800
 msgid "Current"
 msgstr ""
 
@@ -11263,7 +11269,7 @@ msgid "Current Editor"
 msgstr ""
 
 #. Source code: h_new_result: STRING = "Current Result"
-#: es_test_comparison_widget.e:780
+#: es_test_comparison_widget.e:790
 msgid "Current Result"
 msgstr ""
 
@@ -11359,7 +11365,7 @@ msgid "Cursor line highlight color"
 msgstr ""
 
 #. Source code: e_Cursor_position: STRING_32			do Result := locale.translation("Cursor position (line:column)")	end
-#: interface_names.e:2812
+#: interface_names.e:2813
 msgid "Cursor position (line:column)"
 msgstr ""
 
@@ -13122,7 +13128,7 @@ msgid "Data"
 msgstr ""
 
 #. Source code: t_Date: STRING_32							do Result := locale.translation ("Date") end
-#: interface_names.e:2670
+#: interface_names.e:2671
 msgid "Date"
 msgstr ""
 
@@ -13148,12 +13154,12 @@ msgid "Deactivate Replay Mode"
 msgstr ""
 
 #. Source code: e_Deactivate_execution_recording: STRING_32	do Result := locale.translation("Deactivate execution recording")	end
-#: interface_names.e:2927
+#: interface_names.e:2928
 msgid "Deactivate execution recording"
 msgstr ""
 
 #. Source code: e_Deactivate_execution_replay_mode: STRING_32	do Result := locale.translation("Deactivate execution replay mode")	end
-#: interface_names.e:2930
+#: interface_names.e:2931
 msgid "Deactivate execution replay mode"
 msgstr ""
 
@@ -13165,6 +13171,12 @@ msgstr ""
 #. Source code: d_Finished_removing_dead_code: STRING_32		do Result := locale.translation("Dead Code Removal Completed")	end
 #: interface_names.e:369
 msgid "Dead Code Removal Completed"
+msgstr ""
+
+#. Source code: (locale.translation_in_context ("Dead code removal", "configuration.option.dead_code"),
+#: target_properties.e:358
+msgctxt "configuration.option.dead_code"
+msgid "Dead code removal"
 msgstr ""
 
 #. Source code: section_debug: STRING_32 do Result := locale.translation ("Debug")	end
@@ -13737,17 +13749,17 @@ msgid "Delete"
 msgstr ""
 
 #. Source code: Result := locale.formatted_string(locale.translation("Delete Client Link '$1'") , [a_name])
-#: interface_names.e:2544
+#: interface_names.e:2545
 msgid "Delete Client Link '$1'"
 msgstr ""
 
 #. Source code: Result := locale.formatted_string(locale.translation("Delete Inheritance Link Between '$1' and '$2'"), [an_ancestor,a_descendant])
-#: interface_names.e:2552
+#: interface_names.e:2553
 msgid "Delete Inheritance Link Between '$1' and '$2'"
 msgstr ""
 
 #. Source code: Result := locale.formatted_string(locale.translation("Delete Non-Conforming Inheritance Link Between '$1' and '$2'"), [an_ancestor,a_descendant])
-#: interface_names.e:2554
+#: interface_names.e:2555
 msgid "Delete Non-Conforming Inheritance Link Between '$1' and '$2'"
 msgstr ""
 
@@ -13777,12 +13789,12 @@ msgid "Delete graphical items, remove code from system"
 msgstr ""
 
 #. Source code: t_delete_selected_item: STRING_32			do Result := locale.translation("Delete selected item in the list.")	end
-#: interface_names.e:2359
+#: interface_names.e:2360
 msgid "Delete selected item in the list."
 msgstr ""
 
 #. Source code: t_delete_selected_items: STRING_32			do Result := locale.translation("Delete selected items in the list.")	end
-#: interface_names.e:2360
+#: interface_names.e:2361
 msgid "Delete selected items in the list."
 msgstr ""
 
@@ -13792,7 +13804,7 @@ msgid "Delete selected row"
 msgstr ""
 
 #. Source code: t_Deleting_files: STRING_32					do Result := locale.translation("Deleting Files")	end
-#: interface_names.e:2361
+#: interface_names.e:2362
 msgid "Deleting Files"
 msgstr ""
 
@@ -13942,7 +13954,7 @@ msgid "Detach Application"
 msgstr ""
 
 #. Source code: e_Exec_detach: STRING_32			do Result := locale.translation("Detach execution")	end
-#: interface_names.e:2841
+#: interface_names.e:2842
 msgid "Detach execution"
 msgstr ""
 
@@ -14627,7 +14639,7 @@ msgid "Disable Execution Recording"
 msgstr ""
 
 #. Source code: t_Diagram_disable_high_quality: STRING_32	do Result := locale.translation("Disable High Quality")	end
-#: interface_names.e:2601
+#: interface_names.e:2602
 msgid "Disable High Quality"
 msgstr ""
 
@@ -14653,12 +14665,12 @@ msgid "Disable graphical output."
 msgstr ""
 
 #. Source code: e_Dbg_assertion_checking: STRING_32	do Result := locale.translation("Disable or restore assertion checking handling during execution")	end
-#: interface_names.e:2898
+#: interface_names.e:2899
 msgid "Disable or restore assertion checking handling during execution"
 msgstr ""
 
 #. Source code: e_Dbg_Ignore_breakpoints: STRING_32 	do Result := locale.translation("Disable stop at breakpoint (Execution ignores breakpoints).")	end
-#: interface_names.e:2900
+#: interface_names.e:2901
 msgid "Disable stop at breakpoint (Execution ignores breakpoints)."
 msgstr ""
 
@@ -14684,7 +14696,7 @@ msgid "Discard target scope customized formatter"
 msgstr ""
 
 #. Source code: e_discover_melt: STRING_32			do Result := locale.translation("Discover unreferenced externally added classes and recompile.")	end
-#: interface_names.e:2867
+#: interface_names.e:2868
 msgid "Discover unreferenced externally added classes and recompile."
 msgstr ""
 
@@ -14752,7 +14764,7 @@ msgid "Display all breakpoints together"
 msgstr ""
 
 #. Source code: e_Pretty_print: STRING_32			do Result := locale.translation("Display an expanded view of objects")	end
-#: interface_names.e:2862
+#: interface_names.e:2863
 msgid "Display an expanded view of objects"
 msgstr ""
 
@@ -15008,7 +15020,7 @@ msgid "Display information"
 msgstr ""
 
 #. Source code: e_Display_system_info: STRING_32	do Result := locale.translation("Display information concerning current system")	end
-#: interface_names.e:2829
+#: interface_names.e:2830
 msgid "Display information concerning current system"
 msgstr ""
 
@@ -15389,7 +15401,7 @@ msgid "Down"
 msgstr ""
 
 #. Source code: e_open_c_file: STRING_32 do Result := locale.translation ("Drop a class/feature here to open its corresponding C file/function in external editor.") end
-#: interface_names.e:2906
+#: interface_names.e:2907
 msgid ""
 "Drop a class/feature here to open its corresponding C file/function in "
 "external editor."
@@ -15412,7 +15424,7 @@ msgid "Dropping Eiffel files to the editor works for open projects only."
 msgstr ""
 
 #. Source code: t_Dummy: STRING_32							do Result := locale.translation("Dummy")	end
-#: interface_names.e:2362
+#: interface_names.e:2363
 msgid "Dummy"
 msgstr ""
 
@@ -15465,7 +15477,7 @@ msgid "Dynamic Feature Evaluation"
 msgstr ""
 
 #. Source code: t_Dynamic_lib_window: STRING_32 				do Result := locale.translation("Dynamic Library Builder")	end
-#: interface_names.e:2363
+#: interface_names.e:2364
 msgid "Dynamic Library Builder"
 msgstr ""
 
@@ -15567,7 +15579,7 @@ msgid "Edit"
 msgstr ""
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Edit $1"), [a_name])
-#: interface_names.e:2652
+#: interface_names.e:2653
 msgid "Edit $1"
 msgstr ""
 
@@ -15592,7 +15604,7 @@ msgid "Edit EIS auto-node generation property."
 msgstr ""
 
 #. Source code: t_Edit_expression: STRING_32					do Result := locale.translation("Edit Expression")	end
-#: interface_names.e:2393
+#: interface_names.e:2394
 msgid "Edit Expression"
 msgstr ""
 
@@ -15643,7 +15655,7 @@ msgid "Edit condition"
 msgstr ""
 
 #. Source code: t_contract_edit_selected: STRING_32 			do Result := locale.translation ("Edit selected contract") end
-#: interface_names.e:2683
+#: interface_names.e:2684
 msgid "Edit selected contract"
 msgstr ""
 
@@ -15654,12 +15666,12 @@ msgid "Edit the breakpoint located at the cursor."
 msgstr ""
 
 #. Source code: e_Edit_exported_feature: STRING_32	do Result := locale.translation("Edit the properties of the selected feature")	end
-#: interface_names.e:2832
+#: interface_names.e:2833
 msgid "Edit the properties of the selected feature"
 msgstr ""
 
 #. Source code: e_Edit_expression: STRING_32		do Result := locale.translation("Edit the selected expression")	end
-#: interface_names.e:2833
+#: interface_names.e:2834
 msgid "Edit the selected expression"
 msgstr ""
 
@@ -15669,7 +15681,7 @@ msgid "Edit..."
 msgstr ""
 
 #. Source code: t_Editor: STRING_32							do Result := locale.translation("Editor")	end
-#: interface_names.e:2638
+#: interface_names.e:2639
 msgid "Editor"
 msgstr ""
 
@@ -17902,7 +17914,7 @@ msgid "Eiffel Compilation"
 msgstr ""
 
 #. Source code: e_Compilation_failed: STRING_32		do Result := locale.translation("Eiffel Compilation Failed")	end
-#: interface_names.e:2791
+#: interface_names.e:2792
 msgid "Eiffel Compilation Failed"
 msgstr ""
 
@@ -17914,7 +17926,7 @@ msgid ""
 msgstr ""
 
 #. Source code: e_Compilation_succeeded: STRING_32	do Result := locale.translation("Eiffel Compilation Succeeded")	end
-#: interface_names.e:2792
+#: interface_names.e:2793
 msgid "Eiffel Compilation Succeeded"
 msgstr ""
 
@@ -17951,22 +17963,22 @@ msgid "EiffelStudio"
 msgstr ""
 
 #. Source code: t_eiffelstudio_error: STRING_32				do Result := locale.translation ("EiffelStudio Error") end
-#: interface_names.e:2666
+#: interface_names.e:2667
 msgid "EiffelStudio Error"
 msgstr ""
 
 #. Source code: t_eiffelstudio_info: STRING_32				do Result := locale.translation ("EiffelStudio Information") end
-#: interface_names.e:2669
+#: interface_names.e:2670
 msgid "EiffelStudio Information"
 msgstr ""
 
 #. Source code: t_eiffelstudio_question: STRING_32			do Result := locale.translation ("EiffelStudio Question") end
-#: interface_names.e:2668
+#: interface_names.e:2669
 msgid "EiffelStudio Question"
 msgstr ""
 
 #. Source code: t_eiffelstudio_warning: STRING_32			do Result := locale.translation ("EiffelStudio Warning") end
-#: interface_names.e:2667
+#: interface_names.e:2668
 msgid "EiffelStudio Warning"
 msgstr ""
 
@@ -18046,7 +18058,7 @@ msgid "Elseif"
 msgstr ""
 
 #. Source code: l_email: STRING_32 do Result := locale.translation ("Email") end
-#: interface_names.e:2721
+#: interface_names.e:2722
 msgid "Email"
 msgstr ""
 
@@ -18090,7 +18102,7 @@ msgid "Empty Creation Routine .NET Name Error"
 msgstr ""
 
 #. Source code: t_Empty_development_window: STRING_32 		do Result := locale.translation("Empty Development Tool")	end
-#: interface_names.e:2453
+#: interface_names.e:2454
 msgid "Empty Development Tool"
 msgstr ""
 
@@ -18412,7 +18424,7 @@ msgid "Enable Context Menu On Right-Click"
 msgstr ""
 
 #. Source code: t_Diagram_enable_high_quality: STRING_32	do Result := locale.translation("Enable High Quality")	end
-#: interface_names.e:2602
+#: interface_names.e:2603
 msgid "Enable High Quality"
 msgstr ""
 
@@ -18718,7 +18730,7 @@ msgid "Enable rule."
 msgstr ""
 
 #. Source code: e_Dbg_stop_at_breakpoints: STRING_32 do Result := locale.translation("Enable stop at breakpoint (Execution stops when a breakpoint is reached).")	end
-#: interface_names.e:2899
+#: interface_names.e:2900
 msgid ""
 "Enable stop at breakpoint (Execution stops when a breakpoint is reached)."
 msgstr ""
@@ -18740,7 +18752,7 @@ msgid "Enable/Disable Breakpoints"
 msgstr ""
 
 #. Source code: e_Toggle_state_of_expressions: STRING_32		do Result := locale.translation("Enable/Disable expressions")	end
-#: interface_names.e:2890
+#: interface_names.e:2891
 msgid "Enable/Disable expressions"
 msgstr ""
 
@@ -18993,7 +19005,7 @@ msgid "Ensure then"
 msgstr ""
 
 #. Source code: t_Enter_condition: STRING_32					do Result := locale.translation("Enter Condition")	end
-#: interface_names.e:2365
+#: interface_names.e:2366
 msgid "Enter Condition"
 msgstr ""
 
@@ -19018,17 +19030,17 @@ msgid "Enter or select a name to save the current layout as."
 msgstr ""
 
 #. Source code: lb_enter_bug_information: STRING = "Enter supplementary bug information"
-#: es_exception_submit_dialog.e:1000
+#: es_exception_submit_dialog.e:1007
 msgid "Enter supplementary bug information"
 msgstr ""
 
 #. Source code: lb_enter_synopsis: STRING = "Enter synopsis"
-#: es_exception_submit_dialog.e:1001
+#: es_exception_submit_dialog.e:1008
 msgid "Enter synopsis"
 msgstr ""
 
 #. Source code: t_Enter_name_of_the_unit_test: STRING_32		do Result := locale.translation("Enter the name of the new Unit test case. You have the%N%
-#: interface_names.e:2366
+#: interface_names.e:2367
 msgid ""
 "Enter the name of the new Unit test case. You have the\n"
 "options to specify the class to test"
@@ -19082,22 +19094,22 @@ msgid "Equal in void test"
 msgstr ""
 
 #. Source code: Result := locale.formatted_string(locale.translation("Erase Class '$1'"), [a_name])
-#: interface_names.e:2572
+#: interface_names.e:2573
 msgid "Erase Class '$1'"
 msgstr ""
 
 #. Source code: t_Diagram_erase_classes_cmd: STRING_32		do Result := locale.translation("Erase Classes")	end
-#: interface_names.e:2575
+#: interface_names.e:2576
 msgid "Erase Classes"
 msgstr ""
 
 #. Source code: Result := locale.formatted_string(locale.translation("Erase Cluster '$1'"), [a_name])
-#: interface_names.e:2563
+#: interface_names.e:2564
 msgid "Erase Cluster '$1'"
 msgstr ""
 
 #. Source code: t_Diagram_delete_midpoint_cmd: STRING_32	do Result := locale.translation("Erase Midpoint")	end
-#: interface_names.e:2566
+#: interface_names.e:2567
 msgid "Erase Midpoint"
 msgstr ""
 
@@ -19107,7 +19119,7 @@ msgid "Error"
 msgstr ""
 
 #. Source code: err_error: STRING_32 do Result := locale.translation ("Error ") end
-#: interface_names.e:2944
+#: interface_names.e:2945
 msgid "Error "
 msgstr ""
 
@@ -19436,7 +19448,7 @@ msgid "Evaluating: "
 msgstr ""
 
 #. Source code: t_Expression_evaluation: STRING_32			do Result := locale.translation("Evaluation")	end
-#: interface_names.e:2371
+#: interface_names.e:2372
 msgid "Evaluation"
 msgstr ""
 
@@ -19524,7 +19536,7 @@ msgid "Exception data"
 msgstr ""
 
 #. Source code: e_Dbg_exception_handler: STRING_32	do Result := locale.translation("Exception handling ...")	end
-#: interface_names.e:2897
+#: interface_names.e:2898
 msgid "Exception handling ..."
 msgstr ""
 
@@ -19618,7 +19630,7 @@ msgid "Executable"
 msgstr ""
 
 #. Source code: e_Up_to_date: STRING_32				do Result := locale.translation("Executable is up-to-date")	end
-#: interface_names.e:2893
+#: interface_names.e:2894
 msgid "Executable is up-to-date"
 msgstr ""
 
@@ -19628,7 +19640,7 @@ msgid "Execute $1 tests"
 msgstr ""
 
 #. Source code: e_Exec_step: STRING_32				do Result := locale.translation("Execute execution one step at a time")	end
-#: interface_names.e:2846
+#: interface_names.e:2847
 msgid "Execute execution one step at a time"
 msgstr ""
 
@@ -19660,17 +19672,17 @@ msgid "Execution Parameters ..."
 msgstr ""
 
 #. Source code: wt_Execution_Profile: STRING_32 do Result := locale.translation("Execution Profile")	end
-#: interface_names.e:2971
+#: interface_names.e:2972
 msgid "Execution Profile"
 msgstr ""
 
 #. Source code: wt_Execution_profile_error: STRING_32 do Result := locale.translation("Execution Profile Error")	end
-#: interface_names.e:3012
+#: interface_names.e:3013
 msgid "Execution Profile Error"
 msgstr ""
 
 #. Source code: wt_Execution_Profile_Generation: STRING_32 do Result := locale.translation("Execution Profile Generation")	end
-#: interface_names.e:2978
+#: interface_names.e:2979
 msgid "Execution Profile Generation"
 msgstr ""
 
@@ -19690,7 +19702,7 @@ msgid "Execution interrupted"
 msgstr ""
 
 #. Source code: fs_debug_menu: STRING_32					do Result := locale.translation ("Execution menu") end
-#: interface_names.e:2318
+#: interface_names.e:2319
 msgid "Execution menu"
 msgstr ""
 
@@ -19710,7 +19722,7 @@ msgid "Existing Layouts:"
 msgstr ""
 
 #. Source code: st_exit_eiffelstudio: STRING_32		do Result := locale.translation ("Exit EiffelStudio") end
-#: interface_names.e:2705
+#: interface_names.e:2706
 msgid "Exit EiffelStudio"
 msgstr ""
 
@@ -19752,7 +19764,7 @@ msgid "Expand categorized folder level"
 msgstr ""
 
 #. Source code: Result := locale.formatted_string(locale.translation("Expand cluster '$1'"), [ a_name])
-#: interface_names.e:2591
+#: interface_names.e:2592
 msgid "Expand cluster '$1'"
 msgstr ""
 
@@ -19809,7 +19821,7 @@ msgid "Expanded object view"
 msgstr ""
 
 #. Source code: t_experimental: STRING = "Experimental"
-#: eb_development_window.e:2539
+#: eb_development_window.e:2552
 msgid "Experimental"
 msgstr ""
 
@@ -20029,12 +20041,12 @@ msgid "External"
 msgstr ""
 
 #. Source code: t_external_command: STRING_32				do Result := locale.translation("External Command")	end
-#: interface_names.e:2373
+#: interface_names.e:2374
 msgid "External Command"
 msgstr ""
 
 #. Source code: t_external_commands: STRING_32				do Result := locale.translation("External Commands")	end
-#: interface_names.e:2374
+#: interface_names.e:2375
 msgid "External Commands"
 msgstr ""
 
@@ -20054,7 +20066,7 @@ msgid "External E&ditor $1 '$2'"
 msgstr ""
 
 #. Source code: t_External_edition: STRING_32				do Result := locale.translation("External Edition")	end
-#: interface_names.e:2375
+#: interface_names.e:2376
 msgid "External Edition"
 msgstr ""
 
@@ -20069,7 +20081,7 @@ msgid "External command is not specified."
 msgstr ""
 
 #. Source code: e_external_command_not_launched: STRING_32 do Result := locale.translation("External command not launched.")	end
-#: interface_names.e:2920
+#: interface_names.e:2921
 msgid "External command not launched."
 msgstr ""
 
@@ -20129,7 +20141,7 @@ msgid "External editor command"
 msgstr ""
 
 #. Source code: e_external_editor_not_defined: STRING_32 do Result := locale.translation("External editor not defined")	end
-#: interface_names.e:2913
+#: interface_names.e:2914
 msgid "External editor not defined"
 msgstr ""
 
@@ -20196,17 +20208,17 @@ msgid "F&ormat"
 msgstr ""
 
 #. Source code: e_f_code: STRING_32 do Result := locale.translation("F_code")	end
-#: interface_names.e:2908
+#: interface_names.e:2909
 msgid "F_code"
 msgstr ""
 
 #. Source code: t_pass: STRING = "Pass"
-#: es_test_comparison_widget.e:782
+#: es_test_comparison_widget.e:792
 msgid "Fail"
 msgstr ""
 
 #. Source code: t_Failed: STRING_32						do Result := locale.translation ("Failed") end
-#: interface_names.e:2620
+#: interface_names.e:2621
 msgid "Failed"
 msgstr ""
 
@@ -20262,7 +20274,7 @@ msgid "Feature"
 msgstr ""
 
 #. Source code: t_Exported_feature: STRING_32				do Result := locale.translation_in_context ("Feature", "eiffelstudio.dynamic_library_builder_windows.export_column_name")	end
-#: interface_names.e:2370
+#: interface_names.e:2371
 msgctxt "eiffelstudio.dynamic_library_builder_windows.export_column_name"
 msgid "Feature"
 msgstr ""
@@ -20302,7 +20314,7 @@ msgid "Feature"
 msgstr ""
 
 #. Source code: s_Feature_stone: STRING_32			do Result := locale.translation("Feature ")	end
-#: interface_names.e:2299
+#: interface_names.e:2300
 msgid "Feature "
 msgstr ""
 
@@ -20328,7 +20340,7 @@ msgid "Feature Name"
 msgstr ""
 
 #. Source code: t_Feature_properties: STRING_32				do Result := locale.translation("Feature Properties")	end
-#: interface_names.e:2378
+#: interface_names.e:2379
 msgid "Feature Properties"
 msgstr ""
 
@@ -20772,7 +20784,7 @@ msgid "Features"
 msgstr ""
 
 #. Source code: t_features_to_test: STRING_32				do Result := locale.translation("Features To Test")	end
-#: interface_names.e:2439
+#: interface_names.e:2440
 msgid "Features To Test"
 msgstr ""
 
@@ -20784,6 +20796,12 @@ msgstr ""
 #. Source code: l_show_feature_from_any: STRING_32	do Result := locale.translation("Features from ANY")	end
 #: interface_names.e:2094
 msgid "Features from ANY"
+msgstr ""
+
+#. Source code: locale.translation_in_context ("Features only", "configuration.option.dead_code"),
+#: target_properties.e:368
+msgctxt "configuration.option.dead_code"
+msgid "Features only"
 msgstr ""
 
 #. #-#-#-#-#  estudio.pot  #-#-#-#-#
@@ -20832,7 +20850,7 @@ msgid ""
 msgstr ""
 
 #. Source code: Result := locale.formatted_string (locale.translation ("File %"$1%" has been modified by another editor."), [a_file_name])
-#: interface_names.e:2447
+#: interface_names.e:2448
 msgid "File \"$1\" has been modified by another editor."
 msgstr ""
 
@@ -20864,7 +20882,7 @@ msgid "File Name"
 msgstr ""
 
 #. Source code: t_File_selection: STRING_32					do Result := locale.translation("File Selection")	end
-#: interface_names.e:2379
+#: interface_names.e:2380
 msgid "File Selection"
 msgstr ""
 
@@ -21031,7 +21049,7 @@ msgid "Filter shown and navigatable warnings"
 msgstr ""
 
 #. Source code: tt_runs_button: STRING = "Filter tests by their last result"
-#: es_test_statistics_widget.e:303
+#: es_test_statistics_widget.e:310
 msgid "Filter tests by their last result"
 msgstr ""
 
@@ -21145,12 +21163,12 @@ msgid "Find matching brace"
 msgstr ""
 
 #. Source code: t_Find_test_case_classes: STRING_32			do Result := locale.translation("Find test case classes")	end
-#: interface_names.e:2381
+#: interface_names.e:2382
 msgid "Find test case classes"
 msgstr ""
 
 #. Source code: t_Find: STRING_32							do Result := locale.translation("Find: ")	end
-#: interface_names.e:2380
+#: interface_names.e:2381
 msgid "Find: "
 msgstr ""
 
@@ -21166,7 +21184,7 @@ msgid "Finish"
 msgstr ""
 
 #. Source code: t_finish_freezing_status: STRING_32			do Result := locale.translation("Finish Freezing Status")	end
-#: interface_names.e:2382
+#: interface_names.e:2383
 msgid "Finish Freezing Status"
 msgstr ""
 
@@ -21181,7 +21199,7 @@ msgid "Finnish (Finland)"
 msgstr ""
 
 #. Source code: l_first_name: STRING_32 do Result := locale.translation ("First Name") end
-#: interface_names.e:2718
+#: interface_names.e:2719
 msgid "First Name"
 msgstr ""
 
@@ -21264,7 +21282,7 @@ msgid "Focus on class address input field."
 msgstr ""
 
 #. Source code: fs_focus_on_editor: STRING_32			do Result := locale.translation ("Focus on current editor") end
-#: interface_names.e:2308
+#: interface_names.e:2309
 msgid "Focus on current editor"
 msgstr ""
 
@@ -21275,7 +21293,7 @@ msgid "Focus out selection background color"
 msgstr ""
 
 #. Source code: s_folder_stone: STRING_32			do Result := locale.translation("Folder ")	end
-#: interface_names.e:2302
+#: interface_names.e:2303
 msgid "Folder "
 msgstr ""
 
@@ -21493,7 +21511,7 @@ msgid "Force right angles"
 msgstr ""
 
 #. Source code: e_force_execution_mode: STRING_32		do Result := locale.translation("Force the environment to stay in execution mode")	end
-#: interface_names.e:2795
+#: interface_names.e:2796
 msgid "Force the environment to stay in execution mode"
 msgstr ""
 
@@ -21627,7 +21645,7 @@ msgid "Forth external command shortcut."
 msgstr ""
 
 #. Source code: e_History_forth: STRING_32			do Result := locale.translation("Forward")	end
-#: interface_names.e:2850
+#: interface_names.e:2851
 msgid "Forward"
 msgstr ""
 
@@ -21751,7 +21769,7 @@ msgid "From "
 msgstr ""
 
 #. Source code: Result := locale.formatted_string (locale.translation("From $1"), [Workbench_name])
-#: interface_names.e:2357
+#: interface_names.e:2358
 msgid "From $1"
 msgstr ""
 
@@ -22211,7 +22229,7 @@ msgid "Generating: "
 msgstr ""
 
 #. Source code: wt_Generation_error: STRING_32 do Result := locale.translation("Generation Error")	end
-#: interface_names.e:2994
+#: interface_names.e:2995
 msgid "Generation Error"
 msgstr ""
 
@@ -22278,7 +22296,7 @@ msgid "German (Switzerland)"
 msgstr ""
 
 #. Source code: e_Display_error_help: STRING_32		do Result := locale.translation("Give help on compilation errors")	end
-#: interface_names.e:2828
+#: interface_names.e:2829
 msgid "Give help on compilation errors"
 msgstr ""
 
@@ -22315,7 +22333,7 @@ msgid "Go to"
 msgstr ""
 
 #. Source code: e_go_to_f_code_dir: STRING_32 do Result := locale.translation("Go to F_code directory of this system, or right click to open F_code in specified file browser")	end
-#: interface_names.e:2905
+#: interface_names.e:2906
 msgid ""
 "Go to F_code directory of this system, or right click to open F_code in "
 "specified file browser"
@@ -22342,14 +22360,14 @@ msgid "Go to Previous War&ning"
 msgstr ""
 
 #. Source code: e_go_to_w_code_dir: STRING_32 do Result := locale.translation("Go to W_code directory of this system, or right click to open W_code in specified file browser")	end
-#: interface_names.e:2904
+#: interface_names.e:2905
 msgid ""
 "Go to W_code directory of this system, or right click to open W_code in "
 "specified file browser"
 msgstr ""
 
 #. Source code: t_go_to_breakable: STRING_32				do Result := locale.translation ("Go to breakable index") end
-#: interface_names.e:2608
+#: interface_names.e:2609
 msgid "Go to breakable index"
 msgstr ""
 
@@ -22359,7 +22377,7 @@ msgid "Go to definition"
 msgstr ""
 
 #. Source code: t_go_to_line: STRING_32				do Result := locale.translation ("Go to line") end
-#: interface_names.e:2607
+#: interface_names.e:2608
 msgid "Go to line"
 msgstr ""
 
@@ -22420,14 +22438,14 @@ msgid "Go to previous warning"
 msgstr ""
 
 #. Source code: e_go_to_project_dir: STRING_32 do Result := locale.translation ("Go to project directory of this system, or right click to open that directory in specified file browser") end
-#: interface_names.e:2907
+#: interface_names.e:2908
 msgid ""
 "Go to project directory of this system, or right click to open that "
 "directory in specified file browser"
 msgstr ""
 
 #. Source code: t_go_to_info: STRING_32						do Result := locale.translation ("Go to the selected external information source") end
-#: interface_names.e:2383
+#: interface_names.e:2384
 msgid "Go to the selected external information source"
 msgstr ""
 
@@ -22583,7 +22601,7 @@ msgid "Groups this override is overriding."
 msgstr ""
 
 #. Source code: b_guest: STRING_32 do Result := locale.translation ("Guest") end
-#: interface_names.e:2726
+#: interface_names.e:2727
 msgid "Guest"
 msgstr ""
 
@@ -22712,7 +22730,7 @@ msgid "Help Topic could not be displayed, please check Eiffel Installation"
 msgstr ""
 
 #. Source code: e_Switch_num_formating: STRING_32		do Result := locale.translation ("Hexadecimal/Decimal formating") end
-#: interface_names.e:2889
+#: interface_names.e:2890
 msgid "Hexadecimal/Decimal formating"
 msgstr ""
 
@@ -22786,7 +22804,7 @@ msgid "Hide inheritance links"
 msgstr ""
 
 #. Source code: t_hide_internal_call_stack_elements: STRING_32 	do Result := locale.translation ("Hide internal callstack elements?") end
-#: interface_names.e:2698
+#: interface_names.e:2699
 msgid "Hide internal callstack elements?"
 msgstr ""
 
@@ -22802,7 +22820,7 @@ msgid "Hide old archive"
 msgstr ""
 
 #. Source code: tt_hide_internal_call_stack_elements: STRING_32 do Result := locale.translation ("Hide rows related to internal or hidden callstack elements?") end
-#: interface_names.e:2699
+#: interface_names.e:2700
 msgid "Hide rows related to internal or hidden callstack elements?"
 msgstr ""
 
@@ -22869,7 +22887,7 @@ msgid "Hint background"
 msgstr ""
 
 #. Source code: t_Diagram_history_tool: STRING_32			do Result := locale.translation("History Tool")	end
-#: interface_names.e:2465
+#: interface_names.e:2466
 msgid "History Tool"
 msgstr ""
 
@@ -22917,7 +22935,7 @@ msgid "Hungarian (Hungary)"
 msgstr ""
 
 #. Source code: l_agree_and_continue_with_gpl: STRING_32 do Result := locale.translation ("I agree and continue with GPL Edition") end
-#: interface_names.e:2713
+#: interface_names.e:2714
 msgid "I agree and continue with GPL Edition"
 msgstr ""
 
@@ -23038,7 +23056,7 @@ msgid ""
 msgstr ""
 
 #. Source code: lb_register_account: STRING = "If you do not already have an account, please register "
-#: es_exception_submit_dialog.e:1013
+#: es_exception_submit_dialog.e:1020
 msgid "If you do not already have an account, please register "
 msgstr ""
 
@@ -23204,7 +23222,7 @@ msgid ""
 msgstr ""
 
 #. Source code: t_Feature: STRING_32							do Result := locale.translation("In Feature")	end
-#: interface_names.e:2377
+#: interface_names.e:2378
 msgid "In Feature"
 msgstr ""
 
@@ -23281,17 +23299,17 @@ msgid "Include"
 msgstr ""
 
 #. Source code: Result := locale.formatted_string(locale.translation("Include Class '$1'"), [a_name])
-#: interface_names.e:2506
+#: interface_names.e:2507
 msgid "Include Class '$1'"
 msgstr ""
 
 #. Source code: Result := locale.formatted_string(locale.translation("Include Cluster '$1'"), [a_name])
-#: interface_names.e:2513
+#: interface_names.e:2514
 msgid "Include Cluster '$1'"
 msgstr ""
 
 #. Source code: Result := locale.formatted_string(locale.translation("Include Library '$1'"),[a_name])
-#: interface_names.e:2520
+#: interface_names.e:2521
 msgid "Include Library '$1'"
 msgstr ""
 
@@ -23390,7 +23408,7 @@ msgid "Incorrect system tag, no name specified."
 msgstr ""
 
 #. Source code: fs_indent: STRING_32						do Result := locale.translation ("Indent") end
-#: interface_names.e:2316
+#: interface_names.e:2317
 msgid "Indent"
 msgstr ""
 
@@ -23405,7 +23423,7 @@ msgid "Indent selected row using an \"OR\" criterion"
 msgstr ""
 
 #. Source code: t_Index: STRING_32							do Result := locale.translation("Index")	end
-#: interface_names.e:2384
+#: interface_names.e:2385
 msgid "Index"
 msgstr ""
 
@@ -23719,7 +23737,7 @@ msgid "Init whole word"
 msgstr ""
 
 #. Source code: t_first_match_reached: STRING_32	do Result := locale.translation("Initial match reached.")	end
-#: interface_names.e:2604
+#: interface_names.e:2605
 msgid "Initial match reached."
 msgstr ""
 
@@ -23824,7 +23842,7 @@ msgid "Input domain:"
 msgstr ""
 
 #. Source code: t_Diagram_insert_midpoint_cmd: STRING_32	do Result := locale.translation("Insert Midpoint")	end
-#: interface_names.e:2523
+#: interface_names.e:2524
 msgid "Insert Midpoint"
 msgstr ""
 
@@ -25295,7 +25313,7 @@ msgid "Largest number of items displayed in list data."
 msgstr ""
 
 #. Source code: l_last_name: STRING_32 do Result := locale.translation ("Last Name") end
-#: interface_names.e:2719
+#: interface_names.e:2720
 msgid "Last Name"
 msgstr ""
 
@@ -25438,7 +25456,7 @@ msgid "Latvian (Latvia)"
 msgstr ""
 
 #. Source code: cancel_text: STRING = "Cancel"
-#: es_test_launch_wizard.e:340
+#: es_test_launch_wizard.e:342
 msgid "Launch"
 msgstr ""
 
@@ -25496,7 +25514,7 @@ msgid "Library"
 msgstr ""
 
 #. Source code: s_library_stone: STRING_32			do Result := locale.translation("Library ")	end
-#: interface_names.e:2303
+#: interface_names.e:2304
 msgid "Library "
 msgstr ""
 
@@ -25543,7 +25561,7 @@ msgid "License"
 msgstr ""
 
 #. Source code: Result := locale.formatted_string (locale.translation ("License for $1"), [workbench_name])
-#: interface_names.e:2328
+#: interface_names.e:2329
 msgid "License for $1"
 msgstr ""
 
@@ -25620,7 +25638,7 @@ msgid "Link Context"
 msgstr ""
 
 #. Source code: t_Diagram_link_tool: STRING_32				do Result := locale.translation("Link Tool")	end
-#: interface_names.e:2463
+#: interface_names.e:2464
 msgid "Link Tool"
 msgstr ""
 
@@ -25637,12 +25655,12 @@ msgid "Link color"
 msgstr ""
 
 #. Source code: e_Toggle_stone_management: STRING_32 do Result := locale.translation("Link or not the context tool to other components")	end
-#: interface_names.e:2891
+#: interface_names.e:2892
 msgid "Link or not the context tool to other components"
 msgstr ""
 
 #. Source code: e_Unify_stone: STRING_32				do Result := locale.translation("Link the context tool to the other components")	end
-#: interface_names.e:2894
+#: interface_names.e:2895
 msgid "Link the context tool to the other components"
 msgstr ""
 
@@ -25793,7 +25811,7 @@ msgid "Local"
 msgstr ""
 
 #. Source code: s_Local_stone: STRING_32			do Result := locale.translation("Local ")	end
-#: interface_names.e:2300
+#: interface_names.e:2301
 msgid "Local "
 msgstr ""
 
@@ -25902,7 +25920,7 @@ msgid "Locate"
 msgstr ""
 
 #. Source code: e_Show_class_cluster: STRING_32		do Result := locale.translation("Locate currently edited class or cluster")	end
-#: interface_names.e:2881
+#: interface_names.e:2882
 msgid "Locate currently edited class or cluster"
 msgstr ""
 
@@ -25994,17 +26012,17 @@ msgid "Lock the Tools"
 msgstr ""
 
 #. Source code: b_submit: STRING = "Submit"
-#: es_exception_submit_dialog.e:1018
+#: es_exception_submit_dialog.e:1025
 msgid "Log out"
 msgstr ""
 
 #. Source code: b_log_out: STRING = "Log out"
-#: es_exception_submit_dialog.e:1017
+#: es_exception_submit_dialog.e:1024
 msgid "Login"
 msgstr ""
 
 #. Source code: l_login_with_credentials: STRING_32 do Result := locale.translation ("Login with credentials") end
-#: interface_names.e:2715
+#: interface_names.e:2716
 msgid "Login with credentials"
 msgstr ""
 
@@ -26160,7 +26178,7 @@ msgid "Make attribute constant"
 msgstr ""
 
 #. Source code: lb_make_public: STRING = "Make bug publicly available"
-#: es_exception_submit_dialog.e:1002
+#: es_exception_submit_dialog.e:1009
 msgid "Make bug publicly available"
 msgstr ""
 
@@ -26503,7 +26521,7 @@ msgid "Maximize metric result area?"
 msgstr ""
 
 #. Source code: t_Set_stack_depth: STRING_32					do Result := locale.translation("Maximum Call Stack Depth")	end
-#: interface_names.e:2425
+#: interface_names.e:2426
 msgid "Maximum Call Stack Depth"
 msgstr ""
 
@@ -26985,7 +27003,7 @@ msgid "Minimize All"
 msgstr ""
 
 #. Source code: e_Minimize_all: STRING_32			do Result := locale.translation("Minimize all windows")	end
-#: interface_names.e:2851
+#: interface_names.e:2852
 msgid "Minimize all windows"
 msgstr ""
 
@@ -27375,17 +27393,17 @@ msgid "Mouse wheel scroll size"
 msgstr ""
 
 #. Source code: Result := locale.formatted_string(locale.translation("Move Class '$1'"), [a_name])
-#: interface_names.e:2471
+#: interface_names.e:2472
 msgid "Move Class '$1'"
 msgstr ""
 
 #. Source code: Result := locale.formatted_string(locale.translation("Move Cluster '$1'"),[a_name])
-#: interface_names.e:2478
+#: interface_names.e:2479
 msgid "Move Cluster '$1'"
 msgstr ""
 
 #. Source code: t_Diagram_move_midpoint_cmd: STRING_32		do Result := locale.translation("Move Midpoint")	end
-#: interface_names.e:2481
+#: interface_names.e:2482
 msgid "Move Midpoint"
 msgstr ""
 
@@ -27444,12 +27462,12 @@ msgid "Move metric unit up.\n"
 msgstr ""
 
 #. Source code: t_contract_move_selected_down: STRING_32 		do Result := locale.translation ("Move selected contract down") end
-#: interface_names.e:2685
+#: interface_names.e:2686
 msgid "Move selected contract down"
 msgstr ""
 
 #. Source code: t_contract_move_selected_up: STRING_32 			do Result := locale.translation ("Move selected contract up") end
-#: interface_names.e:2684
+#: interface_names.e:2685
 msgid "Move selected contract up"
 msgstr ""
 
@@ -27554,7 +27572,7 @@ msgid "Name"
 msgstr ""
 
 #. Source code: e_Project_name: STRING_32			do Result := locale.translation("Name of the current project")	end
-#: interface_names.e:2864
+#: interface_names.e:2865
 msgid "Name of the current project"
 msgstr ""
 
@@ -27744,12 +27762,12 @@ msgid "New Editor"
 msgstr ""
 
 #. Source code: t_title: STRING = "New Eiffel Test"
-#: es_test_launch_wizard.e:323
+#: es_test_launch_wizard.e:325
 msgid "New Eiffel Test"
 msgstr ""
 
 #. Source code: t_New_expression: STRING_32					do Result := locale.translation("New Expression")	end
-#: interface_names.e:2389
+#: interface_names.e:2390
 msgid "New Expression"
 msgstr ""
 
@@ -27779,7 +27797,7 @@ msgid "New Name:"
 msgstr ""
 
 #. Source code: t_New_project: STRING_32						do Result := locale.translation("New Project")	end
-#: interface_names.e:2394
+#: interface_names.e:2395
 msgid "New Project"
 msgstr ""
 
@@ -27804,12 +27822,12 @@ msgid "New Tab"
 msgstr ""
 
 #. Source code: t_New_unit_test_case: STRING_32				do Result := locale.translation("New Unit Test Case")	end
-#: interface_names.e:2396
+#: interface_names.e:2397
 msgid "New Unit Test Case"
 msgstr ""
 
 #. Source code: t_New_unit_test_wizard: STRING_32			do Result := locale.translation("New Unit Test Wizard")	end
-#: interface_names.e:2395
+#: interface_names.e:2396
 msgid "New Unit Test Wizard"
 msgstr ""
 
@@ -27929,7 +27947,7 @@ msgid "New window"
 msgstr ""
 
 #. Source code: launch_text: STRING = "Launch"
-#: es_test_launch_wizard.e:338
+#: es_test_launch_wizard.e:340
 msgid "Next"
 msgstr ""
 
@@ -27965,7 +27983,7 @@ msgid "No breakpoints"
 msgstr ""
 
 #. Source code: w_no_description: STRING = "No bug description has been supplied. Submitting a report without additional details can make it hard to reproduce.%N%NDo you want to continue submitting a bug report?"
-#: es_exception_submit_dialog.e:1025
+#: es_exception_submit_dialog.e:1032
 msgid ""
 "No bug description has been supplied. Submitting a report without additional "
 "details can make it hard to reproduce.\n"
@@ -28089,7 +28107,7 @@ msgid "No features in this file"
 msgstr ""
 
 #. Source code: e_no_text_is_selected: STRING_32 do Result := locale.translation("No file name is selected.")	end
-#: interface_names.e:2911
+#: interface_names.e:2912
 msgid "No file name is selected."
 msgstr ""
 
@@ -28099,7 +28117,7 @@ msgid "No help available for this element"
 msgstr ""
 
 #. Source code: e_show_help_unavailable: STRING_32 do Result := locale.translation("No help provider is available to show help for this dialog!")	end
-#: interface_names.e:2924
+#: interface_names.e:2925
 msgid "No help provider is available to show help for this dialog!"
 msgstr ""
 
@@ -28109,7 +28127,7 @@ msgid "No information"
 msgstr ""
 
 #. Source code: t_contract_no_invariants: STRING_32 			do Result := locale.translation ("No invariants added yet") end
-#: interface_names.e:2694
+#: interface_names.e:2695
 msgid "No invariants added yet"
 msgstr ""
 
@@ -28155,12 +28173,12 @@ msgid "No object"
 msgstr ""
 
 #. Source code: t_contract_no_postcondtions: STRING_32 			do Result := locale.translation ("No postconditions added yet") end
-#: interface_names.e:2693
+#: interface_names.e:2694
 msgid "No postconditions added yet"
 msgstr ""
 
 #. Source code: t_contract_no_preconditions: STRING_32 			do Result := locale.translation ("No preconditions added yet") end
-#: interface_names.e:2692
+#: interface_names.e:2693
 msgid "No preconditions added yet"
 msgstr ""
 
@@ -28297,7 +28315,7 @@ msgid "No when part"
 msgstr ""
 
 #. Source code: i_non_critical: STRING = "Non Critical"
-#: es_exception_submit_dialog.e:1023
+#: es_exception_submit_dialog.e:1030
 msgid "Non Critical"
 msgstr ""
 
@@ -28316,6 +28334,28 @@ msgstr ""
 #: vuno_deferred.e:62
 msgctxt "compiler.error"
 msgid "Non-object call on a type with a deferred base class {1}."
+msgstr ""
+
+#. Source code: locale.translation_in_context ("[
+#: vd81.e:57
+msgctxt "compiler.warning"
+msgid ""
+"Non-total order on real numbers specified for the target '{1}' is now "
+"obsolete.\n"
+"Consider changing the setting to \"True\" and using features with the names "
+"starting from \"ieee\" of the classes REAL_32 and REAL_64 if needed.\n"
+"\n"
+"How to change the setting?\n"
+"\t1. Open the project settings dialog: Project | Project Settings...\n"
+"\t2. For every affected target, navigate to Target | Advanced.\n"
+"\t3. In the section \"Language\" in the pane on the right, set the value of "
+"the setting \"Total Order on REALs\" to \"True\"."
+msgstr ""
+
+#. Source code: t.add (locale.translation_in_context ("Non-total order on reals is obsolete.", "compiler.warning"))
+#: vd81.e:73
+msgctxt "compiler.warning"
+msgid "Non-total order on reals is obsolete."
 msgstr ""
 
 #. 	<PREF NAME="rule.nonconforming_object_test.enable" DESCRIPTION="Enable rule."><BOOLEAN>False</BOOLEAN></PREF>
@@ -28338,6 +28378,12 @@ msgstr ""
 #. Source code: locale.translation_in_context ("None", "configuration.concurrency"),
 #: conf_interface_names.e:386
 msgctxt "configuration.concurrency"
+msgid "None"
+msgstr ""
+
+#. Source code: locale.translation_in_context ("None", "configuration.option.dead_code"),
+#: target_properties.e:367
+msgctxt "configuration.option.dead_code"
 msgid "None"
 msgstr ""
 
@@ -28393,7 +28439,7 @@ msgid "Not Compiled"
 msgstr ""
 
 #. Source code: t_untested: STRING = "Not Tested"
-#: es_test_comparison_widget.e:785
+#: es_test_comparison_widget.e:795
 msgid "Not Tested"
 msgstr ""
 
@@ -28403,12 +28449,12 @@ msgid "Not evaluated"
 msgstr ""
 
 #. Source code: t_Not_run_yet: STRING_32						do Result := locale.translation("Not run yet") end
-#: interface_names.e:2391
+#: interface_names.e:2392
 msgid "Not run yet"
 msgstr ""
 
 #. Source code: t_Not_updated: STRING_32						do Result := locale.translation("Not updated") end
-#: interface_names.e:2392
+#: interface_names.e:2393
 msgid "Not updated"
 msgstr ""
 
@@ -28947,7 +28993,7 @@ msgid "Once"
 msgstr ""
 
 #. Source code: do Result := locale.translation("Once an execution of an instrumented system has generated the proper file,%N%
-#: interface_names.e:2981
+#: interface_names.e:2982
 msgid ""
 "Once an execution of an instrumented system has generated the proper file,\n"
 "you must process it through a profile converter to produce the Execution\n"
@@ -29067,7 +29113,7 @@ msgid "Open Backup File"
 msgstr ""
 
 #. Source code: t_open_c_file: STRING_32						do Result := locale.translation ("Open C file") end
-#: interface_names.e:2658
+#: interface_names.e:2659
 msgid "Open C file"
 msgstr ""
 
@@ -29077,7 +29123,7 @@ msgid "Open Containing Folder"
 msgstr ""
 
 #. Source code: l_open_eiffelstudio_account_web_site: STRING_32 do Result := locale.translation ("Open EiffelStudio account website in web browser.") end
-#: interface_names.e:2728
+#: interface_names.e:2729
 msgid "Open EiffelStudio account website in web browser."
 msgstr ""
 
@@ -29102,22 +29148,22 @@ msgid "Open Watch tool menu"
 msgstr ""
 
 #. Source code: e_Open_dynamic_lib_definition: STRING_32 do Result := locale.translation("Open a dynamic library definition")	end
-#: interface_names.e:2857
+#: interface_names.e:2858
 msgid "Open a dynamic library definition"
 msgstr ""
 
 #. Source code: e_Open_file: STRING_32				do Result := locale.translation("Open a file")	end
-#: interface_names.e:2858
+#: interface_names.e:2859
 msgid "Open a file"
 msgstr ""
 
 #. Source code: e_New_context_tool: STRING_32		do Result := locale.translation("Open a new context window")	end
-#: interface_names.e:2852
+#: interface_names.e:2853
 msgid "Open a new context window"
 msgstr ""
 
 #. Source code: e_New_editor: STRING_32				do Result := locale.translation("Open a new editor window")	end
-#: interface_names.e:2854
+#: interface_names.e:2855
 msgid "Open a new editor window"
 msgstr ""
 
@@ -29170,12 +29216,12 @@ msgid "Open project dialog width"
 msgstr ""
 
 #. Source code: e_open_selection_in_editor: STRING_32 do Result := locale.translation("Open selected file name in specified external editor")	end
-#: interface_names.e:2902
+#: interface_names.e:2903
 msgid "Open selected file name in specified external editor"
 msgstr ""
 
 #. Source code: e_Open_eac_browser: STRING_32		do Result := locale.translation("Open the Eiffel Assembly Cache browser tool")	end
-#: interface_names.e:2859
+#: interface_names.e:2860
 msgid "Open the Eiffel Assembly Cache browser tool"
 msgstr ""
 
@@ -29205,12 +29251,12 @@ msgid "Open user defined metrics externally"
 msgstr ""
 
 #. Source code: e_Operation_failed: STRING_32	do Result := locale.translation("Operation failed.") end
-#: interface_names.e:2940
+#: interface_names.e:2941
 msgid "Operation failed."
 msgstr ""
 
 #. Source code: e_Operation_succeeded: STRING_32	do Result := locale.translation("Operation succeeded.")	end
-#: interface_names.e:2939
+#: interface_names.e:2940
 msgid "Operation succeeded."
 msgstr ""
 
@@ -29287,7 +29333,7 @@ msgid "Order used to sort feature clauses in formatted texts."
 msgstr ""
 
 #. Source code: t_Organize_favorites: STRING_32				do Result := locale.translation("Organize Favorites")	end
-#: interface_names.e:2407
+#: interface_names.e:2408
 msgid "Organize Favorites"
 msgstr ""
 
@@ -29452,7 +29498,7 @@ msgid "Overflow &Prevention..."
 msgstr ""
 
 #. Source code: t_Set_critical_stack_depth: STRING_32		do Result := locale.translation("Overflow Prevention")	end
-#: interface_names.e:2426
+#: interface_names.e:2427
 msgid "Overflow Prevention"
 msgstr ""
 
@@ -29500,7 +29546,7 @@ msgid "Overwrite"
 msgstr ""
 
 #. Source code: t_Overwite_layout: STRING_32					do Result := locale.translation ("Overwrite Layout") end
-#: interface_names.e:2657
+#: interface_names.e:2658
 msgid "Overwrite Layout"
 msgstr ""
 
@@ -29583,12 +29629,12 @@ msgid "Pashto (Afghanistan)"
 msgstr ""
 
 #. Source code: t_unresolved: STRING = "Unresolved"
-#: es_test_comparison_widget.e:783
+#: es_test_comparison_widget.e:793
 msgid "Pass"
 msgstr ""
 
 #. Source code: t_passed: STRING_32							do Result := locale.translation ("Passed") end
-#: interface_names.e:2647
+#: interface_names.e:2648
 msgid "Passed"
 msgstr ""
 
@@ -29598,12 +29644,12 @@ msgid "Passes"
 msgstr ""
 
 #. Source code: l_password: STRING_32 do Result := locale.translation ("Password") end
-#: interface_names.e:2720
+#: interface_names.e:2721
 msgid "Password"
 msgstr ""
 
 #. Source code: lb_password: STRING = "Password:"
-#: es_exception_submit_dialog.e:1003
+#: es_exception_submit_dialog.e:1010
 msgid "Password:"
 msgstr ""
 
@@ -29657,7 +29703,7 @@ msgid "Pause application"
 msgstr ""
 
 #. Source code: e_Exec_stop: STRING_32				do Result := locale.translation("Pause execution at current point")	end
-#: interface_names.e:2847
+#: interface_names.e:2848
 msgid "Pause execution at current point"
 msgstr ""
 
@@ -29725,7 +29771,7 @@ msgid "Persian (Iran)"
 msgstr ""
 
 #. Source code: t_physics_setting: STRING_32					do Result := locale.translation ("Physics settings") end
-#: interface_names.e:2645
+#: interface_names.e:2646
 msgid "Physics settings"
 msgstr ""
 
@@ -29751,7 +29797,7 @@ msgid "Pick metrics or items like group/class/feature and drop here"
 msgstr ""
 
 #. Source code: e_Drop_an_error_stone: STRING_32	do Result := locale.translation("Pick the code of a compilation error (such as VEEN, VTCT,...)%N%
-#: interface_names.e:2830
+#: interface_names.e:2831
 msgid ""
 "Pick the code of a compilation error (such as VEEN, VTCT,...)\n"
 "and drop it here to have extended information about it."
@@ -29822,12 +29868,12 @@ msgid "Please clear this window after c compilation has exited."
 msgstr ""
 
 #. Source code: e_project_not_compiled: STRING = "Please compile the project first"
-#: es_test_launch_wizard.e:335
+#: es_test_launch_wizard.e:337
 msgid "Please compile the project first"
 msgstr ""
 
 #. Source code: e_Diagram_class_header: STRING_32 	do Result := locale.translation("Please drop a class on this button.%NUse right click for both%N%
-#: interface_names.e:2816
+#: interface_names.e:2817
 msgid ""
 "Please drop a class on this button.\n"
 "Use right click for both\n"
@@ -29835,7 +29881,7 @@ msgid ""
 msgstr ""
 
 #. Source code: e_Diagram_hole: STRING_32			do Result := locale.translation("Please drop a class or a cluster on this button %N%
-#: interface_names.e:2813
+#: interface_names.e:2814
 msgid ""
 "Please drop a class or a cluster on this button \n"
 "to view its diagram.\n"
@@ -29843,7 +29889,7 @@ msgid ""
 msgstr ""
 
 #. Source code: e_Diagram_remove_anchor: STRING_32	do Result := locale.translation("Please drop a class or a cluster with an%Nanchor on this button.%NUse right click for both%N%
-#: interface_names.e:2818
+#: interface_names.e:2819
 msgid ""
 "Please drop a class or a cluster with an\n"
 "anchor on this button.\n"
@@ -29852,7 +29898,7 @@ msgid ""
 msgstr ""
 
 #. Source code: e_Diagram_delete_item: STRING_32	do Result := locale.translation("Please drop a class, a cluster or a link%N%
-#: interface_names.e:2826
+#: interface_names.e:2827
 msgid ""
 "Please drop a class, a cluster or a link\n"
 "on this button. Use right click for both\n"
@@ -29860,7 +29906,7 @@ msgid ""
 msgstr ""
 
 #. Source code: e_Diagram_delete_figure: STRING_32	do Result := locale.translation("Please drop a class, a cluster or a midpoint%N%
-#: interface_names.e:2822
+#: interface_names.e:2823
 msgid ""
 "Please drop a class, a cluster or a midpoint\n"
 "on this button. Use right click for both\n"
@@ -29868,7 +29914,7 @@ msgid ""
 msgstr ""
 
 #. Source code: e_Diagram_create_class: STRING_32	do Result := locale.translation("Please drop this button on the diagram.%N%
-#: interface_names.e:2820
+#: interface_names.e:2821
 msgid ""
 "Please drop this button on the diagram.\n"
 "Use right click for both\n"
@@ -30048,7 +30094,7 @@ msgid "Position of the split area."
 msgstr ""
 
 #. Source code: t_reference_position: STRING_32				do Result := locale.translation ("Positions") end
-#: interface_names.e:2659
+#: interface_names.e:2660
 msgid "Positions"
 msgstr ""
 
@@ -30111,7 +30157,7 @@ msgid "Precompilation &Wizard..."
 msgstr ""
 
 #. Source code: t_precompile_progress: STRING_32 			do Result := locale.translation ("Precompilation Progress") end
-#: interface_names.e:2435
+#: interface_names.e:2436
 msgid "Precompilation Progress"
 msgstr ""
 
@@ -30241,12 +30287,12 @@ msgid "Prettify text in current editor."
 msgstr ""
 
 #. Source code: 
-#: es_test_comparison_widget.e:789
+#: es_test_comparison_widget.e:799
 msgid "Previous"
 msgstr ""
 
 #. Source code: h_old_result: STRING = "Previous Result"
-#: es_test_comparison_widget.e:779
+#: es_test_comparison_widget.e:789
 msgid "Previous Result"
 msgstr ""
 
@@ -30281,7 +30327,7 @@ msgid "Print a message:"
 msgstr ""
 
 #. Source code: e_Print: STRING_32					do Result := locale.translation("Print the currently edited text")	end
-#: interface_names.e:2863
+#: interface_names.e:2864
 msgid "Print the currently edited text"
 msgstr ""
 
@@ -30322,12 +30368,12 @@ msgid "Profile"
 msgstr ""
 
 #. Source code: t_Profile_query_window: STRING_32			do Result := locale.translation("Profile Query Window")	end
-#: interface_names.e:2408
+#: interface_names.e:2409
 msgid "Profile Query Window"
 msgstr ""
 
 #. Source code: t_Profiler_wizard: STRING_32					do Result := locale.translation("Profiler Wizard")	end
-#: interface_names.e:2409
+#: interface_names.e:2410
 msgid "Profiler Wizard"
 msgstr ""
 
@@ -30343,7 +30389,7 @@ msgid "Progress bar color"
 msgstr ""
 
 #. Source code: e_open_project: STRING_32 do Result := locale.translation ("Project") end
-#: interface_names.e:2910
+#: interface_names.e:2911
 msgid "Project"
 msgstr ""
 
@@ -30387,7 +30433,7 @@ msgid "Project &Settings..."
 msgstr ""
 
 #. Source code: t_Project_toolbar: STRING_32					do Result := locale.translation ("Project Bar") end
-#: interface_names.e:2646
+#: interface_names.e:2647
 msgid "Project Bar"
 msgstr ""
 
@@ -30427,7 +30473,7 @@ msgid "Project compiled: $1"
 msgstr ""
 
 #. Source code: t_project_documentation: STRING_32			do Result := locale.translation("Project documentation")	end
-#: interface_names.e:2415
+#: interface_names.e:2416
 msgid "Project documentation"
 msgstr ""
 
@@ -30590,32 +30636,32 @@ msgid "Purchase"
 msgstr ""
 
 #. Source code: l_purchase_enterprise_edition: STRING_32 do Result := locale.translation ("Purchase Enterprise edition") end
-#: interface_names.e:2714
+#: interface_names.e:2715
 msgid "Purchase Enterprise edition"
 msgstr ""
 
 #. Source code: t_Diagram_put_one_handle_left_cmd: STRING_32	do Result := locale.translation("Put Handle Left")	end
-#: interface_names.e:2578
+#: interface_names.e:2579
 msgid "Put Handle Left"
 msgstr ""
 
 #. Source code: t_Diagram_put_one_handle_right_cmd: STRING_32	do Result := locale.translation("Put Handle Right")	end
-#: interface_names.e:2579
+#: interface_names.e:2580
 msgid "Put Handle Right"
 msgstr ""
 
 #. Source code: t_Diagram_put_right_angles_cmd: STRING_32	do Result := locale.translation("Put Right Angles")	end
-#: interface_names.e:2576
+#: interface_names.e:2577
 msgid "Put Right Angles"
 msgstr ""
 
 #. Source code: t_Diagram_put_two_handles_left_cmd: STRING_32	do Result := locale.translation("Put Two Handles Left")	end
-#: interface_names.e:2580
+#: interface_names.e:2581
 msgid "Put Two Handles Left"
 msgstr ""
 
 #. Source code: t_Diagram_put_two_handles_right_cmd: STRING_32	do Result := locale.translation("Put Two Handles Right")	end
-#: interface_names.e:2581
+#: interface_names.e:2582
 msgid "Put Two Handles Right"
 msgstr ""
 
@@ -30676,7 +30722,7 @@ msgid "Query:"
 msgstr ""
 
 #. Source code: t_question: STRING_32 						do Result := locale.translation ("Question") end
-#: interface_names.e:2627
+#: interface_names.e:2628
 msgid "Question"
 msgstr ""
 
@@ -30706,12 +30752,12 @@ msgid "Raise Windows"
 msgstr ""
 
 #. Source code: e_Raise_all_unsaved: STRING_32		do Result := locale.translation("Raise all unsaved windows")	end
-#: interface_names.e:2869
+#: interface_names.e:2870
 msgid "Raise all unsaved windows"
 msgstr ""
 
 #. Source code: e_Raise_all: STRING_32				do Result := locale.translation("Raise all windows")	end
-#: interface_names.e:2868
+#: interface_names.e:2869
 msgid "Raise all windows"
 msgstr ""
 
@@ -30758,7 +30804,7 @@ msgid "Re&move All Breakpoints"
 msgstr ""
 
 #. Source code: l_read_license_text: STRING_32 do Result := locale.translation ("Read License Text") end
-#: interface_names.e:2712
+#: interface_names.e:2713
 msgid "Read License Text"
 msgstr ""
 
@@ -30819,7 +30865,7 @@ msgid "Recompile Overrides"
 msgstr ""
 
 #. Source code: e_override_scan: STRING_32			do Result := locale.translation("Recompile override clusters")	end
-#: interface_names.e:2866
+#: interface_names.e:2867
 msgid "Recompile override clusters"
 msgstr ""
 
@@ -30829,7 +30875,7 @@ msgid "Recompile project"
 msgstr ""
 
 #. Source code: e_Exec_recompile: STRING_32      	do Result := locale.translation("Recompiling project will end current execution.") end
-#: interface_names.e:2848
+#: interface_names.e:2849
 msgid "Recompiling project will end current execution."
 msgstr ""
 
@@ -30926,7 +30972,7 @@ msgid "Redo Refactoring"
 msgstr ""
 
 #. Source code: fs_redo_command: STRING_32				do Result := locale.translation ("Redo command") end
-#: interface_names.e:2310
+#: interface_names.e:2311
 msgid "Redo command"
 msgstr ""
 
@@ -30966,7 +31012,7 @@ msgid "Redundant parentheses"
 msgstr ""
 
 #. Source code: t_Refactory_toolbar: STRING_32				do Result := locale.translation ("Refactor Bar") end
-#: interface_names.e:2648
+#: interface_names.e:2649
 msgid "Refactor Bar"
 msgstr ""
 
@@ -30977,12 +31023,12 @@ msgid "Refactor if block"
 msgstr ""
 
 #. Source code: t_refactoring_class_rename: STRING_32 do Result := locale.translation("Refactor: Class Rename")	end
-#: interface_names.e:2611
+#: interface_names.e:2612
 msgid "Refactor: Class Rename"
 msgstr ""
 
 #. Source code: t_refactoring_feature_rename: STRING_32	do Result := locale.translation("Refactor: Feature Rename (Compiled Classes)")	end
-#: interface_names.e:2609
+#: interface_names.e:2610
 msgid "Refactor: Feature Rename (Compiled Classes)"
 msgstr ""
 
@@ -31055,7 +31101,7 @@ msgid "Refresh list of libraries."
 msgstr ""
 
 #. Source code: t_contract_refresh: STRING_32 					do Result := locale.translation ("Refresh the current contracts to include any unsaved, undetected editor changes") end
-#: interface_names.e:2686
+#: interface_names.e:2687
 msgid ""
 "Refresh the current contracts to include any unsaved, undetected editor "
 "changes"
@@ -31077,12 +31123,12 @@ msgid "Regexp"
 msgstr ""
 
 #. Source code: b_register: STRING_32 do Result := locale.translation ("Register") end
-#: interface_names.e:2724
+#: interface_names.e:2725
 msgid "Register"
 msgstr ""
 
 #. Source code: l_register_new_account: STRING_32 do Result := locale.translation ("Register a new account.") end
-#: interface_names.e:2729
+#: interface_names.e:2730
 msgid "Register a new account."
 msgstr ""
 
@@ -31133,7 +31179,7 @@ msgid "Remember location"
 msgstr ""
 
 #. Source code: lb_remember_me: STRING = "Remember me"
-#: es_exception_submit_dialog.e:1004
+#: es_exception_submit_dialog.e:1011
 msgid "Remember me"
 msgstr ""
 
@@ -31191,7 +31237,7 @@ msgid "Remove Condition"
 msgstr ""
 
 #. Source code: t_Diagram_remove_handles_cmd: STRING_32		do Result := locale.translation("Remove Handles")	end
-#: interface_names.e:2582
+#: interface_names.e:2583
 msgid "Remove Handles"
 msgstr ""
 
@@ -31201,12 +31247,12 @@ msgid "Remove Project"
 msgstr ""
 
 #. Source code: t_Diagram_remove_right_angles_cmd: STRING_32	do Result := locale.translation("Remove Right Angles")	end
-#: interface_names.e:2577
+#: interface_names.e:2578
 msgid "Remove Right Angles"
 msgstr ""
 
 #. Source code: e_Remove_class_cluster: STRING_32	do Result := locale.translation("Remove a class or a cluster from the system")	end
-#: interface_names.e:2871
+#: interface_names.e:2872
 msgid "Remove a class or a cluster from the system"
 msgstr ""
 
@@ -31278,7 +31324,7 @@ msgid "Remove current selected metric"
 msgstr ""
 
 #. Source code: e_Remove_object: STRING_32			do Result := locale.translation("Remove currently selected object")	end
-#: interface_names.e:2874
+#: interface_names.e:2875
 msgid "Remove currently selected object"
 msgstr ""
 
@@ -31358,7 +31404,7 @@ msgid "Remove rule"
 msgstr ""
 
 #. Source code: t_contract_remove_selected: STRING_32			do Result := locale.translation ("Remove selected contract") end
-#: interface_names.e:2682
+#: interface_names.e:2683
 msgid "Remove selected contract"
 msgstr ""
 
@@ -31373,7 +31419,7 @@ msgid "Remove selected customized tool"
 msgstr ""
 
 #. Source code: e_Remove_expressions: STRING_32		do Result := locale.translation("Remove selected expressions")	end
-#: interface_names.e:2873
+#: interface_names.e:2874
 msgid "Remove selected expressions"
 msgstr ""
 
@@ -31393,7 +31439,7 @@ msgid "Remove selected stone handler"
 msgstr ""
 
 #. Source code: t_Remove_selected_test_cases: STRING_32		do Result := locale.translation ("Remove selected test cases") end
-#: interface_names.e:2660
+#: interface_names.e:2661
 msgid "Remove selected test cases"
 msgstr ""
 
@@ -31419,7 +31465,7 @@ msgid "Remove the empty loop"
 msgstr ""
 
 #. Source code: e_Remove_exported_feature: STRING_32	do Result := locale.translation("Remove the selected feature from this dynamic library definition")	end
-#: interface_names.e:2872
+#: interface_names.e:2873
 msgid "Remove the selected feature from this dynamic library definition"
 msgstr ""
 
@@ -31466,7 +31512,7 @@ msgid "Remove {1} from redefine subclause"
 msgstr ""
 
 #. Source code: 
-#: es_test_comparison_widget.e:787
+#: es_test_comparison_widget.e:797
 msgid "Removed"
 msgstr ""
 
@@ -31525,12 +31571,12 @@ msgid "Rename"
 msgstr ""
 
 #. Source code: Result := locale.formatted_string(locale.translation("Rename Class '$1' Globally to '$2'"), [old_name, new_name])
-#: interface_names.e:2537
+#: interface_names.e:2538
 msgid "Rename Class '$1' Globally to '$2'"
 msgstr ""
 
 #. Source code: Result := locale.formatted_string(locale.translation("Rename Class '$1' Locally to '$2'"), [old_name,new_name])
-#: interface_names.e:2530
+#: interface_names.e:2531
 msgid "Rename Class '$1' Locally to '$2'"
 msgstr ""
 
@@ -31671,27 +31717,27 @@ msgid "Replay mode"
 msgstr ""
 
 #. Source code: e_Exec_replay_forth: STRING_32	do Result := locale.translation("Replay next execution stack")	end
-#: interface_names.e:2934
+#: interface_names.e:2935
 msgid "Replay next execution stack"
 msgstr ""
 
 #. Source code: e_Exec_replay_right: STRING_32	do Result := locale.translation("Replay next execution step")	end
-#: interface_names.e:2936
+#: interface_names.e:2937
 msgid "Replay next execution step"
 msgstr ""
 
 #. Source code: e_Exec_replay_back: STRING_32	do Result := locale.translation("Replay previous execution stack")	end
-#: interface_names.e:2933
+#: interface_names.e:2934
 msgid "Replay previous execution stack"
 msgstr ""
 
 #. Source code: e_Exec_replay_left: STRING_32	do Result := locale.translation("Replay previous execution step")	end
-#: interface_names.e:2935
+#: interface_names.e:2936
 msgid "Replay previous execution step"
 msgstr ""
 
 #. Source code: e_Exec_replay: STRING_32	do Result := locale.translation("Replay the execution")	end
-#: interface_names.e:2932
+#: interface_names.e:2933
 msgid "Replay the execution"
 msgstr ""
 
@@ -31939,7 +31985,7 @@ msgid "Restore tab"
 msgstr ""
 
 #. Source code: e_Restore_normal_mode: STRING_32		do Result := locale.translation("Restore the environment to normal mode")	end
-#: interface_names.e:2875
+#: interface_names.e:2876
 msgid "Restore the environment to normal mode"
 msgstr ""
 
@@ -31954,7 +32000,7 @@ msgid "Result"
 msgstr ""
 
 #. Source code: f_result_file: STRING = "Result File"
-#: es_test_comparison_widget.e:792
+#: es_test_comparison_widget.e:802
 msgid "Result File"
 msgstr ""
 
@@ -32051,7 +32097,7 @@ msgid "Reuse existing name"
 msgstr ""
 
 #. Source code: ws_Execution_Profile: STRING_32 do Result := locale.translation("Reuse or Generate an Execution Profile.")	end
-#: interface_names.e:2972
+#: interface_names.e:2973
 msgid "Reuse or Generate an Execution Profile."
 msgstr ""
 
@@ -32633,7 +32679,7 @@ msgid "Rule ID"
 msgstr ""
 
 #. Source code: l_unresolved_button: STRING = "Unresolved"
-#: es_test_statistics_widget.e:299
+#: es_test_statistics_widget.e:306
 msgid "Run"
 msgstr ""
 
@@ -32755,7 +32801,7 @@ msgid "Run without stop point"
 msgstr ""
 
 #. Source code: e_Exec_no_stop: STRING_32			do Result := locale.translation("Run without stopping at breakpoints")	end
-#: interface_names.e:2843
+#: interface_names.e:2844
 msgid "Run without stopping at breakpoints"
 msgstr ""
 
@@ -32786,7 +32832,7 @@ msgid "Runs"
 msgstr ""
 
 #. Source code: wt_Runtime_information_record_error: STRING_32 do Result := locale.translation("Runtime Information Record Error")	end
-#: interface_names.e:2997
+#: interface_names.e:2998
 msgid "Runtime Information Record Error"
 msgstr ""
 
@@ -32928,12 +32974,12 @@ msgid "Save As..."
 msgstr ""
 
 #. Source code: t_save_backup: STRING_32						do Result := locale.translation("Save Backup") end
-#: interface_names.e:2418
+#: interface_names.e:2419
 msgid "Save Backup"
 msgstr ""
 
 #. Source code: e_save_c_compilation_output: STRING_32 do Result := locale.translation("Save C Compilation output to file")	end
-#: interface_names.e:2903
+#: interface_names.e:2904
 msgid "Save C Compilation output to file"
 msgstr ""
 
@@ -32964,7 +33010,7 @@ msgid "Save all"
 msgstr ""
 
 #. Source code: e_Save_call_stack: STRING_32			do Result := locale.translation("Save call stack to a text file")	end
-#: interface_names.e:2878
+#: interface_names.e:2879
 msgid "Save call stack to a text file"
 msgstr ""
 
@@ -32974,12 +33020,12 @@ msgid "Save current output to disk"
 msgstr ""
 
 #. Source code: e_Save_exception_into: STRING_32		do Result := locale.translation("Save exception message to a text file")	end
-#: interface_names.e:2879
+#: interface_names.e:2880
 msgid "Save exception message to a text file"
 msgstr ""
 
 #. Source code: t_contract_save_to_class: STRING_32 			do Result := locale.translation ("Save modifications to the associated class") end
-#: interface_names.e:2680
+#: interface_names.e:2681
 msgid "Save modifications to the associated class"
 msgstr ""
 
@@ -32994,7 +33040,7 @@ msgid "Save output to file"
 msgstr ""
 
 #. Source code: e_Save_dynamic_lib_definition: STRING_32 do Result := locale.translation("Save this dynamic library definition")	end
-#: interface_names.e:2880
+#: interface_names.e:2881
 msgid "Save this dynamic library definition"
 msgstr ""
 
@@ -33216,7 +33262,7 @@ msgid "Section \"$1\" is missing."
 msgstr ""
 
 #. Source code: t_See_failure_trace: STRING_32				do Result := locale.translation ("See failure trace")	end
-#: interface_names.e:2630
+#: interface_names.e:2631
 msgid "See failure trace"
 msgstr ""
 
@@ -33266,22 +33312,22 @@ msgid "Select All Metrics"
 msgstr ""
 
 #. Source code: t_Select_class: STRING_32					do Result := locale.translation("Select Class")	end
-#: interface_names.e:2419
+#: interface_names.e:2420
 msgid "Select Class"
 msgstr ""
 
 #. Source code: t_Select_cluster: STRING_32					do Result := locale.translation("Select Cluster")	end
-#: interface_names.e:2420
+#: interface_names.e:2421
 msgid "Select Cluster"
 msgstr ""
 
 #. Source code: t_Diagram_context_depth: STRING_32			do Result := locale.translation("Select Depths")	end
-#: interface_names.e:2462
+#: interface_names.e:2463
 msgid "Select Depths"
 msgstr ""
 
 #. Source code: t_Select_feature: STRING_32					do Result := locale.translation("Select Feature")	end
-#: interface_names.e:2421
+#: interface_names.e:2422
 msgid "Select Feature"
 msgstr ""
 
@@ -33301,17 +33347,17 @@ msgid "Select Viewer"
 msgstr ""
 
 #. Source code: t_Select_a_directory: STRING_32				do Result := locale.translation("Select a Directory")	end
-#: interface_names.e:2424
+#: interface_names.e:2425
 msgid "Select a Directory"
 msgstr ""
 
 #. Source code: t_Select_a_file: STRING_32					do Result := locale.translation("Select a File")	end
-#: interface_names.e:2423
+#: interface_names.e:2424
 msgid "Select a File"
 msgstr ""
 
 #. Source code: ws_Execution_Profile_Generation: STRING_32 do Result := locale.translation("Select a Run-time information record to generate the Execution profile")	end
-#: interface_names.e:2979
+#: interface_names.e:2980
 msgid "Select a Run-time information record to generate the Execution profile"
 msgstr ""
 
@@ -33447,7 +33493,7 @@ msgid "Select feature type"
 msgstr ""
 
 #. Source code: t_Select_features_for_which: STRING_32		do Result := locale.translation("Select features for which feature method stubs should be generated.")	end
-#: interface_names.e:2422
+#: interface_names.e:2423
 msgid "Select features for which feature method stubs should be generated."
 msgstr ""
 
@@ -33502,7 +33548,7 @@ msgid "Select target"
 msgstr ""
 
 #. Source code: ws_Compilation_mode: STRING_32 do Result := locale.translation("Select the Compilation mode.")	end
-#: interface_names.e:2969
+#: interface_names.e:2970
 msgid "Select the Compilation mode."
 msgstr ""
 
@@ -33522,7 +33568,7 @@ msgid "Select the formats to use"
 msgstr ""
 
 #. Source code: ws_Switches_and_query: STRING_32 do Result := locale.translation("Select the information you need and formulate your query.")	end
-#: interface_names.e:2992
+#: interface_names.e:2993
 msgid "Select the information you need and formulate your query."
 msgstr ""
 
@@ -33532,7 +33578,7 @@ msgid "Select the target you want (0 to quit): "
 msgstr ""
 
 #. Source code: t_contract_select_mode: STRING_32 				do Result := locale.translation ("Select the type of contracts to edit") end
-#: interface_names.e:2687
+#: interface_names.e:2688
 msgid "Select the type of contracts to edit"
 msgstr ""
 
@@ -33547,7 +33593,7 @@ msgid "Select type of new links"
 msgstr ""
 
 #. Source code: t_select_working_directory: STRING_32 do Result := locale.translation("Select working directory")	end
-#: interface_names.e:2612
+#: interface_names.e:2613
 msgid "Select working directory"
 msgstr ""
 
@@ -33603,7 +33649,7 @@ msgid ""
 msgstr ""
 
 #. Source code: e_selected_text_is_not_file: STRING_32 do Result := locale.translation("Selected text is not a correct file name.")	end
-#: interface_names.e:2912
+#: interface_names.e:2913
 msgid "Selected text is not a correct file name."
 msgstr ""
 
@@ -33697,7 +33743,7 @@ msgid "Send to context"
 msgstr ""
 
 #. Source code: e_Shell: STRING_32					do Result := locale.translation("Send to external editor")	end
-#: interface_names.e:2886
+#: interface_names.e:2887
 msgid "Send to external editor"
 msgstr ""
 
@@ -33754,7 +33800,7 @@ msgid "Serbian (Serbia and Montenegro, Latin)"
 msgstr ""
 
 #. Source code: i_non_critical: STRING = "Non Critical"
-#: es_exception_submit_dialog.e:1022
+#: es_exception_submit_dialog.e:1029
 msgid "Serious"
 msgstr ""
 
@@ -33779,7 +33825,7 @@ msgid "Set &Conditional Breakpoint"
 msgstr ""
 
 #. Source code: Result := locale.formatted_string (locale.translation("Set Center Class: $1"), [a_class_name])
-#: interface_names.e:2460
+#: interface_names.e:2461
 msgid "Set Center Class: $1"
 msgstr ""
 
@@ -33821,7 +33867,7 @@ msgid "Set environment"
 msgstr ""
 
 #. Source code: e_Set_stack_depth: STRING_32			do Result := locale.translation("Set maximum call stack depth")	end
-#: interface_names.e:2885
+#: interface_names.e:2886
 msgid "Set maximum call stack depth"
 msgstr ""
 
@@ -33839,6 +33885,18 @@ msgid ""
 "reattachment;\n"
 "\t- Mismatch error: override library settings by raising an error if a "
 "computed manifest array type differs from the target type of a reattachment."
+msgstr ""
+
+#. Source code: locale.translation_in_context ("[
+#: target_properties.e:359
+msgctxt "configuration.option.dead_code"
+msgid ""
+"Set the kind of code removal algorithm that should be applied when compiling "
+"in finalized mode:\n"
+"\t- None: do not perform dead code removal;\n"
+"\t- Features only: remove code based on feature call graph;\n"
+"\t- All: remove code based on feature call graph and keeping only classes "
+"used to create objects or marked as visible."
 msgstr ""
 
 #. Source code: m_To_lower: STRING_32				do Result := locale.translation("Set to &Lowercase")	end
@@ -33936,7 +33994,7 @@ msgid "Setup criterion text properties"
 msgstr ""
 
 #. Source code: t_customized_formatter_setup: STRING_32 		do Result := locale.translation ("Setup customized formatters") end
-#: interface_names.e:2663
+#: interface_names.e:2664
 msgid "Setup customized formatters"
 msgstr ""
 
@@ -34256,7 +34314,7 @@ msgid "Severity score."
 msgstr ""
 
 #. Source code: lb_severity: STRING = "Severity:"
-#: es_exception_submit_dialog.e:1005
+#: es_exception_submit_dialog.e:1012
 msgid "Severity:"
 msgstr ""
 
@@ -35430,9 +35488,9 @@ msgctxt "code_analyzer.toolbar.item.tooltip"
 msgid "Show Dialog for Analyzer Preferences"
 msgstr ""
 
-#. Source code: l_show_features: STRING_32 	do Result := locale.translation ("Show Features (Ctrl+Space)") end
+#. Source code: l_show_features: STRING_32 	do Result := locale.translation ("Show Features") end
 #: interface_names.e:2277
-msgid "Show Features (Ctrl+Space)"
+msgid "Show Features"
 msgstr ""
 
 #. Source code: gc_stats_help: STRING_GENERAL do Result := locale.translation ("Show GC statistics") end
@@ -35460,9 +35518,14 @@ msgstr ""
 msgid "Show Signature"
 msgstr ""
 
-#. Source code: l_show_templates: STRING_32 do Result := locale.translation ("Show Templates (Ctrl+Space)") end
+#. Source code: l_show_symbols: STRING_32 do Result := locale.translation ("Show Symbols") end
+#: interface_names.e:2279
+msgid "Show Symbols"
+msgstr ""
+
+#. Source code: l_show_templates: STRING_32 do Result := locale.translation ("Show Templates") end
 #: interface_names.e:2278
-msgid "Show Templates (Ctrl+Space)"
+msgid "Show Templates"
 msgstr ""
 
 #. Source code: b_Show_test_run_cases: STRING_32				do Result := locale.translation("Show Test Run Cases")	end
@@ -35673,12 +35736,12 @@ msgid "Show external output tool"
 msgstr ""
 
 #. Source code: tt_fail_button: STRING = "Show failing tests"
-#: es_test_statistics_widget.e:305
+#: es_test_statistics_widget.e:312
 msgid "Show failing tests"
 msgstr ""
 
 #. Source code: t_Show_failures_only: STRING_32				do Result := locale.translation("Show failures only")	end
-#: interface_names.e:2433
+#: interface_names.e:2434
 msgid "Show failures only"
 msgstr ""
 
@@ -35725,7 +35788,7 @@ msgid "Show hidden preferences in preference window?"
 msgstr ""
 
 #. Source code: e_Bkpt_info: STRING_32				do Result := locale.translation("Show information about breakpoints")	end
-#: interface_names.e:2789
+#: interface_names.e:2790
 msgid "Show information about breakpoints"
 msgstr ""
 
@@ -35776,7 +35839,7 @@ msgid "Show metric tool"
 msgstr ""
 
 #. Source code: t_Next_failed_test: STRING_32				do Result := locale.translation("Show next failed test")	end
-#: interface_names.e:2387
+#: interface_names.e:2388
 msgid "Show next failed test"
 msgstr ""
 
@@ -35825,7 +35888,7 @@ msgid "Show physics settings dialog"
 msgstr ""
 
 #. Source code: t_Previous_failed_test: STRING_32			do Result := locale.translation("Show previous failed test")	end
-#: interface_names.e:2417
+#: interface_names.e:2418
 msgid "Show previous failed test"
 msgstr ""
 
@@ -35910,7 +35973,7 @@ msgid "Show suppliers of a class up to a level of preference value."
 msgstr ""
 
 #. Source code: t_All_test_runs: STRING_32					do Result := locale.translation("Show test run history dialog")	end
-#: interface_names.e:2335
+#: interface_names.e:2336
 msgid "Show test run history dialog"
 msgstr ""
 
@@ -35932,7 +35995,7 @@ msgid "Show text labels"
 msgstr ""
 
 #. Source code: t_contract_show_callers: STRING_32 				do Result := locale.translation ("Show the callers of the currently edited feature") end
-#: interface_names.e:2689
+#: interface_names.e:2690
 msgid "Show the callers of the currently edited feature"
 msgstr ""
 
@@ -35986,7 +36049,7 @@ msgid "Show unchanged features in class ANY by default?"
 msgstr ""
 
 #. Source code: tt_unresolved_button: STRING = "Show unresolved tests"
-#: es_test_statistics_widget.e:304
+#: es_test_statistics_widget.e:311
 msgid "Show unresolved tests"
 msgstr ""
 
@@ -36038,7 +36101,7 @@ msgid "Show/hide signature in completion list."
 msgstr ""
 
 #. Source code: t_contract_show_all_lines: STRING_32 			do Result := locale.translation ("Show/hide the hidden contract place holders for inherited contracts") end
-#: interface_names.e:2688
+#: interface_names.e:2689
 msgid "Show/hide the hidden contract place holders for inherited contracts"
 msgstr ""
 
@@ -36089,7 +36152,7 @@ msgid "Sixth external command shortcut."
 msgstr ""
 
 #. Source code: b_skip: STRING_32 do Result := locale.translation ("Skip") end
-#: interface_names.e:2725
+#: interface_names.e:2726
 msgid "Skip"
 msgstr ""
 
@@ -36178,7 +36241,7 @@ msgid "Some arguments of routine '"
 msgstr ""
 
 #. Source code: e_Edited: STRING_32					do Result := locale.translation("Some classes were edited since last compilation")	end
-#: interface_names.e:2834
+#: interface_names.e:2835
 msgid "Some classes were edited since last compilation"
 msgstr ""
 
@@ -36574,7 +36637,7 @@ msgid "Standard (C/byte code)"
 msgstr ""
 
 #. Source code: t_Standard_toolbar: STRING_32				do Result := locale.translation ("Standard Buttons") end
-#: interface_names.e:2643
+#: interface_names.e:2644
 msgid "Standard Buttons"
 msgstr ""
 
@@ -36604,7 +36667,7 @@ msgid "Start command"
 msgstr ""
 
 #. Source code: e_Exec_debug: STRING_32				do Result := locale.translation("Start execution and stop at breakpoints")	end
-#: interface_names.e:2835
+#: interface_names.e:2836
 msgid "Start execution and stop at breakpoints"
 msgstr ""
 
@@ -36614,12 +36677,12 @@ msgid "Start metric archive evaluation"
 msgstr ""
 
 #. Source code: t_run_last_tests: STRING_32					do Result := locale.translation ("Start test run") end
-#: interface_names.e:2662
+#: interface_names.e:2663
 msgid "Start test run"
 msgstr ""
 
 #. Source code: t_run_last_failed_tests_first: STRING_32		do Result := locale.translation ("Start test run failed first") end
-#: interface_names.e:2661
+#: interface_names.e:2662
 msgid "Start test run failed first"
 msgstr ""
 
@@ -36641,7 +36704,7 @@ msgid "Starting dialog width"
 msgstr ""
 
 #. Source code: f_statistics: STRING = "Statistics"
-#: es_test_comparison_widget.e:793
+#: es_test_comparison_widget.e:803
 msgid "Statistics"
 msgstr ""
 
@@ -36698,7 +36761,7 @@ msgid "Step into"
 msgstr ""
 
 #. Source code: e_Exec_into: STRING_32				do Result := locale.translation("Step into a routine")	end
-#: interface_names.e:2842
+#: interface_names.e:2843
 msgid "Step into a routine"
 msgstr ""
 
@@ -36713,7 +36776,7 @@ msgid "Step out"
 msgstr ""
 
 #. Source code: e_Exec_out: STRING_32				do Result := locale.translation("Step out of a routine")	end
-#: interface_names.e:2845
+#: interface_names.e:2846
 msgid "Step out of a routine"
 msgstr ""
 
@@ -36784,7 +36847,7 @@ msgid ""
 msgstr ""
 
 #. Source code: e_Exec_kill: STRING_32				do Result := locale.translation("Stop execution")	end
-#: interface_names.e:2837
+#: interface_names.e:2838
 msgid "Stop execution"
 msgstr ""
 
@@ -36810,7 +36873,7 @@ msgid "Stop metric recalculation"
 msgstr ""
 
 #. Source code: t_Stop_test_run: STRING_32					do Result := locale.translation("Stop test run")	end
-#: interface_names.e:2432
+#: interface_names.e:2433
 msgid "Stop test run"
 msgstr ""
 
@@ -36861,12 +36924,12 @@ msgid "Subcluster depth"
 msgstr ""
 
 #. Source code: i_critical: STRING = "Critical"
-#: es_exception_submit_dialog.e:1019
+#: es_exception_submit_dialog.e:1026
 msgid "Submit"
 msgstr ""
 
 #. Source code: lb_submitting: STRING = "Submitting bug report, please wait..."
-#: es_exception_submit_dialog.e:1012
+#: es_exception_submit_dialog.e:1019
 msgid "Submitting bug report, please wait..."
 msgstr ""
 
@@ -36989,12 +37052,12 @@ msgid "Switch to Tree View"
 msgstr ""
 
 #. Source code: e_Switch_num_format_to_dec: STRING_32 do Result := locale.translation("Switch to decimal format")	end
-#: interface_names.e:2888
+#: interface_names.e:2889
 msgid "Switch to decimal format"
 msgstr ""
 
 #. Source code: e_Switch_num_format_to_hex: STRING_32 do Result := locale.translation("Switch to hexadecimal format")	end
-#: interface_names.e:2887
+#: interface_names.e:2888
 msgid "Switch to hexadecimal format"
 msgstr ""
 
@@ -37014,7 +37077,7 @@ msgid "Switch to search mode"
 msgstr ""
 
 #. Source code: wt_Switches_and_query: STRING_32 do Result := locale.translation("Switches and Query")	end
-#: interface_names.e:2991
+#: interface_names.e:2992
 msgid "Switches and Query"
 msgstr ""
 
@@ -37034,7 +37097,7 @@ msgid "Synchronize"
 msgstr ""
 
 #. Source code: e_Send_stone_to_context: STRING_32	do Result := locale.translation("Synchronize context")	end
-#: interface_names.e:2882
+#: interface_names.e:2883
 msgid "Synchronize context"
 msgstr ""
 
@@ -37137,7 +37200,7 @@ msgid "System doesn't exist."
 msgstr ""
 
 #. Source code: e_Compiling: STRING_32				do Result := locale.translation("System is being compiled")	end
-#: interface_names.e:2810
+#: interface_names.e:2811
 msgid "System is being compiled"
 msgstr ""
 
@@ -37262,7 +37325,7 @@ msgid "Target"
 msgstr ""
 
 #. Source code: s_target_stone: STRING_32 			do Result := locale.translation("Target ")	end
-#: interface_names.e:2304
+#: interface_names.e:2305
 msgid "Target "
 msgstr ""
 
@@ -37272,7 +37335,7 @@ msgid "Target Name"
 msgstr ""
 
 #. Source code: t_target_selection: STRING_32 				do Result := locale.translation ("Target Selection") end
-#: interface_names.e:2438
+#: interface_names.e:2439
 msgid "Target Selection"
 msgstr ""
 
@@ -37417,7 +37480,7 @@ msgid "Terminate C Compilation"
 msgstr ""
 
 #. Source code: e_Terminate_c_compilation: STRING_32 do Result := locale.translation("Terminate current C compilation in progress")	end
-#: interface_names.e:2895
+#: interface_names.e:2896
 msgid "Terminate current C compilation in progress"
 msgstr ""
 
@@ -37427,7 +37490,7 @@ msgid "Terminate running command"
 msgstr ""
 
 #. Source code: h_old_result: STRING = "Previous Result"
-#: es_test_comparison_widget.e:778
+#: es_test_comparison_widget.e:788
 msgid "Test"
 msgstr ""
 
@@ -37437,7 +37500,7 @@ msgid "Test $1 was removed from the test suite before it was executed"
 msgstr ""
 
 #. Source code: t_test_count: STRING_32						do Result := locale.translation("Test Count")	end
-#: interface_names.e:2440
+#: interface_names.e:2441
 msgid "Test Count"
 msgstr ""
 
@@ -37457,7 +37520,7 @@ msgid "Test Generation"
 msgstr ""
 
 #. Source code: t_test_runs_history: STRING_32				do Result := locale.translation("Test Runs History")	end
-#: interface_names.e:2444
+#: interface_names.e:2445
 msgid "Test Runs History"
 msgstr ""
 
@@ -37522,12 +37585,12 @@ msgid "Testing"
 msgstr ""
 
 #. Source code: t_testing_experimental: STRING_32			do Result := locale.translation("Testing (experimental)")	end
-#: interface_names.e:2442
+#: interface_names.e:2443
 msgid "Testing (experimental)"
 msgstr ""
 
 #. Source code: t_testing_result: STRING_32					do Result := locale.translation("Testing Result")	end
-#: interface_names.e:2443
+#: interface_names.e:2444
 msgid "Testing Result"
 msgstr ""
 
@@ -37657,12 +37720,12 @@ msgid "Thai (Thailand)"
 msgstr ""
 
 #. Source code: tt_thank_you: STRING = "Thank you for the bug report"
-#: es_exception_submit_dialog.e:998
+#: es_exception_submit_dialog.e:1005
 msgid "Thank you for the bug report"
 msgstr ""
 
 #. Source code: (locale.translation_in_context ("The $ operator is not supported on externals.", "compiler.error"),
-#: ast_feature_checker_generator.e:4358
+#: ast_feature_checker_generator.e:4352
 msgctxt "compiler.error"
 msgid "The $ operator is not supported on externals."
 msgstr ""
@@ -37863,7 +37926,7 @@ msgid "The configuration file you have selected is not valid."
 msgstr ""
 
 #. Source code: t_contract_syntax_error_1: STRING_32 			do Result := locale.translation ("The contracts cannot be shown for class ") end
-#: interface_names.e:2690
+#: interface_names.e:2691
 msgid "The contracts cannot be shown for class "
 msgstr ""
 
@@ -37984,7 +38047,7 @@ msgid ""
 msgstr ""
 
 #. Source code: "The file you have supplied as Runtime Information Record%N%
-#: interface_names.e:3001
+#: interface_names.e:3002
 msgid ""
 "The file you have supplied as Runtime Information Record\n"
 "does not exist or is not valid.\n"
@@ -37999,7 +38062,7 @@ msgid ""
 msgstr ""
 
 #. Source code: do Result := locale.translation("The file you have supplied as existing Execution Profile does%N%
-#: interface_names.e:3014
+#: interface_names.e:3015
 msgid ""
 "The file you have supplied as existing Execution Profile does\n"
 "not exist. Please provide a valid file or generate\n"
@@ -38169,7 +38232,7 @@ msgid_plural "The obsolete feature call has to be removed in {1} days."
 msgstr[0] ""
 
 #. Source code: e_Exec_attach_on_port_description: STRING_32	do Result := locale.translation("The port number shoud be greater than 1023.%NIt is recommended to use the range 49152-65535.")	end
-#: interface_names.e:2840
+#: interface_names.e:2841
 msgid ""
 "The port number shoud be greater than 1023.\n"
 "It is recommended to use the range 49152-65535."
@@ -38296,7 +38359,7 @@ msgid ""
 msgstr ""
 
 #. Source code: Result := "The submitted report is now available at "
-#: es_exception_submit_dialog.e:1008
+#: es_exception_submit_dialog.e:1015
 msgid "The submitted report is now available at "
 msgstr ""
 
@@ -38344,7 +38407,7 @@ msgid "The test suite service is currently unavailable."
 msgstr ""
 
 #. Source code: "The testing library which is needed to compile and execute tests has not been added yet.%N%N%
-#: es_test_launch_wizard.e:326
+#: es_test_launch_wizard.e:328
 msgid ""
 "The testing library which is needed to compile and execute tests has not "
 "been added yet.\n"
@@ -38359,7 +38422,7 @@ msgid ""
 msgstr ""
 
 #. Source code: "The testing library which is needed to compile and execute tests has not been added yet.%N%N%
-#: es_test_launch_wizard.e:332
+#: es_test_launch_wizard.e:334
 msgid ""
 "The testing library which is needed to compile and execute tests has not "
 "been added yet.\n"
@@ -38528,7 +38591,7 @@ msgid ""
 msgstr ""
 
 #. Source code: Result := "There was a problem submitting the problem report. Please retry or submit it manually at "
-#: es_exception_submit_dialog.e:1028
+#: es_exception_submit_dialog.e:1035
 msgid ""
 "There was a problem submitting the problem report. Please retry or submit it "
 "manually at "
@@ -38709,7 +38772,7 @@ msgid ""
 msgstr ""
 
 #. Source code: (once "This is the last day you can still login as guest", once "You can still login as guest for $1 more days", once "eiffel.account", nb_days), nb_days)
-#: interface_names.e:2735
+#: interface_names.e:2736
 msgctxt "eiffel.account"
 msgid "This is the last day you can still login as guest"
 msgid_plural "You can still login as guest for $1 more days"
@@ -38862,7 +38925,7 @@ msgid "Tibetan (PRC)"
 msgstr ""
 
 #. Source code: t_time: STRING_32							do Result := locale.translation ("Time")	end
-#: interface_names.e:2625
+#: interface_names.e:2626
 msgid "Time"
 msgstr ""
 
@@ -39944,7 +40007,7 @@ msgid ""
 msgstr ""
 
 #. Source code: t_show_variable_suggestion: STRING_32		do Result := locale.translation("Type '$' to show available variables")	end
-#: interface_names.e:2434
+#: interface_names.e:2435
 msgid "Type '$' to show available variables"
 msgstr ""
 
@@ -39980,7 +40043,7 @@ msgid "Type of compilation."
 msgstr ""
 
 #. Source code: (locale.translation_in_context ("Type of target in a agent call may not be a basic type or a formal.", "compiler.error"),
-#: ast_feature_checker_generator.e:4490
+#: ast_feature_checker_generator.e:4484
 msgctxt "compiler.error"
 msgid "Type of target in a agent call may not be a basic type or a formal."
 msgstr ""
@@ -40412,7 +40475,7 @@ msgid "Unable to extract tests for selected call stack frames."
 msgstr ""
 
 #. Source code: e_test_suite_unavailable: STRING = "Unable to fetch results from test suite"
-#: es_test_comparison_widget.e:795
+#: es_test_comparison_widget.e:805
 msgid "Unable to fetch results from test suite"
 msgstr ""
 
@@ -40504,7 +40567,7 @@ msgid ""
 msgstr ""
 
 #. Source code: e_file_not_readable: STRING = "Unable to read results from file%N$1"
-#: es_test_comparison_widget.e:796
+#: es_test_comparison_widget.e:806
 msgid ""
 "Unable to read results from file\n"
 "$1"
@@ -40528,7 +40591,7 @@ msgid "Unable to write file: $1"
 msgstr ""
 
 #. Source code: t_unchanged: STRING = "Unchanged"
-#: es_test_comparison_widget.e:786
+#: es_test_comparison_widget.e:796
 msgid "Unchanged"
 msgstr ""
 
@@ -40567,7 +40630,7 @@ msgid "Uncomment selected lines"
 msgstr ""
 
 #. Source code: st_compile_changes: STRING_32		do Result := locale.translation ("Uncompile changes") end
-#: interface_names.e:2704
+#: interface_names.e:2705
 msgid "Uncompile changes"
 msgstr ""
 
@@ -40647,7 +40710,7 @@ msgid "Undo Refactoring"
 msgstr ""
 
 #. Source code: fs_undo_command: STRING_32				do Result := locale.translation ("Undo command") end
-#: interface_names.e:2309
+#: interface_names.e:2310
 msgid "Undo command"
 msgstr ""
 
@@ -40673,7 +40736,7 @@ msgid "Unevaluated"
 msgstr ""
 
 #. Source code: st_unicode_cannot_save: STRING_32	do Result := locale.translation ("Unicode characters could not be saved.") end
-#: interface_names.e:2708
+#: interface_names.e:2709
 msgid "Unicode characters could not be saved."
 msgstr ""
 
@@ -40684,7 +40747,7 @@ msgid "Unified stone"
 msgstr ""
 
 #. Source code: fs_unindent: STRING_32					do Result := locale.translation ("Unindent") end
-#: interface_names.e:2317
+#: interface_names.e:2318
 msgid "Unindent"
 msgstr ""
 
@@ -40717,7 +40780,7 @@ msgid "Unit order"
 msgstr ""
 
 #. Source code: t_Unit_test_files_will_be_generated: STRING_32	do Result := locale.translation("Unit test files will be generated.")	end
-#: interface_names.e:2404
+#: interface_names.e:2405
 msgid "Unit test files will be generated."
 msgstr ""
 
@@ -40808,7 +40871,7 @@ msgid "Unlin&k Context Tool"
 msgstr ""
 
 #. Source code: e_Separate_stone: STRING_32			do Result := locale.translation("Unlink the context tool from the other components")	end
-#: interface_names.e:2884
+#: interface_names.e:2885
 msgid "Unlink the context tool from the other components"
 msgstr ""
 
@@ -41022,7 +41085,7 @@ msgid "Update comments"
 msgstr ""
 
 #. Source code: t_Update_test_case_last_changed_time: STRING_32	do Result := locale.translation("Update last changed time")	end
-#: interface_names.e:2405
+#: interface_names.e:2406
 msgid "Update last changed time"
 msgstr ""
 
@@ -41649,7 +41712,7 @@ msgid "Useless contract with void safety"
 msgstr ""
 
 #. Source code: l_user_name: STRING_32 do Result := locale.translation ("User Name") end
-#: interface_names.e:2717
+#: interface_names.e:2718
 msgid "User Name"
 msgstr ""
 
@@ -41683,12 +41746,12 @@ msgid "User-defined tags"
 msgstr ""
 
 #. Source code: lb_username: STRING = "Username:"
-#: es_exception_submit_dialog.e:1014
+#: es_exception_submit_dialog.e:1021
 msgid "Username:"
 msgstr ""
 
 #. Source code: do Result := locale.translation("Using this wizard you can analyze the result of a profiling.%N%
-#: interface_names.e:2954
+#: interface_names.e:2955
 msgid ""
 "Using this wizard you can analyze the result of a profiling.\n"
 "\n"
@@ -41769,7 +41832,7 @@ msgid ""
 msgstr ""
 
 #. Source code: t_Using_this_wizard: STRING_32				do Result := locale.translation("Using this wizard you can create whole set of unit test files.%N%
-#: interface_names.e:2397
+#: interface_names.e:2398
 msgid ""
 "Using this wizard you can create whole set of unit test files.\n"
 "\n"
@@ -42298,7 +42361,7 @@ msgid "WEL Application Type"
 msgstr ""
 
 #. Source code: e_w_code: STRING_32 do Result := locale.translation("W_code")	end
-#: interface_names.e:2909
+#: interface_names.e:2910
 msgid "W_code"
 msgstr ""
 
@@ -42450,7 +42513,7 @@ msgid "Watch Tool"
 msgstr ""
 
 #. Source code: t_watch_tool_error_message: STRING_32		do Result := locale.translation ("Watch tool :: error message")	end
-#: interface_names.e:2635
+#: interface_names.e:2636
 msgid "Watch tool :: error message"
 msgstr ""
 
@@ -42467,7 +42530,7 @@ msgid "Watches grids layout managed"
 msgstr ""
 
 #. Source code: t_Welcome: STRING_32	do Result := locale.translation ("Welcome")	end
-#: interface_names.e:2632
+#: interface_names.e:2633
 msgid "Welcome"
 msgstr ""
 
@@ -42514,7 +42577,7 @@ msgid ""
 msgstr ""
 
 #. Source code: wt_Profiler_welcome: STRING_32 do Result := locale.translation("Welcome to the Profiler Wizard")	end
-#: interface_names.e:2952
+#: interface_names.e:2953
 msgid "Welcome to the Profiler Wizard"
 msgstr ""
 
@@ -42694,7 +42757,7 @@ msgid "Will normal referenced supplier/client classes be shown?"
 msgstr ""
 
 #. Source code: t_Windows_tool: STRING_32					do Result := locale.translation ("Windows")	end
-#: interface_names.e:2631
+#: interface_names.e:2632
 msgid "Windows"
 msgstr ""
 
@@ -42832,7 +42895,7 @@ msgid "Yoruba (Nigeria)"
 msgstr ""
 
 #. Source code: l_login_with_existing_account: STRING_32 do Result := locale.translation ("You already have an account? Login >>") end
-#: interface_names.e:2730
+#: interface_names.e:2731
 msgid "You already have an account? Login >>"
 msgstr ""
 
@@ -42902,7 +42965,7 @@ msgid ""
 msgstr ""
 
 #. Source code: do Result := locale.translation("You can generate the Execution Profile from a Run-time Information Record%N%
-#: interface_names.e:2974
+#: interface_names.e:2975
 msgid ""
 "You can generate the Execution Profile from a Run-time Information Record\n"
 "created by a profiler, or you can reuse an existing Execution Profile if "
@@ -42982,7 +43045,7 @@ msgid ""
 msgstr ""
 
 #. Source code: st_unsaved_changed: STRING_32		do Result := locale.translation ("You have unsaved changes") end
-#: interface_names.e:2706
+#: interface_names.e:2707
 msgid "You have unsaved changes"
 msgstr ""
 
@@ -43033,7 +43096,7 @@ msgid "You should first manipulate the subqueries"
 msgstr ""
 
 #. Source code: e_external_command_list_full: STRING_32 do Result := locale.translation("Your external command list is full.%NUse Tools->External Command... to delete one.")	end
-#: interface_names.e:2915
+#: interface_names.e:2916
 msgid ""
 "Your external command list is full.\n"
 "Use Tools->External Command... to delete one."
@@ -43069,12 +43132,12 @@ msgid "Zoom "
 msgstr ""
 
 #. Source code: t_Diagram_zoom_in_cmd: STRING_32				do Result := locale.translation("Zoom In")	end
-#: interface_names.e:2583
+#: interface_names.e:2584
 msgid "Zoom In"
 msgstr ""
 
 #. Source code: t_Diagram_zoom_out_cmd: STRING_32			do Result := locale.translation("Zoom Out")	end
-#: interface_names.e:2584
+#: interface_names.e:2585
 msgid "Zoom Out"
 msgstr ""
 
@@ -43451,7 +43514,7 @@ msgid "error message"
 msgstr ""
 
 #. Source code: t_eweasel_unhandled_output: STRING_32		do Result := locale.translation("eweasel unhandled output")	end
-#: interface_names.e:2376
+#: interface_names.e:2377
 msgid "eweasel unhandled output"
 msgstr ""
 
@@ -43486,7 +43549,7 @@ msgid "finalize the system (discard assertions by default)"
 msgstr ""
 
 #. Source code: t_finish_freezing_launch_error: STRING_32 	do Result := locale.translation("finish_freezing Launch Error")	end
-#: interface_names.e:2605
+#: interface_names.e:2606
 msgid "finish_freezing Launch Error"
 msgstr ""
 
@@ -43547,7 +43610,7 @@ msgid "group item"
 msgstr ""
 
 #. Source code: b_login: STRING = "Login"
-#: es_exception_submit_dialog.e:1016
+#: es_exception_submit_dialog.e:1023
 msgid "here"
 msgstr ""
 

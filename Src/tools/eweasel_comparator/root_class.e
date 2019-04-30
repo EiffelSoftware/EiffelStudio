@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "System's root class, compare different compiler versions' tests"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -9,13 +9,14 @@ class
 	ROOT_CLASS
 
 inherit
-	ARGUMENTS
+	ARGUMENTS_32
+	LOCALIZED_PRINTER
 
 create
 
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make
 		local
@@ -63,7 +64,7 @@ feature
 			list_test : LIST_TEST
 			globals: PLAIN_TEXT_FILE
 		do
-			if output_file.is_equal ("stdout") then
+			if output_file.same_string ({STRING_32} "stdout") then
 				globals := io.default_output
 			else
 				create globals.make_open_write(output_file)
@@ -89,13 +90,11 @@ feature
 			globals.putstring (formatted ("Test name", First_column_count, has_tab) +
 				formatted ("Code", Second_column_count, has_tab) + version_names + "%N")
 
-			from
-				list_test.start
-			until
-				list_test.after
+			across
+				list_test as t
 			loop
-				key := list_test.key_for_iteration
-				name := list_test.item_for_iteration
+				key := t.key
+				name := t.item
 				test_results := formatted (name, First_column_count, has_tab) +
 					formatted (key, Second_column_count, has_tab)
 				create list_items.make
@@ -111,12 +110,13 @@ feature
 					index := index + 1
 				end
 
-				if only_different_results and (same_elements ("passed", list_items) or same_elements ("failed", list_items)) then
-				else
+				if
+					only_different_results implies
+					not (same_elements ("passed", list_items) or same_elements ("failed", list_items))
+				then
 					globals.putstring (test_results)
 					globals.put_new_line
 				end
-				list_test.forth
 			end
 
 		end
@@ -127,20 +127,23 @@ feature
 			-- `-tests' for `array'
 		local
 			index: INTEGER
-			first_test: STRING
+			first_test: READABLE_STRING_32
 			nb_to_remove: INTEGER
 			l_test_index: INTEGER
+			n: INTEGER
 		do
-			if index_of_beginning_with_word_option ("output") /= 0 then
-				output_file := separate_word_option_value ("output")
-			else
+			if index_of_beginning_with_word_option ("output") = 0 then
 					-- By default we redirect to the STDOUT.
-				output_file := "stdout"
+				output_file := {STRING_32} "stdout"
+			else
+				output_file := separate_word_option_value ("output")
 			end
 			l_test_index := index_of_beginning_with_word_option ("tests")
 			first_test := separate_word_option_value ("tests")
 
-			if first_test.count * output_file.count /= 0 then
+			if first_test.count * output_file.count = 0 then
+				io.putstring ("Wrong number of files")
+			else
 					-- argument_array has 4 or 5 extra words : output, output's path, tests,
 					-- and `command line' at position 0..
 					-- and sometimes differences
@@ -150,20 +153,19 @@ feature
 				if index_of_beginning_with_word_option ("tab") /= 0 then
 					nb_to_remove := nb_to_remove + 1
 				end
-				create array.make(1, argument_array.count - l_test_index - nb_to_remove - 1)
-				array.put (first_test, 1)
-				if array.count > 1 then
+				n := argument_array.count - l_test_index - nb_to_remove - 1
+				create array.make (n)
+				array.extend (first_test)
+				if n > 1 then
 					from
 						index := 2
 					until
-						index > array.count
+						index > n
 					loop
-						array.put (argument_array.item (index + l_test_index), index)
+						array.extend (argument_array.item (index + l_test_index))
 						index := index + 1
 					end
 				end
-			else
-				io.putstring ("Wrong number of files")
 			end
 		end
 
@@ -171,34 +173,36 @@ feature
 			--  Set `output_file' and `array' from shell when `-loop' in command line.
 		local
 			index: INTEGER
-			test_file, whole_name: STRING
+			n: INTEGER
+			test_file, whole_name: STRING_32
 		do
 			io.putstring ("This application allows to follow tests' evolution through different compiler versions%N")
 			io.putstring ("Please enter the whole path of output file (the file you want to see comparison in)%N")
 			io.read_line
-			output_file := io.last_string.twin
+			output_file := io.last_string.twin.to_string_32
 			io.putstring ("How many compiler versions do you want to compare?%N")
 			io.read_integer
-			create array.make (1, io.last_integer)
-			whole_name := ""
+			n := io.last_integer
+			create array.make (n)
+			whole_name := {STRING_32} ""
 			from
 				index := 1
 			until
-				index > array.count
+				index > n
 			loop
 				io.putstring ("Please enter file number ")
 				io.put_integer (index)
 				io.putstring (":%N")
 				io.read_line
-				test_file := io.last_string.twin
-				array.put (test_file, index)
-				whole_name.append ("%N" + test_file)
+				test_file := io.last_string.twin.to_string_32
+				array.extend (test_file)
+				whole_name.append ({STRING_32} "%N" + test_file)
 				index := index + 1
 			end
 			io.putstring ("Do you want to save all results or just tests that have different result throuch compiler versions? (y/n)")
 			io.read_line
 			only_different_results := equal (io.last_string, "y")
-			io.putstring ("Generated in: " + output_file + " using tests: " + whole_name + ".")
+			localized_print ({STRING_32} "Generated in: " + output_file + {STRING_32} " using tests: " + whole_name + {STRING_32} ".")
 		end
 
 
@@ -209,27 +213,16 @@ feature
 		end
 
 	same_elements (res : STRING; list : LINKED_LIST [STRING]): BOOLEAN
-		local
-			bool: BOOLEAN
 		do
-			bool := True
-			from
-				list.start
-			until
-				list.exhausted
-			loop
-				bool := bool and equal (list.first, list.item)
-				list.forth
-			end
-			Result := bool
+			Result := across list as i all res ~ i.item end
 		end
 
 feature --Access
 
-	output_file: STRING
+	output_file: READABLE_STRING_32
 		-- Path of comparison file.
 
-	array: ARRAY [STRING]
+	array: ARRAYED_LIST [READABLE_STRING_32]
 		-- Each item is a tests results file for a compiler version.
 
 	only_different_results: BOOLEAN
@@ -272,7 +265,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -296,11 +289,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class ROOT_CLASS
+end

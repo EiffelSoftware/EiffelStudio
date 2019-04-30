@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "List of existing tests"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,12 +17,12 @@ inherit
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make
 			-- Initialize
 		do
-			table_make(2)
+			table_make (2)
 		end
 
 feature
@@ -30,21 +30,15 @@ feature
 	add_tests_from_compiler_results (cr : COMPILER_RESULTS)
 			-- add additional tests if not yet in list_test
 		local
-			l_key,name: STRING
-			test_info: TEST_INFO
+			l_key: STRING
 		do
-			from
-				cr.start
-			until
-				cr.after
+			across
+				cr as r
 			loop
-				l_key := cr.key_for_iteration
+				l_key := r.key
 				if not has (l_key) then
-					test_info := cr.item (l_key)
-					name := test_info.test_real_name
-					add_single_test (l_key, name)
+					add_single_test (l_key, r.item.test_real_name)
 				end
-				cr.forth
 			end
 		end
 
@@ -58,7 +52,7 @@ feature
 		end
 
 note
-	copyright: "Copyright (c) 1984-2007, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -82,11 +76,11 @@ note
 			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class LIST_TEST
+end

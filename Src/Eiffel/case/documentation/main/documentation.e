@@ -533,7 +533,7 @@ feature {NONE} -- Implementation
 
 			create textfile.make_with_path (root_directory.path.extended ("goto.html"))
 			textfile.open_write
-			save_string_in_file (textfile, goto_text)
+			save_string_into_file (textfile, goto_text)
 			textfile.close
 		end
 
@@ -712,7 +712,7 @@ feature -- Specific Generation
 				check file_writable: False end
 			end
 			if fi.is_open_write then
-				save_string_in_file (fi, filter.image)
+				save_string_into_file (fi, filter.image)
 				fi.close
 			end
 			filter.wipe_out_image
@@ -871,6 +871,23 @@ feature -- Specific Generation
 			retry
 		end
 
+	save_string_into_file (a_file: PLAIN_TEXT_FILE; a_str: STRING_32)
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open: a_file.is_open_write
+			a_file_exist: a_file.exists
+			a_str_not_void: a_str /= Void
+		local
+			utf_conv: UTF_CONVERTER
+		do
+			Utf32.convert_to (System_encoding, a_str)
+			if Utf32.last_conversion_successful and not utf32.last_conversion_lost_data then
+				a_file.put_string (Utf32.last_converted_stream)
+			else
+				a_file.put_string (utf_conv.utf_32_string_to_utf_8_string_8 (a_str))
+			end
+		end
+
 feature {NONE} -- Menu bars
 
 	insert_global_menu_bar (text: TEXT_FORMATTER; d, l, h: BOOLEAN)
@@ -923,7 +940,7 @@ feature {NONE} -- Menu bars
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

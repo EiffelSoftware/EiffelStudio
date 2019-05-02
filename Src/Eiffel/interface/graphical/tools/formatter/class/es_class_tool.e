@@ -70,11 +70,13 @@ feature -- Element change
 
 				-- Now set the mode and stone.
 			set_mode (a_mode)
-			l_stone ?= a_stone
-			if l_stone = Void and then attached {CLASSI_STONE} a_stone as l_cis then
-				if l_cis.class_i.is_compiled then
-					create l_stone.make (l_cis.class_i.compiled_class)
-				end
+			if attached {CLASSC_STONE} a_stone as l_ccs then
+				l_stone := l_ccs
+			elseif
+				attached {CLASSI_STONE} a_stone as l_cis and then
+				l_cis.class_i.is_compiled
+			then
+				create l_stone.make (l_cis.class_i.compiled_class)
 			end
 			if l_stone /= Void then
 				panel.set_stone (l_stone)
@@ -102,7 +104,7 @@ feature {NONE} -- Internationalization
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -849,24 +849,30 @@ feature {NONE} -- Implementation
 				elseif c <= 0xDF then
 						-- 110xxxxx 10xxxxxx
 					i := i + 2
-					if i <= n then
+					if i - 1 <= n then
 						cp := cp + 1
 						cc := cc + 1
 					end
 				elseif c <= 0xEF then
 						-- 1110xxxx 10xxxxxx 10xxxxxx
 					i := i + 3
-					if i <= n then
+					if i - 1 <= n then
 						cp := cp + 1
 						cc := cc + 1
 					end
 				elseif c <= 0xF7 then
 						-- 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
 					i := i + 4
-					if i <= n then
+					if i - 1 <= n then
 						cp := cp + 1
 						cc := cc + 1
 					end
+				else
+					check should_not_occur: False end
+						-- unexpected case for valid UTF-8 encoded text.
+					i := i + 1
+					cp := cp + 1
+					cc := cc + 1
 				end
 			end
 			next_character_column := cc
@@ -893,7 +899,7 @@ invariant
 	filename_not_void: filename /= Void
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

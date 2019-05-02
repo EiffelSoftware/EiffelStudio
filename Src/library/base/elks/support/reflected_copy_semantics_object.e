@@ -118,20 +118,16 @@ feature {NONE} -- Implementation
 
 	dereference (ptr: POINTER; offset: INTEGER): POINTER
 		external
-			"C inline use %"eif_built_in.h%""
-		alias
-			"return *(EIF_REFERENCE *) eif_obj_at($ptr, $offset);"
+			"built_in static"
 		end
 
 	object_from_address (ptr: POINTER): ANY
 		external
-			"C inline use %"eif_built_in.h%""
-		alias
-			"return (EIF_REFERENCE) $ptr;"
+			"built_in static"
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

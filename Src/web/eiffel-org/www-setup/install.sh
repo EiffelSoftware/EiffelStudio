@@ -1,5 +1,32 @@
 #!/bin/bash
 
+# This script is meant for quick & easy install via:
+#   $ curl -fsSL https://svn.eiffel.com/eiffelstudio/trunk/Src/web/eiffel-org/www-setup/install.sh -o get-eiffelstudio.sh
+#   $ sh get-eiffelstudio.sh
+#
+# or
+#   $ curl -sSL https://svn.eiffel.com/eiffelstudio/trunk/Src/web/eiffel-org/www-setup/install.sh | bash -s --
+#
+# (Inspired by get.docker.com)
+#
+# Optional arguments:
+#
+# --platform {ise_platform}: set the targetted platform (linux-x86, linux-x86-64, ...)
+# --install-dir: location for the targetted $ISE_EIFFEL
+# --dir: parent location for the targetted $ISE_EIFFEL based on major.minor values (it should be writable).
+# --url url-to-eiffel-installation-archive: url to installation archive for instance from the ftp.eiffel.com
+# --channel latest|beta|nightly|major.minor.build: choose the channel, latest stable version, beta or nightly, 
+#					or directly the stable $major.$minor.$build
+#
+# Notes:
+#   the default value for --channel is latest.
+#   the platform value is taken from $ISE_PLATFORM or guessed from the architecture.
+#
+# Examples when script available via https://www.eiffel.org/setup/install.sh :
+#  $ curl -sSL https://www.eiffel.org/setup/install.sh | bash -s -- --channel nightly --dir /opt/eiffel
+#  $ curl -sSL https://www.eiffel.org/setup/install.sh | bash -s -- --channel nightly --install-dir /opt/eiffel/nightly --dir /opt/eiffel
+#  $ curl -sSL https://www.eiffel.org/setup/install.sh | bash -s -- --url https://ftp.eiffel.com/pub/beta/nightly/Eiffel_19.04_gpl_103127-linux-x86-64.tar.bz2 --install-dir /opt/eiffel/test --dir /opt/eiffel
+
 # Default values
 ISE_MAJOR_MINOR_LATEST=18.11
 ISE_BUILD_LATEST=102592
@@ -28,6 +55,9 @@ do
 		;;
 		--url)
 			ISE_CUSTOM_URL=$2
+			if [ -z "$ISE_CHANNEL" ]; then
+				ISE_CHANNEL=$2
+			fi
 			shift
 			shift
 		;;
@@ -82,14 +112,6 @@ done
 
 TMP_SAFETY_DELAY=10
 
-# This script is meant for quick & easy install via:
-#   $ curl -fsSL https://svn.eiffel.com/eiffelstudio/trunk/Src/web/eiffel-org/www-setup/install.sh -o get-eiffelstudio.sh
-#   $ sh get-eiffelstudio.sh
-#
-# or
-#   $ curl -sSL https://svn.eiffel.com/eiffelstudio/trunk/Src/web/eiffel-org/www-setup/install.sh | sh
-#
-# (Inspired by get.docker.com)
 
 # This value will automatically get changed for:
 #   * latest
@@ -107,6 +129,19 @@ iseverParse() {
 	minor="${1#$major.}"
 	minor="${minor%%.*}"
 	build="${1#$major.$minor.}"
+}
+
+iseverParseName() {
+	f=$1
+	t="${f%%_*}"
+	t="${f#${t}_}"
+	major="${t%%.*}"
+	t="${t#$major.}"
+	minor="${t%%_*}"
+	t="${t#${minor}_}"
+	lic="${t%%_*}"
+	t="${t#${lic}_}"
+	build="${t%%-*}"
 }
 
 command_exists() {
@@ -140,6 +175,7 @@ do_install() {
 				exit 1
 				;;
 		esac
+		echo >&2 Using ISE_PLATFORM=$ISE_PLATFORM on architecture $architecture
 	else
 		echo >&2 Using existing ISE_PLATFORM=$ISE_PLATFORM on architecture $architecture
 	fi
@@ -203,15 +239,25 @@ do_install() {
 			echo >&2 Version=$major.$minor.$build
 			;;
 		*)
-			echo >&2 Use custom release $ISE_CHANNEL if any
-			iseverParse $ISE_CHANNEL
-			echo >&2 $major.$minor.$build
-			ISE_MAJOR_MINOR=$major.$minor
-			ISE_BUILD=$build
 			if [ -z "$ISE_CUSTOM_URL" ]; then
+				echo >&2 Use custom release $ISE_CHANNEL if any
+				iseverParse $ISE_CHANNEL
+				echo >&2 $major.$minor.$build
+				ISE_MAJOR_MINOR=$major.$minor
+				ISE_BUILD=$build
 				ISE_DOWNLOAD_FILE=Eiffel_${ISE_MAJOR_MINOR}_gpl_${ISE_BUILD}-${ISE_PLATFORM}.tar.bz2
 				ISE_DOWNLOAD_URL=https://ftp.eiffel.com/pub/download/$ISE_MAJOR_MINOR/$ISE_DOWNLOAD_FILE
 			else
+				echo >&2 Use custom url $ISE_CUSTOM_URL 
+				ISE_CHANNEL=`basename $ISE_CHANNEL` 
+				if [ "`echo $ISE_CHANNEL | tr -d -c '.' | wc -c`" = "2" ]; then
+					iseverParse $ISE_CHANNEL
+				else
+					iseverParseName $ISE_CHANNEL
+				fi
+				echo >&2 $major.$minor.$build
+				ISE_MAJOR_MINOR=$major.$minor
+				ISE_BUILD=$build
 				ISE_DOWNLOAD_URL=$ISE_CUSTOM_URL
 			fi
 			;;
@@ -310,25 +356,6 @@ do_install() {
 		echo >&2 EiffelStudio installed in $ISE_EIFFEL
 		$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ecb -version  >&2
 		echo >&2 Use the file $ISE_RC_FILE to setup your Eiffel environment.
-		case $ISE_CHANNEL in
-			latest)
-				\rm -f $T_CURRENT_DIR/eiffel_latest.rc
-				ln -s -f $ISE_RC_FILE $T_CURRENT_DIR/eiffel_latest.rc > /dev/null
-				echo >&2 or the file $T_CURRENT_DIR/eiffel_latest.rc
-				;;
-			beta)
-				\rm -f $T_CURRENT_DIR/eiffel_beta.rc
-				ln -s -f $ISE_RC_FILE $T_CURRENT_DIR/eiffel_beta.rc > /dev/null
-				echo >&2 or the file $T_CURRENT_DIR/eiffel_beta.rc
-				;;
-			nightly)
-				\rm -f $T_CURRENT_DIR/eiffel_nightly.rc
-				ln -s -f $ISE_RC_FILE $T_CURRENT_DIR/eiffel_nightly.rc > /dev/null
-				echo >&2 or the file $T_CURRENT_DIR/eiffel_nightly.rc
-				;;
-			*)
-				;;
-		esac
 		echo >&2 Happy Eiffeling!
 	else
 		echo >&2 ERROR: Installation failed !!!

@@ -136,37 +136,39 @@ feature -- Generation Structure
 			ep_method: JVM_METHOD
 		do
 			c := repository.item (type_id)
-			f ?= c.features.item (feature_id)
-			debug ("JVM_GEN2")
-				print ("def entry point: " + c.qualified_name + ", " + f.external_name + "%N")
+			if attached {JVM_WRITTEN_FEATURE} c.features.item (feature_id) as f then
+				debug ("JVM_GEN2")
+					print ("def entry point: " + c.qualified_name + ", " + f.external_name + "%N")
+				end
+				-- Add entry class_
+				calc_free_type_id
+				repository.put (c.qualified_name_wo_l + "_" + f.external_name, last_free_type_id)
+				ep_class := repository.item (last_free_type_id)
+				ep_class.parents.force (repository.item_by_qualified_name ("Ljava/lang/Object;").type_id)
+
+							-- Add entry method
+				create ep_method.make (ep_class.constant_pool)
+				ep_method.set_external_name ("main")
+				ep_method.set_is_static (True)
+				ep_method.set_parameters ("[Ljava/lang/String;")
+				ep_method.set_return_type_name ("V")
+				ep_method.set_feature_id (1)
+				ep_method.close_signature
+				ep_class.put_feature (ep_method)
+
+							-- Add code for entry method
+				ep_method.code.append_new_class (type_id)
+				ep_method.code.append_dup
+				ep_method.code.append_invoke_default_constructor (type_id)
+				ep_method.code.append_invoke_from_feature_id (type_id, feature_id)
+				ep_method.code.append_return (void_type)
+
+							-- Since the new free type id is the highest one, the class
+							-- will be generated automatically even if we are already
+							-- in the `repository.generate_byte_code' loop.
+			else
+				check is_written_feature: False end
 			end
-
-			-- Add entry class_
-			calc_free_type_id
-			repository.put (c.qualified_name_wo_l + "_" + f.external_name, last_free_type_id)
-			ep_class := repository.item (last_free_type_id)
-			ep_class.parents.force (repository.item_by_qualified_name ("Ljava/lang/Object;").type_id)
-
-						-- Add entry method
-			create ep_method.make (ep_class.constant_pool)
-			ep_method.set_external_name ("main")
-			ep_method.set_is_static (True)
-			ep_method.set_parameters ("[Ljava/lang/String;")
-			ep_method.set_return_type_name ("V")
-			ep_method.set_feature_id (1)
-			ep_method.close_signature
-			ep_class.put_feature (ep_method)
-
-						-- Add code for entry method
-			ep_method.code.append_new_class (type_id)
-			ep_method.code.append_dup
-			ep_method.code.append_invoke_default_constructor (type_id)
-			ep_method.code.append_invoke_from_feature_id (type_id, feature_id)
-			ep_method.code.append_return (void_type)
-
-						-- Since the new free type id is the highest one, the class
-						-- will be generated automatically even if we are already
-						-- in the `repository.generate_byte_code' loop.
 		end
 
 	end_assembly_generation
@@ -748,8 +750,13 @@ feature -- IL Generation
 				print ("%N")
 			end
 			current_feature := current_class.features.item (feature_id)
-			current_written_feature ?= current_feature
-			current_method ?= current_feature
+			current_written_feature := Void
+			if attached {like current_written_feature} current_feature as wf then
+				current_written_feature := wf
+			end
+			if attached {like current_method} current_feature as m then
+				current_method := m
+			end
 			counter.reset
 
 			check
@@ -2511,7 +2518,7 @@ feature -- Convenience
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

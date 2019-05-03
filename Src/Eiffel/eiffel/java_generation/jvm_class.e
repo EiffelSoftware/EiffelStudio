@@ -7,24 +7,24 @@ note
                 %information and emit java byte code from it"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-					 
+
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
 	JVM_CLASS
-				
+
 inherit
-	
+
 	SHARED_JVM_CLASS_REPOSITORY
 	PLATFORM
 	JVM_CONSTANTS
-			
+
 create
 	make
 
 feature {NONE} -- Initialization
-			
+
 	make (fn: STRING; a_type_id: INTEGER)
 			-- create a jvm class gived it's fully qualified name
 			-- `fn' is of the form: [package_name\.]+class_name
@@ -43,13 +43,13 @@ feature {NONE} -- Initialization
 			create constant_pool.make
 			is_source_code_hack_enabled := True
 		end
-			
+
 feature {ANY} -- Access
-			
+
 	qualified_name: STRING
 			-- fully qualified name of class representet by `Current'
 			-- including a leading L and a trainling ; if object type
-			
+
 	qualified_name_wo_l: STRING
 			-- same as `qualified_name' but without the leading L and
 			-- trailing ;
@@ -62,14 +62,14 @@ feature {ANY} -- Access
 				Result.keep_head (Result.count - 1)
 			end
 		end
-			
+
 	type_id: INTEGER
 			-- type id of class repr. by `Current'
-			
+
 	element_type_id: INTEGER
 			-- if `is_array_type' this is set to the `type_id' of the
 			-- class whose member the elements of this array are.
-			
+
 	is_basic_type: BOOLEAN
 			-- is this type a basic type
 		do
@@ -80,7 +80,7 @@ feature {ANY} -- Access
 			else
 			end
 		end
-			
+
 	jvm_type_id: INTEGER
 			-- JVM type. See JVM_CONSTANTS *_type for details
 			-- Please note that JVM type ids are not a bidirectional
@@ -129,14 +129,14 @@ feature {ANY} -- Access
 		end
 feature {ANY} -- Java debug information
 	source_code_file_name: STRING
-			-- name of source code file 
-	
+			-- name of source code file
+
 	has_source_code_file_name: BOOLEAN
 			-- is the source code file name available?
 		do
 			Result := source_code_file_name /= Void
 		end
-	
+
 	set_source_code_file_name (a: STRING)
 			-- set the source code file name
 		require
@@ -154,7 +154,7 @@ feature {ANY} -- Java debug information
 		ensure
 			source_code_file_name_not_void: source_code_file_name /= Void
 		end
-	
+
 	unset_source_code_file_name
 			-- call if class (resp. type)  has no source code file name
 			-- i.e. in case of generic types
@@ -163,46 +163,46 @@ feature {ANY} -- Java debug information
 		ensure
 			has_no_source_code_file_name: not has_source_code_file_name
 		end
-	
+
 	is_source_code_hack_enabled: BOOLEAN
 			-- is the source code hack enabled
-			-- in order to work properly jdb (the java debugger from 
-			-- suns jdk) source code needs to be stored in files ending 
-			-- with ".java". If this variable is set to `True' the meta 
-			-- data in the ".class" files will not hold the real source 
-			-- code file name, but a modified one, where ".e" is 
-			-- replaced with ".java". Make sure to rename the source 
+			-- in order to work properly jdb (the java debugger from
+			-- suns jdk) source code needs to be stored in files ending
+			-- with ".java". If this variable is set to `True' the meta
+			-- data in the ".class" files will not hold the real source
+			-- code file name, but a modified one, where ".e" is
+			-- replaced with ".java". Make sure to rename the source
 			-- code files as well.
-	
+
 feature {ANY} -- Status report
-			
+
 	is_array_type: BOOLEAN
 			-- is class a native java array
 			-- Note: Do we need to store the element type as well?
-			
+
 	is_external: BOOLEAN
 			-- do we need to generate byte code for this class ?
 			-- if `True,' we don't
-			
+
 	is_expanded: BOOLEAN
 			-- is type expanded ?
 			-- if `True' and `is_external' False we are into trouble,
 			-- because threre are no expanded object types in Java.
 			-- We would need to emulate the creation and copy semantics
 			-- of expanded types by hand.
-			
+
 	is_deferred: BOOLEAN
 			-- is this class deferred ?
 			-- If `True' and `is_interface' = `False' this means we are
 			-- dealing with an abstract class.
-			
+
 	is_interface: BOOLEAN
 			-- does this type represent an interface ?
 
 feature {ANY} -- Status settings
-			
+
 	set_array_type (a_element_type_id: INTEGER)
-			-- if this is an array type (ARRAY[SOMETHING]) put the id of 
+			-- if this is an array type (ARRAY[SOMETHING]) put the id of
 			-- "SOMETHING" in here
 		require
 			repository.has_by_id (a_element_type_id)
@@ -213,38 +213,38 @@ feature {ANY} -- Status settings
 			is_array_type: is_array_type
 			element_type_id_set: element_type_id = a_element_type_id
 		end
-			
+
 	reset_array_type
 			-- unsets (or resets) the array type status).
-			-- after this call this method is marked to be not of an 
+			-- after this call this method is marked to be not of an
 			-- array type (which is the default anyway)
 		do
 			is_array_type := False
 		ensure
 			not_is_array_type: not is_array_type
 		end
-			
+
 	set_external
 			-- this is an external class.
-			-- external classes are cute, cause they don't need to 
-			-- generated. we still need to collect info about them, 
-			-- because when we access them, we need to reference them in 
+			-- external classes are cute, cause they don't need to
+			-- generated. we still need to collect info about them,
+			-- because when we access them, we need to reference them in
 			-- the symbol tablel (read constant pool)
 		do
 			is_external := True
 		ensure
 			is_external: is_external
 		end
-			
+
 	reset_external
-			-- after this call the class is marked to be not an external 
+			-- after this call the class is marked to be not an external
 			-- class (which is the default anyway)
 		do
 			is_external := False
 		ensure
 			not_is_external: not is_external
 		end
-			
+
 	set_expanded
 			-- mark this class as expanded, not supported yet !!!!
 		do
@@ -258,7 +258,7 @@ feature {ANY} -- Status settings
 		ensure
 			is_expanded: is_expanded
 		end
-			
+
 	reset_expanded
 			-- mark class as beeing not expanded (default)
 		do
@@ -266,7 +266,7 @@ feature {ANY} -- Status settings
 		ensure
 			not_is_expanded: not is_expanded
 		end
-			
+
 	set_deferred
 			-- mark class as deferred
 		do
@@ -274,7 +274,7 @@ feature {ANY} -- Status settings
 		ensure
 			is_deferred: is_deferred
 		end
-			
+
 	reset_deferred
 			-- mark class as not deferred (default)
 		do
@@ -282,7 +282,7 @@ feature {ANY} -- Status settings
 		ensure
 			not_is_deferred: not is_deferred
 		end
-			
+
 	set_interface
 			-- mark class as interface
 		do
@@ -290,7 +290,7 @@ feature {ANY} -- Status settings
 		ensure
 			is_inteface: is_interface
 		end
-			
+
 	reset_interface
 			-- mark class not to be an interface
 		do
@@ -298,16 +298,16 @@ feature {ANY} -- Status settings
 		ensure
 			not_is_inteface: not is_interface
 		end
-			
+
 feature {ANY} -- Composite access
-			
+
 	parents: LINKED_LIST [INTEGER]
 			-- list of all parents of this class
 			-- of course since we are dealing with Java here
 			-- there must at most be one super class all the other
 			-- parents must be interfaces.
 			-- The items in the list refer to the parents `type_id's
-			
+
 	features: ARRAY [JVM_FEATURE]
 			-- all features available in this classes namespace (either
 			-- declared here, or inherited)
@@ -332,7 +332,7 @@ feature {ANY} -- Composite access
 				i := i + 1
 			end
 		end
-			
+
 	feature_by_routine_id (rout_id: INTEGER): JVM_FEATURE
 			-- returns the feature with the given `rout_id' as routine id.
 		require
@@ -342,7 +342,7 @@ feature {ANY} -- Composite access
 		ensure
 			result_not_void: Result /= Void
 		end
-	
+
 	try_feature_by_routine_id (rout_id: INTEGER): JVM_FEATURE
 			-- returns the feature with the given `rout_id' as routine id
 			-- if such a feature exists. otherwise it returns `Void'.
@@ -364,7 +364,7 @@ feature {ANY} -- Composite access
 		ensure
 			precursor_implies_result_not_void: has_precursor_by_routine_id (rout_id) implies Result /= Void
 		end
-		
+
 	has_precursor_by_routine_id (rout_id: INTEGER): BOOLEAN
 			-- there is at least one features with `rout_id' as
 			-- routine_id in `parents'
@@ -384,7 +384,7 @@ feature {ANY} -- Composite access
 				end
 			end
 		end
-		
+
 	external_name_of_precursor_by_routine_id (rout_id: INTEGER): STRING
 			-- get the external name of a inherited feature
 		require
@@ -394,9 +394,9 @@ feature {ANY} -- Composite access
 		ensure
 			Result_valid: Result /= Void and then not Result.is_empty
 		end
-		
+
 	try_external_name_of_precursor_by_routine_id (rout_id: INTEGER): STRING
-			-- get the external name of a inherited feature if such 
+			-- get the external name of a inherited feature if such
 			-- there is a precursor, otherwise return `Void'
 		do
 			from
@@ -415,67 +415,66 @@ feature {ANY} -- Composite access
 		ensure
 			precursor_exists_implies_result_valid: has_precursor_by_routine_id (rout_id) implies Result /= Void and then not Result.is_empty
 		end
-		
+
 	put_feature (f: JVM_FEATURE)
 			-- put feature into class.
-			-- to add a new feature to a class proceed as following: 
-			-- create the feature and setup the signature, then put it 
+			-- to add a new feature to a class proceed as following:
+			-- create the feature and setup the signature, then put it
 			-- in via this feature
 		require
 			feature_not_set_yet: is_feature_id_free (f.feature_id)
 		do
 			features.force (f, f.feature_id)
 		end
-			
+
 	is_feature_id_free (id: INTEGER): BOOLEAN
 			-- is `id' still unset in the feature array ?
 		do
 			Result := not features.valid_index (id) or else features.item (id) = Void
 		end
-	
+
 	is_valid_feature_id (id: INTEGER): BOOLEAN
 			-- is a feature with feature id `id' present?
 		do
 			Result := features.item (id) /= Void
 		end
-			
+
 	written_methods_count: INTEGER
 			-- how many written methods does this class containt.
 			-- (written fields are _not_ included!)
 		local
 			i: INTEGER
-			f: JVM_WRITTEN_FEATURE
 		do
 			from
 				i := features.lower
 			until
 				i > features.upper
 			loop
-				f ?= features.item (i)
 				if
-					f /= Void and then not f.is_field and not f.is_field_setter
+					attached {JVM_WRITTEN_FEATURE} features.item (i) as f and then
+					not f.is_field and then
+					not f.is_field_setter
 				then
 					Result := Result + 1
 				end
 				i := i + 1
 			end
 		end
-			
+
 	written_fields_count: INTEGER
-			-- how many written fields are in this class. written 
+			-- how many written fields are in this class. written
 			-- methods are _not_ included
 		local
 			i: INTEGER
-			f: JVM_WRITTEN_FEATURE
 		do
 			from
 				i := features.lower
 			until
 				i > features.upper
 			loop
-				f ?= features.item (i)
 				if
-					f /= Void and then f.is_field
+					attached {JVM_WRITTEN_FEATURE} features.item (i) as f and then
+					f.is_field
 				then
 					Result := Result + 1
 				end
@@ -484,10 +483,10 @@ feature {ANY} -- Composite access
 		end
 
 	super_class: JVM_CLASS
-			-- super class (heir) of class. since java has only SI, this 
-			-- is exactly one class (except for interfaces, which have 
-			-- no super class). in case a non interface class has no 
-			-- explicit super class specified ANY (resp. 
+			-- super class (heir) of class. since java has only SI, this
+			-- is exactly one class (except for interfaces, which have
+			-- no super class). in case a non interface class has no
+			-- explicit super class specified ANY (resp.
 			-- java.lang.Object) is used.
 		require
 			not_is_interface: not is_interface
@@ -510,15 +509,15 @@ feature {ANY} -- Composite access
 		ensure
 			result_not_void: Result /= Void
 		end
-			
+
 	constant_pool: CONSTANT_POOL
 			-- constant pool
 
 feature {ANY} -- Special features
-	
+
 	invariant_: JVM_WRITTEN_FEATURE
 			-- references the invariant of this class (if it has one)
-	
+
 	set_invariant (f: JVM_WRITTEN_FEATURE)
 			-- set the invariant feature of this class.
 		do
@@ -528,13 +527,13 @@ feature {ANY} -- Special features
 		end
 
 feature {ANY} -- Code Generation
-			
+
 	jvm_file_name: STRING
 			-- file name of file this class will be stored in
 		do
 			Result := qualified_name_wo_l + ".class"
 		end
-			
+
 	generate_byte_code
 			-- generate JVM byte code for class
 			-- this is the magic procedure that produces the ".class" file
@@ -559,15 +558,15 @@ feature {ANY} -- Code Generation
 				store_fields (f)
 				store_methods (f)
 				attributes.emit (f)
-										
+
 				f.close
 			end
 		end
 
 feature {NONE} -- Code Generation Implementation
-	
+
 	file_header: JVM_BYTE_CODE
-			-- byte code for the (physical) file header 
+			-- byte code for the (physical) file header
 	class_header: JVM_BYTE_CODE
 			-- header for the class
 	attributes: JVM_BYTE_CODE
@@ -576,20 +575,20 @@ feature {NONE} -- Code Generation Implementation
 			-- Note: Do not confuse with class attributes, the latter
 			-- called fields in Java. The former is a way to store meta information
 			-- in the java class file.
-			
+
 	update_file_header
 			-- fill out `file_header'
-			-- only after calling this feature `file_header' can be 
+			-- only after calling this feature `file_header' can be
 			-- written to disk
 		do
 			create file_header.make
 			file_header.set_constant_pool (constant_pool)
-			
+
 						-- write 0xCAFEBABE to `f'. this is the magic number every java
 						-- binary file must start with
 			file_header.append_uint_16_from_int (0xCAFE)
 			file_header.append_uint_16_from_int (0xBABE)
-							
+
 						-- write minro and major version number
 						-- using 45.02 as documented in "JAVA Virtual Machine (John
 						-- Meyer, Troy Downing - O'Reilly - 1997 First Edition)
@@ -598,18 +597,18 @@ feature {NONE} -- Code Generation Implementation
 		ensure
 			file_header_not_void: file_header /= Void
 		end
-			
+
 	close_constant_pool
 			-- close the constant pool
-			-- only after this has happened, you can write the constant 
+			-- only after this has happened, you can write the constant
 			-- pool on disk
 		do
 			constant_pool.close
 		end
-			
+
 	close_class_header
 			-- fill out `class_header'
-			-- only after calling this feature `class_header' can be 
+			-- only after calling this feature `class_header' can be
 			-- written to disk
 		do
 			create class_header.make
@@ -622,16 +621,15 @@ feature {NONE} -- Code Generation Implementation
 			class_header_not_void: class_header /= Void
 						--	 class_header_closed: class_header.is_closed
 		end
-			
+
 	close_features
 			-- fill out `features'
-			-- only after calling this feature `features' can be 
+			-- only after calling this feature `features' can be
 			-- written to disk
 		require
 			--features_open:
 		local
 			i: INTEGER
-			wf: JVM_WRITTEN_FEATURE
 		do
 			if
 				not is_interface
@@ -643,10 +641,7 @@ feature {NONE} -- Code Generation Implementation
 			until
 				i > features.upper
 			loop
-				wf ?= features.item (i)
-				if
-					wf /= Void
-				then
+				if attached {JVM_WRITTEN_FEATURE} features.item (i) as wf then
 					check
 						wf.is_open
 					end
@@ -657,10 +652,10 @@ feature {NONE} -- Code Generation Implementation
 		ensure
 			--features_closed:
 		end
-			
+
 	close_attributes
 			-- fill out `attributes'
-			-- only after calling this feature `attributes' can be 
+			-- only after calling this feature `attributes' can be
 			-- written to disk
 		do
 			create attributes.make
@@ -677,12 +672,12 @@ feature {NONE} -- Code Generation Implementation
 			else
 				attributes.append_uint_16_from_int (0x0)
 			end
-							
+
 		ensure
 			attributes_not_void: attributes /= Void
 						--	 attributes_closed: attributes.is_closed
 		end
-			
+
 	store_fields (file: RAW_FILE)
 			-- append byte code for fields in file `file'
 		require
@@ -690,7 +685,6 @@ feature {NONE} -- Code Generation Implementation
 		local
 			i: INTEGER
 			bc: JVM_BYTE_CODE
-			f: JVM_WRITTEN_FEATURE
 		do
 			create bc.make_size (1)
 			bc.append_uint_16_from_int (written_fields_count)
@@ -700,9 +694,9 @@ feature {NONE} -- Code Generation Implementation
 			until
 				i > features.upper
 			loop
-				f ?= features.item (i)
 				if
-					f /= Void and then f.is_field
+					attached {JVM_WRITTEN_FEATURE} features.item (i) as f and then
+					f.is_field
 				then
 					check
 						f.is_closed
@@ -712,7 +706,7 @@ feature {NONE} -- Code Generation Implementation
 				i := i + 1
 			end
 		end
-			
+
 	store_methods (file: RAW_FILE)
 			-- append byte code for `methods' to file `file'
 		require
@@ -730,9 +724,10 @@ feature {NONE} -- Code Generation Implementation
 			until
 				i > features.upper
 			loop
-				f ?= features.item (i)
 				if
-					f /= Void and then not f.is_field and not f.is_field_setter
+					attached {JVM_WRITTEN_FEATURE} features.item (i) as f and then
+					not f.is_field and then
+					not f.is_field_setter
 				then
 					check
 						f.is_closed
@@ -744,7 +739,7 @@ feature {NONE} -- Code Generation Implementation
 		end
 
 feature {NONE}
-	
+
 	append_access_flag
 			-- append access flag to `class_header' byte code
 		require
@@ -765,7 +760,7 @@ feature {NONE}
 			end
 			class_header.append_uint_16_from_int (i)
 		end
-						
+
 	append_this_class
 			-- append this class `class_header' byte_code
 		require
@@ -773,7 +768,7 @@ feature {NONE}
 		do
 			class_header.append_class_by_type_id (type_id)
 		end
-			
+
 	append_parents
 			-- append parents byte code to `class_header' byte code
 		require
@@ -782,7 +777,7 @@ feature {NONE}
 			append_super_class
 			append_interfaces
 		end
-			
+
 	append_super_class
 			-- append super class to `class_header' byte code
 		require
@@ -797,7 +792,7 @@ feature {NONE}
 				class_header.append_class_by_type_id (super_class.type_id)
 			end
 		end
-			
+
 	append_interfaces
 			-- append interfaces to `class_header' byte code
 		require
@@ -836,7 +831,7 @@ feature {NONE}
 				parents.forth
 			end
 		end
-			
+
 feature {ANY}
 	add_default_constructor
 			-- Since Eiffe creations procedures and Java constructors do
@@ -858,7 +853,7 @@ feature {ANY}
 			-- constant pool
 			constant_pool.put_method_ref ("<init>", "()V", super_class.qualified_name_wo_l)
 			super_class_constructor_index := constant_pool.last_cpe_index
-							
+
 						-- add new default constructor
 			create m.make (constant_pool)
 			f_id := features.upper + 1
@@ -873,7 +868,7 @@ feature {ANY}
 			m.set_return_type_name ("V")
 			m.set_is_constructor (True)
 			m.close_signature
-							
+
 						-- call superclass default constructor
 			m.code.append_push_from_local (0, object_type)
 			m.code.append_invoke_default_constructor (super_class.type_id)
@@ -881,16 +876,16 @@ feature {ANY}
 			m.code.append_return (void_type)
 			put_feature (m)
 		end
-			
+
 invariant
-	
+
 	features_not_void: features /= Void
 	parents_not_void: parents /= Void
 	constant_pool_not_void: constant_pool /= Void
 	has_source_code_file_name_implies_source_code_file_name_not_void: has_source_code_file_name implies source_code_file_name /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -903,22 +898,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class JVM_CLASS

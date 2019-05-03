@@ -11,24 +11,24 @@ class
 	JVM_METHOD_BYTE_CODE
 
 inherit
-	
+
 	JVM_BYTE_CODE
 		redefine
 			make,
 			emit
 		end
-	
+
 	JVM_NAME_CONVERTER
-			
+
 	IL_CONST
-	
+
 	JVM_OPCODES
-	
+
 create
 	make
 
 feature
-				
+
 	make
 		-- create the object
 		do
@@ -37,7 +37,7 @@ feature
 			create label_marks.make
 			create labels.make (1, 0)
 		end
-				
+
 	emit (file: RAW_FILE)
 			-- append it to a file
 		local
@@ -48,17 +48,17 @@ feature
 		end
 
 feature {ANY} -- Stack
-				
+
 	stack: JVM_TYPE_STACK
 			-- reflects the stack at any time
 			-- but instead of holding the actual values it holds the jvm
 			-- type ids instead (JVM_CONSTANS.*_type)
-			
+
 feature {ANY} -- Post label processing
- 	
+
 	label_marks: LINKED_LIST [JVM_LABEL_MARK]
 			-- all the label marks set for this method
-				
+
 	labels: ARRAY [JVM_LABEL]
 			-- all the labels created for this method
 			-- items index = label id
@@ -84,11 +84,11 @@ feature {ANY} -- Post label processing
 		end
 
 	process_label_marks
-			-- since the jump offset of forward jumps cannot be known at 
-			-- the time when we should write the offset, we put in only 
+			-- since the jump offset of forward jumps cannot be known at
+			-- the time when we should write the offset, we put in only
 			-- a placeholder and remmeber it's position (`label_marks').
-			-- after code generation this feature replaces all the marks 
-			-- with the actual offset, that now can be computed 
+			-- after code generation this feature replaces all the marks
+			-- with the actual offset, that now can be computed
 			-- (difference between mark and label)
 		require
 			labels_closed: all_labels_closed
@@ -113,15 +113,15 @@ feature {ANY} -- Post label processing
 								-- offsets are 16 bit wide. with any luck this should
 								-- never be a problem.
 				end
-													
+
 				put_sint_16_from_int (label_marks.item.jump_offset, offset)
-																																																																											
+
 				label_marks.forth
 			end
 		end
 
 feature {ANY} -- Invokeing methods
-	
+
 	append_invoke_default_constructor (type_id: INTEGER)
 			-- append code for:
 			-- invoking the default constructor of the object referenced
@@ -163,7 +163,7 @@ feature {ANY} -- Invokeing methods
 				append_invoke_virtual_from_written_feature (f)
 			end
 		end
-			
+
 	append_invoke_virtual_from_written_feature (f: JVM_WRITTEN_FEATURE)
 			-- appends a invoke with index at the end of
 			-- the byte code.
@@ -205,7 +205,7 @@ feature {ANY} -- Invokeing methods
 			stack_dec1: f.has_non_void_return_type implies stack.count + f.parameter_jvm_type_ids.count = old stack.count
 			stack_consistent: f.has_non_void_return_type implies stack.count >= 1 and then stack.item = jvm_type_to_stack (f.return_jvm_type_id)
 		end
-			
+
 	append_invoke_special_from_written_feature (f: JVM_WRITTEN_FEATURE)
 			-- appends a invoke special with index at the end of
 			-- the byte code.
@@ -246,7 +246,7 @@ feature {ANY} -- Invokeing methods
 			stack_dec1: f.has_non_void_return_type implies stack.count + f.parameter_jvm_type_ids.count = old stack.count
 			stack_consistent: f.has_non_void_return_type implies stack.count >= 1 and then stack.item = jvm_type_to_stack (f.return_jvm_type_id)
 		end
-			
+
 	append_invoke_static_from_written_feature (f: JVM_WRITTEN_FEATURE)
 			-- appends a invoke static with index at the end of
 			-- the byte code.
@@ -284,7 +284,7 @@ feature {ANY} -- Invokeing methods
 			stack_dec1: f.has_non_void_return_type implies stack.count + f.parameter_jvm_type_ids.count - 1= old stack.count
 			stack_consistent: f.has_non_void_return_type implies stack.count >= 1 and then stack.item = jvm_type_to_stack (f.return_jvm_type_id)
 		end
-			
+
 	append_invoke_interface_from_written_feature (f: JVM_WRITTEN_FEATURE)
 			-- appends a invoke static with index at the end of
 			-- the byte code.
@@ -335,24 +335,25 @@ feature {ANY} -- Invokeing methods
 			f_not_void: f /= Void
 		local
 			wf: JVM_WRITTEN_FEATURE
-			rf: JVM_REFLECTED_FEATURE
 		do
-			wf ?= f
-			if
-				wf = Void
-			then
-				rf ?= f
-				check
-					rf_not_void: rf /= Void
-				end
+			if attached {JVM_WRITTEN_FEATURE} f as l_wf then
+				wf := l_wf
+			elseif attached {JVM_REFLECTED_FEATURE} f as rf then
 				wf := rf.written_feature
+			else
+				check
+					is_written_feature_or_reflected_feature: False
+				end
 			end
-			check
-				wf_not_void: wf /= Void
+			if wf = Void then
+				check
+					wf_not_void: False
+				end
+			else
+				append_invoke_from_written_feature (wf)
 			end
-			append_invoke_from_written_feature (wf)
 		end
-			
+
 	append_invoke_from_feature_id (type_id, feature_id: INTEGER)
 			-- appends a invoke opcode with index at the end of
 			-- the byte code.
@@ -370,16 +371,16 @@ feature {ANY} -- Invokeing methods
 feature {ANY} -- Pushing manfest constants on the stack
 	append_push_default_value (jvm_type_id: INTEGER)
 			-- append code for
-			-- push the default value for the jvm type `jvm_type_id' 
+			-- push the default value for the jvm type `jvm_type_id'
 			-- onto the stack
 		require
 			valid_jvm_type: valid_jvm_type (jvm_type_id)
 		do
 			inspect
 				jvm_type_id
-			when void_type then 
+			when void_type then
 				check False end
-			when object_type then 
+			when object_type then
 				append_push_null
 			when int_type, byte_type, short_type, bool_type, char_type then
 				append_push_manifest_int (0)
@@ -409,7 +410,7 @@ feature {ANY} -- Pushing manfest constants on the stack
 			stack_inc: stack.count - 1 = old stack.count
 			stack_type: stack.item = object_type
 		end
-						
+
 	append_push_manifest_string (s: STRING)
 			-- appends code for:
 			-- putting a manifest string on top of the stack
@@ -424,7 +425,7 @@ feature {ANY} -- Pushing manfest constants on the stack
 			stack_inc: stack.count - 1 = old stack.count
 			stack_type: stack.item = object_type
 		end
-			
+
 	append_push_manifest_double (d: DOUBLE)
 			-- appends code for:
 			-- putting a manifest double (as defined by java double)  on top of the stack
@@ -437,7 +438,7 @@ feature {ANY} -- Pushing manfest constants on the stack
 			stack_inc: stack.count - 1 = old stack.count
 			stack_type: stack.item = double_type
 		end
-			
+
 	append_push_manifest_float (f: REAL)
 			-- appends code for:
 			-- putting a manifest float (as defined by java float) on top of the stack
@@ -449,7 +450,7 @@ feature {ANY} -- Pushing manfest constants on the stack
 			stack_inc: stack.count - 1 = old stack.count
 			stack_type: stack.item = float_type
 		end
-			
+
 	append_push_manifest_int (i: INTEGER)
 			-- appends code for:
 			-- putting a manifest int (as defined by java int)  on top of the stack
@@ -479,11 +480,11 @@ feature {ANY} -- Pushing manfest constants on the stack
 			stack_inc: stack.count - 1 = old stack.count
 			stack_type: stack.item = int_type
 		end
-			
+
 	append_push_manifest_long_from_int (i: INTEGER)
 			-- appends code for:
 			-- putting a manifest long (as defined by java long)  on top of the stack
-			-- note: this takes up 2 stack words on the jvm, while on 
+			-- note: this takes up 2 stack words on the jvm, while on
 			-- the type stack any item is only one entry
 		do
 			inspect
@@ -503,7 +504,7 @@ feature {ANY} -- Pushing manfest constants on the stack
 		end
 
 feature {ANY} -- local variables
-	
+
 	append_pop_into_local (slot, jvm_type: INTEGER)
 			-- appends code for:
 			-- pops the top item of the stack into the jvm local variable `slot'
@@ -520,7 +521,7 @@ feature {ANY} -- local variables
 			valid_type: conversion_exists (stack.item, jvm_type_to_stack (jvm_type))
 		do
 			append_convert_to (jvm_type_to_stack (jvm_type))
-												
+
 						-- wide
 			append_wide
 			inspect
@@ -562,7 +563,7 @@ feature {ANY} -- local variables
 		ensure
 			stack_dec: stack.count + 1 = old stack.count
 		end
-			
+
 	append_push_from_local (slot, jvm_type: INTEGER)
 			-- appends code for:
 			-- pushing the value of the jvm local in slot `slot' onto
@@ -616,7 +617,7 @@ feature {ANY} -- local variables
 			stack_inc: stack.count - 1 = old stack.count
 			stack_consistent: stack.item = jvm_type_to_stack (jvm_type)
 		end
-			
+
 feature {ANY} -- Push and pop fields
 	append_pop_field_by_feature_id (type_id, feature_id: INTEGER)
 			-- appends the code for:
@@ -646,7 +647,7 @@ feature {ANY} -- Push and pop fields
 			stack_dec_static: repository.item (type_id).features.item (feature_id).written_feature.is_static implies stack.count + 1 = old stack.count
 			stack_dec_non_static: not repository.item (type_id).features.item (feature_id).written_feature.is_static implies stack.count + 2 = old stack.count
 		end
-	
+
 	append_pop_field (f: JVM_WRITTEN_FEATURE)
 			-- appends the code for:
 			-- poping the top value from the stack into a field (attribute)
@@ -684,7 +685,7 @@ feature {ANY} -- Push and pop fields
 			stack_dec_static: f.is_static implies stack.count + 1 = old stack.count
 			stack_dec_non_static: not f.is_static implies stack.count + 2 = old stack.count
 		end
-	
+
 	append_push_field_by_feature_id (type_id, feature_id: INTEGER)
 			-- appends the code for:
 			-- pushing the value (of an object referenced by the topmost
@@ -699,7 +700,7 @@ feature {ANY} -- Push and pop fields
 		do
 			append_push_field (repository.item (type_id).features.item (feature_id).written_feature)
 		end
-			
+
 	append_push_field (f: JVM_WRITTEN_FEATURE)
 			-- appends the code for:
 			-- pushing the value (of an object referenced by the topmost
@@ -842,7 +843,7 @@ feature {ANY} -- Arithmetics
 			stack_size: stack.count + 1 = old stack.count
 			stack_consistent: stack.item = int_type
 		end
-	
+
 	append_add
 			-- appends code for:
 			-- add the two top items on the stack
@@ -874,7 +875,7 @@ feature {ANY} -- Arithmetics
 		ensure
 			stack_dec: stack.count + 1 = old stack.count
 		end
-			
+
 	append_sub
 			-- appends code for:
 			-- substacts the two top items on the stack
@@ -905,7 +906,7 @@ feature {ANY} -- Arithmetics
 		ensure
 			stack_dec: stack.count + 1 = old stack.count
 		end
-	
+
 	append_mul
 			-- appends code for:
 			-- multiplies the two top items on the stack
@@ -920,7 +921,7 @@ feature {ANY} -- Arithmetics
 				cast: stack.item = stack.i_th (2) --TODO cast in that case
 							-- and then change preconidtion stack_consistent
 			end
-			
+
 			inspect
 				stack.item
 			when int_type then
@@ -938,7 +939,7 @@ feature {ANY} -- Arithmetics
 		ensure
 			stack_dec: stack.count + 1 = old stack.count
 		end
-			
+
 	append_precise_div
 			-- appends code for:
 			-- divides the two top items on the stack
@@ -953,7 +954,7 @@ feature {ANY} -- Arithmetics
 				cast: stack.item = stack.i_th (2) --TODO cast in that case
 							-- and then change preconidtion stack_consistent
 			end
-			
+
 			inspect
 				stack.item
 			when int_type then -- convert to double and then divide
@@ -969,13 +970,13 @@ feature {ANY} -- Arithmetics
 				append_opcode (oc_pop2)
 				-- divide
 				append_opcode (oc_ddiv)
-				
+
 				-- simulate max stack
 				stack.extend (double_type)
 				stack.extend (double_type)
 				stack.remove
 				stack.remove
-				
+
 				-- bring stack to real state
 				stack.remove
 				stack.remove
@@ -993,11 +994,11 @@ feature {ANY} -- Arithmetics
 				append_opcode (oc_pop2)
 				-- divide
 				append_opcode (oc_ddiv)
-				
+
 				-- simulate max stack
 				stack.extend (long_type)
 				stack.remove
-				
+
 				-- bring stack to real state
 				stack.remove
 				stack.remove
@@ -1029,7 +1030,7 @@ feature {ANY} -- Arithmetics
 				cast: stack.item = stack.i_th (2) --TODO cast in that case
 							-- and then change preconidtion stack_consistent
 			end
-			
+
 			inspect
 				stack.item
 			when int_type then
@@ -1050,7 +1051,7 @@ feature {ANY} -- Arithmetics
 		ensure
 			stack_dec: stack.count + 1 = old stack.count
 		end
-			
+
 	append_not
 			-- append code for:
 			-- apply the not operator to the top most stack item
@@ -1072,7 +1073,7 @@ feature {ANY} -- Arithmetics
 			stack_dec: stack.count = old stack.count
 			stack_item: stack.item = int_type
 		end
-			
+
 	append_gt
 			-- TODO: beat the guys who specified the JVM
 			-- they have not included opcodes for comparsion of all
@@ -1086,7 +1087,7 @@ feature {ANY} -- Arithmetics
 			stack_size: stack.count >= 2
 		do
 			-- todo: cast if necessary
-							
+
 			-- first let's determine what types of elements we need to compare.
 			inspect
 				stack.item
@@ -1119,7 +1120,7 @@ feature {ANY} -- Arithmetics
 			stack_dec: stack.count + 1 = old stack.count
 			stack_item: stack.item = int_type
 		end
-			
+
 	append_eq
 			-- appends code for:
 			-- compares the two top items on the stack for equality
@@ -1152,7 +1153,7 @@ feature {ANY} -- Arithmetics
 		ensure
 			stack_dec: stack.count + 1 = old stack.count
 		end
-			
+
 	append_ne
 			-- appends code for:
 			-- compares the two top items on the stack for equality
@@ -1216,7 +1217,7 @@ feature {ANY} -- Conditionals
 		ensure
 			stack_dec: stack.count + 1 = old stack.count
 		end
-			
+
 	append_branch_on_true_by_label_id (label: INTEGER)
 			-- appends a branch on true
 			-- if the top element on the stack is an integer with an
@@ -1241,7 +1242,7 @@ feature {ANY} -- Conditionals
 		end
 
 feature {ANY} -- Unconditionals
-	
+
 	append_branch_by_label_id (label: INTEGER)
 			-- appends a unconditional branch (jump, goto)
 			-- jump to the position in the bytecode identified with
@@ -1257,14 +1258,14 @@ feature {ANY} -- Unconditionals
 			append_opcode (oc_goto)
 			append_uint_16_from_int (0x0000) -- to be filled in later
 		end
-						
+
 	append_return (jvm_type: INTEGER)
 			-- appends an instruction that returns from the current method
 			-- what opcode is used depends on the top of the stack
 		require
 			valid_jvm_type: valid_jvm_type (jvm_type)
 						--			result_void_stack_empty:  jvm_type = void_type implies stack.count = 0
-						-- cannot really assume that, because of 
+						-- cannot really assume that, because of
 						-- tricky ifs and exception throwings
 			result_type_non_void_stack_1: jvm_type /= void_type implies stack.count >= 1
 			result_type_non_void_stack_cons: jvm_type /= void_type implies jvm_type_to_stack (jvm_type) >= stack.item
@@ -1308,7 +1309,7 @@ feature {ANY} -- Unconditionals
 --		ensure
 --			stack_size: stack.count = 0
 		end
-			
+
 feature {ANY} -- Arrays
 	append_push_array_count
 			-- appends code for
@@ -1325,7 +1326,7 @@ feature {ANY} -- Arrays
 			stack_size: stack.count = old stack.count
 			stack_consistent: stack.item = int_type
 		end
-			
+
 	append_push_from_array (kind: INTEGER)
 			-- append code for:
 			-- read value from array (which is of kind `kind') and push
@@ -1408,7 +1409,7 @@ feature {ANY} -- Arrays
 		ensure
 			stack_size: stack.count + 3 = old stack.count
 		end
-			
+
 feature {ANY} -- Object creation
 	append_new_class (type_id: INTEGER)
 			-- appends the code for:
@@ -1424,7 +1425,7 @@ feature {ANY} -- Object creation
 			stack_inc: stack.count - 1 = old stack.count
 			stack_consistent: stack.item = object_type
 		end
-			
+
 	append_new_class_by_name (name: STRING)
 			-- appends the code for:
 			-- create a new object (initialized only with default values
@@ -1439,7 +1440,7 @@ feature {ANY} -- Object creation
 			stack_inc: stack.count - 1 = old stack.count
 			stack_consistent: stack.item = object_type
 		end
-			
+
 	append_new_array_by_type_id (type_id: INTEGER)
 			-- appends code for:
 			-- creates a new array object of type `type_id'
@@ -1483,7 +1484,7 @@ feature {ANY} -- Object creation
 			stack_size: stack.count = old stack.count
 			stack_consistent: stack.item = object_type
 		end
-			
+
 feature {ANY} -- Misc. Stack operations
 
 	append_pop
@@ -1498,7 +1499,7 @@ feature {ANY} -- Misc. Stack operations
 		ensure
 			stack_dec: stack.count + 1 = old stack.count
 		end
-			
+
 	append_dup
 			-- duplicates the item on top of the stack
 		require
@@ -1512,9 +1513,9 @@ feature {ANY} -- Misc. Stack operations
 			stack_inc: stack.count - 1 = old stack.count
 			stack_consistent: stack.item = stack.i_th (2)
 		end
-			
+
 feature {ANY} -- Exceptions
-	
+
 	append_throw_exception
 			-- append code for
 			-- throw exeption
@@ -1550,7 +1551,7 @@ feature {ANY} -- Introspection
 			stack_size: stack.count = old stack.count
 			stack_consistent: stack.item = int_type
 		end
-			
+
 	append_check_cast_by_type_id (type_id: INTEGER)
 			-- append code for
 			-- check if the top stack item is of type `type_id' or null
@@ -1568,32 +1569,32 @@ feature {ANY} -- Introspection
 		end
 
 feature {NONE} -- Implementation
-			
+
 	append_int_32_constant (i: INTEGER)
 		do
 			constant_pool.put_int_32_constant (i)
 			append_uint_16_from_int (constant_pool.last_cpe_index)
 		end
-			
+
 	append_int_64_constant_from_int (i: INTEGER)
 		do
 			constant_pool.put_int_64_constant_from_int (i)
 			append_uint_16_from_int (constant_pool.last_cpe_index)
 		end
-			
+
 	append_double_constant (d: DOUBLE)
 			-- Note: `put_double_constant' does not seem to work. FIXME
 		do
 			constant_pool.put_double_constant (d)
 			append_uint_16_from_int (constant_pool.last_cpe_index)
 		end
-			
+
 	append_float_constant (f: REAL)
 		do
 			constant_pool.put_float_constant (f)
 			append_uint_16_from_int (constant_pool.last_cpe_index)
 		end
-			
+
 	append_string_constant_wide_index (str: STRING)
 			-- puts a CPE_UTF8 with the `str' as content in the constant
 			-- pool and appends it's cp index in the byte code. the
@@ -1604,7 +1605,7 @@ feature {NONE} -- Implementation
 			constant_pool.put_string_constant (str)
 			append_uint_16_from_int (constant_pool.last_cpe_index)
 		end
-			
+
 	append_wide
 		do
 			append_opcode (oc_wide)
@@ -1617,7 +1618,7 @@ feature {NONE} -- Implementation
 		do
 			append_uint_8_from_int (opcode)
 		end
-			
+
 	append_invoke_virtual (method_name, method_signature, written_class: STRING)
 			-- appends a invoke virtual opcode with index at the end of
 			-- the byte code.
@@ -1631,7 +1632,7 @@ feature {NONE} -- Implementation
 			constant_pool.put_method_ref (method_name, method_signature, written_class)
 			append_feature (constant_pool.last_cpe_index)
 		end
-	
+
 feature {ANY} --
 	append_invoke_special (method_name, method_signature, written_class: STRING)
 			-- invoke special
@@ -1645,7 +1646,7 @@ feature {ANY} --
 			constant_pool.put_method_ref (method_name, method_signature, written_class)
 			append_feature (constant_pool.last_cpe_index)
 		end
-feature {NONE}						
+feature {NONE}
 	append_invoke_constructor_by_type_id (signature: STRING; type_id: INTEGER)
 		require
 			valid_type_id: repository.has_by_id (type_id)
@@ -1653,7 +1654,7 @@ feature {NONE}
 		do
 			append_invoke_special ("<init>", signature, repository.item (type_id).qualified_name_wo_l)
 		end
-			
+
 	append_int_gt
 			-- append code for:
 			-- compare to integers
@@ -1673,7 +1674,7 @@ feature {NONE}
 			append_sint_16_from_int (4) -- branch offset
 			append_opcode (oc_iconst_1)
 			append_opcode (oc_nop) -- branch target uncond. jump
-							
+
 			stack.remove
 			stack.remove
 			stack.extend (int_type)
@@ -1681,7 +1682,7 @@ feature {NONE}
 			stack_dec: stack.count + 1 = old stack.count
 			stack_item: stack.item = int_type
 		end
-			
+
 	append_int_eq
 			-- append code for:
 			-- compare to integers
@@ -1701,7 +1702,7 @@ feature {NONE}
 			append_sint_16_from_int (4) -- branch offset
 			append_opcode (oc_iconst_1)
 			append_opcode (oc_nop) -- branch target uncond. jump
-							
+
 			stack.remove
 			stack.remove
 			stack.extend (int_type)
@@ -1709,7 +1710,7 @@ feature {NONE}
 			stack_dec: stack.count + 1 = old stack.count
 			stack_item: stack.item = int_type
 		end
-			
+
 	append_obj_eq
 			-- append code for:
 			-- compare to object references
@@ -1729,7 +1730,7 @@ feature {NONE}
 			append_sint_16_from_int (4) -- branch offset
 			append_opcode (oc_iconst_1)
 			append_opcode (oc_nop) -- branch target uncond. jump
-							
+
 			stack.remove
 			stack.remove
 			stack.extend (int_type)
@@ -1737,7 +1738,7 @@ feature {NONE}
 			stack_dec: stack.count + 1 = old stack.count
 			stack_item: stack.item = int_type
 		end
-			
+
 	append_obj_ne
 			-- append code for:
 			-- compare to object references
@@ -1757,7 +1758,7 @@ feature {NONE}
 			append_sint_16_from_int (4) -- branch offset
 			append_opcode (oc_iconst_0)
 			append_opcode (oc_nop) -- branch target uncond. jump
-							
+
 			stack.remove
 			stack.remove
 			stack.extend (int_type)
@@ -1765,7 +1766,7 @@ feature {NONE}
 			stack_dec: stack.count + 1 = old stack.count
 			stack_item: stack.item = int_type
 		end
-			
+
 	append_double_gt
 			-- append code for:
 			-- compare to doubles
@@ -1786,7 +1787,7 @@ feature {NONE}
 			append_sint_16_from_int (4) -- branch offset
 			append_opcode (oc_iconst_1)
 			append_opcode (oc_nop) -- branch target uncond. jump
-							
+
 			stack.remove
 			stack.remove
 			stack.extend (int_type)
@@ -1808,7 +1809,7 @@ feature {NONE}
 			if
 				stack.item /= jvm_type
 			then
-										
+
 				inspect
 					stack.item -- souce type
 				when int_type then
@@ -1893,7 +1894,7 @@ feature {NONE}
 			stack_item: stack.item = jvm_type
 		end
 feature
-			
+
 	conversion_exists (source_jvm_type, target_jvm_type: INTEGER): BOOLEAN
 			-- tells you wether there is a opcode for a conversion of a
 			-- value from `source_jvm_type' ot `target_jvm_type'
@@ -1965,7 +1966,7 @@ feature
 				end
 			end
 		end
-			
+
 	jvm_type_to_stack (a_jvm_type: INTEGER): INTEGER
 			-- takes a valid jvm_type and returns it's corresponding jvm
 			-- type on the stack. This is in most cases the same type,
@@ -1984,12 +1985,12 @@ feature
 		end
 
 invariant
-	
+
 	lables_not_void: labels /= Void
 	label_marks_not_void: label_marks /= Void
-			
+
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -2002,22 +2003,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

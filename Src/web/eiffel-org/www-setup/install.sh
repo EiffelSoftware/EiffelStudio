@@ -133,14 +133,13 @@ iseverParse() {
 
 iseverParseName() {
 	f=$1
-	t="${f%%_*}"
-	t="${f#${t}_}"
+	t="${f#*_}"
 	major="${t%%.*}"
-	t="${t#$major.}"
+	t="${t#*.}"
 	minor="${t%%_*}"
-	t="${t#${minor}_}"
+	t="${t#*_}"
 	lic="${t%%_*}"
-	t="${t#${lic}_}"
+	t="${t#*_}"
 	build="${t%%-*}"
 }
 

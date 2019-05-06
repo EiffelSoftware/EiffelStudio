@@ -1,5 +1,5 @@
 note
-	description: "Specialized configiration for versions of Microsoft's Visual Studio."
+	description: "Specialized configuration for versions of Microsoft's Visual Studio."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$date$";

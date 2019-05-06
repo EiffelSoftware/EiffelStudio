@@ -71,11 +71,13 @@ feature -- Status report
 		end
 
 	is_msc_vc140_configuration: BOOLEAN
-			-- Is this VS 2015?
+			-- Is this VS 2015 or later?
 		require
 			has_checked: has_checked
 		do
-			Result := attached {VS_2015_CONFIG} internal_c_configuration
+			Result := attached {VS_2015_CONFIG} internal_c_configuration 
+					or attached {VS_2017_CONFIG} internal_c_configuration
+					-- Note: VS_2019_CONFIG inherits from VS_2017_CONFIG
 		end
 
 feature -- Status setting

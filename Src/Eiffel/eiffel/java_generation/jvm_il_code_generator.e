@@ -131,7 +131,6 @@ feature -- Generation Structure
 			-- type `type_id' with the creation procedure `feature_id'
 		local
 			c: JVM_CLASS
-			f: JVM_WRITTEN_FEATURE
 			ep_class: JVM_CLASS
 			ep_method: JVM_METHOD
 		do

@@ -714,7 +714,6 @@ feature {NONE} -- Code Generation Implementation
 		local
 			i: INTEGER
 			bc: JVM_BYTE_CODE
-			f: JVM_WRITTEN_FEATURE
 		do
 			create bc.make_size (1)
 			bc.append_uint_16_from_int (written_methods_count)

@@ -351,10 +351,14 @@ feature{NONE} -- Implementation/Data
 				l_row_index > l_row_count
 			loop
 				l_grid_row := l_grid.row (l_row_index)
-				l_stone_item ?= l_grid_row.item (1)
-				l_tool_item ?= l_grid_row.item (2)
-				check l_stone_item /= Void and then l_tool_item /= Void end
-				l_value.put (tool_name_table.item (l_tool_item.text), stone_name_table.item (l_stone_item.text))
+				if
+					attached {EV_GRID_CHOICE_ITEM} l_grid_row.item (1) as l_stone_item and then
+					attached {EV_GRID_CHOICE_ITEM} l_grid_row.item (2) as l_tool_item
+				then
+					l_value.put (tool_name_table.item (l_tool_item.text), stone_name_table.item (l_stone_item.text))
+				else
+					check stone_and_tool_choice_item: False end
+				end
 				l_row_index := l_row_index + 1
 			end
 			Result := l_value
@@ -627,7 +631,7 @@ invariant
 	items_attached: items /= Void
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

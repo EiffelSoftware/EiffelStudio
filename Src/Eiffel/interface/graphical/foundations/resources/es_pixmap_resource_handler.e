@@ -65,15 +65,12 @@ feature -- Query
 	retrieve_matrix (a_name: READABLE_STRING_GENERAL): detachable EV_PIXEL_BUFFER
 			-- Attempts to retrieve a matrix from a given file name or other moniker.
 			--
-			-- `a_name': A file name, sans extension, or another moniker used to load a pixmap file.
+			-- `a_name': A file name, without extension, or another moniker used to load a pixmap file.
 			-- `Result': A loaded
 		require
 			not_a_name_is_empty: not a_name.is_empty
 		local
 			l_matrices: like matrices
-			l_file_name: like matrix_file_name
-			l_buffer: EV_PIXEL_BUFFER
-			u: FILE_UTILITIES
 		do
 			l_matrices := matrices
 			if l_matrices.has (a_name) then
@@ -81,8 +78,42 @@ feature -- Query
 			end
 
 			if Result = Void then
+				Result := retrieve_matrix_at_location (matrix_file_name (a_name), a_name)
+			end
+		ensure
+			not_result_is_destroyed: attached Result implies not Result.is_destroyed
+			matrices_has_a_name: attached Result implies matrices.has (a_name)
+		end
+
+	retrieve_matrix_at_location (a_location: PATH; a_optional_name: detachable READABLE_STRING_GENERAL): detachable EV_PIXEL_BUFFER
+			-- Attempts to retrieve a matrix from location `a_location`, and cache it as `a_location.name` or `a_optional_name` if set.
+			--
+			-- `a_location`: a path name used to load a pixmap file.
+			-- `a_optional_name`: the name to use when caching in `matrices`.
+			-- `Result`: the loaded pixmap matrix.
+		require
+			not_a_location_is_empty: not a_location.is_empty
+			a_optional_name_void_or_not_empty: a_optional_name = Void or else not a_optional_name.is_empty
+		local
+			l_matrices: like matrices
+			l_file_name: like matrix_file_name
+			l_matrix_name: READABLE_STRING_GENERAL
+			l_buffer: EV_PIXEL_BUFFER
+			u: FILE_UTILITIES
+		do
+			l_matrices := matrices
+			if a_optional_name /= Void then
+				l_matrix_name := a_optional_name
+			else
+				l_matrix_name := a_location.name
+			end
+			if l_matrices.has (l_matrix_name) then
+				Result := l_matrices.item (l_matrix_name)
+			end
+
+			if Result = Void then
 					-- Load the pixmap file from disk, if it exists
-				l_file_name := matrix_file_name (a_name)
+				l_file_name := a_location
 				if attached eiffel_layout.user_priority_file_name (l_file_name, True) as l_user_file_name then
 						-- The user has replaced the pixmaps.
 					l_file_name := l_user_file_name
@@ -92,20 +123,20 @@ feature -- Query
 					l_buffer.set_with_named_path (l_file_name)
 
 						-- Ensure only successful loads are cached!
-					l_matrices.force (l_buffer, a_name)
+					l_matrices.force (l_buffer, l_matrix_name)
 					Result := l_buffer
 				end
 			end
 		ensure
 			not_result_is_destroyed: attached Result implies not Result.is_destroyed
-			matrices_has_a_name: attached Result implies matrices.has (a_name)
+			matrices_has_a_location: attached Result implies matrices.has (if a_optional_name /= Void then a_optional_name else a_location.name end)
 		end
 
 invariant
 	matrices_attached: attached matrices
 
 ;note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

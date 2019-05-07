@@ -339,8 +339,6 @@ feature{NONE} -- Implementation/Data
 			l_row_index: INTEGER
 			l_row_count: INTEGER
 			l_grid_row: EV_GRID_ROW
-			l_stone_item: EV_GRID_CHOICE_ITEM
-			l_tool_item: EV_GRID_CHOICE_ITEM
 		do
 			create l_value.make (5)
 			l_grid := grid

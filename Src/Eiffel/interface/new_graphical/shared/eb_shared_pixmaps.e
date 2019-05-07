@@ -18,7 +18,7 @@ inherit
 
 feature -- Access
 
-	stock_pixmaps: attached EV_STOCK_PIXMAPS
+	stock_pixmaps: EV_STOCK_PIXMAPS
 			-- EiffelVision2 OS pixmaps
 		once
 			create Result
@@ -36,7 +36,8 @@ feature -- Access
 				create Result.make ("mini_15x15", 15, 15)
 			elseif l_dpi > 144 then
 				create Result.make ("mini_20x20", 20, 20)
-			else
+			end
+			if Result = Void or else Result.has_error then
 				create Result.make ("10x10", 10, 10)
 			end
 		end
@@ -53,7 +54,8 @@ feature -- Access
 				create Result.make ("small_18x18", 18, 18)
 			elseif l_dpi > 144 then
 				create Result.make ("small_24x24", 24, 24)
-			else
+			end
+			if Result = Void or else Result.has_error then
 				create Result.make ("12x12", 12, 12)
 			end
 		end
@@ -70,7 +72,8 @@ feature -- Access
 				create Result.make ("icons_24x24", 24, 24)
 			elseif l_dpi > 144 then
 				create Result.make ("icons_32x32", 32, 32)
-			else
+			end
+			if Result = Void or else Result.has_error then
 				create Result.make ("16x16", 16, 16)
 			end
 		end

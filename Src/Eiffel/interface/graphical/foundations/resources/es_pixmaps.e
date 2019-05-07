@@ -36,6 +36,7 @@ feature {NONE} -- Initialization
 			if attached resource_handler.retrieve_matrix (a_name) as l_loaded_buffer then
 				l_buffer := l_loaded_buffer
 			else
+				has_error := True
 				if attached logger.service as s then
 					s.put_message_with_severity (
 						locale_formatter.formatted_translation (w_could_not_load_matrix, [a_name]),
@@ -60,9 +61,10 @@ feature {NONE} -- Initialization
 		local
 			l_buffer: attached EV_PIXEL_BUFFER
 		do
-			if attached {EV_PIXEL_BUFFER} resource_handler.matrix_file_name (a_path) as l_loaded_buffer then
+			if attached resource_handler.retrieve_matrix_at_location (create {PATH}.make_from_string (a_path), Void) as l_loaded_buffer then
 				l_buffer := l_loaded_buffer
 			else
+				has_error := True
 				if attached logger.service as s then
 					s.put_message_with_severity (
 						locale_formatter.formatted_translation (w_could_not_load_matrix, [a_path]),
@@ -111,6 +113,10 @@ feature -- Access
 			-- Matrix height
 		deferred
 		end
+
+	has_error: BOOLEAN
+			-- Has error?
+			-- note: unable to load from given file, ...
 
 feature {NONE} -- Access
 
@@ -362,7 +368,7 @@ invariant
 	matrix_buffer_height_big_enough: matrix_buffer.height.to_natural_32 >= matrix_pixel_height
 
 ;note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

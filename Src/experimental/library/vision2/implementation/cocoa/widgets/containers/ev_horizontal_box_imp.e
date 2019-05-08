@@ -16,8 +16,7 @@ inherit
 
 	EV_BOX_IMP
 		redefine
-			interface,
-			ev_apply_new_size
+			interface
 		end
 
 create
@@ -276,4 +275,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	interface: detachable EV_HORIZONTAL_BOX note option: stable attribute end;
 
+note
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end -- class EV_HORIZONTAL_BOX_IMP

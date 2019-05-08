@@ -1,4 +1,4 @@
-﻿note
+note
 	description: "Representation of an Eiffel type."
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
@@ -6,7 +6,7 @@
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+frozen class
 	TYPE [G]
 
 inherit

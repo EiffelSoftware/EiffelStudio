@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "EiffelVision drawing area. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 
 	EV_DRAWABLE_IMP
 		redefine
-			make, interface, destroy, get_dc, release_dc, redraw
+			make, interface, destroy, get_dc, release_dc
 		end
 
 	EV_PRIMITIVE_IMP
@@ -39,7 +39,6 @@ inherit
 			on_getdlgcode,
 			on_wm_dropfiles
 		redefine
-			on_paint,
 			on_erase_background,
 			class_background,
 			default_style,
@@ -323,8 +322,8 @@ feature {EV_DRAWABLE_IMP} -- Internal datas.
 			-- dc we use when painting outside a WM_PAINT message
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA
@@ -333,4 +332,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EV_DRAWING_AREA_IMP
+end

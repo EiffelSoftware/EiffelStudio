@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that can easily create display objects."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -133,7 +133,7 @@ feature -- Settings
 			table_description_not_void: table_description /= Void
 		local
 			attribute_code_list: ARRAYED_LIST [INTEGER]
-			description_list: ARRAYED_LIST [STRING]
+			description_list: ARRAYED_LIST [STRING_32]
 		do
 			attribute_code_list := table_description.attribute_code_list
 			description_list := table_description.description_list
@@ -205,7 +205,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -215,10 +215,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-
-end -- class DV_FACTORY
-
-
+end

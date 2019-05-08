@@ -1,13 +1,13 @@
 package vision2_extension
 
 project
-	vision2_extension = "vision2_extension-safe.ecf"
 	vision2_extension = "vision2_extension.ecf"
 
 note
 	description: "[
-			Extensions to the EiffelVision2 library.
-		]"
+Extensions to the EiffelVision2 library.
+				]"
+
 	title: EiffelVision2 extension
 	tags: vision2,extension,container,thread
 	copyright: 1984-2016 Eiffel Software and others

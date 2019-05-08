@@ -377,93 +377,93 @@ feature {NONE} -- Obsolete (Use class INTERNAL instead)
 
 	switch_mark (obj: ANY)
 		obsolete
-			"Removed. Use {INTERNAL}.mark and {INTERNAL}.unmark instead."
+			"Removed. Use {INTERNAL}.mark and {INTERNAL}.unmark instead [2017-11-30]."
 		do
 		end
 
 	unmark_structure (obj: ANY)
 		obsolete
 			"Removed. Previous implementation was not safe. Use {INTERNAL} and a structure to remember%
-			%what needs to be unmarked."
+			%what needs to be unmarked [2017-11-30]."
 		do
 		end
 
 	traversal (object: ANY)
 		obsolete
-			"Use {OBJECT_GRAPH_TRAVERSABLE} descendants to get a complete graph of an object."
+			"Use {OBJECT_GRAPH_TRAVERSABLE} descendants to get a complete graph of an object [2017-11-30]."
 		do
 		end
 
 	deep_traversal (object: ANY)
 		obsolete
-			"Use {OBJECT_GRAPH_TRAVERSABLE} descendants to get a complete graph of an object."
+			"Use {OBJECT_GRAPH_TRAVERSABLE} descendants to get a complete graph of an object [2017-11-30]."
 		do
 		end
 
 	object_init_action (object: ANY)
 		obsolete
-			"Not used anymore."
+			"Not used anymore [2017-11-30]."
 		do
 		end
 
 	reference_object_action (i: INTEGER; object: ANY)
 		obsolete
-			"Not used anymore."
+			"Not used anymore [2017-11-30]."
 		do
 		end
 
 	simple_object_action (type, i: INTEGER; object: ANY)
 		obsolete
-			"Not used anymore."
+			"Not used anymore [2017-11-30]."
 		do
 		end
 
 	object_finish_action (object: ANY)
 		obsolete
-			"Not used anymore."
+			"Not used anymore [2017-11-30]."
 		do
 		end
 
 	store_action (object: ANY)
 		obsolete
-			"Not used anymore."
+			"Not used anymore [2017-11-30]."
 		do
 		end
 
 	nb_classes: INTEGER
 			-- Number of dynamic types in current system
 		obsolete
-			"Should not be used. No other equivalent feature is supported."
+			"Should not be used. No other equivalent feature is supported [2017-11-30]."
 		do
 		end
 
 	array_traversal (one_array: ARRAY [ANY])
 		obsolete
-			"Use {OBJECT_GRAPH_TRAVERSABLE} descendants to get a complete graph of an object."
+			"Use {OBJECT_GRAPH_TRAVERSABLE} descendants to get a complete graph of an object [2017-11-30]."
 		do
 		end
 
 	array_unmark (one_array: ARRAY [ANY])
 		obsolete
-			"Use {OBJECT_GRAPH_TRAVERSABLE} descendants to get a complete graph of an object."
+			"Use {OBJECT_GRAPH_TRAVERSABLE} descendants to get a complete graph of an object [2017-11-30]."
 		do
 		end
 
 	deep_unmark (object: ANY)
 		obsolete
-			"Use {OBJECT_GRAPH_TRAVERSABLE} descendants to get a complete graph of an object."
+			"Use {OBJECT_GRAPH_TRAVERSABLE} descendants to get a complete graph of an object [2017-11-30]."
 		do
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end -- class EXT_INTERNAL

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "A very simple view for a EG_NODE"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,6 @@ class
 inherit
 	EG_LINKABLE_FIGURE
 		redefine
-			update,
 			default_create,
 			xml_node_name,
 			model,
@@ -210,8 +209,8 @@ invariant
 	node_figure_not_void: node_figure /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA
@@ -220,8 +219,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EG_SIMPLE_NODE
-
+end

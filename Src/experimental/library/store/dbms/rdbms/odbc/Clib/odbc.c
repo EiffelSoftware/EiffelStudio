@@ -1770,6 +1770,29 @@ int odbc_conv_type (int typeCode)
 	}
 }
 
+
+/*****************************************************************/
+/*                                                               */
+/*                     ROUTINE  DESCRIPTION                      */
+/*                                                               */
+/* NAME: odbc_row_count()                                         */
+/* DESCRIPTION:                                                  */
+/*   SQLRowCount returns the number of rows affected by an UPDATE, */
+/*   INSERT, or DELETE statement; an SQL_ADD,                     */
+/*   SQL_UPDATE_BY_BOOKMARK, or SQL_DELETE_BY_BOOKMARK operation */ 
+/*   in SQLBulkOperations; or an SQL_UPDATE or SQL_DELETE 
+/*	 operation in SQLSetPos..    					             */
+/*                                                                */
+/*****************************************************************/
+
+SQLLEN odbc_row_count(void *con, int no_desc){
+	SQLLEN  RowCount;
+	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
+	l_con->rc = SQLRowCount(l_con->hstmt[no_desc], &RowCount); 
+	return RowCount;
+}
+
+
 int odbc_get_col_type (void *con, int no_des, int index)
 {
 	CON_CONTEXT *l_con = (CON_CONTEXT *)con;
@@ -2418,4 +2441,6 @@ rt_public EIF_NATURAL_64 strhextoval(SQL_NUMERIC_STRUCT *NumStr)
 	}
 	return value;
 }
+
+
 

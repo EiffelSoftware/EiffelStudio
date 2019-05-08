@@ -20,7 +20,6 @@ inherit
 			update_for_pick_and_drop
 		redefine
 			interface,
-			make,
 			set_pixmap,
 			cocoa_view,
 			parent_imp
@@ -208,7 +207,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_TOOL_BAR_BUTTON note option: stable attribute end;
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

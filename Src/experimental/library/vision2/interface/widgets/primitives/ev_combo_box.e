@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"[
 			A text field with a button. When the button is pressed, a list of
@@ -41,8 +41,7 @@ inherit
 	EV_LIST_ITEM_LIST
 		redefine
 			implementation,
-			is_in_default_state,
-			create_implementation
+			is_in_default_state
 		end
 
 	EV_COMBO_BOX_ACTION_SEQUENCES
@@ -177,8 +176,8 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA
@@ -187,17 +186,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_COMBO_BOX
-
-
-
-
-
-
-
-
-
-
+end

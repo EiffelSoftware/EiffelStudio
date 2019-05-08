@@ -98,6 +98,7 @@ feature {NONE} -- Initialization
 			horizontal_box.extend (vertical_scrollbar)
 			horizontal_box.disable_item_expand (vertical_scrollbar)
 			drawing_area.resize_actions.extend (agent on_resizing)
+			drawing_area.dpi_changed_actions.extend (agent on_dpi_resizing)
 
 
 			create vertical_box
@@ -451,6 +452,13 @@ feature {NONE} -- Implementation
 			vertical_scrollbar.set_leap (drawing_area.height.max (1))
 		end
 
+	on_dpi_resizing (a_dpi, a_x, a_y, a_width, a_height: INTEGER)
+			-- `area' has been resized.
+			-- Update scrollbars.
+		do
+			on_resizing (a_x, a_y, a_width, a_height)
+		end
+
 	on_pointer_button_press_on_drawing_area (ax, ay, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; ascreen_x, ascreen_y: INTEGER)
 			-- Pointer button was pressed in `drawing_area'.
 		do
@@ -624,7 +632,7 @@ invariant
 	scroll_speed_positive: scroll_speed >= 0.0
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

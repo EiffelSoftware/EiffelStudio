@@ -6,10 +6,10 @@
 			<eis src="$(ISE_DOC_UUID)/3d96626f-11f3-67a2-dec6-69f7faf4a8d6" tag="EiffelTime" protocol="" name="EiffelTime"/>
 		</note>
 		<description>EiffelTime: Date/Time abstractions and computations.
-			Copyright (c) 1984-2016, Eiffel Software and others.
+			Copyright (c) 1984-2018, Eiffel Software and others.
 			Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
 		<root all_classes="true"/>
-		<option namespace="EiffelSoftware.Library">
+		<option warning="true" namespace="EiffelSoftware.Library">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<external_include location="$(ISE_LIBRARY)\library\time\spec\include">
@@ -57,5 +57,8 @@
 	</target>
 	<target name="time_dotnet" extends="time">
 		<setting name="msil_generation" value="true"/>
+		<capability>
+			<concurrency support="none"/>
+		</capability>
 	</target>
 </system>

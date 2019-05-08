@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Eiffel Vision list. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,7 +11,7 @@ class
 inherit
 	EV_LIST_I
 		redefine
-			interface, make, selected_item, selected_items, wipe_out
+			interface, selected_items, wipe_out
 		end
 
 	EV_LIST_ITEM_LIST_IMP
@@ -32,7 +32,7 @@ inherit
 			on_right_button_double_click, pnd_press, escape_pnd, set_background_color,
 			set_foreground_color
 		redefine
-			old_make, on_key_down, on_mouse_move, set_default_minimum_size,
+			on_key_down, on_mouse_move, set_default_minimum_size,
 			make, interface, on_size, enable_sensitive, disable_sensitive, background_color_internal,
 			destroy
 		end
@@ -817,8 +817,8 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_LIST note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA
@@ -827,4 +827,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EV_LIST_IMP
+end

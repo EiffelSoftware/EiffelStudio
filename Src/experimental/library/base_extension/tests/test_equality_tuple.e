@@ -1,10 +1,12 @@
-note
+﻿note
 	description: "Testing of EQUALITY_TUPLE class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
 	TEST_EQUALITY_TUPLE
+
+obsolete "The test is kept until {EQUALITY_TUPLE} is removed. [2019-05-31]"
 
 inherit
 	EQA_TEST_SET
@@ -27,7 +29,7 @@ feature
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

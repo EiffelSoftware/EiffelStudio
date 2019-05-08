@@ -73,7 +73,7 @@ feature -- Status report
 	error_message: STRING
 			-- SQL error message prompted by database server
 		obsolete
-			"Use `error_message_32' instead."
+			"Use `error_message_32' instead [2017-11-30]."
 		do
 			Result := error_message_32.as_string_8
 		end
@@ -91,7 +91,7 @@ feature -- Status report
 	warning_message: STRING
 			-- SQL warning message prompted by database server
 		obsolete
-			"Use `warning_message_32' instead."
+			"Use `warning_message_32' instead [2017-11-30]."
 		do
 			Result := warning_message_32.as_string_8
 		end
@@ -179,7 +179,7 @@ invariant
 	has_handle: implementation /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

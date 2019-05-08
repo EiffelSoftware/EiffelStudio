@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"Appearance of a screen pointer cursor, typically moved by a mouse."
 	legal: "See notice at end of class."
@@ -12,7 +12,7 @@ class
 
 obsolete
 	"Use EV_POINTER_STYLE instead [2017-05-31]"
-	
+
 inherit
 	EV_PIXMAP
 		redefine
@@ -27,7 +27,8 @@ create
 	make_with_pointer_style
 
 convert
-	make_with_pointer_style ({EV_POINTER_STYLE})
+	make_with_pointer_style ({EV_POINTER_STYLE}),
+	to_pointer_style: {EV_POINTER_STYLE}
 
 feature {NONE} -- Initialization
 
@@ -53,9 +54,16 @@ feature {NONE} -- Initialization
 				create l_temp
 			end
 			implementation.init_from_pointer_style (l_temp)
-
 			set_x_hotspot (l_temp.x_hotspot)
 			set_y_hotspot (l_temp.y_hotspot)
+		end
+
+feature -- Conversion
+
+	to_pointer_style: EV_POINTER_STYLE
+			-- Current object represented by a different type.
+		do
+			create Result.make_with_pixmap (Current, x_hotspot, y_hotspot)
 		end
 
 feature -- Access
@@ -121,28 +129,14 @@ feature -- Duplication
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_CURSOR
-
-
-
-
-
-
-
-
-
-
-
+end

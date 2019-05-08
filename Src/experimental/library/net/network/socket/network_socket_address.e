@@ -1,15 +1,11 @@
-note
-
-	description:
-		"A network socket address."
+﻿note
+	description: "A network socket address."
 	legal: "See notice at end of class.";
-
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$"
 
 class
-
 	NETWORK_SOCKET_ADDRESS
 
 inherit
@@ -18,7 +14,9 @@ inherit
 		export
 			{NONE} all
 		undefine
-			copy, is_equal, get_sock_family
+			copy, is_equal
+		redefine
+			get_sock_family
 		end
 
 	SOCKET_RESOURCES
@@ -143,7 +141,7 @@ feature -- Status setting
 			create ext.make (protocol)
 			return := get_servent_port (ext1.item, ext.item);
 			set_port (return)
-		end;
+		end
 
 	set_port (p: INTEGER)
 			-- Set port to `p'.
@@ -206,7 +204,7 @@ feature {NONE} -- External
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -216,6 +214,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-end -- class NETWORK_SOCKET_ADDRESS
-
+end

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Wrapper for NSArray. Typed with Eiffel Generics."
 	author: "Daniel Furrer"
 	date: "$Date$"
@@ -157,7 +157,15 @@ feature -- Status report
 	after: BOOLEAN
 			-- Is there no valid position to the right of current one?
 		do
-			Result := (index >= count.to_integer_32)
+			Result := index >= count.to_integer_32
+		end
+
+feature -- Iteration
+
+	new_cursor: NS_ARRAY_ITERATION_CURSOR [T]
+			-- <Precursor>
+		do
+			create Result.make (Current)
 		end
 
 --	array_by_adding_object (a_an_object: T): NS_ARRAY [T]
@@ -315,7 +323,7 @@ feature -- Status report
 ----			Result := {NS_ARRAY_API}init_with_contents_of_u_r_l(cocoa_object, a_url.cocoa_object)
 ----		end
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

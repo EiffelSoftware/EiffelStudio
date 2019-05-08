@@ -92,7 +92,7 @@ feature -- Status setting
 							(address.port, address.host)
 				end
 				main_socket := l_main_socket
-				l_main_socket.set_timeout (timeout)
+				l_main_socket.set_timeout_ns (timeout_ns)
 				l_main_socket.set_connect_timeout (connect_timeout)
 				l_main_socket.connect
 			end
@@ -341,7 +341,7 @@ invariant
 				(is_packet_pending = (bytes_transferred < count))
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

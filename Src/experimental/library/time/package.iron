@@ -1,18 +1,16 @@
 package time
 
 project
-	time = "time-safe.ecf"
 	time = "time.ecf"
-	time_french = "time_french-safe.ecf"
 	time_french = "time_french.ecf"
-	time_german = "time_german-safe.ecf"
 	time_german = "time_german.ecf"
 
 note
 	description: "[
-			Date/Time abstractions and computations.
-			Manipulation of time, date and duration.
-		]"
+Date/Time abstractions and computations.
+Manipulation of time, date and duration.
+				]"
+
 	title: EiffelTime
 	tags: date,time,duration
 	copyright: 1984-2016 Eiffel Software and others

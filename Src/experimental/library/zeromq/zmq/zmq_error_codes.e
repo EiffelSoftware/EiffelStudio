@@ -17,6 +17,8 @@ feature -- Access
 			"C inline use %"zmq.h%""
 		alias
 			"return EAGAIN;"
+		ensure
+			is_class: class
 		end
 
 	efault: INTEGER
@@ -25,6 +27,8 @@ feature -- Access
 			"C inline use %"zmq.h%""
 		alias
 			"return EFAULT;"
+		ensure
+			is_class: class
 		end
 
 	eintr: INTEGER
@@ -33,6 +37,8 @@ feature -- Access
 			"C inline use %"zmq.h%""
 		alias
 			"return EINTR;"
+		ensure
+			is_class: class
 		end
 
 	enotsock: INTEGER
@@ -41,6 +47,8 @@ feature -- Access
 			"C inline use %"zmq.h%""
 		alias
 			"return ENOTSOCK;"
+		ensure
+			is_class: class
 		end
 
 	eterm: INTEGER
@@ -49,10 +57,12 @@ feature -- Access
 			"C inline use %"zmq.h%""
 		alias
 			"return ETERM;"
+		ensure
+			is_class: class
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

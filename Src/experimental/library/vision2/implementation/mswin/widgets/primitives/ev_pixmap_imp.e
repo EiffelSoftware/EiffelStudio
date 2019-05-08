@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"Eiffel Vision pixmap. Mswindows implementation for a%N%
 		%simple pixmap (not drawable, not self-displayable)"
@@ -17,7 +17,6 @@ inherit
 		redefine
 			interface,
 			on_parented,
-			set_with_default,
 			set_pebble,
 			set_actual_drop_target_agent,
 			set_pebble_function,
@@ -102,6 +101,10 @@ feature -- Event handling
 		end
 
 	init_resize_actions (a_resize_actions: like resize_actions)
+		do
+		end
+
+	init_dpi_changed_actions (a_dpi_changed_actions: like dpi_changed_actions)
 		do
 		end
 
@@ -1254,6 +1257,13 @@ feature {EV_ANY_I} -- Delegated features
 			attached_interface.implementation.on_parented
 		end
 
+	set_anti_aliasing (value: BOOLEAN)
+			-- <Precursor>
+		do
+			promote_to_drawable
+			attached_interface.implementation.set_anti_aliasing (value)
+		end
+
 feature {EV_PIXMAP_I} -- Implementation
 
 	destroy
@@ -1994,8 +2004,8 @@ invariant
 			l_private_cursor.reference_tracked
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA
@@ -2004,4 +2014,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EV_PIXMAP_IMP
+end

@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"Eiffel Vision multi column list row. Mswindows implementation."
 	legal: "See notice at end of class."
@@ -12,7 +12,6 @@ class
 inherit
 	EV_MULTI_COLUMN_LIST_ROW_I
 		redefine
-			parent_imp,
 			interface
 		select
 			pixmap
@@ -27,7 +26,6 @@ inherit
 			remove_pixmap,
 			pixmap_equal_to
 		redefine
-			parent_imp,
 			interface,
 			on_parented
 		end
@@ -259,8 +257,8 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_MULTI_COLUMN_LIST_ROW note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA
@@ -269,17 +267,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
-
-
-
-
-
-
-
-
-
-
+end

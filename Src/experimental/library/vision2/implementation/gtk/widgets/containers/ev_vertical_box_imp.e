@@ -22,7 +22,6 @@ inherit
 	EV_BOX_IMP
 		redefine
 			interface,
-			old_make,
 			make
 		end
 
@@ -48,7 +47,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
     interface: detachable EV_VERTICAL_BOX note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

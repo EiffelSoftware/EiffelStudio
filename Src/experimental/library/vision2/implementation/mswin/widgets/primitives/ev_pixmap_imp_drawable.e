@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "EiffelVision pixmap. Mswindows implementation for %
 				  %drawable pixmap (drawable, not self-displayable)"
 	legal: "See notice at end of class."
@@ -16,7 +16,6 @@ inherit
 		redefine
 			interface,
 			on_parented,
-			set_with_default,
 			set_pebble,
 			set_actual_drop_target_agent
 		end
@@ -538,6 +537,10 @@ feature -- Event handling
 		end
 
 	init_resize_actions (a_resize_actions: like resize_actions)
+		do
+		end
+
+	init_dpi_changed_actions (a_dpi_changed_actions: like dpi_changed_actions)
 		do
 		end
 
@@ -1156,8 +1159,8 @@ invariant
 		attached mask_dc as l_mask_dc implies l_mask_dc.reference_tracked;
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA
@@ -1166,18 +1169,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_PIXMAP_IMP_DRAWABLE
-
-
-
-
-
-
-
-
-
-
-
+end

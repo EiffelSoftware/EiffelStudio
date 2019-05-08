@@ -1,6 +1,4 @@
-note
-	description: "Summary description for {DATABASE_EXECUTOR}."
-	author: ""
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -10,6 +8,7 @@ class
 inherit
 
 	DB_SPECIFIC_TABLES_ACCESS_USE
+	LOCALIZED_PRINTER
 
 create
 	make
@@ -59,7 +58,7 @@ feature -- Access
 				if not connection.db_control.is_ok then
 						-- The attempt to insert a new object
 						-- failed
-					io.putstring (connection.db_control.error_message)
+					localized_print (connection.db_control.error_message_32)
 					io.new_line
 					connection.db_control.rollback
 				else
@@ -94,7 +93,7 @@ feature -- Update
 				create updater.make
 				updater.set_query (update_sql_query (tablerow.table_description))
 				map_parameters (updater, description)
-				pr.set_arguments (update_parameters (description.Table_code).to_array, description.attribute_list.to_array)
+				pr.set_arguments_32 (update_parameters (description.Table_code).to_array, description.attribute_list.to_array)
 				pr.load
 				if not pr.exists and then attached updater.last_query_32 as l_query then
 					pr.store (l_query)
@@ -122,8 +121,8 @@ feature -- Update
 			has_id: td.id_code /= td.No_id
 		local
 			code: INTEGER
-			parameter_list: ARRAYED_LIST [STRING]
-			attribute_list: ARRAYED_LIST [STRING]
+			parameter_list: ARRAYED_LIST [STRING_32]
+			attribute_list: ARRAYED_LIST [STRING_32]
 			l_has_id,
 			l_do_append: BOOLEAN
 		do
@@ -155,7 +154,7 @@ feature -- Update
 			Result.append (" where " + td.id_name + " = :" + parameter (td.id_name))
 		end
 
-	update_parameters (code: INTEGER): ARRAYED_LIST [STRING]
+	update_parameters (code: INTEGER): ARRAYED_LIST [STRING_32]
 			-- Parameters names for an update on table with `code'.
 			-- Parameters contain the required ':' prefix to tell
 			-- EiffelCommerce it is a parameter.
@@ -170,15 +169,15 @@ feature -- Update
 			end
 		end
 
-	update_parameters_table: ARRAY [detachable ARRAYED_LIST [STRING]]
+	update_parameters_table: ARRAY [detachable ARRAYED_LIST [STRING_32]]
 			-- Table that stores parameters/map names for a database update.
 
-	parameter (s: STRING): STRING
+	parameter (s: STRING_32): STRING_32
 			-- Prepend "N_" to `s'.
 		require
 			s_not_void: s /= Void
 		do
-			Result := "N_" + s
+			Result := {STRING_32} "N_" + s
 		end
 
 	Values_separator: STRING = ", "
@@ -191,7 +190,7 @@ feature -- Update
 			updater_not_void: updater /= Void
 			table_description_not_void: table_descr /= Void
 		local
-			name_list: ARRAYED_LIST [STRING]
+			name_list: ARRAYED_LIST [STRING_32]
 			i: INTEGER
 		do
 			name_list := update_parameters (table_descr.Table_code)
@@ -225,7 +224,5 @@ feature {NONE} -- Implementation
 			repository_attached: attached repository as le_repository
 			Result = le_repository.exists
 		end
-
-
 
 end

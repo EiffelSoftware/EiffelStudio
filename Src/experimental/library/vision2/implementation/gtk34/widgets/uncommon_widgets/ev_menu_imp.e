@@ -30,8 +30,7 @@ inherit
 		redefine
 			interface,
 			make,
-			list_widget,
-			destroy
+			list_widget
 		end
 
 create
@@ -170,7 +169,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "ImageCodecInfo struct used by Gdi+."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -131,6 +131,8 @@ feature -- C externals
 			"C [macro %"wel_gdi_plus.h%"]"
 		alias
 			"sizeof (ImageCodecInfo)"
+		ensure
+			is_class: class
 		end
 
 feature {NONE} -- C externals
@@ -143,6 +145,8 @@ feature {NONE} -- C externals
 			"[
 				&((ImageCodecInfo *)$a_item)->FormatID
 			]"
+		ensure
+			is_class: class
 		end
 
 	c_format_description (a_item: POINTER): POINTER
@@ -153,6 +157,8 @@ feature {NONE} -- C externals
 			"[
 				((ImageCodecInfo *)$a_item)->FormatDescription
 			]"
+		ensure
+			is_class: class
 		end
 
 	c_clsid (a_item: POINTER): POINTER
@@ -163,6 +169,8 @@ feature {NONE} -- C externals
 			"[
 				&(((ImageCodecInfo *)$a_item)->Clsid)
 			]"
+		ensure
+			is_class: class
 		end
 
 	c_codec_name (a_item: POINTER): POINTER
@@ -173,6 +181,8 @@ feature {NONE} -- C externals
 			"[
 				((ImageCodecInfo *)$a_item)->CodecName
 			]"
+		ensure
+			is_class: class
 		end
 
 	c_dll_name (a_item: POINTER): POINTER
@@ -183,6 +193,8 @@ feature {NONE} -- C externals
 			"[
 				((ImageCodecInfo *)$a_item)->DllName
 			]"
+		ensure
+			is_class: class
 		end
 
 	c_filename_extension (a_item: POINTER): POINTER
@@ -193,6 +205,8 @@ feature {NONE} -- C externals
 			"[
 				((ImageCodecInfo *)$a_item)->FilenameExtension
 			]"
+		ensure
+			is_class: class
 		end
 
 	c_mime_type (a_item: POINTER): POINTER
@@ -203,6 +217,8 @@ feature {NONE} -- C externals
 			"[
 				((ImageCodecInfo *)$a_item)->MimeType
 			]"
+		ensure
+			is_class: class
 		end
 
 	c_flags (a_item: POINTER): INTEGER_64
@@ -213,6 +229,8 @@ feature {NONE} -- C externals
 			"[
 				((ImageCodecInfo *)$a_item)->Flags
 			]"
+		ensure
+			is_class: class
 		end
 
 	c_version (a_item: POINTER): INTEGER_64
@@ -223,6 +241,8 @@ feature {NONE} -- C externals
 			"[
 				((ImageCodecInfo *)$a_item)->Version
 			]"
+		ensure
+			is_class: class
 		end
 
 	c_sig_count (a_item: POINTER): INTEGER_64
@@ -233,6 +253,8 @@ feature {NONE} -- C externals
 			"[
 				((ImageCodecInfo *)$a_item)->SigCount
 			]"
+		ensure
+			is_class: class
 		end
 
 	c_sig_size (a_item: POINTER): INTEGER_64
@@ -243,6 +265,8 @@ feature {NONE} -- C externals
 			"[
 				((ImageCodecInfo *)$a_item)->SigSize
 			]"
+		ensure
+			is_class: class
 		end
 
 feature -- Obsoletes
@@ -265,6 +289,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 
 end

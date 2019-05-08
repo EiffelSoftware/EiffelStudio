@@ -1,5 +1,4 @@
-note
-	description: "Summary description for {I18N_TEST_UTILITIES}."
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -19,7 +18,7 @@ feature -- Access
 
 feature -- Path/Filename
 
-	mo_folder: STRING
+	mo_folder: STRING_32
 			-- Folder to contain mo files
 		once
 			Result := tests_folder
@@ -29,10 +28,10 @@ feature -- Path/Filename
 			Result.append ("mo")
 		end
 
-	tests_folder: STRING
+	tests_folder: STRING_32
 			-- Test folder
 		once
-			if attached Env.get ("ISE_LIBRARY") as l_v then
+			if attached Env.item ("ISE_LIBRARY") as l_v then
 				Result := l_v.twin
 				Result.append_character (Operating_environment.Directory_separator)
 				Result.append ("library")
@@ -63,7 +62,7 @@ feature {NONE} -- Comparison
 			i, l_count: INTEGER_32
 		do
 			l_filename := a_path
-			create {PLAIN_TEXT_FILE} l_file.make (l_filename)
+			create {PLAIN_TEXT_FILE} l_file.make_with_name (l_filename)
 			l_file.open_read
 			from
 				i := 1
@@ -101,8 +100,8 @@ feature {NONE} -- Comparison
 		do
 			l_filename1 := a_first_path
 			l_filename2 := a_second_path
-			create {PLAIN_TEXT_FILE} l_file1.make (l_filename1)
-			create {PLAIN_TEXT_FILE} l_file2.make (l_filename2)
+			create {PLAIN_TEXT_FILE} l_file1.make_with_name (l_filename1)
+			create {PLAIN_TEXT_FILE} l_file2.make_with_name (l_filename2)
 			l_file1.open_read
 			l_file2.open_read
 			from
@@ -173,7 +172,7 @@ feature {NONE} -- Output function
 			-- Cached output
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

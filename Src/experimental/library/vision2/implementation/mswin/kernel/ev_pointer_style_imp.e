@@ -1,8 +1,8 @@
-note
+﻿note
 	description: "Windows implementation of EV_POINTER_STYLE_I."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	keywords: "mouse, pointer, cursor, arrow"
+	keywords: mouse, pointer, cursor, arrow
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,26 +11,25 @@ class
 
 inherit
 	EV_POINTER_STYLE_I
-		redefine
-			destroy
-		end
 
 create
 	make
 
-feature -- Initlization
+feature {NONE} -- Initialization
+
+	make
+			-- Initialize.
+		do
+			build_default_icon (to_windows_constants ({EV_POINTER_STYLE_CONSTANTS}.standard_cursor))
+			set_is_initialized (True)
+		end
+
+feature -- Initialization
 
 	old_make (an_interface: EV_POINTER_STYLE)
 			-- Creation method
 		do
 			assign_interface (an_interface)
-		end
-
-	make
-			-- Initialize
-		do
-			build_default_icon (to_windows_constants ({EV_POINTER_STYLE_CONSTANTS}.standard_cursor))
-			set_is_initialized (True)
 		end
 
 	init_from_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER; a_x_hotspot, a_y_hotspot: INTEGER)
@@ -48,14 +47,6 @@ feature -- Initlization
 				l_wel_mask_bitmap.delete
 			end
 			wel_mask_bitmap := Void
-		end
-
-	init_from_cursor (a_cursor: EV_CURSOR)
-			-- Initialize from `a_cursor'
-		obsolete
-			"Use EV_POINTER_SYLE directly now. [2017-05-31]"
-		do
-			init_from_pixmap (a_cursor, a_cursor.x_hotspot, a_cursor.y_hotspot)
 		end
 
 	init_from_pixmap (a_pixmap: EV_PIXMAP; a_hotspot_x, a_hotspot_y:INTEGER)
@@ -339,7 +330,7 @@ feature {NONE} -- Implementation
 	wel_bitmap: detachable WEL_BITMAP
 			-- Dib 32bits rbga bitmap.
 
-	wel_mask_bitmap: detachable WEL_BITMAP;
+	wel_mask_bitmap: detachable WEL_BITMAP
 			-- Mask bitmap
 
 	Idc_constants: WEL_IDC_CONSTANTS
@@ -349,8 +340,8 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA
@@ -358,7 +349,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

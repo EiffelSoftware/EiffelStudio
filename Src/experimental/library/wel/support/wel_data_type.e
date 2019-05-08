@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Conversion to and from Windows data type"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,6 +16,8 @@ feature -- Conversion from Eiffel to Windows
 			"C macro use <windows.h>"
 		alias
 			"(LPARAM)"
+		ensure
+			is_class: class
 		end
 
 	frozen to_wparam (i: INTEGER): POINTER
@@ -24,6 +26,8 @@ feature -- Conversion from Eiffel to Windows
 			"C macro use <windows.h>"
 		alias
 			"(WPARAM)"
+		ensure
+			is_class: class
 		end
 
 	frozen to_lresult (i: INTEGER): POINTER
@@ -32,10 +36,12 @@ feature -- Conversion from Eiffel to Windows
 			"C macro use <windows.h>"
 		alias
 			"(LRESULT)"
+		ensure
+			is_class: class
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

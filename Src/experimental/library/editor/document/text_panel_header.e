@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Header control for dealing with multiple documents in TEXT_PANEL."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -178,19 +178,19 @@ feature {NONE} -- Initialization
 
 			create left_scroll_button
 			left_scroll_button.set_pixmap (l_icons.header_left_scroll_pixmap)
-			left_scroll_button.select_actions.force_extend (agent scroll_left)
+			left_scroll_button.select_actions.extend (agent scroll_left)
 			left_scroll_button.disable_sensitive
 			l_toolbar.extend (left_scroll_button)
 
 			create right_scroll_button
 			right_scroll_button.set_pixmap (l_icons.header_right_scroll_pixmap)
-			right_scroll_button.select_actions.force_extend (agent scroll_right)
+			right_scroll_button.select_actions.extend (agent scroll_right)
 			right_scroll_button.disable_sensitive
 			l_toolbar.extend (right_scroll_button)
 
 			create close_button
 			close_button.set_pixmap (l_icons.header_close_current_document_pixmap)
-			close_button.select_actions.force_extend (agent close_document)
+			close_button.select_actions.extend (agent close_document)
 			close_button.disable_sensitive
 			l_toolbar.extend (close_button)
 
@@ -536,7 +536,7 @@ invariant
 	has_panel: panel /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -546,7 +546,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class TEXT_PANEL_HEADER
+end

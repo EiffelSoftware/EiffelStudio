@@ -19,6 +19,8 @@ feature -- File descriptor status
 			-- Is `fd' in the range of valid file descriptors?
 		do
 			Result := fd >= 0
+		ensure
+			is_class: class
 		end
 
 feature -- File descriptor operations
@@ -373,7 +375,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

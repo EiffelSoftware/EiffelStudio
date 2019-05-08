@@ -205,9 +205,9 @@ feature -- Properties
 			set: pixel_buffer = a_pixel_buffer
 		end
 
-	name: STRING_32
-			-- Name which is used for save/open docking layout configuration
-			-- This name should not changed in all locales
+	name: READABLE_STRING_32
+			-- Name which is used for save/open docking layout configuration.
+			-- This name should not change in all locales.
 
 	set_name (a_name: READABLE_STRING_GENERAL)
 			-- Set `name'

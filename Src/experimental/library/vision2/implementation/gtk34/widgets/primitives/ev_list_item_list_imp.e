@@ -32,8 +32,6 @@ inherit
 	EV_ITEM_LIST_IMP [EV_LIST_ITEM]
 		redefine
 			interface,
-			insert_i_th,
-			remove_i_th,
 			make
 		end
 
@@ -401,7 +399,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

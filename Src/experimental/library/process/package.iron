@@ -1,15 +1,15 @@
 package process
 
 project
-	process = "process-safe.ecf"
 	process = "process.ecf"
 
 note
 	title: EiffelProcess
 	description: "[
-			Process library: Starting/Waiting for process as well as reading/writing to/from standard inputs.
-			Note: it requires EiffelThread.
-		]"
+Process library: Starting/Waiting for process as well as reading/writing to/from standard inputs.
+Note: it requires EiffelThread.
+				]"
+
 	tags: process,runtime
 	copyright: 1984-2016 Eiffel Software and others
 	license: Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)

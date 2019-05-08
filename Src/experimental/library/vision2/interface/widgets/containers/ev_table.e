@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"[
 			EiffelVision table. Invisible container that allows
@@ -16,10 +16,11 @@ class
 inherit
 	EV_CONTAINER
 		undefine
-			prune_all, fill
+			fill,
+			new_cursor,
+			prune_all
 		redefine
 			implementation,
-			create_implementation,
 			is_in_default_state
 		end
 
@@ -35,7 +36,6 @@ inherit
 			changeable_comparison_criterion, remove,
 			cl_prune, has
 		redefine
-			duplicate,
 			move
 		end
 
@@ -611,8 +611,8 @@ invariant
 	rows_positive: rows >= 1
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

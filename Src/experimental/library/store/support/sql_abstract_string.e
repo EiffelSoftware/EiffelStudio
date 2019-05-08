@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Abstracted string to handle SQL string."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -371,6 +371,8 @@ feature {NONE} -- Implementation
 
 	c_strlen (ptr: POINTER): INTEGER
 		deferred
+		ensure
+			is_class: class
 		end
 
 invariant
@@ -378,7 +380,7 @@ invariant
 	count_not_negative: count >= 0
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

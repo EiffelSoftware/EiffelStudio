@@ -1,9 +1,9 @@
-note
+﻿note
 	description: "[
-					cURL form constants.
-					For more informaton see:
-					http://curl.haxx.se/libcurl/c/curl_formadd.html
-																		]"
+			cURL form constants.
+			For more informaton see:
+			http://curl.haxx.se/libcurl/c/curl_formadd.html
+		]"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
 	date: "$Date$"
@@ -22,6 +22,8 @@ feature -- Query
 			"[
 				CURLFORM_COPYNAME
 			]"
+		ensure
+			is_class: class
 		end
 
 	curlform_copycontents: INTEGER
@@ -32,6 +34,8 @@ feature -- Query
 			"[
 				CURLFORM_COPYCONTENTS
 			]"
+		ensure
+			is_class: class
 		end
 
 	curlform_end: INTEGER
@@ -42,6 +46,8 @@ feature -- Query
 			"[
 				CURLFORM_END
 			]"
+		ensure
+			is_class: class
 		end
 
 	curlform_file: INTEGER
@@ -52,24 +58,27 @@ feature -- Query
 			"[
 				CURLFORM_FILE
 			]"
+		ensure
+			is_class: class
 		end
 
 	is_valid (a_integer: INTEGER): BOOLEAN
 			-- If `a_integer' valid?
 		do
-			Result := 	a_integer = curlform_copycontents or
-						a_integer = curlform_copyname or
-						a_integer =	curlform_end or
-						a_integer = curlform_file
+			Result :=
+				a_integer = curlform_copycontents or
+				a_integer = curlform_copyname or
+				a_integer = curlform_end or
+				a_integer = curlform_file
 		end
 
 note
 	library:   "cURL: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
-			356 Storke Road, Goleta, CA 93117 USA
+			5949 Hollister Ave., Goleta, CA 93117 USA
 			Telephone 805-685-1006, Fax 805-685-6869
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com

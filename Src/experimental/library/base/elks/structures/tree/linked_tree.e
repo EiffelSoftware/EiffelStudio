@@ -1,12 +1,12 @@
-note
+﻿note
 	description: "Trees implemented using a linked list representation"
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	names: linked_tree, tree, linked_list;
-	representation: recursive, linked;
-	access: cursor, membership;
-	contents: generic;
+	names: linked_tree, tree, linked_list
+	representation: recursive, linked
+	access: cursor, membership
+	contents: generic
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -18,12 +18,16 @@ class LINKED_TREE [G] inherit
 		export
 			{NONE} ll_empty
 		undefine
-			child_after, child_before, child_item,
+			child_after,
+			child_before,
+			child_item,
 			child_off
 		redefine
-			parent, clone_node
+			new_cursor,
+			parent
 		select
-			has
+			has,
+			new_cursor
 		end
 
 	LINKABLE [G]
@@ -96,7 +100,10 @@ class LINKED_TREE [G] inherit
 			child_isfirst, child_islast, valid_cursor_index,
 			copy, is_equal
 		redefine
-			first_child, new_cell, new_tree, child_cursor
+			child_cursor,
+			first_child,
+			new_cell,
+			new_tree
 		select
 			is_leaf
 		end
@@ -105,7 +112,7 @@ create
 
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (v: like item)
 			-- Create single node with item `v'.
@@ -146,6 +153,14 @@ feature -- Access
 			-- Current cursor position
 		do
 			create Result.make (child, child_after, child_before)
+		end
+
+feature -- Iteration
+
+	new_cursor: LINKED_TREE_ITERATION_CURSOR [G]
+			-- <Precursor>
+		do
+			create Result.make (Current)
 		end
 
 feature {RECURSIVE_CURSOR_TREE} -- Element change
@@ -301,7 +316,6 @@ feature {NONE} -- Inapplicable
 
 feature {LINKED_TREE} -- Implementation
 
-
 	new_cell (v: like item): like Current
 			-- New cell containing `v'
 		do
@@ -316,6 +330,7 @@ feature {LINKED_TREE} -- Implementation
 			-- A newly created instance of the same type.
 			-- This feature may be redefined in descendants so as to
 			-- produce an adequately allocated and initialized object.
+		obsolete "Use explicit creation instead. See also explanations for `duplicate`. [2018-11-30]"
 		do
 			create Result.make (item)
 		end
@@ -368,7 +383,7 @@ invariant
 	no_void_child: readable_child = child_readable
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

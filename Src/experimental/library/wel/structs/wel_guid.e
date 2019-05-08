@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 	make_empty
 			-- Create a GUID with null data.
 		do
-			make (0, 0, 0, << 0,0,0,0,0,0,0,0 >>)
+			make (0, 0, 0, {ARRAY [NATURAL_8]} << 0,0,0,0,0,0,0,0 >>)
 		end
 
 	share_from_pointer (a_pointer: POINTER)
@@ -158,14 +158,14 @@ invariant
 	internal_item_not_void: internal_item /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

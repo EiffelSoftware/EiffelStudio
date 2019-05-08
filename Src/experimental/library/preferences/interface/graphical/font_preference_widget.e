@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Default widget for viewing and editing font preferences."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -105,7 +105,8 @@ feature {NONE} -- Implementation
 		do
 			create change_item_widget
 			refresh
-			change_item_widget.pointer_double_press_actions.force_extend (agent show_change_item_widget)
+			change_item_widget.pointer_double_press_actions.extend
+				(agent (x, y, b: INTEGER_32; x_tilt, y_tilt, pressure: REAL_64; screen_x, screen_y: INTEGER_32) do show_change_item_widget end)
 		end
 
 	show_change_item_widget
@@ -122,7 +123,7 @@ feature {NONE} -- Implementation
 
 note
 
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -132,4 +133,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class FONT_PREFERENCE_WIDGET
+end

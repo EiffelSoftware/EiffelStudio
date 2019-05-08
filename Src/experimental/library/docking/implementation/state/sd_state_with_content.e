@@ -79,7 +79,9 @@ feature -- Commands
 			if attached zone as l_zone then
 				l_zone.close
 			end
-			docking_manager.zones.prune_zone_by_content (content)
+			if docking_manager.zones.has_content (content) then
+				docking_manager.zones.prune_zone_by_content (content)
+			end
 			docking_manager.command.remove_empty_split_area
 			docking_manager.command.update_title_bar
 			docking_manager.command.unlock_update
@@ -158,7 +160,7 @@ feature {NONE} -- Implementation
 			-- Content managed by `Current'.
 
 ;note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -4,7 +4,6 @@ setup
 	compile_library = Clib
 
 project
-	libevent = "libevent-safe.ecf"
 	libevent = "libevent.ecf"
 
 note

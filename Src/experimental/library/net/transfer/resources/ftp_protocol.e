@@ -162,7 +162,7 @@ feature -- Status setting
 				if not passive_mode then
 					create l_socket.make_server_by_port (0)
 					data_socket := l_socket
-					l_socket.set_timeout (timeout)
+					l_socket.set_timeout_ns (timeout_ns)
 					l_socket.listen (1)
 				end
 				if send_transfer_command then
@@ -255,11 +255,11 @@ feature {NONE} -- Status setting
 			if is_proxy_used then
 				create l_proxy.make (address)
 				proxy_connection := l_proxy
-				l_proxy.set_timeout (timeout)
+				l_proxy.set_timeout_ns (timeout_ns)
 			else
 				create l_socket.make_client_by_port (address.port, address.host)
 				main_socket := l_socket
-				l_socket.set_timeout (timeout)
+				l_socket.set_timeout_ns (timeout_ns)
 				l_socket.connect
 			end
 		rescue
@@ -768,7 +768,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

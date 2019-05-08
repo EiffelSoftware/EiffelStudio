@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "System encodings, windows implementation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,8 +10,6 @@ class
 
 inherit
 	SYSTEM_ENCODINGS_I
-
-	ENCODING_HELPER
 
 feature -- Access
 
@@ -31,9 +29,18 @@ feature -- Access
 
 	console_code_page: STRING
 			-- Console code page
+		local
+			code_page: like {WEL_API}.console_input_code_page
 		do
-			create Result.make (10)
-			Result.append_natural_32 (c_console_code_page)
+			code_page := {WEL_API}.console_output_code_page
+			if code_page = 0 then
+				code_page := {WEL_API}.console_input_code_page
+				if code_page = 0 then
+					code_page := {WEL_API}.oem_code_page
+				end
+			end
+			create Result.make (5)
+			Result.append_natural_32 (code_page)
 		end
 
 	iso_8859_1_code_page: STRING = "28591"
@@ -56,7 +63,7 @@ feature {NONE} -- Implementation
 		do
 			create l_pointer.make (c_tchar_length * bufferlen)
 			l_int := c_extract_locale_string(lcid, lc_ctype, l_pointer.item, l_pointer.count)
-			Result := pointer_to_wide_string (l_pointer.item, l_int * c_tchar_length)
+			Result := {ENCODING_HELPER}.pointer_to_wide_string (l_pointer.item, l_int * c_tchar_length)
 			if Result [Result.count].code = 0 then
 					-- Remove trailing zero.
 				Result.remove (Result.count)
@@ -76,16 +83,6 @@ feature {NONE} -- Implementation
 			"C inline use <windows.h>"
 		alias
 			"return sizeof(TCHAR);"
-		end
-
-	c_console_code_page: NATURAL
-			-- Output codepage of the console
-		external
-			"C inline use <windows.h>"
-		alias
-			"[
-				return (EIF_NATURAL_32)GetConsoleOutputCP ();
-			]"
 		end
 
 	system_locale: INTEGER
@@ -114,7 +111,7 @@ invariant
 
 note
 	library:   "Encoding: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -123,7 +120,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

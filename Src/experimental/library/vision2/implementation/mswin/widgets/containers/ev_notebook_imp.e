@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"EiffelVision notebook, Mswindows implementation."
 	legal: "See notice at end of class."
@@ -25,9 +25,6 @@ inherit
 			enable_sensitive,
 			disable_sensitive,
 			set_default_minimum_size,
-			compute_minimum_width,
-			compute_minimum_height,
-			compute_minimum_size,
 			on_size,
 			interface,
 			child_added,
@@ -1038,8 +1035,8 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_NOTEBOOK note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA
@@ -1048,4 +1045,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- EV_NOTEBOOK_IMP
+end

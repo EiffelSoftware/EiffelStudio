@@ -46,7 +46,7 @@ feature {NONE} -- Basic operations.
 feature -- Sender change
 
 	add_sender_address (a_sender: READABLE_STRING_8)
-			-- Àdded `a_sender' address to "From:" entries.
+			-- Added `a_sender' address to "From:" entries.
 		do
 			add_header_entry (H_from, a_sender)
 		end
@@ -54,21 +54,21 @@ feature -- Sender change
 feature -- Recipient change
 
 	add_recipient_address (a_recipient: READABLE_STRING_8)
-			-- Àdded `a_recipient' address to "To:" entries.
+			-- Added `a_recipient' address to "To:" entries.
 		do
-			add_header_entry (H_to, a_recipient)
+			add_header_entries (H_to, splitted_recipients_from (a_recipient))
 		end
 
 	add_recipient_address_in_cc (a_recipient: READABLE_STRING_8)
-			-- Àdded `a_recipient' address to "Cc:" entries.
+			-- Added `a_recipient' address to "Cc:" entries.
 		do
-			add_header_entry (H_cc, a_recipient)
+			add_header_entries (H_cc, splitted_recipients_from (a_recipient))
 		end
 
 	add_recipient_address_in_bcc (a_recipient: READABLE_STRING_8)
-			-- Àdded `a_recipient' address to "BCc:" entries.
+			-- Added `a_recipient' address to "BCc:" entries.
 		do
-			add_header_entry (H_bcc, a_recipient)
+			add_header_entries (H_bcc, splitted_recipients_from (a_recipient))
 		end
 
 feature -- Status report
@@ -80,7 +80,7 @@ feature -- Status report
 
 feature -- Entries changes
 
-	add_header_entry (header_key, header_entry: STRING)
+	add_header_entry (header_key, header_entry: READABLE_STRING_8)
 			-- Add 'header_entry' to header 'header_key',
 			-- If no such header exists, create it.
 		require
@@ -96,7 +96,7 @@ feature -- Entries changes
 			end
 		end
 
-	add_header_entries (header_key: STRING; header_entries: ARRAY [STRING])
+	add_header_entries (header_key: STRING; header_entries: ITERABLE [READABLE_STRING_8])
 			-- Add multiple 'header_entries' at once  to 'header_key',
 			-- If not such header exists. create it.
 		local
@@ -146,6 +146,57 @@ feature -- Basic operations
 		end
 
 feature -- Implementation (EMAIL_RESOURCE)
+
+	splitted_recipients_from (a_recipient_value: READABLE_STRING_8): ARRAYED_LIST [READABLE_STRING_8]
+			-- List of individual recipients from `a_recipient_value`.
+			-- Mainly to support input with multiple recipient addresses.
+		local
+			i,j,n: INTEGER
+			p: INTEGER
+			s: READABLE_STRING_8
+		do
+			create Result.make (1)
+			n := a_recipient_value.count
+			from
+				i := 1
+				j := 1
+			until
+				i > n
+			loop
+				inspect a_recipient_value[i]
+				when '"' then
+					p := a_recipient_value.index_of ('%"', i + 1)
+					if p > 0 then
+						i := p
+					end
+				when '<' then
+					p := a_recipient_value.index_of ('>', i + 1)
+					if p > 0 then
+						i := p
+					end
+				when ',' then
+					s := a_recipient_value.substring (j, i - 1)
+					if not s.is_whitespace then
+						Result.force (s)
+					end
+					from
+					until
+						i + 1 > n or not a_recipient_value[i + 1].is_space
+					loop
+						i := i + 1
+					end
+					j := i + 1
+				else
+				end
+				i := i + 1
+			end
+			if j < n then
+				s := a_recipient_value.substring (j, n)
+				if not s.is_whitespace then
+					Result.force (s)
+				end
+			end
+		end
 
 	can_be_received: BOOLEAN = True
 			-- Can an email received?

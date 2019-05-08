@@ -1,13 +1,13 @@
 package uuid
 
 project
-	uuid = "uuid-safe.ecf"
 	uuid = "uuid.ecf"
 
 note
 	description: "[
-			Generate/Manipulate UUIDs.
-		]"
+Generate/Manipulate UUIDs.
+				]"
+
 	title: EiffelUUID
 	tags: uuid,generator,parser,identifier
 	copyright: 1984-2016 Eiffel Software and others

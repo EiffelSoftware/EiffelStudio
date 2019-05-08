@@ -1,7 +1,6 @@
 package testing
 
 project
-	testing = "testing-safe.ecf"
 	testing = "testing.ecf"
 
 note

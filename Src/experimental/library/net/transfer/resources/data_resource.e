@@ -1,8 +1,6 @@
-note
-	description:
-		"Data resources"
+﻿note
+	description: "Data resources"
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -225,8 +223,27 @@ feature -- Status report
 		deferred
 		end
 
+feature -- Access: timeout
+
 	timeout: INTEGER
-			-- Duration of timeout in seconds
+			-- Duration of timeout in seconds.
+		obsolete
+			"Use `timeout_ns` using nanoseconds [2018-01-15]"
+		local
+			ns: like timeout_ns
+		do
+			ns := timeout_ns
+			Result := {SOCKET_TIMEOUT_UTILITIES}.nanoseconds_to_seconds (timeout_ns)
+			if Result = 0 and ns > 0 then
+					-- As 0 may have different meaning, use the closest non zero possible value.
+				Result := 1
+			end
+		ensure
+			timeout_positive: timeout_ns /= 0 implies Result > 0
+		end
+
+	timeout_ns: NATURAL_64
+			-- Duration of timeout in nanoseconds.
 
 	connect_timeout: INTEGER
 			-- The connect timeout in milliseconds
@@ -345,13 +362,24 @@ feature -- Status setting
 		end
 
 	set_timeout (n: like timeout)
-			-- Set connection timeout to `n'.
+			-- Set timeout to `n' seconds.
 		require
 			non_negative: n >= 0
 		do
-			timeout := n
+			set_timeout_ns ({SOCKET_TIMEOUT_UTILITIES}.seconds_to_nanoseconds (n))
 		ensure
-			timeout_set: timeout = n
+			timeout_set: timeout_ns = {SOCKET_TIMEOUT_UTILITIES}.seconds_to_nanoseconds (n)
+		end
+
+	set_timeout_ns (a_timeout_nanoseconds: NATURAL_64)
+			-- Set timeout with to `a_timeout_nanoseconds` nanoseconds.
+			-- Warning: the timeout granularity of the platform may not be nanoseconds, but micro or milliseconds.
+		require
+			is_valid_timeout_ns: {SOCKET_TIMEOUT_UTILITIES}.is_valid_timeout_ns (a_timeout_nanoseconds)
+		do
+			timeout_ns := a_timeout_nanoseconds
+		ensure
+			timeout_ns_set: timeout_ns = a_timeout_nanoseconds
 		end
 
 	set_connect_timeout (n: like connect_timeout)
@@ -439,7 +467,6 @@ feature {NONE} -- Constants
 invariant
 
 	address_assigned: address /= Void
-	timeout_non_negative: timeout >= 0
 	packet_constraint: not (has_packet xor last_packet /= Void)
 	pending_constraint: is_packet_pending implies
 						(is_open and is_readable and transfer_initiated)
@@ -448,18 +475,14 @@ invariant
 	mode_constraint: is_mode_set = read_mode xor write_mode
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class DATA_RESOURCE
-
+end

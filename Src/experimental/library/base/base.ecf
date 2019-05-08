@@ -8,7 +8,7 @@
 		<file_rule>
 			<exclude>/\.svn$</exclude>
 		</file_rule>
-		<option namespace="EiffelSoftware.Library">
+		<option warning="true" namespace="EiffelSoftware.Library">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<mapping old_name="REAL" new_name="REAL_32"/>
@@ -56,6 +56,7 @@
 				<exclude>/kernel/exceptions/void_target.e$</exclude>
 				<exclude>/kernel/file.e$</exclude>
 				<exclude>/kernel/file_info.e$</exclude>
+				<exclude>/kernel/file_iteration_cursor.e$</exclude>
 				<exclude>/kernel/file_name.e$</exclude>
 				<exclude>/kernel/function.e$</exclude>
 				<exclude>/kernel/gc_info.e$</exclude>

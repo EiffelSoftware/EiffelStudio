@@ -199,6 +199,12 @@ feature -- Access
 			end
 		end
 
+	available_cpu_count: NATURAL_32
+			-- Number of available CPUs.		
+		do
+			Result := {ENVIRONMENT}.processor_count.to_natural_32
+		end
+
 feature -- Status
 
 	return_code: INTEGER

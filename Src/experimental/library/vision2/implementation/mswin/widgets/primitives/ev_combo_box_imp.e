@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "EiffelVision Combo-box. Implementation interface"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,7 +14,6 @@ inherit
 			text_length
 		redefine
 			interface,
-			make,
 			initialize_hints
 		end
 
@@ -986,40 +985,43 @@ feature {NONE} -- WEL Implementation
 	on_cbn_selchange
 			-- The selection is about to change.
 		local
-			new_selected_item: detachable EV_LIST_ITEM_IMP
+			l_new_selected_item: detachable EV_LIST_ITEM_IMP
+			l_acts: detachable EV_NOTIFY_ACTION_SEQUENCE
 		do
 					-- Retrieve the new selected item.
 			if selected then
-				new_selected_item := ev_children.i_th (wel_selected_item + 1)
+				l_new_selected_item := ev_children.i_th (wel_selected_item + 1)
 			else
-				new_selected_item := Void
+				l_new_selected_item := Void
 			end
 
-			if not equal (old_selected_item, new_selected_item) then
+			if not equal (old_selected_item, l_new_selected_item) then
 					-- Send a "Deselect Action" to the old item, and
 					-- to the combo box.
 				if attached old_selected_item as l_old_selected_item then
-					if l_old_selected_item.deselect_actions_internal /= Void then
-						l_old_selected_item.deselect_actions.call (Void)
+					l_acts := l_old_selected_item.deselect_actions_internal
+					if l_acts /= Void then
+						l_acts.call (Void)
 					end
-					if deselect_actions_internal /= Void then
-						deselect_actions_internal.call
-							([l_old_selected_item.interface])
+					l_acts := deselect_actions_internal
+					if l_acts /= Void then
+						l_acts.call ([l_old_selected_item.interface])
 					end
 				end
 
 					-- Remember the current selected item.
-				old_selected_item := new_selected_item
+				old_selected_item := l_new_selected_item
 
 					-- Send a "Select Action" to the new item, and
 					-- to the combo box.
-				if new_selected_item /= Void then
-					if new_selected_item.select_actions_internal /= Void then
-						new_selected_item.select_actions.call (Void)
+				if l_new_selected_item /= Void then
+					l_acts := l_new_selected_item.select_actions_internal
+					if l_acts /= Void then
+						l_acts.call (Void)
 					end
-					if select_actions_internal /= Void then
-						select_actions_internal.call
-							([new_selected_item.interface])
+					l_acts := select_actions_internal
+					if l_acts /= Void then
+						l_acts.call ([l_new_selected_item.interface])
 					end
 				end
 			end
@@ -1158,8 +1160,8 @@ invariant
 	text_field_not_void: text_field /= Void implies is_editable
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

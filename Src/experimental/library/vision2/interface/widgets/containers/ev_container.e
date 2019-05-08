@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"[
 			Widget that contains other widgets.
@@ -94,29 +94,28 @@ feature -- Access
 		require
 			not_destroyed: not is_destroyed
 		local
-			l: LINEAR [EV_WIDGET]
-			cs: detachable CURSOR_STRUCTURE [EV_WIDGET]
+			lst: LINEAR [EV_WIDGET]
 			c: detachable CURSOR
-			ct: detachable EV_CONTAINER
+			cs: detachable CURSOR_STRUCTURE [EV_WIDGET]
 		do
 			Result := has (an_item)
-			l := linear_representation
-			cs ?= l
-			if cs /= Void then
-				c := cs.cursor
+			lst := linear_representation
+			if attached {CURSOR_STRUCTURE [EV_WIDGET]} lst as l_cursor_structure then
+				cs := l_cursor_structure
+				c := l_cursor_structure.cursor
 			end
-			from
-				l.start
+			across
+				lst as ic
 			until
-				l.off or Result
+				Result
 			loop
-				ct ?= l.item
-				if ct /= Void then
+				if attached {EV_CONTAINER} ic.item as ct then
 					Result := ct.has_recursive (an_item)
 				end
-				l.forth
+
 			end
 			if cs /= Void and then c /= Void then
+					-- By security, restore previous cursor location
 				cs.go_to (c)
 			end
 		end
@@ -241,6 +240,14 @@ feature -- Element change
 		deferred
 		ensure
 			has_v: not has (v)
+		end
+
+feature -- Iteration
+
+	new_cursor: ITERATION_CURSOR [EV_WIDGET]
+			-- <Precursor>
+		do
+			Result := linear_representation.new_cursor
 		end
 
 feature -- Measurement
@@ -372,11 +379,8 @@ feature -- Contract support
 			-- May `v' be inserted in `Current'.
 			-- Instances of EV_WINDOW may not be inserted
 			-- in a container even though they are widgets.
-		local
-			l_window: detachable EV_WINDOW
 		do
-			l_window ?= v
-			Result := l_window = Void
+			Result := not attached {EV_WINDOW} v
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
@@ -418,7 +422,7 @@ invariant
 	items_unique: is_usable implies items_unique
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -428,19 +432,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_CONTAINER
-
-
-
-
-
-
-
-
-
-
-
-
+end

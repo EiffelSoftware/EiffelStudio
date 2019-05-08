@@ -37,8 +37,12 @@ feature
 			localhostname: STRING
 		do
 			localhostname := impl.local_host_name
-			check attached create_from_name (localhostname) as l_result then
+			if attached create_from_name (localhostname) as l_result then
 				Result := l_result
+			else
+				check attached create_from_name ("localhost") as l_result then
+					Result := l_result
+				end
 			end
 		end
 
@@ -618,7 +622,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

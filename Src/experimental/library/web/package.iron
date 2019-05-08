@@ -1,7 +1,6 @@
 package web
 
 project
-	web = "web-safe.ecf"
 	web = "web.ecf"
 
 note

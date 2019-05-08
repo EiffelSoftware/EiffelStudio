@@ -187,13 +187,13 @@ feature -- Test routines
 			f.close
 		end
 
-	generate_ecf_truncated_at_size (fn: PATH; a_size: INTEGER; a_end: READABLE_STRING_8)
+	generate_ecf_truncated_at_size (fn: PATH; a_size: INTEGER; a_end: READABLE_STRING_32)
 		local
 			s: STRING_32
 			f: RAW_FILE
-			t: READABLE_STRING_8
+			t: READABLE_STRING_32
 		do
-			t := "</system>"
+			t := {STRING_32} "</system>"
 
 			s := ecf_content_with_size (a_size - a_end.count + t.count)
 			s.replace_substring_all (t, a_end)
@@ -442,7 +442,7 @@ feature -- Test routines
 			create vis_uc
 
 			create l_input.make_with_path (xml_file_name ("truncated_at_chunk-ecf.xml"))
-			generate_ecf_truncated_at_size (xml_file_name ("truncated_at_chunk-ecf.xml"), l_input.chunk_size, "</foo_bar>")
+			generate_ecf_truncated_at_size (xml_file_name ("truncated_at_chunk-ecf.xml"), l_input.chunk_size, {STRING_32} "</foo_bar>")
 
 			l_input.open_read
 			l_input.start
@@ -730,6 +730,24 @@ feature -- ASCII
 		do
 			test_xml_content ("cdata_bracket_01", True, False, "<doc><![CDATA[]]]]></doc>") -- ]]
 			test_xml_content ("cdata_bracket_02", True, False, "<doc><![CDATA[]]]]><![CDATA[>]]></doc>")
+		end
+
+	test_entity_at_end_of_input
+		local
+			p: XML_PARSER
+			doc_cb: XML_CALLBACKS_DOCUMENT
+			s: STRING_8
+		do
+			print ("Testing case MarkH%N")
+			p := Factory.new_parser
+			create s.make_empty
+			create doc_cb.make_null
+			p.set_callbacks (new_callbacks_pipe (s, Void, doc_cb))
+				-- valid
+			p.parse_from_string ("<foo att=%"AT&ampT")
+			p.parse_from_string_32 ({STRING_32} "<foo att=%"AT&ampT")
+			p.parse_from_string_32 ({STRING_32} "<doc><foo att=%"AT&ampT%">AT&ampT</foo><foo att=%"AT&ampT%">AT&ampT</foo></doc>")
+			assert ("mark", not p.is_correct)
 		end
 
 feature {NONE} -- XML content

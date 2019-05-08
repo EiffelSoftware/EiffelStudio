@@ -49,9 +49,9 @@ feature -- Initialization
 			make_socket;
 			is_open_write := True;
 			is_open_read := True
-			timeout := default_timeout
+			set_default_timeout
 		ensure then
-			timeout_set_to_default: timeout = default_timeout
+			timeout_set_to_default: is_default_timeout
 		end
 
 	make_bound (a_port: INTEGER)
@@ -65,9 +65,9 @@ feature -- Initialization
 			addr := create_any_local
 			create an_address.make_from_address_and_port (addr, a_port)
 			make_bound_to_address (an_address)
-			timeout := default_timeout
+			set_default_timeout
 		ensure
-			timeout_set_to_default: timeout = default_timeout
+			timeout_set_to_default: is_default_timeout
 		end
 
 	make_loopback_bound (a_port: INTEGER)
@@ -81,9 +81,9 @@ feature -- Initialization
 			addr := create_loopback
 			create an_address.make_from_address_and_port (addr, a_port)
 			make_bound_to_address (an_address)
-			timeout := default_timeout
+			set_default_timeout
 		ensure
-			timeout_set_to_default: timeout = default_timeout
+			timeout_set_to_default: is_default_timeout
 		end
 
 	make_targeted (a_hostname: STRING; a_peer_port: INTEGER)
@@ -95,9 +95,8 @@ feature -- Initialization
 			c_reset_error
 			create an_address.make_from_hostname_and_port (a_hostname, a_peer_port);
 			make_connected_to_peer (an_address)
-			timeout := default_timeout
 		ensure
-			timeout_set_to_default: timeout = default_timeout
+			timeout_set_to_default: is_default_timeout
 		end
 
 feature -- Status report

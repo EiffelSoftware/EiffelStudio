@@ -1,7 +1,6 @@
 package diff
 
 project
-	diff = "diff-safe.ecf"
 	diff = "diff.ecf"
 
 note

@@ -35,6 +35,11 @@
 			</condition>
 		</external_linker_flag>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
+		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</library>
 		<cluster name="encoding" location=".\">
 			<option namespace="Encoding">
 			</option>
@@ -59,5 +64,8 @@
 	</target>
 	<target name="encoding_dotnet" extends="encoding">
 		<setting name="msil_generation" value="true"/>
+		<capability>
+			<concurrency support="none"/>
+		</capability>
 	</target>
 </system>

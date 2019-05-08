@@ -1,6 +1,5 @@
-note
-	description:
-		"Facilities for direct drawing to a printer."
+﻿note
+	description: "Facilities for direct drawing to a printer."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "printer"
@@ -13,8 +12,7 @@ class
 inherit
 	EV_DRAWABLE
 		redefine
-			implementation,
-			create_implementation
+			implementation
 		end
 
 create {EV_PRINT_PROJECTOR_IMP, EV_MODEL_PRINT_PROJECTOR_IMP}
@@ -86,22 +84,14 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- Responsible for interaction with the native graphics toolkit.
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_PRINTER
-
-
-
-
-
+end

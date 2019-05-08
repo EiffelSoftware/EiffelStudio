@@ -14,6 +14,8 @@ feature -- Tests
 		local
 			uri: URI
 		do
+			create uri.make_from_string ("http://www.été.test")
+
 			create uri.make_from_string ("file:/foo/bar")
 			assert ("scheme", uri.scheme.same_string ("file"))
 			assert ("no authority", same_string (uri.authority, Void))
@@ -93,6 +95,33 @@ feature -- Tests
 --			assert ("path segment", uri.path_segments.count = 5 and then uri[4].same_string ("d") and then uri[5].same_string (""))
 			assert ("path segment", uri.path_segments.count = 5 and then uri[0].is_empty and then uri[1].same_string ("a") and then uri[4].same_string ("d"))
 			assert ("is_valid", uri.is_valid)
+
+			uri.add_unencoded_path_segment ("a b c")
+			assert ("path segment with space", uri.path_segments.count = 6 and then
+						uri[0].is_empty and then uri[1].same_string ("a") and then uri[4].same_string ("d") and then
+						uri[5].same_string ("a b c") and then
+						uri.string.ends_with_general ("a%%20b%%20c")
+						)
+			assert ("is_valid", uri.is_valid)
+
+		end
+
+	test_spaces
+		local
+			uri: URI
+		do
+			create uri.make_from_string ("http://www.example.com")
+			uri.add_unencoded_path_segment ("foo")
+			uri.add_unencoded_path_segment ("a and b")
+			uri.add_unencoded_path_segment ("bar")
+			uri.add_unencoded_path_segment ("slash/end")
+			uri.add_query_parameter ("id", "123")
+			uri.add_query_parameter ("title", "Eiffel World!")
+			uri.add_query_parameter ("path", "foo/bar")
+			uri.add_query_parameter ("pair", "foo=bar")
+			assert ("uri with space", uri.string.same_string ("http://www.example.com/foo/a%%20and%%20b/bar/slash%%2Fend?id=123&title=Eiffel+World!&path=foo/bar&pair=foo=bar"))
+			assert ("uri segment ok", uri.decoded_path_segment (2).same_string ("a and b"))
+			assert ("uri query ok", attached uri.decoded_query_item ("title") as v and then v.same_string ("Eiffel World!"))
 		end
 
 	test_urls
@@ -209,27 +238,31 @@ feature -- Tests
 			assert ("query", same_string (uri.query, "a=b&a=b"))
 
 			uri.add_query_parameter ("a=b", "b=a")
-			assert ("query", same_string (uri.query, "a=b&a=b&a%%3Db=b%%3Da"))
+			assert ("query", same_string (uri.query, "a=b&a=b&a%%3Db=b=a"))
 
 			uri.remove_query
 			assert ("query", same_string (uri.query, Void))
 
 			uri.remove_query
 			uri.add_query_parameter ("?", "&")
-			assert ("query", same_string (uri.query, "%%3F=%%26"))
+			assert ("query", same_string (uri.query, "?=%%26"))
 
 			uri.remove_query
 			uri.add_query_parameter ("abc", "a+b+c")
 			assert ("query", same_string (uri.query, "abc=a%%2Bb%%2Bc"))
 
+			uri.remove_query
+			uri.add_query_parameter ("abc", "a b c")
+			assert ("query", same_string (uri.query, "abc=a+b+c"))
+
 
 			uri.remove_query
 			uri.add_query_parameter ("&", "?")
-			assert ("query", same_string (uri.query, "%%26=%%3F"))
+			assert ("query", same_string (uri.query, "%%26=?"))
 
 			uri.remove_query
 			uri.add_query_parameter ("?a=b", "xyz")
-			assert ("query", same_string (uri.query, "%%3Fa%%3Db=xyz"))
+			assert ("query", same_string (uri.query, "?a%%3Db=xyz"))
 
 
 			uri.remove_query
@@ -237,8 +270,17 @@ feature -- Tests
 			assert ("query", same_string (uri.query, "lst%%5Ba%%5D=b"))
 
 			uri.remove_query
-			uri.add_query_parameter ("lst[a][b]", "c")
-			assert ("query", same_string (uri.query, "lst%%5Ba%%5D%%5Bb%%5D=c"))
+			uri.add_encoded_query_parameter ("lst[a]", "b")
+			assert ("query", same_string (uri.query, "lst[a]=b"))
+
+			uri.remove_query
+			uri.add_query_parameter ("fct(a,b)", "function(a,b)")
+			assert ("query", same_string (uri.query, "fct(a,b)=function(a,b)"))
+
+
+			uri.remove_query
+			uri.add_encoded_query_parameter ("lst[a][b]", "c")
+			assert ("query", same_string (uri.query, "lst[a][b]=c"))
 		end
 
 	test_mailto
@@ -306,6 +348,9 @@ feature -- Tests
 
 			uri.add_unencoded_path_segment ("foo/bar")
 			assert ("path ok", uri.path.same_string ("base/foo/foo%%2Fbar"))
+
+			uri.add_unencoded_path_segment ("A and B")
+			assert ("path ok", uri.path.same_string ("base/foo/foo%%2Fbar/A%%20and%%20B"))
 		end
 
 	test_opaque
@@ -351,7 +396,7 @@ feature -- Tests
 			print (uri_split_to_string (uri) + "%N")
 
 			create uri.make_from_string ("http://[A:b:c:DE:fF:0:1:aC]")
-			assert ("host", same_string (uri.host, "[A:b:c:DE:fF:0:1:aC]"))
+			assert ("host", same_string (uri.host, "[a:b:c:de:ff:0:1:ac]"))
 			print (uri_split_to_string (uri) + "%N")
 
 			create uri.make_from_string ("http://user:pass@[000:01:02:003:004:5:6:007]:8080/foo/bar")
@@ -360,10 +405,6 @@ feature -- Tests
 			assert ("userinfo", same_string (uri.userinfo, "user:pass"))
 			assert ("path", same_string (uri.path, "/foo/bar"))
 			print (uri_split_to_string (uri) + "%N")
-
-			-- reg-name
-
-
 		end
 
 	test_unicode
@@ -414,8 +455,46 @@ feature -- Tests
 
 			uri.set_unencoded_path ({STRING_32} "/summer/été/message/上海/extra/")
 			assert ("http://foo.com/summer/%%C3%%A9t%%C3%%A9/message/%%E4%%B8%%8A%%E6%%B5%%B7/extra/", uri.string.same_string ("http://foo.com/summer/%%C3%%A9t%%C3%%A9/message/%%E4%%B8%%8A%%E6%%B5%%B7/extra/"))
+		end
+
+	test_unicode_host
+		local
+			uri: URI
+		do
+			create uri.make_from_string ("http://xn--bcher-kva.xn--p1ai/")
+			assert ("unicode hostname", attached uri.hostname as h and then h.same_string_general ({STRING_32} "bücher.рф"))
+
+			create uri.make_from_string ("http://foo.test")
+			assert ("unicode hostname", attached uri.hostname as h and then h.same_string_general ({STRING_32} "foo.test"))
+
+			create uri.make_from_string ("http://foo.bar.com/")
+			assert ("unicode hostname", attached uri.hostname as h and then h.same_string_general ({STRING_32} "foo.bar.com"))
+
+			uri.set_hostname ({STRING_32} "bücher.рф")
+			assert ("unicode hostname", attached uri.hostname as h and then h.same_string_general ({STRING_32} "bücher.рф"))
+			assert ("rfc host", attached uri.host as h and then h.same_string_general ("xn--bcher-kva.xn--p1ai"))
+
+			uri.set_hostname ("xn--bcher-kva.xn--p1ai")
+			assert ("unicode hostname", attached uri.hostname as h and then h.same_string_general ({STRING_32} "bücher.рф"))
+			assert ("rfc host", attached uri.host as h and then h.same_string_general ("xn--bcher-kva.xn--p1ai"))
+
+			uri.set_hostname ("xn--été.test")
+			assert ("unicode hostname", attached uri.hostname as h and then h.same_string_general ({STRING_32} "xn--été.test"))
+			assert ("rfc host", attached uri.host as h and then h.same_string_general ("xn--xn--t-esab.test"))
 
 
+			create uri.make_from_string ("http://foo.com")
+			uri.set_hostname ({STRING_32} "bücher.рф")
+			assert ("hostname", attached uri.host as h and then h.same_string ("xn--bcher-kva.xn--p1ai"))
+			assert ("unicode hostname", attached uri.hostname as h and then h.same_string_general ({STRING_32} "bücher.рф"))
+
+			uri.set_hostname ({STRING_32} "foo.рф.com")
+			assert ("hostname", attached uri.host as h and then h.same_string ("foo.xn--p1ai.com"))
+			assert ("unicode hostname", attached uri.hostname as h and then h.same_string_general ({STRING_32} "foo.рф.com"))
+
+			uri.set_hostname ({STRING_32} "foo.bar.com")
+			assert ("hostname", attached uri.host as h and then h.same_string ("foo.bar.com"))
+			assert ("unicode hostname", attached uri.hostname as h and then h.same_string_general ({STRING_32} "foo.bar.com"))
 		end
 
 	test_nuts

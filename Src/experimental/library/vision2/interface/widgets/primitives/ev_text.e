@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"[
 			EiffelVision text area. To query multiple lines of text from the user.
@@ -22,8 +22,7 @@ inherit
 		undefine
 			is_in_default_state
 		redefine
-			implementation,
-			is_in_default_state
+			implementation
 		end
 
 create
@@ -236,8 +235,8 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA
@@ -246,16 +245,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_TEXT
-
-
-
-
-
-
-
-
-
+end

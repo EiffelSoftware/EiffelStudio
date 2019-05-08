@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "A command line switch file validator that checks if an natural integer is with a value range."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,9 +10,6 @@ class
 
 inherit
 	ARGUMENT_NUMERIC_RANGE_VALIDATOR [NATURAL_64]
-		redefine
-			validate_value
-		end
 
 create
 	make
@@ -35,8 +32,8 @@ feature {NONE} -- Validation
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

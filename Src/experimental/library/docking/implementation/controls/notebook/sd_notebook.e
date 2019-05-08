@@ -332,6 +332,12 @@ feature -- Command
 			internal_tab_box.on_resize (a_x, a_y, a_width, a_height)
 		end
 
+	on_dpi_changed (a_dpi: INTEGER; a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER)
+			-- Handle resize actions
+		do
+			on_resize (a_x, a_y, a_width, a_height)
+		end
+
 	set_content_position (a_content: SD_CONTENT; a_index: INTEGER)
 			-- Position `a_content' at `a_index'
 		require
@@ -813,7 +819,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

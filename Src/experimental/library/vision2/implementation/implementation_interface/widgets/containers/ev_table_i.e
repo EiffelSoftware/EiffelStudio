@@ -1,9 +1,9 @@
-note
+﻿note
 	description:
 		"Eiffel Vision table. Implementation interface"
-	legal: "See notice at end of class.";
+	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$";
+	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
@@ -12,8 +12,7 @@ deferred class
 inherit
 	EV_CONTAINER_I
 		redefine
-			interface,
-			item
+			interface
 		end
 
 feature -- Access
@@ -720,8 +719,8 @@ invariant
 	internal_array_not_void: internal_array /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA
@@ -730,17 +729,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_TABLE_I
-
-
-
-
-
-
-
-
-
-
+end

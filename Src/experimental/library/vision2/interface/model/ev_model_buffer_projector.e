@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 				a_drawing_area)
 			a_drawing_area.expose_actions.extend (agent on_paint)
 			a_drawing_area.resize_actions.extend (agent resize_buffer)
-
+			a_drawing_area.dpi_changed_actions.extend (agent dpi_resize_buffer)
 
 			recenter_agent := agent
 				do
@@ -120,6 +120,7 @@ feature -- Access
 			u_x := rectangle.x
 			u_y := rectangle.y
 			drawable.set_background_color (world.background_color)
+			drawable.set_anti_aliasing (world.is_anti_aliasing_enabled)
 			drawable.clear_rectangle (u_x + offset_x, u_y + offset_y, rectangle.width, rectangle.height)
 			if world.is_show_requested then
 				project_figure_group_full (world)
@@ -181,6 +182,7 @@ feature -- Display updates
 			u_height := u.height
 			create l_rect.make (u_x, u_y, u_width, u_height)
 			drawable.set_background_color (world.background_color)
+			drawable.set_anti_aliasing (world.is_anti_aliasing_enabled)
 			drawable.clear_rectangle (u_x - drawable_position.x, u_y - drawable_position.y, u_width, u_height)
 
 			if world.grid_visible then
@@ -292,6 +294,13 @@ feature {NONE} -- Implementation
 			update
 		end
 
+	dpi_resize_buffer (a_dpi,a_x, a_y, area_width, area_height: INTEGER)
+			-- Resize buffer if it is smaller than `Buffer_scale_factor' times
+			-- the size given by `area_width' and `area_height'.
+		do
+			resize_buffer (a_x, a_y, area_width, area_height)
+		end
+
 	buffer_covers_area: BOOLEAN
 			-- Is `area' still in the surface covered by buffer ?
 		local
@@ -319,8 +328,8 @@ invariant
 	right_drawable_in_the_cell: drawable = drawable_in_the_cell
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA
@@ -329,12 +338,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_MODEL_BUFFER_PROJECTOR
-
-
-
-
-
+end

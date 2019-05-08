@@ -91,6 +91,7 @@ feature {NONE} -- Initlization
 			internal_notebook.drop_actions.extend (agent on_notebook_drop)
 
 			resize_actions.extend (agent internal_notebook.on_resize)
+			dpi_changed_actions.extend (agent internal_notebook.on_dpi_changed )
 
 			set_minimum_width (internal_shared.zone_minimum_width)
 			set_minimum_height (internal_shared.zone_minimum_height)
@@ -484,7 +485,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

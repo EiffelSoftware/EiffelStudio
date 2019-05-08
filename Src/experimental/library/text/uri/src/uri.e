@@ -28,6 +28,7 @@ note
 	EIS: "name=mailto-RFC2368", "protocol=URI", "src=http://tools.ietf.org/html/rfc2368"
 	EIS: "name=ipv6-RFC2373", "protocol=URI", "src=http://tools.ietf.org/html/rfc2373"
 	EIS: "name=ipv6-RFC2373 in URL", "protocol=URI", "src=http://tools.ietf.org/html/rfc2732"
+	EIS: "name=RFC3490 Internationalizing Domain Names in Applications (IDNA)", "protocol=URI", "src=https://tools.ietf.org/html/rfc3490"
 
 class
 	URI
@@ -157,19 +158,13 @@ feature {NONE} -- Initialization
 			if is_valid then
 				check_validity (True)
 			end
-		ensure
-			same_if_valid: is_valid and not is_corrected implies a_string.starts_with (string)
 		end
 
-	make_with_details (a_scheme: READABLE_STRING_8; a_host: detachable READABLE_STRING_8; a_path: READABLE_STRING_8)
+	make_with_details (a_scheme: READABLE_STRING_8; a_host: detachable READABLE_STRING_GENERAL; a_path: READABLE_STRING_8)
 			-- Create Current uri from scheme `a_scheme', host `a_host' and path `a_path'.
 		do
 			create scheme.make_from_string (a_scheme)
-			if a_host /= Void then
-				create host.make_from_string (a_host)
-			else
-				host := Void
-			end
+			set_hostname (a_host)
 			create path.make_from_string (a_path)
 		end
 
@@ -298,6 +293,49 @@ feature -- Access
 	host: detachable IMMUTABLE_STRING_8
 			-- Host name.
 			--| RFC3986: host = IP-literal / IPv4address / reg-name
+
+	idn_hostname: detachable IMMUTABLE_STRING_8
+			-- Hostname, formatted with Punycode according to the IDN standard (RFC 3490).
+			--| RFC3490 Internationalizing Domain Names in Applications (IDNA):
+			--| see https://tools.ietf.org/html/rfc3490
+		do
+			Result := host
+		end
+
+	hostname: detachable STRING_32
+			-- Unicode hostname.
+			-- Decoded IDN value from `host`.
+		note
+			EIS: "name=RFC3490 Internationalizing Domain Names in Applications (IDNA)", "protocol=URI", "src=https://tools.ietf.org/html/rfc3490"
+		local
+			lst: LIST [READABLE_STRING_8]
+			s: READABLE_STRING_8
+			l_is_first: BOOLEAN
+		do
+			if attached host as h then
+				create Result.make (h.count)
+				lst := h.split ('.')
+				l_is_first := True
+				across
+					lst as ic
+				loop
+					s := ic.item
+					if l_is_first then
+						l_is_first := False
+					else
+						Result.append_character ('.')
+					end
+					if
+						s.count > 4 and then s.head (4).is_case_insensitive_equal_general ("xn--") and then
+						attached {PUNYCODE}.decoded_string (s.substring (5, s.count)) as pc
+					then
+						Result.append_string (pc)
+					else
+						Result.append_string_general (s)
+					end
+				end
+			end
+		end
 
 	port: INTEGER
 			-- Associated port, if `0' this is not defined.
@@ -458,6 +496,30 @@ feature -- Access
 						Result.force ([decoded_www_form_urlencoded_string (e.item.name), decoded_www_form_urlencoded_string (l_val)])
 					else
 						Result.force ([decoded_www_form_urlencoded_string (e.item.name), Void])
+					end
+				end
+			end
+		end
+
+	decoded_query_item (a_name: READABLE_STRING_GENERAL): detachable READABLE_STRING_32
+			-- Decoded query item associated with `a_name`.
+			-- If item exists without any value, return empty string.
+		local
+			k: READABLE_STRING_GENERAL
+		do
+			if attached query_items as lst then
+				across
+					lst as e
+				until
+					Result /= Void
+				loop
+					k := decoded_www_form_urlencoded_string (e.item.name)
+					if a_name.same_string (k) then
+						if attached e.item.value as l_val then
+							Result := decoded_www_form_urlencoded_string (l_val)
+						else
+							Result := {STRING_32} ""
+						end
 					end
 				end
 			end
@@ -655,18 +717,52 @@ feature -- Element Change
 			userinfo_set: is_same_string (v, userinfo)
 		end
 
-	set_hostname (v: detachable READABLE_STRING_8)
-			-- Set `host' to `v'
+	set_hostname (v: detachable READABLE_STRING_GENERAL)
+			-- Set `host` from string `v` formatted with Punycode according to the IDN standard if needed.
+		note
+			EIS: "name=RFC3490 Internationalizing Domain Names in Applications (IDNA)", "protocol=URI", "src=https://tools.ietf.org/html/rfc3490"
 		require
 			is_valid_host (v)
+		local
+			pc: STRING_8
+			l_is_first: BOOLEAN
+			h: STRING_8
+			s: READABLE_STRING_GENERAL
 		do
-			if v = Void then
-				host := Void
-			else
-				create host.make_from_string (v)
+			host := Void
+			if v /= Void then
+				if v.starts_with ("xn--") and then is_ascii_string (v) then
+						-- note: if starts with xn-- and has non ASCII character ...
+						--       this is wrong, consider it as normal domain name.
+					create host.make_from_string (v.to_string_8.as_lower)
+				else
+					if is_ascii_string (v) then
+						create host.make_from_string (v.to_string_8.as_lower)
+					else
+						l_is_first := True
+						create h.make (v.count)
+						across
+							v.split ('.') as ic
+						loop
+							if l_is_first then
+								l_is_first := False
+							else
+								h.append_character ('.')
+							end
+							s := ic.item
+							if is_ascii_string (s) then
+								h.append (s.to_string_8)
+							else
+								pc := {PUNYCODE}.encoded_string (s)
+								h.append ("xn--")
+								h.append (pc)
+							end
+						end
+						check h_is_lower_case: h.same_string (h.as_lower) end
+						create host.make_from_string (h)
+					end
+				end
 			end
-		ensure
-			hostname_set: is_same_string (v, host)
 		end
 
 	set_port (v: like port)
@@ -749,7 +845,7 @@ feature -- Element Change
 			else
 				create s.make_from_string (path)
 				s.append_character ('/')
-				append_percent_encoded_string_to (a_segment, s)
+				append_path_segment_encoded_string_to (a_segment, s)
 				set_path (s)
 			end
 		end
@@ -790,6 +886,30 @@ feature -- Change: query
 			query := Void
 		end
 
+	add_encoded_query_parameter (a_name: READABLE_STRING_8; a_value: detachable READABLE_STRING_8)
+			-- Add already encoded parameters, used to bypass strict rules.
+			-- Warning: depending on systems, this may be unsafe, and some systems can possibly
+			-- modify characters such as: { } | \ ^ ~ [ ] `
+		local
+			q: detachable STRING
+		do
+			if attached query as l_query then
+				create q.make_from_string (l_query)
+			else
+				create q.make_empty
+			end
+			if not q.is_empty then
+				q.append_character ('&')
+			end
+
+			q.append (a_name)
+			if a_value /= Void then
+				q.append_character ('=')
+				q.append (a_value)
+			end
+			create query.make_from_string (q)
+		end
+
 	add_query_parameter (a_name: READABLE_STRING_GENERAL; a_value: detachable READABLE_STRING_GENERAL)
 			-- Add non percent-encoded parameters
 		local
@@ -804,10 +924,10 @@ feature -- Change: query
 				q.append_character ('&')
 			end
 
-			q.append (www_form_urlencoded_string (a_name))
+			append_query_name_encoded_string_to (a_name, q)
 			if a_value /= Void then
 				q.append_character ('=')
-				q.append (www_form_urlencoded_string (a_value))
+				append_query_value_encoded_string_to (a_value, q)
 			end
 			create query.make_from_string (q)
 		end
@@ -1053,6 +1173,23 @@ feature -- Status report
 			end
 		end
 
+	is_ascii_string (a_string: READABLE_STRING_GENERAL): BOOLEAN
+			-- Is `a_string` containing only ASCII characters?
+		local
+			i,n: INTEGER
+		do
+			from
+				i := 1
+				n := a_string.count
+				Result := True
+			until
+				i > n or not Result
+			loop
+				Result := a_string.code (i) <= 127 --| note: 127 = {CHARACTER_8}.max_ascii_value
+				i := i + 1
+			end
+		end
+
 feature -- Helper
 
 	string_item (s: READABLE_STRING_GENERAL; i: INTEGER): CHARACTER_32
@@ -1065,7 +1202,8 @@ feature -- Helper
 			-- character encoding is UTF-8.
 			-- See http://www.w3.org/TR/html5/forms.html#url-encoded-form-data
 		do
-			append_percent_encoded_string_to (a_string, a_target)
+
+			append_www_form_url_encoded_string_to (a_string, a_target)
 		end
 
 	www_form_urlencoded_string (a_string: READABLE_STRING_GENERAL): STRING_8
@@ -1074,7 +1212,7 @@ feature -- Helper
 			-- See http://www.w3.org/TR/html5/forms.html#url-encoded-form-data
 		do
 			create Result.make (a_string.count)
-			append_percent_encoded_string_to (a_string, Result)
+			append_www_form_urlencoded_string_to (a_string, Result)
 		end
 
 	append_decoded_www_form_urlencoded_string_to (a_string: READABLE_STRING_GENERAL; a_target: STRING_GENERAL)
@@ -1137,7 +1275,7 @@ feature -- Status report
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

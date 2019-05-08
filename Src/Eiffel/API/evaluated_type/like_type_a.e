@@ -432,7 +432,7 @@ feature -- Modification
 
 	set_is_implicitly_attached
 		local
-			t: TYPE_A
+			t: like actual_type
 		do
 				-- Make sure `actual_type' does not affect attachment status.
 			t := actual_type
@@ -445,7 +445,7 @@ feature -- Modification
 
 	unset_is_implicitly_attached
 		local
-			t: TYPE_A
+			t: like actual_type
 		do
 				-- Make sure `actual_type' does not affect attachment status.
 			t := actual_type
@@ -687,7 +687,7 @@ feature {TYPE_A} -- Helpers
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

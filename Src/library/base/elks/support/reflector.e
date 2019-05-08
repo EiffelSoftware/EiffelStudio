@@ -93,22 +93,22 @@ feature -- Creation
 			dynamic_type_set: attached_type (Result.generating_type.type_id) = attached_type (type_id)
 		end
 
-	new_special_any_instance (type_id, count: INTEGER): SPECIAL [detachable ANY]
+	new_special_any_instance (type_id, a_capacity: INTEGER): SPECIAL [detachable ANY]
 			-- New instance of dynamic `type_id' that represents
-			-- a SPECIAL with `count' element. To create a SPECIAL of
-			-- basic type, use `SPECIAL'.
+			-- a SPECIAL with can contain `a_capacity' elements of reference type.
+			-- To create a SPECIAL of basic type, use class SPECIAL directly.
 		require
-			count_valid: count >= 0
+			a_capacity_valid: a_capacity >= 0
 			type_id_nonnegative: type_id >= 0
 			special_type: is_special_any_type (type_id)
 		do
-			create Result.make_empty (count)
+			create Result.make_empty (a_capacity)
 			c_set_dynamic_type (Result, type_id)
 		ensure
 			instance_free: class
 			dynamic_type_set: Result.generating_type.type_id = type_id
 			count_set: Result.count = 0
-			capacity_set: Result.capacity = count
+			capacity_set: Result.capacity = a_capacity
 		end
 
 	new_tuple_from_special (type_id: INTEGER; values: SPECIAL [detachable separate ANY]): detachable TUPLE
@@ -220,7 +220,8 @@ feature -- Status report
 	is_special_type (type_id: INTEGER): BOOLEAN
 			-- Is type represented by `type_id' represent
 			-- a SPECIAL [XX] where XX is a reference type
-			-- or a basic type.
+			-- or a basic expanded type (note that user-defined
+			-- expanded types are excluded).
 		require
 			type_id_nonnegative: type_id >= 0
 		external

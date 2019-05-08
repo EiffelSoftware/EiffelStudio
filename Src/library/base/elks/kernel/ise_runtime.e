@@ -97,7 +97,7 @@ feature -- Internal C routines
 		end
 
 	frozen is_attached_type (a_type_id: INTEGER): BOOLEAN
-			-- Is `a_type' an attached type?
+			-- Is `a_type_id' an attached type?
 		external
 			"built_in static"
 		ensure
@@ -105,7 +105,7 @@ feature -- Internal C routines
 		end
 
 	frozen detachable_type (a_type_id: INTEGER): INTEGER
-			-- Detachable version of `a_type'
+			-- Detachable version of `a_type_id'
 		external
 			"built_in static"
 		ensure
@@ -113,7 +113,7 @@ feature -- Internal C routines
 		end
 
 	frozen attached_type (a_type_id: INTEGER): INTEGER
-			-- Attached version of `a_type'
+			-- Attached version of `a_type_id'
 		external
 			"built_in static"
 		ensure
@@ -121,7 +121,7 @@ feature -- Internal C routines
 		end
 
 	frozen is_field_transient_of_type (i: INTEGER; a_type_id: INTEGER): BOOLEAN
-			-- Is `i-th' field (zero based index) a transient field?
+			-- Is `i-th' field a transient field?
 		external
 			"built_in static"
 		ensure
@@ -129,7 +129,7 @@ feature -- Internal C routines
 		end
 
 	frozen is_field_expanded_of_type (i: INTEGER; a_type_id: INTEGER): BOOLEAN
-			-- Is `i'-th field of `object' an expanded attribute?
+			-- Is `i'-th field of `object' a user-defined expanded attribute?
 		external
 			"built_in static"
 		ensure
@@ -161,7 +161,7 @@ feature -- Internal C routines
 feature -- Internal support
 
 	frozen reference_field_at_offset (a_enclosing: POINTER; a_physical_offset: INTEGER): ANY
-			-- Retrieve the reference field of `a_enclosing' located at `a_physical_offset' bytes.
+			-- Object at `a_physical_offset' bytes from `a_enclosing'.
 		external
 			"built_in static"
 		ensure
@@ -169,7 +169,7 @@ feature -- Internal support
 		end
 
 	frozen raw_reference_field_at_offset (a_enclosing: POINTER; a_physical_offset: INTEGER): POINTER
-			-- Retrieve the unprotected reference field of `a_enclosing' located at `a_physical_offset' bytes.
+			-- Unprotected object at `a_physical_offset' bytes from `a_enclosing'..
 		external
 			"built_in static"
 		ensure
@@ -177,7 +177,7 @@ feature -- Internal support
 		end
 
 	frozen dynamic_type_at_offset (a_enclosing: POINTER; a_physical_offset: INTEGER): INTEGER_32
-			-- Dynamic type of the field at `a_physical_offset' bytes from `a_enclosing'.
+			-- Dynamic type of the object at `a_physical_offset' bytes from `a_enclosing'.
 		external
 			"built_in static"
 		ensure
@@ -193,7 +193,7 @@ feature -- Internal support
 		end
 
 	frozen is_special_copy_semantics_item (i: INTEGER; a_object: POINTER): BOOLEAN
-			-- Does `i'-th item of specia `a_object' denote a reference with copy semantics?
+			-- Does `i'-th item of special `a_object' denote a reference with copy semantics?
 		external
 			"built_in static"
 		ensure
@@ -209,7 +209,7 @@ feature -- Internal support
 		end
 
 	frozen field_offset_of_type (i: INTEGER; a_type_id: INTEGER): INTEGER
-			-- Physical offset of the `i'-th field for an object of dynamic type `a_type'.
+			-- Physical offset of the `i'-th field for an object of dynamic type `a_type_id'.
 		external
 			"built_in static"
 		ensure

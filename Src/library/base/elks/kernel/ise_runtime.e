@@ -17,42 +17,42 @@ feature -- Feature specific to ISE runtime.
 
 	frozen generator_of_type (a_type_id: INTEGER): STRING
 			-- Name of the generating class of current object
- 		external
- 			"built_in static"
+		external
+			"built_in static"
 		ensure
 			instance_free: class
- 		end
+		end
 
 	frozen check_assert (b: BOOLEAN): BOOLEAN
- 		external
- 			"built_in static"
+		external
+			"built_in static"
 		ensure
 			instance_free: class
- 		end
+		end
 
- 	frozen generating_type_of_type (a_type_id: INTEGER): STRING
- 		external
- 			"built_in static"
+	frozen generating_type_of_type (a_type_id: INTEGER): STRING
+		external
+			"built_in static"
 		ensure
 			instance_free: class
- 		end
+		end
 
 	frozen in_assertion: BOOLEAN
 			-- Are we currently checking some assertions?
- 		external
- 			"built_in static"
+		external
+			"built_in static"
 		ensure
 			instance_free: class
- 		end
+		end
 
 	frozen once_objects (a_result_type_id: INTEGER): SPECIAL [ANY]
 			-- Once objects initialized in current system.
 			-- `a_result_type_id' is the dynamic type of `SPECIAL [ANY]'.
- 		external
- 			"built_in static"
+		external
+			"built_in static"
 		ensure
 			instance_free: class
- 		end
+		end
 
 feature -- Internal C routines
 
@@ -62,7 +62,7 @@ feature -- Internal C routines
 			"built_in static"
 		ensure
 			instance_free: class
- 		end
+		end
 
 	frozen type_id_from_name (s: POINTER): INTEGER
 			-- Dynamic type whose name is represented by `s'.
@@ -70,7 +70,7 @@ feature -- Internal C routines
 			"built_in static"
 		ensure
 			instance_free: class
- 		end
+		end
 
 	frozen dynamic_type (object: separate ANY): INTEGER
 			-- Dynamic type of `object'.

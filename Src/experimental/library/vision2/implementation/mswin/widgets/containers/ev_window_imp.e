@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Eiffel Vision window. Mswindows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,9 +34,6 @@ inherit
 			client_y,
 			parent_ask_resize,
 			set_default_minimum_size,
-			compute_minimum_width,
-			compute_minimum_height,
-			compute_minimum_size,
 			on_destroy,
 			interface,
 			on_size,
@@ -107,8 +104,8 @@ inherit
 			default_ex_style,
 			default_style,
 			on_size,
+			on_dpi_changed,
 			on_get_min_max_info,
-			on_destroy,
 			on_show,
 			on_hide,
 			on_move,
@@ -1220,6 +1217,52 @@ feature {EV_ANY_I} -- Implementation
 		-- `height' and `width'. Therefore we store them internally,
 		-- and restore them in on_show if necessary.
 
+
+	on_dpi_changed (a_dpi: INTEGER)
+			-- WM_dpichange message.
+			-- This message is sent to a window whose dpi changed,
+		local
+			bar_imp: detachable EV_VERTICAL_BOX_IMP
+			w_rect: WEL_RECT
+		do
+			if interface /= Void then
+				w_rect := window_rect
+				internal_set_size (w_rect.width, w_rect.height)
+
+				if not upper_bar.is_empty then
+					bar_imp ?= upper_bar.implementation
+					check
+						bar_imp_not_void: bar_imp /= Void then
+					end
+					bar_imp.set_move_and_size (0, 0, client_width, client_y)
+				end
+
+				if attached item_imp as l_item_imp then
+					l_item_imp.set_move_and_size (client_x, client_y,
+						client_width, client_height)
+				end
+
+				if not lower_bar.is_empty then
+					bar_imp ?= lower_bar.implementation
+					check
+						bar_imp_not_void: bar_imp /= Void then
+					end
+					bar_imp.set_move_and_size (0,
+						client_y + client_height + 1,
+						client_width, bar_imp.minimum_height)
+				end
+
+					-- Calls user actions if any
+				execute_dpi_actions (a_dpi, client_width, client_height)
+			end
+		end
+
+	execute_dpi_actions (a_dpi, a_width, a_height: INTEGER)
+			-- execute `resize_actions_internal' if not Void.
+		do
+			trigger_resize_actions (a_width, a_height)
+		end
+
 feature {EV_ANY_I} -- Implementation
 
 	--accelerators: WEL_ACCELERATORS
@@ -1450,10 +1493,8 @@ feature {NONE} -- Features that should be directly implemented by externals
 
 	cwin_get_next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER
 			-- SDK GetNextDlgGroupItem
-		external
-			"C [macro <wel.h>] (HWND, HWND, BOOL): HWND"
-		alias
-			"GetNextDlgTabItem"
+		do
+			Result := {WEL_CONTROL}.c_cwin_get_next_dlgtabitem (hdlg, hctl, previous)
 		end
 
 	get_wm_hscroll_code (wparam, lparam: POINTER): INTEGER
@@ -1521,12 +1562,12 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 			-- <Precursor>
 		do
 				-- Windows and descendents are not shown by default.
-			Result := False
+			-- Result := False
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA
@@ -1535,19 +1576,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_WINDOW_IMP
-
-
-
-
-
-
-
-
-
-
-
-
+end

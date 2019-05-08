@@ -52,6 +52,7 @@ feature {NONE} -- Initialization
 			create l_uri_string.make (a_string.count)
 			iri_into_uri (a_string, l_uri_string)
 			make_from_uri_string (l_uri_string)
+			set_hostname (to_internationalized_percent_encoded_string (host))
 		end
 
 	make_from_uri (a_uri: URI)
@@ -263,7 +264,7 @@ feature -- Query
 		local
 			s: STRING_32
 		do
-			if attached host as h then
+			if attached hostname as h then
 				if attached userinfo as u then
 					create s.make_from_string (u)
 					s.append_character ('@')
@@ -360,8 +361,7 @@ feature {NONE} -- Implementation: Internationalization
 			-- Result is Void if `s' is Void.
 		do
 			if s /= Void then
-				create Result.make (s.count)
-				append_percent_encoded_string_into_internationalized_percent_encoded_string (s, Result)
+				Result := to_attached_internationalized_percent_encoded_string (s)
 			end
 		end
 
@@ -429,7 +429,7 @@ feature {NONE} -- Implementation: Internationalization
 
 
 ;note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

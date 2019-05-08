@@ -13,9 +13,17 @@ feature -- Types
 
 	max_integer_type: INTEGER_64
 			-- INTEGER type of max word length
+		do
+		ensure
+			instance_free: class
+		end
 
 	max_natural_type: NATURAL_64
 			-- NATURAL type of max word length
+		do
+		ensure
+			instance_free: class
+		end
 
 	type_count: INTEGER = 4
 			-- Number of types of integer/natural in Eiffel
@@ -49,6 +57,8 @@ feature -- Type checking
 					  (type = type_integer_16) or
 					  (type = type_integer_32) or
 					  (type = type_integer_64)
+		ensure
+			instance_free: class
 		end
 
 	natural_type_valid (type: INTEGER): BOOLEAN
@@ -58,6 +68,8 @@ feature -- Type checking
 					  (type = type_natural_16) or
 					  (type = type_natural_32) or
 					  (type = type_natural_64)
+		ensure
+			instance_free: class
 		end
 
 	integer_natural_type_valid (type: INTEGER): BOOLEAN
@@ -72,6 +84,8 @@ feature -- Type checking
 					  (type = type_natural_16) or
 					  (type = type_natural_32) or
 					  (type = type_natural_64)
+		ensure
+			instance_free: class
 		end
 
 	real_double_type_valid (type: INTEGER): BOOLEAN
@@ -79,24 +93,30 @@ feature -- Type checking
 		do
 			Result :=
 				type = type_no_limitation or
-				  type = type_real or
-				  type = type_double
+				type = type_real or
+				type = type_double
+		ensure
+			instance_free: class
 		end
 
 	real_type_valid (type: INTEGER): BOOLEAN
 			-- Is `type' a valid real type?
 		do
 			Result := type = type_real
+		ensure
+			instance_free: class
 		end
 
 	double_type_valid (type: INTEGER): BOOLEAN
 			-- Is `type' a valid double type?
 		do
 			Result := type = type_double
+		ensure
+			instance_free: class
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

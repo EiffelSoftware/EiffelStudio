@@ -20,8 +20,8 @@ feature -- Access
 	l_request_restart: STRING_32	do Result := " (REQUIRES RESTART)" end
 	l_tree_view: STRING_32			do Result := "Tree View" end
 	f_switch_to_tree_view: STRING_32 do Result := "Switch to Tree View" end
-	l_flat_view: STRING_32			do Result := "Flat View" end
-	f_switch_to_flat_view: STRING_32 do Result := "Switch to Flat View" end
+	l_flat_view: STRING_32			do Result := "Search..." end
+	f_switch_to_flat_view: STRING_32 do Result := "Switch to search mode" end
 
 	l_matches_of_total_preferences (a_count: INTEGER; a_total_count: INTEGER): STRING_32
 		do
@@ -38,7 +38,7 @@ feature -- Access
 	l_updating_the_view: STRING_32 	do Result := "Updating the view ..." end
 	l_filter: STRING_32				do Result := "Filter:" end
 	l_filter_value: STRING_32			do Result := "Include Values?" end
-	l_tree_or_flat_view: STRING_32		do Result := "Tree/Flat View" end
+	l_tree_or_flat_view: STRING_32		do Result := "Tree/Search View" end
 	l_restore_defaults: STRING_32 		do Result := "Restore Defaults" end
 	l_import_preferences: STRING_32 	do Result := "Import ..." end
 	l_importing_preferences: STRING_32 	do Result := "Importing ..." end
@@ -50,7 +50,7 @@ feature -- Access
 	l_apply: STRING_32					do Result := "Apply" end
 	l_display_window: STRING_32 		do Result := "Display window" end
 	l_description: STRING_32			do Result := "Description" end
-	l_building_flat_view: STRING_32	do Result := "Building flat view ..." end
+	l_building_flat_view: STRING_32	do Result := "Building search view ..." end
 	l_building_tree_view: STRING_32	do Result := "Building tree view ..." end
 
 
@@ -93,7 +93,7 @@ feature -- Access
 		-- Base name of the file that contains the icon of the preferences window.
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

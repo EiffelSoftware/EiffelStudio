@@ -297,6 +297,8 @@ feature {EV_GTK_CALLBACK_MARSHAL} -- Externals
 			"C inline use %"ev_gtk_callback_marshal.h%""
 		alias
 			"c_ev_gtk_callback_marshal_init ((EIF_REFERENCE) $object, (void (*) (EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER, EIF_POINTER)) $a_marshal);"
+		ensure
+			is_class: class
 		end
 
 	frozen c_ev_gtk_callback_marshal_destroy
@@ -304,6 +306,8 @@ feature {EV_GTK_CALLBACK_MARSHAL} -- Externals
 			-- See ev_gtk_callback_marshal.c
 		external
 			"C | %"ev_gtk_callback_marshal.h%""
+		ensure
+			is_class: class
 		end
 
 feature -- Implementation
@@ -312,6 +316,8 @@ feature -- Implementation
 			-- See ev_gtk_callback_marshal.c
 		external
 			"C signature (int) use %"ev_gtk_callback_marshal.h%""
+		ensure
+			is_class: class
 		end
 
 feature {EV_ANY_IMP, EV_GTK_CALLBACK_MARSHAL} -- Externals
@@ -322,6 +328,8 @@ feature {EV_ANY_IMP, EV_GTK_CALLBACK_MARSHAL} -- Externals
 				-- Set up signal handlers.
 		external
 			"C macro use %"ev_any_imp.h%""
+		ensure
+			is_class: class
 		end
 
 	frozen c_signal_connect (a_c_object: POINTER; a_signal_name: POINTER;
@@ -331,6 +339,8 @@ feature {EV_ANY_IMP, EV_GTK_CALLBACK_MARSHAL} -- Externals
 			"C (GtkObject*, gchar*, EIF_OBJECT, gboolean): guint | %"ev_gtk_callback_marshal.h%""
 		alias
 			"c_ev_gtk_callback_marshal_signal_connect"
+		ensure
+			is_class: class
 		end
 
 	frozen c_signal_connect_true (a_c_object: POINTER; a_signal_name: POINTER;
@@ -340,6 +350,8 @@ feature {EV_ANY_IMP, EV_GTK_CALLBACK_MARSHAL} -- Externals
 			"C (GtkObject*, gchar*, EIF_OBJECT): guint | %"ev_gtk_callback_marshal.h%""
 		alias
 			"c_ev_gtk_callback_marshal_signal_connect_true"
+		ensure
+			is_class: class
 		end
 
 feature {EV_APPLICATION_IMP, EV_TIMEOUT_IMP} -- Externals
@@ -349,10 +361,12 @@ feature {EV_APPLICATION_IMP, EV_TIMEOUT_IMP} -- Externals
 			-- Call `an_agent' after `a_delay'.
 		external
 			"C (gint, EIF_OBJECT): EIF_INTEGER | %"ev_gtk_callback_marshal.h%""
+		ensure
+			is_class: class
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -362,18 +376,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_GTK_CALLBACK_MARSHAL
-
-
-
-
-
-
-
-
-
-
-
+end

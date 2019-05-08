@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Versioning information about Windows"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -91,13 +91,20 @@ feature -- Constants
 feature -- Measurement
 
 	structure_size: INTEGER
+			-- <Precursor>
+		do
+			Result := c_structure_size
+		end
+
+feature {NONE} -- Implementation
+
+	c_structure_size: INTEGER
+			-- Implementation of `c_structure_size`.
 		external
 			"C inline use <windows.h>"
 		alias
 			"return sizeof(OSVERSIONINFO);"
 		end
-
-feature {NONE} -- Implementation
 
 	c_set_struct_size (a_ptr: POINTER; a_size: INTEGER)
 		require
@@ -146,7 +153,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -71,6 +71,7 @@ feature -- Command
 			l_docking_manager.zones.zones.add_actions.extend (agent on_added_zone)
 			l_docking_manager.zones.zones.remove_actions.extend (agent on_pruned_zone)
 			l_docking_manager.internal_viewport.resize_actions.extend (agent on_resize (?, ?, ?, ?, False))
+			l_docking_manager.internal_viewport.dpi_changed_actions.extend (agent on_dpi_change_resize (?, ?, ?, ?, ?, False))
 
 			ev_application.pointer_button_press_actions.extend (widget_pointer_press_handler)
 			ev_application.pointer_button_press_actions.extend (widget_pointer_press_for_upper_zone_handler)
@@ -87,7 +88,6 @@ feature  -- Agents
 			not_destroyed: not is_destroyed
 		local
 			l_auto_hide_zone: detachable SD_AUTO_HIDE_ZONE
-			l_zones: ARRAYED_LIST [SD_ZONE]
 			l_content: detachable SD_CONTENT
 			l_setter: SD_SYSTEM_SETTER
 			l_docking_manager: like docking_manager
@@ -95,23 +95,18 @@ feature  -- Agents
 			create {SD_SYSTEM_SETTER_IMP} l_setter
 			if not l_setter.is_during_pnd then
 				l_docking_manager := docking_manager
-				l_zones := l_docking_manager.zones.zones.twin
-				from
-					l_zones.start
-				until
-					l_zones.after
+				across
+					l_docking_manager.zones.zones.twin as ic
 				loop
-					if attached {EV_CONTAINER} l_zones.item as lt_container then
+					if
+						attached ic.item as l_zone and then
+						attached {EV_CONTAINER} l_zone as lt_container then
 						if
 							not lt_container.is_destroyed and then
 							(is_parent_recursive (lt_container, a_widget) and not ignore_additional_click) and
-							l_zones.item.content /= l_docking_manager.zones.place_holder_content
+							l_zone.content /= l_docking_manager.zones.place_holder_content
 						then
-							if l_docking_manager.property.last_focus_content /= l_zones.item.content then
-								l_docking_manager.property.set_last_focus_content (l_zones.item.content)
-								l_zones.item.on_focus_in (Void)
-								l_zones.item.content.focus_in_actions.call (Void)
-							else
+							if l_docking_manager.property.last_focus_content = l_zone.content then
 								l_content := l_docking_manager.property.last_focus_content
 								if
 									l_content /= Void and then
@@ -124,13 +119,15 @@ feature  -- Agents
 								elseif l_auto_hide_zone /= Void then
 									l_auto_hide_zone.set_focus_color (True)
 								end
+							else
+								l_docking_manager.property.set_last_focus_content (l_zone.content)
+								l_zone.on_focus_in (Void)
+								l_zone.content.focus_in_actions.call (Void)
 							end
 						end
 					else
 						check not_possible: False end
 					end
-
-					l_zones.forth
 				end
 
 				ignore_additional_click := False
@@ -141,17 +138,12 @@ feature  -- Agents
 			-- Handle EV_APPLICATION's pointer button press actions, for recover SD_UPPER_ZONE's size
 		require
 			not_destroyed: not is_destroyed
-		local
-			l_zones: ARRAYED_LIST [SD_ZONE]
 		do
-			l_zones := docking_manager.zones.zones.twin
-			from
-				l_zones.start
-			until
-				l_zones.after
+			across
+				docking_manager.zones.zones.twin as ic
 			loop
-				if attached {SD_UPPER_ZONE} l_zones.item as l_upper_zone then
-					if attached {EV_CONTAINER} l_zones.item as lt_container then
+				if attached {SD_UPPER_ZONE} ic.item as l_upper_zone then
+					if attached {EV_CONTAINER} ic.item as lt_container then
 						if
 							is_parent_recursive (lt_container, a_widget) and then
 							not attached {EV_TOOL_BAR} a_widget and then -- We ignore click on tool bar.
@@ -164,8 +156,6 @@ feature  -- Agents
 						check not_possible: False end
 					end
 				end
-
-				l_zones.forth
 			end
 		end
 
@@ -217,6 +207,15 @@ feature  -- Agents
 				end
 			end
 			l_docking_manager.tool_bar_manager.on_resize (a_x, a_y, l_docking_manager.internal_viewport.width, l_docking_manager.internal_viewport.height, a_force)
+		end
+
+
+	on_dpi_change_resize (a_dpi,a_x: INTEGER; a_y: INTEGER; a_width: INTEGER; a_height: INTEGER; a_force: BOOLEAN)
+			-- Handle dpi change zone event. Resize all the widgets in fixed_area (EV_FIXED)
+		require
+			not_destroyed: not is_destroyed
+		do
+			on_resize (a_x, a_y, a_width, a_height, a_force)
 		end
 
 	on_added_zone (a_zone: SD_ZONE)
@@ -311,32 +310,20 @@ feature  -- Agents
 		end
 
 	on_top_level_window_focus_out
-			-- Handle top level window focus out actions
-		local
-			l_floating_zones: ARRAYED_LIST [SD_FLOATING_ZONE]
-			l_has_focus: BOOLEAN
+			-- Handle top level window focus out actions.
 		do
-			if not is_destroyed and then is_docking_manager_attached then
-				if not docking_manager.main_window.is_destroyed and not docking_manager.property.is_opening_config then
-					l_floating_zones := docking_manager.query.floating_zones
-					l_has_focus := docking_manager.main_window.has_focus
-					if not l_has_focus then
-						from
-							l_floating_zones.start
-						until
-							l_floating_zones.after or l_has_focus
-						loop
-							l_has_focus := l_floating_zones.item.has_focus
-							l_floating_zones.forth
-						end
-					end
-					if not l_has_focus then
-						--FIXIT: Currently we disable this feature
-						-- Because when show a dialog, it'll get focus, make main window lost focus
-						-- We should make a window can never get focus first
-		--				docking_manager.tool_bar_manager.hide_all_floating
-					end
-				end
+			if
+				not is_destroyed and then
+				is_docking_manager_attached and then
+				not docking_manager.main_window.is_destroyed and
+				not docking_manager.property.is_opening_config and then
+				not docking_manager.main_window.has_focus and then
+				not across docking_manager.query.floating_zones as ic some ic.item.has_focus end
+			then
+					-- TODO: Currently we disable this feature
+					-- Because when show a dialog, it'll get focus, make main window lost focus
+					-- We should make a window can never get focus first
+				-- docking_manager.tool_bar_manager.hide_all_floating
 			end
 		end
 
@@ -398,16 +385,14 @@ feature  -- Agents
 			l_screen_x := l_position.x
 			l_screen_y := l_position.y
 
-			if not notify_one_auto_hide_panel ({SD_ENUMERATION}.top, l_widget, l_screen_x, l_screen_y) then
-				if not notify_one_auto_hide_panel ({SD_ENUMERATION}.bottom, l_widget, l_screen_x, l_screen_y) then
-					if not notify_one_auto_hide_panel ({SD_ENUMERATION}.left, l_widget, l_screen_x, l_screen_y) then
-						if not notify_one_auto_hide_panel ({SD_ENUMERATION}.right, l_widget, l_screen_x, l_screen_y) then
-							if not pointer_in_tab then
-								focused_tab_stub := Void
-							end
-						end
-					end
-				end
+			if
+				not notify_one_auto_hide_panel ({SD_ENUMERATION}.top, l_widget, l_screen_x, l_screen_y) and then
+				not notify_one_auto_hide_panel ({SD_ENUMERATION}.bottom, l_widget, l_screen_x, l_screen_y) and then
+				not notify_one_auto_hide_panel ({SD_ENUMERATION}.left, l_widget, l_screen_x, l_screen_y) and then
+				not notify_one_auto_hide_panel ({SD_ENUMERATION}.right, l_widget, l_screen_x, l_screen_y) and then
+				not pointer_in_tab
+			then
+				focused_tab_stub := Void
 			end
 
 			debug ("docking")
@@ -471,10 +456,12 @@ feature -- Destory
 			-- Destory all underline objects
 		local
 			l_main_window: EV_WINDOW
+			ev_app: like ev_application
 		do
 			if attached docking_manager as l_docking_manager then
 				if attached l_docking_manager.internal_viewport as l_viewport then
 					l_viewport.resize_actions.wipe_out
+					l_viewport.dpi_changed_actions.wipe_out
 				else
 					check viewport_attached: False end
 				end
@@ -484,13 +471,13 @@ feature -- Destory
 				l_main_window.focus_out_actions.prune_all (top_level_window_focus_out)
 				l_main_window.focus_in_actions.prune_all (top_level_window_focus_in)
 			end
-
-			ev_application.pnd_motion_actions.prune_all (pnd_motion_actions_handler)
-			ev_application.pick_actions.prune_all (pick_actions_handler)
-			ev_application.drop_actions.prune_all (drop_actions_handler)
-			ev_application.theme_changed_actions.prune_all (theme_changed_handler)
-			ev_application.pointer_button_press_actions.prune_all (widget_pointer_press_handler)
-			ev_application.pointer_button_press_actions.prune_all (widget_pointer_press_for_upper_zone_handler)
+			ev_app := ev_application
+			ev_app.pnd_motion_actions.prune_all (pnd_motion_actions_handler)
+			ev_app.pick_actions.prune_all (pick_actions_handler)
+			ev_app.drop_actions.prune_all (drop_actions_handler)
+			ev_app.theme_changed_actions.prune_all (theme_changed_handler)
+			ev_app.pointer_button_press_actions.prune_all (widget_pointer_press_handler)
+			ev_app.pointer_button_press_actions.prune_all (widget_pointer_press_for_upper_zone_handler)
 			focused_tab_stub := Void
 			clear_docking_manager
 
@@ -502,35 +489,18 @@ feature -- Destory
 feature -- Contract support
 
 	user_widget_valid (a_content: SD_CONTENT): BOOLEAN
-			-- Dose a_widget alreay in docking library?
+			-- Does a_content alreay in docking system?
 		require
 			not_destroyed: not is_destroyed
-		local
-			l_found: BOOLEAN
-			l_contents: ARRAYED_LIST [SD_CONTENT]
 		do
-			l_contents := docking_manager.contents.twin
-
-			from
-				l_contents.start
-			until
-				l_contents.after or l_found
-			loop
-				if l_contents.item /= a_content then
-					if attached {EV_CONTAINER} l_contents.item.user_widget as l_container then
-						if l_container.has_recursive (a_content.user_widget) then
-							l_found := True
-						end
-					end
-
-					if a_content.user_widget = l_contents.item.user_widget then
-						l_found := True
-					end
-				end
-
-				l_contents.forth
+			Result := not across
+				docking_manager.contents as ic
+			some
+				ic.item /= a_content and then
+				(attached {EV_CONTAINER} ic.item.user_widget as l_container and then
+				l_container.has_recursive (a_content.user_widget) or else
+				ic.item.user_widget = a_content.user_widget)
 			end
-			Result := not l_found
 		end
 
 	title_unique (a_content: SD_CONTENT): BOOLEAN
@@ -538,22 +508,13 @@ feature -- Contract support
 		require
 			not_destroyed: not is_destroyed
 			a_content_not_void: a_content /= Void
-		local
-			l_contents: ARRAYED_LIST [SD_CONTENT]
 		do
-			l_contents := docking_manager.contents.twin
-			Result := True
-
-			from
-				l_contents.start
-			until
-				l_contents.after or not Result
-			loop
-				if l_contents.item /= a_content then
-					Result := not l_contents.item.unique_title.as_string_32.is_equal (a_content.unique_title.as_string_32)
+			Result :=
+				across
+					docking_manager.contents as ic
+				all
+					ic.item = a_content or else not ic.item.unique_title.same_string (a_content.unique_title)
 				end
-				l_contents.forth
-			end
 		end
 
 	is_destroyed: BOOLEAN
@@ -646,7 +607,7 @@ invariant
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

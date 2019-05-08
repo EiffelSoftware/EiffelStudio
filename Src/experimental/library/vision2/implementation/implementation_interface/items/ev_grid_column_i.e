@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Column of an EV_GRID, containing EV_GRID_ITEMs."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -372,7 +372,7 @@ feature -- Status setting
 			-- row index `start_row', `end_row' that are not hidden (i.e. `is_show_requested' is True).
 		require
 			parented: attached parent as l_parent
-			valid_rows: start_row >= 1 and end_row <= l_parent.row_count and start_row <= end_row
+			valid_rows: start_row >= 1 and end_row <= l_parent.row_count and start_row - 1 <= end_row
 		local
 			item_counter: INTEGER
 			parent_row_count: INTEGER
@@ -801,7 +801,7 @@ invariant
 	physical_index_set: parent /= Void implies physical_index >= 0
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

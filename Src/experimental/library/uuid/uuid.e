@@ -1,7 +1,5 @@
-note
-	description: "[
-		Represents a UUID
-	]"
+﻿note
+	description: "UUID representation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -38,8 +36,10 @@ create {UUID_GENERATOR}
 
 feature {NONE} -- Initialization
 
-	make (d1: like data_1; d2: like data_2; d3: like data_3; d4: like data_4; d5: like data_5;)
+	make (d1: like data_1; d2: like data_2; d3: like data_3; d4: like data_4; d5: like data_5)
 			-- Initialize a UUID from data segments: `d1', `d2', `d3', `d4' and `d5'.
+		note
+			ca_ignore: "CA011", "CA011: too many arguments"
 		do
 			data_1 := d1
 			data_2 := d2
@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 
 	make_from_string (a_uuid: READABLE_STRING_GENERAL)
 			-- Initialize UUID from a string.
-			-- `a_uuid' must be in the form of FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF
+			-- `a_uuid' must be in the form of "FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF".
 		require
 			a_uuid_attached: a_uuid /= Void
 			is_valid_uuid: is_valid_uuid (a_uuid)
@@ -142,19 +142,19 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	data_1: NATURAL_32
-			-- First data segment
+			-- First data segment.
 
 	data_2: NATURAL_16
-			-- Second data segment
+			-- Second data segment.
 
 	data_3: NATURAL_16
-			-- Third data segment
+			-- Third data segment.
 
 	data_4: NATURAL_16
-			-- Fourth data segment
+			-- Fourth data segment.
 
 	data_5: NATURAL_64
-			-- Fifth and final data segment
+			-- Fifth and final data segment.
 
 	hash_code: INTEGER
 			-- <Precursor>
@@ -181,9 +181,7 @@ feature -- Status report
 		local
 			i: INTEGER
 		do
-			if a_uuid.count /= 36 then
-				Result := False
-			else
+			if a_uuid.count = 36 then
 				Result := True
 				from
 					i := 1
@@ -191,13 +189,15 @@ feature -- Status report
 					not Result or i > 36
 				loop
 					if i = 9 or i = 14 or i = 19 or i = 24 then
-						Result := a_uuid.item (i) = separator_char
+						Result := a_uuid [i] = separator_char
 					else
-						Result := a_uuid.item (i).is_hexa_digit
+						Result := a_uuid [i].is_hexa_digit
 					end
 					i := i + 1
 				end
 			end
+		ensure
+			instance_free: class
 		end
 
 feature -- Comparison
@@ -223,7 +223,7 @@ feature -- Comparison
 feature -- Conversion
 
 	string: STRING_32
-			-- New string containing terse printable representation
+			-- New string containing terse printable representation.
 		do
 			create Result.make (37)
 			Result.append_string_general (data_1.to_hex_string)
@@ -241,7 +241,7 @@ feature -- Conversion
 		end
 
 	out: STRING
-			-- New string containing terse printable representation
+			-- New string containing terse printable representation.
 		do
 			create Result.make (37)
 			Result.append_string_general (data_1.to_hex_string)
@@ -266,7 +266,7 @@ feature -- Conversion
 feature {NONE} -- Implementation
 
 	hex_to_natural_8 (a_char: CHARACTER_32): NATURAL_8
-			-- Converts hex character `a_char' to a NATURAL_8
+			-- Converts hex character `a_char' to a `{NATURAL_8}`.
 		require
 			a_char_is_hexa_digit: a_char.is_hexa_digit
 		local
@@ -284,10 +284,10 @@ feature {NONE} -- Implementation
 
 	separator_char: CHARACTER_32 = '-'
 	separator_char_8: CHARACTER = '-'
-			-- UUID separator character
+			-- UUID separator character.
 
 ;note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

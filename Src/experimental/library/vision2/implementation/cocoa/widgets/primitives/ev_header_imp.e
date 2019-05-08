@@ -15,8 +15,7 @@ inherit
 
 	EV_ITEM_LIST_IMP [EV_HEADER_ITEM, EV_HEADER_ITEM_IMP]
 		redefine
-			interface,
-			make
+			interface
 		end
 
 	EV_PRIMITIVE_IMP
@@ -28,8 +27,7 @@ inherit
 
 	EV_FONTABLE_IMP
 		redefine
-			interface,
-			make
+			interface
 		end
 
 	NS_OUTLINE_VIEW_DATA_SOURCE[ANY]
@@ -141,7 +139,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_HEADER note option: stable attribute end;
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

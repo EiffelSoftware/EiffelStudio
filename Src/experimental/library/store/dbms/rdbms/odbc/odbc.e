@@ -28,7 +28,9 @@ inherit
 			text_not_supported,
 			exec_proc_not_supported,
 			is_convert_string_type_required,
-			is_connection_string_supported
+			is_connection_string_supported,
+			is_affected_row_count_supported,
+			affected_row_count
 		end
 
 	DISPOSABLE
@@ -36,6 +38,8 @@ inherit
 	STRING_HANDLER
 
 	GLOBAL_SETTINGS
+
+	LOCALIZED_PRINTER
 
 feature -- Access
 
@@ -84,6 +88,7 @@ feature -- For DATABASE_CHANGE
 
 	pre_immediate (descriptor, i: INTEGER)
 		do
+			affected_row_count := 0
 			odbc_pre_immediate (con_context_pointer, descriptor, i)
 			update_status
 		end
@@ -103,7 +108,7 @@ feature -- For DATABASE_FORMAT
 	string_format (object: detachable STRING): STRING
 			-- String representation in SQL of `object'.
 		obsolete
-			"Use `string_format_32' instead."
+			"Use `string_format_32' instead.  [2017-11-30]"
 		do
 			Result := string_format_32 (object).as_string_8_conversion
 		end
@@ -351,7 +356,7 @@ feature -- For DATABASE_PROC
 			io.put_string ("== Try to Get Text of Stored Procedure through EiffelStore on ODBC ==")
 			io.new_line
 			io.put_string ("Sorry, the ")
-			io.put_string (Result.as_string_8_conversion)
+			localized_print (Result)
 			io.put_string (" driver does not support such function at present.")
 			io.new_line
 			io.put_string ("=====================================================================")
@@ -384,7 +389,7 @@ feature -- For DATABASE_PROC
 			io.put_string ("===== Try to Create Stored Procedure through EiffelStore on ODBC =====")
 			io.new_line
 			io.put_string ("Sorry, the ")
-			io.put_string (driver_name.string.as_string_8_conversion)
+			localized_print (driver_name.string)
 			io.put_string (" driver does not support such function at present.")
 			io.new_line
 			io.put_string ("======================================================================")
@@ -408,7 +413,7 @@ feature -- For DATABASE_PROC
 			create driver_name.make_shared_from_pointer (odbc_driver_name)
 			io.new_line
 			io.put_string ("Sorry, the ")
-			io.put_string (driver_name.string.as_string_8_conversion)
+			localized_print (driver_name.string)
 			io.put_string (" driver does not support such function at present.")
 			io.new_line
 		end
@@ -433,7 +438,7 @@ feature -- For DATABASE_PROC
 			io.put_string ("===== Try to Drop Stored Procedure through EiffelStore on ODBC =====")
 			io.new_line
 			io.put_string ("Sorry, the ")
-			io.put_string (driver_name.string.as_string_8_conversion)
+			localized_print (driver_name.string)
 			io.put_string (" driver does not support such function at present.")
 			io.new_line
 			io.put_string ("====================================================================")
@@ -555,6 +560,7 @@ feature -- External
 			c_temp: ODBC_SQL_STRING
 		do
 			create c_temp.make (command)
+			affected_row_count := 0
 			odbc_init_order (con_context_pointer, no_descriptor, c_temp.item, c_temp.count, 0)
 			update_status
 		end
@@ -585,6 +591,7 @@ feature -- External
 			if l_para /= Void then
 				l_para.release
 			end
+			affected_row_count := odbc_row_count (con_context_pointer, no_descriptor)
 			odbc_terminate_order (con_context_pointer, no_descriptor)
 			update_status
 		end
@@ -848,6 +855,16 @@ feature -- External
 			Result := odbc_support_proc = 1
 		end
 
+
+	is_affected_row_count_supported: BOOLEAN
+			-- Is `affected_row_count' supported?
+		do
+			Result := True
+		end
+
+	affected_row_count: INTEGER
+			-- The number of rows changed, deleted, or inserted by the last statement.
+
 feature {NONE} -- Access
 
 	con_context_pointer: POINTER
@@ -890,6 +907,12 @@ feature {NONE} -- Disposal
 		end
 
 feature {NONE} -- External features
+
+	odbc_row_count (a_handle: POINTER; no_descriptor: INTEGER): INTEGER
+			-- Number of affected rows
+		external
+			"C use %"odbc.h%""
+		end
 
 	odbc_get_error_message (a_con: POINTER): POINTER
 			-- C buffer which contains the error_message.
@@ -1453,7 +1476,7 @@ feature {NONE} -- External features
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

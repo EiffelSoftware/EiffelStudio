@@ -1,6 +1,5 @@
-note
-	description: "EiffelVision pixmap. Common attributes between%
-				  %all different EV_PIXMAP Windows implementation"
+﻿note
+	description: "EiffelVision pixmap. Common attributes between all different EV_PIXMAP Windows implementations."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -107,17 +106,16 @@ feature -- Saving
 				a_wel_bitmap.decrement_reference
 			elseif png_format /= Void then
 				create a_fn.make_from_path (a_file_path)
-				if png_format.scale_height /= 0 then
-					a_height := png_format.scale_height
-				else
-					a_height := l_raw_image_data.height
-				end
-
-				if png_format.scale_width /= 0 then
-					a_width := png_format.scale_width
-				else
-					a_width := l_raw_image_data.width
-				end
+				a_height := if png_format.scale_height = 0 then
+						l_raw_image_data.height
+					else
+						png_format.scale_height
+					end
+				a_width := if png_format.scale_width = 0 then
+						l_raw_image_data.width
+					else
+						png_format.scale_width
+					end
 				if {PLATFORM}.is_dotnet then
 					create l_managed_pointer.make_from_array (l_raw_image_data)
 					l_area_ptr := l_managed_pointer.item
@@ -214,14 +212,13 @@ feature -- Misc.
 	raw_image_data: EV_RAW_IMAGE_DATA
 			-- RGBA representation of `Current'.
 		local
-			mask_dc, mem_dc: detachable WEL_MEMORY_DC
+			mask_dc, mem_dc: WEL_MEMORY_DC
 			a_width: INTEGER
 			array_offset, array_size: INTEGER
 			array_area: SPECIAL [NATURAL_8]
-			col_Ref_item: NATURAL_32
+			col_ref_item: NATURAL_32
 			mask_dc_item, mem_dc_item: POINTER
-			tmp_mask_bitmap, tmp_bitmap: detachable WEL_BITMAP
-			l_has_mask: BOOLEAN
+			tmp_mask_bitmap, tmp_bitmap: WEL_BITMAP
 			l_x, l_y: INTEGER
 			l_interface: like interface
 		do
@@ -229,13 +226,13 @@ feature -- Misc.
 			create mem_dc.make
 			tmp_bitmap := get_bitmap
 			mem_dc.select_bitmap (tmp_bitmap)
-			l_has_mask := has_mask
-			if l_has_mask then
+			if has_mask then
 				create mask_dc.make
 				tmp_mask_bitmap := get_mask_bitmap
-				check tmp_mask_bitmap /= Void then end
-				mask_dc.select_bitmap (tmp_mask_bitmap)
-				mask_dc_item := mask_dc.item
+				if attached tmp_mask_bitmap then
+					mask_dc.select_bitmap (tmp_mask_bitmap)
+					mask_dc_item := mask_dc.item
+				end
 			end
 
 			l_interface := interface
@@ -249,8 +246,8 @@ feature -- Misc.
 			until
 				array_offset = array_size
 			loop
-				l_x := (array_offset \\ (a_width) // 4)
-				l_y := ((array_offset) // a_width)
+				l_x := array_offset \\ a_width // 4
+				l_y := array_offset // a_width
 				col_ref_item := cwin_get_pixel (
 						mem_dc_item,
 						l_x,
@@ -259,38 +256,31 @@ feature -- Misc.
 				array_area.put (get_rvalue (col_ref_item), array_offset)
 				array_area.put (get_gvalue (col_ref_item), array_offset + 1)
 				array_area.put (get_bvalue (col_ref_item), array_offset + 2)
-				if l_has_mask then
+				if attached tmp_mask_bitmap then
 					col_ref_item := cwin_get_pixel (
 						mask_dc_item,
 						l_x,
 						l_y
 					)
 						-- If mask color is 1 then pixel is opaque, so we use 255 for the mask value.
-					if get_rvalue (col_ref_item) /= 0 then
-						array_area.put (255, array_offset + 3)
-					else
-						array_area.put (0, array_offset + 3)
-					end
+					array_area.put (if get_rvalue (col_ref_item) = 0 then 0 else 255 end, array_offset + 3)
 				else
 					array_area.put (255, array_offset + 3)
 				end
-
 				array_offset := array_offset + 4
 			end
 
-			if l_has_mask then
-				check mask_dc /= Void then end
+			if attached mask_dc then
 				mask_dc.unselect_bitmap
 				mask_dc.delete
-				check tmp_mask_bitmap /= Void then end
-				tmp_mask_bitmap.decrement_reference
-				tmp_mask_bitmap := Void
+				if attached tmp_mask_bitmap then
+					tmp_mask_bitmap.decrement_reference
+				end
 			end
 
 			mem_dc.unselect_bitmap
 			mem_dc.delete
 			tmp_bitmap.decrement_reference
-			tmp_bitmap := Void
 		end
 
 	gdi_compact
@@ -301,24 +291,18 @@ feature -- Misc.
 
 	build_icon: WEL_ICON
 			-- Build a WEL_ICON from `bitmap' and `mask_bitmap'.
-		local
-			l_result: detachable WEL_ICON
 		do
-			l_result ?= build_graphical_resource (True)
-			check l_result /= Void then end
-			Result := l_result
+			Result := {WEL_ICON} / build_graphical_resource (True)
+			check attached Result then end
 		ensure
 			Result_not_void: Result /= Void
 		end
 
 	build_cursor: WEL_CURSOR
 			-- Build a WEL_CURSOR from `bitmap' and `mask_bitmap'.
-		local
-			l_result: detachable WEL_CURSOR
 		do
-			l_result ?= build_graphical_resource (False)
-			check l_result /= Void then end
-			Result := l_result
+			Result := {WEL_CURSOR} / build_graphical_resource (False)
+			check attached Result then end
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -371,14 +355,6 @@ feature {EV_POINTER_STYLE_IMP} -- Implementation
 			create tmp_bitmap.make_by_bitmap (l_bitmap)
 			tmp_bitmap.enable_reference_tracking
 			l_bitmap.decrement_reference
-
-			if not is_icon then
-				if attached {EV_CURSOR} interface as ev_cursor_interface then
-					-- This is a cursor, so set the hotspot
-					icon_info.set_x_hotspot (ev_cursor_interface.x_hotspot)
-					icon_info.set_y_hotspot (ev_cursor_interface.y_hotspot)
-				end
-			end
 
 				-- create an empty mask
 			create mem_dc.make
@@ -494,8 +470,8 @@ feature {
 	interface: detachable EV_PIXMAP note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA
@@ -504,18 +480,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_PIXMAP_IMP_STATE
-
-
-
-
-
-
-
-
-
-
-
+end

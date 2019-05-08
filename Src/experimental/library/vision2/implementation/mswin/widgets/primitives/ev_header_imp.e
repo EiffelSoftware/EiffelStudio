@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that represent an EiffelVision header control. Mswin Implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -35,8 +35,7 @@ inherit
 
 	EV_FONTABLE_IMP
 		redefine
-			interface,
-			make
+			interface
 		end
 
 	WEL_HEADER_CONTROL
@@ -560,8 +559,8 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA
@@ -570,4 +569,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EV_HEADER_IMP
+end

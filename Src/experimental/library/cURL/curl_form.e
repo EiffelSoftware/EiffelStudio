@@ -69,7 +69,7 @@ feature -- Command
 			item := default_pointer
 		end
 
-feature {CURL_EXTERNALS} -- Internal command	
+feature {CURL_EXTERNALS_I} -- Internal command	
 
 	set_item (a_item: POINTER)
 			-- Set `item' with `a_item'
@@ -81,11 +81,11 @@ feature {CURL_EXTERNALS} -- Internal command
 
 note
 	library:   "cURL: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
-			356 Storke Road, Goleta, CA 93117 USA
+			5949 Hollister Ave., Goleta, CA 93117 USA
 			Telephone 805-685-1006, Fax 805-685-6869
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com

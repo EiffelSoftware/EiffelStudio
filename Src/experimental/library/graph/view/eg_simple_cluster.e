@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "A very simple implementation of a EG_CLUSTER_FIGURE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -12,7 +12,6 @@ inherit
 	EG_CLUSTER_FIGURE
 		redefine
 			default_create,
-			update,
 			xml_node_name,
 			make_filled
 		end
@@ -210,8 +209,8 @@ invariant
 	rectangle_not_void: rectangle /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA
@@ -220,8 +219,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EG_SIMPLE_CLUSTER
-
+end

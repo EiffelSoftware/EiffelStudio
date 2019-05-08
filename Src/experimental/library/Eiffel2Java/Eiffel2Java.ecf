@@ -24,5 +24,8 @@
 	</target>
 	<target name="eiffel2java_dotnet" extends="eiffel2java">
 		<setting name="msil_generation" value="true"/>
+		<capability>
+			<concurrency support="none"/>
+		</capability>
 	</target>
 </system>

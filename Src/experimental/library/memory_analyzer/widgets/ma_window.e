@@ -1,8 +1,10 @@
-note
-	description: "This class is the main window of MEMORY ANALYZER.%
-		%May the memory analyzer communicate with other program which can surround the target debugged application%
-		% and send the MEMORY's memory map to a pipe? It should be nice, because it will only analyze the objects which%
-		%we care."
+﻿note
+	description: "[
+			This class is the main window of MEMORY ANALYZER.
+			May the memory analyzer communicate with other program which can surround the target debugged application
+			and send the MEMORY's memory map to a pipe? It should be nice, because it will only analyze the objects which
+			we care.
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -81,9 +83,11 @@ feature {NONE} -- Initialization
 				-- Small hack to ensure that first time `split_incre' is shown it
 				-- is shown with the right proportion as `resize_actions' are called
 				-- when notebook tab shows its content.
-			split_incre.resize_actions.force_extend (agent update_splitter_proportion_once (split_incre, {REAL_32} 0.5))
+			split_incre.resize_actions.extend (agent update_splitter_proportion_once (split_incre, {REAL_32} 0.5, ?, ?, ?, ?))
+			split_incre.dpi_changed_actions.extend (agent update_splitter_proportion_once_dpi_change (split_incre, {REAL_32} 0.5, ?, ?, ?, ?, ?))
 
-			gc_graphs.resize_actions.force_extend (agent analyze_gc.redraw_for_resize)
+			gc_graphs.resize_actions.extend (agent (x, y, w, h: INTEGER_32) do analyze_gc.redraw_for_resize end)
+			gc_graphs.dpi_changed_actions.extend (agent (a_dpi, x, y, w, h: INTEGER_32) do analyze_gc.redraw_for_resize end)
 
 			search_route_button.select_actions.extend (agent search_route)
 		ensure then
@@ -149,6 +153,9 @@ feature -- Redefine
 			show_actions.wipe_out
 			split_incre.resize_actions.wipe_out
 			gc_graphs.resize_actions.wipe_out
+			split_incre.dpi_changed_actions.wipe_out
+			gc_graphs.dpi_changed_actions.wipe_out
+
 			if not filter_window.is_destroyed then
 				filter_window.destroy
 			end
@@ -157,7 +164,7 @@ feature -- Redefine
 
 feature {NONE} -- Implementation for agents
 
-	update_splitter_proportion_once (a_splitter: EV_SPLIT_AREA; a_proportion: REAL)
+	update_splitter_proportion_once (a_splitter: EV_SPLIT_AREA; a_proportion: REAL; x, y, w, h: INTEGER_32)
 			-- Set `a_splitter' with `a_proportion'.
 			-- Wipe out `a_splitter' `resize_actions' when `a_splitter' is shown.
 		require
@@ -172,6 +179,14 @@ feature {NONE} -- Implementation for agents
 			a_splitter.set_proportion (a_proportion)
 		ensure
 			a_splitter_resize_actions_empty: a_splitter.is_displayed implies a_splitter.resize_actions.is_empty
+		end
+
+
+	update_splitter_proportion_once_dpi_change (a_splitter: EV_SPLIT_AREA; a_proportion: REAL; a_dpi,x, y, w, h: INTEGER_32)
+			-- Set `a_splitter' with `a_proportion'.
+			-- Wipe out `a_splitter' `resize_actions' when `a_splitter' is shown.
+		do
+			update_splitter_proportion_once (a_splitter, a_proportion, x, y, w, h)
 		end
 
 	eiffel_view_frame_size_change (a_x, a_y, a_width, a_height: INTEGER)
@@ -502,7 +517,7 @@ invariant
 	main_book_has_tab_states_compare: main_book.has (tab_states_compare)
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -512,8 +527,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class MA_WINDOW
-
+end

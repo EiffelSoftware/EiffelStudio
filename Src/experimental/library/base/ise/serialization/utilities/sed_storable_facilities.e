@@ -91,6 +91,7 @@ feature -- Serialization routines
 			an_object_not_void: an_object /= Void
 			a_medium_not_void: a_medium /= Void
 			a_medium_writable: a_medium.is_open_write
+			a_medium_support_storable: a_medium.support_storable
 		do
 			store (an_object, create {SED_MEDIUM_READER_WRITER}.make_for_writing (a_medium))
 		end
@@ -138,6 +139,7 @@ feature -- Serialization routines
 		require
 			a_medium_not_void: a_medium /= Void
 			a_medium_open_for_reading: a_medium.is_open_read
+			a_medium_support_storable: a_medium.support_storable
 		do
 			Result := retrieved (create {SED_MEDIUM_READER_WRITER}.make_for_reading (a_medium), False)
 		end

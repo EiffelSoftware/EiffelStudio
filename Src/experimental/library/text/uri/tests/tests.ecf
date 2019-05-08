@@ -15,7 +15,7 @@
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="testing" location="$ISE_LIBRARY\library\testing\testing.ecf"/>
-		<library name="uri-safe" location="..\uri.ecf" readonly="false">
+		<library name="uri" location="..\uri.ecf" readonly="false">
 			<option>
 				<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 			</option>

@@ -506,7 +506,7 @@ feature {NONE} -- Implementation: parse
 					from
 						done := False
 					until
-						done or parsing_stopped
+						done or parsing_stopped or end_of_input
 					loop
 						att := next_attribute_data
 						if att /= Void then
@@ -568,8 +568,10 @@ feature {NONE} -- Implementation: parse
 				if end_of_input then
 					report_truncated_content ({STRING_32} "incomplete processing instruction")
 				elseif n.is_empty then
-					rewind_character
-					report_error ({STRING_32} "Invalid processing instruction syntax <?" + last_character.out.to_string_32)
+					if not end_of_input then
+						rewind_character
+					end
+					report_error ({STRING_32} "Invalid processing instruction syntax <?" + create {STRING_32}.make_filled (last_character, 1))
 				elseif n.is_case_insensitive_equal (str_xml) then
 					parse_declaration
 				else
@@ -621,7 +623,7 @@ feature {NONE} -- Implementation: parse
 				report_truncated_content ({STRING_32} "incomplete CDATA syntax")
 			else
 				if last_character /= '[' then
-					report_error ({STRING_32} "invalid syntax <!" + last_character.out.to_string_32)
+					report_error ({STRING_32} "invalid syntax <!" + create {STRING_32}.make_filled (last_character, 1))
 				elseif end_of_input then
 					report_truncated_content ({STRING_32} "incomplete CDATA syntax")
 				else
@@ -655,7 +657,9 @@ feature {NONE} -- Implementation: parse
 									elseif c = ']' then
 											-- Could be ]]]
 										s.append_character (']')
-										rewind_character
+										if not end_of_input then
+											rewind_character
+										end
 									else
 										s.append_character (']')
 										s.append_character (']')
@@ -722,12 +726,16 @@ feature {NONE} -- Implementation: parse
 									done := True
 								elseif c = '-' then
 									s.append_character ('-')
-									rewind_character
+									if not end_of_input then
+										rewind_character
+									end
 								else
 									s.append_character ('-')
 									s.append_character ('-')
 									s.append_character (c)
-									read_character
+									if not end_of_input then
+										read_character
+									end
 								end
 							else
 								s.append_character ('-')
@@ -771,7 +779,7 @@ feature {NONE} -- Implementation: parse
 			read_character
 			if last_character /= 'D' then
 					--| This includes end_of_input which set '%U' to last_character
-				report_error ({STRING_32} "invalid syntax <!" + last_character.out.to_string_32)
+				report_error ({STRING_32} "invalid syntax <!" + create {STRING_32}.make_filled (last_character, 1))
 			else
 				c := last_character
 				from
@@ -1296,6 +1304,17 @@ feature {NONE} -- Query
 					else
 						Result := resolved_entity (s)
 					end
+				elseif end_of_input then
+					create Result.make (s.count + 3)
+					Result.append_character ('&')
+					if is_char then
+						Result.append_character ('#')
+						if is_hexa then
+							Result.append_character ('x')
+						end
+					end
+					Result.append_string (s)
+					report_error ({STRING_32} "Invalid entity syntax " + s)
 				else
 					rewind_character
 					create Result.make (s.count + 3)
@@ -1424,7 +1443,9 @@ feature {NONE} -- Query
 						else
 							s.append_character (c)
 						end
-						read_character
+						if not end_of_input then
+							read_character
+						end
 						c := last_character
 					end
 				end
@@ -1874,7 +1895,7 @@ feature {NONE} -- Factory: cache
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

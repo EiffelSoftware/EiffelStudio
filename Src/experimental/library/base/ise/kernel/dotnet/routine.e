@@ -17,6 +17,14 @@ inherit
 			is_equal, copy
 		end
 
+	REFLECTOR
+		export
+			{NONE} all
+		redefine
+			copy,
+			is_equal
+		end
+
 feature -- Initialization
 
 	adapt (other: like Current)
@@ -287,6 +295,27 @@ feature -- Basic operations
 		deferred
 		end
 
+feature -- Extended operations
+
+	flexible_call (a: detachable separate TUPLE)
+			-- Call routine with arguments `a'.
+			-- Compared to `call' the type of `a' may be different from `{OPEN_ARGS}'.
+		require
+			valid_operands: valid_operands (a)
+		local
+			default_arguments: detachable OPEN_ARGS
+		do
+			if not attached a then
+				call (default_arguments)
+			else
+				check
+					from_precondition: attached {OPEN_ARGS} new_tuple_from_tuple (({OPEN_ARGS}).type_id, a) as x
+				then
+					call (x)
+				end
+			end
+		end
+
 feature -- Obsolete
 
 	adapt_from (other: like Current)
@@ -324,7 +353,7 @@ feature {ROUTINE} -- Implementation
 	frozen is_inline_agent: BOOLEAN
 			-- Is the target feature an inline agent
 
-	frozen set_rout_disp (handle: RUNTIME_METHOD_HANDLE; closed_args: TUPLE;
+	frozen set_rout_disp_final, set_rout_disp (handle: RUNTIME_METHOD_HANDLE; closed_args: TUPLE;
 						  omap: ARRAY [INTEGER]; a_is_inline_agent: BOOLEAN)
 			-- Initialize object.
 		require

@@ -258,8 +258,9 @@ feature {NONE} -- Implementation
 		once
 			create Result.make
 			Result.set_title ("Select the Eiffel file")
-			Result.set_filter (<<"Eiffel file (*.e)",
-				"All file (*.*)">>, <<"*.e", "*.*">>)
+			Result.set_filter
+				({ARRAY [READABLE_STRING_32]} <<{STRING_32} "Eiffel files (*.e)", {STRING_32} "All files (*.*)">>,
+				{ARRAY [READABLE_STRING_32]} <<{STRING_32} "*.e", {STRING_32} "*.*">>)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -268,9 +269,11 @@ feature {NONE} -- Implementation
 		once
 			create Result.make
 			Result.set_title ("Select the header/resource file")
-			Result.set_filter (<<"Resource file (*.rc)",
-				"Header file (*.h)", "All file (*.*)">>,
-				<<"*.rc", "*.h", "*.*">>)
+			Result.set_filter ({ARRAY [READABLE_STRING_32]}
+				<<{STRING_32} "Resource files (*.rc)",
+				{STRING_32} "Header files (*.h)",
+				{STRING_32} "All files (*.*)">>,
+				{ARRAY [READABLE_STRING_32]} <<{STRING_32} "*.rc", {STRING_32} "*.h", {STRING_32} "*.*">>)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -310,7 +313,7 @@ invariant
 	internal_translate_button_attached: internal_translate_button /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

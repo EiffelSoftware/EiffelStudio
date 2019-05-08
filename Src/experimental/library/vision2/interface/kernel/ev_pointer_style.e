@@ -1,14 +1,14 @@
-note
-	description:"[
+﻿note
+	description: "[
 			Apearance of a screen pointer cursor, typically moved by a mouse.
 			
 			EV_POINTER_STYLE works better than EV_CURSOR on Windows platforms. 
 			It support high-depth color cursor (such as when using remote desktop),
 			but EV_CURSOR can't. For Unix platforms, they are almost the same.
-																					]"
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	keywords: "mouse, pointer, cursor, arrow"
+	keywords: mouse, pointer, cursor, arrow
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -25,11 +25,7 @@ create
 	default_create,
 	make_predefined,
 	make_with_pixel_buffer,
-	make_with_pixmap,
-	make_with_cursor
-
-convert
-	make_with_cursor ({EV_CURSOR})
+	make_with_pixmap
 
 feature {NONE} -- Initlization
 
@@ -46,12 +42,9 @@ feature {NONE} -- Initlization
 			-- Create pointer style using `a_pixel_buffer' with hotspot (`a_x', `a_y').
 		require
 			a_pixel_buffer_not_void: a_pixel_buffer /= Void
-		local
-			l_temp_buffer: EV_PIXEL_BUFFER
 		do
 			default_create
-			l_temp_buffer := a_pixel_buffer
-			implementation.init_from_pixel_buffer (l_temp_buffer, a_x, a_y)
+			implementation.init_from_pixel_buffer (a_pixel_buffer, a_x, a_y)
 		end
 
 	make_with_pixmap (a_pixmap: EV_PIXMAP; a_x, a_y: INTEGER)
@@ -61,18 +54,6 @@ feature {NONE} -- Initlization
 		do
 			default_create
 			implementation.init_from_pixmap (a_pixmap, a_x, a_y)
-		end
-
-	make_with_cursor (a_cursor: EV_CURSOR)
-			-- Initialize from `a_cursor'.
-		obsolete
-			"Use EV_POINTER_STYLE directly now. [2017-05-31]"
-		do
-			default_create
-				-- We convert from EV_CURSOR, `a_cursor' maybe void.
-			if a_cursor /= Void then
-				implementation.init_from_cursor (a_cursor)
-			end
 		end
 
 feature -- Command
@@ -154,9 +135,9 @@ feature -- Comparison
 		do
 			if other /= Void then
 					-- Images are proportional.
-				Result := (
-					width * other.height = other.width * height and then (other.x_hotspot = x_hotspot and other.y_hotspot = y_hotspot)
-				)
+				Result :=
+					width * other.height = other.width * height and then
+					(other.x_hotspot = x_hotspot and other.y_hotspot = y_hotspot)
 			end
 		end
 
@@ -165,7 +146,6 @@ feature -- Implementation
 	create_interface_objects
 			-- <Precursor>
 		do
-
 		end
 
 	create_implementation
@@ -178,7 +158,7 @@ feature -- Implementation
 			-- Implementation.
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -187,7 +167,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

@@ -21,9 +21,8 @@ inherit
  			on_middle_button_double_click, on_right_button_double_click,
  			minimum_width, minimum_height, pnd_press, escape_pnd, update_for_pick_and_drop
 		redefine
-			parent_imp, wel_move_and_resize, on_mouse_move, on_key_down,
-			destroy, interface, make, on_left_button_double_click,
-			x_position, y_position, disable_sensitive, enable_sensitive,
+			parent_imp, on_mouse_move, on_key_down,
+			destroy, interface, make, x_position, y_position, disable_sensitive, enable_sensitive,
 			is_dockable_source, show, hide, is_show_requested
 		end
 
@@ -32,8 +31,7 @@ inherit
 			ev_set_minimum_width, ev_set_minimum_height, ev_set_minimum_size,
 			initialize_sizeable
 		redefine
-			compute_minimum_width, compute_minimum_height,
-			compute_minimum_size, interface
+			interface
 		end
 
 	EV_DOCKABLE_TARGET_IMP
@@ -77,7 +75,7 @@ inherit
 			on_wm_dropfiles
 		redefine
 			wel_set_parent, wel_resize, wel_move, wel_move_and_resize,
- 			on_left_button_double_click, default_style, background_brush,
+ 			default_style, background_brush,
  			on_tbn_dropdown
 		end
 
@@ -1318,8 +1316,8 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_TOOL_BAR note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

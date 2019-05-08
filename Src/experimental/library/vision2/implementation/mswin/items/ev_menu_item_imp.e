@@ -157,33 +157,25 @@ feature -- Measurement
 
 	x_position: INTEGER
 			-- Horizontal offset relative to parent `x_position' in pixels.
-		local
-			a_menu_bar: detachable EV_MENU_BAR_IMP
-			a_menu: detachable EV_MENU_IMP
 		do
-			a_menu_bar ?= parent_imp
-			if a_menu_bar = Void then
-				a_menu ?= parent_imp
-				check a_menu /= Void then end
-				Result := screen_x - a_menu.screen_x
+			if attached {EV_MENU_BAR_IMP} parent_imp as l_menu_bar then
+				Result := screen_x - l_menu_bar.screen_x
+			elseif attached {EV_MENU_IMP} parent_imp as l_menu then
+				Result := screen_x - l_menu.screen_x
 			else
-				Result := screen_x - a_menu_bar.screen_x
+				check parent_either_menu_bar_or_menu: False end
 			end
 		end
 
 	y_position: INTEGER
 			-- Vertical offset relative to parent `y_position' in pixels.
-		local
-			a_menu_bar: detachable EV_MENU_BAR_IMP
-			a_menu: detachable EV_MENU_IMP
 		do
-			a_menu_bar ?= parent_imp
-			if a_menu_bar = Void then
-				a_menu ?= parent_imp
-				check a_menu /= Void then end
+			if attached {EV_MENU_BAR_IMP} parent_imp as a_menu_bar then
+				Result := screen_y - a_menu_bar.screen_y
+			elseif attached {EV_MENU_IMP} parent_imp as a_menu then
 				Result := screen_y - a_menu.screen_y
 			else
-				Result := screen_y - a_menu_bar.screen_y
+				check either_menu_bar_or_manu: False end
 			end
 		end
 
@@ -282,8 +274,11 @@ feature {NONE} -- Implementation
 	parent: detachable EV_MENU_ITEM_LIST
 			-- Item list containing `Current'.
 		do
-			if attached parent_imp as l_parent_imp then
-				Result ?= l_parent_imp.interface
+			if
+				attached parent_imp as l_parent_imp and then
+				attached {EV_MENU_ITEM_LIST} l_parent_imp.interface as l_interface
+			then
+				Result := l_interface
 			end
 		end
 
@@ -341,20 +336,16 @@ feature {EV_MENU_ITEM_IMP} -- Implementation
 
 	top_level_window_imp: detachable EV_WINDOW_IMP
 			-- Window containing `Current' in parenting hierarchy.
-		local
-			a_menu: detachable EV_MENU_IMP
-			a_menu_bar: detachable EV_MENU_BAR_IMP
 		do
-			if parent_imp /= Void then
-				a_menu ?= parent_imp
-				if a_menu /= Void then
-					Result := a_menu.top_level_window_imp
+			if attached parent_imp as l_parent_imp then
+				if attached {EV_MENU_IMP} l_parent_imp as l_menu then
+					Result := l_menu.top_level_window_imp
+				elseif attached {EV_MENU_BAR_IMP} l_parent_imp as l_menu_bar then
+					Result := l_menu_bar.top_level_window_imp
 				else
-					a_menu_bar ?= parent_imp
 					check
-						parent_was_menu_or_bar: a_menu_bar /= Void then
+						parent_was_menu_or_bar: False then
 					end
-					Result := a_menu_bar.top_level_window_imp
 				end
 			end
 		end
@@ -463,11 +454,8 @@ feature {EV_MENU_CONTAINER_IMP, EV_MENU_IMP} -- WEL Implementation
 
 	on_measure_item (measure_item_struct: WEL_MEASURE_ITEM_STRUCT)
 			-- Process `Wm_measureitem' message.
-		local
-			par_imp: detachable EV_MENU_IMP
 		do
-			par_imp ?= parent_imp
-			if par_imp /= void then
+			if attached {EV_MENU_IMP} parent_imp as par_imp then
 				par_imp.on_measure_menu_item (measure_item_struct)
 			else
 				on_measure_menu_bar_item (measure_item_struct)
@@ -476,11 +464,8 @@ feature {EV_MENU_CONTAINER_IMP, EV_MENU_IMP} -- WEL Implementation
 
 	on_draw_item (draw_item_struct: WEL_DRAW_ITEM_STRUCT)
 			-- Process `Wm_drawitem' message.
-		local
-			par_imp: detachable EV_MENU_IMP
 		do
-			par_imp ?= parent_imp
-			if par_imp /= void then
+			if attached {EV_MENU_IMP} parent_imp as par_imp then
 				on_draw_menu_item (draw_item_struct)
 			else
 				on_draw_menu_bar_item (draw_item_struct)
@@ -938,11 +923,9 @@ feature {NONE} -- Implementation
 	extract_icon (a_pixmap_imp_state: EV_PIXMAP_IMP_STATE): WEL_ICON
 			-- Extract the icon from `pixmap_imp'.
 		local
-			pix_imp: detachable EV_PIXMAP_IMP
 			l_result: detachable WEL_ICON
 		do
-			pix_imp ?= a_pixmap_imp_state
-			if pix_imp /= Void then
+			if attached {EV_PIXMAP_IMP} a_pixmap_imp_state as pix_imp then
 				l_result := pix_imp.icon
 			end
 			if l_result /= Void then
@@ -981,7 +964,7 @@ feature {NONE} -- Constants
 			-- Space between the text and the pixmap in a menu bar item
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"Facilities for pick and drop mechanism.%N%
 		%Decendents can act both as pick and drop sources and as targets.%N%
@@ -36,8 +36,6 @@ inherit
 			default_create,
 			is_equal,
 			copy
-		redefine
-			set_pebble_function
 		end
 
 	EV_POSITIONED
@@ -370,8 +368,8 @@ invariant
 		mode_is_target_menu.to_integer = 1
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA
@@ -380,18 +378,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_PICK_AND_DROPABLE
-
-
-
-
-
-
-
-
-
-
-
+end

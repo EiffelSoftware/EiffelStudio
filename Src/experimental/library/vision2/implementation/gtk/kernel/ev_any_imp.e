@@ -1,8 +1,9 @@
-note
-	description:
-		"Base class for GTK implementation (_IMP) classes. %N%
-		%Handles interaction between Eiffel objects and GTK objects %N%
-		%See important notes on memory management at end of class"
+﻿note
+	description: "[
+			Base class for GTK implementation (_IMP) classes.
+			Handles interaction between Eiffel objects and GTK objects
+			See important notes on memory management at end of class
+		]"
 	legal: "See notice at end of class."
 	keywords: "implementation, gtk, any, base"
 	status: "See notice at end of class."
@@ -71,6 +72,8 @@ feature {EV_ANY_I} -- Access
 			"C inline use %"ev_any_imp.h%""
 		alias
 			"c_ev_any_imp_get_eif_reference_from_object_id ($a_c_object)"
+		ensure
+			is_class: class
 		end
 
 	frozen gtk_is_object (a_c_object: POINTER): BOOLEAN
@@ -78,6 +81,8 @@ feature {EV_ANY_I} -- Access
 			"C inline use <ev_gtk.h>"
 		alias
 			"GTK_IS_OBJECT ($a_c_object)"
+		ensure
+			is_class: class
 		end
 
 feature {EV_ANY, EV_ANY_IMP} -- Implementation
@@ -236,8 +241,6 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Access
 
 	eif_current_object_id: INTEGER
 			-- New identifier for Current
-		obsolete
-			"Use `eif_object_id (Current)' instead. [2017-05-31]"
 		external
 			"built_in"
 		ensure
@@ -265,10 +268,12 @@ feature -- Measurement
 			"C [macro <stdio.h>]"
 		alias
 			"NULL"
+		ensure
+			is_class: class
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -278,18 +283,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_ANY_IMP
-
-
-
-
-
-
-
-
-
-
-
+end

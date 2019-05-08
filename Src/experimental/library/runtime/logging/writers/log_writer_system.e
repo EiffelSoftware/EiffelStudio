@@ -15,8 +15,6 @@ inherit
 	DISPOSABLE
 		undefine
 			default_create
-		redefine
-			dispose
 		end
 
 	LOG_FACILITY_CONSTANTS
@@ -247,7 +245,7 @@ feature {NONE} -- Externals
 				ReportEventA($l_data, wType, (WORD) $priority, dwEventId, NULL, 1, 0, lpStrings, NULL);
 
 			#elif EIF_OS == EIF_OS_LINUX
-				syslog($priority, $msg);
+				syslog($priority, "%s", (char *) $msg);
 			#else
 				/* Nothing to be done here. */
 			#endif
@@ -255,7 +253,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source:		"[
 			Eiffel Software

@@ -31,7 +31,6 @@ feature -- Basic operations
 			-- Stop at current point in list on `abort'.
 		local
 			snapshot: ARRAYED_LIST [PROCEDURE [detachable TUPLE [ANY]]]
-			l_tuple: TUPLE [pebble: ANY]
 		do
 			if attached a_pebble_tuple then
 				inspect
@@ -49,9 +48,7 @@ feature -- Basic operations
 							snapshot.index > snapshot.count or is_aborted_stack.item
 						loop
 							if snapshot.item.valid_operands (a_pebble_tuple) then
-								l_tuple := snapshot.item.empty_operands
-								l_tuple.pebble :=  a_pebble_tuple.pebble
-								snapshot.item.call (l_tuple)
+								snapshot.item.flexible_call (a_pebble_tuple)
 							end
 							snapshot.forth
 						variant
@@ -124,23 +121,16 @@ feature {NONE} -- Convenience
 			l_tuple: TUPLE [pebble: ANY]
 		do
 			if attached veto_pebble_function as l_veto_pebble_function then
-				l_tuple := l_veto_pebble_function.empty_operands
-				if l_tuple.valid_type_for_index (a_pebble, 1) then
-					l_tuple.pebble := a_pebble
-					Result := l_veto_pebble_function.valid_operands (l_tuple) and then
-						l_veto_pebble_function.item (l_tuple)
-				else
-						-- The `a_pebble' does not match what the veto even accept, we should
-						-- clearly reject the drop.
-					Result := False
-				end
+				l_tuple := [a_pebble]
+				Result := l_veto_pebble_function.valid_operands (l_tuple) and then
+					l_veto_pebble_function.flexible_item (l_tuple)
 			else
 				Result := True
 			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

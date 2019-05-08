@@ -27,7 +27,7 @@ feature
 	prepare (s: STRING)
 			-- Parse of the sql statement `s'
 		obsolete
-			"Use `prepare_32' instead."
+			"Use `prepare_32' instead [2017-11-30]."
 		require
 			not_void: s /= Void
 			meaning_full_statement: s.count > 0
@@ -129,7 +129,7 @@ feature {NONE} -- Implementation
 			-- Buffer for storing SQL string in `prepare_32'.
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

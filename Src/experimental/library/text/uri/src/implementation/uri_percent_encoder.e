@@ -12,9 +12,8 @@ class
 feature -- Percent encoding
 
 	append_percent_encoded_string_to (s: READABLE_STRING_GENERAL; a_result: STRING_GENERAL)
-			-- Append `a_string' as percent-encoded value to `a_result'
+			-- Append `s' as percent-encoded value to `a_result'
 		local
-			c: NATURAL_32
 			i,n: INTEGER
 		do
 			from
@@ -23,33 +22,150 @@ feature -- Percent encoding
 			until
 				i > n
 			loop
-				c := s.code (i)
-				if
-						--| unreserved ALPHA / DIGIT
-					   (48 <= c and c <= 57)  -- DIGIT: 0 .. 9
-					or (65 <= c and c <= 90)  -- ALPHA: A .. Z
-					or (97 <= c and c <= 122) -- ALPHA: a .. z
-				then
-					a_result.append_code (c)
+				append_encoded_character_code_to (s.code (i), a_result)
+				i := i + 1
+			end
+		end
+
+	append_query_name_encoded_string_to (s: READABLE_STRING_GENERAL; a_result: STRING_GENERAL)
+			-- Append `s' as encoded for URI query name to `a_result'
+		local
+			i,n: INTEGER
+		do
+			from
+				i := 1
+				n := s.count
+			until
+				i > n
+			loop
+				append_query_name_encoded_character_code_to (s.code (i), a_result)
+				i := i + 1
+			end
+		end
+
+	append_query_value_encoded_string_to (s: READABLE_STRING_GENERAL; a_result: STRING_GENERAL)
+			-- Append `s' as encoded for URI query value to `a_result'.
+		local
+			i,n: INTEGER
+		do
+			from
+				i := 1
+				n := s.count
+			until
+				i > n
+			loop
+				append_query_value_encoded_character_code_to (s.code (i), a_result)
+				i := i + 1
+			end
+		end
+
+	append_path_segment_encoded_string_to (s: READABLE_STRING_GENERAL; a_result: STRING_GENERAL)
+			-- Append `a_string' as encoded for URI path segment to `a_result'
+		local
+			i,n: INTEGER
+		do
+			from
+				i := 1
+				n := s.count
+			until
+				i > n
+			loop
+				append_path_segment_encoded_character_code_to (s.code (i), a_result)
+				i := i + 1
+			end
+		end
+
+	append_www_form_url_encoded_string_to (s: READABLE_STRING_GENERAL; a_result: STRING_GENERAL)
+			-- Append `a_string' as www-form-urlencoded value to `a_result'.
+			-- The main difference with `append_percent_encoded_string_to` is the encoding of space using '+'.
+		local
+			i,n: INTEGER
+		do
+			from
+				i := 1
+				n := s.count
+			until
+				i > n
+			loop
+				inspect s.code (i)
+				when 32 then -- space: 32 ' '
+					a_result.append_code (43) -- 43 '+'
 				else
-					inspect c
-					when
-						45, 46, 95, 126 -- unreserved characters: -._~
-					then
-						a_result.append_code (c)
-					when
-						58, 64, -- reserved =+ gen-delims: :@
-						33, 36, 38, 39, 40, 41, 42, -- reserved =+ sub-delims: !$&'()*
-						43, 44, 59, 61, -- reserved = sub-delims: +,;=
-						37 -- percent encoding: %
-					then
-						append_percent_encoded_character_code_to (c, a_result)
-					else
-						append_percent_encoded_character_code_to (c, a_result)
-					end
+					append_encoded_character_code_to (s.code (i), a_result)
 				end
 				i := i + 1
 			end
+		end
+
+feature {NONE} -- URI building helpers		
+
+	append_encoded_character_code_to (c: NATURAL_32; a_result: STRING_GENERAL)
+			-- Append character code `c' as query name encoded content into `a_result'.
+		do
+			if
+					--| unreserved ALPHA / DIGIT
+				   (48 <= c and c <= 57)  -- DIGIT: 0 .. 9
+				or (65 <= c and c <= 90)  -- ALPHA: A .. Z
+				or (97 <= c and c <= 122) -- ALPHA: a .. z
+			then
+				a_result.append_code (c)
+			else
+				inspect c
+				when
+					45, 46, 95, 126 -- unreserved characters: -._~
+				then
+					a_result.append_code (c)
+				when
+					58, 64, -- reserved =+ gen-delims: : @
+					33, 36, 38, 39, 40, 41, 42, -- reserved =+ sub-delims: ! $ & ' ( ) *
+					43, 44, 59, 61, -- reserved = sub-delims: + , ; =
+					37 -- percent encoding: %
+				then
+					append_percent_encoded_character_code_to (c, a_result)
+				else
+					append_percent_encoded_character_code_to (c, a_result)
+				end
+			end
+		end
+
+	append_query_name_encoded_character_code_to (c: NATURAL_32; a_result: STRING_GENERAL)
+			-- Append character code `a_code' as query name encoded content into `a_result'.
+		do
+			inspect c
+			when 61 then -- equal sign: =
+				append_percent_encoded_character_code_to (c, a_result)
+			else
+				append_query_value_encoded_character_code_to (c, a_result)
+			end
+		end
+
+	append_query_value_encoded_character_code_to (c: NATURAL_32; a_result: STRING_GENERAL)
+			-- Append character code `a_code' as query value encoded content into `a_result'.
+		do
+			inspect c
+			when 32 then -- Space
+				a_result.append_code (43) -- 43 '+'
+			when
+				39, -- '
+				58, 64, -- reserved =+ gen-delims: : @
+				33, 36, 40, 41, 42, -- reserved =+ sub-delims: ! $ ( ) *
+				44, 59, 61 -- reserved = sub-delims: , ; =
+			then
+				a_result.append_code (c)
+			when
+				47, -- slash: /
+				63  -- question mark ?
+			then
+				a_result.append_code (c)
+			else
+				append_encoded_character_code_to (c, a_result)
+			end
+		end
+
+	append_path_segment_encoded_character_code_to (c: NATURAL_32; a_result: STRING_GENERAL)
+			-- Append character code `a_code' as query name encoded content into `a_result'.
+		do
+			append_encoded_character_code_to (c, a_result)
 		end
 
 feature -- Percent encoding: character		
@@ -174,6 +290,7 @@ feature -- Percent decoding
 						if a_result_is_string_32 then
 							a_result.append_code (c)
 						else
+								-- Keep the percent encoded char for non string 32.
 							append_percent_encoded_character_code_to (c, a_result)
 						end
 					end
@@ -496,7 +613,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

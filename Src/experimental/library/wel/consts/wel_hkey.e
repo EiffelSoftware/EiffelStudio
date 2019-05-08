@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Registry keys constants"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -77,6 +77,8 @@ feature -- Access
 			"C [macro %"winreg.h%"] : EIF_POINTER"
 		alias
 			"HKEY_CLASSES_ROOT"
+		ensure
+			is_class: class
 		end
 
 	frozen Hkey_current_user: POINTER
@@ -84,6 +86,8 @@ feature -- Access
 			"C [macro %"winreg.h%"] : EIF_POINTER"
 		alias
 			"HKEY_CURRENT_USER"
+		ensure
+			is_class: class
 		end
 
 	frozen Hkey_local_machine: POINTER
@@ -91,6 +95,8 @@ feature -- Access
 			"C [macro %"winreg.h%"] : EIF_POINTER"
 		alias
 			"HKEY_LOCAL_MACHINE"
+		ensure
+			is_class: class
 		end
 
 	frozen Hkey_users: POINTER
@@ -98,6 +104,8 @@ feature -- Access
 			"C [macro %"winreg.h%"] : EIF_POINTER"
 		alias
 			"HKEY_USERS"
+		ensure
+			is_class: class
 		end
 
 	frozen Hkey_performance_data: POINTER
@@ -105,6 +113,8 @@ feature -- Access
 			"C [macro %"winreg.h%"] : EIF_POINTER"
 		alias
 			"HKEY_PERFORMANCE_DATA"
+		ensure
+			is_class: class
 		end
 
 	frozen Hkey_current_config: POINTER
@@ -112,6 +122,8 @@ feature -- Access
 			"C [macro %"winreg.h%"] : EIF_POINTER"
 		alias
 			"HKEY_CURRENT_CONFIG"
+		ensure
+			is_class: class
 		end
 
 	frozen Hkey_dyn_data: POINTER
@@ -119,21 +131,19 @@ feature -- Access
 			"C [macro %"winreg.h%"] : EIF_POINTER"
 		alias
 			"HKEY_DYN_DATA"
+		ensure
+			is_class: class
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class WEL_HKEY
-
+end

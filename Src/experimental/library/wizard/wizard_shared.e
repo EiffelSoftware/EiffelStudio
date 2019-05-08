@@ -1,8 +1,9 @@
-note
+﻿note
 	description: "Proxy to shared references"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "pascalf"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,8 +12,6 @@ class
 
 inherit
 	EV_LAYOUT_CONSTANTS
-
-	ARGUMENTS_32
 
 feature -- Access
 
@@ -58,9 +57,10 @@ feature -- Access
 	wizard_source: PATH
 			-- Wizard sources.
 		require
-			not argument (1).is_empty
+			{EXECUTION_ENVIRONMENT}.arguments.argument_count >= 1
+			not {EXECUTION_ENVIRONMENT}.arguments.argument (1).is_empty
 		once
-			create Result.make_from_string (argument (1))
+			create Result.make_from_string ({EXECUTION_ENVIRONMENT}.arguments.argument (1))
 		ensure
 			exists: Result /= Void
 		end
@@ -127,14 +127,10 @@ feature -- Access
 
 	locale: I18N_LOCALE
 			-- Current locale.
-		local
-			l_manager: I18N_LOCALE_MANAGER
 		do
-			if attached locale_cell.item as r then
-				Result := r
-			else
-				create l_manager.make ("")
-				Result := l_manager.system_locale
+			Result := locale_cell.item
+			if not attached Result then
+				Result := (create {I18N_LOCALE_MANAGER}.make ("")).system_locale
 				locale_cell.put (Result)
 			end
 		ensure
@@ -277,7 +273,7 @@ invariant
 	history_exists: history /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

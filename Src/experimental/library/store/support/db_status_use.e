@@ -42,7 +42,7 @@ feature -- Status report
 	error_message: STRING
 			-- SQL error message prompted by database server
 		obsolete
-			"Use `error_message_32' instead."
+			"Use `error_message_32' instead [2017-11-30]."
 		do
 			Result := error_message_32.as_string_8
 		end
@@ -50,7 +50,7 @@ feature -- Status report
 	warning_message: STRING
 			-- SQL warning message prompted by database server
 		obsolete
-			"Use `warning_message_32' instead."
+			"Use `warning_message_32' instead [2017-11-30]."
 		do
 			Result := warning_message_32.as_string_8
 		end
@@ -80,14 +80,14 @@ feature -- Status setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

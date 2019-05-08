@@ -24,10 +24,7 @@ deferred class
 inherit
 	EV_WIDGET_I
 		redefine
-			interface,
-			set_default_colors,
-			refresh_now,
-			init_file_drop_actions
+			interface
 		end
 
 	EV_SIZEABLE_IMP
@@ -46,9 +43,6 @@ inherit
 		end
 
 	EV_WIDGET_ACTION_SEQUENCES_I
-		redefine
-			init_file_drop_actions
-		end
 
 	EV_WEL_KEY_CONVERSION
 		rename
@@ -491,6 +485,10 @@ feature -- Event handling
 		end
 
 	init_resize_actions (a_resize_actions: like resize_actions)
+		do
+		end
+
+	init_dpi_changed_actions (a_dpi_changed_actions: like dpi_changed_actions)
 		do
 		end
 
@@ -1346,6 +1344,16 @@ feature -- Deferred features
 			end
 		end
 
+	frozen trigger_dpi_actions (a_dpi, a_width, a_height: INTEGER)
+			-- `Current' has been resized.
+		require
+			exists: exists
+		do
+			if attached dpi_changed_actions_internal as l_actions then
+				l_actions.call ([a_dpi, screen_x, screen_y, a_width, a_height])
+			end
+		end
+
 	wel_parent: detachable WEL_WINDOW
 			-- The wel parent of `Current'.
 		deferred
@@ -1558,7 +1566,7 @@ feature -- Deferred features
 		end
 
 	cwin_get_next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER
-			-- SDK GetNextDlgGroupItem
+			-- SDK GetNextDlgTabItem
 		deferred
 		end
 
@@ -1664,11 +1672,13 @@ feature -- Feature that should be directly implemented by externals
 			-- (from WEL_WINDOW)
 			-- (export status {NONE})
 		deferred
+		ensure
+			is_class: class
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

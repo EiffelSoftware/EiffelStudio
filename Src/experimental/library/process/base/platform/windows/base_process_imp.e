@@ -105,7 +105,7 @@ feature -- Control
 			-- <Precursor>
 		do
 			check
-				from_recondition_process_launched: attached child_process.process_handle as h
+				from_precondition_process_launched: attached child_process.process_handle as h
 			then
 				{WEL_API}.wait_for_single_object (h.item, {WEL_API}.infinite).do_nothing
 			end
@@ -118,7 +118,7 @@ feature -- Control
 			w: INTEGER
 		do
 			check
-				from_recondition_process_launched: attached child_process.process_handle as h
+				from_precondition_process_launched: attached child_process.process_handle as h
 			then
 				w := {WEL_API}.wait_for_single_object (h.item, timeout)
 				if w = {WEL_API}.wait_object_0 then

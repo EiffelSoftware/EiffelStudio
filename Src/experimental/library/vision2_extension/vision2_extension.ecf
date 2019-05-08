@@ -74,5 +74,8 @@
 	</target>
 	<target name="vision2_extension_dotnet" extends="vision2_extension">
 		<setting name="msil_generation" value="true"/>
+		<capability>
+			<concurrency support="none"/>
+		</capability>
 	</target>
 </system>

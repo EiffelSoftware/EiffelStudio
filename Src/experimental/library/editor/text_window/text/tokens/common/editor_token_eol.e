@@ -1,8 +1,9 @@
-note
+ï»¿note
 	description: "Token that describe the end of a line."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -15,7 +16,6 @@ inherit
 			text_color_id,
 			background_color_id,
 			background_color,
-			process,
 			is_new_line,
 			character_length
 		end
@@ -162,9 +162,9 @@ feature {NONE} -- Private Constants
 			-- EOL symbol to be displayed
 		do
 			if character_length = 1 then
-				Result := once {STRING_32} "¯"
+				Result := once {STRING_32} "Â¯"
 			else
-				Result := once {STRING_32} "¬"
+				Result := once {STRING_32} "Â¬"
 			end
 		end
 
@@ -241,7 +241,7 @@ invariant
 	character_length_restricted: character_length = 1 or character_length = 2
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -251,7 +251,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EDITOR_TOKEN_EOL
+end

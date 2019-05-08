@@ -277,6 +277,9 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 				end
 			end
 			{GTK}.gtk_window_set_focus (l_window, l_widget)
+			if not {GTK}.gtk_widget_is_focus (l_widget) then
+				{GTK}.gtk_widget_grab_focus (l_widget)
+			end
 		end
 
 	has_focus: BOOLEAN

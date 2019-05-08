@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Abstract notions of a window."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -1419,6 +1419,14 @@ feature {WEL_WINDOW} -- Messages
 
 feature {NONE} -- Messages
 
+	on_dpi_changed (a_dpi: INTEGER)
+			-- WM_dpichange message.
+			-- This message is sent to a window whose dpi changed,
+		require
+			exists: exists
+		do
+		end
+
 	on_window_pos_changed (window_pos: WEL_WINDOW_POS)
 			-- Wm_windowpschanged message.
 			-- This message is sent to a window whose size,
@@ -1683,6 +1691,28 @@ feature {NONE} -- Messages
 		do
 		end
 
+	on_wm_dpi_changed (a_wparam: POINTER; a_lparam: POINTER)
+			-- Called when a window receives WM_DPICHANGED message.
+		require
+			exists: exists
+		local
+			l_rect: WEL_RECT
+			l_dpi: INTEGER
+		do
+				-- When we handle the WM_DPICHANGED, the app it's
+				-- responsible to call SetWindowsPos and scale windows controls
+				-- and resources, at the moment only SetWindowsPos is handled.
+				-- a_wparam new dpi setting
+				-- need to use the new DPI retrieved from the a_wparam to calculate the new scale factor.
+			l_dpi := cwin_hi_word (a_wparam)
+
+				-- a_lparam windows rectangle scaled for the new DPI.
+			create l_rect.make_by_pointer (a_lparam)
+			move_and_resize_internal (l_rect.left, l_rect.top, l_rect.width, l_rect.height, True, 0)
+
+			on_dpi_changed (l_dpi)
+		end
+
 feature {WEL_WINDOW, WEL_DISPATCHER} -- Implementation
 
 	default_window_procedure: POINTER
@@ -1713,6 +1743,10 @@ feature {WEL_WINDOW} -- Implementation
 					main_args.current_instance.item, data)
 			end
 			if item /= default_pointer then
+					-- Workaround until we can scale the windows resource
+					-- when we get a WM_dpichange.
+					-- Here Windows will scale the non-client area (title bar etc) of the windows.
+				--{WEL_SCALING_API}.enable_non_client_dpi_scaling (item)
 				register_current_window
 				set_default_window_procedure
 			else
@@ -2075,6 +2109,8 @@ feature {WEL_ABSTRACT_DISPATCHER, WEL_WINDOW} -- Implementation
 					-- with a manifest file you get the focus outline rectangle on
 					-- controls.
 				disable_default_processing
+			when wm_dpichanged then
+				on_wm_dpi_changed (wparam, lparam)
 			else
 				default_process_message (msg, wparam, lparam)
 			end
@@ -2475,6 +2511,8 @@ feature {NONE} -- Externals
 			"C [macro %"wel.h%"] (HWND, int)"
 		alias
 			"ShowWindow"
+		ensure
+			is_class: class
 		end
 
 	cwin_is_window_visible (hwnd: POINTER): BOOLEAN
@@ -2551,15 +2589,6 @@ feature {NONE} -- Externals
 			"C [macro %"wel.h%"] (TRACKMOUSEEVENT*): EIF_BOOLEAN"
 		alias
 			"_TrackMouseEvent"
-		end
-
-	cwin_invalidate_rect (hwnd, a_rect: POINTER;
-			erase_background: BOOLEAN)
-			-- SDK InvalidateRect
-		external
-			"C [macro %"wel.h%"] (HWND, RECT *, BOOL)"
-		alias
-			"InvalidateRect"
 		end
 
 	cwin_invalidate_rgn (hwnd, a_region: POINTER;
@@ -2771,8 +2800,20 @@ feature {NONE} -- Externals
 			"GetMessagePos"
 		end
 
+feature {WEL_INPUT_EVENT} -- Externals
+
+	cwin_invalidate_rect (hwnd, a_rect: POINTER; erase_background: BOOLEAN)
+			-- SDK InvalidateRect
+		external
+			"C [macro %"wel.h%"] (HWND, RECT *, BOOL)"
+		alias
+			"InvalidateRect"
+		end
+
+
+
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

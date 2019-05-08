@@ -20,6 +20,8 @@ feature -- Context constants
 			"C inline use <zmq.h>"
 		alias
 			"return ZMQ_IO_THREADS;"
+		ensure
+			is_class: class
 		end
 
 	max_sockets: INTEGER
@@ -28,6 +30,8 @@ feature -- Context constants
 			"C inline use <zmq.h>"
 		alias
 			"return ZMQ_MAX_SOCKETS;"
+		ensure
+			is_class: class
 		end
 
 feature -- Socket types : Request-Replay Pattern
@@ -38,6 +42,8 @@ feature -- Socket types : Request-Replay Pattern
 			"C inline use <zmq.h>"
 		alias
 			"ZMQ_REQ"
+		ensure
+			is_class: class
 		end
 
 	rep: INTEGER_32
@@ -46,6 +52,8 @@ feature -- Socket types : Request-Replay Pattern
 			"C inline use <zmq.h>"
 		alias
 			"ZMQ_REP"
+		ensure
+			is_class: class
 		end
 
 	router: INTEGER_32
@@ -54,6 +62,8 @@ feature -- Socket types : Request-Replay Pattern
 			"C inline use <zmq.h>"
 		alias
 			"ZMQ_ROUTER"
+		ensure
+			is_class: class
 		end
 
 	dealer: INTEGER_32
@@ -62,6 +72,8 @@ feature -- Socket types : Request-Replay Pattern
 			"C inline use <zmq.h>"
 		alias
 			"ZMQ_DEALER"
+		ensure
+			is_class: class
 		end
 
 feature -- Socket types: Publish-subscribe pattern
@@ -72,6 +84,8 @@ feature -- Socket types: Publish-subscribe pattern
 			"C inline use <zmq.h>"
 		alias
 			"ZMQ_PUB"
+		ensure
+			is_class: class
 		end
 
 	sub: INTEGER_32
@@ -80,6 +94,8 @@ feature -- Socket types: Publish-subscribe pattern
 			"C inline use <zmq.h>"
 		alias
 			"ZMQ_SUB"
+		ensure
+			is_class: class
 		end
 
 	xpub: INTEGER_32
@@ -88,6 +104,8 @@ feature -- Socket types: Publish-subscribe pattern
 			"C inline use <zmq.h>"
 		alias
 			"ZMQ_XPUB"
+		ensure
+			is_class: class
 		end
 
 	xsub: INTEGER_32
@@ -96,6 +114,8 @@ feature -- Socket types: Publish-subscribe pattern
 			"C inline use <zmq.h>"
 		alias
 			"ZMQ_XSUB"
+		ensure
+			is_class: class
 		end
 
 feature -- Socket types: Pipeline
@@ -106,6 +126,8 @@ feature -- Socket types: Pipeline
 			"C inline use <zmq.h>"
 		alias
 			"ZMQ_PUSH"
+		ensure
+			is_class: class
 		end
 
 	pull: INTEGER_32
@@ -114,6 +136,8 @@ feature -- Socket types: Pipeline
 			"C inline use <zmq.h>"
 		alias
 			"ZMQ_PULL"
+		ensure
+			is_class: class
 		end
 
 feature -- Socket Types: Exclusive pair pattern
@@ -124,6 +148,8 @@ feature -- Socket Types: Exclusive pair pattern
 			"C inline use <zmq.h>"
 		alias
 			"ZMQ_PAIR"
+		ensure
+			is_class: class
 		end
 
 feature -- Poll constants
@@ -137,6 +163,8 @@ feature -- Poll constants
 			"C inline use <zmq.h>"
 		alias
 			"ZMQ_POLLIN"
+		ensure
+			is_class: class
 		end
 
 	pollout: INTEGER_32
@@ -148,6 +176,8 @@ feature -- Poll constants
 			"C inline use <zmq.h>"
 		alias
 			"ZMQ_POLLOUT"
+		ensure
+			is_class: class
 		end
 
 	pollerr: INTEGER_32
@@ -160,6 +190,8 @@ feature -- Poll constants
 			"C inline use <zmq.h>"
 		alias
 			"ZMQ_POLLERR"
+		ensure
+			is_class: class
 		end
 
 feature -- Socket options
@@ -169,6 +201,8 @@ feature -- Socket options
 			"C inline use <zmq.h>"
 		alias
 			"return ZMQ_NOBLOCK;"
+		ensure
+			is_class: class
 		end
 
 	sndhwm: INTEGER_32
@@ -194,6 +228,8 @@ feature -- Socket options
 			"C inline use <zmq.h>"
 		alias
 			"return ZMQ_SNDHWM;"
+		ensure
+			is_class: class
 		end
 
 	rcvhwm: INTEGER_32
@@ -216,6 +252,8 @@ feature -- Socket options
 			"C inline use <zmq.h>"
 		alias
 			"return ZMQ_RCVHWM;"
+		ensure
+			is_class: class
 		end
 
 	affinity: INTEGER_32
@@ -240,6 +278,8 @@ feature -- Socket options
 			"C inline use <zmq.h>"
 		alias
 			"return ZMQ_AFFINITY;"
+		ensure
+			is_class: class
 		end
 
 	subscribe: INTEGER_32
@@ -261,6 +301,8 @@ feature -- Socket options
 			"C inline use <zmq.h>"
 		alias
 			"return ZMQ_SUBSCRIBE;"
+		ensure
+			is_class: class
 		end
 
 	unsubscribe: INTEGER_32
@@ -279,6 +321,8 @@ feature -- Socket options
 			"C inline use <zmq.h>"
 		alias
 			"return ZMQ_UNSUBSCRIBE;"
+		ensure
+			is_class: class
 		end
 
 	identity: INTEGER_32
@@ -301,6 +345,8 @@ feature -- Socket options
 			"C inline use <zmq.h>"
 		alias
 			"return ZMQ_IDENTITY;"
+		ensure
+			is_class: class
 		end
 
 	rate: INTEGER_32
@@ -316,6 +362,8 @@ feature -- Socket options
 			"C inline use <zmq.h>"
 		alias
 			"return ZMQ_RATE;"
+		ensure
+			is_class: class
 		end
 
 	recovery_ivl: INTEGER_32
@@ -336,6 +384,8 @@ feature -- Socket options
 			"C inline use <zmq.h>"
 		alias
 			"return ZMQ_RECOVERY_IVL;"
+		ensure
+			is_class: class
 		end
 
 	sndbuf: INTEGER_32
@@ -352,6 +402,8 @@ feature -- Socket options
 			"C inline use <zmq.h>"
 		alias
 			"return ZMQ_SNDBUF;"
+		ensure
+			is_class: class
 		end
 
 	rcvbuf: INTEGER_32
@@ -368,6 +420,8 @@ feature -- Socket options
 			"C inline use <zmq.h>"
 		alias
 			"return ZMQ_RCVBUF;"
+		ensure
+			is_class: class
 		end
 
 	linger: INTEGER_32
@@ -396,6 +450,8 @@ feature -- Socket options
 			"C inline use <zmq.h>"
 		alias
 			"return ZMQ_LINGER;"
+		ensure
+			is_class: class
 		end
 
 	reconnect_ivl: INTEGER_32
@@ -417,6 +473,8 @@ feature -- Socket options
 			"C inline use <zmq.h>"
 		alias
 			"return ZMQ_RECONNECT_IVL;"
+		ensure
+			is_class: class
 		end
 
 	reconnect_ivl_max: INTEGER_32
@@ -437,6 +495,8 @@ feature -- Socket options
 			"C inline use <zmq.h>"
 		alias
 			"return ZMQ_RECONNECT_IVL_MAX;"
+		ensure
+			is_class: class
 		end
 
 	backlog: INTEGER_32
@@ -453,6 +513,8 @@ feature -- Socket options
 			"C inline use <zmq.h>"
 		alias
 			"return ZMQ_BACKLOG;"
+		ensure
+			is_class: class
 		end
 
 	maxmsgsize: INTEGER_32
@@ -468,6 +530,8 @@ feature -- Socket options
 			"C inline use <zmq.h>"
 		alias
 			"return ZMQ_MAXMSGSIZE;"
+		ensure
+			is_class: class
 		end
 
 	multicast_hops: INTEGER_32
@@ -483,6 +547,8 @@ feature -- Socket options
 			"C inline use <zmq.h>"
 		alias
 			"return ZMQ_MULTICAST_HOPS;"
+		ensure
+			is_class: class
 		end
 
 	rcvtimeo: INTEGER_32
@@ -500,6 +566,8 @@ feature -- Socket options
 			"C inline use <zmq.h>"
 		alias
 			"return ZMQ_RCVTIMEO;"
+		ensure
+			is_class: class
 		end
 
 	sndtimeo: INTEGER_32
@@ -517,6 +585,8 @@ feature -- Socket options
 			"C inline use <zmq.h>"
 		alias
 			"return ZMQ_SNDTIMEO;"
+		ensure
+			is_class: class
 		end
 
 --	ipv6: INTEGER_32
@@ -548,6 +618,8 @@ feature -- Socket options
 			"C inline use <zmq.h>"
 		alias
 			"return ZMQ_IPV4ONLY;"
+		ensure
+			is_class: class
 		end
 
 --	immediate: INTEGER_32
@@ -580,6 +652,8 @@ feature -- Socket options
 			"C inline use <zmq.h>"
 		alias
 			"return ZMQ_ROUTER_MANDATORY;"
+		ensure
+			is_class: class
 		end
 
 --	router_raw: INTEGER_32
@@ -615,6 +689,8 @@ feature -- Socket options
 			"C inline use <zmq.h>"
 		alias
 			"return ZMQ_XPUB_VERBOSE;"
+		ensure
+			is_class: class
 		end
 
 	tcp_keepalive: INTEGER_32
@@ -630,6 +706,8 @@ feature -- Socket options
 			"C inline use <zmq.h>"
 		alias
 			"return ZMQ_TCP_KEEPALIVE;"
+		ensure
+			is_class: class
 		end
 
 	tcp_keepalive_idle: INTEGER_32
@@ -645,6 +723,8 @@ feature -- Socket options
 			"C inline use <zmq.h>"
 		alias
 			"return ZMQ_TCP_KEEPALIVE_IDLE;"
+		ensure
+			is_class: class
 		end
 
 	tcp_keepalive_cnt: INTEGER_32
@@ -660,6 +740,8 @@ feature -- Socket options
 			"C inline use <zmq.h>"
 		alias
 			"return ZMQ_TCP_KEEPALIVE_CNT;"
+		ensure
+			is_class: class
 		end
 
 	tcp_keepalive_intvl: INTEGER_32
@@ -675,6 +757,8 @@ feature -- Socket options
 			"C inline use <zmq.h>"
 		alias
 			"return ZMQ_TCP_KEEPALIVE_INTVL;"
+		ensure
+			is_class: class
 		end
 
 	tcp_accept_filter: INTEGER_32
@@ -693,10 +777,12 @@ feature -- Socket options
 			"C inline use <zmq.h>"
 		alias
 			"return ZMQ_TCP_ACCEPT_FILTER;"
+		ensure
+			is_class: class
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

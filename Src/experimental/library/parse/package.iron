@@ -1,13 +1,13 @@
 package parse
 
 project
-	parse = "parse-safe.ecf"
 	parse = "parse.ecf"
 
 note
 	description: "[
-			Parse library: Parsing facilities.
-		]"
+Parse library: Parsing facilities.
+				]"
+
 	title: EiffelParse
 	tags: parser,text
 	copyright: 1984-2016 Eiffel Software and others

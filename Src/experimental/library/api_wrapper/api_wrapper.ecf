@@ -30,6 +30,7 @@
 				<custom name="vision_implementation" value="cocoa"/>
 			</condition>
 		</file_rule>
+
 		<external_linker_flag value="`$(ISE_LIBRARY)/library/api_wrapper/implementation/unix/Clib/dl-config --library`">
 			<description>Library required for dynamic loading.</description>
 			<condition>

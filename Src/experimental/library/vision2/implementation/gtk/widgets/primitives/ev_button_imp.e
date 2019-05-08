@@ -23,7 +23,6 @@ inherit
 		redefine
 			interface,
 			make,
-			old_make,
 			set_foreground_color,
 			foreground_color_pointer,
 			on_focus_changed,
@@ -33,14 +32,12 @@ inherit
 
 	EV_PIXMAPABLE_IMP
 		redefine
-			interface,
-			make
+			interface
 		end
 
 	EV_TEXTABLE_IMP
 		redefine
 			interface,
-			make,
 			align_text_left,
 			align_text_center,
 			align_text_right
@@ -49,7 +46,6 @@ inherit
 	EV_FONTABLE_IMP
 		redefine
 			interface,
-			make,
 			fontable_widget
 		end
 
@@ -237,7 +233,7 @@ invariant
 	button_box_not_null: is_usable implies button_box /= NULL
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

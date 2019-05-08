@@ -965,7 +965,7 @@ EIF_INTEGER c_sendfile(EIF_INTEGER out_fd, FILE* f, EIF_INTEGER offset, EIF_INTE
 /******************************************************/
 
 EIF_INTEGER c_read_stream_noexception(EIF_INTEGER fd, EIF_INTEGER len, EIF_POINTER buf)
-	/* read a stream of character from socket fd into buffer buf of length len.
+	/* Read a stream of character from socket fd into buffer buf of length len.
 	 *	NO exception is raised, and eventual error is return as result!
 	 */
 {
@@ -975,7 +975,7 @@ EIF_INTEGER c_read_stream_noexception(EIF_INTEGER fd, EIF_INTEGER len, EIF_POINT
 }
 
 EIF_INTEGER c_read_stream(EIF_INTEGER fd, EIF_INTEGER len, EIF_POINTER buf)
-	/*x read a stream of character from socket fd into buffer buf
+	/* Read a stream of character from socket fd into buffer buf
 	    of length len */
 {
 	EIF_INTEGER res;
@@ -985,7 +985,7 @@ EIF_INTEGER c_read_stream(EIF_INTEGER fd, EIF_INTEGER len, EIF_POINTER buf)
 }
 
 EIF_INTEGER c_recv_noexception(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INTEGER flags)
-	/* receive at most len bytes from socket fd into buffer buf
+	/* Receive at most len bytes from socket fd into buffer buf
 	 *   flags can be or'ed from 0, MSG_OOB, MSG_PEEK or MSG_DONTROUTE 
 	 * NO exception is raised, and eventual error is return as result!
 	 */
@@ -996,7 +996,7 @@ EIF_INTEGER c_recv_noexception(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len,
 }
 
 EIF_INTEGER c_receive(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INTEGER flags)
-	/*x receive at most len bytes from socket fd into buffer buf
+	/* Receive at most len bytes from socket fd into buffer buf
 	    flags can be or'ed from 0, MSG_OOB, MSG_PEEK or MSG_DONTROUTE */
 {
 	EIF_INTEGER res;
@@ -1006,7 +1006,7 @@ EIF_INTEGER c_receive(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INTE
 }
 
 EIF_INTEGER c_recvfrom_noexception(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INTEGER flags, EIF_POINTER addr, EIF_POINTER addr_len)
-	/* like c_receive and sender address is stored into socket address
+	/* Like c_receive and sender address is stored into socket address
 	 *   structure addr and address length into *addr_len .
 	 *	NO exception is raised, and eventual error is return as result!
 	 */
@@ -1023,7 +1023,7 @@ EIF_INTEGER c_recvfrom_noexception(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER 
 }
 
 EIF_INTEGER c_rcv_from(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INTEGER flags, EIF_POINTER addr, EIF_POINTER addr_len)
-	/*x like c_receive and sender address is stored into socket address
+	/* Like c_receive and sender address is stored into socket address
 	    structure addr and address length into *addr_len */
 {
 	EIF_INTEGER res;
@@ -1038,7 +1038,7 @@ EIF_INTEGER c_rcv_from(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INT
 /********************************************************/
 
 EIF_INTEGER c_write_noexception(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len)
-	/* write at most len bytes from buffer buf into socket fd
+	/* Write at most len bytes from buffer buf into socket fd
 	 *   return number of actually sent bytes.
 	 *	NO exception is raised, and eventual error is return as result!
 	 */
@@ -1049,7 +1049,7 @@ EIF_INTEGER c_write_noexception(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len
 }
 
 EIF_INTEGER c_write(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len)
-	/*x write at most len bytes from buffer buf into socket fd
+	/* Write at most len bytes from buffer buf into socket fd
 	    return number of actually sent bytes */
 {
 	EIF_INTEGER res;
@@ -1059,7 +1059,7 @@ EIF_INTEGER c_write(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len)
 }
 
 EIF_INTEGER c_send_noexception(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INTEGER flags)
-	/* send at most len bytes from buffer buf into socket fd
+	/* Send at most len bytes from buffer buf into socket fd
 	 *   to connected peer address
 	 *   flags can be or'ed from 0 with MSG_OOB, MSG_PEEK, MSG_DONTROUTE
 	 *   return actual number of bytes sent .
@@ -1072,7 +1072,7 @@ EIF_INTEGER c_send_noexception(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len,
 }
 
 EIF_INTEGER c_send(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INTEGER flags)
-	/*x send at most len bytes from buffer buf into socket fd
+	/* Send at most len bytes from buffer buf into socket fd
 	    to connected peer address
 	    flags can be or'ed from 0 with MSG_OOB, MSG_PEEK, MSG_DONTROUTE
 	    return actual number of bytes sent */
@@ -1084,7 +1084,7 @@ EIF_INTEGER c_send(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INTEGER
 }
 
 EIF_INTEGER c_sendto_noexception(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INTEGER flags, EIF_POINTER addr, EIF_INTEGER addr_len)
-	/* like c_send and peer address can be set through socket address
+	/* Like c_send and peer address can be set through socket address
 	 *   structure addr of length addr_len .
 	 *	NO exception is raised, and eventual error is return as result!
 	 */
@@ -1095,7 +1095,7 @@ EIF_INTEGER c_sendto_noexception(EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER le
 }
 
 EIF_INTEGER c_send_to (EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INTEGER flags, EIF_POINTER addr, EIF_INTEGER addr_len)
-	/*x like c_send and peer address can be set through socket address
+	/* Like c_send and peer address can be set through socket address
 	    structure addr of length addr_len */
 {
 	EIF_INTEGER res;
@@ -1109,14 +1109,14 @@ EIF_INTEGER c_send_to (EIF_INTEGER fd, EIF_POINTER buf, EIF_INTEGER len, EIF_INT
 /********************************************************/
 
 void c_set_sock_opt_int(EIF_INTEGER fd, EIF_INTEGER level, EIF_INTEGER opt, EIF_INTEGER val)
-	/*x set socket fd options */
+	/* Set socket fd options */
 {
 	int arg = (int) val;
 	eif_net_check (setsockopt((EIF_SOCKET_TYPE) fd, (int) level, (int) opt, (char *) &arg, sizeof(arg)));
 }
 
 EIF_INTEGER c_get_sock_opt_int(EIF_INTEGER fd, EIF_INTEGER level, EIF_INTEGER opt)
-	/*x get socket fd options */
+	/* Get socket fd options */
 {
 	int arg;
 #ifdef EIF_VMS
@@ -1130,7 +1130,7 @@ EIF_INTEGER c_get_sock_opt_int(EIF_INTEGER fd, EIF_INTEGER level, EIF_INTEGER op
 }
 
 EIF_BOOLEAN c_is_linger_on(EIF_INTEGER fd)
-	/*x does socket discard data on close ? (default linger off -> no) */
+	/* Does socket discard data on close ? (default linger off -> no) */
 {
 	struct linger arg;
 #ifdef EIF_VMS
@@ -1144,7 +1144,7 @@ EIF_BOOLEAN c_is_linger_on(EIF_INTEGER fd)
 }
 
 EIF_INTEGER c_linger_time(EIF_INTEGER fd)
-	/*x non null values are equivalent (despite original specification) */
+	/* Non null values are equivalent (despite original specification) */
 {
 	struct linger arg;
 #ifdef EIF_VMS
@@ -1158,7 +1158,7 @@ EIF_INTEGER c_linger_time(EIF_INTEGER fd)
 }
 
 EIF_INTEGER c_set_sock_opt_linger(EIF_INTEGER fd, EIF_BOOLEAN flag, EIF_INTEGER time)
-	/*x set linger options (on/off and timeout), does not work */
+	/* Set linger options (on/off and timeout), does not work */
 {
 	struct linger arg;
 	int result;
@@ -1176,8 +1176,16 @@ EIF_INTEGER c_set_sock_opt_linger(EIF_INTEGER fd, EIF_BOOLEAN flag, EIF_INTEGER 
 	return (EIF_INTEGER) result;
 }
 
-EIF_INTEGER c_get_sock_recv_timeout(EIF_INTEGER fd, EIF_INTEGER level)
-	/* get socket fd SO_RCVTIMEO options */
+/********************************************************/
+/* timeout   											*/
+/********************************************************/
+
+#define nanoseconds_in_second 		RTU64C(1000000000)
+#define nanoseconds_in_millisecond 	RTU64C(1000000)
+#define nanoseconds_in_microsecond 	RTU64C(1000)
+
+EIF_NATURAL_64 c_get_sock_opt_timeout(EIF_INTEGER fd, EIF_INTEGER level, int optname)
+	/* Get socket fd timeval `optname` option in nanoseconds */
 {
 #ifdef EIF_VMS
 	size_t asize;
@@ -1188,76 +1196,55 @@ EIF_INTEGER c_get_sock_recv_timeout(EIF_INTEGER fd, EIF_INTEGER level)
 #ifdef EIF_WINDOWS
 	int arg;
 	asize = sizeof(arg);
-	eif_net_check(getsockopt((EIF_SOCKET_TYPE) fd, (int) level, SO_RCVTIMEO, (char *) &arg, &asize));
-	return (EIF_INTEGER) (arg / 1000); /* Convert milliseconds to seconds */
+	eif_net_check(getsockopt((EIF_SOCKET_TYPE) fd, (int) level, optname, (char *) &arg, &asize));
+	return nanoseconds_in_millisecond * arg; 
 #else
 	struct timeval tv;
 	asize = sizeof(struct timeval);
-	eif_net_check(getsockopt((EIF_SOCKET_TYPE) fd, (int) level, SO_RCVTIMEO, &tv, &asize));
-	return (EIF_INTEGER) tv.tv_sec;
+	eif_net_check(getsockopt((EIF_SOCKET_TYPE) fd, (int) level, optname, &tv, &asize));
+	return (EIF_NATURAL_64) (nanoseconds_in_second * tv.tv_sec + nanoseconds_in_microsecond * tv.tv_usec);
 #endif
 }
 
-void c_set_sock_recv_timeout(EIF_INTEGER fd, EIF_INTEGER level, EIF_INTEGER recv_timeout_seconds)
-	/* set socket SO_RCVTIMEO option to recv_timeout_seconds */
+void c_set_sock_opt_timeout(EIF_INTEGER fd, EIF_INTEGER level, int optname, EIF_NATURAL_64 timeout_ns)
+	/* Set socket `optname` option to timeout_ns */
 {
 #ifdef EIF_WINDOWS
-	int arg = (int) 1000 * recv_timeout_seconds; /* Timeout in milliseconds */
-	eif_net_check (setsockopt((EIF_SOCKET_TYPE) fd, (int) level, (int) SO_RCVTIMEO, (char *) &arg, sizeof(arg)));
-#else
-	struct timeval tv;
-	tv.tv_sec = (int) recv_timeout_seconds;  /* Timeout in seconds */
-	tv.tv_usec = 0;
-
-	eif_net_check (setsockopt((EIF_SOCKET_TYPE) fd, (int) level, (int) SO_RCVTIMEO, &tv, sizeof(struct timeval)));
-#endif
-}
-
-EIF_INTEGER c_get_sock_send_timeout(EIF_INTEGER fd, EIF_INTEGER level)
-	/* get socket fd SO_SNDTIMEO options */
-{
-#ifdef EIF_VMS
-	size_t asize;
-#else
-	socklen_t asize;
-#endif
-
-#ifdef EIF_WINDOWS
+	EIF_NATURAL_64 ms;
 	int arg;
-	asize = sizeof(arg);
-	eif_net_check(getsockopt((EIF_SOCKET_TYPE) fd, (int) level, SO_SNDTIMEO, (char *) &arg, &asize));
-	return (EIF_INTEGER) (arg / 1000); /* Convert milliseconds to seconds */
+	ms = timeout_ns / nanoseconds_in_millisecond; 
+	if (ms > INT_MAX) {
+		arg = INT_MAX;
+	} else {
+		arg = (int) ms;
+	}
+	if (arg == 0 && timeout_ns != 0) {
+			/* timeout values are above zero, but less than 1 millisecond
+			 * then set to 1 millisecond as a timeout of 0 may indicate an infinite time-out period).
+			 */
+		arg = 1;
+	}
+	eif_net_check (setsockopt((EIF_SOCKET_TYPE) fd, (int) level, optname, (char *) &arg, sizeof(arg)));
 #else
 	struct timeval tv;
-	asize = sizeof(struct timeval);
-	eif_net_check(getsockopt((EIF_SOCKET_TYPE) fd, (int) level, SO_SNDTIMEO, &tv, &asize));
-	return (EIF_INTEGER) tv.tv_sec;
+	tv.tv_sec = (long) (timeout_ns / nanoseconds_in_second); 
+	tv.tv_usec = (long) ((timeout_ns % nanoseconds_in_second) / nanoseconds_in_microsecond);
+	if (tv.tv_sec == 0 && tv.tv_usec == 0 && timeout_ns != 0) {
+			/* timeout values are above zero, but less than 1 microsecond
+			 * then set to 1 microsecond as a timeout of 0 may indicate an infinite time-out period).
+			 */
+		tv.tv_usec = 1;
+	}
+	eif_net_check (setsockopt((EIF_SOCKET_TYPE) fd, (int) level, optname, &tv, sizeof(struct timeval)));
 #endif
 }
-
-void c_set_sock_send_timeout(EIF_INTEGER fd, EIF_INTEGER level, EIF_INTEGER send_timeout_seconds)
-	/* set socket SO_SNDTIMEO option to send_timeout_seconds */
-{
-#ifdef EIF_WINDOWS
-	int arg = (int) 1000 * send_timeout_seconds; /* Timeout in milliseconds */
-	eif_net_check (setsockopt((EIF_SOCKET_TYPE) fd, (int) level, (int) SO_SNDTIMEO, (char *) &arg, sizeof(arg)));
-#else
-	struct timeval tv;
-	tv.tv_sec = (int) send_timeout_seconds;  /* Timeout in seconds */
-	tv.tv_usec = 0;
-
-	eif_net_check (setsockopt((EIF_SOCKET_TYPE) fd, (int) level, (int) SO_SNDTIMEO, &tv, sizeof(struct timeval)));
-#endif
-}
-
 
 /********************************************************/
 /* Misc													*/
 /********************************************************/
 
-
 EIF_INTEGER c_fcntl(EIF_INTEGER fd, EIF_INTEGER cmd, EIF_INTEGER arg)
-	/*x set possibly open fd socket options */
+	/* Set possibly open fd socket options */
 {
 #if defined EIF_WINDOWS || defined VXWORKS
 	return 0;
@@ -1272,7 +1259,7 @@ EIF_INTEGER c_fcntl(EIF_INTEGER fd, EIF_INTEGER cmd, EIF_INTEGER arg)
 }
 
 void c_set_blocking(EIF_INTEGER fd)
-	/*x set socket fd blocking */
+	/* Set socket fd blocking */
 {
 #ifdef EIF_WINDOWS
 	u_long arg = 0;
@@ -1290,7 +1277,7 @@ void c_set_blocking(EIF_INTEGER fd)
 }
 
 void c_set_non_blocking(EIF_INTEGER fd)
-	/*x set socket fd non-blocking */
+	/* Set socket fd non-blocking */
 {
 
 #ifdef EIF_WINDOWS
@@ -1309,7 +1296,7 @@ void c_set_non_blocking(EIF_INTEGER fd)
 }
 
 EIF_INTEGER c_get_number(EIF_POINTER data_obj)
-	/*x packet number out of packet structure */
+	/* Packet number out of packet structure */
 {
 	/* Note: it is assumed here the size of a long integer (EIF_INTEGER)
 	 * is either 4 or 8.
@@ -1336,7 +1323,7 @@ EIF_INTEGER c_get_number(EIF_POINTER data_obj)
 }
 
 void c_set_number(EIF_POINTER data_obj, EIF_INTEGER num)
-	/*x set packet number in packet structure */
+	/* Set packet number in packet structure */
 {
 	/* Note: it is assumed here the size of a long integer (EIF_INTEGER)
 	 * is either 4 or 8.
@@ -1358,7 +1345,7 @@ void c_set_number(EIF_POINTER data_obj, EIF_INTEGER num)
 
 
 void c_shutdown(EIF_INTEGER sock, EIF_INTEGER how)
-	/*x shut down a socket with `how' modality */
+	/* Shut down a socket with `how' modality */
 {
 		/* Note that even if the call to `shutdown' fails we don't throw an
 		 * exception. The reason is that sometime the socket is already closed

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Oracle specification"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -11,7 +11,6 @@ class
 inherit
 	DATABASE
 		redefine
-			normal_parse,
 			parse,
 			bind_arguments,
 			convert_string_type,
@@ -69,7 +68,7 @@ feature -- For DATABASE_FORMAT
 	string_format (object: detachable STRING): STRING
 			-- String representation in SQL of `object'.
 		obsolete
-			"Use `string_format_32' instead."
+			"Use `string_format_32' instead [2017-11-30]."
 		do
 			Result := string_format_32 (object).as_string_8_conversion
 		end
@@ -1006,7 +1005,7 @@ feature {NONE} -- External features
 	Concat_string: STRING_32 = "'||'";
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -1016,9 +1015,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class ORACLE
-
-
+end

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "EiffelVision postscript drawing area implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -245,6 +245,12 @@ feature -- Element change
 			font := a_font.twin
 		end
 
+	set_anti_aliasing (value: BOOLEAN)
+			-- <Precursor>
+		do
+				-- No effect here.
+		end
+
 feature -- Clearing and drawing operations
 
 	redraw
@@ -344,7 +350,7 @@ feature -- Clearing and drawing operations
 					create page_rectangle.make (real_page_width * (h - 1), real_page_height * (v - 1), real_page_width, real_page_height)
 					page_clip_rectangle := intersect (page_rectangle, clip_rectangle)
 					file_with_header.append  ("newpath%N")
-					file_with_header.append  ((page_clip_rectangle.left).out + " " + (- (page_clip_rectangle.top)).out + " moveto%N")
+					file_with_header.append  ((page_clip_rectangle.left).out + " " + (- page_clip_rectangle.top).out + " moveto%N")
 					file_with_header.append  ((page_clip_rectangle.width).out + " 0 rlineto%N")
 					file_with_header.append  ("0 " + (- page_clip_rectangle.height).out + " rlineto%N")
 					file_with_header.append  ((-page_clip_rectangle.width).out + " 0 rlineto%N")
@@ -388,7 +394,7 @@ feature -- Clearing and drawing operations
 feature -- Duplication
 
 	sub_pixmap (area: EV_RECTANGLE): EV_PIXMAP
-			-- Pixmap region of `Current' represented by rectangle `area'
+			-- Pixmap region of `Current' represented by rectangle `area'.
 		do
 			check do_not_call: False end
 			create Result
@@ -399,7 +405,7 @@ feature -- Drawing operations
 	draw_point (x, y: INTEGER)
 			-- Draw point at (`x', 'y').
 		do
-			translate_to (x, ( - y))
+			translate_to (x, - y)
 			add_ps ("newpath")
 			draw_arc_ps (1, 0, 360)
 			add_ps ("closepath")
@@ -424,21 +430,18 @@ feature -- Drawing operations
 			add_ps ("gsave")
 			translate_to (0, 0)
 			font_name := font.name.twin
+				-- White space is not allowed in a font name.
+			font_name.prune_all (' ')
 			font_name.put (font_name.item (1).as_upper, 1)
 			create font_style.make (20)
 			if font.weight = 8 then
 				font_style.append_string_general ("Bold")
 			end
-			if font_name.same_string_general ("Times") then
-				if font.shape = 11 then
-					font_style.append_string_general ("Italic")
-				end
-			else
-				if font.shape = 11 then
-					font_style.append_string_general ("Oblique")
-				end
+			if font.shape = 11 then
+				font_style.append_string_general
+					(if font_name.same_string_general ("Times") then "Italic" else "Oblique" end)
 			end
-			if font_style.count = 0 then
+			if font_style.is_empty then
 				font_style.append_string_general ("Roman")
 			end
 			add_ps ("/" + font_name + "-" + font_style + " findfont")
@@ -460,7 +463,7 @@ feature -- Drawing operations
 					end
 					add_ps (x.out + " " + ( - y - font.ascent - line_nr * font_height).out + " moveto")
 					line.prepend_character ('(')
-					line.append_string_general (") show)")
+					line.append_string_general (") show")
 					add_ps (line)
 					line_nr := line_nr + 1
 					line.wipe_out
@@ -563,7 +566,7 @@ feature -- Drawing operations
 			-- Angles are measured in radians.
 		do
 			add_ps ("gsave")
-			translate_to (x + (a_bounding_width // 2), (-(y + (a_bounding_height // 2))))
+			translate_to (x + a_bounding_width // 2, - (y + a_bounding_height // 2))
 			add_ps ("1 " + (a_bounding_height / a_bounding_width).out + " scale")
 			draw_arc_ps (a_bounding_width // 2, ((a_start_angle * 180) / Pi).rounded, (((an_aperture + a_start_angle) * 180) / Pi).rounded)
 			add_ps ("stroke")
@@ -589,7 +592,7 @@ feature -- Drawing operations
 			-- `a_bounding_height'.
 		do
 			add_ps ("gsave")
-			translate_to (x + (a_bounding_width // 2), ( - (y + (a_bounding_height //2))))
+			translate_to (x + a_bounding_width // 2,  - (y + a_bounding_height //2))
 			add_ps ("newpath")
 			add_ps ("1 " + (a_bounding_height / a_bounding_width).out + " scale")
 			draw_arc_ps (a_bounding_width // 2, 0, 360)
@@ -667,7 +670,7 @@ feature -- Drawing operations (filled)
 			-- `a_bounding_height'.
 		do
 			add_ps ("gsave")
-			translate_to (x + (a_bounding_width // 2), ( - (y + (a_bounding_height //2))))
+			translate_to (x + a_bounding_width // 2, - (y + a_bounding_height //2))
 			add_ps ("newpath")
 			add_ps ("1 " + (a_bounding_height / a_bounding_width).out + " scale")
 			draw_arc_ps (a_bounding_width // 2, 0, 360)
@@ -753,7 +756,7 @@ feature {NONE} -- Implementation
 	draw_pie_slice_ps (a_h, a_w, a_line_width, start_angle, end_angle: INTEGER; dashed, filled: BOOLEAN)
 		do
 			add_ps ("newpath")
-			if (a_w > a_h) then
+			if a_w > a_h then
 				add_ps ("1 " + (a_h / a_w).out + " scale")
 			else
 				add_ps ((a_w / a_h).out + " 1 scale")
@@ -810,7 +813,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -820,12 +823,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_POSTSCRIPT_DRAWABLE_IMP
-
-
-
-
-
+end

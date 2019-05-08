@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Control with a text."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -10,9 +10,6 @@ class
 
 inherit
 	WEL_CONTROL
-		redefine
-			class_name
-		end
 
 	WEL_SS_CONSTANTS
 		export
@@ -29,7 +26,7 @@ feature {NONE} -- Initialization
 
 	make (a_parent: WEL_WINDOW; a_name: READABLE_STRING_GENERAL;
 			a_x, a_y, a_width, a_height, an_id: INTEGER)
-			-- Make a static control
+			-- Make a static control.
 		require
 			a_parent_not_void: a_parent /= Void
 			a_parent_exists: a_parent.exists
@@ -50,16 +47,16 @@ feature -- Access
 
 	foreground_color: WEL_COLOR_REF
 			-- foreground color used for the text of the
-			-- control
-			-- Can be redefined by the user
+			-- control.
+			-- Can be redefined by the user.
 		do
 			create Result.make_system (Color_windowtext)
 		end
 
 	background_color: WEL_COLOR_REF
 			-- Background color used for the background of the
-			-- control
-			-- Can be redefined by the user
+			-- control.
+			-- Can be redefined by the user.
 		do
 			create Result.make_system (Color_btnface)
 		end
@@ -67,7 +64,7 @@ feature -- Access
 feature -- Basic operations
 
 	clear
-			-- Clear the text
+			-- Clear the text.
 		require
 			exists: exists
 		do
@@ -79,20 +76,20 @@ feature -- Basic operations
 feature {NONE} -- Implementation
 
 	class_name: STRING_32
-			-- Window class name to create
+			-- Window class name to create.
 		once
 			Result := {STRING_32} "Static"
 		end
 
 	default_style: INTEGER
-			-- Default style used to create the control
+			-- Default style used to create the control.
 		once
 			Result := Ws_visible + Ws_child + Ws_group +
 				Ws_tabstop + Ss_left
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -102,8 +99,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class WEL_STATIC
-
+end

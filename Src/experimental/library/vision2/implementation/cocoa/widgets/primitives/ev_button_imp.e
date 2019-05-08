@@ -33,14 +33,12 @@ inherit
 	EV_PIXMAPABLE_IMP
 		redefine
 			interface,
-			make,
 			set_pixmap
 		end
 
 	EV_TEXTABLE_IMP
 		redefine
 			interface,
-			make,
 			set_text,
 			align_text_left,
 			align_text_center,
@@ -49,8 +47,7 @@ inherit
 
 	EV_FONTABLE_IMP
 		redefine
-			interface,
-			make
+			interface
 		end
 
 	NS_BUTTON
@@ -264,7 +261,7 @@ feature {EV_ANY, EV_ANY_I} -- implementation
 			-- functionality implemented by `Current'
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

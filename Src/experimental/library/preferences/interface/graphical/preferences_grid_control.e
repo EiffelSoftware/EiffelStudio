@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			A widget containing a tree/grid view of application preferences.  Provides a
 			list to view preference information and ability to edit the preferences using popup floating widgets.  Also allows
@@ -52,22 +52,7 @@ feature {NONE} -- Initialization
 			l_tb: EV_TOOL_BAR
 		do
 				-- Create objects before using them for void-safety reasons.
-			create filter_box
-			create filter_text_box
-			create filter_value_check_box.make_with_text (l_filter_value)
-			create view_toggle_button.make_with_text (l_flat_view)
-			create split_area
-			create grid_container
-			create status_box
-			create description_location
-			create status_label
-			create description_text
-			create restore_button.make_with_text (l_restore_defaults)
-			create import_button.make_with_text (l_import_preferences)
-			create export_button.make_with_text (l_export_preferences)
-			create display_hidden_button.make_with_text (l_display_hidden_preferences)
-			create apply_or_close_button.make_with_text (l_apply)
-			create grid
+			create_controls
 			build_filter_icons
 
 			display_update_agent := agent on_preference_changed_externally
@@ -96,7 +81,6 @@ feature {NONE} -- Initialization
 			l_ffilter.extend (l_hb)
 			l_box.extend (l_ffilter)
 			l_box.disable_item_expand (l_ffilter)
-
 
 			create l_fgrid
 			create l_vb
@@ -130,6 +114,48 @@ feature {NONE} -- Initialization
 			split_area.disable_item_expand (l_fdesc)
 			l_box.extend (split_area)
 
+			add_buttons (l_box)
+
+				--| Widget properties
+			if attached description_location.parent as p then
+				description_location.set_background_color (p.background_color)
+			end
+
+			description_location.disable_edit
+			description_text.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
+			description_text.disable_edit
+
+			initialize_grid
+			initialize_actions
+			initialize_shortcuts
+		end
+
+	create_controls
+			-- Create control widgets.
+		do
+			create filter_box
+			create filter_text_box
+			create filter_value_check_box.make_with_text (l_filter_value)
+			create view_toggle_button.make_with_text (l_flat_view)
+			create split_area
+			create grid_container
+			create status_box
+			create description_location
+			create status_label
+			create description_text
+			create restore_button.make_with_text (l_restore_defaults)
+			create import_button.make_with_text (l_import_preferences)
+			create export_button.make_with_text (l_export_preferences)
+			create display_hidden_button.make_with_text (l_display_hidden_preferences)
+			create apply_or_close_button.make_with_text (l_apply)
+			create grid
+		end
+
+	add_buttons (b: EV_VERTICAL_BOX)
+			-- Add buttons to the given box.
+		local
+			l_hb: EV_HORIZONTAL_BOX
+		do
 			create l_hb
 			l_hb.set_padding_width (small_padding_size)
 			l_hb.set_border_width (small_border_size)
@@ -152,20 +178,13 @@ feature {NONE} -- Initialization
 			l_hb.disable_item_expand (export_button)
 			l_hb.disable_item_expand (display_hidden_button)
 			l_hb.disable_item_expand (apply_or_close_button)
-			l_box.extend (l_hb)
-			l_box.disable_item_expand (l_hb)
+			b.extend (l_hb)
+			b.disable_item_expand (l_hb)
+		end
 
-				--| Widget properties
-			if attached description_location.parent as p then
-				description_location.set_background_color (p.background_color)
-			end
-
-			description_location.disable_edit
-			description_text.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
-			description_text.disable_edit
-
-				--| Dynamic behavior
-
+	initialize_grid
+			-- Initialize grid widget.
+		do
 			flat_sorting_info := Name_sorting_mode
 			default_row_height := grid.row_height
 			grid.enable_single_row_selection
@@ -176,14 +195,17 @@ feature {NONE} -- Initialization
 			grid.column (col_status_index).set_title (l_status)
 			grid.column (col_value_index).set_title (l_literal_value)
 			enable_tree_view
+		end
 
-
-				-- Agents
+	initialize_actions
+			-- Initialize actions associated with widgets.
+		do
 			grid.pointer_double_press_item_actions.extend (agent on_grid_item_double_pressed)
 			grid.key_press_actions.extend (agent on_grid_key_pressed)
 
-			grid.header.pointer_double_press_actions.force_extend (agent on_header_double_clicked)
-			grid.header.item_resize_end_actions.force_extend (agent on_header_item_resize)
+			grid.header.pointer_double_press_actions.extend
+				(agent (x, y, b: INTEGER_32; x_tilt, y_tilt, pressure: REAL_64; screen_x, screen_y: INTEGER_32) do on_header_double_clicked end)
+			grid.header.item_resize_end_actions.extend (agent on_header_item_resize)
 			grid.header.item_pointer_button_press_actions.extend (agent on_header_item_single_clicked)
 
 			restore_button.select_actions.extend (agent on_restore)
@@ -193,17 +215,16 @@ feature {NONE} -- Initialization
 			apply_or_close_button.select_actions.extend (agent on_apply_or_close)
 			description_location.key_press_actions.extend (agent on_description_key_pressed)
 			description_text.key_press_actions.extend (agent on_description_key_pressed)
-			l_box.resize_actions.force_extend (agent on_resize)
+			widget.resize_actions.extend (agent (x, y, w, h: INTEGER_32) do on_resize end)
+			widget.dpi_changed_actions.extend (agent (dpi, x, y, w, h: INTEGER_32) do on_resize end)
 			view_toggle_button.select_actions.extend (agent toggle_view)
 
 				--| Filter
 			filter_text_box.change_actions.extend (agent request_update_matches)
 			filter_value_check_box.select_actions.extend (agent request_update_matches)
-
-			init_shortcuts
 		end
 
-	init_shortcuts
+	initialize_shortcuts
 		do
 			filter_text_box.key_press_actions.extend (agent accelerator_on_key_pressed)
 			description_location.key_press_actions.extend (agent accelerator_on_key_pressed)
@@ -244,13 +265,6 @@ feature -- Access
 	status_label: EV_LABEL
 	filter_text_box: EV_TEXT_FIELD
 	filter_value_check_box: EV_CHECK_BUTTON
-
-feature -- Obsolete
-
-	register_preference_widget (a_pref_widget: PREFERENCE_WIDGET)
-		obsolete "do not use, this had no effect at all, so this was removed [2017-05-31]."
-		do
-		end
 
 feature -- Status Setting
 
@@ -422,8 +436,6 @@ feature {NONE} -- Events
 
 	set_preference_to_default (a_item: EV_GRID_LABEL_ITEM; a_pref: PREFERENCE)
 			-- Set the preference value to the original default.
-		local
-			l_gitem: detachable EV_GRID_ITEM
 		do
 			a_pref.reset
 			a_item.set_text (p_default_value)
@@ -432,11 +444,11 @@ feature {NONE} -- Events
 				a_item.set_text (a_item.text + " (" + auto_value + ")")
 			end
 
-			l_gitem := a_item.row.item (col_value_index)
-			if l_gitem /= Void then
-				if attached {PREFERENCE_WIDGET} l_gitem.data as l_prefwidget then
-					l_prefwidget.refresh
-				end
+			if
+				attached a_item.row.item (col_value_index) as l_gitem and then
+				attached {PREFERENCE_WIDGET} l_gitem.data as l_prefwidget
+			then
+				l_prefwidget.refresh
 			end
 		end
 
@@ -493,49 +505,44 @@ feature {NONE} -- Events
 			if p /= Void then
 				create dlg.make_with_title (l_import_preferences)
 				dlg.show_modal_to_window (p)
-				s := dlg.file_name
-				if s /= Void then
-					create stor.make_with_location_and_version (s, preferences.version)
+				create stor.make_with_location_and_version (dlg.file_name, preferences.version)
 
-						-- Busy style
-					l_style := p.pointer_style
-					p.set_pointer_style (create {EV_POINTER_STYLE}.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.busy_cursor))
+					-- Busy style
+				l_style := p.pointer_style
+				p.set_pointer_style (create {EV_POINTER_STYLE}.make_predefined ({EV_POINTER_STYLE_CONSTANTS}.busy_cursor))
 
-						-- Popup dialog
-					create popup.make_with_shadow
-					create bb
-					bb.set_border_width (1)
-					create vb
-					bb.extend (vb)
-					vb.set_border_width (10)
-					create lab.make_with_text (l_importing_preferences)
-					lab.align_text_left
-					vb.extend (lab)
+					-- Popup dialog
+				create popup.make_with_shadow
+				create bb
+				bb.set_border_width (1)
+				create vb
+				bb.extend (vb)
+				vb.set_border_width (10)
+				create lab.make_with_text (l_importing_preferences)
+				lab.align_text_left
+				vb.extend (lab)
 
-					create lab.make_with_text ("...")
-					lab.align_text_left
-					vb.extend (lab)
+				create lab.make_with_text ("...")
+				lab.align_text_left
+				vb.extend (lab)
 
-					popup.extend (bb)
-					popup.set_background_color ((create {EV_STOCK_COLORS}).white)
-					popup.propagate_background_color
-					bb.set_background_color ((create {EV_STOCK_COLORS}).blue)
-					popup.set_width ((9 * p.width) // 10)
-					popup.set_position (p.x_position + (p.width - popup.width) // 2, p.y_position + (p.height - popup.height) // 2)
-					popup.show_relative_to_window (p)
-					popup.refresh_now
+				popup.extend (bb)
+				popup.set_background_color ((create {EV_STOCK_COLORS}).white)
+				popup.propagate_background_color
+				bb.set_background_color ((create {EV_STOCK_COLORS}).blue)
+				popup.set_width ((9 * p.width) // 10)
+				popup.set_position (p.x_position + (p.width - popup.width) // 2, p.y_position + (p.height - popup.height) // 2)
+				popup.show_relative_to_window (p)
+				popup.refresh_now
 
-					preferences.import_from_storage_with_callback (stor, agent (ia_txt: EV_LABEL; ia_i, ia_count: INTEGER; ia_name, ia_value: READABLE_STRING_GENERAL)
-							do
-								ia_txt.set_text ("[" + ia_i.out + "/" + ia_count.out + "] " + ia_name.out + "%N")
-								ia_txt.refresh_now
-							end (lab, ?, ?, ?, ?))
-					popup.destroy
-					if l_style /= Void then
-						p.set_pointer_style (l_style)
-					end
-					rebuild
-				end
+				preferences.import_from_storage_with_callback (stor, agent (ia_txt: EV_LABEL; ia_i, ia_count: INTEGER; ia_name, ia_value: READABLE_STRING_GENERAL)
+						do
+							ia_txt.set_text ("[" + ia_i.out + "/" + ia_count.out + "] " + ia_name.out + "%N")
+							ia_txt.refresh_now
+						end (lab, ?, ?, ?, ?))
+				popup.destroy
+				p.set_pointer_style (l_style)
+				rebuild
 			end
 		end
 
@@ -545,26 +552,28 @@ feature {NONE} -- Events
 			l_popup_menu: EV_MENU
 			l_menu_item: EV_MENU_ITEM
 		do
-			if not a_pref.is_default_value and then a_button = 3 then
+			if
+				not a_pref.is_default_value and then
+				a_button = 3 and then
+				a_item.row.data = a_pref
+			then
 					-- Extract preference from row data.
 					-- Show the menu only if necessary (that is to say, the preference value is different from the default one)
-				if a_item.row.data = a_pref then
-						-- Ensure that before showing the menu, the row gets selected.
-					grid.remove_selection
-					a_item.row.enable_select
-					create l_popup_menu
-					if a_pref.has_default_value then
-							-- The right clicked preference matches the selection in the grid
-						create l_menu_item.make_with_text (l_restore_defaults)
-						l_menu_item.select_actions.extend (agent set_preference_to_default (a_item, a_pref))
-						l_popup_menu.extend (l_menu_item)
-					else
-						create l_menu_item.make_with_text (l_no_default_value)
-						l_menu_item.disable_sensitive
-						l_popup_menu.extend (l_menu_item)
-					end
-					l_popup_menu.show
+					-- Ensure that before showing the menu, the row gets selected.
+				grid.remove_selection
+				a_item.row.enable_select
+				create l_popup_menu
+				if a_pref.has_default_value then
+						-- The right clicked preference matches the selection in the grid
+					create l_menu_item.make_with_text (l_restore_defaults)
+					l_menu_item.select_actions.extend (agent set_preference_to_default (a_item, a_pref))
+					l_popup_menu.extend (l_menu_item)
+				else
+					create l_menu_item.make_with_text (l_no_default_value)
+					l_menu_item.disable_sensitive
+					l_popup_menu.extend (l_menu_item)
 				end
+				l_popup_menu.show
 			end
 		end
 
@@ -575,13 +584,13 @@ feature {NONE} -- Events
 		do
 			if a_item /= Void then
 				l_col_index := a_item.column.index
-				if l_col_index = col_name_index or l_col_index = col_type_index or l_col_index = col_status_index then
-					if attached {BOOLEAN_PREFERENCE} a_item.row.data as l_bool_preference then
-						if attached {EV_GRID_CHOICE_ITEM} a_item.row.item (col_value_index) as l_combo_widget then
-							l_combo_widget.set_text ((not l_bool_preference.value).out)
-							l_combo_widget.deactivate_actions.call (Void)
-						end
-					end
+				if
+					(l_col_index = col_name_index or l_col_index = col_type_index or l_col_index = col_status_index) and then
+					attached {BOOLEAN_PREFERENCE} a_item.row.data as l_bool_preference and then
+					attached {EV_GRID_CHOICE_ITEM} a_item.row.item (col_value_index) as l_combo_widget
+				then
+					l_combo_widget.set_text ((not l_bool_preference.value).out)
+					l_combo_widget.deactivate_actions.call (Void)
 				end
 			end
 		end
@@ -705,39 +714,36 @@ feature {NONE} -- Events
 			col_index: INTEGER
 		do
 			if
-				not grid.is_tree_enabled
-				and a_but = 1
-				and grid.header.pointed_divider_index = 0 --| Let's be sure no divider is clicked
+				not grid.is_tree_enabled and
+				a_but = 1 and
+					-- Let's be sure no divider is clicked
+				grid.header.pointed_divider_index = 0 and then
+				attached {EV_GRID_HEADER_ITEM} hi as ghi and then
+				attached ghi.column as l_column
 			then
-				if attached {EV_GRID_HEADER_ITEM} hi as ghi and then
-					attached ghi.column as l_column
-				then
-					col_index := l_column.index
-					if col_index /= Value_sorting_mode then
-						if col_index = flat_sorting_info.abs then
-							flat_sorting_info := - flat_sorting_info
-						else
-							if grid.column_count >= flat_sorting_info.abs then
-								grid.column (flat_sorting_info.abs).header_item.remove_pixmap
-							end
-							flat_sorting_info := col_index
+				col_index := l_column.index
+				if col_index /= Value_sorting_mode then
+					if col_index = flat_sorting_info.abs then
+						flat_sorting_info := - flat_sorting_info
+					else
+						if grid.column_count >= flat_sorting_info.abs then
+							grid.column (flat_sorting_info.abs).header_item.remove_pixmap
 						end
-						rebuild
+						flat_sorting_info := col_index
 					end
+					rebuild
 				end
 			end
 		end
 
-	on_header_item_resize
+	on_header_item_resize (h: EV_HEADER_ITEM)
 			-- Header was double-clicked.
 		local
 			div_index: INTEGER
-			col: EV_GRID_COLUMN
 		do
 			div_index := grid.header.pointed_divider_index
 			if div_index > 0 then
-				col := grid.column (div_index)
-				resized_columns_list.put (True, col.index)
+				resized_columns_list.put (True, grid.column (div_index).index)
 			end
 		end
 
@@ -777,7 +783,7 @@ feature {NONE} -- Implementation
 			status_label.refresh_now
 
 				-- Alphabetically sort the known preferences
-			l_sorted_preferences := sorted_known_preferences_by (-Name_sorting_mode, show_hidden_preferences, preferences.preferences.linear_representation)
+			l_sorted_preferences := sorted_known_preferences_by (-Name_sorting_mode, show_hidden_preferences, preferences.preferences)
 
 			if l_sorted_preferences /= Void and then not l_sorted_preferences.is_empty then
 				create l_pref_hash.make (l_sorted_preferences.count)
@@ -882,22 +888,18 @@ feature {NONE} -- Implementation
 			grid_remove_and_clear_all_rows (grid)
 
 				-- Retrieve known preferences
-			if matches /= Void then
-				l_sorted_preferences := sorted_known_preferences_by (flat_sorting_info, show_hidden_preferences, matches)
+			if attached matches as m then
+				l_sorted_preferences := sorted_known_preferences_by (flat_sorting_info, show_hidden_preferences, m)
 			else
-				l_sorted_preferences := sorted_known_preferences_by (flat_sorting_info, show_hidden_preferences, preferences.preferences.linear_representation)
+				l_sorted_preferences := sorted_known_preferences_by (flat_sorting_info, show_hidden_preferences, preferences.preferences)
 			end
 
 			if l_sorted_preferences /= Void and then not l_sorted_preferences.is_empty then
 					-- Traverse the preferences in the system and add to grid list
-				from
-					l_sorted_preferences.start
-				until
-					l_sorted_preferences.after
+				across
+					l_sorted_preferences as p
 				loop
-					l_pref := l_sorted_preferences.item
-					add_short_preference_row (Void, l_pref)
-					l_sorted_preferences.forth
+					add_short_preference_row (Void, p.item)
 				end
 				update_grid_columns
 			end
@@ -909,11 +911,10 @@ feature {NONE} -- Implementation
 			Result := a.index < b.index
 		end
 
-	sorted_known_preferences_by (a_sorting_info: INTEGER; a_show_hidden: BOOLEAN; a_prefs_to_sort: detachable LIST [PREFERENCE]): detachable LIST [PREFERENCE]
+	sorted_known_preferences_by (a_sorting_info: INTEGER; a_show_hidden: BOOLEAN; a_prefs_to_sort: ITERABLE [PREFERENCE]): LIST [PREFERENCE]
 			-- Sorted known preferences using criteria `a_sorting_info'.
 			-- Exclude hidden preferences when `a_show_hidden' is False.
 		local
-			l_prefs_to_sort: detachable LIST [PREFERENCE]
 			l_known_pref_ht: STRING_TABLE [PREFERENCE]
 			l_sorted_preferences: SORTED_TWO_WAY_LIST [PROXY_COMPARABLE [TUPLE [pref_name: STRING_32; index: STRING_32]]]
 			l_compare_agent: PREDICATE [TUPLE [STRING_32, STRING_32], TUPLE [STRING_32, STRING_32]]
@@ -923,74 +924,66 @@ feature {NONE} -- Implementation
 			l_sorting_up: BOOLEAN
 			l_sorting_criteria: INTEGER
 		do
-			l_prefs_to_sort := a_prefs_to_sort
-			if l_prefs_to_sort /= Void then
-				l_sorting_up := a_sorting_info > 0
-				l_sorting_criteria := a_sorting_info.abs
-				l_compare_agent := agent index_tuple_less_than
+			l_sorting_up := a_sorting_info > 0
+			l_sorting_criteria := a_sorting_info.abs
+			l_compare_agent := agent index_tuple_less_than
 
-					-- Alphabetically sort the known preferences
-				from
-					create l_sorted_preferences.make
-					l_prefs_to_sort.start
-				until
-					l_prefs_to_sort.after
-				loop
-					l_pref := l_prefs_to_sort.item
-					l_pref_name := l_pref.name
-					l_display_name := build_full_name_to_display (l_pref_name)
-					inspect l_sorting_criteria
-					when Name_sorting_mode then --| Pref name
-						l_pref_index := l_display_name
-					when Type_sorting_mode then --| type name
-						l_pref_index := l_pref.string_type + "@" + l_display_name
-					when Status_sorting_mode then --| type name
-						create l_pref_index.make_empty
-						if l_pref.is_default_value then
-							l_pref_index.append (p_default_value)
-						else
-							l_pref_index.append (user_value)
-						end
-						if l_pref.is_auto then
-							l_pref_index.append (auto_value)
-						end
-						l_pref_index.append ("@" + l_display_name)
+				-- Alphabetically sort the known preferences
+			create l_sorted_preferences.make
+			across
+				a_prefs_to_sort as p
+			loop
+				l_pref := p.item
+				l_pref_name := l_pref.name
+				l_display_name := build_full_name_to_display (l_pref_name)
+				inspect l_sorting_criteria
+				when Name_sorting_mode then --| Pref name
+					l_pref_index := l_display_name
+				when Type_sorting_mode then --| type name
+					l_pref_index := l_pref.string_type + "@" + l_display_name
+				when Status_sorting_mode then --| type name
+					create l_pref_index.make_empty
+					if l_pref.is_default_value then
+						l_pref_index.append (p_default_value)
 					else
-						check False end
-						create l_pref_index.make_empty
+						l_pref_index.append (user_value)
 					end
-					create l_proxy_comparable.make ([l_pref_name, l_pref_index], l_compare_agent)
-					l_sorted_preferences.extend (l_proxy_comparable)
-					l_prefs_to_sort.forth
+					if l_pref.is_auto then
+						l_pref_index.append (auto_value)
+					end
+					l_pref_index.append ("@" + l_display_name)
+				else
+					check False end
+					create l_pref_index.make_empty
 				end
-				l_prefs_to_sort := Void
+				create l_proxy_comparable.make ([l_pref_name, l_pref_index], l_compare_agent)
+				l_sorted_preferences.extend (l_proxy_comparable)
+			end
 
-				create {ARRAYED_LIST [PREFERENCE]} Result.make (l_sorted_preferences.count)
+			create {ARRAYED_LIST [PREFERENCE]} Result.make (l_sorted_preferences.count)
 
-					-- Traverse the preferences in the system and add to grid list
-				from
-					l_known_pref_ht := preferences.preferences
-					if l_sorting_up then
-						l_sorted_preferences.start
-					else
-						l_sorted_preferences.finish
-					end
-				until
-					l_sorted_preferences.off
-				loop
-					l_pref_name := l_sorted_preferences.item.item.pref_name
-
-					l_pref := l_known_pref_ht.item (l_pref_name)
-					if l_pref /= Void then
-						if a_show_hidden or (not a_show_hidden and then not l_pref.is_hidden) then
-							Result.extend (l_pref)
-						end
-					end
-					if l_sorting_up then
-						l_sorted_preferences.forth
-					else
-						l_sorted_preferences.back
-					end
+				-- Traverse the preferences in the system and add to grid list
+			from
+				l_known_pref_ht := preferences.preferences
+				if l_sorting_up then
+					l_sorted_preferences.start
+				else
+					l_sorted_preferences.finish
+				end
+			until
+				l_sorted_preferences.off
+			loop
+				l_pref_name := l_sorted_preferences.item.item.pref_name
+				if
+					attached l_known_pref_ht.item (l_pref_name) as p and then
+					(a_show_hidden or not p.is_hidden)
+				then
+					Result.extend (p)
+				end
+				if l_sorting_up then
+					l_sorted_preferences.forth
+				else
+					l_sorted_preferences.back
 				end
 			end
 		end
@@ -1274,16 +1267,14 @@ feature {NONE} -- Implementation
 			p := grid
 			n := p.row_count
 			if n > 0 then
-				col := grid.column (1)
+				col := p.column (1)
 				col.set_width (col.required_width_of_item_span (1, n) + column_border_space)
-				col := grid.column (2)
+				col := p.column (2)
 				col.set_width (col.required_width_of_item_span (1, n) + column_border_space)
-				col := grid.column (3)
+				col := p.column (3)
 				col.set_width (col.required_width_of_item_span (1, n) + column_border_space)
 			end
 		end
-
-feature {NONE} -- Implementation
 
 	pixmap_file_contents (pn: READABLE_STRING_GENERAL): EV_PIXMAP
 			-- Load a pixmap in file named `pn'.
@@ -1501,11 +1492,10 @@ feature {NONE} -- Filtering
 		local
 			s: STRING_32
 			l_match_text: STRING_32
-			s32: STRING_32
 			l_matched: BOOLEAN
 			l_preference: PREFERENCE
-			l_prefs: LIST [PREFERENCE]
-			l_filter_engine: detachable KMP_WILD
+			l_prefs: like preferences.preferences
+			l_filter_engine: KMP_WILD
 			l_filter_also_value: BOOLEAN
 			l_matches: like matches
 		do
@@ -1514,68 +1504,61 @@ feature {NONE} -- Filtering
 
 			matches := Void
 			if not grid.is_tree_enabled and not update_matches_requested then
-				l_prefs := preferences.preferences.linear_representation
+				l_prefs := preferences.preferences
 				l_match_text := filter_text_box.text
 				l_filter_also_value := filter_value_check_box.is_selected
-				if l_match_text.is_empty then
-					matches := l_prefs
-				else
+				if not l_match_text.is_empty then
 					create {ARRAYED_LIST [PREFERENCE]} l_matches.make (l_prefs.count)
 					matches := l_matches
-					from
-						if l_match_text.item (1) /= '*' then
-							l_match_text.prepend_character ('*')
-						end
-						if l_match_text.item (l_match_text.count) /= '*' then
-							l_match_text.append_character ('*')
-						end
-						create l_filter_engine.make_empty
-						l_filter_engine.set_pattern (l_match_text)
-						l_filter_engine.disable_case_sensitive
-						l_prefs.start
-					until
-						l_prefs.after
+					if l_match_text.item (1) /= '*' then
+						l_match_text.prepend_character ('*')
+					end
+					if l_match_text.item (l_match_text.count) /= '*' then
+						l_match_text.append_character ('*')
+					end
+					create l_filter_engine.make_empty
+					l_filter_engine.set_pattern (l_match_text)
+					l_filter_engine.disable_case_sensitive
+					across
+						l_prefs  as p
 					loop
-						l_preference := l_prefs.item
-						s32 := build_preference_name_to_display (l_preference)
+						l_preference := p.item
+						s := build_preference_name_to_display (l_preference)
 						l_matched := False
-						if l_filter_engine /= Void then
-							if not s32.is_empty	then
-								l_filter_engine.set_text (s32)
+						if not s.is_empty then
+							l_filter_engine.set_text (s)
+							l_matched := l_filter_engine.pattern_matches
+						end
+						if not l_matched and l_filter_also_value then
+							s := l_preference.text_value
+							if not s.is_empty then
+								l_filter_engine.set_text (s)
 								l_matched := l_filter_engine.pattern_matches
 							end
-							if not l_matched and l_filter_also_value then
-								s := l_preference.text_value
-								if not s.is_empty then
-									l_filter_engine.set_text (s)
-									l_matched := l_filter_engine.pattern_matches
-								end
-							end
-						else
-							l_matched := True
 						end
 						if l_matched then
 							l_matches.extend (l_preference)
 						end
-						l_prefs.forth
 					end
 				end
 				if update_matches_requested then
 					matches := Void
 				else
-						--| Sort the known preferences
-					matches := sorted_known_preferences_by (Name_sorting_mode, show_hidden_preferences, matches)
---					matches := sorted_known_preferences_by (flat_sorting_info, show_hidden_preferences, preferences.preferences.linear_representation)
+						-- Sort the known preferences.
+					l_matches :=
+						if attached l_matches then
+							sorted_known_preferences_by (Name_sorting_mode, show_hidden_preferences, l_matches)
+						else
+							sorted_known_preferences_by (Name_sorting_mode, show_hidden_preferences, l_prefs)
+						end
+					matches := l_matches
 					if update_matches_requested then
 						matches := Void
 					else
 						if grid.row_count > 0 then
 							grid.remove_rows (1, grid.row_count)
 						end
-						l_matches := matches
-						if l_matches /= Void then
-							grid.set_row_count_to (l_matches.count)
-						end
+						grid.set_row_count_to (l_matches.count)
 						update_status_bar
 					end
 				end
@@ -1616,8 +1599,7 @@ feature {NONE} -- Filtering
 					--| grid indexes start at 1
 					--| list start at 1
 					l_preference := l_matches.i_th (r)
-					l_row := grid.row (r)
-					initialize_row_for_preference (l_row, l_preference)
+					initialize_row_for_preference (grid.row (r), l_preference)
 				end
 			end
 
@@ -1741,7 +1723,10 @@ invariant
 	has_preferences: preferences /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	ca_ignore:
+		"CA011", "CA011: too many arguments",
+		"CA033", "CA033: very large class"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -1751,5 +1736,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class PREFERENCES_GRID_CONTROL
-
+end

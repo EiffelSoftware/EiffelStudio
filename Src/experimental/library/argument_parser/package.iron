@@ -1,7 +1,6 @@
 package argument_parser
 
 project
-	obsolete_arg_parser = "argument_parser-safe.ecf"
 	obsolete_arg_parser = "argument_parser.ecf"
 
 note

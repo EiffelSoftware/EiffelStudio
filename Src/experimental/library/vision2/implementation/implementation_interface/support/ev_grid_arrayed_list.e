@@ -48,12 +48,25 @@ feature {EV_GRID_I, EV_GRID_ROW_I, ANY} -- Implementation
 			a_duplicate: like Current
 			a_count: INTEGER
 			l_original_index: INTEGER
+			current_index: INTEGER
+			m: INTEGER
 		do
 				-- Save index for restoring later.
 			l_original_index := index
 			a_count := count
-			index := i
-			a_duplicate := duplicate (n)
+			from
+				m := n
+				create a_duplicate.make (n)
+				current_index := i
+			until
+				m <= 0
+			loop
+				a_duplicate.extend (i_th (current_index))
+				current_index := current_index + 1
+				m := m - 1
+			variant
+				m
+			end
 
 				-- Move existing items up.
 			area.move_data ((i - 1) + n, i - 1, a_count - ((i - 1) + n))
@@ -83,12 +96,26 @@ feature {EV_GRID_I, EV_GRID_ROW_I, ANY} -- Implementation
 			a_duplicate: like Current
 			a_count: INTEGER
 			l_original_index: INTEGER
+			current_index: INTEGER
+			m: INTEGER
 		do
 				-- Save index for restoring later.
 			l_original_index := index
 			a_count := count
 			index := i
-			a_duplicate := duplicate (n)
+			from
+				m := n
+				create a_duplicate.make (n)
+				current_index := i
+			until
+				m <= 0
+			loop
+				a_duplicate.extend (i_th (current_index))
+				current_index := current_index + 1
+				m := m - 1
+			variant
+				m
+			end
 
 				-- Move existing items up.
 			area.move_data ((i - 1) + n, i - 1, a_count - ((i - 1) + n))
@@ -98,7 +125,7 @@ feature {EV_GRID_I, EV_GRID_ROW_I, ANY} -- Implementation
 			area.fill_with_default (a_count, upper - 1)
 
 				-- Calculate insertion index to insert before index `j'
-			if j > (i + n - 1) then
+			if j > i + n - 1 then
 				index := j - n - 1
 			else
 				index := j - 1
@@ -151,14 +178,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

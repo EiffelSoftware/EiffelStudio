@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Helper routines for encoding conversion."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -8,7 +8,7 @@ note
 class
 	ENCODING_HELPER
 
-feature {NONE} -- Implementation
+feature -- Conversion
 
 	multi_byte_to_pointer (a_string: STRING_8): MANAGED_POINTER
 			-- Managed pointer of `a_string'.
@@ -20,6 +20,7 @@ feature {NONE} -- Implementation
 			create l_cstr.make (a_string)
 			Result := l_cstr.managed_data
 		ensure
+			instance_free: class
 			result_not_void: Result /= Void
 		end
 
@@ -43,6 +44,7 @@ feature {NONE} -- Implementation
 			end
 			Result.put_natural_16 (0, i * 2)
 		ensure
+			instance_free: class
 			Result_not_void: Result /= Void
 		end
 
@@ -66,6 +68,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 		ensure
+			instance_free: class
 			Result_not_void: Result /= Void
 		end
 
@@ -93,6 +96,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 		ensure
+			instance_free: class
 			Result_not_void: Result /= Void
 		end
 
@@ -120,6 +124,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 		ensure
+			instance_free: class
 			Result_not_void: Result /= Void
 		end
 
@@ -129,6 +134,8 @@ feature {NONE} -- Implementation
 			"Use `string_to_multi_byte' instead."
 		do
 			Result := string_32_to_multi_byte (a_string)
+		ensure
+			instance_free: class
 		end
 
 	string_32_to_multi_byte (a_string: STRING_32): STRING_8
@@ -168,6 +175,7 @@ feature {NONE} -- Implementation
 				create Result.make_empty
 			end
 		ensure
+			instance_free: class
 			Result_not_void: Result /= Void
 		end
 
@@ -202,6 +210,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 		ensure
+			instance_free: class
 			Result_not_void: Result /= Void
 		end
 
@@ -226,6 +235,7 @@ feature {NONE} -- Implementation
 				i := i + 1
 			end
 		ensure
+			instance_free: class
 			Result_not_void: Result /= Void
 			valid_count: Result.count = a_string.count * 2
 		end
@@ -241,10 +251,11 @@ feature {NONE} -- Implementation
 				Result := string_32_to_multi_byte (a_string.as_string_32)
 			end
 		ensure
+			instance_free: class
 			Result_not_void: Result /= Void
 		end
 
-feature {NONE} -- Endian
+feature -- Endian
 
 	string_32_switch_endian (a_str: STRING_32): STRING_32
 			-- Switch endian of `a_str' for both high and low bits.
@@ -269,6 +280,7 @@ feature {NONE} -- Endian
 				i := i + 1
 			end
 		ensure
+			instance_free: class
 			Result_not_void: Result /= Void
 		end
 
@@ -294,18 +306,21 @@ feature {NONE} -- Endian
 				i := i + 1
 			end
 		ensure
+			instance_free: class
 			Result_not_void: Result /= Void
 		end
 
 	is_little_endian: BOOLEAN
 			-- Is this system little endian?
 		once
-			Result := (create {PLATFORM}).is_little_endian
+			Result := {PLATFORM}.is_little_endian
+		ensure
+			instance_free: class
 		end
 
 note
 	library:   "Encoding: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -314,7 +329,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

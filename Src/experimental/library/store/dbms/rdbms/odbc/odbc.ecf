@@ -53,6 +53,7 @@
 			</condition>
 		</external_linker_flag>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding.ecf"/>
 		<library name="store" location="$ISE_LIBRARY\library\store\store.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<cluster name="db" location=".\"/>

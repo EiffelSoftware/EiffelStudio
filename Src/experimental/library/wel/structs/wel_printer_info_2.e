@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Encapsulation of the PRINTER_INFO_2 Windows structure giving some printer details."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,7 +34,7 @@ feature -- Access
 
 	server_name: detachable WEL_STRING
 			-- String identifying the server that controls the printer.
-			-- If this string is Void, the printer is controlled locally. 
+			-- If this string is Void, the printer is controlled locally.
 		require
 			exists: exists
 		local
@@ -66,7 +66,7 @@ feature -- Access
 			-- Port(s) used to transmit data to the printer.
 			-- If a printer is connected to more than one port,
 			-- the names of each port must be separated by
-			-- commas (for example, "LPT1:,LPT2:,LPT3:"). 
+			-- commas (for example, "LPT1:,LPT2:,LPT3:").
 		require
 			exists: exists
 		do
@@ -90,7 +90,7 @@ feature -- Access
 		end
 
 	location: WEL_STRING
-			-- Physical location of the printer (for example, "Bldg. 38, Room 1164"). 
+			-- Physical location of the printer (for example, "Bldg. 38, Room 1164").
 		require
 			exists: exists
 		do
@@ -99,7 +99,7 @@ feature -- Access
 
 	sep_file: WEL_STRING
 			 -- Name of the file used to create the separator page.
-			 -- This page is used to separate print jobs sent to the printer. 
+			 -- This page is used to separate print jobs sent to the printer.
 		require
 			exists: exists
 		do
@@ -109,7 +109,7 @@ feature -- Access
 	print_processor: WEL_STRING
 			-- Name of the print processor used by the printer.
 			-- You can use the `EnumPrintProcessors' function to obtain a list
-			-- of print processors installed on a server. 
+			-- of print processors installed on a server.
 		require
 			exists: exists
 		do
@@ -119,7 +119,7 @@ feature -- Access
 	data_type: WEL_STRING
 			-- Data type used to record the print job.
 			-- You can use the `EnumPrintProcessorDatatypes' function to
-			-- obtain a list of data types supported by a specific print processor. 
+			-- obtain a list of data types supported by a specific print processor.
 		require
 			exists: exists
 		do
@@ -127,7 +127,7 @@ feature -- Access
 		end
 
 	parameters: WEL_STRING
-			 -- Default print-processor parameters. 
+			 -- Default print-processor parameters.
 		require
 			exists: exists
 		do
@@ -143,7 +143,7 @@ feature -- Access
 		end
 
 	priority: INTEGER
-			-- Priority value that the spooler uses to route print jobs. 
+			-- Priority value that the spooler uses to route print jobs.
 		require
 			exists: exists
 		do
@@ -151,7 +151,7 @@ feature -- Access
 		end
 
 	default_priority: INTEGER
-			-- Default priority value assigned to each print job. 
+			-- Default priority value assigned to each print job.
 		require
 			exists: exists
 		do
@@ -160,7 +160,7 @@ feature -- Access
 
 	start_time: INTEGER
  			-- Earliest time at which the printer will print a job.
-			-- This value is expressed as minutes elapsed since 12:00 AM GMT (Greenwich Mean Time). 
+			-- This value is expressed as minutes elapsed since 12:00 AM GMT (Greenwich Mean Time).
 		require
 			exists: exists
 		do
@@ -169,7 +169,7 @@ feature -- Access
 
 	until_time: INTEGER
 			-- Latest time at which the printer will print a job.
-			-- This value is expressed as minutes elapsed since 12:00 AM GMT (Greenwich Mean Time). 
+			-- This value is expressed as minutes elapsed since 12:00 AM GMT (Greenwich Mean Time).
 		require
 			exists: exists
 		do
@@ -193,7 +193,7 @@ feature -- Access
 		end
 
 	average_ppm: INTEGER
-			-- Average number of pages per minute that have been printed on the printer. 
+			-- Average number of pages per minute that have been printed on the printer.
 		require
 			exists: exists
 		do
@@ -203,13 +203,20 @@ feature -- Access
 feature -- Measurements
 
 	structure_size: INTEGER
+			-- <Precursor>
+		do
+			Result := c_structure_size
+		end
+
+feature {NONE} -- C externals
+
+	c_structure_size: INTEGER
+			-- Implementation of `c_structure_size`.
 		external
 			"C inline use <windows.h>, <winspool.h>"
 		alias
 			"return sizeof(PRINTER_INFO_2);"
 		end
-
-feature {NONE} -- C externals
 
 	c_server_name (a_item: POINTER): POINTER
 		external
@@ -358,9 +365,8 @@ feature {NONE} -- C externals
 			"return ((PRINTER_INFO_2 *) $a_item)->AveragePPM;"
 		end
 
-
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

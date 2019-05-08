@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Windows implementation for EV_PIXEL_BUFFER_I."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -701,11 +701,11 @@ feature {EV_PIXEL_BUFFER_IMP} -- Implementation
 			support: is_gdi_plus_installed
 		do
 			create Result.make
-			Result.set_m_row (<<1, 0, 0, 0, 0>>, 0)
-			Result.set_m_row (<<0, 1, 0, 0, 0>>, 1)
-			Result.set_m_row (<<0, 0, 1, 0, 0>>, 2)
-			Result.set_m_row (<<0, 0, 0, 1, 0>>, 3)
-			Result.set_m_row (<<-1, -1, -1, 0, 0>>, 4)
+			Result.set_m_row ({ARRAY [REAL_32]} <<1, 0, 0, 0, 0>>, 0)
+			Result.set_m_row ({ARRAY [REAL_32]} <<0, 1, 0, 0, 0>>, 1)
+			Result.set_m_row ({ARRAY [REAL_32]} <<0, 0, 1, 0, 0>>, 2)
+			Result.set_m_row ({ARRAY [REAL_32]} <<0, 0, 0, 1, 0>>, 3)
+			Result.set_m_row ({ARRAY [REAL_32]} <<-1, -1, -1, 0, 0>>, 4)
 		ensure
 			not_void: Result /= Void
 		end
@@ -766,7 +766,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

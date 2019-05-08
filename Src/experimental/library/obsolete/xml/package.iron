@@ -1,9 +1,7 @@
 package obsolete_xml
 
 project
-	xml_parser = "parser/xml_parser-safe.ecf"
 	xml_parser = "parser/xml_parser.ecf"
-	xml_tree = "tree/xml_tree-safe.ecf"
 	xml_tree = "tree/xml_tree.ecf"
 
 note

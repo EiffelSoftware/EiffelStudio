@@ -511,7 +511,6 @@ feature -- Status setting
 			-- ourself.
 		local
 			index: INTEGER
-			dockable_dialog: detachable EV_DOCKABLE_DIALOG
 			tool: EV_WIDGET
 		do
 			rebuilding_locked := True
@@ -531,12 +530,12 @@ feature -- Status setting
 				external_representation.off
 			loop
 				tool := external_representation.item
-				dockable_dialog ?= parent_window (tool)
-				check
-					parent_window_was_dialog: dockable_dialog /= Void then
+				if attached {EV_DOCKABLE_DIALOG} parent_window (tool) as dockable_dialog then
+					dockable_dialog.wipe_out
+					dockable_dialog.destroy
+				else
+					check parent_window_was_dialog: False end
 				end
-				dockable_dialog.wipe_out
-				dockable_dialog.destroy
 				if attached tool.parent as l_tool_parent then
 					l_tool_parent.prune_all (tool)
 				end
@@ -990,7 +989,6 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			-- Remove all docking areas added as result of last call to
 			-- `initialize_docking_areas'.
 		local
-			cell: detachable EV_CELL
 			holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
 			box: EV_BOX
 		do
@@ -1013,8 +1011,10 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 							-- We do not wish to remove any minimized items contained in `upper_box',
 							-- only the cells added during call to `initialize_docking_areas'.
 							-- Therefore, we check that they are cells with data to qualify this.
-						cell ?= box.item
-						if cell /= Void and then cell.data /= Void then
+						if 
+							attached {EV_CELL} box.item as cell and then 
+							cell.data /= Void 
+						then
 							box.remove
 						else
 							box.forth
@@ -1029,8 +1029,11 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 							-- We do not wish to remove any minimized items contained in `upper_box',
 							-- only the cells added during call to `initialize_docking_areas'.
 							-- Therefore, we check that they are cells with data to qualify this.
-						cell ?= box.item
-						if cell /= Void and then cell.data /= Void then
+
+						if 
+							attached {EV_CELL} box.item as cell and then 
+							cell.data /= Void 
+						then
 							box.remove
 						else
 							box.forth
@@ -1562,8 +1565,11 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 		local
 			split_area: detachable EV_SPLIT_AREA
 		do
-			if attached a_tool.parent as l_parent then
-				split_area ?= l_parent.parent
+			if 
+				attached a_tool.parent as l_parent and then
+				attached {EV_SPLIT_AREA} l_parent.parent as spa
+			then
+				split_area := spa
 			end
 			remove_tool_structure (a_tool)
 				-- We must now unparent the split area if it is empty and
@@ -1589,9 +1595,9 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			until
 				counter <= 1
 			loop
-				parent_split_area ?= all_split_areas.i_th (counter - 1)
+				parent_split_area := all_split_areas.i_th (counter - 1)
 				check parent_split_area /= Void then end
-				current_split_area ?= all_split_areas.i_th (counter)
+				current_split_area := all_split_areas.i_th (counter)
 				check current_split_area /= Void then end
 				if current_split_area.is_empty then
 					parent_split_area.prune_all (current_split_area)
@@ -1617,9 +1623,9 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 				counter = all_split_areas.count + 1 or
 					all_split_areas.last = split_area
 			loop
-				parent_split_area ?= all_split_areas.i_th (counter + 1)
+				parent_split_area := all_split_areas.i_th (counter + 1)
 				if parent_split_area /= Void then
-					current_split_area ?= all_split_areas.i_th (counter)
+					current_split_area := all_split_areas.i_th (counter)
 					check current_split_area /= Void then end
 					if current_split_area.is_empty then
 						parent_split_area.prune_all (current_split_area)
@@ -1643,7 +1649,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			new_parent_split_area: detachable EV_SPLIT_AREA
 		do
 			from
-				parent_split_area ?= split_area
+				parent_split_area := split_area
 				check parent_split_area /= Void then end
 			until
 				parent_split_area.parent /= Void
@@ -2025,7 +2031,9 @@ feature {NONE} -- Implementation
 			end
 				-- Now actually remove `a_widget' from its holder.
 			if attached a_widget.parent as l_widget_parent then
-				dialog ?= parent_window (a_widget)
+				if attached {EV_DOCKABLE_DIALOG} parent_window (a_widget) as dlg then
+					dialog := dlg
+				end
 				l_widget_parent.prune_all (a_widget)
 				if dialog /= Void then
 					dialog.destroy

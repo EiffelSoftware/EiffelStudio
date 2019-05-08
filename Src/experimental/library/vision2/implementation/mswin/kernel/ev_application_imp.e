@@ -1,6 +1,5 @@
-note
-	description:
-		"Eiffel Vision application. Mswindows implementation."
+﻿note
+	description: "Eiffel Vision application. MS Windows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -12,7 +11,6 @@ class
 inherit
 	EV_APPLICATION_I
 		redefine
-			wait_for_input,
 			make,
 			wake_up_gui_thread
 		end
@@ -57,6 +55,7 @@ inherit
 
 	WEL_SHARED_METRICS
 
+
 create
 	make
 
@@ -67,7 +66,9 @@ feature -- Initialization
 		local
 			l_result: INTEGER
 			l_process: POINTER
+
 		do
+			(create {WEL_SCALING_EXTERNALS}).set_process_per_monitor_dpi_aware
 			create reusable_message.make
 			init_instance
 			init_application
@@ -736,7 +737,7 @@ invariant
 	process_handle_valid: not is_destroyed implies process_handle /= default_pointer
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -746,4 +747,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EV_APPLICATION_IMP
+end

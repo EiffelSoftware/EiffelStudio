@@ -1,6 +1,7 @@
-note
+﻿note
 	description: "Cocoa implementation of EV_POINTER_STYLE_I."
 	author: "Daniel Furrer"
+	revised_by: "Alexander Kogtenkov"
 	keywords: "mouse, pointer, cursor, arrow"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -72,16 +73,6 @@ feature {NONE} -- Initlization
 			end
 		end
 
-	init_from_cursor (a_cursor: EV_CURSOR)
-			-- Initialize from `a_cursor'
-		local
-			l_pixmap_imp: detachable EV_PIXMAP_IMP
-		do
-			l_pixmap_imp ?= a_cursor.implementation
-			check l_pixmap_imp /= Void then end
-			create cursor.make_with_image (l_pixmap_imp.image, create {NS_POINT}.make_point (a_cursor.x_hotspot, a_cursor.y_hotspot))
-		end
-
 	init_from_pixmap (a_pixmap: EV_PIXMAP; a_hotspot_x, a_hotspot_y: INTEGER_32)
 			-- Initalize from `a_pixmap'
 		local
@@ -139,11 +130,11 @@ feature {EV_ANY_HANDLER, EV_ANY_I} -- Implementation
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
 
-	interface: detachable EV_POINTER_STYLE note option: stable attribute end;
-			-- Interface
+	interface: detachable EV_POINTER_STYLE note option: stable attribute end
+			-- Interface.
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -152,4 +143,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
+
 end

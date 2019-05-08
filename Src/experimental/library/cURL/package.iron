@@ -4,7 +4,6 @@ setup
 	compile_library = Clib
 
 project
-	curl = "cURL-safe.ecf"
 	curl = "cURL.ecf"
 
 note
@@ -14,7 +13,6 @@ note
 	license: Eiffel Forum v2
 	copyright: Copyright (c), Eiffel Software and others.
 	link[license]: http://www.eiffel.com/licensing/forum.txt
-	link[source]: "Subversion"
-	https://svn.eiffel.com/eiffelstudio/trunk/Src/library/cURL
+	link[source]: Subversion https://svn.eiffel.com/eiffelstudio/trunk/Src/library/cURL
 
 end

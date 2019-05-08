@@ -43,7 +43,7 @@ feature -- Conversion
 	string_format (object: STRING): STRING
 			-- Converted string of `object' according to the database format.
 		obsolete
-			"Use `string_format_32' instead."
+			"Use `string_format_32' instead [2017-05-31]."
 		require
 			argument_not_void: object /= Void
 		do
@@ -63,7 +63,7 @@ feature {NONE} -- Implementation
 	implementation: DATABASE_FORMAT [DATABASE];
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software

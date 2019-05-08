@@ -11,7 +11,6 @@ class
 inherit
 	SD_STATE
 		redefine
-			dock_at_top_level,
 			change_zone_split_area,
 			stick,
 			move_to_docking_zone,
@@ -321,7 +320,7 @@ feature {NONE} -- Implementation
 
 note
 	library:	"SmartDocking: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

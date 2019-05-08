@@ -44,5 +44,8 @@
 	</target>
 	<target name="ribbon_dotnet" extends="ribbon">
 		<setting name="msil_generation" value="true"/>
+		<capability>
+			<concurrency support="none"/>
+		</capability>
 	</target>
 </system>

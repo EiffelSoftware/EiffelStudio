@@ -26,6 +26,8 @@ feature -- Conformance
 			type2_nonnegative: type2 >= 0
 		do
 			Result := helper.type_conforms_to (type1, type2)
+		ensure
+			instance_free: class
 		end
 
 	field_conforms_to (a_source_type, a_field_type: INTEGER): BOOLEAN
@@ -37,6 +39,8 @@ feature -- Conformance
 			a_field_type_non_negative: a_field_type >= 0
 		do
 			Result := helper.field_conforms_to (a_source_type, a_field_type)
+		ensure
+			instance_free: class
 		end
 
 feature -- Creation
@@ -196,6 +200,8 @@ feature -- Status report
 			type_id_nonnegative: type_id >= 0
 		do
 			Result := helper.is_special_type (type_id)
+		ensure
+			instance_free: class
 		end
 
 	is_tuple_type (type_id: INTEGER): BOOLEAN
@@ -212,6 +218,8 @@ feature -- Status report
 			a_type_non_negative: a_type_id >= 0
 		do
 			Result := helper.is_attached_type (a_type_id)
+		ensure
+			instance_free: class
 		end
 
 	is_field_transient_of_type (i: INTEGER; a_type_id: INTEGER): BOOLEAN
@@ -223,6 +231,8 @@ feature -- Status report
 			index_small_enough: i <= field_count_of_type (a_type_id)
 		do
 			Result := helper.is_field_transient_of_type (i, a_type_id)
+		ensure
+			instance_free: class
 		end
 
 	is_field_expanded_of_type (i: INTEGER; a_type_id: INTEGER): BOOLEAN
@@ -233,6 +243,8 @@ feature -- Status report
 			index_small_enough: i <= field_count_of_type (a_type_id)
 		do
 			Result := helper.is_field_expanded_of_type (i, a_type_id)
+		ensure
+			instance_free: class
 		end
 
 feature -- Access
@@ -243,6 +255,8 @@ feature -- Access
 			type_id_nonnegative: type_id >= 0
 		do
 			Result := helper.class_name_of_type (type_id)
+		ensure
+			instance_free: class
 		end
 
 	type_name_of_type (type_id: INTEGER): STRING
@@ -310,6 +324,8 @@ feature -- Access
 			index_small_enought: i <= field_count_of_type (type_id)
 		do
 			Result := helper.field_name_of_type (i, type_id)
+		ensure
+			instance_free: class
 		end
 
 	field_type_of_type (i: INTEGER; type_id: INTEGER): INTEGER
@@ -322,6 +338,7 @@ feature -- Access
 			Result := helper.field_type_of_type (i, type_id)
 		ensure
 			field_type_nonnegative: Result >= 0
+			instance_free: class
 		end
 
 	field_static_type_of_type (i: INTEGER; type_id: INTEGER): INTEGER
@@ -334,6 +351,7 @@ feature -- Access
 			Result := helper.field_static_type_of_type (i, type_id)
 		ensure
 			field_type_nonnegative: Result >= 0
+			instance_free: class
 		end
 
 feature -- Version
@@ -351,6 +369,8 @@ feature -- Measurement
 			type_id_nonnegative: type_id >= 0
 		do
 			Result := helper.field_count_of_type (type_id)
+		ensure
+			instance_free: class
 		end
 
 	persistent_field_count_of_type (a_type_id: INTEGER): INTEGER
@@ -359,6 +379,8 @@ feature -- Measurement
 			a_type_non_negative: a_type_id >= 0
 		do
 			Result := helper.persistent_field_count_of_type (a_type_id)
+		ensure
+			instance_free: class
 		end
 
 feature {NONE} -- Implementation
@@ -367,10 +389,12 @@ feature {NONE} -- Implementation
 			-- Helper that tell us all about types in a .NET system.
 		once
 			create Result
+		ensure
+			instance_free: class
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

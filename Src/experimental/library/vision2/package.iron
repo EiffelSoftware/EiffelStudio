@@ -6,15 +6,15 @@ setup
 	compile_library = implementation/gtk34/Clib
 
 project
-	vision2 = "vision2-safe.ecf"
 	vision2 = "vision2.ecf"
 
 note
 	title: Eiffel Vision2
 	description: "[
-			EiffelVision2 is a nice GUI toolkit abstraction that works on multiple platforms. 
-			It is based on GTK for Unix and WEL on Windows.
-		]"
+EiffelVision2 is a nice GUI toolkit abstraction that works on multiple platforms.
+It is based on GTK for Unix and WEL on Windows.
+				]"
+
 	tags: gui,portable,widget,window,ui,toolkit
 	copyright: 1984-2016 Eiffel Software and others
 	license: Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)

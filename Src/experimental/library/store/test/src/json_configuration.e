@@ -6,19 +6,19 @@ create
 
 feature {NONE} -- Initialization
 
-	make (fn: STRING)
+	make (fn: STRING_32)
 		require
 			fn_not_empty: fn /= Void and then not fn.is_empty
 		do
 			filename := fn
 		end
 
-	make_from_string (s: READABLE_STRING_8)
+	make_from_string (s: READABLE_STRING_32)
 		do
 			text := s
 		end
 
-	filename: detachable READABLE_STRING_8
+	filename: detachable READABLE_STRING_32
 
 	text: detachable READABLE_STRING_32
 
@@ -29,7 +29,7 @@ feature -- Report
 			Result := location /= Void
 		end
 
-	location: detachable READABLE_STRING_8
+	location: detachable READABLE_STRING_32
 		do
 			Result := filename
 		end
@@ -75,10 +75,11 @@ feature -- Basic operation
 			f: PLAIN_TEXT_FILE
 			s,t: detachable STRING_8
 			i: INTEGER
+			u: UTF_CONVERTER
 		do
 			reset_error
 			if attached filename as fn then
-				create f.make (fn)
+				create f.make_with_name (fn)
 				if f.exists and then f.is_readable then
 					create s.make (f.count)
 					from
@@ -97,10 +98,11 @@ feature -- Basic operation
 					end
 				end
 			end
-			if s = Void then
-				if attached text as l_text then
-					create s.make_from_string (l_text)
-				end
+			if
+				s = Void and then
+				attached text as l_text
+			then
+				create s.make_from_string (u.string_32_to_utf_8_string_8 (l_text))
 			end
 			if s /= Void then
 				from
@@ -114,8 +116,12 @@ feature -- Basic operation
 					s.remove_head (i - 1)
 				end
 
-				create p.make_parser (s)
-				if attached {JSON_OBJECT} p.parse_json as j then
+				create p.make_with_string (s)
+				p.parse_content
+				if
+					p.is_parsed and then
+					attached p.parsed_json_object as j
+				then
 					data := j
 				end
 				has_error := p.errors.count > 0
@@ -139,7 +145,7 @@ feature -- Basic operation
 			f: RAW_FILE
 		do
 			if attached location as l_location then
-				create f.make (l_location)
+				create f.make_with_name (l_location)
 				if not f.exists or else f.is_writable then
 					f.open_write
 					if attached text as l_text then
@@ -207,7 +213,7 @@ feature -- Query
 					until
 						l_ids.after or Result = Void
 					loop
-						create l_id.make_json (l_ids.item)
+						create l_id.make_from_string (l_ids.item)
 						if attached {JSON_OBJECT} Result as v_data then
 							if v_data.has_key (l_id) then
 								Result := v_data.item (l_id)

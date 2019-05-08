@@ -1,9 +1,8 @@
-note
-	description:
-		"Eiffel Vision multi column list row. Implementation interface."
+﻿note
+	description: "Eiffel Vision multi column list row. Implementation interface."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$";
+	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
@@ -26,8 +25,7 @@ inherit
 		undefine
 			pixmap_equal_to
 		redefine
-			interface,
-			pixmap_equal_to
+			interface
 		end
 
 	EV_DESELECTABLE_I
@@ -128,8 +126,8 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_MULTI_COLUMN_LIST_ROW note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA
@@ -138,18 +136,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_MULTI_COLUMN_LIST_ROW_I
-
-
-
-
-
-
-
-
-
-
-
+end

@@ -1,8 +1,8 @@
-note
+﻿note
 	description: "EiffelVision drawable. GTK implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	keywords: "figures, primitives, drawing, line, point, ellipse"
+	keywords: figures, primitives, drawing, line, point, ellipse
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -12,8 +12,7 @@ deferred class
 inherit
 	EV_DRAWABLE_I
 		redefine
-			interface,
-			draw_sub_pixel_buffer
+			interface
 		end
 
 	EV_DRAWABLE_CONSTANTS
@@ -115,12 +114,11 @@ feature -- Access
 		local
 			l_red, l_green, l_blue: INTEGER
 		do
+				-- Default to black if `internal_foreground_color` is not set.
 			if attached internal_foreground_color as l_internal_foreground_color then
 				l_red := l_internal_foreground_color.red_8_bit
 				l_green := l_internal_foreground_color.green_8_bit
 				l_blue := l_internal_foreground_color.blue_8_bit
-			else
-					-- We default to black
 			end
 			create Result.make_with_8_bit_rgb (l_red, l_green, l_blue)
 		end
@@ -368,6 +366,12 @@ feature -- Element change
 				line_style, cap_style, join_style)
 		end
 
+	set_anti_aliasing (value: BOOLEAN)
+			-- <Precursor>
+		do
+				-- TODO: provide implementation.
+		end
+
 feature -- Clearing operations
 
 	clear
@@ -529,18 +533,26 @@ feature -- Drawing operations
 				if a_width /= -1 then
 						-- We need to perform ellipsizing on text if available, otherwise we clip.
 					l_ellipsize_symbol := pango_layout_set_ellipsize_symbol
-					if l_ellipsize_symbol /= default_pointer then
-						pango_layout_set_ellipsize_call (l_ellipsize_symbol, a_pango_layout, 3)
-						{GTK2}.pango_layout_set_width (a_pango_layout, a_width * {GTK2}.pango_scale)
-					else
+					if l_ellipsize_symbol = default_pointer then
 							-- Previous code for gtk 2.4 that set a clip area for text rendering.						
 						a_clip_area := gc_clip_area
 						set_clip_area (create {EV_RECTANGLE}.make (x_orig, y_orig, a_width, 10000))
 						{GTK2}.pango_layout_set_width (a_pango_layout, 10000 * {GTK2}.pango_scale)
+					else
+						pango_layout_set_ellipsize_call (l_ellipsize_symbol, a_pango_layout, 3)
+						{GTK2}.pango_layout_set_width (a_pango_layout, a_width * {GTK2}.pango_scale)
 					end
 				end
 
-				if a_angle /= 0 then
+				if a_angle = 0 then
+					{GTK2}.gdk_draw_layout (
+						drawable,
+						gc,
+						a_x.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+						a_y.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+						a_pango_layout
+					)
+				else
 					l_pango_renderer := {GTK2}.gdk_pango_renderer_get_default ({GTK2}.gdk_screen_get_default)
 						-- This is reusable so do not free the renderer.
 						-- Renderer is needed to rotate text without a bounding box
@@ -566,27 +578,17 @@ feature -- Drawing operations
 						-- Clean up Pango renderer.
 					{GTK2}.gdk_pango_renderer_set_drawable (l_pango_renderer, default_pointer)
 					{GTK2}.gdk_pango_renderer_set_gc (l_pango_renderer, default_pointer)
-				else
-					{GTK2}.gdk_draw_layout (
-						drawable,
-						gc,
-						a_x.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-						a_y.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-						a_pango_layout
-					)
 				end
 
 					-- Reset all changed values.
 				if a_width /= -1 then
 					if l_ellipsize_symbol /= default_pointer then
 						pango_layout_set_ellipsize_call (l_ellipsize_symbol, a_pango_layout, 0)
-					else
+					elseif attached a_clip_area then
 							-- Restore clip area (used for gtk 2.4 implementation)
-						if a_clip_area /= Void then
-							set_clip_area (a_clip_area)
-						else
-							remove_clipping
-						end
+						set_clip_area (a_clip_area)
+					else
+						remove_clipping
 					end
 				end
 
@@ -811,20 +813,21 @@ feature -- Drawing operations
 			-- Draw rectangle with upper-left corner on (`x', `y')
 			-- with size `a_width' and `a_height'.
 		do
-			if drawable /= default_pointer then
-				if a_width > 0 and then a_height > 0 then
-						-- If width or height are zero then nothing will be rendered.
-					{GTK}.gdk_draw_rectangle (
-						drawable,
-						gc,
-						0,
-						(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-						(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-						a_width - 1,
-						a_height - 1
-					)
-					update_if_needed
-				end
+			if
+				drawable /= default_pointer and then
+				a_width > 0 and then a_height > 0
+			then
+					-- If width or height are zero then nothing will be rendered.
+				{GTK}.gdk_draw_rectangle (
+					drawable,
+					gc,
+					0,
+					(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+					(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+					a_width - 1,
+					a_height - 1
+				)
+				update_if_needed
 			end
 		end
 
@@ -832,21 +835,22 @@ feature -- Drawing operations
 			-- Draw an ellipse bounded by top left (`x', `y') with
 			-- size `a_width' and `a_height'.
 		do
-			if drawable /= default_pointer then
-				if (a_width > 0 and a_height > 0 ) then
-					{GTK}.gdk_draw_arc (
-						drawable,
-						gc,
-						0,
-						(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-						(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
-						(a_width - 1),
-						(a_height - 1),
-						0,
-						whole_circle
-					)
-					update_if_needed
-				end
+			if
+				drawable /= default_pointer and then
+				a_width > 0 and a_height > 0
+			then
+				{GTK}.gdk_draw_arc (
+					drawable,
+					gc,
+					0,
+					(x + device_x_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+					(y + device_y_offset).max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value),
+					a_width - 1,
+					a_height - 1,
+					0,
+					whole_circle
+				)
+				update_if_needed
 			end
 		end
 
@@ -876,7 +880,7 @@ feature -- Drawing operations
 			-- The arc is then closed by two segments through (`x', `y').
 			-- Angles are measured in radians
 		local
-			left, top, right, bottom: INTEGER
+			left, top: INTEGER
 			x_start_arc, y_start_arc, x_end_arc, y_end_arc: INTEGER
 			semi_width, semi_height: REAL
 			tang_start, tang_end: REAL
@@ -884,16 +888,14 @@ feature -- Drawing operations
 		do
 			left := x.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value)
 			top := y.max ({INTEGER_16}.min_value).min ({INTEGER_16}.max_value)
-			right := left + a_width
-			bottom := top + a_height
 
 			semi_width := (a_width / 2).truncated_to_real
 			semi_height := (a_height / 2).truncated_to_real
 			tang_start := tangent (a_start_angle)
 			tang_end := tangent (a_start_angle + an_aperture)
 
-			x_tmp := semi_height / (sqrt (tang_start * tang_start + (semi_height * semi_height) / (semi_width * semi_width)))
-			y_tmp := semi_height / (sqrt (1 + (semi_height * semi_height) / (semi_width * semi_width * tang_start * tang_start)))
+			x_tmp := semi_height / sqrt (tang_start * tang_start + (semi_height * semi_height) / (semi_width * semi_width))
+			y_tmp := semi_height / sqrt (1 + (semi_height * semi_height) / (semi_width * semi_width * tang_start * tang_start))
 			if sine (a_start_angle) > 0 then
 				y_tmp := -y_tmp
 			end
@@ -903,8 +905,8 @@ feature -- Drawing operations
 			x_start_arc := (x_tmp + left + semi_width).rounded
 			y_start_arc := (y_tmp + top + semi_height).rounded
 
-			x_tmp := semi_height / (sqrt (tang_end * tang_end + (semi_height * semi_height) / (semi_width * semi_width)))
-			y_tmp := semi_height / (sqrt (1 + (semi_height * semi_height) / (semi_width * semi_width * tang_end * tang_end)))
+			x_tmp := semi_height / sqrt (tang_end * tang_end + (semi_height * semi_height) / (semi_width * semi_width))
+			y_tmp := semi_height / sqrt (1 + (semi_height * semi_height) / (semi_width * semi_width * tang_end * tang_end))
 			if sine (a_start_angle + an_aperture) > 0 then
 				y_tmp := -y_tmp
 			end
@@ -1060,7 +1062,7 @@ feature {EV_GTK_DEPENDENT_APPLICATION_IMP, EV_ANY_I} -- Implementation
 				Result := {GTK}.gdk_pixbuf_new (0, True, 8, a_width, a_height)
 			elseif mask /= l_null then
 				l_mask_pix := {GTK2}.gdk_pixbuf_get_from_drawable (l_null, mask, l_null, src_x, src_y, dest_x, dest_y, a_width, a_height)
-
+						-- If mask could not be allocated, keep `Result` without masking.
 				if l_mask_pix /= l_null then
 						-- Add alpha channel to `l_mask_pix' as required by
 						-- `draw_mask_on_pixbuf' since the creation of `l_mask_pix'
@@ -1087,8 +1089,6 @@ feature {EV_GTK_DEPENDENT_APPLICATION_IMP, EV_ANY_I} -- Implementation
 
 						-- Clean up
 					{GTK2}.object_unref (l_mask_pix)
-				else
-						-- Mask could not be allocated, free `Result', we still keep `Result' without masking
 				end
 			end
 		end
@@ -1129,23 +1129,19 @@ feature {NONE} -- Implementation
 
 	fg_color: POINTER
 			-- Default allocated background color.
-		local
-			a_success: BOOLEAN
 		once
 			Result := {GTK}.c_gdk_color_struct_allocate
-			a_success := {GTK}.gdk_colormap_alloc_color ({GTK2}.gdk_screen_get_rgb_colormap ({GTK2}.gdk_screen_get_default), Result, False, True)
+			{GTK}.gdk_colormap_alloc_color ({GTK2}.gdk_screen_get_rgb_colormap ({GTK2}.gdk_screen_get_default), Result, False, True).do_nothing
 		end
 
 	bg_color: POINTER
 			-- Default allocate foreground color.
-		local
-			a_success: BOOLEAN
 		once
 			Result := {GTK}.c_gdk_color_struct_allocate
 			{GTK}.set_gdk_color_struct_red (Result, 65535)
 			{GTK}.set_gdk_color_struct_green (Result, 65535)
 			{GTK}.set_gdk_color_struct_blue (Result, 65535)
-			a_success := {GTK}.gdk_colormap_alloc_color ({GTK2}.gdk_screen_get_rgb_colormap ({GTK2}.gdk_screen_get_default), Result, False, True)
+			{GTK}.gdk_colormap_alloc_color ({GTK2}.gdk_screen_get_rgb_colormap ({GTK2}.gdk_screen_get_default), Result, False, True).do_nothing
 		end
 
 	draw_mask_on_pixbuf (a_pixbuf_ptr, a_mask_ptr: POINTER)
@@ -1250,7 +1246,7 @@ invariant
 	gc_not_void: is_usable implies gc /= default_pointer
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -1260,4 +1256,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EV_DRAWABLE_IMP
+end

@@ -109,5 +109,8 @@
 	</target>
 	<target name="libevent_dotnet" extends="libevent">
 		<setting name="msil_generation" value="true"/>
+		<capability>
+			<concurrency support="none"/>
+		</capability>
 	</target>
 </system>

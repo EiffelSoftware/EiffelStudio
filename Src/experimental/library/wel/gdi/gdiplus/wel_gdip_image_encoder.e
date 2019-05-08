@@ -89,61 +89,61 @@ feature -- Parameters type enumeration
 	compression: WEL_GUID
 			-- Gdi+ compression GUID
 		once
-			create Result.make ((-526552163).as_natural_32, (-13100).as_natural_16, 0x44ee, <<0x8e, 0xba, 0x3f, 0xbf, 0x8b, 0xe4, 0xfc, 0x58>>)
+			create Result.make ((-526552163).as_natural_32, (-13100).as_natural_16, 0x44ee, {ARRAY [NATURAL_8]} <<0x8e, 0xba, 0x3f, 0xbf, 0x8b, 0xe4, 0xfc, 0x58>>)
 		end
 
 	color_depth: WEL_GUID
 			-- Gdi+ color depth GUID
 		once
-			create Result.make (0x66087055, (-21146).as_natural_16, 0x4c7c, <<0x9a, 0x18, 0x38, 0xa2, 0x31, 11, 0x83, 0x37>>)
+			create Result.make (0x66087055, (-21146).as_natural_16, 0x4c7c, {ARRAY [NATURAL_8]} <<0x9a, 0x18, 0x38, 0xa2, 0x31, 11, 0x83, 0x37>>)
 		end
 
 	scan_method: WEL_GUID
 			-- Gdi+ scan method GUID
 		once
-			create Result.make (0x3a4e2661, 0x3109, 0x4e56, <<0x85, 0x36, 0x42, 0xc1, 0x56, 0xe7, 220, 250>>)
+			create Result.make (0x3a4e2661, 0x3109, 0x4e56, {ARRAY [NATURAL_8]} <<0x85, 0x36, 0x42, 0xc1, 0x56, 0xe7, 220, 250>>)
 		end
 
 	version: WEL_GUID
 			-- Gdi+ version GUID
 		once
-			create Result.make (0x24d18c76, (-32438).as_natural_16, 0x41a4, <<0xbf, 0x53, 0x1c, 0x21, 0x9c, 0xcc, 0xf7, 0x97>>)
+			create Result.make (0x24d18c76, (-32438).as_natural_16, 0x41a4, {ARRAY [NATURAL_8]} <<0xbf, 0x53, 0x1c, 0x21, 0x9c, 0xcc, 0xf7, 0x97>>)
 		end
 
 	render_method: WEL_GUID
 			-- Gdi+ render method GUID
 		once
-			create Result.make (0x6d42c53a, 0x229a, 0x4825, <<0x8b, 0xb7, 0x5c, 0x99, 0xe2, 0xb9, 0xa8, 0xb8>>)
+			create Result.make (0x6d42c53a, 0x229a, 0x4825, {ARRAY [NATURAL_8]} <<0x8b, 0xb7, 0x5c, 0x99, 0xe2, 0xb9, 0xa8, 0xb8>>)
 		end
 
 	quality: WEL_GUID
 			-- Gdi+ quality GUID
 		once
-			create Result.make (0x1d5be4b5, (-1462).as_natural_16, 0x452d, <<0x9c, 0xdd, 0x5d, 0xb3, 0x51, 5, 0xe7, 0xeb>>)
+			create Result.make (0x1d5be4b5, (-1462).as_natural_16, 0x452d, {ARRAY [NATURAL_8]} <<0x9c, 0xdd, 0x5d, 0xb3, 0x51, 5, 0xe7, 0xeb>>)
 		end
 
 	transformation: WEL_GUID
 			-- Gdi+ transformation GUID
 		once
-			create Result.make ((-1928416559).as_natural_32, (-23154).as_natural_16, 0x4ea8, <<170, 20, 0x10, 0x80, 0x74, 0xb7, 0xb6, 0xf9>>)
+			create Result.make ((-1928416559).as_natural_32, (-23154).as_natural_16, 0x4ea8, {ARRAY [NATURAL_8]} <<170, 20, 0x10, 0x80, 0x74, 0xb7, 0xb6, 0xf9>>)
 		end
 
 	luminance_table: WEL_GUID
 			-- Gdi+ luminance table GUID
 		once
-			create Result.make ((-307020850).as_natural_32, 0x266, 0x4a77, <<0xb9, 4, 0x27, 0x21, 0x60, 0x99, 0xe7, 0x17>>)
+			create Result.make ((-307020850).as_natural_32, 0x266, 0x4a77, {ARRAY [NATURAL_8]} <<0xb9, 4, 0x27, 0x21, 0x60, 0x99, 0xe7, 0x17>>)
 		end
 
 	chrominance_table: WEL_GUID
 			-- Gdi+ chrominance table GUID
 		once
-			create Result.make ((-219916836).as_natural_32, 0x9b3, 0x4316, <<130, 0x60, 0x67, 0x6a, 0xda, 50, 0x48, 0x1c>>)
+			create Result.make ((-219916836).as_natural_32, 0x9b3, 0x4316, {ARRAY [NATURAL_8]} <<130, 0x60, 0x67, 0x6a, 0xda, 50, 0x48, 0x1c>>)
 		end
 
 	save_flag: WEL_GUID
 			-- Gdi+ save flag GUID
 		once
-			create Result.make (0x292266fc, (-21440).as_natural_16, 0x47bf, <<140, 0xfc, 0xa8, 0x5b, 0x89, 0xa6, 0x55, 0xde>>)
+			create Result.make (0x292266fc, (-21440).as_natural_16, 0x47bf, {ARRAY [NATURAL_8]} <<140, 0xfc, 0xa8, 0x5b, 0x89, 0xa6, 0x55, 0xde>>)
 		end
 
 feature -- Contract support
@@ -196,7 +196,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

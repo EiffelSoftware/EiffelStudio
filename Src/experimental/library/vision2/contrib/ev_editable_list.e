@@ -1,11 +1,11 @@
-note
+﻿note
 	description: "[Multi-column lists that allow in-place editing of list row items.  By default ALL%
 		%columns are editable.  Only one single column item is editable at any time and the widget type%
 		%which can be edited must conform to EV_TEXTABLE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "6/17/02"
-	revision: "1.0"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EV_EDITABLE_LIST
@@ -19,7 +19,7 @@ inherit
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (a_window: EV_WINDOW)
 			-- Create list with all columns editable and with relative 'a_window'.
@@ -85,13 +85,11 @@ feature -- Status setting
 	set_with_previous_text
 			-- Set field at row index 'widget_row' and column index 'widget_column' with
 			-- value of `saved text' after an edit has been unsuccessful
-		local
-			l_saved_text: like saved_text
 		do
 			go_i_th (widget_row)
-			l_saved_text := saved_text
-			check l_saved_text /= Void then end
-			item.put_i_th (l_saved_text, widget_column)
+			if attached saved_text as t then
+				item.put_i_th (t, widget_column)
+			end
 		end
 
 	set_unique_column_values (a_flag: BOOLEAN)
@@ -121,8 +119,9 @@ feature -- Status setting
 				loop
 					if editable_columns.item = i then
 						editable_columns.remove
+					else
+						editable_columns.forth
 					end
-					editable_columns.forth
 				end
 			end
 
@@ -152,9 +151,8 @@ feature -- Status setting
 			done: BOOLEAN
 		do
 			if a_flag then
-				if editable_rows.has (i) then
-					-- Already editbale, do nothing.
-				else
+					-- Do nothing for already editable.
+				if not editable_rows.has (i) then
 					editable_rows.extend (i)
 				end
 			else
@@ -193,16 +191,13 @@ feature -- Status setting
 			-- Set widget type to be displayed at column index 'i'
 		require
 			editable_column: column_editable (i)
-		local
-			combo_box: detachable EV_COMBO_BOX
 		do
 			if change_widgets.has (i) then
 				change_widgets.replace (a_widget, i)
 			else
 				change_widgets.put (a_widget, i)
 			end
-			combo_box ?= a_widget
-			if combo_box /= Void then
+			if attached {EV_COMBO_BOX} a_widget as combo_box then
 				combo_box.select_actions.extend (agent combo_item_selected (combo_box))
 			end
 		end
@@ -248,7 +243,7 @@ feature -- Editing
 			if attached selected_item as l_selected_item then
 				widget_column := column_index (x, y)
 				widget_row := index_of (l_selected_item, 1)
-				saved_text := l_selected_item @ (widget_column)
+				saved_text := l_selected_item [widget_column]
 				calculate_offsets (x, y)
 				generate_edit_dialog
 			end
@@ -328,32 +323,31 @@ feature {NONE} -- Actions
 			-- Actions to be performed when change widget is updated, redefine for custom
 			-- behaviour.
 		local
-			l_widget: like widget
 			l_saved_text: like saved_text
 			l_error_dialog: like error_dialog
 		do
-			l_widget := widget
-			check l_widget /= Void then end
-			if attached selected_item as l_selected_item then
-				if unique_column_values then
-					if is_valid_text (l_widget.text, widget_column, index_of (l_selected_item, 1)) then
-						l_selected_item.put_i_th (l_widget.text, widget_column)
+			if attached widget as w then
+				if attached selected_item as l_selected_item then
+					if unique_column_values then
+						if is_valid_text (w.text, widget_column, index_of (l_selected_item, 1)) then
+							l_selected_item.put_i_th (w.text, widget_column)
+						else
+							l_saved_text := saved_text
+							check l_saved_text /= Void then end
+							w.set_text (l_saved_text)
+							create l_error_dialog.make_with_text
+								("This column identifier is in use by another row.%N Please choose another.")
+							error_dialog := l_error_dialog
+							l_error_dialog.show_modal_to_window (relative_window)
+						end
 					else
-						l_saved_text := saved_text
-						check l_saved_text /= Void then end
-						l_widget.set_text (l_saved_text)
-						create l_error_dialog.make_with_text
-							("This column identifier is in use by another row.%N Please choose another.")
-						error_dialog := l_error_dialog
-						l_error_dialog.show_modal_to_window (relative_window)
+						l_selected_item.put_i_th (w.text, widget_column)
 					end
-				else
-					l_selected_item.put_i_th (l_widget.text, widget_column)
 				end
+				w.focus_out_actions.wipe_out
+				w.key_release_actions.wipe_out
+				on_edit_end
 			end
-			l_widget.focus_out_actions.wipe_out
-			l_widget.key_release_actions.wipe_out
-			on_edit_end
 		end
 
 	update_agents (a_container_arg: EV_CONTAINER; adding: BOOLEAN)
@@ -361,29 +355,21 @@ feature {NONE} -- Actions
 			-- it hides the editable dialog.  If not `adding' then remove the
 			-- appropriate agent.
 		local
-			con: detachable EV_CONTAINER
-			a_container: detachable LINEAR [EV_WIDGET]
 			button_press_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
 		do
-			a_container ?= a_container_arg.linear_representation
-			check a_container /= Void then end
-			from
-				a_container.start
-			until
-				a_container.off
+			across
+				a_container_arg.linear_representation as ic
 			loop
-				button_press_actions := a_container.item.pointer_button_press_actions
+				button_press_actions := ic.item.pointer_button_press_actions
 				if adding then
 					button_press_actions.extend (agent hide_window)
 				else
 					button_press_actions.go_i_th (button_press_actions.count)
 					button_press_actions.remove
 				end
-				con ?= a_container.item
-				if con /= Void then
+				if attached {EV_CONTAINER} ic.item as con then
 					update_agents (con, adding)
 				end
-				a_container.forth
 			end
 		end
 
@@ -392,10 +378,9 @@ feature {NONE} -- Commands
 	generate_edit_dialog
 			-- Generate new edit dialog for row editing in column at index 'i'.
 		local
-			textable: EV_TEXTABLE
-			l_widget: like widget
 			l_internal_dialog: like internal_dialog
 			l_saved_text: like saved_text
+			w: like widget
 		do
 			if column_editable (widget_column) and row_editable (widget_row) then
 
@@ -407,35 +392,32 @@ feature {NONE} -- Commands
 				end
 
 				if change_widgets.has (widget_column) then
-					widget ?= change_widgets.item (widget_column)
+					w := {like widget} / change_widgets.item (widget_column)
 				else
-						-- Use text field as default widget type
-					create {EV_TEXT_FIELD} textable
-					change_widgets.put (textable, widget_column)
-					widget ?= textable
+						-- Use text field as default widget type.
+					create {EV_TEXT_FIELD} w
+					change_widgets.put (w, widget_column)
 				end
-				l_widget := widget
-				check l_widget /= Void then end
+				widget := w
+						-- Create the parent dialog.
+				if attached w then
+					create l_internal_dialog
+					internal_dialog := l_internal_dialog
+					l_internal_dialog.extend (w)
+					l_internal_dialog.disable_user_resize
+					l_internal_dialog.set_size (dialog_width, dialog_height)
+					l_internal_dialog.show_relative_to_window (relative_window)
+					l_internal_dialog.set_position (x_offset, y_offset)
+					initialize_observers
 
+							-- Setup the editable widget			
+					w.key_release_actions.extend (agent on_key_release (?, l_internal_dialog))
 
-
-						-- Create the parent dialog
-				create l_internal_dialog
-				internal_dialog := l_internal_dialog
-				l_internal_dialog.extend (l_widget)
-				l_internal_dialog.disable_user_resize
-				l_internal_dialog.set_size (dialog_width, dialog_height)
-				l_internal_dialog.show_relative_to_window (relative_window)
-				l_internal_dialog.set_position (x_offset, y_offset)
-				initialize_observers
-
-						-- Setup the editable widget			
-				l_widget.key_release_actions.extend (agent on_key_release (?, l_internal_dialog))
-
-				l_saved_text := saved_text
-				check l_saved_text /= Void then end
-				l_widget.set_text (l_saved_text)
-				l_widget.focus_out_actions.extend (agent focus_lost)
+					l_saved_text := saved_text
+					check l_saved_text /= Void then end
+					w.set_text (l_saved_text)
+					w.focus_out_actions.extend (agent focus_lost)
+				end
 			end
 		end
 
@@ -500,11 +482,8 @@ feature {NONE} -- Widget
 	calculate_y_offset (y: INTEGER)
 			-- Calculate the y axis value required to correctly position edit dialog in
 			-- list.  WORK AROUND SINCE VISION DOES NOT MAKE AVAILABLE COLUMN TITLE HEIGHT.
-		local
-		 	actual_index: INTEGER
 		do
-			actual_index := y - ((y - 19) \\ row_height).abs
-			y_offset := screen_y + actual_index + 13 - row_height
+			y_offset := screen_y + (y - ((y - 19) \\ row_height).abs) + 13 - row_height
 		end
 
 	calculate_x_offset (x: INTEGER)
@@ -567,13 +546,12 @@ feature {NONE} -- Implementation
 				Result := True
 				start
 			until
-				after or (Result = False)
+				after or not Result
 			loop
-				if empty_column_values and a_string.is_empty then
-				else
-					if (a_string.same_string (item @ c) and not (index = r)) then
+				if not empty_column_values or not a_string.is_empty then
+					if a_string.same_string (item [c]) and index /= r then
 						Result := False
-					elseif (not empty_column_values) and (a_string.is_empty) then
+					elseif not empty_column_values and a_string.is_empty then
 						Result := False
 					end
 				end
@@ -630,14 +608,13 @@ feature {NONE} -- Implementation
 			i_th (widget_row).put_i_th (l_selected_item.text, widget_column)
 		end
 
-
 invariant
 	has_relative_window: relative_window /= Void
 	change_widgets_not_void: change_widgets /= Void
 	editable_columns_not_void: editable_columns /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -647,11 +624,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_EDITABLE_LIST
-
-
-
-
+end

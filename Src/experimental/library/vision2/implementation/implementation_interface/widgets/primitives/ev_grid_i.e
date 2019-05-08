@@ -1,8 +1,8 @@
-note
+﻿note
 	description: "[
-		Widget which is a combination of an EV_TREE and an EV_MULTI_COLUMN_LIST.
-		Implementation Interface.
-			]"
+			Widget which is a combination of an EV_TREE and an EV_MULTI_COLUMN_LIST.
+			Implementation Interface.
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -19,8 +19,6 @@ inherit
 			interface,
 			drop_actions,
 			set_default_key_processing_handler,
-			has_focus,
-			set_focus,
 			set_pebble,
 			set_pebble_function,
 			conforming_pick_actions,
@@ -28,9 +26,6 @@ inherit
 			pick_ended_actions,
 			set_accept_cursor,
 			set_deny_cursor,
-			enable_capture,
-			disable_capture,
-			has_capture,
 			set_pick_and_drop_mode,
 			set_drag_and_drop_mode,
 			set_target_menu_mode,
@@ -126,7 +121,7 @@ feature -- Access
 			until
 				visible_counter = i
 			loop
-				a_col_i := l_columns @ (counter)
+				a_col_i := l_columns [counter]
 				check a_col_i /= Void then end
 				if a_col_i.is_show_requested then
 					visible_counter := visible_counter + 1
@@ -424,18 +419,15 @@ feature -- Access
 			-- the number of pixels required to ensure the first visible column is flush to the left of the
 			-- viewable area of `Current'.
 		local
-			final_column_width: INTEGER
 			virtual_x_position_of_last_column: INTEGER
 			l_column_i: detachable EV_GRID_COLUMN_I
 		do
 			if is_horizontal_overscroll_enabled then
 				l_column_i := columns.i_th (column_count)
 				check l_column_i /= Void then end
-				final_column_width := l_column_i.width
-
 					-- We perform `max' as if the viewable width is less than the
 					-- final column width then there are no extra pixels to be displayed.
-				Result := (viewable_width - final_column_width).max (0)
+				Result := (viewable_width - l_column_i.width).max (0)
 			elseif is_horizontal_scrolling_per_item then
 				l_column_i := columns.i_th (last_first_column_in_per_item_scrolling)
 				check l_column_i /= Void then end
@@ -469,7 +461,7 @@ feature -- Access
 					virtual_y_position_of_last_row := row_internal (row_index).virtual_y_position_unlocked
 					l_calculation := total_row_height - virtual_y_position_of_last_row
 				end
-			elseif is_vertical_scrolling_per_item = False then
+			elseif not is_vertical_scrolling_per_item then
 				l_calculation := viewable_height
 			end
 				-- We perform `max' as if the viewable height is less than the
@@ -483,8 +475,8 @@ feature -- Access
 				Result = viewable_height - row_height
 --			valid_result_with_rows_with_overdraw_with_variable_row_height: row_count > 0 and not is_row_height_fixed and is_vertical_overscroll_enabled implies
 --				Result = viewable_height - row (row_count).height
-			valid_result_with_rows_when_per_pixel_scrolling_with_no_overdraw: row_count > 0 and is_vertical_scrolling_per_item = False and
-				is_vertical_overscroll_enabled = False implies Result = 0
+			valid_result_with_rows_when_per_pixel_scrolling_with_no_overdraw: row_count > 0 and not is_vertical_scrolling_per_item and
+				not is_vertical_overscroll_enabled implies Result = 0
 			valid_result_with_fixed_height_rows_when_per_item_scrolling_and_no_overdraw: row_count > 0 and is_row_height_fixed and is_vertical_scrolling_per_item and
 				is_vertical_scrolling_per_item and row (row_count).virtual_y_position + row_height > viewable_height and not is_vertical_overscroll_enabled implies Result <= row_height
 		end
@@ -889,33 +881,29 @@ feature -- Pick and Drop
 
 			if Result /= Void then
 				if attached item_accept_cursor_function as l_item_accept_cursor_function and then item_int /= Void then
-					a_cursor := l_item_accept_cursor_function.item ([item_int])
-					if a_cursor /= Void then
-						drawable.set_accept_cursor (a_cursor)
-						l_locked_indexes := locked_indexes
-						from
-							l_locked_indexes.start
-						until
-							l_locked_indexes.off
-						loop
-							l_locked_indexes.item.drawing_area.set_accept_cursor (a_cursor)
-							l_locked_indexes.forth
-						end
+					a_cursor := l_item_accept_cursor_function (item_int)
+					drawable.set_accept_cursor (a_cursor)
+					l_locked_indexes := locked_indexes
+					from
+						l_locked_indexes.start
+					until
+						l_locked_indexes.off
+					loop
+						l_locked_indexes.item.drawing_area.set_accept_cursor (a_cursor)
+						l_locked_indexes.forth
 					end
 				end
 				if attached item_deny_cursor_function as l_item_deny_cursor_function and then item_int /= Void then
-					a_cursor := l_item_deny_cursor_function.item ([item_int])
-					if a_cursor /= Void then
-						drawable.set_deny_cursor (a_cursor)
-						l_locked_indexes := locked_indexes
-						from
-							l_locked_indexes.start
-						until
-							l_locked_indexes.off
-						loop
-							l_locked_indexes.item.drawing_area.set_deny_cursor (a_cursor)
-							l_locked_indexes.forth
-						end
+					a_cursor := l_item_deny_cursor_function (item_int)
+					drawable.set_deny_cursor (a_cursor)
+					l_locked_indexes := locked_indexes
+					from
+						l_locked_indexes.start
+					until
+						l_locked_indexes.off
+					loop
+						l_locked_indexes.item.drawing_area.set_deny_cursor (a_cursor)
+						l_locked_indexes.forth
 					end
 				end
 			end
@@ -1144,7 +1132,7 @@ feature -- Status setting
 		local
 			a_col_i: detachable EV_GRID_COLUMN_I
 		do
-			a_col_i := columns @ (a_column)
+			a_col_i := columns [a_column]
 			check a_col_i /= Void then end
 			if not a_col_i.is_show_requested then
 				if a_col_i.is_locked and then attached a_col_i.locked_column as l_locked_column then
@@ -1171,7 +1159,7 @@ feature -- Status setting
 		local
 			a_col_i: detachable EV_GRID_COLUMN_I
 		do
-			a_col_i := columns @ (a_column)
+			a_col_i := columns [a_column]
 			check a_col_i /= Void then end
 			if a_col_i.is_show_requested then
 				if a_col_i.is_locked and then attached a_col_i.locked_column as l_locked_column then
@@ -1198,7 +1186,7 @@ feature -- Status setting
 		local
 			l_column: detachable EV_GRID_COLUMN_I
 		do
-			l_column := (columns @ (a_column))
+			l_column := columns [a_column]
 			check l_column /= Void then end
 			l_column.enable_select
 		ensure
@@ -1575,7 +1563,7 @@ feature -- Status setting
 			-- Permit rows to have varying heights.
 		require
 			not_dynamic_content_enabled_with_height_not_bounded:
-				not (is_content_partially_dynamic and is_vertical_overscroll_enabled = False)
+				not (is_content_partially_dynamic and not is_vertical_overscroll_enabled)
 		do
 			is_row_height_fixed := False
 			set_vertical_computation_required (1)
@@ -1589,12 +1577,10 @@ feature -- Status setting
 		local
 			add_columns: BOOLEAN
 			temp_column_count: INTEGER
-			a_columns: like columns
 		do
 			from
-				add_columns := a_column_count > columns.count
-				a_columns := columns
-				temp_column_count := a_columns.count
+				temp_column_count := columns.count
+				add_columns := a_column_count > temp_column_count
 			until
 				temp_column_count = a_column_count
 			loop
@@ -1737,6 +1723,7 @@ feature -- Status setting
 			end
 			if virtual_x_changed then
 				if is_horizontal_scrolling_per_item then
+						-- TODO: Provide implementation.
 					fixme (Once "Implement")
 				else
 					internal_horizontal_scroll_bar.change_actions.block
@@ -1744,10 +1731,11 @@ feature -- Status setting
 					internal_horizontal_scroll_bar.change_actions.resume
 				end
 			end
-			if virtual_x_changed or virtual_y_changed then
-				if virtual_position_changed_actions_internal /= Void then
-					virtual_position_changed_actions_internal.call ([virtual_x_position, virtual_y_position])
-				end
+			if
+				(virtual_x_changed or virtual_y_changed) and then
+				attached virtual_position_changed_actions_internal as v
+			then
+				v.call (virtual_x_position, virtual_y_position)
 			end
 		ensure
 			virtual_position_set: virtual_x_position = virtual_x and virtual_y_position = virtual_y
@@ -2070,7 +2058,7 @@ feature -- Status report
 		local
 			a_col_i: detachable EV_GRID_COLUMN_I
 		do
-			a_col_i := columns @ (a_column)
+			a_col_i := columns [a_column]
 			check a_col_i /= Void then end
 			Result := a_col_i.is_show_requested
 		end
@@ -2237,38 +2225,36 @@ feature -- Status report
 			valid_column: a_column >= 1 and a_column <= column_count
 			valid_row: a_row >= 1 and a_row <= row_count
 		local
-			l_result: detachable EV_COLOR
-			l_column_i: detachable EV_GRID_COLUMN_I
 			l_row_i: EV_GRID_ROW_I
 		do
 			if are_columns_drawn_above_rows then
-				l_column_i := (columns @ (a_column))
-				check l_column_i /= Void then end
-				l_result := l_column_i.background_color
+				check attached columns [a_column] as l_column_i then
+					Result := l_column_i.background_color
+				end
 			end
-
-			if l_result = Void then
+			if not attached Result then
 				l_row_i := row_internal (a_row)
-				l_result := l_row_i.background_color
-				if l_result /= Void and then is_tree_enabled and then (l_row_i.parent_row_i /= Void or l_row_i.subrow_count > 0) then
+				Result := l_row_i.background_color
+				if
+					attached Result and then
+					is_tree_enabled and then
+					(l_row_i.parent_row_i /= Void or l_row_i.subrow_count > 0) and then
 						-- We are a tree row so we discard the row color if less than the first item index.
-					if a_column < l_row_i.index_of_first_item then
-						l_result := Void
-					end
+					a_column < l_row_i.index_of_first_item
+				then
+					Result := Void
 				end
-				if l_result = Void then
+				if not attached Result then
 					if not are_columns_drawn_above_rows then
-						l_column_i := (columns @ (a_column))
-						check l_column_i /= Void then end
-						l_result := l_column_i.background_color
+						check attached columns [a_column] as l_column_i then
+							Result := l_column_i.background_color
+						end
 					end
-					if l_result = Void then
-						l_result := background_color
+					if not attached Result then
+						Result := background_color
 					end
 				end
 			end
-			check l_result /= Void then end
-			Result := l_result
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -2346,10 +2332,8 @@ feature -- Status report
 				loop
 					Result := item (l_current_row_index, l_current_column_index)
 					if Result = Void and then l_dynamic_content_function /= Void then
-						Result := l_dynamic_content_function.item ([l_current_row_index, l_current_column_index])
-						if Result /= Void then
-							internal_set_item (l_current_row_index, l_current_column_index, Result)
-						end
+						Result := l_dynamic_content_function (l_current_row_index, l_current_column_index)
+						internal_set_item (l_current_row_index, l_current_column_index, Result)
 					end
 					if a_is_tab_navigatable and then Result /= Void and then not Result.is_tab_navigatable then
 						Result := Void
@@ -2431,7 +2415,7 @@ feature -- Element change
 		do
 			drawables_have_focus := True
 		ensure
-			drawables_have_focus: drawables_have_focus = True
+			drawables_have_focus: drawables_have_focus
 		end
 
 	disable_drawables_have_focus
@@ -2439,7 +2423,7 @@ feature -- Element change
 		do
 			drawables_have_focus := False
 		ensure
-			drawables_have_focus: drawables_have_focus = False
+			drawables_have_focus: not drawables_have_focus
 		end
 
 	insert_new_rows (rows_to_insert, i: INTEGER)
@@ -2511,7 +2495,7 @@ feature -- Element change
 				-- Then those from `move_rows' which require `a_parent_row' to be `Void'
 			not_breaking_existing_subrow_structure:
 				j = row_count + 1 or else
-				((a_parent_row = Void and j <= row_count and (i + n <= row_count) and ((j = i or j = i + 1) implies row (i + n).parent_row = Void))) or else
+				(a_parent_row = Void and j <= row_count and i + n <= row_count and ((j = i or j = i + 1) implies row (i + n).parent_row = Void)) or else
 				((a_parent_row = Void and j <= row_count) implies row (j).parent_row = Void)
 
 				-- Finally those from `move_rows_to_parent' which require `a_parent_row' to be non-Void.
@@ -2620,7 +2604,6 @@ feature -- Element change
 			n_valid: n > 0 and then i + n <= column_count + 1
 			move_not_overlapping: n > 1 implies (j <= i or else j >= i + n)
 		local
-			header_item: EV_HEADER_ITEM
 			min_index: INTEGER
 			a_duplicate: ARRAYED_LIST [EV_HEADER_ITEM]
 			a_counter: INTEGER
@@ -2635,8 +2618,7 @@ feature -- Element change
 			until
 				a_counter > n
 			loop
-				header_item := header.item
-				a_duplicate.put_front (header_item)
+				a_duplicate.put_front (header.item)
 				header.remove
 				a_counter := a_counter + 1
 			end
@@ -2731,15 +2713,9 @@ feature -- Removal
 		require
 			a_row_positive: a_row > 0
 			a_row_less_than_row_count: a_row <= row_count
-		local
-			a_row_i: EV_GRID_ROW_I
-			subrow_count_recursive: INTEGER
 		do
-				-- Retrieve row from the grid
-			a_row_i := row_internal (a_row)
-				-- Remove row and its subrows
-			subrow_count_recursive := a_row_i.subrow_count_recursive
-			remove_rows (a_row, a_row + subrow_count_recursive)
+				-- Retrieve row from the grid and remove it and its subrows.
+			remove_rows (a_row, a_row + row_internal (a_row).subrow_count_recursive)
 		ensure
 			row_count_updated: row_count = old row_count - (old row (a_row).subrow_count_recursive + 1)
 			old_row_removed: (old row (a_row)).parent = Void
@@ -3069,7 +3045,6 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 		local
 			i: INTEGER
 			l_columns: like columns
-			l_column_i: detachable EV_GRID_COLUMN_I
 		do
 			from
 				l_columns := columns
@@ -3078,8 +3053,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			until
 				i = 0
 			loop
-				l_column_i := (l_columns @ i)
-				if l_column_i /= Void and then not l_column_i.is_show_requested then
+				if attached l_columns [i] as l_column_i and then not l_column_i.is_show_requested then
 						-- If the column is not visible then neither is its associating header item.
 					Result := Result - 1
 				end
@@ -3212,7 +3186,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			end
 			vertical_computation_added_to_once_idle_actions := False
 		ensure
-			reset: vertical_computation_added_to_once_idle_actions = False
+			reset: not vertical_computation_added_to_once_idle_actions
 		end
 
 	recompute_horizontal_scroll_bar_from_once_idle_actions
@@ -3226,7 +3200,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			end
 			horizontal_computation_added_to_once_idle_actions := False
 		ensure
-			reset: horizontal_computation_added_to_once_idle_actions = False
+			reset: not horizontal_computation_added_to_once_idle_actions
 		end
 
 	recompute_column_offsets (an_index: INTEGER)
@@ -3282,7 +3256,6 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 			visible_count: INTEGER
 			row_index: INTEGER
 			l_row_count: INTEGER
-			just_looped: BOOLEAN
 			original_row_index: INTEGER
 			l_row_indexes_to_visible_indexes: detachable EV_GRID_ARRAYED_LIST [INTEGER]
 			l_visible_indexes_to_row_indexes: detachable EV_GRID_ARRAYED_LIST [INTEGER]
@@ -3320,7 +3293,6 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 					l_row_indexes_to_visible_indexes := row_indexes_to_visible_indexes
 					check l_row_indexes_to_visible_indexes /= Void then end
 					check l_visible_indexes_to_row_indexes /= Void then end
-					check l_row_offsets /= Void then end
 						-- Retrieve the count of visible rows calculated last time this feature was called.
 					l_visible_row_count := visible_row_count
 					if index > 1 then
@@ -3339,7 +3311,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 								l_row_indexes_to_visible_indexes.i_th (index) <= l_visible_row_count and then
 								l_visible_indexes_to_row_indexes.i_th (l_row_indexes_to_visible_indexes.i_th (index)) + 1 = index
 							then
-								visible_count := l_row_indexes_to_visible_indexes.i_th (index)
+								visible_count := l_row_indexes_to_visible_indexes [index]
 							else
 								index := 1
 								visible_count := 0
@@ -3355,7 +3327,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 							-- no rows in the grid. So, we reset these attributes to the start.
 						visible_count := 0
 					end
-					current_row_offset := l_row_offsets @ (index)
+					current_row_offset := l_row_offsets [index]
 				end
 
 					-- Ensure we enlarge our data structures to accommodate the total number of rows.
@@ -3383,8 +3355,6 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 					check l_row_offsets /= Void then end
 					l_is_row_height_fixed := is_row_height_fixed
 					l_row_height := row_height
-					just_looped := True
-
 				until
 					row_index > l_row_count
 				loop
@@ -3543,7 +3513,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 						current_row := current_row.parent_row_i
 						if current_row /= Void then
 							current_row_index_of_first_item := current_row.index_of_first_item
-							if ((current_row_index_of_first_item /= 0 and current_row_index_of_first_item >= current_index_of_first_item) or (current_row_index_of_first_item = 0 and current_index_of_first_item = 0)) then
+							if (current_row_index_of_first_item /= 0 and current_row_index_of_first_item >= current_index_of_first_item) or (current_row_index_of_first_item = 0 and current_index_of_first_item = 0) then
 								found_row := current_row
 								current_index_of_first_item := found_row.index_of_first_item
 							end
@@ -3563,17 +3533,17 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 					check
 						correct: found_row /= current_row and current_row /= Void implies found_row.index_of_first_item >= 1
 					end
-					if pointed_row_i /= found_row then
-						if found_row.index_of_first_item <= 1 then
-							Result := (pointed_row_i.indent_depth_in_tree - found_row.indent_depth_in_tree) * tree_subrow_indent + first_tree_node_indent
-						else
-							Result := (pointed_row_i.indent_depth_in_tree - found_row.indent_depth_in_tree + 1) * tree_subrow_indent
-						end
-					else
+					if pointed_row_i = found_row then
 						if node_index = 1 or node_index = 0 then
 							Result := first_tree_node_indent
 						elseif pointed_row_i.subrow_count > 0 then
 							Result := tree_subrow_indent
+						end
+					else
+						if found_row.index_of_first_item <= 1 then
+							Result := (pointed_row_i.indent_depth_in_tree - found_row.indent_depth_in_tree) * tree_subrow_indent + first_tree_node_indent
+						else
+							Result := (pointed_row_i.indent_depth_in_tree - found_row.indent_depth_in_tree + 1) * tree_subrow_indent
 						end
 					end
 				end
@@ -3651,11 +3621,9 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 	redraw_client_area
 			-- Redraw complete visible client area of `Current'.
 		do
-			if is_displayed then
-				if not is_locked then
-					drawable.redraw
-					redraw_locked
-				end
+			if is_displayed and then not is_locked then
+				drawable.redraw
+				redraw_locked
 			end
 		end
 
@@ -3982,7 +3950,6 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation
 		local
 			l_total_row_height: INTEGER
 			l_client_height: INTEGER
-			average_row_height: INTEGER
 			previous_scroll_bar_value: INTEGER
 			row_index: INTEGER
 		do
@@ -4024,12 +3991,11 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation
 						end
 						internal_vertical_scroll_bar.value_range.resize_exactly (0, row_index - 1)
 					end
-					average_row_height := (l_total_row_height // visible_row_count)
-					internal_vertical_scroll_bar.set_leap ((l_client_height // average_row_height).max (1))
+					internal_vertical_scroll_bar.set_leap ((l_client_height * visible_row_count // l_total_row_height).max (1))
 					if has_vertical_scrolling_per_item_just_changed then
 							-- If we are just switching from per pixel to per item vertical
 							-- scrolling, we must approximate the previous position of the scroll bar.
-						internal_vertical_scroll_bar.set_value (previous_scroll_bar_value // average_row_height)
+						internal_vertical_scroll_bar.set_value (previous_scroll_bar_value * visible_row_count // l_total_row_height)
 					end
 					if is_item_height_changing then
 							-- The `value' of the scroll bar should not have changed.
@@ -4079,7 +4045,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I} -- Implementation
 			if not uses_row_offsets then
 					-- In this situation, we can simply calculate the
 					-- final row as they all have the same height.
-				row_index := (visible_row_count - (viewable_height - (viewable_height \\ row_height)) // row_height + 1)
+				row_index := visible_row_count - (viewable_height - (viewable_height \\ row_height)) // row_height + 1
 			else
 					-- Must now iterate backwards to find the first row as each has
 					-- a different height.
@@ -4155,7 +4121,6 @@ feature {ANY}
 		local
 			l_total_column_width: INTEGER
 			l_client_width: INTEGER
-			average_column_width: INTEGER
 			previous_scroll_bar_value: INTEGER
 			column_index: INTEGER
 		do
@@ -4190,12 +4155,11 @@ feature {ANY}
 						column_index := last_first_column_in_per_item_scrolling
 						internal_horizontal_scroll_bar.value_range.resize_exactly (0, column_index - 1)
 					end
-					average_column_width := (l_total_column_width // columns.count)
-					internal_horizontal_scroll_bar.set_leap (l_client_width // average_column_width)
+					internal_horizontal_scroll_bar.set_leap (l_client_width * columns.count // l_total_column_width)
 					if has_horizontal_scrolling_per_item_just_changed then
 							-- If we are just switching from per pixel to per item horizontal
 							-- scrolling, we must approximate the previous position of the scroll bar.
-						internal_horizontal_scroll_bar.set_value (previous_scroll_bar_value // average_column_width)
+						internal_horizontal_scroll_bar.set_value (previous_scroll_bar_value * columns.count // l_total_column_width)
 					end
 				else
 					internal_horizontal_scroll_bar.value_range.resize_exactly (0, maximum_virtual_x_position)
@@ -4207,28 +4171,28 @@ feature {ANY}
 
 							-- Must restrict to the maximum permitted value, as the virtual area
 							-- is smaller when per pixel scrolling is set as you cannot scroll past the final item.
-						internal_horizontal_scroll_bar.set_value ((column_offsets @ (previous_scroll_bar_value + 1)).min (internal_horizontal_scroll_bar.value_range.upper))
+						internal_horizontal_scroll_bar.set_value (column_offsets [previous_scroll_bar_value + 1].min (internal_horizontal_scroll_bar.value_range.upper))
 					end
 				end
-			else
+			elseif internal_horizontal_scroll_bar.is_show_requested then
 					-- The headers are not as wide as the visible client area.
-				if internal_horizontal_scroll_bar.is_show_requested then
-					internal_horizontal_scroll_bar.hide
-					update_scroll_bar_spacer
-				end
+				internal_horizontal_scroll_bar.hide
+				update_scroll_bar_spacer
 			end
 
-			if is_horizontal_offset_set_to_zero_when_items_smaller_than_viewable_width then
-				if viewport_x_offset > 0 and (l_total_column_width - viewport_x_offset < viewable_width) then
-						-- If `header' and `drawable' currently have a position that starts before the client area of
-						-- `viewport' and the total header width is small enough so that at the current position, `header' and
-						-- `drawable' do not reach to the very left-hand edge of the `viewport', update the horizontal offset
-						-- so that they do reach the very left-hand edge of `viewport'
-					viewport_x_offset := (l_total_column_width - viewable_width).max (0)
-					viewport.set_x_offset (viewport_x_offset)
+			if
+				is_horizontal_offset_set_to_zero_when_items_smaller_than_viewable_width and then
+				viewport_x_offset > 0 and
+				l_total_column_width - viewport_x_offset < viewable_width
+			then
+					-- If `header' and `drawable' currently have a position that starts before the client area of
+					-- `viewport' and the total header width is small enough so that at the current position, `header' and
+					-- `drawable' do not reach to the very left-hand edge of the `viewport', update the horizontal offset
+					-- so that they do reach the very left-hand edge of `viewport'
+				viewport_x_offset := (l_total_column_width - viewable_width).max (0)
+				viewport.set_x_offset (viewport_x_offset)
 
-					header_viewport.set_x_offset ((l_total_column_width - viewable_width).max (0))
-				end
+				header_viewport.set_x_offset ((l_total_column_width - viewable_width).max (0))
 			end
 		end
 
@@ -4244,7 +4208,7 @@ feature {ANY}
 		do
 			is_horizontal_offset_set_to_zero_when_items_smaller_than_viewable_width := False
 		ensure
-			set: is_horizontal_offset_set_to_zero_when_items_smaller_than_viewable_width = False
+			set: not is_horizontal_offset_set_to_zero_when_items_smaller_than_viewable_width
 		end
 
 feature {EV_GRID_DRAWER_I} -- Drawing implementation
@@ -4355,6 +4319,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			vertical_box.extend (header_viewport)
 			vertical_box.disable_item_expand (header_viewport)
 			viewport.resize_actions.extend (agent viewport_resized)
+			viewport.dpi_changed_actions.extend (agent viewport_dpi_change_resized)
 
 			static_fixed.set_minimum_size (static_fixed_x_offset * 2, static_fixed_y_offset * 2)
 
@@ -4368,7 +4333,6 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			vertical_box.extend (internal_horizontal_scroll_bar)
 			vertical_box.disable_item_expand (internal_horizontal_scroll_bar)
 			internal_horizontal_scroll_bar.hide
-			create vertical_box
 				-- Now connect events to `header' which are used to update the "physical size" of
 				-- Current in response to their re-sizing.
 			header_viewport.extend (header)
@@ -4544,7 +4508,7 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 				header_index := header.index_of (header_item, 1)
 				set_horizontal_computation_required (header_index)
 				l_columns := columns
-				l_column_i := l_columns @ (header_index)
+				l_column_i := l_columns [header_index]
 				check l_column_i /= Void then end
 				if are_column_separators_enabled and (last_width_of_header_during_resize = 0 and header_item.width > 0) or
 					last_width_of_header_during_resize_internal > 0 and header_item.width = 0 then
@@ -4731,16 +4695,16 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			internal_client_y := a_y_position
 				-- Store the virtual client y position internally.
 
-			buffer_space := (buffered_drawable_size - viewable_height)
+			buffer_space := buffered_drawable_size - viewable_height
 			current_buffer_position := viewport_y_offset
 
 				-- Calculate if the buffer must be flipped. If so, redraw the complete client area,
 				-- otherwise, simply move the position in `viewport'.
-			if (internal_client_y > last_vertical_scroll_bar_value) and ((internal_client_y - last_vertical_scroll_bar_value) + (current_buffer_position)) >= buffer_space then
+			if internal_client_y > last_vertical_scroll_bar_value and internal_client_y - last_vertical_scroll_bar_value + current_buffer_position >= buffer_space then
 				viewport_y_offset := 0
 				viewport.set_y_offset (viewport_y_offset)
 				redraw_client_area
-			elseif (internal_client_y < last_vertical_scroll_bar_value) and ((internal_client_y - last_vertical_scroll_bar_value) + (current_buffer_position)) < 0 then
+			elseif internal_client_y < last_vertical_scroll_bar_value and internal_client_y - last_vertical_scroll_bar_value + current_buffer_position < 0 then
 				viewport_y_offset := buffer_space
 				viewport.set_y_offset (viewport_y_offset)
 				redraw_client_area
@@ -4788,16 +4752,16 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			internal_client_x := a_x_position
 				-- Store the virtual client x position internally.
 
-			buffer_space := (buffered_drawable_size - viewable_width)
+			buffer_space := buffered_drawable_size - viewable_width
 			current_buffer_position := viewport_x_offset
 
 				-- Calculate if the buffer must be flipped. If so, redraw the complete client area,
 				-- otherwise, simply move the position in `viewport'.
-			if (internal_client_x > last_horizontal_scroll_bar_value) and ((internal_client_x - last_horizontal_scroll_bar_value) + (current_buffer_position)) >= buffer_space then
+			if internal_client_x > last_horizontal_scroll_bar_value and internal_client_x - last_horizontal_scroll_bar_value + current_buffer_position >= buffer_space then
 				viewport_x_offset := 0
 				viewport.set_x_offset (viewport_x_offset)
 				redraw_client_area
-			elseif (internal_client_x < last_horizontal_scroll_bar_value) and ((internal_client_x - last_horizontal_scroll_bar_value) + (current_buffer_position)) < 0 then
+			elseif internal_client_x < last_horizontal_scroll_bar_value and internal_client_x - last_horizontal_scroll_bar_value + current_buffer_position < 0 then
 				viewport_x_offset := buffer_space
 				viewport.set_x_offset (viewport_x_offset)
 				redraw_client_area
@@ -4889,6 +4853,15 @@ feature {EV_GRID_LOCKED_I} -- Drawing implementation
 			viewable_dimensions_set: viewable_width = a_width and viewable_height = a_height
 			viewport_item_at_least_as_big_as_viewport: viewport.readable implies (viewport.item.width >= viewable_width and
 				viewport.item.height >= viewable_height)
+		end
+
+	viewport_dpi_change_resized (a_dpi,an_x, a_y, a_width, a_height: INTEGER)
+			-- Respond to resizing of `Viewport' to width and height `a_width', `a_height'.
+		require
+			a_width_non_negative: a_width >= 0
+			a_height_non_negative: a_height >= 0
+		do
+			viewport_resized (an_x, a_y, a_width, a_height)
 		end
 
 	reposition_locked_items
@@ -5189,10 +5162,12 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			end
 
 				-- Now handle the enter and leave actions. Note that these are fired before the motion events.
-			if not pointer_enter_called then
-				if pointer_enter_actions_internal /= Void and then not pointer_enter_actions_internal.is_empty then
-					pointer_enter_actions_internal.call (Void)
-				end
+			if
+				not pointer_enter_called and then
+				attached pointer_enter_actions_internal as p and then
+				not p.is_empty
+			then
+				p.call (Void)
 			end
 			if pointed_item /= Void then
 				if pointed_item /= last_pointed_item then
@@ -5204,10 +5179,12 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 							l_last_pointed_item.pointer_leave_actions.call (Void)
 						end
 					end
-					if not pointer_enter_called then
-						if pointer_enter_item_actions_internal /= Void and then not pointer_enter_item_actions_internal.is_empty then
-							pointer_enter_item_actions.call ([not pointer_enter_called, pointed_item.attached_interface])
-						end
+					if
+						not pointer_enter_called and then
+						attached pointer_enter_item_actions_internal as p and then
+						not p.is_empty
+					then
+						pointer_enter_item_actions.call (not pointer_enter_called, pointed_item.attached_interface)
 					end
 					if pointed_item.pointer_enter_actions_internal /= Void then
 						pointed_item.pointer_enter_actions.call (Void)
@@ -5218,10 +5195,11 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 					pointed_item.pointer_motion_actions.call ([client_x_to_virtual_x(a_x) - pointed_item.virtual_x_position, client_y_to_virtual_y (a_y) - pointed_item.virtual_y_position, 0.0, 0.0, 0.0, a_screen_x, a_screen_y])
 				end
 			else
-				if not pointer_enter_called then
-					if pointer_enter_item_actions_internal /= Void then
-						pointer_enter_item_actions_internal.call ([True, Void])
-					end
+				if
+					not pointer_enter_called and then
+					attached pointer_enter_item_actions_internal as p
+				then
+					p.call (True, Void)
 				end
 				if attached last_pointed_item as l_last_pointed_item then
 					if pointer_leave_item_actions_internal /= Void and then not pointer_leave_item_actions_internal.is_empty then
@@ -5577,7 +5555,6 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 				until
 					l_parent_row_i = Void or else not Result
 				loop
-					check l_parent_row_i /= Void end
 					if not l_parent_row_i.is_expanded or not l_parent_row_i.is_show_requested then
 						Result := False
 					end
@@ -5593,16 +5570,10 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			-- Return the next activatable item from `a_starting_item' for `a_key', if none is available then return `a_starting_item'.
 		local
 			l_look_left: BOOLEAN
-			l_sel_item: detachable EV_GRID_ITEM
-			l_row_index, l_column_index: INTEGER
 		do
 			l_look_left := (a_key.code = {EV_KEY_CONSTANTS}.key_tab and ev_application.shift_pressed) or a_key.code = {EV_KEY_CONSTANTS}.key_home
-			l_row_index := a_starting_item.row.index
-			l_column_index := a_starting_item.column.index
-			l_sel_item := find_next_item (a_starting_item.row.index, a_starting_item.column.index, l_look_left, True)
-			if l_sel_item /= Void then
-				Result := l_sel_item
-			else
+			Result := find_next_item (a_starting_item.row.index, a_starting_item.column.index, l_look_left, True)
+			if not attached Result then
 				Result := a_starting_item
 			end
 		end
@@ -5635,7 +5606,7 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 
 			l_last_selected_item := last_selected_item
 			l_last_selected_row := last_selected_row
-			l_shift_key_start_item := l_shift_key_start_item
+			l_shift_key_start_item := shift_key_start_item
 
 				-- Clear up previous values in case they have been removed from the grid.
 			if l_last_selected_item /= Void and then l_last_selected_item.parent_i /= Current then
@@ -5726,13 +5697,13 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 								current_item := item_internal (a_col_counter, a_row_counter)
 								if current_item = Void and then l_dynamic_content_function /= Void then
 									check is_content_partially_dynamic: is_content_partially_dynamic end
-									current_item := l_dynamic_content_function.item ([a_col_counter, a_row_counter]).implementation
+									current_item := l_dynamic_content_function (a_col_counter, a_row_counter).implementation
 										-- We now check that the set item is the same as the one returned. If you both
 										-- set an item and return a different item from the dynamic function, this is invalid
 										-- so the following check prevents this:
 									check
 										item_set_implies_set_item_is_returned_item: item (a_col_counter, a_row_counter) /= Void
-											implies current_item /= Void and then item (a_col_counter, a_row_counter) = current_item.attached_interface
+											implies item (a_col_counter, a_row_counter) = current_item.attached_interface
 									end
 									if item_internal (a_col_counter, a_row_counter) = Void then
 										internal_set_item (a_col_counter, a_row_counter, current_item.attached_interface)
@@ -5864,41 +5835,48 @@ feature {EV_GRID_LOCKED_I} -- Event handling
 			l_look_left: BOOLEAN
 		do
 			enable_drawables_have_focus
-			if is_item_tab_navigation_enabled and then (row_count > 0 and column_count > 0) and then not is_row_selection_enabled then
-				if application_implementation.tab_navigation_state /= {EV_APPLICATION_I}.tab_state_none then
-					if application_implementation.tab_navigation_state = {EV_APPLICATION_I}.tab_state_from_previous then
-						l_column_index := 1
-						l_row_index := 1
-						l_item := item (l_column_index, l_row_index)
-					else
-						l_column_index := column_count
-						l_row_index := row_count
-						l_look_left := True
-						l_item := item (l_column_index, l_row_index)
-					end
-					if l_item = Void or else not l_item.is_tab_navigatable or else not l_item.is_displayed then
-						l_item := find_next_item (l_row_index, l_column_index, l_look_left, True)
-					end
-					if l_item /= Void and then l_item.is_displayed then
-							-- Make sure that a visible item is available before selecting.
-						l_item.enable_select
-						l_item.ensure_visible
-					end
+			if
+				is_item_tab_navigation_enabled and then
+				row_count > 0 and
+				column_count > 0 and then
+				not is_row_selection_enabled and then
+				application_implementation.tab_navigation_state /= {EV_APPLICATION_I}.tab_state_none
+			then
+				if application_implementation.tab_navigation_state = {EV_APPLICATION_I}.tab_state_from_previous then
+					l_column_index := 1
+					l_row_index := 1
+					l_item := item (l_column_index, l_row_index)
+				else
+					l_column_index := column_count
+					l_row_index := row_count
+					l_look_left := True
+					l_item := item (l_column_index, l_row_index)
+				end
+				if l_item = Void or else not l_item.is_tab_navigatable or else not l_item.is_displayed then
+					l_item := find_next_item (l_row_index, l_column_index, l_look_left, True)
+				end
+				if l_item /= Void and then l_item.is_displayed then
+						-- Make sure that a visible item is available before selecting.
+					l_item.enable_select
+					l_item.ensure_visible
 				end
 			end
 			redraw_client_area
 			if focus_in_actions_internal /= Void and then not focus_in_actions_internal.is_empty then
-				focus_in_actions_internal.call (Void)
+				focus_in_actions_internal.call
 			end
 		end
 
 	focus_out_received
 			-- Called by `focus_out_actions' of `drawable'.
 		do
-			if is_item_tab_navigation_enabled and then not is_row_selection_enabled and then not is_always_selected then
-				if application_implementation.tab_navigation_state /= {EV_APPLICATION_I}.tab_state_none then
-					remove_selection
-				end
+			if
+				is_item_tab_navigation_enabled and then
+				not is_row_selection_enabled and then
+				not is_always_selected and then
+				application_implementation.tab_navigation_state /= {EV_APPLICATION_I}.tab_state_none
+			then
+				remove_selection
 			end
 			disable_drawables_have_focus
 			redraw_client_area
@@ -5957,7 +5935,6 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_DRAWER_I} -- Implementation
 			i_positive: a_index > 0
 		local
 			row_i:  detachable EV_GRID_ROW_I
-			a_row_data: SPECIAL [detachable EV_GRID_ITEM_I]
 			old_count: INTEGER
 			i, j: INTEGER
 			l_internal_row_data: like internal_row_data
@@ -5977,12 +5954,10 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_DRAWER_I} -- Implementation
 			until
 				i > rows_to_insert
 			loop
-				create a_row_data.make_empty (0)
-				l_internal_row_data.put_i_th (a_row_data, i + j)
+				l_internal_row_data.put_i_th (create {SPECIAL [detachable EV_GRID_ITEM_I]}.make_empty (0), i + j)
 				row_i := l_attached_interface.new_row.implementation
 				row_i.set_parent_i (Current, row_counter)
 				row_counter := row_counter + 1
-
 				rows.put_i_th (row_i, i + j)
 				i := i + 1
 			end
@@ -6003,18 +5978,16 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_DRAWER_I} -- Implementation
 			a_row_positive: a_row > 0
 		local
 			temp_rows: like rows
-			l_result: detachable EV_GRID_ROW_I
 		do
 			temp_rows := rows
 			if a_row <= temp_rows.count then
-				l_result := temp_rows @ a_row
+				Result := temp_rows [a_row]
 			end
-			if l_result = Void then
+			if Result = Void then
 				add_row_at (a_row)
-				l_result := temp_rows @ a_row
+				Result := temp_rows [a_row]
 			end
-			check l_result /= Void then end
-			Result := l_result
+			check Result /= Void then end
 		ensure
 			row_not_void: Result /= Void
 		end
@@ -6023,12 +5996,9 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_DRAWER_I} -- Implementation
 			-- Column `a_column'.
 		require
 			a_column_positive: a_column > 0
-		local
-			l_result: detachable EV_GRID_COLUMN_I
 		do
-			l_result := columns @ a_column
-			check l_result /= Void then end
-			Result := l_result
+			Result := columns [a_column]
+			check Result /= Void then end
 		ensure
 			column_not_void: Result /= Void
 		end
@@ -6043,7 +6013,7 @@ feature -- Implementation
 			items_spanning_horz, items_spanning_vert: ARRAYED_LIST [INTEGER]
 			l_index_of_first_item: INTEGER
 			l_previously_expanded, l_expansion_status_changed: BOOLEAN
-			l_make_item_visible, l_shift_pressed: BOOLEAN
+			l_make_item_visible: BOOLEAN
 			l_key_code: INTEGER
 		do
 			if not is_destroyed and then (row_count > 0 and column_count > 0) then
@@ -6065,7 +6035,6 @@ feature -- Implementation
 
 				if is_selection_keyboard_handling_enabled and then (attached default_key_processing_handler as l_handler implies l_handler.item ([a_key])) then
 					l_key_code := a_key.code
-					l_shift_pressed := ev_application.shift_pressed
 
 						-- Call key actions.
 					if key_press_actions_internal /= Void and then not key_press_actions_internal.is_empty then
@@ -6074,7 +6043,7 @@ feature -- Implementation
 
 						-- Call key actions on items.
 					if l_prev_sel_item /= Void and then attached l_prev_sel_item.implementation.key_press_actions_internal as l_actions then
-						l_actions.call ([a_key])
+						l_actions.call (a_key)
 					end
 
 						-- Check to see if column navigation should be ignored if selected row expansion status has changed during the key actions.
@@ -6107,16 +6076,18 @@ feature -- Implementation
 									a_sel_item := find_next_item_in_column (l_prev_sel_item.column, l_prev_sel_item.row.index, False, True)
 								else
 									a_sel_item := find_next_item_in_row (l_prev_sel_item.row, l_prev_sel_item.column.index, True, False)
-									if a_sel_item = Void and then is_tree_enabled then
+									if
+										a_sel_item = Void and then
+										is_tree_enabled and then
 											-- We may have a tree item so we should perform tree key handling
 											-- If node is collapsed then we expand it.
-										if l_prev_sel_item.row.subrow_count > 0 then
-												-- We have a subrow(s) so we select the first one if expanded
-											if not l_prev_sel_item.row.is_expanded then
-												l_prev_sel_item.row.expand
-											else
-												a_sel_item := find_next_item_in_row (l_prev_sel_item.row.subrow (1), l_prev_sel_item.column.index - 1, True, False)
-											end
+										l_prev_sel_item.row.subrow_count > 0
+									then
+											-- We have a subrow(s) so we select the first one if expanded
+										if not l_prev_sel_item.row.is_expanded then
+											l_prev_sel_item.row.expand
+										else
+											a_sel_item := find_next_item_in_row (l_prev_sel_item.row.subrow (1), l_prev_sel_item.column.index - 1, True, False)
 										end
 									end
 								end
@@ -6127,18 +6098,16 @@ feature -- Implementation
 								end
 							end
 						when {EV_KEY_CONSTANTS}.key_back_space then
-							if not is_row_selection_enabled then
-								if
-									is_tree_enabled and then
-									is_item_navigatable_to (l_prev_sel_item) and then
-									find_next_item_in_row (l_prev_sel_item.row, l_prev_sel_item.column.index, False, False) = Void
-								then
-									if attached l_prev_sel_item.row.parent_row as l_parent_row then
-										a_sel_item := find_next_item_in_row (l_parent_row, l_prev_sel_item.column.index.min (l_parent_row.count) + 1, False, False)
-										if a_sel_item /= Void then
-											a_sel_item.ensure_visible
-										end
-									end
+							if
+								not is_row_selection_enabled and then
+								is_tree_enabled and then
+								is_item_navigatable_to (l_prev_sel_item) and then
+								find_next_item_in_row (l_prev_sel_item.row, l_prev_sel_item.column.index, False, False) = Void and then
+								attached l_prev_sel_item.row.parent_row as l_parent_row
+							then
+								a_sel_item := find_next_item_in_row (l_parent_row, l_prev_sel_item.column.index.min (l_parent_row.count) + 1, False, False)
+								if a_sel_item /= Void then
+									a_sel_item.ensure_visible
 								end
 							end
 						when {EV_KEY_CONSTANTS}.Key_left then
@@ -6225,10 +6194,11 @@ feature -- Implementation
 							set_virtual_position (virtual_x_position, 0)
 						else
 							items_spanning_vert := drawer.items_spanning_vertical_span ((virtual_y_position - viewable_height + 1).max (0), 0)
-							if items_spanning_vert.count > 0 then
-								if attached row (items_spanning_vert.first) as l_row then
-									set_virtual_position (virtual_x_position, l_row.virtual_y_position)
-								end
+							if
+								items_spanning_vert.count > 0 and then
+								attached row (items_spanning_vert.first) as l_row
+							then
+								set_virtual_position (virtual_x_position, l_row.virtual_y_position)
 							end
 						end
 					when {EV_KEY_CONSTANTS}.key_page_down then
@@ -6236,10 +6206,11 @@ feature -- Implementation
 							set_virtual_position (virtual_x_position, maximum_virtual_y_position)
 						else
 							items_spanning_vert := drawer.items_spanning_vertical_span (virtual_y_position + viewable_height + 1, viewable_height)
-							if items_spanning_vert.count > 0 then
-								if attached row (items_spanning_vert.last) as l_row then
-									set_virtual_position (virtual_x_position, (l_row.virtual_y_position - viewable_height + l_row.height).max (0))
-								end
+							if
+								items_spanning_vert.count > 0 and then
+								attached row (items_spanning_vert.last) as l_row
+							then
+								set_virtual_position (virtual_x_position, (l_row.virtual_y_position - viewable_height + l_row.height).max (0))
 							end
 						end
 					else
@@ -6258,7 +6229,7 @@ feature -- Implementation
 						end
 						handle_newly_selected_item (a_sel_item, 0, True)
 
-						if a_sel_item /= Void and then a_sel_item /= currently_active_item and then l_make_item_visible then
+						if a_sel_item /= currently_active_item and then l_make_item_visible then
 								-- We don't want to scroll the grid if an item is being activated.
 							if is_row_selection_enabled then
 								a_sel_item.row.ensure_visible
@@ -6616,7 +6587,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 					-- Create new columns needed.
 				set_column_count_to (a_column)
 			end
-			a_grid_col_i := columns @ (a_column)
+			a_grid_col_i := columns [a_column]
 			check a_grid_col_i /= Void then end
 			column_physical_index := a_grid_col_i.physical_index
 
@@ -6625,14 +6596,14 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 				set_row_count_to (a_row)
 			end
 			a_grid_row_i := row_internal (a_row)
-			a_row_data := internal_row_data @ a_row
+			a_row_data := internal_row_data [a_row]
 			check a_row_data /= Void then end
 
 			if a_row_data.count < column_physical_index + 1 then
 				enlarge_row (a_row, column_physical_index + 1)
 			else
 					-- There is an item already present, if non void then mark it as removed from grid
-				a_existing_item := a_row_data @ column_physical_index
+				a_existing_item := a_row_data [column_physical_index]
 				if a_existing_item /= Void then
 					redraw_item (a_existing_item)
 					a_existing_item.disable_select_internal
@@ -6719,7 +6690,7 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 			col_index: INTEGER
 		do
 				-- Retrieve column from grid
-			a_grid_column_i := columns @ (a_column)
+			a_grid_column_i := columns [a_column]
 			check a_grid_column_i /= Void then end
 			col_index := a_grid_column_i.physical_index
 
@@ -6728,13 +6699,13 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I, EV_GRID_ITEM_I, EV_GRID_DRAWER_I} -- I
 
 				-- Gain access to the internal row data
 				-- for retrieval of item.
-			row_data :=  internal_row_data @ a_row
+			row_data :=  internal_row_data [a_row]
 			check row_data /= Void then end
 
 				-- `row_data' may not have a count less than
 				-- `column_count' if items are Void in this row.
 			if col_index < row_data.count then
-				Result := row_data @ (col_index)
+				Result := row_data [col_index]
 			end
 		end
 
@@ -6788,7 +6759,7 @@ invariant
 	tree_node_connector_color_not_void: is_initialized implies tree_node_connector_color /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -6798,18 +6769,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
 end
-
-
-
-
-
-
-
-
-
-
-
-
-

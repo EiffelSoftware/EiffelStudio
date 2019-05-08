@@ -24,8 +24,6 @@
 		</capability>
 		<library name="eiffelbase" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="gobo_argument" location="gobo_argument.ecf"/>
-		<library name="gobo_gelex" location="gobo_gelex.ecf"/>
-		<library name="gobo_geyacc" location="gobo_geyacc.ecf"/>
 		<library name="gobo_kernel" location="gobo_kernel.ecf"/>
 		<library name="gobo_lexical" location="gobo_lexical.ecf"/>
 		<library name="gobo_math" location="gobo_math.ecf"/>

@@ -85,6 +85,9 @@
 	</target>
 	<target name="web_browser_dotnet" extends="web_browser">
 		<setting name="msil_generation" value="true"/>
+		<capability>
+			<concurrency support="none"/>
+		</capability>
 	</target>
 	<target name="web_browser_cocoa" extends="web_browser">
 		<setting name="platform" value="macintosh"/>

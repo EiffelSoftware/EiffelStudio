@@ -1,15 +1,15 @@
 package Eiffel2Java
 
 project
-	eiffel2java = "Eiffel2Java-safe.ecf"
 	eiffel2java = "Eiffel2Java.ecf"
 
 note
-	description: " Eiffel2Java lets you call Java code by loading a JVM instance in an Eiffel process and controlling the execution of Java code from Eiffel."
+	description: Eiffel2Java lets you call Java code by loading a JVM instance in an Eiffel process and controlling the execution of Java code from Eiffel.
 	title: Eiffel2Java
-	tags:java,wrapper
+	tags: java,wrapper
 	copyright: 1984-2013 Eiffel Software and others
 	license: Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)
 	link[license]: http://www.eiffel.com/licensing/forum.txt
 	link[source]: "Subversion" https://svn.eiffel.com/eiffelstudio/trunk/Src/library/Eiffel2Java
+
 end

@@ -43,6 +43,7 @@ feature -- Command
 			destination_is_closed: a_dest.is_closed
 		local
 			l_line: STRING
+			u: UTF_CONVERTER
 		do
 			from
 				a_src.open_read
@@ -53,7 +54,7 @@ feature -- Command
 				a_src.read_line
 				if a_substitute then
 						-- FIXME: Should substitution be UTF-8 encoded? [2017-05-03]
-					l_line := a_env.substitute (a_src.last_string).as_string_8_conversion
+					l_line := u.string_32_to_utf_8_string_8 (a_env.substitute (a_src.last_string))
 				else
 					l_line := a_src.last_string
 				end
@@ -312,7 +313,7 @@ feature -- Constants
 	target_directory_key: STRING_32 = "EQA_TARGET_DIRECTORY"
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

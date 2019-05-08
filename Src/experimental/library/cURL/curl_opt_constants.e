@@ -1,12 +1,12 @@
-note
+﻿note
 	description: "[
-					libcurl library opt constants
-					For more informaton see:
+			libcurl library opt constants
+			For more informaton see:
 
-					http://curl.haxx.se/libcurl/c/curl_easy_setopt.html
+			http://curl.haxx.se/libcurl/c/curl_easy_setopt.html
 
-					Code related to LIBCURL_VERSION: 7.17.0
-				]"
+			Code related to LIBCURL_VERSION: 7.17.0
+		]"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
 	date: "$Date$"
@@ -29,6 +29,8 @@ feature -- Version
 			"C inline use <curl/curlver.h>"
 		alias
 			"return LIBCURL_VERSION;"
+		ensure
+			is_class: class
 		end
 
 	libcurl_version_major: INTEGER
@@ -37,6 +39,8 @@ feature -- Version
 			"C inline use <curl/curlver.h>"
 		alias
 			"return LIBCURL_VERSION_MAJOR;"
+		ensure
+			is_class: class
 		end
 
 	libcurl_version_minor: INTEGER
@@ -45,6 +49,8 @@ feature -- Version
 			"C inline use <curl/curlver.h>"
 		alias
 			"return LIBCURL_VERSION_MINOR;"
+		ensure
+			is_class: class
 		end
 
 	libcurl_version_patch: INTEGER
@@ -53,6 +59,8 @@ feature -- Version
 			"C inline use <curl/curlver.h>"
 		alias
 			"return LIBCURL_VERSION_PATCH;"
+		ensure
+			is_class: class
 		end
 
 feature -- Behavior
@@ -63,6 +71,8 @@ feature -- Behavior
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_VERBOSE;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_header: INTEGER
@@ -71,6 +81,8 @@ feature -- Behavior
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_HEADER;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_noprogress: INTEGER
@@ -79,6 +91,8 @@ feature -- Behavior
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_NOPROGRESS;"
+		ensure
+			is_class: class
 		end
 
 feature -- Callback
@@ -89,6 +103,8 @@ feature -- Callback
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_WRITEFUNCTION;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_writedata: INTEGER
@@ -97,6 +113,8 @@ feature -- Callback
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_WRITEDATA;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_readfunction: INTEGER
@@ -105,6 +123,8 @@ feature -- Callback
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_READFUNCTION;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_readdata: INTEGER
@@ -113,6 +133,8 @@ feature -- Callback
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_READDATA;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_debugfunction: INTEGER
@@ -121,6 +143,8 @@ feature -- Callback
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_DEBUGFUNCTION;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_progressfunction: INTEGER
@@ -129,6 +153,8 @@ feature -- Callback
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_PROGRESSFUNCTION;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_progressdata: INTEGER
@@ -137,6 +163,8 @@ feature -- Callback
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_PROGRESSDATA;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_writeheader: INTEGER
@@ -145,6 +173,8 @@ feature -- Callback
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_WRITEHEADER;"
+		ensure
+			is_class: class
 		end
 
 feature -- Network
@@ -155,6 +185,8 @@ feature -- Network
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_URL;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_proxy: INTEGER
@@ -163,6 +195,8 @@ feature -- Network
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_PROXY;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_proxyport: INTEGER
@@ -171,6 +205,8 @@ feature -- Network
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_PROXYPORT;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_proxytype: INTEGER
@@ -179,6 +215,8 @@ feature -- Network
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_PROXYTYPE;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_httpproxytunnel: INTEGER
@@ -187,6 +225,8 @@ feature -- Network
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_HTTPPROXYTUNNEL;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_interface: INTEGER
@@ -195,6 +235,8 @@ feature -- Network
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_INTERFACE;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_localport: INTEGER
@@ -203,6 +245,8 @@ feature -- Network
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_LOCALPORT;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_localportrange: INTEGER
@@ -211,6 +255,8 @@ feature -- Network
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_LOCALPORTRANGE;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_buffersize: INTEGER
@@ -219,6 +265,8 @@ feature -- Network
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_BUFFERSIZE"
+		ensure
+			is_class: class
 		end
 
 	curlopt_port: INTEGER
@@ -227,6 +275,8 @@ feature -- Network
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_PORT;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_tcp_nodelay: INTEGER
@@ -235,6 +285,8 @@ feature -- Network
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_TCP_NODELAY;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_nosignal: INTEGER
@@ -243,6 +295,8 @@ feature -- Network
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_NOSIGNAL;"
+		ensure
+			is_class: class
 		end
 
 feature -- Names and Passwords (Authentication)
@@ -253,6 +307,8 @@ feature -- Names and Passwords (Authentication)
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_USERPWD;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_proxyuserpwd: INTEGER
@@ -261,6 +317,8 @@ feature -- Names and Passwords (Authentication)
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_PROXYUSERPWD;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_httpauth: INTEGER
@@ -269,6 +327,8 @@ feature -- Names and Passwords (Authentication)
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_HTTPAUTH;"
+		ensure
+			is_class: class
 		end
 
 	curlauth_none: INTEGER
@@ -277,6 +337,8 @@ feature -- Names and Passwords (Authentication)
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLAUTH_NONE;"
+		ensure
+			is_class: class
 		end
 
 	curlauth_basic: INTEGER
@@ -285,6 +347,8 @@ feature -- Names and Passwords (Authentication)
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLAUTH_BASIC;"
+		ensure
+			is_class: class
 		end
 
 	curlauth_digest: INTEGER
@@ -293,6 +357,8 @@ feature -- Names and Passwords (Authentication)
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLAUTH_DIGEST;"
+		ensure
+			is_class: class
 		end
 
 	curlauth_any: INTEGER
@@ -301,6 +367,8 @@ feature -- Names and Passwords (Authentication)
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLAUTH_ANY;"
+		ensure
+			is_class: class
 		end
 
 	curlauth_anysafe: INTEGER
@@ -309,6 +377,8 @@ feature -- Names and Passwords (Authentication)
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLAUTH_ANYSAFE;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_proxyauth: INTEGER
@@ -317,6 +387,8 @@ feature -- Names and Passwords (Authentication)
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_PROXYAUTH;"
+		ensure
+			is_class: class
 		end
 
 feature -- HTTP
@@ -327,6 +399,8 @@ feature -- HTTP
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_AUTOREFERER;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_encoding: INTEGER
@@ -336,6 +410,8 @@ feature -- HTTP
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_ENCODING;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_followlocation: INTEGER
@@ -344,6 +420,8 @@ feature -- HTTP
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_FOLLOWLOCATION;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_unrestricted_auth: INTEGER
@@ -352,6 +430,8 @@ feature -- HTTP
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_UNRESTRICTED_AUTH;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_maxredirs: INTEGER
@@ -360,6 +440,8 @@ feature -- HTTP
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_MAXREDIRS;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_put: INTEGER
@@ -368,6 +450,8 @@ feature -- HTTP
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_PUT;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_post: INTEGER
@@ -376,6 +460,8 @@ feature -- HTTP
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_POST;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_postfields: INTEGER
@@ -384,6 +470,8 @@ feature -- HTTP
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_POSTFIELDS;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_postfieldsize: INTEGER
@@ -392,6 +480,8 @@ feature -- HTTP
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_POSTFIELDSIZE;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_postfieldsize_large: INTEGER
@@ -400,6 +490,8 @@ feature -- HTTP
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_POSTFIELDSIZE_LARGE;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_httppost: INTEGER
@@ -408,6 +500,8 @@ feature -- HTTP
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_HTTPPOST;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_referer: INTEGER
@@ -416,6 +510,8 @@ feature -- HTTP
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_REFERER;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_useragent: INTEGER
@@ -424,6 +520,8 @@ feature -- HTTP
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_USERAGENT;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_httpheader: INTEGER
@@ -432,6 +530,8 @@ feature -- HTTP
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_HTTPHEADER;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_cookie: INTEGER
@@ -440,6 +540,8 @@ feature -- HTTP
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_COOKIE;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_cookiefile: INTEGER
@@ -448,6 +550,8 @@ feature -- HTTP
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_COOKIEFILE;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_cookiejar: INTEGER
@@ -456,6 +560,8 @@ feature -- HTTP
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_COOKIEJAR;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_cookiesession: INTEGER
@@ -464,6 +570,8 @@ feature -- HTTP
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_COOKIESESSION;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_cookielist: INTEGER
@@ -472,6 +580,8 @@ feature -- HTTP
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_COOKIELIST"
+		ensure
+			is_class: class
 		end
 
 	curlopt_httpget: INTEGER
@@ -482,6 +592,8 @@ feature -- HTTP
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_HTTPGET;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_http_version: INTEGER
@@ -490,6 +602,8 @@ feature -- HTTP
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_HTTP_VERSION;"
+		ensure
+			is_class: class
 		end
 
 	curl_http_version_none: INTEGER
@@ -499,6 +613,8 @@ feature -- HTTP
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURL_HTTP_VERSION_NONE"
+		ensure
+			is_class: class
 		end
 
 	curl_http_version_1_0: INTEGER
@@ -508,6 +624,8 @@ feature -- HTTP
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURL_HTTP_VERSION_1_0"
+		ensure
+			is_class: class
 		end
 
 	curl_http_version_1_1: INTEGER
@@ -517,6 +635,8 @@ feature -- HTTP
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURL_HTTP_VERSION_1_1"
+		ensure
+			is_class: class
 		end
 
 	curlopt_ignore_content_length: INTEGER
@@ -525,6 +645,8 @@ feature -- HTTP
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_IGNORE_CONTENT_LENGTH;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_http_content_decoding: INTEGER
@@ -533,6 +655,8 @@ feature -- HTTP
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_HTTP_CONTENT_DECODING;"
+		ensure
+			is_class: class
 		end
 
 feature -- Protocol
@@ -543,6 +667,8 @@ feature -- Protocol
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_TRANSFERTEXT;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_crlf: INTEGER
@@ -551,6 +677,8 @@ feature -- Protocol
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_CRLF;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_resume_from: INTEGER
@@ -559,6 +687,8 @@ feature -- Protocol
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_RESUME_FROM;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_resume_from_large: INTEGER
@@ -567,6 +697,8 @@ feature -- Protocol
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_RESUME_FROM_LARGE;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_customrequest: INTEGER
@@ -575,6 +707,8 @@ feature -- Protocol
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_CUSTOMREQUEST"
+		ensure
+			is_class: class
 		end
 
 	curlopt_filetime: INTEGER
@@ -583,6 +717,8 @@ feature -- Protocol
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_FILETIME;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_nobody: INTEGER
@@ -591,6 +727,8 @@ feature -- Protocol
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_NOBODY;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_infilesize: INTEGER
@@ -599,6 +737,8 @@ feature -- Protocol
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_INFILESIZE;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_infilesize_large: INTEGER
@@ -607,6 +747,8 @@ feature -- Protocol
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_INFILESIZE_LARGE;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_upload: INTEGER
@@ -615,6 +757,8 @@ feature -- Protocol
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_UPLOAD;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_maxfilesize: INTEGER
@@ -623,6 +767,8 @@ feature -- Protocol
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_MAXFILESIZE;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_maxfilesize_large: INTEGER
@@ -631,6 +777,8 @@ feature -- Protocol
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_MAXFILESIZE_LARGE;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_timecondition: INTEGER
@@ -639,6 +787,8 @@ feature -- Protocol
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_TIMECONDITION;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_timevalue: INTEGER
@@ -647,6 +797,18 @@ feature -- Protocol
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_TIMEVALUE;"
+		ensure
+			is_class: class
+		end
+
+	curlopt_mimepost: INTEGER
+			-- Declared as CURLOPT_MIMEPOST
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"return CURLOPT_MIMEPOST;"
+		ensure
+			is_class: class
 		end
 
 feature -- Connection
@@ -657,6 +819,8 @@ feature -- Connection
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_TIMEOUT"
+		ensure
+			is_class: class
 		end
 
 	curlopt_connect_timeout: INTEGER
@@ -668,6 +832,8 @@ feature -- Connection
 			"[
 				return CURLOPT_CONNECTTIMEOUT
 			]"
+		ensure
+			is_class: class
 		end
 
 	curlopt_timeout_ms: INTEGER
@@ -676,6 +842,8 @@ feature -- Connection
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_TIMEOUT_MS;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_low_speed_limit: INTEGER
@@ -684,6 +852,8 @@ feature -- Connection
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_LOW_SPEED_LIMIT;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_low_speed_time: INTEGER
@@ -692,6 +862,8 @@ feature -- Connection
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_LOW_SPEED_TIME;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_max_send_speed_large: INTEGER
@@ -700,6 +872,8 @@ feature -- Connection
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_MAX_SEND_SPEED_LARGE;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_max_recv_speed_large: INTEGER
@@ -708,6 +882,8 @@ feature -- Connection
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_MAX_RECV_SPEED_LARGE;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_maxconnects: INTEGER
@@ -716,6 +892,8 @@ feature -- Connection
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_MAXCONNECTS;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_fresh_connect: INTEGER
@@ -724,6 +902,8 @@ feature -- Connection
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_FRESH_CONNECT;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_forbid_reuse: INTEGER
@@ -732,6 +912,8 @@ feature -- Connection
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_FORBID_REUSE;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_connecttimeout: INTEGER
@@ -740,6 +922,8 @@ feature -- Connection
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_CONNECTTIMEOUT"
+		ensure
+			is_class: class
 		end
 
 	curlopt_ipresolve: INTEGER
@@ -748,6 +932,8 @@ feature -- Connection
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_IPRESOLVE;"
+		ensure
+			is_class: class
 		end
 
 	curl_ipresolve_whatever: INTEGER
@@ -756,6 +942,8 @@ feature -- Connection
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURL_IPRESOLVE_WHATEVER;"
+		ensure
+			is_class: class
 		end
 
 	curl_ipresolve_v4: INTEGER
@@ -764,6 +952,8 @@ feature -- Connection
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURL_IPRESOLVE_V4;"
+		ensure
+			is_class: class
 		end
 
 	curl_ipresolve_v6: INTEGER
@@ -772,6 +962,8 @@ feature -- Connection
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURL_IPRESOLVE_V6;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_connect_only: INTEGER
@@ -780,6 +972,8 @@ feature -- Connection
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_CONNECT_ONLY;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_use_ssl: INTEGER
@@ -788,6 +982,8 @@ feature -- Connection
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_USE_SSL;"
+		ensure
+			is_class: class
 		end
 
 	curlusessl_none: INTEGER
@@ -796,6 +992,8 @@ feature -- Connection
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLUSESSL_NONE;"
+		ensure
+			is_class: class
 		end
 
 	curlusessl_try: INTEGER
@@ -804,6 +1002,8 @@ feature -- Connection
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLUSESSL_TRY;"
+		ensure
+			is_class: class
 		end
 
 	curlusessl_control: INTEGER
@@ -812,6 +1012,8 @@ feature -- Connection
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLUSESSL_CONTROL;"
+		ensure
+			is_class: class
 		end
 
 	curlusessl_all: INTEGER
@@ -820,6 +1022,8 @@ feature -- Connection
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLUSESSL_ALL;"
+		ensure
+			is_class: class
 		end
 
 feature -- SSL and Security
@@ -830,6 +1034,8 @@ feature -- SSL and Security
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_SSLCERT;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_sslcerttype: INTEGER
@@ -838,6 +1044,8 @@ feature -- SSL and Security
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_SSLCERTTYPE;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_sslkey: INTEGER
@@ -846,6 +1054,8 @@ feature -- SSL and Security
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_SSLKEY;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_sslkeytype: INTEGER
@@ -854,6 +1064,8 @@ feature -- SSL and Security
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_SSLKEYTYPE;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_keypasswd: INTEGER
@@ -862,6 +1074,8 @@ feature -- SSL and Security
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_KEYPASSWD;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_sslengine: INTEGER
@@ -870,6 +1084,8 @@ feature -- SSL and Security
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_SSLENGINE;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_sslengine_default: INTEGER
@@ -878,6 +1094,8 @@ feature -- SSL and Security
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_SSLENGINE_DEFAULT;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_sslversion: INTEGER
@@ -886,6 +1104,8 @@ feature -- SSL and Security
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_SSLVERSION;"
+		ensure
+			is_class: class
 		end
 
 	curl_sslversion_default: INTEGER
@@ -894,6 +1114,8 @@ feature -- SSL and Security
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURL_SSLVERSION_DEFAULT;"
+		ensure
+			is_class: class
 		end
 
 	curl_sslversion_tlsv1: INTEGER
@@ -902,6 +1124,8 @@ feature -- SSL and Security
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURL_SSLVERSION_TLSv1;"
+		ensure
+			is_class: class
 		end
 
 	curl_sslversion_sslv2: INTEGER
@@ -910,6 +1134,8 @@ feature -- SSL and Security
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURL_SSLVERSION_SSLv2;"
+		ensure
+			is_class: class
 		end
 
 	curl_sslversion_sslv3: INTEGER
@@ -918,6 +1144,8 @@ feature -- SSL and Security
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURL_SSLVERSION_SSLv3;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_ssl_verifypeer: INTEGER
@@ -926,6 +1154,8 @@ feature -- SSL and Security
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_SSL_VERIFYPEER;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_cainfo: INTEGER
@@ -934,6 +1164,8 @@ feature -- SSL and Security
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_CAINFO;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_capath: INTEGER
@@ -942,6 +1174,8 @@ feature -- SSL and Security
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_CAPATH;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_ssl_verifyhost: INTEGER
@@ -950,6 +1184,8 @@ feature -- SSL and Security
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_SSL_VERIFYHOST;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_random_file: INTEGER
@@ -958,6 +1194,8 @@ feature -- SSL and Security
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_RANDOM_FILE;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_egdsocket: INTEGER
@@ -966,6 +1204,8 @@ feature -- SSL and Security
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_EGDSOCKET;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_ssl_cipher_list: INTEGER
@@ -974,6 +1214,8 @@ feature -- SSL and Security
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_SSL_CIPHER_LIST;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_ssl_sessionid_cache: INTEGER
@@ -982,6 +1224,8 @@ feature -- SSL and Security
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_SSL_SESSIONID_CACHE;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_krblevel: INTEGER
@@ -990,6 +1234,8 @@ feature -- SSL and Security
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_KRBLEVEL;"
+		ensure
+			is_class: class
 		end
 
 feature -- SSH
@@ -1000,6 +1246,8 @@ feature -- SSH
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_SSH_AUTH_TYPES;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_ssh_public_keyfile: INTEGER
@@ -1008,6 +1256,8 @@ feature -- SSH
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_SSH_PUBLIC_KEYFILE;"
+		ensure
+			is_class: class
 		end
 
 	curlopt_ssh_private_keyfile: INTEGER
@@ -1016,6 +1266,38 @@ feature -- SSH
 			"C inline use <curl/curl.h>"
 		alias
 			"return CURLOPT_SSH_PRIVATE_KEYFILE;"
+		ensure
+			is_class: class
+		end
+
+	curlopt_mail_from: INTEGER
+			-- Declared as CURLOPT_MAIL_FROM
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"return CURLOPT_MAIL_FROM;"
+		ensure
+			is_class: class
+		end
+
+	curlopt_mail_rcpt: INTEGER
+			-- Declared as CURLOPT_MAIL_RCPT
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"return CURLOPT_MAIL_RCPT;"
+		ensure
+			is_class: class
+		end
+
+	curl_zero_terminated: INTEGER
+			-- Declared as CURL_ZERO_TERMINATED
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"return CURL_ZERO_TERMINATED;"
+		ensure
+			is_class: class
 		end
 
 feature -- Status report
@@ -1134,12 +1416,15 @@ feature -- Status report
 						v = curlopt_krblevel or
 						v = curlopt_ssh_auth_types or
 						v = curlopt_ssh_public_keyfile or
-						v = curlopt_ssh_private_keyfile
+						v = curlopt_ssh_private_keyfile or
+						v = curlopt_mail_from or
+						v = curlopt_mail_rcpt or
+						v = curl_zero_terminated
 		end
 
 note
 	library:   "cURL: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

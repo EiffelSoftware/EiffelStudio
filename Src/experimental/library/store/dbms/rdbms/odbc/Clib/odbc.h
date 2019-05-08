@@ -284,6 +284,8 @@ extern void odbc_get_col_desc (int no_desc, int index);
 extern void odbc_free_connection (void *con);
 extern EIF_NATURAL_64 strhextoval(SQL_NUMERIC_STRUCT *NumStr);
 extern void odbc_set_decimal_presicion_and_scale (void *con, int precision, int scale);
+extern SQLLEN odbc_row_count (void *con, int no_desc);
+
 
 /*****************************************************************/
 /*                                                               */

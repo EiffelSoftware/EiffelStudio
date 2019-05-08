@@ -21,8 +21,7 @@ inherit
 			interface,
 			initialize,
 			remove_i_th,
-			insert_i_th,
-			ev_apply_new_size
+			insert_i_th
 		end
 
 	EV_FONTABLE_IMP
@@ -362,7 +361,7 @@ feature {EV_ANY_I, EV_ANY} -- Implementation
 	tab_view: NS_TAB_VIEW
 
 ;note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

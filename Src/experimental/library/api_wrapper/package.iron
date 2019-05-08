@@ -1,7 +1,6 @@
 package api_wrapper
 
 project
-	api_wrapper = "api_wrapper-safe.ecf"
 	api_wrapper = "api_wrapper.ecf"
 
 note

@@ -1,10 +1,9 @@
-note
+﻿note
 	description: "Intermediary routines between gtk and eiffel."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-
 
 class
 	EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES
@@ -206,10 +205,12 @@ feature {EV_ANY_I} -- Externals
 			"C (GtkWidget*): EIF_REFERENCE | %"ev_any_imp.h%""
 		alias
 			"c_ev_any_imp_get_eif_reference_from_object_id"
+		ensure
+			is_class: class
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -219,18 +220,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES
-
-
-
-
-
-
-
-
-
-
-
+end

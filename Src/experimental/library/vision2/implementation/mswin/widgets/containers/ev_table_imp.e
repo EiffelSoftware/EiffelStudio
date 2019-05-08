@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"[
 			Eiffel Vision table. Ms windows implementation
@@ -14,8 +14,7 @@ note
 		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-
-	date: "$Date$";
+	date: "$Date$"
 	revision: "$Revision$"
 
 class
@@ -37,9 +36,6 @@ inherit
 		redefine
 			disable_sensitive,
 			enable_sensitive,
-			compute_minimum_width,
-			compute_minimum_height,
-			compute_minimum_size,
 			interface,
 			make,
 			on_size,
@@ -1169,8 +1165,8 @@ invariant
 	ev_children_not_void: ev_children /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
-	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA
@@ -1179,17 +1175,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_TABLE_IMP
-
-
-
-
-
-
-
-
-
-
+end

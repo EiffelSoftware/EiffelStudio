@@ -140,15 +140,15 @@ feature {NONE} -- Externals
 	c_co_task_mem_free (a_item: like item)
 			-- Call `CoTaskMemFree' on `a_item'.
 		external
-			"C inline use <windows.h>"
+			"C inline use <objbase.h>"
 		alias
-			"CoTaskMemFree((void*)$a_item)"
+			"CoTaskMemFree((void*)$a_item);"
 		end
 
 	c_name (a_item: like item): POINTER
 			-- Retrieve `pwcsName' field of STATSTG structure
 		external
-			"C inline use <windows.h>"
+			"C inline use <objidl.h>"
 		alias
 			"((STATSTG*)$a_item)->pwcsName"
 		end
@@ -156,7 +156,7 @@ feature {NONE} -- Externals
 	c_size (a_item: like item): POINTER
 			-- Retrieve pointer on `cbSize' field of STATSTG structure
 		external
-			"C inline use <windows.h>"
+			"C inline use <objidl.h>"
 		alias
 			"&(((STATSTG*)$a_item)->cbSize)"
 		end
@@ -164,7 +164,7 @@ feature {NONE} -- Externals
 	c_type (a_item: like item): INTEGER
 			-- Retrieve `type' field of STATSTG structure
 		external
-			"C inline use <windows.h>"
+			"C inline use <objidl.h>"
 		alias
 			"(EIF_INTEGER)((STATSTG*)$a_item)->type"
 		end
@@ -172,7 +172,7 @@ feature {NONE} -- Externals
 	c_modification_time (a_item: like item): POINTER
 			-- Retrieve pointer on `mtime' field of STATSTG structure
 		external
-			"C inline use <windows.h>"
+			"C inline use <objidl.h>"
 		alias
 			"&(((STATSTG*)$a_item)->mtime)"
 		end
@@ -180,7 +180,7 @@ feature {NONE} -- Externals
 	c_creation_time (a_item: like item): POINTER
 			-- Retrieve pointer on `ctime' field of STATSTG structure
 		external
-			"C inline use <windows.h>"
+			"C inline use <objidl.h>"
 		alias
 			"&(((STATSTG*)$a_item)->ctime)"
 		end
@@ -188,7 +188,7 @@ feature {NONE} -- Externals
 	c_access_time (a_item: like item): POINTER
 			-- Retrieve pointer on `atime' field of STATSTG structure
 		external
-			"C inline use <windows.h>"
+			"C inline use <objidl.h>"
 		alias
 			"&(((STATSTG*)$a_item)->atime)"
 		end
@@ -196,7 +196,7 @@ feature {NONE} -- Externals
 	c_mode (a_item: like item): INTEGER
 			-- Retrieve `grfMode' field of STATSTG structure
 		external
-			"C inline use <windows.h>"
+			"C inline use <objidl.h>"
 		alias
 			"(EIF_INTEGER)((STATSTG*)$a_item)->grfMode"
 		end
@@ -204,7 +204,7 @@ feature {NONE} -- Externals
 	c_locks_supported (a_item: like item): INTEGER
 			-- Retrieve `grfMode' field of STATSTG structure
 		external
-			"C inline use <windows.h>"
+			"C inline use <objidl.h>"
 		alias
 			"(EIF_INTEGER)(((STATSTG*)$a_item)->grfLocksSupported)"
 		end
@@ -212,7 +212,7 @@ feature {NONE} -- Externals
 	c_clsid (a_item: like item): POINTER
 			-- Retrieve pointer on `clsid' field of STATSTG structure
 		external
-			"C inline use <windows.h>"
+			"C inline use <objidl.h>"
 		alias
 			"&(((STATSTG*)$a_item)->clsid)"
 		end

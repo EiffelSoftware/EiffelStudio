@@ -28,6 +28,7 @@ feature -- Access
 		do
 			create {PROCESS_IMP} Result.make (a_file_name, args, a_working_directory)
 		ensure
+			instance_free: class
 			process_launched_created: Result /= Void
 		end
 
@@ -41,11 +42,12 @@ feature -- Access
 		do
 			create {PROCESS_IMP} Result.make_with_command_line (a_cmd_line, a_working_directory)
 		ensure
+			instance_free: class
 			process_launched_created: Result /= Void
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

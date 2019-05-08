@@ -37,7 +37,7 @@ feature -- Access
 	last_parsed_query : detachable STRING
 			-- Last parsed query
 		obsolete
-			"Use `last_parsed_query_32' instead."
+			"Use `last_parsed_query_32' instead  [2017-11-30]."
 		do
 			if attached last_parsed_query_32 as l_str then
 				Result := l_str.as_string_8
@@ -216,7 +216,7 @@ feature {NONE} -- Implementation
 			-- Internal `affected_row_count'
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

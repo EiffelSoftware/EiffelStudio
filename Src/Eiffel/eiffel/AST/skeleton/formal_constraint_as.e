@@ -33,7 +33,7 @@ inherit
 
 	SHARED_ERROR_HANDLER
 		export
-			{NONE} all
+			{ANY} error_handler
 		end
 
 	COMPILER_EXPORTER
@@ -658,7 +658,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

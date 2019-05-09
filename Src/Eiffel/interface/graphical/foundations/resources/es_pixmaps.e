@@ -223,7 +223,7 @@ feature -- Query
 			l_coords: TUPLE [x: NATURAL_8; y: NATURAL_8]
 		do
 			l_coords := icon_coordinates_table.item (a_name)
-			Result := matrix_buffer.sub_pixmap (pixel_rectangle (l_coords.x, l_coords.y))
+			Result := matrix_buffer.sub_pixel_buffer (pixel_rectangle (l_coords.x, l_coords.y)).to_pixmap
 		ensure
 			named_icon_attached: Result /= Void
 			not_result_is_destroyed: not Result.is_destroyed

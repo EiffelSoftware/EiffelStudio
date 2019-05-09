@@ -152,7 +152,6 @@ feature -- Command
 	set_from_icon (a_wel_icon: WEL_ICON)
 			-- Load pixel data from `a_wel_icon'.
 		local
-			l_pixmap_imp: detachable EV_PIXMAP_IMP
 			l_bitmap: WEL_BITMAP
 			l_icon_info: detachable WEL_ICON_INFO
 			l_header_info: WEL_BITMAP_INFO_HEADER
@@ -224,10 +223,13 @@ feature -- Command
 				l_mem_dc.release
 			else
 				l_pixmap := pixmap
-				check l_pixmap /= Void then end
-				l_pixmap_imp ?= l_pixmap.implementation
-				check l_pixmap_imp /= Void then end
-				l_pixmap_imp.set_with_resource (a_wel_icon)
+				check l_pixmap /= Void then
+				end
+				if attached {EV_PIXMAP_IMP} l_pixmap.implementation as l_pixmap_imp then
+					l_pixmap_imp.set_with_resource (a_wel_icon)
+				else
+					check has_pixmap_imp: False end
+				end
 			end
 		end
 
@@ -267,33 +269,33 @@ feature -- Command
 			-- Create asub pixmap from Current.
 		local
 			l_temp_buffer: EV_PIXEL_BUFFER
-			l_imp: detachable EV_PIXEL_BUFFER_IMP
 		do
 			l_temp_buffer := sub_pixel_buffer (a_rect)
-			l_imp ?= l_temp_buffer.implementation
-			check not_void: l_imp /= Void then end
 			create Result
-			l_imp.draw_to_drawable (Result)
-				-- We use `twin' to ensure the implementation of EV_PIXMAP is EV_PIXMAP_IMP
-				-- and not EV_PIXMAP_IMP_DRAWABLE.
-			Result := Result.twin
+			if attached {EV_PIXEL_BUFFER_IMP} l_temp_buffer.implementation as l_imp then
+				l_imp.draw_to_drawable (Result)
+					-- We use `twin' to ensure the implementation of EV_PIXMAP is EV_PIXMAP_IMP
+					-- and not EV_PIXMAP_IMP_DRAWABLE.
+				Result := Result.twin
+			else
+				check has_pixel_buffer_imp: False then
+				end
+			end
 		end
 
 	draw_to_drawable (a_drawable: EV_DRAWABLE)
 			-- Draw Current to `a_drawable'
-		local
-			l_pixmap: detachable EV_PIXMAP
 		do
-			l_pixmap ?= a_drawable
-			if l_pixmap /= Void then
+			if attached {EV_PIXMAP} a_drawable as l_pixmap then
 				l_pixmap.set_size (width, height)
 			end
 			if is_gdi_plus_installed then
 				draw_to_drawable_with_matrix (a_drawable, Void)
-			else
-				l_pixmap := pixmap
-				check l_pixmap /= Void then end
+			elseif attached pixmap as l_pixmap then
 				a_drawable.draw_pixmap (0, 0, l_pixmap)
+			else
+				check has_pixmap: pixmap /= Void then
+				end
 			end
 		end
 
@@ -301,13 +303,13 @@ feature -- Command
 			-- Draw Current to `a_drawable'
 		local
 			l_graphics: WEL_GDIP_GRAPHICS
-			l_drawable_imp: detachable EV_DRAWABLE_IMP
 			l_gdip_bitmap: like gdip_bitmap
 			l_pixmap: like pixmap
 		do
-			l_drawable_imp ?= a_drawable.implementation
-			check l_drawable_imp /= Void then end
-			if is_gdi_plus_installed then
+			if
+				is_gdi_plus_installed and then
+				attached {EV_DRAWABLE_IMP} a_drawable.implementation as l_drawable_imp
+			then
 				l_gdip_bitmap := gdip_bitmap
 				check l_gdip_bitmap /= Void then end
 				l_drawable_imp.get_dc
@@ -316,6 +318,7 @@ feature -- Command
 				l_graphics.destroy_item
 				l_drawable_imp.release_dc
 			else
+				check has_drawable_imp: not is_gdi_plus_installed end
 				l_pixmap := pixmap
 				check l_pixmap /= Void then end
 				a_drawable.draw_sub_pixmap (a_dest_rect.x, a_dest_rect.y, l_pixmap, create {EV_RECTANGLE}.make (a_src_rect.x, a_src_rect.y, a_src_rect.width, a_src_rect.height))
@@ -325,17 +328,16 @@ feature -- Command
 	sub_pixel_buffer (a_rect: EV_RECTANGLE): EV_PIXEL_BUFFER
 			-- Create a new sub pixel buffer object.
 		local
-			l_imp: detachable EV_PIXEL_BUFFER_IMP
 			l_graphics: WEL_GDIP_GRAPHICS
 			l_dest_rect, l_src_rect: WEL_RECT
 			l_gdip_bitmap, l_imp_gdip_bitmap: like gdip_bitmap
 		do
 			create Result.make_with_size (a_rect.width, a_rect.height)
 
-			l_imp ?= Result.implementation
-			check not_void: l_imp /= Void then end
-
-			if is_gdi_plus_installed then
+			if
+				is_gdi_plus_installed and then
+				attached {EV_PIXEL_BUFFER_IMP} Result.implementation as l_imp
+			then
 				l_gdip_bitmap := gdip_bitmap
 				check l_gdip_bitmap /= Void then end
 				l_imp_gdip_bitmap := l_imp.gdip_bitmap
@@ -360,7 +362,6 @@ feature -- Command
 	stretched (a_width, a_height: INTEGER): EV_PIXEL_BUFFER
 			-- <Precursor>
 		local
-			l_imp: detachable EV_PIXEL_BUFFER_IMP
 			l_graphics: WEL_GDIP_GRAPHICS
 			l_dest_rect, l_src_rect: WEL_RECT
 			l_gdip_bitmap, l_imp_gdip_bitmap: like gdip_bitmap
@@ -368,10 +369,10 @@ feature -- Command
 		do
 			create Result.make_with_size (a_width, a_height)
 
-			l_imp ?= Result.implementation
-			check not_void: l_imp /= Void then end
-
-			if is_gdi_plus_installed then
+			if
+				is_gdi_plus_installed and then
+				attached {EV_PIXEL_BUFFER_IMP} Result.implementation as l_imp
+			then
 				l_gdip_bitmap := gdip_bitmap
 				check l_gdip_bitmap /= Void then end
 				l_imp_gdip_bitmap := l_imp.gdip_bitmap
@@ -397,41 +398,41 @@ feature -- Command
 	draw_pixel_buffer_with_x_y (a_x, a_y: INTEGER; a_pixel_buffer: EV_PIXEL_BUFFER)
 			-- Draw `a_pixel_buffer' at `a_rect'.
 		local
-			l_imp: detachable EV_PIXEL_BUFFER_IMP
 			l_graphics: WEL_GDIP_GRAPHICS
 			l_dest_rect, l_src_rect: WEL_RECT
 			l_gdip_bitmap: like gdip_bitmap
 			l_pixmap: like pixmap
 		do
-			l_imp ?= a_pixel_buffer.implementation
-			check not_void: l_imp /= Void then end
+			if attached {EV_PIXEL_BUFFER_IMP} a_pixel_buffer.implementation as l_imp then
+				if is_gdi_plus_installed then
+					l_gdip_bitmap := gdip_bitmap
+					check l_gdip_bitmap /= Void then end
+					create l_graphics.make_from_image (l_gdip_bitmap)
+					create l_src_rect.make (0, 0, a_pixel_buffer.width, a_pixel_buffer.height)
+					create l_dest_rect.make (a_x, a_y, a_x + a_pixel_buffer.width, a_y + a_pixel_buffer.height)
 
-			if is_gdi_plus_installed then
-				l_gdip_bitmap := gdip_bitmap
-				check l_gdip_bitmap /= Void then end
-				create l_graphics.make_from_image (l_gdip_bitmap)
-				create l_src_rect.make (0, 0, a_pixel_buffer.width, a_pixel_buffer.height)
-				create l_dest_rect.make (a_x, a_y, a_x + a_pixel_buffer.width, a_y + a_pixel_buffer.height)
+					check same_size: l_src_rect.width = l_dest_rect.width and l_src_rect.height = l_dest_rect.height end
 
-				check same_size: l_src_rect.width = l_dest_rect.width and l_src_rect.height = l_dest_rect.height end
+					l_gdip_bitmap := l_imp.gdip_bitmap
+					check l_gdip_bitmap /= Void then end
+					l_graphics.draw_image_with_dest_rect_src_rect (l_gdip_bitmap, l_dest_rect, l_src_rect)
 
-				l_gdip_bitmap := l_imp.gdip_bitmap
-				check l_gdip_bitmap /= Void then end
-				l_graphics.draw_image_with_dest_rect_src_rect (l_gdip_bitmap, l_dest_rect, l_src_rect)
-
-				l_dest_rect.dispose
-				l_src_rect.dispose
-				l_graphics.destroy_item
-				-- In GDI+, alpha data issue is automatically handled, so we don't need to set mask.
-			else
-				l_pixmap := pixmap
-				check l_pixmap /= Void then end
-				if attached l_imp.pixmap as l_imp_pixmap then
-					l_pixmap.draw_pixmap (a_x, a_y, l_imp_pixmap)
+					l_dest_rect.dispose
+					l_src_rect.dispose
+					l_graphics.destroy_item
+					-- In GDI+, alpha data issue is automatically handled, so we don't need to set mask.
 				else
-					check False end
+					l_pixmap := pixmap
+					check l_pixmap /= Void then end
+					if attached l_imp.pixmap as l_imp_pixmap then
+						l_pixmap.draw_pixmap (a_x, a_y, l_imp_pixmap)
+					else
+						check has_pixmap_imp: False end
+					end
 				end
-
+			else
+				check has_pixel_buffer_imp: False then
+				end
 			end
 		end
 
@@ -559,7 +560,6 @@ feature -- Query
 			not_too_big: a_rect.width <= width  and a_rect.height <= height
 			support: is_gdi_plus_installed
 		local
-			l_imp: detachable EV_BITMAP_IMP
 			l_graphics: WEL_GDIP_GRAPHICS
 			l_image_attributes: WEL_GDIP_IMAGE_ATTRIBUTES
 			l_dest_rect, l_src_rect: WEL_RECT
@@ -573,28 +573,30 @@ feature -- Query
 			-- And we can't create a EV_BITMAP more than 1bpp to overcome this problem, because Windows API maskblt only accept 1bpp bitmap as mask bitmap.
 			Result.fill_rectangle (0, 0, width, height)
 
-			l_imp ?= Result.implementation
-			check not_void: l_imp /= Void then end
+			if attached {EV_BITMAP_IMP} Result.implementation as l_imp then
+				create l_graphics.make_from_dc (l_imp.dc)
+				create l_image_attributes.make
+				l_image_attributes.clear_color_key
+				l_image_attributes.set_color_matrix (mask_color_matrix)
 
-			create l_graphics.make_from_dc (l_imp.dc)
-			create l_image_attributes.make
-			l_image_attributes.clear_color_key
-			l_image_attributes.set_color_matrix (mask_color_matrix)
+				create l_dest_rect.make (0, 0, a_rect.width, a_rect.height)
+				create l_src_rect.make (a_rect.x, a_rect.y, a_rect.right, a_rect.bottom)
 
-			create l_dest_rect.make (0, 0, a_rect.width, a_rect.height)
-			create l_src_rect.make (a_rect.x, a_rect.y, a_rect.right, a_rect.bottom)
+				l_gdip_bitmap := gdip_bitmap
+				check l_gdip_bitmap /= Void then end
+				l_graphics.draw_image_with_src_rect_dest_rect_unit_attributes (l_gdip_bitmap, l_dest_rect, l_src_rect, {WEL_GDIP_UNIT}.unitpixel, l_image_attributes)
 
-			l_gdip_bitmap := gdip_bitmap
-			check l_gdip_bitmap /= Void then end
-			l_graphics.draw_image_with_src_rect_dest_rect_unit_attributes (l_gdip_bitmap, l_dest_rect, l_src_rect, {WEL_GDIP_UNIT}.unitpixel, l_image_attributes)
+				l_dest_rect.dispose
+				l_src_rect.dispose
+				l_image_attributes.destroy_item
+				l_graphics.destroy_item
 
- 			l_dest_rect.dispose
- 			l_src_rect.dispose
-			l_image_attributes.destroy_item
-			l_graphics.destroy_item
-
-			-- Then we have to invert mask bitmap colors to overcome the 32bits to 1bit bitmap convert problem.
-			l_imp.dc.bit_blt (0, 0, width, height, l_imp.dc, 0, 0, {WEL_RASTER_OPERATIONS_CONSTANTS}.patinvert)
+				-- Then we have to invert mask bitmap colors to overcome the 32bits to 1bit bitmap convert problem.
+				l_imp.dc.bit_blt (0, 0, width, height, l_imp.dc, 0, 0, {WEL_RASTER_OPERATIONS_CONSTANTS}.patinvert)
+			else
+				check has_bitmap_imp: False then
+				end
+			end
 		ensure
 			not_void: Result /= Void
 		end
@@ -653,43 +655,41 @@ feature {EV_PIXEL_BUFFER_IMP} -- Implementation
 			not_void: a_drawable /= Void
 			support: is_gdi_plus_installed
 		local
-			l_imp: detachable EV_DRAWABLE_IMP
-			l_drawing_area: detachable EV_DRAWING_AREA_IMP
-			l_pixmap: detachable EV_PIXMAP
 			l_graphics: WEL_GDIP_GRAPHICS
 			l_rect: WEL_RECT
 			l_image_attributes: WEL_GDIP_IMAGE_ATTRIBUTES
 			l_gdip_bitmap: like gdip_bitmap
 		do
-			l_imp ?= a_drawable.implementation
-			check not_void: l_imp /= Void then end
-			l_drawing_area ?= l_imp
+			if attached {EV_DRAWABLE_IMP} a_drawable.implementation as l_imp then
+				l_imp.get_dc
 
-			l_imp.get_dc
+				create l_graphics.make_from_dc (l_imp.dc)
 
-			create l_graphics.make_from_dc (l_imp.dc)
+				l_gdip_bitmap := gdip_bitmap
+				check l_gdip_bitmap /= Void then end
 
-			l_gdip_bitmap := gdip_bitmap
-			check l_gdip_bitmap /= Void then end
+				if a_color_matrix = Void then
+					l_graphics.draw_image (l_gdip_bitmap, 0, 0)
+				else
+					create l_image_attributes.make
+					l_image_attributes.clear_color_key
+					l_image_attributes.set_color_matrix (a_color_matrix)
+					create l_rect.make (0, 0, width, height)
+					l_graphics.draw_image_with_src_rect_dest_rect_unit_attributes (l_gdip_bitmap, l_rect, l_rect, {WEL_GDIP_UNIT}.unitpixel, l_image_attributes)
+					l_image_attributes.destroy_item
+				end
 
-			if a_color_matrix = Void then
-				l_graphics.draw_image (l_gdip_bitmap, 0, 0)
+				l_graphics.destroy_item
+
+				l_imp.release_dc
 			else
-				create l_image_attributes.make
-				l_image_attributes.clear_color_key
-				l_image_attributes.set_color_matrix (a_color_matrix)
-				create l_rect.make (0, 0, width, height)
-				l_graphics.draw_image_with_src_rect_dest_rect_unit_attributes (l_gdip_bitmap, l_rect, l_rect, {WEL_GDIP_UNIT}.unitpixel, l_image_attributes)
-				l_image_attributes.destroy_item
+				check has_drawable_imp: False then
+				end
 			end
 
-			l_graphics.destroy_item
-
-			l_imp.release_dc
 
 			-- Set mask bitmap
-			l_pixmap ?= a_drawable
-			if l_pixmap /= Void then
+			if attached {EV_PIXMAP} a_drawable as l_pixmap then
 				l_pixmap.set_mask (mask_bitmap (create {EV_RECTANGLE}.make (0, 0, width, height)))
 			end
 		end
@@ -719,36 +719,37 @@ feature -- Obsolete
 	draw_pixel_buffer (a_pixel_buffer: EV_PIXEL_BUFFER; a_dest_rect: EV_RECTANGLE)
 			-- Draw `a_pixel_buffer' at `a_rect'.
 		local
-			l_imp: detachable EV_PIXEL_BUFFER_IMP
 			l_graphics: WEL_GDIP_GRAPHICS
 			l_dest_rect, l_src_rect: WEL_RECT
 			l_gdip_bitmap: like gdip_bitmap
 			l_pixmap: like pixmap
 		do
-			l_imp ?= a_pixel_buffer.implementation
-			check not_void: l_imp /= Void then end
+			if attached {EV_PIXEL_BUFFER_IMP} a_pixel_buffer.implementation as l_imp then
+				if is_gdi_plus_installed then
+					l_gdip_bitmap := gdip_bitmap
+					check l_gdip_bitmap /= Void then end
+					create l_graphics.make_from_image (l_gdip_bitmap)
+					create l_src_rect.make (0, 0, a_dest_rect.width, a_dest_rect.height)
+					create l_dest_rect.make (a_dest_rect.x, a_dest_rect.y, a_dest_rect.right, a_dest_rect.bottom)
+					l_gdip_bitmap := l_imp.gdip_bitmap
+					check l_gdip_bitmap /= Void then end
+					l_graphics.draw_image_with_dest_rect_src_rect (l_gdip_bitmap, l_src_rect, l_dest_rect)
 
-			if is_gdi_plus_installed then
-				l_gdip_bitmap := gdip_bitmap
-				check l_gdip_bitmap /= Void then end
-				create l_graphics.make_from_image (l_gdip_bitmap)
-				create l_src_rect.make (0, 0, a_dest_rect.width, a_dest_rect.height)
-				create l_dest_rect.make (a_dest_rect.x, a_dest_rect.y, a_dest_rect.right, a_dest_rect.bottom)
-				l_gdip_bitmap := l_imp.gdip_bitmap
-				check l_gdip_bitmap /= Void then end
-				l_graphics.draw_image_with_dest_rect_src_rect (l_gdip_bitmap, l_src_rect, l_dest_rect)
-
-				l_dest_rect.dispose
-				l_src_rect.dispose
-				l_graphics.destroy_item
-				-- In GDI+, alpha data issue is automatically handled, so we don't need to set mask.			
-			else
-				l_pixmap := pixmap
-				check l_pixmap /= Void then end
-				if attached l_imp.pixmap as l_imp_pixmap then
-					l_pixmap.draw_pixmap (a_dest_rect.x, a_dest_rect.y, l_imp_pixmap)
+					l_dest_rect.dispose
+					l_src_rect.dispose
+					l_graphics.destroy_item
+					-- In GDI+, alpha data issue is automatically handled, so we don't need to set mask.			
 				else
-					check False end
+					l_pixmap := pixmap
+					check l_pixmap /= Void then end
+					if attached l_imp.pixmap as l_imp_pixmap then
+						l_pixmap.draw_pixmap (a_dest_rect.x, a_dest_rect.y, l_imp_pixmap)
+					else
+						check False end
+					end
+				end
+			else
+				check has_pixel_buffer_imp: False then
 				end
 			end
 		end
@@ -766,7 +767,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

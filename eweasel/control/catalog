@@ -1377,6 +1377,7 @@ test	reference-equality-gc-protection	final126 tcf pass finalizing gc
 test	optimized-is_equal-call			final127 tcf pass finalizing code_removal
 test	dead-code-removal-with-conversion	final128 tcf pass finalizing code_removal
 test	dead-code-removal-qat-and-generic	final129 tcf pass finalizing code_removal
+test	dead-code-removal-new_instance		final130 tcf fail finalizing code_removal
 
 -- Runtime
 test	gc-tracking-001					runtime001	tcf pass runtime

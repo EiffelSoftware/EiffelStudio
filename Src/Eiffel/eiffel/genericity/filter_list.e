@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Filter all available types in system."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -14,9 +14,30 @@ inherit
 			make as table_make
 		export
 			{ANY}
-				start, item_for_iteration, forth, after, put, has_item, cursor, go_to, valid_key, count, content,
-				is_deep_equal, is_equal, standard_is_equal, copy, deep_copy, valid_cursor, deleted_marks, same_type,
-				deep_twin, wipe_out, twin, off
+				after,
+				content,
+				copy,
+				count,
+				cursor,
+				deep_copy,
+				deep_twin,
+				deleted_marks,
+				forth,
+				go_to,
+				has_item,
+				is_deep_equal,
+				is_equal,
+				item_for_iteration,
+				new_cursor,
+				off,
+				put,
+				same_type,
+				standard_is_equal,
+				start,
+				twin,
+				valid_cursor,
+				valid_key,
+				wipe_out
 			{FILTER_LIST} all
 		redefine
 			same_keys
@@ -96,7 +117,7 @@ feature -- Cleaning
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

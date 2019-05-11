@@ -3,7 +3,7 @@
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 deferred class VDRS4
 
@@ -14,7 +14,7 @@ inherit
 			print_single_line_error_message,
 			process_issue
 		redefine
-			build_explain, subcode, print_single_line_error_message
+			build_explain, subcode
 		end
 
 	SHARED_NAMES_HEAP
@@ -98,7 +98,7 @@ feature -- Output
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

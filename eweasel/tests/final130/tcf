@@ -3,6 +3,7 @@ test_description The feature `new_instance` should fail if requested type ID is 
 
 copy_sub 	 Ace $TEST Ace
 copy_raw 	 a.e $CLUSTER a.e
+copy_raw 	 b.e $CLUSTER b.e
 
 copy_raw 	 test1.e $CLUSTER test.e
 

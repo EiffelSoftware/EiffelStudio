@@ -204,7 +204,7 @@ rt_private rt_inline EIF_BOOLEAN rt_is_special_copy_semantics_item (EIF_INTEGER_
 #define eif_builtin_ISE_RUNTIME_set_real_64_field_at(field_offs,obj,offs,val)		*(EIF_REAL_64 *) (eif_obj_at(obj,offs) + field_offs) = (EIF_REAL_64) (val)
 #define eif_builtin_ISE_RUNTIME_set_pointer_field_at(field_offs,obj,offs,val)		*(EIF_POINTER *) (eif_obj_at(obj,offs) + field_offs) = (EIF_POINTER) (val)
 
-#define eif_builtin_ISE_RUNTIME_unlock_marking							eif_unlock_marking
+#define eif_builtin_ISE_RUNTIME_unlock_marking							eif_unlock_marking()
 #define eif_builtin_ISE_RUNTIME_eif_gen_param_id(a_type_id, i)			eif_gen_param_id(a_type_id, i)
 #define eif_builtin_ISE_RUNTIME_generic_parameter_count(a_type_id)		eif_gen_count_with_dftype(eif_decoded_type(a_type_id).id)
 #define eif_builtin_ISE_RUNTIME_field_offset_of_type(i,a_type_id)		ei_offset_of_type(i,a_type_id)

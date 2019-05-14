@@ -1,4 +1,4 @@
-class
+class 
 	ISE_RUNTIME
 
 feature -- Feature specific to ISE runtime.
@@ -93,5 +93,12 @@ feature -- Object marking
 		alias
 			"eif_lock_marking"
 		end
+
+	unlock_marking
+		external
+			"C use %"eif_traverse.h%""
+		alias
+			"eif_unlock_marking"
+		end		
 	
 end	

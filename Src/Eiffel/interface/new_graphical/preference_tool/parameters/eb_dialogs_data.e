@@ -173,15 +173,9 @@ feature {EB_SHARED_PREFERENCES} -- Value
 		end
 
 	show_update_manager_dialog: BOOLEAN
-			-- Should we display stable update channel?
+			-- Should we display available release update?
 		do
 			Result := show_update_manager_dialog_preference.value
-		end
-
-	show_beta_update_manager_dialog: BOOLEAN
-			-- Should we display beta update channel?
-		do
-			Result := show_beta_update_manager_dialog_preference.value
 		end
 
 	show_starting_dialog: BOOLEAN
@@ -391,7 +385,6 @@ feature {EB_SHARED_PREFERENCES, EB_TOOL} -- Preference
 	already_editing_class_preference: BOOLEAN_PREFERENCE
 	executing_command_preference: BOOLEAN_PREFERENCE
 	show_update_manager_dialog_preference: BOOLEAN_PREFERENCE
-	show_beta_update_manager_dialog_preference: BOOLEAN_PREFERENCE
 
 	last_opened_project_directory_preference: PATH_PREFERENCE
 	last_opened_dynamic_lib_directory_preference: PATH_PREFERENCE
@@ -456,7 +449,6 @@ feature -- Preference strings
 	show_starting_dialog_string: STRING = "interface.dialogs.show_starting_dialog"
 	show_first_launching_dialog_string: STRING = "interface.dialogs.show_first_launching_dialog"
 	show_update_manager_dialog_string: STRING = "interface.dialogs.show_update_manager_dialog"
-	show_beta_update_manager_dialog_string: STRING = "interface.dialogs.show_beta_update_manager_dialog"
 	confirm_change_resource_need_restart_string: STRING = "interface.dialogs.confirm_resource_change_needs_restart"
 	generate_homonyms_string: STRING = "interface.dialogs.generate_homonyms"
 	stop_execution_when_compiling_string: STRING = "interface.dialogs.stop_execution_when_compiling"
@@ -535,8 +527,6 @@ feature {NONE} -- Implementation
 			show_first_launching_dialog_preference.set_hidden (True)
 			show_update_manager_dialog_preference := l_manager.new_boolean_preference_value (l_manager, show_update_manager_dialog_string, True)
 			show_update_manager_dialog_preference.set_hidden (True)
-			show_beta_update_manager_dialog_preference := l_manager.new_boolean_preference_value (l_manager, show_beta_update_manager_dialog_string, False)
-			show_beta_update_manager_dialog_preference.set_hidden (True)
 			confirm_change_resource_need_restart_preference := l_manager.new_boolean_preference_value (l_manager, confirm_change_resource_need_restart_string, True)
 			generate_homonyms_preference := l_manager.new_boolean_preference_value (l_manager, generate_homonyms_string, True)
 			stop_execution_when_compiling_preference := l_manager.new_boolean_preference_value (l_manager, stop_execution_when_compiling_string, True)
@@ -605,7 +595,6 @@ invariant
 	show_starting_dialog_preference_not_void: show_starting_dialog_preference /= Void
 	show_first_launching_dialog_preference_not_void: show_first_launching_dialog_preference /= Void
 	show_update_manager_dialog_preference_not_void: show_update_manager_dialog_preference /= Void
-	show_beta_update_manager_dialog_preference_not_void: show_beta_update_manager_dialog_preference /= Void
 	confirm_change_resource_need_restart_preference_not_void: confirm_change_resource_need_restart_preference /= Void
 	generate_homonyms_preference_not_void: generate_homonyms_preference /= Void
 	stop_execution_when_compiling_preference_not_void: stop_execution_when_compiling_preference /= Void

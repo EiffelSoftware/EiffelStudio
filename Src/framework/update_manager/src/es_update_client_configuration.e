@@ -7,7 +7,6 @@ class
 	ES_UPDATE_CLIENT_CONFIGURATION
 
 inherit
-
 	SHARED_EXECUTION_ENVIRONMENT
 
 create
@@ -27,10 +26,8 @@ feature {NONE} -- Implemention
 			cfg: like json_configuration
 		do
 			create cfg.make_with_uri (a_uri)
-			implementation_service_root := cfg.service_root
 			json_configuration := cfg
 		ensure
-			connection_timeout_set: connection_timeout = default_timeout
 			service_root_set: service_root.same_string (a_uri)
 		end
 
@@ -39,27 +36,28 @@ feature {NONE} -- Implemention
 		local
 			cfg: like json_configuration
 		do
-
 			create cfg.make (Execution_environment.current_working_path.extended ("eiffel_download_config.json"))
-			implementation_service_root := cfg.service_root
 			json_configuration := cfg
 		end
-
-	json_configuration: detachable ES_UPDATE_JSON_CONFIGURATION
-			-- download configuration file
 
 feature -- Access
 
 	connection_timeout: INTEGER
 			-- Maximum time the request is allowed to take.
 		do
-			Result := if attached json_configuration as cfg then cfg.connection_timeout.as_integer_32 else Default_timeout end
+			Result := json_configuration.connection_timeout
 		end
 
 	service_root: STRING_8
 			-- Root uri to drive the interaction.
 		do
-			Result := if attached json_configuration as cfg then cfg.service_root else {ES_UPDATE_CONSTANTS}.update_service_url end
+			Result := json_configuration.service_root
+		end
+
+	channel_endpoint (a_channel: READABLE_STRING_8): STRING_8
+		do
+			create Result.make_from_string (service_root)
+			Result.append ("/api/downloads/channel/" + a_channel)
 		end
 
 	media_type: STRING
@@ -72,10 +70,40 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	implementation_service_root: STRING
-			-- Root uri to drive the interaction.
+	json_configuration: ES_UPDATE_JSON_CONFIGURATION
+			-- download configuration file
 
-	default_timeout: INTEGER = 30
-			-- Default time the request is allowed to take.
+invariant
 
+note
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

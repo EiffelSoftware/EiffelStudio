@@ -199,35 +199,34 @@ feature {NONE} -- Implementation (preparation of all widgets)
 		end
 
 	launch_interface
-		local
-			cfg: ES_UPDATE_CLIENT_CONFIGURATION
-			api: ES_UPDATE_MANAGER
 		do
-			create cfg.make ({ES_UPDATE_CONSTANTS}.update_service_url)
-			create api.make (cfg)
+			if preferences.dialog_data.show_first_launching_dialog then
+				display_first_launching_dialog (agent display_launching_page)
+			else
+				display_launching_page
+			end
+		end
 
-			if is_eiffel_layout_defined and then
+feature {NONE} -- Welcome dialog
+
+	update_manager_api: ES_UPDATE_MANAGER
+			-- Update manager.
+		do
+			create Result.make (create {ES_UPDATE_CLIENT_CONFIGURATION}.make ({ES_UPDATE_CONSTANTS}.update_service_url))
+		end
+
+	display_launching_page
+		do
+			if
+				is_eiffel_layout_defined and then
 				preferences.dialog_data.show_update_manager_dialog and then
-				attached api.has_update_release_by_channel_and_platform ({ES_UPDATE_CONSTANTS}.stable_channel, eiffel_layout.eiffel_platform, eiffel_layout.version_name) as l_release
+				attached update_manager_api.available_release_update_for_channel (preferences.misc_data.update_channel, eiffel_layout.eiffel_platform, "18.11") as l_release
 			then
-				if preferences.dialog_data.show_beta_update_manager_dialog and then
-					attached api.has_update_release_by_channel_and_platform ({ES_UPDATE_CONSTANTS}.beta_channel, eiffel_layout.eiffel_platform, eiffel_layout.version_name) as l_beta_release
- 				then
- 					display_update_manager_dialog (l_release, agent display_update_manager_dialog (l_beta_release, agent display_first_launching_dialog  (agent display_startup_page) ))
-				elseif preferences.dialog_data.show_first_launching_dialog then
-					display_update_manager_dialog (l_release, agent display_first_launching_dialog  (agent display_startup_page) )
-				else
-					display_update_manager_dialog (l_release, agent display_startup_page)
-				end
-			elseif preferences.dialog_data.show_first_launching_dialog then
-				display_first_launching_dialog (agent display_startup_page)
+				display_update_manager_dialog (l_release, agent display_startup_page)
 			else
 				display_startup_page
 			end
 		end
-
-
-feature {NONE} -- Welcome dialog
 
 	display_startup_page
 		local
@@ -320,6 +319,8 @@ feature {NONE} -- Implementation: interface loading
 			debug ("to_implement")
 				(create {REFACTORING_HELPER}).to_implement ("Handle (multiple) -config_option values and pass them to project loader.")
 			end
+-- TODO: why not using the absolute pate?
+--			l_loader.open_project_file (l_config.absolute_path.canonical_path, l_target, l_project_path, index_of_word_option ("clean") /= 0, Void)
 			l_loader.open_project_file (l_config, l_target, l_project_path, index_of_word_option ("clean") /= 0, Void)
 			if
 				not l_loader.has_error and then
@@ -366,8 +367,7 @@ feature {NONE} -- Implementation: interface loading
 		end
 
 	display_first_launching_dialog (cb: detachable PROCEDURE [TUPLE])
-			-- Show the starting dialog letting the user choose where
-			-- his project is (or will be).
+			-- Show the starting dialog , when EiffelStudio is launched for the first time
 			-- And call `cb` when dialog is closed (cancelled or not).
 		local
 			dlg: ES_FIRST_LAUNCHING_DIALOG

@@ -36,91 +36,81 @@ feature -- Access
 
 feature -- API
 
-	has_update_release_by_platform (a_platform: READABLE_STRING_8; a_current_version: READABLE_STRING_8): detachable ES_UPDATE_RELEASE
+	available_release_update_for_any_channel (a_platform: READABLE_STRING_8; a_current_version: READABLE_STRING_8): detachable ES_UPDATE_RELEASE
 			-- Verify if there is an available release update.
 			-- Check the latest stable and beta releases for the given platform
 			-- `platform` and if the version is newest than the current eiffel studio version
 			-- it retuns the release update information in other case Void.
 		local
-			cfg: ES_UPDATE_CLIENT_CONFIGURATION
-			api: ES_UPDATE_MANAGER
 			l_beta_release: ES_UPDATE_RELEASE
 			l_stable_release: ES_UPDATE_RELEASE
 			l_final: STRING
 		do
-			l_beta_release := latest_beta_release_by_platform (a_platform)
-			l_stable_release := latest_stable_release_by_platform (a_platform)
-			if attached l_beta_release and then attached l_stable_release then
+			l_beta_release := latest_release_by_platform ({ES_UPDATE_CONSTANTS}.beta_channel, a_platform)
+			l_stable_release := latest_release_by_platform ({ES_UPDATE_CONSTANTS}.stable_channel, a_platform)
+			if
+				l_beta_release /= Void and then
+				l_stable_release /= Void
+			then
 				l_final := l_beta_release.number.max (l_stable_release.number)
-				if l_final.is_greater (A_current_version) then
-					Result := if l_beta_release.number > l_stable_release.number then l_beta_release else l_stable_release end
+				if l_final.is_greater (a_current_version) then
+					if l_beta_release.number > l_stable_release.number then
+						Result := l_beta_release
+					else
+						Result := l_stable_release
+					end
 				end
-			elseif attached l_beta_release then
-				Result := if l_beta_release.number > a_current_version then l_beta_release else Void end
-			elseif attached l_stable_release then
-				Result := if l_stable_release.number > a_current_version then l_stable_release else Void end
+			elseif l_beta_release /= Void then
+				if l_beta_release.number > a_current_version then
+					Result := l_beta_release
+				end
+			elseif l_stable_release /= Void then
+				if l_stable_release.number > a_current_version then
+					Result := l_stable_release
+				end
 			end
-
 		end
 
-	has_update_release_by_channel_and_platform (a_channel: READABLE_STRING_8; a_platform: READABLE_STRING_8; a_current_version: READABLE_STRING_8): detachable ES_UPDATE_RELEASE
+	available_release_update_for_channel (a_channel: READABLE_STRING_8; a_platform: READABLE_STRING_8; a_current_version: READABLE_STRING_8): detachable ES_UPDATE_RELEASE
 			-- Verify if there is an available beta release update.
 			-- Check the latest release for the given channel `a_channel` and platform
 			-- `a_platform` and if the version is newest than the current eiffel studio version
 			-- it retuns the release update information in other case Void.
 		require
 			valid_channel: is_valid_channel (a_channel)
-		local
-			cfg: ES_UPDATE_CLIENT_CONFIGURATION
-			api: ES_UPDATE_MANAGER
-			l_release: ES_UPDATE_RELEASE
-			l_final: STRING
 		do
-			if a_channel.is_case_insensitive_equal ({ES_UPDATE_CONSTANTS}.beta_channel) then
-				l_release := latest_beta_release_by_platform (a_platform)
-			else
-				l_release := latest_stable_release_by_platform (a_platform)
+			Result := latest_release_by_platform (a_channel, a_platform)
+			if
+				Result /= Void and then
+				not Result.number.is_greater (a_current_version)
+			then
+				Result := Void
 			end
-			if attached l_release as ll_release and then ll_release.number.is_greater (a_current_version) then
-				Result := ll_release
+			if
+				Result = Void and then
+				not a_channel.is_case_insensitive_equal_general ({ES_UPDATE_CONSTANTS}.stable_channel)
+			then
+					-- Always check in `stable` channel
+				Result := available_release_update_for_channel ({ES_UPDATE_CONSTANTS}.stable_channel, a_platform, a_current_version)
 			end
 		end
 
-
 	is_valid_channel (a_channel: READABLE_STRING_8): BOOLEAN
-				-- Is channel `a_channel` a valid one (stable|beta)?
+				-- Is `a_channel` a valid channel?
 			do
-				Result := a_channel.is_case_insensitive_equal ({ES_UPDATE_CONSTANTS}.beta_channel) or else a_channel.is_case_insensitive_equal ({ES_UPDATE_CONSTANTS}.stable_channel)
+				Result := a_channel.is_case_insensitive_equal ({ES_UPDATE_CONSTANTS}.beta_channel)
+						or else a_channel.is_case_insensitive_equal ({ES_UPDATE_CONSTANTS}.stable_channel)
 			end
 
 feature {NONE} -- Implementation
 
-	latest_stable_release_by_platform (a_platform: READABLE_STRING_8): detachable ES_UPDATE_RELEASE
+	latest_release_by_platform (a_channel: READABLE_STRING_8; a_platform: READABLE_STRING_8): detachable ES_UPDATE_RELEASE
+		require
+			valid_channel: is_valid_channel (a_channel)
 		do
-			Result := internal_release_by_platform (latest_stable_release, a_platform, {ES_UPDATE_CONSTANTS}.stable_channel)
-		end
-
-	latest_beta_release_by_platform (a_platform: READABLE_STRING_8): detachable ES_UPDATE_RELEASE
-		do
-			Result := internal_release_by_platform (latest_beta_release, a_platform, {ES_UPDATE_CONSTANTS}.beta_channel)
-		end
-
-	latest_stable_release: JSON_VALUE
-		local
-			l_url: STRING
-		do
-			create l_url.make_from_string (config.service_root)
-			l_url.append (stable_channel)
-			Result := get (l_url, Void)
-		end
-
-	latest_beta_release: JSON_VALUE
-		local
-			l_url: STRING
-		do
-			create l_url.make_from_string (config.service_root)
-			l_url.append (beta_channel)
-			Result := get (l_url, Void)
+			if attached {JSON_OBJECT} json_response_for_get_request (config.channel_endpoint (a_channel), Void) as jo then
+				Result := internal_release_by_platform (jo, a_platform, a_channel)
+			end
 		end
 
 feature -- Status report
@@ -140,17 +130,14 @@ feature {NONE} -- Constants
 
 feature {NONE} -- Retrieve URL
 
-	get (a_path: READABLE_STRING_GENERAL; ctx: detachable HTTP_CLIENT_REQUEST_CONTEXT): JSON_VALUE
+	json_response_for_get_request (a_path: READABLE_STRING_GENERAL; ctx: detachable HTTP_CLIENT_REQUEST_CONTEXT): detachable JSON_VALUE
 			-- Response for GET request based on Current, `a_path' and `ctx'.
 		local
 			l_http_response: STRING_8
 			l_ctx: detachable HTTP_CLIENT_REQUEST_CONTEXT
+			l_body: detachable READABLE_STRING_8
 			l_url: STRING_8
-			l_status: INTEGER
 		do
-			create {JSON_OBJECT} Result.make_empty
-
-			create l_http_response.make_empty
 			l_ctx := ctx
 			if l_ctx = Void then
 				create l_ctx.make
@@ -159,48 +146,54 @@ feature {NONE} -- Retrieve URL
 			l_url := a_path.to_string_8
 			if attached client.get (l_url, l_ctx) as g_response then
 				l_url := g_response.url
+				l_body := g_response.body
 				debug
+					create l_http_response.make_empty
 					l_http_response.append ("Status: " + g_response.status.out + "%N")
 					l_http_response.append (g_response.raw_header)
-					l_status := g_response.status
-				end
-				if attached g_response.error_message as l_message then
-					debug
+					if attached g_response.error_message as l_message then
 						l_http_response.append (" ")
 						l_http_response.append (l_message)
 					end
-				end
-				if attached g_response.body as l_body then
-					debug
+					if l_body /= Void then
 						l_http_response.append ("%N%N")
 						l_http_response.append (l_body)
 					end
-					if not l_body.is_empty and then attached json (l_body) as j then
-						Result := j
-					end
+				end
+				if
+					l_body /= Void and then
+					not l_body.is_empty and then
+					attached json (l_body) as j
+				then
+					Result := j
 				end
 			end
 		end
 
-	internal_release_by_platform (a_json: JSON_VALUE; a_platform: READABLE_STRING_8; a_channel: READABLE_STRING_8): detachable ES_UPDATE_RELEASE
-			--Given a JSON object, get a release filtered by platform `a_platform`.
-		local
-			found: BOOLEAN
+	internal_release_by_platform (a_json: JSON_OBJECT; a_platform: READABLE_STRING_8; a_channel: READABLE_STRING_8): detachable ES_UPDATE_RELEASE
+			-- Given a JSON object, get a release filtered by platform `a_platform`.
 		do
-			if attached {JSON_OBJECT} a_json as jo and then attached {JSON_STRING} jo.item ("number") as l_number and then attached {JSON_ARRAY} jo.item ("downloads") as l_download then
+			if
+				attached a_json.string_item ("number") as j_number and then
+				attached {JSON_ARRAY} a_json.item ("downloads") as j_downloads
+			then
 				across
-					l_download as ic
+					j_downloads as ic
+				until
+					Result /= Void
 				loop
-					if not found then
-						if attached {JSON_OBJECT} ic.item as l_jo and then attached {JSON_STRING} l_jo.item ("platform") as l_platform and then attached {JSON_STRING} l_jo.item ("filename") as l_filename and then attached {JSON_STRING} l_jo.item ("href") as l_link and then l_platform.unescaped_string_8.is_case_insensitive_equal_general (a_platform) then
-							found := True
-							create Result.make (a_channel, l_filename.unescaped_string_8, a_platform, l_link.unescaped_string_8, l_number.unescaped_string_8)
-						end
+					if
+						attached {JSON_OBJECT} ic.item as l_jo and then
+						attached l_jo.string_item ("platform") as j_platform and then
+						attached l_jo.string_item ("filename") as j_filename and then
+						attached l_jo.string_item ("href") as j_link and then
+						j_platform.same_caseless_string (a_platform)
+					then
+						create Result.make (a_channel, j_filename.unescaped_string_32, a_platform, j_link.unescaped_string_8, j_number.unescaped_string_8)
 					end
 				end
 			end
 		end
-
 
 	json (s: READABLE_STRING_8): detachable JSON_VALUE
 			-- Parse the string `s` as JSON.
@@ -209,19 +202,40 @@ feature {NONE} -- Retrieve URL
 		do
 			create p.make_with_string (s)
 			p.parse_content
-			if p.is_valid and then attached p.parsed_json_value as v then
-				Result := v
+			if p.is_valid then
+				Result := p.parsed_json_value
 			end
 		end
 
-	initialize_context_header (ctx: HTTP_CLIENT_REQUEST_CONTEXT)
-			-- Intialize context `ctx`.
-		do
-		end
-
-	stable_channel: STRING = "/api/downloads/channel/stable"
-			-- path part of Stable URL.
-
-	beta_channel: STRING = "/api/downloads/channel/beta"
-			-- -- path part of Beta URL.
+note
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
+	copying: "[
+			This file is part of Eiffel Software's Eiffel Development Environment.
+			
+			Eiffel Software's Eiffel Development Environment is free
+			software; you can redistribute it and/or modify it under
+			the terms of the GNU General Public License as published
+			by the Free Software Foundation, version 2 of the License
+			(available at the URL listed under "license" above).
+			
+			Eiffel Software's Eiffel Development Environment is
+			distributed in the hope that it will be useful, but
+			WITHOUT ANY WARRANTY; without even the implied warranty
+			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+			See the GNU General Public License for more details.
+			
+			You should have received a copy of the GNU General Public
+			License along with Eiffel Software's Eiffel Development
+			Environment; if not, write to the Free Software Foundation,
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+		]"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

@@ -163,6 +163,12 @@ feature -- Value
 			Result := pnd_preference.value
 		end
 
+	update_channel: STRING
+			-- Update channel name.
+		do
+			Result := update_channel_preference.selected_value
+		end
+
 	eis_path: STRING_32
 			-- EIS path for project searching of incoming location
 		do
@@ -205,6 +211,7 @@ feature -- Preference
 	file_browser_command_preference: STRING_32_PREFERENCE
 	locale_id_preference: ARRAY_PREFERENCE
 	pnd_preference: BOOLEAN_PREFERENCE
+	update_channel_preference: ARRAY_PREFERENCE
 	eis_path_preference: STRING_32_PREFERENCE
 	use_postscript_preference: BOOLEAN_PREFERENCE
 	license_accepted_preference: BOOLEAN_PREFERENCE
@@ -225,6 +232,7 @@ feature {NONE} -- Preference Strings
 	file_browser_command_string: STRING = "general.file_browser_command"
 	locale_id_preference_string: STRING = "general.locale"
 	pnd_preference_string: STRING = "general.pick_and_drop_(pnd)_mode"
+	update_channel_string: STRING = "general.update_channel"
 	eis_path_preference_string: STRING = "general.eis_path"
 	use_postscript_preference_string: STRING = "general.use_postscript"
 	license_accepted_preference_string: STRING = "general.license_accepted"
@@ -265,6 +273,9 @@ feature {NONE} -- Implementation
 			locale_id_preference.set_default_value ("de_DE;[en_US];es_ES;fr_FR;ru_RU;zh_CN;Unselected")
 
 			pnd_preference := l_manager.new_boolean_preference_value (l_manager, pnd_preference_string, False)
+
+			update_channel_preference := l_manager.new_array_preference_value (l_manager, update_channel_string, <<"stable", "beta">>)
+			update_channel_preference.set_is_choice (True)
 
 			create l_eis_path.make_empty
 			eis_path_preference := l_manager.new_string_32_preference_value (l_manager, eis_path_preference_string, l_eis_path)
@@ -402,13 +413,14 @@ invariant
 	console_shell_command_preference_not_void: console_shell_command_preference /= Void
 	locale_id_preference_not_void: locale_id_preference /= Void
 	pnd_preference_not_void: pnd_preference /= Void
+	update_channel_preference_not_void: update_channel_preference /= Void
 	eis_preference_not_void: eis_path_preference /= Void
 	use_postscript_preference_not_void: use_postscript_preference /= Void
 	license_accepted_preference_not_void: license_accepted_preference /= Void
 	es_cloud_enabled_preference_not_void: es_cloud_enabled_preference /= Void
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

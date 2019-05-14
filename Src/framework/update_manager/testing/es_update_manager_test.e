@@ -25,7 +25,7 @@ feature -- Test routines
 			create api.make (cfg)
 			create {EC_EIFFEL_LAYOUT} env
 
-			if attached api.has_update_release_by_channel_and_platform ({ES_UPDATE_CONSTANTS}.beta_channel, env.eiffel_platform, env.version_name) as l_release then
+			if attached api.available_release_update_for_channel ({ES_UPDATE_CONSTANTS}.beta_channel, env.eiffel_platform, env.version_name) as l_release then
 				assert ("True", True)
 			else
 				assert ("False", True)
@@ -44,10 +44,10 @@ feature -- Test routines
 			create cfg.make_with_config
 			create api.make (cfg)
 			create {EC_EIFFEL_LAYOUT} env
-			if attached api.has_update_release_by_platform ( env.eiffel_platform, env.version_name) as l_release then
+			if attached api.available_release_update_for_any_channel (env.eiffel_platform, env.version_name) as l_release then
 				assert ("True", True)
 			else
-				assert ("Fase", True)
+				assert ("False", True)
 			end
 		end
 

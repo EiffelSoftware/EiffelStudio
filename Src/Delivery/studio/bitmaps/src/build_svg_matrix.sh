@@ -108,9 +108,9 @@ echo svg_page_size=$svg_page_width x $svg_page_height >> ${target}.txt
 
 function svg_to_png { # icons.svg icons.png width height
 	echo " - SVG to ${2}"
-	convert -resize ${3}x${4} -background $background $1 $2
+	convert -resize ${3}x${4} +antialias -background $background $1 $2
 	#Try with inkscape:
-	#inkscape -z -w $3 -h $4 $1 --export-png=$2
+	#inkscape --without-gui --export-background-opacity=0  --export-width=$3 --export-height=$4 $1 --export-png=$2
 }
 
 echo "<svg height=\"$svg_page_height\" viewBox=\"0 0 $svg_page_width $svg_page_height\" width=\"$svg_page_width\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">"  > $target

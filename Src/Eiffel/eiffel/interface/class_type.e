@@ -573,14 +573,12 @@ feature -- Update
 			cl_not_void: cl /= Void
 			conformance_table_not_void: cl.conformance_table /= Void
 		local
-			a_parent: CLASS_TYPE
 			a_table: like conformance_table
 			l_area: SPECIAL [CL_TYPE_A]
-			l_parent_type: CL_TYPE_A
 			i, nb: INTEGER
 		do
 			a_table := cl.conformance_table
-			if type_id > a_table.upper or else a_table.item (type_id) = False then
+			if type_id > a_table.upper or else not a_table.item (type_id) then
 					-- The parent has not been inserted yet. We use `force' as `type_id'
 					-- might be greater than what `a_table' can hold.
 				a_table.force (True, type_id)
@@ -592,9 +590,7 @@ feature -- Update
 				until
 					i = nb
 				loop
-					l_parent_type := l_area.item (i)
-					a_parent := l_parent_type.associated_class_type (type)
-					a_parent.build_conformance_table_of (cl)
+					l_area.item (i).associated_class_type (type).build_conformance_table_of (cl)
 					i := i + 1
 				end
 				if attached {GEN_TYPE_A} type as g and then not g.is_tuple then
@@ -737,7 +733,7 @@ feature -- Generation
 			l_feature_table_area := l_feature_table.area
 			if not final_mode then
 				generate_c_code := is_modifiable
-			elseif system.is_class_reachable (associated_class) then
+			elseif system.is_class_type_reachable (type_id) then
 					-- Record that the class is reachable for diagnostics.
 				is_reachable := True
 					-- Check to see if there is really something to generate.
@@ -840,36 +836,35 @@ feature -- Generation
 					if l_feature_i.to_generate_in (current_class) then
 							-- Generate the C code of `feature_i'
 						generate_feature (l_feature_i, buffer, header_buffer)
-						if l_feature_i.is_object_relative_once then
-							--| generate also the related hidden attributes
-							if
-								l_obj_once_info_table /= Void and then
-								attached l_obj_once_info_table.items_intersecting_with_rout_id_set (l_feature_i.rout_id_set) as l_obj_once_info_list
-							then
-								from
-									l_obj_once_info_list.start
-								until
-									l_obj_once_info_list.after
-								loop
-									if attached l_obj_once_info_list.item as l_obj_info then
-										l_attribute_i := l_obj_info.called_attribute_i
+						if
+							l_feature_i.is_object_relative_once and then
+							l_obj_once_info_table /= Void and then
+							attached l_obj_once_info_table.items_intersecting_with_rout_id_set (l_feature_i.rout_id_set) as l_obj_once_info_list
+						then
+								--| generate also the related hidden attributes
+							from
+								l_obj_once_info_list.start
+							until
+								l_obj_once_info_list.after
+							loop
+								if attached l_obj_once_info_list.item as l_obj_info then
+									l_attribute_i := l_obj_info.called_attribute_i
 --| FIXME:2010-11-07: find why when using to_generate_in, it is not working great for once per object
 --										if l_attribute_i.to_generate_in (current_class) then
-											generate_feature (l_attribute_i, buffer, header_buffer)
+										generate_feature (l_attribute_i, buffer, header_buffer)
 --										end
-										l_attribute_i := l_obj_info.exception_attribute_i
+									l_attribute_i := l_obj_info.exception_attribute_i
 --										if l_attribute_i.to_generate_in (current_class) then
-											generate_feature (l_attribute_i, buffer, header_buffer)
+										generate_feature (l_attribute_i, buffer, header_buffer)
 --										end
-										if l_obj_info.has_result then
-											l_attribute_i := l_obj_info.result_attribute_i
+									if l_obj_info.has_result then
+										l_attribute_i := l_obj_info.result_attribute_i
 --											if l_attribute_i.to_generate_in (current_class) then
-												generate_feature (l_attribute_i, buffer, header_buffer)
+											generate_feature (l_attribute_i, buffer, header_buffer)
 --											end
-										end
 									end
-									l_obj_once_info_list.forth
 								end
+								l_obj_once_info_list.forth
 							end
 						end
 					end
@@ -914,9 +909,9 @@ feature -- Generation
 				buffer.generate_block_close
 				buffer.put_new_line
 
+				Extern_declarations.generate (header_buffer)
+				header_buffer.end_c_specific_code
 				if final_mode then
-					Extern_declarations.generate (header_buffer)
-					header_buffer.end_c_specific_code
 					Extern_declarations.generate_header_files (headers)
 					Extern_declarations.wipe_out
 
@@ -927,8 +922,6 @@ feature -- Generation
 					header_buffer.put_in_file (extern_decl_file)
 					extern_decl_file.close
 				else
-					Extern_declarations.generate (header_buffer)
-					header_buffer.end_c_specific_code
 					Extern_declarations.generate_header_files (header_buffer)
 					Extern_declarations.wipe_out
 				end
@@ -943,20 +936,15 @@ feature -- Generation
 						-- file in each sudirectories of the W_code.
 					set_has_cpp_externals (l_byte_context.has_cpp_externals_calls)
 					file := open_generation_file (has_cpp_externals)
-				else
-					file := open_generation_file (l_byte_context.has_cpp_externals_calls)
-				end
-
-				if not final_mode then
 					Header_generation_buffer.put_in_file (file)
 				else
+					file := open_generation_file (l_byte_context.has_cpp_externals_calls)
 					headers.put_in_file (file)
 				end
 				ext_inline_buffer.end_c_specific_code
 				ext_inline_buffer.put_in_file (file)
 				buffer.put_in_file (file)
 				file.close
-
 			else
 					-- The file hasn't been generated.
 				System.makefile_generator.record_empty_class_type (static_type_id)
@@ -992,20 +980,21 @@ feature -- Generation
 			previous_file: RAW_FILE
 		do
 			l_file_name := full_file_name (System.in_final_mode, packet_name (C_prefix, packet_number), base_file_name, Void)
-			if byte_context.workbench_mode then
-					-- If the status of the file has been changed we delete the
-					-- previous version.
-				if has_cpp_status_changed then
-					previous_file_name := l_file_name
-					if has_cpp_externals_calls then
-						previous_file_name := previous_file_name.appended (Dot_c)
-					else
-						previous_file_name := previous_file_name.appended (Dot_cpp)
-					end
-					create previous_file.make_with_path (previous_file_name)
-					if previous_file.exists and then previous_file.is_writable then
-						previous_file.delete
-					end
+			if
+				byte_context.workbench_mode and then
+				has_cpp_status_changed
+			then
+				-- If the status of the file has been changed we delete the
+				-- previous version.
+				previous_file_name := l_file_name
+				if has_cpp_externals_calls then
+					previous_file_name := previous_file_name.appended (Dot_c)
+				else
+					previous_file_name := previous_file_name.appended (Dot_cpp)
+				end
+				create previous_file.make_with_path (previous_file_name)
+				if previous_file.exists and then previous_file.is_writable then
+					previous_file.delete
 				end
 			end
 			if has_cpp_externals_calls then
@@ -1122,7 +1111,6 @@ feature -- Generation
 		local
 			i, nb_ref, position: INTEGER
 			c_name: STRING
-			value: INTEGER
 			l_create_info: CREATE_INFO
 		do
 			c_name := Encoder.feature_name (type_id, Initialization_body_index)
@@ -1169,8 +1157,7 @@ feature -- Generation
 
 				buffer.put_new_line
 				buffer.put_string ("*(EIF_REFERENCE *) (Current")
-				value := nb_ref + i
-				skeleton.generate_i_th_reference_offset (buffer, value, True)
+				skeleton.generate_i_th_reference_offset (buffer, nb_ref + i, True)
 				buffer.put_string(") = Current + offset_position;")
 				buffer.put_new_line
 
@@ -1332,7 +1319,7 @@ feature -- Parent table generation
 			Par_table.make_byte_code (ba, Current)
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Parent table evaluation
 
 	compute_parent_table (final_mode: BOOLEAN)
 			-- Compute parent table and make it available in `Par_table'.
@@ -1381,7 +1368,7 @@ feature {NONE} -- Implementation
 			-- Buffer for parent table generation
 		once
 			create Result.make
-		end;
+		end
 
 feature -- Skeleton generation
 
@@ -1508,7 +1495,7 @@ feature -- Skeleton generation
 			buffer.put_character (',')
 			buffer.put_new_line
 			buffer.put_string ("(uint16) ")
-			buffer.put_natural_16 (skeleton_flags)
+			buffer.put_hex_natural_16 (skeleton_flags)
 			buffer.put_character (',')
 			buffer.put_new_line
 
@@ -1798,7 +1785,7 @@ feature -- Cecil generation
 			end
 		end
 
-feature -- Byte code generation
+feature {NONE} -- Byte code generation
 
 	melted_feature_table: MELTED_FEATURE_TABLE
 		local
@@ -1988,6 +1975,11 @@ feature {NONE} -- Convenience
 			if l_class.is_frozen then
 				Result := Result | 0x2000
 			end
+
+				-- Bit 14: Store dead status of the type.
+			if not byte_context.workbench_mode and then not system.is_class_type_alive (type_id) then
+				Result := Result | 0x4000
+			end
 		end
 
 feature {NONE} -- Debug output
@@ -2035,6 +2027,7 @@ invariant
 	valid_implementation_id: System.il_generation implies implementation_id > 0
 
 note
+	ca_ignore: "CA093", "CA093: manifest array type mismatch"
 	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

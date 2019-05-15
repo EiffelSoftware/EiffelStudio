@@ -170,6 +170,7 @@ RT_LNK void eif_exit_eiffel_code(void);
  *  RTLNTY(x) allocates a new TYPE [like x] instance using the encoded ftype 'x'
  *  RTLNTY2(x, a) allocates a new TYPE [like x] instance of ftype 'x'
  *  RTLNSMART(x) allocates a new object of dftype 'x'
+ *  RTLNALIVE(x) same as `RTLNSMART(x)` with a check that the code for the type is generated
  *  RTLNR(x,y,a,o,c) allocates a new routine object of type 'x' and
  *  RTLNC(x) creates a new non-initialized instance of 'x'.
  *  RTLNSP(t,n,e,b) allocates a new special array
@@ -186,6 +187,7 @@ RT_LNK void eif_exit_eiffel_code(void);
 #define RTLNTY(x)			eif_type_malloc(eif_decoded_type(x), 0)
 #define RTLNTY2(x,a)		eif_type_malloc(x, a)
 #define RTLNSMART(x)		smart_emalloc(x)
+#define RTLNALIVE(x)		alive_emalloc(x)
 #define RTLNRW(a,d,e,f,g,h,i,j,k,l,m) rout_obj_create_wb((a),(d),(e),(f),(g),(h),(i),(j),(k),(l),(m))
 #define RTLNRF(a,b,c,d,e,f,g) rout_obj_create_fl((a),(b),(c),(d),(e),(f), (g))
 #define RTLNC(x)			eclone(x)

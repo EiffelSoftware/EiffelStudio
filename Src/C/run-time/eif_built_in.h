@@ -93,7 +93,7 @@ extern "C" {
 #define eif_builtin_REFLECTOR_c_set_dynamic_type(obj,enc_ftype)			eif_set_dynamic_type(obj,enc_ftype)
 #define eif_builtin_REFLECTOR_c_new_type_instance_of(type_id)			eif_type_malloc(eif_decoded_type(type_id), 0)
 #define eif_builtin_REFLECTOR_c_new_tuple_instance_of(type_id)			RTLNT(eif_decoded_type(type_id).id)
-#define eif_builtin_REFLECTOR_c_new_instance_of(type_id)			RTLNSMART(eif_decoded_type(type_id).id)
+#define eif_builtin_REFLECTOR_c_new_instance_of(type_id)			RTLNALIVE(eif_decoded_type(type_id).id)
 #define eif_builtin_REFLECTOR_field_count_of_type(type_id)			ei_count_field_of_type(type_id)
 #define eif_builtin_REFLECTOR_is_tuple_type(type_id)				eif_is_tuple_type(type_id)     
 #define eif_builtin_REFLECTOR_is_special_type(type_id)				eif_is_special_type(type_id) 

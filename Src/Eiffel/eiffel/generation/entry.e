@@ -55,11 +55,8 @@ feature -- Status report
 		do
 				-- Take into account only polymorphic entries.
 			if is_polymorphic then
-				Result :=
-						-- Check if dead code removal is in place.
-					attached system.remover as r implies
-						-- Check if the class is alive when dead code removal takes place.
-					r.is_class_alive (class_id)
+					-- Check if the class type is alive when dead code removal takes place.
+				Result := system.is_class_type_alive (type_id)
 			end
 		end
 

@@ -100,6 +100,7 @@ RT_LNK EIF_REFERENCE eif_type_malloc (EIF_TYPE a_type, EIF_TYPE_INDEX l_annotati
 RT_LNK EIF_REFERENCE tuple_malloc (EIF_TYPE_INDEX ftype);	/* Allocated tuple object */
 RT_LNK EIF_REFERENCE tuple_malloc_specific (EIF_TYPE_INDEX ftype, uint32 count, EIF_BOOLEAN atomic);	/* Allocated tuple object */
 RT_LNK EIF_REFERENCE smart_emalloc (EIF_TYPE_INDEX ftype);
+RT_LNK EIF_REFERENCE alive_emalloc (EIF_TYPE_INDEX ftype);
 RT_LNK EIF_REFERENCE sp_init (EIF_REFERENCE obj, EIF_TYPE_INDEX dftype, EIF_INTEGER lower, EIF_INTEGER upper);	/* Initialize special object of expanded */
 
 RT_LNK EIF_REFERENCE strmalloc(unsigned int nbytes);		/* Allocate a string. */

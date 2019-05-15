@@ -2,7 +2,7 @@
 	description: "Private structure definitions."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2006, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2019, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -66,7 +66,8 @@ RT_LNK long *nbref;		/* Gives # of references given DT */
 
 /* Macro to extract from `cn_flags' of `node' of type `struct cnode' and gets
  * the appropriate information. */
-#define EIF_IS_FROZEN_FLAG				0x2000
+#define EIF_IS_DEAD_FLAG			0x4000
+#define EIF_IS_FROZEN_FLAG			0x2000
 #define EIF_IS_DEFERRED_FLAG			0x1000
 #define EIF_IS_COMPOSITE_FLAG			0x0800
 #define EIF_HAS_DISPOSE_FLAG			0x0400
@@ -74,6 +75,7 @@ RT_LNK long *nbref;		/* Gives # of references given DT */
 #define EIF_IS_DECLARED_EXPANDED_FLAG	0x0100
 
 #define EIF_TUPLE_CODE(node)				(char) (EIF_TUPLE_CODE_MASK & (node).cn_flags)
+#define EIF_IS_DEAD_TYPE(node)				((node).cn_flags & EIF_IS_DEAD_FLAG)
 #define EIF_IS_FROZEN_TYPE(node)			(((node).cn_flags & EIF_IS_FROZEN_FLAG) == EIF_IS_FROZEN_FLAG)
 #define EIF_IS_DEFERRED_TYPE(node)			(((node).cn_flags & EIF_IS_DEFERRED_FLAG) == EIF_IS_DEFERRED_FLAG)
 #define EIF_IS_COMPOSITE_TYPE(node)			(((node).cn_flags & EIF_IS_COMPOSITE_FLAG) == EIF_IS_COMPOSITE_FLAG)

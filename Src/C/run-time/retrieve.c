@@ -2,7 +2,7 @@
 	description: "Eiffel retrieve mechanism."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2017, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2019, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -1596,6 +1596,10 @@ rt_shared EIF_REFERENCE rt_nmake(long int objectCount)
 		/* Read object flags and dynamic type */
 		buffer_read((char *) &flags, sizeof(uint16));
 		buffer_read((char *) &dtype, sizeof(uint16));
+		if (EIF_IS_DEAD_TYPE(System(dtype))) {
+				/* The type is not generated in the system. */
+			xraise (EN_RETR);
+		}
 		dftype = rt_read_cid (dtype);
 		dtype = To_dtype(dftype);
 
@@ -1778,6 +1782,10 @@ rt_public EIF_REFERENCE grt_nmake(long int objectCount)
 		/* Read object flags (dynamic type) */
 		buffer_read((char *) &store_flags, sizeof(uint32));
 		Split_flags_dtype (flags, dtype, store_flags);
+		if (EIF_IS_DEAD_TYPE(System(dtype))) {
+				/* The type is not generated in the system. */
+			xraise (EN_RETR);
+		}
 		dftype = rt_read_cid (dtype);
 
 #if DEBUG & 1
@@ -1998,6 +2006,10 @@ rt_private EIF_REFERENCE rrt_nmake (long int objectCount)
 			if (conv->new_dftype != TYPE_UNDEFINED) {
 				dftype = conv->new_dftype;
 			}
+			if (EIF_IS_DEAD_TYPE(System(To_dtype(dftype)))) {
+					/* The type is not generated in the system. */
+				xraise (EN_RETR);
+			}
 			if (flags & EO_TUPLE) {
 				newadd = RTLNT(dftype);
 				if (!newadd) {
@@ -2027,6 +2039,10 @@ rt_private EIF_REFERENCE rrt_nmake (long int objectCount)
 		else {		/* Normal object */
 			if (conv->new_dftype != TYPE_UNDEFINED) {
 				dftype = conv->new_dftype;
+			}
+			if (EIF_IS_DEAD_TYPE(System(To_dtype(dftype)))) {
+					/* The type is not generated in the system. */
+				xraise (EN_RETR);
 			}
 				/* NOTE: Manu 05/30/2003
 				 * We have to use RTLNSMART because of the change in the TUPLE

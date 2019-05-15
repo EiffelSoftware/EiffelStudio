@@ -144,13 +144,16 @@ feature -- Status report
 
 	used: BOOLEAN
 			-- Is the entry used?
+		local
+			s: like system
 		do
 			if is_polymorphic then
+				s := system
 				Result :=
-						-- Check if dead code removal is in place.
-					attached system.remover as r implies
-						-- Check if the class is alive when dead code removal takes place.
-					r.is_code_reachable (body_index) and then r.is_class_alive (class_id)
+						-- Check if dead code removal is in place and the code is reachable.
+					(attached s.remover as r implies r.is_code_reachable (body_index)) and then
+						-- Check if the class type is alive.
+					s.is_class_type_alive (type_id)
 			end
 		end
 

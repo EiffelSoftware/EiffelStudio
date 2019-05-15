@@ -2,7 +2,7 @@
 	description: "Memory allocation management routines."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2015, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2019, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -662,7 +662,7 @@ rt_shared EIF_CS_TYPE *eif_type_set_mutex = NULL;
 
 /*
 doc:	<routine name="smart_emalloc" return_type="EIF_REFERENCE" export="public">
-doc:		<summary>Perform smart allocation of either a TUPLE object or a normal object. It does not take into account SPECIAL creation as a size is required for that. See `emalloc' comments for me details.</summary>
+doc:		<summary>Perform smart allocation of either a TUPLE object or a normal object. It does not take into account SPECIAL creation as a size is required for that. See `emalloc' comments for the details.</summary>
 doc:		<param name="ftype" type="EIF_TYPE_INDEX">Full dynamic type used to determine if we are creating a TUPLE or a normal object.</param>
 doc:		<return>A newly allocated object if successful, otherwise throw an exception</return>
 doc:		<exception>"No more memory" when it fails</exception>
@@ -675,6 +675,30 @@ rt_public EIF_REFERENCE smart_emalloc (EIF_TYPE_INDEX ftype)
 {
 	EIF_TYPE_INDEX type = To_dtype(ftype);
 	if (type == egc_tup_dtype) {
+		return tuple_malloc (ftype);
+	} else {
+		return emalloc_size (ftype, type, EIF_Size(type));
+	}
+}
+
+/*
+doc:	<routine name="alive_emalloc" return_type="EIF_REFERENCE" export="public">
+doc:		<summary>Perform smart allocation of either a TUPLE object or a normal object. It does not take into account SPECIAL creation as a size is required for that. See `emalloc' comments for the details.</summary>
+doc:		<param name="ftype" type="EIF_TYPE_INDEX">Full dynamic type used to determine if we are creating a TUPLE or a normal object.</param>
+doc:		<return>A newly allocated object if successful, otherwise throw an exception</return>
+doc:		<exception>"No more memory" or "Create on deferred"</exception>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>Done by different allocators to whom we request memory</synchronization>
+doc:	</routine>
+*/
+
+rt_public EIF_REFERENCE alive_emalloc (EIF_TYPE_INDEX ftype)
+{
+	EIF_TYPE_INDEX type = To_dtype(ftype);
+	if (EIF_IS_DEAD_TYPE(System(type))) {
+		xraise (EN_CDEF);
+		return (EIF_REFERENCE) 0;
+	} else if (type == egc_tup_dtype) {
 		return tuple_malloc (ftype);
 	} else {
 		return emalloc_size (ftype, type, EIF_Size(type));

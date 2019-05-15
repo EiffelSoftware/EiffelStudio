@@ -2429,7 +2429,6 @@ end
 				i > nb
 			loop
 				a_class := class_array.item (i)
-
 				if
 					a_class /= Void and then a_class.lace_class.config_class.is_always_compile and then
 					not marked_classes.has (a_class.class_id)
@@ -2536,7 +2535,6 @@ end
 			set_or_reset_action_not_void: set_or_reset_action /= Void
 			class_types_not_void: class_types /= Void
 		local
-			l_class_type: CLASS_TYPE
 			l_types: ARRAY [CLASS_TYPE]
 			i, nb: INTEGER
 		do
@@ -2547,9 +2545,8 @@ end
 			until
 				i > nb
 			loop
-				l_class_type := l_types.item (i)
-				if l_class_type /= Void then
-					set_or_reset_action.call ([l_class_type])
+				if attached l_types [i] as class_type then
+					set_or_reset_action (class_type)
 				end
 				i := i + 1
 			end
@@ -2777,9 +2774,8 @@ end
 	make_parent_table_byte_code (file: RAW_FILE)
 			-- Generates parent tables byte code in `file'.
 		local
-			i, nb: INTEGER;
-			cl_type: CLASS_TYPE;
-			to_append: CHARACTER_ARRAY;
+			i, nb: INTEGER
+			to_append: CHARACTER_ARRAY
 		do
 			Byte_array.clear
 
@@ -2793,10 +2789,9 @@ end
 					until
 						i > nb
 					loop
-						cl_type := class_types.item (i)
-						if cl_type /= Void then
+						if attached class_types [i] as class_type then
 								-- Classes could be removed
-							cl_type.make_parent_table_byte_code (Byte_array)
+							class_type.make_parent_table_byte_code (Byte_array)
 						end
 						i := i + 1
 					end
@@ -2817,7 +2812,7 @@ end
 
 				-- Put the parent table in `file'.
 			to_append.store (file)
-		end;
+		end
 
 	make_option_table (file: RAW_FILE)
 			-- Generate byte code for the option table.
@@ -2826,12 +2821,8 @@ end
 			file_is_open_write: file.is_open_write
 		local
 			i, nb: INTEGER
-			cl_type: CLASS_TYPE
 			a_class: CLASS_C
 		do
-debug ("OPTIONS")
-	io.error.put_string ("Making option table%N")
-end
 			Byte_array.clear
 			from
 				i := min_type_id
@@ -2839,16 +2830,10 @@ end
 			until
 				i > nb
 			loop
-				cl_type := class_types.item (i)
-				if cl_type /= Void then
+				if attached class_types [i] as class_type then
 						-- Classes could be removed
-					Byte_array.append_short_integer (cl_type.type_id - 1)
-					a_class := cl_type.associated_class
-debug ("OPTIONS")
-	io.error.put_string ("%TClass ")
-	io.error.put_string (a_class.name)
-	io.error.put_new_line
-end
+					Byte_array.append_short_integer (class_type.type_id - 1)
+					a_class := class_type.associated_class
 					a_class.assertion_level.make_byte_code (Byte_array)
 					a_class.debug_level.make_byte_code (Byte_array)
 					a_class.trace_level.make_byte_code (Byte_array)
@@ -3290,8 +3275,19 @@ feature -- Final mode generation
 
 					address_table.update_ids
 
-						-- Dead code removal
-					if dead_code /= {CONF_TARGET_OPTION}.dead_code_index_none then
+						-- Dead code removal.
+					is_class_type_alive_storage.make (class_types.count)
+					is_class_type_reachable_storage.make (class_types.count)
+					if dead_code = {CONF_TARGET_OPTION}.dead_code_index_none then
+						across
+							class_types as t
+						loop
+							is_class_type_alive_storage [t.target_index] :=
+								attached t.item as class_type and then
+								is_type_reachable (class_type.type)
+						end
+						is_class_type_reachable_storage.copy (is_class_type_alive_storage)
+					else
 						deg_output := Degree_output
 						deg_output.put_start_dead_code_removal_message
 						remove_dead_code
@@ -3338,6 +3334,8 @@ feature -- Final mode generation
 						-- to store them on disk as they are recomputed at each finalization.
 					process_conformance_table_for_type (agent {CLASS_TYPE}.reset_conformance_table)
 
+					is_class_type_alive_storage.make (0)
+					is_class_type_reachable_storage.make (0)
 					remover := Void
 
 						-- Set `Server_control' not to remove right away extra unused
@@ -3384,6 +3382,7 @@ feature -- Final mode generation
 			inlining_on := old_inlining_on
 			array_optimization_on := old_array_optimization_on
 			skeleton_table := Void
+			remover := Void
 
 				-- Clean conformance table for CLASS_TYPE instances. We don't need
 				-- to store them on disk as they are recomputed at each finalization.
@@ -3753,6 +3752,7 @@ feature -- Dead code removal
 			-- Dead code removal
 		local
 			visible_classes: ARRAYED_LIST [CLASS_C]
+			r: like remover
 		do
 				-- Note: To have dead code removal working when assertions are enabled
 				-- we need to perform two things:
@@ -3760,42 +3760,43 @@ feature -- Dead code removal
 				-- 2 - record all inherited assertions of a routine.
 				-- We currently can do `1' but not `2'.
 
-			create remover.make
+			create r.make
+			remover := r
 
 				-- Mark classes that are known by the run-time.
 			if is_basic_class_alive then
-				remover.mark_class_alive (boolean_class.compiled_class.class_id)
-				remover.mark_class_alive (character_8_class.compiled_class.class_id)
-				remover.mark_class_alive (character_32_class.compiled_class.class_id)
-				remover.mark_class_alive (integer_8_class.compiled_class.class_id)
-				remover.mark_class_alive (integer_16_class.compiled_class.class_id)
-				remover.mark_class_alive (integer_32_class.compiled_class.class_id)
-				remover.mark_class_alive (integer_64_class.compiled_class.class_id)
-				remover.mark_class_alive (natural_8_class.compiled_class.class_id)
-				remover.mark_class_alive (natural_16_class.compiled_class.class_id)
-				remover.mark_class_alive (natural_32_class.compiled_class.class_id)
-				remover.mark_class_alive (natural_64_class.compiled_class.class_id)
-				remover.mark_class_alive (pointer_class.compiled_class.class_id)
-				remover.mark_class_alive (real_32_class.compiled_class.class_id)
-				remover.mark_class_alive (real_64_class.compiled_class.class_id)
-				remover.mark_class_alive (typed_pointer_class.compiled_class.class_id)
+				r.mark_class_alive (boolean_class.compiled_class.class_id)
+				r.mark_class_alive (character_8_class.compiled_class.class_id)
+				r.mark_class_alive (character_32_class.compiled_class.class_id)
+				r.mark_class_alive (integer_8_class.compiled_class.class_id)
+				r.mark_class_alive (integer_16_class.compiled_class.class_id)
+				r.mark_class_alive (integer_32_class.compiled_class.class_id)
+				r.mark_class_alive (integer_64_class.compiled_class.class_id)
+				r.mark_class_alive (natural_8_class.compiled_class.class_id)
+				r.mark_class_alive (natural_16_class.compiled_class.class_id)
+				r.mark_class_alive (natural_32_class.compiled_class.class_id)
+				r.mark_class_alive (natural_64_class.compiled_class.class_id)
+				r.mark_class_alive (pointer_class.compiled_class.class_id)
+				r.mark_class_alive (real_32_class.compiled_class.class_id)
+				r.mark_class_alive (real_64_class.compiled_class.class_id)
+				r.mark_class_alive (typed_pointer_class.compiled_class.class_id)
 			end
 			if is_string_class_alive then
-				remover.mark_class_alive (string_8_id)
-				remover.mark_class_alive (string_32_id)
+				r.mark_class_alive (string_8_id)
+				r.mark_class_alive (string_32_id)
 			end
 			if is_array_class_alive then
-				remover.mark_class_alive (array_id)
+				r.mark_class_alive (array_id)
 			end
 			if is_tuple_class_alive then
-				remover.mark_class_alive (tuple_id)
+				r.mark_class_alive (tuple_id)
 			end
 
-			remover.mark_class_alive (exception_class_id)
-			remover.mark_class_alive (ise_exception_manager_class_id)
+			r.mark_class_alive (exception_class_id)
+			r.mark_class_alive (ise_exception_manager_class_id)
 
 			if array_optimization_on then
-				remover.record_array_descendants
+				r.record_array_descendants
 			end
 
 			if dead_code = {CONF_TARGET_OPTION}.dead_code_index_feature then
@@ -3809,9 +3810,9 @@ feature -- Dead code removal
 						(c.is_precompiled implies c.is_in_system)
 					then
 						if c.is_deferred then
-							remover.mark_class_reachable (c.class_id)
+							r.mark_class_reachable (c.class_id)
 						else
-							remover.mark_class_alive (c.class_id)
+							r.mark_class_alive (c.class_id)
 						end
 					end
 				end
@@ -3827,7 +3828,7 @@ feature -- Dead code removal
 					(c.is_precompiled implies c.is_in_system) and then
 					c.visible_level.has_visible
 				then
-					c.mark_visible_class (remover)
+					c.mark_visible_class (r)
 					visible_classes.extend (c)
 				end
 			end
@@ -3951,10 +3952,21 @@ feature -- Dead code removal
 				-- Protection of feature `set_item' of `reference INTEGER_64'.
 			register_polymorphic ({PREDEFINED_NAMES}.set_item_name_id, integer_64_class)
 
-			remover.analyze
+			r.analyze
 debug ("DEAD_CODE")
-			remover.dump_alive
+			r.dump_alive
 end
+			across
+				class_types as t
+			loop
+				if attached t.item as class_type and then is_type_reachable (class_type.type) then
+					is_class_type_alive_storage [t.target_index] := r.is_class_alive (class_type.type.class_id)
+					is_class_type_reachable_storage [t.target_index] := r.is_class_reachable (class_type.type.class_id)
+				else
+					is_class_type_alive_storage [t.target_index] := False
+					is_class_type_reachable_storage [t.target_index] := False
+				end
+			end
 		end
 
 	register_monomorphic  (n: INTEGER; i: detachable CLASS_I)
@@ -3986,7 +3998,7 @@ end
 		require
 			good_argument: f /= Void
 		do
-			Result := attached remover as r implies remover.is_code_reachable (f.body_index)
+			Result := attached remover as r implies r.is_code_reachable (f.body_index)
 		end
 
 	is_class_reachable (c: CLASS_C): BOOLEAN
@@ -3996,13 +4008,60 @@ end
 			in_final_mode
 		do
 			Result :=
-				if attached system.remover as r then
+				if attached remover as r then
 						-- Use reachability information from the remover.
 					r.is_class_reachable (c.class_id)
 				else
 						-- Use general information about class usage.
 					c.is_precompiled implies c.is_in_system
 				end
+		end
+
+	is_class_type_alive (i: like {CLASS_TYPE}.type_id): BOOLEAN
+			-- Is class type of ID `i` alive (i.e., an object of that type can be created) when executing the system?
+		require
+			in_final_mode
+			class_types.valid_index (i)
+		do
+			Result := is_class_type_alive_storage [i]
+		end
+
+	is_class_type_reachable (i: like {CLASS_TYPE}.type_id): BOOLEAN
+			-- Is class type of ID `i` reachable (i.e., code of that type could be executed) when executing the system?
+		require
+			in_final_mode
+			class_types.valid_index (i)
+		do
+			Result := is_class_type_reachable_storage [i]
+		end
+
+feature {NONE} -- Generation
+
+	is_type_reachable (t: TYPE_A): BOOLEAN
+			-- Is type `t` built using only reachable classes?
+		require
+			in_final_mode
+		do
+			Result :=
+				attached t.base_class as c implies
+				(c.is_precompiled implies c.is_in_system) and then
+				(attached t.generics as gs implies across gs as g all is_type_reachable (g.item) end)
+		end
+
+	is_class_type_alive_storage: BOOL_STRING
+			-- Storage for precomputed values of `is_class_type_alive`.
+		require
+			in_final_mode
+		once
+			create Result.make (0)
+		end
+
+	is_class_type_reachable_storage: BOOL_STRING
+			-- Storage for precomputed values of `is_class_type_reachable`.
+		require
+			in_final_mode
+		once
+			create Result.make (0)
 		end
 
 feature -- Generation
@@ -4080,6 +4139,7 @@ feature -- Generation
 			-- Store the mapping between workbench `type_id' and the finalized one.
 			-- This mapping is needed for the profiler wizard when displaying finalized result.
 		require
+			in_final_mode
 			a_backup_not_void: a_backup /= Void
 			a_backup_valid: a_backup.lower >= 0 and a_backup.upper <= static_type_id_counter.count
 		local
@@ -4092,7 +4152,7 @@ feature -- Generation
 			l_facility: SED_STORABLE_FACILITIES
 			l_mapping_file: RAW_FILE
 		do
-				-- Build mapping between the new IDs and the old one.
+				-- Build mapping between the new IDs and the old ones.
 			from
 				class_array := classes
 				nb := class_counter.count
@@ -4234,7 +4294,7 @@ feature -- Generation
 						l_class_is_finalized := not a_class.is_precompiled or else a_class.is_in_system
 							-- If an expanded type is in a precompiled library, then there will always
 							-- be a generic derivation for TYPE [my_expanded_class] due to the presence
-							-- of `generating_type: TYPE [detachable like Current' in ANY. Even if the
+							-- of `generating_type: TYPE [detachable like Current]' in ANY. Even if the
 							-- expanded class is not really used in the system, we need to compile it in
 							-- so that we can generate the generic derivation of `{TYPE}' that includes it.
 							-- This solves many eweasel tests such as test#time002 when
@@ -4280,33 +4340,28 @@ feature -- Generation
 		local
 			i, l_count: INTEGER
 			l_types: like class_types
-			l_type: CLASS_TYPE
 		do
+			l_types := class_types
+			l_count := l_types.count
 			if is_restoring then
-				l_types := class_types
-				l_count := l_types.count
 				from i := 1 until i = l_count loop
-					l_type := l_types[i]
 					if
-						l_type /= Void and then not l_type.is_precompiled and then
-						not l_type.is_external and then l_type.is_generated_as_single_type
+						attached l_types [i] as class_type and then not class_type.is_precompiled and then
+						not class_type.is_external and then class_type.is_generated_as_single_type
 					then
-						l_type.set_implementation_id (a_backup[i])
+						class_type.set_implementation_id (a_backup [i])
 					end
 					i := i + 1
 				end
 			else
-				l_types := class_types
-				l_count := l_types.count
 				from i := 1 until i = l_count loop
-					l_type := l_types[i]
 					if
-						l_type /= Void and then not l_type.is_precompiled and then
-						not l_type.is_external  and then l_type.is_generated_as_single_type
+						attached l_types [i] as class_type and then not class_type.is_precompiled and then
+						not class_type.is_external and then class_type.is_generated_as_single_type
 					then
-						a_backup.put (l_type.implementation_id, i)
+						a_backup.put (class_type.implementation_id, i)
 							-- Set implementation id to static id for .NET types that have been marked a single.
-						l_type.set_implementation_id (l_type.static_type_id)
+						class_type.set_implementation_id (class_type.static_type_id)
 					end
 					i := i + 1
 				end
@@ -4584,6 +4639,8 @@ feature -- Generation
 
 	generate_reference_table
 			-- Generate the table of reference number per type.
+		require
+			in_final_mode
 		local
 			i, nb, nb_ref, nb_exp: INTEGER
 			class_type: CLASS_TYPE
@@ -4595,7 +4652,6 @@ feature -- Generation
 					-- Clear buffer for current generation
 				buffer := generation_buffer
 				buffer.clear_all
-
 				i := 1
 				nb := type_id_counter.value
 				buffer.put_string ("%Nlong egc_fnbref_init[] = {%N")
@@ -4612,7 +4668,6 @@ feature -- Generation
 				else
 					buffer.put_integer (0)
 				end
-
 				buffer.put_string (",%N")
 				i := i + 1
 			end
@@ -4626,11 +4681,11 @@ feature -- Generation
 	generate_parent_tables
 			-- Generates parent tables.
 		local
-			i, nb, cid: INTEGER;
-			cl_type: CLASS_TYPE;
-			parents_file: INDENT_FILE;
-			final_mode: BOOLEAN;
-			max_id: INTEGER;
+			i, nb, cid: INTEGER
+			cl_type: CLASS_TYPE
+			parents_file: INDENT_FILE
+			final_mode: BOOLEAN
+			max_id: INTEGER
 			used_ids: ARRAY [BOOLEAN]
 			buffer: GENERATION_BUFFER
 		do
@@ -4640,7 +4695,9 @@ feature -- Generation
 
 			final_mode := byte_context.final_mode
 
-			buffer.put_string ("#include %"eif_eiffel.h%"")
+			buffer.put_string ("[
+				#include "eif_eiffel.h"
+			]")
 
 			buffer.start_c_specific_code
 
@@ -4666,9 +4723,12 @@ feature -- Generation
 
 			buffer.put_new_line
 			buffer.put_string ("int egc_partab_size_init = ")
-			buffer.put_integer (max_id);
-			buffer.put_string (";%N");
-			buffer.put_string ("struct eif_par_types *egc_partab_init[] = {%N");
+			buffer.put_integer (max_id)
+			buffer.put_string ("[
+				;
+				struct eif_par_types *egc_partab_init[] = {
+
+			]")
 
 			from
 				i := 0
@@ -4676,28 +4736,27 @@ feature -- Generation
 				i > max_id
 			loop
 				if used_ids.item (i) then
-					buffer.put_string ("&par");
-					buffer.put_integer (i);
+					buffer.put_string ("&par")
+					buffer.put_integer (i)
 				else
-					buffer.put_string ("NULL");
-				end;
-				buffer.put_string (",%N");
-				i := i + 1;
-			end;
-			buffer.put_string ("NULL};");
+					buffer.put_string ("NULL")
+				end
+				buffer.put_string (",%N")
+				i := i + 1
+			end
+			buffer.put_string ("NULL};")
 			buffer.end_c_specific_code
 
 			create parents_file.make_c_code_file (gen_file_name (final_mode, Eparents));
 			buffer.put_in_file (parents_file)
-			parents_file.close;
-		end;
+			parents_file.close
+		end
 
 	generate_skeletons
-			-- Generate skeletons of class types
+			-- Generate skeletons of class types.
 		local
 			class_array: ARRAY [CLASS_C]
-			j, i, nb: INTEGER
-			cl_type: CLASS_TYPE
+			i, nb: INTEGER
 			a_class: CLASS_C
 			final_mode: BOOLEAN
 			types: TYPE_LIST
@@ -4723,23 +4782,23 @@ feature -- Generation
 				nb := class_counter.count
 				from i := 1 until i > nb loop
 					a_class := class_array.item (i)
-					if a_class /= Void then
-						j := a_class.class_id
-						if a_class.has_visible then
-							buffer.put_string ("extern const char *cl")
-							buffer.put_integer (j)
+					if
+						attached a_class and then
+						a_class.has_visible
+					then
+						buffer.put_string ("extern const char *cl")
+						buffer.put_integer (a_class.class_id)
+						buffer.put_string ("[];%N")
+						from
+							types := a_class.types
+							types.start
+						until
+							types.after
+						loop
+							buffer.put_string ("extern const uint32 cr")
+							buffer.put_integer (types.item.type_id)
 							buffer.put_string ("[];%N")
-							from
-								types := a_class.types
-								types.start
-							until
-								types.after
-							loop
-								buffer.put_string ("extern const uint32 cr")
-								buffer.put_integer (types.item.type_id)
-								buffer.put_string ("[];%N")
-								types.forth
-							end
+							types.forth
 						end
 					end
 					i := i + 1
@@ -4757,10 +4816,9 @@ feature -- Generation
 				i > nb
 			loop
 				buffer.flush_buffer (skeleton_file)
-				cl_type := class_types.item (i)
 					-- Classes could be removed
-				if cl_type /= Void then
-					cl_type.generate_skeleton1 (buffer)
+				if attached class_types [i] as class_type then
+					class_type.generate_skeleton1 (buffer)
 				end
 				i := i + 1
 			end
@@ -4773,21 +4831,20 @@ feature -- Generation
 				i > nb
 			loop
 				buffer.flush_buffer (skeleton_file)
-				cl_type := class_types.item (i)
-				if cl_type /= Void then
+				if attached class_types [i] as class_type then
 					if final_mode then
 						if
-							not cl_type.associated_class.is_precompiled or else
-							cl_type.associated_class.is_in_system
+							not class_type.associated_class.is_precompiled or else
+							class_type.associated_class.is_in_system
 						then
-							cl_type.generate_skeleton2 (buffer)
+							class_type.generate_skeleton2 (buffer)
 						else
 								-- Type not inserted in system because it was coming
 								-- from a precompiled library.
 							buffer.put_string ("%N{0L, 0L,%"INVALID_TYPE%",NULL,NULL,NULL,NULL,(uint16)0L,NULL,NULL}")
 						end
 					else
-						cl_type.generate_skeleton2 (buffer)
+						class_type.generate_skeleton2 (buffer)
 					end
 				else
 					if final_mode then
@@ -4824,10 +4881,9 @@ feature -- Generation
 				i > nb
 			loop
 				buffer.flush_buffer (skeleton_file)
-				cl_type := class_types.item (i)
 					-- Classes could be removed
-				if cl_type /= Void then
-					cl_type.generate_attribute_names (buffer)
+				if attached class_types [i] as class_type then
+					class_type.generate_attribute_names (buffer)
 				end
 				i := i + 1
 			end
@@ -4843,12 +4899,15 @@ feature -- Generation
 			cl_type: CLASS_TYPE
 			structure_file: INDENT_FILE
 			buffer: GENERATION_BUFFER
+			final_mode: BOOLEAN
 		do
-			if in_final_mode then
-				create structure_file.make_c_code_file (final_file_name (estructure, Dot_x, 1));
-			else
-				create structure_file.make_c_code_file (workbench_file_name (estructure, Dot_h, 1));
-			end
+			final_mode := in_final_mode
+			create structure_file.make_c_code_file
+				(if final_mode then
+					final_file_name (estructure, Dot_x, 1)
+				else
+					workbench_file_name (estructure, Dot_h, 1)
+				end)
 
 			buffer := generation_buffer
 			buffer.clear_all
@@ -4887,7 +4946,6 @@ feature -- Generation
 		local
 			class_array: ARRAY [CLASS_C]
 			i, nb: INTEGER
-			cl_type: CLASS_TYPE
 			a_class: CLASS_C
 			final_mode: BOOLEAN
 			temp: STRING
@@ -4960,9 +5018,8 @@ feature -- Generation
 					until
 						i > nb
 					loop
-						cl_type := class_types.item (i)
-						if cl_type /= Void and then cl_type.associated_class.has_visible then
-							cl_type.generate_cecil (buffer)
+						if attached class_types [i] as class_type and then class_type.associated_class.has_visible then
+							class_type.generate_cecil (buffer)
 						else
 							buffer.put_string (once "%N{(int32) 0, (int) 0, (char **) 0, (char *) 0}")
 						end
@@ -4985,7 +5042,7 @@ feature -- Generation
 		end
 
 	create_cecil_tables
-			-- Prepare cecil tables
+			-- Prepare cecil tables.
 		local
 			class_array: ARRAY [CLASS_C]
 			i, nb: INTEGER
@@ -5009,6 +5066,8 @@ feature -- Generation
 
 	generate_initialization_table
 			-- Generate table of initialization routines for composite objects.
+		require
+			in_final_mode
 		local
 			rout_table: ROUT_TABLE
 			rout_entry: ROUT_ENTRY
@@ -5271,15 +5330,12 @@ feature -- Pattern table generation
 			-- Generation of the main file
 		local
 			final_mode: BOOLEAN
-
 			i, nb: INTEGER
 			initialization_file: INDENT_FILE
 			buffer: GENERATION_BUFFER
-
 			l_empty_array: ARRAY [STRING_8]
 			l_encoder: like encoder
 			cs: CURSOR
-			cl_type: CLASS_TYPE
 			l_root: SYSTEM_ROOT
 			l_root_cl: CLASS_C
 			l_root_ft: FEATURE_I
@@ -5439,9 +5495,8 @@ feature -- Pattern table generation
 				until
 					i > nb
 				loop
-					cl_type := class_types.item (i)
-					if cl_type /= Void then
-						buffer.generate_extern_declaration (once "void", l_encoder.init_name (cl_type.static_type_id), l_empty_array)
+					if attached class_types [i] as class_type then
+						buffer.generate_extern_declaration (once "void", l_encoder.init_name (class_type.static_type_id), l_empty_array)
 					end
 					i := i + 1
 				end
@@ -5457,10 +5512,9 @@ feature -- Pattern table generation
 				until
 					i > nb
 				loop
-					cl_type := class_types.item (i)
-					if cl_type /= Void then
+					if attached class_types [i] as class_type then
 						buffer.put_new_line
-						buffer.put_string (l_encoder.init_name (cl_type.static_type_id))
+						buffer.put_string (l_encoder.init_name (class_type.static_type_id))
 						buffer.put_string (once "();")
 					end
 					i := i + 1
@@ -5499,21 +5553,19 @@ feature -- Pattern table generation
 				-- Module initialization routine 'egc_system_mod_init_init'
 				-- Declarations
 			from
-				i  := 1
+				i := 1
 				nb := type_id_counter.value
 			until
 				i > nb
 			loop
-				cl_type := class_types.item (i)
-
-				if cl_type /= Void and then not makefile_generator.empty_class_types.has (cl_type.static_type_id) then
-					if
-						not final_mode or else
-						(not cl_type.is_precompiled or else cl_type.associated_class.is_in_system)
-					then
-						buffer.generate_extern_declaration (
-									once "void", l_encoder.module_init_name (cl_type.static_type_id), l_empty_array)
-					end
+				if
+					attached class_types [i] as class_type and then
+					(not (final_mode and then makefile_generator.empty_class_types.has (class_type.static_type_id)) and then
+						(class_type.is_precompiled implies class_type.associated_class.is_in_system) or else
+					not (final_mode or else makefile_generator.empty_class_types.has (class_type.static_type_id)))
+				then
+					buffer.generate_extern_declaration
+						(once "void", l_encoder.module_init_name (class_type.static_type_id), l_empty_array)
 				end
 				i := i + 1
 			end
@@ -5548,17 +5600,15 @@ feature -- Pattern table generation
 			until
 				i > nb
 			loop
-				cl_type := class_types.item (i)
-
-				if cl_type /= Void and then not makefile_generator.empty_class_types.has (cl_type.static_type_id) then
-					if
-						not final_mode or else
-						(not cl_type.is_precompiled or else cl_type.associated_class.is_in_system)
-					then
-						buffer.put_new_line
-						buffer.put_string (Encoder.module_init_name (cl_type.static_type_id))
-						buffer.put_string (once "();")
-					end
+				if
+					attached class_types [i] as class_type and then
+					(not (final_mode and then makefile_generator.empty_class_types.has (class_type.static_type_id)) and then
+						(class_type.is_precompiled implies class_type.associated_class.is_in_system) or else
+					not (final_mode or else makefile_generator.empty_class_types.has (class_type.static_type_id)))
+				then
+					buffer.put_new_line
+					buffer.put_string (Encoder.module_init_name (class_type.static_type_id))
+					buffer.put_string (once "();")
 				end
 				i := i + 1
 			end
@@ -5571,7 +5621,7 @@ feature -- Pattern table generation
 
 			buffer.end_c_specific_code
 
-			create initialization_file.make_c_code_file (gen_file_name (final_mode, Einit));
+			create initialization_file.make_c_code_file (gen_file_name (final_mode, Einit))
 			buffer.put_in_file (initialization_file)
 			initialization_file.close
 		end
@@ -5620,9 +5670,8 @@ feature --option file generation
 			class_array := classes
 			nb := class_counter.count
 			from i := 1 until i > nb loop
-				a_class := class_array.item (i)
-				if a_class /= Void then
-					a_class.debug_level.generate_keys (buffer, a_class.class_id)
+				if attached class_array.item (i) as c then
+					c.debug_level.generate_keys (buffer, c.class_id)
 				end
 				i := i + 1
 			end
@@ -5649,8 +5698,7 @@ feature --option file generation
 					buffer.put_string (", ")
 					a_class.debug_level.generate (buffer, a_class.class_id)
 				else
-					buffer.put_string ("(int16) 0, (int16) 0, (int16) 0,%
-						%{(int16) 0, (int16) 0, (char **) 0}")
+					buffer.put_string ("(int16) 0, (int16) 0, (int16) 0, {(int16) 0, (int16) 0, (char **) 0}")
 				end
 				buffer.put_string ("},%N")
 				i := i + 1
@@ -5658,11 +5706,12 @@ feature --option file generation
 			buffer.put_string ("};")
 			buffer.end_c_specific_code
 
-			if is_workbench_mode then
-				create option_file.make_c_code_file (workbench_file_name (Eoption, dot_c, 1));
-			else
-				create option_file.make_c_code_file (final_file_name (Eoption, dot_c, 1));
-			end
+			create option_file.make_c_code_file
+				(if is_workbench_mode then
+					workbench_file_name (Eoption, dot_c, 1)
+				else
+					final_file_name (Eoption, dot_c, 1)
+				end)
 			buffer.put_in_file (option_file)
 			option_file.close
 		end
@@ -6370,6 +6419,7 @@ feature {NONE} -- External features
 
 invariant
 	attached remover implies dead_code /= {CONF_TARGET_OPTION}.dead_code_index_none
+	attached remover implies in_final_mode
 
 note
 	date: "$Date$"

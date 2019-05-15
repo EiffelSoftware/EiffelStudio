@@ -236,7 +236,7 @@ feature -- Status report
 					loop
 						entry := storage [i]
 						if
-							r.is_class_alive (entry.class_id) and then
+							system_i.is_class_type_alive (entry.type_id) and then
 							system_i.class_type_of_id (entry.type_id).dynamic_conform_to (a_type, type_id, context_type)
 						then
 								-- There are used conforming entries in the table.

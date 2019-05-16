@@ -50,7 +50,10 @@ feature {NONE} -- Output
 			io.put_character (' ')
 			io.put_real (y)
 			io.put_new_line
-			io.put_string ("  =  std: " + (x  = y).to_integer.out + " ieee: " + x.ieee_is_equal         (y).to_integer.out + "%N")
+			io.put_string ("  =  std: " + (x  = y).to_integer.out + " ieee: " + x.ieee_is_equal         (y).to_integer.out +
+				" is_equal: "          + x.is_equal (y).to_integer.out          +
+				" is_deep_equal: "     + x.is_deep_equal (y).to_integer.out     +
+				" standard_is_equal: " + x.standard_is_equal (y).to_integer.out + "%N")
 			io.put_string (" <=  std: " + (x <= y).to_integer.out + " ieee: " + x.ieee_is_less_equal    (y).to_integer.out + "%N")
 			io.put_string (" <   std: " + (x <  y).to_integer.out + " ieee: " + x.ieee_is_less          (y).to_integer.out + "%N")
 			io.put_string (" >   std: " + (x >  y).to_integer.out + " ieee: " + x.ieee_is_greater       (y).to_integer.out + "%N")
@@ -67,7 +70,10 @@ feature {NONE} -- Output
 			io.put_character (' ')
 			io.put_double (y)
 			io.put_new_line
-			io.put_string ("  =  std: " + (x  = y).to_integer.out + " ieee: " + x.ieee_is_equal         (y).to_integer.out + "%N")
+			io.put_string ("  =  std: " + (x  = y).to_integer.out + " ieee: " + x.ieee_is_equal         (y).to_integer.out +
+				" is_equal: "          + x.is_equal (y).to_integer.out          +
+				" is_deep_equal: "     + x.is_deep_equal (y).to_integer.out     +
+				" standard_is_equal: " + x.standard_is_equal (y).to_integer.out + "%N")
 			io.put_string (" <=  std: " + (x <= y).to_integer.out + " ieee: " + x.ieee_is_less_equal    (y).to_integer.out + "%N")
 			io.put_string (" <   std: " + (x <  y).to_integer.out + " ieee: " + x.ieee_is_less          (y).to_integer.out + "%N")
 			io.put_string (" >   std: " + (x >  y).to_integer.out + " ieee: " + x.ieee_is_greater       (y).to_integer.out + "%N")

@@ -238,7 +238,7 @@ feature -- C special code generation
 			when is_digit_type then
 				generate_is_digit (buffer, basic_type, target)
 			when is_equal_type then
-				generate_equal (buffer, target, parameter)
+				generate_equal (buffer, basic_type, target, parameter)
 			when to_character_8_type then
 				buffer.put_string ("(EIF_CHARACTER_8) ")
 				target.print_register
@@ -419,6 +419,7 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 	c_type_table: HASH_TABLE [INTEGER, INTEGER]
 		once
 			create Result.make (100)
+			Result.put (is_equal_type, {PREDEFINED_NAMES}.is_deep_equal_name_id)
 			Result.put (is_equal_type, {PREDEFINED_NAMES}.is_equal_name_id)
 			Result.put (is_equal_type, {PREDEFINED_NAMES}.standard_is_equal_name_id)
 			Result.put (out_type, {PREDEFINED_NAMES}.out_name_id)
@@ -516,6 +517,7 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 	byte_type_table: HASH_TABLE [INTEGER, INTEGER]
 		once
 			create Result.make (100)
+			Result.put (is_equal_type, {PREDEFINED_NAMES}.is_deep_equal_name_id)
 			Result.put (is_equal_type, {PREDEFINED_NAMES}.is_equal_name_id)
 			Result.put (is_equal_type, {PREDEFINED_NAMES}.standard_is_equal_name_id)
 			Result.put (max_type, {PREDEFINED_NAMES}.max_name_id)
@@ -593,7 +595,7 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 feature {NONE} -- Fast access to feature name
 
 	min_type_id: INTEGER = 1
-	
+
 	is_equal_type: INTEGER = 1
 	set_item_type: INTEGER = 2
 	out_type: INTEGER = 3
@@ -755,7 +757,7 @@ feature {NONE} -- C code generation
 			shared_include_queue_put ({PREDEFINED_NAMES}.ctype_header_name_id)
 		end
 
-	generate_equal (buffer: GENERATION_BUFFER; target: REGISTRABLE; parameter: PARAMETER_BL)
+	generate_equal (buffer: GENERATION_BUFFER; basic_type: BASIC_A; target: REGISTRABLE; parameter: PARAMETER_BL)
 			-- Generate fast wrapper for call on `equal' where target and parameter
 			-- are both basic types.
 		require
@@ -763,12 +765,22 @@ feature {NONE} -- C code generation
 			target_not_void: target /= Void
 			parameter_not_void: parameter /= Void
 		do
-			target.print_register
-			buffer.put_character (' ')
-			buffer.put_character ('=')
-			buffer.put_character ('=')
-			buffer.put_character (' ')
-			parameter.print_immediate_register
+			if (basic_type.is_real_32 or else basic_type.is_real_64) and then system.total_order_on_reals then
+				shared_include_queue_put ({PREDEFINED_NAMES}.eif_helpers_header_name_id)
+				buffer.put_string (if basic_type.is_real_32 then "eif_is_equal_real_32" else "eif_is_equal_real_64" end)
+				buffer.put_two_character (' ', '(')
+				target.print_register
+				buffer.put_two_character (',', ' ')
+				parameter.print_immediate_register
+				buffer.put_character (')')
+			else
+				target.print_register
+				buffer.put_character (' ')
+				buffer.put_character ('=')
+				buffer.put_character ('=')
+				buffer.put_character (' ')
+				parameter.print_immediate_register
+			end
 		end
 
 	generate_plus (buffer: GENERATION_BUFFER; type_of_basic: INTEGER; target: REGISTRABLE; parameter: PARAMETER_BL; is_minus: BOOLEAN)
@@ -1385,7 +1397,7 @@ feature {NONE} -- Type information
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

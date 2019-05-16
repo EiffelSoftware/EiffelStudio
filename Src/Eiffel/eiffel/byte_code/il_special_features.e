@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Special optimization on calls where target is a basic type."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -190,7 +190,12 @@ feature -- IL code generation
 					parameters_not_void: parameters /= Void
 				end
 				parameters.process (a_generator)
-				il_generator.generate_binary_operator (il_eq, type.is_natural)
+				if system.total_order_on_reals and then (type.is_real_32 or else type.is_real_64) then
+					il_generator.generate_real_comparison_routine (il_eq, type.is_real_32, boolean_type)
+				else
+						-- Generate unsigned comparison for natural numbers.
+					il_generator.generate_binary_operator (il_eq, type.is_natural)
+				end
 
 			when zero_type, default_type then
 					-- No need to keep pushed value as we are going
@@ -438,6 +443,7 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 	basic_type_table: HASH_TABLE [INTEGER, INTEGER]
 		once
 			create Result.make (100)
+			Result.put (is_equal_type, is_deep_equal_name_id)
 			Result.put (is_equal_type, is_equal_name_id)
 			Result.put (is_equal_type, standard_is_equal_name_id)
 			Result.put (zero_type, zero_name_id)

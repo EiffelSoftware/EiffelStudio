@@ -14,10 +14,8 @@ feature
 				io.put_string ("Void tuple element")
 			elseif not attached {like tuple} x as y then
 				io.put_string ("Unexpected element type")
-			elseif not attached {NATURAL_64} (y [1]) as z then
-				io.put_string ("Unexpected tuple type")
 			else
-				io.put_natural_64 (z)
+				io.put_natural_64 (y.value)
 			end
 			io.put_new_line
 		end

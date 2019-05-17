@@ -1879,6 +1879,7 @@ test	old-expression-in-feature-body		exec371 tcf fail execution old expression
 test	target-manifest-array-type-computation	exec372 tcf pass execution manifest array
 test	type-with-none				exec373	tcf pass execution conformance
 test	floating-point-comparison		exec374 tcf pass execution ieee
+test	anchored-tuple-creation			exec375 tcf fail execution creation anchored_type tuple
 
 -- Once specific
 

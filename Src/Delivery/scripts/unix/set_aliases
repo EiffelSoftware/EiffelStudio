@@ -133,11 +133,11 @@ exit 1
 # SVN Commands: checkout, export
 co ()
 {
-until  svn checkout --config-option config:miscellany:use-commit-times=yes $* >> $INSTALL_LOG; do echo "svn checkout $* failed, retrying..."; done
+until  svn checkout --config-option config:miscellany:use-commit-times=yes $* >> $INSTALL_LOG; do echo "svn checkout .. $* failed, retrying..."; done
 }
 exprt ()
 {
-until  svn --force export --config-option config:miscellany:use-commit-times=yes $* >> $INSTALL_LOG; do echo "svn export $* failed, retrying..."; done
+until  svn --force export --config-option config:miscellany:use-commit-times=yes $* >> $INSTALL_LOG; do echo "svn export .. $* failed, retrying..."; done
 }
 
 # C Compilation

@@ -80,6 +80,9 @@ cd $INSTALL_DIR
 remtrace studio
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/Delivery/studio studio 
 fullrd studio/bitmaps/src
+fullrd studio/bitmaps/png/icons_16x16.png
+fullrd studio/bitmaps/png/small_12x12.png
+fullrd studio/bitmaps/png/icons_10x10.png
 fullrd studio/spec/windows
 fullrd studio/spec/win64
 fullrd studio/config/windows

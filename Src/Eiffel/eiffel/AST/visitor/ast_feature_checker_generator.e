@@ -1231,11 +1231,15 @@ feature {NONE} -- Implementation
 			tuple_argument_number: INTEGER
 			w: like {ERROR_HANDLER}.warning_level
 			has_vucr: BOOLEAN
+			l_is_qualified_call: BOOLEAN
 		do
 				-- Reset any previously reported VUAR error.
 			last_vuar_error := Void
 				-- Record if the call is controlled.
 			l_is_controlled := is_controlled
+				-- Record if the call is qualified (the attribute `is_qualified_call` may change when processing arguments).
+				-- TODO: check whether `is_qualified` would be a safe replacement for `is_qualified_call`.
+			l_is_qualified_call := is_qualified_call
 				-- Reset
 			l_error_level := error_level
 			if a_feature = Void then
@@ -1585,7 +1589,7 @@ feature {NONE} -- Implementation
 							if error_level /= l_error_level then
 								reset_types
 							end
-						elseif not is_qualified_call and then current_feature.is_class and then not l_feature.is_class then
+						elseif not l_is_qualified_call and then current_feature.is_class and then not l_feature.is_class then
 								-- The error for agents is reported elsewhere.
 							if not is_agent then
 								w := error_handler.warning_level
@@ -1650,7 +1654,7 @@ feature {NONE} -- Implementation
 								error_handler.insert_warning (create {VUNO_NOT_INSTANCE_FREE}.make (l_feature, current_feature, context.current_class, context.written_class, l_feature_name))
 							elseif
 								not has_vucr and then
-								not is_qualified_call and then
+								not l_is_qualified_call and then
 								current_feature.is_class and then
 								not l_feature.is_class and then
 								not is_agent
@@ -2053,14 +2057,17 @@ feature {NONE} -- Implementation
 								check_cat_call (l_last_type, l_feature, l_arg_types, l_feature_name, l_parameters)
 							end
 
-								-- We need to take the deep_actual_type because we cannot carry
-								-- the anchors from the result type which do not make sense in
-								-- the current context.
-							if is_qualified_call then
-								set_type (l_result_type.deep_actual_type, a_name)
-							else
-  								set_type (l_result_type, a_name)
-							end
+							set_type
+								(if l_is_qualified_call then
+										-- We need to use deep_actual_type because we cannot carry
+										-- the anchors from the result type which do not make sense in
+										-- the current context.
+										-- TODO: Remove this branch when anchored types are properly adapted to the current context.
+									l_result_type.deep_actual_type
+								else
+	  								l_result_type
+								end,
+								a_name)
 							last_calls_target_type := l_last_constrained
 							if l_feature.is_attribute then
 								last_access_writable := True

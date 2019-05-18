@@ -19,8 +19,15 @@ feature {NONE} -- Initialization
 
 	frozen default_create
 			-- Default creation method.
+		local
+			retried: BOOLEAN
 		do
-			initialize_scaling
+			if not retried then
+				initialize_scaling
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 	initialize_scaling

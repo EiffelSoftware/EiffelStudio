@@ -18,8 +18,14 @@ feature --Access
 
 	scaled_size (a_size: INTEGER): INTEGER
 			-- Scaled size of `a_size`.
+		local
+			l_dpi: like dpi
 		do
-			Result := (a_size * (dpi/96)).rounded
+			Result := a_size
+			l_dpi := dpi
+			if l_dpi > 0 then
+				Result := (Result * (dpi / 96)).rounded
+			end
 		ensure
 			instance_free: class
 		end

@@ -7,7 +7,6 @@ class
 	EV_MONITOR_DPI_DETECTOR_IMP
 
 inherit
-
 	EV_MONITOR_DPI_DETECTOR
 
 feature -- Access
@@ -16,13 +15,19 @@ feature -- Access
 			-- <Precursor>
 		local
 			ev: EV_SCREEN_IMP
+			ext: WEL_SCALING_EXTERNALS
+			l_dpi: INTEGER
 		do
 			create ev.make
 			Result := ev.vertical_resolution.to_natural_32
-			Result := (create {WEL_SCALING_EXTERNALS}).dpi_for_monitor (ev.dc.item).to_natural_32
+			create ext
+			if ext.is_scaling_installed then
+				l_dpi := ext.dpi_for_monitor (ev.dc.item)
+				if l_dpi > 0 then
+					Result := l_dpi.to_natural_32
+				end
+			end
 		end
-
-
 
 note
 	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"

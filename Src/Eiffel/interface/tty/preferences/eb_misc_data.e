@@ -211,7 +211,7 @@ feature -- Preference
 	file_browser_command_preference: STRING_32_PREFERENCE
 	locale_id_preference: ARRAY_PREFERENCE
 	pnd_preference: BOOLEAN_PREFERENCE
-	update_channel_preference: ARRAY_PREFERENCE
+	update_channel_preference: STRING_CHOICE_PREFERENCE
 	eis_path_preference: STRING_32_PREFERENCE
 	use_postscript_preference: BOOLEAN_PREFERENCE
 	license_accepted_preference: BOOLEAN_PREFERENCE
@@ -274,8 +274,10 @@ feature {NONE} -- Implementation
 
 			pnd_preference := l_manager.new_boolean_preference_value (l_manager, pnd_preference_string, False)
 
-			update_channel_preference := l_manager.new_array_preference_value (l_manager, update_channel_string, <<"stable", "beta">>)
-			update_channel_preference.set_is_choice (True)
+			update_channel_preference := l_manager.new_string_choice_preference_value (l_manager, update_channel_string, <<"stable", "beta">>)
+			if update_channel_preference.selected_index = 0 then
+				update_channel_preference.set_selected_index (1)
+			end
 
 			create l_eis_path.make_empty
 			eis_path_preference := l_manager.new_string_32_preference_value (l_manager, eis_path_preference_string, l_eis_path)

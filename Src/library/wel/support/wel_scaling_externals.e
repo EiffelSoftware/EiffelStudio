@@ -46,7 +46,7 @@ feature -- Constants
 
 	Default_dpi: INTEGER = 96
 			-- Default DPI value of 96
-			-- known as DPI unaware, the application render as 
+			-- known as DPI unaware, the application render as
 			-- if the screen that they are on has a DPI value of 96 .
 
 	Process_per_monitor_dpi_aware: INTEGER  = 2
@@ -139,16 +139,19 @@ feature {NONE} -- C externals
 		require
 			a_api_exists: a_scaling_handle /= default_pointer
 		external
-			"C inline use <shellscalingapi.h>"
+			"C inline use <wel_scaling_api.h>"
 		alias
 			"[
-				FARPROC GetDpiForMonitor = NULL;
-				HMODULE user32_module = (HMODULE) $a_scaling_handle;
-				
-				GetDpiForMonitor = GetProcAddress (user32_module, "GetDpiForMonitor");
-				if (GetDpiForMonitor) {
-					(FUNCTION_CAST_TYPE(void, WINAPI, (HMONITOR, MONITOR_DPI_TYPE, UINT *, UINT * )) GetDpiForMonitor) ($a_hwnd, $a_flags, $dpi_x, $dpi_y );
-				}
+				#ifdef _MSC_VER  
+					FARPROC GetDpiForMonitor = NULL;
+					HMODULE user32_module = (HMODULE) $a_scaling_handle;
+					
+					GetDpiForMonitor = GetProcAddress (user32_module, "GetDpiForMonitor");
+					if (GetDpiForMonitor) {
+						(FUNCTION_CAST_TYPE(void, WINAPI, (HMONITOR, MONITOR_DPI_TYPE, UINT *, UINT * )) GetDpiForMonitor) ($a_hwnd, $a_flags, $dpi_x, $dpi_y );
+					}
+				#endif	
+
 			]"
 		end
 
@@ -157,18 +160,20 @@ feature {NONE} -- C externals
 		require
 			a_api_exists: a_scaling_handle /= default_pointer
 		external
-			"C inline use <shellscalingapi.h>"
+			"C inline use <wel_scaling_api.h>"
 		alias
 			"[
-				FARPROC SetProcessDpiAwareness = NULL;
-				HMODULE user32_module = (HMODULE) $a_scaling_handle;
-						
-				SetProcessDpiAwareness = GetProcAddress (user32_module, "SetProcessDpiAwareness");
-				if (SetProcessDpiAwareness) {
-					return (FUNCTION_CAST_TYPE(HRESULT, WINAPI, (PROCESS_DPI_AWARENESS)) SetProcessDpiAwareness) ($a_level);
-				} else {
-					return 	0;
-				}
+				#ifdef _MSC_VER  
+					FARPROC SetProcessDpiAwareness = NULL;
+					HMODULE user32_module = (HMODULE) $a_scaling_handle;
+							
+					SetProcessDpiAwareness = GetProcAddress (user32_module, "SetProcessDpiAwareness");
+					if (SetProcessDpiAwareness) {
+						return (FUNCTION_CAST_TYPE(HRESULT, WINAPI, (PROCESS_DPI_AWARENESS)) SetProcessDpiAwareness) ($a_level);
+					} else {
+						return 	0;
+					}
+				#endif
 			]"
 		end
 
@@ -177,18 +182,20 @@ feature {NONE} -- C externals
 		require
 			a_api_exists: a_scaling_handle /= default_pointer
 		external
-			"C inline use <shellscalingapi.h>"
+			"C inline use <wel_scaling_api.h>"
 		alias
 			"[
-				FARPROC GetProcessDpiAwareness = NULL;
-				HMODULE user32_module = (HMODULE) $a_scaling_handle;
-								
-				GetProcessDpiAwareness = GetProcAddress (user32_module, "GetProcessDpiAwareness");
-				if (GetProcessDpiAwareness) {
-					return (FUNCTION_CAST_TYPE(HRESULT, WINAPI, (HANDLE, PROCESS_DPI_AWARENESS * )) GetProcessDpiAwareness) ($a_process, $a_value);
-				} else {
-					return 0;
-				}
+				#ifdef _MSC_VER  
+					FARPROC GetProcessDpiAwareness = NULL;
+					HMODULE user32_module = (HMODULE) $a_scaling_handle;
+									
+					GetProcessDpiAwareness = GetProcAddress (user32_module, "GetProcessDpiAwareness");
+					if (GetProcessDpiAwareness) {
+						return (FUNCTION_CAST_TYPE(HRESULT, WINAPI, (HANDLE, PROCESS_DPI_AWARENESS * )) GetProcessDpiAwareness) ($a_process, $a_value);
+					} else {
+						return 0;
+					}
+				#endif
 			]"
 		end
 

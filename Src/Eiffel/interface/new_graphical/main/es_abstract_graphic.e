@@ -220,7 +220,8 @@ feature {NONE} -- Welcome dialog
 			if
 				is_eiffel_layout_defined and then
 				preferences.dialog_data.show_update_manager_dialog and then
-				attached update_manager_api.available_release_update_for_channel (preferences.misc_data.update_channel, eiffel_layout.eiffel_platform, "18.11") as l_release
+				attached update_manager_api.available_release_update_for_channel (preferences.misc_data.update_channel,
+										eiffel_layout.eiffel_platform, eiffel_layout.version_name) as l_release
 			then
 				display_update_manager_dialog (l_release, agent display_startup_page)
 			else

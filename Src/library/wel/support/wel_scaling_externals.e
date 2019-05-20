@@ -33,7 +33,6 @@ feature {NONE} -- Initialization
 			-- Properly initialize Current.
 		local
 			dll: WEL_DLL
-			ws: WEL_STRING
 		do
 			create dll.make_permanent ("Shcore.dll")
 			scaling_handle := dll.item
@@ -47,7 +46,8 @@ feature -- Constants
 
 	Default_dpi: INTEGER = 96
 			-- Default DPI value of 96
-			-- known as DPI unawre, the application render as if the screen that they are on has a DPI value of 96
+			-- known as DPI unaware, the application render as 
+			-- if the screen that they are on has a DPI value of 96 .
 
 	Process_per_monitor_dpi_aware: INTEGER  = 2
 
@@ -147,7 +147,7 @@ feature {NONE} -- C externals
 				
 				GetDpiForMonitor = GetProcAddress (user32_module, "GetDpiForMonitor");
 				if (GetDpiForMonitor) {
-					(FUNCTION_CAST(void , (HMONITOR, MONITOR_DPI_TYPE, UINT *, UINT * )) GetDpiForMonitor) ($a_hwnd, $a_flags, $dpi_x, $dpi_y );
+					(FUNCTION_CAST_TYPE(void, WINAPI, (HMONITOR, MONITOR_DPI_TYPE, UINT *, UINT * )) GetDpiForMonitor) ($a_hwnd, $a_flags, $dpi_x, $dpi_y );
 				}
 			]"
 		end
@@ -165,7 +165,7 @@ feature {NONE} -- C externals
 						
 				SetProcessDpiAwareness = GetProcAddress (user32_module, "SetProcessDpiAwareness");
 				if (SetProcessDpiAwareness) {
-					return (FUNCTION_CAST(HRESULT , (PROCESS_DPI_AWARENESS)) SetProcessDpiAwareness) ($a_level);
+					return (FUNCTION_CAST_TYPE(HRESULT, WINAPI, (PROCESS_DPI_AWARENESS)) SetProcessDpiAwareness) ($a_level);
 				} else {
 					return 	0;
 				}
@@ -185,7 +185,7 @@ feature {NONE} -- C externals
 								
 				GetProcessDpiAwareness = GetProcAddress (user32_module, "GetProcessDpiAwareness");
 				if (GetProcessDpiAwareness) {
-					return (FUNCTION_CAST(HRESULT , (HANDLE, PROCESS_DPI_AWARENESS * )) GetProcessDpiAwareness) ($a_process, $a_value);
+					return (FUNCTION_CAST_TYPE(HRESULT, WINAPI, (HANDLE, PROCESS_DPI_AWARENESS * )) GetProcessDpiAwareness) ($a_process, $a_value);
 				} else {
 					return 0;
 				}

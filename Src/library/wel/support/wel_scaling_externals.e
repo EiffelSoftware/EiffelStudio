@@ -109,9 +109,9 @@ feature -- Access
 
 	set_process_per_monitor_dpi_aware
 			-- Set ProcessDPIAwareness to PROCESS_PER_MONITOR_DPI_AWARE
-			-- PROCESS_PER_MONITOR_DPI_AWARE	
-			--|	Per monitor DPI aware. This app checks for the DPI when it is created and adjusts the scale factor whenever the DPI changes.
-			--| These applications are not automatically scaled by the system.		
+			-- PROCESS_PER_MONITOR_DPI_AWARE
+			--| Per monitor DPI aware. This app checks for the DPI when it is created and adjusts the scale factor whenever the DPI changes.
+			--| These applications are not automatically scaled by the system.
 		local
 			l_res: BOOLEAN
 			l_value: INTEGER
@@ -134,7 +134,7 @@ feature -- Access
 
 feature {NONE} -- C externals
 
-	c_get_dpi_for_monitor (a_scaling_handle: POINTER; a_hwnd: POINTER; a_flags: INTEGER_32; dpi_x, dpi_y: TYPED_POINTER[INTEGER])
+	c_get_dpi_for_monitor (a_scaling_handle: POINTER; a_hwnd: POINTER; a_flags: INTEGER_32; dpi_x, dpi_y: TYPED_POINTER [INTEGER])
 			-- Declared as HRESULT GetDpiForMonitor( HMONITOR hmonitor, MONITOR_DPI_TYPE dpiType, UINT *dpiX, UINT *dpiY );
 		require
 			a_api_exists: a_scaling_handle /= default_pointer
@@ -150,8 +150,7 @@ feature {NONE} -- C externals
 					if (GetDpiForMonitor) {
 						(FUNCTION_CAST_TYPE(void, WINAPI, (HMONITOR, MONITOR_DPI_TYPE, UINT *, UINT * )) GetDpiForMonitor) ($a_hwnd, $a_flags, $dpi_x, $dpi_y );
 					}
-				#endif	
-
+				#endif
 			]"
 		end
 
@@ -169,16 +168,18 @@ feature {NONE} -- C externals
 							
 					SetProcessDpiAwareness = GetProcAddress (user32_module, "SetProcessDpiAwareness");
 					if (SetProcessDpiAwareness) {
-						return (FUNCTION_CAST_TYPE(HRESULT, WINAPI, (PROCESS_DPI_AWARENESS)) SetProcessDpiAwareness) ($a_level);
+						return EIF_TEST((FUNCTION_CAST_TYPE(HRESULT, WINAPI, (PROCESS_DPI_AWARENESS)) SetProcessDpiAwareness) ($a_level));
 					} else {
-						return 	0;
+						return EIF_FALSE;
 					}
+				#else
+					return EIF_FALSE;
 				#endif
 			]"
 		end
 
 	c_get_process_dpi_awareness	(a_scaling_handle:POINTER; a_process: POINTER; a_value: TYPED_POINTER [INTEGER]): INTEGER
-			-- Declated as HRESULT GetProcessDpiAwareness(HANDLE hprocess, PROCESS_DPI_AWARENESS *value);
+			-- Declared as HRESULT GetProcessDpiAwareness(HANDLE hprocess, PROCESS_DPI_AWARENESS *value);
 		require
 			a_api_exists: a_scaling_handle /= default_pointer
 		external
@@ -195,6 +196,8 @@ feature {NONE} -- C externals
 					} else {
 						return 0;
 					}
+				#else
+					return 0;
 				#endif
 			]"
 		end

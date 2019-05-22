@@ -69,13 +69,17 @@ feature
 feature {NONE} -- Pixmap resources
 
 	Shared_pixmaps: EB_SHARED_PIXMAPS
-		once
+		do
+				-- TODO double check if it's ok to change the current
+				-- once feature to load pixmaps based on the Monitor DPI.	
 			create Result
 		end
 
 	frozen icons: ES_SMALL_ICONS
 			-- Breakpoint icon resources
-		once
+		do
+				-- TODO double check if it's ok to change the current
+				-- once feature to load small_pixmaps based on the Monitor DPI.	
 			Result := shared_pixmaps.small_pixmaps
 		ensure
 			result_not_void: Result /= Void
@@ -83,7 +87,9 @@ feature {NONE} -- Pixmap resources
 
 	icon_group_bp_slot: ARRAY [EV_PIXMAP]
 			-- Regular (no modifiers) breakpoint icon group.
-		once
+		do
+				-- TODO double check if it's ok to change the current
+				-- once feature to load pixmaps based on the Monitor DPI.	
 			Result := <<icons.bp_slot_icon, icons.bp_slot_other_frame_icon, icons.bp_slot_current_line_icon>>
 		ensure
 			result_not_void: Result /= Void
@@ -91,7 +97,9 @@ feature {NONE} -- Pixmap resources
 
 	icon_group_bp_enabled: ARRAY [EV_PIXMAP]
 			-- Enabled breakpoint icon group.
-		once
+		do
+				-- TODO double check if it's ok to change the current
+				-- once feature to load pixmaps based on the Monitor DPI.	
 			Result := <<icons.bp_enabled_icon, icons.bp_enabled_other_frame_icon, icons.bp_enabled_current_line_icon>>
 		ensure
 			result_not_void: Result /= Void
@@ -99,7 +107,9 @@ feature {NONE} -- Pixmap resources
 
 	icon_group_bp_disabled: ARRAY [EV_PIXMAP]
 			-- Disabled breakpoint icon group.
-		once
+		do
+				-- TODO double check if it's ok to change the current
+				-- once feature to load small_pixmaps based on the Monitor DPI.	
 			Result := <<icons.bp_disabled_icon, icons.bp_disabled_other_frame_icon, icons.bp_disabled_current_line_icon>>
 		ensure
 			result_not_void: Result /= Void
@@ -107,7 +117,9 @@ feature {NONE} -- Pixmap resources
 
 	icon_group_bp_enabled_condition: ARRAY [EV_PIXMAP]
 			-- Conditional, enabled breakpoint icon group.
-		once
+		do
+				-- TODO double check if it's ok to change the current
+				-- once feature to load small_pixmaps based on the Monitor DPI.	
 			Result := <<icons.bp_enabled_conditional_icon, icons.bp_enabled_other_frame_icon, icons.bp_enabled_current_line_icon>>
 		ensure
 			result_not_void: Result /= Void
@@ -115,7 +127,9 @@ feature {NONE} -- Pixmap resources
 
 	icon_group_bp_disabled_condition: ARRAY [EV_PIXMAP]
 			-- Conditional, disabled breakpoint icon group.
-		once
+		do
+				-- TODO double check if it's ok to change the current
+				-- once feature to load small_pixmaps based on the Monitor DPI.	
 			Result := <<icons.bp_disabled_conditional_icon, icons.bp_disabled_other_frame_icon, icons.bp_disabled_current_line_icon>>
 		ensure
 			result_not_void: Result /= Void

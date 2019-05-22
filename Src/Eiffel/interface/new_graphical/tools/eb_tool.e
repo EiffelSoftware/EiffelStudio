@@ -231,14 +231,18 @@ feature -- Status setting
 feature {NONE} -- Helpers
 
 	frozen stock_pixmaps: ES_ICONS
-			-- Shared access to stock 16x16 EiffelStudio pixmaps
-		once
+			-- Shared access to stock EiffelStudio pixmaps
+		do
+				-- TODO review
+				-- update once feature to load pixmaps based monitor dpi.
 			Result := (create {EB_SHARED_PIXMAPS}).icon_pixmaps
 		end
 
 	frozen stock_mini_pixmaps: ES_MINI_ICONS
-			-- Shared access to stock 10x10 EiffelStudio pixmaps
-		once
+			-- Shared access to stock EiffelStudio pixmaps
+		do
+				-- TODO review
+				-- update once feature to load pixmaps based monitor dpi.
 			Result := (create {EB_SHARED_PIXMAPS}).mini_pixmaps
 		end
 

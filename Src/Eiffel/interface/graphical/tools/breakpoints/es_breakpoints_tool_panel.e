@@ -1374,7 +1374,9 @@ feature {NONE} -- Implementation, cosmetic
 			-- Breakable icons.
 		local
 			l_shared: EB_SHARED_PIXMAPS
-		once
+		do
+				-- TODO review
+				-- update once feature to load pixmaps based monitor dpi.
 			create l_shared
 			Result := l_shared.small_pixmaps
 		ensure

@@ -33,9 +33,13 @@ feature {NONE} -- Initialization
 			-- Properly initialize Current.
 		local
 			dll: WEL_DLL
+			dll2: WEL_DLL
 		do
 			create dll.make_permanent ("Shcore.dll")
 			scaling_handle := dll.item
+			create dll2.make_permanent ("User32.dll")
+			scaling_handle2 := dll2.item
+
 		end
 
 feature -- Constants
@@ -49,7 +53,15 @@ feature -- Constants
 			-- known as DPI unaware, the application render as
 			-- if the screen that they are on has a DPI value of 96 .
 
+	Process_dpi_unaware: INTEGER = 0
+			-- Defined as PROCESS_DPI_UNAWARE = 0
+
+
+	Process_system_dpi_aware: INTEGER = 1
+			-- Defined as PROCESS_SYSTEM_DPI_AWARE = 1
+
 	Process_per_monitor_dpi_aware: INTEGER  = 2
+			-- Defined as PROCESS_PER_MONITOR_DPI_AWARE = 2
 
 feature -- Status report
 
@@ -63,6 +75,10 @@ feature -- Access
 
 	scaling_handle: POINTER
 			-- Handle to Schore.dll if present.
+
+	scaling_handle2: POINTER
+			-- Handle to User32.dll if present.
+
 
 	monitor_scale (hwnd: POINTER): TUPLE [scalex: DOUBLE; scaley: DOUBLE]
 			-- Return the scale DIP (device independent pixels) size, based on the current DPI
@@ -132,6 +148,24 @@ feature -- Access
 			retry
 		end
 
+	set_process_per_monitor_dpi_aware_v2
+		local
+			l_res: BOOLEAN
+			l_value: INTEGER
+			l_val_res: INTEGER
+			retried: BOOLEAN
+		do
+			if not retried then
+				if not scaling_handle2.is_default_pointer  then
+					l_res := c_set_process_dpi_awareness_context (scaling_handle2, c_dpi_awareness_context_per_monitor_aware_v2)
+				end
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+
 feature {NONE} -- C externals
 
 	c_get_dpi_for_monitor (a_scaling_handle: POINTER; a_hwnd: POINTER; a_flags: INTEGER_32; dpi_x, dpi_y: TYPED_POINTER [INTEGER])
@@ -169,6 +203,43 @@ feature {NONE} -- C externals
 					SetProcessDpiAwareness = GetProcAddress (user32_module, "SetProcessDpiAwareness");
 					if (SetProcessDpiAwareness) {
 						return EIF_TEST((FUNCTION_CAST_TYPE(HRESULT, WINAPI, (PROCESS_DPI_AWARENESS)) SetProcessDpiAwareness) ($a_level));
+					} else {
+						return EIF_FALSE;
+					}
+				#else
+					return EIF_FALSE;
+				#endif
+			]"
+		end
+
+	c_dpi_awareness_context_per_monitor_aware_v2 : NATURAL_64
+		external
+			"C inline use <windef.h>"
+		alias
+		  "[
+			#if defined(_MSC_VER) && defined(_DPI_AWARENESS_CONTEXTS_)
+				return DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2;
+			#else
+				return 0;
+			#endif
+			]"
+		end
+
+	c_set_process_dpi_awareness_context	(a_scaling_handle: POINTER; a_level: NATURAL_64): BOOLEAN
+			-- Declated as BOOL SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT value);
+		require
+			a_api_exists: a_scaling_handle /= default_pointer
+		external
+			"C inline use <winuser.h>"
+		alias
+			"[
+				#if defined(_MSC_VER) && defined(_DPI_AWARENESS_CONTEXTS_)
+					FARPROC SetProcessDpiAwarenessContext = NULL;
+					HMODULE user32_module = (HMODULE) $a_scaling_handle;
+							
+					SetProcessDpiAwarenessContext = GetProcAddress (user32_module, "SetProcessDpiAwarenessContext");
+					if (SetProcessDpiAwarenessContext) {
+						return EIF_TEST((FUNCTION_CAST_TYPE(BOOL, WINAPI, (DPI_AWARENESS_CONTEXT)) SetProcessDpiAwarenessContext) ($a_level));
 					} else {
 						return EIF_FALSE;
 					}

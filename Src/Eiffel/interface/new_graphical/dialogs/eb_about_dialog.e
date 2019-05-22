@@ -55,6 +55,7 @@ feature -- Initialization
 			hbox: EV_HORIZONTAL_BOX
 			version_label: EV_LABEL
 			copyright_label: EV_LABEL
+			dpi_awareness_label: EV_LABEL
 			registration_label: EV_TEXT
 			info_label: EV_LABEL
 			hsep: EV_HORIZONTAL_SEPARATOR
@@ -84,6 +85,12 @@ feature -- Initialization
 			create version_label.make_with_text (t_Version_info)
 			version_label.align_text_left
 			version_label.set_background_color (bg)
+
+			create dpi_awareness_label.make_with_text (t_DPI_info)
+			dpi_awareness_label.align_text_left
+			dpi_awareness_label.set_background_color (bg)
+
+
 			create copyright_label.make_with_text (t_Copyright_info)
 			copyright_label.align_text_left
 			copyright_label.set_background_color (bg)
@@ -100,6 +107,8 @@ feature -- Initialization
 			eiffel_text_box.set_padding (Layout_constants.Default_padding_size)
 			eiffel_text_box.extend (version_label)
 			eiffel_text_box.disable_item_expand (version_label)
+			eiffel_text_box.extend (dpi_awareness_label)
+			eiffel_text_box.disable_item_expand (dpi_awareness_label)
 			eiffel_text_box.extend (copyright_label)
 			eiffel_text_box.disable_item_expand (copyright_label)
 			eiffel_text_box.extend (info_label)
@@ -171,6 +180,15 @@ feature {NONE} -- Constant strings
 			end
 		end
 
+	t_DPI_info: STRING
+		once
+			create Result.make (100)
+			Result.append ("Monitor DPI")
+			Result.append (" ")
+			Result.append_natural_32 ({EV_MONITOR_DPI_DETECTOR_IMP}.dpi)
+			Result.append (".")
+		end
+
 	t_Copyright_info: STRING
 		local
 			c_date: C_DATE
@@ -199,7 +217,7 @@ feature {NONE} -- Constant strings
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

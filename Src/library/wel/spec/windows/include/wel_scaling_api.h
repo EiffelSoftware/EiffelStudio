@@ -24,6 +24,8 @@ description: "WEL: library of reusable components for Windows."
 
 #ifdef _MSC_VER 
 #	include <shellscalingapi.h>
+#	include <windef.h>
+#	include <winuser.h>
 #endif
 
 

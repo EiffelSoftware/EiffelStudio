@@ -4,6 +4,7 @@
 		]"
 	date: "$Date$"
 	revision: "$Revision$"
+	EIS: "name=High-DPI Reference", "src=https://docs.microsoft.com/en-us/windows/desktop/hidpi/high-dpi-reference", "protocol=uri"
 
 class
 	WEL_SCALING_EXTERNALS
@@ -38,8 +39,7 @@ feature {NONE} -- Initialization
 			create dll.make_permanent ("Shcore.dll")
 			scaling_handle := dll.item
 			create dll2.make_permanent ("User32.dll")
-			scaling_handle2 := dll2.item
-
+			scaling_handle_ctx := dll2.item
 		end
 
 feature -- Constants
@@ -56,12 +56,17 @@ feature -- Constants
 	Process_dpi_unaware: INTEGER = 0
 			-- Defined as PROCESS_DPI_UNAWARE = 0
 
-
 	Process_system_dpi_aware: INTEGER = 1
 			-- Defined as PROCESS_SYSTEM_DPI_AWARE = 1
 
 	Process_per_monitor_dpi_aware: INTEGER  = 2
 			-- Defined as PROCESS_PER_MONITOR_DPI_AWARE = 2
+
+
+	Dpi_awareness_context_per_monitor_aware_v2 : NATURAL_64
+		do
+			Result := c_dpi_awareness_context_per_monitor_aware_v2
+		end
 
 feature -- Status report
 
@@ -71,12 +76,18 @@ feature -- Status report
 			Result := not scaling_handle.is_default_pointer
 		end
 
+	is_scaling_context_installed: BOOLEAN
+			-- Is "User32.dll" available?
+		do
+			Result := not scaling_handle_ctx.is_default_pointer
+		end
+
 feature -- Access
 
 	scaling_handle: POINTER
 			-- Handle to Schore.dll if present.
 
-	scaling_handle2: POINTER
+	scaling_handle_ctx: POINTER
 			-- Handle to User32.dll if present.
 
 
@@ -156,15 +167,14 @@ feature -- Access
 			retried: BOOLEAN
 		do
 			if not retried then
-				if not scaling_handle2.is_default_pointer  then
-					l_res := c_set_process_dpi_awareness_context (scaling_handle2, c_dpi_awareness_context_per_monitor_aware_v2)
+				if not scaling_handle_ctx.is_default_pointer  then
+					l_res := c_set_process_dpi_awareness_context (scaling_handle_ctx, c_dpi_awareness_context_per_monitor_aware_v2)
 				end
 			end
 		rescue
 			retried := True
 			retry
 		end
-
 
 feature {NONE} -- C externals
 
@@ -213,8 +223,9 @@ feature {NONE} -- C externals
 		end
 
 	c_dpi_awareness_context_per_monitor_aware_v2 : NATURAL_64
+			-- Declared as
 		external
-			"C inline use <windef.h>"
+			"C inline use <wel_scaling_api.h>"
 		alias
 		  "[
 			#if defined(_MSC_VER) && defined(_DPI_AWARENESS_CONTEXTS_)
@@ -230,7 +241,7 @@ feature {NONE} -- C externals
 		require
 			a_api_exists: a_scaling_handle /= default_pointer
 		external
-			"C inline use <winuser.h>"
+			"C inline use <wel_scaling_api.h>"
 		alias
 			"[
 				#if defined(_MSC_VER) && defined(_DPI_AWARENESS_CONTEXTS_)

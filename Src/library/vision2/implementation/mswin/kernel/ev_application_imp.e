@@ -70,8 +70,7 @@ feature -- Initialization
 		do
 			create l_wel_scaling_externals
 			if l_wel_scaling_externals.is_scaling_installed then
---				l_wel_scaling_externals.set_process_per_monitor_dpi_aware
-				l_wel_scaling_externals.set_process_per_monitor_dpi_aware_v2
+				l_wel_scaling_externals.set_process_per_monitor_dpi_aware
 			end
 
 			create reusable_message.make

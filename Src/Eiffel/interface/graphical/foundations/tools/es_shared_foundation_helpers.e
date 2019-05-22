@@ -39,14 +39,18 @@ feature {NONE} -- Helpers: User interface
 		end
 
 	frozen stock_pixmaps: ES_ICONS
-			-- Shared access to stock 16x16 EiffelStudio pixmaps
-		once
+			-- Access to stock dpi based EiffelStudio pixmaps
+		do
+				-- TODO review
+				-- update once feature to load pixmaps based monitor dpi.
 			Result := (create {EB_SHARED_PIXMAPS}).icon_pixmaps
 		end
 
 	frozen mini_stock_pixmaps: ES_MINI_ICONS
-			-- Shared access to stock 10x10 EiffelStudio pixmaps
-		once
+			-- Access to stock dpi based EiffelStudio pixmaps
+		do
+				-- TODO review
+				-- update once feature to load pixmaps based monitor dpi.
 			Result := (create {EB_SHARED_PIXMAPS}).mini_pixmaps
 		end
 

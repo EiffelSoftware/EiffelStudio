@@ -274,8 +274,10 @@ feature -- Destroy
 feature {NONE} -- Helpers
 
     frozen stock_pixmaps: ES_ICONS
-            -- Shared access to stock 16x16 EiffelStudio pixmaps
-        once
+            -- Shared access to stock EiffelStudio pixmaps
+        do
+        		-- TODO double check if it's ok to change the current
+				-- once feature to load small_pixmaps based on the Monitor DPI.	
             Result := (create {EB_SHARED_PIXMAPS}).icon_pixmaps
         ensure
             result_attached: Result /= Void

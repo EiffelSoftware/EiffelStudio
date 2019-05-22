@@ -25,69 +25,177 @@ feature -- Access
 		end
 
 	mini_pixmaps: ES_MINI_ICONS
-			-- Title bar pixmaps (10px)
+			-- Title bar pixmaps.
 		local
 			l_dpi: NATURAL
-		once
+		do
 			l_dpi := {EV_MONITOR_DPI_DETECTOR_IMP}.dpi
 			if l_dpi > 108 and then l_dpi <= 120 then
-				create Result.make ("mini_12x12", 12, 12)
+				Result := mini_pixmaps_12
 			elseif l_dpi > 132 and then l_dpi <= 144 then
-				create Result.make ("mini_15x15", 15, 15)
+				Result := mini_pixmaps_15
 			elseif l_dpi > 144 then
 				create Result.make ("mini_20x20", 20, 20)
 			else
 				create Result.make ("mini_10x10", 10, 10)
 			end
 			if Result = Void or else Result.has_error then
-				create Result.make ("10x10", 10, 10)
+				Result := mini_pixmaps_10
 			end
 		end
 
+	mini_pixmaps_10: ES_MINI_ICONS
+			-- Title bar pixmaps (10px)
+		once
+			create Result.make ("10x10", 10, 10)
+		end
+
+	mini_pixmaps_12: ES_MINI_ICONS
+			-- Title bar pixmaps (12px)
+		once
+			create Result.make ("mini_12x12", 12, 12)
+		end
+
+	mini_pixmaps_15: ES_MINI_ICONS
+			-- Title bar pixmaps (15px)	
+		once
+			create Result.make ("mini_15x15", 15, 15)
+		end
+
+	mini_pixmaps_20: ES_MINI_ICONS
+			-- Title bar pixmaps (20px)
+		once
+			create Result.make ("mini_20x20", 20, 20)
+		end
+
 	small_pixmaps: ES_SMALL_ICONS
-			-- Small icon pixmaps (12px)
+			-- Small icon pixmaps.
 		local
 			l_dpi: NATURAL
-		once
+		do
 			l_dpi := {EV_MONITOR_DPI_DETECTOR_IMP}.dpi
 			if l_dpi > 108 and then l_dpi <= 120 then
-				create Result.make ("small_15x15", 15, 15)
+				Result := small_pixmaps_12
 			elseif l_dpi > 132 and then l_dpi <= 144 then
-				create Result.make ("small_18x18", 18, 18)
+				Result := small_pixmaps_18
 			elseif l_dpi > 144 then
-				create Result.make ("small_24x24", 24, 24)
+				Result := small_pixmaps_24
 			else
 				create Result.make ("small_12x12", 12, 12)
 			end
 			if Result = Void or else Result.has_error then
-				create Result.make ("12x12", 12, 12)
+				Result := small_pixmaps_12
 			end
 		end
 
+	small_pixmaps_12: ES_SMALL_ICONS
+			-- Small icon pixmaps (12px).
+		once
+			create Result.make ("12x12", 12, 12)
+		end
+
+	small_pixmaps_15: ES_SMALL_ICONS
+			-- Small icon pixmaps (15px).
+		once
+			create Result.make ("small_15x15", 15, 15)
+		end
+
+	small_pixmaps_18: ES_SMALL_ICONS
+			-- Small icon pixmaps (18px).
+		once
+			create Result.make ("small_18x18", 18, 18)
+		end
+
+	small_pixmaps_24: ES_SMALL_ICONS
+			-- Small icon pixmaps (24px).
+		once
+			create Result.make ("small_24x24", 24, 24)
+		end
+
 	icon_pixmaps: ES_ICONS
-			-- Normal sized icon pixmaps (16px)
+			-- Normal sized icon pixmaps.
 		local
 			l_dpi: NATURAL
-		once
+		do
 			l_dpi := {EV_MONITOR_DPI_DETECTOR_IMP}.dpi
 			if l_dpi > 108 and then l_dpi <= 120 then
-				create Result.make ("icons_20x20", 20, 20)
+				Result := icon_pixmaps_20
 			elseif l_dpi > 132 and then l_dpi <= 144 then
-				create Result.make ("icons_24x24", 24, 24)
+				Result := icon_pixmaps_24
 			elseif l_dpi > 144 then
-				create Result.make ("icons_32x32", 32, 32)
+				Result := icon_pixmaps_32
+			end
+			if Result = Void or else Result.has_error then
+				Result := icon_pixmaps_16
+			end
+		end
+
+	icon_pixmaps_16: ES_ICONS
+			-- Normal sized icon pixmaps (16px).
+		once
+			create Result.make ("16x16", 16, 16)
+		end
+
+	icon_pixmaps_20: ES_ICONS
+			-- Normal sized icon pixmaps (20px).
+		once
+			create Result.make ("icons_20x20", 20, 20)
+		end
+
+	icon_pixmaps_24: ES_ICONS
+			-- Normal sized icon pixmaps (24px).
+		once
+			create Result.make ("icons_24x24", 24, 24)
+		end
+
+	icon_pixmaps_32: ES_ICONS
+			-- Normal sized icon pixmaps (32px).
+		once
+			create Result.make ("icons_32x32", 32, 32)
+		end
+
+	configuration_pixmaps: ES_CONFIGURATION_PIXMAPS
+			-- Configuration system pixmaps.
+		local
+			l_dpi: NATURAL
+		do
+			l_dpi := {EV_MONITOR_DPI_DETECTOR_IMP}.dpi
+			if l_dpi > 108 and then l_dpi <= 120 then
+				Result := configuration_pixmaps_20
+			elseif l_dpi > 132 and then l_dpi <= 144 then
+				Result := configuration_pixmaps_24
+			elseif l_dpi > 144 then
+				Result := configuration_pixmaps_32
 			else
 				create Result.make ("icons_16x16", 16, 16)
 			end
 			if Result = Void or else Result.has_error then
-				create Result.make ("16x16", 16, 16)
+				Result := configuration_pixmaps_16
 			end
 		end
 
-	configuration_pixmaps: ES_CONFIGURATION_PIXMAPS
-			-- Configuration system pixmaps (16px)
+	configuration_pixmaps_16: ES_CONFIGURATION_PIXMAPS
+			-- Configuration system pixmaps 16px.
 		once
-			create Result.make ("16x16")
+			create Result.make ("16x16", 16, 16)
+		end
+
+	configuration_pixmaps_20: ES_CONFIGURATION_PIXMAPS
+			-- Configuration system pixmaps 20px.
+		once
+			create Result.make ("icons_20x20", 20, 20)
+		end
+
+	configuration_pixmaps_24: ES_CONFIGURATION_PIXMAPS
+			-- Configuration system pixmaps 24px.
+		once
+			create Result.make ("icons_24x24", 24, 24)
+		end
+
+	configuration_pixmaps_32: ES_CONFIGURATION_PIXMAPS
+			-- Configuration system pixmaps 32px.
+		once
+			create Result.make ("icons_32x32", 32, 32)
 		end
 
 feature -- Helpers

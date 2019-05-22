@@ -916,7 +916,7 @@ feature {NONE} -- Factory
 			create Result.make (4)
 
 			create l_box
-			l_box.set_minimum_width (280)
+			l_box.set_minimum_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (280))
 			l_box.set_padding ({ES_UI_CONSTANTS}.horizontal_padding)
 
 				-- Output Label

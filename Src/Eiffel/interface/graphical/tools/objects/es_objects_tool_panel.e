@@ -360,11 +360,11 @@ feature {NONE} -- Interface
 			spref := preferences.debug_tool_data.grid_column_layout_preference_for (g.id)
 			g.set_default_columns_layout (
 						<<
-							[g.col_name_id, 	True,  False, 150, interface_names.l_name, interface_names.to_name],
-							[g.col_value_id, 	True,  False, 150, interface_names.l_value, interface_names.to_value],
-							[g.col_type_id, 	True,  False, 200, interface_names.l_type, interface_names.to_type],
-							[g.col_address_id, 	True,  False,  80, interface_names.l_address, interface_names.to_address],
-							[g.col_scoop_pid_id, True, False,   30, interface_names.l_scoop_pid, interface_names.to_scoop_pid],
+							[g.col_name_id, 	True,  False, {EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (150), interface_names.l_name, interface_names.to_name],
+							[g.col_value_id, 	True,  False, {EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (150), interface_names.l_value, interface_names.to_value],
+							[g.col_type_id, 	True,  False, {EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (200), interface_names.l_type, interface_names.to_type],
+							[g.col_address_id, 	True,  False, {EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size  (80), interface_names.l_address, interface_names.to_address],
+							[g.col_scoop_pid_id, True, False, {EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size  (30), interface_names.l_scoop_pid, interface_names.to_scoop_pid],
 							[g.col_context_id, 	False, False,   0, interface_names.l_context_dot, interface_names.to_context_dot]
 						>>
 					)
@@ -1539,7 +1539,7 @@ invariant
 note
 	ca_ignore:
 		"CA093", "CA093: manifest array type mismatch"
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

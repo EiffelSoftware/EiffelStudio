@@ -108,7 +108,7 @@ feature {NONE} -- Initialization
 
 				--| UI structure			
 			create box2
-			box2.set_padding (3)
+			box2.set_padding ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (3))
 
 			special_label_color := (create {EV_STOCK_COLORS}).blue
 
@@ -157,7 +157,7 @@ feature {NONE} -- Initialization
 			end
 			exception.remove_text
 				-- We set a minimum width to prevent the label from resizing the call stack.
-			exception.set_minimum_width (40)
+			exception.set_minimum_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (40))
 			exception.set_foreground_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 0, 0))
 			exception.disable_edit
 
@@ -174,13 +174,13 @@ feature {NONE} -- Initialization
 ----| FIXME Jfiat: Use session to store/restore column widths
 			g.set_column_count_to (4)
 			g.column (Feature_column_index).set_title (Interface_names.t_Feature)
-			g.column (Feature_column_index).set_width (120)
+			g.column (Feature_column_index).set_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (120))
 			g.column (Position_column_index).set_title (" @") --Interface_names.t_Position)
-			g.column (Position_column_index).set_width (20)
+			g.column (Position_column_index).set_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (20))
 			g.column (Dtype_column_index).set_title (Interface_names.t_Dynamic_type)
-			g.column (Dtype_column_index).set_width (100)
+			g.column (Dtype_column_index).set_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (100))
 			g.column (Stype_column_index).set_title (Interface_names.t_Static_type)
-			g.column (Stype_column_index).set_width (100)
+			g.column (Stype_column_index).set_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (100))
 
 				--| Action/event on call stack grid
 			g.drop_actions.extend (agent on_element_drop)
@@ -2455,7 +2455,7 @@ feature {NONE} -- Implementation, cosmetic
 
 
 ;note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

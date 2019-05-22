@@ -110,8 +110,8 @@ feature{NONE} -- Initialization
 
 			create l_locale_text.make_with_text (interface_names.l_locale)
 
-			l_ev_empty_lbl.set_minimum_height (State_bar_height)
-			l_ev_empty_lbl.set_minimum_width (State_bar_height * 2)
+			l_ev_empty_lbl.set_minimum_height ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (State_bar_height))
+			l_ev_empty_lbl.set_minimum_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (State_bar_height) * 2)
 			l_ev_horizontal_box_7.extend (l_ev_empty_lbl)
 			l_ev_horizontal_box_7.disable_item_expand (l_ev_empty_lbl)
 			output_toolbar.extend (save_output_btn)
@@ -141,15 +141,15 @@ feature{NONE} -- Initialization
 			l_ev_horizontal_box_2.extend (l_ev_cmd_lbl)
 			l_ev_horizontal_box_2.extend (cmd_lst)
 			create l_cell
-			l_cell.set_minimum_width (5)
+			l_cell.set_minimum_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (5))
 			l_ev_horizontal_box_2.extend (l_cell)
 			l_ev_horizontal_box_2.disable_item_expand (l_cell)
 			l_ev_horizontal_box_2.extend (l_locale_text)
 			l_ev_horizontal_box_2.disable_item_expand (l_locale_text)
 			l_ev_horizontal_box_2.extend (locale_combo)
-			locale_combo.set_minimum_width (200)
+			locale_combo.set_minimum_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (200))
 			l_ev_horizontal_box_2.disable_item_expand (locale_combo)
-			l_ev_horizontal_box_2.set_padding_width (5)
+			l_ev_horizontal_box_2.set_padding_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (5))
 			l_ev_horizontal_box_5.extend (cmd_toolbar)
 			l_ev_horizontal_box_5.extend (toolbar)
 			l_ev_horizontal_box_5.disable_item_expand (toolbar)
@@ -179,8 +179,8 @@ feature{NONE} -- Initialization
 			l_ev_horizontal_box_4.extend (state_label)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_1)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_4)
-			l_ev_vertical_box_1.set_padding (4)
-			l_ev_vertical_box_1.set_border_width (4)
+			l_ev_vertical_box_1.set_padding ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (4))
+			l_ev_vertical_box_1.set_border_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (4))
 
 			del_cmd_btn.set_pixmap (stock_pixmaps.general_delete_icon)
 			del_cmd_btn.set_pixel_buffer (stock_pixmaps.general_delete_icon_buffer)
@@ -856,7 +856,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

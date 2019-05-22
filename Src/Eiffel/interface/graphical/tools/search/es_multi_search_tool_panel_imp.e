@@ -52,8 +52,11 @@ feature {NONE} -- Initialize
 			label_search.align_text_left
 
 			create keyword_field
+--			keyword_field.set_minimum_width (
+--				Layout_constants.Dialog_unit_to_pixels (min_width_of_keyword_field))
+
 			keyword_field.set_minimum_width (
-				Layout_constants.Dialog_unit_to_pixels (min_width_of_keyword_field))
+				{EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (min_width_of_keyword_field))
 
 			create search_box
 			search_box.set_padding (2)
@@ -67,8 +70,11 @@ feature {NONE} -- Initialize
 
 					-- Replace box
 			create replace_combo_box
+--			replace_combo_box.set_minimum_width (
+--				Layout_constants.Dialog_unit_to_pixels (min_width_of_keyword_field))
+
 			replace_combo_box.set_minimum_width (
-				Layout_constants.Dialog_unit_to_pixels (min_width_of_keyword_field))
+				{EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (min_width_of_keyword_field))
 
 			create replace_button.make_with_text (interface_names.b_replace)
 
@@ -93,7 +99,7 @@ feature {NONE} -- Initialize
 			option_and_replace_all_box.extend (option_frame)
 			create hbox
 			create cell
-			cell.set_minimum_width (10)
+			cell.set_minimum_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (10))
 			hbox.extend (cell)
 			hbox.disable_item_expand (cell)
 			option_frame.extend (hbox)
@@ -123,7 +129,7 @@ feature {NONE} -- Initialize
 			hbox.disable_item_expand (vbox)
 
 			create cell
-			cell.set_minimum_width (10)
+			cell.set_minimum_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (10))
 			hbox.extend (cell)
 
 			create vbox
@@ -135,7 +141,7 @@ feature {NONE} -- Initialize
 			hbox.disable_item_expand (vbox)
 
 			create cell
-			cell.set_minimum_width (10)
+			cell.set_minimum_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (10))
 			hbox.extend (cell)
 
 			create replace_all_click_button.make_with_text (interface_names.b_replace_all)
@@ -146,7 +152,7 @@ feature {NONE} -- Initialize
 			vbox.extend (create {EV_CELL})
 
 			create cell
-			cell.set_minimum_width (3)
+			cell.set_minimum_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (3))
 			option_and_replace_all_box.extend (cell)
 			option_and_replace_all_box.disable_item_expand (cell)
 
@@ -164,8 +170,8 @@ feature {NONE} -- Initialize
 			report_box := build_report_box
 
 			create vbox
-			vbox.set_border_width (Layout_constants.Small_border_size)
-			vbox.set_padding (Layout_constants.Small_border_size)
+			vbox.set_border_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (Layout_constants.Small_border_size))
+			vbox.set_padding ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (Layout_constants.Small_border_size))
 			vbox.extend (search_box)
 			vbox.disable_item_expand (search_box)
 			vbox.extend (replace_box)
@@ -234,16 +240,16 @@ feature {NONE} -- Initialize
 			create Result
 
 			create hbox
-			hbox.set_border_width (Layout_constants.Small_border_size)
+			hbox.set_border_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (Layout_constants.Small_border_size))
 
 			create cell
-			cell.set_minimum_width (5)
+			cell.set_minimum_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (5))
 			hbox.extend (cell)
 			hbox.disable_item_expand (cell)
 
 			create scope
 			create vbox
-			vbox.set_padding_width (layout_constants.small_border_size )
+			vbox.set_padding_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (layout_constants.small_border_size) )
 			vbox.extend (current_editor_button)
 			vbox.extend (whole_project_button)
 			vbox.extend (custom_button)
@@ -262,12 +268,12 @@ feature {NONE} -- Initialize
 			scope.extend (vbox)
 
 			create cell
-			cell.set_minimum_width (3)
+			cell.set_minimum_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (3))
 			scope.extend (cell)
 			scope.disable_item_expand (cell)
 
 			create vbox
-			vbox.set_padding_width (layout_constants.small_border_size)
+			vbox.set_padding_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size  (layout_constants.small_border_size))
 
 			create l_hbox
 			vbox.extend (l_hbox)
@@ -299,7 +305,7 @@ feature {NONE} -- Initialize
 
 			Result.extend (options)
 			Result.disable_item_expand (options)
-			Result.set_border_width (layout_constants.small_border_size)
+			Result.set_border_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (layout_constants.small_border_size))
 		end
 
 	build_report_box: EV_VERTICAL_BOX
@@ -321,7 +327,6 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, ES_TOOL} -- Initialize
 			l_cmd.set_mini_pixel_buffer (pixmaps.mini_pixmaps.callstack_send_to_external_editor_icon_buffer)
 			mini_toolbar.extend (l_cmd.new_mini_sd_toolbar_item)
 			mini_toolbar.compute_minimum_size
-
 			content.set_mini_toolbar (mini_toolbar)
 		ensure then
 			mini_toolbar_exists: mini_toolbar /= Void
@@ -609,7 +614,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

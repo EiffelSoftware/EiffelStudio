@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 			-- <Precursor>
 		do
 			create record_widget_cell
-			a_widget.set_border_width (1)
+			a_widget.set_border_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (1))
 			a_widget.set_background_color (colors.stock_colors.gray)
 			a_widget.extend (record_widget_cell)
 		end
@@ -487,7 +487,7 @@ feature {NONE} -- Internationalization
 		]"
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

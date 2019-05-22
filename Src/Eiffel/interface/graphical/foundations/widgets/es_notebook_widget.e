@@ -201,10 +201,10 @@ feature {NONE} -- Factory
 
                 -- Top padding compensates for {SD_TOOL_BAR} not vertically aligning tool bars
             create l_top_padding
-            l_top_padding.set_minimum_height (2)
+            l_top_padding.set_minimum_height ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (2))
 
             create l_container
-            l_container.set_minimum_height (26)
+            l_container.set_minimum_height ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (26))
 
                 -- Add left tool bar
             if l_tool_bar /= Void then
@@ -245,7 +245,7 @@ feature {NONE} -- Internal implementation cache
 
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

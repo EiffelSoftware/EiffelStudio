@@ -156,12 +156,12 @@ feature {NONE} -- Initialization
 
 				-- Separator
 			create l_sep
-			l_sep.set_minimum_height (2)
+			l_sep.set_minimum_height ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (2))
 			option_bar_box.extend (l_sep)
 
 			create l_hbox
-			l_hbox.set_padding_width (layout_constants.small_padding_size)
-			l_hbox.set_border_width (1)
+			l_hbox.set_padding_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (layout_constants.small_padding_size))
+			l_hbox.set_border_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (1))
 			option_bar_box.extend (l_hbox)
 			option_bar_box.disable_item_expand (l_hbox)
 
@@ -260,8 +260,8 @@ feature {NONE} -- Initialization
 			a_box.extend (b)
 
 			create hb
-			hb.set_padding_width (layout_constants.small_padding_size)
-			hb.set_border_width (1)
+			hb.set_padding_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (layout_constants.small_padding_size))
+			hb.set_border_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (1))
 
 			b.extend (hb)
 			b.disable_item_expand (hb)
@@ -284,14 +284,14 @@ feature {NONE} -- Initialization
 				create st.make (cl)
 				create pix.make_with_pixel_buffer (pixel_buffer_from_class_i (cl.original_class))
 				hb.extend (pix)
-				hb.set_padding_width (2)
-				pix.set_minimum_width (16)
-				pix.set_minimum_height (16)
+				hb.set_padding_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (2))
+				pix.set_minimum_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (16))
+				pix.set_minimum_height ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (16))
 				pix.set_pebble (st)
 				hb.disable_item_expand (pix)
 
 				create l_cl_lab.make_with_text (cl.name)
-				l_cl_lab.set_minimum_width (l_cl_lab.font.width * 3)
+				l_cl_lab.set_minimum_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (l_cl_lab.font.width * 3) )
 				l_cl_lab.set_tooltip (cl.name)
 				l_cl_lab.set_pebble (st)
 				l_cl_lab.align_text_left
@@ -317,8 +317,8 @@ feature {NONE} -- Initialization
 			a_box.disable_item_expand (l_tpl_box)
 
 			create l_hbox
-			l_hbox.set_padding_width (layout_constants.small_padding_size)
-			l_hbox.set_border_width (1)
+			l_hbox.set_padding_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (layout_constants.small_padding_size))
+			l_hbox.set_border_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (1))
 			l_tpl_box.extend (l_hbox)
 			l_tpl_box.disable_item_expand (l_hbox)
 
@@ -1389,7 +1389,7 @@ feature {NONE} -- Implementation
 			create l_v
 
 			create l_padding
-			l_padding.set_minimum_height ({ES_UI_CONSTANTS}.label_vertical_padding)
+			l_padding.set_minimum_height ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size ({ES_UI_CONSTANTS}.label_vertical_padding))
 			l_padding.set_background_color (colors.tooltip_color)
 			l_v.extend (l_padding)
 			l_v.disable_item_expand (l_padding)
@@ -1399,7 +1399,7 @@ feature {NONE} -- Implementation
 			l_v.disable_item_expand (l_h)
 
 			create l_padding
-			l_padding.set_minimum_width ({ES_UI_CONSTANTS}.label_horizontal_padding)
+			l_padding.set_minimum_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size ({ES_UI_CONSTANTS}.label_horizontal_padding))
 			l_padding.set_background_color (colors.tooltip_color)
 			l_h.extend (l_padding)
 			l_h.disable_item_expand (l_padding)
@@ -1408,15 +1408,15 @@ feature {NONE} -- Implementation
 			l_h.extend (l_comment_preview)
 
 			create l_padding
-			l_padding.set_minimum_height ({ES_UI_CONSTANTS}.label_vertical_padding)
+			l_padding.set_minimum_height ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size ({ES_UI_CONSTANTS}.label_vertical_padding))
 			l_padding.set_background_color (colors.tooltip_color)
 			l_v.extend (l_padding)
 			l_v.disable_item_expand (l_padding)
-			l_padding.set_minimum_width (300)
+			l_padding.set_minimum_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (300))
 
 				-- Separator
 			create l_sep
-			l_sep.set_minimum_height (2)
+			l_sep.set_minimum_height ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (2))
 			l_v.extend (l_sep)
 			l_v.disable_item_expand (l_sep)
 
@@ -1451,7 +1451,7 @@ feature {NONE} -- Implementation
 			create l_v
 
 			create l_padding
-			l_padding.set_minimum_height ({ES_UI_CONSTANTS}.label_vertical_padding)
+			l_padding.set_minimum_height ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size ({ES_UI_CONSTANTS}.label_vertical_padding))
 			l_padding.set_background_color (colors.tooltip_color)
 			l_v.extend (l_padding)
 			l_v.disable_item_expand (l_padding)
@@ -1461,7 +1461,7 @@ feature {NONE} -- Implementation
 			l_v.disable_item_expand (l_h)
 
 			create l_padding
-			l_padding.set_minimum_width ({ES_UI_CONSTANTS}.label_horizontal_padding)
+			l_padding.set_minimum_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size ({ES_UI_CONSTANTS}.label_horizontal_padding))
 			l_padding.set_background_color (colors.tooltip_color)
 			l_h.extend (l_padding)
 			l_h.disable_item_expand (l_padding)
@@ -1470,15 +1470,15 @@ feature {NONE} -- Implementation
 			l_h.extend (l_comment_preview)
 
 			create l_padding
-			l_padding.set_minimum_height ({ES_UI_CONSTANTS}.label_vertical_padding)
+			l_padding.set_minimum_height ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size ({ES_UI_CONSTANTS}.label_vertical_padding))
 			l_padding.set_background_color (colors.tooltip_color)
 			l_v.extend (l_padding)
 			l_v.disable_item_expand (l_padding)
-			l_padding.set_minimum_width (300)
+			l_padding.set_minimum_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (300))
 
 				-- Separator
 			create l_sep
-			l_sep.set_minimum_height (2)
+			l_sep.set_minimum_height ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (2))
 			l_v.extend (l_sep)
 			l_v.disable_item_expand (l_sep)
 

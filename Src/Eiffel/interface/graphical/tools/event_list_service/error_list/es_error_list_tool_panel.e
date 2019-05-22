@@ -96,27 +96,27 @@ feature {NONE} -- Initialization: User interface
 
 				-- Create columns
 			l_col := a_widget.column (category_column)
-			l_col.set_width (40)
+			l_col.set_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (40))
 
 			l_col := a_widget.column (rule_column)
 			l_col.set_title (interface_names.l_rule_code)
-			l_col.set_width (50)
+			l_col.set_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (50))
 
 			l_col := a_widget.column (description_column)
 			l_col.set_title (interface_names.l_description)
-			l_col.set_width (100)
+			l_col.set_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (100))
 
 			l_col := a_widget.column (context_column)
 			l_col.set_title (interface_names.l_location)
-			l_col.set_width (200)
+			l_col.set_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (200))
 
 			l_col := a_widget.column (position_column)
 			l_col.set_title (interface_names.l_position)
-			l_col.set_width (80)
+			l_col.set_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (80))
 
 			l_col := a_widget.column (severity_column)
 			l_col.set_title (interface_names.l_severity)
-			l_col.set_width (50)
+			l_col.set_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (50))
 			l_col.hide
 
 			a_widget.enable_tree
@@ -2166,7 +2166,7 @@ invariant
 	item_count_matches_error_and_warning_count: error_count + warning_count + hint_count = item_count
 
 ;note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

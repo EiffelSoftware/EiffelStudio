@@ -55,12 +55,12 @@ feature {NONE} -- Initialization
 			esgrid.enable_multiple_row_selection
 			esgrid.set_column_count_to (6)
 			esgrid.set_default_columns_layout (<<
-						[esgrid.col_name_id, True, False, 150, interface_names.l_Expression, interface_names.to_expression],
-						[esgrid.col_value_id, True, False, 150, interface_names.l_value, interface_names.to_value],
-						[esgrid.col_type_id, True, False, 100, interface_names.l_type, interface_names.to_type],
-						[esgrid.col_address_id, True, False, 80, interface_names.l_address, interface_names.to_address],
-						[esgrid.col_scoop_pid_id, True, False,   30, interface_names.l_scoop_pid, interface_names.to_scoop_pid],
-						[esgrid.col_context_id, True, False, 200, interface_names.l_Context, interface_names.to_context]
+						[esgrid.col_name_id, True, False, {EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (150), interface_names.l_Expression, interface_names.to_expression],
+						[esgrid.col_value_id, True, False, {EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (150), interface_names.l_value, interface_names.to_value],
+						[esgrid.col_type_id, True, False, {EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (100), interface_names.l_type, interface_names.to_type],
+						[esgrid.col_address_id, True, False, {EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (80), interface_names.l_address, interface_names.to_address],
+						[esgrid.col_scoop_pid_id, True, False,   {EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (30), interface_names.l_scoop_pid, interface_names.to_scoop_pid],
+						[esgrid.col_context_id, True, False, {EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (200), interface_names.l_Context, interface_names.to_context]
 					>>
 				)
 			esgrid.set_columns_layout (1, esgrid.default_columns_layout)

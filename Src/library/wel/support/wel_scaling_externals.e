@@ -142,7 +142,7 @@ feature {NONE} -- C externals
 			"C inline use <wel_scaling_api.h>"
 		alias
 			"[
-				#ifdef _MSC_VER  
+				#if defined(_MSC_VER) && defined(DPI_ENUMS_DECLARED)
 					FARPROC GetDpiForMonitor = NULL;
 					HMODULE user32_module = (HMODULE) $a_scaling_handle;
 					
@@ -162,7 +162,7 @@ feature {NONE} -- C externals
 			"C inline use <wel_scaling_api.h>"
 		alias
 			"[
-				#ifdef _MSC_VER  
+				#if defined(_MSC_VER) && defined(DPI_ENUMS_DECLARED)
 					FARPROC SetProcessDpiAwareness = NULL;
 					HMODULE user32_module = (HMODULE) $a_scaling_handle;
 							
@@ -186,7 +186,7 @@ feature {NONE} -- C externals
 			"C inline use <wel_scaling_api.h>"
 		alias
 			"[
-				#ifdef _MSC_VER  
+				#if defined(_MSC_VER) && defined(DPI_ENUMS_DECLARED)
 					FARPROC GetProcessDpiAwareness = NULL;
 					HMODULE user32_module = (HMODULE) $a_scaling_handle;
 									

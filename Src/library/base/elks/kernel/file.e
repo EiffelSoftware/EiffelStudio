@@ -1382,7 +1382,7 @@ feature -- Removal
 
 feature -- Input
 
-	read_real, readreal
+	read_real, readreal, read_real_32
 			-- Read a new real.
 			-- Make result available in `last_real'.
 		require else
@@ -1390,7 +1390,7 @@ feature -- Input
 		deferred
 		end
 
-	read_double, readdouble
+	read_double, readdouble, read_real_64
 			-- Read a new double.
 			-- Make result available in `last_double'.
 		require else

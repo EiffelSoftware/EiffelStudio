@@ -1,11 +1,9 @@
-note
+﻿note
 
-	description:
-		"Generic sockets"
+	description: "Generic sockets"
 	legal: "See notice at end of class."
-
-	status: "See notice at end of class.";
-	date: "$Date$";
+	status: "See notice at end of class."
+	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
@@ -312,14 +310,14 @@ feature -- Output
 			put_managed_pointer (put_socket_buffer, 0, character_8_bytes)
 		end
 
-	put_real, putreal (r: REAL)
+	put_real, putreal, put_real_32 (r: REAL_32)
 			-- Write real `r' to socket.
 		do
 			put_socket_buffer.put_real_32_be (r, 0)
 			put_managed_pointer (put_socket_buffer, 0, real_32_bytes)
 		end
 
-	put_double, putdouble (d: DOUBLE)
+	put_double, putdouble, put_real_64 (d: REAL_64)
 			-- Write double `d' to socket.
 		do
 			put_socket_buffer.put_real_64_be (d, 0)
@@ -488,7 +486,7 @@ feature -- Output
 
 feature -- Input
 
-	read_real, readreal
+	read_real, readreal, read_real_32
 			-- Read a new real.
 			-- Make result available in `last_real'.
 		do
@@ -501,7 +499,7 @@ feature -- Input
 			end
 		end
 
-	read_double, readdouble
+	read_double, readdouble, read_real_64
 			-- Read a new double.
 			-- Make result available in `last_double'.
 		do
@@ -1223,7 +1221,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -1233,4 +1231,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- Class SOCKET
+end

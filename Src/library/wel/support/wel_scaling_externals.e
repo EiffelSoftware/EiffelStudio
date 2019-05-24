@@ -226,7 +226,7 @@ feature {NONE} -- C externals
 			"C inline use <wel_scaling_api.h>"
 		alias
 		  "[
-			#if defined(_MSC_VER) && defined(_DPI_AWARENESS_CONTEXTS_)
+			#if defined(_MSC_VER) && defined(_DPI_AWARENESS_CONTEXTS_) && defined(DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2)
 				return DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2;
 			#else
 				return 0;
@@ -245,7 +245,6 @@ feature {NONE} -- C externals
 				#if defined(_MSC_VER) && defined(_DPI_AWARENESS_CONTEXTS_)
 					FARPROC SetProcessDpiAwarenessContext = NULL;
 					HMODULE user32_module = (HMODULE) $a_scaling_handle;
-							
 					SetProcessDpiAwarenessContext = GetProcAddress (user32_module, "SetProcessDpiAwarenessContext");
 					if (SetProcessDpiAwarenessContext) {
 						return EIF_TEST((FUNCTION_CAST_TYPE(BOOL, WINAPI, (DPI_AWARENESS_CONTEXT)) SetProcessDpiAwarenessContext) ($a_level));

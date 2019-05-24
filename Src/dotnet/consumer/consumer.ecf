@@ -24,7 +24,6 @@
 		<setting name="dead_code_removal" value="all"/>
 		<capability>
 			<concurrency support="none" use="thread"/>
-			<void_safety support="all"/>
 		</capability>
 		<external_resource location="$EIFFEL_SRC\dotnet\consumer\resources\consumer.resx"/>
 		<library name="assembly_resolver" location="$EIFFEL_SRC\dotnet\helpers\assembly_resolver\assembly_resolver.ecf" readonly="false"/>

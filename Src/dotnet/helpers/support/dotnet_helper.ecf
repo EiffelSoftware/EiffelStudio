@@ -8,9 +8,6 @@
 		<option warning="true" namespace="EiffelSoftware.Helpers">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
-		<capability>
-			<void_safety support="all"/>
-		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<assembly name="eiffelsoftware_runtime" location="$ISE_EIFFEL\studio\spec\$ISE_PLATFORM\lib\EiffelSoftware.Runtime.dll"/>
 		<assembly name="mscorlib" location="${ISE_DOTNET_FRAMEWORK}\mscorlib.dll"/>

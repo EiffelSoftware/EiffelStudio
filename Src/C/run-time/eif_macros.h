@@ -2,7 +2,7 @@
 	description: "Macros used by C code at run time."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2017, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2019, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -1448,7 +1448,7 @@ RT_LNK void eif_exit_eiffel_code(void);
  *  RTWC(rid,dtype) is a creation procedure call
  *  RTWA(rid,dtype) is the access to an attribute
  *  RTVA(rid,name,obj) is a nested access to an attribute (dot expression)
- *  RTWCT(rid,dtype,dftype) fetches the creation type of a generic features
+ *  RTWCT(rid,dtype,dftype) fetches the creation type of a generic feature
  *  RTWCTT(rid,dftype) same as RTWCT but takes dftype and dtype is computed from dftype
  *  RTWPP(x) returns the feature address ($ or agent operator) of id x. The ids are assigned int ADDRESS_TABLE.
  *  RTWO(x) stores in a list the body id of the just called once routine

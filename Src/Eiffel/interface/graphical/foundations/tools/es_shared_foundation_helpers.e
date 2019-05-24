@@ -43,7 +43,9 @@ feature {NONE} -- Helpers: User interface
 		do
 				-- TODO review
 				-- update once feature to load pixmaps based monitor dpi.
-			Result := (create {EB_SHARED_PIXMAPS}).icon_pixmaps
+				-- using object-less call
+				-- Date: 05/24/2019
+			Result := {EB_SHARED_PIXMAPS}.icon_pixmaps
 		end
 
 	frozen mini_stock_pixmaps: ES_MINI_ICONS
@@ -51,7 +53,9 @@ feature {NONE} -- Helpers: User interface
 		do
 				-- TODO review
 				-- update once feature to load pixmaps based monitor dpi.
-			Result := (create {EB_SHARED_PIXMAPS}).mini_pixmaps
+				-- using object-less call
+				-- Date 05/24/2019
+			Result := {EB_SHARED_PIXMAPS}.mini_pixmaps
 		end
 
 ;note

@@ -11,9 +11,7 @@ class
 feature {EB_TOOL} -- Resources
 
 	Pixmaps: EB_SHARED_PIXMAPS
-		do
-				-- TODO double check if it's ok to change the current
-				-- once feature to load pixmaps based on the Monitor DPI.	
+		once
 			create Result
 		end
 

@@ -97,9 +97,11 @@ feature {NONE} -- Helpers
 	frozen stock_pixmaps: ES_ICONS
 			-- Access to stock dpi based EiffelStudio pixmaps.
 		do
-				-- TODO double check if it's ok to change the current
-				-- once feature to load icon_pixmap based on the Monitor DPI.
-			Result := (create {EB_SHARED_PIXMAPS}).icon_pixmaps
+				-- TODO review
+				-- updated once feature to load icon_pixmap based on the Monitor DPI.
+				-- using object-less call
+				-- Date 05/24/2019	
+			Result := {EB_SHARED_PIXMAPS}.icon_pixmaps
 		ensure
 			result_attached: Result /= Void
 		end

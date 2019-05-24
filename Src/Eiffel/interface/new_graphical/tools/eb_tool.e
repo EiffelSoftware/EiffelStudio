@@ -235,7 +235,9 @@ feature {NONE} -- Helpers
 		do
 				-- TODO review
 				-- update once feature to load pixmaps based monitor dpi.
-			Result := (create {EB_SHARED_PIXMAPS}).icon_pixmaps
+				-- using object-less call
+				-- Date: 05/24/2019
+			Result := {EB_SHARED_PIXMAPS}.icon_pixmaps
 		end
 
 	frozen stock_mini_pixmaps: ES_MINI_ICONS
@@ -243,7 +245,7 @@ feature {NONE} -- Helpers
 		do
 				-- TODO review
 				-- update once feature to load pixmaps based monitor dpi.
-			Result := (create {EB_SHARED_PIXMAPS}).mini_pixmaps
+			Result := {EB_SHARED_PIXMAPS}.mini_pixmaps
 		end
 
 	frozen stone_director: ES_TOOL_STONE_REDIRECT_HELPER

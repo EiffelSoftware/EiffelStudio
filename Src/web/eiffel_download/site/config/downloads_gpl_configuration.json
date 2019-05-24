@@ -1,12 +1,11 @@
 {
 "mirror": "http://sourceforge.net/projects/eiffelstudio/files/",
-"products":
+"products": [
 {
-    "id": "eiffelstudio-gpl", "name": "EiffelStudio",
+    "id": "eiffelstudio", "name": "EiffelStudio",
     "version": "19.05 GPL",
     "number": "19.05",
     "build": "Build_103187",
-    "download_link_pattern": "${mirror}${name} ${number}/${build}/${filename}/download",
     "download": [
       {
         "filename": "Eiffel_19.05_gpl_103187-win64.msi",
@@ -57,4 +56,6 @@
         "hash": "6eb91f369d9f7632c0464b966d5a2d32bdec3925218a79eef812156aa7508e71" 
       }
     ]
-}}
+}
+]
+}

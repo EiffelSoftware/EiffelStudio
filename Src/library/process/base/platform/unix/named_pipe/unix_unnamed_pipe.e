@@ -189,7 +189,7 @@ feature -- Element change
 
 feature -- Input
 
-	readreal, read_real
+	readreal, read_real, read_real_32
 			-- Was declared in UNIX_UNNAMED_PIPE as synonym of `readreal'.
 		do
 			read_block (read_descriptor, shared_mptr.item, current_platform.real_32_bytes)
@@ -198,7 +198,7 @@ feature -- Input
 			end
 		end
 
-	read_double, readdouble
+	read_double, readdouble, read_real_64
 		do
 			read_block (read_descriptor, shared_mptr.item, current_platform.real_64_bytes)
 			if last_read_successful then
@@ -468,7 +468,7 @@ feature -- Output
 			write_block (write_descriptor, mp.item, s.count)
 		end
 
-	putreal, put_real (r: REAL)
+	putreal, put_real, put_real_32 (r: REAL_32)
 		do
 			shared_mptr.put_real_32 (r, 0)
 			write_block (write_descriptor, shared_mptr.item, current_platform.real_32_bytes)
@@ -536,7 +536,7 @@ feature -- Output
 			write_block (write_descriptor, shared_mptr.item, current_platform.boolean_bytes)
 		end
 
-	putdouble, put_double (d: DOUBLE)
+	putdouble, put_double, put_real_64 (d: REAL_64)
 			-- Was declared in UNIX_UNNAMED_PIPE as synonym of `putdouble'.
 		do
 			shared_mptr.put_real_64 (d, 0)
@@ -698,7 +698,7 @@ invariant
 	current_platform_not_void: current_platform /= Void
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

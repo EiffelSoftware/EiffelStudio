@@ -162,8 +162,6 @@ feature -- Access
 	set_process_per_monitor_dpi_aware_v2
 		local
 			l_res: BOOLEAN
-			l_value: INTEGER
-			l_val_res: INTEGER
 			retried: BOOLEAN
 		do
 			if not retried then

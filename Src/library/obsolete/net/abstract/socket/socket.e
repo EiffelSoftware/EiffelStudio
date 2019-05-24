@@ -1,11 +1,9 @@
-note
+﻿note
 
-	description:
-		"Generic sockets"
+	description: "Generic sockets"
 	legal: "See notice at end of class."
-
-	status: "See notice at end of class.";
-	date: "$Date$";
+	status: "See notice at end of class."
+	date: "$Date$"
 	revision: "$Revision$"
 
 class
@@ -44,12 +42,12 @@ feature -- Initialization
 			retried: BOOLEAN
 		do
 			if not retried then
-				descriptor := fd;
-				create address.make;
-				c_sock_name (descriptor, address.socket_address.item, address.count);
-				family := address.family;
-				descriptor_available := True;
-				is_open_read := True;
+				descriptor := fd
+				create address.make
+				c_sock_name (descriptor, address.socket_address.item, address.count)
+				family := address.family
+				descriptor_available := True
+				is_open_read := True
 				is_open_write := True
 			end
 		ensure
@@ -62,7 +60,7 @@ feature -- Initialization
 				retried := True
 				retry
 			end
-		end;
+		end
 
 feature -- Access
 
@@ -116,7 +114,7 @@ feature -- Element change
 			support_storable: support_storable
 		do
 			eif_net_basic_store (descriptor, $object)
-		end;
+		end
 
 	general_store (object: ANY)
 			-- Produce an external representation of the
@@ -158,7 +156,7 @@ feature -- Basic commands
 			retried: BOOLEAN
 		do
 			if not retried then
-				c_bind (descriptor, address.socket_address.item, address.count);
+				c_bind (descriptor, address.socket_address.item, address.count)
 				is_open_read := True
 			end
 		rescue
@@ -167,19 +165,19 @@ feature -- Basic commands
 				retried := True
 				retry
 			end
-		end;
+		end
 
 	connect
 			-- Connect socket to peer address.
 		require
-			socket_exists: exists;
+			socket_exists: exists
 			valid_peer_address: peer_address /= Void
 		local
 			retried: BOOLEAN
 		do
 			if not retried then
-				c_connect (descriptor, peer_address.socket_address.item, peer_address.count);
-				is_open_write := True;
+				c_connect (descriptor, peer_address.socket_address.item, peer_address.count)
+				is_open_write := True
 				is_open_read := True
 			end
 		rescue
@@ -189,21 +187,21 @@ feature -- Basic commands
 				retried := True
 				retry
 			end
-		end;
+		end
 
 	make_socket
 			-- Create socket descriptor.
 		require
-			valid_family: family >= 0;
-			valid_type: type >= 0;
+			valid_family: family >= 0
+			valid_type: type >= 0
 			valid_protocol: protocol >= 0
 		do
 			descriptor := c_socket (family, type, protocol);
 			if descriptor > -1 then
-				descriptor_available := True;
+				descriptor_available := True
 				set_blocking
 			end
-		end;
+		end
 
 	cleanup
 			-- Cleanup socket.
@@ -211,7 +209,7 @@ feature -- Basic commands
 			if exists then
 				close
 			end
-		end;
+		end
 
 	close
 			-- Close socket for all context.
@@ -231,10 +229,10 @@ feature -- Basic commands
 		require
 			socket_exists: exists
 		do
-			c_close_socket (descriptor);
-			descriptor := -2;
-			descriptor_available := False;
-			is_open_read := False;
+			c_close_socket (descriptor)
+			descriptor := -2
+			descriptor_available := False
+			is_open_read := False
 			is_open_write := False
 		ensure
 			is_closed: is_closed
@@ -244,27 +242,27 @@ feature -- Basic commands
 			-- Is socket closed?
 		do
 			Result := descriptor = -2
-		end;
+		end
 
-	descriptor_available: BOOLEAN;
+	descriptor_available: BOOLEAN
 			-- Is descriptor available?
 
 
-	family: INTEGER;
+	family: INTEGER
 			-- Socket family eg. af_inet, af_unix
 
-	protocol: INTEGER;
+	protocol: INTEGER
 			-- Protocol of the socket. default 0
 			-- means for the system to chose the default
 			-- protocol for the family chosen. eg. `udp', `tcp'.
 
-	type: INTEGER;
+	type: INTEGER
 			-- Type of socket. eg stream, datagram
 
-	address: SOCKET_ADDRESS;
+	address: SOCKET_ADDRESS
 			-- Local address of socket
 
-	peer_address: like address;
+	peer_address: like address
 			-- Peer address of socket
 
 	set_peer_address (addr: like address)
@@ -276,7 +274,7 @@ feature -- Basic commands
 			peer_address := addr
 		ensure
 			address_set: peer_address = addr
-		end;
+		end
 
 	set_address (addr: like address)
 			-- Set local address to `addr'.
@@ -286,9 +284,9 @@ feature -- Basic commands
 			address := addr
 		ensure
 			address_set: address = addr
-		end;
+		end
 
-	descriptor: INTEGER;
+	descriptor: INTEGER
 			-- Socket descriptor of current socket
 
 feature -- Miscellaneous
@@ -310,7 +308,7 @@ feature -- Output
 			opened_for_write: is_open_write
 		do
 			put_character ('%N')
-		end;
+		end
 
 	put_string, putstring (s: STRING)
 			-- Write string `s' to socket.
@@ -322,7 +320,7 @@ feature -- Output
 		do
 			create ext.make (s)
 			c_put_stream (descriptor, ext.item, s.count)
-		end;
+		end
 
 	put_managed_pointer (p: MANAGED_POINTER; start_pos, nb_bytes: INTEGER)
 			-- Put data of length `nb_bytes' pointed by `start_pos' index in `p' at
@@ -344,16 +342,16 @@ feature -- Output
 			opened_for_write: is_open_write
 		do
 			c_put_char (descriptor, c)
-		end;
+		end
 
-	put_real, putreal (r: REAL)
+	put_real, putreal, put_real_32 (r: REAL_32)
 			-- Write real `r' to socket.
 		require else
 			socket_exists: exists;
 			opened_for_write: is_open_write
 		do
 			c_put_float (descriptor, r)
-		end;
+		end
 
 	put_integer, putint, put_integer_32 (i: INTEGER)
 			-- Write integer `i' to socket.
@@ -445,16 +443,16 @@ feature -- Output
 			else
 				put_character ('F')
 			end
-		end;
+		end
 
-	put_double, putdouble (d: DOUBLE)
+	put_double, putdouble, put_real_64 (d: REAL_64)
 			-- Write double `d' to socket.
 		require else
 			socket_exists: exists;
 			opened_for_write: is_open_write
 		do
 			c_put_double (descriptor, d)
-		end;
+		end
 
 	write (a_packet: PACKET)
 			-- Write packet `a_packet' to socket.
@@ -462,9 +460,9 @@ feature -- Output
 			socket_exists: exists;
 			opened_for_write: is_open_write
 		local
-			amount_sent: INTEGER;
-			ext_data: POINTER;
-			return_val: INTEGER;
+			amount_sent: INTEGER
+			ext_data: POINTER
+			return_val: INTEGER
 			count: INTEGER
 		do
 			from
@@ -479,18 +477,18 @@ feature -- Output
 					amount_sent := amount_sent + return_val;
 				end
 			end
-		end;
+		end
 
 	send (a_packet: PACKET; flags: INTEGER)
 			-- Send a packet `a_packet' of data to socket.
 		require
-			socket_exists: exists;
-			opened_for_write: is_open_write;
+			socket_exists: exists
+			opened_for_write: is_open_write
 			valid_packet: a_packet /= Void
 		local
-			amount_sent: INTEGER;
+			amount_sent: INTEGER
 			ext_data: POINTER
-			return_val: INTEGER;
+			return_val: INTEGER
 			count: INTEGER
 		do
 			from
@@ -501,11 +499,11 @@ feature -- Output
 			loop
 				return_val := c_send (descriptor, ext_data, count - amount_sent, flags);
 				if return_val > 0 then
-					amount_sent := amount_sent + return_val;
+					amount_sent := amount_sent + return_val
 					ext_data := ext_data + return_val
 				end
 			end
-		end;
+		end
 
 	exists: BOOLEAN
 			-- Does socket exist?
@@ -513,23 +511,23 @@ feature -- Output
 			Result := descriptor >= 0
 		end;
 
-	is_open_write: BOOLEAN;
+	is_open_write: BOOLEAN
 			-- Is socket opened for writing?
 
-	is_open_read: BOOLEAN;
+	is_open_read: BOOLEAN
 			-- Is socket opened for reading?
 
 	is_readable: BOOLEAN
 			-- Is socket a readable medium?
 		do
 			Result := True
-		end;
+		end
 
 	is_executable: BOOLEAN
 			-- Is socket an executable?
 		do
 			Result := False
-		end;
+		end
 
 	is_writable: BOOLEAN
 			-- Is socket a writable medium?
@@ -541,7 +539,7 @@ feature -- Output
 			-- Is there currently any data available on socket?
 		do
 			Result := c_select_poll (descriptor) /= 0
-		end;
+		end
 
 	extendible: BOOLEAN
 			-- May new items be added?
@@ -551,7 +549,7 @@ feature -- Output
 
 feature -- Input
 
-	read_real, readreal
+	read_real, readreal, read_real_32
 			-- Read a new real.
 			-- Make result available in `last_real'.
 		require else
@@ -560,9 +558,9 @@ feature -- Input
 		do
 			read_to_managed_pointer (socket_buffer, 0, real_32_bytes)
 			last_real := socket_buffer.read_real_32_be (0)
-		end;
+		end
 
-	read_double, readdouble
+	read_double, readdouble, read_real_64
 			-- Read a new double.
 			-- Make result available in `last_double'.
 		require else
@@ -571,7 +569,7 @@ feature -- Input
 		do
 			read_to_managed_pointer (socket_buffer, 0, real_64_bytes)
 			last_double := socket_buffer.read_real_64_be (0)
-		end;
+		end
 
 	read_character, readchar
 			-- Read a new character.
@@ -582,7 +580,7 @@ feature -- Input
 		do
 			read_to_managed_pointer (socket_buffer, 0, character_8_bytes)
 			last_character := socket_buffer.read_character (0)
-		end;
+		end
 
 	read_boolean, readbool
 			-- Read a new boolean.
@@ -597,9 +595,9 @@ feature -- Input
 			else
 				last_boolean := False
 			end
-		end;
+		end
 
-	last_boolean: BOOLEAN;
+	last_boolean: BOOLEAN
 			-- Last boolean read by read_boolean
 
 	read_integer, readint, read_integer_32
@@ -711,7 +709,7 @@ feature -- Input
 					-- exception
 				create last_string.make (0)
 			end
-		end;
+		end
 
 	read_to_managed_pointer (p: MANAGED_POINTER; start_pos, nb_bytes: INTEGER)
 			-- Read at most `nb_bytes' bound bytes and make result
@@ -750,10 +748,10 @@ feature -- Input
 			until
 				last_character = '%N'
 			loop
-				last_string.extend (last_character);
+				last_string.extend (last_character)
 				read_character
 			end
-		end;
+		end
 
 	read (size: INTEGER): PACKET
 			-- Read a packet of data of maximum size `size'.
@@ -788,7 +786,7 @@ feature -- Input
 				create Result.make_from_managed_pointer (l_data)
 			end
 			bytes_read := amount_read
-		end;
+		end
 
 	receive (size, flags: INTEGER): PACKET
 			-- Receive a packet of maximum size `size'.
@@ -825,7 +823,7 @@ feature -- Input
 			if l_data /= Void then
 				create Result.make_from_managed_pointer (l_data)
 			end
-		end;
+		end
 
 feature -- socket options
 
@@ -835,7 +833,7 @@ feature -- socket options
 			socket_exists: exists
 		do
 			c_set_sock_opt_int (descriptor, level_sol_socket, sodebug, 1)
-		end;
+		end
 
 	disable_debug
 			-- Disable socket system debugging.
@@ -843,7 +841,7 @@ feature -- socket options
 			socket_exists: exists
 		do
 			c_set_sock_opt_int (descriptor, level_sol_socket, sodebug, 0)
-		end;
+		end
 
 	debug_enabled: BOOLEAN
 			-- Is socket system debugging enabled?
@@ -854,7 +852,7 @@ feature -- socket options
 		do
 			is_set := c_get_sock_opt_int (descriptor, level_sol_socket, sodebug);
 			Result := is_set /= 0
-		end;
+		end
 
 	do_not_route
 			-- Set socket to non-routing.
@@ -862,7 +860,7 @@ feature -- socket options
 			socket_exists: exists
 		do
 			c_set_sock_opt_int (descriptor, level_sol_socket, so_dont_route, 1)
-		end;
+		end
 
 	route
 			-- Set socket to routing.
@@ -870,7 +868,7 @@ feature -- socket options
 			socket_exists: exists
 		do
 			c_set_sock_opt_int (descriptor, level_sol_socket, so_dont_route, 0)
-		end;
+		end
 
 	route_enabled: BOOLEAN
 			-- Is routing enabled?
@@ -881,7 +879,7 @@ feature -- socket options
 		do
 			is_set := c_get_sock_opt_int (descriptor, level_sol_socket, so_dont_route);
 			Result := is_set /= 0
-		end;
+		end
 
 	set_receive_buf_size (s: INTEGER)
 			-- Set receive buffer size.
@@ -891,7 +889,7 @@ feature -- socket options
 			c_set_sock_opt_int (descriptor, level_sol_socket, so_rcv_buf, s)
 		ensure
 			size_set: s = receive_buf_size
-		end;
+		end
 
 	receive_buf_size: INTEGER
 			-- Size of receive buffer.
@@ -899,7 +897,7 @@ feature -- socket options
 			socket_exists: exists
 		do
 			Result := c_get_sock_opt_int (descriptor, level_sol_socket, so_rcv_buf)
-		end;
+		end
 
 	set_send_buf_size (s: INTEGER)
 			-- Set the send buffer to size `s'.
@@ -909,7 +907,7 @@ feature -- socket options
 			c_set_sock_opt_int (descriptor, level_sol_socket, so_snd_buf, s)
 		ensure
 			size_set: s = send_buf_size
-		end;
+		end
 
 	send_buf_size: INTEGER
 			-- Size of send buffer.
@@ -917,7 +915,7 @@ feature -- socket options
 			socket_exists: exists
 		do
 			Result := c_get_sock_opt_int (descriptor, level_sol_socket, so_snd_buf)
-		end;
+		end
 
 	is_socket_stream: BOOLEAN
 			-- Is the socket a stream?
@@ -928,7 +926,7 @@ feature -- socket options
 		do
 			is_soc_s := c_get_sock_opt_int (descriptor, level_sol_socket, sotype);
 			Result := is_soc_s = sock_stream
-		end;
+		end
 
 	set_non_blocking
 			-- Set socket to non-blocking mode.
@@ -939,7 +937,7 @@ feature -- socket options
 			is_blocking := False
 		ensure
 			not is_blocking
-		end;
+		end
 
 	set_blocking
 			-- Set socket to blocking mode.
@@ -950,7 +948,7 @@ feature -- socket options
 			is_blocking := True
 		ensure
 			is_blocking
-		end;
+		end
 
 	is_blocking: BOOLEAN
 			-- Is the socket blocking?
@@ -968,7 +966,7 @@ feature -- socket options
 		ensure
 			set_id: own < -1 implies own = group_id or else
 				own > 0 implies own = process_id
-		end;
+		end
 
 	is_group_id: BOOLEAN
 			-- Is the owner id the socket group id?
@@ -979,7 +977,7 @@ feature -- socket options
 		do
 			is_grp := c_fcntl (descriptor, c_fgetown, 0);
 			Result := is_grp < -1
-		end;
+		end
 
 	is_process_id: BOOLEAN
 			-- Is the owner id the socket process id?
@@ -990,7 +988,7 @@ feature -- socket options
 		do
 			is_proc := c_fcntl (descriptor, c_fgetown, 0);
 			Result := is_proc > 0
-		end;
+		end
 
 	group_id: INTEGER
 			-- Group id of socket
@@ -999,7 +997,7 @@ feature -- socket options
 			group_set: is_group_id
 		do
 			Result := (c_fcntl (descriptor, c_fgetown, 0) * -1)
-		end;
+		end
 
 	process_id: INTEGER
 			-- Process id of socket
@@ -1028,116 +1026,116 @@ feature {NONE} -- Externals
 			-- External c routine to create the socket descriptor
 		external
 			"C"
-		end;
+		end
 
 	c_bind (soc: INTEGER; addr: POINTER; length: INTEGER)
 			-- External c routine to bind the socket descriptor
 			-- to a local address
 		external
 			"C"
-		end;
+		end
 
 	c_connect (soc: INTEGER; addr: POINTER; length: INTEGER)
 			-- External c routine that connect the socket
 			-- to the peer address
 		external
 			"C blocking"
-		end;
+		end
 
 	c_shutdown (s: INTEGER; how: INTEGER)
 			-- Shut down socket `s' with `how' modality
 			-- (0 no more receive, 1 no more send, 2 no more both)
 		external
 			"C blocking"
-		end;
+		end
 
 	c_close_socket (s: INTEGER)
 			-- External c routine to close the socket identified
 			-- by the descriptor `s'
 		external
 			"C"
-		end;
+		end
 
 	c_sock_name (soc: INTEGER; addr: POINTER; length: INTEGER)
 			-- External c routine that returns the socket name.
 		external
 			"C"
-		end;
+		end
 
 	c_peer_name (soc: INTEGER; addr: POINTER; length: INTEGER): INTEGER
 			-- External routine that returns the peers socket name
 		external
 			"C"
-		end;
+		end
 
 	c_put_char (fd: INTEGER; c: CHARACTER)
 			-- External routine to write character `c' to socket `fd'
 		external
 			"C blocking"
-		end;
+		end
 
 	c_put_int (fd: INTEGER; i: INTEGER)
 			-- External routine to write integer `i' to socket `fd'
 		external
 			"C blocking"
-		end;
+		end
 
 	c_put_float (fd: INTEGER; r: REAL)
 			-- External routine to write real `r' to socket `fd'
 		external
 			"C blocking"
-		end;
+		end
 
 	c_put_double (fd: INTEGER; d: DOUBLE)
 			-- External routine to write double `d' to socket `fd'
 		external
 			"C blocking"
-		end;
+		end
 
 	c_put_stream (fd: INTEGER; s: POINTER; length: INTEGER)
 			-- External routine to write stream pointed by `s' of
 			-- length `length' to socket `fd'
 		external
 			"C blocking"
-		end;
+		end
 
 	c_read_char (fd: INTEGER; a_bytes_read: TYPED_POINTER [INTEGER]): CHARACTER
 			-- External routine to read a character from socket `fd'
 		external
 			"C blocking"
-		end;
+		end
 
 	c_read_int (fd: INTEGER; a_bytes_read: TYPED_POINTER [INTEGER]): INTEGER
 			-- External routine to read an integer from socket `fd'
 		external
 			"C blocking"
-		end;
+		end
 
 	c_read_float (fd: INTEGER; a_bytes_read: TYPED_POINTER [INTEGER]): REAL
 			-- external routine to read a real from socket `fd'
 		external
 			"C blocking"
-		end;
+		end
 
 	c_read_double (fd: INTEGER; a_bytes_read: TYPED_POINTER [INTEGER]): DOUBLE
 			-- External routine to read a double from socket `fd'
 		external
 			"C blocking"
-		end;
+		end
 
 	c_read_stream (fd: INTEGER; l: INTEGER; buf: POINTER): INTEGER
 			-- External routine to read a `l' number of characters
 			-- into buffer `buf' from socket `fd'
 		external
 			"C blocking"
-		end;
+		end
 
 	c_write (fd: INTEGER; buf: POINTER; l: INTEGER): INTEGER
 			-- External routine to write `l' length of data
 			-- on socket `fd'.
 		external
 			"C blocking"
-		end;
+		end
 
 	c_receive (fd: INTEGER; buf: POINTER; len: INTEGER; flags: INTEGER): INTEGER
 			-- External routine to receive at most `len' number of
@@ -1145,7 +1143,7 @@ feature {NONE} -- Externals
 			-- options
 		external
 			"C blocking"
-		end;
+		end
 
 	c_send (fd: INTEGER; buf: POINTER; len: INTEGER; flags: INTEGER): INTEGER
 			-- External routine to send at most `len' number of
@@ -1153,44 +1151,44 @@ feature {NONE} -- Externals
 			-- options
 		external
 			"C blocking"
-		end;
+		end
 
 	c_set_sock_opt_int (fd, level, opt, val: INTEGER)
 			-- C routine to set socket options of integer type
 		external
 			"C"
-		end;
+		end
 
 	c_get_sock_opt_int (fd, level, opt: INTEGER): INTEGER
 			-- C routine to get socket options of integer type
 		external
 			"C"
-		end;
+		end
 
 	c_fcntl (fd, cmd, arg: INTEGER): INTEGER
 			-- C wrapper to fcntl() routine
 		external
 			"C"
-		end;
+		end
 
 	c_set_non_blocking (fd: INTEGER)
 			-- C routine to set the socket as non-blocking
 		external
 			"C"
-		end;
+		end
 
 	c_set_blocking (fd: INTEGER)
 			-- C routine to set the socket as blocking
 		external
 			"C"
-		end;
+		end
 
 	c_syncpoll (fd: INTEGER): INTEGER
 			-- C routine to synchonously poll socket
 			-- (using `msg_peek' flag)
 		external
 			"C blocking"
-		end;
+		end
 
 	c_select_poll (fd: INTEGER): INTEGER
 			-- C routine to synchronously poll socket
@@ -1204,42 +1202,38 @@ feature {NONE} -- Externals
 			-- `file_handle'
 		external
 			"C"
-		end;
+		end
 
 	eif_net_basic_store (file_handle: INTEGER; object: POINTER)
 			-- Store object structure reachable form current object
 			-- in file pointer `file_ptr'.
 		external
 			"C"
-		end;
+		end
 
 	eif_net_general_store (file_handle: INTEGER; object: POINTER)
 			-- Store object structure reachable form current object
 			-- in file pointer `file_ptr'.
 		external
 			"C"
-		end;
+		end
 
 	eif_net_independent_store (file_handle: INTEGER; object: POINTER)
 			-- Store object structure reachable form current object
 			-- in file pointer `file_ptr'.
 		external
 			"C"
-		end;
+		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- Class SOCKET
-
+end

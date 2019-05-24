@@ -1,6 +1,4 @@
-note
-	description: "[
-	]"
+﻿note
 	legal: "See notice at end of class."
 	status: "Community Preview 1.0"
 	date: "$Date$"
@@ -170,7 +168,7 @@ feature -- Output
 			buf.append_character (c)
 		end
 
-	put_real, putreal (r: REAL)
+	put_real, putreal, put_real_32 (r: REAL_32)
 			-- <Precursor>
 		do
 			buf.append_real (r)
@@ -230,7 +228,7 @@ feature -- Output
 			buf.append_boolean (b)
 		end
 
-	put_double, putdouble (d: DOUBLE)
+	put_double, putdouble, put_real_64 (d: REAL_64)
 			-- <Precursor>
 		do
 			buf.append_double (d)
@@ -244,13 +242,13 @@ feature -- Output
 
 feature -- Input
 
-	read_real, readreal
+	read_real, readreal, read_real_32
 			-- <Precursor>
 		do
 			-- Do nothing
 		end
 
-	read_double, readdouble
+	read_double, readdouble, read_real_64
 			-- <Precursor>
 		do
 			-- Do nothing
@@ -328,9 +326,8 @@ feature -- Input
 			-- Do nothing
 		end
 
-
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -42,30 +42,40 @@ feature -- Access
 			if Result = Void or else Result.has_error then
 				Result := mini_pixmaps_10
 			end
+		ensure
+			is_class: class
 		end
 
 	mini_pixmaps_10: ES_MINI_ICONS
 			-- Title bar pixmaps (10px)
 		once
 			create Result.make ("10x10", 10, 10)
+		ensure
+			is_class: class
 		end
 
 	mini_pixmaps_12: ES_MINI_ICONS
 			-- Title bar pixmaps (12px)
 		once
 			create Result.make ("mini_12x12", 12, 12)
+		ensure
+			is_class: class
 		end
 
 	mini_pixmaps_15: ES_MINI_ICONS
 			-- Title bar pixmaps (15px)	
 		once
 			create Result.make ("mini_15x15", 15, 15)
+		ensure
+			is_class: class
 		end
 
 	mini_pixmaps_20: ES_MINI_ICONS
 			-- Title bar pixmaps (20px)
 		once
 			create Result.make ("mini_20x20", 20, 20)
+		ensure
+			is_class: class
 		end
 
 	small_pixmaps: ES_SMALL_ICONS
@@ -86,30 +96,40 @@ feature -- Access
 			if Result = Void or else Result.has_error then
 				Result := small_pixmaps_12
 			end
+		ensure
+			is_class: class
 		end
 
 	small_pixmaps_12: ES_SMALL_ICONS
 			-- Small icon pixmaps (12px).
 		once
 			create Result.make ("12x12", 12, 12)
+		ensure
+			is_class: class
 		end
 
 	small_pixmaps_15: ES_SMALL_ICONS
 			-- Small icon pixmaps (15px).
 		once
 			create Result.make ("small_15x15", 15, 15)
+		ensure
+			is_class: class
 		end
 
 	small_pixmaps_18: ES_SMALL_ICONS
 			-- Small icon pixmaps (18px).
 		once
 			create Result.make ("small_18x18", 18, 18)
+		ensure
+			is_class: class
 		end
 
 	small_pixmaps_24: ES_SMALL_ICONS
 			-- Small icon pixmaps (24px).
 		once
 			create Result.make ("small_24x24", 24, 24)
+		ensure
+			is_class: class
 		end
 
 	icon_pixmaps: ES_ICONS
@@ -128,30 +148,40 @@ feature -- Access
 			if Result = Void or else Result.has_error then
 				Result := icon_pixmaps_16
 			end
+		ensure
+			is_class: class
 		end
 
 	icon_pixmaps_16: ES_ICONS
 			-- Normal sized icon pixmaps (16px).
 		once
 			create Result.make ("16x16", 16, 16)
+		ensure
+			is_class: class
 		end
 
 	icon_pixmaps_20: ES_ICONS
 			-- Normal sized icon pixmaps (20px).
 		once
 			create Result.make ("icons_20x20", 20, 20)
+		ensure
+			is_class: class
 		end
 
 	icon_pixmaps_24: ES_ICONS
 			-- Normal sized icon pixmaps (24px).
 		once
 			create Result.make ("icons_24x24", 24, 24)
+		ensure
+			is_class: class
 		end
 
 	icon_pixmaps_32: ES_ICONS
 			-- Normal sized icon pixmaps (32px).
 		once
 			create Result.make ("icons_32x32", 32, 32)
+		ensure
+			is_class: class
 		end
 
 	configuration_pixmaps: ES_CONFIGURATION_PIXMAPS
@@ -172,30 +202,40 @@ feature -- Access
 			if Result = Void or else Result.has_error then
 				Result := configuration_pixmaps_16
 			end
+		ensure
+			is_class: class
 		end
 
 	configuration_pixmaps_16: ES_CONFIGURATION_PIXMAPS
 			-- Configuration system pixmaps 16px.
 		once
 			create Result.make ("16x16", 16, 16)
+		ensure
+			is_class: class
 		end
 
 	configuration_pixmaps_20: ES_CONFIGURATION_PIXMAPS
 			-- Configuration system pixmaps 20px.
 		once
 			create Result.make ("icons_20x20", 20, 20)
+		ensure
+			is_class: class
 		end
 
 	configuration_pixmaps_24: ES_CONFIGURATION_PIXMAPS
 			-- Configuration system pixmaps 24px.
 		once
 			create Result.make ("icons_24x24", 24, 24)
+		ensure
+			is_class: class
 		end
 
 	configuration_pixmaps_32: ES_CONFIGURATION_PIXMAPS
 			-- Configuration system pixmaps 32px.
 		once
 			create Result.make ("icons_32x32", 32, 32)
+		ensure
+			is_class: class
 		end
 
 feature -- Helpers

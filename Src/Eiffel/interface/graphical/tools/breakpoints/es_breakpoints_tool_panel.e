@@ -1377,8 +1377,9 @@ feature {NONE} -- Implementation, cosmetic
 		do
 				-- TODO review
 				-- update once feature to load pixmaps based monitor dpi.
-			create l_shared
-			Result := l_shared.small_pixmaps
+				-- using object-less call
+				-- Date: 05/24/2019
+			Result := {EB_SHARED_PIXMAPS}.small_pixmaps
 		ensure
 			result_attached: Result /= Void
 		end

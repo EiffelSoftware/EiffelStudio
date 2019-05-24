@@ -1,8 +1,8 @@
 {
 "mirror": "https://enterprise:udeief5w9mydgg9di5xy@ftp.eiffel.com/enterprise/",
-"products":
+"products": [
 {
-    "id": "eiffelstudio-ent", "name": "EiffelStudio",
+    "id": "eiffelstudio_ent", "name": "EiffelStudio",
     "version": "19.05 Enterprise Evaluation Edition",
     "number": "19.05",
     "build": "Build_103187",
@@ -66,4 +66,6 @@
         "hash": "23d75c12067900b06b7bf43a2d1a6e156948595fde34fc7bf44a61ec0f0d8196" 
       }
     ]
-}}
+}
+]
+}

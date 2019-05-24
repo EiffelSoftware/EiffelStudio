@@ -1,5 +1,4 @@
-note
-	description: "Summary description for {ES_INSTALLATION_ENVIRONMENT}."
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -76,7 +75,6 @@ feature -- Element change
 			l_lowered_var: READABLE_STRING_GENERAL
 			p: PATH
 			f: PLAIN_TEXT_FILE
-			s: STRING
 			utf: UTF_CONVERTER
 			d: DIRECTORY
 		do
@@ -112,7 +110,7 @@ feature -- Element change
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

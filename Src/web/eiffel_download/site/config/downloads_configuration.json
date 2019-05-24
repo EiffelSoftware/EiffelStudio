@@ -39,13 +39,6 @@
       }
       ,{
         "cdkey": "84873-03814-54816-22341-92120-83673",
-        "filename": "Eiffel_19.05_ent_103187-windows.7z",
-        "platform": "windows",
-        "size": "86000721",
-        "hash": "b5654e04eb7af1aafec660ba3abd825779be53dfa3f5081390dea6d581712f89" 
-      }
-      ,{
-        "cdkey": "84873-03814-54816-22341-92120-83673",
         "filename": "Eiffel_19.05_ent_103187-win64.msi",
         "platform": "win64",
         "size": "157221410",
@@ -64,13 +57,6 @@
         "platform": "linux-armv7",
         "size": "105976109",
         "hash": "dfcf5250de9bee7ea3a51ff22a4114a22c930f027000e244aaad76c9517c0911" 
-      }
-      ,{
-        "cdkey": "84873-03814-54816-22341-92120-83673",
-        "filename": "Eiffel_19.05_ent_103187-win64.7z",
-        "platform": "win64",
-        "size": "95583867",
-        "hash": "567f55f06be1c6441e80d1f8ac4ab7dcea75494c783d91b6302d8041394df0f2" 
       }
       ,{
         "cdkey": "84873-03814-54816-22341-92120-83673",

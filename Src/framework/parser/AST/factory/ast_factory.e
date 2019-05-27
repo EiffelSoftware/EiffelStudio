@@ -364,11 +364,7 @@ feature -- Value AST creation
 			u: UTF_CONVERTER
 		do
 				-- Would be nice to not have to create a INTEGER_AS to get the character value.
-			backup_match_list_count
-			disable_match_list_extension
-			l_integer := new_integer_value (a_psr, '+', Void, buffer, Void)
-			enable_match_list_extension
-			resume_match_list_count
+			l_integer := new_temporary_integer_value (a_psr, '+', buffer)
 			if l_integer /= Void then
 				if l_integer.natural_64_value <= {NATURAL_32}.Max_value then
 					Result := new_character_as (l_integer.natural_32_value.to_character_32, a_psr.line, a_psr.column, a_psr.position, roundtrip_buffer.count,
@@ -383,6 +379,16 @@ feature -- Value AST creation
 					-- Dummy code since integer value could not be computed.
 				Result := new_character_as ('a', 0, 0, 0, 0, 0, 0, 0, roundtrip_buffer)
 			end
+		end
+
+	new_temporary_integer_value (a_psr: EIFFEL_SCANNER_SKELETON; sign_symbol: CHARACTER; buffer: STRING): detachable INTEGER_AS
+				-- Useful to create a INTEGER_AS anhd get the associated numeric value.
+		do
+			backup_match_list_count
+			disable_match_list_extension
+			Result := new_integer_value (a_psr, sign_symbol, Void, buffer, Void)
+			enable_match_list_extension
+			resume_match_list_count
 		end
 
 	new_integer_value (a_psr: EIFFEL_SCANNER_SKELETON; sign_symbol: CHARACTER; a_type: detachable TYPE_AS; buffer: STRING; s_as: detachable SYMBOL_AS): detachable INTEGER_AS
@@ -2118,7 +2124,7 @@ note
 		"CA033", "CA033 — very long class"
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

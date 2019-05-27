@@ -591,6 +591,26 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	process_string_character_as_value (str: READABLE_STRING_8)
+			-- Check whether `str' is a valid character value
+			-- in a string and set `last_token' accordingly.
+		require
+			not_empty: str.count >= 0
+		do
+			if
+				attached ast_factory.new_temporary_integer_value (Current, '+', str) as i
+			then
+				if i.natural_64_value <= {NATURAL_32}.Max_value then
+					process_string_character_code (i.natural_32_value)
+				else
+					report_character_code_too_large_error (str)
+				end
+			else
+				check unsupported: False end
+				report_string_bad_special_character_error
+			end
+		end
+
 	process_string_character_code (code: NATURAL_32)
 			-- Check whether `code' is a valid character code
 			-- in a string and set `last_token' accordingly.

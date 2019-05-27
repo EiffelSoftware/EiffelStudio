@@ -14,4 +14,12 @@ STRING_32 constants test 2: True
 STRING_32 constants test 3: True
 STRING_32 constants test 4: True
 STRING_32 constants test 5: True
+STRING_32 constants test syntax dec: True
+STRING_32 constants test syntax dec bis: True
+STRING_32 constants test syntax 0x: True
+STRING_32 constants test syntax 0x bis: True
+STRING_32 constants test syntax 0c: True
+STRING_32 constants test syntax 0c bis: True
+STRING_32 constants test syntax 0b: True
+STRING_32 constants test syntax 0b bis: True
 Execution completed

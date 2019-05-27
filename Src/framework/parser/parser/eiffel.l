@@ -961,7 +961,7 @@ BREAK	{HORIZONAL_BREAK}|\n
 				last_detachable_char_as_value := ast_factory.new_character_as ('%>', line, column, position, text_count, character_column, character_position, unicode_text_count, roundtrip_token_buffer)
 				last_token := TE_CHAR
 			}
-\'%\/[0-9]+\/\'	|
+\'%\/{I}\/\'	|
 \'%\/0[xX]{H}(({H}|_)*{H})?\/\' |
 \'%\/0[cC]{O}(({O}|_)*{O})?\/\' |
 \'%\/0[bB]{B}(({B}|_)*{B})?\/\' {
@@ -1362,10 +1362,13 @@ BREAK	{HORIZONAL_BREAK}|\n
 				ast_factory.append_two_characters_to_buffer (roundtrip_token_buffer, '%%', '>')
 				token_buffer.append_character ('%>')
 			}
-	%\/[0-9]{1,7}\/	{
+	%\/{I}\/	|
+	%\/0[xX]{H}(({H}|_)*{H})?\/ |
+	%\/0[cC]{O}(({O}|_)*{O})?\/ |
+	%\/0[bB]{B}(({B}|_)*{B})?\/ {
 				update_character_locations
 				ast_factory.append_text_to_buffer (roundtrip_token_buffer, Current)
-				process_string_character_code (text_substring (3, text_count - 1).to_natural_32)
+				process_string_character_as_value (text_substring (3, text_count - 1))
 			}
 	%{BREAK}+%	{
 				update_character_locations

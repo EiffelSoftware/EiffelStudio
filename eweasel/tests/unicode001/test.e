@@ -14,6 +14,7 @@ feature -- Make
 		do
 			test_char
 			test_string_32
+			test_manifest_string_32_syntax
 			test_system_string
 		end
 
@@ -72,6 +73,28 @@ feature -- Run time
 			print ("STRING_32 constants test 5: " + l_pass.out + "%N")
 		end
 
+	test_manifest_string_32_syntax
+		local
+			l_pass: BOOLEAN
+			l_str: STRING_32
+		do
+			l_str := str32_2
+			l_pass :=
+					l_str.item (1).code = 27979 and then
+					l_str.item (2).code = 35797 and then
+					l_str.count = 2
+			print ("STRING_32 constants test syntax dec: " + l_pass.out + "%N")
+			print ("STRING_32 constants test syntax dec bis: " + l_str.same_string (str32_2_dec_bis).out + "%N")
+			print ("STRING_32 constants test syntax 0x: " + l_str.same_string (str32_2_0x).out + "%N")
+			print ("STRING_32 constants test syntax 0x bis: " + l_str.same_string (str32_2_0x_bis).out + "%N")
+
+			print ("STRING_32 constants test syntax 0c: " + l_str.same_string (str32_2_0c).out + "%N")
+			print ("STRING_32 constants test syntax 0c bis: " + l_str.same_string (str32_2_0c_bis).out + "%N")
+
+			print ("STRING_32 constants test syntax 0b: " + l_str.same_string (str32_2_0b).out + "%N")
+			print ("STRING_32 constants test syntax 0b bis: " + l_str.same_string (str32_2_0b_bis).out + "%N")
+		end
+
 	test_system_string
 		local
 			l_s: SYSTEM_STRING
@@ -97,6 +120,13 @@ feature -- Strings
 
 	str32_1: STRING_32 = "测试"
 	str32_2: STRING_32 = "%/27979/%/35797/"
+	str32_2_dec_bis: STRING_32 = "%/27_979/%/35_797/"
+	str32_2_0x: STRING_32 = "%/0x6D4B/%/0x8BD5/"
+	str32_2_0x_bis: STRING_32 = "%/0x6_D4B/%/0x8_BD5/"
+	str32_2_0c: STRING_32 = "%/0c66513/%/0c105725/"
+	str32_2_0c_bis: STRING_32 = "%/0c66_513/%/0c10_5725/"
+	str32_2_0b: STRING_32 = "%/0b0110110101001011/%/0b1000101111010101/"
+	str32_2_0b_bis: STRING_32 = "%/0b0110_1101_0100_1011/%/0b1000_1011_1101_0101/"
 	str32_3: STRING_32 =
 		"[
 			测试

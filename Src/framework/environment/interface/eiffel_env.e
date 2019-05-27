@@ -92,18 +92,28 @@ feature -- Access
 				Result.append_string_general ("Base Path = ")
 				Result.append (unix_layout_base_path.name)
 			else
-				Result.append_string_general ("$ISE_EIFFEL = ")
+				Result.append_string_general ("$" + {EIFFEL_CONSTANTS}.ise_eiffel_env)
+				Result.append_string_general (" = ")
 				Result.append (install_path.name)
 				Result.append_string_general ("%N")
-				Result.append_string_general ("$ISE_LIBRARY = ")
+				Result.append_string_general ("$" + {EIFFEL_CONSTANTS}.ise_library_env)
+				Result.append_string_general (" = ")
 				Result.append (eiffel_library.name)
 				Result.append_string_general ("%N")
-				Result.append_string_general ("$ISE_PLATFORM = ")
+				Result.append_string_general ("$" + {EIFFEL_CONSTANTS}.ise_platform_env)
+				Result.append_string_general (" = ")
 				Result.append_string_general (eiffel_platform)
 				if {PLATFORM}.is_windows then
 					Result.append_string_general ("%N")
-					Result.append_string_general ("$ISE_C_COMPILER = ")
+					Result.append_string_general ("$" + {EIFFEL_CONSTANTS}.ise_c_compiler_env)
+					Result.append_string_general (" = ")
 					Result.append_string_general (eiffel_c_compiler)
+					if attached eiffel_c_compiler_version as eccv and then not eccv.is_whitespace then
+						Result.append_string_general ("%N")
+						Result.append_string_general ("$" + {EIFFEL_CONSTANTS}.ise_c_compiler_ver_env)
+						Result.append_string_general (" = ")
+						Result.append_string_general (eccv)
+					end
 				end
 			end
 		ensure

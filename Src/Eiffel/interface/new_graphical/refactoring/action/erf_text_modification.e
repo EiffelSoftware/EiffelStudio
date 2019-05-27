@@ -14,6 +14,11 @@ inherit
 			destroy
 		end
 
+	EIFFEL_LAYOUT
+		export
+			{NONE} all
+		end
+
 	SHARED_WORKBENCH
 		export
 			{NONE} all
@@ -63,7 +68,6 @@ feature -- Prepare/Commit
 			text_managed: text_managed
 		local
 			diff: DIFF_TEXT
-			file_path: FILE_NAME
 			file: RAW_FILE
 			undo_patch: STRING_8
 		do
@@ -75,11 +79,10 @@ feature -- Prepare/Commit
 				undo_patch := diff.unified
 
 				if not undo_patch.is_empty then
-					create file_path.make_temporary_name
-					create file.make_open_write (file_path)
+					create file.make_open_temporary_with_prefix (eiffel_layout.temporary_path.extended ("tmp-erf-").name)
 					file.put_string (undo_patch)
 					file.close
-					undo_redo := file_path.out
+					undo_redo := file.path.utf_8_name
 				else
 					undo_redo := Void
 				end
@@ -231,7 +234,7 @@ invariant
 	modified_needs_text_managed: is_modified implies text_managed
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -70,6 +70,7 @@ feature -- Basic operations
 		ensure
 			Result_not_void: Result /= Void
 			Result_length_not_bigger_than_maximum: Result.count <= a_max_length
+			instance_free: class
 		end
 
 note

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "To compile non-compiled resources and add them in a specific IL module."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -86,14 +86,14 @@ feature -- Generation
 							((nb > 4) and l_name.substring (nb - 3, nb).as_lower.is_equal (".txt"))
 						if l_not_is_resource_generated then
 							l_new_name := new_compiled_resource_file_name (create {PATH}.make_from_string (l_name))
-							generate_resource (create {PATH}.make_from_string (l_name), l_new_name)
+							generate_resource (create {PATH}.make_from_string (l_name), l_new_name, l_res.target.options.is_warning_as_error)
 							if is_file_readable (l_new_name) then
 								l_name := resource_name (create {PATH}.make_from_string (l_name), True)
 								l_name.append_character ('.')
 								l_name.append_string_general (resources_extension)
 								define_resource (module, l_new_name, l_name)
 							else
-								Error_handler.insert_warning (create {VIRC}.make_failed (l_name))
+								Error_handler.insert_warning (create {VIRC}.make_failed (l_name), l_res.target.options.is_warning_as_error)
 							end
 						else
 							if is_file_readable (create {PATH}.make_from_string (l_name)) then
@@ -101,7 +101,7 @@ feature -- Generation
 									-- we simply embed them in the generated assembly.
 								define_resource (module, create {PATH}.make_from_string (l_name), resource_name (create {PATH}.make_from_string (l_name), False))
 							else
-								error_handler.insert_warning (create {VIRC}.make_resource_file_not_found (l_name))
+								error_handler.insert_warning (create {VIRC}.make_resource_file_not_found (l_name), l_res.target.options.is_warning_as_error)
 							end
 						end
 					end
@@ -123,8 +123,9 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	generate_resource (a_resource, a_target: PATH)
+	generate_resource (a_resource, a_target: PATH; is_warning_as_error: BOOLEAN)
 			-- Generate a compiled resource in `a_target' using `a_resource' as resource file.
+			-- Report an error instead of a warning if `is_warning_as_error` is set to `True`.
 		require
 			a_resource_not_void: a_resource /= Void
 			a_target_not_void: a_target /= Void
@@ -164,7 +165,7 @@ feature {NONE} -- Implementation
 			end
 
 			if l_virc /= Void then
-				Error_handler.insert_warning (l_virc)
+				Error_handler.insert_warning (l_virc, is_warning_as_error)
 			end
 		end
 
@@ -277,7 +278,7 @@ invariant
 	resources_not_void: resources /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -308,4 +309,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class IL_RESOURCE_GENERATOR
+end

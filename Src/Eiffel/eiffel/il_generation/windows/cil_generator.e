@@ -154,7 +154,7 @@ feature -- Generation
 					if not l_public_key.is_valid then
 						l_public_key := Void
 							-- Introduce error saying that public key cannot be read.
-						Error_handler.insert_warning (create {VIIK})
+						Error_handler.insert_warning (create {VIIK}, universe.target.options.is_warning_as_error)
 					end
 				else
 					l_public_key := Void
@@ -318,7 +318,7 @@ feature -- Generation
 						if system.msil_use_optimized_precompile and not l_precomp.is_precompile_finalized then
 								-- generate warning informing them they is no ompitzed precompiled library
 							create l_viop.make (l_precomp.name)
-							error_handler.insert_warning (l_viop)
+							error_handler.insert_warning (l_viop, universe.target.options.is_warning_as_error)
 						end
 
 						copy_to_local (l_precomp.assembly_driver (l_use_optimized_precomp), assembly_location (is_finalizing), Void)
@@ -1109,7 +1109,7 @@ feature {NONE} -- File copying
 					else
 							-- Source does not exist, report the error.
 						create l_vicf.make (a_source.name, l_target.path.name)
-						error_handler.insert_warning (l_vicf)
+						error_handler.insert_warning (l_vicf, universe.target.options.is_warning_as_error)
 					end
 				end
 			else
@@ -1125,7 +1125,7 @@ feature {NONE} -- File copying
 				else
 					create l_vicf.make (a_source.name, "Target not yet computed")
 				end
-				error_handler.insert_warning (l_vicf)
+				error_handler.insert_warning (l_vicf, universe.target.options.is_warning_as_error)
 			end
 		rescue
 			l_retried := True
@@ -1158,7 +1158,7 @@ invariant
 	system_exists: System /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -282,7 +282,6 @@ feature -- Commands
 			an_actions_not_void: an_actions /= Void
 		local
 			l_action: CONF_ACTION
-			vd84: VD84
 			vd85: VD85
 			l_prc_factory:  BASE_PROCESS_FACTORY
 			l_prc_launcher: BASE_PROCESS
@@ -326,12 +325,11 @@ feature -- Commands
 					if not l_success then
 						if l_action.must_succeed then
 							not_actions_successful := True
-							create vd84.make (l_action.command)
-							error_handler.insert_error (vd84)
+							error_handler.insert_error (create {VD84}.make (l_action.command))
 							error_handler.checksum
 						else
 							create vd85.make (l_action.command)
-							error_handler.insert_warning (vd85)
+							error_handler.insert_warning (vd85, lace.target.options.is_warning_as_error)
 						end
 					end
 				end
@@ -404,7 +402,7 @@ feature -- Commands
 					system.set_rebuild (False)
 					system.reset_has_compilation_started
 					compilation_counter := compilation_counter + 1
-					if (System.has_been_changed or else System.freezing_occurred) then
+					if System.has_been_changed or else System.freezing_occurred then
 						save_project (Compilation_modes.is_precompiling)
 					end
 				end

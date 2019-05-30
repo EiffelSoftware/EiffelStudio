@@ -30,14 +30,15 @@ create
 	make_15_11,
 	make_16_11,
 	make_18_01,
-	make_19_05
+	make_19_05,
+	make_19_11
 
 feature {NONE} -- Creation
 
 	default_create
 			-- <Precursor>
 		do
-			make_19_05
+			make_19_11
 		end
 
 	make_6_3
@@ -336,6 +337,7 @@ invariant
 	consistent_void_safety: void_safety_capability.value = void_safety
 
 note
+	ca_ignore: "CA093", "CA093: manifest array type mismatch"
 	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

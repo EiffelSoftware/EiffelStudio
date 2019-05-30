@@ -1920,7 +1920,7 @@ feature -- Access
 						warn.set_feature (current_feature)
 					end
 					warn.set_obsolete_class (ass_class)
-					Error_handler.insert_warning (warn)
+					Error_handler.insert_warning (warn, ass_class.is_warning_reported_as_error (w_obsolete_class))
 				end
 			end
 		end

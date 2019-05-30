@@ -456,31 +456,31 @@ feature {NONE} -- Modification
 			an_inherited_options_not_void: an_inherited_options /= Void
 			properties_not_void: properties /= Void
 		local
+			c: CONF_VALUE_CHOICE
 			l_bool_prop: BOOLEAN_PROPERTY
 			l_warning: READABLE_STRING_GENERAL
 		do
 			properties.add_section (conf_interface_names.section_warning)
 
-			l_bool_prop := new_boolean_property (conf_interface_names.option_warnings_name, an_inherited_options.is_warning)
-			l_bool_prop.set_description (conf_interface_names.option_warnings_description)
-			l_bool_prop.change_value_actions.extend (agent an_options.set_warning)
-			l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent refresh))
-			l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
-			if a_inherits then
-				l_bool_prop.use_inherited_actions.extend (agent an_options.unset_warning)
-				l_bool_prop.use_inherited_actions.extend (agent refresh)
-				l_bool_prop.use_inherited_actions.extend (agent handle_value_changes (False))
-
-				if an_options.is_warning_configured then
-					l_bool_prop.enable_overriden
-				else
-					l_bool_prop.enable_inherited
-				end
+			c := if a_inherits then an_inherited_options.warning else Void end
+			add_choice_property (
+				locale.translation_in_context ("Warning", "configuration.option"),
+				locale.translation_in_context ({STRING_32} "[
+					How should warnings be reported?
+					 • None: Do not report wanings;
+					 • Warning: Report enabled warnings as warnings;
+					 • Error: Report enabled warnings as errors.
+				]", "configuration.option"),
+				create {ARRAYED_LIST [STRING_32]}.make_from_array (
+					<<locale.translation_in_context ("None", "configuration.option"),
+					locale.translation_in_context ("Warning", "configuration.option"),
+					locale.translation_in_context ("Error", "configuration.option")>>),
+				an_options.warning,
+				c
+			)
+			if attached last_added_choice_property as l_prop and then a_check_non_client_option and then is_non_client_option (at_warning) then
+				l_prop.enable_readonly
 			end
-			if a_check_non_client_option and then is_non_client_option (at_warning) then
-				l_bool_prop.enable_readonly
-			end
-			properties.add_property (l_bool_prop)
 
 			from
 				known_warnings.start
@@ -499,7 +499,7 @@ feature {NONE} -- Modification
 					l_bool_prop.change_value_actions.extend (agent an_options.add_warning (l_warning, ?))
 					l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
 					properties.add_property (l_bool_prop)
-					if not an_inherited_options.is_warning then
+					if an_inherited_options.warning.index = {CONF_OPTION}.warning_index_none then
 						l_bool_prop.enable_readonly
 					end
 				end
@@ -850,7 +850,7 @@ feature {NONE} -- Refresh displayed data.
 			-- Last added choice property
 
 ;note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

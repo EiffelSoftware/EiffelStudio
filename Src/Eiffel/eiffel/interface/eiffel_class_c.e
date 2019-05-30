@@ -261,8 +261,10 @@ feature -- Action
 				l_options := l_lace_class.options
 				if is_warning_generated then
 					parser.set_has_syntax_warning (l_options.is_warning_enabled (w_syntax))
+					parser.set_warning_as_error (l_options.is_warning_as_error)
 				else
 					parser.set_has_syntax_warning (False)
+					parser.set_warning_as_error (False)
 				end
 				inspect l_options.syntax.index
 				when {CONF_OPTION}.syntax_index_obsolete then
@@ -2175,7 +2177,7 @@ invariant
 
 note
 	ca_ignore: "CA033", "CA033: very long class"
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

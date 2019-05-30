@@ -1651,7 +1651,7 @@ feature {NONE} -- Implementation
 						if error_level = l_error_level then
 							if is_static and then not l_feature.is_class then
 									-- The instance-free call is OK, but the called feature is not instance-free.
-								error_handler.insert_warning (create {VUNO_NOT_INSTANCE_FREE}.make (l_feature, current_feature, context.current_class, context.written_class, l_feature_name))
+								error_handler.insert_warning (create {VUNO_NOT_INSTANCE_FREE}.make (l_feature, current_feature, context.current_class, context.written_class, l_feature_name), context.current_class.lace_class.options.is_warning_as_error)
 							elseif
 								not has_vucr and then
 								not l_is_qualified_call and then
@@ -1665,7 +1665,8 @@ feature {NONE} -- Implementation
 										create {VUCR_BODY_WARNING}.make_precursor (l_feature, current_feature, context.current_class, context.written_class, a_name)
 									else
 										create {VUCR_BODY_WARNING}.make_feature (l_feature, current_feature, context.current_class, context.written_class, a_name)
-									end)
+									end,
+									l_context_current_class.lace_class.options.is_warning_as_error)
 							end
 							if not system.il_generation then
 								if l_feature.is_inline_agent then
@@ -2038,7 +2039,7 @@ feature {NONE} -- Implementation
 								current_feature.written_class /= System.current_class
 							then
 									-- Invalid call to replicated feature, raise VMCS.
-								Error_handler.insert_warning (create {REPLICATED_FEATURE_CALL_WARNING}.make (System.current_class, current_feature, l_feature))
+								Error_handler.insert_warning (create {REPLICATED_FEATURE_CALL_WARNING}.make (System.current_class, current_feature, l_feature), context.current_class.lace_class.options.is_warning_as_error)
 							end
 
 								-- Check if cat-call detection only for qualified calls and if enabled for current context class and
@@ -2446,7 +2447,7 @@ feature {NONE} -- Visitor
 								-- The implicit type is required to compute array type, it should be replaced with an explicit one.
 							if context.current_class.lace_class.is_manifest_array_type_mismatch_warning then
 									-- Report a warning.
-								error_handler.insert_warning (create {VWMA_EXPLICIT_TYPE_REQUIRED_FOR_CONFORMANCE}.make (context, default_element_type, l_type_a, l_as, False))
+								error_handler.insert_warning (create {VWMA_EXPLICIT_TYPE_REQUIRED_FOR_CONFORMANCE}.make (context, default_element_type, l_type_a, l_as, False), context.current_class.lace_class.options.is_warning_as_error)
 							elseif context.current_class.lace_class.is_manifest_array_type_mismatch_error then
 									-- Report an error.
 								error_handler.insert_error (create {VWMA_EXPLICIT_TYPE_REQUIRED_FOR_CONFORMANCE}.make (context, default_element_type, l_type_a, l_as, True))
@@ -2502,7 +2503,7 @@ feature {NONE} -- Visitor
 								error_handler.insert_error (create {VWMA_EXPLICIT_TYPE_REQUIRED_FOR_MATCH}.make (context, default_element_type, l_type_a, l_as, True))
 							else
 									-- Report a warning.
-								error_handler.insert_warning (create {VWMA_EXPLICIT_TYPE_REQUIRED_FOR_MATCH}.make (context, default_element_type, l_type_a, l_as, False))
+								error_handler.insert_warning (create {VWMA_EXPLICIT_TYPE_REQUIRED_FOR_MATCH}.make (context, default_element_type, l_type_a, l_as, False), context.current_class.lace_class.options.is_warning_as_error)
 							end
 						end
 							-- Use the default (computed) array type.
@@ -3719,7 +3720,7 @@ feature {NONE} -- Visitor
 						context.current_class.is_warning_enabled (w_vwab)
 					then
 							-- Warn that the attribute has a non-empty body that is never executed.
-						error_handler.insert_warning (create {VWAB}.make (l_as.routine_body.start_location, context))
+						error_handler.insert_warning (create {VWAB}.make (l_as.routine_body.start_location, context), context.current_class.is_warning_reported_as_error (w_vwab))
 					end
 						-- Check postconditions
 					if l_as.postcondition /= Void then
@@ -5483,7 +5484,7 @@ feature {NONE} -- Visitor
 							l_vweq.set_left_type (l_left_type)
 							l_vweq.set_right_type (l_right_type)
 							l_vweq.set_location (l_as.operator_location)
-							error_handler.insert_warning (l_vweq)
+							error_handler.insert_warning (l_vweq, context.current_class.is_warning_reported_as_error (w_vweq))
 						end
 						if l_left_type.is_basic and l_right_type.is_basic then
 								-- Non-compatible basic type always implies a False/true comparison.
@@ -6050,7 +6051,7 @@ feature {NONE} -- Visitor
 						l_vjrv1.set_target_name (l_as.target.access_name)
 						l_vjrv1.set_target_type (l_target_type)
 						l_vjrv1.set_location (l_as.target.end_location)
-						error_handler.insert_warning (l_vjrv1)
+						error_handler.insert_warning (l_vjrv1, context.current_class.is_warning_reported_as_error (w_vjrv))
 					end
 				elseif
 					is_void_safe_conformance and then
@@ -6081,7 +6082,7 @@ feature {NONE} -- Visitor
 							l_vjrv2.set_target_name (l_as.target.access_name)
 							l_vjrv2.set_target_type (l_target_type)
 							l_vjrv2.set_location (l_as.target.end_location)
-							error_handler.insert_warning (l_vjrv2)
+							error_handler.insert_warning (l_vjrv2, context.current_class.is_warning_reported_as_error (w_vjrv))
 						end
 					end
 				end
@@ -11463,7 +11464,7 @@ feature {NONE} -- Implementation: checking locals
 				a_locals.forth
 			end
 			if l_warning /= Void then
-				error_handler.insert_warning (l_warning)
+				error_handler.insert_warning (l_warning, context.current_class.is_warning_reported_as_error (w_unused_local))
 			end
 		end
 
@@ -11683,7 +11684,7 @@ feature {NONE} -- Implementation: catcall check
 							create l_acat.make (a_location)
 							context.init_error (l_acat)
 							l_acat.set_called_feature (a_feature)
-							error_handler.insert_warning (l_acat)
+							error_handler.insert_warning (l_acat, context.current_class.lace_class.options.is_warning_as_error)
 						end
 						l_acat.add_export_status_violation (l_descendant_class, l_descendant_feature)
 					end

@@ -34,10 +34,10 @@ inherit
 			{NONE} all
 		end
 
-create
+create {AST_FACTORY}
 	initialize
 
-feature {AST_FACTORY} -- Initialization
+feature {NONE} -- Initialization
 
 	initialize (l: like language_name)
 			-- Create a new EXTERNAL_LANGUAGE AST node.
@@ -322,13 +322,14 @@ feature {NONE} -- Implementation
 							end
 						end
 
-						if signature_part /= Void or else image.count /= 0 then
-							if extension = Void then
-								if ext_language_name.is_equal ("C++") then
-									has_parsing_error := True
-								else
-									create {C_EXTENSION_AS} extension
-								end
+						if
+							(signature_part /= Void or else image.count /= 0) and then
+							not attached extension
+						then
+							if ext_language_name.is_equal ("C++") then
+								has_parsing_error := True
+							else
+								create {C_EXTENSION_AS} extension
 							end
 						end
 
@@ -399,7 +400,7 @@ feature {NONE} -- Implementation
 					language_name.column,
 					eiffel_parser.filename, "Use new external syntax instead.")
 				l_warning.set_associated_class (l_class_c)
-				Error_handler.insert_warning (l_warning)
+				Error_handler.insert_warning (l_warning, l_class_c.is_warning_reported_as_error (w_syntax))
 			end
 		end
 
@@ -408,7 +409,7 @@ invariant
 	extension_not_void: extension /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -193,10 +193,19 @@ feature -- Constants
 			Result := namespace_1_20_0 + {STRING_32} " http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd"
 		end
 
+	namespace_1_21_0: STRING_32 = "http://www.eiffel.com/developers/xml/configuration-1-21-0"
+			-- Namespace of the 19.11 release.
+
+	schema_1_21_0: STRING_32
+			-- Schema of the 19.11 release.
+		once
+			Result := namespace_1_21_0 + {STRING_32} " http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd"
+		end
+
 	Latest_namespace: READABLE_STRING_32
 			-- Latest configuration namespace.
 		once
-			Result := namespace_1_20_0
+			Result := namespace_1_21_0
 		ensure
 			class
 		end
@@ -204,7 +213,7 @@ feature -- Constants
 	Latest_schema: STRING_32
 			-- Latest schema location.
 		once
-			Result := schema_1_20_0
+			Result := schema_1_21_0
 		end
 
 feature -- Status report
@@ -247,6 +256,7 @@ feature -- Normalization
 			elseif n.same_string (namespace_1_18_0) then Result := namespace_1_18_0
 			elseif n.same_string (namespace_1_19_0) then Result := namespace_1_19_0
 			elseif n.same_string (namespace_1_20_0) then Result := namespace_1_20_0
+			elseif n.same_string (namespace_1_21_0) then Result := namespace_1_21_0
 			elseif n.same_string (latest_namespace) then Result := latest_namespace
 			else
 					-- Unknown namespace.
@@ -308,7 +318,7 @@ feature {NONE} -- Ordering
 	namespace_order: STRING_TABLE [NATURAL]
 			-- Order numbers associated with namespaces.
 		once
-			create Result.make (10)
+			create Result.make (21)
 			Result.compare_objects
 			Result.extend (1, namespace_1_0_0)
 			Result.extend (2, namespace_1_2_0)
@@ -330,6 +340,7 @@ feature {NONE} -- Ordering
 			Result.extend (18, namespace_1_18_0)
 			Result.extend (19, namespace_1_19_0)
 			Result.extend (20, namespace_1_20_0)
+			Result.extend (21, namespace_1_21_0)
 				-- When adding a new namespace, do not forget to increment the counter index too!
 		end
 

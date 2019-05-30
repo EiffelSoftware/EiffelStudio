@@ -241,7 +241,8 @@ feature {COMPILER_EXPORTER} -- Setting
 					end
 					if
 						(new_options.is_full_class_checking and then not old_options.is_full_class_checking or else
-						new_options.array.index /= old_options.array.index) and then
+						new_options.array.index /= old_options.array.index or else
+						new_options.warning.index /= old_options.warning.index) and then
 						attached c
 					then
 							-- Class should be rechecked.
@@ -291,7 +292,7 @@ invariant
 	name_in_upper: name.as_upper.is_equal (name)
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

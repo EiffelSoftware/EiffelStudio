@@ -534,6 +534,7 @@ feature {NONE} -- Implementation
 		local
 			l_load: CONF_LOAD
 			vd00: VD00
+			vd80: VD80
 		do
 				-- Load configuration file.
 			create l_load.make (create {CONF_COMP_FACTORY})
@@ -547,16 +548,11 @@ feature {NONE} -- Implementation
 
 				-- add warnings
 			if l_load.is_warning then
-				l_load.last_warnings.do_all (agent (a_warning: CONF_ERROR)
-					require
-						a_warning_not_void: a_warning /= Void
-					local
-						vd80: VD80
-					do
-						create vd80
-						vd80.set_warning (a_warning)
-						error_handler.insert_warning (vd80)
-					end)
+				across l_load.last_warnings as w loop
+					create vd80
+					vd80.set_warning (w.item)
+					error_handler.insert_warning (vd80, target.options.is_warning_as_error)
+				end
 			end
 
 			set_conf_system (l_load.last_system)
@@ -863,7 +859,7 @@ feature {NONE} -- Implementation
 		do
 			if attached {CONF_ERROR_CAPABILITY} e as l_cap_error then
 				if system.compiler_profile.is_capability_warning then
-					error_handler.insert_warning (create {VD01}.make (l_cap_error))
+					error_handler.insert_warning (create {VD01}.make (l_cap_error), target.options.is_warning_as_error)
 				else
 					error_handler.insert_error (create {VD01}.make (l_cap_error))
 				end
@@ -879,10 +875,10 @@ feature {NONE} -- Implementation
 				if system.compiler_profile.is_capability_error then
 					error_handler.insert_error (create {VD01}.make (l_cap_error))
 				else
-					error_handler.insert_warning (create {VD01}.make (l_cap_error))
+					error_handler.insert_warning (create {VD01}.make (l_cap_error), target.options.is_warning_as_error)
 				end
 			else
-				error_handler.insert_warning (create {VD00}.make (e))
+				error_handler.insert_warning (create {VD00}.make (e), target.options.is_warning_as_error)
 			end
 		end
 
@@ -926,7 +922,7 @@ feature {NONE} -- Implementation
 				if not l_cycles.is_empty then
 					create vd89
 					vd89.set_cycles (l_cycles)
-					error_handler.insert_warning (vd89)
+					error_handler.insert_warning (vd89, False)
 				end
 
 				if not is_force_new_target and l_parse_vis.last_warnings /= Void then
@@ -938,7 +934,7 @@ feature {NONE} -- Implementation
 					loop
 						create vd80
 						vd80.set_warning (l_errors.item)
-						error_handler.insert_warning (vd80)
+						error_handler.insert_warning (vd80, False)
 						l_errors.forth
 					end
 				end
@@ -1083,7 +1079,7 @@ feature {NONE} -- Implementation
 					if l_b /= system.cls_compliant and then (a_target.precompile /= Void or workbench.has_compilation_started) then
 						if not is_force_new_target then
 							create vd83.make (s_cls_compliant, system.cls_compliant.out.as_lower, l_s)
-							Error_handler.insert_warning (vd83)
+							Error_handler.insert_warning (vd83, a_target.options.is_warning_as_error)
 						end
 					else
 						system.set_cls_compliant (l_b)
@@ -1276,7 +1272,7 @@ feature {NONE} -- Implementation
 					if l_b /= system.il_generation and then (a_target.precompile /= Void or workbench.has_compilation_started) then
 						if not is_force_new_target then
 							create vd83.make (s_java_generation, system.il_generation.out.as_lower, l_s)
-							Error_handler.insert_warning (vd83)
+							Error_handler.insert_warning (vd83, a_target.options.is_warning_as_error)
 						end
 					else
 						system.set_java_generation (l_b)
@@ -1320,7 +1316,7 @@ feature {NONE} -- Implementation
 			then
 				if not is_force_new_target then
 					create vd83.make (s_metadata_cache_path, system.metadata_cache_path, l_s)
-					Error_handler.insert_warning (vd83)
+					Error_handler.insert_warning (vd83, a_target.options.is_warning_as_error)
 				end
 				-- new system without precompile, set value
 			elseif a_target.precompile = Void and not workbench.has_compilation_started then
@@ -1355,7 +1351,7 @@ feature {NONE} -- Implementation
 					if l_b /= system.il_generation and then (a_target.precompile /= Void or workbench.has_compilation_started) then
 						if not is_force_new_target then
 							create vd83.make (s_msil_generation, system.il_generation.out.as_lower, l_s)
-							Error_handler.insert_warning (vd83)
+							Error_handler.insert_warning (vd83, a_target.options.is_warning_as_error)
 						end
 					elseif l_b and then not eiffel_layout.default_il_environment.is_dotnet_installed then
 						Error_handler.insert_error (create {VD86})
@@ -1379,7 +1375,7 @@ feature {NONE} -- Implementation
 				if l_s /= Void and then not equal (system.clr_runtime_version, l_s) and then (a_target.precompile /= Void or workbench.has_compilation_started) then
 					if not is_force_new_target then
 						create vd83.make (s_msil_clr_version, system.clr_runtime_version, l_s)
-						Error_handler.insert_warning (vd83)
+						Error_handler.insert_warning (vd83, a_target.options.is_warning_as_error)
 					end
 				elseif a_target.precompile = Void and not workbench.has_compilation_started then
 					set_clr_runtime_version (l_s)
@@ -1503,7 +1499,7 @@ feature {NONE} -- Implementation
 					if l_b /= system.total_order_on_reals and then (a_target.precompile /= Void or workbench.has_compilation_started) then
 						if not is_force_new_target then
 							create vd83.make (s_total_order_on_reals, system.total_order_on_reals.out.as_lower, l_s)
-							Error_handler.insert_warning (vd83)
+							Error_handler.insert_warning (vd83, a_target.options.is_warning_as_error)
 						end
 					else
 						set_total_order_on_reals (l_b, a_target)
@@ -1574,7 +1570,7 @@ feature {NONE} -- Implementation
 			first_compilation: workbench.has_compilation_started implies system.total_order_on_reals = v
 		do
 			if not v then
-				error_handler.insert_warning (create {VD81}.make (t))
+				error_handler.insert_warning (create {VD81}.make (t), t.options.is_warning_as_error)
 			end
 			system.set_total_order_on_reals (v)
 		ensure
@@ -1608,6 +1604,7 @@ feature {NONE} -- Implementation
 			l_factory: CONF_COMP_FACTORY
 			l_project_location: PROJECT_DIRECTORY
 			l_system_name: READABLE_STRING_GENERAL
+			vd80: VD80
 		do
 			create l_factory
 			l_pre := a_target.precompile
@@ -1625,16 +1622,11 @@ feature {NONE} -- Implementation
 
 				-- add warnings
 			if l_load.is_warning then
-				l_load.last_warnings.do_all (agent (a_warning: CONF_ERROR)
-					require
-						a_warning_not_void: a_warning /= Void
-					local
-						vd80: VD80
-					do
-						create vd80
-						vd80.set_warning (a_warning)
-						error_handler.insert_warning (vd80)
-					end)
+				across l_load.last_warnings as w loop
+					create vd80
+					vd80.set_warning (w.item)
+					error_handler.insert_warning (vd80, a_target.options.is_warning_as_error)
+				end
 			end
 
 			l_system := l_load.last_system

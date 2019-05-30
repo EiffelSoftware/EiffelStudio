@@ -63,19 +63,23 @@ feature -- Error handling primitives
 				fixme ("[
 					Callers should set the error position. We have checked this for most errors
 					but some may not be correct, this is why there is still a fixme.
-					]")
+				]")
 			end
 			error_list.extend (e)
 			error_list.finish
 		end
 
-	insert_warning (w: ERROR)
-			-- Insert `w' in `warning_list'.
+	insert_warning (w: ERROR; is_error: BOOLEAN)
+			-- Insert `w' in `warning_list' unless `is_error` indicates that the warning should be reported as an error.
 		require
 			good_argument: w /= Void
 		do
-			warning_list.extend (w)
-			warning_list.finish
+			if is_error then
+				insert_error (w)
+			else
+				warning_list.extend (w)
+				warning_list.finish
+			end
 		end
 
 	raise_error
@@ -295,7 +299,7 @@ invariant
 	warning_list_exists: warning_list /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -38,14 +38,15 @@ create
 	make_7_3,
 	make_14_05,
 	make_15_11,
-	make_18_01
+	make_18_01,
+	make_19_11
 
 feature {NONE} -- Creation
 
 	default_create
 			-- Initialize options to the defaults of the current version.
 		do
-			make_18_01
+			make_19_11
 		end
 
 	make_6_3
@@ -57,6 +58,7 @@ feature {NONE} -- Creation
 			create void_safety.make (void_safety_name, void_safety_index_none)
 			create catcall_detection.make (catcall_detection_values, catcall_detection_index_none)
 			is_obsolete_routine_type := True
+			create warning.make (warning_name, warning_index_none)
 		end
 
 	make_6_4
@@ -123,6 +125,14 @@ feature {NONE} -- Creation
 			make_18_01
 		end
 
+	make_19_11
+			-- Initialize options to the defaults of 19.11.
+			-- Difference from `make_19_05`: warnings are reported.
+		do
+			make_19_05
+			warning.put_default_index (warning_index_warning)
+		end
+
 feature -- Status
 
 	is_profile_configured: BOOLEAN
@@ -136,9 +146,6 @@ feature -- Status
 
 	is_debug_configured: BOOLEAN
 			-- Is `is_debug' configured?
-
-	is_warning_configured: BOOLEAN
-			-- Is `is_warning' configured?
 
 	is_msil_application_optimize_configured: BOOLEAN
 			-- Is `is_msil_application_optimize' configured?
@@ -160,7 +167,6 @@ feature -- Status
 				is_trace_configured or
 				is_optimize_configured or
 				is_debug_configured or
-				is_warning_configured or
 				is_msil_application_optimize_configured or
 				is_full_class_checking_configured or
 				catcall_detection.is_set or
@@ -172,7 +178,8 @@ feature -- Status
 				warnings /= Void or
 				debugs /= Void or
 				syntax.is_set or
-				array.is_set)
+				array.is_set or
+				warning.is_set)
 		end
 
 	is_empty_for (n: detachable READABLE_STRING_32): BOOLEAN
@@ -183,7 +190,6 @@ feature -- Status
 				is_trace_configured or
 				is_optimize_configured or
 				is_debug_configured or
-				is_warning_configured or
 				is_msil_application_optimize_configured or
 				is_full_class_checking_configured or
 				is_attached_by_default_configured or
@@ -194,6 +200,7 @@ feature -- Status
 				debugs /= Void or
 				syntax.is_set or
 				array.is_set or
+				warning.is_set or
 					-- Void safety and catcall detection options are used only before `namespace_1_15_0`.
 				(is_before_or_equal (n, namespace_1_15_0) and then
 					(catcall_detection.is_set or
@@ -228,13 +235,6 @@ feature -- Status update
 		do
 			is_debug_configured := False
 			is_debug := False
-		end
-
-	unset_warning
-			-- Unset warning.
-		do
-			is_warning_configured := False
-			is_warning := False
 		end
 
 	unset_msil_application_optimize
@@ -287,9 +287,6 @@ feature -- Access, stored in configuration file
 
 	is_debug: BOOLEAN
 			-- Do debug?
-
-	is_warning: BOOLEAN
-			-- Show warnings?
 
 	is_msil_application_optimize: BOOLEAN
 			-- Do .NET specific application optimizations?
@@ -347,12 +344,36 @@ feature -- Access: manifest array type
 	array_index_standard: NATURAL_8 = 3
 			-- Option index for standard syntax
 
-feature {NONE} -- Access: syntax
+feature {NONE} -- Access: manifest array type
 
 	array_name: ARRAY [READABLE_STRING_32]
-			-- Available values for `manifest_array_type` option.
+			-- Available values for `array` option.
 		once
 			Result := <<{STRING_32} "mismatch_error", {STRING_32} "mismatch_warning", {STRING_32} "standard">>
+		ensure
+			result_attached: Result /= Void
+		end
+
+feature -- Access: warnings
+
+	warning: CONF_VALUE_CHOICE
+			-- Expected way to report warnings.
+
+	warning_index_none: NATURAL_8 = 1
+			-- Option index to suppress warnings.
+
+	warning_index_warning: NATURAL_8 = 2
+			-- Option index to report warnings as warnings.
+
+	warning_index_error: NATURAL_8 = 3
+			-- Option index to report warnings as errors.
+
+feature {NONE} -- Access: warnings
+
+	warning_name: ARRAY [READABLE_STRING_32]
+			-- Available values for `warning` option.
+		once
+			Result := <<{STRING_32} "none", {STRING_32} "warning", {STRING_32} "error">>
 		ensure
 			result_attached: Result /= Void
 		end
@@ -439,7 +460,13 @@ feature -- Access queries
 		require
 			a_warning_valid: is_warning_known (a_warning)
 		do
-			Result := is_warning and then (not attached warnings as w or else (not w.has_key (a_warning) or else w.found_item))
+			Result := warning.index /= warning_index_none and then (attached warnings as w implies (w.has_key (a_warning) implies w.found_item))
+		end
+
+	is_warning_as_error: BOOLEAN
+			-- Should a warning be reported as an error?
+		do
+			Result := warning.index = warning_index_error
 		end
 
 feature {CONF_ACCESS} -- Update, stored in configuration file.
@@ -549,17 +576,6 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 			is_debug_configured: is_debug_configured
 		end
 
-	set_warning (a_enabled: BOOLEAN)
-			-- Set `is_warning' to `a_enabled'.
-			-- Enables/disables warning clauses in general.
-		do
-			is_warning_configured := True
-			is_warning := a_enabled
-		ensure
-			is_warning_set: is_warning = a_enabled
-			is_warning_configured: is_warning_configured
-		end
-
 	set_msil_application_optimize (a_enabled: BOOLEAN)
 			-- Set `is_msil_application_optimize' to `a_enable'.
 			-- Enabled/disables .NET application optimizations in general.
@@ -636,6 +652,7 @@ feature -- Duplication
 				catcall_detection := other.catcall_detection.twin
 				syntax := other.syntax.twin
 				array := other.array.twin
+				warning := other.warning.twin
 				if attached other.warnings as w then
 					warnings := w.twin
 				end
@@ -666,13 +683,12 @@ feature -- Comparison
 			and then is_profile_configured = other.is_profile_configured
 			and then is_trace = other.is_trace
 			and then is_trace_configured = other.is_trace_configured
-			and then is_warning = other.is_warning
-			and then is_warning_configured = other.is_warning_configured
 			and then equal (local_namespace, other.local_namespace)
 			and then equal (namespace, other.namespace)
 			and then void_safety.is_equal (other.void_safety)
 			and then syntax.is_equal (other.syntax)
 			and then array.is_equal (other.array)
+			and then warning.is_equal (other.warning)
 			and then equal (warnings, other.warnings)
 			then
 				Result := True
@@ -694,6 +710,7 @@ feature -- Comparison
 				void_safety.index = other.void_safety.index and
 				syntax.index = other.syntax.index and
 				array.index = other.array.index and
+				warning.index = other.warning.index and
 				equal(local_namespace, other.local_namespace) and
 				equal (debugs, other.debugs)
 		end
@@ -788,9 +805,11 @@ feature -- Merging
 					is_debug_configured := other.is_debug_configured or else is_debug /~ other.is_debug
 					is_debug := other.is_debug
 				end
-				if not is_warning_configured then
-					is_warning_configured := other.is_warning_configured or else is_warning /~ other.is_warning
-					is_warning := other.is_warning
+				if
+					not warning.is_set and then
+					(other.warning.is_set or else warning.index /= other.warning.index)
+				then
+					warning.put_index (other.warning.index)
 				end
 				if not is_msil_application_optimize_configured then
 					is_msil_application_optimize_configured := other.is_msil_application_optimize_configured or else is_msil_application_optimize /~ other.is_msil_application_optimize
@@ -836,6 +855,7 @@ feature -- Merging
 				end
 				syntax.set_safely (other.syntax)
 				array.set_safely (other.array)
+				warning.set_safely (other.warning)
 				void_safety.set_safely (other.void_safety)
 					-- The merge for `is_attached_by_default' should happen after merging `void_safety'
 					-- because the latter is used to default to `True' if the resulting project is not Void-safe.
@@ -871,6 +891,7 @@ invariant
 	debugs_compare_objects: attached debugs as l_d implies l_d.object_comparison
 
 note
+	ca_ignore: "CA093", "CA093: manifest array type mismatch"
 	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

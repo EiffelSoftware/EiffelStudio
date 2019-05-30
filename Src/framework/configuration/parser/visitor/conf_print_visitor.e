@@ -1007,8 +1007,14 @@ feature {NONE} -- Implementation
 			if an_options.is_debug_configured then
 				append_boolean_attribute (o_is_debug, an_options.is_debug)
 			end
-			if an_options.is_warning_configured then
-				append_boolean_attribute (o_is_warning, an_options.is_warning)
+			if an_options.warning.is_set then
+				if is_after_or_equal (namespace, namespace_1_21_0) then
+						-- The option is an enumeration starting from `namespace_1_21_0`.
+					append_text_attribute (o_warning, an_options.warning.item)
+				else
+						-- The option is a boolean value before `namespace_1_21_0`.
+					append_boolean_attribute (o_warning, an_options.warning.index /= {CONF_OPTION}.warning_index_none)
+				end
 			end
 			if an_options.is_msil_application_optimize_configured then
 				append_boolean_attribute (o_is_msil_application_optimize, an_options.is_msil_application_optimize)

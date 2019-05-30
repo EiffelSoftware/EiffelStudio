@@ -127,7 +127,7 @@ feature -- Basic operation
 				if current_options = Void then
 					create current_options
 				end
-				current_options.set_warning (True)
+				current_options.warning.put_index ({CONF_OPTION}.warning_index_warning)
 					-- disable some warnings by default
 				current_options.add_warning (w_vjrv, False)
 				current_options.add_warning (w_export_class_missing, False)

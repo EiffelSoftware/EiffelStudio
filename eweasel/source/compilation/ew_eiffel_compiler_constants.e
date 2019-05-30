@@ -27,9 +27,9 @@ feature {NONE} -- Output constants
 
 	Syntax_warning_prefix: STRING = "Obsolete syntax"
 
-	Validity_error_prefix: STRING = "Error code:"
+	Validity_error_prefix: STRING = "Error code: "
 
-	Validity_warning_prefix: STRING = "Warning code:"
+	Validity_warning_prefix: STRING = "Warning code: "
 
 	Class_name_prefix: STRING = "Class:"
 

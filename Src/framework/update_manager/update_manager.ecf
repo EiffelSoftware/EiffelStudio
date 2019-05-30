@@ -5,7 +5,7 @@
 		<setting name="console_application" value="true"/>
 		<setting name="dead_code_removal" value="all"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="false"/>
-		<library name="framework" location="$ISE_LIBRARY\framework\environment\environment.ecf"/>
+		<library name="framework" location="$EIFFEL_SRC\framework\environment\environment.ecf"/>
 		<library name="http_authorization" location="$ISE_LIBRARY\contrib\library\web\authentication\http_authorization\http_authorization.ecf"/>
 		<library name="http_client" location="$ISE_LIBRARY\contrib\library\network\http_client\http_client.ecf"/>
 		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json.ecf"/>

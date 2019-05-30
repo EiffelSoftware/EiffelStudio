@@ -185,10 +185,11 @@ feature {NONE} -- Initialization
 			enable_sorting
 
 				-- Set button states based on session data
-			if attached develop_window_session_data as w_session_data then
-				if attached {STRING} w_session_data.value (columns_sorting_data_session_id) as s then
-					grid_wrapper.set_sorting_status (grid_wrapper.sorted_columns_from_string (s))
-				end
+			if
+				attached develop_window_session_data as w_session_data and then
+				attached {STRING} w_session_data.value (columns_sorting_data_session_id) as s
+			then
+				grid_wrapper.set_sorting_status (grid_wrapper.sorted_columns_from_string (s))
 			end
 
 			update
@@ -715,7 +716,6 @@ feature {NONE} -- Impl filling
 		require
 			not grid.is_tree_enabled
 		local
-			bp: BREAKPOINT
 			r: INTEGER
 		do
 			from
@@ -725,8 +725,7 @@ feature {NONE} -- Impl filling
 			until
 				bps.after
 			loop
-				bp := bps.item_for_iteration
-				grid.row (r).set_data (bp)
+				grid.row (r).set_data (bps.item_for_iteration)
 				r := r + 1
 				bps.forth
 			end
@@ -746,9 +745,7 @@ feature {NONE} -- Impl filling
 			stwl: PART_SORTED_TWO_WAY_LIST [E_FEATURE]
 			f: E_FEATURE
 			c: CLASS_C
-			bp_list: LIST [INTEGER]
 			has_bp: BOOLEAN
-			cs: CLASSC_STONE
 			bpm: BREAKPOINTS_MANAGER
 		do
 				--| Prepare data .. mainly sorting
@@ -788,8 +785,7 @@ feature {NONE} -- Impl filling
 				loop
 					f := stwl.item
 					if bpm.is_feature_breakable (f) then
-						bp_list := bpm.breakpoints_set_for (f, False)
-						has_bp := not bp_list.is_empty
+						has_bp := not bpm.breakpoints_set_for (f, False).is_empty
 					end
 					stwl.forth
 				end
@@ -797,8 +793,7 @@ feature {NONE} -- Impl filling
 				if has_bp then
 					create lab.make_with_text (c.name_in_upper)
 					lab.set_foreground_color (class_color)
-					create cs.make (c)
-					lab.set_data (cs)
+					lab.set_data (create {CLASSC_STONE}.make (c))
 
 					r := grid.row_count + 1
 					grid.insert_new_row (r)
@@ -840,7 +835,6 @@ feature {NONE} -- Impl filling
 			lab: EV_GRID_LABEL_ITEM
 			first_bp: BOOLEAN
 			i: INTEGER
-			fs: FEATURE_STONE
 			bp: BREAKPOINT
 			bpm: BREAKPOINTS_MANAGER
 			loc: BREAKPOINT_LOCATION
@@ -855,8 +849,7 @@ feature {NONE} -- Impl filling
 
 				create lab.make_with_text (f.name_32)
 				lab.set_foreground_color (feature_color)
-				create fs.make (f)
-				lab.set_data (fs)
+				lab.set_data (create {FEATURE_STONE}.make (f))
 
 				if filter_enabled then
 					l_filter := filter
@@ -923,15 +916,13 @@ feature {NONE} -- Impl filling
 
 	insert_metrics
 		local
-			bpm: BREAKPOINTS_MANAGER
 			t: TUPLE [total: INTEGER; not_set: INTEGER; enabled: INTEGER; hidden_enabled: INTEGER; disabled: INTEGER; hidden_disabled: INTEGER]
 			splab: EV_GRID_SPAN_LABEL_ITEM
 			s: STRING
 			i: INTEGER
 		do
 			debug("breakpoint")
-				bpm := breakpoints_manager
-				t := bpm.metrics
+				t := breakpoints_manager.metrics
 				if t /= Void then
 					s := ""
 					s.append_string ("total=" + t.total.out)
@@ -1372,8 +1363,6 @@ feature {NONE} -- Implementation, cosmetic
 
 	Breakable_icons: ES_SMALL_ICONS
 			-- Breakable icons.
-		local
-			l_shared: EB_SHARED_PIXMAPS
 		do
 				-- TODO review
 				-- update once feature to load pixmaps based monitor dpi.

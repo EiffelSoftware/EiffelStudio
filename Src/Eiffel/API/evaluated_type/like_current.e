@@ -352,7 +352,7 @@ feature -- Generic conformance
 		do
 				-- Only if a type is not expanded do we need to generate the
 				-- attached annotation since by default expanded implies attached.
-			if is_attached and not is_expanded then
+			if lace.is_void_safe and then is_attached and then not is_expanded then
 				Result := {SHARED_GEN_CONF_LEVEL}.attached_type
 			end
 
@@ -747,10 +747,10 @@ feature {COMPILER_EXPORTER} -- Primitives
 			create Result.make (Current)
 		end
 
-	initialize_info (an_info: like shared_create_info)
+	initialize_info
 			-- Initialize `an_info' using current data.
 		do
-			an_info.make (Current)
+			shared_create_info.make (Current)
 		end
 
 	convert_to (a_context_class: CLASS_C; a_target_type: TYPE_A): BOOLEAN
@@ -771,7 +771,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

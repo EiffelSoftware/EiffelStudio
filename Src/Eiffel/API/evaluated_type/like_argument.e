@@ -91,9 +91,9 @@ feature -- Generic conformance
 			end
 		end
 
-	initialize_info (an_info: like shared_create_info)
+	initialize_info
 		do
-			an_info.set_position (position)
+			shared_create_info.set_position (position)
 		end
 
 	create_info: CREATE_ARG

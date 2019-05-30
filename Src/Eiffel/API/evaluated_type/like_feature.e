@@ -1,9 +1,9 @@
-note
+﻿note
 	description: "Class for an staticed type on a feature."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class
 	LIKE_FEATURE
@@ -87,7 +87,7 @@ feature -- Status Report
 			-- Is type fixed at compile time without anchors or formals?
 		do
 			if system.in_final_mode then
-				initialize_info (shared_create_info)
+				initialize_info
 				Result := shared_create_info.is_explicit
 			else
 				Result := False
@@ -146,10 +146,9 @@ feature -- Access
 
 feature -- Generic conformance
 
-	initialize_info (an_info: like shared_create_info)
+	initialize_info
 		do
-				-- FIXME: Should we use `make' or just `set_info'?
-			an_info.make (feature_id, routine_id)
+			shared_create_info.make (feature_id, routine_id)
 		end
 
 	create_info: CREATE_FEAT

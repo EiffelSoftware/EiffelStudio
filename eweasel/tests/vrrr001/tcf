@@ -114,13 +114,13 @@ define		 LOCALS "local wimp: INTEGER"
 define		 RESCUE "rescue io.putstring ("In rescue clause%N"); retry"
 copy_sub 	 test1.e  $CLUSTER test1.e
 compile_melted
-compile_result 	 validity_warning TEST1 Unused_local_warning
+compile_result 	 validity_warning TEST1 "Unused Local"
 
 define		 BODY "once"
 define		 LOCALS "local wimp: INTEGER"
 define		 RESCUE "rescue io.putstring ("In rescue clause%N"); retry"
 copy_sub 	 test1.e  $CLUSTER test1.e
 compile_melted
-compile_result 	 validity_warning TEST1 Unused_local_warning
+compile_result 	 validity_warning TEST1 "Unused Local"
 
 test_end

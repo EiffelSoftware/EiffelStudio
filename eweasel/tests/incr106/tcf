@@ -13,7 +13,7 @@ copy_sub 	 Ace $TEST Ace
 define		 CLASS_NAME "TEST"
 copy_sub 	 test.e  $CLUSTER test.e
 compile_melted
-compile_result 	 validity_warning TEST Unused_local_warning
+compile_result 	 validity_warning TEST "Unused Local"
 
 define		 CLASS_NAME "XXXX"
 copy_sub 	 test.e  $CLUSTER test.e
@@ -23,6 +23,6 @@ compile_result 	 validity_error NONE VD20
 define		 CLASS_NAME "TEST"
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
-compile_result 	 validity_warning TEST Unused_local_warning
+compile_result 	 validity_warning TEST "Unused Local"
 
 test_end

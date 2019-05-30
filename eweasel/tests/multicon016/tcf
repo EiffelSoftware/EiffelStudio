@@ -6,7 +6,7 @@ copy_raw 	multi.e $CLUSTER multi.e
 
 
 compile_melted
-compile_result validity_error TEST Unused_local_warning; MULTI VTMC(2)
+compile_result validity_error TEST "Unused Local"; MULTI VTMC(2)
 
 test_end
 

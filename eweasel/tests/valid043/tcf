@@ -11,5 +11,5 @@ test_description A manifest array with one element of type INTEGER should confor
 copy_sub Ace $TEST Ace
 copy_raw test.e $CLUSTER test.e
 compile_melted
-compile_result validity_warning TEST Unused_local_warning
+compile_result validity_warning TEST "Unused Local"
 test_end

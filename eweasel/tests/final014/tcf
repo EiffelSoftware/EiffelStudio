@@ -17,7 +17,7 @@ copy_sub 	test2.e $CLUSTER test2.e
 copy_sub 	parent.e $CLUSTER parent.e
 copy_raw 	weasel.h $CLUSTER weasel.h
 compile_final
-compile_result 	 validity_warning TEST Unused_local_warning
+compile_result 	 validity_warning TEST "Unused Local"
 
 c_compile_final
 c_compile_result ok

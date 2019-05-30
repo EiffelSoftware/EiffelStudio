@@ -11,7 +11,7 @@ test_description A function whose return type is NONE and which references the p
 copy_sub Ace $TEST Ace
 copy_raw test.e $CLUSTER test.e
 compile_melted
-compile_result validity_warning TEST Unused_local_warning
+compile_result validity_warning TEST "Unused Local"
 
 compile_frozen
 compile_result ok

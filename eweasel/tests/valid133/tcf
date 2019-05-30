@@ -13,6 +13,6 @@ copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e
 copy_raw 	test1.e $CLUSTER test1.e
 compile_melted
-compile_result 	validity_error TEST Unused_local_warning; TEST1 VLEC
+compile_result 	validity_error TEST "Unused Local"; TEST1 VLEC
 
 test_end

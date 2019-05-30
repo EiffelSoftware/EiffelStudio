@@ -14,7 +14,7 @@ copy_raw 	 test.e  $CLUSTER test.e
 delete 		 $CLUSTER test.e
 copy_raw 	 test.e  $CLUSTER test.e
 compile_melted
-compile_result 	 validity_warning TEST Unused_local_warning
+compile_result 	 validity_warning TEST "Unused Local"
 
 execute_work	 NONE exec_output1 1
 execute_result	 ok

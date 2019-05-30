@@ -13,7 +13,7 @@ copy_sub 	 Ace $TEST Ace
 define		 INSTRUCTION ""
 copy_sub 	 test.e  $CLUSTER test.e
 compile_frozen
-compile_result 	 validity_warning TEST Unused_local_warning
+compile_result 	 validity_warning TEST "Unused Local"
 
 c_compile_work
 c_compile_result ok
@@ -21,7 +21,7 @@ c_compile_result ok
 define		 INSTRUCTION "print (Void)"
 copy_sub 	 test.e  $CLUSTER test.e
 compile_melted
-compile_result 	 validity_warning TEST Unused_local_warning
+compile_result 	 validity_warning TEST "Unused Local"
 
 execute_work	 NONE exec_output1 1000 1000
 execute_result	 ok

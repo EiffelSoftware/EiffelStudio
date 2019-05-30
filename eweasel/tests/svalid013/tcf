@@ -9,6 +9,6 @@ copy_raw	child1.e $CLUSTER child1.e
 copy_raw	child2.e $CLUSTER child2.e
 
 compile_melted
-compile_result	validity_warning PARENT Unused_local_warning
+compile_result	validity_warning PARENT "Unused Local"
 
 test_end

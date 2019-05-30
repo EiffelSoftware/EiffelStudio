@@ -16,7 +16,7 @@ copy_raw	a2.e $CLUSTER a2.e
 copy_raw	a3.e $CLUSTER a3.e 
 
 compile_final
-compile_result	validity_warning TEST Unused_local_warning
+compile_result	validity_warning TEST "Unused Local"
 
 c_compile_final
 c_compile_result	ok

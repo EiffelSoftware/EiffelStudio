@@ -18,7 +18,7 @@ copy_raw 	 test2.e  $CLUSTER test2.e
 copy_sub 	 test3.e  $CLUSTER test3.e
 
 compile_melted
-compile_result 	 validity_warning TEST Unused_local_warning
+compile_result 	 validity_warning TEST "Unused Local"
 
 define		 CLASS_NAME "TEST3_XXX"
 copy_sub 	 test3.e  $CLUSTER test3.e
@@ -38,7 +38,7 @@ compile_result 	 validity_error TEST1 VTCG
 define		 ACTUAL_GENERIC "TEST3"
 copy_sub 	 test1.e  $CLUSTER test1.e
 resume_compile
-compile_result 	 validity_warning TEST Unused_local_warning
+compile_result 	 validity_warning TEST "Unused Local"
 
 define		 CLASS_NAME "TEST3_XXX"
 copy_sub 	 test3.e  $CLUSTER test3.e
@@ -58,6 +58,6 @@ compile_result 	 validity_error TEST1 VTCG
 define		 ACTUAL_GENERIC "TEST3"
 copy_sub 	 test1.e  $CLUSTER test1.e
 resume_compile
-compile_result 	 validity_warning TEST Unused_local_warning
+compile_result 	 validity_warning TEST "Unused Local"
 
 test_end

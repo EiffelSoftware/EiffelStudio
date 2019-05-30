@@ -20,7 +20,7 @@ compile_result 	 ok
 define		 LOCAL "x: TEST1 [INTEGER, STRING, REAL];"
 copy_sub 	 test.e  $CLUSTER test.e
 compile_melted
-compile_result 	validity_warning TEST Unused_local_warning
+compile_result 	validity_warning TEST "Unused Local"
 
 define		 GENERICS "G, H"
 copy_sub 	 test1.e  $CLUSTER test1.e
@@ -30,7 +30,7 @@ compile_result 	 validity_error TEST VTUG(2)
 define		 GENERICS "I, G, H"
 copy_sub 	 test1.e  $CLUSTER test1.e
 resume_compile
-compile_result 	validity_warning TEST Unused_local_warning
+compile_result 	validity_warning TEST "Unused Local"
 
 define		 GENERICS "H, G"
 copy_sub 	 test1.e  $CLUSTER test1.e
@@ -40,6 +40,6 @@ compile_result 	 validity_error TEST VTUG(2)
 define		 LOCAL "x: TEST1 [INTEGER, STRING];"
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
-compile_result 	validity_warning TEST Unused_local_warning
+compile_result 	validity_warning TEST "Unused Local"
 
 test_end

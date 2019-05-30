@@ -170,10 +170,12 @@ feature -- Update
 			elseif is_prefix (Syntax_warning_prefix, line) then
 				in_error := False
 				analyze_syntax_warning (line)
-			elseif is_prefix (Validity_error_prefix, line) or
-				is_prefix (Validity_warning_prefix, line) then
+			elseif is_prefix (validity_error_prefix, line) then
 				in_error := True
-				analyze_validity_error (line)
+				analyze_validity_error (line, validity_error_prefix.count)
+			elseif is_prefix (validity_warning_prefix, line) then
+				in_error := True
+				analyze_validity_error (line, validity_warning_prefix.count)
 			elseif is_prefix (Resume_prompt, line) then
 				in_error := False
 				compilation_paused := True
@@ -434,18 +436,24 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	analyze_validity_error (line: STRING)
-		require
-			line_not_void: line /= Void;
-		do
-			add_validity_error (new_validity_error (line));
-		end;
-
-	new_validity_error (line: STRING): EW_EIFFEL_VALIDITY_ERROR
+	analyze_validity_error (line: STRING; prefix_count: like {STRING}.count)
 		require
 			line_not_void: line /= Void
+			prefix_count <= line.count
 		do
-			create Result.make (create {STRING_32}.make_empty, broken_into_words (from_utf_8 (line)) [3])
+			add_validity_error (new_validity_error (line, prefix_count))
+		end
+
+	new_validity_error (line: STRING; prefix_count: like {STRING}.count): EW_EIFFEL_VALIDITY_ERROR
+		require
+			line_not_void: line /= Void
+			prefix_count <= line.count
+		local
+			message: STRING_32
+		do
+			message := from_utf_8 (line).tail (line.count - prefix_count)
+			message.adjust
+			create Result.make (create {STRING_32}.make_empty, message)
 		end
 
 	analyze_error_line (line: STRING)

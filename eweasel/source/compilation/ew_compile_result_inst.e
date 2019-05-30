@@ -197,7 +197,7 @@ feature {NONE} -- Implementation
 			line: READABLE_STRING_32
 			line_no: INTEGER
 		do
-			words := broken_into_words (phrase)
+			words := broken_into_arguments (phrase)
 			count := words.count
 			if count < 2 then
 				init_ok := False

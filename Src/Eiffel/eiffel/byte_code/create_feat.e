@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Creation of an object bounded to type of a feature during execution."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -52,21 +52,6 @@ feature -- Initialization
 		ensure
 			feature_id_set: feature_id = f_id
 			routine_id_set: routine_id = f_rout_id
-		end
-
-feature -- Settings
-
-	set_info (f_id, r_id: INTEGER)
-			-- Set `feature_id' and `routine_id' with `f_id' and `r_id'.
-		require
-			valid_f_id: f_id > 0
-			valid_r_id: r_id > 0
-		do
-			feature_id := f_id
-			routine_id := r_id
-		ensure
-			feature_id_set: feature_id = f_id
-			routine_id_set: routine_id = r_id
 		end
 
 feature -- Access
@@ -256,7 +241,7 @@ feature -- Genericity
 			end
 		end
 
-	generate_cid (buffer: GENERATION_BUFFER; final_mode : BOOLEAN)
+	generate_cid (buffer: GENERATION_BUFFER; final_mode: BOOLEAN)
 
 		local
 			table: POLY_TABLE [ENTRY]
@@ -298,8 +283,7 @@ feature -- Genericity
 					context.generate_current_dftype
 					buffer.put_character (',')
 					buffer.put_type_id (table.min_type_id)
-					buffer.put_character (')')
-					buffer.put_character (',')
+					buffer.put_two_character (')', ',')
 
 						-- Side effect. This is not nice but
 						-- unavoidable.
@@ -315,15 +299,14 @@ feature -- Genericity
 				context.generate_current_dtype
 				buffer.put_string ({C_CONST}.comma_space)
 				context.generate_current_dftype
-				buffer.put_character (')')
-				buffer.put_character (',')
+				buffer.put_two_character (')', ',')
 			end
 		end
 
-	generate_cid_array (buffer : GENERATION_BUFFER;
-						final_mode : BOOLEAN; idx_cnt : COUNTER)
+	generate_cid_array (buffer: GENERATION_BUFFER;
+						final_mode: BOOLEAN; idx_cnt: COUNTER)
 		local
-			dummy : INTEGER
+			dummy: INTEGER
 			table: POLY_TABLE [ENTRY]
 			l_type: TYPE_A
 		do
@@ -363,8 +346,8 @@ feature -- Genericity
 			end
 		end
 
-	generate_cid_init (buffer : GENERATION_BUFFER;
-					   final_mode : BOOLEAN; idx_cnt : COUNTER; a_level: NATURAL)
+	generate_cid_init (buffer: GENERATION_BUFFER;
+					   final_mode: BOOLEAN; idx_cnt: COUNTER; a_level: NATURAL)
 		local
 			dummy: INTEGER
 			table: POLY_TABLE [ENTRY]
@@ -395,28 +378,27 @@ feature -- Genericity
 			end
 		end
 
-	make_type_byte_code (ba : BYTE_ARRAY)
+	make_type_byte_code (ba: BYTE_ARRAY)
 			-- <Precursor>
 		do
 			ba.append_natural_16 ({SHARED_GEN_CONF_LEVEL}.like_feature_type)
 			ba.append_integer_for_type_array (routine_id)
 		end
 
-	type_to_create: CL_TYPE_A
-
+	type_to_create: detachable CL_TYPE_A
 		local
-			table : POLY_TABLE [ENTRY]
+			table: POLY_TABLE [ENTRY]
 		do
 			if context.final_mode then
 				table := Eiffel_table.poly_table (routine_id)
 				if table.has_one_type then
-					Result ?= table.first.type.deep_actual_type
+					Result := {CL_TYPE_A} / table.first.type.deep_actual_type
 				end
 			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -447,4 +429,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class CREATE_FEAT
+end

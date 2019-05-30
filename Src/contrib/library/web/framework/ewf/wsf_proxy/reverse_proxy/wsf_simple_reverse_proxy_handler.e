@@ -6,6 +6,14 @@ note
 class
 	WSF_SIMPLE_REVERSE_PROXY_HANDLER
 
+inherit
+	WSF_TIMEOUT_UTILITIES
+		export
+			{NONE} all
+		end
+
+	ANY
+
 create
 	make
 
@@ -14,9 +22,11 @@ feature {NONE} -- Initialization
 	make (a_remote_uri: READABLE_STRING_8)
 		do
 			create remote_uri.make_from_string (a_remote_uri)
-			timeout := 30 -- seconds. See {NETWORK_SOCKET}.default_timeout
+			timeout_ns := 30_000_000_000 -- seconds. See {NETWORK_SOCKET}.default_timeout
 			connect_timeout := 5_000 -- 5 seconds.
-			is_via_header_supported := True
+			recv_timeout_ns := 5_000_000_000 -- 5 seconds
+			send_timeout_ns := 5_000_000_000 -- 5 seconds
+			is_forwarded_header_supported := True
 		end
 
 feature -- Access
@@ -33,12 +43,35 @@ feature -- Settings
 	connect_timeout: INTEGER assign set_connect_timeout
 			-- In milliseconds.
 
-	timeout: INTEGER assign set_timeout
-			-- In seconds.
+	timeout_ns,
+	recv_timeout_ns,
+	send_timeout_ns: NATURAL_64
 
-	is_via_header_supported: BOOLEAN
-			-- Via: header supported.
+	is_via_header_supported: BOOLEAN assign set_header_via
+			-- "Via:" header supported.
+			-- See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Via
 			-- Default: True.
+
+	is_forwarded_header_supported: BOOLEAN assign set_header_forwarded
+			-- "Forwarded:" header supported (standard)
+			-- Forwarded: by=<identifier>;for=<identifier>;host=<host>;proto=<http|https>
+			-- See https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Forwarded
+			-- and https://tools.ietf.org/html/rfc7239#section-4
+			-- Default: False
+
+	is_x_forwarded_header_supported: BOOLEAN assign set_header_x_forwarded
+			-- "X-Forwarded-For:" header supported (XFF), and related ...
+			-- See: de-facto standard https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Forwarded-For
+			--		https://en.wikipedia.org/wiki/X-Forwarded-For
+			-- Default: False
+
+	is_using_proxy_host: BOOLEAN assign keep_proxy_host
+			-- Do not change the HTTP_HOST.
+			-- Default: False
+
+feature -- Forwarded header settings
+
+	header_forwarded_by: detachable READABLE_STRING_8 assign set_header_forwarded_by
 
 feature -- Change
 
@@ -47,10 +80,30 @@ feature -- Change
 			uri_rewriter := a_rewriter
 		end
 
+feature -- Timeout Change		
+
 	set_timeout (a_timeout_in_seconds: INTEGER)
 			-- in seconds.
 		do
-			timeout := a_timeout_in_seconds
+			set_timeout_ns (seconds_to_nanoseconds (a_timeout_in_seconds))
+		end
+
+	set_timeout_ns (a_timeout_ns: NATURAL_64)
+			-- in nanoseconds.
+		do
+			timeout_ns := a_timeout_ns
+		end
+
+	set_recv_timeout_ns (ns: NATURAL_64)
+			-- in nanoseconds.
+		do
+			recv_timeout_ns := ns
+		end
+
+	set_send_timeout_ns (ns: NATURAL_64)
+			-- in nanoseconds.
+		do
+			send_timeout_ns := ns
 		end
 
 	set_connect_timeout (a_timeout_in_milliseconds: INTEGER)
@@ -59,23 +112,54 @@ feature -- Change
 			connect_timeout := a_timeout_in_milliseconds
 		end
 
-	set_is_via_header_supported (b: BOOLEAN)
+feature -- Header Change		
+
+	set_header_forwarded (b: BOOLEAN)
+			-- Set `is_forwarded_header_supported` to `b`.
+		do
+			is_forwarded_header_supported := b
+		end
+
+	set_header_forwarded_by (a_id: like header_forwarded_by)
+		do
+			header_forwarded_by := a_id
+		end
+
+	set_is_via_header_supported,
+	set_header_via (b: BOOLEAN)
 			-- Set `is_via_header_supported' to `b'.
 		do
 			is_via_header_supported := b
 		end
 
-feature -- Execution
-
-	proxy_uri (request: WSF_REQUEST): STRING
-			-- URI to query on proxyfied host.
+	set_header_x_forwarded (b: BOOLEAN)
+			-- Set `is_x_forwarded_header_supported` to `b`.
 		do
+			is_x_forwarded_header_supported := b
+		end
+
+	keep_proxy_host (b: BOOLEAN)
+		do
+			is_using_proxy_host := b
+		end
+
+feature -- Access / information
+
+	proxy_url (req: WSF_REQUEST): STRING
+			-- Proxy forward to `Result` URL.
+		local
+			l_remote_uri: like remote_uri
+		do
+			l_remote_uri := remote_uri
+			create Result.make_from_string (l_remote_uri.string)
 			if attached uri_rewriter as r then
-				Result := r.uri (request)
+				Result.append (r.uri (req))
 			else
-				Result := request.request_uri
+				Result.append (req.request_uri)
 			end
 		end
+
+feature -- Execution
 
 	execute (request: WSF_REQUEST; response: WSF_RESPONSE)
 			-- Execute reverse proxy request.
@@ -90,23 +174,25 @@ feature -- Execution
 			l_completed: BOOLEAN
 			l_remote_uri: like remote_uri
 			l_socket_factory: WSF_PROXY_SOCKET_FACTORY
+			l_forwarded: STRING
+			s: READABLE_STRING_8
 		do
 			l_remote_uri := remote_uri
 			create l_socket_factory
 			if not l_socket_factory.is_uri_supported (l_remote_uri) then
 				send_error (request, response, {HTTP_STATUS_CODE}.bad_gateway, l_remote_uri.scheme + " is not supported! [for remote " + l_remote_uri.string + "]")
-			elseif attached l_socket_factory.socket_from_uri (l_remote_uri) as l_socket then
+			elseif attached {NETWORK_STREAM_SOCKET} l_socket_factory.socket_from_uri (l_remote_uri) as l_socket then
 				l_socket.set_connect_timeout (connect_timeout) -- milliseconds
-				l_socket.set_timeout (timeout) -- seconds
+				l_socket.set_timeout_ns (timeout_ns)
+				l_socket.set_recv_timeout_ns (recv_timeout_ns)
+				l_socket.set_send_timeout_ns (send_timeout_ns)
 
 				l_socket.connect
-				if l_socket.is_connected then
-					create l_http_query.make_from_string (request.request_method)
-					l_http_query.append_character (' ')
-					l_http_query.append (l_remote_uri.path)
-					l_http_query.append (proxy_uri (request))
-					l_http_query.append_character (' ')
-					l_http_query.append (request.server_protocol)
+				if
+					l_socket.is_connected and then
+					attached l_socket.peer_address as l_socket_peer_address
+				then
+					l_http_query := forward_http_query (request)
 					if attached request.raw_header_data as l_raw_header then
 						i := l_raw_header.substring_index ("%R%N", 1)
 						if i > 0 then
@@ -115,15 +201,22 @@ feature -- Execution
 						else
 							create h.make_from_raw_header_data (l_raw_header.to_string_8)
 						end
-						if attached l_remote_uri.host as l_remote_host then
+						s := Void
+						if is_using_proxy_host then
+							if attached request.http_host as l_request_host then
+								s := l_request_host
+							end
+						elseif attached l_remote_uri.host as l_remote_host then
+							s := l_remote_host
 							if l_remote_uri.port > 0 then
-								h.put_header_key_value ("Host", l_remote_host + ":" + l_remote_uri.port.out)
-							else
-								h.put_header_key_value ("Host", l_remote_host)
+								s := s + ":" + l_remote_uri.port.out
 							end
 						end
+						if s /= Void then
+							h.put_header_key_value ("Host", s)
+						end
 
-							-- Via header
+							-- Proxy related headers
 						if is_via_header_supported then
 							if attached h.item ("Via") as v then
 								l_via := v
@@ -131,8 +224,50 @@ feature -- Execution
 							else
 								create l_via.make_empty
 							end
-							l_via.append (request.server_protocol + " " + request.server_name + " (PROXY-" + request.server_software + ")")
+							l_via.append (request.server_protocol)
+							l_via.append_character (' ')
+							l_via.append (request.server_name)
+							l_via.append (" (PROXY-")
+							l_via.append (request.server_software)
+							l_via.append_character (')')
 							h.put_header_key_value ("Via", l_via)
+						end
+						if is_forwarded_header_supported then
+							-- Forwarded: for=<identifier>;host=<host>;proto=<http|https>
+							create l_forwarded.make (50)
+							l_forwarded.append ("for=")
+							l_forwarded.append (request.remote_addr)
+							if attached request.http_host as l_host then
+								l_forwarded.append (";host=")
+								l_forwarded.append (l_host)
+							end
+							l_forwarded.append (";proto=")
+							if request.is_https then
+								l_forwarded.append ("https")
+							else
+								l_forwarded.append ("http")
+							end
+							if attached header_forwarded_by as l_id then
+								l_forwarded.append (";by=")
+								l_forwarded.append (l_id)
+							end
+							if attached request.meta_string_variable ("HTTP_FORWARDED") as l_req_forwarded then
+								l_forwarded := l_req_forwarded + ", " + l_forwarded
+							end
+							h.put_header_key_value ("Forwarded", l_forwarded)
+						end
+						if is_x_forwarded_header_supported then
+							s := request.remote_addr
+							if attached request.meta_string_variable ("HTTP_X_FORWARDED_FOR") as l_xff then
+								s := l_xff + ", " + s
+							end
+							h.put_header_key_value ("X-Forwarded-For", s)
+							h.put_header_key_value ("X-Forwarded-Port", request.server_port.out)
+							if request.is_https then
+								h.put_header_key_value ("X-Forwarded-Proto", "https")
+							else
+								h.put_header_key_value ("X-Forwarded-Proto", "http")
+							end
 						end
 
 							-- Max-Forwards header handling
@@ -219,7 +354,29 @@ feature -- Execution
 			end
 		end
 
-feature {NONE} -- Implementation		
+feature {NONE} -- Implementation
+
+	forward_http_query (req: WSF_REQUEST): STRING
+		local
+			l_remote_uri: like remote_uri
+		do
+			l_remote_uri := remote_uri
+
+			create Result.make_from_string (req.request_method)
+			Result.append_character (' ')
+			Result.append (l_remote_uri.path)
+			if attached l_remote_uri.query as q then
+				Result.append_character ('?')
+				Result.append (q)
+			end
+			if attached uri_rewriter as r then
+				Result.append (r.uri (req))
+			else
+				Result.append (req.request_uri)
+			end
+			Result.append_character (' ')
+			Result.append (req.server_protocol)
+		end
 
 	status_line_info (a_line: READABLE_STRING_8): detachable TUPLE [protocol: READABLE_STRING_8; status_code: INTEGER; reason_phrase: detachable READABLE_STRING_8]
 			-- Info from status line

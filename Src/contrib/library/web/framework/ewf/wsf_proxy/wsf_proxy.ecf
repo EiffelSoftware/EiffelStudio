@@ -10,6 +10,7 @@
 				<custom name="ssl_supported" value="true"/>
 			</condition>
 		</library>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="uri" location="$ISE_LIBRARY\library\text\uri\uri.ecf"/>
 		<library name="wsf" location="..\wsf\wsf.ecf"/>
 		<cluster name="network" location=".\network\" recursive="true">

@@ -300,7 +300,7 @@ feature -- Execution
 						end
 					end
 				else
-					Result.set_error_message ("Error: cURL Error[" + l_result.out + "] " + curl.error_message (l_result))
+					Result.set_error_message ("Error: cURL Error[" + l_result.out + "]")
 					Result.status := response_status_code (curl_easy, curl_handle)
 				end
 

@@ -12,7 +12,7 @@ test_description Introduce VTAT violation and try to resume compilation
 copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e
 compile_melted
-compile_result 	 validity_warning TEST Unused_local_warning
+compile_result 	 validity_warning TEST "Unused Local"
 
 copy_raw 	test_rev1.e $CLUSTER test.e
 compile_melted

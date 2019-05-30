@@ -12,7 +12,7 @@ test_description A class repeatedly generates a small manifest array, each of wh
 copy_sub 	 Ace $TEST Ace
 copy_raw 	 test.e  $CLUSTER test.e
 compile_melted
-compile_result 	 validity_warning TEST Unused_local_warning VWMA(1):31
+compile_result 	 validity_warning TEST "Unused Local" VWMA(1):31
 
 execute_work	 NONE exec_output1 200000
 execute_result	 ok

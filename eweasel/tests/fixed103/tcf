@@ -12,7 +12,7 @@ test_description A class with an internal routine is replaced by an an external 
 copy_sub 	 Ace $TEST Ace
 copy_raw 	 test.e  $CLUSTER test.e
 compile_melted
-compile_result 	 validity_warning TEST Unused_local_warning
+compile_result 	 validity_warning TEST "Unused Local"
 
 copy_raw 	 test_rev1.e  $CLUSTER test.e
 compile_melted

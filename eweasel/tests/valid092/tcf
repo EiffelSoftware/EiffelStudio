@@ -28,6 +28,6 @@ compile_result 	 validity_error TEST VOMB(2)
 define		 ENTITY "1"
 copy_sub 	 test.e $CLUSTER test.e
 resume_compile
-compile_result 	 validity_warning TEST Unused_local_warning
+compile_result 	 validity_warning TEST "Unused Local"
 
 test_end

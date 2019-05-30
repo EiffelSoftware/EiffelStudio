@@ -22,6 +22,6 @@ compile_result 	 validity_error NONE VSCN
 
 copy_sub 	 Ace_rev1 $TEST Ace
 resume_compile
-compile_result 	 validity_warning TEST Unused_local_warning
+compile_result 	 validity_warning TEST "Unused Local"
 
 test_end

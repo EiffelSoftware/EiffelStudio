@@ -12,7 +12,7 @@ test_description A boolean operator (and, or, and then, or else, xor, implies, n
 copy_sub 	 Ace $TEST Ace
 copy_raw 	 test.e  $CLUSTER test.e
 compile_frozen
-compile_result 	 validity_warning TEST Unused_local_warning
+compile_result 	 validity_warning TEST "Unused Local"
 
 c_compile_work
 c_compile_result ok

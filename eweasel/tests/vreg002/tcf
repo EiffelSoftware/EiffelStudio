@@ -66,6 +66,6 @@ compile_result 	 validity_error TEST VREG
 define		 LOCALS "a: INTEGER; weasel: REAL; b: STRING; c: DOUBLE; e: POINTER"
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
-compile_result 	 validity_warning TEST Unused_local_warning
+compile_result 	 validity_warning TEST "Unused Local"
 
 test_end

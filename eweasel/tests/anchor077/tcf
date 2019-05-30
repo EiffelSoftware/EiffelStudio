@@ -8,6 +8,6 @@ copy_raw	test2.e $CLUSTER test2.e
 copy_raw	test3.e $CLUSTER test3.e
 
 compile_melted
-compile_result	validity_warning TEST Unused_local_warning
+compile_result	validity_warning TEST "Unused Local"
 
 test_end

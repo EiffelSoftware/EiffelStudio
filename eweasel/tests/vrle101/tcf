@@ -31,7 +31,7 @@ define		 LOCALS "local y: REAL"
 define		 FEATURE "x: INTEGER"
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
-compile_result 	 validity_warning TEST Unused_local_warning
+compile_result 	 validity_warning TEST "Unused Local"
 
 define		 LOCALS "local x: INTEGER"
 define		 FEATURE "x: INTEGER"
@@ -43,7 +43,7 @@ define		 LOCALS "local x: INTEGER"
 define		 FEATURE "y: INTEGER"
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
-compile_result 	 validity_warning TEST Unused_local_warning
+compile_result 	 validity_warning TEST "Unused Local"
 
 define		 TEST1_FEATURE "x"
 copy_sub 	 test1.e  $CLUSTER test1.e
@@ -53,14 +53,14 @@ compile_result 	 validity_error TEST VRLE(1)
 define		 INHERITANCE ""
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
-compile_result 	 validity_warning TEST Unused_local_warning
+compile_result 	 validity_warning TEST "Unused Local"
 
 define		 INHERITANCE "inherit TEST1"
 define		 TEST1_FEATURE "z"
 copy_sub 	 test.e  $CLUSTER test.e
 copy_sub 	 test1.e  $CLUSTER test1.e
 compile_melted
-compile_result 	 validity_warning TEST Unused_local_warning 
+compile_result 	 validity_warning TEST "Unused Local" 
 
 define		 INHERITANCE "inherit TEST1 rename z as x end"
 copy_sub 	 test.e  $CLUSTER test.e
@@ -75,6 +75,6 @@ compile_result 	 validity_error TEST VRLE(1)
 define		 LOCALS "local w: INTEGER"
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
-compile_result 	 validity_warning TEST Unused_local_warning
+compile_result 	 validity_warning TEST "Unused Local"
 
 test_end

@@ -28,11 +28,11 @@ compile_result 	 validity_error TEST VEEN(22)
 define		 POSTCONDITION "old Current = Current"
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
-compile_result 	 validity_warning TEST Unused_local_warning
+compile_result 	 validity_warning TEST "Unused Local"
 
 define		 POSTCONDITION "old Result"
 copy_sub 	 test.e  $CLUSTER test.e
 compile_melted
-compile_result 	 validity_warning TEST Unused_local_warning
+compile_result 	 validity_warning TEST "Unused Local"
 
 test_end

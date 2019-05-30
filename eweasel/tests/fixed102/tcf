@@ -23,6 +23,6 @@ compile_result 	 validity_error TEST VREG VREG
 define		 BODY "local x1: ARRAY [INTEGER]; x2: ARRAY [BOOLEAN]; x3: ARRAY [DOUBLE]; do end;"
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
-compile_result 	 validity_warning TEST Unused_local_warning
+compile_result 	 validity_warning TEST "Unused Local"
 
 test_end

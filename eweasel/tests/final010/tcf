@@ -12,7 +12,7 @@ test_description A system allocates an ARRAYED_LIST each of whose elements is an
 copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e
 compile_final
-compile_result 	 validity_warning TEST Unused_local_warning
+compile_result 	 validity_warning TEST "Unused Local"
 
 c_compile_final
 c_compile_result ok

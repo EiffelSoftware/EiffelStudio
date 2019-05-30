@@ -13,7 +13,7 @@ copy_sub 	 Ace $TEST Ace
 copy_raw 	 test.e  $CLUSTER test.e
 copy_raw 	 test1.e  $CLUSTER test1.e
 compile_melted
-compile_result 	 validity_warning TEST Unused_local_warning
+compile_result 	 validity_warning TEST "Unused Local"
 
 execute_work	 NONE exec_output1 5
 execute_result	 ok
@@ -22,7 +22,7 @@ compare		 exec_output1 output
 cleanup_compile
 
 compile_frozen
-compile_result 	 validity_warning TEST Unused_local_warning
+compile_result 	 validity_warning TEST "Unused Local"
 
 c_compile_work
 c_compile_result ok

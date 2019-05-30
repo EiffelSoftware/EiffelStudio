@@ -23,7 +23,7 @@ copy_sub	Ace	$TEST Ace
 copy_raw	root_class.e	$CLUSTER root_class.e
 
 compile_frozen
-compile_result	validity_warning ROOT_CLASS Unused_local_warning
+compile_result	validity_warning ROOT_CLASS "Unused Local"
 c_compile_work
 c_compile_result ok
 

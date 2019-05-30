@@ -11,6 +11,6 @@ copy_raw	class2_override.e	$OVERRIDE class2.e
 copy_raw	class3_override.e	$OVERRIDE class3.e
 
 compile_melted
-compile_result validity_warning TEST Unused_local_warning
+compile_result validity_warning TEST "Unused Local"
 
 test_end

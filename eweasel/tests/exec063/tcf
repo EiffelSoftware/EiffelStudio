@@ -12,7 +12,7 @@ test_description A class repeatedly creates a LINKED_LIST [STRING] whose number 
 copy_sub 	 Ace $TEST Ace
 copy_raw 	 test.e  $CLUSTER test.e
 compile_frozen
-compile_result 	 validity_warning TEST Unused_local_warning
+compile_result 	 validity_warning TEST "Unused Local"
 
 c_compile_work
 c_compile_result ok

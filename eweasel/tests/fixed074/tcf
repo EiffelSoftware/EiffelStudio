@@ -15,21 +15,21 @@ copy_sub 	 test.e  $CLUSTER test.e
 copy_raw 	 test1.e  $CLUSTER test1.e
 copy_raw 	 test2.e  $CLUSTER test2.e
 compile_melted
-compile_result 	 validity_warning TEST Unused_local_warning
+compile_result 	 validity_warning TEST "Unused Local"
 
 define		 TEST_INHERITANCE "inherit TEST1 [STRING]; TEST2;"
 copy_sub 	 test.e  $CLUSTER test.e
 compile_melted
-compile_result 	 validity_warning TEST Unused_local_warning
+compile_result 	 validity_warning TEST "Unused Local"
 
 define		 TEST_INHERITANCE "inherit TEST1 [STRING];"
 copy_sub 	 test.e  $CLUSTER test.e
 copy_raw 	 test1_rev1.e  $CLUSTER test1.e
 compile_melted
-compile_result 	 validity_warning TEST Unused_local_warning 
+compile_result 	 validity_warning TEST "Unused Local" 
 
 copy_raw 	 test1_rev2.e  $CLUSTER test1.e
 compile_melted
-compile_result 	 validity_warning TEST Unused_local_warning
+compile_result 	 validity_warning TEST "Unused Local"
 
 test_end

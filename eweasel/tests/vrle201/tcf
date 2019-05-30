@@ -27,7 +27,7 @@ define		 LOCALS "local y: REAL"
 define		 ARGUMENTS "(x: STRING)"
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
-compile_result 	 validity_warning TEST Unused_local_warning
+compile_result 	 validity_warning TEST "Unused Local"
 
 define		 LOCALS "local x: INTEGER"
 define		 ARGUMENTS "(x: INTEGER)"
@@ -39,7 +39,7 @@ define		 LOCALS "local x: INTEGER"
 define		 ARGUMENTS "(y: INTEGER)"
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
-compile_result 	 validity_warning TEST Unused_local_warning
+compile_result 	 validity_warning TEST "Unused Local"
 
 define		 LOCALS "local y: INTEGER"
 define		 ARGUMENTS "(y: INTEGER)"
@@ -61,6 +61,6 @@ compile_result 	 validity_error TEST VRLE(2)
 define		 ARGUMENTS ""
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
-compile_result 	 validity_warning TEST Unused_local_warning
+compile_result 	 validity_warning TEST "Unused Local"
 
 test_end

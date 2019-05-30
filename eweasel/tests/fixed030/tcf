@@ -16,7 +16,7 @@ define		 TEST1_INHERITANCE ""
 copy_sub 	 test.e  $CLUSTER test.e
 copy_sub 	 test1.e  $CLUSTER test1.e
 compile_melted
-compile_result 	 validity_warning TEST Unused_local_warning
+compile_result 	 validity_warning TEST "Unused Local"
 
 define		 TEST_INHERITANCE "inherit ANY undefine is_equal end;"
 define		 TEST1_INHERITANCE "inherit TEST;"
@@ -33,6 +33,6 @@ compile_result 	 validity_error TEST VCCH(1)
 define		 TEST_INHERITANCE ""
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
-compile_result 	 validity_warning TEST Unused_local_warning
+compile_result 	 validity_warning TEST "Unused Local"
 
 test_end

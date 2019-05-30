@@ -120,36 +120,35 @@ feature -- Callbacks
 			l_attribute: INTEGER
 			l_local: READABLE_STRING_32
 		do
-			if not is_error then
-				if
-					not a_local_part.is_case_insensitive_equal_general ("xmlns") and
-					not a_local_part.is_case_insensitive_equal_general ("xsi") and
-					not a_local_part.is_case_insensitive_equal_general ("schemaLocation")
-				then
-					l_local := a_local_part.as_lower
+			if
+				not is_error and then
+				not a_local_part.is_case_insensitive_equal_general ("xmlns") and
+				not a_local_part.is_case_insensitive_equal_general ("xsi") and
+				not a_local_part.is_case_insensitive_equal_general ("schemaLocation")
+			then
+				l_local := a_local_part.as_lower
 
-					if note_level = 0 then
-							-- check if the attribute is valid for the current state
-						if attached tag_attributes.item (current_tag.item) as l_attr then
-							l_attribute := l_attr.item (l_local)
-						end
-						if current_attributes = Void then
-							create current_attributes.make (1)
-						end
-						if l_attribute /= 0 and then not current_attributes.has (l_attribute) then
-								-- Check and put defined attributes in `current_attributes'.
-							if not a_value.is_empty then
-								current_attributes.force (lt_gt_escaped_string (a_value), l_attribute)
-							else
-								set_parse_error_message (conf_interface_names.e_parse_invalid_value (a_local_part))
-							end
+				if note_level = 0 then
+						-- check if the attribute is valid for the current state
+					if attached tag_attributes.item (current_tag.item) as l_attr then
+						l_attribute := l_attr.item (l_local)
+					end
+					if current_attributes = Void then
+						create current_attributes.make (1)
+					end
+					if l_attribute /= 0 and then not current_attributes.has (l_attribute) then
+							-- Check and put defined attributes in `current_attributes'.
+						if not a_value.is_empty then
+							current_attributes.force (lt_gt_escaped_string (a_value), l_attribute)
 						else
-							report_unknown_attribute (a_local_part)
+							set_parse_error_message (conf_interface_names.e_parse_invalid_value (a_local_part))
 						end
 					else
-							-- Put undefined attributes in `current_attributes_undefined'.
-						current_attributes_undefined.force (lt_gt_escaped_string (a_value), l_local)
+						report_unknown_attribute (a_local_part)
 					end
+				else
+						-- Put undefined attributes in `current_attributes_undefined'.
+					current_attributes_undefined.force (lt_gt_escaped_string (a_value), l_local)
 				end
 			end
 		end
@@ -627,10 +626,11 @@ feature {NONE} -- Implementation attribute processing
 							set_parse_error_message (conf_interface_names.e_parse_invalid_attribute ("location"))
 						else
 							redir := factory.new_redirection_with_file_name (file_name, l_loc, l_uu)
-							if includes_this_or_after (namespace_1_16_0) then
-								if attached current_attributes.item (at_message) as l_msg then
-									redir.set_message (l_msg)
-								end
+							if
+								includes_this_or_after (namespace_1_16_0) and then
+								attached current_attributes.item (at_message) as l_msg
+							then
+								redir.set_message (l_msg)
 							end
 							last_redirection := redir
 						end
@@ -1614,11 +1614,23 @@ feature {NONE} -- Implementation attribute processing
 					set_parse_error_message (conf_interface_names.e_parse_invalid_value (o_is_debug))
 				end
 			end
-			if attached current_attributes.item (at_warning) as l_warning then
-				if l_warning.is_boolean then
-					l_current_option.set_warning (l_warning.to_boolean)
+			if attached current_attributes.item (at_warning) as o then
+				if includes_this_or_after (namespace_1_21_0) then
+						-- Starting from 19.11 warnings can be reported as errors.
+					if l_current_option.warning.is_valid_item (o) then
+						l_current_option.warning.put (o)
+					else
+						set_parse_error_message (conf_interface_names.e_parse_invalid_value (o_warning))
+					end
+				elseif o.is_boolean then
+					l_current_option.warning.put_index
+						(if o.to_boolean then
+							{CONF_OPTION}.warning_index_warning
+						else
+							{CONF_OPTION}.warning_index_none
+						end)
 				else
-					set_parse_error_message (conf_interface_names.e_parse_invalid_value (o_is_warning))
+					set_parse_error_message (conf_interface_names.e_parse_invalid_value (o_warning))
 				end
 			end
 			if
@@ -2433,6 +2445,11 @@ feature {NONE} -- Processing of options
 			new_options: CONF_TARGET_OPTION
 		do
 			if
+				a_namespace.same_string (namespace_1_21_0)
+			then
+					-- Use the defaults of ES 19.11.
+				default_options := default_options_19_11
+			elseif
 				a_namespace.same_string (namespace_1_20_0)
 			then
 					-- Use the defaults of ES 19.05.
@@ -3008,7 +3025,7 @@ feature {NONE} -- Implementation state transitions
 			l_attr.force (at_profile, o_is_profile)
 			l_attr.force (at_optimize, o_is_optimize)
 			l_attr.force (at_debug, o_is_debug)
-			l_attr.force (at_warning, o_is_warning)
+			l_attr.force (at_warning, o_warning)
 			l_attr.force (at_manifest_array_type, o_manifest_array_type)
 			l_attr.force (at_msil_application_optimize, o_is_msil_application_optimize)
 			l_attr.force (at_namespace, o_namespace)
@@ -3256,6 +3273,14 @@ feature {NONE} -- Implementation state transitions
 		end
 
 feature {NONE} -- Default options
+
+	default_options_19_11: CONF_TARGET_OPTION
+			-- Default options of 19.11.
+		once
+			create Result.make_19_11
+		ensure
+			result_attached: Result /= Void
+		end
 
 	default_options_19_05: CONF_TARGET_OPTION
 			-- Default options of 19.05.

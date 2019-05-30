@@ -801,7 +801,6 @@ feature {NONE} -- Option names
 			Result.force (o_is_optimize)
 			Result.force (o_is_profile)
 			Result.force (o_is_trace)
-			Result.force (o_is_warning)
 		end
 
 	valid_options: SEARCH_TABLE [READABLE_STRING_32]
@@ -814,6 +813,7 @@ feature {NONE} -- Option names
 			Result.force (o_namespace)
 			Result.force (o_syntax)
 			Result.force (o_void_safety)
+			Result.force (o_warning)
 		end
 
 note

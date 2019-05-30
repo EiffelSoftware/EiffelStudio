@@ -846,13 +846,8 @@ end
 					create l_agent_sorter.make (agent {VTCM}.less_than)
 					create l_sorter.make (l_agent_sorter)
 					l_sorter.sort (l_list)
-					from
-						l_list.start
-					until
-						l_list.after
-					loop
-						Error_handler.insert_warning (l_list.item_for_iteration)
-						l_list.forth
+					across l_list as w loop
+						error_handler.insert_warning (w.item, w.item.associated_class.is_warning_reported_as_error (w_export_class_missing))
 					end
 				end
 			end
@@ -1070,7 +1065,7 @@ end
 				loop
 					create vd80
 					vd80.set_warning (l_warnings.item)
-					error_handler.insert_warning (vd80)
+					error_handler.insert_warning (vd80, l_target.options.is_warning_as_error)
 					l_warnings.forth
 				end
 
@@ -1377,7 +1372,7 @@ end
 				loop
 					create vd80
 					vd80.set_warning (l_errors.item)
-					Error_handler.insert_warning (vd80)
+					Error_handler.insert_warning (vd80, universe.target.options.is_warning_as_error)
 					l_errors.forth
 				end
 			end
@@ -6339,7 +6334,7 @@ feature -- Statistics
 					l_str.append ("%Tother: " + statistics.other.out)
 					l_str.append ("%N")
 					create l_cat_call_summary.make (l_str)
-					error_handler.insert_warning (l_cat_call_summary)
+					error_handler.insert_warning (l_cat_call_summary, False)
 				end
 			end
 		end

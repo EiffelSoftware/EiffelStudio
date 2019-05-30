@@ -386,6 +386,14 @@ feature -- Status report
 			Result := lace_class.options.is_warning_enabled (a_warning)
 		end
 
+	is_warning_reported_as_error (w: STRING): BOOLEAN
+			-- Should warning `w` be reported as an error?
+		require
+			is_warning_enabled (w)
+		do
+			Result := lace_class.options.is_warning_as_error
+		end
+
 	apply_msil_application_optimizations: BOOLEAN
 			-- Should MSIL application optimizations be applied?
 		do
@@ -2914,7 +2922,8 @@ feature -- Validity class
 					not l_feature.is_routine or l_feature.argument_count > 0
 				then
 					error_handler.insert_warning (
-						create {SPECIAL_ERROR}.make ("Class ANY must have a procedure `internal_correct_mismatch' with no arguments for recoverable storable to work properly", Current))
+						create {SPECIAL_ERROR}.make ("Class ANY must have a procedure `internal_correct_mismatch' with no arguments for recoverable storable to work properly", Current),
+						original_class.options.is_warning_as_error)
 				end
 				l_feature := feature_table.item_id (names_heap.is_equal_name_id)
 				if

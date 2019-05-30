@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Warning for unreferenced local variable within a feature."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -45,7 +45,7 @@ feature -- Properties
 	unused_locals: LINKED_LIST [TUPLE [name: INTEGER_32; type: TYPE_A]]
 			-- List of unused local names and type.
 
-	code: STRING = "Unused_local_warning"
+	code: STRING = "Unused Local"
 			-- Error code
 
 	help_file_name: STRING = "Unused_local_warning"
@@ -67,20 +67,14 @@ feature -- Output
 			a_text_formatter.add ("Feature: ")
 			associated_feature.append_name (a_text_formatter)
 			a_text_formatter.add_new_line
-			if unused_locals.count = 1 then
-				a_text_formatter.add ("Unused local is: ")
-			else
-				a_text_formatter.add ("Unused locals are: ")
-			end
+			a_text_formatter.add (locale.plural_translation_in_context ("Unused local is: ", "Unused locals are: ", "compiler.warning", unused_locals.count))
 			a_text_formatter.add_new_line
 
-			from
-				unused_locals.start
-			until
-				unused_locals.after
+			across
+				unused_locals as l
 			loop
-				l_name := unused_locals.item.name
-				l_type := unused_locals.item.type
+				l_name := l.item.name
+				l_type := l.item.type
 				check
 					valid_l_name: names_heap.valid_index (l_name)
 					l_type_not_void: l_type /= Void
@@ -90,7 +84,6 @@ feature -- Output
 				a_text_formatter.add (": ")
 				l_type.append_to (a_text_formatter)
 				a_text_formatter.add_new_line
-				unused_locals.forth
 			end
 			a_text_formatter.set_context_group (l_group)
 		end
@@ -122,27 +115,19 @@ feature {NONE} -- Output
 	print_single_line_error_message (a_text_formatter: TEXT_FORMATTER)
 			-- Displays single line help in `a_text_formatter'.
 		local
-			l_locals: like unused_locals
-			l_cursor: CURSOR
 			l_text: STRING_32
 		do
 			Precursor (a_text_formatter)
 			create l_text.make (100)
 			l_text.append_character (' ')
-
-			l_locals := unused_locals
-			l_cursor := l_locals.cursor
-			from l_locals.start until l_locals.after loop
+			across unused_locals as l loop
 				l_text.append_character ('`')
-				l_text.append_string_general (names_heap.item_32 (l_locals.item.name))
+				l_text.append_string_general (names_heap.item_32 (l.item.name))
 				l_text.append_character ('%'')
-				if not l_locals.islast then
+				if not l.is_last then
 					l_text.append_string_general (", ")
 				end
-				l_locals.forth
 			end
-			l_locals.go_to (l_cursor)
-
 			a_text_formatter.add (l_text)
 		end
 
@@ -165,7 +150,7 @@ invariant
 	unused_locals_not_void: unused_locals /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -196,4 +181,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class UNUSED_LOCAL_WARNING
+end

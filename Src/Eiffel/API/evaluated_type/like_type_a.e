@@ -598,7 +598,7 @@ feature -- Generic conformance
 		do
 			generate_cid_prefix (buffer, Void)
 			if use_info then
-				initialize_info (shared_create_info)
+				initialize_info
 				shared_create_info.generate_cid (buffer, final_mode)
 			else
 				actual_type.generate_cid (buffer, final_mode, use_info, a_context_type)
@@ -609,7 +609,7 @@ feature -- Generic conformance
 		do
 			generate_cid_prefix (buffer, idx_cnt)
 			if use_info then
-				initialize_info (shared_create_info)
+				initialize_info
 				shared_create_info.generate_cid_array (buffer, final_mode, idx_cnt)
 			else
 				actual_type.generate_cid_array (buffer, final_mode, use_info, idx_cnt, a_context_type)
@@ -620,7 +620,7 @@ feature -- Generic conformance
 		do
 			generate_cid_prefix (Void, idx_cnt)
 			if use_info then
-				initialize_info (shared_create_info)
+				initialize_info
 				shared_create_info.generate_cid_init (buffer, final_mode, idx_cnt, a_level)
 			else
 				actual_type.generate_cid_init (buffer, final_mode, use_info, idx_cnt, a_context_type, a_level)
@@ -631,7 +631,7 @@ feature -- Generic conformance
 		do
 			make_type_prefix_byte_code (ba)
 			if use_info then
-				initialize_info (shared_create_info)
+				initialize_info
 				shared_create_info.make_type_byte_code (ba)
 			else
 				actual_type.make_type_byte_code (ba, use_info, a_context_type)
@@ -643,15 +643,15 @@ feature -- Generic conformance
 			-- creation instruction.
 		do
 			if use_info then
-				initialize_info (shared_create_info)
+				initialize_info
 				shared_create_info.generate_il_type
 			else
 				actual_type.generate_gen_type_il (il_generator, use_info)
 			end
 		end
 
-	initialize_info (an_info: like shared_create_info)
-			-- Initialize `an_info' using current data.
+	initialize_info
+			-- Initialize `shared_create_info` using current data.
 		do
 		end
 

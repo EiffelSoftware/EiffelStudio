@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		This class is used as follows: 
 		it is called on an IV_IMPLEMENTATION which contains at least one loop and tries to generate invariants for the loop by mutating the postcondition expression. 
@@ -738,7 +738,7 @@ feature --Expression visitor
 
 feature --assisting operations
 
-	get_postconditions(): LINKED_LIST [IV_POSTCONDITION]
+	get_postconditions: LINKED_LIST [IV_POSTCONDITION]
 		--this only works if contracts list has already been filled in.
 		require
 			contracts /= Void

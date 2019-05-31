@@ -8,7 +8,7 @@ define_date     DATE -1461
 copy_sub	test.e $CLUSTER test.e
 
 compile_melted
-compile_result 	validity_warning NONE Obsolete
+compile_result 	validity_warning NONE "Obsolete Call"
 
 analyze_code rule "CA069"
 analyze_code_result violation "TEST CA069:10-Error"

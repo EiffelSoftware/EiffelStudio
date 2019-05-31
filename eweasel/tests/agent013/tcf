@@ -6,7 +6,7 @@ copy_raw 	test.e $CLUSTER test.e
 copy_raw 	test_proc.e $CLUSTER test_proc.e
 
 compile_melted
-compile_result validity_warning TEST_PROC Obsolete Obsolete
+compile_result validity_warning TEST_PROC "Obsolete Call" "Obsolete Call"
 
 execute_work 	NONE exec_output_m
 execute_result ok

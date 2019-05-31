@@ -8,6 +8,6 @@ copy_sub	a.e $CLUSTER a.e
 copy_sub	test.e $CLUSTER test.e
 
 compile_melted
-compile_result 	validity_warning TEST Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete Obsolete
+compile_result 	validity_warning TEST "Obsolete Call" "Obsolete Call" "Obsolete Call" "Obsolete Call" "Obsolete Call" "Obsolete Call" "Obsolete Call" "Obsolete Call" "Obsolete Call" "Obsolete Call" "Obsolete Call" "Obsolete Call" "Obsolete Call" "Obsolete Call" "Obsolete Call" "Obsolete Call" "Obsolete Call" "Obsolete Call" "Obsolete Call" "Obsolete Call" "Obsolete Call" "Obsolete Call" "Obsolete Call" "Obsolete Call" "Obsolete Call" "Obsolete Call" "Obsolete Call" "Obsolete Call" "Obsolete Call" "Obsolete Call"
 
 test_end

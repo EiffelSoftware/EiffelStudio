@@ -13,7 +13,7 @@ if DOTNET copy_sub 	point.e $CLUSTER point.e
 if DOTNET compile_melted
 if DOTNET compile_result 	validity_error POINT VIFI(1); POINT VIFI(3)
 if DOTNET abort_compile
--- if DOTNET compile_result 	validity_warning TEST Obsolete; TEST Obsolete; TEST Obsolete
+-- if DOTNET compile_result 	validity_warning TEST "Obsolete Call"; TEST "Obsolete Call"; TEST "Obsolete Call"
 -- if DOTNET execute_work	NONE exec_output_vt
 -- if DOTNET execute_result	ok
 -- if DOTNET compare		exec_output_vt output
@@ -26,7 +26,7 @@ copy_sub 	 test.e  $CLUSTER test.e
 copy_sub 	 point.e $CLUSTER point.e
 
 compile_melted
-compile_result 	 validity_warning TEST Obsolete; TEST Obsolete; TEST Obsolete
+compile_result 	 validity_warning TEST "Obsolete Call"; TEST "Obsolete Call"; TEST "Obsolete Call"
 execute_work	 NONE exec_output_nv
 execute_result	 ok
 compare		 exec_output_nv output_c
@@ -39,7 +39,7 @@ copy_sub 	 test.e  $CLUSTER test.e
 copy_sub 	 point.e $CLUSTER point.e
 
 compile_melted
-compile_result 	 validity_warning TEST Obsolete; TEST Obsolete; TEST Obsolete
+compile_result 	 validity_warning TEST "Obsolete Call"; TEST "Obsolete Call"; TEST "Obsolete Call"
 execute_work	 NONE exec_output_ct
 execute_result	 ok
 compare		 exec_output_ct output_t

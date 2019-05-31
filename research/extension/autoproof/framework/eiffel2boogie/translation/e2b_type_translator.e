@@ -1,7 +1,5 @@
-note
-	description: "[
-		Translation of Eiffel types to Boogie.
-	]"
+﻿note
+	description: "Translation of Eiffel types to Boogie."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -47,7 +45,6 @@ feature -- Basic operations
 			l_boogie_type_name: STRING
 			l_constant: IV_CONSTANT
 			l_path: PATH
-			l_dep: FILE_NAME
 			l_attr_translator: E2B_ATTRIBUTE_TRANSLATOR
 			l_routine_translator: E2B_ROUTINE_TRANSLATOR
 		do
@@ -60,12 +57,12 @@ feature -- Basic operations
 				helper.class_note_values (l_class, "theory") as deps
 			loop
 				create l_path.make_from_string (deps.item)
-				if l_path.is_absolute then
-					create l_dep.make_from_string (deps.item)
-				else
-					create l_dep.make_from_string (l_path.absolute_path_in (l_class.lace_class.file_name.parent).canonical_path.out)
-				end
-				boogie_universe.add_dependency (l_dep)
+				boogie_universe.add_dependency
+					(if l_path.is_absolute then
+						create {PATH}.make_from_string (deps.item)
+					else
+						l_path.absolute_path_in (l_class.lace_class.file_name.parent).canonical_path
+					end)
 			end
 
 				-- Add actual generic parameters
@@ -134,7 +131,6 @@ feature -- Basic operations
 			a_type_exists: a_type /= Void
 		local
 			l_class: CLASS_C
-			l_checks: like last_clauses
 		do
 			type := a_type
 			l_class := type.base_class
@@ -246,7 +242,6 @@ feature {NONE} -- Implementation
 	generate_model_axiom
 			-- Generate an axiom listing all model queries of `type'.
 		local
-			l_m_name: STRING
 			l_type_var: IV_VAR_TYPE
 			l_f, l_m: IV_ENTITY
 			l_def: IV_EXPRESSION
@@ -436,7 +431,6 @@ feature {NONE} -- Implementation
 		require
 			a_class_not_void: a_class /= Void
 		local
-			l_list: BYTE_LIST [BYTE_NODE]
 			l_assert: ASSERT_B
 			l_clause: IV_ASSERT
 			l_translator: E2B_CONTRACT_EXPRESSION_TRANSLATOR
@@ -444,15 +438,10 @@ feature {NONE} -- Implementation
 		do
 			if inv_byte_server.has (a_class.class_id) then
 				helper.set_up_byte_context (a_class.invariant_feature, helper.class_type_in_context (a_class.actual_type, a_class, a_class.invariant_feature, type))
-				from
-					l_list := inv_byte_server.item (a_class.class_id).byte_list
-					l_list.start
-				until
-					l_list.after
+				across
+					inv_byte_server.item (a_class.class_id).byte_list as b
 				loop
-					l_assert ?= l_list.item
-					check l_assert /= Void end
-
+					l_assert := b.item
 					if is_tag_included (a_included, a_excluded, l_assert.tag) then
 						create l_translator.make
 						l_translator.copy_entity_mapping (a_mapping)
@@ -488,8 +477,6 @@ feature {NONE} -- Implementation
 						end
 					end
 					l_assert.process (builtin_collector)
-
-					l_list.forth
 				end
 			end
 		end
@@ -497,7 +484,6 @@ feature {NONE} -- Implementation
 	generate_invariant_axiom (a_generic_function, a_special_function: STRING)
 			-- Generate axioms that connect `a_generic_function' with `a_special_function'.
 		local
-			l_forall: IV_FORALL
 			l_heap, l_current: IV_ENTITY
 			l_generic_call, l_special_call: IV_FUNCTION_CALL
 		do
@@ -626,8 +612,6 @@ feature -- Invariant admissibility
 			l_goto: IV_GOTO
 			l_block: IV_BLOCK
 			l_assert, l_assume: IV_ASSERT
-			l_forall: IV_FORALL
-			l_i, l_current: IV_ENTITY
 		do
 			l_name := a_class_type.base_class.name_in_upper + ".invariant_admissibility_check"
 			create l_proc.make (l_name)

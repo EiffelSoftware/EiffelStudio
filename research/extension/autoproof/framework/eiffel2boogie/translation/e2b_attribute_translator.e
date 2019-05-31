@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Translator for Eiffel attributes.
 	]"
@@ -21,9 +21,9 @@ feature -- Basic operations
 		require
 			is_attribute: a_feature.is_attribute or helper.is_built_in_attribute (a_feature)
 		local
-			l_attribute_name, l_old_name: STRING
+			l_attribute_name: STRING
 			l_class_type: CL_TYPE_A
-			l_type_prop, l_expr, l_context_type: IV_EXPRESSION
+			l_type_prop, l_context_type: IV_EXPRESSION
 			l_forall: IV_FORALL
 			l_heap, l_o, l_f: IV_ENTITY
 			l_heap_access: IV_MAP_ACCESS
@@ -237,7 +237,7 @@ feature {NONE} -- Implementation
 					-- The guard is the preservation of the invariant of observers
 				Result := factory.implies_ (
 					factory.function_call ("user_inv", << a_h, a_o >>, types.bool),
-					factory.function_call ("user_inv", << factory.map_update (a_h, << a_cur, a_f >>, a_v), a_o >>, types.bool))
+					factory.function_call ("user_inv", << factory.map_update (a_h, create {ARRAYED_LIST [IV_EXPRESSION]}.make_from_array (<<a_cur, a_f>>), a_v), a_o >>, types.bool))
 			else
 				l_guard_feature := a_origin_class.feature_named_32 (a_guard_string)
 				if is_valid_guard_feature (a_guard_string, l_guard_feature, a_attr_type) then

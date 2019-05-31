@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Input for Boogie verifier."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	boogie_files: attached LINKED_LIST [attached STRING]
+	boogie_files: LINKED_LIST [PATH]
 			-- List of files to include when running Boogie.
 			-- These files will be added before `custom_content' in the order
 			-- they appear in the list.
@@ -42,11 +42,11 @@ feature -- Status report
 
 feature -- Element change
 
-	add_boogie_file (a_file_name: attached STRING)
+	add_boogie_file (a_file_name: PATH)
 			-- Add `a_file_name' to `boogie_files'.
 		require
-			file_exists: (create {PLAIN_TEXT_FILE}.make (a_file_name)).exists
-			file_readable: (create {PLAIN_TEXT_FILE}.make (a_file_name)).is_readable
+			file_exists: (create {PLAIN_TEXT_FILE}.make_with_path (a_file_name)).exists
+			file_readable: (create {PLAIN_TEXT_FILE}.make_with_path (a_file_name)).is_readable
 		do
 			if not boogie_files.has (a_file_name) then
 				boogie_files.extend (a_file_name)

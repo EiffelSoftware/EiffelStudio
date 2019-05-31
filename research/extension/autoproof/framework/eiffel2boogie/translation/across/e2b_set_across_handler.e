@@ -1,7 +1,4 @@
-note
-	description: "[
-		TODO
-	]"
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -60,7 +57,7 @@ feature {NONE} -- Implementation
 	guard (a_bound_var: IV_ENTITY): IV_EXPRESSION
 			-- <Precursor>
 		do
-			Result := factory.map_access (set, << a_bound_var >>)
+			Result := factory.map_access (set, create {ARRAYED_LIST [IV_EXPRESSION]}.make_from_array (<<a_bound_var>>))
 		end
 
 	add_triggers (a_quantifier: IV_QUANTIFIER)

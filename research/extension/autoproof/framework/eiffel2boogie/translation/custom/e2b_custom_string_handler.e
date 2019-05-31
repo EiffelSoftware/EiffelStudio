@@ -116,7 +116,7 @@ feature -- Basic operations
 			translation_pool.add_referenced_feature (l_creator, l_cl_type)
 
 				-- Build sequence argument
-			create l_seq_type.make ("Seq", << types.int >>)
+			create l_seq_type.make ("Seq", create {ARRAYED_LIST [IV_TYPE]}.make_from_array (<<types.int>>))
 			if a_node.value.is_empty then
 				l_expr := factory.function_call ("Seq#Empty", Void, l_seq_type)
 			else

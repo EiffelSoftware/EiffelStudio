@@ -1,7 +1,4 @@
-note
-	description: "[
-		TODO
-	]"
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,11 +8,8 @@ class
 inherit
 
 	E2B_CUSTOM_CALL_HANDLER
-
 	E2B_CUSTOM_NESTED_HANDLER
-
 	SHARED_WORKBENCH
-
 	SHARED_NAMES_HEAP
 
 feature -- Status report
@@ -23,12 +17,8 @@ feature -- Status report
 	is_handling_call (a_target_type: TYPE_A; a_feature: FEATURE_I): BOOLEAN
 			-- <Precursor>
 		do
-			Result :=
-					a_target_type.base_class.name_in_upper ~ "PROCEDURE" or
-					a_target_type.base_class.name_in_upper ~ "ROUTINE" or
-					a_target_type.base_class.name_in_upper ~ "FUNCTION"
+			Result := attached {CL_TYPE_A} a_target_type as c and then {E2B_HELPER}.is_agent_type (c)
 		end
-
 
 	is_handling_nested (a_nested: NESTED_B): BOOLEAN
 			-- <Precursor>
@@ -252,22 +242,19 @@ feature -- Basic operations
 			-- Handle nested in either contract or body.
 		local
 			l_name: STRING
-			l_access: ACCESS_EXPR_B
-			l_agent: ROUTINE_CREATION_B
 			l_expr: EXPR_B
-
 			l_agent_class: CLASS_C
 			l_agent_feature: FEATURE_I
 			l_agent_type: CL_TYPE_A
-
 			l_fcall: IV_FUNCTION_CALL
 		do
 			if attached {FEATURE_B} a_nested.message as l_call then
 				l_name := names_heap.item (l_call.feature_name_id)
-				if l_name ~ "postcondition" then
-					l_access ?= a_nested.target
-					l_agent ?= l_access.expr
-
+				if
+					l_name ~ "postcondition" and then
+					attached {ACCESS_EXPR_B} a_nested.target as l_access and then
+					attached {ROUTINE_CREATION_B} l_access.expr as l_agent
+				then
 					l_agent_class := system.class_of_id (l_agent.origin_class_id)
 					l_agent_feature := l_agent_class.feature_of_feature_id (l_agent.feature_id)
 						-- TODO: take actual type of open/closed target of agent creation
@@ -314,41 +301,10 @@ feature -- Implementation
 			a_translator.set_last_expression (l_call)
 		end
 
-	agents_theory_filename: FILE_NAME
+	agents_theory_filename: PATH
 			-- File name of agents theory.
 		once
-			create Result.make
-			Result.set_directory (theory_directory)
-			Result.set_file_name ("agents.bpl")
-		end
-
-	theory_directory: DIRECTORY_NAME
-			-- Directory containing theory files.
-		local
-			l_ee: EXECUTION_ENVIRONMENT
-			l_ise_eiffel, l_eiffel_src: STRING
-			l_path: DIRECTORY_NAME
-			l_dir: DIRECTORY
-		once
-			create l_ee
-
-				-- 1. Delivery of installation
-			create l_path.make_from_string (l_ee.get ("ISE_EIFFEL"))
-			l_path.extend ("studio")
-			l_path.extend ("tools")
-			l_path.extend ("autoproof")
-			create l_dir.make (l_path)
-
-				-- 2. Delivery of development version
-			if not l_dir.exists then
-				create l_path.make_from_string (l_ee.get ("EIFFEL_SRC"))
-				l_path.extend ("Delivery")
-				l_path.extend ("studio")
-				l_path.extend ("tools")
-				l_path.extend ("autoproof")
-			end
-
-			Result := l_path
+			Result := {E2B_BOOGIE_GENERATOR}.theory_directory.extended ("agents.bpl")
 		end
 
 end

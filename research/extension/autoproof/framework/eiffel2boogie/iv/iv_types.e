@@ -1,7 +1,5 @@
-note
-	description: "[
-		Access to basic IV types and conversion facilities.
-	]"
+﻿note
+	description: "Access to basic IV types and conversion facilities."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -36,7 +34,7 @@ feature -- Access: default types
 	nullary_type (a_name: STRING): IV_USER_TYPE
 			-- User-defined type from a nullary type constructor.
 		do
-			create {IV_USER_TYPE} Result.make (a_name, <<>>)
+			create {IV_USER_TYPE} Result.make (a_name, create {ARRAYED_LIST [IV_TYPE]}.make_from_array (<<>>))
 		end
 
 	ref: IV_USER_TYPE
@@ -50,7 +48,7 @@ feature -- Access: default types
 	field (a_content_type: IV_TYPE): IV_TYPE
 			-- Field type that has content of type `a_content_type'.
 		do
-			create {IV_USER_TYPE} Result.make ("Field", << a_content_type >>)
+			create {IV_USER_TYPE} Result.make ("Field", create {ARRAYED_LIST [IV_TYPE]}.make_from_array (<<a_content_type>>))
 		end
 
 	field_content_type (a_field_type: IV_TYPE): IV_TYPE
@@ -69,7 +67,7 @@ feature -- Access: default types
 			l_param: IV_VAR_TYPE
 		once
 			create l_param.make_fresh
-			create {IV_MAP_SYNONYM_TYPE} Result.make (<< l_param.name >>, << ref, field (l_param) >>, l_param, "HeapType", <<>>)
+			create {IV_MAP_SYNONYM_TYPE} Result.make (<< l_param.name >>, create {ARRAYED_LIST [IV_TYPE]}.make_from_array (<<ref, field (l_param)>>), l_param, "HeapType", create {ARRAYED_LIST [IV_TYPE]}.make (0))
 		end
 
 	frame: IV_TYPE
@@ -78,7 +76,7 @@ feature -- Access: default types
 			l_param: IV_VAR_TYPE
 		once
 			create l_param.make_fresh
-			create {IV_MAP_SYNONYM_TYPE} Result.make (<< l_param.name >>, << ref, field (l_param) >>, bool, "Frame", <<>>)
+			create {IV_MAP_SYNONYM_TYPE} Result.make (<< l_param.name >>, create {ARRAYED_LIST [IV_TYPE]}.make_from_array (<<ref, field (l_param)>>), bool, "Frame", create {ARRAYED_LIST [IV_TYPE]}.make (0))
 		end
 
 	type: IV_TYPE
@@ -90,7 +88,7 @@ feature -- Access: default types
 	set (a_content_type: IV_TYPE): IV_MAP_SYNONYM_TYPE
 			-- Set type that has content of type `a_content_type'.
 		do
-			create Result.make (<<>>, << a_content_type >>, bool, "Set", << a_content_type >>)
+			create Result.make (<<>>, create {ARRAYED_LIST [IV_TYPE]}.make_from_array (<<a_content_type>>), bool, "Set", create {ARRAYED_LIST [IV_TYPE]}.make_from_array (<<a_content_type>>))
 			Result.set_default_value (factory.function_call ("Set#Empty", <<>>, Result))
 			Result.set_rank_function ("Set#Subset")
 		end
@@ -105,7 +103,8 @@ feature -- Type translation
 			l_class: CLASS_C
 			l_user_type: IV_USER_TYPE
 			l_constructor: STRING
-			l_params, l_domain_types: ARRAY [IV_TYPE]
+			l_params: like {IV_USER_TYPE}.parameters
+			l_domain_types: like {IV_MAP_SYNONYM_TYPE}.domain_types
 			l_default_function, l_type_inv_function, l_leq_function: STRING
 			l_access_feature: FEATURE_I
 		do
@@ -121,14 +120,14 @@ feature -- Type translation
 					-- The class is mapped to a Boogie type
 				l_constructor := helper.type_for_logical (l_class)
 				if a_type.generics = Void then
-					create l_params.make_empty
+					create l_params.make (0)
 				else
-					create l_params.make (1, a_type.generics.count)
+					create l_params.make (a_type.generics.count)
 					across
 						a_type.generics as g
 					loop
 						check attached {CL_TYPE_A} g.item as t then
-							l_params [g.target_index] := for_class_type (t)
+							l_params.extend (for_class_type (t))
 						end
 					end
 				end
@@ -140,11 +139,11 @@ feature -- Type translation
 					create l_user_type.make (l_constructor, l_params)
 				else
 						-- Yes: extract domain and range types from the access feature and make the user-defined type a synonym
-					create l_domain_types.make (1, l_access_feature.argument_count)
+					create l_domain_types.make (l_access_feature.argument_count)
 					across
 						l_access_feature.arguments as args
 					loop
-						l_domain_types [args.target_index] := for_class_type (helper.class_type_in_context (args.item, l_access_feature.written_class, l_access_feature, a_type))
+						l_domain_types.extend (for_class_type (helper.class_type_in_context (args.item, l_access_feature.written_class, l_access_feature, a_type)))
 					end
 					create {IV_MAP_SYNONYM_TYPE} l_user_type.make (<<>>,
 						l_domain_types,
@@ -184,7 +183,7 @@ feature -- Type translation
 			l_boogie_type: IV_TYPE
 			l_content_type: CL_TYPE_A
 			l_fname: STRING
-			l_arg, l_inv: IV_EXPRESSION
+			l_inv: IV_EXPRESSION
 			l_type_properties: ARRAYED_LIST [STRING_32]
 		do
 			Result := factory.true_

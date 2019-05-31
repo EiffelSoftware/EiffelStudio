@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "User-defined Boogie types; consist of a type constructor with zero or more parameters."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_constructor: STRING; a_params: ARRAY [IV_TYPE])
+	make (a_constructor: STRING; a_params: like parameters)
 			-- Create a type by applying `a_constructor' to `a_params'.
 		require
 			a_constructor_exists: a_constructor /= Void
@@ -41,7 +41,7 @@ feature -- Access
 	constructor: STRING
 			-- Type constructor.
 
-	parameters: ARRAY [IV_TYPE]
+	parameters: ARRAYED_LIST [IV_TYPE]
 			-- Type parameters.
 
 	default_value: IV_EXPRESSION
@@ -83,8 +83,6 @@ feature -- Equality
 
 	is_equal (a_other: like Current): BOOLEAN
 			-- Is `a_other' same type as this?
-		local
-			i: INTEGER
 		do
 			Result := constructor ~ a_other.constructor and
 				parameters ~ a_other.parameters

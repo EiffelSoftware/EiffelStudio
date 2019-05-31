@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "A handler for calls where target type is a logical class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -94,8 +94,8 @@ feature {NONE} -- Implementation
 			-- <Precursor>
 		local
 			l_fname: STRING
-			l_fcall, l_pre_call: IV_FUNCTION_CALL
-			l_args: ARRAY [IV_EXPRESSION]
+			l_fcall: IV_FUNCTION_CALL
+			l_args: like {IV_MAP_ACCESS}.indexes
 		do
 			check helper.is_feature_logical (a_feature) end
 			translation_pool.add_referenced_feature (a_feature, a_translator.current_target_type)
@@ -105,11 +105,11 @@ feature {NONE} -- Implementation
 			l_fname := helper.function_for_logical (a_feature)
 			if l_fname ~ "[]" then
 					-- The feature maps to map access
-				create l_args.make (1, a_translator.last_parameters.count)
+				create l_args.make (a_translator.last_parameters.count)
 				across
 					a_translator.last_parameters as params
 				loop
-					l_args [params.target_index] := params.item
+					l_args.extend (params.item)
 				end
 				a_translator.set_last_expression (factory.map_access (a_translator.current_target, l_args))
 			else
@@ -170,7 +170,7 @@ feature {NONE} -- Implementation
 					l_type := types.set (l_elem_type)
 					l_prefix := "Set"
 				elseif f.feature_name ~ "to_mml_sequence" then
-					create {IV_USER_TYPE} l_type.make ("Seq", << l_elem_type >>)
+					create {IV_USER_TYPE} l_type.make ("Seq", create {ARRAYED_LIST [IV_TYPE]}.make_from_array (<<l_elem_type>>))
 					l_prefix := "Seq"
 				else
 					check False end

@@ -26,7 +26,7 @@ feature -- Access
 	declarations: LINKED_LIST [IV_DECLARATION]
 			-- List of top-level declarations.
 
-	dependencies: LINKED_LIST [FILE_NAME]
+	dependencies: LINKED_LIST [PATH]
 			-- List of file dependencies.
 
 	procedure_named (a_name: STRING): detachable IV_PROCEDURE
@@ -86,7 +86,7 @@ feature -- Element change
 			a_declaration_added: declarations.last = a_declaration
 		end
 
-	add_dependency (a_file_name: FILE_NAME)
+	add_dependency (a_file_name: PATH)
 			-- Add a file to `dependencies'.
 		require
 			a_file_name_attached: attached a_file_name

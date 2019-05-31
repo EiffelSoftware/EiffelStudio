@@ -1,7 +1,4 @@
-note
-	description: "[
-		TODO
-	]"
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -21,10 +18,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_type: IV_TYPE)
+	make (a_name: like name; a_type: IV_TYPE)
 			-- Initialize with name `a_name' and type `a_type'.
 		require
-			a_name_valid: is_valid_name (a_name)
+			a_name_valid: is_valid_name_32 (a_name)
 		do
 			name := a_name.twin
 			type := a_type
@@ -35,7 +32,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: STRING
+	name: READABLE_STRING_32
 			-- Name of entity.
 
 	type: IV_TYPE

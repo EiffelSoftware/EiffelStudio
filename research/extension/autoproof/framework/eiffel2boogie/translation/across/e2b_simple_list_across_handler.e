@@ -1,5 +1,4 @@
-note
-	description: "TODO"
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -45,23 +44,24 @@ feature {NONE} -- Implementation
 	translate_domain
 			-- <Precursor>
 		local
-			l_type: GEN_TYPE_A
-			l_gen_type: CL_TYPE_A
 			l_content_type: IV_TYPE
 			l_class: CLASS_C
 			l_seq_feature: FEATURE_I
 			l_heap_access: IV_EXPRESSION
 		do
-			l_type ?= domain.type
-			check l_type /= Void and l_type.generics.count = 1 end
-			l_gen_type ?= l_type.generics.first
-			l_class := l_type.base_class
-			l_seq_feature := l_class.feature_named_32 ("sequence")
-			l_content_type := types.for_class_type (l_gen_type)
+			if
+				attached {GEN_TYPE_A} domain.type as l_type and then
+				l_type.generics.count = 1 and then
+				attached {CL_TYPE_A} l_type.generics.first as l_gen_type
+			then
+				l_class := l_type.base_class
+				l_seq_feature := l_class.feature_named_32 ("sequence")
+				l_content_type := types.for_class_type (l_gen_type)
 
-			domain.process (expression_translator)
-			l_heap_access := factory.heap_access (expression_translator.entity_mapping.heap, expression_translator.last_expression, name_translator.boogie_procedure_for_feature (l_seq_feature, l_type), l_content_type)
-			set := factory.function_call ("Seq#Range", << l_heap_access >>, types.set (l_content_type))
+				domain.process (expression_translator)
+				l_heap_access := factory.heap_access (expression_translator.entity_mapping.heap, expression_translator.last_expression, name_translator.boogie_procedure_for_feature (l_seq_feature, l_type), l_content_type)
+				set := factory.function_call ("Seq#Range", << l_heap_access >>, types.set (l_content_type))
+			end
 		end
 
 	bound_var_type: IV_TYPE
@@ -73,7 +73,7 @@ feature {NONE} -- Implementation
 	guard (a_bound_var: IV_ENTITY): IV_EXPRESSION
 			-- <Precursor>
 		do
-			Result := factory.map_access (set, << a_bound_var >>)
+			Result := factory.map_access (set, create {ARRAYED_LIST [IV_EXPRESSION]}.make_from_array (<<a_bound_var>>))
 		end
 
 	add_triggers (a_quantifier: IV_QUANTIFIER)

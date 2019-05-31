@@ -1,7 +1,5 @@
 ﻿note
-	description: "[
-		IV-visitor that generates Boogie code.
-	]"
+	description: "IV-visitor that generates Boogie code."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -576,7 +574,7 @@ feature -- Expression Visitor
 			a_map_update.target.process (Current)
 			output.put ("[")
 			across a_map_update.indexes as i loop
-				if i.cursor_index /= 1 then
+				if not i.is_first then
 					output.put (", ")
 				end
 				i.item.process (Current)

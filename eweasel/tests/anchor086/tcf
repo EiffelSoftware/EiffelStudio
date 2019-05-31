@@ -9,6 +9,6 @@ copy_raw	c.e $CLUSTER c.e
 copy_raw	d.e $CLUSTER d.e
 
 compile_melted
-compile_result	validity_error A Syntax
+compile_result	validity_error A "Syntax Error:10"
 
 test_end

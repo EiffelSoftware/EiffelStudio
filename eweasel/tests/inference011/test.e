@@ -42,7 +42,7 @@ feature {NONE} -- Initialization
 			i := 5
 		end
 
-feature {NONE} -- Helper
+feature -- Helper
 
 	r (x, y: INTEGER) do report (y, True) end
 	p (x, y: INTEGER): BOOLEAN do Result := x = y end

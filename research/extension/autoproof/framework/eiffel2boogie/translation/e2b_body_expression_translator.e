@@ -1,7 +1,4 @@
-note
-	description: "[
-		TODO
-	]"
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -115,13 +112,7 @@ feature -- Visitors
 			l_target_type: CL_TYPE_A
 
 			l_local: IV_ENTITY
-			l_havoc: IV_HAVOC
-			l_allocated: IV_ENTITY
-			l_binop: IV_BINARY_OPERATION
-			l_heap_access: IV_MAP_ACCESS
-			l_call: IV_FUNCTION_CALL
 			l_proc_call: IV_PROCEDURE_CALL
-			l_type_value: IV_VALUE
 			l_handler: E2B_CUSTOM_CALL_HANDLER
 		do
 			l_type := class_type_in_current_context (a_node.type)
@@ -405,7 +396,6 @@ feature -- Translation
 			a_feature.has_return_value
 		local
 			l_call: IV_FUNCTION_CALL
-			l_pcall: IV_PROCEDURE_CALL
 		do
 			create l_call.make (a_builtin_name, types.for_class_type (feature_class_type (a_feature)))
 			l_call.add_argument (entity_mapping.heap)
@@ -434,13 +424,9 @@ feature -- Translation
 	process_inlined_routine_call (a_feature: FEATURE_I; a_parameters: BYTE_LIST [PARAMETER_B])
 			-- Process feature call.
 		local
-			l_target: IV_EXPRESSION
-			l_target_type: TYPE_A
-			l_call: IV_PROCEDURE_CALL
 			l_translator: E2B_INSTRUCTION_TRANSLATOR
 			l_block: IV_BLOCK
 			l_entity_mapping: E2B_ENTITY_MAPPING
-			l_features: LIST [FEATURE_I]
 		do
 				-- TODO: look for all possible descendant-implementations for feature
 				-- and add a nondeterministic goto that selects between all of those

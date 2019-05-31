@@ -1,7 +1,4 @@
 ﻿note
-	description: "[
-		TODO
-	]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -577,8 +574,6 @@ feature -- Visitors
 
 	process_current_b (a_node: CURRENT_B)
 			-- <Precursor>
-		local
-			l_type: LIKE_CURRENT
 		do
 			last_expression := entity_mapping.current_expression
 		end
@@ -735,8 +730,6 @@ feature -- Visitors
 			l_assign: ASSIGN_B
 			l_object_test_local: OBJECT_TEST_LOCAL_B
 			l_nested: NESTED_B
-			l_access: ACCESS_EXPR_B
-			l_bin_free: BIN_FREE_B
 			l_class: CLASS_C
 			l_across_handler: E2B_ACROSS_HANDLER
 		do
@@ -785,15 +778,12 @@ feature -- Visitors
 		local
 			l_temp_expression: IV_EXPRESSION
 			l_target: IV_EXPRESSION
-			l_target_name: STRING
 			l_target_type: CL_TYPE_A
-			l_formal: FORMAL_A
 
 			l_object_test_local: OBJECT_TEST_LOCAL_B
 			l_across_handler: E2B_ACROSS_HANDLER
 			l_feature: FEATURE_B
 			l_nested: NESTED_B
-			l_call: IV_FUNCTION_CALL
 			l_handler: E2B_CUSTOM_NESTED_HANDLER
 			l_name: STRING
 		do
@@ -900,7 +890,6 @@ feature -- Visitors
 			-- <Precursor>
 		local
 			l_type: CL_TYPE_A
-			l_type_check: IV_BINARY_OPERATION
 			l_type_expr, l_expr: IV_EXPRESSION
 		do
 			safe_process (a_node.expression)
@@ -944,7 +933,6 @@ feature -- Visitors
 	process_parameter_b (a_node: PARAMETER_B)
 			-- <Precursor>
 		local
-			l_context_type: CL_TYPE_A
 			l_target: IV_EXPRESSION
 			l_target_type: CL_TYPE_A
 			l_last_expression: IV_EXPRESSION
@@ -1191,7 +1179,6 @@ feature -- Translation
 	process_argument_expression (a_expr: EXPR_B): IV_EXPRESSION
 			-- Process `a_expr' in the context of the routine.
 		local
-			l_context_type: CL_TYPE_A
 			l_target: IV_EXPRESSION
 			l_target_type: CL_TYPE_A
 			l_last_expression: IV_EXPRESSION
@@ -1440,8 +1427,6 @@ feature -- Implementation
 
 	create_iterator (a_type: IV_TYPE)
 			-- Create new unbound iterator.
-		local
-			l_name: STRING
 		do
 			create last_local.make (helper.unique_identifier ("i"), a_type)
 		end
@@ -1457,9 +1442,6 @@ feature -- Implementation
 
 	process_semistrict (a_condition: IV_EXPRESSION; a_expr: EXPR_B)
 			-- Add `a_condition' to the safety check, then process `a_expr'.
-		local
-			l_fcall: IV_FUNCTION_CALL
-			l_fname: STRING
 		do
 			safety_check_condition.extend (factory.and_clean (safety_check_condition.item, a_condition))
 			safe_process (a_expr)

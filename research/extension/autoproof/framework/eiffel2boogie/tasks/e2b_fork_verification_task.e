@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Verification task that verifies one feature at a time and (possibly) in parallel."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,8 +19,6 @@ feature {NONE} -- Initialization
 
 	make (a_translator_input: E2B_TRANSLATOR_INPUT)
 			-- Initialize task.
-		local
-			l_part_input: E2B_TRANSLATOR_INPUT
 		do
 			create remaining_inputs.make
 			create verification_tasks.make

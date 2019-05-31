@@ -216,14 +216,7 @@ feature {NONE} -- Implementation
 		require
 			is_cluster: a_cluster.is_cluster
 			not_internal: not a_cluster.is_test_cluster
-		local
-			l_class: CONF_CLASS
 		do
-				-- Update cluster data
-			if not cluster_data_table.has_key (a_cluster) then
-
-			end
-
 				-- Update classes of this cluster
 			if attached a_cluster.classes then
 				across a_cluster.classes as c loop

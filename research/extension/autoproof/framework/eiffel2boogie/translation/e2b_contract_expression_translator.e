@@ -126,8 +126,6 @@ feature -- Translation
 	process_routine_call (a_feature: FEATURE_I; a_parameters: BYTE_LIST [PARAMETER_B]; a_for_creator: BOOLEAN)
 			-- Process feature call.
 		local
-			l_target: IV_EXPRESSION
-			l_target_type: TYPE_A
 			l_call: IV_FUNCTION_CALL
 			l_name: STRING
 		do

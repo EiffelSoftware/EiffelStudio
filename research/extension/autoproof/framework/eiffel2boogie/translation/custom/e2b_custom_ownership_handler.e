@@ -1,5 +1,4 @@
-note
-	description: "Summary description for {E2B_CUSTOM_OWNERSHIP_HANDLER}."
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -31,10 +30,8 @@ feature -- Basic operations
 			-- <Precursor>
 		local
 			l_name: STRING
-			l_assign: IV_ASSIGNMENT
 			l_call: IV_PROCEDURE_CALL
 			l_type: IV_TYPE
-			l_names: LIST [STRING]
 			l_trig: IV_FUNCTION_CALL
 			l_old_side_effect: LINKED_LIST [IV_STATEMENT]
 		do
@@ -224,8 +221,6 @@ feature -- Basic operations
 			-- Check if `a_tags' only lists valid class invariant of `a_class'.
 			-- Otherwise report error in feature `a_context_feature'.
 		local
-			l_asserts: BYTE_LIST [BYTE_NODE]
-			l_assert: ASSERT_B
 			l_tags_copy: LINKED_LIST [STRING]
 			l_string: STRING
 		do
@@ -308,7 +303,7 @@ feature -- Basic operations
 						c.item.node_info.set_attribute ("rid", a_feature.rout_id_set.first.out)
 						if options.is_inv_check_independent then
 							a_translator.add_independent_check (c.item)
-						else	
+						else
 							a_translator.side_effect.extend (c.item)
 						end
 					end

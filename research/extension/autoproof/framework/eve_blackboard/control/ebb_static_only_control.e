@@ -1,6 +1,4 @@
-note
-	description: "Summary description for {EBB_STATIC_ONLY_CONTROL}."
-	author: ""
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -25,10 +23,10 @@ feature -- Basic operations
 
 	think
 			-- <Precursor>
-		local
-			l_input: EBB_TOOL_INPUT
-			l_tool: EBB_TOOL
-			l_configuration: EBB_TOOL_CONFIGURATION
+--		local
+--			l_input: EBB_TOOL_INPUT
+--			l_tool: EBB_TOOL
+--			l_configuration: EBB_TOOL_CONFIGURATION
 		do
 --			if
 --				blackboard.executions.running_executions.is_empty and
@@ -53,12 +51,6 @@ feature -- Basic operations
 
 	create_new_tool_executions
 			-- <Precursor>
-		local
-			l_class: EBB_CLASS_DATA
-			l_input: EBB_TOOL_INPUT
-			l_tool: EBB_TOOL
-			l_configuration: EBB_TOOL_CONFIGURATION
-			l_execution: EBB_TOOL_EXECUTION
 		do
 			if next_tool_execution /= Void then
 				blackboard.executions.queue_tool_execution (next_tool_execution)

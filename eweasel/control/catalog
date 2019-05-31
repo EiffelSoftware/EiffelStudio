@@ -1042,7 +1042,7 @@ test	qat-resume-veen-compiler-error		incr364 tcf pass incrementality generic anc
 test	renamed-type-crash			incr365 tcf pass incrementality generic
 test	once-per-object-add-descendant		incr366 tcf pass incrementality once
 test	change-constraint-rename-crash		incr367 tcf pass incrementality generic anchored_type
-test	qat-change-parent-actual-generic	incr368 tcf fail incrementality generic anchored_type
+test	qat-change-parent-actual-generic	incr368 tcf pass incrementality generic anchored_type
 test	qat-veen-instead-of-vtat		incr369 tcf pass incrementality anchored_type
 test	qat-constrained-type-in-crash-2		incr370 tcf pass incrementality anchored_type
 test	rename-routine-error			incr371 tcf pass incrementality
@@ -1077,16 +1077,16 @@ test	once-per-object-change-inheritance	incr399 tcf pass incrementality once
 test	qat-change-constant-anchor-type		incr400 tcf pass incrementality anchored_type
 test	renaming-class-in-constraint-crash	incr401 tcf pass incrementality renaming
 test	fix-expanded-generic-vlec-infinite-loop	incr402	tcf pass incrementality expanded manual
-test	qat-change-agent-target-type		incr403	tcf fail incrementality anchored_type agents
+test	qat-change-agent-target-type		incr403	tcf pass incrementality anchored_type agents
 test 	once-per-object-link-failure		incr404 tcf fail incrementality once
 test 	is-expanded-crash-2			incr405 tcf pass incrementality
 test 	once-per-object-add-attributes		incr406 tcf fail incrementality once
 test 	once-per-object-to-attribute		incr407 tcf fail incrementality once
 test 	non-conforming-remove-precondition	incr408 tcf fail incrementality non-conforming
 test 	has-stable-attribute-crash		incr409 tcf fail incrementality stable attached_types
-test 	type-to-create-crash			incr410 tcf fail incrementality attached_types
+test 	type-to-create-crash			incr410 tcf pass incrementality attached_types
 test 	rout-entry-crash-3			incr411 tcf fail incrementality
-test 	create-qualified-explicit-crash		incr412 tcf fail incrementality anchored_type
+test 	create-qualified-explicit-crash		incr412 tcf pass incrementality anchored_type
 test 	adding-removing-transient			incr413 tcf pass incrementality transient
 test 	removing-descendant-crash	incr414 tcf pass incrementality
 test 	system-change-crash			incr415 tcf fail incrementality

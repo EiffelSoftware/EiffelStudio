@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Interface to run the Boogie verifier.
 		
@@ -101,8 +101,6 @@ feature -- Basic operations
 			last_output_set: attached last_output
 		local
 			l_boogie_parser: E2B_BOOGIE_OUTPUT_PARSER
-			l_result: E2B_RESULT
-			l_ap_error: E2B_AUTOPROOF_ERROR
 		do
 			create l_boogie_parser.make
 			l_boogie_parser.parse (last_output)

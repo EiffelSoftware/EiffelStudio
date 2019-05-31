@@ -1,7 +1,4 @@
-note
-	description: "[
-		TODO
-	]"
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -76,7 +73,6 @@ feature -- Translation: Signature
 			l_contracts: like contracts_of
 			l_fields: LINKED_LIST [TUPLE [o: IV_EXPRESSION; f: IV_ENTITY]]
 			l_modifies: IV_MODIFIES
-			l_type: TYPE_A
 		do
 			set_context (a_feature, a_type)
 			translation_pool.add_type (current_type)
@@ -395,7 +391,6 @@ feature -- Translation: Signature
 		local
 			l_pre: IV_PRECONDITION
 			l_post: IV_POSTCONDITION
-			l_i: IV_ENTITY
 			l_written_feature: FEATURE_I
 		do
 			create Result.make
@@ -480,7 +475,6 @@ feature -- Translation: Signature
 			-- Add frame condition if `agent_modify' is used in precondition.
 		local
 			l_translator: E2B_CONTRACT_EXPRESSION_TRANSLATOR
-			l_item: E2B_ASSERT_ORIGIN
 			l_name: STRING
 			l_fcall: IV_FUNCTION_CALL
 			l_pre: IV_PRECONDITION
@@ -556,8 +550,6 @@ feature -- Translation: Implementation
 			l_translator: E2B_INSTRUCTION_TRANSLATOR
 			l_type: CL_TYPE_A
 			l_proc_name: STRING
-			l_values: ARRAYED_LIST [STRING_32]
-			l_assign: IV_ASSIGNMENT
 			l_call: IV_PROCEDURE_CALL
 			l_ownership_handler: E2B_CUSTOM_OWNERSHIP_HANDLER
 			l_feature: FEATURE_I
@@ -1157,7 +1149,6 @@ feature -- Translation: agents
 		local
 			l_procedure: IV_PROCEDURE
 			l_function: IV_FUNCTION
-			l_axiom: IV_AXIOM
 		do
 			set_context (a_feature, a_type)
 

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Default implementation of the blackboard service."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -110,8 +110,6 @@ feature -- Basic operations
 			-- Commit all verification results added since last commit of results.
 		require
 			recording_results: is_recording_results
-		local
-			l_feature_data: EBB_FEATURE_DATA
 		do
 			across verification_results as l_cursor loop
 				if data.has_feature (l_cursor.item.associated_feature) then

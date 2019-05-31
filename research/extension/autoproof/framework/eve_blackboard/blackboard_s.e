@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Service for accessing and controling the blackboard."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -169,13 +169,11 @@ feature {NONE} -- Implementation
 		end
 
 	frozen rota: detachable ROTA_S
-			-- Access to rota service
-		local
-			l_service_consumer: SERVICE_CONSUMER [ROTA_S]
+			-- Access to rota service.
 		do
-			create l_service_consumer
-			if l_service_consumer.is_service_available and then l_service_consumer.service.is_interface_usable then
-				Result := l_service_consumer.service
+			Result := (create {SERVICE_CONSUMER [ROTA_S]}).service
+			if attached Result and then not Result.is_interface_usable then
+				Result := Void
 			end
 		end
 

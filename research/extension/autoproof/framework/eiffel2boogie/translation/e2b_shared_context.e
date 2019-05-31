@@ -1,6 +1,4 @@
-note
-	description: "Summary description for {E2B_SHARED_TRANSLATOR}."
-	author: ""
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -113,8 +111,6 @@ feature {NONE} -- Implementation
 		end
 
 	stop_timer
-		local
-			l_time: DT_TIME
 		do
 			start_time.remove
 		end

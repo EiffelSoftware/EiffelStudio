@@ -231,14 +231,12 @@ feature -- Processing
 			l_attribute: ATTRIBUTE_B
 			l_feature: FEATURE_I
 			l_type: CL_TYPE_A
-			l_target_name: STRING
 
 			l_target, l_source: IV_EXPRESSION
 			l_field: IV_ENTITY
 			l_assignment: IV_ASSIGNMENT
 			l_call: IV_PROCEDURE_CALL
 			l_assert: IV_ASSERT
-			l_fcall: IV_FUNCTION_CALL
 		do
 			set_current_origin_information (a_node)
 
@@ -653,14 +651,13 @@ feature -- Processing
 		require
 			from_loop: a_node.stop /= Void and a_node.iteration_exit_condition = Void
 		local
-			l_pre_heap, l_variant: IV_ENTITY
+			l_pre_heap: IV_ENTITY
 			l_frame: like process_loop_modifies
 			l_old_writable: IV_EXPRESSION
 			l_condition: IV_EXPRESSION
 			l_invariant: ASSERT_B
 			l_goto: IV_GOTO
 			l_temp_block, l_head_block, l_body_block, l_end_block: IV_BLOCK
-			l_assert: IV_ASSERT
 			l_assume: IV_ASSERT
 			l_variant_locals: ARRAYED_LIST [IV_ENTITY]
 			l_variant_exprs: ARRAYED_LIST [IV_EXPRESSION]
@@ -778,19 +775,15 @@ feature -- Processing
 			from_loop: a_node.stop = Void and a_node.iteration_exit_condition /= Void
 		local
 			l_condition: IV_EXPRESSION
-			l_variant_local: STRING
 			l_invariant: ASSERT_B
 			l_goto: IV_GOTO
 			l_temp_block, l_head_block, l_body_block, l_end_block: IV_BLOCK
 			l_assert: IV_ASSERT
 			l_assume: IV_ASSERT
-			l_not: IV_UNARY_OPERATION
-			l_op: IV_BINARY_OPERATION
 			l_variant: IV_ENTITY
 			l_assignment: IV_ASSIGNMENT
 
 			l_assign: ASSIGN_B
-			l_across_handler: E2B_ACROSS_HANDLER
 			l_object_test_local: OBJECT_TEST_LOCAL_B
 			l_nested: NESTED_B
 			l_access: ACCESS_EXPR_B
@@ -908,7 +901,6 @@ feature -- Processing
 			-- Process loop with unrolling.
 		local
 			l_condition: IV_EXPRESSION
-			l_variant_local: STRING
 			l_invariant: ASSERT_B
 			l_goto: IV_GOTO
 			l_temp_block, l_head_block, l_body_block, l_end_block, l_force_end_block: IV_BLOCK
@@ -1215,7 +1207,6 @@ feature {NONE} -- Loop processing
 		local
 			l_variant: IV_ENTITY
 			l_assignment: IV_ASSIGNMENT
-			l, r: IV_EXPRESSION
 		do
 			if a_variant /= Void then
 				set_current_origin_information (a_variant)

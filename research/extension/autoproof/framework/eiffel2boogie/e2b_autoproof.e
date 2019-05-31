@@ -1,7 +1,5 @@
-note
-	description: "[
-		Interface to launch AutoProof.
-	]"
+﻿note
+	description: "Interface to launch AutoProof."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -77,8 +75,6 @@ feature -- Basic operations
 
 	reset
 			-- Reset AutoProof.
-		local
-			l_context: E2B_SHARED_CONTEXT
 		do
 			create input.make
 			create notification_agents.make
@@ -92,9 +88,6 @@ feature -- Basic operations
 			-- Verify input.
 		require
 			not_running: not is_running
-		local
-			l_notify_task: E2B_NOTIFY_TASK
-			l_context: E2B_SHARED_CONTEXT
 		do
 			create {E2B_BULK_VERIFICATION_TASK} verify_task.make (input)
 			start_verify_task
@@ -106,8 +99,6 @@ feature -- Basic operations
 			-- Verify input.
 		require
 			not_running: not is_running
-		local
-			l_notify_task: E2B_NOTIFY_TASK
 		do
 			create {E2B_FORK_VERIFICATION_TASK} verify_task.make (input)
 			start_verify_task
@@ -146,13 +137,11 @@ feature {NONE} -- Implementation
 			-- List of notification agents.
 
 	frozen rota: detachable ROTA_S
-			-- Access to rota service
-		local
-			l_service_consumer: SERVICE_CONSUMER [ROTA_S]
+			-- Access to rota service.
 		do
-			create l_service_consumer
-			if l_service_consumer.is_service_available and then l_service_consumer.service.is_interface_usable then
-				Result := l_service_consumer.service
+			Result := (create {SERVICE_CONSUMER [ROTA_S]}).service
+			if attached Result and then not Result.is_interface_usable then
+				Result := Void
 			end
 		end
 

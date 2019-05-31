@@ -1,7 +1,5 @@
-note
-	description: "[
-		Default implementation for a verification error.
-	]"
+﻿note
+	description: "Default implementation for a verification error."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -50,8 +48,6 @@ feature -- Display
 
 	single_line_message (a_formatter: TEXT_FORMATTER)
 			-- Single line description of this error.
-		local
-			l_message: STRING_32
 		do
 			across components as i loop
 				if i.item[1] = '$' then

@@ -10,6 +10,9 @@ feature
 		do
 			create storage.make (1)
 			storage.extend (tuple)
+				-- The test could be simplified to
+				-- 	io.put_natural_64 (storage [1].value)
+				-- but then it can hang instead of reporting an issue.
 			if not attached [storage [1]] [1] as x then
 				io.put_string ("Void tuple element")
 			elseif not attached {like tuple} x as y then

@@ -1,7 +1,5 @@
-note
-	description: "[
-		Helper functions for Eiffel to Boogie translation.
-	]"
+﻿note
+	description: "Helper functions for Eiffel to Boogie translation."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -83,32 +81,23 @@ feature -- General note helpers
 
 	note_values (a_indexing_clause: INDEXING_CLAUSE_AS; a_tag: STRING_32): ARRAYED_LIST [STRING_32]
 			-- List of note values of tag `a_tag'.
-		local
-			l_values: EIFFEL_LIST [ATOMIC_AS]
 		do
 			create Result.make (3)
 			Result.compare_objects
-			from
-				a_indexing_clause.start
-			until
-				a_indexing_clause.after
+			across
+				a_indexing_clause as i
 			loop
-				if a_indexing_clause.item.tag.name_32.is_equal (a_tag) then
-					l_values := a_indexing_clause.item.index_list
-					from
-						l_values.start
-					until
-						l_values.after
+				if i.item.tag.name_32.same_string (a_tag) then
+					across
+						i.item.index_list as v
 					loop
-						if attached {STRING_AS} l_values.item as l_string then
+						if attached {STRING_AS} v.item as l_string then
 							Result.extend (l_string.value_32)
 						else
-							Result.extend (l_values.item.string_value_32)
+							Result.extend (v.item.string_value_32)
 						end
-						l_values.forth
 					end
 				end
-				a_indexing_clause.forth
 			end
 		end
 
@@ -327,8 +316,6 @@ feature -- Logical helpers
 
 	is_class_logical (a_class: CLASS_C): BOOLEAN
 			-- Is `a_class' mapped to a logical type in a Boogie theory?
-		local
-			l_values: ARRAYED_LIST [STRING_32]
 		do
 			Result := attached type_for_logical (a_class)
 		end
@@ -427,13 +414,10 @@ feature -- Ownership helpers
 			-- 4. the class of `a_feature' list `a_type' as explicit
 			-- 5. the class of `a_feature' marks all as explicit
 		do
-			Result := not options.is_ownership_defaults_enabled
-			if not Result then
-				Result := is_feature_explicit (a_feature, a_type)
-			end
-			if not Result then
-				Result := is_class_explicit (a_feature.written_class, a_type)
-			end
+			Result :=
+				not options.is_ownership_defaults_enabled or else
+				is_feature_explicit (a_feature, a_type) or else
+				is_class_explicit (a_feature.written_class, a_type)
 		end
 
 	is_clause_reads (a_clause: ASSERT_B): BOOLEAN
@@ -550,7 +534,7 @@ feature -- Ownership helpers
 			-- Does `a_feature' represent on the of the built-in attributes?
 			-- (Which means that it is not actually an attribute, but should be).
 		do
-			-- ToDo: take possible renaming into account?
+				-- ToDo: take possible renaming into account?
 			Result := translation_mapping.ghost_access.has (a_feature.feature_name_32)
 		end
 
@@ -607,8 +591,16 @@ feature -- Model helpers
 --					across translation_mapping.ghost_access as m loop
 --						Result.extend (a_class.feature_named_32 (m.item))
 --					end
-					Result.extend (a_class.feature_named_32 ("subjects"))
-					Result.extend (a_class.feature_named_32 ("observers"))
+					if attached a_class.feature_named_32 ("subjects") as f then
+						Result.extend (f)
+					else
+						add_unsupported_error (a_class, "Feature `subjects` is not found in class `ANY`.", 0)
+					end
+					if attached a_class.feature_named_32 ("observers") as f then
+						Result.extend (f)
+					else
+						add_unsupported_error (a_class, "Feature `observers` is not found in class `ANY`.", 0)
+					end
 				else
 					across model_queries (a_class) as m loop
 						l_f := a_class.feature_named_32 (m.item)
@@ -741,11 +733,17 @@ feature -- Eiffel helpers
 
 	is_agent_type (t: CL_TYPE_A): BOOLEAN
 			-- Is `t' an agent type?
+		local
+			n: like {CLASS_C}.name
 		do
+			n := t.base_class.name
 			Result :=
-				t.base_class.name_in_upper ~ "ROUTINE" or
-				t.base_class.name_in_upper ~ "PROCEDURE" or
-				t.base_class.name_in_upper ~ "FUNCTION"
+				n.is_case_insensitive_equal ("ROUTINE") or else
+				n.is_case_insensitive_equal ("PROCEDURE") or else
+				n.is_case_insensitive_equal ("FUNCTION") or else
+				n.is_case_insensitive_equal ("PREDICATE")
+		ensure
+			instance_free: class
 		end
 
 	is_conforming_or_non_conforming_parent_class (a_child, a_parent: CLASS_C): BOOLEAN
@@ -837,18 +835,14 @@ feature -- Eiffel helpers
 			end
 		end
 
-	set_any_type: CL_TYPE_A
+	set_any_type: detachable CL_TYPE_A
 			-- Type MML_SET [ANY] (supplier of ANY).
 		do
-			check attached {CL_TYPE_A} system.any_type.base_class.feature_named_32 ("owns").type as t then
-				Result := t
+			if attached system.any_type.base_class.feature_named_32 ({STRING_32} "owns") as f then
+				Result := {CL_TYPE_A} / f.type
+			else
+				add_unsupported_error (Void, "Feature `owns` is not found in class `ANY`.", 0)
 			end
-		end
-
-	set_class: CLASS_C
-			-- Class MML_SET.
-		do
-			Result := set_any_type.base_class
 		end
 
 feature -- Contract helpers
@@ -863,8 +857,6 @@ feature -- Byte context helpers
 
 	set_up_byte_context (a_feature: FEATURE_I; a_type: TYPE_A)
 			-- Set up byte context for `a_feature' of type `a_type'.
-		local
-			l_byte_code: BYTE_CODE
 		do
 				-- Clear byte context
 			if a_feature /= Void then
@@ -893,8 +885,7 @@ feature -- Byte context helpers
 			if a_feature /= Void then
 				Context.set_current_feature (a_feature)
 				if byte_server.has (a_feature.body_index) then
-					l_byte_code := byte_server.item (a_feature.body_index)
-					Context.set_byte_code (l_byte_code)
+					Context.set_byte_code (byte_server.item (a_feature.body_index))
 				end
 			end
 		end
@@ -1047,6 +1038,5 @@ feature {NONE} -- Implementation
 		once
 			create Result.make (50)
 		end
-
 
 end

@@ -1,7 +1,4 @@
-note
-	description: "[
-		TODO
-	]"
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -21,7 +18,7 @@ create
 
 feature {NONE} -- Implementation
 
-	make (a_target: IV_EXPRESSION; a_indexes: ARRAY [IV_EXPRESSION])
+	make (a_target: IV_EXPRESSION; a_indexes: like indexes)
 			-- Make map access to `a_target' with index `a_indexes'.
 		require
 			a_target_attached: attached a_target
@@ -40,7 +37,7 @@ feature -- Access
 	target: IV_EXPRESSION
 			-- Target.
 
-	indexes: ARRAY [IV_EXPRESSION]
+	indexes: ARRAYED_LIST [IV_EXPRESSION]
 			-- Indexes.
 
 	type: IV_TYPE
@@ -82,7 +79,7 @@ feature -- Access
 			l_fresh_var: IV_ENTITY
 			l_subst: ARRAYED_LIST [TUPLE[var: IV_ENTITY; val: IV_EXPRESSION]]
 		do
-			create l_indexes.make (indexes.lower, indexes.upper)
+			create l_indexes.make (indexes.count)
 			create l_subst.make (3)
 			across
 				indexes as i
@@ -92,11 +89,11 @@ feature -- Access
 				if i.item.is_arithmetic and i.item.has_free_var_named (a_bound_var.name) then
 					-- Argument is a nontrivial expression with a bound variable: replace with a fresh bound variable
 					l_fresh_var := factory.unique_entity (a_bound_var.name, l_res.expr.type)
-					l_indexes [i.target_index] := l_fresh_var
+					l_indexes.extend (l_fresh_var)
 					l_subst.extend ([l_fresh_var, l_res.expr])
 				else
 					-- No substitution
-					l_indexes [i.target_index] := l_res.expr
+					l_indexes.extend (l_res.expr)
 				end
 			end
 			l_res := target.with_simple_vars (a_bound_var)

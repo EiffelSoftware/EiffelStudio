@@ -1,7 +1,4 @@
-note
-	description: "[
-		TODO
-	]"
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -55,10 +52,10 @@ feature -- Access
 
 feature -- Element change
 
-	add_argument (a_name: STRING; a_type: IV_TYPE)
+	add_argument (a_name: READABLE_STRING_32; a_type: IV_TYPE)
 			-- Add argument with name `a_name' and type `a_type'.
 		require
-			a_name_valid: is_valid_name (a_name)
+			a_name_valid: is_valid_name_32 (a_name)
 			a_type_attached: attached a_type
 		do
 			arguments.extend (create {IV_ENTITY_DECLARATION}.make (a_name, a_type))

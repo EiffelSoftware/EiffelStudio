@@ -1,7 +1,5 @@
-note
-	description: "[
-		Helper class to create IV-nodes.
-	]"
+﻿note
+	description: "Helper class to create IV-nodes."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -80,7 +78,7 @@ feature -- Values
 
 feature -- Entities
 
-	entity (a_name: STRING; a_type: IV_TYPE): IV_ENTITY
+	entity (a_name: READABLE_STRING_32; a_type: IV_TYPE): IV_ENTITY
 			-- Entity with name `a_name' and type `a_type'.
 		do
 			create Result.make (a_name, a_type)
@@ -292,13 +290,13 @@ feature -- Functions
 
 feature -- Heap and map access
 
-	map_access (a_map: IV_EXPRESSION; a_indexes: ARRAY [IV_EXPRESSION]): IV_MAP_ACCESS
+	map_access (a_map: IV_EXPRESSION; a_indexes: like {IV_MAP_ACCESS}.indexes): IV_MAP_ACCESS
 			-- Map access to `a_map'[`a_index'].
 		do
 			create Result.make (a_map, a_indexes)
 		end
 
-	map_update (a_map: IV_EXPRESSION; a_indexes: ARRAY [IV_EXPRESSION]; a_value: IV_EXPRESSION): IV_MAP_UPDATE
+	map_update (a_map: IV_EXPRESSION; a_indexes: ARRAYED_LIST [IV_EXPRESSION]; a_value: IV_EXPRESSION): IV_MAP_UPDATE
 			-- Map update `a_map'[`a_index' := `a_value'].
 		do
 			create Result.make (a_map, a_indexes, a_value)
@@ -307,7 +305,7 @@ feature -- Heap and map access
 	heap_access (a_heap: IV_EXPRESSION; a_target: IV_EXPRESSION; a_name: STRING; a_content_type: IV_TYPE): IV_MAP_ACCESS
 			-- Heap access to `a_feature' on `Current'.
 		do
-			Result := map_access (a_heap, <<a_target, create {IV_ENTITY}.make (a_name, types.field (a_content_type)) >>)
+			Result := map_access (a_heap, create {ARRAYED_LIST [IV_EXPRESSION]}.make_from_array (<<a_target, create {IV_ENTITY}.make (a_name, types.field (a_content_type)) >>))
 		end
 
 	heap_current_access (a_mapping: E2B_ENTITY_MAPPING; a_name: STRING; a_content_type: IV_TYPE): IV_MAP_ACCESS
@@ -326,8 +324,8 @@ feature -- Heap and map access
 			-- Array access to `a_array'[`a_index'].
 		do
 			Result := map_access (
-				heap_access (a_heap, a_array, "area", create {IV_MAP_TYPE}.make (<<>>, << types.int >>, a_content_type)),
-				<< a_index >>)
+				heap_access (a_heap, a_array, "area", create {IV_MAP_TYPE}.make (<<>>, create {ARRAYED_LIST [IV_TYPE]}.make_from_array (<<types.int>>), a_content_type)),
+				create {ARRAYED_LIST [IV_EXPRESSION]}.make_from_array (<<a_index>>))
 		end
 
 feature -- Statements
@@ -377,7 +375,7 @@ feature -- Framing
 	frame_access (a_frame, a_obj, a_field: IV_EXPRESSION): IV_MAP_ACCESS
 			-- Expression `a_frame [a_obj, a_field]'.
 		do
-			create Result.make (a_frame, << a_obj, a_field >>)
+			create Result.make (a_frame, create {ARRAYED_LIST [IV_EXPRESSION]}.make_from_array (<< a_obj, a_field >>))
 		end
 
 	writes_routine_frame (a_feature: FEATURE_I; a_type: CL_TYPE_A; a_boogie_procedure: IV_PROCEDURE): IV_EXPRESSION

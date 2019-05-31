@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Boogie executable for Windows."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -27,98 +27,43 @@ feature {NONE} -- Implementation
 		do
 			boogie_file_name := default_boogie_code_file_name
 			boogie_output_file_name := default_boogie_output_file_name
-			model_file_name := default_model_file_name
 			create input.make
 		end
 
 feature {NONE} -- Implementation
 
-	boogie_file_name: attached STRING
+	boogie_file_name: PATH
 			-- <Precursor>
 
-	boogie_output_file_name: attached STRING
+	boogie_output_file_name: PATH
 			-- <Precursor>
 
-	model_file_name: attached STRING
-			-- <Precursor>
-
-	boogie_executable: attached STRING
+	boogie_executable: READABLE_STRING_32
 			-- <Precursor>
 		local
-			l_ee: EXECUTION_ENVIRONMENT
---			l_registry: WEL_REGISTRY
---			l_registry_value: WEL_REGISTRY_KEY_VALUE
-			l_possible_paths: LINKED_LIST [PATH]
-			l_ise_eiffel, l_eiffel_src: STRING
-			l_file: RAW_FILE
-			l_path: PATH
+			p: PATH
 		once
-			create Result.make_empty
-			create l_possible_paths.make
-			create l_ee
-
-				-- 1. Delivery of installation
-			l_ise_eiffel := l_ee.get ("ISE_EIFFEL")
-			if l_ise_eiffel /= Void then
-				create l_path.make_from_string (l_ise_eiffel)
-				l_possible_paths.extend (l_path.extended ("studio").extended ("tools").extended ("boogie").extended ("Boogie.exe"))
-			end
-
-				-- 2. Delivery of development version
-			l_eiffel_src := l_ee.get ("EIFFEL_SRC")
-			if l_eiffel_src /= Void then
-				create l_path.make_from_string (l_eiffel_src)
-				l_possible_paths.extend (l_path.extended ("Delivery").extended ("studio").extended ("tools").extended ("boogie").extended ("Boogie.exe"))
-				l_possible_paths.extend (l_path.extended ("..").extended ("Delivery").extended ("studio").extended ("tools").extended ("boogie").extended ("Boogie.exe"))
-			end
-
-			from
-				l_possible_paths.start
-			until
-				l_possible_paths.after or else not Result.is_empty
-			loop
-				create l_file.make_with_path (l_possible_paths.item)
-				if l_file.exists then
-					Result := l_possible_paths.item.out
+				-- 0. Assume it's in the PATH.
+			Result := {STRING_32} "boogie" + {EIFFEL_LAYOUT}.eiffel_layout.executable_suffix
+			if {EIFFEL_LAYOUT}.is_eiffel_layout_defined then
+					-- 1. Look in the installation directory.
+				p := {EIFFEL_LAYOUT}.eiffel_layout.tools_path.extended ("boogie").extended (Result)
+				if (create {RAW_FILE}.make_with_path (p)).exists then
+					Result := p.name
 				end
-				l_possible_paths.forth
-			end
-
-			if Result.is_empty then
-					-- 4. Assume it's in the PATH
-				Result := "Boogie.exe"
 			end
 		end
 
-	default_boogie_code_file_name: FILE_NAME
-			-- File name for Boogie code file
-		local
-			l_time: TIME
-			l_filename: STRING
+	default_boogie_code_file_name: PATH
+			-- File name for Boogie code file.
 		do
-			create Result.make_from_string (system.eiffel_project.project_directory.target_path.out)
-			Result.extend ("Proofs")
-			Result.extend ("autoproof" + unique_number.out + ".bpl")
+			Result := system.eiffel_project.project_directory.target_path.extended ("Proofs").extended ("autoproof" + unique_number.out + ".bpl")
 		end
 
-	default_boogie_output_file_name: FILE_NAME
-			-- File name for Boogie output file
-		local
-			l_time: TIME
-			l_filename: STRING
+	default_boogie_output_file_name: PATH
+			-- File name for Boogie output file.
 		do
-			create Result.make_from_string (system.eiffel_project.project_directory.target_path.out)
-			Result.extend ("Proofs")
-			Result.extend ("output" + unique_number.out + ".txt")
-		end
-
-	default_model_file_name: FILE_NAME
-			-- File name for Boogie code file
-		local
-			l_time: TIME
-			l_filename: STRING
-		do
-			create Result.make_from_string ("C:\temp\output.model")
+			Result := system.eiffel_project.project_directory.target_path.extended ("Proofs").extended ("output" + unique_number.out + ".txt")
 		end
 
 	global_counter: CELL [INTEGER]

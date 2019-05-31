@@ -35,25 +35,26 @@ feature -- Element change
 
 feature -- Helper functions: arguments and result
 
-	arguments_of (a_feature: FEATURE_I; a_context: CL_TYPE_A): ARRAYED_LIST [TUPLE [name: STRING; orig_type: TYPE_A; type: CL_TYPE_A; boogie_type: IV_TYPE]]
+	arguments_of (a_feature: FEATURE_I; a_context: CL_TYPE_A): ARRAYED_LIST [TUPLE [name: STRING_32; orig_type: TYPE_A; type: CL_TYPE_A; boogie_type: IV_TYPE]]
 			-- List of feature arguments of `a_feature'.
 		require
 			a_feature_attached: attached a_feature
 			a_context_attached: attached a_context
 		local
-			i: INTEGER
 			l_type: CL_TYPE_A
 		do
 			create Result.make (a_feature.argument_count)
-			from i := 1 until i > a_feature.argument_count loop
-				l_type := helper.class_type_in_context (a_feature.arguments.i_th (i), a_context.base_class, a_feature, a_context)
-				Result.extend([
-					a_feature.arguments.item_name (i),
-					a_feature.arguments.i_th (i),
-					l_type,
-					types.for_class_type (l_type)
-				])
-				i := i + 1
+			if attached a_feature.arguments as arguments then
+				across
+					arguments as a
+				loop
+					l_type := helper.class_type_in_context (a.item, a_context.base_class, a_feature, a_context)
+					Result.extend
+						(arguments.item_name_32 (a.target_index),
+						a.item,
+						l_type,
+						types.for_class_type (l_type))
+				end
 			end
 		end
 
@@ -66,7 +67,7 @@ feature -- Helper functions: arguments and result
 			Result := arguments_of (current_feature, current_type)
 		end
 
-	add_argument_with_property (a_name: STRING; a_orig_type: TYPE_A; a_type: CL_TYPE_A; a_boogie_type: IV_TYPE)
+	add_argument_with_property (a_name: READABLE_STRING_32; a_orig_type: TYPE_A; a_type: CL_TYPE_A; a_boogie_type: IV_TYPE)
 			-- Add argument and property to current procedure.
 		require
 			current_procedure_set: attached current_boogie_procedure
@@ -282,8 +283,7 @@ feature -- Helper functions: contracts
 			l_objects_type: like translate_contained_expressions
 			l_name: STRING_32
 			l_type: CL_TYPE_A
-			l_attr, l_to_set, l_new_version: FEATURE_I
-			l_boogie_type: IV_TYPE
+			l_attr, l_new_version: FEATURE_I
 			l_field: IV_ENTITY
 			l_origin: CLASS_C
 		do
@@ -383,7 +383,7 @@ feature -- Helper functions: contracts
 			create l_type_var.make_fresh
 			create l_o.make ("$o", types.ref)
 			create l_f.make ("$f", types.field (l_type_var))
-			create l_access.make (a_lhs, << l_o, l_f >>)
+			create l_access.make (a_lhs, create {ARRAYED_LIST [IV_EXPRESSION]}.make_from_array (<<l_o, l_f>>))
 			l_expr := factory.false_
 
 				-- Axiom rhs: a big disjunction
@@ -440,7 +440,7 @@ feature -- Helper functions: contracts
 					l_disjunct := factory.equal (a_var, o.item)
 				else
 					check o.item.type ~ types.set (types.ref) end
-					l_disjunct := factory.map_access (o.item, << a_var >>)
+					l_disjunct := factory.map_access (o.item, create {ARRAYED_LIST [IV_EXPRESSION]}.make_from_array (<<a_var>>))
 				end
 				Result := factory.or_clean (Result, l_disjunct)
 			end

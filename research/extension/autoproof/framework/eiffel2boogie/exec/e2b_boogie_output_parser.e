@@ -1,5 +1,4 @@
-note
-	description: "Summary description for {E2B_BOOGIE_OUTPUT_PARSER}."
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -68,7 +67,7 @@ feature {NONE} -- Implementation
 
 			elseif parsing_regexp.matches (a_line) then
 				-- boogie file name: parsing_regexp.captured_substring (1)
-				fill_boogie_input_lines (parsing_regexp.captured_substring (1))
+				fill_boogie_input_lines (create {PATH}.make_from_string (parsing_regexp.captured_substring (1)))
 				last_result.set_input_text (input_lines)
 
 			elseif finished_regexp.matches (a_line) then
@@ -140,12 +139,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	fill_boogie_input_lines (a_filename: STRING)
+	fill_boogie_input_lines (a_filename: PATH)
 			-- Fill `input_lines' with file `a_filename'.
 		local
 			l_file: PLAIN_TEXT_FILE
 		do
-			create l_file.make (a_filename)
+			create l_file.make_with_path (a_filename)
 			create {ARRAYED_LIST [STRING]} input_lines.make (10_000)
 			from
 				l_file.open_read

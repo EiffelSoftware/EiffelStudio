@@ -9,21 +9,21 @@ copy_sub	Ace $TEST Ace
 define_date     DATE -1461
 copy_sub	test.e $CLUSTER test.e
 compile_melted
-compile_result 	validity_warning TEST Obsolete:10 Obsolete:11 Obsolete:12
+compile_result 	validity_warning TEST "Obsolete Call:10" "Obsolete Call:11" "Obsolete Call:12"
 cleanup_compile
 
 	-- Yerterday: warning.
 define_date     DATE -1
 copy_sub	test.e $CLUSTER test.e
 compile_melted
-compile_result 	validity_warning TEST Obsolete:10 Obsolete:11 Obsolete:12
+compile_result 	validity_warning TEST "Obsolete Call:10" "Obsolete Call:11" "Obsolete Call:12"
 cleanup_compile
 
 	-- In a month: hint.
 define_date     DATE 31
 copy_sub	test.e $CLUSTER test.e
 compile_melted
-compile_result 	validity_warning TEST Obsolete:10 Obsolete:11 Obsolete:12
+compile_result 	validity_warning TEST "Obsolete Call:10" "Obsolete Call:11" "Obsolete Call:12"
 cleanup_compile
 
 	-- Options: disable warnings.
@@ -34,7 +34,7 @@ copy_sub	Ace $TEST Ace
 define_date     DATE -1461
 copy_sub	test.e $CLUSTER test.e
 compile_melted
-compile_result 	validity_warning NONE Obsolete
+compile_result 	validity_warning NONE "Obsolete Call"
 cleanup_compile
 
 	-- Yerterday: warning.

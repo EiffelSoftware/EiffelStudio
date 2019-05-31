@@ -5,7 +5,7 @@ copy_sub	Ace $TEST Ace
 copy_raw	test.e $CLUSTER test.e
 
 compile_melted
-compile_result	validity_warning TEST Obsolete:34
+compile_result	validity_warning TEST "Obsolete Call:34"
 
 execute_work	NONE exec_output_m
 execute_result	ok

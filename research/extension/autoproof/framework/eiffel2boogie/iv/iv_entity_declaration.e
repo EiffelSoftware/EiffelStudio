@@ -1,7 +1,4 @@
-note
-	description: "[
-		TODO
-	]"
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -175,7 +175,7 @@ feature -- Visit nodes
 		local
 			l_version: detachable CONF_VERSION
 			l_settings: like {CONF_TARGET}.settings
-			l_sorted_list: ARRAYED_LIST [like known_settings.item]
+			l_sorted_list: ARRAYED_LIST [attached like known_settings.item]
 			setting_value: like {CONF_TARGET}.settings.item
 		do
 			current_target := a_target
@@ -227,7 +227,7 @@ feature -- Visit nodes
 
 			l_settings := a_target.internal_settings
 			create l_sorted_list.make_from_iterable (known_settings)
-			;(create {QUICK_SORTER [like known_settings.item]}.make (create {COMPARABLE_COMPARATOR [like known_settings.item]})).sort (l_sorted_list)
+			;(create {QUICK_SORTER [like known_settings.item]}.make (create {COMPARABLE_COMPARATOR [attached like known_settings.item]})).sort (l_sorted_list)
 			across
 				l_sorted_list as s
 			loop
@@ -236,7 +236,7 @@ feature -- Visit nodes
 					if
 						not attached setting_value and then
 						boolean_settings.has (s.item) and then
-						is_boolean_setting_true (s.item, namespace) /= is_boolean_setting_true (s.item, a_target.system.namespace)
+						is_boolean_setting_true (s.item, if attached namespace as n then n else latest_namespace end) /= is_boolean_setting_true (s.item, a_target.system.namespace)
 					then
 							-- The setting has a different default value in the current namespace.
 						setting_value := configuration_boolean_value (is_boolean_setting_true (s.item, a_target.system.namespace))

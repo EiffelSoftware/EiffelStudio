@@ -175,7 +175,8 @@ feature -- Visit nodes
 		local
 			l_version: detachable CONF_VERSION
 			l_settings: like {CONF_TARGET}.settings
-			l_sorted_list: ARRAYED_LIST [READABLE_STRING_GENERAL]
+			l_sorted_list: ARRAYED_LIST [like known_settings.item]
+			setting_value: like {CONF_TARGET}.settings.item
 		do
 			current_target := a_target
 			append_tag_open ({STRING_32} "target")
@@ -225,19 +226,27 @@ feature -- Visit nodes
 			append_target_options (a_target.internal_options)
 
 			l_settings := a_target.internal_settings
-			create l_sorted_list.make_from_array (l_settings.current_keys)
-			;(create {QUICK_SORTER [READABLE_STRING_GENERAL]}.make (create {COMPARABLE_COMPARATOR [READABLE_STRING_GENERAL]})).sort (l_sorted_list)
+			create l_sorted_list.make_from_iterable (known_settings)
+			;(create {QUICK_SORTER [like known_settings.item]}.make (create {COMPARABLE_COMPARATOR [like known_settings.item]})).sort (l_sorted_list)
 			across
 				l_sorted_list as s
 			loop
-				if
-					valid_setting (s.item, namespace) and then
-					attached l_settings.item (s.item) as l_setting_item
-				then
-					append_tag_open ({STRING_32} "setting")
-					append_text_attribute ("name", s.item)
-					append_text_attribute ("value", l_setting_item)
-					append_tag_close_empty
+				if valid_setting (s.item, namespace) then
+					setting_value := l_settings.item (s.item)
+					if
+						not attached setting_value and then
+						boolean_settings.has (s.item) and then
+						is_boolean_setting_true (s.item, namespace) /= is_boolean_setting_true (s.item, a_target.system.namespace)
+					then
+							-- The setting has a different default value in the current namespace.
+						setting_value := configuration_boolean_value (is_boolean_setting_true (s.item, a_target.system.namespace))
+					end
+					if attached setting_value then
+						append_tag_open ({STRING_32} "setting")
+						append_text_attribute ("name", s.item)
+						append_text_attribute ("value", setting_value)
+						append_tag_close_empty
+					end
 				end
 			end
 				-- Add a dead code removal setting.

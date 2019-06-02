@@ -1914,13 +1914,13 @@ feature -- Access
 		   		actual_type.has_associated_class
 		   	then
 				ass_class := actual_type.base_class
-				if ass_class.is_obsolete and then ass_class.lace_class.options.is_warning_enabled (w_obsolete_class) then
+				if ass_class.is_obsolete and then current_class.lace_class.options.is_warning_enabled (w_obsolete_class) then
 					create warn.make_with_class (current_class)
 					if current_feature /= Void then
 						warn.set_feature (current_feature)
 					end
 					warn.set_obsolete_class (ass_class)
-					Error_handler.insert_warning (warn, ass_class.is_warning_reported_as_error (w_obsolete_class))
+					error_handler.insert_warning (warn, current_class.is_warning_reported_as_error (w_obsolete_class))
 				end
 			end
 		end

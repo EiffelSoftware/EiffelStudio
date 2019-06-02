@@ -478,8 +478,16 @@ feature {NONE} -- Modification
 				an_options.warning,
 				c
 			)
-			if attached last_added_choice_property as l_prop and then a_check_non_client_option and then is_non_client_option (at_warning) then
-				l_prop.enable_readonly
+			if attached last_added_choice_property as l_prop then
+				l_prop.change_value_actions.extend (agent change_no_argument_wrapper ({READABLE_STRING_32}?, agent refresh))
+				l_prop.change_value_actions.extend (agent change_no_argument_wrapper ({READABLE_STRING_32}?, agent handle_value_changes (False)))
+				if a_inherits then
+					l_prop.use_inherited_actions.extend (agent refresh)
+					l_prop.use_inherited_actions.extend (agent handle_value_changes (False))
+				end
+				if a_check_non_client_option and then is_non_client_option (at_warning) then
+					l_prop.enable_readonly
+				end
 			end
 
 			from

@@ -1,9 +1,7 @@
-note
+﻿note
 
-	description:
-		"Files viewed as persistent sequences of ASCII characters"
+	description: "Files viewed as persistent sequences of ASCII characters."
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -134,13 +132,13 @@ feature -- Output
 			end
 		end
 
-	put_real, putreal (r: REAL_32)
+	put_real, putreal, put_real_32 (r: REAL_32)
 			-- Write ASCII value of `r' at current position.
 		do
 			put_string (r.out)
 		end
 
-	put_double, putdouble (d: REAL_64)
+	put_double, putdouble, put_real_64 (d: REAL_64)
 			-- Write ASCII value `d' at current position.
 		do
 			put_string (d.out)
@@ -243,7 +241,7 @@ feature -- Input
 			last_natural_8 := ctoi_convertor.parsed_natural_8
 		end
 
-	read_real, readreal
+	read_real, readreal, read_real_32
 			-- Read the ASCII representation of a new real
 			-- from file. Make result available in `last_real'.
 		do
@@ -251,7 +249,7 @@ feature -- Input
 			last_real := last_double.truncated_to_real
 		end
 
-	read_double, readdouble
+	read_double, readdouble, read_real_64
 			-- Read the ASCII representation of a new double
 			-- from file. Make result available in `last_double'.
 		do
@@ -393,9 +391,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-end -- class PLAIN_TEXT_FILE
-
-
-
+end

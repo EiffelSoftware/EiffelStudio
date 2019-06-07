@@ -23,14 +23,17 @@ description: "WEL: library of reusable components for Windows."
 #define _wel_scaling_api_h_
 
 #ifdef _MSC_VER 
-#	include <shellscalingapi.h>
-#	include <windef.h>
-#	include <winuser.h>
+#include <shellscalingapi.h>
+#include <windef.h>
+#include <winuser.h>
 #endif
-
 
 #ifdef __cplusplus
 extern "C" {
+#endif
+
+#ifdef __cplusplus
+}
 #endif
 
 #endif /* _wel_scaling_api_h_ */

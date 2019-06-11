@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that creates simple links, simple clusters and ellipse nodes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -35,10 +35,6 @@ feature -- Basic operations
 
 	model_from_xml (node: attached like xml_element_type): EG_ITEM
 			-- Create an EG_ITEM from `node' if possible.
-		local
---			node_name, source_name, target_name: STRING
---			a_source, a_target: EG_LINKABLE
-			l_result: detachable like model_from_xml
 		do
 -- TODO: implement the xml conversion.
 --			node_name := node.name
@@ -68,7 +64,7 @@ feature -- Basic operations
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -78,7 +74,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class ELLIPSE_FACTORY
+end

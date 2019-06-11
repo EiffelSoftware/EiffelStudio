@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Analyze the objects in the memory on a graph"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -69,7 +69,6 @@ feature -- Command
 			a_object_not_void : a_object /= Void
 		local
 			l_obj_with_node : TUPLE [obj: ANY; node: EG_NODE]
-			l_result: detachable like find_draw_node_by_object
 		do
 			from
 				objects_already_draw.start
@@ -424,7 +423,6 @@ feature {NONE} -- Low Level Logic Implementation
 		local
 			l_type_key: INTEGER
 			l_data: detachable ARRAYED_LIST[ANY]
-			l_row_index: INTEGER
 			l_item: ANY
 		do
 			l_type_key:= object_finder.find_key_for_type (a_type_name)
@@ -494,7 +492,7 @@ invariant
 	objects_already_draw_has_no_void_item: True-- No Void items in `objects_already_draw'
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -503,8 +501,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that provide access to constants loaded from files."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -449,8 +449,6 @@ feature -- Access
 			initialized: constants_initialized
 			name_valid: a_name /= Void and not a_name.is_empty
 			has_constant (a_name)
-		local
-			l_item: detachable STRING
 		do
 			Result := all_constants.item (a_name)
 			if Result /= Void then
@@ -466,8 +464,6 @@ feature -- Access
 			initialized: constants_initialized
 			name_valid: a_name /= Void and not a_name.is_empty
 			has_constant: has_constant (a_name)
-		local
-			l_string: STRING
 		do
 			if attached all_constants.item (a_name) as l_item then
 				check
@@ -580,7 +576,7 @@ invariant
 	all_constants_not_void: all_constants /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -590,4 +586,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class MA_CONSTANTS_IMP
+end

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that is a straight forward implementation for an `n_body_force_solver' O(n^2)"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,7 +18,6 @@ feature {NONE} -- Implementation
 			-- Solve n_nody_force O(n).
 		local
 			l_item: EG_PARTICLE
-			l_result: detachable like n_body_force_solver
 		do
 			from
 				particles.start
@@ -36,7 +35,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -46,8 +45,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EG_PARTICLE_SIMULATION_N2
-
+end

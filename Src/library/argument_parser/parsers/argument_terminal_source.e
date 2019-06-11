@@ -10,6 +10,8 @@ note
 class
 	ARGUMENT_TERMINAL_SOURCE
 
+obsolete "Use an up-to-date version of the arguments parser library. [2019-11-30]"
+
 inherit
 	ARGUMENT_SOURCE
 

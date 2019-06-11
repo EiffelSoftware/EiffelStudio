@@ -8,6 +8,8 @@ note
 deferred class
 	ENVIRONMENT_ARGUMENTS
 
+obsolete "Use an up-to-date version of the arguments parser library. [2019-11-30]"
+
 feature -- Access
 
 	argument (i: INTEGER): STRING

@@ -103,12 +103,21 @@ feature {NONE} -- Initialization
 			-- Create a circular chain with all items obtained from `other`.
 		local
 			a: like area_v2
+			i, n: like area_v2.count
 		do
-			make (estimated_count_of (other))
+			n := estimated_count_of (other)
+			make (n)
 			a := area_v2
 			across
 				other as o
 			loop
+				i := i + 1
+				if i > n then
+						-- The estimation could be approximate, resize the storage if needed.
+					n := i
+					a := a.aliased_resized_area (n)
+					area_v2 := a
+				end
 				a.extend (o.item)
 			end
 		end
@@ -871,7 +880,7 @@ invariant
 
 note
 	ca_ignore: "CA033", "CA033: very large class"
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

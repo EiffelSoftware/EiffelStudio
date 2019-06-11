@@ -490,7 +490,6 @@ feature {NONE} -- Events
 	on_import
 		local
 			dlg: EV_FILE_OPEN_DIALOG
-			s: detachable STRING_32
 			stor: PREFERENCES_STORAGE_XML
 			p: detachable EV_WINDOW
 			popup: detachable EV_POPUP_WINDOW
@@ -872,7 +871,6 @@ feature {NONE} -- Implementation
 			-- Fill with preferences no structure, flat list.
 		local
 			l_sorted_preferences: like sorted_known_preferences_by
-			l_pref: PREFERENCE
 		do
 			if flat_sorting_info.abs <= grid.column_count then
 				if flat_sorting_info > 0 then
@@ -1589,7 +1587,6 @@ feature {NONE} -- Filtering
 			flat_mode: not grid.is_tree_enabled
 		local
 			l_preference: detachable PREFERENCE
-			l_row: EV_GRID_ROW
 			l_item: detachable EV_GRID_ITEM
 		do
 			if attached {PREFERENCE} grid.row (r).data as p then

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Object is a view for an EG_CLUSTER."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -201,7 +201,6 @@ feature {NONE} -- Implementation
 			-- `a_linkable' was removed from the cluster.
 		local
 			l_world: like world
-			linkable_fig: detachable EG_LINKABLE_FIGURE
 		do
 			l_world := world
 			if l_world /= Void then
@@ -214,7 +213,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -224,8 +223,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EG_CLUSTER_FIGURE
-
+end

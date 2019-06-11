@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that is a view for an EG_GRAPH"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -461,7 +461,6 @@ feature -- Element change
 			has_target_figure: has_linkable_figure (rl_link_target)
 		local
 			link_figure: EG_LINK_FIGURE
-			source, target: detachable EG_LINKABLE_FIGURE
 		do
 			if attached factory as l_factory then
 				link_figure := l_factory.new_link_figure (a_link)
@@ -940,9 +939,6 @@ feature {NONE} -- Implementation
 			a_cluster_not_void: a_cluster /= Void
 			not_has_cluster: not has_cluster_figure (a_cluster)
 			non_linkable_already_part_of_view: not a_cluster.flat_linkables.there_exists (agent has_linkable_figure)
-		local
-			cur_cluster: detachable EG_CLUSTER
-			cur_node: detachable like node_type
 		do
 			from
 				a_cluster.linkables.start
@@ -1223,7 +1219,7 @@ invariant
 	selected_figures_not_void: selected_figures /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -1233,8 +1229,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EG_FIGURE_WORLD
-
+end

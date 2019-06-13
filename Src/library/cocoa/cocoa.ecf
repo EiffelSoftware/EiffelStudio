@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="cocoa" uuid="804E870E-1EED-4F7B-9C7D-4762358A62D7" readonly="false" library_target="cocoa">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="cocoa" uuid="804E870E-1EED-4F7B-9C7D-4762358A62D7" readonly="false" library_target="cocoa">
 	<target name="cocoa">
 		<description>Cocoa Eiffel Library.
-			Copyright (c) 2009, Daniel Furrer.</description>
+			Copyright (c) 2009-2019, Daniel Furrer.</description>
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/EIFGEN.{0,1}$</exclude>
 			<exclude>/\.svn$</exclude>
 			<exclude>/temp$</exclude>
 		</file_rule>
-		<option warning="true">
+		<option warning="error">
 		</option>
 		<external_include location="$(ISE_LIBRARY)/library/objc_base/Clib"/>
 		<external_include location="$(ISE_LIBRARY)/library/cocoa/Clib"/>

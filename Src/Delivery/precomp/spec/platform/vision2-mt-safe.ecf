@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd" name="precomp_vision2-mt-safe" uuid="7039682D-D23E-4B31-BB0E-58969C896BCF" library_target="vision2-mt-safe">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="precomp_vision2-mt-safe" uuid="7039682D-D23E-4B31-BB0E-58969C896BCF" library_target="vision2-mt-safe">
 	<target name="vision2-mt-safe">
 		<description>Vision2 library</description>
 		<root all_classes="true"/>
+		<option warning="error">
+		</option>
 		<capability>
 			<concurrency use="thread"/>
 		</capability>

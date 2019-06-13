@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd" name="precomp_wel-mt-safe" uuid="640C39AE-DA7F-4A66-85A9-126DA2A7D258" library_target="wel-mt-safe">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="precomp_wel-mt-safe" uuid="640C39AE-DA7F-4A66-85A9-126DA2A7D258" library_target="wel-mt-safe">
 	<target name="wel-mt-safe">
 		<description>WEL library</description>
 		<root all_classes="true"/>
+		<option warning="error">
+		</option>
 		<capability>
 			<concurrency use="thread"/>
 		</capability>

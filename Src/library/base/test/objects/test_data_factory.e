@@ -1,6 +1,7 @@
 ﻿note
 	description: "Factory class for generating a bunch of tricky objects, which can be used for testing."
 	author: "Roman Schmocker"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -38,6 +39,8 @@ feature -- Test data
 
 	complete_test_data: ARRAYED_LIST[ANY]
 			-- A list of all objects from all factories.
+		obsolete
+			"This feature calls that obsolete feature `file_name` to test the obsoleete class FILE_NAME. [2019-11-30]"
 		do
 			create Result.make(200)
 			Result.append (object_graph_factory.all_basic_types)
@@ -50,17 +53,25 @@ feature -- Test data
 	wrap_in_cell (list: ARRAYED_LIST [ANY]): ARRAYED_LIST [CELL [ANY]]
 			-- Put each element in `list' into a `CELL [ANY]'.
 			-- Useful for testing polymorphic attachment.
-		local
-			cell: CELL[ANY]
 		do
 			across
 				list as item
 			from
 				create Result.make (list.count)
 			loop
-				create cell.put (item.item)
-				Result.extend (cell)
+
+				Result.extend (create {CELL [ANY]}.put (item.item))
 			end
 		end
 
+note
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

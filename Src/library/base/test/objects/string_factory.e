@@ -11,6 +11,8 @@ feature -- Access
 
 	all_strings: ARRAYED_LIST [READABLE_STRING_GENERAL]
 			-- A collection of different strings.
+		obsolete
+			"This feature calls that obsolete feature `file_name` to test the obsoleete class FILE_NAME. [2019-11-30]"
 		do
 			create Result.make (50)
 
@@ -242,9 +244,21 @@ feature -- Access: IMMUTABLE_STRING_32
 feature -- Access: FILE_NAME
 
 	file_name: FILE_NAME
-			-- Test a file name (subtype of STRING_8)
+			-- Test a file name (subtype of STRING_8).
+		obsolete
+			"This feature is used to test the obsolete class FILE_NAME. [2019-11-30]"
 		do
 			create Result.make_from_string ("a_file_name")
 		end
 
+note
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

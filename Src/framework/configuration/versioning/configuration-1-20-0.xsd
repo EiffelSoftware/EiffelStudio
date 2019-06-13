@@ -312,7 +312,15 @@
 			<xs:enumeration value = "old_verbatim_strings"/>
 			<xs:enumeration value = "platform"/>
 			<xs:enumeration value = "shared_library_definition"/>
-			<xs:enumeration value = "total_order_on_reals"/>
+			<xs:enumeration value = "total_order_on_reals">
+				<xs:annotation>
+					<xs:documentation>
+						Total order on reals
+						- false - apply IEEE 754 standard rules for comparison of floating point numbers;
+						- true (default) - force total order on floating point numbers, including NaNs.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
 			<xs:enumeration value = "use_all_cluster_name_as_namespace"/>
 			<xs:enumeration value = "use_cluster_name_as_namespace"/>
 		</xs:restriction>

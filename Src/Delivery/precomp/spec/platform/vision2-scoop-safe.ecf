@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd" name="vision2-scoop-safe" uuid="CCFD1F8C-4478-4F8F-B59D-F1BB8424619B" library_target="vision2-scoop-safe">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="vision2-scoop-safe" uuid="CCFD1F8C-4478-4F8F-B59D-F1BB8424619B" library_target="vision2-scoop-safe">
 	<target name="vision2-scoop-safe">
 		<description>Vision2 library</description>
 		<root all_classes="true"/>
+		<option warning="error">
+		</option>
 		<capability>
 			<concurrency use="scoop"/>
 		</capability>

@@ -43,6 +43,7 @@ feature {NONE} -- Initialization
 			-- Create new compound file with path `filename'
 			-- and mode `a_mode' in file system.
 			-- See class ECOM_STGM for `mode' values.
+		obsolete "Use `make_new_doc_file_path` instead. [2019-11-30]"
 		require
 			valid_filename: filename /= Void
 			valid_mode: is_valid_stgm (a_mode)
@@ -93,6 +94,7 @@ feature {NONE} -- Initialization
 			-- and mode `mode' in file system.
 			-- excluding block pointed by `exclude' (can be default_pointer)
 			-- See class ECOM_STGM for `a_mode' values.
+		obsolete "Use `make_open_file_path` instead. [2019-11-30]"
 		require
 			valid_file: filename /= Void and then is_compound_file (filename)
 			valid_mode: is_valid_stgm (a_mode)
@@ -629,7 +631,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

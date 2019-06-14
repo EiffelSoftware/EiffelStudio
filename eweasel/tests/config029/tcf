@@ -5,7 +5,7 @@ define		BAD_LIBRARY ""
 copy_sub 	Ace $TEST Ace
 
 compile_melted
-compile_result	validity_warning FILE_URL "Obsolete Class"
+compile_result	ok
 
 define		BAD_LIBRARY "<library name="garbage" location="$ISE_LIBRARY\library\garbage.ecf"/>"
 copy_sub 	Ace $TEST Ace

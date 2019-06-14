@@ -1,8 +1,6 @@
 note
-	description:
-		"Root class for validity test"
+	description: "Root class for validity test."
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,7 +29,7 @@ feature {NONE} -- Initialization
 			if argv.count /= 2 then
 				Io.error.put_string ("Please specify test data file!%N")
 			else
-				create f.make (argv.item (1))
+				create f.make_with_name (argv.item (1))
 				if not f.exists or else not f.is_readable then
 					Io.error.put_string ("Cannot open file!%N")
 				else
@@ -55,7 +53,7 @@ feature {NONE} -- Initialization
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			 Eiffel Software
@@ -65,6 +63,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-
-end -- class TEST_ROOT
-
+end

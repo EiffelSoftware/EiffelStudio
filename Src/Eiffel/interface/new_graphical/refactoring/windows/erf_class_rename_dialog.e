@@ -133,7 +133,7 @@ feature {NONE} -- Initialization
 			set_default_cancel_button (cancel_button)
 			show_actions.extend (agent on_show)
 
-			set_minimum_width (400)
+			set_minimum_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (400))
 		end
 
 feature -- Status report
@@ -292,7 +292,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

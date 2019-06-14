@@ -1,8 +1,6 @@
-note
-	description:
-		"Log output in text-only"
+﻿note
+	description: "Log output in text-only."
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,9 +29,9 @@ feature -- Output
 			put_new_line
 			put_new_line
 			put_string ("Top level tests: " + d.test_count.out + ", ")
-			put_string ("Passed: " + d.contained_passed_tests.out + " [" + 
+			put_string ("Passed: " + d.contained_passed_tests.out + " [" +
 				(d.contained_pass_percentage.rounded).out + "%%], " +
-				"Failed: " + d.contained_failed_tests.out + " [" + 
+				"Failed: " + d.contained_failed_tests.out + " [" +
 				(d.contained_fail_percentage.rounded).out + "%%]")
 			put_new_line
 			put_new_line
@@ -44,7 +42,7 @@ feature -- Output
 			runs := d.total_run_count
 			from i := 1 until i > runs loop
 				passed := d.has_passed (i)
-				timing := d.timing_display_enabled and then 
+				timing := d.timing_display_enabled and then
 					d.has_execution_time (i)
 				if not passed or timing then
 					put_header ("Run " + i.out)
@@ -97,7 +95,7 @@ feature -- Output
 			text: STRING
 			box: STRING
 		do
-			text := clone (s)
+			text := s.twin
 			text.precede (' ')
 			text.precede (c)
 			text.extend (' ')
@@ -111,7 +109,7 @@ feature -- Output
 			put_string (box)
 			put_new_line
 		end
-		
+
 	put_summary (t: TESTABLE)
 			-- Output result summary of test `t'.
 		local
@@ -156,14 +154,14 @@ feature -- Output
 			end
 			put_new_line
 		end
-					
+
 	put_container_results (t: TEST_CONTAINER)
 			-- Output statistic information about tests contained in `t'.
 		do
 			put_string ("   (Contained tests: " + t.test_count.out + ", ")
-			put_string ("Passed: " + t.contained_passed_tests.out + " [" + 
+			put_string ("Passed: " + t.contained_passed_tests.out + " [" +
 				(t.contained_pass_percentage.rounded).out + "%%], " +
-				"Failed: " + t.contained_failed_tests.out + " [" + 
+				"Failed: " + t.contained_failed_tests.out + " [" +
 				(t.contained_fail_percentage.rounded).out + "%%])")
 			put_new_line
 		end
@@ -184,7 +182,7 @@ feature -- Output
 			res.select_run (run)
 			create f.make_from_integer (res.assertions)
 			f.right_justify
-			from 
+			from
 				i := 1
 				put_string ("Reason: %N")
 			until
@@ -240,13 +238,13 @@ feature -- Output
 			put_new_line
 			res.select_run (old_run)
 		end
-	
+
 	put_new_line
 			-- Output new line.
 		do
 			output_device.put_new_line
 		end
-		
+
 feature {NONE} -- Implementation
 
 	standard_put_string (s: STRING)
@@ -256,18 +254,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class TEST_LOG
-
+end

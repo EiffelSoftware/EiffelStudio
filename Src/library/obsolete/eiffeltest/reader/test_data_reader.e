@@ -1,8 +1,6 @@
-note
-	description:
-		"Reader for injecting test input data from a file into a test case"
+﻿note
+	description: "Reader for injecting test input data from a file into a test case."
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -23,7 +21,7 @@ feature {NONE} -- Initialization
 			column_number_positive: c > 0
 		do
 			file := f
-			create table.make (1, c)
+			create table.make_filled (Void, 1, c)
 		ensure
 			file_set: file = f
 			columns_set: columns = c
@@ -243,7 +241,7 @@ feature {NONE} -- Constants
 
 feature {NONE} -- Implementation
 
-	table: ARRAY [TEST_DATA_COLUMN]
+	table: ARRAY [detachable TEST_DATA_COLUMN]
 			-- Table storing test data column handlers
 
 	file: FILE
@@ -263,8 +261,8 @@ feature {NONE} -- Implementation
 			i: INTEGER
 			pos: INTEGER
 		do
-			create data_values.make (1, columns)
-			s := clone (last_string)
+			create data_values.make_filled ("", 1, columns)
+			s := last_string.twin
 			if is_comment then s.keep_tail (s.count - 1) end
 			from i := 1 until i > columns loop
 				pos := s.index_of ('%T', 1)
@@ -321,7 +319,7 @@ invariant
 	data_values_consistent: has_data_values implies data_values.count = columns
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -331,8 +329,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class TEST_DATA_READER
-
+end

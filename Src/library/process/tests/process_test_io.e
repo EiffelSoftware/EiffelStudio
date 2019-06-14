@@ -1,7 +1,5 @@
 ﻿note
-	description: "[
-		Eiffel tests that can be executed by testing tool.
-	]"
+	description: "Eiffel tests that can be executed by testing tool."
 	author: "EiffelStudio test wizard"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -60,6 +58,9 @@ feature -- Test routines
 			create_echo_process (l_args)
 			l_process := current_process
 			l_file := create_temporary_file ("stdout")
+			if not l_file.is_closed then
+				l_file.close
+			end
 			l_process.redirect_output_to_file (l_file.path.name)
 			print (l_file.path.name)
 			l_process.launch
@@ -86,6 +87,9 @@ feature -- Test routines
 			create_echo_process (l_args)
 			l_process := current_process
 			l_file := create_temporary_file ("stderr")
+			if not l_file.is_closed then
+				l_file.close
+			end
 			l_process.redirect_error_to_file (l_file.path.name)
 			print (l_file.path.name)
 			l_process.launch
@@ -111,7 +115,9 @@ feature -- Test routines
 			create_echo_process (l_args)
 			l_process := current_process
 			l_file := create_temporary_file ("stdin")
-			l_file.open_write
+			if not l_file.is_open_write then
+				l_file.open_write
+			end
 			l_file.put_string ("ARGUMENT1%N")
 			l_file.put_string ("ARGUMENT2%N")
 			l_file.put_string ("quit%N")
@@ -149,70 +155,31 @@ feature -- Test routines
 			check_successful_exit
 		end
 
-
 feature {NONE} -- Implementation
 
-	create_temporary_file (a_extension: detachable STRING_8): PLAIN_TEXT_FILE
+	create_temporary_file (a_extension: STRING_8): PLAIN_TEXT_FILE
 			-- Create file with temporary name.
 			-- With concurrent execution, noting ensures that {FILE_NAME}.make_temporary_name is unique
 			-- So using `a_extension' may help
-		local
-			fn: FILE_NAME
-			s: like {FILE_NAME}.string
-			f: detachable like create_temporary_file
-			i: INTEGER
 		do
-				-- With concurrent execution, noting ensures that {FILE_NAME}.make_temporary_name is unique
-				-- So let's try to find
-			from
-			until
-				f /= Void or i > 1000
-			loop
-				create fn.make_temporary_name
-				s := fn.string
-				if i > 0 then
-					s.append_character ('-')
-					s.append_integer (i)
-					create fn.make_from_string (s)
-				end
-				if a_extension /= Void then
-					fn.add_extension (a_extension)
-				end
-				s := fn.string
-				create f.make_with_name (fn.string)
-				if f.exists then
-					i := i + 1
-					f := Void
-				end
-			end
-			if f = Void then
-				Result := create_temporary_file (Void)
-			else
-				Result := f
-				assert ("not_temporary_file_exists", not Result.exists)
-				assert ("temporary_creatable", Result.is_creatable)
-			end
-		ensure
-			not_result_exists: not Result.exists
-			result_creatable: Result.is_creatable
+			create Result.make_open_temporary_with_prefix (a_extension)
 		end
 
 	compare_file_content (a_file: like create_temporary_file; a_expected: READABLE_STRING_8)
 			-- Compare file content with given string, raise exception if content does not match or file
 			-- could not be read.
-		local
-			l_last_string: detachable READABLE_STRING_8
 		do
 			assert ("file_exists", a_file.exists)
 			assert ("file_readable", a_file.is_readable)
-			a_file.open_read
+			if not a_file.is_open_read then
+				a_file.open_read
+			end
 			a_file.read_stream (a_file.count)
-			l_last_string := a_file.last_string
-			assert ("expected_content", a_expected.same_string (l_last_string))
+			assert ("expected_content", a_expected.same_string (a_file.last_string))
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -1,5 +1,4 @@
-note
-	description: "Summary description for {XML_FILE_OUTPUT_STREAM}."
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -19,7 +18,7 @@ feature {NONE} -- Initialization
 		require
 			a_file_attached: a_file /= Void
 		do
-			name := a_file.name
+			name := a_file.path.utf_8_name
 			set_chunk_size (Default_chunk_size)
 			target := a_file
 		end
@@ -66,17 +65,14 @@ feature -- Basic operation
 			target.put_string (current_chunk)
 			current_chunk.wipe_out
 		ensure then
-			current_chunk.count = 0
+			current_chunk.is_empty
 		end
 
 feature -- Output
 
 	put_character (c: CHARACTER)
-		local
-			cn: INTEGER
 		do
-			cn := current_chunk.count
-			if cn >= default_chunk_size - 1 then
+			if current_chunk.count >= default_chunk_size - 1 then
 				flush
 			end
 			current_chunk.append_character (c)
@@ -94,7 +90,7 @@ feature -- Output
 			else
 				if current_chunk.count + n > default_chunk_size then
 					flush
-					check current_chunk.count = 0 end
+					check current_chunk.is_empty end
 				end
 				current_chunk.append (a_string)
 				check current_chunk.count < default_chunk_size end
@@ -116,7 +112,7 @@ invariant
 	target_attached: target /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -1,8 +1,6 @@
-note
-	description:
-		"Implementation of comparator builder"
+﻿note
+	description: "Implementation of comparator builder."
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -26,7 +24,7 @@ feature {NONE} -- Initialization
 	make
 			-- Create builder.
 		do
-			create character_array.make (0, 255)
+			create character_array.make_filled (False, 0, 255)
 			create comparators.make
 		end
 
@@ -34,7 +32,7 @@ feature {NONE} -- Constants
 
 	Single_character, Range: INTEGER = unique
 			-- IDs for `token_type'
-			
+
 feature -- Access
 
 	comparators: LINKED_SET[COMPARATOR]
@@ -53,7 +51,7 @@ feature -- Status report
 		do
 			Result := not comparators.is_empty
 		end
-		
+
 feature -- Status setting
 
 	define_set (s: STRING)
@@ -73,12 +71,12 @@ feature -- Status setting
 		do
 			from until s.is_empty loop
 				fetch_token (s)
-				if not last_token.is_empty then 
-					update_character_array (False) 
+				if not last_token.is_empty then
+					update_character_array (False)
 				end
 			end
 		end
-		
+
 	remove (s: STRING)
 			-- Remove from character set.
 		require
@@ -86,8 +84,8 @@ feature -- Status setting
 		do
 			from until s.is_empty loop
 				fetch_token (s)
-				if not last_token.is_empty then 
-					update_character_array (True) 
+				if not last_token.is_empty then
+					update_character_array (True)
 				end
 			end
 		end
@@ -105,23 +103,23 @@ feature -- Basic operations
 			start: INTEGER
 			count: INTEGER
 		do
-			from 
-				i := 0 
+			from
+				i := 0
 			invariant
 				bounds_ok: start <= i
-			until 
-				i = 256 
+			until
+				i = 256
 			loop
 				cur := character_array @ i
-				if i > 0 then 
-					last := character_array @ (i - 1) 
-				else 
+				if i > 0 then
+					last := character_array @ (i - 1)
+				else
 					last := False
 				end
 				if last /= cur then
 					if last = True then
-						create_comparator 
-							(start.to_character, start.to_character + count)
+						create_comparator
+							(start.to_character_8, start.to_character_8 + count)
 					end
 					start := i
 					count := 0
@@ -131,7 +129,7 @@ feature -- Basic operations
 				i := i + 1
 			end
 			if character_array @ start = True then
-				create_comparator (start.to_character, (255).to_integer.to_character)
+				create_comparator (start.to_character_8, (255).to_integer.to_character_8)
 			end
 		end
 
@@ -142,7 +140,7 @@ feature {NONE} -- Implementation
 
 	last_character: CHARACTER
 			-- Last character fetched by `get_character'
-			
+
 	character_array: ARRAY[BOOLEAN]
 			-- Array storing the state of each character
 
@@ -179,7 +177,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	create_comparator (low, high: CHARACTER)
 			-- Create a comparator.
 		require
@@ -196,7 +194,7 @@ feature {NONE} -- Implementation
 		ensure
 			comparator_added: comparators.count = old comparators.count + 1
 		end
-		
+
 	token_type: INTEGER
 			-- Type of token stored in `last_token'.
 		do
@@ -228,7 +226,7 @@ feature {NONE} -- Implementation
 			loop
 				get_character (tok)
 				cur := last_character
-				if not tok.is_empty then 
+				if not tok.is_empty then
 					next := tok.item (1)
 				else
 					next := '%U'
@@ -236,18 +234,18 @@ feature {NONE} -- Implementation
 				if last_token.is_empty and cur = '-' and not quoted then
 					tok.remove (1)
 				end
-				if tok.is_empty and 
-					(cur = Backslash.to_character and not quoted) then 
-					cur := '%U' 
+				if tok.is_empty and
+					(cur = Backslash.to_character_8 and not quoted) then
+					cur := '%U'
 				end
 				if quoted then
 					last_token.extend (last_character)
 					valid := True
 				end
 				if not valid then
-					if cur = Backslash.to_character and not quoted then 
+					if cur = Backslash.to_character_8 and not quoted then
 						quoted := True
-					elseif quoted then 
+					elseif quoted then
 						quoted := False
 					end
 					if next = '-' and not quoted then
@@ -287,18 +285,14 @@ invariant
 			token_type /= 0
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class COMPARATOR_BUILDER_IMPL
-
+end

@@ -1,11 +1,9 @@
-note
+﻿note
 
-	description:
-		"A medium poller for asynchronous IO on IO_MEDIUMs"
-	legal: "See notice at end of class.";
-
-	status: "See notice at end of class.";
-	date: "$Date$";
+	description: "A medium poller for asynchronous IO on IO_MEDIUMs."
+	legal: "See notice at end of class."
+	status: "See notice at end of class."
+	date: "$Date$"
 	revision: "$Revision$"
 
 class
@@ -278,12 +276,12 @@ feature -- booleans to decide whether to include each mask in the select call
 
 feature -- commands to be executed
 
-	read_command_list: ARRAY [POLL_COMMAND]
+	read_command_list: ARRAY [detachable POLL_COMMAND]
 			-- List of poll commands to be called
 			-- when their medium is selected for read event.
 		once
-			create Result.make (0, 10)
-		end;
+			create Result.make_filled (Void, 0, 10)
+		end
 
 	put_read_command (a_command: POLL_COMMAND)
 			-- Set `a_command' to be called when read event is
@@ -323,12 +321,12 @@ feature -- commands to be executed
 			command_removed: read_command_list.item (s.handle) = Void
 		end;
 
-	write_command_list: ARRAY [POLL_COMMAND]
+	write_command_list: ARRAY [detachable POLL_COMMAND]
 			-- List of poll commands to be called
 			-- when their medium is selected for write event.
 		once
-			create Result.make (0, 10)
-		end;
+			create Result.make_filled (Void, 0, 10)
+		end
 
 	put_write_command (a_command: POLL_COMMAND)
 			-- Set `a_command' to be called when write event is
@@ -366,11 +364,11 @@ feature -- commands to be executed
 			command_removed: write_command_list.item (s.handle) = Void
 		end;
 
-	exception_command_list: ARRAY [POLL_COMMAND]
+	exception_command_list: ARRAY [detachable POLL_COMMAND]
 			-- List of poll commands to be called
 			-- when their medium is selected for exception event.
 		once
-			create Result.make (0, 10)
+			create Result.make_filled (Void, 0, 10)
 		end;
 
 	put_exception_command (a_command: POLL_COMMAND)
@@ -418,18 +416,14 @@ feature {NONE}
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class MEDIUM_POLLER
-
+end

@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 	initialize
 			-- Initialize file protocol.
 		do
-			create file.make (address.name)
+			create file.make_with_path (address.path)
 			create buffer.make_filled ('%/000/', Default_buffer_size)
 			read_buffer_size := Default_buffer_size
 			set_overwrite_mode
@@ -243,14 +243,14 @@ feature {NONE} -- Implementation
 	overwrite_mode: BOOLEAN;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

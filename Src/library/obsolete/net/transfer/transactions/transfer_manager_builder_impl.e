@@ -8,12 +8,12 @@ note
 	revision: "$Revision$"
 
 class TRANSFER_MANAGER_BUILDER_IMPL inherit
-	
+
 	DATA_RESOURCE_FACTORY
 		export
 			{NONE} all
 		end
-		
+
 	HOST_VALIDITY_CHECKER
 
 create
@@ -53,7 +53,7 @@ feature -- Access
 		ensure
 			result_exists: Result /= Void
 		end
-		
+
 feature -- Measurement
 
 	count: INTEGER
@@ -61,7 +61,7 @@ feature -- Measurement
 		do
 			Result := transactions.count
 		end
-		
+
 feature -- Status report
 
 	is_empty: BOOLEAN
@@ -73,7 +73,7 @@ feature -- Status report
 	manager_built: BOOLEAN
 			-- Has manager been built?
 		do
-			Result := transfer_manager /= Void and then 
+			Result := transfer_manager /= Void and then
 				not transfer_manager.is_empty
 		end
 
@@ -82,7 +82,7 @@ feature -- Status report
 		do
 			Result := (Readable <= mode and mode <= Writable)
 		end
-		
+
 	is_address_correct (addr: STRING; mode: INTEGER): BOOLEAN
 			-- Is address `addr' correct considering `mode'?
 			-- (`mode' is `Readable' or `Writable')
@@ -109,13 +109,13 @@ feature -- Status report
 					if res.is_proxy_supported then
 						res.set_proxy_information (source_proxy)
 					end
-					Result := add_reference 
+					Result := add_reference
 						(readable_set, res, agent res.is_readable)
 				when Writable then
 					if res.is_proxy_supported then
 						res.set_proxy_information (target_proxy)
 					end
-					Result := add_reference 
+					Result := add_reference
 						(writable_set, res, agent res.is_writable)
 				end
 				if Result and not resource_hash.found then
@@ -123,7 +123,7 @@ feature -- Status report
 				end
 			end
 		end
-	
+
 	transfer_finished: BOOLEAN
 			-- Has a transfer occurred?
 		do
@@ -171,13 +171,13 @@ feature -- Status setting
 		do
 			if timeout = Void then
 				create timeout.put (s)
-			else 
+			else
 				timeout.put (s)
 			end
 		ensure
 			timeout_set: timeout.item = s
 		end
-			
+
 	set_source_proxy (host: STRING; port: INTEGER)
 			-- Set source proxy host to `host' and port to `port'.
 		require
@@ -205,7 +205,7 @@ feature -- Status setting
 		end
 
 	set_proxies (host: STRING; port: INTEGER)
-			-- Set source and target proxy host to `host' and 
+			-- Set source and target proxy host to `host' and
 			-- port to `port'.
 		require
 			host_not_empty: host /= Void and then not host.is_empty
@@ -271,7 +271,7 @@ feature -- Element change
 				resource_hash.search (su.location)
 					check
 						found: resource_hash.found
-							-- Because resource has been created during 
+							-- Because resource has been created during
 							-- correctness check
 					end
 				sr := resource_hash.found_item.deep_twin
@@ -281,7 +281,7 @@ feature -- Element change
 				resource_hash.search (tu.location)
 					check
 						found: resource_hash.found
-							-- Because resource has been created during 
+							-- Because resource has been created during
 							-- correctness check
 					end
 				tr := resource_hash.found_item.deep_twin
@@ -304,8 +304,8 @@ feature -- Element change
 				transactions.extend (ta)
 			end
 		ensure
-			one_more_transaction_if_correct: 
-				(last_added_source_correct and 
+			one_more_transaction_if_correct:
+				(last_added_source_correct and
 				last_added_target_correct) implies count = old count + 1
 		end
 
@@ -326,25 +326,25 @@ feature -- Removal
 
 			remove_reference (readable_set, transactions.item.source)
 			remove_reference (writable_set, transactions.item.target)
-			
+
 			transactions.remove
 			if idx > count then idx := count end
 			transactions.go_i_th (idx)
 		ensure
 			one_less_item: count = count - 1
-			index_unchanged: (old transactions.index < old count) 
+			index_unchanged: (old transactions.index < old count)
 				implies (transactions.index = old transactions.index)
-			index_adapted: (old transactions.index = old count) 
+			index_adapted: (old transactions.index = old count)
 				implies (transactions.index = old transactions.index - 1)
 		end
-			
+
 	wipe_out
 			-- Clear manager.
 		do
 			transactions.wipe_out
 			readable_set.wipe_out
 			writable_set.wipe_out
-			resource_hash.clear_all
+			resource_hash.wipe_out
 			optimized_transactions := Void
 			transfer_manager := Void
 		ensure
@@ -352,7 +352,7 @@ feature -- Removal
 			no_optimized_transactions: optimized_transactions = Void
 			no_manager: not manager_built
 		end
-		
+
 feature -- Basic operations
 
 	build_manager
@@ -381,7 +381,7 @@ feature {NONE} -- Constants
 	Readable: INTEGER = 1
 	Writable: INTEGER = 2
 			-- Mode constants
-			
+
 feature {NONE} -- Implementation
 
 	transactions: ARRAYED_LIST [TRANSACTION]
@@ -405,7 +405,7 @@ feature {NONE} -- Implementation
 	timeout: CELL [INTEGER]
 			-- Duration of timeout in seconds
 			-- (If `Void' the default value is used.)
-			
+
 	source_proxy: PROXY_INFORMATION
 			-- Information about proxy for the source resource
 
@@ -417,9 +417,9 @@ feature {NONE} -- Implementation
 		do
 			if optimized_transactions /= Void and then not
 				optimized_transactions.is_empty then
-				from 
-					optimized_transactions.start 
-				until 
+				from
+					optimized_transactions.start
+				until
 					optimized_transactions.after
 				loop
 					Result := Result + optimized_transactions.item.count
@@ -451,9 +451,9 @@ feature {NONE} -- Implementation
 				end
 				transactions.forth
 			end
-				
+
 			create optimized_transactions.make (count)
-			
+
 			from transactions.start until transactions.after loop
 				hash.search (transactions.item.source.address)
 				if hash.found then
@@ -462,16 +462,16 @@ feature {NONE} -- Implementation
 					if not (transactions @ lst.item).source.
 						supports_multiple_transactions or lst.count = 1 then
 						from lst.start until lst.after loop
-							optimized_transactions.extend 
+							optimized_transactions.extend
 								(transactions @ lst.item)
 							lst.forth
 						end
 					else
-						from 
-							lst.start 
+						from
+							lst.start
 							create multitrans.make
-						until 
-							lst.after 
+						until
+							lst.after
 						loop
 							multitrans.add_transaction (transactions @ lst.item)
 							lst.forth
@@ -493,11 +493,11 @@ feature {NONE} -- Implementation
 			no_manager: not manager_built
 			optimized: optimized_count > 0
 		do
-			from 
+			from
 				optimized_transactions.start
 				create transfer_manager.make
 				transfer_manager.stop_on_error
-			until 
+			until
 				optimized_transactions.after
 			loop
 				transfer_manager.add_transaction (optimized_transactions.item)
@@ -548,14 +548,14 @@ invariant
 	count_equality: (optimized_count > 0) implies (count = optimized_count)
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -207,7 +207,7 @@ feature -- Copy-semantics items
 			create Result.put (item)
 		end
 
-	embedded_expanded: CELL [E_DOUBLE_CELL [ANY, ANY]]
+	embedded_expanded: CELL [E_DOUBLE_CELL [separate ANY, separate ANY]]
 			-- A CELL object containing an embedded expanded object
 		local
 			item: E_DOUBLE_CELL [ANY, ANY]
@@ -217,7 +217,7 @@ feature -- Copy-semantics items
 			Result.item.second := create {ANY}
 		end
 
-	embedded_expanded_with_integer: CELL [E_DOUBLE_CELL [ANY, INTEGER]]
+	embedded_expanded_with_integer: CELL [E_DOUBLE_CELL [separate ANY, INTEGER]]
 			-- A CELL object containing an embedded expanded object with an integer
 		local
 			item: E_DOUBLE_CELL [ANY, INTEGER]
@@ -234,11 +234,11 @@ feature -- Copy-semantics items
 			Result.second := create {ANY}
 		end
 
-	nested_embedded_with_copysemantics: CELL [E_DOUBLE_CELL [E_FLAT_CLASS, ANY]]
+	nested_embedded_with_copysemantics: CELL [E_DOUBLE_CELL [E_FLAT_CLASS, separate ANY]]
 			-- A CELL containing two user-defined expanded attributes and a copy-semantics object.
 		local
 			item: E_DOUBLE_CELL [E_FLAT_CLASS, ANY]
-			item2: E_DOUBLE_CELL [ANY, ANY]
+			item2: E_DOUBLE_CELL [separate ANY, separate ANY]
 		do
 			create Result.put (item)
 			item2.first := 42
@@ -247,4 +247,14 @@ feature -- Copy-semantics items
 		end
 
 
+note
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

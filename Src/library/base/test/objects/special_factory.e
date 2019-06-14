@@ -202,7 +202,7 @@ feature -- Copy-semantics references
 			end
 		end
 
-	special_with_expanded: SPECIAL[ E_DOUBLE_CELL [detachable ANY, detachable ANY]]
+	special_with_expanded: SPECIAL[ E_DOUBLE_CELL [detachable separate ANY, detachable separate ANY]]
 			-- A SPECIAL with a user-defined expanded object.
 		local
 			cell: E_DOUBLE_CELL [detachable ANY, detachable ANY]
@@ -213,7 +213,7 @@ feature -- Copy-semantics references
 			create Result.make_filled (cell, Default_size)
 		end
 
-	special_with_expanded_and_copysemantics: SPECIAL[ E_DOUBLE_CELL [detachable ANY, detachable ANY]]
+	special_with_expanded_and_copysemantics: SPECIAL[ E_DOUBLE_CELL [detachable separate ANY, detachable separate ANY]]
 			-- A SPECIAL containing a user-defined expanded object, containing a copy-semantics object.
 		local
 			cell: E_DOUBLE_CELL [detachable ANY, detachable ANY]
@@ -224,4 +224,14 @@ feature -- Copy-semantics references
 			create Result.make_filled (cell, Default_size)
 		end
 
+note
+	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

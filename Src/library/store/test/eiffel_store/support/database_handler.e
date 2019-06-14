@@ -173,7 +173,7 @@ feature -- Status Report
 		deferred
 		end
 
-feature {REPORT_DATA_PROVIDER, LOGIN_DATA_PROVIDER} -- Implementation
+feature {NONE} -- Implementation
 
 	connect
 			-- Connect to the database.

@@ -39,8 +39,23 @@ feature -- Access
 		deferred
 		end
 
+	only_application: BOOLEAN
+			-- Process only application ecf
+		deferred
+		end
+
+	only_testing: BOOLEAN
+			-- Process only target with testing
+		deferred
+		end
+
+	only_library: BOOLEAN
+			-- Process only library targets
+		deferred
+		end
+
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

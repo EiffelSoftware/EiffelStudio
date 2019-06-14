@@ -49,6 +49,12 @@ feature {NONE} -- Initialization
 			else
 				expression := ""
 			end
+
+			create filter
+			filter.application := args.only_application
+			filter.library := args.only_library
+			filter.testing := args.only_testing
+
 			root_directory := execution_environment.current_working_path
 
 			if attached args.excluded_directories as l_excluded_dirs then
@@ -188,6 +194,8 @@ feature -- Access
 
 	expression: detachable READABLE_STRING_32
 
+	filter: detachable TUPLE [application: BOOLEAN; library: BOOLEAN; testing: BOOLEAN]
+
 	process_expression (ecf: READABLE_STRING_GENERAL; a_uuid: detachable READABLE_STRING_GENERAL; a_system_name, a_target_name: READABLE_STRING_GENERAL; )
 		local
 			cmd: STRING_32
@@ -241,6 +249,8 @@ feature -- Basic operation
 		local
 			tgt: CONF_TARGET
 			l_regexp: detachable REGULAR_EXPRESSION
+			b: BOOLEAN
+			l_is_testing: BOOLEAN
 		do
 			l_regexp := ecf_regexp
 			if
@@ -252,7 +262,26 @@ feature -- Basic operation
 						l_system.targets as ic
 					loop
 						tgt := ic.item
-						if not tgt.is_abstract then
+						b := not tgt.is_abstract
+						if b and filter.library and then l_system.library_target /= tgt then
+							b := False -- Not a library
+						end
+						if b and filter.application then
+							b := attached tgt.setting_executable_name as n and then not n.is_whitespace
+						end
+						if b and filter.testing then
+							across
+								tgt.libraries as lib_ic
+							until
+								l_is_testing
+							loop
+								if attached lib_ic.item as lib then
+									l_is_testing := testing_lib_path.same_as (create {PATH}.make_from_string (lib.path))
+								end
+							end
+							b := l_is_testing -- Not a testing target
+						end
+						if b then
 							if verbose then
 								localized_print (a_fn.name)
 								localized_print ("[")
@@ -305,6 +334,18 @@ feature -- Basic operation
 
 feature {NONE} -- Implementation
 
+	testing_lib_path: detachable PATH
+		local
+			p: PATH
+			s: READABLE_STRING_32
+		once
+			s := execution_environment.item ("ISE_LIBRARY")
+			if s /= Void then
+				create p.make_from_string (s)
+				Result := p.extended ("library").extended ("testing").extended ("testing.ecf")
+			end
+		end
+
 	report_warning (m: READABLE_STRING_GENERAL)
 		do
 			warnings.extend (m)
@@ -326,7 +367,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

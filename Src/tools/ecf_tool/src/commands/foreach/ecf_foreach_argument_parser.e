@@ -134,6 +134,27 @@ feature -- Access
 			end
 		end
 
+	only_application: BOOLEAN
+		once
+			if has_option (filter_target_switch) and then attached option_of_name (filter_target_switch) as o and then o.has_value then
+				Result := o.value.same_string ("application")
+			end
+		end
+
+	only_testing: BOOLEAN
+		once
+			if has_option (filter_target_switch) and then attached option_of_name (filter_target_switch) as o and then o.has_value then
+				Result := o.value.same_string ("testing")
+			end
+		end
+
+	only_library: BOOLEAN
+		once
+			if has_option (filter_target_switch) and then attached option_of_name (filter_target_switch) as o and then o.has_value then
+				Result := o.value.same_string ("library")
+			end
+		end
+
 feature {NONE} -- Usage
 
 	non_switched_argument_name: IMMUTABLE_STRING_32
@@ -176,6 +197,8 @@ feature {NONE} -- Switches
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (include_switch, "Include <directory>", True, True, include_switch, "directory", False))
 			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (exclude_switch, "Exclude <directory>", True, True, exclude_switch, "directory", False))
 
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (filter_target_switch, "Filter target: <target-type>", True, False, filter_target_switch, "target-type: application, library, testing", True))
+
 			Result.extend (create {ARGUMENT_SWITCH}.make (verbose_switch, "Verbose output", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (simulation_switch, "Simulation mode", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (execution_forced_switch, "Execution forced", True, False))
@@ -188,6 +211,8 @@ feature {NONE} -- Switches
 	exclude_switch: STRING = "exclude"
 	verbose_switch: STRING = "v|verbose"
 	expression_switch: STRING = "e|expression"
+
+	filter_target_switch: STRING = "filter-target"
 
 feature {NONE} -- Implementation
 
@@ -202,7 +227,7 @@ feature {NONE} -- Implementation
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

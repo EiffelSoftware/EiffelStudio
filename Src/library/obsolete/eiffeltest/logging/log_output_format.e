@@ -1,8 +1,6 @@
-note
-	description:
-		"Test log output formats"
+﻿note
+	description: "Test log output formats."
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -50,15 +48,15 @@ feature -- Output
 			strout: STRING
 			pos: INTEGER
 		do
-			str := clone (s)
+			str := s.twin
 			from until str.is_empty loop
 				pos := str.index_of ('%N', 1)
 				if pos > 0 then
 					strout := str.substring (1, pos - 1)
 					str.keep_tail (str.count - pos)
 				else
-					strout := clone (str)
-					str.clear_all
+					strout := str.twin
+					str.wipe_out
 				end
 				standard_put_string (strout)
 				if pos > 0 then put_new_line end
@@ -108,7 +106,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -118,8 +116,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class LOG_OUTPUT_FORMAT
-
+end

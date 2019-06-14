@@ -1,8 +1,6 @@
-note
-	description:
-		"Testable components consisting out of a single test"
+﻿note
+	description: "Testable components consisting out of a single test."
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,7 +13,7 @@ deferred class SINGLE_TEST inherit
 		export
 			{NONE} all
 		end
-		
+
 feature -- Access
 
 	test_results: TEST_CASE_RESULT
@@ -34,20 +32,20 @@ feature -- Measurement
 		end
 
 feature -- Status report
-	
+
 	Is_test_container: BOOLEAN = False
 			-- is test a container? (Answer: no)
-	 
+
 	Has_random_generator: BOOLEAN = False
 			-- Does current object have access to a random number generator?
 			-- (Answer: no)
-	 
+
 	is_rescue_enabled: BOOLEAN
 			-- Is exception trapping enabled?
 		do
 			Result := not rescue_disabled_flag
 		end
-	
+
 	is_prefix_set: BOOLEAN
 			-- Is prefix set?
 		do
@@ -66,11 +64,11 @@ feature -- Status report
 			Result := test_results /= Void and then
 				test_results.has_current_result
 		end
-		
+
 	is_ready: BOOLEAN
 			-- Is test ready to be executed?
 		do
-			Result := (not Top_level_allowed implies is_container_set) and 
+			Result := (not Top_level_allowed implies is_container_set) and
 				is_number_set and is_name_set
 		end
 
@@ -84,7 +82,7 @@ feature -- Status report
 			Result := test_results.has_passed
 			test_results.select_run (old_run)
 		end
-	 
+
 	is_exception (n: INTEGER): BOOLEAN
 			-- Did run `n' of test throw an exception?
 		local
@@ -97,7 +95,7 @@ feature -- Status report
 				test_results.select_run (old_run)
 			end
 		end
-	 
+
 	has_execution_time (n: INTEGER): BOOLEAN
 			-- Has run `n' of test a recorded execution time?
 		local
@@ -108,7 +106,7 @@ feature -- Status report
 			Result := test_results.has_execution_time
 			test_results.select_run (old_run)
 		end
-	 
+
 	has_any_execution_time: BOOLEAN
 			-- Does any test have a recorded execution time?
 		local
@@ -163,7 +161,7 @@ feature -- Status setting
 			no_prefix: not is_prefix_set
 			no_reason: not is_reason_set
 		end
-		
+
 	enable_rescue
 			-- Enable exception trapping.
 		do
@@ -171,7 +169,7 @@ feature -- Status setting
 		ensure
 			enabled: is_rescue_enabled
 		end
-	 
+
 	disable_rescue
 			-- Disable exception trapping.
 		do
@@ -179,12 +177,12 @@ feature -- Status setting
 		ensure
 			disabled: not is_rescue_enabled
 		end
-	 
+
 	clear_results
 			-- Clear results.
 		do
 			test_results.clear_results
-		end 
+		end
 
 feature -- Basic operations
 
@@ -198,7 +196,7 @@ feature -- Basic operations
 				run_without_rescue
 			end
 				check
-					result_available_if_expected: 
+					result_available_if_expected:
 							produces_result implies has_current_result
 						-- Because if test produces a result, one has been
 						-- established by now
@@ -208,7 +206,7 @@ feature -- Basic operations
 		ensure then
 			recording_finished: not has_current_result
 			one_more_run: produces_result implies run_count = old run_count + 1
-			run_count_consistent: produces_result implies 
+			run_count_consistent: produces_result implies
 					(run_count = test_results.run_count)
 		end
 
@@ -216,7 +214,7 @@ feature -- Basic operations
 			-- Do test action.
 		deferred
 		end
-	
+
 feature {NONE} -- Basic operations
 
 	assert (a: BOOLEAN; n: STRING)
@@ -237,7 +235,7 @@ feature {NONE} -- Basic operations
 		require
 			produces_result: produces_result
 		do
-			check_assertion (equal (a, b), 
+			check_assertion (equal (a, b),
 				"expected: <" + b.out + "> but was: <" + a.out + ">")
 		ensure
 			prefix_reset: not is_prefix_set
@@ -249,7 +247,7 @@ feature {NONE} -- Basic operations
 		require
 			produces_result: produces_result
 		do
-			check_assertion (not equal (a, b), 
+			check_assertion (not equal (a, b),
 				"Unexpected value: <" + a.out + ">")
 		ensure
 			prefix_reset: not is_prefix_set
@@ -266,7 +264,7 @@ feature {NONE} -- Basic operations
 		do
 			minval := a.min (b)
 			maxval := a.max (b)
-			check_assertion ((maxval - minval <= delta), 
+			check_assertion ((maxval - minval <= delta),
 				"DOUBLEs not equal, expected delta: " + delta.out +
 				" actual delta: " + (maxval - minval).out)
 		ensure
@@ -303,7 +301,7 @@ feature {NONE} -- Basic operations
 		require
 			produces_result: produces_result
 		do
-			check_assertion (a = b, 
+			check_assertion (a = b,
 				"<" + a.out + "> is not the same object as <" + b.out + ">!")
 		ensure
 			prefix_reset: not is_prefix_set
@@ -315,7 +313,7 @@ feature {NONE} -- Basic operations
 		require
 			produces_result: produces_result
 		do
-			check_assertion (a = b, 
+			check_assertion (a = b,
 				"<" + a.out + "> is the same object as <" + b.out + ">!")
 		ensure
 			prefix_reset: not is_prefix_set
@@ -332,7 +330,7 @@ feature {NONE} -- Basic operations
 		ensure
 			exception_flag_set: exception_expected
 		end
-		
+
 	pass
 			-- Add a pass.
 		require
@@ -363,26 +361,26 @@ feature -- Output
 		do
 			f.put_summary (Current)
 		end
-	 
+
 	 put_failure_information (f: LOG_FACILITY; n: INTEGER)
 	 		-- Output failure information for run `n' to `f'.
 		do
 			f.put_failure_information (Current, n)
 		end
-	 
+
 	 put_timing_information (f: LOG_FACILITY; n: INTEGER)
 	 		-- Output timing information for run `n' to `f'.
 		do
 			f.put_timing_information (Current, n)
 		end
-	 
+
 feature {NONE} -- Inapplicable
 
 	seed: INTEGER
 			-- Random seed
 		do
 		end
-	 
+
 	set_seed (s: INTEGER)
 			-- Set seed to `s'.
 		do
@@ -398,10 +396,10 @@ feature {NONE} -- Implementation
 
 	exception_expected: BOOLEAN
 			-- Is expected that test throws an exception?
-			
+
 	prefix_string: STRING
 			-- Optional prefix
-	
+
 	check_assertion (a: BOOLEAN; m: STRING)
 			-- Check if assertion `a' holds. If not, register failure with
 			-- failure message `m' or alternate message `reason', if set.
@@ -414,10 +412,10 @@ feature {NONE} -- Implementation
 			if a then
 				test_results.add_pass
 			else
-				if reason /= Void then 
-					msg := clone (reason) 
+				if reason /= Void then
+					msg := reason.twin
 				else
-					msg := clone (m)
+					msg := m.twin
 				end
 
 				if prefix_string /= Void then
@@ -440,8 +438,8 @@ feature {NONE} -- Implementation
 			retried: BOOLEAN
 			e: EXCEPTION_INFO
 		do
-			if not retried then 
-				run_without_rescue 
+			if not retried then
+				run_without_rescue
 				if exception_expected then
 					fail ("Expected exception was not thrown!")
 				end
@@ -453,14 +451,14 @@ feature {NONE} -- Implementation
 			else
 				create e
 				if is_developer_exception then
-					e.set_type (clone (developer_exception_name))
+					e.set_type (developer_exception_name.twin)
 					e.set_tag_name ("[No tag]")
 				else
-					e.set_type (clone (meaning (original_exception)))
-					e.set_tag_name (clone (original_tag_name))
+					e.set_type (meaning (original_exception).twin)
+					e.set_tag_name (original_tag_name.twin)
 				end
-				e.set_origin_class (clone (original_class_name))
-				e.set_origin_feature (clone (original_recipient_name))
+				e.set_origin_class (original_class_name.twin)
+				e.set_origin_feature (original_recipient_name.twin)
 					check
 						complete: e.complete
 							-- Because all information has been filled in.
@@ -526,7 +524,7 @@ feature {NONE} -- Implementation
 				dest_list.forth
 			end
 		end
-		
+
 invariant
 
 	no_empty_prefix: prefix_string /= Void implies not prefix_string.is_empty
@@ -534,18 +532,14 @@ invariant
 	run_count_equality: run_count = total_run_count
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class SINGLE_TEST
-
+end

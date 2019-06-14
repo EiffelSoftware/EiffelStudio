@@ -1,8 +1,6 @@
-note
-	description:
-		"Strategy executing all tests in the suite `n' times in random order"
+﻿note
+	description: "Strategy executing all tests in the suite `n' times in random order."
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -37,7 +35,7 @@ feature -- Cursor movement
 		do
 			Precursor
 			if runs = Void or else runs.capacity /= suite.test_count then
-				create runs.make (1, suite.test_count)
+				create runs.make_filled (0, 1, suite.test_count)
 			end
 			from i := 1 until i > runs.capacity loop
 				runs.put (context.item, i)
@@ -48,7 +46,7 @@ feature -- Cursor movement
 
 feature {NONE} -- Implementation
 
-	runs: ARRAY [INTEGER] 
+	runs: ARRAY [INTEGER]
 			-- Number of remaining runs for each test
 
 	finish_run
@@ -62,18 +60,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class RANDOM_N_TIMES_STRATEGY
-
+end

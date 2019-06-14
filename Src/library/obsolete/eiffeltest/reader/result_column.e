@@ -1,8 +1,6 @@
-note
-	description:
-		"Result columns in test input data tables"
+﻿note
+	description: "Result columns in test input data tables."
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,7 +16,7 @@ class RESULT_COLUMN inherit
 		export
 			{NONE} all
 		end
-		
+
 feature -- Status report
 
 	input_accepted (s: STRING): BOOLEAN
@@ -44,33 +42,29 @@ feature {NONE} -- Implementation
 		ensure then
 			expected_result_set: test_case.has_expected_result
 		end
-			
+
 	expected_result (s: STRING): TEST_RUN_RESULT
 			-- Expected result encoded in `s'
 		local
 			res: STRING
 		do
-			res := clone (s)
+			res := s.twin
 			res.to_upper
 			if run_result_factory.has_product (s) then
 				run_result_factory.select_product (s)
 				Result := run_result_factory.product
 			end
 		end
-		
+
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class RESULT_COLUMN
-
+end

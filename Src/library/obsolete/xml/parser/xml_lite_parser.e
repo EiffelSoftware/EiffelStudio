@@ -1,4 +1,4 @@
-note
+﻿note
 	description : "[
 			Simple XML parser
 
@@ -73,7 +73,7 @@ feature -- Parsing
 			retried: BOOLEAN
 		do
 			if not retried then
-				create f.make (a_filename)
+				create f.make_with_name (a_filename)
 				if f.exists and f.is_readable then
 					f.open_read
 					parse_from_file (f)
@@ -1347,9 +1347,8 @@ feature {NONE} -- Factory: cache
 			create Result.make (100)
 		end
 
-
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

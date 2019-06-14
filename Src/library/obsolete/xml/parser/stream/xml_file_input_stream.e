@@ -1,5 +1,4 @@
-note
-	description: "Summary description for {XML_FILE_INPUT_STREAM}."
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -20,7 +19,7 @@ feature {NONE} -- Initialization
 		require
 			a_file_attached: a_file /= Void
 		do
-			name := a_file.name
+			name := a_file.path.utf_8_name
 			create current_chunk.make_empty
 			chunk_size := default_chunk_size
 			count := a_file.count
@@ -32,13 +31,21 @@ feature {NONE} -- Initialization
 			a_filename_not_empty: a_filename /= Void and then not a_filename.is_empty
 		do
 			set_inner_source (True)
-			make (create {RAW_FILE}.make (a_filename))
+			make (create {RAW_FILE}.make_with_name (a_filename))
 		end
 
 feature -- Access
 
 	name: STRING
 			-- Name of current stream
+
+	index: INTEGER
+
+	line: INTEGER
+
+	column: INTEGER
+
+	last_character: CHARACTER
 
 feature -- Status report
 
@@ -54,16 +61,6 @@ feature -- Status report
 		do
 			Result := source.is_open_read
 		end
-
-feature -- Access
-
-	index: INTEGER
-
-	line: INTEGER
-
-	column: INTEGER
-
-	last_character: CHARACTER
 
 feature -- Chunk
 
@@ -190,7 +187,7 @@ invariant
 	source_attached: source /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -40,7 +40,7 @@ feature -- Status setting
 		require
 			context_exists: c /= Void
 		do
-			actual_context := c
+			actual_context := {like actual_context} / c
 			if actual_context = Void then raise ("Non-conforming argument") end
 		ensure
 			context_set: context = c

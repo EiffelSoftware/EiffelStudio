@@ -72,7 +72,7 @@ feature {NONE} -- Initialization
 			vb_text_field.set_padding (Layout_constants.small_padding_size)
 			vb_text_field.set_border_width (Layout_constants.default_border_size)
 			create name_field
-			name_field.set_minimum_height (22)
+			name_field.set_minimum_height ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (22))
 			vb_text_field.extend (name_field)
 			vb_text_field.disable_item_expand (name_field)
 			hb_name.extend (vb_text_field)
@@ -117,7 +117,7 @@ feature {NONE} -- Initialization
 			set_default_cancel_button (cancel_button)
 			show_actions.extend (agent on_show)
 
-			set_minimum_width (350)
+			set_minimum_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (350))
 		end
 
 feature -- Status report
@@ -225,7 +225,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

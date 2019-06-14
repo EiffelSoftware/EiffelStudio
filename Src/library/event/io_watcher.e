@@ -1,9 +1,8 @@
 note
-	description:
-		"Watches an IO_MEDIUM and performs arbitrary actions when%
-		%its state changes.%N%
-		%Resources allocated by `set_medium' will not be released until%
-		%`remove_medium' is called"
+	description: "[
+			Watches an IO_MEDIUM and performs arbitrary actions when its state changes.
+			Resources allocated by `set_medium' will not be released until `remove_medium` is called.
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 class
@@ -91,19 +90,19 @@ feature -- Access
 
 feature -- Event handling
 
-	read_actions: ACTION_SEQUENCE [TUPLE []]
+	read_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions to be performed when `medium' has become
 			-- available for reading.
 
-	write_actions: ACTION_SEQUENCE [TUPLE []]
+	write_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions to be performed when `medium' has become
 			-- available for non-blocking writing.			
 
-	error_actions: ACTION_SEQUENCE [TUPLE []]
+	error_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions to be performed when `medium' is in an
 			-- error state.
 
-	exception_actions: ACTION_SEQUENCE [TUPLE []]
+	exception_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions to be performed when an exception was raised
 			-- on `medium'.
 
@@ -211,18 +210,14 @@ invariant
 	medium_has_callback_handle: not (medium /= Void xor callback_handle > 0)
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end
-

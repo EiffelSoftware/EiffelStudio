@@ -1,8 +1,6 @@
-note
-	description:
-		"FTP protocol"
+﻿note
+	description: "FTP protocol."
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -152,7 +150,7 @@ feature -- Status setting
 						accepted_socket := data_socket
 					else
 						data_socket.accept
-						accepted_socket ?= data_socket.accepted
+						accepted_socket := {like accepted_socket} / data_socket.accepted
 					end
 					if accepted_socket /= Void then
 						debug Io.error.put_string ("Socket accepted%N") end
@@ -219,7 +217,7 @@ feature -- Status setting
 		local
 			o: like Current
 		do
-			o ?= other
+			o := {like Current} / other
 				check
 					same_type: o /= Void
 						-- Because of precondition
@@ -694,18 +692,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class FTP_PROTOCOL
-
+end

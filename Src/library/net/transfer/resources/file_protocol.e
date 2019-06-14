@@ -1,8 +1,6 @@
-note
-	description:
-		"The FILE protocol"
+﻿note
+	description: "The FILE protocol."
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -23,7 +21,7 @@ feature {NONE} -- Initialization
 	initialize
 			-- Initialize file protocol.
 		do
-			create file.make_with_name (address.name)
+			create file.make_with_path (address.path)
 			create buffer.make_filled ('%/000/', Default_buffer_size)
 			read_buffer_size := Default_buffer_size
 			set_overwrite_mode
@@ -115,7 +113,7 @@ feature -- Status report
 	read_mode: BOOLEAN
 			-- Is read mode set?
 		do
-			Result := (mode = Read_mode_id)
+			Result := mode = Read_mode_id
 		end
 
 	write_mode: BOOLEAN
@@ -233,8 +231,6 @@ feature -- Input
 		do
 			file.read_stream (read_buffer_size)
 			l_packet := file.last_string
-				-- Per postcondition of `file.read_stream'.
-			check l_packet_attached: l_packet /= Void end
 			last_packet := l_packet
 			last_packet_size := l_packet.count
 			bytes_transferred := bytes_transferred + last_packet_size
@@ -253,18 +249,14 @@ feature {NONE} -- Implementation
 	overwrite_mode: BOOLEAN;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class FILE_PROTOCOL
-
+end

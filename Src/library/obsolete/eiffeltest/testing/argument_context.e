@@ -1,8 +1,6 @@
-note
-	description:
-		"Argument context facility"
+﻿note
+	description: "Argument context facility."
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -42,7 +40,7 @@ feature -- Status setting
 		require
 			context_exists: c /= Void
 		do
-			actual_context ?= c
+			actual_context := c
 			if actual_context = Void then raise ("Non-conforming argument") end
 		ensure
 			context_set: context = c
@@ -66,18 +64,14 @@ invariant
 	context_set_definition: is_context_set = (actual_context /= Void)
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class ARGUMENT_CONTEXT
-
+end

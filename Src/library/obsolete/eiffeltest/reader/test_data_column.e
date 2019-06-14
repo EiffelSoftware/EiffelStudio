@@ -31,7 +31,7 @@ feature -- Basic operations
 			test_case_exists: t /= Void
 			accepted_input: input_accepted (s)
 		do
-			test_case := t
+			test_case := {like test_case} / t
 			if test_case = Void then
 				raise ("Passed test case is of wrong type")
 			end

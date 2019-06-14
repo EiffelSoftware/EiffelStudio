@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Eiffel tests that can be executed by testing tool.
 	]"
@@ -168,7 +168,6 @@ feature -- Test routines
 		local
 			l_src, l_dst: ARRAY [STRING]
 			l_diff: DIFF [STRING]
-			i: INTEGER
 		do
 			create l_src.make_filled (create {STRING}.make_empty, 0, 1)
 			l_dst := l_src.deep_twin
@@ -199,7 +198,7 @@ feature {NONE} -- Constants
 		%Inserted line 3"
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

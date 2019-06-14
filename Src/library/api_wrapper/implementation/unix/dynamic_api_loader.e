@@ -1,10 +1,10 @@
-note
+﻿note
 	description: "[
 		The Unix implementation of the dynamic API loader {DYNAMIC_API_I}.
 	]"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
+	status: "See notice at end of class."
+	date: "$Date$"
 	revision: "$Revision$"
 
 class
@@ -37,25 +37,26 @@ feature -- Basic operations
 	load_library (a_name: READABLE_STRING_8; a_version: detachable READABLE_STRING_8): POINTER
 			-- <Precursor>
 		local
-			l_fn: FILE_NAME
-			l_mac_fn: FILE_NAME
+			l_fn: PATH
 		do
-			create l_fn.make_from_string (a_name.as_string_8)
+			create l_fn.make_from_string (a_name)
 			if {PLATFORM}.is_mac then
-				l_mac_fn := l_fn.twin
-				if a_version /= Void then
-					l_mac_fn.add_extension (a_version.as_string_8)
-				end
-				l_mac_fn.add_extension (once "dylib")
-				Result := load_library_from_path (l_mac_fn.string)
+				Result := load_library_from_path
+					((if attached a_version then
+						l_fn.appended_with_extension (a_version)
+					else
+						l_fn
+					end).appended_with_extension (once "dylib").utf_8_name)
 			end
 			if Result = default_pointer then
 					-- Not a Mac or dylib not found, attempt so
-				l_fn.add_extension (once "so")
-				if a_version /= Void then
-					l_fn.add_extension (a_version.as_string_8)
-				end
-				Result := load_library_from_path (l_fn.string)
+				l_fn := l_fn.appended_with_extension (once "so")
+				Result := load_library_from_path
+					((if attached a_version then
+						l_fn.appended_with_extension (a_version)
+					else
+						l_fn
+					end).utf_8_name)
 			end
 		end
 
@@ -77,9 +78,9 @@ feature -- Basic operations
 		local
 			l_result: BOOLEAN
 		do
-			l_result := (c_dlclose (a_hnd) = 0)
-			check 
-				library_freed: l_result 
+			l_result := c_dlclose (a_hnd) = 0
+			check
+				library_freed: l_result
 			end
 		end
 
@@ -145,8 +146,8 @@ feature {NONE} -- External: Flags
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

@@ -1,10 +1,10 @@
-note
+﻿note
 	description: "[
 		The Cocoa implementation of the dynamic API loader {DYNAMIC_API_I}.
 	]"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
+	status: "See notice at end of class."
+	date: "$Date$"
 	revision: "$Revision$"
 
 class
@@ -34,14 +34,13 @@ feature -- Basic operations
 	load_library (a_name: READABLE_STRING_8; a_version: detachable READABLE_STRING_8): POINTER
 			-- <Precursor>
 		local
-			l_fn: FILE_NAME
+			l_fn: PATH
 		do
-			create l_fn.make_from_string (a_name.as_string_8)
-			if a_version /= Void then
-				l_fn.add_extension (a_version.as_string_8)
+			create l_fn.make_from_string (a_name)
+			if attached a_version then
+				l_fn := l_fn.appended_with_extension (a_version)
 			end
-			l_fn.add_extension (once "dylib")
-			Result := load_library_from_path (l_fn.string)
+			Result := load_library_from_path (l_fn.appended_with_extension (once "dylib").utf_8_name)
 		end
 
 	load_library_from_path (a_path: READABLE_STRING_8): POINTER
@@ -56,9 +55,9 @@ feature -- Basic operations
 			-- fixme: not implemented
 		end
 
-;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software and Daniel Furrer"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+note
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

@@ -1,8 +1,6 @@
-note
-	description:
-		"Resources accessed over a network"
+ï»¿note
+	description: "Resources accessed over a network."
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -146,7 +144,7 @@ feature -- Status setting
 		local
 			o: like Current
 		do
-			o ?= other
+			o := {like Current} / other
 				check
 					same_type: o /= Void
 						-- Because of precondition
@@ -228,10 +226,10 @@ feature {NONE} -- Implementation
 			-- Cached value of `is_writable'
 
 	readable_cached: BOOLEAN
-			-- Has a value für `is_readable' been cached?
+			-- Has a value for `is_readable' been cached?
 
 	writable_cached: BOOLEAN
-			-- Has a value für `is_writable' been cached?
+			-- Has a value for `is_writable' been cached?
 
 	check_socket (s: NETWORK_SOCKET; transfer_mode: INTEGER)
 			-- Check, if it is possible to read from/write to `s' (depending on
@@ -251,14 +249,14 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-end -- class NETWORK_RESOURCE
+end

@@ -1,5 +1,5 @@
-note
-	description: "Implementation of data resource factory"
+﻿note
+	description: "Implementation of data resource factory."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -190,12 +190,11 @@ feature {NONE} -- Implementation (Factory setup)
 		local
 			u: FILE_URL
 		do
-			u ?= url
+			u := {FILE_URL} / url
 				check
 					type_correct: u /= Void
 						-- Because factory has created the right URL type
 				end
-
 			create {FILE_PROTOCOL} Result.make (u)
 		end
 
@@ -210,12 +209,11 @@ feature {NONE} -- Implementation (Factory setup)
 		local
 			u: HTTP_URL
 		do
-			u ?= url
+			u := {HTTP_URL} / url
 				check
 					type_correct: u /= Void
 						-- Because factory has created the right URL type
 				end
-
 			create {HTTP_PROTOCOL} Result.make (u)
 		end
 
@@ -230,12 +228,11 @@ feature {NONE} -- Implementation (Factory setup)
 		local
 			u: FTP_URL
 		do
-			u ?= url
+			u := {FTP_URL} / url
 				check
 					type_correct: u /= Void
 						-- Because factory has created the right URL type
 				end
-
 			create {FTP_PROTOCOL} Result.make (u)
 		end
 
@@ -245,18 +242,14 @@ invariant
 							not default_service.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class DATA_RESOURCE_FACTORY_IMPL
-
+end

@@ -1,8 +1,8 @@
-note
+﻿note
 	description: "[
-					Encoding conversion implementation on Unix. The cache is never freed in the library. 
-					It relies on the normal termination of the client process.
-					]"
+			Encoding conversion implementation on Unix. The cache is never freed in the library. 
+			It relies on the normal termination of the client process.
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -121,14 +121,14 @@ feature -- String encoding convertion
 				else
 					last_conversion_successful := False
 				end
-					-- Even in the case of an error `l_pointer' might not be NULL.
-				if l_pointer /= Void then
+					-- Even in the case of an error `l_pointer` might not be NULL.
+				if l_pointer /= default_pointer then
 					l_pointer.memory_free
 				end
 			end
 		rescue
 			l_retried := True
-			if l_pointer /= Void then
+			if l_pointer /= default_pointer then
 				l_pointer.memory_free
 			end
 			l_exception := exception_manager.last_exception
@@ -488,11 +488,9 @@ feature {NONE} -- Implementation
 			]"
 		end
 
-
-
 note
 	library:   "Encoding: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -501,7 +499,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

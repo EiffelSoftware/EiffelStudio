@@ -1,6 +1,4 @@
-note
-	description: "Summary description for {TEST_FILE_NAME}."
-	author: ""
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,13 +11,13 @@ inherit
 feature
 
 	test_file_name
+		obsolete "The feature tests an obsolete class FILE_NAME. [2019-11-30]"
 		local
 			l_file_name: FILE_NAME
 		do
 			create l_file_name.make_temporary_name
 			assert ("Not Empty", l_file_name.is_valid)
 		end
-
 
 note
 	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"

@@ -1,12 +1,15 @@
-<?xml version="1.0" encoding="ISO-8859-1"?><system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="test">
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" name="test" uuid="026CF40C-D503-46BA-8579-54214BDED060">
 	<target name="test">
-		<root cluster="root_cluster" class="test" feature="make"/>
-		<option warning="true" full_class_checking="true" syntax="provisional">
-			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="false"/>
+		<root cluster="root_cluster" class="TEST" feature="make"/>
+		<option warning="error">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true"/>
 		</option>
 		<setting name="console_application" value="true"/>
-		<setting name="total_order_on_reals" value="true"/>
-		<precompile name="precompile" location="$PRECOMPILED_BASE_MT"/>
+		<capability>
+			<concurrency support="none"/>
+		</capability>
+		<precompile name="precompile" location="$PRECOMPILED_BASE_SAFE"/>
 		$EWEASEL_DOTNET_SETTING
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<cluster name="root_cluster" location="$CLUSTER\"/>

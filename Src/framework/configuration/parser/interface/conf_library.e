@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "A library."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -112,7 +112,7 @@ feature -- Access queries
 		end
 
 	options: CONF_OPTION
-			-- Options (Debuglevel, assertions, ...)
+			-- <Precursor>
 		do
 				-- Only options that can be overridden should be taken from the local definition,
 				-- so `internal_options' cannot be used as a starting point, the clean object is used instead.
@@ -134,12 +134,48 @@ feature -- Access queries
 			end
 		end
 
+	adapted_options: CONF_OPTION
+			-- <Precursor>
+		do
+				-- Only options that can be overridden should be taken from the local definition,
+				-- so `internal_options' cannot be used as a starting point, the clean object is used instead.
+			create Result
+
+				-- Apply local options if present.
+			if attached forced_options as o then
+				Result.merge_client (o)
+			elseif attached internal_options as o then
+				Result.merge_client (o)
+			end
+
+				-- Apply options of the application if required.
+			if use_application_options then
+				Result.merge_client (target.adapted_options)
+			end
+
+				-- Apply options specified in the library.
+			if attached library_target as t then
+				Result.merge (t.adapted_options)
+			end
+		end
+
 	class_options: detachable STRING_TABLE [CONF_OPTION]
-			-- Options for classes.
+			-- <Precursor>
 		do
 				-- get local options
-			if attached internal_class_options as l_internal_class_options then
-				Result := l_internal_class_options.twin
+			if attached internal_class_options as o then
+				Result := o.twin
+			end
+		end
+
+	adapted_class_options: detachable STRING_TABLE [CONF_OPTION]
+			-- <Precursor>
+		do
+				-- Get local options
+			if attached forced_class_options as o then
+				Result := o.twin
+			elseif attached internal_class_options as o then
+				Result := o.twin
 			end
 		end
 
@@ -203,7 +239,7 @@ invariant
 	library_target_set: classes_set implies library_target /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

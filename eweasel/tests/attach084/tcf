@@ -5,7 +5,7 @@ copy_sub	Ace $TEST Ace
 copy_raw	test.e $CLUSTER test.e
 
 compile_frozen
-compile_result validity_error NONE VD01 VD01 VD46
+compile_result validity_error NONE VD46
 
 abort_compile
 cleanup_compile

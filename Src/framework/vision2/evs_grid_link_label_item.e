@@ -1,7 +1,5 @@
 ﻿note
-	description: "[
-		Specialized {EV_GRID_LABEL_ITEM} which displays the current text as a clickable link.
-	]"
+	description: "Specialized {EV_GRID_LABEL_ITEM} which displays the current text as a clickable link."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -78,7 +76,7 @@ feature {NONE} -- Status report
 		do
 			Result := last_pointer_style /= Void
 		ensure
-			definition: Result = (last_pointer_style)
+			definition: Result = attached last_pointer_style
 		end
 
 	is_first_button_active: BOOLEAN
@@ -120,13 +118,14 @@ feature {NONE} -- Implementation
 	on_pointer_release (a_x: INTEGER; a_y: INTEGER; a_button: INTEGER; a_x_tilt: DOUBLE; a_y_tilt: DOUBLE; a_pressure: DOUBLE; a_screen_x: INTEGER; a_screen_y: INTEGER)
 			-- Called when a button is released on `Current'.
 		do
-			if a_button = {EV_POINTER_CONSTANTS}.left then
-				if is_first_button_active then
-					if is_hovering then
-						select_actions.call (Void)
-					end
-					is_first_button_active := False
+			if
+				a_button = {EV_POINTER_CONSTANTS}.left and then
+				is_first_button_active
+			then
+				if is_hovering then
+					select_actions.call (Void)
 				end
+				is_first_button_active := False
 			end
 		end
 
@@ -181,7 +180,7 @@ feature {NONE} -- Assertion helpers
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

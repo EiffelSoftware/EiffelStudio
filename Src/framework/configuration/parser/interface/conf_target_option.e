@@ -276,6 +276,11 @@ feature -- Duplication
 		do
 			if other /= Current then
 				Precursor (other)
+					-- Duplicate options that are not included in {CONF_OPTION}.
+					-- Take into account that they are 
+				array_override := array_override.twin
+				concurrency := concurrency.twin
+				dead_code := dead_code.twin
 					-- Make copies of capabilities with appropriate values and update root values.
 				create catcall_safety_capability.make (catcall_detection)
 				catcall_safety_capability.put_root_index (other.catcall_safety_capability.custom_root_index)
@@ -283,8 +288,6 @@ feature -- Duplication
 				concurrency_capability.put_root_index (other.concurrency_capability.custom_root_index)
 				create void_safety_capability.make (void_safety)
 				void_safety_capability.put_root_index (other.void_safety_capability.custom_root_index)
-				array_override := other.array_override.twin
-				dead_code := other.dead_code.twin
 			end
 		end
 

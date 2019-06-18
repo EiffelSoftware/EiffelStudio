@@ -295,22 +295,19 @@ feature {NONE} -- Implementation
 
 	row_is_ready_for_identification (a_row: EV_GRID_ROW): BOOLEAN
 		do
-			if attached identification_agent /= Void and attached row_is_ready_for_identification_agent as l_row_is_ready_for_identification_agent then
-				Result := l_row_is_ready_for_identification_agent.item ([a_row])
-			else
-				Result := row_is_ready_for_default_identification (a_row)
-			end
+			Result :=
+				if attached identification_agent and attached row_is_ready_for_identification_agent as l_row_is_ready_for_identification_agent then
+					l_row_is_ready_for_identification_agent (a_row)
+				else
+					row_is_ready_for_default_identification (a_row)
+				end
 		end
 
 	row_is_ready_for_evaluation (a_row: EV_GRID_ROW): BOOLEAN
 		require
 			value_agent /= Void
 		do
-			if attached row_is_ready_for_evaluation_agent as l_row_is_ready_for_evaluation_agent then
-				Result := l_row_is_ready_for_evaluation_agent.item ([a_row])
-			else
-				Result := True
-			end
+			Result := attached row_is_ready_for_evaluation_agent as is_ready implies is_ready (a_row)
 		end
 
 	row_is_ready_for_default_identification (a_row: EV_GRID_ROW): BOOLEAN
@@ -321,11 +318,12 @@ feature {NONE} -- Implementation
 	global_identification: STRING_32
 		do
 			Result := name.twin
-			if attached global_identification_agent as l_global_identification_agent then
-				if attached l_global_identification_agent.item (Void) as s then
-					Result.append_string_general ("::")
-					Result.append_string (s)
-				end
+			if
+				attached global_identification_agent as identification and then
+				attached identification (Void) as s
+			then
+				Result.append_string_general ("::")
+				Result.append_string (s)
 			end
 		end
 
@@ -493,7 +491,6 @@ feature {NONE} -- Implementation
 								--| Let's check difference
 							if attached value_agent as l_value_agent then
 								tv := lay.value
-								has_diff := False
 								l_val := l_value_agent.item ([a_row, False])
 								if tv = Void or l_val = Void then
 									has_diff := tv /= Void or l_val /= Void
@@ -714,7 +711,7 @@ feature {NONE} -- Agent
 			-- row and old value
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

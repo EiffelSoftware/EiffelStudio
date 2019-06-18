@@ -27,11 +27,24 @@ feature -- Access
 	options: CONF_TARGET_OPTION
 			-- Options (Debuglevel, assertions, ...)
 		do
-			if attached internal_options as l_internal_options then
-				Result := l_internal_options
-			else
+			Result := internal_options
+			if not attached Result then
 				create Result
 			end
+		end
+
+	adapted_options: CONF_TARGET_OPTION
+			-- Options adapted to the current project.
+		do
+			Result := forced_options
+			if not attached Result then
+				Result := internal_options
+				if not attached Result then
+					create Result
+				end
+			end
+		ensure
+			Result_not_void: Result /= Void
 		end
 
 	settings: STRING_TABLE [READABLE_STRING_32]
@@ -312,8 +325,21 @@ feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes that are store
 			Result_not_void: Result /= Void
 		end
 
+	forced_options: like internal_options
+			-- Same as `internal_options`, but forced by a third-party (client, precompile, etc.) project,
+			-- not by the original one.
+
 	internal_settings: like settings
 			-- Settings of this target itself.
+
+feature {CONF_VISITOR} -- Modification
+
+	force_options (o: like options)
+		do
+			forced_options := o
+		ensure
+			forced_options = o
+		end
 
 invariant
 	internal_settings_attached: attached internal_settings

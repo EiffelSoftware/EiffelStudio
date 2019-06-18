@@ -165,6 +165,38 @@ feature -- Access queries
 			Result := l_result
 		end
 
+	adapted_options: CONF_OPTION
+			-- <Precursor>
+		local
+			l_local: CONF_OPTION
+		do
+				-- Get local options
+			if attached forced_options as o then
+				l_local := o.twin
+			elseif attached internal_options as o then
+				l_local := o.twin
+			else
+				create l_local
+			end
+			l_local.merge (if attached parent as p then p.adapted_options else target.adapted_options end)
+
+				-- if used as library, get options from application level if the library is defined there
+			if
+				is_used_in_library and then
+				attached target.system.application_target_library as l
+			then
+				Result := l.adapted_options
+			end
+
+			if attached Result then
+				Result.merge (l_local)
+					-- Need to set local namespace, because local namespaces cannot be merged for libraries
+				Result.set_local_namespace (l_local.local_namespace)
+			else
+				Result := l_local
+			end
+		end
+
 	class_options: like internal_class_options
 			-- Options for classes.
 		local
@@ -198,6 +230,44 @@ feature -- Access queries
 							Result := l_class_options.twin
 						end
 					end
+				end
+			end
+		end
+
+	adapted_class_options: like internal_class_options
+			-- Options for classes.
+		do
+				-- Get local options
+			if
+				attached parent as p and then
+				attached p.adapted_class_options as o
+			then
+				Result := o.twin
+			end
+			if attached forced_class_options as o then
+				if Result /= Void then
+					Result.merge (o)
+				else
+					Result := o.twin
+				end
+			elseif attached internal_class_options as o then
+				if Result /= Void then
+					Result.merge (o)
+				else
+					Result := o.twin
+				end
+			end
+
+				-- if used as library, get options from application level if the library is defined there
+			if
+				is_used_in_library and then
+				attached target.system.application_target_library as l and then
+				attached l.adapted_class_options as o
+			then
+				if Result /= Void then
+					Result.merge (o)
+				else
+					Result := o.twin
 				end
 			end
 		end
@@ -613,7 +683,7 @@ invariant
 	parent_child_relationship: attached parent as p implies (attached p.children as p_children and then p_children.has (Current))
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

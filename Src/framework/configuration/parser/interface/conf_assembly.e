@@ -174,9 +174,21 @@ feature -- Access queries
 			create Result
 		end
 
+	adapted_options: CONF_OPTION
+			-- Options of this assembly adapted to the current project.
+		once
+			Result := options
+		end
+
 	class_options: detachable STRING_TABLE [CONF_OPTION]
 			-- Options of classes in the assembly.
 		do
+		end
+
+	adapted_class_options: detachable STRING_TABLE [CONF_OPTION]
+			-- Options of classes in the assembly adapted to the current project.
+		do
+				-- Classes in assemblies have no options.
 		end
 
 	sub_group_by_name (a_name: READABLE_STRING_GENERAL): detachable CONF_GROUP
@@ -276,7 +288,7 @@ feature -- Visit
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

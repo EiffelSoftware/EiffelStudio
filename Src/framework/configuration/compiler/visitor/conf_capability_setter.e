@@ -105,43 +105,80 @@ feature {NONE} -- Traversal
 
 	update_cluster (cluster: CONF_CLUSTER)
 			-- Update options of classes in `cluster'.
+		local
+			o: like {CONF_CLUSTER}.internal_class_options.item
+			f: like {CONF_CLUSTER}.forced_class_options
 		do
 			if attached cluster.internal_class_options as os then
 				across
 					os as option
 				loop
+					o := option.item
 						-- Update class options to use the root setting.
-					option.item.catcall_detection.put_index (root_catcall_detection_index)
-					option.item.void_safety.put_index (root_void_safety_index)
+					if
+						o.catcall_detection.index /= root_catcall_detection_index or else
+						o.void_safety.index /= root_void_safety_index
+					then
+						o := o.twin
+						o.catcall_detection.put_index (root_catcall_detection_index)
+						o.void_safety.put_index (root_void_safety_index)
+						if not attached f then
+							create f.make_caseless (os.count)
+						end
+						f [option.key] := o
+					end
+				end
+				if attached f then
+					cluster.force_class_options (f)
 				end
 			end
 		end
 
 	update_group (group: CONF_GROUP)
 			-- Update options of group `group'.
+		local
+			o: like {CONF_GROUP}.internal_options
 		do
-			if attached group.internal_options as option then
+			if
+				attached group.internal_options as option and then
+				(option.catcall_detection.index /= root_catcall_detection_index or else
+				option.void_safety.index /= root_void_safety_index)
+			then
 					-- Update group options to use the root setting.
-				option.catcall_detection.put_index (root_catcall_detection_index)
-				option.void_safety.put_index (root_void_safety_index)
+				o := option.twin
+				o.catcall_detection.put_index (root_catcall_detection_index)
+				o.void_safety.put_index (root_void_safety_index)
+				group.force_options (o)
 			end
 		end
 
 	update_target (parent: CONF_TARGET)
 			-- Update options of target `parent'.
+		local
+			o: like {CONF_TARGET}.internal_options
 		do
-			if attached parent.changeable_internal_options as option then
+			o := parent.internal_options
+			if not attached o then
+				create o
+			end
+			if
+				o.catcall_detection.index /= root_catcall_detection_index or else
+				o.concurrency.index /= root_concurrency_index or else
+				o.void_safety.index /= root_void_safety_index
+			then
+				o := o.twin
 					-- Update target options to use the root setting.
-				option.catcall_detection.put_index (root_catcall_detection_index)
-				option.concurrency.put_index (root_concurrency_index)
-				option.void_safety.put_index (root_void_safety_index)
+				o.catcall_detection.put_index (root_catcall_detection_index)
+				o.concurrency.put_index (root_concurrency_index)
+				o.void_safety.put_index (root_void_safety_index)
+				parent.force_options (o)
 			end
 		end
 
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

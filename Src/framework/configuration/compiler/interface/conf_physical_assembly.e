@@ -307,17 +307,29 @@ feature -- Access queries
 	options: CONF_OPTION
 			-- Options of this assembly.
 		once
-				-- assemblies have no options
+				-- Assemblies have no options.
 			create Result
 				-- But we have to treat classes as void-safe, as otherwise
 				-- nothing from an assembly can be used in a void-safe project.
 			Result.void_safety.put_index ({CONF_OPTION}.void_safety_index_all)
 		end
 
+	adapted_options: CONF_OPTION
+			-- Options of this assembly adapted to the current project.
+		once
+			Result := options
+		end
+
 	class_options: detachable STRING_TABLE [CONF_OPTION]
 			-- Options of classes in the assembly.
 		do
 				-- classes in assemblies have no options
+		end
+
+	adapted_class_options: detachable STRING_TABLE [CONF_OPTION]
+			-- Options of classes in the assembly adapted to the current project.
+		do
+				-- Classes in assemblies have no options.
 		end
 
 	sub_group_by_name (a_name: READABLE_STRING_GENERAL): detachable CONF_GROUP
@@ -449,7 +461,7 @@ invariant
 	assemblies_not_void: assemblies /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

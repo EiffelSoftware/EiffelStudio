@@ -192,8 +192,22 @@ feature -- Access queries
 			Result_not_void: Result /= Void
 		end
 
+	adapted_options: CONF_OPTION
+			-- Options adapted to the current project.
+		deferred
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 	class_options: detachable STRING_TABLE [CONF_OPTION]
 			-- Options for classes.
+		deferred
+		ensure
+			Result_not_empty: Result /= Void implies not Result.is_empty
+		end
+
+	adapted_class_options: detachable STRING_TABLE [CONF_OPTION]
+			-- Options for classes adapted to the current project.
 		deferred
 		ensure
 			Result_not_empty: Result /= Void implies not Result.is_empty
@@ -203,25 +217,19 @@ feature -- Access queries
 			-- Get the options for `a_class'.
 		local
 			l_name: READABLE_STRING_GENERAL
-			l_map: like mapping
-			l_class_options: like class_options
 		do
-			l_map := mapping
-			if attached l_map.item (a_class) as l_map_found_item then
-				l_name := l_map_found_item
-			else
+			l_name := mapping.item (a_class)
+			if not attached l_name then
 				l_name := a_class
 			end
-			l_class_options := class_options
-			if l_class_options /= Void then
-				if attached l_class_options.item (l_name) as l_class then
-					Result := l_class.twin
-					Result.merge (options)
-				else
-					Result := options.twin
-				end
+			if
+				attached adapted_class_options as os and then
+				attached os.item (l_name) as o
+			then
+				Result := o.twin
+				Result.merge (adapted_options)
 			else
-				Result := options.twin
+				Result := adapted_options.twin
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -636,8 +644,16 @@ feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes stored in conf
 	internal_options: detachable CONF_OPTION
 			-- Options (Debuglevel, assertions, ...) of this group itself.
 
+	forced_options: like internal_options
+			-- Same as `internal_options`, but forced by a third-party (client, precompile, etc.) project,
+			-- not by the original one.
+
 	internal_class_options: detachable STRING_TABLE [CONF_OPTION]
 			-- Classes with specific options of this group itself.
+
+	forced_class_options: like internal_class_options
+			-- Same as `internal_class_options`, but forced by a third-party (client, precompile, etc.) project,
+			-- not by the original one.
 
 	changeable_internal_options: attached like internal_options
 			-- A possibility to change settings without knowing if we have some options already set.
@@ -670,6 +686,30 @@ feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, attributes stored in conf
 				add_class_options (res, a_class.name)
 			end
 			Result := res
+		end
+
+feature {CONF_VISITOR} -- Modification
+
+	force_options (o: like options)
+		require
+			attached internal_options
+		do
+			forced_options := o
+		ensure
+			forced_options = o
+		end
+
+	force_class_options (o: attached like forced_class_options)
+			-- Force class options `o` by a third-party project.
+		require
+			internal_class_options_attached: attached internal_class_options as i
+			is_caseless: o.is_case_insensitive
+			internal_includes_forced: across o as oc all i.has (oc.key) end
+			forced_includes_internal: across i as ic all o.has (ic.key) end
+		do
+			forced_class_options := o
+		ensure
+			forced_class_options = o
 		end
 
 feature {CONF_VISITOR, CONF_ACCESS} -- Implementation, not stored in configuration fi

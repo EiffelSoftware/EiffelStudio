@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that represent a target section."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -96,32 +96,31 @@ feature -- Element update
 		do
 			create dlg.make (configuration_window.current_target, configuration_window.conf_factory)
 			dlg.show_modal_to_window (configuration_window)
-			if dlg.is_ok then
-				if
-					attached dlg.last_target as tgt and then
-					attached parent as p
-				then
-					par_loc := target.system.file_path.absolute_path.canonical_path.parent
-					loc := tgt.system.file_path.absolute_path.canonical_path
-					if loc.name.starts_with (loc.name) then
-						create s.make_from_string (loc.name)
-						s.remove_head (par_loc.name.count)
-						if not s.is_empty and s[1] = loc.directory_separator then
-							s.remove_head (1)
-							create loc.make_from_string (s)
-						end
+			if
+				dlg.is_ok and then
+				attached dlg.last_target as tgt and then
+				attached parent as p
+			then
+				par_loc := target.system.file_path.absolute_path.canonical_path.parent
+				loc := tgt.system.file_path.absolute_path.canonical_path
+				if loc.name.starts_with (loc.name) then
+					create s.make_from_string (loc.name)
+					s.remove_head (par_loc.name.count)
+					if not s.is_empty and s[1] = loc.directory_separator then
+						s.remove_head (1)
+						create loc.make_from_string (s)
 					end
-					target.reference_parent (create {CONF_REMOTE_TARGET_REFERENCE}.make (tgt.name, loc.name))
-					target.set_remote_parent (tgt)
-					if attached configuration_window.remote_target_section_from (tgt, p) as l_section then
-						p.start
-						p.prune (l_section)
-					end
-					p.start
-					p.prune (Current)
-					configuration_window.add_target_sections (tgt, p)
-					p.last.enable_select
 				end
+				target.reference_parent (create {CONF_REMOTE_TARGET_REFERENCE}.make (tgt.name, loc.name))
+				target.set_remote_parent (tgt)
+				if attached configuration_window.remote_target_section_from (tgt, p) as l_section then
+					p.start
+					p.prune (l_section)
+				end
+				p.start
+				p.prune (Current)
+				configuration_window.add_target_sections (tgt, p)
+				p.last.enable_select
 			end
 		end
 
@@ -176,7 +175,7 @@ feature {NONE} -- Implementation
 				check
 					not_after: not after
 				end
-				Result ?= item
+				Result := {TARGET_GROUPS_SECTION} / item
 				forth
 			end
 		ensure
@@ -194,7 +193,7 @@ feature {NONE} -- Implementation
 				check
 					not_after: not after
 				end
-				Result ?= item
+				Result := {TARGET_ADVANCED_SECTION} / item
 				forth
 			end
 		ensure
@@ -218,7 +217,7 @@ feature {NONE} -- Implementation
 				check
 					not_after: not l_advanced.after
 				end
-				Result ?= l_advanced.item
+				Result := {TARGET_EXTERNALS_SECTION} / l_advanced.item
 				l_advanced.forth
 			end
 		ensure
@@ -242,7 +241,7 @@ feature {NONE} -- Implementation
 				check
 					not_after: not l_advanced.after
 				end
-				Result ?= l_advanced.item
+				Result := {TARGET_TASKS_SECTION} / l_advanced.item
 				l_advanced.forth
 			end
 		ensure
@@ -254,28 +253,18 @@ feature {NONE} -- Implementation
 		local
 			l_parent_tree: EV_TREE
 			l_parent: EV_TREE_NODE_LIST
-			l_par_node: EV_TREE_NODE
 		do
 			configuration_window.conf_system.remove_target (target.name)
-
 			l_parent := parent
 			l_parent_tree := parent_tree
 			l_parent.start
 			l_parent.prune (Current)
-			l_par_node ?= l_parent
-			if l_par_node /= Void then
-				l_par_node.enable_select
-			else
-				l_parent_tree.first.enable_select
-			end
+			(if attached {EV_TREE_NODE} l_parent as n then n else l_parent_tree.first end).enable_select
 		end
 
 	context_menu: ARRAYED_LIST [EV_MENU_ITEM]
 			-- Context menu with available actions for `Current'.
 		local
-			l_groups: TARGET_GROUPS_SECTION
-			l_externals: TARGET_EXTERNALS_SECTION
-			l_tasks: TARGET_TASKS_SECTION
 			l_item: EV_MENU_ITEM
 		do
 			create Result.make (10)
@@ -291,12 +280,9 @@ feature {NONE} -- Implementation
 				l_item.disable_sensitive
 			end
 
-			l_groups := groups_section
-			Result.append (l_groups.context_menu)
-			l_externals := externals_section
-			Result.append (l_externals.context_menu)
-			l_tasks := tasks_section
-			Result.append (l_tasks.context_menu)
+			Result.append (groups_section.context_menu)
+			Result.append (externals_section.context_menu)
+			Result.append (tasks_section.context_menu)
 
 			create l_item.make_with_text_and_action (conf_interface_names.general_remove, agent ask_remove_target)
 			Result.extend (l_item)
@@ -316,17 +302,10 @@ feature {NONE} -- Implementation
 
 	update_toolbar_sensitivity
 			-- Enable/disable buttons in `toolbar'.
-		local
-			l_groups: TARGET_GROUPS_SECTION
-			l_externals: TARGET_EXTERNALS_SECTION
-			l_tasks: TARGET_TASKS_SECTION
 		do
-			l_groups := groups_section
-			l_groups.update_toolbar_sensitivity
-			l_externals := externals_section
-			l_externals.update_toolbar_sensitivity
-			l_tasks := tasks_section
-			l_tasks.update_toolbar_sensitivity
+			groups_section.update_toolbar_sensitivity
+			externals_section.update_toolbar_sensitivity
+			tasks_section.update_toolbar_sensitivity
 
 			toolbar.add_target_button.select_actions.wipe_out
 			toolbar.add_target_button.select_actions.extend (agent add_target)
@@ -347,7 +326,7 @@ invariant
 	target_not_void: target /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,15 +1,13 @@
-
 class TEST
+
 create
 	make
-feature
+
+feature {NONE} -- Creation
 	
 	make
-		local
-			a: STRING;
 		do 
-			create s.make (a);
-		end;
+			;(create {EXECUTION_ENVIRONMENT}).do_nothing
+		end
 	
-	s: SYSTEM_EXECUTION
 end 

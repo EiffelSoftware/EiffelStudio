@@ -1,8 +1,8 @@
 ﻿note
 	description: "[
-		List of all C external features in IL code generation.
-		For each class ID we have a SEARCH_TABLE [INTEGER] that
-		represents all external names ID in class ID.
+			List of all C external features in IL code generation.
+			For each class ID we have a SEARCH_TABLE [INTEGER] that
+			represents all external names ID in class ID.
 		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ inherit
 	HASH_TABLE [SEARCH_TABLE [INTEGER], INTEGER]
 		export
 			{EXTERNALS} all
-			{ANY} has, remove, count
+			{ANY} count, has, prunable, remove
 		end
 
 	SHARED_WORKBENCH
@@ -318,7 +318,7 @@ feature {NONE} -- Previous version
 			-- Old version of Current.
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

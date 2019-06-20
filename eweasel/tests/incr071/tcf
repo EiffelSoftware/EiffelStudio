@@ -9,71 +9,81 @@
 test_name 	 delete-finite-add-back
 test_description After initial compilation, the file with class FINITE (in a local directory) is deleted, then FINITE is added back to the cluster and compilation is resumed
 
-copy_sub 	 Ace $TEST Ace
-copy_raw	active.e $CLUSTER active.e 
-copy_raw	arrayed_list.e $CLUSTER arrayed_list.e 
-copy_raw	arrayed_list_cursor.e $CLUSTER arrayed_list_cursor.e 
-copy_raw	bag.e $CLUSTER bag.e 
-copy_raw	bilinear.e $CLUSTER bilinear.e 
-copy_raw	bounded.e $CLUSTER bounded.e 
-copy_raw	box.e $CLUSTER box.e 
-copy_raw	cell.e $CLUSTER cell.e 
-copy_raw	chain.e $CLUSTER chain.e 
-copy_raw	collection.e $CLUSTER collection.e 
-copy_raw	container.e $CLUSTER container.e 
-copy_raw	countable.e $CLUSTER countable.e 
-copy_raw	countable_sequence.e $CLUSTER countable_sequence.e 
-copy_raw	cursor.e $CLUSTER cursor.e 
-copy_raw	cursor_structure.e $CLUSTER cursor_structure.e 
-copy_raw	c_string.e $CLUSTER c_string.e 
-copy_raw	debug_output.e $CLUSTER debug_output.e
-copy_raw	dynamic_chain.e $CLUSTER dynamic_chain.e 
-copy_raw	dynamic_list.e $CLUSTER dynamic_list.e 
-copy_raw	execution_environment.e $CLUSTER execution_environment.e 
-copy_raw	file_comparer.e $CLUSTER file_comparer.e 
-copy_raw	finite.e $CLUSTER finite.e 
-copy_raw	hash_table.e $CLUSTER hash_table.e 
-copy_raw	hash_table_cursor.e $CLUSTER hash_table_cursor.e 
-copy_raw	indexable.e $CLUSTER indexable.e 
-copy_raw	indexable_iteration_cursor.e $CLUSTER indexable_iteration_cursor.e 
-copy_raw	infinite.e $CLUSTER infinite.e 
-copy_raw	internal.e $CLUSTER internal.e 
-copy_raw	iterable.e $CLUSTER iterable.e 
-copy_raw	iteration_cursor.e $CLUSTER iteration_cursor.e 
-copy_raw	linear.e $CLUSTER linear.e 
-copy_raw	linked_list_cursor.e $CLUSTER linked_list_cursor.e 
-copy_raw	list.e $CLUSTER list.e 
-copy_raw	managed_pointer.e $CLUSTER managed_pointer.e
-copy_raw	memory_structure.e $CLUSTER memory_structure.e
-copy_raw	mismatch_information.e $CLUSTER mismatch_information.e
-copy_raw	mismatch_corrector.e $CLUSTER mismatch_corrector.e
-copy_raw	primes.e $CLUSTER primes.e 
-copy_raw	process.e $CLUSTER process.e 
-copy_raw	readable_indexable.e $CLUSTER readable_indexable.e 
-copy_raw	reflector.e $CLUSTER reflector.e 
-copy_raw	reflector_helper.e $CLUSTER reflector_helper.e 
-copy_raw	reflector_constants.e $CLUSTER reflector_constants.e 
-copy_raw	resizable.e $CLUSTER resizable.e 
-copy_raw	set.e $CLUSTER set.e 
-copy_raw	sequence.e $CLUSTER sequence.e 
-copy_raw	string_iteration_cursor.e $CLUSTER string_iteration_cursor.e 
-copy_raw	system_execution.e $CLUSTER system_execution.e 
-copy_raw	table.e $CLUSTER table.e 
+copy_sub 	Ace $TEST Ace
 copy_raw	test.e $CLUSTER test.e 
-copy_raw	traversable.e $CLUSTER traversable.e 
-copy_raw	unbounded.e $CLUSTER unbounded.e 
-copy_raw	operating_environment.e $CLUSTER operating_environment.e 
-copy_raw	ise_exception_manager.e $CLUSTER ise_exception_manager.e 
-copy_raw	utf_converter.e $CLUSTER utf_converter.e 
-copy_raw	exception.e $CLUSTER exception.e
+
+copy_file	$ACCESS/active.e $CLUSTER active.e 
+copy_file	$LIST/arrayed_list.e $CLUSTER arrayed_list.e 
+copy_file	$CURSORS/arrayed_list_cursor.e $CLUSTER arrayed_list_cursor.e 
+copy_file	$ACCESS/bag.e $CLUSTER bag.e 
+copy_file	$TRAVERSING/bilinear.e $CLUSTER bilinear.e 
+copy_file	$STORAGE/bounded.e $CLUSTER bounded.e 
+copy_file	$STORAGE/box.e $CLUSTER box.e 
+copy_file	$LIST/cell.e $CLUSTER cell.e 
+copy_file	$LIST/chain.e $CLUSTER chain.e 
+copy_file	$ACCESS/collection.e $CLUSTER collection.e 
+copy_file	$ACCESS/container.e $CLUSTER container.e 
+copy_file	$STORAGE/countable.e $CLUSTER countable.e 
+copy_file	$SUPPORT/countable_sequence.e $CLUSTER countable_sequence.e 
+copy_file	$CURSORS/cursor.e $CLUSTER cursor.e 
+copy_file	$ACCESS/cursor_structure.e $CLUSTER cursor_structure.e 
+copy_file	$SUPPORT/c_string.e $CLUSTER c_string.e 
+copy_file	$SUPPORT/debug_output.e $CLUSTER debug_output.e
+copy_file	$LIST/dynamic_chain.e $CLUSTER dynamic_chain.e 
+copy_file	$LIST/dynamic_list.e $CLUSTER dynamic_list.e 
+copy_file	$TABLE/dynamic_table.e $CLUSTER dynamic_table.e 
+copy_file	$SUPPORT/execution_environment.e $CLUSTER execution_environment.e 
+copy_file	$SUPPORT/file_comparer.e $CLUSTER file_comparer.e 
+copy_file	$STORAGE/finite.e $CLUSTER finite.e 
+copy_file	$TABLE/hash_table.e $CLUSTER hash_table.e 
+copy_file	$CURSORS/hash_table_cursor.e $CLUSTER hash_table_cursor.e 
+copy_file	$ACCESS/indexable.e $CLUSTER indexable.e 
+copy_file	$CURSORS/indexable_iteration_cursor.e $CLUSTER indexable_iteration_cursor.e 
+copy_file	$STORAGE/infinite.e $CLUSTER infinite.e 
+copy_file	$SUPPORT/internal.e $CLUSTER internal.e 
+copy_file	$KERNEL/iterable.e $CLUSTER iterable.e 
+copy_file	$KERNEL/iteration_cursor.e $CLUSTER iteration_cursor.e 
+copy_file	$TRAVERSING/linear.e $CLUSTER linear.e 
+copy_file	$CURSORS/linked_list_cursor.e $CLUSTER linked_list_cursor.e 
+copy_file	$LIST/list.e $CLUSTER list.e 
+copy_file	$SUPPORT/managed_pointer.e $CLUSTER managed_pointer.e
+copy_file	$SUPPORT/memory_structure.e $CLUSTER memory_structure.e
+copy_file	$SUPPORT/mismatch_information.e $CLUSTER mismatch_information.e
+copy_file	$SUPPORT/mismatch_corrector.e $CLUSTER mismatch_corrector.e
+copy_file	$SUPPORT/primes.e $CLUSTER primes.e 
+--copy_file	process.e $CLUSTER process.e 
+copy_file	$ACCESS/readable_indexable.e $CLUSTER readable_indexable.e 
+copy_file	$SUPPORT/reflector.e $CLUSTER reflector.e 
+copy_file	$SUPPORT/reflector_helper.e $CLUSTER reflector_helper.e 
+copy_file	$SUPPORT/reflector_constants.e $CLUSTER reflector_constants.e 
+copy_file	$STORAGE/resizable.e $CLUSTER resizable.e 
+copy_file	$SET/set.e $CLUSTER set.e 
+copy_file	$LIST/sequence.e $CLUSTER sequence.e 
+copy_file	$CURSORS/string_iteration_cursor.e $CLUSTER string_iteration_cursor.e 
+--copy_file	$SUPPORT/system_execution.e $CLUSTER system_execution.e 
+copy_file	$ACCESS/table.e $CLUSTER table.e 
+copy_file	$TRAVERSING/traversable.e $CLUSTER traversable.e 
+copy_file	$STORAGE/unbounded.e $CLUSTER unbounded.e 
+copy_file	$SUPPORT/operating_environment.e $CLUSTER operating_environment.e 
+copy_file	$EXCEPTIONS_ISE/ise_exception_manager.e $CLUSTER ise_exception_manager.e 
+copy_file	$KERNEL/utf_converter.e $CLUSTER utf_converter.e 
+copy_file	$EXCEPTIONS_ELKS/exception.e $CLUSTER exception.e
+copy_file	$TABLE/string_table.e $CLUSTER string_table.e
+copy_file	$SUPPORT/double_math.e $CLUSTER double_math.e
+copy_file	$SUPPORT/math_const.e $CLUSTER math_const.e
+copy_file	$LIST/linked_list.e $CLUSTER linked_list.e 
+copy_file	$LIST/linkable.e $CLUSTER linkable.e 
+copy_file	$LIST/fixed_list.e $CLUSTER fixed_list.e 
+copy_file	$TREE/binary_tree.e $CLUSTER binary_tree.e 
+
 compile_melted
 compile_result 	 ok
 
 delete		$CLUSTER finite.e
 compile_melted
-compile_result 	 validity_error BOUNDED VTCT ; SEQUENCE VTCT ; UNBOUNDED VTCT
+compile_result 	 validity_error BOUNDED VTCT; CONTAINER VTCT; SEQUENCE VTCT; UNBOUNDED VTCT
 
-copy_raw	finite.e $CLUSTER finite.e 
+copy_file	$STORAGE/finite.e $CLUSTER finite.e 
 resume_compile
 compile_result 	 ok
 

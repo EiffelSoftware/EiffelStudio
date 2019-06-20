@@ -18,7 +18,7 @@ class HASH_TABLE [G, K -> detachable HASHABLE] inherit
 			copy, is_equal
 		end
 
-	TABLE [G, K]
+	DYNAMIC_TABLE [G, K]
 		rename
 			at as definite_item,
 			extend as collection_extend,
@@ -543,12 +543,6 @@ feature -- Status report
 	extendible: BOOLEAN = False
 			-- May new items be added?
 
-	prunable: BOOLEAN
-			-- May items be removed?
-		do
-			Result := True
-		end
-
 	conflict: BOOLEAN
 			-- Did last operation cause a conflict?
 		do
@@ -1044,7 +1038,7 @@ feature -- Removal
 				control := removed_constant
 				found_item := l_default_value
 			end
-		ensure
+		ensure then
 			removed_or_not_found: removed or not_found
 			not_present: not has (key)
 			one_less: found implies (count = old count - 1)

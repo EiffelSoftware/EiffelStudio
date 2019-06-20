@@ -40,7 +40,8 @@ class ARRAYED_LIST [G] inherit
 			put_left, merge_left,
 			merge_right, duplicate, prune_all, has, search,
 			append, valid_index, is_equal, copy,
-			for_all, there_exists, do_all, do_if
+			for_all, there_exists, do_all, do_if,
+			remove_i_th
 		end
 
 	MISMATCH_CORRECTOR
@@ -713,6 +714,19 @@ feature -- Removal
 			area_v2.remove_tail (1)
 		ensure then
 			index: index = old index
+		end
+
+	remove_i_th (i: INTEGER)
+			-- <Precursor>
+		do
+			if i < count then
+				area_v2.move_data (i, i - 1, count - i)
+			end
+			area_v2.remove_tail (1)
+			if index > i then
+					-- Take into account that the old `i`-th element has been removed.
+				index := index - 1
+			end
 		end
 
 	prune_all (v: like item)

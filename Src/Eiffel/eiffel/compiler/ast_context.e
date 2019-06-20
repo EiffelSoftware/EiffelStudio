@@ -582,10 +582,8 @@ feature {AST_FEATURE_CHECKER_GENERATOR, AST_CONTEXT} -- Local scopes: removal
 			loop
 				if scopes [i] = object_test_scopes [j].name_id then
 						-- The `i'-th item corresponds to an object test local, let's remove it.
-					scopes.go_i_th (i)
-					scopes.remove
-					object_test_scopes.go_i_th (j)
-					object_test_scopes.remove
+					scopes.remove_i_th (i)
+					object_test_scopes.remove_i_th (j)
 					j := j - 1
 				end
 				i := i - 1
@@ -1030,7 +1028,7 @@ invariant
 	object_test_locals_attached: object_test_locals /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

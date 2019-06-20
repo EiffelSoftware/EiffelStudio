@@ -815,11 +815,9 @@ end;
 								end
 									-- Remove the inherit info from its old location
 								if l_from_features_list then
-									found_item.features.go_i_th (i)
-									found_item.features.remove
+									found_item.features.remove_i_th (i)
 								else
-									found_item.deferred_features.go_i_th (i)
-									found_item.deferred_features.remove
+									found_item.deferred_features.remove_i_th (i)
 								end
 									-- If old feature has no remaining features then remove from `Current'.
 								if found_item.is_empty then
@@ -2032,7 +2030,7 @@ feature {NONE} -- Temporary body index
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

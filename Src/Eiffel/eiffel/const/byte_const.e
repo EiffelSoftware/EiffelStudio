@@ -5,8 +5,8 @@ note
 		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2016-07-07 15:52:58 +0200 (jeu., 07 juil. 2016) $"
+	revision: "$Revision: 99000 $"
 
 class BYTE_CONST
 
@@ -268,10 +268,17 @@ feature -- Access
 	Bc_do_rescue_end:	CHARACTER = '%/176/';
 
 		-- Always failing postcondition
-	Bc_postfail: CHARACTER = '%/177/';
+	Bc_postfail: 		CHARACTER = '%/177/';
+
+		-- Immutable strings
+	Bc_immstring8:			CHARACTER = '%/178/';
+	Bc_immstring32:			CHARACTER = '%/179/';
+	Bc_once_immstring8:		CHARACTER = '%/180/';
+	Bc_once_immstring32:	CHARACTER = '%/181/';
+
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -2,8 +2,8 @@
 	description: "Visitor for BYTE_NODE objects which generates the Eiffel melted code."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2019-03-20 11:47:25 +0100 (Wed, 20 Mar 2019) $"
+	revision: "$Revision: 102979 $"
 
 class
 	MELTED_GENERATOR
@@ -1806,9 +1806,17 @@ feature {NONE} -- Visitors
 		do
 			l_is_str32 := a_node.is_string_32
 			if l_is_str32 then
-				ba.append (bc_once_string32)
+				if a_node.is_immutable then
+					ba.append (bc_once_immstring32)
+				else
+					ba.append (bc_once_string32)
+				end
 			else
-				ba.append (bc_once_string)
+				if a_node.is_immutable then
+					ba.append (Bc_once_immstring8)
+				else
+					ba.append (bc_once_string)
+				end
 			end
 			ba.append_integer (a_node.body_index - 1)
 			ba.append_integer (a_node.number - 1)
@@ -2008,13 +2016,21 @@ feature {NONE} -- Visitors
 		do
 			if a_node.is_string_32 then
 				l_value_32 := a_node.value_32
-				ba.append (Bc_string32)
+				if a_node.is_immutable then
+					ba.append (Bc_immstring32)
+				else
+					ba.append (Bc_string32)
+				end
 					-- Bytes to read
 				ba.append_integer (l_value_32.count * 4)
 				ba.append_raw_string_32 (l_value_32)
 			else
 				l_value := a_node.value_8
-				ba.append (Bc_string)
+				if a_node.is_immutable then
+					ba.append (Bc_immstring8)
+				else
+					ba.append (Bc_string)
+				end
 					-- Bytes to read
 				ba.append_integer (l_value.count)
 				ba.append_raw_string (l_value)

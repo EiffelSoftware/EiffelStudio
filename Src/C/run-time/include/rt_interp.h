@@ -1,7 +1,7 @@
 /*
 	description: "Interpreter declarations and definitions."
-	date:		"$Date$"
-	revision:	"$Revision$"
+	date:		"$Date: 2018-02-13 13:55:34 +0100 (mar., 13 févr. 2018) $"
+	revision:	"$Revision: 101413 $"
 	copyright:	"Copyright (c) 1985-2018, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
@@ -300,7 +300,13 @@ extern "C" {
 /* Always failing postcondition */
 #define BC_POSTFAIL	(unsigned char) 177
 
-#define MAX_CODE                177    /* Maximum legal byte code */
+/* Immutable Strings */
+#define BC_IMMSTRING8	(unsigned char) 178
+#define BC_IMMSTRING32	(unsigned char) 179
+#define BC_ONCE_IMMSTRING8	(unsigned char) 180
+#define BC_ONCE_IMMSTRING32	(unsigned char) 181
+
+#define MAX_CODE                181    /* Maximum legal byte code */
 
 	/* Structure to get and set variable value in the debugger */
 typedef struct tag_EIF_DEBUG_VALUE {

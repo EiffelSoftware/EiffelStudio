@@ -2,8 +2,8 @@
 	description: "Predefined constants for use in NAMES_HEAP"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2019-04-29 12:52:00 +0200 (Mon, 29 Apr 2019) $"
+	revision: "$Revision: 103089 $"
 
 class
 	PREDEFINED_NAMES
@@ -240,6 +240,7 @@ feature -- Constants
 	ieee_is_less_equal_name_id: INTEGER = 227
 	ieee_maximum_number_name_id: INTEGER = 228
 	ieee_minimum_number_name_id: INTEGER = 229
+	make_from_string_name_id: INTEGER = 230
 
 feature -- Classification
 

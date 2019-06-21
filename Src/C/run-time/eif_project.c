@@ -3,8 +3,8 @@
 			Dummy declarations for variables and routines called in the run-time but
 			generated in a system in `E1/eplug.c'.
 			]"
-	date:		"$Date$"
-	revision:	"$Revision$"
+	date:		"$Date: 2015-06-30 16:43:18 +0200 (mar., 30 juin 2015) $"
+	revision:	"$Revision: 97590 $"
 	copyright:	"Copyright (c) 1985-2015, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
@@ -38,7 +38,7 @@
 */
 
 /*
-doc:<file name="eif_project.c" header="eif_project.h" version="$Id$" summary="Declarations for runtime variables called by run-time and initialized by compiler C generated code">
+doc:<file name="eif_project.c" header="eif_project.h" version="$Id: eif_project.c 97590 2015-06-30 14:43:18Z manus $" summary="Declarations for runtime variables called by run-time and initialized by compiler C generated code">
 */
 
 #ifdef __VMS 	/* EIF_VMS is not defined yet */
@@ -154,6 +154,37 @@ rt_public void (*egc_str32make)(EIF_REFERENCE, EIF_TYPED_VALUE);
 #else
 rt_public void (*egc_str32make)(EIF_REFERENCE, EIF_INTEGER);
 #endif
+
+
+/*
+doc:	<attribute name="egc_immstr8make_from_string" return_type="fnptr" export="public">
+doc:		<summary>Address of Eiffel routine IMMUTABLE_STRING_8.make_from_string to create Eiffel strings from C.</summary>
+doc:		<thread_safety>Safe as initialized once at the very beginning of an execution.</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<eiffel_classes>IMMUTABLE_STRING_8</eiffel_classes>
+doc:	</attribute>
+*/
+#ifdef WORKBENCH
+rt_public void (*egc_immstr8make_from_string)(EIF_REFERENCE, EIF_TYPED_VALUE);
+#else
+rt_public void (*egc_immstr8make_from_string)(EIF_REFERENCE, EIF_REFERENCE);
+#endif
+
+/*
+doc:	<attribute name="egc_immstr32make_from_string" return_type="fnptr" export="public">
+doc:		<summary>Address of Eiffel routine IMMUTABLE_STRING_32.make_from_string to create Eiffel strings from C.</summary>
+doc:		<thread_safety>Safe as initialized once at the very beginning of an execution.</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<eiffel_classes>IMMUTABLE_STRING_32</eiffel_classes>
+doc:	</attribute>
+*/
+#ifdef WORKBENCH
+rt_public void (*egc_immstr32make_from_string)(EIF_REFERENCE, EIF_TYPED_VALUE);
+#else
+rt_public void (*egc_immstr32make_from_string)(EIF_REFERENCE, EIF_REFERENCE);
+#endif
+
+
 
 #ifdef WORKBENCH
 /*
@@ -380,7 +411,9 @@ rt_public int egc_is_experimental = 0;
 
 
 rt_public EIF_TYPE_INDEX egc_str_dtype;
+rt_public EIF_TYPE_INDEX egc_immstr8_dtype;
 rt_public EIF_TYPE_INDEX egc_str32_dtype;
+rt_public EIF_TYPE_INDEX egc_immstr32_dtype;
 rt_public EIF_TYPE_INDEX egc_arr_dtype;
 rt_public EIF_TYPE_INDEX egc_tup_dtype;
 rt_public int32 egc_disp_rout_id;

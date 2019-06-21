@@ -5,8 +5,8 @@ note
 	description: "Eiffel parsers"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2018-08-20 19:05:19 +0200 (Mon, 20 Aug 2018) $"
+	revision: "$Revision: 102048 $"
 
 class EIFFEL_PARSER
 
@@ -3814,7 +3814,7 @@ Manifest_value: Boolean_constant
 			{ $$ := $1 }
 	|	Nosigned_real
 			{ $$ := $1 }
-	|	Default_manifest_string
+	|	Manifest_string
 			{ $$ := $1 }
 	;
 

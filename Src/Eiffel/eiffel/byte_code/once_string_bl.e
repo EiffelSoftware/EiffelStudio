@@ -3,8 +3,8 @@ note
 	description: "Enlarged byte code for once manifest string."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2017-01-31 07:25:52 +0100 (Tue, 31 Jan 2017) $"
+	revision: "$Revision: 99774 $"
 
 class
 	ONCE_STRING_BL
@@ -72,9 +72,17 @@ feature
 					-- or to create a new one if this is the first acceess to the string
 				buf.put_new_line
 				if is_string_32 then
-					buf.put_string ("RTCOMS32(")
+					if is_immutable then
+						buf.put_string ("RTCOMIS32(")
+					else
+						buf.put_string ("RTCOMS32(")
+					end
 				else
-					buf.put_string ("RTCOMS(")
+					if is_immutable then
+						buf.put_string ("RTCOMIS8(")
+					else
+						buf.put_string ("RTCOMS(")
+					end
 				end
 				register.print_register
 				buf.put_character (',')
@@ -135,7 +143,7 @@ feature -- Properties
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

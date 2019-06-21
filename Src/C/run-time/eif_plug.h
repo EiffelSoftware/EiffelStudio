@@ -1,7 +1,7 @@
 /*
 	description: "Declarations for plugging routines and structures."
-	date:		"$Date$"
-	revision:	"$Revision$"
+	date:		"$Date: 2018-02-13 10:17:21 +0100 (mar., 13 févr. 2018) $"
+	revision:	"$Revision: 101412 $"
 	copyright:	"Copyright (c) 1985-2018, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
@@ -62,11 +62,11 @@ RT_LNK EIF_TYPED_VALUE eif_do_nothing_value;	/* To store values of computation o
  * Run time functions used by generated C code.
  */
 
-RT_LNK EIF_REFERENCE makestr_with_hash(const char *s, size_t len, int a_hash);
-RT_LNK EIF_REFERENCE makestr_with_hash_as_old(const char *s, size_t len, int a_hash);
+RT_LNK EIF_REFERENCE makestr_with_hash(const char *s, size_t len, EIF_BOOLEAN is_immut, int a_hash);
+RT_LNK EIF_REFERENCE makestr_with_hash_as_old(const char *s, size_t len, EIF_BOOLEAN is_immut, int a_hash);
 RT_LNK EIF_REFERENCE makestr(const char *s, size_t len);
-RT_LNK EIF_REFERENCE makestr32_with_hash(const char *s, size_t len, int a_hash);
-RT_LNK EIF_REFERENCE makestr32_with_hash_as_old(const char *s, size_t len, int a_hash);
+RT_LNK EIF_REFERENCE makestr32_with_hash(const char *s, size_t len, EIF_BOOLEAN is_immut, int a_hash);
+RT_LNK EIF_REFERENCE makestr32_with_hash_as_old(const char *s, size_t len, EIF_BOOLEAN is_immut, int a_hash);
 extern EIF_REFERENCE striparr(EIF_REFERENCE curr, int dtype, EIF_REFERENCE *items, long int nbr);			/* Build an Eiffel ARRAY[ANY] object for strip*/
 
 RT_LNK EIF_REFERENCE eif_arg_array(void);		/* ARRAY[STRING] creation from command line arguments */

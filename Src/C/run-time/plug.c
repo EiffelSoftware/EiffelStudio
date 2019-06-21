@@ -1,7 +1,7 @@
 /*
 	description: "A set of routines to plug the run-time in the generated C code."
-	date:		"$Date$"
-	revision:	"$Revision$"
+	date:		"$Date: 2017-06-20 18:24:47 +0200 (mar., 20 juin 2017) $"
+	revision:	"$Revision: 100535 $"
 	copyright:	"Copyright (c) 1985-2013, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
@@ -35,7 +35,7 @@
 */
 
 /*
-doc:<file name="plug.c" header="eif_plug.h" version="$Id$" summary="Set of routines to plug run-time into generated C code">
+doc:<file name="plug.c" header="eif_plug.h" version="$Id: plug.c 100535 2017-06-20 16:24:47Z alexk $" summary="Set of routines to plug run-time into generated C code">
 */
 
 #include "eif_portable.h"
@@ -380,10 +380,10 @@ rt_public EIF_REFERENCE makestr(const char *s, size_t len)
 	 * allocated string or raises a "No more memory" exception.
 	 */
 {
-	return makestr_with_hash (s, len, 0);
+	return makestr_with_hash (s, len, EIF_FALSE, 0);
 }
 
-rt_public EIF_REFERENCE makestr_with_hash (const char *s, size_t len, int a_hash)
+rt_public EIF_REFERENCE makestr_with_hash (const char *s, size_t len, EIF_BOOLEAN is_immut, int a_hash)
 	/* Makes an Eiffel STRING object from a C string with precomputed hash code value `a_hash'.
 	 * This routine creates the object and returns a pointer to the newly
 	 * allocated string or raises a "No more memory" exception.
@@ -415,7 +415,25 @@ rt_public EIF_REFERENCE makestr_with_hash (const char *s, size_t len, int a_hash
 	memcpy (*(EIF_REFERENCE *)string, s, len);
 	RT_GC_WEAN(string);			/* Remove protection */
 
-	return string;
+	if (is_immut == EIF_TRUE) {
+		EIF_REFERENCE immstring;
+		immstring = emalloc(egc_immstr8_dtype);	/* If we return, it succeeded */
+		RT_GC_PROTECT(immstring); /* Protect address in case it moves */
+#ifdef WORKBENCH
+		DISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
+#endif
+		nstcall = 0;
+		RT_IMMSTRING8_MAKE_FROM_STRING(immstring, string);		/* Call feature `make_from_string' in class IMMUTABLE_STRING_8 */
+
+#ifdef WORKBENCH
+		UNDISCARD_BREAKPOINTS; /* the debugger can now stop again */
+#endif
+		RT_GC_WEAN(immstring);		/* Remove protection */
+		return immstring;
+	} else {
+		return string;
+	}
+
 }
 
 /*
@@ -431,12 +449,16 @@ doc:		<synchronization>None</synchronization>
 doc:	</routine>
 */
 
-rt_public EIF_REFERENCE makestr_with_hash_as_old (const char *s, size_t len, int a_hash)
+rt_public EIF_REFERENCE makestr_with_hash_as_old (const char *s, size_t len, EIF_BOOLEAN is_immut, int a_hash)
 {
 	EIF_GET_CONTEXT
 	EIF_REFERENCE string;					/* Were string object is located */
 
-	string = emalloc_as_old (egc_str_dtype); /* If we return, it succeeded */
+	if (is_immut == EIF_TRUE) {
+		string = emalloc (egc_str_dtype); /* If we return, it succeeded */
+	} else {
+		string = emalloc_as_old (egc_str_dtype); /* If we return, it succeeded */
+	}
 
 	RT_GC_PROTECT(string); /* Protect address in case it moves */
 
@@ -459,10 +481,27 @@ rt_public EIF_REFERENCE makestr_with_hash_as_old (const char *s, size_t len, int
 	memcpy (*(EIF_REFERENCE *)string, s, len);
 	RT_GC_WEAN(string);			/* Remove protection */
 
-	return string;
+	if (is_immut == EIF_TRUE) {
+		EIF_REFERENCE immstring;
+		immstring = emalloc_as_old(egc_immstr8_dtype);	/* If we return, it succeeded */
+		RT_GC_PROTECT(immstring); /* Protect address in case it moves */
+#ifdef WORKBENCH
+		DISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
+#endif
+		nstcall = 0;
+		RT_IMMSTRING8_MAKE_FROM_STRING(immstring, string);		/* Call feature `make_from_string' in class IMMUTABLE_STRING_8 */
+
+#ifdef WORKBENCH
+		UNDISCARD_BREAKPOINTS; /* the debugger can now stop again */
+#endif
+		RT_GC_WEAN(immstring);		/* Remove protection */
+		return immstring;
+	} else {
+		return string;
+	}
 }
 
-rt_public EIF_REFERENCE makestr32_with_hash (const char *s, size_t len, int a_hash)
+rt_public EIF_REFERENCE makestr32_with_hash (const char *s, size_t len, EIF_BOOLEAN is_immut, int a_hash)
 	/* Makes an Eiffel STRING_32 object from a C string with precomputed hash code value `a_hash'.
 	 * This routine creates the object and returns a pointer to the newly
 	 * allocated string or raises a "No more memory" exception.
@@ -510,7 +549,24 @@ rt_public EIF_REFERENCE makestr32_with_hash (const char *s, size_t len, int a_ha
 #endif
 	RT_GC_WEAN(string);			/* Remove protection */
 
-	return string;
+	if (is_immut == EIF_TRUE) {
+		EIF_REFERENCE immstring;
+		immstring = emalloc(egc_immstr32_dtype);	/* If we return, it succeeded */
+		RT_GC_PROTECT(immstring); /* Protect address in case it moves */
+#ifdef WORKBENCH
+		DISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
+#endif
+		nstcall = 0;
+		RT_IMMSTRING32_MAKE_FROM_STRING(immstring, string);		/* Call feature `make_from_string' in class IMMUTABLE_STRING_32 */
+
+#ifdef WORKBENCH
+		UNDISCARD_BREAKPOINTS; /* the debugger can now stop again */
+#endif
+		RT_GC_WEAN(immstring);		/* Remove protection */
+		return immstring;
+	} else {
+		return string;
+	}
 }
 
 /*
@@ -526,12 +582,16 @@ doc:		<synchronization>None</synchronization>
 doc:	</routine>
 */
 
-rt_public EIF_REFERENCE makestr32_with_hash_as_old (const char *s, size_t len, int a_hash)
+rt_public EIF_REFERENCE makestr32_with_hash_as_old (const char *s, size_t len, EIF_BOOLEAN is_immut, int a_hash)
 {
 	EIF_GET_CONTEXT
 	EIF_REFERENCE string;					/* Were string object is located */
 
-	string = emalloc_as_old (egc_str32_dtype); /* If we return, it succeeded */
+	if (is_immut == EIF_TRUE) {
+		string = emalloc (egc_str32_dtype); /* If we return, it succeeded */
+	} else {
+		string = emalloc_as_old (egc_str32_dtype); /* If we return, it succeeded */
+	}
 
 	RT_GC_PROTECT(string); /* Protect address in case it moves */
 
@@ -570,7 +630,24 @@ rt_public EIF_REFERENCE makestr32_with_hash_as_old (const char *s, size_t len, i
 #endif
 	RT_GC_WEAN(string);			/* Remove protection */
 
-	return string;
+	if (is_immut == EIF_TRUE) {
+		EIF_REFERENCE immstring;
+		immstring = emalloc_as_old(egc_immstr32_dtype);	/* If we return, it succeeded */
+		RT_GC_PROTECT(immstring); /* Protect address in case it moves */
+#ifdef WORKBENCH
+		DISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
+#endif
+		nstcall = 0;
+		RT_IMMSTRING32_MAKE_FROM_STRING(immstring, string);		/* Call feature `make_from_string' in class IMMUTABLE_STRING_32 */
+
+#ifdef WORKBENCH
+		UNDISCARD_BREAKPOINTS; /* the debugger can now stop again */
+#endif
+		RT_GC_WEAN(immstring);		/* Remove protection */
+		return immstring;
+	} else {
+		return string;
+	}
 }
 
 /*

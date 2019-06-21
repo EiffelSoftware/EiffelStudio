@@ -1,7 +1,7 @@
 /*
 	description: "Private Macros used by C code at run time."
-	date:		"$Date$"
-	revision:	"$Revision$"
+	date:		"$Date: 2015-06-26 10:01:47 +0200 (ven., 26 juin 2015) $"
+	revision:	"$Revision: 97570 $"
 	copyright:	"Copyright (c) 1985-2007, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
@@ -96,6 +96,20 @@ extern "C" {
 		(egc_str32set)((EIF_REFERENCE) string, u); \
 	}
 #define RT_STRING32_SET_HASH_CODE(string, hash)
+#define RT_IMMSTRING8_MAKE_FROM_STRING(obj,str) \
+	{ \
+		EIF_TYPED_VALUE u; \
+		u.type = SK_REF; \
+		u.it_ref = (EIF_REFERENCE) (str); \
+		(egc_immstr8make_from_string)((EIF_REFERENCE) (obj), u); \
+	}
+#define RT_IMMSTRING32_MAKE_FROM_STRING(obj,str) \
+	{ \
+		EIF_TYPED_VALUE u; \
+		u.type = SK_REF; \
+		u.it_ref = (EIF_REFERENCE) (str); \
+		(egc_immstr32make_from_string)((EIF_REFERENCE) (obj), u); \
+	}
 #else
 #define RT_STRING32_MAKE(string,len) \
 	(egc_str32make)((EIF_REFERENCE) (string), (len))
@@ -103,6 +117,10 @@ extern "C" {
 	*(EIF_INTEGER *) ((EIF_REFERENCE) string + egc_str32_count_offset) = (EIF_INTEGER) count;
 #define RT_STRING32_SET_HASH_CODE(string, hash) \
 	*(EIF_INTEGER *) ((EIF_REFERENCE) string + egc_str32_hash_offset) = (EIF_INTEGER) hash;
+#define RT_IMMSTRING8_MAKE_FROM_STRING(obj,str) \
+	(egc_immstr8make_from_string)((EIF_REFERENCE) (obj),(EIF_REFERENCE) (str));
+#define RT_IMMSTRING32_MAKE_FROM_STRING(obj,str) \
+	(egc_immstr32make_from_string)((EIF_REFERENCE) (obj),(EIF_REFERENCE) (str));
 #endif
 
 

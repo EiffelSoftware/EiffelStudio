@@ -2,8 +2,8 @@
 	description: "Various constants for C code generation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2019-03-22 16:35:47 +0100 (Fri, 22 Mar 2019) $"
+	revision: "$Revision: 103008 $"
 
 class
 	C_CONST
@@ -84,7 +84,9 @@ feature -- Macros
 	rti64c: STRING = "RTI64C"
 	rtu64c: STRING = "RTU64C"
 	rtms_ex_h: STRING = "RTMS_EX_H"
+	rtmis8_ex_h: STRING = "RTMIS8_EX_H"
 	rtms32_ex_h: STRING = "RTMS32_EX_H"
+	rtmis32_ex_h: STRING = "RTMIS32_EX_H"
 	dtype: STRING = "Dtype"
 	dftype: STRING = "Dftype"
 	rtcv_open: STRING = "RTCV("

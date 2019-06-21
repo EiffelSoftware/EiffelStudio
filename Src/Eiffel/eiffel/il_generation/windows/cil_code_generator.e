@@ -2,8 +2,8 @@
 	description: "Generation of IL code using a bridge pattern."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2018-10-03 18:19:00 +0200 (Wed, 03 Oct 2018) $"
+	revision: "$Revision: 102267 $"
 
 deferred class
 	CIL_CODE_GENERATOR
@@ -6468,6 +6468,15 @@ feature -- Constants generation
 			internal_generate_feature_access (string_implementation_id, string_make_feat_id, 1, False, True)
 		end
 
+	put_immutable_manifest_string_8 (s: READABLE_STRING_GENERAL)
+			-- Put `s' on IL stack.
+		do
+			create_object (immutable_string_8_implementation_id)
+			duplicate_top
+			put_system_string (s)
+			internal_generate_feature_access (immutable_string_8_implementation_id, immutable_string_8_make_feat_id, 1, False, True)
+		end
+
 	put_manifest_string_32_from_system_string_local (n: INTEGER)
 			-- Create a manifest string by using local at position `n' which
 			-- should be of type SYSTEM_STRING.
@@ -6486,6 +6495,16 @@ feature -- Constants generation
 
 			put_system_string_32 (s)
 			internal_generate_feature_access (string_32_implementation_id, string_32_make_feat_id, 1, False, True)
+		end
+
+	put_immutable_manifest_string_32 (s: READABLE_STRING_32)
+			-- Put `s' on IL stack.
+		do
+			create_object (immutable_string_32_implementation_id)
+			duplicate_top
+
+			put_system_string_32 (s)
+			internal_generate_feature_access (immutable_string_32_implementation_id, immutable_string_32_make_feat_id, 1, False, True)
 		end
 
 	put_system_string (s: READABLE_STRING_GENERAL)
@@ -7513,6 +7532,60 @@ feature {CIL_CODE_GENERATOR} -- Implementation: convenience
 			string_32_make_feat_id_positive: Result > 0
 		end
 
+	immutable_string_8_type: TYPE_A
+			-- Type of IMMUTABLE_STRING_8 object
+		once
+			Result := System.immutable_string_8_class.compiled_class.types.first.type
+		end
+
+	immutable_string_8_implementation_id: INTEGER
+			-- Type ID of IMMUTABLE_STRING_8 implementation.
+		once
+			Result := immutable_string_8_type.implementation_id (Void)
+		end
+
+	immutable_string_8_type_id: INTEGER
+			-- Type of IMMUTABLE_STRING_8 interface.
+		once
+			Result := immutable_string_8_type.static_type_id (Void)
+		end
+
+	immutable_string_8_make_feat_id: INTEGER
+			-- Feature ID of `make_from_cil' of STRING.
+		once
+			Result := System.immutable_string_8_class.compiled_class.
+				feature_table.item_id ({PREDEFINED_NAMES}.make_from_cil_name_id).feature_id
+		ensure
+			immutable_string_8_make_feat_id_positive: Result > 0
+		end
+
+	immutable_string_32_type: TYPE_A
+			-- Type of IMMUTABLE_STRING_32 object
+		once
+			Result := System.immutable_string_32_class.compiled_class.types.first.type
+		end
+
+	immutable_string_32_implementation_id: INTEGER
+			-- Type ID of IMMUTABLE_STRING_32 implementation.
+		once
+			Result := immutable_string_32_type.implementation_id (Void)
+		end
+
+	immutable_string_32_type_id: INTEGER
+			-- Type of IMMUTABLE_STRING_32 interface.
+		once
+			Result := immutable_string_32_type.static_type_id (Void)
+		end
+
+	immutable_string_32_make_feat_id: INTEGER
+			-- Feature ID of `make_from_cil' of STRING.
+		once
+			Result := System.immutable_string_32_class.compiled_class.
+				feature_table.item_id ({PREDEFINED_NAMES}.make_from_cil_name_id).feature_id
+		ensure
+			immutable_string_32_make_feat_id_positive: Result > 0
+		end
+
 	any_type: CL_TYPE_A
 			-- Type of ANY
 		once
@@ -8167,7 +8240,7 @@ note
 		"CA011", "CA011: too many arguments",
 		"CA033", "CA033: very long class",
 		"CA093", "CA093: manifest array type mismatch"
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

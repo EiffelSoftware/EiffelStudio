@@ -3,8 +3,8 @@ note
 	description: "Scanners for Eiffel parsers"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2019-05-27 09:58:03 +0200 (Mon, 27 May 2019) $"
+	revision: "$Revision: 103223 $"
 
 class EIFFEL_SCANNER
 

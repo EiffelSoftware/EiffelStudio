@@ -8,8 +8,8 @@
 		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2019-04-29 12:52:00 +0200 (Mon, 29 Apr 2019) $"
+	revision: "$Revision: 103089 $"
 
 class
 	NAMES_HEAP
@@ -434,6 +434,7 @@ feature {NONE} -- Implementation: access
 			put ("ieee_is_less_equal") check found_item = ieee_is_less_equal_name_id end
 			put ("ieee_maximum_number") check found_item = ieee_maximum_number_name_id end
 			put ("ieee_minimum_number") check found_item = ieee_minimum_number_name_id end
+			put ("make_from_string") check found_item = make_from_string_name_id end
 		end
 
 invariant

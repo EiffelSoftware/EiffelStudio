@@ -2,8 +2,8 @@ note
 	description: "Given a constant value provides its associated VALUE_I instance"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2013-03-14 16:34:05 +0100 (jeu., 14 mars 2013) $"
+	revision: "$Revision: 91366 $"
 
 class
 	AST_VALUE_I_GENERATOR
@@ -85,11 +85,13 @@ feature {NONE} -- Implementation
 
 	process_string_as (a_string: STRING_AS)
 		do
-				-- A string constant of the form: a: STRING_8 = "fdsfd"
-				-- does not require any type qualification to the manifest string "fdsfd"
-				-- since the constant type is known to be STRING_8.
-			check type_not_exists: a_string.type = Void end
-			create {STRING_VALUE_I} last_value.make (a_string.value, False)
+				-- A string constant of the form:
+				--  str: STRING_8 = "abc"
+				--  str: STRING_32 = {STRING_32} "abc"
+				--  str: IMMUTABLE_STRING_8 = {IMMUTABLE_STRING_8} "abc"
+				--  str: IMMUTABLE_STRING_32 = {IMMUTABLE_STRING_32} "abc"
+				-- Without type qualification, the manifest string type is known to be STRING_8
+			create {STRING_VALUE_I} last_value.make (a_string.value, False)			
 		end
 
 	process_verbatim_string_as (a_string: VERBATIM_STRING_AS)
@@ -98,7 +100,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

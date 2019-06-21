@@ -2,8 +2,8 @@
 	description: "Generation of IL code for stack based virtual machine."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2019-04-29 13:42:45 +0200 (Mon, 29 Apr 2019) $"
+	revision: "$Revision: 103096 $"
 
 deferred class
 	IL_CODE_GENERATOR
@@ -903,6 +903,13 @@ feature -- Constants generation
 		deferred
 		end
 
+	put_immutable_manifest_string_8 (s: READABLE_STRING_GENERAL)
+			-- Put `s' on IL stack.
+		require
+			valid_s: s /= Void
+		deferred
+		end
+
 	put_manifest_string_32_from_system_string_local (n: INTEGER)
 			-- Create a manifest string by using local at position `n' which
 			-- should be of type SYSTEM_STRING.
@@ -913,6 +920,13 @@ feature -- Constants generation
 
 	put_manifest_string_32 (s: READABLE_STRING_32)
 			-- Put `s' on IL stack.
+		require
+			valid_s: s /= Void
+		deferred
+		end
+
+	put_immutable_manifest_string_32 (s: READABLE_STRING_32)
+			-- Put instance of platform IMMUTABLE_STRING_32 object corresponding to `s' on IL stack.
 		require
 			valid_s: s /= Void
 		deferred

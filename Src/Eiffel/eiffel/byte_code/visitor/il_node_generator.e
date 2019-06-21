@@ -3100,9 +3100,17 @@ feature {NONE} -- Visitors
 				il_generator.put_system_string_32 (a_node.value_32)
 			else
 				if a_node.is_string_32 then
-					il_generator.put_manifest_string_32 (a_node.value_32)
+					if a_node.is_immutable then
+						il_generator.put_immutable_manifest_string_32 (a_node.value_32)
+					else
+						il_generator.put_manifest_string_32 (a_node.value_32)
+					end
 				else
-					il_generator.put_manifest_string (a_node.value_32)
+					if a_node.is_immutable then
+						il_generator.put_immutable_manifest_string_8 (a_node.value_32)
+					else
+						il_generator.put_manifest_string (a_node.value_32)
+					end
 				end
 			end
 		end
@@ -4923,8 +4931,8 @@ feature {NONE} -- Convenience
 		end
 
 note
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2019-04-29 13:39:40 +0200 (Mon, 29 Apr 2019) $"
+	revision: "$Revision: 103095 $"
 	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

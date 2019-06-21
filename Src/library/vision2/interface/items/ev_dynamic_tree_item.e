@@ -1,12 +1,9 @@
-note
-	description:
-		"[
-			Dynamically expandable tree item.
-		]"
+﻿note
+	description: "Dynamically expandable tree item."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	keywords: "tree, item, dynamic"
-	date: "11/4/1999"
+	keywords: tree, item, dynamic
+	date: "$Date: рп$"
 	revision: "$Revision$"
 
 class
@@ -18,7 +15,7 @@ inherit
 		export
 			{EV_DYNAMIC_TREE_ITEM} fill, dl_force, dl_replace, put, writable, prunable, prune_all, append,
 			extend, force, merge_left, merge_right, move, prune, put_front, put_i_th, put_left,
-			put_right, remove, remove_left, remove_right, replace, swap, wipe_out
+			put_right, remove, remove_i_th, remove_left, remove_right, replace, swap, wipe_out
 		redefine
 			implementation,
 			parent_of_items_is_current
@@ -211,7 +208,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -221,18 +218,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_DYNAMIC_TREE_ITEM
-
-
-
-
-
-
-
-
-
-
-
+end

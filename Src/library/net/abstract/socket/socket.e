@@ -656,9 +656,9 @@ feature -- Input
 			create ext.make_empty (nb_char + 1)
 			return_val := c_read_stream (descriptor, nb_char, ext.item)
 			bytes_read := return_val
-			if return_val >= 0 then
-				ext.set_count (return_val)
-				last_string := ext.substring (1, return_val)
+			if return_val > 0 then
+				last_string.grow (return_val)
+				ext.copy_to_string (last_string, 1, 1, return_val)
 			else
 				last_string.wipe_out
 			end

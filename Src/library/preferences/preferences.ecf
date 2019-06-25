@@ -78,6 +78,12 @@
 				<exclude>/xml_implementation$</exclude>
 				<exclude>/registry_implementation$</exclude>
 			</file_rule>
+			<file_rule>
+				<exclude>/registry$</exclude>
+				<condition>
+					<platform excluded_value="windows"/>
+				</condition>
+			</file_rule>
 			<cluster name="pref_default_storage_xml" location="$|xml_implementation\" recursive="true">
 				<condition>
 					<platform excluded_value="windows"/>

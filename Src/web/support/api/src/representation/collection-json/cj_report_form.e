@@ -20,7 +20,9 @@ feature {NONE} --Initialization
 	make (a_host: READABLE_STRING_GENERAL; a_form: ESA_REPORT_FORM_VIEW; a_user: detachable ANY)
 			-- Initialize `Current'.
 		do
-			log.write_information (generator + ".make render template: cj_form_report.tpl")
+			debug
+				log.write_information (generator + ".make render template: cj_form_report.tpl")
+			end
 			set_template_folder (cj_path)
 			set_template_file_name ("cj_form_report.tpl")
 			template.add_value (a_host, "host")
@@ -45,7 +47,9 @@ feature {NONE} --Initialization
 	make_with_data (a_host: READABLE_STRING_GENERAL; a_form: ESA_REPORT_FORM_VIEW; a_user: detachable ANY)
 			-- Initialize `Current'.
 		do
-			log.write_information (generator + ".make_with_data render template: cj_form_report.tpl")
+			debug
+				log.write_information (generator + ".make_with_data render template: cj_form_report.tpl")
+			end
 			set_template_folder (cj_path)
 			set_template_file_name ("cj_form_report.tpl")
 			template.add_value (a_host, "host")
@@ -84,7 +88,9 @@ feature {NONE} --Initialization
 		local
 			l_message: STRING
 		do
-			log.write_information (generator + ".make_with_error render template: cj_form_report.tpl")
+			debug
+				log.write_information (generator + ".make_with_error render template: cj_form_report.tpl")
+			end
 			set_template_folder (cj_path)
 			set_template_file_name ("cj_form_report.tpl")
 			template.add_value (a_host, "host")

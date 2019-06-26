@@ -103,11 +103,15 @@ feature {NONE} -- Initialization
 	login_with_connection_string (a_string: STRING)
 			-- Login with `a_connection_string'and immediately connect to database.
 		do
-			log.write_debug (generator +".login_with_connection_string")
+			debug
+				log.write_debug (generator +".login_with_connection_string")
+			end
 			create db_application.login_with_connection_string (a_string)
 			db_application.set_base
 			create db_control.make
-			log.write_debug (generator +".login_with_connection_string, is_keep_connection? "+ is_keep_connection.out )
+			debug
+				log.write_debug (generator +".login_with_connection_string, is_keep_connection? "+ is_keep_connection.out )
+			end
 			keep_connection := is_keep_connection
 			if keep_connection then
 				connect

@@ -54,7 +54,9 @@ feature -- HTTP Methods
 		do
 			create l_rhf
 			if attached current_media_type (req) as l_type then
-				log.write_information(generator + ".do_get Processing logoff")
+				debug
+					log.write_information(generator + ".do_get Processing logoff")
+				end
 				if
 					attached {WSF_STRING} req.cookie (esa_session_token) as l_cookie_token and then
 					attached current_user (req) as l_user

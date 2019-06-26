@@ -20,8 +20,10 @@ feature -- Intialization
 	data_reader (a_query: STRING; a_parameters: STRING_TABLE [ANY])
 			-- SQL data reader for the query `a_query' with arguments `a_parameters'
 		do
-			log.write_information (generator + ".data_reader" + " execute query: " + a_query)
-			log.write_debug (generator + ".data_reader" + " arguments:" + log_parameters (a_parameters))
+			debug
+				log.write_information (generator + ".data_reader" + " execute query: " + a_query)
+			end
+			log.write_debug (generator + ".data_reader execute query: " + a_query  + " arguments:" + log_parameters (a_parameters))
 			query := a_query
 			parameters := a_parameters
 		ensure

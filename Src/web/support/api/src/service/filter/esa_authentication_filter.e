@@ -29,7 +29,9 @@ feature -- Basic operations
 		do
 				-- Basic Authentication
 			if attached req.http_authorization then
-				log.write_debug (generator + ".execute " )
+				debug
+					log.write_debug (generator + ".execute " )
+				end
 				create l_auth.make (req.http_authorization)
 				if attached req.raw_header_data as l_raw_data then
 				   log.write_debug (generator + ".execute " + l_raw_data )

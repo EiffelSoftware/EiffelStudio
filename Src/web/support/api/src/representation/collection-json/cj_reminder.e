@@ -21,7 +21,9 @@ feature {NONE} --Initialization
 	make (a_host: READABLE_STRING_GENERAL; a_error: detachable STRING)
 			-- Initialize `Current'.
 		do
-			log.write_information (generator + ".make render template: cj_reminder.tpl")
+			debug
+				log.write_information (generator + ".make render template: cj_reminder.tpl")
+			end
 				-- Set template CJ
 			set_template_folder (cj_path)
 				-- Build common template

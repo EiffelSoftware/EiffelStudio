@@ -22,7 +22,9 @@ feature {NONE} --Initialization
 	make (a_host: READABLE_STRING_GENERAL; a_user: detachable ANY)
 			-- Initialize `Current'.
 		do
-			log.write_information (generator + ".make render template: collection_json.tpl")
+			debug
+				log.write_information (generator + ".make render template: collection_json.tpl")
+			end
 				-- Set path to CJ.
 			set_template_folder (cj_path)
 
@@ -37,7 +39,9 @@ feature {NONE} --Initialization
 	make_with_error (a_host: READABLE_STRING_GENERAL; a_error: READABLE_STRING_GENERAL; a_code: INTEGER; a_user: detachable ANY)
 			-- Initialize `Current'.
 		do
-			log.write_information (generator + ".make_with_error render template: collection_json.tpl")
+			debug
+				log.write_information (generator + ".make_with_error render template: collection_json.tpl")
+			end
 
 				-- Build Common Template
 			make_template (a_host, a_user, "collection_json.tpl")

@@ -52,7 +52,9 @@ feature -- Absolute Host
 			if Result.last_index_of ('/', Result.count) = Result.count then
 				Result.remove_tail (1)
 			end
-			log.write_debug (generator + ".absolute_host " + Result )
+			debug
+				log.write_debug (generator + ".absolute_host " + Result )
+			end
 		end
 
 feature -- Compression

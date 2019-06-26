@@ -78,13 +78,17 @@ feature -- HTTP Methods
 			l_role: USER_ROLE
 		do
 			if attached current_user_name (req) as l_user then
-				log.write_information ( generator+".do_get Processing request: user:" + l_user  )
+				debug
+					log.write_information ( generator+".do_get Processing request: user:" + l_user  )
+				end
 				l_role := api_service.role (l_user)
 				if l_role.is_user then
 						-- List of reports visible for registered user.
 						-- They are able to see his own reports and also visible reports.
 					user_reports (req, res, l_user)
-					log.write_information (generator+".do_get Executed List of reports for registered users" )
+					debug
+						log.write_information (generator+".do_get Executed List of reports for registered users" )
+					end
 				elseif l_role.is_administrator or else l_role.is_responsible then
 						-- List of reports visible for reponsible and admin users
 					if
@@ -95,7 +99,9 @@ feature -- HTTP Methods
 					else
 						responsible_reports (req, res)
 					end
-					log.write_information (generator+".do_get Executed List of reports for reponsible" )
+					debug
+						log.write_information (generator+".do_get Executed List of reports for reponsible" )
+					end
 				else
 						-- Internal Users?
 				end
@@ -112,7 +118,9 @@ feature -- HTTP Methods
 			l_role: USER_ROLE
 			l_rhf: ESA_REPRESENTATION_HANDLER_FACTORY
 		do
-			log.write_information (generator+".do_post Processing request"  )
+			debug
+				log.write_information (generator+".do_post Processing request"  )
+			end
 			if attached current_user_name (req) as l_user then
 				if attached {WSF_STRING} req.path_parameter ("id") as l_id and then
 				   	l_id.is_integer and then attached extract_data_from_request(req, current_media_type (req)) as l_responsible and then
@@ -244,7 +252,9 @@ feature -- Implementation
 			--| At the moment the page size is hardcoded as 10 items per page.
 			--| we can set a defaut and then let the user customize it, but it's not
 			--| critical at the moment.
-			log.write_information ( generator+".user_reports" )
+			debug
+				log.write_information ( generator+".user_reports" )
+			end
 			create l_rhf
 			if attached current_media_type (req) as l_type then
 				create l_input_validator
@@ -271,7 +281,9 @@ feature -- Implementation
 					mark_selected_status (list_status, l_input_validator.status)
 
 					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).problem_reports_guest (req, res, l_report_view)
-					log.write_information (generator+".user_reports Executed reports guest" )
+					debug
+						log.write_information (generator+".user_reports Executed reports guest" )
+					end
 				else
 						-- Bad request
 					log.write_error (generator + ".user_reports " + l_input_validator.error_message)

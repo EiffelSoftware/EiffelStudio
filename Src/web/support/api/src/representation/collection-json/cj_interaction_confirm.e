@@ -21,7 +21,9 @@ feature {NONE} --Initialization
 	make (a_host: READABLE_STRING_GENERAL; a_form: ESA_INTERACTION_FORM_VIEW; a_user: detachable ANY;)
 			-- Initialize `Current'.
 		do
-			log.write_information (generator + ".make render template: cj_interaction_confirm.tpl")
+			debug
+				log.write_information (generator + ".make render template: cj_interaction_confirm.tpl")
+			end
 			set_template_folder (cj_path)
 				-- Build common template
 			make_template (a_host, a_form, a_user, "cj_interaction_confirm.tpl")

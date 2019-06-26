@@ -87,10 +87,12 @@ feature -- HTTP Methods
 			create l_rhf
 			if attached current_media_type (req) as l_type then
 				if attached {READABLE_STRING_32} current_user_name (req) as l_user and then api_service.is_active (l_user) then
-					log.write_information (generator + ".do_get Processing Login request using media_type: "+ l_type +" User: " + l_user)
+					debug
+						log.write_information (generator + ".do_get Processing Login request using media_type: "+ l_type +" User: " + l_user)
+					end
 					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).login_page (req, res)
 				else
-					log.write_alert (generator + ".do_get Processing Login request using media_type: "+ l_type + " Could not login, the use does not exist or is not active!")
+					log.write_alert (generator + ".do_get Processing Login request using media_type: "+ l_type + " Could not login, the user does not exist or is not active!")
 					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).new_response_unauthorized (req, res)
 				end
 			else

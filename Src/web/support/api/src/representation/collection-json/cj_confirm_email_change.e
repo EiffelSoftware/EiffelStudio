@@ -23,7 +23,9 @@ feature {NONE} --Initialization
 		local
 			l_error: STRING
 		do
-			log.write_information (generator + ".make render template: cj_confirm_change_email.tpl")
+			debug
+				log.write_information (generator + ".make render template: cj_confirm_change_email.tpl")
+			end
 				-- Set template to HTML.
 			set_template_folder (cj_path)
 				-- Build common template

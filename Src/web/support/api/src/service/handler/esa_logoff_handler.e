@@ -52,7 +52,9 @@ feature -- HTTP Methods
 		do
 			create l_rhf
 			if attached current_media_type (req) as l_type then
-				log.write_information(generator + ".do_get Processing logoff")
+				debug
+					log.write_information(generator + ".do_get Processing logoff")
+				end
 				l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).logout_page (req, res)
 			else
 				log.write_alert (generator +".do_get Processing not acceptable")

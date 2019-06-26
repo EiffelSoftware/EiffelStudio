@@ -21,7 +21,9 @@ feature {NONE} --Initialization
 	make (a_host: READABLE_STRING_GENERAL; a_list: LIST [REPORT_SEVERITY]; a_user: detachable ANY)
 			-- Initialize `Current'.
 		do
-			log.write_information (generator + ".make render template: cj_severity.tpl")
+			debug
+				log.write_information (generator + ".make render template: cj_severity.tpl")
+			end
 				-- Set template to CJ
 			set_template_folder (cj_path)
 

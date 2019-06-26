@@ -20,8 +20,10 @@ feature {NONE} -- Intialization
 		local
 			l_retried: BOOLEAN
 		do
-			log.write_information (generator + ".data_reader" + " execute store procedure: " + a_sp)
-			log.write_debug (generator + ".data_reader" + " arguments:" + log_parameters (a_parameters))
+			debug
+				log.write_information (generator + ".data_reader" + " execute store procedure: " + a_sp)
+			end
+			log.write_debug (generator + ".data_reader store procedure: " + a_sp  + " arguments:" + log_parameters (a_parameters))
 		    if not l_retried then
 				stored_procedure := a_sp
 				parameters := a_parameters
@@ -59,8 +61,10 @@ feature {NONE} -- Intialization
 		local
 			l_retried: BOOLEAN
 		do
-			log.write_information (generator + ".data_writer" + " execute store procedure: " + a_sp)
-			log.write_debug (generator + ".data_writer" + " arguments:" + log_parameters (a_parameters))
+			debug
+				log.write_information (generator + ".data_writer" + " execute store procedure: " + a_sp)
+			end
+			log.write_debug (generator + ".data_writer  store procedure: " + a_sp + " arguments:" + log_parameters (a_parameters))
 			if not l_retried then
 				stored_procedure := a_sp
 				parameters := a_parameters

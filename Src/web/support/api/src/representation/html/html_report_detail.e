@@ -21,7 +21,9 @@ feature {NONE} -- {Initialization}
 	make (a_host: READABLE_STRING_GENERAL; a_report: detachable REPORT; a_user: detachable ANY)
 			-- Initialize `Current'.
 		do
-			log.write_information (generator + ".make render template: reports_detail.tpl")
+			debug
+				log.write_information (generator + ".make render template: reports_detail.tpl")
+			end
 			-- Set folder to HTML
 			set_template_folder (html_path)
 			-- Build common template

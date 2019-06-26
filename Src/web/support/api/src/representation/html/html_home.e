@@ -21,7 +21,9 @@ feature {NONE} --Initialization
 			-- Initialize `Current'.
 		do
 
-			log.write_information (generator + ".make render template: home.tpl")
+			debug
+				log.write_information (generator + ".make render template: home.tpl")
+			end
 				-- Set template to HTML
 			set_template_folder (html_path)
 				-- Build common template

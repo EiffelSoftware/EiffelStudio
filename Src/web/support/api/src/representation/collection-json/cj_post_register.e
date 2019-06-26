@@ -20,7 +20,9 @@ feature {NONE} --Initialization
 	make (a_host: READABLE_STRING_GENERAL; a_user: detachable ANY)
 			-- Initialize `Current'.
 		do
-			log.write_information (generator + ".make render template: cj_post_register.tpl")
+			debug
+				log.write_information (generator + ".make render template: cj_post_register.tpl")
+			end
 				-- Set template to CJ
 			set_template_folder (cj_path)
 				-- Build common template

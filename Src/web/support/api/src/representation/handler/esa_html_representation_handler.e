@@ -57,14 +57,18 @@ feature -- View
 		local
 			l_hp: HTML_REPORT
 		do
-			log.write_information (generator+".problem_reports_guest" )
+			debug
+				log.write_information (generator+".problem_reports_guest" )
+			end
 			if attached req.http_host as l_host then
 				create l_hp.make (absolute_host (req, ""), a_report_view)
 				if attached l_hp.representation as l_report_page then
 					new_response_get (req, res, l_report_page)
 				end
 			end
-			log.write_information (generator+".problem_reports_guest executed" )
+			debug
+				log.write_information (generator+".problem_reports_guest executed" )
+			end
 		end
 
 

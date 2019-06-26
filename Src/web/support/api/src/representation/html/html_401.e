@@ -21,7 +21,9 @@ feature {NONE} --Initialization
 	make (a_host: READABLE_STRING_GENERAL)
 			-- Initialize `Current'.
 		do
-			log.write_information (generator + ".make render template: 401.tpl")
+			debug
+				log.write_information (generator + ".make render template: 401.tpl")
+			end
 				-- Set path to HTML.
 			set_template_folder (html_path)
 				-- Build common template

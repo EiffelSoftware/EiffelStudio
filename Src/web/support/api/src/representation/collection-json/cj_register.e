@@ -23,7 +23,9 @@ feature {NONE} -- Initialization
 		local
 			l_error: STRING
 		do
-			log.write_information (generator + ".make render template: cj_register.tpl")
+			debug
+				log.write_information (generator + ".make render template: cj_register.tpl")
+			end
 				-- Set template folder to CJ.
 			set_template_folder (cj_path)
 

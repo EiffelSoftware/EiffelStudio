@@ -18,7 +18,9 @@ feature {NONE} --Initialization
 	make (a_host: READABLE_STRING_GENERAL; a_form: ESA_REPORT_FORM_VIEW; a_user: detachable ANY;)
 			-- Initialize `Current'.
 		do
-			log.write_information (generator + ".make render template: report_form_confirm.tpl")
+			debug
+				log.write_information (generator + ".make render template: report_form_confirm.tpl")
+			end
 			set_template_folder (html_path)
 			set_template_file_name ("report_form_confirm.tpl")
 			template.add_value (a_host, "host")

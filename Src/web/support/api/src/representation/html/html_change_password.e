@@ -22,7 +22,9 @@ feature {NONE} --Initialization
 			-- Initialize `Current'.
 		do
 
-			log.write_information (generator + ".make render template: change_password.tpl")
+			debug
+				log.write_information (generator + ".make render template: change_password.tpl")
+			end
 				-- Set folder to HTML
 			set_template_folder (html_path)
 				-- Build common template

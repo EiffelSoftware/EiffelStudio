@@ -57,7 +57,9 @@ feature -- HTTP Methods
 		do
 			create l_rhf
 			if attached current_media_type (req) as l_type then
-				log.write_information (generator + ".do_get Processing request using media type " + l_type )
+				debug
+					log.write_information (generator + ".do_get Processing request using media type " + l_type )
+				end
      			l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).reminder_page (req, res, Void)
 			else
 				log.write_information (generator + ".do_get Processing request unacceptable media type" )
@@ -76,7 +78,9 @@ feature -- HTTP Methods
 		do
 			create l_rhf
 			if attached current_media_type (req) as l_type then
-				log.write_information (generator + ".do_post Processing request using media type " + l_type )
+				debug
+					log.write_information (generator + ".do_post Processing request using media type " + l_type )
+				end
 				l_email:= extract_data_from_request (req, l_type)
 				if attached api_service.token_from_email (l_email) then
 							-- Account not activated

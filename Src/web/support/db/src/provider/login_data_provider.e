@@ -119,7 +119,9 @@ feature -- Access
 		local
 			l_parameters: STRING_TABLE [ANY]
 		do
-			log.write_information (generator + ".countries")
+			debug
+				log.write_information (generator + ".countries")
+			end
 			create l_parameters.make (0)
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (Select_countries, l_parameters))
 			db_handler.execute_query
@@ -134,7 +136,9 @@ feature -- Access
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".token_from_email")
+			debug
+				log.write_information (generator + ".token_from_email")
+			end
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_email, 100), {DATA_PARAMETERS_NAMES}.email_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetRegistrationToken", l_parameters))
@@ -153,7 +157,9 @@ feature -- Access
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".token_from_username")
+			debug
+				log.write_information (generator + ".token_from_username")
+			end
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_username, 50), {DATA_PARAMETERS_NAMES}.email_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetRegistrationTokenFromUsername", l_parameters))
@@ -173,7 +179,9 @@ feature -- Access
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".membership_creation_date")
+			debug
+				log.write_information (generator + ".membership_creation_date")
+			end
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_username, 50), {DATA_PARAMETERS_NAMES}.username_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetMembershipCreationDate", l_parameters))
@@ -192,7 +200,9 @@ feature -- Access
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".role")
+			debug
+				log.write_information (generator + ".role")
+			end
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_username, 50), {DATA_PARAMETERS_NAMES}.username_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetRole", l_parameters))
@@ -212,7 +222,9 @@ feature -- Access
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".role_description")
+			debug
+				log.write_information (generator + ".role_description")
+			end
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_synopsis, 50), {DATA_PARAMETERS_NAMES}.username_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetRoleDescription", l_parameters))
@@ -230,7 +242,9 @@ feature -- Access
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator+".security_questions")
+			debug
+				log.write_information (generator+".security_questions")
+			end
 			create l_parameters.make (0)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetSecurityQuestions", l_parameters))
 			db_handler.execute_reader
@@ -245,7 +259,9 @@ feature -- Access
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".question_from_email")
+			debug
+				log.write_information (generator + ".question_from_email")
+			end
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_email.to_string_32, 100), {DATA_PARAMETERS_NAMES}.username_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetQuestionFromEmail", l_parameters))
@@ -262,7 +278,9 @@ feature -- Access
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".user_creation_date")
+			debug
+				log.write_information (generator + ".user_creation_date")
+			end
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_username, 50), {DATA_PARAMETERS_NAMES}.username_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetUserCreationDate", l_parameters))
@@ -281,7 +299,9 @@ feature -- Access
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".contact_from_email")
+			debug
+				log.write_information (generator + ".contact_from_email")
+			end
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_email, 100), {DATA_PARAMETERS_NAMES}.username_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetContactFromEmail", l_parameters))
@@ -300,7 +320,9 @@ feature -- Access
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".user_from_email")
+			debug
+				log.write_information (generator + ".user_from_email")
+			end
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_email, 100), {DATA_PARAMETERS_NAMES}.username_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetUserFromEmail", l_parameters))
@@ -319,7 +341,9 @@ feature -- Access
 		local
 			l_parameters: STRING_TABLE[ANY]
 		do
-			log.write_information (generator + ".user_from_username")
+			debug
+				log.write_information (generator + ".user_from_username")
+			end
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_username, 50), {DATA_PARAMETERS_NAMES}.username_param)
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (Select_user_from_username, l_parameters))
@@ -340,7 +364,9 @@ feature -- Access
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".user_information")
+			debug
+				log.write_information (generator + ".user_information")
+			end
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_username, 50), {DATA_PARAMETERS_NAMES}.username_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetUserInformation", l_parameters))
@@ -363,7 +389,9 @@ feature -- Element Settings
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".remove_user")
+			debug
+				log.write_information (generator + ".remove_user")
+			end
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_username, 50), {DATA_PARAMETERS_NAMES}.username_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_writer ("RemoveUser", l_parameters))
@@ -379,7 +407,9 @@ feature -- Element Settings
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".remove_token")
+			debug
+				log.write_information (generator + ".remove_token")
+			end
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_token, 7), {DATA_PARAMETERS_NAMES}.registrationtoken_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_writer ("RemoveRegistrationToken", l_parameters))
@@ -397,7 +427,9 @@ feature -- Element Settings
 			l_password_salt, l_password_hash: STRING
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".update_password")
+			debug
+				log.write_information (generator + ".update_password")
+			end
 			create l_security
 			l_password_salt := l_security.salt
 			l_password_hash := l_security.password_hash (a_password, l_password_salt)
@@ -416,7 +448,9 @@ feature -- Element Settings
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".update_email_from_user_and_token")
+			debug
+				log.write_information (generator + ".update_email_from_user_and_token")
+			end
 			create l_parameters.make (2)
 			l_parameters.put (string_parameter (a_user, 50), {DATA_PARAMETERS_NAMES}.Username_param)
 			l_parameters.put (string_parameter (a_token, 50), {DATA_PARAMETERS_NAMES}.Token_param)
@@ -431,7 +465,9 @@ feature -- Element Settings
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".update_personal_information")
+			debug
+				log.write_information (generator + ".update_personal_information")
+			end
 			create l_parameters.make (11)
 			l_parameters.put (string_parameter (a_username, 50), {DATA_PARAMETERS_NAMES}.Username_param)
 			if attached a_first_name then
@@ -475,7 +511,9 @@ feature -- Element Settings
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".change_user_email")
+			debug
+				log.write_information (generator + ".change_user_email")
+			end
 			create l_parameters.make (3)
 			l_parameters.put (string_parameter (a_user, 50), {DATA_PARAMETERS_NAMES}.Username_param)
 			l_parameters.put (string_parameter (a_new_email, 150), {DATA_PARAMETERS_NAMES}.Email_param)
@@ -490,7 +528,9 @@ feature -- Element Settings
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".change_password")
+			debug
+				log.write_information (generator + ".change_password")
+			end
 			create l_parameters.make (3)
 			l_parameters.put (string_parameter (a_user, 50), {DATA_PARAMETERS_NAMES}.Username_param)
 			l_parameters.put (string_parameter (a_email, 150), {DATA_PARAMETERS_NAMES}.Email_param)
@@ -650,7 +690,9 @@ feature -- Status Report
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".is_active")
+			debug
+				log.write_information (generator + ".is_active")
+			end
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_username, 50), {DATA_PARAMETERS_NAMES}.username_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("IsMemberhipActive", l_parameters))
@@ -667,7 +709,9 @@ feature -- Status Report
 		local
 			l_parameters: HASH_TABLE[ANY,STRING_32]
 		do
-			log.write_information (generator + ".validate_login")
+			debug
+				log.write_information (generator + ".validate_login")
+			end
 
 			create l_parameters.make (2)
 			l_parameters.put (a_username, {DATA_PARAMETERS_NAMES}.username_param)
@@ -694,7 +738,9 @@ feature -- Status Report
 		local
 			l_token: detachable STRING
 		do
-			log.write_information (generator + ".activation_valid")
+			debug
+				log.write_information (generator + ".activation_valid")
+			end
 			l_token := token_from_email (a_email)
 			if l_token = Void then
 				if user_from_email(a_email) = Void then
@@ -721,7 +767,9 @@ feature -- Status Report
 		local
 			l_parameters: HASH_TABLE [ANY,STRING_32]
 		do
-			log.write_information (generator + ".email_token_age")
+			debug
+				log.write_information (generator + ".email_token_age")
+			end
 			create Result.default_create
 			create l_parameters.make (2)
 			l_parameters.put (string_parameter (a_user, 50), {DATA_PARAMETERS_NAMES}.Username_param)

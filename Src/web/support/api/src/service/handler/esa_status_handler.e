@@ -55,7 +55,9 @@ feature -- HTTP Methods
 			create l_rhf
 			to_implement ("Add status_page implementation!!!")
 			if attached current_media_type (req) as l_type then
-				log.write_information (generator+".do_get Processing request media_type:" + l_type)
+				debug
+					log.write_information (generator+".do_get Processing request media_type:" + l_type)
+				end
 				l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).status_page (req, res, api_service.status)
 			else
 				log.write_alert (generator+".do_get Processing request not acceptable")

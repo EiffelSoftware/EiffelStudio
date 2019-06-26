@@ -20,7 +20,9 @@ feature {NONE} --Initialization
 	make (a_host: READABLE_STRING_GENERAL;a_form: detachable ESA_ACTIVATION_VIEW; a_user: detachable ANY)
 			-- Initialize `Current'.
 		do
-			log.write_information (generator + ".make render template: cj_activation.tpl")
+			debug
+				log.write_information (generator + ".make render template: cj_activation.tpl")
+			end
 			-- Set patht to CJ
 			set_template_folder (cj_path)
 				-- Build common template

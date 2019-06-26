@@ -21,7 +21,9 @@ feature {NONE} --Initialization
 	make (a_host: READABLE_STRING_GENERAL)
 			-- Initialize `Current'.
 		do
-			log.write_information (generator + ".make render template: logoff.tpl")
+			debug
+				log.write_information (generator + ".make render template: logoff.tpl")
+			end
 				-- Set folder to HTML
 			set_template_folder (html_path)
 				-- Build common template

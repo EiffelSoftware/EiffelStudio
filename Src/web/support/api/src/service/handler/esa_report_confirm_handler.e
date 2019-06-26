@@ -72,7 +72,9 @@ feature -- HTTP Methods
 			if attached {READABLE_STRING_32} current_user_name (req) as l_user and then
 			   attached {WSF_STRING} req.path_parameter("id") as l_id and then l_id.is_integer then
 				if attached current_media_type (req) as l_type then
-					log.write_information (generator + ".do_get Processing request: User:" + l_user + " Id:" + l_id.value)
+					debug
+						log.write_information (generator + ".do_get Processing request: User:" + l_user + " Id:" + l_id.value)
+					end
 					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).report_form_confirm_page (req, res, l_id.integer_value)
 				else
 					log.write_alert (generator + ".do_get Processing request not acceptable")
@@ -98,7 +100,9 @@ feature -- HTTP Methods
 			if attached {READABLE_STRING_32} current_user_name (req) as l_user then
 				if attached current_media_type (req) as l_type then
 					api_service.commit_problem_report (extract_form_data(req, l_type))
-					log.write_information (generator +"do_post Send email to report number:" + api_service.last_problem_report_number.out)
+					debug
+						log.write_information (generator +"do_post Send email to report number:" + api_service.last_problem_report_number.out)
+					end
 					send_new_report_email (l_user, absolute_host (req,""))
 					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).report_form_confirm_redirect (req, res)
 				else

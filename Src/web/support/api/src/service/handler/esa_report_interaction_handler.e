@@ -88,7 +88,9 @@ feature -- Report Interaction
 				attached req.path_parameter ("name") as l_name
 			then
 				if api_service.is_attachment_visible (a_user, l_id.as_string.integer_value) then
-					log.write_information (generator+".do_get Processing request download file:" + l_name.as_string.value )
+					debug
+						log.write_information (generator+".do_get Processing request download file:" + l_name.as_string.value )
+					end
 					compute_response_get_txt (req, res, api_service.attachments_content (l_id.as_string.integer_value))
 				else
 					-- 401
@@ -99,7 +101,9 @@ feature -- Report Interaction
 					retrieve_id (l_id) > 0
 			then
 				if api_service.is_interaction_visible (a_user, retrieve_id (l_id) ) then
-					log.write_information (generator+".do_get Processing request download content for interaction :" + l_id.out)
+					debug
+						log.write_information (generator+".do_get Processing request download content for interaction :" + l_id.out)
+					end
 					compute_response_get_txt (req, res, api_service.interaction_content (retrieve_id (l_id) ))
 				else
 					-- 401

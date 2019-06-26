@@ -17,7 +17,9 @@ feature {NONE} --Initialization
 	make (a_host: READABLE_STRING_GENERAL; a_id: INTEGER; a_user: detachable ANY)
 			-- Initialize `Current'.
 		do
-			log.write_information (generator + ".make render template: cj_report_confirm.tpl")
+			debug
+				log.write_information (generator + ".make render template: cj_report_confirm.tpl")
+			end
 			set_template_folder (cj_path)
 			set_template_file_name ("cj_report_confirm.tpl")
 			template.add_value (a_host, "host")

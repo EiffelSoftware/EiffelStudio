@@ -23,7 +23,9 @@ feature {NONE} --Initialization
 		local
 			l_error: STRING
 		do
-			log.write_information (generator + ".make render template: cj_change_password.tpl")
+			debug
+				log.write_information (generator + ".make render template: cj_change_password.tpl")
+			end
 				-- Set folder to CJ.			
 			set_template_folder (cj_path)
 				-- Build Common Template

@@ -358,7 +358,7 @@ feature -- Status report
 						attached truncated_string_representation (0, l_max) as l_str
 					then
 						if (l_max > 0) and then last_string_representation_length > (l_max - 0 + 1) then
-							l_str.append ("...")
+							l_str.append_string_general ("...")
 						end
 						create Result.make (l_str.count)
 						Result.append (Character_routines.eiffel_string_32 (l_str))
@@ -370,7 +370,7 @@ feature -- Status report
 								--| TODO: 2009-09-22: remove after a few weeks of testing
 							Result := "`debug_output' disabled on this expanded item!"
 						else
-							check should_not_occurs: False end
+							check error_reported: debugger_manager.application.error_reported end
 						end
 					end
 				else
@@ -777,7 +777,11 @@ feature {NONE} -- Classic specific
 			check
 				running_and_stopped: debugger_manager.safe_application_is_stopped
 			end
-			if a_feat /= Void and debugger_manager.application.is_valid_and_known_object_address (value_address) then
+			if
+				a_feat /= Void and then
+				not debugger_manager.application.error_reported and then
+				debugger_manager.application.is_valid_and_known_object_address (value_address)
+			then
 					-- Initialize the communication.
 				l_dbg_obj := debugger_manager.object_manager.classic_debugged_object_with_class (value_address, a_compiled_class)
 				if not l_dbg_obj.is_erroneous then
@@ -797,12 +801,17 @@ feature {NONE} -- Classic specific
 
 									-- Receive the Result.
 								recv_value (Current)
-								if is_exception then
-									Result := Void --| exception_item
+								if error then
+									debugger_manager.application.report_error
+									Result := Void -- Error ...
 								else
-									if item /= Void then
-										item.set_hector_addr
-										Result := item.dump_value
+									if is_exception then
+										Result := Void --| exception_item
+									else
+										if item /= Void then
+											item.set_hector_addr
+											Result := item.dump_value
+										end
 									end
 								end
 								reset_recv_value
@@ -1201,7 +1210,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

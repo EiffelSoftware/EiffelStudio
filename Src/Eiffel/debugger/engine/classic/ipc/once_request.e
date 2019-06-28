@@ -190,7 +190,12 @@ feature -- Implementation
 						Result := proc_v
 					else
 						recv_value (Current)
-						if is_exception then
+						if error then
+							create err_v.make_with_name (once_routine.feature_name)
+							err_v.set_message ("Error : unable to retrieve the data.")
+							Result := err_v
+							debugger_manager.application.report_error
+						elseif is_exception then
 							exc_v := exception_item
 							reset_recv_value
 							if exc_v /= Void then
@@ -216,26 +221,33 @@ feature -- Implementation
 					end
 				else
 					recv_value (Current)
-					check is_exception: is_exception end
-					if is_exception then
-						exc_v := exception_item
-						reset_recv_value
-						check exc_v /= Void end
-						if exc_v /= Void then
-							Result := exc_v
-						else
-							create {EXCEPTION_DEBUG_VALUE} Result.make_without_any_value
-						end
+					if error then
+						create err_v.make_with_name (once_routine.feature_name)
+						err_v.set_message ("Error : unable to retrieve the data.")
+						Result := err_v
+						debugger_manager.application.report_error
 					else
-						if attached {ABSTRACT_REFERENCE_VALUE} item as arv then
-							create {EXCEPTION_DEBUG_VALUE} Result.make_with_value (arv)
+						check is_exception: is_exception end
+						if is_exception then
+							exc_v := exception_item
+							reset_recv_value
+							check exc_v /= Void end
+							if exc_v /= Void then
+								Result := exc_v
+							else
+								create {EXCEPTION_DEBUG_VALUE} Result.make_without_any_value
+							end
 						else
-							check should_not_occurred: False end
-							create {EXCEPTION_DEBUG_VALUE} Result.make_without_any_value
+							if attached {ABSTRACT_REFERENCE_VALUE} item as arv then
+								create {EXCEPTION_DEBUG_VALUE} Result.make_with_value (arv)
+							else
+								check should_not_occurred: False end
+								create {EXCEPTION_DEBUG_VALUE} Result.make_without_any_value
+							end
+							reset_recv_value
 						end
-						reset_recv_value
+						Result.set_hector_addr
 					end
-					Result.set_hector_addr
 					Result.set_name (once_routine.feature_name)
 
 					debug ("debugger_ipc")
@@ -356,7 +368,7 @@ feature -- Contract support
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -117,28 +117,32 @@ feature {NONE} -- Implementation
 				send_rqst_3_integer (Rqst_dynamic_eval, fi.rout_id_set.first, wclt.type_id - 1, l_is_basic)
 					-- Receive the Result.
 				recv_value (Current)
-				if is_exception then
-					if attached exception_item as exv then
-						exv.set_hector_addr
-						dbg_error_handler.notify_error_exception (Debugger_names.msg_error_exception_occurred_during_evaluation (fi.written_class.name_in_upper, fi.feature_name, exception_error_message (exv)))
-					else
-						dbg_error_handler.notify_error_exception (Debugger_names.msg_error_exception_occurred_during_evaluation (fi.written_class.name_in_upper, fi.feature_name, Void))
-					end
-
-					reset_recv_value
+				if error_occurred then
+					dbg_error_handler.notify_error_evaluation (Debugger_names.msg_error_evaluation_aborted (fi.written_class.name_in_upper, fi.feature_name))
 				else
-					if fi.is_function then
-						if item /= Void then
-							item.set_hector_addr
-							if attached item.dump_value as dv then
-								create last_result.make_with_value (dv)
-							else
-								--FIXME: should we create last_result.failed
-							end
-							reset_recv_value
+					if is_exception then
+						if attached exception_item as exv then
+							exv.set_hector_addr
+							dbg_error_handler.notify_error_exception (Debugger_names.msg_error_exception_occurred_during_evaluation (fi.written_class.name_in_upper, fi.feature_name, exception_error_message (exv)))
+						else
+							dbg_error_handler.notify_error_exception (Debugger_names.msg_error_exception_occurred_during_evaluation (fi.written_class.name_in_upper, fi.feature_name, Void))
 						end
+
+						reset_recv_value
 					else
-						create last_result.make_with_value (debugger_manager.dump_value_factory.new_procedure_return_value (create {PROCEDURE_RETURN_DEBUG_VALUE}.make_with_name (fi.feature_name)))
+						if fi.is_function then
+							if item /= Void then
+								item.set_hector_addr
+								if attached item.dump_value as dv then
+									create last_result.make_with_value (dv)
+								else
+									--FIXME: should we create last_result.failed
+								end
+								reset_recv_value
+							end
+						else
+							create last_result.make_with_value (debugger_manager.dump_value_factory.new_procedure_return_value (create {PROCEDURE_RETURN_DEBUG_VALUE}.make_with_name (fi.feature_name)))
+						end
 					end
 				end
 			end
@@ -194,7 +198,7 @@ feature {NONE} -- Implementation
 			if b then
 				recv_value (Current)
 			end
-			if item /= Void then
+			if not error_occurred and item /= Void then
 				item.set_hector_addr
 				if attached item.dump_value as dv then
 					create last_result.make_with_value (dv)
@@ -316,7 +320,7 @@ feature -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

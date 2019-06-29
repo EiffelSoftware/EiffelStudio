@@ -1,4 +1,4 @@
---| Copyright (c) 1993-2018 University of Southern California, Eiffel Software and contributors.
+--| Copyright (c) 1993-2019 University of Southern California, Eiffel Software and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General Public
 --| License version 2.
@@ -143,6 +143,7 @@ test	valid-iteration-index-failure	table010 tcf pass table
 test	table-disjoint			table011 tcf pass table
 test	hash-table-is-equal		table012 tcf fail table
 test	string-table-duplicate-caseless-insertion table013 tcf pass table
+test	hash_table-remove-precondition	table014 tcf pass table
 
 test	recursive-delete-with-symlinks	directory001 tcf pass directory
 test	directory-multibyte-delete	directory002 tcf pass directory library unicode

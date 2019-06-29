@@ -990,6 +990,8 @@ feature -- Removal
 			-- if so, set `position' to index of removed element.
 			-- If not, set `not_found'.
 			-- Reset `found_item' to its default value if `removed'.
+		require else
+			prunable
 		local
 			l_default_key: detachable K
 			l_default_value: detachable G

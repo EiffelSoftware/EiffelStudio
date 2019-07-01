@@ -26,7 +26,9 @@ feature -- Basic operations
 		local
 			s: STRING_8
 		do
-			log.write_debug (generator + ".execute")
+			debug
+				log.write_debug (generator + ".execute")
+			end
 			create s.make (2048)
 			if attached req.content_type as l_type then
 				s.append ("[length=")

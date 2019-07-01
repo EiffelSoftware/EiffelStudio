@@ -73,7 +73,9 @@ feature -- HTTP Methods
 			   attached {WSF_STRING} req.path_parameter("report_id") as l_report_id and then l_report_id.is_integer and then
 			   attached {WSF_STRING} req.path_parameter ("id") as l_id and then l_id.is_integer  then
 				if attached current_media_type (req) as l_type then
-					log.write_information (generator + ".do_get Processing request")
+					debug
+						log.write_information (generator + ".do_get Processing request")
+					end
 					l_rhf.new_representation_handler (esa_config, l_type, media_type_variants (req)).interaction_form_confirm_page (req, res, l_report_id.integer_value, l_id.integer_value)
 				else
 					l_rhf.new_representation_handler (esa_config, Empty_string, media_type_variants (req)).interaction_form_confirm_page (req, res, l_report_id.integer_value, l_id.integer_value)
@@ -103,7 +105,9 @@ feature -- HTTP Methods
 				attached {WSF_STRING} req.path_parameter("report_id") as l_report_id and then l_report_id.is_integer
 			then
 				if attached current_media_type (req) as l_type then
-					log.write_information (generator + ".do_post Processing request")
+					debug
+						log.write_information (generator + ".do_post Processing request")
+					end
 					l_interaction := extract_form_data(req, l_type)
 					l_old_report := api_service.problem_report (l_report_id.integer_value)
 					api_service.commit_interaction (l_interaction)

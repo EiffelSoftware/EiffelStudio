@@ -21,7 +21,9 @@ feature {NONE} --Initialization
 	make (a_host: READABLE_STRING_GENERAL; a_form: ESA_REGISTER_VIEW; a_user: detachable ANY;)
 			-- Initialize `Current'.
 		do
-			log.write_information (generator + ".make render template: register.tpl")
+			debug
+				log.write_information (generator + ".make render template: register.tpl")
+			end
 				-- Set folder to HTML
 			set_template_folder (html_path)
 

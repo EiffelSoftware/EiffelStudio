@@ -547,8 +547,8 @@ feature {NONE} -- Implementation
 						end
 
 						check
-							(rout.is_function implies locals_list.count = l_locals.count - 1 )
-							or else locals_list.count = l_locals.count
+							(rout.is_function implies locals_list.count = l_locals.count - 1 - object_test_locals_list.count)
+							or else locals_list.count = l_locals.count + object_test_locals_list.count
 						end
 						l_locals := Void
 					end

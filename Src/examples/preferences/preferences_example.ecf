@@ -20,7 +20,14 @@
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
 	</target>
+	<target name="default" extends="common">
+		<library name="preferences" location="$ISE_LIBRARY\library\preferences\preferences.ecf"/>
+		<cluster name="root_cluster" location=".\">
+			<cluster name="storage_factory" location="$|spec\default\"/>
+		</cluster>
+	</target>
 	<target name="xml" extends="common">
+		<variable name="pref_default_storage" value="xml"/>
 		<library name="preferences_xml" location="$ISE_LIBRARY\library\preferences\preferences_xml.ecf"/>
 		<cluster name="root_cluster" location=".\">
 			<cluster name="storage_factory" location="$|spec\xml\"/>
@@ -28,7 +35,7 @@
 	</target>
 	<target name="registry" extends="common">
 		<setting name="platform" value="windows"/>
-		<library name="preferences_reg" location="$ISE_LIBRARY\library\preferences\preferences_reg.ecf"/>
+		<library name="preferences_reg" location="$ISE_LIBRARY\library\preferences\preferences.ecf"/>
 		<cluster name="root_cluster" location=".\">
 			<cluster name="storage_factory" location="$|spec\registry\"/>
 		</cluster>

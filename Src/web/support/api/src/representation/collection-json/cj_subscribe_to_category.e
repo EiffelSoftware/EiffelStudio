@@ -18,7 +18,9 @@ feature {NONE} --Initialization
 	make (a_host: READABLE_STRING_GENERAL; a_user: detachable ANY; a_list: LIST [ESA_CATEGORY_SUBSCRIBER_VIEW ])
 			-- Initialize `Current'.
 		do
-			log.write_information (generator  +"make render template: cj_subscribe_to_category.tpl" )
+			debug
+				log.write_information (generator  +"make render template: cj_subscribe_to_category.tpl" )
+			end
 			set_template_folder (cj_path)
 			set_template_file_name ("cj_subscribe_to_category.tpl")
 			template.add_value (a_host, "host")

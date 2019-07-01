@@ -708,7 +708,7 @@ feature {NONE} -- Events
 			end
 		end
 
-	on_header_item_single_clicked (hi: EV_HEADER_ITEM; ax,ay, a_but: INTEGER)
+	on_header_item_single_clicked (hi: detachable EV_HEADER_ITEM; ax,ay, a_but: INTEGER)
 		local
 			col_index: INTEGER
 		do

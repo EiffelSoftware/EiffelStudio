@@ -20,7 +20,9 @@ feature {NONE} --Initialization
 	make (a_host: READABLE_STRING_GENERAL; a_account: ESA_ACCOUNT_VIEW)
 			-- Initialize `Current'.
 		do
-			log.write_information (generator  +"make render template: account.tpl" )
+			debug
+				log.write_information (generator  +"make render template: account.tpl" )
+			end
 				-- Set path to HTML.
 			set_template_folder (html_path)
 				-- Build common template

@@ -45,8 +45,11 @@ feature -- Access
 		        ```
 		           multi lines code
 		        ```
-		        (use ```lang ...``` to provide a lang such as eiffel, shell, ...)
-		
+		        use ```lang ... ``` to declare the language: replace "lang" by eiffel, shell, xml, ...
+		        ```eiffel
+		        	class EIFFEL ...
+		        ```
+		        		
 		Indenting:
 		        :first indent
 		        ::second indent

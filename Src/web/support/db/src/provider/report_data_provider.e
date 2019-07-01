@@ -39,7 +39,9 @@ feature -- Access
 			l_query: STRING
 			l_encoder: DATABASE_SQL_SERVER_ENCODER
 		do
-			log.write_information (generator + ".problem_reports_2")
+			debug
+				log.write_information (generator + ".problem_reports_2")
+			end
 			create l_parameters.make (6)
 			l_parameters.put (a_rows_per_page, "RowsPerPage")
 			l_parameters.put (a_rows_per_page * a_page_number, "Offset")
@@ -95,7 +97,9 @@ feature -- Access
 			l_query: STRING
 			l_encode: DATABASE_SQL_SERVER_ENCODER
 		do
-			log.write_information (generator + ".problem_reports_guest_2")
+			debug
+				log.write_information (generator + ".problem_reports_guest_2")
+			end
 			to_implement ("Improve the way to generate the prepare statement.")
 			create l_parameters.make (4)
 			l_parameters.put (a_rows_per_page, "RowsPerPage")
@@ -153,7 +157,9 @@ feature -- Access
 			l_encode: DATABASE_SQL_SERVER_ENCODER
 			l_query_filter: STRING
 		do
-			log.write_information (generator + ".problem_reports_responsibles")
+			debug
+				log.write_information (generator + ".problem_reports_responsibles")
+			end
 			create l_parameters.make (7)
 			l_parameters.put (a_rows_per_page, "RowsPerPage")
 			l_parameters.put (a_rows_per_page * a_page_number, "Offset")
@@ -229,7 +235,9 @@ feature -- Access
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".problem_report")
+			debug
+				log.write_information (generator + ".problem_report")
+			end
 
 			create l_parameters.make (1)
 			l_parameters.put (a_number, {DATA_PARAMETERS_NAMES}.number_param)
@@ -252,7 +260,9 @@ feature -- Access
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".problem_report_category_subscribers")
+			debug
+				log.write_information (generator + ".problem_report_category_subscribers")
+			end
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_category, 50), {DATA_PARAMETERS_NAMES}.Category_synopsis_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetProblemReportCategorySubscribers", l_parameters))
@@ -266,7 +276,9 @@ feature -- Access
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".interaction")
+			debug
+				log.write_information (generator + ".interaction")
+			end
 
 			create l_parameters.make (2)
 			l_parameters.put (a_interaction_id, {DATA_PARAMETERS_NAMES}.Interactionid_param)
@@ -291,7 +303,9 @@ feature -- Access
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 			l_list: LIST [INTEGER]
 		do
-			log.write_information (generator + ".interactions")
+			debug
+				log.write_information (generator + ".interactions")
+			end
 			create {ARRAYED_LIST [REPORT_INTERACTION]} Result.make (0)
 			create {ARRAYED_LIST [INTEGER]} l_list.make (0)
 
@@ -329,7 +343,9 @@ feature -- Access
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".interactions_guest")
+			debug
+				log.write_information (generator + ".interactions_guest")
+			end
 			create {ARRAYED_LIST [REPORT_INTERACTION]} Result.make (0)
 
 			create l_parameters.make (1)
@@ -357,7 +373,9 @@ feature -- Access
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".attachment_headers")
+			debug
+				log.write_information (generator + ".attachment_headers")
+			end
 			create {ARRAYED_LIST [REPORT_ATTACHMENT]} Result.make (0)
 
 			create l_parameters.make (1)
@@ -384,7 +402,9 @@ feature -- Access
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".attachment_headers_guest")
+			debug
+				log.write_information (generator + ".attachment_headers_guest")
+			end
 			create {ARRAYED_LIST [REPORT_ATTACHMENT]} Result.make (0)
 
 			create l_parameters.make (1)
@@ -411,7 +431,9 @@ feature -- Access
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".attachment_content")
+			debug
+				log.write_information (generator + ".attachment_content")
+			end
 			create Result.make_empty
 
 			create l_parameters.make (1)
@@ -434,7 +456,9 @@ feature -- Access
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".registration_token_from_username")
+			debug
+				log.write_information (generator + ".registration_token_from_username")
+			end
 			create Result.make_empty
 
 			create l_parameters.make (1)
@@ -457,7 +481,9 @@ feature -- Access
 			l_parameters:STRING_TABLE [ANY]
 			l_encoder: DATABASE_SQL_SERVER_ENCODER
 		do
-			log.write_information (generator + ".user_password_salt")
+			debug
+				log.write_information (generator + ".user_password_salt")
+			end
 			create l_parameters.make (1)
 			l_parameters.put (l_encoder.encode (string_parameter(a_username,50)), {DATA_PARAMETERS_NAMES}.username_param)
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (Select_user_password_salt, l_parameters))
@@ -480,7 +506,9 @@ feature -- Access
 			l_security: SECURITY_PROVIDER
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".add_user")
+			debug
+				log.write_information (generator + ".add_user")
+			end
 			create l_security
 			l_answer_salt := l_security.salt
 			l_answer_hash := l_security.password_hash (a_answer, l_answer_salt)
@@ -512,7 +540,9 @@ feature -- Access
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".categories")
+			debug
+				log.write_information (generator + ".categories")
+			end
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_username, 50), {DATA_PARAMETERS_NAMES}.Username_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetProblemReportCategories", l_parameters))
@@ -527,7 +557,9 @@ feature -- Access
 		local
 			l_parameters: STRING_TABLE [ANY]
 		do
-			log.write_information (generator + ".all_categories")
+			debug
+				log.write_information (generator + ".all_categories")
+			end
 			create l_parameters.make (0)
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (Select_categories, l_parameters))
 			db_handler.execute_query
@@ -541,7 +573,9 @@ feature -- Access
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".classes")
+			debug
+				log.write_information (generator + ".classes")
+			end
 			create l_parameters.make (0)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetProblemReportClasses", l_parameters))
 			db_handler.execute_reader
@@ -555,7 +589,9 @@ feature -- Access
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".severities")
+			debug
+				log.write_information (generator + ".severities")
+			end
 			create l_parameters.make (0)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetProblemReportSeverities", l_parameters))
 			db_handler.execute_reader
@@ -569,7 +605,9 @@ feature -- Access
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".priorities")
+			debug
+				log.write_information (generator + ".priorities")
+			end
 			create l_parameters.make (0)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetProblemReportPriorities", l_parameters))
 			db_handler.execute_reader
@@ -583,7 +621,9 @@ feature -- Access
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".status")
+			debug
+				log.write_information (generator + ".status")
+			end
 			create l_parameters.make (0)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetProblemReportStatus", l_parameters))
 			db_handler.execute_reader
@@ -597,7 +637,9 @@ feature -- Access
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".countries")
+			debug
+				log.write_information (generator + ".countries")
+			end
 			create l_parameters.make (0)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetProblemReportSeverities", l_parameters))
 			db_handler.execute_reader
@@ -629,7 +671,9 @@ feature -- Access
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".temporary_problem_report")
+			debug
+				log.write_information (generator + ".temporary_problem_report")
+			end
 
 			create l_parameters.make (1)
 			l_parameters.put (a_id, {DATA_PARAMETERS_NAMES}.Reportid_param)
@@ -653,7 +697,9 @@ feature -- Access
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".problem_reports_for_edition")
+			debug
+				log.write_information (generator + ".problem_reports_for_edition")
+			end
 			create l_parameters.make (4)
 			l_parameters.put (string_parameter (a_username, 50), {DATA_PARAMETERS_NAMES}.Username_param)
 			l_parameters.put (string_parameter (a_first_name, 50), {DATA_PARAMETERS_NAMES}.Firstname_param)
@@ -679,7 +725,9 @@ feature -- Access
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".responsibles")
+			debug
+				log.write_information (generator + ".responsibles")
+			end
 			create l_parameters.make (0)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetProblemReportResponsibles", l_parameters))
 			db_handler.execute_reader
@@ -697,7 +745,9 @@ feature -- Access
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".temporary_interaction_2")
+			debug
+				log.write_information (generator + ".temporary_interaction_2")
+			end
 
 			create l_parameters.make (1)
 			l_parameters.put (a_id, {DATA_PARAMETERS_NAMES}.Interactionid_param)
@@ -728,7 +778,9 @@ feature -- Access
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".temporary_interaction_3")
+			debug
+				log.write_information (generator + ".temporary_interaction_3")
+			end
 
 			create l_parameters.make (1)
 			l_parameters.put (a_id, {DATA_PARAMETERS_NAMES}.Interactionid_param)
@@ -754,7 +806,9 @@ feature -- Access
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".temporary_problem_report_attachments")
+			debug
+				log.write_information (generator + ".temporary_problem_report_attachments")
+			end
 
 			create {ARRAYED_LIST [TUPLE [id: INTEGER_32; length: INTEGER_32; filename: READABLE_STRING_32]]} Result.make (0)
 			create l_parameters.make (1)
@@ -782,7 +836,9 @@ feature -- Access
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".temporary_interation_attachments")
+			debug
+				log.write_information (generator + ".temporary_interation_attachments")
+			end
 
 			create {ARRAYED_LIST [TUPLE [id: INTEGER_32; length: INTEGER_32; filename: READABLE_STRING_32]]} Result.make (0)
 			create l_parameters.make (1)
@@ -812,7 +868,9 @@ feature -- Access
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".responsibles")
+			debug
+				log.write_information (generator + ".responsibles")
+			end
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_username, 50), {DATA_PARAMETERS_NAMES}.Username_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetProblemReportSubscribedCategories2", l_parameters))
@@ -826,7 +884,9 @@ feature -- Access
 		local
 			l_parameters:STRING_TABLE [ANY]
 		do
-			log.write_information (generator + ".interaction_by_id")
+			debug
+				log.write_information (generator + ".interaction_by_id")
+			end
 			create l_parameters.make (1)
 			l_parameters.put (a_id, "id")
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (Select_interaction_content, l_parameters))
@@ -844,7 +904,9 @@ feature -- Basic Operations
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".new_problem_report_id")
+			debug
+				log.write_information (generator + ".new_problem_report_id")
+			end
 
 			create l_parameters.make (1)
 			l_parameters.put (a_username, {DATA_PARAMETERS_NAMES}.Username_param)
@@ -866,7 +928,9 @@ feature -- Basic Operations
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".row_count_problem_report_guest")
+			debug
+				log.write_information (generator + ".row_count_problem_report_guest")
+			end
 
 			create l_parameters.make (2)
 			l_parameters.put (a_category, {DATA_PARAMETERS_NAMES}.Categoryid_param)
@@ -892,7 +956,9 @@ feature -- Basic Operations
 			l_encode: DATABASE_SQL_SERVER_ENCODER
 			l_query: STRING
 		do
-			log.write_information (generator + ".row_count_problem_report_guest")
+			debug
+				log.write_information (generator + ".row_count_problem_report_guest")
+			end
 
 			create l_parameters.make (2)
 			l_parameters.put (string_parameter (a_username, 50), {DATA_PARAMETERS_NAMES}.Username_param)
@@ -942,7 +1008,9 @@ feature -- Basic Operations
 			l_query: STRING
 			l_encode: DATABASE_SQL_SERVER_ENCODER
 		do
-			log.write_information (generator + ".row_count_problem_report_responsible")
+			debug
+				log.write_information (generator + ".row_count_problem_report_responsible")
+			end
 
 			create l_parameters.make (6)
 			l_parameters.put (a_category, {DATA_PARAMETERS_NAMES}.Categoryid_param)
@@ -997,7 +1065,9 @@ feature -- Basic Operations
 			l_encode: DATABASE_SQL_SERVER_ENCODER
 			l_query: STRING
 		do
-			log.write_information (generator + ".row_count_problem_report_user")
+			debug
+				log.write_information (generator + ".row_count_problem_report_user")
+			end
 
 			create l_parameters.make (4)
 			l_parameters.put (l_encode.encode (string_parameter (a_username, 50)), {DATA_PARAMETERS_NAMES}.Username_param)
@@ -1044,7 +1114,9 @@ feature -- Basic Operations
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 			l_int: INTEGER
 		do
-			log.write_information (generator + ".commit_problem_report")
+			debug
+				log.write_information (generator + ".commit_problem_report")
+			end
 			set_last_problem_report_number (l_int)
 
 			create l_parameters.make (1)
@@ -1069,7 +1141,9 @@ feature -- Basic Operations
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".remove_temporary_problem_report")
+			debug
+				log.write_information (generator + ".remove_temporary_problem_report")
+			end
 
 			create l_parameters.make (1)
 			l_parameters.put (a_report_id, {DATA_PARAMETERS_NAMES}.Reportid_param)
@@ -1101,7 +1175,9 @@ feature -- Basic Operations
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 			utf: UTF_CONVERTER
 		do
-			log.write_information (generator + ".initialize_problem_report")
+			debug
+				log.write_information (generator + ".initialize_problem_report")
+			end
 
 			create l_parameters.make (11)
 			l_parameters.put (a_report_id, {DATA_PARAMETERS_NAMES}.Reportid_param)
@@ -1143,7 +1219,9 @@ feature -- Basic Operations
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".update_problem_report")
+			debug
+				log.write_information (generator + ".update_problem_report")
+			end
 
 			create l_parameters.make (11)
 			l_parameters.put (a_pr, {DATA_PARAMETERS_NAMES}.Number_param)
@@ -1168,7 +1246,9 @@ feature -- Basic Operations
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".set_problem_report_responsible")
+			debug
+				log.write_information (generator + ".set_problem_report_responsible")
+			end
 
 			create l_parameters.make (2)
 			l_parameters.put (a_number, {DATA_PARAMETERS_NAMES}.Number_param)
@@ -1187,7 +1267,9 @@ feature -- Basic Operations
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".new_interaction_id")
+			debug
+				log.write_information (generator + ".new_interaction_id")
+			end
 
 			create l_parameters.make (2)
 			l_parameters.put (string_parameter (a_username, 50), {DATA_PARAMETERS_NAMES}.Username_param)
@@ -1211,7 +1293,9 @@ feature -- Basic Operations
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".initialize_interaction_2")
+			debug
+				log.write_information (generator + ".initialize_interaction_2")
+			end
 
 			create l_parameters.make (5)
 			l_parameters.put (a_interaction_id, {DATA_PARAMETERS_NAMES}.Interactionid_param)
@@ -1231,7 +1315,9 @@ feature -- Basic Operations
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 			l_int: INTEGER
 		do
-			log.write_information (generator + ".commit_interaction")
+			debug
+				log.write_information (generator + ".commit_interaction")
+			end
 			set_last_interaction_id (l_int)
 
 			create l_parameters.make (1)
@@ -1259,7 +1345,9 @@ feature -- Basic Operations
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".upload_temporary_report_attachment")
+			debug
+				log.write_information (generator + ".upload_temporary_report_attachment")
+			end
 
 			create l_parameters.make (4)
 			l_parameters.put (a_report_id, {DATA_PARAMETERS_NAMES}.Reportid_param)
@@ -1277,7 +1365,9 @@ feature -- Basic Operations
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".upload_temporary_interaction_attachment")
+			debug
+				log.write_information (generator + ".upload_temporary_interaction_attachment")
+			end
 
 			create l_parameters.make (4)
 			l_parameters.put (a_interaction_id, {DATA_PARAMETERS_NAMES}.Interactionid_param)
@@ -1297,7 +1387,9 @@ feature -- Basic Operations
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".remove_temporary_report_attachment")
+			debug
+				log.write_information (generator + ".remove_temporary_report_attachment")
+			end
 
 			create l_parameters.make (2)
 			l_parameters.put (a_report_id, {DATA_PARAMETERS_NAMES}.Reportid_param)
@@ -1315,7 +1407,9 @@ feature -- Basic Operations
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".remove_temporary_interaction_attachment")
+			debug
+				log.write_information (generator + ".remove_temporary_interaction_attachment")
+			end
 
 			create l_parameters.make (2)
 			l_parameters.put (a_interaction_id, {DATA_PARAMETERS_NAMES}.Interactionid_param)
@@ -1331,7 +1425,9 @@ feature -- Basic Operations
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".remove_all_temporary_report_attachments")
+			debug
+				log.write_information (generator + ".remove_all_temporary_report_attachments")
+			end
 
 			create l_parameters.make (1)
 			l_parameters.put (a_report_id, {DATA_PARAMETERS_NAMES}.Reportid_param)
@@ -1346,7 +1442,9 @@ feature -- Basic Operations
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".remove_all_temporary_interaction_attachments")
+			debug
+				log.write_information (generator + ".remove_all_temporary_interaction_attachments")
+			end
 
 			create l_parameters.make (1)
 			l_parameters.put (a_interaction_id, {DATA_PARAMETERS_NAMES}.Interactionid_param)
@@ -1364,7 +1462,9 @@ feature -- Basic Operations
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".set_problem_report_status")
+			debug
+				log.write_information (generator + ".set_problem_report_status")
+			end
 
 			create l_parameters.make (2)
 			l_parameters.put (a_number, {DATA_PARAMETERS_NAMES}.Number_param)
@@ -1383,7 +1483,9 @@ feature -- Basic Operations
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".set_problem_report_category")
+			debug
+				log.write_information (generator + ".set_problem_report_category")
+			end
 
 			create l_parameters.make (2)
 			l_parameters.put (a_number, {DATA_PARAMETERS_NAMES}.Number_param)
@@ -1402,7 +1504,9 @@ feature -- Basic Operations
 				l_subject: STRING
 				l_notes: STRING
 		do
-			log.write_information (generator + ".add_download_interaction")
+			debug
+				log.write_information (generator + ".add_download_interaction")
+			end
 
 			create l_subject.make (a_product.count + a_platform.count + 40)
 			l_subject.append ("Downloaded ")
@@ -1432,7 +1536,9 @@ feature -- Basic Operations
 				l_subject: STRING
 				l_notes: STRING
 		do
-			log.write_information (generator + ".add_download_interaction_contact")
+			debug
+				log.write_information (generator + ".add_download_interaction_contact")
+			end
 
 			create l_subject.make (a_product.count + a_platform.count + 40)
 			l_subject.append ("Downloaded ")
@@ -1460,7 +1566,9 @@ feature -- Basic Operations
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".initialize_download")
+			debug
+				log.write_information (generator + ".initialize_download")
+			end
 			create l_parameters.make (2)
 			l_parameters.put (string_parameter (a_email, 150), {DATA_PARAMETERS_NAMES}.Email_param)
 			l_parameters.put (a_token, {DATA_PARAMETERS_NAMES}.Token_param)
@@ -1479,7 +1587,9 @@ feature -- Basic Operations
 			l_parameters: STRING_TABLE [ANY]
 			l_encode: DATABASE_SQL_SERVER_ENCODER
 		do
-			log.write_information (generator + ".retrieve_download_details")
+			debug
+				log.write_information (generator + ".retrieve_download_details")
+			end
 			create l_parameters.make (1)
 			l_parameters.put (l_encode.encode (string_parameter(a_token,50)), {DATA_PARAMETERS_NAMES}.Token_param)
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (Select_download_details, l_parameters))
@@ -1530,7 +1640,9 @@ feature -- Basic Operations
 			l_parameters: STRING_TABLE [ANY]
 			l_encode: DATABASE_SQL_SERVER_ENCODER
 		do
-			log.write_information (generator + ".retrieve_download_details")
+			debug
+				log.write_information (generator + ".retrieve_download_details")
+			end
 			create l_parameters.make (1)
 			l_parameters.put (l_encode.encode (string_parameter(a_token,50)), {DATA_PARAMETERS_NAMES}.Token_param)
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (Select_temporary_download_details, l_parameters))
@@ -1569,7 +1681,9 @@ feature -- Basic Operations
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".add_contacts_temporary")
+			debug
+				log.write_information (generator + ".add_contacts_temporary")
+			end
 			create l_parameters.make (3)
 			l_parameters.put (string_parameter (a_first_name, 50), {DATA_PARAMETERS_NAMES}.Firstname_param)
 			l_parameters.put (string_parameter (a_last_name, 50), {DATA_PARAMETERS_NAMES}.Lastname_param)
@@ -1586,7 +1700,9 @@ feature -- Basic Operations
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".add_temporary_contacts_to_contacts")
+			debug
+				log.write_information (generator + ".add_temporary_contacts_to_contacts")
+			end
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_email, 150), {DATA_PARAMETERS_NAMES}.Email_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_writer ("CommitContact", l_parameters))
@@ -1599,7 +1715,9 @@ feature -- Basic Operations
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".register_newsletter")
+			debug
+				log.write_information (generator + ".register_newsletter")
+			end
 			create l_parameters.make (1)
 			l_parameters.put (string_parameter (a_email, 150), {DATA_PARAMETERS_NAMES}.Email_param)
 
@@ -1616,7 +1734,9 @@ feature -- Status Report
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 			l_res: INTEGER
 		do
-			log.write_information (generator + ".is_report_visible_guest")
+			debug
+				log.write_information (generator + ".is_report_visible_guest")
+			end
 
 			create l_parameters.make (1)
 			l_parameters.put (a_number, {DATA_PARAMETERS_NAMES}.number_param)
@@ -1639,7 +1759,9 @@ feature -- Status Report
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 			l_res: INTEGER
 		do
-			log.write_information (generator + ".is_report_visible")
+			debug
+				log.write_information (generator + ".is_report_visible")
+			end
 
 			create l_parameters.make (2)
 			l_parameters.put (a_username, {DATA_PARAMETERS_NAMES}.Username_param)
@@ -1665,7 +1787,9 @@ feature -- Status Report
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 			l_res: INTEGER
 		do
-			log.write_information (generator + ".interaction_visible")
+			debug
+				log.write_information (generator + ".interaction_visible")
+			end
 
 			create l_parameters.make (2)
 			l_parameters.put (string_parameter (a_username, 50), {DATA_PARAMETERS_NAMES}.Username_param)
@@ -1689,7 +1813,9 @@ feature -- Status Report
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 			l_res: INTEGER
 		do
-			log.write_information (generator + ".interaction_visible_guest")
+			debug
+				log.write_information (generator + ".interaction_visible_guest")
+			end
 
 			create l_parameters.make (1)
 			l_parameters.put (a_interaction_id, {DATA_PARAMETERS_NAMES}.Interactionid_param)
@@ -1714,7 +1840,9 @@ feature -- Status Report
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 			l_res: INTEGER
 		do
-			log.write_information (generator + ".attachment_visible")
+			debug
+				log.write_information (generator + ".attachment_visible")
+			end
 
 			create l_parameters.make (2)
 			l_parameters.put (string_parameter (a_username, 50), {DATA_PARAMETERS_NAMES}.Username_param)
@@ -1738,7 +1866,9 @@ feature -- Status Report
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 			l_res: INTEGER
 		do
-			log.write_information (generator + ".attachment_visible_guest")
+			debug
+				log.write_information (generator + ".attachment_visible_guest")
+			end
 
 			create l_parameters.make (1)
 			l_parameters.put (a_attachment_id, {DATA_PARAMETERS_NAMES}.Attachmentid_param)
@@ -1761,7 +1891,9 @@ feature -- Status Report
 		local
 			l_parameters: HASH_TABLE [ANY, STRING_32]
 		do
-			log.write_information (generator + ".register_subscriber")
+			debug
+				log.write_information (generator + ".register_subscriber")
+			end
 			if a_subscribe then
 
 				create l_parameters.make (2)
@@ -1787,7 +1919,9 @@ feature -- Status Report
 		local
 			l_parameters: HASH_TABLE[ANY,STRING_32]
 		do
-			log.write_information (generator + ".download_expiration_token_age")
+			debug
+				log.write_information (generator + ".download_expiration_token_age")
+			end
 			create l_parameters.make (1)
 			l_parameters.put (a_token, {DATA_PARAMETERS_NAMES}.Token_param)
 			db_handler.set_store (create {DATABASE_STORE_PROCEDURE}.data_reader ("GetDownloadExpirationTokenAge", l_parameters))
@@ -1807,7 +1941,9 @@ feature -- Status Report
 		do
 			create l_encoder
 			Result := -1
-			log.write_information (generator + ".download_expiration_token_age_2")
+			debug
+				log.write_information (generator + ".download_expiration_token_age_2")
+			end
 			create l_parameters.make (1)
 			l_parameters.put (l_encoder.encode (string_parameter(a_token,50)), {DATA_PARAMETERS_NAMES}.Token_param)
 			db_handler.set_query (create {DATABASE_QUERY}.data_reader (select_download_expiration, l_parameters))
@@ -2232,7 +2368,9 @@ feature -- {NONE} Implementation
 		local
 			l_parameters: STRING_TABLE [ANY]
 		do
-			log.write_information (generator + ".delete_problem_report_temporary_interactions")
+			debug
+				log.write_information (generator + ".delete_problem_report_temporary_interactions")
+			end
 
 			create l_parameters.make (1)
 			l_parameters.put (a_interaction, {DATA_PARAMETERS_NAMES}.interactionid_param)

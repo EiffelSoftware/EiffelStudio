@@ -121,6 +121,9 @@ feature -- Properties
 	ignoring_breakpoints: BOOLEAN
 			-- Is application ignoring breakpoints ?			
 
+	error_reported: BOOLEAN
+			-- Has error been reported during debugging?
+
 	current_execution_stack_number: INTEGER
 			-- Stack number currently displaying the locals and arguments
 
@@ -402,6 +405,7 @@ feature -- Execution
 	clear_internals
 			-- Clear internal values
 		do
+			set_error_reported (False)
 			if attached internal_remote_rt_object as rto then
 				rto.recycle
 				internal_remote_rt_object := Void
@@ -1227,6 +1231,16 @@ feature -- Setting
 			set: execution_mode = exec_mode
 		end
 
+	report_error
+		do
+			set_error_reported (True)
+		end
+
+	set_error_reported (b: BOOLEAN)
+		do
+			error_reported := b
+		end
+
 	set_current_execution_stack_number (i: INTEGER)
 			-- Set the `current_execution_stack_number' to `i'.
 			--| If `current_execution_stack_number' is greater than
@@ -1354,7 +1368,7 @@ feature {NONE} -- fake
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

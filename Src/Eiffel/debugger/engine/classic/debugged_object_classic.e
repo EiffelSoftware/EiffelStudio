@@ -31,11 +31,15 @@ feature {NONE} -- Creation
 				print ("DEBUGGED_OBJECT_CLASSIC.make%N")
 			end
 			object_address := addr
+			if debugger_manager.application.error_reported then
+				is_erroneous := True
+			else
+				create rqst.make (addr)
+				rqst.set_sp_bounds (sp_lower, sp_upper)
+				rqst.send
+				is_erroneous := rqst.is_erroneous
+			end
 
-			create rqst.make (addr)
-			rqst.set_sp_bounds (sp_lower, sp_upper)
-			rqst.send
-			is_erroneous := rqst.is_erroneous
 			if not is_erroneous then
 				attributes := rqst.attributes
 				scoop_processor_id := rqst.scoop_processor_id
@@ -142,7 +146,7 @@ feature -- Properties
 			-- Attributes of object being inspected (sorted by name)
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

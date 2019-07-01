@@ -21,10 +21,11 @@ feature -- Logger
             -- that could be shared between threads
             -- without reinitializing it.
 		local
-			l_log_writer: LOG_ROLLING_WRITER_FILE
+			l_log_writer: ESA_LOG_ROLLING_WRITER_FILE
 			l_environment: EXECUTION_ENVIRONMENT
 			l_path: PATH
 			l_logger_config: LOGGER_CONFIGURATION
+			dir: DIRECTORY
 		once ("PROCESS")
 					--| Initialize the logging facility
 			create Result.make
@@ -40,7 +41,8 @@ feature -- Logger
 
 			if attached separate_character_option_value ('d') as l_dir then
 				l_path := create {PATH}.make_from_string (l_dir)
-				create l_log_writer.make_at_location (l_path.extended ("..").appended ("\api.log"))
+				create dir.make_with_path (l_path)
+				create l_log_writer.make_at_location_and_count (l_path.extended ("..").appended ("\api.log"), dir.entries.count.to_natural_8)
 			else
 				if attached {PATH} l_logger_config.path as l_log_path then
 					if l_log_path.is_absolute then
@@ -54,7 +56,7 @@ feature -- Logger
 					create l_log_writer.make_at_location (l_path.extended("logs").extended("api.log"))
 				end
 			end
-			l_log_writer.set_max_file_size ({NATURAL_64}1024*1204)
+			l_log_writer.set_max_file_size ({NATURAL_64}4*1024*1204)
 			l_log_writer.set_max_backup_count (l_logger_config.backup_count)
 			set_logger_level (l_log_writer, l_logger_config.level)
 			log.register_log_writer (l_log_writer)

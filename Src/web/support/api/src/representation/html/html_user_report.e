@@ -22,7 +22,9 @@ feature {NONE} --Initialization
 		local
 			tpl_inspector: TEMPLATE_INSPECTOR
 		do
-			log.write_information (generator + ".make render template: user_reports.tpl")
+			debug
+				log.write_information (generator + ".make render template: user_reports.tpl")
+			end
 			create {ESA_REPORT_CATEGORY_TEMPLATE_INSPECTOR} tpl_inspector.register (({detachable REPORT_CATEGORY}).out)
 			set_selected_category (a_view.categories, a_view.selected_category)
 			create {ESA_REPORT_STATUS_TEMPLATE_INSPECTOR} tpl_inspector.register (({detachable REPORT_STATUS}).out)

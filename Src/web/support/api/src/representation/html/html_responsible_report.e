@@ -21,7 +21,9 @@ feature {NONE} --Initialization
 			tpl_inspector: TEMPLATE_INSPECTOR
 		do
 
-			log.write_information (generator + ".make render template: user_responsible_reports.tpl")
+			debug
+				log.write_information (generator + ".make render template: user_responsible_reports.tpl")
+			end
 			create {ESA_REPORT_STATUS_TEMPLATE_INSPECTOR} tpl_inspector.register (({detachable REPORT_STATUS}).out)
 
 			set_template_folder (html_path)

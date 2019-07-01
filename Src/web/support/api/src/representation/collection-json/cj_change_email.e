@@ -19,7 +19,9 @@ feature {NONE} --Initialization
 	make (a_host: READABLE_STRING_GENERAL; a_user: detachable ANY; a_view: ESA_EMAIL_VIEW)
 			-- Initialize `Current'.
 		do
-			log.write_information (generator + ".make render template: cj_change_email.tpl")
+			debug
+				log.write_information (generator + ".make render template: cj_change_email.tpl")
+			end
 				-- Set path to CJ
 			set_template_folder (cj_path)
 				-- Build common template

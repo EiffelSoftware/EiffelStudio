@@ -273,22 +273,28 @@ feature -- Execution
 			Ipc_engine.end_of_debugging
 		end
 
-
 feature -- Remote access to RT_
 
 	imp_remote_rt_object: detachable ABSTRACT_REFERENCE_VALUE
 			-- Return the remote rt_object
 		do
-			ewb_request.send_rqst_1 (rqst_rt_operation, rtop_dump_object)
-			ewb_request.reset_recv_value
-			ewb_request.recv_value (ewb_request)
-			if attached {like imp_remote_rt_object} ewb_request.item as ref then
-				Result := ref
-				Result.set_hector_addr
-			else
-				check ewb_request.item = Void end
+			if not error_reported then
+				ewb_request.send_rqst_1 (rqst_rt_operation, rtop_dump_object)
+				ewb_request.reset_recv_value
+				ewb_request.recv_value (ewb_request)
+				if ewb_request.error then
+					set_error
+					debugger_manager.application.report_error
+				else
+					if attached {like imp_remote_rt_object} ewb_request.item as ref then
+						Result := ref
+						Result.set_hector_addr
+					else
+						check ewb_request.item = Void end
+					end
+				end
+				ewb_request.reset_recv_value
 			end
-			ewb_request.reset_recv_value
 		end
 
 	activate_execution_replay_recording (b: BOOLEAN): BOOLEAN
@@ -303,13 +309,20 @@ feature -- Remote access to RT_
 		do
 			send_rqst_0 (rqst_last_exception)
 			recv_value (Current)
-			if is_exception then
-				Result := exception_item
-				Result.set_hector_addr
-			else
+			if error then
 				check item_void: item = Void end
+				debugger_manager.application.report_error
 				create Result.make_with_value (Void)
+			else
+				if is_exception then
+					Result := exception_item
+					Result.set_hector_addr
+				else
+					check item_void: item = Void end
+					create Result.make_with_value (Void)
+				end
 			end
+
 			reset_recv_value
 		end
 
@@ -318,16 +331,21 @@ feature -- Remote access to SCOOP MANAGER
 	imp_remote_rt_scoop_manager: detachable ABSTRACT_REFERENCE_VALUE
 			-- Return the remote scp_mnger
 		do
-			ewb_request.send_rqst_1 (rqst_rt_operation, Rtop_dump_scoop_manager)
-			ewb_request.reset_recv_value
-			ewb_request.recv_value (ewb_request)
-			if attached {like imp_remote_rt_scoop_manager} ewb_request.item as ref then
-				Result := ref
-				Result.set_hector_addr
-			else
-				check ewb_request.item = Void end
+			if not error_reported then
+				ewb_request.send_rqst_1 (rqst_rt_operation, Rtop_dump_scoop_manager)
+				ewb_request.reset_recv_value
+				ewb_request.recv_value (ewb_request)
+				if error then
+					check ewb_request.item = Void end
+					debugger_manager.application.report_error
+				elseif attached {like imp_remote_rt_scoop_manager} ewb_request.item as ref then
+					Result := ref
+					Result.set_hector_addr
+				else
+					check ewb_request.item = Void end
+				end
+				ewb_request.reset_recv_value
 			end
-			ewb_request.reset_recv_value
 		end
 
 feature {NONE} -- Breakpoints implementation
@@ -727,7 +745,7 @@ invariant
 	ipc_engine_not_void: ipc_engine /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

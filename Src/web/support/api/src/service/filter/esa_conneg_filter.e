@@ -36,10 +36,14 @@ feature -- Basic operations
 				    	l_compression_variants.is_acceptable and then
 				    	attached l_compression_variants.encoding as l_encoding
 				    then
-				    	log.write_debug (generator + " execute [compression]: " + l_encoding )
+				    	debug
+					    	log.write_debug (generator + " execute [compression]: " + l_encoding )
+				    	end
 						req.set_execution_variable ("compression", l_encoding)
 				    end
-				    log.write_debug (generator + " execute [media type]: " + l_type )
+				    debug
+					    log.write_debug (generator + " execute [media type]: " + l_type )
+				    end
 
 					req.set_execution_variable ("media_type", l_type)
 					execute_next (req, res)

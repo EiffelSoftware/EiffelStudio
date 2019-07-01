@@ -77,7 +77,9 @@ feature -- HTTP Methods
 			create l_rhf
 			if attached {READABLE_STRING_32} current_user_name (req) as l_user then
 					-- Logged in user
-				log.write_information (generator+".do_get Processing request with user:" + l_user  )
+				debug
+					log.write_information (generator+".do_get Processing request with user:" + l_user  )
+				end
 				if attached current_media_type (req) as l_type then
 					create l_input_validator
 					l_input_validator.input_from (req.query_parameters)

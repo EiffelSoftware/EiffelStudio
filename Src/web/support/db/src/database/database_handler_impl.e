@@ -50,7 +50,9 @@ feature -- Functionality
 					disconnect
 				end
 				set_successful
-				log.write_debug ( generator+".execute_reader Successful")
+				debug
+					log.write_debug ( generator+".execute_reader Successful")
+				end
 			end
 		rescue
 			set_last_error_from_exception ("Store procedure execution")
@@ -85,7 +87,9 @@ feature -- Functionality
 					disconnect
 				end
 				set_successful
-				log.write_debug ( generator+".execute_writer Successful")
+				debug
+					log.write_debug ( generator+".execute_writer Successful")
+				end
 			end
 		rescue
 			set_last_error_from_exception ("Store procedure execution")

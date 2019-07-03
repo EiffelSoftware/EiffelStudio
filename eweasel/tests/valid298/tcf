@@ -1,0 +1,19 @@
+test_name 	 adaptation-export-status
+test_description Export status of an explicitly exported feature is a union of inherited export status and adaptation export status.
+
+copy_sub 	 Ace $TEST Ace
+copy_raw 	 a.e $CLUSTER a.e
+copy_raw 	 b.e $CLUSTER b.e
+
+define		 ERROR ""
+copy_sub 	 test.e $CLUSTER test.e
+
+compile_melted
+compile_result 	 validity_error TEST VUEX(2):10 VUEX(2):11 VUEX(2):14 VUEX(2):15
+
+define		 ERROR "--"
+copy_sub 	 test.e $CLUSTER test.e
+resume_compile
+compile_result 	 ok
+
+test_end

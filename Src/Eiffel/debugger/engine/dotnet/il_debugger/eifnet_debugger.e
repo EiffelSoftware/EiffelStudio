@@ -154,11 +154,9 @@ feature -- Initialization
 			-- Initialize dotnet runtime, to be sure to use the correct version of the
 			-- runtime after while
 		local
-			l_cli_com: CLI_COM
 			l_host: CLR_HOST
 		once
-			create l_cli_com
-			l_cli_com.initialize_com
+			;(create {CLI_COM}).initialize_com
 			l_host := (create {CLR_HOST_FACTORY}).runtime_host (Eiffel_system.System.clr_runtime_version)
 		end
 
@@ -364,7 +362,7 @@ feature -- Status
 	last_dbg_call_succeed: BOOLEAN
 			-- Last call succeed ?
 		do
-			Result := (last_dbg_call_success = 0)
+			Result := last_dbg_call_success = 0
 		end
 
 feature {EIFNET_DEBUGGER} -- Callback notification about synchro
@@ -381,8 +379,6 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 
 	estudio_callback_event (cb_id: INTEGER)
 			-- Callback trigger for processing at end of dotnet callback
-		require else
-			not estudio_callback_event_processing
 		local
 			may_stop_on_callback: BOOLEAN
 			s: APPLICATION_STATUS
@@ -528,7 +524,7 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 						--| This should be done on the callback event
 						--| but in case this is not done, let's do it
 					r := {ICOR_DEBUG_APP_DOMAIN}.cpp_attach (p)
-					check (r = 0) end
+					check r = 0 end
 				end
 				dbgsync_cb_without_stopping := True
 			when Cst_managed_cb_create_process then
@@ -773,8 +769,6 @@ feature {NONE} -- Callback actions
 
 	stop_on_cb (cb_id: INTEGER): BOOLEAN
 			-- Stop the system (on step complete or breakpoint for instance)
-		local
-			execution_stopped: BOOLEAN
 		do
 				--| Refresh CallStack info
 			if managed_callback_is_exit_process (cb_id) then
@@ -783,29 +777,23 @@ feature {NONE} -- Callback actions
 				init_current_callstack
 			end
 			if managed_callback_is_breakpoint (cb_id) then
-				execution_stopped := execution_stopped_on_end_of_breakpoint_callback
+				Result := execution_stopped_on_end_of_breakpoint_callback
 			elseif managed_callback_is_step_complete (cb_id) then
-				if is_inside_function_evaluation then
-					execution_stopped := False
-				else
-					execution_stopped := execution_stopped_on_end_of_step_complete_callback
-				end
+				Result := not is_inside_function_evaluation and then execution_stopped_on_end_of_step_complete_callback
 			elseif managed_callback_is_exception (cb_id) then
 				if is_inside_function_evaluation then
 					if icor_debug_controller /= Void then
 						call_do_continue_on_cb
 					end
-					execution_stopped := False
 				else
 					application_status.set_exception_occurred (True)
-					execution_stopped := execution_stopped_on_exception_callback
+					Result := execution_stopped_on_exception_callback
 				end
 			else
 					--| Then we stop the execution ;)
 					--| do nothing for now
-				execution_stopped := True
+				Result := True
 			end
-			Result := execution_stopped
 		end
 
 	execution_stopped_on_end_of_breakpoint_callback: BOOLEAN
@@ -1511,59 +1499,55 @@ feature -- Exception
 			-- Get `exception_info_to_string' and `exception_info_message' output
 		local
 			retried: BOOLEAN
-			l_exception_info: EIFNET_DEBUG_VALUE_INFO
 			icdv: ICOR_DEBUG_VALUE
 			l_icdov: ICOR_DEBUG_OBJECT_VALUE
 			l_class_name, l_module_name: STRING
 			l_to_string, l_message: STRING_32
 		do
-			if not retried then
-				if attached {EIFNET_DEBUG_REFERENCE_VALUE} v as dv then
-					l_exception_info := dv.icd_value_info
-					if
-						l_exception_info /= Void
-					then
-						icdv := l_exception_info.icd_referenced_value
-						l_class_name := l_exception_info.value_class_name
-						l_module_name := l_exception_info.value_module_file_name
+			if
+				not retried and then
+				attached {EIFNET_DEBUG_REFERENCE_VALUE} v as dv and then
+				attached dv.icd_value_info as l_exception_info
+			then
+				icdv := l_exception_info.icd_referenced_value
+				l_class_name := l_exception_info.value_class_name
+				l_module_name := l_exception_info.value_module_file_name
 
-						l_icdov := l_exception_info.new_interface_debug_object_value
-						if l_icdov /= Void then
-							l_to_string := to_string_value_from_exception_object_value (Void,
-								icdv,
-								l_icdov
-							)
-							l_message := get_message_value_from_exception_object_value (Void,
-								icdv,
-								l_icdov
-							)
-							l_icdov.clean_on_dispose
+				l_icdov := l_exception_info.new_interface_debug_object_value
+				if l_icdov /= Void then
+					l_to_string := to_string_value_from_exception_object_value (Void,
+						icdv,
+						l_icdov
+					)
+					l_message := get_message_value_from_exception_object_value (Void,
+						icdv,
+						l_icdov
+					)
+					l_icdov.clean_on_dispose
 
-							create Result.make_empty
-							if l_message = Void or else l_message.is_empty then
-								--| This could means the prog did exit_process
-								--| or .. anything else
-								if l_class_name /= Void then
-									Result.append (l_class_name)
-								end
-								if l_module_name /= Void then
-									if not Result.is_empty then
-										Result.append_character (' ')
-									end
-									Result.append_character ('(')
-									Result.append (l_module_name)
-									Result.append_character (')')
-								end
-							else
-								Result.append (l_message)
-							end
-							if l_to_string /= Void and then not l_to_string.is_empty then
-								if not Result.is_empty then
-									Result.append_character ('%N')
-								end
-								Result.append_string (l_to_string)
-							end
+					create Result.make_empty
+					if l_message = Void or else l_message.is_empty then
+						--| This could means the prog did exit_process
+						--| or .. anything else
+						if l_class_name /= Void then
+							Result.append (l_class_name)
 						end
+						if l_module_name /= Void then
+							if not Result.is_empty then
+								Result.append_character (' ')
+							end
+							Result.append_character ('(')
+							Result.append (l_module_name)
+							Result.append_character (')')
+						end
+					else
+						Result.append (l_message)
+					end
+					if l_to_string /= Void and then not l_to_string.is_empty then
+						if not Result.is_empty then
+							Result.append_character ('%N')
+						end
+						Result.append_string (l_to_string)
 					end
 				end
 			end
@@ -1690,11 +1674,10 @@ feature -- Function Evaluation
 			valid_feature_name: f_name /= Void and then not f_name.is_empty
 		local
 			icdm: ICOR_DEBUG_MODULE
-			classtok, feattok: NATURAL_32
+			feattok: NATURAL_32
 		do
 			icdm := a_icdmod
-			classtok := a_classtok
-			feattok := icdm.md_feature_token (classtok, f_name)
+			feattok := icdm.md_feature_token (a_classtok, f_name)
 			if feattok > 0 then
 				Result := icdm.get_function_from_token (feattok)
 				if Result = Void then
@@ -1718,7 +1701,6 @@ feature -- Function Evaluation
 									end
 								end
 							end
-
 						end
 					end
 				end
@@ -1781,10 +1763,8 @@ feature {EIFNET_DEBUGGER_EVALUATOR} -- Implementation of ICorDebugFunction retri
 			-- ICorDebugClass for `a_class_c'.`a_f_name'
 		local
 			l_feat_i : FEATURE_I
-			l_class_c: CLASS_C
 		do
-			l_class_c := ct.associated_class
-			l_feat_i := l_class_c.feature_named_32 (a_f_name)
+			l_feat_i := ct.associated_class.feature_named_32 (a_f_name)
 			Result := icd_function_by_feature (Void, ct, l_feat_i)
 		end
 
@@ -2008,7 +1988,6 @@ feature -- Specific function evaluation
  				min,max: INTEGER): STRING_32
 			-- Debug ouput string value
 		local
-			l_icd_frame: ICOR_DEBUG_FRAME
 			l_icd: ICOR_DEBUG_VALUE
 			l_icdov: ICOR_DEBUG_OBJECT_VALUE
 			l_icd_class: ICOR_DEBUG_CLASS
@@ -2044,8 +2023,7 @@ feature -- Specific function evaluation
 							l_func := l_icd_module.get_function_from_token (l_feature_token)
 						end
 						if l_func /= Void then
-							l_icd_frame := a_frame
-							l_icd := eifnet_dbg_evaluator.function_evaluation (l_icd_frame, l_func, <<a_icd>>)
+							l_icd := eifnet_dbg_evaluator.function_evaluation (a_frame, l_func, <<a_icd>>)
 							if eifnet_dbg_evaluator.last_eval_is_exception and l_icd /= Void then
 								l_icd.clean_on_dispose
 								l_icd := Void
@@ -2247,7 +2225,7 @@ feature -- Specific function evaluation
 					end
 					l_icd_debug_value.clean_on_dispose
 				else
-					if (l_data_icd_class.last_error_code) = {ICOR_DEBUG_API_ERROR_CODE_FORMATTER}.cordbg_e_class_not_loaded then
+					if l_data_icd_class.last_error_code = {ICOR_DEBUG_API_ERROR_CODE_FORMATTER}.cordbg_e_class_not_loaded then
 						l_once_already_called := False
 					else
 						l_once_not_available := True
@@ -2360,7 +2338,7 @@ feature -- Specific function evaluation
 						attached dv.icd_value as icdv and then not icdv.is_null_reference
 					then
 						l_prepared_icd_debug_value := Edv_formatter.prepared_debug_value (icdv)
-						if attached {ICOR_DEBUG_OBJECT_VALUE} l_prepared_icd_debug_value.query_interface_icor_debug_object_value as icdov then
+						if attached l_prepared_icd_debug_value.query_interface_icor_debug_object_value as icdov then
 							l_icdv_tmp := icdov.get_field_value (l_data_icd_class, l_done_token)
 							if l_icdv_tmp /= Void then
 								l_prepared_icdv_tmp := edv_formatter.prepared_debug_value (l_icdv_tmp)
@@ -2532,7 +2510,7 @@ feature {NONE} -- External
 			-- Value for C externals to have an infinite wait
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

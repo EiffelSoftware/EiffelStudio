@@ -717,14 +717,12 @@ feature {BYTE_NODE} -- Visitor
 						attached {FEATURE_B} a_node.call as l_f_b and then
 						l_f_b.parameters /= Void and then
 						l_f_b.parameters.count = 1 and then
-						attached {PARAMETER_B} l_f_b.parameters.first as l_p_b
+						attached l_f_b.parameters.first as l_p_b and then
+						attached l_p_b.expression as l_e_b and then
+						attached l_e_b.evaluate as l_v_i
 					then
-						if attached {EXPR_B} l_p_b.expression as l_e_b then
-							if attached l_e_b.evaluate as l_v_i then
-								l_supported	:= True
-								evaluate_value_i (l_v_i, Void)
-							end
-						end
+						l_supported	:= True
+						evaluate_value_i (l_v_i, Void)
 					end
 				else
 					if l_type_to_create /= Void then
@@ -1562,14 +1560,12 @@ feature {BYTE_NODE} -- Visitor
 			l_tmp_target_backup: like tmp_target
 --			l_call_value: DBG_EVALUATED_VALUE
 --			l_value: DUMP_VALUE
-			l_type_i: CL_TYPE_A
 		do
 			debug ("refactor_fixme")
 				fixme ("Later when we have a way to ensure the unicity of TYPE instances, we'll need to update this part")
 			end
 			l_tmp_target_backup := tmp_target
-			l_type_i := resolved_real_type_in_context (a_node.type)
-			create_empty_instance_of (l_type_i)
+			create_empty_instance_of (resolved_real_type_in_context (a_node.type))
 -- FIXME: the following commented code seems to be useless, and it fixes bug#15888  (2009-06-01)
 --			if not error_occurred then
 --				l_call_value := tmp_result
@@ -2230,11 +2226,9 @@ feature {NONE} -- Evaluation: implementation
 		end
 
 	is_equal_evaluation_on_values (a_left, a_right: DBG_EVALUATED_VALUE): BOOLEAN
-			-- Compare using `is_equal'
-		require else
-			same_type: values_with_same_type (a_left, a_right)
+			-- Compare using `is_equal`.
 		do
-			if attached application_execution as app then
+			if values_with_same_type (a_left, a_right) and then attached application_execution as app then
 				Result := app.is_equal_evaluation (a_left, a_right, dbg_error_handler)
 			else
 				dbg_error_handler.notify_error_exception_internal_issue
@@ -2563,7 +2557,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -2594,4 +2588,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class DBG_EXPRESSION_EVALUATOR_B
+end

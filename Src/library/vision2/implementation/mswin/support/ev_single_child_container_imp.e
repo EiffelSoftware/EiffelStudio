@@ -1,7 +1,8 @@
-note
-	description:
-		"A common class for Mswindows containers with one child without%N%
-		%commitment to a WEL control."
+﻿note
+	description: "[
+			A common class for Mswindows containers with one child
+			without commitment to a WEL control.
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -165,34 +166,25 @@ feature {EV_ANY_I} -- WEL Implementation
 			-- `search_pos' is the index where searching must start from for containers, and `forwards' determines the
 			-- tabbing direction. If `search_pos' is less then 1 or more than `count' for containers, the parent of the
 			-- container must be searched next.
-		require else
-			valid_search_pos: search_pos >= 0 and search_pos <= attached_interface.count + 1
-		local
-			w: detachable EV_WIDGET_IMP
-			container: detachable EV_CONTAINER
-			l_result: detachable EV_WIDGET_IMP
 		do
-			l_result := return_current_if_next_tabstop_widget (start_widget, search_pos, forwards)
-			if l_result = Void and search_pos = 1 and item /= Void and is_sensitive then
+			Result := return_current_if_next_tabstop_widget (start_widget, search_pos, forwards)
+			if
+				not attached Result and
+				search_pos = 1 and
+				attached item and
+				is_sensitive and
+				attached item_imp as w
+			then
 					-- Otherwise search the child.
-				w := item_imp
-				check w /= Void then end
-				if forwards then
-					l_result := w.next_tabstop_widget (start_widget, 1, forwards)
-				else
-					container ?= w.interface
-					if container /= Void then
-						l_result := w.next_tabstop_widget (start_widget, container.count, forwards)
-					else
-						l_result := w.next_tabstop_widget (start_widget, 1, forwards)
-					end
-				end
+				Result := w.next_tabstop_widget
+				 	(start_widget,
+				 	if forwards or else not attached {EV_CONTAINER} w.interface as c then 1 else c.count end,
+				 	forwards)
 			end
-			if l_result = Void then
-				l_result := next_tabstop_widget_from_parent (start_widget, search_pos, forwards)
+			if not attached Result then
+				Result := next_tabstop_widget_from_parent (start_widget, search_pos, forwards)
 			end
-			check l_result /= Void then end
-			Result := l_result
+			check attached Result then end
 		end
 
 	is_control_in_window (hwnd_control: POINTER): BOOLEAN
@@ -239,7 +231,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -249,17 +241,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_SINGLE_CHILD_CONTAINER_IMP
-
-
-
-
-
-
-
-
-
-
+end

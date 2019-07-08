@@ -107,6 +107,19 @@ feature {NONE} -- Initialization
 			c_string_provider.read_substring_into_character_32_area (area, 1, l_count)
 		end
 
+	make_from_c_byte_array (c_string: POINTER; a_count: INTEGER)
+			-- Initialize from contents of `c_string' for a length of `a_count`,
+			-- a string created by some C function.
+		require
+			c_string_exists: c_string /= default_pointer
+		do
+			c_string_provider.set_shared_from_pointer_and_count (c_string, 4 * a_count)
+			create area.make_filled ('%/000/', a_count + 1)
+			count := a_count
+			internal_hash_code := 0
+			c_string_provider.read_unicode_substring_into_character_32_area (area, 1, 4 * a_count)
+		end
+
 	make_from_c_pointer (c_string: POINTER)
 			-- Create new instance from contents of `c_string',
 			-- a string created by some C function.
@@ -851,7 +864,7 @@ invariant
 	area_not_void: area /= Void
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

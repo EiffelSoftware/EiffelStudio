@@ -63,16 +63,16 @@ extern "C" {
 	RT_LNK void (*egc_strset)(EIF_REFERENCE, EIF_TYPED_VALUE);
 	RT_LNK void (*egc_str32make)(EIF_REFERENCE, EIF_TYPED_VALUE);	/* STRING_32 creation feature */
 	RT_LNK void (*egc_str32set)(EIF_REFERENCE, EIF_TYPED_VALUE);
-	RT_LNK void (*egc_immstr8make_from_string)(EIF_REFERENCE, EIF_TYPED_VALUE);	/* IMMUTABLE_STRING_8 creation feature */
-	RT_LNK void (*egc_immstr32make_from_string)(EIF_REFERENCE, EIF_TYPED_VALUE);	/* IMMUTABLE_STRING_32 creation feature */
+	RT_LNK void (*egc_immstr8make_from_c_substring)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE);	/* IMMUTABLE_STRING_8 creation feature */
+	RT_LNK void (*egc_immstr32make_from_c_byte_array)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE);	/* IMMUTABLE_STRING_32 creation feature */
 	RT_LNK void (*egc_arrmake)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE);/* ARRAY creation feature */
 #else
 	RT_LNK void (*egc_strmake)(EIF_REFERENCE, EIF_INTEGER);	/* STRING creation feature */
 	RT_LNK uint32 egc_str_count_offset;
 	RT_LNK uint32 egc_str_hash_offset;
 	RT_LNK void (*egc_str32make)(EIF_REFERENCE, EIF_INTEGER);	/* STRING_32 creation feature */
-	RT_LNK void (*egc_immstr8make_from_string)(EIF_REFERENCE, EIF_REFERENCE);	/* IMMUTABLE_STRING_32 creation feature */
-	RT_LNK void (*egc_immstr32make_from_string)(EIF_REFERENCE, EIF_REFERENCE);	/* IMMUTABLE_STRING_32 creation feature */
+	RT_LNK void (*egc_immstr8make_from_c_substring)(EIF_REFERENCE, EIF_POINTER, EIF_INTEGER, EIF_INTEGER);	/* IMMUTABLE_STRING_32 creation feature */
+	RT_LNK void (*egc_immstr32make_from_c_byte_array)(EIF_REFERENCE, EIF_POINTER, EIF_INTEGER);	/* IMMUTABLE_STRING_32 creation feature */
 	RT_LNK uint32 egc_str32_count_offset;
 	RT_LNK uint32 egc_str32_hash_offset;
 	RT_LNK void (*egc_arrmake)(EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER);/* ARRAY creation feature */

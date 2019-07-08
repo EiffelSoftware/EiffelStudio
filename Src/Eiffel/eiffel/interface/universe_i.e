@@ -692,6 +692,8 @@ feature {COMPILER_EXPORTER} -- Implementation
 			l_actions.put (agent l_system.set_typed_pointer_class, "TYPED_POINTER")
 			l_actions.put (agent l_system.set_string_class (?, 8), "STRING_8")
 			l_actions.put (agent l_system.set_string_class (?, 32), "STRING_32")
+			l_actions.put (agent l_system.set_immutable_string_class (?, 8), "IMMUTABLE_STRING_8")
+			l_actions.put (agent l_system.set_immutable_string_class (?, 32), "IMMUTABLE_STRING_32")
 			l_actions.put (agent l_system.set_array_class, "ARRAY")
 			l_actions.put (agent l_system.set_special_class, "SPECIAL")
 			l_actions.put (agent l_system.set_tuple_class, "TUPLE")

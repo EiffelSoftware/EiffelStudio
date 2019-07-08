@@ -165,9 +165,9 @@ doc:		<eiffel_classes>IMMUTABLE_STRING_8</eiffel_classes>
 doc:	</attribute>
 */
 #ifdef WORKBENCH
-rt_public void (*egc_immstr8make_from_string)(EIF_REFERENCE, EIF_TYPED_VALUE);
+rt_public void (*egc_immstr8make_from_c_substring)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE, EIF_TYPED_VALUE);
 #else
-rt_public void (*egc_immstr8make_from_string)(EIF_REFERENCE, EIF_REFERENCE);
+rt_public void (*egc_immstr8make_from_c_substring)(EIF_REFERENCE, EIF_POINTER, EIF_INTEGER, EIF_INTEGER);
 #endif
 
 /*
@@ -179,9 +179,9 @@ doc:		<eiffel_classes>IMMUTABLE_STRING_32</eiffel_classes>
 doc:	</attribute>
 */
 #ifdef WORKBENCH
-rt_public void (*egc_immstr32make_from_string)(EIF_REFERENCE, EIF_TYPED_VALUE);
+rt_public void (*egc_immstr32make_from_c_byte_array)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE);
 #else
-rt_public void (*egc_immstr32make_from_string)(EIF_REFERENCE, EIF_REFERENCE);
+rt_public void (*egc_immstr32make_from_c_byte_array)(EIF_REFERENCE, EIF_POINTER, EIF_INTEGER);
 #endif
 
 

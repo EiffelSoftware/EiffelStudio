@@ -3814,7 +3814,7 @@ Manifest_value: Boolean_constant
 			{ $$ := $1 }
 	|	Nosigned_real
 			{ $$ := $1 }
-	|	Manifest_string
+	|	Default_manifest_string
 			{ $$ := $1 }
 	;
 

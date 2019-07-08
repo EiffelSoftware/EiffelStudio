@@ -391,12 +391,12 @@ feature -- Plug and Makefile file
 			count_feat, internal_hash_code_feat: ATTRIBUTE_I
 			str32_make_feat, str32_set_count_feat: FEATURE_I
 			str32_count_feat, str32_internal_hash_code_feat: ATTRIBUTE_I
-			immstr8_make_from_string_feat,
-			immstr32_make_from_string_feat: FEATURE_I
+			immstr8_make_from_c_substring_feat,
+			immstr32_make_from_c_byte_array_feat: FEATURE_I
 			creation_feature: FEATURE_I
 			feat: FEATURE_I
 			dispose_name, str_make_name, str32_make_name,
-			immstr8_make_from_string_name, immstr32_make_from_string_name,
+			immstr8_make_from_c_substring_name, immstr32_make_from_c_byte_array_name,
 			init_name, exp_init_name,
 			set_count_name, str32_set_count_name: STRING
 			arr_make_name, set_rout_disp_name: STRING
@@ -501,11 +501,11 @@ feature -- Plug and Makefile file
 			end
 
 				-- Make IMMUTABLE_STRING_8 declaration
-			immstr8_make_from_string_feat := imm_string8_cl.feature_table.item_id ({PREDEFINED_NAMES}.make_from_string_name_id)
-			immstr8_make_from_string_name := Encoder.feature_name (immstr8_make_from_string_feat.written_class.types.first.type_id,
-													immstr8_make_from_string_feat.body_index).string
+			immstr8_make_from_c_substring_feat := imm_string8_cl.feature_table.item_id ({PREDEFINED_NAMES}.make_from_c_substring_name_id)
+			immstr8_make_from_c_substring_name := Encoder.feature_name (immstr8_make_from_c_substring_feat.written_class.types.first.type_id,
+													immstr8_make_from_c_substring_feat.body_index).string
 			buffer.put_string ("extern void ")
-			buffer.put_string (immstr8_make_from_string_name)
+			buffer.put_string (immstr8_make_from_c_substring_name)
 			buffer.put_string ("();%N")
 
 				-- Make STRING_32 declaration
@@ -528,11 +528,11 @@ feature -- Plug and Makefile file
 			end
 
 				-- Make IMMUTABLE_STRING_32 declaration
-			immstr32_make_from_string_feat := imm_string32_cl.feature_table.item_id ({PREDEFINED_NAMES}.make_from_string_name_id)
-			immstr32_make_from_string_name := Encoder.feature_name (immstr32_make_from_string_feat.written_class.types.first.type_id,
-													immstr32_make_from_string_feat.body_index).string
+			immstr32_make_from_c_byte_array_feat := imm_string32_cl.feature_table.item_id ({PREDEFINED_NAMES}.make_from_c_byte_array_name_id)
+			immstr32_make_from_c_byte_array_name := Encoder.feature_name (immstr32_make_from_c_byte_array_feat.written_class.types.first.type_id,
+													immstr32_make_from_c_byte_array_feat.body_index).string
 			buffer.put_string ("extern void ")
-			buffer.put_string (immstr32_make_from_string_name)
+			buffer.put_string (immstr32_make_from_c_byte_array_name)
 			buffer.put_string ("();%N")
 
 				--| make ARRAY declaration
@@ -766,11 +766,11 @@ feature -- Plug and Makefile file
 
 				-- Pointer on creation feature of class IMMUTABLE_STRING_8
 			if final_mode then
-				buffer.put_string ("%Tegc_immstr8make_from_string = (void (*)(EIF_REFERENCE, EIF_REFERENCE)) ")
+				buffer.put_string ("%Tegc_immstr8make_from_c_substring = (void (*)(EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE)) ")
 			else
-				buffer.put_string ("%Tegc_immstr8make_from_string = (void (*)(EIF_REFERENCE, EIF_TYPED_VALUE)) ")
+				buffer.put_string ("%Tegc_immstr8make_from_c_substring = (void (*)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE)) ")
 			end
-			buffer.put_string (immstr8_make_from_string_name)
+			buffer.put_string (immstr8_make_from_c_substring_name)
 			buffer.put_string (";%N")
 
 				-- Pointer on creation feature of class STRING_32
@@ -784,11 +784,11 @@ feature -- Plug and Makefile file
 
 				-- Pointer on creation feature of class IMMUTABLE_STRING_32
 			if final_mode then
-				buffer.put_string ("%Tegc_immstr32make_from_string = (void (*)(EIF_REFERENCE, EIF_REFERENCE)) ")
+				buffer.put_string ("%Tegc_immstr32make_from_c_byte_array = (void (*)(EIF_REFERENCE, EIF_REFERENCE)) ")
 			else
-				buffer.put_string ("%Tegc_immstr32make_from_string = (void (*)(EIF_REFERENCE, EIF_TYPED_VALUE)) ")
+				buffer.put_string ("%Tegc_immstr32make_from_c_byte_array = (void (*)(EIF_REFERENCE, EIF_TYPED_VALUE)) ")
 			end
-			buffer.put_string (immstr32_make_from_string_name)
+			buffer.put_string (immstr32_make_from_c_byte_array_name)
 			buffer.put_string (";%N")
 
 				-- Pointer on creation feature of class ARRAY[ANY]

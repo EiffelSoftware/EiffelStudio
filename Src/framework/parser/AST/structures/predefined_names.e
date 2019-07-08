@@ -240,7 +240,8 @@ feature -- Constants
 	ieee_is_less_equal_name_id: INTEGER = 227
 	ieee_maximum_number_name_id: INTEGER = 228
 	ieee_minimum_number_name_id: INTEGER = 229
-	make_from_string_name_id: INTEGER = 230
+	make_from_c_substring_name_id: INTEGER = 230
+	make_from_c_byte_array_name_id: INTEGER = 231
 
 feature -- Classification
 

@@ -3886,10 +3886,10 @@ feature -- Dead code removal
 				-- Protection of feature `make' of class STRING_32.
 			register_monomorphic ({PREDEFINED_NAMES}.Make_name_id, string_32_class)
 
-				-- Protection of feature `make_from_string' of class IMMUTABLE_STRING_8.
-			register_monomorphic ({PREDEFINED_NAMES}.make_from_c_substring_name_id, immutable_string_8_class)
+				-- Protection of feature `make_from_c_byte_array' of class IMMUTABLE_STRING_8.
+			register_monomorphic ({PREDEFINED_NAMES}.make_from_c_byte_array_name_id, immutable_string_8_class)
 
-				-- Protection of feature `make_from_string' of class IMMUTABLE_STRING_32.
+				-- Protection of feature `make_from_c_byte_array' of class IMMUTABLE_STRING_32.
 			register_monomorphic ({PREDEFINED_NAMES}.make_from_c_byte_array_name_id, immutable_string_32_class)
 
 				-- Protection of ROUTINE class features.

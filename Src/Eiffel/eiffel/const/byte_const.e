@@ -138,10 +138,13 @@ feature -- Access
 	Bc_not_used_122:	CHARACTER = '%/122/';
 	Bc_not_used_123:	CHARACTER = '%/123/';
 	Bc_not_used_124:	CHARACTER = '%/124/';
-	Bc_not_used_125:	CHARACTER = '%/125/';
-	Bc_not_used_126:	CHARACTER = '%/126/';
-	Bc_not_used_127:	CHARACTER = '%/127/';
-	Bc_not_used_128:	CHARACTER = '%/128/';
+
+		-- Immutable strings
+	Bc_immstring8:			CHARACTER = '%/125/';
+	Bc_immstring32:			CHARACTER = '%/126/';
+	Bc_once_immstring8:		CHARACTER = '%/127/';
+	Bc_once_immstring32:	CHARACTER = '%/128/';
+
 	Bc_object_expr_addr:CHARACTER = '%/129/';
 	Bc_reserve:			CHARACTER = '%/130/';
 	Bc_pop:				CHARACTER = '%/131/';
@@ -269,12 +272,6 @@ feature -- Access
 
 		-- Always failing postcondition
 	Bc_postfail: 		CHARACTER = '%/177/';
-
-		-- Immutable strings
-	Bc_immstring8:			CHARACTER = '%/178/';
-	Bc_immstring32:			CHARACTER = '%/179/';
-	Bc_once_immstring8:		CHARACTER = '%/180/';
-	Bc_once_immstring32:	CHARACTER = '%/181/';
 
 
 note

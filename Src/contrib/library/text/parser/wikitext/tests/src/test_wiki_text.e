@@ -714,6 +714,109 @@ text=bar
 			assert ("o", not o.is_empty)
 		end
 
+	test_table_with_wiki_code_and_bang
+		local
+			t: WIKI_CONTENT_TEXT
+			o,e: STRING
+		do
+			create t.make_from_string ("[
+{| 
+|- 
+| Test 
+| 
+<code>
+bang-bang !! double exclamation marks
+</code>..
+|}
+			]")
+			e := "[
+<p><table><tr><td> Test </td><td> 
+<code>bang-bang !! double exclamation marks</code><br/>
+..</td></tr>
+</table>
+</p>
+
+			]"--
+
+			create o.make_empty
+
+			t.structure.process (new_xhtml_generator (o))
+			assert ("o", not o.is_empty)
+			assert ("expected", o.same_string (e))
+
+			create t.make_from_string ("[
+{| 
+|- 
+| Test 
+| 
+<code>
+bang-bang <em>!!</em> double exclamation marks
+</code>..
+|}
+			]")
+			e := "[
+<p><table><tr><td> Test </td><td> 
+<code>bang-bang &lt;em&gt;!!&lt;/em&gt; double exclamation marks</code><br/>
+..</td></tr>
+</table>
+</p>
+
+			]"--
+
+			create o.make_empty
+
+			t.structure.process (new_xhtml_generator (o))
+			assert ("o", not o.is_empty)
+			assert ("expected", o.same_string (e))
+
+			create t.make_from_string ("[
+{|
+|-
+| Test
+|
+```
+bang-bang !! double exclamation marks
+```..
+|}
+			]")
+			e := "[
+<p><table><tr><td> Test</td><td>
+<code>bang-bang !! double exclamation marks</code><br/>
+..</td></tr>
+</table>
+</p>
+
+			]"--
+
+			create o.make_empty
+
+			t.structure.process (new_xhtml_generator (o))
+			assert ("o", not o.is_empty)
+			assert ("expected", o.same_string (e))
+
+			create t.make_from_string ("[
+{|
+|-
+| Test
+|
+`bang-bang !! double exclamation marks`..
+|}
+			]")
+			e := "[
+<p><table><tr><td> Test</td><td>
+<code class="inline">bang-bang !! double exclamation marks</code>..</td></tr>
+</table>
+</p>
+
+			]"--
+
+			create o.make_empty
+
+			t.structure.process (new_xhtml_generator (o))
+			assert ("o", not o.is_empty)
+			assert ("expected", o.same_string (e))
+		end
+
 	test_preformatted_text
 		local
 			t: WIKI_CONTENT_TEXT

@@ -74,7 +74,7 @@ feature -- Helpers
 
 	next_closing_table (s: STRING; a_start: INTEGER): INTEGER
 		local
-			i,n: INTEGER
+			i,j,k,n: INTEGER
 			v: INTEGER
 		do
 			from
@@ -94,6 +94,31 @@ feature -- Helpers
 							Result := i - 1
 						else
 							v := v - 1
+						end
+					end
+				when '<' then
+					j := next_end_of_tag_character (s, i + 1)
+					if j > i and then attached tag_name_from (s.substring (i, j)) as l_tag_name then
+						j := next_closing_tag (s, l_tag_name, j + 1)
+						if j > i then
+							i := j
+						end
+					end
+				when '`' then
+					if safe_character (s, i + 1) = '`' and then safe_character (s, i + 2) = '`' then
+						j := s.substring_index ("```", i + 2)
+						if j > 0 then
+							i := j
+						else
+							i := i + 2
+						end
+					else
+						j := s.index_of ('`', i + 1)
+						if j > 0 then
+							k := index_of_end_of_line (s, i + 1)
+							if k = 0 or else j <= k then
+								i := j
+							end
 						end
 					end
 				else
@@ -232,7 +257,7 @@ feature {NONE} -- Implementation
 
 
 note
-	copyright: "2011-2016, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2019, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

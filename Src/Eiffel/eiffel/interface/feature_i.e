@@ -1,10 +1,14 @@
 ﻿note
-	description: "Instance of an Eiffel feature: for every inherited feature there is%N%
-		%an instance of FEATURE_I with its final name, the class name where it%N%
-		%is written, the body id of its content and the routine table ids to%N%
-		%which the feature is attached.%N%
-		%Attribute `type' is the real type of the feature in the class where it%N%
-		%is inherited (or written), that means there is no more anchored type."
+	description: "[
+			Instance of an Eiffel feature.
+			
+			For every inherited feature there is an instance of FEATURE_I with its final name,
+			the class name where it is written, the body id of its content and
+			the routine table ids to which the feature is attached.
+			
+			Attribute `type` is the real type of the feature in the class where it
+			is inherited (or written), that means there is no more anchored type.
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -160,6 +164,47 @@ feature -- Access
 			end
 		ensure
 			export_status_not_void: export_status /= Void
+		end
+
+	immediate_export_status: EXPORT_I
+			-- Export status of the feature declaration without taking inheritance into account.
+			-- Use with care: the function is slow when the feature is selectively exported.
+		local
+			f: like feature_flags
+		do
+			f := feature_flags
+			if f & is_immediate_export_status_all_mask /= 0 then
+				Result := export_all_status
+			elseif f & is_immediate_export_status_none_mask /= 0 then
+				Result := export_none_status
+			else
+				if
+					written_in /= 0 and then
+					attached written_class.ast.features as cs
+				then
+						-- Retrieve the export status from the AST.
+					across
+						cs as c
+					until
+						attached Result
+					loop
+						if attached c.item.features as fs then
+							across
+								fs as h
+							until
+								attached Result
+							loop
+								if attached h.item.feature_with_name (feature_name_id) then
+									Result := export_status_generator.feature_clause_export_status (system, written_class, c.item)
+								end
+							end
+						end
+					end
+				end
+				if not attached Result then
+					Result := export_none_status
+				end
+			end
 		end
 
 	origin_feature_id: INTEGER
@@ -729,17 +774,43 @@ feature -- Setting
 
 	set_export_status (e: EXPORT_I)
 			-- Assign `e' to `export_status'.
+			-- See also: `set_immediate_export_status`.
 		require
 			e_not_void: e /= Void
 		do
-			if e.is_all or e.is_none then
+				-- Reset export status flags.
+			feature_flags := feature_flags & is_export_status_none_mask.bit_not
+				-- Update export status flags.
+			if e.is_all then
 				internal_export_status := Void
-				feature_flags := feature_flags.set_bit_with_mask (e.is_none, is_export_status_none_mask)
+			elseif e.is_none then
+				internal_export_status := Void
+				feature_flags := feature_flags | is_export_status_none_mask
 			else
 				internal_export_status := e
 			end
 		ensure
 			export_status_set: export_status.same_as (e)
+		end
+
+	set_immediate_export_status (e, i: EXPORT_I)
+			-- Assign export status `e` to `export_status` and record immedate export status `i` of the feature (if possible).
+			-- See also: `set_export_status`.
+		do
+				-- Reset immediate export status flags.
+			feature_flags := feature_flags &
+				(is_immediate_export_status_none_mask |
+				is_immediate_export_status_all_mask).bit_not
+				-- Update immediate export status flags.
+			if i.is_all then
+				feature_flags := feature_flags | is_immediate_export_status_all_mask
+			elseif i.is_none then
+				feature_flags := feature_flags | is_immediate_export_status_none_mask
+			end
+			set_export_status (e)
+		ensure
+			export_status_set: export_status.same_as (e)
+			immediate_export_status_set: immediate_export_status.same_as (i)
 		end
 
 	frozen set_is_origin (b: BOOLEAN)
@@ -3648,6 +3719,8 @@ feature {FEATURE_I} -- Feature flags
 	has_non_object_call_in_assertion_mask: NATURAL_64 =				0x0004_0000_0000
 	has_unqualified_call_in_assertion_mask: NATURAL_64 =				0x0008_0000_0000
 	is_ghost_mask: NATURAL_64 =				0x0010_0000_0000
+	is_immediate_export_status_none_mask: NATURAL_64 = 0x0020_0000_0000
+	is_immediate_export_status_all_mask: NATURAL_64 = 0x0040_0000_0000
 			-- Mask used for each feature property.
 
 feature {FEATURE_I} -- Implementation

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Demo class for binary trees."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -140,8 +140,6 @@ feature {NONE} -- Basic operations
 
 	execute (new_command: INTEGER)
 			-- Execute command corresponding to user's request.
-		require else
-			valid_command: new_command >= child_put_left and new_command <= quit
 		local
 			new : like active
 		do

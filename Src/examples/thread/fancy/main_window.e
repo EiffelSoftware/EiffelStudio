@@ -136,8 +136,6 @@ feature {NONE} -- Behavior
 
 	on_menu_command (a_menu_id: INTEGER)
 			-- Execute the command correpsonding to `menu_id'.
-		require else
-			about_box_not_void: about_box /= Void
 		do
 			inspect
 				a_menu_id
@@ -146,7 +144,9 @@ feature {NONE} -- Behavior
 			when Cmd_win_oval then
 				;(create {OVAL_DEMO_WINDOW}.make (display_mutex)).do_nothing
 			when Cmd_help_about then
-				about_box.activate
+				if attached about_box as b then
+					b.activate
+				end
 			when Cmd_win_exit then
 				if closeable then
 					do_exit (Current)
@@ -295,7 +295,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

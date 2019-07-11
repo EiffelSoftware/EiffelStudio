@@ -1,4 +1,4 @@
-note
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 
@@ -155,8 +155,6 @@ feature {NONE} -- Basic operations
 
 	execute (new_command: INTEGER)
 			-- Execute command corresponding to user's request.
-		require else
-			valid_command: new_command >= put_left and new_command <= quit
 		do
 				--| parse and perform action
 			if new_command = child then

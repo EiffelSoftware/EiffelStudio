@@ -385,7 +385,7 @@ test	secret-func-arg-in-precondition	valid086 tcf pass validity
 test	vtct-on-valid-class		valid087 tcf pass validity
 test	creation-proc-secret-precond	valid088 tcf fail validity
 test	join-features-invalid-vuex	valid089 tcf pass validity
-test	switch-parents-vuex-gone	valid090 tcf fail validity
+test	switch-parents-vuex-gone	valid090 tcf pass validity
 test	inspect-char-inside-inspect-int	valid091 tcf pass validity inspect
 test	vomb2-called-veen		valid092 tcf pass validity
 test	vtcg-instead-of-vtug2		valid093 tcf pass validity

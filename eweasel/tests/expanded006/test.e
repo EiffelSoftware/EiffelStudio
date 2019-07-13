@@ -31,40 +31,40 @@ feature -- Initialization
 			a /= Void
 		do
 			io.put_string ("Printing ")
-			io.put_string (a.generating_type.name_32.as_string_8)
+			io.put_string (a.generating_type.name_32.to_string_8)
 			io.put_new_line
 			if a.a /= Void then
-				io.put_string (a.a.generating_type.name_32.as_string_8)
+				io.put_string (a.a.generating_type.name_32.to_string_8)
 				io.put_new_line
 			end
 			if a.b /= Void then
-				io.put_string (a.b.generating_type.name_32.as_string_8)
+				io.put_string (a.b.generating_type.name_32.to_string_8)
 				io.put_new_line
 			end
-			io.put_string (a.c1.generating_type.name_32.as_string_8)
+			io.put_string (a.c1.generating_type.name_32.to_string_8)
 			io.put_new_line
-			io.put_string (a.c2.generating_type.name_32.as_string_8)
+			io.put_string (a.c2.generating_type.name_32.to_string_8)
 			io.put_new_line
-			io.put_string (a.d1.generating_type.name_32.as_string_8)
+			io.put_string (a.d1.generating_type.name_32.to_string_8)
 			io.put_new_line
-			io.put_string (a.d2.generating_type.name_32.as_string_8)
+			io.put_string (a.d2.generating_type.name_32.to_string_8)
 			io.put_new_line
 
 			if a.f_a /= Void then
-				io.put_string (a.f_a.generating_type.name_32.as_string_8)
+				io.put_string (a.f_a.generating_type.name_32.to_string_8)
 				io.put_new_line
 			end
 			if a.f_b /= Void then
-				io.put_string (a.f_b.generating_type.name_32.as_string_8)
+				io.put_string (a.f_b.generating_type.name_32.to_string_8)
 				io.put_new_line
 			end
-			io.put_string (a.f_c1.generating_type.name_32.as_string_8)
+			io.put_string (a.f_c1.generating_type.name_32.to_string_8)
 			io.put_new_line
-			io.put_string (a.f_c2.generating_type.name_32.as_string_8)
+			io.put_string (a.f_c2.generating_type.name_32.to_string_8)
 			io.put_new_line
-			io.put_string (a.f_d1.generating_type.name_32.as_string_8)
+			io.put_string (a.f_d1.generating_type.name_32.to_string_8)
 			io.put_new_line
-			io.put_string (a.f_d2.generating_type.name_32.as_string_8)
+			io.put_string (a.f_d2.generating_type.name_32.to_string_8)
 			io.put_new_line
 
 			io.put_new_line

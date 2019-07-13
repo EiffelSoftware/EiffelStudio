@@ -26,7 +26,7 @@ feature
 			!!d1.make
 			!!d2.make
 			d2 := f
-			io.put_string (d2.generating_type.name_32.as_string_8) io.new_line
+			io.put_string (d2.generating_type.name_32.to_string_8) io.new_line
 			io.put_integer (d2.www); io.new_line
 		end
 

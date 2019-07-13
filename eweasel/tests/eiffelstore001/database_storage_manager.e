@@ -42,22 +42,22 @@ feature -- Initialization
 			set_map_zero_null_value (False)
 
 			if attached a_schema as l_schema then
-				a_data_app.set_application (l_schema.as_string_8)
+				a_data_app.set_application (l_schema.to_string_8)
 			end
 			if attached a_data_source as l_ds then
-				a_data_app.set_data_source (l_ds)
+				a_data_app.set_data_source (l_ds.to_string_8)
 			end
 			if attached a_host_name as l_hn then
-				a_data_app.set_hostname (l_hn)
+				a_data_app.set_hostname (l_hn.to_string_8)
 			end
 			if attached a_role_id as l_rid and then attached a_role_password as l_rp then
-				a_data_app.set_role (l_rid, l_rp)
+				a_data_app.set_role (l_rid.to_string_8, l_rp.to_string_8)
 			end
 			if attached a_group as l_group then
-				a_data_app.set_group (l_group)
+				a_data_app.set_group (l_group.to_string_8)
 			end
 
-			a_data_app.login (a_name.as_string_8, a_password.as_string_8)
+			a_data_app.login (a_name.to_string_8, a_password.to_string_8)
 			a_data_app.set_base
 
 			create session_control.make

@@ -3,7 +3,7 @@ class
 
 inherit {NONE}
 
-	ARGUMENTS
+	ARGUMENTS_32
 
 create
 	make

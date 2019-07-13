@@ -163,7 +163,7 @@ feature {NONE} -- Creation
 		local
 			done: BOOLEAN
 		do
-			io.put_string (a.generating_type.name_32.as_string_8) io.put_new_line
+			io.put_string (a.generating_type.name_32.to_string_8) io.put_new_line
 			across a as c loop
 				if done then
 					io.put_string (c.item) io.put_new_line
@@ -175,14 +175,14 @@ feature {NONE} -- Creation
 
 	test_iterable (a: ITERABLE [ANY])
 		do
-			io.put_string (a.generating_type.name_32.as_string_8) io.put_new_line
+			io.put_string (a.generating_type.name_32.to_string_8) io.put_new_line
 			across a as c loop io.put_string (c.item.out) io.put_new_line end
 			io.put_new_line
 		end
 
 	test_indexable_reversed (a: READABLE_INDEXABLE [ANY])
 		do
-			io.put_string (a.generating_type.name_32.as_string_8) io.put_new_line
+			io.put_string (a.generating_type.name_32.to_string_8) io.put_new_line
 			across a.new_cursor.reversed as c loop
 				io.put_string (c.item.out)
 				io.put_new_line
@@ -192,7 +192,7 @@ feature {NONE} -- Creation
 
 	test_indexable_with_step (a: READABLE_INDEXABLE [ANY]; a_step: INTEGER)
 		do
-			io.put_string (a.generating_type.name_32.as_string_8) io.put_new_line
+			io.put_string (a.generating_type.name_32.to_string_8) io.put_new_line
 			across a.new_cursor.with_step (a_step) as c loop
 				io.put_string (c.item.out)
 				io.put_new_line
@@ -202,7 +202,7 @@ feature {NONE} -- Creation
 
 	test_indexable_reversed_with_step (a: READABLE_INDEXABLE [ANY]; a_step: INTEGER)
 		do
-			io.put_string (a.generating_type.name_32.as_string_8) io.put_new_line
+			io.put_string (a.generating_type.name_32.to_string_8) io.put_new_line
 			across a.new_cursor.with_step (a_step).reversed as c loop
 				io.put_string (c.item.out)
 				io.put_new_line
@@ -212,7 +212,7 @@ feature {NONE} -- Creation
 
 	test_indexable_incremented_decremented (a: READABLE_INDEXABLE [ANY])
 		do
-			io.put_string (a.generating_type.name_32.as_string_8) io.put_new_line
+			io.put_string (a.generating_type.name_32.to_string_8) io.put_new_line
 			across a.new_cursor.incremented (2).decremented (1) as c loop
 				io.put_string (c.item.out)
 				io.put_new_line

@@ -12,7 +12,7 @@ feature
 			action := agent f
 			create t1
 			l_tuple := [t1.g.h]
-			io.put_string (l_tuple.generating_type.name_32.as_string_8)
+			io.put_string (l_tuple.generating_type.name_32.to_string_8)
 			io.put_new_line
 			action.call (l_tuple)
 		end

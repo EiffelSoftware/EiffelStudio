@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2019 University of Southern California and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -14,17 +14,17 @@ feature
 			l_b: B [expanded C [ANY]]
 		do
 			create l_a.make
-			io.put_string (l_a.generating_type.name_32.as_string_8)
+			io.put_string (l_a.generating_type.name_32.to_string_8)
 			io.new_line
-			io.put_string (l_a.item.generating_type.name_32.as_string_8)
+			io.put_string (l_a.item.generating_type.name_32.to_string_8)
 			io.new_line
-			io.put_string (l_a.c.generating_type.name_32.as_string_8)
+			io.put_string (l_a.c.generating_type.name_32.to_string_8)
 			io.new_line
 
 			create l_b
-			io.put_string (l_b.generating_type.name_32.as_string_8)
+			io.put_string (l_b.generating_type.name_32.to_string_8)
 			io.new_line
-			io.put_string (l_b.item.generating_type.name_32.as_string_8)
+			io.put_string (l_b.item.generating_type.name_32.to_string_8)
 			io.new_line
 		end
 	

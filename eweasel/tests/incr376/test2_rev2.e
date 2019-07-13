@@ -1,7 +1,7 @@
 
 deferred class TEST2
 feature
-	val: STRING
+	val: READABLE_STRING_8
 		once ("OBJECT")
 			Result := generating_type.name
 		end

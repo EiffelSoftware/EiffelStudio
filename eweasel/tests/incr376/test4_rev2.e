@@ -6,7 +6,7 @@ inherit
 			val
 		end
 feature
-	val: STRING
+	val: READABLE_STRING_8
 		once ("OBJECT")
 			Result := precursor
 		end

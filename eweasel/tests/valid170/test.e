@@ -8,7 +8,7 @@ feature {NONE} -- Creation
 	make is
 			-- Run tests.
 		do
-			io.put_string (f.generating_type.name_32.as_string_8)
+			io.put_string (f.generating_type.name_32.to_string_8)
 			io.put_new_line
 		end
 

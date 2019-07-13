@@ -13,16 +13,16 @@ feature
 		do
 			create t4
 			t1 := t4
-			io.put_string (t1.g.generating_type.name_32.as_string_8)
+			io.put_string (t1.g.generating_type.name_32.to_string_8)
 			io.put_new_line
 
 			create t2
 			t1 := t2
-			io.put_string (t1.g.generating_type.name_32.as_string_8)
+			io.put_string (t1.g.generating_type.name_32.to_string_8)
 			io.put_new_line
 
 			create h.make (0)
-			io.put_string (h.generating_type.name_32.as_string_8)
+			io.put_string (h.generating_type.name_32.to_string_8)
 			io.put_new_line
 
 			create int

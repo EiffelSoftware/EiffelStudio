@@ -10,7 +10,7 @@ feature
 		do
 			io.put_string ("Hey you weasel%N")
 			!!x.make
-			io.put_string (x.generating_type.name_32.as_string_8) io.new_line
+			io.put_string (x.generating_type.name_32.to_string_8) io.new_line
 			Result := x
 		end
 	

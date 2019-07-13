@@ -22,7 +22,7 @@ feature
 
 feature {NONE} -- Helper
 
-	generating_type_of (g: G): STRING
+	generating_type_of (g: G): READABLE_STRING_8
 		require
 			g_attached: g /= Void
 		do

@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2017 University of Southern California and contributors.
+--| Copyright (c) 1993-2019 University of Southern California and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -13,16 +13,16 @@ feature
 		do
 			!!x
 			x.weasel
-			io.put_string (x.w.generating_type.name_32.as_string_8); io.new_line
+			io.put_string (x.w.generating_type.name_32.to_string_8); io.new_line
 			!!y
 			y.weasel
-			io.put_string (y.w.generating_type.name_32.as_string_8); io.new_line
+			io.put_string (y.w.generating_type.name_32.to_string_8); io.new_line
 			!!z
 			z.weasel
-			io.put_string (z.w.generating_type.name_32.as_string_8); io.new_line
+			io.put_string (z.w.generating_type.name_32.to_string_8); io.new_line
 			!!k
 			k.weasel
-			io.put_string (k.w.generating_type.name_32.as_string_8); io.new_line
+			io.put_string (k.w.generating_type.name_32.to_string_8); io.new_line
 		end;
 	
 	x: TEST1 [INTEGER_8]

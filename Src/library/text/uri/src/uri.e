@@ -71,7 +71,7 @@ feature {NONE} -- Initialization
 					q := a_string.index_of ('@', p + 1)
 					if q > 0 and (r = 0 or q < r) then
 							--| found user:passwd
-						t := a_string.substring (p + 1, q - 1)
+						t := a_string.substring (p + 1, q - 1).to_string_8
 						set_userinfo (t)
 						p := q
 						q := a_string.index_of ('/', p + 1)
@@ -83,10 +83,10 @@ feature {NONE} -- Initialization
 						q := qq
 					end
 					if q > 0 then
-						t := a_string.substring (p + 1, q - 1)
+						t := a_string.substring (p + 1, q - 1).to_string_8
 					else
 						q := a_string.count
-						t := a_string.substring (p + 1, q)
+						t := a_string.substring (p + 1, q).to_string_8
 						q := 0 --| end of processing						
 					end
 					if not t.is_empty and then t[1] = '[' then
@@ -120,7 +120,7 @@ feature {NONE} -- Initialization
 
 				if q > 0 and q <= a_string.count then
 						--| found query
-					t := a_string.substring (q, a_string.count)
+					t := a_string.substring (q, a_string.count).to_string_8
 					q := t.index_of ('?', 1)
 					if q > 0 then
 						s := t.substring (1, q - 1)
@@ -213,14 +213,15 @@ feature -- Basic operation
 
 				-- Check path
 				-- 		TODO: no space, all character well escaped, ...
-			if path.has (' ') then
-					-- Fix bad URI
-				if a_fixing then
-					create s.make_from_string (path)
-					s.replace_substring_all (" ", "%%20")
-					set_path (s)
-					is_corrected := True
-				end
+			if
+				path.has (' ') and then
+				a_fixing
+			then
+					-- Fix bad URI.
+				create s.make_from_string (path)
+				s.replace_substring_all (" ", "%%20")
+				set_path (s)
+				is_corrected := True
 			end
 			if not is_valid_path (path) then
 				is_valid := False
@@ -228,17 +229,18 @@ feature -- Basic operation
 
 				-- Check query
 				-- 		TODO: no space, all character well escaped, ...			
-			if attached query as q then
-				if q.has (' ') then
-						-- Fix bad URI						
-					if a_fixing then
-						create s.make_from_string (q)
-						s.replace_substring_all (" ", "%%20")
-						set_query (s)
-						is_corrected := True
-					else
-						is_valid := False
-					end
+			if
+				attached query as q and then
+				q.has (' ')
+			then
+					-- Fix bad URI						
+				if a_fixing then
+					create s.make_from_string (q)
+					s.replace_substring_all (" ", "%%20")
+					set_query (s)
+					is_corrected := True
+				else
+					is_valid := False
 				end
 			end
 			if not is_valid_query (query) then
@@ -671,13 +673,13 @@ feature -- Conversion
 				end
 				p.append (c.item)
 			end
-			if p.is_empty then
-			else
-				if p.item (1) /= '/' then
-					if not path.is_empty and then path.item (1) = '/' then
-						p.prepend_character ('/')
-					end
-				end
+			if
+				not p.is_empty and then
+				p.item (1) /= '/' and then
+				not path.is_empty and then
+				path.item (1) = '/'
+			then
+				p.prepend_character ('/')
 			end
 			create Result.make_from_string (string)
 			Result.set_path (p)
@@ -711,7 +713,7 @@ feature -- Element Change
 			if v = Void then
 				userinfo := Void
 			else
-				create userinfo.make_from_string (v.as_string_8)
+				create userinfo.make_from_string (v)
 			end
 		ensure
 			userinfo_set: is_same_string (v, userinfo)
@@ -806,13 +808,12 @@ feature -- Element Change
 					i = 0 or j > n
 				loop
 					i := a_path.index_of ('/', j)
-					if i = 1 and then a_path[i] = '/' then
+					if i = 1 and then a_path [i] = '/' then
 						j := i + 1
 							-- skipped
 					elseif i > 1 then
-						if a_path[i - 1] = '\' then
-								-- Slash being escaped ... skipped
-						else
+							-- Skip an escaped backslash.
+						if a_path [i - 1] /= '\' then
 							add_unencoded_path_segment (a_path.substring (j, i - 1))
 						end
 						j := i + 1
@@ -1048,13 +1049,13 @@ feature -- Status report
 			--		reg-name    = *( unreserved / pct-encoded / sub-delims )			
 		do
 			Result := True
-			if s /= Void and then not s.is_empty then
-				if string_item (s, 1) = '[' and string_item (s, s.count) = ']' then
-					Result := True  -- IPV6 : to complete
-				else
-					Result := True -- IPV4 or reg-name : to complete
-				end
-			end
+			-- if s /= Void and then not s.is_empty then
+				-- if string_item (s, 1) = '[' and string_item (s, s.count) = ']' then
+					-- TODO: IPv6.
+				-- else
+					-- TODO: IPv4 or reg-name.
+				-- end
+			-- end
 		end
 
 	is_valid_path (s: READABLE_STRING_GENERAL): BOOLEAN

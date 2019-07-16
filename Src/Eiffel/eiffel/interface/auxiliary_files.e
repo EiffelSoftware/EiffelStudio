@@ -384,20 +384,19 @@ feature -- Plug and Makefile file
 	generate_plug
 			-- Generate plug with run-time
 		local
-			any_cl, string_cl, string32_cl, imm_string8_cl, imm_string32_cl,
+			any_cl, ise_runtime_cl, string_cl, string32_cl,
 			array_cl, exception_manager_cl: CLASS_C
 			arr_type_id: INTEGER
 			id: INTEGER
 			count_feat, internal_hash_code_feat: ATTRIBUTE_I
 			str32_make_feat, str32_set_count_feat: FEATURE_I
 			str32_count_feat, str32_internal_hash_code_feat: ATTRIBUTE_I
-			immstr8_make_from_c_byte_array_feat,
-			immstr32_make_from_c_byte_array_feat: FEATURE_I
 			creation_feature: FEATURE_I
 			feat: FEATURE_I
 			dispose_name, str_make_name, str32_make_name,
-			immstr8_make_from_c_byte_array_name, immstr32_make_from_c_byte_array_name,
 			init_name, exp_init_name,
+			ise_runtime_new_string_8_name, ise_runtime_new_string_32_name,
+			ise_runtime_new_immutable_string_8_name, ise_runtime_new_immutable_string_32_name,
 			set_count_name, str32_set_count_name: STRING
 			arr_make_name, set_rout_disp_name: STRING
 			set_exception_data_name, is_code_ignored_name: STRING
@@ -450,12 +449,11 @@ feature -- Plug and Makefile file
 			buffer.start_c_specific_code
 
 				-- Extern declarations
+			ise_runtime_cl := system.class_of_id (system.ise_runtime_id)
 			string_cl := system.class_of_id (system.string_8_id)
 			cl_type := string_cl.types.first
 
 			string32_cl := system.class_of_id (system.string_32_id)
-			imm_string32_cl := system.class_of_id (system.immutable_string_32_id)
-			imm_string8_cl := system.class_of_id (system.immutable_string_8_id)
 
 				-- Make ANY declaration
 			any_cl := system.any_class.compiled_class
@@ -475,11 +473,37 @@ feature -- Plug and Makefile file
 			buffer.put_string (twin_name)
 			buffer.put_string ("();%N")
 
+				-- ISE_RUNTIME declaration	
+			feat := ise_runtime_cl.feature_table.item_id ({PREDEFINED_NAMES}.new_string_8_name_id)
+			ise_runtime_new_string_8_name := Encoder.feature_name (feat.written_class.types.first.type_id, feat.body_index).string
+			buffer.put_string ("extern EIF_REFERENCE ")
+			buffer.put_string (ise_runtime_new_string_8_name)
+			buffer.put_string ("();%N")
+
+			feat := ise_runtime_cl.feature_table.item_id ({PREDEFINED_NAMES}.new_string_32_name_id)
+			ise_runtime_new_string_32_name := Encoder.feature_name (feat.written_class.types.first.type_id, feat.body_index).string
+			buffer.put_string ("extern EIF_REFERENCE ")
+			buffer.put_string (ise_runtime_new_string_32_name)
+			buffer.put_string ("();%N")
+
+			feat := ise_runtime_cl.feature_table.item_id ({PREDEFINED_NAMES}.new_immutable_string_8_name_id)
+			ise_runtime_new_immutable_string_8_name := Encoder.feature_name (feat.written_class.types.first.type_id, feat.body_index).string
+			buffer.put_string ("extern EIF_REFERENCE ")
+			buffer.put_string (ise_runtime_new_immutable_string_8_name)
+			buffer.put_string ("();%N")
+
+			feat := ise_runtime_cl.feature_table.item_id ({PREDEFINED_NAMES}.new_immutable_string_32_name_id)
+			ise_runtime_new_immutable_string_32_name := Encoder.feature_name (feat.written_class.types.first.type_id, feat.body_index).string
+			buffer.put_string ("extern EIF_REFERENCE ")
+			buffer.put_string (ise_runtime_new_immutable_string_32_name)
+			buffer.put_string ("();%N")
+
+
 				-- Make STRING declaration
 			if attached string_cl.feature_table.item_id ({PREDEFINED_NAMES}.make_name_id) as str_make_feat then
 				str_make_name := Encoder.feature_name (str_make_feat.written_class.types.first.type_id,
 					str_make_feat.body_index).string
-				buffer.put_string ("extern void ")
+				buffer.put_string ("extern EIF_REFERENCE ")
 				buffer.put_string (str_make_name)
 				buffer.put_string ("();%N")
 			else
@@ -500,14 +524,6 @@ feature -- Plug and Makefile file
 				end
 			end
 
-				-- Make IMMUTABLE_STRING_8 declaration
-			immstr8_make_from_c_byte_array_feat := imm_string8_cl.feature_table.item_id ({PREDEFINED_NAMES}.make_from_c_byte_array_name_id)
-			immstr8_make_from_c_byte_array_name := Encoder.feature_name (immstr8_make_from_c_byte_array_feat.written_class.types.first.type_id,
-													immstr8_make_from_c_byte_array_feat.body_index).string
-			buffer.put_string ("extern void ")
-			buffer.put_string (immstr8_make_from_c_byte_array_name)
-			buffer.put_string ("();%N")
-
 				-- Make STRING_32 declaration
 			str32_make_feat := string32_cl.feature_table.item_id ({PREDEFINED_NAMES}.make_name_id)
 			str32_make_name := Encoder.feature_name (str32_make_feat.written_class.types.first.type_id,
@@ -526,14 +542,6 @@ feature -- Plug and Makefile file
 				buffer.put_string (str32_set_count_name)
 				buffer.put_string ("();%N")
 			end
-
-				-- Make IMMUTABLE_STRING_32 declaration
-			immstr32_make_from_c_byte_array_feat := imm_string32_cl.feature_table.item_id ({PREDEFINED_NAMES}.make_from_c_byte_array_name_id)
-			immstr32_make_from_c_byte_array_name := Encoder.feature_name (immstr32_make_from_c_byte_array_feat.written_class.types.first.type_id,
-													immstr32_make_from_c_byte_array_feat.body_index).string
-			buffer.put_string ("extern void ")
-			buffer.put_string (immstr32_make_from_c_byte_array_name)
-			buffer.put_string ("();%N")
 
 				--| make ARRAY declaration
 				--| Temporary solution. When a system uses precompiled information,
@@ -755,6 +763,41 @@ feature -- Plug and Makefile file
 			buffer.put_string (twin_name)
 			buffer.put_string (";%N")
 
+				-- Pointer on new_*_string functions of class ISE_RUNTIME
+				-- ISE_RUNTIME.new_string_8
+			if final_mode then
+				buffer.put_string ("%Tegc_ise_runtime_new_string_8 = (EIF_REFERENCE (*)(EIF_REFERENCE, EIF_POINTER, EIF_INTEGER)) ")
+			else
+				buffer.put_string ("%Tegc_ise_runtime_new_string_8 = (EIF_REFERENCE (*)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE)) ")
+			end
+			buffer.put_string (ise_runtime_new_string_8_name)
+			buffer.put_string (";%N")
+				-- ISE_RUNTIME.new_string_32
+			if final_mode then
+				buffer.put_string ("%Tegc_ise_runtime_new_string_32 = (EIF_REFERENCE (*)(EIF_REFERENCE, EIF_POINTER, EIF_INTEGER)) ")
+			else
+				buffer.put_string ("%Tegc_ise_runtime_new_string_32 = (EIF_REFERENCE (*)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE)) ")
+			end
+			buffer.put_string (ise_runtime_new_string_32_name)
+			buffer.put_string (";%N")
+				-- ISE_RUNTIME.new_immutable_string_8
+			if final_mode then
+				buffer.put_string ("%Tegc_ise_runtime_new_immutable_string_8 = (EIF_REFERENCE (*)(EIF_REFERENCE, EIF_POINTER, EIF_INTEGER)) ")
+			else
+				buffer.put_string ("%Tegc_ise_runtime_new_immutable_string_8 = (EIF_REFERENCE (*)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE)) ")
+			end
+			buffer.put_string (ise_runtime_new_immutable_string_8_name)
+			buffer.put_string (";%N")
+				-- ISE_RUNTIME.new_immutable_string_32
+			if final_mode then
+				buffer.put_string ("%Tegc_ise_runtime_new_immutable_string_32 = (EIF_REFERENCE (*)(EIF_REFERENCE, EIF_POINTER, EIF_INTEGER)) ")
+			else
+				buffer.put_string ("%Tegc_ise_runtime_new_immutable_string_32 = (EIF_REFERENCE (*)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE)) ")
+			end
+			buffer.put_string (ise_runtime_new_immutable_string_32_name)
+			buffer.put_string (";%N")
+
+
 				-- Pointer on creation feature of class STRING
 			if final_mode then
 				buffer.put_string ("%Tegc_strmake = (void (*)(EIF_REFERENCE, EIF_INTEGER)) ")
@@ -764,15 +807,6 @@ feature -- Plug and Makefile file
 			buffer.put_string (str_make_name)
 			buffer.put_string (";%N")
 
-				-- Pointer on creation feature of class IMMUTABLE_STRING_8
-			if final_mode then
-				buffer.put_string ("%Tegc_immstr8make_from_c_byte_array = (void (*)(EIF_REFERENCE, EIF_POINTER, EIF_INTEGER)) ")
-			else
-				buffer.put_string ("%Tegc_immstr8make_from_c_byte_array = (void (*)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE)) ")
-			end
-			buffer.put_string (immstr8_make_from_c_byte_array_name)
-			buffer.put_string (";%N")
-
 				-- Pointer on creation feature of class STRING_32
 			if final_mode then
 				buffer.put_string ("%Tegc_str32make = (void (*)(EIF_REFERENCE, EIF_INTEGER)) ")
@@ -780,15 +814,6 @@ feature -- Plug and Makefile file
 				buffer.put_string ("%Tegc_str32make = (void (*)(EIF_REFERENCE, EIF_TYPED_VALUE)) ")
 			end
 			buffer.put_string (str32_make_name)
-			buffer.put_string (";%N")
-
-				-- Pointer on creation feature of class IMMUTABLE_STRING_32
-			if final_mode then
-				buffer.put_string ("%Tegc_immstr32make_from_c_byte_array = (void (*)(EIF_REFERENCE, EIF_POINTER, EIF_INTEGER)) ")
-			else
-				buffer.put_string ("%Tegc_immstr32make_from_c_byte_array = (void (*)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE)) ")
-			end
-			buffer.put_string (immstr32_make_from_c_byte_array_name)
 			buffer.put_string (";%N")
 
 				-- Pointer on creation feature of class ARRAY[ANY]
@@ -922,24 +947,19 @@ feature -- Plug and Makefile file
 				buffer.put_string (";%N")
 			end
 
+				-- Dynamic type of class ISE_RUNTIME
+			buffer.put_string ("%N%Tegc_ise_runtime_dtype = ")
+			buffer.put_type_id (ise_runtime_cl.types.first.type_id)
+			buffer.put_string (";%N")
+
 				-- Dynamic type of class STRING
 			buffer.put_string ("%N%Tegc_str_dtype = ")
 			buffer.put_type_id (string_cl.types.first.type_id)
 			buffer.put_string (";%N")
 
-				-- Dynamic type of class IMMUTABLE_STRING_8
-			buffer.put_string ("%N%Tegc_immstr8_dtype = ")
-			buffer.put_type_id (imm_string8_cl.types.first.type_id)
-			buffer.put_string (";%N")
-
 				-- Dynamic type of class STRING_32
 			buffer.put_string ("%N%Tegc_str32_dtype = ")
 			buffer.put_type_id (string32_cl.types.first.type_id)
-			buffer.put_string (";%N")
-
-				-- Dynamic type of class IMMUTABLE_STRING_32
-			buffer.put_string ("%N%Tegc_immstr32_dtype = ")
-			buffer.put_type_id (imm_string32_cl.types.first.type_id)
 			buffer.put_string (";%N")
 
 				-- Dynamic type of class ARRAY[ANY]

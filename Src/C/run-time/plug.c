@@ -390,51 +390,20 @@ rt_public EIF_REFERENCE makestr_with_hash (const char *s, size_t len, EIF_BOOLEA
 	 */
 {
 	EIF_GET_CONTEXT
-
+	EIF_REFERENCE string;
+#ifdef WORKBENCH
+	DISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
+#endif
+		/* If we return, it succeeded */
 	if (is_immut == EIF_TRUE) {
-		EIF_REFERENCE immstring;
-		immstring = emalloc(egc_immstr8_dtype);	/* If we return, it succeeded */
-		RT_GC_PROTECT(immstring); /* Protect address in case it moves */
-#ifdef WORKBENCH
-		DISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
-#endif
-		nstcall = 0;
-		RT_IMMSTRING8_MAKE_FROM_C_BYTE_ARRAY(immstring, s, len);		/* Call feature `make_from_c_substring' in class IMMUTABLE_STRING_8 */
-
-#ifdef WORKBENCH
-		UNDISCARD_BREAKPOINTS; /* the debugger can now stop again */
-#endif
-		RT_GC_WEAN(immstring);		/* Remove protection */
-		return immstring;
+		RT_ISE_RUNTIME_NEW_IMMUTABLE_STRING_8(s, (EIF_INTEGER) len, string);
 	} else {
-		EIF_REFERENCE string;					/* Were string object is located */
-
-		string = emalloc(egc_str_dtype);	/* If we return, it succeeded */
-
-		RT_GC_PROTECT(string); /* Protect address in case it moves */
-
-#ifdef WORKBENCH
-		DISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following 2 functions */
-#endif
-		nstcall = 0;
-		RT_STRING_MAKE(string, (EIF_INTEGER) len);		/* Call feature `make' in class STRING */
-		RT_STRING_SET_HASH_CODE(string, a_hash);
-		RT_STRING_SET_COUNT(string, len);
-#ifdef WORKBENCH
-		UNDISCARD_BREAKPOINTS; /* the debugger can now stop again */
-#endif
-
-		/* Copy C string `s' in special object `area' of the new string
-		 * descriptor `string'. We know the `area' is the very first reference
-		 * of the STRING object, hence the simple de-referencing.
-		 */
-
-		memcpy (*(EIF_REFERENCE *)string, s, len);
-		RT_GC_WEAN(string);			/* Remove protection */
-
-		return string;
+		RT_ISE_RUNTIME_NEW_STRING_8(s, (EIF_INTEGER) len, string);	
 	}
-
+#ifdef WORKBENCH
+	UNDISCARD_BREAKPOINTS; /* the debugger can now stop again */
+#endif
+	return string;
 }
 
 /*
@@ -454,48 +423,20 @@ rt_public EIF_REFERENCE makestr_with_hash_as_old (const char *s, size_t len, EIF
 {
 	EIF_GET_CONTEXT
 
+	EIF_REFERENCE string;
+#ifdef WORKBENCH
+	DISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
+#endif
 	if (is_immut == EIF_TRUE) {
-		EIF_REFERENCE immstring;
-		immstring = emalloc_as_old(egc_immstr8_dtype);	/* If we return, it succeeded */
-		RT_GC_PROTECT(immstring); /* Protect address in case it moves */
-#ifdef WORKBENCH
-		DISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
-#endif
-		nstcall = 0;
-		RT_IMMSTRING8_MAKE_FROM_C_BYTE_ARRAY(immstring, s, len);		/* Call feature `make_from_c_substring' in class IMMUTABLE_STRING_8 */
-
-#ifdef WORKBENCH
-		UNDISCARD_BREAKPOINTS; /* the debugger can now stop again */
-#endif
-		RT_GC_WEAN(immstring);		/* Remove protection */
-		return immstring;
+		RT_ISE_RUNTIME_NEW_IMMUTABLE_STRING_8(s, (EIF_INTEGER) len, string);		/* If we return, it succeeded */
 	} else {
-		EIF_REFERENCE string;					/* Were string object is located */
-		string = emalloc_as_old (egc_str_dtype); /* If we return, it succeeded */
-
-		RT_GC_PROTECT(string); /* Protect address in case it moves */
-
-#ifdef WORKBENCH
-		DISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following 2 functions */
-#endif
-		nstcall = 0;
-		RT_STRING_MAKE(string, (EIF_INTEGER) len);		/* Call feature `make' in class STRING */
-		RT_STRING_SET_HASH_CODE(string, a_hash);
-		RT_STRING_SET_COUNT(string, len);
-#ifdef WORKBENCH
-		UNDISCARD_BREAKPOINTS; /* the debugger can now stop again */
-#endif
-
-		/* Copy C string `s' in special object `area' of the new string
-		 * descriptor `string'. We know the `area' is the very first reference
-		 * of the STRING object, hence the simple de-referencing.
-		 */
-
-		memcpy (*(EIF_REFERENCE *)string, s, len);
-		RT_GC_WEAN(string);			/* Remove protection */
-
-		return string;
+		RT_ISE_RUNTIME_NEW_STRING_8(s, (EIF_INTEGER) len, string);		/* If we return, it succeeded */
 	}
+#ifdef WORKBENCH
+	UNDISCARD_BREAKPOINTS; /* the debugger can now stop again */
+#endif
+	/* FIXME emalloc_as_old ??? */
+	return string;
 }
 
 rt_public EIF_REFERENCE makestr32_with_hash (const char *s, size_t len, EIF_BOOLEAN is_immut, int a_hash)
@@ -506,65 +447,20 @@ rt_public EIF_REFERENCE makestr32_with_hash (const char *s, size_t len, EIF_BOOL
 {
 	EIF_GET_CONTEXT
 
+	EIF_REFERENCE string;
+#ifdef WORKBENCH
+	DISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
+#endif
+		/* If we return, it succeeded */
 	if (is_immut == EIF_TRUE) {
-		EIF_REFERENCE immstring;
-		immstring = emalloc(egc_immstr32_dtype);	/* If we return, it succeeded */
-		RT_GC_PROTECT(immstring); /* Protect address in case it moves */
-#ifdef WORKBENCH
-		DISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
-#endif
-		nstcall = 0;
-		RT_IMMSTRING32_MAKE_FROM_C_BYTE_ARRAY(immstring, s, len);		/* Call feature `make_from_c_byte_array' in class IMMUTABLE_STRING_32 */
-
-#ifdef WORKBENCH
-		UNDISCARD_BREAKPOINTS; /* the debugger can now stop again */
-#endif
-		RT_GC_WEAN(immstring);		/* Remove protection */
-		return immstring;
+		RT_ISE_RUNTIME_NEW_IMMUTABLE_STRING_32(s, (EIF_INTEGER) len, string);
 	} else {
-
-		EIF_REFERENCE string;					/* Were string object is located */
-		string = emalloc(egc_str32_dtype);	/* If we return, it succeeded */
-
-		RT_GC_PROTECT(string); /* Protect address in case it moves */
-
-#ifdef WORKBENCH
-		DISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following 2 functions */
-#endif
-		nstcall = 0;
-		RT_STRING32_MAKE(string, (EIF_INTEGER) len);		/* Call feature `make' in class STRING_32 */
-		RT_STRING32_SET_HASH_CODE(string, a_hash);
-		RT_STRING32_SET_COUNT(string, len);
-#ifdef WORKBENCH
-		UNDISCARD_BREAKPOINTS; /* the debugger can now stop again */
-#endif
-
-		/* Copy C string `s' in special object `area' of the new string
-		 * descriptor `string'. We know the `area' is the very first reference
-		 * of the STRING_32 object, hence the simple de-referencing.
-		 */
-
-#if BYTEORDER == 0x1234
-		memcpy (*(EIF_REFERENCE *)string, s, len * 4); /* Every STRING_32 character has 4 bytes. */
-#else
-		{
-			int i = 0;
-			uint32 l_little, l_big;
-			for (; i < len ; i++) {
-				memcpy (&l_little, s + (i * 4), 4);
-					/* Convert our little endian to big endian. */
-				l_big = ((l_little >> 24) & 0xff) |
-					((l_little >> 8) & 0xff00) |
-					((l_little << 8) & 0xff0000) |
-					((l_little << 24) & 0xff000000);
-				memcpy ((*(EIF_REFERENCE *) string) + (i * 4), &l_big, 4);
-			}
-		}
-#endif
-		RT_GC_WEAN(string);			/* Remove protection */
-		return string;
-
+		RT_ISE_RUNTIME_NEW_STRING_32(s, (EIF_INTEGER) len, string);
 	}
+#ifdef WORKBENCH
+	UNDISCARD_BREAKPOINTS; /* the debugger can now stop again */
+#endif
+	return string;
 }
 
 /*
@@ -584,63 +480,21 @@ rt_public EIF_REFERENCE makestr32_with_hash_as_old (const char *s, size_t len, E
 {
 	EIF_GET_CONTEXT
 
+	EIF_REFERENCE string;
+#ifdef WORKBENCH
+	DISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
+#endif
+		/* If we return, it succeeded */
 	if (is_immut == EIF_TRUE) {
-		EIF_REFERENCE immstring;
-		immstring = emalloc_as_old(egc_immstr32_dtype);	/* If we return, it succeeded */
-		RT_GC_PROTECT(immstring); /* Protect address in case it moves */
-#ifdef WORKBENCH
-		DISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following functions */
-#endif
-		nstcall = 0;
-		RT_IMMSTRING32_MAKE_FROM_C_BYTE_ARRAY(immstring, s, len);		/* Call feature `make_from_c_byte_array' in class IMMUTABLE_STRING_32 */
-
-#ifdef WORKBENCH
-		UNDISCARD_BREAKPOINTS; /* the debugger can now stop again */
-#endif
-		RT_GC_WEAN(immstring);		/* Remove protection */
-		return immstring;
+		RT_ISE_RUNTIME_NEW_IMMUTABLE_STRING_32(s, (EIF_INTEGER) len, string);
 	} else {
-		EIF_REFERENCE string;					/* Were string object is located */
-		string = emalloc_as_old (egc_str32_dtype); /* If we return, it succeeded */
-
-		RT_GC_PROTECT(string); /* Protect address in case it moves */
-
-#ifdef WORKBENCH
-		DISCARD_BREAKPOINTS; /* prevent the debugger from stopping in the following 2 functions */
-#endif
-		nstcall = 0;
-		RT_STRING32_MAKE(string, (EIF_INTEGER) len);		/* Call feature `make' in class STRING_32 */
-		RT_STRING32_SET_HASH_CODE(string, a_hash);
-		RT_STRING32_SET_COUNT(string, len);
-#ifdef WORKBENCH
-		UNDISCARD_BREAKPOINTS; /* the debugger can now stop again */
-#endif
-
-		/* Copy C string `s' in special object `area' of the new string
-		 * descriptor `string'. We know the `area' is the very first reference
-		 * of the STRING_32 object, hence the simple de-referencing.
-		 */
-
-#if BYTEORDER == 0x1234
-		memcpy (*(EIF_REFERENCE *)string, s, len * 4); /* Every STRING_32 character has 4 bytes. */
-#else
-		{
-			int i = 0;
-			uint32 l_little, l_big;
-			for (; i < len ; i++) {
-				memcpy (&l_little, s + (i * 4), 4);
-					/* Convert our little endian to big endian. */
-				l_big = ((l_little >> 24) & 0xff) |
-					((l_little >> 8) & 0xff00) |
-					((l_little << 8) & 0xff0000) |
-					((l_little << 24) & 0xff000000);
-				memcpy ((*(EIF_REFERENCE *) string) + (i * 4), &l_big, 4);
-			}
-		}
-#endif
-		RT_GC_WEAN(string);			/* Remove protection */
-		return string;
+		RT_ISE_RUNTIME_NEW_STRING_32(s, (EIF_INTEGER) len, string);
 	}
+#ifdef WORKBENCH
+	UNDISCARD_BREAKPOINTS; /* the debugger can now stop again */
+#endif
+		/* FIXME jfiat [2019/07/16] : emalloc_as_old ??? */
+	return string;
 }
 
 /*

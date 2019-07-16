@@ -96,23 +96,37 @@ extern "C" {
 		(egc_str32set)((EIF_REFERENCE) string, u); \
 	}
 #define RT_STRING32_SET_HASH_CODE(string, hash)
-#define RT_IMMSTRING8_MAKE_FROM_C_BYTE_ARRAY(obj,str,len) \
+#define RT_ISE_RUNTIME_NEW_STRING_8(str,len,res) \
 	{ \
-		EIF_TYPED_VALUE u,i; \
-		u.type = SK_POINTER; \
-		u.it_p = (EIF_POINTER) (str); \
-		i.type = SK_INT32; \
-		i.it_i4 = (EIF_INTEGER_32) (len); \
-		(egc_immstr8make_from_c_byte_array)((EIF_REFERENCE) (obj), u, i); \
+		EIF_TYPED_VALUE u,i_len,r; \
+		u.type = SK_POINTER; u.it_p = (EIF_POINTER) (str); \
+		i_len.type = SK_INT32; i_len.it_i4 = (EIF_INTEGER_32) (len); \
+		r = (egc_ise_runtime_new_string_8)((EIF_REFERENCE) emalloc(egc_ise_runtime_dtype), u, i_len); \
+		res = (EIF_REFERENCE) r.it_ref; \
 	}
-#define RT_IMMSTRING32_MAKE_FROM_C_BYTE_ARRAY(obj,str,len) \
+#define RT_ISE_RUNTIME_NEW_STRING_32(str,len,res) \
 	{ \
-		EIF_TYPED_VALUE u,i; \
-		u.type = SK_POINTER; \
-		u.it_p = (EIF_POINTER) (str); \
-		i.type = SK_INT32; \
-		i.it_i4 = (EIF_INTEGER_32) (len); \
-		(egc_immstr32make_from_c_byte_array)((EIF_REFERENCE) (obj), u, i); \
+		EIF_TYPED_VALUE u,i_len,r; \
+		u.type = SK_POINTER; u.it_p = (EIF_POINTER) (str); \
+		i_len.type = SK_INT32; i_len.it_i4 = (EIF_INTEGER_32) (len); \
+		r = (egc_ise_runtime_new_string_32)((EIF_REFERENCE) emalloc(egc_ise_runtime_dtype), u, i_len); \
+		res = (EIF_REFERENCE) r.it_ref; \
+	}
+#define RT_ISE_RUNTIME_NEW_IMMUTABLE_STRING_8(str,len,res) \
+	{ \
+		EIF_TYPED_VALUE u,i_len,r; \
+		u.type = SK_POINTER; u.it_p = (EIF_POINTER) (str); \
+		i_len.type = SK_INT32; i_len.it_i4 = (EIF_INTEGER_32) (len); \
+		r = (egc_ise_runtime_new_immutable_string_8)((EIF_REFERENCE) emalloc(egc_ise_runtime_dtype), u, i_len); \
+		res = (EIF_REFERENCE) r.it_ref; \
+	}
+#define RT_ISE_RUNTIME_NEW_IMMUTABLE_STRING_32(str,len,res) \
+	{ \
+		EIF_TYPED_VALUE u,i_len,r; \
+		u.type = SK_POINTER; u.it_p = (EIF_POINTER) (str); \
+		i_len.type = SK_INT32; i_len.it_i4 = (EIF_INTEGER_32) (len); \
+		r = (egc_ise_runtime_new_immutable_string_32)((EIF_REFERENCE) emalloc(egc_ise_runtime_dtype), u, i_len); \
+		res = (EIF_REFERENCE) r.it_ref; \
 	}
 #else
 #define RT_STRING32_MAKE(string,len) \
@@ -121,10 +135,14 @@ extern "C" {
 	*(EIF_INTEGER *) ((EIF_REFERENCE) string + egc_str32_count_offset) = (EIF_INTEGER) count;
 #define RT_STRING32_SET_HASH_CODE(string, hash) \
 	*(EIF_INTEGER *) ((EIF_REFERENCE) string + egc_str32_hash_offset) = (EIF_INTEGER) hash;
-#define RT_IMMSTRING8_MAKE_FROM_C_BYTE_ARRAY(obj,str,len) \
-	(egc_immstr8make_from_c_byte_array)((EIF_REFERENCE) (obj),(EIF_REFERENCE) (str), (EIF_INTEGER)len);
-#define RT_IMMSTRING32_MAKE_FROM_C_BYTE_AREA(obj,str,len) \
-	(egc_immstr32make_from_c_byte_area)((EIF_REFERENCE) (obj),(EIF_REFERENCE) (str), (EIF_INTEGER) len);
+#define RT_ISE_RUNTIME_NEW_STRING_8(str,len, res) \
+	res = (egc_ise_runtime_new_string_8)((EIF_REFERENCE) NULL, (EIF_POINTER) (str), (EIF_INTEGER) len);
+#define RT_ISE_RUNTIME_NEW_STRING_32(str,len, res) \
+	res = (egc_ise_runtime_new_string_32)((EIF_REFERENCE) NULL, (EIF_POINTER) (str), (EIF_INTEGER) len);
+#define RT_ISE_RUNTIME_NEW_IMMUTABLE_STRING_8(str,len, res) \
+	res = (egc_ise_runtime_new_immutable_string_8)((EIF_REFERENCE) NULL, (EIF_POINTER) (str), (EIF_INTEGER) len);
+#define RT_ISE_RUNTIME_NEW_IMMUTABLE_STRING_32(str,len, res) \
+	res = (egc_ise_runtime_new_immutable_string_32)((EIF_REFERENCE) NULL, (EIF_POINTER) (str), (EIF_INTEGER) len);
 #endif
 
 

@@ -16,6 +16,10 @@ feature -- Generation type
 feature -- Classes from the configutation point of view
 
 	any_class: CLASS_I
+
+	ise_runtime_class: CLASS_I
+			-- Class ISE_RUNTIME
+
 	system_object_class: EXTERNAL_CLASS_I
 			-- Class ANY and System.Object
 
@@ -149,6 +153,17 @@ feature -- Classes from the type system of view
 			detachable_separate_any_type_attached: Result /= Void
 			detachable_separate_any_type_detachable: not Result.is_attached
 			detachable_separate_any_type_separate: Result.is_separate
+		end
+
+	ise_runtime_id: INTEGER
+			-- Id of class ISE_RUNTIME
+		require
+			ise_runtime_class_exists: ise_runtime_class /= Void
+			compiled: ise_runtime_class.is_compiled
+		do
+			Result := ise_runtime_class.compiled_class.class_id
+		ensure
+			valid_result: Result > 0
 		end
 
 	system_object_id: INTEGER
@@ -394,6 +409,7 @@ feature -- Settings
 			disposable_class := Void
 			exception_class := Void
 			function_class := Void
+			ise_runtime_class := Void
 			integer_16_class := Void
 			integer_32_class := Void
 			integer_64_class := Void
@@ -437,6 +453,17 @@ feature -- Settings
 			c.set_as_basic_class
 		ensure
 			any_class_set: any_class = c
+		end
+
+	set_ise_runtime_class (c: CLASS_I)
+			-- Assign `c' to `ise_runtime_class'.
+		require
+			c_not_void: c /= Void
+		do
+			c.set_as_basic_class
+			ise_runtime_class := c
+		ensure
+			ise_runtime_class_set: ise_runtime_class = c
 		end
 
 	set_system_object_class (c: CLASS_I)

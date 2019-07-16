@@ -434,7 +434,11 @@ feature {NONE} -- Implementation: access
 			put ("ieee_is_less_equal") check found_item = ieee_is_less_equal_name_id end
 			put ("ieee_maximum_number") check found_item = ieee_maximum_number_name_id end
 			put ("ieee_minimum_number") check found_item = ieee_minimum_number_name_id end
-			put ("make_from_c_byte_array") check found_item = make_from_c_byte_array_name_id end
+			put ("new_string_8") check found_item = new_string_8_name_id end
+			put ("new_string_32") check found_item = new_string_32_name_id end
+			put ("new_immutable_string_8") check found_item = new_immutable_string_8_name_id end
+			put ("new_immutable_string_32") check found_item = new_immutable_string_32_name_id end
+
 		end
 
 invariant

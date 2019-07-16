@@ -240,7 +240,10 @@ feature -- Constants
 	ieee_is_less_equal_name_id: INTEGER = 227
 	ieee_maximum_number_name_id: INTEGER = 228
 	ieee_minimum_number_name_id: INTEGER = 229
-	make_from_c_byte_array_name_id: INTEGER = 230
+	new_string_8_name_id: INTEGER = 230
+	new_string_32_name_id: INTEGER = 231
+	new_immutable_string_8_name_id: INTEGER = 232
+	new_immutable_string_32_name_id: INTEGER = 233
 
 feature -- Classification
 

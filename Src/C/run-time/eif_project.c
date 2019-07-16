@@ -93,6 +93,65 @@ doc:	</attribute>
 rt_public EIF_INTEGER exec_recording_enabled;	  
 #endif
 
+/*
+doc:	<attribute name="egc_ise_runtime_new_string_8" return_type="fnptr" export="public">
+doc:		<summary>Address of Eiffel routine ISE_RUNTIME.new_string_8 
+doc:			to create new Eiffel strings from C 1 byte array.</summary>
+doc:		<thread_safety>Safe as initialized once at the very beginning of an execution.</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<eiffel_classes>ISE_RUNTIME</eiffel_classes>
+doc:	</attribute>
+*/
+#ifdef WORKBENCH
+rt_public EIF_TYPED_VALUE (*egc_ise_runtime_new_string_8)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE);
+#else
+rt_public EIF_REFERENCE (*egc_ise_runtime_new_string_8)(EIF_REFERENCE, EIF_POINTER, EIF_INTEGER);
+#endif
+
+/*
+doc:	<attribute name="egc_ise_runtime_new_string_32" return_type="fnptr" export="public">
+doc:		<summary>Address of Eiffel routine ISE_RUNTIME.new_string_32 
+doc:			to create new Eiffel strings from C 4 bytes array.</summary>
+doc:		<thread_safety>Safe as initialized once at the very beginning of an execution.</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<eiffel_classes>ISE_RUNTIME</eiffel_classes>
+doc:	</attribute>
+*/
+#ifdef WORKBENCH
+rt_public EIF_TYPED_VALUE (*egc_ise_runtime_new_string_32)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE);
+#else
+rt_public EIF_REFERENCE (*egc_ise_runtime_new_string_32)(EIF_REFERENCE, EIF_POINTER, EIF_INTEGER);
+#endif
+/*
+doc:	<attribute name="egc_ise_runtime_new_immutable_string_8" return_type="fnptr" export="public">
+doc:		<summary>Address of Eiffel routine ISE_RUNTIME.new_immutable_string_8 
+doc:			to create new immutable Eiffel strings from C 1 byte array.</summary>
+doc:		<thread_safety>Safe as initialized once at the very beginning of an execution.</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<eiffel_classes>ISE_RUNTIME</eiffel_classes>
+doc:	</attribute>
+*/
+#ifdef WORKBENCH
+rt_public EIF_TYPED_VALUE (*egc_ise_runtime_new_immutable_string_8)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE);
+#else
+rt_public EIF_REFERENCE (*egc_ise_runtime_new_immutable_string_8)(EIF_REFERENCE, EIF_POINTER, EIF_INTEGER);
+#endif
+
+/*
+doc:	<attribute name="egc_ise_runtime_new_immutable_string_32" return_type="fnptr" export="public">
+doc:		<summary>Address of Eiffel routine ISE_RUNTIME.new_immutable_string_32 
+doc:			to create new immutable Eiffel strings from C 4 bytes array.</summary>
+doc:		<thread_safety>Safe as initialized once at the very beginning of an execution.</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<eiffel_classes>ISE_RUNTIME</eiffel_classes>
+doc:	</attribute>
+*/
+#ifdef WORKBENCH
+rt_public EIF_TYPED_VALUE (*egc_ise_runtime_new_immutable_string_32)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE);
+#else
+rt_public EIF_REFERENCE (*egc_ise_runtime_new_immutable_string_32)(EIF_REFERENCE, EIF_POINTER, EIF_INTEGER);
+#endif
+
 
 /*
 doc:	<attribute name="egc_strmake" return_type="fnptr" export="public">
@@ -154,37 +213,6 @@ rt_public void (*egc_str32make)(EIF_REFERENCE, EIF_TYPED_VALUE);
 #else
 rt_public void (*egc_str32make)(EIF_REFERENCE, EIF_INTEGER);
 #endif
-
-
-/*
-doc:	<attribute name="egc_immstr8make_from_c_byte_array" return_type="fnptr" export="public">
-doc:		<summary>Address of Eiffel routine IMMUTABLE_STRING_8.make_from_c_byte_array to create Eiffel strings from C 1 byte array.</summary>
-doc:		<thread_safety>Safe as initialized once at the very beginning of an execution.</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<eiffel_classes>IMMUTABLE_STRING_8</eiffel_classes>
-doc:	</attribute>
-*/
-#ifdef WORKBENCH
-rt_public void (*egc_immstr8make_from_c_byte_array)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE);
-#else
-rt_public void (*egc_immstr8make_from_c_byte_array)(EIF_REFERENCE, EIF_POINTER, EIF_INTEGER);
-#endif
-
-/*
-doc:	<attribute name="egc_immstr32make_from_string" return_type="fnptr" export="public">
-doc:		<summary>Address of Eiffel routine IMMUTABLE_STRING_32.make_from_c_byte_array to create Eiffel strings from C 4 bytes array.</summary>
-doc:		<thread_safety>Safe as initialized once at the very beginning of an execution.</thread_safety>
-doc:		<synchronization>None</synchronization>
-doc:		<eiffel_classes>IMMUTABLE_STRING_32</eiffel_classes>
-doc:	</attribute>
-*/
-#ifdef WORKBENCH
-rt_public void (*egc_immstr32make_from_c_byte_array)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE);
-#else
-rt_public void (*egc_immstr32make_from_c_byte_array)(EIF_REFERENCE, EIF_POINTER, EIF_INTEGER);
-#endif
-
-
 
 #ifdef WORKBENCH
 /*
@@ -410,10 +438,9 @@ doc:	</attribute>
 rt_public int egc_is_experimental = 0;
 
 
+rt_public EIF_TYPE_INDEX egc_ise_runtime_dtype;
 rt_public EIF_TYPE_INDEX egc_str_dtype;
-rt_public EIF_TYPE_INDEX egc_immstr8_dtype;
 rt_public EIF_TYPE_INDEX egc_str32_dtype;
-rt_public EIF_TYPE_INDEX egc_immstr32_dtype;
 rt_public EIF_TYPE_INDEX egc_arr_dtype;
 rt_public EIF_TYPE_INDEX egc_tup_dtype;
 rt_public int32 egc_disp_rout_id;

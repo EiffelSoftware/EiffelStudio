@@ -709,6 +709,9 @@ feature {COMPILER_EXPORTER} -- Implementation
 			l_exceptions.put ("RT_EXTENSION")
 			l_actions.put (agent l_system.set_rt_extension_class, "RT_EXTENSION")
 
+				-- ISE_RUNTIME
+			l_actions.put (agent l_system.set_ise_runtime_class, "ISE_RUNTIME")
+
 				-- Exception manager
 			l_actions.put (agent l_system.set_exception_manager_class, "ISE_EXCEPTION_MANAGER")
 			l_exceptions.put ("EXCEPTION")

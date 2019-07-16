@@ -797,6 +797,44 @@ feature -- Object marking
 			instance_free: class
 		end
 
+feature {ANY} -- String factory
+
+	new_string_8 (a_c_byte_array: POINTER; a_char_count: INTEGER): READABLE_STRING_8
+			-- New string 8 from C byte array `a_c_byte_array` of length `a_char_count`.
+			-- The byte array encodes each character with 1 byte.
+		do
+			create {STRING_8} Result.make_from_c_byte_array (a_c_byte_array, a_char_count)
+		ensure
+			instance_free: class
+		end
+
+	new_string_32 (a_c_byte_array: POINTER; a_char_count: INTEGER): READABLE_STRING_32
+			-- New string 32 from C byte array `a_c_byte_array` of length `a_char_count`.
+			-- The byte array encodes each character with 4 bytes.
+		do
+			create {STRING_32} Result.make_from_c_byte_array (a_c_byte_array, a_char_count)
+		ensure
+			instance_free: class
+		end
+
+	new_immutable_string_8 (a_c_byte_array: POINTER; a_char_count: INTEGER): READABLE_STRING_8
+			-- New immutable string 8 from C byte array `a_c_byte_array` of length `a_char_count`.
+			-- The byte array encodes each character with 1 byte.
+		do
+			create {IMMUTABLE_STRING_8} Result.make_from_c_byte_array (a_c_byte_array, a_char_count)
+		ensure
+			instance_free: class
+		end
+
+	new_immutable_string_32 (a_c_byte_array: POINTER; a_char_count: INTEGER): READABLE_STRING_32
+			-- New immutable string 32 from C byte array `a_c_byte_array` of length `a_char_count`.
+			-- The byte array encodes each character with 4 bytes.
+		do
+			create {IMMUTABLE_STRING_32} Result.make_from_c_byte_array (a_c_byte_array, a_char_count)
+		ensure
+			instance_free: class
+		end
+
 note
 	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

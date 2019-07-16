@@ -59,6 +59,18 @@ extern "C" {
 
 	RT_LNK EIF_INTEGER egc_prof_enabled;	  /* Is the Eiffel profiler on */
 #ifdef WORKBENCH
+	RT_LNK EIF_TYPED_VALUE (*egc_ise_runtime_new_string_8)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE);			/* ISE_RUNTIME.new_string_8 function */
+	RT_LNK EIF_TYPED_VALUE (*egc_ise_runtime_new_string_32)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE);			/* ISE_RUNTIME.new_string_32 function */
+	RT_LNK EIF_TYPED_VALUE (*egc_ise_runtime_new_immutable_string_8)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE);	/* ISE_RUNTIME.new_immutable_string_8 function */
+	RT_LNK EIF_TYPED_VALUE (*egc_ise_runtime_new_immutable_string_32)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE);	/* ISE_RUNTIME.new_immutable_string_32 function */
+#else
+	RT_LNK EIF_REFERENCE (*egc_ise_runtime_new_string_8)(EIF_REFERENCE, EIF_POINTER, EIF_INTEGER);				/* ISE_RUNTIME.new_string_8 function */
+	RT_LNK EIF_REFERENCE (*egc_ise_runtime_new_string_32)(EIF_REFERENCE, EIF_POINTER, EIF_INTEGER);				/* ISE_RUNTIME.new_string_32 function */
+	RT_LNK EIF_REFERENCE (*egc_ise_runtime_new_immutable_string_8)(EIF_REFERENCE, EIF_POINTER, EIF_INTEGER);	/* ISE_RUNTIME.new_immutable_string_8 function */
+	RT_LNK EIF_REFERENCE (*egc_ise_runtime_new_immutable_string_32)(EIF_REFERENCE, EIF_POINTER, EIF_INTEGER);	/* ISE_RUNTIME.new_immutable_string_32 function */
+#endif
+
+#ifdef WORKBENCH
 	RT_LNK void (*egc_strmake)(EIF_REFERENCE, EIF_TYPED_VALUE);	/* STRING creation feature */
 	RT_LNK void (*egc_strset)(EIF_REFERENCE, EIF_TYPED_VALUE);
 	RT_LNK void (*egc_str32make)(EIF_REFERENCE, EIF_TYPED_VALUE);	/* STRING_32 creation feature */
@@ -115,6 +127,7 @@ extern "C" {
 	RT_LNK int egc_has_ieee_semantic;
 	RT_LNK int egc_is_experimental;
 
+	RT_LNK EIF_TYPE_INDEX egc_ise_runtime_dtype;				/* Dynamic type for ISE_RUNTIME */
 	RT_LNK EIF_TYPE_INDEX egc_str_dtype;				/* Dynamic type for string */
 	RT_LNK EIF_TYPE_INDEX egc_immstr8_dtype;			/* Dynamic type for IMMUTABLE_STRING_8 */
 	RT_LNK EIF_TYPE_INDEX egc_str32_dtype;				/* Dynamic type for STRING_32 */

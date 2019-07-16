@@ -144,7 +144,7 @@ feature -- Conversion
 
 feature -- Explicit Conversion
 
-	utf8_to_utf32 (a_string: STRING_8): STRING_32
+	utf8_to_utf32 (a_string: READABLE_STRING_8): STRING_32
 			-- UTF8 to UTF32 conversion, Eiffel implementation.
 		require
 			a_string_not_void: a_string /= Void
@@ -167,7 +167,7 @@ feature -- Explicit Conversion
 			Result_not_void: Result /= Void
 		end
 
-	utf32_to_utf8 (a_string: STRING_32): STRING_8
+	utf32_to_utf8 (a_string: READABLE_STRING_32): STRING_8
 			-- Convert UTF32 to UTF8.
 		require
 			a_string_not_void: a_string /= Void
@@ -344,7 +344,7 @@ feature {NONE} -- Implementation
 
 note
 	library:   "Encoding: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

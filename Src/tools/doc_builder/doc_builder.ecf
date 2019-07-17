@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd" name="doc_builder" uuid="3E4B15A1-870D-46AF-A500-B1F8DF363DCB">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="doc_builder" uuid="3E4B15A1-870D-46AF-A500-B1F8DF363DCB">
 	<target name="doc_builder">
 		<root class="DOC_BUILDER" feature="make_and_launch"/>
 		<file_rule>
@@ -52,7 +52,7 @@
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
-		<cluster name="doc_builder_unix" location="." recursive="true">
+		<cluster name="doc_builder_unix" location=".\" recursive="true">
 			<condition>
 				<platform excluded_value="windows"/>
 			</condition>
@@ -71,7 +71,7 @@
 				<exclude>/web_browser_widget.e$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="doc_builder_windows" location="." recursive="true">
+		<cluster name="doc_builder_windows" location=".\" recursive="true">
 			<condition>
 				<platform value="windows"/>
 			</condition>
@@ -88,12 +88,12 @@
 				<exclude>/web_browser_widget.e$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="facade_unix" location="facade">
+		<cluster name="facade_unix" location="facade\">
 			<condition>
 				<platform excluded_value="windows"/>
 			</condition>
 		</cluster>
-		<cluster name="facade_windows" location="facade">
+		<cluster name="facade_windows" location="facade\">
 			<condition>
 				<platform value="windows"/>
 			</condition>

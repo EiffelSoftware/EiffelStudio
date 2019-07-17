@@ -520,42 +520,6 @@ feature -- Contract support
 	is_destroyed: BOOLEAN
 			-- If Current destroyed?
 
-feature {SD_DEBUG_ACCESS} -- For debug
-
-	show_inner_container_structure
-			-- For debug
-		require
-			not_destroyed: not is_destroyed
-		do
-			io.put_string ("%N --------------------- SD_DOCKING_MANAGER inner container -------------------")
-			docking_manager.inner_containers.start
-			show_inner_container_structure_imp (docking_manager.inner_containers.item.item, " ")
-		end
-
-	show_inner_container_structure_imp (a_container: EV_WIDGET; a_indent: READABLE_STRING_8)
-			-- For debug
-		require
-			not_destroyed: not is_destroyed
-		do
-			if attached {SD_DOCKING_ZONE} a_container as l_docking_zone then
-				io.put_string ("%N " + a_indent + a_container.generating_type.name_32.as_string_8 + " " + l_docking_zone.content.unique_title)
-			else
-				if a_container /= Void then
-					io.put_string ("%N " + a_indent + a_container.generating_type.name_32.as_string_8)
-				else
-					io.put_string ("%N " + a_indent + "Void")
-				end
-			end
-			if attached {EV_SPLIT_AREA} a_container as l_split_area then
-				if attached l_split_area.first as l_first then
-					show_inner_container_structure_imp (l_first, a_indent + " ")
-				end
-				if attached l_split_area.second as l_second then
-					show_inner_container_structure_imp (l_second, a_indent + " ")
-				end
-			end
-		end
-
 feature {NONE}  -- Implementation
 
 	is_parent_recursive (a_parent: EV_CONTAINER; a_child: EV_WIDGET): BOOLEAN

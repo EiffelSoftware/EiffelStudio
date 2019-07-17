@@ -52,7 +52,7 @@
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf"/>
-		<cluster name="doc_builder_unix" location="$EIFFEL_SRC\tools\doc_builder\" recursive="true">
+		<cluster name="doc_builder_unix" location="." recursive="true">
 			<condition>
 				<platform excluded_value="windows"/>
 			</condition>
@@ -71,7 +71,7 @@
 				<exclude>/web_browser_widget.e$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="doc_builder_windows" location="$EIFFEL_SRC\tools\doc_builder\" recursive="true">
+		<cluster name="doc_builder_windows" location="." recursive="true">
 			<condition>
 				<platform value="windows"/>
 			</condition>
@@ -88,12 +88,12 @@
 				<exclude>/web_browser_widget.e$</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="facade_unix" location="$EIFFEL_SRC\tools\doc_builder\facade\">
+		<cluster name="facade_unix" location="facade">
 			<condition>
 				<platform excluded_value="windows"/>
 			</condition>
 		</cluster>
-		<cluster name="facade_windows" location="$EIFFEL_SRC\tools\doc_builder\facade\">
+		<cluster name="facade_windows" location="facade">
 			<condition>
 				<platform value="windows"/>
 			</condition>

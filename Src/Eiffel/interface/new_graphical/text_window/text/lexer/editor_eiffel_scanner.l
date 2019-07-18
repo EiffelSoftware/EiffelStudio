@@ -415,8 +415,7 @@ UTF8_tail	[\x80-\xBF]
 		}
 	}
 
-[%\"]([^\n\"]|{NON_ASCII}|%\")*(\"|%)	|
-[%\"]([^\n\"\%]|{NON_ASCII}|%\"|%A|%B|%C\%D|%F|%H|%L|%N|%Q|%R|%S|%T|%U|%V|%%|%\'|%\(|%\)|%<|%>|%\/[0-9]{1,3}\/)* {
+[%\"]([^\n\"%]|{NON_ASCII}|%\"|%A|%B|%C|%D|%F|%H|%L|%N|%Q|%R|%S|%T|%U|%V|%%|%\'|%\(|%\)|%<|%>|%\/[0-9]{1,3}\/)*[%\"] {
 			-- Eiffel String
 		if not in_comments then						
 			curr_token := new_string (text)

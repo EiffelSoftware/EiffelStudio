@@ -40,7 +40,7 @@ feature -- Formatting
 			a_args_attached: a_args /= Void
 			not_a_args_is_empty: not a_args.is_empty
 		do
-			Result := format_unicode (a_str, a_args).as_string_8
+			Result := {UTF_CONVERTER}.string_32_to_utf_8_string_8 (format_unicode (a_str, a_args))
 		ensure
 			result_not_void: Result /= Void
 			not_result_is_empty: not Result.is_empty
@@ -141,7 +141,7 @@ feature -- Formatting
 		end
 
 	ellipse (a_str: READABLE_STRING_GENERAL; a_max_len: INTEGER): STRING_8
-			-- Prunes string an adds ',,,' if the supplied string length is greater than the threadshold.
+			-- Prunes string and adds '...' if the supplied string length is greater than the threadshold.
 			--
 			-- `a_str': The string to ellipse.
 			-- `a_max_len': A string's maximum length, after which ellipsing will be performed.
@@ -151,8 +151,15 @@ feature -- Formatting
 			not_a_str_is_empty: not a_str.is_empty
 			a_max_len_big_enough: a_max_len > 3
 		do
-			Result := a_str.as_string_8
-			if Result ~ a_str then
+			Result :=
+				if a_str.is_valid_as_string_8 then
+					a_str.to_string_8
+				elseif attached {READABLE_STRING_8} a_str as s then
+					s.string
+				else
+					{UTF_CONVERTER}.string_32_to_utf_8_string_8 (a_str.as_string_32)
+				end
+			if Result = a_str then
 				Result := Result.twin
 			end
 			if Result.count > a_max_len then
@@ -205,7 +212,7 @@ feature -- Formatting
 			not_a_str_is_empty: not a_str.is_empty
 			a_tab_chars_positive: a_tab_chars > 0
 		do
-			Result := tabbify_unicode (a_str, a_tab_chars).as_string_8
+			Result := {UTF_CONVERTER}.string_32_to_utf_8_string_8 (tabbify_unicode (a_str, a_tab_chars))
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
@@ -271,7 +278,7 @@ feature {NONE} -- Symbols
 			-- Index close characterю
 
 ;note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

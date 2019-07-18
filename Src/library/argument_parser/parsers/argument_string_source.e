@@ -38,7 +38,15 @@ feature {NONE} -- Initialization
 				a_arguments.after
 			loop
 				l_arg := a_arguments.item
-				l_args.put (l_arg.as_string_8, i)
+				l_args.put
+					(if l_arg.is_valid_as_string_8 then
+						l_arg.to_string_8
+					elseif attached {READABLE_STRING_8} l_arg as s then
+						s.string
+					else
+						{UTF_CONVERTER}.string_32_to_utf_8_string_8 (l_arg.as_string_32)
+					end,
+					i)
 				i := i + 1
 			end
 			arguments := l_args
@@ -67,7 +75,15 @@ feature {NONE} -- Initialization
 			loop
 				l_arg := a_arguments[i + j]
 				j := j + 1
-				l_args.put (l_arg.as_string_8, j)
+				l_args.put
+					(if l_arg.is_valid_as_string_8 then
+						l_arg.to_string_8
+					elseif attached {READABLE_STRING_8} l_arg as s then
+						s.string
+					else
+						{UTF_CONVERTER}.string_32_to_utf_8_string_8 (l_arg.as_string_32)
+					end,
+					j)
 			end
 			arguments := l_args
 		ensure
@@ -88,7 +104,7 @@ feature -- Status report
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

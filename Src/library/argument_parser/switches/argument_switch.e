@@ -1,7 +1,5 @@
-note
-	description: "[
-			A command line switch.
-		]"
+﻿note
+	description: "A command line switch."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -74,7 +72,7 @@ feature -- Access
 	lower_case_id: STRING
 			-- Lower-case version of the switch identifier
 
-	name: STRING
+	name: READABLE_STRING_8
 			-- Priority option name
 		do
 			if has_short_name then
@@ -87,7 +85,7 @@ feature -- Access
 			not_result_is_empty: not Result.is_empty
 		end
 
-	long_name: STRING
+	long_name: READABLE_STRING_8
 			-- Option long name
 
 	short_name: CHARACTER
@@ -176,7 +174,7 @@ feature -- Query
 
 feature {NONE} -- Query
 
-	split_canonical_id (a_id: READABLE_STRING_8): TUPLE [long_name: STRING; short_name: CHARACTER]
+	split_canonical_id (a_id: READABLE_STRING_8): TUPLE [long_name: READABLE_STRING_8; short_name: CHARACTER]
 			-- Splits canonical switch identifier in a long and short name.
 			-- Note: When no short name is found `Result.short_name' will be a null character ('%U').
 			--
@@ -187,14 +185,12 @@ feature {NONE} -- Query
 			not_a_id_is_empty: not a_id.is_empty
 		local
 			i: INTEGER
-			l_long_name: STRING
 		do
 			i := a_id.index_of (canocial_name_separator, 1)
 			if i > 0 and i + 1 <= a_id.count then
-				l_long_name := a_id.substring (i + 1, a_id.count)
-				Result := [l_long_name, a_id.item (1)]
+				Result := [a_id.substring (i + 1, a_id.count), a_id.item (1)]
 			else
-				Result := [a_id.as_string_8, '%U']
+				Result := [a_id, '%U']
 			end
 		ensure
 			result_attached: Result /= Void
@@ -220,8 +216,8 @@ invariant
 	not_description_is_empty: not description.is_empty
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

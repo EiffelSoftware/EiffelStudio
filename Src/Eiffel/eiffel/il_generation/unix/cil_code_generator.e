@@ -728,6 +728,11 @@ feature -- Constants generation
 		do
 		end
 
+	put_immutable_manifest_string_8 (s: READABLE_STRING_GENERAL)
+			-- Put `s' on IL stack.
+		do
+		end
+
 	put_manifest_string_32_from_system_string_local (n: INTEGER)
 			-- Create a manifest string by using local at position `n' which
 			-- should be of type SYSTEM_STRING.
@@ -735,6 +740,12 @@ feature -- Constants generation
 		end
 
 	put_manifest_string_32 (s: READABLE_STRING_32)
+			-- Put `s' on IL stack.
+			-- `s' is in UTF-8
+		do
+		end
+
+	put_immutable_manifest_string_32 (s: READABLE_STRING_32)
 			-- Put `s' on IL stack.
 			-- `s' is in UTF-8
 		do
@@ -1022,7 +1033,7 @@ feature {CIL_CODE_GENERATOR, CUSTOM_ATTRIBUTE_GENERATOR} -- Custom attribute def
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

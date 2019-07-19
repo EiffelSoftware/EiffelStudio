@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2019 University of Southern California and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -15,7 +15,7 @@ feature
 			x := [1, p]
 			io.put_string (x.generator)
 			io.new_line
-			io.put_string (x.generating_type.name_32.as_string_8)
+			io.put_string (x.generating_type.name_32.to_string_8)
 			io.new_line
   		end
 			

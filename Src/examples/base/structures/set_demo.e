@@ -1,7 +1,7 @@
-note
+﻿note
 	description: "[
 			Demo class for sets.
-				MLS to demo LINKED_SET.
+			MLS to demo LINKED_SET.
 		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -123,8 +123,6 @@ feature {NONE} -- Basic operations
 
 	execute (new_command: INTEGER)
 			-- Execute command corresponding of user's request.
-		require else
-			valid_command: new_command >= put and new_command <= quit
 		local
 			set1, set2: like a
 			element: INTEGER

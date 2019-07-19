@@ -218,7 +218,7 @@ feature {NONE} -- Execution
 			end
 		end
 
-	write (write_stream: PROCEDURE [STRING_8]; n: like {SPECIAL [NATURAL_8]}.count)
+	write (write_stream: PROCEDURE [READABLE_STRING_8]; n: like {SPECIAL [NATURAL_8]}.count)
 			-- Write `n` bytes to standard output.
 		local
 			buffer: STRING_8

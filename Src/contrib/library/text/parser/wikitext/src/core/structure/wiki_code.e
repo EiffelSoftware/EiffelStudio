@@ -62,7 +62,11 @@ feature {NONE} -- Initialization
 				l_lang.left_adjust
 				l_lang.right_adjust
 				create l_source.make (s.count + 15) -- = (14 - 3) + (7 - 3)
-				l_source.append ("<code lang=%"" + l_lang + "%">%N")
+				if l_lang.is_whitespace then
+					l_source.append ("<code>%N")
+				else
+					l_source.append ("<code lang=%"" + l_lang + "%">%N")
+				end
 				i := j + 1
 			else
 				create l_source.make (s.count + 4) -- = 7 - 3
@@ -132,7 +136,7 @@ feature -- Visitor
 		end
 
 note
-	copyright: "2011-2016, Jocelyn Fiat and Eiffel Software"
+	copyright: "2011-2019, Jocelyn Fiat and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat

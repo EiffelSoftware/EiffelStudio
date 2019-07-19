@@ -1,5 +1,5 @@
 test_name	svalid-conversion-export-error
-test_description A conversion routine is not exported to a descendant class, the compiler should report a VUEX error, but instead accept the code.
+test_description A conversion routine is not exported to a descendant class, the compiler should accept the code instead of reporting a VUEX error because feature cannot become less available.
 
 copy_sub	Ace	$TEST Ace
 copy_raw	test.e	$CLUSTER test.e
@@ -9,6 +9,6 @@ copy_raw	b.e	$CLUSTER b.e
 copy_raw	c.e	$CLUSTER c.e
 
 compile_melted
-compile_result validity_error TEST VUEX(2)
+compile_result ok
 
 test_end

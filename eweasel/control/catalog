@@ -587,6 +587,8 @@ test	typed-manifest-array-type-validity	valid293 tcf pass validity manifest arra
 test	identifier-scope-validity		valid294 tcf pass validity scope argument local object_test separate iteration agent
 test	identifier-scope-validity-recompilation	valid295 tcf pass validity scope argument local object_test separate iteration agent incrementality
 test	obsolete-feature-call-date	valid296 tcf pass validity warning obsolete_call
+test	redeclaration-export-status	valid297 tcf fail validity export
+test	adaptation-export-status	valid298 tcf fail validity export
 
 -- Multiple error reporting tests
 test	multi-error-degree-4	multierr001 tcf pass multi-errors

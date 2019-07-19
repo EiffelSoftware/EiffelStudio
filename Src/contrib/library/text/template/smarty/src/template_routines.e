@@ -1,6 +1,4 @@
-note
-	description: "Objects that ..."
-	author: ""
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -19,7 +17,6 @@ feature
 		local
 			otn: STRING
 			obj_fields: detachable STRING_TABLE [INTEGER]
-			l_any: detachable ANY
 		do
 			otn := type_name (obj)
 			if
@@ -56,7 +53,6 @@ feature
 			obj /= Void
 		local
 			fi, fc: INTEGER
-			fn: STRING
 			otn: STRING
 		do
 			otn := type_name (obj)
@@ -67,8 +63,7 @@ feature
 			until
 				fi > fc
 			loop
-				fn := field_name (fi, obj)
-				Result.force (fi, fn)
+				Result.force (fi, field_name (fi, obj))
 				fi := fi + 1
 			end
 			internal_info.force (Result, otn)
@@ -113,10 +108,11 @@ feature -- Inspectors
 		end
 
 note
-	copyright: "2011-2015, Jocelyn Fiat, and Eiffel Software"
+	copyright: "2011-2019, Jocelyn Fiat, and Eiffel Software"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Jocelyn Fiat
 			Contact: http://about.jocelynfiat.net/
 		]"
-end -- class TEMPLATE_ROUTINES
+
+end

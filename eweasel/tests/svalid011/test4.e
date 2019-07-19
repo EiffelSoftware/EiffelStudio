@@ -8,7 +8,7 @@ feature
 			t1: TEST1 [like test_g]
 		do
 			t1 := t2
-			io.put_string (t1.generating_type.name_32.as_string_8)
+			io.put_string (t1.generating_type.name_32.to_string_8)
 			io.put_new_line
 		end
 

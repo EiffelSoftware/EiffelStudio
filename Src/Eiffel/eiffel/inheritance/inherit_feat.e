@@ -453,10 +453,9 @@ feature
 			not_empty: not is_empty
 			positive_feature_name_id: feature_name_id > 0
 		local
-			export_status: EXPORT_I
 			info: INHERIT_INFO
 		do
-				-- Default value: no export at all
+				-- Default value: no export at all.
 			Result := Export_none
 			from
 				features.start
@@ -464,30 +463,26 @@ feature
 				features.after or else Result.is_all
 			loop
 				info := features.item
-					-- First look for a new export status for the
-					-- inherited feature
-				export_status := info.parent.new_export_for (feature_name_id)
-				if export_status = Void then
-					export_status := info.internal_a_feature.export_status
+					-- Add adapted export status (if any).
+				if attached info.parent.new_export_for (feature_name_id) as e then
+					Result := Result.concatenation (e)
 				end
-				Result := Result.concatenation (export_status)
-
+					-- Add inherited export status.
+				Result := Result.concatenation (info.internal_a_feature.export_status)
 				features.forth
-			end;
+			end
 			from
 				deferred_features.start
 			until
 				deferred_features.after or else Result.is_all
 			loop
 				info := deferred_features.item
-					-- First look for a new export status for the
-					-- inherited feature
-				export_status := info.parent.new_export_for (feature_name_id)
-					-- If no new export status, then take the inherted one
-				if export_status = Void then
-					export_status := info.internal_a_feature.export_status
+					-- Add adapted export status (if any).
+				if attached info.parent.new_export_for (feature_name_id) as e then
+					Result := Result.concatenation (e)
 				end
-				Result := Result.concatenation (export_status)
+					-- Add inherited export status.
+				Result := Result.concatenation (info.internal_a_feature.export_status)
 				deferred_features.forth
 			end
 		end
@@ -530,7 +525,7 @@ feature -- Debug
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

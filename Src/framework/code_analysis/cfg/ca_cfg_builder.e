@@ -1,6 +1,7 @@
-note
+﻿note
 	description: "Provides functionality to build a Control Flow Graph from an Abstract Syntax Tree."
 	author: "Stefan Zurfluh"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -146,8 +147,6 @@ feature {NONE} -- AST Visitor
 		end
 
 	process_elseif_as (a_elseif: ELSIF_AS)
-		require else
-			correct_structure: attached {CA_CFG_IF} last_block
 		local
 			l_elseif_block: CA_CFG_IF
 			l_skip: CA_CFG_SKIP

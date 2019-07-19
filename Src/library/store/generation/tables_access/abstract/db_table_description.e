@@ -161,13 +161,10 @@ feature -- Access (table row values)
 			-- Table row attribute values.
 		do
 			create Result.make (Attribute_number)
-			from
-				attribute_code_list.start
-			until
-				attribute_code_list.after
+			across
+				attribute_code_list as a
 			loop
-				Result.extend (attribute_value (attribute_code_list.item))
-				attribute_code_list.forth
+				Result.extend (attribute_value (a.item))
 			end
 		ensure
 			not_void: Result /= Void
@@ -177,13 +174,10 @@ feature -- Access (table row values)
 			-- Table row attribute string values.
 		do
 			create Result.make (Attribute_number)
-			from
-				attribute_code_list.start
-			until
-				attribute_code_list.after
+			across
+				attribute_code_list as a
 			loop
-				Result.extend (printable_attribute (attribute_code_list.item))
-				attribute_code_list.forth
+				Result.extend (printable_attribute (a.item))
 			end
 		ensure
 			not_void: Result /= Void
@@ -195,13 +189,10 @@ feature -- Access (table row values)
 			not_void: list /= Void
 		do
 			create Result.make (list.count)
-			from
-				list.start
-			until
-				list.after
+			across
+				list as l
 			loop
-				Result.extend (attribute_value (list.item))
-				list.forth
+				Result.extend (attribute_value (l.item))
 			end
 		ensure
 			not_void: Result /= Void
@@ -213,13 +204,10 @@ feature -- Access (table row values)
 			not_void: list /= Void
 		do
 			create Result.make (list.count)
-			from
-				list.start
-			until
-				list.after
+			across
+				list as l
 			loop
-				Result.extend (printable_attribute (list.item))
-				list.forth
+				Result.extend (printable_attribute (l.item))
 			end
 		ensure
 			not_void: Result /= Void
@@ -230,18 +218,12 @@ feature -- Access (table row values)
 			-- This can be useful to create tags or parameter names.
 		require
 			action_not_void: action /= Void
-		local
-			l_result: detachable STRING
 		do
 			create Result.make (Attribute_number)
-			from
-				description_list.start
-			until
-				description_list.after
+			across
+				description_list as d
 			loop
-				l_result := action.item ([description_list.item.twin])
-				Result.extend (l_result)
-				description_list.forth
+				Result.extend (action (d.item.twin))
 			end
 		end
 
@@ -274,7 +256,7 @@ feature -- Basic operations
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

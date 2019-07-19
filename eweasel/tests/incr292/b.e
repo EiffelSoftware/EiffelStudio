@@ -1,7 +1,7 @@
 class B
 
-feature
+feature {NONE}
 
 	name: STRING
 
-end -- class B
+end

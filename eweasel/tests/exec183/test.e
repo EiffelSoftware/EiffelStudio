@@ -10,13 +10,13 @@ feature
 			t2: TEST2
 		do
 			create s1.make_filled (t1, 100)
-			io.put_string (s1.item (10).generating_type.name_32.as_string_8)
+			io.put_string (s1.item (10).generating_type.name_32.to_string_8)
 			io.put_new_line
 			io.put_string (s1.item (10).generator)
 			io.put_new_line
 
 			create s2.make_filled (t2, 100)
-			io.put_string (s2.item (10).generating_type.name_32.as_string_8)
+			io.put_string (s2.item (10).generating_type.name_32.to_string_8)
 			io.put_new_line
 			io.put_string (s2.item (10).generator)
 			io.put_new_line

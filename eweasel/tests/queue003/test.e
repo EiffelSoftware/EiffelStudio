@@ -18,7 +18,7 @@ feature
 			a_queue2.is_empty
 			a_queue1.same_type (a_queue2)
 		do
-			io.put_string (a_queue1.generating_type.name_32.as_string_8)
+			io.put_string (a_queue1.generating_type.name_32.to_string_8)
 			io.put_new_line
 
 			print_list ("1", a_queue1.linear_representation)

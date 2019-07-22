@@ -190,7 +190,7 @@ feature {NONE} -- C externals
 					
 					GetDpiForMonitor = GetProcAddress (user32_module, "GetDpiForMonitor");
 					if (GetDpiForMonitor) {
-						(FUNCTION_CAST_TYPE(void, WINAPI, (HMONITOR, MONITOR_DPI_TYPE, UINT *, UINT * )) GetDpiForMonitor) ($a_hwnd, $a_flags, $dpi_x, $dpi_y );
+						(FUNCTION_CAST_TYPE(void, WINAPI, (HMONITOR, MONITOR_DPI_TYPE, UINT *, UINT * )) GetDpiForMonitor) ((HMONITOR) $a_hwnd, (MONITOR_DPI_TYPE) $a_flags, (UINT *) $dpi_x, (UINT *) $dpi_y );
 					}
 				#endif
 			]"
@@ -210,7 +210,7 @@ feature {NONE} -- C externals
 							
 					SetProcessDpiAwareness = GetProcAddress (user32_module, "SetProcessDpiAwareness");
 					if (SetProcessDpiAwareness) {
-						return EIF_TEST((FUNCTION_CAST_TYPE(HRESULT, WINAPI, (PROCESS_DPI_AWARENESS)) SetProcessDpiAwareness) ($a_level));
+						return EIF_TEST((FUNCTION_CAST_TYPE(HRESULT, WINAPI, (PROCESS_DPI_AWARENESS)) SetProcessDpiAwareness) ((PROCESS_DPI_AWARENESS)$a_level));
 					} else {
 						return EIF_FALSE;
 					}
@@ -247,7 +247,7 @@ feature {NONE} -- C externals
 					HMODULE user32_module = (HMODULE) $a_scaling_handle;
 					SetProcessDpiAwarenessContext = GetProcAddress (user32_module, "SetProcessDpiAwarenessContext");
 					if (SetProcessDpiAwarenessContext) {
-						return EIF_TEST((FUNCTION_CAST_TYPE(BOOL, WINAPI, (DPI_AWARENESS_CONTEXT)) SetProcessDpiAwarenessContext) ($a_level));
+						return EIF_TEST((FUNCTION_CAST_TYPE(BOOL, WINAPI, (DPI_AWARENESS_CONTEXT)) SetProcessDpiAwarenessContext) ((DPI_AWARENESS_CONTEXT) $a_level));
 					} else {
 						return EIF_FALSE;
 					}
@@ -271,7 +271,7 @@ feature {NONE} -- C externals
 									
 					GetProcessDpiAwareness = GetProcAddress (user32_module, "GetProcessDpiAwareness");
 					if (GetProcessDpiAwareness) {
-						return (FUNCTION_CAST_TYPE(HRESULT, WINAPI, (HANDLE, PROCESS_DPI_AWARENESS * )) GetProcessDpiAwareness) ($a_process, $a_value);
+						return (FUNCTION_CAST_TYPE(HRESULT, WINAPI, (HANDLE, PROCESS_DPI_AWARENESS * )) GetProcessDpiAwareness) ((HANDLE) $a_process, (PROCESS_DPI_AWARENESS *) $a_value);
 					} else {
 						return 0;
 					}

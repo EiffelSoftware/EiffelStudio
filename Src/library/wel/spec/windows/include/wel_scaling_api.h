@@ -15,25 +15,47 @@ description: "WEL: library of reusable components for Windows."
 /*****************************************************************************/
 /* wel_scaling_api.h                                                         */
 /*****************************************************************************/
-/* Used to add HighDPI support	(only for MSC compiler: 2019-05-20  )         */
-/*****************************************************************************/
 
 
 #ifndef _wel_scaling_api_h_
 #define _wel_scaling_api_h_
 
-#ifdef _MSC_VER 
-#include <shellscalingapi.h>
-#include <windef.h>
-#include <winuser.h>
+#ifndef SCALING_ENUMS_DECLARED
+
+typedef enum {
+    DEVICE_PRIMARY = 0,
+    DEVICE_IMMERSIVE = 1,
+} DISPLAY_DEVICE_TYPE;
+
+typedef enum {
+    SCF_VALUE_NONE = 0x00,
+    SCF_SCALE = 0x01,
+    SCF_PHYSICAL = 0x02,
+} SCALE_CHANGE_FLAGS;
+
+#define SCALING_ENUMS_DECLARED
+#endif
+
+#ifndef DPI_ENUMS_DECLARED
+
+typedef enum PROCESS_DPI_AWARENESS {
+    PROCESS_DPI_UNAWARE = 0,
+    PROCESS_SYSTEM_DPI_AWARE = 1,
+    PROCESS_PER_MONITOR_DPI_AWARE = 2
+} PROCESS_DPI_AWARENESS;
+
+typedef enum MONITOR_DPI_TYPE {
+    MDT_EFFECTIVE_DPI = 0,
+    MDT_ANGULAR_DPI = 1,
+    MDT_RAW_DPI = 2,
+    MDT_DEFAULT = MDT_EFFECTIVE_DPI
+} MONITOR_DPI_TYPE;
+
+#define DPI_ENUMS_DECLARED
 #endif
 
 #ifdef __cplusplus
 extern "C" {
-#endif
-
-#ifdef __cplusplus
-}
 #endif
 
 #endif /* _wel_scaling_api_h_ */

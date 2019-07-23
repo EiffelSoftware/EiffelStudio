@@ -12,11 +12,6 @@ description: "WEL: library of reusable components for Windows."
 		]"
 */
 
-/*****************************************************************************/
-/* wel_scaling_api.h                                                         */
-/*****************************************************************************/
-
-
 #ifndef _wel_scaling_api_h_
 #define _wel_scaling_api_h_
 
@@ -52,10 +47,6 @@ typedef enum MONITOR_DPI_TYPE {
 } MONITOR_DPI_TYPE;
 
 #define DPI_ENUMS_DECLARED
-#endif
-
-#ifdef __cplusplus
-extern "C" {
 #endif
 
 #endif /* _wel_scaling_api_h_ */

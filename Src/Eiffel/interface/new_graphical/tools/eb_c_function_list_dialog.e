@@ -305,13 +305,11 @@ feature{NONE} -- Implementation/Sorting
 		require
 			a_mapper_attached: a_mapper /= Void
 			b_mapper_attached: b_mapper /= Void
-		local
-			l_name_a: STRING_8
-			l_name_b: STRING_8
 		do
-			l_name_a ?= a_mapper.a_target_item.data
-			l_name_b ?= b_mapper.a_target_item.data
-			if l_name_a /= Void and then l_name_b /= Void then
+			if
+				attached {STRING_8} a_mapper.a_target_item.data as l_name_a and then
+				attached {STRING_8} b_mapper.a_target_item.data as l_name_b
+			then
 				if a_sorting_order = ascending_order then
 					Result := l_name_a <= l_name_b
 				elseif a_sorting_order = descending_order then
@@ -329,7 +327,7 @@ invariant
 	file_table_valid: mapper /= Void implies valid_file_table /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

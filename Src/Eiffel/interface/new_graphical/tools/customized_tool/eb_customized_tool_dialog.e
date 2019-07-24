@@ -141,10 +141,10 @@ feature{NONE} -- Implementation/Data
 	handler_dialog: EB_STONE_HANDLER_DIALOG
 			-- Dialog to setup stone handler
 
-	data_from_row (a_row: EV_GRID_ROW): EB_CUSTOMIZED_TOOL_DESP
+	data_from_row (a_row: EV_GRID_ROW): detachable EB_CUSTOMIZED_TOOL_DESP
 			-- Data from `a_row'.
 		do
-			Result ?= a_row.data
+			Result := {like data_from_row} / a_row.data
 		end
 
 feature{NONE} -- Implementation
@@ -376,7 +376,7 @@ feature{NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

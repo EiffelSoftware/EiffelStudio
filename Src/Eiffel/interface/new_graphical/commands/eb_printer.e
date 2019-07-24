@@ -143,34 +143,35 @@ feature -- Basic operations
 			cmd_set: external_command /= Void and then not external_command.is_empty
 			valid_text_set: text /= Void
 		local
-			file_name: FILE_NAME
-			cmd: STRING
+			cmd: STRING_32
 			sent_txt: STRING
 			file: PLAIN_TEXT_FILE
 			retried: BOOLEAN
+			t: EV_TIMEOUT
 		do
 			if not retried then
 				sent_txt := text
 				sent_txt.prune_all ('%R')
 				sent_txt.replace_substring_all ("%N", "%R%N")
 					-- Generate the file we put the text in.
-				create file_name.make_temporary_name
-				create file.make (file_name)
-				if file.exists then
-					file.open_write
-				else
-					file.create_read_write
-				end
+				create file.make_open_temporary_with_prefix ("eb_printer")
 				file.put_string (sent_txt)
 				file.close
 					-- Generate the actual command line.
-				cmd := external_command.twin
-				cmd.replace_substring_all ("$target", file_name)
+				create cmd.make_from_string_general (external_command)
+				cmd.replace_substring_all ({STRING_32} "$target", file.path.name)
 					-- Send the command.
 				(create {EXECUTION_ENVIRONMENT}).launch (cmd)
 					-- Delete the temporary file.
 					--| FIXME XR: It is too soon, the external command didn't have time to load the file!
-				file.delete
+				create t.make_with_interval (10_000)
+				t.actions.extend_kamikaze (agent (f: FILE; i_t: EV_TIMEOUT)
+						do
+							f.delete
+							i_t.set_interval (0)
+							i_t.destroy
+						end(file, t)
+					)
 			end
 		rescue
 			retried := True
@@ -220,7 +221,7 @@ feature {NONE} -- Implementation: graphical interface
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

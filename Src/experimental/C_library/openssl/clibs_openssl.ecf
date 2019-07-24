@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="clibs_openssl" uuid="B844718C-416F-4D50-8ADE-91F3DBB9CC08" library_target="clibs_openssl">
+	<target name="clibs_openssl">
+		<description>
+			C library dependency for openSSL binding.
+
+			note: set custom variable "openssl_static" to "true", in order to link with static C lib.
+  		</description>
+		<root all_classes="true"/>
+		<external_include location="$(ISE_LIBRARY)\C_library\openssl\include">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</external_include>
+		<external_include location="/usr/local/include">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_include>
+		<external_object location="$(ISE_LIBRARY)\C_library\openssl\spec\$(ISE_PLATFORM)\lib\libcrypto.lib">
+			<condition>
+				<platform value="windows"/>
+				<custom name="openssl_static" value="true"/>
+			</condition>
+		</external_object>
+		<external_object location="$(ISE_LIBRARY)\C_library\openssl\spec\$(ISE_PLATFORM)\lib\libssl.lib">
+			<condition>
+				<platform value="windows"/>
+				<custom name="openssl_static" value="true"/>
+			</condition>
+		</external_object>
+
+		<external_object location="$(ISE_LIBRARY)\C_library\openssl\spec\$(ISE_PLATFORM)\bin\libcrypto.lib">
+			<condition>
+				<platform value="windows"/>
+				<custom name="openssl_static" excluded_value="true"/>
+			</condition>
+		</external_object>
+		<external_object location="$(ISE_LIBRARY)\C_library\openssl\spec\$(ISE_PLATFORM)\bin\libssl.lib">
+			<condition>
+				<platform value="windows"/>
+				<custom name="openssl_static" excluded_value="true"/>
+			</condition>
+		</external_object>
+		<external_linker_flag value="-lcrypto">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_linker_flag>
+		<external_linker_flag value="-lssl">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_linker_flag>
+
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+	</target>
+</system>

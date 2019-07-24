@@ -13,12 +13,12 @@
 		<option warning="true" namespace="EiffelSoftware.Library">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
-		<external_include location="$(ISE_LIBRARY)\experimental\library\cURL\spec\include">
+		<external_include location="$(ISE_LIBRARY)\library\cURL\spec\include">
 			<condition>
 				<platform value="windows"/>
 			</condition>
 		</external_include>
-		<external_include location="$(ISE_LIBRARY)/experimental/library/cURL/spec/include">
+		<external_include location="$(ISE_LIBRARY)/library/cURL/spec/include">
 			<condition>
 				<platform excluded_value="windows"/>
 			</condition>
@@ -29,20 +29,20 @@
 				<custom name="static_curl_enabled" value="true"/>
 			</condition>
 		</external_cflag>
-		<external_object location="$(ISE_LIBRARY)/experimental/library/cURL/spec/$(ISE_PLATFORM)/lib/eiffel_curl.o">
+		<external_object location="$(ISE_LIBRARY)/library/cURL/spec/$(ISE_PLATFORM)/lib/eiffel_curl.o">
 			<condition>
 				<platform excluded_value="windows"/>
 				<concurrency value="none"/>
 			</condition>
 		</external_object>
-		<external_object location="$(ISE_LIBRARY)\experimental\library\cURL\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\eiffel_curl.lib">
+		<external_object location="$(ISE_LIBRARY)\library\cURL\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\eiffel_curl.lib">
 			<condition>
 				<platform value="windows"/>
 				<concurrency value="none"/>
 				<dotnet value="false"/>
 			</condition>
 		</external_object>
-		<external_object location="$(ISE_LIBRARY)\experimental\library\cURL\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\eiffel_curl_static.lib">
+		<external_object location="$(ISE_LIBRARY)\library\cURL\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\eiffel_curl_static.lib">
 			<condition>
 				<platform value="windows"/>
 				<concurrency value="none"/>
@@ -50,7 +50,7 @@
 				<custom name="static_curl_enabled" value="true"/>
 			</condition>
 		</external_object>
-		<external_object location="$(ISE_LIBRARY)\experimental\library\cURL\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\MTeiffel_curl_static.lib">
+		<external_object location="$(ISE_LIBRARY)\library\cURL\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\MTeiffel_curl_static.lib">
 			<condition>
 				<platform value="windows"/>
 				<concurrency excluded_value="none"/>
@@ -58,7 +58,7 @@
 				<custom name="static_curl_enabled" value="true"/>
 			</condition>
 		</external_object>
-		<external_object location="$(ISE_LIBRARY)\experimental\library\cURL\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\mteiffel_curl.lib">
+		<external_object location="$(ISE_LIBRARY)\library\cURL\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\mteiffel_curl.lib">
 			<condition>
 				<platform value="windows"/>
 				<concurrency excluded_value="none"/>
@@ -66,13 +66,13 @@
 				<custom name="static_curl_enabled" excluded_value="true"/>
 			</condition>
 		</external_object>
-		<external_object location="$(ISE_LIBRARY)/experimental/library/cURL/spec/$(ISE_PLATFORM)/lib/MTeiffel_curl.o">
+		<external_object location="$(ISE_LIBRARY)/library/cURL/spec/$(ISE_PLATFORM)/lib/MTeiffel_curl.o">
 			<condition>
 				<platform excluded_value="windows"/>
 				<concurrency excluded_value="none"/>
 			</condition>
 		</external_object>
-		<external_object location="$(ISE_LIBRARY)\experimental\library\cURL\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\ileiffel_curl.lib">
+		<external_object location="$(ISE_LIBRARY)\library\cURL\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\ileiffel_curl.lib">
 			<condition>
 				<platform value="windows"/>
 				<dotnet value="true"/>

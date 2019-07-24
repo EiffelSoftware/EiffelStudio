@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="clibs_zlib" uuid="E1A8B1CE-F7BE-4E58-8C33-36788262FD7B" library_target="clibs_zlib">
+	<target name="clibs_zlib">
+		<root all_classes="true"/>
+		<external_include location="$(ISE_LIBRARY)\C_library\zlib">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</external_include>
+		<external_object location="$(ISE_LIBRARY)\C_library\zlib\spec\$ISE_C_COMPILER\$ISE_PLATFORM\lib\zlib.lib">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</external_object>
+		<external_object location="-lz">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_object>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+	</target>
+</system>

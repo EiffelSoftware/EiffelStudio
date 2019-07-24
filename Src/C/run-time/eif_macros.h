@@ -1137,7 +1137,9 @@ RT_LNK void eif_exit_eiffel_code(void);
  *  RTMS(s) creates an Eiffel string from a C manifest string s.
  *  RTMS_EX(s,c) creates an Eiffel string from a C manifest string s of length c.
  *  RTMS_EX_H(s,c,h) creates an Eiffel string from a C manifest string s of length c and hash-code h.
+ *  RTMIS8_EX_H(s,c,h) creates an IMMUTABLE_STRING_8 from a C manifest string s of length c.
  *  RTMS32_EX_H(s,c,h) creates an STRING_32 from a C manifest string s of length c and hash-code h.
+ *  RTMIS32_EX_H(s,c,h) creates an IMMUTABLE_STRING_32 from a C manifest string s of length c.
  *  RTMS_EX_O(s,c,h) creates an Eiffel string in heap for old objects from a C manifest string s of length c and hash-code h.
  *  RTOMS(b,n) a value of a once manifest string object for routine body index `b' and number `n'.
  *  RTDOMS(b,m) declares a field to store once manifest string objects for routine body index `b' and number `n' of such objects.
@@ -1152,15 +1154,21 @@ RT_LNK void eif_exit_eiffel_code(void);
  *  RTOF(x) returns the offset of expanded 'x' within enclosing object
  *  RTEO(x) returns the address of the enclosing object for expanded 'x'
  */
-#define	RTMS(s)			makestr_with_hash(s,strlen(s),0)
-#define	RTMS_EX(s,c)	makestr_with_hash(s,c,0)
-#define	RTMS_EX_H(s,c,h)	makestr_with_hash(s,c,h)
-#define RTMS_EX_O(s,c,h)	makestr_with_hash_as_old(s,c,h)
+#define	RTMS(s)				makestr_with_hash(s,strlen(s),EIF_FALSE,0)
+#define	RTMS_EX(s,c)		makestr_with_hash(s,c,EIF_FALSE,0)
+#define	RTMS_EX_H(s,c,h)	makestr_with_hash(s,c,EIF_FALSE,h)
+#define RTMS_EX_O(s,c,h)	makestr_with_hash_as_old(s,c,EIF_FALSE,h)
+#define	RTMIS8_EX(s,c)		makestr_with_hash(s,c,EIF_TRUE,0)
+#define	RTMIS8_EX_H(s,c,h)	makestr_with_hash(s,c,EIF_TRUE,h)
+#define RTMIS8_EX_O(s,c,h)	makestr_with_hash_as_old(s,c,EIF_TRUE,h)
 
-#define	RTMS32(s)		makestr32_with_hash(s,strlen(s),0)
-#define	RTMS32_EX(s,c)	makestr32_with_hash(s,c,0)
-#define	RTMS32_EX_H(s,c,h)	makestr32_with_hash(s,c,h)
-#define RTMS32_EX_O(s,c,h)	makestr32_with_hash_as_old(s,c,h)
+#define	RTMS32(s)			makestr32_with_hash(s,strlen(s),EIF_FALSE, 0)
+#define	RTMS32_EX(s,c)		makestr32_with_hash(s,c,EIF_FALSE,0)
+#define	RTMS32_EX_H(s,c,h)	makestr32_with_hash(s,c,EIF_FALSE,h)
+#define RTMS32_EX_O(s,c,h)	makestr32_with_hash_as_old(s,c,EIF_FALSE,h)
+#define	RTMIS32_EX(s,c)		makestr32_with_hash(s,c,EIF_TRUE,0)
+#define	RTMIS32_EX_H(s,c,h)	makestr32_with_hash(s,c,EIF_TRUE,h)
+#define RTMIS32_EX_O(s,c,h)	makestr32_with_hash_as_old(s,c,EIF_TRUE,h)
 
 #if defined(WORKBENCH) || defined(EIF_THREADS)
 #define RTOMS(b,n)	(EIF_oms[(b)][(n)])
@@ -1199,6 +1207,32 @@ RT_LNK void eif_exit_eiffel_code(void);
 			if (!rs) { \
 				register_oms (rsp); \
 				rs = RTMS32_EX_O(s,c,h); \
+				*rsp = rs; \
+			} \
+			r = rs; \
+		}
+#define RTCOMIS8(r,b,n,s,c,h) \
+		{ \
+			EIF_REFERENCE * rsp; \
+			EIF_REFERENCE rs; \
+			rsp = &RTOMS(b,n); \
+			rs = *rsp; \
+			if (!rs) { \
+				register_oms (rsp); \
+				rs = RTMIS8_EX_O(s,c,h); \
+				*rsp = rs; \
+			} \
+			r = rs; \
+		}
+#define RTCOMIS32(r,b,n,s,c,h) \
+		{ \
+			EIF_REFERENCE * rsp; \
+			EIF_REFERENCE rs; \
+			rsp = &RTOMS(b,n); \
+			rs = *rsp; \
+			if (!rs) { \
+				register_oms (rsp); \
+				rs = RTMIS32_EX_O(s,c,h); \
 				*rsp = rs; \
 			} \
 			r = rs; \

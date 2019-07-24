@@ -1272,4 +1272,30 @@ feature -- Test
 			check_boolean ("valid_index", not ("123").valid_index (4))
 		end
 
+	test_manifest
+		local
+			s: READABLE_STRING_GENERAL
+		do
+			s := {STRING_8} "abc"
+			check_string_equality ("manifest immutable_string_8", s, {IMMUTABLE_STRING_8} "abc")
+			check_string_equality ("once manifest immutable_string_8", s, once {IMMUTABLE_STRING_8} "abc")
+			check_string_equality ("constant immutable_string_8", s, immutable_string_8_constant)
+			s := {STRING_8} "bin%Uary"
+			check_string_equality ("manifest binary immutable_string_8", s, {IMMUTABLE_STRING_8} "bin%Uary")
+		end
+
+feature -- Constants
+
+	immutable_string_8_constant: IMMUTABLE_STRING_8 = "abc"
+
+note
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

@@ -2843,9 +2843,17 @@ feature {NONE} -- Visitors
 			if a_node.is_dotnet_string then
 				il_generator.generate_once_string (a_node.number - 1, a_node.value_32, string_type_cil)
 			elseif a_node.is_string_32 then
-				il_generator.generate_once_string (a_node.number - 1, a_node.value_32, string_type_string_32)
+				if a_node.is_immutable then
+					il_generator.generate_once_string (a_node.number - 1, a_node.value_32, string_type_immutable_string_32)
+				else
+					il_generator.generate_once_string (a_node.number - 1, a_node.value_32, string_type_string_32)
+				end
 			else
-				il_generator.generate_once_string (a_node.number - 1, a_node.value_32, string_type_string)
+				if a_node.is_immutable then
+					il_generator.generate_once_string (a_node.number - 1, a_node.value_32, string_type_immutable_string_8)
+				else
+					il_generator.generate_once_string (a_node.number - 1, a_node.value_32, string_type_string)
+				end
 			end
 		end
 
@@ -3100,9 +3108,17 @@ feature {NONE} -- Visitors
 				il_generator.put_system_string_32 (a_node.value_32)
 			else
 				if a_node.is_string_32 then
-					il_generator.put_manifest_string_32 (a_node.value_32)
+					if a_node.is_immutable then
+						il_generator.put_immutable_manifest_string_32 (a_node.value_32)
+					else
+						il_generator.put_manifest_string_32 (a_node.value_32)
+					end
 				else
-					il_generator.put_manifest_string (a_node.value_32)
+					if a_node.is_immutable then
+						il_generator.put_immutable_manifest_string_8 (a_node.value_32)
+					else
+						il_generator.put_manifest_string (a_node.value_32)
+					end
 				end
 			end
 		end

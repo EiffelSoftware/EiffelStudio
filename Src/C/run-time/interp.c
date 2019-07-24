@@ -3606,6 +3606,72 @@ rt_private void interpret(int flag, int where)
 		}
 
 	/*
+	 * Once manifest IMMUTABLE_STRING_8 .
+	 */
+	case BC_ONCE_IMMSTRING8:
+#ifdef DEBUG
+		dprintf(2)("BC_ONCE_IMMSTRING8\n");
+#endif
+		{
+			unsigned long stagval;
+			unsigned char *OLD_IC;
+			int32 body_index;	/* routine body index */
+			int32 number;	/* number of the once manifest string in routine body */
+			int32 length;	/* nubmer of bytes of once manifest string */
+
+			stagval = tagval;
+			body_index = get_int32(&IC);	/* Get routine body index */
+			number = get_int32(&IC);	/* Get number of the once manifest string in the routine body */
+			length = get_int32(&IC);
+			string = get_string8(&IC, length);	/* Get string of specified length. */
+
+			last = eif_opstack_push_empty(&op_stack);
+			last->type = SK_REF;
+
+			OLD_IC = IC;
+			RTCOMIS8 (last->it_ref, body_index, number, (char *) string, length, 0);
+			IC = OLD_IC;
+
+			if (tagval != stagval) {
+				sync_registers(MTC scur,stop);
+			}
+			break;
+		}
+
+	/*
+	 * Once manifest IMMUTABLE_STRING_32.
+	 */
+	case BC_ONCE_IMMSTRING32:
+#ifdef DEBUG
+		dprintf(2)("BC_ONCE_IMMSTRING32\n");
+#endif
+		{
+			unsigned long stagval;
+			unsigned char *OLD_IC;
+			int32 body_index;	/* routine body index */
+			int32 number;	/* number of the once manifest string in routine body */
+			int32 length;	/* nubmer of bytes of once manifest string */
+
+			stagval = tagval;
+			body_index = get_int32(&IC);	/* Get routine body index */
+			number = get_int32(&IC);	/* Get number of the once manifest string in the routine body */
+			length = get_int32(&IC);
+			string = get_string8(&IC, length);	/* Get string of specified length. */
+
+			last = eif_opstack_push_empty(&op_stack);
+			last->type = SK_REF;
+
+			OLD_IC = IC;
+			RTCOMIS32 (last->it_ref, body_index, number, (char *) string, length / sizeof (EIF_CHARACTER_32), 0);
+			IC = OLD_IC;
+
+			if (tagval != stagval) {
+				sync_registers(MTC scur,stop);
+			}
+			break;
+		}
+
+	/*
 	 * Allocate space to store once manifest strings.
 	 */
 	case BC_ALLOCATE_ONCE_STRINGS:
@@ -3691,6 +3757,77 @@ rt_private void interpret(int flag, int where)
 
 			OLD_IC = IC;
 			str_obj = RTMS32_EX((char *) string, length / sizeof (EIF_CHARACTER_32));
+			IC = OLD_IC;
+
+			last->type = SK_REF;
+			last->it_ref = str_obj;
+			if (tagval != stagval)
+				sync_registers(MTC scur,stop);
+			break;
+		}
+
+	/*
+	 * Manifest IMMUTABLE_STRING_8.
+	 */
+	case BC_IMMSTRING8:
+#ifdef DEBUG
+		dprintf(2)("BC_IMMSTRING8\n");
+#endif
+		{
+			EIF_REFERENCE str_obj;			  /* String object created */
+			unsigned long stagval;
+			unsigned char *OLD_IC;
+			int32 length;						/* number of bytes of the manifest string */
+
+			stagval = tagval;
+
+			length = get_int32(&IC);
+			string = get_string8(&IC, length);	/* Get string of specified length. */
+			last = eif_opstack_push_empty(&op_stack);
+			last->type = SK_INT32;		/* Protect empty cell from GC */
+
+			/* We have to use the str_obj temporary variable instead of doing
+			 * the assignment directly into last->it_ref because the GC might
+			 * run a cycle when makestr() is called...
+			 */
+
+			OLD_IC = IC;
+			str_obj = RTMIS8_EX((char *) string, length);
+			IC = OLD_IC;
+
+			last->type = SK_REF;
+			last->it_ref = str_obj;
+			if (tagval != stagval)
+				sync_registers(MTC scur,stop);
+			break;
+		}		
+	/*
+	 * Manifest IMMUTABLE_STRING_32.
+	 */
+	case BC_IMMSTRING32:
+#ifdef DEBUG
+		dprintf(2)("BC_IMMSTRING32\n");
+#endif
+		{
+			EIF_REFERENCE str_obj;			  /* String object created */
+			unsigned long stagval;
+			unsigned char *OLD_IC;
+			int32 length;						/* number of bytes of the manifest string */
+
+			stagval = tagval;
+
+			length = get_int32(&IC);
+			string = get_string8(&IC, length);	/* Get string of specified length. */
+			last = eif_opstack_push_empty(&op_stack);
+			last->type = SK_INT32;		/* Protect empty cell from GC */
+
+			/* We have to use the str_obj temporary variable instead of doing
+			 * the assignment directly into last->it_ref because the GC might
+			 * run a cycle when makestr() is called...
+			 */
+
+			OLD_IC = IC;
+			str_obj = RTMIS32_EX((char *) string, length / sizeof (EIF_CHARACTER_32));
 			IC = OLD_IC;
 
 			last->type = SK_REF;

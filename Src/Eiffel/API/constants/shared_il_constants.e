@@ -73,6 +73,8 @@ feature -- String type
 	string_type_cil: INTEGER = 1
 	string_type_string: INTEGER = 2
 	string_type_string_32: INTEGER = 3
+	string_type_immutable_string_8: INTEGER = 4
+	string_type_immutable_string_32: INTEGER = 5
 
 note
 	copyright:	"Copyright (c) 1984-2010, Eiffel Software"

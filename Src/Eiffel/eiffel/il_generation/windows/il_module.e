@@ -403,6 +403,12 @@ feature {CIL_CODE_GENERATOR} -- Once manifest strings: access
 			elseif a_type = string_type_string then
 				Result := once_string_field_eiffel_token
 				once_string_field_name := once_string_field_eiffel_name
+			elseif a_type = string_type_immutable_string_8 then
+				Result := once_immutable_string_8_field_eiffel_token
+				once_string_field_name := once_immutable_string_8_field_eiffel_name
+			elseif a_type = string_type_immutable_string_32 then
+				Result := once_immutable_string_32_field_eiffel_token
+				once_string_field_name := once_immutable_string_32_field_eiffel_name
 			else
 				Result := once_string_32_field_eiffel_token
 				once_string_field_name := once_string_32_field_eiffel_name
@@ -420,6 +426,12 @@ feature {CIL_CODE_GENERATOR} -- Once manifest strings: access
 					if a_type = string_type_string then
 						l_field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_class,
 							actual_class_type_token (system.string_8_class.compiled_class.types.first.static_type_id))
+					elseif a_type = string_type_immutable_string_8 then
+						l_field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_class,
+							actual_class_type_token (system.immutable_string_8_class.compiled_class.types.first.static_type_id))
+					elseif a_type = string_type_immutable_string_32 then
+						l_field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_class,
+							actual_class_type_token (system.immutable_string_32_class.compiled_class.types.first.static_type_id))
 					else
 						l_field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_class,
 							actual_class_type_token (system.string_32_class.compiled_class.types.first.static_type_id))
@@ -431,6 +443,10 @@ feature {CIL_CODE_GENERATOR} -- Once manifest strings: access
 					once_string_field_cil_token := Result
 				elseif a_type = string_type_string then
 					once_string_field_eiffel_token := Result
+				elseif a_type = string_type_immutable_string_8 then
+					once_immutable_string_8_field_eiffel_token := Result
+				elseif a_type = string_type_immutable_string_32 then
+					once_immutable_string_32_field_eiffel_token := Result
 				else
 					once_string_32_field_eiffel_token := Result
 				end
@@ -509,6 +525,22 @@ feature {CIL_CODE_GENERATOR} -- Once manifest strings: status report
 			definition: Result implies once_string_32_field_eiffel_token /= 0
 		end
 
+	is_once_immutable_string_8_field_eiffel_defined: BOOLEAN
+			-- Is token of a field that is used to store values of Eiffel once manifest strings (IMMUTABLE_STRING_8) defined?
+		do
+			Result := once_immutable_string_8_field_eiffel_token /= 0
+		ensure
+			definition: Result implies once_immutable_string_8_field_eiffel_token /= 0
+		end
+
+	is_once_immutable_string_32_field_eiffel_defined: BOOLEAN
+			-- Is token of a field that is used to store values of Eiffel once manifest strings (IMMUTABLE_STRING_32) defined?
+		do
+			Result := once_immutable_string_32_field_eiffel_token /= 0
+		ensure
+			definition: Result implies once_immutable_string_32_field_eiffel_token /= 0
+		end
+
 	is_once_string_allocation_routine_defined: BOOLEAN
 			-- Is token of a routine that allocates array to store once manifest string values defined?
 		do
@@ -580,6 +612,31 @@ feature {CIL_CODE_GENERATOR} -- Once manifest strings: management
 				l_field_sig)
 			define_thread_static_attribute (once_string_32_field_eiffel_token)
 
+				-- Emit field for Eiffel strings (IMMUTABLE_STRING_8).
+			l_field_sig.reset
+			l_field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
+			l_field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
+			l_field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, actual_class_type_token (system.immutable_string_8_class.compiled_class.types.first.static_type_id))
+			once_immutable_string_8_field_eiffel_token := md_emit.define_field (
+				once_immutable_string_8_field_eiffel_name,
+				helper_class_token,
+				{MD_FIELD_ATTRIBUTES}.public | {MD_FIELD_ATTRIBUTES}.static,
+				l_field_sig)
+			define_thread_static_attribute (once_immutable_string_8_field_eiffel_token)
+
+				-- Emit field for Eiffel strings (IMMUTABLE_STRING_32).
+			l_field_sig.reset
+			l_field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
+			l_field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_szarray, 0)
+			l_field_sig.set_type ({MD_SIGNATURE_CONSTANTS}.Element_type_class, actual_class_type_token (system.immutable_string_32_class.compiled_class.types.first.static_type_id))
+			once_immutable_string_32_field_eiffel_token := md_emit.define_field (
+				once_immutable_string_32_field_eiffel_name,
+				helper_class_token,
+				{MD_FIELD_ATTRIBUTES}.public | {MD_FIELD_ATTRIBUTES}.static,
+				l_field_sig)
+			define_thread_static_attribute (once_immutable_string_32_field_eiffel_token)
+
+
 				-- Emit method to allocate storage for strings.
 			l_method_sig := method_sig
 			l_method_sig.reset
@@ -601,6 +658,8 @@ feature {CIL_CODE_GENERATOR} -- Once manifest strings: management
 			once_string_field_cil_defined: is_once_string_field_cil_defined
 			once_string_field_eiffel_defined: is_once_string_field_eiffel_defined
 			once_string_32_field_eiffel_defined: is_once_string_32_field_eiffel_defined
+			once_immutable_string_32_field_eiffel_defined: is_once_immutable_string_32_field_eiffel_defined
+			once_immutable_string_8_field_eiffel_defined: is_once_immutable_string_8_field_eiffel_defined
 			once_string_allocation_routine_defined: is_once_string_allocation_routine_defined
 		end
 
@@ -630,6 +689,18 @@ feature {NONE} -- Once manifest strings: names
 			create Result.make ("oms32_eiffel")
 		end
 
+	once_immutable_string_8_field_eiffel_name: UNI_STRING
+			-- Name of the once manifest string field to store Eiffel strings
+		once
+			create Result.make ("omis8_eiffel")
+		end
+
+	once_immutable_string_32_field_eiffel_name: UNI_STRING
+			-- Name of the once manifest string field to store Eiffel strings (STRING_32)
+		once
+			create Result.make ("omis32_eiffel")
+		end
+
 	once_string_allocation_routine_name: UNI_STRING
 			-- Name of the routine that allocates storage for once manifest strings
 		once
@@ -650,6 +721,14 @@ feature {NONE} -- Once manifest strings: tokens
 			-- Token of a field that is used to store values of once manifest strings
 			-- of Eiffel type "STRING_32" or 0 if it is not computed yet
 
+	once_immutable_string_8_field_eiffel_token: INTEGER
+			-- Token of a field that is used to store values of once manifest strings
+			-- of Eiffel type "IMMUTABLE_STRING_8" or 0 if it is not computed yet
+
+	once_immutable_string_32_field_eiffel_token: INTEGER
+			-- Token of a field that is used to store values of once manifest strings
+			-- of Eiffel type "IMMUTABLE_STRING_32" or 0 if it is not computed yet
+
 	once_string_allocation_routine_token_value: INTEGER
 			-- Token of a routine that performs allocation of arrays for once manifest strings
 
@@ -658,6 +737,12 @@ feature {NONE} -- Once manifest strings: tokens
 
 	once_string_32_class_token_value: INTEGER
 			-- Token of a run-time helper class that keeps values of once manifest strings (STRING_32)
+
+	once_immutable_string_8_class_token_value: INTEGER
+			-- Token of a run-time helper class that keeps values of once manifest strings (IMMUTABLE_STRING_8)
+
+	once_immutable_string_32_class_token_value: INTEGER
+			-- Token of a run-time helper class that keeps values of once manifest strings (IMMUTABLE_STRING_32)
 
 	once_string_class_token: INTEGER
 			-- Token of a run-time helper class that keeps values of once manifest strings
@@ -3631,7 +3716,7 @@ invariant
 	dll_or_console_valid: not is_assembly_module implies (is_dll and is_console_application)
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -134,6 +134,12 @@ feature -- Access
 				elseif Current = local_system.string_32_class then
 					create {STRING_CLASS_B} Result.make (Current, True)
 
+				elseif Current = local_system.immutable_string_8_class then
+					create {STRING_CLASS_B} Result.make_immutable (Current, False)
+
+				elseif Current = local_system.immutable_string_32_class then
+					create {STRING_CLASS_B} Result.make_immutable (Current, True)
+
 				elseif Current = local_system.array_class then
 					create {ARRAY_CLASS_B} Result.make (Current)
 

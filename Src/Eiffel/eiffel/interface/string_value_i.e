@@ -99,13 +99,18 @@ feature -- Status Report
 	is_string_32: BOOLEAN
 			-- Is the current constant a STRING_32 one?
 
+	is_immutable_string: BOOLEAN
+			-- Is the current constant an IMMUTABLE_STRING_.. ?
+
 	valid_type (t: TYPE_A): BOOLEAN
 			-- Is the current value compatible with `t' ?
 		do
 			if attached {CL_TYPE_A} t as l_ctype then
 				Result :=
 					(l_ctype.class_id = System.string_8_id and then encoding_converter.is_code_point_valid_string_8 (string_value)) or
+					(l_ctype.class_id = System.immutable_string_8_id and then encoding_converter.is_code_point_valid_string_8 (string_value)) or
 					l_ctype.class_id = System.string_32_id or
+					l_ctype.class_id = System.immutable_string_32_id or
 					l_ctype.class_id = system_string_id
 			end
 		end
@@ -121,10 +126,14 @@ feature -- Settings
 
 	set_real_type (t: CL_TYPE_A)
 			-- Extract type and set `is_dotnet_string' accordingly.
+		local
+			l_cl_type_class_id: INTEGER
 		do
 			if attached {CL_TYPE_A} t as l_cl_type then
-				is_dotnet_string := l_cl_type.class_id = system_string_id
-				is_string_32 := l_cl_type.class_id = string_32_id
+				l_cl_type_class_id := l_cl_type.class_id
+				is_dotnet_string := l_cl_type_class_id = system_string_id
+				is_string_32 := l_cl_type_class_id = string_32_id or else l_cl_type_class_id = immutable_string_32_id
+				is_immutable_string := l_cl_type_class_id = immutable_string_32_id or l_cl_type_class_id = immutable_string_8_id
 			end
 		end
 
@@ -143,7 +152,11 @@ feature -- Code generation
 			if is_string_32 then
 				l_value_32 := string_value_32
 				l_value := encoding_converter.string_32_to_stream (l_value_32)
-				buf.put_string ({C_CONST}.rtms32_ex_h)
+				if is_immutable_string then
+					buf.put_string ({C_CONST}.rtmis32_ex_h)
+				else
+					buf.put_string ({C_CONST}.rtms32_ex_h)
+				end
 
 				buf.put_character ('(')
 				buf.put_string_literal (l_value)
@@ -156,7 +169,11 @@ feature -- Code generation
 				buf.put_character(')')
 			else
 				l_value := string_value_8
-				buf.put_string ({C_CONST}.rtms_ex_h)
+				if is_immutable_string then
+					buf.put_string ({C_CONST}.rtmis8_ex_h)
+				else
+					buf.put_string ({C_CONST}.rtms_ex_h)
+				end
 
 				buf.put_character ('(')
 				buf.put_string_literal (l_value)
@@ -177,9 +194,17 @@ feature -- Code generation
 				il_generator.put_system_string_32 (string_value_32)
 			else
 				if is_string_32 then
-					il_generator.put_manifest_string_32 (string_value_32)
+					if is_immutable_string then
+						il_generator.put_immutable_manifest_string_32 (string_value_32)
+					else
+						il_generator.put_manifest_string_32 (string_value_32)
+					end
 				else
-					il_generator.put_manifest_string (string_value_32)
+					if is_immutable_string then
+						il_generator.put_immutable_manifest_string_8 (string_value_32)
+					else
+						il_generator.put_manifest_string (string_value_32)
+					end
 				end
 			end
 		end
@@ -192,13 +217,22 @@ feature -- Code generation
 		do
 			if is_string_32 then
 				l_value_32 := string_value_32
-				ba.append (Bc_string32)
+				if is_immutable_string then
+					ba.append (bc_immstring32)
+				else
+					ba.append (Bc_string32)
+				end
+
 					-- Bytes to read
 				ba.append_integer (l_value_32.count * 4)
 				ba.append_raw_string_32 (l_value_32)
 			else
 				l_value := string_value_8
-				ba.append (Bc_string)
+				if is_immutable_string then
+					ba.append (bc_immstring8)
+				else
+					ba.append (Bc_string)
+				end
 					-- Bytes to read
 				ba.append_integer (l_value.count)
 				ba.append_raw_string (l_value)
@@ -237,8 +271,24 @@ feature {NONE} -- Implementation
 	string_32_id: INTEGER
 			-- Id of class STRING_32
 		do
-			if System.string_32_class /= Void and then System.string_32_class.is_compiled then
+			if attached System.string_32_class as cl and then cl.is_compiled then
 				Result := System.string_32_id
+			end
+		end
+
+	immutable_string_8_id: INTEGER
+			-- Id of class IMMUTABLE_STRING_8
+		do
+			if attached System.immutable_string_8_class as cl and then cl.is_compiled then
+				Result := System.immutable_string_8_id
+			end
+		end
+
+	immutable_string_32_id: INTEGER
+			-- Id of class IMMUTABLE_STRING_32
+		do
+			if attached System.immutable_string_32_class as cl and then cl.is_compiled then
+				Result := System.immutable_string_32_id
 			end
 		end
 
@@ -246,7 +296,7 @@ invariant
 	string_value_set: string_value /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

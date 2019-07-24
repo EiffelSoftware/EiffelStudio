@@ -1918,7 +1918,7 @@ feature -- Constants generation
 		do
 		end
 
-	put_manifest_string (s: READABLE_STRING_GENERAL)
+	put_immutable_manifest_string_8, put_manifest_string (s: READABLE_STRING_GENERAL)
 			-- Put `s' on IL stack.
 		do
 		end
@@ -1929,7 +1929,7 @@ feature -- Constants generation
 		do
 		end
 
-	put_manifest_string_32 (s: READABLE_STRING_32)
+	put_immutable_manifest_string_32, put_manifest_string_32 (s: READABLE_STRING_32)
 			-- Put `s' on IL stack.
 		do
 		end

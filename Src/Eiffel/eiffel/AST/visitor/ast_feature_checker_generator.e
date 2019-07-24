@@ -2571,14 +2571,28 @@ feature {NONE} -- Visitor
 			end
 		end
 
+	adapted_manifest_string_class_c (a_class_id: INTEGER; a_class_i: detachable CLASS_I): detachable CLASS_C
+		do
+			if a_class_i /= Void then
+				Result := a_class_i.compiled_class
+				if Result.class_id /= a_class_id then
+					Result := Void
+				end
+			end
+		ensure
+			Result /= Void implies Result.class_id = a_class_id and Result.original_class = a_class_i
+		end
+
 	process_string_as (l_as: STRING_AS)
 		local
 			l_simplified_string_type: TYPE_A
 			l_is_string_32: BOOLEAN
 			l_value: detachable STRING
 			class_id: INTEGER
+			ci: detachable CLASS_I
 			s8, s32: detachable CLASS_C
 			t8, t32: detachable TYPE_A
+			l_is_immutable: BOOLEAN
 		do
 			if l_as.type = Void then
 					-- Default to STRING_8, if not specified in the code.
@@ -2599,13 +2613,20 @@ feature {NONE} -- Visitor
 					record_creation_dependence (l_simplified_string_type)
 				end
 				class_id := l_simplified_string_type.base_class.class_id
-				if attached system.string_8_class as c then
-					s8 := c.compiled_class
+				s32 := adapted_manifest_string_class_c (class_id, system.string_32_class)
+				if s32 = Void then
+					s32 := adapted_manifest_string_class_c (class_id, system.immutable_string_32_class)
+					l_is_immutable := s32 /= Void
 				end
-				if attached system.string_32_class as c then
-					s32 := c.compiled_class
+				if s32 = Void then
+					s8 := adapted_manifest_string_class_c (class_id, system.string_8_class)
+					if s8 = Void then
+						s8 := adapted_manifest_string_class_c (class_id, system.immutable_string_8_class)
+						l_is_immutable := s8 /= Void
+					end
 				end
-				if attached s8 and then s8.class_id = class_id then
+				if attached s8 then
+					check s8.class_id = class_id end
 					if l_as.is_code_point_valid_string_8 then
 							-- Constant is of type "STRING_8".
 						if is_byte_node_enabled then
@@ -2622,7 +2643,8 @@ feature {NONE} -- Visitor
 						error_handler.insert_error (create {VWMQ}.make (l_simplified_string_type, <<t32>>, context, l_as))
 						reset_types
 					end
-				elseif attached s32 and then s32.class_id = class_id then
+				elseif attached s32 then
+					check s32.class_id = class_id end
 						-- Constant is of type "STRING_32".
 					if is_byte_node_enabled then
 							-- For STRING_32 manifest string, UTF-8 value is kept for later transformation.
@@ -2643,9 +2665,9 @@ feature {NONE} -- Visitor
 				if attached l_value then
 					if l_as.is_once_string then
 						once_manifest_string_index := once_manifest_string_index + 1
-						create {ONCE_STRING_B} last_byte_node.make (l_value, l_is_string_32, once_manifest_string_index)
+						create {ONCE_STRING_B} last_byte_node.make (l_value, l_is_string_32, l_is_immutable, once_manifest_string_index)
 					else
-						create {STRING_B} last_byte_node.make (l_value, l_is_string_32)
+						create {STRING_B} last_byte_node.make (l_value, l_is_string_32, l_is_immutable)
 					end
 				end
 			end
@@ -9408,7 +9430,7 @@ feature {NONE} -- Implementation
 						error_handler.insert_error (l_veen)
 					end
 					if not l_has_error and is_byte_node_enabled then
-						l_expressions.extend ([create {STRING_B}.make (l_name.value, False), l_expr_b])
+						l_expressions.extend ([create {STRING_B}.make (l_name.value, False, False), l_expr_b]) -- TODO: check for manifest immutable string [2019-05-28]
 					end
 					a_tuple.expressions.forth
 				end

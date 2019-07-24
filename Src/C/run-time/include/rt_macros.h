@@ -96,6 +96,24 @@ extern "C" {
 		(egc_str32set)((EIF_REFERENCE) string, u); \
 	}
 #define RT_STRING32_SET_HASH_CODE(string, hash)
+#define RT_IMMSTRING8_MAKE_FROM_C_BYTE_ARRAY(obj,str,len) \
+	{ \
+		EIF_TYPED_VALUE u,i; \
+		u.type = SK_POINTER; \
+		u.it_p = (EIF_POINTER) (str); \
+		i.type = SK_INT32; \
+		i.it_i4 = (EIF_INTEGER_32) (len); \
+		(egc_immstr8make_from_c_byte_array)((EIF_REFERENCE) (obj), u, i); \
+	}
+#define RT_IMMSTRING32_MAKE_FROM_C_BYTE_ARRAY(obj,str,len) \
+	{ \
+		EIF_TYPED_VALUE u,i; \
+		u.type = SK_POINTER; \
+		u.it_p = (EIF_POINTER) (str); \
+		i.type = SK_INT32; \
+		i.it_i4 = (EIF_INTEGER_32) (len); \
+		(egc_immstr32make_from_c_byte_array)((EIF_REFERENCE) (obj), u, i); \
+	}
 #else
 #define RT_STRING32_MAKE(string,len) \
 	(egc_str32make)((EIF_REFERENCE) (string), (len))
@@ -103,6 +121,10 @@ extern "C" {
 	*(EIF_INTEGER *) ((EIF_REFERENCE) string + egc_str32_count_offset) = (EIF_INTEGER) count;
 #define RT_STRING32_SET_HASH_CODE(string, hash) \
 	*(EIF_INTEGER *) ((EIF_REFERENCE) string + egc_str32_hash_offset) = (EIF_INTEGER) hash;
+#define RT_IMMSTRING8_MAKE_FROM_C_BYTE_ARRAY(obj,str,len) \
+	(egc_immstr8make_from_c_byte_array)((EIF_REFERENCE) (obj),(EIF_REFERENCE) (str), (EIF_INTEGER)len);
+#define RT_IMMSTRING32_MAKE_FROM_C_BYTE_ARRAY(obj,str,len) \
+	(egc_immstr32make_from_c_byte_array)((EIF_REFERENCE) (obj),(EIF_REFERENCE) (str), (EIF_INTEGER) len);
 #endif
 
 

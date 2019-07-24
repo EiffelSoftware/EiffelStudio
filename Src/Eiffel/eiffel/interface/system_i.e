@@ -472,6 +472,8 @@ feature -- Properties
 
 			local_workbench.change_class (string_8_class)
 			local_workbench.change_class (string_32_class)
+			local_workbench.change_class (immutable_string_8_class)
+			local_workbench.change_class (immutable_string_32_class)
 
 			local_workbench.change_class (real_64_class)
 			local_workbench.change_class (real_32_class)
@@ -3883,6 +3885,12 @@ feature -- Dead code removal
 
 				-- Protection of feature `make' of class STRING_32.
 			register_monomorphic ({PREDEFINED_NAMES}.Make_name_id, string_32_class)
+
+				-- Protection of feature `make_from_c_byte_array' of class IMMUTABLE_STRING_8.
+			register_monomorphic ({PREDEFINED_NAMES}.make_from_c_byte_array_name_id, immutable_string_8_class)
+
+				-- Protection of feature `make_from_c_byte_array' of class IMMUTABLE_STRING_32.
+			register_monomorphic ({PREDEFINED_NAMES}.make_from_c_byte_array_name_id, immutable_string_32_class)
 
 				-- Protection of ROUTINE class features.
 			register_polymorphic ({PREDEFINED_NAMES}.set_rout_disp_final_name_id, routine_class)

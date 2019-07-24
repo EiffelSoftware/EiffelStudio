@@ -90,7 +90,7 @@ extern "C" {
 #define BC_LASSIGN			24
 #define BC_ASSIGN			25
 #define BC_CREATE			26
-#define BC_START_SEPARATE		27
+#define BC_START_SEPARATE	27
 #define	BC_END_SEPARATE		28
 #define BC_NOTUSED_29		29
 #define BC_NOTUSED_30		30
@@ -189,10 +189,13 @@ extern "C" {
 #define BC_NOTUSED_122		122
 #define BC_NOTUSED_123		123
 #define BC_NOTUSED_124		124
-#define BC_NOTUSED_125		125
-#define BC_NOTUSED_126		126
-#define BC_NOTUSED_127		127
-#define BC_NOTUSED_128		(unsigned char) 128
+
+/* Immutable Strings */
+#define BC_IMMSTRING8	(unsigned char) 125
+#define BC_IMMSTRING32	(unsigned char) 126
+#define BC_ONCE_IMMSTRING8	(unsigned char) 127
+#define BC_ONCE_IMMSTRING32	(unsigned char) 128
+
 #define BC_OBJECT_EXPR_ADDR	(unsigned char) 129
 #define BC_RESERVE			(unsigned char) 130
 #define BC_POP				(unsigned char) 131

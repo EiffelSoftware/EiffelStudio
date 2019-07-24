@@ -1,4 +1,4 @@
-class
+﻿class
 	TEST_IMMUTABLE_STRING_32
 
 inherit
@@ -10,9 +10,9 @@ feature -- Test
 		local
 			s, t: IMMUTABLE_STRING_32
 		do
-			create s.make_from_string ("ABcd EF gh I 123 ;�")
+			create s.make_from_string ("ABcd EF gh I 123 ;Ü")
 			t := s.as_lower
-			check_string_equality ("as_lower", t, "abcd ef gh i 123 ;�")
+			check_string_equality ("as_lower", t, "abcd ef gh i 123 ;ü")
 			check_boolean ("as_lower", t /= s)
 		end
 
@@ -20,9 +20,9 @@ feature -- Test
 		local
 			s, t: IMMUTABLE_STRING_32
 		do
-			create s.make_from_string ("ABcd EF gh I 123 ;�")
+			create s.make_from_string ("ABcd EF gh I 123 ;ü")
 			t := s.as_upper
-			check_string_equality ("as_upper", t, "ABCD EF GH I 123 ;�")
+			check_string_equality ("as_upper", t, "ABCD EF GH I 123 ;Ü")
 			check_boolean ("as_upper", t /= s)
 		end
 
@@ -1279,4 +1279,31 @@ feature -- Test
 			check_boolean ("valid_index", not ("123").valid_index (4))
 		end
 
+	test_manifest
+		local
+			s: READABLE_STRING_GENERAL
+		do
+			s := {STRING_32} "for-all=∀"
+			check_string_equality ("manifest immutable_string_32", s, {IMMUTABLE_STRING_32} "for-all=∀")
+			check_string_equality ("once manifest immutable_string_32", s, once {IMMUTABLE_STRING_32} "for-all=∀")
+			check_string_equality ("constant immutable_string_32", s, immutable_string_32_constant)
+			s := {STRING_32} "for-all%U∀"
+			check_string_equality ("manifest binary immutable_string_32", s, {IMMUTABLE_STRING_32} "for-all%U∀")
+		end
+
+feature -- Constants
+
+	immutable_string_32_constant: IMMUTABLE_STRING_32 = "for-all=∀"
+
+
+note
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end

@@ -54,6 +54,12 @@ feature -- Classes from the configutation point of view
 	string_32_class: CLASS_I
 			-- Class STRING_32
 
+	immutable_string_8_class: CLASS_I
+			-- Class IMMUTABLE_STRING_8
+
+	immutable_string_32_class: CLASS_I
+			-- Class IMMUTABLE_STRING_32
+
 	array_class: CLASS_I
 			-- Class ARRAY
 
@@ -207,6 +213,28 @@ feature -- Classes from the type system of view
 			compiled: string_32_class.is_compiled
 		do
 			Result := string_32_class.compiled_class.class_id
+		ensure
+			valid_result: Result > 0
+		end
+
+	immutable_string_8_id: INTEGER
+			-- Id of class IMMUTABLE_STRING_8
+		require
+			immutable_string_8_class_exists: immutable_string_8_class /= Void
+			compiled: immutable_string_8_class.is_compiled
+		do
+			Result := immutable_string_8_class.compiled_class.class_id
+		ensure
+			valid_result: Result > 0
+		end
+
+	immutable_string_32_id: INTEGER
+			-- Id of class IMMUTABLE_STRING_32
+		require
+			immutable_string_32_class_exists: immutable_string_32_class /= Void
+			compiled: immutable_string_32_class.is_compiled
+		do
+			Result := immutable_string_32_class.compiled_class.class_id
 		ensure
 			valid_result: Result > 0
 		end
@@ -385,7 +413,9 @@ feature -- Settings
 			rt_extension_class := Void
 			special_class := Void
 			string_32_class := Void
+			immutable_string_32_class := Void
 			string_8_class := Void
+			immutable_string_8_class := Void
 			system_exception_type_class := Void
 			system_object_class := Void
 			system_string_class := Void
@@ -559,6 +589,23 @@ feature -- Settings
 		ensure
 			string_32_class_set: n = 32 implies string_32_class = c
 			string_8_class_set: n = 8 implies string_8_class = c
+		end
+
+	set_immutable_string_class (c: CLASS_I; n: INTEGER)
+			-- Assign `c' to `immutable_string_n_class'.
+		require
+			c_not_void: c /= Void
+			n_valid: n = 8 or n = 32
+		do
+			c.set_as_basic_class
+			if n = 32 then
+				immutable_string_32_class := c
+			else
+				immutable_string_8_class := c
+			end
+		ensure
+			immutable_string_32_class_set: n = 32 implies immutable_string_32_class = c
+			immutable_string_8_class_set: n = 8 implies immutable_string_8_class = c
 		end
 
 	set_system_string_class (c: CLASS_I)

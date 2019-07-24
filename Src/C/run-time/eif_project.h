@@ -63,12 +63,16 @@ extern "C" {
 	RT_LNK void (*egc_strset)(EIF_REFERENCE, EIF_TYPED_VALUE);
 	RT_LNK void (*egc_str32make)(EIF_REFERENCE, EIF_TYPED_VALUE);	/* STRING_32 creation feature */
 	RT_LNK void (*egc_str32set)(EIF_REFERENCE, EIF_TYPED_VALUE);
+	RT_LNK void (*egc_immstr8make_from_c_byte_array)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE);	/* IMMUTABLE_STRING_8 creation feature */
+	RT_LNK void (*egc_immstr32make_from_c_byte_array)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE);	/* IMMUTABLE_STRING_32 creation feature */
 	RT_LNK void (*egc_arrmake)(EIF_REFERENCE, EIF_TYPED_VALUE, EIF_TYPED_VALUE);/* ARRAY creation feature */
 #else
 	RT_LNK void (*egc_strmake)(EIF_REFERENCE, EIF_INTEGER);	/* STRING creation feature */
 	RT_LNK uint32 egc_str_count_offset;
 	RT_LNK uint32 egc_str_hash_offset;
 	RT_LNK void (*egc_str32make)(EIF_REFERENCE, EIF_INTEGER);	/* STRING_32 creation feature */
+	RT_LNK void (*egc_immstr8make_from_c_byte_array)(EIF_REFERENCE, EIF_POINTER, EIF_INTEGER);	/* IMMUTABLE_STRING_8 creation feature */
+	RT_LNK void (*egc_immstr32make_from_c_byte_array)(EIF_REFERENCE, EIF_POINTER, EIF_INTEGER);	/* IMMUTABLE_STRING_32 creation feature */
 	RT_LNK uint32 egc_str32_count_offset;
 	RT_LNK uint32 egc_str32_hash_offset;
 	RT_LNK void (*egc_arrmake)(EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER);/* ARRAY creation feature */
@@ -112,7 +116,9 @@ extern "C" {
 	RT_LNK int egc_is_experimental;
 
 	RT_LNK EIF_TYPE_INDEX egc_str_dtype;				/* Dynamic type for string */
+	RT_LNK EIF_TYPE_INDEX egc_immstr8_dtype;			/* Dynamic type for IMMUTABLE_STRING_8 */
 	RT_LNK EIF_TYPE_INDEX egc_str32_dtype;				/* Dynamic type for STRING_32 */
+	RT_LNK EIF_TYPE_INDEX egc_immstr32_dtype;			/* Dynamic type for IMMUTABLE_STRING_32 */
 	RT_LNK EIF_TYPE_INDEX egc_arr_dtype;				/* Dynamic type for ARRAY[ANY] */
 	RT_LNK EIF_TYPE_INDEX egc_tup_dtype;				/* Dynamic type for TUPLE */
 	RT_LNK int32 egc_disp_rout_id;			/* Dispose routine id */ 

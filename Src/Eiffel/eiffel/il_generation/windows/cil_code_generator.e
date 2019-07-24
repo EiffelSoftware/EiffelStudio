@@ -665,8 +665,10 @@ feature -- Generation Structure
 			l_cur_mod: like current_module
 			helper_emit: MD_EMIT
 			oms_field_cil_token: INTEGER
-			oms_field_eiffel_token: INTEGER
-			oms_32_field_eiffel_token: INTEGER
+			oms_field_eiffel_token,
+			oms_32_field_eiffel_token,
+			omis_8_field_eiffel_token,
+			omis_32_field_eiffel_token: INTEGER
 			oms_array_type_cil_token: INTEGER
 			oms_array_type_eiffel_token: INTEGER
 			array_type_token: INTEGER
@@ -685,6 +687,8 @@ feature -- Generation Structure
 				oms_field_cil_token := current_module.once_string_field_token (string_type_cil)
 				oms_field_eiffel_token := current_module.once_string_field_token (string_type_string)
 				oms_32_field_eiffel_token := current_module.once_string_field_token (string_type_string_32)
+				omis_8_field_eiffel_token := current_module.once_string_field_token (string_type_immutable_string_8)
+				omis_32_field_eiffel_token := current_module.once_string_field_token (string_type_immutable_string_32)
 
 					-- Generate allocation routine.
 
@@ -733,6 +737,26 @@ feature -- Generation Structure
 				oms_array_type_eiffel_token := helper_emit.define_type_spec (type_sig)
 				method_body.put_opcode_mdtoken ({MD_OPCODES}.newarr, oms_array_type_eiffel_token)
 				method_body.put_opcode_mdtoken ({MD_OPCODES}.stsfld, oms_32_field_eiffel_token)
+					-- Create "IMMUTABLE_STRING_8[][]" and assign it to "omis8_eiffel".
+				method_body.put_opcode ({MD_OPCODES}.ldarg_0)
+				put_integer_32_constant (1)
+				method_body.put_opcode ({MD_OPCODES}.add)
+				type_sig.reset
+				type_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_szarray, 0)
+				type_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_class, current_module.actual_class_type_token (immutable_string_8_type_id))
+				oms_array_type_eiffel_token := helper_emit.define_type_spec (type_sig)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.newarr, oms_array_type_eiffel_token)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.stsfld, omis_8_field_eiffel_token)
+					-- Create "IMMUTABLE_STRING_32[][]" and assign it to "omis32_eiffel".
+				method_body.put_opcode ({MD_OPCODES}.ldarg_0)
+				put_integer_32_constant (1)
+				method_body.put_opcode ({MD_OPCODES}.add)
+				type_sig.reset
+				type_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_szarray, 0)
+				type_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_class, current_module.actual_class_type_token (immutable_string_32_type_id))
+				oms_array_type_eiffel_token := helper_emit.define_type_spec (type_sig)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.newarr, oms_array_type_eiffel_token)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.stsfld, omis_32_field_eiffel_token)
 					-- Create "string[][]" and assign it to "oms_cil".
 					-- Leave "string[][]" at stack top.
 				method_body.put_opcode ({MD_OPCODES}.ldarg_0)
@@ -795,6 +819,20 @@ feature -- Generation Structure
 				method_body.put_opcode_mdtoken ({MD_OPCODES}.stsfld, oms_32_field_eiffel_token)
 				method_body.put_opcode ({MD_OPCODES}.ldloc_0)
 				method_body.put_static_call (array_copy_method_token, 3, False)
+					-- Reallocate "IMMUTABLE_STRING_32[][]".
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.ldsfld, omis_32_field_eiffel_token)
+				method_body.put_opcode ({MD_OPCODES}.ldarg_0)
+				put_integer_32_constant (1)
+				method_body.put_opcode ({MD_OPCODES}.add)
+				type_sig.reset
+				type_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_szarray, 0)
+				type_sig.set_type ({MD_SIGNATURE_CONSTANTS}.element_type_class, current_module.actual_class_type_token (immutable_string_32_type_id))
+				oms_array_type_eiffel_token := helper_emit.define_type_spec (type_sig)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.newarr, oms_array_type_eiffel_token)
+				method_body.put_opcode ({MD_OPCODES}.dup)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.stsfld, omis_32_field_eiffel_token)
+				method_body.put_opcode ({MD_OPCODES}.ldloc_0)
+				method_body.put_static_call (array_copy_method_token, 3, False)
 					-- Leave "string[][]" on stack top.
 				method_body.put_opcode_mdtoken ({MD_OPCODES}.ldsfld, oms_field_cil_token)
 
@@ -818,6 +856,18 @@ feature -- Generation Structure
 				method_body.put_opcode ({MD_OPCODES}.ldarg_0)
 				method_body.put_opcode ({MD_OPCODES}.ldarg_1)
 				method_body.put_opcode_mdtoken ({MD_OPCODES}.newarr, current_module.actual_class_type_token (string_32_type_id))
+				method_body.put_opcode ({MD_OPCODES}.stelem_ref)
+					-- omis8_eiffel
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.ldsfld, omis_8_field_eiffel_token)
+				method_body.put_opcode ({MD_OPCODES}.ldarg_0)
+				method_body.put_opcode ({MD_OPCODES}.ldarg_1)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.newarr, current_module.actual_class_type_token (immutable_string_8_type_id))
+				method_body.put_opcode ({MD_OPCODES}.stelem_ref)
+					-- omis32_eiffel
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.ldsfld, omis_32_field_eiffel_token)
+				method_body.put_opcode ({MD_OPCODES}.ldarg_0)
+				method_body.put_opcode ({MD_OPCODES}.ldarg_1)
+				method_body.put_opcode_mdtoken ({MD_OPCODES}.newarr, current_module.actual_class_type_token (immutable_string_32_type_id))
 				method_body.put_opcode ({MD_OPCODES}.stelem_ref)
 					-- Done.
 				generate_return (False)
@@ -5793,6 +5843,10 @@ feature -- Once manifest string manipulation
 					put_manifest_string_32 (value)
 				elseif type = string_type_string then
 					put_manifest_string (value)
+				elseif type = string_type_immutable_string_32 then
+					put_immutable_manifest_string_32 (value)
+				elseif type = string_type_immutable_string_8 then
+					put_immutable_manifest_string_8 (value)
 				end
 			end
 			method_body.put_opcode ({MD_OPCODES}.stelem_ref)
@@ -6468,6 +6522,15 @@ feature -- Constants generation
 			internal_generate_feature_access (string_implementation_id, string_make_feat_id, 1, False, True)
 		end
 
+	put_immutable_manifest_string_8 (s: READABLE_STRING_GENERAL)
+			-- Put `s' on IL stack.
+		do
+			create_object (immutable_string_8_implementation_id)
+			duplicate_top
+			put_system_string (s)
+			internal_generate_feature_access (immutable_string_8_implementation_id, immutable_string_8_make_feat_id, 1, False, True)
+		end
+
 	put_manifest_string_32_from_system_string_local (n: INTEGER)
 			-- Create a manifest string by using local at position `n' which
 			-- should be of type SYSTEM_STRING.
@@ -6486,6 +6549,16 @@ feature -- Constants generation
 
 			put_system_string_32 (s)
 			internal_generate_feature_access (string_32_implementation_id, string_32_make_feat_id, 1, False, True)
+		end
+
+	put_immutable_manifest_string_32 (s: READABLE_STRING_32)
+			-- Put `s' on IL stack.
+		do
+			create_object (immutable_string_32_implementation_id)
+			duplicate_top
+
+			put_system_string_32 (s)
+			internal_generate_feature_access (immutable_string_32_implementation_id, immutable_string_32_make_feat_id, 1, False, True)
 		end
 
 	put_system_string (s: READABLE_STRING_GENERAL)
@@ -7513,6 +7586,60 @@ feature {CIL_CODE_GENERATOR} -- Implementation: convenience
 			string_32_make_feat_id_positive: Result > 0
 		end
 
+	immutable_string_8_type: TYPE_A
+			-- Type of IMMUTABLE_STRING_8 object
+		once
+			Result := System.immutable_string_8_class.compiled_class.types.first.type
+		end
+
+	immutable_string_8_implementation_id: INTEGER
+			-- Type ID of IMMUTABLE_STRING_8 implementation.
+		once
+			Result := immutable_string_8_type.implementation_id (Void)
+		end
+
+	immutable_string_8_type_id: INTEGER
+			-- Type of IMMUTABLE_STRING_8 interface.
+		once
+			Result := immutable_string_8_type.static_type_id (Void)
+		end
+
+	immutable_string_8_make_feat_id: INTEGER
+			-- Feature ID of `make_from_cil' of STRING.
+		once
+			Result := System.immutable_string_8_class.compiled_class.
+				feature_table.item_id ({PREDEFINED_NAMES}.make_from_cil_name_id).feature_id
+		ensure
+			immutable_string_8_make_feat_id_positive: Result > 0
+		end
+
+	immutable_string_32_type: TYPE_A
+			-- Type of IMMUTABLE_STRING_32 object
+		once
+			Result := System.immutable_string_32_class.compiled_class.types.first.type
+		end
+
+	immutable_string_32_implementation_id: INTEGER
+			-- Type ID of IMMUTABLE_STRING_32 implementation.
+		once
+			Result := immutable_string_32_type.implementation_id (Void)
+		end
+
+	immutable_string_32_type_id: INTEGER
+			-- Type of IMMUTABLE_STRING_32 interface.
+		once
+			Result := immutable_string_32_type.static_type_id (Void)
+		end
+
+	immutable_string_32_make_feat_id: INTEGER
+			-- Feature ID of `make_from_cil' of STRING.
+		once
+			Result := System.immutable_string_32_class.compiled_class.
+				feature_table.item_id ({PREDEFINED_NAMES}.make_from_cil_name_id).feature_id
+		ensure
+			immutable_string_32_make_feat_id_positive: Result > 0
+		end
+
 	any_type: CL_TYPE_A
 			-- Type of ANY
 		once
@@ -8167,7 +8294,7 @@ note
 		"CA011", "CA011: too many arguments",
 		"CA033", "CA033: very long class",
 		"CA093", "CA093: manifest array type mismatch"
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

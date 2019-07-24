@@ -85,9 +85,13 @@ feature {NONE} -- Implementation
 
 	process_string_as (a_string: STRING_AS)
 		do
-				-- A string constant of the form: a: STRING_8 = "fdsfd"
-				-- does not require any type qualification to the manifest string "fdsfd"
-				-- since the constant type is known to be STRING_8.
+				-- A string constant of the form:
+				--  str: STRING_8 = "abc"
+				--  str: STRING_32 = "abc"
+				--  str: IMMUTABLE_STRING_8 = "abc"
+				--  str: IMMUTABLE_STRING_32 = "abc"
+				-- Without type qualification, the manifest string type is known to be STRING_8
+
 			check type_not_exists: a_string.type = Void end
 			create {STRING_VALUE_I} last_value.make (a_string.value, False)
 		end
@@ -98,7 +102,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -164,7 +164,7 @@ feature -- Metric definitions
 		local
 			a_cursor: XML_COMPOSITE_CURSOR
 			i: INTEGER
-			node, a_metric_element: XML_ELEMENT
+			a_metric_element: XML_ELEMENT
 			node_name: STRING
 		do
 			a_cursor := metric_header.new_cursor
@@ -174,8 +174,7 @@ feature -- Metric definitions
 			until
 				a_metric_element /= Void
 			loop
-				node ?= a_cursor.item
-				if node /= Void then
+				if attached {XML_ELEMENT} a_cursor.item as node then
 					node_name := node.attribute_by_name ("Name").value
 					if node_name.is_equal (metric_name) then
 						a_metric_element := node
@@ -353,7 +352,7 @@ feature -- Observer
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

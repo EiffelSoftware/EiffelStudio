@@ -728,6 +728,11 @@ feature -- Constants generation
 		do
 		end
 
+	put_immutable_manifest_string_8 (s: READABLE_STRING_GENERAL)
+			-- <Precursor/>
+		do
+		end
+
 	put_manifest_string_32_from_system_string_local (n: INTEGER)
 			-- Create a manifest string by using local at position `n' which
 			-- should be of type SYSTEM_STRING.
@@ -737,6 +742,11 @@ feature -- Constants generation
 	put_manifest_string_32 (s: READABLE_STRING_32)
 			-- Put `s' on IL stack.
 			-- `s' is in UTF-8
+		do
+		end
+
+	put_immutable_manifest_string_32 (s: READABLE_STRING_32)
+			-- <Precursor/>
 		do
 		end
 

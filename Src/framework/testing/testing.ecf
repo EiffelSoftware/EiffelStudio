@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="framework_testing" uuid="CA1FED3E-E1FB-41B3-B89E-0A1BF754CC5D" library_target="framework_testing">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="framework_testing" uuid="CA1FED3E-E1FB-41B3-B89E-0A1BF754CC5D" library_target="framework_testing">
 	<target name="framework_testing">
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/.svn$</exclude>
 		</file_rule>
-		<option full_class_checking="false" namespace="EiffelSoftware.Framework">
+		<option namespace="EiffelSoftware.Framework">
 			<assertions precondition="true"/>
 		</option>
 		<capability>

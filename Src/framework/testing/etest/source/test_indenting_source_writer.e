@@ -1,12 +1,10 @@
-note
-	description: "[
-		Outputstream filter that transparently indents lines
-	]"
+﻿note
+	description: "Output stream filter that transparently indents lines."
 	copyright: "Copyright (c) 2007, Andreas Leitner and others"
+	revised_by: "Alexander Kogtenkov"
 	license: "Eiffel Forum License v2 (see forum.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
-
 
 class
 	TEST_INDENTING_SOURCE_WRITER
@@ -111,7 +109,7 @@ feature -- Output
 			indentation_printed := False
 		end
 
-	put_string (a_string: STRING)
+	put_string (a_string: READABLE_STRING_8)
 			-- Write `a_string' to output stream.
 		do
 			if not indentation_printed then
@@ -187,7 +185,7 @@ invariant
 	output_stream_not_void: output_stream /= Void
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

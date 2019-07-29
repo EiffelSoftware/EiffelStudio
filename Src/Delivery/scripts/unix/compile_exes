@@ -345,11 +345,6 @@ cd $EXPORT_DIR/bin
 untgz_ccode getest
 move getest $INSTALL_DIR/library/gobo/spec/$ISE_PLATFORM/bin/getest
 
-remtrace gexace
-cd $EXPORT_DIR/bin
-untgz_ccode gexace
-move gexace $INSTALL_DIR/library/gobo/spec/$ISE_PLATFORM/bin/gexace
-
 remtrace gexslt
 cd $EXPORT_DIR/bin
 untgz_ccode gexslt

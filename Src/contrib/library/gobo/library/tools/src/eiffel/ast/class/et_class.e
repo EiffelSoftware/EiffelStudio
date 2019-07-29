@@ -5,7 +5,7 @@ note
 		"Eiffel classes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -44,7 +44,12 @@ inherit
 			position, append_to_string,
 			is_named_type, is_valid_context,
 			debug_output, copy, is_equal,
-			append_unaliased_to_string
+			append_unaliased_to_string,
+			named_query,
+			named_procedure,
+			add_overloaded_queries,
+			add_overloaded_procedures,
+			adapted_class_base_type_index_of_label
 		end
 
 	ET_SHARED_CLASS_CODES
@@ -187,12 +192,17 @@ feature -- Initialization
 			queries.reset
 			procedures.reset
 			if attached formal_parameters as l_formal_parameters then
-				l_formal_parameters.reset
+				l_formal_parameters.reset_constraint_renames
+				l_formal_parameters.reset_constraint_creation_procedures
 				create l_unfolded_tuple_actual_parameters_resolver.make (tokens.null_system_processor)
 				nb := l_formal_parameters.count
 				from i := 1 until i > nb loop
 					if attached l_formal_parameters.formal_parameter (i).constraint as l_constraint then
-						l_unfolded_tuple_actual_parameters_resolver.resolve_type (l_constraint, Current)
+						nb2 := l_constraint.count
+						from j := 1 until j > nb2 loop
+							l_unfolded_tuple_actual_parameters_resolver.resolve_type (l_constraint.type_constraint (j).type, Current)
+							j := j + 1
+						end
 					end
 					i := i + 1
 				end
@@ -244,6 +254,7 @@ feature -- Initialization
 			queries.reset_after_features_flattened
 			procedures.reset_after_features_flattened
 			if attached formal_parameters as l_formal_parameters then
+				l_formal_parameters.reset_constraint_renames
 				l_formal_parameters.reset_constraint_creation_procedures
 			end
 			if attached invariants as l_invariants then
@@ -527,8 +538,18 @@ feature -- Status report
 			Result := class_code = class_codes.typed_pointer_class_code
 		end
 
-	is_unknown: BOOLEAN
+	is_unknown_class: BOOLEAN
 			-- Is current class an "*UNKNOWN*" class?
+			-- This class does not conform to any other class,
+			-- not even itself.
+		do
+			Result := group.is_unknown and then name.same_class_name (tokens.unknown_class_name)
+		ensure
+			definition: Result = (group.is_unknown and then name.same_class_name (tokens.unknown_class_name))
+		end
+
+	is_unknown: BOOLEAN
+			-- Is current class unknown?
 			-- This class does not conform to any other class,
 			-- not even itself.
 		do
@@ -832,8 +853,8 @@ feature -- Preparsing
 			l_master_class := master_class_in_universe
 			if l_master_class.actual_class = Current then
 				Result := l_master_class.first_local_non_override_class
-				if Result = Current and then not l_master_class.other_local_non_override_classes.is_empty then
-					Result := l_master_class.other_local_non_override_classes.first
+				if Result = Current and then attached l_master_class.other_local_non_override_classes as l_other_local_non_override_classes and then not l_other_local_non_override_classes.is_empty then
+					Result := l_other_local_non_override_classes.first
 				end
 				if Result = Void then
 					if attached l_master_class.first_imported_class as l_imported_class then
@@ -1032,6 +1053,7 @@ feature -- Preparsing status
 			group := tokens.unknown_group
 			time_stamp := no_time_stamp
 			is_interface := False
+			has_utf8_bom := False
 		ensure
 			not_preparsed: not is_preparsed
 		end
@@ -1114,6 +1136,7 @@ feature -- Parsing status
 			registered_inline_constant_count := 0
 			leading_break := Void
 			providers := Void
+			has_utf8_bom := False
 			status_mutex.unlock
 		ensure
 			not_parsed: not is_parsed
@@ -1134,6 +1157,20 @@ feature {NONE} -- Parsing status
 			-- Has a fatal syntax error been detected?
 			--
 			-- This is not protected by a mutex in case of multi-threading.
+
+feature -- Encoding
+
+	has_utf8_bom: BOOLEAN
+			-- Has the byte order mark (BOM) for UTF-8 been found at the
+			-- beginning of the class text?
+
+	set_has_utf8_bom (b: BOOLEAN)
+			-- Set `has_utf8_bom' to `b'.
+		do
+			has_utf8_bom := b
+		ensure
+			has_utf8_bom_set: has_utf8_bom = b
+		end
 
 feature -- Class header
 
@@ -1165,9 +1202,6 @@ feature -- Class header
 		do
 			if is_expanded then
 				Result := True
-			elseif is_none then
-					-- Class type "NONE" is always detachable regardless of type marks.
-				Result := False
 			elseif attached class_mark as l_class_mark and then l_class_mark.is_attachment_mark then
 				Result := l_class_mark.is_attached_mark
 			elseif attached universe.implicit_attachment_type_mark as l_type_mark and then l_type_mark.is_attachment_mark then
@@ -1323,20 +1357,28 @@ feature -- Genericity
 			-- Set `formal_parameters' to `a_parameters'.
 		local
 			i, nb: INTEGER
+			j, nb2: INTEGER
 		do
 			formal_parameters := a_parameters
 			tuple_constraint_position := 0
 			if a_parameters /= Void then
 				nb := a_parameters.count
 				from i := 1 until i > nb loop
-					if attached {ET_TUPLE_TYPE} a_parameters.formal_parameter (i).constraint then
-						if tuple_constraint_position /= 0 then
-								-- This is not a single-tuple class: there are more than one
-								-- Tuple type as formal parameter constraint.
-							tuple_constraint_position := 0
-							i := nb -- Jump out of the loop.
-						else
-							tuple_constraint_position := i
+					if attached a_parameters.formal_parameter (i).constraint as l_constraint then
+						nb2 := l_constraint.count
+						from j := 1 until j > nb2 loop
+							if attached {ET_TUPLE_TYPE} l_constraint.type_constraint (j).type then
+								if tuple_constraint_position /= 0 then
+										-- This is not a single-tuple class: there are more than one
+										-- formal parameter with a Tuple type as constraint.
+									tuple_constraint_position := 0
+									i := nb -- Jump out of the outer loop.
+								else
+									tuple_constraint_position := i
+								end
+								j := nb2 -- Jump out of the inner loop.
+							end
+							j := j + 1
 						end
 					end
 					i := i + 1
@@ -2001,37 +2043,15 @@ feature -- Features
 	named_query (a_name: ET_CALL_NAME): detachable ET_QUERY
 			-- Query named `a_name';
 			-- Void if no such query
-		require
-			a_name_not_void: a_name /= Void
 		do
 			Result := queries.named_feature (a_name)
-		ensure
-			registered: Result /= Void implies Result.is_registered
 		end
 
 	named_procedure (a_name: ET_CALL_NAME): detachable ET_PROCEDURE
 			-- Procedure named `a_name';
 			-- Void if no such procedure
-		require
-			a_name_not_void: a_name /= Void
 		do
 			Result := procedures.named_feature (a_name)
-		ensure
-			registered: Result /= Void implies Result.is_registered
-		end
-
-	named_feature (a_name: ET_CALL_NAME): detachable ET_FEATURE
-			-- Feature named `a_name';
-			-- Void if no such feature
-		require
-			a_name_not_void: a_name /= Void
-		do
-			Result := procedures.named_feature (a_name)
-			if Result = Void then
-				Result := queries.named_feature (a_name)
-			end
-		ensure
-			registered: Result /= Void implies Result.is_registered
 		end
 
 	named_declared_feature (a_name: ET_CALL_NAME): detachable ET_FEATURE
@@ -2080,26 +2100,14 @@ feature -- Features
 
 	add_overloaded_queries (a_name: ET_CALL_NAME; a_list: DS_ARRAYED_LIST [ET_QUERY])
 			-- Add to `a_list' queries whose name or overloaded name is `a_name'.
-		require
-			a_name_not_void: a_name /= Void
-			a_list_not_void: a_list /= Void
-			no_void_item: not a_list.has_void
 		do
 			queries.add_overloaded_features (a_name, a_list)
-		ensure
-			no_void_item: not a_list.has_void
 		end
 
 	add_overloaded_procedures (a_name: ET_CALL_NAME; a_list: DS_ARRAYED_LIST [ET_PROCEDURE])
 			-- Add to `a_list' procedures whose name or overloaded name is `a_name'.
-		require
-			a_name_not_void: a_name /= Void
-			a_list_not_void: a_list /= Void
-			no_void_item: not a_list.has_void
 		do
 			procedures.add_overloaded_features (a_name, a_list)
-		ensure
-			no_void_item: not a_list.has_void
 		end
 
 	queries: ET_QUERY_LIST
@@ -2315,6 +2323,14 @@ feature -- Features
 			else
 				Result := procedures.has_inherited_feature (a_feature)
 			end
+		end
+
+	adapted_class_base_type_index_of_label (a_label: ET_IDENTIFIER; a_context: ET_TYPE_CONTEXT): INTEGER
+			-- Index of actual generic parameter with label `a_label'
+			-- in `a_context.base_type'.
+			-- 0 if it does not exist.
+		do
+			Result := a_context.base_type_index_of_label (a_label)
 		end
 
 feature -- Feature registration

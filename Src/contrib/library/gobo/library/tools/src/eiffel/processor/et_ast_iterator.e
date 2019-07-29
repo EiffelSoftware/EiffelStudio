@@ -5,7 +5,7 @@ note
 		"Eiffel AST iterators"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -169,6 +169,9 @@ feature {ET_AST_NODE} -- Processing
 		do
 			a_name.alias_keyword.process (Current)
 			a_name.alias_string.process (Current)
+			if attached a_name.convert_keyword as l_convert_keyword then
+				l_convert_keyword.process (Current)
+			end
 		end
 
 	process_alias_name (a_name: ET_ALIAS_NAME)
@@ -176,6 +179,9 @@ feature {ET_AST_NODE} -- Processing
 		do
 			a_name.alias_keyword.process (Current)
 			a_name.alias_string.process (Current)
+			if attached a_name.convert_keyword as l_convert_keyword then
+				l_convert_keyword.process (Current)
+			end
 		end
 
 	process_aliased_feature_name (a_name: ET_ALIASED_FEATURE_NAME)
@@ -235,17 +241,10 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
-	process_attachment_separate_keywords (a_keywords: ET_ATTACHMENT_SEPARATE_KEYWORDS)
+	process_attachment_mark_separate_keyword (a_keywords: ET_ATTACHMENT_MARK_SEPARATE_KEYWORD)
 			-- Process `a_keywords'.
 		do
-			a_keywords.attachment_keyword.process (Current)
-			a_keywords.separateness_keyword.process (Current)
-		end
-
-	process_attachment_symbol_separate_keyword (a_keywords: ET_ATTACHMENT_SYMBOL_SEPARATE_KEYWORD)
-			-- Process `a_keywords'.
-		do
-			a_keywords.attachment_symbol.process (Current)
+			a_keywords.attachment_mark.process (Current)
 			a_keywords.separateness_keyword.process (Current)
 		end
 
@@ -286,6 +285,27 @@ feature {ET_AST_NODE} -- Processing
 			if attached an_instruction.creation_call as l_creation_call then
 				l_creation_call.process (Current)
 			end
+		end
+
+	process_base_type_constraint_list (a_list: ET_BASE_TYPE_CONSTRAINT_LIST)
+			-- Process `a_list'.
+		local
+			i, nb: INTEGER
+		do
+			a_list.left_brace.process (Current)
+			nb := a_list.count
+			from i := 1 until i > nb loop
+				a_list.item (i).process (Current)
+				i := i + 1
+			end
+			a_list.right_brace.process (Current)
+		end
+
+	process_base_type_rename_constraint (a_type_rename_constraint: ET_BASE_TYPE_RENAME_CONSTRAINT)
+			-- Process `a_type_rename_constraint'.
+		do
+			a_type_rename_constraint.type.process (Current)
+			a_type_rename_constraint.renames.process (Current)
 		end
 
 	process_binary_integer_constant (a_constant: ET_BINARY_INTEGER_CONSTANT)
@@ -592,6 +612,20 @@ feature {ET_AST_NODE} -- Processing
 			a_list.end_keyword.process (Current)
 		end
 
+	process_constraint_rename_list (a_list: ET_CONSTRAINT_RENAME_LIST)
+			-- Process `a_list'.
+		local
+			i, nb: INTEGER
+		do
+			a_list.rename_keyword.process (Current)
+			nb := a_list.count
+			from i := 1 until i > nb loop
+				a_list.item (i).process (Current)
+				i := i + 1
+			end
+			a_list.end_keyword.process (Current)
+		end
+
 	process_convert_builtin_expression (a_convert_expression: ET_CONVERT_BUILTIN_EXPRESSION)
 			-- Process `a_convert_expression'.
 		do
@@ -689,7 +723,7 @@ feature {ET_AST_NODE} -- Processing
 		local
 			i, nb: INTEGER
 		do
-			a_list.creation_keyword.process (Current)
+			a_list.create_keyword.process (Current)
 			if attached a_list.clients_clause as l_clients_clause then
 				l_clients_clause.process (Current)
 			end
@@ -2675,6 +2709,34 @@ feature {ET_AST_NODE} -- Processing
 		do
 			a_type.type.process (Current)
 			a_type.comma.process (Current)
+		end
+
+	process_type_constraint_comma (a_type_constraint_comma: ET_TYPE_CONSTRAINT_COMMA)
+			-- Process `a_type_constraint_comma'.
+		do
+			a_type_constraint_comma.type_constraint.process (Current)
+			a_type_constraint_comma.comma.process (Current)
+		end
+
+	process_type_constraint_list (a_list: ET_TYPE_CONSTRAINT_LIST)
+			-- Process `a_list'.
+		local
+			i, nb: INTEGER
+		do
+			a_list.left_brace.process (Current)
+			nb := a_list.count
+			from i := 1 until i > nb loop
+				a_list.item (i).process (Current)
+				i := i + 1
+			end
+			a_list.right_brace.process (Current)
+		end
+
+	process_type_rename_constraint (a_type_rename_constraint: ET_TYPE_RENAME_CONSTRAINT)
+			-- Process `a_type_rename_constraint'.
+		do
+			a_type_rename_constraint.type.process (Current)
+			a_type_rename_constraint.renames.process (Current)
 		end
 
 	process_underscored_integer_constant (a_constant: ET_UNDERSCORED_INTEGER_CONSTANT)

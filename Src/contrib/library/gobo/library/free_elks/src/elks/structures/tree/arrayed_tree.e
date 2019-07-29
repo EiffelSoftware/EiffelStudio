@@ -606,14 +606,6 @@ feature -- Access: children
 			arrayed_list.wipe_out
 		end
 
-	move (i: INTEGER)
-			-- Move child
-		obsolete
-			"Use feature `child_move' instead. [2017-05-31]"
-		do
-			child_move (i)
-		end
-
 	child_move (i: INTEGER)
 		do
 			arrayed_list.move (i)

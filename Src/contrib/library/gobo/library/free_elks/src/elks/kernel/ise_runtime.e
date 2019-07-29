@@ -30,29 +30,29 @@ feature -- Feature specific to ISE runtime.
 			instance_free: class
 		end
 
- 	frozen generating_type_of_type (a_type_id: INTEGER): STRING
- 		external
- 			"built_in static"
+	frozen generating_type_of_type (a_type_id: INTEGER): STRING
+		external
+			"built_in static"
 		ensure
 			instance_free: class
- 		end
+		end
 
 	frozen in_assertion: BOOLEAN
 			-- Are we currently checking some assertions?
- 		external
- 			"built_in static"
+		external
+			"built_in static"
 		ensure
 			instance_free: class
- 		end
+		end
 
 	frozen once_objects (a_result_type_id: INTEGER): SPECIAL [ANY]
 			-- Once objects initialized in current system.
 			-- `a_result_type_id' is the dynamic type of `SPECIAL [ANY]'.
- 		external
- 			"built_in static"
+		external
+			"built_in static"
 		ensure
 			instance_free: class
- 		end
+		end
 
 feature -- Internal C routines
 
@@ -83,7 +83,7 @@ feature -- Internal C routines
 	frozen pre_ecma_mapping_status: BOOLEAN
 			-- Do we map old name to new name by default?
 		external
- 			"built_in static"
+			"built_in static"
 		ensure
 			instance_free: class
 		end
@@ -91,7 +91,7 @@ feature -- Internal C routines
 	frozen set_pre_ecma_mapping (v: BOOLEAN)
 			-- Set `pre_ecma_mapping_status' with `v'.
 		external
- 			"built_in static"
+			"built_in static"
 		ensure
 			instance_free: class
 		end
@@ -101,17 +101,17 @@ feature -- Internal C routines
 			-- Note: returned object is not initialized and may
 			-- hence violate its invariant.
 			-- `type_id' cannot represent a SPECIAL type, use
-			-- `new_special_any_instance' instead.		
+			-- `new_special_of_reference_instance_of' instead.		
 		external
  			"built_in static"
 		ensure
 			instance_free: class
 		end
 
-	new_special_of_reference_instance_of (type_id: INTEGER): SPECIAL [detachable ANY]
+	new_special_of_reference_instance_of (type_id, a_capacity: INTEGER): SPECIAL [detachable ANY]
 			-- New instance of dynamic `type_id' that represents
-			-- a SPECIAL with can contain `a_capacity' element. To create a SPECIAL of
-			-- basic type, use `SPECIAL'.		
+			-- a SPECIAL which can contain `a_capacity' elements of reference type.
+			-- To create a SPECIAL of basic type, use class SPECIAL directly.	
 		external
  			"built_in static"
 		ensure
@@ -201,7 +201,7 @@ feature -- Internal C routines
 feature -- Internal support
 
 	frozen reference_field_at_offset (a_enclosing: POINTER; a_physical_offset: INTEGER): ANY
-			-- Object at `a_physical_offset' bytes from `a_enclosing'.
+			-- Reference field of `a_enclosing' located at `a_physical_offset' bytes.
 		external
 			"built_in static"
 		ensure
@@ -209,7 +209,7 @@ feature -- Internal support
 		end
 
 	frozen raw_reference_field_at_offset (a_enclosing: POINTER; a_physical_offset: INTEGER): POINTER
-			-- Unprotected object at `a_physical_offset' bytes from `a_enclosing'..
+			-- Unprotected reference field of `a_enclosing' located at `a_physical_offset' bytes.
 		external
 			"built_in static"
 		ensure
@@ -217,7 +217,7 @@ feature -- Internal support
 		end
 
 	frozen dynamic_type_at_offset (a_enclosing: POINTER; a_physical_offset: INTEGER): INTEGER_32
-			-- Dynamic type of the object at `a_physical_offset' bytes from `a_enclosing'.
+			-- Dynamic type of the field at `a_physical_offset' bytes from `a_enclosing'.
 		external
 			"built_in static"
 		ensure
@@ -874,7 +874,7 @@ feature -- Object marking
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

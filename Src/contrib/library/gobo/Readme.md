@@ -40,12 +40,12 @@ and eleven utilities:
 * Gobo Eiffel Ant (geant)
 * Gobo Eiffel Compiler (gec)
 * Gobo Eiffel C Compilation (gecc)
+* Gobo Eiffel Cop (gecop)
 * Gobo Eiffel Doc (gedoc)
 * Gobo Eiffel Lex (gelex)
 * Gobo Eiffel Lint (gelint)
 * Gobo Eiffel Preprocessor (gepp)
 * Gobo Eiffel Test (getest)
-* Gobo Eiffel Xace (gexace)
 * Gobo Eiffel XSLT Processor (gexslt)
 * Gobo Eiffel Yacc (geyacc)
 
@@ -56,11 +56,11 @@ library classes provided in this package.
 
 The supported Eiffel compilers, in alphabetical order, are:
 
-* Gobo Eiffel Compiler (gec) 4.3
-* ISE Eiffel 18.07.10.1981 (Classic and .NET)
+* Gobo Eiffel Compiler (gec) 19.06.21.1
+* ISE Eiffel 19.05.10.3187 (Classic and .NET)
 
 For more details about the supported Eiffel compilers, please see the file
-[Release_notes.md](Release_notes.md). 
+[Release_notes.md](./Release_notes.md). 
 This software might work with other Eiffel compilers and/or other compiler
 versions, however no test has been made yet.
 To have a better understanding of the way this software has been designed
@@ -150,4 +150,4 @@ are available to help you make the first steps.
 
 ## Authors
 
-Copyright (c) 1997-2018, Eric Bezault and others
+Copyright (c) 1997-2019, Eric Bezault and others

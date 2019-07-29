@@ -5,7 +5,7 @@ note
 		"Eiffel lexical symbols"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,8 +20,7 @@ inherit
 			make_with_position as make_leaf_with_position
 		undefine
 			is_bang,
-			is_question_mark,
-			text
+			is_question_mark
 		end
 
 	ET_TOKEN_CODES
@@ -430,6 +429,7 @@ feature -- Access
 
 	text: STRING
 			-- Textual representation of symbol
+			-- (using UTF-8 encoding)
 		do
 			inspect code
 			when arrow_symbol_code then

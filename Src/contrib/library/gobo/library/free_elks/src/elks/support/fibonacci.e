@@ -3,7 +3,7 @@
 	library: "Free implementation of ELKS library"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	names: fibonacci;
+	names: fibonacci
 	date: "$Date$"
 	revision: "$Revision$"
 

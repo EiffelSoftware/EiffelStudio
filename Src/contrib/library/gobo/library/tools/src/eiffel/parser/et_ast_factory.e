@@ -5,7 +5,7 @@ note
 		"Eiffel Abstract Syntax Tree factories"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -980,9 +980,9 @@ feature -- AST leaves
 			-- New integer constant in binary format
 		require
 			a_scanner_not_void: a_scanner /= Void
-			-- valid_literal: (0[bB](_*[0-1]+_*)+).recognizes (a_scanner.last_literal)
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(0[bB][0-1]+(_+[0-1]+)*").recognizes (a_scanner.last_literal)
 		do
-			create Result.make (a_scanner.last_literal)
+			Result := a_scanner.last_binary_integer_constant
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -995,7 +995,7 @@ feature -- AST leaves
 			-- Result := Void
 		end
 
-	new_c1_character_constant (a_value: CHARACTER; a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_C1_CHARACTER_CONSTANT
+	new_c1_character_constant (a_value: CHARACTER_32; a_scanner: ET_EIFFEL_SCANNER_SKELETON): detachable ET_C1_CHARACTER_CONSTANT
 			-- New character constant of the form 'A'
 		require
 			a_scanner_not_void: a_scanner /= Void
@@ -1008,6 +1008,7 @@ feature -- AST leaves
 			-- New character constant of the form '%A'
 		require
 			a_scanner_not_void: a_scanner /= Void
+			a_value_one_utf8_byte: {UC_UTF8_ROUTINES}.natural_32_code_byte_count (a_value.natural_32_code) = 1
 		do
 			create Result.make (a_value)
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -1017,7 +1018,7 @@ feature -- AST leaves
 			-- New character constant of the form '%/code/'
 		require
 			a_scanner_not_void: a_scanner /= Void
-			-- valid_literal: ((0*([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5]))|(0x[0-9a-fA-F]{1,4})).recognizes (a_scanner.last_literal)
+			-- valid_literal: ([0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]+)*|0[bB][0-1](_*[0-1]+)*).recognizes (a_scanner.last_literal)
 		do
 			Result := a_scanner.last_c3_character_constant
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -1046,9 +1047,9 @@ feature -- AST leaves
 			-- New integer constant in hexadecimal format
 		require
 			a_scanner_not_void: a_scanner /= Void
-			-- valid_literal: (0[xX](_*[0-9a-fA-F]+_*)+).recognizes (a_scanner.last_literal)
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("0[xX](_*[0-9a-fA-F]+_*)+").recognizes (a_scanner.last_literal)
 		do
-			create Result.make (a_scanner.last_literal)
+			Result := a_scanner.last_hexadecimal_integer_constant
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -1066,9 +1067,9 @@ feature -- AST leaves
 			-- New integer constant in octal format
 		require
 			a_scanner_not_void: a_scanner /= Void
-			-- valid_literal: (0[cC](_*[0-7]+_*)+).recognizes (a_scanner.last_literal)
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("0[cC][0-7]+(_+[0-7]+)*").recognizes (a_scanner.last_literal)
 		do
-			create Result.make (a_scanner.last_literal)
+			Result := a_scanner.last_octal_integer_constant
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -1076,9 +1077,9 @@ feature -- AST leaves
 			-- New integer constant with no underscore
 		require
 			a_scanner_not_void: a_scanner /= Void
-			-- valid_literal: ([0-9]+).recognizes (a_scanner.last_literal)
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("[0-9]+").recognizes (a_scanner.last_literal)
 		do
-			create Result.make (a_scanner.last_literal)
+			Result := a_scanner.last_regular_integer_constant
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -1086,7 +1087,7 @@ feature -- AST leaves
 			-- New manifest string with no special character
 		require
 			a_scanner_not_void: a_scanner /= Void
-			-- valid_literal: ([^"%\n]*).recognizes (a_scanner.last_literal)
+			-- valid_literal: (([^"%\n\x80-\xFF}]|{NON_ASCII})*).recognizes (a_scanner.last_literal)
 		do
 			create Result.make (a_scanner.last_literal)
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -1106,7 +1107,7 @@ feature -- AST leaves
 			-- New manifest string with special characters
 		require
 			a_scanner_not_void: a_scanner /= Void
-			-- valid_literal: (([^"%\n]|%([^\n]|\/([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\/|[ \t\r]*\n[ \t\r\n]*%))*).recognizes (a_scanner.last_literal)
+			-- valid_literal: (([^"%\n\x80-\xFF]|{NON_ASCII}|%([^\n\x08-\xFF]|\/([[0-9](_*[0-9]+)*|0[xX][0-9a-fA-F](_*[0-9a-fA-F]+)*|0[cC][0-7](_*[0-7]+)*|0[bB][0-1](_*[0-1]+)*)\/|{HORIZONTAL_BREAK}*\n{BREAK}*%))*).recognizes (a_scanner.last_literal)
 		do
 			Result := a_scanner.last_special_manifest_string
 			Result.set_position (a_scanner.line, a_scanner.column)
@@ -1116,9 +1117,9 @@ feature -- AST leaves
 			-- New integer constant with underscores
 		require
 			a_scanner_not_void: a_scanner /= Void
-			-- valid_literal: ((_*[0-9]+_*)+).recognizes (a_scanner.last_literal)
+			valid_literal: {RX_PCRE_ROUTINES}.regexp ("(_*[0-9]+_*)+").recognizes (a_scanner.last_literal)
 		do
-			create Result.make (a_scanner.last_literal)
+			Result := a_scanner.last_underscored_integer_constant
 			Result.set_position (a_scanner.line, a_scanner.column)
 		end
 
@@ -1156,6 +1157,9 @@ feature -- AST nodes
 				create Result.make_all (a_iterable_expression, a_cursor_name, an_until_conditional, a_all_conditional)
 				Result.set_invariant_part (an_invariant)
 				Result.set_variant_part (a_variant)
+				if a_as /= Void then
+					Result.set_as_keyword (a_as)
+				end
 			end
 		end
 
@@ -1170,6 +1174,9 @@ feature -- AST nodes
 				create Result.make (a_iterable_expression, a_cursor_name, a_from_compound, an_until_conditional, a_loop_compound)
 				Result.set_invariant_part (an_invariant)
 				Result.set_variant_part (a_variant)
+				if a_as /= Void then
+					Result.set_as_keyword (a_as)
+				end
 			end
 		end
 
@@ -1183,6 +1190,9 @@ feature -- AST nodes
 				create Result.make_some (a_iterable_expression, a_cursor_name, an_until_conditional, a_some_conditional)
 				Result.set_invariant_part (an_invariant)
 				Result.set_variant_part (a_variant)
+				if a_as /= Void then
+					Result.set_as_keyword (a_as)
+				end
 			end
 		end
 
@@ -1246,7 +1256,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_alias_and_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_NAME
+	new_alias_and_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
 			-- New alias "and" feature name
 		do
 			if a_string /= Void then
@@ -1254,10 +1264,13 @@ feature -- AST nodes
 				if an_alias /= Void and then not an_alias.position.is_null then
 					Result.set_alias_keyword (an_alias)
 				end
+				if a_convert /= Void then
+					Result.set_convert_keyword (a_convert)
+				end
 			end
 		end
 
-	new_alias_and_then_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_NAME
+	new_alias_and_then_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
 			-- New alias "and then" feature name
 		do
 			if a_string /= Void then
@@ -1265,10 +1278,13 @@ feature -- AST nodes
 				if an_alias /= Void and then not an_alias.position.is_null then
 					Result.set_alias_keyword (an_alias)
 				end
+				if a_convert /= Void then
+					Result.set_convert_keyword (a_convert)
+				end
 			end
 		end
 
-	new_alias_bracket_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_NAME
+	new_alias_bracket_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
 			-- New alias "[]" feature name
 		do
 			if a_string /= Void then
@@ -1276,10 +1292,13 @@ feature -- AST nodes
 				if an_alias /= Void and then not an_alias.position.is_null then
 					Result.set_alias_keyword (an_alias)
 				end
+				if a_convert /= Void then
+					Result.set_convert_keyword (a_convert)
+				end
 			end
 		end
 
-	new_alias_div_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_NAME
+	new_alias_div_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
 			-- New alias "//" feature name
 		do
 			if a_string /= Void then
@@ -1287,10 +1306,13 @@ feature -- AST nodes
 				if an_alias /= Void and then not an_alias.position.is_null then
 					Result.set_alias_keyword (an_alias)
 				end
+				if a_convert /= Void then
+					Result.set_convert_keyword (a_convert)
+				end
 			end
 		end
 
-	new_alias_divide_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_NAME
+	new_alias_divide_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
 			-- New alias "//" feature name
 		do
 			if a_string /= Void then
@@ -1298,10 +1320,13 @@ feature -- AST nodes
 				if an_alias /= Void and then not an_alias.position.is_null then
 					Result.set_alias_keyword (an_alias)
 				end
+				if a_convert /= Void then
+					Result.set_convert_keyword (a_convert)
+				end
 			end
 		end
 
-	new_alias_dotdot_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_NAME
+	new_alias_dotdot_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
 			-- New alias ".." feature name
 		do
 			if a_string /= Void then
@@ -1309,10 +1334,13 @@ feature -- AST nodes
 				if an_alias /= Void and then not an_alias.position.is_null then
 					Result.set_alias_keyword (an_alias)
 				end
+				if a_convert /= Void then
+					Result.set_convert_keyword (a_convert)
+				end
 			end
 		end
 
-	new_alias_free_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_FREE_NAME
+	new_alias_free_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_FREE_NAME
 			-- New alias free feature name
 		require
 			a_string_computed: a_string /= Void implies a_string.value.count > 0
@@ -1322,10 +1350,13 @@ feature -- AST nodes
 				if an_alias /= Void and then not an_alias.position.is_null then
 					Result.set_alias_keyword (an_alias)
 				end
+				if a_convert /= Void then
+					Result.set_convert_keyword (a_convert)
+				end
 			end
 		end
 
-	new_alias_ge_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_NAME
+	new_alias_ge_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
 			-- New alias ">=" feature name
 		do
 			if a_string /= Void then
@@ -1333,10 +1364,13 @@ feature -- AST nodes
 				if an_alias /= Void and then not an_alias.position.is_null then
 					Result.set_alias_keyword (an_alias)
 				end
+				if a_convert /= Void then
+					Result.set_convert_keyword (a_convert)
+				end
 			end
 		end
 
-	new_alias_gt_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_NAME
+	new_alias_gt_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
 			-- New alias ">" feature name
 		do
 			if a_string /= Void then
@@ -1344,10 +1378,13 @@ feature -- AST nodes
 				if an_alias /= Void and then not an_alias.position.is_null then
 					Result.set_alias_keyword (an_alias)
 				end
+				if a_convert /= Void then
+					Result.set_convert_keyword (a_convert)
+				end
 			end
 		end
 
-	new_alias_implies_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_NAME
+	new_alias_implies_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
 			-- New alias "implies" feature name
 		do
 			if a_string /= Void then
@@ -1355,10 +1392,13 @@ feature -- AST nodes
 				if an_alias /= Void and then not an_alias.position.is_null then
 					Result.set_alias_keyword (an_alias)
 				end
+				if a_convert /= Void then
+					Result.set_convert_keyword (a_convert)
+				end
 			end
 		end
 
-	new_alias_le_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_NAME
+	new_alias_le_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
 			-- New alias "<=" feature name
 		do
 			if a_string /= Void then
@@ -1366,10 +1406,13 @@ feature -- AST nodes
 				if an_alias /= Void and then not an_alias.position.is_null then
 					Result.set_alias_keyword (an_alias)
 				end
+				if a_convert /= Void then
+					Result.set_convert_keyword (a_convert)
+				end
 			end
 		end
 
-	new_alias_lt_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_NAME
+	new_alias_lt_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
 			-- New alias "<" feature name
 		do
 			if a_string /= Void then
@@ -1377,10 +1420,13 @@ feature -- AST nodes
 				if an_alias /= Void and then not an_alias.position.is_null then
 					Result.set_alias_keyword (an_alias)
 				end
+				if a_convert /= Void then
+					Result.set_convert_keyword (a_convert)
+				end
 			end
 		end
 
-	new_alias_minus_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_NAME
+	new_alias_minus_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
 			-- New alias "-" feature name
 		do
 			if a_string /= Void then
@@ -1388,10 +1434,13 @@ feature -- AST nodes
 				if an_alias /= Void and then not an_alias.position.is_null then
 					Result.set_alias_keyword (an_alias)
 				end
+				if a_convert /= Void then
+					Result.set_convert_keyword (a_convert)
+				end
 			end
 		end
 
-	new_alias_mod_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_NAME
+	new_alias_mod_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
 			-- New alias "\\" feature name
 		do
 			if a_string /= Void then
@@ -1399,10 +1448,13 @@ feature -- AST nodes
 				if an_alias /= Void and then not an_alias.position.is_null then
 					Result.set_alias_keyword (an_alias)
 				end
+				if a_convert /= Void then
+					Result.set_convert_keyword (a_convert)
+				end
 			end
 		end
 
-	new_alias_not_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_NAME
+	new_alias_not_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
 			-- New alias "not" feature name
 		do
 			if a_string /= Void then
@@ -1410,10 +1462,13 @@ feature -- AST nodes
 				if an_alias /= Void and then not an_alias.position.is_null then
 					Result.set_alias_keyword (an_alias)
 				end
+				if a_convert /= Void then
+					Result.set_convert_keyword (a_convert)
+				end
 			end
 		end
 
-	new_alias_or_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_NAME
+	new_alias_or_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
 			-- New alias "or" feature name
 		do
 			if a_string /= Void then
@@ -1421,10 +1476,13 @@ feature -- AST nodes
 				if an_alias /= Void and then not an_alias.position.is_null then
 					Result.set_alias_keyword (an_alias)
 				end
+				if a_convert /= Void then
+					Result.set_convert_keyword (a_convert)
+				end
 			end
 		end
 
-	new_alias_or_else_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_NAME
+	new_alias_or_else_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
 			-- New alias "or else" feature name
 		do
 			if a_string /= Void then
@@ -1432,10 +1490,13 @@ feature -- AST nodes
 				if an_alias /= Void and then not an_alias.position.is_null then
 					Result.set_alias_keyword (an_alias)
 				end
+				if a_convert /= Void then
+					Result.set_convert_keyword (a_convert)
+				end
 			end
 		end
 
-	new_alias_parenthesis_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_NAME
+	new_alias_parenthesis_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
 			-- New alias "()" feature name
 		do
 			if a_string /= Void then
@@ -1443,10 +1504,13 @@ feature -- AST nodes
 				if an_alias /= Void and then not an_alias.position.is_null then
 					Result.set_alias_keyword (an_alias)
 				end
+				if a_convert /= Void then
+					Result.set_convert_keyword (a_convert)
+				end
 			end
 		end
 
-	new_alias_plus_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_NAME
+	new_alias_plus_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
 			-- New alias "+" feature name
 		do
 			if a_string /= Void then
@@ -1454,10 +1518,13 @@ feature -- AST nodes
 				if an_alias /= Void and then not an_alias.position.is_null then
 					Result.set_alias_keyword (an_alias)
 				end
+				if a_convert /= Void then
+					Result.set_convert_keyword (a_convert)
+				end
 			end
 		end
 
-	new_alias_power_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_NAME
+	new_alias_power_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
 			-- New alias "^" feature name
 		do
 			if a_string /= Void then
@@ -1465,10 +1532,13 @@ feature -- AST nodes
 				if an_alias /= Void and then not an_alias.position.is_null then
 					Result.set_alias_keyword (an_alias)
 				end
+				if a_convert /= Void then
+					Result.set_convert_keyword (a_convert)
+				end
 			end
 		end
 
-	new_alias_times_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_NAME
+	new_alias_times_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
 			-- New alias "*" feature name
 		do
 			if a_string /= Void then
@@ -1476,16 +1546,22 @@ feature -- AST nodes
 				if an_alias /= Void and then not an_alias.position.is_null then
 					Result.set_alias_keyword (an_alias)
 				end
+				if a_convert /= Void then
+					Result.set_convert_keyword (a_convert)
+				end
 			end
 		end
 
-	new_alias_xor_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_NAME
+	new_alias_xor_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_NAME
 			-- New alias "xor" feature name
 		do
 			if a_string /= Void then
 				create Result.make_xor (a_string)
 				if an_alias /= Void and then not an_alias.position.is_null then
 					Result.set_alias_keyword (an_alias)
+				end
+				if a_convert /= Void then
+					Result.set_convert_keyword (a_convert)
 				end
 			end
 		end
@@ -1550,21 +1626,13 @@ feature -- AST nodes
 			end
 		end
 
-	new_attachment_separate_keywords (a_attachment_keyword: detachable ET_KEYWORD;
-		a_separateness_keyword: detachable ET_KEYWORD): detachable ET_ATTACHMENT_SEPARATE_KEYWORDS
-			-- New attachment keyword ('attached' or 'detachable') followed by the keyword 'separate'
+	new_attachment_mark_separate_keyword (a_attachment_mark: detachable ET_TYPE_MARK;
+		a_separateness_keyword: detachable ET_KEYWORD): detachable ET_ATTACHMENT_MARK_SEPARATE_KEYWORD
+			-- New attachment mark ('attached', 'detachable', '!' or '?',
+			-- possibly implicit) followed by the keyword 'separate'
 		do
-			if a_attachment_keyword /= Void and a_separateness_keyword /= Void then
-				create Result.make (a_attachment_keyword, a_separateness_keyword)
-			end
-		end
-
-	new_attachment_symbol_separate_keyword (a_attachment_symbol: detachable ET_SYMBOL;
-		a_separateness_keyword: detachable ET_KEYWORD): detachable ET_ATTACHMENT_SYMBOL_SEPARATE_KEYWORD
-			-- New attachment symbol ('!' or '?') followed by the keyword 'separate'
-		do
-			if a_attachment_symbol /= Void and a_separateness_keyword /= Void then
-				create Result.make (a_attachment_symbol, a_separateness_keyword)
+			if a_attachment_mark /= Void and a_separateness_keyword /= Void then
+				create Result.make (a_attachment_mark, a_separateness_keyword)
 			end
 		end
 
@@ -1767,7 +1835,7 @@ feature -- AST nodes
 		end
 
 	new_constrained_formal_parameter (a_type_mark: detachable ET_KEYWORD; a_name: detachable ET_IDENTIFIER;
-		an_arrow: detachable ET_SYMBOL; a_constraint: detachable ET_TYPE;
+		an_arrow: detachable ET_SYMBOL; a_constraint: detachable ET_CONSTRAINT;
 		a_creation: detachable ET_CONSTRAINT_CREATOR; a_class: detachable ET_CLASS): detachable ET_CONSTRAINED_FORMAL_PARAMETER
 			-- New constrained formal generic parameter
 		do
@@ -1847,6 +1915,14 @@ feature -- AST nodes
 			if a_name /= Void then
 				create Result.make (a_type_mark, a_name)
 			end
+		end
+
+	new_constraint_renames (a_rename: detachable ET_KEYWORD; a_end: detachable ET_KEYWORD; nb: INTEGER): detachable ET_CONSTRAINT_RENAME_LIST
+			-- New constraint rename clause with given capacity
+		require
+			nb_positive: nb >= 0
+		do
+			create Result.make_with_capacity (nb)
 		end
 
 	new_convert_feature_comma (a_convert_feature: detachable ET_CONVERT_FEATURE; a_comma: detachable ET_SYMBOL): detachable ET_CONVERT_FEATURE_ITEM
@@ -1942,7 +2018,7 @@ feature -- AST nodes
 			end
 		end
 
-	new_creator (a_creation: detachable ET_KEYWORD; a_clients: detachable ET_CLIENT_LIST; nb: INTEGER): detachable ET_CREATOR
+	new_creator (a_create: detachable ET_KEYWORD; a_clients: detachable ET_CLIENT_LIST; nb: INTEGER): detachable ET_CREATOR
 			-- New creation clause with given capacity
 		require
 			nb_positive: nb >= 0
@@ -2012,7 +2088,7 @@ feature -- AST nodes
 		do
 			if a_name /= Void and a_type /= Void and a_clients /= Void and a_class /= Void then
 				create Result.make (a_name, args, a_type, a_class)
-				if an_is = tokens.is_keyword then
+				if an_is /= Void then
 					Result.set_is_keyword (an_is)
 				end
 				Result.set_assigner (an_assigner)
@@ -2033,7 +2109,7 @@ feature -- AST nodes
 		do
 			if a_name /= Void and a_clients /= Void and a_class /= Void then
 				create Result.make (a_name, args, a_class)
-				if an_is = tokens.is_keyword then
+				if an_is /= Void then
 					Result.set_is_keyword (an_is)
 				end
 				Result.set_obsolete_message (an_obsolete)
@@ -2066,7 +2142,7 @@ feature -- AST nodes
 		do
 			if a_name /= Void and a_type /= Void and a_clients /= Void and a_class /= Void then
 				create Result.make (a_name, args, a_type, a_class)
-				if an_is = tokens.is_keyword then
+				if an_is /= Void then
 					Result.set_is_keyword (an_is)
 				end
 				Result.set_assigner (an_assigner)
@@ -2112,7 +2188,7 @@ feature -- AST nodes
 		do
 			if a_name /= Void and a_clients /= Void and a_class /= Void then
 				create Result.make (a_name, args, a_class)
-				if an_is = tokens.is_keyword then
+				if an_is /= Void then
 					Result.set_is_keyword (an_is)
 				end
 				Result.set_obsolete_message (an_obsolete)
@@ -2277,7 +2353,7 @@ feature -- AST nodes
 		do
 			if a_name /= Void and a_type /= Void and a_language /= Void and a_clients /= Void and a_class /= Void then
 				create Result.make (a_name, args, a_type, a_language, a_class)
-				if an_is = tokens.is_keyword then
+				if an_is /= Void then
 					Result.set_is_keyword (an_is)
 				end
 				Result.set_assigner (an_assigner)
@@ -2325,7 +2401,7 @@ feature -- AST nodes
 		do
 			if a_name /= Void and a_language /= Void and a_clients /= Void and a_class /= Void then
 				create Result.make (a_name, args, a_language, a_class)
-				if an_is = tokens.is_keyword then
+				if an_is /= Void then
 					Result.set_is_keyword (an_is)
 				end
 				Result.set_obsolete_message (an_obsolete)
@@ -3127,7 +3203,7 @@ feature -- AST nodes
 		do
 			if a_name /= Void and a_type /= Void and a_clients /= Void and a_class /= Void then
 				create Result.make (a_name, args, a_type, a_class)
-				if an_is = tokens.is_keyword then
+				if an_is /= Void then
 					Result.set_is_keyword (an_is)
 				end
 				Result.set_assigner (an_assigner)
@@ -3190,7 +3266,7 @@ feature -- AST nodes
 		do
 			if a_name /= Void and a_clients /= Void and a_class /= Void then
 				create Result.make (a_name, args, a_class)
-				if an_is = tokens.is_keyword then
+				if an_is /= Void then
 					Result.set_is_keyword (an_is)
 				end
 				Result.set_obsolete_message (an_obsolete)
@@ -3445,11 +3521,11 @@ feature -- AST nodes
 	new_qualified_like_braced_type (a_type_mark: detachable ET_TYPE_MARK;
 		a_like: detachable ET_KEYWORD; a_left_brace: detachable ET_SYMBOL;
 		a_type: detachable ET_TYPE; a_right_brace: detachable ET_SYMBOL;
-		a_name: detachable ET_QUALIFIED_FEATURE_NAME): detachable ET_QUALIFIED_LIKE_BRACED_TYPE
+		a_name: detachable ET_QUALIFIED_FEATURE_NAME; a_class: detachable ET_CLASS): detachable ET_QUALIFIED_LIKE_BRACED_TYPE
 			-- New qualified anchored type of the form 'like {A}.b'
 		do
-			if a_type /= Void and a_name /= Void then
-				create Result.make (a_type_mark, a_type, a_name)
+			if a_type /= Void and a_name /= Void and a_class /= Void then
+				create Result.make (a_type_mark, a_type, a_name, a_class)
 				if a_like /= Void and then not a_like.position.is_null then
 					Result.set_like_keyword (a_like)
 				end
@@ -3457,11 +3533,11 @@ feature -- AST nodes
 		end
 
 	new_qualified_like_type (a_type_mark: detachable ET_TYPE_MARK; a_type: detachable ET_LIKE_TYPE;
-		a_name: detachable ET_QUALIFIED_FEATURE_NAME): detachable ET_QUALIFIED_LIKE_TYPE
+		a_name: detachable ET_QUALIFIED_FEATURE_NAME; a_class: detachable ET_CLASS): detachable ET_QUALIFIED_LIKE_TYPE
 			-- New qualified anchored type of the form 'like a.b.c'
 		do
-			if a_type /= Void and a_name /= Void then
-				create Result.make (a_type_mark, a_type, a_name)
+			if a_type /= Void and a_name /= Void and a_class /= Void then
+				create Result.make (a_type_mark, a_type, a_name, a_class)
 			end
 		end
 
@@ -3597,6 +3673,31 @@ feature -- AST nodes
 			-- New type-comma
 		do
 			Result := a_type
+		end
+
+	new_type_constraint_comma (a_type_constraint: detachable ET_TYPE_CONSTRAINT; a_comma: detachable ET_SYMBOL): detachable ET_TYPE_CONSTRAINT_ITEM
+			-- New type_constraint-comma
+		do
+			Result := a_type_constraint
+		end
+
+	new_type_constraint_list (a_left, a_right: detachable ET_SYMBOL; nb: INTEGER): detachable ET_TYPE_CONSTRAINT_LIST
+			-- New type constraint list with capacity `nb'
+		require
+			nb_positive: nb >= 0
+		do
+			create Result.make_with_capacity (nb)
+			if a_left /= Void and then not a_left.position.is_null then
+				Result.set_left_brace (a_left)
+			end
+		end
+
+	new_type_rename_constraint (a_type: detachable ET_TYPE; a_renames: detachable ET_CONSTRAINT_RENAME_LIST): detachable ET_TYPE_RENAME_CONSTRAINT
+			-- New type-rename constraint
+		do
+			if a_type /= Void and a_renames /= Void then
+				create Result.make (a_type, a_renames)
+			end
 		end
 
 	new_unique_attribute (a_name: detachable ET_EXTENDED_FEATURE_NAME; a_type: detachable ET_DECLARED_TYPE;

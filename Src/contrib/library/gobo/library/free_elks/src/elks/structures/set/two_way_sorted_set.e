@@ -1,7 +1,7 @@
 ﻿note
 	description: "[
-		Sets whose items may be compared according to a total order relation;
-		implemented as sorted two-way lists.
+			Sets whose items may be compared according to a total order relation;
+			implemented as sorted two-way lists.
 		]"
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."

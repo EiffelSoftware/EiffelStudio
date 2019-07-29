@@ -5,7 +5,7 @@ note
 		"Eiffel formal generic parameters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -50,6 +50,18 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 
+	reset_constraint_base_types
+			-- Reset `constraint_base_types' and `recursive_formal_constraints'
+			-- as they were just after the current formal parameter was last parsed.
+		do
+		end
+
+	reset_constraint_renames
+			-- Reset constraint renames as they were just
+			-- after they were last parsed.
+		do
+		end
+
 	reset_constraint_creation_procedures
 			-- Reset constraint creation procedures as they were just
 			-- after they were last parsed.
@@ -64,7 +76,7 @@ feature -- Access
 	type_mark: detachable ET_KEYWORD
 			-- 'expanded', 'reference' keyword
 
-	constraint: detachable ET_TYPE
+	constraint: detachable ET_CONSTRAINT
 			-- Generic constraint
 		do
 			-- Result := Void
@@ -78,15 +90,28 @@ feature -- Access
 			constraint_not_void: Result /= Void implies constraint /= Void
 		end
 
-	constraint_base_type: detachable ET_BASE_TYPE
-			-- Base type of constraint;
-			-- Void means that there is no explicit constraint
-			-- (i.e. the implicit constraint is "ANY"), or there
-			-- is a cycle of the form "A [G -> H, H -> G]" in
-			-- the constraints (i.e. the base type is also considered
-			-- to be "ANY" in that case)
+	constraint_base_types: ET_CONSTRAINT_BASE_TYPES
+			-- Base types of `constraint'.
+			-- "detachable ANY" if no constraint.
+		do
+			Result := implementation_class.universe.detachable_any_type
+		ensure
+			constraint_base_types_not_void: Result /= Void
+			constraint_base_types_are_named_types: Result.are_named_types
+		end
+
+	recursive_formal_constraints: detachable SPECIAL [NATURAL_32]
+			-- Formal parameters which are constraints (recursively) of
+			-- the current formal parameter, or Void if no such constraint.
+			-- Indexed by formal parameter indexes (index 0 is not used).
+			-- Flags:
+			--  No_type_mark (0b1): as if we had "G -> H".
+			--  Attached_mark (0b10): as if we had "G -> attached H".
+			--  Detachable_mark (0b100): as if we had "G -> detachable H".
 		do
 			-- Result := Void
+		ensure
+			valid_count: Result /= Void implies Result.count = implementation_class.formal_parameter_count + 1
 		end
 
 	hash_code: INTEGER
@@ -136,6 +161,13 @@ feature -- Status report
 			Result := attached type_mark as l_type_mark and then l_type_mark.is_reference
 		end
 
+	has_constraint_cycle: BOOLEAN
+			-- Is there some cycle in the constraint?
+			-- (e.g. "[G -> G]" or "[G -> H, H -> G]")
+		do
+			-- Result := False
+		end
+
 feature -- Setting
 
 	set_index (an_index: INTEGER)
@@ -156,17 +188,12 @@ feature -- Setting
 			type_mark_set: type_mark = a_keyword
 		end
 
-	set_constraint_base_type (a_type: like constraint_base_type)
-			-- Set `constraint_base_type' to `a_type'.
-		require
-			constrained: constraint /= Void
-			a_type_not_void: a_type /= Void
-			a_type_named: a_type.is_named_type
-		do
-			check not_constrained: constraint = Void end
-		ensure
-			constraint_base_type_set: constraint_base_type = a_type
-		end
+feature -- Flags
+
+	No_type_mark: NATURAL_32 = 0b1
+	Attached_mark: NATURAL_32 = 0b10
+	Detachable_mark: NATURAL_32 = 0b100
+			-- Flags for `recursive_formal_constraints'
 
 feature -- Processing
 
@@ -175,9 +202,5 @@ feature -- Processing
 		do
 			a_processor.process_formal_parameter (Current)
 		end
-
-invariant
-
-	constraint_base_type_named: attached constraint_base_type as l_constraint_base_type implies l_constraint_base_type.is_named_type
 
 end

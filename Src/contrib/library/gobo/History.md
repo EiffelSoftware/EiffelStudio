@@ -1,5 +1,225 @@
 # Release History
 
+## Version ?? - ??
+
+### gelex
+
+* Fixed bug when computing equivalence classes. The generated arrays should be
+  slightly smaller.
+
+### Gobo Eiffel Kernel Library
+
+* Changed the signature of features `put_string` and `put_substring` in class
+  `KI_CHARACTER_OUTPUT_STREAM` and its descendants so that the argument is
+  of type `READABLE_STRING_8` instead of `STRING_8`. This is to follow the
+  same change in class `IO_MEDIUM`.
+
+### Gobo Eiffel Tools Library
+
+* Added support for `across ... is ...`.
+
+
+## Version 19.06.21.1 - 21 June 2019
+
+### gec
+
+* Added support for `total_order_on_reals` so that the assertions inherited from
+  `COMPARABLE` do not get violated with NaNs in classes `REAL_32` and `REAL_64`.
+* Implemented `ieee_*` built-in routines in classes `REAL_32` and `REAL_64`.
+
+### Gobo Eiffel Tools Library
+
+* Added support for new values `none|feature|all` for setting `dead_code_removal`
+  in ECF classes as introduced in ECF 1.20.0. Note that `gec` does not take this
+  setting into account.
+* Changed default for setting `total_order_on_reals` from `false` to `true` in
+  ECF classes as per ECF 1.20.0.
+* Added support for bracket expressions whose target is itself a bracket expression
+  (e.g. `f [i][j]`) in order to be compatible with ISE Eiffel's parser.
+* Fixed bug in the Tuple-argument-unfolding mechanism when the formal argument
+  with a Tuple type was not at the last position. The routine was erroneously 
+  considered as not being a single-tuple routine.
+* Added support for hidden clusters, as defined in ECF.
+* Added support for hexadecimal, octal and binary character codes in manifest
+  strings and character constants.
+* Added support for Unicode (UTF-8) when reading Eiffel class files. These files
+  are expected to be encoded in UTF-8 if they start with the corresponding BOM
+  (Byte Order Mark), or ISO 8859-1 otherwise.
+
+## Version 19.03.21.1 - 21 March 2019
+
+### geant
+
+* Removed task `<gexace>`, because the tool `gexace` is not supported anymore.
+
+### gec
+
+* Fixed name of built-in feature `ISE_RUNTIME.new_special_of_reference_instance_of` 
+  in generated C code.
+* Added header files to the C runtime to allow compilation of the ISE Eiffel
+  compiler.
+* Fixed bug in generated C code of inline agent where its result was wrongly
+  stored in the placeholder in place of the result of its enclosing once function.
+* Fixed bug when parsing the language string in external routines. The arguments
+  part in `signature` was not considered as optional.
+* Added support for `"C++ struct ..."` in external routines.
+* Fixed C compilation errors with `msc` as back-end C compiler when compiling
+  ISE EiffelTime. See [here](https://support.eiffel.com/report_detail/19508) for
+  details.
+* Adapted generated C code so that the FreeELKS introspection classes work
+  in void-safe mode.
+* Improved interoperability with ISE Eiffel by making sure that type
+  `attached NONE` is different from type `detachable NONE` in void-safe mode.
+* Added option `--ise=major[.minor[.revision[.build]]]` to specify the version
+  of ISE Eiffel whose semantics should be used during compilation.
+* The only Eiffel configuration notation now supported by the `gec` is ECF.
+
+### gecop
+
+* New tool to validate the conformance of Eiffel tools (typically compilers)
+  to the ECMA Eiffel standard.
+* Added tests for the validity rules `VAPE-1` and `VAPE-2`.
+* Do not duplicate expected test results of the validation suite for `gec` and
+  `gelint` when they are the same.
+* Made the validation suite browsable with the GitHub Markdown facilities.
+* Added tests for the validity rules `VGFG` and `VGGC`.
+* Added tests for the validity rule `VFAV`.
+* Added tests for the validity rule `VGMC`.
+
+### gedoc
+
+* The only Eiffel configuration notation now supported by the `gedoc` is ECF.
+
+### gelex
+
+* Fixed examples in the documentation.
+
+### gelint
+
+* The only Eiffel configuration notation now supported by the `gelint` is ECF.
+
+### getest
+
+* Changed the signature of some `assert_*` routines to be able to compare
+  some `separate` objects in SCOOP mode.
+
+### gexace
+
+* This tool is not supported anymore and has been removed. The only
+  Eiffel configuration notation supported by the Gobo project is ECF.
+  The source code of `gexace` can still be found in
+  `$GOBO/library/tools/src/xace`, but the classes have been marked 
+  as obsolete.
+
+### Gobo Eiffel Argument Library
+
+* In class `AP_OPTION_WITH_PARAMETER`, made the difference between
+  `set_default_parameter` which provides a default parameter value
+  be used when the current option is not specified on the command-line
+  (when the option is not mandatory), and `set_parameter_optional`
+  which makes it possible to specify the current option on the
+  command-line with no parameter (the parameter is optional, even
+  when the option is mandatory).
+
+### Gobo Eiffel Kernel Library
+
+* Unmarked as instance-free the feature `eol` in `KI_TEXT_INPUT_STREAM`
+  and `KI_TEXT_OUTPUT_STREAM` so that it can be implemented using the
+  bridge pattern in descendant classes.
+
+### Gobo Eiffel Tools Library
+
+* Made sure that validity error `VHPR-2` (conforming inheritance from
+  a frozen class) is reported correctly.
+* Do not report a syntax error for manifest characters of the form `'''`.
+  Apparently it is allowed by the ECMA standard.
+* Relaxed the validity rule where the result type of once functions cannot
+  contain anchored types to just *unqualified* anchored types. This is to
+  be compatible with ISE Eiffel.
+* Relaxed validity rule `VAVE` so that the loop variant expressions can
+  not only be of type `INTEGER` but also of one of its sized variants.
+* Fixed bug when the type of the anchor of a qualified anchored type
+  (e.g. `like {A}.f` or `like a.b`) appearing in the signature of a
+  redeclared feature is itself a qualified anchored type. In some valid
+  cases, a validity error `VDRD-2` was emitted, indicating that the signature
+  of the redeclared feature did not conform to the one in the parent.
+* Fixed bug in the dynamic type set builder where types in object-tests
+  (e.g. `T` in `attached {T} x`) were marked as alive (types with possible
+  direct instances) as if they were creation types. This caused internal
+  errors during the C code generation for the types whose base class was
+  deferred.
+* Fixed bug when processing ECF files where conditions `<concurrency>` and
+  `<void_safety>` were not taking into account the `support` capability
+  value when the `use` value was not specified.
+* Made sure that all targets in the ECF file are affected when overriding
+  the setting `library_root`.
+* Fixed bug when processing ECF files where conditions were not taking into
+  account the setting and capability values of the parent target when not
+  specified in the current target.
+* Fixed bug where `separate T` was considered `attached` even with the
+  option `is_attached_by_default="false"` in the ECF file.
+* Interoperability with ISE Eiffel: let `like Current` be attached in
+  void-safe mode even with the option `is_attached_by_default="false"`
+  in the ECF file.
+* Interoperability with ISE Eiffel: do not accept `reference` before 
+  class types anymore (e.g. `reference INTEGER`), only before the
+  declaration of a formal generic parameter (e.g. `class C [reference G]`).
+* Improved the way some kernel types and their implicit attachment marks
+  are processed in void-safe mode.
+* Improved the way dynamic type sets and their attachment marks are 
+  processed in void-safe mode.
+* Improved speed when computing dynamic type sets.
+* Made sure that no `VDRS-4` error is reported when two features are
+  inherited under the same name (after possible renaming) from the same
+  parent and one is deferred and not the other.
+* Report a validity error `VAPE-1` when the address expression `$g` 
+  appears in the precondition of `f` and `g` is not exported to all
+  classes to which `f` is exported.
+* Fixed bug where a `VEEN-2` validity error was erroneously reported
+  when the entity `Result` appears in the body of a function inline
+  agent which itself appears in the precondition of a feature.
+* Report a validity error `VAPE-2` when a creation call with the
+  creation procedure `make` appears in the precondition of `f` and
+  `make` is not exported for creation to all classes to which `f`
+  is exported.
+* Report a validity error `VAPE` when an implicit conversion appears
+  in the precondition of `f` and the associated convert feature is not
+  exported (or exported for creation in case of a convert procedure)
+  to all classes to which `f` is exported.
+* Fixed bug in void-safety mode when a generic constraint is of the
+  form `C [G -> H, H -> G]` where `G` was erroneously considered as
+  not conforming to `H`. This issue did not exist in non-void-safety
+  mode.
+* Fixed bug where a formal generic parameter `G` was not assumed to
+  conform to `detachable ANY` when there was a cycle in the generic
+  constraints (e.g. `[G -> H, H -> G]`).
+* Took into account the fact that ISE Eiffel now reports `VDRS-4`
+  errors as of version 19.01.
+* Fixed bug when processing a `Precursor` instruction in a function
+  or a `Precursor` expression in a procedure. An internal error was
+  reported.
+* Check validity of actual arguments in a call even when it was not
+  possible to determine the feature of the call.
+* Added support for multiple generic constraints.
+* The only Eiffel configuration notation now supported by the Gobo
+  project is ECF. The classes for the Ace and Xace notations have
+  been marked as obsolete.
+
+### Gobo Eiffel XPath Library
+
+* Made unit tests compilable in void-safe mode.
+
+### Gobo Eiffel XSLT Library
+
+* Made unit tests compilable in void-safe mode.
+
+### Miscellaneous
+
+* All Gobo ECF files are now SCOOP capable. It does not mean that the
+  code in Gobo takes advantage of the SCOOP model, but rather that its
+  classes can be used in a SCOOP application.
+* New version number format: `year.month.day.number_of_commits_on_that_day`.
+
 ## Version 4.3 - 28 November 2018
 
 ### geant
@@ -17,7 +237,8 @@
 * Added command-line options `--no-benchmark`, `--nested-benchmark` and --`metrics`.
 * Improved the way benchmarks, metrics, silent and verbose modes are
   specified and taken into account.
-* Change the command-line option `--cc` to accept the following values: `no|script|make|gecc`.
+* Change the command-line option `--cc` to accept the following values: 
+  `no|script|make|gecc`.
 * Made `gec` multi-threaded, with the command-line option `--thread`.
 * Added command-line option `--target` to select the name of the target
   in the ECF file.
@@ -26,7 +247,8 @@
 
 ### gecc
 
-* New tool to compile the C code generated by `gec` in a multi-threaded environment.
+* New tool to compile the C code generated by `gec` in a multi-threaded
+  environment.
 
 ### gedoc
 

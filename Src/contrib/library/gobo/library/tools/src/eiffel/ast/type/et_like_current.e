@@ -5,7 +5,7 @@ note
 		"Eiffel 'like Current' types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2001-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -20,6 +20,9 @@ inherit
 			shallow_named_type_with_type_mark,
 			named_type_has_class,
 			is_like_current,
+			add_adapted_base_classes_to_list,
+			adapted_base_class_with_named_feature,
+			adapted_base_class_with_seeded_feature,
 			same_syntactical_like_current_with_type_marks,
 			same_named_class_type_with_type_marks,
 			same_named_formal_parameter_type_with_type_marks,
@@ -32,7 +35,8 @@ inherit
 			conforms_from_tuple_type_with_type_marks,
 			type_with_type_mark,
 			is_type_reference_with_type_mark,
-			is_type_detachable_with_type_mark
+			is_type_detachable_with_type_mark,
+			has_unqualified_anchored_type
 		end
 
 create
@@ -67,6 +71,24 @@ feature -- Access
 			-- or unmatched formal generic parameter.
 		do
 			Result := a_context.named_base_class
+		end
+
+	adapted_base_class_with_named_feature (a_name: ET_CALL_NAME; a_context: ET_TYPE_CONTEXT): ET_ADAPTED_CLASS
+			-- Base class of current type when it appears in `a_context', or in case of
+			-- a formal parameter one of its constraint adapted base classes containing
+			-- a feature named `a_name' (or any of the constraints if none contains such
+			-- feature)
+		do
+			Result := a_context.adapted_base_class_with_named_feature (a_name)
+		end
+
+	adapted_base_class_with_seeded_feature (a_seed: INTEGER; a_context: ET_TYPE_CONTEXT): ET_ADAPTED_CLASS
+			-- Base class of current type when it appears in `a_context', or in case of
+			-- a formal parameter one of its constraint adapted base classes containing
+			-- a feature with seed `a_seed' (or any of the constraints if none contains
+			-- such feature)
+		do
+			Result := a_context.adapted_base_class_with_seeded_feature (a_seed)
 		end
 
 	base_type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT): ET_BASE_TYPE
@@ -224,6 +246,13 @@ feature -- Status report
 			Result := a_context.is_type_detachable_with_type_mark (overridden_type_mark (a_type_mark))
 		end
 
+	has_unqualified_anchored_type: BOOLEAN
+			-- Does current type contain an unqualified anchored type
+			-- (i.e. 'like Current' or 'like feature_name')?
+		do
+			Result := True
+		end
+
 	base_type_has_class (a_class: ET_CLASS; a_context: ET_TYPE_CONTEXT): BOOLEAN
 			-- Does the base type of current type contain `a_class'
 			-- when it appears in `a_context'?
@@ -236,6 +265,16 @@ feature -- Status report
 			-- when it appears in `a_context'?
 		do
 			Result := a_context.named_type_has_class (a_class)
+		end
+
+feature -- Basic operations
+
+	add_adapted_base_classes_to_list (a_list: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]; a_context: ET_TYPE_CONTEXT)
+			-- Add to `a_list' the base class of current type when it appears in `a_context' or
+			-- the adapted base classes of the constraints (in the same order they appear in
+			-- 'constraint_base_types') in case of a formal parameter.
+		do
+			a_context.add_adapted_base_classes_to_list (a_list)
 		end
 
 feature -- Comparison
@@ -404,14 +443,7 @@ feature -- Output
 			-- current type to `a_string'.
 		do
 			if attached type_mark as l_type_mark then
-				if l_type_mark.is_implicit_mark then
-					a_string.append_character ('[')
-				end
-				a_string.append_string (l_type_mark.text)
-				if l_type_mark.is_implicit_mark then
-					a_string.append_character (']')
-				end
-				a_string.append_character (' ')
+				l_type_mark.append_to_string_with_space (a_string)
 			end
 			a_string.append_string (like_space_current)
 		end

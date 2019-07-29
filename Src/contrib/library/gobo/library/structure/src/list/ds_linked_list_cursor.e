@@ -5,7 +5,7 @@
 		"Cursors for linked list traversals"
 
 	library: "Gobo Eiffel Structure Library"
-	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"

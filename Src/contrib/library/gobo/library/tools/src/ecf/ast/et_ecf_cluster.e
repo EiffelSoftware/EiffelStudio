@@ -5,7 +5,7 @@ note
 		"ECF Eiffel clusters"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2006-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,13 +15,20 @@ class ET_ECF_CLUSTER
 inherit
 
 	ET_CLUSTER
+		rename
+			make as make_cluster
 		undefine
 			lower_name
 		redefine
-			parent, subclusters,
-			full_pathname, full_unix_pathname,
+			parent,
+			subclusters,
+			pathname,
+			full_pathname,
+			full_unix_pathname,
+			is_hidden,
 			is_valid_eiffel_filename,
 			is_valid_directory_name,
+			new_recursive_cluster,
 			universe
 		end
 
@@ -92,9 +99,6 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-
-	name: STRING
-			-- Name
 
 	pathname: STRING
 			-- Directory pathname
@@ -208,7 +212,7 @@ feature -- Access
 feature -- Status report
 
 	is_hidden: BOOLEAN
-			-- Should the classes of current cluster not be exported when used as library?
+			-- Should the classes of current group not be exported when part of a library?
 			-- See ET_ADAPTED_UNIVERSE.export_classes.
 
 	is_valid_eiffel_filename (a_filename: STRING): BOOLEAN

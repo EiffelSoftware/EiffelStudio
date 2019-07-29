@@ -5,7 +5,7 @@ note
 		"Eiffel types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,6 +19,14 @@ inherit
 	ET_ACTUAL_PARAMETER
 		undefine
 			resolved_syntactical_constraint_with_type
+		end
+
+	ET_TYPE_CONSTRAINT
+		rename
+			count as type_constraint_count,
+			type as type_constraint_type
+		undefine
+			conforms_to_type_with_type_marks
 		end
 
 	ET_CONSTRAINT_TYPE
@@ -71,6 +79,12 @@ feature -- Access
 	base_class (a_context: ET_TYPE_CONTEXT): ET_CLASS
 			-- Base class of current type when it appears in `a_context'
 			-- (Definition of base class in ETL2 page 198).
+			--
+			-- Note that in case of a formal parameter with multiple
+			-- constraints, then return the base class of the first
+			-- constraint. In order to get the other base classes,
+			-- use `add_adapted_base_classes_to_list'.
+			--
 			-- Return "*UNKNOWN*" class if unresolved identifier type,
 			-- or unmatched formal generic parameter.
 		require
@@ -98,11 +112,44 @@ feature -- Access
 			named_base_class_not_void: Result /= Void
 		end
 
+	adapted_base_class_with_named_feature (a_name: ET_CALL_NAME; a_context: ET_TYPE_CONTEXT): ET_ADAPTED_CLASS
+			-- Base class of current type when it appears in `a_context', or in case of
+			-- a formal parameter one of its constraint adapted base classes containing
+			-- a feature named `a_name' (or any of the constraints if none contains such
+			-- feature)
+		require
+			a_name_not_void: a_name /= Void
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+		do
+			Result := base_class (a_context)
+		end
+
+	adapted_base_class_with_seeded_feature (a_seed: INTEGER; a_context: ET_TYPE_CONTEXT): ET_ADAPTED_CLASS
+			-- Base class of current type when it appears in `a_context', or in case of
+			-- a formal parameter one of its constraint adapted base classes containing
+			-- a feature with seed `a_seed' (or any of the constraints if none contains
+			-- such feature)
+		require
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+		do
+			Result := base_class (a_context)
+		end
+
 	base_type (a_context: ET_TYPE_CONTEXT): ET_BASE_TYPE
 			-- Base type of current type, when it appears in `a_context',
 			-- only made up of class names and generic formal parameters
 			-- when the root type of `a_context' is a generic type not
 			-- fully derived (Definition of base type in ETL2 p.198).
+			--
+			-- Note that in case of a formal parameter with multiple
+			-- constraints, then return the base type of the first
+			-- constraint. In order to get the other base types,
+			-- use `add_adapted_base_classes_to_list'.
+			--
 			-- Replace by "*UNKNOWN*" any unresolved identifier type, or
 			-- unmatched formal generic parameter if this parameter
 			-- is current type.
@@ -285,6 +332,14 @@ feature -- Access
 			definition: Result = Current
 		end
 
+	type_constraint_type: like Current
+			-- Type
+		do
+			Result := Current
+		ensure then
+			definition: Result = Current
+		end
+
 	type_with_type_mark (a_type_mark: detachable ET_TYPE_MARK): ET_TYPE
 			-- Current type whose type mark status is
 			-- overridden by `a_type_mark', if not Void
@@ -426,6 +481,13 @@ feature -- Status report
 			-- Result := False
 		end
 
+	has_unqualified_anchored_type: BOOLEAN
+			-- Does current type contain an unqualified anchored type
+			-- (i.e. 'like Current' or 'like feature_name')?
+		do
+			-- Result := False
+		end
+
 	has_identifier_anchored_type: BOOLEAN
 			-- Does current type contain an identifier anchored type
 			-- (i.e. an anchored type other than 'like Current')?
@@ -456,9 +518,7 @@ feature -- Status report
 		end
 
 	named_type_is_formal_type (a_context: ET_TYPE_CONTEXT): BOOLEAN
-			-- Is named type of current type, or if it is a qualified type
-			-- is the named type of its  target type (recursively),
-			-- a formal parameter when viewed from `a_context'?
+			-- Is named type of current type a formal parameter when viewed from `a_context'?
 		require
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
@@ -495,6 +555,25 @@ feature -- Status report
 			-- when it appears in `a_context'?
 		do
 			Result := named_type_has_class (a_class, a_context)
+		end
+
+feature -- Basic operations
+
+	add_adapted_base_classes_to_list (a_list: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]; a_context: ET_TYPE_CONTEXT)
+			-- Add to `a_list' the base class of current type when it appears in `a_context' or
+			-- the adapted base classes of the constraints (in the same order they appear in
+			-- 'constraint_base_types') in case of a formal parameter.
+		require
+			a_list_not_void: a_list /= Void
+			no_void_adapted_base_class: not a_list.has_void
+			a_context_not_void: a_context /= Void
+			a_context_valid: a_context.is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+		do
+			a_list.force_last (base_class (a_context))
+		ensure
+			at_least_one_more: a_list.count > old a_list.count
+			no_void_adapted_base_class: not a_list.has_void
 		end
 
 feature -- Comparison
@@ -638,6 +717,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			other_not_void: other /= Void
 			other_context_not_void: other_context /= Void
 			other_context_valid: other_context.is_valid_context
+			other_context_is_root: other_context.is_root_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
 			-- no_cycle: no cycle in anchored types involved.
@@ -754,6 +834,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			other_not_void: other /= Void
 			other_context_not_void: other_context /= Void
 			other_context_valid: other_context.is_valid_context
+			other_context_is_root: other_context.is_root_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
 			-- no_cycle: no cycle in anchored types involved.
@@ -802,6 +883,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			other_not_void: other /= Void
 			other_context_not_void: other_context /= Void
 			other_context_valid: other_context.is_valid_context
+			other_context_is_root: other_context.is_root_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
 			-- no_cycle: no cycle in anchored types involved.
@@ -827,35 +909,47 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 
 feature -- Conformance
 
-	conforms_to_type (other: ET_TYPE; other_context, a_context: ET_TYPE_CONTEXT; a_system_processor: ET_SYSTEM_PROCESSOR): BOOLEAN
-			-- Does current type appearing in `a_context' conform
-			-- to `other' type appearing in `other_context'?
+	conforms_to_constraint (a_constraint: ET_CONSTRAINT; a_constraint_context, a_context: ET_TYPE_CONTEXT; a_system_processor: ET_SYSTEM_PROCESSOR): BOOLEAN
+			-- Does current type appearing in `a_context' conform to all
+			-- types in `a_constraint' type appearing in `a_constraint_context'?
 			-- (Note: 'a_system_processor.ancestor_builder' is used on the classes
 			-- whose ancestors need to be built in order to check for conformance.)
 		require
-			other_not_void: other /= Void
-			other_context_not_void: other_context /= Void
-			other_context_valid: other_context.is_valid_context
+			a_constraint_not_void: a_constraint /= Void
+			a_constraint_context_not_void: a_constraint_context /= Void
+			a_constraint_context_valid: a_constraint_context.is_valid_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
 			-- no_cycle: no cycle in anchored types involved.
 			a_system_processor_not_void: a_system_processor /= Void
 		do
-			Result := conforms_to_type_with_type_marks (other, Void, other_context, Void, a_context, a_system_processor)
+			Result := conforms_to_constraint_with_type_marks (a_constraint, Void, a_constraint_context, Void, a_context, a_system_processor)
 		end
 
-	conforms_to_type_with_type_marks (other: ET_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT; a_system_processor: ET_SYSTEM_PROCESSOR): BOOLEAN
-			-- Same as `conforms_to_type' except that the type mark status of `Current'
-			-- and `other' is overridden by `a_type_mark' and `other_type_mark', if not Void
+	conforms_to_constraint_with_type_marks (a_constraint: ET_CONSTRAINT; a_constraint_type_mark: detachable ET_TYPE_MARK; a_constraint_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK; a_context: ET_TYPE_CONTEXT; a_system_processor: ET_SYSTEM_PROCESSOR): BOOLEAN
+			-- Same as `conforms_to_constraint' except that the type mark status of `Current'
+			-- and the types in `a_constraint' is overridden by `a_type_mark' and
+			-- `a_constraint_type_mark', if not Void
 		require
-			other_not_void: other /= Void
-			other_context_not_void: other_context /= Void
-			other_context_valid: other_context.is_valid_context
+			a_constraint_not_void: a_constraint /= Void
+			a_constraint_context_not_void: a_constraint_context /= Void
+			a_constraint_context_valid: a_constraint_context.is_valid_context
 			a_context_not_void: a_context /= Void
 			a_context_valid: a_context.is_valid_context
 			-- no_cycle: no cycle in anchored types involved.
 			a_system_processor_not_void: a_system_processor /= Void
-		deferred
+		local
+			i, nb: INTEGER
+		do
+			Result := True
+			nb := a_constraint.count
+			from i := 1 until i > nb loop
+				if not conforms_to_type_with_type_marks (a_constraint.type_constraint (i).type, a_constraint_type_mark, a_constraint_context, a_type_mark, a_context, a_system_processor) then
+					Result := False
+					i := nb -- Jump out of the loop.
+				end
+				i := i + 1
+			end
 		end
 
 feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
@@ -1058,6 +1152,30 @@ feature -- Output
 			a_string_not_void: a_string /= Void
 		do
 			append_to_string (a_string)
+		end
+
+	runtime_name_to_text: STRING
+			-- Textual representation of unaliased version of current type
+			-- as returned by 'TYPE.runtime_name'.
+			-- (Create a new string at each call.)
+			-- An unaliased version if when aliased types such as INTEGER
+			-- are replaced by the associated types such as INTEGER_32.
+		do
+			create Result.make (15)
+			append_runtime_name_to_string (Result)
+		ensure
+			runtime_name_to_text_not_void: Result /= Void
+		end
+
+	append_runtime_name_to_string (a_string: STRING)
+			-- Append to `a_string' textual representation of unaliased
+			-- version of current type as returned by 'TYPE.runtime_name'.
+			-- An unaliased version if when aliased types such as INTEGER
+			-- are replaced by the associated types such as INTEGER_32.
+		require
+			a_string_not_void: a_string /= Void
+		do
+			append_unaliased_to_string (a_string)
 		end
 
 	debug_output: STRING

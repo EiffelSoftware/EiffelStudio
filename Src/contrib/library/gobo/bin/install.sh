@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # description: "Install Gobo Eiffel tools"
-# copyright: "Copyright (c) 2007-2018, Eric Bezault and others"
+# copyright: "Copyright (c) 2007-2019, Eric Bezault and others"
 # license: "MIT License"
 # date: "$Date$"
 # revision: "$Revision$"
@@ -13,7 +13,7 @@ echo "Executing install.sh..."
 
 gobo_usage() {
 	echo "usage: install.sh [-v][-t][--thread=N] <c_compiler>"
-	echo "   c_compiler:  msc | lcc-win32 | lcc-win64 | bcc | gcc | mingw | cc | icc | tcc | no_c"
+	echo "   c_compiler:  msc | lcc-win32 | lcc-win64 | bcc | gcc | mingw | clang | cc | icc | tcc | no_c"
 }
 
 VERBOSE=
@@ -94,11 +94,6 @@ if [ "$EIF" = "ge" ]; then
 	$BIN_DIR/gec$EXE --finalize --no-benchmark $THREAD_OPTION $GOBO/tool/geant/src/system.ecf
 	$STRIP geant${EXE}
 	if [ "$VERBOSE" = "-v" ]; then
-		echo "Compiling gexace..."
-	fi
-	$BIN_DIR/gec$EXE --finalize --no-benchmark $THREAD_OPTION $GOBO/tool/gexace/src/system.ecf
-	$STRIP gexace${EXE}
-	if [ "$VERBOSE" = "-v" ]; then
 		echo "Compiling gedoc..."
 	fi
 	$BIN_DIR/gec$EXE --finalize --no-benchmark $THREAD_OPTION $GOBO/tool/gedoc/src/system.ecf
@@ -113,6 +108,12 @@ if [ "$EIF" = "ge" ]; then
 	fi
 	$BIN_DIR/gec$EXE --finalize --no-benchmark $THREAD_OPTION $GOBO/tool/gelint/src/system.ecf
 	$STRIP gelint${EXE}
+	if [ "$VERBOSE" = "-v" ]; then
+		echo "Compiling gecop..."
+	fi
+	$BIN_DIR/gec$EXE --finalize --no-benchmark --cc=no $THREAD_OPTION $GOBO/tool/gecop/src/system.ecf
+	$BIN_DIR/gecc$EXE $THREAD_OPTION gecop.sh
+	$STRIP gecop${EXE}
 	if [ "$TEST_ONLY" = "" ]; then
 		if [ "$VERBOSE" = "-v" ]; then
 			echo "Compiling gelex..."
@@ -145,10 +146,10 @@ cd $BIN_DIR
 geant$EXE $VERBOSE --buildfilename=$GOBO/tool/gec/src/build.eant clean
 geant$EXE $VERBOSE --buildfilename=$GOBO/tool/gecc/src/build.eant clean
 geant$EXE $VERBOSE --buildfilename=$GOBO/tool/geant/src/build.eant clean
-geant$EXE $VERBOSE --buildfilename=$GOBO/tool/gexace/src/build.eant clean
 geant$EXE $VERBOSE --buildfilename=$GOBO/tool/gedoc/src/build.eant clean
 geant$EXE $VERBOSE --buildfilename=$GOBO/tool/getest/src/build.eant clean
 geant$EXE $VERBOSE --buildfilename=$GOBO/tool/gelint/src/build.eant clean
+geant$EXE $VERBOSE --buildfilename=$GOBO/tool/gecop/src/build.eant clean
 if [ "$TEST_ONLY" = "" ]; then
 	geant$EXE $VERBOSE --buildfilename=$GOBO/tool/gelex/src/build.eant clean
 	geant$EXE $VERBOSE --buildfilename=$GOBO/tool/geyacc/src/build.eant clean

@@ -5,7 +5,7 @@
 		"A concatenation of two XPath Expressions (comma operator)"
 
 	library: "Gobo Eiffel XPath Library"
-	copyright: "Copyright (c) 2007-2015, Colin Adams and others"
+	copyright: "Copyright (c) 2007-2019, Colin Adams and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"

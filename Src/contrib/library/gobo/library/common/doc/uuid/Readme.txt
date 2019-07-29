@@ -1,43 +1,46 @@
-E1FFE100-60B0-0001-0002-003000000004
+E1FFE100-60B0-0001-0002-000000000003
 
-Eiffel  -Gobo-   V-   L-  T        N
+Eiffel__-Gobo-LLLL-TNNN-VVVVVVVVVVVV
 
-V: Version
 L: Library/Tool Id
-   0001 - free_elks
-   0002 - kernel
-   0003 - common
-   0004 - structure
-   0005 - math
-   0006 - pattern
-   0007 - thread
-   0008 - time
-   0009 - utility
-   0010 - regexp
-   0011 - string
-   0012 - argument
-   0013 - lexical
-   0014 - parse
-   0015 - xml
-   0016 - xpath
-   0017 - xslt
-   0018 - tools
-   0019 - test
-   1001 - gec
-   1002 - gecc
-   1003 - gelint
-   1004 - gedoc
-   1005 - gelex
-   1006 - geyacc
-   1007 - getest
-   1008 - geant
-   1009 - gexslt
-   1010 - gepp
-   1011 - gexace
 T: Type
-   1 - Source
-   2 - Tool
-   3 - Example
-   4 - Test
+   0 - Source
+   1 - Tool
+   2 - Example
+   3 - Test
 N: Number within the library/type
+V: Version
 
+
+LLLL                TNNN
+0001 - free_elks    0001, 3001
+0002 - kernel       0001, 3001
+0003 - common       3001-3003
+0004 - structure    0001, 3001
+0005 - math         0001, 2001, 3001-3002
+0006 - pattern      0001, 2001, 3001-3002
+0007 - thread       0001, 3001
+0008 - time         0001, 2001, 3001-3002
+0009 - utility      0001, 3001-3003
+0010 - regexp       0001, 2001, 3001
+0011 - string       0001, 1001, 3001
+0012 - argument     0001, 2001, 3001-3002
+0013 - lexical      0001-0002, 2001-2003, 3001-3002
+0014 - parse        0001-0002, 2001-2004, 3001
+0015 - xml          0001, 2001-2004, 3001-3006
+0016 - xpath        0001, 3001
+0017 - xslt         0001, 2001-2002, 3001-3002
+0018 - tools        0001, 2001-2002, 3001-3002
+0019 - test         0001-0002, 2001-2002, 3001-3002
+1001 - gec          0001, 3001
+1002 - gecc         0001, 3001
+1003 - gelint       0001, 3001
+1004 - gedoc        0001, 3001
+1005 - gelex        0001, 3001
+1006 - geyacc       0001, 3001
+1007 - getest       0001, 3001
+1008 - geant        0001, 3001-3002
+1009 - gexslt       0001, 3001
+1010 - gepp         0001, 3001
+1011 - gexace       0001, 3001
+1012 - gecop        0001, 3001

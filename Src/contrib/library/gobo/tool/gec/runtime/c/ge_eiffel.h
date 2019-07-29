@@ -4,7 +4,7 @@
 		"C declarations for the Gobo Eiffel runtime."
 
 	system: "Gobo Eiffel Compiler"
-	copyright: "Copyright (c) 2005-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -46,6 +46,8 @@
 #define EIF_WINDOWS 1
 #include <windows.h>
 #endif
+
+#define BYTEORDER 0x1234
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -218,6 +220,7 @@ typedef EIF_NATIVE_CHAR* EIF_FILENAME;
 #else
 #define GE_min_int32 GE_int32(-2147483648)
 #endif
+#define GE_max_int32 GE_int32(2147483647)
 #if defined(__LCC__) || defined(__GNUC__) || defined(__MINGW32__)
 /* lcc-win32 reports a constant overflow for -9223372036854775808. */
 /* gcc and mingw-win64 warn that integer constant is so large that it is unsigned. */
@@ -262,6 +265,7 @@ typedef EIF_NATIVE_CHAR* EIF_FILENAME;
 #define RTI64C(x) GE_int64(x)
 #define EIF_OBJECT EIF_REFERENCE
 #define EIF_OBJ EIF_OBJECT
+#define OVERHEAD sizeof(EIF_ANY)
 /* Function pointer call to make sure all arguments are correctly pushed onto stack. */
 /* FUNCTION_CAST is for standard C calls. */
 /* FUNCTION_CAST_TYPE is for non-standard C calls. */

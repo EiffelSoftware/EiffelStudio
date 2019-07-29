@@ -32,7 +32,7 @@ class ARRAYED_LIST [G] inherit
 	DYNAMIC_LIST [G]
 		undefine
 			put_i_th,
-			force, is_inserted, copy
+			force, is_inserted
 		redefine
 			first, last, swap, wipe_out, i_th, at,
 			go_i_th, move, prunable, start, finish,

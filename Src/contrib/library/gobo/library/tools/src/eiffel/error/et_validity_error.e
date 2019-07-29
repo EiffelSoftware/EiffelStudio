@@ -5,7 +5,7 @@ note
 		"Eiffel validity errors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -27,8 +27,10 @@ create
 
 	make,
 	make_vaol1a,
-	make_vape0a,
-	make_vape0b,
+	make_vape1a,
+	make_vape1b,
+	make_vape2a,
+	make_vape2b,
 	make_vave0a,
 	make_vbac1a,
 	make_vbac2a,
@@ -37,12 +39,6 @@ create
 	make_vcch2a,
 	make_vcfg1a,
 	make_vcfg2a,
-	make_vcfg3a,
-	make_vcfg3b,
-	make_vcfg3c,
-	make_vcfg3e,
-	make_vcfg3f,
-	make_vcfg3h,
 	make_vdjr0a,
 	make_vdjr0b,
 	make_vdjr0c,
@@ -115,55 +111,82 @@ create
 	make_vfav1f,
 	make_vfav1g,
 	make_vfav1h,
+	make_vfav1i,
+	make_vfav1j,
+	make_vfav1k,
+	make_vfav1l,
+	make_vfav1m,
+	make_vfav1n,
+	make_vfav1o,
+	make_vfav1p,
+	make_vfav1q,
+	make_vfav1r,
+	make_vfav1s,
+	make_vfav1t,
 	make_vfav2a,
 	make_vfav2b,
 	make_vfav2c,
 	make_vfav2d,
+	make_vfav2e,
+	make_vfav2f,
+	make_vfav2g,
+	make_vfav3a,
+	make_vfav3b,
+	make_vfav3c,
+	make_vfav3d,
+	make_vfav3e,
+	make_vfav3f,
+	make_vfav3g,
 	make_vfav4a,
-	make_vfav4b,
-	make_vfav4c,
-	make_vfav4d,
-	make_vfav4e,
 	make_vffd4a,
-	make_vffd5a,
-	make_vffd6a,
 	make_vffd7a,
 	make_vffd7b,
 	make_vgcc1a,
-	make_vgcc1b,
 	make_vgcc3a,
 	make_vgcc5a,
-	make_vgcc5b,
 	make_vgcc6a,
 	make_vgcc6b,
 	make_vgcc6c,
 	make_vgcc6d,
-	make_vgcc6e,
 	make_vgcc8a,
-	make_vgcc8b,
 	make_vgcp1a,
 	make_vgcp2a,
 	make_vgcp2b,
 	make_vgcp3a,
 	make_vgcp3b,
 	make_vgcp3c,
+	make_vggc1a,
+	make_vggc2a,
+	make_vggc2b,
+	make_vggc2c,
+	make_vggc2d,
+	make_vggc2e,
+	make_vggc2f,
+	make_vggc3a,
+	make_vggc3b,
+	make_vggc3c,
+	make_vggc3d,
+	make_vgmc0a,
+	make_vgmc0b,
+	make_vgmc0c,
+	make_vgmc0d,
+	make_vgmc0e,
+	make_vgmc0f,
+	make_vgmc0g,
 	make_vhay0a,
 	make_vhpr1a,
 	make_vhpr1b,
+	make_vhpr2a,
 	make_vhpr3a,
 	make_vhrc1a,
 	make_vhrc2a,
-	make_vhrc4a,
-	make_vhrc4b,
-	make_vhrc4c,
-	make_vhrc4d,
-	make_vhrc5a,
 	make_vjar0a,
 	make_vjaw0a,
 	make_vjaw0b,
 	make_vjaw0c,
 	make_vjrv0a,
 	make_vkcn1a,
+	make_vkcn1b,
 	make_vkcn1c,
 	make_vkcn2a,
 	make_vkcn2c,
@@ -210,10 +233,12 @@ create
 	make_vpir3b,
 	make_vqmc1a,
 	make_vqmc2a,
+	make_vqmc2b,
 	make_vqmc3a,
 	make_vqmc3b,
 	make_vqmc4a,
 	make_vqmc5a,
+	make_vqmc5b,
 	make_vqui0a,
 	make_vred0a,
 	make_vred0b,
@@ -239,8 +264,6 @@ create
 	make_vtcg4b,
 	make_vtct0a,
 	make_vtct0b,
-	make_vtgc0a,
-	make_vtgc0b,
 	make_vtug1a,
 	make_vtug2a,
 	make_vuar1a,
@@ -332,7 +355,9 @@ create
 	make_gvuio0a,
 	make_gvuio0b,
 	make_gvuio0c,
-	make_gvwmc2a
+	make_gvwmc2a,
+	make_gvwmc2b,
+	make_gvwmc2c
 
 feature {NONE} -- Initialization
 
@@ -410,13 +435,13 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = implementation class name
 		end
 
-	make_vape0a (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_pre_feature: ET_FEATURE; a_client: ET_CLIENT)
-			-- Create a new VAPE error: `a_feature' named `a_name', appearing in an unqualified
-			-- call in a precondition of `a_pre_feature' in `a_class_impl' and viewed from
+	make_vape1a (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_pre_feature: ET_FEATURE; a_client: ET_CLIENT)
+			-- Create a new VAPE-1 error: `a_feature' named `a_name' of an unqualified call
+			-- appearing in a precondition of `a_pre_feature' in `a_class_impl' and viewed from
 			-- one of its descendants `a_class' (possibly itself), is not exported to class
 			-- `a_client' to which `a_pre_feature' is exported.
 			--
-			-- ETL2: p.122
+			-- ECMA 367-2, 8.9.5 page 58.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_impl_not_void: a_class_impl /= Void
@@ -429,9 +454,9 @@ feature {NONE} -- Initialization
 			current_class := a_class
 			class_impl := a_class_impl
 			position := a_name.position
-			code := template_code (vape0a_template_code)
-			etl_code := vape_etl_code
-			default_template := default_message_template (vape0a_default_template)
+			code := template_code (vape1a_template_code)
+			etl_code := vape1_etl_code
+			default_template := default_message_template (vape1a_default_template)
 			create parameters.make_filled (empty_string, 1, 10)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
@@ -462,14 +487,14 @@ feature {NONE} -- Initialization
 			-- dollar10: $10 = name of client of feature `$9'
 		end
 
-	make_vape0b (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target_class: ET_CLASS; a_pre_feature: ET_FEATURE; a_client: ET_CLIENT)
-			-- Create a new VAPE error: `a_feature' named `a_name', appearing in a qualified
-			-- call with target's base class `a_target_class' in a precondition of
-			-- `a_pre_feature' in `a_class_impl' and view from one of its descendants
+	make_vape1b (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_target_class: ET_CLASS; a_pre_feature: ET_FEATURE; a_client: ET_CLIENT)
+			-- Create a new VAPE-1 error: `a_feature' named `a_name' of a qualified
+			-- call with target's base class `a_target_class', appearing in a precondition
+			-- of `a_pre_feature' in `a_class_impl' and view from one of its descendants
 			-- a_class' (possibly itself), is not exported to class `a_client' to which
 			-- `a_pre_feature' is exported.
 			--
-			-- ETL2: p.122
+			-- ECMA 367-2, 8.9.5 page 58.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_impl_not_void: a_class_impl /= Void
@@ -483,9 +508,9 @@ feature {NONE} -- Initialization
 			current_class := a_class
 			class_impl := a_class_impl
 			position := a_name.position
-			code := template_code (vape0b_template_code)
-			etl_code := vape_etl_code
-			default_template := default_message_template (vape0b_default_template)
+			code := template_code (vape1b_template_code)
+			etl_code := vape1_etl_code
+			default_template := default_message_template (vape1b_default_template)
 			create parameters.make_filled (empty_string, 1, 11)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
@@ -515,16 +540,129 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = name of corresponding feature in class $9
 			-- dollar9: $9 = base class of target of the call
 			-- dollar10: $10 = name of feature containing precondition
-			-- dollar11: $11 = name of client of feature `$9'
+			-- dollar11: $11 = name of client of feature `$10'
+		end
+
+	make_vape2a (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_procedure: ET_PROCEDURE; a_target_class: ET_CLASS; a_pre_feature: ET_FEATURE; a_client: ET_CLIENT)
+			-- Create a new VAPE-2 error: `a_procedure' named `a_name' of a creation instruction
+			-- or expression with creation type's base class `a_target_class', appearing in a
+			-- precondition of `a_pre_feature' in `a_class_impl' and view from one of its descendants
+			-- a_class' (possibly itself), is not exported for creation to class `a_client'
+			-- to which `a_pre_feature' is exported.
+			--
+			-- ECMA 367-2, 8.9.5 page 58.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_procedure_not_void: a_procedure /= Void
+			a_target_class_not_void: a_target_class /= Void
+			a_pre_feature_not_void: a_pre_feature /= Void
+			a_client_not_void: a_client /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			code := template_code (vape2a_template_code)
+			etl_code := vape2_etl_code
+			default_template := default_message_template (vape2a_default_template)
+			create parameters.make_filled (empty_string, 1, 11)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.lower_name, 7)
+			parameters.put (a_procedure.lower_name, 8)
+			parameters.put (a_target_class.upper_name, 9)
+			parameters.put (a_pre_feature.lower_name, 10)
+			parameters.put (a_client.name.upper_name, 11)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = procedure name of the creation call
+			-- dollar8: $8 = name of corresponding procedure in class $9
+			-- dollar9: $9 = base class of creation type
+			-- dollar10: $10 = name of feature containing precondition
+			-- dollar11: $11 = name of client of feature `$10'
+		end
+
+	make_vape2b (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_procedure: ET_PROCEDURE; a_formal: ET_FORMAL_PARAMETER; a_pre_feature: ET_FEATURE; a_client: ET_CLIENT)
+			-- Create a new VAPE-2 error: `a_procedure' named `a_name' of a creation instruction
+			-- or expression with `a_formal' as creation type, appearing in a precondition of
+			-- `a_pre_feature' in `a_class_impl' and view from one of its descendants
+			-- a_class' (possibly itself), is not exported for creation to class `a_client'
+			-- to which `a_pre_feature' is exported.
+			--
+			-- ECMA 367-2, 8.9.5 page 58.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_procedure_not_void: a_procedure /= Void
+			a_formal_not_void: a_formal /= Void
+			a_pre_feature_not_void: a_pre_feature /= Void
+			a_client_not_void: a_client /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			code := template_code (vape2b_template_code)
+			etl_code := vape2_etl_code
+			default_template := default_message_template (vape2b_default_template)
+			create parameters.make_filled (empty_string, 1, 11)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.lower_name, 7)
+			parameters.put (a_procedure.lower_name, 8)
+			parameters.put (a_formal.index.out, 9)
+			parameters.put (a_pre_feature.lower_name, 10)
+			parameters.put (a_client.name.upper_name, 11)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = procedure name of the creation call
+			-- dollar8: $8 = name of corresponding procedure in class $9
+			-- dollar9: $9 = index of formal generic parameter
+			-- dollar10: $10 = name of feature containing precondition
+			-- dollar11: $11 = name of client of feature `$10'
 		end
 
 	make_vave0a (a_class, a_class_impl: ET_CLASS; an_expression: ET_EXPRESSION; a_type: ET_NAMED_TYPE)
 			-- Create a new VAVE error: the expression `an_expression' of a
 			-- loop variant in `a_class_impl' and viewed from one of its
 			-- descendants `a_class' (possibly itself) is of type `a_type'
-			-- which is not "INTEGER".
+			-- which is not a sized variant of "INTEGER".
 			--
 			-- ETL2: p.130
+			-- ECMA 367-2: p.48
 		require
 			a_class_not_void: a_class /= Void
 			a_class_impl_not_void: a_class_impl /= Void
@@ -873,298 +1011,6 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = first formal name
 			-- dollar8: $8 = first formal index
 			-- dollar9: $9 = second formal index
-		end
-
-	make_vcfg3a (a_class: ET_CLASS; a_type: ET_LIKE_TYPE)
-			-- Create a new VCFG-3 error: invalid type `a_type' in
-			-- constraint of formal generic parameter of `a_class'.
-			--
-			-- ETR: p.16
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_type_not_void: a_type /= Void
-		do
-			current_class := a_class
-			class_impl := a_class
-			position := a_type.position
-			code := template_code (vcfg3a_template_code)
-			etl_code := vcfg3_etl_code
-			default_template := default_message_template (vcfg3a_default_template)
-			create parameters.make_filled (empty_string, 1, 7)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_type.to_text, 7)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = invalid type
-		end
-
-	make_vcfg3b (a_class: ET_CLASS; a_formal: ET_FORMAL_PARAMETER; a_constraint: ET_FORMAL_PARAMETER_TYPE)
-			-- Create a new VCFG-3 error: the constraint of `a_formal'
-			-- in `a_class' is the formal generic parameter itself.
-			--
-			-- ETR: p.16
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_formal_not_void: a_formal /= Void
-			a_constraint_not_void: a_constraint /= Void
-			valid_constraint: a_formal.constraint = a_constraint
-		do
-			current_class := a_class
-			class_impl := a_class
-			position := a_constraint.position
-			code := template_code (vcfg3b_template_code)
-			etl_code := vcfg3_etl_code
-			default_template := default_message_template (vcfg3b_default_template)
-			create parameters.make_filled (empty_string, 1, 8)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_formal.upper_name, 7)
-			parameters.put (a_constraint.to_text, 8)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = formal parameter
-			-- dollar8: $8 = constraint
-		end
-
-	make_vcfg3c (a_class: ET_CLASS; a_formal: ET_FORMAL_PARAMETER; a_constraint: ET_FORMAL_PARAMETER_TYPE)
-			-- Create a new VCFG-3 error: the constraint of `a_formal'
-			-- in `a_class' is another formal generic parameter
-			-- appearing before `a_formal' in the list of formal
-			-- generic parameters.
-			--
-			-- ETR: p.16
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_formal_not_void: a_formal /= Void
-			a_constraint_not_void: a_constraint /= Void
-			valid_constraint: a_formal.constraint = a_constraint
-		do
-			current_class := a_class
-			class_impl := a_class
-			position := a_constraint.position
-			code := template_code (vcfg3c_template_code)
-			etl_code := vcfg3_etl_code
-			default_template := default_message_template (vcfg3c_default_template)
-			create parameters.make_filled (empty_string, 1, 8)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_formal.upper_name, 7)
-			parameters.put (a_constraint.to_text, 8)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = formal parameter
-			-- dollar8: $8 = constraint
-		end
-
-	make_vcfg3e (a_class: ET_CLASS; a_cycle: DS_LIST [ET_FORMAL_PARAMETER])
-			-- Create a new VCFG-3 error: the constraints of the formal
-			-- generic parameters `a_cycle' of `a_class' are involved
-			-- in a cycle.
-			--
-			-- ETR: p.16
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_cyle_not_void: a_cycle /= Void
-			no_void_formal: not a_cycle.has_void
-			is_cycle: a_cycle.count >= 2
-		local
-			a_cursor: DS_LIST_CURSOR [ET_FORMAL_PARAMETER]
-			a_string: STRING
-		do
-			current_class := a_class
-			class_impl := a_class
-			position := a_cycle.first.name.position
-			code := template_code (vcfg3e_template_code)
-			etl_code := vcfg3_etl_code
-			default_template := default_message_template (vcfg3e_default_template)
-			from
-				create a_string.make (20)
-				a_cursor := a_cycle.new_cursor
-				a_cursor.start
-				a_string.append_string (a_cursor.item.upper_name)
-				a_cursor.forth
-			until
-				a_cursor.after
-			loop
-				a_string.append_string (" -> ")
-				a_string.append_string (a_cursor.item.upper_name)
-				a_cursor.forth
-			end
-			create parameters.make_filled (empty_string, 1, 7)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_string, 7)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = cycle
-		end
-
-	make_vcfg3f (a_class: ET_CLASS; a_formal: ET_FORMAL_PARAMETER; a_type: ET_FORMAL_PARAMETER_TYPE)
-			-- Create a new VCFG-3 error: the constraint of `a_formal'
-			-- in `a_class' contains the formal generic parameter
-			-- itself.
-			--
-			-- ETR: p.16
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_formal_not_void: a_formal /= Void
-			a_type_not_void: a_type /= Void
-		do
-			current_class := a_class
-			class_impl := a_class
-			position := a_type.position
-			code := template_code (vcfg3f_template_code)
-			etl_code := vcfg3_etl_code
-			default_template := default_message_template (vcfg3f_default_template)
-			create parameters.make_filled (empty_string, 1, 8)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_formal.upper_name, 7)
-			parameters.put (a_type.to_text, 8)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = formal parameter
-			-- dollar8: $8 = formal type in constraint
-		end
-
-	make_vcfg3h (a_class: ET_CLASS; a_cycle: DS_LIST [ET_FORMAL_PARAMETER])
-			-- Create a new VCFG-3 error: the constraints of the formal
-			-- generic parameters `a_cycle' of `a_class' are involved
-			-- in a cycle.
-			--
-			-- ETR: p.16
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_cyle_not_void: a_cycle /= Void
-			no_void_formal: not a_cycle.has_void
-			is_cycle: a_cycle.count >= 2
-		local
-			a_cursor: DS_LIST_CURSOR [ET_FORMAL_PARAMETER]
-			a_string: STRING
-		do
-			current_class := a_class
-			class_impl := a_class
-			position := a_cycle.first.name.position
-			code := template_code (vcfg3h_template_code)
-			etl_code := vcfg3_etl_code
-			default_template := default_message_template (vcfg3h_default_template)
-			from
-				create a_string.make (20)
-				a_cursor := a_cycle.new_cursor
-				a_cursor.start
-				a_string.append_string (a_cursor.item.upper_name)
-				a_cursor.forth
-			until
-				a_cursor.after
-			loop
-				a_string.append_string (" -> ")
-				a_string.append_string (a_cursor.item.upper_name)
-				a_cursor.forth
-			end
-			create parameters.make_filled (empty_string, 1, 7)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_string, 7)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = cycle
 		end
 
 	make_vdjr0a (a_class: ET_CLASS; f1, f2: ET_PARENT_FEATURE)
@@ -3390,7 +3236,7 @@ feature {NONE} -- Initialization
 			position := a_result.position
 			code := template_code (veen2b_template_code)
 			etl_code := veen2_etl_code
-			default_template := default_message_template (veen2b_default_template)
+			default_template := default_message_template (veen2f_default_template)
 			create parameters.make_filled (empty_string, 1, 6)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
@@ -4099,10 +3945,10 @@ feature {NONE} -- Initialization
 		end
 
 	make_vfav1a (a_class: ET_CLASS; a_feature: ET_FEATURE)
-			-- Create a new VFAV-1 error: `a_feature' has an infix operator alias
-			-- but is not a function with exactly one argument.
+			-- Create a new VFAV-1 error: `a_feature' has a binary operator alias
+			-- but is not a query with exactly one argument.
 			--
-			-- ECMA: p.42
+			-- ECMA 367-2, 8.5.26 page 43.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
@@ -4144,10 +3990,10 @@ feature {NONE} -- Initialization
 		end
 
 	make_vfav1b (a_class: ET_CLASS; a_feature: ET_FEATURE)
-			-- Create a new VFAV-1 error: `a_feature' has a prefix operator alias
+			-- Create a new VFAV-1 error: `a_feature' has a unary operator alias
 			-- but is not a query with no argument.
 			--
-			-- ECMA: p.42
+			-- ECMA 367-2, 8.5.26 page 43.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
@@ -4192,7 +4038,7 @@ feature {NONE} -- Initialization
 			-- Create a new VFAV-1 error: `a_feature1' and `a_feature2' have
 			-- the same unary operator alias.
 			--
-			-- ECMA: p.42
+			-- ECMA 367-2, 8.5.26 page 43.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
@@ -4243,7 +4089,7 @@ feature {NONE} -- Initialization
 			-- Create a new VFAV-1 error: `a_feature1' and `a_feature2' have
 			-- the same unary operator alias.
 			--
-			-- ECMA: p.42
+			-- ECMA 367-2, 8.5.26 page 43.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
@@ -4296,7 +4142,7 @@ feature {NONE} -- Initialization
 			-- Create a new VFAV-1 error: `a_feature1' and `a_feature2' have
 			-- the same unary operator alias.
 			--
-			-- ECMA: p.42
+			-- ECMA 367-2, 8.5.26 page 43.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
@@ -4351,7 +4197,7 @@ feature {NONE} -- Initialization
 			-- Create a new VFAV-1 error: `a_feature1' and `a_feature2' have
 			-- the same binary operator alias.
 			--
-			-- ECMA: p.42
+			-- ECMA 367-2, 8.5.26 page 43.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
@@ -4402,7 +4248,7 @@ feature {NONE} -- Initialization
 			-- Create a new VFAV-1 error: `a_feature1' and `a_feature2' have
 			-- the same binary operator alias.
 			--
-			-- ECMA: p.42
+			-- ECMA 367-2, 8.5.26 page 43.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
@@ -4455,7 +4301,7 @@ feature {NONE} -- Initialization
 			-- Create a new VFAV-1 error: `a_feature1' and `a_feature2' have
 			-- the same binary operator alias.
 			--
-			-- ECMA: p.42
+			-- ECMA 367-2, 8.5.26 page 43.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
@@ -4506,11 +4352,609 @@ feature {NONE} -- Initialization
 			-- dollar12: $12 = second parent base class
 		end
 
+	make_vfav1i (a_class: ET_CLASS; a_feature: ET_FEATURE)
+			-- Create a new VFAV-1 error: `a_feature' has a prefix name but is
+			-- not a query with no argument.
+			--
+			-- ECMA 367-2, 8.5.26 page 43.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_name_prefix: a_feature.name.is_prefix
+			a_feature_not_prefixable: not a_feature.is_prefixable
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			code := template_code (vfav1i_template_code)
+			etl_code := vfav1_etl_code
+			default_template := default_message_template (vfav1i_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_feature.lower_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name
+		end
+
+	make_vfav1j (a_class: ET_CLASS; a_feature: ET_FEATURE)
+			-- Create a new VFAV-1 error: `a_feature' has an infix name but is
+			-- not a function with exactly one argument.
+			--
+			-- ECMA 367-2, 8.5.26 page 43.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_name_infix: a_feature.name.is_infix
+			a_feature_not_infixable: not a_feature.is_infixable
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_feature.name.position
+			code := template_code (vfav1j_template_code)
+			etl_code := vfav1_etl_code
+			default_template := default_message_template (vfav1j_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_feature.lower_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name
+		end
+
+	make_vfav1k (a_class: ET_CLASS; a_feature: ET_FEATURE)
+			-- Create a new VFAV-1 error: `a_feature' has an operator alias
+			-- which can be either unary or binary, but it is not a
+			-- query with no argument or exactly one argument.
+			--
+			-- ECMA 367-2, 8.5.26 page 43.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_feature_not_void: a_feature /= Void
+			a_feature_has_alias: attached a_feature.alias_name as l_alias_name
+			a_feature_alias_prefixable_and_infixable: l_alias_name.is_prefixable and l_alias_name.is_infixable
+			a_feature_not_prefixable_nor_infixable: not a_feature.is_prefixable and not a_feature.is_infixable
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := ast_position (a_feature.alias_name)
+			code := template_code (vfav1k_template_code)
+			etl_code := vfav1_etl_code
+			default_template := default_message_template (vfav1k_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_feature.lower_name, 7)
+			parameters.put (alias_lower_name (a_feature.alias_name), 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name
+			-- dollar8: $8 = alias name
+		end
+
+	make_vfav1l (a_class: ET_CLASS; a_type: ET_BASE_TYPE; a_rename: ET_RENAME; f: ET_FEATURE)
+			-- Create a new VFAV-1 error: the Rename_pair
+			-- `a_rename' has a new name of the Prefix form,
+			-- but the corresponding feature `f' is not a
+			-- query with no argument.
+			-- `a_type' is either the parent or generic constraint
+			-- where the rename clause appears.
+			--
+			-- ECMA 367-2, 8.5.26 page 43.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_type_not_void: a_type /= Void
+			a_rename_not_void: a_rename /= Void
+			f_not_void: f /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_rename.new_name.position
+			code := template_code (vfav1l_template_code)
+			etl_code := vfav1_etl_code
+			default_template := default_message_template (vfav1l_default_template)
+			create parameters.make_filled (empty_string, 1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_rename.new_name.feature_name.lower_name, 7)
+			parameters.put (f.lower_name, 8)
+			parameters.put (a_type.upper_name, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = new prefix name
+			-- dollar8: $8 = old feature name
+			-- dollar9: $9 = parent or generic constraint base class
+		end
+
+	make_vfav1m (a_class: ET_CLASS; a_type: ET_BASE_TYPE; a_rename: ET_RENAME; f: ET_FEATURE)
+			-- Create a new VFAV-1 error: the Rename_pair `a_rename' has
+			-- a new name with a binary operator alias,
+			-- but the corresponding feature `f' is not a
+			-- function with exactly one argument.
+			-- `a_type' is either the parent or generic constraint
+			-- where the rename clause appears.
+			--
+			-- ECMA 367-2, 8.5.26 page 43.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_a_type_not_void: a_type /= Void
+			a_rename_not_void: a_rename /= Void
+			a_rename_has_alias: attached a_rename.new_name.alias_name as l_new_alias_name
+			a_rename_alias_infix: l_new_alias_name.is_infix
+			f_not_void: f /= Void
+			f_not_infixable: not f.is_infixable
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := ast_position (a_rename.new_name.alias_name)
+			code := template_code (vfav1m_template_code)
+			etl_code := vfav1_etl_code
+			default_template := default_message_template (vfav1m_default_template)
+			create parameters.make_filled (empty_string, 1, 10)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_rename.new_name.feature_name.lower_name, 7)
+			parameters.put (alias_lower_name (a_rename.new_name.alias_name), 8)
+			parameters.put (f.lower_name, 9)
+			parameters.put (a_type.upper_name, 10)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = new feature name
+			-- dollar8: $8 = new alias name
+			-- dollar9: $9 = old feature name
+			-- dollar10: $10 = parent or generic constraint base class
+		end
+
+	make_vfav1n (a_class: ET_CLASS; a_type: ET_BASE_TYPE; a_rename: ET_RENAME; f: ET_FEATURE)
+			-- Create a new VFAV-1 error: the Rename_pair `a_rename' has
+			-- a new name with a unary operator alias,
+			-- but the corresponding feature `f' is not a
+			-- query with no argument.
+			-- `a_type' is either the parent or generic constraint
+			-- where the rename clause appears.
+			--
+			-- ECMA 367-2, 8.5.26 page 43.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_type_not_void: a_type /= Void
+			a_rename_not_void: a_rename /= Void
+			a_rename_has_alias: attached a_rename.new_name.alias_name as l_new_name_alias_name
+			a_rename_alias_prefix: l_new_name_alias_name.is_prefix
+			f_not_void: f /= Void
+			f_not_prefixable: not f.is_prefixable
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := ast_position (a_rename.new_name.alias_name)
+			code := template_code (vfav1n_template_code)
+			etl_code := vfav1_etl_code
+			default_template := default_message_template (vfav1n_default_template)
+			create parameters.make_filled (empty_string, 1, 10)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_rename.new_name.feature_name.lower_name, 7)
+			parameters.put (alias_lower_name (a_rename.new_name.alias_name), 8)
+			parameters.put (f.lower_name, 9)
+			parameters.put (a_type.upper_name, 10)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = new feature name
+			-- dollar8: $8 = new alias name
+			-- dollar9: $9 = old feature name
+			-- dollar10: $10 = parent or generic constraint base class
+		end
+
+	make_vfav1o (a_class: ET_CLASS; a_type: ET_BASE_TYPE; a_rename: ET_RENAME; f: ET_FEATURE)
+			-- Create a new VFAV-1 error: the Rename_pair `a_rename' has
+			-- a new name of the Infix form, but the corresponding feature
+			-- `f' is not a function with one argument.
+			-- `a_type' is either the parent or generic constraint
+			-- where the rename clause appears.
+			--
+			-- ECMA 367-2, 8.5.26 page 43.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_type_not_void: a_type /= Void
+			a_rename_not_void: a_rename /= Void
+			f_not_void: f /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_rename.new_name.position
+			code := template_code (vfav1o_template_code)
+			etl_code := vfav1_etl_code
+			default_template := default_message_template (vfav1o_default_template)
+			create parameters.make_filled (empty_string, 1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_rename.new_name.feature_name.lower_name, 7)
+			parameters.put (f.lower_name, 8)
+			parameters.put (a_type.upper_name, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = new infix name
+			-- dollar8: $8 = old feature name
+			-- dollar9: $9 = parent or generic constraint base class
+		end
+
+	make_vfav1p (a_class: ET_CLASS; a_type: ET_BASE_TYPE; a_rename: ET_RENAME; f: ET_FEATURE)
+			-- Create a new VFAV-1 error: the Rename_pair `a_rename' has a new_name
+			-- with an operator alias which can be either unary or binary,
+			-- but the corresponding feature `f' is not a query with no argument
+			-- or exactly one argument.
+			-- `a_type' is either the parent or generic constraint
+			-- where the rename clause appears
+			--
+			-- ECMA 367-2, 8.5.26 page 43.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_type_not_void: a_type /= Void
+			a_rename_not_void: a_rename /= Void
+			a_rename_has_alias: attached a_rename.new_name.alias_name as l_new_name_alias_name
+			a_rename_alias_prefixable_and_infixable: l_new_name_alias_name.is_prefixable and l_new_name_alias_name.is_infixable
+			f_not_void: f /= Void
+			f_not_prefixable_nor_infixable: not f.is_prefixable and not not f.is_infixable
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := ast_position (a_rename.new_name.alias_name)
+			code := template_code (vfav1p_template_code)
+			etl_code := vfav1_etl_code
+			default_template := default_message_template (vfav1p_default_template)
+			create parameters.make_filled (empty_string, 1, 10)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_rename.new_name.feature_name.lower_name, 7)
+			parameters.put (alias_lower_name (a_rename.new_name.alias_name), 8)
+			parameters.put (f.lower_name, 9)
+			parameters.put (a_type.upper_name, 10)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = new feature name
+			-- dollar8: $8 = new alias name
+			-- dollar9: $9 = old feature name
+			-- dollar10: $10 = parent or generic constraint base class
+		end
+
+	make_vfav1q (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename1, a_rename2: ET_RENAME; a_alias_name: ET_ALIAS_NAME; a_formal: ET_FORMAL_PARAMETER)
+			-- Create a new VFAV-1 error: a unary operator alias name appears more than once
+			-- (e.g. also in `a_rename1') as second element of the Rename_pair
+			-- `a_rename2' in the constraint `a_constraint' of formal parameter
+			-- `a_formal' in `a_class'.
+			--
+			-- ECMA 367-2, 8.12.9 page 80.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_rename1_not_void: a_rename1 /= Void
+			a_rename2_not_void: a_rename2 /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_alias_name_definition: a_alias_name = a_rename2.new_name.alias_name
+			a_alias_name_is_prefix: a_alias_name.is_prefix
+			a_formal_not_void: a_formal /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_alias_name.position
+			code := template_code (vfav1q_template_code)
+			etl_code := vfav1_etl_code
+			default_template := default_message_template (vfav1q_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_alias_name.lower_name, 7)
+			parameters.put (a_constraint.upper_name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = alias name
+			-- dollar8: $8 = constraint base class
+		end
+
+	make_vfav1r (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename1, a_rename2: ET_RENAME; a_alias_name: ET_ALIAS_NAME; a_formal: ET_FORMAL_PARAMETER)
+			-- Create a new VFAV-1 error: a binary operator alias name appears more than once
+			-- (e.g. also in `a_rename1') as second element of the Rename_pair
+			-- `a_rename2' in the constraint `a_constraint' of formal parameter
+			-- `a_formal' in `a_class'.
+			--
+			-- ECMA 367-2, 8.12.9 page 80.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_rename1_not_void: a_rename1 /= Void
+			a_rename2_not_void: a_rename2 /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_alias_name_definition: a_alias_name = a_rename2.new_name.alias_name
+			a_alias_name_is_infix: a_alias_name.is_infix
+			a_formal_not_void: a_formal /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_alias_name.position
+			code := template_code (vfav1r_template_code)
+			etl_code := vfav1_etl_code
+			default_template := default_message_template (vfav1r_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_alias_name.lower_name, 7)
+			parameters.put (a_constraint.upper_name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = alias name
+			-- dollar8: $8 = constraint base class
+		end
+
+	make_vfav1s (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_formal: ET_FORMAL_PARAMETER)
+			-- Create a new VFAV-1 error: the unary operator alias name which appears as second
+			-- element of the Rename_pair `a_rename' in the constraint `a_constraint'
+			-- of formal parameter `a_formal' in `a_class' is already the name of the
+			-- alias of `a_feature' in `a_constraint'.
+			--
+			-- ECMA 367-2, 8.12.9 page 80.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_rename_not_void: a_rename /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_alias_name_definition: a_alias_name = a_rename.new_name.alias_name
+			a_alias_name_is_prefix: a_alias_name.is_prefix
+			a_feature_not_void: a_feature /= Void
+			a_formal_not_void: a_formal /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_alias_name.position
+			code := template_code (vfav1s_template_code)
+			etl_code := vfav1_etl_code
+			default_template := default_message_template (vfav1s_default_template)
+			create parameters.make_filled (empty_string, 1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_alias_name.lower_name, 7)
+			parameters.put (a_feature.lower_name, 8)
+			parameters.put (a_constraint.upper_name, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = alias name
+			-- dollar8: $8 = feature name
+			-- dollar9: $9 = constraint base class
+		end
+
+	make_vfav1t (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_formal: ET_FORMAL_PARAMETER)
+			-- Create a new VFAV-1 error: the binary operator alias name which appears as second
+			-- element of the Rename_pair `a_rename' in the constraint `a_constraint'
+			-- of formal parameter `a_formal' in `a_class' is already the name of the
+			-- alias of `a_feature' in `a_constraint'.
+			--
+			-- ECMA 367-2, 8.12.9 page 80.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_rename_not_void: a_rename /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_alias_name_definition: a_alias_name = a_rename.new_name.alias_name
+			a_alias_name_is_infix: a_alias_name.is_infix
+			a_feature_not_void: a_feature /= Void
+			a_formal_not_void: a_formal /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_alias_name.position
+			code := template_code (vfav1t_template_code)
+			etl_code := vfav1_etl_code
+			default_template := default_message_template (vfav1t_default_template)
+			create parameters.make_filled (empty_string, 1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_alias_name.lower_name, 7)
+			parameters.put (a_feature.lower_name, 8)
+			parameters.put (a_constraint.upper_name, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = alias name
+			-- dollar8: $8 = feature name
+			-- dollar9: $9 = constraint base class
+		end
+
 	make_vfav2a (a_class: ET_CLASS; a_feature: ET_FEATURE)
 			-- Create a new VFAV-2 error: `a_feature' has a bracket alias
 			-- but is not a function with at least one argument.
 			--
-			-- ECMA: p.42
+			-- ECMA 367-2, 8.5.26 page 43.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
@@ -4555,7 +4999,7 @@ feature {NONE} -- Initialization
 			-- Create a new VFAV-2 error: `a_feature1' and `a_feature2' have both
 			-- a bracket alias.
 			--
-			-- ECMA: p.42
+			-- ECMA 367-2, 8.5.26 page 43.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
@@ -4606,7 +5050,7 @@ feature {NONE} -- Initialization
 			-- Create a new VFAV-2 error: `a_feature1' and `a_feature2' have both
 			-- a bracket alias.
 			--
-			-- ECMA: p.42
+			-- ECMA 367-2, 8.5.26 page 43.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
@@ -4659,7 +5103,7 @@ feature {NONE} -- Initialization
 			-- Create a new VFAV-2 error: `a_feature1' and `a_feature2' have both
 			-- a bracket alias.
 			--
-			-- ECMA: p.42
+			-- ECMA 367-2, 8.5.26 page 43.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
@@ -4710,11 +5154,168 @@ feature {NONE} -- Initialization
 			-- dollar12: $12 = second parent base class
 		end
 
-	make_vfav4a (a_class: ET_CLASS; a_feature: ET_FEATURE)
-			-- Create a new VFAV-4 error: `a_feature' has a parenthesis alias
+	make_vfav2e (a_class: ET_CLASS; a_type: ET_BASE_TYPE; a_rename: ET_RENAME; f: ET_FEATURE)
+			-- Create a new VFAV-2 error: the Rename_pair
+			-- `a_rename' has a new_name with a bracket alias,
+			-- but the corresponding feature `f' is not a
+			-- function with at least one argument.
+			-- `a_type' is either the parent or generic constraint
+			-- where the rename clause appears.
+			--
+			-- ECMA 367-2, 8.5.26 page 43.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_type_not_void: a_type /= Void
+			a_rename_not_void: a_rename /= Void
+			a_rename_has_alias: attached a_rename.new_name.alias_name as l_new_alias_name
+			a_rename_alias_bracket: l_new_alias_name.is_bracket
+			f_not_void: f /= Void
+			f_not_bracketable: not f.is_bracketable
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := ast_position (a_rename.new_name.alias_name)
+			code := template_code (vfav2e_template_code)
+			etl_code := vfav2_etl_code
+			default_template := default_message_template (vfav2e_default_template)
+			create parameters.make_filled (empty_string, 1, 10)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_rename.new_name.feature_name.lower_name, 7)
+			parameters.put (alias_lower_name (a_rename.new_name.alias_name), 8)
+			parameters.put (f.lower_name, 9)
+			parameters.put (a_type.upper_name, 10)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = new feature name
+			-- dollar8: $8 = new alias name
+			-- dollar9: $9 = old feature name
+			-- dollar10: $10 = parent or generic constraint base class
+		end
+
+	make_vfav2f (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename1, a_rename2: ET_RENAME; a_alias_name: ET_ALIAS_NAME; a_formal: ET_FORMAL_PARAMETER)
+			-- Create a new VFAV-2 error: a bracket alias name appears more than once
+			-- (e.g. also in `a_rename1') as second element of the Rename_pair
+			-- `a_rename2' in the constraint `a_constraint' of formal parameter
+			-- `a_formal' in `a_class'.
+			--
+			-- ECMA 367-2, 8.12.9 page 80.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_rename1_not_void: a_rename1 /= Void
+			a_rename2_not_void: a_rename2 /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_alias_name_definition: a_alias_name = a_rename2.new_name.alias_name
+			a_alias_name_is_bracket: a_alias_name.is_bracket
+			a_formal_not_void: a_formal /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_alias_name.position
+			code := template_code (vfav2f_template_code)
+			etl_code := vfav2_etl_code
+			default_template := default_message_template (vfav2f_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_alias_name.lower_name, 7)
+			parameters.put (a_constraint.upper_name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = alias name
+			-- dollar8: $8 = constraint base class
+		end
+
+	make_vfav2g (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_formal: ET_FORMAL_PARAMETER)
+			-- Create a new VFAV-2 error: the bracket alias name which appears as second
+			-- element of the Rename_pair `a_rename' in the constraint `a_constraint'
+			-- of formal parameter `a_formal' in `a_class' is already the name of the
+			-- alias of `a_feature' in `a_constraint'.
+			--
+			-- ECMA 367-2, 8.12.9 page 80.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_rename_not_void: a_rename /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_alias_name_definition: a_alias_name = a_rename.new_name.alias_name
+			a_alias_name_is_bracket: a_alias_name.is_bracket
+			a_feature_not_void: a_feature /= Void
+			a_formal_not_void: a_formal /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_alias_name.position
+			code := template_code (vfav2g_template_code)
+			etl_code := vfav2_etl_code
+			default_template := default_message_template (vfav2g_default_template)
+			create parameters.make_filled (empty_string, 1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_alias_name.lower_name, 7)
+			parameters.put (a_feature.lower_name, 8)
+			parameters.put (a_constraint.upper_name, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = alias name
+			-- dollar8: $8 = feature name
+			-- dollar9: $9 = constraint base class
+		end
+
+	make_vfav3a (a_class: ET_CLASS; a_feature: ET_FEATURE)
+			-- Create a new VFAV-3 error: `a_feature' has a parenthesis alias
 			-- but is not a feature with at least one argument.
 			--
-			-- ISE.
+			-- ECMA 367-3 (working version 3-36), 8.5.27 page 25.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
@@ -4726,9 +5327,9 @@ feature {NONE} -- Initialization
 			current_class := a_class
 			class_impl := a_class
 			position := ast_position (a_feature.alias_name)
-			code := template_code (vfav4a_template_code)
-			etl_code := vfav4_etl_code
-			default_template := default_message_template (vfav4a_default_template)
+			code := template_code (vfav3a_template_code)
+			etl_code := vfav3_etl_code
+			default_template := default_message_template (vfav3a_default_template)
 			create parameters.make_filled (empty_string, 1, 8)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
@@ -4755,11 +5356,11 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = alias name
 		end
 
-	make_vfav4b (a_class: ET_CLASS; a_feature1, a_feature2: ET_FEATURE)
-			-- Create a new VFAV-4 error: `a_feature1' and `a_feature2' have both
+	make_vfav3b (a_class: ET_CLASS; a_feature1, a_feature2: ET_FEATURE)
+			-- Create a new VFAV-3 error: `a_feature1' and `a_feature2' have both
 			-- a parenthesis alias.
 			--
-			-- ISE
+			-- ECMA 367-3 (working version 3-36), 8.5.27 page 25.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
@@ -4773,9 +5374,9 @@ feature {NONE} -- Initialization
 			current_class := a_class
 			class_impl := a_class
 			position := ast_position (a_feature1.alias_name)
-			code := template_code (vfav4b_template_code)
-			etl_code := vfav4_etl_code
-			default_template := default_message_template (vfav4b_default_template)
+			code := template_code (vfav3b_template_code)
+			etl_code := vfav3_etl_code
+			default_template := default_message_template (vfav3b_default_template)
 			create parameters.make_filled (empty_string, 1, 10)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
@@ -4806,11 +5407,11 @@ feature {NONE} -- Initialization
 			-- dollar10: $10 = second alias name
 		end
 
-	make_vfav4c (a_class: ET_CLASS; a_feature1: ET_FEATURE; a_feature2: ET_PARENT_FEATURE)
-			-- Create a new VFAV-4 error: `a_feature1' and `a_feature2' have both
+	make_vfav3c (a_class: ET_CLASS; a_feature1: ET_FEATURE; a_feature2: ET_PARENT_FEATURE)
+			-- Create a new VFAV-3 error: `a_feature1' and `a_feature2' have both
 			-- a parenthesis alias.
 			--
-			-- ISE
+			-- ECMA 367-3 (working version 3-36), 8.5.27 page 25.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
@@ -4824,9 +5425,9 @@ feature {NONE} -- Initialization
 			current_class := a_class
 			class_impl := a_class
 			position := ast_position (a_feature1.alias_name)
-			code := template_code (vfav4c_template_code)
-			etl_code := vfav4_etl_code
-			default_template := default_message_template (vfav4c_default_template)
+			code := template_code (vfav3c_template_code)
+			etl_code := vfav3_etl_code
+			default_template := default_message_template (vfav3c_default_template)
 			create parameters.make_filled (empty_string, 1, 11)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
@@ -4859,11 +5460,11 @@ feature {NONE} -- Initialization
 			-- dollar11: $11 = second parent base class
 		end
 
-	make_vfav4d (a_class: ET_CLASS; a_feature1, a_feature2: ET_PARENT_FEATURE)
-			-- Create a new VFAV-4 error: `a_feature1' and `a_feature2' have both
+	make_vfav3d (a_class: ET_CLASS; a_feature1, a_feature2: ET_PARENT_FEATURE)
+			-- Create a new VFAV-3 error: `a_feature1' and `a_feature2' have both
 			-- a parenthesis alias.
 			--
-			-- ISE
+			-- ECMA 367-3 (working version 3-36), 8.5.27 page 25.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
@@ -4877,9 +5478,9 @@ feature {NONE} -- Initialization
 			current_class := a_class
 			class_impl := a_class
 			position := a_feature1.parent.type.name.position
-			code := template_code (vfav4d_template_code)
-			etl_code := vfav4_etl_code
-			default_template := default_message_template (vfav4d_default_template)
+			code := template_code (vfav3d_template_code)
+			etl_code := vfav3_etl_code
+			default_template := default_message_template (vfav3d_default_template)
 			create parameters.make_filled (empty_string, 1, 12)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
@@ -4914,17 +5515,19 @@ feature {NONE} -- Initialization
 			-- dollar12: $12 = second parent base class
 		end
 
-	make_vfav4e (a_class: ET_CLASS; a_parent: ET_PARENT; a_rename: ET_RENAME; f: ET_FEATURE)
-			-- Create a new VFAV-4 error: the Rename_pair
+	make_vfav3e (a_class: ET_CLASS; a_type: ET_BASE_TYPE; a_rename: ET_RENAME; f: ET_FEATURE)
+			-- Create a new VFAV-3 error: the Rename_pair
 			-- `a_rename' has a new_name with a parenthesis alias,
 			-- but the corresponding feature `f' is not a
 			-- feature with at least one argument.
+			-- `a_type' is either the parent or generic constraint
+			-- where the rename clause appears.
 			--
-			-- ISE
+			-- ECMA 367-3 (working version 3-36), 8.5.27 page 25.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
-			a_parent_not_void: a_parent /= Void
+			a_type_not_void: a_type /= Void
 			a_rename_not_void: a_rename /= Void
 			a_rename_has_alias: attached a_rename.new_name.alias_name as l_new_alias_name
 			a_rename_alias_parenthesis: l_new_alias_name.is_parenthesis
@@ -4934,9 +5537,9 @@ feature {NONE} -- Initialization
 			current_class := a_class
 			class_impl := a_class
 			position := ast_position (a_rename.new_name.alias_name)
-			code := template_code (vfav4e_template_code)
-			etl_code := vfav4_etl_code
-			default_template := default_message_template (vfav4e_default_template)
+			code := template_code (vfav3e_template_code)
+			etl_code := vfav3_etl_code
+			default_template := default_message_template (vfav3e_default_template)
 			create parameters.make_filled (empty_string, 1, 10)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
@@ -4947,7 +5550,7 @@ feature {NONE} -- Initialization
 			parameters.put (a_rename.new_name.feature_name.lower_name, 7)
 			parameters.put (alias_lower_name (a_rename.new_name.alias_name), 8)
 			parameters.put (f.lower_name, 9)
-			parameters.put (a_parent.type.upper_name, 10)
+			parameters.put (a_type.upper_name, 10)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -4964,7 +5567,151 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = new feature name
 			-- dollar8: $8 = new alias name
 			-- dollar9: $9 = old feature name
-			-- dollar10: $10 = parent base class
+			-- dollar10: $10 = parent or generic constraint base class
+		end
+
+	make_vfav3f (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename1, a_rename2: ET_RENAME; a_alias_name: ET_ALIAS_NAME; a_formal: ET_FORMAL_PARAMETER)
+			-- Create a new VFAV-3 error: a parenthesis alias name appears more than
+			-- once (e.g. also in `a_rename1') as second element of the Rename_pair
+			-- `a_rename2' in the constraint `a_constraint' of formal parameter
+			-- `a_formal' in `a_class'.
+			--
+			-- ECMA 367-3 (working version 3-36), 8.5.27 page 25.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_rename1_not_void: a_rename1 /= Void
+			a_rename2_not_void: a_rename2 /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_alias_name_definition: a_alias_name = a_rename2.new_name.alias_name
+			a_alias_name_is_parenthesis: a_alias_name.is_parenthesis
+			a_formal_not_void: a_formal /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_alias_name.position
+			code := template_code (vfav3f_template_code)
+			etl_code := vfav3_etl_code
+			default_template := default_message_template (vfav3f_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_alias_name.lower_name, 7)
+			parameters.put (a_constraint.upper_name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = alias name
+			-- dollar8: $8 = constraint base class
+		end
+
+	make_vfav3g (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_formal: ET_FORMAL_PARAMETER)
+			-- Create a new VFAV-3 error: the parenthesis alias name which appears as second
+			-- element of the Rename_pair `a_rename' in the constraint `a_constraint'
+			-- of formal parameter `a_formal' in `a_class' is already the name of the
+			-- alias of `a_feature' in `a_constraint'.
+			--
+			-- ECMA 367-3 (working version 3-36), 8.5.27 page 25.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_rename_not_void: a_rename /= Void
+			a_alias_name_not_void: a_alias_name /= Void
+			a_alias_name_definition: a_alias_name = a_rename.new_name.alias_name
+			a_alias_name_is_parenthesis: a_alias_name.is_parenthesis
+			a_feature_not_void: a_feature /= Void
+			a_formal_not_void: a_formal /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_alias_name.position
+			code := template_code (vfav3g_template_code)
+			etl_code := vfav3_etl_code
+			default_template := default_message_template (vfav3g_default_template)
+			create parameters.make_filled (empty_string, 1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_alias_name.lower_name, 7)
+			parameters.put (a_feature.lower_name, 8)
+			parameters.put (a_constraint.upper_name, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = alias name
+			-- dollar8: $8 = feature name
+			-- dollar9: $9 = constraint base class
+		end
+
+	make_vfav4a (a_class: ET_CLASS; a_alias_name: ET_ALIAS_NAME)
+			-- Create a new VFAV-4 error: `a_alias_name' has a convert mark
+			-- but it is not binary operator alias.
+			--
+			-- ECMA 367-2, 8.5.26 page 43.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_alias_name_not_void: a_alias_name /= Void
+			a_alias_name_not_infix: not a_alias_name.is_infix
+			a_alias_name_has_convert: a_alias_name.convert_keyword /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := ast_position (a_alias_name)
+			code := template_code (vfav4a_template_code)
+			etl_code := vfav4_etl_code
+			default_template := default_message_template (vfav4a_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_alias_name.lower_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = alias name
 		end
 
 	make_vffd4a (a_class: ET_CLASS; a_feature: ET_FEATURE)
@@ -4984,90 +5731,6 @@ feature {NONE} -- Initialization
 			code := template_code (vffd4a_template_code)
 			etl_code := vffd4_etl_code
 			default_template := default_message_template (vffd4a_default_template)
-			create parameters.make_filled (empty_string, 1, 7)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_feature.lower_name, 7)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = feature name
-		end
-
-	make_vffd5a (a_class: ET_CLASS; a_feature: ET_FEATURE)
-			-- Create a new VFFD-5 error: `a_feature' has a prefix name but is
-			-- not an attribute or a function with no argument.
-			--
-			-- ETL2: p.69
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_name_prefix: a_feature.name.is_prefix
-			a_feature_not_prefixable: not a_feature.is_prefixable
-		do
-			current_class := a_class
-			class_impl := a_class
-			position := a_feature.name.position
-			code := template_code (vffd5a_template_code)
-			etl_code := vffd5_etl_code
-			default_template := default_message_template (vffd5a_default_template)
-			create parameters.make_filled (empty_string, 1, 7)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_feature.lower_name, 7)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = feature name
-		end
-
-	make_vffd6a (a_class: ET_CLASS; a_feature: ET_FEATURE)
-			-- Create a new VFFD-6 error: `a_feature' has an infix name but is
-			-- not a function with exactly one argument.
-			--
-			-- ETL2: p.69
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_name_infix: a_feature.name.is_infix
-			a_feature_not_infixable: not a_feature.is_infixable
-		do
-			current_class := a_class
-			class_impl := a_class
-			position := a_feature.name.position
-			code := template_code (vffd6a_template_code)
-			etl_code := vffd6_etl_code
-			default_template := default_message_template (vffd6a_default_template)
 			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
@@ -5176,12 +5839,12 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = feature name
 		end
 
-	make_vgcc1a (a_class, a_class_impl: ET_CLASS; a_creation: ET_CREATION_EXPRESSION; a_target: ET_CLASS)
-			-- Create a new VGCC-1 error: the creation expression `a_creation',
-			-- appearing in `a_class_impl' and viewed from one
-			-- of its descendants `a_class' (possibly iteself), has no
-			-- Creation_call part but the base class `a_target' of the
-			-- creation type is deferred.
+	make_vgcc1a (a_class, a_class_impl: ET_CLASS; a_creation: ET_CREATION_COMPONENT; a_target: ET_CLASS)
+			-- Create a new VGCC-1 error: the creation instruction or
+			-- expression `a_creation', appearing in `a_class_impl' and
+			-- viewed from one of its descendants `a_class' (possibly
+			-- itself), has no Creation_call part but the base class
+			-- `a_target' of the creation type is deferred.
 			--
 			-- ECMA 367-2: p.109
 		require
@@ -5197,51 +5860,6 @@ feature {NONE} -- Initialization
 			code := template_code (vgcc1a_template_code)
 			etl_code := vgcc1_etl_code
 			default_template := default_message_template (vgcc1a_default_template)
-			create parameters.make_filled (empty_string, 1, 7)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_target.upper_name, 7)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class_impl
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = creation type base class name
-		end
-
-	make_vgcc1b (a_class, a_class_impl: ET_CLASS; a_creation: ET_CREATION_INSTRUCTION; a_target: ET_CLASS)
-			-- Create a new VGCC-1 error: the creation instruction `a_creation',
-			-- appearing in `a_class_impl' and viewed from one of its
-			-- descendants `a_class' (possibly itself), has no Creation_call
-			-- part but the base class `a_target' of the creation type
-			-- is deferred.
-			--
-			-- ECMA 367-2: p.109
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_creation_not_void: a_creation /= Void
-			a_target_not_void: a_target /= Void
-		do
-			current_class := a_class
-			class_impl := a_class_impl
-			position := a_creation.position
-			code := template_code (vgcc1b_template_code)
-			etl_code := vgcc1_etl_code
-			default_template := default_message_template (vgcc1b_default_template)
 			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
@@ -5316,12 +5934,12 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = target type (named type)
 		end
 
-	make_vgcc5a (a_class, a_class_impl: ET_CLASS; a_creation: ET_CREATION_EXPRESSION; a_target: ET_CLASS)
-			-- Create a new VGCC-5 error: the creation expression `a_creation',
-			-- appearing in `a_class_impl' and viewed from one
-			-- of its descendants `a_class' (possibly iteself), has no
-			-- Creation_call part but the base class `a_target' of the
-			-- creation type has a Creators part.
+	make_vgcc5a (a_class, a_class_impl: ET_CLASS; a_creation: ET_CREATION_COMPONENT; a_target: ET_CLASS)
+			-- Create a new VGCC-5 error: the creation instruction or
+			-- expression `a_creation', appearing in `a_class_impl' and
+			-- viewed from one of its descendants `a_class' (possibly
+			-- itself), has no Creation_call part but the base class
+			-- `a_target' of the creation type has a Creators part.
 			--
 			-- ETL2: p.286
 		require
@@ -5337,51 +5955,6 @@ feature {NONE} -- Initialization
 			code := template_code (vgcc5a_template_code)
 			etl_code := vgcc5_etl_code
 			default_template := default_message_template (vgcc5a_default_template)
-			create parameters.make_filled (empty_string, 1, 7)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_target.upper_name, 7)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class_impl
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = creation type base class name
-		end
-
-	make_vgcc5b (a_class, a_class_impl: ET_CLASS; a_creation: ET_CREATION_INSTRUCTION; a_target: ET_CLASS)
-			-- Create a new VGCC-5 error: the creation instruction `a_creation',
-			-- appearing in `a_class_impl' and viewed from one of its
-			-- descendants `a_class' (possibly itself), has no Creation_call
-			-- part but the base class `a_target' of the creation type
-			-- has a Creators part.
-			--
-			-- ETL2: p.286
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_creation_not_void: a_creation /= Void
-			a_target_not_void: a_target /= Void
-		do
-			current_class := a_class
-			class_impl := a_class_impl
-			position := a_creation.position
-			code := template_code (vgcc5b_template_code)
-			etl_code := vgcc5_etl_code
-			default_template := default_message_template (vgcc5b_default_template)
 			create parameters.make_filled (empty_string, 1, 7)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
@@ -5499,9 +6072,9 @@ feature {NONE} -- Initialization
 
 	make_vgcc6c (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS)
 			-- Create a new VGCC-6 error: `a_feature' of class `a_target', appearing in
-			-- a creation expression with creation procedure name `a_name' in `a_class_impl'
-			-- and viewed from one of its descendants `a_class' (possibly itself),
-			-- is not exported for creation to `a_class'.
+			-- a creation instruction or expression with creation procedure name `a_name'
+			-- in `a_class_impl' and viewed from one of its descendants `a_class'
+			-- (possibly itself), is not exported for creation to `a_class'.
 			--
 			-- ETL2: p.286
 		require
@@ -5592,60 +6165,12 @@ feature {NONE} -- Initialization
 			-- dollar9: $9 = base class of creation type
 		end
 
-	make_vgcc6e (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS)
-			-- Create a new VGCC-6 error: `a_feature' of class `a_target', appearing in
-			-- a creation instruction with creation procedure name `a_name' in `a_class_impl'
-			-- and viewed from one of its descendants `a_class' (possibly itself),
-			-- is not exported for creation to `a_class'.
-			--
-			-- ETL2: p.286
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-			a_target_not_void: a_target /= Void
-		do
-			current_class := a_class
-			class_impl := a_class_impl
-			position := a_name.position
-			code := template_code (vgcc6e_template_code)
-			etl_code := vgcc6_etl_code
-			default_template := default_message_template (vgcc6e_default_template)
-			create parameters.make_filled (empty_string, 1, 9)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_name.lower_name, 7)
-			parameters.put (a_feature.lower_name, 8)
-			parameters.put (a_target.upper_name, 9)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class_impl
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = feature name of the creation call
-			-- dollar8: $8 = name of corresponding feature in class $9
-			-- dollar9: $9 = base class of creation type
-		end
-
 	make_vgcc8a (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS; a_formal: ET_FORMAL_PARAMETER)
 			-- Create a new VGCC-8 error: `a_feature' of class `a_target', appearing in
-			-- a creation expression with creation procedure name `a_name' in `a_class_impl'
-			-- and viewed from one of its descendants `a_class' (possibly itself), is not
-			-- listed as creation procedure for the formal parameter `a_formal' in `a_class'.
+			-- a creation instruction or expression with creation procedure name `a_name'
+			-- in `a_class_impl' and viewed from one of its descendants `a_class' (possibly
+			-- itself), is not listed as creation procedure for the formal parameter
+			-- `a_formal' in `a_class'.
 			--
 			-- In ISE Eiffel only.
 		require
@@ -5663,58 +6188,6 @@ feature {NONE} -- Initialization
 			code := template_code (vgcc8a_template_code)
 			etl_code := vgcc8_etl_code
 			default_template := default_message_template (vgcc8a_default_template)
-			create parameters.make_filled (empty_string, 1, 10)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_name.lower_name, 7)
-			parameters.put (a_feature.lower_name, 8)
-			parameters.put (a_target.upper_name, 9)
-			parameters.put (a_formal.index.out, 10)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class_impl
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = feature name of the creation call
-			-- dollar8: $8 = name of corresponding feature in class $9
-			-- dollar9: $9 = base class of creation type
-			-- dollar10: $10 = index of formal parameter in class $5
-		end
-
-	make_vgcc8b (a_class, a_class_impl: ET_CLASS; a_name: ET_FEATURE_NAME; a_feature: ET_FEATURE; a_target: ET_CLASS; a_formal: ET_FORMAL_PARAMETER)
-			-- Create a new VGCC-8 error: `a_feature' of class `a_target', appearing in
-			-- a creation instruction with creation procedure name `a_name' in `a_class_impl'
-			-- and viewed from one of its descendants `a_class' (possibly itself), is not
-			-- listed as creation procedure for the formal parameter `a_formal' in `a_class'.
-			--
-			-- In ISE Eiffel only.
-		require
-			a_class_not_void: a_class /= Void
-			a_class_impl_not_void: a_class_impl /= Void
-			a_class_impl_preparsed: a_class_impl.is_preparsed
-			a_name_not_void: a_name /= Void
-			a_feature_not_void: a_feature /= Void
-			a_target_not_void: a_target /= Void
-			a_formal_not_void: a_formal /= Void
-		do
-			current_class := a_class
-			class_impl := a_class_impl
-			position := a_name.position
-			code := template_code (vgcc8b_template_code)
-			etl_code := vgcc8_etl_code
-			default_template := default_message_template (vgcc8b_default_template)
 			create parameters.make_filled (empty_string, 1, 10)
 			parameters.put (etl_code, 1)
 			parameters.put (filename, 2)
@@ -5990,6 +6463,919 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = procedure name
 		end
 
+	make_vggc1a (a_class: ET_CLASS; a_type: ET_LIKE_TYPE)
+			-- Create a new VGGC-1 error: invalid type `a_type' in
+			-- constraint of formal generic parameter of `a_class'.
+			--
+			-- ECMA 367-2, 8.12.9 page 80.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_type_not_void: a_type /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_type.position
+			code := template_code (vggc1a_template_code)
+			etl_code := vggc1_etl_code
+			default_template := default_message_template (vggc1a_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_type.to_text, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = invalid type
+		end
+
+	make_vggc2a (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename: ET_RENAME; a_formal: ET_FORMAL_PARAMETER)
+			-- Create a new VGGC-2 error: the feature name appearing as first
+			-- element of the Rename_pair `a_rename' for the constraint type
+			-- `a_constraint' of formal parameter `a_formal' in `a_class' is
+			-- not the final name of a feature in the base class of `a_constraint'.
+			--
+			-- ECMA 367-2, 8.12.9 page 80.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_rename_not_void: a_rename /= Void
+			a_formal_not_void: a_formal /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_rename.old_name.position
+			code := template_code (vggc2a_template_code)
+			etl_code := vggc2_etl_code
+			default_template := default_message_template (vggc2a_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_rename.old_name.lower_name, 7)
+			parameters.put (a_constraint.upper_name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name
+			-- dollar8: $8 = constraint base class
+		end
+
+	make_vggc2b (a_class: ET_CLASS; a_constraint: ET_FORMAL_PARAMETER_TYPE; a_renames: ET_CONSTRAINT_RENAME_LIST; a_formal: ET_FORMAL_PARAMETER)
+			-- Create a new VGGC-2 error: the constraint type `a_constraint' of formal
+			-- parameter `a_formal' in `a_class' is itself a formal parameter,
+			-- and therefore cannot have a rename clause but has one (`a_renames').
+			--
+			-- Not in ECMA 367-2, 8.12.9 page 80.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_renames_not_void: a_renames /= Void
+			a_formal_not_void: a_formal /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_constraint.name.position
+			code := template_code (vggc2b_template_code)
+			etl_code := vggc2_etl_code
+			default_template := default_message_template (vggc2b_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_constraint.upper_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = constraint formal type
+		end
+
+	make_vggc2c (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_renames: ET_CONSTRAINT_RENAME_LIST; a_formal: ET_FORMAL_PARAMETER)
+			-- Create a new VGGC-2 error: the constraint type `a_constraint' of formal
+			-- parameter `a_formal' in `a_class' is "NONE", and therefore cannot have
+			-- a rename clause but has one (`a_renames').
+			--
+			-- ECMA 367-2, 8.12.9 page 80.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_constraint_is_none: a_constraint.base_class.is_none
+			a_renames_not_void: a_renames /= Void
+			a_formal_not_void: a_formal /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_constraint.name.position
+			code := template_code (vggc2c_template_code)
+			etl_code := vggc2_etl_code
+			default_template := default_message_template (vggc2c_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_constraint.upper_name, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = constraint "NONE"
+		end
+
+	make_vggc2d (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename1, a_rename2: ET_RENAME; a_formal: ET_FORMAL_PARAMETER)
+			-- Create a new VGGC-2 error: a feature name appears more than once
+			-- (e.g. also in `a_rename1') as first element of the Rename_pair
+			-- `a_rename2' in the constraint `a_constraint' of formal parameter
+			-- `a_formal' in `a_class'.
+			--
+			-- ECMA 367-2, 8.12.9 page 80.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_rename1_not_void: a_rename1 /= Void
+			a_rename2_not_void: a_rename2 /= Void
+			a_formal_not_void: a_formal /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_rename2.old_name.position
+			code := template_code (vggc2d_template_code)
+			etl_code := vggc2_etl_code
+			default_template := default_message_template (vggc2d_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_rename2.old_name.lower_name, 7)
+			parameters.put (a_constraint.upper_name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name
+			-- dollar8: $8 = constraint base class
+		end
+
+	make_vggc2e (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename1, a_rename2: ET_RENAME; a_formal: ET_FORMAL_PARAMETER)
+			-- Create a new VGGC-2 error: a feature name appears more than once
+			-- (e.g. also in `a_rename1') as second element of the Rename_pair
+			-- `a_rename2' in the constraint `a_constraint' of formal parameter
+			-- `a_formal' in `a_class'.
+			--
+			-- ECMA 367-2, 8.12.9 page 80.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_rename1_not_void: a_rename1 /= Void
+			a_rename2_not_void: a_rename2 /= Void
+			a_formal_not_void: a_formal /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_rename2.new_name.feature_name.position
+			code := template_code (vggc2e_template_code)
+			etl_code := vggc2_etl_code
+			default_template := default_message_template (vggc2e_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_rename2.new_name.feature_name.lower_name, 7)
+			parameters.put (a_constraint.upper_name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name
+			-- dollar8: $8 = constraint base class
+		end
+
+	make_vggc2f (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename: ET_RENAME; a_formal: ET_FORMAL_PARAMETER)
+			-- Create a new VGGC-2 error: the feature name which appears as second
+			-- element of the Rename_pair `a_rename' in the constraint `a_constraint'
+			-- of formal parameter `a_formal' in `a_class' is already the final name
+			-- of a feature in `a_constraint'.
+			--
+			-- ECMA 367-2, 8.12.9 page 80.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_constraint_not_void: a_constraint /= Void
+			a_rename_not_void: a_rename /= Void
+			a_formal_not_void: a_formal /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_rename.new_name.feature_name.position
+			code := template_code (vggc2f_template_code)
+			etl_code := vggc2_etl_code
+			default_template := default_message_template (vggc2f_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_rename.new_name.feature_name.lower_name, 7)
+			parameters.put (a_constraint.upper_name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name
+			-- dollar8: $8 = constraint base class
+		end
+
+	make_vggc3a (a_class: ET_CLASS; cp: ET_FEATURE_NAME; a_constraint: ET_CLASS)
+			-- Create a new VGGC-3 error: creation procedure name `cp'
+			-- is not the final name of a feature in the base class
+			-- `a_constraint' of a generic constraint in `a_class'.
+			--
+			-- ECMA 367-2, 8.12.9 page 80.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			cp_not_void: cp /= Void
+			a_constraint_not_void: a_constraint /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := cp.position
+			code := template_code (vggc3a_template_code)
+			etl_code := vggc3_etl_code
+			default_template := default_message_template (vggc3a_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (cp.lower_name, 7)
+			parameters.put (a_constraint.upper_name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = creation procedure name
+			-- dollar8: $8 = constraint base class name
+		end
+
+	make_vggc3b (a_class: ET_CLASS; cp: ET_FEATURE_NAME; a_constraints: ET_CONSTRAINT_BASE_TYPES)
+			-- Create a new VGGC-3 error: creation procedure name `cp'
+			-- is not the final name of a feature in the base class of
+			-- any of the generic constraints `a_constraints' in `a_class'.
+			--
+			-- ECMA 367-2, 8.12.9 page 80.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			cp_not_void: cp /= Void
+			a_constraints_not_void: a_constraints /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := cp.position
+			code := template_code (vggc3b_template_code)
+			etl_code := vggc3_etl_code
+			default_template := default_message_template (vggc3b_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (cp.lower_name, 7)
+			parameters.put (a_constraints.types_to_text, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = creation procedure name
+			-- dollar8: $8 = generic constraints
+		end
+
+	make_vggc3c (a_class: ET_CLASS; cp: ET_FEATURE_NAME; f: ET_FEATURE; a_constraint: ET_CLASS)
+			-- Create a new VGGC-3 error: creation procedure name `cp'
+			-- is the final name (after possible renaming) of `f' in the
+			-- base class `a_constraint' of  a generic constraint in `a_class',
+			-- but `f' is not a procedure.
+			-- Note that the name of `f' in `a_constraint' may be different from `cp'
+			-- if it has been renamed in the rename clause of the generic constraint.
+			--
+			-- ECMA 367-2, 8.12.9 page 80.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			cp_not_void: cp /= Void
+			f_not_void: f /= Void
+			f_not_procedure: not f.is_procedure
+			a_constraint_not_void: a_constraint /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := cp.position
+			code := template_code (vggc3c_template_code)
+			etl_code := vggc3_etl_code
+			default_template := default_message_template (vggc3c_default_template)
+			create parameters.make_filled (empty_string, 1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (cp.lower_name, 7)
+			parameters.put (a_constraint.upper_name, 8)
+			parameters.put (f.lower_name, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = creation procedure name
+			-- dollar8: $8 = constraint base class name
+			-- dollar9: $9 = name of feature in constraint base class
+		end
+
+	make_vggc3d (a_class: ET_CLASS; cp: ET_FEATURE_NAME; f1: ET_FEATURE; a_constraint1: ET_BASE_TYPE_CONSTRAINT; f2: ET_FEATURE; a_constraint2: ET_BASE_TYPE_CONSTRAINT)
+			-- Create a new VGGC-3 error: creation procedure name `cp' is the final name
+			-- (after possible renaming) of a feature in the base class of both
+			-- generic constraints `a_constraint1' and `a_constraint2' in `a_class'.
+			-- Note that the name of `f1' in `a_constraint1' and of `f2' is `a_constraint2'
+			-- may be different from `cp' if they have been renamed in the rename clause
+			--  of the generic constraint.
+			--
+			-- ECMA 367-2, 8.12.9 page 80.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			cp_not_void: cp /= Void
+			f1_not_void: f1 /= Void
+			a_constraint1_not_void: a_constraint1 /= Void
+			f2_not_void: f2 /= Void
+			a_constraint2_not_void: a_constraint2 /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := cp.position
+			code := template_code (vggc3d_template_code)
+			etl_code := vggc3_etl_code
+			default_template := default_message_template (vggc3d_default_template)
+			create parameters.make_filled (empty_string, 1, 11)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (cp.lower_name, 7)
+			parameters.put (a_constraint1.type.to_text, 8)
+			parameters.put (f1.lower_name, 9)
+			parameters.put (a_constraint2.type.to_text, 10)
+			parameters.put (f2.lower_name, 11)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = creation procedure name
+			-- dollar8: $8 = first constraint
+			-- dollar9: $9 = name of feature in first constraint base class
+			-- dollar10: $10 = second constraint
+			-- dollar11: $11 = name of feature in second constraint base class
+		end
+
+	make_vgmc0a (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_constraints: DS_ARRAYED_LIST [ET_ADAPTED_CLASS])
+			-- Create a new VGMC error: `a_name', appearing in `a_class_impl' and
+			-- viewed from one of its descendants `a_class' (possibly itself), is
+			-- not the final name of a feature in the base class of any of the
+			-- generic constraints `a_constraints'.
+			--
+			-- ECMA 367-2, 8.12.22 page 83.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_constraints_not_void: a_constraints /= Void
+			no_void_constraint: not a_constraints.has_void
+			multiple_constraints: a_constraints.count > 1
+		local
+			l_constraint_to_text: STRING
+			i, nb: INTEGER
+			l_not_first: BOOLEAN
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			code := template_code (vgmc0a_template_code)
+			etl_code := vgmc_etl_code
+			default_template := default_message_template (vgmc0a_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.lower_name, 7)
+			create l_constraint_to_text.make (15)
+			l_constraint_to_text.append_character ('{')
+			nb := a_constraints.count
+			from i := 1 until i > nb loop
+				if l_not_first then
+					l_constraint_to_text.append_character (',')
+					l_constraint_to_text.append_character (' ')
+				else
+					l_not_first := True
+				end
+				a_constraints.item (i).base_type.append_to_string (l_constraint_to_text)
+				i := i + 1
+			end
+			l_constraint_to_text.append_character ('}')
+			parameters.put (l_constraint_to_text, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = call name
+			-- dollar8: $8 = generic constraints
+		end
+
+	make_vgmc0b (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; f1: ET_FEATURE; a_constraint1: ET_ADAPTED_CLASS; f2: ET_FEATURE; a_constraint2: ET_ADAPTED_CLASS)
+			-- Create a new VGMC error: `a_name', appearing in `a_class_impl' and
+			-- viewed from one of its descendants `a_class' (possibly itself), is
+			-- the final name (after possible renaming) of a feature in the base
+			-- class of both generic constraints `a_constraint1' and `a_constraint2'.
+			-- Note that the name of `f1' in `a_constraint1' and of `f2' is `a_constraint2'
+			-- may be different from `a_name' if they have been renamed in the rename clause
+			-- of the generic constraint.
+			--
+			-- ECMA 367-2, 8.12.22 page 83.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			f1_not_void: f1 /= Void
+			a_constraint1_not_void: a_constraint1 /= Void
+			f2_not_void: f2 /= Void
+			a_constraint2_not_void: a_constraint2 /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			code := template_code (vgmc0b_template_code)
+			etl_code := vgmc_etl_code
+			default_template := default_message_template (vgmc0b_default_template)
+			create parameters.make_filled (empty_string, 1, 11)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.lower_name, 7)
+			parameters.put (a_constraint1.base_type.to_text, 8)
+			parameters.put (f1.lower_name, 9)
+			parameters.put (a_constraint2.base_type.to_text, 10)
+			parameters.put (f2.lower_name, 11)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = call name
+			-- dollar8: $8 = first constraint
+			-- dollar9: $9 = name of feature in first constraint base class
+			-- dollar10: $10 = second constraint
+			-- dollar11: $11 = name of feature in second constraint base class
+		end
+
+	make_vgmc0c (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; f1: ET_FEATURE; a_constraint1: ET_ADAPTED_CLASS; a_tuple_index2: INTEGER; a_constraint2: ET_ADAPTED_CLASS)
+			-- Create a new VGMC error: `a_name', appearing in `a_class_impl' and
+			-- viewed from one of its descendants `a_class' (possibly itself), is
+			-- the final name (after possible renaming) of a feature in the base
+			-- class of generic constraint `a_constraint1' and a tuple label in
+			-- the generic constraint `a_constraint2'.
+			-- Note that the name of `f1' in `a_constraint1' may be different from
+			-- `a_name' if it has been renamed in the rename clause of the generic
+			-- constraint.
+			--
+			-- ECMA 367-2, 8.12.22 page 83.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			f1_not_void: f1 /= Void
+			a_constraint1_not_void: a_constraint1 /= Void
+			a_constraint2_not_void: a_constraint2 /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			code := template_code (vgmc0c_template_code)
+			etl_code := vgmc_etl_code
+			default_template := default_message_template (vgmc0c_default_template)
+			create parameters.make_filled (empty_string, 1, 11)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.lower_name, 7)
+			parameters.put (a_constraint1.base_type.to_text, 8)
+			parameters.put (f1.lower_name, 9)
+			parameters.put (a_constraint2.base_type.to_text, 10)
+			parameters.put (a_tuple_index2.out, 11)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = call name
+			-- dollar8: $8 = first constraint
+			-- dollar9: $9 = name of feature in first constraint base class
+			-- dollar10: $10 = second constraint
+			-- dollar11: $11 = index of tuple label in second constraint base class
+		end
+
+	make_vgmc0d (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_tuple_index1: INTEGER; a_constraint1: ET_ADAPTED_CLASS; a_tuple_index2: INTEGER; a_constraint2: ET_ADAPTED_CLASS)
+			-- Create a new VGMC error: `a_name', appearing in `a_class_impl' and
+			-- viewed from one of its descendants `a_class' (possibly itself), is
+			-- a tuple label in both generic constraints `a_constraint1' and
+			-- `a_constraint2'.
+			--
+			-- ECMA 367-2, 8.12.22 page 83.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_constraint1_not_void: a_constraint1 /= Void
+			a_constraint2_not_void: a_constraint2 /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			code := template_code (vgmc0d_template_code)
+			etl_code := vgmc_etl_code
+			default_template := default_message_template (vgmc0d_default_template)
+			create parameters.make_filled (empty_string, 1, 11)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.lower_name, 7)
+			parameters.put (a_constraint1.base_type.to_text, 8)
+			parameters.put (a_tuple_index1.out, 9)
+			parameters.put (a_constraint2.base_type.to_text, 10)
+			parameters.put (a_tuple_index2.out, 11)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = call name
+			-- dollar8: $8 = first constraint
+			-- dollar9: $9 = index of tuple label in first constraint base class
+			-- dollar10: $10 = second constraint
+			-- dollar11: $11 = index of tuple label in second constraint base class
+		end
+
+	make_vgmc0e (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; f1: ET_QUERY; a_constraint1: ET_ADAPTED_CLASS; f2: ET_QUERY; a_constraint2: ET_ADAPTED_CLASS)
+			-- Create a new VGMC error: `a_name', appearing in `a_class_impl' and
+			-- viewed from one of its descendants `a_class' (possibly itself), is
+			-- the final name (after possible renaming) of a query with two different
+			-- versions in the base class of both generic constraints `a_constraint1'
+			-- and `a_constraint2', and these versions have different types.
+			-- Note that the name of `f1' in `a_constraint1' and of `f2' is `a_constraint2'
+			-- may be different from `a_name' if they have been renamed in the rename clause
+			-- of the generic constraint.
+			--
+			-- ECMA 367-2, 8.12.22 page 83.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			f1_not_void: f1 /= Void
+			a_constraint1_not_void: a_constraint1 /= Void
+			f2_not_void: f2 /= Void
+			a_constraint2_not_void: a_constraint2 /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			code := template_code (vgmc0e_template_code)
+			etl_code := vgmc_etl_code
+			default_template := default_message_template (vgmc0e_default_template)
+			create parameters.make_filled (empty_string, 1, 11)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.lower_name, 7)
+			parameters.put (a_constraint1.base_type.to_text, 8)
+			parameters.put (f1.lower_name, 9)
+			parameters.put (a_constraint2.base_type.to_text, 10)
+			parameters.put (f2.lower_name, 11)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = call name
+			-- dollar8: $8 = first constraint
+			-- dollar9: $9 = name of feature in first constraint base class
+			-- dollar10: $10 = second constraint
+			-- dollar11: $11 = name of feature in second constraint base class
+		end
+
+	make_vgmc0f (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; a_tuple_index: INTEGER; a_constraint1: ET_ADAPTED_CLASS; a_constraint2: ET_ADAPTED_CLASS)
+			-- Create a new VGMC error: `a_name', appearing in `a_class_impl' and
+			-- viewed from one of its descendants `a_class' (possibly itself), is
+			-- a tuple label whose corresponding items at index `a_tuple_index'
+			-- in generic constraints `a_constraint1' and `a_constraint2' have
+			-- a different type.
+			--
+			-- ECMA 367-2, 8.12.22 page 83.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_constraint1_not_void: a_constraint1 /= Void
+			a_constraint2_not_void: a_constraint2 /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			code := template_code (vgmc0f_template_code)
+			etl_code := vgmc_etl_code
+			default_template := default_message_template (vgmc0f_default_template)
+			create parameters.make_filled (empty_string, 1, 10)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.lower_name, 7)
+			parameters.put (a_tuple_index.out, 8)
+			parameters.put (a_constraint1.base_type.to_text, 9)
+			parameters.put (a_constraint2.base_type.to_text, 10)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = call name
+			-- dollar8: $8 = tuple item index
+			-- dollar9: $9 = first constraint
+			-- dollar10: $10 = second constraint
+		end
+
+	make_vgmc0g (a_class, a_class_impl: ET_CLASS; a_name: ET_CALL_NAME; f1: ET_FEATURE; a_constraint1: ET_ADAPTED_CLASS; f2: ET_FEATURE; a_constraint2: ET_ADAPTED_CLASS)
+			-- Create a new VGMC error: `a_name', appearing in an agent in `a_class_impl'
+			-- and viewed from one of its descendants `a_class' (possibly itself), is
+			-- the final name (after possible renaming) of a feature with two different
+			-- versions in the base class of both generic constraints `a_constraint1'
+			-- and `a_constraint2', and these versions have different signatures.
+			-- Note that the name of `f1' in `a_constraint1' and of `f2' is `a_constraint2'
+			-- may be different from `a_name' if they have been renamed in the rename clause
+			-- of the generic constraint.
+			--
+			-- ECMA 367-2, 8.12.22 page 83.
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_name_not_void: a_name /= Void
+			f1_not_void: f1 /= Void
+			a_constraint1_not_void: a_constraint1 /= Void
+			f2_not_void: f2 /= Void
+			a_constraint2_not_void: a_constraint2 /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_name.position
+			code := template_code (vgmc0g_template_code)
+			etl_code := vgmc_etl_code
+			default_template := default_message_template (vgmc0g_default_template)
+			create parameters.make_filled (empty_string, 1, 11)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.lower_name, 7)
+			parameters.put (a_constraint1.base_type.to_text, 8)
+			parameters.put (f1.lower_name, 9)
+			parameters.put (a_constraint2.base_type.to_text, 10)
+			parameters.put (f2.lower_name, 11)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = call name
+			-- dollar8: $8 = first constraint
+			-- dollar9: $9 = name of feature in first constraint base class
+			-- dollar10: $10 = second constraint
+			-- dollar11: $11 = name of feature in second constraint base class
+		end
+
 	make_vhay0a (a_class: ET_CLASS)
 			-- Create a new VHAY error: `a_class' implicitly inherits
 			-- from unknown class ANY.
@@ -6125,6 +7511,46 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = class NONE
 		end
 
+	make_vhpr2a (a_class: ET_CLASS; a_parent: ET_BASE_TYPE)
+			-- Create a new VHPR-2 error: `a_class' inherits from frozen
+			-- class `a_parent' through conforming inheritance.
+			--
+			-- ECMA 367-2: p.47
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_parent_not_void: a_parent /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_parent.position
+			code := template_code (vhpr2a_template_code)
+			etl_code := vhpr2_etl_code
+			default_template := default_message_template (vhpr2a_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_parent.to_text, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = parent class
+		end
+
 	make_vhpr3a (a_class: ET_CLASS; a_type: ET_LIKE_TYPE)
 			-- Create a new VHPR-3 error: invalid type `a_type'
 			-- in parent clause of `a_class'.
@@ -6256,260 +7682,6 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = implementation class name
 			-- dollar7: $7 = feature name
 			-- dollar8: $8 = parent base class
-		end
-
-	make_vhrc4a (a_class: ET_CLASS; a_parent: ET_PARENT; a_rename: ET_RENAME; f: ET_FEATURE)
-			-- Create a new VHRC-4 error: the Rename_pair
-			-- `a_rename' has a new_name of the Prefix form,
-			-- but the corresponding feature `f' is not an
-			-- attibute nor a function with no argument.
-			--
-			-- ETR: p.23
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_parent_not_void: a_parent /= Void
-			a_rename_not_void: a_rename /= Void
-			f_not_void: f /= Void
-		do
-			current_class := a_class
-			class_impl := a_class
-			position := a_rename.new_name.position
-			code := template_code (vhrc4a_template_code)
-			etl_code := vhrc4_etl_code
-			default_template := default_message_template (vhrc4a_default_template)
-			create parameters.make_filled (empty_string, 1, 9)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_rename.new_name.feature_name.lower_name, 7)
-			parameters.put (f.lower_name, 8)
-			parameters.put (a_parent.type.upper_name, 9)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = new prefix name
-			-- dollar8: $8 = old feature name
-			-- dollar9: $9 = parent base class
-		end
-
-	make_vhrc4b (a_class: ET_CLASS; a_parent: ET_PARENT; a_rename: ET_RENAME; f: ET_FEATURE)
-			-- Create a new VHRC-4 error: the Rename_pair
-			-- `a_rename' has a new_name with a bracket alias,
-			-- but the corresponding feature `f' is not a
-			-- function with at least one argument.
-			--
-			-- ECMA: p.46
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_parent_not_void: a_parent /= Void
-			a_rename_not_void: a_rename /= Void
-			a_rename_has_alias: attached a_rename.new_name.alias_name as l_new_alias_name
-			a_rename_alias_bracket: l_new_alias_name.is_bracket
-			f_not_void: f /= Void
-			f_not_bracketable: not f.is_bracketable
-		do
-			current_class := a_class
-			class_impl := a_class
-			position := ast_position (a_rename.new_name.alias_name)
-			code := template_code (vhrc4b_template_code)
-			etl_code := vhrc4_etl_code
-			default_template := default_message_template (vhrc4b_default_template)
-			create parameters.make_filled (empty_string, 1, 10)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_rename.new_name.feature_name.lower_name, 7)
-			parameters.put (alias_lower_name (a_rename.new_name.alias_name), 8)
-			parameters.put (f.lower_name, 9)
-			parameters.put (a_parent.type.upper_name, 10)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = new feature name
-			-- dollar8: $8 = new alias name
-			-- dollar9: $9 = old feature name
-			-- dollar10: $10 = parent base class
-		end
-
-	make_vhrc4c (a_class: ET_CLASS; a_parent: ET_PARENT; a_rename: ET_RENAME; f: ET_FEATURE)
-			-- Create a new VHRC-4 error: the Rename_pair `a_rename' has
-			-- a new_name with a binary operator alias,
-			-- but the corresponding feature `f' is not a
-			-- function with exactly one argument.
-			--
-			-- ECMA: p.46
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_parent_not_void: a_parent /= Void
-			a_rename_not_void: a_rename /= Void
-			a_rename_has_alias: attached a_rename.new_name.alias_name as l_new_alias_name
-			a_rename_alias_infix: l_new_alias_name.is_infix
-			f_not_void: f /= Void
-			f_not_infixable: not f.is_infixable
-		do
-			current_class := a_class
-			class_impl := a_class
-			position := ast_position (a_rename.new_name.alias_name)
-			code := template_code (vhrc4c_template_code)
-			etl_code := vhrc4_etl_code
-			default_template := default_message_template (vhrc4c_default_template)
-			create parameters.make_filled (empty_string, 1, 10)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_rename.new_name.feature_name.lower_name, 7)
-			parameters.put (alias_lower_name (a_rename.new_name.alias_name), 8)
-			parameters.put (f.lower_name, 9)
-			parameters.put (a_parent.type.upper_name, 10)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = new feature name
-			-- dollar8: $8 = new alias name
-			-- dollar9: $9 = old feature name
-			-- dollar10: $10 = parent base class
-		end
-
-	make_vhrc4d (a_class: ET_CLASS; a_parent: ET_PARENT; a_rename: ET_RENAME; f: ET_FEATURE)
-			-- Create a new VHRC-4 error: the Rename_pair `a_rename' has
-			-- a new_name with a unary operator alias,
-			-- but the corresponding feature `f' is not a
-			-- query with no argument.
-			--
-			-- ECMA: p.46
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_parent_not_void: a_parent /= Void
-			a_rename_not_void: a_rename /= Void
-			a_rename_has_alias: attached a_rename.new_name.alias_name as l_new_name_alias_name
-			a_rename_alias_prefix: l_new_name_alias_name.is_prefix
-			f_not_void: f /= Void
-			f_not_prefixable: not f.is_prefixable
-		do
-			current_class := a_class
-			class_impl := a_class
-			position := ast_position (a_rename.new_name.alias_name)
-			code := template_code (vhrc4d_template_code)
-			etl_code := vhrc4_etl_code
-			default_template := default_message_template (vhrc4d_default_template)
-			create parameters.make_filled (empty_string, 1, 10)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_rename.new_name.feature_name.lower_name, 7)
-			parameters.put (alias_lower_name (a_rename.new_name.alias_name), 8)
-			parameters.put (f.lower_name, 9)
-			parameters.put (a_parent.type.upper_name, 10)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = new feature name
-			-- dollar8: $8 = new alias name
-			-- dollar9: $9 = old feature name
-			-- dollar10: $10 = parent base class
-		end
-
-	make_vhrc5a (a_class: ET_CLASS; a_parent: ET_PARENT; a_rename: ET_RENAME; f: ET_FEATURE)
-			-- Create a new VHRC-5 error: the Rename_pair `a_rename' has
-			-- a new_name of the Infix form, but the corresponding feature
-			-- `f' is not a function with one argument.
-			--
-			-- ETR: p.23
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_parent_not_void: a_parent /= Void
-			a_rename_not_void: a_rename /= Void
-			f_not_void: f /= Void
-		do
-			current_class := a_class
-			class_impl := a_class
-			position := a_rename.new_name.position
-			code := template_code (vhrc5a_template_code)
-			etl_code := vhrc5_etl_code
-			default_template := default_message_template (vhrc5a_default_template)
-			create parameters.make_filled (empty_string, 1, 9)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_rename.new_name.feature_name.lower_name, 7)
-			parameters.put (f.lower_name, 8)
-			parameters.put (a_parent.type.upper_name, 9)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = new infix name
-			-- dollar8: $8 = old feature name
-			-- dollar9: $9 = parent base class
 		end
 
 	make_vjar0a (a_class, a_class_impl: ET_CLASS; an_assignment: ET_ASSIGNMENT; a_source_type, a_target_type: ET_NAMED_TYPE)
@@ -6777,6 +7949,50 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = feature name of the call
 			-- dollar8: $8 = name of corresponding feature in class $9
 			-- dollar9: $9 = base class of target of the call
+		end
+
+	make_vkcn1b (a_class: ET_CLASS; a_name: ET_IDENTIFIER; a_target: ET_CLASS)
+			-- Create a new VKCN-1 error: tuple label `a_name' of tuple class `a_target',
+			-- appearing in the qualified instruction call `a_name' in `a_class', is not
+			-- a procedure.
+			--
+			-- ETL2: p.341
+		require
+			a_class_not_void: a_class /= Void
+			a_class_preparsed: a_class.is_preparsed
+			a_name_not_void: a_name /= Void
+			a_target_not_void: a_target /= Void
+		do
+			current_class := a_class
+			class_impl := a_class
+			position := a_name.position
+			code := template_code (vkcn1b_template_code)
+			etl_code := vkcn1_etl_code
+			default_template := default_message_template (vkcn1b_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_name.lower_name, 7)
+			parameters.put (a_target.upper_name, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name of the call
+			-- dollar8: $8 = base class of target of the call
 		end
 
 	make_vkcn1c (a_class: ET_CLASS; a_name: ET_CALL_NAME; a_feature: ET_FEATURE)
@@ -8916,6 +10132,69 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = type
 		end
 
+	make_vqmc2b (a_class, a_class_impl: ET_CLASS; a_attribute: ET_CONSTANT_ATTRIBUTE; a_constant: ET_CHARACTER_CONSTANT)
+			-- Create a new VQMC-2 error: `a_attribute', declared in `a_class_impl', introduces
+			-- a character constant `a_constant' but its value is not representable as an instance
+			-- of its character type when viewed from one of its descendants `a_class' (possibly itself).
+			--
+			-- ECMA 367-2: p.100
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_attribute_not_void: a_attribute /= Void
+			integer_constant: a_attribute.constant = a_constant
+		local
+			l_literal: STRING
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_attribute.type.position
+			code := template_code (vqmc2b_template_code)
+			etl_code := vqmc2_etl_code
+			default_template := default_message_template (vqmc2b_default_template)
+			create l_literal.make (10)
+			l_literal.append_character ('%'')
+			if attached {ET_C3_CHARACTER_CONSTANT} a_constant as l_c3 then
+				l_literal.append_character ('%%')
+				l_literal.append_character ('/')
+				l_literal.append_string (l_c3.literal)
+				l_literal.append_character ('/')
+			elseif attached {ET_C2_CHARACTER_CONSTANT} a_constant as l_c2 then
+				l_literal.append_character ('%%')
+				l_literal.append_character (l_c2.literal)
+			else
+				{UC_UTF8_ROUTINES}.append_natural_32_code_to_utf8 (l_literal, a_constant.value.natural_32_code)
+			end
+			l_literal.append_character ('%'')
+			create parameters.make_filled (empty_string, 1, 9)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_attribute.lower_name, 7)
+			parameters.put (a_attribute.type.to_text, 8)
+			parameters.put (l_literal, 9)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name
+			-- dollar8: $8 = character type
+			-- dollar9: $9 = character value
+		end
+
 	make_vqmc3a (a_class, a_class_impl: ET_CLASS; an_attribute: ET_CONSTANT_ATTRIBUTE)
 			-- Create a new VQMC-3 error: `an_attribute', declared in `a_class_impl', introduces
 			-- an integer constant but its type is not "INTEGER" when viewed from one of its
@@ -9107,6 +10386,51 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = implementation class name
 			-- dollar7: $7 = feature name
 			-- dollar8: $8 = type
+		end
+
+	make_vqmc5b (a_class, a_class_impl: ET_CLASS; a_attribute: ET_CONSTANT_ATTRIBUTE; a_constant: ET_MANIFEST_STRING)
+			-- Create a new VQMC-5 error: `a_attribute', declared in `a_class_impl', introduces
+			-- a string constant `a_constant' but its value is not representable as an instance
+			-- of its string type when viewed from one of its descendants `a_class' (possibly itself).
+			--
+			-- ECMA 367-2: p.100
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_attribute_not_void: a_attribute /= Void
+			integer_constant: a_attribute.constant = a_constant
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_attribute.type.position
+			code := template_code (vqmc5b_template_code)
+			etl_code := vqmc5_etl_code
+			default_template := default_message_template (vqmc5b_default_template)
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_attribute.lower_name, 7)
+			parameters.put (a_attribute.type.to_text, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = feature name
+			-- dollar8: $8 = string type
 		end
 
 	make_vqui0a (a_class, a_class_impl: ET_CLASS; a_unique: ET_UNIQUE_ATTRIBUTE)
@@ -10075,7 +11399,7 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = anchor name
 		end
 
-	make_vtcg3a (a_class, a_class_impl: ET_CLASS; a_type: ET_CLASS_TYPE; an_actual, a_constraint: ET_TYPE)
+	make_vtcg3a (a_class, a_class_impl: ET_CLASS; a_type: ET_CLASS_TYPE; an_actual: ET_TYPE; a_constraint: ET_CONSTRAINT)
 			-- Create a new VTCG-3 error: actual generic paramater `an_actual'
 			-- of `a_type' appearing in `a_class_impl' and viewed from one of
 			-- its decendants `a_class' (possibly itself) does not conform to
@@ -10095,7 +11419,7 @@ feature {NONE} -- Initialization
 			--       A
 			--   end
 			--
-			--   class X
+			--   class X [G]
 			--   end
 			--
 			--   class Y [G, H -> X [G]]
@@ -10128,7 +11452,7 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (an_actual.to_text, 7)
-			parameters.put (a_constraint.to_text, 8)
+			parameters.put (a_constraint.types_to_text, 8)
 			parameters.put (a_type.to_text, 9)
 			set_compilers (True)
 		ensure
@@ -10328,97 +11652,6 @@ feature {NONE} -- Initialization
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = implementation class name
 			-- dollar7: $7 = type base class
-		end
-
-	make_vtgc0a (a_class: ET_CLASS; cp: ET_FEATURE_NAME; a_constraint: ET_CLASS)
-			-- Create a new VTGC error: creation procedure name `cp'
-			-- is not the final name of a feature in the base class
-			-- `a_constraint' of a generic constraint of `a_class'.
-			--
-			-- ETL3 (4.82-00-00): p.261 (CTGC)
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			cp_not_void: cp /= Void
-			a_constraint_not_void: a_constraint /= Void
-		do
-			current_class := a_class
-			class_impl := a_class
-			position := cp.position
-			code := template_code (vtgc0a_template_code)
-			etl_code := vtgc_etl_code
-			default_template := default_message_template (vtgc0a_default_template)
-			create parameters.make_filled (empty_string, 1, 8)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (cp.lower_name, 7)
-			parameters.put (a_constraint.upper_name, 8)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = creation procedure name
-			-- dollar8: $8 = constraint base class name
-		end
-
-	make_vtgc0b (a_class: ET_CLASS; cp: ET_FEATURE_NAME; f: ET_FEATURE; a_constraint: ET_CLASS)
-			-- Create a new VTGC error: creation procedure name `cp'
-			-- is not the final name of a procedure in the base class
-			-- `a_constraint' of a generic constraint of `a_class'.
-			--
-			-- ETL3 (4.82-00-00): p.261 (CTGC)
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			cp_not_void: cp /= Void
-			f_not_void: f /= Void
-			f_name: f.name.same_feature_name (cp)
-			f_not_procedure: not f.is_procedure
-			a_constraint_not_void: a_constraint /= Void
-		do
-			current_class := a_class
-			class_impl := a_class
-			position := cp.position
-			code := template_code (vtgc0b_template_code)
-			etl_code := vtgc_etl_code
-			default_template := default_message_template (vtgc0b_default_template)
-			create parameters.make_filled (empty_string, 1, 8)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (cp.lower_name, 7)
-			parameters.put (a_constraint.upper_name, 8)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = creation procedure name
-			-- dollar8: $8 = constraint base class name
 		end
 
 	make_vtug1a (a_class: ET_CLASS; a_type: ET_CLASS_TYPE)
@@ -14464,6 +15697,110 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = integer type
 		end
 
+	make_gvwmc2b (a_class, a_class_impl: ET_CLASS; a_constant: ET_CHARACTER_CONSTANT; a_type: ET_NAMED_TYPE)
+			-- Create a new GVWMC-2 error: `a_constant' in `a_class_impl' and viewed
+			-- from one of its descendants `a_class' (possibly itself) is not
+			-- representable as an instance of the character type `a_type'.
+			--
+			-- Not in ECMA-367-2
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_constant_not_void: a_constant /= Void
+			a_type_not_void: a_type /= Void
+		local
+			l_literal: STRING
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_constant.value_position
+			code := template_code (gvwmc2b_template_code)
+			etl_code := gvwmc2_etl_code
+			default_template := default_message_template (gvwmc2b_default_template)
+			create l_literal.make (10)
+			l_literal.append_character ('%'')
+			if attached {ET_C3_CHARACTER_CONSTANT} a_constant as l_c3 then
+				l_literal.append_character ('%%')
+				l_literal.append_character ('/')
+				l_literal.append_string (l_c3.literal)
+				l_literal.append_character ('/')
+			elseif attached {ET_C2_CHARACTER_CONSTANT} a_constant as l_c2 then
+				l_literal.append_character ('%%')
+				l_literal.append_character (l_c2.literal)
+			else
+				{UC_UTF8_ROUTINES}.append_natural_32_code_to_utf8 (l_literal, a_constant.value.natural_32_code)
+			end
+			l_literal.append_character ('%'')
+			create parameters.make_filled (empty_string, 1, 8)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (l_literal, 7)
+			parameters.put (a_type.to_text, 8)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = constant value
+			-- dollar8: $8 = character type
+		end
+
+	make_gvwmc2c (a_class, a_class_impl: ET_CLASS; a_constant: ET_MANIFEST_STRING; a_type: ET_NAMED_TYPE)
+			-- Create a new GVWMC-2 error: `a_constant' in `a_class_impl' and viewed
+			-- from one of its descendants `a_class' (possibly itself) is not
+			-- representable as an instance of the string type `a_type'.
+			--
+			-- Not in ECMA-367-2
+		require
+			a_class_not_void: a_class /= Void
+			a_class_impl_not_void: a_class_impl /= Void
+			a_class_impl_preparsed: a_class_impl.is_preparsed
+			a_constant_not_void: a_constant /= Void
+			a_type_not_void: a_type /= Void
+		do
+			current_class := a_class
+			class_impl := a_class_impl
+			position := a_constant.value_position
+			code := template_code (gvwmc2c_template_code)
+			etl_code := gvwmc2_etl_code
+			default_template := default_message_template (gvwmc2c_default_template)
+			create parameters.make_filled (empty_string, 1, 7)
+			parameters.put (etl_code, 1)
+			parameters.put (filename, 2)
+			parameters.put (position.line.out, 3)
+			parameters.put (position.column.out, 4)
+			parameters.put (current_class.upper_name, 5)
+			parameters.put (class_impl.upper_name, 6)
+			parameters.put (a_type.to_text, 7)
+			set_compilers (True)
+		ensure
+			current_class_set: current_class = a_class
+			class_impl_set: class_impl = a_class_impl
+			all_reported: all_reported
+			all_fatal: all_fatal
+			-- dollar0: $0 = program name
+			-- dollar1: $1 = ETL code
+			-- dollar2: $2 = filename
+			-- dollar3: $3 = line
+			-- dollar4: $4 = column
+			-- dollar5: $5 = class name
+			-- dollar6: $6 = implementation class name
+			-- dollar7: $7 = string type
+		end
+
 feature -- Access
 
 	current_class: ET_CLASS
@@ -14537,22 +15874,18 @@ feature {NONE} -- Implementation
 		end
 
 	vaol1a_default_template: STRING = "old expression does not appear in a postcondition."
-	vape0a_default_template: STRING = "feature `$8' of class $5 appearing in the precondition of `$9' is not exported to class $10 to which feature `$9' is exported."
-	vape0b_default_template: STRING = "feature `$8' of class $9 appearing in the precondition of `$10' is not exported to class $11 to which feature `$10' is exported."
-	vave0a_default_template: STRING = "loop variant expression of non-INTEGER type '$7'."
+	vape1a_default_template: STRING = "feature `$8' of class $5 appearing in the precondition of `$9' is not exported to class $10 to which feature `$9' is exported."
+	vape1b_default_template: STRING = "feature `$8' of class $9 appearing in the precondition of `$10' is not exported to class $11 to which feature `$10' is exported."
+	vape2a_default_template: STRING = "procedure `$8' of class $9 appearing in the precondition of `$10' is not exported for creation to class $11 to which feature `$10' is exported."
+	vape2b_default_template: STRING = "procedure `$8' of formal generic parameter #$9 appearing in the precondition of `$10' is not exported for creation to class $11 to which feature `$10' is exported."
+	vave0a_default_template: STRING = "loop variant expression of type '$7' is not a sized variant of INTEGER."
 	vbac1a_default_template: STRING = "the source of the assigner call (of type '$7') does not conform nor convert to its target (of type '$8')."
 	vbac2a_default_template: STRING = "query `$7' in class $8 has no assigner command."
 	vcch1a_default_template: STRING = "class is not marked as deferred but has deferred feature `$7'."
 	vcch1b_default_template: STRING = "class is not marked as deferred but has deferred feature `$7' inherited from $8."
 	vcch2a_default_template: STRING = "class is marked as deferred but has no deferred feature."
 	vcfg1a_default_template: STRING = "formal generic parameter '$7' has the same name as a class in the surrounding universe."
-	vcfg2a_default_template: STRING = "'$7' is the name of formal generic parameters #$7 and #$8."
-	vcfg3a_default_template: STRING = "invalid type '$7' in constraint of formal generic parameter."
-	vcfg3b_default_template: STRING = "constraint of formal generic parameter '$7' is '$8' itself."
-	vcfg3c_default_template: STRING = "constraint of formal generic parameter '$7' is another formal generic parameter '$8'."
-	vcfg3e_default_template: STRING = "formal generic constraint cycle $7."
-	vcfg3f_default_template: STRING = "constraint of formal generic parameter '$7' contains '$8' itself."
-	vcfg3h_default_template: STRING = "formal generic constraint cycle $7."
+	vcfg2a_default_template: STRING = "formal generic parameters #$8 and #$9 have the same name '$7'."
 	vdjr0a_default_template: STRING = "joined deferred features `$7' inherited from $8 and $9 don't have the same signature. Different number of arguments."
 	vdjr0b_default_template: STRING = "joined deferred features `$7' inherited from $8 and $9 don't have the same signature. Type of argument number $10 differs."
 	vdjr0c_default_template: STRING = "joined deferred features `$7' inherited from $8 and $9 don't have the same signature. Type of result differs."
@@ -14617,7 +15950,7 @@ feature {NONE} -- Implementation
 	vfac2a_default_template: STRING = "the number of arguments in assigner procedure `$8' is not one more than the number of arguments in query `$7'."
 	vfac3a_default_template: STRING = "the type of the first argument of assigner procedure `$8' and the result type of query `$7' do not have the same deanchored form."
 	vfac4a_default_template: STRING = "the type of the $10-th argument of assigner procedure `$8' and of the $9-th argument of query `$7' do not have the same deanchored form."
-	vfav1a_default_template: STRING = "feature `$7' has a binary Operator alias `$8' but is not a query with at exactly one argument."
+	vfav1a_default_template: STRING = "feature `$7' has a binary Operator alias `$8' but is not a query with exactly one argument."
 	vfav1b_default_template: STRING = "feature `$7' has a unary Operator alias `$8' but is not a query with no argument."
 	vfav1c_default_template: STRING = "features `$7' and `$9' have both the same unary Operator alias `$8'."
 	vfav1d_default_template: STRING = "features `$7' and `$9' inherited from $11 have both the same unary Operator alias `$8'."
@@ -14625,55 +15958,82 @@ feature {NONE} -- Implementation
 	vfav1f_default_template: STRING = "features `$7' and `$9' have both the same binary Operator alias `$8'."
 	vfav1g_default_template: STRING = "features `$7' and `$9' inherited from $11 have both the same binary Operator alias `$8'."
 	vfav1h_default_template: STRING = "features `$7' inherited from $9 and `$10' inherited from $12 have both the same binary Operator alias `$8'."
+	vfav1i_default_template: STRING = "feature `$7' has a Prefix name but is not a query with no argument."
+	vfav1j_default_template: STRING = "feature `$7' has an Infix name but is not a query with exactly one argument."
+	vfav1k_default_template: STRING = "feature `$7' has an Operator alias `$8' which can be either unary or binary, but it is not a query with no argument or exactly one argument."
+	vfav1l_default_template: STRING = "`$7' is of the Prefix form but `$8' in $9 is not a query with no argument."
+	vfav1m_default_template: STRING = "`$7' has a binary Operator alias `$8' but `$9' in $10 is not a query with exactly one argument."
+	vfav1n_default_template: STRING = "`$7' has a unary Operator alias `$8' but `$9' in $10 is not a query with no argument."
+	vfav1o_default_template: STRING = "`$7' is of the Infix form but `$8' in $9 is not a query with one argument."
+	vfav1p_default_template: STRING = "`$7' has an Operator alias `$8' which can be either unary or binary, but `$9' in $10 is not a query with no argument or exactly one argument."
+	vfav1q_default_template: STRING = "unary Operator alias `$7' appears on the right-hand-side of more than one rename pair in generic constraint $8."
+	vfav1r_default_template: STRING = "binary Operator alias `$7' appears on the right-hand-side of more than one rename pair in generic constraint $8."
+	vfav1s_default_template: STRING = "`$7' is already the unary Operator alias of feature `$8' in generic constraint $9."
+	vfav1t_default_template: STRING = "`$7' is already the binary Operator alias of feature `$8' in generic constraint $9."
 	vfav2a_default_template: STRING = "feature `$7' has a Bracket alias `$8' but is not a query with at least one argument."
 	vfav2b_default_template: STRING = "features `$7' and `$9' have both the same Bracket alias `$8'."
 	vfav2c_default_template: STRING = "features `$7' and `$9' inherited from $11 have both the same Bracket alias `$8'."
 	vfav2d_default_template: STRING = "features `$7' inherited from $9 and `$10' inherited from $12 have both the same Bracket alias `$8'."
-	vfav4a_default_template: STRING = "feature `$7' has a Parenthesis alias `$8' but is not a feature with at least one argument."
-	vfav4b_default_template: STRING = "features `$7' and `$9' have both the same Parenthesis alias `$8'."
-	vfav4c_default_template: STRING = "features `$7' and `$9' inherited from $11 have both the same Parenthesis alias `$8'."
-	vfav4d_default_template: STRING = "features `$7' inherited from $9 and `$10' inherited from $12 have both the same Parenthesis alias `$8'."
-	vfav4e_default_template: STRING = "`$7' has a Parenthesis alias `$8' but `$9' in $10 is not a feature with at least one argument."
+	vfav2e_default_template: STRING = "`$7' has a Bracket alias `$8' but `$9' in $10 is not a query with at least one argument."
+	vfav2f_default_template: STRING = "Bracket alias `$7' appears on the right-hand-side of more than one rename pair in generic constraint $8."
+	vfav2g_default_template: STRING = "`$7' is already the Bracket alias of feature `$8' in generic constraint $9."
+	vfav3a_default_template: STRING = "feature `$7' has a Parenthesis alias `$8' but is not a feature with at least one argument."
+	vfav3b_default_template: STRING = "features `$7' and `$9' have both the same Parenthesis alias `$8'."
+	vfav3c_default_template: STRING = "features `$7' and `$9' inherited from $11 have both the same Parenthesis alias `$8'."
+	vfav3d_default_template: STRING = "features `$7' inherited from $9 and `$10' inherited from $12 have both the same Parenthesis alias `$8'."
+	vfav3e_default_template: STRING = "`$7' has a Parenthesis alias `$8' but `$9' in $10 is not a feature with at least one argument."
+	vfav3f_default_template: STRING = "Parenthesis alias `$7' appears on the right-hand-side of more than one rename pair in generic constraint $8."
+	vfav3g_default_template: STRING = "`$7' is already the Parenthesis alias of feature `$8' in generic constraint $9."
+	vfav4a_default_template: STRING = "`$7' has a convert mark but it is not a binary operator alias."
 	vffd4a_default_template: STRING = "deferred feature `$7' is marked as frozen."
-	vffd5a_default_template: STRING = "feature `$7' has a Prefix name but is not an attribute or a function with no argument."
-	vffd6a_default_template: STRING = "feature `$7' has an Infix name but is not a function with exactly one argument."
 	vffd7a_default_template: STRING = "feature `$7' is a once funtion but its type contains an anchored type."
 	vffd7b_default_template: STRING = "feature `$7' is a once funtion but its type contains a formal generic parameter."
-	vgcc1a_default_template: STRING = "creation expression with no Creation_call part, but $7 is deferred."
-	vgcc1b_default_template: STRING = "creation instruction with no Creation_call part, but $7 is deferred."
+	vgcc1a_default_template: STRING = "creation with no Creation_call part, but $7 is deferred."
 	vgcc3a_default_template: STRING = "explicit creation type '$7' does not conform to target entity type '$8'."
-	vgcc5a_default_template: STRING = "creation expression with no Creation_call part, but $7 has a Creators part."
-	vgcc5b_default_template: STRING = "creation instruction with no Creation_call part, but $7 has a Creators part."
+	vgcc5a_default_template: STRING = "creation with no Creation_call part, but $7 has a Creators part."
 	vgcc6a_default_template: STRING = "`$7' is the final name of a once-procedure."
 	vgcc6b_default_template: STRING = "`$7' is not the final name of a procedure in class $9."
 	vgcc6c_default_template: STRING = "procedure `$8' of class $9 is not exported for creation to class $5."
 	vgcc6d_default_template: STRING = "`$7' is not the final name of a procedure in class $9."
-	vgcc6e_default_template: STRING = "procedure `$8' of class $9 is not exported for creation to class $5."
 	vgcc8a_default_template: STRING = "procedure `$8' of class $9 is not listed as creation procedure of the $10-th formal generic parameter of class $5."
-	vgcc8b_default_template: STRING = "procedure `$8' of class $9 is not listed as creation procedure of the $10-th formal generic parameter of class $5."
 	vgcp1a_default_template: STRING = "deferred class has a creation clause."
 	vgcp2a_default_template: STRING = "`$7' is not the final name of a procedure."
 	vgcp2b_default_template: STRING = "`$7' is not the final name of a procedure."
 	vgcp3a_default_template: STRING = "procedure name `$7' appears twice in creation clause."
 	vgcp3b_default_template: STRING = "procedure name `$7' appears in two different creation clauses."
-	vgcp3c_default_template: STRING = "procedure name `$7' appears twice in creation clause of constraint."
+	vgcp3c_default_template: STRING = "procedure name `$7' appears twice in creation clause of generic constraint."
+	vggc1a_default_template: STRING = "invalid type '$7' in constraint of formal generic parameter."
+	vggc2a_default_template: STRING = "`$7' is not the final name of a feature in generic constraint $8."
+	vggc2b_default_template: STRING = "generic constraint $7 is a formal generic parameter and therefore cannot have a rename clause."
+	vggc2c_default_template: STRING = "generic constraint $7 cannot have a rename clause."
+	vggc2d_default_template: STRING = "feature name `$7' appears on the left-hand-side of more than one rename pair in generic constraint $8."
+	vggc2e_default_template: STRING = "feature name `$7' appears on the right-hand-side of more than one rename pair in generic constraint $8."
+	vggc2f_default_template: STRING = "`$7' is already the final name of a feature in generic constraint $8."
+	vggc3a_default_template: STRING = "`$7' is not the final name of a procedure in generic constraint's base class $8."
+	vggc3b_default_template: STRING = "`$7' is not the final name of a procedure in the base class of any of generic constraints $8."
+	vggc3c_default_template: STRING = "feature `$9' in $8 appearing as creator `$7' in the generic constraint is not a procedure."
+	vggc3d_default_template: STRING = "features `$9' in '$8' and `$11' in '$10' appear both as creator `$7' in the generic constraint."
+	vgmc0a_default_template: STRING = "`$7' is not the final name of a feature in the base class of any of generic constraints $8."
+	vgmc0b_default_template: STRING = "features `$9' in '$8' and `$11' in '$10' have both the same generically constrained name `$7'."
+	vgmc0c_default_template: STRING = "feature `$9' in '$8' and tuple item at index '$11' in '$10' have both the same generically constrained name `$7'."
+	vgmc0d_default_template: STRING = "`$7' is a tuple label in both generic constraints '$8' and '$10'."
+	vgmc0e_default_template: STRING = "queries `$9' in '$8' and `$11' in '$10' are two versions with different types of the query with the generically constrained name `$7'."
+	vgmc0f_default_template: STRING = "tuple items at index '$8' in generic constraints '$9' and '$10' corresponding the tuple label `$7' have different types."
+	vgmc0g_default_template: STRING = "features `$9' in '$8' and `$11' in '$10' are two versions with different signatures of the feature with the generically constrained name `$7'."
 	vhay0a_default_template: STRING = "implicitly inherits from unknown class ANY."
 	vhpr1a_default_template: STRING = "inheritance cycle $7."
 	vhpr1b_default_template: STRING = "inheritance cycle when inheriting from $7."
+	vhpr2a_default_template: STRING = "conforming inheritance from frozen class $7."
 	vhpr3a_default_template: STRING = "invalid type '$7' in parent clause."
 	vhrc1a_default_template: STRING = "`$7' is not the final name of a feature in $8."
-	vhrc2a_default_template: STRING = "feature name `$7' appears as first element of two Rename_pairs."
-	vhrc4a_default_template: STRING = "`$7' is of the Prefix form but `$8' in $9 is not an attribute nor a function with no argument."
-	vhrc4b_default_template: STRING = "`$7' has a Bracket alias `$8' but `$9' in $10 is not a query with at least one argument."
-	vhrc4c_default_template: STRING = "`$7' has a binary Operator alias `$8' but `$9' in $10 is not a query with exactly one argument."
-	vhrc4d_default_template: STRING = "`$7' has a unary Operator alias `$8' but `$9' in $10 is not a query with no argument."
-	vhrc5a_default_template: STRING = "`$7' is of the Infix form but `$8' in $9 is not a function with one argument."
+	vhrc2a_default_template: STRING = "feature name `$7' appears on the left-hand-side of more than one rename pair."
 	vjar0a_default_template: STRING = "the source of the assignment (of type '$7') does not conform nor convert to its target entity (of type '$8')."
 	vjaw0a_default_template: STRING = "feature `$7' is not an attribute. A Writable is either a local variable (including Result) or an attribute."
 	vjaw0b_default_template: STRING = "`$7' is the name of a formal argument of feature `$8'. A Writable is either a local variable (including Result) or an attribute."
 	vjaw0c_default_template: STRING = "`$7' is the name of a formal argument of an inline agent. A Writable is either a local variable (including Result) or an attribute."
 	vjrv0a_default_template: STRING = "the type '$7' of the target entity of the assignment attempt is not a reference type."
 	vkcn1a_default_template: STRING = "query `$8' of class $9 appears in a call instruction."
+	vkcn1b_default_template: STRING = "tuple label `$7' appears in a call instruction."
 	vkcn1c_default_template: STRING = "query `$8' appears in a call instruction."
 	vkcn2a_default_template: STRING = "procedure `$8' of class $9 appears in a call expression."
 	vkcn2c_default_template: STRING = "procedure `$8' appears in a call expression."
@@ -14720,10 +16080,12 @@ feature {NONE} -- Implementation
 	vpir3b_default_template: STRING = "inline agents cannot be of the external form."
 	vqmc1a_default_template: STRING = "boolean constant attribute `$7' is not declared of type BOOLEAN."
 	vqmc2a_default_template: STRING = "character constant attribute `$7' is not declared of type CHARACTER."
+	vqmc2b_default_template: STRING = "character value $9 in constant attribute `$7' is not representable (too big or surrogate) as an instance of '$8'."
 	vqmc3a_default_template: STRING = "integer constant attribute `$7' is not declared of type INTEGER."
 	vqmc3b_default_template: STRING = "integer value '$9' in constant attribute `$7' is not representable as an instance of '$8'."
 	vqmc4a_default_template: STRING = "real constant attribute `$7' is not declared of type REAL or DOUBLE."
 	vqmc5a_default_template: STRING = "string constant attribute `$7' is not declared of type STRING."
+	vqmc5b_default_template: STRING = "string value in constant attribute `$7' is not representable (contains too big or surrogate characters) as an instance of '$8'."
 	vqui0a_default_template: STRING = "unique attribute `$7' is not declared of type INTEGER."
 	vred0a_default_template: STRING = "argument name '$7' appear twice in feature `$8'."
 	vred0b_default_template: STRING = "local variable name '$7' appear twice in feature `$8'."
@@ -14746,11 +16108,9 @@ feature {NONE} -- Implementation
 	vtat2b_default_template: STRING = "invalid type '$7' when part of a qualified anchored type: the type of anchor `$8' must not depend (possibly recursively) on a qualified anchored type."
 	vtcg3a_default_template: STRING = "actual generic parameter '$7' in type '$9' does not conform to constraint '$8'."
 	vtcg4a_default_template: STRING = "base class $9 of the $7-th actual generic parameter of $10 does not make feature `$8' available as creation procedure to class $10."
-	vtcg4b_default_template: STRING = "the $7-th actual generic parameter of $10, which is the $9-th formal generic parameter of class $5, does not list feature `$8' as creation procedure in its generic constraint."
+	vtcg4b_default_template: STRING = "the $7-th actual generic parameter of $10, which is the $9-th formal generic parameter of class $5, does not list feature `$8' as creation procedure in its constraint."
 	vtct0a_default_template: STRING = "type based on unknown class $7."
 	vtct0b_default_template: STRING = "type based on unknown class $7."
-	vtgc0a_default_template: STRING = "`$7' is not the final name of a procedure in constraint's base class $8."
-	vtgc0b_default_template: STRING = "`$7' is not the final name of a procedure in constraint's base class $8."
 	vtug1a_default_template: STRING = "type '$7' has actual generic parameters but class $8 is not generic."
 	vtug2a_default_template: STRING = "type '$7' has wrong number of actual generic parameters."
 	vuar1a_default_template: STRING = "the number of actual arguments is not the same as the number of formal arguments of feature `$8' in class $9."
@@ -14843,11 +16203,14 @@ feature {NONE} -- Implementation
 	gvuio0b_default_template: STRING = "`$7' is an object-test local of an inline agent and hence cannot be an instruction."
 	gvuio0c_default_template: STRING = "`$7' is an object-test local of an invariant and hence cannot be an instruction."
 	gvwmc2a_default_template: STRING = "integer constant '$7' is not representable as an instance of '$8'."
+	gvwmc2b_default_template: STRING = "character constant $7 is not representable (too big or surrogate) as an instance of '$8'."
+	gvwmc2c_default_template: STRING = "manifest string is not representable (contains too big or surrogate characters) as an instance of '$7'."
 	gvzzz0a_default_template: STRING = "validity error"
 			-- Default templates
 
 	vaol1_etl_code: STRING = "VAOL-1"
-	vape_etl_code: STRING = "VAPE"
+	vape1_etl_code: STRING = "VAPE-1"
+	vape2_etl_code: STRING = "VAPE-2"
 	vave_etl_code: STRING = "VAVE"
 	vbac1_etl_code: STRING = "VBAC-1"
 	vbac2_etl_code: STRING = "VBAC-2"
@@ -14855,7 +16218,6 @@ feature {NONE} -- Implementation
 	vcch2_etl_code: STRING = "VCCH-2"
 	vcfg1_etl_code: STRING = "VCFG-1"
 	vcfg2_etl_code: STRING = "VCFG-2"
-	vcfg3_etl_code: STRING = "VCFG-3"
 	vdjr_etl_code: STRING = "VDJR"
 	vdjr2_etl_code: STRING = "VDJR-2"
 	vdpr1_etl_code: STRING = "VDPR-1"
@@ -14888,12 +16250,12 @@ feature {NONE} -- Implementation
 	vfac4_etl_code: STRING = "VFAC-4"
 	vfav1_etl_code: STRING = "VFAV-1"
 	vfav2_etl_code: STRING = "VFAV-2"
+	vfav3_etl_code: STRING = "VFAV-3"
 	vfav4_etl_code: STRING = "VFAV-4"
 	vffd4_etl_code: STRING = "VFFD-4"
-	vffd5_etl_code: STRING = "VFFD-5"
-	vffd6_etl_code: STRING = "VFFD-6"
 	vffd7_etl_code: STRING = "VFFD-7"
 	vhpr1_etl_code: STRING = "VHPR-1"
+	vhpr2_etl_code: STRING = "VHPR-2"
 	vgcc1_etl_code: STRING = "VGCC-1"
 	vgcc3_etl_code: STRING = "VGCC-3"
 	vgcc5_etl_code: STRING = "VGCC-5"
@@ -14902,12 +16264,14 @@ feature {NONE} -- Implementation
 	vgcp1_etl_code: STRING = "VGCP-1"
 	vgcp2_etl_code: STRING = "VGCP-2"
 	vgcp3_etl_code: STRING = "VGCP-3"
+	vggc1_etl_code: STRING = "VGGC-1"
+	vggc2_etl_code: STRING = "VGGC-2"
+	vggc3_etl_code: STRING = "VGGC-3"
+	vgmc_etl_code: STRING = "VGMC"
 	vhay_etl_code: STRING = "VHAY"
 	vhpr3_etl_code: STRING = "VHPR-3"
 	vhrc1_etl_code: STRING = "VHRC-1"
 	vhrc2_etl_code: STRING = "VHRC-2"
-	vhrc4_etl_code: STRING = "VHRC-4"
-	vhrc5_etl_code: STRING = "VHRC-5"
 	vjar_etl_code: STRING = "VJAR"
 	vjaw_etl_code: STRING = "VJAW"
 	vjrv_etl_code: STRING = "VJRV"
@@ -14952,7 +16316,6 @@ feature {NONE} -- Implementation
 	vtcg3_etl_code: STRING = "VTCG-3"
 	vtcg4_etl_code: STRING = "VTCG-4"
 	vtct_etl_code: STRING = "VTCT"
-	vtgc_etl_code: STRING = "VTGC"
 	vtug1_etl_code: STRING = "VTUG-1"
 	vtug2_etl_code: STRING = "VTUG-2"
 	vuar1_etl_code: STRING = "VUAR-1"
@@ -15024,8 +16387,10 @@ feature {NONE} -- Implementation
 		end
 
 	vaol1a_template_code: STRING = "vaol1a"
-	vape0a_template_code: STRING = "vape0a"
-	vape0b_template_code: STRING = "vape0b"
+	vape1a_template_code: STRING = "vape1a"
+	vape1b_template_code: STRING = "vape1b"
+	vape2a_template_code: STRING = "vape2a"
+	vape2b_template_code: STRING = "vape2b"
 	vave0a_template_code: STRING = "vave0a"
 	vbac1a_template_code: STRING = "vbac1a"
 	vbac2a_template_code: STRING = "vbac2a"
@@ -15034,12 +16399,6 @@ feature {NONE} -- Implementation
 	vcch2a_template_code: STRING = "vcch2a"
 	vcfg1a_template_code: STRING = "vcfg1a"
 	vcfg2a_template_code: STRING = "vcfg2a"
-	vcfg3a_template_code: STRING = "vcfg3a"
-	vcfg3b_template_code: STRING = "vcfg3b"
-	vcfg3c_template_code: STRING = "vcfg3c"
-	vcfg3e_template_code: STRING = "vcfg3e"
-	vcfg3f_template_code: STRING = "vcfg3f"
-	vcfg3h_template_code: STRING = "vcfg3h"
 	vdjr0a_template_code: STRING = "vdjr0a"
 	vdjr0b_template_code: STRING = "vdjr0b"
 	vdjr0c_template_code: STRING = "vdjr0c"
@@ -15112,55 +16471,85 @@ feature {NONE} -- Implementation
 	vfav1f_template_code: STRING = "vfav1f"
 	vfav1g_template_code: STRING = "vfav1g"
 	vfav1h_template_code: STRING = "vfav1h"
+	vfav1i_template_code: STRING = "vfav1i"
+	vfav1j_template_code: STRING = "vfav1j"
+	vfav1k_template_code: STRING = "vfav1k"
+	vfav1l_template_code: STRING = "vfav1l"
+	vfav1m_template_code: STRING = "vfav1m"
+	vfav1n_template_code: STRING = "vfav1n"
+	vfav1o_template_code: STRING = "vfav1o"
+	vfav1p_template_code: STRING = "vfav1p"
+	vfav1q_template_code: STRING = "vfav1q"
+	vfav1r_template_code: STRING = "vfav1r"
+	vfav1s_template_code: STRING = "vfav1s"
+	vfav1t_template_code: STRING = "vfav1t"
 	vfav2a_template_code: STRING = "vfav2a"
 	vfav2b_template_code: STRING = "vfav2b"
 	vfav2c_template_code: STRING = "vfav2c"
 	vfav2d_template_code: STRING = "vfav2d"
+	vfav2e_template_code: STRING = "vfav2e"
+	vfav2f_template_code: STRING = "vfav2f"
+	vfav2g_template_code: STRING = "vfav2g"
+	vfav3a_template_code: STRING = "vfav3a"
+	vfav3b_template_code: STRING = "vfav3b"
+	vfav3c_template_code: STRING = "vfav3c"
+	vfav3d_template_code: STRING = "vfav3d"
+	vfav3e_template_code: STRING = "vfav3e"
+	vfav3f_template_code: STRING = "vfav3f"
+	vfav3g_template_code: STRING = "vfav3g"
 	vfav4a_template_code: STRING = "vfav4a"
-	vfav4b_template_code: STRING = "vfav4b"
-	vfav4c_template_code: STRING = "vfav4c"
-	vfav4d_template_code: STRING = "vfav4d"
-	vfav4e_template_code: STRING = "vfav4e"
 	vffd4a_template_code: STRING = "vffd4a"
 	vffd5a_template_code: STRING = "vffd5a"
 	vffd6a_template_code: STRING = "vffd6a"
 	vffd7a_template_code: STRING = "vffd7a"
 	vffd7b_template_code: STRING = "vffd7b"
 	vgcc1a_template_code: STRING = "vgcc1a"
-	vgcc1b_template_code: STRING = "vgcc1b"
 	vgcc3a_template_code: STRING = "vgcc3a"
 	vgcc5a_template_code: STRING = "vgcc5a"
-	vgcc5b_template_code: STRING = "vgcc5b"
 	vgcc6a_template_code: STRING = "vgcc6a"
 	vgcc6b_template_code: STRING = "vgcc6b"
 	vgcc6c_template_code: STRING = "vgcc6c"
 	vgcc6d_template_code: STRING = "vgcc6d"
-	vgcc6e_template_code: STRING = "vgcc6e"
 	vgcc8a_template_code: STRING = "vgcc8a"
-	vgcc8b_template_code: STRING = "vgcc8b"
 	vgcp1a_template_code: STRING = "vgcp1a"
 	vgcp2a_template_code: STRING = "vgcp2a"
 	vgcp2b_template_code: STRING = "vgcp2b"
 	vgcp3a_template_code: STRING = "vgcp3a"
 	vgcp3b_template_code: STRING = "vgcp3b"
 	vgcp3c_template_code: STRING = "vgcp3c"
+	vggc1a_template_code: STRING = "vggc1a"
+	vggc2a_template_code: STRING = "vggc2a"
+	vggc2b_template_code: STRING = "vggc2b"
+	vggc2c_template_code: STRING = "vggc2c"
+	vggc2d_template_code: STRING = "vggc2d"
+	vggc2e_template_code: STRING = "vggc2e"
+	vggc2f_template_code: STRING = "vggc2f"
+	vggc2h_template_code: STRING = "vggc2h"
+	vggc3a_template_code: STRING = "vggc3a"
+	vggc3b_template_code: STRING = "vggc3b"
+	vggc3c_template_code: STRING = "vggc3c"
+	vggc3d_template_code: STRING = "vggc3d"
+	vgmc0a_template_code: STRING = "vgmc0a"
+	vgmc0b_template_code: STRING = "vgmc0b"
+	vgmc0c_template_code: STRING = "vgmc0c"
+	vgmc0d_template_code: STRING = "vgmc0d"
+	vgmc0e_template_code: STRING = "vgmc0e"
+	vgmc0f_template_code: STRING = "vgmc0f"
+	vgmc0g_template_code: STRING = "vgmc0g"
 	vhay0a_template_code: STRING = "vhay0a"
 	vhpr1a_template_code: STRING = "vhpr1a"
 	vhpr1b_template_code: STRING = "vhpr1b"
+	vhpr2a_template_code: STRING = "vhpr2a"
 	vhpr3a_template_code: STRING = "vhpr3a"
 	vhrc1a_template_code: STRING = "vhrc1a"
 	vhrc2a_template_code: STRING = "vhrc2a"
-	vhrc4a_template_code: STRING = "vhrc4a"
-	vhrc4b_template_code: STRING = "vhrc4b"
-	vhrc4c_template_code: STRING = "vhrc4c"
-	vhrc4d_template_code: STRING = "vhrc4d"
-	vhrc5a_template_code: STRING = "vhrc5a"
 	vjar0a_template_code: STRING = "vjar0a"
 	vjaw0a_template_code: STRING = "vjaw0a"
 	vjaw0b_template_code: STRING = "vjaw0b"
 	vjaw0c_template_code: STRING = "vjaw0c"
 	vjrv0a_template_code: STRING = "vjrv0a"
 	vkcn1a_template_code: STRING = "vkcn1a"
+	vkcn1b_template_code: STRING = "vkcn1b"
 	vkcn1c_template_code: STRING = "vkcn1c"
 	vkcn2a_template_code: STRING = "vkcn2a"
 	vkcn2c_template_code: STRING = "vkcn2c"
@@ -15207,10 +16596,12 @@ feature {NONE} -- Implementation
 	vpir3b_template_code: STRING = "vpir3b"
 	vqmc1a_template_code: STRING = "vqmc1a"
 	vqmc2a_template_code: STRING = "vqmc2a"
+	vqmc2b_template_code: STRING = "vqmc2b"
 	vqmc3a_template_code: STRING = "vqmc3a"
 	vqmc3b_template_code: STRING = "vqmc3b"
 	vqmc4a_template_code: STRING = "vqmc4a"
 	vqmc5a_template_code: STRING = "vqmc5a"
+	vqmc5b_template_code: STRING = "vqmc5b"
 	vqui0a_template_code: STRING = "vqui0a"
 	vred0a_template_code: STRING = "vred0a"
 	vred0b_template_code: STRING = "vred0b"
@@ -15330,6 +16721,8 @@ feature {NONE} -- Implementation
 	gvuio0b_template_code: STRING = "gvuio0b"
 	gvuio0c_template_code: STRING = "gvuio0c"
 	gvwmc2a_template_code: STRING = "gvwmc2a"
+	gvwmc2b_template_code: STRING = "gvwmc2b"
+	gvwmc2c_template_code: STRING = "gvwmc2c"
 	gvzzz0a_template_code: STRING = "gvzzz0a"
 			-- Template error codes
 

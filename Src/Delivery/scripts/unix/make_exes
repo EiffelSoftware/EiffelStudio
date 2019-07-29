@@ -261,16 +261,6 @@ fi
 clean_project
 move getest.tar.bz2 $EXPORT_DIR/bin
 
-remtrace gexace
-finalize gexace.ecf gexace
-tgz_ccode gexace gexace.tar.bz2
-if [ ! -f gexace.tar.bz2 ]; then
-	echo Could not finalize a new gexace
-	CANCEL
-fi
-clean_project
-move gexace.tar.bz2 $EXPORT_DIR/bin
-
 remtrace gexslt
 finalize gexslt.ecf gexslt
 tgz_ccode gexslt gexslt.tar.bz2

@@ -5,7 +5,7 @@ note
 		"Eiffel type checkers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -49,6 +49,10 @@ feature {NONE} -- Initialization
 			current_class_impl := tokens.unknown_class
 			current_feature_impl := dummy_feature
 			create constraint_context.make_with_capacity (current_class, 1)
+			create target_context.make_with_capacity (current_class, 10)
+			create other_context.make_with_capacity (current_class, 10)
+			create adapted_base_class_checker.make (a_system_processor)
+			create adapted_base_classes.make (20)
 		end
 
 feature -- Validity checking
@@ -90,7 +94,7 @@ feature -- Validity checking
 			current_feature_impl := old_feature_impl
 		end
 
-	check_creation_type_validity (a_type: ET_CLASS_TYPE; a_current_class_impl: ET_CLASS; a_current_context: ET_TYPE_CONTEXT; a_position: ET_POSITION)
+	check_creation_type_validity (a_type: ET_BASE_TYPE; a_current_class_impl: ET_CLASS; a_current_context: ET_TYPE_CONTEXT; a_position: ET_POSITION)
 			-- Check validity of `a_type' as a creation type written in `a_current_class_impl'
 			-- and viewed from `a_current_context'. Note that `a_type' should already be a valid
 			-- type by itself (call `check_type_validity' for that).
@@ -114,15 +118,15 @@ feature -- Validity checking
 			a_creator: detachable ET_CONSTRAINT_CREATOR
 			a_name: ET_FEATURE_NAME
 			a_seed: INTEGER
-			a_creation_procedure: detachable ET_PROCEDURE
 			an_index: INTEGER
 			a_formal_parameters: detachable ET_FORMAL_PARAMETER_LIST
 			a_formal_parameter: detachable ET_FORMAL_PARAMETER
 			a_formal_creator: detachable ET_CONSTRAINT_CREATOR
-			a_formal_type: detachable ET_FORMAL_PARAMETER_TYPE
-			has_formal_type_error: BOOLEAN
+			a_formal_base_types: ET_CONSTRAINT_BASE_TYPES
 			i, nb: INTEGER
-			j, nb2: INTEGER
+			j, nb_creators: INTEGER
+			k, nb_base_types: INTEGER
+			nb_parameters: INTEGER
 			had_error: BOOLEAN
 			old_context: ET_TYPE_CONTEXT
 			old_class: ET_CLASS
@@ -140,6 +144,27 @@ feature -- Validity checking
 			a_type_class.process (system_processor.interface_checker)
 			if not a_type_class.interface_checked or else a_type_class.has_interface_error then
 				set_fatal_error
+			elseif attached {ET_TUPLE_TYPE} a_type as l_tuple_type then
+					-- This covers the case where we have:
+					--    FOO [TUPLE [MY_EXPANDED [BAR]]
+					-- and FOO was declared as:
+					--    class FOO [G -> TUPLE create default_create end]
+				if attached l_tuple_type.actual_parameters as a_parameters then
+					nb_parameters := a_parameters.count
+					from i := 1 until i > nb_parameters loop
+						if attached {ET_BASE_TYPE} a_parameters.type (i) as l_base_type and then l_base_type.is_expanded then
+								-- If the actual parameter is expanded, then the creation of an instance
+								-- of that type will be implicit, so we need to check recursively
+								-- its validity as a creation type.
+							had_error := has_fatal_error
+							check_creation_type_validity (l_base_type, current_class_impl, current_context, a_position)
+							if had_error then
+								set_fatal_error
+							end
+						end
+						i := i + 1
+					end
+				end
 			elseif an_actuals /= Void and then not an_actuals.is_empty then
 				a_formals := a_type_class.formal_parameters
 				nb := an_actuals.count
@@ -155,46 +180,55 @@ feature -- Validity checking
 						a_formal := a_formals.formal_parameter (i)
 						a_creator := a_formal.creation_procedures
 						if a_creator /= Void and then not a_creator.is_empty then
-							a_base_class := a_named_actual.base_class (current_context)
-							if attached {ET_FORMAL_PARAMETER_TYPE} a_named_actual as l_attached_formal_type then
-								a_formal_type := l_attached_formal_type
+							nb_creators := a_creator.count
+							if attached {ET_FORMAL_PARAMETER_TYPE} a_named_actual as a_formal_type then
 								an_index := a_formal_type.index
 								if a_formal_parameters = Void or else an_index > a_formal_parameters.count then
 										-- Internal error: `a_formal_parameter' is supposed to be
 										-- a formal parameter of `current_context''s base class.
-									has_formal_type_error := True
 									set_fatal_error
 									error_handler.report_giaaa_error
 								else
-									has_formal_type_error := False
 									a_formal_parameter := a_formal_parameters.formal_parameter (an_index)
+									a_formal_base_types := a_formal_parameter.constraint_base_types
 									a_formal_creator := a_formal_parameter.creation_procedures
-								end
-							end
-							nb2 := a_creator.count
-							if nb2 > 0 then
-								a_base_class.process (system_processor.interface_checker)
-								if not a_base_class.interface_checked or else a_base_class.has_interface_error then
-									set_fatal_error
-								else
-									from j := 1 until j > nb2 loop
+									nb_base_types := a_formal_base_types.count
+									from j := 1 until j > nb_creators loop
 										a_name := a_creator.feature_name (j)
 										a_seed := a_name.seed
-										a_creation_procedure := a_base_class.seeded_procedure (a_seed)
-										if a_creation_procedure = Void then
+										from k := 1 until k > nb_base_types loop
+											a_base_class := a_formal_base_types.type_constraint (k).base_class
+											a_base_class.process (system_processor.interface_checker)
+											if not a_base_class.interface_checked_successfully then
+												set_fatal_error
+											elseif not attached a_base_class.seeded_procedure (a_seed) as l_creation_procedure then
+												-- We are in the case of multiple constraints and the
+												-- procedure with this seed comes from another constraint.
+											elseif a_formal_creator = Void or else not a_formal_creator.has_feature (l_creation_procedure) then
+												set_fatal_error
+												if not class_interface_error_only then
+													error_handler.report_vtcg4b_error (current_class, current_class_impl, a_position, i, a_name, a_formal_parameter, a_type_class)
+												end
+											end
+											k := k + 1
+										end
+										j := j + 1
+									end
+								end
+							else
+								a_base_class := a_named_actual.base_class (current_context)
+								a_base_class.process (system_processor.interface_checker)
+								if not a_base_class.interface_checked_successfully then
+									set_fatal_error
+								else
+									from j := 1 until j > nb_creators loop
+										a_name := a_creator.feature_name (j)
+										a_seed := a_name.seed
+										if not attached a_base_class.seeded_procedure (a_seed) as l_creation_procedure then
 												-- Internal error: `a_type' is supposed to be a valid type.
 											set_fatal_error
 											error_handler.report_giaaa_error
-										elseif a_formal_type /= Void then
-											if not has_formal_type_error and a_formal_parameter /= Void then
-												if a_formal_creator = Void or else not a_formal_creator.has_feature (a_creation_procedure) then
-													set_fatal_error
-													if not class_interface_error_only then
-														error_handler.report_vtcg4b_error (current_class, current_class_impl, a_position, i, a_name, a_formal_parameter, a_type_class)
-													end
-												end
-											end
-										elseif not a_creation_procedure.is_creation_exported_to (a_type_class, a_base_class, system_processor) then
+										elseif not l_creation_procedure.is_creation_exported_to (a_type_class, a_base_class, system_processor) then
 											if system_processor.is_ise and then (current_class.is_deferred and an_actual.is_like_current) then
 												-- ISE accepts code of the form:
 												--
@@ -255,7 +289,7 @@ feature -- Validity checking
 												-- which was nevertheless not more unsafe than the other cases above.
 											elseif
 												system_processor.older_ise_version (ise_6_0_6_7358) and then
-												(a_base_class.is_deferred and a_creation_procedure.has_seed (current_system.default_create_seed))
+												(a_base_class.is_deferred and l_creation_procedure.has_seed (current_system.default_create_seed))
 											then
 												-- ISE started to report this VTCG error with version 6.0.6.7358.
 												-- However we report it anyway, except when the creation procedure
@@ -273,30 +307,27 @@ feature -- Validity checking
 										j := j + 1
 									end
 								end
-							end
-								-- Since the corresponding formal generic parameter
-								-- has creation procedures associated with it, it
-								-- is possible to create instances of `an_actual'
-								-- through that means. So we need to check recursively
-								-- its validity as a creation type.
-							if attached {ET_CLASS_TYPE} a_named_actual as l_class_type then
-								had_error := has_fatal_error
-								check_creation_type_validity (l_class_type, current_class_impl, current_context, a_position)
-								if had_error then
-									set_fatal_error
+									-- Since the corresponding formal generic parameter
+									-- has creation procedures associated with it, it
+									-- is possible to create instances of `an_actual'
+									-- through that means. So we need to check recursively
+									-- its validity as a creation type.
+								if attached {ET_BASE_TYPE} a_named_actual as l_base_type then
+									had_error := has_fatal_error
+									check_creation_type_validity (l_base_type, current_class_impl, current_context, a_position)
+									if had_error then
+										set_fatal_error
+									end
 								end
 							end
-						else
-								-- We need to check whether `an_actual' is expanded.
-								-- In that case the creation of an instance of that
-								-- type will be implicit, so we need to check recursively
+						elseif attached {ET_BASE_TYPE} a_named_actual as l_base_type and then l_base_type.is_expanded then
+								-- If `a_named_actual' is expanded, then the creation of an instance
+								-- of that type will be implicit, so we need to check recursively
 								-- its validity as a creation type.
-							if attached {ET_CLASS_TYPE} a_named_actual as l_class_type and then l_class_type.is_expanded then
-								had_error := has_fatal_error
-								check_creation_type_validity (l_class_type, current_class_impl, current_context, a_position)
-								if had_error then
-									set_fatal_error
-								end
+							had_error := has_fatal_error
+							check_creation_type_validity (l_base_type, current_class_impl, current_context, a_position)
+							if had_error then
+								set_fatal_error
 							end
 						end
 						i := i + 1
@@ -362,7 +393,7 @@ feature {NONE} -- Validity checking
 			an_actual: ET_TYPE
 			l_actuals: detachable ET_ACTUAL_PARAMETERS
 			a_formal: ET_FORMAL_PARAMETER
-			a_constraint: detachable ET_TYPE
+			a_constraint: detachable ET_CONSTRAINT
 			a_class: ET_CLASS
 			had_error: BOOLEAN
 			l_conforms: BOOLEAN
@@ -371,6 +402,7 @@ feature {NONE} -- Validity checking
 			a_class := a_type.base_class
 			if a_class.is_none then
 				if a_type.is_generic then
+						-- Class "NONE" is not generic.
 					set_fatal_error
 					if not class_interface_error_only then
 						if current_class = current_class_impl then
@@ -510,17 +542,18 @@ feature {NONE} -- Validity checking
 									-- we need to check that "LIST [FOO]" conforms to
 									-- "LIST [LIST [FOO]]", not just "LIST [G]".
 								constraint_context.set (a_type, current_context.root_context)
-								l_conforms := an_actual.conforms_to_type (a_constraint, constraint_context, current_context, system_processor)
+								l_conforms := an_actual.conforms_to_constraint (a_constraint, constraint_context, current_context, system_processor)
 								if not l_conforms then
 									if current_class = current_class_impl and then a_class.tuple_constraint_position = i then
 										a_type.resolve_unfolded_tuple_actual_parameters_2 (current_context, constraint_context, system_processor)
 										if attached a_type.actual_parameters as l_actual_parameters and then l_actual_parameters /= l_actuals then
 											l_actuals := l_actual_parameters
 											an_actual := l_actuals.type (i)
-											l_conforms := an_actual.conforms_to_type (a_constraint, constraint_context, current_context, system_processor)
+											l_conforms := an_actual.conforms_to_constraint (a_constraint, constraint_context, current_context, system_processor)
 										end
 									end
 								end
+								constraint_context.reset (tokens.unknown_class)
 								if not l_conforms then
 										-- The actual parameter does not conform to the
 										-- constraint of its corresponding formal parameter.
@@ -732,82 +765,126 @@ feature {NONE} -- Validity checking
 			-- no_cycle: no cycle in anchored types involved.
 		local
 			l_seed: INTEGER
+			l_name: ET_FEATURE_NAME
 			l_target_type: ET_TYPE
 			l_class: ET_CLASS
 			old_in_qualified_anchored_type: BOOLEAN
+			l_adapted_base_class: ET_ADAPTED_CLASS
+			l_adapted_base_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
+			l_has_multiple_constraints: BOOLEAN
+			i, nb: INTEGER
+			l_first_context: detachable ET_NESTED_TYPE_CONTEXT
+			l_first_adapted_base_class: detachable ET_ADAPTED_CLASS
+			l_first_query: detachable ET_QUERY
+			l_target_context_count: INTEGER
 		do
 			has_fatal_error := False
 			old_in_qualified_anchored_type := in_qualified_anchored_type
 			in_qualified_anchored_type := True
+			l_name := a_type.name
+			l_seed := a_type.seed
 			l_target_type := a_type.target_type
 			l_target_type.process (Current)
+			l_adapted_base_classes := adapted_base_classes
 			if not has_fatal_error then
 				report_qualified_anchored_type_supplier (l_target_type, current_context.root_context)
-				l_seed := a_type.seed
-				if l_seed = 0 then
-						-- Not resolved yet. It needs to be resolved
-						-- in the implementation class first.
-					if current_class /= current_class_impl then
-							-- Internal error: it should have been resolved in
-							-- the implementation class.
-						set_fatal_error
-						error_handler.report_giaaa_error
-					else
-						l_class := l_target_type.base_class (current_context)
-						l_class.process (system_processor.interface_checker)
-						if not l_class.interface_checked or else l_class.has_interface_error then
-							set_fatal_error
-						else
-							if attached l_class.named_query (a_type.name) as l_query then
-								a_type.resolve_identifier_type (l_query.first_seed)
+				target_context.set (l_target_type, current_context.root_context)
+				l_target_context_count := target_context.count
+				target_context.add_adapted_base_classes_to_list (l_adapted_base_classes)
+				l_has_multiple_constraints := l_adapted_base_classes.count > 1
+				check_adapted_base_classes_validity (l_name, l_adapted_base_classes, target_context)
+			end
+			if has_fatal_error then
+				-- Cannot go further.
+			elseif l_seed = 0 then
+				l_adapted_base_class := l_adapted_base_classes.first
+				l_class := l_adapted_base_class.base_class
+					-- Not resolved yet. It needs to be resolved
+					-- in the implementation class first.
+				if current_class /= current_class_impl then
+						-- Internal error: it should have been resolved in
+						-- the implementation class.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				elseif attached l_adapted_base_class.named_query (l_name) as l_query then
+					a_type.resolve_identifier_type (l_query.first_seed)
 -- TODO: check that `l_query' is exported to `current_class'.
-								if system_processor.qualified_anchored_types_cycle_detection_enabled then
-									if  l_query.type.depends_on_qualified_anchored_type (l_class) then
-											-- Error: the type of the anchor appearing in a qualified
-											-- anchored type should not depend on a qualified anchored type.
-											-- This is a way to avoid cycles in qualified anchored types.
-										set_fatal_error
-										if not class_interface_error_only then
-											error_handler.report_vtat2b_error (current_class, current_class_impl, a_type)
-										end
-									end
-								end
-							else
-									-- Error: there is no query with this final name.
-								set_fatal_error
-								if not class_interface_error_only then
-									error_handler.report_vtat1c_error (current_class, a_type, l_class)
-								end
+					if system_processor.qualified_anchored_types_cycle_detection_enabled then
+						if l_query.type.depends_on_qualified_anchored_type (l_class) then
+								-- Error: the type of the anchor appearing in a qualified
+								-- anchored type should not depend on a qualified anchored type.
+								-- This is a way to avoid cycles in qualified anchored types.
+							set_fatal_error
+							if not class_interface_error_only then
+								error_handler.report_vtat2b_error (current_class, current_class_impl, a_type)
 							end
 						end
 					end
 				else
-					l_class := l_target_type.base_class (current_context)
-					l_class.process (system_processor.interface_checker)
-					if not l_class.interface_checked or else l_class.has_interface_error then
-						set_fatal_error
-					else
-						if attached l_class.seeded_query (l_seed) as l_query then
--- TODO: check that `l_query' is exported to `current_class'.
-							if system_processor.qualified_anchored_types_cycle_detection_enabled then
-								if l_query.type.depends_on_qualified_anchored_type (l_class) then
-										-- Error: the type of the anchor appearing in a qualified
-										-- anchored type should not depend on a qualified anchored type.
-										-- This is a way to avoid cycles in qualified anchored types.
-									set_fatal_error
-									if not class_interface_error_only then
-										error_handler.report_vtat2b_error (current_class, current_class_impl, a_type)
-									end
-								end
-							end
-						else
-								-- Internal error: if we got a seed, then `l_query' should not be void.
-							set_fatal_error
-							error_handler.report_giaaa_error
-						end
+						-- Error: there is no query with this final name.
+					set_fatal_error
+					if not class_interface_error_only then
+						error_handler.report_vtat1c_error (current_class, a_type, l_class)
 					end
 				end
+			elseif l_adapted_base_classes.is_empty then
+					-- Internal error: the seed was already computed in a proper ancestor
+					-- (or in another generic derivation) of `current_class' where this
+					-- type was written. So, if we got a seed, there should be a query
+					-- for this seed.
+				set_fatal_error
+				error_handler.report_giaaa_error
+			else
+				nb := l_adapted_base_classes.count
+				from i := 1 until i > nb loop
+					l_adapted_base_class := l_adapted_base_classes.item (i)
+					l_class := l_adapted_base_class.base_class
+					if attached l_class.seeded_query (l_seed) as l_query then
+-- TODO: check that `l_query' is exported to `current_class'.
+						if system_processor.qualified_anchored_types_cycle_detection_enabled then
+							if l_query.type.depends_on_qualified_anchored_type (l_class) then
+									-- Error: the type of the anchor appearing in a qualified
+									-- anchored type should not depend on a qualified anchored type.
+									-- This is a way to avoid cycles in qualified anchored types.
+								set_fatal_error
+								if not class_interface_error_only then
+									error_handler.report_vtat2b_error (current_class, current_class_impl, a_type)
+								end
+							end
+						end
+						adapted_base_class_checker.reset_context_if_multiple_constraints (l_has_multiple_constraints, l_adapted_base_class, target_context)
+						target_context.force_last (l_query.type)
+						if l_first_context /= Void and l_first_adapted_base_class /= Void and l_first_query /= Void then
+							if not target_context.same_named_context (l_first_context) then
+									-- Two queries with the same seed and different result types.
+								set_fatal_error
+								error_handler.report_vgmc0e_error (current_class, current_class_impl, l_name, l_first_query, l_first_adapted_base_class, l_query, l_adapted_base_class)
+							end
+						elseif nb > 1 then
+							l_first_context := other_context
+							l_first_context.copy_type_context (target_context)
+							l_first_adapted_base_class := l_adapted_base_class
+							l_first_query := l_query
+						end
+						target_context.keep_first (l_target_context_count)
+					elseif l_class.is_none then
+-- TODO: "NONE" conforms to all reference types.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					else
+							-- Internal error: the seed was already computed in a proper ancestor
+							-- (or in another generic derivation) of `current_class' where this
+							-- type was written. So, if we got a seed, there should be a query
+							-- for this seed.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					end
+					i := i + 1
+				end
 			end
+			target_context.reset (tokens.unknown_class)
+			other_context.reset (tokens.unknown_class)
+			l_adapted_base_classes.wipe_out
 			in_qualified_anchored_type := old_in_qualified_anchored_type
 		end
 
@@ -835,6 +912,44 @@ feature {NONE} -- Validity checking
 			end
 			reset_fatal_error (had_error)
 		end
+
+feature {NONE} -- Multiple generic constraints
+
+	check_adapted_base_classes_validity (a_name: ET_CALL_NAME; a_adapted_base_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]; a_context: ET_TYPE_CONTEXT)
+			-- Check validity of `a_adapted_base_classes' in case of multiple generic constraints
+			-- when they are the possible base classes of a target of call name `a_name'.
+			-- `a_context' represents the type of the target of the call.
+			-- Keep in that list:
+			-- * only one class when processing `a_name' in the class where the call
+			--   was written, or
+			-- * all applicable classes when `a_name' was already resolved in a proper
+			--   ancestor (or in another generic derivation) of `current_class' where
+			--   the call was written.
+			--
+			-- Set `has_fatal_error' if a fatal error occurred.
+		require
+			a_name_not_void: a_name /= Void
+			a_adapted_base_classes_not_void: a_adapted_base_classes /= Void
+			no_void_adapted_base_class: not a_adapted_base_classes.has_void
+			a_context_not_void: a_context /= Void
+			a_context_is_valid: a_context.is_valid_context
+		do
+			has_fatal_error := False
+			adapted_base_class_checker.set_class_interface_error_only (class_interface_error_only)
+			adapted_base_class_checker.check_adapted_base_classes_validity (a_name, a_adapted_base_classes, a_context, current_class, current_class_impl)
+			if adapted_base_class_checker.has_fatal_error then
+				set_fatal_error
+			end
+		ensure
+			in_implementation_class: (current_class_impl = current_class or a_name.seed = 0) implies a_adapted_base_classes.count = 1
+			not_in_implementation_class: (current_class_impl /= current_class and a_name.seed /= 0) implies across a_adapted_base_classes as l_adapted_base_classes all a_name.is_tuple_label or else (not l_adapted_base_classes.item.base_class.is_none implies l_adapted_base_classes.item.base_class.seeded_feature (a_name.seed) /= Void) end
+		end
+
+	adapted_base_class_checker: ET_ADAPTED_BASE_CLASS_CHECKER
+			-- Adapted base class checker
+
+	adapted_base_classes: DS_ARRAYED_LIST [ET_ADAPTED_CLASS]
+			-- List of adapted base classes
 
 feature -- Error reporting
 
@@ -944,6 +1059,12 @@ feature {NONE} -- Implementation
 	constraint_context: ET_NESTED_TYPE_CONTEXT
 			-- Constraint context for type conformance checking
 
+	target_context: ET_NESTED_TYPE_CONTEXT
+			-- Context for type conformance checking
+
+	other_context: ET_NESTED_TYPE_CONTEXT
+			-- Context for type conformance checking
+
 	dummy_feature: ET_FEATURE
 			-- Dummy feature
 		local
@@ -964,5 +1085,10 @@ invariant
 	current_class_definition: current_class = current_context.base_class
 	current_feature_impl_not_void: current_feature_impl /= Void
 	constraint_context_not_void: constraint_context /= Void
+	target_context_not_void: target_context /= Void
+	other_context_not_void: other_context /= Void
+	adapted_base_class_checker_not_void: adapted_base_class_checker /= Void
+	adapted_base_classes_not_void: adapted_base_classes /= Void
+	no_void_adapted_base_class: not adapted_base_classes.has_void
 
 end

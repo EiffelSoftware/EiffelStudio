@@ -5,7 +5,7 @@ note
 		"Test features of class ARRAY"
 
 	library: "FreeELKS Library"
-	copyright: "Copyright (c) 2006-2011, Eric Bezault and others"
+	copyright: "Copyright (c) 2006-2018, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -78,7 +78,7 @@ feature -- Test
 			assert_iarrays_same ("ai_all_cleared", <<0, 0, 0, 0>>, l_ai)
 			assert_integers_equal ("ai_same_lower", 4, l_ai.lower)
 			assert_integers_equal ("ai_same_upper", 7, l_ai.upper)
-			l_as := <<"1", "2", "3", "4">>
+			l_as := {ARRAY [detachable STRING]} <<"1", "2", "3", "4">>
 			assert_arrays_equal ("as_initialized", <<"1", "2", "3", "4">>, l_as)
 			l_as.clear_all
 			create void_as.make_filled (Void, 1, 4)
@@ -254,7 +254,7 @@ feature -- Test
 			i2 := 5
 			l_array := <<s1, i2>>
 			assert ("item1", l_array.item (1) = s1)
-			assert_strings_equal ("item2a", i2.generating_type, l_array.item (2).generating_type)
+			assert_equal ("item2a", i2.generating_type, l_array.item (2).generating_type)
 			assert_strings_equal ("item2b", i2.out, l_array.item (2).out)
 		end
 

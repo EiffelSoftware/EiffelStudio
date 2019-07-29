@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # description: "Bootstrap Gobo Eiffel Compiler in $GOBO/bin"
-# copyright: "Copyright (c) 2016-2018, Eric Bezault and others"
+# copyright: "Copyright (c) 2016-2019, Eric Bezault and others"
 # license: "MIT License"
 # date: "$Date$"
 # revision: "$Revision$"
@@ -13,7 +13,7 @@ echo "Executing bootstrap.sh..."
 
 gobo_usage() {
 	echo "usage: bootstrap.sh [-v][--thread=N] <c_compiler>"
-	echo "   c_compiler:  msc | lcc-win32 | lcc-win64 | bcc | gcc | mingw | cc | icc | tcc | no_c"
+	echo "   c_compiler:  msc | lcc-win32 | lcc-win64 | bcc | gcc | mingw | clang | cc | icc | tcc | no_c"
 }
 
 VERBOSE=
@@ -56,7 +56,6 @@ c_compilation() {
 	if [ "$VERBOSE" = "-v" ]; then
 		echo "Compiling gec (bootstrap 0)..."
 	fi
-	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec9.c
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec8.c
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec7.c
 	$CC $CFLAGS -c $BOOTSTRAP_DIR/gec6.c
@@ -155,6 +154,16 @@ elif [ "$CC" = "mingw" ]; then
 	LFLAG_OUT='-o '
 	LLIBS='-lm'
 	echo mingw > $GOBO/tool/gec/config/c/default.cfg
+	c_compilation
+elif [ "$CC" = "clang" ]; then
+	CC=clang
+	LD=clang
+#	CFLAGS='-Wno-unused-value -Wno-deprecated-declarations -O2'
+	CFLAGS='-Wno-unused-value -Wno-deprecated-declarations'
+	LFLAGS=''
+	LFLAG_OUT='-o '
+	LLIBS='-lm -lpthread'
+	echo clang > $GOBO/tool/gec/config/c/default.cfg
 	c_compilation
 elif [ "$CC" = "cc" ]; then
 	CC='cc'

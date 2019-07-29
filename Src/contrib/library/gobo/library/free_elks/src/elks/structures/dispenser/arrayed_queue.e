@@ -3,11 +3,11 @@
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	names: dispenser, array;
-	representation: array;
-	access: fixed, fifo, membership;
-	size: fixed;
-	contents: generic;
+	names: dispenser, array
+	representation: array
+	access: fixed, fifo, membership
+	size: fixed
+	contents: generic
 	date: "$Date$"
 	revision: "$Revision$"
 

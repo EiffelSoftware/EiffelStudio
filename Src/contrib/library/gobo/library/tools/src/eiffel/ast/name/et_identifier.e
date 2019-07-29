@@ -5,7 +5,7 @@ note
 		"Eiffel identifiers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -229,6 +229,7 @@ feature -- Access
 
 	lower_name: STRING
 			-- Lower-name of identifier
+			-- (using UTF-8 encoding)
 			-- (May return the same object as `name' if already in lower case,
 			-- otherwise return a new object at each call.)
 		local
@@ -250,6 +251,7 @@ feature -- Access
 
 	upper_name: STRING
 			-- Upper-name of identifer
+			-- (using UTF-8 encoding)
 			-- (May return the same object as `name' if already in upper case,
 			-- otherwise return a new object at each call.)
 		local

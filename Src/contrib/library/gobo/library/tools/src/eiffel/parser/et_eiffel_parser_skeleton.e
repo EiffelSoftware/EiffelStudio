@@ -5,7 +5,7 @@ note
 		"Eiffel parser skeletons"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -33,7 +33,6 @@ inherit
 	ET_CLASS_PROCESSOR
 		rename
 			process_identifier as process_ast_identifier,
-			process_c1_character_constant as process_ast_c1_character_constant,
 			process_c2_character_constant as process_ast_c2_character_constant,
 			process_regular_manifest_string as process_ast_regular_manifest_string
 		undefine
@@ -47,7 +46,6 @@ inherit
 		rename
 			make as make_ast_processor,
 			process_identifier as process_ast_identifier,
-			process_c1_character_constant as process_ast_c1_character_constant,
 			process_c2_character_constant as process_ast_c2_character_constant,
 			process_regular_manifest_string as process_ast_regular_manifest_string
 		redefine
@@ -164,9 +162,12 @@ feature -- Parsing
 			eiffel_buffer.set_file (a_file)
 			yy_load_input_buffer
 			yyparse
-			if attached last_class as l_last_class and then l_last_class /= current_class then
-				l_last_class.processing_mutex.unlock
-				last_class := Void
+			if attached last_class as l_last_class then
+				l_last_class.set_has_utf8_bom (eiffel_buffer.has_utf8_bom)
+				if l_last_class /= current_class then
+					l_last_class.processing_mutex.unlock
+					last_class := Void
+				end
 			end
 			reset
 			group := old_group
@@ -614,31 +615,90 @@ feature {NONE} -- Basic operations
 
 	set_formal_parameters (a_parameters: detachable ET_FORMAL_PARAMETER_LIST)
 			-- Set formal generic parameters of `last_class'.
-		require
-			no_constraint: a_parameters = Void implies constraints.is_empty
-			same_count: a_parameters /= Void implies constraints.count = a_parameters.count
 		local
 			a_class: like last_class
-			a_constraint: detachable ET_CONSTRAINT_TYPE
-			a_type: detachable  ET_TYPE
-			i, nb: INTEGER
+			a_type: detachable ET_TYPE
+			l_constraint: ET_CONSTRAINT
+			l_type_constraint_item: ET_TYPE_CONSTRAINT_ITEM
+			i, j, k: INTEGER
 		do
 			if a_parameters /= Void then
 				a_class := last_class
 				if a_class /= Void then
-					nb := a_parameters.count
-					from i := nb until i < 1 loop
+					from
+						i := a_parameters.count
+						j := constraints.count
+					until
+						i < 1
+					loop
 						if attached {ET_CONSTRAINED_FORMAL_PARAMETER} a_parameters.formal_parameter (i) as a_constrained_formal then
-							a_constraint := constraints.item (i)
-							if a_constraint /= Void then
-								a_type := a_constraint.resolved_syntactical_constraint (a_parameters, a_class, Current)
+							l_constraint := a_constrained_formal.constraint
+							if attached {ET_TYPE_RENAME_CONSTRAINT} l_constraint as l_type_constraint then
+								if j > 0 and then attached constraints.item (j) as l_constraint_type then
+									a_type := l_constraint_type.resolved_syntactical_constraint (a_parameters, a_class, Current)
+								else
+									a_type := Void
+								end
+								j := j - 1
+								if a_type /= Void then
+									l_type_constraint.set_type (a_type)
+								else
+									a_parameters.remove (i)
+								end
+							elseif attached {ET_TYPE_CONSTRAINT} l_constraint as l_type_constraint then
+								if j > 0 and then attached constraints.item (j) as l_constraint_type then
+									a_type := l_constraint_type.resolved_syntactical_constraint (a_parameters, a_class, Current)
+								else
+									a_type := Void
+								end
+								j := j - 1
 								if a_type /= Void then
 									a_constrained_formal.set_constraint (a_type)
 								else
 									a_parameters.remove (i)
 								end
-							else
-								a_parameters.remove (i)
+							elseif attached {ET_TYPE_CONSTRAINT_LIST} l_constraint as l_type_constraint_list then
+								from
+									k := l_type_constraint_list.count
+								until
+									k < 1
+								loop
+									if j > 0 and then attached constraints.item (j) as l_constraint_type then
+										a_type := l_constraint_type.resolved_syntactical_constraint (a_parameters, a_class, Current)
+									else
+										a_type := Void
+									end
+									j := j - 1
+									l_type_constraint_item := l_type_constraint_list.item (k)
+									if attached {ET_TYPE_CONSTRAINT_COMMA} l_type_constraint_item as l_type_constraint_comma then
+										if attached {ET_TYPE_RENAME_CONSTRAINT} l_type_constraint_comma.type_constraint as l_type_constraint then
+											if a_type /= Void then
+												l_type_constraint.set_type (a_type)
+											else
+												l_type_constraint_list.remove (k)
+											end
+										else
+											if a_type /= Void then
+												l_type_constraint_comma.set_type_constraint (a_type)
+											else
+												l_type_constraint_list.remove (k)
+											end
+										end
+									elseif attached {ET_TYPE_RENAME_CONSTRAINT} l_type_constraint_item as l_type_constraint then
+										if a_type /= Void then
+											l_type_constraint.set_type (a_type)
+										else
+											l_type_constraint_list.remove (k)
+										end
+									else
+										if a_type /= Void then
+											l_type_constraint_list.put (a_type, k)
+										else
+											l_type_constraint_list.remove (k)
+										end
+									end
+									k := k - 1
+								end
 							end
 						end
 						i := i - 1
@@ -1012,12 +1072,13 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 				l_type_mark := a_type_mark
 				if l_type_mark = Void then
 					l_type_mark := current_universe.implicit_attachment_type_mark
+				elseif attached {ET_KEYWORD} l_type_mark as l_keyword and then l_keyword.is_separate then
+					l_type_mark := ast_factory.new_attachment_mark_separate_keyword (current_universe.implicit_attachment_type_mark, l_keyword)
 				end
 				if a_base_class.name.same_class_name (tokens.tuple_class_name) then
-					if a_type_mark /= Void and then not a_type_mark.is_attachment_mark then
-							-- A TUPLE type is not a class type. It cannot
-							-- be prefixed by 'expanded' or 'reference'.
-							-- But it can be prefixed by 'attached', 'detachable', '!' or '?'.
+					if a_type_mark /= Void and then a_type_mark.is_expandedness_mark then
+							-- A TUPLE type is not a class type. It cannot be prefixed by 'expanded'.
+							-- But it can be prefixed by 'attached', 'detachable', '!', '?' or 'separate'.
 						report_syntax_error (a_type_mark.position)
 						Result := ast_factory.new_tuple_type (Void, a_name, Void, a_base_class)
 					else
@@ -1053,9 +1114,8 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 			a_formal := a_formals.formal_parameter_by_name (a_name)
 			if a_formal /= Void then
 				if a_type_mark /= Void and then not a_type_mark.is_attachment_mark then
-						-- A formal parameter type is not a class type.
-						-- It cannot be prefixed by 'expanded' or 'reference'.
-						-- But it can be prefixed by 'attached', 'detachable', '!' or '?'.
+						-- A TUPLE type is not a class type. It cannot be prefixed by 'expanded'.
+						-- But it can be prefixed by 'attached', 'detachable', '!', '?' or 'separate'.
 					report_syntax_error (a_type_mark.position)
 				end
 					-- A formal parameter cannot have actual generic parameters.
@@ -1072,12 +1132,14 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 					l_type_mark := a_type_mark
 					if l_type_mark = Void then
 						l_type_mark := current_universe.implicit_attachment_type_mark
+					elseif attached {ET_KEYWORD} l_type_mark as l_keyword and then l_keyword.is_separate then
+						l_type_mark := ast_factory.new_attachment_mark_separate_keyword (current_universe.implicit_attachment_type_mark, l_keyword)
 					end
 					if a_base_class.name.same_class_name (tokens.tuple_class_name) then
-						if a_type_mark /= Void and then not a_type_mark.is_attachment_mark then
+						if a_type_mark /= Void and then a_type_mark.is_expandedness_mark then
 								-- A TUPLE type is not a class type. It cannot
 								-- be prefixed by 'expanded' or 'reference'.
-								-- But it can be prefixed by 'attached', 'detachable', '!' or '?'.
+								-- But it can be prefixed by 'attached', 'detachable', '!', '?' or separate.
 							report_syntax_error (a_type_mark.position)
 							Result := ast_factory.new_tuple_type (Void, a_name, a_parameters, a_base_class)
 						else
@@ -1213,6 +1275,9 @@ feature {NONE} -- AST factory
 				l_cursor_name := Result.cursor_name
 				l_cursor_name.set_across_cursor (False)
 				l_cursor_name.set_seed (l_last_across_components.count)
+				l_cursor_name := Result.unfolded_cursor_name
+				l_cursor_name.set_across_cursor (True)
+				l_cursor_name.set_seed (l_last_across_components.count)
 			end
 		end
 
@@ -1258,6 +1323,9 @@ feature {NONE} -- AST factory
 					-- parsing within its scope.
 				l_cursor_name := Result.cursor_name
 				l_cursor_name.set_across_cursor (False)
+				l_cursor_name.set_seed (l_last_across_components.count)
+				l_cursor_name := Result.unfolded_cursor_name
+				l_cursor_name.set_across_cursor (True)
 				l_cursor_name.set_seed (l_last_across_components.count)
 			end
 		end
@@ -1330,17 +1398,17 @@ feature {NONE} -- AST factory
 		end
 
 	new_alias_free_name (an_alias: detachable ET_KEYWORD;
-		a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_FREE_NAME
+		a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_FREE_NAME
 			-- New alias free feature name
 		do
 			if a_string /= Void then
 				if a_string.value.count > 0 then
-					Result := ast_factory.new_alias_free_name (an_alias, a_string)
+					Result := ast_factory.new_alias_free_name (an_alias, a_string, a_convert)
 				else
 					-- TODO: error.
 				end
 			else
-				Result := ast_factory.new_alias_free_name (an_alias, a_string)
+				Result := ast_factory.new_alias_free_name (an_alias, a_string, a_convert)
 			end
 		end
 
@@ -1573,11 +1641,11 @@ feature {NONE} -- AST factory
 			Result := ast_factory.new_formal_arguments (a_left, a_right, nb)
 		end
 
-	new_invalid_alias_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING): detachable ET_ALIAS_FREE_NAME
+	new_invalid_alias_name (an_alias: detachable ET_KEYWORD; a_string: detachable ET_MANIFEST_STRING; a_convert: detachable ET_KEYWORD): detachable ET_ALIAS_FREE_NAME
 			-- New invalid alias feature name
 		do
 -- ERROR
-			Result := new_alias_free_name (an_alias, a_string)
+			Result := new_alias_free_name (an_alias, a_string, a_convert)
 		end
 
 	new_invalid_infix_name (an_infix: detachable ET_KEYWORD; an_operator: detachable ET_MANIFEST_STRING): detachable ET_INFIX_FREE_NAME
@@ -1770,6 +1838,8 @@ feature {NONE} -- AST factory
 					l_type_mark := a_type_mark
 					if l_type_mark = Void then
 						l_type_mark := current_universe.implicit_attachment_type_mark
+					elseif attached {ET_KEYWORD} l_type_mark as l_keyword and then l_keyword.is_separate then
+						l_type_mark := ast_factory.new_attachment_mark_separate_keyword (current_universe.implicit_attachment_type_mark, l_keyword)
 					end
 					if a_generics /= Void then
 						Result := ast_factory.new_generic_class_type (l_type_mark, a_name, a_generics, l_class)
@@ -1992,6 +2062,8 @@ feature {NONE} -- AST factory
 				l_type_mark := a_type_mark
 				if l_type_mark = Void then
 					l_type_mark := current_universe.implicit_attachment_type_mark
+				elseif attached {ET_KEYWORD} l_type_mark as l_keyword and then l_keyword.is_separate then
+					l_type_mark := ast_factory.new_attachment_mark_separate_keyword (current_universe.implicit_attachment_type_mark, l_keyword)
 				end
 				Result := ast_factory.new_tuple_type (l_type_mark, a_tuple, a_generics, a_class)
 			end
@@ -2555,12 +2627,12 @@ feature {NONE} -- Counters
 
 feature {NONE} -- Input buffer
 
-	eiffel_buffer: YY_FILE_BUFFER
+	eiffel_buffer: ET_EIFFEL_FILE_BUFFER
 			-- Eiffel file input buffer
 
 feature {NONE} -- Constants
 
-	Initial_eiffel_buffer_size: INTEGER = 50000
+	Initial_eiffel_buffer_size: INTEGER = 100000
 			-- Initial size for `eiffel_buffer'
 
 	Initial_counters_capacity: INTEGER = 10

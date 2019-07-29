@@ -5,7 +5,7 @@ note
 		"Nested contexts to evaluate Eiffel types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -113,6 +113,63 @@ feature -- Access
 				l_type := last
 				remove_last
 				Result := l_type.named_base_class (Current)
+				put_last (l_type)
+			end
+		end
+
+	adapted_base_class_with_named_feature (a_name: ET_CALL_NAME): ET_ADAPTED_CLASS
+			-- Base class of current context, or in case of a formal parameter one
+			-- of its constraint adapted base classes containing a feature named
+			-- `a_name' (or any of the constraints if none contains such feature)
+		local
+			l_type: ET_TYPE
+			l_index: INTEGER
+		do
+			if count = 0 then
+				Result := root_context.context_adapted_base_class_with_named_feature (a_name)
+			elseif attached {ET_LIKE_N} last as l_like_n then
+				l_index := l_like_n.index
+				if l_index = 0 or l_index >= count then
+					Result := root_context.context_adapted_base_class_with_named_feature (a_name)
+				else
+					l_type := item (l_index)
+					put (l_like_n.previous, count)
+					Result := l_type.adapted_base_class_with_named_feature (a_name, Current)
+					put (l_like_n, count)
+				end
+			else
+				l_type := last
+				remove_last
+				Result := l_type.adapted_base_class_with_named_feature (a_name, Current)
+				put_last (l_type)
+			end
+		end
+
+	adapted_base_class_with_seeded_feature (a_seed: INTEGER): ET_ADAPTED_CLASS
+			-- Base class of current context, or in case of a formal parameter
+			-- one of its constraint adapted base classes containing a feature
+			-- with seed `a_seed' (or any of the constraints if none contains
+			-- such feature)
+		local
+			l_type: ET_TYPE
+			l_index: INTEGER
+		do
+			if count = 0 then
+				Result := root_context.context_adapted_base_class_with_seeded_feature (a_seed)
+			elseif attached {ET_LIKE_N} last as l_like_n then
+				l_index := l_like_n.index
+				if l_index = 0 or l_index >= count then
+					Result := root_context.context_adapted_base_class_with_seeded_feature (a_seed)
+				else
+					l_type := item (l_index)
+					put (l_like_n.previous, count)
+					Result := l_type.adapted_base_class_with_seeded_feature (a_seed, Current)
+					put (l_like_n, count)
+				end
+			else
+				l_type := last
+				remove_last
+				Result := l_type.adapted_base_class_with_seeded_feature (a_seed, Current)
 				put_last (l_type)
 			end
 		end
@@ -515,6 +572,66 @@ feature -- Status report
 			end
 		end
 
+	named_type_is_formal_type: BOOLEAN
+			-- Is named type of current context a formal parameter?
+		local
+			l_type: ET_TYPE
+			l_index: INTEGER
+		do
+			if count = 0 then
+				Result := root_context.named_type_is_formal_type (Current)
+			elseif attached {ET_LIKE_N} last as l_like_n then
+				l_index := l_like_n.index
+				if l_index = 0 then
+					Result := root_context.named_type_is_formal_type (Current)
+				elseif l_index >= count then
+					force_last (tokens.like_0)
+					Result := root_context.named_type_is_formal_type (Current)
+					remove_last
+				else
+					l_type := item (l_index)
+					put (l_like_n.previous, count)
+					Result := l_type.named_type_is_formal_type (Current)
+					put (l_like_n, count)
+				end
+			else
+				l_type := last
+				remove_last
+				Result := l_type.named_type_is_formal_type (Current)
+				put_last (l_type)
+			end
+		end
+
+feature -- Basic operations
+
+	add_adapted_base_classes_to_list (a_list: DS_ARRAYED_LIST [ET_ADAPTED_CLASS])
+			-- Add to `a_list' the base class of current context' or the adapted
+			-- base classes of the constraints (in the same order they appear in
+			-- 'constraint_base_types') in case of a formal parameter.
+		local
+			l_type: ET_TYPE
+			l_index: INTEGER
+		do
+			if count = 0 then
+				root_context.context_add_adapted_base_classes_to_list (a_list)
+			elseif attached {ET_LIKE_N} last as l_like_n then
+				l_index := l_like_n.index
+				if l_index = 0 or l_index >= count then
+					root_context.context_add_adapted_base_classes_to_list (a_list)
+				else
+					l_type := item (l_index)
+					put (l_like_n.previous, count)
+					l_type.add_adapted_base_classes_to_list (a_list, Current)
+					put (l_like_n, count)
+				end
+			else
+				l_type := last
+				remove_last
+				l_type.add_adapted_base_classes_to_list (a_list, Current)
+				put_last (l_type)
+			end
+		end
+
 feature -- Comparison
 
 	same_named_type_with_type_marks (other: ET_TYPE; other_type_mark: detachable ET_TYPE_MARK; other_context: ET_TYPE_CONTEXT; a_type_mark: detachable ET_TYPE_MARK): BOOLEAN
@@ -688,7 +805,6 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		local
 			l_type: ET_TYPE
 			l_index: INTEGER
-			l_context: ET_NESTED_TYPE_CONTEXT
 		do
 			if count = 0 then
 				Result := root_context.same_named_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
@@ -697,41 +813,35 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				if l_index = 0 then
 					Result := root_context.same_named_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
 				elseif l_index >= count then
-					if other_context /= Current then
-						force_last (tokens.like_0)
-						Result := root_context.same_named_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
-						remove_last
-					else
-						l_context := cloned_type_context
-						l_context.force_last (tokens.like_0)
-						Result := root_context.same_named_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
+					check
+							-- The precondition says that `other_context' is a root context.
+							-- So it cannot be the same object as `Current' which is not a root context here (`count' /= 0 and `l_index' /= 0).
+						precondition_other_context_is_root: other_context /= Current
 					end
+					force_last (tokens.like_0)
+					Result := root_context.same_named_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+					remove_last
 				else
-					l_type := item (l_index)
-					if other_context /= Current then
-						put (l_like_n.previous, count)
-						Result := l_type.same_named_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
-						put (l_like_n, count)
-					else
-						l_context := cloned_type_context
-						l_context.force_last (l_like_n.previous)
-						Result := l_type.same_named_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
+					check
+							-- The precondition says that `other_context' is a root context.
+							-- So it cannot be the same object as `Current' which is not a root context here (`count' /= 0 and `l_index' /= 0).
+						precondition_other_context_is_root: other_context /= Current
 					end
+					l_type := item (l_index)
+					put (l_like_n.previous, count)
+					Result := l_type.same_named_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+					put (l_like_n, count)
 				end
 			else
-				if other_context /= Current then
-					l_type := last
-					remove_last
-					Result := l_type.same_named_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
-					put_last (l_type)
-				elseif count = 1 then
-					Result := last.same_named_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, root_context)
-				else
-					l_type := last
-					l_context := cloned_type_context
-					l_context.remove_last
-					Result := l_type.same_named_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
+				check
+						-- The precondition says that `other_context' is a root context.
+						-- So it cannot be the same object as `Current' which is not a root context here (`count' /= 0 and `last' is not a like_0).
+					precondition_other_context_is_root: other_context /= Current
 				end
+				l_type := last
+				remove_last
+				Result := l_type.same_named_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+				put_last (l_type)
 			end
 		end
 
@@ -853,7 +963,6 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 		local
 			l_type: ET_TYPE
 			l_index: INTEGER
-			l_context: ET_NESTED_TYPE_CONTEXT
 		do
 			if count = 0 then
 				Result := root_context.same_base_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
@@ -862,41 +971,35 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 				if l_index = 0 then
 					Result := root_context.same_base_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
 				elseif l_index >= count then
-					if other_context /= Current then
-						force_last (tokens.like_0)
-						Result := root_context.same_base_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
-						remove_last
-					else
-						l_context := cloned_type_context
-						l_context.force_last (tokens.like_0)
-						Result := root_context.same_base_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
+					check
+							-- The precondition says that `other_context' is a root context.
+							-- So it cannot be the same object as `Current' which is not a root context here (`count' /= 0 and `l_index' /= 0).
+						precondition_other_context_is_root: other_context /= Current
 					end
+					force_last (tokens.like_0)
+					Result := root_context.same_base_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+					remove_last
 				else
-					l_type := item (l_index)
-					if other_context /= Current then
-						put (l_like_n.previous, count)
-						Result := l_type.same_base_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
-						put (l_like_n, count)
-					else
-						l_context := cloned_type_context
-						l_context.force_last (l_like_n.previous)
-						Result := l_type.same_base_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
+					check
+							-- The precondition says that `other_context' is a root context.
+							-- So it cannot be the same object as `Current' which is not a root context here (`count' /= 0 and `l_index' /= 0).
+						precondition_other_context_is_root: other_context /= Current
 					end
+					l_type := item (l_index)
+					put (l_like_n.previous, count)
+					Result := l_type.same_base_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+					put (l_like_n, count)
 				end
 			else
-				if other_context /= Current then
-					l_type := last
-					remove_last
-					Result := l_type.same_base_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
-					put_last (l_type)
-				elseif count = 1 then
-					Result := last.same_base_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, root_context)
-				else
-					l_type := last
-					l_context := cloned_type_context
-					l_context.remove_last
-					Result := l_type.same_base_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context)
+				check
+						-- The precondition says that `other_context' is a root context.
+						-- So it cannot be the same object as `Current' which is not a root context here (`count' /= 0 and `last' is not a like_0).
+					precondition_other_context_is_root: other_context /= Current
 				end
+				l_type := last
+				remove_last
+				Result := l_type.same_base_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current)
+				put_last (l_type)
 			end
 		end
 
@@ -1077,7 +1180,6 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 		local
 			l_type: ET_TYPE
 			l_index: INTEGER
-			l_context: ET_NESTED_TYPE_CONTEXT
 		do
 			if count = 0 then
 				Result := root_context.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current, a_system_processor)
@@ -1086,41 +1188,35 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Conformance
 				if l_index = 0 then
 					Result := root_context.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current, a_system_processor)
 				elseif l_index >= count then
-					if other_context /= Current then
-						force_last (tokens.like_0)
-						Result := root_context.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current, a_system_processor)
-						remove_last
-					else
-						l_context := cloned_type_context
-						l_context.force_last (tokens.like_0)
-						Result := root_context.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context, a_system_processor)
+					check
+							-- The precondition says that `other_context' is a root context.
+							-- So it cannot be the same object as `Current' which is not a root context here (`count' /= 0 and `l_index' /= 0).
+						precondition_other_context_is_root: other_context /= Current
 					end
+					force_last (tokens.like_0)
+					Result := root_context.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current, a_system_processor)
+					remove_last
 				else
-					l_type := item (l_index)
-					if other_context /= Current then
-						put (l_like_n.previous, count)
-						Result := l_type.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current, a_system_processor)
-						put (l_like_n, count)
-					else
-						l_context := cloned_type_context
-						l_context.force_last (l_like_n.previous)
-						Result := l_type.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context, a_system_processor)
+					check
+							-- The precondition says that `other_context' is a root context.
+							-- So it cannot be the same object as `Current' which is not a root context here (`count' /= 0 and `l_index' /= 0).
+						precondition_other_context_is_root: other_context /= Current
 					end
+					l_type := item (l_index)
+					put (l_like_n.previous, count)
+					Result := l_type.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current, a_system_processor)
+					put (l_like_n, count)
 				end
 			else
-				if other_context /= Current then
-					l_type := last
-					remove_last
-					Result := l_type.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current, a_system_processor)
-					put_last (l_type)
-				elseif count = 1 then
-					Result := last.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, root_context, a_system_processor)
-				else
-					l_type := last
-					l_context := cloned_type_context
-					l_context.remove_last
-					Result := l_type.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, l_context, a_system_processor)
+				check
+						-- The precondition says that `other_context' is a root context.
+						-- So it cannot be the same object as `Current' which is not a root context here (`count' /= 0 and `last' is not a like_0).
+					precondition_other_context_is_root: other_context /= Current
 				end
+				l_type := last
+				remove_last
+				Result := l_type.conforms_from_formal_parameter_type_with_type_marks (other, other_type_mark, other_context, a_type_mark, Current, a_system_processor)
+				put_last (l_type)
 			end
 		end
 
@@ -1213,20 +1309,33 @@ feature -- Duplication
 			end
 		ensure
 			cloned_type_context_not_void: Result /= Void
+			same_root_context: Result.same_root_context (Current)
 		end
 
 	copy_type_context (other: ET_NESTED_TYPE_CONTEXT)
 			-- Copy `other' to current context.
+		require
+			other_not_void: other /= Void
 		local
 			i, nb: INTEGER
 		do
-			wipe_out
-			set_root_context (other.root_context)
-			nb := other.count
-			from i := 1 until i > nb loop
-				force_last (other.item (i))
-				i := i + 1
+			if other /= Current then
+				wipe_out
+				set_root_context (other.root_context)
+				nb := other.count
+				from i := 1 until i > nb loop
+					force_last (other.item (i))
+					i := i + 1
+				end
 			end
+		ensure
+			same_root_context: same_root_context (other)
+		end
+
+	copy_to_type_context (other: ET_NESTED_TYPE_CONTEXT)
+			-- Copy current context to `other'.
+		do
+			other.copy_type_context (Current)
 		end
 
 feature {NONE} -- Implementation

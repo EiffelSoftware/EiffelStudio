@@ -25,7 +25,6 @@
 		</description>
 
 		<delete directory="Tgeant"/>
-		<delete directory="tmp"/>
 	</target>
 
 	<target name="init_system" export="NONE">

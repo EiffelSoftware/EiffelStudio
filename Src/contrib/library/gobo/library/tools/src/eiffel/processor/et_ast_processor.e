@@ -5,7 +5,7 @@ note
 		"Eiffel AST processors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-20189, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -186,14 +186,7 @@ feature {ET_AST_NODE} -- Processing
 		deferred
 		end
 
-	process_attachment_separate_keywords (a_keywords: ET_ATTACHMENT_SEPARATE_KEYWORDS)
-			-- Process `a_keywords'.
-		require
-			a_keywords_not_void: a_keywords /= Void
-		deferred
-		end
-
-	process_attachment_symbol_separate_keyword (a_keywords: ET_ATTACHMENT_SYMBOL_SEPARATE_KEYWORD)
+	process_attachment_mark_separate_keyword (a_keywords: ET_ATTACHMENT_MARK_SEPARATE_KEYWORD)
 			-- Process `a_keywords'.
 		require
 			a_keywords_not_void: a_keywords /= Void
@@ -211,6 +204,20 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `an_instruction'.
 		require
 			an_instruction_not_void: an_instruction /= Void
+		deferred
+		end
+
+	process_base_type_constraint_list (a_list: ET_BASE_TYPE_CONSTRAINT_LIST)
+			-- Process `a_list'.
+		require
+			a_list_not_void: a_list /= Void
+		deferred
+		end
+
+	process_base_type_rename_constraint (a_type_rename_constraint: ET_BASE_TYPE_RENAME_CONSTRAINT)
+			-- Process `a_type_rename_constraint'.
+		require
+			a_type_rename_constraint_not_void: a_type_rename_constraint /= Void
 		deferred
 		end
 
@@ -383,6 +390,13 @@ feature {ET_AST_NODE} -- Processing
 		end
 
 	process_constraint_creator (a_list: ET_CONSTRAINT_CREATOR)
+			-- Process `a_list'.
+		require
+			a_list_not_void: a_list /= Void
+		deferred
+		end
+
+	process_constraint_rename_list (a_list: ET_CONSTRAINT_RENAME_LIST)
 			-- Process `a_list'.
 		require
 			a_list_not_void: a_list /= Void
@@ -1456,6 +1470,27 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_type'.
 		require
 			a_type_not_void: a_type /= Void
+		deferred
+		end
+
+	process_type_constraint_comma (a_type_constraint_comma: ET_TYPE_CONSTRAINT_COMMA)
+			-- Process `a_type_constraint_comma'.
+		require
+			a_type_constraint_comma_not_void: a_type_constraint_comma /= Void
+		deferred
+		end
+
+	process_type_constraint_list (a_list: ET_TYPE_CONSTRAINT_LIST)
+			-- Process `a_list'.
+		require
+			a_list_not_void: a_list /= Void
+		deferred
+		end
+
+	process_type_rename_constraint (a_type_rename_constraint: ET_TYPE_RENAME_CONSTRAINT)
+			-- Process `a_type_rename_constraint'.
+		require
+			a_type_rename_constraint_not_void: a_type_rename_constraint /= Void
 		deferred
 		end
 

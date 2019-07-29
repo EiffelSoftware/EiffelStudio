@@ -5,7 +5,7 @@ note
 		"Contexts to evaluate Eiffel types"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2003-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2003-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -44,6 +44,11 @@ feature -- Access
 
 	base_class: ET_CLASS
 			-- Base class of current context
+			--
+			-- Note that in case of a formal parameter with multiple
+			-- constraints, then return the base class of the first
+			-- constraint. In order to get the other base classes,
+			-- use `add_adapted_base_classes_to_list'.
 		require
 			valid_context: is_valid_context
 			-- no_cycle: no cycle in anchored types involved.
@@ -65,8 +70,35 @@ feature -- Access
 			named_base_class_not_void: Result /= Void
 		end
 
+	adapted_base_class_with_named_feature (a_name: ET_CALL_NAME): ET_ADAPTED_CLASS
+			-- Base class of current context, or in case of a formal parameter one
+			-- of its constraint adapted base classes containing a feature named
+			-- `a_name' (or any of the constraints if none contains such feature)
+		require
+			a_name_not_void: a_name /= Void
+			valid_context: is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+		deferred
+		end
+
+	adapted_base_class_with_seeded_feature (a_seed: INTEGER): ET_ADAPTED_CLASS
+			-- Base class of current context, or in case of a formal parameter
+			-- one of its constraint adapted base classes containing a feature
+			-- with seed `a_seed' (or any of the constraints if none contains
+			-- such feature)
+		require
+			valid_context: is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+		deferred
+		end
+
 	base_type: ET_BASE_TYPE
 			-- Base type of current context
+			--
+			-- Note that in case of a formal parameter with multiple
+			-- constraints, then return the base type of the first
+			-- constraint. In order to get the other base types,
+			-- use `add_adapted_base_classes_to_list'.
 		require
 			valid_context: is_valid_context
 			-- no_cycle: no cycle in anchored types involved.
@@ -283,6 +315,14 @@ feature -- Status report
 		deferred
 		end
 
+	named_type_is_formal_type: BOOLEAN
+			-- Is named type of current context a formal parameter?
+		require
+			valid_context: is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+		deferred
+		end
+
 	attachment_type_conformance_mode: BOOLEAN
 			-- Should attachment status be taken into account when checking
 			-- conformance of types?
@@ -294,6 +334,23 @@ feature -- Status report
 			-- Should the generated application be SCOOP-capable?
 		do
 			Result := root_context.base_class.current_system.scoop_mode
+		end
+
+feature -- Basic operations
+
+	add_adapted_base_classes_to_list (a_list: DS_ARRAYED_LIST [ET_ADAPTED_CLASS])
+			-- Add to `a_list' the base class of current context' or the adapted
+			-- base classes of the constraints (in the same order they appear in
+			-- 'constraint_base_types') in case of a formal parameter.
+		require
+			a_list_not_void: a_list /= Void
+			no_void_adapted_base_class: not a_list.has_void
+			valid_context: is_valid_context
+			-- no_cycle: no cycle in anchored types involved.
+		deferred
+		ensure
+			at_least_one_more: a_list.count > old a_list.count
+			no_void_adapted_base_class: not a_list.has_void
 		end
 
 feature -- Comparison
@@ -409,6 +466,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			other_not_void: other /= Void
 			other_context_not_void: other_context /= Void
 			other_context_valid: other_context.is_valid_context
+			other_context_is_root: other_context.is_root_context
 			-- no_cycle: no cycle in anchored types involved.
 		deferred
 		end
@@ -451,6 +509,7 @@ feature {ET_TYPE, ET_TYPE_CONTEXT} -- Comparison
 			other_not_void: other /= Void
 			other_context_not_void: other_context /= Void
 			other_context_valid: other_context.is_valid_context
+			other_context_is_root: other_context.is_root_context
 			-- no_cycle: no cycle in anchored types involved.
 		deferred
 		end
@@ -582,22 +641,36 @@ feature -- Conversion
 	as_nested_type_context: ET_NESTED_TYPE_CONTEXT
 			-- Nested type context corresponding to the same type as current;
 			-- Return `Current' is already a nested type context.
+		require
+			valid_context: is_valid_context
 		do
 			Result := to_nested_type_context
 		ensure
 			new_type_context_not_void: Result /= Void
-			valid_context: is_valid_context implies Result.is_valid_context
 			same_root_context: Result.same_root_context (Current)
 		end
 
 	to_nested_type_context: ET_NESTED_TYPE_CONTEXT
 			-- Nested type context corresponding to the same type as current;
 			-- Return a new object at each call.
+		require
+			valid_context: is_valid_context
 		deferred
 		ensure
 			new_type_context_not_void: Result /= Void
-			valid_context: is_valid_context implies Result.is_valid_context
 			same_root_context: Result.same_root_context (Current)
+		end
+
+feature -- Duplication
+
+	copy_to_type_context (other: ET_NESTED_TYPE_CONTEXT)
+			-- Copy current context to `other'.
+		require
+			other_not_void: other /= Void
+			valid_context: is_valid_context
+		deferred
+		ensure
+			same_root_context: other.same_root_context (Current)
 		end
 
 end

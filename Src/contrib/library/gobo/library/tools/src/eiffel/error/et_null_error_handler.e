@@ -5,7 +5,7 @@ note
 		"Null error handlers"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -29,7 +29,8 @@ inherit
 			reportable_gvsrc5_error,
 			reportable_gvsrc6_error,
 			reportable_vaol1_error,
-			reportable_vape_error,
+			reportable_vape1_error,
+			reportable_vape2_error,
 			reportable_vave_error,
 			reportable_vbac1_error,
 			reportable_vbac2_error,
@@ -37,7 +38,6 @@ inherit
 			reportable_vcch2_error,
 			reportable_vcfg1_error,
 			reportable_vcfg2_error,
-			reportable_vcfg3_error,
 			reportable_vdjr_error,
 			reportable_vdjr2_error,
 			reportable_vdpr1_error,
@@ -69,10 +69,9 @@ inherit
 			reportable_vfac4_error,
 			reportable_vfav1_error,
 			reportable_vfav2_error,
+			reportable_vfav3_error,
 			reportable_vfav4_error,
 			reportable_vffd4_error,
-			reportable_vffd5_error,
-			reportable_vffd6_error,
 			reportable_vffd7_error,
 			reportable_vgcc1_error,
 			reportable_vgcc3_error,
@@ -82,13 +81,16 @@ inherit
 			reportable_vgcp1_error,
 			reportable_vgcp2_error,
 			reportable_vgcp3_error,
+			reportable_vggc1_error,
+			reportable_vggc2_error,
+			reportable_vggc3_error,
+			reportable_vgmc_error,
 			reportable_vhay_error,
 			reportable_vhpr1_error,
+			reportable_vhpr2_error,
 			reportable_vhpr3_error,
 			reportable_vhrc1_error,
 			reportable_vhrc2_error,
-			reportable_vhrc4_error,
-			reportable_vhrc5_error,
 			reportable_vjar_error,
 			reportable_vjaw_error,
 			reportable_vjrv_error,
@@ -134,7 +136,6 @@ inherit
 			reportable_vtcg3_error,
 			reportable_vtcg4_error,
 			reportable_vtct_error,
-			reportable_vtgc_error,
 			reportable_vtug1_error,
 			reportable_vtug2_error,
 			reportable_vuar1_error,
@@ -298,8 +299,15 @@ feature -- Validity error status
 			Result := False
 		end
 
-	reportable_vape_error (a_class: ET_CLASS): BOOLEAN
-			-- Can a VAPE error be reported when it
+	reportable_vape1_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VAPE-1 error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
+	reportable_vape2_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VAPE-2 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
@@ -349,13 +357,6 @@ feature -- Validity error status
 
 	reportable_vcfg2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VCFG-2 error be reported when it
-			-- appears in `a_class'?
-		do
-			Result := False
-		end
-
-	reportable_vcfg3_error (a_class: ET_CLASS): BOOLEAN
-			-- Can a VCFG-3 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
@@ -578,6 +579,13 @@ feature -- Validity error status
 			Result := False
 		end
 
+	reportable_vfav3_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VFAV-3 error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
 	reportable_vfav4_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VFAV-4 error be reported when it
 			-- appears in `a_class'?
@@ -587,20 +595,6 @@ feature -- Validity error status
 
 	reportable_vffd4_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VFFD-4 error be reported when it
-			-- appears in `a_class'?
-		do
-			Result := False
-		end
-
-	reportable_vffd5_error (a_class: ET_CLASS): BOOLEAN
-			-- Can a VFFD-5 error be reported when it
-			-- appears in `a_class'?
-		do
-			Result := False
-		end
-
-	reportable_vffd6_error (a_class: ET_CLASS): BOOLEAN
-			-- Can a VFFD-6 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
@@ -669,6 +663,34 @@ feature -- Validity error status
 			Result := False
 		end
 
+	reportable_vggc1_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VGGC-1 error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
+	reportable_vggc2_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VGGC-2 error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
+	reportable_vggc3_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VGGC-3 error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
+	reportable_vgmc_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VGMC error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
 	reportable_vhay_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VHAY error be reported when it
 			-- appears in `a_class'?
@@ -678,6 +700,13 @@ feature -- Validity error status
 
 	reportable_vhpr1_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VHPR-1 error be reported when it
+			-- appears in `a_class'?
+		do
+			Result := False
+		end
+
+	reportable_vhpr2_error (a_class: ET_CLASS): BOOLEAN
+			-- Can a VHPR-2 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
@@ -699,20 +728,6 @@ feature -- Validity error status
 
 	reportable_vhrc2_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VHRC-2 error be reported when it
-			-- appears in `a_class'?
-		do
-			Result := False
-		end
-
-	reportable_vhrc4_error (a_class: ET_CLASS): BOOLEAN
-			-- Can a VHRC-4 error be reported when it
-			-- appears in `a_class'?
-		do
-			Result := False
-		end
-
-	reportable_vhrc5_error (a_class: ET_CLASS): BOOLEAN
-			-- Can a VHRC-5 error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False
@@ -1014,13 +1029,6 @@ feature -- Validity error status
 
 	reportable_vtct_error (a_class: ET_CLASS): BOOLEAN
 			-- Can a VTCT error be reported when it
-			-- appears in `a_class'?
-		do
-			Result := False
-		end
-
-	reportable_vtgc_error (a_class: ET_CLASS): BOOLEAN
-			-- Can a VTGC error be reported when it
 			-- appears in `a_class'?
 		do
 			Result := False

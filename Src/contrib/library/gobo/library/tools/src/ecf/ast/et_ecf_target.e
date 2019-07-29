@@ -382,26 +382,6 @@ feature -- Setting
 
 feature -- Basic operations
 
-	update_state (a_state: ET_ECF_STATE)
-			-- Update `a_state' with information found in
-			-- `parent' if any, and overridden by information
-			-- found in current target.
-		require
-			a_state_not_void: a_state /= Void
-		local
-			l_value: detachable STRING
-		do
-			if attached parent as l_parent and then attached l_parent.target as l_parent_target then
-				l_parent_target.update_state (a_state)
-			end
-			a_state.set_concurrency_mode (capabilities.use_value ({ET_ECF_CAPABILITY_NAMES}.concurrency_capability_name))
-			a_state.set_void_safety_mode (capabilities.use_value ({ET_ECF_CAPABILITY_NAMES}.void_safety_capability_name))
-			l_value := settings.value ({ET_ECF_SETTING_NAMES}.msil_generation_setting_name)
-			if l_value /= Void and then l_value.is_boolean then
-				a_state.set_dotnet (l_value.to_boolean)
-			end
-		end
-
 	fill_universe (a_universe: ET_ECF_INTERNAL_UNIVERSE; a_state: ET_ECF_STATE)
 			-- Add to `a_universe' the clusters, libraries and .NET assemblies
 			-- of current target,  and recursive its parent target if any, whose
@@ -529,6 +509,11 @@ feature -- Basic operations
 			if l_value /= Void and then l_value.is_boolean then
 				a_system.set_exception_trace_mode (l_value.to_boolean)
 			end
+				-- "total_order_on_reals".
+			l_value := settings.value ({ET_ECF_SETTING_NAMES}.total_order_on_reals_setting_name)
+			if l_value /= Void and then l_value.is_boolean then
+				a_system.set_total_order_on_reals_mode (l_value.to_boolean)
+			end
 		end
 
 	fill_capabilities (a_system: ET_ECF_SYSTEM)
@@ -610,10 +595,22 @@ feature -- Basic operations
 			-- Override settings of current target with `a_settings'.
 		require
 			a_settings_not_void: a_settings /= Void
+		local
+			i, nb: INTEGER
 		do
 			across a_settings.primary_settings as l_primary_settings loop
 				if STRING_.same_case_insensitive (l_primary_settings.key, "all_assertions") then
-					override_all_assertions (l_primary_settings.item)
+					if attached system_config.targets as l_targets then
+						l_targets.do_all (agent {ET_ECF_TARGET}.override_all_assertions (l_primary_settings.item))
+					else
+						override_all_assertions (l_primary_settings.item)
+					end
+				elseif STRING_.same_case_insensitive (l_primary_settings.key, {ET_ECF_SETTING_NAMES}.library_root_setting_name) and attached system_config.targets as l_targets then
+					nb := l_targets.count
+					from i := 1 until i > nb loop
+						l_targets.target (i).settings.set_primary_value (l_primary_settings.key, l_primary_settings.item)
+						i := i + 1
+					end
 				else
 					settings.set_primary_value (l_primary_settings.key, l_primary_settings.item)
 				end

@@ -5,7 +5,7 @@ note
 		"Eiffel dynamic type builders"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -49,7 +49,6 @@ inherit
 			report_creation_expression,
 			report_creation_instruction,
 			report_current,
-			report_current_type_needed,
 			report_equality_expression,
 			report_formal_argument,
 			report_formal_argument_declaration,
@@ -133,10 +132,7 @@ feature {NONE} -- Initialization
 			current_dynamic_feature := dummy_dynamic_feature
 			create dynamic_type_sets.make_with_capacity (1000)
 			object_id_dynamic_type_set := dummy_dynamic_type
-			create current_index.make (0)
-			create result_index.make (0)
 			create constant_indexes.make_map (16)
-			create none_index.make (0)
 			catcall_error_mode := True
 		ensure
 			current_dynamic_system_set: current_dynamic_system = a_system
@@ -148,7 +144,23 @@ feature -- Factory
 	new_dynamic_type_set (a_type: ET_DYNAMIC_TYPE): ET_DYNAMIC_TYPE_SET
 			-- New dynamic type set
 		do
-			Result := a_type.alive_conforming_descendants
+			if in_new_dynamic_type_set then
+				create {ET_DYNAMIC_STANDALONE_TYPE_SET} Result.make_empty (a_type)
+				dynamic_type_set_count := dynamic_type_set_count + 1
+			else
+				in_new_dynamic_type_set := True
+				if a_type.is_expanded then
+					if a_type.is_generic then
+						Result := alive_conforming_descendants (a_type)
+						Result.set_never_void
+					else
+						Result := a_type
+					end
+				else
+					Result := alive_conforming_descendants (a_type)
+				end
+				in_new_dynamic_type_set := False
+			end
 		end
 
 feature -- Status report
@@ -164,15 +176,14 @@ feature -- Generation
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
 			i, nb: INTEGER
-			l_type: ET_DYNAMIC_TYPE
-			l_other_type: ET_DYNAMIC_TYPE
+			l_type: ET_DYNAMIC_PRIMARY_TYPE
 			j, nb2: INTEGER
 			l_features: ET_DYNAMIC_FEATURE_LIST
 			l_feature: ET_DYNAMIC_FEATURE
 			l_precursor: detachable ET_DYNAMIC_PRECURSOR
 			l_other_precursors: detachable ET_DYNAMIC_PRECURSOR_LIST
 			k, nb3: INTEGER
-			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
+			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_PRIMARY_TYPE]
 			l_call: detachable ET_DYNAMIC_QUALIFIED_CALL
 			l_count: INTEGER
 			old_nb: INTEGER
@@ -346,29 +357,6 @@ feature -- Generation
 					end
 					i := i + 1
 				end
-					-- Process dynamic types.
-				from i := 1 until i > nb loop
-					l_type := l_dynamic_types.item (i)
-					from
-						if l_type.was_alive then
-							j := old_nb + 1
-						elseif l_type.is_alive then
-							j := 1
-							l_type.set_was_alive
-						else
-							j := nb + 1
-						end
-					until
-						j > nb
-					loop
-						l_other_type := l_dynamic_types.item (j)
-						if l_type.conforms_to_type (l_other_type) then
-							l_other_type.alive_conforming_descendants.put_type (l_type)
-						end
-						j := j + 1
-					end
-					i := i + 1
-				end
 				old_nb := nb
 			end
 			check_catcall_validity
@@ -378,7 +366,7 @@ feature -- Generation
 
 feature {ET_DYNAMIC_QUALIFIED_CALL} -- Generation
 
-	propagate_call_type (a_type: ET_DYNAMIC_TYPE; a_call: ET_DYNAMIC_QUALIFIED_CALL)
+	propagate_call_type (a_type: ET_DYNAMIC_PRIMARY_TYPE; a_call: ET_DYNAMIC_QUALIFIED_CALL)
 			-- Propagate `a_type' from target type set `a_call'.
 		local
 			l_target_type_set: ET_DYNAMIC_TYPE_SET
@@ -388,7 +376,7 @@ feature {ET_DYNAMIC_QUALIFIED_CALL} -- Generation
 				l_dynamic_feature := a_call.seeded_dynamic_feature (a_type, current_dynamic_system)
 				if l_dynamic_feature = Void then
 					l_target_type_set := a_call.target_type_set
-					if a_type.conforms_to_type (l_target_type_set.static_type) then
+					if a_type.conforms_to_primary_type (l_target_type_set.static_type.primary_type) then
 							-- Internal error: there should be a feature with seed
 							-- `l_seed' in all descendants of `l_target_type_set.static_type'.
 						set_fatal_error
@@ -406,7 +394,7 @@ feature {ET_DYNAMIC_QUALIFIED_CALL} -- Generation
 
 feature {ET_DYNAMIC_QUALIFIED_CALL} -- Generation
 
-	propagate_tuple_label_expression_dynamic_types (a_call: ET_DYNAMIC_QUALIFIED_QUERY_CALL; a_type: ET_DYNAMIC_TYPE)
+	propagate_tuple_label_expression_dynamic_types (a_call: ET_DYNAMIC_QUALIFIED_QUERY_CALL; a_type: ET_DYNAMIC_PRIMARY_TYPE)
 			-- Propagate dynamic types of the label in tuple `a_type' to
 			-- the dynamic type set of the result type of `a_call'.
 		local
@@ -414,8 +402,8 @@ feature {ET_DYNAMIC_QUALIFIED_CALL} -- Generation
 			l_index: INTEGER
 			l_label_type_set: ET_DYNAMIC_TYPE_SET
 			l_result_type_set: ET_DYNAMIC_TYPE_SET
-			old_feature: ET_DYNAMIC_FEATURE
-			old_type: ET_DYNAMIC_TYPE
+			old_feature: like current_dynamic_feature
+			old_type: like current_dynamic_type
 		do
 			old_feature := current_dynamic_feature
 			current_dynamic_feature := a_call.current_feature
@@ -443,15 +431,15 @@ feature {ET_DYNAMIC_QUALIFIED_CALL} -- Generation
 			current_dynamic_type := old_type
 		end
 
-	propagate_tuple_label_setter_dynamic_types (a_call: ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL; a_type: ET_DYNAMIC_TYPE)
+	propagate_tuple_label_setter_dynamic_types (a_call: ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL; a_type: ET_DYNAMIC_PRIMARY_TYPE)
 			-- Propagate dynamic types of the source of tuple label setter `a_call'
 			-- to the dynamic type set of the corresponding tuple label in `a_type'.
 		local
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_index: INTEGER
 			l_label_type_set: ET_DYNAMIC_TYPE_SET
-			old_feature: ET_DYNAMIC_FEATURE
-			old_type: ET_DYNAMIC_TYPE
+			old_feature: like current_dynamic_feature
+			old_type: like current_dynamic_type
 		do
 			old_feature := current_dynamic_feature
 			current_dynamic_feature := a_call.current_feature
@@ -484,7 +472,7 @@ feature {ET_DYNAMIC_QUALIFIED_CALL} -- Generation
 
 feature {ET_DYNAMIC_OBJECT_EQUALITY_EXPRESSION, ET_DYNAMIC_EQUALITY_EXPRESSION} -- Generation
 
-	propagate_is_equal_argument_type (a_type: ET_DYNAMIC_TYPE; a_feature: ET_DYNAMIC_FEATURE)
+	propagate_is_equal_argument_type (a_type: ET_DYNAMIC_PRIMARY_TYPE; a_feature: ET_DYNAMIC_FEATURE)
 			-- Propagate `a_type' as argument of `a_feature', the feature being the
 			-- feature 'is_equal' possibly used internally in object equality ('~' and '/~')
 			-- or in equality ('=' and '/=') when the target type is expanded.
@@ -492,21 +480,21 @@ feature {ET_DYNAMIC_OBJECT_EQUALITY_EXPRESSION, ET_DYNAMIC_EQUALITY_EXPRESSION} 
 			l_formal_type_set: detachable ET_DYNAMIC_TYPE_SET
 		do
 			l_formal_type_set := a_feature.argument_type_set (1)
-			if l_formal_type_set /= Void and then a_type.conforms_to_type (l_formal_type_set.static_type) then
+			if l_formal_type_set /= Void and then a_type.conforms_to_primary_type (l_formal_type_set.static_type.primary_type) then
 				propagate_builtin_actual_argument_dynamic_types (a_type, 1, a_feature)
 			end
 		end
 
 feature {ET_DYNAMIC_SYSTEM} -- Generation
 
-	propagate_type_of_type_result_type (a_type: ET_DYNAMIC_TYPE; a_feature: ET_DYNAMIC_FEATURE)
+	propagate_type_of_type_result_type (a_type: ET_DYNAMIC_PRIMARY_TYPE; a_feature: ET_DYNAMIC_FEATURE)
 			-- Propagate `a_type' to the dynamic type set of the result of the
 			-- built-in feature `a_feature' corresponding to "INTERNAL.type_of_type".
 		do
 			propagate_builtin_result_dynamic_types (a_type, a_feature)
 		end
 
-feature {ET_DYNAMIC_TYPE, ET_DYNAMIC_SYSTEM} -- Generation
+feature {ET_DYNAMIC_PRIMARY_TYPE, ET_DYNAMIC_SYSTEM} -- Generation
 
 	propagate_reference_field_dynamic_types (a_attribute: ET_DYNAMIC_FEATURE)
 			-- Propagate the dynamic types of the dynamic type set of
@@ -593,14 +581,14 @@ feature {NONE} -- Generation
 	is_built: BOOLEAN
 			-- Have the dynamic type sets of `current_dynamic_system' all been built?
 
-	build_feature_dynamic_type_sets (a_feature: ET_DYNAMIC_FEATURE; a_current_dynamic_type: ET_DYNAMIC_TYPE)
+	build_feature_dynamic_type_sets (a_feature: ET_DYNAMIC_FEATURE; a_current_dynamic_type: ET_DYNAMIC_PRIMARY_TYPE)
 			-- Build dynamic type sets for `a_feature' in `a_current_dynamic_type'.
 		require
 			a_feature_not_void: a_feature /= Void
 			a_current_dynamic_type_not_void: a_current_dynamic_type /= Void
 		local
-			old_feature: ET_DYNAMIC_FEATURE
-			old_type: ET_DYNAMIC_TYPE
+			old_feature: like current_dynamic_feature
+			old_type: like current_dynamic_type
 			l_argument_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_result_type_set: detachable ET_DYNAMIC_TYPE_SET
@@ -630,7 +618,6 @@ feature {NONE} -- Generation
 				end
 			end
 			had_error := has_fatal_error
-			a_feature.set_current_type_needed (False)
 			if a_feature.is_precursor then
 				check_precursor_feature_validity (a_feature.static_feature, a_current_dynamic_type.base_type)
 			else
@@ -647,10 +634,11 @@ feature {NONE} -- Generation
 			end
 			a_feature.set_dynamic_type_sets (l_dynamic_type_sets)
 			a_feature.set_built (True)
-			current_index.put (0)
-			result_index.put (0)
+			current_index := 0
+			result_index := 0
+			attached_result_index := 0
+			void_index := 0
 			constant_indexes.wipe_out
-			none_index.put (0)
 			dynamic_type_sets.wipe_out
 			current_dynamic_feature := old_feature
 			current_dynamic_type := old_type
@@ -663,8 +651,8 @@ feature {NONE} -- CAT-calls
 		local
 			i, nb: INTEGER
 			l_call: detachable ET_DYNAMIC_QUALIFIED_CALL
-			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_TYPE]
-			l_type: ET_DYNAMIC_TYPE
+			l_dynamic_types: DS_ARRAYED_LIST [ET_DYNAMIC_PRIMARY_TYPE]
+			l_type: ET_DYNAMIC_PRIMARY_TYPE
 		do
 			if catcall_error_mode or catcall_warning_mode then
 				l_dynamic_types := current_dynamic_system.dynamic_types
@@ -708,7 +696,7 @@ feature {NONE} -- CAT-calls
 			end
 		end
 
-	check_catcall_target_validity (a_type: ET_DYNAMIC_TYPE; a_call: ET_DYNAMIC_QUALIFIED_CALL)
+	check_catcall_target_validity (a_type: ET_DYNAMIC_PRIMARY_TYPE; a_call: ET_DYNAMIC_QUALIFIED_CALL)
 			-- Check whether target type `a_type' introduces CAT-calls in `a_call'.
 		require
 			a_type_not_void: a_type /= Void
@@ -721,7 +709,7 @@ feature {NONE} -- CAT-calls
 			l_source_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_target_type_set: detachable ET_DYNAMIC_TYPE_SET
 			j, nb2: INTEGER
-			l_source_type: ET_DYNAMIC_TYPE
+			l_source_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_target_type: ET_DYNAMIC_TYPE
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_seed: INTEGER
@@ -760,8 +748,8 @@ feature {NONE} -- CAT-calls
 								nb2 := l_source_type_set.count
 								from j := 1 until j > nb2 loop
 									l_source_type := l_source_type_set.dynamic_type (j)
-									if not l_source_type.conforms_to_type (l_target_type) then
-										report_catcall_error (a_type, Void, 1, l_target_type, l_target_type_set, l_source_type, l_source_type_set, a_call)
+									if not l_source_type.conforms_to_primary_type (l_target_type.primary_type) then
+										report_catcall_error (a_type, Void, 1, l_target_type, l_source_type, l_source_type_set, a_call)
 									end
 									j := j + 1
 								end
@@ -802,8 +790,8 @@ feature {NONE} -- CAT-calls
 										nb2 := l_source_type_set.count
 										from j := 1 until j > nb2 loop
 											l_source_type := l_source_type_set.dynamic_type (j)
-											if not l_source_type.conforms_to_type (l_target_type) then
-												report_catcall_error (a_type, l_dynamic_feature, i, l_target_type, l_target_type_set, l_source_type, l_source_type_set, a_call)
+											if not l_source_type.conforms_to_primary_type (l_target_type.primary_type) then
+												report_catcall_error (a_type, l_dynamic_feature, i, l_target_type, l_source_type, l_source_type_set, a_call)
 											end
 											j := j + 1
 										end
@@ -817,21 +805,20 @@ feature {NONE} -- CAT-calls
 			end
 		end
 
-	report_catcall_error (a_target_type: ET_DYNAMIC_TYPE; a_dynamic_feature: detachable ET_DYNAMIC_FEATURE;
-		arg: INTEGER; a_formal_type: ET_DYNAMIC_TYPE; a_formal_type_set: ET_DYNAMIC_TYPE_SET;
-		an_actual_type: ET_DYNAMIC_TYPE; an_actual_type_set: ET_DYNAMIC_TYPE_SET; a_call: ET_DYNAMIC_QUALIFIED_CALL)
+	report_catcall_error (a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_dynamic_feature: detachable ET_DYNAMIC_FEATURE;
+		arg: INTEGER; a_formal_type: ET_DYNAMIC_TYPE; an_actual_type: ET_DYNAMIC_PRIMARY_TYPE;
+		an_actual_type_set: ET_DYNAMIC_TYPE_SET; a_call: ET_DYNAMIC_QUALIFIED_CALL)
 			-- Report a CAT-call error in `a_call'. When the target is of type `a_target_type', we
 			-- try to pass to the corresponding feature `a_dynamic_feature' an actual argument of
 			-- type `an_actual_type' (which is one of the types of `an_actual_type_set') which
 			-- does not conform to the type of the `arg'-th corresponding formal argument
-			-- `a_formal_type' (which is one of the types of `a_formal_type_set').
+			-- `a_formal_type'.
 			-- When `a_dynamic_feature' is Void, then the call is assumed to be a Tuple label setter.
 		require
 			a_target_type_not_void: a_target_type /= Void
 			a_call_not_void: a_call /= Void
 			a_dynamic_feature_not_void_or_tuple_label_setter: a_call.is_tuple_label xor a_dynamic_feature /= Void
 			a_formal_type_not_void: a_formal_type /= Void
-			a_formal_type_set_not_void: a_formal_type_set /= Void
 			an_actual_type_not_void: an_actual_type /= Void
 			an_actual_type_set_not_void: an_actual_type_set /= Void
 			valid_arg: attached a_call.static_call.arguments as l_static_arguments and then l_static_arguments.valid_index (arg)
@@ -841,7 +828,7 @@ feature {NONE} -- CAT-calls
 -- TODO: better error message reporting.
 			l_message := shared_error_message
 			STRING_.wipe_out (l_message)
-			append_catcall_error_message (l_message, a_target_type, a_dynamic_feature, arg, a_formal_type, a_formal_type_set, an_actual_type, an_actual_type_set, a_call)
+			append_catcall_error_message (l_message, a_target_type, a_dynamic_feature, arg, a_formal_type, an_actual_type, an_actual_type_set, a_call)
 			if catcall_error_mode then
 					-- CAT-calls are considered as fatal errors.
 				set_fatal_error
@@ -850,15 +837,14 @@ feature {NONE} -- CAT-calls
 			STRING_.wipe_out (l_message)
 		end
 
-	append_catcall_error_message (a_message: STRING; a_target_type: ET_DYNAMIC_TYPE; a_dynamic_feature: detachable ET_DYNAMIC_FEATURE;
-		arg: INTEGER; a_formal_type: ET_DYNAMIC_TYPE; a_formal_type_set: ET_DYNAMIC_TYPE_SET;
-		an_actual_type: ET_DYNAMIC_TYPE; an_actual_type_set: ET_DYNAMIC_TYPE_SET; a_call: ET_DYNAMIC_QUALIFIED_CALL)
+	append_catcall_error_message (a_message: STRING; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_dynamic_feature: detachable ET_DYNAMIC_FEATURE;
+		arg: INTEGER; a_formal_type: ET_DYNAMIC_TYPE; an_actual_type: ET_DYNAMIC_PRIMARY_TYPE;
+		an_actual_type_set: ET_DYNAMIC_TYPE_SET; a_call: ET_DYNAMIC_QUALIFIED_CALL)
 			-- Append to `a_message' the error message of a CAT-call error in `a_call'.
 			-- When the target is of type `a_target_type', we try to pass to the corresponding
 			-- feature `a_dynamic_feature' an actual argument of type `an_actual_type' (which
 			-- is one of the types of `an_actual_type_set') which does not conform to the type
-			-- of the `arg'-th corresponding formal argument `a_formal_type' (which is one of
-			-- the types of `a_formal_type_set').
+			-- of the `arg'-th corresponding formal argument `a_formal_type'.
 			-- When `a_dynamic_feature' is Void, then the call is assumed to be a Tuple label setter.
 		require
 			a_message_not_void: a_message /= Void
@@ -866,7 +852,6 @@ feature {NONE} -- CAT-calls
 			a_target_type_not_void: a_target_type /= Void
 			a_dynamic_feature_not_void_or_tuple_label_setter: a_call.is_tuple_label xor a_dynamic_feature /= Void
 			a_formal_type_not_void: a_formal_type /= Void
-			a_formal_type_set_not_void: a_formal_type_set /= Void
 			an_actual_type_not_void: an_actual_type /= Void
 			an_actual_type_set_not_void: an_actual_type_set /= Void
 			valid_arg: attached a_call.static_call.arguments as l_static_arguments and then l_static_arguments.valid_index (arg)
@@ -921,7 +906,7 @@ feature {NONE} -- Feature validity
 			-- Check validity of `a_feature'.
 			-- Set `has_fatal_error' if a fatal error occurred.
 		local
-			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_dynamic_type: ET_DYNAMIC_PRIMARY_TYPE
 		do
 			Precursor (a_feature)
 			if not has_fatal_error then
@@ -929,7 +914,7 @@ feature {NONE} -- Feature validity
 					check_external_builtin_function_validity (a_feature)
 				elseif a_feature.type.same_base_type_with_type_marks (current_universe_impl.string_type, tokens.implicit_attached_type_mark, current_type, tokens.implicit_attached_type_mark, current_type) then
 					if current_type = current_dynamic_type.base_type then
-						l_dynamic_type := result_type_set.static_type
+						l_dynamic_type := result_type_set.static_type.primary_type
 						mark_string_type_alive (l_dynamic_type)
 						propagate_builtin_result_dynamic_types (l_dynamic_type, current_dynamic_feature)
 					end
@@ -1149,7 +1134,9 @@ feature {NONE} -- Event handling
 			-- Report that a call to across cursor `a_name' has been processed.
 		do
 			if current_type = current_dynamic_type.base_type then
-				a_name.set_index (a_across_component.cursor_name.index)
+				if a_name /= a_across_component.unfolded_cursor_name then
+					a_name.set_index (a_across_component.cursor_name.index)
+				end
 			end
 		end
 
@@ -1158,7 +1145,11 @@ feature {NONE} -- Event handling
 		do
 			if current_type = current_dynamic_type.base_type then
 					-- Take care of the type of the across cursor.
-				a_name.set_index (a_across_component.new_cursor_expression.index)
+				if a_name = a_across_component.unfolded_cursor_name or not a_across_component.has_item_cursor then
+					a_name.set_index (a_across_component.new_cursor_expression.index)
+				else
+					a_name.set_index (a_across_component.cursor_item_expression.index)
+				end
 			end
 		end
 
@@ -1254,7 +1245,7 @@ feature {NONE} -- Event handling
 					error_handler.report_giaaa_error
 				else
 					l_source_type := l_source_type_set.static_type
-					if l_source_type.base_type.conforms_to_type (a_target_type, current_type, current_type, system_processor) then
+					if l_source_type.primary_type.base_type.conforms_to_type_with_type_marks (a_target_type, Void, current_type, l_source_type.type_mark, current_type, system_processor) then
 -- TODO: built-in feature with formal generic parameter? Should not be needed with ECMA Eiffel.
 						set_dynamic_type_set (l_source_type_set, an_expression)
 					else
@@ -1278,7 +1269,7 @@ feature {NONE} -- Event handling
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_dynamic_type := current_dynamic_system.dynamic_type (a_type, current_type)
-				mark_type_alive (l_dynamic_type)
+				mark_type_alive (l_dynamic_type.primary_type)
 				constant_indexes.search (l_dynamic_type)
 				if constant_indexes.found and a_expression.index = 0 then
 					a_expression.set_index (constant_indexes.found_item)
@@ -1290,7 +1281,7 @@ feature {NONE} -- Event handling
 			end
 		end
 
-	report_creation_expression (an_expression: ET_CREATION_EXPRESSION; a_creation_type: ET_TYPE; a_procedure: ET_PROCEDURE)
+	report_creation_expression (an_expression: ET_CREATION_EXPRESSION; a_creation_type: ET_TYPE; a_procedure: detachable ET_PROCEDURE)
 			-- Report that a creation expression, with creation type
 			-- `a_creation_type' in context of `current_type', has
 			-- been processed.
@@ -1298,26 +1289,30 @@ feature {NONE} -- Event handling
 			i, nb: INTEGER
 			l_dynamic_procedure: ET_DYNAMIC_FEATURE
 			l_dynamic_creation_type: ET_DYNAMIC_TYPE
+			l_dynamic_creation_primary_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_actual: ET_EXPRESSION
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_dynamic_creation_type := current_dynamic_system.dynamic_type (a_creation_type, current_type)
-				l_dynamic_procedure := l_dynamic_creation_type.dynamic_procedure (a_procedure, current_dynamic_system)
-				l_dynamic_procedure.set_creation (True)
-				mark_type_alive (l_dynamic_creation_type)
-				if attached an_expression.arguments as l_actuals then
-					nb := l_actuals.count
-					from i := 1 until i > nb loop
-						l_actual := l_actuals.actual_argument (i)
-						propagate_argument_operand_dynamic_types (l_actual, i, l_dynamic_procedure)
-						i := i + 1
+				l_dynamic_creation_primary_type := l_dynamic_creation_type.primary_type
+				mark_type_alive (l_dynamic_creation_primary_type)
+				if a_procedure /= Void then
+					l_dynamic_procedure := l_dynamic_creation_primary_type.dynamic_procedure (a_procedure, current_dynamic_system)
+					l_dynamic_procedure.set_creation (True)
+					if attached an_expression.arguments as l_actuals then
+						nb := l_actuals.count
+						from i := 1 until i > nb loop
+							l_actual := l_actuals.actual_argument (i)
+							propagate_argument_operand_dynamic_types (l_actual, i, l_dynamic_procedure)
+							i := i + 1
+						end
 					end
 				end
 				set_dynamic_type_set (l_dynamic_creation_type, an_expression)
 			end
 		end
 
-	report_creation_instruction (an_instruction: ET_CREATION_INSTRUCTION; a_creation_type: ET_TYPE; a_procedure: ET_PROCEDURE)
+	report_creation_instruction (an_instruction: ET_CREATION_INSTRUCTION; a_creation_type: ET_TYPE; a_procedure: detachable ET_PROCEDURE)
 			-- Report that a creation instruction, with creation type
 			-- `a_creation_type' in context of `current_type', has
 			-- been processed.
@@ -1325,19 +1320,23 @@ feature {NONE} -- Event handling
 			i, nb: INTEGER
 			l_dynamic_procedure: ET_DYNAMIC_FEATURE
 			l_dynamic_creation_type: ET_DYNAMIC_TYPE
+			l_dynamic_creation_primary_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_actual: ET_EXPRESSION
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_dynamic_creation_type := current_dynamic_system.dynamic_type (a_creation_type, current_type)
-				l_dynamic_procedure := l_dynamic_creation_type.dynamic_procedure (a_procedure, current_dynamic_system)
-				l_dynamic_procedure.set_creation (True)
-				mark_type_alive (l_dynamic_creation_type)
-				if attached an_instruction.arguments as l_actuals then
-					nb := l_actuals.count
-					from i := 1 until i > nb loop
-						l_actual := l_actuals.actual_argument (i)
-						propagate_argument_operand_dynamic_types (l_actual, i, l_dynamic_procedure)
-						i := i + 1
+				l_dynamic_creation_primary_type := l_dynamic_creation_type.primary_type
+				mark_type_alive (l_dynamic_creation_primary_type)
+				if a_procedure /= Void then
+					l_dynamic_procedure := l_dynamic_creation_primary_type.dynamic_procedure (a_procedure, current_dynamic_system)
+					l_dynamic_procedure.set_creation (True)
+					if attached an_instruction.arguments as l_actuals then
+						nb := l_actuals.count
+						from i := 1 until i > nb loop
+							l_actual := l_actuals.actual_argument (i)
+							propagate_argument_operand_dynamic_types (l_actual, i, l_dynamic_procedure)
+							i := i + 1
+						end
 					end
 				end
 				propagate_creation_dynamic_type (l_dynamic_creation_type, an_instruction)
@@ -1346,24 +1345,18 @@ feature {NONE} -- Event handling
 
 	report_current (an_expression: ET_CURRENT)
 			-- Report that the current entity has been processed.
+		local
+			l_attached_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				if an_expression.index = 0 and current_index.item /= 0 then
-					an_expression.set_index (current_index.item)
+				if an_expression.index = 0 and current_index /= 0 then
+					an_expression.set_index (current_index)
 				end
-				set_dynamic_type_set (current_dynamic_type, an_expression)
-				if current_index.item = 0 then
-					current_index.put (an_expression.index)
+				l_attached_type := current_dynamic_system.dynamic_type (tokens.attached_like_current, current_type)
+				set_dynamic_type_set (l_attached_type, an_expression)
+				if current_index = 0 then
+					current_index := an_expression.index
 				end
-			end
-		end
-
-	report_current_type_needed
-			-- Report that the current type is needed to execute the feature being analyzed.
-			-- This might be needed for optimization purposes.
-		do
-			if current_type = current_dynamic_type.base_type then
-				current_dynamic_feature.set_current_type_needed (True)
 			end
 		end
 
@@ -1383,17 +1376,47 @@ feature {NONE} -- Event handling
 					error_handler.report_giaaa_error
 				else
 					create l_equality.make (an_expression, l_target_type_set, current_dynamic_feature, current_dynamic_type)
-					l_target_type_set.static_type.put_equality_expression (l_equality)
+					l_target_type_set.static_type.primary_type.put_equality_expression (l_equality)
 					propagate_equality_expression_target_dynamic_types (l_equality)
 				end
 			end
 		end
 
-	report_formal_argument (a_name: ET_IDENTIFIER; a_formal: ET_FORMAL_ARGUMENT)
+	report_formal_argument (a_name: ET_IDENTIFIER; a_is_attached: BOOLEAN; a_formal: ET_FORMAL_ARGUMENT)
 			-- Report that a call to formal argument `a_name' has been processed.
+			-- `a_is_attached' means that we know (with a CAP, Certified Attachment Pattern)
+			-- that this formal argument is attached at this position in the code.
+		local
+			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_dynamic_attached_type: ET_DYNAMIC_TYPE
+			l_dynamic_attached_type_set: detachable ET_DYNAMIC_TYPE_SET
 		do
 			if current_type = current_dynamic_type.base_type then
-				a_name.set_index (a_formal.name.index)
+				if a_is_attached then
+					a_name.set_index (a_formal.attached_index)
+					if not attached dynamic_type_set (a_name) as l_dynamic_type_set then
+							-- Internal error: this dynamic type set should already have been
+							-- set by 'ET_DYNAMIC_FEATURE.make' or
+							-- `report_inline_agent_formal_argument_declaration'.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					else
+						l_dynamic_type := l_dynamic_type_set.static_type
+						l_dynamic_attached_type := current_dynamic_system.attached_type (l_dynamic_type.primary_type)
+						if l_dynamic_attached_type /= l_dynamic_type then
+								-- The dynamic type set for the attached version of the
+								-- formal argument has not been created yet.
+							l_dynamic_attached_type_set := new_dynamic_type_set (l_dynamic_attached_type)
+							set_dynamic_type_set (l_dynamic_attached_type_set, a_name)
+								-- Unless proven otherwise after possible attachments,
+								-- a formal actual argument is assumed to be never Void.
+							l_dynamic_attached_type_set.set_never_void
+							propagate_cap_dynamic_types (a_formal.name, l_dynamic_type_set, l_dynamic_attached_type_set)
+						end
+					end
+				else
+					a_name.set_index (a_formal.index)
+				end
 			end
 		end
 
@@ -1401,9 +1424,25 @@ feature {NONE} -- Event handling
 			-- Report that the declaration of the formal
 			-- argument `a_formal' of a feature has been processed.
 		do
-			-- The dynamic type sets of formal arguments of features have
-			-- already been set when creating the corresponding dynamic
-			-- feature (see ET_DYNAMIC_FEATURE.make).
+			if current_type = current_dynamic_type.base_type then
+					-- The dynamic type sets of formal arguments of features have
+					-- already been set when creating the corresponding dynamic
+					-- feature (see ET_DYNAMIC_FEATURE.make).
+					-- Reserve a placeholder in `dynamic_type_sets' for the attached version
+					-- of the formal argument, if later needed with a CAP (Certified Attachment Pattern).
+				a_formal.name.set_index (a_formal.index)
+				if not attached dynamic_type_set (a_formal.name) as l_dynamic_type_set then
+						-- Internal error: this dynamic type set should already have been
+						-- set by 'ET_DYNAMIC_FEATURE.make'.
+					set_fatal_error
+					error_handler.report_giaaa_error
+				else
+					a_formal.name.set_index (a_formal.attached_index)
+					set_dynamic_type_set (l_dynamic_type_set, a_formal.name)
+					a_formal.set_attached_index (a_formal.name.index)
+					a_formal.name.set_index (a_formal.index)
+				end
+			end
 		end
 
 	report_function_address (an_expression: ET_FEATURE_ADDRESS; a_query: ET_QUERY)
@@ -1421,7 +1460,7 @@ feature {NONE} -- Event handling
 		end
 
 	report_if_expression (a_expression: ET_IF_EXPRESSION; a_type: ET_TYPE; a_context: ET_TYPE_CONTEXT)
-			-- Report that a 'if' epxression of type `a_type' in context
+			-- Report that a 'if' expression of type `a_type' in context
 			-- of `a_context' has been processed.
 		local
 			l_dynamic_type: ET_DYNAMIC_TYPE
@@ -1479,6 +1518,7 @@ feature {NONE} -- Event handling
 			a_context_valid: a_context.is_valid_context
 		local
 			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_dynamic_primary_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_open_operand_type_set: ET_DYNAMIC_TYPE_SET
 			l_result_type_set: detachable ET_DYNAMIC_TYPE_SET
@@ -1489,23 +1529,26 @@ feature {NONE} -- Event handling
 			i, nb: INTEGER
 			j, nb2: INTEGER
 			l_target: ET_AGENT_TARGET
+			l_current_attached_type: ET_DYNAMIC_TYPE
 		do
 			l_dynamic_type := current_dynamic_system.dynamic_type (a_type, a_context)
-			mark_type_alive (l_dynamic_type)
+			l_dynamic_primary_type := l_dynamic_type.primary_type
+			mark_type_alive (l_dynamic_primary_type)
 			set_dynamic_type_set (l_dynamic_type, an_expression)
-			if not attached {ET_DYNAMIC_ROUTINE_TYPE} l_dynamic_type as l_agent_type then
+			if not attached {ET_DYNAMIC_ROUTINE_TYPE} l_dynamic_primary_type as l_agent_type then
 					-- Internal error: the dynamic type of an agent should be an agent type.
 				set_fatal_error
 				error_handler.report_giaaa_error
 			else
 					-- Set dynamic type set of implicit 'Current' target.
 				l_target := an_expression.target
-				if l_target.index = 0 and current_index.item /= 0 then
-					l_target.set_index (current_index.item)
+				if l_target.index = 0 and current_index /= 0 then
+					l_target.set_index (current_index)
 				end
-				set_dynamic_type_set (current_dynamic_type, l_target)
-				if current_index.item = 0 then
-					current_index.put (l_target.index)
+				l_current_attached_type := current_dynamic_system.dynamic_type (tokens.attached_like_current, current_type)
+				set_dynamic_type_set (l_current_attached_type, l_target)
+				if current_index = 0 then
+					current_index := l_target.index
 				end
 					-- Dynamic type set of 'Result'.
 				l_result_type_set := l_agent_type.result_type_set
@@ -1578,7 +1621,15 @@ feature {NONE} -- Event handling
 					-- Unless proven otherwise after possible attachments,
 					-- a formal actual argument is assumed to be never Void.
 				l_dynamic_type_set.set_never_void
+				a_formal.name.set_index (a_formal.index)
 				set_dynamic_type_set (l_dynamic_type_set, a_formal.name)
+				a_formal.set_index (a_formal.name.index)
+					-- Reserve a placeholder in `dynamic_type_sets' for the attached version
+					-- of the formal argument, if later needed with a CAP (Certified Attachment Pattern).
+				a_formal.name.set_index (a_formal.attached_index)
+				set_dynamic_type_set (l_dynamic_type_set, a_formal.name)
+				a_formal.set_attached_index (a_formal.name.index)
+				a_formal.name.set_index (a_formal.index)
 			end
 		end
 
@@ -1586,13 +1637,23 @@ feature {NONE} -- Event handling
 			-- Report that the declaration of the local variable `a_local'
 			-- of an inline agent has been processed.
 		local
-			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_dynamic_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_dynamic_type := current_dynamic_system.dynamic_type (a_local.type, current_type)
+					-- The local variable is assumed to be detachable
+					-- unless proven otherwise with a CAP (Certified Attachment Pattern).
+				l_dynamic_type := current_dynamic_system.dynamic_primary_type (a_local.type, current_type)
 				l_dynamic_type_set := new_dynamic_type_set (l_dynamic_type)
+				a_local.name.set_index (a_local.index)
 				set_dynamic_type_set (l_dynamic_type_set, a_local.name)
+				a_local.set_index (a_local.name.index)
+					-- Reserve a placeholder in `dynamic_type_sets' for the attached version
+					-- of the local variable, if later needed.
+				a_local.name.set_index (a_local.attached_index)
+				set_dynamic_type_set (l_dynamic_type_set, a_local.name)
+				a_local.set_attached_index (a_local.name.index)
+				a_local.name.set_index (a_local.index)
 			end
 		end
 
@@ -1602,6 +1663,7 @@ feature {NONE} -- Event handling
 		local
 			l_dynamic_type: ET_DYNAMIC_TYPE
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
+			l_dynamic_primary_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			if current_type = current_dynamic_type.base_type then
 				if not attached current_inline_agent as l_current_inline_agent then
@@ -1618,6 +1680,25 @@ feature {NONE} -- Event handling
 					l_dynamic_type := current_dynamic_system.dynamic_type (a_type, current_type)
 					l_dynamic_type_set := new_dynamic_type_set (l_dynamic_type)
 					set_dynamic_type_set (l_dynamic_type_set, l_implicit_result)
+					if l_dynamic_type.primary_type = l_dynamic_type then
+						l_current_inline_agent.set_result_index (l_implicit_result.index)
+							-- Reserve a placeholder in `dynamic_type_sets' for the attached version
+							-- of 'Result', if later needed with a CAP (Certified Attachment Pattern).
+						l_implicit_result.set_index (l_current_inline_agent.attached_result_index)
+						set_dynamic_type_set (l_dynamic_type_set, l_implicit_result)
+						l_current_inline_agent.set_attached_result_index (l_implicit_result.index)
+						l_implicit_result.set_index (l_current_inline_agent.result_index)
+					else
+							-- The 'Result' is assumed to be detachable within the body of the inline
+							-- agent, unless proven otherwise with a CAP (Certified Attachment Pattern).
+						l_current_inline_agent.set_attached_result_index (l_implicit_result.index)
+						l_dynamic_primary_type_set := new_dynamic_type_set (l_dynamic_type.primary_type)
+						l_implicit_result.set_index (l_current_inline_agent.result_index)
+						set_dynamic_type_set (l_dynamic_primary_type_set, l_implicit_result)
+						l_current_inline_agent.set_result_index (l_implicit_result.index)
+						l_implicit_result.set_index (l_current_inline_agent.attached_result_index)
+						propagate_cap_dynamic_types (l_implicit_result, l_dynamic_primary_type_set, l_dynamic_type_set)
+					end
 				end
 			end
 		end
@@ -1655,15 +1736,42 @@ feature {NONE} -- Event handling
 			-- processed as target of an assignment (attempt).
 		do
 			if current_type = current_dynamic_type.base_type then
-				a_name.set_index (a_local.name.index)
+				a_name.set_index (a_local.index)
 			end
 		end
 
-	report_local_variable (a_name: ET_IDENTIFIER; a_local: ET_LOCAL_VARIABLE)
+	report_local_variable (a_name: ET_IDENTIFIER; a_is_attached: BOOLEAN; a_local: ET_LOCAL_VARIABLE)
 			-- Report that a call to local variable `a_name' has been processed.
+			-- `a_is_attached' means that we know (with a CAP, Certified Attachment Pattern)
+			-- that this local variable is attached at this position in the code.
+		local
+			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_dynamic_attached_type: ET_DYNAMIC_TYPE
+			l_dynamic_attached_type_set: detachable ET_DYNAMIC_TYPE_SET
 		do
 			if current_type = current_dynamic_type.base_type then
-				a_name.set_index (a_local.name.index)
+				if a_is_attached then
+					a_name.set_index (a_local.attached_index)
+					if not attached dynamic_type_set (a_name) as l_dynamic_type_set then
+							-- Internal error: this dynamic type set should already have been
+							-- set by `report_local_variable_declaration' or
+							-- `report_inline_agent_local_variable_declaration'.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					else
+						l_dynamic_type := l_dynamic_type_set.static_type
+						l_dynamic_attached_type := current_dynamic_system.attached_type (l_dynamic_type.primary_type)
+						if l_dynamic_attached_type /= l_dynamic_type then
+								-- The dynamic type set for the attached version of the
+								-- local variable has not been created yet.
+							l_dynamic_attached_type_set := new_dynamic_type_set (l_dynamic_attached_type)
+							set_dynamic_type_set (l_dynamic_attached_type_set, a_name)
+							propagate_cap_dynamic_types (a_local.name, l_dynamic_type_set, l_dynamic_attached_type_set)
+						end
+					end
+				else
+					a_name.set_index (a_local.index)
+				end
 			end
 		end
 
@@ -1671,13 +1779,23 @@ feature {NONE} -- Event handling
 			-- Report that the declaration of the local variable `a_local'
 			-- of a feature has been processed.
 		local
-			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_dynamic_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_dynamic_type_set: ET_DYNAMIC_TYPE_SET
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_dynamic_type := current_dynamic_system.dynamic_type (a_local.type, current_type)
+					-- The local variable is assumed to be detachable
+					-- unless proven otherwise with a CAP (Certified Attachment Pattern).
+				l_dynamic_type := current_dynamic_system.dynamic_primary_type (a_local.type, current_type)
 				l_dynamic_type_set := new_dynamic_type_set (l_dynamic_type)
+				a_local.name.set_index (a_local.index)
 				set_dynamic_type_set (l_dynamic_type_set, a_local.name)
+				a_local.set_index (a_local.name.index)
+					-- Reserve a placeholder in `dynamic_type_sets' for the attached version
+					-- of the local variable, if later needed.
+				a_local.name.set_index (a_local.attached_index)
+				set_dynamic_type_set (l_dynamic_type_set, a_local.name)
+				a_local.set_attached_index (a_local.name.index)
+				a_local.name.set_index (a_local.index)
 			end
 		end
 
@@ -1686,47 +1804,64 @@ feature {NONE} -- Event handling
 			-- of `a_context' has been processed.
 		local
 			l_type: ET_DYNAMIC_TYPE
+			l_primary_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_queries: ET_DYNAMIC_FEATURE_LIST
 			l_dynamic_type_set: detachable ET_DYNAMIC_TYPE_SET
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_type := current_dynamic_system.dynamic_type (a_type, a_context)
-				mark_type_alive (l_type)
+				l_primary_type := l_type.primary_type
+				mark_type_alive (l_primary_type)
 				set_dynamic_type_set (l_type, an_expression)
 					-- Make sure that types "SPECIAL [XXX]" (used in feature 'area'), and
 					-- "INTEGER" (used in feature 'lower' and 'upper') are marked as alive.
-				l_queries := l_type.queries
-				if l_queries.count < 3 then
+				l_queries := l_primary_type.queries
+				if
+					current_dynamic_system.array_area_feature = Void or
+					current_dynamic_system.array_lower_feature = Void or
+					current_dynamic_system.array_upper_feature = Void
+				then
 						-- Error already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 					set_fatal_error
--- TODO: internal error
+				elseif l_queries.count < 3 then
+						-- Internal error: should not happen after the wellformedness
+						-- of the expected attributes in class "ARRAY" has been checked
+						-- in ET_DYNAMIC_SYSTEM.compile_kernel.
+					set_fatal_error
+					error_handler.report_giaaa_error
 				else
 						-- Feature 'area' should be the first in the list of features.
 					l_dynamic_type_set := l_queries.item (1).result_type_set
 					if l_dynamic_type_set = Void then
-							-- Error in feature 'area', already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
+							-- Internal error: should not happen after the wellformedness
+							-- of the expected attributes in class "ARRAY" has been checked
+							-- in ET_DYNAMIC_SYSTEM.compile_kernel.
 						set_fatal_error
--- TODO: internal error
+						error_handler.report_giaaa_error
 					else
-						mark_type_alive (l_dynamic_type_set.static_type)
+						mark_type_alive (l_dynamic_type_set.static_type.primary_type)
 					end
 						-- Feature 'lower' should be the second in the list of features.
 					l_dynamic_type_set := l_queries.item (2).result_type_set
 					if l_dynamic_type_set = Void then
-							-- Error in feature 'lower', already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
+							-- Internal error: should not happen after the wellformedness
+							-- of the expected attributes in class "ARRAY" has been checked
+							-- in ET_DYNAMIC_SYSTEM.compile_kernel.
 						set_fatal_error
--- TODO: internal error
+						error_handler.report_giaaa_error
 					else
-						mark_type_alive (l_dynamic_type_set.static_type)
+						mark_type_alive (l_dynamic_type_set.static_type.primary_type)
 					end
 						-- Feature 'upper' should be the third in the list of features.
 					l_dynamic_type_set := l_queries.item (3).result_type_set
 					if l_dynamic_type_set = Void then
-							-- Error in feature 'upper', already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
+							-- Internal error: should not happen after the wellformedness
+							-- of the expected attributes in class "ARRAY" has been checked
+							-- in ET_DYNAMIC_SYSTEM.compile_kernel.
 						set_fatal_error
--- TODO: internal error
+						error_handler.report_giaaa_error
 					else
-						mark_type_alive (l_dynamic_type_set.static_type)
+						mark_type_alive (l_dynamic_type_set.static_type.primary_type)
 					end
 				end
 			end
@@ -1737,10 +1872,12 @@ feature {NONE} -- Event handling
 			-- `a_context' has been processed.
 		local
 			l_type: ET_DYNAMIC_TYPE
+			l_primary_type: ET_DYNAMIC_PRIMARY_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_type := current_dynamic_system.dynamic_type (a_type, a_context)
-				mark_type_alive (l_type)
+				l_primary_type := l_type.primary_type
+				mark_type_alive (l_primary_type)
 				set_dynamic_type_set (l_type, an_expression)
 			end
 		end
@@ -1750,10 +1887,12 @@ feature {NONE} -- Event handling
 			-- in `a_context' has been processed.
 		local
 			l_type: ET_DYNAMIC_TYPE
+			l_primary_type: ET_DYNAMIC_PRIMARY_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_type := current_dynamic_system.dynamic_type (a_type, a_context)
-				mark_type_alive (l_type)
+				l_primary_type := l_type.primary_type
+				mark_type_alive (l_primary_type)
 				set_dynamic_type_set (l_type, an_expression)
 			end
 		end
@@ -1824,7 +1963,7 @@ feature {NONE} -- Event handling
 					error_handler.report_giaaa_error
 				else
 					create l_object_equality.make (an_expression, l_target_type_set, current_dynamic_feature, current_dynamic_type)
-					l_target_type_set.static_type.put_object_equality_expression (l_object_equality)
+					l_target_type_set.static_type.primary_type.put_object_equality_expression (l_object_equality)
 					propagate_object_equality_expression_target_dynamic_types (l_object_equality)
 				end
 			end
@@ -1833,6 +1972,7 @@ feature {NONE} -- Event handling
 	report_object_test (a_object_test: ET_OBJECT_TEST)
 			-- Report that the object-test `a_object_test' has been processed.
 		do
+				-- Object-tests are of type "BOOLEAN".
 			report_constant_expression (a_object_test, current_universe_impl.boolean_type)
 		end
 
@@ -1844,7 +1984,6 @@ feature {NONE} -- Event handling
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_type := current_dynamic_system.dynamic_type (a_type, a_context)
-				mark_type_alive (l_type)
 			end
 		end
 
@@ -1869,13 +2008,13 @@ feature {NONE} -- Event handling
 			-- and `a_query' is the precursor feature.
 		local
 			i, nb: INTEGER
-			l_parent_type: ET_DYNAMIC_TYPE
+			l_parent_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_precursor: ET_DYNAMIC_FEATURE
 			l_dynamic_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_actual: ET_EXPRESSION
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_parent_type := current_dynamic_system.dynamic_type (a_parent_type, current_type)
+				l_parent_type := current_dynamic_system.dynamic_primary_type (a_parent_type, current_type)
 				l_precursor := current_dynamic_feature.dynamic_precursor (a_query, l_parent_type, current_dynamic_system)
 				if attached an_expression.arguments as l_actuals then
 					nb := l_actuals.count
@@ -1902,12 +2041,12 @@ feature {NONE} -- Event handling
 			-- and `a_procedure' is the precursor feature.
 		local
 			i, nb: INTEGER
-			l_parent_type: ET_DYNAMIC_TYPE
+			l_parent_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_precursor: ET_DYNAMIC_FEATURE
 			l_actual: ET_EXPRESSION
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_parent_type := current_dynamic_system.dynamic_type (a_parent_type, current_type)
+				l_parent_type := current_dynamic_system.dynamic_primary_type (a_parent_type, current_type)
 				l_precursor := current_dynamic_feature.dynamic_precursor (a_procedure, l_parent_type, current_dynamic_system)
 				if attached an_instruction.arguments as l_actuals then
 					nb := l_actuals.count
@@ -1946,6 +2085,7 @@ feature {NONE} -- Event handling
 			-- Report that a qualified call expression has been processed.
 		local
 			l_target_type_set: detachable ET_DYNAMIC_TYPE_SET
+			l_target_primary_type: detachable ET_DYNAMIC_PRIMARY_TYPE
 			l_result_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_call: ET_DYNAMIC_QUALIFIED_QUERY_CALL
 			l_target: ET_EXPRESSION
@@ -1963,6 +2103,7 @@ feature {NONE} -- Event handling
 					set_fatal_error
 					error_handler.report_giaaa_error
 				else
+					l_target_primary_type := l_target_type_set.static_type.primary_type
 					l_type := a_query.type
 -- TODO: like argument (the following is just a workaround
 -- which works only in a limited number of cases, in particular
@@ -1982,7 +2123,7 @@ feature {NONE} -- Event handling
 						end
 					end
 					if l_dynamic_type = Void then
-						l_dynamic_type := current_dynamic_system.dynamic_type (l_type, l_target_type_set.static_type.base_type)
+						l_dynamic_type := current_dynamic_system.dynamic_type (l_type, l_target_primary_type.base_type)
 					end
 					l_result_type_set := new_dynamic_type_set (l_dynamic_type)
 						-- Unless proven otherwise after possible attachments,
@@ -1990,7 +2131,7 @@ feature {NONE} -- Event handling
 					l_result_type_set.set_never_void
 					set_dynamic_type_set (l_result_type_set, an_expression)
 					create l_dynamic_call.make (an_expression, l_target_type_set, l_result_type_set, current_dynamic_feature, current_dynamic_type)
-					l_target_type_set.static_type.put_query_call (l_dynamic_call)
+					l_target_primary_type.put_query_call (l_dynamic_call)
 					propagate_qualified_call_target_dynamic_types (l_dynamic_call)
 				end
 			end
@@ -2013,7 +2154,7 @@ feature {NONE} -- Event handling
 					error_handler.report_giaaa_error
 				else
 					create l_dynamic_call.make (an_instruction, l_target_type_set, current_dynamic_feature, current_dynamic_type)
-					l_target_type_set.static_type.put_procedure_call (l_dynamic_call)
+					l_target_type_set.static_type.primary_type.put_procedure_call (l_dynamic_call)
 					propagate_qualified_call_target_dynamic_types (l_dynamic_call)
 				end
 			end
@@ -2042,6 +2183,7 @@ feature {NONE} -- Event handling
 			-- of type `an_agent_type' in `a_context' has been processed.
 		local
 			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_dynamic_primary_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_target_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_target: ET_AGENT_TARGET
@@ -2054,9 +2196,10 @@ feature {NONE} -- Event handling
 			l_dynamic_procedure_call: ET_DYNAMIC_QUALIFIED_PROCEDURE_CALL
 		do
 			l_dynamic_type := current_dynamic_system.dynamic_type (an_agent_type, a_context)
-			mark_type_alive (l_dynamic_type)
+			l_dynamic_primary_type := l_dynamic_type.primary_type
+			mark_type_alive (l_dynamic_primary_type)
 			set_dynamic_type_set (l_dynamic_type, an_expression)
-			if not attached {ET_DYNAMIC_ROUTINE_TYPE} l_dynamic_type as l_dynamic_agent_type then
+			if not attached {ET_DYNAMIC_ROUTINE_TYPE} l_dynamic_primary_type as l_dynamic_agent_type then
 					-- Internal error: the dynamic type of an agent should be an agent type.
 				set_fatal_error
 				error_handler.report_giaaa_error
@@ -2126,7 +2269,7 @@ feature {NONE} -- Event handling
 						end
 					else
 						create l_dynamic_procedure_call.make (an_expression, l_target_type_set, current_dynamic_feature, current_dynamic_type)
-						l_target_type_set.static_type.put_procedure_call (l_dynamic_procedure_call)
+						l_target_type_set.static_type.primary_type.put_procedure_call (l_dynamic_procedure_call)
 						propagate_qualified_call_target_dynamic_types (l_dynamic_procedure_call)
 					end
 				end
@@ -2147,7 +2290,7 @@ feature {NONE} -- Event handling
 			l_dynamic_query_call: ET_DYNAMIC_QUALIFIED_QUERY_CALL
 		do
 			create l_dynamic_query_call.make (an_expression, a_target_type_set, a_result_type_set, current_dynamic_feature, current_dynamic_type)
-			a_target_type_set.static_type.put_query_call (l_dynamic_query_call)
+			a_target_type_set.static_type.primary_type.put_query_call (l_dynamic_query_call)
 			propagate_qualified_call_target_dynamic_types (l_dynamic_query_call)
 		end
 
@@ -2173,36 +2316,114 @@ feature {NONE} -- Event handling
 			report_constant_expression (a_constant, a_type)
 		end
 
-	report_result (an_expression: ET_RESULT)
+	report_result (a_result: ET_RESULT; a_is_attached: BOOLEAN)
 			-- Report that the result entity has been processed.
+			-- `a_is_attached' means that we know (with a CAP, Certified Attachment Pattern)
+			-- that the result entity is attached at this position in the code.
 		local
-			l_dynamic_type_set: detachable ET_DYNAMIC_TYPE_SET
-			l_implicit_result: detachable ET_RESULT
-			l_result_index: INTEGER
+			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_dynamic_primary_type_set: ET_DYNAMIC_TYPE_SET
+			l_dynamic_attached_type: ET_DYNAMIC_TYPE
+			l_dynamic_attached_type_set: ET_DYNAMIC_TYPE_SET
+			l_attached_result_index: INTEGER
 		do
 			if current_type = current_dynamic_type.base_type then
-				if attached current_inline_agent as l_current_inline_agent then
-					l_implicit_result := l_current_inline_agent.implicit_result
-					if l_implicit_result /= Void then
-						l_dynamic_type_set := dynamic_type_set (l_implicit_result)
-						l_result_index := l_implicit_result.index
+				if a_is_attached then
+					if attached current_inline_agent as l_current_inline_agent then
+						l_attached_result_index := l_current_inline_agent.attached_result_index
+					else
+						l_attached_result_index := attached_result_index
+					end
+					if l_attached_result_index /= 0 then
+						a_result.set_index (l_attached_result_index)
+						if not attached dynamic_type_set (a_result) as l_dynamic_type_set then
+								-- Internal error: this dynamic type set should already have been
+								-- set if `l_attached_result_index' is set.
+							set_fatal_error
+							error_handler.report_giaaa_error
+						else
+							l_dynamic_type := l_dynamic_type_set.static_type
+							l_dynamic_attached_type := current_dynamic_system.attached_type (l_dynamic_type.primary_type)
+							if l_dynamic_attached_type /= l_dynamic_type then
+									-- The dynamic type set for the attached version of
+									-- 'Result' has not been created yet.
+								l_dynamic_attached_type_set := new_dynamic_type_set (l_dynamic_attached_type)
+								set_dynamic_type_set (l_dynamic_attached_type_set, a_result)
+								propagate_cap_dynamic_types (a_result, l_dynamic_type_set, l_dynamic_attached_type_set)
+							end
+						end
+					elseif current_inline_agent /= Void then
+							-- Internal error: this dynamic type set should already have been
+							-- set by `report_inline_agent_result_declaration'.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					elseif not attached current_dynamic_feature.result_type_set as l_dynamic_type_set then
+							-- Internal error: the result type set of a function cannot be void.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					else
+						l_dynamic_type := l_dynamic_type_set.static_type
+						if l_dynamic_type.primary_type = l_dynamic_type then
+							a_result.set_index (result_index)
+							set_dynamic_type_set (l_dynamic_type_set, a_result)
+							result_index := a_result.index
+							a_result.set_index (attached_result_index)
+							l_dynamic_attached_type := current_dynamic_system.attached_type (l_dynamic_type.primary_type)
+							if l_dynamic_attached_type /= l_dynamic_type then
+								l_dynamic_attached_type_set := new_dynamic_type_set (l_dynamic_attached_type)
+								set_dynamic_type_set (l_dynamic_attached_type_set, a_result)
+								attached_result_index := a_result.index
+								propagate_cap_dynamic_types (a_result, l_dynamic_type_set, l_dynamic_attached_type_set)
+							else
+								set_dynamic_type_set (l_dynamic_type_set, a_result)
+								attached_result_index := a_result.index
+							end
+						else
+								-- The 'Result' is assumed to be detachable within the body of the function,
+								-- unless proven otherwise with a CAP (Certified Attachment Pattern).
+							a_result.set_index (attached_result_index)
+							set_dynamic_type_set (l_dynamic_type_set, a_result)
+							attached_result_index := a_result.index
+							l_dynamic_primary_type_set := new_dynamic_type_set (l_dynamic_type.primary_type)
+							a_result.set_index (result_index)
+							set_dynamic_type_set (l_dynamic_primary_type_set, a_result)
+							result_index := a_result.index
+							a_result.set_index (attached_result_index)
+							propagate_cap_dynamic_types (a_result, l_dynamic_primary_type_set, l_dynamic_type_set)
+						end
 					end
 				else
-					l_dynamic_type_set := current_dynamic_feature.result_type_set
-					l_result_index := result_index.item
-				end
-				if l_dynamic_type_set = Void then
-						-- Internal error: the result type set of a function cannot be void.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				else
-					if an_expression.index = 0 then
-						an_expression.set_index (l_result_index)
-					end
-					set_dynamic_type_set (l_dynamic_type_set, an_expression)
-					if current_inline_agent = Void then
-						if result_index.item = 0 then
-							result_index.put (an_expression.index)
+					if attached current_inline_agent as l_current_inline_agent then
+						a_result.set_index (l_current_inline_agent.result_index)
+					elseif result_index /= 0 then
+						a_result.set_index (result_index)
+					elseif not attached current_dynamic_feature.result_type_set as l_dynamic_type_set then
+							-- Internal error: the result type set of a function cannot be void.
+						set_fatal_error
+						error_handler.report_giaaa_error
+					else
+						l_dynamic_type := l_dynamic_type_set.static_type
+						if l_dynamic_type.primary_type = l_dynamic_type then
+							a_result.set_index (result_index)
+							set_dynamic_type_set (l_dynamic_type_set, a_result)
+							result_index := a_result.index
+								-- Reserve a placeholder in `dynamic_type_sets' for the attached version
+								-- of 'Result', if later needed with a CAP (Certified Attachment Pattern).
+							a_result.set_index (attached_result_index)
+							set_dynamic_type_set (l_dynamic_type_set, a_result)
+							attached_result_index := a_result.index
+							a_result.set_index (result_index)
+						else
+								-- The 'Result' is assumed to be detachable within the body of the function,
+								-- unless proven otherwise with a CAP (Certified Attachment Pattern).
+							a_result.set_index (attached_result_index)
+							set_dynamic_type_set (l_dynamic_type_set, a_result)
+							attached_result_index := a_result.index
+							l_dynamic_primary_type_set := new_dynamic_type_set (l_dynamic_type.primary_type)
+							a_result.set_index (result_index)
+							set_dynamic_type_set (l_dynamic_primary_type_set, a_result)
+							result_index := a_result.index
+							propagate_cap_dynamic_types (a_result, l_dynamic_primary_type_set, l_dynamic_type_set)
 						end
 					end
 				end
@@ -2212,51 +2433,21 @@ feature {NONE} -- Event handling
 	report_result_assignment_target (a_result: ET_RESULT)
 			-- Report that the result entity has been processed
 			-- as target of an assignment (attempt).
-		local
-			l_dynamic_type_set: detachable ET_DYNAMIC_TYPE_SET
-			l_implicit_result: detachable ET_RESULT
-			l_result_index: INTEGER
 		do
-			if current_type = current_dynamic_type.base_type then
-				if attached current_inline_agent as l_current_inline_agent then
-					l_implicit_result := l_current_inline_agent.implicit_result
-					if l_implicit_result /= Void then
-						l_dynamic_type_set := dynamic_type_set (l_implicit_result)
-						l_result_index := l_implicit_result.index
-					end
-				else
-					l_dynamic_type_set := current_dynamic_feature.result_type_set
-					l_result_index := result_index.item
-				end
-				if l_dynamic_type_set = Void then
-						-- Internal error: the result type set of a function cannot be void.
-					set_fatal_error
-					error_handler.report_giaaa_error
-				else
-					if a_result.index = 0 then
-						a_result.set_index (l_result_index)
-					end
-					set_dynamic_type_set (l_dynamic_type_set, a_result)
-					if current_inline_agent = Void then
-						if result_index.item = 0 then
-							result_index.put (a_result.index)
-						end
-					end
-				end
-			end
+			report_result (a_result, False)
 		end
 
 	report_static_call_expression (an_expression: ET_STATIC_CALL_EXPRESSION; a_type: ET_TYPE; a_query: ET_QUERY)
 			-- Report that a static call expression has been processed.
 		local
 			i, nb: INTEGER
-			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_dynamic_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_dynamic_query: ET_DYNAMIC_FEATURE
 			l_dynamic_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_actual: ET_EXPRESSION
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_dynamic_type := current_dynamic_system.dynamic_type (a_type, current_type)
+				l_dynamic_type := current_dynamic_system.dynamic_primary_type (a_type, current_type)
 				l_dynamic_query := l_dynamic_type.dynamic_query (a_query, current_dynamic_system)
 				l_dynamic_type.set_static (True)
 				if attached an_expression.arguments as l_actuals then
@@ -2282,12 +2473,12 @@ feature {NONE} -- Event handling
 			-- Report that a static call instruction has been processed.
 		local
 			i, nb: INTEGER
-			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_dynamic_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_dynamic_procedure: ET_DYNAMIC_FEATURE
 			l_actual: ET_EXPRESSION
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_dynamic_type := current_dynamic_system.dynamic_type (a_type, current_type)
+				l_dynamic_type := current_dynamic_system.dynamic_primary_type (a_type, current_type)
 				l_dynamic_procedure := l_dynamic_type.dynamic_procedure (a_procedure, current_dynamic_system)
 				l_dynamic_type.set_static (True)
 				if attached an_instruction.arguments as l_actuals then
@@ -2310,13 +2501,15 @@ feature {NONE} -- Event handling
 			a_type_not_void: a_type /= Void
 		local
 			l_string_type: ET_DYNAMIC_TYPE
+			l_string_primary_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_area_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_area_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_string_type := current_dynamic_system.dynamic_type (a_type, current_type)
-				mark_type_alive (l_string_type)
-				if l_string_type.attribute_count < 2 then
+				l_string_primary_type := l_string_type.primary_type
+				mark_type_alive (l_string_primary_type)
+				if l_string_primary_type.attribute_count < 2 then
 						-- Internal error: class "STRING" should have at least the
 						-- features 'area' and 'count' as first features.
 						-- Already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
@@ -2324,14 +2517,14 @@ feature {NONE} -- Event handling
 					error_handler.report_giaaa_error
 				else
 						-- Attribute 'area'.
-					l_area_type_set := l_string_type.queries.item (1).result_type_set
+					l_area_type_set := l_string_primary_type.queries.item (1).result_type_set
 					if l_area_type_set = Void then
 							-- Error in feature 'area', already reported in ET_DYNAMIC_SYSTEM.compile_kernel.
 						set_fatal_error
 						error_handler.report_giaaa_error
 					else
 						l_area_type := l_area_type_set.static_type
-						mark_type_alive (l_area_type)
+						mark_type_alive (l_area_type.primary_type)
 						propagate_manifest_string_area_dynamic_type (l_area_type, l_area_type_set, a_string)
 					end
 				end
@@ -2365,10 +2558,12 @@ feature {NONE} -- Event handling
 			-- in `a_context' has been processed.
 		local
 			l_type: ET_DYNAMIC_TYPE
+			l_primary_type: ET_DYNAMIC_PRIMARY_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_type := current_dynamic_system.dynamic_type (a_type, a_context)
-				mark_type_alive (l_type)
+				l_primary_type := l_type.primary_type
+				mark_type_alive (l_primary_type)
 				set_dynamic_type_set (l_type, an_expression)
 			end
 		end
@@ -2378,6 +2573,7 @@ feature {NONE} -- Event handling
 			-- in `a_context' has been processed.
 		local
 			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_dynamic_primary_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_target_type_set: detachable ET_DYNAMIC_TYPE_SET
 			l_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_target: ET_AGENT_TARGET
@@ -2385,9 +2581,10 @@ feature {NONE} -- Event handling
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_dynamic_type := current_dynamic_system.dynamic_type (an_agent_type, a_context)
-				mark_type_alive (l_dynamic_type)
+				l_dynamic_primary_type := l_dynamic_type.primary_type
+				mark_type_alive (l_dynamic_primary_type)
 				set_dynamic_type_set (l_dynamic_type, an_expression)
-				if not attached {ET_DYNAMIC_ROUTINE_TYPE} l_dynamic_type as l_dynamic_agent_type then
+				if not attached {ET_DYNAMIC_ROUTINE_TYPE} l_dynamic_primary_type as l_dynamic_agent_type then
 						-- Internal error: the dynamic type of an agent should be an agent type.
 					set_fatal_error
 					error_handler.report_giaaa_error
@@ -2433,6 +2630,7 @@ feature {NONE} -- Event handling
 		local
 			l_target: ET_EXPRESSION
 			l_target_type_set: detachable ET_DYNAMIC_TYPE_SET
+			l_target_primary_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_item_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_index: INTEGER
 			l_dynamic_type: ET_DYNAMIC_TYPE
@@ -2448,7 +2646,8 @@ feature {NONE} -- Event handling
 					set_fatal_error
 					error_handler.report_giaaa_error
 				else
-					if not attached {ET_DYNAMIC_TUPLE_TYPE} l_target_type_set.static_type as l_tuple_type then
+					l_target_primary_type := l_target_type_set.static_type.primary_type
+					if not attached {ET_DYNAMIC_TUPLE_TYPE} l_target_primary_type as l_tuple_type then
 							-- Internal error: the target of a label expression
 							-- should be a Tuple.
 						set_fatal_error
@@ -2468,7 +2667,7 @@ feature {NONE} -- Event handling
 							l_result_type_set.set_never_void
 							set_dynamic_type_set (l_result_type_set, an_expression)
 							create l_dynamic_call.make (an_expression, l_target_type_set, l_result_type_set, current_dynamic_feature, current_dynamic_type)
-							l_target_type_set.static_type.put_query_call (l_dynamic_call)
+							l_target_primary_type.put_query_call (l_dynamic_call)
 							propagate_qualified_call_target_dynamic_types (l_dynamic_call)
 						end
 					end
@@ -2495,7 +2694,7 @@ feature {NONE} -- Event handling
 					error_handler.report_giaaa_error
 				else
 					create l_dynamic_call.make (an_assigner, l_target_type_set, current_dynamic_feature, current_dynamic_type)
-					l_target_type_set.static_type.put_procedure_call (l_dynamic_call)
+					l_target_type_set.static_type.primary_type.put_procedure_call (l_dynamic_call)
 					propagate_qualified_call_target_dynamic_types (l_dynamic_call)
 				end
 			end
@@ -2506,10 +2705,12 @@ feature {NONE} -- Event handling
 			-- in `a_context' has been processed.
 		local
 			l_type: ET_DYNAMIC_TYPE
+			l_primary_type: ET_DYNAMIC_PRIMARY_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_type := current_dynamic_system.dynamic_type (a_type, a_context)
-				mark_type_alive (l_type)
+				l_primary_type := l_type.primary_type
+				mark_type_alive (l_primary_type)
 				set_dynamic_type_set (l_type, an_expression)
 			end
 		end
@@ -2716,6 +2917,7 @@ feature {NONE} -- Event handling
 			a_context_valid: a_context.is_valid_context
 		local
 			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_dynamic_primary_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_open_operand_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			l_open_operand_type_set: ET_DYNAMIC_TYPE_SET
 			l_result_type_set: detachable ET_DYNAMIC_TYPE_SET
@@ -2726,24 +2928,27 @@ feature {NONE} -- Event handling
 			j, nb2: INTEGER
 			l_not_done: BOOLEAN
 			l_target: ET_AGENT_TARGET
+			l_current_attached_type: ET_DYNAMIC_TYPE
 		do
 			a_feature.set_regular (True)
 			l_dynamic_type := current_dynamic_system.dynamic_type (a_type, a_context)
-			mark_type_alive (l_dynamic_type)
+			l_dynamic_primary_type := l_dynamic_type.primary_type
+			mark_type_alive (l_dynamic_primary_type)
 			set_dynamic_type_set (l_dynamic_type, an_expression)
-			if not attached {ET_DYNAMIC_ROUTINE_TYPE} l_dynamic_type as l_agent_type then
+			if not attached {ET_DYNAMIC_ROUTINE_TYPE} l_dynamic_primary_type as l_agent_type then
 					-- Internal error: the dynamic type of an agent should be an agent type.
 				set_fatal_error
 				error_handler.report_giaaa_error
 			else
 					-- Set dynamic type set of implicit 'Current' target.
 				l_target := an_expression.target
-				if l_target.index = 0 and current_index.item /= 0 then
-					l_target.set_index (current_index.item)
+				if l_target.index = 0 and current_index /= 0 then
+					l_target.set_index (current_index)
 				end
-				set_dynamic_type_set (current_dynamic_type, l_target)
-				if current_index.item = 0 then
-					current_index.put (l_target.index)
+				l_current_attached_type := current_dynamic_system.dynamic_type (tokens.attached_like_current, current_type)
+				set_dynamic_type_set (l_current_attached_type, l_target)
+				if current_index = 0 then
+					current_index := l_target.index
 				end
 					-- Dynamic type set of 'Result'.
 				l_result_type_set := l_agent_type.result_type_set
@@ -2824,16 +3029,16 @@ feature {NONE} -- Event handling
 	report_void_constant (an_expression: ET_VOID)
 			-- Report that a Void has been processed.
 		local
-			l_type: ET_DYNAMIC_TYPE
+			l_type: ET_DYNAMIC_PRIMARY_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_type := current_dynamic_system.none_type
-				if an_expression.index = 0 and none_index.item /= 0 then
-					an_expression.set_index (none_index.item)
+				if an_expression.index = 0 and void_index /= 0 then
+					an_expression.set_index (void_index)
 				end
 				set_dynamic_type_set (l_type, an_expression)
-				if none_index.item = 0 then
-					none_index.put (an_expression.index)
+				if void_index = 0 then
+					void_index := an_expression.index
 				end
 			end
 		end
@@ -2848,19 +3053,21 @@ feature {NONE} -- Built-in features
 			a_feature_not_void: a_feature /= Void
 		local
 			l_result_type: ET_DYNAMIC_TYPE
+			l_result_primary_type: ET_DYNAMIC_PRIMARY_TYPE
 			l_base_type: ET_BASE_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_result_type := result_type_set.static_type
-				l_base_type := l_result_type.base_type
-				if current_universe_impl.string_8_type.same_named_type_with_type_marks (l_base_type, tokens.implicit_attached_type_mark, current_type, tokens.implicit_attached_type_mark, current_type) then
-					mark_string_type_alive (l_result_type)
-				elseif current_universe_impl.string_32_type.same_named_type_with_type_marks (l_base_type, tokens.implicit_attached_type_mark, current_type, tokens.implicit_attached_type_mark, current_type) then
-					mark_string_type_alive (l_result_type)
-				elseif current_universe_impl.immutable_string_32_type.same_named_type_with_type_marks (l_base_type, tokens.implicit_attached_type_mark, current_type, tokens.implicit_attached_type_mark, current_type) then
-					mark_string_type_alive (l_result_type)
+				l_result_primary_type := l_result_type.primary_type
+				l_base_type := l_result_primary_type.base_type
+				if current_universe_impl.string_8_type.same_named_type_with_type_marks (l_base_type, tokens.implicit_detachable_type_mark, current_type, tokens.implicit_detachable_type_mark, current_type) then
+					mark_string_type_alive (l_result_primary_type)
+				elseif current_universe_impl.string_32_type.same_named_type_with_type_marks (l_base_type, tokens.implicit_detachable_type_mark, current_type, tokens.implicit_detachable_type_mark, current_type) then
+					mark_string_type_alive (l_result_primary_type)
+				elseif current_universe_impl.immutable_string_32_type.same_named_type_with_type_marks (l_base_type, tokens.implicit_detachable_type_mark, current_type, tokens.implicit_detachable_type_mark, current_type) then
+					mark_string_type_alive (l_result_primary_type)
 				else
-					mark_type_alive (l_result_type)
+					mark_type_alive (l_result_primary_type)
 				end
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
@@ -2881,10 +3088,12 @@ feature {NONE} -- Built-in features
 			no_error: not has_fatal_error
 			a_feature_not_void: a_feature /= Void
 		local
+			l_current_attached_type: ET_DYNAMIC_TYPE
 			l_copy_feature: detachable ET_DYNAMIC_FEATURE
 		do
 			if current_type = current_dynamic_type.base_type then
-				propagate_builtin_result_dynamic_types (current_dynamic_type, current_dynamic_feature)
+				l_current_attached_type := current_dynamic_system.dynamic_type (tokens.attached_like_current, current_type)
+				propagate_builtin_result_dynamic_types (l_current_attached_type, current_dynamic_feature)
 					-- Feature `copy' is called internally.
 				l_copy_feature := current_dynamic_type.seeded_dynamic_procedure (current_system.copy_seed, current_dynamic_system)
 				if l_copy_feature = Void then
@@ -2895,7 +3104,7 @@ feature {NONE} -- Built-in features
 					error_handler.report_giaaa_error
 				else
 					l_copy_feature.set_regular (True)
-					propagate_builtin_actual_argument_dynamic_types (current_dynamic_type, 1, l_copy_feature)
+					propagate_builtin_actual_argument_dynamic_types (l_current_attached_type, 1, l_copy_feature)
 				end
 			end
 		end
@@ -3200,8 +3409,8 @@ feature {NONE} -- Built-in features
 			l_result_type: ET_DYNAMIC_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
-				l_result_type := current_dynamic_system.ise_exception_manager_type
-				mark_type_alive (l_result_type)
+				l_result_type := current_dynamic_system.attached_type (current_dynamic_system.ise_exception_manager_type)
+				mark_type_alive (l_result_type.primary_type)
 				propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 			end
 		end
@@ -3224,7 +3433,7 @@ feature {NONE} -- Built-in features
 					error_handler.report_giaaa_error
 				elseif l_result_type_set.is_expanded then
 					l_result_type := l_result_type_set.static_type
-					mark_type_alive (l_result_type)
+					mark_type_alive (l_result_type.primary_type)
 				end
 			end
 		end
@@ -3281,6 +3490,7 @@ feature {NONE} -- Built-in features
 			a_feature_not_void: a_feature /= Void
 		do
 			-- Do nothing.
+			-- This is taken care of by 'ET_DYNAMIC_SYSTEM.propagate_type_of_type_result_type'.
 		end
 
 	report_builtin_ise_runtime_reference_field (a_feature: ET_EXTERNAL_FUNCTION)
@@ -3318,11 +3528,13 @@ feature {NONE} -- Built-in features
 		local
 			l_result_type_set: ET_DYNAMIC_TYPE_SET
 			l_dynamic_type: ET_DYNAMIC_TYPE
+			l_dynamic_primary_type: ET_DYNAMIC_PRIMARY_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_result_type_set := result_type_set
 				l_dynamic_type := l_result_type_set.static_type
-				mark_string_type_alive (l_dynamic_type)
+				l_dynamic_primary_type := l_dynamic_type.primary_type
+				mark_string_type_alive (l_dynamic_primary_type)
 				propagate_builtin_result_dynamic_types (l_dynamic_type, current_dynamic_feature)
 				l_result_type_set.propagate_can_be_void (current_dynamic_system.none_type)
 			end
@@ -3356,7 +3568,7 @@ feature {NONE} -- Built-in features
 					set_fatal_error
 					error_handler.report_giaaa_error
 				elseif l_result_type_set.is_expanded then
-					mark_type_alive (l_result_type_set.static_type)
+					mark_type_alive (l_result_type_set.static_type.primary_type)
 				end
 			end
 		end
@@ -3430,13 +3642,15 @@ feature {NONE} -- Built-in features
 			a_feature_not_void: a_feature /= Void
 		local
 			l_result_type: ET_DYNAMIC_TYPE
+			l_result_primary_type: ET_DYNAMIC_PRIMARY_TYPE
 		do
 			if current_type = current_dynamic_type.base_type then
 				l_result_type := result_type_set.static_type
+				l_result_primary_type := l_result_type.primary_type
 					-- The Result is either expanded or Void.
 					-- Nothing to propagate when it is Void.
 				if l_result_type.is_expanded then
-					mark_type_alive (l_result_type)
+					mark_type_alive (l_result_primary_type)
 					propagate_builtin_result_dynamic_types (l_result_type, current_dynamic_feature)
 				end
 			end
@@ -3452,7 +3666,7 @@ feature {NONE} -- Built-in features
 			l_parameters: detachable ET_ACTUAL_PARAMETERS
 			l_type: ET_TYPE
 			l_dynamic_type: ET_DYNAMIC_TYPE
-			l_result_type: ET_DYNAMIC_TYPE
+			l_result_type: ET_DYNAMIC_PRIMARY_TYPE
 			i, nb: INTEGER
 		do
 			if current_type = current_dynamic_type.base_type then
@@ -3467,8 +3681,8 @@ feature {NONE} -- Built-in features
 					l_parameters := l_base_type.actual_parameters
 					if l_parameters /= Void then
 							-- We should have already checked by now that the result
-							-- type of the built-in feature TYPE.generic_parameter
-							-- is "TYPE [ANY]".
+							-- type of the built-in feature TYPE.generic_parameter_type
+							-- is "TYPE [detachable ANY]".
 						nb := l_parameters.count
 						from i := 1 until i > nb loop
 							l_type := l_parameters.type (i)
@@ -3485,23 +3699,27 @@ feature {NONE} -- Built-in features
 
 feature {ET_FEATURE_CHECKER} -- Access
 
-	current_dynamic_type: ET_DYNAMIC_TYPE
+	current_dynamic_type: ET_DYNAMIC_PRIMARY_TYPE
 			-- Target type of `current_dynamic_feature'
 
 	current_dynamic_feature: ET_DYNAMIC_FEATURE
 			-- Feature whose dynamic type sets are being built
 
-	current_index: DS_CELL [INTEGER]
-			-- Index of dynamic type set of "Current" in `dynamic_type_sets'
+	current_index: INTEGER
+			-- Index of dynamic type set of 'Current' in `dynamic_type_sets'
 
-	result_index: DS_CELL [INTEGER]
-			-- Index of dynamic type set of "Result" in `dynamic_type_sets'
+	result_index: INTEGER
+			-- Index of dynamic type set of 'Result' in `dynamic_type_sets'
+
+	attached_result_index: INTEGER
+			-- Index of attached version (with a CAP, Certified Attachment Pattern)
+			-- of 'Result' in `dynamic_type_sets'
+
+	void_index: INTEGER
+			-- Index of dynamic type set of 'Void' expressions in `dynamic_type_sets'
 
 	constant_indexes: DS_HASH_TABLE [INTEGER, ET_DYNAMIC_TYPE]
 			-- Indexes of dynamic type set of constant expressions in `dynamic_type_sets'
-
-	none_index: DS_CELL [INTEGER]
-			-- Index of dynamic type set of none expressions in `dynamic_type_sets'
 
 feature {NONE} -- Feature checker
 
@@ -3600,6 +3818,18 @@ feature {NONE} -- Implementation
 			an_agent_not_void: an_agent /= Void
 			a_query_not_void: a_query /= Void
 			a_result_type_set_not_void: a_result_type_set /= Void
+		do
+			-- Do nothing.
+		end
+
+	propagate_cap_dynamic_types (a_expression: ET_EXPRESSION; a_detachable_type_set, a_attached_type_set: ET_DYNAMIC_TYPE_SET)
+			-- Propagate dynamic types of a possibly Void expression to
+			-- the dynamic types of its attached counterpart when it is
+			-- known to be attached with a CAP (Certified Attachment Pattern).
+		require
+			a_expression_not_void: a_expression /= Void
+			a_detachable_type_set_not_void: a_detachable_type_set /= Void
+			a_attached_type_set_not_void: a_attached_type_set /= Void
 		do
 			-- Do nothing.
 		end
@@ -3752,8 +3982,8 @@ feature {NONE} -- Implementation
 			-- Dynamic type set associated with the `i'-th argument of feature being processed;
 			-- Report a fatal error if not known
 		do
-			if attached current_dynamic_feature.argument_type_set (i) as l_argumnt_type_set then
-				Result := l_argumnt_type_set
+			if attached current_dynamic_feature.argument_type_set (i) as l_argument_type_set then
+				Result := l_argument_type_set
 			else
 					-- Internal error: dynamic type set not known.
 				set_fatal_error
@@ -3771,7 +4001,7 @@ feature {NONE} -- Implementation
 			an_operand_not_void: an_operand /= Void
 		local
 			i, nb: INTEGER
-			l_unknown: ET_DYNAMIC_TYPE
+			l_unknown: ET_DYNAMIC_PRIMARY_TYPE
 		do
 			i := an_operand.index
 			if i = 0 then
@@ -3798,7 +4028,12 @@ feature {NONE} -- Implementation
 	dynamic_type_sets: ET_DYNAMIC_TYPE_SET_LIST
 			-- Dynamic type sets of expressions within current feature
 
-	dummy_dynamic_type: ET_DYNAMIC_TYPE
+	in_new_dynamic_type_set: BOOLEAN
+			-- Flag to handle properly re-entrant calls to `new_dynamic_type_set'
+			-- (when `new_dynamic_type_set' calls `alive_conforming_descendants'
+			-- which calls `new_dynamic_type_set')
+
+	dummy_dynamic_type: ET_DYNAMIC_PRIMARY_TYPE
 			-- Dummy dynamic type
 		once
 			create Result.make (current_type, current_class)
@@ -3819,9 +4054,6 @@ invariant
 	dynamic_type_sets_not_void: dynamic_type_sets /= Void
 	current_dynamic_type_not_void: current_dynamic_type /= Void
 	current_dynamic_feature_not_void: current_dynamic_feature /= Void
-	current_index_not_void: current_index /= Void
-	result_index_not_void: result_index /= Void
 	constant_indexes_not_void: constant_indexes /= Void
-	none_index_not_void: none_index /= Void
 
 end

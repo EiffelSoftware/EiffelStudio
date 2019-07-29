@@ -5,7 +5,7 @@ note
 		"Eiffel features equipped with dynamic type sets"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2004-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2004-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,7 +25,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_feature: like static_feature; a_target_type: ET_DYNAMIC_TYPE; a_system: ET_DYNAMIC_SYSTEM)
+	make (a_feature: like static_feature; a_target_type: ET_DYNAMIC_PRIMARY_TYPE; a_system: ET_DYNAMIC_SYSTEM)
 			-- Create a new feature equipped with dynamic type sets,
 			-- associated with compilation time feature `a_feature' in
 			-- type `a_target_type' in the surrounding system `a_system'.
@@ -58,7 +58,7 @@ feature {NONE} -- Initialization
 				if a_feature.is_constant_attribute or a_feature.is_unique_attribute then
 					l_dynamic_type := a_system.dynamic_type (l_type, a_target_type.base_type)
 					result_type_set := l_dynamic_type
-					l_dynamic_type_set_builder.mark_type_alive (l_dynamic_type)
+					l_dynamic_type_set_builder.mark_type_alive (l_dynamic_type.primary_type)
 				elseif builtin_class_code = tokens.builtin_identified_routines_class and then builtin_feature_code = tokens.builtin_identified_routines_eif_id_object then
 						-- Note that the 'object_id' mechanism is some kind of
 						-- weak reference implementation. Therefore, by nature,
@@ -127,6 +127,7 @@ feature {NONE} -- Initialization
 						end
 						l_dynamic_type_sets.put_last (l_dynamic_type_set)
 						arg.name.set_index (i)
+						arg.set_index (i)
 						i := i + 1
 					end
 				end
@@ -165,7 +166,7 @@ feature -- Access
 	result_type_set: detachable ET_DYNAMIC_TYPE_SET
 			-- Type set of result, if any
 
-	target_type: ET_DYNAMIC_TYPE
+	target_type: ET_DYNAMIC_PRIMARY_TYPE
 			-- Type of target
 
 	argument_type_set (i: INTEGER): detachable ET_DYNAMIC_TYPE_SET
@@ -203,7 +204,7 @@ feature -- Access
 			-- Other precursors called from current feature;
 			-- May be void if zero or one precursor called
 
-	dynamic_precursor (a_feature: ET_FEATURE; a_parent_type: ET_DYNAMIC_TYPE; a_system: ET_DYNAMIC_SYSTEM): ET_DYNAMIC_PRECURSOR
+	dynamic_precursor (a_feature: ET_FEATURE; a_parent_type: ET_DYNAMIC_PRIMARY_TYPE; a_system: ET_DYNAMIC_SYSTEM): ET_DYNAMIC_PRECURSOR
 			-- Dynamic precursor of current feature;
 			-- `a_feature' is the precursor of the current feaure in `a_parent_type'
 		require
@@ -410,10 +411,6 @@ feature -- Status report
 				end
 			end
 		end
-
-	is_current_type_needed: BOOLEAN
-			-- Is current type is needed to execute current feature?
-			-- (This might be needed for optimization purposes.)
 
 	is_builtin: BOOLEAN
 			-- Is current feature built-in?
@@ -778,14 +775,6 @@ feature -- Status setting
 		ensure
 			address_set: is_address = b
 			regular_set: b implies is_regular
-		end
-
-	set_current_type_needed (b: BOOLEAN)
-			-- Set `is_current_type_needed' to `b'.
-		do
-			is_current_type_needed := b
-		ensure
-			current_type_needed_set: is_current_type_needed = b
 		end
 
 feature -- Output

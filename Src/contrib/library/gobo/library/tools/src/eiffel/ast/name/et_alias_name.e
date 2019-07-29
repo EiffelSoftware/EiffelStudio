@@ -5,7 +5,7 @@ note
 		"Eiffel alias feature names"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2005-2017, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -530,12 +530,14 @@ feature -- Access
 
 	name: STRING
 			-- Name of feature
+			-- (using UTF-8 encoding)
 		do
 			Result := alias_name
 		end
 
 	lower_name: STRING
 			-- Lower-name of feature call
+			-- (using UTF-8 encoding)
 			-- (May return the same object as `name' if already in lower case.)
 		do
 			Result := name
@@ -543,6 +545,7 @@ feature -- Access
 
 	alias_name: STRING
 			-- Name of alias
+			-- (using UTF-8 encoding)
 		do
 			inspect code
 			when alias_bracket_code then
@@ -598,21 +601,27 @@ feature -- Access
 		ensure
 			alias_name_not_void: Result /= Void
 			alias_name_not_empty: Result.count > 0
+			alias_name_is_string: {KL_ANY_ROUTINES}.same_types (Result, "")
+			valid_utf8_alias_name: {UC_UTF8_ROUTINES}.valid_utf8 (Result)
 		end
 
 	alias_lower_name: STRING
 			-- Lower-name of alias
+			-- (using UTF-8 encoding)
 			-- (May return the same object as `alias_name' if already in lower case.)
 		do
 			Result := alias_name
 		ensure
 			alias_lower_name_not_void: Result /= Void
 			alias_lower_name_not_empty: Result.count > 0
+			alias_lower_name_is_string: {KL_ANY_ROUTINES}.same_types (Result, "")
+			valid_utf8_alias_lower_name: {UC_UTF8_ROUTINES}.valid_utf8 (Result)
 			definition: Result.is_equal (alias_name.as_lower)
 		end
 
 	operator_name: STRING
 			-- Name of operator
+			-- (using UTF-8 encoding)
 		do
 			inspect code
 			when alias_bracket_code then
@@ -668,16 +677,21 @@ feature -- Access
 		ensure
 			operator_name_not_void: Result /= Void
 			operator_name_not_empty: Result.count > 0
+			operator_name_is_string: {KL_ANY_ROUTINES}.same_types (Result, "")
+			valid_utf8_operator_name: {UC_UTF8_ROUTINES}.valid_utf8 (Result)
 		end
 
 	operator_lower_name: STRING
 			-- Lower-name of operator
+			-- (using UTF-8 encoding)
 			-- (May return the same object as `operator_name' if already in lower case.)
 		do
 			Result := operator_name
 		ensure
 			operator_lower_name_not_void: Result /= Void
 			operator_lower_name_not_empty: Result.count > 0
+			operator_lower_name_is_string: {KL_ANY_ROUTINES}.same_types (Result, "")
+			valid_utf8_operator_lower_name: {UC_UTF8_ROUTINES}.valid_utf8 (Result)
 			definition: Result.is_equal (operator_name.as_lower)
 		end
 
@@ -692,6 +706,9 @@ feature -- Access
 
 	alias_string: ET_MANIFEST_STRING
 			-- Name of alias
+
+	convert_keyword: detachable ET_KEYWORD
+			-- 'convert' keyword
 
 	position: ET_POSITION
 			-- Position of first character of
@@ -712,7 +729,11 @@ feature -- Access
 	last_leaf: ET_AST_LEAF
 			-- Last leaf node in current node
 		do
-			Result := alias_string
+			if attached convert_keyword as l_convert_keyword then
+				Result := l_convert_keyword
+			else
+				Result := alias_string
+			end
 		end
 
 feature -- Setting
@@ -725,6 +746,16 @@ feature -- Setting
 			alias_keyword := an_alias
 		ensure
 			alias_keyword_set: alias_keyword = an_alias
+		end
+
+	set_convert_keyword (a_keyword: like convert_keyword)
+			-- Set `convert_keyword' to `a_keyword'.
+		require
+			a_keyword_not_void: a_keyword /= Void
+		do
+			convert_keyword := a_keyword
+		ensure
+			convert_keyword_set: convert_keyword = a_keyword
 		end
 
 feature -- Status setting

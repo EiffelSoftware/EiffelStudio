@@ -4,13 +4,17 @@ note
 
 		"String routines"
 
-	library: "Gobo Eiffel Tools Library"
+	library: "Gobo Eiffel String Library"
 	copyright: "Copyright (c) 2001-2014, Andreas Leitner and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class UT_STRING_ROUTINES
+
+obsolete
+
+	"Use ST_STRING_ROUTINES instead. [2019-03-17]"
 
 inherit
 

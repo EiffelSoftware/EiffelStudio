@@ -4,7 +4,7 @@ note
 
 		"Gobo Eiffel Compiler"
 
-	copyright: "Copyright (c) 2005-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2005-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -46,7 +46,6 @@ feature -- Execution
 		local
 			a_filename: STRING
 			a_file: KL_TEXT_INPUT_FILE
-			nb: INTEGER
 		do
 			Arguments.set_program_name ("gec")
 				-- For compatibility with ISE's tools, define the environment
@@ -59,14 +58,7 @@ feature -- Execution
 			a_file.open_read
 			if a_file.is_open_read then
 				last_system := Void
-				nb := a_filename.count
-				if nb > 5 and then STRING_.same_string (a_filename.substring (nb - 4, nb), ".xace") then
-					parse_xace_file (a_file)
-				elseif nb > 4 and then STRING_.same_string (a_filename.substring (nb - 3, nb), ".ecf") then
-					parse_ecf_file (a_file)
-				else
-					parse_ace_file (a_file)
-				end
+				parse_ecf_file (a_file)
 				a_file.close
 				if attached last_system as l_last_system then
 					process_system (l_last_system)
@@ -94,60 +86,6 @@ feature -- Access
 			-- Last Eiffel system parsed, if any
 
 feature {NONE} -- Eiffel config file parsing
-
-	parse_ace_file (a_file: KI_CHARACTER_INPUT_STREAM)
-			-- Read Ace file `a_file'.
-			-- Put result in `last_system' if no error occurred.
-		require
-			a_file_not_void: a_file /= Void
-			a_file_open_read: a_file.is_open_read
-		local
-			l_lace_parser: ET_LACE_PARSER
-			l_lace_error_handler: ET_LACE_ERROR_HANDLER
-		do
-			last_system := Void
-			if is_silent then
-				create l_lace_error_handler.make_null
-			else
-				create l_lace_error_handler.make_standard
-			end
-			create l_lace_parser.make (l_lace_error_handler)
-			l_lace_parser.parse_file (a_file)
-			if not l_lace_parser.syntax_error then
-				last_system := l_lace_parser.last_system
-			end
-		end
-
-	parse_xace_file (a_file: KI_CHARACTER_INPUT_STREAM)
-			-- Read Xace file `a_file'.
-			-- Put result in `last_system' if no error occurred.
-		require
-			a_file_not_void: a_file /= Void
-			a_file_open_read: a_file.is_open_read
-		local
-			l_xace_parser: ET_XACE_SYSTEM_PARSER
-			l_xace_error_handler: ET_XACE_DEFAULT_ERROR_HANDLER
-			l_xace_variables: DS_HASH_TABLE [STRING, STRING]
-		do
-			last_system := Void
-			if is_silent then
-				create l_xace_error_handler.make_null
-			else
-				create l_xace_error_handler.make_standard
-			end
-			create l_xace_variables.make_map (100)
-			l_xace_variables.set_key_equality_tester (string_equality_tester)
-			if attached override_variables as l_override_variables then
-				across l_override_variables.primary_variables as l_primary_variables loop
-					l_xace_variables.force_last (l_primary_variables.item, l_primary_variables.key)
-				end
-			end
-			create l_xace_parser.make_with_variables (l_xace_variables, l_xace_error_handler)
-			l_xace_parser.parse_file (a_file)
-			if not l_xace_error_handler.has_error then
-				last_system := l_xace_parser.last_system
-			end
-		end
 
 	parse_ecf_file (a_file: KI_CHARACTER_INPUT_STREAM)
 			-- Read ECF file `a_file'.
@@ -222,24 +160,22 @@ feature {NONE} -- Processing
 			error_handler.set_ise
 			error_handler.set_verbose (is_verbose)
 			l_thread_count := thread_count
-			if l_thread_count > 1 and {PLATFORM}.is_thread_capable then
-				create {ET_SYSTEM_MULTIPROCESSOR} l_system_processor.make (l_thread_count)
-			else
-				create l_system_processor.make
-			end
+			l_system_processor := {ET_SYSTEM_PROCESSOR_FACTORY}.new_system_processor (l_thread_count)
 			l_system_processor.set_error_handler (error_handler)
-			l_system_processor.set_ise_version (ise_latest)
+			l_system_processor.set_ise_version (ise_version)
 			l_system_processor.set_benchmark_shown (not is_no_benchmark and not is_silent)
 			l_system_processor.set_nested_benchmark_shown (is_nested_benchmark and not is_no_benchmark and not is_silent)
 			l_system_processor.set_metrics_shown (is_metrics and not is_silent)
+			if is_gelint then
+				l_system_processor.set_flat_mode (True)
+				l_system_processor.set_flat_dbc_mode (True)
+			end
 			dt_total := l_system_processor.benchmark_start_time
 			if l_thread_count > 1 then
 				l_system_processor.compile (a_system)
 			end
 			create l_system.make (a_system, l_system_processor)
 			if is_gelint then
-				l_system_processor.set_flat_mode (True)
-				l_system_processor.set_flat_dbc_mode (True)
 				l_system.set_full_class_checking (True)
 			end
 			l_system.set_catcall_error_mode (catcall_error_mode)
@@ -251,7 +187,7 @@ feature {NONE} -- Processing
 			l_system.set_dynamic_type_set_builder (l_builder)
 			l_system.compile (l_system_processor)
 			l_system_processor.set_benchmark_shown (not is_no_benchmark and not is_silent)
-			l_system_processor.record_end_time (dt2, "Degree 2")
+			l_system_processor.record_end_time (dt2, "Degree -2")
 			l_root_type := a_system.root_type
 			if l_root_type = Void then
 				-- Do nothing.
@@ -280,6 +216,18 @@ feature {NONE} -- Processing
 				end
 				l_generator.generate (l_system_name)
 				if is_metrics and not is_silent then
+					error_handler.info_file.put_string ("Type count: ")
+					error_handler.info_file.put_integer (l_system.dynamic_types.count)
+					error_handler.info_file.put_new_line
+					error_handler.info_file.put_string ("Alive type count: ")
+					error_handler.info_file.put_integer (l_system.alive_dynamic_type_count)
+					error_handler.info_file.put_new_line
+					error_handler.info_file.put_string ("Feature count: ")
+					error_handler.info_file.put_integer (l_system.dynamic_feature_count)
+					error_handler.info_file.put_new_line
+					error_handler.info_file.put_string ("Dynamic type set count: ")
+					error_handler.info_file.put_integer (l_builder.dynamic_type_set_count)
+					error_handler.info_file.put_new_line
 					error_handler.info_file.put_string ("Never void targets: ")
 					error_handler.info_file.put_integer (l_generator.never_void_target_count)
 					error_handler.info_file.put_new_line
@@ -350,6 +298,10 @@ feature -- Arguments
 		do
 			Result := gelint_flag.was_found or ecf_gelint_option
 		end
+
+	ise_version: UT_VERSION
+			-- ISE version, whose semantics should be
+			-- used by the Eiffel code analysis process
 
 	catcall_error_mode: BOOLEAN
 			-- Are CAT-call errors considered as fatal errors?
@@ -473,6 +425,9 @@ feature -- Argument parsing
 	gelint_flag: AP_FLAG
 			-- Flag for '--gelint'
 
+	ise_option: AP_STRING_OPTION
+			-- Option for '--ise=major[.minor[.revision[.build]]]'
+
 	c_compile_option: AP_ENUMERATION_OPTION
 			-- Option for '--cc=<no|script|make|gecc>'
 
@@ -546,6 +501,12 @@ feature -- Argument parsing
 			create gelint_flag.make_with_long_form ("gelint")
 			gelint_flag.set_description ("Run gelint on the full content of each class being compiled.")
 			a_parser.options.force_last (gelint_flag)
+				-- ise.
+			create ise_option.make_with_long_form ("ise")
+			ise_option.set_description ("Version of Eiffel whose semantics should be used during code analysis. (default: latest version)")
+			ise_option.set_parameter_description ("major[.minor[.revision[.build]]]")
+			ise_option.set_default_parameter (ise_latest.out)
+			a_parser.options.force_last (ise_option)
 				-- catcall
 			create catcall_option.make_with_long_form ("catcall")
 			catcall_option.set_description ("Should CAT-call errors be considered as fatal errors, as warnings, or just ignored? (default: warning)")
@@ -633,6 +594,7 @@ feature -- Argument parsing
 			else
 				ecf_filename := a_parser.parameters.first
 			end
+			set_ise_version (ise_option, a_parser)
 			set_override_settings (setting_option, a_parser)
 			set_override_capabilities (capability_option, a_parser)
 			set_override_variables (variable_option, a_parser)
@@ -658,6 +620,45 @@ feature -- Argument parsing
 			gc_option_not_void: gc_option /= Void
 			thread_option_not_void: thread_option /= Void
 			new_instance_types_option_not_void: new_instance_types_option /= Void
+		end
+
+	set_ise_version (a_option: like ise_option; a_parser: AP_PARSER)
+			-- Set `ise_version' with information passed in `a_option'.
+			-- Report usage message and exit in case of invalid input.
+		require
+			a_option_not_void: a_option /= Void
+			a_parser_not_void: a_parser /= Void
+		local
+			l_ise_regexp: RX_PCRE_REGULAR_EXPRESSION
+			l_ise_version: detachable UT_VERSION
+		do
+			l_ise_version := ise_latest
+			if not attached a_option.parameter as l_parameter then
+				report_usage_message (a_parser)
+				Exceptions.die (1)
+			elseif not STRING_.same_string (l_parameter, ise_latest.out) then
+				create l_ise_regexp.make
+				l_ise_regexp.compile ("([0-9]+)(\.([0-9]+))?(\.([0-9]+))?(\.([0-9]+))?")
+				if l_ise_regexp.recognizes (l_parameter) then
+					inspect l_ise_regexp.match_count
+					when 2 then
+						create l_ise_version.make_major (l_ise_regexp.captured_substring (1).to_integer)
+					when 4 then
+						create l_ise_version.make_major_minor (l_ise_regexp.captured_substring (1).to_integer, l_ise_regexp.captured_substring (3).to_integer)
+					when 6 then
+						create l_ise_version.make (l_ise_regexp.captured_substring (1).to_integer, l_ise_regexp.captured_substring (3).to_integer, l_ise_regexp.captured_substring (5).to_integer, 0)
+					when 8 then
+						create l_ise_version.make (l_ise_regexp.captured_substring (1).to_integer, l_ise_regexp.captured_substring (3).to_integer, l_ise_regexp.captured_substring (5).to_integer, l_ise_regexp.captured_substring (7).to_integer)
+					else
+						report_usage_message (a_parser)
+						Exceptions.die (1)
+					end
+				else
+					report_usage_message (a_parser)
+					Exceptions.die (1)
+				end
+			end
+			ise_version := l_ise_version
 		end
 
 	set_override_settings (a_option: like setting_option; a_parser: AP_PARSER)
@@ -856,12 +857,14 @@ invariant
 
 	error_handler_not_void: error_handler /= Void
 	ecf_filename_not_void: ecf_filename /= Void
+	ise_version_not_void: ise_version /= Void
 	target_option_not_void: target_option /= Void
 	setting_option_not_void: setting_option /= Void
 	capability_option_not_void: capability_option /= Void
 	variable_option_not_void: variable_option /= Void
 	catcall_option_not_void: catcall_option /= Void
 	gelint_flag_not_void: gelint_flag /= Void
+	ise_option_not_void: ise_option /= Void
 	finalize_flag_not_void: finalize_flag /= Void
 	silent_flag_not_void: silent_flag /= Void
 	no_benchmark_flag_not_void: no_benchmark_flag /= Void

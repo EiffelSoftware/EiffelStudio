@@ -1,0 +1,14 @@
+-------------------------------------------------------------------------------
+
+Error code: VCFG(2)
+
+Error: class has two formal generic parameters with the same name.
+What to do: make sure that all formal parameter names are different. 
+
+Class: BB [G, G]
+Parameter name: G
+Line: 1
+  ->class BB [G, G]
+  
+
+-------------------------------------------------------------------------------

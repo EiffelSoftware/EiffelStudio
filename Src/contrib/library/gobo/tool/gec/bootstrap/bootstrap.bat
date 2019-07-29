@@ -1,7 +1,7 @@
 @echo off
 
 rem description: "Bootstrap Gobo Eiffel Compiler in $GOBO/bin"
-rem copyright: "Copyright (c) 2016-2018, Eric Bezault and others"
+rem copyright: "Copyright (c) 2016-2019, Eric Bezault and others"
 rem license: "MIT License"
 rem date: "$Date$"
 rem revision: "$Revision$"
@@ -66,6 +66,7 @@ if .%CC%. == .bcc. goto bcc32
 if .%CC%. == .bcc32. goto bcc32
 if .%CC%. == .gcc. goto gcc
 if .%CC%. == .mingw. goto mingw
+if .%CC%. == .clang. goto clang
 if .%CC%. == .cc. goto cc
 if .%CC%. == .icc. goto icc
 if .%CC%. == .tcc. goto tcc
@@ -137,6 +138,17 @@ goto exit
 	echo mingw > %GOBO%\tool\gec\config\c\default.cfg
 	goto c_compilation
 
+:clang
+	set CC=clang
+	set LD=clang
+	set CFLAGS=-Wno-unused-value -Wno-deprecated-declarations -O2
+	set LFLAGS=
+	set LFLAG_OUT=-o 
+	set LLIBS=-lm -lpthread
+	set OBJ=.o
+	echo clang > %GOBO%\tool\gec\config\c\default.cfg
+	goto c_compilation
+	
 :cc
 	set CC=cc
 	set LD=cc
@@ -171,7 +183,6 @@ goto exit
 	goto c_compilation
 
 :c_compilation
-	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec9.c
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec8.c
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec7.c
 	%CC% %CFLAGS% -c %BOOTSTRAP_DIR%\gec6.c
@@ -218,7 +229,7 @@ goto exit
 
 :usage
 	echo usage: bootstrap.bat [-v] ^<c_compiler^>
-	echo    c_compiler:  msc ^| lcc-win32 ^| lcc-win64 ^| bcc ^| gcc ^| mingw ^| cc ^| icc ^| tcc ^| no_c
+	echo    c_compiler:  msc ^| lcc-win32 ^| lcc-win64 ^| bcc ^| gcc ^| mingw ^| clang ^| cc ^| icc ^| tcc ^| no_c
 	goto exit
 
 :exit

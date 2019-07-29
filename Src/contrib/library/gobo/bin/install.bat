@@ -1,7 +1,7 @@
 @echo off
 
 rem description: "Install Gobo Eiffel tools"
-rem copyright: "Copyright (c) 2007-2018, Eric Bezault and others"
+rem copyright: "Copyright (c) 2007-2019, Eric Bezault and others"
 rem license: "MIT License"
 rem date: "$Date$"
 rem revision: "$Revision$"
@@ -61,13 +61,13 @@ goto no_verbose
 :ge
 	cd %BIN_DIR%
 	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\geant\src\system.ecf
-	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\gexace\src\system.ecf
 	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\gelex\src\system.ecf
 	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\geyacc\src\system.ecf
 	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\gepp\src\system.ecf
 	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\getest\src\system.ecf
 	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\gelint\src\system.ecf
 	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\gedoc\src\system.ecf
+	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\gecop\src\system.ecf
 	%BIN_DIR%\gec%EXE% --finalize --no-benchmark %GOBO%\tool\gexslt\src\system.ecf
 	goto clean
 
@@ -77,19 +77,19 @@ goto no_verbose
 	geant%EXE% %VERBOSE% --buildfilename=%GOBO%\tool\gec\src\build.eant clean
 	geant%EXE% %VERBOSE% --buildfilename=%GOBO%\tool\gecc\src\build.eant clean
 	geant%EXE% %VERBOSE% --buildfilename=%GOBO%\tool\geant\src\build.eant clean
-	geant%EXE% %VERBOSE% --buildfilename=%GOBO%\tool\gexace\src\build.eant clean
 	geant%EXE% %VERBOSE% --buildfilename=%GOBO%\tool\gelex\src\build.eant clean
 	geant%EXE% %VERBOSE% --buildfilename=%GOBO%\tool\geyacc\src\build.eant clean
 	geant%EXE% %VERBOSE% --buildfilename=%GOBO%\tool\gepp\src\build.eant clean
 	geant%EXE% %VERBOSE% --buildfilename=%GOBO%\tool\getest\src\build.eant clean
 	geant%EXE% %VERBOSE% --buildfilename=%GOBO%\tool\gelint\src\build.eant clean
 	geant%EXE% %VERBOSE% --buildfilename=%GOBO%\tool\gedoc\src\build.eant clean
+	geant%EXE% %VERBOSE% --buildfilename=%GOBO%\tool\gecop\src\build.eant clean
 	geant%EXE% %VERBOSE% --buildfilename=%GOBO%\tool\gexslt\src\build.eant clean
 	goto exit
 
 :usage
 	echo usage: install.bat [-v] ^<c_compiler^>
-	echo    c_compiler:  msc ^| lcc-win32 ^| lcc-win64 ^| bcc ^| gcc ^| mingw ^| cc ^| icc ^| tcc ^| no_c
+	echo    c_compiler:  msc ^| lcc-win32 ^| lcc-win64 ^| bcc ^| gcc ^| mingw ^| clang ^| cc ^| icc ^| tcc ^| no_c
 	goto exit
 
 :exit

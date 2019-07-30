@@ -14,12 +14,13 @@
 		copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
 		license: "MIT License"
 	</description>
+
 	<target name="test">
 		<root all_classes="true"/>
 		<file_rule>
-			<exclude>/EIFGENs$</exclude>
-			<exclude>/\.git$</exclude>
 			<exclude>/\.svn$</exclude>
+			<exclude>/\.git$</exclude>
+			<exclude>/EIFGENs$</exclude>
 		</file_rule>
 		<option warning="true"/>
 		<variable name="GOBO_LIBRARY" value="../../.."/>
@@ -32,6 +33,7 @@
 		<library name="test_skl" location="${GOBO_LIBRARY}/library/test/library_skl.ecf" readonly="true"/>
 		<library name="tools" location="${GOBO_LIBRARY}/library/tools/library.ecf" readonly="true"/>
 		<library name="utility" location="${GOBO_LIBRARY}/library/utility/library.ecf" readonly="true"/>
+
 		<cluster name="test" location="./" recursive="true">
 			<file_rule>
 				<exclude>/harness$</exclude>

@@ -39,7 +39,8 @@ class ARRAYED_LIST [G] inherit
 			prune, new_cursor,
 			put_left, merge_left,
 			merge_right, duplicate, prune_all, has, search,
-			append, valid_index, is_equal, for_all, there_exists, do_all, do_if
+			append, valid_index, is_equal, copy,
+			for_all, there_exists, do_all, do_if
 		end
 
 	MISMATCH_CORRECTOR

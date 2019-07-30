@@ -1,6 +1,6 @@
 note
 	description: "[
-		Sequences of 8-bit characters, accessible through integer indices
+		Sequences of 32-bit characters, accessible through integer indices
 		in a contiguous range.
 		]"
 	library: "Free implementation of ELKS library"
@@ -10,7 +10,7 @@ note
 	revision: "$Revision$"
 
 class
-	STRING_8
+	IMMUTABLE_STRING_32
 
 inherit
 	COMPARABLE
@@ -18,7 +18,7 @@ inherit
 			out
 		end
 
-	ITERABLE [CHARACTER_8]
+	ITERABLE [CHARACTER_32]
 		undefine
 			is_equal
 		redefine
@@ -28,12 +28,12 @@ inherit
 create
 	make,
 	make_empty,
-	make_from_cil
+	make_from_cil,
+	make_from_c_byte_array
 
 convert
 	to_cil: {SYSTEM_STRING},
-	make_from_cil ({SYSTEM_STRING}),
-	as_string_32: {STRING_32}
+	make_from_cil ({SYSTEM_STRING})
 
 feature {NONE} -- Initialization
 
@@ -54,18 +54,22 @@ feature {NONE} -- Initialization
 			create area.make_empty (0)
 		end
 
+	make_from_c_byte_array (a_byte_array: POINTER; a_character_count: INTEGER)
+			-- Initialize from contents of `a_byte_array' for a length of `a_character_count`,
+			-- given that each character is encoded in 4 bytes (little endian).
+			-- ex: (char*) "a\000\000\000b\000\000\000c\000\000\000" for unicode STRING_32 "abc"
+		require
+			a_byte_array_exists: a_byte_array /= Default_pointer
+		do
+			make (a_character_count)
+		end
+
 feature -- Access
 
-	new_cursor: INDEXABLE_ITERATION_CURSOR [CHARACTER_8]
+	new_cursor: INDEXABLE_ITERATION_CURSOR [CHARACTER_32]
 			-- <Precursor>
 		do
 			create Result.make
-		end
-
-	as_string_32: STRING_32
-			-- Convert `Current' as a STRING_32.
-		do
-			create Result.make (0)
 		end
 
 feature -- Comparison
@@ -83,18 +87,13 @@ feature -- Status report
 			Result := count = 0
 		end
 
-	valid_code (v: NATURAL_32): BOOLEAN
-			-- Is `v' a valid code for a CHARACTER_32?
+	code (i: INTEGER): NATURAL_32
+			-- Character at position `i'
 		do
-			Result := v < {NATURAL_32} 256
+			Result := area.item (i - 1).natural_32_code
 		end
 
-	area: SPECIAL [CHARACTER_8]
-
-	set_count (n: INTEGER)
-		do
-			count := n
-		end
+	area: SPECIAL [CHARACTER_32]
 
 	internal_hash_code: INTEGER
 
@@ -103,24 +102,10 @@ feature -- Status report
 
 feature -- Element change
 
-	plus alias "+" (s: STRING_8): like Current
+	plus alias "+" (s: STRING_32): like Current
 			-- <Precursor>
 		do
 			create Result.make (10)
-		end
-
-	put_code (v: NATURAL_32; i: INTEGER)
-			-- Replace character at position `i' by character of code `v'.
-		do
-			area.put (v.to_character_8, i - 1)
-			internal_hash_code := 0
-		end
-
-	put_character (c: CHARACTER_8; i: INTEGER)
-			-- Replace character at position `i' by character `c'.
-		do
-			area.put (c, i - 1)
-			internal_hash_code := 0
 		end
 
 feature -- Conversion
@@ -132,12 +117,44 @@ feature -- Conversion
 			create Result.make (' ', 0)
 		end
 
+	as_string_8: STRING_8
+			-- Convert `Current' as a STRING_8. If a code of `Current' is
+			-- not a valid code for a STRING_8 it is replaced with the null
+			-- character.
+		local
+			i, nb: INTEGER
+			l_code: NATURAL_32
+		do
+			if attached {STRING_8} Current as l_result then
+				Result := l_result
+			else
+				nb := count
+				create Result.make (nb)
+				Result.set_count (nb)
+				from
+					i := 1
+				until
+					i > nb
+				loop
+					l_code := code (i)
+					if Result.valid_code (l_code) then
+						Result.put_code (l_code, i)
+					else
+						Result.put_code ({NATURAL_32} 0, i)
+					end
+					i := i + 1
+				end
+			end
+		ensure
+			as_string_8_not_void: Result /= Void
+		end
+
 feature -- Output
 
 	out: STRING
 			-- Printable representation
 		do
-			Result := Current
+			Result := as_string_8
 		end
 
 ;note

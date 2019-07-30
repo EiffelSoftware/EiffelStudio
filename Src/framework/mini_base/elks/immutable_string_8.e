@@ -10,7 +10,7 @@ note
 	revision: "$Revision$"
 
 class
-	STRING_8
+	IMMUTABLE_STRING_8
 
 inherit
 	COMPARABLE
@@ -28,7 +28,8 @@ inherit
 create
 	make,
 	make_empty,
-	make_from_cil
+	make_from_cil,
+	make_from_c_byte_array
 
 convert
 	to_cil: {SYSTEM_STRING},
@@ -54,12 +55,47 @@ feature {NONE} -- Initialization
 			create area.make_empty (0)
 		end
 
+	make_from_c_byte_array (a_byte_array: POINTER; a_character_count: INTEGER)
+			-- Initialize from contents of `a_byte_array' for a length of `a_character_count`,
+			-- given that each character is encoded in 1 single byte.
+			-- ex: (char*) "abc"  for STRING_8 "abc"			
+		require
+			a_byte_array_exists: a_byte_array /= Default_pointer
+		do
+			make (a_character_count)
+		end
+
 feature -- Access
 
 	new_cursor: INDEXABLE_ITERATION_CURSOR [CHARACTER_8]
 			-- <Precursor>
 		do
 			create Result.make
+		end
+
+	as_string_8: STRING_8
+			-- Convert `Current' as a STRING_8. If a code of `Current' is
+			-- not a valid code for a STRING_8 it is replaced with the null
+			-- character.
+		local
+			i, nb: INTEGER
+		do
+			if attached {STRING_8} Current as l_result then
+				Result := l_result
+			else
+				nb := count
+				create Result.make (nb)
+				Result.set_count (nb)
+				i := 1
+				across
+					Current as ic
+				loop
+					Result.put_character (ic.item, i)
+					i := i + 1
+				end
+			end
+		ensure
+			as_string_8_not_void: Result /= Void
 		end
 
 	as_string_32: STRING_32
@@ -91,11 +127,6 @@ feature -- Status report
 
 	area: SPECIAL [CHARACTER_8]
 
-	set_count (n: INTEGER)
-		do
-			count := n
-		end
-
 	internal_hash_code: INTEGER
 
 	count: INTEGER
@@ -107,20 +138,6 @@ feature -- Element change
 			-- <Precursor>
 		do
 			create Result.make (10)
-		end
-
-	put_code (v: NATURAL_32; i: INTEGER)
-			-- Replace character at position `i' by character of code `v'.
-		do
-			area.put (v.to_character_8, i - 1)
-			internal_hash_code := 0
-		end
-
-	put_character (c: CHARACTER_8; i: INTEGER)
-			-- Replace character at position `i' by character `c'.
-		do
-			area.put (c, i - 1)
-			internal_hash_code := 0
 		end
 
 feature -- Conversion
@@ -137,7 +154,7 @@ feature -- Output
 	out: STRING
 			-- Printable representation
 		do
-			Result := Current
+			Result := as_string_8
 		end
 
 ;note

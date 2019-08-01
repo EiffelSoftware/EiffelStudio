@@ -2575,7 +2575,7 @@ feature {NONE} -- Visitor
 		do
 			if a_class_i /= Void then
 				Result := a_class_i.compiled_class
-				if Result.class_id /= a_class_id then
+				if Result /= Void and then Result.class_id /= a_class_id then
 					Result := Void
 				end
 			end

@@ -22,7 +22,7 @@ execute_work	 NONE exec_output1
 execute_result	 ok
 compare		 exec_output1 output1
 
-define		 EXCLUDE "<exclude>string_8.e</exclude>"
+define		 EXCLUDE "<exclude>/string_8.e</exclude>"
 copy_sub 	 Ace $TEST Ace
 compile_melted
 compile_result 	 validity_error NONE VD23

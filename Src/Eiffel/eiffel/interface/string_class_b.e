@@ -70,7 +70,8 @@ feature -- Checking
 			end
 		end
 
-	check_for_creation_procedure
+	check_for_creation_procedure (a_for_immut: BOOLEAN)
+			-- Check for creation procedure, depending on `a_for_immut` for immutable or mutable strings.
 		local
 			creat_feat: FEATURE_I
 			error, done: BOOLEAN
@@ -86,13 +87,24 @@ feature -- Checking
 					done or else creators.after
 				loop
 					creat_feat := feature_table.item (creators.key_for_iteration)
-					if
-						creat_feat.feature_name_id = names_heap.make_name_id and then
-						creat_feat.same_signature (make_signature)
-					then
-						done := True
+					if a_for_immut then
+						if
+							creat_feat.feature_name_id = names_heap.make_from_c_byte_array_name_id and then
+							creat_feat.same_signature (make_from_c_byte_array_signature)
+						then
+							done := True
+						else
+							creators.forth
+						end
 					else
-						creators.forth
+						if
+							creat_feat.feature_name_id = names_heap.make_name_id and then
+							creat_feat.same_signature (make_signature)
+						then
+							done := True
+						else
+							creators.forth
+						end
 					end
 				end
 				error := not done
@@ -125,40 +137,39 @@ feature -- Checking
 		local
 			special_error: SPECIAL_ERROR;
 		do
-			check_for_area_attribute
-			check_for_creation_procedure
+			check_for_creation_procedure (is_immutable)
 			if not is_immutable then
+				check_for_area_attribute
 				check_for_set_count_procedure
-			end
+				if not System.il_generation then
+						-- Presence of attribute `internal_hash_code'.
+					if
+						not attached {ATTRIBUTE_I} feature_table.item_id (Names_heap.internal_hash_code_name_id) as internal_hash_code_feat
+						or else not internal_hash_code_feat.type.same_as (Integer_type)
+					then
+						create special_error.make (string_case_5, Current)
+						Error_handler.insert_error (special_error)
+					end
 
-			if not System.il_generation then
-					-- Presence of attribute `internal_hash_code'.
-				if
-					not attached {ATTRIBUTE_I} feature_table.item_id (Names_heap.internal_hash_code_name_id) as internal_hash_code_feat
-					or else not internal_hash_code_feat.type.same_as (Integer_type)
-				then
-					create special_error.make (string_case_5, Current)
-					Error_handler.insert_error (special_error)
-				end
-
-					-- Presence of attribute `count'.
-				if
-					not attached feature_table.item_id (Names_heap.count_name_id) as l_feat
-					or else not l_feat.is_attribute or else not l_feat.type.same_as (integer_32_type)
-				then
-					create special_error.make (string_case_6, Current)
-					Error_handler.insert_error (special_error)
-				end
-			else
-					-- Presence of `to_cil'.
-				if
-					not attached feature_table.item_id ({PREDEFINED_NAMES}.to_cil_name_id) as l_feat
-					or else l_feat.has_arguments
-					or else not l_feat.has_return_value
-					or else l_feat.type.base_class.class_id /= system.system_string_id
-				then
-					create special_error.make (string_case_7, Current)
-					Error_handler.insert_error (special_error)
+						-- Presence of attribute `count'.
+					if
+						not attached feature_table.item_id (Names_heap.count_name_id) as l_feat
+						or else not l_feat.is_attribute or else not l_feat.type.same_as (integer_32_type)
+					then
+						create special_error.make (string_case_6, Current)
+						Error_handler.insert_error (special_error)
+					end
+				else
+						-- Presence of `to_cil'.
+					if
+						not attached feature_table.item_id ({PREDEFINED_NAMES}.to_cil_name_id) as l_feat
+						or else l_feat.has_arguments
+						or else not l_feat.has_return_value
+						or else l_feat.type.base_class.class_id /= system.system_string_id
+					then
+						create special_error.make (string_case_7, Current)
+						Error_handler.insert_error (special_error)
+					end
 				end
 			end
 		end
@@ -175,7 +186,20 @@ feature {NONE} -- Implementation
 			create Result;
 			Result.set_arguments (args);
 			Result.set_feature_name_id (Names_heap.make_name_id, 0)
-		end;
+		end
+
+	make_from_c_byte_array_signature: DYN_PROC_I
+			-- Required signature for feature `make_from_c_byte_array' of class IMMUTABLE_STRING_*
+		local
+			args: FEAT_ARG;
+		do
+			create args.make (2);
+			args.extend (Pointer_type);
+			args.extend (Integer_type);
+			create Result;
+			Result.set_arguments (args);
+			Result.set_feature_name_id (Names_heap.make_from_cil_name_id, 0)
+		end
 
 	area_type: GEN_TYPE_A
 			-- Type SPECIAL [CHARACTER]

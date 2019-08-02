@@ -155,7 +155,7 @@ feature {NONE} -- Basic functionality
 			if {PLATFORM}.is_windows then
 				l_output.receive (a_expected.count + a_expected.occurrences ('%N'), a_from_errors)
 				l_received := l_output.last_received
-				s := l_received.twin
+				create s.make_from_string (l_received)
 				s.prune_all ('%R')
 				l_received := s
 			else
@@ -262,7 +262,7 @@ feature {NONE} -- Constants
 			-- Time in milliseconds we wait for process to send new output
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

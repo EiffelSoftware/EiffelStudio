@@ -458,7 +458,7 @@ feature -- Output
 			write_block (write_descriptor, shared_mptr.item, current_platform.character_8_bytes)
 		end
 
-	put_string, putstring (s: STRING)
+	put_string, putstring (s: READABLE_STRING_8)
 			-- <Precursor>
 		local
 			mp: MANAGED_POINTER

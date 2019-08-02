@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Summary description for {BOM_ENCODING_DETECTOR}."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -29,7 +29,6 @@ feature -- Basic operations
 	detect (a_string: READABLE_STRING_GENERAL)
 			-- Detect `detected_encoding' of `a_string'.
 		local
-			l_bytes: STRING
 			l_bom: STRING
 			i: INTEGER
 			l_mismatch: BOOLEAN
@@ -41,7 +40,6 @@ feature -- Basic operations
 			last_bom := Void
 				-- Three byte BOM
 			if a_string.count >= 3 then
-				l_bytes := a_string.as_string_8
 				from
 					l_bom := bom_utf8
 					l_count := l_bom.count
@@ -49,7 +47,7 @@ feature -- Basic operations
 				until
 					i > l_count or l_mismatch
 				loop
-					if l_bom.item (i) /= l_bytes.item (i) then
+					if l_bom.code (i) /= a_string.code (i) then
 						l_mismatch := True
 					end
 					i := i + 1
@@ -64,7 +62,7 @@ feature -- Basic operations
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

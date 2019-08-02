@@ -104,6 +104,8 @@ copy_raw	special.e $CLUSTER special.e
 copy_raw	std_files.e $CLUSTER std_files.e 
 copy_raw	string_32.e $CLUSTER string_32.e 
 copy_raw	string_8.e $CLUSTER string_8.e 
+copy_raw	immutable_string_32.e $CLUSTER immutable_string_32.e 
+copy_raw	immutable_string_8.e $CLUSTER immutable_string_8.e 
 copy_raw	string_handler.e $CLUSTER string_handler.e 
 copy_raw	table.e $CLUSTER table.e 
 copy_raw	to_special.e $CLUSTER to_special.e 

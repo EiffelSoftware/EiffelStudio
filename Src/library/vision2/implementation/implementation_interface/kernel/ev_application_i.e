@@ -1,7 +1,9 @@
-note
+﻿note
 	description:
-		"Eiffel Vision application. Implementation interface.%N%
-		%See ev_application.e"
+		"[
+			Eiffel Vision application. Implementation interface.
+			See `{EV_APPLICATION}`.
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "application"
@@ -910,7 +912,7 @@ feature {NONE} -- Debug
 			loop
 				trg ?= identified.id_object (pnd_targets.item_for_iteration)
 				if trg /= Void and then attached trg.target_name as l_target_name then
-					io.error.put_string (l_target_name.as_string_8)
+					io.error.put_string (l_target_name.to_string_8)
 				end
 				pnd_targets.forth
 			end
@@ -1208,7 +1210,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -1218,18 +1220,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_APPLICATION_I
-
-
-
-
-
-
-
-
-
-
-
+end

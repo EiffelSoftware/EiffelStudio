@@ -253,7 +253,7 @@ feature -- Access
 			end
 		end
 
-	new_integer_as (t: detachable TYPE_AS; s: BOOLEAN; v: detachable STRING; buf: detachable STRING; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cn: INTEGER): detachable INTEGER_CONSTANT
+	new_integer_as (t: detachable TYPE_AS; s: BOOLEAN; v: detachable STRING; buf: detachable READABLE_STRING_8; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cn: INTEGER): detachable INTEGER_CONSTANT
 			-- New INTEGER_AS node
 		do
 			if v /= Void then
@@ -262,7 +262,7 @@ feature -- Access
 			end
 		end
 
-	new_integer_hexa_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cn: INTEGER): detachable INTEGER_CONSTANT
+	new_integer_hexa_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: READABLE_STRING_8; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cn: INTEGER): detachable INTEGER_CONSTANT
 			-- New INTEGER_AS node
 		do
 			if v /= Void then
@@ -271,7 +271,7 @@ feature -- Access
 			end
 		end
 
-	new_integer_octal_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cn: INTEGER): detachable INTEGER_CONSTANT
+	new_integer_octal_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: READABLE_STRING_8; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cn: INTEGER): detachable INTEGER_CONSTANT
 			-- New INTEGER_AS node
 		do
 			if v /= Void then
@@ -280,7 +280,7 @@ feature -- Access
 			end
 		end
 
-	new_integer_binary_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cn: INTEGER): detachable INTEGER_CONSTANT
+	new_integer_binary_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: READABLE_STRING_8; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cn: INTEGER): detachable INTEGER_CONSTANT
 			-- New INTEGER_AS node
 		do
 			if v /= Void then
@@ -315,7 +315,7 @@ feature -- Access for Errors
 
 feature {NONE} -- Validation
 
-	validate_integer_real_type (a_psr: EIFFEL_SCANNER_SKELETON; a_type: detachable TYPE_AS; buffer: STRING; for_integer: BOOLEAN)
+	validate_integer_real_type (a_psr: EIFFEL_SCANNER_SKELETON; a_type: detachable TYPE_AS; buffer: READABLE_STRING_8; for_integer: BOOLEAN)
 			-- New integer value.
 		local
 			l_type: TYPE_A
@@ -371,9 +371,9 @@ feature {NONE} -- Validation
 
 note
 	ca_ignore:
-		"CA011", "CA011 — too many arguments",
-		"CA033", "CA033 — very long class"
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+		"CA011", "CA011: too many arguments",
+		"CA033", "CA033: very long class"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

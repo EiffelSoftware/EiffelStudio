@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Objects that is a model for a cluster."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -27,15 +26,15 @@ feature {NONE} -- Initialization
 			Precursor {EG_CLUSTER}
 		end
 
-	make_with_name (a_name: like name)
+	make_with_name (a_name: like name_32)
 			-- Create an EIFFEL_CLUSTER and set `name' to `a_name'.
 		require
 			a_name_not_void: a_name /= Void
 		do
 			default_create
-			name := a_name
+			set_name_32 (a_name)
 		ensure
-			set: name = a_name
+			set: name_32 = a_name
 		end
 
 feature -- Node type
@@ -43,7 +42,7 @@ feature -- Node type
 	node_type: EM_CLASS;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -74,4 +73,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class EM_CLUSTER
+end

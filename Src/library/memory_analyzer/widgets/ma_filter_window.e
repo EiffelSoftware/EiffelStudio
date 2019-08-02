@@ -266,14 +266,14 @@ feature {NONE} -- Implementation
 		do
 			if attached {like a_filter_data} a_item.data as l_filter_data then
 				inspect a_index
-				when 1 then l_filter_data.class_name := a_item.text
+				when 1 then l_filter_data.class_name := {UTF_CONVERTER}.string_32_to_utf_8_string_8 (a_item.text)
 				when 2 then
 					if attached {MA_GRID_CHECK_BOX_ITEM} a_item as l_check_box then
 						l_filter_data.selected := l_check_box.is_selected
 					else
 						check not_check_box_item: False end
 					end
-				when 3 then l_filter_data.description := a_item.text
+				when 3 then l_filter_data.description := {UTF_CONVERTER}.string_32_to_utf_8_string_8 (a_item.text)
 				else
 				end
 			else
@@ -350,7 +350,7 @@ invariant
 	grid_not_void: grid /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

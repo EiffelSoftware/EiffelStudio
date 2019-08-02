@@ -1014,22 +1014,22 @@ feature {EB_SAVE_FILE_COMMAND, EB_SAVE_ALL_FILE_COMMAND, EB_DEVELOPMENT_WINDOW, 
 			end
 		end
 
-	set_title_saved_with (a_saved: BOOLEAN; a_title: STRING)
+	set_title_saved_with (a_saved: BOOLEAN; a_title: READABLE_STRING_32)
 			-- Set '*' in the title base on `a_saved'.
 			-- `a_title' will be used as name in editor docking_content
 		require
 			not_void: a_title /= Void
 		local
-			l_short_title: STRING
-			l_title: STRING
+			l_short_title: READABLE_STRING_32
+			l_title: STRING_32
 		do
 			if docking_content /= Void then
 				if not a_title.is_empty then
 					-- We must twin it, otherwise it will change the class name
-					l_title := a_title.twin
+					create l_title.make_from_string (a_title)
 
 					-- First we make sure docking_content title has `l_title'
-					l_short_title := docking_content.short_title.as_string_8
+					l_short_title := docking_content.short_title
 					if l_short_title = Void or else not l_short_title.has_substring (l_title) then
 						docking_content.set_short_title (l_title)
 						docking_content.set_long_title (l_title)
@@ -2120,7 +2120,7 @@ feature {NONE} -- Implementation: Internal cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

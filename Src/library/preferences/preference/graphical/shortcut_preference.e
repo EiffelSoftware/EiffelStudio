@@ -2,7 +2,7 @@ note
 	description: "Shortcut preference."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date:"
+	date: "$Date$"
 	revision: "$Revision$"
 
 class
@@ -62,12 +62,12 @@ feature -- Access
 			-- Actual Key
 		local
 			l_key_code: INTEGER
-			s: STRING
+			s: READABLE_STRING_32
 		do
 			if attached value as l_value then
 				s := l_value.key_string
 			else
-				create s.make_empty
+				create {IMMUTABLE_STRING_32} s.make_empty
 			end
 			l_key_code := key_code_from_key_string (s)
 			if l_key_code > 0 then
@@ -282,7 +282,7 @@ feature {NONE} -- Implementation
 	str_false: STRING = "False";
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -292,8 +292,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class SHORTCUT_PREFERENCE
-
+end

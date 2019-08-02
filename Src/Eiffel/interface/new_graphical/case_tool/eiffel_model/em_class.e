@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Objects that is a model for an Eiffel class"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,11 +13,11 @@ inherit
 		redefine
 			default_create
 		end
-		
+
 create
 	make_with_name,
 	make_expanded_with_name
-		
+
 feature {NONE} -- Implementation
 
 	default_create
@@ -30,17 +29,17 @@ feature {NONE} -- Implementation
 			create root_class_changed_actions
 		end
 
-	make_with_name (a_name: like name)
+	make_with_name (a_name: like name_32)
 			-- Create an EIFFEL_CLASS using `a_name' as `name'.
 		require
 			a_name_not_void: a_name /= Void
 		do
 			default_create
-			name := a_name
+			set_name_32 (a_name)
 		ensure
-			set: name = a_name
+			set: name_32 = a_name
 		end
-		
+
 	make_expanded_with_name (a_name: like name)
 			-- Create an expanded EIFFEL_CLASS using `a_name' as `name'.
 		require
@@ -54,28 +53,28 @@ feature {NONE} -- Implementation
 		end
 
 feature -- Status report.
-	
+
 	is_expanded: BOOLEAN
 			-- Is `Current' expanded?
-			
+
 	is_deferred: BOOLEAN
 			-- Is `Current' deferred?
-			
+
 	is_effective: BOOLEAN
 			-- Is `Current' effective?
-			
+
 	is_persistent: BOOLEAN
 			-- Is `Current' persistend?
-			
+
 	is_interfaced: BOOLEAN
 			-- Is `Current' interfaced?
-			
+
 	is_root_class: BOOLEAN
 			-- Is `Current' a root class?
-			
+
 	is_reused: BOOLEAN
 			-- Is `Current' a reusable component?
-			
+
 	is_compiled: BOOLEAN
 			-- Is `Current' a compiled class?
 
@@ -86,10 +85,10 @@ feature -- Access
 
 	generics: STRING
 			-- Generic parameters of `Current'.
-			
+
 	generics_changed_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Called when `generics' is changed.
-			
+
 	root_class_changed_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Called when `is_root_class' changed.
 
@@ -131,7 +130,7 @@ feature -- Status settings.
 		ensure
 			set: is_expanded = b
 		end
-		
+
 	set_is_deferred (b: BOOLEAN)
 			-- Set `is_deferred' to `b'.
 		do
@@ -142,7 +141,7 @@ feature -- Status settings.
 		ensure
 			set: is_deferred = b
 		end
-		
+
 	set_is_effective (b: BOOLEAN)
 			-- Set `is_effective' to `b'.
 		do
@@ -153,7 +152,7 @@ feature -- Status settings.
 		ensure
 			set: is_effective = b
 		end
-		
+
 	set_is_persistent (b: BOOLEAN)
 			-- Set `is_persistent' to `b'.
 		do
@@ -164,7 +163,7 @@ feature -- Status settings.
 		ensure
 			set: is_persistent = b
 		end
-		
+
 	set_is_interfaced (b: BOOLEAN)
 			-- Set `is_effective' to `b'.
 		do
@@ -175,7 +174,7 @@ feature -- Status settings.
 		ensure
 			set: is_interfaced = b
 		end
-		
+
 	set_is_reused (b: BOOLEAN)
 			-- Set `is_reused' to `b'.
 		do
@@ -186,7 +185,7 @@ feature -- Status settings.
 		ensure
 			set: is_reused = b
 		end
-	
+
 feature -- Element change
 
 	set_generics (a_generic: STRING)
@@ -200,15 +199,15 @@ feature -- Element change
 			end
 		ensure
 			set: (generics = Void implies a_generic = Void) and (generics /= Void implies (a_generic /= Void and then generics.is_equal (a_generic)))
-		end	
-		
+		end
+
 invariant
 	generics_changed_actions_not_void: generics_changed_actions /= Void
 	properties_changed_actions_not_void: properties_changed_actions /= Void
 	root_class_changed_actions_not_void: root_class_changed_actions /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -239,4 +238,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class EM_CLASS
+end

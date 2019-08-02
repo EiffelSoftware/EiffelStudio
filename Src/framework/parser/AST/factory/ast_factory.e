@@ -381,7 +381,7 @@ feature -- Value AST creation
 			end
 		end
 
-	new_temporary_integer_value (a_psr: EIFFEL_SCANNER_SKELETON; sign_symbol: CHARACTER; buffer: STRING): detachable INTEGER_AS
+	new_temporary_integer_value (a_psr: EIFFEL_SCANNER_SKELETON; sign_symbol: CHARACTER; buffer: READABLE_STRING_8): detachable INTEGER_AS
 				-- Useful to create a INTEGER_AS anhd get the associated numeric value.
 		do
 			backup_match_list_count
@@ -391,7 +391,7 @@ feature -- Value AST creation
 			resume_match_list_count
 		end
 
-	new_integer_value (a_psr: EIFFEL_SCANNER_SKELETON; sign_symbol: CHARACTER; a_type: detachable TYPE_AS; buffer: STRING; s_as: detachable SYMBOL_AS): detachable INTEGER_AS
+	new_integer_value (a_psr: EIFFEL_SCANNER_SKELETON; sign_symbol: CHARACTER; a_type: detachable TYPE_AS; buffer: READABLE_STRING_8; s_as: detachable SYMBOL_AS): detachable INTEGER_AS
 			-- New integer value.
 		require
 			buffer_not_void: buffer /= Void
@@ -427,8 +427,7 @@ feature -- Value AST creation
 				if Result = Void or else not Result.is_initialized then
 					if sign_symbol = '-' then
 							-- Add `-' for a better reporting.
-						buffer.precede ('-')
-						a_psr.report_integer_too_small_error (a_type, buffer)
+						a_psr.report_integer_too_small_error (a_type, "-" + buffer)
 					else
 						a_psr.report_integer_too_large_error (a_type, buffer)
 					end
@@ -438,30 +437,29 @@ feature -- Value AST creation
 			end
 		end
 
-	new_real_value (a_psr: EIFFEL_SCANNER_SKELETON; is_signed: BOOLEAN; sign_symbol: CHARACTER; a_type: detachable TYPE_AS; buffer: STRING; s_as: detachable SYMBOL_AS): detachable REAL_AS
+	new_real_value (a_psr: EIFFEL_SCANNER_SKELETON; is_signed: BOOLEAN; sign_symbol: CHARACTER; a_type: detachable TYPE_AS; buffer: READABLE_STRING_8; s_as: detachable SYMBOL_AS): detachable REAL_AS
 			-- New real value.
 		require
 			buffer_not_void: buffer /= Void
 			a_psr_not_void: a_psr /= Void
 		local
-			l_buffer: STRING
+			l_buffer: READABLE_STRING_8
 		do
 			validate_integer_real_type (a_psr, a_type, buffer, False)
 			if is_valid_integer_real then
 				if is_signed and sign_symbol = '-' then
-					l_buffer := buffer.string
-					buffer.precede ('-')
+					l_buffer := "-" + buffer
 				else
 					l_buffer := buffer
 				end
-				Result := new_real_as (a_type, buffer, l_buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count,
+				Result := new_real_as (a_type, l_buffer, buffer, s_as, a_psr.line, a_psr.column, a_psr.position, a_psr.text_count,
 					a_psr.character_column, a_psr.character_position, a_psr.unicode_text_count)
 			end
 		end
 
 feature {NONE} -- Validation
 
-	validate_integer_real_type (a_psr: EIFFEL_SCANNER_SKELETON; a_type: detachable TYPE_AS; buffer: STRING; for_integer: BOOLEAN)
+	validate_integer_real_type (a_psr: EIFFEL_SCANNER_SKELETON; a_type: detachable TYPE_AS; buffer: READABLE_STRING_8; for_integer: BOOLEAN)
 			-- New integer value.
 		require
 			buffer_not_void: buffer /= Void
@@ -1571,7 +1569,7 @@ feature -- Access
 			end
 		end
 
-	new_integer_as (t: detachable TYPE_AS; s: BOOLEAN; v: detachable STRING; buf: detachable STRING; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cn: INTEGER): detachable INTEGER_AS
+	new_integer_as (t: detachable TYPE_AS; s: BOOLEAN; v: detachable STRING; buf: detachable READABLE_STRING_8; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cn: INTEGER): detachable INTEGER_AS
 			-- New INTEGER_AS node
 		do
 			if v /= Void then
@@ -1580,7 +1578,7 @@ feature -- Access
 			end
 		end
 
-	new_integer_hexa_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cn: INTEGER): detachable INTEGER_AS
+	new_integer_hexa_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: READABLE_STRING_8; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cn: INTEGER): detachable INTEGER_AS
 			-- New INTEGER_AS node
 		do
 			if v /= Void then
@@ -1589,7 +1587,7 @@ feature -- Access
 			end
 		end
 
-	new_integer_octal_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cn: INTEGER): detachable INTEGER_AS
+	new_integer_octal_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: READABLE_STRING_8; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cn: INTEGER): detachable INTEGER_AS
 			-- New INTEGER_AS node
 		do
 			if v /= Void then
@@ -1598,7 +1596,7 @@ feature -- Access
 			end
 		end
 
-	new_integer_binary_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cn: INTEGER): detachable INTEGER_AS
+	new_integer_binary_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: READABLE_STRING_8; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cn: INTEGER): detachable INTEGER_AS
 			-- New INTEGER_AS node
 		do
 			if v /= Void then
@@ -1792,7 +1790,7 @@ feature -- Access
 			end
 		end
 
-	new_real_as (t: detachable TYPE_AS; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cn: INTEGER): detachable REAL_AS
+	new_real_as (t: detachable TYPE_AS; v: detachable READABLE_STRING_8; buf: READABLE_STRING_8; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cn: INTEGER): detachable REAL_AS
 			-- New REAL AST node
 		do
 			if v /= Void then
@@ -2120,8 +2118,8 @@ feature {NONE} -- Implementation
 
 note
 	ca_ignore:
-		"CA011", "CA011 — too many arguments",
-		"CA033", "CA033 — very long class"
+		"CA011", "CA011: too many arguments",
+		"CA033", "CA033: very long class"
 	date: "$Date$"
 	revision: "$Revision$"
 	copyright: "Copyright (c) 1984-2019, Eiffel Software"

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that is a view for an EG_ITEM."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 				name_label.set_text (once "")
 				name_label.hide
 			else
-				if attached l_model.name as l_name then
+				if attached l_model.name_32 as l_name then
 					set_name_label_text (l_name)
 				else
 					name_label.set_text (once "")
@@ -84,7 +84,7 @@ feature -- Access
 		do
 			l_xml_routines := xml_routines
 			l_model := model
-			if l_model /= Void and then attached l_model.name as l_name then
+			if l_model /= Void and then attached l_model.name_32 as l_name then
 				node.add_attribute (name_string, xml_namespace, l_name)
 			end
 			node.put_last (l_xml_routines.xml_node (node, is_selected_string, boolean_representation (is_selected)))
@@ -107,10 +107,10 @@ feature -- Access
 				if attached model as l_model then
 					l_name := l_name_attrib.value
 					if
-						not attached l_model.name as l_model_name
-						or else not l_model_name.same_string_general (l_name)
+						attached l_model.name_32 as l_model_name implies
+						not l_model_name.same_string (l_name)
 					then
-						l_model.set_name (l_name)
+						l_model.set_name_32 (l_name)
 					end
 				end
 				node.forth
@@ -240,7 +240,7 @@ feature {NONE} -- Implementation
 	on_name_change
 			-- Name was changed in the model.
 		do
-			if (attached model as l_model) and then (attached l_model.name as l_name) then
+			if attached model as l_model and then attached l_model.name_32 as l_name then
 				if name_label.text.count = 0 and then not is_label_shown then
 					name_label.show
 				end
@@ -251,13 +251,13 @@ feature {NONE} -- Implementation
 			request_update
 		end
 
-	set_name_label_text (a_text: STRING)
+	set_name_label_text (a_text: READABLE_STRING_32)
 			-- Set `name_label'.`text' to `a_text'.
 			-- | Redefine in subclass if you want make changes to the text.
 		require
 			a_text_not_void: a_text /= Void
 			model_not_void: model /= Void
-			a_text_equal_model_text: attached model as l_model and then l_model.name = a_text
+			a_text_equal_model_text: attached model as l_model and then l_model.name_32 = a_text
 		do
 			name_label.set_text (a_text)
 		end
@@ -266,7 +266,7 @@ invariant
 	name_label_not_void: name_label /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -276,8 +276,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EG_FIGURE
-
+end

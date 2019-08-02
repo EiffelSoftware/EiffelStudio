@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_type: like constant_type; r: STRING)
+	make (a_type: like constant_type; r: READABLE_STRING_8)
 			-- Create a new REAL_AS node of type `a_type' with `r'
 			-- containing the textual representation
 			-- of the real value.
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 			constant_type := a_type
 		ensure
 			value_not_void: value /= Void
-			value_set: not r.has ('_') implies value.is_equal (r)
+			value_set: not r.has ('_') implies value.same_string (r)
 				-- and then r.has ('_') implies value.is_equal (r) (modulo removed underscores)
 			constant_type_set: constant_type = a_type
 		end
@@ -131,7 +131,7 @@ feature {AST_EIFFEL} -- Output
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

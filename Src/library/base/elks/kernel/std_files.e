@@ -185,7 +185,7 @@ feature -- Element change
 			standard_default.put_character (c)
 		end
 
-	put_string, putstring (s: STRING)
+	put_string, putstring (s: READABLE_STRING_8)
 			-- Write `s' at end of default output.
 		require
 			string_not_void: s /= Void

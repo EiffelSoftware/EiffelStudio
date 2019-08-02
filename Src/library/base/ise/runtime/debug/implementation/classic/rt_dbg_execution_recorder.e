@@ -1,5 +1,5 @@
 ﻿note
-	description: "Execution recorder"
+	description: "Execution recorder."
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
 	date: "$Date$"
@@ -223,7 +223,7 @@ feature -- Event
 			debug ("RT_DBG_RECORD")
 				dtrace_indent (dep);
 				dtrace ("enter_feature (")
-				dtrace (ref.generating_type.name)
+				dtrace ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (ref.generating_type.name_32))
 				dtrace (", " + cid.out + ", " + fid.out + ", " + dep.out + ")");
 				dtrace (" [[" + record_count.out + "]]%N")
 			end
@@ -255,7 +255,7 @@ feature -- Event
 					if topr.depth = r.depth then
 						topr.deep_close
 					end
-					if attached {like callstack_record} callstack_record (r.depth - 1) as depr then
+					if attached callstack_record (r.depth - 1) as depr then
 						r.attach_to (depr)
 					else
 						check should_not_occur: False end
@@ -281,7 +281,7 @@ feature -- Event
 			debug ("RT_DBG_RECORD")
 				dtrace_indent (dep);
 				dtrace ("enter_rescue (")
-				dtrace (ref.generating_type.name)
+				dtrace ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (ref.generating_type.name_32))
 				dtrace (", " + dep.out + ")");
 				dtrace (" [[" + record_count.out + "]]%N")
 			end
@@ -322,11 +322,11 @@ feature -- Event
 			debug ("RT_DBG_RECORD")
 				dtrace_indent (dep);
 				dtrace ("leave_feature (")
-				dtrace (ref.generating_type.name + " <" + ($ref).out + ">")
+				dtrace ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (ref.generating_type.name_32) + " <" + ($ref).out + ">")
 				dtrace (", " + cid.out + ", " + fid.out + ", " + dep.out + "). %N")
 			end
 
-			if not attached {like callstack_record} top_callstack_record as r then
+			if not attached top_callstack_record as r then
 				--| This can occurs if the recording started deeper in the call stack.
 				--| in this case, do not record anything until we enter again inside a feature
 				--| In the meantime, just discard the recorded data
@@ -392,7 +392,7 @@ feature -- Event
 		require
 			is_not_replaying: not is_replaying
 		do
-			if attached {like callstack_record} top_callstack_record as r then
+			if attached top_callstack_record as r then
 				if r.depth = dep then
 					r.register_position (bp_i, bp_ni)
 				else
@@ -549,9 +549,9 @@ feature -- Replay
 					--| Current replayed call exists
 				attached replayed_call as l_curr and then
 					--| a_id correspond to an existing call
-				attached {like callstack_record_by_id} callstack_record_by_id (a_id) as l_req and then
+				attached callstack_record_by_id (a_id) as l_req and then
 					--| now find the associated replayable call (with rt_information_available)
-				attached {like callstack_record} l_req.associated_replayable_call as l_next
+				attached l_req.associated_replayable_call as l_next
 			then
 				d1 := l_curr.depth
 				d2 := l_next.depth
@@ -634,7 +634,7 @@ feature -- Replay
 			debug ("RT_DBG_REPLAY")
 				print ("callstack_record_details (" + a_id + "," + nb.out + ") -start- %N")
 			end
-			if attached {like callstack_record_by_id} callstack_record_by_id (a_id) as r then
+			if attached callstack_record_by_id (a_id) as r then
 				Result := r.to_string (nb)
 			end
 			debug ("RT_DBG_REPLAY")
@@ -1103,12 +1103,12 @@ feature -- Measurement
 	is_call_at_depth (a_call: like replayed_call; d: INTEGER): BOOLEAN
 			-- Call `a_call' has depth `d' ?
 		do
-			Result := attached {like replayed_call} a_call as c and then c.depth = d
+			Result := attached a_call and then a_call.depth = d
 		end
 
 note
 	library:   "EiffelBase: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

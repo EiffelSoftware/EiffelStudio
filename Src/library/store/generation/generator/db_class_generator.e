@@ -104,7 +104,7 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	create_result_block (template_block: STRING): STRING_32
+	create_result_block (template_block: STRING): STRING_8
 			-- Replace tags in `attribute_block' and iterate for table/table attributes
 			-- matching conditions given by `tags' to create the
 			-- concatenation of blocks corresponding to the mapping of
@@ -113,10 +113,11 @@ feature {NONE} -- Implementation
 			attribute_block_not_void: template_block /= Void
 		local
 			i, count: INTEGER
+			s: STRING_8
 		do
-			create Result.make (template_block.count)
+			create s.make (template_block.count)
 			if tags.has_first_attribute_option then
-				append_block (Result, template_block, 1)
+				append_block (s, template_block, 1)
 			end
 			if tags.has_intermediate_attribute_option then
 				from
@@ -125,13 +126,14 @@ feature {NONE} -- Implementation
 				until
 					i > count
 				loop
-					append_block (Result, template_block, i)
+					append_block (s, template_block, i)
 					i := i + 1
 				end
 			end
 			if tags.has_last_attribute_option and then count > 0 then
-				append_block (Result, template_block, count + 1)
+				append_block (s, template_block, count + 1)
 			end
+			Result := s
 		ensure
 			result_block_not_void: Result /= Void
 		end
@@ -173,7 +175,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

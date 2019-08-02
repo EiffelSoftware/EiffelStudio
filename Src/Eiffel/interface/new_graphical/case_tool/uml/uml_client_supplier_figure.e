@@ -1,8 +1,9 @@
-note
+﻿note
 	description: "Objects that is an UML view for a client supplier link."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "Benno Baumgartner"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -377,7 +378,7 @@ feature {NONE} -- Implementation
 			set_line_width (uml_client_line_width)
 		end
 
-	set_name_label_text (a_text: STRING)
+	set_name_label_text (a_text: READABLE_STRING_32)
 			-- Set `name_label'.`text' to `a_text'.
 		local
 			l_features: LIST [FEATURE_AS]

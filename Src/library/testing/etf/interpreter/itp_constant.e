@@ -1,6 +1,6 @@
-note
+﻿note
 	description: "[
-		Objects representing constants.
+			Objects representing constants.
 		]"
 	author: "Andreas Leitner"
 	date: "$Date$"
@@ -41,7 +41,7 @@ feature -- Access
 			if l_value = Void then
 				Result := none_type_name
 			else
-				Result := l_value.generating_type.name
+				Result := {UTF_CONVERTER}.string_32_to_utf_8_string_8 (l_value.generating_type.name_32)
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -56,10 +56,8 @@ feature -- Processing
 			a_processor.process_constant (Current)
 		end
 
-feature{NONE} -- Implementation
-
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -1,8 +1,8 @@
-note
+﻿note
 	description: "[
-					Main Builder for EB_DEVELOPMENT_WINDOW.
-					Build all tools and formatters.
-																		]"
+			Main Builder for EB_DEVELOPMENT_WINDOW.
+			Build all tools and formatters.
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date		: "$Date$"
@@ -967,11 +967,11 @@ feature {NONE} -- Docking
 				check exists: l_internal.dynamic_type_from_string ("ES_THREADS_TOOL") /= -1 end
 				check exists: l_internal.dynamic_type_from_string ("ES_BREAKPOINTS_TOOL") /= -1 end
 				if
-					a_tool_id.as_string_8.is_equal ("ES_CALL_STACK_TOOL") or
-					a_tool_id.as_string_8.is_equal ("ES_OBJECTS_TOOL") or
-					a_tool_id.as_string_8.is_equal ("ES_OBJECT_VIEWER_TOOL") or
-					a_tool_id.as_string_8.has_substring  ("ES_WATCH_TOOL") or -- We use `has_substring' here since second watch tool's name is ES_WATCH_TOOL:2, 3rd tool's name is ES_WATCH_TOOL:3, ...
-					a_tool_id.as_string_8.is_equal ("ES_THREADS_TOOL")
+					a_tool_id.same_string ("ES_CALL_STACK_TOOL") or
+					a_tool_id.same_string ("ES_OBJECTS_TOOL") or
+					a_tool_id.same_string ("ES_OBJECT_VIEWER_TOOL") or
+					a_tool_id.has_substring  ("ES_WATCH_TOOL") or -- We use `has_substring' here since second watch tool's name is ES_WATCH_TOOL:2, 3rd tool's name is ES_WATCH_TOOL:3, ...
+					a_tool_id.same_string ("ES_THREADS_TOOL")
 				then
 					l_ignore := True
 				end

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		File utilities, for retrieving files and folders and formatting paths.
 	]"
@@ -71,7 +71,10 @@ feature -- File operations
 					-- Convert to UTF-8, calculate path and convert back.
 				Result := u.utf_8_string_8_to_string_32 (file_system.dirname (u.string_32_to_utf_8_string_8 (n32)))
 			else
-				Result := file_system.dirname (n.as_string_8)
+				check
+					n.is_valid_as_string_8
+				end
+				Result := file_system.dirname (n.to_string_8)
 			end
 		end
 

@@ -1914,11 +1914,14 @@ feature {NONE} -- Encoding conversion
 					l_str := l_encoding.last_converted_string
 				end
 			end
-			if l_str = Void then
-				Result := a_string.as_string_8
-			else
-				Result := l_str.as_string_8
-			end
+			Result :=
+				if attached l_str then
+					l_str.to_string_8
+				elseif attached {READABLE_STRING_8} a_string as s then
+					s.string
+				else
+					{UTF_CONVERTER}.string_32_to_utf_8_string_8 (a_string.as_string_32)
+				end
 		ensure
 			Result_not_void: Result /= Void
 		end

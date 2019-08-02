@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "A low-level string class to convert Eiffel strings to UTF-16 Unicode strings used by the Windows API."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -172,7 +172,7 @@ feature -- Access
 					-- Broken implementation as most likely data will be truncated
 				create l_str.make (count)
 				read_substring_into (l_str, 1, count)
-				a_string.append (l_str.as_string_8)
+				a_string.append ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (l_str))
 			end
 		end
 
@@ -392,7 +392,6 @@ feature -- Element change
 				if l_start <= nb then
 						-- We need to store the last remaining chunk.
 					u.escaped_utf_32_substring_into_utf_16_0_pointer (a_string, l_start, nb, l_managed_data, j, upper_cell)
-					j := upper_cell.item + character_size
 				else
 						-- Set null character at the end.
 					l_managed_data.put_natural_16 (0, j)
@@ -529,7 +528,7 @@ invariant
 	bytes_count_valid: (bytes_count \\ character_size) = 0
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

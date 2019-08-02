@@ -1,8 +1,9 @@
-note
+﻿note
 	description: "Whole text displayed in the editor window."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "Christophe Bonnard [ bonnard@bigfoot.com ] / Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -58,7 +59,7 @@ feature -- test features
 
 	after: BOOLEAN
 		do
-			Result := (current_line = Void)
+			Result := not attached current_line
 		end
 
 	forth
@@ -129,7 +130,7 @@ feature -- Basic operations
 			end
 		end
 
-	string_selected (start_selection: VIEWER_CURSOR; end_selection: VIEWER_CURSOR): STRING
+	string_selected (start_selection: VIEWER_CURSOR; end_selection: VIEWER_CURSOR): STRING_32
 		require
 			selections_attached: start_selection /= Void and end_selection /= Void
 			right_order: start_selection < end_selection
@@ -196,17 +197,14 @@ feature -- Element Change
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class VIEWER_CONTENT
+end

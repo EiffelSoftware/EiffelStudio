@@ -16,7 +16,7 @@ feature -- Trace
 			io.error.put_string (create {STRING}.make_filled (' ', 2 * n))
 		end
 
-	dtrace (m: STRING)
+	dtrace (m: READABLE_STRING_8)
 			-- note: might be be removed with 6.2	
 		require
 			m_attached: m /= Void
@@ -26,11 +26,11 @@ feature -- Trace
 
 note
 	library:   "EiffelBase: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
-			356 Storke Road, Goleta, CA 93117 USA
+			5949 Hollister Ave., Goleta, CA 93117 USA
 			Telephone 805-685-1006, Fax 805-685-6869
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com

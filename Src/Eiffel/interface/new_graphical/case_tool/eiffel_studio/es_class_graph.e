@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Objects that is a graph of classes"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -209,16 +208,16 @@ feature {EB_CONTEXT_DIAGRAM_COMMAND} -- Implementation
 			l_status_bar := context_editor.develop_window.status_bar
 			l_status_bar.reset_progress_bar_with_range (0 |..| nb_of_items)
 
-			l_status_bar.display_message (names.l_exploring_ancestor_of (center_class.name))
+			l_status_bar.display_message (names.l_exploring_ancestor_of (center_class.name_32))
 			explore_ancestors (center_class.class_i, ancestor_depth, True)
 
-			l_status_bar.display_message (names.l_exploring_descendants_of (center_class.name))
+			l_status_bar.display_message (names.l_exploring_descendants_of (center_class.name_32))
 			explore_descendants (center_class.class_i, descendant_depth, True)
 
-			l_status_bar.display_message (names.l_exploring_clinets_of (center_class.name))
+			l_status_bar.display_message (names.l_exploring_clinets_of (center_class.name_32))
 			explore_clients (center_class, client_depth, True)
 
-			l_status_bar.display_message (names.l_exploring_suppliers_of (center_class.name))
+			l_status_bar.display_message (names.l_exploring_suppliers_of (center_class.name_32))
 			explore_suppliers (center_class, supplier_depth, True)
 		end
 
@@ -753,7 +752,7 @@ invariant
 	center_class_Void_implies_empty: center_class = Void implies is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -784,4 +783,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class ES_CLASS_GRAPH
+end

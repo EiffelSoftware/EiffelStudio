@@ -65,7 +65,54 @@ feature -- Test routines
 			assert ("sha1 from file", l_s.is_case_insensitive_equal ("50abf5706a150990a08b2c5ea40fa0e585554732"))
 		end
 
+	test_sha1_reset_update
+			-- SHA1 + salt using update from bytes
+			-- and update from string
+		do
+				-- Expected value: 30F914D0BCF42A91973C2695CF3F1041C9F0A295
+			assert ("Same Hash:", sha1_util_update_from_bytes ("content", "salt").same_string_general (sha1_util_update_from_string ("content", "salt")))
+		end
+
+
+
 feature {NONE} -- Implementation
+
+	sha1_util_update_from_bytes (content: STRING; salt: STRING): STRING_8
+		local
+			l_encoder: UTF_CONVERTER
+			hash: SPECIAL [NATURAL_8]
+		do
+			sha1.reset
+			sha1.update_from_string (salt)
+			sha1.update_from_string (content)
+			hash := sha1.digest
+			across 1 |..| 1000 as i loop
+				sha1.reset
+				sha1.update_from_bytes (hash)
+				hash := sha1.digest
+			end
+			Result := sha1.digest_as_string
+		end
+
+	 sha1_util_update_from_string (content: STRING; salt: STRING): STRING
+        local
+            hash: STRING
+            l_content: STRING
+            l_salt: STRING
+            l_encoder: UTF_CONVERTER
+        do
+            sha1.reset
+            sha1.update_from_string (salt)
+            sha1.update_from_string (content)
+            hash := sha1.digest_as_string
+            across 1 |..| 1000 as i loop
+                sha1.reset
+                sha1.update_from_string (hash)
+                hash := sha1.digest_as_string
+            end
+            Result := hash
+        end
+
 
 	sha1_string (a_str: STRING): STRING
 		do
@@ -98,7 +145,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

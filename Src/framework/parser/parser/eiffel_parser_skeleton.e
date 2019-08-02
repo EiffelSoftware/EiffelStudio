@@ -1306,7 +1306,8 @@ feature {AST_FACTORY} -- Error handling
 				end
 				report_one_warning
 					(create {SYNTAX_WARNING}.make (l, c, filename,
-						locale.translation_in_context (once "Deprecated use of keyword `is`.", once "parser.eiffel.warning")))
+						{UTF_CONVERTER}.string_32_to_utf_8_string_8
+							(locale.translation_in_context (once "Deprecated use of keyword `is`.", once "parser.eiffel.warning"))))
 			end
 		end
 
@@ -1364,11 +1365,11 @@ invariant
 
 note
 	ca_ignore:
-		"CA011", "CA011 — too many arguments",
-		"CA033", "CA033 — very long class"
+		"CA011", "CA011: too many arguments",
+		"CA033", "CA033: very long class"
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

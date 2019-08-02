@@ -43,7 +43,7 @@ feature -- Test routines
 			end
 		end
 
-	test_accuracy_for (a_date_string: READABLE_STRING_8; a_expected: detachable READABLE_STRING_8)
+	test_accuracy_for (a_date_string: STRING_8; a_expected: detachable READABLE_STRING_8)
 			-- New test routine
 		local
 			l_date_time: DATE_TIME
@@ -62,7 +62,7 @@ feature -- Test routines
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

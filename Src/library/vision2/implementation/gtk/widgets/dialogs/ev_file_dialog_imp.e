@@ -282,7 +282,7 @@ feature {NONE} -- Implementation
 	valid_file_name, valid_file_title (a_name: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `a_name' a valid file_name on the current platform?
 		do
-			Result := not a_name.as_string_8.has ('*')
+			Result := not a_name.has ('*')
 		end
 
 feature {EV_ANY, EV_ANY_I} -- Implementation
@@ -290,7 +290,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_FILE_DIALOG note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

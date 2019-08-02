@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Eiffel Vision dynamic list. Mswindows implementation.
 
@@ -47,8 +47,7 @@ feature {NONE} -- Implementation
 	remove_i_th (i: INTEGER)
 			-- Remove item at `i'-th position.
 		do
-			ev_children.go_i_th (i)
-			ev_children.remove
+			ev_children.remove_i_th (i)
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -59,7 +58,7 @@ feature {EV_ANY_I} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -69,17 +68,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_DYNAMIC_LIST_IMP
-
-
-
-
-
-
-
-
-
-
+end

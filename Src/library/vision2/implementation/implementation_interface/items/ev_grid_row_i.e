@@ -923,8 +923,7 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			l_parent_i: like parent_i
 		do
 			row_imp := a_row.implementation
-			subrows.go_i_th (subrow_count)
-			subrows.remove
+			subrows.remove_i_th (subrow_count)
 			row_imp.internal_set_parent_row (Void)
 			row_imp.set_subrow_index (0)
 
@@ -1169,8 +1168,7 @@ feature {EV_GRID_I, EV_GRID_ROW_I} -- Implementation
 			if is_expanded then
 				update_parent_expanded_node_counts_recursively (-1)
 			end
-			subrows.go_i_th (a_subrow.subrow_index)
-			subrows.remove
+			subrows.remove_i_th (a_subrow.subrow_index)
 			update_subrow_indices (a_subrow.subrow_index)
 
 				-- Set the expanded state to `False' if no subrows.
@@ -1457,7 +1455,7 @@ invariant
 	hash_code_valid: is_initialized implies ((parent = Void and then hash_code = 0) or else (parent /= Void and then hash_code > 0))
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -2246,8 +2246,8 @@ feature -- Label texts
 	l_go_to_next_warning: STRING_32 			do Result := locale.translation ("Go to next warning") end
 	l_go_to_previous_warning: STRING_32 		do Result := locale.translation ("Go to previous warning") end
 
-	l_always_acknowledge_without_asking: STRING	do Result := locale.translation ("always acknowledge without asking.") end
-	l_always_compile_before_debug:STRING_32 	do Result := locale.translation ("always compile before executing.") end
+	l_always_acknowledge_without_asking: STRING_32 do Result := locale.translation ("always acknowledge without asking.") end
+	l_always_compile_before_debug:STRING_32 do Result := locale.translation ("always compile before executing.") end
 	l_always_delete_without_asking:STRING_32 do Result := locale.translation ("always delete without asking.") end
 
 	l_show_help:STRING_32 					do Result := locale.translation ("Show Help...") end

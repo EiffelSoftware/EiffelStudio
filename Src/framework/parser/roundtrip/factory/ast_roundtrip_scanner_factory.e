@@ -1,13 +1,12 @@
-note
+﻿note
 	description: "[
-					Roundtrip factory used to generate `match_list'.
-					Use it with `EIFFEL_ROUNDTRIP_SCANNER' to generate `match_list' only.
+			Roundtrip factory used to generate `match_list'.
+			Use it with `EIFFEL_ROUNDTRIP_SCANNER' to generate `match_list' only.
 
-					Do not use it to do paring.
-				 ]"
+			Do not use it to do paring.
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -143,7 +142,7 @@ feature -- Access
 			extend_match_list_with_stub (create{LEAF_STUB_AS}.make (buf.string, l, c, p, n, cc, cp, cs))
 		end
 
-	new_integer_as (t: detachable TYPE_AS; s: BOOLEAN; v: detachable STRING; buf: detachable STRING; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cs: INTEGER): detachable INTEGER_AS
+	new_integer_as (t: detachable TYPE_AS; s: BOOLEAN; v: detachable STRING; buf: detachable READABLE_STRING_8; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cs: INTEGER): detachable INTEGER_AS
 			-- New INTEGER_AS node
 		do
 			if buf /= Void then
@@ -151,25 +150,25 @@ feature -- Access
 			end
 		end
 
-	new_integer_hexa_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cs: INTEGER): detachable INTEGER_AS
+	new_integer_hexa_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: READABLE_STRING_8; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cs: INTEGER): detachable INTEGER_AS
 			-- New INTEGER_AS node
 		do
 			extend_match_list_with_stub (create{LEAF_STUB_AS}.make (buf.string, l, c, p, n, cc, cp, cs))
 		end
 
-	new_integer_octal_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cs: INTEGER): detachable INTEGER_AS
+	new_integer_octal_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: READABLE_STRING_8; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cs: INTEGER): detachable INTEGER_AS
 			-- New INTEGER_AS node
 		do
 			extend_match_list_with_stub (create{LEAF_STUB_AS}.make (buf.string, l, c, p, n, cc, cp, cs))
 		end
 
-	new_integer_binary_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cs: INTEGER): detachable INTEGER_AS
+	new_integer_binary_as (t: detachable TYPE_AS; s: CHARACTER; v: detachable STRING; buf: READABLE_STRING_8; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cs: INTEGER): detachable INTEGER_AS
 			-- New INTEGER_AS node
 		do
 			extend_match_list_with_stub (create{LEAF_STUB_AS}.make (buf.string, l, c, p, n, cc, cp, cs))
 		end
 
-	new_real_as (t: detachable TYPE_AS; v: detachable STRING; buf: STRING; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cs: INTEGER): detachable REAL_AS
+	new_real_as (t: detachable TYPE_AS; v: detachable READABLE_STRING_8; buf: READABLE_STRING_8; s_as: detachable SYMBOL_AS; l, c, p, n, cc, cp, cs: INTEGER): detachable REAL_AS
 			-- New REAL AST node
 		do
 			extend_match_list_with_stub (create {LEAF_STUB_AS}.make (buf.string, l, c, p, n, cc, cp, cs))
@@ -261,16 +260,14 @@ feature -- Access
 		end
 
 	create_break_as_with_data (a_text: STRING; l, c, p, n, cc, cp, cs: INTEGER)
-			-- New COMMENT_AS node
-		local
-			b_as: BREAK_AS
+			-- New COMMENT_AS node.
 		do
-			create b_as.make (a_text.string, l, c, p, n, cc, cp, cs)
-			extend_match_list (b_as)
+			extend_match_list (create {BREAK_AS}.make (a_text.string, l, c, p, n, cc, cp, cs))
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	ca_ignore: "CA011", "CA011: too many arguments"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

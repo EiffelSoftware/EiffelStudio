@@ -497,7 +497,7 @@ feature {AST_FACTORY} -- Error handling
 			report_one_error (an_error)
 		end
 
-	report_integer_too_large_error (a_type: detachable TYPE_AS; an_int: STRING)
+	report_integer_too_large_error (a_type: detachable TYPE_AS; an_int: READABLE_STRING_8)
 			-- `an_int', although only made up of digits, doesn't fit
 			-- in an INTEGER (i.e. greater than maximum_integer_value).
 		require
@@ -514,7 +514,7 @@ feature {AST_FACTORY} -- Error handling
 			report_one_error (create {SYNTAX_ERROR}.make (line, column, filename, l_message))
 		end
 
-	report_integer_too_small_error (a_type: detachable TYPE_AS; an_int: STRING)
+	report_integer_too_small_error (a_type: detachable TYPE_AS; an_int: READABLE_STRING_8)
 			-- `an_int', although only made up of digits, doesn't fit
 			-- in an INTEGER (i.e. less than minimum_integer_value).
 		require
@@ -531,7 +531,7 @@ feature {AST_FACTORY} -- Error handling
 			report_one_error (create {SYNTAX_ERROR}.make (line, column, filename, l_message))
 		end
 
-	report_character_code_too_large_error (a_code: STRING)
+	report_character_code_too_large_error (a_code: READABLE_STRING_8)
 			-- Integer encoded by `a_code' is too large to fit into a CHARACTER_32
 		require
 			a_code_not_void: a_code /= Void

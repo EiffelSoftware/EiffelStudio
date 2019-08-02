@@ -379,7 +379,7 @@ feature -- Test routines
 
 			s := {STRING_32} ".    %T"
 			check_boolean ("is not whitespace", not s.is_whitespace)
-			
+
 			check_boolean ("substring is whitespace", s.is_substring_whitespace (2, s.count))
 			check_boolean ("substring is whitespace", s.is_substring_whitespace (1, 0)) -- empty string is whitespace
 			check_boolean ("substring is whitespace", s.is_substring_whitespace (2, 1)) -- empty string is whitespace
@@ -426,7 +426,7 @@ feature {NONE} -- Implementation
 			t: like s
 		do
 			t := s.substring (start_index, end_index)
-			assert (start_index.out + ":" + end_index.out + " -> %""+ t.as_string_8 +"%"", t.same_characters (s, start_index, end_index, 1))
+			assert (start_index.out + ":" + end_index.out + " -> %""+ {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (t) +"%"", t.same_characters (s, start_index, end_index, 1))
 		end
 
 	check_same_substring_result_on_string_32 (start_index, end_index: INTEGER; s: READABLE_STRING_32)
@@ -434,7 +434,7 @@ feature {NONE} -- Implementation
 			t: like s
 		do
 			t := s.substring (start_index, end_index)
-			assert (start_index.out + ":" + end_index.out + " -> %""+ t.as_string_8 +"%"", t.same_characters (s, start_index, end_index, 1))
+			assert (start_index.out + ":" + end_index.out + " -> %""+ {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (t) +"%"", t.same_characters (s, start_index, end_index, 1))
 		end
 
 	check_same_substring_result_on_string_general (start_index, end_index: INTEGER; s: READABLE_STRING_GENERAL)
@@ -442,7 +442,7 @@ feature {NONE} -- Implementation
 			t: like s
 		do
 			t := s.substring (start_index, end_index)
-			assert (start_index.out + ":" + end_index.out + " -> %""+ t.as_string_8 +"%"", t.same_characters (s, start_index, end_index, 1))
+			assert (start_index.out + ":" + end_index.out + " -> %""+ {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (t) +"%"", t.same_characters (s, start_index, end_index, 1))
 		end
 
 
@@ -451,7 +451,7 @@ feature {NONE} -- Implementation
 			t: like s
 		do
 			t := s.substring (start_index, end_index).as_upper
-			assert (start_index.out + ":" + end_index.out + " -> %""+ t.as_string_8 +"%"",  t.same_caseless_characters (s, start_index, end_index, 1))
+			assert (start_index.out + ":" + end_index.out + " -> %""+ {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (t) +"%"",  t.same_caseless_characters (s, start_index, end_index, 1))
 		end
 
 	check_same_caseless_substring_result_on_string_32 (start_index, end_index: INTEGER; s: READABLE_STRING_32)
@@ -459,7 +459,7 @@ feature {NONE} -- Implementation
 			t: like s
 		do
 			t := s.substring (start_index, end_index).as_upper
-			assert (start_index.out + ":" + end_index.out + " -> %""+ t.as_string_8 +"%"",  t.same_caseless_characters (s, start_index, end_index, 1))
+			assert (start_index.out + ":" + end_index.out + " -> %""+ {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (t) +"%"",  t.same_caseless_characters (s, start_index, end_index, 1))
 		end
 
 	check_same_caseless_substring_result_on_string_general (start_index, end_index: INTEGER; s: READABLE_STRING_GENERAL)
@@ -467,7 +467,7 @@ feature {NONE} -- Implementation
 			t: like s
 		do
 			t := s.substring (start_index, end_index).as_upper
-			assert (start_index.out + ":" + end_index.out + " -> %""+ t.as_string_8 +"%"",  t.same_caseless_characters (s, start_index, end_index, 1))
+			assert (start_index.out + ":" + end_index.out + " -> %""+ {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (t) +"%"",  t.same_caseless_characters (s, start_index, end_index, 1))
 		end
 
 feature -- string_8
@@ -496,6 +496,16 @@ feature -- string_8
 		end
 
 
+note
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
 end
 
 

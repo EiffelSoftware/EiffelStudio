@@ -977,11 +977,11 @@ feature -- Test
 			s: IMMUTABLE_STRING_8
 		do
 			s := ""
-			check_boolean ("string", s.string /= s)
+			check_boolean ("string", s /= s.string)
 			check_string_equality ("string", s.string, s)
 			check_boolean ("string", not s.string.shared_with (s))
 			s := "12345"
-			check_boolean ("string", s.string /= s)
+			check_boolean ("string", s /= s.string)
 			check_string_equality ("string", s.string, s)
 			check_boolean ("string", not s.string.shared_with (s))
 		end

@@ -76,7 +76,7 @@ feature -- Test routines
 			pixmap.save_to_named_path (create {EV_BMP_FORMAT}, l_path)
 			pixmap.save_to_named_path (create {EV_PNG_FORMAT}, l_path)
 			create l_file.make_with_path (l_path)
-			assert ({STRING_32} "Pixmap missing in " + l_path.canonical_path.name + ".", l_file.exists)
+			assert ("Pixmap missing in " + l_path.canonical_path.utf_8_name + ".", l_file.exists)
 			l_file.delete
 		end
 
@@ -343,7 +343,7 @@ feature {NONE} -- Actual Test
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -67,7 +67,7 @@ feature -- Test routines
 
 feature {NONE} -- Implementation
 
-	test_formatted_out_date (a_code_string: READABLE_STRING_8; v: DATE)
+	test_formatted_out_date (a_code_string: STRING_8; v: DATE)
 		local
 			s: STRING
 			c: DATE_VALIDITY_CHECKER
@@ -81,7 +81,7 @@ feature {NONE} -- Implementation
 			assert ("roundtrip succeed", s.same_string (d.formatted_out (a_code_string)))
 		end
 
-	test_formatted_out_date_time (a_code_string: READABLE_STRING_8; v: DATE_TIME)
+	test_formatted_out_date_time (a_code_string: STRING_8; v: DATE_TIME)
 		local
 			s: STRING
 			c: DATE_TIME_VALIDITY_CHECKER
@@ -96,7 +96,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

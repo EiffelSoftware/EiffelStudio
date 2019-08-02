@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that is a BON view for an EIFFEL_CLUSTER."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -601,7 +601,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	set_name_label_text (a_text: STRING)
+	set_name_label_text (a_text: READABLE_STRING_32)
 			-- Set `name_label'.`text' to `a_text'.
 		local
 			s, rest: STRING
@@ -779,7 +779,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Objects that is a graph model for a given group"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -165,7 +164,7 @@ feature -- Element change
 							remove_cluster
 							l_cluster.prune_all (Current)
 						else
-							name := group.name
+							set_name_32 (group.name)
 							group_id := id_of_group (group)
 						end
 					else
@@ -182,7 +181,7 @@ feature -- Element change
 									remove_cluster
 									l_cluster.prune_all (Current)
 								else
-									name := group.name
+									set_name_32 (group.name)
 									group_id := id_of_group (group)
 								end
 							end
@@ -239,7 +238,7 @@ invariant
 	identifier_not_void: group_id /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -270,4 +269,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class ES_CLUSTER
+end

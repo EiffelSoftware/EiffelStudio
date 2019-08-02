@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Internal names for infix and prefix functions, Bench version"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -181,7 +181,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Basic operations
 			result_not_void: Result /= Void
 		end
 
-	extract_alias_name (op: READABLE_STRING_8): STRING_8
+	extract_alias_name (op: READABLE_STRING_8): READABLE_STRING_8
 			-- Extract symbol part from alias name encoded as any of the following:
 			--   prefix "..."
 			--   infix "..."
@@ -246,7 +246,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -277,4 +277,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- Class PREFIX_INFIX_NAMES
+end

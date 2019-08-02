@@ -296,7 +296,7 @@ feature {NONE} -- Implemention
 			-- User pick a item from grid to filter.
 		do
 			if a_item /= Void and then a_item.column.index = 1 then
-				create {MA_CLASS_STONE} Result.make (a_item.text)
+				create {MA_CLASS_STONE} Result.make ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (a_item.text))
 			end
 		end
 
@@ -398,7 +398,7 @@ invariant
 	grid_increased_not_void: grid_changed /= Void
 	grid_data_not_void: grid_data /= Void
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

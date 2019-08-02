@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Objects that is a model for a client supplier link."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -39,7 +38,7 @@ feature {NONE} -- Initialization
 			a_name_not_void: a_name /= Void
 		do
 			make_directed_with_source_and_target (a_client, a_supplier)
-			name := a_name
+			set_name_32 (a_name)
 			if a_supplier.is_expanded then
 				is_aggregated := True
 			end
@@ -81,7 +80,7 @@ invariant
 	is_aggregated_changed_not_void: is_aggregated_changed /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -112,4 +111,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class EM_CLIENT_SUPPLIER_LINK
+end

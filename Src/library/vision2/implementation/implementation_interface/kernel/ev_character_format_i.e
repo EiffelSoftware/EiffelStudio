@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"[
 			Implementation Interface of Character format containing color,
@@ -58,7 +58,7 @@ feature -- Access
 			l_color: INTEGER
 		do
 			Result := family.out
-			Result.append (name.as_string_8)
+			Result.append ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (name))
 			Result.append (height.out)
 			Result.append (weight.out)
 			Result.append (shape.out)
@@ -201,26 +201,14 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Implementatio
 	interface: detachable EV_CHARACTER_FORMAT note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_CHARACTER_FORMAT_I
-
-
-
-
-
-
-
-
-
+end

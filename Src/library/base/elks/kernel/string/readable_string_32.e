@@ -37,8 +37,7 @@ inherit
 
 convert
 	to_cil: {SYSTEM_STRING},
-	as_readable_string_8: {READABLE_STRING_8},
-	as_string_8: {STRING_8},
+	as_string_8: {READABLE_STRING_8, STRING_8},
 	as_string_32: {STRING_32}
 
 feature {NONE} -- Initialization
@@ -705,11 +704,9 @@ feature -- Output
 	out: STRING
 			-- Printable representation.
 		do
-			create Result.make (count)
-			Result.append (as_string_8)
+			Result := {UTF_CONVERTER}.string_32_to_utf_8_string_8 (Current)
 		ensure then
 			out_not_void: Result /= Void
-			same_items: same_type ("") implies same_string_general (Result)
 		end
 
 feature {NONE} -- Implementation

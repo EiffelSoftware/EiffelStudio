@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that produces views for given models."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -49,15 +49,8 @@ feature -- Access
 
 	xml_element_type: XML_ELEMENT
 			-- Element type for compilation purpose.
-		local
-			e: detachable like xml_element_type
 		do
-			check should_not_be_used: False end
-
-				-- To satisfy void-safety compiler checking			
-			check e /= Void then
-				Result := e
-			end
+			check should_not_be_used: False then end
 		end
 
 feature {EG_FIGURE_WORLD} -- Implementation
@@ -74,7 +67,7 @@ feature {EG_FIGURE_WORLD} -- Implementation
 
 feature {NONE} -- Implementation
 
-	linkable_with_name (a_name: STRING): detachable EG_LINKABLE
+	linkable_with_name (a_name: READABLE_STRING_32): detachable EG_LINKABLE
 			-- Linkable with name `a_name' in graph if any
 		require
 			a_name_not_void: a_name /= Void
@@ -93,7 +86,7 @@ feature {NONE} -- Implementation
 					until
 						nodes.after or else Result /= Void
 					loop
-						if nodes.item.name ~ a_name then
+						if nodes.item.name_32 ~ a_name then
 							Result := nodes.item
 						end
 						nodes.forth
@@ -106,7 +99,7 @@ feature {NONE} -- Implementation
 					until
 						clusters.after or else Result /= Void
 					loop
-						if clusters.item.name ~ a_name then
+						if clusters.item.name_32 ~ a_name then
 							Result := clusters.item
 						end
 						clusters.forth
@@ -118,7 +111,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -128,8 +121,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EG_FIGURE_FACTORY
-
+end

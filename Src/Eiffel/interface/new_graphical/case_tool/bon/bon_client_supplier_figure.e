@@ -576,7 +576,7 @@ feature {NONE} -- Implementation
 			on_name_change
 		end
 
-	set_name_label_text (a_text: STRING)
+	set_name_label_text (a_text: READABLE_STRING_32)
 			-- Set `name_label'.`text' to `a_text'.
 		local
 			txt: EV_MODEL_TEXT
@@ -779,7 +779,7 @@ invariant
 	aggregate_figure_not_void: aggregate_figure /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Object is a view for an EG_LINK"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -57,10 +57,10 @@ feature -- Access
 		do
 			Result := Precursor {EG_FIGURE} (node)
 			if attached model as l_model then
-				if attached l_model.source.link_name as l_source_link_name then
+				if attached l_model.source.link_name_32 as l_source_link_name then
 					Result.add_attribute (once "SOURCE", xml_namespace, l_source_link_name)
 				end
-				if attached l_model.target.link_name as l_target_link_name then
+				if attached l_model.target.link_name_32 as l_target_link_name then
 					Result.add_attribute (once "TARGET", xml_namespace, l_target_link_name)
 				end
 				Result.put_last (Xml_routines.xml_node (Result, is_directed_string, boolean_representation (l_model.is_directed)))
@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -151,5 +151,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EG_LINK_FIGURE
-
+end

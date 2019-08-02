@@ -1,7 +1,7 @@
-note
+﻿note
 	description: "Encoding detector for encoding specified in an eiffel class."
 	date: "$Date$"
-	revision: "$Revision$"
+	revision: "$Revision: $"
 
 class
 	EIFFEL_CLASS_ENCODING_DETECTOR
@@ -129,7 +129,6 @@ feature {NONE} -- Implementation
 		local
 			l_found: BOOLEAN
 			l_start, l_end: INTEGER
-			l_found_class: BOOLEAN
 			l_count: INTEGER
 			l_char: NATURAL_32
 			l_encoding: like detected_encoding
@@ -151,22 +150,21 @@ feature {NONE} -- Implementation
 					l_end := index
 					l_found := True
 				elseif is_class_keyword (l_char) then
-					l_found_class := consume_class_keyword
+					consume_class_keyword.do_nothing
 				end
 			end
-			if l_found then
-				if
-					attached buffer as l_buffer and then
-					(attached l_buffer.substring (l_start + 1, l_end - 1).as_string_8 as l_string) and then
-					not l_string.is_empty
-				then
-					create l_encoding.make (l_string)
-						-- Check if the encoding is valid.
-					l_encoding.convert_to (utf8, "C")
-					if l_encoding.last_conversion_successful then
-						last_detection_successful := True
-						detected_encoding := l_encoding
-					end
+			if l_found and then
+				attached buffer as l_buffer and then
+				attached l_buffer.substring (l_start + 1, l_end - 1) as s and then
+				not s.is_empty and then
+				s.is_valid_as_string_8
+			then
+				create l_encoding.make (s.to_string_8)
+					-- Check if the encoding is valid.
+				l_encoding.convert_to (utf8, "C")
+				if l_encoding.last_conversion_successful then
+					last_detection_successful := True
+					detected_encoding := l_encoding
 				end
 			end
 		end
@@ -186,7 +184,6 @@ feature {NONE} -- Implementation
 				l_buffer := buffer
 				l_count := l_buffer.count
 				l_index := index
-				l_char := l_buffer.code (l_index)
 			until
 				l_index >= l_count or else l_found
 			loop
@@ -328,7 +325,7 @@ feature {NONE} -- Implementation
 	class_string: STRING = "class"
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

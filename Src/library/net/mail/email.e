@@ -1,8 +1,9 @@
-note
+﻿note
 	description: "Email Object"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "david s"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -15,7 +16,7 @@ inherit
 create
 	make, make_with_entry
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make
 			-- Initialize the headers table.
@@ -72,7 +73,7 @@ feature -- Recipient change
 		end
 
 feature -- Status report
-		
+
 	has_header_entry (header_key: STRING): BOOLEAN
 		do
 			Result:= headers.has (header_key)
@@ -85,28 +86,22 @@ feature -- Entries changes
 			-- If no such header exists, create it.
 		require
 			not_void: header_entry /= Void and then header_key /= Void
-		local
-			l_header: detachable HEADER
 		do
 			if attached headers.item (header_key) as l_h then
 				l_h.add_entry (header_entry)
 			else
-				create l_header.make (header_entry)
-				headers.put (l_header, header_key)
+				headers.put (create {HEADER}.make (header_entry), header_key)
 			end
 		end
 
 	add_header_entries (header_key: STRING; header_entries: ITERABLE [READABLE_STRING_8])
 			-- Add multiple 'header_entries' at once  to 'header_key',
 			-- If not such header exists. create it.
-		local
-			l_header: detachable HEADER
 		do
 			if attached headers.item (header_key) as l_h then
 				l_h.add_entries (header_entries)
 			else
-				create l_header.make_with_entries (header_entries)
-				headers.put (l_header, header_key)
+				headers.put (create {HEADER}.make_with_entries (header_entries), header_key)
 			end
 		end
 
@@ -208,7 +203,7 @@ feature -- Implementation (EMAIL_RESOURCE)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -218,8 +213,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EMAIL
-
+end

@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Objects is a model for a class in Eiffel Studio."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -60,7 +59,7 @@ feature {NONE} -- Initialization
 			if es_class_id = Void then
 				es_class_id := generate_uuid
 			end
-			name := a_class.name.twin
+			set_name_32 (a_class.name.twin)
 			class_i := a_class
 
 			is_needed_on_diagram := True
@@ -735,7 +734,7 @@ invariant
 	feature_clause_list_changed_actions_not_Void: feature_clause_list_changed_actions /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -766,4 +765,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class ES_CLASS
+end

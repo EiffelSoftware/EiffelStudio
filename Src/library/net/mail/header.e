@@ -1,9 +1,12 @@
-note
-	description: "Objects that contains all the information relative to any header.%
-				  % Headers can only have email addresses informations."
+﻿note
+	description: "[
+			Objects that contains all the information relative to any header.
+			Headers can only have email addresses informations.
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "David s"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,9 +16,9 @@ class
 create
 	make, make_with_entries
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
-	make (item: STRING)
+	make (item: READABLE_STRING_8)
 			-- Initialize the header with one 'item'.
 		do
 			create entries.make (1)
@@ -31,7 +34,7 @@ feature -- Initialization
 
 feature -- Access
 
-	entries: ARRAYED_LIST [STRING]
+	entries: ARRAYED_LIST [READABLE_STRING_8]
 		-- Multiple entries.
 
 feature -- Status report
@@ -39,7 +42,7 @@ feature -- Status report
 	multiple_entries: BOOLEAN
 		-- Has the header multiple entries.
 
-	unique_entry: STRING
+	unique_entry: READABLE_STRING_8
 			-- Entry,
 			-- Useful if not multiple entries.
 		require
@@ -54,12 +57,6 @@ feature -- Status setting
 			-- Enable multiple entries.
 		do
 			multiple_entries:= True
-		end
-
-	enable_contains_addresses
-		obsolete
-			"Implementation was never used, so no need to call this routine [2017-05-31]."
-		do
 		end
 
 feature -- Basic operations
@@ -113,22 +110,16 @@ feature {NONE} -- Implementation
 			-- Convert 'array' into entries.
 		require
 			entries_exists: entries /= Void
-		local
-			lin_array: LINEAR [STRING]
 		do
-			lin_array:= src.linear_representation
-			from
-				lin_array.start
-			until
-				lin_array.after
+			across
+				src as e
 			loop
-				entries.extend (lin_array.item)
-				lin_array.forth
+				entries.extend (e.item)
 			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -138,8 +129,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class HEADER
-
+end

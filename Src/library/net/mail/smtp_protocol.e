@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Implementation of SMTP protocol."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -17,9 +17,9 @@ inherit
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
-	make (host:STRING; user: STRING)
+	make (host: STRING; user: STRING)
 			-- Create an smtp protocol with 'host, 'user' and default port.
 		require
 			host_not_void: host /= Void
@@ -122,14 +122,12 @@ feature -- Implementation (EMAIL_RESOURCE)
 	initialize
 			-- Initialize the protocol to send a new email.
 		do
-
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Connection
 
 	username: STRING
 		-- Smtp user name (Needed to initiate the connection).
-
 
 feature {NONE} -- Basic operations
 
@@ -168,7 +166,7 @@ feature {NONE} -- Basic operations
 			if attached socket as l_socket then
 				l_socket.put_string (s + "%R%N")
 				decode (l_socket)
-				if (smtp_code_number /= expected_code) then
+				if smtp_code_number /= expected_code then
 					enable_transfer_error
 					if attached smtp_reply as l_smtp_reply then
 						set_transfer_error_message (l_smtp_reply)
@@ -180,8 +178,6 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-feature {NONE} -- Basic operations
-
 	send_mail
 			-- Send mail using smtp protocol.
 		do
@@ -192,7 +188,7 @@ feature {NONE} -- Basic operations
 		require
 			can_be_sent: memory_resource.can_be_sent
 		local
-			l_header_from: STRING
+			l_header_from: READABLE_STRING_8
 		do
 			if attached memory_resource.header (H_from) as l_header then
 				l_header_from := extracted_email (l_header.unique_entry)
@@ -252,7 +248,7 @@ feature {NONE} -- Basic operations
 			sub_header.append ("%R%N")
 		end
 
-	add_sub_header (sub_header_key: STRING)
+	add_sub_header (sub_header_key: READABLE_STRING_8)
 			-- Add new header line 'sub_header_key',
 		note
 			EIS: "SMTP RFC5321", "src=https://tools.ietf.org/html/rfc5321#appendix-B", "protocol=uri"
@@ -261,34 +257,35 @@ feature {NONE} -- Basic operations
 			sub_header_key_not_void: sub_header_key /= Void
 			key_exists: memory_resource.headers.has (sub_header_key)
 		local
-			l_entries: ARRAYED_LIST [STRING]
+			l_entries: like {HEADER}.entries
 			l_entry: STRING
 		do
 				-- BCC email addresses must be listed in the RCPT TO command list,
 				-- but the BCC header should not be printed under the DATA command.
 				-- So we not append them into the sub_header string which will be
 				-- used under the DATA command.
-			if not sub_header_key.is_case_insensitive_equal_general (h_bcc) then
-				if attached memory_resource.header (sub_header_key) as l_header then
-					from
-						l_entries := l_header.entries
-						l_entries.start
-						create l_entry.make_empty
-					until
-						l_entries.after
-					loop
-						l_entry.append (l_entries.item)
-						l_entries.forth
-						if not l_entries.after then
-							l_entry.append_character (',')
-						end
+			if
+				not sub_header_key.is_case_insensitive_equal_general (h_bcc) and then
+				attached memory_resource.header (sub_header_key) as l_header
+			then
+				from
+					l_entries := l_header.entries
+					l_entries.start
+					create l_entry.make_empty
+				until
+					l_entries.after
+				loop
+					l_entry.append (l_entries.item)
+					l_entries.forth
+					if not l_entries.after then
+						l_entry.append_character (',')
 					end
-					sub_header.append (sub_header_key + ": " + l_entry + "%R%N")
 				end
+				sub_header.append (sub_header_key + ": " + l_entry + "%R%N")
 			end
 		end
 
-	send_all (a_header_from: STRING)
+	send_all (a_header_from: READABLE_STRING_8)
 			-- Send the mail considering the correct information to `a_header_from'
 		require
 			a_header_from_attached: a_header_from /= Void
@@ -333,7 +330,7 @@ feature {NONE} -- Basic operations
 
 feature {NONE} -- Access
 
-	recipients: detachable ARRAYED_LIST [STRING]
+	recipients: detachable ARRAYED_LIST [READABLE_STRING_8]
 		-- Header to use with the command 'Mail_to', it contains the "TO", "CC" and "BCC" fields.
 
 	sub_header: STRING
@@ -341,7 +338,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Implementation
 
-	extracted_email (a_text: STRING): STRING
+	extracted_email (a_text: READABLE_STRING_8): READABLE_STRING_8
 			-- Extract email address from `a_text'.
 		require
 			a_text_not_void: a_text /= Void
@@ -360,7 +357,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -370,8 +367,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class SMTP_PROTOCOL
-
+end

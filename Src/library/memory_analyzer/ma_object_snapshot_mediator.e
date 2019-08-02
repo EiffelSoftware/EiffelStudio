@@ -197,8 +197,12 @@ feature {NONE} -- Implementation
 					object_grid.set_deny_cursor (deny_node)
 				else
 						-- If is an item represent a class.
-					if attached {EV_GRID_LABEL_ITEM} a_item as l_item then
-						create {MA_CLASS_STONE} Result.make (l_item.text)
+					if
+						attached {EV_GRID_LABEL_ITEM} a_item as l_item and then
+						l_item.text.is_valid_as_string_8
+					then
+							-- TODO: handle Unicode.
+						create {MA_CLASS_STONE} Result.make (l_item.text.to_string_8)
 					else
 						create {MA_CLASS_STONE} Result.make ("Unknown grid item")
 					end
@@ -433,7 +437,7 @@ feature {NONE} -- Implementation
 			l_int: INTERNAL
 			l_any: ANY
 			l_row: EV_GRID_ROW
-			l_string: STRING
+			l_string: READABLE_STRING_32
 			l_count: INTEGER
 		do
 			if a_parent_row.subrow_count = 0 then
@@ -446,8 +450,7 @@ feature {NONE} -- Implementation
 					until
 						j = nb
 					loop
-						l_string := l_int.type_name (l_data.item (j))
-						if not is_object_from_ma (l_string) then
+						if not is_object_from_ma (l_int.type_name_32 (l_data.item (j))) then
 							l_count := l_count + 1
 						end
 						j := j + 1
@@ -461,9 +464,9 @@ feature {NONE} -- Implementation
 					until
 						j = nb
 					loop
-						l_string := l_int.type_name (l_data.item (j))
+						l_string := l_int.type_name_32 (l_data.item (j))
 						if not is_object_from_ma (l_string) then
-							create l_item.make_with_text ((i - l_row_index).out + ": " + l_string)
+							create l_item.make_with_text ((i - l_row_index).out.to_string_32 + ": " + l_string)
 							l_item.set_data (l_data.item (j))
 							l_item.set_pixmap (icons.object_grid_icon)
 							object_grid.set_item (1, i, l_item)
@@ -660,15 +663,16 @@ feature {NONE} -- Implementation
 
 feature -- Status report
 
-	is_object_from_ma (a_str: STRING): BOOLEAN
+	is_object_from_ma (a_str: READABLE_STRING_32): BOOLEAN
 			-- If the type of object is from MA.
 		do
 			if a_str /= Void then
-				Result := a_str.is_equal (once "MA_GRID_LABEL_ITEM") or else
-						a_str.is_equal (once "TUPLE [MA_OBJECT_SNAPSHOT_MEDIATOR, ANY, EV_GRID_ROW]") or else
-						--a_str.is_equal (once "MA_OBJECT_SNAPSHOT_MEDIATOR") or else
-						a_str.is_equal (once "TUPLE [MA_OBJECT_SNAPSHOT_MEDIATOR, ANY]") or else
-						a_str.has_substring ("MA_OBJECT_SNAPSHOT")
+				Result :=
+					a_str.same_string_general (once "MA_GRID_LABEL_ITEM") or else
+					a_str.same_string_general (once "TUPLE [MA_OBJECT_SNAPSHOT_MEDIATOR, ANY, EV_GRID_ROW]") or else
+					--a_str.is_equal (once "MA_OBJECT_SNAPSHOT_MEDIATOR") or else
+					a_str.same_string_general (once "TUPLE [MA_OBJECT_SNAPSHOT_MEDIATOR, ANY]") or else
+					a_str.has_substring ("MA_OBJECT_SNAPSHOT")
 			end
 		end
 
@@ -818,7 +822,7 @@ invariant
 	object_grid_not_void: object_grid /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

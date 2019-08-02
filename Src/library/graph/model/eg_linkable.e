@@ -1,5 +1,5 @@
-note
-	description: "An EG_ITEM can have links to other EG_LINKABLE through an EG_LINK"
+﻿note
+	description: "An EG_ITEM can have links to other EG_LINKABLE through an EG_LINK."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -25,8 +25,19 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	link_name_32: detachable READABLE_STRING_32
+			-- Name for linking.
+		require
+			set: name_32 /= Void
+		do
+			Result := name_32
+		ensure
+			Result /= Void
+		end
+
 	link_name: detachable STRING
-			-- Name for linking
+			-- Name for linking.
+		obsolete "Use `link_name_32` instead. [2019-11-30]"
 		require
 			set: name /= Void
 		do
@@ -103,7 +114,7 @@ invariant
 	internal_links_not_void: internal_links /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -113,8 +124,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EG_LINKABLE
-
+end

@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "Objects that is a graph of clusters and classes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -196,12 +195,12 @@ feature {NONE} -- Implementation
 			end
 
 			if context_editor /= Void then
-				context_editor.develop_window.status_bar.display_message ("Exploring superclusters of " + center_cluster.name)
+				context_editor.develop_window.status_bar.display_message ({STRING_32} "Exploring superclusters of " + center_cluster.name_32)
 			end
 			explore_superclusters (center_cluster, supercluster_depth)
 
 			if context_editor /= Void then
-				context_editor.develop_window.status_bar.display_message ("Exploring subclusters of " + center_cluster.name)
+				context_editor.develop_window.status_bar.display_message ({STRING_32} "Exploring subclusters of " + center_cluster.name_32)
 			end
 			explore_subclusters (center_cluster, subcluster_depth, True, True)
 		end
@@ -456,7 +455,7 @@ invariant
 	supercluster_depth_positive: supercluster_depth >= 0
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -487,4 +486,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class ES_CLUSTER_GRAPH
+end

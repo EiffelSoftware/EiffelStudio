@@ -1,8 +1,7 @@
-note
-	description: "All resources"
+﻿note
+	description: "All resources."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,13 +13,13 @@ inherit
 
 feature -- Access
 
-	header (h: STRING): detachable HEADER
+	header (h: READABLE_STRING_8): detachable HEADER
 			-- Retrieve the content of the header 'h'
 		do
 			Result := headers.item (h)
 		end
 
-	headers: HASH_TABLE [HEADER, STRING]
+	headers: HASH_TABLE [HEADER, READABLE_STRING_8]
 		-- All information concerning each headers
 
 feature -- Basic operations
@@ -116,7 +115,7 @@ feature -- Status setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -126,8 +125,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EMAIL_RESOURCE
-
+end

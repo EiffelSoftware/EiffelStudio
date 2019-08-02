@@ -1,6 +1,6 @@
-note
+﻿note
 	description: "[
-		Objects that represent the implementation interface for rich text widgets.
+			Objects that represent the implementation interface for rich text widgets.
 		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -459,7 +459,23 @@ feature {EV_ANY, EV_ANY_I, EV_RICH_TEXT_BUFFERING_STRUCTURES_I} -- Status settin
 			complete_saving
 			create text_file.make_with_path (a_filename)
 			text_file.open_write
-			text_file.put_string (buffer.internal_text.as_string_8)
+			if across buffer.internal_text as c all c.item.natural_32_code <= 0x7f end then
+				text_file.put_string (buffer.internal_text.to_string_8)
+			else
+					-- TODO: improve performance.
+				across
+					buffer.internal_text as c
+				loop
+					if c.item.natural_32_code <= 0x7f then
+						text_file.put_character (c.item.to_character_8)
+					else
+						text_file.put_character ('\')
+						text_file.put_character ('u')
+						text_file.put_integer_16 (c.item.code.as_integer_16)
+						text_file.put_character ('?')
+					end
+				end
+			end
 			text_file.close
 		ensure
 			text_not_changed: text.is_equal (old text)
@@ -632,7 +648,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_RICH_TEXT note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -642,4 +658,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EV_RICH_TEXT_I
+end

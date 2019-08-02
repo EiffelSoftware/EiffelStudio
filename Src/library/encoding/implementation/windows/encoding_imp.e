@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Encoding conversion implementation on Windows"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -31,7 +31,7 @@ feature -- String encoding convertion
 			if a_from_string.is_empty then
 				last_conversion_successful := True
 				if a_from_string.is_string_8 then
-					last_converted_string := a_from_string.as_string_8.twin
+					last_converted_string := a_from_string.to_string_8.twin
 				else
 					last_converted_string := a_from_string.as_string_32.twin
 				end
@@ -96,7 +96,20 @@ feature -- String encoding convertion
 						last_converted_string := l_converted_8
 					end
 				else
-					l_string_32 := multi_byte_to_wide_char (l_from_code_page, a_from_string.as_string_8)
+					l_string_32 := multi_byte_to_wide_char
+						(l_from_code_page,
+						if a_from_string.is_valid_as_string_8 then
+								-- Use original string.
+							a_from_string.to_string_8
+						else
+								-- Fallback to UTF-8.
+							{UTF_CONVERTER}.string_32_to_utf_8_string_8
+								(if attached {READABLE_STRING_32} a_from_string as s then
+									s
+								else
+									a_from_string.as_string_32
+								end)
+						end)
 					if is_two_byte_code_page (a_to_code_page) then
 						if l_to_be = is_little_endian then
 							l_converted_32 := string_16_switch_endian (l_string_32)
@@ -307,10 +320,9 @@ feature {NONE} -- Implementation
 			"return sizeof(WCHAR);"
 		end
 
-
 note
 	library:   "Encoding: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -319,7 +331,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

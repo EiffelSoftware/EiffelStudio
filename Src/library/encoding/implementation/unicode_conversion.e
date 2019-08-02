@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Eiffel implementations for Unicode encoding conversion."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -64,7 +64,6 @@ feature -- Query
 			a_string_not_void: a_string /= Void
 		local
 			l_nat8: NATURAL_8
-			l_code: NATURAL_32
 			i, nb: INTEGER
 		do
 			from
@@ -79,7 +78,6 @@ feature -- Query
 						-- Form 0xxxxxxx.
 				elseif (l_nat8 & 0xE0) = 0xC0 then
 						-- Form 110xxxxx 10xxxxxx.
-					l_code := (l_nat8 & 0x1F).to_natural_32 |<< 6
 					i := i + 1
 				elseif (l_nat8 & 0xF0) = 0xE0 then
 					-- Form 1110xxxx 10xxxxxx 10xxxxxx.
@@ -108,14 +106,26 @@ feature -- Conversion
 			if a_from_code_page.is_case_insensitive_equal (a_to_code_page) then
 				last_conversion_successful := True
 				if a_from_string.is_string_8 then
-					last_converted_string := a_from_string.as_string_8
+					last_converted_string := a_from_string.to_string_8
 				else
 					last_converted_string := a_from_string.as_string_32
 				end
 			else
 				if a_from_code_page.is_case_insensitive_equal ({CODE_PAGE_CONSTANTS}.utf8) then
 						-- UTF-8 to UTF-32
-					last_converted_string := utf8_to_utf32 (a_from_string.as_string_8)
+					last_converted_string := utf8_to_utf32
+						(if a_from_string.is_valid_as_string_8 then
+								-- Use original string.
+							a_from_string.to_string_8
+						else
+								-- Fallback to UTF-8.
+							{UTF_CONVERTER}.string_32_to_utf_8_string_8
+								(if attached {READABLE_STRING_32} a_from_string as s then
+									s
+								else
+									a_from_string.as_string_32
+								end)
+						end)
 					last_conversion_successful := True
 				elseif a_from_code_page.is_case_insensitive_equal ({CODE_PAGE_CONSTANTS}.utf32) then
 					if a_to_code_page.is_case_insensitive_equal ({CODE_PAGE_CONSTANTS}.utf8) then
@@ -344,7 +354,7 @@ feature {NONE} -- Implementation
 
 note
 	library:   "Encoding: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -353,7 +363,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

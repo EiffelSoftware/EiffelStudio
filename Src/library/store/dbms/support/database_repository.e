@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Implementation of DB_REPOSITORY"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
@@ -10,7 +10,7 @@ class
 
 inherit
 	HANDLE_SPEC [G]
-	
+
 	EXCEPTIONS
 		rename
 			class_name as exceptions_class_name
@@ -81,7 +81,6 @@ feature -- Basic operations
 			col_name: STRING
 			tmp_class_name: STRING
 			s,s1,s2,s3,s4: STRING
-			l_column_name: detachable STRING
 		do
 			tmp_class_name := repository_name.as_upper
 			Create s.make(20)
@@ -108,9 +107,8 @@ feature -- Basic operations
 				el := table.item
 				check attached el.column_name as l_name then
 						-- FIXME: implied by ...bug
-					l_column_name := l_name.as_string_8
+					col_name := l_name.as_lower
 				end
-				col_name := l_column_name.as_lower
 
 				s1.append("%Tset_"+col_name+" (a_"+col_name+": ")
 				s.append ("%T"+col_name+": ")
@@ -524,7 +522,7 @@ feature {NONE} -- Status report
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

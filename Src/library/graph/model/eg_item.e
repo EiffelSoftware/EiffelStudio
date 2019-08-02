@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "The model for a graph item"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -40,18 +40,48 @@ feature -- Access
 			Result := internal_hash_id
 		end
 
-	name: detachable STRING
+	name_32: detachable READABLE_STRING_32
 			-- Name of `Current'.
 
-	set_name (a_name: detachable STRING)
+	name: detachable STRING
+			-- Name of `Current'.
+		obsolete "Use `name_32` instead. [2019-11-30]"
+		do
+			if attached name_32 as n then
+				Result := {UTF_CONVERTER}.string_32_to_utf_8_string_8 (n)
+			end
+		end
+
+	set_name_32 (a_name: detachable READABLE_STRING_32)
 			-- Set `name' to `a_name'.
 		do
-			if a_name /= name then
-				name := a_name
+			if
+				attached a_name /= attached name_32 or else
+				attached a_name and then attached name_32 as n and then not a_name.same_string (n)
+			then
+				name_32 := a_name
 				name_change_actions.call (Void)
 			end
 		ensure
-			set: name = a_name
+			set: name_32 = a_name
+		end
+
+	set_name (a_name: detachable STRING)
+			-- Set `name' to `a_name'.
+		obsolete "Use `set_name_32` instead. [2019-11-30]"
+		do
+			if attached a_name then
+				set_name_32
+					(if {UTF_CONVERTER}.is_valid_utf_8_string_8 (a_name) then
+						{UTF_CONVERTER}.utf_8_string_8_to_string_32 (a_name)
+					else
+						a_name.as_string_32
+					end)
+			else
+				set_name_32 (Void)
+			end
+		ensure
+			set: name ~ a_name
 		end
 
 	name_change_actions: EV_NOTIFY_ACTION_SEQUENCE
@@ -84,7 +114,7 @@ invariant
 	name_change_actions_not_void: name_change_actions /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -556,9 +556,9 @@ feature {NONE} -- Conversion
 					l_value := prune_whitespace (v)
 					if l_value.is_boolean then
 						Result := l_value.to_boolean
-					elseif v_bool_one.same_string (l_value) or else v_bool_yes.is_case_insensitive_equal_general (l_value) then
+					elseif v_bool_one.same_string_general (l_value) or else v_bool_yes.is_case_insensitive_equal_general (l_value) then
 						Result := True
-					elseif v_bool_zero.same_string (l_value) or else v_bool_no.is_case_insensitive_equal_general (l_value) then
+					elseif v_bool_zero.same_string_general (l_value) or else v_bool_no.is_case_insensitive_equal_general (l_value) then
 						Result := False
 					else
 							-- Invalid Boolean value.
@@ -856,7 +856,7 @@ invariant
 	xml_parser_callbacks_is_current: xml_parser.callbacks = Current
 
 ;note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

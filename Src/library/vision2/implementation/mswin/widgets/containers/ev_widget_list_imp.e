@@ -1,5 +1,5 @@
-note
-	description: "Eiffel Vision widget list. Mswindows implementation."
+﻿note
+	description: "Eiffel Vision widget list. MS Windows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -71,8 +71,7 @@ feature {NONE} -- Implementation
 				v_imp_not_void: v_imp /= Void then
 			end
 			remove_item_actions.call ([v_imp.attached_interface])
-			ev_children.go_i_th (i)
-			ev_children.remove
+			ev_children.remove_i_th (i)
 			notify_change (Nc_minsize, Current, False)
 
 				-- Unlink the widget from its parent and
@@ -179,7 +178,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_WIDGET_LIST note option: stable attribute end;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -189,17 +188,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EV_WIDGET_LIST_IMP
-
-
-
-
-
-
-
-
-
-
+end

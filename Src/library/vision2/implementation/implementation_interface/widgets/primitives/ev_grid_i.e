@@ -2693,8 +2693,7 @@ feature -- Removal
 
 				-- Remove association of column with `Current'
 			a_col_i.update_for_removal
-			columns.go_i_th (a_column)
-			columns.remove
+			columns.remove_i_th (a_column)
 
 			update_grid_column_indices (a_column)
 			update_index_of_first_item_dirty_row_flags (a_column)

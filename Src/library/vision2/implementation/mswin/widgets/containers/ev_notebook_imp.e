@@ -1,6 +1,5 @@
 ﻿note
-	description:
-		"EiffelVision notebook, Mswindows implementation."
+	description: "EiffelVision notebook, MS Windows implementation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -715,8 +714,7 @@ feature {NONE} -- Implementation
 				wel_win_not_void: wel_win /= Void then
 			end
 			remove_item_actions.call ([v_imp.attached_interface])
-			ev_children.go_i_th (i)
-			ev_children.remove
+			ev_children.remove_i_th (i)
 			disable_notebook_assertions
 			if selected_item_index = i then
 				if selected_item_index > 1 then
@@ -1035,7 +1033,7 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 	interface: detachable EV_NOTEBOOK note option: stable attribute end;
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

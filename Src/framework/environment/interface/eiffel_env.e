@@ -1,7 +1,6 @@
 ﻿note
 
-	description:
-		"Environment for bitmaps, help, binaries, scripts...."
+	description: "Environment for bitmaps, help, binaries, scripts...."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -11,6 +10,8 @@ deferred class EIFFEL_ENV
 
 inherit
 	ANY
+
+	LOCALIZED_PRINTER
 
 	SHARED_COMPILER_PROFILE
 
@@ -228,7 +229,7 @@ feature -- Status update
 				elseif l_variable.is_directory and then not u.directory_exists (l_value) then
 					io.error.put_string (l_product_names.workbench_name)
 					io.error.put_string (": the environment variable " + {EIFFEL_CONSTANTS}.ise_eiffel_env + " points to a non-existing directory:%N")
-					io.error.put_string (l_value.as_string_8)
+					localized_print_error (l_value)
 					l_is_valid := False
 				else
 						-- Set the environment variable, as it may have come from the Windows registry.
@@ -1939,18 +1940,6 @@ feature -- Environment update
 			a_value_ok: a_value /= Void and then not a_value.has ('%U')
 		do
 			environment.put (a_value, a_var)
-		ensure
-			value_updated: attached get_environment_32 (a_var) as v implies v.same_string_general (a_value)
-		end
-
-	set_environment_32 (a_value, a_var: READABLE_STRING_GENERAL)
-			-- Update environment variable `a_key' to be `a_value'.
-		obsolete "use set_environment"
-		require
-			a_var_ok: a_var /= Void and then not a_var.is_empty and then not a_var.has ('%U')
-			a_value_ok: a_value /= Void and then not a_value.has ('%U')
-		do
-			set_environment (a_value, a_var)
 		ensure
 			value_updated: attached get_environment_32 (a_var) as v implies v.same_string_general (a_value)
 		end

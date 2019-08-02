@@ -386,7 +386,7 @@ feature {BASE_PROCESS_IMP} -- Process management
 			end
 		end
 
-	put_string (s: STRING)
+	put_string (s: READABLE_STRING_8)
 			-- Put `s' into input pipe of process.
 		require
 			s_not_void: s /= Void
@@ -750,7 +750,7 @@ invariant
 	valid_stderr_descriptor: valid_file_descriptor (Stderr_descriptor)
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

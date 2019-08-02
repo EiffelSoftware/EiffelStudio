@@ -127,7 +127,7 @@ feature -- Test routines
 
 	generate_ecf (fn: PATH)
 		local
-			s: STRING_32
+			s: STRING_8
 			f: RAW_FILE
 		do
 			s := ecf_content_with_size (0)
@@ -137,14 +137,13 @@ feature -- Test routines
 			f.close
 		end
 
-	ecf_content_with_size (a_size: INTEGER): STRING_32
+	ecf_content_with_size (a_size: INTEGER): STRING_8
 		require
 			a_size = 0 or a_size > 1070 -- current content of manifest string, see below
 		local
-			t: STRING_32
+			t: STRING_8
 		do
-			Result :=
-{STRING_32} "[
+			Result := "[
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <system xmlns="http://www.eiffel.com/developers/xml/configuration-1-8-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-8-0 http://www.eiffel.com/developers/xml/configuration-1-8-0.xsd" name="tests" uuid="8E006284-3BDE-4DB9-9F1B-ED1322ABD360">
 	<target name="tests">
@@ -167,9 +166,9 @@ feature -- Test routines
 			check Result.count = 1070 end
 			if a_size > 0 then
 				if Result.count < a_size then
-					t := {STRING_32} "</system>"
-					t.prepend (create {STRING_32}.make_filled (' ', a_size - Result.count))
-					Result.replace_substring_all ({STRING_32} "</system>", t)
+					t := "</system>"
+					t.prepend (create {STRING_8}.make_filled (' ', a_size - Result.count))
+					Result.replace_substring_all ("</system>", t)
 				end
 				check Result.count = a_size end
 			end
@@ -177,7 +176,7 @@ feature -- Test routines
 
 	generate_ecf_with_size (fn: PATH; a_size: INTEGER)
 		local
-			s: STRING_32
+			s: STRING_8
 			f: RAW_FILE
 		do
 			s := ecf_content_with_size (a_size)
@@ -187,13 +186,13 @@ feature -- Test routines
 			f.close
 		end
 
-	generate_ecf_truncated_at_size (fn: PATH; a_size: INTEGER; a_end: READABLE_STRING_32)
+	generate_ecf_truncated_at_size (fn: PATH; a_size: INTEGER; a_end: READABLE_STRING_8)
 		local
-			s: STRING_32
+			s: STRING_8
 			f: RAW_FILE
-			t: READABLE_STRING_32
+			t: READABLE_STRING_8
 		do
-			t := {STRING_32} "</system>"
+			t := "</system>"
 
 			s := ecf_content_with_size (a_size - a_end.count + t.count)
 			s.replace_substring_all (t, a_end)
@@ -383,7 +382,7 @@ feature -- Test routines
 			-- New test routine
 		local
 			p: XML_PARSER
-			s: STRING_32
+			s: STRING_8
 			doc_cb: XML_CALLBACKS_DOCUMENT
 			vis_uc: XML_HAS_UNICODE_NODE_VISITOR
 			l_end_checker: XML_END_TAG_CHECKER
@@ -442,7 +441,7 @@ feature -- Test routines
 			create vis_uc
 
 			create l_input.make_with_path (xml_file_name ("truncated_at_chunk-ecf.xml"))
-			generate_ecf_truncated_at_size (xml_file_name ("truncated_at_chunk-ecf.xml"), l_input.chunk_size, {STRING_32} "</foo_bar>")
+			generate_ecf_truncated_at_size (xml_file_name ("truncated_at_chunk-ecf.xml"), l_input.chunk_size, "</foo_bar>")
 
 			l_input.open_read
 			l_input.start
@@ -769,9 +768,9 @@ feature {NONE} -- XML content
 			generate_xml_from_string (xml_file_name (a_assert_name + "-test.xml"), a_xml_content)
 			p.parse_from_path (xml_file_name (a_assert_name + "-test.xml"))
 			if a_expecting_success then
-				assert (a_assert_name + ":file:parsed", p.is_correct)
-				assert (a_assert_name + ":file:succeed", not p.error_occurred)
-				assert (a_assert_name + ":file:truncation_reported", p.truncation_reported = a_expecting_truncation_reported)
+				assert ("test:" + a_assert_name + ":file:parsed", p.is_correct)
+				assert ("test:" + a_assert_name + ":file:succeed", not p.error_occurred)
+				assert ("test:" + a_assert_name + ":file:truncation_reported", p.truncation_reported = a_expecting_truncation_reported)
 			else
 				if attached p.error_message as err then
 					print (err)
@@ -780,15 +779,15 @@ feature {NONE} -- XML content
 					print ("error without message!%N")
 				end
 
-				assert (a_assert_name + ":file:error", not p.is_correct or p.error_occurred)
+				assert ("test:" + a_assert_name + ":file:error", not p.is_correct or p.error_occurred)
 			end
 
 				-- As string input
 			p.parse_from_string (a_xml_content)
 			if a_expecting_success then
-				assert (a_assert_name + ":string:parsed", p.is_correct)
-				assert (a_assert_name + ":string:succeed", not p.error_occurred)
-				assert (a_assert_name + ":string:truncation_reported", p.truncation_reported = a_expecting_truncation_reported)
+				assert ("test:" + a_assert_name + ":string:parsed", p.is_correct)
+				assert ("test:" + a_assert_name + ":string:succeed", not p.error_occurred)
+				assert ("test:" + a_assert_name + ":string:truncation_reported", p.truncation_reported = a_expecting_truncation_reported)
 			else
 				if attached p.error_message as err then
 					print (err)
@@ -797,7 +796,7 @@ feature {NONE} -- XML content
 					print ("error without message!%N")
 				end
 
-				assert (a_assert_name + ":string:error", not p.is_correct or p.error_occurred)
+				assert ("test:" + a_assert_name + ":string:error", not p.is_correct or p.error_occurred)
 			end
 		end
 

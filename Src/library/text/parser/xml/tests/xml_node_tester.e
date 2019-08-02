@@ -35,7 +35,7 @@ feature -- Visitor
 		local
 			errs: like errors
 		do
-			io.error.put_string (m.as_string_8)
+			io.error.put_string ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (m))
 			io.error.put_new_line
 			errs := errors
 			if errs = Void then

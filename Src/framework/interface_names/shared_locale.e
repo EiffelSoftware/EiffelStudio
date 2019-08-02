@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Locale used by interface name translation."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -103,7 +103,7 @@ feature {NONE} -- Implementation
 feature -- File saving
 
 	save_string_in_file (a_file: FILE; a_str: READABLE_STRING_GENERAL)
-			-- Save `a_str' in `a_file', according to current locale.
+			-- Save `a_str' in `a_file', according to current system locale.
 			-- `a_str' is taken as UTF-32 string.
 		require
 			a_file_not_void: a_file /= Void
@@ -111,12 +111,7 @@ feature -- File saving
 			a_file_exist: a_file.exists
 			a_str_not_void: a_str /= Void
 		do
-			utf32.convert_to (system_encoding, a_str)
-			if utf32.last_conversion_successful then
-				a_file.put_string (utf32.last_converted_stream)
-			else
-				a_file.put_string (a_str.as_string_8)
-			end
+			a_file.put_string (utf32_to_console_encoding (system_encoding, a_str))
 		end
 
 	read_string_from_file (a_file: FILE): STRING_32
@@ -330,7 +325,7 @@ feature -- String
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -34,6 +34,7 @@ feature -- String encoding convertion
 			l_pointer: POINTER
 			l_out_count: INTEGER
 			l_string_32: STRING_32
+			l_string_8: STRING_8
 			l_big_endian: BOOLEAN
 			l_error: INTEGER
 			l_retried: BOOLEAN
@@ -65,8 +66,13 @@ feature -- String encoding convertion
 					l_managed_pointer := wide_string_to_pointer (l_string_32)
 					l_count := (l_string_32.count) * 2
 				else
-					l_managed_pointer := multi_byte_to_pointer (a_from_string.as_string_8)
-					l_count := a_from_string.count
+					if a_from_string.is_valid_as_string_8 then
+						l_string_8 := a_from_string.to_string_8
+					else
+						l_string_8 := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_from_string)
+					end
+					l_managed_pointer := multi_byte_to_pointer (l_string_8)
+					l_count := l_string_8.count
 				end
 				l_pointer := iconv_imp (a_from_code_page, a_to_code_page, l_managed_pointer.item, l_count, $l_out_count, $l_error)
 				if l_error = 0 and l_pointer /= default_pointer then

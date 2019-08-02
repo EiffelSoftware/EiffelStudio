@@ -10,7 +10,7 @@ class
 
 feature -- Conversion
 
-	multi_byte_to_pointer (a_string: STRING_8): MANAGED_POINTER
+	multi_byte_to_pointer (a_string: STRING): MANAGED_POINTER
 			-- Managed pointer of `a_string'.
 		require
 			a_string_not_void: a_string /= Void

@@ -10,7 +10,7 @@ class
 
 feature {I18N_LOCALE} -- Initialization
 
-	unix_set_locale (a_locale: STRING)
+	unix_set_locale (a_locale: READABLE_STRING_GENERAL)
 			-- set the locale to the locale
 			-- represented by the string pointed by `a_pointer'
 			-- to get default locale, give pointer to ""
@@ -179,7 +179,7 @@ feature {NONE} -- Implementation: C externals
 
 note
 	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

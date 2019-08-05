@@ -64,7 +64,7 @@ feature -- Query: url-decoded
 			if attached {READABLE_STRING_32} n as n32 then
 				Result := url_encoded_string (n32)
 			else
-				Result := n.as_string_8
+				Result := n.to_string_8
 			end
 		end
 

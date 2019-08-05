@@ -184,8 +184,7 @@ feature  -- Output
 		do
 			error_message.wipe_out
 			if attached file_path as l_file_path then
-					-- FIXME jfiat [2013/06/25] : unicode support
-				error_message.append (l_file_path.name.as_string_8)
+				error_message.append (l_file_path.utf_8_name)
 			end
 			error_message.append (" (line ")
 			error_message.append_integer (token.line_number)
@@ -239,7 +238,7 @@ feature {NONE} -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

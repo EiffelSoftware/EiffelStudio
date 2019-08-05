@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 		require
 			a_escaped_string_not_void: a_escaped_string /= Void
 		do
-			item := a_escaped_string
+			item := a_escaped_string.to_string_8
 		end
 
 	make_with_escaped_json (a_escaped_string: READABLE_STRING_8)
@@ -397,7 +397,7 @@ feature -- Change Element
 			s_not_void: s /= Void
 		do
 			if attached {READABLE_STRING_8} s as s8 then
-				append_string (s.as_string_8)
+				append_string (s.to_string_8)
 			else
 				append_string_32 (s.as_string_32)
 			end
@@ -561,6 +561,6 @@ invariant
 	item_not_void: item /= Void
 
 note
-	copyright: "2010-2018, Javier Velilla, Jocelyn Fiat, Eiffel Software and others https://github.com/eiffelhub/json."
+	copyright: "2010-2019, Javier Velilla, Jocelyn Fiat, Eiffel Software and others https://github.com/eiffelhub/json."
 	license: "https://github.com/eiffelhub/json/blob/master/License.txt"
 end

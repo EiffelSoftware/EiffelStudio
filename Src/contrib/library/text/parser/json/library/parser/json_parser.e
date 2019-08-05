@@ -42,7 +42,7 @@ feature {NONE} -- Initialize
 			index := 1
 		end
 
-	make_with_string (a_content: STRING)
+	make_with_string (a_content: READABLE_STRING_8)
 			-- Initialize parser with JSON content `a_content'.
 		require
 			a_content_not_empty: a_content /= Void and then not a_content.is_empty
@@ -53,7 +53,7 @@ feature {NONE} -- Initialize
 			make_reader (a_content)
 		end
 
-	make_parser (a_json: STRING)
+	make_parser (a_json: READABLE_STRING_8)
 			-- Initialize.
 		obsolete
 			"Use `make_with_string' [2017-05-31]."
@@ -830,6 +830,6 @@ feature {NONE} -- JSON String Buffer
 			-- JSON is_number buffer.		
 
 ;note
-	copyright: "2010-2018, Javier Velilla, Jocelyn Fiat, Eiffel Software and others https://github.com/eiffelhub/json."
+	copyright: "2010-2019, Javier Velilla, Jocelyn Fiat, Eiffel Software and others https://github.com/eiffelhub/json."
 	license: "https://github.com/eiffelhub/json/blob/master/License.txt"
 end

@@ -752,7 +752,7 @@ feature -- Test
 			create ucs.make_from_string (s)
 
 				-- Eiffel value -> JSON value -> JSON representation
-			create js.make_from_string (ucs)
+			create js.make_from_string_general (ucs)
 			assert ("js.representation.is_equal (%"%"foobar%"%")", js.representation.is_equal (jrep))
 
 				-- Eiffel value -> JSON value -> JSON representation with factory

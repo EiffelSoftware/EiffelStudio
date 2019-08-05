@@ -190,9 +190,9 @@ feature -- Informations
  			require
  				a_code_page_info_exists: a_code_page_info /= Void
  			local
- 				l_str: STRING_8
+ 				l_str: READABLE_STRING_GENERAL
  			do
- 				l_str := get_code_page.as_string_8
+ 				l_str := get_code_page
 				a_code_page_info.set_ansi_code_page (l_str)
 				a_code_page_info.set_oem_code_page (l_str)
 				a_code_page_info.set_mac_code_page (l_str)
@@ -560,7 +560,7 @@ feature {NONE} --Implementation
 			end
 		end
 
-	guess_proper_locale (a_name: STRING): STRING
+	guess_proper_locale (a_name: READABLE_STRING_GENERAL): STRING
 			-- We try to guess a locale from `a_name', when `a_name', for example in LL_RR style, can
 			-- not be recognized by `setlocale' on Solaris, but LL_RR.ENC does exist as system locale mostly.
 			-- First take the system locale, then try to find a most matching one.
@@ -569,7 +569,9 @@ feature {NONE} --Implementation
 		local
 			l_str: C_STRING
 			l_ptr, l_null: POINTER
-			l_s, l_name: STRING
+			l_s: STRING
+			l_name: READABLE_STRING_GENERAL
+			l_fullname: READABLE_STRING_32
 			l_available_locales: like available_locales
 			l_result: detachable STRING
 		do
@@ -596,9 +598,12 @@ feature {NONE} --Implementation
 						until
 							l_available_locales.after or l_result /= Void
 						loop
-							l_s := l_available_locales.item.full_name
-							if l_s.as_lower.has_substring (l_name) then
-								l_result := l_s
+							l_fullname := l_available_locales.item.full_name
+							if l_fullname.is_valid_as_string_8 then
+								l_s:= l_fullname.to_string_8
+								if l_s.as_lower.has_substring (l_name) then
+									l_result := l_s
+								end
 							end
 							l_available_locales.forth
 						end
@@ -606,7 +611,11 @@ feature {NONE} --Implementation
 				end
 			end
 			if l_result = Void then
-				Result := a_name
+				if a_name.is_valid_as_string_8 then
+					Result := a_name.to_string_8
+				else
+					Result := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_name)
+				end
 			else
 				Result := l_result
 			end
@@ -616,7 +625,7 @@ feature {NONE} --Implementation
 
 note
 	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

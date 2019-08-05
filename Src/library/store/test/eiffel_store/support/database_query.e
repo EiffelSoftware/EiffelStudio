@@ -1,7 +1,7 @@
 note
 	description: "Summary description for {DATABASE_QUERY}."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2017-02-01 15:21:00 +0100 (Wed, 01 Feb 2017) $"
+	revision: "$Revision: 99782 $"
 
 class
 	DATABASE_QUERY
@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 				a_parameters.after
 			loop
 				Result.append ("name:")
-				Result.append (a_parameters.key_for_iteration.as_string_32)
+				Result.append ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_parameters.key_for_iteration))
 				Result.append (", value:")
 				if
 					a_parameters.key_for_iteration.has_substring ("Password") or else

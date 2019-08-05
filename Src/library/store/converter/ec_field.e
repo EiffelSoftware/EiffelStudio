@@ -1,8 +1,8 @@
 note
 
 	status: "See notice at end of class.";
-	Date: "$Date$";
-	Revision: "$Revision$";
+	Date: "$Date: 2011-04-08 23:52:53 +0200 (Fri, 08 Apr 2011) $";
+	Revision: "$Revision: 86178 $";
 	Product: "Environment Converter"
 
 class EC_FIELD

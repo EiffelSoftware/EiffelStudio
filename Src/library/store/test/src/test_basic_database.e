@@ -1,7 +1,7 @@
 note
 	description: "Utility class that handles preparation work for a basic database test"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2014-11-15 10:15:08 +0100 (Sat, 15 Nov 2014) $"
+	revision: "$Revision: 96094 $"
 
 deferred class
 	TEST_BASIC_DATABASE
@@ -152,12 +152,18 @@ feature -- Spec helper
 	sql_table_name (a_name: STRING): STRING
 			-- SQL table name quoted if needed
 		local
-			l_sep: STRING
+			s: STRING
 		do
-			l_sep := db_spec.identifier_quoter
 			create Result.make_from_string (a_name)
-			Result.prepend (l_sep)
-			Result.append (l_sep)
+			if attached db_spec.identifier_quoter as l_sep then
+				if l_sep.is_valid_as_string_8 then
+					s := l_sep.to_string_8
+				else
+					s := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_sep)
+				end
+				Result.prepend (s)
+				Result.append (s)
+			end
 		end
 
 feature {NONE} -- Decimal callbacks

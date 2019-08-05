@@ -1,8 +1,8 @@
 note
 	description: "Summary description for {TESTING_HELPER}."
 	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2014-03-18 22:51:30 +0100 (Tue, 18 Mar 2014) $"
+	revision: "$Revision: 94623 $"
 
 deferred class
 	TESTING_HELPER

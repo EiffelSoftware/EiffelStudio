@@ -1,8 +1,8 @@
 note
 
 	status: "See notice at end of class.";
-	Date: "$Date$"
-	Revision: "$Revision$"
+	Date: "$Date: 2017-05-23 14:29:02 +0200 (Tue, 23 May 2017) $"
+	Revision: "$Revision: 100428 $"
 	Access: change, modify, update, insert, delete
 	Product: EiffelStore
 	Database: All_Bases
@@ -71,14 +71,11 @@ feature -- Basic operations
 			connected: is_connected
 			request_exists: request /= Void
 			is_ok: is_ok
-		local
-			u: UTF_CONVERTER
 		do
 			last_query_32 := request.as_string_32
 			implementation.modify (request)
 			if not is_ok and then is_tracing then
-				trace_output.putstring (u.utf_32_string_to_utf_8_string_8 (error_message_32))
-				trace_output.new_line
+				trace_message (error_message_32)
 			end
 		ensure
 			last_query_changed: attached last_query_32 as l_s and then l_s.same_string_general (request)
@@ -127,7 +124,7 @@ feature {NONE} -- Initialization
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -1,0 +1,1912 @@
+Index: dataview/graphical/dv_combo_box.e
+===================================================================
+--- dataview/graphical/dv_combo_box.e	(revision 103394)
++++ dataview/graphical/dv_combo_box.e	(working copy)
+@@ -105,11 +105,19 @@
+ 	Boolean_data: INTEGER = 3
+ 			-- Combo box enable access to selected boolean data.
+ 
+-	string_value: STRING
++	string_value: STRING_32
+ 			-- Display string.
+ 		do
+-			if behavior_type = String_data and then attached selected_item as l_item and then attached l_item.data as l_data then
+-				Result := l_data.out
++			if
++				behavior_type = String_data and then
++				attached selected_item as l_item and then
++				attached l_item.data as l_data
++			then
++				if attached {READABLE_STRING_GENERAL} l_data as s then
++					Result := s.to_string_32
++				else
++					Result := l_data.out
++				end
+ 			else
+ 				Result := text
+ 			end
+@@ -172,7 +180,7 @@
+ 			extend (new_item)
+ 		end
+ 
+-	add_data_choice (a_data: ANY; a_label: STRING)
++	add_data_choice (a_data: ANY; a_label: READABLE_STRING_GENERAL)
+ 			-- Add `a_data' to the combo box and enable its selection
+ 			-- with `a_label'.
+ 		require
+@@ -189,7 +197,7 @@
+ 			extend (new_item)
+ 		end
+ 
+-	set_string_value (a_text: STRING)
++	set_string_value (a_text: READABLE_STRING_GENERAL)
+ 			-- Set display string to `a_text'.
+ 		local
+ 			it: detachable EV_LIST_ITEM
+@@ -335,7 +343,7 @@
+ 		end
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: dataview/graphical/dv_label.e
+===================================================================
+--- dataview/graphical/dv_label.e	(revision 103394)
++++ dataview/graphical/dv_label.e	(working copy)
+@@ -17,13 +17,13 @@
+ 			copy
+ 		end
+ 
+-create 
++create
+ 	default_create,
+ 	make_with_text
+ 
+ feature -- Access
+ 
+-	value: STRING
++	value: STRING_32
+ 			-- Text area value.
+ 		do
+ 			Result := text
+@@ -71,14 +71,14 @@
+ 			-- Is label sensitiveness locked?
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+-			 Eiffel Software
+-			 356 Storke Road, Goleta, CA 93117 USA
+-			 Telephone 805-685-1006, Fax 805-685-6869
+-			 Website http://www.eiffel.com
+-			 Customer support http://support.eiffel.com
++			Eiffel Software
++			5949 Hollister Ave., Goleta, CA 93117 USA
++			Telephone 805-685-1006, Fax 805-685-6869
++			Website http://www.eiffel.com
++			Customer support http://support.eiffel.com
+ 		]"
+ 
+ 
+Index: dataview/graphical/dv_string_list.e
+===================================================================
+--- dataview/graphical/dv_string_list.e	(revision 103394)
++++ dataview/graphical/dv_string_list.e	(working copy)
+@@ -44,7 +44,7 @@
+ 	separator: CHARACTER
+ 			-- Integer values separator, ',' by default.
+ 
+-	value: STRING
++	value: STRING_32
+ 			-- List selected values, coded with integers.
+ 			-- and comma-separated.
+ 		local
+@@ -51,7 +51,7 @@
+ 			lis: DYNAMIC_LIST [EV_LIST_ITEM]
+ 		do
+ 			lis := selected_items
+-			Result := ""
++			create Result.make_empty
+ 			from
+ 				lis.start
+ 			until
+@@ -124,7 +124,7 @@
+ 			end
+ 		end
+ 
+-	add_choice (a_code: INTEGER; a_label: STRING)
++	add_choice (a_code: INTEGER; a_label: READABLE_STRING_GENERAL)
+ 			-- Add `a_data' to the combo box and enable its selection
+ 			-- with `a_label'.
+ 		require
+@@ -138,7 +138,7 @@
+ 			extend (new_item)
+ 		end
+ 
+-	set_value (s: STRING)
++	set_value (s: READABLE_STRING_GENERAL)
+ 			-- List values to select , coded with integers.
+ 			-- and comma-separated.
+ 		local
+@@ -197,7 +197,7 @@
+ 		end
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: dataview/graphical/dv_text.e
+===================================================================
+--- dataview/graphical/dv_text.e	(revision 103394)
++++ dataview/graphical/dv_text.e	(working copy)
+@@ -19,7 +19,7 @@
+ 
+ feature -- Access
+ 
+-	value: STRING
++	value: STRING_32
+ 			-- Text area value.
+ 		do
+ 			Result := text
+@@ -77,14 +77,14 @@
+ 			-- Carriage return character.
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+-			 Eiffel Software
+-			 356 Storke Road, Goleta, CA 93117 USA
+-			 Telephone 805-685-1006, Fax 805-685-6869
+-			 Website http://www.eiffel.com
+-			 Customer support http://support.eiffel.com
++			Eiffel Software
++			5949 Hollister Ave., Goleta, CA 93117 USA
++			Telephone 805-685-1006, Fax 805-685-6869
++			Website http://www.eiffel.com
++			Customer support http://support.eiffel.com
+ 		]"
+ 
+ 
+Index: dataview/graphical/dv_text_field.e
+===================================================================
+--- dataview/graphical/dv_text_field.e	(revision 103394)
++++ dataview/graphical/dv_text_field.e	(working copy)
+@@ -19,7 +19,7 @@
+ 
+ feature -- Access
+ 
+-	value: STRING
++	value: STRING_32
+ 			-- Text area value.
+ 		do
+ 			Result := text
+@@ -27,14 +27,19 @@
+ 
+ feature -- Basic operations
+ 
+-	set_value (a_text: STRING)
++	set_value (a_text: READABLE_STRING_GENERAL)
+ 			-- Set display string to `a_text'.
++		local
++			s32: STRING_32
+ 		do
+ 			if a_text /= Void and then not a_text.is_empty then
+ 				if a_text.has ('%R') then
+-					a_text.prune_all ('%R')
+-				end 
+-				set_text (a_text)
++					create s32.make_from_string_general (a_text)
++					s32.prune_all ('%R')
++					set_text (s32)
++				else
++					set_text (a_text)
++				end
+ 			else
+ 				remove_text
+ 			end
+@@ -74,14 +79,14 @@
+ 			-- Is label sensitiveness locked?
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+-			 Eiffel Software
+-			 356 Storke Road, Goleta, CA 93117 USA
+-			 Telephone 805-685-1006, Fax 805-685-6869
+-			 Website http://www.eiffel.com
+-			 Customer support http://support.eiffel.com
++			Eiffel Software
++			5949 Hollister Ave., Goleta, CA 93117 USA
++			Telephone 805-685-1006, Fax 805-685-6869
++			Website http://www.eiffel.com
++			Customer support http://support.eiffel.com
+ 		]"
+ 
+ 
+Index: dataview/processing/dv_interactive_searcher.e
+===================================================================
+--- dataview/processing/dv_interactive_searcher.e	(revision 103394)
++++ dataview/processing/dv_interactive_searcher.e	(working copy)
+@@ -155,7 +155,7 @@
+ 	last_column: INTEGER
+ 			-- Last searched column value.
+ 
+-	last_value: detachable STRING
++	last_value: detachable STRING_32
+ 			-- Last searched qualifying value.
+ 
+ 	last_qualification: INTEGER
+@@ -176,7 +176,7 @@
+ 			if attached value_selector as l_val_selector then
+ 				last_value := l_val_selector.value
+ 			else
+-				last_value := ""
++				create last_value.make_empty
+ 			end
+ 			if attached qualification_selector as l_qualification_selector then
+ 				last_qualification := l_qualification_selector.value
+@@ -187,7 +187,7 @@
+ 		end
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: dataview/processing/dv_messages.e
+===================================================================
+--- dataview/processing/dv_messages.e	(revision 103394)
++++ dataview/processing/dv_messages.e	(working copy)
+@@ -62,45 +62,45 @@
+ 
+ feature --
+ 
+-	retrieve_field_value (type: detachable STRING; name: STRING): STRING
++	retrieve_field_value (type: detachable STRING; name: READABLE_STRING_GENERAL): STRING
+ 			-- Value of field with `name' and `type' retrieval failure message.
+ 		do
+ 			if type /= Void then
+-				Result := "Cannot retrieve " + type + " value for field '" + name + "'."
++				Result := "Cannot retrieve " + type + " value for field '" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (name) + "'."
+ 			else
+-				Result := "Cannot retrieve for field '" + name + "' of an unknown type."
++				Result := "Cannot retrieve for field '" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (name) + "' of an unknown type."
+ 			end
+ 		end
+ 
+-	enter_field_value (type: detachable STRING; name: STRING): STRING
++	enter_field_value (type: detachable STRING; name: READABLE_STRING_GENERAL): STRING
+ 			-- Value of field with `name' and `type' not valid message.
+ 		do
+ 			if type /= Void then
+-				Result := "Please enter a " + type + " value for field '" + name + "'."
++				Result := "Please enter a " + type + " value for field '" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (name) + "'."
+ 			else
+-				Result := "Please enter a value for field '" + name + "' of an unknown type."
++				Result := "Please enter a value for field '" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (name) + "' of an unknown type."
+ 			end
+ 		end
+ 
+-	type_not_recognized (name: STRING): STRING
++	type_not_recognized (name: READABLE_STRING_GENERAL): STRING
+ 			-- Type of field with `name' not recognized message.
+ 		do
+-			Result := "Field '" + name + "' type not recognized."
++			Result := "Field '" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (name) + "' type not recognized."
+ 		end
+ 
+-	wrong_date_format (name: STRING): STRING
++	wrong_date_format (name: READABLE_STRING_GENERAL): STRING
+ 			-- Wrong date type format for field with `name' message.
+ 		do
+ 			Result := "Date format not valid for field: '"
+-					+ name + "'.%NPlease see sample in field to make sure %
++					+ {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (name) + "'.%NPlease see sample in field to make sure %
+ 					%to enter a valid date. Please 'Refresh' to restore original value."
+ 		end
+ 
+-	wrong_datetime_format (name: STRING): STRING
++	wrong_datetime_format (name: READABLE_STRING_GENERAL): STRING
+ 			-- Wrong date & time type format for field with `name' message.
+ 		do
+ 			Result := "Date & time format not valid for field: '"
+-					+ name + "'.%NPlease see sample in field to make sure %
++					+ {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (name) + "'.%NPlease see sample in field to make sure %
+ 					%to enter a valid date & time. Please 'Refresh' to restore original value."
+ 		end
+ 
+@@ -127,7 +127,7 @@
+ 		end
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: dataview/processing/dv_tablerow_field.e
+===================================================================
+--- dataview/processing/dv_tablerow_field.e	(revision 103394)
++++ dataview/processing/dv_tablerow_field.e	(working copy)
+@@ -42,13 +42,13 @@
+ 			-- Description of the database table containing
+ 			-- the represented attribute.
+ 
+-	text: STRING
++	text: STRING_32
+ 			-- Field text.
+ 		do
+ 			if attached graphical_value as l_gv then
+ 				Result := l_gv.value
+ 			else
+-				Result := ""
++				create Result.make_empty
+ 			end
+ 		ensure
+ 			result_not_void: Result /= Void
+@@ -311,7 +311,8 @@
+ 		local
+ 			d: DATE
+ 			dt: DATE_TIME
+-			l_title: STRING
++			l_date_text: STRING
++			l_title: READABLE_STRING_GENERAL
+ 		do
+ 			if attached graphical_title as l_gtitle then
+ 				l_title := l_gtitle.value
+@@ -319,10 +320,10 @@
+ 				l_title := ""
+ 			end
+ 			is_update_valid := True
+-			if has_changed or else not text.is_equal (database_text) then
++			if has_changed or else not text.same_string_general (database_text) then
+ 				if is_string then
+ 					if attached redirector as l_redirector then
+-						if attached {STRING} l_redirector.inverted_value (text) as l_string_data then
++						if attached {READABLE_STRING_GENERAL} l_redirector.inverted_value (text) as l_string_data then
+ 							default_tablerow.set_attribute (attribute_code, l_string_data)
+ 						else
+ 							is_update_valid := False
+@@ -348,11 +349,15 @@
+ 						end
+ 					end
+ 				elseif is_datetime then
+-					if not text.is_empty then
++					if
++						not text.is_empty and then
++						text.is_valid_as_string_8
++					then
++						l_date_text := text.to_string_8
+ 						if is_date then
+ 							create d.make_now
+-							if d.date_valid_default (text) then
+-								create d.make_from_string_default (text)
++							if d.date_valid_default (l_date_text) then
++								create d.make_from_string_default (l_date_text)
+ 								create dt.make_by_date (d)
+ 								default_tablerow.set_attribute (attribute_code, dt)
+ 							else
+@@ -367,8 +372,8 @@
+ 							end
+ 						else
+ 							create dt.make_now
+-							if dt.date_time_valid (text, default_format_string) then
+-								create dt.make_from_string_default (text)
++							if dt.date_time_valid (l_date_text, default_format_string) then
++								create dt.make_from_string_default (l_date_text)
+ 								default_tablerow.set_attribute (attribute_code, dt)
+ 							else
+ 								is_update_valid := False
+@@ -504,7 +509,7 @@
+ 
+ feature {NONE} -- Implementation
+ 
+-	set_text (s: STRING)
++	set_text (s: READABLE_STRING_GENERAL)
+ 			-- Set `s' to displayed text.
+ 			-- Warning: call `enable_has_changed' after
+ 			-- to notify that field has changed.
+@@ -513,7 +518,7 @@
+ 		do
+ 			has_changed := False
+ 			is_cleared := False
+-			database_text := s
++			database_text := s.to_string_32
+ 			if attached graphical_value as l_gv then
+ 				l_gv.set_value (s)
+ 			end
+@@ -537,7 +542,7 @@
+ 	redirector: detachable DV_VALUE_REDIRECTOR
+ 			-- Value redirector.
+ 
+-	database_text: STRING
++	database_text: STRING_32
+ 			-- Field content contained in database.
+ 
+ 	type_code: INTEGER
+@@ -547,7 +552,7 @@
+ 			-- Represented field type name.
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: dataview/processing/dv_value_redirector.e
+===================================================================
+--- dataview/processing/dv_value_redirector.e	(revision 103394)
++++ dataview/processing/dv_value_redirector.e	(working copy)
+@@ -53,7 +53,7 @@
+ 			end
+ 		end
+ 
+-	inverted_value (s: STRING): detachable ANY
++	inverted_value (s: READABLE_STRING_GENERAL): detachable ANY
+ 			--
+ 		require
+ 			can_invert: can_invert
+@@ -61,7 +61,7 @@
+ 			if attached inversion_table.item (s) as l_found_item then
+ 				Result := l_found_item
+ 			elseif attached invertor as l_invertor then
+-				Result := l_invertor.item ([s])
++				Result := l_invertor.item ([s.to_string_32])
+ 				inversion_table.put (Result, s)
+ 			end
+ 		end
+@@ -92,7 +92,7 @@
+ 			at_least_one_result_set: at_least_one_result_set
+ 		end
+ 
+-	set_inversion_table (inv_t: HASH_TABLE [ANY, STRING])
++	set_inversion_table (inv_t: STRING_TABLE [ANY])
+ 			-- Set values of the invertor result table with `res_t'.
+ 		require
+ 			not_void: inv_t /= Void
+@@ -102,7 +102,7 @@
+ 			can_invert: can_invert
+ 		end
+ 
+-	set_redirector (red: FUNCTION [ANY, STRING])
++	set_redirector (red: FUNCTION [ANY, STRING_32])
+ 			-- Set the redirector to use.
+ 			-- PLEASE set a procedure keeping argument of type ANY to avoid cat calls.
+ 		require
+@@ -113,7 +113,7 @@
+ 			at_least_one_result_set: at_least_one_result_set
+ 		end
+ 
+-	set_invertor (inv: FUNCTION [STRING, ANY])
++	set_invertor (inv: FUNCTION [STRING_32, ANY])
+ 			-- Set the invertor to use.
+ 			-- Warning: set a procedure keeping result of type ANY to avoid cat calls.
+ 		require
+@@ -126,20 +126,20 @@
+ 
+ feature {NONE} -- Implementation
+ 
+-	redirector: detachable FUNCTION [ANY, STRING]
++	redirector: detachable FUNCTION [ANY, STRING_32]
+ 			-- Function to redirect data to a string representation.
+ 
+-	invertor: detachable FUNCTION [STRING, ANY]
++	invertor: detachable FUNCTION [STRING_32, ANY]
+ 			-- Function to find back data from its string representation.
+ 
+ 	result_table: HASH_TABLE [STRING_32, HASHABLE]
+ 			-- Table to store and access string corresponding to an hashable data.
+ 
+-	inversion_table: HASH_TABLE [ANY, STRING];
++	inversion_table: STRING_TABLE [ANY];
+ 			--  Table to store and access data from its string representation.
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: dataview/user_interactions/dv_sensitive_string.e
+===================================================================
+--- dataview/user_interactions/dv_sensitive_string.e	(revision 103394)
++++ dataview/user_interactions/dv_sensitive_string.e	(working copy)
+@@ -10,7 +10,7 @@
+ 
+ feature -- Access
+ 
+-	value: STRING
++	value: STRING_32
+ 			-- Display string.
+ 		deferred
+ 		end
+@@ -17,7 +17,7 @@
+ 
+ feature -- Basic operations
+ 
+-	set_value (a_text: STRING)
++	set_value (a_text: READABLE_STRING_GENERAL)
+ 			-- Set display string to `a_text'.
+ 		deferred
+ 		end
+@@ -33,14 +33,14 @@
+ 		end
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+-			 Eiffel Software
+-			 356 Storke Road, Goleta, CA 93117 USA
+-			 Telephone 805-685-1006, Fax 805-685-6869
+-			 Website http://www.eiffel.com
+-			 Customer support http://support.eiffel.com
++			Eiffel Software
++			5949 Hollister Ave., Goleta, CA 93117 USA
++			Telephone 805-685-1006, Fax 805-685-6869
++			Website http://www.eiffel.com
++			Customer support http://support.eiffel.com
+ 		]"
+ 
+ 
+Index: dbms/rdbms/odbc/odbc.e
+===================================================================
+--- dbms/rdbms/odbc/odbc.e	(revision 103394)
++++ dbms/rdbms/odbc/odbc.e	(working copy)
+@@ -421,12 +421,9 @@
+ 	support_drop_proc: BOOLEAN
+ 		local
+ 			l_sql_string: ODBC_SQL_STRING
+-			l_string: STRING
+ 		do
+ 			create l_sql_string.make_by_pointer (odbc_procedure_term (con_context_pointer))
+-			l_string := l_sql_string.string.as_string_8
+-			Result :=
+-				l_string.is_case_insensitive_equal (once "stored procedure")
++			Result := l_sql_string.string.is_case_insensitive_equal_general (once "stored procedure")
+ 		end
+ 
+ 	drop_proc_not_supported
+@@ -1476,7 +1473,7 @@
+ 		end
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: dbms/support/database_control.e
+===================================================================
+--- dbms/support/database_control.e	(revision 103394)
++++ dbms/support/database_control.e	(working copy)
+@@ -46,8 +46,7 @@
+ 					end
+ 				else
+ 					if is_tracing then
+-						trace_output.putstring ("Current implementation does not support connection string.")
+-						trace_output.new_line
++						trace_message ("Current implementation does not support connection string.")
+ 					end
+ 					handle.status.set_connect (False)
+ 				end
+@@ -95,14 +94,14 @@
+ 		end
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+-			 Eiffel Software
+-			 356 Storke Road, Goleta, CA 93117 USA
+-			 Telephone 805-685-1006, Fax 805-685-6869
+-			 Website http://www.eiffel.com
+-			 Customer support http://support.eiffel.com
++			Eiffel Software
++			5949 Hollister Ave., Goleta, CA 93117 USA
++			Telephone 805-685-1006, Fax 805-685-6869
++			Website http://www.eiffel.com
++			Customer support http://support.eiffel.com
+ 		]"
+ 
+ 
+Index: dbms/support/database_data.e
+===================================================================
+--- dbms/support/database_data.e	(revision 103394)
++++ dbms/support/database_data.e	(working copy)
+@@ -259,10 +259,10 @@
+ 							l_value.put (l_string_32, ind)
+ 						else
+ 							if l_string_32.is_valid_as_string_8 then
+-								l_value.put (l_string_32.as_string_8, ind)
++								l_value.put (l_string_32.to_string_8, ind)
+ 							else
+-								l_value.put (l_string_32.as_string_8, ind)
+-								fixme ("Report data loss.")
++								l_value.put ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_string_32), ind)
++								fixme ("Report data loss, or utf-8 encoding.")
+ 							end
+ 						end
+ 
+@@ -429,7 +429,7 @@
+ 	all_non_voids: value /= Void implies value_size /= Void and value_max_size /= Void and value_type /= Void and select_name /= Void
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: dbms/support/database_manager.e
+===================================================================
+--- dbms/support/database_manager.e	(revision 103394)
++++ dbms/support/database_manager.e	(working copy)
+@@ -407,8 +407,16 @@
+ 			-- String representation in SQL of `s'.
+ 		require
+ 			s_not_void: s /= Void
++		local
++			s32: STRING_32
+ 		do
+-			Result := string_format_32 (s).as_string_8
++			s32 := string_format_32 (s)
++
++			if s32.is_valid_as_string_8 then
++				Result := s32.to_string_8
++			else
++				Result := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (s32)
++			end
+ 		end
+ 
+ 	string_format_32 (s: READABLE_STRING_GENERAL): STRING_32
+@@ -484,7 +492,7 @@
+ 			-- `insert_with_repository' feature name.
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: generation/tables_access/abstract/abstract_db_table_manager.e
+===================================================================
+--- generation/tables_access/abstract/abstract_db_table_manager.e	(revision 103394)
++++ generation/tables_access/abstract/abstract_db_table_manager.e	(working copy)
+@@ -98,7 +98,7 @@
+ 		deferred
+ 		end
+ 
+-	add_value_qualifier (column: INTEGER; value: STRING)
++	add_value_qualifier (column: INTEGER; value: READABLE_STRING_GENERAL)
+ 			-- Add qualifier `column' = `value' to prepared select query.
+ 		require
+ 			select_query_prepared: select_query_prepared
+@@ -106,7 +106,7 @@
+ 		deferred
+ 		end
+ 
+-	add_specific_qualifier (column: INTEGER; value: STRING; type: INTEGER; case: BOOLEAN)
++	add_specific_qualifier (column: INTEGER; value: READABLE_STRING_GENERAL; type: INTEGER; case: BOOLEAN)
+ 			-- Add qualifier `column' related to `value' with `type' and `case'.
+ 		require
+ 			select_query_prepared: select_query_prepared
+@@ -147,7 +147,7 @@
+ 		end
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: generation/tables_access/abstract/db_table_description.e
+===================================================================
+--- generation/tables_access/abstract/db_table_description.e	(revision 103394)
++++ generation/tables_access/abstract/db_table_description.e	(working copy)
+@@ -85,7 +85,15 @@
+ 
+ 	id_name: STRING
+ 			-- Table ID attribute name.
++		obsolete
++			"Use `id_name_32' instead [2019-11-30]."
+ 		do
++			Result := id_name_32.as_string_8
++		end
++
++	id_name_32: STRING_32
++			-- Table ID attribute name.	
++		do
+ 			Result := description_list.i_th (Id_code)
+ 		end
+ 
+Index: generation/tables_access/db_table_manager.e
+===================================================================
+--- generation/tables_access/db_table_manager.e	(revision 103394)
++++ generation/tables_access/db_table_manager.e	(working copy)
+@@ -121,28 +121,45 @@
+ 
+ 	select_query: STRING
+ 			-- Select query to execute. Execute with `load_result_list'.
++		obsolete
++			"Use `select_query_32' instead  [2019-11-30]."
+ 		require
+ 			select_query_prepared: select_query_prepared
+ 		local
+-			l_select_qualifiers: like select_qualifiers
++			q: like select_query_32
+ 		do
++			q := select_query_32
++			if q.is_valid_as_string_8 then
++				Result := q.to_string_8
++			else
++				Result := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (q)
++			end
++		end
++
++	select_query_32: STRING_32
++			-- Select query to execute. Execute with `load_result_list'.
++		require
++			select_query_prepared: select_query_prepared
++		do
+ 				-- implied by precondition `select_query_prepared'
+ 			check attached select_table_descr as l_select_table_descr then
+ 				if attached select_columns as l_select_columns then
+-					Result := "select " + l_select_columns
++					create Result.make_from_string ({STRING_32} "select ")
++					Result.append_string (l_select_columns)
+ 				else
+-					Result := "select *"
++					Result := {STRING_32} "select *"
+ 				end
+-				Result.append (" from " + l_select_table_descr.Table_name)
+-				l_select_qualifiers := select_qualifiers
+-				if l_select_qualifiers /= Void then
+-					Result.append (" where " + l_select_qualifiers)
++				Result.append_string_general (" from ")
++				Result.append_string_general (l_select_table_descr.Table_name)
++				if attached select_qualifiers as l_select_qualifiers then
++					Result.append_string_general (" where ")
++					Result.append (l_select_qualifiers)
+ 				end
+-				Result.append (order_by)
++				Result.append_string_general (order_by)
+ 			end
+ 		end
+ 
+-	select_qualifiers: detachable STRING
++	select_qualifiers: detachable STRING_32
+ 			-- Qualifying clause of current SQL query.
+ 
+ 	database_result_list: detachable ARRAYED_LIST [DB_TABLE]
+@@ -174,7 +191,7 @@
+ 		do
+ 				-- implied by precondition `select_query_prepared'
+ 			check attached select_table_descr as l_select_table_descr then
+-				result_list := load_list_with_query_and_tablecode (select_query, l_select_table_descr.Table_code)
++				result_list := load_list_with_query_and_tablecode (select_query_32, l_select_table_descr.Table_code)
+ 			end
+ 		end
+ 
+@@ -231,21 +248,21 @@
+ 			end
+ 		end
+ 
+-	add_value_qualifier (column: INTEGER; value: STRING)
++	add_value_qualifier (column: INTEGER; value: READABLE_STRING_GENERAL)
+ 			-- Add qualifier `column' = `value' to prepared select query.
+ 		local
+-			q: STRING
+-			sql_value: STRING
++			q: STRING_32
++			sql_value: STRING_32
+ 		do
+ 				-- implied by precondition `select_query_prepared'
+ 			check attached select_table_descr as l_select_table_descr then
+-				sql_value := string_format (value)
++				sql_value := string_format_32 (value)
+ 				q := l_select_table_descr.description_list.i_th (column) + Space + "=" + Space + sql_value
+ 				add_qualifier (q)
+ 			end
+ 		end
+ 
+-	add_specific_qualifier (column: INTEGER; value: STRING; type: INTEGER; case_sens: BOOLEAN)
++	add_specific_qualifier (column: INTEGER; value: READABLE_STRING_GENERAL; type: INTEGER; case_sens: BOOLEAN)
+ 			-- Add qualifier `column' related to `value' with `type' and `case'.
+ 			-- 'LIKE' predicates are implemented by both Oracle and ODBC with '%' and '_' wild
+ 			-- card characters.
+@@ -252,24 +269,26 @@
+ 			-- Case sensitiveness can only be specified for Oracle. ODBC set case sensitiveness
+ 			-- directly on database columns.
+ 		local
+-			q: STRING
+-			attr, val: STRING
++			q: STRING_32
++			attr, val: STRING_32
+ 			coltype: INTEGER
+ 		do
+ 				-- implied by precondition `select_query_prepared'
+ 			check attached select_table_descr as l_select_table_descr then
+ 				attr := l_select_table_descr.description_list.i_th (column)
+-				val := value.twin
++				create val.make_from_string_general (value)
+ 				coltype := l_select_table_descr.type_list.i_th (column)
+-				if case_sens or else not database_handle_name.is_equal (Oracle_handle_name) then
++				if case_sens or else not database_handle_name.same_string (Oracle_handle_name) then
+ 					q := attr.twin
+ 				else
+-					if coltype = l_select_table_descr.string_type or else
+-							coltype = l_select_table_descr.character_type then
+-						q := to_lower (attr)
++					if
++						coltype = l_select_table_descr.string_type
++						or else coltype = l_select_table_descr.character_type
++					then
++						q := to_lower_32 (attr)
+ 						val.to_lower
+ 					else
+-						q := attr.twin
++						create q.make_from_string_general (attr)
+ 					end
+ 				end
+ 				if like_type (type) then
+@@ -277,31 +296,33 @@
+ 						-- '_' -> '?'): a solution is to replace
+ 						-- these characters by any character, i.e. '_'.
+ 					val.replace_substring_all (any_wildcard, only_one_wildcard)
+-					q.append (Space)
+-					q.append (Like_predicate)
+-					q.append (Space)
++					q.append_string_general (Space)
++					q.append_string_general (Like_predicate)
++					q.append_string_general (Space)
+ 					if type = Contains_type or else type = Suffix_type then
+-						val.prepend (any_wildcard)
++						val.prepend_string_general (any_wildcard)
+ 					end
+ 					if type = Contains_type or else type = Prefix_type then
+-						val.append (any_wildcard)
++						val.append_string_general (any_wildcard)
+ 					end
+ 				else
+-					q.append (Space)
++					q.append_string_general (Space)
+ 					if type = Equals_type then
+-						q.append ("=")
++						q.append_character ('=')
+ 					elseif type = Greater_type then
+-						q.append (">")
++						q.append_character ('>')
+ 					elseif type = Lower_type then
+-						q.append ("<")
++						q.append_character ('<')
+ 					end
+-					q.append (Space)
++					q.append_string_general (Space)
+ 				end
+ 						-- Gives a valid SQL string representation to `val'.
+-				if like_type (type) or else
+-						coltype = l_select_table_descr.string_type or else
+-						coltype = l_select_table_descr.character_type then
+-					val := string_format (val)
++				if
++					like_type (type)
++					or else coltype = l_select_table_descr.string_type
++					or else coltype = l_select_table_descr.character_type
++				then
++					val := string_format_32 (val)
+ 				end
+ 				q.append (val)
+ 				add_qualifier (q)
+@@ -323,7 +344,7 @@
+ 			is_id_selection: is_id_selection
+ 		end
+ 
+-	add_qualifier (value: STRING)
++	add_qualifier (value: READABLE_STRING_GENERAL)
+ 			-- Add qualifier `value' to prepared select query.
+ 		require
+ 			select_query_prepared: select_query_prepared
+@@ -333,9 +354,12 @@
+ 		do
+ 			l_select_qualifiers := select_qualifiers
+ 			if l_select_qualifiers = Void then
+-				select_qualifiers := value.twin
++				create select_qualifiers.make_from_string_general (value)
+ 			else
+-				l_select_qualifiers.append (Space + And_operator + Space + value)
++				l_select_qualifiers.append_string_general (Space)
++				l_select_qualifiers.append_string_general (And_operator)
++				l_select_qualifiers.append_string_general (Space)
++				l_select_qualifiers.append_string_general (value)
+ 			end
+ 		end
+ 
+@@ -417,7 +441,7 @@
+ 			end
+ 		end
+ 
+-	load_list_with_query_and_tablecode (query: STRING; tablecode: INTEGER): detachable ARRAYED_LIST [DB_TABLE]
++	load_list_with_query_and_tablecode (query: READABLE_STRING_GENERAL; tablecode: INTEGER): detachable ARRAYED_LIST [DB_TABLE]
+ 			-- Load list of table rows from `query'. Table rows type is
+ 			-- table of code `tablecode'.
+ 		require
+@@ -428,9 +452,7 @@
+ 		do
+ 			obj := tables.obj (tablecode)
+ 			has_error := False
+-			if attached database_manager.load_list_with_select (query, obj) as l_result then
+-				Result := l_result
+-			end
++			Result := database_manager.load_list_with_select (query, obj)
+ 			if database_manager.has_error and then attached database_manager.error_message_32 as l_error_message then
+ 				has_error := True
+ 				error_message_32 := selection_failed (query) + l_error_message
+@@ -629,7 +651,7 @@
+ 			end
+ 		end
+ 
+-	update_sql_query (td: DB_TABLE_DESCRIPTION): STRING
++	update_sql_query (td: DB_TABLE_DESCRIPTION): STRING_32
+ 			-- SQL query corresponding to a database update.
+ 		require
+ 			not_void: td /= Void
+@@ -642,7 +664,10 @@
+ 			l_do_append: BOOLEAN
+ 		do
+ 			code := td.Table_code
+-			Result := "update " + tables.name_list.i_th (code) + " set "
++			create Result.make (20)
++			Result.append_string_general ("update ")
++			Result.append (tables.name_list.i_th (code))
++			Result.append_string_general (" set ")
+ 			parameter_list := update_parameters (code)
+ 			attribute_list := td.description_list
+ 			l_has_id := td.id_code /= td.no_id
+@@ -658,7 +683,9 @@
+ 					-- Do not insert the table primary key into the insert statement, this produces and sql error
+ 				l_do_append := l_has_id and then parameter_list.index /= td.id_code
+ 				if l_do_append then
+-					Result.append (attribute_list.item + " = :" + parameter_list.item)
++					Result.append (attribute_list.item)
++					Result.append_string_general (" = :")
++					Result.append_string_general (parameter_list.item)
+ 				end
+ 				parameter_list.forth
+ 				attribute_list.forth
+@@ -666,7 +693,10 @@
+ 					Result.append (Values_separator)
+ 				end
+ 			end
+-			Result.append (" where " + td.id_name + " = :" + parameter (td.id_name))
++			Result.append_string_general (" where ")
++			Result.append_string (td.id_name_32)
++			Result.append_string_general (" = :")
++			Result.append_string (parameter (td.id_name_32))
+ 		end
+ 
+ 	update_parameters (code: INTEGER): ARRAYED_LIST [STRING_32]
+@@ -724,14 +754,16 @@
+ 			end
+ 		end
+ 
+-	max_id_query (table_descr: DB_TABLE_DESCRIPTION): STRING
++	max_id_query (table_descr: DB_TABLE_DESCRIPTION): STRING_32
+ 			-- Query to find maximum ID for table described by `table_descr'.
+ 		require
+ 			not_void: table_descr /= Void
+ 			has_id: table_descr.id_code /= table_descr.No_id
+ 		do
+-			Result := "select max(" + table_descr.id_name
+-					+ ") from " + table_descr.table_name
++			Result := {STRING_32} "select max("
++			Result.append_string (table_descr.id_name_32)
++			Result.append_string_general (") from ")
++			Result.append_string_general (table_descr.table_name)
+ 		end
+ 
+ 	repository (code: INTEGER): DB_REPOSITORY
+@@ -764,10 +796,14 @@
+ 			-- Delete `an_obj' in the database, i.e.
+ 			-- the table row of `an_obj' table with `an_obj' ID.
+ 		local
+-			q: STRING
++			q: STRING_32
+ 		do
+-			q := "delete from " + description.Table_name + " where " + description.id_name
+-				+ " = " + description.printable_id
++			q := {STRING_32} "delete from "
++			q.append_string_general (description.Table_name)
++			q.append_string_general (" where ")
++			q.append_string (description.id_name_32)
++			q.append_string_general (" = ")
++			q.append_string_general (description.printable_id)
+ 			database_manager.execute_query (q)
+ 			if database_manager.has_error then
+ 				has_error := True
+@@ -841,6 +877,14 @@
+ 			Result := database_manager.string_format (s)
+ 		end
+ 
++	string_format_32 (s: READABLE_STRING_GENERAL): STRING_32
++			-- String representation in SQL of `s'.
++		require
++			s_not_void: s /= Void
++		do
++			Result := database_manager.string_format_32 (s)
++		end
++
+ 	database_manager: DATABASE_MANAGER [DATABASE]
+ 			-- Database manager: manage every interaction
+ 			-- with database.
+@@ -847,7 +891,7 @@
+ 
+ feature {NONE} -- Implementation
+ 
+-	select_columns: detachable STRING
++	select_columns: detachable STRING_32
+ 			-- Columns to select from a selection statement.
+ 
+ 	order_by: STRING
+@@ -885,6 +929,17 @@
+ 			Result := "lower (" + a_attribute + ")"
+ 		end
+ 
++	to_lower_32 (a_attribute: READABLE_STRING_GENERAL): STRING_32
++			-- Oracle SQL representation of the value in lower case for `a_attribute'.
++		require
++			a_attribute_not_void: a_attribute /= Void
++		do
++			create Result.make (8 + a_attribute.count)
++			Result.append_string_general ("lower (")
++			Result.append_string_general (a_attribute)
++			Result.append_string_general (")")
++		end
++
+ 	Like_predicate: STRING = "like"
+ 			-- SQL 'like' predicate (used to match expressions using wildcards).
+ 
+@@ -966,7 +1021,7 @@
+ 		end
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: interface/db_change.e
+===================================================================
+--- interface/db_change.e	(revision 103394)
++++ interface/db_change.e	(working copy)
+@@ -71,14 +71,11 @@
+ 			connected: is_connected
+ 			request_exists: request /= Void
+ 			is_ok: is_ok
+-		local
+-			u: UTF_CONVERTER
+ 		do
+ 			last_query_32 := request.as_string_32
+ 			implementation.modify (request)
+ 			if not is_ok and then is_tracing then
+-				trace_output.putstring (u.utf_32_string_to_utf_8_string_8 (error_message_32))
+-				trace_output.new_line
++				trace_message (error_message_32)
+ 			end
+ 		ensure
+ 			last_query_changed: attached last_query_32 as l_s and then l_s.same_string_general (request)
+@@ -127,7 +124,7 @@
+ 		end
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: interface/db_control.e
+===================================================================
+--- interface/db_control.e	(revision 103394)
++++ interface/db_control.e	(working copy)
+@@ -75,14 +75,14 @@
+ 		do
+ 			if not is_ok then
+ 				fixme ("Unicode support for output.")
+-				io.error.putstring ("EiffelStore Error")
++				io.error.put_string ("EiffelStore Error")
+ 				if error_code /= 0 then
+-					io.error.putstring (" <")
+-					io.error.putint (error_code)
+-					io.error.putchar ('>')
++					io.error.put_string (" <")
++					io.error.put_integer (error_code)
++					io.error.put_character ('>')
+ 				end
+-				io.error.putstring (": ")
+-				io.error.putstring (error_message_32.as_string_8)
++				io.error.put_string (": ")
++				io.error.put_string ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (error_message_32))
+ 			end
+ 		end
+ 
+@@ -120,14 +120,14 @@
+ 		end
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+-			 Eiffel Software
+-			 356 Storke Road, Goleta, CA 93117 USA
+-			 Telephone 805-685-1006, Fax 805-685-6869
+-			 Website http://www.eiffel.com
+-			 Customer support http://support.eiffel.com
++			Eiffel Software
++			5949 Hollister Ave., Goleta, CA 93117 USA
++			Telephone 805-685-1006, Fax 805-685-6869
++			Website http://www.eiffel.com
++			Customer support http://support.eiffel.com
+ 		]"
+ 
+ 
+Index: interface/db_dyn_change.e
+===================================================================
+--- interface/db_dyn_change.e	(revision 103394)
++++ interface/db_dyn_change.e	(working copy)
+@@ -43,14 +43,11 @@
+ 			not_void: s /= Void
+ 			meaning_full_sql: s.count > 0
+ 			is_ok: is_ok
+-		local
+-			u: UTF_CONVERTER
+ 		do
+ 			implementation.prepare (s)
+ 			set_prepared (True)
+ 			if not is_ok and then is_tracing then
+-				trace_output.putstring (u.utf_32_string_to_utf_8_string_8  (error_message_32))
+-				trace_output.new_line
++				trace_message (error_message_32)
+ 			end
+ 		ensure
+ 			prepared_statement: is_prepared
+@@ -62,14 +59,11 @@
+ 			not_void: s /= Void
+ 			meaning_full_sql: s.count > 0
+ 			is_ok: is_ok
+-		local
+-			u: UTF_CONVERTER
+ 		do
+ 			implementation.prepare_32 (s)
+ 			set_prepared (True)
+ 			if not is_ok and then is_tracing then
+-				trace_output.putstring (u.utf_32_string_to_utf_8_string_8 (error_message_32))
+-				trace_output.new_line
++				trace_message (error_message_32)
+ 			end
+ 		ensure
+ 			prepared_statement: is_prepared
+@@ -79,13 +73,10 @@
+ 			-- Rebind arguments from argument mapping list.
+ 		require
+ 			connected: is_connected
+-		local
+-			u: UTF_CONVERTER
+ 		do
+ 			implementation.rebind_arguments
+ 			if not is_ok and then is_tracing then
+-				trace_output.putstring (u.utf_32_string_to_utf_8_string_8 (error_message_32))
+-				trace_output.new_line
++				trace_message (error_message_32)
+ 			end
+ 		end
+ 
+@@ -93,15 +84,12 @@
+ 			-- Execute the sql statement
+ 		require
+ 			prepare_statement: is_prepared
+-		local
+-			u: UTF_CONVERTER
+ 		do
+ 			if is_ok then
+ 				implementation.execute
+ 			end
+ 			if not is_ok and then is_tracing then
+-				trace_output.putstring (u.utf_32_string_to_utf_8_string_8 (error_message_32))
+-				trace_output.new_line
++				trace_message (error_message_32)
+ 			end
+ 		end
+ 
+@@ -126,7 +114,7 @@
+ 
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: interface/db_dyn_selection.e
+===================================================================
+--- interface/db_dyn_selection.e	(revision 103394)
++++ interface/db_dyn_selection.e	(working copy)
+@@ -55,15 +55,12 @@
+ 			not_void: s /= Void
+ 			meaning_full_statement: s.count > 0
+ 			is_ok: is_ok
+-		local
+-			u: UTF_CONVERTER
+ 		do
+ 			set_executed (False)
+ 			implementation.prepare_32 (s)
+ 			set_prepared (True)
+ 			if not is_ok and then is_tracing then
+-				trace_output.putstring (u.utf_32_string_to_utf_8_string_8 (error_message_32))
+-				trace_output.new_line
++				trace_message (error_message_32)
+ 			end
+ 		ensure
+ 			prepared_statement: is_prepared
+@@ -74,13 +71,10 @@
+ 			-- Rebind arguments from argument mapping list.
+ 		require
+ 			connected: is_connected
+-		local
+-			u: UTF_CONVERTER
+ 		do
+ 			implementation.rebind_arguments
+ 			if not is_ok and then is_tracing then
+-				trace_output.putstring (u.utf_32_string_to_utf_8_string_8 (error_message_32))
+-				trace_output.new_line
++				trace_message (error_message_32)
+ 			end
+ 		end
+ 
+@@ -88,8 +82,6 @@
+ 			-- Execute the sql statement
+ 		require
+ 			prepared_statement: is_prepared
+-		local
+-			u: UTF_CONVERTER
+ 		do
+ 			if is_ok then
+ 				if is_executed then
+@@ -100,8 +92,7 @@
+ 				implementation.execute
+ 			end
+ 			if not is_ok and then is_tracing then
+-				trace_output.putstring (u.utf_32_string_to_utf_8_string_8 (error_message_32))
+-				trace_output.new_line
++				trace_message (error_message_32)
+ 			end
+ 		ensure
+ 			prepared_statement: is_executed
+@@ -113,7 +104,7 @@
+ 		-- Handle reference to specific database implementation
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: interface/db_proc.e
+===================================================================
+--- interface/db_proc.e	(revision 103394)
++++ interface/db_proc.e	(working copy)
+@@ -109,14 +109,11 @@
+ 			-- Load stored procedure `name'
+ 		require
+ 			is_connected: is_connected
+-		local
+-			u: UTF_CONVERTER
+ 		do
+ 			implementation.load
+ 			loaded := True
+ 			if not is_ok and then is_tracing then
+-				trace_output.putstring (u.utf_32_string_to_utf_8_string_8 (error_message_32))
+-				trace_output.new_line
++				trace_message (error_message_32)
+ 			end
+ 		ensure
+ 			loaded: loaded
+@@ -157,9 +154,7 @@
+ 		do
+ 			implementation.store (sql)
+ 			if not is_ok and then is_tracing then
+-				fixme ("Unicode support for output tracing.")
+-				trace_output.putstring (error_message_32.as_string_8)
+-				trace_output.new_line
++				trace_message (error_message_32)
+ 			end
+ 		end
+ 
+@@ -174,9 +169,7 @@
+ 		do
+ 			implementation.execute (destination)
+ 			if not is_ok and then is_tracing then
+-				fixme ("Unicode support for output tracing.")
+-				trace_output.putstring (error_message_32.as_string_8)
+-				trace_output.new_line
++				trace_message (error_message_32)
+ 			end
+ 		end
+ 
+@@ -191,9 +184,7 @@
+ 		do
+ 			implementation.execute_string (destination, sql)
+ 			if not is_ok and then is_tracing then
+-				fixme ("Unicode support for output tracing.")
+-				trace_output.putstring (error_message_32.as_string_8)
+-				trace_output.new_line
++				trace_message (error_message_32)
+ 			end
+ 		end
+ 
+@@ -204,9 +195,7 @@
+ 		do
+ 			implementation.drop
+ 			if not is_ok and then is_tracing then
+-				fixme ("Unicode support for output tracing.")
+-				trace_output.putstring (error_message_32.as_string_8)
+-				trace_output.new_line
++				trace_message (error_message_32)
+ 			end
+ 			loaded := False
+ 		ensure
+@@ -283,7 +272,7 @@
+ 	load_and_exists: loaded implies (exists or not exists)
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: interface/db_repository.e
+===================================================================
+--- interface/db_repository.e	(revision 103394)
++++ interface/db_repository.e	(working copy)
+@@ -97,14 +97,11 @@
+ 		require
+ 			repository_name: repository_name /= Void
+ 			connected: is_connected
+-		local
+-			u: UTF_CONVERTER
+ 		do
+ 			implementation.load
+ 			loaded := true
+ 			if not is_ok and then is_tracing then
+-				trace_output.putstring (u.utf_32_string_to_utf_8_string_8 (error_message_32))
+-				trace_output.new_line
++				trace_message (error_message_32)
+ 			end
+ 		ensure
+ 			loaded
+@@ -141,13 +138,10 @@
+ 			connected: is_connected
+ 			obj_exists: object /= Void
+ 			is_ok: is_ok
+-		local
+-			u: UTF_CONVERTER
+ 		do
+ 			implementation.allocate (object, repository_name)
+ 			if not is_ok and then is_tracing then
+-				trace_output.putstring (u.utf_32_string_to_utf_8_string_8 (error_message_32))
+-				trace_output.new_line
++				trace_message (error_message_32)
+ 			end
+ 		end
+ 
+@@ -169,14 +163,14 @@
+ 		end
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+-			 Eiffel Software
+-			 356 Storke Road, Goleta, CA 93117 USA
+-			 Telephone 805-685-1006, Fax 805-685-6869
+-			 Website http://www.eiffel.com
+-			 Customer support http://support.eiffel.com
++			Eiffel Software
++			5949 Hollister Ave., Goleta, CA 93117 USA
++			Telephone 805-685-1006, Fax 805-685-6869
++			Website http://www.eiffel.com
++			Customer support http://support.eiffel.com
+ 		]"
+ 
+ 
+Index: interface/db_selection.e
+===================================================================
+--- interface/db_selection.e	(revision 103394)
++++ interface/db_selection.e	(working copy)
+@@ -353,14 +353,12 @@
+ 			is_ok: is_ok
+ 		local
+ 			l_last_query_32: STRING_32
+-			u: UTF_CONVERTER
+ 		do
+ 			l_last_query_32 := s.as_string_32
+ 			last_query_32 := l_last_query_32
+ 			implementation.query (l_last_query_32)
+ 			if is_tracing and then not is_ok then
+-				trace_output.putstring (u.utf_32_string_to_utf_8_string_8 (error_message_32))
+-				trace_output.new_line
++				trace_message (error_message_32)
+ 			end
+ 		ensure
+ 			last_query_changed: attached last_query_32 as l_s and then l_s.same_string_general (s)
+@@ -430,7 +428,7 @@
+ 			-- Does `map_table' need to be updated?
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: interface/db_store.e
+===================================================================
+--- interface/db_store.e	(revision 103394)
++++ interface/db_store.e	(working copy)
+@@ -52,13 +52,10 @@
+ 			object_exists: object /= Void
+ 			is_ok: is_ok
+ 			owns_repository: owns_repository
+-		local
+-			u: UTF_CONVERTER
+ 		do
+ 			implementation.put (object)
+ 			if is_tracing and then not is_ok then
+-				trace_output.putstring (u.utf_32_string_to_utf_8_string_8 (error_message_32))
+-				trace_output.new_line
++				trace_message (error_message_32)
+ 			end
+ 		end
+ 
+@@ -69,13 +66,10 @@
+ 			object_exists: object /= Void
+ 			is_ok: is_ok
+ 			owns_repository: owns_repository
+-		local
+-			u: UTF_CONVERTER
+ 		do
+ 			implementation.force (object)
+ 			if is_tracing and then not is_ok then
+-				trace_output.putstring (u.utf_32_string_to_utf_8_string_8 (error_message_32))
+-				trace_output.new_line
++				trace_message (error_message_32)
+ 			end
+ 		end
+ 
+@@ -95,14 +89,14 @@
+ 		end
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+-			 Eiffel Software
+-			 356 Storke Road, Goleta, CA 93117 USA
+-			 Telephone 805-685-1006, Fax 805-685-6869
+-			 Website http://www.eiffel.com
+-			 Customer support http://support.eiffel.com
++			Eiffel Software
++			5949 Hollister Ave., Goleta, CA 93117 USA
++			Telephone 805-685-1006, Fax 805-685-6869
++			Website http://www.eiffel.com
++			Customer support http://support.eiffel.com
+ 		]"
+ 
+ 
+Index: support/db_exec_use.e
+===================================================================
+--- support/db_exec_use.e	(revision 103394)
++++ support/db_exec_use.e	(working copy)
+@@ -28,6 +28,15 @@
+ 			Result := handle.execution_type.is_tracing
+ 		end
+ 
++	trace_message (m: READABLE_STRING_GENERAL)
++			-- Trace message `m` to destination file.
++		require
++			is_tracing
++		do
++			trace_output.put_string ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (m))
++			trace_output.put_new_line
++		end
++
+ 	trace_output: FILE
+ 			-- Trace destination file
+ 		do
+@@ -71,14 +80,14 @@
+ 		end
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+-			 Eiffel Software
+-			 356 Storke Road, Goleta, CA 93117 USA
+-			 Telephone 805-685-1006, Fax 805-685-6869
+-			 Website http://www.eiffel.com
+-			 Customer support http://support.eiffel.com
++			Eiffel Software
++			5949 Hollister Ave., Goleta, CA 93117 USA
++			Telephone 805-685-1006, Fax 805-685-6869
++			Website http://www.eiffel.com
++			Customer support http://support.eiffel.com
+ 		]"
+ 
+ 
+Index: support/db_status_use.e
+===================================================================
+--- support/db_status_use.e	(revision 103394)
++++ support/db_status_use.e	(working copy)
+@@ -55,6 +55,12 @@
+ 			Result := warning_message_32.as_string_8
+ 		end
+ 
++	utf_8_error_message: STRING_8
++			-- SQL error message prompted by database server, UTF-8 encoded.
++		do
++			Result := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (error_message_32)
++		end
++
+ 	error_message_32: STRING_32
+ 			-- SQL error message prompted by database server
+ 		do
+@@ -61,6 +67,12 @@
+ 			Result := handle.status.error_message_32
+ 		end
+ 
++	utf_8_warning_message: STRING_8
++			-- SQL warning message prompted by database server, UTF-8 encoded.
++		do
++			Result := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (warning_message_32)
++		end
++
+ 	warning_message_32: STRING_32
+ 			-- SQL warning message prompted by database server
+ 		do
+@@ -80,7 +92,7 @@
+ 		end
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: support/ext_internal.e
+===================================================================
+--- support/ext_internal.e	(revision 103394)
++++ support/ext_internal.e	(working copy)
+@@ -148,10 +148,15 @@
+ 						set_reference_field (i, object, value.twin)
+ 					elseif field_conforms_to (immutable_string_8_dtype, l_type) then
+ 							-- Field is compatible with IMMUTABLE_STRING_8, let's go for it.
+-						set_reference_field (i, object, create {IMMUTABLE_STRING_8}.make_from_string (string_general.as_string_8))
++						if string_general.is_valid_as_string_8 then
++							set_reference_field (i, object, create {IMMUTABLE_STRING_8}.make_from_string (string_general.to_string_8))
++						else
++							check is_string_8: False end
++							set_reference_field (i, object, create {IMMUTABLE_STRING_8}.make_from_string ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (string_general)))
++						end
+ 					elseif field_conforms_to (immutable_string_32_dtype, l_type) then
+ 							-- Field is compatible with IMMUTABLE_STRING_32, let's go for it.
+-						set_reference_field (i, object, create {IMMUTABLE_STRING_32}.make_from_string (string_general.as_string_32))
++						set_reference_field (i, object, create {IMMUTABLE_STRING_32}.make_from_string_general (string_general))
+ 					else
+ 						Result := False
+ 					end
+@@ -456,7 +461,7 @@
+ 		end
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: support/sql_scan.e
+===================================================================
+--- support/sql_scan.e	(revision 103394)
++++ support/sql_scan.e	(working copy)
+@@ -97,9 +97,12 @@
+ 			wipe_out
+ 			append_string_general (s)
+ 			replace
+-			if handle.execution_type.is_tracing then
+-				handle.execution_type.trace_output.putstring (Current.as_string_8)
+-				handle.execution_type.trace_output.new_line
++			if
++				handle.execution_type.is_tracing and then
++				attached handle.execution_type.trace_output as l_trace_output
++			then
++				l_trace_output.put_string ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (Current))
++				l_trace_output.new_line
+ 			end
+ 			Result := Current
+ 		end
+@@ -112,9 +115,12 @@
+ 			wipe_out
+ 			append_string_general (s)
+ 			replace_dynamic
+-			if handle.execution_type.is_tracing then
+-				handle.execution_type.trace_output.putstring (Current.as_string_8)
+-				handle.execution_type.trace_output.new_line
++			if
++				handle.execution_type.is_tracing and then
++				attached handle.execution_type.trace_output as l_trace_output
++			then
++				l_trace_output.put_string ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (Current))
++				l_trace_output.new_line
+ 			end
+ 			Result := Current
+ 		end
+@@ -500,7 +506,7 @@
+ 			-- Reading complex value?
+ 
+ note
+-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
++	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+ 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+ 	source: "[
+ 			Eiffel Software
+Index: test/eiffel_store/application.e
+===================================================================
+--- test/eiffel_store/application.e	(revision 103394)
++++ test/eiffel_store/application.e	(working copy)
+@@ -41,20 +41,20 @@
+ 	string: STRING_32 = "'this data needs to be escaped: ] '"
+ 	string2: STRING_32 = "'this data needs ' to be escaped: ] '"
+ 
+-	encode (a_string:READABLE_STRING_32): READABLE_STRING_32
++	encode (a_string: READABLE_STRING_GENERAL): READABLE_STRING_32
+ 			-- Escape single quote (') and braces ([,]).
+ 		local
+-			l_string: STRING
++			l_string: STRING_32
+ 		do
+-			l_string := a_string.twin
++			create l_string.make_from_string_general (a_string)
+ 			if not l_string.is_empty then
+-				l_string.replace_substring_all ("[", "[[")
+-				l_string.replace_substring_all ("]", "]]")
++				l_string.replace_substring_all ({STRING_32} "[", {STRING_32} "[[")
++				l_string.replace_substring_all ({STRING_32} "]", {STRING_32} "]]")
+ 				if l_string.index_of ('%'', 1) > 0 then
+-					l_string.replace_substring ("[", l_string.index_of ('%'', 1), l_string.index_of ('%'', 1))
++					l_string.replace_substring ({STRING_32} "[", l_string.index_of ('%'', 1), l_string.index_of ('%'', 1))
+ 				end
+ 				if l_string.last_index_of ('%'', l_string.count) > 0 then
+-					l_string.replace_substring ("]", l_string.last_index_of ('%'', l_string.count), l_string.count)
++					l_string.replace_substring ({STRING_32} "]", l_string.last_index_of ('%'', l_string.count), l_string.count)
+ 				end
+ 			end
+ 			Result := l_string
+Index: test/eiffel_store/support/database_executor.e
+===================================================================
+--- test/eiffel_store/support/database_executor.e	(revision 103394)
++++ test/eiffel_store/support/database_executor.e	(working copy)
+@@ -114,7 +114,7 @@
+ 			retry
+ 		end
+ 
+-	update_sql_query (td: DB_TABLE_DESCRIPTION): STRING
++	update_sql_query (td: DB_TABLE_DESCRIPTION): STRING_32
+ 			-- SQL query corresponding to a database update.
+ 		require
+ 			not_void: td /= Void
+@@ -127,7 +127,9 @@
+ 			l_do_append: BOOLEAN
+ 		do
+ 			code := td.Table_code
+-			Result := "update " + tables.name_list.i_th (code) + " set "
++			create Result.make_from_string ({STRING_32} "update ")
++			Result.append_string (tables.name_list.i_th (code))
++			Result.append_string_general (" set ")
+ 			parameter_list := update_parameters (code)
+ 			attribute_list := td.description_list
+ 			l_has_id := td.id_code /= td.no_id
+@@ -143,7 +145,9 @@
+ 					-- Do not insert the table primary key into the insert statement, this produces and sql error
+ 				l_do_append := l_has_id and then parameter_list.index /= td.id_code
+ 				if l_do_append then
+-					Result.append (attribute_list.item + " = :" + parameter_list.item)
++					Result.append (attribute_list.item)
++					Result.append_string_general (" = :")
++					Result.append (parameter_list.item)
+ 				end
+ 				parameter_list.forth
+ 				attribute_list.forth
+@@ -151,7 +155,10 @@
+ 					Result.append (Values_separator)
+ 				end
+ 			end
+-			Result.append (" where " + td.id_name + " = :" + parameter (td.id_name))
++			Result.append_string_general (" where ")
++			Result.append (td.id_name_32)
++			Result.append_string_general (" = :")
++			Result.append (parameter (td.id_name_32))
+ 		end
+ 
+ 	update_parameters (code: INTEGER): ARRAYED_LIST [STRING_32]
+@@ -177,7 +184,9 @@
+ 		require
+ 			s_not_void: s /= Void
+ 		do
+-			Result := {STRING_32} "N_" + s
++			create Result.make (2 + s.count)
++			Result.append_string ({STRING_32} "N_")
++			Result.append (s)
+ 		end
+ 
+ 	Values_separator: STRING = ", "
+Index: test/eiffel_store/support/database_query.e
+===================================================================
+--- test/eiffel_store/support/database_query.e	(revision 103394)
++++ test/eiffel_store/support/database_query.e	(working copy)
+@@ -113,7 +113,7 @@
+ 				a_parameters.after
+ 			loop
+ 				Result.append ("name:")
+-				Result.append (a_parameters.key_for_iteration.as_string_32)
++				Result.append ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_parameters.key_for_iteration))
+ 				Result.append (", value:")
+ 				if
+ 					a_parameters.key_for_iteration.has_substring ("Password") or else
+Index: test/eiffel_store/support/database_store_procedure.e
+===================================================================
+--- test/eiffel_store/support/database_store_procedure.e	(revision 103394)
++++ test/eiffel_store/support/database_store_procedure.e	(working copy)
+@@ -223,7 +223,7 @@
+ 				a_parameters.after
+ 			loop
+ 				Result.append ("name:")
+-				Result.append (a_parameters.key_for_iteration)
++				Result.append ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_parameters.key_for_iteration))
+ 				Result.append (", value:")
+ 				if
+ 					a_parameters.key_for_iteration.has_substring ("Password") or else
+@@ -231,8 +231,12 @@
+ 				then
+ 					-- Data to exclude
+ 				else
+-					if attached a_parameters.item_for_iteration as l_item  then
+-						Result.append (l_item.out)
++					if attached a_parameters.item_for_iteration as l_item then
++						if attached {READABLE_STRING_GENERAL} l_item as s then
++							Result.append ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (s))
++						else
++							Result.append (l_item.out)
++						end
+ 					end
+ 				end
+ 				Result.append ("%N")
+Index: test/src/autotests/test_data_correctness.e
+===================================================================
+--- test/src/autotests/test_data_correctness.e	(revision 103394)
++++ test/src/autotests/test_data_correctness.e	(working copy)
+@@ -129,11 +129,11 @@
+ 			end
+ 				-- Create the table
+ 			execute_query (trailing_blanks_create_table)
+-			assert ("DB Error occurred" + Db_change.error_message_32.as_string_8, Db_change.is_ok)
++			assert ("DB Error occurred" + Db_change.utf_8_error_message, Db_change.is_ok)
+ 
+ 				-- Insert data
+ 			execute_query (trailing_blanks_insert_data)
+-			assert ("DB Error occurred" + Db_change.error_message_32.as_string_8, Db_change.is_ok)
++			assert ("DB Error occurred" + Db_change.utf_8_error_message, Db_change.is_ok)
+ 		end
+ 
+ 	trailing_blanks_make_selection
+Index: test/src/autotests/test_nested_transaction.e
+===================================================================
+--- test/src/autotests/test_nested_transaction.e	(revision 103394)
++++ test/src/autotests/test_nested_transaction.e	(working copy)
+@@ -147,7 +147,7 @@
+ 			db_selection.object_convert (book)
+ 			db_selection.cursor_to_object
+ 
+-			authors.force (True, book.author)
++			authors.force (True, book.author.to_string_8)
+ 		end
+ 
+ 	data_objects: HASH_TABLE [ANY, STRING]
+Index: test/src/autotests/test_transaction.e
+===================================================================
+--- test/src/autotests/test_transaction.e	(revision 103394)
++++ test/src/autotests/test_transaction.e	(working copy)
+@@ -149,7 +149,7 @@
+ 			db_selection.object_convert (book)
+ 			db_selection.cursor_to_object
+ 
+-			authors.force (True, book.author)
++			authors.force (True, book.author.to_string_8)
+ 		end
+ 
+ 	data_objects: HASH_TABLE [ANY, STRING]
+Index: test/src/json_configuration.e
+===================================================================
+--- test/src/json_configuration.e	(revision 103394)
++++ test/src/json_configuration.e	(working copy)
+@@ -149,7 +149,7 @@
+ 				if not f.exists or else f.is_writable then
+ 					f.open_write
+ 					if attached text as l_text then
+-						f.put_string (l_text)
++						f.put_string ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_text))
+ 					elseif attached data as l_data then
+ 						f.put_string (l_data.representation)
+ 					end
+@@ -199,10 +199,10 @@
+ 
+ feature -- Query
+ 
+-	json_value (a_json_data: detachable JSON_VALUE; a_id: STRING): detachable JSON_VALUE
++	json_value (a_json_data: detachable JSON_VALUE; a_id: READABLE_STRING_GENERAL): detachable JSON_VALUE
+ 		local
+ 			l_id: JSON_STRING
+-			l_ids: LIST [STRING]
++			l_ids: LIST [READABLE_STRING_GENERAL]
+ 		do
+ 			Result := a_json_data
+ 			if Result /= Void then
+@@ -213,7 +213,7 @@
+ 					until
+ 						l_ids.after or Result = Void
+ 					loop
+-						create l_id.make_from_string (l_ids.item)
++						create l_id.make_from_string_general (l_ids.item)
+ 						if attached {JSON_OBJECT} Result as v_data then
+ 							if v_data.has_key (l_id) then
+ 								Result := v_data.item (l_id)
+Index: test/src/test_basic_database.e
+===================================================================
+--- test/src/test_basic_database.e	(revision 103394)
++++ test/src/test_basic_database.e	(working copy)
+@@ -152,12 +152,18 @@
+ 	sql_table_name (a_name: STRING): STRING
+ 			-- SQL table name quoted if needed
+ 		local
+-			l_sep: STRING
++			s: STRING
+ 		do
+-			l_sep := db_spec.identifier_quoter
+ 			create Result.make_from_string (a_name)
+-			Result.prepend (l_sep)
+-			Result.append (l_sep)
++			if attached db_spec.identifier_quoter as l_sep then
++				if l_sep.is_valid_as_string_8 then
++					s := l_sep.to_string_8
++				else
++					s := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_sep)
++				end
++				Result.prepend (s)
++				Result.append (s)
++			end
+ 		end
+ 
+ feature {NONE} -- Decimal callbacks

@@ -3,8 +3,8 @@ note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "Lionel Moro"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2009-04-11 05:38:01 +0200 (Sat, 11 Apr 2009) $"
+	revision: "$Revision: 78205 $"
 
 deferred class
 	MULTI_KEY

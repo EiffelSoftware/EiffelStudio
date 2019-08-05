@@ -1,9 +1,9 @@
 /*
  * eif_mysql.c:	Eiffel MySQL stub library
  *
- * Author: $Author$
- * Revision: $Revision$
- * Date: $Date$
+ * Author: $Author: manus $
+ * Revision: $Revision: 96350 $
+ * Date: $Date: 2014-12-16 10:09:46 +0100 (Tue, 16 Dec 2014) $
  *
  * Copyright:	(C) 2010 by ITPassion, Eiffel Software and others
  *

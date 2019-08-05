@@ -2,8 +2,8 @@ note
 	description: "DB_CHANGE for dynamic sql"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2017-05-23 14:29:02 +0200 (Tue, 23 May 2017) $"
+	revision: "$Revision: 100428 $"
 
 class
 	DB_DYN_CHANGE
@@ -43,14 +43,11 @@ feature -- Element change
 			not_void: s /= Void
 			meaning_full_sql: s.count > 0
 			is_ok: is_ok
-		local
-			u: UTF_CONVERTER
 		do
 			implementation.prepare (s)
 			set_prepared (True)
 			if not is_ok and then is_tracing then
-				trace_output.putstring (u.utf_32_string_to_utf_8_string_8  (error_message_32))
-				trace_output.new_line
+				trace_message (error_message_32)
 			end
 		ensure
 			prepared_statement: is_prepared
@@ -62,14 +59,11 @@ feature -- Element change
 			not_void: s /= Void
 			meaning_full_sql: s.count > 0
 			is_ok: is_ok
-		local
-			u: UTF_CONVERTER
 		do
 			implementation.prepare_32 (s)
 			set_prepared (True)
 			if not is_ok and then is_tracing then
-				trace_output.putstring (u.utf_32_string_to_utf_8_string_8 (error_message_32))
-				trace_output.new_line
+				trace_message (error_message_32)
 			end
 		ensure
 			prepared_statement: is_prepared
@@ -79,13 +73,10 @@ feature -- Element change
 			-- Rebind arguments from argument mapping list.
 		require
 			connected: is_connected
-		local
-			u: UTF_CONVERTER
 		do
 			implementation.rebind_arguments
 			if not is_ok and then is_tracing then
-				trace_output.putstring (u.utf_32_string_to_utf_8_string_8 (error_message_32))
-				trace_output.new_line
+				trace_message (error_message_32)
 			end
 		end
 
@@ -93,15 +84,12 @@ feature -- Element change
 			-- Execute the sql statement
 		require
 			prepare_statement: is_prepared
-		local
-			u: UTF_CONVERTER
 		do
 			if is_ok then
 				implementation.execute
 			end
 			if not is_ok and then is_tracing then
-				trace_output.putstring (u.utf_32_string_to_utf_8_string_8 (error_message_32))
-				trace_output.new_line
+				trace_message (error_message_32)
 			end
 		end
 
@@ -126,7 +114,7 @@ feature {NONE} -- Implementation
 
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

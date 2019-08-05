@@ -2,8 +2,8 @@ note
 	description: "ODBC specification"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
-	date: "$Date$";
-	revision: "$Revision$"
+	date: "$Date: 2018-10-16 22:12:53 +0200 (Tue, 16 Oct 2018) $";
+	revision: "$Revision: 102330 $"
 
 class
 	ODBC
@@ -421,12 +421,9 @@ feature -- For DATABASE_PROC
 	support_drop_proc: BOOLEAN
 		local
 			l_sql_string: ODBC_SQL_STRING
-			l_string: STRING
 		do
 			create l_sql_string.make_by_pointer (odbc_procedure_term (con_context_pointer))
-			l_string := l_sql_string.string.as_string_8
-			Result :=
-				l_string.is_case_insensitive_equal (once "stored procedure")
+			Result := l_sql_string.string.is_case_insensitive_equal_general (once "stored procedure")
 		end
 
 	drop_proc_not_supported
@@ -1476,7 +1473,7 @@ feature {NONE} -- External features
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

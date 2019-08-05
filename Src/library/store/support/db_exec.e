@@ -1,8 +1,8 @@
 note
 
 	status: "See notice at end of class.";
-	Date: "$Date$"
-	Revision: "$Revision$"
+	Date: "$Date: 2008-12-29 21:27:11 +0100 (Mon, 29 Dec 2008) $"
+	Revision: "$Revision: 76420 $"
 	Access: execute, immediate, prepare
 	Product: EiffelStore
 	Database: All_Bases

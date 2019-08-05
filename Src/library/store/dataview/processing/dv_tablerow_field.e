@@ -2,8 +2,8 @@ note
 	description: "Graphic objects representing a database table attribute."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2014-01-15 19:27:37 +0100 (Wed, 15 Jan 2014) $"
+	revision: "$Revision: 94004 $"
 
 class
 	DV_TABLEROW_FIELD
@@ -42,13 +42,13 @@ feature -- Access
 			-- Description of the database table containing
 			-- the represented attribute.
 
-	text: STRING
+	text: STRING_32
 			-- Field text.
 		do
 			if attached graphical_value as l_gv then
 				Result := l_gv.value
 			else
-				Result := ""
+				create Result.make_empty
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -311,7 +311,8 @@ feature {DV_COMPONENT} -- Basic operations
 		local
 			d: DATE
 			dt: DATE_TIME
-			l_title: STRING
+			l_date_text: STRING
+			l_title: READABLE_STRING_GENERAL
 		do
 			if attached graphical_title as l_gtitle then
 				l_title := l_gtitle.value
@@ -319,10 +320,10 @@ feature {DV_COMPONENT} -- Basic operations
 				l_title := ""
 			end
 			is_update_valid := True
-			if has_changed or else not text.is_equal (database_text) then
+			if has_changed or else not text.same_string_general (database_text) then
 				if is_string then
 					if attached redirector as l_redirector then
-						if attached {STRING} l_redirector.inverted_value (text) as l_string_data then
+						if attached {READABLE_STRING_GENERAL} l_redirector.inverted_value (text) as l_string_data then
 							default_tablerow.set_attribute (attribute_code, l_string_data)
 						else
 							is_update_valid := False
@@ -348,11 +349,15 @@ feature {DV_COMPONENT} -- Basic operations
 						end
 					end
 				elseif is_datetime then
-					if not text.is_empty then
+					if
+						not text.is_empty and then
+						text.is_valid_as_string_8
+					then
+						l_date_text := text.to_string_8
 						if is_date then
 							create d.make_now
-							if d.date_valid_default (text) then
-								create d.make_from_string_default (text)
+							if d.date_valid_default (l_date_text) then
+								create d.make_from_string_default (l_date_text)
 								create dt.make_by_date (d)
 								default_tablerow.set_attribute (attribute_code, dt)
 							else
@@ -367,8 +372,8 @@ feature {DV_COMPONENT} -- Basic operations
 							end
 						else
 							create dt.make_now
-							if dt.date_time_valid (text, default_format_string) then
-								create dt.make_from_string_default (text)
+							if dt.date_time_valid (l_date_text, default_format_string) then
+								create dt.make_from_string_default (l_date_text)
 								default_tablerow.set_attribute (attribute_code, dt)
 							else
 								is_update_valid := False
@@ -504,7 +509,7 @@ feature {DV_COMPONENT} -- Basic operations
 
 feature {NONE} -- Implementation
 
-	set_text (s: STRING)
+	set_text (s: READABLE_STRING_GENERAL)
 			-- Set `s' to displayed text.
 			-- Warning: call `enable_has_changed' after
 			-- to notify that field has changed.
@@ -513,7 +518,7 @@ feature {NONE} -- Implementation
 		do
 			has_changed := False
 			is_cleared := False
-			database_text := s
+			database_text := s.to_string_32
 			if attached graphical_value as l_gv then
 				l_gv.set_value (s)
 			end
@@ -537,7 +542,7 @@ feature {NONE} -- Implementation
 	redirector: detachable DV_VALUE_REDIRECTOR
 			-- Value redirector.
 
-	database_text: STRING
+	database_text: STRING_32
 			-- Field content contained in database.
 
 	type_code: INTEGER
@@ -547,7 +552,7 @@ feature {NONE} -- Implementation
 			-- Represented field type name.
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

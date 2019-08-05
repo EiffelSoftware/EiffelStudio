@@ -2,8 +2,8 @@
 	description: "Oracle specification"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2018-12-18 19:07:47 +0100 (Tue, 18 Dec 2018) $"
+	revision: "$Revision: 102628 $"
 
 class
 	ORACLE

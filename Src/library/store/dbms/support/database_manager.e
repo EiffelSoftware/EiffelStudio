@@ -2,8 +2,8 @@ note
 	description: "Object that enable basic database management."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2017-05-23 14:29:02 +0200 (Tue, 23 May 2017) $"
+	revision: "$Revision: 100428 $"
 
 class
 	DATABASE_MANAGER [reference G -> DATABASE create default_create end]
@@ -407,8 +407,16 @@ feature -- Access
 			-- String representation in SQL of `s'.
 		require
 			s_not_void: s /= Void
+		local
+			s32: STRING_32
 		do
-			Result := string_format_32 (s).as_string_8
+			s32 := string_format_32 (s)
+
+			if s32.is_valid_as_string_8 then
+				Result := s32.to_string_8
+			else
+				Result := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (s32)
+			end
 		end
 
 	string_format_32 (s: READABLE_STRING_GENERAL): STRING_32
@@ -484,7 +492,7 @@ feature {NONE} -- Implementation
 			-- `insert_with_repository' feature name.
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

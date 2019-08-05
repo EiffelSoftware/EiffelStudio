@@ -2,8 +2,8 @@ note
 	description: "Implementation of DB_FORMAT"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2017-05-23 14:29:02 +0200 (Tue, 23 May 2017) $"
+	revision: "$Revision: 100428 $"
 
 class
 	DATABASE_FORMAT [G -> DATABASE create default_create end]

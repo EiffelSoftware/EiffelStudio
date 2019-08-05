@@ -2,8 +2,8 @@
 	description: "Implementation of DB_REPOSITORY"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2019-08-02 10:08:17 +0200 (Fri, 02 Aug 2019) $"
+	revision: "$Revision: 103380 $"
 
 class
 	DATABASE_REPOSITORY [reference G -> DATABASE create default_create end]

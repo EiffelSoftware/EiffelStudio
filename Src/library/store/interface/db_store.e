@@ -1,8 +1,8 @@
 note
 
 	status: "See notice at end of class.";
-	Date: "$Date$"
-	Revision: "$Revision$"
+	Date: "$Date: 2013-01-18 20:47:18 +0100 (Fri, 18 Jan 2013) $"
+	Revision: "$Revision: 90729 $"
 	Access: store
 	Product: EiffelStore
 	Database: All_Bases
@@ -52,13 +52,10 @@ feature -- Basic operations
 			object_exists: object /= Void
 			is_ok: is_ok
 			owns_repository: owns_repository
-		local
-			u: UTF_CONVERTER
 		do
 			implementation.put (object)
 			if is_tracing and then not is_ok then
-				trace_output.putstring (u.utf_32_string_to_utf_8_string_8 (error_message_32))
-				trace_output.new_line
+				trace_message (error_message_32)
 			end
 		end
 
@@ -69,13 +66,10 @@ feature -- Basic operations
 			object_exists: object /= Void
 			is_ok: is_ok
 			owns_repository: owns_repository
-		local
-			u: UTF_CONVERTER
 		do
 			implementation.force (object)
 			if is_tracing and then not is_ok then
-				trace_output.putstring (u.utf_32_string_to_utf_8_string_8 (error_message_32))
-				trace_output.new_line
+				trace_message (error_message_32)
 			end
 		end
 
@@ -95,14 +89,14 @@ feature {NONE} -- Initialization
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

@@ -1,7 +1,7 @@
 note
 	description: "Summary description for {NUMERIC_INFO}."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2014-04-04 05:31:05 +0200 (Fri, 04 Apr 2014) $"
+	revision: "$Revision: 94775 $"
 
 class
 	NUMERIC_INFO

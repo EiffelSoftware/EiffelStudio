@@ -2,8 +2,8 @@
 	description: "Description of a table."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2019-07-12 12:42:05 +0200 (Fri, 12 Jul 2019) $"
+	revision: "$Revision: 103337 $"
 
 deferred class
 	DB_TABLE_DESCRIPTION
@@ -85,6 +85,14 @@ feature -- Access (table description)
 
 	id_name: STRING
 			-- Table ID attribute name.
+		obsolete
+			"Use `id_name_32' instead [2019-11-30]."
+		do
+			Result := id_name_32.as_string_8
+		end
+
+	id_name_32: STRING_32
+			-- Table ID attribute name.	
 		do
 			Result := description_list.i_th (Id_code)
 		end

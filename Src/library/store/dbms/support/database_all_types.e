@@ -2,8 +2,8 @@ note
 	description: "Implementation of DB_ALL_TYPES"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
-	date: "$Date$";
-	revision: "$Revision$"
+	date: "$Date: 2011-07-29 09:19:12 +0200 (Fri, 29 Jul 2011) $";
+	revision: "$Revision: 86912 $"
 
 class
 	DATABASE_ALL_TYPES [G -> DATABASE create default_create end]

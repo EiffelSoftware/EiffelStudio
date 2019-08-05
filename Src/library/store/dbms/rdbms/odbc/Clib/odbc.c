@@ -11,8 +11,8 @@
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
 
-   Date: "$Date$";
-   Revision: "$Revision$";
+   Date: "$Date: 2018-10-16 22:12:53 +0200 (Tue, 16 Oct 2018) $";
+   Revision: "$Revision: 102330 $";
    Product: "EiffelStore";
    Database: "ODBC"
 */

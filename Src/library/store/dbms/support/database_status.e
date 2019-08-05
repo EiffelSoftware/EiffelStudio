@@ -2,8 +2,8 @@ note
 	description: "Implementation of DB_STATUS"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2012-03-26 10:27:09 +0200 (Mon, 26 Mar 2012) $"
+	revision: "$Revision: 88469 $"
 
 class
 	DATABASE_STATUS [G -> DATABASE create default_create end]

@@ -4,8 +4,8 @@ note
 			%class DV_TABLEROWS_NAVIGATOR."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2014-01-15 19:27:37 +0100 (Wed, 15 Jan 2014) $"
+	revision: "$Revision: 94004 $"
 
 deferred class
 	DV_TABLEROWS_COMPONENT

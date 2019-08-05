@@ -1,8 +1,8 @@
 note
 
 	status: "See notice at end of class.";
-	Date: "$Date$";
-	Revision: "$Revision$";
+	Date: "$Date: 2011-02-14 11:10:16 +0100 (Mon, 14 Feb 2011) $";
+	Revision: "$Revision: 85591 $";
 	Product: "Environment Converter"
 
 class FILE2DBMS

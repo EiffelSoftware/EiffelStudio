@@ -1,7 +1,7 @@
 note
 	description: "Constants to identify types of entities."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2014-04-11 00:22:43 +0200 (Fri, 11 Apr 2014) $"
+	revision: "$Revision: 94822 $"
 
 class
 	DB_TYPES

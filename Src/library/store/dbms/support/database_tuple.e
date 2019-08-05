@@ -2,8 +2,8 @@ note
 	description: "Implementation of DB_TUPLE"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2012-07-23 05:03:16 +0200 (Mon, 23 Jul 2012) $"
+	revision: "$Revision: 89169 $"
 
 class
 	DATABASE_TUPLE [G -> DATABASE create default_create end]

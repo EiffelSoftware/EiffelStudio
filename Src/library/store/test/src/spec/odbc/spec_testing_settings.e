@@ -1,8 +1,8 @@
 note
 	description : "Objects that ..."
-	author: "$Author$"
-	date: "$Date$"
-	revision: "$Revision$"
+	author: "$Author: manus $"
+	date: "$Date: 2014-01-14 21:55:46 +0100 (Tue, 14 Jan 2014) $"
+	revision: "$Revision: 93991 $"
 
 class
 	SPEC_TESTING_SETTINGS

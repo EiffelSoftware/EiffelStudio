@@ -1,8 +1,8 @@
 note
 
 	status: "See notice at end of class.";
-	Date: "$Date$"
-	Revision: "$Revision$"
+	Date: "$Date: 2017-05-23 14:29:02 +0200 (Tue, 23 May 2017) $"
+	Revision: "$Revision: 100428 $"
 	Product: EiffelStore
 	Database : All_Bases
 
@@ -55,10 +55,22 @@ feature -- Status report
 			Result := warning_message_32.as_string_8
 		end
 
+	utf_8_error_message: STRING_8
+			-- SQL error message prompted by database server, UTF-8 encoded.
+		do
+			Result := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (error_message_32)
+		end
+
 	error_message_32: STRING_32
 			-- SQL error message prompted by database server
 		do
 			Result := handle.status.error_message_32
+		end
+
+	utf_8_warning_message: STRING_8
+			-- SQL warning message prompted by database server, UTF-8 encoded.
+		do
+			Result := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (warning_message_32)
 		end
 
 	warning_message_32: STRING_32
@@ -80,7 +92,7 @@ feature -- Status setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

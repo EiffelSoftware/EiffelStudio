@@ -149,7 +149,7 @@ feature -- Basic operation
 				if not f.exists or else f.is_writable then
 					f.open_write
 					if attached text as l_text then
-						f.put_string (l_text)
+						f.put_string ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_text))
 					elseif attached data as l_data then
 						f.put_string (l_data.representation)
 					end
@@ -199,10 +199,10 @@ feature -- Access
 
 feature -- Query
 
-	json_value (a_json_data: detachable JSON_VALUE; a_id: STRING): detachable JSON_VALUE
+	json_value (a_json_data: detachable JSON_VALUE; a_id: READABLE_STRING_GENERAL): detachable JSON_VALUE
 		local
 			l_id: JSON_STRING
-			l_ids: LIST [STRING]
+			l_ids: LIST [READABLE_STRING_GENERAL]
 		do
 			Result := a_json_data
 			if Result /= Void then
@@ -213,7 +213,7 @@ feature -- Query
 					until
 						l_ids.after or Result = Void
 					loop
-						create l_id.make_from_string (l_ids.item)
+						create l_id.make_from_string_general (l_ids.item)
 						if attached {JSON_OBJECT} Result as v_data then
 							if v_data.has_key (l_id) then
 								Result := v_data.item (l_id)

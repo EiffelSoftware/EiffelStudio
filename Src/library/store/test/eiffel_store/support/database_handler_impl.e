@@ -1,8 +1,8 @@
 note
 	description: "Summary description for {DATABASE_HANDLER}."
 	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2017-02-01 15:21:00 +0100 (Wed, 01 Feb 2017) $"
+	revision: "$Revision: 99782 $"
 
 class
 	DATABASE_HANDLER_IMPL

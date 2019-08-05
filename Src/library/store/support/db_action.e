@@ -4,8 +4,8 @@ note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "pascalf"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2011-05-17 02:16:17 +0200 (Tue, 17 May 2011) $"
+	revision: "$Revision: 86464 $"
 	Product: EiffelStore
 	Database: All_Bases
 

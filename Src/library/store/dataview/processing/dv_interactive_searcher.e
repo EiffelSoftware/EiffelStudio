@@ -3,8 +3,8 @@ note
 			%determined at run-time."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2014-01-15 19:27:37 +0100 (Wed, 15 Jan 2014) $"
+	revision: "$Revision: 94004 $"
 
 class
 	DV_INTERACTIVE_SEARCHER
@@ -155,7 +155,7 @@ feature {NONE} -- Implementation
 	last_column: INTEGER
 			-- Last searched column value.
 
-	last_value: detachable STRING
+	last_value: detachable STRING_32
 			-- Last searched qualifying value.
 
 	last_qualification: INTEGER
@@ -176,7 +176,7 @@ feature {NONE} -- Implementation
 			if attached value_selector as l_val_selector then
 				last_value := l_val_selector.value
 			else
-				last_value := ""
+				create last_value.make_empty
 			end
 			if attached qualification_selector as l_qualification_selector then
 				last_qualification := l_qualification_selector.value
@@ -187,7 +187,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

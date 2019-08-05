@@ -1,6 +1,6 @@
 ﻿note
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2018-01-25 13:41:50 +0100 (Thu, 25 Jan 2018) $"
+	revision: "$Revision: 101301 $"
 
 class
 	USERS_DESCRIPTION

@@ -3,8 +3,8 @@ note
 		Eiffel tests that can be executed by testing tool.
 	]"
 	author: "EiffelStudio test wizard"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2014-01-14 21:46:37 +0100 (Tue, 14 Jan 2014) $"
+	revision: "$Revision: 93986 $"
 	testing: "type/manual"
 
 class
@@ -129,11 +129,11 @@ feature {NONE} -- Trailing blanks
 			end
 				-- Create the table
 			execute_query (trailing_blanks_create_table)
-			assert ("DB Error occurred" + Db_change.error_message_32.as_string_8, Db_change.is_ok)
+			assert ("DB Error occurred" + Db_change.utf_8_error_message, Db_change.is_ok)
 
 				-- Insert data
 			execute_query (trailing_blanks_insert_data)
-			assert ("DB Error occurred" + Db_change.error_message_32.as_string_8, Db_change.is_ok)
+			assert ("DB Error occurred" + Db_change.utf_8_error_message, Db_change.is_ok)
 		end
 
 	trailing_blanks_make_selection

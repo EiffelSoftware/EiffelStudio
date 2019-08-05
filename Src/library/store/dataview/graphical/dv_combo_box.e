@@ -2,8 +2,8 @@ note
 	description: "Typed combo box."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2014-01-15 19:27:37 +0100 (Wed, 15 Jan 2014) $"
+	revision: "$Revision: 94004 $"
 
 class
 	DV_COMBO_BOX
@@ -105,11 +105,19 @@ feature -- Access
 	Boolean_data: INTEGER = 3
 			-- Combo box enable access to selected boolean data.
 
-	string_value: STRING
+	string_value: STRING_32
 			-- Display string.
 		do
-			if behavior_type = String_data and then attached selected_item as l_item and then attached l_item.data as l_data then
-				Result := l_data.out
+			if
+				behavior_type = String_data and then
+				attached selected_item as l_item and then
+				attached l_item.data as l_data
+			then
+				if attached {READABLE_STRING_GENERAL} l_data as s then
+					Result := s.to_string_32
+				else
+					Result := l_data.out
+				end
 			else
 				Result := text
 			end
@@ -172,7 +180,7 @@ feature -- Basic operations
 			extend (new_item)
 		end
 
-	add_data_choice (a_data: ANY; a_label: STRING)
+	add_data_choice (a_data: ANY; a_label: READABLE_STRING_GENERAL)
 			-- Add `a_data' to the combo box and enable its selection
 			-- with `a_label'.
 		require
@@ -189,7 +197,7 @@ feature -- Basic operations
 			extend (new_item)
 		end
 
-	set_string_value (a_text: STRING)
+	set_string_value (a_text: READABLE_STRING_GENERAL)
 			-- Set display string to `a_text'.
 		local
 			it: detachable EV_LIST_ITEM
@@ -335,7 +343,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

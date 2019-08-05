@@ -3,8 +3,8 @@ note
 		Eiffel tests that can be executed by testing tool.
 	]"
 	author: "EiffelStudio test wizard"
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2013-05-21 01:15:17 +0200 (Tue, 21 May 2013) $"
+	revision: "$Revision: 92557 $"
 	testing: "type/manual"
 
 class
@@ -149,7 +149,7 @@ feature {NONE}
 			db_selection.object_convert (book)
 			db_selection.cursor_to_object
 
-			authors.force (True, book.author)
+			authors.force (True, book.author.to_string_8)
 		end
 
 	data_objects: HASH_TABLE [ANY, STRING]

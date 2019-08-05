@@ -1,8 +1,8 @@
 note
 	description: "Summary description for {MYSQL_SQL_STRING}."
 	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2015-02-03 23:14:33 +0100 (Tue, 03 Feb 2015) $"
+	revision: "$Revision: 96577 $"
 
 class
 	MYSQL_SQL_STRING

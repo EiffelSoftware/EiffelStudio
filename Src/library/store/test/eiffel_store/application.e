@@ -1,7 +1,7 @@
 ﻿note
 	description: "Main class, to test null values, sql injection, store procedures and DB_PROC.store."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2018-01-25 13:41:02 +0100 (Thu, 25 Jan 2018) $"
+	revision: "$Revision: 101300 $"
 
 class
 	APPLICATION
@@ -41,20 +41,20 @@ feature -- Encoding
 	string: STRING_32 = "'this data needs to be escaped: ] '"
 	string2: STRING_32 = "'this data needs ' to be escaped: ] '"
 
-	encode (a_string:READABLE_STRING_32): READABLE_STRING_32
+	encode (a_string: READABLE_STRING_GENERAL): READABLE_STRING_32
 			-- Escape single quote (') and braces ([,]).
 		local
-			l_string: STRING
+			l_string: STRING_32
 		do
-			l_string := a_string.twin
+			create l_string.make_from_string_general (a_string)
 			if not l_string.is_empty then
-				l_string.replace_substring_all ("[", "[[")
-				l_string.replace_substring_all ("]", "]]")
+				l_string.replace_substring_all ({STRING_32} "[", {STRING_32} "[[")
+				l_string.replace_substring_all ({STRING_32} "]", {STRING_32} "]]")
 				if l_string.index_of ('%'', 1) > 0 then
-					l_string.replace_substring ("[", l_string.index_of ('%'', 1), l_string.index_of ('%'', 1))
+					l_string.replace_substring ({STRING_32} "[", l_string.index_of ('%'', 1), l_string.index_of ('%'', 1))
 				end
 				if l_string.last_index_of ('%'', l_string.count) > 0 then
-					l_string.replace_substring ("]", l_string.last_index_of ('%'', l_string.count), l_string.count)
+					l_string.replace_substring ({STRING_32} "]", l_string.last_index_of ('%'', l_string.count), l_string.count)
 				end
 			end
 			Result := l_string

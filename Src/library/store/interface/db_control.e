@@ -1,8 +1,8 @@
 note
 
 	status: "See notice at end of class.";
-	Date: "$Date$"
-	Revision: "$Revision$"
+	Date: "$Date: 2013-01-26 06:59:43 +0100 (Sat, 26 Jan 2013) $"
+	Revision: "$Revision: 90910 $"
 	Product: EiffelStore
 	Database: All_Bases
 
@@ -75,14 +75,14 @@ feature -- Basic operations
 		do
 			if not is_ok then
 				fixme ("Unicode support for output.")
-				io.error.putstring ("EiffelStore Error")
+				io.error.put_string ("EiffelStore Error")
 				if error_code /= 0 then
-					io.error.putstring (" <")
-					io.error.putint (error_code)
-					io.error.putchar ('>')
+					io.error.put_string (" <")
+					io.error.put_integer (error_code)
+					io.error.put_character ('>')
 				end
-				io.error.putstring (": ")
-				io.error.putstring (error_message_32.as_string_8)
+				io.error.put_string (": ")
+				io.error.put_string ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (error_message_32))
 			end
 		end
 
@@ -120,14 +120,14 @@ feature {NONE} -- Initialization
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 

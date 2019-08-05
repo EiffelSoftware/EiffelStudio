@@ -1,7 +1,7 @@
 note
 	description: "Thread to load data and perform a selection."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2014-11-15 10:15:08 +0100 (Sat, 15 Nov 2014) $"
+	revision: "$Revision: 96094 $"
 
 class
 	DATA_OPERATION_THREAD

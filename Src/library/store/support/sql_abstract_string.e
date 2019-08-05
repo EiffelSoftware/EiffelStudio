@@ -1,7 +1,7 @@
 ﻿note
 	description: "Abstracted string to handle SQL string."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2018-01-23 21:24:11 +0100 (Tue, 23 Jan 2018) $"
+	revision: "$Revision: 101290 $"
 
 deferred class
 	SQL_ABSTRACT_STRING

@@ -3,8 +3,8 @@ note
 			%set and its graphical display."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2015-12-17 14:34:17 +0100 (Thu, 17 Dec 2015) $"
+	revision: "$Revision: 98279 $"
 
 class
 	DV_TABLE_COMPONENT

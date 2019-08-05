@@ -1,8 +1,8 @@
 note
 
 	status: "See notice at end of class.";
-	date: "$Date$"
-	revision: "$Revision$"
+	date: "$Date: 2017-05-23 14:29:02 +0200 (Tue, 23 May 2017) $"
+	revision: "$Revision: 100428 $"
 	product: "EiffelStore"
 	database: "All bases"
 
@@ -109,14 +109,11 @@ feature -- Basic operations
 			-- Load stored procedure `name'
 		require
 			is_connected: is_connected
-		local
-			u: UTF_CONVERTER
 		do
 			implementation.load
 			loaded := True
 			if not is_ok and then is_tracing then
-				trace_output.putstring (u.utf_32_string_to_utf_8_string_8 (error_message_32))
-				trace_output.new_line
+				trace_message (error_message_32)
 			end
 		ensure
 			loaded: loaded
@@ -157,9 +154,7 @@ feature -- Basic operations
 		do
 			implementation.store (sql)
 			if not is_ok and then is_tracing then
-				fixme ("Unicode support for output tracing.")
-				trace_output.putstring (error_message_32.as_string_8)
-				trace_output.new_line
+				trace_message (error_message_32)
 			end
 		end
 
@@ -174,9 +169,7 @@ feature -- Basic operations
 		do
 			implementation.execute (destination)
 			if not is_ok and then is_tracing then
-				fixme ("Unicode support for output tracing.")
-				trace_output.putstring (error_message_32.as_string_8)
-				trace_output.new_line
+				trace_message (error_message_32)
 			end
 		end
 
@@ -191,9 +184,7 @@ feature -- Basic operations
 		do
 			implementation.execute_string (destination, sql)
 			if not is_ok and then is_tracing then
-				fixme ("Unicode support for output tracing.")
-				trace_output.putstring (error_message_32.as_string_8)
-				trace_output.new_line
+				trace_message (error_message_32)
 			end
 		end
 
@@ -204,9 +195,7 @@ feature -- Basic operations
 		do
 			implementation.drop
 			if not is_ok and then is_tracing then
-				fixme ("Unicode support for output tracing.")
-				trace_output.putstring (error_message_32.as_string_8)
-				trace_output.new_line
+				trace_message (error_message_32)
 			end
 			loaded := False
 		ensure
@@ -283,7 +272,7 @@ invariant
 	load_and_exists: loaded implies (exists or not exists)
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

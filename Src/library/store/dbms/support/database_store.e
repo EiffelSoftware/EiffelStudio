@@ -2,8 +2,8 @@ note
 	description: "Implementation of DB_STORE"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
-	date: "$Date: 2014-04-24 06:23:51 +0200 (Thu, 24 Apr 2014) $"
-	revision: "$Revision: 94913 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	DATABASE_STORE [reference G -> DATABASE create default_create end]

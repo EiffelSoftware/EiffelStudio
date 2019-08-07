@@ -1,8 +1,8 @@
 note
 
 	status: "See notice at end of class.";
-	Date: "$Date: 2017-05-23 14:29:02 +0200 (Tue, 23 May 2017) $"
-	Revision: "$Revision: 100428 $"
+	Date: "$Date$"
+	Revision: "$Revision$"
 	Product: EiffelStore
 	Database : All_Bases
 

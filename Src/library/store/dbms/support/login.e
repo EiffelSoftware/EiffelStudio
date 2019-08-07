@@ -2,8 +2,8 @@ note
 	description: ""
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
-	date: "$Date: 2012-01-16 11:25:58 +0100 (Mon, 16 Jan 2012) $";
-	revision: "$Revision: 88184 $"
+	date: "$Date$";
+	revision: "$Revision$"
 
 class
 	LOGIN [G -> DATABASE create default_create end]

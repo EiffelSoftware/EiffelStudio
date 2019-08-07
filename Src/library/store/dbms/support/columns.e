@@ -2,8 +2,8 @@
 	description: "Description of a database table column"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
-	date: "$Date: 2009-04-11 05:38:01 +0200 (Sat, 11 Apr 2009) $";
-	revision: "$Revision: 78205 $"
+	date: "$Date$";
+	revision: "$Revision$"
 
 class
 	COLUMNS [G -> DATABASE create default_create end]

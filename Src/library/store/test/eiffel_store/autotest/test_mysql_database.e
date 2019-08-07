@@ -1,6 +1,6 @@
 ﻿note
-	date: "$Date: 2018-01-25 13:41:02 +0100 (Thu, 25 Jan 2018) $"
-	revision: "$Revision: 101300 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	TEST_MYSQL_DATABASE

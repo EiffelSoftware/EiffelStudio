@@ -4,8 +4,8 @@ note
 					Note that we use UTF-8 in the client to send Unicode to the database.
 					So we don't use this to send string, we use C_STRING instead.
 					]"
-	date: "$Date: 2015-02-03 23:14:33 +0100 (Tue, 03 Feb 2015) $"
-	revision: "$Revision: 96577 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	SYBASE_SQL_STRING

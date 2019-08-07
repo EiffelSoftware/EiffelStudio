@@ -1,7 +1,7 @@
 note
 	description: "UUID data"
-	date: "$Date: 2012-06-29 10:36:04 +0200 (Fri, 29 Jun 2012) $"
-	revision: "$Revision: 89050 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	UUID_DATA

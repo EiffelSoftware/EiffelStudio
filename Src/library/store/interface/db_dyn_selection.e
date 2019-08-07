@@ -2,8 +2,8 @@ note
 	description: "DB_SELECTION for dynamic sql"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date: 2017-05-23 14:29:02 +0200 (Tue, 23 May 2017) $"
-	revision: "$Revision: 100428 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	DB_DYN_SELECTION

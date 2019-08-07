@@ -2,8 +2,8 @@ note
 	description: "Object that enable basic database management."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date: 2017-05-23 14:29:02 +0200 (Tue, 23 May 2017) $"
-	revision: "$Revision: 100428 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	DATABASE_MANAGER [reference G -> DATABASE create default_create end]

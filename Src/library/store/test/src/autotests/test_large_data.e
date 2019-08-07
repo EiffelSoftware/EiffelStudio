@@ -1,8 +1,8 @@
 note
 	description: "Summary description for {TEST_LARGE_DATA}."
 	author: ""
-	date: "$Date: 2014-04-10 22:49:15 +0200 (Thu, 10 Apr 2014) $"
-	revision: "$Revision: 94818 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	TEST_LARGE_DATA

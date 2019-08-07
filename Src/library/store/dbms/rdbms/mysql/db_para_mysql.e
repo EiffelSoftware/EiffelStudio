@@ -1,7 +1,7 @@
 note
 	description: "Parameter of MySQL dynamic call"
-	date: "$Date: 2015-02-03 23:14:33 +0100 (Tue, 03 Feb 2015) $"
-	revision: "$Revision: 96577 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	DB_PARA_MYSQL

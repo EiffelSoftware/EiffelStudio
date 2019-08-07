@@ -1,7 +1,7 @@
 note
 	description: "MySQL externals"
-	date: "$Date: 2014-01-08 23:42:56 +0100 (Wed, 08 Jan 2014) $"
-	revision: "$Revision: 93936 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	MYSQL_EXTERNALS

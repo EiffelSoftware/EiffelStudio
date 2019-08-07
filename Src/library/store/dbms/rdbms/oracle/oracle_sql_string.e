@@ -1,8 +1,8 @@
 note
 	description: "Summary description for {ORACLE_SQL_STRING}."
 	author: ""
-	date: "$Date: 2015-02-03 23:14:33 +0100 (Tue, 03 Feb 2015) $"
-	revision: "$Revision: 96577 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	ORACLE_SQL_STRING

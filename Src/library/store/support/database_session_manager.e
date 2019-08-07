@@ -1,7 +1,7 @@
 note
 	description: "Manager to handle database sessions"
-	date: "$Date: 2013-05-21 01:15:17 +0200 (Tue, 21 May 2013) $"
-	revision: "$Revision: 92557 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	DATABASE_SESSION_MANAGER

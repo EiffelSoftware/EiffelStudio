@@ -1,7 +1,7 @@
 ﻿note
 	description: "Main class, to test null values, sql injection, store procedures and DB_PROC.store."
-	date: "$Date: 2018-01-25 13:41:02 +0100 (Thu, 25 Jan 2018) $"
-	revision: "$Revision: 101300 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	APPLICATION

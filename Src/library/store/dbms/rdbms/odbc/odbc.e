@@ -2,8 +2,8 @@ note
 	description: "ODBC specification"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
-	date: "$Date: 2018-10-16 22:12:53 +0200 (Tue, 16 Oct 2018) $";
-	revision: "$Revision: 102330 $"
+	date: "$Date$";
+	revision: "$Revision$"
 
 class
 	ODBC

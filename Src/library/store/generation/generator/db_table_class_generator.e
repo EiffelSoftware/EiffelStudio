@@ -4,8 +4,8 @@ note
 			%a class description (class DB_REPOSITORY)."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
-	Date: "$Date: 2014-04-11 00:22:43 +0200 (Fri, 11 Apr 2014) $"
-	Revision: "$Revision: 94822 $"
+	Date: "$Date$"
+	Revision: "$Revision$"
 	Product: EiffelStore
 	Database: All_Bases
 

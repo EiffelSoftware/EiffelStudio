@@ -1,8 +1,8 @@
 note
 	description : "Objects that ..."
-	author: "$Author: manus $"
-	date: "$Date: 2014-03-21 01:22:49 +0100 (Fri, 21 Mar 2014) $"
-	revision: "$Revision: 94660 $"
+	author: "$Author$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	TEST_STORE

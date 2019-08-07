@@ -1,7 +1,7 @@
 note
 	description: "Utility class that handles preparation work for a basic database test"
-	date: "$Date: 2014-11-15 10:15:08 +0100 (Sat, 15 Nov 2014) $"
-	revision: "$Revision: 96094 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	TEST_BASIC_DATABASE

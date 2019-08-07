@@ -1,8 +1,8 @@
 note
 	description: "Summary description for {DB_SPECIFIC_TABLES_ACCESS}."
 	author: ""
-	date: "$Date: 2017-02-01 15:21:00 +0100 (Wed, 01 Feb 2017) $"
-	revision: "$Revision: 99782 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	DB_SPECIFIC_TABLES_ACCESS

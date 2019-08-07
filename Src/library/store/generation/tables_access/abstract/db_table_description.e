@@ -2,8 +2,8 @@
 	description: "Description of a table."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date: 2019-07-12 12:42:05 +0200 (Fri, 12 Jul 2019) $"
-	revision: "$Revision: 103337 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	DB_TABLE_DESCRIPTION

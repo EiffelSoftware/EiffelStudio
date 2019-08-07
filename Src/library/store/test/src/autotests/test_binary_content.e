@@ -1,7 +1,7 @@
 note
 	description: "Testing that insertion of binary content is done properly."
-	date: "$Date: 2014-04-11 01:57:30 +0200 (Fri, 11 Apr 2014) $"
-	revision: "$Revision: 94823 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	TEST_BINARY_CONTENT

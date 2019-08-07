@@ -1,8 +1,8 @@
 note
 	description: "Summary description for {PROCEDURE_DATA}."
 	author: ""
-	date: "$Date: 2014-01-14 01:07:41 +0100 (Tue, 14 Jan 2014) $"
-	revision: "$Revision: 93975 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	PROCEDURE_DATA

@@ -1,7 +1,7 @@
 note
 	description: "One piece of MySQL parameter bind info"
-	date: "$Date: 2014-01-08 23:42:56 +0100 (Wed, 08 Jan 2014) $"
-	revision: "$Revision: 93936 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	DB_BIND_MYSQL

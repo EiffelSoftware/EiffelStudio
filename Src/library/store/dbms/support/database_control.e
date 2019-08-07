@@ -2,8 +2,8 @@ note
 	description: "Implementation of DB_CONTROL"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
-	date: "$Date: 2013-01-18 20:47:18 +0100 (Fri, 18 Jan 2013) $";
-	revision: "$Revision: 90729 $"
+	date: "$Date$";
+	revision: "$Revision$"
 
 class
 	DATABASE_CONTROL [G -> DATABASE create default_create end]

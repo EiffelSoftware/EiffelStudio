@@ -2,8 +2,8 @@ note
 	description: "Implementation of DB_DATA"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
-	date: "$Date: 2014-04-11 00:22:43 +0200 (Fri, 11 Apr 2014) $"
-	revision: "$Revision: 94822 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	DATABASE_DATA [G -> DATABASE create default_create end]

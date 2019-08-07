@@ -4,8 +4,8 @@ note
 		%a navigator."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date: 2015-12-17 14:34:17 +0100 (Thu, 17 Dec 2015) $"
-	revision: "$Revision: 98279 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	DV_TABLEROW_ID_PROVIDER

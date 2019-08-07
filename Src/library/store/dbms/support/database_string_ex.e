@@ -2,8 +2,8 @@ note
 	description: "String tools"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
-	date: "$Date: 2011-06-25 06:33:14 +0200 (Sat, 25 Jun 2011) $"
-	revision: "$Revision: 86789 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	DATABASE_STRING_EX [G -> DATABASE create default_create end]

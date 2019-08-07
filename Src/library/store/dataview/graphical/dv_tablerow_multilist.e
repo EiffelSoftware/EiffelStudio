@@ -2,8 +2,8 @@
 	description: "Multi column list displaying database table rows."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date: 2018-01-25 14:29:58 +0100 (Thu, 25 Jan 2018) $"
-	revision: "$Revision: 101308 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	DV_TABLEROW_MULTILIST

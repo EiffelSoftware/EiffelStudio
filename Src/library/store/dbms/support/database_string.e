@@ -2,8 +2,8 @@ note
 	description: "String format of the database"
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
-	date: "$Date: 2008-12-29 21:27:11 +0100 (Mon, 29 Dec 2008) $"
-	revision: "$Revision: 76420 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	DATABASE_STRING [G -> DATABASE create default_create end]

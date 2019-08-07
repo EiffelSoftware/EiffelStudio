@@ -1,7 +1,7 @@
 note
 	description: "Global settings for the library."
-	date: "$Date: 2015-12-17 14:34:17 +0100 (Thu, 17 Dec 2015) $"
-	revision: "$Revision: 98279 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	GLOBAL_SETTINGS

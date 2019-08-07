@@ -2,8 +2,8 @@ note
 	description: "Radio button."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: "$Date: 2010-12-17 19:27:01 +0100 (Fri, 17 Dec 2010) $"
-	revision: "$Revision: 85190 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	DV_RADIO_BUTTON

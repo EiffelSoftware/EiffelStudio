@@ -2,8 +2,8 @@ note
 	description: "HASH_TABLE where keys are of type READABLE_STRING_32."
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
-	date: "$Date: 2013-05-21 01:15:17 +0200 (Tue, 21 May 2013) $"
-	revision: "$Revision: 92557 $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	DB_STRING_HASH_TABLE [G]

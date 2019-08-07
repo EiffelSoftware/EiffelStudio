@@ -416,6 +416,7 @@ feature -- Access
 				Result := s32.to_string_8
 			else
 				Result := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (s32)
+				fixme ("Report data loss, or utf-8 encoding.")
 			end
 		end
 

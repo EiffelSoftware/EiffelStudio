@@ -1089,7 +1089,7 @@ feature -- Input
 
 feature -- Output
 
-	store_analyzer (file_name: STRING)
+	store_analyzer (file_name: READABLE_STRING_GENERAL)
 			-- Store `analyzer' in file named `file_name'.
 		require
 			initialized: initialized
@@ -1449,7 +1449,7 @@ invariant
 	consistent: dfa /= Void implies categories_table /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -566,7 +566,7 @@ feature -- JSON_FROM_FILE
  		end
 
 
-	new_json_parser (a_string: STRING): JSON_PARSER
+	new_json_parser (a_string: READABLE_STRING_8): JSON_PARSER
 		do
 			create Result.make_with_string (a_string)
 		end

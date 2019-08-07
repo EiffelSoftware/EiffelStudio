@@ -17,7 +17,7 @@ feature {NONE} -- Initialization
 
 	make (a_string: READABLE_STRING_8)
 		do
-			source := a_string
+			source := a_string.to_string_8
 			count := a_string.count
 		end
 

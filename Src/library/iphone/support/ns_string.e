@@ -35,7 +35,7 @@ feature {NONE} -- Creation
 
 feature -- Access
 
-	to_string: STRING
+	to_string: STRING_32
 		local
 			cstring: C_STRING
 		do
@@ -62,7 +62,7 @@ feature {NONE} -- Objective-C implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -47,16 +47,16 @@ feature {NONE} -- Initialization
 		do
 			Precursor
 
-				--| Add the pixmap to the dialog box. 
+				--| Add the pixmap to the dialog box.
 				--|
-				--| We do not use `{EV_STOCK_PIXMAPS}.Information_pixmap' 
+				--| We do not use `{EV_STOCK_PIXMAPS}.Information_pixmap'
 				--| directly because a given pixmap can only have one
 				--| parent. `Information_pixmap' may have alredy been put
 				--| into another container.
 			create pixmap
 			pixmap.copy ((create {EV_STOCK_PIXMAPS}).Information_pixmap)
 			pixmap.set_minimum_size (pixmap.width, pixmap.height)
-	
+
 			message_label.align_text_left
 
 			create horizontal_separator
@@ -69,7 +69,7 @@ feature {NONE} -- Initialization
 			buttons_box.extend (create {EV_CELL}) -- Fill in empty space on left
 			buttons_box.extend (ok_button)
 			buttons_box.disable_item_expand (ok_button)
-						
+
 			create left_vertical_box
 			left_vertical_box.set_border_width (7)
 			left_vertical_box.extend (pixmap)
@@ -109,15 +109,15 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	message: STRING
+	message: STRING_32
 			-- Message displayed in the dialog box.
 		do
 			Result := message_label.text
 		end
 
 feature -- Element change
-	
-	set_message (a_message: STRING)
+
+	set_message (a_message: READABLE_STRING_GENERAL)
 		do
 			message_label.set_text (a_message)
 		end

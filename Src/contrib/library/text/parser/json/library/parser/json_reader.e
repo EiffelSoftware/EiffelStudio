@@ -12,7 +12,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_json: STRING)
+	make (a_json: READABLE_STRING_8)
 			-- Initialize Reader
 		do
 			set_representation (a_json)
@@ -26,12 +26,12 @@ feature -- Commands
 			index := 1
 		end
 
-	set_representation (a_json: STRING)
+	set_representation (a_json: READABLE_STRING_8)
 			-- Set `representation'.
 		do
-			a_json.left_adjust
-			a_json.right_adjust
-			representation := a_json
+			representation := a_json.to_string_8
+			representation.left_adjust
+			representation.right_adjust
 			reset
 		end
 
@@ -128,6 +128,6 @@ invariant
 	representation_not_void: representation /= Void
 
 note
-	copyright: "2010-2018, Javier Velilla, Jocelyn Fiat, Eiffel Software and others https://github.com/eiffelhub/json."
+	copyright: "2010-2019, Javier Velilla, Jocelyn Fiat, Eiffel Software and others https://github.com/eiffelhub/json."
 	license: "https://github.com/eiffelhub/json/blob/master/License.txt"
 end

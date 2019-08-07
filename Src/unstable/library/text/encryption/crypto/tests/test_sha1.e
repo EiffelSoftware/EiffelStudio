@@ -68,12 +68,44 @@ feature -- Test routines
 	test_sha1_reset_update
 			-- SHA1 + salt using update from bytes
 			-- and update from string
+		local
+			s1,s2: STRING
+            h_s: STRING
+            h_b: SPECIAL [NATURAL_8]
+            l_content: STRING
+            l_salt: STRING
+            l_encoder: UTF_CONVERTER
 		do
+			sha1.reset
+            sha1.update_from_string ("salt")
+            sha1.update_from_string ("content")
+            h_s := sha1.digest_as_string
+
+			sha1_1.reset
+            sha1_1.update_from_string ("salt")
+            sha1_1.update_from_string ("content")
+            h_b := sha1_1.digest
+            across 1 |..| 1000 as i loop
+            	sha1.reset
+            	sha1_1.reset
+
+                sha1.update_from_hexadecimal_string (h_s)
+                h_s := sha1.digest_as_string
+
+				sha1_1.update_from_bytes (h_b)
+				h_b := sha1.digest
+
+				s1 := sha1.digest_as_string
+				s2 := sha1_1.digest_as_string
+				assert ("Same Hash [" + i.item.out + "]:", s1.same_string_general (s2))
+            end
+
+
 				-- Expected value: 30F914D0BCF42A91973C2695CF3F1041C9F0A295
-			assert ("Same Hash:", sha1_util_update_from_bytes ("content", "salt").same_string_general (sha1_util_update_from_string ("content", "salt")))
+			s1 := sha1_util_update_from_bytes ("content", "salt")
+			s2 := sha1_util_update_from_string ("content", "salt")
+			assert ("Same Hash:", s1.same_string_general (s2))
 		end
-
-
 
 feature {NONE} -- Implementation
 
@@ -107,7 +139,7 @@ feature {NONE} -- Implementation
             hash := sha1.digest_as_string
             across 1 |..| 1000 as i loop
                 sha1.reset
-                sha1.update_from_string (hash)
+                sha1.update_from_hexadecimal_string (hash)
                 hash := sha1.digest_as_string
             end
             Result := hash

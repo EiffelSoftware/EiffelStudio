@@ -100,7 +100,7 @@ feature -- Access
 			then
 				Result := {JSON_NULL}.representation
 			else
-				Result := l_item
+				Result := l_item.to_string_8
 			end
 		end
 
@@ -181,7 +181,7 @@ feature -- Status report
 	debug_output: STRING
 			-- String that should be displayed in debugger to represent `Current'.
 		do
-			Result := item
+			Result := item.to_string_8
 		end
 
 feature -- Implementation

@@ -46,7 +46,7 @@ feature -- Path/Filename
 
 feature {NONE} -- Comparison
 
-	has_same_content_as_string (a_path: STRING; a_string: READABLE_STRING_8): BOOLEAN
+	has_same_content_as_string (a_path: READABLE_STRING_GENERAL; a_string: READABLE_STRING_GENERAL): BOOLEAN
 			-- Does target file for path have same content as given string?
 			--
 			-- `a_path': Absolute path of file
@@ -57,12 +57,10 @@ feature {NONE} -- Comparison
 		require
 			a_path_not_empty: not a_path.is_empty
 		local
-			l_filename: READABLE_STRING_8
 			l_file: FILE
 			i, l_count: INTEGER_32
 		do
-			l_filename := a_path
-			create {PLAIN_TEXT_FILE} l_file.make_with_name (l_filename)
+			create {PLAIN_TEXT_FILE} l_file.make_with_name (a_path)
 			l_file.open_read
 			from
 				i := 1
@@ -82,7 +80,7 @@ feature {NONE} -- Comparison
 			l_file.close
 		end
 
-	has_same_content_as_path (a_first_path, a_second_path: STRING): BOOLEAN
+	has_same_content_as_path (a_first_path, a_second_path: READABLE_STRING_GENERAL): BOOLEAN
 			-- Do target files for given paths have the same content?
 			--
 			-- `a_first': Absolute path of first file.
@@ -95,13 +93,10 @@ feature {NONE} -- Comparison
 			a_first_path_not_empty: not a_first_path.is_empty
 			a_second_path_not_empty: not a_second_path.is_empty
 		local
-			l_filename1, l_filename2: STRING
 			l_file1, l_file2: FILE
 		do
-			l_filename1 := a_first_path
-			l_filename2 := a_second_path
-			create {PLAIN_TEXT_FILE} l_file1.make_with_name (l_filename1)
-			create {PLAIN_TEXT_FILE} l_file2.make_with_name (l_filename2)
+			create {PLAIN_TEXT_FILE} l_file1.make_with_name (a_first_path)
+			create {PLAIN_TEXT_FILE} l_file2.make_with_name (a_second_path)
 			l_file1.open_read
 			l_file2.open_read
 			from
@@ -131,7 +126,7 @@ feature {NONE} -- Output function
 			end
 		end
 
-	save_cache_to_file (a_file_name: STRING)
+	save_cache_to_file (a_file_name: READABLE_STRING_GENERAL)
 		local
 			l_file: RAW_FILE
 		do
@@ -172,7 +167,7 @@ feature {NONE} -- Output function
 			-- Cached output
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

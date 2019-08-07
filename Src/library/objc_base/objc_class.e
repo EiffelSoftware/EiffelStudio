@@ -249,7 +249,7 @@ feature {NONE} -- Implementation
 	type_encoding_for_agent (a_agent: ROUTINE): STRING
 			-- Given an Eiffel agent, returns the Objective-C type encoding for a similar message that will be used to do the dispatching.
 		local
-			type: STRING
+			type: READABLE_STRING_8
 		do
 			create Result.make_from_string ("@:")
 			if attached {FUNCTION [BOOLEAN]} a_agent as l_function then
@@ -259,15 +259,15 @@ feature {NONE} -- Implementation
 				Result.prepend ("v")
 				type := l_routine.generating_type.generic_parameter_type (2).name
 
-				if type.is_equal ("TUPLE") then
+				if type.same_string ("TUPLE") then
 					-- No arguments
-				elseif type.is_equal ("TUPLE [POINTER]") then
+				elseif type.same_string ("TUPLE [POINTER]") then
 					Result.append ("*")
 				elseif
-					type.is_equal ("TUPLE [!NS_OBJECT]") or type.is_equal ("TUPLE [NS_OBJECT]") or
-					type.is_equal ("TUPLE [!NS_EVENT]") or type.is_equal ("TUPLE [NS_EVENT]") or
-					type.is_equal ("TUPLE [!NS_NOTIFICATION]") or type.is_equal ("TUPLE [NS_NOTIFICATION]") or
-					type.is_equal ("TUPLE [!NS_WINDOW]") or type.is_equal ("TUPLE [NS_WINDOW]")
+					type.same_string ("TUPLE [!NS_OBJECT]") or type.same_string ("TUPLE [NS_OBJECT]") or
+					type.same_string ("TUPLE [!NS_EVENT]") or type.same_string ("TUPLE [NS_EVENT]") or
+					type.same_string ("TUPLE [!NS_NOTIFICATION]") or type.same_string ("TUPLE [NS_NOTIFICATION]") or
+					type.same_string ("TUPLE [!NS_WINDOW]") or type.same_string ("TUPLE [NS_WINDOW]")
 				then
 					-- dynamic_type_from_string (...), generic_dynamic_type(type, i)...
 					Result.append ("*")
@@ -320,7 +320,7 @@ feature {OBJC_CALLBACK_MARSHAL, OBJC_CLASS, NS_OBJECT} -- C Object
 invariant
 	item_not_null: item /= default_pointer
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

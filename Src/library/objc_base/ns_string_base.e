@@ -61,7 +61,7 @@ feature -- Access
 			cstring: C_STRING
 		do
 			create cstring.make_shared_from_pointer ({NS_STRING_API}.c_string_using_encoding (item, {NS_STRING_API}.UTF8_string_encoding))
-			Result := cstring.string.as_string_8
+			Result := cstring.string
 		ensure
 			result_not_void: Result /= void
 		end
@@ -92,7 +92,7 @@ feature -- Measurement
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

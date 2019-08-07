@@ -16,7 +16,7 @@ feature -- Access
 			-- Standard JNI enviroment. It uses value of
 			-- CLASS_PATH environment variable to initialize JVM.
 		local
-			class_path: detachable STRING
+			class_path: detachable READABLE_STRING_GENERAL
 			jvm: JAVA_VM
 			exec: EXECUTION_ENVIRONMENT
 		once
@@ -24,7 +24,7 @@ feature -- Access
 				-- First obtain the value of the CLASSPATH environment
 				-- variable
 			if attached exec.item ("CLASSPATH") as l_item then
-				class_path := l_item.as_string_8
+				class_path := l_item
 			end
 			if class_path = Void then
 					-- Default to current directory
@@ -32,7 +32,7 @@ feature -- Access
 			end
 			debug ("java_vm")
 				io.error.putstring ("CLASSPATH=")
-				io.error.putstring (class_path)
+				io.error.putstring ({UTF_CONVERTER}.escaped_utf_32_string_to_utf_8_string_8 (class_path))
 				io.error.new_line
 			end
 
@@ -47,7 +47,7 @@ feature -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -14,7 +14,7 @@ create {SHARED_JNI_ENVIRONMENT}
 
 feature {NONE} -- Initialization
 
-	make (class_path: STRING)
+	make (class_path: READABLE_STRING_GENERAL)
 			-- Create a JVM execution environment and specify a CLASSPATH
 		require
 			class_path_valid: class_path /= Void
@@ -30,7 +30,8 @@ feature {NONE} -- Initialization
 
 			create l_options.make_filled (({JAVA_VM_OPTION}).default, 1, 1)
 			create l_option.make
-			l_option.set_option_string ("-Djava.class.path=" + class_path)
+				-- TODO: maybe JAVA_VM_OPTION should use unicode values instead.
+			l_option.set_option_string ("-Djava.class.path=" + {UTF_CONVERTER}.escaped_utf_32_string_to_utf_8_string_8 (class_path))
 			l_options.put (l_option, 1)
 
 			default_vm_args.set_options (l_options)
@@ -48,7 +49,7 @@ feature {NONE} -- Initialization
 					io.error.putstring ("*** Failed to load JVM=")
 					io.error.putint (err)
 					io.error.putstring ("  *** CLASSPATH=")
-					io.error.putstring (class_path)
+					io.error.putstring ({UTF_CONVERTER}.escaped_utf_32_string_to_utf_8_string_8 (class_path))
 					io.error.new_line
 				end
 
@@ -163,7 +164,7 @@ feature {NONE} -- externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -14,6 +14,12 @@ feature -- Access
 
 	digest_as_string: STRING_8
 			-- Hexadecimal string representation of Current digest.
+		do
+			Result := digest_as_hexadecimal_string
+		end
+
+	digest_as_hexadecimal_string: STRING_8
+			-- Hexadecimal string representation of Current digest.
 		local
 			l_digest: like digest
 			index, l_upper: INTEGER
@@ -27,6 +33,25 @@ feature -- Access
 				index > l_upper
 			loop
 				Result.append (l_digest [index].to_hex_string)
+				index := index + 1
+			end
+		end
+
+	digest_as_byte_string: STRING_8
+			-- Byte array string representation of Current digest.
+		local
+			l_digest: like digest
+			index, l_upper: INTEGER
+		do
+			l_digest := digest
+			create Result.make (l_digest.count // 2)
+			from
+				index := l_digest.lower
+				l_upper := l_digest.upper
+			until
+				index > l_upper
+			loop
+				Result.extend (l_digest [index].to_character_8)
 				index := index + 1
 			end
 		end
@@ -74,8 +99,48 @@ feature -- Element Change
 			end
 		end
 
-	update_from_string (a_string: READABLE_STRING_8)
-			-- Append bytes from `a_string'.
+	update_from_hexadecimal_string (a_string: READABLE_STRING_8)
+			-- Append bytes from hexadecimal string `a_string'.
+		require
+			hexadecimal_format: a_string.count \\ 2 = 0
+		local
+			i, l_upper: INTEGER
+			c1,c2: CHARACTER_8
+			n: NATURAL_32
+		do
+			from
+				i := 1
+				l_upper := a_string.count
+			until
+				i + 1 > l_upper
+			loop
+				c1 := a_string[i].as_lower
+				inspect c1
+				when '0' .. '9' then
+					n := c1.natural_32_code - ('0').natural_32_code
+				when 'a' .. 'f' then
+					n := 10 + c1.natural_32_code - ('a').natural_32_code
+				else
+					-- Error, not an hexa!					
+				end
+				n := n |<< 4
+				c2 := a_string[i + 1].as_lower
+				inspect c2
+				when '0' .. '9' then
+					n := n + c2.natural_32_code - ('0').natural_32_code
+				when 'a' .. 'f' then
+					n := n + 10 + c2.natural_32_code - ('a').natural_32_code
+				else
+					-- Error, not an hexa!					
+				end
+				update_from_byte (n.to_natural_8) -- a_string.code (i).as_natural_8)
+				i := i + 2
+			end
+		end
+
+	update_from_bytes_string (a_string: READABLE_STRING_8)
+			-- Append bytes from bytes coded in string `a_string'.
+			-- note: see READABLE_STRING_8 as an array of CHARACTER_8, i.e NATURAL_8.
 		local
 			i, l_upper: INTEGER
 		do
@@ -88,6 +153,13 @@ feature -- Element Change
 				update_from_byte (a_string.code (i).as_natural_8)
 				i := i + 1
 			end
+		end
+
+	update_from_string (a_string: READABLE_STRING_8)
+			-- Append bytes from bytes coded in string `a_string'.
+			-- note: see READABLE_STRING_8 as an array of CHARACTER_8, i.e NATURAL_8.
+		do
+			update_from_bytes_string (a_string)
 		end
 
 	update_from_iterator (a_it: ITERATION_CURSOR [NATURAL_8])
@@ -170,7 +242,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

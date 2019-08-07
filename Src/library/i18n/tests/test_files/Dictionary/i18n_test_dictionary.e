@@ -337,17 +337,17 @@ feature {NONE} -- Data access
 				until
 					i > datalength
 				loop
-					singular:=random.item.out
+					singular := random.item.out
 					random.forth
-					translated_singular:=random.item.out
+					translated_singular := random.item.out
 					random.forth
-					original_plural:=random.item.out
+					original_plural := random.item.out
 					output_file.put_string ("get data iteration " + i.out + ": " + "%N")
 
 					if attached t.singular (singular) as l_singular then
-						output_file.put_string ("get_singular(" + singular.as_string_8 + "): "+ l_singular +"%N")
+						output_file.put_string ("get_singular(" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (singular) + "): "+ {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_singular) +"%N")
 					else
-						output_file.put_string ("not has(" + singular.as_string_8 + "): "+ "%N")
+						output_file.put_string ("not has(" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (singular) + "): "+ "%N")
 					end
 
 
@@ -360,14 +360,14 @@ feature {NONE} -- Data access
 						j>10
 					loop
 						if attached t.plural (singular,original_plural, j) as l_plural then
-							output_file.put_string ("get_plural (" + singular.as_string_8 + ","
-													+ original_plural.as_string_8 + "," + j.out +"): "
-													+ l_plural +"%N")
+							output_file.put_string ("get_plural (" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (singular) + ","
+													+ {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (original_plural) + "," + j.out +"): "
+													+ {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_plural) +"%N")
 
 						else
 
-							output_file.put_string (" not has_plural (" + singular.as_string_8 + ","
-													+ original_plural.as_string_8 + "," + j.out +") %N ")
+							output_file.put_string (" not has_plural (" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (singular) + ","
+													+ {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (original_plural) + "," + j.out +") %N ")
 						end
 						j:=j+1
 					end
@@ -409,9 +409,9 @@ feature {NONE} -- Data access
 
 
 					if attached t.singular (singular) as l_singular then
-						output_file.put_string ("get_singular(" + singular.as_string_8 + "): "+ l_singular +"%N")
+						output_file.put_string ("get_singular(" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (singular) + "): "+ {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_singular) +"%N")
 					else
-						output_file.put_string (" not has_singular(" + singular.as_string_8 + ") %N ")
+						output_file.put_string (" not has_singular(" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (singular) + ") %N ")
 					end
 
 					-- i think `plural_number' could be 0,1,2,3
@@ -423,12 +423,12 @@ feature {NONE} -- Data access
 						j>10
 					loop
 						if attached t.plural (singular,original_plural, j) as l_plural then
-							output_file.put_string ("get_plural (" + singular.as_string_8 + "," + original_plural.as_string_8 + "," + j.out +"): "
+							output_file.put_string ("get_plural (" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (singular) + "," + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (original_plural) + "," + j.out +"): "
 							+ l_plural +"%N")
 
 						else
 
-							output_file.put_string (" not has_plural (" + singular.as_string_8 + "," + original_plural.as_string_8 + "," + j.out +")%N")
+							output_file.put_string (" not has_plural (" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (singular) + "," + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (original_plural) + "," + j.out +")%N")
 
 						end
 						j:=j+1
@@ -457,7 +457,7 @@ feature {NONE} -- access
 
 note
 	library:   "Internationalization library"
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

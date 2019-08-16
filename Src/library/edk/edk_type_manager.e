@@ -1,5 +1,4 @@
 ﻿note
-	description: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -27,16 +26,12 @@ feature {EDK_WINDOW}
 			-- Register type of `Current'
 		local
 			l_current_type_id: INTEGER
-			l_namespace: STRING
 			l_type_registration: EDK_TYPE_REGISTRATION
 		do
 			if attached {TYPE [EDK_WINDOW]} type_of (a_window_type) as l_window_type then
 				l_current_type_id := dynamic_type (a_window_type)
 				if not registered_window_types.has (l_window_type) then
 					registered_window_types.extend (l_window_type)
-
-						-- Create namespace from type
-					l_namespace := a_window_type.generating_type.name.as_lower
 
 					create l_type_registration.make (l_window_type)
 					a_window_type.register_messages (l_type_registration)
@@ -69,7 +64,7 @@ feature {EDK_TYPE_REGISTRATION, EDK_PROPERTY_ATTRIBUTES} -- External
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

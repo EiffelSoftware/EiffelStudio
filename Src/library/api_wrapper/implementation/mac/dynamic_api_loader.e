@@ -31,7 +31,7 @@ feature -- Query
 
 feature -- Basic operations
 
-	load_library (a_name: READABLE_STRING_8; a_version: detachable READABLE_STRING_8): POINTER
+	load_library (a_name: READABLE_STRING_GENERAL; a_version: detachable READABLE_STRING_GENERAL): POINTER
 			-- <Precursor>
 		local
 			l_fn: PATH
@@ -40,10 +40,10 @@ feature -- Basic operations
 			if attached a_version then
 				l_fn := l_fn.appended_with_extension (a_version)
 			end
-			Result := load_library_from_path (l_fn.appended_with_extension (once "dylib").utf_8_name)
+			Result := load_library_from_path (l_fn.appended_with_extension (once "dylib").name)
 		end
 
-	load_library_from_path (a_path: READABLE_STRING_8): POINTER
+	load_library_from_path (a_path: READABLE_STRING_GENERAL): POINTER
 			-- <Precursor>
 		do
 			-- fixme: not implemented

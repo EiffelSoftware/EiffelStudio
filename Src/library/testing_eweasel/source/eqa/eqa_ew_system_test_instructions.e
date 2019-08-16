@@ -76,7 +76,7 @@ feature -- Command
 			not_void: a_value /= Void
 		local
 			l_inst: EQA_EW_DEFINE_INST
-			l_value: STRING
+			l_value: STRING_32
 		do
 			l_value := a_value
 			if l_value.is_empty then
@@ -100,7 +100,7 @@ feature -- Command
 			not_void: a_dir_path /= Void
 		local
 			l_inst: EQA_EW_DEFINE_DIR_INST
-			l_path: STRING
+			l_path: STRING_32
 			l_count, l_max: INTEGER
 		do
 			from
@@ -130,7 +130,7 @@ feature -- Command
 			not_void: a_file_name /= Void
 		local
 			l_inst: EQA_EW_DEFINE_FILE_INST
-			l_path: STRING
+			l_path: STRING_32
 			l_count, l_max: INTEGER
 		do
 			from
@@ -497,17 +497,8 @@ feature -- Command
 			--	Similar to `Compile_melted'
 			--	Compile_final_keep requests finalizing of the system with
 			--	assertions kept
-		local
-			l_inst: EQA_EW_COMPILE_FINAL_KEEP_INST
-			l_temp: STRING
 		do
-			if a_output_filename = Void then
-				l_temp := ""
-			else
-				l_temp := a_output_filename
-			end
-			create l_inst.make (a_output_filename)
-			l_inst.execute (test_set)
+			(create {EQA_EW_COMPILE_FINAL_KEEP_INST}.make (a_output_filename)).execute (test_set)
 		end
 
 	C_compile_final (a_output_filename: detachable STRING)
@@ -542,7 +533,7 @@ feature -- Command
 			not_void: a_system_name /= Void
 		local
 			l_inst: EQA_EW_SYSTEM_INST
-			l_system_name: STRING
+			l_system_name: like {EQA_EW_SYSTEM_TEST_SET}.system_name
 		do
 			l_system_name := test_set.environment.substitute (a_system_name)
 
@@ -565,7 +556,7 @@ feature {NONE} -- Implementation
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

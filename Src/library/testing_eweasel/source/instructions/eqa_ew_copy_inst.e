@@ -1,4 +1,4 @@
-note
+﻿note
 	description:
 		"[
 					Ancestor class for all copy instructions
@@ -165,7 +165,7 @@ feature {NONE} -- Implementation
 			new_file_not_void: Result /= Void
 		end
 
-	ensure_dir_exists (a_dir_name: STRING)
+	ensure_dir_exists (a_dir_name: READABLE_STRING_32)
 			-- Try to ensure that directory `dir_name' exists
 			-- (it is not guaranteed to exist at exit).
 		require
@@ -191,39 +191,40 @@ feature {NONE} -- Implementation
 			-- only if `substitute' is true) to
 			-- file `dest'.
 		require
-			source_not_void: src /= Void;
-			destination_not_void: dest /= Void;
-			source_is_closed: src.is_closed;
-			destination_is_closed: dest.is_closed;
+			source_not_void: src /= Void
+			destination_not_void: dest /= Void
+			source_is_closed: src.is_closed
+			destination_is_closed: dest.is_closed
 		local
-			line: STRING;
+			line: STRING
 			l_env: EQA_ENVIRONMENT
 		do
 			from
 				l_env := test_set.environment
-				src.open_read;
-				dest.open_write;
+				src.open_read
+				dest.open_write
 			until
 					-- src.readable is required or else src.read_line will throw an exception
 				src.end_of_file or not src.readable
 			loop
-				src.read_line;
-				if substitute then
-					line := l_env.substitute (src.last_string);
-				else
-					line := src.last_string;
-				end;
+				src.read_line
+				line :=
+					if substitute then
+						{UTF_CONVERTER}.string_32_to_utf_8_string_8 (l_env.substitute (src.last_string))
+					else
+						src.last_string
+					end
 				if not src.end_of_file then
-					dest.put_string (line);
-					dest.new_line;
+					dest.put_string (line)
+					dest.new_line
 				elseif not line.is_empty then
-					dest.put_string (line);
+					dest.put_string (line)
 				end
-			end;
-			src.close;
-			dest.flush;
-			dest.close;
-		end;
+			end
+			src.close
+			dest.flush
+			dest.close
+		end
 
 	is_fast: BOOLEAN
 			-- Should "speed" mode be used?
@@ -265,7 +266,7 @@ feature {NONE} -- Constants
 			-- Tag for an exception thrown in `Current'
 
 ;note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

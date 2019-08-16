@@ -119,7 +119,7 @@ feature -- Query
 			if illegal_instruction then
 				l_status.append ("illegal_instruction ")
 			end
-			if l_status.count = 0 then
+			if l_status.is_empty then
 				l_status.append ("unknown	")
 				if attached raw_compiler_output as l_raw_compiler_output then
 					l_status.extend ('%N')
@@ -182,7 +182,7 @@ feature -- Command
 					create l_exception_tag.make(0)
 					exception_tag := l_exception_tag
 				end
-				if l_exception_tag.count = 0 then
+				if l_exception_tag.is_empty then
 					l_s.keep_tail (a_line.count - {EQA_EW_EIFFEL_COMPILER_CONSTANTS}.Exception_occurred_prefix.count)
 					l_exception_tag.append (l_s)
 				end
@@ -283,8 +283,8 @@ feature {EQA_EW_COMPILE_RESULT_INST} -- Internal command
 
 feature {NONE} -- Syntax error implementation
 
-	new_syntax_error (a_line: STRING): EQA_EW_EIFFEL_SYNTAX_ERROR
-			-- Create a syntax error object
+	new_syntax_error (a_line: READABLE_STRING_8): EQA_EW_EIFFEL_SYNTAX_ERROR
+			-- Create a syntax error object.
 		require
 			line_not_void: a_line /= Void
 		local
@@ -326,7 +326,7 @@ feature {NONE} -- Syntax error implementation
 			end
 		end
 
-	new_syntax_warning (a_line: STRING): EQA_EW_EIFFEL_SYNTAX_ERROR
+	new_syntax_warning (a_line: READABLE_STRING_8): EQA_EW_EIFFEL_SYNTAX_ERROR
 				-- Create a syntax warning object
 		require
 			line_not_void: a_line /= Void
@@ -369,22 +369,15 @@ feature {NONE} -- Syntax error implementation
 			end
 		end
 
-	new_validity_error (a_line: STRING): EQA_EW_EIFFEL_VALIDITY_ERROR
+	new_validity_error (a_line: READABLE_STRING_8): EQA_EW_EIFFEL_VALIDITY_ERROR
 			-- Create a validity error object
 		require
 			line_not_void: a_line /= Void
-		local
-			l_words: LIST [STRING]
-			l_code: STRING
-			l_class_name: STRING
 		do
-			l_words := string_util.broken_into_words (a_line)
-			l_code := l_words.i_th (3)
-			create l_class_name.make (0)
-			create Result.make (l_class_name, l_code)
+			create Result.make ("", string_util.broken_into_words (a_line).i_th (3))
 		end
 
-	analyze_syntax_error (a_line: STRING)
+	analyze_syntax_error (a_line: READABLE_STRING_8)
 			-- Analyze syntax error
 		require
 			line_not_void: a_line /= Void
@@ -392,7 +385,7 @@ feature {NONE} -- Syntax error implementation
 			add_syntax_error (new_syntax_error (a_line))
 		end
 
-	analyze_syntax_warning (a_line: STRING)
+	analyze_syntax_warning (a_line: READABLE_STRING_8)
 			-- Analyze syntax warning
 		require
 			line_not_void: a_line /= Void
@@ -400,7 +393,7 @@ feature {NONE} -- Syntax error implementation
 			add_syntax_error (new_syntax_warning (a_line))
 		end
 
-	analyze_validity_error (a_line: STRING)
+	analyze_validity_error (a_line: READABLE_STRING_8)
 			-- Analyze validity error
 		require
 			line_not_void: a_line /= Void
@@ -413,7 +406,7 @@ feature {NONE} -- Syntax error implementation
 
 feature {NONE} -- Implementation
 
-	analyze_error_line (a_line: STRING)
+	analyze_error_line (a_line: READABLE_STRING_8)
 			-- Analyze error line
 		require
 			line_not_void: a_line /= Void
@@ -473,7 +466,7 @@ feature {NONE} -- Implementation
 			-- Raw output of compiler, if not Void
 
 ;note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

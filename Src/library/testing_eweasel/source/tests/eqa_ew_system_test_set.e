@@ -202,7 +202,7 @@ feature -- Query
 	ecf_name: detachable STRING
 			-- Name of Ecf (ace) file for Eiffel compilations
 
-	system_name: detachable STRING
+	system_name: detachable READABLE_STRING_32
 			-- Name of executable file specified in Ace
 
 	copy_wait_required: BOOLEAN
@@ -354,7 +354,7 @@ feature -- Command
 			execution_result := a_e
 		end
 
-	set_system_name (a_name: STRING)
+	set_system_name (a_name: like system_name)
 			-- Set `system_name' with `a_name'
 		do
 			system_name := a_name
@@ -434,7 +434,7 @@ feature {NONE} -- Implementation
 			-- File name prefix for execution output
 
 ;note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

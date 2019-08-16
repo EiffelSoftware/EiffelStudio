@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 					Define the substitution variable <name> to have the value			
 					<value>.  If <value> contains white space characters, it must
@@ -92,9 +92,9 @@ feature {NONE} -- Initialization
 					failure_explanation := "value must be quoted on both ends or on neither end"
 					init_ok := False
 				end
-				if init_ok then
+--				if init_ok then
 --					init_environment.define (variable, value)
-				end
+--				end
 			end
 
 			if not init_ok then
@@ -124,14 +124,14 @@ feature -- Query
 
 feature {NONE}
 
-	variable: detachable STRING
+	variable: detachable STRING_32
 			-- Name of environment value
 
-	value: detachable STRING
+	value: detachable STRING_32
 			-- Value to be given to environment value
 
 ;note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.
@@ -159,6 +159,5 @@ feature {NONE}
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 
 end

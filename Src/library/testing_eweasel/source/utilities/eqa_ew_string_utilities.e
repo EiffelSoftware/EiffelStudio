@@ -1,7 +1,5 @@
-note
-	description: "[
-					String manipulation utilities
-																								]"
+﻿note
+	description: "String manipulation utilities."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "Eiffel test"
@@ -12,20 +10,14 @@ class EQA_EW_STRING_UTILITIES
 
 feature -- Character properties
 
-	is_white (c: CHARACTER): BOOLEAN
-			-- Is `c' a white space character?
-		do
-			Result := c = ' ' or c = '%T' or c = '%R' or c = '%N'
-		end;
-
 	is_identifier_char (c: CHARACTER): BOOLEAN
 			-- Is `c' an identifier character?
 		do
 			Result := (c >= 'A' and c <= 'Z') or
 				(c >= 'a' and c <= 'z') or
 				(c >= '0' and c <= '9') or
-				(c = '_');
-		end;
+				(c = '_')
+		end
 
 feature -- String properties
 
@@ -86,32 +78,21 @@ feature -- String properties
 			end
 		end
 
-	first_white_position (s: STRING): INTEGER
+	first_white_position (s: READABLE_STRING_GENERAL): INTEGER
 			-- Position of first white space character in
 			-- `s' or 0 if no white space characters.
 		require
 			string_not_void: s /= Void
-		local
-			pos: INTEGER;
-			found: BOOLEAN
-			char: CHARACTER
 		do
 			from
-				pos := 1
+				Result := 1
 			until
-				pos > s.count or found
+				Result > s.count or else s.item (Result).is_space
 			loop
-				char := s.item (pos)
-				if is_white (char) then
-					found := True;
-				else
-					pos := pos + 1
-				end
-			end;
-			if found then
-				Result := pos
-			else
-				Result := 0;
+				Result := Result + 1
+			end
+			if Result > s.count then
+				Result := 0
 			end
 		ensure
 			nonnegative_result: Result >= 0
@@ -124,19 +105,14 @@ feature -- String list routines
 			-- or are Void removed
 		require
 			list_not_void: list /= Void
-		local
-			item: STRING
-			res: ARRAYED_LIST [STRING] -- ??? Temp due to bug
 		do
 			from
-				create res.make (list.count)
-				Result := res
+				create {ARRAYED_LIST [STRING]} Result.make (list.count)
 				list.start
 			until
 				list.after
 			loop
-				item := list.item
-				if item /= Void and then item.count > 0 then
+				if attached list.item as item and then item.count > 0 then
 					Result.extend (item)
 				end
 				list.forth
@@ -167,7 +143,7 @@ feature -- String list routines
 			end;
 		end;
 
-	broken_into_words (line: STRING): DYNAMIC_LIST [STRING]
+	broken_into_words (line: READABLE_STRING_8): DYNAMIC_LIST [STRING]
 			-- Result of breaking `line' into words, where each
 			-- word is terminated by white space
 		require
@@ -175,7 +151,6 @@ feature -- String list routines
 		local
 			pos, first, last: INTEGER
 			word: STRING
-			char: CHARACTER
 			in_word, is_white_char: BOOLEAN
 		do
 			from
@@ -184,8 +159,7 @@ feature -- String list routines
 			until
 				pos > line.count
 			loop
-				char := line.item (pos)
-				is_white_char := is_white (char)
+				is_white_char := line.item (pos).is_space
 				if in_word then
 					if is_white_char then
 						in_word := False
@@ -279,7 +253,7 @@ feature -- String list routines
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.
@@ -307,6 +281,5 @@ feature -- String list routines
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 
 end

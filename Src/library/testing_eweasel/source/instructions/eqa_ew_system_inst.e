@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 					Set the name of the system, to be used to execute it.  Must
 					match the system name in the Ace file or unexpected results
@@ -23,13 +23,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_test_set: EQA_EW_SYSTEM_TEST_SET; a_sys_name: STRING)
+	make (a_test_set: EQA_EW_SYSTEM_TEST_SET; a_sys_name: attached like system_name)
 			-- Creation method
 		do
 			inst_initialize (a_test_set, a_sys_name)
 		end
 
-	inst_initialize (a_test_set: EQA_EW_SYSTEM_TEST_SET; sys: STRING)
+	inst_initialize (a_test_set: EQA_EW_SYSTEM_TEST_SET; sys: attached like system_name)
 			-- Initialize instruction from `sys'.
 			-- Set `init_ok' to indicate whether initialization
 			-- was successful.
@@ -69,10 +69,10 @@ feature -- Query
 
 feature {NONE} -- Implementation
 
-	system_name: detachable STRING
+	system_name: detachable like {EQA_EW_SYSTEM_TEST_SET}.system_name
 			-- Name of executable file specified in Ace.
 ;note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.
@@ -100,11 +100,5 @@ feature {NONE} -- Implementation
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
-
-
-
 
 end

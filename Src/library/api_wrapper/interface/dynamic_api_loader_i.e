@@ -6,8 +6,8 @@
 		      to loading or querying for an API feature may be necessary, hence the interface is available.
 	]"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
+	status: "See notice at end of class."
+	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
@@ -60,7 +60,7 @@ feature -- Query
 
 feature -- Basic operations
 
-	load_library (a_name: READABLE_STRING_8; a_version: detachable READABLE_STRING_8): POINTER
+	load_library (a_name: READABLE_STRING_GENERAL; a_version: detachable READABLE_STRING_GENERAL): POINTER
 			-- Attempts to loads a dynamic library using a library name.
 			--
 			-- `a_name': The name of a dynamic library, without an extension.
@@ -74,7 +74,7 @@ feature -- Basic operations
 		deferred
 		end
 
-	load_library_from_path (a_path: READABLE_STRING_8): POINTER
+	load_library_from_path (a_path: READABLE_STRING_GENERAL): POINTER
 			-- Attempts to loads a dynamic library from a path on disk.
 			--
 			-- `a_path': The path to a dynamic library.

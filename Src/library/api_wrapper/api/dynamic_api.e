@@ -1,10 +1,10 @@
-note
+﻿note
 	description: "[
 		Base class for wrapping a dynamic library APIs using OS dynamic library load resolution policies.
 	]"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
+	status: "See notice at end of class."
+	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
@@ -15,7 +15,7 @@ inherit
 
 feature -- Access
 
-	module_name: READABLE_STRING_8
+	module_name: READABLE_STRING_32
 			-- The library module name, without an extension.
 		deferred
 		ensure
@@ -25,7 +25,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	minimum_version: detachable READABLE_STRING_8
+	minimum_version: detachable READABLE_STRING_32
 			-- The library module's minimum supported version.
 		deferred
 		ensure
@@ -41,8 +41,8 @@ feature {NONE} -- Basic operations
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

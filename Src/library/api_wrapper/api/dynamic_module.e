@@ -1,11 +1,11 @@
-note
+﻿note
 	description: "[
 		Provices access to the raw API facilities of a dynamic module loaded using OS dynamic module
 		loading policies.
 	]"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
+	status: "See notice at end of class."
+	date: "$Date$"
 	revision: "$Revision$"
 
 class
@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialize
 
-	make (a_name: READABLE_STRING_8)
+	make (a_name: READABLE_STRING_32)
 			-- Initialize the dynamic module.
 			--
 			-- `a_name': Name of the module to load, minus any file extension.
@@ -37,7 +37,7 @@ feature {NONE} -- Initialize
 			module_name_set: module_name.same_string (a_name)
 		end
 
-	make_with_version (a_name: READABLE_STRING_8; a_version: READABLE_STRING_8)
+	make_with_version (a_name: READABLE_STRING_32; a_version: READABLE_STRING_32)
 			-- Initialize the dynamic module with a specific version string.
 			--
 			-- `a_name': Name of the module to load, minus any file extension.
@@ -70,10 +70,10 @@ feature {NONE} -- Clean up
 
 feature -- Access
 
-	module_name: IMMUTABLE_STRING_8
+	module_name: IMMUTABLE_STRING_32
 			-- <Precursor>
 
-	minimum_version: detachable IMMUTABLE_STRING_8
+	minimum_version: detachable IMMUTABLE_STRING_32
 			-- <Precursor>
 		note
 			option: stable
@@ -94,8 +94,8 @@ invariant
 	not_minimum_version_is_empty: attached minimum_version implies not minimum_version.is_empty
 
 ;note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

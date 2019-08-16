@@ -1,6 +1,7 @@
 ﻿note
 	description: "Lets the user inspect the vision2 widget layout of the current application"
 	author: "Daniel Furrer"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -34,7 +35,7 @@ feature -- Console View
 				until
 					window_list.after
 				loop
-					io.output.put_string(window_list.item.title + "%N")
+					io.output.put_string(window_list.item.title.to_string_8 + "%N")
 					output_info_rec (window_list.item, 1)
 					io.output.put_string("----------%N")
 					window_list.forth
@@ -387,10 +388,11 @@ feature {NONE} -- Graphical view
 			if attached {EV_VIEWPORT} a_widget as viewport then
 				str.append ("%N" + "offsets: x: " + viewport.x_offset.out + "  y: " + viewport.x_offset.out + "%N")
 			end
-			if attached {EV_WIDGET_IMP} a_widget.implementation as a_widget_imp then
-				if attached {NS_VIEW} a_widget_imp.cocoa_view as a_view then
-					str.append ("%N" + "isFlipped: " + a_view.is_flipped.out + "%N")
-				end
+			if
+				attached {EV_WIDGET_IMP} a_widget.implementation as a_widget_imp and then
+				attached {NS_VIEW} a_widget_imp.cocoa_view as a_view
+			then
+				str.append ("%N" + "isFlipped: " + a_view.is_flipped.out + "%N")
 			end
 			info_label.set_text (str)
 			show_overlay (a_widget)
@@ -410,24 +412,26 @@ feature {NONE} -- Graphical view
 		local
 			x1, y1, x2, y2: INTEGER
 		do
-			if attached {EV_WIDGET_IMP} a_widget.implementation as w_imp then
-				if attached w_imp.top_level_window_imp as w and then attached w.screen as l_screen then
-					x1 := a_widget.screen_x - 1
-					y1 := (l_screen.frame.size.height.rounded - a_widget.screen_y - a_widget.height) - 1
-					x2 := a_widget.screen_x + a_widget.width + 1
-					y2 := (l_screen.frame.size.height.rounded - a_widget.screen_y) + 1
+			if
+				attached {EV_WIDGET_IMP} a_widget.implementation as w_imp and then
+				attached w_imp.top_level_window_imp as w and then
+				attached w.screen as l_screen
+			then
+				x1 := a_widget.screen_x - 1
+				y1 := (l_screen.frame.size.height.rounded - a_widget.screen_y - a_widget.height) - 1
+				x2 := a_widget.screen_x + a_widget.width + 1
+				y2 := (l_screen.frame.size.height.rounded - a_widget.screen_y) + 1
 
-					x1 := x1.min(l_screen.frame.size.width.rounded).max(0)
-					y1 := y1.min(l_screen.frame.size.height.rounded).max(0)
-					x2 := x2.min(l_screen.frame.size.width.rounded).max(0)
-					y2 := y2.min(l_screen.frame.size.height.rounded).max(0)
-					overlay.animator.set_frame (create {NS_RECT}.make_rect (x1, y1, x2-x1, (y2-y1).abs), True)
-					if attached {NS_WINDOW} implementation as win_imp then
-						overlay.set_parent_window (win_imp)
-						-- Not working as expected :(
-					else
-						check False end
-					end
+				x1 := x1.min(l_screen.frame.size.width.rounded).max(0)
+				y1 := y1.min(l_screen.frame.size.height.rounded).max(0)
+				x2 := x2.min(l_screen.frame.size.width.rounded).max(0)
+				y2 := y2.min(l_screen.frame.size.height.rounded).max(0)
+				overlay.animator.set_frame (create {NS_RECT}.make_rect (x1, y1, x2-x1, (y2-y1).abs), True)
+				if attached {NS_WINDOW} implementation as win_imp then
+					overlay.set_parent_window (win_imp)
+					-- Not working as expected :(
+				else
+					check False end
 				end
 			end
 		end
@@ -465,12 +469,11 @@ feature {NONE} -- Graphical view
 	debug_widget
 		local
 			rescued: BOOLEAN
-			fail: INTEGER
-			widget_imp: detachable EV_WIDGET_IMP
 		do
 			if attached selected_widget as widget and not rescued then
-				widget_imp ?= widget.implementation
-				fail := 1 // 0
+--				if attached {EV_WIDGET_IMP} widget.implementation as widget_imp then
+--				end
+				check False then end
 			end
 		rescue
 			rescued := True
@@ -503,7 +506,7 @@ feature {NONE} -- Implementation
 	info_label: EV_LABEL
 
 ;note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

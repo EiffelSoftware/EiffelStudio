@@ -1,6 +1,7 @@
-note
+﻿note
 	description: "EiffelVision multi-column-list, Cocoa implementation."
 	copyright:	"Copyright (c) 2009, Daniel Furrer"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -130,17 +131,12 @@ feature -- DataSource
 		end
 
 	child_of_item (an_index: INTEGER; a_node: detachable EV_MULTI_COLUMN_LIST_ROW): EV_MULTI_COLUMN_LIST_ROW
-		local
-			l_result: detachable EV_MULTI_COLUMN_LIST_ROW
 		do
-			l_result := i_th (an_index + 1)
-			check l_result /= Void end
-			Result := l_result
+			Result := i_th (an_index + 1)
 		end
 
 	object_value_for_table_column_by_item (a_table_column: POINTER; a_node: EV_MULTI_COLUMN_LIST_ROW): POINTER
 		local
-			l_column: STRING
 			l_pixmap_imp: detachable EV_PIXMAP_IMP
 		do
 			-- FIXME: do proper reverse mapping from the a_table_column pointer to the eiffel object
@@ -151,8 +147,7 @@ feature -- DataSource
 					Result := l_pixmap_imp.image.item
 				end
 			else
-				l_column := a_node.i_th (1)
-				Result := (create {NS_STRING}.make_with_string (l_column)).item
+				Result := (create {NS_STRING}.make_with_string (a_node [1])).item
 			end
 		end
 
@@ -495,11 +490,10 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 
 	set_row_pixmap (a_row: INTEGER; a_pixmap: EV_PIXMAP)
 			-- Set row `a_row' pixmap to `a_pixmap'.
-		local
-			pixmap_imp: detachable EV_PIXMAP_IMP
 		do
-			pixmap_imp ?= a_pixmap.implementation
---			a_list_iter := ev_children.i_th (a_row).list_iter.item
+--			if attached {EV_PIXMAP_IMP} a_pixmap.implementation as pixmap_imp then
+----			a_list_iter := ev_children.i_th (a_row).list_iter.item
+--			end
 		end
 
 	remove_row_pixmap (a_row: INTEGER)
@@ -549,4 +543,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-end -- class EV_MULTI_COLUMN_LIST_IMP
+
+end

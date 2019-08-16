@@ -1,6 +1,7 @@
 note
 	description: "Eiffel Vision menu item. Cocoa implementation."
 	author:	"Daniel Furrer"
+	revised_by: "Alexander Kogtenkov"
 
 class
 	EV_MENU_ITEM_IMP
@@ -54,25 +55,21 @@ feature -- Status setting
 
 	enable_sensitive
 			-- Make the menu item avtive
-		local
-			pos: INTEGER
 		do
 			-- If this is a menu item we have to change the state through associated parent menu reference and this item's index
-			if attached {EV_MENU_IMP} parent_imp as a_menu then
-				pos := a_menu.index_of (interface, 1)
-			end
+--			if attached {EV_MENU_IMP} parent_imp as a_menu then
+--				pos := a_menu.index_of (interface, 1)
+--			end
 			Precursor {EV_SENSITIVE_IMP}
 		end
 
 	disable_sensitive
 			-- Make the menu item grayed out and ignore commands
-		local
-			pos: INTEGER
 		do
 			-- If this is a menu item we have to change the state through associated parent menu reference and this item's index
-			if attached {EV_MENU_IMP} parent_imp as a_menu then
-				pos := a_menu.index_of (interface, 1)
-			end
+--			if attached {EV_MENU_IMP} parent_imp as a_menu then
+--				pos := a_menu.index_of (interface, 1)
+--			end
 			Precursor {EV_SENSITIVE_IMP}
 		end
 
@@ -121,13 +118,13 @@ feature -- Element change
 		do
 			l_split_list :=  a_text.split ('+')
 			menu_item.set_key_equivalent (l_split_list.last.as_lower)
-			if l_split_list.there_exists (agent (other: STRING_32): BOOLEAN do Result := ("Ctrl").is_equal(other) end) then
+			if l_split_list.there_exists (agent (other: STRING_32): BOOLEAN do Result := ({STRING_32} "Ctrl").same_string (other) end) then
 				l_key_mask := l_key_mask.bit_or ({NS_MENU_ITEM}.control_key_mask)
 			end
-			if l_split_list.there_exists (agent (other: STRING_32): BOOLEAN do Result := ("Shift").is_equal(other) end) then
+			if l_split_list.there_exists (agent (other: STRING_32): BOOLEAN do Result := ({STRING_32} "Shift").same_string (other) end) then
 				l_key_mask := l_key_mask.bit_or ({NS_MENU_ITEM}.shift_key_mask)
 			end
-			if l_split_list.there_exists (agent (other: STRING_32): BOOLEAN do Result := ("Alt").is_equal(other) end) then
+			if l_split_list.there_exists (agent (other: STRING_32): BOOLEAN do Result := ({STRING_32} "Alt").same_string (other) end) then
 				l_key_mask := l_key_mask.bit_or ({NS_MENU_ITEM}.alternate_key_mask)
 			end
 			menu_item.set_key_equivalent_modifier_mask (l_key_mask)
@@ -209,4 +206,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-end -- class EV_MENU_ITEM_IMP
+
+end

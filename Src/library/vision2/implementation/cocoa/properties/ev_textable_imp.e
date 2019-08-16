@@ -1,6 +1,7 @@
-note
+﻿note
 	description: "Eiffel Vision textable. Cocoa implementation."
 	author: "Daniel Furrer"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -65,7 +66,7 @@ feature -- Element change
 
 feature -- Internal
 
-	internal_text: detachable STRING
+	internal_text: detachable STRING_32
 
 feature {EV_ANY_IMP} -- Implementation
 
@@ -91,11 +92,11 @@ feature {EV_ANY_IMP} -- Implementation
 			until
 				i > s.count
 			loop
-				if s.item (i) = '&' then
-					if s.item (i + 1) /= '&' then
-						s.put (char, i)
-					else
+				if s [i] = '&' then
+					if s [i + 1] = '&' then
 						i := i + 1
+					else
+						s [i] := char
 					end
 				end
 				i := i + 1
@@ -116,4 +117,14 @@ feature {EV_ANY_IMP} -- Implementation
 			end
 		end
 
-end -- class EV_TEXTABLE_IMP
+note
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
+		]"
+end

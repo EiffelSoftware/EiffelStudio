@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "COM GUID structure"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -127,11 +127,12 @@ feature -- Conversion
 	out: STRING
 			-- String representation.
 		do
-			if item = default_pointer then
-				Result := ""
-			else
-				Result := to_string.as_string_8
-			end
+			Result :=
+				if item = default_pointer then
+					 ""
+				else
+					{UTF_CONVERTER}.string_32_to_utf_8_string_8 (to_string)
+				end
 		end
 
 feature {NONE} -- Externals
@@ -184,7 +185,7 @@ feature {NONE} -- Externals
       	end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -194,5 +195,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class ECOM_GUID
-
+end

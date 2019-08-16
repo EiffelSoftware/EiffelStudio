@@ -6,10 +6,10 @@
 deferred class EW_COPY_INST
 
 inherit
-	EW_TEST_INSTRUCTION;
-	EW_PREDEFINED_VARIABLES;
-	EW_STRING_UTILITIES;
-	EW_OS_ACCESS;
+	EW_TEST_INSTRUCTION
+	EW_PREDEFINED_VARIABLES
+	EW_STRING_UTILITIES
+	EW_OS_ACCESS
 	EXECUTION_ENVIRONMENT
 		export
 			{NONE} all
@@ -195,7 +195,7 @@ feature {NONE}  -- Implementation
 			source_is_closed: src.is_closed
 			destination_is_closed: dest.is_closed
 		local
-			line: STRING
+			line: READABLE_STRING_8
 		do
 			from
 				src.open_read
@@ -204,11 +204,12 @@ feature {NONE}  -- Implementation
 				src.end_of_file
 			loop
 				src.read_line
-				if substitute then
-					line := to_utf_8 (env.substitute (from_utf_8 (src.last_string)))
-				else
-					line := src.last_string
-				end
+				line :=
+					if substitute then
+						to_utf_8 (env.substitute (from_utf_8 (src.last_string)))
+					else
+						src.last_string
+					end
 				if not src.end_of_file then
 					dest.put_string (line)
 					dest.new_line
@@ -252,7 +253,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2017, University of Southern California, Eiffel Software and contributors.
+			Copyright (c) 1984-2019, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
 		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"

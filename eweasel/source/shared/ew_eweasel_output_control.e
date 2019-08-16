@@ -40,7 +40,7 @@ feature -- Commands
 			flush
 		end
 
-	append (output: STRING; on_new_line: BOOLEAN)
+	append (output: READABLE_STRING_8; on_new_line: BOOLEAN)
 			-- Append `output' to current output
 		require
 			output_not_void: output /= Void
@@ -64,7 +64,7 @@ feature -- Commands
 			end
 		end
 
-	append_error (output: STRING; on_new_line: BOOLEAN)
+	append_error (output: READABLE_STRING_8; on_new_line: BOOLEAN)
 			-- Append `output' to current output, formatted to indicate error.
 		require
 			output_not_void: output /= Void
@@ -106,7 +106,7 @@ feature {NONE} -- Implementation
 	date: "$Date$"
 	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
+			Copyright (c) 1984-2019, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
 		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"

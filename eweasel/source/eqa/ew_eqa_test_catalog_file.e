@@ -50,7 +50,7 @@ feature -- Command
 
 feature -- Query
 
-	all_test_instructions: HASH_TABLE [TUPLE [a_description, a_arguments: STRING], STRING]
+	all_test_instructions: HASH_TABLE [TUPLE [a_description, a_arguments: READABLE_STRING_32], READABLE_STRING_32]
 			-- Key is folder name
 			-- All parsed test instructions from file
 
@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 							l_arguments.append (l_list.item + " ")
 							l_list.forth
 						end
-						all_test_instructions.put ([to_utf_8 (l_list.first).as_string_8, to_utf_8 (l_arguments).as_string_8], to_utf_8 (l_list [2]).as_string_8)
+						all_test_instructions.put ([l_list.first, l_arguments], l_list [2])
 					end
 --				else
 --					l_cmd := a_line

@@ -20,7 +20,7 @@ feature -- Command
 			ready: is_ready
 		end
 
-	append_related_setup (a_folder_name: STRING; a_content_to_append: STRING)
+	append_related_setup (a_folder_name: READABLE_STRING_32; a_content_to_append: STRING)
 			-- Append related setup line to `a_content_to_append'
 			-- Set `test_arguments' if possible
 		require
@@ -29,14 +29,14 @@ feature -- Command
 			not_void: a_content_to_append /= Void
 			cleared: test_arguments = Void
 		local
-			l_item: TUPLE [a_description, a_argument: STRING]
+			l_item: TUPLE [a_description, a_argument: READABLE_STRING_32]
 		do
 			l_item := catalog_file.all_test_instructions.item (a_folder_name)
 			if l_item /= Void then
 				a_content_to_append.append ("%N%T%T%Tinit (")
 				a_content_to_append.append ("%"" + a_folder_name + "%")")
 
-				test_arguments := l_item.a_argument
+				test_arguments := {UTF_CONVERTER}.string_32_to_utf_8_string_8 (l_item.a_argument)
 			else
 				a_content_to_append.append ("%N%T%T%T--not found in catalog file")
 			end

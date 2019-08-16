@@ -1,7 +1,5 @@
 ﻿note
-	description: "[
-			Convert eweasel testing control file to a testing control class file
-		]"
+	description: "Convert eweasel testing control file to a testing control class file."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	keywords: "Eiffel test"
@@ -113,7 +111,7 @@ feature {EW_EQA_WINDOWS_SETUP} -- Internal
 			l_io.close
 		end
 
-	all_eweasel_test_case_template_content (all_converted_class_content: STRING): STRING
+	all_eweasel_test_case_template_content (all_converted_class_content: READABLE_STRING_8): STRING
 			--
 		require
 			all_converted_class_names_not_void: all_converted_class_content /= Void
@@ -164,10 +162,10 @@ feature {NONE} -- Implementation
 			write_content_to_file (l_converted, (create {PATH}.make_from_string (a_output_class_name)).appended_with_extension ("e"))
 		end
 
-	test_description: detachable STRING
+	test_description: detachable READABLE_STRING_8
 			-- Test description
 
-	test_name: detachable STRING
+	test_name: detachable READABLE_STRING_8
 			-- Test name
 
 	digits_of (a_routine_name: STRING): STRING
@@ -688,7 +686,7 @@ feature {NONE} -- Implementation
 	date: "$Date$"
 	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
+			Copyright (c) 1984-2019, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
 		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"

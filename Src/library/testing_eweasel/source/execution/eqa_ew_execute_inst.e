@@ -81,7 +81,6 @@ feature -- Command
 			l_prog, l_exec_dir: STRING_32
 			l_outfile, l_execute_cmd: READABLE_STRING_32
 			l_exec_error: detachable READABLE_STRING_32
-			l_execution: EQA_EW_SYSTEM_EXECUTION
 			l_file_system: EQA_FILE_SYSTEM
 		do
 			l_execute_cmd := a_test.environment.item_attached ({EQA_EW_PREDEFINED_VARIABLES}.Execute_command_name, a_test.asserter)
@@ -102,7 +101,7 @@ feature -- Command
 				if l_exec_error = Void then
 					if attached arguments as l_arguments then
 						execute_ok := True
-						create l_execution.make (l_prog, l_arguments, l_execute_cmd, l_exec_dir, input_file_name, l_outfile, a_test)
+						;(create {EQA_EW_SYSTEM_EXECUTION}.make (l_prog, l_arguments, l_execute_cmd, l_exec_dir, input_file_name, l_outfile, a_test)).do_nothing
 					else
 						failure_explanation := "No arguments provided"
 						execute_ok := False
@@ -136,7 +135,7 @@ feature {NONE} -- Implementation
 	output_file_name: detachable STRING
 			-- Name of output file
 
-	arguments: detachable ARRAYED_LIST [STRING]
+	arguments: detachable ARRAYED_LIST [READABLE_STRING_32]
 			-- Arguments
 
 	execution_dir_name: STRING
@@ -145,7 +144,7 @@ feature {NONE} -- Implementation
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.

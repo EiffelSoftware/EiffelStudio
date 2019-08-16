@@ -1,7 +1,5 @@
 ﻿note
-	description: "[
-		The Unix implementation of the dynamic API loader {DYNAMIC_API_I}.
-	]"
+	description: "The Unix implementation of the dynamic API loader {DYNAMIC_API_I}."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -34,7 +32,7 @@ feature -- Query
 
 feature -- Basic operations
 
-	load_library (a_name: READABLE_STRING_8; a_version: detachable READABLE_STRING_8): POINTER
+	load_library (a_name: READABLE_STRING_GENERAL; a_version: detachable READABLE_STRING_GENERAL): POINTER
 			-- <Precursor>
 		local
 			l_fn: PATH
@@ -60,7 +58,7 @@ feature -- Basic operations
 			end
 		end
 
-	load_library_from_path (a_path: READABLE_STRING_8): POINTER
+	load_library_from_path (a_path: READABLE_STRING_GENERAL): POINTER
 			-- <Precursor>
 		local
 			l_path: C_STRING

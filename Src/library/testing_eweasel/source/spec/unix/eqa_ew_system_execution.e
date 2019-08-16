@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Intialization
 
-	make (a_prog: STRING; a_args: ARRAYED_LIST [STRING]; a_execute_cmd, a_dir: STRING; a_inf: detachable READABLE_STRING_8; a_savef: READABLE_STRING_32; a_test_set: EQA_EW_SYSTEM_TEST_SET)
+	make (a_prog: READABLE_STRING_32; a_args: ARRAYED_LIST [READABLE_STRING_32]; a_execute_cmd, a_dir: READABLE_STRING_32; a_inf: detachable READABLE_STRING_8; a_savef: READABLE_STRING_32; a_test_set: EQA_EW_SYSTEM_TEST_SET)
 			-- Start a new process to execute `prog' with
 			-- arguments `args' using execution command
 			-- `execute_cmd' in directory `dir'.
@@ -59,7 +59,7 @@ feature {NONE} -- Intialization
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,8 +1,8 @@
-note
+﻿note
 	description: "[
-					EiffelRibbon root ribbon object, it contains ribbon group
-					Some global ribbon features are available in this class
-																					]"
+			EiffelRibbon root ribbon object, it contains ribbon group
+			Some global ribbon features are available in this class
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -192,7 +192,7 @@ feature {EV_RIBBON_ITEM, EV_RIBBON_TEXTABLE, EV_RIBBON_TOOLTIPABLE, EV_RIBBON_AP
 			l_result: NATURAL_32
 		do
 			l_result := c_set_ui_command_property (item, a_command_id, a_key.item, a_variant.item)
-			Result := (l_result = {WEL_COM_HRESULT}.s_ok)
+			Result := l_result = {WEL_COM_HRESULT}.s_ok
 		end
 
 	invalidate (a_command_id: NATURAL_32; a_flags: INTEGER_32; a_key: EV_PROPERTY_KEY)
@@ -452,16 +452,13 @@ feature {EV_RIBBON_DISPACHER} -- Externals callbacks
 
 	on_create_ui_command (a_iui_application: POINTER; a_command_id: NATURAL_32; a_ui_command_type: INTEGER; a_iui_command_handler: POINTER)
 			-- Called for each Command specified in the Windows Ribbon framework markup to bind the Command to an IUICommandHandler.
-		local
-			l_pointer: POINTER
 		do
 			if ui_application = default_pointer then
 				ui_application := a_iui_application
 			end
 			if ui_application = a_iui_application then
 				if command_handler = default_pointer then
-					l_pointer := c_create_ui_command_handler (a_iui_command_handler)
-					command_handler := l_pointer
+					command_handler := c_create_ui_command_handler (a_iui_command_handler)
 				end
 				c_set_command_handler (command_handler, a_iui_command_handler)
 			end
@@ -551,8 +548,9 @@ feature {EV_RIBBON_DISPACHER} -- Externals callbacks
 				return hr;
 			}"
 		end
+
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

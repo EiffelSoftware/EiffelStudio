@@ -267,7 +267,6 @@ feature {NONE} -- Implementation
 			l_words: LIST [STRING]
 			l_count: INTEGER
 			l_cname: STRING
-			l_val: EQA_EW_EIFFEL_VALIDITY_ERROR
 			l_failure_explanation: like failure_explanation
 		do
 			l_words := string_util.broken_into_words (a_phrase)
@@ -286,8 +285,7 @@ feature {NONE} -- Implementation
 				until
 					l_words.after
 				loop
-					create l_val.make (l_cname, l_words.item)
-					a_cr.add_validity_error (l_val)
+					a_cr.add_validity_error (create {EQA_EW_EIFFEL_VALIDITY_ERROR}.make (l_cname, l_words.item))
 					l_words.forth
 				end
 			end
@@ -322,7 +320,7 @@ feature {NONE} -- Constants
 	Validity_warning_result: STRING = "validity_warning"
 
 ;note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	copying: "[
 			This file is part of the EiffelWeasel Eiffel Regression Tester.

@@ -1,10 +1,10 @@
-note
+﻿note
 	description: "[
-					The Combo Box consists of a single-column list box that contains a 
-					collection of mutually exclusive items or Commands combined with a static
-					or edit control and a drop-down arrow. The list box portion of the control
-					is displayed when the user clicks the drop-down arrow.
-																								]"
+			The Combo Box consists of a single-column list box that contains a 
+			collection of mutually exclusive items or Commands combined with a static
+			or edit control and a drop-down arrow. The list box portion of the control
+			is displayed when the user clicks the drop-down arrow.
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -74,7 +74,6 @@ feature -- Command
 			l_key: EV_PROPERTY_KEY
 			l_value: EV_PROPERTY_VARIANT
 			l_command_id: NATURAL_32
-			l_result: BOOLEAN
 		do
 			l_command_id := command_list.item (command_list.lower)
 			check command_id_valid: l_command_id /= 0 end
@@ -83,7 +82,7 @@ feature -- Command
 				create l_key.make_selected_item
 				create l_value.make_empty
 				l_value.set_uint32 (a_index)
-				l_result := l_ribbon.set_command_property (l_command_id, l_key, l_value)
+				l_ribbon.set_command_property (l_command_id, l_key, l_value).do_nothing
 				l_value.destroy
 			end
 		end
@@ -137,23 +136,16 @@ feature {NONE} -- Implementation
 			-- <Precursor>
 		local
 			l_selected: NATURAL_32
-			l_item: EV_RIBBON_COMBO_BOX_ITEM
 		do
 			Result := Precursor (a_command_id, a_execution_verb, a_property_key, a_property_value, a_command_execution_properties)
 			if command_list.has (a_command_id) then
 				l_selected := selected_item
-				if item_source.valid_index (l_selected.as_integer_32 + 1) then
-					l_item := item_source.i_th (l_selected.as_integer_32 + 1)
-					if a_execution_verb = {EV_EXECUTION_VERB}.execute then
-						if attached l_item.select_actions_cache as l_select_action then
-							l_select_action.call (void)
-						end
-					elseif a_execution_verb = {EV_EXECUTION_VERB}.preview then
-
-					elseif a_execution_verb = {EV_EXECUTION_VERB}.cancel_preview then
-
-					end
-
+				if
+					item_source.valid_index (l_selected.as_integer_32 + 1) and then
+					a_execution_verb = {EV_EXECUTION_VERB}.execute and then
+					attached item_source [l_selected.as_integer_32 + 1].select_actions_cache as l_select_action
+				then
+					l_select_action.call
 				end
 			end
 		end
@@ -190,7 +182,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	maximum_width_string: detachable STRING
+	maximum_width_string: detachable READABLE_STRING_32
 			-- Maximum width string from items source
 		local
 			l_item: EV_RIBBON_COMBO_BOX_ITEM
@@ -211,12 +203,11 @@ feature {NONE} -- Implementation
 						Result := l_label
 					end
 				end
-
 				item_source.forth
 			end
 		end
 note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

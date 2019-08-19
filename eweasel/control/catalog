@@ -295,6 +295,7 @@ test	syntax-obsolete-typed-string	syntax069 tcf pass syntax
 test	inline-separate-instruction-syntax	syntax070 tcf pass syntax scoop separate
 test	object-test-with-operators	syntax071 tcf fail syntax attached_types void_safe
 test	bracket-expression-as-bracket-target	syntax072 tcf fail syntax bracket_expression
+test	across-loop-unicode-syntax		syntax073 tcf fail syntax loop across iteration unicode
 
 -- Validity tests
 

@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 				a_parameters.after
 			loop
 				Result.append ("name:")
-				Result.append (a_parameters.key_for_iteration.as_string_32)
+				Result.append ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_parameters.key_for_iteration))
 				Result.append (", value:")
 				if
 					a_parameters.key_for_iteration.has_substring ("Password") or else

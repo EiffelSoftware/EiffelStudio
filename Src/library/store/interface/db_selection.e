@@ -353,14 +353,12 @@ feature -- Basic operations
 			is_ok: is_ok
 		local
 			l_last_query_32: STRING_32
-			u: UTF_CONVERTER
 		do
 			l_last_query_32 := s.as_string_32
 			last_query_32 := l_last_query_32
 			implementation.query (l_last_query_32)
 			if is_tracing and then not is_ok then
-				trace_output.putstring (u.utf_32_string_to_utf_8_string_8 (error_message_32))
-				trace_output.new_line
+				trace_message (error_message_32)
 			end
 		ensure
 			last_query_changed: attached last_query_32 as l_s and then l_s.same_string_general (s)
@@ -430,7 +428,7 @@ feature {NONE} -- Status report
 			-- Does `map_table' need to be updated?
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -440,10 +438,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class DB_SELECTION
-
-
-

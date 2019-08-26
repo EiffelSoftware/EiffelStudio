@@ -149,7 +149,7 @@ feature {NONE}
 			db_selection.object_convert (book)
 			db_selection.cursor_to_object
 
-			authors.force (True, book.author)
+			authors.force (True, book.author.to_string_8)
 		end
 
 	data_objects: HASH_TABLE [ANY, STRING]

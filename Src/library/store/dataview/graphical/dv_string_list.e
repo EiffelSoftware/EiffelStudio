@@ -44,14 +44,14 @@ feature -- Access
 	separator: CHARACTER
 			-- Integer values separator, ',' by default.
 
-	value: STRING
+	value: STRING_32
 			-- List selected values, coded with integers.
 			-- and comma-separated.
 		local
 			lis: DYNAMIC_LIST [EV_LIST_ITEM]
 		do
 			lis := selected_items
-			Result := ""
+			create Result.make_empty
 			from
 				lis.start
 			until
@@ -124,7 +124,7 @@ feature -- Basic operations
 			end
 		end
 
-	add_choice (a_code: INTEGER; a_label: STRING)
+	add_choice (a_code: INTEGER; a_label: READABLE_STRING_GENERAL)
 			-- Add `a_data' to the combo box and enable its selection
 			-- with `a_label'.
 		require
@@ -138,7 +138,7 @@ feature -- Basic operations
 			extend (new_item)
 		end
 
-	set_value (s: STRING)
+	set_value (s: READABLE_STRING_GENERAL)
 			-- List values to select , coded with integers.
 			-- and comma-separated.
 		local
@@ -197,7 +197,7 @@ feature -- Basic operations
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

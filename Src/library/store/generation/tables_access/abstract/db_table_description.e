@@ -85,6 +85,14 @@ feature -- Access (table description)
 
 	id_name: STRING
 			-- Table ID attribute name.
+		obsolete
+			"Use `id_name_32' instead [2019-11-30]."
+		do
+			Result := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (id_name_32)
+		end
+
+	id_name_32: STRING_32
+			-- Table ID attribute name.	
 		do
 			Result := description_list.i_th (Id_code)
 		end

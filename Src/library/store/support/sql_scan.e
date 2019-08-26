@@ -97,9 +97,12 @@ feature -- Basic operations
 			wipe_out
 			append_string_general (s)
 			replace
-			if handle.execution_type.is_tracing then
-				handle.execution_type.trace_output.putstring (Current.as_string_8)
-				handle.execution_type.trace_output.new_line
+			if
+				handle.execution_type.is_tracing and then
+				attached handle.execution_type.trace_output as l_trace_output
+			then
+				l_trace_output.put_string ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (Current))
+				l_trace_output.new_line
 			end
 			Result := Current
 		end
@@ -112,9 +115,12 @@ feature -- Basic operations
 			wipe_out
 			append_string_general (s)
 			replace_dynamic
-			if handle.execution_type.is_tracing then
-				handle.execution_type.trace_output.putstring (Current.as_string_8)
-				handle.execution_type.trace_output.new_line
+			if
+				handle.execution_type.is_tracing and then
+				attached handle.execution_type.trace_output as l_trace_output
+			then
+				l_trace_output.put_string ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (Current))
+				l_trace_output.new_line
 			end
 			Result := Current
 		end
@@ -500,7 +506,7 @@ feature {NONE} -- Status setting
 			-- Reading complex value?
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -510,10 +516,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class SQL_SCAN
-
-
-

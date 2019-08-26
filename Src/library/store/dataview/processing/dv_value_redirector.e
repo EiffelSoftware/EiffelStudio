@@ -53,7 +53,7 @@ feature -- Access
 			end
 		end
 
-	inverted_value (s: STRING): detachable ANY
+	inverted_value (s: READABLE_STRING_GENERAL): detachable ANY
 			--
 		require
 			can_invert: can_invert
@@ -61,7 +61,7 @@ feature -- Access
 			if attached inversion_table.item (s) as l_found_item then
 				Result := l_found_item
 			elseif attached invertor as l_invertor then
-				Result := l_invertor.item ([s])
+				Result := l_invertor.item ([s.to_string_32])
 				inversion_table.put (Result, s)
 			end
 		end
@@ -92,7 +92,7 @@ feature -- Basic operations
 			at_least_one_result_set: at_least_one_result_set
 		end
 
-	set_inversion_table (inv_t: HASH_TABLE [ANY, STRING])
+	set_inversion_table (inv_t: STRING_TABLE [ANY])
 			-- Set values of the invertor result table with `res_t'.
 		require
 			not_void: inv_t /= Void
@@ -102,7 +102,7 @@ feature -- Basic operations
 			can_invert: can_invert
 		end
 
-	set_redirector (red: FUNCTION [ANY, STRING])
+	set_redirector (red: FUNCTION [ANY, STRING_32])
 			-- Set the redirector to use.
 			-- PLEASE set a procedure keeping argument of type ANY to avoid cat calls.
 		require
@@ -113,7 +113,7 @@ feature -- Basic operations
 			at_least_one_result_set: at_least_one_result_set
 		end
 
-	set_invertor (inv: FUNCTION [STRING, ANY])
+	set_invertor (inv: FUNCTION [STRING_32, ANY])
 			-- Set the invertor to use.
 			-- Warning: set a procedure keeping result of type ANY to avoid cat calls.
 		require
@@ -126,20 +126,20 @@ feature -- Basic operations
 
 feature {NONE} -- Implementation
 
-	redirector: detachable FUNCTION [ANY, STRING]
+	redirector: detachable FUNCTION [ANY, STRING_32]
 			-- Function to redirect data to a string representation.
 
-	invertor: detachable FUNCTION [STRING, ANY]
+	invertor: detachable FUNCTION [STRING_32, ANY]
 			-- Function to find back data from its string representation.
 
 	result_table: HASH_TABLE [STRING_32, HASHABLE]
 			-- Table to store and access string corresponding to an hashable data.
 
-	inversion_table: HASH_TABLE [ANY, STRING];
+	inversion_table: STRING_TABLE [ANY];
 			--  Table to store and access data from its string representation.
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -148,9 +148,6 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
 
 
 end -- class DV_VALUE_REDIRECTOR

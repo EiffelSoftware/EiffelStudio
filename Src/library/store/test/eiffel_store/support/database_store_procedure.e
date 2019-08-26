@@ -223,7 +223,7 @@ feature {NONE} -- Implementation
 				a_parameters.after
 			loop
 				Result.append ("name:")
-				Result.append (a_parameters.key_for_iteration)
+				Result.append ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (a_parameters.key_for_iteration))
 				Result.append (", value:")
 				if
 					a_parameters.key_for_iteration.has_substring ("Password") or else
@@ -231,8 +231,12 @@ feature {NONE} -- Implementation
 				then
 					-- Data to exclude
 				else
-					if attached a_parameters.item_for_iteration as l_item  then
-						Result.append (l_item.out)
+					if attached a_parameters.item_for_iteration as l_item then
+						if attached {READABLE_STRING_GENERAL} l_item as s then
+							Result.append ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (s))
+						else
+							Result.append (l_item.out)
+						end
 					end
 				end
 				Result.append ("%N")
@@ -241,4 +245,3 @@ feature {NONE} -- Implementation
 		end
 
 end
-

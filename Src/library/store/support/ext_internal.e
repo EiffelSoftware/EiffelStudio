@@ -148,10 +148,15 @@ feature -- Basic operations
 						set_reference_field (i, object, value.twin)
 					elseif field_conforms_to (immutable_string_8_dtype, l_type) then
 							-- Field is compatible with IMMUTABLE_STRING_8, let's go for it.
-						set_reference_field (i, object, create {IMMUTABLE_STRING_8}.make_from_string (string_general.as_string_8))
+						if string_general.is_valid_as_string_8 then
+							set_reference_field (i, object, create {IMMUTABLE_STRING_8}.make_from_string (string_general.to_string_8))
+						else
+							check is_string_8: False end
+							set_reference_field (i, object, create {IMMUTABLE_STRING_8}.make_from_string ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (string_general)))
+						end
 					elseif field_conforms_to (immutable_string_32_dtype, l_type) then
 							-- Field is compatible with IMMUTABLE_STRING_32, let's go for it.
-						set_reference_field (i, object, create {IMMUTABLE_STRING_32}.make_from_string (string_general.as_string_32))
+						set_reference_field (i, object, create {IMMUTABLE_STRING_32}.make_from_string_general (string_general))
 					else
 						Result := False
 					end
@@ -456,7 +461,7 @@ feature {NONE} -- Obsolete (Use class INTERNAL instead)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -467,6 +472,3 @@ note
 		]"
 
 end -- class EXT_INTERNAL
-
-
-

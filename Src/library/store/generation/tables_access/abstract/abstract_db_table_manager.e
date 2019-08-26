@@ -98,7 +98,7 @@ feature -- Basic operations: selection
 		deferred
 		end
 
-	add_value_qualifier (column: INTEGER; value: STRING)
+	add_value_qualifier (column: INTEGER; value: READABLE_STRING_GENERAL)
 			-- Add qualifier `column' = `value' to prepared select query.
 		require
 			select_query_prepared: select_query_prepared
@@ -106,7 +106,7 @@ feature -- Basic operations: selection
 		deferred
 		end
 
-	add_specific_qualifier (column: INTEGER; value: STRING; type: INTEGER; case: BOOLEAN)
+	add_specific_qualifier (column: INTEGER; value: READABLE_STRING_GENERAL; type: INTEGER; case: BOOLEAN)
 			-- Add qualifier `column' related to `value' with `type' and `case'.
 		require
 			select_query_prepared: select_query_prepared
@@ -147,7 +147,7 @@ feature -- Basic operations: update
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -156,9 +156,6 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end -- class ABSTRACT_DB_TABLE_MANAGER
 

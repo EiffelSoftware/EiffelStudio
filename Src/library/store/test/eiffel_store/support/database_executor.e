@@ -114,7 +114,7 @@ feature -- Update
 			retry
 		end
 
-	update_sql_query (td: DB_TABLE_DESCRIPTION): STRING
+	update_sql_query (td: DB_TABLE_DESCRIPTION): STRING_32
 			-- SQL query corresponding to a database update.
 		require
 			not_void: td /= Void
@@ -127,7 +127,9 @@ feature -- Update
 			l_do_append: BOOLEAN
 		do
 			code := td.Table_code
-			Result := "update " + tables.name_list.i_th (code) + " set "
+			Result := {STRING_32} "update "
+			Result.append_string (tables.name_list.i_th (code))
+			Result.append_string_general (" set ")
 			parameter_list := update_parameters (code)
 			attribute_list := td.description_list
 			l_has_id := td.id_code /= td.no_id
@@ -143,7 +145,9 @@ feature -- Update
 					-- Do not insert the table primary key into the insert statement, this produces and sql error
 				l_do_append := l_has_id and then parameter_list.index /= td.id_code
 				if l_do_append then
-					Result.append (attribute_list.item + " = :" + parameter_list.item)
+					Result.append (attribute_list.item)
+					Result.append_string_general (" = :")
+					Result.append (parameter_list.item)
 				end
 				parameter_list.forth
 				attribute_list.forth
@@ -151,7 +155,10 @@ feature -- Update
 					Result.append (Values_separator)
 				end
 			end
-			Result.append (" where " + td.id_name + " = :" + parameter (td.id_name))
+			Result.append_string_general (" where ")
+			Result.append (td.id_name_32)
+			Result.append_string_general (" = :")
+			Result.append (parameter (td.id_name_32))
 		end
 
 	update_parameters (code: INTEGER): ARRAYED_LIST [STRING_32]
@@ -177,7 +184,9 @@ feature -- Update
 		require
 			s_not_void: s /= Void
 		do
-			Result := {STRING_32} "N_" + s
+			create Result.make (2 + s.count)
+			Result.append_string ({STRING_32} "N_")
+			Result.append (s)
 		end
 
 	Values_separator: STRING = ", "

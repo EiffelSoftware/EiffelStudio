@@ -259,10 +259,10 @@ feature -- Element change
 							l_value.put (l_string_32, ind)
 						else
 							if l_string_32.is_valid_as_string_8 then
-								l_value.put (l_string_32.as_string_8, ind)
+								l_value.put (l_string_32.to_string_8, ind)
 							else
-								l_value.put (l_string_32.as_string_8, ind)
-								fixme ("Report data loss.")
+								l_value.put ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_string_32), ind)
+								fixme ("Report data loss, or utf-8 encoding.")
 							end
 						end
 
@@ -429,7 +429,7 @@ invariant
 	all_non_voids: value /= Void implies value_size /= Void and value_max_size /= Void and value_type /= Void and select_name /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -438,9 +438,6 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end -- class DATABASE_DATA
 

@@ -121,28 +121,45 @@ feature -- Access
 
 	select_query: STRING
 			-- Select query to execute. Execute with `load_result_list'.
+		obsolete
+			"Use `select_query_32' instead  [2019-11-30]."
 		require
 			select_query_prepared: select_query_prepared
 		local
-			l_select_qualifiers: like select_qualifiers
+			q: like select_query_32
 		do
-				-- implied by precondition `select_query_prepared'
-			check attached select_table_descr as l_select_table_descr then
-				if attached select_columns as l_select_columns then
-					Result := "select " + l_select_columns
-				else
-					Result := "select *"
-				end
-				Result.append (" from " + l_select_table_descr.Table_name)
-				l_select_qualifiers := select_qualifiers
-				if l_select_qualifiers /= Void then
-					Result.append (" where " + l_select_qualifiers)
-				end
-				Result.append (order_by)
+			q := select_query_32
+			if q.is_valid_as_string_8 then
+				Result := q.to_string_8
+			else
+				Result := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (q)
 			end
 		end
 
-	select_qualifiers: detachable STRING
+	select_query_32: STRING_32
+			-- Select query to execute. Execute with `load_result_list'.
+		require
+			select_query_prepared: select_query_prepared
+		do
+				-- implied by precondition `select_query_prepared'
+			check attached select_table_descr as l_select_table_descr then
+				Result := {STRING_32} "select "
+				if attached select_columns as l_select_columns then
+					Result.append_string (l_select_columns)
+				else
+					Result.append_character ('*')
+				end
+				Result.append_string_general (" from ")
+				Result.append_string_general (l_select_table_descr.Table_name)
+				if attached select_qualifiers as l_select_qualifiers then
+					Result.append_string_general (" where ")
+					Result.append (l_select_qualifiers)
+				end
+				Result.append_string_general (order_by)
+			end
+		end
+
+	select_qualifiers: detachable STRING_32
 			-- Qualifying clause of current SQL query.
 
 	database_result_list: detachable ARRAYED_LIST [DB_TABLE]
@@ -174,7 +191,7 @@ feature -- Basic operations
 		do
 				-- implied by precondition `select_query_prepared'
 			check attached select_table_descr as l_select_table_descr then
-				result_list := load_list_with_query_and_tablecode (select_query, l_select_table_descr.Table_code)
+				result_list := load_list_with_query_and_tablecode (select_query_32, l_select_table_descr.Table_code)
 			end
 		end
 
@@ -231,45 +248,47 @@ feature -- Basic operations
 			end
 		end
 
-	add_value_qualifier (column: INTEGER; value: STRING)
+	add_value_qualifier (column: INTEGER; value: READABLE_STRING_GENERAL)
 			-- Add qualifier `column' = `value' to prepared select query.
 		local
-			q: STRING
-			sql_value: STRING
+			q: STRING_32
+			sql_value: STRING_32
 		do
 				-- implied by precondition `select_query_prepared'
 			check attached select_table_descr as l_select_table_descr then
-				sql_value := string_format (value)
+				sql_value := string_format_32 (value)
 				q := l_select_table_descr.description_list.i_th (column) + Space + "=" + Space + sql_value
 				add_qualifier (q)
 			end
 		end
 
-	add_specific_qualifier (column: INTEGER; value: STRING; type: INTEGER; case_sens: BOOLEAN)
+	add_specific_qualifier (column: INTEGER; value: READABLE_STRING_GENERAL; type: INTEGER; case_sens: BOOLEAN)
 			-- Add qualifier `column' related to `value' with `type' and `case'.
 			-- 'LIKE' predicates are implemented by both Oracle and ODBC with '%' and '_' wild
 			-- card characters.
 			-- Case sensitiveness can only be specified for Oracle. ODBC set case sensitiveness
 			-- directly on database columns.
 		local
-			q: STRING
-			attr, val: STRING
+			q: STRING_32
+			attr, val: STRING_32
 			coltype: INTEGER
 		do
 				-- implied by precondition `select_query_prepared'
 			check attached select_table_descr as l_select_table_descr then
 				attr := l_select_table_descr.description_list.i_th (column)
-				val := value.twin
+				create val.make_from_string_general (value)
 				coltype := l_select_table_descr.type_list.i_th (column)
-				if case_sens or else not database_handle_name.is_equal (Oracle_handle_name) then
+				if case_sens or else not database_handle_name.same_string (Oracle_handle_name) then
 					q := attr.twin
 				else
-					if coltype = l_select_table_descr.string_type or else
-							coltype = l_select_table_descr.character_type then
-						q := to_lower (attr)
+					if
+						coltype = l_select_table_descr.string_type
+						or else coltype = l_select_table_descr.character_type
+					then
+						q := to_lower_32 (attr)
 						val.to_lower
 					else
-						q := attr.twin
+						create q.make_from_string_general (attr)
 					end
 				end
 				if like_type (type) then
@@ -277,31 +296,33 @@ feature -- Basic operations
 						-- '_' -> '?'): a solution is to replace
 						-- these characters by any character, i.e. '_'.
 					val.replace_substring_all (any_wildcard, only_one_wildcard)
-					q.append (Space)
-					q.append (Like_predicate)
-					q.append (Space)
+					q.append_string_general (Space)
+					q.append_string_general (Like_predicate)
+					q.append_string_general (Space)
 					if type = Contains_type or else type = Suffix_type then
-						val.prepend (any_wildcard)
+						val.prepend_string_general (any_wildcard)
 					end
 					if type = Contains_type or else type = Prefix_type then
-						val.append (any_wildcard)
+						val.append_string_general (any_wildcard)
 					end
 				else
-					q.append (Space)
+					q.append_string_general (Space)
 					if type = Equals_type then
-						q.append ("=")
+						q.append_character ('=')
 					elseif type = Greater_type then
-						q.append (">")
+						q.append_character ('>')
 					elseif type = Lower_type then
-						q.append ("<")
+						q.append_character ('<')
 					end
-					q.append (Space)
+					q.append_string_general (Space)
 				end
 						-- Gives a valid SQL string representation to `val'.
-				if like_type (type) or else
-						coltype = l_select_table_descr.string_type or else
-						coltype = l_select_table_descr.character_type then
-					val := string_format (val)
+				if
+					like_type (type)
+					or else coltype = l_select_table_descr.string_type
+					or else coltype = l_select_table_descr.character_type
+				then
+					val := string_format_32 (val)
 				end
 				q.append (val)
 				add_qualifier (q)
@@ -323,7 +344,7 @@ feature -- Basic operations
 			is_id_selection: is_id_selection
 		end
 
-	add_qualifier (value: STRING)
+	add_qualifier (value: READABLE_STRING_GENERAL)
 			-- Add qualifier `value' to prepared select query.
 		require
 			select_query_prepared: select_query_prepared
@@ -333,9 +354,12 @@ feature -- Basic operations
 		do
 			l_select_qualifiers := select_qualifiers
 			if l_select_qualifiers = Void then
-				select_qualifiers := value.twin
+				create select_qualifiers.make_from_string_general (value)
 			else
-				l_select_qualifiers.append (Space + And_operator + Space + value)
+				l_select_qualifiers.append_string_general (Space)
+				l_select_qualifiers.append_string_general (And_operator)
+				l_select_qualifiers.append_string_general (Space)
+				l_select_qualifiers.append_string_general (value)
 			end
 		end
 
@@ -417,7 +441,7 @@ feature -- Queries
 			end
 		end
 
-	load_list_with_query_and_tablecode (query: STRING; tablecode: INTEGER): detachable ARRAYED_LIST [DB_TABLE]
+	load_list_with_query_and_tablecode (query: READABLE_STRING_GENERAL; tablecode: INTEGER): detachable ARRAYED_LIST [DB_TABLE]
 			-- Load list of table rows from `query'. Table rows type is
 			-- table of code `tablecode'.
 		require
@@ -428,9 +452,7 @@ feature -- Queries
 		do
 			obj := tables.obj (tablecode)
 			has_error := False
-			if attached database_manager.load_list_with_select (query, obj) as l_result then
-				Result := l_result
-			end
+			Result := database_manager.load_list_with_select (query, obj)
 			if database_manager.has_error and then attached database_manager.error_message_32 as l_error_message then
 				has_error := True
 				error_message_32 := selection_failed (query) + l_error_message
@@ -629,7 +651,7 @@ feature {NONE} -- Update implementation
 			end
 		end
 
-	update_sql_query (td: DB_TABLE_DESCRIPTION): STRING
+	update_sql_query (td: DB_TABLE_DESCRIPTION): STRING_32
 			-- SQL query corresponding to a database update.
 		require
 			not_void: td /= Void
@@ -642,7 +664,10 @@ feature {NONE} -- Update implementation
 			l_do_append: BOOLEAN
 		do
 			code := td.Table_code
-			Result := "update " + tables.name_list.i_th (code) + " set "
+			create Result.make (20)
+			Result.append_string_general ("update ")
+			Result.append (tables.name_list.i_th (code))
+			Result.append_string_general (" set ")
 			parameter_list := update_parameters (code)
 			attribute_list := td.description_list
 			l_has_id := td.id_code /= td.no_id
@@ -658,7 +683,9 @@ feature {NONE} -- Update implementation
 					-- Do not insert the table primary key into the insert statement, this produces and sql error
 				l_do_append := l_has_id and then parameter_list.index /= td.id_code
 				if l_do_append then
-					Result.append (attribute_list.item + " = :" + parameter_list.item)
+					Result.append (attribute_list.item)
+					Result.append_string_general (" = :")
+					Result.append_string_general (parameter_list.item)
 				end
 				parameter_list.forth
 				attribute_list.forth
@@ -666,7 +693,10 @@ feature {NONE} -- Update implementation
 					Result.append (Values_separator)
 				end
 			end
-			Result.append (" where " + td.id_name + " = :" + parameter (td.id_name))
+			Result.append_string_general (" where ")
+			Result.append_string (td.id_name_32)
+			Result.append_string_general (" = :")
+			Result.append_string (parameter (td.id_name_32))
 		end
 
 	update_parameters (code: INTEGER): ARRAYED_LIST [STRING_32]
@@ -724,14 +754,16 @@ feature {NONE} -- Creation implementation
 			end
 		end
 
-	max_id_query (table_descr: DB_TABLE_DESCRIPTION): STRING
+	max_id_query (table_descr: DB_TABLE_DESCRIPTION): STRING_32
 			-- Query to find maximum ID for table described by `table_descr'.
 		require
 			not_void: table_descr /= Void
 			has_id: table_descr.id_code /= table_descr.No_id
 		do
-			Result := "select max(" + table_descr.id_name
-					+ ") from " + table_descr.table_name
+			Result := {STRING_32} "select max("
+			Result.append_string (table_descr.id_name_32)
+			Result.append_string_general (") from ")
+			Result.append_string_general (table_descr.table_name)
 		end
 
 	repository (code: INTEGER): DB_REPOSITORY
@@ -764,10 +796,14 @@ feature {NONE} -- Deletion implementation
 			-- Delete `an_obj' in the database, i.e.
 			-- the table row of `an_obj' table with `an_obj' ID.
 		local
-			q: STRING
+			q: STRING_32
 		do
-			q := "delete from " + description.Table_name + " where " + description.id_name
-				+ " = " + description.printable_id
+			q := {STRING_32} "delete from "
+			q.append_string_general (description.Table_name)
+			q.append_string_general (" where ")
+			q.append_string (description.id_name_32)
+			q.append_string_general (" = ")
+			q.append_string_general (description.printable_id)
 			database_manager.execute_query (q)
 			if database_manager.has_error then
 				has_error := True
@@ -841,13 +877,21 @@ feature {NONE} -- Implementation
 			Result := database_manager.string_format (s)
 		end
 
+	string_format_32 (s: READABLE_STRING_GENERAL): STRING_32
+			-- String representation in SQL of `s'.
+		require
+			s_not_void: s /= Void
+		do
+			Result := database_manager.string_format_32 (s)
+		end
+
 	database_manager: DATABASE_MANAGER [DATABASE]
 			-- Database manager: manage every interaction
 			-- with database.
 
 feature {NONE} -- Implementation
 
-	select_columns: detachable STRING
+	select_columns: detachable STRING_32
 			-- Columns to select from a selection statement.
 
 	order_by: STRING
@@ -883,6 +927,17 @@ feature {NONE} -- SQL query construction
 			a_attribute_not_void: a_attribute /= Void
 		do
 			Result := "lower (" + a_attribute + ")"
+		end
+
+	to_lower_32 (a_attribute: READABLE_STRING_GENERAL): STRING_32
+			-- Oracle SQL representation of the value in lower case for `a_attribute'.
+		require
+			a_attribute_not_void: a_attribute /= Void
+		do
+			create Result.make (8 + a_attribute.count)
+			Result.append_string_general ("lower (")
+			Result.append_string_general (a_attribute)
+			Result.append_string_general (")")
 		end
 
 	Like_predicate: STRING = "like"
@@ -966,7 +1021,7 @@ feature {NONE} -- Error messages
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -155,7 +155,7 @@ feature {NONE} -- Implementation
 	last_column: INTEGER
 			-- Last searched column value.
 
-	last_value: detachable STRING
+	last_value: detachable STRING_32
 			-- Last searched qualifying value.
 
 	last_qualification: INTEGER
@@ -176,7 +176,7 @@ feature {NONE} -- Implementation
 			if attached value_selector as l_val_selector then
 				last_value := l_val_selector.value
 			else
-				last_value := ""
+				create last_value.make_empty
 			end
 			if attached qualification_selector as l_qualification_selector then
 				last_qualification := l_qualification_selector.value
@@ -187,7 +187,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -196,9 +196,6 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
 
 
 end -- class DV_INTERACTIVE_SEARCHER

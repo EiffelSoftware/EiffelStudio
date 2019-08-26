@@ -28,6 +28,15 @@ feature -- Status report
 			Result := handle.execution_type.is_tracing
 		end
 
+	trace_message (m: READABLE_STRING_GENERAL)
+			-- Trace message `m` to destination file.
+		require
+			is_tracing
+		do
+			trace_output.put_string ({UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (m))
+			trace_output.put_new_line
+		end
+
 	trace_output: FILE
 			-- Trace destination file
 		do
@@ -71,20 +80,14 @@ feature -- Status setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
 end -- class DB_EXEC_USE
-
-
-

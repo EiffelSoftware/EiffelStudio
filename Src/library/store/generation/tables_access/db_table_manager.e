@@ -143,11 +143,11 @@ feature -- Access
 		do
 				-- implied by precondition `select_query_prepared'
 			check attached select_table_descr as l_select_table_descr then
+				Result := {STRING_32} "select "
 				if attached select_columns as l_select_columns then
-					create Result.make_from_string ({STRING_32} "select ")
 					Result.append_string (l_select_columns)
 				else
-					Result := {STRING_32} "select *"
+					Result.append_character ('*')
 				end
 				Result.append_string_general (" from ")
 				Result.append_string_general (l_select_table_descr.Table_name)

@@ -127,7 +127,7 @@ feature -- Update
 			l_do_append: BOOLEAN
 		do
 			code := td.Table_code
-			create Result.make_from_string ({STRING_32} "update ")
+			Result := {STRING_32} "update "
 			Result.append_string (tables.name_list.i_th (code))
 			Result.append_string_general (" set ")
 			parameter_list := update_parameters (code)

@@ -88,7 +88,7 @@ feature -- Access (table description)
 		obsolete
 			"Use `id_name_32' instead [2019-11-30]."
 		do
-			Result := id_name_32.as_string_8
+			Result := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (id_name_32)
 		end
 
 	id_name_32: STRING_32

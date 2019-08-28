@@ -2,10 +2,14 @@
 	description: "[
 			Table of unicode symbols indexed by title, for code completion purpose.
 			See 	https://en.wikipedia.org/wiki/Mathematical_Operators
+					https://en.wikipedia.org/wiki/Mathematical_operators_and_symbols_in_Unicode
 					https://www.unicode.org/charts/PDF/U2200.pdf
 		]"
+
 	date: "$Date$"
 	revision: "$Revision$"
+	EIS: "name=Unicode symbols for math", "protocol=URI", "src=https://en.wikipedia.org/wiki/Mathematical_operators_and_symbols_in_Unicode", "tag=symbol"
+	EIS: "name=Math Symbol", "protocol=URI", "src=https://www.compart.com/en/unicode/category/Sm", "tag=symbol"
 
 class
 	EB_COMPLETION_UNICODE_SYMBOLS
@@ -23,12 +27,15 @@ feature {NONE} -- Initialization
 	make
 		do
 			create items.make_caseless (30)
+			create sections.make_caseless (10)
 			load
 		end
 
 feature -- Access
 
 	items: STRING_TABLE [CHARACTER_32]
+
+	sections: STRING_TABLE [LIST [TUPLE [symbol: CHARACTER_32; description: READABLE_STRING_GENERAL]]]
 
 	new_cursor: TABLE_ITERATION_CURSOR [CHARACTER_32, READABLE_STRING_GENERAL]
 			-- Fresh cursor associated with current structure
@@ -48,19 +55,30 @@ feature {NONE} -- Persistency
 			p: PATH
 			f: PLAIN_TEXT_FILE
 			utf: UTF_CONVERTER
-			l_line, s32: STRING
+			l_line: STRING
+			s32: STRING_32
+			l_section_name: STRING
+			l_section_list: detachable LIST [TUPLE [symbol: CHARACTER_32; description: READABLE_STRING_GENERAL]]
 			ch: CHARACTER_32
-			i: INTEGER
+			i,j: INTEGER
 		do
 			p := eiffel_layout.eifinit_path.extended ("unicode_symbols.cfg")
 			if attached eiffel_layout.user_priority_file_name (p, True) as pp then
 				p := pp
 			end
+			items.wipe_out
+			sections.wipe_out
+			l_section_name := "Default"
+			l_section_list := sections [l_section_name]
+			if l_section_list = Void then
+				create {ARRAYED_LIST [TUPLE [symbol: CHARACTER_32; desc: READABLE_STRING_GENERAL]]} l_section_list.make (10)
+				sections.put (l_section_list, l_section_name)
+			end
+
 			create f.make_with_path (p)
 			if f.exists and then f.is_access_readable then
 				f.open_read
 				from
-
 				until
 					f.end_of_file or f.exhausted
 				loop
@@ -68,8 +86,26 @@ feature {NONE} -- Persistency
 					l_line := f.last_string
 					l_line.left_adjust
 					l_line.right_adjust
-					if l_line.is_empty or else l_line.starts_with_general ("--") then
+					if l_line.is_empty then
 							-- Ignore line
+					elseif l_line.starts_with_general ("--") then
+						if l_line.count > 2 and then l_line[3] = '[' then
+							j := l_line.index_of (']', 3)
+							if j > 3 then
+								l_section_name := l_line.substring (4, j - 1)
+								l_section_name.adjust
+								l_section_list := sections [l_section_name]
+								if l_section_list = Void then
+									create {ARRAYED_LIST [TUPLE [symbol: CHARACTER_32; desc: READABLE_STRING_GENERAL]]} l_section_list.make (10)
+									sections.put (l_section_list, l_section_name)
+								end
+
+							else
+								-- Ignore line
+							end
+						else
+							-- Ignore line
+						end
 					else
 							-- format: `character code`:`name`
 						ch := '%U'
@@ -83,11 +119,12 @@ feature {NONE} -- Persistency
 							ch := character_from_string (l_line)
 						end
 						if ch /= '%U' then
-							if s32 /= Void then
-								items [s32] := ch
-							else
-								items [ch.out] := ch
+							if s32 = Void then
+								create s32.make (1)
+								s32.extend (ch)
 							end
+							items [s32] := ch
+							l_section_list.force ([ch, s32])
 						end
 					end
 				end
@@ -135,6 +172,11 @@ feature {NONE} -- Persistency
 				items ["Logical OR"] := {CHARACTER_32} '%/8744/'
 				items ["Intersection"] := {CHARACTER_32} '%/8745/'
 				items ["Union"] := {CHARACTER_32} '%/8746/'
+				across
+					items as ic
+				loop
+					l_section_list.extend ([ic.item, ic.key])
+				end
 			end
 		end
 

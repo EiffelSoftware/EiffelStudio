@@ -1190,19 +1190,19 @@ feature -- Keybord shortcuts Customization
 			create Result.make (default_shortcut_actions.count)
 		end
 
-	default_shortcut_actions: ARRAYED_LIST [TUPLE [actions: HASH_TABLE [TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING_8], STRING_8]; group: MANAGED_SHORTCUT_GROUP]]
+	default_shortcut_actions: ARRAYED_LIST [TUPLE [actions: HASH_TABLE [TUPLE [alt: BOOLEAN; ctrl: BOOLEAN; shift: BOOLEAN; key: STRING_8], STRING_8]; group: MANAGED_SHORTCUT_GROUP]]
 			-- Array of shortcut defaults (Alt/Ctrl/Shift/KeyString)
 
-	editor_shortcut_actions: ARRAYED_LIST [TUPLE [HASH_TABLE [TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING_8], STRING_8], MANAGED_SHORTCUT_GROUP]]
+	editor_shortcut_actions: ARRAYED_LIST [TUPLE [HASH_TABLE [TUPLE [alt: BOOLEAN; ctrl: BOOLEAN; shift: BOOLEAN; key: STRING_8], STRING_8], MANAGED_SHORTCUT_GROUP]]
 			-- Array for shortcut defaults
 			-- in tuple, the four elements are: (Alt/Ctrl/Shift/KeyString)
 		local
-			l_hash: HASH_TABLE [TUPLE [BOOLEAN, BOOLEAN, BOOLEAN, STRING_8], STRING_8]
+			l_hash: HASH_TABLE [TUPLE [alt: BOOLEAN; ctrl: BOOLEAN; shift: BOOLEAN; key: STRING_8], STRING_8]
 		once
 			create Result.make (1)
 
 				-- Shortcuts for main window group
-			create l_hash.make (15)
+			create l_hash.make (16)
 			l_hash.put ([False, False, False, key_strings.item (Key_F2).twin.as_string_8], "customized_insertion_1")
 			l_hash.put ([False,  True, False, key_strings.item (Key_F2).twin.as_string_8], "customized_insertion_2")
 			l_hash.put ([False, False,  True, key_strings.item (Key_F2).twin.as_string_8], "customized_insertion_3")
@@ -1239,6 +1239,8 @@ feature -- Keybord shortcuts Customization
 
 			l_hash.put ([False,  True, False, key_strings.item (key_0).twin.as_string_8], "zoom_reset")
 			l_hash.put ([False,  True, False, key_strings.item (key_numpad_0).twin.as_string_8], "zoom_reset_numpad")
+
+			l_hash.put ([True,  True, False, key_strings.item (key_space).twin.as_string_8], "insert_symbol")
 
 			Result.extend ([l_hash, main_window_group])
 		end

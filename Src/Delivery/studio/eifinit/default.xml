@@ -777,7 +777,7 @@
 	<PREF NAME="shortcuts.editor.zoom_out_numpad" DESCRIPTION="Trigger zoom out editor's font through numpad keys."><SHORTCUT Ctrl="True">NumPad -</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.editor.zoom_reset" DESCRIPTION="Trigger resetting editor's font."><SHORTCUT Ctrl="True">0</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.editor.zoom_reset_numpad" DESCRIPTION="Trigger resetting editor's font through numpad keys."><SHORTCUT Ctrl="True">NumPad 0</SHORTCUT></PREF>
-		
+	<PREF NAME="shortcuts.editor.insert_symbol" DESCRIPTION="Insert symbol using specific dialog."><SHORTCUT Ctrl="True" Alt="true">Space</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.external_commands.shortcut_0" DESCRIPTION="First external command shortcut."><SHORTCUT Alt="True">0</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.external_commands.shortcut_1" DESCRIPTION="Second external command shortcut."><SHORTCUT Alt="True">1</SHORTCUT></PREF>
 	<PREF NAME="shortcuts.external_commands.shortcut_2" DESCRIPTION="Third external command shortcut."><SHORTCUT Alt="True">2</SHORTCUT></PREF>

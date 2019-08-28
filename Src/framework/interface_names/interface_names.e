@@ -2956,6 +2956,14 @@ feature -- Description texts
 	e_Operation_succeeded: STRING_32	do Result := locale.translation("Operation succeeded.")	end
 	e_Operation_failed: STRING_32	do Result := locale.translation("Operation failed.") end
 
+	e_Insert_symbol: STRING_32	do Result := locale.translation("Insert symbol") end
+
+	f_insert_symbol: STRING_32 	do Result := locale.translation("Insert Symbol")	end
+
+	m_insert_symbol: STRING_32 	do Result := locale.translation("&Insert Symbol")	end
+
+	b_insert_symbol: STRING_32	do Result := locale.translation("Insert Symbol")	end
+
 feature -- Error
 
 	err_error: STRING_32 do Result := locale.translation ("Error ") end

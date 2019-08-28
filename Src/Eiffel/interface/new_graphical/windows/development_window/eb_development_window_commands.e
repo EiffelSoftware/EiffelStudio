@@ -75,6 +75,8 @@ feature -- Query
 	editor_paste_cmd: EB_EDITOR_PASTE_COMMAND
 			-- Command to paste text in the editor.
 
+	editor_insert_symbol_cmd: EB_INSERT_SYMBOL_EDITOR_COMMAND
+
 	melt_cmd: EB_MELT_PROJECT_COMMAND
 			-- Command to start compilation.
 
@@ -845,7 +847,7 @@ feature -- Recycle
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

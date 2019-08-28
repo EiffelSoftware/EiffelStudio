@@ -131,6 +131,7 @@ feature -- Basic operations
 		do
 			mname := menu_name.twin
 			if shortcut_available then
+				check no_space: not mname.has ('%T') end
 				mname.append (Tabulation)
 				mname.append (shortcut_string)
 			end
@@ -182,7 +183,7 @@ feature {NONE} -- Implementation
 	Tabulation: STRING = "%T";
 
 note
-	copyright:	"Copyright (c) 1984-2009, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

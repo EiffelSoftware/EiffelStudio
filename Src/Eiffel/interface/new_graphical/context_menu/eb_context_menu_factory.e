@@ -14,7 +14,6 @@ inherit
 	EB_RECYCLABLE
 	EB_SHARED_MANAGERS
 	EB_SHARED_MENU_EXTENDER
-	EB_SHARED_PIXMAPS
 	EB_SHARED_PREFERENCES
 	SHARED_BENCH_NAMES
 
@@ -688,6 +687,17 @@ feature {NONE} -- Menu section, Granularity 1.
 			if l_unmanaged_editor then
 				l_menu_item.select_actions.wipe_out
 				l_menu_item.select_actions.extend (agent a_editor.paste)
+			end
+			if is_editable then
+				l_menu_item.enable_sensitive
+			else
+				l_menu_item.disable_sensitive
+			end
+
+			l_menu_item := dev_window.commands.editor_insert_symbol_cmd.new_menu_item_unmanaged
+			a_menu.extend (l_menu_item)
+			if l_unmanaged_editor then
+				l_menu_item.select_actions.wipe_out
 			end
 			if is_editable then
 				l_menu_item.enable_sensitive
@@ -2020,7 +2030,7 @@ invariant
 	dev_window_not_void: dev_window /= Void
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

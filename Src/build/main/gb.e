@@ -145,13 +145,20 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	open_with_name (f: STRING)
+	open_with_name (f: READABLE_STRING_GENERAL)
 			-- Use the open project command to open
 			-- file `f'.
 		require
 			f_not_void: f /= Void
+		local
+			p: PATH
 		do
-			components.commands.Open_project_command.execute_with_name (f)
+			create p.make_from_string (f)
+			if not p.is_absolute then
+				p := {EXECUTION_ENVIRONMENT}.current_working_path.extended_path (p)
+			end
+				-- FIXME: unicode support!!!
+			components.commands.Open_project_command.execute_with_name (p.utf_8_name)
 		end
 
 --	end_digit_processing (pebble: ANY) is

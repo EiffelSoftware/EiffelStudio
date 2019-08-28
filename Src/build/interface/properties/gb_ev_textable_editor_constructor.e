@@ -89,7 +89,7 @@ feature {NONE} -- Implementation
 	has_user_events: BOOLEAN = True
 		-- Does `Current' have user events which must be set?
 
-	start_timer (x, y, b: INTEGER_32; x_tilt, y_tilt, pressure: REAL_64; screen_x, screen_y: INTEGER_32)
+	start_timer
 			-- Start a timer, which is used as a delay between an event begin
 			-- received by `user_event_widget' and `check_state'.
 		local

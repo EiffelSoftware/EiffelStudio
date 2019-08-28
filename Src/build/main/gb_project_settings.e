@@ -439,10 +439,11 @@ feature {NONE} --Implementation
 	set_string_attribute (a_string: STRING; an_agent: PROCEDURE [STRING])
 			-- Call `an_agent' with `a_string'.
 		require
-			a_string_not_void: a_string /= Void
 			an_agent_not_void: an_agent /= Void
 		do
-			an_agent.call ([a_string])
+			if a_string /= Void then
+				an_agent.call ([a_string])
+			end
 		end
 
 	set_boolean_attribute (a_string: STRING; true_agent, false_agent: PROCEDURE)

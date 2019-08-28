@@ -195,6 +195,42 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER} -- Initialization
 			set: save_all_cmd = a_cmd
 		end
 
+feature -- DPI handling
+
+	dpi: NATURAL
+			-- Return the dots per inch (dpi) of the monitor
+			-- DPI sizes 96, 120, 144, 192, etc.
+		do
+			Result := dpi_cache
+			if Result = 0 then
+				update_dpi ({EV_MONITOR_DPI_DETECTOR_IMP}.dpi)
+				Result := dpi_cache
+			end
+		end
+
+	update_dpi (a_dpi: NATURAL)
+		require
+			a_dpi > 0
+		do
+			dpi_cache := a_dpi
+		ensure
+			dpi_cache_updated: dpi_cache = a_dpi or else dpi_cache /= 0
+		end
+
+	dpi_cache: like dpi
+
+	scaled_size (a_size: INTEGER): INTEGER
+			-- Scaled size of `a_size`.
+		local
+			l_dpi: like dpi
+		do
+			Result := a_size
+			l_dpi := dpi
+			if l_dpi > 0 then
+				Result := (Result * (dpi / 96)).rounded
+			end
+		end
+
 feature {NONE} -- Clean up
 
 	internal_recycle
@@ -1544,7 +1580,7 @@ feature {EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Window manage
 						-- Only save the size of the window if not maximized,
 						-- since if maximized we know the size of the window, it is
 						-- the size of the screen.
-					development_window_data.save_size_and_dpi (window.dpi, window.width, window.height)
+					development_window_data.save_size_and_dpi (dpi, window.width, window.height)
 				end
 			end
 		end

@@ -274,6 +274,8 @@ feature -- Event: license
 	on_gpl_usage_accepted
 		do
 			preferences.misc_data.set_license_accepted (True)
+				-- Save preferences right away.
+			preferences.preferences.save_preferences
 			if is_cloud_enabled then
 				if is_logged_in then
 					on_next
@@ -385,7 +387,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

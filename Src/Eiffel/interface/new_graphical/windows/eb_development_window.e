@@ -203,16 +203,23 @@ feature -- DPI handling
 		do
 			Result := dpi_cache
 			if Result = 0 then
-				update_dpi ({EV_MONITOR_DPI_DETECTOR_IMP}.dpi)
+				update_dpi ({EV_MONITOR_DPI_DETECTOR_IMP}.dpi.to_integer_32)
 				Result := dpi_cache
 			end
 		end
 
-	update_dpi (a_dpi: NATURAL)
+	update_dpi (a_dpi: INTEGER)
 		require
 			a_dpi > 0
 		do
-			dpi_cache := a_dpi
+			if attached {EXECUTION_ENVIRONMENT}.item ("ISE_STUDIO_DPI") as l_forced_dpi and then l_forced_dpi.is_integer then
+				dpi_cache := l_forced_dpi.to_natural_32
+				if dpi_cache <= 0 then
+					dpi_cache := a_dpi.to_natural_32
+				end
+			else
+				dpi_cache := a_dpi.to_natural_32
+			end
 		ensure
 			dpi_cache_updated: dpi_cache = a_dpi or else dpi_cache /= 0
 		end
@@ -1580,7 +1587,7 @@ feature {EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Window manage
 						-- Only save the size of the window if not maximized,
 						-- since if maximized we know the size of the window, it is
 						-- the size of the screen.
-					development_window_data.save_size_and_dpi (dpi, window.width, window.height)
+					development_window_data.save_size_and_dpi (dpi.to_integer_32, window.width, window.height)
 				end
 			end
 		end

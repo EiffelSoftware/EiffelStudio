@@ -1587,7 +1587,7 @@ feature {EB_WINDOW_MANAGER, EB_DEVELOPMENT_WINDOW_MAIN_BUILDER} -- Window manage
 						-- Only save the size of the window if not maximized,
 						-- since if maximized we know the size of the window, it is
 						-- the size of the screen.
-					development_window_data.save_size_and_dpi (dpi.to_integer_32, window.width, window.height)
+					development_window_data.save_size_and_dpi (dpi, window.width, window.height)
 				end
 			end
 		end

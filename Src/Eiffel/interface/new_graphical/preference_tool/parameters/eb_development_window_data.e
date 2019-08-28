@@ -40,7 +40,7 @@ feature -- Element change
 			height_set: height = a_height
 		end
 
-	save_size_and_dpi (a_dpi: NATURAL; a_width, a_height: INTEGER)
+	save_size_and_dpi (a_dpi: like dpi; a_width, a_height: INTEGER)
 			-- Save width and height of window and dpi.
 		do
 			width := a_width

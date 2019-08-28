@@ -1206,7 +1206,7 @@ feature -- Element change
 		deferred
 		end
 
-	put_string, putstring (s: STRING)
+	put_string, putstring (s: READABLE_STRING_8)
 			-- Write `s' at current position.
 		local
 			i: INTEGER

@@ -56,19 +56,21 @@ feature -- Output
 			end
 		end
 
-	put_string (s: STRING)
+	put_string (s: READABLE_STRING_8)
 			-- Write `s' at current position.
 		local
 			l_str: STRING
 		do
-			if s.count /= 0 then
+			if s.has ('%N') then
 				create l_str.make_from_string (s)
 				l_str.replace_substring_all (eiffel_newline, dotnet_newline)
 				Precursor (l_str)
+			else
+				Precursor (s)
 			end
 		end
 
-	putstring (s: STRING)
+	putstring (s: READABLE_STRING_8)
 			-- Write `s' at current position.
 		do
 			put_string (s)
@@ -125,11 +127,7 @@ feature -- Output
 	put_boolean, putbool (b: BOOLEAN)
 			-- Write ASCII value of `b' at current position.
 		do
-			if b then
-				put_string (true_string)
-			else
-				put_string (false_string)
-			end
+			put_string (if b then true_string else false_string end)
 		end
 
 	put_real, putreal, put_real_32 (r: REAL_32)

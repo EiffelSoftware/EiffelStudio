@@ -188,7 +188,7 @@ feature -- Output
 			put_character ('%N')
 		end
 
-	put_string, putstring (s: STRING)
+	put_string, putstring (s: READABLE_STRING_8)
 			-- Write `s' to medium.
 		do
 		end

@@ -137,7 +137,7 @@ feature -- Output
 			end
 		end
 
-	put_string, putstring (s: STRING)
+	put_string, putstring (s: READABLE_STRING_8)
 			--
 		local
 			byte_array: NATIVE_ARRAY [NATURAL_8]

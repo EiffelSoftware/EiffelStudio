@@ -10,4 +10,8 @@ execute_work	NONE exec_output_m
 execute_result	ok
 compare		exec_output_m output
 
+prettify	test.e output_p
+compile_result ok
+compare		output_p output_p
+
 test_end

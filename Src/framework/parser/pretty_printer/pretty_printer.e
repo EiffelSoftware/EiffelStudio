@@ -6,7 +6,12 @@ class
 
 inherit
 	AST_ROUNDTRIP_ITERATOR
+		rename
+			internal_match_list as match_list
 		redefine
+			match_list,
+			reset,
+
 			process_leading_leaves,
 
 			-- Leafs
@@ -155,7 +160,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_out_stream: like out_stream)
+	make (a_out_stream: like out_stream; r: attached like parsed_class; m: like match_list)
 			-- Initialization.
 		require
 			out_stream_ready: a_out_stream /= Void
@@ -166,6 +171,8 @@ feature {NONE} -- Initialization
 			last_index := 0
 			last_printed := '%U'
 			new_line_count := 0
+			set_parsed_class (r)
+			set_match_list (m)
 			change_indent := agent do_nothing
 		end
 
@@ -177,7 +184,10 @@ feature -- Access
 	indent: STRING_32
 			-- Indentation string.
 
-feature {NONE} -- Internal access
+feature {NONE} -- Access
+
+	match_list: like {AST_ROUNDTRIP_ITERATOR}.match_list
+			-- <Precursor>
 
 	last_printed: CHARACTER_32
 			-- Last printed character.
@@ -187,6 +197,13 @@ feature {NONE} -- Internal access
 
 	new_line_count: INTEGER
 			-- Number of consequitive new line characters.
+
+feature -- Setting
+
+	reset
+			-- Unused.
+		do
+		end
 
 feature {NONE} -- Output
 
@@ -1332,55 +1349,63 @@ feature {CLASS_AS} -- Instructions
 			l_variant_processing_after: BOOLEAN
 		do
 			is_expr_iteration := False
-			print_on_new_line (l_as.iteration)
-
-			print_on_new_line (l_as.from_keyword (match_list))
-			print_compound (l_as.from_part)
-
-			print_on_new_line (l_as.invariant_keyword (match_list))
-			print_list_indented (l_as.full_invariant_list)
-
-			if attached l_as.until_keyword (match_list) as l_until then
-					-- Special code to handle the old or new ordering of the `variant'
-					-- clause in a loop.
-				if attached l_as.variant_part as l_variant then
-					if l_variant.start_position > l_until.start_position then
-						l_variant_processing_after := True
+			if attached l_as.iteration as i and then i.is_symbolic then
+				print_on_new_line (l_as.repeat_symbol (match_list))
+				safe_process_and_print (i, "", "")
+				print_compound (l_as.compound)
+				print_on_new_line (l_as.end_symbol)
+			else
+				print_on_new_line (l_as.iteration)
+				print_on_new_line (l_as.from_keyword (match_list))
+				print_compound (l_as.from_part)
+				print_on_new_line (l_as.invariant_keyword (match_list))
+				print_list_indented (l_as.full_invariant_list)
+				if attached l_as.until_keyword (match_list) as l_until then
+						-- Special code to handle the old or new ordering of the `variant'
+						-- clause in a loop.
+					if attached l_as.variant_part as l_variant then
+						if l_variant.start_position > l_until.start_position then
+							l_variant_processing_after := True
+						else
+							print_on_new_line (l_as.variant_part)
+						end
 					else
 						print_on_new_line (l_as.variant_part)
 					end
-				else
+					print_on_new_line (l_until)
+				end
+				print_on_new_line_indented (l_as.stop)
+				print_on_new_line (l_as.loop_keyword (match_list))
+				print_compound (l_as.compound)
+				if l_variant_processing_after then
 					print_on_new_line (l_as.variant_part)
 				end
-				print_on_new_line (l_until)
+				print_on_new_line (l_as.end_keyword)
 			end
-
-			print_on_new_line_indented (l_as.stop)
-
-			print_on_new_line (l_as.loop_keyword (match_list))
-			print_compound (l_as.compound)
-
-			if l_variant_processing_after then
-				print_on_new_line (l_as.variant_part)
-			end
-
-			print_on_new_line (l_as.end_keyword)
 		end
 
 	process_iteration_as (l_as: ITERATION_AS)
 		do
-			safe_process (l_as.across_keyword (match_list))
-
-				-- If used in a loop statement, we want the expression on a new line.
-				-- If used in an expression, it should appear on the same line.
-			if is_expr_iteration then
-				safe_process_and_print (l_as.expression, " ", "")
+			if l_as.is_symbolic then
+					-- The iteration part is of the form
+					--  variable `:` expression
+				safe_process_and_print (l_as.identifier, " ", "")
+				safe_process_and_print (l_as.in_symbol (match_list), "", " ")
+				safe_process_and_print (l_as.expression, "", " ")
 			else
-				print_on_new_line_indented (l_as.expression)
+					-- The iteration part is of the form
+					--  `across` expression `as` variable
+				safe_process (l_as.across_keyword (match_list))
+					-- If used in a loop statement, we want the expression on a new line.
+					-- If used in an expression, it should appear on the same line.
+				if is_expr_iteration then
+					safe_process_and_print (l_as.expression, " ", "")
+				else
+					print_on_new_line_indented (l_as.expression)
+				end
+				safe_process_and_print (l_as.as_keyword (match_list), " ", "")
+				safe_process_and_print (l_as.identifier, " ", "")
 			end
-
-			safe_process_and_print (l_as.as_keyword (match_list), " ", "")
-			safe_process_and_print (l_as.identifier, " ", "")
 		end
 
 	process_variant_as (l_as: VARIANT_AS)
@@ -1564,15 +1589,22 @@ feature {AST_VISITOR} -- Expressions
 			-- Process the loop expression `l_as'.
 		do
 			is_expr_iteration := True
-			safe_process (l_as.iteration)
-			safe_process_and_print (l_as.invariant_keyword (match_list), " ", "")
-			safe_process_and_print (l_as.full_invariant_list, " ", "")
-			safe_process_and_print (l_as.until_keyword (match_list), " ", "")
-			safe_process_and_print (l_as.exit_condition, " ", "")
-			safe_process_and_print (l_as.qualifier_keyword (match_list), " ", " ")
-			safe_process (l_as.expression)
-			safe_process_and_print (l_as.variant_part, " ", "")
-			safe_process_and_print (l_as.end_keyword, " ", "")
+			if attached l_as.iteration as i and then i.is_symbolic then
+				safe_process_and_print (l_as.qualifier_symbol (match_list), "", "")
+				i.process (Current)
+				safe_process_and_print (i.bar_symbol (match_list), "", " ")
+				safe_process (l_as.expression)
+			else
+				safe_process (l_as.iteration)
+				safe_process_and_print (l_as.invariant_keyword (match_list), " ", "")
+				safe_process_and_print (l_as.full_invariant_list, " ", "")
+				safe_process_and_print (l_as.until_keyword (match_list), " ", "")
+				safe_process_and_print (l_as.exit_condition, " ", "")
+				safe_process_and_print (l_as.qualifier_keyword (match_list), " ", " ")
+				safe_process (l_as.expression)
+				safe_process_and_print (l_as.variant_part, " ", "")
+				safe_process_and_print (l_as.end_keyword, " ", "")
+			end
 		end
 
 	process_object_test_as (l_as: OBJECT_TEST_AS)
@@ -1983,9 +2015,10 @@ invariant
 	indent_attached: attached indent
 
 note
+	ca_ignore: "CA033", "CA033: very large class"
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

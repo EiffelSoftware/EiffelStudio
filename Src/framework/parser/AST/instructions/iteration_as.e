@@ -13,25 +13,65 @@ inherit
 	AST_EIFFEL
 
 create
-	initialize
+	make_keyword,
+	make_symbolic
 
 feature {NONE} -- Initialization
 
-	initialize (a: like across_keyword; e: like expression; b: like as_keyword; i: like identifier; r: BOOLEAN)
+	make_keyword (a: like across_keyword; e: like expression; b: like as_keyword; i: like identifier; r: BOOLEAN)
 			-- Create a new ITERATION AST node for an iteration part of a loop in the form
-			-- across e as i -- when `not r`;
-			-- across e is i -- when `r`.
+			-- "across `e` as `i`" -- when `not r`;
+			-- "across `e` is `i`" -- when `r`.
 		require
 			e_attached: e /= Void
 			i_attached: i /= Void
 		do
 			if a /= Void then
-				across_keyword_index := a.index
+				across_keyword_or_bar_symbol_index := a.index
 			end
-			expression := e
 			if b /= Void then
-				as_keyword_index := b.index
+				as_keyword_or_in_symbol_index := b.index
 			end
+			make (e, i, r)
+		ensure
+			across_keyword_set: a /= Void implies across_keyword_or_bar_symbol_index = a.index
+			expression_set: expression = e
+			as_keyword_set: b /= Void implies as_keyword_or_in_symbol_index = b.index
+			identifier_set: identifier = i
+			is_restricted_set: is_restricted = r
+		end
+
+	make_symbolic (i: like identifier; a: like in_symbol; e: like expression; b: like bar_symbol)
+			-- Create a new ITERATION AST node for an iteration part of a loop in the form
+			-- "`i` ∈ `e` |".
+		require
+			e_attached: e /= Void
+			i_attached: i /= Void
+		do
+			if attached a then
+				as_keyword_or_in_symbol_index := a.index
+			end
+			if attached b then
+				across_keyword_or_bar_symbol_index := b.index
+			end
+			make (e, i, True)
+			is_symbolic := True
+		ensure
+			identifier_set: identifier = i
+			in_symbol_set: attached a implies as_keyword_or_in_symbol_index = a.index
+			expression_set: expression = e
+			bar_symbol_set: attached b implies across_keyword_or_bar_symbol_index = b.index
+		end
+
+	make (e: like expression; i: like identifier; r: BOOLEAN)
+			-- Initialize a new ITERATION AST node for an iteration part of a loop in the form
+			-- "across `e` as `i`" -- when `not r`;
+			-- "across `e` is `i`"  or "`i` ∈ `e` |" -- when `r`.
+		require
+			e_attached: e /= Void
+			i_attached: i /= Void
+		do
+			expression := e
 			identifier := i
 				-- Build initialization code in the form
 				--    `identifier'.start
@@ -68,11 +108,11 @@ feature {NONE} -- Initialization
 				))
 			end
 		ensure
-			across_keyword_set: a /= Void implies across_keyword_index = a.index
 			expression_set: expression = e
-			as_keyword_set: b /= Void implies as_keyword_index = b.index
 			identifier_set: identifier = i
 		end
+
+feature -- Access
 
 	create_access_feat_as (n: STRING; i: like identifier): ACCESS_FEAT_AS
 			-- Create a new node for a feature call of name `n'
@@ -99,39 +139,72 @@ feature -- Visitor
 
 feature -- Roundtrip
 
-	across_keyword_index, as_keyword_index: INTEGER
+	is_symbolic: BOOLEAN
+			-- Is symbolic form of the iteration used?
+
+	across_keyword_or_bar_symbol_index, as_keyword_or_in_symbol_index: INTEGER
 			-- Index of keyword "across" and "as" associated with this structure.
 
 	across_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keyword "across" associated with this structure.
 		require
+			not is_symbolic
 			a_list_attached: a_list /= Void
 		local
 			i: INTEGER
 		do
-			i := across_keyword_index
-			if a_list.valid_index (i) and then attached {KEYWORD_AS} a_list.i_th (i) as r then
-				Result := r
+			i := across_keyword_or_bar_symbol_index
+			if a_list.valid_index (i) then
+				Result := {KEYWORD_AS} / a_list [i]
+			end
+		end
+
+	bar_symbol (a_list: LEAF_AS_LIST): detachable SYMBOL_AS
+			-- Symbol "¦" associated with this structure.
+		require
+			is_symbolic
+			a_list_attached: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := across_keyword_or_bar_symbol_index
+			if a_list.valid_index (i) then
+				Result := {SYMBOL_AS} / a_list [i]
 			end
 		end
 
 	as_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keyword "as" associated with this structure.
 		require
+			not is_symbolic
 			a_list_attached: a_list /= Void
 		local
 			i: INTEGER
 		do
-			i := as_keyword_index
-			if a_list.valid_index (i) and then attached {KEYWORD_AS} a_list.i_th (i) as r then
-				Result := r
+			i := as_keyword_or_in_symbol_index
+			if a_list.valid_index (i) then
+				Result := {KEYWORD_AS} / a_list [i]
+			end
+		end
+
+	in_symbol (a_list: LEAF_AS_LIST): detachable SYMBOL_AS
+			-- Symbol ":" associated with this structure.
+		require
+			is_symbolic
+			a_list_attached: a_list /= Void
+		local
+			i: INTEGER
+		do
+			i := as_keyword_or_in_symbol_index
+			if a_list.valid_index (i) then
+				Result := {SYMBOL_AS} / a_list [i]
 			end
 		end
 
 	index: INTEGER
 			-- <Precursor>
 		do
-			Result := across_keyword_index
+			Result := across_keyword_or_bar_symbol_index
 		end
 
 feature -- Attributes
@@ -176,17 +249,30 @@ feature -- Roundtrip/Token
 
 	first_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 		do
-			if a_list /= Void then
-				Result := across_keyword (a_list)
-			end
-			if Result = Void then
-				Result := expression.first_token (a_list)
+			if is_symbolic then
+				Result := identifier.first_token (a_list)
+			else
+				if attached a_list then
+					Result := across_keyword (a_list)
+				end
+				if not attached Result then
+					Result := expression.first_token (a_list)
+				end
 			end
 		end
 
 	last_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 		do
-			Result := identifier.last_token (a_list)
+			if is_symbolic then
+				if attached a_list then
+					Result := bar_symbol (a_list)
+				end
+				if not attached Result then
+					Result := expression.last_token (a_list)
+				end
+			else
+				Result := identifier.last_token (a_list)
+			end
 		end
 
 feature -- Comparison
@@ -196,6 +282,7 @@ feature -- Comparison
 		do
 			Result := equivalent (expression, other.expression) and then
 				equivalent (identifier, other.identifier) and then
+				is_symbolic = other.is_symbolic and then
 				is_restricted = other.is_restricted
 		end
 
@@ -206,10 +293,11 @@ invariant
 	exit_condition_attached: exit_condition /= Void
 	advance_attached: advance /= Void
 	item_attached_if_restricted: attached item = is_restricted
+	restricted_if_symbolic: is_symbolic implies is_restricted
 
 note
 	ca_ignore: "CA011", "CA011: too many arguments"
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

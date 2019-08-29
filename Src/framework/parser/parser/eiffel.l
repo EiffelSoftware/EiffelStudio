@@ -35,12 +35,15 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 
 -- Following UTF-8 standard: http://tools.ietf.org/html/rfc3629
 -- NON_ASCII: Identical to all code points of Unicode excluding 0 - 127.
+-- NON_ASCII_NB: Identical to NON_ASCII except for open/closing brackets.
 
 UTF8_CHAR	{UTF8_1}|{UTF8_2}|{UTF8_3}|{UTF8_4}
 NON_ASCII	{UTF8_2}|{UTF8_3}|{UTF8_4}
+NON_ASCII_NB	{UTF8_2}|{UTF8_3_NB}|{UTF8_4}
 UTF8_1		[\x00-\x7F]
 UTF8_2		[\xC2-\xDF]{UTF8_TAIL}
 UTF8_3		(\xE0[\xA0-\xBF]{UTF8_TAIL})|([\xE1-\xEC]({UTF8_TAIL}{2}))|(\xED[\x80-\x9F]{UTF8_TAIL})|([\xEE-\xEF]({UTF8_TAIL}{2}))
+UTF8_3_NB	(\xE0[\xA0-\xBF]{UTF8_TAIL})|([\xE1\xE3-\xEC]({UTF8_TAIL}{2}))|(\xE2([\x80-\x9E\xA0-\xBF]{UTF8_TAIL})|\x9F[\x80-\xA5\xB0-\xBF])|(\xED[\x80-\x9F]{UTF8_TAIL})|([\xEE-\xEF]({UTF8_TAIL}{2}))
 UTF8_4		(\xF0[\x90-\xBF]({UTF8_TAIL}{2}))|([\xF1-\xF3]({UTF8_TAIL}{3}))|(\xF4[\x80-\x8F]({UTF8_TAIL}{2}))
 UTF8_TAIL	[\x80-\xBF]
 
@@ -114,6 +117,12 @@ BREAK	{HORIZONAL_BREAK}|\n
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_COLON, Current)
 				last_token := TE_COLON
 			}
+--\xE2\x80\xA2 {
+--				update_character_locations
+--				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_COLON, Current)
+--				last_token := TE_COLON
+--			}
+
 ","			{
 				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_COMMA, Current)
@@ -283,8 +292,63 @@ BREAK	{HORIZONAL_BREAK}|\n
 
 -- Free operators
 
+\xE2\x88\x80 {
+				update_character_locations
+				if syntax_version /= obsolete_syntax then
+					last_symbol_id_value := ast_factory.new_symbol_id_as (TE_FORALL, Current)
+					last_token := TE_FORALL
+				else
+					process_id_as
+					last_token := TE_FREE
+				end
+			}
+\xE2\x88\x83 {
+				update_character_locations
+				if syntax_version /= obsolete_syntax then
+					last_symbol_id_value := ast_factory.new_symbol_id_as (TE_EXISTS, Current)
+					last_token := TE_EXISTS
+				else
+					process_id_as
+					last_token := TE_FREE
+				end
+			}
+\xC2\xA6 {
+				update_character_locations
+				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_BAR, Current)
+				last_token := TE_BAR
+			}
+\xE2\x9F\xB3 {
+				update_character_locations
+				if syntax_version /= obsolete_syntax then
+					last_symbol_id_value := ast_factory.new_symbol_id_as (TE_REPEAT, Current)
+					last_token := TE_REPEAT
+				else
+					process_id_as
+					last_token := TE_FREE
+				end
+			}
+\xE2\x9F\xA6 {
+				update_character_locations
+				if syntax_version /= obsolete_syntax then
+					last_symbol_id_value := ast_factory.new_symbol_id_as (TE_BLOCK_OPEN, Current)
+					last_token := TE_BLOCK_OPEN
+				else
+					process_id_as
+					last_token := TE_FREE
+				end
+			}
+\xE2\x9F\xA7 {
+				update_character_locations
+				if syntax_version /= obsolete_syntax then
+					last_symbol_id_value := ast_factory.new_symbol_id_as (TE_BLOCK_CLOSE, Current)
+					last_token := TE_BLOCK_CLOSE
+				else
+					process_id_as
+					last_token := TE_FREE
+				end
+			}
 (@|#|\||&)[@#0-9a-zA-Z_!\$&\'\(\)\*\+\,\-\./:;<>=\?\[\\\]\^\`\{\}\|\~]*		|
-{NON_ASCII}+ {
+{NON_ASCII_NB}+ {
 				update_character_locations
 				last_token := TE_FREE
 				process_id_as

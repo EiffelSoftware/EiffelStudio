@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Abstract description of an Eiffel loop expression."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,11 +18,12 @@ create
 feature {NONE} -- Initialization
 
 	initialize (f: like iteration; w: like invariant_keyword; i: like invariant_part; u: like until_keyword; c: like exit_condition;
-		q: like qualifier_keyword; a: like is_all; e: like expression; v: like variant_part; k: like end_keyword)
+		q: like qualifier_keyword; s: like qualifier_symbol; a: like is_all; e: like expression; v: like variant_part; k: like end_keyword)
 			-- Create a new LOOP EXPRESSION AST node.
 		require
 			f_attached: f /= Void
 			e_attached: e /= Void
+			at_most_one_qualifier: not attached q or not attached s
 		do
 			iteration := f
 			if w /= Void then
@@ -34,8 +35,10 @@ feature {NONE} -- Initialization
 				until_keyword_index := u.index
 			end
 			exit_condition := c
-			if q /= Void then
-				qualifier_keyword_index := q.index
+			if attached q then
+				qualifier_index := q.index
+			elseif attached s then
+				qualifier_index := s.index
 			end
 			is_all := a
 			expression := e
@@ -47,7 +50,8 @@ feature {NONE} -- Initialization
 			full_invariant_list_set: full_invariant_list = i
 			until_keyword_set: u /= Void implies until_keyword_index = u.index
 			exit_conditionp_set: exit_condition = c
-			qualifier_keyword_set: q /= Void implies qualifier_keyword_index = q.index
+			qualifier_keyword_set: attached q implies qualifier_index = q.index
+			qualifier_symbol_set: attached s implies qualifier_index = s.index
 			is_all_set: is_all = a
 			expression_set: expression = e
 			variant_part_set: variant_part = v
@@ -68,11 +72,11 @@ feature -- Roundtrip
 			-- Invariant assertion list that contains both complete and incomplete assertions.
 			-- e.g. "tag:expr", "tag:", "expr"
 
-	invariant_keyword_index, until_keyword_index, qualifier_keyword_index: INTEGER
-			-- Index of keyword "invariant", "until" and "all"/"some" associated with this structure
+	invariant_keyword_index, until_keyword_index, qualifier_index: INTEGER
+			-- Index of keyword "invariant", "until" and "all"/"some" associated with this structure.
 
 	invariant_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
-			-- Keyword "invariant" associated with this structure
+			-- Keyword "invariant" associated with this structure.
 		require
 			a_list_not_void: a_list /= Void
 		do
@@ -88,17 +92,27 @@ feature -- Roundtrip
 		end
 
 	qualifier_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
-			-- Keyword "all" or "some" associated with this structure
+			-- Keyword "all" or "some" associated with this structure.
 		require
 			a_list_not_void: a_list /= Void
 		do
-			Result := keyword_from_index (a_list, qualifier_keyword_index)
+			Result := keyword_from_index (a_list, qualifier_index)
+		end
+
+	qualifier_symbol (a_list: LEAF_AS_LIST): detachable SYMBOL_AS
+			-- Symbol "∀" or "∃" associated with this structure.
+		require
+			a_list_not_void: a_list /= Void
+		do
+			if a_list.valid_index (qualifier_index) then
+				Result := {SYMBOL_AS} / a_list [qualifier_index]
+			end
 		end
 
 	index: INTEGER
 			-- <Precursor>
 		do
-			Result := qualifier_keyword_index
+			Result := qualifier_index
 		end
 
 feature -- Attributes
@@ -128,7 +142,12 @@ feature -- Roundtrip/Token
 
 	first_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 		do
-			Result := iteration.first_token (a_list)
+			if iteration.is_symbolic and then attached a_list then
+				Result := qualifier_symbol (a_list)
+			end
+			if not attached Result then
+				Result := iteration.first_token (a_list)
+			end
 		end
 
 	last_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
@@ -156,7 +175,9 @@ invariant
 	expression_attached: expression /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	ca_ignore:
+		"CA011", "CA011: too many arguments"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

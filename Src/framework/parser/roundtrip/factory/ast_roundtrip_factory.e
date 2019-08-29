@@ -1,10 +1,10 @@
 ﻿note
 	description: "[
-					Roundtrip AST factory
+			Roundtrip AST factory
 
-					It will setup all indexes used by roundtrip and also, it will generate `match_list'.
-					Call `match_list' after parsing to get the list.
-					]"
+			It will setup all indexes used by roundtrip and also, it will generate `match_list'.
+			Call `match_list' after parsing to get the list.
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -20,6 +20,7 @@ inherit
 			new_keyword_as,
 			new_keyword_id_as,
 			new_symbol_as,
+			new_symbol_id_as,
 			new_current_as,
 			new_deferred_as,
 			new_boolean_as,
@@ -260,6 +261,14 @@ feature -- Leaf Nodes
 		do
 			Result := Precursor (a_code, a_scn)
 			extend_match_list_with_stub (create{SYMBOL_STUB_AS}.make (a_code, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count, a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count))
+		end
+
+	new_symbol_id_as (c: INTEGER_32; s: EIFFEL_SCANNER_SKELETON): detachable like symbol_id_type
+		do
+			Result := Precursor (c, s)
+				-- It is ok to create a SYMBOL_STUB_AS because it inherits from LEAF_STUB_AS and thus
+ 				-- when the keyword is actually used as an identifier it should be just fine.
+ 			extend_match_list_with_stub (create {SYMBOL_STUB_AS}.make (c, s.line, s.column, s.position, s.text_count, s.character_column, s.character_position, s.unicode_text_count))
 		end
 
 	create_break_as (a_scn: EIFFEL_SCANNER_SKELETON)

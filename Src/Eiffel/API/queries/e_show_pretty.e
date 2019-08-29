@@ -121,10 +121,13 @@ feature {NONE} -- Implementation
 		local
 			p: PRETTY_PRINTER
 		do
-			create p.make (s)
-			p.set_parsed_class (parser.root_node)
-			p.set_match_list (parser.match_list)
-			parser.root_node.process (p)
+			check
+				root_node_attached: attached parser.root_node as r
+				match_list_attached: attached parser.match_list as l
+			then
+				create p.make (s, r, l)
+				parser.root_node.process (p)
+			end
 		end
 
 note

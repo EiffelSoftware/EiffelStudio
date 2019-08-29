@@ -40,6 +40,7 @@ inherit
 			new_keyword_id_as,
 			new_once_string_keyword_as,
 			new_symbol_as,
+			new_symbol_id_as,
 			new_square_symbol_as,
 			create_break_as,
 			create_break_as_with_data,
@@ -241,7 +242,15 @@ feature -- Access
 	new_symbol_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER_SKELETON): detachable SYMBOL_AS
 			-- New KEYWORD AST node		
 		do
-			extend_match_list_with_stub (create{SYMBOL_STUB_AS}.make (a_code, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count, a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count))
+			extend_match_list_with_stub (create {SYMBOL_STUB_AS}.make (a_code, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count, a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count))
+		end
+
+	new_symbol_id_as (c: INTEGER; s: EIFFEL_SCANNER_SKELETON): detachable like symbol_id_type
+			-- New SYMBOL AST node
+		do
+				-- It is ok to create a SYMBOL_STUB_AS because it inherits from LEAF_STUB_AS and thus
+				-- when the keyword is actually used as an identifier it should be just fine.
+			extend_match_list_with_stub (create {SYMBOL_STUB_AS}.make (c, s.line, s.column, s.position, s.text_count, s.character_column, s.character_position, s.unicode_text_count))
 		end
 
 	new_square_symbol_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER_SKELETON): detachable SYMBOL_AS

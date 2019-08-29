@@ -143,7 +143,15 @@ feature -- Parser Access
 feature -- Typing
 
 	keyword_id_type: TUPLE [keyword: detachable KEYWORD_AS; id: detachable ID_AS; line, column: INTEGER; filename: like {ERROR}.file_name]
-			-- Type for `new_keyowrd_id_as'.
+			-- Type for `new_keyword_id_as'.
+		do
+			check False then end
+		ensure
+			is_called: False
+		end
+
+	symbol_id_type: TUPLE [symbol: detachable SYMBOL_AS; id: detachable ID_AS; line, column: INTEGER; filename: like {ERROR}.file_name]
+			-- Type for `new_symbol_id_as'.
 		do
 			check False then end
 		ensure
@@ -596,6 +604,20 @@ feature -- Roundtrip: leaf_as
 		do
 			create Result.make (a_code, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count,
 				a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count)
+		end
+
+	new_symbol_id_as (c: INTEGER; s: EIFFEL_SCANNER_SKELETON): detachable like symbol_id_type
+			-- New tuple with a symbol and an id for the current token (free operator).
+		require
+			attached s
+			valid_code:
+				c = {EIFFEL_TOKENS}.te_block_close or
+				c = {EIFFEL_TOKENS}.te_block_open or
+				c = {EIFFEL_TOKENS}.te_exists or
+				c = {EIFFEL_TOKENS}.te_forall or
+				c = {EIFFEL_TOKENS}.te_repeat
+		do
+			Result := [new_symbol_as (c, s), new_filled_id_as (s), s.line, s.column, s.filename]
 		end
 
 	new_square_symbol_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER_SKELETON): detachable SYMBOL_AS
@@ -1627,7 +1649,16 @@ feature -- Access
 			-- 	across expr is x -- when `is_resticted`
 		do
 			if e /= Void and i /= Void then
-				create Result.initialize (a, e, b, i, is_restricted)
+				create Result.make_keyword (a, e, b, i, is_restricted)
+			end
+		end
+
+	new_symbolic_iteration_as (i: detachable ID_AS; a: detachable SYMBOL_AS; e: detachable EXPR_AS; b: detachable SYMBOL_AS): detachable ITERATION_AS
+			-- New ITERATION AST node for an iteration part of a loop in the form
+			-- "`i` ∈ `e` |"
+		do
+			if attached i and attached e then
+				create Result.make_symbolic (i, a, e, b)
 			end
 		end
 
@@ -1660,20 +1691,20 @@ feature -- Access
 
 	new_loop_as (t: detachable ITERATION_AS; f: detachable EIFFEL_LIST [INSTRUCTION_AS]; i: detachable EIFFEL_LIST [TAGGED_AS];
 			v: detachable VARIANT_AS; s: detachable EXPR_AS; c: detachable EIFFEL_LIST [INSTRUCTION_AS];
-			e, f_as, i_as, u_as, l_as: detachable KEYWORD_AS): detachable LOOP_AS
+			e, f_as, i_as, u_as, l_as: detachable KEYWORD_AS; r, bc: detachable SYMBOL_AS): detachable LOOP_AS
 			-- New LOOP AST node
 		do
-			if (t /= Void or s /= Void) and e /= Void then
-				create Result.initialize (t, f, i, v, s, c, e, f_as, i_as, u_as, l_as)
+			if (t /= Void or s /= Void) and (attached e or attached bc) then
+				create Result.initialize (t, f, i, v, s, c, e, f_as, i_as, u_as, l_as, r, bc)
 			end
 		end
 
 	new_loop_expr_as (f: detachable ITERATION_AS; w: detachable KEYWORD_AS; i: detachable EIFFEL_LIST [TAGGED_AS];
-			u: detachable KEYWORD_AS; c: detachable EXPR_AS; q: detachable KEYWORD_AS; a: BOOLEAN; e: detachable EXPR_AS; v: detachable VARIANT_AS; k: detachable KEYWORD_AS): detachable LOOP_EXPR_AS
+			u: detachable KEYWORD_AS; c: detachable EXPR_AS; q: detachable KEYWORD_AS; s: detachable SYMBOL_AS; a: BOOLEAN; e: detachable EXPR_AS; v: detachable VARIANT_AS; k: detachable KEYWORD_AS): detachable LOOP_EXPR_AS
 			-- New LOOP expression AST node
 		do
 			if f /= Void and then e /= Void then
-				create Result.initialize (f, w, i, u, c, q, a, e, v, k)
+				create Result.initialize (f, w, i, u, c, q, s, a, e, v, k)
 			end
 		end
 

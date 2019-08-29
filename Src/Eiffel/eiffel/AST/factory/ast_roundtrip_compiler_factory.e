@@ -1,8 +1,8 @@
 ﻿note
 	description: "[
-					Roundtrip compiler factory
-					It will generate `match_list' during parsing.
-					]"
+			Roundtrip compiler factory
+			It will generate `match_list' during parsing.
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -43,6 +43,7 @@ inherit
 			new_keyword_as,
 			new_keyword_id_as,
 			new_symbol_as,
+			new_symbol_id_as,
 			new_current_as,
 			new_deferred_as,
 			new_boolean_as,
@@ -133,6 +134,7 @@ feature -- Roundtrip
 		end
 
 note
+	ca_ignore: "CA011", "CA011: too many arguments"
 	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

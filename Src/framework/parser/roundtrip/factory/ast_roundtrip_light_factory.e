@@ -1,12 +1,12 @@
 ﻿note
 	description: "[
-					AST factory that supports roundtrip facility
-					This factory will setup all indexes used by roundtrip parser,
-					but it doesn't generate `match_list'.
+			AST factory that supports roundtrip facility
+			This factory will setup all indexes used by roundtrip parser,
+			but it doesn't generate `match_list'.
 
-					Use `AST_ROUNDTRIP_FACTORY' if you want to generate `match_list' while parsing or
-					you can use `EIFFEL_ROUNDTRIP_SCANNER' later to generate `match_list' separately.
-				 ]"
+			Use `AST_ROUNDTRIP_FACTORY' if you want to generate `match_list' while parsing or
+			you can use `EIFFEL_ROUNDTRIP_SCANNER' later to generate `match_list' separately.
+		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -24,6 +24,7 @@ inherit
 			new_keyword_as,
 			new_keyword_id_as,
 			new_symbol_as,
+			new_symbol_id_as,
 			new_current_as,
 			new_deferred_as,
 			new_boolean_as,
@@ -349,6 +350,34 @@ feature -- Leaf nodes
 			create Result.make (a_code, a_scn.line, a_scn.column, a_scn.position, a_scn.text_count, a_scn.character_column, a_scn.character_position, a_scn.unicode_text_count)
 			increase_match_list_count
 			Result.set_index (match_list_count)
+		end
+
+	new_symbol_id_as (c: INTEGER_32; s: EIFFEL_SCANNER_SKELETON): detachable like symbol_id_type
+			-- <Precursor>
+		local
+			l_id_as: ID_AS
+			l_symbol_as: SYMBOL_AS
+			l_cnt: INTEGER_32
+			l_str: STRING_8
+		do
+				-- Create the ID_AS first.
+			l_cnt := s.text_count
+			l_str := reusable_string_buffer
+			l_str.wipe_out
+			s.append_text_to_string (l_str)
+			create l_id_as.initialize (l_str)
+			l_id_as.set_position (s.line, s.column, s.position, l_cnt,
+				s.character_column, s.character_position, s.unicode_text_count)
+
+				-- Create the SYMBOL_AS
+			create l_symbol_as.make (c, s.line, s.column, s.position, s.text_count, s.character_column, s.character_position, s.unicode_text_count)
+
+				-- Since the keyword is sharing the same piece of text as the ID_AS, we share the index.
+			increase_match_list_count
+			l_id_as.set_index (match_list_count)
+			l_symbol_as.set_index (match_list_count)
+
+			Result := [l_symbol_as, l_id_as, s.line, s.column, s.filename]
 		end
 
 	create_break_as (a_scn: EIFFEL_SCANNER_SKELETON)

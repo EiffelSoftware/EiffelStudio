@@ -1,10 +1,10 @@
-note
+﻿note
 	description	: "Abstract description of an Eiffel loop instruction. %
 				  %Version for Bench."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class LOOP_AS
 
@@ -20,11 +20,11 @@ feature {NONE} -- Initialization
 
 	initialize (t: like iteration; f: like from_part; i: like invariant_part;
 		v: like variant_part; s: like stop;
-		c: like compound; e: like end_keyword; f_as, i_as, u_as, l_as: detachable KEYWORD_AS)
+		c: like compound; e: like end_keyword; f_as, i_as, u_as, l_as: detachable KEYWORD_AS; r, bc: detachable SYMBOL_AS)
 			-- Create a new LOOP AST node.
 		require
 			t_or_s_attached: t /= Void or s /= Void
-			e_attached: e /= Void
+			e_or_c_attached: attached e or attached bc
 		do
 			iteration := t
 			from_part := f
@@ -34,7 +34,8 @@ feature {NONE} -- Initialization
 			stop := s
 			compound := c
 			end_keyword := e
-			if f_as /= Void then
+			end_symbol := bc
+			if attached f_as then
 				from_keyword_index := f_as.index
 			end
 			if i_as /= Void then
@@ -43,8 +44,10 @@ feature {NONE} -- Initialization
 			if u_as /= Void then
 				until_keyword_index := u_as.index
 			end
-			if l_as /= Void then
-				loop_keyword_index := l_as.index
+			if attached l_as then
+				loop_index := l_as.index
+			elseif attached r then
+				loop_index := r.index
 			end
 		ensure
 			iteration_set: iteration = t
@@ -54,10 +57,12 @@ feature {NONE} -- Initialization
 			stop_set: stop = s
 			compound_set: compound = c
 			end_keyword_set: end_keyword = e
-			from_keyword_set: f_as /= Void implies from_keyword_index = f_as.index
+			end_symbol_set: end_symbol = bc
+			from_keyword_set: attached f_as implies from_keyword_index = f_as.index
 			invariant_keyword_set: i_as /= Void implies invariant_keyword_index = i_as.index
 			until_keyword_set: u_as /= Void implies until_keyword_index = u_as.index
-			loop_keyword_set: l_as /= Void implies loop_keyword_index = l_as.index
+			loop_keyword_set: attached l_as implies loop_index = l_as.index
+			repeat_symbol_set: attached r implies loop_index = r.index
 		end
 
 feature -- Visitor
@@ -74,15 +79,27 @@ feature -- Roundtrip
 			-- Invariant assertion list that contains both complete and incomplete assertions.
 			-- e.g. "tag:expr", "tag:", "expr"
 
-	from_keyword_index, invariant_keyword_index, until_keyword_index, loop_keyword_index: INTEGER
+	from_keyword_index, invariant_keyword_index, until_keyword_index, loop_index: INTEGER
 			-- Index of keyword "from", "invariant", "until" and "loop" associated with this structure
 
 	from_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keyword "from" associated with this structure
 		require
 			a_list_not_void: a_list /= Void
+			not_is_symbolic: attached iteration as i implies not i.is_symbolic
 		do
 			Result := keyword_from_index (a_list, from_keyword_index)
+		end
+
+	repeat_symbol (a_list: LEAF_AS_LIST): detachable SYMBOL_AS
+			-- Symbol "⟳" associated with this structure.
+		require
+			a_list_not_void: a_list /= Void
+			is_symbolic: attached iteration as i and then i.is_symbolic
+		do
+			if a_list.valid_index (loop_index) then
+				Result := {SYMBOL_AS} / a_list [loop_index]
+			end
 		end
 
 	invariant_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
@@ -102,17 +119,18 @@ feature -- Roundtrip
 		end
 
 	loop_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
-			-- Keyword "loop" associated with this structure
+			-- Keyword "loop" associated with this structure.
 		require
 			a_list_not_void: a_list /= Void
+			not_is_symbolic: attached iteration as i implies not i.is_symbolic
 		do
-			Result := keyword_from_index (a_list, loop_keyword_index)
+			Result := keyword_from_index (a_list, loop_index)
 		end
 
 	index: INTEGER
 			-- <Precursor>
 		do
-			Result := loop_keyword_index
+			Result := loop_index
 		end
 
 feature -- Attributes
@@ -135,15 +153,23 @@ feature -- Attributes
 	compound: detachable EIFFEL_LIST [INSTRUCTION_AS]
 			-- Loop compound
 
-	end_keyword: KEYWORD_AS
-			-- Line number where `end' keyword is located
+	end_keyword: detachable KEYWORD_AS
+			-- Line number where `end' keyword is located.
+
+	end_symbol: detachable SYMBOL_AS
+			-- Line number where closing block symbol is located.
 
 feature -- Roundtrip/Token
 
 	first_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 		do
-			if attached iteration as l_iter then
-				Result := l_iter.first_token (a_list)
+			if attached iteration as i then
+				if i.is_symbolic and then attached a_list then
+					Result := repeat_symbol (a_list)
+				end
+				if not attached Result then
+					Result := i.first_token (a_list)
+				end
 			elseif a_list /= Void and from_keyword_index /= 0 then
 				Result := from_keyword (a_list)
 			elseif attached from_part as l_from then
@@ -161,9 +187,18 @@ feature -- Roundtrip/Token
 			end
 		end
 
+	end_leaf: LEAF_AS
+		do
+			Result := end_keyword
+			if not attached Result then
+				Result := end_symbol
+				check from_invariant: attached Result then end
+			end
+		end
+
 	last_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
 		do
-			Result := end_keyword.last_token (a_list)
+			Result := end_leaf.last_token (a_list)
 		end
 
 feature -- Comparison
@@ -181,9 +216,11 @@ feature -- Comparison
 
 invariant
 	iteration_or_stop_attached: iteration /= Void or stop /= Void
+	end_keyword_or_symbol_attached: attached end_keyword or attached end_symbol
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	ca_ignore: "CA011", "CA011: too many arguments"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -214,4 +251,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class LOOP_AS
+end

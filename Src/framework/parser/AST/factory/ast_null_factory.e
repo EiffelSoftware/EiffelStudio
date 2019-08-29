@@ -41,7 +41,7 @@ inherit
 			new_qualified_anchored_type, new_qualified_anchored_type_with_type,
 			new_real_as, new_rename_as, new_require_as, new_require_else_as,
 			new_result_as, new_retry_as, new_reverse_as, new_routine_as,
-			new_separate_instruction_as, new_static_access_as, new_string_as, new_tagged_as,
+			new_separate_instruction_as, new_static_access_as, new_string_as, new_symbol_id_as, new_tagged_as,
 			new_tuple_as, new_type_dec_as, new_type_expr_as, new_un_free_as, new_un_minus_as,
 			new_un_not_as, new_un_old_as, new_un_plus_as, new_un_strip_as, new_unique_as,
 			new_variant_as, new_verbatim_string_as, new_void_as, new_filled_none_id_as,
@@ -296,6 +296,10 @@ feature -- Roundtrip: leaf_as
 
 	new_symbol_as (a_code: INTEGER; a_scn: EIFFEL_SCANNER_SKELETON): detachable SYMBOL_AS
 			-- New KEYWORD AST node	all Eiffel symbols except "[" and "]"
+		do
+		end
+
+	new_symbol_id_as (c: INTEGER; s: EIFFEL_SCANNER_SKELETON): detachable like symbol_id_type
 		do
 		end
 
@@ -906,14 +910,13 @@ feature -- Access
 
 	new_loop_as (t: detachable ITERATION_AS; f: detachable EIFFEL_LIST [INSTRUCTION_AS]; i: detachable EIFFEL_LIST [TAGGED_AS];
 			v: VARIANT_AS; s: EXPR_AS; c: EIFFEL_LIST [INSTRUCTION_AS];
-			e, f_as, i_as, u_as, l_as: KEYWORD_AS): detachable LOOP_AS
-
-			-- New LOOP AST node
+			e, f_as, i_as, u_as, l_as: KEYWORD_AS; r, bc: detachable SYMBOL_AS): detachable LOOP_AS
+			-- <Precursor>
 		do
 		end
 
 	new_loop_expr_as (f: detachable ITERATION_AS; w: detachable KEYWORD_AS; i: detachable EIFFEL_LIST [TAGGED_AS];
-			u: detachable KEYWORD_AS; c: detachable EXPR_AS; q: detachable KEYWORD_AS; a: BOOLEAN; e: detachable EXPR_AS; v: detachable VARIANT_AS; k: detachable KEYWORD_AS): detachable LOOP_EXPR_AS
+			u: detachable KEYWORD_AS; c: detachable EXPR_AS; q: detachable KEYWORD_AS; s: detachable SYMBOL_AS; a: BOOLEAN; e: detachable EXPR_AS; v: detachable VARIANT_AS; k: detachable KEYWORD_AS): detachable LOOP_EXPR_AS
 			-- New LOOP expression AST node
 		do
 		end

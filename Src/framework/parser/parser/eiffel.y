@@ -21,7 +21,8 @@ create
 
 %start		Eiffel_parser
 
-%nonassoc	TE_ASSIGNMENT
+%nonassoc	TE_ASSIGNMENT TE_REPEAT
+%left		TE_FORALL TE_EXISTS
 %nonassoc	TE_DOTDOT
 %left		TE_IMPLIES
 %left		TE_OR
@@ -36,7 +37,7 @@ create
 %nonassoc	TE_STRIP
 %left		TE_OLD
 %left		TE_DOT
-%right		TE_LPARAN
+%right		TE_LPARAN TE_BLOCK_OPEN
 
 %token <detachable ID_AS> TE_FREE TE_ID TE_TUPLE
 %token TE_INTEGER
@@ -48,12 +49,14 @@ create
 %token <detachable SYMBOL_AS>		TE_LARRAY TE_RARRAY TE_RPARAN TE_LPARAN
 %token <detachable SYMBOL_AS>		TE_LCURLY TE_RCURLY
 %token <detachable SYMBOL_AS> 		TE_BANG TE_SEMICOLON
-%token <detachable SYMBOL_AS>		TE_COLON TE_COMMA
+%token <detachable SYMBOL_AS>		TE_COLON TE_COMMA TE_BAR
 %token <detachable SYMBOL_AS>		TE_CONSTRAIN TE_QUESTION
 %token <detachable SYMBOL_AS> 		TE_DOTDOT TE_DOT
 %token <detachable SYMBOL_AS> 		TE_TILDE TE_NOT_TILDE TE_EQ TE_LT TE_GT TE_LE TE_GE TE_NE
 %token <detachable SYMBOL_AS> 		TE_PLUS TE_MINUS TE_STAR TE_SLASH TE_POWER
 %token <detachable SYMBOL_AS> 		TE_DIV TE_MOD
+	-- Special type for symbols that are either symbols or free operators.
+%token <detachable like {AST_FACTORY}.symbol_id_type as symbol_id>		TE_FORALL TE_EXISTS TE_REPEAT TE_BLOCK_OPEN TE_BLOCK_CLOSE
 
 %token <detachable BOOL_AS> TE_FALSE TE_TRUE
 %token <detachable RESULT_AS> TE_RESULT
@@ -221,7 +224,7 @@ create
 %type <detachable CONSTRAINT_LIST_AS> Multiple_constraint_list
 %type <detachable CONSTRAINING_TYPE_AS> Single_constraint
 
-%expect 368
+%expect 438
 
 %%
 
@@ -2717,32 +2720,32 @@ Loop_instruction:
 						once "Loop variant should appear just before the end keyword of the loop."))
 				end
 				if attached $3 as l_invariant_pair then
-					$$ := ast_factory.new_loop_as (Void, $2, l_invariant_pair.second, $4, $6, $8, $9, $1, l_invariant_pair.first, $5, $7)
+					$$ := ast_factory.new_loop_as (Void, $2, l_invariant_pair.second, $4, $6, $8, $9, $1, l_invariant_pair.first, $5, $7, Void, Void)
 				else
-					$$ := ast_factory.new_loop_as (Void, $2, Void, $4, $6, $8, $9, $1, Void, $5, $7)
+					$$ := ast_factory.new_loop_as (Void, $2, Void, $4, $6, $8, $9, $1, Void, $5, $7, Void, Void)
 				end
 			}
 	| TE_FROM Compound Invariant TE_UNTIL Expression TE_LOOP Compound Variant_opt TE_END
 			{
 				if attached $3 as l_invariant_pair then
-					$$ := ast_factory.new_loop_as (Void, $2, l_invariant_pair.second, $8, $5, $7, $9, $1, l_invariant_pair.first, $4, $6)
+					$$ := ast_factory.new_loop_as (Void, $2, l_invariant_pair.second, $8, $5, $7, $9, $1, l_invariant_pair.first, $4, $6, Void, Void)
 				else
-					$$ := ast_factory.new_loop_as (Void, $2, Void, $8, $5, $7, $9, $1, Void, $4, $6)
+					$$ := ast_factory.new_loop_as (Void, $2, Void, $8, $5, $7, $9, $1, Void, $4, $6, Void, Void)
 				end
 			}
 	| Iteration TE_FROM Compound Invariant Exit_condition_opt TE_LOOP Compound Variant_opt TE_END
 			{
 				if attached $4 as l_invariant_pair then
 					if attached $5 as l_until_pair then
-						$$ := ast_factory.new_loop_as ($1, $3, l_invariant_pair.second, $8, l_until_pair.second, $7, $9, $2, l_invariant_pair.first, l_until_pair.first, $6)
+						$$ := ast_factory.new_loop_as ($1, $3, l_invariant_pair.second, $8, l_until_pair.second, $7, $9, $2, l_invariant_pair.first, l_until_pair.first, $6, Void, Void)
 					else
-						$$ := ast_factory.new_loop_as ($1, $3, l_invariant_pair.second, $8, Void, $7, $9, $2, l_invariant_pair.first, Void, $6)
+						$$ := ast_factory.new_loop_as ($1, $3, l_invariant_pair.second, $8, Void, $7, $9, $2, l_invariant_pair.first, Void, $6, Void, Void)
 					end
 				else
 					if attached $5 as l_until_pair then
-						$$ := ast_factory.new_loop_as ($1, $3, Void, $8, l_until_pair.second, $7, $9, $2, Void, l_until_pair.first, $6)
+						$$ := ast_factory.new_loop_as ($1, $3, Void, $8, l_until_pair.second, $7, $9, $2, Void, l_until_pair.first, $6, Void, Void)
 					else
-						$$ := ast_factory.new_loop_as ($1, $3, Void, $8, Void, $7, $9, $2, Void, Void, $6)
+						$$ := ast_factory.new_loop_as ($1, $3, Void, $8, Void, $7, $9, $2, Void, Void, $6, Void, Void)
 					end
 				end
 				leave_scope
@@ -2751,17 +2754,22 @@ Loop_instruction:
 			{
 				if attached $2 as l_invariant_pair then
 					if attached $3 as l_until_pair then
-						$$ := ast_factory.new_loop_as ($1, Void, l_invariant_pair.second, $6, l_until_pair.second, $5, $7, Void, l_invariant_pair.first, l_until_pair.first, $4)
+						$$ := ast_factory.new_loop_as ($1, Void, l_invariant_pair.second, $6, l_until_pair.second, $5, $7, Void, l_invariant_pair.first, l_until_pair.first, $4, Void, Void)
 					else
-						$$ := ast_factory.new_loop_as ($1, Void, l_invariant_pair.second, $6, Void, $5, $7, Void, l_invariant_pair.first, Void, $4)
+						$$ := ast_factory.new_loop_as ($1, Void, l_invariant_pair.second, $6, Void, $5, $7, Void, l_invariant_pair.first, Void, $4, Void, Void)
 					end
 				else
 					if attached $3 as l_until_pair then
-						$$ := ast_factory.new_loop_as ($1, Void, Void, $6, l_until_pair.second, $5, $7, Void, Void, l_until_pair.first, $4)
+						$$ := ast_factory.new_loop_as ($1, Void, Void, $6, l_until_pair.second, $5, $7, Void, Void, l_until_pair.first, $4, Void, Void)
 					else
-						$$ := ast_factory.new_loop_as ($1, Void, Void, $6, Void, $5, $7, Void, Void, Void, $4)
+						$$ := ast_factory.new_loop_as ($1, Void, Void, $6, Void, $5, $7, Void, Void, Void, $4, Void, Void)
 					end
 				end
+				leave_scope
+			}
+	| TE_REPEAT Identifier_as_lower TE_COLON Expression TE_BLOCK_OPEN {enter_scope; add_scope_iteration ($2)} Compound TE_BLOCK_CLOSE
+			{
+				$$ := ast_factory.new_loop_as (ast_factory.new_symbolic_iteration_as ($2, $3, $4, extract_symbol ($5)), Void, Void, Void, Void, $7, Void, Void, Void, Void, Void, extract_symbol ($1), extract_symbol ($8))
 				leave_scope
 			}
 	;
@@ -2771,15 +2779,15 @@ Loop_expression:
 			{
 				if attached $2 as l_invariant_pair then
 					if attached $3 as l_until_pair then
-						$$ := ast_factory.new_loop_expr_as ($1, l_invariant_pair.first, l_invariant_pair.second, l_until_pair.first, l_until_pair.second, $4, True, $5, $6, $7)
+						$$ := ast_factory.new_loop_expr_as ($1, l_invariant_pair.first, l_invariant_pair.second, l_until_pair.first, l_until_pair.second, $4, Void, True, $5, $6, $7)
 					else
-						$$ := ast_factory.new_loop_expr_as ($1, l_invariant_pair.first, l_invariant_pair.second, Void, Void, $4, True, $5, $6, $7)
+						$$ := ast_factory.new_loop_expr_as ($1, l_invariant_pair.first, l_invariant_pair.second, Void, Void, $4, Void, True, $5, $6, $7)
 					end
 				else
 					if attached $3 as l_until_pair then
-						$$ := ast_factory.new_loop_expr_as ($1, Void, Void, l_until_pair.first, l_until_pair.second, $4, True, $5, $6, $7)
+						$$ := ast_factory.new_loop_expr_as ($1, Void, Void, l_until_pair.first, l_until_pair.second, $4, Void, True, $5, $6, $7)
 					else
-						$$ := ast_factory.new_loop_expr_as ($1, Void, Void, Void, Void, $4, True, $5, $6, $7)
+						$$ := ast_factory.new_loop_expr_as ($1, Void, Void, Void, Void, $4, Void, True, $5, $6, $7)
 					end
 				end
 				leave_scope
@@ -2788,20 +2796,36 @@ Loop_expression:
 			{
 				if attached $2 as l_invariant_pair then
 					if attached $3 as l_until_pair then
-						$$ := ast_factory.new_loop_expr_as ($1, l_invariant_pair.first, l_invariant_pair.second, l_until_pair.first, l_until_pair.second, extract_keyword ($4), False, $5, $6, $7)
+						$$ := ast_factory.new_loop_expr_as ($1, l_invariant_pair.first, l_invariant_pair.second, l_until_pair.first, l_until_pair.second, extract_keyword ($4), Void, False, $5, $6, $7)
 					else
-						$$ := ast_factory.new_loop_expr_as ($1, l_invariant_pair.first, l_invariant_pair.second, Void, Void, extract_keyword ($4), False, $5, $6, $7)
+						$$ := ast_factory.new_loop_expr_as ($1, l_invariant_pair.first, l_invariant_pair.second, Void, Void, extract_keyword ($4), Void, False, $5, $6, $7)
 					end
 				else
 					if attached $3 as l_until_pair then
-						$$ := ast_factory.new_loop_expr_as ($1, Void, Void, l_until_pair.first, l_until_pair.second, extract_keyword ($4), False, $5, $6, $7)
+						$$ := ast_factory.new_loop_expr_as ($1, Void, Void, l_until_pair.first, l_until_pair.second, extract_keyword ($4), Void, False, $5, $6, $7)
 					else
-						$$ := ast_factory.new_loop_expr_as ($1, Void, Void, Void, Void, extract_keyword ($4), False, $5, $6, $7)
+						$$ := ast_factory.new_loop_expr_as ($1, Void, Void, Void, Void, extract_keyword ($4), Void, False, $5, $6, $7)
 					end
 				end
 				leave_scope
 			}
-	;
+	| TE_FORALL Identifier_as_lower TE_COLON Expression TE_BAR {enter_scope; add_scope_iteration ($2)} Expression
+			{
+				insert_supplier ("ITERABLE", $2)
+				insert_supplier ("ITERATION_CURSOR", $2)
+				$$ := ast_factory.new_loop_expr_as
+					(ast_factory.new_symbolic_iteration_as ($2, $3, $4, $5), Void, Void, Void, Void, Void, extract_symbol ($1), True, $7, Void, Void)
+				leave_scope
+			}
+	| TE_EXISTS Identifier_as_lower TE_COLON Expression TE_BAR {enter_scope; add_scope_iteration ($2)} Expression
+			{
+				insert_supplier ("ITERABLE", $2)
+				insert_supplier ("ITERATION_CURSOR", $2)
+				$$ := ast_factory.new_loop_expr_as
+					(ast_factory.new_symbolic_iteration_as ($2, $3, $4, $5), Void, Void, Void, Void, Void, extract_symbol ($1), False, $7, Void, Void)
+				leave_scope
+			}
+	;                                
 
 Iteration:
 	TE_ACROSS Expression TE_AS Identifier_as_lower
@@ -3363,6 +3387,12 @@ Qualified_binary_expression:
 			{ $$ := ast_factory.new_bin_lt_as ($1, $3, $2) }
 	|	Expression Free_operator Expression %prec TE_FREE
 			{ $$ := ast_factory.new_bin_free_as ($1, $2, $3) }
+	|	Expression TE_EXISTS Expression -- %prec TE_FREE
+			{ $$ := ast_factory.new_bin_free_as ($1, extract_id_from_symbol ($2), $3) }
+	|	Expression TE_FORALL Expression -- %prec TE_FREE
+			{ $$ := ast_factory.new_bin_free_as ($1, extract_id_from_symbol ($2), $3) }
+	|	Expression TE_REPEAT Expression -- %prec TE_FREE
+			{ $$ := ast_factory.new_bin_free_as ($1, extract_id_from_symbol ($2), $3) }
 	;
 
 Factor: TE_VOID
@@ -3418,6 +3448,12 @@ Qualified_factor:
 			{ $$ := ast_factory.new_un_not_as ($2, $1) }
 	|	Free_operator Expression %prec TE_NOT
 			{ $$ := ast_factory.new_un_free_as ($1, $2) }
+	|	TE_EXISTS Expression -- %prec TE_NOT
+			{ $$ := ast_factory.new_un_free_as (extract_id_from_symbol ($1), $2) }
+	|	TE_FORALL Expression -- %prec TE_NOT
+			{ $$ := ast_factory.new_un_free_as (extract_id_from_symbol ($1), $2) }
+	|	TE_REPEAT Expression -- %prec TE_NOT
+			{ $$ := ast_factory.new_un_free_as (extract_id_from_symbol ($1), $2) }
 	;
 
 Typed_expression:	Typed			

@@ -1193,6 +1193,22 @@ feature {NONE} -- Actions
 			end
 		end
 
+	extract_symbol (v: like last_symbol_id_value): detachable SYMBOL_AS
+			-- Extract symbol entry from `v` if present. Void otherwise.
+		do
+			if attached v then
+				Result := v.symbol
+			end
+		end
+
+	extract_id_from_symbol (v: like last_symbol_id_value): detachable ID_AS
+			-- Extract ID entry from `v` if present. Void otherwise.
+		do
+			if attached v then
+				Result := v.id
+			end
+		end
+
 	check_object_test_expression (a_expr: detachable EXPR_AS)
 			-- Check if `a_expr' is a valid expression for an object test.
 		do

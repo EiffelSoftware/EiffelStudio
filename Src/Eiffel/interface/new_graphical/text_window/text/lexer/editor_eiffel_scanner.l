@@ -91,7 +91,9 @@ UTF8_tail	[\x80-\xBF]
 "}"					|
 "["					|
 "]"					|
-"$"					{
+"$"					|
+\xE2\x9F\xA6				|
+\xE2\x9F\xA7				{
 						-- Symbols
 					if not in_comments then
 						curr_token := new_text (text)
@@ -245,7 +247,7 @@ UTF8_tail	[\x80-\xBF]
 
 ----------/** Eiffel identifiers **/--------------------------------------------
 
-([A-Z]|{NON_ASCII})([A-Z0-9_]|{NON_ASCII})*							{
+[A-Z][A-Z0-9_]*							{
 										if not in_comments then
 											if is_current_group_valid then
 												tmp_classes := current_group.class_by_name (text, True)
@@ -265,7 +267,7 @@ UTF8_tail	[\x80-\xBF]
 										}
 
 
-([a-zA-Z]|{NON_ASCII})([a-zA-Z0-9_]|{NON_ASCII})*					{
+[a-zA-Z][a-zA-Z0-9_]*					{
 										if not in_comments then
 											curr_token := new_text (text)											
 										else
@@ -277,9 +279,9 @@ UTF8_tail	[\x80-\xBF]
 
 ----------/** Eiffel free operators **/-----------------------------------------
 
-[@#|&][^%" \t\r\n]*						{
+([@#|&][^%" \t\r\n]*)|{NON_ASCII}					{
 										if not in_comments then
-											curr_token := new_text (text)										
+											curr_token := new_operator (text)
 										else
 											curr_token := new_comment (text)
 										end
@@ -500,7 +502,7 @@ UTF8_tail	[\x80-\xBF]
 %%
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

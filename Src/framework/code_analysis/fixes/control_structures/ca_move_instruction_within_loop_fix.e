@@ -63,7 +63,7 @@ feature {NONE} -- Implementation
 				l_new_string.append (l_indent + l_temp + "%N")
 			end
 
-			loop_to_change.replace_text (l_new_string, match_list)
+			loop_to_change.replace_text ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (l_new_string), match_list)
 		end
 
 end

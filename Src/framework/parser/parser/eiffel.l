@@ -117,12 +117,6 @@ BREAK	{HORIZONAL_BREAK}|\n
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_COLON, Current)
 				last_token := TE_COLON
 			}
---\xE2\x80\xA2 {
---				update_character_locations
---				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_COLON, Current)
---				last_token := TE_COLON
---			}
-
 ","			{
 				update_character_locations
 				last_detachable_symbol_as_value := ast_factory.new_symbol_as (TE_COMMA, Current)

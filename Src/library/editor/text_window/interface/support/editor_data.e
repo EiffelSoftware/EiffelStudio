@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "General editor preferences."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -738,7 +738,7 @@ feature {NONE} -- Implementation
 			comments_background_color_preference := l_manager.new_color_preference_value (l_manager, comments_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			quoted_feature_text_color_preference := l_manager.new_color_preference_value (l_manager, quoted_feature_text_color_string, create {EV_COLOR}.make_with_8_bit_rgb (64, 0, 0))
 			quoted_feature_background_color_preference := l_manager.new_color_preference_value (l_manager, quoted_feature_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
-			operator_text_color_preference := l_manager.new_color_preference_value (l_manager, operator_text_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 0, 0))
+			operator_text_color_preference := l_manager.new_color_preference_value (l_manager, operator_text_color_string, create {EV_COLOR}.make_with_8_bit_rgb (224, 0, 0))
 			operator_background_color_preference := l_manager.new_color_preference_value (l_manager, operator_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			number_text_color_preference := l_manager.new_color_preference_value (l_manager, number_text_color_string, create {EV_COLOR}.make_with_8_bit_rgb (128, 0, 255))
 			number_background_color_preference := l_manager.new_color_preference_value (l_manager, number_background_color_string, create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
@@ -811,7 +811,7 @@ feature {NONE} -- Implementation
 			-- Preferences
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -821,7 +821,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EDITOR_DATA
+end

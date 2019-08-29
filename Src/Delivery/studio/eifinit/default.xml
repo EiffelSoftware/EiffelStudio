@@ -679,7 +679,7 @@
 	<PREF NAME="editor.general.colors.spaces_background_color" DESCRIPTION="Background color of space characters."><COLOR>auto</COLOR></PREF>
 	<PREF NAME="editor.general.colors.comments_text_color" DESCRIPTION="Color of comments text."><COLOR>128;0;0</COLOR></PREF>
 	<PREF NAME="editor.general.colors.comments_background_color" DESCRIPTION="Background color of comments text."><COLOR>auto</COLOR></PREF>
-	<PREF NAME="editor.general.colors.operator_text_color" DESCRIPTION="Color of operator text."><COLOR>255;0;0</COLOR></PREF>
+	<PREF NAME="editor.general.colors.operator_text_color" DESCRIPTION="Color of operator text."><COLOR>224;0;0</COLOR></PREF>
 	<PREF NAME="editor.general.colors.operator_background_color" DESCRIPTION="Background color of operator text."><COLOR>auto</COLOR></PREF>
 	<PREF NAME="editor.general.colors.number_text_color" DESCRIPTION="Color of number text."><COLOR>128;0;255</COLOR></PREF>
 	<PREF NAME="editor.general.colors.number_background_color" DESCRIPTION="Background color of number text."><COLOR>auto</COLOR></PREF>

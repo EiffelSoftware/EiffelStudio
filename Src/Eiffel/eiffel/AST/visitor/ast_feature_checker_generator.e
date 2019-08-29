@@ -2589,7 +2589,6 @@ feature {NONE} -- Visitor
 			l_is_string_32: BOOLEAN
 			l_value: detachable STRING
 			class_id: INTEGER
-			ci: detachable CLASS_I
 			s8, s32: detachable CLASS_C
 			t8, t32: detachable TYPE_A
 			l_is_immutable: BOOLEAN

@@ -3,8 +3,8 @@ class
 
 create
 	make,
-	make_empty
-	, make_from_c_byte_array
+	make_empty,
+	make_from_c_byte_array
 
 feature {NONE} -- Initialization
 

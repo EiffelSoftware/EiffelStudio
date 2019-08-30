@@ -58,13 +58,13 @@ feature -- Execute
 
 	execute (a_bp: BREAKPOINT; a_dm: DEBUGGER_MANAGER)
 		do
-			if message /= Void then
-				a_dm.debugger_message (a_dm.computed_breakpoint_message (a_bp, message))
+			if attached message as m then
+				a_dm.debugger_message (a_dm.computed_breakpoint_message (a_bp, m))
 			end
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

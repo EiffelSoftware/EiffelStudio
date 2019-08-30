@@ -663,7 +663,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 			l_exceptions: SEARCH_TABLE [STRING]
 			l_system: like system
 		do
-			create l_actions.make (50)
+			create l_actions.make (52)
 			create l_exceptions.make (1)
 
 			l_system := system

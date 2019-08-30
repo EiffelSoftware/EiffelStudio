@@ -532,6 +532,8 @@ feature -- Properties
 			character_32_class.compiled_class.record_precompiled_class_in_system
 			string_8_class.compiled_class.record_precompiled_class_in_system
 			string_32_class.compiled_class.record_precompiled_class_in_system
+			immutable_string_8_class.compiled_class.record_precompiled_class_in_system
+			immutable_string_32_class.compiled_class.record_precompiled_class_in_system
 			special_class.compiled_class.record_precompiled_class_in_system
 			pointer_class.compiled_class.record_precompiled_class_in_system
 			array_class.compiled_class.record_precompiled_class_in_system
@@ -2375,6 +2377,8 @@ end
 			character_32_class.compiled_class.mark_class (marked_classes)
 			string_8_class.compiled_class.mark_class (marked_classes)
 			string_32_class.compiled_class.mark_class (marked_classes)
+			immutable_string_8_class.compiled_class.mark_class (marked_classes)
+			immutable_string_32_class.compiled_class.mark_class (marked_classes)
 			special_class.compiled_class.mark_class (marked_classes)
 			pointer_class.compiled_class.mark_class (marked_classes)
 			array_class.compiled_class.mark_class (marked_classes)

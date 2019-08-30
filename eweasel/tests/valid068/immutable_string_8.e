@@ -2,9 +2,20 @@ class
 	IMMUTABLE_STRING_8
 
 create
+	make,
+	make_empty,
 	make_from_c_byte_array
 
 feature {NONE} -- Initialization
+
+	make (n: INTEGER) is
+		do
+		end
+
+	make_empty is
+		do
+			make (0)
+		end	
 
 	make_from_c_byte_array (a_byte_array: POINTER; a_character_count: INTEGER)
 			-- Initialize from contents of `a_byte_array' for a length of `a_character_count`,

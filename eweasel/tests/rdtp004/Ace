@@ -10,6 +10,11 @@
 		<setting name="total_order_on_reals" value="true"/>
 		<precompile name="precompile" location="$PRECOMPILED_BASE"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="gobo_kernel" location="$ISE_LIBRARY\library\gobo\gobo_kernel.ecf">
+			<option>
+				<warning name="obsolete_feature" enabled="false"/>
+			</option>
+		</library>
 		<library name="parser" location="$EIFFEL_SRC\framework\parser\parser.ecf"/>	
 		<cluster name="root_cluster" location="$CLUSTER\"/>
 	</target>

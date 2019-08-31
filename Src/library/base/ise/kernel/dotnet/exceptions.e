@@ -5,7 +5,6 @@
 		This class may be used as ancestor by classes needing its facilities.
 		]"
 	legal: "See notice at end of class."
-
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -27,7 +26,7 @@ feature -- Status report
 		do
 			l_exception := exception_manager.exception_from_code (except)
 			if l_exception /= Void then
-				Result := l_exception.tag.as_string_8
+				Result := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_exception.tag)
 			end
 		end
 
@@ -62,7 +61,7 @@ feature -- Status report
 			applicable: is_developer_exception
 		do
 			if attached {EXCEPTION} exception_manager.last_exception as l_exception and then attached l_exception.original.description as l_des then
-				Result := l_des.as_string_8
+				Result := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_des)
 			end
 		end
 
@@ -95,7 +94,7 @@ feature -- Status report
 			-- Tag of last violated assertion clause
 		do
 			if attached {EXCEPTION} exception_manager.last_exception as l_exception and then attached l_exception.description as l_des then
-				Result := l_des.as_string_8
+				Result := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_des)
 			end
 		end
 
@@ -129,7 +128,7 @@ feature -- Status report
 			-- String representation of the exception trace
 		do
 			if attached {EXCEPTION} exception_manager.last_exception as l_exception and then attached l_exception.trace as l_t then
-				Result := l_t.as_string_8
+				Result := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_t)
 			end
 		end
 
@@ -138,7 +137,7 @@ feature -- Status report
 			-- assertion violation.
 		do
 			if attached {EXCEPTION} exception_manager.last_exception as l_exception and then attached l_exception.cause.original.description as l_des then
-				Result := l_des.as_string_8
+				Result := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (l_des)
 			end
 		end
 
@@ -254,7 +253,7 @@ feature -- Status setting
 
 note
 	library:	"EiffelBase: Library of reusable components for Eiffel."
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -264,8 +263,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-end -- class EXCEPTIONS
-
-
+end

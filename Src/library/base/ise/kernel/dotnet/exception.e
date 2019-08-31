@@ -212,10 +212,10 @@ feature -- Output
 			-- New string containing terse printable representation
 			-- of current object
 		do
-			Result := generating_type.name
+			Result := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (generating_type.name_32)
 			Result.append_character ('%N')
 			if attached trace as l_t then
-				Result.append_string (l_t.as_string_8)
+				{UTF_CONVERTER}.utf_32_string_into_utf_8_string_8 (l_t, Result)
 			end
 		end
 
@@ -275,7 +275,7 @@ feature {NONE} -- Implementation
 			-- Backend storage for description
 
 ;note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

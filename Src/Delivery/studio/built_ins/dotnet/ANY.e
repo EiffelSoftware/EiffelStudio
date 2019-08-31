@@ -128,7 +128,7 @@ feature -- Output
 			-- New string containing terse printable representation
 			-- of current object.
 		do
-			Result := generating_type.name
+			Result := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (generating_type.name_32)
 		end
 
 end

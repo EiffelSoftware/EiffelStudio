@@ -369,7 +369,7 @@ feature -- Access
 		require
 			object_not_void: object /= Void
 		do
-			Result := object.generating_type.name
+			Result := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (object.generating_type.name_32)
 		end
 
 	type_name_32 (object: ANY): STRING_32

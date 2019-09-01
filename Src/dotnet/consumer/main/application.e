@@ -76,7 +76,7 @@ feature {NONE} -- Initialization
 
 			if attached {RUNTIME_ENVIRONMENT}.get_runtime_directory as l_runtime_dir then
 				l_writer.put_string ("Using runtime directory: ")
-				l_writer.put_string (l_runtime_dir)
+				l_writer.put_string (utf32_to_console_encoding (console_encoding, create {STRING_32}.make_from_cil (l_runtime_dir)))
 				l_writer.new_line
 				l_writer.new_line
 			end
@@ -347,15 +347,8 @@ feature {NONE} -- Output
 			-- Displays a status message
 		require
 			a_msg_attached: a_msg /= Void
-		local
-			l_writer: like writer
 		do
-			l_writer := writer
-			if attached utf32_to_console_encoding (Console_encoding, a_msg) as l_string then
-				l_writer.put_string (l_string)
-			else
-				l_writer.put_string (a_msg.as_string_8)
-			end
+			writer.put_string (utf32_to_console_encoding (Console_encoding, a_msg))
 		end
 
 	display_message_with_new_line (a_msg: READABLE_STRING_GENERAL)
@@ -366,11 +359,7 @@ feature {NONE} -- Output
 			l_writer: like writer
 		do
 			l_writer := writer
-			if attached utf32_to_console_encoding (Console_encoding, a_msg) as l_string then
-				l_writer.put_string (l_string)
-			else
-				l_writer.put_string (a_msg.as_string_8)
-			end
+			l_writer.put_string (utf32_to_console_encoding (Console_encoding, a_msg))
 			l_writer.new_line
 		end
 
@@ -382,11 +371,7 @@ feature {NONE} -- Output
 			l_writer: like error_writer
 		do
 			l_writer := error_writer
-			if attached utf32_to_console_encoding (Console_encoding, a_msg) as l_string then
-				l_writer.put_string (l_string)
-			else
-				l_writer.put_string (a_msg.as_string_8)
-			end
+			l_writer.put_string (utf32_to_console_encoding (Console_encoding, a_msg))
 			l_writer.new_line
 		end
 
@@ -401,6 +386,7 @@ feature {NONE} -- Output
 		once
 			Result := io.error
 		end
+
 feature {NONE} -- Implementation
 
 	cache_reader: CACHE_READER
@@ -409,7 +395,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

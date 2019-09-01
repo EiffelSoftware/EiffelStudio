@@ -235,7 +235,6 @@
 		<geant target="copy_exec_file_if_missing" arguments="${ISE_EIFFEL}/library/gobo/spec/${ISE_PLATFORM}/bin,${_BINARY_DIR}/gobo,gelint${exe}" />
 		<geant target="copy_exec_file_if_missing" arguments="${ISE_EIFFEL}/library/gobo/spec/${ISE_PLATFORM}/bin,${_BINARY_DIR}/gobo,gepp${exe}" />
 		<geant target="copy_exec_file_if_missing" arguments="${ISE_EIFFEL}/library/gobo/spec/${ISE_PLATFORM}/bin,${_BINARY_DIR}/gobo,getest${exe}" />
-		<geant target="copy_exec_file_if_missing" arguments="${ISE_EIFFEL}/library/gobo/spec/${ISE_PLATFORM}/bin,${_BINARY_DIR}/gobo,gexace${exe}" />
 		<geant target="copy_exec_file_if_missing" arguments="${ISE_EIFFEL}/library/gobo/spec/${ISE_PLATFORM}/bin,${_BINARY_DIR}/gobo,gexslt${exe}" />
 		<geant target="copy_exec_file_if_missing" arguments="${ISE_EIFFEL}/library/gobo/spec/${ISE_PLATFORM}/bin,${_BINARY_DIR}/gobo,geyacc${exe}" />
 
@@ -572,7 +571,6 @@
 		<geant target="get_bin__" arguments="gobo_gelint,${binary_gobo_dir},gelint${exe}" />
 		<geant target="get_bin__" arguments="gobo_gepp,${binary_gobo_dir},gepp${exe}" />
 		<geant target="get_bin__" arguments="gobo_getest,${binary_gobo_dir},getest${exe}" />
-		<geant target="get_bin__" arguments="gobo_gexace,${binary_gobo_dir},gexace${exe}" />
 		<geant target="get_bin__" arguments="gobo_gexslt,${binary_gobo_dir},gexslt${exe}" />
 
 		<unset name="binary_gobo_dir" />
@@ -905,7 +903,6 @@
 		<geant target="copy_exec_file" arguments="${a_binary_dir},${target_gobo_bin_dir},gelint${exe}" />
 		<geant target="copy_exec_file" arguments="${a_binary_dir},${target_gobo_bin_dir},gepp${exe}" />
 		<geant target="copy_exec_file" arguments="${a_binary_dir},${target_gobo_bin_dir},getest${exe}" />
-		<geant target="copy_exec_file" arguments="${a_binary_dir},${target_gobo_bin_dir},gexace${exe}" />
 		<geant target="copy_exec_file" arguments="${a_binary_dir},${target_gobo_bin_dir},gexslt${exe}" />
 
 		<unset name="target_gobo_bin_dir" />

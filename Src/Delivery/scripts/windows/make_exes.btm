@@ -341,11 +341,6 @@ finalize getest.ecf getest
 cleanup_eiffel getest getest.exe
 move getest.exe %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM\bin
 
-remtrace gexace
-finalize gexace.ecf gexace
-cleanup_eiffel gexace gexace.exe
-move gexace.exe %STUDIO_DIR\library\gobo\spec\%ISE_PLATFORM\bin
-
 remtrace gexslt
 finalize gexslt.ecf gexslt
 cleanup_eiffel gexslt gexslt.exe

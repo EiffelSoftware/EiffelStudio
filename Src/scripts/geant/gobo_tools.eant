@@ -55,8 +55,6 @@
 		<geant target="get_bin__gobo_exec" arguments="gepp,$L_comp_dir,$L_out_dir" 	    />
 		<!-- getest -->
 		<geant target="get_bin__gobo_exec" arguments="getest,$L_comp_dir,$L_out_dir"    />
-		<!-- gexace -->
-		<geant target="get_bin__gobo_exec" arguments="gexace,$L_comp_dir,$L_out_dir"    />
 		<!-- gexslt -->
 		<geant target="get_bin__gobo_exec" arguments="gexslt,$L_comp_dir,$L_out_dir"    />
 

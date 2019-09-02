@@ -3785,6 +3785,8 @@ feature -- Dead code removal
 			if is_string_class_alive then
 				r.mark_class_alive (string_8_id)
 				r.mark_class_alive (string_32_id)
+				r.mark_class_alive (immutable_string_8_id)
+				r.mark_class_alive (immutable_string_32_id)
 			end
 			if is_array_class_alive then
 				r.mark_class_alive (array_id)

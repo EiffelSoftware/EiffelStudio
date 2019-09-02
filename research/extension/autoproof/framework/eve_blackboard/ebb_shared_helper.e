@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Helper features used by different classes."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -63,16 +63,13 @@ feature {NONE} -- Helper functions
 		end
 
 	importance_weight (a_indexes: INDEXING_CLAUSE_AS): REAL
-		local
-			l_importance: ID_AS
 		do
 			Result := 1.0
 			if a_indexes /= Void then
-				l_importance ?= feature_indexing_value (a_indexes, "importance")
-				if l_importance /= Void then
-					if l_importance.name_8.is_equal ("high") then
+				if attached {ID_AS} feature_indexing_value (a_indexes, "importance") as l_importance then
+					if l_importance.name_8.same_string ("high") then
 						Result := 2.0
-					elseif l_importance.name_8.is_equal ("low") then
+					elseif l_importance.name_8.same_string ("low") then
 						Result := 0.5
 					end
 				end
@@ -82,35 +79,29 @@ feature {NONE} -- Helper functions
 	correctness_override (a_indexes: INDEXING_CLAUSE_AS): TUPLE [value: REAL; is_set: BOOLEAN]
 		local
 			l_atomic: ATOMIC_AS
-			l_integer: INTEGER_AS
-			l_real: REAL_AS
-			l_text: ID_AS
 			l_value: REAL
 			l_is_set: BOOLEAN
 		do
 			l_value := {REAL}.nan
-			if a_indexes /= Void then
+			if attached a_indexes then
 				l_atomic := feature_indexing_value (a_indexes, "correctness")
-				l_integer ?= l_atomic
-				l_real ?= l_atomic
-				l_text ?= l_atomic
-				if l_integer /= Void then
+				if attached {INTEGER_AS} l_atomic as l_integer then
 					l_value := (l_integer.integer_32_value / 100).truncated_to_real
 					l_is_set := True
-				elseif l_real /= Void then
+				elseif attached {REAL_AS} l_atomic as l_real then
 					l_value := l_real.value.to_real
 					l_is_set := True
-				elseif l_text /= Void then
-					if l_text.name_8.is_equal ("assumed") or l_text.name_8.is_equal ("proven") then
+				elseif attached {ID_AS} l_atomic as l_text then
+					if l_text.name_8.same_string ("assumed") or l_text.name_8.same_string ("proven") then
 						l_value := 1.0
 						l_is_set := True
-					elseif l_text.name_8.is_equal ("tested") then
+					elseif l_text.name_8.same_string ("tested") then
 						l_value := 0.9
 						l_is_set := True
-					elseif l_text.name_8.is_equal ("ignore") or l_text.name_8.is_equal ("skip") then
+					elseif l_text.name_8.same_string ("ignore") or l_text.name_8.same_string ("skip") then
 						l_value := {REAL}.nan
 						l_is_set := True
-					elseif l_text.name_8.is_equal ("failed") or l_text.name_8.is_equal ("fault") then
+					elseif l_text.name_8.same_string ("failed") or l_text.name_8.same_string ("fault") then
 						l_value := -1.0
 						l_is_set := True
 					end
@@ -127,17 +118,13 @@ feature {NONE} -- Helper functions
 	weight_override (a_indexes: INDEXING_CLAUSE_AS): REAL
 		local
 			l_atomic: ATOMIC_AS
-			l_integer: INTEGER_AS
-			l_real: REAL_AS
 		do
 			Result := {REAL}.nan
 			if a_indexes /= Void then
 				l_atomic := feature_indexing_value (a_indexes, "weight")
-				l_integer ?= l_atomic
-				l_real ?= l_atomic
-				if l_integer /= Void then
+				if attached {INTEGER_AS} l_atomic as l_integer then
 					Result := l_integer.integer_32_value
-				elseif l_real /= Void then
+				elseif attached {REAL_AS} l_atomic as l_real then
 					Result := l_real.value.to_real
 				end
 				if Result < 0.0 then
@@ -149,7 +136,6 @@ feature {NONE} -- Helper functions
 	verification_list (a_indexes: INDEXING_CLAUSE_AS): ARRAYED_LIST [STRING]
 		local
 			l_index: INDEX_AS
-			l_string: ID_AS
 		do
 			create Result.make (1)
 			if a_indexes /= Void then
@@ -159,15 +145,14 @@ feature {NONE} -- Helper functions
 					a_indexes.after or not Result.is_empty
 				loop
 					l_index := a_indexes.item_for_iteration
-					if l_index.tag /= Void and then l_index.tag.name_8.is_equal ("verification") then
+					if l_index.tag /= Void and then l_index.tag.name_8.same_string ("verification") then
 						if l_index.index_list /= Void then
 							from
 								l_index.index_list.start
 							until
 								l_index.index_list.after
 							loop
-								l_string ?= l_index.index_list.item
-								if l_string /= Void then
+								if attached {ID_AS} l_index.index_list.item as l_string then
 									Result.extend (l_string.name_8)
 								end
 								l_index.index_list.forth

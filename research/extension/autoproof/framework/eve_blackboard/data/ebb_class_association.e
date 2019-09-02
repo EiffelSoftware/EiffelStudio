@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Item associated to a class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -41,12 +41,9 @@ feature -- Access
 
 	associated_class: attached CLASS_I
 			-- Class associated with this data.
-		local
-			l_class_name: STRING
 		do
 			if associated_class_cache = Void then
-				l_class_name := system.names.item_32 (class_name_id)
-				associated_class_cache := system.universe.classes_with_name (l_class_name).first
+				associated_class_cache := system.universe.classes_with_name (system.names.item_32 (class_name_id)).first
 			end
 			check associated_class_cache /= Void end
 			Result := associated_class_cache

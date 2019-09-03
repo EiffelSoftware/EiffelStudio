@@ -141,7 +141,7 @@ feature -- Query
 		local
 			f: RAW_FILE
 			utf: UTF_CONVERTER
-			s: STRING_8
+			s: READABLE_STRING_8
 			l_uri: URI
 			l_path_uri: PATH_URI
 		do

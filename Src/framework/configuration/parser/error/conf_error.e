@@ -24,11 +24,11 @@ feature -- Access
 	out: STRING
 			-- Output
 		do
-			Result := text
+			Result := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (text)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

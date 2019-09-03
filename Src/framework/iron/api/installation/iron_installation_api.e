@@ -492,7 +492,8 @@ feature -- Local path
 			--| example: http://iron.eiffel.com/13.11/com.eiffel/library/text/parser/xml/parser/xml_parser.ecf
 			--| (the package is located at "http://iron.eiffel.com/13.11/com.eiffel/library/text/parser/xml")
 		local
-			s,r: STRING
+			s: READABLE_STRING_8
+			r: STRING_8
 			l_pn_item: READABLE_STRING_8
 			l_package: detachable IRON_PACKAGE
 			l_loc: READABLE_STRING_8

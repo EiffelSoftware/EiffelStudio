@@ -111,10 +111,9 @@ feature -- Execution
 						index_tag_32 := index.tag.name_32
 						if
 							index_tag_32 /= Void and then
-							attached index_tag_32.as_string_8 as index_tag and then
-							(not index_tag.is_equal ("status") and
-							not index_tag.is_equal ("date") and
-							not index_tag.is_equal ("revision"))
+							(not index_tag_32.same_string_general ("status") and
+							not index_tag_32.same_string_general ("date") and
+							not index_tag_32.same_string_general ("revision"))
 						then
 							a_text_formatter.add_new_line
 							a_text_formatter.add_indent
@@ -148,10 +147,9 @@ feature -- Execution
 						index_tag_32 := index.tag.name_32
 						if
 							index_tag_32 /= Void and then
-							attached index_tag_32.as_string_8 as index_tag and then
-							(not index_tag.is_equal ("status") and
-							not index_tag.is_equal ("date") and
-							not index_tag.is_equal ("revision"))
+							(not index_tag_32.same_string ("status") and
+							not index_tag_32.same_string ("date") and
+							not index_tag_32.same_string ("revision"))
 						then
 							a_text_formatter.add_new_line
 							a_text_formatter.add_indent
@@ -178,7 +176,7 @@ feature -- Execution
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

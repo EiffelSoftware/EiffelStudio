@@ -176,7 +176,7 @@ feature {NONE} -- Usage
 
 	name: IMMUTABLE_STRING_32
 		once
-			create Result.make_from_string_general ({ECF_UPDATER_COMMAND}.default_name)
+			create Result.make_from_string_general ({ECF_FOREACH_COMMAND}.default_name)
 		end
 
 	sub_system_name: detachable IMMUTABLE_STRING_32

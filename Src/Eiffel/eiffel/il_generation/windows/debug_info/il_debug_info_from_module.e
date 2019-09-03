@@ -275,7 +275,7 @@ feature
 			--
 		do
 			io.put_string ("************************************************************%N")
-			io.put_string ("* Module=" + module_filename.as_string_8 + "%N")
+			io.put_string ("* Module=" + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (module_filename) + "%N")
 			io.put_string ("************************************************************%N")
 			io.put_string ("%N Class Token  => static_class_type %N%N")
 
@@ -294,7 +294,7 @@ invariant
 	module_filename_not_void: module_filename /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

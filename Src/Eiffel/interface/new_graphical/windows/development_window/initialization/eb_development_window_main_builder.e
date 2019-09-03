@@ -133,6 +133,7 @@ feature -- Command
 			l_editor_cut_cmd: EB_EDITOR_CUT_COMMAND
 			l_editor_copy_cmd: EB_EDITOR_COPY_COMMAND
 			l_editor_paste_cmd: EB_EDITOR_PASTE_COMMAND
+			l_editor_insert_symbol_cmd: EB_INSERT_SYMBOL_EDITOR_COMMAND
 			l_new_cluster_cmd: EB_NEW_CLUSTER_COMMAND
 			l_new_library_cmd: EB_NEW_LIBRARY_COMMAND
 			l_new_assembly_cmd: EB_NEW_ASSEMBLY_COMMAND
@@ -273,6 +274,11 @@ feature -- Command
 			auto_recycle (l_editor_paste_cmd)
 			l_dev_commands.set_editor_paste_cmd (l_editor_paste_cmd)
 			l_dev_commands.toolbarable_commands.extend (l_editor_paste_cmd)
+
+			create l_editor_insert_symbol_cmd.make (develop_window)
+			auto_recycle (l_editor_insert_symbol_cmd)
+			l_dev_commands.set_editor_insert_symbol_cmd (l_editor_insert_symbol_cmd)
+			l_dev_commands.toolbarable_commands.extend (l_editor_insert_symbol_cmd)
 
 			create l_new_cluster_cmd.make (develop_window, False)
 			auto_recycle (l_new_cluster_cmd)

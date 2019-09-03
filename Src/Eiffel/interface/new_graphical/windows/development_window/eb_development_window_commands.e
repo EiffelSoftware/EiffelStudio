@@ -330,6 +330,14 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER, EB_DEVELOPMENT_WINDOW_TOOLBAR_BUILDER} -
 			set: editor_paste_cmd = a_cmd
 		end
 
+	set_editor_insert_symbol_cmd (a_cmd: like editor_insert_symbol_cmd)
+			-- Set `editor_insert_symbol_cmd'
+		do
+			editor_insert_symbol_cmd := a_cmd
+		ensure
+			set: editor_insert_symbol_cmd = a_cmd
+		end
+
 	set_new_cluster_cmd (a_cmd: like new_cluster_cmd)
 			-- Set `new_cluster_cmd'
 		do

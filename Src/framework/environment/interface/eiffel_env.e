@@ -261,7 +261,7 @@ feature -- Status update
 
 				if not directory_path_exists (bin_path) then
 					io.error.put_string (l_product_names.workbench_name)
-					io.error.put_string (": the path $" + {EIFFEL_CONSTANTS}.ise_eiffel_env + "/studio/spec/$" + {EIFFEL_CONSTANTS}.ise_platform_env + "/bin points to a non-existing directory:%N")
+					io.error.put_string (": the path $" + {EIFFEL_CONSTANTS}.ise_eiffel_env + "/" + distribution_name + "/spec/$" + {EIFFEL_CONSTANTS}.ise_platform_env + "/bin points to a non-existing directory:%N")
 					io.error.put_string (bin_path.utf_8_name)
 					on_check_environment_failure
 				end

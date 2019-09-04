@@ -1,7 +1,4 @@
-note
-	description: "[
-		TODO
-	]"
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -38,7 +35,7 @@ feature -- Comparison
 			-- Does this expression equal `a_other' (if considered in the same context)?
 			-- ToDo: this is not really correct, we should be comparing DeBrujn versions.
 		do
-			Result := attached {IV_FORALL} a_other as q and then
+			Result := attached {IV_EXISTS} a_other as q and then
 				(expression.same_expression (q.expression) and
 				bound_variables.count = q.bound_variables.count and
 				across 1 |..| bound_variables.count as i all

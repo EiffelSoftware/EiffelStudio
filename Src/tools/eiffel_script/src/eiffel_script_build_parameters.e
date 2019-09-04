@@ -30,6 +30,9 @@ feature {NONE} -- Creation
 			elseif v.ends_with (".ecf") then
 				set_ecf_location (v)
 				cl_index.replace (i + 1)
+			elseif (v.same_string ("-o") or v.same_string ("--executable-output")) and arr.valid_index (i + 1) then
+				set_executable_path (arr [i + 1])
+				cl_index.replace (i + 2)
 			elseif v.same_string ("--target") then
 				set_ecf_target (arr [i + 1])
 				cl_index.replace (i + 2)

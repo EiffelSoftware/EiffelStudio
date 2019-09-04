@@ -97,7 +97,14 @@ feature {NONE} -- Implementation
 					check verified_regexp.captured_substring (2).starts_with ("error") end
 					current_procedure_result.set_error
 				end
-				current_procedure_result.set_time (verified_regexp.captured_substring (1).to_real)
+				if attached verified_regexp.captured_substring (1) as t then
+					if t.has (',') then
+						t.replace_substring_all (",", ".")
+					end
+					if t.is_real_32 then
+						current_procedure_result.set_time (t.to_real_32)
+					end
+				end
 				last_result.procedure_results.extend (current_procedure_result)
 				if not current_procedure_result.is_error then
 					current_procedure_result := Void

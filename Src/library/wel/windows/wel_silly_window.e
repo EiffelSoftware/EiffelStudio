@@ -46,7 +46,13 @@ feature {NONE} -- Implementation
 								-- and trying to resize it again with the same size doesn't do much, so we shrink the window by one pixel.
 								-- The side effect is that if you are refreshing the content of a window while resizing
 								-- you will see those windows shrink and grow by one pixel width during the resizing.
-							l_window.move_and_resize (l_pos.x, l_pos.y, l_pos.width - 1, l_pos.height, False )
+							if l_pos.width > 0 then
+								l_window.move_and_resize (l_pos.x, l_pos.y, l_pos.width - 1, l_pos.height, False )
+							elseif l_pos.height > 0 then
+								l_window.move_and_resize (l_pos.x, l_pos.y, l_pos.width, l_pos.height - 1, False )
+							else
+									-- do not try to workaround, if width and height are not positive.
+							end
 							l_window.move_and_resize (l_pos.x, l_pos.y, l_pos.width, l_pos.height, (l_pos.flags & swp_noredraw) = 0)
 							l_is_refresh_required := True
 						else
@@ -76,7 +82,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2011, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

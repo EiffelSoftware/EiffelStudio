@@ -23,6 +23,10 @@ feature {NONE} -- Creation
 			--	• feature ID `fid`
 			--	• `d` tells if the associated class is deferred
 			--	• class ID `cid`
+		require
+			is_valid_type_id: system.class_types.valid_index (tid)
+			has_type_id: attached system.class_type_of_id (tid) as context_class_type
+			valid_type_for_type_id: t.is_valid_context_type (context_class_type.type)
 		do
 			type := t
 			type_id := tid

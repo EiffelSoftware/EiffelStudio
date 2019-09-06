@@ -40,6 +40,10 @@ feature {NONE} -- Creation
 		a_is_class_deferred: BOOLEAN;
 		a_class_id: like class_id)
 			--	Initialize an object with the corresponding data.
+		require
+			is_valid_type_id: system.class_types.valid_index (a_type_id)
+			has_type_id: attached system.class_type_of_id (a_type_id) as context_class_type
+			valid_type_for_type_id: a_type.is_valid_context_type (context_class_type.type)
 		do
 			make_attr (a_type, a_type_id, a_feature_id, a_is_deferred or a_is_class_deferred, a_class_id)
 			is_deferred := a_is_deferred

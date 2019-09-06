@@ -193,7 +193,7 @@ feature {NONE} -- Implementation: access
 	area: SPECIAL [STRING]
 			-- Store string names indexed by their ID.
 
-	lookup_table: HASH_TABLE [INTEGER, STRING]
+	lookup_table: HASH_TABLE [INTEGER, READABLE_STRING_8]
 			-- Hash-table indexed by string names
 			-- Values are indexes of Current to access corresponding
 			-- key in an efficient manner.

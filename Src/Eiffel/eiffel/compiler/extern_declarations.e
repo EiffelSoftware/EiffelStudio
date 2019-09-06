@@ -234,7 +234,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Settings
 			type_tables.put (type_table.string)
 		end
 
-	add_routine (type: TYPE_C; rout_name: STRING)
+	add_routine (type: TYPE_C; rout_name: READABLE_STRING_8)
 			-- Add one routine of name `rout_name' and C type `type`.
 		require
 			rout_name_exists: rout_name /= Void
@@ -243,7 +243,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Settings
 			routines.put (new_signature (type.c_string, rout_name, Void))
 		end
 
-	add_routine_with_signature (type: STRING; rout_name: STRING; argument_types: ARRAY [STRING])
+	add_routine_with_signature (type: STRING; rout_name: READABLE_STRING_8; argument_types: ARRAY [STRING])
 			-- Add one routine of name `rout_name' and C type `type' and with argument types
 			-- `arguments_types
 		require
@@ -253,7 +253,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Settings
 			routines.put (new_signature (type, rout_name, argument_types))
 		end
 
-	add_wrapper_with_signature (type: STRING; rout_name: STRING; argument_types: ARRAY [STRING])
+	add_wrapper_with_signature (type: STRING; rout_name: READABLE_STRING_8; argument_types: ARRAY [STRING])
 			-- Add one routine of name `rout_name' and C type `type' and with argument types
 			-- `arguments_types
 		require
@@ -265,7 +265,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Settings
 
 feature {NONE} -- Implementation
 
-	new_signature (type: STRING; rout_name: STRING; argument_types: ARRAY [STRING]): STRING
+	new_signature (type: STRING; rout_name: READABLE_STRING_8; argument_types: ARRAY [STRING]): STRING
 			-- Add one routine of name `rout_name' and C type `type' and with argument types
 			-- `arguments_types
 		require
@@ -322,7 +322,7 @@ feature {NONE} -- Attributes
 			-- Once names
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

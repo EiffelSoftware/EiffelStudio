@@ -69,6 +69,20 @@ feature {NONE} -- Implementation
 			create argument_names.make_filled (0, n)
 		end
 
+feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access
+
+	item_name (i: INTEGER): STRING
+			-- Name of argument at position `i'.
+		require
+			index_positive: i >= 1
+			index_small_enough: i <= count
+		do
+			Result := Names_heap.item (argument_names.item (i - 1))
+		ensure
+			Result_not_void: Result /= Void
+			Result_not_empty: not Result.is_empty
+		end
+
 feature -- Access
 
 	argument_names: SPECIAL [INTEGER]
@@ -83,20 +97,6 @@ feature -- Access
 			Result := argument_names.item (i - 1)
 		ensure
 			valid_result: Result > 0
-		end
-
-	item_name (i: INTEGER): STRING
-			-- Name of argument at position `i'.
-		obsolete
-			"Use `item_name_32` instead. [2018-05-31]"
-		require
-			index_positive: i >= 1
-			index_small_enough: i <= count
-		do
-			Result := Names_heap.item (argument_names.item (i - 1))
-		ensure
-			Result_not_void: Result /= Void
-			Result_not_empty: not Result.is_empty
 		end
 
 	item_name_32 (i: INTEGER): STRING_32
@@ -337,7 +337,7 @@ invariant
 	argument_names_not_void: argument_names /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

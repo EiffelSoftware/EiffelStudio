@@ -469,7 +469,7 @@ feature {AST_FACTORY} -- Error handling
 			report_one_error (create {VIIN}.make (line, column, filename, ""))
 		end
 
-	report_invalid_type_for_real_error (a_type: TYPE_AS; a_real: STRING)
+	report_invalid_type_for_real_error (a_type: TYPE_AS; a_real: READABLE_STRING_8)
 			-- Error when an incorrect type `a_type' is specified for a real constant `a_real'.
 		require
 			a_type_not_void: a_type /= Void
@@ -483,7 +483,7 @@ feature {AST_FACTORY} -- Error handling
 			report_one_error (an_error)
 		end
 
-	report_invalid_type_for_integer_error (a_type: TYPE_AS; an_int: STRING)
+	report_invalid_type_for_integer_error (a_type: TYPE_AS; an_int: READABLE_STRING_8)
 			-- Error when an incorrect type `a_type' is specified for an integer constant `an_int'.
 		require
 			a_type_not_void: a_type /= Void

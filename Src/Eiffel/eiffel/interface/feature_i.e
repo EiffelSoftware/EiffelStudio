@@ -2255,13 +2255,21 @@ feature -- Signature instantiation
 
 	result_type_in (t: CLASS_TYPE): TYPE_A
 			-- Result type adapted to the target type `t`.
+		local
+			base_type: CL_TYPE_A
 		do
 			Result := type
 			if Result.is_like_current then
 					-- We need to instantiate `like Current' in the context of `class_type'
 					-- to fix eweasel test#exec035.
 					-- Associated actual type is always attached.
-				Result := Result.instantiated_in (t.type.as_attached_in (t.associated_class))
+					-- Use the basic version of the class type if available.
+				base_type := t.basic_type
+				if not attached base_type then
+						-- Otherwise, use the regular version of the class type.
+					base_type := t.type
+				end
+				Result := Result.instantiated_in (base_type.as_attached_in (t.associated_class))
 			end
 		end
 

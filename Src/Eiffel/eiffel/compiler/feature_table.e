@@ -401,7 +401,7 @@ feature -- Access: compatibility
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access: compatibility
 
-	item (s: STRING): FEATURE_I
+	item (s: READABLE_STRING_8): FEATURE_I
 			-- Item of name `s'.
 		require
 			s_not_void: s /= Void
@@ -433,7 +433,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Access: compatibility
 			search_id (Names_heap.id_of (s))
 		end
 
-	alias_item (alias_name: STRING): FEATURE_I
+	alias_item (alias_name: READABLE_STRING_8): FEATURE_I
 			-- Feature with given `alias_name' if any
 		require
 			alias_name_not_void: alias_name /= Void

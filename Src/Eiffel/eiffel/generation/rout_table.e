@@ -614,13 +614,13 @@ feature {NONE} -- Implementation
 			a_max_positive: a_max > 0
 			a_max_greater_or_equal_than_a_min: a_max >= a_min
 		local
-			entry, l_rout_entry: ROUT_ENTRY;
-			i, j, nb, index: INTEGER;
+			entry, l_rout_entry: ROUT_ENTRY
+			i, j, nb, index: INTEGER
 			l_start, l_end: INTEGER
 			l_generate_entry: BOOLEAN
-			l_routine_name, l_wrapped_name: STRING;
+			l_routine_name, l_wrapped_name: READABLE_STRING_8
 			l_table_name: STRING
-			l_wrappers: SEARCH_TABLE [STRING]
+			l_wrappers: SEARCH_TABLE [READABLE_STRING_8]
 			l_seed_pattern_id, l_pattern_id: INTEGER
 			l_seed: FEATURE_I
 			l_c_pattern: C_PATTERN
@@ -766,7 +766,7 @@ feature {NONE} -- Implementation
 			buffer.put_new_line
 		end
 
-	generate_wrapper (buffer: GENERATION_BUFFER; a_entry: ROUT_ENTRY; a_seed_pattern_id, a_pattern_id: INTEGER; a_wrapped_name, a_routine_name: STRING)
+	generate_wrapper (buffer: GENERATION_BUFFER; a_entry: ROUT_ENTRY; a_seed_pattern_id, a_pattern_id: INTEGER; a_wrapped_name, a_routine_name: READABLE_STRING_8)
 			-- Generate wrapper for `a_routine_name' called `a_wrapped_name' using signature information from `a_seed_pattern_id' and `a_pattern_id'.
 		require
 			buffer_not_void: buffer /= Void
@@ -931,7 +931,7 @@ feature {NONE} -- Implementation
 			buffer.generate_block_close
 		end
 
-	generate_loop_initialization (buffer: GENERATION_BUFFER; a_table_name, a_routine_name: STRING; a_lower, a_upper: INTEGER)
+	generate_loop_initialization (buffer: GENERATION_BUFFER; a_table_name, a_routine_name: READABLE_STRING_8; a_lower, a_upper: INTEGER)
 			-- Generate code to initialize current array with `a_routine_name'. Generate a
 			-- loop if `a_lower' is different from `a_upper'.
 		require

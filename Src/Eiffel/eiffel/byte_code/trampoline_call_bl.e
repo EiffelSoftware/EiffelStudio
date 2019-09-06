@@ -33,7 +33,7 @@ feature {NONE} -- Access
 	context_entry: ROUT_ENTRY
 			-- A routine entry associated with the feature initially used in the call.
 
-	trampoline_name: STRING_8
+	trampoline_name: READABLE_STRING_8
 			-- The name of the trampoline.
 
 feature -- C code generation

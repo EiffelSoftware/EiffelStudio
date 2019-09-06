@@ -290,7 +290,7 @@ feature -- C code generation
 	generate_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_A)
 			-- Generate feature call in a `typ' context
 		local
-			internal_name: STRING
+			internal_name: READABLE_STRING_8
 			table_name: STRING
 			type_i: TYPE_A
 			type_c: TYPE_C

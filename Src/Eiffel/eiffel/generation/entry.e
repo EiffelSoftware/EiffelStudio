@@ -20,6 +20,8 @@ inherit
 			{NONE} all
 		end
 
+	DEBUG_OUTPUT
+
 feature -- comparison
 
 	is_less alias "<" (other: ENTRY): BOOLEAN
@@ -139,6 +141,23 @@ feature -- Status report
 	is_initialization_required: BOOLEAN
 			-- Is initialization of an attribute required?
 		deferred
+		end
+
+feature {NONE} -- Output
+
+	debug_output: STRING_32
+			-- <Precursor>
+		do
+			create Result.make_empty
+			if attached system.class_type_of_id (type_id) as c then
+				Result.append (c.type.debug_output)
+			end
+			Result.append_character ({CHARACTER_32} ' ')
+			Result.append (system.class_of_id (class_id).feature_of_feature_id (feature_id).feature_name_32)
+			if not type.is_void then
+				Result.append ({STRING_32} ": ")
+				Result.append (type.name)
+			end
 		end
 
 note

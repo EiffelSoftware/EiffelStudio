@@ -97,6 +97,7 @@ feature -- Generic conformance
 			-- Mode dependent type id - just for convenience
 		require
 			context_type_valid: is_valid_context_type (a_context_type)
+			has_associated_class_type: has_associated_class_type (a_context_type)
 		do
 			Result := {SHARED_GEN_CONF_LEVEL}.terminator_type       -- Invalid type id.
 			check
@@ -111,6 +112,7 @@ feature -- Generic conformance
 		require
 			valid_file : buffer /= Void
 			context_type_valid: is_valid_context_type (a_context_type)
+			has_associated_class_type: has_associated_class_type (a_context_type)
 		do
 			generate_cid_prefix (buffer, Void)
 			buffer.put_integer (generated_id (final_mode, a_context_type))
@@ -127,6 +129,7 @@ feature -- Generic conformance
 			valid_file : buffer /= Void
 			valid_counter : idx_cnt /= Void
 			context_type_valid: is_valid_context_type (a_context_type)
+			has_associated_class_type: has_associated_class_type (a_context_type)
 		local
 			dummy : INTEGER
 		do
@@ -175,6 +178,7 @@ feature -- Generic conformance
 		require
 			ba_attached: ba /= Void
 			context_type_valid: is_valid_context_type (a_context_type)
+			has_associated_class_type: has_associated_class_type (a_context_type)
 		do
 			make_type_prefix_byte_code (ba)
 			ba.append_natural_16 (generated_id (False, a_context_type))

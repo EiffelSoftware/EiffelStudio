@@ -3,6 +3,7 @@
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "Etienne Amodeo"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -2372,19 +2373,19 @@ feature {EB_COMPLETION_POSSIBILITIES_PROVIDER} -- Constants
 			Result := <<":=", "?=", ";", ",">>
 		end
 
-	infix_groups: LINKED_LIST [ARRAY [STRING]]
+	infix_groups: LINKED_LIST [ARRAY [READABLE_STRING_32]]
 			-- list of operators groups, sorted by priority
 		once
 			create Result.make
-			Result.extend (<<"@">>)
-			Result.extend (<<"^">>)
-			Result.extend (<<"*", "/", "//", "\\">>)
-			Result.extend (<<"+", "-">>)
-			Result.extend (<<"/=", "=", ">", ">=", "<", "<=">>)
-			Result.extend (<<"and">>)
-			Result.extend (<<"xor">>)
-			Result.extend (<<"or">>)
-			Result.extend (<<"implies">>)
+			Result.extend (<<{STRING_32} "@">>)
+			Result.extend (<<{STRING_32} "^">>)
+			Result.extend (<<{STRING_32} "*", {STRING_32} "/", {STRING_32} "//", {STRING_32} "\\">>)
+			Result.extend (<<{STRING_32} "+", {STRING_32} "-">>)
+			Result.extend (<<{STRING_32} "/=", {STRING_32} "=", {STRING_32} ">", {STRING_32} ">=", {STRING_32} "<", {STRING_32} "<=">>)
+			Result.extend (<<{STRING_32} "and">>)
+			Result.extend (<<{STRING_32} "xor">>)
+			Result.extend (<<{STRING_32} "or">>)
+			Result.extend (<<{STRING_32} "implies">>)
 		end
 
 invariant

@@ -402,9 +402,9 @@ feature -- Code generation
 			if use_init then
 				create idx_cnt
 				idx_cnt.set_value (0)
-				l_gen_type.generate_cid_array (l_buffer, final_mode, True, idx_cnt, context_class_type.type)
+				l_gen_type.generate_cid_array (l_buffer, final_mode, True, idx_cnt, context_cl_type)
 			else
-				l_gen_type.generate_cid (l_buffer, final_mode, True, context_class_type.type)
+				l_gen_type.generate_cid (l_buffer, final_mode, True, context_cl_type)
 			end
 			l_buffer.put_hex_natural_16 ({SHARED_GEN_CONF_LEVEL}.terminator_type)
 			l_buffer.put_string ("};")
@@ -424,7 +424,7 @@ feature -- Code generation
 			if use_init then
 					-- Reset counter
 				idx_cnt.set_value (0)
-				l_gen_type.generate_cid_init (l_buffer, final_mode, True, idx_cnt, context_class_type.type, a_level)
+				l_gen_type.generate_cid_init (l_buffer, final_mode, True, idx_cnt, context_cl_type, a_level)
 			end
 
 			l_buffer.put_new_line
@@ -1574,7 +1574,7 @@ feature -- Access
 	is_ancestor (other: CLASS_TYPE): BOOLEAN
 			-- Is `other' an ancestor of `context_class_type'?
 		do
-			Result := context_class_type.type.is_conformant_to (context_class_type.associated_class, other.type)
+			Result := context_cl_type.is_conformant_to (context_class_type.associated_class, other.type)
 		end
 
 	is_written_context: BOOLEAN
@@ -2556,7 +2556,7 @@ feature -- C code generation: locals
 						l_loc_name.append ("sloc")
 						l_loc_name.append_integer (i)
 						if attached {CL_TYPE_A} type_i as l_type then
-							l_class_type := l_type.associated_class_type (context_class_type.type)
+							l_class_type := l_type.associated_class_type (context_cl_type)
 							l_class_type.generate_expanded_structure_declaration (buf, l_loc_name)
 						else
 							check

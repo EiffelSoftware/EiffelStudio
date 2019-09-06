@@ -107,6 +107,20 @@ feature {NONE} -- Initialization
 			c_string_provider.read_substring_into_character_32_area (area, 1, l_count)
 		end
 
+	make_from_c_byte_array (a_byte_array: POINTER; a_character_count: INTEGER)
+			-- Initialize from contents of `a_byte_array' for a length of `a_character_count`,
+			-- given that each character is encoded in 4 bytes (little endian).
+			-- ex: (char*) "a\000\000\000b\000\000\000c\000\000\000" for unicode STRING_32 "abc"
+		require
+			a_byte_array_exists: not a_byte_array.is_default_pointer
+		do
+			c_string_provider.set_shared_from_pointer_and_count (a_byte_array, 4 * a_character_count)
+			create area.make_filled ('%/000/', 4 * a_character_count + 1)
+			count := a_character_count
+			internal_hash_code := 0
+			c_string_provider.read_unicode_substring_into_character_32_area (area, 1, 4 * a_character_count)
+		end
+
 	make_from_c_pointer (c_string: POINTER)
 			-- Create new instance from contents of `c_string',
 			-- a string created by some C function.

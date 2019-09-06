@@ -48,6 +48,7 @@ create
 	make_from_string_8,
 	make_from_string_32,
 	make_from_c,
+	make_from_c_byte_array,
 	make_from_cil,
 	make_from_separate
 

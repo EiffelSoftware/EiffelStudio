@@ -43,6 +43,7 @@ create
 	make_filled,
 	make_from_string,
 	make_from_c,
+	make_from_c_byte_array,
 	make_from_c_substring,
 	make_from_cil,
 	make_from_separate

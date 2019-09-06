@@ -104,6 +104,20 @@ feature {NONE} -- Initialization
 			internal_case_insensitive_hash_code := 0
 			c_string_provider.read_substring_into_character_8_area (area, 1, l_count)
 		end
+		
+	make_from_c_byte_array (a_byte_array: POINTER; a_character_count: INTEGER)
+			-- Initialize from contents of `a_byte_array' for a length of `a_character_count`,
+			-- given that each character is encoded in 1 single byte.
+			-- ex: (char*) "abc"  for STRING_8 "abc"			
+		require
+			a_byte_array_exists: not a_byte_array.is_default_pointer
+		do
+			c_string_provider.set_shared_from_pointer_and_count (a_byte_array, a_character_count)
+			create area.make_filled ('%/000/', a_character_count + 1)
+			count := a_character_count
+			internal_hash_code := 0
+			c_string_provider.read_substring_into_character_8_area (area, 1, a_character_count)
+		end
 
 	make_from_c_substring (c_string: POINTER; start_pos, end_pos: INTEGER)
 			-- Initialize from substring of `c_string',

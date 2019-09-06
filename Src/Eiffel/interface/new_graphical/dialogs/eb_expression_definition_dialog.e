@@ -767,7 +767,7 @@ feature {NONE} -- Code completion.
 											agent eb_debugger_manager.current_debugging_feature_as)
 
 				class_provider.set_use_all_classes_in_universe (True)
-				class_field.set_completing_feature (false)
+				class_field.set_completing_class
 				class_field.set_completion_possibilities_provider (class_provider)
 				class_provider.set_code_completable (class_field)
 			end
@@ -859,7 +859,7 @@ invariant
 	dialog_not_void: dialog /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

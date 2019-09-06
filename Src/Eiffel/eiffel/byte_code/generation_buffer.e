@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Temporization buffer used during the C generation"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -422,7 +422,7 @@ feature -- Automatically indented output
 			l_buffer.put ('0', i - 1)
 		end
 
-	put_string (s: STRING)
+	put_string (s: READABLE_STRING_8)
 			-- Write string `s'.
 		require
 			s_not_void: s /= Void
@@ -709,7 +709,7 @@ feature -- prototype code generation
 			generate_function_declaration (type, f_name, False, arg_types)
 		end
 
-	generate_function_signature (type: STRING; f_name: STRING;
+	generate_function_signature (type: STRING; f_name: READABLE_STRING_8;
 					extern: BOOLEAN; extern_header: like Current
 					arg_names: ARRAY [STRING]; arg_types: ARRAY [STRING])
 			-- Generate the function signature for ANSI C
@@ -957,7 +957,7 @@ invariant
 	buffers_not_void: buffers /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

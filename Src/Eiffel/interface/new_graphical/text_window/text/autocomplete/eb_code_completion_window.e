@@ -486,7 +486,7 @@ feature -- Initialization
 		do
 			option_bar_box.show
 			option_template_feature.show
-			feature_mode := True
+			completion_mode := feature_completion_mode
 			l_string := feature_name
 			l_string.prune_all_leading (' ')
 			l_string.prune_all_leading ('	')
@@ -503,8 +503,20 @@ feature -- Initialization
 			option_bar_box.show
 			option_template_feature.hide
 			set_associated_target_class (Void)
-			feature_mode := False
+			completion_mode := class_completion_mode
 			common_initialization (an_editor, class_name, a_remainder, completion_possibilities, True)
+		end
+
+	initialize_for_alias_name (an_editor: like code_completable;
+							a_text: STRING;
+							a_remainder: INTEGER;
+							completion_possibilities: like sorted_names)
+			-- Initialize to to complete for `class_name' in `an_editor'.
+		do
+			option_bar_box.show
+			option_template_feature.hide
+			completion_mode := alias_name_completion_mode
+			common_initialization (an_editor, "", 0, completion_possibilities, True)
 		end
 
 	initialize_completion_possibilities (a_completion_possibilities: like sorted_names)
@@ -515,11 +527,14 @@ feature -- Initialization
 			internal_delayed_unicode_symbol_list := Void
 			internal_unicode_symbol_list := Void
 			template_sorted_names := Void
-			across a_completion_possibilities as ic loop
-				if attached {EB_TEMPLATE_FOR_COMPLETION} ic.item as l_item then
-					add_template_item (l_item)
-				else
-					add_item (ic.item)
+			if a_completion_possibilities /= Void then
+					-- For alias name completion, it could be Void or empty.
+				across a_completion_possibilities as ic loop
+					if attached {EB_TEMPLATE_FOR_COMPLETION} ic.item as l_item then
+						add_template_item (l_item)
+					else
+						add_item (ic.item)
+					end
 				end
 			end
 		end
@@ -694,10 +709,34 @@ feature -- Query
 			end
 		end
 
+feature {NONE} -- Status report: completion mode.
+
+	feature_completion_mode: INTEGER = 1
+	class_completion_mode: INTEGER = 2
+	alias_name_completion_mode: INTEGER = 3
+
+	completion_mode: INTEGER
+			-- Completion mode value.
+
 feature -- Status report
 
 	feature_mode: BOOLEAN
 			-- Is `Current' used to select feature names ?
+		do
+			Result := completion_mode = feature_completion_mode
+		end
+
+	class_mode: BOOLEAN
+			-- Is `Current' used to select class names ?
+		do
+			Result := completion_mode = class_completion_mode
+		end
+
+	alias_name_mode: BOOLEAN
+			-- Is `Current' used to select feature names ?
+		do
+			Result := completion_mode = alias_name_completion_mode
+		end
 
 	scrolling_common_line_count : INTEGER
 		do
@@ -1176,19 +1215,29 @@ feature {NONE} -- String matching
 		do
 				-- For feature completion, also include unicode symbols if completion is requested.
 			if
-				feature_mode and then
 				show_completion_unicode_symbols and then
-				ev_application.ctrl_pressed -- Only on demand!
+				ev_application.ctrl_pressed and then -- Only on demand!
+				(feature_mode or alias_name_mode)
 			then
-				lst := internal_delayed_unicode_symbol_list
+				if feature_mode then
+					lst := internal_delayed_unicode_symbol_list
+				else
+					lst := internal_unicode_symbol_list
+				end
 				if lst = Void then
 						-- Only once!
-					lst := unicode_symbol_list (True)
+					lst := unicode_symbol_list (feature_mode) -- i.e for text_mode, using the non delayed list.
 					internal_delayed_unicode_symbol_list := lst
 					if not lst.is_empty then
 						l_sorted_names := sorted_names
-						cnt := l_sorted_names.upper
-						l_sorted_names.conservative_resize_with_default (lst [lst.lower], l_sorted_names.lower, cnt + lst.count)
+						if l_sorted_names = Void then
+							cnt := 0
+							create l_sorted_names.make_filled (lst [lst.lower], cnt + 1, cnt + lst.count)
+							sorted_names := l_sorted_names
+						else
+							cnt := l_sorted_names.upper
+							l_sorted_names.conservative_resize_with_default (lst [lst.lower], l_sorted_names.lower, cnt + lst.count)
+						end
 						across
 							lst as ic
 						loop
@@ -1722,8 +1771,10 @@ feature {NONE} -- Implementation
 				end
 				if feature_mode then
 					complete_feature
-				else
+				elseif class_mode then
 					complete_class
+				else
+					complete_alias_name
 				end
 			end
 			exit
@@ -1812,6 +1863,26 @@ feature {NONE} -- Implementation
 				end
 			elseif not buffered_input.is_empty then
 				code_completable.complete_class_from_window (buffered_input, character_to_append, remainder)
+			end
+		end
+
+	complete_alias_name
+			-- Complete class name
+		local
+			local_name: STRING_GENERAL
+		do
+			if choice_list.has_selected_row then
+				if
+					attached choice_list.selected_rows.first as l_first_row and then
+					attached {NAME_FOR_COMPLETION} l_first_row.data as l_name_item
+				then
+					local_name := l_name_item.insert_name
+					code_completable.complete_alias_name_from_window (local_name, '%U', remainder)
+				else
+					check has_name_item: False end
+				end
+			elseif not buffered_input.is_empty then
+				code_completable.complete_alias_name_from_window (buffered_input, character_to_append, remainder)
 			end
 		end
 

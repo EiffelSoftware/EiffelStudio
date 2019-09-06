@@ -31,8 +31,7 @@ feature {NONE} -- Initialization
 			if not retried then
 				Precursor {EB_NORMAL_COMPLETION_POSSIBILITIES_PROVIDER}
 			else
-				reset_completion_list
-				class_completion_possibilities := Void
+				reset_completion_lists
 				is_prepared := True
 			end
 		rescue
@@ -41,7 +40,7 @@ feature {NONE} -- Initialization
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

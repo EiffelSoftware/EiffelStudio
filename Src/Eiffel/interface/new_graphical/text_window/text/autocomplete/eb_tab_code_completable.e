@@ -40,7 +40,7 @@ feature -- Initialize
 			-- Initialize code completion
 		do
 			Precursor {CODE_COMPLETABLE}
-			set_completing_feature (true)
+			set_completing_feature
 			set_save_list_position_action (agent save_window_position)
 			create focus_back_actions
 		end
@@ -119,12 +119,27 @@ feature -- Status Change
 			discard_feature_signature_set: discard_feature_signature = a_b
 		end
 
-	set_completing_feature (a_completing_feature: BOOLEAN)
-			-- Set `completing_feature' with `a_completing_feature'.
+	set_completing_feature
+			-- Set `completing_feature' with `True'.
 		do
-			completing_feature := a_completing_feature
+			completion_mode := completing_feature_mode
 		ensure
-			completing_feature_set: completing_feature = a_completing_feature
+			completing_feature_set: completing_feature = True
+		end
+
+	set_completing_class
+			-- Set `completing_class' with `True'.
+		do
+			completion_mode := completing_class_mode
+		ensure
+			completing_class_set: completing_class = True
+		end
+
+	set_completing_alias_name (b: BOOLEAN)
+		do
+			completion_mode := completing_alias_name_mode
+		ensure
+			completing_alias_name_set: completing_alias_name = True
 		end
 
 feature -- Status report
@@ -147,12 +162,33 @@ feature -- Status report
 	discard_feature_signature: BOOLEAN
 			-- Discard feature signature?
 
-	completing_feature: BOOLEAN
-			-- Completing feature? Otherwise completing classes.
-
 	need_tabbing: BOOLEAN
 			-- Need tabbing after completion?
 			-- If false, tabbing is automatically triggered.
+
+feature -- Status report / completion mode
+
+	completion_mode: INTEGER
+
+	completing_feature_mode: INTEGER = 1
+	completing_class_mode: INTEGER = 2
+	completing_alias_name_mode: INTEGER = 3
+
+	completing_feature: BOOLEAN
+			-- Completing feature? Otherwise completing classes.
+		do
+			Result := completion_mode = completing_feature_mode
+		end
+
+	completing_class: BOOLEAN
+		do
+			Result := completion_mode = completing_class_mode
+		end
+
+	completing_alias_name: BOOLEAN
+		do
+			Result := completion_mode = completing_alias_name_mode
+		end
 
 feature {NONE} -- Status report
 
@@ -512,6 +548,32 @@ feature {CODE_COMPLETION_WINDOW} -- Code complete from window
 			end
 		end
 
+	complete_alias_name_from_window (completed: STRING_32; appended_character: CHARACTER_32; remainder: INTEGER)
+			-- Insert `completed' in the editor.
+		local
+			i: INTEGER
+		do
+			if is_editable then
+				if remainder > 0 then
+					from
+						i := 0
+					until
+						i = remainder
+					loop
+						delete_char
+						i := i + 1
+					end
+				end
+				if not completed.is_empty then
+					insert_string (completed)
+				end
+				if appended_character /= '%U' then
+					insert_char (appended_character)
+				end
+				refresh
+			end
+		end
+
 	complete_feature_call (completed: STRING_32; is_feature_signature: BOOLEAN; appended_character: CHARACTER_32; remainder: INTEGER; a_continue_completion: BOOLEAN)
  			-- Finish completion process by inserting the completed expression.
 		local
@@ -570,16 +632,24 @@ feature {NONE} -- Implementation
 						Current,
 						name_part_to_be_completed,
 						name_part_to_be_completed_remainder,
-						possibilities_provider.completion_possibilities,
+						possibilities_provider.feature_completion_possibilities,
 						completing_word
 					)
-			else
+			elseif completing_class then
 				choices.initialize_for_classes
 					(
 						Current,
 						name_part_to_be_completed,
 						name_part_to_be_completed_remainder,
 						possibilities_provider.class_completion_possibilities
+					)
+			elseif completing_alias_name then
+				choices.initialize_for_alias_name
+					(
+						Current,
+						name_part_to_be_completed,
+						name_part_to_be_completed_remainder,
+						possibilities_provider.alias_name_completion_possibilities
 					)
 			end
 			if choices.is_displayed then
@@ -764,7 +834,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

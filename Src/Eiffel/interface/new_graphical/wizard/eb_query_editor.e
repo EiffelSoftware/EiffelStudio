@@ -84,7 +84,7 @@ feature {EB_FEATURE_EDITOR} -- Implementation
 			l_frame.extend (l_hbox)
 
 			create setter_text
-			setter_text.set_completing_feature (False)
+			setter_text.set_completing_class
 
 			create text_completion.make (system.any_class.compiled_class, Void)
 			text_completion.set_code_completable (setter_text)
@@ -146,7 +146,7 @@ feature {EB_FEATURE_EDITOR} -- Implementation
 	type_selector: EB_TYPE_SELECTOR;
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

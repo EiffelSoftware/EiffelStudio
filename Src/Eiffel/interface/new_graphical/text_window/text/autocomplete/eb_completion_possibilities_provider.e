@@ -11,6 +11,8 @@ deferred class
 
 inherit
 	COMPLETION_POSSIBILITIES_PROVIDER
+		rename
+			completion_possibilities as feature_completion_possibilities
 		redefine
 			code_completable,
 			completion_possible,
@@ -30,6 +32,13 @@ feature -- Access
 		deferred
 		end
 
+	alias_name_completion_possibilities: SORTABLE_ARRAY [like name_type]
+			-- Completions proposals found by `prepare_auto_complete'
+		require
+			is_prepared : is_prepared
+		deferred
+		end
+
 	name_type: EB_NAME_FOR_COMPLETION
 
 feature -- Status report
@@ -40,19 +49,23 @@ feature -- Status report
 	provide_classes: BOOLEAN
 			-- Provide `class_completion_possibilities'?
 
+	provide_alias_name: BOOLEAN
+			-- Provide `alias_name_completion_possibilities'?
+
 	completion_possible: BOOLEAN
 			-- Is completion possible?
 		do
 			if
-				(provide_features implies (completion_possibilities /= Void and then not completion_possibilities.is_empty)) and
-				(provide_classes implies (class_completion_possibilities /= Void and then not class_completion_possibilities.is_empty))
+				(provide_features implies (attached feature_completion_possibilities as l_f_possibilities and then not l_f_possibilities.is_empty)) and
+				(provide_classes implies (attached class_completion_possibilities as l_c_possibilities and then not l_c_possibilities.is_empty)) and
+				(provide_alias_name implies True)
 			then
-				Result := true
+				Result := True
 			end
 		end
 
 	completing_context: BOOLEAN
-			-- Is current context suitable to trigger an completion?
+			-- Is current context suitable to trigger a completion?
 		local
 			l_token: EDITOR_TOKEN
 			l_image: STRING_32
@@ -60,45 +73,49 @@ feature -- Status report
 			Result := True
 			l_token := cursor_token
 			if l_token /= Void then
-				if l_token.is_text then
-					l_image := l_token.wide_image
-					if l_image.count > 1 and then current_pos_in_token > 1 then
-							-- Will prevent completion of '`.' or '..'
-						Result := is_completable_separator_character_32 (l_image [current_pos_in_token - 1])
+				if attached {EDITOR_TOKEN_STRING} l_token then
+					Result := True
+				else
+					if l_token.is_text then
+						l_image := l_token.wide_image
+						if l_image.count > 1 and then current_pos_in_token > 1 then
+								-- Will prevent completion of '`.' or '..'
+							Result := is_completable_separator_character_32 (l_image [current_pos_in_token - 1])
+						end
 					end
-				end
 
-				l_token := l_token.previous
+					l_token := l_token.previous
 
-				if l_token /= Void then
-					if attached {EDITOR_TOKEN_COMMENT} l_token then
-							-- Previous token is a comment so we cannot complete.
-							-- Happens when completing -- A Comment `.|
-						Result := False
-					elseif l_token.is_text then
-							-- Will prevent completion of '22|'
-						Result := not attached {EDITOR_TOKEN_NUMBER} l_token
+					if l_token /= Void then
+						if attached {EDITOR_TOKEN_COMMENT} l_token then
+								-- Previous token is a comment so we cannot complete.
+								-- Happens when completing -- A Comment `.|
+							Result := False
+						elseif l_token.is_text then
+								-- Will prevent completion of '22|'
+							Result := not attached {EDITOR_TOKEN_NUMBER} l_token
 
-						if Result then
-								-- will prevent completion of '"str"|'
-							Result := not attached {EDITOR_TOKEN_STRING} l_token
 							if Result then
-								l_image := l_token.wide_image
-								if l_image.count > 1 then
-										-- Will prevent completion of '|.' or '..'
-									if is_completable_separator_character_32 (l_image [l_image.count]) then
-										inspect
-											l_image [l_image.count - 1]
-										when ')', '}', ']' then
-											Result := True
-										else
-											Result := False -- Exclude for instance '|.' or '..' or '|..' or '`.' , ...
+									-- will prevent completion of '"str"|'
+								Result := not attached {EDITOR_TOKEN_STRING} l_token
+								if Result then
+									l_image := l_token.wide_image
+									if l_image.count > 1 then
+											-- Will prevent completion of '|.' or '..'
+										if is_completable_separator_character_32 (l_image [l_image.count]) then
+											inspect
+												l_image [l_image.count - 1]
+											when ')', '}', ']' then
+												Result := True
+											else
+												Result := False -- Exclude for instance '|.' or '..' or '|..' or '`.' , ...
+											end
 										end
-									end
-								elseif not l_image.is_empty and is_completable_separator (l_image) then
-									if attached l_token.previous as prev then
-											-- Will prevent completion of '10.|'
-										Result := not attached {EDITOR_TOKEN_NUMBER} prev
+									elseif not l_image.is_empty and is_completable_separator (l_image) then
+										if attached l_token.previous as prev then
+												-- Will prevent completion of '10.|'
+											Result := not attached {EDITOR_TOKEN_NUMBER} prev
+										end
 									end
 								end
 							end
@@ -115,7 +132,8 @@ feature {CODE_COMPLETABLE} -- Basic operation
 		do
 			Precursor {COMPLETION_POSSIBILITIES_PROVIDER}
 			provide_features := code_completable.completing_feature
-			provide_classes := not code_completable.completing_feature
+			provide_classes := code_completable.completing_class
+			provide_alias_name := code_completable.completing_alias_name
 		end
 
 feature -- Element Change
@@ -124,7 +142,7 @@ feature -- Element Change
 			-- Set `provide_features' with `a_provide'.
 		do
 			provide_features := a_provide
-			is_prepared := false
+			is_prepared := False
 		ensure
 			provide_features_set: provide_features = a_provide
 		end
@@ -133,9 +151,18 @@ feature -- Element Change
 			-- Set `provide_classes' with `a_provide'.
 		do
 			provide_classes := a_provide
-			is_prepared := false
+			is_prepared := False
 		ensure
 			provide_classes_set: provide_classes = a_provide
+		end
+
+	set_provide_alias_name (a_provide: BOOLEAN)
+			-- Set `provide_alias_name' with `a_provide'.
+		do
+			provide_alias_name := a_provide
+			is_prepared := False
+		ensure
+			provide_alias_name_set: provide_alias_name = a_provide
 		end
 
 feature {NONE} -- Implementation
@@ -187,7 +214,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

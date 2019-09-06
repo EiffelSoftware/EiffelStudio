@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 			text_completion.set_use_all_classes_in_universe (a_class_c = Void)
 
 			set_completion_possibilities_provider (text_completion)
-			set_completing_feature (False)
+			set_completing_class
 		end
 
 feature {NONE} -- Implementation
@@ -58,7 +58,7 @@ feature {NONE} -- Implementation
 		-- Class completion provider.
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -12,8 +12,9 @@ class
 inherit
 	EB_COMPLETE_INFO_ANALYZER
 		rename
-			build_completion_list as build_completion_list_analyse,
-			build_class_completion_list as build_class_completion_list_analyse
+			build_feature_completion_list as build_feature_completion_list_analyse,
+			build_class_completion_list as build_class_completion_list_analyse,
+			build_alias_name_completion_list as build_alias_name_completion_list_analyse
 		redefine
 			reset
 		end
@@ -189,7 +190,7 @@ feature -- Analysis preparation
 			is_ready := True
 		end
 
-	build_completion_list (a_cursor: like current_cursor)
+	build_feature_completion_list (a_cursor: like current_cursor)
 			-- Build feature completion list.
 		require
 			a_cursor_not_void: a_cursor /= Void
@@ -203,7 +204,7 @@ feature -- Analysis preparation
 			current_token := a_cursor.token
 			l_current_feature_as := feature_containing_cursor (a_cursor)
 			current_feature_as := l_current_feature_as
-			build_completion_list_analyse (current_token, current_cursor.pos_in_token)
+			build_feature_completion_list_analyse (current_token, current_cursor.pos_in_token)
 
 			if
 				l_current_feature_as /= Void and
@@ -237,6 +238,18 @@ feature -- Analysis preparation
 			build_class_completion_list_analyse (current_token)
 		end
 
+	build_alias_name_completion_list (a_cursor: like current_cursor)
+			-- Build class completion list.
+		require
+			a_cursor_not_void: a_cursor /= Void
+		do
+			current_cursor := a_cursor
+			current_line := current_cursor.line
+			current_token := a_cursor.token
+			current_feature_as := Void
+			build_alias_name_completion_list_analyse (current_token)
+		end
+
 	build_template_list (a_stone: detachable FEATURE_STONE)
 			-- Build feature template completion list
 		local
@@ -268,11 +281,11 @@ feature -- Analysis preparation
 					end
 					l_templates.forth
 				end
-				if attached completion_possibilities as l_completion_possibilities then
+				if attached feature_completion_possibilities as l_completion_possibilities then
 						-- Note: this happens when the target object has no exported feature.
 						--		 (should the `completion_possibilities` be empty instead of Void?)
-					completion_possibilities := l_completion_possibilities.subarray (1, cp_index - 1)
-					completion_possibilities.sort
+					feature_completion_possibilities := l_completion_possibilities.subarray (1, cp_index - 1)
+					feature_completion_possibilities.sort
 				end
 			end
 		end
@@ -310,8 +323,8 @@ feature -- Analysis preparation
 						l_templates.forth
 					end
 				end
-				completion_possibilities := completion_possibilities.subarray (1, cp_index - 1)
-				completion_possibilities.sort
+				feature_completion_possibilities := feature_completion_possibilities.subarray (1, cp_index - 1)
+				feature_completion_possibilities.sort
 			end
 		end
 
@@ -842,7 +855,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

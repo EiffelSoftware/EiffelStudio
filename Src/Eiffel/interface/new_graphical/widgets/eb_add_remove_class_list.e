@@ -124,7 +124,7 @@ feature {NONE} -- GUI
 			if has_parent then
 				text_field.set_parent_window ((create {EVS_HELPERS}).widget_top_level_window (parent))
 			end
-			text_field.set_completing_feature (false)
+			text_field.set_completing_class
 			text_field.set_completion_possibilities_provider (l_provider)
 			l_provider.set_code_completable (text_field)
 			create hbox
@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

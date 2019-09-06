@@ -546,7 +546,7 @@ feature {NONE} -- Implementation
 					a_alt = l_shortcut_pref.is_alt and
 					a_shift = l_shortcut_pref.is_shift
 				then
-					Result := not completing_feature
+					Result := completing_class
 				end
 
 				precompletion_actions.wipe_out
@@ -630,7 +630,7 @@ invariant
 	invariant_clause: True -- Your invariant here
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

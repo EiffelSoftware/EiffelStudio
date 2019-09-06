@@ -48,19 +48,23 @@ feature -- Completion access
 	exploring_current_class: BOOLEAN
 			-- was automatic completion called after a blank space ?
 
-	completion_possibilities: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION]
+	feature_completion_possibilities: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION]
 			-- completion possibilities for the current position in the editor
 
-feature -- Basic operations
+feature -- Basic operations / reset
 
-	reset_completion_list
-			-- Reset completion possibilities
+	reset_completion_lists
+			-- Reset all completion possibilities
 		do
-			completion_possibilities := Void
+			feature_completion_possibilities := Void
+			class_completion_possibilities := Void
+			alias_name_completion_possibilities := Void
 		end
 
-	build_completion_list (a_current_token: EDITOR_TOKEN; a_pos_in_cursor: INTEGER)
-			-- create the list of completion possibilities for the position
+feature -- Basic operations		
+
+	build_feature_completion_list (a_current_token: EDITOR_TOKEN; a_pos_in_cursor: INTEGER)
+			-- create the list of feature completion possibilities for the position
 			-- associated with `cursor'
 		require
 			a_current_token_not_void: a_current_token /= Void
@@ -89,7 +93,7 @@ feature -- Basic operations
 				last_formal := Void
 				last_was_constrained := False
 				last_was_multi_constrained := False
-				create completion_possibilities.make (1, 30)
+				create feature_completion_possibilities.make (1, 30)
 				create inserted_feature_table.make (30)
 				cp_index := 1
 				initialize_context
@@ -224,10 +228,10 @@ feature -- Basic operations
 						-- Reset and sort matches
 						--| TODO check if we can return completion_possibilities as an empty array.
 					if cp_index = 1 then
-						reset_completion_list
+						feature_completion_possibilities := Void
 					else
-						completion_possibilities := completion_possibilities.subarray (1, cp_index - 1)
-						completion_possibilities.sort
+						feature_completion_possibilities := feature_completion_possibilities.subarray (1, cp_index - 1)
+						feature_completion_possibilities.sort
 					end
 					reset_after_search
 				end
@@ -444,8 +448,33 @@ feature -- Class names completion
 			accessible_classes_from_group_not_void: Result /= Void
 		end
 
-	class_completion_possibilities: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION]
+	class_completion_possibilities: detachable SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION]
 			-- completion possibilities for the class name at current position in the editor.
+
+	build_alias_name_completion_list (a_token: EDITOR_TOKEN)
+			-- create the list of completion possibilities for the position
+			-- associated with `cursor'
+		require
+			a_token_not_void: a_token /= Void
+		local
+			name_name: EB_NAME_FOR_COMPLETION
+			l_poss: like alias_name_completion_possibilities
+		do
+			create insertion.put ("")
+			is_create := False
+			alias_name_completion_possibilities := Void
+			build_overload_list := False
+--			create l_poss.make_empty
+			alias_name_completion_possibilities := l_poss
+			if l_poss /= Void and then l_poss.count > 1 then
+				l_poss.sort
+			end
+			reset_after_search
+			calculate_insertion (a_token)
+		end
+
+	alias_name_completion_possibilities: detachable SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION]
+			-- completion possibilities for the text name at current position in the editor.
 
 feature {NONE} -- Implementation
 
@@ -783,9 +812,9 @@ feature {NONE} -- Implementation
 		end
 
 	add_feature_to_completion_possibilities (feat: E_FEATURE)
-			-- add the signature of `feat' to `completion_possibilities'
+			-- add the signature of `feat' to `feature_completion_possibilities'
 		require
-			completion_possibilities_not_void: completion_possibilities /= Void
+			completion_possibilities_not_void: feature_completion_possibilities /= Void
 			feat_is_not_void: feat /= Void
 		do
 			if not build_overload_list then
@@ -796,7 +825,7 @@ feature {NONE} -- Implementation
 		end
 
 	internal_add_feature (feat: E_FEATURE)
-			-- Internal add feat to `completion_possibilities'
+			-- Internal add feat to `feature_completion_possibilities'
 		require
 			feat_not_void: feat /= Void
 		local
@@ -938,13 +967,13 @@ feature {NONE} -- Implementation
 		require
 			name /= Void
 		local
-			l_possibilities: like completion_possibilities
+			l_possibilities: like feature_completion_possibilities
 		do
-			l_possibilities := completion_possibilities
+			l_possibilities := feature_completion_possibilities
 			if l_possibilities = Void then
 				check has_completion_possibilities: False end
 				create l_possibilities.make_empty
-				completion_possibilities := l_possibilities
+				feature_completion_possibilities := l_possibilities
 				cp_index := 1
 			end
 			if l_possibilities.capacity < cp_index then
@@ -1544,7 +1573,7 @@ feature {NONE} -- Implementation
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -471,12 +471,12 @@ feature -- Completion-clickable initialization / update
 			end
 		end
 
-	prepare_auto_complete (add_point: BOOLEAN)
+	prepare_feature_auto_complete (add_point: BOOLEAN)
 			-- Use `click_tool' to determine whether there is some
 			-- name to be completed at `cursor' position and set
 			-- `auto_complete_is_possible' accordingly.
 			-- If it is, strings that can possibly be used for completion
-			-- are available in `completion_possibilities'.
+			-- are available in `feature_completion_possibilities'.
 		require
 			click_and_complete_is_active
 		do
@@ -488,9 +488,9 @@ feature -- Completion-clickable initialization / update
 					-- what precedes as the name to be completed.
 			end
 
-			click_tool.build_completion_list (cursor)
+			click_tool.build_feature_completion_list (cursor)
 			if
-				attached click_tool.completion_possibilities as l_completion_possibilities and then
+				attached click_tool.feature_completion_possibilities as l_completion_possibilities and then
 				not l_completion_possibilities.is_empty
 			then
 				auto_complete_possible := True
@@ -507,7 +507,7 @@ feature -- Completion-clickable initialization / update
 			-- name to be completed at cursor position and set
 			-- `auto_complete_is_possible' accordingly.
 			-- If it is, strings that can possibly be used for completion
-			-- are available in `completion_possibilities'.
+			-- are available in `class_completion_possibilities'.
 		do
 			history.record_move
 			auto_complete_possible := False
@@ -517,22 +517,43 @@ feature -- Completion-clickable initialization / update
 			end
 		end
 
-	auto_complete_possible: BOOLEAN
-			-- Did `prepare_auto_complete' manage to find a list of completion proposals?
+	prepare_alias_name_complete
+			-- Determine whether there is some
+			-- name to be completed at cursor position and set
+			-- `auto_complete_is_possible' accordingly.
+			-- If it is, strings that can possibly be used for completion
+			-- are available in `alias_completion_possibilities'.
+		do
+			history.record_move
+			auto_complete_possible := False
+			click_tool.build_alias_name_completion_list (cursor)
+			auto_complete_possible := True
+		end
 
-	completion_possibilities: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION]
-			-- Completions proposals found by `prepare_auto_complete'
+	auto_complete_possible: BOOLEAN
+			-- Did `prepare_feature_auto_complete' manage to find a list of completion proposals?
+
+	feature_completion_possibilities: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION]
+			-- Completions proposals found by `prepare_feature_auto_complete'
 		do
 			if click_tool /= Void and then auto_complete_possible then
-				Result := click_tool.completion_possibilities
+				Result := click_tool.feature_completion_possibilities
 			end
 		end
 
 	class_completion_possibilities: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION]
-			-- Completions proposals found by `prepare_auto_complete'
+			-- Completions proposals found by `prepare_class_name_complete'
 		do
 			if click_tool /= Void and then auto_complete_possible then
 				Result := click_tool.class_completion_possibilities
+			end
+		end
+
+	alias_name_completion_possibilities: SORTABLE_ARRAY [EB_NAME_FOR_COMPLETION]
+			-- Completions proposals found by `prepare_alias_name_complete'
+		do
+			if click_tool /= Void and then auto_complete_possible then
+				Result := click_tool.alias_name_completion_possibilities
 			end
 		end
 
@@ -891,13 +912,15 @@ feature {NONE} -- Possiblilities provider
 			-- Prepare completion
 		do
 			Precursor
-			if click_tool.completion_possibilities /= Void then
-				click_tool.reset_completion_list
-			end
-			if provide_features and then click_and_complete_is_active then
-				prepare_auto_complete (False)
+			click_tool.reset_completion_lists
+			if provide_features then
+				if click_and_complete_is_active then
+					prepare_feature_auto_complete (False)
+				end
 			elseif provide_classes then
 				prepare_class_name_complete
+			elseif provide_alias_name then
+				prepare_alias_name_complete
 			end
 		end
 
@@ -905,7 +928,7 @@ feature {NONE} -- Possiblilities provider
 			-- Reset completion
 		do
 			if click_tool /= Void then
-				click_tool.reset_completion_list
+				click_tool.reset_completion_lists
 			end
 		end
 
@@ -1048,7 +1071,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

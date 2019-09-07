@@ -453,7 +453,7 @@ feature -- Statement Visitor
 				attached a_statement.origin_information as l_origin and then
 				attached l_origin.file
 			then
-				output.put_comment_line (l_origin.file + ":" + l_origin.line.out)
+				output.put_comment_line (l_origin.file.utf_8_name + ":" + l_origin.line.out)
 				if l_origin.line > 0 then
 					output.put_comment_line (l_origin.text_of_line)
 				end

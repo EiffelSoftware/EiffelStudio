@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 	make (a_name: like name; a_type: IV_TYPE)
 			-- Initialize with name `a_name' and type `a_type'.
 		require
-			a_name_valid: is_valid_name_32 (a_name)
+			a_name_valid: is_valid_name (a_name)
 		do
 			name := a_name.twin
 			type := a_type
@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: READABLE_STRING_32
+	name: READABLE_STRING_8
 			-- Name of entity.
 
 	type: IV_TYPE
@@ -53,10 +53,10 @@ feature -- Access
 
 feature -- Status report
 
-	has_free_var_named (a_name: STRING): BOOLEAN
+	has_free_var_named (a_name: READABLE_STRING_8): BOOLEAN
 			-- Does this expression contain a free variable with name `a_name'?
 		do
-			Result := name ~ a_name
+			Result := name.same_string (a_name)
 		end
 
 feature -- Comparison
@@ -64,7 +64,7 @@ feature -- Comparison
 	same_expression (a_other: IV_EXPRESSION): BOOLEAN
 			-- Does this expression equal `a_other' (if considered in the same context)?
 		do
-			Result := attached {IV_ENTITY} a_other as e and then e.name ~ name
+			Result := attached {IV_ENTITY} a_other as e and then e.name.same_string (name)
 		end
 
 feature -- Visitor

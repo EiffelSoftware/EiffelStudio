@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Visitor to process the iv universe and perform postcondition mutation of loops to create invariants"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			verifier := a_verifier
 		end
 
-feature {IV_POSTCONDITION_MUTATION} -- Implementation
+feature {NONE} -- {IV_POSTCONDITION_MUTATION} -- Implementation
 
 	universe: IV_UNIVERSE
 			--the IV_UNIVERSE this AST was taken from

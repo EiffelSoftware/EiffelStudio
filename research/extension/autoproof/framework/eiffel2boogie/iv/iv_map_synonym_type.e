@@ -30,7 +30,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_type_params: ARRAY [STRING]; a_domain_types: like domain_types; a_range_type: IV_TYPE; a_constructor: STRING; a_params: like parameters)
+	make (a_type_params: ARRAY [STRING]; a_domain_types: like domain_types; a_range_type: IV_TYPE; a_constructor: READABLE_STRING_8; a_params: like parameters)
 			-- Create a map type "<a_type_params>[a_domain_types]a_range_type" with synonym "a_constructor a_params".
 		require
 			a_type_params_exists: attached a_type_params

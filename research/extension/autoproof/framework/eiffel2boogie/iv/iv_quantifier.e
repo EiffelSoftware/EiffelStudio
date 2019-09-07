@@ -56,10 +56,10 @@ feature -- Access
 
 feature -- Status report
 
-	has_free_var_named (a_name: STRING): BOOLEAN
+	has_free_var_named (a_name: READABLE_STRING_8): BOOLEAN
 			-- Does this expression contain a free variable with name `a_name'?
 		do
-			Result := not (across bound_variables as i some i.item.name ~ a_name end) and expression.has_free_var_named (a_name)
+			Result := not (across bound_variables as i some i.item.name.same_string (a_name) end) and expression.has_free_var_named (a_name)
 		end
 
 feature -- Element change

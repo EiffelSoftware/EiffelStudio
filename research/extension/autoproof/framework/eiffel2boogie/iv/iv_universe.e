@@ -29,7 +29,7 @@ feature -- Access
 	dependencies: LINKED_LIST [PATH]
 			-- List of file dependencies.
 
-	procedure_named (a_name: STRING): detachable IV_PROCEDURE
+	procedure_named (a_name: READABLE_STRING_8): detachable IV_PROCEDURE
 			-- Boogie procedure with name `a_name'.
 		do
 			from
@@ -37,14 +37,14 @@ feature -- Access
 			until
 				declarations.after or Result /= Void
 			loop
-				if attached {IV_PROCEDURE} declarations.item as l_proc and then l_proc.name ~ a_name then
+				if attached {IV_PROCEDURE} declarations.item as l_proc and then l_proc.name.same_string (a_name) then
 					Result := l_proc
 				end
 				declarations.forth
 			end
 		end
 
-	constant_named (a_name: STRING): detachable IV_CONSTANT
+	constant_named (a_name: READABLE_STRING_8): detachable IV_CONSTANT
 			-- Boogie constant with name `a_name'.
 		do
 			from
@@ -52,14 +52,14 @@ feature -- Access
 			until
 				declarations.after or Result /= Void
 			loop
-				if attached {IV_CONSTANT} declarations.item as l_const and then l_const.name ~ a_name then
+				if attached {IV_CONSTANT} declarations.item as l_const and then l_const.name.same_string (a_name) then
 					Result := l_const
 				end
 				declarations.forth
 			end
 		end
 
-	function_named (a_name: STRING): detachable IV_FUNCTION
+	function_named (a_name: READABLE_STRING_8): detachable IV_FUNCTION
 			-- Boogie function with name `a_name'.
 		do
 			from
@@ -67,7 +67,7 @@ feature -- Access
 			until
 				declarations.after or Result /= Void
 			loop
-				if attached {IV_FUNCTION} declarations.item as l_fun and then l_fun.name ~ a_name then
+				if attached {IV_FUNCTION} declarations.item as l_fun and then l_fun.name.same_string (a_name) then
 					Result := l_fun
 				end
 				declarations.forth

@@ -40,10 +40,32 @@ create
 
 feature {NONE} -- Initialization
 
-	make
-			-- Initialize instruction translator.
+	make (a_implementation: IV_IMPLEMENTATION; a_feature: FEATURE_I; a_type: CL_TYPE_A)
+			-- Initialize instruction translator with the specified context.
+		require
+			a_type_attached: attached a_type
+			a_feature_attached: attached a_feature
+			a_implementation_attached: attached a_implementation
 		do
-			reset
+			create entity_mapping.make
+			create locals_map.make (5)
+			local_writable := Void
+			context_readable := Void
+			current_implementation := a_implementation
+			current_feature := a_feature
+			current_type := a_type
+			current_block := current_implementation.body
+			if attached types.for_class_type (a_type) as t then
+				entity_mapping.set_current (create {IV_ENTITY}.make
+						(if attached {IV_ENTITY} entity_mapping.current_expression as e then
+							e.name
+						else
+							{E2B_ENTITY_MAPPING}.default_current_name
+						end, t))
+			end
+			if a_feature.has_return_value then
+				entity_mapping.set_default_result (helper.class_type_in_context (a_feature.type, a_feature.written_class, a_feature, a_type))
+			end
 		end
 
 feature -- Access
@@ -78,22 +100,6 @@ feature -- Access
 
 feature -- Element change
 
-	set_context (a_implementation: IV_IMPLEMENTATION; a_feature: FEATURE_I; a_type: CL_TYPE_A)
-			-- Set context.
-		require
-			a_type_attached: attached a_type
-			a_feature_attached: attached a_feature
-			a_implementation_attached: attached a_implementation
-		do
-			current_implementation := a_implementation
-			current_feature := a_feature
-			current_type := a_type
-			current_block := current_implementation.body
-			if a_feature.has_return_value then
-				entity_mapping.set_default_result (helper.class_type_in_context (a_feature.type, a_feature.written_class, a_feature, a_type))
-			end
-		end
-
 	set_entity_mapping (a_entity_mapping: E2B_ENTITY_MAPPING)
 			-- Set `entity_mapping' to `a_entity_mapping'.
 		do
@@ -118,24 +124,11 @@ feature -- Element change
 
 feature -- Basic operations
 
-	reset
-			-- Reset instruction translator.
-		do
-			current_feature := Void
-			current_type := Void
-			current_implementation := Void
-			current_block := Void
-			create entity_mapping.make
-			create locals_map.make (5)
-			local_writable := Void
-			context_readable := Void
-		end
-
 	process_feature_of_type (a_feature: FEATURE_I; a_type: CL_TYPE_A)
 			-- Process body of feature `a_feature' of type `a_type'.
 		local
 			l_type: CL_TYPE_A
-			l_name: STRING
+			l_name: READABLE_STRING_8
 			l_ownership_handler: E2B_CUSTOM_OWNERSHIP_HANDLER
 			l_feature: FEATURE_I
 			l_expr_translator: E2B_BODY_EXPRESSION_TRANSLATOR
@@ -152,7 +145,7 @@ feature -- Basic operations
 					-- Public procedures unwrap Current in the beginning, unless lemma or marked with explicit wrapping
 				if helper.is_public (a_feature) and not a_feature.has_return_value and
 					not helper.is_explicit (a_feature, "wrapping") and not helper.is_lemma (a_feature) and not helper.is_nonvariant (a_feature) then
-					l_feature := system.any_type.base_class.feature_named_32 ("unwrap")
+					l_feature := system.any_type.base_class.feature_named ("unwrap")
 					l_expr_translator.set_context_line_number (a_feature.body.start_location.line)
 
 					l_ownership_handler.pre_builtin_call (l_expr_translator, l_feature)
@@ -192,7 +185,7 @@ feature -- Basic operations
 			if options.is_ownership_enabled then
 				if not helper.is_explicit (a_feature, "wrapping") and not helper.is_lemma (a_feature) and not helper.is_nonvariant (a_feature) then
 					if helper.is_public (a_feature) and not a_feature.has_return_value then
-						l_feature := system.any_type.base_class.feature_named_32 ("wrap")
+						l_feature := system.any_type.base_class.feature_named ("wrap")
 						l_expr_translator.set_context_line_number (a_feature.body.end_location.line)
 
 						l_ownership_handler.pre_builtin_call (l_expr_translator, l_feature)
@@ -226,9 +219,6 @@ feature -- Processing
 	process_assign_b (a_node: ASSIGN_B)
 			-- <Precursor>
 		local
-			l_local: LOCAL_B
-			l_result: RESULT_B
-			l_attribute: ATTRIBUTE_B
 			l_feature: FEATURE_I
 			l_type: CL_TYPE_A
 
@@ -241,19 +231,12 @@ feature -- Processing
 			set_current_origin_information (a_node)
 
 				-- Create target node
-			if a_node.target.is_local then
-				l_local ?= a_node.target
-				check l_local /= Void end
-				l_target := entity_mapping.local_ (l_local.position)
-			elseif a_node.target.is_result then
-				l_result ?= a_node.target
-				check l_result /= Void end
+			if attached {RESULT_B} a_node.target as l_result then
 				check current_feature.has_return_value end
 				l_target := entity_mapping.result_expression
-			elseif a_node.target.is_attribute then
-				l_attribute ?= a_node.target
-				check is_attribute: l_attribute /= Void end
-
+			elseif attached {LOCAL_B} a_node.target as l_local then
+				l_target := entity_mapping.local_ (l_local.position)
+			elseif attached {ATTRIBUTE_B} a_node.target as l_attribute then
 				l_feature := helper.feature_for_call_access (l_attribute, current_type)
 				check
 					valid_feature: l_feature /= Void
@@ -322,19 +305,16 @@ feature -- Processing
 
 	process_check_b (a_node: CHECK_B)
 			-- <Precursor>
-		local
-			l_assert: ASSERT_B
 		do
-			if a_node.check_list /= Void then
-				from
-					a_node.check_list.start
-				until
-					a_node.check_list.after
+			if attached a_node.check_list as ls then
+				across
+					ls as l
 				loop
-					l_assert ?= a_node.check_list.item
-					check l_assert /= Void end
-					process_single_check (l_assert)
-					a_node.check_list.forth
+					check
+						attached {ASSERT_B} l.item as l_assert
+					then
+						process_single_check (l_assert)
+					end
 				end
 			end
 		end
@@ -443,9 +423,7 @@ feature -- Processing
 		local
 			l_if: IV_CONDITIONAL
 			l_nested_if: IV_CONDITIONAL
-			l_elseif: ELSIF_B
 			l_temp_block: IV_BLOCK
-			i: INTEGER
 		do
 			set_current_origin_information (a_node)
 
@@ -462,35 +440,30 @@ feature -- Processing
 
 				-- elseif blocks
 			current_block := l_if.else_block
-			if a_node.elsif_list /= Void then
-				from
-					i := a_node.elsif_list.lower
-				until
-					i > a_node.elsif_list.upper
+			if attached a_node.elsif_list as ls then
+				across
+					ls as l
 				loop
-					l_elseif ?= a_node.elsif_list.i_th (i)
-					check l_elseif /= Void end
-					set_current_origin_information (l_elseif)
-
-						-- elseif condition
-					process_expression (l_elseif.expr)
-					create l_nested_if.make (last_expression)
-					add_statement (l_nested_if)
-
-						-- elseif block
-					current_block := l_nested_if.then_block
-					process_compound (l_elseif.compound)
-
-						-- else block
-					current_block := l_nested_if.else_block
-
-					i := i + 1
+					check
+						attached {ELSIF_B} l.item as l_elseif
+					then
+						set_current_origin_information (l_elseif)
+							-- elseif condition
+						process_expression (l_elseif.expr)
+						create l_nested_if.make (last_expression)
+						add_statement (l_nested_if)
+							-- elseif block
+						current_block := l_nested_if.then_block
+						process_compound (l_elseif.compound)
+							-- else block
+						current_block := l_nested_if.else_block
+					end
 				end
 			end
 
 				-- else block
-			if a_node.else_part /= Void then
-				process_compound (a_node.else_part)
+			if attached a_node.else_part as e then
+				process_compound (e)
 			end
 
 				-- restore context
@@ -500,7 +473,6 @@ feature -- Processing
 	process_inspect_b (a_node: INSPECT_B)
 			-- <Precursor>
 		local
-			l_case: CASE_B
 			l_temp_block, l_head_block, l_else_block, l_end_block: IV_BLOCK
 			l_case_blocks: ARRAY [IV_BLOCK]
 			l_case_conditions: ARRAY [IV_EXPRESSION]
@@ -530,59 +502,56 @@ feature -- Processing
 			create l_assign.make (l_entity, last_expression)
 			add_statement (l_assign)
 
-			if a_node.case_list /= Void then
-				from
-					a_node.case_list.start
-				until
-					a_node.case_list.after
+			if attached a_node.case_list as case_list then
+				across
+					case_list as ls
 				loop
-					l_index := a_node.case_list.index
-					l_case ?= a_node.case_list.item
-					check l_case /= Void end
+					l_index := ls.target_index
+					check
+						attached {CASE_B} ls.item as l_case
+					then
+						if l_case.interval /= Void and then not l_case.interval.is_empty then
+							from
+								l_condition := Void
+								l_case.interval.start
+							until
+								l_case.interval.after
+							loop
+								process_contract_expression (l_case.interval.item.lower, False)
+								l_lower := last_expression
+									-- TODO: check side effect
+								process_contract_expression (l_case.interval.item.upper, False)
+								l_upper := last_expression
+									-- TODO: check side effect
 
-					if l_case.interval /= Void and then not l_case.interval.is_empty then
-						from
-							l_condition := Void
-							l_case.interval.start
-						until
-							l_case.interval.after
-						loop
-							process_contract_expression (l_case.interval.item.lower, False)
-							l_lower := last_expression
-								-- TODO: check side effect
-							process_contract_expression (l_case.interval.item.upper, False)
-							l_upper := last_expression
-								-- TODO: check side effect
+								l_binary := factory.and_ (
+									factory.less_equal (l_lower, l_entity),
+									factory.less_equal (l_entity, l_upper))
 
-							l_binary := factory.and_ (
-								factory.less_equal (l_lower, l_entity),
-								factory.less_equal (l_entity, l_upper))
+								if l_condition = Void then
+									l_condition := l_binary
+								else
+									l_condition := factory.or_ (l_condition, l_binary)
+								end
 
-							if l_condition = Void then
-								l_condition := l_binary
-							else
-								l_condition := factory.or_ (l_condition, l_binary)
+								l_case.interval.forth
 							end
-
-							l_case.interval.forth
+						else
+							create {IV_VALUE} l_condition.make ("false", types.bool)
 						end
-					else
-						create {IV_VALUE} l_condition.make ("false", types.bool)
+
+						set_current_origin_information (l_case)
+
+						l_case_blocks.force (create {IV_BLOCK}.make_name (helper.unique_identifier ("inspect_case")), l_index)
+						set_current_block (l_case_blocks.item (l_index))
+						create l_assume.make_assume (l_condition)
+						add_statement (l_assume)
+						process_compound (l_case.compound)
+						create l_goto.make (l_end_block)
+						add_statement (l_goto)
+
+						l_case_conditions.force (l_condition, l_index)
 					end
-
-					set_current_origin_information (l_case)
-
-					l_case_blocks.force (create {IV_BLOCK}.make_name (helper.unique_identifier ("inspect_case")), l_index)
-					set_current_block (l_case_blocks.item (l_index))
-					create l_assume.make_assume (l_condition)
-					add_statement (l_assume)
-					process_compound (l_case.compound)
-					create l_goto.make (l_end_block)
-					add_statement (l_goto)
-
-					l_case_conditions.force (l_condition, l_index)
-
-					a_node.case_list.forth
 				end
 			end
 
@@ -655,7 +624,6 @@ feature -- Processing
 			l_frame: like process_loop_modifies
 			l_old_writable: IV_EXPRESSION
 			l_condition: IV_EXPRESSION
-			l_invariant: ASSERT_B
 			l_goto: IV_GOTO
 			l_temp_block, l_head_block, l_body_block, l_end_block: IV_BLOCK
 			l_assume: IV_ASSERT
@@ -685,19 +653,17 @@ feature -- Processing
 				-- Collect modify and decreases clauses
 			create l_modifies.make (3)
 			create l_decreases.make (3)
-			if a_node.invariant_part /= Void then
-				from
-					a_node.invariant_part.start
-				until
-					a_node.invariant_part.after
+			if attached a_node.invariant_part as i then
+				across
+					i as node
 				loop
-					l_invariant ?= a_node.invariant_part.item
-					if helper.is_clause_modify (l_invariant) then
+					if not attached {ASSERT_B} node.item as l_invariant then
+							-- Unexpected byte node.
+					elseif helper.is_clause_modify (l_invariant) then
 						l_modifies.extend (create {E2B_ASSERT_ORIGIN}.make (l_invariant, current_feature.written_class))
 					elseif helper.is_clause_decreases (l_invariant) then
 						l_decreases.extend (create {E2B_ASSERT_ORIGIN}.make (l_invariant, current_feature.written_class))
 					end
-					a_node.invariant_part.forth
 				end
 			end
 
@@ -775,7 +741,7 @@ feature -- Processing
 			from_loop: a_node.stop = Void and a_node.iteration_exit_condition /= Void
 		local
 			l_condition: IV_EXPRESSION
-			l_invariant: ASSERT_B
+--			l_invariant: ASSERT_B
 			l_goto: IV_GOTO
 			l_temp_block, l_head_block, l_body_block, l_end_block: IV_BLOCK
 			l_assert: IV_ASSERT
@@ -783,34 +749,34 @@ feature -- Processing
 			l_variant: IV_ENTITY
 			l_assignment: IV_ASSIGNMENT
 
-			l_assign: ASSIGN_B
-			l_object_test_local: OBJECT_TEST_LOCAL_B
-			l_nested: NESTED_B
-			l_access: ACCESS_EXPR_B
-			l_bin_free: BIN_FREE_B
-			l_name: STRING
+--			l_assign: ASSIGN_B
+--			l_object_test_local: OBJECT_TEST_LOCAL_B
+--			l_nested: NESTED_B
+--			l_access: ACCESS_EXPR_B
+--			l_bin_free: BIN_FREE_B
+--			l_name: STRING
 		do
 			set_current_origin_information (a_node.advance_code.first)
 
-			l_assign ?= a_node.iteration_initialization.first
-			check l_assign /= Void end
-			l_object_test_local ?= l_assign.target
-			check l_object_test_local /= Void end
-			l_nested ?= l_assign.source
-			check l_nested /= Void end
-			l_access ?= l_nested.target
-			check l_access /= Void end
+--			l_assign ?= a_node.iteration_initialization.first
+--			check l_assign /= Void end
+--			l_object_test_local ?= l_assign.target
+--			check l_object_test_local /= Void end
+--			l_nested ?= l_assign.source
+--			check l_nested /= Void end
+--			l_access ?= l_nested.target
+--			check l_access /= Void end
 
-			l_name := l_nested.target.type.base_class.name_in_upper
-			if l_name ~ "ARRAY" then
---				create {E2B_ARRAY_ACROSS_HANDLER} l_across_handler.make (Current, a_node, l_nested.target, l_object_test_local)
-			elseif l_name ~ "INTEGER_INTERVAL" then
-				l_bin_free ?= l_access.expr
-				check l_bin_free /= Void end
---				create {E2B_INTERVAL_ACROSS_HANDLER} l_across_handler.make (Current, a_node, l_bin_free, l_object_test_local)
-			else
-				check False end
-			end
+--			l_name := l_nested.target.type.base_class.name_in_upper
+--			if l_name ~ "ARRAY" then
+----				create {E2B_ARRAY_ACROSS_HANDLER} l_across_handler.make (Current, a_node, l_nested.target, l_object_test_local)
+--			elseif l_name ~ "INTEGER_INTERVAL" then
+--				l_bin_free ?= l_access.expr
+--				check l_bin_free /= Void end
+----				create {E2B_INTERVAL_ACROSS_HANDLER} l_across_handler.make (Current, a_node, l_bin_free, l_object_test_local)
+--			else
+--				check False end
+--			end
 
 			l_temp_block := current_block
 			create l_head_block.make_name (helper.unique_identifier("loop_head"))
@@ -827,24 +793,22 @@ feature -- Processing
 			current_block := l_head_block
 
 				-- Invariants
-			if a_node.invariant_part /= Void then
-				from
-					a_node.invariant_part.start
-				until
-					a_node.invariant_part.after
+			if attached a_node.invariant_part as i then
+				across
+					i as node
 				loop
-					l_invariant ?= a_node.invariant_part.item
-					set_current_origin_information (l_invariant)
-					process_contract_expression (l_invariant.expr, False)
-					across last_safety_checks as i loop
-						add_statement (i.item)
+					if attached {ASSERT_B} node.item as l_invariant then
+						set_current_origin_information (l_invariant)
+						process_contract_expression (l_invariant.expr, False)
+						across last_safety_checks as c loop
+							add_statement (c.item)
+						end
+						create l_assert.make (last_expression)
+						l_assert.node_info.set_type ("loop_inv")
+						l_assert.node_info.set_tag (l_invariant.tag)
+						l_assert.node_info.set_line (l_invariant.line_number)
+						add_statement (l_assert)
 					end
-					create l_assert.make (last_expression)
-					l_assert.node_info.set_type ("loop_inv")
-					l_assert.node_info.set_tag (l_invariant.tag)
-					l_assert.node_info.set_line (l_invariant.line_number)
-					add_statement (l_assert)
-					a_node.invariant_part.forth
 				end
 			end
 
@@ -901,7 +865,6 @@ feature -- Processing
 			-- Process loop with unrolling.
 		local
 			l_condition: IV_EXPRESSION
-			l_invariant: ASSERT_B
 			l_goto: IV_GOTO
 			l_temp_block, l_head_block, l_body_block, l_end_block, l_force_end_block: IV_BLOCK
 			l_assert: IV_ASSERT
@@ -954,21 +917,19 @@ feature -- Processing
 				current_block := l_head_block
 
 					-- Invariants
-				if a_node.invariant_part /= Void then
-					from
-						a_node.invariant_part.start
-					until
-						a_node.invariant_part.after
+				if attached a_node.invariant_part as i then
+					across
+						i as node
 					loop
-						l_invariant ?= a_node.invariant_part.item
-						set_current_origin_information (l_invariant)
-						process_contract_expression (l_invariant.expr, False)
-						create l_assert.make (last_expression)
-						l_assert.node_info.set_type ("loop_inv")
-						l_assert.node_info.set_tag (l_invariant.tag)
-						l_assert.node_info.set_line (l_invariant.line_number)
-						add_statement (l_assert)
-						a_node.invariant_part.forth
+						if attached {ASSERT_B} node.item as l_invariant then
+							set_current_origin_information (l_invariant)
+							process_contract_expression (l_invariant.expr, False)
+							create l_assert.make (last_expression)
+							l_assert.node_info.set_type ("loop_inv")
+							l_assert.node_info.set_tag (l_invariant.tag)
+							l_assert.node_info.set_line (l_invariant.line_number)
+							add_statement (l_assert)
+						end
 					end
 				end
 
@@ -1025,18 +986,16 @@ feature -- Processing
 				current_block := l_force_end_block
 
 					-- Invariants
-				if a_node.invariant_part /= Void then
-					from
-						a_node.invariant_part.start
-					until
-						a_node.invariant_part.after
+				if attached a_node.invariant_part as i then
+					across
+						i as node
 					loop
-						l_invariant ?= a_node.invariant_part.item
-						set_current_origin_information (l_invariant)
-						process_contract_expression (l_invariant.expr, False)
-						create l_assert.make (last_expression)
-						add_statement (l_assert)
-						a_node.invariant_part.forth
+						if attached {ASSERT_B} node.item as l_invariant then
+							set_current_origin_information (l_invariant)
+							process_contract_expression (l_invariant.expr, False)
+							create l_assert.make (last_expression)
+							add_statement (l_assert)
+						end
 					end
 				end
 
@@ -1143,18 +1102,18 @@ feature {NONE} -- Loop processing
 			-- Process loop invariants `a_invariants' and add default invariants
 			-- with pre-loop heap `a_pre-heap' and the loop frame `a_loop_frame' (if exists, otherwise Void).
 		local
-			l_invariant: ASSERT_B
 			l_inv: IV_ASSERT
 		do
 			if a_invariants /= Void then
-				from
-					a_invariants.start
-				until
-					a_invariants.after
+				across
+					a_invariants as node
 				loop
-					l_invariant ?= a_invariants.item
 						-- Ignore modifies and decreases clauses
-					if not helper.is_clause_modify (l_invariant) and not helper.is_clause_decreases (l_invariant) then
+					if
+						attached {ASSERT_B} node.item as l_invariant and then
+						not helper.is_clause_modify (l_invariant) and then not
+						helper.is_clause_decreases (l_invariant)
+					then
 						set_current_origin_information (l_invariant)
 						process_contract_expression (l_invariant.expr, False)
 						if l_invariant.tag /= Void and then l_invariant.tag.is_case_insensitive_equal_general ("assume") then
@@ -1178,7 +1137,6 @@ feature {NONE} -- Loop processing
 						end
 						add_statement (l_inv)
 					end
-					a_invariants.forth
 				end
 			end
 				-- Default invariants (free)			
@@ -1277,15 +1235,9 @@ feature {NONE} -- Implementation
 		local
 			l_error: BOOLEAN
 		do
-			if l_error then
-				create Result
-				Result.set_file (current_feature.written_class.file_name.as_string_8)
-				Result.set_line (-1)
-			else
-				create Result
-				Result.set_file (current_feature.written_class.file_name.as_string_8)
-				Result.set_line (a_node.line_number)
-			end
+			create Result
+			Result.set_file (current_feature.written_class.file_name)
+			Result.set_line (if l_error then -1 else a_node.line_number end)
 		rescue
 				-- a_node.line_number might result in a postcondition violation
 			l_error := True

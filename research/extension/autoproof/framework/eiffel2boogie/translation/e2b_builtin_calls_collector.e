@@ -23,6 +23,9 @@ inherit
 	SHARED_WORKBENCH
 		export {NONE} all end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+		export {NONE} all end
+
 feature -- Status report
 
 	is_any_target: BOOLEAN
@@ -38,14 +41,14 @@ feature -- Status setting
 
 feature -- Results
 
-	has_attribute (a_name: STRING): BOOLEAN
+	has_attribute (a_name: READABLE_STRING_8): BOOLEAN
 			-- Is attribute `a_name' mentioned?
 		do
-			if a_name ~ "observers" then
+			if a_name.same_string ("observers") then
 				Result := has_observers
-			elseif a_name ~ "subjects" then
+			elseif a_name.same_string ("subjects") then
 				Result := has_subjects
-			elseif a_name ~ "owns" then
+			elseif a_name.same_string ("owns") then
 				Result := has_owns
 			end
 		end
@@ -71,18 +74,24 @@ feature -- Processing
 			l_feature: FEATURE_I
 		do
 			Precursor (a_node)
-			l_name := names_heap.item_32 (a_node.feature_name_id)
+			l_name := names_heap.item (a_node.feature_name_id)
 			if a_node.routine_id > 0 then
 				l_feature := system.class_of_id (a_node.written_in).feature_of_rout_id (a_node.routine_id)
 			end
-			if l_name ~ "observers" then
+			if l_name.same_string ("observers") then
 				has_observers := True
-			elseif l_name ~ "subjects" then
+			elseif l_name.same_string ("subjects") then
 				has_subjects := True
-			elseif l_name ~ "owns" then
+			elseif l_name.same_string ("owns") then
 				has_owns := True
-			elseif l_name ~ "closed" or l_name ~ "is_open" or l_name ~ "is_wrapped" or l_name ~ "owner" or l_name ~ "is_free" or
-				(attached l_feature and then helper.is_invariant_unfriendly (l_feature)) then
+			elseif
+				l_name.same_string ("closed") or
+				l_name.same_string ("is_open") or
+				l_name.same_string ("is_wrapped") or
+				l_name.same_string ("owner") or
+				l_name.same_string ("is_free") or
+				(attached l_feature and then helper.is_invariant_unfriendly (l_feature))
+			then
 				is_inv_unfriendly := True
 			end
 		end

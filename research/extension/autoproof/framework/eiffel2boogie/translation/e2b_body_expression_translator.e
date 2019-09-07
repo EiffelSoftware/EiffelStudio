@@ -49,7 +49,6 @@ feature -- Visitors
 		local
 			i, n: INTEGER
 			l_type: CL_TYPE_A
-			l_expr: EXPR_B
 			l_target: IV_EXPRESSION
 			l_pcall: IV_PROCEDURE_CALL
 			l_assign: IV_ASSIGNMENT
@@ -90,13 +89,12 @@ feature -- Visitors
 			until
 				i > n
 			loop
-				l_expr ?= a_node.expressions.i_th (i)
-				check l_expr /= Void end
-				create l_assign.make (
-					factory.array_access (entity_mapping.heap, l_target, factory.int_value (i), l_content_type),
-					process_argument_expression (l_expr))
-				l_block.add_statement (l_assign)
-
+				if attached {EXPR_B} a_node.expressions [i] as e then
+					create l_assign.make (
+						factory.array_access (entity_mapping.heap, l_target, factory.int_value (i), l_content_type),
+						process_argument_expression (e))
+					l_block.add_statement (l_assign)
+				end
 				i := i + 1
 			end
 			last_expression := l_target
@@ -165,7 +163,7 @@ feature -- Visitors
 			-- <Precursor>
 		do
 			if a_node.is_inline_agent then
-				helper.add_unsupported_error (context_feature, "Inline agents are not supported", context_line_number)
+				helper.add_unsupported_error (context_feature, {STRING_32} "Inline agents are not supported", context_line_number)
 				last_expression := dummy_node (a_node.type)
 			else
 				(create {E2B_CUSTOM_AGENT_CALL_HANDLER}).handle_agent_creation (Current, a_node)
@@ -314,7 +312,7 @@ feature -- Translation
 				if helper.is_setter (context_feature) and
 					not a_feature.has_return_value  and not helper.is_setter (a_feature) then
 						-- Setter calling a non-setter procedure: unsound framing
-					helper.add_semantic_error (context_feature, messages.nonsetter_call_from_setter (a_feature.feature_name), context_line_number)
+					helper.add_semantic_error (context_feature, messages.nonsetter_call_from_setter (a_feature.feature_name_32), context_line_number)
 				end
 
 				if a_for_creator or
@@ -327,7 +325,7 @@ feature -- Translation
 					create l_pcall.make (name_translator.boogie_procedure_for_feature (a_feature, current_target_type))
 					if helper.is_creator (a_feature) then
 						-- A feature specified to be creator-only, but called as a regular procedure
-						helper.add_semantic_error (context_feature, messages.creator_call_as_procedure (a_feature.feature_name), context_line_number)
+						helper.add_semantic_error (context_feature, messages.creator_call_as_procedure (a_feature.feature_name_32), context_line_number)
 					end
 				end
 
@@ -469,8 +467,7 @@ feature -- Translation
 			end
 
 			create l_block.make
-			create l_translator.make
-			l_translator.set_context (context_implementation, a_feature, current_target_type)
+			create l_translator.make (context_implementation, a_feature, current_target_type)
 			l_translator.set_current_block (l_block)
 			l_translator.set_entity_mapping (l_entity_mapping)
 

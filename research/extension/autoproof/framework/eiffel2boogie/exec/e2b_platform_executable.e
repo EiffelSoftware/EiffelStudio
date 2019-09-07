@@ -142,12 +142,12 @@ feature {NONE} -- Implementation
 
 				-- Prepare command line arguments
 			create l_arguments.make
-			l_arguments.extend ("/trace")
+			l_arguments.extend ({STRING_32} "/trace")
 			if l_context.options.is_enforcing_timeout then
-				l_arguments.extend ("/z3opt:/T:" + l_context.options.timeout.out)
+				l_arguments.extend ({STRING_32} "/z3opt:/T:" + l_context.options.timeout.out)
 			end
---			l_arguments.extend ("/errorLimit:1")
---			l_arguments.extend ("/mv:" + safe_file_name (model_file_name))
+--			l_arguments.extend ({STRING_32} "/errorLimit:1")
+--			l_arguments.extend ({STRING_32} "/mv:" + safe_file_name (model_file_name))
 			l_arguments.extend (boogie_file_name.name)
 
 				-- Launch Boogie
@@ -158,8 +158,8 @@ feature {NONE} -- Implementation
 				process.set_on_fail_launch_handler (agent handle_launch_failed (boogie_executable, l_arguments))
 			elseif {PLATFORM}.is_unix then
 				l_arguments.put_front (boogie_executable)
-				process := l_process_factory.process_launcher ("/usr/bin/mono", l_arguments, l_ee.current_working_path.name)
-				process.set_on_fail_launch_handler (agent handle_launch_failed ("/usr/bin/mono " + boogie_executable, l_arguments))
+				process := l_process_factory.process_launcher ({STRING_32} "/usr/bin/mono", l_arguments, l_ee.current_working_path.name)
+				process.set_on_fail_launch_handler (agent handle_launch_failed ({STRING_32} "/usr/bin/mono " + boogie_executable, l_arguments))
 			else
 				check False end
 			end
@@ -179,7 +179,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	handle_launch_failed (a_executable: STRING; a_arguments: LINKED_LIST [READABLE_STRING_32])
+	handle_launch_failed (a_executable: READABLE_STRING_32; a_arguments: LINKED_LIST [READABLE_STRING_32])
 			-- Handle launch of Boogie failed.
 		local
 			l_error: E2B_AUTOPROOF_ERROR

@@ -74,7 +74,7 @@ feature -- Status notification.
 			create Result.put (Void)
 		end
 
-	set_status (a_message: STRING)
+	set_status (a_message: READABLE_STRING_32)
 			-- Set status message.
 		do
 			if status_notifier_agent_cell.item /= Void then

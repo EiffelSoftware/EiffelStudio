@@ -50,7 +50,7 @@ feature -- Cache control
 
 feature -- General note helpers
 
-	class_note_values (a_class: CLASS_C; a_tag: STRING_32): ARRAYED_LIST [STRING_32]
+	class_note_values (a_class: CLASS_C; a_tag: READABLE_STRING_8): ARRAYED_LIST [READABLE_STRING_8]
 			-- List of note values of tag `a_tag'.
 		do
 			create Result.make (5)
@@ -67,7 +67,7 @@ feature -- General note helpers
 			result_attached: attached Result
 		end
 
-	feature_note_values (a_feature: FEATURE_I; a_tag: STRING_32): ARRAYED_LIST [STRING_32]
+	feature_note_values (a_feature: FEATURE_I; a_tag: READABLE_STRING_8): ARRAYED_LIST [READABLE_STRING_8]
 			-- List of note values of tag `a_tag'.
 		do
 			if a_feature.body /= Void and then a_feature.body.indexes /= Void then
@@ -79,7 +79,7 @@ feature -- General note helpers
 			result_attached: attached Result
 		end
 
-	note_values (a_indexing_clause: INDEXING_CLAUSE_AS; a_tag: STRING_32): ARRAYED_LIST [STRING_32]
+	note_values (a_indexing_clause: INDEXING_CLAUSE_AS; a_tag: READABLE_STRING_8): ARRAYED_LIST [READABLE_STRING_8]
 			-- List of note values of tag `a_tag'.
 		do
 			create Result.make (3)
@@ -87,24 +87,20 @@ feature -- General note helpers
 			across
 				a_indexing_clause as i
 			loop
-				if i.item.tag.name_32.same_string (a_tag) then
+				if i.item.tag.name.same_string (a_tag) then
 					across
 						i.item.index_list as v
 					loop
-						if attached {STRING_AS} v.item as l_string then
-							Result.extend (l_string.value_32)
-						else
-							Result.extend (v.item.string_value_32)
-						end
+						Result.extend (if attached {STRING_AS} v.item as s then s.value else v.item.string_value end)
 					end
 				end
 			end
 		end
 
-	boolean_feature_note_value (a_feature: FEATURE_I; a_tag: STRING_32): BOOLEAN
+	boolean_feature_note_value (a_feature: FEATURE_I; a_tag: READABLE_STRING_8): BOOLEAN
 			-- Value of a boolean feature note tag, False if not present.
 		local
-			l_values: ARRAYED_LIST [STRING_32]
+			l_values: like feature_note_values
 		do
 			l_values := feature_note_values (a_feature, a_tag)
 			if not l_values.is_empty then
@@ -112,10 +108,10 @@ feature -- General note helpers
 			end
 		end
 
-	boolean_class_note_value (a_class: CLASS_C; a_tag: STRING_32): BOOLEAN
+	boolean_class_note_value (a_class: CLASS_C; a_tag: READABLE_STRING_8): BOOLEAN
 			-- Value of a boolean feature note tag, False if not present.
 		local
-			l_values: ARRAYED_LIST [STRING_32]
+			l_values: like class_note_values
 		do
 			l_values := class_note_values (a_class, a_tag)
 			if not l_values.is_empty then
@@ -123,10 +119,10 @@ feature -- General note helpers
 			end
 		end
 
-	integer_feature_note_value (a_feature: FEATURE_I; a_tag: STRING_32): INTEGER
+	integer_feature_note_value (a_feature: FEATURE_I; a_tag: READABLE_STRING_8): INTEGER
 			-- Value of an integer feature note tag, -1 if not present.
 		local
-			l_values: ARRAYED_LIST [STRING_32]
+			l_values: like feature_note_values
 		do
 			Result := -1
 			l_values := feature_note_values (a_feature, a_tag)
@@ -135,40 +131,40 @@ feature -- General note helpers
 			end
 		end
 
-	string_class_note_value (a_class: CLASS_C; a_tag: STRING_32): STRING
+	string_class_note_value (a_class: CLASS_C; a_tag: READABLE_STRING_8): READABLE_STRING_8
 			-- Value of a string class note tag, empty string if not present.
 		local
-			l_values: ARRAYED_LIST [STRING_32]
+			l_values: like class_note_values
 		do
 			Result := ""
 			l_values := class_note_values (a_class, a_tag)
 			if not l_values.is_empty then
-				Result := l_values.i_th (1).as_string_8
+				Result := l_values [1]
 			end
 		end
 
-	string_feature_note_value (a_feature: FEATURE_I; a_tag: STRING_32): STRING
+	string_feature_note_value (a_feature: FEATURE_I; a_tag: READABLE_STRING_8): READABLE_STRING_8
 			-- Value of a string feature note tag, empty string if not present.
 		local
-			l_values: ARRAYED_LIST [STRING_32]
+			l_values: like feature_note_values
 		do
 			Result := ""
 			l_values := feature_note_values (a_feature, a_tag)
 			if not l_values.is_empty then
-				Result := l_values.i_th (1).as_string_8
+				Result := l_values [1]
 			end
 		end
 
 feature -- Class status helpers
 
-	is_class_status (a_class: CLASS_C; a_value: STRING): BOOLEAN
+	is_class_status (a_class: CLASS_C; a_value: READABLE_STRING_8): BOOLEAN
 			-- Does `a_class' has a note with a tag status that contains the value `a_value'?
 		local
-			l_values: ARRAYED_LIST [STRING_32]
+			l_values: like class_note_values
 		do
 			l_values := class_note_values (a_class, "status")
 			if not l_values.is_empty then
-				Result := across l_values as i some i.item.as_string_8.is_equal (a_value)  end
+				Result := across l_values as i some i.item.same_string (a_value)  end
 			end
 		end
 
@@ -186,14 +182,14 @@ feature -- Class status helpers
 
 feature -- Feature status helpers
 
-	is_feature_status (a_feature: FEATURE_I; a_value: STRING): BOOLEAN
+	is_feature_status (a_feature: FEATURE_I; a_value: READABLE_STRING_8): BOOLEAN
 			-- Does `a_feature' has a feature note with a tag status that contains the value `a_value'?
 		local
-			l_values: ARRAYED_LIST [STRING_32]
+			l_values: like feature_note_values
 		do
 			l_values := feature_note_values (a_feature, "status")
 			if not l_values.is_empty then
-				Result := across l_values as i some i.item.as_string_8.is_equal (a_value)  end
+				Result := across l_values as i some i.item.same_string (a_value)  end
 			end
 		end
 
@@ -287,7 +283,7 @@ feature -- Feature status helpers
 			Result := is_feature_status (a_feature, "skip")
 		end
 
-	features_with_string_note_value (a_class: CLASS_C; a_tag, a_value: STRING_32): LINKED_LIST [FEATURE_I]
+	features_with_string_note_value (a_class: CLASS_C; a_tag, a_value: READABLE_STRING_8): LINKED_LIST [FEATURE_I]
 			-- Feature of class `a_class', which has a note where `a_tag' contain `a_value'.
 		local
 			l_feature: FEATURE_I
@@ -326,13 +322,13 @@ feature -- Logical helpers
 			Result := is_class_logical (a_feature.written_class) and not is_lemma (a_feature)
 		end
 
-	type_for_logical (a_class: CLASS_C): STRING
+	type_for_logical (a_class: CLASS_C): detachable READABLE_STRING_8
 			-- Boogie type that `a_class' maps to;
 			-- Void if `a_class' is not logical.
 		require
 			a_class_exists: attached a_class
 		local
-			l_values: ARRAYED_LIST [STRING_32]
+			l_values: like class_note_values
 		do
 			l_values := class_note_values (a_class, "maps_to")
 			if not l_values.is_empty then
@@ -340,11 +336,11 @@ feature -- Logical helpers
 			end
 		end
 
-	function_for_logical (a_feature: FEATURE_I): STRING
+	function_for_logical (a_feature: FEATURE_I): detachable READABLE_STRING_8
 			-- Boogie function that `a_feature' maps to;
 			-- Void if `a_feature' is not from a logical class.
 		local
-			l_values: ARRAYED_LIST [STRING_32]
+			l_values: like feature_note_values
 		do
 			if attached a_feature and then is_class_logical (a_feature.written_class) then
 				l_values := feature_note_values (a_feature, "maps_to")
@@ -373,7 +369,7 @@ feature -- Logical helpers
 					Result /= Void or a_class.feature_table.after
 				loop
 					l_feature := a_class.feature_table.item_for_iteration
-					if function_for_logical (l_feature) ~ "[]" then
+					if attached function_for_logical (l_feature) as n and then n.same_string ("[]") then
 						Result := l_feature
 					end
 					a_class.feature_table.forth
@@ -384,26 +380,16 @@ feature -- Logical helpers
 
 feature -- Ownership helpers
 
-	is_class_explicit (a_class: CLASS_C; a_type: STRING): BOOLEAN
+	is_class_explicit (a_class: CLASS_C; a_type: READABLE_STRING_8): BOOLEAN
 			-- Does `a_class' list `a_type' as explicit?
-		local
-			l_values: ARRAYED_LIST [STRING_32]
 		do
-			l_values := class_note_values (a_class, "explicit")
-			if not l_values.is_empty then
-				Result := across l_values as i some i.item.as_string_8 ~ a_type or i.item.as_string_8 ~ "all" end
-			end
+			Result := across class_note_values (a_class, "explicit") as i some i.item.same_string (a_type) or i.item.same_string ("all") end
 		end
 
 	is_feature_explicit (a_feature: FEATURE_I; a_type: STRING): BOOLEAN
 			-- Does `a_feature' or list `a_type' as explicit?
-		local
-			l_values: ARRAYED_LIST [STRING_32]
 		do
-			l_values := feature_note_values (a_feature, "explicit")
-			if not l_values.is_empty then
-				Result := across l_values as i some i.item.as_string_8 ~ a_type or i.item.as_string_8 ~ "all" end
-			end
+			Result := across feature_note_values (a_feature, "explicit") as i some i.item.same_string (a_type) or i.item.same_string ("all") end
 		end
 
 	is_explicit (a_feature: FEATURE_I; a_type: STRING): BOOLEAN
@@ -450,23 +436,19 @@ feature -- Ownership helpers
 				(a_type.is_like_current and not (attached a_context_feature and then is_nonvariant (a_context_feature)))
 		end
 
-	boogie_name_for_attribute (a_feature: FEATURE_I; a_context_type: CL_TYPE_A): STRING_32
+	boogie_name_for_attribute (a_feature: FEATURE_I; a_context_type: CL_TYPE_A): READABLE_STRING_8
 			-- Name of the boogie tranlsation of `a_feature', taking special translation of built-ins into account.
-		local
-			l_name: STRING_32
 		do
-			l_name := a_feature.feature_name_32
-			if translation_mapping.ghost_access.has (l_name) then
-				Result := l_name
-			else
+			Result := a_feature.feature_name
+			if not translation_mapping.ghost_access.has (Result) then
 				Result := name_translator.boogie_procedure_for_feature (a_feature, a_context_type)
 			end
 		end
 
-	guards_for_attribute (a_feature: FEATURE_I): LINKED_LIST [TUPLE [str: STRING; origin: CLASS_C]]
+	guards_for_attribute (a_feature: FEATURE_I): LINKED_LIST [TUPLE [str: READABLE_STRING_8; origin: CLASS_C]]
 			-- Update guard for attribute `a_feature'.
 		local
-			g: STRING
+			g: READABLE_STRING_8
 			c: CLASS_C
 		do
 			create Result.make
@@ -496,19 +478,19 @@ feature -- Ownership helpers
 			each_non_empty: across Result as s all not s.item.str.is_empty end
 		end
 
-	attribute_from_string (a_name: STRING; a_type: CL_TYPE_A; a_origin_class: CLASS_C; a_context_feature: FEATURE_I; a_context_line_number: INTEGER): FEATURE_I
+	attribute_from_string (a_name: READABLE_STRING_8; a_type: CL_TYPE_A; a_origin_class: CLASS_C; a_context_feature: FEATURE_I; a_context_line_number: INTEGER): FEATURE_I
 			-- Attribute or built-in ghost access with name `a_name' defined in `a_origin_class' in type `a_type'.
 		local
 			l_old_version: FEATURE_I
 		do
-			l_old_version := a_origin_class.feature_named_32 (a_name)
+			l_old_version := a_origin_class.feature_named (a_name)
 			if l_old_version = Void then
-				add_semantic_error (a_context_feature, messages.unknown_attribute (a_name, a_origin_class.name_in_upper), a_context_line_number)
+				add_semantic_error (a_context_feature, messages.unknown_attribute ({UTF_CONVERTER}.utf_8_string_8_to_string_32 (a_name), a_origin_class.name_in_upper), a_context_line_number)
 			else
 				Result := a_type.base_class.feature_of_rout_id_set (l_old_version.rout_id_set)
 				check attached Result end
 				if not l_old_version.is_attribute and not translation_mapping.ghost_access.has (a_name) then
-					add_semantic_error (a_context_feature, messages.unknown_attribute (a_name, a_origin_class.name_in_upper), a_context_line_number)
+					add_semantic_error (a_context_feature, messages.unknown_attribute ({UTF_CONVERTER}.utf_8_string_8_to_string_32 (a_name), a_origin_class.name_in_upper), a_context_line_number)
 				end
 			end
 		end
@@ -518,9 +500,9 @@ feature -- Ownership helpers
 		local
 			l_type: CL_TYPE_A
 		do
-			if translation_mapping.ghost_access.has (a_feature.feature_name_32) then
+			if translation_mapping.ghost_access.has (a_feature.feature_name) then
 				-- Handle built-in ANY attributes separately, since they are not really attributes.
-				create Result.make (a_feature.feature_name_32, types.field (translation_mapping.ghost_access_type (a_feature.feature_name_32)))
+				create Result.make (a_feature.feature_name, types.field (translation_mapping.ghost_access_type (a_feature.feature_name)))
 			else
 				check a_feature.is_attribute end
 				l_type := class_type_in_context (a_feature.type, a_context_type.base_class, Void, a_context_type)
@@ -535,7 +517,7 @@ feature -- Ownership helpers
 			-- (Which means that it is not actually an attribute, but should be).
 		do
 				-- ToDo: take possible renaming into account?
-			Result := translation_mapping.ghost_access.has (a_feature.feature_name_32)
+			Result := translation_mapping.ghost_access.has (a_feature.feature_name)
 		end
 
 	ghost_attributes (a_class: CLASS_C): ARRAYED_LIST [FEATURE_I]
@@ -572,7 +554,7 @@ feature -- Ownership helpers
 
 feature -- Model helpers
 
-	model_queries (a_class: CLASS_C): ARRAYED_LIST [STRING_32]
+	model_queries (a_class: CLASS_C): like class_note_values
 			-- Names of model queries declared in class `a_class'.
 		do
 			Result := class_note_values (a_class, "model")
@@ -591,23 +573,23 @@ feature -- Model helpers
 --					across translation_mapping.ghost_access as m loop
 --						Result.extend (a_class.feature_named_32 (m.item))
 --					end
-					if attached a_class.feature_named_32 ("subjects") as f then
+					if attached a_class.feature_named ("subjects") as f then
 						Result.extend (f)
 					else
-						add_unsupported_error (a_class, "Feature `subjects` is not found in class `ANY`.", 0)
+						add_unsupported_error (a_class, {STRING_32} "Feature `subjects` is not found in class `ANY`.", 0)
 					end
-					if attached a_class.feature_named_32 ("observers") as f then
+					if attached a_class.feature_named ("observers") as f then
 						Result.extend (f)
 					else
-						add_unsupported_error (a_class, "Feature `observers` is not found in class `ANY`.", 0)
+						add_unsupported_error (a_class, {STRING_32} "Feature `observers` is not found in class `ANY`.", 0)
 					end
 				else
 					across model_queries (a_class) as m loop
-						l_f := a_class.feature_named_32 (m.item)
+						l_f := a_class.feature_named (m.item)
 						if l_f /= Void then
 							Result.extend (l_f)
 						else
-							add_semantic_warning (a_class, messages.unknown_attribute (m.item, a_class.name_in_upper), -1)
+							add_semantic_warning (a_class, messages.unknown_attribute ({UTF_CONVERTER}.utf_8_string_8_to_string_32 (m.item), a_class.name_in_upper), -1)
 						end
 					end
 					across a_class.parents_classes as c loop
@@ -635,14 +617,14 @@ feature -- Model helpers
 		require
 			a_feature_exists: attached a_feature
 		local
-			l_rep_clause: ARRAYED_LIST [STRING_32]
+			l_rep_clause: like feature_note_values
 			l_rep_feature: FEATURE_I
 		do
 			create Result.make (5)
 			across all_versions (a_feature) as vers loop
 				l_rep_clause := feature_note_values (vers.item, "replaces")
 				across l_rep_clause as f loop
-					l_rep_feature := vers.item.written_class.feature_named_32 (f.item)
+					l_rep_feature := vers.item.written_class.feature_named (f.item)
 					if attached l_rep_feature then
 						Result.extend (a_descendant.feature_of_rout_id_set (l_rep_feature.rout_id_set))
 						across replaced_model_queries (l_rep_feature, a_descendant) as q loop
@@ -672,11 +654,11 @@ feature -- Model helpers
 			across a_class.direct_descendants as d loop
 				if a_descendant.inherits_from (d.item) then
 					l_new_version := d.item.feature_of_rout_id_set (a_feature.rout_id_set)
-					if model_queries (d.item).has (l_new_version.feature_name_32) then
+					if model_queries (d.item).has (l_new_version.feature_name) then
 						create l_rep_features.make
 						l_rep_features.extend (l_new_version)
 					else
-						l_rep_features := features_with_string_note_value (d.item, "replaces", l_new_version.feature_name_32)
+						l_rep_features := features_with_string_note_value (d.item, "replaces", l_new_version.feature_name)
 					end
 					across l_rep_features as rep_f loop
 						across replacing_model_queries (rep_f.item, d.item, a_descendant) as q loop
@@ -693,15 +675,36 @@ feature -- String helpers
 
 	feature_of_type_as_string (a_feature: FEATURE_I; a_type: TYPE_A): STRING
 		do
-			Result := "{" + a_type.name + "}." + a_feature.feature_name_32
+			Result := "{" + a_type.name + "}." + a_feature.feature_name
 		end
 
 feature -- Eiffel helpers
 
 	constraint_type (a_class: CLASS_C): CL_TYPE_A
 			-- Type based on `a_class' without formal generic parameters.
+		local
+			new_generics: like {CL_TYPE_A}.generics
+			r: GEN_TYPE_A
 		do
-			Result := a_class.constraint_actual_type
+			Result := a_class.actual_type
+			if
+				attached {GEN_TYPE_A} Result as t and then
+				attached t.generics as old_generics
+			then
+				across
+					old_generics as g
+				loop
+					if g.item.is_formal then
+						if not attached new_generics then
+							new_generics := old_generics.twin
+							r := t.twin
+							r.set_generics (new_generics)
+							Result := r
+						end
+						new_generics [g.target_index] := t.base_class.single_constraint (g.target_index)
+					end
+				end
+			end
 			a_class.update_types (Result)
 		end
 
@@ -790,6 +793,8 @@ feature -- Eiffel helpers
 			-- Class type of `a_type', which is written in `a_written_class' (with optional `a_feature') as seen from `a_current_type'.
 		require
 			no_formals: not a_current_type.has_formal_generic
+		local
+			t: TYPE_A
 		do
 			if a_type.is_like_current then
 				Result := a_current_type
@@ -797,8 +802,16 @@ feature -- Eiffel helpers
 				-- `evaluated_type_in_descendant' switches to the correct feature in case of LIKE_FEATURE types
 				-- `deep_actual_type' gets rid of like types
 				-- `instantiated_in (a_current_type)' instantiates the generics				
-				check attached {CL_TYPE_A} a_type.evaluated_type_in_descendant (a_written_class, a_current_type.base_class, a_feature).deep_actual_type.instantiated_in (a_current_type) as t then
-					Result := t
+				t := a_type.evaluated_type_in_descendant (a_written_class, a_current_type.base_class, a_feature).deep_actual_type.instantiated_in (a_current_type)
+				if attached {CL_TYPE_A} t as c then
+					Result := c
+				elseif
+					attached {FORMAL_A} a_type as f and then
+					attached {CL_TYPE_A} a_current_type.base_class.single_constraint (f.position) as c
+				then
+					Result := c
+				else
+					check class_type_constraint: False then end
 				end
 			end
 		ensure
@@ -838,10 +851,10 @@ feature -- Eiffel helpers
 	set_any_type: detachable CL_TYPE_A
 			-- Type MML_SET [ANY] (supplier of ANY).
 		do
-			if attached system.any_type.base_class.feature_named_32 ({STRING_32} "owns") as f then
+			if attached system.any_type.base_class.feature_named ("owns") as f then
 				Result := {CL_TYPE_A} / f.type
 			else
-				add_unsupported_error (Void, "Feature `owns` is not found in class `ANY`.", 0)
+				add_unsupported_error (Void, {STRING_32} "Feature `owns` is not found in class `ANY`.", 0)
 			end
 		end
 
@@ -913,7 +926,7 @@ feature -- Other
 			create Result.put (0)
 		end
 
-	unique_identifier (a_name: STRING): STRING
+	unique_identifier (a_name: READABLE_STRING_8): READABLE_STRING_8
 			-- Unique identifier with base name `a_name'.
 		do
 			internal_counter.put (internal_counter.item + 1)
@@ -921,7 +934,7 @@ feature -- Other
 			Result := a_name + "_" + internal_counter.item.out
 		end
 
-	add_unsupported_error (a_class_or_feature: ANY; a_message: STRING; a_line_number: INTEGER)
+	add_unsupported_error (a_class_or_feature: ANY; a_message: READABLE_STRING_32; a_line_number: INTEGER)
 			-- Add AutoProof error about unsupported construct concerning `a_class_or_feature' with message `a_message'.
 			-- Verification will not proceed.
 		require
@@ -942,7 +955,7 @@ feature -- Other
 			autoproof_errors.extend (l_error)
 		end
 
-	add_semantic_error (a_class_or_feature: ANY; a_message: STRING; a_line_number: INTEGER)
+	add_semantic_error (a_class_or_feature: ANY; a_message: READABLE_STRING_32; a_line_number: INTEGER)
 			-- Add AutoProof validity error concerning `a_class_or_feature' with message `a_message'.
 			-- Verification will not proceed.
 		require
@@ -965,7 +978,7 @@ feature -- Other
 			end
 		end
 
-	add_semantic_warning (a_class_or_feature: ANY; a_message: STRING; a_line_number: INTEGER)
+	add_semantic_warning (a_class_or_feature: ANY; a_message: READABLE_STRING_32; a_line_number: INTEGER)
 			-- Add AutoProof validity warning concerning `a_class_or_feature' with message `a_message'.
 			-- Verification will proceed.
 		require

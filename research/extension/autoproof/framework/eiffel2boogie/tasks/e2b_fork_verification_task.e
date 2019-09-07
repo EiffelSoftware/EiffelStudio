@@ -9,8 +9,8 @@ class
 inherit
 
 	E2B_VERIFY_TASK
-
 	SHARED_WORKBENCH
+	INTERNAL_COMPILER_STRING_EXPORTER
 
 create
 	make
@@ -191,10 +191,10 @@ feature {NONE} -- Implementation
 				Result := "C-" + a_input.class_list.first.name_in_upper
 			end
 			if not a_input.feature_list.is_empty then
-				Result := "F-" + a_input.feature_list.first.written_class.name_in_upper + "." + a_input.feature_list.first.feature_name_32.out
+				Result := "F-" + a_input.feature_list.first.written_class.name_in_upper + "." + a_input.feature_list.first.feature_name
 			end
 			if not a_input.feature_of_type_list.is_empty then
-				Result := "FT-" + a_input.feature_of_type_list.first.t.base_class.name_in_upper + "." + a_input.feature_of_type_list.first.f.feature_name_32.out
+				Result := "FT-" + a_input.feature_of_type_list.first.t.base_class.name_in_upper + "." + a_input.feature_of_type_list.first.f.feature_name
 			end
 		end
 

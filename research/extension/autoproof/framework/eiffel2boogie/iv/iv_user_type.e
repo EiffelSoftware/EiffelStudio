@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_constructor: STRING; a_params: like parameters)
+	make (a_constructor: READABLE_STRING_8; a_params: like parameters)
 			-- Create a type by applying `a_constructor' to `a_params'.
 		require
 			a_constructor_exists: a_constructor /= Void
@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	constructor: STRING
+	constructor: READABLE_STRING_8
 			-- Type constructor.
 
 	parameters: ARRAYED_LIST [IV_TYPE]
@@ -65,7 +65,7 @@ feature -- Element change
 			default_value := a_value
 		end
 
-	set_type_inv_function (a_name: STRING)
+	set_type_inv_function (a_name: READABLE_STRING_8)
 			-- Set `type_inv_function' to `a_name'.
 		do
 			type_inv_function := a_name
@@ -90,7 +90,7 @@ feature -- Equality
 
 feature -- Termination
 
-	set_rank_function (a_function: STRING)
+	set_rank_function (a_function: READABLE_STRING_8)
 			-- Set `rank_leq_function' to `a_function'.
 		do
 			rank_leq_function := a_function
@@ -110,10 +110,10 @@ feature -- Termination
 
 feature {NONE} -- Implementation		
 
-	rank_leq_function: STRING
+	rank_leq_function: READABLE_STRING_8
 			-- Name of the Boogie function that defines the well-founded order on this type.
 
-	type_inv_function: STRING
+	type_inv_function: READABLE_STRING_8
 			-- Name of the Boogie function that defines the invariant on this type.
 
 invariant

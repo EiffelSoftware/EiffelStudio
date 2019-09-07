@@ -1,7 +1,4 @@
-note
-	description: "[
-		TODO
-	]"
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -10,7 +7,7 @@ class
 
 feature -- Access
 
-	file: STRING
+	file: PATH
 			-- Origin file.
 
 	line: INTEGER
@@ -27,7 +24,8 @@ feature -- Access
 			l_file: PLAIN_TEXT_FILE
 			i: INTEGER
 		do
-			create l_file.make_open_read (file)
+			create l_file.make_with_path (file)
+			l_file.open_read
 			from
 				i := 1
 			until
@@ -44,10 +42,10 @@ feature -- Access
 
 feature -- Element change
 
-	set_file (a_file: STRING)
+	set_file (a_file: READABLE_STRING_32)
 			-- Set `file' to `a_file'.
 		do
-			file := a_file.twin
+			create file.make_from_string (a_file)
 		end
 
 	set_line (a_line: INTEGER)

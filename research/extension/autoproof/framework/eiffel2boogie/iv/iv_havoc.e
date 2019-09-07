@@ -1,7 +1,4 @@
-note
-	description: "[
-		TODO
-	]"
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -21,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING)
+	make (a_name: READABLE_STRING_8)
 			-- Initialize havoc with `a_name'.
 		require
 			a_name_valid: is_valid_name (a_name)
@@ -34,12 +31,12 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	names: LINKED_LIST [STRING]
+	names: LINKED_LIST [READABLE_STRING_8]
 			-- Names of entities.
 
 feature -- Element changed
 
-	add_name (a_name: STRING)
+	add_name (a_name: READABLE_STRING_8)
 			-- Add `a_name' to `names'.
 		require
 			a_name_valid: is_valid_name (a_name)

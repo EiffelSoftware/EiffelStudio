@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: STRING
+	name: READABLE_STRING_8
 			-- Name of entity.
 
 	type: IV_TYPE

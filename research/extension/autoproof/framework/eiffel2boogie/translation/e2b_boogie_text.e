@@ -76,7 +76,7 @@ feature -- Basic operations
 			end
 		end
 
-	put (a_string: STRING)
+	put (a_string: READABLE_STRING_8)
 			-- Append `a_string'.
 		require
 			a_string_attached: attached a_string
@@ -86,7 +86,7 @@ feature -- Basic operations
 --			a_string_added: string.ends_with (a_string)
 		end
 
-	put_literal_string (s: STRING)
+	put_literal_string (s: READABLE_STRING_8)
 			-- Append string `s` making sure it can be read back.
 		require
 			s_attached: attached s
@@ -95,7 +95,10 @@ feature -- Basic operations
 			e: STRING
 		do
 			if s.has (' ') then
-				e := s.twin
+				e := s.to_string_8
+				if e = s then
+					e := e.twin
+				end
 					-- Replace all spaces with no-break space.
 				e.replace_substring_all (" ", "%/194/%/160/")
 				internal_string.append (e)

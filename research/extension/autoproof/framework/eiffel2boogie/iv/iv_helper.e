@@ -7,7 +7,7 @@ class
 
 feature -- Helper functions
 
-	is_valid_name (a_string: STRING): BOOLEAN
+	is_valid_name (a_string: READABLE_STRING_8): BOOLEAN
 			-- Is `a_string' a valid name?
 		do
 			Result :=

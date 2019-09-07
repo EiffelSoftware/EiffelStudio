@@ -1,6 +1,4 @@
-note
-	description: "Summary description for {E2B_CUSTOM_ANY_CALL_HANDLER}."
-	author: ""
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -20,7 +18,7 @@ feature -- Status report
 	is_handling_call (a_target_type: TYPE_A; a_feature: FEATURE_I): BOOLEAN
 			-- <Precursor>
 		do
-			Result := a_feature.feature_name_32 ~ "generating_type"
+			Result := a_feature.feature_name.same_string ("generating_type")
 		end
 
 	is_handling_nested (a_nested: NESTED_B): BOOLEAN

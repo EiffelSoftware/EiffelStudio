@@ -10,6 +10,7 @@ inherit
 	E2B_SHARED_CONTEXT
 
 	IV_SHARED_FACTORY
+	INTERNAL_COMPILER_STRING_EXPORTER
 
 feature -- Access: default types
 
@@ -102,10 +103,10 @@ feature -- Type translation
 		local
 			l_class: CLASS_C
 			l_user_type: IV_USER_TYPE
-			l_constructor: STRING
+			l_constructor: READABLE_STRING_8
 			l_params: like {IV_USER_TYPE}.parameters
 			l_domain_types: like {IV_MAP_SYNONYM_TYPE}.domain_types
-			l_default_function, l_type_inv_function, l_leq_function: STRING
+			l_default_function, l_type_inv_function, l_leq_function: READABLE_STRING_8
 			l_access_feature: FEATURE_I
 		do
 			l_class := a_type.base_class
@@ -126,8 +127,12 @@ feature -- Type translation
 					across
 						a_type.generics as g
 					loop
-						check attached {CL_TYPE_A} g.item as t then
+						if attached {CL_TYPE_A} g.item as t then
 							l_params.extend (for_class_type (t))
+						elseif attached {CL_TYPE_A} a_type.base_class.single_constraint (g.target_index) as t then
+							l_params.extend (for_class_type (t))
+						else
+							check class_type_constraint: False then end
 						end
 					end
 				end
@@ -153,7 +158,7 @@ feature -- Type translation
 				end
 
 					-- Check if the type has a default value
-				l_default_function := helper.function_for_logical (l_class.feature_named_32 ("default_create"))
+				l_default_function := helper.function_for_logical (l_class.feature_named ("default_create"))
 				if attached l_default_function then
 					l_user_type.set_default_value (factory.function_call (l_default_function, << >>, l_user_type))
 				end
@@ -165,7 +170,7 @@ feature -- Type translation
 				end
 
 					-- Check if the type has a rank function
-				l_leq_function := helper.function_for_logical (l_class.feature_named_32 ("infix %"<=%""))
+				l_leq_function := helper.function_for_logical (l_class.feature_named ("infix %"<=%""))
 				if attached l_leq_function then
 					l_user_type.set_rank_function (l_leq_function)
 				end
@@ -184,7 +189,8 @@ feature -- Type translation
 			l_content_type: CL_TYPE_A
 			l_fname: STRING
 			l_inv: IV_EXPRESSION
-			l_type_properties: ARRAYED_LIST [STRING_32]
+			l_type_properties: ARRAYED_LIST [READABLE_STRING_8]
+			t: CL_TYPE_A
 		do
 			Result := factory.true_
 			l_boogie_type := for_class_type (a_type)
@@ -228,10 +234,15 @@ feature -- Type translation
 						across
 							l_type_properties as prop
 						loop
-							check attached {CL_TYPE_A} a_type.generics [prop.target_index] as t then
-								if for_class_type (t) ~ ref  then
-									Result := factory.and_clean (Result, factory.function_call (prop.item, << a_heap, a_expr, factory.type_value (t) >>, bool))
-								end
+							if attached {CL_TYPE_A} a_type.generics [prop.target_index] as c then
+								t := c
+							elseif attached {CL_TYPE_A} a_type.base_class.single_constraint (prop.target_index) as c then
+								t := c
+							else
+								check class_type_constraint: False then end
+							end
+							if for_class_type (t) ~ ref  then
+								Result := factory.and_clean (Result, factory.function_call (prop.item, << a_heap, a_expr, factory.type_value (t) >>, bool))
 							end
 						end
 					end

@@ -66,7 +66,7 @@ feature -- Status report
 			Result := value ~ "true"
 		end
 
-	has_free_var_named (a_name: STRING): BOOLEAN
+	has_free_var_named (a_name: READABLE_STRING_8): BOOLEAN
 			-- Does this expression contain a free variable with name `a_name'?
 		do
 		end

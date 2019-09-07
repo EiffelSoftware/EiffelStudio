@@ -72,10 +72,10 @@ feature -- Basic operations
 			else
 				l_new_args := a_parameters
 			end
-			l_is_function := a_translator.current_target_type.base_class.name_in_upper ~ "FUNCTION"
-			if a_feature.feature_name_32 ~ "precondition" then
+			l_is_function := a_translator.current_target_type.base_class.name_in_upper.same_string ("FUNCTION")
+			if a_feature.feature_name.same_string ("precondition") then
 				a_translator.process_builtin_routine_call (a_feature, l_new_args, "routine.precondition_" + l_new_args.count.out)
-			elseif a_feature.feature_name_32 ~ "postcondition" then
+			elseif a_feature.feature_name.same_string ("postcondition") then
 				if l_is_function then
 					process_postcondition_call (a_translator, a_feature, l_new_args, "function.postcondition_" + l_new_args.count.out)
 				else

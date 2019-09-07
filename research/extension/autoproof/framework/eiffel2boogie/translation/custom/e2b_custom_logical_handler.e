@@ -59,18 +59,16 @@ feature -- Basic operations
 	handle_binary (a_translator: E2B_EXPRESSION_TRANSLATOR; a_class: CLASS_C; a_left, a_right: IV_EXPRESSION; a_operator: STRING)
 			-- Handle built-in (non alias) binary expression where `a_left' is of logical type.
 		require
-			eq_or_neq: a_operator ~ "==" or a_operator ~ "!="
+			eq_or_neq: a_operator.same_string ("==") or a_operator.same_string ("!=")
 		local
-			l_eq: STRING
 			l_expr: IV_EXPRESSION
 		do
-			l_eq := helper.function_for_logical (a_class.feature_named_32 ("is_equal"))
-			if l_eq /= Void then
+			if attached helper.function_for_logical (a_class.feature_named ("is_equal")) as l_eq then
 				l_expr := factory.function_call (l_eq, << a_left, a_right >>, types.bool)
 			else
 				l_expr := factory.equal (a_left, a_right)
 			end
-			if a_operator ~ "!=" then
+			if a_operator.same_string ("!=") then
 				l_expr := factory.not_ (l_expr)
 			end
 			a_translator.set_last_expression (l_expr)
@@ -93,7 +91,7 @@ feature {NONE} -- Implementation
 	handle_routine_call (a_translator: E2B_EXPRESSION_TRANSLATOR; a_feature: FEATURE_I; a_parameters: BYTE_LIST [PARAMETER_B])
 			-- <Precursor>
 		local
-			l_fname: STRING
+			l_fname: READABLE_STRING_8
 			l_fcall: IV_FUNCTION_CALL
 			l_args: like {IV_MAP_ACCESS}.indexes
 		do
@@ -103,7 +101,7 @@ feature {NONE} -- Implementation
 			a_translator.process_parameters (a_parameters)
 
 			l_fname := helper.function_for_logical (a_feature)
-			if l_fname ~ "[]" then
+			if attached l_fname and then l_fname.same_string ("[]") then
 					-- The feature maps to map access
 				create l_args.make (a_translator.last_parameters.count)
 				across
@@ -137,62 +135,56 @@ feature {NONE} -- Implementation
 	handle_nested (a_translator: E2B_EXPRESSION_TRANSLATOR; a_nested: NESTED_B)
 			-- Handle `a_nested'.
 		local
-			l_tuple: TUPLE_CONST_B
-			l_array: ARRAY_CONST_B
 			l_exprs: LINKED_LIST [IV_EXPRESSION]
 			l_expr: IV_EXPRESSION
 			l_elem_type, l_type: IV_TYPE
 			l_prefix: STRING
 		do
 			if attached {ACCESS_EXPR_B} a_nested.target as x then
-				l_tuple ?= x.expr
-				l_array ?= x.expr
-			end
-			check l_tuple /= Void or l_array /= Void end
-			create l_exprs.make
-			l_elem_type := types.ref -- ToDo: wrong elem type for empty tuples/arrays
-			if l_tuple /= Void then
-				across l_tuple.expressions as i loop
-					i.item.process (a_translator)
-					l_exprs.extend (a_translator.last_expression)
-					l_elem_type := a_translator.last_expression.type
-				end
-			else
-				check l_array /= Void end
-				across l_array.expressions as i loop
-					i.item.process (a_translator)
-					l_exprs.extend (a_translator.last_expression)
-					l_elem_type := a_translator.last_expression.type
-				end
-			end
-			check attached {FEATURE_B} a_nested.message as f then
-				if f.feature_name ~ "to_mml_set" then
-					l_type := types.set (l_elem_type)
-					l_prefix := "Set"
-				elseif f.feature_name ~ "to_mml_sequence" then
-					create {IV_USER_TYPE} l_type.make ("Seq", create {ARRAYED_LIST [IV_TYPE]}.make_from_array (<<l_elem_type>>))
-					l_prefix := "Seq"
-				else
-					check False end
-				end
-				if l_exprs.is_empty then
-					a_translator.set_last_expression (
-						factory.function_call (l_prefix + "#Empty", Void, l_type))
-				else
-					from
-						l_exprs.start
-						l_expr := factory.function_call (l_prefix + "#Singleton", << l_exprs.item >>, l_type)
-						l_exprs.forth
-					until
-						l_exprs.after
-					loop
-						l_expr := factory.function_call (
-							l_prefix + "#Extended",
-							<< l_expr, l_exprs.item >>,
-							l_type)
-						l_exprs.forth
+				create l_exprs.make
+				l_elem_type := types.ref -- TODO: wrong elem type for empty tuples/arrays
+				if attached {TUPLE_CONST_B} x.expr as l_tuple then
+					across l_tuple.expressions as i loop
+						i.item.process (a_translator)
+						l_exprs.extend (a_translator.last_expression)
+						l_elem_type := a_translator.last_expression.type
 					end
-					a_translator.set_last_expression (l_expr)
+				elseif attached {ARRAY_CONST_B} x.expr as l_array then
+					across l_array.expressions as i loop
+						i.item.process (a_translator)
+						l_exprs.extend (a_translator.last_expression)
+						l_elem_type := a_translator.last_expression.type
+					end
+				end
+				check attached {FEATURE_B} a_nested.message as f then
+					if f.feature_name ~ "to_mml_set" then
+						l_type := types.set (l_elem_type)
+						l_prefix := "Set"
+					elseif f.feature_name ~ "to_mml_sequence" then
+						create {IV_USER_TYPE} l_type.make ("Seq", create {ARRAYED_LIST [IV_TYPE]}.make_from_array (<<l_elem_type>>))
+						l_prefix := "Seq"
+					else
+						check False end
+					end
+					if l_exprs.is_empty then
+						a_translator.set_last_expression (
+							factory.function_call (l_prefix + "#Empty", Void, l_type))
+					else
+						from
+							l_exprs.start
+							l_expr := factory.function_call (l_prefix + "#Singleton", << l_exprs.item >>, l_type)
+							l_exprs.forth
+						until
+							l_exprs.after
+						loop
+							l_expr := factory.function_call (
+								l_prefix + "#Extended",
+								<< l_expr, l_exprs.item >>,
+								l_type)
+							l_exprs.forth
+						end
+						a_translator.set_last_expression (l_expr)
+					end
 				end
 			end
 		end

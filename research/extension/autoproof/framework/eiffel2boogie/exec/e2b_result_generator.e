@@ -63,7 +63,7 @@ feature -- Basic operations
 				across a_boogie_result.boogie_errors as i loop
 					create l_ap_error
 					l_ap_error.set_type ("Boogie")
-					l_ap_error.set_message (i.item)
+					l_ap_error.set_message ({UTF_CONVERTER}.utf_8_string_8_to_string_32 (i.item))
 					last_result.verification_results.extend (l_ap_error)
 				end
 			end
@@ -321,9 +321,9 @@ feature {NONE} -- Implementation
 			else
 					-- default error message
 				if l_has_tag then
-					Result := "$type error with tag $tag."
+					Result := {STRING_32} "$type error with tag $tag."
 				else
-					Result := "$type error."
+					Result := {STRING_32} "$type error."
 				end
 			end
 			if a_error.is_postcondition_violation then

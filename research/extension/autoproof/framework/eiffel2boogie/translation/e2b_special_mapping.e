@@ -1,7 +1,4 @@
-note
-	description: "[
-		TODO
-	]"
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -76,42 +73,35 @@ feature -- Access
 
 	handler_for_across (a_across: LOOP_EXPR_B; a_translator: E2B_EXPRESSION_TRANSLATOR): detachable E2B_ACROSS_HANDLER
 			-- Custom handler for `a_across' (if any).
-		local
-			l_assign: ASSIGN_B
-			l_object_test_local: OBJECT_TEST_LOCAL_B
-			l_nested: NESTED_B
-			l_access: ACCESS_EXPR_B
-			l_bin_free: BIN_FREE_B
-			l_class: CLASS_C
 		do
-			l_assign ?= a_across.iteration_code.first
-			check l_assign /= Void end
-			l_object_test_local ?= l_assign.target
-			check l_object_test_local /= Void end
-			l_nested ?= l_assign.source
-			check l_nested /= Void end
-			l_class := l_nested.target.type.base_class
-
-			if helper.is_class_logical (l_class) then
-				create {E2B_SET_ACROSS_HANDLER} Result.make (a_translator, l_object_test_local, l_nested.target, a_across)
-			elseif l_class.name_in_upper ~ "INTEGER_INTERVAL" then
-				l_access ?= l_nested.target
-				check l_access /= Void end
-				l_bin_free ?= l_access.expr
-				check l_bin_free /= Void end
-				create {E2B_INTERVAL_ACROSS_HANDLER} Result.make (a_translator, l_object_test_local, l_bin_free, a_across)
-			elseif l_class.name_in_upper ~ "SIMPLE_ARRAY" then
-				create {E2B_SIMPLE_ARRAY_ACROSS_HANDLER} Result.make (a_translator, l_object_test_local, l_nested.target, a_across)
-			elseif l_class.name_in_upper ~ "SIMPLE_LIST" then
-				create {E2B_SIMPLE_LIST_ACROSS_HANDLER} Result.make (a_translator, l_object_test_local, l_nested.target, a_across)
-			elseif l_class.name_in_upper ~ "ARRAY" then
---				create {E2B_ARRAY_ACROSS_HANDLER} l_across_handler.make (a_translator, l_object_test_local, l_nested.target, a_node)
+			if
+				attached {ASSIGN_B} a_across.iteration_code.first as l_assign and then
+				attached {OBJECT_TEST_LOCAL_B} l_assign.target as l_object_test_local and then
+				attached {NESTED_B} l_assign.source as l_nested and then
+				attached l_nested.target.type.base_class as l_class
+			then
+				if helper.is_class_logical (l_class) then
+					create {E2B_SET_ACROSS_HANDLER} Result.make (a_translator, l_object_test_local, l_nested.target, a_across)
+				elseif l_class.name_in_upper.same_string ("INTEGER_INTERVAL") then
+					if
+						attached {ACCESS_EXPR_B} l_nested.target as l_access and then
+						attached {BIN_FREE_B} l_access.expr as l_bin_free
+					then
+						create {E2B_INTERVAL_ACROSS_HANDLER} Result.make (a_translator, l_object_test_local, l_bin_free, a_across)
+					end
+				elseif l_class.name_in_upper.same_string ("SIMPLE_ARRAY") then
+					create {E2B_SIMPLE_ARRAY_ACROSS_HANDLER} Result.make (a_translator, l_object_test_local, l_nested.target, a_across)
+				elseif l_class.name_in_upper.same_string ("SIMPLE_LIST") then
+					create {E2B_SIMPLE_LIST_ACROSS_HANDLER} Result.make (a_translator, l_object_test_local, l_nested.target, a_across)
+				elseif l_class.name_in_upper.same_string ("ARRAY") then
+	--				create {E2B_ARRAY_ACROSS_HANDLER} l_across_handler.make (a_translator, l_object_test_local, l_nested.target, a_node)
+				end
 			end
 		end
 
 feature -- Access (built-ins)
 
-	builtin_any_functions: ARRAY [STRING_32]
+	builtin_any_functions: ARRAY [READABLE_STRING_8]
 			-- List of builtin function names.
 		once
 			Result := <<
@@ -133,7 +123,7 @@ feature -- Access (built-ins)
 			Result.compare_objects
 		end
 
-	builtin_any_procedures: ARRAY [STRING_32]
+	builtin_any_procedures: ARRAY [READABLE_STRING_8]
 			-- List of builtin procedure names.
 		once
 			Result := <<
@@ -147,7 +137,7 @@ feature -- Access (built-ins)
 			Result.compare_objects
 		end
 
-	ghost_access: ARRAY [STRING_32]
+	ghost_access: ARRAY [READABLE_STRING_8]
 			-- List of built-in ghost attributes.
 		once
 			Result := <<
@@ -172,7 +162,7 @@ feature -- Access (built-ins)
 			>>
 		end
 
-	ghost_access_type (name: STRING): IV_TYPE
+	ghost_access_type (name: READABLE_STRING_8): IV_TYPE
 			-- Boogie types of a built-in attribute with name `name'.
 		require
 			is_ghost_access: ghost_access.has (name)
@@ -182,14 +172,14 @@ feature -- Access (built-ins)
 			from
 				i := ghost_access.lower
 			until
-				ghost_access [i] ~ name
+				ghost_access [i].same_string (name)
 			loop
 				i := i + 1
 			end
 			Result := ghost_access_types [i]
 		end
 
-	ghost_setter: ARRAY [STRING_32]
+	ghost_setter: ARRAY [READABLE_STRING_8]
 			-- List of feature names.
 		once
 			Result := <<
@@ -201,7 +191,7 @@ feature -- Access (built-ins)
 			Result.compare_objects
 		end
 
-	void_ok_features: ARRAY [STRING_32]
+	void_ok_features: ARRAY [READABLE_STRING_8]
 			-- List of special ANY feature names that can be called on Void.
 		once
 			Result := <<
@@ -211,10 +201,10 @@ feature -- Access (built-ins)
 			Result.compare_objects
 		end
 
-	default_tags: ARRAY [STRING_32]
+	default_tags: ARRAY [READABLE_STRING_8]
 			-- Tags of default invariant clauses.
 		once
-			Result := << "default_observers", "default_subjects", "default_owns", "A2" >>
+			Result := <<"default_observers", "default_subjects", "default_owns", "A2">>
 			Result.compare_objects
 		end
 

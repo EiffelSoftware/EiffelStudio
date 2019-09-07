@@ -58,7 +58,7 @@ feature -- Semi Access
 	universe: IV_UNIVERSE
 		--the complete universe that the AST for this implementation was taken from.
 
-feature {IV_MUTATOR}
+feature {NONE} -- {IV_MUTATOR}
 
 	reset
 			-- Reset universe visitor.
@@ -757,31 +757,25 @@ feature --assisting operations
 
 	get_outer_loops(the_block:IV_BLOCK): LINKED_LIST[ARRAY[IV_BLOCK]]
 		-- fill the list outer_loops with the outer loops of a_implementation.
-		-- IMPORTANT: this only works, if a loop is stored as loop_head_X, loop_body_(X+1), loop_end_(X+2) after eachother in the statements. Otherwise the implementation needs to be adjusted.
+		-- IMPORTANT: this only works, if a loop is stored as loop_head_X, loop_body_(X+1), loop_end_(X+2) after each other in the statements. Otherwise the implementation needs to be adjusted.
 		require
 			body_set: the_block /= Void
 		local
 			temp_array: ARRAY[IV_BLOCK]
-			a_block: IV_BLOCK
 			i: INTEGER
 		do
 			create Result.make
 			across the_block.statements as st loop
 				if attached {IV_BLOCK} st.item as possible_loop_block then
 					if possible_loop_block.name.has_substring ("loop_head") then
-
-						temp_array := Void
 						create temp_array.make_filled (possible_loop_block, 1, 3)
-
-						temp_array.put (possible_loop_block, 1)--this is probably unnecessary, since the array is filled with this item.
-
-						a_block ?= the_block.statements.i_th (st.cursor_index+1)
-						temp_array.put (a_block, 2)
-						a_block ?= the_block.statements.i_th (st.cursor_index+2)
-						temp_array.put (a_block, 3)
-
+						if attached {IV_BLOCK} the_block.statements [st.cursor_index + 1] as b then
+							temp_array [2] := b
+						end
+						if attached {IV_BLOCK} the_block.statements [st.cursor_index + 2] as b then
+							temp_array [3] := b
+						end
 						Result.force (temp_array)
-
 					end
 				elseif attached {IV_CONDITIONAL} st.item as cond then
 					Result.append (get_outer_loops (cond.then_block))
@@ -799,7 +793,6 @@ feature --assisting operations
 			body_set: body /= Void
 		local
 			temp_array: ARRAY[IV_BLOCK]
-			a_block: IV_BLOCK
 			i,j: INTEGER
 			loop_head_index: INTEGER -- is 7 for loop_head_7
 			loop_body_index: INTEGER
@@ -819,32 +812,22 @@ feature --assisting operations
 						loop_head_index := possible_loop_block.name.substring (possible_loop_block.name.count, possible_loop_block.name.count).to_integer
 						temp_array := Void
 						create temp_array.make_filled (possible_loop_block, 1, 3)
-
-						temp_array.put (possible_loop_block, 1)--this is probably unnecessary, since the array is filled with this item.
-
-
-
-						a_block ?= the_block.statements.i_th (st.cursor_index+1)--this is the body block, call function recursively on it.
-
-						if is_debugging_enabled then
-							if a_block = Void then
-								print("%Nproblem, a_block is void. statements array size: ")
-								print(body.statements.count)
-								print(", cursor_index+1: ")
-								print(st.cursor_index+1)
-								print(", last loop_head index: ")
-								print(loop_head_index)
-	--							print(" code: ")
-	--							print(possible_loop_block.name.item (possible_loop_block.name.count).code)
-	--							print(possible_loop_block.name.substring (possible_loop_block.name.count, possible_loop_block.name.count).to_integer)
-							end
+						if attached {IV_BLOCK} the_block.statements [st.cursor_index + 1] as b then
+								-- This is the body block, call function recursively on it.
+								-- Get the loops of the body block.
+							Result.append (get_all_loops (b))
+							temp_array [2] := b
+						elseif is_debugging_enabled then
+							print("%Nproblem, a_block is void. statements array size: ")
+							print(body.statements.count)
+							print(", cursor_index+1: ")
+							print(st.cursor_index+1)
+							print(", last loop_head index: ")
+							print(loop_head_index)
 						end
-						if a_block /= Void then -- get the loops of the body block
-							Result.append (get_all_loops (a_block))
+						if attached {IV_BLOCK} the_block.statements [st.cursor_index + 2] as b then
+							temp_array [3] := b
 						end
-						temp_array.put (a_block, 2)
-						a_block ?= the_block.statements.i_th (st.cursor_index+2)
-						temp_array.put (a_block, 3)
 						Result.force (temp_array)
 					end
 				elseif attached {IV_CONDITIONAL} st.item as cnd then

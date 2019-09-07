@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	type: detachable STRING
+	type: detachable READABLE_STRING_8
 			-- Type associated with this node.
 		do
 			if attributes.has_key ("type") then
@@ -35,7 +35,7 @@ feature -- Access
 			end
 		end
 
-	tag: detachable STRING
+	tag: detachable READABLE_STRING_8
 			-- Tag associated with this node.
 		do
 			if attributes.has_key ("tag") then
@@ -43,7 +43,7 @@ feature -- Access
 			end
 		end
 
-	line: detachable STRING
+	line: detachable READABLE_STRING_8
 			-- Line associated with this node.
 		do
 			if attributes.has_key ("line") then
@@ -51,12 +51,12 @@ feature -- Access
 			end
 		end
 
-	attributes: detachable STRING_TABLE [STRING]
+	attributes: detachable STRING_TABLE [READABLE_STRING_8]
 			-- Attributes associated with this node.
 
 feature -- Element change
 
-	set_type (a_value: STRING)
+	set_type (a_value: READABLE_STRING_8)
 			-- Set `type' to `a_value'.
 		do
 			set_attribute ("type", a_value)
@@ -64,7 +64,7 @@ feature -- Element change
 			type_set: type ~ a_value
 		end
 
-	set_tag (a_value: STRING)
+	set_tag (a_value: READABLE_STRING_8)
 			-- Set `tag' to `a_value'.
 		do
 			set_attribute ("tag", a_value)
@@ -80,7 +80,7 @@ feature -- Element change
 			line_set: line.to_integer = a_value
 		end
 
-	set_attribute (a_key: STRING; a_value: STRING)
+	set_attribute (a_key: READABLE_STRING_8; a_value: READABLE_STRING_8)
 			-- Set attribute `a_key' to `a_value'.
 		do
 			if not attached attributes then

@@ -1,7 +1,4 @@
-note
-	description: "[
-		TODO
-	]"
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -21,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING)
+	make (a_name: READABLE_STRING_8)
 			-- Initialize procedure with name `a_name'.
 		do
 			name := a_name.twin
@@ -36,7 +33,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: STRING
+	name: READABLE_STRING_8
 			-- Procedure name.
 
 	arguments: LINKED_LIST [IV_ENTITY_DECLARATION]

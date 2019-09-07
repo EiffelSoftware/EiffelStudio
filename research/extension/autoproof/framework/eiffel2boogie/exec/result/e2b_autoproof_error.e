@@ -43,7 +43,7 @@ feature -- Element change
 			type := a_string
 		end
 
-	set_message (a_string: STRING)
+	set_message (a_string: READABLE_STRING_32)
 			-- Set `single_line_message' to `a_string'.
 		do
 			internal_message := a_string
@@ -75,7 +75,7 @@ feature -- Comparison
 
 feature {E2B_AUTOPROOF_ERROR} -- Implementation
 
-	internal_message: STRING
+	internal_message: READABLE_STRING_32
 			-- Message for this error.
 
 end

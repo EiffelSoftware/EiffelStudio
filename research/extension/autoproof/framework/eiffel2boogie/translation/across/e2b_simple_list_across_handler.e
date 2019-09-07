@@ -7,6 +7,7 @@ class
 
 inherit
 	E2B_ACROSS_HANDLER
+	INTERNAL_COMPILER_STRING_EXPORTER
 
 create
 	make
@@ -55,7 +56,7 @@ feature {NONE} -- Implementation
 				attached {CL_TYPE_A} l_type.generics.first as l_gen_type
 			then
 				l_class := l_type.base_class
-				l_seq_feature := l_class.feature_named_32 ("sequence")
+				l_seq_feature := l_class.feature_named ("sequence")
 				l_content_type := types.for_class_type (l_gen_type)
 
 				domain.process (expression_translator)

@@ -1,7 +1,4 @@
-note
-	description: "[
-		TODO
-	]"
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -29,7 +26,7 @@ feature {NONE} -- Initialization
 			name := ""
 		end
 
-	make_name (a_name: STRING)
+	make_name (a_name: READABLE_STRING_8)
 			-- Initialize block with name `a_name'.
 		do
 			create statements.make
@@ -48,7 +45,7 @@ feature -- Status report
 
 feature -- Access
 
-	name: STRING
+	name: READABLE_STRING_8
 			-- A unique name for this block.
 
 	statements: LINKED_LIST [IV_STATEMENT]

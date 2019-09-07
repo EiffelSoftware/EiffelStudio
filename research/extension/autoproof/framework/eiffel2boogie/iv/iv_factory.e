@@ -20,6 +20,13 @@ inherit
 			{NONE} all
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+		rename
+			equal as any_equal
+		export
+			{NONE} all
+		end
+
 feature -- Values
 
 	false_: IV_VALUE
@@ -78,19 +85,19 @@ feature -- Values
 
 feature -- Entities
 
-	entity (a_name: READABLE_STRING_32; a_type: IV_TYPE): IV_ENTITY
+	entity (a_name: READABLE_STRING_8; a_type: IV_TYPE): IV_ENTITY
 			-- Entity with name `a_name' and type `a_type'.
 		do
 			create Result.make (a_name, a_type)
 		end
 
-	unique_entity (a_name_prefix: STRING; a_type: IV_TYPE): IV_ENTITY
+	unique_entity (a_name_prefix: READABLE_STRING_8; a_type: IV_TYPE): IV_ENTITY
 			-- Entity with name `a_name_X' (where 'X' is unique) and type `a_type'.
 		do
 			create Result.make (helper.unique_identifier (a_name_prefix), a_type)
 		end
 
-	heap_entity (a_name: STRING): IV_ENTITY
+	heap_entity (a_name: READABLE_STRING_8): IV_ENTITY
 		do
 			Result := entity (a_name, types.heap)
 		end
@@ -105,7 +112,7 @@ feature -- Entities
 			Result := function_call ("old", << global_heap >>, types.heap)
 		end
 
-	ref_entity (a_name: STRING): IV_ENTITY
+	ref_entity (a_name: READABLE_STRING_8): IV_ENTITY
 		do
 			Result := entity (a_name, types.ref)
 		end
@@ -277,7 +284,7 @@ feature -- Functions
 			Result.add_argument (a_arg)
 		end
 
-	function_call (a_function_name: STRING; a_arguments: ARRAY [IV_EXPRESSION]; a_result_type: IV_TYPE): IV_FUNCTION_CALL
+	function_call (a_function_name: READABLE_STRING_8; a_arguments: ARRAY [IV_EXPRESSION]; a_result_type: IV_TYPE): IV_FUNCTION_CALL
 			-- Function call to `a_function_name' with arguments `a_arguments'.
 		do
 			create Result.make (a_function_name, a_result_type)
@@ -302,13 +309,13 @@ feature -- Heap and map access
 			create Result.make (a_map, a_indexes, a_value)
 		end
 
-	heap_access (a_heap: IV_EXPRESSION; a_target: IV_EXPRESSION; a_name: STRING; a_content_type: IV_TYPE): IV_MAP_ACCESS
+	heap_access (a_heap: IV_EXPRESSION; a_target: IV_EXPRESSION; a_name: READABLE_STRING_8; a_content_type: IV_TYPE): IV_MAP_ACCESS
 			-- Heap access to `a_feature' on `Current'.
 		do
 			Result := map_access (a_heap, create {ARRAYED_LIST [IV_EXPRESSION]}.make_from_array (<<a_target, create {IV_ENTITY}.make (a_name, types.field (a_content_type)) >>))
 		end
 
-	heap_current_access (a_mapping: E2B_ENTITY_MAPPING; a_name: STRING; a_content_type: IV_TYPE): IV_MAP_ACCESS
+	heap_current_access (a_mapping: E2B_ENTITY_MAPPING; a_name: READABLE_STRING_8; a_content_type: IV_TYPE): IV_MAP_ACCESS
 			-- Heap access to `a_feature' on `Current'.
 		do
 			Result := heap_access (a_mapping.heap, a_mapping.current_expression, a_name, a_content_type)
@@ -397,7 +404,7 @@ feature -- Framing
 				Result := function_call ("same_outside", <<l_old_heap, global_heap, l_fcall>>, types.bool)
 			end
 				-- TODO: fix inlining
-			if not a_boogie_procedure.name.has_substring (a_feature.feature_name_32.out) then
+			if not a_boogie_procedure.name.has_substring (a_feature.feature_name) then
 				Result := true_
 			end
 		end
@@ -443,7 +450,7 @@ feature -- Axioms
 
 feature -- Miscellaneous
 
-	trace (a_text: STRING): IV_STATEMENT
+	trace (a_text: READABLE_STRING_8): IV_STATEMENT
 			-- Tracing statement.
 		local
 			l_assume: IV_ASSERT

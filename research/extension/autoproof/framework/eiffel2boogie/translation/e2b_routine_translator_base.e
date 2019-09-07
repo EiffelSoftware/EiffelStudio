@@ -19,7 +19,7 @@ feature -- Access
 
 feature -- Element change
 
-	set_up_boogie_procedure (a_boogie_name: STRING)
+	set_up_boogie_procedure (a_boogie_name: READABLE_STRING_8)
 			-- Set up `current_boogie_procedure'.
 		do
 			current_boogie_procedure := boogie_universe.procedure_named (a_boogie_name)
@@ -35,7 +35,7 @@ feature -- Element change
 
 feature -- Helper functions: arguments and result
 
-	arguments_of (a_feature: FEATURE_I; a_context: CL_TYPE_A): ARRAYED_LIST [TUPLE [name: STRING_32; orig_type: TYPE_A; type: CL_TYPE_A; boogie_type: IV_TYPE]]
+	arguments_of (a_feature: FEATURE_I; a_context: CL_TYPE_A): ARRAYED_LIST [TUPLE [name: READABLE_STRING_8; orig_type: TYPE_A; type: CL_TYPE_A; boogie_type: IV_TYPE]]
 			-- List of feature arguments of `a_feature'.
 		require
 			a_feature_attached: attached a_feature
@@ -50,7 +50,7 @@ feature -- Helper functions: arguments and result
 				loop
 					l_type := helper.class_type_in_context (a.item, a_context.base_class, a_feature, a_context)
 					Result.extend
-						(arguments.item_name_32 (a.target_index),
+						(arguments.item_name (a.target_index),
 						a.item,
 						l_type,
 						types.for_class_type (l_type))
@@ -67,7 +67,7 @@ feature -- Helper functions: arguments and result
 			Result := arguments_of (current_feature, current_type)
 		end
 
-	add_argument_with_property (a_name: READABLE_STRING_32; a_orig_type: TYPE_A; a_type: CL_TYPE_A; a_boogie_type: IV_TYPE)
+	add_argument_with_property (a_name: READABLE_STRING_8; a_orig_type: TYPE_A; a_type: CL_TYPE_A; a_boogie_type: IV_TYPE)
 			-- Add argument and property to current procedure.
 		require
 			current_procedure_set: attached current_boogie_procedure
@@ -257,7 +257,7 @@ feature -- Helper functions: contracts
 			-- Full object descriptions extracted from `a_clauses' and translated with `a_translator', given as arguments to `a_function'.
 		local
 			l_objects_type: like translate_contained_expressions
-			l_name: STRING_32
+			l_name: STRING
 		do
 			create {LINKED_LIST [IV_EXPRESSION]} Result.make
 
@@ -265,8 +265,8 @@ feature -- Helper functions: contracts
 				a_clauses as i
 			loop
 				if attached {FEATURE_B} i.item.clause.expr as l_call then
-					l_name := names_heap.item_32 (l_call.feature_name_id)
-					if l_name ~ a_function then
+					l_name := names_heap.item (l_call.feature_name_id)
+					if l_name.same_string (a_function) then
 --						a_translator.set_origin_class (i.item.origin)
 						l_objects_type := translate_contained_expressions (l_call.parameters.i_th (1).expression, a_translator, True)
 						Result.append (l_objects_type.expressions)
@@ -278,10 +278,10 @@ feature -- Helper functions: contracts
 	frame_partial_objects_of (a_clauses: LIST [E2B_ASSERT_ORIGIN]; a_function: STRING; a_translator: E2B_CONTRACT_EXPRESSION_TRANSLATOR; a_check_model: BOOLEAN): LIST [E2B_FRAME_ELEMENT]
 			-- Partial object descriptions extracted from `a_clauses' and translated with `a_translator', given as arguments to `a_function'.
 		local
-			l_fieldnames: LINKED_LIST [STRING_32]
+			l_fieldnames: LINKED_LIST [READABLE_STRING_8]
 			l_fields: LINKED_LIST [IV_ENTITY]
 			l_objects_type: like translate_contained_expressions
-			l_name: STRING_32
+			l_name: STRING_8
 			l_type: CL_TYPE_A
 			l_attr, l_new_version: FEATURE_I
 			l_field: IV_ENTITY
@@ -293,8 +293,8 @@ feature -- Helper functions: contracts
 				a_clauses as i
 			loop
 				if attached {FEATURE_B} i.item.clause.expr as l_call then
-					l_name := names_heap.item_32 (l_call.feature_name_id)
-					if l_name ~ a_function then
+					l_name := names_heap.item (l_call.feature_name_id)
+					if l_name.same_string (a_function) then
 						a_translator.set_origin_class (i.item.origin)
 						l_objects_type := translate_contained_expressions (l_call.parameters.i_th (2).expression, a_translator, True)
 						create l_fields.make
@@ -323,7 +323,7 @@ feature -- Helper functions: contracts
 								helper.class_type_from_class (i.item.origin, current_type)).base_class
 							across l_fieldnames as f loop
 								if a_check_model then
-									l_attr := l_origin.feature_named_32 (f.item)
+									l_attr := l_origin.feature_named (f.item)
 									if attached l_attr and then helper.is_model_query (l_origin, l_attr) then
 										l_new_version := l_type.base_class.feature_of_rout_id_set (l_attr.rout_id_set)
 										l_field := helper.field_from_attribute (l_new_version, l_type)
@@ -343,7 +343,7 @@ feature -- Helper functions: contracts
 											end
 										end
 									else
-										helper.add_semantic_error (current_feature, messages.unknown_model (f.item, l_origin.name_in_upper), i.item.clause.line_number)
+										helper.add_semantic_error (current_feature, messages.unknown_model ({UTF_CONVERTER}.utf_8_string_8_to_string_32 (f.item), l_origin.name_in_upper), i.item.clause.line_number)
 									end
 								else
 									l_attr := helper.attribute_from_string (f.item, l_type, l_origin, current_feature, i.item.clause.line_number)

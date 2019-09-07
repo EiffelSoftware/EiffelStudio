@@ -162,7 +162,7 @@ feature -- Convenience
 			a_feature_attached: attached a_feature
 			current_target_type_attached: attached current_target_type
 		do
-			Result := helper.class_type_in_context (a_feature.type, current_target_type.base_class, a_feature, current_target_type)
+			Result := helper.class_type_in_context (a_feature.type, context_type.base_class, a_feature, context_type)
 		end
 
 	expression_class_type (a_node: EXPR_B): CL_TYPE_A
@@ -226,6 +226,14 @@ feature -- Basic operations
 			context_feature := a_feature
 			context_type := a_type
 			current_target_type := a_type
+			if attached types.for_class_type (a_type) as t then
+				entity_mapping.set_current (create {IV_ENTITY}.make
+					(if attached {IV_ENTITY} entity_mapping.current_expression as e then
+						e.name
+					else
+						{E2B_ENTITY_MAPPING}.default_current_name
+					end, t))
+			end
 			current_target := entity_mapping.current_expression
 			if a_feature /= Void and then a_feature.has_return_value then
 				entity_mapping.set_default_result (feature_class_type (a_feature))
@@ -300,7 +308,7 @@ feature -- Visitors
 	process_array_const_b (a_node: ARRAY_CONST_B)
 			-- <Precursor>
 		do
-			helper.add_unsupported_error (context_feature, "Manifest array in contract not supported.", context_line_number)
+			helper.add_unsupported_error (context_feature, {STRING_32} "Manifest array in contract not supported.", context_line_number)
 			last_expression := dummy_node (a_node.type)
 		end
 
@@ -592,23 +600,12 @@ feature -- Visitors
 
 	process_constant_b (a_node: CONSTANT_B)
 			-- <Precursor>
-		local
-			l_bool: BOOL_VALUE_I
-			l_char: CHAR_VALUE_I
 		do
-			if a_node.value.is_boolean then
-				l_bool ?= a_node.value
-				check l_bool /= Void end
-				if l_bool.boolean_value then
-					last_expression := factory.true_
-				else
-					last_expression := factory.false_
-				end
+			if attached {BOOL_VALUE_I} a_node.value as l_bool then
+				last_expression := if l_bool.boolean_value then factory.true_ else factory.false_ end
 			elseif a_node.value.is_integer or a_node.value.is_numeric then
 				create {IV_VALUE} last_expression.make (a_node.value.string_value, types.int)
-			elseif a_node.value.is_character then
-				l_char ?= a_node.value
-				check l_char /= Void end
+			elseif attached {CHAR_VALUE_I} a_node.value as l_char then
 				last_expression := factory.int_value (l_char.character_value.code)
 			elseif a_node.value.is_real then
 				last_expression := dummy_node (a_node.type)
@@ -620,7 +617,7 @@ feature -- Visitors
 	process_creation_expr_b (a_node: CREATION_EXPR_B)
 			-- <Precursor>
 		do
-			helper.add_unsupported_error (context_feature, "Creation expression in contract not supported.", context_line_number)
+			helper.add_unsupported_error (context_feature, {STRING_32} "Creation expression in contract not supported.", context_line_number)
 			last_expression := dummy_node (a_node.type)
 		end
 
@@ -652,7 +649,6 @@ feature -- Visitors
 			-- <Precursor>
 		local
 			l_feature: FEATURE_I
-			l_constant: CONSTANT_I
 			l_handler: E2B_CUSTOM_CALL_HANDLER
 		do
 			l_feature := helper.feature_for_call_access (a_node, current_target_type)
@@ -665,9 +661,11 @@ feature -- Visitors
 				if l_feature.is_attribute then
 					process_attribute_call (l_feature)
 				elseif l_feature.is_constant then
-					l_constant ?= l_feature
-					check l_constant /= Void end
-					process_constant_call (l_constant)
+					check
+						from_condition: attached {CONSTANT_I} l_feature as l_constant
+					then
+						process_constant_call (l_constant)
+					end
 				elseif l_feature.is_routine then
 					process_routine_call (l_feature, a_node.parameters, False)
 				else
@@ -726,39 +724,27 @@ feature -- Visitors
 
 	process_loop_expr_b (a_node: LOOP_EXPR_B)
 			-- <Precursor>
-		local
-			l_assign: ASSIGN_B
-			l_object_test_local: OBJECT_TEST_LOCAL_B
-			l_nested: NESTED_B
-			l_class: CLASS_C
-			l_across_handler: E2B_ACROSS_HANDLER
 		do
-			l_assign ?= a_node.iteration_code.first
-			check l_assign /= Void end
-			l_object_test_local ?= l_assign.target
-			check l_object_test_local /= Void end
-			l_nested ?= l_assign.source
-			check l_nested /= Void end
-			l_class := l_nested.target.type.base_class
-
-			l_across_handler := translation_mapping.handler_for_across (a_node, Current)
-
-			is_in_quantifier := True
-
-			if attached l_across_handler then
-				current_target := entity_mapping.current_expression
-				current_target_type := context_type
-				last_expression := Void
-
-				across_handler_map.put (l_across_handler, l_object_test_local.position)
-				l_across_handler.handle_across_expression
-				across_handler_map.remove (l_object_test_local.position)
-			else
-				last_expression := dummy_node (a_node.type)
-				helper.add_semantic_error (context_feature, "Across over type " + l_class.name_in_upper + " not supported", context_line_number)
+			if
+				attached {ASSIGN_B} a_node.iteration_code.first as l_assign and then
+				attached {OBJECT_TEST_LOCAL_B} l_assign.target as l_object_test_local and then
+				attached {NESTED_B} l_assign.source as l_nested and then
+				attached l_nested.target.type.base_class as l_class
+			then
+				is_in_quantifier := True
+				if attached translation_mapping.handler_for_across (a_node, Current) as l_across_handler then
+					current_target := entity_mapping.current_expression
+					current_target_type := context_type
+					last_expression := Void
+					across_handler_map.put (l_across_handler, l_object_test_local.position)
+					l_across_handler.handle_across_expression
+					across_handler_map.remove (l_object_test_local.position)
+				else
+					last_expression := dummy_node (a_node.type)
+					helper.add_semantic_error (context_feature, {STRING_32} "Across over type " + l_class.name_in_upper + " not supported", context_line_number)
+				end
+				is_in_quantifier := False
 			end
-
-			is_in_quantifier := False
 		end
 
 	process_nat64_val_b (a_node: NAT64_VAL_B)
@@ -780,39 +766,35 @@ feature -- Visitors
 			l_target: IV_EXPRESSION
 			l_target_type: CL_TYPE_A
 
-			l_object_test_local: OBJECT_TEST_LOCAL_B
-			l_across_handler: E2B_ACROSS_HANDLER
-			l_feature: FEATURE_B
-			l_nested: NESTED_B
 			l_handler: E2B_CUSTOM_NESTED_HANDLER
 			l_name: STRING
 		do
 			l_handler := translation_mapping.handler_for_nested (a_node)
-			l_object_test_local ?= a_node.target
-			if l_object_test_local /= Void and then across_handler_map.has (l_object_test_local.position) then
+			if
+				attached {OBJECT_TEST_LOCAL_B} a_node.target as l_object_test_local and then
+				attached across_handler_map.item (l_object_test_local.position) as l_across_handler and then
+				attached {FEATURE_B} if attached {NESTED_B} a_node.message as l_nested then
+						l_nested.target
+					else
+						a_node.message
+					end
+				as l_feature
+			then
 					-- Special mapping of object test local in across loop
-				l_across_handler := across_handler_map.item (l_object_test_local.position)
-				l_nested ?= a_node.message
-				if l_nested /= Void then
-					l_feature ?= l_nested.target
-				else
-					l_feature ?= a_node.message
-				end
-				check l_feature /= Void end
 				l_name := l_feature.feature_name.as_lower
-				if l_name ~ "item" then
+				if l_name.same_string ("item") then
 					l_across_handler.handle_call_item (Void)
-				elseif l_name ~ "index" or l_name ~ "cursor_index" then
+				elseif l_name.same_string ("index") or l_name.same_string ("cursor_index") then
 					l_across_handler.handle_call_cursor_index (Void)
-				elseif l_name ~ "after" then
+				elseif l_name.same_string ("after") then
 					l_across_handler.handle_call_after (Void)
-				elseif l_name ~ "is_wrapped" or l_name ~ "is_open" then
+				elseif l_name.same_string ("is_wrapped") or l_name.same_string ("is_open") then
 					last_expression := dummy_node (a_node.type)
 				else
 					check False end
 					last_expression := dummy_node (a_node.type)
 				end
-				if l_nested /= Void then
+				if attached {NESTED_B} a_node.message as l_nested then
 					l_target := current_target
 					l_target_type := current_target_type
 
@@ -977,14 +959,14 @@ feature -- Visitors
 	process_routine_creation_b (a_node: ROUTINE_CREATION_B)
 			-- <Precursor>
 		do
-			helper.add_unsupported_error (context_feature, "Agents in contract not supported.", context_line_number)
+			helper.add_unsupported_error (context_feature, {STRING_32} "Agents in contract not supported.", context_line_number)
 			last_expression := dummy_node (a_node.type)
 		end
 
 	process_string_b (a_node: STRING_B)
 			-- <Precursor>
 		do
-			helper.add_unsupported_error (context_feature, "Manifest string not supported.", context_line_number)
+			helper.add_unsupported_error (context_feature, {STRING_32} "Manifest string not supported.", context_line_number)
 			last_expression := dummy_node (a_node.type)
 		end
 
@@ -1001,7 +983,7 @@ feature -- Visitors
 	process_tuple_const_b (a_node: TUPLE_CONST_B)
 			-- <Precursor>
 		do
-			helper.add_unsupported_error (context_feature, "Manifest tuple in contract not supported.", context_line_number)
+			helper.add_unsupported_error (context_feature, {STRING_32} "Manifest tuple in contract not supported.", context_line_number)
 			last_expression := dummy_node (a_node.type)
 		end
 
@@ -1209,19 +1191,25 @@ feature -- Translation
 			l_expr_type: CL_TYPE_A
 			l_class: CLASS_C
 			l_feature: FEATURE_I
-			l_conversion: STRING
+			l_conversion: READABLE_STRING_8
+			t: CL_TYPE_A
 		do
 			safe_process (a_expr)
 
 			l_expr_type := class_type_in_current_context (a_expr.type)
 			l_class := l_expr_type.base_class
-			l_feature := l_class.feature_named_32 ("new_cursor")
+			l_feature := l_class.feature_named ("new_cursor")
 			l_conversion := helper.function_for_logical (l_feature)
 			if l_conversion = Void then
 				helper.add_semantic_error (l_class, messages.logical_no_across_conversion, -1)
 			else
-				check attached {CL_TYPE_A} helper.class_type_in_context (l_feature.type, l_feature.written_class, l_feature, l_expr_type).generics.first as t then
-					last_set_content_type := t
+				t := helper.class_type_in_context (l_feature.type, l_feature.written_class, l_feature, l_expr_type)
+				if attached {CL_TYPE_A} t.generics.first as c then
+					last_set_content_type := c
+				elseif attached {CL_TYPE_A} t.base_class.single_constraint (1) as c then
+					last_set_content_type := c
+				else
+					check class_type_constraint: False then end
 				end
 				if not l_conversion.is_empty then
 					last_expression := factory.function_call (l_conversion, << last_expression >>, types.set (a_content_type))
@@ -1253,7 +1241,7 @@ feature -- Translation
 	add_function_precondition_check (a_feature: FEATURE_I; a_fcall: IV_FUNCTION_CALL)
 			-- Check the precondition of the function call `a_fcall' of `a_feature'.
 		local
-			l_fname: STRING
+			l_fname: READABLE_STRING_8
 			l_pre_call: IV_FUNCTION_CALL
 		do
 			l_fname := name_translator.boogie_function_for_feature (a_feature, current_target_type, False)

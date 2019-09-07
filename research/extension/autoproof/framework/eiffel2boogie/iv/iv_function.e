@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_type: IV_TYPE)
+	make (a_name: READABLE_STRING_8; a_type: IV_TYPE)
 			-- Initialize function with name `a_name' and type `a_type'.
 		require
 			a_name_attached: attached a_name
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: STRING
+	name: READABLE_STRING_8
 			-- Function name.
 
 	arguments: LINKED_LIST [IV_ENTITY_DECLARATION]
@@ -52,15 +52,15 @@ feature -- Access
 
 feature -- Element change
 
-	add_argument (a_name: READABLE_STRING_32; a_type: IV_TYPE)
+	add_argument (a_name: READABLE_STRING_8; a_type: IV_TYPE)
 			-- Add argument with name `a_name' and type `a_type'.
 		require
-			a_name_valid: is_valid_name_32 (a_name)
+			a_name_valid: is_valid_name (a_name)
 			a_type_attached: attached a_type
 		do
 			arguments.extend (create {IV_ENTITY_DECLARATION}.make (a_name, a_type))
 		ensure
-			argument_added: arguments.last.name ~ a_name
+			argument_added: arguments.last.name.same_string (a_name)
 			argument_added: arguments.last.type = a_type
 		end
 

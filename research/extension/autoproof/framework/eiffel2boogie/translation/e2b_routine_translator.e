@@ -69,7 +69,7 @@ feature -- Translation: Signature
 		require
 			routine: a_feature.is_routine
 		local
-			l_proc_name: STRING
+			l_proc_name: READABLE_STRING_8
 			l_contracts: like contracts_of
 			l_fields: LINKED_LIST [TUPLE [o: IV_EXPRESSION; f: IV_ENTITY]]
 			l_modifies: IV_MODIFIES
@@ -86,11 +86,12 @@ feature -- Translation: Signature
 			end
 
 				-- Set up name
-			if a_for_creator then
-				l_proc_name := name_translator.boogie_procedure_for_creator (current_feature, current_type)
-			else
-				l_proc_name := name_translator.boogie_procedure_for_feature (current_feature, current_type)
-			end
+			l_proc_name :=
+				if a_for_creator then
+					name_translator.boogie_procedure_for_creator (current_feature, current_type)
+				else
+					name_translator.boogie_procedure_for_feature (current_feature, current_type)
+				end
 
 				-- Initialize procedure
 			set_up_boogie_procedure (l_proc_name)
@@ -316,7 +317,7 @@ feature -- Translation: Signature
 				end
 
 					-- OWNERSHIP DEFAULTS
-					-- ToDo: should default precondtions be enabled for lemmas?
+					-- TODO: should default precondtions be enabled for lemmas?
 				create l_mapping.make
 				l_mapping.set_current (current_boogie_procedure.arguments.first.entity)
 				across ownership_default (a_for_creator, l_mapping) as i loop
@@ -475,14 +476,14 @@ feature -- Translation: Signature
 			-- Add frame condition if `agent_modify' is used in precondition.
 		local
 			l_translator: E2B_CONTRACT_EXPRESSION_TRANSLATOR
-			l_name: STRING
+			l_name: READABLE_STRING_8
 			l_fcall: IV_FUNCTION_CALL
 			l_pre: IV_PRECONDITION
 		do
 			across contracts_of (current_feature, current_type).modifies as l_modifies loop
 				if attached {FEATURE_B} l_modifies.item.clause.expr as l_call then
-					l_name := names_heap.item_32 (l_call.feature_name_id)
-					if l_name ~ "modify_agent" then
+					l_name := names_heap.item (l_call.feature_name_id)
+					if l_name.same_string ("modify_agent") then
 						if attached {TUPLE_CONST_B} l_call.parameters.i_th (2).expression as l_tuple then
 							create l_translator.make
 							l_translator.set_context (current_feature, current_type)
@@ -549,7 +550,7 @@ feature -- Translation: Implementation
 			l_implementation: IV_IMPLEMENTATION
 			l_translator: E2B_INSTRUCTION_TRANSLATOR
 			l_type: CL_TYPE_A
-			l_proc_name: STRING
+			l_proc_name: READABLE_STRING_8
 			l_call: IV_PROCEDURE_CALL
 			l_ownership_handler: E2B_CUSTOM_OWNERSHIP_HANDLER
 			l_feature: FEATURE_I
@@ -560,11 +561,12 @@ feature -- Translation: Implementation
 			set_context (a_feature, a_type)
 			set_inlining_options_for_feature (a_feature)
 
-			if a_for_creator then
-				l_proc_name := name_translator.boogie_procedure_for_creator (current_feature, current_type)
-			else
-				l_proc_name := name_translator.boogie_procedure_for_feature (current_feature, current_type)
-			end
+			l_proc_name :=
+				if a_for_creator then
+					name_translator.boogie_procedure_for_creator (current_feature, current_type)
+				else
+					name_translator.boogie_procedure_for_feature (current_feature, current_type)
+				end
 
 			l_procedure := boogie_universe.procedure_named (l_proc_name)
 			check l_procedure /= Void end
@@ -573,8 +575,7 @@ feature -- Translation: Implementation
 			create l_implementation.make (l_procedure)
 			boogie_universe.add_declaration (l_implementation)
 
-			create l_translator.make
-			l_translator.set_context (l_implementation, current_feature, current_type)
+			create l_translator.make (l_implementation, current_feature, current_type)
 			if helper.has_functional_representation (a_feature) then
 				l_translator.set_context_readable (factory.global_readable)
 				if not helper.is_invariant_unfriendly (current_feature) then
@@ -596,7 +597,7 @@ feature -- Translation: Implementation
 					-- Public procedures unwrap Current in the beginning, unless lemma or marked with explicit wrapping
 				if not a_for_creator and helper.is_public (current_feature) and not a_feature.has_return_value and
 					not helper.is_explicit (current_feature, "wrapping") and not helper.is_lemma (a_feature) and not helper.is_nonvariant (a_feature) then
-					l_feature := system.any_type.base_class.feature_named_32 ("unwrap")
+					l_feature := system.any_type.base_class.feature_named ("unwrap")
 					l_expr_translator.set_context_line_number (a_feature.body.start_location.line)
 
 					l_ownership_handler.pre_builtin_call (l_expr_translator, l_feature)
@@ -653,7 +654,7 @@ feature -- Translation: Implementation
 			if options.is_ownership_enabled then
 				if not helper.is_explicit (current_feature, "wrapping") and not helper.is_lemma (a_feature) and not helper.is_nonvariant (a_feature) then
 					if a_for_creator or helper.is_public (current_feature) and not a_feature.has_return_value then
-						l_feature := system.any_type.base_class.feature_named_32 ("wrap")
+						l_feature := system.any_type.base_class.feature_named ("wrap")
 						l_expr_translator.set_context_line_number (a_feature.body.end_location.line)
 
 						l_ownership_handler.pre_builtin_call (l_expr_translator, l_feature)
@@ -753,7 +754,7 @@ feature -- Translation: Functions
 	translate_function_precondition_predicate (a_feature: FEATURE_I; a_type: CL_TYPE_A)
 			-- Translate precondition predicate of feature `a_feature' of type `a_type'.
 		local
-			l_fname: STRING
+			l_fname: READABLE_STRING_8
 			l_pre_function, l_trigger_function: IV_FUNCTION
 			l_mapping: E2B_ENTITY_MAPPING
 			l_entity: IV_ENTITY
@@ -1173,7 +1174,7 @@ feature -- Translation: agents
 				-- TODO: generate postcondition axiom for all known subtypes with redefined contracts
 			if not current_feature.written_class.name_in_upper.is_equal ("ANY") then
 				across current_feature.written_class.direct_descendants as d loop
-					generate_postcondition_axiom (d.item.feature_named_32 (current_feature.feature_name_32), current_type, d.item.actual_type)
+					generate_postcondition_axiom (d.item.feature_named (current_feature.feature_name), current_type, d.item.actual_type)
 				end
 			end
 --			current_feature.written_class.direct_descendants.item.feature_of_rout_id_set (current_feature.rout_id_set)

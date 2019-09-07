@@ -70,16 +70,17 @@ feature -- Basic operations
 			elseif translation_mapping.ghost_setter.has (l_name) then
 				l_name := l_name.substring (5, l_name.count)
 				a_translator.process_builtin_routine_call (a_feature, a_parameters, "xyz")
-				l_call ?= a_translator.side_effect.last
-				a_translator.side_effect.finish
-				a_translator.side_effect.remove	-- last side effect is actual call, here to non-existing "xyz"
-				a_translator.set_last_expression (Void)
-				l_call := factory.procedure_call ("update_heap", <<
-					a_translator.current_target,
-					factory.entity (l_name, types.field ((create {E2B_SPECIAL_MAPPING}.make).ghost_access_type (l_name))),
-					l_call.arguments.i_th (2)>>)
-				l_call.node_info.set_line (a_translator.context_line_number)
-				a_translator.side_effect.extend (l_call)
+				if attached {IV_PROCEDURE_CALL} a_translator.side_effect.last as c then
+					a_translator.side_effect.finish
+					a_translator.side_effect.remove	-- last side effect is actual call, here to non-existing "xyz"
+					a_translator.set_last_expression (Void)
+					l_call := factory.procedure_call ("update_heap", <<
+						a_translator.current_target,
+						factory.entity (l_name, types.field ((create {E2B_SPECIAL_MAPPING}.make).ghost_access_type (l_name))),
+						c.arguments.i_th (2)>>)
+					l_call.node_info.set_line (a_translator.context_line_number)
+					a_translator.side_effect.extend (l_call)
+				end
 			else
 				check false end
 			end
@@ -217,12 +218,12 @@ feature -- Basic operations
 			end
 		end
 
-	check_valid_class_inv_tags (a_class: CLASS_C; a_context_feature: FEATURE_I; a_line_number: INTEGER; a_tags: LIST [STRING])
+	check_valid_class_inv_tags (a_class: CLASS_C; a_context_feature: FEATURE_I; a_line_number: INTEGER; a_tags: LIST [READABLE_STRING_8])
 			-- Check if `a_tags' only lists valid class invariant of `a_class'.
 			-- Otherwise report error in feature `a_context_feature'.
 		local
-			l_tags_copy: LINKED_LIST [STRING]
-			l_string: STRING
+			l_tags_copy: LINKED_LIST [READABLE_STRING_8]
+			l_string: STRING_32
 		do
 			create l_tags_copy.make
 			l_tags_copy.append (a_tags)
@@ -234,36 +235,28 @@ feature -- Basic operations
 				-- Remove user-defined tags
 			check_flat_inv_tags (a_class, l_tags_copy)
 			if not l_tags_copy.is_empty then
-				l_string := ""
+				l_string := {STRING_32} ""
 				across l_tags_copy as i loop
-					l_string.append (i.item)
-					l_string.append (", ")
+					l_string.append ({UTF_CONVERTER}.utf_8_string_8_to_string_32 (i.item))
+					l_string.append ({STRING_32} ", ")
 				end
 				l_string.remove_tail (2)
 				helper.add_semantic_error (a_context_feature, messages.invalid_tag (l_string, a_class.name_in_upper), a_line_number)
 			end
 		end
 
-	check_flat_inv_tags (a_class: CLASS_C; a_tags: LIST [STRING])
+	check_flat_inv_tags (a_class: CLASS_C; a_tags: LIST [READABLE_STRING_8])
 			-- Remove from `a_tags' all class invariant tags present in `a_class' and its ancestors.
 		local
-			l_asserts: BYTE_LIST [BYTE_NODE]
-			l_assert: ASSERT_B
 			l_classes: FIXED_LIST [CLASS_C]
 		do
 			if inv_byte_server.has (a_class.class_id) then
-				from
-					l_asserts := inv_byte_server.item (a_class.class_id).byte_list
-					l_asserts.start
-				until
-					l_asserts.after
+				across
+					inv_byte_server.item (a_class.class_id).byte_list as node
 				loop
-					l_assert ?= l_asserts.item_for_iteration
-					check l_assert /= Void end
-					if l_assert.tag /= Void then
-						a_tags.prune_all (l_assert.tag)
+					if attached {ASSERT_B} node.item as a then
+						a_tags.prune_all (a.tag)
 					end
-					l_asserts.forth
 				end
 			end
 			from
@@ -380,7 +373,7 @@ feature -- Basic operations
 				l_pcall.add_argument (factory.function_call (l_function.name,
 					<< a_translator.entity_mapping.heap, a_translator.current_target >>,
 					types.field_content_type (l_field.type)))
-				l_pcall.node_info.set_attribute ("default", a_attr.feature_name_32)
+				l_pcall.node_info.set_attribute ("default", a_attr.feature_name)
 				l_pcall.node_info.set_line (a_translator.context_line_number)
 
 					-- Create a condition that l_field is in the modify clause of the current function

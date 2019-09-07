@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_type: IV_TYPE)
+	make (a_name: READABLE_STRING_8; a_type: IV_TYPE)
 			-- Initialize function call with `a_name' and `a_type'.
 		do
 			name := a_name.twin
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	name: STRING
+	name: READABLE_STRING_8
 			-- Name of called function.
 
 	arguments: LINKED_LIST [IV_EXPRESSION]
@@ -90,7 +90,7 @@ feature -- Access
 
 feature -- Status report
 
-	has_free_var_named (a_name: STRING): BOOLEAN
+	has_free_var_named (a_name: READABLE_STRING_8): BOOLEAN
 			-- Does this expression contain a free variable with name `a_name'?
 		do
 			Result := across arguments as i some i.item.has_free_var_named (a_name) end

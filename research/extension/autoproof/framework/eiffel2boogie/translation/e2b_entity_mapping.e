@@ -13,6 +13,8 @@ inherit
 
 	E2B_SHARED_CONTEXT
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 create
 	make,
 	make_copy
@@ -54,13 +56,13 @@ feature -- Access
 	argument (a_feature: FEATURE_I; a_type: CL_TYPE_A; a_position: INTEGER): IV_EXPRESSION
 			-- Argument of feature `a_feature' at position `a_position'.
 		local
-			l_name: READABLE_STRING_32
+			l_name: READABLE_STRING_8
 			l_type: IV_TYPE
 		do
 			if argument_mapping.has_key (a_position) then
 				Result := argument_mapping.item (a_position)
 			else
-				l_name := a_feature.arguments.item_name_32 (a_position)
+				l_name := a_feature.arguments.item_name (a_position)
 				l_type := types.for_class_type (helper.class_type_in_context (a_feature.arguments.i_th (a_position), a_type.base_class, a_feature, a_type))
 				create {IV_ENTITY} Result.make (l_name, l_type)
 			end

@@ -58,6 +58,7 @@ feature -- Element change
 			-- Add `a_class' to be translated.
 		local
 			l_feature: FEATURE_I
+			c: CURSOR
 		do
 			if not helper.is_class_logical (a_class) then
 				translation_pool.add_class_check (helper.constraint_type (a_class))
@@ -70,7 +71,12 @@ feature -- Element change
 				loop
 					l_feature := a_class.feature_table.item_for_iteration
 					if helper.verify_feature_in_class (l_feature, a_class) then
+							-- Record current position because it can change after adding the feature.
+						c := a_class.feature_table.cursor
+							-- Add the feature.
 						add_feature_of_type (l_feature, a_class.actual_type)
+							-- Restore the current position to continue iteration.
+						a_class.feature_table.go_to (c)
 					end
 					a_class.feature_table.forth
 				end
@@ -116,7 +122,7 @@ feature -- Basic operations
 						l_error.set_class (x.type.base_class)
 						l_error.set_feature (x.feat)
 					end
-					l_error.set_message (messages.internal_translation_error (l_unit.id))
+					l_error.set_message (messages.internal_translation_error (l_unit.id.to_string_32))
 					autoproof_errors.extend (l_error)
 				end
 			else

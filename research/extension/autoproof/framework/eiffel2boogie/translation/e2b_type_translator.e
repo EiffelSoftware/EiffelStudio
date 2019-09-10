@@ -143,6 +143,7 @@ feature -- Basic operations
 			l_class := type.base_class
 
 			if not helper.is_class_logical (l_class) and not helper.is_class_array (l_class) then
+				helper.set_up_byte_context (l_class.invariant_feature, a_type)
 				translate_invariant_function
 
 				-- Add guards for built-in attributes (ANY versions)
@@ -175,8 +176,8 @@ feature -- Basic operations
 		local
 			l_mapping: E2B_ENTITY_MAPPING
 		do
+			helper.switch_byte_context (a_type.base_class.invariant_feature, a_type, a_type)
 			type := a_type
-
 			if a_target.same_expression (factory.std_current) then
 					-- Standard target: use cache
 				if invariant_check_cache.has_key (type) then
@@ -198,6 +199,7 @@ feature -- Basic operations
 				l_mapping.set_current (a_target)
 				generate_invariant_clauses (Void, Void, type.base_class, l_mapping)
 			end
+			helper.unswitch_byte_context
 		end
 
 feature {NONE} -- Implementation
@@ -444,7 +446,7 @@ feature {NONE} -- Implementation
 			l_found: BOOLEAN
 		do
 			if inv_byte_server.has (a_class.class_id) then
-				helper.set_up_byte_context (a_class.invariant_feature, helper.class_type_in_context (a_class.actual_type, a_class, a_class.invariant_feature, type))
+				helper.switch_byte_context (a_class.invariant_feature, helper.class_type_in_context (a_class.actual_type, a_class, a_class.invariant_feature, type), a_class.actual_type)
 				across
 					inv_byte_server.item (a_class.class_id).byte_list as b
 				loop
@@ -485,6 +487,7 @@ feature {NONE} -- Implementation
 					end
 					l_assert.process (builtin_collector)
 				end
+				helper.unswitch_byte_context
 			end
 		end
 

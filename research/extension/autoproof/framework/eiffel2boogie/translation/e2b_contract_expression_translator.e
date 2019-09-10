@@ -51,7 +51,7 @@ feature -- Basic operations
 			-- Set context of expression to `a_feature' in type `a_type'.
 		do
 			Precursor (a_feature, a_type)
-			origin_class := a_type.base_class
+			origin_class := context.current_type.base_class
 		end
 
 	reset

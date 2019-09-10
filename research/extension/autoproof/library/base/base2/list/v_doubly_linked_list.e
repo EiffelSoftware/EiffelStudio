@@ -394,7 +394,6 @@ feature -- Removal
 				else
 					check f.right = cells [2] end
 					if attached f.right as second then
-						check second.inv end
 						f.unwrap
 						second.unwrap
 						second.put_left (Void)
@@ -427,7 +426,6 @@ feature -- Removal
 				else
 					check cells [cells.count - 1].inv end
 					if attached l.left as second_last then
-						check cells [cells.count - 1].right = l end
 						l.unwrap
 						second_last.unwrap
 						second_last.put_right (Void)

@@ -43,9 +43,10 @@ feature -- Cache control
 			ghost_attribute_cache.wipe_out
 			internal_counter.put (0)
 				-- Reset invariant checks
-			(create {E2B_TYPE_TRANSLATOR}).invariant_check_cache.wipe_out;
+			;(create {E2B_TYPE_TRANSLATOR}).invariant_check_cache.wipe_out
 				-- Reset type varibale counter
-			(create {IV_VAR_TYPE}.reset).do_nothing
+			;(create {IV_VAR_TYPE}.reset).do_nothing
+			create context_stack.make (1)
 		end
 
 feature -- General note helpers
@@ -789,8 +790,8 @@ feature -- Eiffel helpers
 			check Result /= Void end
 		end
 
-	class_type_in_context (a_type: TYPE_A; a_written_class: CLASS_C; a_feature: FEATURE_I; a_current_type: CL_TYPE_A): CL_TYPE_A
-			-- Class type of `a_type', which is written in `a_written_class' (with optional `a_feature') as seen from `a_current_type'.
+	class_type_in_context (a_type: TYPE_A; an_ancestor_class: CLASS_C; a_feature: FEATURE_I; a_current_type: CL_TYPE_A): CL_TYPE_A
+			-- Class type `a_type', which comes from `an_ancestor_class' (with optional `a_feature') as seen from `a_current_type'.
 		require
 			no_formals: not a_current_type.has_formal_generic
 		local
@@ -799,10 +800,12 @@ feature -- Eiffel helpers
 			if a_type.is_like_current then
 				Result := a_current_type
 			else
-				-- `evaluated_type_in_descendant' switches to the correct feature in case of LIKE_FEATURE types
-				-- `deep_actual_type' gets rid of like types
-				-- `instantiated_in (a_current_type)' instantiates the generics				
-				t := a_type.evaluated_type_in_descendant (a_written_class, a_current_type.base_class, a_feature).deep_actual_type.instantiated_in (a_current_type)
+					-- `evaluated_type_in_descendant' switches to the correct feature in case of LIKE_FEATURE types
+					-- `deep_actual_type' gets rid of like types
+					-- `instantiated_in (a_current_type)' instantiates the generics				
+				t := a_type.evaluated_type_in_descendant
+					(an_ancestor_class, a_current_type.base_class, a_feature).deep_actual_type.instantiated_in
+					(a_current_type)
 				if attached {CL_TYPE_A} t as c then
 					Result := c
 				elseif
@@ -888,20 +891,72 @@ feature -- Byte context helpers
 			end
 			check a_type.has_associated_class_type (Void) end
 			Context.init (a_type.associated_class_type (Void))
---			if a_feature /= Void then
---				Context.set_class_type (a_feature.written_type (a_type.associated_class_type (Void)))
---			else
---				-- TODO: Investiage why it is Void.
---			end
 
 				-- Set up feature data
 			if a_feature /= Void then
+				Context.set_class_type (a_feature.written_type (a_type.associated_class_type (Void)))
 				Context.set_current_feature (a_feature)
 				if byte_server.has (a_feature.body_index) then
 					Context.set_byte_code (byte_server.item (a_feature.body_index))
 				end
 			end
 		end
+
+	switch_byte_context (f: FEATURE_I; target_type: CL_TYPE_A; written_type: CL_TYPE_A)
+			-- Update byte context to feature `f` written in `written_type` called on type `target_type`.
+			-- Use `unswitch_byte_context` to restore original state.
+		do
+			context.change_class_type_context
+				(target_type.associated_class_type (Void),
+				target_type,
+				written_type.associated_class_type (Void),
+				written_type)
+			context_stack.put ([context.current_feature, context.byte_code])
+			if attached f then
+				context.set_current_feature (f)
+				if byte_server.has (f.body_index) then
+					context.set_byte_code (byte_server.item (f.body_index))
+				end
+			else
+				context.clear_feature_data
+			end
+		ensure
+			context_stack_count: switch_count = old switch_count + 1
+			context_stack_unchanged: across old context_stack as i all context_stack [i.target_index] = i.item end
+		end
+
+	unswitch_byte_context
+			-- Restore byte context to the state before the call to `switch_byte_context`.
+		require
+			switch_count > 0
+		do
+			if attached context_stack.item.current_feature as f then
+				context.set_current_feature (f)
+			else
+				context.clear_feature_data
+			end
+			if attached context_stack.item.byte_code as b then
+				context.set_byte_code (b)
+			end
+			context_stack.remove
+			context.restore_class_type_context
+		ensure
+			context_stack_count: switch_count = old switch_count - 1
+			context_stack_unchanged: across context_stack as i all (old context_stack) [i.target_index] = i.item end
+		end
+
+	switch_count: NATURAL_32
+			-- Number of times the byte context stack has switched.
+		do
+			Result := context_stack.count.as_natural_32
+		ensure
+			definition: Result = context_stack.count.as_natural_32
+		end
+
+feature {NONE} -- Storage
+
+	context_stack: ARRAYED_STACK [TUPLE [current_feature: detachable FEATURE_I; byte_code: detachable BYTE_CODE]]
+			-- Stack of byte contexts saved by `switch_byte_context`.
 
 feature -- Other
 

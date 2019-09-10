@@ -239,7 +239,7 @@ feature {NONE} -- Implementation
 					factory.function_call ("user_inv", << factory.map_update (a_h, create {ARRAYED_LIST [IV_EXPRESSION]}.make_from_array (<<a_cur, a_f>>), a_v), a_o >>, types.bool))
 			else
 				l_guard_feature := a_origin_class.feature_named (a_guard_string)
-				if is_valid_guard_feature (a_guard_string, l_guard_feature, a_attr_type) then
+				if is_valid_guard_feature (a_guard_string, l_guard_feature, a_attr_type, a_origin_class) then
 					translation_pool.add_referenced_feature (l_guard_feature, current_type)
 						-- Generate guard definition from `l_guard_feature'
 					l_fname := name_translator.boogie_function_for_feature (l_guard_feature, current_type, False)
@@ -253,7 +253,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_valid_guard_feature (a_guard_name: READABLE_STRING_8; a_guard_feature: FEATURE_I; a_attr_type: CL_TYPE_A): BOOLEAN
+	is_valid_guard_feature (a_guard_name: READABLE_STRING_8; a_guard_feature: FEATURE_I; a_attr_type: CL_TYPE_A; guard_feature_class: CLASS_C): BOOLEAN
 			-- Does `a_guard_feature' have a valid signature for an update guard for an attribute of type `a_attr_type'?
 		do
 			if a_guard_feature = Void then
@@ -262,7 +262,7 @@ feature {NONE} -- Implementation
 				helper.add_semantic_error (a_guard_feature, messages.guard_feature_not_predicate, -1)
 			elseif a_guard_feature.argument_count /= 2 then
 				helper.add_semantic_error (a_guard_feature, messages.guard_feature_arg_count, -1)
-			elseif types.for_class_type (helper.class_type_in_context (a_guard_feature.arguments [1], a_guard_feature.written_class, a_guard_feature, current_type))
+			elseif types.for_class_type (helper.class_type_in_context (a_guard_feature.arguments [1], guard_feature_class, a_guard_feature, current_type))
 					/~ types.for_class_type (a_attr_type) then
 				helper.add_semantic_error (a_guard_feature, messages.guard_feature_arg1, -1)
 			elseif not a_guard_feature.arguments [2].same_as (system.any_type) then

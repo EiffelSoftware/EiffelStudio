@@ -21,11 +21,6 @@ inherit
 create
 	make
 
-feature -- Access
-
-	context_implementation: IV_IMPLEMENTATION
-			-- Context of expression.
-
 feature -- Basic operations
 
 	set_context_implementation (a_implementation: IV_IMPLEMENTATION)
@@ -511,15 +506,6 @@ feature -- Translation
 			l_if.then_block.add_statement (a_statement)
 			l_if.then_block.add_statement (create {IV_ASSERT}.make_assume (factory.false_))
 			side_effect.extend (l_if)
-		end
-
-feature -- Implementation
-
-	create_local (a_type: CL_TYPE_A)
-			-- Create new local.
-		do
-			create last_local.make (helper.unique_identifier ("temp"), types.for_class_type (a_type))
-			context_implementation.add_local (last_local.name, last_local.type)
 		end
 
 end

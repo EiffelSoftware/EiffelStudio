@@ -873,9 +873,28 @@ feature -- Visitors
 		local
 			l_type: CL_TYPE_A
 			l_type_expr, l_expr: IV_EXPRESSION
+			object_test_local: like last_local
 		do
 			safe_process (a_node.expression)
 			l_expr := last_expression
+			l_type := class_type_in_current_context
+				(if a_node.is_void_check then
+					a_node.expression.type
+				else
+					a_node.target.type
+				end)
+			if
+				attached a_node.target as t and then
+				attached context_implementation and then
+				attached {LIST [IV_STATEMENT]} side_effect as effect
+			then
+					-- TODO: handle the case when `context_implementation` is not attached and `side_effect` does not hold `IV_STATEMENT`.
+				translation_pool.add_type (l_type)
+				create_local (l_type)
+				object_test_local := last_local
+				effect.extend (create {IV_ASSIGNMENT}.make (object_test_local, l_expr))
+				l_expr := object_test_local
+			end
 			if a_node.is_void_check then
 				last_expression := factory.not_equal (l_expr, factory.void_)
 			else
@@ -1434,6 +1453,22 @@ feature -- Implementation
 			safety_check_condition.extend (factory.and_clean (safety_check_condition.item, a_condition))
 			safe_process (a_expr)
 			safety_check_condition.remove
+		end
+
+feature {E2B_CUSTOM_OWNERSHIP_HANDLER, E2B_CUSTOM_AGENT_CALL_HANDLER, E2B_CUSTOM_STRING_HANDLER} -- Access
+
+	context_implementation: detachable IV_IMPLEMENTATION
+			-- Context of expression.
+
+feature {E2B_CUSTOM_OWNERSHIP_HANDLER, E2B_CUSTOM_AGENT_CALL_HANDLER, E2B_CUSTOM_STRING_HANDLER} -- Modification
+
+	create_local (t: CL_TYPE_A)
+			-- Create a new local with type `t`.
+		require
+			attached context_implementation
+		do
+			create last_local.make (helper.unique_identifier ("temp"), types.for_class_type (t))
+			context_implementation.add_local (last_local.name, last_local.type)
 		end
 
 invariant

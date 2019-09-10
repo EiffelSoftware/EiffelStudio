@@ -53,6 +53,7 @@ feature -- Basic operations
 		ensure
 			locked_effect: locked = old locked & item
 			owns_effect: owns = old owns & item + item.subjects
+			observers_effect: observers = old observers
 			wrapped: is_wrapped
 			modify (Current)
 			modify_field ("owner", [item, item.subjects, owns])
@@ -208,7 +209,7 @@ feature {NONE} -- Implementation
 invariant
 	locked_non_void: locked.non_void
 	owns_definition: across locked as x all owns [x.item] and x.item.subjects <= owns end
-	equivalence_definition: across locked as x all across locked as y all equivalence [x.item, y.item] = (x.item.is_model_equal (y.item)) end end
+	equivalence_definition: across locked as x all across locked as y all equivalence [x.item, y.item] = x.item.is_model_equal (y.item) end end
 	default_subjects: subjects ~ create {MML_SET [ANY]}
 	observrs_are_lockers: across observers as o all attached {V_LOCKER [G]} o.item end
 

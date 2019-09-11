@@ -284,7 +284,7 @@ feature -- Basic operations
 				if use_static_invariant (a_translator) then
 						-- Check exact invariant definition.
 					create l_type_translator
-					l_type_translator.translate_inline_invaraint_check (a_translator.current_target_type, a_translator.current_target)
+					l_type_translator.translate_inline_invariant_check (a_translator.current_target_type, a_translator.current_target)
 
 					across helper.ghost_attributes (a_translator.current_target_type.base_class) as a loop
 						set_implicit_ghost (a_translator, a.item)
@@ -342,7 +342,7 @@ feature -- Basic operations
 		end
 
 	use_static_invariant (a_translator: E2B_BODY_EXPRESSION_TRANSLATOR): BOOLEAN
-			-- Should the static definition of the ivnariant be used for the current target of `a_translator'?
+			-- Should the static definition of the invariant be used for the current target of `a_translator'?
 		do
 				-- Yes if the current target is "Current" and the context feature is not marked as nonvariant,
 				-- or the type of the target is exact.

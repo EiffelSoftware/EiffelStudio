@@ -171,7 +171,7 @@ feature -- Basic operations
 			generate_filtered_invariant_axiom (a_included, a_excluded, a_ancestor)
 		end
 
-	translate_inline_invaraint_check (a_type: CL_TYPE_A; a_target: IV_EXPRESSION)
+	translate_inline_invariant_check (a_type: CL_TYPE_A; a_target: IV_EXPRESSION)
 			-- Translate the invariant of `a_type' into assert statements and store them in `last_clauses'.
 		local
 			l_mapping: E2B_ENTITY_MAPPING
@@ -453,8 +453,10 @@ feature {NONE} -- Implementation
 					l_assert := b.item
 					if is_tag_included (a_included, a_excluded, l_assert.tag) then
 						create l_translator.make
-						l_translator.copy_entity_mapping (a_mapping)
 						l_translator.set_context (a_class.invariant_feature, type)
+							-- Entity mapping should be copied after setting the context
+							-- because setting the context can also set a mapping for "Current".
+						l_translator.copy_entity_mapping (a_mapping)
 						l_translator.set_origin_class (a_class)
 						l_translator.set_context_line_number (l_assert.line_number)
 						l_translator.set_context_tag (l_assert.tag)

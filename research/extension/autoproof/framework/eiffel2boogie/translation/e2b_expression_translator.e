@@ -226,13 +226,13 @@ feature -- Basic operations
 			context_feature := a_feature
 			context_type := a_type
 			current_target_type := a_type
-			if attached types.for_class_type (a_type) as t then
-				entity_mapping.set_current (create {IV_ENTITY}.make
-					(if attached {IV_ENTITY} entity_mapping.current_expression as e then
-						e.name
-					else
-						{E2B_ENTITY_MAPPING}.default_current_name
-					end, t))
+			if
+				attached {IV_ENTITY} entity_mapping.current_expression as e and then
+				attached types.for_class_type (a_type) as t and then
+				e.type /~ t
+			then
+					-- A fix for a target of a mapped MML type.
+				entity_mapping.set_current (create {IV_ENTITY}.make (e.name, t))
 			end
 			current_target := entity_mapping.current_expression
 			if a_feature /= Void and then a_feature.has_return_value then

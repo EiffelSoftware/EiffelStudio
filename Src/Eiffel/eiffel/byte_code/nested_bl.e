@@ -107,12 +107,14 @@ feature
 					-- We never grab temporary registers in the middle of a
 					-- multidot expression.
 				if not (r.is_temporary or used (r)) then
-					if local_type.c_type.same_class_type (r.c_type) then
+					if
+						local_type.c_type.same_class_type (r.c_type) and then
+						register = Void and
+						not context.has_invariant
+					then
 							-- Don't bother calling set_propagated, because we
 							-- know it'll be done at the end of the call anyway.
-						if register = Void and not context.has_invariant then
-							register := r
-						end
+						register := r
 					end
 						-- We may safely propagate register to our target only
 						-- when that register is not used further in the call.
@@ -267,7 +269,14 @@ feature
 						-- The optimization can still be done for calls like t.f:
 						-- E_f (E_t (l[0])) is valid and does not need a register
 						-- Xavier
-					not (target.is_attribute or target.is_polymorphic or attached {ACCESS_EXPR_B} target or msg_target.is_polymorphic)
+					not
+						(target.is_attribute or else
+						target.is_polymorphic or else
+						attached {ACCESS_EXPR_B} target or else
+						msg_target.is_polymorphic or else
+							-- If assertions are kept, calls cannot be arguments of each other
+							-- because the flag indicating a nested call ("nstcall") should be set separately for each of them.
+						message.has_call and then target.has_call and then system.keep_assertions)
 				then
 					context.init_propagation
 					target.propagate (No_register)
@@ -391,15 +400,15 @@ feature {REGISTRABLE} -- C code generation
 		do
 			if message.target = message then
 					-- We reached the last call
-				if register /= No_register then
-						-- There is a register, hence the call has already
-						-- been generated and the result is in the register.
-					register.print_checked_target_register
-				else
+				if register = No_register then
 						-- There is no register, which means the call has not
 						-- been generated yet.
 						-- General case.
 					Precursor
+				else
+						-- There is a register, hence the call has already
+						-- been generated and the result is in the register.
+					register.print_checked_target_register
 				end
 			else
 					-- Simply propagate the request (it is impossible for a
@@ -410,7 +419,7 @@ feature {REGISTRABLE} -- C code generation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

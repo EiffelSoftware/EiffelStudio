@@ -10,7 +10,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make
 		do
 			if argument_count = 0 then
 				print ("ok%N")

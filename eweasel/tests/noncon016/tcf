@@ -7,9 +7,12 @@ copy_raw test.e $CLUSTER test.e
 compile_melted
 compile_result 	ok
 
-execute_work	NONE exec_output_1
+c_compile_work
+c_compile_result	ok
+
+execute_work	NONE exec_output_m
 execute_result	ok
-compare	exec_output_1 output
+compare	exec_output_m output
 
 compile_frozen
 compile_result 	ok
@@ -17,9 +20,9 @@ compile_result 	ok
 c_compile_work
 c_compile_result	ok
 
-execute_work	NONE exec_output_2
+execute_work	NONE exec_output_w
 execute_result	ok
-compare	exec_output_2 output
+compare	exec_output_w output
 
 compile_final
 compile_result	ok
@@ -27,9 +30,9 @@ compile_result	ok
 c_compile_final
 c_compile_result	ok
 
-execute_final	NONE exec_output_3
+execute_final	NONE exec_output_f
 execute_result	ok
-compare	exec_output_3 output
+compare	exec_output_f output
 
 
 

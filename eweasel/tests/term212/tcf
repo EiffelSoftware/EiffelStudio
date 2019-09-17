@@ -6,7 +6,7 @@ copy_raw	special.e $CLUSTER special.e
 copy_raw	typed_pointer.e $CLUSTER typed_pointer.e
 
 compile_melted
-compile_result	validity_error ARRAY VTUG(1) VTUG(1) VTUG(1) ; ISE_RUNTIME VTUG(1) ; STRING_32 VTUG(1) ; STRING_8 VTUG(1)
+compile_result	validity_error ARRAY VTUG(1) VTUG(1) VTUG(1); IMMUTABLE_STRING_32 VTUG(1); IMMUTABLE_STRING_8 VTUG(1); ISE_RUNTIME VTUG(1); STRING_32 VTUG(1); STRING_8 VTUG(1)
 
 copy_raw	special.e-rev1 $CLUSTER special.e
 

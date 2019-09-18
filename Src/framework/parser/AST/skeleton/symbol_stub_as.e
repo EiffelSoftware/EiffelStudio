@@ -82,7 +82,8 @@ feature -- Text
 			when {EIFFEL_TOKENS}.te_mod then Result := once "\\"
 			when {EIFFEL_TOKENS}.te_forall then Result := for_all
 			when {EIFFEL_TOKENS}.te_exists then Result := there_exists
-			when {EIFFEL_TOKENS}.te_repeat then Result := clockwise_gapped_circle_arrow
+			when {EIFFEL_TOKENS}.te_repeat_open then Result := clockwise_gapped_circle_arrow
+			when {EIFFEL_TOKENS}.te_repeat_close then Result := anticlockwise_gapped_circle_arrow
 			when {EIFFEL_TOKENS}.te_bar then Result := broken_bar
 			end
 		end
@@ -117,6 +118,12 @@ feature {NONE} -- Unicode
 			-- UTF-8 representation of the symbol.
 		once
 			Result := {UTF_CONVERTER}.string_32_to_utf_8_string_8 ({STRING_32} "⟳")
+		end
+
+	anticlockwise_gapped_circle_arrow: STRING
+			-- UTF-8 representation of the symbol.
+		once
+			Result := {UTF_CONVERTER}.string_32_to_utf_8_string_8 ({STRING_32} "⟲")
 		end
 
 	broken_bar: STRING

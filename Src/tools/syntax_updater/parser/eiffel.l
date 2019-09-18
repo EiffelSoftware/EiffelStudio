@@ -314,8 +314,18 @@ BREAK	{HORIZONAL_BREAK}|\n
 \xE2\x9F\xB3 {
 				update_character_locations
 				if syntax_version /= obsolete_syntax then
-					last_symbol_id_value := ast_factory.new_symbol_id_as (TE_REPEAT, Current)
-					last_token := TE_REPEAT
+					last_symbol_id_value := ast_factory.new_symbol_id_as (TE_REPEAT_OPEN, Current)
+					last_token := TE_REPEAT_OPEN
+				else
+					process_id_as
+					last_token := TE_FREE
+				end
+			}
+\xE2\x9F\xB2 {
+				update_character_locations
+				if syntax_version /= obsolete_syntax then
+					last_symbol_id_value := ast_factory.new_symbol_id_as (TE_REPEAT_CLOSE, Current)
+					last_token := TE_REPEAT_CLOSE
 				else
 					process_id_as
 					last_token := TE_FREE

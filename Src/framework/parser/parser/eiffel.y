@@ -21,7 +21,7 @@ create
 
 %start		Eiffel_parser
 
-%nonassoc	TE_ASSIGNMENT TE_REPEAT
+%nonassoc	TE_ASSIGNMENT TE_REPEAT_OPEN TE_REPEAT_CLOSE
 %left		TE_FORALL TE_EXISTS
 %nonassoc	TE_DOTDOT
 %left		TE_IMPLIES
@@ -56,7 +56,7 @@ create
 %token <detachable SYMBOL_AS> 		TE_PLUS TE_MINUS TE_STAR TE_SLASH TE_POWER
 %token <detachable SYMBOL_AS> 		TE_DIV TE_MOD
 	-- Special type for symbols that are either symbols or free operators.
-%token <detachable like {AST_FACTORY}.symbol_id_type as symbol_id>		TE_FORALL TE_EXISTS TE_REPEAT TE_BLOCK_OPEN TE_BLOCK_CLOSE
+%token <detachable like {AST_FACTORY}.symbol_id_type as symbol_id>		TE_FORALL TE_EXISTS TE_REPEAT_OPEN TE_REPEAT_CLOSE TE_BLOCK_OPEN TE_BLOCK_CLOSE
 
 %token <detachable BOOL_AS> TE_FALSE TE_TRUE
 %token <detachable RESULT_AS> TE_RESULT
@@ -224,7 +224,7 @@ create
 %type <detachable CONSTRAINT_LIST_AS> Multiple_constraint_list
 %type <detachable CONSTRAINING_TYPE_AS> Single_constraint
 
-%expect 438
+%expect 554
 
 %%
 
@@ -2767,9 +2767,9 @@ Loop_instruction:
 				end
 				leave_scope
 			}
-	| TE_REPEAT Identifier_as_lower TE_COLON Expression TE_BLOCK_OPEN {enter_scope; add_scope_iteration ($2)} Compound TE_BLOCK_CLOSE
+	| TE_REPEAT_OPEN Identifier_as_lower TE_COLON Expression TE_BAR {enter_scope; add_scope_iteration ($2)} Compound TE_REPEAT_CLOSE
 			{
-				$$ := ast_factory.new_loop_as (ast_factory.new_symbolic_iteration_as ($2, $3, $4, extract_symbol ($5)), Void, Void, Void, Void, $7, Void, Void, Void, Void, Void, extract_symbol ($1), extract_symbol ($8))
+				$$ := ast_factory.new_loop_as (ast_factory.new_symbolic_iteration_as ($2, $3, $4, $5), Void, Void, Void, Void, $7, Void, Void, Void, Void, Void, extract_symbol ($1), extract_symbol ($8))
 				leave_scope
 			}
 	;
@@ -3391,7 +3391,13 @@ Qualified_binary_expression:
 			{ $$ := ast_factory.new_bin_free_as ($1, extract_id_from_symbol ($2), $3) }
 	|	Expression TE_FORALL Expression -- %prec TE_FREE
 			{ $$ := ast_factory.new_bin_free_as ($1, extract_id_from_symbol ($2), $3) }
-	|	Expression TE_REPEAT Expression -- %prec TE_FREE
+	|	Expression TE_REPEAT_OPEN Expression -- %prec TE_FREE
+			{ $$ := ast_factory.new_bin_free_as ($1, extract_id_from_symbol ($2), $3) }
+	|	Expression TE_REPEAT_CLOSE Expression -- %prec TE_FREE
+			{ $$ := ast_factory.new_bin_free_as ($1, extract_id_from_symbol ($2), $3) }
+	|	Expression TE_BLOCK_OPEN Expression -- %prec TE_FREE
+			{ $$ := ast_factory.new_bin_free_as ($1, extract_id_from_symbol ($2), $3) }
+	|	Expression TE_BLOCK_CLOSE Expression -- %prec TE_FREE
 			{ $$ := ast_factory.new_bin_free_as ($1, extract_id_from_symbol ($2), $3) }
 	;
 
@@ -3452,7 +3458,13 @@ Qualified_factor:
 			{ $$ := ast_factory.new_un_free_as (extract_id_from_symbol ($1), $2) }
 	|	TE_FORALL Expression -- %prec TE_NOT
 			{ $$ := ast_factory.new_un_free_as (extract_id_from_symbol ($1), $2) }
-	|	TE_REPEAT Expression -- %prec TE_NOT
+	|	TE_REPEAT_OPEN Expression -- %prec TE_NOT
+			{ $$ := ast_factory.new_un_free_as (extract_id_from_symbol ($1), $2) }
+	|	TE_REPEAT_CLOSE Expression -- %prec TE_NOT
+			{ $$ := ast_factory.new_un_free_as (extract_id_from_symbol ($1), $2) }
+	|	TE_BLOCK_OPEN Expression -- %prec TE_NOT
+			{ $$ := ast_factory.new_un_free_as (extract_id_from_symbol ($1), $2) }
+	|	TE_BLOCK_CLOSE Expression -- %prec TE_NOT
 			{ $$ := ast_factory.new_un_free_as (extract_id_from_symbol ($1), $2) }
 	;
 

@@ -615,7 +615,8 @@ feature -- Roundtrip: leaf_as
 				c = {EIFFEL_TOKENS}.te_block_open or
 				c = {EIFFEL_TOKENS}.te_exists or
 				c = {EIFFEL_TOKENS}.te_forall or
-				c = {EIFFEL_TOKENS}.te_repeat
+				c = {EIFFEL_TOKENS}.te_repeat_open or
+				c = {EIFFEL_TOKENS}.te_repeat_close
 		do
 			Result := [new_symbol_as (c, s), new_filled_id_as (s), s.line, s.column, s.filename]
 		end

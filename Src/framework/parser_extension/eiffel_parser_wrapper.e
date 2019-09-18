@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			An Eiffel parser wrapper for optionally contain errors/warnings within a parser. Parsers can be
 			performed with a set of configuration options also.
@@ -155,7 +155,7 @@ feature -- Basic operation
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Basic operation
 
-	parse (a_parser: EIFFEL_PARSER; a_text: READABLE_STRING_8; a_ignore_errors: BOOLEAN; a_context_class: ABSTRACT_CLASS_C)
+	parse (a_parser: EIFFEL_PARSER; a_text: STRING_8; a_ignore_errors: BOOLEAN; a_context_class: ABSTRACT_CLASS_C)
 			-- Performs a parse using an Eiffel parser.
 			--
 			-- `a_parser'       : The Eiffel parser to perform a parse with.
@@ -182,7 +182,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Basic operation
 				if a_context_class /= Void then
 					a_parser.set_filename (a_context_class.file_name)
 				end
-				a_parser.parse_from_utf8_string (a_text.as_string_8, a_context_class)
+				a_parser.parse_from_utf8_string (a_text, a_context_class)
 
 				has_error := error_handler.error_level /= l_level
 				if a_ignore_errors then
@@ -201,7 +201,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Basic operation
 			error_handler_has_warning_unchanged: error_handler.has_warning = old error_handler.has_warning
 		end
 
-	parse_with_option (a_parser: EIFFEL_PARSER; a_text: READABLE_STRING_8; a_options: CONF_OPTION; a_ignore_errors: BOOLEAN; a_context_class: ABSTRACT_CLASS_C)
+	parse_with_option (a_parser: EIFFEL_PARSER; a_text: STRING_8; a_options: CONF_OPTION; a_ignore_errors: BOOLEAN; a_context_class: ABSTRACT_CLASS_C)
 			-- Performs a parse using an Eiffel parser.
 			--
 			-- `a_parser'       : The Eiffel parser to perform a parse with.
@@ -242,7 +242,7 @@ feature {NONE} -- Basic operations
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

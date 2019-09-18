@@ -221,7 +221,7 @@ feature -- DPI handling
 				dpi_cache := a_dpi.to_natural_32
 			end
 		ensure
-			dpi_cache_updated: dpi_cache = a_dpi or else dpi_cache /= 0
+			dpi_cache_updated: dpi_cache = a_dpi.to_natural_32 or else dpi_cache /= 0
 		end
 
 	dpi_cache: like dpi

@@ -52,7 +52,6 @@ inherit
 			process_undefine_clause_as,
 			process_redefine_clause_as,
 			process_select_clause_as,
-			process_infix_prefix_as,
 			process_feat_name_id_as,
 			process_feature_name_alias_as,
 
@@ -908,13 +907,6 @@ feature {CLASS_AS} -- Inheritance
 			process_inherit_clause_as (l_as)
 		end
 
-	process_infix_prefix_as (l_as: INFIX_PREFIX_AS)
-		do
-			safe_process_and_print (l_as.frozen_keyword, "", " ")
-			safe_process_and_print (l_as.infix_prefix_keyword, "", " ")
-			safe_process (l_as.alias_name)
-		end
-
 	process_feat_name_id_as (l_as: FEAT_NAME_ID_AS)
 		do
 			safe_process_and_print (l_as.frozen_keyword, "", " ")
@@ -925,13 +917,16 @@ feature {CLASS_AS} -- Inheritance
 		do
 			safe_process_and_print (l_as.frozen_keyword, "", " ")
 			safe_process (l_as.feature_name)
-			if l_as.alias_name /= Void then
-				safe_process_and_print (l_as.alias_keyword (match_list), " ", " ")
-				safe_process (l_as.alias_name)
-				if l_as.has_convert_mark then
-					safe_process_and_print (l_as.convert_keyword (match_list), " ", "")
-				end
+			across
+				l_as.aliases as ic
+			loop
+				safe_process_and_print (l_as.keyword_at (match_list, ic.item.alias_keyword_index), " ", " ")
+				safe_process (ic.item.alias_name)
 			end
+			if l_as.convert_keyword_index > 0 then
+				safe_process_and_print (l_as.convert_keyword (match_list), " ", "")
+			end
+
 		end
 
 feature {CLASS_AS} -- Generics

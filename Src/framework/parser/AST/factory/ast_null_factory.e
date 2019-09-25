@@ -30,14 +30,14 @@ inherit
 			new_exit_condition_pair, new_export_item_as, new_expr_address_as, new_expr_call_as, new_external_as,
 			new_external_lang_as, new_feature_as, new_feature_clause_as, new_feature_list_as,
 			new_feature_name_alias_as, new_feature_name_id_as, new_formal_as, new_formal_dec_as, new_filled_id_as,
-			new_guard_as, new_identifier_list, new_if_as, new_if_expression_as, new_index_as, new_infix_as,
+			new_guard_as, new_identifier_list, new_if_as, new_if_expression_as, new_index_as,
 			new_inline_agent_creation_as, new_inspect_as,
 			new_instr_call_as, new_integer_as, new_integer_hexa_as, new_integer_octal_as,
 			new_integer_binary_as, new_interval_as, new_invariant_as, new_iteration_as,
 			new_like_id_as, new_like_current_as, new_list_dec_as, new_location_as, new_loop_as, new_loop_expr_as,
 			new_named_expression_as, new_nested_as, new_nested_expr_as, new_none_type_as,
 			new_object_test_as, new_old_syntax_object_test_as, new_once_as, new_operand_as,
-			new_paran_as, new_parent_as, new_precursor_as, new_prefix_as,
+			new_paran_as, new_parent_as, new_precursor_as,
 			new_qualified_anchored_type, new_qualified_anchored_type_with_type,
 			new_real_as, new_rename_as, new_require_as, new_require_else_as,
 			new_result_as, new_retry_as, new_reverse_as, new_routine_as,
@@ -56,10 +56,10 @@ inherit
 			create_match_list,
 			reverse_extend_separator, reverse_extend_identifier, reverse_extend_identifier_separator,
 			new_agent_routine_creation_as,
-			new_constraint_triple, new_alias_triple, new_agent_target_triple,
+			new_constraint_triple, new_alias_name_info, new_agent_target_triple,
 			new_keyword_instruction_list_pair, new_keyword_string_pair, new_invariant_pair,
 			new_keyword_as, new_keyword_id_as, new_creation_keyword_as, new_end_keyword_as, new_frozen_keyword_as,
-			new_infix_keyword_as, new_precursor_keyword_as, new_prefix_keyword_as, new_once_string_keyword_as,
+			new_precursor_keyword_as, new_once_string_keyword_as,
 			new_symbol_as, new_square_symbol_as,
 			create_break_as, create_break_as_with_data,
 			new_filled_id_as_with_existing_stub,
@@ -177,8 +177,8 @@ feature -- Roundtrip: New AST node
 		do
 		end
 
-	new_alias_triple (k_as: detachable KEYWORD_AS; n_as: detachable STRING_AS; c_as: detachable KEYWORD_AS): detachable ALIAS_TRIPLE
-			-- New ALIST_TRIPLE.
+	new_alias_name_info (k_as: detachable KEYWORD_AS; n_as: detachable STRING_AS): detachable ALIAS_NAME_INFO
+			-- New ALIAST_NAME_INFO.
 		do
 		end
 
@@ -274,18 +274,8 @@ feature -- Roundtrip: leaf_as
 		do
 		end
 
-	new_infix_keyword_as (a_scn: EIFFEL_SCANNER_SKELETON): detachable KEYWORD_AS
-			-- New KEYWORD AST node for keyword "infix'
-		do
-		end
-
 	new_precursor_keyword_as (a_scn: EIFFEL_SCANNER_SKELETON): detachable KEYWORD_AS
 			-- New KEYWORD AST node for keyword "precursor'
-		do
-		end
-
-	new_prefix_keyword_as (a_scn: EIFFEL_SCANNER_SKELETON): detachable KEYWORD_AS
-			-- New KEYWORD AST node for keyword "prefix'
 		do
 		end
 
@@ -782,7 +772,7 @@ feature -- Access
 		do
 		end
 
-	new_feature_name_alias_as (feature_name: detachable ID_AS; alias_name: detachable STRING_AS; has_convert_mark: BOOLEAN; a_as, c_as: detachable KEYWORD_AS): detachable FEATURE_NAME_ALIAS_AS
+	new_feature_name_alias_as (feature_name: detachable ID_AS; a_alias_list: detachable LIST [ALIAS_NAME_INFO]; c_as: detachable KEYWORD_AS): detachable FEATURE_NAME_ALIAS_AS
 			-- New FEATURE_NAME_ALIAS AST node
 		do
 		end
@@ -839,11 +829,6 @@ feature -- Access
 
 	new_index_as (t: detachable ID_AS; i: detachable EIFFEL_LIST [ATOMIC_AS]; c_as: detachable SYMBOL_AS): detachable INDEX_AS
 			-- Create a new INDEX AST node.
-		do
-		end
-
-	new_infix_as (op: detachable STRING_AS; l: detachable KEYWORD_AS): detachable INFIX_PREFIX_AS
-			-- New INFIX AST node
 		do
 		end
 
@@ -975,11 +960,6 @@ feature -- Access
 
 	new_precursor_as (pk: detachable KEYWORD_AS; n: detachable CLASS_TYPE_AS; p: detachable PARAMETER_LIST_AS): detachable PRECURSOR_AS
 			-- New PRECURSOR AST node
-		do
-		end
-
-	new_prefix_as (op: detachable STRING_AS; l: detachable KEYWORD_AS): detachable INFIX_PREFIX_AS
-			-- New PREFIX AST node
 		do
 		end
 

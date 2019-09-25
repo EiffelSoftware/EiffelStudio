@@ -13,61 +13,55 @@ inherit
 		rename
 			initialize as initialize_id
 		redefine
-			alias_name,
-			has_convert_mark,
-			internal_alias_name,
+			has_alias,
 			is_binary,
-			is_bracket,
+			has_bracket_alias,
 			is_equivalent,
-			is_parentheses,
+			has_parentheses_alias,
 			is_unary,
 			process,
 			set_is_binary,
 			set_is_unary,
+			is_valid_binary,
+			is_valid_unary,
 			first_token,
 			last_token
 		end
 
 create
-	initialize
+	initialize_with_list
 
 feature {NONE} -- Creation
 
-	initialize (feature_id: like feature_name; alias_id: like alias_name; convert_status: BOOLEAN; a_as, c_as: detachable KEYWORD_AS)
-			-- Create feature name object with given characteristics.
+	initialize_with_list (feature_id: like feature_name; a_alias_list: LIST [ALIAS_NAME_INFO]; a_convert_keyword: detachable KEYWORD_AS)
 		require
 			feature_id_not_void: feature_id /= Void
-			alias_id_not_void: alias_id /= Void
-			alias_id_not_empty: not alias_id.value.is_empty
-			valid_alias_name:
-				is_bracket_alias_name (alias_id.value) or else
-				is_parentheses_alias_name (alias_id.value) or else
-				is_valid_binary_operator (alias_id.value) or else
-				is_valid_unary_operator (alias_id.value)
+			alias_list_not_empty: not a_alias_list.is_empty
+			has_alias_name: attached a_alias_list.first.alias_name as a_n and then not a_n.value.is_empty
+		local
+			l_alias: FEATURE_ALIAS_NAME
+			l_alias_name: STRING_AS
 		do
 			initialize_id (feature_id)
-			alias_name := alias_id
-			has_convert_mark := convert_status
-			if not is_bracket and then not is_parentheses then
-					-- Make sure we do not get "prefix %"or%"" or alike
-				if is_valid_unary_operator (alias_id.value) then
-					set_is_unary
-				else
-					set_is_binary
+			if a_convert_keyword /= Void then
+				convert_keyword_index := a_convert_keyword.index
+				has_convert_mark := True
+			end
+			create aliases.make (a_alias_list.count)
+			across
+				a_alias_list as ic
+			loop
+				l_alias_name := ic.item.alias_name
+				if l_alias_name /= Void then
+					create l_alias.make (l_alias_name, ic.item.alias_keyword)
+					aliases.force (l_alias)
+					if l_alias.is_unary then
+						set_is_unary
+					elseif l_alias.is_binary then
+						set_is_binary
+					end
 				end
 			end
-			if a_as /= Void then
-				alias_keyword_index := a_as.index
-			end
-			if c_as /= Void then
-				convert_keyword_index := c_as.index
-			end
-		ensure
-			feature_name_set: feature_name = feature_id
-			alias_name_set: alias_name = alias_id
-			has_convert_mark_set: has_convert_mark = convert_status
-			alias_keyword_set: a_as /= Void implies alias_keyword_index = a_as.index
-			convert_keyword_set: c_as /= Void implies convert_keyword_index = c_as.index
 		end
 
 feature -- Visitor
@@ -78,101 +72,158 @@ feature -- Visitor
 			v.process_feature_name_alias_as (Current)
 		end
 
+feature -- Access: aliases
+
+	has_alias: BOOLEAN
+		do
+			Result := attached aliases as lst and then not lst.is_empty
+		end
+
+	aliases: ARRAYED_LIST [FEATURE_ALIAS_NAME]
+
 feature -- Roundtrip
 
-	alias_keyword_index: INTEGER
-		-- Index of keyword "alias" associated with this structure.
-
-	convert_keyword_index: INTEGER
-		-- Index of keyword "convert" associated with this structure.
-
-	alias_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
-		-- Keyword "alias" associated with this structure.
+	keyword_at (a_list: LEAF_AS_LIST; i: INTEGER): detachable KEYWORD_AS
 		require
 			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
 		do
-			i := alias_keyword_index
 			if a_list.valid_index (i) and then attached {KEYWORD_AS} a_list.i_th (i) as k then
 				Result := k
 			end
 		end
 
 	convert_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
-		-- Keyword "convert" associated with this structure.
 		require
-			a_list_not_void: a_list /= Void
-		local
-			i: INTEGER
+			has_convert_mark
 		do
-			i := convert_keyword_index
-			if a_list.valid_index (i) and then attached {KEYWORD_AS} a_list.i_th (i) as k then
-				Result := k
+			if convert_keyword_index > 0 then
+				Result := keyword_at (a_list, convert_keyword_index)
 			end
 		end
 
 feature -- Access
 
-	alias_name: STRING_AS
-			-- Operator associated with the feature
+	has_convert_mark: BOOLEAN assign set_has_convert_mark
+			-- Is operator marked with "convert"?
 
-	internal_alias_name: ID_AS
-			-- Operator associated with the feature (if any)
-			-- augmented with information about its arity in case of operator alias
+	convert_keyword_index: INTEGER
+			-- Index of convert keyword, if any.
+
+feature -- Status report
+
+	has_bracket_alias: BOOLEAN
+			-- Is feature alias (if any) bracket?
 		do
-			if is_bracket or else is_parentheses then
-				create Result.initialize (alias_name.value)
-			else
-				if is_binary then
-					create Result.initialize (infix_feature_name_with_symbol (alias_name.value))
-				else
-					create Result.initialize (prefix_feature_name_with_symbol (alias_name.value))
+			across
+				aliases as ic
+			until
+				Result
+			loop
+				Result := ic.item.is_bracket_alias
+			end
+		end
+
+	has_parentheses_alias: BOOLEAN
+			-- <Precursor>
+		do
+			across
+				aliases as ic
+			until
+				Result
+			loop
+				Result := ic.item.is_parentheses_alias
+			end
+		end
+
+	bracket_alias_as: detachable STRING_AS
+		require
+			has_bracket_alias
+		do
+			across
+				aliases as ic
+			until
+				Result /= Void
+			loop
+				if ic.item.is_bracket_alias then
+					Result := ic.item.alias_name
 				end
 			end
 		end
 
-	has_convert_mark: BOOLEAN
-			-- Is operator marked with "convert"?
-
-feature -- Status report
-
-	is_bracket: BOOLEAN
-			-- Is feature alias (if any) bracket?
+	parenthesis_alias_as: detachable STRING_AS
+		require
+			has_parentheses_alias
 		do
-			Result := alias_name.value.item (1) = '['
-		end
-
-	is_parentheses: BOOLEAN
-			-- <Precursor>
-		do
-			Result := alias_name.value.item (1) = '('
+			across
+				aliases as ic
+			until
+				Result /= Void
+			loop
+				if ic.item.is_parentheses_alias then
+					Result := ic.item.alias_name
+				end
+			end
 		end
 
 	is_binary: BOOLEAN
 			-- Is feature alias (if any) a binary operator?
 		do
-			Result := not is_bracket and then internal_is_binary
+			Result := not has_bracket_alias and then internal_is_binary
 		end
 
 	is_unary: BOOLEAN
 			-- Is feature alias (if any) an unary operator?
 		do
-			Result := not is_bracket and then not is_parentheses and then not internal_is_binary
+			Result := not has_bracket_alias and then not has_parentheses_alias and then not internal_is_binary
+		end
+
+	is_valid_unary: BOOLEAN
+			-- Is the value of the feature name valid unary operator?
+		do
+			if attached aliases as l_aliases then
+				Result := across l_aliases as ic all ic.item.is_valid_unary end
+			end
+		end
+
+	is_valid_binary: BOOLEAN
+			-- Is the value of the feature name valid unary operator?
+		do
+			if attached aliases as l_aliases then
+				Result := across l_aliases as ic all ic.item.is_valid_binary end
+			end
 		end
 
 feature -- Status setting
+
+	set_has_convert_mark (b: BOOLEAN)
+		do
+			has_convert_mark := b
+		end
 
 	set_is_binary
 			-- Mark operator as binary.
 		do
 			internal_is_binary := True
+			if attached aliases as l_aliases then
+				across
+					l_aliases as ic
+				loop
+					ic.item.set_is_binary
+				end
+			end
 		end
 
 	set_is_unary
 			-- Mark operator as unary.
 		do
 			internal_is_binary := False
+			if attached aliases as l_aliases then
+				across
+					l_aliases as ic
+				loop
+					ic.item.set_is_unary
+				end
+			end
 		end
 
 feature -- Roundtrip/Token
@@ -186,15 +237,36 @@ feature -- Roundtrip/Token
 		end
 
 	last_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
+		local
+			c: CURSOR
+			l_aliases: like aliases
 		do
-			if a_list = Void then
-				Result := alias_name.last_token (a_list)
+			if a_list /= Void and then convert_keyword_index > 0 then
+				Result := keyword_at (a_list, convert_keyword_index)
 			else
-				if a_list /= Void and convert_keyword_index /= 0 then
-					Result := convert_keyword (a_list)
-				else
-					Result := alias_name.last_token (a_list)
+				l_aliases := aliases
+				c := l_aliases.cursor
+				from
+					l_aliases.finish
+				until
+					l_aliases.off or Result /= Void
+				loop
+					if attached l_aliases.item as l_item then
+						if a_list = Void then
+							if attached l_item.alias_name as l_as then
+								Result := l_as.last_token (a_list)
+							end
+						else
+							if attached l_item.alias_name as l_as then
+								Result := l_as.last_token (a_list)
+							elseif a_list /= Void and then l_item.alias_keyword_index /= 0 then
+								Result := keyword_at (a_list, l_item.alias_keyword_index)
+							end
+						end
+					end
+					l_aliases.back
 				end
+				l_aliases.go_to (c)
 			end
 		end
 
@@ -202,12 +274,48 @@ feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN
 			-- Is `other' equivalent to the current object?
+		local
+			c1,c2: CURSOR
+			l_aliases, l_other_aliases: like aliases
 		do
 				-- There is no need to check whether both alias names are Bracket,
 				-- because there is a check that they have the same alias name
-			Result :=
-				Precursor (other) and then equivalent (alias_name, other.alias_name) and then
-				other.has_convert_mark = has_convert_mark and then other.is_binary = is_binary
+			if
+				Precursor (other) and then
+				is_binary = other.is_binary and then
+				has_convert_mark = other.has_convert_mark and then
+				convert_keyword_index = other.convert_keyword_index
+			then
+				l_aliases := aliases
+				l_other_aliases := other.aliases
+				if l_aliases = l_other_aliases then
+						-- Same alias list object.
+				elseif l_aliases /= Void and l_other_aliases /= Void then
+					if l_aliases.count = l_other_aliases.count then
+						Result := True
+						c1 := l_aliases.cursor
+						c2 := l_other_aliases.cursor
+						from
+							l_aliases.start
+							l_other_aliases.start
+						until
+							not Result
+						loop
+							if not equivalent (l_aliases.item.alias_name, l_other_aliases.item.alias_name) then
+								Result := False
+							end
+							l_aliases.forth
+							l_other_aliases.forth
+						end
+						l_aliases.go_to (c1)
+						l_other_aliases.go_to (c2)
+					end
+				elseif aliases = Void then
+					Result := other.aliases = Void
+				else
+					Result := False
+				end
+			end
 		end
 
 feature {NONE} -- Status
@@ -217,11 +325,14 @@ feature {NONE} -- Status
 
 invariant
 
-	alias_name_not_void: alias_name /= Void
-	alias_name_not_empty: not alias_name.value.is_empty
+	has_alias: has_alias
+	has_alias_name_not_empty: attached aliases as lst and then
+		not lst.is_empty and then
+		attached lst.first.alias_name as inv_alias_name and then
+		not inv_alias_name.value.is_empty
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

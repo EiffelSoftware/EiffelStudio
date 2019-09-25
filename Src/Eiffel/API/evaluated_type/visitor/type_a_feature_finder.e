@@ -196,7 +196,7 @@ feature -- Search
 				(s.base_class.feature_of_name_id (n) ~ f or else True) -- Feature can be renamed in formal constraints
 		end
 
-	find_by_alias (n: like {FEATURE_I}.alias_name_id; t: TYPE_A; c: CLASS_C)
+	find_by_alias (n: INTEGER; t: TYPE_A; c: CLASS_C)
 			-- Find feature of alias name ID `n' called on type `t' and make it available in `found_feature'
 			-- assuming that the code is written in `c'.
 		require
@@ -208,7 +208,7 @@ feature -- Search
 			found_features.wipe_out
 			context_class := c
 			formal_generics := Void
-			feature_in_class := agent (name: like {FEATURE_I}.alias_name_id; lookup: CLASS_C): detachable FEATURE_I
+			feature_in_class := agent (name: INTEGER; lookup: CLASS_C): detachable FEATURE_I
 				do
 					if lookup.has_feature_table then
 						Result := lookup.feature_of_alias_id (name)
@@ -219,7 +219,7 @@ feature -- Search
 		ensure
 			same_name:
 				attached found_feature as f implies
-				(f.alias_name_id = n or else True) -- Feature can be renamed in formal constraints
+				(f.has_alias_name_id (n) or else True) -- Feature can be renamed in formal constraints
 			valid_site:
 				attached found_feature as f implies attached found_site
 			feature_from_class:
@@ -466,7 +466,7 @@ feature {TYPE_A} -- Visitor
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

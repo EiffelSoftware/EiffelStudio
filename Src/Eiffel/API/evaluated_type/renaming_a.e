@@ -90,24 +90,28 @@ feature {NONE} -- Initialization
 						-- Add new name to the list.
 					put (l_old_name_id, l_new_name.internal_name.name_id)
 
-					if attached {INFIX_PREFIX_AS} l_new_name as l_infix_prefix_name then
-							-- Check validity of infix/prefix for that particular routine.
-						process_alias (l_rename.new_name, l_old_feature)
-							-- No need to add it, because infix have the same internal name as their alias.
-					elseif attached {FEATURE_NAME_ALIAS_AS} l_new_name as l_alias_name then
+					if attached {FEATURE_NAME_ALIAS_AS} l_new_name as l_feat_name_alias then
 							-- Check validity of alias for that particular routine.
 						process_alias (l_rename.new_name, l_old_feature)
 							-- Because `l_old_name_id' is already there, we do not want to generate an error
 							-- and thus we call `internal_put'.
-						internal_put (l_old_name_id, l_new_name.internal_alias_name_id)
+						across
+							l_feat_name_alias.aliases as ic
+						loop
+							internal_put (l_old_name_id, ic.item.internal_alias_name_id)
+						end
 					end
 
 						-- If previously it was an alias routine, we removed the alias from the original class.
-					if l_old_feature.alias_name_id /= 0 and not l_old_feature.is_infix and not l_old_feature.is_prefix then
+					if attached l_old_feature.alias_name_ids as l_ids and then not l_ids.is_empty then
 						if removed_alias = Void then
 							create removed_alias.make (10)
 						end
-						removed_alias.extend (l_old_feature.alias_name_id)
+						across
+							l_ids as ic
+						loop
+							removed_alias.extend (ic.item)
+						end
 					end
 				end
 				a_renamings.forth
@@ -304,63 +308,63 @@ feature {NONE} -- Implementation
 			a_old_feature_not_void: a_old_feature /= Void
 		local
 			l_argument_count: INTEGER
-			l_operator: STRING
 			l_vfav: VFAV_SYNTAX
 		do
 				-- TODO: This code should be refactored as it occurs almost the same way in
 				-- `{AST_COMPILER_FACTORY}.new_feature_as'
-			l_operator := a_name.alias_name.value
 			l_argument_count := a_old_feature.argument_count
-
-			if a_name.is_bracket then
-				if not a_old_feature.has_return_value or else l_argument_count < 1 then
-						-- Invalid bracket alias
-					create {VFAV2_SYNTAX} l_vfav.make (a_name)
-				elseif a_name.has_convert_mark then
-						-- Invalid convert mark
-					create {VFAV3_SYNTAX} l_vfav.make (a_name)
-				end
-			elseif a_name.is_parentheses then
-				if l_argument_count < 1 then
-						-- Invalid parenthesis alias.
-					create {VFAV4_SYNTAX} l_vfav.make (a_name)
-				elseif a_name.has_convert_mark then
-						-- Invalid convert mark.
-					create {VFAV3_SYNTAX} l_vfav.make (a_name)
-				end
-			elseif
-				a_old_feature.has_return_value and then
-				((l_argument_count = 0 and then a_name.is_valid_unary_operator (l_operator)) or else
-				(l_argument_count = 1 and then a_name.is_valid_binary_operator (l_operator)))
+			if
+				attached {FEATURE_NAME_ALIAS_AS} a_name as l_feat_name_alias_as and then
+				l_feat_name_alias_as.has_alias
 			then
-				if l_argument_count = 1 then
-					if attached {INFIX_PREFIX_AS} a_name as l_infix_prefix then
-						if l_infix_prefix.is_prefix then
-								-- Ok, the feature renamed is not capable to be a prefix, throw an error.
-								-- Invalid operator alias
-								create {VFAV1_SYNTAX} l_vfav.make (a_name)
-						end
-					else
-						a_name.set_is_binary
+				if l_feat_name_alias_as.has_bracket_alias then
+					if not a_old_feature.has_return_value or else l_argument_count < 1 then
+							-- Invalid bracket alias
+						create {VFAV2_SYNTAX} l_vfav.make (l_feat_name_alias_as, l_feat_name_alias_as.bracket_alias_as)
+					elseif l_feat_name_alias_as.has_convert_mark then
+							-- Invalid convert mark
+						create {VFAV3_SYNTAX} l_vfav.make (l_feat_name_alias_as, l_feat_name_alias_as.bracket_alias_as)
 					end
-				elseif a_name.has_convert_mark then
-						-- Invalid convert mark
-					create {VFAV3_SYNTAX} l_vfav.make (a_name)
-				else
-					if attached {INFIX_PREFIX_AS} a_name as l_infix_prefix then
-						if l_infix_prefix.is_infix then
-								-- Ok, the feature renamed is not capable to be an infix, throw an error.
-								-- Invalid operator alias
-								create {VFAV1_SYNTAX} l_vfav.make (a_name)
-						end
-					else
-						a_name.set_is_unary
+				elseif l_feat_name_alias_as.has_parentheses_alias then
+					if l_argument_count < 1 then
+							-- Invalid parenthesis alias.
+						create {VFAV4_SYNTAX} l_vfav.make (l_feat_name_alias_as, l_feat_name_alias_as.parenthesis_alias_as)
+					elseif l_feat_name_alias_as.has_convert_mark then
+							-- Invalid convert mark.
+						create {VFAV3_SYNTAX} l_vfav.make (l_feat_name_alias_as, l_feat_name_alias_as.parenthesis_alias_as)
 					end
-
+				elseif a_old_feature.has_return_value then
+					if l_feat_name_alias_as.has_alias then
+						across
+							l_feat_name_alias_as.aliases as ic
+						until
+							l_vfav /= Void
+						loop
+							if
+								(l_argument_count = 0 and then ic.item.is_valid_unary) or else
+								(l_argument_count = 1 and then ic.item.is_valid_binary)
+							then
+								if l_argument_count = 0 and then l_feat_name_alias_as.has_convert_mark then
+										-- Invalid convert mark
+									create {VFAV3_SYNTAX} l_vfav.make (l_feat_name_alias_as, ic.item.alias_name)
+								end
+							else
+									-- Invalid operator alias
+								create {VFAV1_SYNTAX} l_vfav.make (l_feat_name_alias_as, ic.item.alias_name)
+							end
+						end
+						if l_vfav /= Void then
+								-- error already detected.
+						elseif l_argument_count = 1 then
+							l_feat_name_alias_as.set_is_binary
+						elseif l_feat_name_alias_as.has_convert_mark then
+								-- Invalid convert mark
+							create {VFAV3_SYNTAX} l_vfav.make (l_feat_name_alias_as, Void)
+						else
+							l_feat_name_alias_as.set_is_unary
+						end
+					end
 				end
-			else
-					-- Invalid operator alias
-				create {VFAV1_SYNTAX} l_vfav.make (a_name)
 			end
 			if l_vfav /= Void then
 				error_handler.insert_error (l_vfav)
@@ -422,7 +426,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

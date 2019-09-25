@@ -91,6 +91,7 @@ feature -- Basic operations
 			Result.append_substring (op, prefix_str.count + 1, op.count - quote_str.count)
 		ensure
 			result_not_void: Result /= Void
+			instance_free: class
 		end
 
 	prefix_feature_name_with_symbol_32 (symbol: READABLE_STRING_32): STRING_32

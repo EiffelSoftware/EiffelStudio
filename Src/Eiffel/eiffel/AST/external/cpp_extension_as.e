@@ -132,7 +132,7 @@ feature -- Type check
 						context.init_error (cpp_error)
 						Error_handler.insert_error (cpp_error)
 					end
-					if a_feat.alias_name_id > 0 then
+					if a_feat.has_alias then
 						create cpp_error
 						cpp_error.set_error_message ("The alias clause is not allowed")
 						context.init_error (cpp_error)
@@ -152,7 +152,7 @@ feature -- Type check
 						context.init_error (cpp_error)
 						Error_handler.insert_error (cpp_error)
 					end
-					if a_feat.alias_name_id > 0 then
+					if a_feat.has_alias then
 						create cpp_error
 						cpp_error.set_error_message ("The alias clause is not allowed")
 						context.init_error (cpp_error)
@@ -366,7 +366,7 @@ end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -123,14 +123,6 @@ feature -- Roundtrip/Token
 
 feature -- Properties
 
-	prefix_feature_name_32: detachable STRING_32
-			-- Internal name of the prefixed feature
-		do
-			if attached prefix_feature_name as l_name then
-				Result := encoding_converter.utf8_to_utf32 (l_name)
-			end
-		end
-
 	operator_name_32: STRING_32
 		do
 			Result := encoding_converter.utf8_to_utf32 (operator_name)
@@ -177,7 +169,7 @@ invariant
 	expr_not_void: expr /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

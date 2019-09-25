@@ -84,12 +84,6 @@ feature -- Status report
 			end
 		end
 
-	is_xfix: BOOLEAN
-			-- Is `called_feature' a infix or a prefix feature?
-		do
-			Result := called_feature.is_infix or called_feature.is_prefix
-		end
-
 feature {TEST_CAPTURER} -- Element change
 
 	add_operand (a_operand: STRING; a_type: STRING)
@@ -102,7 +96,7 @@ feature {TEST_CAPTURER} -- Element change
 		end
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

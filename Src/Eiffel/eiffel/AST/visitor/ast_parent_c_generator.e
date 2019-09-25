@@ -124,7 +124,18 @@ feature {NONE} -- Implementation
 							Error_handler.insert_error (l_vhrc2)
 						else
 							l_new_name := l_rename_pair.new_name
-							l_renaming_c.put (create {RENAMING}.make (l_new_name.internal_name.name_id, l_new_name.internal_alias_name_id, l_new_name.has_convert_mark), old_name_id)
+							if
+								attached {FEATURE_NAME_ALIAS_AS} l_new_name as l_new_feat_name and then
+								l_new_feat_name.has_alias
+							then
+								across
+									l_new_feat_name.aliases as ic
+								loop
+									l_renaming_c.put (create {RENAMING}.make (l_new_name.internal_name.name_id, ic.item.internal_alias_name_id, l_new_feat_name.has_convert_mark), old_name_id)
+								end
+							else
+								l_renaming_c.put (create {RENAMING}.make (l_new_name.internal_name.name_id, 0, False), old_name_id)
+							end
 						end
 
 						l_renaming.forth
@@ -246,7 +257,7 @@ feature {NONE} -- Implementation
 	Selec: INTEGER = 3;
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

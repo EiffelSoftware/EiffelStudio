@@ -59,34 +59,36 @@ feature -- Assembler
 		local
 			new_feature_as: FEATURE_AS
 			f_name: FEATURE_NAME
+			f_name_alias_as: FEATURE_NAME_ALIAS_AS
 			eiffel_list: EIFFEL_LIST [FEATURE_NAME]
 			l_op: STRING_AS
 			l_id: ID_AS
 			l_frozen_keyword: KEYWORD_AS
+			l_aliases: ARRAYED_LIST [ALIAS_NAME_INFO]
 		do
 			f_name := a_name
 			new_feature_as := a_ast
 			l_frozen_keyword := f_name.frozen_keyword
-			if target_feature.is_infix then
-				create l_op.initialize (extract_symbol_from_infix (target_feature.feature_name), 0, 0, 0, 0, 0, 0, 0)
-				l_op.set_index (f_name.internal_name.index)
-				create {INFIX_PREFIX_AS} f_name.initialize (l_op, True, Void)
-			elseif target_feature.is_prefix then
-				create l_op.initialize (extract_symbol_from_prefix (target_feature.feature_name), 0, 0, 0, 0, 0, 0, 0)
-				l_op.set_index (f_name.internal_name.index)
-				create {INFIX_PREFIX_AS} f_name.initialize (l_op, False, Void)
-			elseif target_feature.alias_name /= Void then
-				create l_op.initialize (extract_alias_name (target_feature.alias_name), 0, 0, 0, 0, 0, 0, 0)
+			if
+				target_feature.has_alias and then
+				attached target_feature.alias_names as l_alias_names and then
+				not l_alias_names.is_empty and then
+				attached l_alias_names.first as l_first_alias_name
+			then
+				create l_op.initialize (extract_alias_name (l_first_alias_name), 0, 0, 0, 0, 0, 0, 0)
 				l_op.set_index (f_name.internal_name.index)
 				create l_id.initialize (target_feature.feature_name)
 				l_id.set_index (f_name.internal_name.index)
-				create {FEATURE_NAME_ALIAS_AS} f_name.initialize (
-					l_id, l_op, target_feature.has_convert_mark, Void, Void)
+				create l_aliases.make (1)
+				l_aliases.extend (create {ALIAS_NAME_INFO}.make (Void, l_op))
+				create f_name_alias_as.initialize_with_list (l_id, l_aliases, Void)
+				f_name_alias_as.has_convert_mark := target_feature.has_convert_mark
 				if target_feature.is_binary then
-					f_name.set_is_binary
+					f_name_alias_as.set_is_binary
 				elseif target_feature.is_unary then
-					f_name.set_is_unary
+					f_name_alias_as.set_is_unary
 				end
+				f_name := f_name_alias_as
 			else
 				create l_id.initialize (target_feature.feature_name)
 				l_id.set_index (f_name.internal_name.index)
@@ -116,20 +118,16 @@ feature {NONE} -- Implementation
 		end
 
 	deferred_content_with_index (a_index: INTEGER): ROUT_BODY_AS
-			-- Deffered content with index of the first token set.
-		local
-			l_deferred: DEFERRED_AS
+			-- Deferred content with index of the first token set.
 		do
-			l_deferred ?= deferred_content.twin
-			check
-				l_deferred_not_void: l_deferred /= Void
+			check is_deferred_as: attached {DEFERRED_AS} deferred_content.twin as l_deferred then
+				l_deferred.set_index (a_index)
+				Result := l_deferred
 			end
-			l_deferred.set_index (a_index)
-			Result := l_deferred
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -813,13 +813,6 @@ feature
 			safe_process (l_as.body)
 		end
 
-	process_infix_prefix_as (l_as: INFIX_PREFIX_AS)
-		do
-			safe_process (l_as.frozen_keyword)
-			safe_process (l_as.infix_prefix_keyword)
-			safe_process (l_as.alias_name)
-		end
-
 	process_feat_name_id_as (l_as: FEAT_NAME_ID_AS)
 		do
 			safe_process (l_as.frozen_keyword)
@@ -830,13 +823,16 @@ feature
 		do
 			safe_process (l_as.frozen_keyword)
 			safe_process (l_as.feature_name)
-			if l_as.alias_name /= Void then
-				safe_process (l_as.alias_keyword (match_list))
-				safe_process (l_as.alias_name)
-				if l_as.has_convert_mark then
-					safe_process (l_as.convert_keyword (match_list))
-				end
+			across
+				l_as.aliases as ic
+			loop
+				safe_process (l_as.keyword_at (match_list, ic.item.alias_keyword_index))
+				safe_process (ic.item.alias_name)
 			end
+			if l_as.convert_keyword_index > 0 then
+				safe_process (l_as.convert_keyword (match_list))
+			end
+
 		end
 
 	process_feature_list_as (l_as: FEATURE_LIST_AS)
@@ -1548,7 +1544,7 @@ invariant
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

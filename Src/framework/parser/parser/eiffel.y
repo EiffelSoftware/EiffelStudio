@@ -1,4 +1,3 @@
-
 %{
 note
 
@@ -69,10 +68,8 @@ create
 %token <detachable KEYWORD_AS> TE_END
 %token <detachable KEYWORD_AS> TE_FROZEN
 %token <detachable KEYWORD_AS> TE_PARTIAL_CLASS	
-%token <detachable KEYWORD_AS> TE_INFIX
 %token <detachable KEYWORD_AS> TE_CREATION
 %token <detachable KEYWORD_AS> TE_PRECURSOR
-%token <detachable KEYWORD_AS> TE_PREFIX
 
 %token <detachable KEYWORD_AS> TE_AGENT TE_ALIAS TE_ALL TE_AND TE_AS
 %token <detachable KEYWORD_AS> TE_CHECK TE_CLASS TE_CONVERT
@@ -97,7 +94,8 @@ create
 
 %type <detachable SYMBOL_AS>ASemi
 %type <detachable KEYWORD_AS> Alias_mark Is_keyword
-%type <detachable ALIAS_TRIPLE>Alias
+%type <detachable ALIAS_NAME_INFO>Alias
+%type <detachable CONSTRUCT_LIST [ALIAS_NAME_INFO]> Alias_list
 %type <detachable PAIR[KEYWORD_AS, EIFFEL_LIST [INSTRUCTION_AS]]> Rescue
 
 %type <detachable PAIR[KEYWORD_AS, ID_AS]> Assigner_mark_opt
@@ -143,7 +141,7 @@ create
 %type <detachable FORMAL_AS>			Formal_parameter
 %type <detachable FORMAL_DEC_AS>		Formal_generic
 %type <detachable GUARD_AS>			Guard
-%type <detachable ID_AS>				Class_or_tuple_identifier Class_identifier Tuple_identifier Identifier_as_lower Free_operator Feature_name_for_call
+%type <detachable ID_AS>				Class_or_tuple_identifier Class_identifier Tuple_identifier Identifier_as_lower Free_operator 
 %type <detachable IF_AS>				Conditional
 %type <detachable IF_EXPRESSION_AS>			Conditional_expression
 %type <detachable INDEX_AS>			Index_clause Index_clause_impl Note_entry Note_entry_impl
@@ -168,7 +166,7 @@ create
 %type <detachable ROUT_BODY_AS>		Routine_body
 %type <detachable ROUTINE_AS>			Routine
 %type <detachable ROUTINE_CREATION_AS>	Agent
-%type <detachable STRING_AS>			Manifest_string Non_empty_string Default_manifest_string Typed_manifest_string Infix_operator Prefix_operator Alias_name
+%type <detachable STRING_AS>			Manifest_string Non_empty_string Default_manifest_string Typed_manifest_string Infix_operator Alias_name
 %type <detachable SEPARATE_INSTRUCTION_AS>	Separate_instruction
 %type <detachable TAGGED_AS>			Assertion_clause
 %type <detachable TUPLE_AS>			Manifest_tuple
@@ -179,7 +177,7 @@ create
 %type <detachable TYPE_DEC_AS>			Entity_declaration_group
 %type <detachable LIST_DEC_AS>			Local_declaration_group
 %type <detachable VARIANT_AS>			Variant Variant_opt
-%type <detachable FEATURE_NAME>		Infix Prefix Feature_name Extended_feature_name New_feature
+%type <detachable FEATURE_NAME>			Feature_name Extended_feature_name New_feature
 
 %type <detachable EIFFEL_LIST [ATOMIC_AS]>			Index_terms Note_values
 %type <detachable EIFFEL_LIST [CASE_AS]>			When_part_list_opt When_part_list
@@ -224,7 +222,7 @@ create
 %type <detachable CONSTRAINT_LIST_AS> Multiple_constraint_list
 %type <detachable CONSTRAINING_TYPE_AS> Single_constraint
 
-%expect 554
+%expect 549
 
 %%
 
@@ -818,51 +816,37 @@ New_feature: Extended_feature_name
 
 Extended_feature_name: Feature_name
 			{ $$ := $1 }
-	|	Identifier_as_lower Alias
+	|	Identifier_as_lower Add_counter Alias_list Remove_counter Alias_mark
 			{
-				if attached $2 as l_alias then
-					$$ := ast_factory.new_feature_name_alias_as ($1, l_alias.alias_name, has_convert_mark, l_alias.alias_keyword, l_alias.convert_keyword)
-				else
-					$$ := ast_factory.new_feature_name_alias_as ($1, Void, has_convert_mark, Void, Void)
+				if attached $3 as l_aliases and then not l_aliases.is_empty then
+					$$ := ast_factory.new_feature_name_alias_as ($1, l_aliases, $5)
 				end
-				
 			}
 	;
 
 Feature_name: Identifier_as_lower
 			{ $$ := ast_factory.new_feature_name_id_as ($1) }
-	|	Infix
-			{ $$ := $1 }
-	|	Prefix
-			{ $$ := $1 }
 	;
 
-Infix: TE_INFIX Infix_operator
+Alias_list: Alias
 			{
-				$$ := ast_factory.new_infix_as ($2, $1)
-				if has_syntax_warning then
-					report_one_warning (
-						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
-						once "Use the alias form of the infix routine."))
+				$$ := ast_factory.new_alias_list (counter_value + 1)
+				if attached $$ as l_list and then attached $1 as l_val then
+					l_list.extend (l_val)
+				end
+			}
+	|	Alias Increment_counter Alias_list
+			{
+				$$ := $3
+				if attached $$ as l_list and then attached $1 as l_val then
+					l_list.put_front (l_val)
 				end
 			}
 	;
 
-
-Prefix: TE_PREFIX Prefix_operator
+Alias: TE_ALIAS Alias_name
 			{
-				$$ := ast_factory.new_prefix_as ($2, $1)
-				if has_syntax_warning then
-					report_one_warning (
-						create {SYNTAX_WARNING}.make (token_line ($1), token_column ($1), filename,
-						once "Use the alias form of the prefix routine."))
-				end
-			}
-	;
-
-Alias: TE_ALIAS Alias_name Alias_mark
-			{
-				$$ := ast_factory.new_alias_triple ($1, $2, $3)
+				$$ := ast_factory.new_alias_name_info ($1, $2)
 			}
 	;
 
@@ -3031,7 +3015,7 @@ Agent:
 			$$ := ast_factory.new_inline_agent_creation_as (
 				ast_factory.new_body_as ($2, $4, Void, $6, $3, Void, Void, Void), $8, $1)
 		}
-	|	TE_AGENT Feature_name_for_call Delayed_actuals
+	|	TE_AGENT Identifier_as_lower Delayed_actuals
 		{
 			inspect id_level when Precondition_level, Postcondition_level then
 				set_has_unqualified_call_in_assertion (True)
@@ -3041,7 +3025,7 @@ Agent:
 			$$ := ast_factory.new_agent_routine_creation_as (
 				Void, $2, $3, False, $1, Void)
 		}
-	|	TE_AGENT Agent_target TE_DOT Feature_name_for_call Delayed_actuals
+	|	TE_AGENT Agent_target TE_DOT Identifier_as_lower Delayed_actuals
 		{
 			if attached $2 as l_target then
 				$$ := ast_factory.new_agent_routine_creation_as (l_target.operand, $4, $5, True, $1, $3)
@@ -3605,23 +3589,7 @@ Call_on_feature_access: Feature_access TE_DOT Feature_access
 			{ $$ := ast_factory.new_nested_as ($1, $3, $2) }
 	;
 
-Feature_name_for_call: Identifier_as_lower
-			{ $$ := $1}
-	|	Infix
-			{
-				if attached $1 as l_infix then
-					$$ := l_infix.internal_name
-				end
-			}
-	|	Prefix
-			{
-				if attached $1 as l_prefix then
-					$$ := l_prefix.internal_name
-				end
-			}
-	;
-
-A_feature: Feature_name_for_call Parameters
+A_feature: Identifier_as_lower Parameters
 			{
 				inspect id_level
 				when Normal_level then
@@ -3635,7 +3603,7 @@ A_feature: Feature_name_for_call Parameters
 			}
 	;
 
-Feature_access: Feature_name_for_call Parameters
+Feature_access: Identifier_as_lower Parameters
 			{ $$ := ast_factory.new_access_feat_as ($1, $2) }
 	;
 
@@ -4093,27 +4061,6 @@ Non_empty_string: TE_STRING
 			{ $$ := $1 }
 	;
 
-Prefix_operator: TE_STR_MINUS
-			{ $$ := $1 }
-	|	TE_STR_PLUS
-			{ $$ := $1 }
-	|	TE_STR_NOT
-			{
-					-- Alias names should always be taken in their lower case version
-				if attached $1 as l_str_not then
-					l_str_not.value.to_lower
-					$$ := l_str_not
-				end
-			}
-	|	TE_STR_FREE
-			{
-					-- Alias names should always be taken in their lower case version
-				if attached $1 as l_str_free then
-					l_str_free.value.to_lower
-					$$ := l_str_free
-				end
-			}
-	;
 
 Infix_operator: TE_STR_LT
 			{ $$ := $1 }

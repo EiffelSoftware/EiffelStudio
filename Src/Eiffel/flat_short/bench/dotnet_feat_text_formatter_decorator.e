@@ -206,8 +206,8 @@ feature -- Element change
 		local
 			l_feature: E_FEATURE
 			l_feature_name: STRING
-			l_is_str: BOOLEAN
 		do
+				-- FIXME: check if aliases are handled [2019-09-25]
 			begin
 			new_expression
 			set_separator (ti_comma)
@@ -215,45 +215,24 @@ feature -- Element change
 			text_formatter.add_indent
 
 
-				-- Put either `frozen, deferred, infix or prefix'.
+				-- Put either `frozen, deferred`.
 			put_feature_qualification
 
-			if current_feature.is_infix then
-				l_is_str := True
-				l_feature_name := infix_feature_name_with_symbol (name_of_current_feature)
-			elseif current_feature.is_prefix then
-				l_is_str := True
-				l_feature_name := prefix_feature_name_with_symbol (name_of_current_feature)
-			else
-				l_feature_name := name_of_current_feature
-			end
+			l_feature_name := name_of_current_feature
 
 			text_formatter.process_feature_dec_item (l_feature_name, True)
 
 			if
 				current_class /= Void and then current_class.has_feature_table and then
-				current_class.feature_table.has (l_feature_name)
+				current_class.feature_table.has (l_feature_name) and then
+				attached {E_FEATURE} current_class.feature_table.item (l_feature_name).api_feature (current_class.class_id) as f
 			then
+				l_feature := f
 					-- Feature should be clickable
-				l_feature ?= current_class.feature_table.item (l_feature_name).
-					api_feature (current_class.class_id)
-			end
-			if l_feature /= Void then
-				if l_is_str then
-					text_formatter.process_symbol_text (ti_double_quote)
-					text_formatter.process_operator_text (dotnet_name_of_current_feature, l_feature)
-					text_formatter.process_symbol_text (ti_double_quote)
-				else
-					text_formatter.process_feature_text (dotnet_name_of_current_feature, l_feature, False)
-				end
+				text_formatter.process_feature_text (dotnet_name_of_current_feature, l_feature, False)
 			else
-				if l_is_str then
-					text_formatter.process_symbol_text (ti_double_quote)
-					text_formatter.process_local_text (Void, dotnet_name_of_current_feature)
-					text_formatter.process_symbol_text (ti_double_quote)
-				else
-					text_formatter.process_local_text (Void, dotnet_name_of_current_feature)
-				end
+				l_feature := Void
+				text_formatter.process_local_text (Void, dotnet_name_of_current_feature)
 			end
 			if
 				not use_dotnet_name_only and
@@ -432,7 +411,7 @@ feature -- Element change
 feature {NONE} -- Element Change
 
 	put_feature_qualification
-			-- Put current feature qualification: frozen, deferred, infix or prefix.
+			-- Put current feature qualification: frozen, deferred.
 		require
 			text_formatter_not_void: text_formatter /= Void
 		do
@@ -444,15 +423,6 @@ feature {NONE} -- Element Change
 			if current_feature.is_deferred then
 					-- Check if feature is deferred.
 				text_formatter.process_keyword_text (Ti_deferred_keyword, Void)
-				text_formatter.add_space
-			end
-			if current_feature.is_infix then
-					-- Check if feature is infix.
-				text_formatter.process_keyword_text (Ti_infix_keyword, Void)
-				text_formatter.add_space
-			elseif current_feature.is_prefix then
-					-- Check if feature is prefix.
-				text_formatter.process_keyword_text (Ti_prefix_keyword, Void)
 				text_formatter.add_space
 			end
 		end
@@ -661,11 +631,7 @@ feature {NONE} -- Element Change
 		do
 				-- Adapt the name of the routine we are searching to what
 				-- the CONSUMED_ENTITY expect.
-			if a_feature.is_infix or a_feature.is_prefix then
-				l_name := a_feature.alias_symbol
-			else
-				l_name := a_feature.name
-			end
+			l_name := a_feature.name
 				-- Search for all entities
 			l_entities := a_consumed_type.flat_entities
 			from
@@ -804,7 +770,7 @@ invariant
 	do_flat: not is_short
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

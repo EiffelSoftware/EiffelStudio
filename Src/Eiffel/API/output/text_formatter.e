@@ -517,28 +517,8 @@ feature -- Text operator
 
 	add_sectioned_feature_name (e_feature: E_FEATURE)
 			-- Put feature name of `e_feature', taking reserved words into consideration.
-		local
-			l_is_prefix_infix: BOOLEAN
-			l_prefix_infix: STRING_32
 		do
-				-- Prepare prefix/infix text.
-			if e_feature.is_prefix then
-				l_prefix_infix := e_feature.prefix_symbol_32
-				l_is_prefix_infix := True
-			elseif e_feature.is_infix then
-				l_prefix_infix := e_feature.infix_symbol_32
-				l_is_prefix_infix := True
-			end
-
-			if l_is_prefix_infix then
-				process_keyword_text (ti_prefix_keyword, Void)
-				add_space
-				l_prefix_infix.prepend_string_general (ti_quote)
-				l_prefix_infix.append_string_general (ti_quote)
-				process_operator_text (l_prefix_infix, e_feature)
-			else
-				add_feature_name (e_feature.name_32, e_feature.written_class)
-			end
+			add_feature_name (e_feature.name_32, e_feature.written_class)
 		end
 
 	add_quoted_text (s: READABLE_STRING_GENERAL)
@@ -658,7 +638,7 @@ feature {NONE} -- Implementation
 			-- Internal context group
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

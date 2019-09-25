@@ -978,7 +978,7 @@ feature {NONE} -- Implementation
 				end
 				if not expr_type_visiting then
 					if l_feat /= Void then
-							-- This includes the case where a qualified call on a feature which was renamed into an infix (or aliased).
+							-- This includes the case where a qualified call on a feature which was renamed into an alias).
 						if l_as.is_qualified or l_text_formatter_decorator.dot_needed then
 							l_text_formatter_decorator.process_symbol_text (ti_dot)
 						end
@@ -1865,13 +1865,9 @@ feature {NONE} -- Implementation
 				end
 			end
 			if not has_error_internal then
-				if l_feat.is_prefix or l_feat.has_alias_name then
+				if l_feat.has_alias_name then
 					if not expr_type_visiting then
-						if l_feat.is_prefix then
-							l_name := l_feat.prefix_symbol_32
-						else
-							l_name := l_feat.alias_symbol_32
-						end
+						l_name := l_as.operator_name_32
 						if in_bench_mode then
 							l_text_formatter_decorator.process_operator_text (l_name, l_feat)
 						elseif (l_name @ 1).is_character_8 and then (l_name @ 1).to_character_8.is_alpha then
@@ -1882,10 +1878,6 @@ feature {NONE} -- Implementation
 						l_text_formatter_decorator.put_space
 					end
 					l_as.expr.process (Current)
-				elseif l_feat.is_infix then
-					check
-						is_infix: False
-					end
 				else
 					l_as.expr.process (Current)
 					if not expr_type_visiting then
@@ -2023,12 +2015,8 @@ feature {NONE} -- Implementation
 			if not expr_type_visiting then
 				if not has_error_internal then
 					check l_feat_not_void: l_feat /= Void end
-					if l_feat.is_infix or l_feat.has_alias_name then
-						if l_feat.is_infix then
-							l_name := l_feat.infix_symbol_32
-						else
-							l_name := l_feat.alias_symbol_32
-						end
+					if l_feat.has_alias_name then
+						l_name := l_as.operator_name_32
 						l_text_formatter_decorator.put_space
 						if in_bench_mode then
 							l_text_formatter_decorator.process_operator_text (l_name, l_feat)
@@ -2383,130 +2371,9 @@ feature {NONE} -- Implementation
 			l_text_formatter_decorator.commit
 		end
 
-	process_infix_prefix_as (l_as: INFIX_PREFIX_AS)
-		local
-			l_feat: E_FEATURE
-			l_is_infix, l_is_prefix: BOOLEAN
-			l_new_name: BOOLEAN
-			l_text_formatter_decorator: like text_formatter_decorator
-		do
-			l_text_formatter_decorator := text_formatter_decorator
-			check
-				not_expr_type_visiting: not expr_type_visiting
-			end
-			if not has_error_internal then
-				if current_feature = Void then
-						-- Processing other part of a class, not in a feature.
-					if last_parent /= Void then
-						l_feat := last_parent.feature_with_id (l_as.internal_name)
-					else
-						l_feat := current_class.feature_with_id (l_as.internal_name)
-							-- Renaming in formal declaration.
-						if processing_formal_dec then
-							if renamed_feature = Void then
-									-- Old name
-								check old_name_feature_not_void: l_feat /= Void end
-								renamed_feature := l_feat
-							else
-									-- New name
-								l_feat := renamed_feature
-								renamed_feature := Void
-								l_new_name := True
-							end
-						end
-					end
-				else
-						-- Processing name of a feature.
-					l_feat := feature_in_class (current_class, current_feature.rout_id_set)
-				end
-			end
-
-			if not has_error_internal and then not processing_parents then
-				check
-					l_feat_not_void: l_feat /= Void
-				end
-				if not processing_none_feature_part and then l_feat.is_frozen then
-					l_text_formatter_decorator.process_keyword_text (ti_frozen_keyword, Void)
-					l_text_formatter_decorator.put_space
-				end
-				if processing_formal_dec and then l_new_name then
-						-- Print visual name of the new renamed feature in formal declaration.
-					l_is_infix := l_as.is_infix
-					l_is_prefix := l_as.is_prefix
-				else
-					l_is_infix := l_feat.is_infix
-					l_is_prefix := l_feat.is_prefix
-				end
-				if l_is_infix then
-					l_text_formatter_decorator.process_keyword_text (ti_infix_keyword, Void)
-					l_text_formatter_decorator.put_space
-					l_text_formatter_decorator.set_without_tabs
-					l_text_formatter_decorator.process_symbol_text (ti_double_quote)
-					if processing_formal_dec then
-						l_text_formatter_decorator.process_operator_text (l_as.visual_name_32, l_feat)
-					else
-						l_text_formatter_decorator.process_operator_text (l_feat.extract_symbol_from_infix_32 (l_feat.name_32), l_feat)
-					end
-					l_text_formatter_decorator.process_symbol_text (ti_double_quote)
-				elseif l_is_prefix then
-					l_text_formatter_decorator.process_keyword_text (ti_prefix_keyword, Void)
-					l_text_formatter_decorator.put_space
-					l_text_formatter_decorator.set_without_tabs
-					l_text_formatter_decorator.process_symbol_text (ti_double_quote)
-					if processing_formal_dec then
-						l_text_formatter_decorator.process_operator_text (l_as.visual_name_32, l_feat)
-					else
-						l_text_formatter_decorator.process_operator_text (l_feat.extract_symbol_from_prefix_32 (l_feat.name_32), l_feat)
-					end
-					l_text_formatter_decorator.process_symbol_text (ti_double_quote)
-				else
-					if processing_formal_dec then
-						l_text_formatter_decorator.process_feature_text (l_as.visual_name_32, l_feat, False)
-					else
-						l_feat.append_name (l_text_formatter_decorator)
-					end
-				end
-			else
-				if not processing_none_feature_part and then l_as.is_frozen then
-					l_text_formatter_decorator.process_keyword_text (ti_frozen_keyword, Void)
-					l_text_formatter_decorator.put_space
-				end
-				if l_as.is_infix then
-					l_text_formatter_decorator.process_keyword_text (ti_infix_keyword, Void)
-					l_text_formatter_decorator.put_space
-					l_text_formatter_decorator.set_without_tabs
-					l_text_formatter_decorator.process_symbol_text (ti_double_quote)
-					if not has_error_internal then
-						l_text_formatter_decorator.process_operator_text (l_as.visual_name_32, l_feat)
-					else
-						l_text_formatter_decorator.process_basic_text (l_as.visual_name_32)
-					end
-					l_text_formatter_decorator.process_symbol_text (ti_double_quote)
-				elseif l_as.is_prefix then
-					l_text_formatter_decorator.process_keyword_text (ti_prefix_keyword, Void)
-					l_text_formatter_decorator.put_space
-					l_text_formatter_decorator.set_without_tabs
-					l_text_formatter_decorator.process_symbol_text (ti_double_quote)
-					if not has_error_internal then
-						l_text_formatter_decorator.process_operator_text (l_as.visual_name_32, l_feat)
-					else
-						l_text_formatter_decorator.process_basic_text (l_as.visual_name_32)
-					end
-					l_text_formatter_decorator.process_symbol_text (ti_double_quote)
-				else
-					if not has_error_internal then
-						l_feat.append_name (l_text_formatter_decorator)
-					else
-						l_text_formatter_decorator.process_basic_text (l_as.visual_name_32)
-					end
-				end
-			end
-		end
-
 	process_feat_name_id_as (l_as: FEAT_NAME_ID_AS)
 		local
 			l_feat: E_FEATURE
-			l_is_infix, l_is_prefix: BOOLEAN
 			l_new_name: BOOLEAN
 			l_text_formatter_decorator: like text_formatter_decorator
 		do
@@ -2552,76 +2419,20 @@ feature {NONE} -- Implementation
 						l_text_formatter_decorator.process_keyword_text (ti_frozen_keyword, Void)
 						l_text_formatter_decorator.put_space
 					end
-					if processing_formal_dec and then l_new_name then
-							-- Print visual name of the new renamed feature in formal declaration.
-						l_is_infix := l_as.is_infix
-						l_is_prefix := l_as.is_prefix
+					if processing_formal_dec then
+						l_text_formatter_decorator.process_feature_text (l_as.visual_name_32, l_feat, False)
 					else
-						l_is_infix := l_feat.is_infix
-						l_is_prefix := l_feat.is_prefix
-					end
-					if l_is_infix then
-						l_text_formatter_decorator.process_keyword_text (ti_infix_keyword, Void)
-						l_text_formatter_decorator.put_space
-						l_text_formatter_decorator.set_without_tabs
-						l_text_formatter_decorator.process_symbol_text (ti_double_quote)
-						if processing_formal_dec then
-							l_text_formatter_decorator.process_operator_text (l_as.visual_name_32, l_feat)
-						else
-							l_text_formatter_decorator.process_operator_text (l_feat.infix_symbol_32, l_feat)
-						end
-						l_text_formatter_decorator.process_symbol_text (ti_double_quote)
-					elseif l_is_prefix then
-						l_text_formatter_decorator.process_keyword_text (ti_prefix_keyword, Void)
-						l_text_formatter_decorator.put_space
-						l_text_formatter_decorator.set_without_tabs
-						l_text_formatter_decorator.process_symbol_text (ti_double_quote)
-						if processing_formal_dec then
-							l_text_formatter_decorator.process_operator_text (l_as.visual_name_32, l_feat)
-						else
-							l_text_formatter_decorator.process_operator_text (l_feat.prefix_symbol_32, l_feat)
-						end
-						l_text_formatter_decorator.process_symbol_text (ti_double_quote)
-					else
-						if processing_formal_dec then
-							l_text_formatter_decorator.process_feature_text (l_as.visual_name_32, l_feat, False)
-						else
-							l_feat.append_name (l_text_formatter_decorator)
-						end
+						l_feat.append_name (l_text_formatter_decorator)
 					end
 				else
 					if not processing_none_feature_part and then l_as.is_frozen then
 						l_text_formatter_decorator.process_keyword_text (ti_frozen_keyword, Void)
 						l_text_formatter_decorator.put_space
 					end
-					if l_as.is_infix then
-						l_text_formatter_decorator.process_keyword_text (ti_infix_keyword, Void)
-						l_text_formatter_decorator.put_space
-						l_text_formatter_decorator.set_without_tabs
-						l_text_formatter_decorator.process_symbol_text (ti_double_quote)
-						if not has_error_internal then
-							l_text_formatter_decorator.process_operator_text (l_as.visual_name_32, l_feat)
-						else
-							l_text_formatter_decorator.process_basic_text (l_as.visual_name_32)
-						end
-						l_text_formatter_decorator.process_symbol_text (ti_double_quote)
-					elseif l_as.is_prefix then
-						l_text_formatter_decorator.process_keyword_text (ti_prefix_keyword, Void)
-						l_text_formatter_decorator.put_space
-						l_text_formatter_decorator.set_without_tabs
-						l_text_formatter_decorator.process_symbol_text (ti_double_quote)
-						if not has_error_internal then
-							l_text_formatter_decorator.process_operator_text (l_as.visual_name_32, l_feat)
-						else
-							l_text_formatter_decorator.process_basic_text (l_as.visual_name_32)
-						end
-						l_text_formatter_decorator.process_symbol_text (ti_double_quote)
+					if not has_error_internal then
+						l_feat.append_name (l_text_formatter_decorator)
 					else
-						if not has_error_internal then
-							l_feat.append_name (l_text_formatter_decorator)
-						else
-							l_text_formatter_decorator.process_basic_text (l_as.visual_name_32)
-						end
+						l_text_formatter_decorator.process_basic_text (l_as.visual_name_32)
 					end
 				end
 			else
@@ -2674,21 +2485,23 @@ feature {NONE} -- Implementation
 			end
 
 			if has_error_internal or else l_feat.has_alias_name then
-				l_text_formatter_decorator.put_space
-				l_text_formatter_decorator.process_keyword_text (ti_alias_keyword, Void)
-				l_text_formatter_decorator.put_space
-				l_text_formatter_decorator.process_symbol_text (ti_double_quote)
-				if not has_error_internal then
-					l_text_formatter_decorator.process_operator_text (l_feat.alias_symbol_32, l_feat)
-				else
-					l_text_formatter_decorator.process_basic_text (l_as.alias_name.value_32)
-				end
-				l_text_formatter_decorator.process_symbol_text (ti_double_quote)
-			end
+				if attached l_feat.aliases as l_aliases then
+					across
+						l_aliases as ic
+					loop
+						l_text_formatter_decorator.put_space
+						l_text_formatter_decorator.process_keyword_text (ti_alias_keyword, Void)
+						l_text_formatter_decorator.put_space
+						l_text_formatter_decorator.process_symbol_text (ti_double_quote)
+						if not has_error_internal then
 
-			if l_as.has_convert_mark then
-				l_text_formatter_decorator.put_space
-				l_text_formatter_decorator.process_keyword_text (ti_convert_keyword, Void)
+							l_text_formatter_decorator.process_operator_text (l_as.extract_alias_name_32 (ic.item.alias_name_32), l_feat)
+						else
+							l_text_formatter_decorator.process_basic_text (l_as.extract_alias_name_32 (ic.item.alias_name_32))
+						end
+						l_text_formatter_decorator.process_symbol_text (ti_double_quote)
+					end
+				end
 			end
 		end
 
@@ -5260,7 +5073,7 @@ note
 	ca_ignore: "CA033", "CA033 — very long class"
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

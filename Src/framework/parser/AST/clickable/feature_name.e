@@ -79,12 +79,12 @@ feature -- Status report
 		do
 		end
 
-	is_bracket: BOOLEAN
+	has_bracket_alias: BOOLEAN
 			-- Is feature alias (if any) bracket?
 		do
 		end
 
-	is_parentheses: BOOLEAN
+	has_parentheses_alias: BOOLEAN
 			-- Is feature alias (if any) parentheses?
 		do
 		end
@@ -102,45 +102,19 @@ feature -- Status report
 	is_feature: BOOLEAN = True
 			-- Does the Current AST represent a feature?
 
-	internal_alias_name_id: INTEGER
-			-- `internal_alias_name' ID in NAMES_HEAP
-		do
-			if attached internal_alias_name as l_alias then
-				Result := l_alias.name_id
-			end
-		ensure
-			has_alias: alias_name /= Void implies Result > 0
-			has_no_alias: alias_name = Void implies Result = 0
-		end
-
-	internal_alias_name: detachable ID_AS
-			-- Operator associated with the feature (if any)
-			-- augmented with information about its arity
+	has_alias: BOOLEAN
+			-- Has an alias?
 		deferred
-		ensure
-			consistent_result: (Result /= Void) = (alias_name /= Void)
-		end
-
-	alias_name: detachable STRING_AS
-			-- Operator name associated with the feature (if any)
-		deferred
-		end
-
-	has_convert_mark: BOOLEAN
-			-- Is operator marked with "convert"?
-		do
 		end
 
 	is_valid_unary: BOOLEAN
 			-- Is the value of the feature name valid unary operator?
-		do
-			Result := attached alias_name as l_name and then is_valid_unary_operator (l_name.value)
+		deferred
 		end
 
 	is_valid_binary: BOOLEAN
 			-- Is the value of the feature name valid unary operator?
-		do
-			Result := attached alias_name as l_name and then is_valid_binary_operator (l_name.value)
+		deferred
 		end
 
 feature -- Status report
@@ -170,9 +144,9 @@ feature -- Status setting
 	set_is_binary
 			-- Mark alias operator as binary.
 		require
-			has_alias: alias_name /= Void
-			not_is_bracket: not is_bracket
-			not_is_parentheses: not is_parentheses
+			has_alias: has_alias
+			not_is_bracket: not has_bracket_alias
+			not_is_parentheses: not has_parentheses_alias
 			not_is_prefix: not is_prefix
 			is_valid_binary: is_valid_binary
 		do
@@ -183,9 +157,9 @@ feature -- Status setting
 	set_is_unary
 			-- Mark alias operator as unary.
 		require
-			has_alias: alias_name /= Void
-			not_is_bracket: not is_bracket
-			not_is_parentheses: not is_parentheses
+			has_alias: has_alias
+			not_is_bracket: not has_bracket_alias
+			not_is_parentheses: not has_parentheses_alias
 			not_is_infix: not is_infix
 			is_valid_unary: is_valid_unary
 		do
@@ -214,16 +188,16 @@ feature -- Location
 
 invariant
 	consistent_operator_status:
-		not (is_bracket and is_binary) and
-		not (is_bracket and is_unary) and
-		not (is_bracket and is_parentheses) and
-		not (is_parentheses and is_binary) and
-		not (is_parentheses and is_unary) and
+		not (has_bracket_alias and is_binary) and
+		not (has_bracket_alias and is_unary) and
+		not (has_bracket_alias and has_parentheses_alias) and
+		not (has_parentheses_alias and is_binary) and
+		not (has_parentheses_alias and is_unary) and
 		not (is_binary and is_unary)
-	consistent_operator_name: (is_bracket or is_parentheses or is_binary or is_unary) = (alias_name /= Void)
+	consistent_operator_name: (has_bracket_alias or has_parentheses_alias or is_binary or is_unary) = has_alias
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

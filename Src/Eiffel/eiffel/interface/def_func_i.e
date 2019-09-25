@@ -89,13 +89,13 @@ feature {NONE} -- Implementation
 
 	new_api_feature: E_FUNCTION
 		do
-			create Result.make (feature_name_id, alias_name, has_convert_mark, feature_id)
+			create Result.make_with_aliases (feature_name_id, alias_names, has_convert_mark, feature_id)
 			Result.set_type (type, assigner_name)
 			update_api (Result)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

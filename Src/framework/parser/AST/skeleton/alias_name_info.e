@@ -7,23 +7,21 @@ note
 	revision: "$Revision$"
 
 class
-	ALIAS_TRIPLE
+	ALIAS_NAME_INFO
 
 create
 	make
 
 feature{NONE} -- Initialization
 
-	make (k_as: like alias_keyword; n_as: like alias_name; c_as: like convert_keyword)
-			-- Create new ALIAS_TRIPLE sturcture.
+	make (k_as: like alias_keyword; n_as: like alias_name)
+			-- Create new structure for `alias "op"` syntax.
 		do
 			alias_keyword := k_as
 			alias_name := n_as
-			convert_keyword := c_as
 		ensure
 			alias_keyword_set: alias_keyword = k_as
 			alias_name_set: alias_name = n_as
-			convert_keyword_set: convert_keyword = c_as
 		end
 
 feature -- Access
@@ -31,13 +29,10 @@ feature -- Access
 	alias_keyword: detachable KEYWORD_AS
 			-- Keyword "alias"
 
-	convert_keyword: detachable KEYWORD_AS
-			-- Keyword "convert"
-
-	alias_name: detachable STRING_AS;
+	alias_name: STRING_AS;
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

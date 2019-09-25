@@ -233,15 +233,7 @@ feature {NONE} -- Events
 					l_feature := l_dialog.selected_feature
 					if l_feature /= Void then
 						l_tag.append_character ('.')
-						if l_feature.is_prefix then
-							l_tag.append ("prefix_")
-							l_tag.append (l_feature.prefix_symbol_32)
-						elseif l_feature.is_infix then
-							l_tag.append ("infix_")
-							l_tag.append (l_feature.infix_symbol_32)
-						else
-							l_tag.append (l_feature.name_32)
-						end
+						l_tag.append (l_feature.name_32)
 					end
 					add_tag (l_tag)
 				end
@@ -354,7 +346,7 @@ feature {NONE} -- Internationalization
 		]"
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

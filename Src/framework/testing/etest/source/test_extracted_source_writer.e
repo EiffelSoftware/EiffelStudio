@@ -115,99 +115,8 @@ feature {NONE} -- Query
 			l_custom_symbol: STRING_8
 			l_symbol: STRING
 		do
-			if a_feature.is_prefix then
-				Result := "prefix_"
-				if a_feature.prefix_symbol_32.as_string_8.is_equal ("+") then
-					Result.append ("plus")
-				elseif a_feature.prefix_symbol_32.as_string_8.is_equal ("-") then
-					Result.append ("minus")
-				else
-						-- Replace all non-alpha-numeric characters with valid representations.
-					from
-						create l_custom_symbol.make_empty
-						l_symbol := a_feature.prefix_symbol_32.as_string_8
-						i := 1
-					until
-						i > l_symbol.count
-					loop
-						if l_symbol.item (i).is_alpha_numeric then
-							l_custom_symbol.append_character (l_symbol.item (i))
-						else
-							inspect l_symbol.item (i)
-							when '#' then
-								l_custom_symbol.append_string ("_symb_number_")
-							when '|' then
-								l_custom_symbol.append_string ("_symb_vertbar_")
-							when '@' then
-								l_custom_symbol.append_string ("_symb_at_")
-							when '&' then
-								l_custom_symbol.append_string ("_symb_amp_")
-							else
-								l_custom_symbol.append_string ("_symb_" + l_symbol.item (i).code.out + "_")
-							end
-						end
-						i := i + 1
-					end
-					Result.append (l_custom_symbol)
-				end
-			elseif a_feature.is_infix then
-    			Result := "infix_"
-    			l_symbol := a_feature.infix_symbol_32.as_string_8
-				if l_symbol.is_equal ("+") then
-					Result.append ("plus")
-				elseif l_symbol.is_equal ("-") then
-					Result.append ("minus")
-				elseif l_symbol.is_equal ("*") then
-					Result.append ("multiply")
-				elseif l_symbol.is_equal ("/") then
-					Result.append ("division")
-				elseif l_symbol.is_equal ("<") then
-					Result.append ("less")
-				elseif l_symbol.is_equal (">") then
-					Result.append ("greater")
-				elseif l_symbol.is_equal ("<=") then
-					Result.append ("less_or_equal")
-				elseif l_symbol.is_equal (">=") then
-					Result.append ("greater_or_equal")
-				elseif l_symbol.is_equal ("//") then
-					Result.append ("integer_division")
-				elseif l_symbol.is_equal ("\\") then
-					Result.append ("modulo")
-				elseif l_symbol.is_equal ("^") then
-					Result.append ("power")
-				else
-						-- Replace all non-alpha-numeric characters with valid representations.
-					from
-						create l_custom_symbol.make_empty
-						l_symbol := a_feature.infix_symbol_32.as_string_8
-						i := 1
-					until
-						i > l_symbol.count
-					loop
-						if l_symbol.item (i).is_alpha_numeric then
-							l_custom_symbol.append_character (l_symbol.item (i))
-						else
-							inspect l_symbol.item (i)
-							when '#' then
-								l_custom_symbol.append_string ("_symb_number_")
-							when '|' then
-								l_custom_symbol.append_string ("_symb_vertbar_")
-							when '@' then
-								l_custom_symbol.append_string ("_symb_at_")
-							when '&' then
-								l_custom_symbol.append_string ("_symb_amp_")
-							else
-								l_custom_symbol.append_character ('_')
-							end
-						end
-						i := i + 1
-					end
-					Result.append (l_custom_symbol)
-				end
-			else
-					-- |FIXME: Unicode encoding handling.
-				create Result.make_from_string (a_feature.name_32.as_string_8)
-			end
+				-- |FIXME: Unicode encoding handling.
+			create Result.make_from_string (a_feature.name_32.as_string_8)
 		ensure
 			result_not_empty: not Result.is_empty
 		end
@@ -256,8 +165,8 @@ feature {TEST_CAPTURER} -- Events
 			stream.put_line ("do")
 			stream.indent
 			stream.put_string ("run_extracted_test (agent ")
-			if a_stack_element.is_creation_procedure or a_stack_element.is_xfix then
-				if l_feat.argument_count > 0 or a_stack_element.is_xfix then
+			if a_stack_element.is_creation_procedure then
+				if l_feat.argument_count > 0 then
 					stream.put_string ("(")
 					from
 						l_list := a_stack_element.types
@@ -281,7 +190,7 @@ feature {TEST_CAPTURER} -- Events
 					stream.put_line ("")
 				end
 				stream.indent
-				if a_stack_element.is_creation_procedure or a_stack_element.is_xfix then
+				if a_stack_element.is_creation_procedure then
 					stream.put_line ("local")
 					stream.indent
 					stream.put_line ("l_result: ANY")
@@ -290,36 +199,27 @@ feature {TEST_CAPTURER} -- Events
 				stream.put_line ("do")
 				stream.indent
 				stream.put_string ("l_result := ")
-				if l_feat.is_prefix then
-					stream.put_string (l_feat.prefix_symbol_32.as_string_8)
-					stream.put_line (" an_arg1")
-				elseif l_feat.is_infix then
-					stream.put_string ("an_arg1 ")
-					stream.put_string (l_feat.infix_symbol_32.as_string_8)
-					stream.put_line (" an_arg2")
-				else
-					stream.put_string ("create {")
-					stream.put_string (a_stack_element.type)
-					stream.put_string ("}.")
-						-- |FIXME: Handle encoding
-					stream.put_string (l_feat.name_32.as_string_8)
-					if a_stack_element.operands.count > 0 then
-						stream.put_character ('(')
-						from
-							i := 1
-						until
-							i > l_feat.argument_count
-						loop
-							stream.put_string ("an_arg" + i.out)
-							if i < l_feat.argument_count then
-								stream.put_string (", ")
-							end
-							i := i + 1
+				stream.put_string ("create {")
+				stream.put_string (a_stack_element.type)
+				stream.put_string ("}.")
+					-- |FIXME: Handle encoding
+				stream.put_string (l_feat.name_32.as_string_8)
+				if a_stack_element.operands.count > 0 then
+					stream.put_character ('(')
+					from
+						i := 1
+					until
+						i > l_feat.argument_count
+					loop
+						stream.put_string ("an_arg" + i.out)
+						if i < l_feat.argument_count then
+							stream.put_string (", ")
 						end
-						stream.put_character (')')
+						i := i + 1
 					end
-					stream.put_line ("")
+					stream.put_character (')')
 				end
+				stream.put_line ("")
 				stream.dedent
 				stream.put_string ("end")
 				stream.dedent
@@ -533,7 +433,7 @@ feature {NONE} -- Constants
 	extracted_ancestor_name: STRING = "EQA_EXTRACTED_TEST_SET"
 
 ;note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

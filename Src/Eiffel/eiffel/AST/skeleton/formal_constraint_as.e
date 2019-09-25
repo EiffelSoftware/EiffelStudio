@@ -566,7 +566,6 @@ feature {NONE} -- Implementation
 			l_content: EIFFEL_LIST [RENAME_AS]
 			l_old_name, l_new_name: ID_AS
 			l_e_feature: E_FEATURE
-			l_alias_name: detachable STRING_AS
 		do
 			a_text_formatter.process_keyword_text (ti_rename_keyword, Void)
 			if a_short then
@@ -581,12 +580,11 @@ feature {NONE} -- Implementation
 				loop
 					l_old_name := l_content.item.old_name.internal_name
 					l_new_name := l_content.item.new_name.internal_name
-					l_alias_name := l_content.item.new_name.alias_name
 					if a_constraint_class /= Void and then a_constraint_class.has_feature_table then
 						l_e_feature := a_constraint_class.feature_with_id (l_old_name)
 					end
 					if l_e_feature /= Void then
-						a_text_formatter.process_feature_text (l_old_name.name_32, l_e_feature, false)
+						a_text_formatter.process_feature_text (l_old_name.name_32, l_e_feature, False)
 					else
 						a_text_formatter.add (l_old_name.name_32)
 					end
@@ -595,13 +593,20 @@ feature {NONE} -- Implementation
 					a_text_formatter.process_keyword_text (ti_as_keyword, Void)
 					a_text_formatter.add_space
 					a_text_formatter.add (l_new_name.name_32)
-					if l_alias_name /= Void then
-						a_text_formatter.add_space
-						a_text_formatter.process_keyword_text (ti_alias_keyword, Void)
-						a_text_formatter.add_space
-						a_text_formatter.process_symbol_text (ti_double_quote)
-						a_text_formatter.add (l_alias_name.value_32)
-						a_text_formatter.process_symbol_text (ti_double_quote)
+					if
+						attached {FEATURE_NAME_ALIAS_AS} l_content.item.new_name as l_feat_name_alias and then
+						l_feat_name_alias.has_alias
+					then
+						across
+							l_feat_name_alias.aliases as ic
+						loop
+							a_text_formatter.add_space
+							a_text_formatter.process_keyword_text (ti_alias_keyword, Void)
+							a_text_formatter.add_space
+							a_text_formatter.process_symbol_text (ti_double_quote)
+							a_text_formatter.add (ic.item.alias_name.value_32)
+							a_text_formatter.process_symbol_text (ti_double_quote)
+						end
 					end
 
 					l_content.forth

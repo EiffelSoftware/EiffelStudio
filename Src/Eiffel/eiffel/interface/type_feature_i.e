@@ -157,7 +157,7 @@ feature {NONE} -- Implementation
 			-- API feature.
 			-- Cannot be called in Current context.
 		do
-			create {E_FUNCTION} Result.make (feature_name_id, alias_name, has_convert_mark, feature_id)
+			create {E_FUNCTION} Result.make_with_aliases (feature_name_id, alias_names, has_convert_mark, feature_id)
 		end
 
 feature {NONE} -- Replication

@@ -371,7 +371,6 @@ feature
 			current_feature: FEATURE_I
 			written_class: CLASS_C
 			to_compare, written_actual_type: TYPE_A
-			alias_name_id: INTEGER
 		do
 				-- First condition for sharing feature: same body id
 			Result := True
@@ -379,7 +378,6 @@ feature
 				from
 					first_feature := features.first.internal_a_feature
 					body_id := first_feature.code_id
-					alias_name_id := first_feature.alias_name_id
 					features.start
 					features.forth
 				until

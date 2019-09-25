@@ -862,7 +862,7 @@ end;
 		do
 			f := a_inherit_info.a_feature
 			inherited_features.put (f, f.feature_name_id, a_inherit_info.a_feature_aliased)
-			if f.alias_name_id > 0 then
+			if f.has_alias then
 				check_alias_name_conflict (f)
 			end
 		end
@@ -1155,7 +1155,7 @@ end;
 						until
 							l_features.after or else inherit_feat /= Void
 						loop
-							if l_features.item.a_feature_alias_name_id = feature_name_id then
+							if l_features.item.feature_has_alias_name_id (feature_name_id) then
 								inherit_feat := item_for_iteration
 							end
 							l_features.forth
@@ -1332,16 +1332,23 @@ debug ("ACTIVITY")
 end;
 
 			Result := feature_i_generator.new_feature (yacc_feature, feature_name_id, a_class)
-			Result.set_feature_name_id (feature_name_id, feat.internal_alias_name_id)
+			Result.set_feature_name_id (feature_name_id, 0)
+			if attached {FEATURE_NAME_ALIAS_AS} feat as l_alias_feat and then l_alias_feat.has_alias then
+				across
+					l_alias_feat.aliases as ic
+				loop
+					Result.add_alias_id (ic.item.internal_alias_name_id)
+				end
+				Result.set_has_convert_mark (l_alias_feat.has_convert_mark)
+			end
 			Result.set_written_in (a_class.class_id)
 			Result.set_is_frozen (feat.is_frozen)
 			Result.set_is_infix (feat.is_infix)
 			Result.set_is_prefix (feat.is_prefix)
-			Result.set_is_bracket (feat.is_bracket)
-			Result.set_is_parentheses (feat.is_parentheses)
+			Result.set_is_bracket (feat.has_bracket_alias)
+			Result.set_is_parentheses (feat.has_parentheses_alias)
 			Result.set_is_binary (feat.is_binary)
 			Result.set_is_unary (feat.is_unary)
-			Result.set_has_convert_mark (feat.has_convert_mark)
 
 			if Result.is_unique and attached {UNIQUE_I} Result as l_unique_i then
 				unique_feature := l_unique_i
@@ -1914,7 +1921,7 @@ end;
 				vmfn.set_a_feature (f)
 				vmfn.set_inherited_feature (inherited_features.item_id (feature_name_id))
 				Error_handler.insert_error (vmfn)
-			elseif f.alias_name_id > 0 then
+			elseif f.has_alias then
 				check_alias_name_conflict (f)
 			end
 		end
@@ -1999,7 +2006,7 @@ feature {NONE} -- Implementation
 			-- `inherited_features.is_alias_conflict' is set to `true'. Report error in this case.
 		require
 			f_attached: f /= Void
-			f_has_alias_name: f.alias_name_id > 0
+			f_has_alias_name: f.has_alias
 		local
 			vfav: VFAV
 		do
@@ -2013,7 +2020,7 @@ feature {NONE} -- Implementation
 				end
 				vfav.set_class (a_class)
 				vfav.set_a_feature (f)
-				vfav.set_inherited_feature (inherited_features.item_alias_id (f.alias_name_id))
+				vfav.set_inherited_feature (inherited_features.item_alias_id (inherited_features.conflicting_alias))
 				Error_handler.insert_error (vfav)
 			end
 		end

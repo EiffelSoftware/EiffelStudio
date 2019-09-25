@@ -127,8 +127,6 @@ feature -- Access
 			feature_name: FEATURE_NAME
 			is_query: BOOLEAN
 			argument_count: INTEGER
-			alias_name: STRING_AS
-			operator: STRING
 			arguments: EIFFEL_LIST [TYPE_DEC_AS]
 			vfav: VFAV_SYNTAX
 			l_built_in_processor: like built_in_processor
@@ -148,13 +146,14 @@ feature -- Access
 					f.after
 				loop
 					feature_name := f.item
-					alias_name := feature_name.alias_name
 					if feature_name.is_prefix or else feature_name.is_infix then
 							-- Infix and prefix features will be checked for VFFD(5,6) later
-					elseif alias_name /= Void then
+					elseif
+						attached {FEATURE_NAME_ALIAS_AS} feature_name as l_feat_name_alias_as and then
+						l_feat_name_alias_as.has_alias
+					then
 							-- TODO This code occurs in almost the same fashion in `{RENAMING_A}.adapt_alias_feature_name_properties'
 						vfav := Void
-						operator := alias_name.value
 						arguments := b.arguments
 						if arguments /= Void then
 								-- It's possible to calculate the value of `argument_count' once
@@ -170,38 +169,53 @@ feature -- Access
 								arguments.forth
 							end
 						end
-						if feature_name.is_bracket then
+						if l_feat_name_alias_as.has_bracket_alias then
 							if not is_query or else argument_count < 1 then
 									-- Invalid bracket alias.
-								create {VFAV2_SYNTAX} vfav.make (feature_name)
-							elseif feature_name.has_convert_mark then
+								create {VFAV2_SYNTAX} vfav.make (l_feat_name_alias_as, l_feat_name_alias_as.bracket_alias_as)
+							elseif l_feat_name_alias_as.has_convert_mark then
 									-- Invalid convert mark.
-								create {VFAV3_SYNTAX} vfav.make (feature_name)
+								create {VFAV3_SYNTAX} vfav.make (l_feat_name_alias_as, l_feat_name_alias_as.bracket_alias_as)
 							end
-						elseif feature_name.is_parentheses then
+						elseif l_feat_name_alias_as.has_parentheses_alias then
 							if argument_count < 1 then
 									-- Invalid parenthesis alias.
-								create {VFAV4_SYNTAX} vfav.make (feature_name)
-							elseif feature_name.has_convert_mark then
+								create {VFAV4_SYNTAX} vfav.make (l_feat_name_alias_as, l_feat_name_alias_as.parenthesis_alias_as)
+							elseif l_feat_name_alias_as.has_convert_mark then
 									-- Invalid convert mark.
-								create {VFAV3_SYNTAX} vfav.make (feature_name)
+								create {VFAV3_SYNTAX} vfav.make (l_feat_name_alias_as, l_feat_name_alias_as.parenthesis_alias_as)
 							end
-						elseif is_query and then (
-								(argument_count = 0 and then feature_name.is_valid_unary_operator (operator)) or else
-								(argument_count = 1 and then feature_name.is_valid_binary_operator (operator))
-							)
-						then
-							if argument_count = 1 then
-								feature_name.set_is_binary
-							elseif feature_name.has_convert_mark then
-									-- Invalid convert mark
-								create {VFAV3_SYNTAX} vfav.make (feature_name)
-							else
-								feature_name.set_is_unary
+						elseif is_query then
+							if l_feat_name_alias_as.has_alias then
+								across
+									l_feat_name_alias_as.aliases as ic
+								until
+									vfav /= Void
+								loop
+									if
+										(argument_count = 0 and then ic.item.is_valid_unary) or else
+										(argument_count = 1 and then ic.item.is_valid_binary)
+									then
+											-- FIXME: maybe move this check outside the loop [2019-09-25].
+										if argument_count = 0 and then l_feat_name_alias_as.has_convert_mark then
+												-- Invalid convert mark
+											create {VFAV3_SYNTAX} vfav.make (l_feat_name_alias_as, ic.item.alias_name)
+										end
+									else
+											-- Invalid operator alias
+										create {VFAV1_SYNTAX} vfav.make (l_feat_name_alias_as, ic.item.alias_name)
+									end
+								end
+								if vfav /= Void then
+										-- Error detected
+								elseif argument_count = 1 then
+									l_feat_name_alias_as.set_is_binary
+								elseif l_feat_name_alias_as.has_convert_mark then
+									create {VFAV3_SYNTAX} vfav.make (l_feat_name_alias_as, Void)
+								else
+									l_feat_name_alias_as.set_is_unary
+								end
 							end
-						else
-								-- Invalid operator alias
-							create {VFAV1_SYNTAX} vfav.make (feature_name)
 						end
 						if vfav /= Void then
 							error_handler.insert_error (vfav)

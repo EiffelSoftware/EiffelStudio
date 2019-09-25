@@ -372,14 +372,6 @@ feature {AST_EIFFEL} -- Skeleton Visitors
 		deferred
 		end
 
-	process_infix_prefix_as (l_as: INFIX_PREFIX_AS)
-			-- Process `l_as'.
-		require
-			is_valid_visitor: is_valid
-			non_void_as: l_as /= Void
-		deferred
-		end
-
 	process_feat_name_id_as (l_as: FEAT_NAME_ID_AS)
 			-- Process `l_as'.
 		require
@@ -1335,7 +1327,7 @@ feature {AST_EIFFEL} -- Clickable visitor
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

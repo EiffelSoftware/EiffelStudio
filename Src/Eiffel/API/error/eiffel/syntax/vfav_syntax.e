@@ -22,19 +22,22 @@ inherit
 
 feature {NONE} -- Creation
 
-	make (f: FEATURE_NAME)
+	make (f: FEATURE_NAME_ALIAS_AS; a_location: detachable LOCATION_AS)
 			-- Create error object.
 		require
 			feature_name_not_void: f /= Void
-			alias_name_not_void: f.alias_name /= Void
 		do
 			set_class (system.current_class)
 			set_feature_name (f.visual_name_32)
-			set_location (f.alias_name)
+			if a_location /= Void then
+				set_location (a_location)
+			else
+				set_location (f.feature_name)
+			end
 		ensure
 			class_c_set: class_c /= Void
 			feature_name_set: feature_name.same_string (f.visual_name_32)
-			location_set: line = f.alias_name.start_location.line and column = f.alias_name.start_location.column
+			location_set: line = a_location.line and column = a_location.column
 		end
 
 feature -- Access
@@ -43,7 +46,7 @@ feature -- Access
 			-- Error code
 
 ; note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

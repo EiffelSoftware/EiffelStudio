@@ -236,7 +236,7 @@ feature {NONE} -- Implementation
     new_api_feature: E_ROUTINE
             -- API feature creation
         do
-			create {E_PROCEDURE} Result.make (feature_name_id, alias_name, has_convert_mark, feature_id)
+			create {E_PROCEDURE} Result.make_with_aliases (feature_name_id, alias_names, has_convert_mark, feature_id)
 			update_api (Result)
         end
 
@@ -258,7 +258,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

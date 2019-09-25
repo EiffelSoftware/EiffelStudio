@@ -5832,11 +5832,6 @@ feature {NONE} -- Visitor
 			end
 		end
 
-	process_infix_prefix_as (l_as: INFIX_PREFIX_AS)
-		do
-			-- Nothing to be done
-		end
-
 	process_feat_name_id_as (l_as: FEAT_NAME_ID_AS)
 		do
 			-- Nothing to be done
@@ -9487,7 +9482,6 @@ feature {NONE} -- Implementation
 			l_context_current_class: CLASS_C
 			l_vwoe: VWOE
 			l_result_tuple: TUPLE[feature_item: FEATURE_I; class_type_of_feature: CL_TYPE_A; features_found_count: INTEGER]
-			l_formal: FORMAL_A
 			l_is_multi_constraint_case: BOOLEAN
 			l_feature_found_count: INTEGER
 			l_vtmc_error: VTMC
@@ -9499,28 +9493,32 @@ feature {NONE} -- Implementation
 				-- No need for `a_left_type.actual_type' since it is done in callers of
 				-- `is_infix_valid'.
 			if a_left_type.is_formal  then
-				l_formal ?= a_left_type
-				if not l_formal.is_single_constraint_without_renaming (l_context_current_class) then
-					l_is_multi_constraint_case := True
-						-- this is the multi constraint case
-					l_type_set := a_left_type.to_type_set.constraining_types (l_context_current_class)
-					check l_type_set /= Void end
-					l_result_tuple := l_type_set.feature_i_state_by_alias_name_id (l_name.name_id)
-						-- We raise an error if there are multiple infix features found
-					l_feature_found_count := l_result_tuple.features_found_count
-					if	l_feature_found_count > 1 then
-						l_vtmc_error := new_vtmc_error (l_name, l_formal.position, l_context_current_class, True)
-					elseif l_feature_found_count = 1 then
-						l_infix :=  l_result_tuple.feature_item
-						l_last_constrained := l_result_tuple.class_type_of_feature
-						l_class := l_last_constrained.base_class
-						last_calls_target_type := l_last_constrained
-					else
-						-- Evereything stays void, an error will be reported.
-					end
+				if attached {FORMAL_A} a_left_type as l_formal then
+					if not l_formal.is_single_constraint_without_renaming (l_context_current_class) then
+						l_is_multi_constraint_case := True
+							-- this is the multi constraint case
+						l_type_set := a_left_type.to_type_set.constraining_types (l_context_current_class)
+						check l_type_set /= Void end
+						l_result_tuple := l_type_set.feature_i_state_by_alias_name_id (l_name.name_id)
+							-- We raise an error if there are multiple infix features found
+						l_feature_found_count := l_result_tuple.features_found_count
+						if	l_feature_found_count > 1 then
+							l_vtmc_error := new_vtmc_error (l_name, l_formal.position, l_context_current_class, True)
+						elseif l_feature_found_count = 1 then
+							l_infix :=  l_result_tuple.feature_item
+							l_last_constrained := l_result_tuple.class_type_of_feature
+							l_class := l_last_constrained.base_class
+							last_calls_target_type := l_last_constrained
+						else
+							-- Evereything stays void, an error will be reported.
+						end
 
+					else
+						l_last_constrained := l_formal.constrained_type (l_context_current_class)
+					end
 				else
-					l_last_constrained := l_formal.constrained_type (l_context_current_class)
+					check is_formal: False end
+					l_last_constrained := a_left_type
 				end
 			else
 				l_last_constrained := a_left_type

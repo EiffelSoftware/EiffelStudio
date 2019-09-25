@@ -315,11 +315,12 @@ feature -- Execution
 			l_row, sr: EV_GRID_ROW
 			gi: EV_GRID_LABEL_ITEM
 			gei: EV_GRID_EDITABLE_ITEM
-			f, s: STRING
+			f, s: STRING_32
 		do
 			if attached {ES_GRID} r.parent as g then
 				l_row := g.grid_extended_new_subrow (r)
-				create gi.make_with_text (fi.feature_name_32)
+				f := fi.feature_name_32
+				create gi.make_with_text (f)
 				if a_list then
 					gi.set_background_color (bgcol)
 					gi.pointer_double_press_actions.extend
@@ -330,11 +331,24 @@ feature -- Execution
 							end (cl.name, fi.feature_name_32, ?, ?, ?, ?, ?, ?, ?, ?))
 				end
 				l_row.set_item (1, gi)
-				s := attached_string (fi.alias_name_32).as_string_8
-				if s.is_empty then
-					s := fi.feature_id.out
+				if fi.has_alias and then attached fi.alias_names_32 as lst then
+					create s.make_empty
+					across
+						lst as ic
+					loop
+						if not s.is_empty then
+							s.append_character (',')
+							s.append_character (' ')
+						end
+						s.append (ic.item)
+					end
+				end
+				if s = Void or else s.is_empty then
+					s := fi.feature_id.out.to_string_32
 				else
-					s.prepend_string (fi.feature_id.out + "  ")
+					s.prepend_string_general (fi.feature_id.out)
+					s.append_character (' ')
+					s.append_character (' ')
 				end
 				l_row.set_item (2, create {EV_GRID_LABEL_ITEM}.make_with_text (s))
 
@@ -482,7 +496,7 @@ feature -- Access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

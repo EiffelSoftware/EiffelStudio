@@ -647,7 +647,7 @@ feature {NONE} -- Implementation
 	new_api_feature: E_ATTRIBUTE
 			-- API feature creation
 		do
-			create Result.make (feature_name_id, alias_name, has_convert_mark, feature_id)
+			create Result.make_with_aliases (feature_name_id, alias_names, has_convert_mark, feature_id)
 			Result.set_type (type, assigner_name)
 			Result.set_is_attribute_with_body (has_body)
 			Result.set_obsolete_message (obsolete_message)

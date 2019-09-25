@@ -137,15 +137,16 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Properties
 		deferred
 		end
 
+	operator_name: STRING
+		do
+			Result := op_name.name
+		end
+
 feature -- Properties
 
-	infix_function_name_32: detachable STRING_32
-			-- Internal name of the infix feature associated to the
-			-- binary expression
+	operator_name_32: STRING_32
 		do
-			if attached infix_function_name as l_name then
-				Result := encoding_converter.utf8_to_utf32 (l_name)
-			end
+			Result := encoding_converter.utf8_to_utf32 (operator_name)
 		end
 
 	op_name: ID_AS
@@ -189,7 +190,7 @@ invariant
 	right_not_void: right /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

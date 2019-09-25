@@ -147,7 +147,7 @@ feature{NONE} -- Implementation
 				Result := a_feature_name.is_case_insensitive_equal (a_feature.name) or else
 					   	  a_feature_name.is_case_insensitive_equal (ti_Precursor_keyword)
 				if (not Result) and then a_feature.has_alias_name then
-					Result := a_feature_name.is_case_insensitive_equal (a_feature.alias_name)
+					Result := a_feature.has_alias_named (a_feature_name)
 				end
 				if Result then
 					Result := flag /= 0 implies flag_stack.has (flag)
@@ -410,7 +410,7 @@ invariant
 	ancestor_class_id_set_attached: ancestor_class_id_set /= Void
 
 note
-        copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+        copyright:	"Copyright (c) 1984-2019, Eiffel Software"
         license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
         licensing_options:	"http://www.eiffel.com/licensing"
         copying: "[

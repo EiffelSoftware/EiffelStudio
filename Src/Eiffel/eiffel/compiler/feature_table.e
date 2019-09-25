@@ -276,9 +276,20 @@ feature -- HASH_TABLE like feature
 				end
 			end
 				-- Update alias table
-			alias_name_id := new.alias_name_id
-			if alias_name_id > 0 then
-				alias_table.put (new.id, alias_name_id)
+			if attached new.alias_name_ids as lst then
+				across
+					lst as ic
+				until
+					alias_table.conflict -- FIXME: check if there is any risk to stop at first conflict? [2019-09-25]
+				loop
+					alias_name_id := ic.item
+					if alias_name_id > 0 then
+						alias_table.put (new.id, alias_name_id)
+						if alias_table.conflict then
+							conflicting_alias := alias_name_id
+						end
+					end
+				end
 			end
 		end
 
@@ -358,9 +369,15 @@ feature {NONE} -- HASH_TABLE like features
 					tmp_feature_server.remove (l_id)
 				end
 					-- Remove old alias name
-				alias_name_id := old_feature.alias_name_id
-				if alias_name_id > 0 then
-					alias_table.remove (alias_name_id)
+				if attached old_feature.alias_name_ids as lst then
+					across
+						lst as ic
+					loop
+						alias_name_id := ic.item
+						if alias_name_id > 0 then
+							alias_table.remove (alias_name_id)
+						end
+					end
 				end
 			end
 			internal_table_remove (key)
@@ -514,6 +531,12 @@ feature -- Status report
 			-- Did last operation cause a conflict on alias name?
 		do
 			Result := alias_table.conflict
+		end
+
+	conflicting_alias: INTEGER
+		require
+			is_alias_conflict: is_alias_conflict
+		attribute
 		end
 
 	is_computed: BOOLEAN

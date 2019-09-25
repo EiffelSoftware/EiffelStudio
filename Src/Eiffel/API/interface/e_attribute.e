@@ -11,7 +11,8 @@ inherit
 		end
 
 create
-	make
+	make,
+	make_with_aliases
 
 feature -- Properties
 
@@ -95,7 +96,7 @@ feature -- Setting
 note
 	date: "$Date$"
 	revision: "$Revision $"
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

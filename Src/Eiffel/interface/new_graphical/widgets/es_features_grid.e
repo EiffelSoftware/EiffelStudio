@@ -555,12 +555,15 @@ feature {NONE} -- Implementation
 			assigner_name: STRING_32
 		do
 			Result := a_ef.name_32.twin
-			if is_alias_enabled and then not a_ef.is_prefix and then not a_ef.is_infix then
-				alias_name := a_ef.alias_name_32
-				if alias_name /= Void then
-					Result.append_string (" alias %"")
-					Result.append_string (eiffel_string_32 (a_ef.alias_symbol_32))
-					Result.append_character ('%"')
+			if is_alias_enabled then
+				if attached a_ef.aliases as lst then
+					across
+						lst as ic
+					loop
+						Result.append_string (" alias %"")
+						Result.append_string (eiffel_string_32 (extract_alias_name_32 (ic.item.alias_name_32)))
+						Result.append_character ('%"')
+					end
 				end
 			end
 			if is_signature_enabled then
@@ -1098,7 +1101,7 @@ feature {NONE} -- Tree item factory
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

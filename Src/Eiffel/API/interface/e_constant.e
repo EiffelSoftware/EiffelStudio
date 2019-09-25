@@ -18,7 +18,8 @@ inherit
 
 create
 
-	make
+	make,
+	make_with_aliases
 
 feature -- Properties
 
@@ -71,7 +72,7 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Setting
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

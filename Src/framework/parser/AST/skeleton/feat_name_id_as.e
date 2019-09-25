@@ -41,17 +41,20 @@ feature -- Access
 	feature_name: ID_AS
 			-- Feature name
 
-	internal_alias_name: detachable ID_AS
-			-- Operator associated with the feature (if any)
-			-- augmented with information about its arity
+	has_alias: BOOLEAN
+			-- Has an alias?
 		do
-				-- Void here
+
 		end
 
-	alias_name: detachable STRING_AS
-			-- Operator name associated with the feature (if any)
+	is_valid_unary: BOOLEAN
+			-- Is the value of the feature name valid unary operator?
 		do
-				-- Void here
+		end
+
+	is_valid_binary: BOOLEAN
+			-- Is the value of the feature name valid unary operator?
+		do
 		end
 
 feature -- Comparison
@@ -67,8 +70,6 @@ feature -- Comparison
 		do
 			if attached {FEAT_NAME_ID_AS} other as l_normal_feature then
 				Result := feature_name.name < l_normal_feature.feature_name.name
-			elseif attached {INFIX_PREFIX_AS} other then
-				Result := True
 			end
 		end
 
@@ -99,7 +100,7 @@ invariant
 	feature_name_not_void: feature_name /= Void
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -185,7 +185,7 @@ feature -- Type inference
 			end
 		end
 
-	operator_call (name_id: like {FEATURE_I}.alias_name_id; context_class: CLASS_C): detachable TUPLE [descriptor: FEATURE_I; site: TYPE_A; target: TYPE_A]
+	operator_call (name_id: INTEGER; context_class: CLASS_C): detachable TUPLE [descriptor: FEATURE_I; site: TYPE_A; target: TYPE_A]
 			-- Information about an operator call with the operator name correponding to `name_id' called on the current type in `context_class':
 			-- descriptor: feature descriptor
 			-- site: class type with the  feature
@@ -360,7 +360,7 @@ feature {NONE} -- Helper
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

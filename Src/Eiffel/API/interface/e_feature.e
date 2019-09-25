@@ -48,7 +48,7 @@ inherit
 
 feature -- Initialization
 
-	make (n: like name_id; a: like alias_name; c: like has_convert_mark; i: INTEGER)
+	make (n: like name_id; a: STRING; c: like has_convert_mark; i: INTEGER)
 			-- Initialize feature with name `n' with
 			-- identification `i'.
 		require
@@ -56,12 +56,37 @@ feature -- Initialization
 			positive_i: i >= 0
 		do
 			name_id := n
-			alias_name := a
+			if a /= Void then
+				add_alias (a)
+			end
 			has_convert_mark := c
 			feature_id := i
 		ensure
 			name_id_set: name_id = n
-			alias_name_set: alias_name = a
+			has_alias_name: a /= Void implies has_alias_named (a)
+			feature_id_set: feature_id = i
+		end
+
+	make_with_aliases (n: like name_id; a_aliases: LIST [STRING]; c: like has_convert_mark; i: INTEGER)
+			-- Initialize feature with name `n' with
+			-- identification `i'.
+		require
+			valid_n: n >= 0
+			positive_i: i >= 0
+		do
+			name_id := n
+			if a_aliases /= Void then
+				across
+					a_aliases as ic
+				loop
+					add_alias (ic.item)
+				end
+			end
+			has_convert_mark := c
+			feature_id := i
+		ensure
+			name_id_set: name_id = n
+			has_alias_name: a_aliases /= Void implies across a_aliases as ic all has_alias_named (ic.item) end
 			feature_id_set: feature_id = i
 		end
 
@@ -116,13 +141,7 @@ feature -- Properties
 			Result := name
 		end
 
-	alias_name_32: STRING_32
-			-- Alias name of the feature (if any)
-		do
-			if alias_name /= Void then
-				Result := encoding_converter.utf8_to_utf32 (alias_name)
-			end
-		end
+	aliases: detachable ARRAYED_LIST [TUPLE [alias_name: STRING; alias_name_32: STRING_32]]
 
 	has_convert_mark: BOOLEAN
 			-- Is convert mark specified for an operator alias?
@@ -130,7 +149,22 @@ feature -- Properties
 	has_alias_name: BOOLEAN
 			-- Does current routine represent a routine with an alias?
 		do
-			Result := alias_name /= Void
+			Result := attached aliases as lst and then not lst.is_empty
+		end
+
+	has_alias_named (a_name: STRING): BOOLEAN
+		do
+			if attached aliases as lst then
+				across
+					lst as c
+				until
+					Result
+				loop
+					if attached a_name.is_case_insensitive_equal (c.item.alias_name) then
+						Result := True
+					end
+				end
+			end
 		end
 
 	assigner_name_32: STRING_32
@@ -366,6 +400,20 @@ feature -- Properties
 		do
 		end
 
+feature -- Element change
+
+	add_alias (a: STRING_8)
+		local
+			lst: like aliases
+		do
+			lst := aliases
+			if lst = Void then
+				create lst.make (1)
+				aliases := lst
+			end
+			lst.force ([a, encoding_converter.utf8_to_utf32 (a)])
+		end
+
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Properties
 
 	name: STRING
@@ -383,9 +431,6 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Properties
 	obsolete_message: STRING;
 			-- Obsolete message
 			-- (Void if Current is not obsolete)
-
-	alias_name: STRING
-			-- Alias name of the feature (if any)
 
 feature -- Access
 
@@ -983,25 +1028,11 @@ feature -- Output
 		local
 			l_name: STRING
 		do
-			if is_infix then
-				a_text_formatter.process_keyword_text (Ti_infix_keyword, Void)
-				a_text_formatter.add_space
-				a_text_formatter.process_symbol_text (Ti_double_quote)
-				a_text_formatter.process_operator_text (extract_symbol_from_infix_32 (name_32), Current)
-				a_text_formatter.process_symbol_text (Ti_double_quote)
-			elseif is_prefix then
-				a_text_formatter.process_keyword_text (Ti_prefix_keyword, Void)
-				a_text_formatter.add_space
-				a_text_formatter.process_symbol_text (Ti_double_quote)
-				a_text_formatter.process_operator_text (extract_symbol_from_prefix_32 (name_32), Current)
-				a_text_formatter.process_symbol_text (Ti_double_quote)
-			else
-				l_name := name.as_lower
-				if is_once or else is_constant then
-					l_name.put ((l_name @ 1).upper, 1)
-				end
-				a_text_formatter.add_feature (Current, encoding_converter.utf8_to_utf32 (l_name))
+			l_name := name.as_lower
+			if is_once or else is_constant then
+				l_name.put ((l_name @ 1).upper, 1)
 			end
+			a_text_formatter.add_feature (Current, encoding_converter.utf8_to_utf32 (l_name))
 		end
 
 	append_full_name (a_text_formatter: TEXT_FORMATTER)
@@ -1009,85 +1040,24 @@ feature -- Output
 			-- (with infix and prefix keywords and alias names if any).
 		require
 			valid_st: a_text_formatter /= Void
-		local
-			a: like alias_name_32
 		do
 			append_name (a_text_formatter)
-			if not is_infix and then not is_prefix then
-				a := alias_name_32
-				if a /= Void then
+			if attached aliases as lst then
+				across
+					lst as ic
+				loop
 					a_text_formatter.add_space
 					a_text_formatter.process_keyword_text (Ti_alias_keyword, Void)
 					a_text_formatter.add_space
 					a_text_formatter.process_symbol_text (Ti_double_quote)
-					a_text_formatter.process_operator_text (extract_alias_name_32 (a), Current)
+					a_text_formatter.process_operator_text (extract_alias_name_32 (ic.item.alias_name_32), Current)
 					a_text_formatter.process_symbol_text (Ti_double_quote)
 				end
 			end
 			if has_convert_mark then
 				a_text_formatter.add_space
-				a_text_formatter.process_keyword_text (ti_convert_keyword, Void)
+				a_text_formatter.process_keyword_text (Ti_convert_keyword, Void)
 			end
-		end
-
-	infix_symbol_32 : STRING_32
-			--
-		require
-			is_infix: is_infix
-		do
-			Result := encoding_converter.utf8_to_utf32 (extract_symbol_from_infix (name))
-		ensure
-			infix_symbol_not_void: Result /= Void
-		end
-
-	prefix_symbol_32 : STRING_32
-			--
-		require
-			is_infix: is_prefix
-		do
-			Result := encoding_converter.utf8_to_utf32 (extract_symbol_from_prefix (name))
-		ensure
-			prefix_symbol_not_void: Result /= Void
-		end
-
-	alias_symbol_32: STRING_32
-		require
-			is_alias: has_alias_name
-		do
-			Result := encoding_converter.utf8_to_utf32 (extract_alias_name (alias_name))
-		ensure
-			alias_symbol_not_void: Result /= Void
-		end
-
-feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Output: operators
-
-	infix_symbol : STRING
-			--
-		require
-			is_infix: is_infix
-		do
-			Result := extract_symbol_from_infix (name)
-		ensure
-			infix_symbol_not_void: Result /= Void
-		end
-
-	prefix_symbol : STRING
-			--
-		require
-			is_infix: is_prefix
-		do
-			Result := extract_symbol_from_prefix (name)
-		ensure
-			prefix_symbol_not_void: Result /= Void
-		end
-
-	alias_symbol: STRING
-		require
-			is_alias: has_alias_name
-		do
-			Result := extract_alias_name (alias_name)
-		ensure
-			alias_symbol_not_void: Result /= Void
 		end
 
 feature -- Output: signature
@@ -1273,7 +1243,7 @@ note
 	ca_ignore: "CA033", "CA033: very large class"
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -56,11 +56,7 @@ feature {NONE} -- Initialization
 			l_name: STRING_32
 			l_type: like completion_type
 		do
-			if a_feature.is_infix then
-				l_s := a_feature.infix_symbol_32
-			else
-				l_s := a_feature.name_32
-			end
+			l_s := a_feature.name_32
 			if a_name /= Void then
 				make_old (a_name)
 			else
@@ -314,7 +310,7 @@ invariant
 	associated_feature_not_void: associated_feature /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -125,10 +125,6 @@ creation
 [iI][fF]								last_token := E_IF;move (text_count)
 [iI][mM][pP][lL][iI][eE][sS]			last_token := E_IMPLIES;move (text_count)
 [iI][nN][dD][eE][xX][iI][nN][gG]		last_token := E_INDEXING;move (text_count)
-[iI][nN][fF][iI][xX]				{
-										is_operator := True
-										last_token := E_INFIX;move (text_count)
-									}
 [iI][nN][hH][eE][rR][iI][tT]			last_token := E_INHERIT;move (text_count)
 [iI][nN][sS][pP][eE][cC][tT]			last_token := E_INSPECT;move (text_count)
 [iI][nN][vV][aA][rR][iI][aA][nN][tT]	last_token := E_INVARIANT;move (text_count)
@@ -142,10 +138,6 @@ creation
 [oO][nN][cC][eE]						last_token := E_ONCE;move (text_count)
 [oO][rR]								last_token := E_OR;move (text_count)
 [pP][rR][eE][cC][uU][rR][sS][oO][rR]	last_token := E_PRECURSOR;move (text_count)
-[pP][rR][eE][fF][iI][xX]			{
-										is_operator := True
-										last_token := E_PREFIX;move (text_count)
-									}
 [rR][eE][dD][eE][fF][iI][nN][eE]		last_token := E_REDEFINE;move (text_count)
 [rR][eE][nN][aA][mM][eE]				last_token := E_RENAME;move (text_count)
 [rR][eE][qQ][uU][iI][rR][eE]			last_token := E_REQUIRE;move (text_count)

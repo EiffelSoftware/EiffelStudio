@@ -577,11 +577,6 @@ BREAK	{HORIZONAL_BREAK}|\n
 
 				end
 			}
-[iI][nN][fF][iI][xX]	{
-				update_character_locations
-				last_detachable_keyword_as_value := ast_factory.new_infix_keyword_as (Current)
-				last_token := TE_INFIX
-			}
 [iI][nN][hH][eE][rR][iI][tT]	{
 				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_keyword_as (TE_INHERIT, Current)
@@ -703,11 +698,6 @@ BREAK	{HORIZONAL_BREAK}|\n
 				update_character_locations
 				last_detachable_keyword_as_value := ast_factory.new_precursor_keyword_as (Current)
 				last_token := TE_PRECURSOR
-			}
-[pP][rR][eE][fF][iI][xX]	{
-				update_character_locations
-				last_detachable_keyword_as_value := ast_factory.new_prefix_keyword_as (Current)
-				last_token := TE_PREFIX
 			}
 [rR][eE][dD][eE][fF][iI][nN][eE]	{
 				update_character_locations

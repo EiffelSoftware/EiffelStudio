@@ -8,12 +8,6 @@ feature -- Comparison
 			Result := Precursor (other)
 		end
 
-	infix "<" (other: INTEGER_8): BOOLEAN
-			-- Is current integer less than `other'?
-		do
-			Result := Precursor (other)
-		end
-
 feature -- Basic operations
 
 	plus alias "+" (other: INTEGER_8): INTEGER_8
@@ -65,60 +59,6 @@ feature -- Basic operations
 		end
 
 	power alias "^" (other: REAL_64): REAL_64
-			-- Integer power of Current by `other'
-		do
-			Result := Precursor (other)
-		end
-
-	infix "+" (other: INTEGER_8): INTEGER_8
-			-- Sum with `other'
-		do
-			Result := Precursor (other)
-		end
-
-	infix "-" (other: INTEGER_8): INTEGER_8
-			-- Result of subtracting `other'
-		do
-			Result := Precursor (other)
-		end
-
-	infix "*" (other: INTEGER_8): INTEGER_8
-			-- Product by `other'
-		do
-			Result := Precursor (other)
-		end
-
-	infix "/" (other: INTEGER_8): REAL_64
-			-- Division by `other'
-		do
-			Result := Precursor (other)
-		end
-
-	prefix "+": INTEGER_8
-			-- Unary plus
-		do
-			Result := Precursor
-		end
-
-	prefix "-": INTEGER_8
-			-- Unary minus
-		do
-			Result := Precursor
-		end
-
-	infix "//" (other: INTEGER_8): INTEGER_8
-			-- Integer division of Current by `other'
-		do
-			Result := Precursor (other)
-		end
-
-	infix "\\" (other: INTEGER_8): INTEGER_8
-			-- Remainder of the integer division of Current by `other'
-		do
-			Result := Precursor (other)
-		end
-
-	infix "^" (other: REAL_64): REAL_64
 			-- Integer power of Current by `other'
 		do
 			Result := Precursor (other)

@@ -8,12 +8,6 @@ feature -- Comparison
 			Result := Precursor (other)
 		end
 
-	infix "<" (other: REAL_64): BOOLEAN
-			-- Is `other' greater than current double?
-		do
-			Result := Precursor (other)
-		end
-
 feature -- Status report
 
 	is_nan: BOOLEAN
@@ -105,48 +99,6 @@ feature -- Basic operations
 		end
 
 	opposite alias "-": REAL_64
-			-- Unary minus
-		do
-			Result := Precursor
-		end
-
-	infix "+" (other: REAL_64): REAL_64
-			-- Sum with `other'
-		do
-			Result := Precursor (other)
-		end
-
-	infix "-" (other: REAL_64): REAL_64
-			-- Result of subtracting `other'
-		do
-			Result := Precursor (other)
-		end
-
-	infix "*" (other: REAL_64): REAL_64
-			-- Product with `other'
-		do
-			Result := Precursor (other)
-		end
-
-	infix "/" (other: REAL_64): REAL_64
-			-- Division by `other'
-		do
-			Result := Precursor (other)
-		end
-
-	infix "^" (other: REAL_64): REAL_64
-			-- Current double to the power `other'
-		do
-			Result := Precursor (other)
-		end
-
-	prefix "+": REAL_64
-			-- Unary plus
-		do
-			Result := Precursor
-		end
-
-	prefix "-": REAL_64
 			-- Unary minus
 		do
 			Result := Precursor

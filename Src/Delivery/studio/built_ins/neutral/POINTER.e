@@ -24,12 +24,6 @@ feature -- Operations
 			Result := Precursor (offset)
 		end
 
-	infix "+" (offset: INTEGER): POINTER
-			-- Pointer moved by an offset of `offset' bytes.
-		do
-			Result := Precursor (offset)
-		end
-
 feature -- Conversion
 
 	to_integer_32: INTEGER_32

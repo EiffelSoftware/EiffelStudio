@@ -32,7 +32,7 @@ feature {NONE} -- Correction
 
 feature -- Access
 
-	infix "+" (a_other: LINEAR [G]): like Current
+	plus alias "+" (a_other: LINEAR [G]): like Current
 			-- Union of 'Current' and 'a_other'
 		require
 			valid_other: a_other /= Void

@@ -111,7 +111,7 @@ feature -- Comparison
 			Result := class_name.is_equal (other.class_name)
 		end
 
-	infix "<" (other: like Current): BOOLEAN
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Less than
 		do
 			Result := class_name < other.class_name

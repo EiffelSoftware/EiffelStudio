@@ -12,11 +12,11 @@ Application_icon	ICON	DISCARDABLE	"ec.ico"
 
 #include <windows.h>
 
-#define VER_FILEVERSION             19.08,0,0
-#define VER_FILEVERSION_STR         "19.08.0.0\0"
+#define VER_FILEVERSION             19.09,0,0
+#define VER_FILEVERSION_STR         "19.09.0.0\0"
 
-#define VER_PRODUCTVERSION          19.08,0,0
-#define VER_PRODUCTVERSION_STR      "19.08\0"
+#define VER_PRODUCTVERSION          19.09,0,0
+#define VER_PRODUCTVERSION_STR      "19.09\0"
 
 #ifndef DEBUG
 #define VER_DEBUG                   0
@@ -38,15 +38,15 @@ BEGIN
         BLOCK "040904E4"
         BEGIN
             VALUE "CompanyName",      "Eiffel Software"
-            VALUE "FileDescription",  "Eiffel Studio 19.08"
-            VALUE "FileVersion",      "19.08"
+            VALUE "FileDescription",  "Eiffel Studio 19.09"
+            VALUE "FileVersion",      "19.09"
             VALUE "InternalName",     ""
             VALUE "LegalCopyright",   "Eiffel Software. All rights reserved."
             VALUE "LegalTrademarks1", ""
             VALUE "LegalTrademarks2", ""
             VALUE "OriginalFilename", ""
-            VALUE "ProductName",      "Eiffel Studio 19.08"
-            VALUE "ProductVersion",   "19.08"
+            VALUE "ProductName",      "Eiffel Studio 19.09"
+            VALUE "ProductVersion",   "19.09"
         END
     END
 

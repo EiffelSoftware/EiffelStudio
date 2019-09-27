@@ -1,5 +1,5 @@
-test_name	delayed-check-failure-with-infix
-test_description When a class is using an infix routine and the class has some routines with an anchor, it crashes the compiler.
+test_name	delayed-check-failure-with-alias
+test_description When a class is using an alias routine and the class has some routines with an anchor, it crashes the compiler.
 
 copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e

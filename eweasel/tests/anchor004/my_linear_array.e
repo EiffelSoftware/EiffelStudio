@@ -16,7 +16,7 @@ feature -- Access
 		do
 		end
 
-	item, infix "@" (i: INTEGER): G is
+	item alias "@" (i: INTEGER): G is
 		do
 		end
 

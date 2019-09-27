@@ -6,7 +6,7 @@ inherit
 
 feature -- Access
 
-	infix "+" (a_other: LINEAR [G]): like Current is
+	add alias "+" (a_other: LINEAR [G]): like Current is
 		do
 		end
 

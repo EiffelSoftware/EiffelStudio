@@ -1,4 +1,4 @@
-A call to an infix operator feature which passes `$x' as its second
+A call to an alias operator feature which passes `$x' as its second
 argument (e.g., `Current @ $x') should be legal, but the compiler
 reports a syntax error.
 

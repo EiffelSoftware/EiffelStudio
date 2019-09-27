@@ -13,7 +13,7 @@ feature
 			print (Current @ $make); io.new_line;
 		end
 	
-	infix "@" (p: POINTER): POINTER is
+	at alias "@" (p: POINTER): POINTER is
 		do
 		end
 end

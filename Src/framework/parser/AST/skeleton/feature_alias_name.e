@@ -71,10 +71,11 @@ feature -- Access
 			if is_bracket_alias or else is_parentheses_alias then
 				create Result.initialize (alias_name.value)
 			else
+					-- For alias, always consider lowercase operator name!
 				if is_binary then
-					create Result.initialize (infix_feature_name_with_symbol (alias_name.value))
+					create Result.initialize (infix_feature_name_with_symbol (alias_name.value.as_lower))
 				else
-					create Result.initialize (prefix_feature_name_with_symbol (alias_name.value))
+					create Result.initialize (prefix_feature_name_with_symbol (alias_name.value.as_lower))
 				end
 			end
 		ensure

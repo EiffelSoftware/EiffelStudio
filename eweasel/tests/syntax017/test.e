@@ -23,43 +23,44 @@ feature
 			print (Current IMPLIES Current); io.new_line;
 			print (Current XOR Current); io.new_line;
 			print (Current #XOR Current); io.new_line;
+			print (Current.negated); io.new_line;
 			print (NOT Current); io.new_line;
 			print (#NOT Current); io.new_line;
 		end;
 
-	infix "OR" (arg: like Current): like Current is
+	disjuncted alias "OR" (arg: like Current): like Current is
 		do
 		end;
 
-	infix "OR ElsE" (arg: like Current): like Current is
+	disjuncted_semistrict alias "OR ElsE" (arg: like Current): like Current is
 		do
 		end;
 	
-	infix "aNd" (arg: like Current): like Current is
+	conjuncted alias "aNd" (arg: like Current): like Current is
 		do
 		end
 
-	infix "aNd Then" (arg: like Current): like Current is
+	conjuncted_semistrict alias "aNd Then" (arg: like Current): like Current is
 		do
 		end
 
-	infix "IMpliES" (arg: like Current): like Current is
+	implication alias "IMpliES" (arg: like Current): like Current is
 		do
 		end
 
-	infix "XOr" (arg: like Current): like Current is
+	disjuncted_exclusive alias "XOr" (arg: like Current): like Current is
 		do
 		end
 
-	infix "#XOr" (arg: like Current): like Current is
+	disjuncted_exclusive_sharp alias "#XOr" (arg: like Current): like Current is
 		do
 		end
 
-	prefix "NoT": like Current is
+	negated alias "NoT": like Current is
 		do
 		end
 
-	prefix "#NoT": like Current is
+	negated_sharp alias "#NoT": like Current is
 		do
 		end
 

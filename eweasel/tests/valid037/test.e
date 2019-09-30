@@ -14,12 +14,12 @@ feature
 		do
 		end;
 		
-	infix "||" (n: TEST): TEST is
+	f alias "||" (n: TEST): TEST is
 		do
 			Result := n @@@ n;
 		end;
 	
-	infix "@@@" (n: TEST): TEST is
+	g alias "@@@" (n: TEST): TEST is
 		do
 		end
 end

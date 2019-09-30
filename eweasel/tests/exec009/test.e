@@ -21,21 +21,21 @@ feature
 			print ($EXPRESSION); io.new_line;
 		end;
 
-	infix "#" (n: INTEGER): BOOLEAN is
+	f alias "#" (n: INTEGER): BOOLEAN is
 		do
 			io.putstring ("Argument to infix %"#%" is ");
 			io.putint (n); io.new_line;
 			Result := True;
 		end;
 
-	infix "##" (n: BOOLEAN): BOOLEAN is
+	g alias "##" (n: BOOLEAN): BOOLEAN is
 		do
 			io.putstring ("Argument to infix %"##%" is ");
 			io.putbool (n); io.new_line;
 			Result := True;
 		end;
 
-	infix "###" (n: BOOLEAN): INTEGER is
+	h alias "###" (n: BOOLEAN): INTEGER is
 		do
 			io.putstring ("Argument to infix %"###%" is ");
 			io.putbool (n); io.new_line;

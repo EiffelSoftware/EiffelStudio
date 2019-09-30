@@ -8,12 +8,12 @@ class TEST
 inherit
 	TEST1
 		rename
-			weasel as infix "@",
-			stoat as infix "@@",
-			ermine as infix "@@@",
-			infix "@@@1" as hamster1,
-			infix "@@@2" as hamster2,
-			infix "@@@3" as hamster3
+			weasel as weasel alias "@",
+			stoat as stoat alias "@@",
+			ermine as ermine alias "@@@",
+			f1 as hamster1 alias "@@@1",
+			f2 as hamster2 alias "@@@2",
+			f3 as hamster3 alias "@@@3"
 		end
 creation
 	make

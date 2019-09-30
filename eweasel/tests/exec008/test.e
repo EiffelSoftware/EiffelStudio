@@ -21,13 +21,13 @@ feature
 			k := ## Current + Current;
 		end;
 	
-	prefix "##": TEST is
+	f alias "##": TEST is
 		do
 			io.putstring ("In prefix %"##%"%N");
 			Result := Current;
 		end;
 	
-	infix "+" (arg: TEST): TEST is
+	g alias "+" (arg: TEST): TEST is
 		do
 			io.putstring ("In infix %"+%"%N");
 			Result := Current;

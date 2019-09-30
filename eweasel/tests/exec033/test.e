@@ -18,7 +18,7 @@ feature
 			io.putdouble (Current @ 3); io.new_line;
 		end
 	
-	infix "@" (other: DOUBLE): DOUBLE is
+	at alias "@" (other: DOUBLE): DOUBLE is
 		do
 			io.putstring ("Other is ");
 			io.putdouble (other); io.new_line;

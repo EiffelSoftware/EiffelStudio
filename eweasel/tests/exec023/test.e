@@ -17,7 +17,7 @@ feature
 			io.putint (+ Current); io.new_line;
 		end;
 
-	prefix "+": INTEGER;
+	identity alias "+": INTEGER;
 
 end
 

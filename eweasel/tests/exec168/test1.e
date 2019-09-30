@@ -28,21 +28,21 @@ feature
 			"floor"
 		end
 
-	infix "@@@1" (k: DOUBLE): DOUBLE is
+	f1 alias "@@@1" (k: DOUBLE): DOUBLE is
 		external 
 			"C inline"
 		alias
 			"floor($k)"
 		end
 
-	infix "@@@2" (k: DOUBLE): DOUBLE is
+	f2 alias "@@@2" (k: DOUBLE): DOUBLE is
 		external 
 			"C use <math.h>"
 		alias
 			"floor"
 		end
 
-	infix "@@@3" (k: DOUBLE): DOUBLE is
+	f3 alias "@@@3" (k: DOUBLE): DOUBLE is
 		external 
 			"C signature (double): double use <math.h>"
 		alias

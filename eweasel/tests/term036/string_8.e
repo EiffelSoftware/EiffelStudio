@@ -36,7 +36,7 @@ class STRING_8 inherit
 	TO_SPECIAL [CHARACTER]
 		redefine
 			copy, is_equal, out,
-			item, infix "@", put, valid_index
+			item, put, valid_index
 		end
 
 	STRING_HANDLER
@@ -191,7 +191,7 @@ feature -- Initialization
 
 feature -- Access
 
-	item, infix "@" (i: INTEGER): CHARACTER is
+	item alias "@" (i: INTEGER): CHARACTER is
 			-- Character at position `i'
 		do
 			Result := area.item (i - 1)
@@ -434,7 +434,7 @@ feature -- Comparison
 			definition: Result = string.is_equal (other.string)
 		end
 
-	infix "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN is
 			-- Is string lexicographically lower than `other'?
 		local
 			other_area: like area
@@ -1021,7 +1021,7 @@ feature -- Element change
 			-- appended: For every `i' in 1..`s'.`count', `item' (old `count'+`i') = `s'.`item' (`i')
 		end
 
-	infix "+" (s: STRING): STRING is
+	plus alias "+" (s: STRING): STRING is
 			-- Append a copy of 's' at the end of a copy of Current,
 			-- Then return the Result.
 		require

@@ -25,7 +25,7 @@ class ARRAY [G] inherit
 		export
 			{ARRAY} set_area
 		redefine
-			copy, is_equal, item, put, infix "@", valid_index
+			copy, is_equal, item, put, valid_index
 		end
 
 create
@@ -67,19 +67,20 @@ feature -- Initialization
 			upper := a.upper
 		end
 
-  make_from_special (a: SPECIAL [G]) is
-            -- Initialize from the items of `a'.
-        require
-            array_exists: a /= Void
-        do
-            area := a
-            lower := 1
-            upper := a.count
-        end
+	make_from_special (a: SPECIAL [G]) is
+			-- Initialize from the items of `a'.
+		require
+			array_exists: a /= Void
+		do
+			area := a
+			lower := 1
+			upper := a.count
+		end
+
 
 feature -- Access
 
-	item, infix "@" (i: INTEGER): G is
+	item alias "@" (i: INTEGER): G is
 			-- Entry at index `i', if in index interval
 		do
 			Result := area.item (i - lower)

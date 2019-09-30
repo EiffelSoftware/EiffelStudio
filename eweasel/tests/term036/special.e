@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen item, frozen infix "@" (i: INTEGER): T is
+	frozen item alias "@" (i: INTEGER): T is
 			-- Item at `i'-th position
 			-- (indices begin at 0)
 		require

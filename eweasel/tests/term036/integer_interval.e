@@ -104,7 +104,7 @@ feature -- Access
 			Result := upper_internal
 		end
 
-	item, infix "@" (i: INTEGER): INTEGER is
+	item alias "@" (i: INTEGER): INTEGER is
 			-- Entry at index `i', if in index interval
 		do
 			Result := i

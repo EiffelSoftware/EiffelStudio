@@ -12,21 +12,21 @@ deferred class COMPARABLE inherit
 
 	PART_COMPARABLE
 		redefine
-			infix "<", infix "<=",
-			infix ">", infix ">=",
+			is_less, is_less_equal,
+			is_greater, is_greater_equal,
 			is_equal
 		end
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN is
 			-- Is current object less than `other'?
 		deferred
 		ensure then
 			asymmetric: Result implies not (other < Current)
 		end
 
-	infix "<=" (other: like Current): BOOLEAN is
+	is_less_equal alias "<=" (other: like Current): BOOLEAN is
 			-- Is current object less than or equal to `other'?
 		do
 			Result := not (other < Current)
@@ -34,7 +34,7 @@ feature -- Comparison
 			definition: Result = ((Current < other) or is_equal (other))
 		end
 
-	infix ">" (other: like Current): BOOLEAN is
+	is_greater alias ">" (other: like Current): BOOLEAN is
 			-- Is current object greater than `other'?
 		do
 			Result := other < Current
@@ -42,7 +42,7 @@ feature -- Comparison
 			definition: Result = (other < Current)
 		end
 
-	infix ">=" (other: like Current): BOOLEAN is
+	is_greater_equal alias ">=" (other: like Current): BOOLEAN is
 			-- Is current object greater than or equal to `other'?
 		do
 			Result := not (Current < other)

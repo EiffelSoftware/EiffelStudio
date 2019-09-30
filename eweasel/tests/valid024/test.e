@@ -28,7 +28,7 @@ feature
 
 feature {NONE}
 	
-	pound, infix "#" (n: INTEGER): INTEGER is
+	pound alias "#" (n: INTEGER): INTEGER is
 		do
 			Result := 47;
 		end;

@@ -4,17 +4,17 @@ class
 inherit
 	TEST3
 		redefine
-			infix "<"
+			is_less
 		end
 
 	TEST4
 		redefine
-			infix "<"
+			is_less
 		end
 
 feature
 
-	infix "<" (other: like Current): BOOLEAN
+	is_less alias "<" (other: like Current): BOOLEAN
 		do
 
 		end

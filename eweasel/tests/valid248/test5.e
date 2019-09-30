@@ -4,12 +4,12 @@ class
 inherit
 	TEST3
 		rename
-			infix "<" as infix "<"
+			is_less as is_less alias "<"
 		end
 
 	TEST4
 		undefine
-			infix "<"
+			is_less
 		end
 		
 end

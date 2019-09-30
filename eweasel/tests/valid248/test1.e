@@ -5,7 +5,7 @@ inherit
 
 feature
 
-	infix "<" (other: like Current): BOOLEAN
+	is_less alias "<" (other: like Current): BOOLEAN
 		do
 		end
 

@@ -4,8 +4,8 @@ class
 inherit
 	TEST3
 		rename
-			infix "<" as is_less alias "<",
-			infix ">" as manu_test
+			is_less as is_less alias "<",
+			is_greater as manu_test
 		end
 
 end

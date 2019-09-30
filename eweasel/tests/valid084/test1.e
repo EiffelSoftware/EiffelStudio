@@ -14,12 +14,12 @@ feature
 
 feature {TEST1}
 
-	prefix "+": BOOLEAN is
+	f alias "+": BOOLEAN is
 		do
 			Result := True;
 		end
 	
-	infix "^" (n: INTEGER): BOOLEAN is
+	g alias "^" (n: INTEGER): BOOLEAN is
 		do
 			Result := True;
 		end

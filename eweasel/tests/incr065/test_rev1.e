@@ -20,19 +20,19 @@ feature
 			print (s);
 		end;
 	
-	infix "@index" (a: INTEGER): STRING is
+	g alias "@index" (a: INTEGER): STRING is
 		do
 			io.putstring ("In lowercase index%N");
 			Result := "1";
 		end;
 
-	infix "@INdex" (a: INTEGER): STRING is
+	h alias "@INdex" (a: INTEGER): STRING is
 		do
 			io.putstring ("In uppercase Index%N");
 			Result := "2";
 		end;
 
-	infix "@INDEX" (a: INTEGER): STRING is
+	i alias "@INDEX" (a: INTEGER): STRING is
 		do
 			io.putstring ("In uppercase INDEX%N");
 			Result := "3";

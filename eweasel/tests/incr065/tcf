@@ -28,6 +28,6 @@ compile_result 	 ok
 
 copy_raw 	 test_rev1.e  $CLUSTER test.e
 compile_melted
-compile_result 	 validity_error TEST VMFN VMFN
+compile_result 	 validity_error TEST VFAV(1) VFAV(1)
 
 test_end

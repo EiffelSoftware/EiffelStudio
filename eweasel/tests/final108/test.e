@@ -13,7 +13,7 @@ feature
 			print (Current.value2 (3.0)); io.new_line
 		end
 
-	infix "-" (n: DOUBLE): DOUBLE
+	minus alias "-" (n: DOUBLE): DOUBLE
 		require
 			show_pre (True)
 		external "C inline"

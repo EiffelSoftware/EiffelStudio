@@ -13,6 +13,6 @@ feature
 			print ((+ Current).a); io.new_line
 		end
 
-	prefix "+": TEST1
+	identity alias "+": TEST1
 
 end

@@ -13,6 +13,6 @@ feature
 			io.put_integer (# Current);
 		end
 
-	prefix "#": INTEGER;
+	f alias "#": INTEGER;
 
 end

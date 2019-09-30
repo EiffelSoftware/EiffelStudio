@@ -14,7 +14,7 @@ feature
 			print (Current @ 3); io.new_line
 		end
 
-	infix "@" (m: INTEGER): INTEGER is
+	at alias "@" (m: INTEGER): INTEGER is
 		external "C"
 		end
 			

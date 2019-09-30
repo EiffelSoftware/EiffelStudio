@@ -15,7 +15,7 @@ feature -- Initialization
 			io.put_new_line
 		end
 
-	infix "^" (p: DOUBLE): DOUBLE is
+	power alias "^" (p: DOUBLE): DOUBLE is
 		do
 			Result := p
 		end

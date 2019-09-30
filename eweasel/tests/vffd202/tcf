@@ -17,56 +17,56 @@ copy_sub 	 test.e  $CLUSTER test.e
 compile_melted
 compile_result 	 validity_error TEST VMFN
 
-define		 FEATURE_LIST1 "infix "@" (n: INTEGER): INTEGER"
-define		 FEATURE_LIST2 "make2, infix "@" (n: INTEGER): INTEGER"
+define		 FEATURE_LIST1 "i alias "@" (n: INTEGER): INTEGER"
+define		 FEATURE_LIST2 "make2, i alias "@" (n: INTEGER): INTEGER"
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
 compile_result 	 validity_error TEST VMFN
 
-define		 FEATURE_LIST1 "infix "@" (n: INTEGER): INTEGER"
-define		 FEATURE_LIST2 "make2, infix "@" (n: BOOLEAN): BOOLEAN"
+define		 FEATURE_LIST1 "i alias "@" (n: INTEGER): INTEGER"
+define		 FEATURE_LIST2 "make2, i alias "@" (n: BOOLEAN): BOOLEAN"
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
 compile_result 	 validity_error TEST VMFN
 
-define		 FEATURE_LIST1 "prefix "@": INTEGER"
-define		 FEATURE_LIST2 "make2, prefix "@": BOOLEAN"
+define		 FEATURE_LIST1 "p alias "@": INTEGER"
+define		 FEATURE_LIST2 "make2, p alias "@": BOOLEAN"
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
 compile_result 	 validity_error TEST VMFN
 
-define		 FEATURE_LIST1 "prefix "not": INTEGER"
-define		 FEATURE_LIST2 "make2, prefix "not": BOOLEAN"
+define		 FEATURE_LIST1 "p alias "not": INTEGER"
+define		 FEATURE_LIST2 "make2, p alias "not": BOOLEAN"
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
 compile_result 	 validity_error TEST VMFN
 
-define		 FEATURE_LIST1 "infix "and" (n: BOOLEAN): INTEGER"
-define		 FEATURE_LIST2 "make2, infix "and" (n: BOOLEAN): INTEGER"
+define		 FEATURE_LIST1 "i alias "and" (n: BOOLEAN): INTEGER"
+define		 FEATURE_LIST2 "make2, i alias "and" (n: BOOLEAN): INTEGER"
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
 compile_result 	 validity_error TEST VMFN
 
-define		 FEATURE_LIST1 "infix "and" (n: BOOLEAN): INTEGER"
-define		 FEATURE_LIST2 "make2, frozen infix "and" (n: BOOLEAN): INTEGER"
+define		 FEATURE_LIST1 "i alias "and" (n: BOOLEAN): INTEGER"
+define		 FEATURE_LIST2 "make2, frozen i alias "and" (n: BOOLEAN): INTEGER"
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
 compile_result 	 validity_error TEST VMFN
 
-define		 FEATURE_LIST1 "infix "and" (n: BOOLEAN): INTEGER"
-define		 FEATURE_LIST2 "make2, frozen infix "and" (n: BOOLEAN): INTEGER"
+define		 FEATURE_LIST1 "i alias "and" (n: BOOLEAN): INTEGER"
+define		 FEATURE_LIST2 "make2, frozen i alias "and" (n: BOOLEAN): INTEGER"
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
 compile_result 	 validity_error TEST VMFN
 
-define		 FEATURE_LIST1 "prefix "|||||||||||||||": like Current"
-define		 FEATURE_LIST2 "make2, frozen prefix "|||||||||||||||": like Current"
+define		 FEATURE_LIST1 "p alias "|||||||||||||||": like Current"
+define		 FEATURE_LIST2 "make2, frozen p alias "|||||||||||||||": like Current"
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
 compile_result 	 validity_error TEST VMFN
 
-define		 FEATURE_LIST1 "prefix "|||||||||||||||": like Current"
-define		 FEATURE_LIST2 "make2, frozen infix "|||||||||||||||"(n: like Current): like Current"
+define		 FEATURE_LIST1 "p alias "|||||||||||||||": like Current"
+define		 FEATURE_LIST2 "make2, frozen i alias "|||||||||||||||"(n: like Current): like Current"
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
 compile_result 	 ok

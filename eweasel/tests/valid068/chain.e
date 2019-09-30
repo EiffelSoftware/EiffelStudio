@@ -23,7 +23,7 @@ deferred class CHAIN [G] inherit
 
 	INDEXABLE [G, INTEGER]
 		rename
-			item as i_th,
+			item as i_th alias "@",
 			put as put_i_th
 		undefine
 			prune_all

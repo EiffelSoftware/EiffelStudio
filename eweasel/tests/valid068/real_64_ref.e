@@ -249,7 +249,7 @@ feature -- Basic operations
 			Result := item ^ other
 		end
 
-	indentity alias "+": like Current is
+	identity alias "+": like Current is
 			-- Unary plus
 		do
 			create Result

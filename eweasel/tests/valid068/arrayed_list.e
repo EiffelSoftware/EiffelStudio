@@ -17,7 +17,7 @@ class ARRAYED_LIST [G] inherit
 	ARRAY [G]
 		rename
 			force as force_i_th,
-			item as i_th,
+			item as i_th alias "@",
 			make as array_make,
 			put as put_i_th,
 			count as array_count,

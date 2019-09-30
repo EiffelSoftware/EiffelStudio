@@ -11,7 +11,7 @@ inherit
 	NUMERIC
 		rename
 			quotient as integer_quotient alias "//",
-			opposite as unapplicable_opposite
+			opposite as unapplicable_minus_prefix
 		redefine
 			out, is_equal
 		end

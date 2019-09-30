@@ -60,7 +60,7 @@ copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
 compile_result 	 ok
 
-define		 INHERITANCE "inherit TEST1 rename infix "@weasel" as wimp end"
+define		 INHERITANCE "inherit TEST1 rename at as wimp end"
 copy_sub 	 test.e  $CLUSTER test.e
 compile_melted
 compile_result 	 validity_error TEST VRFA
@@ -74,7 +74,7 @@ copy_sub 	 test1.e  $CLUSTER test1.e
 resume_compile
 compile_result 	 validity_error TEST VRFA
 
-define		 TEST1_FEATURE "prefix "@weasel": REAL is do end"
+define		 TEST1_FEATURE "f alias "@weasel": REAL is do end"
 copy_sub 	 test1.e  $CLUSTER test1.e
 resume_compile
 compile_result 	 ok

@@ -9,7 +9,7 @@ feature
 	
 	$TEST1_FEATURE
 
-	infix "@weasel" (n: INTEGER): like Current is
+	at alias "@weasel" (n: INTEGER): like Current is
 		do
 		end
 end

@@ -25,7 +25,7 @@ class ARRAY [G] inherit
 		export
 			{ARRAY} set_area
 		redefine
-			copy, is_equal, item, put, infix "@", valid_index
+			copy, is_equal, item, put, valid_index
 		end
 
 create
@@ -80,7 +80,7 @@ feature -- Initialization
 
 feature -- Access
 
-	item, infix "@" (i: INTEGER): G is
+	item alias "@" (i: INTEGER): G is
 			-- Entry at index `i', if in index interval
 		do
 			Result := area.item (i - lower)

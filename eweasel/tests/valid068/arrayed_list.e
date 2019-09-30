@@ -43,7 +43,7 @@ class ARRAYED_LIST [G] inherit
 
 	DYNAMIC_LIST [G]
 		undefine
-			valid_index, infix "@", i_th, put_i_th,
+			valid_index, i_th, put_i_th,
 			force, is_inserted, copy
 		redefine
 			first, last, swap, wipe_out,

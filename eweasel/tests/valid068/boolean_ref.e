@@ -79,7 +79,7 @@ feature -- Element change
 
 feature -- Basic operations
 
-	infix "and" (other: like Current): BOOLEAN is
+	conjuncted alias "and" (other: like Current): BOOLEAN is
 			-- Boolean conjunction with `other'
 		require
 			other_exists: other /= Void
@@ -91,7 +91,7 @@ feature -- Basic operations
 			consistent_with_semi_strict: Result implies (Current and then other)
 		end
 
-	infix "and then" (other: like Current): BOOLEAN is
+	conjuncted_semistrict alias "and then" (other: like Current): BOOLEAN is
 			-- Boolean semi-strict conjunction with `other'
 		require
 			other_exists: other /= Void
@@ -101,7 +101,7 @@ feature -- Basic operations
 			de_morgan: Result = not (not Current or else not other)
 		end
 
-	infix "implies" (other: like Current): BOOLEAN is
+	implication alias "implies" (other: like Current): BOOLEAN is
 			-- Boolean implication of `other'
 			-- (semi-strict)
 		require
@@ -112,14 +112,14 @@ feature -- Basic operations
 			definition: Result = (not Current or else other)
 		end
 
-	prefix "not": like Current is
+	negated alias "not": like Current is
 			-- Negation
 		do
 			create Result
 			Result.set_item (not item)
 		end
 
-	infix "or" (other: like Current): BOOLEAN is
+	disjuncted alias "or" (other: like Current): BOOLEAN is
 			-- Boolean disjunction with `other'
 		require
 			other_exists: other /= Void
@@ -131,7 +131,7 @@ feature -- Basic operations
 			consistent_with_semi_strict: Result implies (Current or else other)
 		end
 
-	infix "or else" (other: like Current): BOOLEAN is
+	disjuncted_semistrict alias "or else" (other: like Current): BOOLEAN is
 			-- Boolean semi-strict disjunction with `other'
 		require
 			other_exists: other /= Void
@@ -141,7 +141,7 @@ feature -- Basic operations
 			de_morgan: Result = not (not Current and then not other)
 		end
 
-	infix "xor" (other: like Current): BOOLEAN is
+	disjuncted_exclusive alias "xor" (other: like Current): BOOLEAN is
 			-- Boolean exclusive or with `other'
 		require
 			other_exists: other /= Void

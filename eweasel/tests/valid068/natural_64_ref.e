@@ -10,8 +10,8 @@ class
 inherit
 	NUMERIC
 		rename
-			infix "/" as infix "//",
-			prefix "-" as unapplicable_minus_prefix
+			quotient as integer_quotient alias "//",
+			opposite as unapplicable_opposite
 		redefine
 			out, is_equal
 		end
@@ -81,7 +81,7 @@ feature -- Access
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN is
+	is_less alias "<" (other: like Current): BOOLEAN is
 			-- Is current integer less than `other'?
 		do
 			Result := item < other.item
@@ -152,28 +152,28 @@ feature -- Status report
 
 feature -- Basic operations
 
-	infix "+" (other: like Current): like Current is
+	plus alias "+" (other: like Current): like Current is
 			-- Sum with `other'
 		do
 			create Result
 			Result.set_item (item + other.item)
 		end
 
-	infix "-" (other: like Current): like Current is
+	minus alias "-" (other: like Current): like Current is
 			-- Result of subtracting `other'
 		do
 			create Result
 			Result.set_item (item - other.item)
 		end
 
-	infix "*" (other: like Current): like Current is
+	product alias "*" (other: like Current): like Current is
 			-- Product by `other'
 		do
 			create Result
 			Result.set_item (item * other.item)
 		end
 
-	infix "/" (other: like Current): DOUBLE is
+	quotient alias "/" (other: like Current): DOUBLE is
 			-- Division by `other'
 		require
 			other_exists: other /= Void
@@ -182,7 +182,7 @@ feature -- Basic operations
 			Result := item / other.item
 		end
 
-	prefix "+": like Current is
+	identity alias "+": like Current is
 			-- Unary plus
 		do
 			create Result
@@ -196,14 +196,14 @@ feature -- Basic operations
 			not_applicable: False
 		end
 
-	infix "//" (other: like Current): like Current is
+	integer_quotient alias "//" (other: like Current): like Current is
 			-- Integer division of Current by `other'
 		do
 			create Result
 			Result.set_item (item // other.item)
 		end
 
-	infix "\\" (other: like Current): like Current is
+	integer_remainder alias "\\" (other: like Current): like Current is
 			-- Remainder of the integer division of Current by `other'
 		require
 			other_exists: other /= Void
@@ -215,7 +215,7 @@ feature -- Basic operations
 			result_exists: Result /= Void
 		end
 
-	infix "^" (other: DOUBLE): DOUBLE is
+	power alias "^" (other: DOUBLE): DOUBLE is
 			-- Integer power of Current by `other'
 		do
 			Result := item ^ other + 0
@@ -376,7 +376,7 @@ feature -- Conversion
 
 feature -- Bit operations
 
-	frozen infix "&", frozen bit_and (i: like Current): like Current is
+	frozen bit_and alias "&" (i: like Current): like Current is
 			-- Bitwise and between Current' and `i'.
 		require
 			i_not_void: i /= Void
@@ -387,7 +387,7 @@ feature -- Bit operations
 			bitwise_and_not_void: Result /= Void
 		end
 
-	frozen infix "|", frozen bit_or (i: like Current): like Current is
+	frozen bit_or alias "|" (i: like Current): like Current is
 			-- Bitwise or between Current' and `i'.
 		require
 			i_not_void: i /= Void
@@ -432,7 +432,7 @@ feature -- Bit operations
 			end	
 		end
 
-	frozen infix "|<<", frozen bit_shift_left (n: INTEGER): like Current is
+	frozen bit_shift_left alias "|<<" (n: INTEGER): like Current is
 			-- Shift Current from `n' position to left.
 		require
 			n_nonnegative: n >= 0
@@ -444,7 +444,7 @@ feature -- Bit operations
 			bit_shift_left_not_void: Result /= Void
 		end
 
-	frozen infix "|>>", frozen bit_shift_right (n: INTEGER): like Current is
+	frozen bit_shift_right alias "|>>" (n: INTEGER): like Current is
 			-- Shift Current from `n' position to right.
 		require
 			n_nonnegative: n >= 0

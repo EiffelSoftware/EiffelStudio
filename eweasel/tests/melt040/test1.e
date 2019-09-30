@@ -6,7 +6,7 @@
 
 class TEST1 [G]
 feature
-	infix "#" (arg: G): G is
+	f alias "#" (arg: G): G is
 		do
 			Result := arg;
 		end

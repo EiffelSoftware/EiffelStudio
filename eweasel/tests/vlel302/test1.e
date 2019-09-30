@@ -11,27 +11,27 @@ feature
 		do
 		end
 
-	prefix "+": INTEGER is
+	f1 alias "+": INTEGER is
 		do
 		end
 
-	prefix "@weasel": INTEGER is
+	f2 alias "@weasel": INTEGER is
 		do
 		end
 
-	prefix "@wuss": INTEGER is
+	f3 alias "@wuss": INTEGER is
 		do
 		end
 
-	infix "-" (n: INTEGER): INTEGER is
+	f4 alias "-" (n: INTEGER): INTEGER is
 		do
 		end
 
-	infix "@wimp" (n: INTEGER): INTEGER is
+	f5 alias "@wimp" (n: INTEGER): INTEGER is
 		do
 		end
 
-	infix "@wuss" (n: INTEGER): INTEGER is
+	f6 alias "@wuss" (n: INTEGER): INTEGER is
 		do
 		end
 

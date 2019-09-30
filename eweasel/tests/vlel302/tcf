@@ -12,32 +12,32 @@ test_description Violate validity constraint VLEL3 with a feature name which app
 copy_sub 	 Ace $TEST Ace
 copy_raw 	 test1.e  $CLUSTER test1.e
 
-define		 EXPORT "{ANY} prefix "+"; {NONE} f, prefix "+""
+define		 EXPORT "{ANY} f1; {NONE} f, f1"
 copy_sub 	 test.e  $CLUSTER test.e
 compile_melted
 compile_result 	 validity_error TEST VLEL(3)
 
-define		 EXPORT "{ANY} prefix "@weasel"; {NONE} f, prefix "@weasel""
+define		 EXPORT "{ANY} f2; {NONE} f, f2"
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
 compile_result 	 validity_error TEST VLEL(3)
 
-define		 EXPORT "{ANY} infix "@wimp"; {NONE} f, infix "@wimp""
+define		 EXPORT "{ANY} f5; {NONE} f, f5"
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
 compile_result 	 validity_error TEST VLEL(3)
 
-define		 EXPORT "{ANY} infix "-", f; {ANY} weasel, infix "-""
+define		 EXPORT "{ANY} f4, f; {ANY} weasel, f4"
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
 compile_result 	 validity_error TEST VLEL(3)
 
-define		 EXPORT "{ANY} weasel, f; {ANY} infix "-", weasel"
+define		 EXPORT "{ANY} weasel, f; {ANY} inf4, weasel"
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
 compile_result 	 validity_error TEST VLEL(3)
 
-define		 EXPORT "{ANY} prefix "@wuss", prefix "+"; {TEST} infix "-", infix "@wuss""
+define		 EXPORT "{ANY} f3, f1; {TEST} f4, f6"
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
 compile_result 	 ok

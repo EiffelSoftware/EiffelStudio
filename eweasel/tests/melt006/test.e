@@ -24,20 +24,20 @@ feature
 			x := ## && || Current;
 		end;
 	
-	prefix "##": TEST is
+	f alias "##": TEST is
 		do
 			io.putstring ("In prefix %"##%"%N");
 			Result := Current;
 		end;
 	
 	
-	prefix "||": TEST is
+	g alias "||": TEST is
 		do
 			io.putstring ("In prefix %"||%"%N");
 			Result := Current;
 		end;
 	
-	prefix "&&": TEST is
+	h alias "&&": TEST is
 		do
 			io.putstring ("In prefix %"&&%"%N");
 			Result := Current;

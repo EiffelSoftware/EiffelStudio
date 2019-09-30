@@ -22,7 +22,7 @@ feature
 			a := a + b
 		end
 
-	infix "+" (b: B): B
+	plus alias "+" (b: B): B
 		do
 			Result := b
 		end

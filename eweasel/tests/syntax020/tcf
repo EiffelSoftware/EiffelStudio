@@ -158,12 +158,6 @@ copy_sub test.e $CLUSTER test.e
 resume_compile
 compile_result syntax_error TEST 23
 
--- FIXME: will be removed by ECMA standard
-define	VAR_NAME infix
-copy_sub test.e $CLUSTER test.e
-resume_compile
-compile_result syntax_error TEST 23
-
 define	VAR_NAME inherit
 copy_sub test.e $CLUSTER test.e
 resume_compile
@@ -233,12 +227,6 @@ compile_result syntax_error TEST 23
 -- compile_result syntax_error TEST 23
 
 define	VAR_NAME or
-copy_sub test.e $CLUSTER test.e
-resume_compile
-compile_result syntax_error TEST 23
-
--- FIXME: will be removed by ECMA standard
-define	VAR_NAME prefix
 copy_sub test.e $CLUSTER test.e
 resume_compile
 compile_result syntax_error TEST 23

@@ -7,5 +7,5 @@
 class TEST1
 feature
 
-	prefix "+": INTEGER is 13
+	f alias "+": INTEGER is 13
 end

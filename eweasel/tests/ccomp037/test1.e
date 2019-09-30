@@ -6,7 +6,7 @@
 
 class TEST1
 feature
-	item, prefix "@": like Current is
+	item alias "@": like Current is
 		do
 			Result := Current
 		end

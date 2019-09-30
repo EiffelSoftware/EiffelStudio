@@ -24,7 +24,7 @@ feature
 			end;
 		end;
 
-	infix "#\" (arg: INTEGER): INTEGER is
+	f alias "#\" (arg: INTEGER): INTEGER is
 		do
 			Result := arg + 2;
 		end;

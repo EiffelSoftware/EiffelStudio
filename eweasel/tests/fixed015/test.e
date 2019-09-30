@@ -20,7 +20,7 @@ feature
 			print (s);
 		end;
 	
-	infix "$FEATURE_NAME" (a: INTEGER): STRING is
+	f alias "$FEATURE_NAME" (a: INTEGER): STRING is
 		do
 		end;
 

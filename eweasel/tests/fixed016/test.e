@@ -28,7 +28,7 @@ feature
 			print (s);
 		end;
 	
-	infix "@index" (a: INTEGER): STRING is
+	f alias "@index" (a: INTEGER): STRING is
 		do
 			io.putstring ("In lowercase index%N");
 			Result := "1";

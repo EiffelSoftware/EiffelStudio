@@ -30,14 +30,14 @@ feature
 			print (s);
 		end;
 	
-	infix "@index" (a: INTEGER): STRING is
+	g alias "@index" (a: INTEGER): STRING is
 		do
 			io.putstring ("In lowercase index%N");
 			Result := "1";
 		end;
 
 
-	prefix "or": STRING is
+	h alias "or": STRING is
 		do
 			io.putstring ("In  pre");
 			Result := "4";

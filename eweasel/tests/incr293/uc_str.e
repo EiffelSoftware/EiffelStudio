@@ -11,7 +11,7 @@ inherit
 
 	STR
 		redefine
-			append_string, infix "+"
+			append_string, plus
 		end
 
 feature
@@ -20,7 +20,7 @@ feature
 		do
 		end
 
-	infix "+" (other: STR): like Current is
+	plus alias "+" (other: STR): like Current is
 		do
 		ensure then
 			final_unicode: is_equal (Result)

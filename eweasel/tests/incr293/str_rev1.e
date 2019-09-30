@@ -9,7 +9,7 @@ create
 
 feature
 
-	infix "+" (other: R_STR): like Current is
+	plus alias "+" (other: R_STR): like Current is
 		do
 		end
 

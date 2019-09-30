@@ -10,7 +10,7 @@ feature
 
 	elks_checking: BOOLEAN is False
 
-	infix "+" (other: R_STR): like Current is
+	plus alias "+" (other: R_STR): like Current is
 		deferred
 		ensure
 			Result /= Void

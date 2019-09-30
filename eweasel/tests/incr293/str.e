@@ -11,7 +11,7 @@ feature
 			do_nothing
 		end
 
-	infix "+" (other: STR): like Current is
+	plus alias "+" (other: STR): like Current is
 		do
 		ensure
 			Result /= Void

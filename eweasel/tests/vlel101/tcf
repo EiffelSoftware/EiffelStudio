@@ -17,17 +17,17 @@ copy_sub 	 test.e  $CLUSTER test.e
 compile_melted
 compile_result 	 validity_error TEST VLEL(1)
 
-define		 EXPORT "{ANY} prefix "+", all; {NONE} prefix "@weasel", all"
+define		 EXPORT "{ANY} p1, all; {NONE} p2, all"
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
 compile_result 	 syntax_error TEST 11
 
-define		 EXPORT "{ANY} all, prefix "+"; {NONE} all, prefix "@weasel""
+define		 EXPORT "{ANY} all, p1; {NONE} all, p2"
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
 compile_result 	 syntax_error TEST 11
 
-define		 EXPORT "{ANY} prefix "+", all; {NONE} all, prefix "@weasel""
+define		 EXPORT "{ANY} p1, all; {NONE} all, p2"
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
 compile_result 	 syntax_error TEST 11

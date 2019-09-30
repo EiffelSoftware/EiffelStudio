@@ -21,22 +21,22 @@ copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
 compile_result 	 validity_error TEST VMFN VMFN
 
-define		 FEATURE_LIST "make, infix "@", make (n: INTEGER): INTEGER"
+define		 FEATURE_LIST "make, f alias "@", make (n: INTEGER): INTEGER"
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
 compile_result 	 validity_error TEST VMFN VMFN
 
-define		 FEATURE_LIST "make, prefix "not", make: INTEGER"
+define		 FEATURE_LIST "make, f alias "not", make: INTEGER"
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
 compile_result 	 validity_error TEST VMFN VMFN
 
-define		 FEATURE_LIST "prefix "not", make, prefix "not": INTEGER"
+define		 FEATURE_LIST "f alias "not", make, f alias "not": INTEGER"
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
 compile_result 	 validity_error TEST VMFN VMFN
 
-define		 FEATURE_LIST "infix "@##", make, infix "@##" (n: INTEGER): INTEGER"
+define		 FEATURE_LIST "f alias "@##", make, f alias "@##" (n: INTEGER): INTEGER"
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
 compile_result 	 validity_error TEST VMFN VMFN
@@ -56,17 +56,12 @@ copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
 compile_result 	 validity_error TEST VMFN
 
-define		 FEATURE_LIST "infix "+", make, prefix "+" (n: INTEGER): INTEGER"
+define		 FEATURE_LIST "p alias "@##############################", p alias "@##############################": DOUBLE"
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
 compile_result 	 validity_error TEST VMFN
 
-define		 FEATURE_LIST "prefix "@##############################", prefix "@##############################": DOUBLE"
-copy_sub 	 test.e  $CLUSTER test.e
-resume_compile
-compile_result 	 validity_error TEST VMFN
-
-define		 FEATURE_LIST "prefix "@##############################", prefix "@###############################": DOUBLE"
+define		 FEATURE_LIST "p1 alias "@##############################", p2 alias "@###############################": DOUBLE"
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
 compile_result 	 ok

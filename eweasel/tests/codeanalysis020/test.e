@@ -88,15 +88,15 @@ feature {TEST} -- Test
 			Result := Current
 		end
 
-	prefix "+": TEST
-			-- An obsolete prefix feature.
+	postive alias "+": TEST
+			-- An obsolete alias feature.
 		obsolete "Prefix. [$(YESTERDAY)]"
 		do
 			Result := Current
 		end
 
-	infix "+" (other: TEST): TEST
-			-- An obsolete infix feature.
+	plus alias "+" (other: TEST): TEST
+			-- An obsolete alias feature.
 		obsolete "Infix. [$(YESTERDAY)]"
 		do
 			Result := Current

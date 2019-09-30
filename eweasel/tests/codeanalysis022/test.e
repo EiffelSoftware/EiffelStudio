@@ -39,14 +39,14 @@ feature {TEST} -- Access
 			Result := Current
 		end
 
-	prefix "+": TEST assign put
-			-- A prefix feature.
+	positive alias "+": TEST assign put
+			-- A alias feature.
 		do
 			Result := Current
 		end
 
-	infix "+" (other: TEST): TEST assign put_to
-			-- An infix feature.
+	plus alias "+" (other: TEST): TEST assign put_to
+			-- An alias feature.
 		do
 			Result := Current
 		end

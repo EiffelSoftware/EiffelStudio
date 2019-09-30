@@ -11,92 +11,12 @@ test_description Violate validity constraint VFFD6 with a class which has an inf
 
 copy_sub 	 Ace $TEST Ace
 
-define		 FEATURE "infix "@" is do end"
+define		 FEATURE "i alias "@" (n: INTEGER): like Current is once end"
 copy_sub 	 test.e  $CLUSTER test.e
 compile_melted
-compile_result 	 validity_error TEST VFFD(6)
-
-define		 FEATURE "infix "@": INTEGER"
-copy_sub 	 test.e  $CLUSTER test.e
-resume_compile
-compile_result 	 validity_error TEST VFFD(6)
-
-define		 FEATURE "infix "@": INTEGER is 13"
-copy_sub 	 test.e  $CLUSTER test.e
-resume_compile
-compile_result 	 validity_error TEST VFFD(6)
-
-define		 FEATURE "infix "@": INTEGER is unique"
-copy_sub 	 test.e  $CLUSTER test.e
-resume_compile
-compile_result 	 validity_error TEST VFFD(6)
-
-define		 FEATURE "infix "@": INTEGER is once end"
-copy_sub 	 test.e  $CLUSTER test.e
-resume_compile
-compile_result 	 validity_error TEST VFFD(6)
-
-define		 FEATURE "infix "@" (n, m: INTEGER): INTEGER is once end"
-copy_sub 	 test.e  $CLUSTER test.e
-resume_compile
-compile_result 	 validity_error TEST VFFD(6)
-
-define		 FEATURE "infix "@" (n: INTEGER) is do end"
-copy_sub 	 test.e  $CLUSTER test.e
-resume_compile
-compile_result 	 validity_error TEST VFFD(6)
-
-define		 FEATURE "infix "@" (n, m: INTEGER) is do end"
-copy_sub 	 test.e  $CLUSTER test.e
-resume_compile
-compile_result 	 validity_error TEST VFFD(6)
-
-define		 FEATURE "a, b, c, infix "@" is do end"
-copy_sub 	 test.e  $CLUSTER test.e
-resume_compile
-compile_result 	 validity_error TEST VFFD(6)
-
-define		 FEATURE "a, b, c, infix "@": INTEGER"
-copy_sub 	 test.e  $CLUSTER test.e
-resume_compile
-compile_result 	 validity_error TEST VFFD(6)
-
-define		 FEATURE "a, b, c, infix "@": INTEGER is 13"
-copy_sub 	 test.e  $CLUSTER test.e
-resume_compile
-compile_result 	 validity_error TEST VFFD(6)
-
-define		 FEATURE "a, b, c, infix "@": INTEGER is unique"
-copy_sub 	 test.e  $CLUSTER test.e
-resume_compile
-compile_result 	 validity_error TEST VFFD(6)
-
-define		 FEATURE "a, b, c, infix "@": INTEGER is once end"
-copy_sub 	 test.e  $CLUSTER test.e
-resume_compile
-compile_result 	 validity_error TEST VFFD(6)
-
-define		 FEATURE "a, b, c, infix "@" (n, m: INTEGER): INTEGER is once end"
-copy_sub 	 test.e  $CLUSTER test.e
-resume_compile
-compile_result 	 validity_error TEST VFFD(6)
-
-define		 FEATURE "a, b, c, infix "@" (n: INTEGER) is do end"
-copy_sub 	 test.e  $CLUSTER test.e
-resume_compile
-compile_result 	 validity_error TEST VFFD(6)
-
-define		 FEATURE "a, b, c, infix "@" (n, m: INTEGER) is do end"
-copy_sub 	 test.e  $CLUSTER test.e
-resume_compile
-compile_result 	 validity_error TEST VFFD(6)
-
-define		 FEATURE "infix "@" (n: INTEGER): like Current is once end"
-copy_sub 	 test.e  $CLUSTER test.e
-resume_compile
 compile_result 	 validity_error TEST VFFD(7)
 
-define		 FEATURE "infix "@" (n: INTEGER): like Current is external "C" end"
+define		 FEATURE "i alias "@" (n: INTEGER): like Current is external "C" end"
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
 compile_result 	 ok

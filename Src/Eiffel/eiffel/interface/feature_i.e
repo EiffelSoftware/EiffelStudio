@@ -1216,7 +1216,9 @@ feature -- Incrementality
 			if lst1 = lst2 then
 				Result := True
 			elseif lst1 = Void then
-				Result := lst2 = Void -- False!
+				Result := lst2 = Void
+			elseif lst2 = Void then
+				Result := False
 			elseif lst1.count = lst2.count then
 				Result := True
 				c1 := lst1.cursor

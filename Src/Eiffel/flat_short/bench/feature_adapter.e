@@ -152,13 +152,7 @@ feature {NONE} -- Implementation
 			from names.start until names.after loop
 				if names.index /= exclude then
 					l_feature_name:= names.item
-					if l_feature_name.is_infix then
-						l_name := "infix %"" + l_feature_name.visual_name + "%""
-					elseif l_feature_name.is_prefix then
-						l_name := "prefix %"" + l_feature_name.visual_name + "%""
-					else
-						l_name := l_feature_name.visual_name
-					end
+					l_name := l_feature_name.visual_name
 					others.extend (l_name)
 				end
 				names.forth
@@ -378,7 +372,7 @@ feature {FORMAT_REGISTRATION} -- Element chage
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

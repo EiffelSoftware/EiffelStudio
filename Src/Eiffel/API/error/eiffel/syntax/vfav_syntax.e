@@ -31,6 +31,8 @@ feature {NONE} -- Creation
 			set_feature_name (f.visual_name_32)
 			if a_location /= Void then
 				set_location (a_location)
+			elseif attached f.aliases as lst and then lst.count = 1 then
+				set_location (lst.first.alias_name)
 			else
 				set_location (f.feature_name)
 			end

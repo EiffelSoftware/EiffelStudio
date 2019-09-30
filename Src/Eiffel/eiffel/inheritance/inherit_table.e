@@ -1343,8 +1343,8 @@ end;
 			end
 			Result.set_written_in (a_class.class_id)
 			Result.set_is_frozen (feat.is_frozen)
-			Result.set_is_infix (feat.is_infix)
-			Result.set_is_prefix (feat.is_prefix)
+			Result.set_is_infix (False) -- FIXME: remove? [2019-09-30]
+			Result.set_is_prefix (False) -- FIXME: remove? [2019-09-30]
 			Result.set_is_bracket (feat.has_bracket_alias)
 			Result.set_is_parentheses (feat.has_parentheses_alias)
 			Result.set_is_binary (feat.is_binary)

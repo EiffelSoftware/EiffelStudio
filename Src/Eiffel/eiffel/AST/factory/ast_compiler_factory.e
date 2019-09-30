@@ -146,9 +146,7 @@ feature -- Access
 					f.after
 				loop
 					feature_name := f.item
-					if feature_name.is_prefix or else feature_name.is_infix then
-							-- Infix and prefix features will be checked for VFFD(5,6) later
-					elseif
+					if
 						attached {FEATURE_NAME_ALIAS_AS} feature_name as l_feat_name_alias_as and then
 						l_feat_name_alias_as.has_alias
 					then
@@ -186,36 +184,37 @@ feature -- Access
 								create {VFAV3_SYNTAX} vfav.make (l_feat_name_alias_as, l_feat_name_alias_as.parenthesis_alias_as)
 							end
 						elseif is_query then
-							if l_feat_name_alias_as.has_alias then
-								across
-									l_feat_name_alias_as.aliases as ic
-								until
-									vfav /= Void
-								loop
-									if
-										(argument_count = 0 and then ic.item.is_valid_unary) or else
-										(argument_count = 1 and then ic.item.is_valid_binary)
-									then
-											-- FIXME: maybe move this check outside the loop [2019-09-25].
-										if argument_count = 0 and then l_feat_name_alias_as.has_convert_mark then
-												-- Invalid convert mark
-											create {VFAV3_SYNTAX} vfav.make (l_feat_name_alias_as, ic.item.alias_name)
-										end
-									else
-											-- Invalid operator alias
-										create {VFAV1_SYNTAX} vfav.make (l_feat_name_alias_as, ic.item.alias_name)
+							across
+								l_feat_name_alias_as.aliases as ic
+							until
+								vfav /= Void
+							loop
+								if
+									(argument_count = 0 and then ic.item.is_valid_unary) or else
+									(argument_count = 1 and then ic.item.is_valid_binary)
+								then
+										-- FIXME: maybe move this check outside the loop [2019-09-25].
+									if argument_count = 0 and then l_feat_name_alias_as.has_convert_mark then
+											-- Invalid convert mark
+										create {VFAV3_SYNTAX} vfav.make (l_feat_name_alias_as, ic.item.alias_name)
 									end
-								end
-								if vfav /= Void then
-										-- Error detected
-								elseif argument_count = 1 then
-									l_feat_name_alias_as.set_is_binary
-								elseif l_feat_name_alias_as.has_convert_mark then
-									create {VFAV3_SYNTAX} vfav.make (l_feat_name_alias_as, Void)
 								else
-									l_feat_name_alias_as.set_is_unary
+										-- Invalid operator alias
+									create {VFAV1_SYNTAX} vfav.make (l_feat_name_alias_as, ic.item.alias_name)
 								end
 							end
+							if vfav /= Void then
+									-- Error detected
+							elseif argument_count = 1 then
+								l_feat_name_alias_as.set_is_binary
+							elseif l_feat_name_alias_as.has_convert_mark then
+								create {VFAV3_SYNTAX} vfav.make (l_feat_name_alias_as, Void)
+							else
+								l_feat_name_alias_as.set_is_unary
+							end
+						else
+								-- This is an alias, but not a bracket or parenthesis alias, and this is not a query ...
+							create {VFAV1_SYNTAX} vfav.make (l_feat_name_alias_as, Void)
 						end
 						if vfav /= Void then
 							error_handler.insert_error (vfav)

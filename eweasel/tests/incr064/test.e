@@ -18,7 +18,7 @@ feature
 	
 feature
 
-	prefix "+": DOUBLE is
+	identity alias "+": DOUBLE is
 		do
 		end
 end

@@ -12,13 +12,13 @@ test_description After initial compilation, a VCCH(2) error is introduced, then 
 copy_sub 	 Ace $TEST Ace
 define		 HEADER "deferred class"
 define		 INST "print (+ Current);"
-define		 FEATURE "prefix "+": DOUBLE is deferred end"
+define		 FEATURE "identity alias "+": DOUBLE is deferred end"
 copy_raw 	 test.e  $CLUSTER test.e
 copy_sub 	 test1.e  $CLUSTER test1.e
 compile_melted
 compile_result 	 ok
 
-define		 FEATURE "prefix "+": DOUBLE is do end"
+define		 FEATURE "identity alias "+": DOUBLE is do end"
 copy_sub 	 test1.e  $CLUSTER test1.e
 compile_melted
 compile_result 	 validity_error TEST VMFN

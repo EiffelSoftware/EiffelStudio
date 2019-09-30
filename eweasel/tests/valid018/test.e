@@ -26,7 +26,7 @@ feature
 		do
 		end;
 
-	infix "or" (n: TEST): TEST is
+	disjuncted alias "or" (n: TEST): TEST is
 		do
 		end;
 

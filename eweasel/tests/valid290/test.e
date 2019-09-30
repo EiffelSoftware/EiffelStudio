@@ -44,14 +44,14 @@ feature {TEST} -- Access
 			Result := Current
 		end
 
-	prefix "+": TEST assign put
+	identity alias "+": TEST assign put
 			-- An obsolete prefix feature.
 		obsolete "Prefix. [$(YESTERDAY)]"
 		do
 			Result := Current
 		end
 
-	infix "+" (other: TEST): TEST assign put_to
+	plus alias "+" (other: TEST): TEST assign put_to
 			-- An obsolete infix feature.
 		obsolete "Infix. [$(YESTERDAY)]"
 		do

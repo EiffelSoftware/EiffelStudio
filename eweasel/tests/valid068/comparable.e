@@ -13,7 +13,7 @@ deferred class COMPARABLE inherit
 	PART_COMPARABLE
 		redefine
 			is_less, is_less_equal,
-			is_greater, is_greater,
+			is_greater, is_greater_equal,
 			is_equal
 		end
 

@@ -10,7 +10,7 @@ class
 inherit
 	NUMERIC
 		rename
-			quotient as integer_quotient "//"
+			quotient as integer_quotient alias "//"
 		redefine
 			out, is_equal
 		end

@@ -4,7 +4,7 @@ class
 inherit
 	TEST1
 		rename
-			infix "+" as infix "-"
+			g as g alias "-"
 		redefine
 			f
 		end

@@ -3,7 +3,7 @@ class
 
 feature
 
-	infix "+" (other: TEST1): TEST1 is
+	g alias "+" (other: TEST1): TEST1 is
 			--
 		do
 

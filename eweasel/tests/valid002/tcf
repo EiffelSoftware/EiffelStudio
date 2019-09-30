@@ -7,41 +7,25 @@
 -- This is a test control file
 
 test_name bad-infix-feature
-test_description Violate validity constraint VFFD
+test_description Violate validity constraint VFAV(1)
 copy_sub Ace $TEST Ace
 
-define		HEADER "infix "not" (n: INTEGER): INTEGER"
+define		HEADER "feat alias "not" (n: INTEGER): INTEGER"
 copy_sub	test.e $CLUSTER test.e
 compile_melted
+compile_result	validity_error TEST VFAV(1)
+
+define		HEADER "feat alias "+" (n, m: INTEGER): REAL"
+copy_sub	test.e $CLUSTER test.e
+resume_compile
+compile_result	validity_error TEST VFAV(1)
+
+define		HEADER "feat alias "&    " (n: INTEGER): INTEGER"
+copy_sub	test.e $CLUSTER test.e
+resume_compile
 compile_result	syntax_error TEST 9
 
-define		HEADER "infix "@@@" (n: INTEGER)"
-define		FEAT_NAME "@@@"
-copy_sub	test.e $CLUSTER test.e
-resume_compile
-compile_result	validity_error TEST VFFD(6)
-
-define		HEADER "infix "+""
-copy_sub	test.e $CLUSTER test.e
-resume_compile
-compile_result	validity_error TEST VFFD(6)
-
-define		HEADER "infix "+": REAL"
-copy_sub	test.e $CLUSTER test.e
-resume_compile
-compile_result	validity_error TEST VFFD(6)
-
-define		HEADER "infix "+" (n, m: INTEGER): REAL"
-copy_sub	test.e $CLUSTER test.e
-resume_compile
-compile_result	validity_error TEST VFFD(6)
-
-define		HEADER "infix "+" (n, m: INTEGER)"
-copy_sub	test.e $CLUSTER test.e
-resume_compile
-compile_result	validity_error TEST VFFD(6)
-
-define		HEADER "infix "&    " (n: INTEGER): INTEGER"
+define		HEADER "feat alias "&" (n: INTEGER): INTEGER"
 copy_sub	test.e $CLUSTER test.e
 resume_compile
 compile_result	syntax_error TEST 9

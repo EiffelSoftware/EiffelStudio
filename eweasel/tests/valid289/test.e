@@ -86,14 +86,14 @@ feature {TEST} -- Test
 			Result := Current
 		end
 
-	prefix "+": TEST
+	identity alias "+": TEST
 			-- An obsolete prefix feature.
 		obsolete "Prefix. [$(YESTERDAY)]"
 		do
 			Result := Current
 		end
 
-	infix "+" (other: TEST): TEST
+	plus alias "+" (other: TEST): TEST
 			-- An obsolete infix feature.
 		obsolete "Infix. [$(YESTERDAY)]"
 		do

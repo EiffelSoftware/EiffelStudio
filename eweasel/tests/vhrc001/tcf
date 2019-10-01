@@ -12,29 +12,29 @@ test_description Switch names - does not violate VHRC
 copy_sub 	 Ace $TEST Ace
 copy_raw 	 test1.e  $CLUSTER test1.e
 
-define		 RENAME "rename prefix "not" as prefix "###", prefix "###" as prefix "not" end"
+define		 RENAME "rename p1 as p1 alias "###", p1 as p1 alias "not" end"
 copy_sub 	 test.e  $CLUSTER test.e
 compile_melted
-compile_result 	 ok
+compile_result 	 validity_error TEST VHRC(2)
 
-define		 RENAME "rename infix "###" as infix "@free_operator", infix "@free_operator" as infix "###" end"
+define		 RENAME "rename i1 as i1 alias "@free_operator", i1 as i1 alias "###" end"
 copy_sub 	 test.e  $CLUSTER test.e
-compile_melted
-compile_result 	 ok
+resume_compile
+compile_result 	 validity_error TEST VHRC(2)
 
 define		 RENAME "rename old_feature as new_feature, new_feature as old_feature end"
 copy_sub 	 test.e  $CLUSTER test.e
-compile_melted
+resume_compile
 compile_result 	 ok
 
-define		 RENAME "rename old_feature as new_feature, new_feature as infix "###", infix "###" as infix "@free_operator", infix "@free_operator" as old_feature end"
+define		 RENAME "rename old_feature as new_feature, new_feature as f alias "###", f as f alias "@free_operator", f as old_feature end"
 copy_sub 	 test.e  $CLUSTER test.e
 compile_melted
-compile_result 	 ok
+compile_result 	 validity_error TEST VHRC(2)
 
-define		 RENAME "rename old_feature as new_feature, infix "###" as infix "@free_operator", new_feature as infix "###", infix "@free_operator" as old_feature end"
+define		 RENAME "rename old_feature as new_feature, i1 as i1 alias "@free_operator", new_feature as f alias "###", i1 as old_feature end"
 copy_sub 	 test.e  $CLUSTER test.e
-compile_melted
-compile_result 	 ok
+resume_compile
+compile_result 	 validity_error TEST VHRC(2)
 
 test_end

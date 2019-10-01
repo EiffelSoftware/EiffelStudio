@@ -12,22 +12,12 @@ test_description Shift names - does not violate VHRC
 copy_sub 	 Ace $TEST Ace
 copy_raw 	 test1.e  $CLUSTER test1.e
 
-define		 RENAME "rename prefix "not" as prefix "###", prefix "###" as prefix "+" end"
-copy_sub 	 test.e  $CLUSTER test.e
-compile_melted
-compile_result 	 ok
-
-define		 RENAME "rename infix "###" as infix "@free_operator", infix "@free_operator" as infix "@@@" end"
-copy_sub 	 test.e  $CLUSTER test.e
-compile_melted
-compile_result 	 ok
-
 define		 RENAME "rename OLD_feature as NEW_feature, NEW_feature as NEWER_feature end"
 copy_sub 	 test.e  $CLUSTER test.e
 compile_melted
 compile_result 	 ok
 
-define		 RENAME "rename old_feature as new_feature, new_feature as infix "###", infix "###" as infix "@free_operator", infix "@free_operator" as infix "@@@" end"
+define		 RENAME "rename old_feature as new_feature, new_feature as f alias "###", i1 as i1 alias "@free_operator", i2 as i2 alias  "@@@" end"
 copy_sub 	 test.e  $CLUSTER test.e
 compile_melted
 compile_result 	 ok

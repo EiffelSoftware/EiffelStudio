@@ -7,21 +7,21 @@
 class TEST1
 feature
 
-	prefix "not": INTEGER is
+	p1 alias "not": INTEGER is
 		do
 		end
 		
-	prefix "###", prefix "+", prefix "@weasel", prefix "###weasel": INTEGER;
+	p2 alias "###", p3 alias "+", p4 alias "@weasel", p5 alias "###weasel": INTEGER;
 		
-	infix "###" (b: BOOLEAN): INTEGER is
+	i1 alias "###" (b: BOOLEAN): INTEGER is
 		once
 		end
 		
-	infix "+" (b: BOOLEAN): INTEGER is
+	i2 alias "+" (b: BOOLEAN): INTEGER is
 		once
 		end
 		
-	infix "@weasel", infix "###weasel" (b: like Current): like Current is
+	i3 alias "@weasel", i4 alias "###weasel" (b: like Current): like Current is
 		external
 			"C"
 		alias

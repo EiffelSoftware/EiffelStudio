@@ -17,7 +17,7 @@ copy_sub 	 test.e  $CLUSTER test.e
 compile_melted
 compile_result 	 ok
 
-define		 RENAME "rename infix "+" as infix "+" end"
+define		 RENAME "rename i2 as i2 alias "+" end"
 copy_sub 	 test.e  $CLUSTER test.e
 compile_melted
 compile_result 	 ok
@@ -27,42 +27,42 @@ copy_sub 	 test.e  $CLUSTER test.e
 compile_melted
 compile_result 	 ok
 
-define		 RENAME "rename prefix "+" as prefix "+" end"
+define		 RENAME "rename p3 as p3 alias "+" end"
 copy_sub 	 test.e  $CLUSTER test.e
 compile_melted
 compile_result 	 ok
 
-define		 RENAME "rename infix "@weasel" as infix "@weasel" end"
+define		 RENAME "rename i3 as i3 alias "@weasel" end"
 copy_sub 	 test.e  $CLUSTER test.e
 compile_melted
 compile_result 	 ok
 
-define		 RENAME "rename infix "@weasel" as infix "@weasel" end"
+define		 RENAME "rename i3 as i3 alias "@weasel" end"
 copy_sub 	 test.e  $CLUSTER test.e
 compile_melted
 compile_result 	 ok
 
-define		 RENAME "rename prefix "@weasel" as prefix "@WEASEL" end"
+define		 RENAME "rename p4 as p4 alias "@WEASEL" end"
 copy_sub 	 test.e  $CLUSTER test.e
 compile_melted
 compile_result 	 ok
 
-define		 RENAME "rename prefix "###" as prefix "###" end"
+define		 RENAME "rename p2 as p2 alias "###" end"
 copy_sub 	 test.e  $CLUSTER test.e
 compile_melted
 compile_result 	 ok
 
-define		 RENAME "rename prefix "###weasel" as prefix "###WEASEL" end"
+define		 RENAME "rename p5 as p5 alias "###WEASEL" end"
 copy_sub 	 test.e  $CLUSTER test.e
 compile_melted
 compile_result 	 ok
 
-define		 RENAME "rename infix "###" as infix "###" end"
+define		 RENAME "rename i1 as i1 alias "###" end"
 copy_sub 	 test.e  $CLUSTER test.e
 compile_melted
 compile_result 	 ok
 
-define		 RENAME "rename infix "###weasel" as infix "###WEASEL" end"
+define		 RENAME "rename i4 as i4 alias "###WEASEL" end"
 copy_sub 	 test.e  $CLUSTER test.e
 compile_melted
 compile_result 	 ok

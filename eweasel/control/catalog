@@ -2511,8 +2511,6 @@ test	validity-vhrc-shift-names	vhrc002	 tcf pass validity vhrc
 test	validity-vhrc1-basic		vhrc101	 tcf pass validity vhrc
 test	validity-vhrc2-basic		vhrc201	 tcf pass validity vhrc
 test	validity-vhrc3-basic		vhrc301	 tcf pass validity vhrc
-test	validity-vhrc4-basic		vhrc401	 tcf pass validity vhrc
-test	validity-vhrc5-basic		vhrc501	 tcf pass validity vhrc
 
 test	validity-vlec1-self		vlec101	 tcf pass validity vlec
 test	validity-vlec1-other		vlec102	 tcf pass validity vlec

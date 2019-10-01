@@ -22,34 +22,35 @@ copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
 compile_result 	 validity_error TEST VHRC(2)
 
-define		 RENAME "rename infix "+" as infix "@weasel", infix "+" as infix "-" end"
+define		 RENAME "rename i2 as i2 alias "@weasel", i2 as i2 alias "-" end"
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
 compile_result 	 validity_error TEST VHRC(2)
 
-define		 RENAME "rename infix "+" as infix "@weasel", infix "+" as infix "@weasel" end"
+define		 RENAME "rename i2 as i2 alias "@weasel", i2 as i2 alias "@weasel" end"
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
 compile_result 	 validity_error TEST VHRC(2)
 
-define		 RENAME "rename prefix "+" as prefix "@weasel", prefix "+" as prefix "-" end"
+define		 RENAME "rename p2 as p2 alias "@weasel", p2 as p2 alias "-" end"
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
 compile_result 	 validity_error TEST VHRC(2)
 
-define		 RENAME "rename prefix "+" as prefix "@weasel", prefix "+" as prefix "@weasel" end"
+define		 RENAME "rename p2 as p2 alias "@weasel", p2 as p2 alias "@weasel" end"
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
 compile_result 	 validity_error TEST VHRC(2)
 
-define		 RENAME "rename prefix "###" as prefix "@weasel", prefix "###" as prefix "@weasle" end"
+define		 RENAME "rename p1 as p1 alias "@weasel", p1 as p1 alias "@weasle" end"
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
 compile_result 	 validity_error TEST VHRC(2)
 
-define		 RENAME "rename prefix "###" as prefix "@weasel", prefix "@weasel" as prefix "###", prefix "###" as old_feat end"
+define		 RENAME "rename p1 as p1 alias "@weasel", p1 as p1 alias "###", p1 as old_feat end"
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
-compile_result 	 validity_error TEST VHRC(2)
+compile_result 	 validity_error TEST VHRC(2) VHRC(2)
+
 
 test_end

@@ -69,16 +69,6 @@ feature -- Status report
 			Result := frozen_keyword /= Void
 		end
 
-	is_infix: BOOLEAN
-			-- Is the feature name an infixed notation?
-		do
-		end
-
-	is_prefix: BOOLEAN
-			-- Is the feature name a prefixed notation?
-		do
-		end
-
 	has_bracket_alias: BOOLEAN
 			-- Is feature alias (if any) bracket?
 		do

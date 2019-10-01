@@ -17,17 +17,12 @@ copy_sub 	 test.e  $CLUSTER test.e
 compile_melted
 compile_result 	 validity_error TEST VHRC(1)
 
-define		 RENAME "rename infix "not" as infix "@weasel" end"
-copy_sub 	 test.e  $CLUSTER test.e
-resume_compile
-compile_result 	 syntax_error TEST 9
-
-define		 RENAME "rename prefix "+" as prefix "@weasel" end"
+define		 RENAME "rename p0 as p0 alias "@weasel" end"
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
 compile_result 	 validity_error TEST VHRC(1)
 
-define		 RENAME "rename infix "+" as infix "@weasel" end"
+define		 RENAME "rename p0 as p0 alias "@weasel" end"
 copy_sub 	 test.e  $CLUSTER test.e
 resume_compile
 compile_result 	 validity_error TEST VHRC(1)

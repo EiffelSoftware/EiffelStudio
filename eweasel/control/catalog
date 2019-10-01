@@ -307,7 +307,6 @@ test	local-same-as-formal		valid005 tcf pass validity
 test	invalid-precondition		valid006 tcf pass validity
 test	invalid-use-of-old		valid007 tcf pass validity
 test	invalid-entity-assertion-tag	valid008 tcf pass validity
-test	rename-infix-to-prefix		valid010 tcf pass validity
 test	anchored-type-violation		valid011 tcf pass validity
 test	invalid-creation-instruction	valid012 tcf pass validity
 test	inherited-assign-violation	valid013 tcf pass validity
@@ -2086,7 +2085,6 @@ test	remove-syntax-error-crash		term176	tcf pass termination
 test	argument-anchors-formal-crash	term177	tcf pass termination
 test	small-eif-stack-chunk		term178	tcf pass termination
 test	inherit-inline-agent-with-formal	term179	tcf pass termination agents
-test	infix-prefix-alias-compatibility-crash	term180 tcf pass termination
 test	create-constrained-generic-crash-2	term181	tcf pass termination
 test	expanded-indirect-like-current		term182	tcf pass termination expanded anchored_type
 test	expanded-indirect-like-current-2	term183	tcf pass termination expanded anchored_type
@@ -2751,7 +2749,6 @@ test	multi-constraint-assigner						multicon040 tcf pass multiconstraint assigne
 test	multi-constraint-recursive-generic				multicon041 tcf pass multiconstraint
 test	multi-constraint-rename-clause-crash			multicon042 tcf pass multiconstraint
 test	multi-constraint-order-affects-semantic			multicon043 tcf pass multiconstraint
-test	multi-constraint-rename-to-infix				multicon044 tcf pass multiconstraint
 test	multi-constraint-alias							multicon045 tcf pass multiconstraint
 test	multi-constraint-constrained-twice				multicon046 tcf pass multiconstraint
 test	multi-constraint-renaming-to-existing-feature	multicon047 tcf pass multiconstraint

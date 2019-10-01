@@ -146,7 +146,7 @@ feature -- Initialization
 
 feature -- Basic operations
 
-	infix "<" (other: like Current): BOOLEAN
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is current object less than `other'? (comparable)
 			-- We use the id in uppercase to compare.
 		local
@@ -164,7 +164,7 @@ feature -- Miscellaneous
 	find_first_node_with_tag(tag_name:STRING; node:XML_ELEMENT):XML_ELEMENT
 			-- Search this node for a node with tag_name.
 		require
-			not_void: tag_name /= Void and node /= VOid
+			not_void: tag_name /= Void and node /= Void
 		local
 			node_cursor: DS_BILINKED_LIST_CURSOR [XML_NODE]
 			found: BOOLEAN

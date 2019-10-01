@@ -42,7 +42,7 @@ feature -- Initialization
 
 feature -- Implementation
 	
-	infix "<" (other: like Current): BOOLEAN
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is current object less than `other'?
 		do
 			Result := dotnet_name < other.dotnet_name

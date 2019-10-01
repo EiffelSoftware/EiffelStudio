@@ -147,7 +147,6 @@ feature -- Status setting
 			has_alias: has_alias
 			not_is_bracket: not has_bracket_alias
 			not_is_parentheses: not has_parentheses_alias
-			not_is_prefix: not is_prefix
 			is_valid_binary: is_valid_binary
 		do
 		ensure
@@ -160,7 +159,6 @@ feature -- Status setting
 			has_alias: has_alias
 			not_is_bracket: not has_bracket_alias
 			not_is_parentheses: not has_parentheses_alias
-			not_is_infix: not is_infix
 			is_valid_unary: is_valid_unary
 		do
 		ensure

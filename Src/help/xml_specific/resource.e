@@ -59,7 +59,7 @@ feature -- Access
 
 feature -- Comparison
 
-	infix "<" (other: like Current): BOOLEAN
+	is_less alias "<" (other: like Current): BOOLEAN
 			-- Is Current less than `other'?
 			--| By default this is based on `name'.
 		do

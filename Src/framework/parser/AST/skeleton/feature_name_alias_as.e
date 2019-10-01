@@ -299,7 +299,7 @@ feature -- Comparison
 							l_aliases.start
 							l_other_aliases.start
 						until
-							not Result
+							not Result or l_aliases.after or l_other_aliases.after
 						loop
 							if not equivalent (l_aliases.item.alias_name, l_other_aliases.item.alias_name) then
 								Result := False

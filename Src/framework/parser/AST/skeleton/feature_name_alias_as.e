@@ -56,9 +56,9 @@ feature {NONE} -- Creation
 					create l_alias.make (l_alias_name, ic.item.alias_keyword)
 					aliases.force (l_alias)
 					if l_alias.is_unary then
-						set_is_unary
+						internal_is_binary := False
 					elseif l_alias.is_binary then
-						set_is_binary
+						internal_is_binary := True
 					end
 				end
 			end

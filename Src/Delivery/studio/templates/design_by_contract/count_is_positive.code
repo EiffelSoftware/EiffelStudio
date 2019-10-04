@@ -21,6 +21,6 @@
   </declarations>
   
   <templates>
-    <template>${var}_is_positive: ${var}.count > 0${end}</template>  
+    <template>${var}_is_positive: ${var}.count &gt; 0${end}</template>  
   </templates>
 </code_template>

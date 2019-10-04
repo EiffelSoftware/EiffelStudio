@@ -411,11 +411,10 @@ feature -- Query
 	ecf_targets (sys: CONF_SYSTEM; a_target_name: detachable READABLE_STRING_GENERAL): detachable LIST [CONF_TARGET]
 		local
 			nb: INTEGER
-			lst: ARRAYED_LIST [CONF_TARGET]
 			tgt: CONF_TARGET
 		do
-			create lst.make (1)
 			if a_target_name /= Void then
+				create {ARRAYED_LIST [CONF_TARGET]} Result.make (1)
 				across
 					sys.compilable_targets as ic
 				until
@@ -427,7 +426,7 @@ feature -- Query
 					end
 				end
 				if tgt /= Void then
-					lst.extend (tgt)
+					Result.extend (tgt)
 				end
 			else
 				tgt := sys.application_target
@@ -437,19 +436,19 @@ feature -- Query
 						tgt = Void and then
 						attached sys.compilable_targets as l_comp_targets
 					then
-						create lst.make (l_comp_targets.count)
+						create {ARRAYED_LIST [CONF_TARGET]} Result.make (l_comp_targets.count)
 						across
 							l_comp_targets as ic
 						loop
-							lst.extend (ic.item)
+							Result.extend (ic.item)
 						end
 					end
 				end
 				if tgt /= Void then
-					lst.extend (tgt)
+					Result.extend (tgt)
 				end
 			end
-			if lst.is_empty then
+			if Result /= Void and then Result.is_empty then
 				Result := Void
 			end
 		end
@@ -668,7 +667,7 @@ OPTIONS:
 Note: you can overwrite default value, using
   EIFFEL_SCRIPT_DIR       : root directory for eiffel script app (default under Eiffel user files/.apps) 
   EIFFEL_SCRIPT_CACHE_DIR : directory caching the compiled executables ($EIFFEL_SCRIPT_DIR/cache) 
-  EIFFEL_SCRIPT_COMP_DIR : directory caching the EIFGENs compilation ($EIFFEL_SCRIPT_DIR/comp) 
+  EIFFEL_SCRIPT_COMP_DIR : directory caching the EIFGENs compilation ($EIFFEL_SCRIPT_DIR/comp)
 
 ]")
 

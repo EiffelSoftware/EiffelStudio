@@ -131,14 +131,10 @@ feature -- Access: Public Encrypt - Private Decrypt
 		local
 			l_decrypt: C_STRING
 			l_msg: C_STRING
-			l_msg2: C_STRING
-			l_str: C_STRING
 			l_res: INTEGER
 			l_len: INTEGER
-			l_externals: SSL_CRYPTO_EXTERNALS
 		do
 			last_error := Void
-			create l_externals
 
 			create l_msg.make ((create {BASE64}).decoded_string (a_message))
 

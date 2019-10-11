@@ -72,7 +72,7 @@ feature {NONE} -- Initialization
 
 			{SSL_CRYPTO_EXTERNALS}.c_bio_free_all (l_priv)
 			{SSL_CRYPTO_EXTERNALS}.c_bio_free_all (l_pub)
-			{SSL_CRYPTO_EXTERNALS}.c_rsa_free (l_key)
+--			{SSL_CRYPTO_EXTERNALS}.c_rsa_free (l_key)
 		end
 
 	make (a_size: INTEGER)
@@ -126,7 +126,7 @@ feature {NONE} -- Initialization
 
 			{SSL_CRYPTO_EXTERNALS}.c_bio_free_all (l_priv)
 			{SSL_CRYPTO_EXTERNALS}.c_bio_free_all (l_pub)
-			{SSL_CRYPTO_EXTERNALS}.c_rsa_free (l_key)
+--			{SSL_CRYPTO_EXTERNALS}.c_rsa_free (l_key)
 		end
 
 feature -- Access
@@ -159,7 +159,7 @@ feature {NONE} -- Implementation
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

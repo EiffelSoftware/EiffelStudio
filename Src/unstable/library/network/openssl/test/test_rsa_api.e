@@ -58,6 +58,52 @@ feature -- Tests
 		end
 
 
+	test_encrypt_decrypt_pkcs1
+		local
+			l_rsa: SSL_RSA
+			l_pub_key: SSL_RSA_PUBLIC_KEY
+			l_priv_key: SSL_RSA_PRIVATE_KEY
+			l_result: STRING
+		do
+			initialize_ssl
+				-- mark_pkcs1_padding
+			create l_rsa.make
+			l_rsa.mark_pkcs1_padding
+			public_key.adjust
+			create l_pub_key.make (public_key)
+			l_result := l_rsa.public_encrypt ("Eiffel", l_pub_key)
+			private_key.adjust
+			create l_priv_key.make (private_key)
+			assert ("Expected Eiffel:", l_rsa.private_decrypt (l_result, l_priv_key).same_string ("Eiffel"))
+
+		end
+
+
+	test_encrypt_decrypt_oaep
+		local
+			l_rsa: SSL_RSA
+			l_pub_key: SSL_RSA_PUBLIC_KEY
+			l_priv_key: SSL_RSA_PRIVATE_KEY
+			l_result: STRING
+		do
+			initialize_ssl
+				-- rsa_pkcs1_oaep_padding
+			create l_rsa.make
+			public_key.adjust
+			create l_pub_key.make (public_key)
+			l_result := l_rsa.public_encrypt ("Eiffel", l_pub_key)
+			private_key.adjust
+			create l_priv_key.make (private_key)
+			check Eiffel: l_rsa.private_decrypt (l_result, l_priv_key).same_string ("Eiffel") end
+		end
+
+
+
+
+
+feature -- Keys
+
+
 	public_key: STRING = "[
 -----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAoRAce3WYYjXXxtbNRMAm
@@ -127,7 +173,7 @@ fjIbXqHiJNWCTHY+f31V1h+sT2iibcXop/FvMsCZGpvr8KK3X4kHsA==
 
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

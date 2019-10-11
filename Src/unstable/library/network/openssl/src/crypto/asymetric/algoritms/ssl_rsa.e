@@ -73,7 +73,7 @@ feature -- Element  Change.
 		end
 
 	mark_no_padding
-			-- This mode should only be used to implement cryptographically sound padding modes 
+			-- This mode should only be used to implement cryptographically sound padding modes
 			-- in the application code. Encrypting user data directly with RSA is insecure.
 		do
 			padding := {SSL_CRYPTO_EXTERNALS}.rsa_no_padding
@@ -121,7 +121,8 @@ feature -- Access: Public Encrypt - Private Decrypt
 			if l_encrypt_len = -1 then
 				create last_error.make (({SSL_CRYPTO_EXTERNALS}.c_error_get_error))
 			end
-			create Result.make_from_string ((create {BASE64}).encoded_string (l_encrypt.string))
+--			create Result.make_from_string ((create {BASE64}).encoded_string (l_encrypt.string))
+			create Result.make_from_string ((create {C_STRING}.make_by_pointer ({SSL_CRYPTO_EXTERNALS}.c_base64_encode (l_encrypt.item, l_encrypt_len))).string)
 		end
 
 	private_decrypt (a_message: READABLE_STRING_8; a_priv_key: SSL_RSA_PRIVATE_KEY): STRING_8
@@ -130,12 +131,23 @@ feature -- Access: Public Encrypt - Private Decrypt
 		local
 			l_decrypt: C_STRING
 			l_msg: C_STRING
+			l_msg2: C_STRING
+			l_str: C_STRING
 			l_res: INTEGER
 			l_len: INTEGER
+			l_externals: SSL_CRYPTO_EXTERNALS
 		do
 			last_error := Void
+			create l_externals
 
 			create l_msg.make ((create {BASE64}).decoded_string (a_message))
+
+
+			if l_msg.string.is_empty then
+					print (generator + "%Ndecrypt")
+					{EXCEPTIONS}.die (1)
+			end
+
 
 				-- Decrypt
 			create l_decrypt.make_empty ({SSL_CRYPTO_EXTERNALS}.c_rsa_size (a_priv_key.rsa))
@@ -257,12 +269,13 @@ feature {NONE} -- Implementation
 					across c_encmsg.managed_data.read_array (0, l_count) as it loop
 						l_data.append_character (it.item.to_character_8)
 					end
-                    Result := (create {BASE64}).encoded_string (l_data)
+--                    Result := (create {BASE64}).encoded_string (l_data)
 
-				   		-- Base64 encoding using OpenSSL http://doctrina.org/Base64-With-OpenSSL-C-API.html
+				    -- Base64 encoding using OpenSSL http://doctrina.org/Base64-With-OpenSSL-C-API.html
 				   	-- l_base64 := {SSL_CRYPTO_EXTERNALS}.c_base64_encode (c_encmsg.item, l_count)
 				   	-- create l_result.make_by_pointer (l_base64)
 				    -- Result := l_result.string
+				    create Result.make_from_string ((create {C_STRING}.make_by_pointer ({SSL_CRYPTO_EXTERNALS}.c_base64_encode (c_encmsg.item, l_count))).string)
 				end
 			end
 
@@ -336,7 +349,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

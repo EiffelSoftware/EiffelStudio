@@ -827,6 +827,24 @@ feature -- BIO
 
 feature -- OpenSSL base64 encoding.
 
+
+	decode_lenght (input: STRING): INTEGER
+		local
+			padding: INTEGER
+			count: INTEGER
+		do
+			count := input.count
+			if input.at (count) = '=' and then input.at (count - 1) = '=' then
+				-- last two chars are =
+				padding := 2
+			elseif input.at (count) = '=' then
+				padding := 1
+			end
+
+			Result := (count * 3) // 4 - padding
+		end
+
+
 	c_base64_encode (buffer: POINTER; length:INTEGER): POINTER
 		external
 			"C inline use %"eif_openssl.h%""
@@ -837,6 +855,9 @@ feature -- OpenSSL base64 encoding.
 				b64 = BIO_new(BIO_f_base64());
 				bio = BIO_new(BIO_s_mem());
 				bio = BIO_push(b64, bio);
+				
+				BIO_set_flags(bio, BIO_FLAGS_BASE64_NO_NL); //Ignore newlines - write everything in one line
+				
 				BIO_write(bio, $buffer, $length);
 				BIO_flush(bio);
 				BIO_get_mem_ptr(bio, &bufferPtr);
@@ -846,8 +867,57 @@ feature -- OpenSSL base64 encoding.
 			]"
 		end
 
+	c_base64_decode (b64message: POINTER; len: INTEGER; a_decode_len: INTEGER): POINTER
+		external
+			"C inline use %"eif_openssl.h%""
+		alias
+			"[
+				BIO *bio, *b64;
+				size_t* length;
+				unsigned char** buffer;
+
+
+				*buffer = (unsigned char*)malloc($a_decode_len + 1);
+				(*buffer)[$a_decode_len] = '\0';
+
+				bio = BIO_new_mem_buf($b64message, -1);
+				b64 = BIO_new(BIO_f_base64());
+				bio = BIO_push(b64, bio);
+
+				BIO_set_flags(bio, BIO_FLAGS_BASE64_NO_NL); //Do not use newlines to flush buffer
+				*length = BIO_read(bio, *buffer, $len);
+				//assert(*($length) == $a_decode_len); //length should equal decodeLen, else something went horribly wrong
+
+				BIO_free_all(bio);
+
+
+				return buffer;
+
+			]"
+		end
+
+
+--int Base64Decode(char* b64message, unsigned char** buffer, size_t* length) { //Decodes a base64 encoded string
+--	BIO *bio, *b64;
+
+--	int decodeLen = calcDecodeLength(b64message);
+--	*buffer = (unsigned char*)malloc(decodeLen + 1);
+--	(*buffer)[decodeLen] = '\0';
+
+--	bio = BIO_new_mem_buf(b64message, -1);
+--	b64 = BIO_new(BIO_f_base64());
+--	bio = BIO_push(b64, bio);
+
+--	BIO_set_flags(bio, BIO_FLAGS_BASE64_NO_NL); //Do not use newlines to flush buffer
+--	*length = BIO_read(bio, *buffer, strlen(b64message));
+--	assert(*length == decodeLen); //length should equal decodeLen, else something went horribly wrong
+--	BIO_free_all(bio);
+
+--	return (0); //success
+--}	
+
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

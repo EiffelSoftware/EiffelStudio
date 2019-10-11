@@ -417,20 +417,20 @@ feature -- Event
 				if text_widget /= Void then
 					text_widget.append_text ("- UI layout settings.%N")
 				end
-				safe_copy_directory_content_into (create {PATH}.make_from_string (ui_layout_tf.text), eiffel_layout.docking_data_path, text_widget)
+				safe_copy_directory_content_into (create {PATH}.make_from_string (ui_layout_tf.text), eiffel_layout.docking_data_path, text_widget, Void)
 				reload_docking_layout (text_widget)
 			end
 			if studio_config_cb.is_sensitive and then studio_config_cb.is_selected then
 				if text_widget /= Void then
 					text_widget.append_text ("- Configuration file.%N")
 				end
-				safe_copy_directory_content_into (create {PATH}.make_from_string (studio_config_tf.text), eiffel_layout.user_files_path.extended ("studio"), text_widget)
+				safe_copy_directory_content_into (create {PATH}.make_from_string (studio_config_tf.text), eiffel_layout.user_files_path.extended ("studio"), text_widget, <<"code_analysis.xml">>)
 			end
 			if templates_cb.is_sensitive and then templates_cb.is_selected then
 				if text_widget /= Void then
 					text_widget.append_text ("- Templates.%N")
 				end
-				safe_copy_directory_content_into (create {PATH}.make_from_string (templates_tf.text), eiffel_layout.user_templates_path, text_widget)
+				safe_copy_directory_content_into (create {PATH}.make_from_string (templates_tf.text), eiffel_layout.user_templates_path, text_widget, Void)
 			end
 			if ini_files_cb.is_sensitive and then ini_files_cb.is_selected then
 				if text_widget /= Void then
@@ -443,7 +443,7 @@ feature -- Event
 					if ic.item.is_current_symbol or ic.item.is_parent_symbol then
 					elseif attached ic.item.extension as ext and then ext.same_string ("ini") then
 						safe_copy_file_to (create {RAW_FILE}.make_with_path (d.path.extended_path (ic.item)),
-								create {RAW_FILE}.make_with_path (eiffel_layout.user_templates_path.extended_path (ic.item)), text_widget)
+								create {RAW_FILE}.make_with_path (eiffel_layout.user_files_path.extended_path (ic.item)), text_widget)
 					end
 				end
 			end
@@ -627,9 +627,10 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	safe_copy_directory_content_into (a_dirname: PATH; a_target_dirname: PATH; a_txt: detachable EV_TEXT)
+	safe_copy_directory_content_into (a_dirname: PATH; a_target_dirname: PATH; a_txt: detachable EV_TEXT; a_excludes: detachable ITERABLE [READABLE_STRING_GENERAL])
 		local
 			p,tgt: PATH
+			p_name: READABLE_STRING_GENERAL
 			d_src, d_tgt: DIRECTORY
 			f_src: RAW_FILE
 		do
@@ -649,13 +650,19 @@ feature {NONE} -- Implementation
 						d_src.entries as ic
 					loop
 						p := ic.item
+						p_name := p.name
 						if p.is_current_symbol or p.is_parent_symbol then
 								-- Skip
+						elseif
+							a_excludes /= Void and then
+							across a_excludes as ex_ic some p_name.same_string (ex_ic.item) end
+						then
+								-- Ignored/excluded.
 						else
 							create f_src.make_with_path (d_src.path.extended_path (p))
 							tgt := a_target_dirname.extended_path (p)
 							if f_src.is_directory then
-								safe_copy_directory_content_into (f_src.path, tgt, a_txt)
+								safe_copy_directory_content_into (f_src.path, tgt, a_txt, a_excludes)
 							else
 								safe_copy_file_to (f_src, create {RAW_FILE}.make_with_path (tgt), a_txt)
 							end
@@ -762,7 +769,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

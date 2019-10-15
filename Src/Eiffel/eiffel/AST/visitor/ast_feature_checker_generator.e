@@ -7136,7 +7136,7 @@ feature {NONE} -- Visitor
 
 			if error_level = l_error_level then
 					-- Update expression type.
-				last_type := l_expression_type
+				set_type (l_expression_type, l_as)
 			else
 				reset_types
 			end

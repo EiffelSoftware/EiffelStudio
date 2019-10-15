@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Editable: yes
 		Scroll bars: yes
@@ -59,17 +59,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	not_editable_warning_message: detachable STRING
-			-- Warning message indicating text is not editable.
-			-- If Void, default message will be used.
-		obsolete
-			"Use `not_editable_warning_wide_message' instead [2017-05-31]"
-		do
-			if attached not_editable_warning_wide_message as l_msg then
-				Result := l_msg.as_string_8
-			end
-		end
-
 	not_editable_warning_wide_message: detachable STRING_32
 			-- Warning message indicating text is not editable.
 			-- If Void, default message will be used.
@@ -81,6 +70,16 @@ feature -- Access
 	  	end
 
 	copy_cut_cursor: detachable like cursor_type
+
+	text_displayed: EDITABLE_TEXT
+			-- Text displayed in the editor.
+
+	cursor_type: EDITOR_CURSOR
+			-- <Precursor>
+		do
+			check False end -- Not called.
+			Result := cursor_type
+		end
 
 feature -- Content change
 
@@ -162,10 +161,12 @@ feature -- Status setting
 
 	set_first_line_displayed (fld: INTEGER; refresh_if_necessary: BOOLEAN)
 		do
-			if prev_x_cur /= 0 or else prev_y_cur /= 0 then
-				if position_is_displayed (prev_x_cur, prev_y_cur) and then prev_y_cur < first_line_displayed + number_of_lines_displayed then
-					wipe_copy_cut_cursor_out
-				end
+			if
+				(prev_x_cur /= 0 or else prev_y_cur /= 0) and then
+				position_is_displayed (prev_x_cur, prev_y_cur) and then
+				prev_y_cur < first_line_displayed + number_of_lines_displayed
+			then
+				wipe_copy_cut_cursor_out
 			end
 			Precursor (fld, refresh_if_necessary)
 		end
@@ -214,18 +215,6 @@ feature -- Private Status
 	overwrite_mode: BOOLEAN
 			-- Do inserted characters overwrite existing ones?
 
-feature -- Access
-
-	text_displayed: EDITABLE_TEXT
-			-- Text displayed in the editor.
-
-	cursor_type: EDITOR_CURSOR
-			-- <Precursor>
-		do
-			check False end -- Not called.
-			Result := cursor_type
-		end
-
 feature -- Process Vision2 events
 
  	on_char (character_string: STRING_32)
@@ -233,13 +222,14 @@ feature -- Process Vision2 events
    		local
    			c: CHARACTER_32
    		do
-			if not ignore_keyboard_input then
-				if not character_string.is_empty then
-		   			c := character_string.as_string_32 @ 1
-					if not ((ctrled_key xor alt_key) or else not is_unwanted_characters (c.natural_32_code)) then
-							-- Ignoring ctrled keys and other special keys (Esc, Tab, Enter, Backspace)
-						handle_character (c)
-					end
+			if
+				not ignore_keyboard_input and then
+				not character_string.is_empty
+			then
+	   			c := character_string.as_string_32 @ 1
+				if not ((ctrled_key xor alt_key) or else not is_unwanted_characters (c.natural_32_code)) then
+						-- Ignoring ctrled keys and other special keys (Esc, Tab, Enter, Backspace)
+					handle_character (c)
 				end
 			end
  		end
@@ -376,10 +366,10 @@ feature {NONE} -- Handle keystokes
 							-- Delete key action
 						l_num := number_of_lines
 						text_displayed.delete_char
-						if l_num /= number_of_lines then
-							refresh_now
-						else
+						if l_num = number_of_lines then
 							invalidate_cursor_rect (True)
+						else
+							refresh_now
 						end
 						check_cursor_position
 					end
@@ -511,17 +501,7 @@ feature -- Text selection access
 			Result := text_displayed.selected_wide_string
 		end
 
-	string_selection: STRING
-			-- Current selection string
-		obsolete
-			"Use `wide_string_selection' instead. [2017-05-31]"
-		require
-			has_selection: has_selection
-		do
-			Result := wide_string_selection.as_string_8
-		end
-
-feature -- Text status report
+feature -- Measurement
 
 	cursor_x_position: INTEGER
 			-- Current column number.
@@ -546,6 +526,8 @@ feature -- Text status report
 		do
 			Result := text_displayed.attached_cursor.y_in_lines
 		end
+
+feature -- Drawing
 
 	 draw_cursor (media: EV_DRAWABLE; x, y, width: INTEGER)
 			-- Draw the cursor block defined by the rectangle associated with the current cursor at `y' and on `media'.	
@@ -609,12 +591,13 @@ feature -- Edition Operations on text
 			text_is_not_empty: number_of_lines /= 0
 			text_is_editable: is_editable
 		do
-			if has_selection then
-				if not text_displayed.attached_cursor.is_equal (text_displayed.attached_selection_cursor) then
-					copy_selection
-					text_displayed.delete_selection
-					refresh_now
-				end
+			if
+				has_selection and then
+				not text_displayed.attached_cursor.is_equal (text_displayed.attached_selection_cursor)
+			then
+				copy_selection
+				text_displayed.delete_selection
+				refresh_now
 			end
 		end
 
@@ -675,10 +658,27 @@ feature -- Edition Operations on text
 			text_is_not_empty: number_of_lines /= 0
 			text_is_editable: is_editable
 			undo_possible: text_displayed.undo_is_possible
+		local
+			f: like first_line_displayed
+			l, n: like {EDITOR_CURSOR}.y_in_lines
+			c: like {EDITOR_CURSOR}.x_in_characters
 		do
+				-- Record current caret position.
+			f := first_line_displayed
+			l := text_displayed.cursor.y_in_lines
+			c := text_displayed.cursor.x_in_characters
+				-- Undo modifications.
 			text_displayed.undo
-			check_cursor_position
 			refresh_now
+				-- Restore caret position.
+			n := number_of_lines
+			set_first_line_displayed (f.min (n), True)
+			if f > 0 and then n > 0 then
+				text_displayed.cursor.set_y_in_lines (l.min (n))
+			end
+			if c > 0 then
+				text_displayed.cursor.set_x_in_characters (c)
+			end
 		end
 
 	redo
@@ -958,10 +958,13 @@ feature {NONE} -- Mouse copy cut
 	on_key_up (ev_key: EV_KEY)
 		do
 			Precursor {SELECTABLE_TEXT_PANEL} (ev_key)
-			if mouse_copy_cut and then ev_key /= Void and then ev_key.code = Key_Ctrl then
-				if Cursors /= Void then
-					editor_drawing_area.set_pointer_style (cursors.cur_cut_selection)
-				end
+			if
+				mouse_copy_cut and then
+				attached ev_key and then
+				ev_key.code = Key_Ctrl and then
+				attached Cursors
+			then
+				editor_drawing_area.set_pointer_style (cursors.cur_cut_selection)
 			end
 		end
 
@@ -1028,7 +1031,7 @@ feature {NONE} -- Implementation
 			-- Is it necessary to show the vertical scroll bar ?
 		do
 			if not is_read_only and then allow_edition then
-				Result := (number_of_lines_displayed < 2 * (text_displayed.number_of_lines - 1))
+				Result := number_of_lines_displayed < 2 * (text_displayed.number_of_lines - 1)
 			else
 				Result := Precursor {SELECTABLE_TEXT_PANEL}
 			end
@@ -1049,7 +1052,6 @@ feature {NONE} -- Private Constants
 	unwanted_characters: SPECIAL [BOOLEAN]
 			-- Unwanted characters: backspace, tabulation, carriage return and escape.
 		local
-			c: CHARACTER
 			i: INTEGER
 		once
 			create Result.make_filled (False, 256)
@@ -1058,8 +1060,7 @@ feature {NONE} -- Private Constants
 			until
 				i = 256
 			loop
-				c := i.to_character_8
-				Result.put (c.is_control, i)
+				Result.put (i.to_character_8.is_control, i)
 				i := i + 1
 			end
 		end
@@ -1071,7 +1072,7 @@ feature {NONE} -- Private Constants
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -1081,7 +1082,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EDITABLE_TEXT_PANEL
+end

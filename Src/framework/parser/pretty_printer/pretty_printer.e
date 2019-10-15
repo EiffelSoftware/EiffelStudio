@@ -179,10 +179,10 @@ feature {NONE} -- Initialization
 			new_line_count := 0
 			set_parsed_class (r)
 			set_match_list (m)
+			create loop_cursors.make (4)
 			change_indent := agent do_nothing
 			set_loop_expression_style (loop_expression_keep)
 			set_new_line_style (new_line_prefer_inline)
-			create loop_cursors.make (4)
 		end
 
 feature -- Access
@@ -1779,7 +1779,9 @@ feature {AST_VISITOR} -- Expressions
 					last_index := i.identifier.index - 1
 					process_id_as (i.identifier)
 					print_string (": ")
-					last_index := i.expression.first_token (match_list).index - 1
+					if attached i.expression.first_token (match_list) as t then
+						last_index := t.index - 1
+					end
 					i.expression.process (Current)
 					print_string (" ¦ ")
 					last_index := l_as.qualifier_index
@@ -1976,7 +1978,9 @@ feature {CLASS_AS} -- Calls
 					end
 					safe_process (a.dot_symbol (match_list))
 					process_leading_leaves_of_token (m.target)
-					last_index := m.target.last_token (match_list).index
+					if attached m.target.last_token (match_list) as t then
+						last_index := t.index
+					end
 					process_leading_leaves (m.dot_symbol_index)
 					last_index := m.dot_symbol_index
 					is_qualified := True
@@ -2026,7 +2030,9 @@ feature {CLASS_AS} -- Calls
 					end
 					safe_process (a.dot_symbol (match_list))
 					process_leading_leaves_of_token (m.target)
-					last_index := m.target.last_token (match_list).index
+					if attached m.target.last_token (match_list) as t then
+						last_index := t.index
+					end
 					process_leading_leaves (m.dot_symbol_index)
 					last_index := m.dot_symbol_index
 					is_qualified := True

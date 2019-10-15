@@ -1,7 +1,4 @@
-note
-	EIS: "name=Unnamed", "protocol=URI", "src=http://www.yourwebsite.com"
-
-class
+﻿class
 	EB_INSERT_SYMBOL_DIALOG
 
 inherit
@@ -203,10 +200,6 @@ feature -- Events
 	on_category_changed
 		local
 			cat: READABLE_STRING_GENERAL
-			i,j: INTEGER
-			nb,n: INTEGER
-			gi: EV_GRID_LABEL_ITEM
-			s: STRING_32
 		do
 			cat := categories_choice.text
 			current_section := cat.to_string_32
@@ -324,6 +317,8 @@ invariant
 	has_editor: editor /= Void
 
 note
+	date: "$Date$"
+	revision: "$Revision$"
 	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

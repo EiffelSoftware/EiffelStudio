@@ -1,8 +1,9 @@
-note
+﻿note
 	description: "A basic editor for EiffelStudio"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "Etienne Amodeo"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -264,8 +265,6 @@ feature -- Text Loading
 			-- <Precursor>
 		local
 			l_d_class : DOCUMENT_CLASS
-			l_s8: STRING_8
-			l_s: STRING_GENERAL
 		do
 			l_d_class := get_class_from_type (once "e")
 			set_current_document_class (l_d_class)
@@ -277,15 +276,16 @@ feature -- Text Loading
  			end
 				-- Remove the BOM before parsing in the editor.
 				-- Otherwise, positions from the compiler parser does not match those from the editor scanner.
-			l_s := s
-			if bom /= Void and then s.count >= bom.count then
-				if s.substring (1, bom.count) ~ bom then
-					l_s8 := s.as_string_8
-					l_s8.remove_head (bom.count)
-					l_s := l_s8
-				end
-			end
-			Precursor {EDITABLE_TEXT_PANEL} (l_s)
+			Precursor {EDITABLE_TEXT_PANEL}
+				(if
+					attached bom and then
+					s.count >= bom.count and then
+					s.substring (1, bom.count) ~ bom
+				then
+					s.to_string_8.tail (s.count - bom.count)
+				else
+					s
+				end)
 		end
 
 	check_document_modifications_and_reload
@@ -373,6 +373,9 @@ feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_MENU_BUILDER} 
 		local
 			l_show_pretty: E_SHOW_PRETTY
 			s: STRING_32
+			f: like first_line_displayed
+			l, n: like {EDITOR_CURSOR}.y_in_lines
+			c: like {EDITOR_CURSOR}.x_in_characters
 		do
 			if is_read_only and then not allow_edition then
 					-- Don't prettify class text if we are in a read-only view.
@@ -385,7 +388,11 @@ feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_MENU_BUILDER} 
 					-- Prettify code.
 				create l_show_pretty.make_string (file_path.name, s)
 					-- Check if formatting is successful.
-				if not l_show_pretty.error then
+				if not l_show_pretty.error and then not same_text (s) then
+						-- Record current caret position.
+					f := first_line_displayed
+					l := text_displayed.cursor.y_in_lines
+					c := text_displayed.cursor.x_in_characters
 						-- Replace current class text with the prettified text.
 					text_displayed.select_all
 					text_displayed.replace_selection (s)
@@ -394,9 +401,15 @@ feature {EB_COMMAND, EB_DEVELOPMENT_WINDOW, EB_DEVELOPMENT_WINDOW_MENU_BUILDER} 
 					refresh_now
 					text_displayed.forget_selection
 					text_displayed.flush
-					text_displayed.start
-					text_displayed.cursor.go_start_line
-					text_displayed.cursor.go_to_position (1)
+						-- Restore caret position.
+					n := number_of_lines
+					set_first_line_displayed (f.min (n), True)
+					if f > 0 and then n > 0 then
+						text_displayed.cursor.set_y_in_lines (l.min (n))
+					end
+					if c > 0 then
+						text_displayed.cursor.set_x_in_characters (c)
+					end
 				end
 			end
 		end
@@ -423,6 +436,41 @@ feature {NONE} -- Prettify implementation
 				-- Call 'prettify' again if the class was successfully saved.
 			if not text_displayed.is_modified then
 				prettify
+			end
+		end
+
+feature {NONE} -- Comparison
+
+	same_text (s: STRING_32): BOOLEAN
+			-- Is current text in the editor the same as `s`?
+		require
+			text_loaded: text_displayed.reading_text_finished
+		local
+			current_line: like {EDITABLE_TEXT}.current_line
+			last_line: like {EDITABLE_TEXT}.last_line
+			line_text: STRING_32
+			position: like {STRING_32}.index_of
+		do
+			Result := True
+			from
+				current_line := text_displayed.first_line
+				last_line := text_displayed.last_line
+				position := 1
+			until
+				not attached current_line or else not Result
+			loop
+				line_text := current_line.wide_image
+				Result := s.same_characters (line_text, 1, line_text.count, position)
+				position := position + line_text.count
+				if
+					Result and then
+					current_line /= last_line and then
+					attached current_line.eol_token
+				then
+					Result := s.valid_index (position) and then s [position] = '%N'
+					position := position + 1
+				end
+				current_line := current_line.next
 			end
 		end
 
@@ -523,4 +571,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EDITOR
+end

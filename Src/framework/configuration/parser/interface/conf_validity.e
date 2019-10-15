@@ -614,7 +614,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	true_boolean_settings_1_19_0_and_below: SEARCH_TABLE [STRING]
+	true_boolean_settings_1_19_0_and_below: SEARCH_TABLE [READABLE_STRING_8]
 			-- Settings that have a boolean value True by default if not specified in configuration
 			-- in namespace `namespace_1_19_0` and below.
 		once
@@ -632,7 +632,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	true_boolean_settings_1_20_0_and_above: SEARCH_TABLE [STRING]
+	true_boolean_settings_1_20_0_and_above: SEARCH_TABLE [READABLE_STRING_8]
 			-- Settings that have a boolean value True by default if not specified in configuration
 			-- in namespace `namespace_1_20_0` and above.
 		once
@@ -642,7 +642,7 @@ feature {NONE} -- Implementation
 			Result_not_void: Result /= Void
 		end
 
-	is_boolean_setting_true (name: like s_check_for_void_target; namespace: like latest_namespace): BOOLEAN
+	is_boolean_setting_true (name: READABLE_STRING_8; namespace: like latest_namespace): BOOLEAN
 			-- Is boolean setting of name `name` True by default if not specified
 			-- in configuration of namespace `namespace`.
 		require

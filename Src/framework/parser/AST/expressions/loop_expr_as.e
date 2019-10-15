@@ -72,8 +72,14 @@ feature -- Roundtrip
 			-- Invariant assertion list that contains both complete and incomplete assertions.
 			-- e.g. "tag:expr", "tag:", "expr"
 
-	invariant_keyword_index, until_keyword_index, qualifier_index: INTEGER
-			-- Index of keyword "invariant", "until" and "all"/"some" associated with this structure.
+	invariant_keyword_index: INTEGER
+			-- Index of keyword "invariant".
+
+	until_keyword_index: INTEGER
+			-- Index of keyword "until".
+
+	qualifier_index: INTEGER
+			-- Index of keyword "all"/"some".
 
 	invariant_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
 			-- Keyword "invariant" associated with this structure.

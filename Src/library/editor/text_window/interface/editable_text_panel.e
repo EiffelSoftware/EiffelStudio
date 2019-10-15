@@ -660,24 +660,30 @@ feature -- Edition Operations on text
 			undo_possible: text_displayed.undo_is_possible
 		local
 			f: like first_line_displayed
+			d: like text_displayed.cursor
 			l, n: like {EDITOR_CURSOR}.y_in_lines
 			c: like {EDITOR_CURSOR}.x_in_characters
 		do
 				-- Record current caret position.
 			f := first_line_displayed
-			l := text_displayed.cursor.y_in_lines
-			c := text_displayed.cursor.x_in_characters
+			d := text_displayed.cursor
+			if attached d then
+				l := d.y_in_lines
+				c := d.x_in_characters
+			end
 				-- Undo modifications.
 			text_displayed.undo
 			refresh_now
 				-- Restore caret position.
 			n := number_of_lines
 			set_first_line_displayed (f.min (n), True)
-			if f > 0 and then n > 0 then
-				text_displayed.cursor.set_y_in_lines (l.min (n))
-			end
-			if c > 0 then
-				text_displayed.cursor.set_x_in_characters (c)
+			if attached d then
+				if f > 0 and then n > 0 then
+					d.set_y_in_lines (l.min (n))
+				end
+				if c > 0 then
+					d.set_x_in_characters (c)
+				end
 			end
 		end
 

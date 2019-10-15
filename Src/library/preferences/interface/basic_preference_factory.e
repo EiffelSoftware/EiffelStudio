@@ -36,6 +36,7 @@ feature -- Access: Basic type
 			Result := (create {PREFERENCE_FACTORY [BOOLEAN, BOOLEAN_PREFERENCE]}).
 				new_preference (a_manager.preferences, a_manager, a_name, a_fallback_value)
 		ensure
+			instance_free: class
 			has_result: Result /= Void
 			preference_name_set: Result.name.is_equal (a_name)
 			preference_added: a_manager.preferences.has_preference (a_name)
@@ -294,7 +295,7 @@ feature -- Obsolete
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

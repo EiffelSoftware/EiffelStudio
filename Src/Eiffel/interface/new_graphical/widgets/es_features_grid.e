@@ -551,7 +551,6 @@ feature {NONE} -- Implementation
 		require
 			a_ef_not_void: a_ef /= Void
 		local
-			alias_name: STRING_32
 			assigner_name: STRING_32
 		do
 			Result := a_ef.name_32.twin

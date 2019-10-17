@@ -391,6 +391,16 @@ feature -- Names and Passwords (Authentication)
 			is_class: class
 		end
 
+	curlopt_tcp_keepalive: INTEGER
+			-- Declared as CURLOPT_TCP_KEEPALIVE
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"return CURLOPT_TCP_KEEPALIVE;"
+		ensure
+			is_class: class
+		end
+
 feature -- HTTP
 
 	curlopt_autoreferer: INTEGER
@@ -811,6 +821,16 @@ feature -- Protocol
 			is_class: class
 		end
 
+	curlopt_headerdata: INTEGER
+			-- Declared as CURLOPT_HEADERDATA
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"return CURLOPT_HEADERDATA;"
+		ensure
+			is_class: class
+		end
+
 feature -- Connection
 
 	curlopt_timeout: INTEGER
@@ -1128,6 +1148,26 @@ feature -- SSL and Security
 			is_class: class
 		end
 
+	curl_sslversion_tlsv1_2: INTEGER
+			-- Declared as CURL_SSLVERSION_MAX_TLSv1_2
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"return CURL_SSLVERSION_MAX_TLSv1_2;"
+		ensure
+			is_class: class
+		end
+
+	curl_sslversion_tlsv1_3: INTEGER
+			-- Declared as CURL_SSLVERSION_TLSv1_3
+		external
+			"C inline use <curl/curl.h>"
+		alias
+			"return CURL_SSLVERSION_TLSv1_3;"
+		ensure
+			is_class: class
+		end
+
 	curl_sslversion_sslv2: INTEGER
 			-- Declared as CURL_SSLVERSION_SSLv2
 		external
@@ -1419,12 +1459,16 @@ feature -- Status report
 						v = curlopt_ssh_private_keyfile or
 						v = curlopt_mail_from or
 						v = curlopt_mail_rcpt or
-						v = curl_zero_terminated
+						v = curl_zero_terminated or
+						v = curl_sslversion_tlsv1_2 or
+						v = curl_sslversion_tlsv1_3 or
+						v = curlopt_headerdata or
+						v = curlopt_tcp_keepalive
 		end
 
 note
 	library:   "cURL: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

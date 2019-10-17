@@ -8,7 +8,7 @@ note
 	legal: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 deferred class
 	CURL_EASY_EXTERNALS_I
 
@@ -109,7 +109,7 @@ feature -- Command
 			-- Declared as curl_easy_setopt.
 		require
 			exists: not a_curl_handle.is_default_pointer
-			valid: a_opt = {CURL_OPT_CONSTANTS}.curlopt_readdata
+			valid: a_opt = {CURL_OPT_CONSTANTS}.curlopt_readdata or a_opt = {CURL_OPT_CONSTANTS}.curlopt_headerdata 
 			readable: a_file /= Void and then a_file.file_readable
 		do
 			setopt_void_star (a_curl_handle, a_opt, a_file.file_pointer)
@@ -388,7 +388,7 @@ feature {NONE} -- C externals
 
 note
 	library:   "cURL: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

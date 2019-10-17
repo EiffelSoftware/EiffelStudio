@@ -38,6 +38,23 @@ feature -- Access
 
 	description: detachable IMMUTABLE_STRING_32
 
+	installations_limit: NATURAL
+			-- Maximum number of installation for the same plan.
+			-- `0` means no limit
+
+	concurrent_sessions_limit: NATURAL
+			-- Maximum number of concurrent sessions for the same plan.
+			-- `0` means no limit			
+
+	data: detachable IMMUTABLE_STRING_32
+		local
+			mi,ms: NATURAL
+		do
+			mi := installations_limit
+			ms := concurrent_sessions_limit
+			Result := "install.limit=" + mi.out + ";session.limit=" + ms.out
+		end
+
 feature -- Status report	
 
 	same_plan (pl: detachable ES_CLOUD_PLAN): BOOLEAN
@@ -64,6 +81,29 @@ feature -- Query
 		end
 
 feature -- Element change
+
+	set_data (a_data: detachable READABLE_STRING_GENERAL)
+		local
+			sess,inst: NATURAL
+			s: READABLE_STRING_GENERAL
+		do
+			sess := 0
+			inst := 0
+			if a_data /= Void then
+				across
+					a_data.split (';') as ic
+				loop
+					s := ic.item
+					if s.starts_with ("install.limit=") then
+						inst := s.substring (s.index_of ('=', 1) + 1, s.count).to_natural
+					elseif s.starts_with ("session.limit=") then
+						sess := s.substring (s.index_of ('=', 1) + 1, s.count).to_natural
+					end
+				end
+			end
+			installations_limit := inst
+			concurrent_sessions_limit := sess
+		end
 
 	set_title (s: detachable READABLE_STRING_GENERAL)
 		do

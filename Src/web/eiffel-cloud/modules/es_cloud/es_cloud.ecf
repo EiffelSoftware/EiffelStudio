@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="es_cloud" uuid="13708EF8-5F2F-412B-8584-F2CF74C93A95" library_target="es_cloud">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="es_cloud" uuid="13708EF8-5F2F-412B-8584-F2CF74C93A95" library_target="es_cloud">
 	<target name="es_cloud">
 		<root all_classes="true"/>
 		<file_rule>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
+		<option warning="none">
+		</option>
+		<setting name="total_order_on_reals" value="false"/>
+		<setting name="dead_code_removal" value="feature"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
 		<library name="cms" location="$ISE_LIBRARY\unstable\library\web\cms\cms.ecf" readonly="false"/>
 		<library name="cms_app_env" location="$ISE_LIBRARY\unstable\library\web\cms\library\app_env\app_env.ecf" readonly="false"/>
 		<library name="cms_config" location="$ISE_LIBRARY\unstable\library\web\cms\library\configuration\config.ecf"/>
 		<library name="cms_model" location="$ISE_LIBRARY\unstable\library\web\cms\library\model\cms_model.ecf"/>
 		<library name="error" location="$ISE_LIBRARY\contrib\library\utility\general\error\error.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
+		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf"/>
 		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf.ecf"/>
 		<library name="wsf_html" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf_html\wsf_html.ecf"/>
 		<cluster name="src" location=".\" recursive="true"/>

@@ -27,6 +27,18 @@ feature -- Access
 		deferred
 		end
 
+	user_installation (a_user: CMS_USER; a_install_id: READABLE_STRING_GENERAL): detachable ES_CLOUD_INSTALLATION
+		deferred
+		end
+
+	user_sessions (a_user: CMS_USER; a_install_id: detachable READABLE_STRING_GENERAL; a_only_active: BOOLEAN): detachable LIST [ES_CLOUD_SESSION]
+		deferred
+		end
+
+	user_session (a_user: CMS_USER; a_install_id, a_session_id: READABLE_STRING_GENERAL): detachable ES_CLOUD_SESSION
+		deferred
+		end
+
 feature -- Change
 
 	save_plan (a_plan: ES_CLOUD_PLAN)
@@ -46,6 +58,10 @@ feature -- Change
 		end
 
 	discard_installation (inst: ES_CLOUD_INSTALLATION)
+		deferred
+		end
+
+	save_session (a_session: ES_CLOUD_SESSION)
 		deferred
 		end
 

@@ -20,6 +20,26 @@ feature {NONE} -- Creation
 
 feature -- Access
 
+	username: detachable STRING_32
+		do
+			Result := eiffel_env.get_environment_32 ("USERNAME")
+			if Result = Void then
+				Result := eiffel_env.get_environment_32 ("USER")
+				if Result = Void then
+					Result := eiffel_env.get_environment_32 ("LOGNAME")
+				end
+			end
+		end
+
+	device_name: STRING_32
+		do
+			if attached eiffel_env.get_environment_32 ("COMPUTERNAME") as n then
+				Result := n
+			else
+				Result := {STRING_32} "unknown"
+			end
+		end
+
 	application_item (a_var: READABLE_STRING_GENERAL; a_app: detachable READABLE_STRING_GENERAL; a_version: detachable STRING): detachable STRING_32
 			-- Variable `a_var' as if we were `a_app' for version `a_version` (formatted as MM.mm).
 		require
@@ -93,7 +113,7 @@ feature -- Element change
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -124,7 +124,7 @@ feature {NONE} -- Action handlers
 			s: STRING
 			l_dbg: BOOLEAN
 		do
-			l_dbg := False
+			l_dbg := True
 			b := main_box
 			b.wipe_out
 			if attached es_cloud_s.service as cld then
@@ -168,6 +168,11 @@ feature {NONE} -- Action handlers
 							end
 							if attached {ES_ACCOUNT_ACCESS_TOKEN} acc.access_token as tok then
 								append_bold_text_to ("Session (%N", txt)
+								append_text_to ("%Tid=", txt)
+								if attached cld.active_session as sess then
+									append_text_to (sess.id, txt)
+								end
+								append_text_to ("%N", txt)
 								append_text_to ("%Ttoken=", txt)
 								append_text_to (tok.token, txt)
 								append_text_to ("%N", txt)
@@ -216,20 +221,47 @@ feature {NONE} -- Action handlers
 							end
 						end
 
-
-						create hb
 						if l_dbg then
 							if
 								attached {ES_ACCOUNT_ACCESS_TOKEN} acc.access_token as tok
 							then
+								create hb
+								b.extend (hb)
+								b.disable_item_expand (hb)
+
 								create but.make_with_text_and_action ("Update", agent on_account_update (cld, acc))
 								hb.extend (create {EV_CELL})
 								hb.extend (but)
 								layout_constants.set_default_size_for_button (but)
 								hb.disable_item_expand (but)
 
-								if attached tok.has_refresh_key then
+								if attached cld.active_session as sess then
+									create but.make_with_text_and_action ("Ping", agent on_account_ping (cld, acc, sess))
+									hb.extend (create {EV_CELL})
+									hb.extend (but)
+									layout_constants.set_default_size_for_button (but)
+									hb.disable_item_expand (but)
 
+									create but.make_with_text_and_action ("End", agent on_session_end (cld, acc, sess))
+									hb.extend (create {EV_CELL})
+									hb.extend (but)
+									layout_constants.set_default_size_for_button (but)
+									hb.disable_item_expand (but)
+
+									create but.make_with_text_and_action ("Pause", agent on_session_pause (cld, acc, sess))
+									hb.extend (create {EV_CELL})
+									hb.extend (but)
+									layout_constants.set_default_size_for_button (but)
+									hb.disable_item_expand (but)
+
+									create but.make_with_text_and_action ("Resume", agent on_session_resume (cld, acc, sess))
+									hb.extend (create {EV_CELL})
+									hb.extend (but)
+									layout_constants.set_default_size_for_button (but)
+									hb.disable_item_expand (but)
+								end
+
+								if attached tok.has_refresh_key then
 									create but.make_with_text_and_action ("Refresh", agent on_account_refresh_token (cld, tok, acc))
 									hb.extend (create {EV_CELL})
 									hb.extend (but)
@@ -239,6 +271,7 @@ feature {NONE} -- Action handlers
 							end
 						end
 
+						create hb
 						create but.make_with_text_and_action ("Logout", agent on_logout (cld))
 						hb.extend (create {EV_CELL})
 						hb.extend (but)
@@ -305,6 +338,26 @@ feature {NONE} -- Action handlers
 			widget.set_pointer_style (l_style)
 		end
 
+	on_account_ping (cld: ES_CLOUD_S; acc: ES_ACCOUNT; sess: ES_ACCOUNT_SESSION)
+		do
+			cld.ping_installation (acc, sess)
+		end
+
+	on_session_end (cld: ES_CLOUD_S; acc: ES_ACCOUNT; sess: ES_ACCOUNT_SESSION)
+		do
+			cld.end_session (acc, sess)
+		end
+
+	on_session_pause (cld: ES_CLOUD_S; acc: ES_ACCOUNT; sess: ES_ACCOUNT_SESSION)
+		do
+			cld.pause_session (acc, sess)
+		end
+
+	on_session_resume (cld: ES_CLOUD_S; acc: ES_ACCOUNT; sess: ES_ACCOUNT_SESSION)
+		do
+			cld.resume_session (acc, sess)
+		end
+
 feature -- Access: Help
 
 	help_context_id: STRING_32
@@ -315,9 +368,9 @@ feature -- Access: Help
 
 feature -- Rich text helper
 
-	append_text_to (a_txt: READABLE_STRING_GENERAL; a_rich_text: EV_RICH_TEXT)
+	append_text_to (a_txt: detachable READABLE_STRING_GENERAL; a_rich_text: EV_RICH_TEXT)
 		do
-			if not a_txt.is_empty then
+			if a_txt /= Void and then not a_txt.is_empty then
 				append_formatted_text_to (a_txt, Void, a_rich_text)
 			end
 		end
@@ -414,7 +467,7 @@ feature -- Rich text helper
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

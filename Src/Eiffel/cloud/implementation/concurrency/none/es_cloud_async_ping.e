@@ -1,42 +1,51 @@
 note
-	description: "Asynchronous call to ping_installation."
+	description: "Asynchronous call to refresh_token."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ES_CLOUD_ASYNC_PING
+	ES_CLOUD_ASYNC_REFRESH
 
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_token: ES_ACCOUNT_ACCESS_TOKEN; a_installation: ES_ACCOUNT_INSTALLATION; a_server_url: READABLE_STRING_8)
+	make (a_access_token: ES_ACCOUNT_ACCESS_TOKEN; a_server_url: READABLE_STRING_8)
+		require
+			has_refresh_key: a_access_token.has_refresh_key
 		do
-			create token.make_from_string (a_token.token)
-			create installation_id.make_from_string (a_installation.id)
+			access_token := a_access_token
 			create server_url.make_from_string (a_server_url)
 		end
 
-	token: IMMUTABLE_STRING_8
-
-	installation_id: IMMUTABLE_STRING_8
+	access_token: ES_ACCOUNT_ACCESS_TOKEN
 
 	server_url: IMMUTABLE_STRING_8
+
+feature -- Output
+
+	refreshed_token: detachable ES_ACCOUNT_ACCESS_TOKEN
 
 feature -- Access
 
 	execute
 		do
-			ping_installation
+			if attached access_token.refresh_key as k then
+				refresh_token (create {IMMUTABLE_STRING_8}.make_from_string (access_token.token), create {IMMUTABLE_STRING_8}.make_from_string (k))
+			end
 		end
 
-	ping_installation
+	refresh_token (a_token: READABLE_STRING_8; a_refresh_key: READABLE_STRING_8)
 		local
 			wapi: ES_CLOUD_API
 		do
+			print ("Going to ping%N")
+			(create {EXECUTION_ENVIRONMENT}).sleep (10_000_000_000)
 			create wapi.make (server_url)
-			wapi.ping_installation (token, installation_id)
+			print ("Pinging%N")
+			refreshed_token := wapi.refreshing_token (a_token, a_refresh_key)
+			print ("Ping done.%N")
 		end
 
 note

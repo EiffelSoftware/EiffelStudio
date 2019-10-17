@@ -40,7 +40,9 @@ feature {NONE} -- Router/administration
 		do
 			if attached module.es_cloud_api as l_es_cloud_api then
 				a_router.handle ("/cloud/subscriptions/", create {ES_CLOUD_SUBSCRIPTIONS_ADMIN_HANDLER}.make (l_es_cloud_api), a_router.methods_get_post)
+				a_router.handle ("/cloud/installations/", create {ES_CLOUD_INSTALLATIONS_ADMIN_HANDLER}.make (l_es_cloud_api), a_router.methods_get_post)
 				a_router.handle ("/cloud/plans/", create {ES_CLOUD_PLANS_ADMIN_HANDLER}.make (l_es_cloud_api), a_router.methods_get_post)
+				a_router.handle ("/cloud/plans/{pid}", create {ES_CLOUD_PLANS_ADMIN_HANDLER}.make (l_es_cloud_api), a_router.methods_get_post)
 			end
 		end
 

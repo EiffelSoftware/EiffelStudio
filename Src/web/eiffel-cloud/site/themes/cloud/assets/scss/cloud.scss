@@ -1,74 +1,110 @@
 @import "common.scss";
 
-#main
-	{
-		.es-message {
-      @extend .box;
-      font-size: xx-large;
-			border: solid 3px #ccc;
-			background-color: #ddd;
-			width: 60%;
-			padding: 20px;
-			margin-left: auto;
-			margin-right: auto;
-      font-family: roboto;
+#main {
+	.es-message {
+		@extend .box;
+		font-size: xx-large;
+		border: solid 3px #ccc;
+		background-color: #ddd;
+		width: 60%;
+		padding: 20px;
+		margin-left: auto;
+		margin-right: auto;
+		font-family: roboto;
+	}
+	div.es-plans {
+		li.es-plan-box {
+			@extend .box;
+			list-style: none;
+			display: inline-flex;
 		}
-    div.es-plans {
-      li.es-plan-box {
-        @extend .box;
-        list-style: none;
-        display: inline-flex;
-      }
-    }
-		div.es-installations {
-			&>p {
-				font-weight: bold;
-			}
+	}
+	div.es-installations {
+		&>p {
+			font-weight: bold;
+		}
+		&>p>a.note {
+			float: right;
+			font-weight: normal;
+			font-style: italic;
+			&:before { content: "("; }
+			&:after { content: ")"; }
+		}
+		li {
 			span {
 				float: right;
 				border: dotted 1px #bbb;
 				padding: 0 5px 0 5px;
 				margin-left: 10px;
-				background-color: #ddd;
+				background-color: #fff;
 				clear: both;
 			}
 			span.creation {
 				font-size: smaller;
 				&:before {
-					content: "Created: ";
+					content: "Installed: ";
 				}
 			}
 			span.access {
 				font-size: smaller;
 				&:before {
-					content: "Last-Access: ";
+					content: "Last-seen: ";
 				}
 			}
-			li {
-				list-style: none;
-				padding: 3px 5px;
-				margin-bottom: 5px;
-				border-left: solid 5px orange;
-        border-top: dotted 1px orange;
+			&.session {
+				margin-top: 5px;
+				span.creation:before { content: "Started: "; }
+				&.active {
+					span { background-color: #cfc; }
+					border-left: solid 5px orange;
+					border-top: dotted 1px orange;
+				}
+				&.paused {
+					span { background-color: #ccf; }
+					border-left: solid 5px #009;
+					border-top: dotted 1px #009;
+					span.access:before { content: "Paused: "; }
+				}
+				&.closed {
+					span { background-color: #bbb; }
+					border-left: solid 5px #999;
+					border-top: dotted 1px #999;
+					span.access:before { content: "Closed: "; }
+				}
+				&.expired {
+					span { background-color: #ddd; }
+					border-left: solid 5px #999;
+					border-top: dotted 1px #999;
+					span.access:before { content: "Expired: "; }
+				}
 			}
-	 }
-	 div.es-subscription {
-		 &>p {
-			 font-weight: bold;
-		 }
-     li {
-       list-style: none;
-     }
-		 li.status {
-			 padding-left: 5px;
-			 &.success {
-				 color: #0a0;
-			   border-left: solid 5px #090;
-			 }
-			 &.warning {
-				 color: #990;
-				 border-left: solid 5px #900;
-			 }
-	 	  }
-	 }
+
+			list-style: none;
+			padding: 3px 5px 15px 5px;
+			margin-bottom: 5px;
+			&.never {
+				border-left: solid 5px #ccc;
+				border-top: dotted 1px #ccc;
+			}
+		}
+	}
+	div.es-subscription {
+		&>p {
+			font-weight: bold;
+		}
+		li {
+			list-style: none;
+		}
+		li.status {
+			padding-left: 5px;
+			&.success {
+				color: #0a0;
+				border-left: solid 5px #090;
+			}
+			&.warning {
+				color: #990;
+				border-left: solid 5px #900;
+			}
+		}
+	}
 }

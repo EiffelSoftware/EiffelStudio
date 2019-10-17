@@ -13,12 +13,56 @@ inherit
 			on_account_logged_in,
 			on_account_logged_out,
 			on_account_updated,
-			on_cloud_available
+			on_cloud_available,
+			on_session_state_changed
 		end
 
 	SHARED_ES_CLOUD_SERVICE
 
 	EB_SHARED_WINDOW_MANAGER
+
+feature {NONE} -- Background ping
+
+	timeout: detachable EV_TIMEOUT
+
+	start_background_pinging (acc: ES_ACCOUNT)
+		local
+			t: EV_TIMEOUT
+		do
+			process_ping (acc)
+
+			t := timeout
+			if t /= Void then
+				t.destroy
+			end
+			create t
+			t.actions.extend (agent process_ping (acc))
+			t.set_interval (ping_delay)
+			timeout := t
+		end
+
+	stop_background_pinging
+		do
+			if attached timeout as t then
+				t.destroy
+				timeout := t
+			end
+		end
+
+	ping_delay: INTEGER = 900_000 -- 15 * 60 * 1000 ms = 15 minutes
+--	ping_delay: INTEGER = 300_000 -- 5 * 60 * 1000 ms = 5 minutes
+--	ping_delay: INTEGER = 30_000 -- 30 * 1000 ms = 30 sec		
+
+	process_ping (acc: ES_ACCOUNT)
+		do
+			if
+				attached es_cloud_s.service as cld and then
+				attached cld.active_session as sess and then
+				not sess.is_paused
+			then
+				cld.async_ping_installation (acc, sess)
+			end
+		end
 
 feature -- Events
 
@@ -30,19 +74,44 @@ feature -- Events
 	on_account_logged_in (acc: ES_ACCOUNT)
 		do
 			on_account_changed (acc)
-			if attached es_cloud_s.service as cld then
-				cld.ping_installation (acc)
-			end
+			start_background_pinging (acc)
 		end
 
 	on_account_logged_out
 		do
+			stop_background_pinging
 			on_account_changed (Void)
 		end
 
 	on_account_updated (acc: detachable ES_ACCOUNT)
 		do
 			on_account_changed (acc)
+		end
+
+	on_session_state_changed (sess: ES_ACCOUNT_SESSION)
+		local
+			dlg: ES_CLOUD_PAUSE_DIALOG
+			w: detachable EB_DEVELOPMENT_WINDOW
+		do
+			if attached es_cloud_s.service as l_cloud_service then
+				if sess.is_paused then
+					create dlg.make (l_cloud_service, "PAUSED!!!!!")
+					w := window_manager.last_focused_development_window
+					if
+						w = Void and then
+						attached window_manager.development_windows as win_lst and then
+						not win_lst.is_empty
+					then
+						w := win_lst.first
+					end
+					if w /= Void then
+						dlg.show_modal_to_window (w.window)
+--						dlg.show_relative_to_window (w.window)
+					else
+						dlg.show
+					end
+				end
+			end
 		end
 
 feature -- Callbacks		
@@ -70,7 +139,7 @@ feature -- Operations
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

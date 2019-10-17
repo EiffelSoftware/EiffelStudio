@@ -9,6 +9,7 @@ class
 
 create
 	make
+	
 feature {NONE} -- Creation
 
 	make (a_installation_id: READABLE_STRING_GENERAL; a_user: CMS_USER)
@@ -30,8 +31,7 @@ feature -- Access
 	status: INTEGER
 
 	creation_date: detachable DATE_TIME
-
-	access_date: detachable DATE_TIME
+			-- Installation registration date.
 
 feature -- status report
 
@@ -64,11 +64,6 @@ feature -- Element change
 	set_creation_date (dt: like creation_date)
 		do
 			creation_date := dt
-		end
-
-	set_access_date (dt: like access_date)
-		do
-			access_date := dt
 		end
 
 end

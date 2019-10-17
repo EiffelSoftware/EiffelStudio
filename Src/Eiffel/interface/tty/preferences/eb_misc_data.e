@@ -290,7 +290,7 @@ feature {NONE} -- Implementation
 			license_accepted_preference := l_manager.new_boolean_preference_value (l_manager, license_accepted_preference_string, False)
 			license_accepted_preference.set_hidden (True)
 
-			es_cloud_enabled_preference := l_manager.new_boolean_preference_value (l_manager, es_cloud_enabled_preference_string, False)
+			es_cloud_enabled_preference := l_manager.new_boolean_preference_value (l_manager, es_cloud_enabled_preference_string, True)
 			es_cloud_enabled_preference.set_hidden (True)
 			es_cloud_enabled_preference.set_restart_required (True)
 		end

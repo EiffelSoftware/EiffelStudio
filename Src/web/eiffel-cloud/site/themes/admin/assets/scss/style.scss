@@ -99,6 +99,14 @@ ul.horizontal {
 	padding: 5px 2px 5px 2px;
 }
 
+table {
+	thead td, th {
+		font-weight: bold;
+	}
+	td {
+		padding: 0 2px 0 2px;
+	}
+}
 table.with_border {
 	thead td {
 		font-weight: bold;

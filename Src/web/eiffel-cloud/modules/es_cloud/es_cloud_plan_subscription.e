@@ -67,6 +67,16 @@ feature -- Status report
 			end
 		end
 
+	concurrent_sessions_limit: NATURAL
+		do
+			Result := plan.concurrent_sessions_limit
+		end
+
+	installations_limit: NATURAL
+		do
+			Result := plan.installations_limit
+		end
+
 feature -- Element change
 
 	set_plan (p: like plan)

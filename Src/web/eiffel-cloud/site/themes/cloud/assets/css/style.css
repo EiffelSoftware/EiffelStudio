@@ -5,7 +5,8 @@
   border-radius: 10px;
   padding: 20px;
   border: solid 3px #ccc;
-  background-color: #eee; }
+  background-color: #eee;
+}
 
 .box, #main .es-message, #main div.es-plans li.es-plan-box, div.login-box {
   -webkit-border-radius: 10px;
@@ -14,7 +15,8 @@
   border-radius: 10px;
   padding: 20px;
   border: solid 3px #ccc;
-  background-color: #eee; }
+  background-color: #eee;
+}
 
 #main .es-message {
   font-size: xx-large;
@@ -24,102 +26,175 @@
   padding: 20px;
   margin-left: auto;
   margin-right: auto;
-  font-family: roboto; }
-
+  font-family: roboto;
+}
 #main div.es-plans li.es-plan-box {
   list-style: none;
-  display: inline-flex; }
-
+  display: inline-flex;
+}
 #main div.es-installations > p {
-  font-weight: bold; }
-
-#main div.es-installations span {
+  font-weight: bold;
+}
+#main div.es-installations > p > a.note {
+  float: right;
+  font-weight: normal;
+  font-style: italic;
+}
+#main div.es-installations > p > a.note:before {
+  content: "(";
+}
+#main div.es-installations > p > a.note:after {
+  content: ")";
+}
+#main div.es-installations li {
+  list-style: none;
+  padding: 3px 5px 15px 5px;
+  margin-bottom: 5px;
+}
+#main div.es-installations li span {
   float: right;
   border: dotted 1px #bbb;
   padding: 0 5px 0 5px;
   margin-left: 10px;
-  background-color: #ddd;
-  clear: both; }
-
-#main div.es-installations span.creation {
-  font-size: smaller; }
-  #main div.es-installations span.creation:before {
-    content: "Created: "; }
-
-#main div.es-installations span.access {
-  font-size: smaller; }
-  #main div.es-installations span.access:before {
-    content: "Last-Access: "; }
-
-#main div.es-installations li {
-  list-style: none;
-  padding: 3px 5px;
-  margin-bottom: 5px;
+  background-color: #fff;
+  clear: both;
+}
+#main div.es-installations li span.creation {
+  font-size: smaller;
+}
+#main div.es-installations li span.creation:before {
+  content: "Installed: ";
+}
+#main div.es-installations li span.access {
+  font-size: smaller;
+}
+#main div.es-installations li span.access:before {
+  content: "Last-seen: ";
+}
+#main div.es-installations li.session {
+  margin-top: 5px;
+}
+#main div.es-installations li.session span.creation:before {
+  content: "Started: ";
+}
+#main div.es-installations li.session.active {
   border-left: solid 5px orange;
-  border-top: dotted 1px orange; }
-
+  border-top: dotted 1px orange;
+}
+#main div.es-installations li.session.active span {
+  background-color: #cfc;
+}
+#main div.es-installations li.session.paused {
+  border-left: solid 5px #009;
+  border-top: dotted 1px #009;
+}
+#main div.es-installations li.session.paused span {
+  background-color: #ccf;
+}
+#main div.es-installations li.session.paused span.access:before {
+  content: "Paused: ";
+}
+#main div.es-installations li.session.closed {
+  border-left: solid 5px #999;
+  border-top: dotted 1px #999;
+}
+#main div.es-installations li.session.closed span {
+  background-color: #bbb;
+}
+#main div.es-installations li.session.closed span.access:before {
+  content: "Closed: ";
+}
+#main div.es-installations li.session.expired {
+  border-left: solid 5px #999;
+  border-top: dotted 1px #999;
+}
+#main div.es-installations li.session.expired span {
+  background-color: #ddd;
+}
+#main div.es-installations li.session.expired span.access:before {
+  content: "Expired: ";
+}
+#main div.es-installations li.never {
+  border-left: solid 5px #ccc;
+  border-top: dotted 1px #ccc;
+}
 #main div.es-subscription > p {
-  font-weight: bold; }
-
+  font-weight: bold;
+}
 #main div.es-subscription li {
-  list-style: none; }
-
+  list-style: none;
+}
 #main div.es-subscription li.status {
-  padding-left: 5px; }
-  #main div.es-subscription li.status.success {
-    color: #0a0;
-    border-left: solid 5px #090; }
-  #main div.es-subscription li.status.warning {
-    color: #990;
-    border-left: solid 5px #900; }
+  padding-left: 5px;
+}
+#main div.es-subscription li.status.success {
+  color: #0a0;
+  border-left: solid 5px #090;
+}
+#main div.es-subscription li.status.warning {
+  color: #990;
+  border-left: solid 5px #900;
+}
 
 body {
   margin: 0;
   background-color: white;
-  font-family: roboto; }
+  font-family: roboto;
+}
 
 a {
   color: blue;
-  text-decoration: none; }
+  text-decoration: none;
+}
 
 div.error {
   color: red;
   background-color: #fdd;
   /* border: solid 1px #f00; */
-  padding: 10px; }
+  padding: 10px;
+}
 
 div.login-box {
   border: solid 3px #6a6;
-  background-color: #eee; }
+  background-color: #eee;
+}
 
 #header {
   background-color: black;
   color: yellow;
   font-family: roboto;
   font-size: x-large;
-  padding: 10px; }
-  #header ul.horizontal li {
-    margin-right: 10px;
-    margin-bottom: 5px;
-    padding: 5px 10px;
-    display: inline-block;
-    border: solid 1px #ffc; }
-    #header ul.horizontal li a {
-      color: yellow; }
-    #header ul.horizontal li.active {
-      border: solid 2px #ffc; }
-    #header ul.horizontal li:hover {
-      background-color: #333;
-      border-bottom: solid 5px yellow;
-      margin-bottom: 0; }
-      #header ul.horizontal li:hover a {
-        color: #ff0; }
+  padding: 10px;
+}
+#header ul.horizontal li {
+  margin-right: 10px;
+  margin-bottom: 5px;
+  padding: 5px 10px;
+  display: inline-block;
+  border: solid 1px #ffc;
+}
+#header ul.horizontal li a {
+  color: yellow;
+}
+#header ul.horizontal li.active {
+  border: solid 2px #ffc;
+}
+#header ul.horizontal li:hover {
+  background-color: #333;
+  border-bottom: solid 5px yellow;
+  margin-bottom: 0;
+}
+#header ul.horizontal li:hover a {
+  color: #ff0;
+}
 
 div#content {
   max-width: 800px;
   padding: 10px;
   margin-left: auto;
-  margin-right: auto; }
+  margin-right: auto;
+}
 
 div#footer {
-  background-color: #006; }
+  background-color: #006;
+}

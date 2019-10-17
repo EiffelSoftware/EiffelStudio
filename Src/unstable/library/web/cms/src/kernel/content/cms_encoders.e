@@ -85,6 +85,15 @@ feature -- Helper conversions to and from string
 			Result := hd.rfc1123_string
 		end
 
+	date_time_to_timestamp_string (dt: DATE_TIME): STRING_8
+			-- Date time `dt` converted to standard output (using RFC3339)
+		local
+			hd: HTTP_DATE
+		do
+			create hd.make_from_date_time (dt)
+			Result := hd.rfc3339_string
+		end
+
 	date_time_from_string (s: READABLE_STRING_GENERAL): detachable DATE_TIME
 			-- Date time from string `s`, if valid.
 		local
@@ -155,6 +164,6 @@ feature -- Helper conversions to and from string
 		end
 
 note
-	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2019, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

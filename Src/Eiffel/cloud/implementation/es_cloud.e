@@ -8,10 +8,15 @@ class
 
 inherit
 	ES_CLOUD_S
+		redefine
+			on_account_logged_in
+		end
 
 	DISPOSABLE_SAFE
 
 	EIFFEL_LAYOUT
+
+	SHARED_EIFFEL_PROJECT
 
 create
 	make,
@@ -42,6 +47,7 @@ feature {NONE} -- Default
 
 	default_server_url: STRING
 		do
+				-- On Windows: Computer\HKEY_CURRENT_USER\Software\ISE\Eiffel_19.09\installation\es_cloud\default_server_url
 			if
 				is_eiffel_layout_defined and then
 				attached (create {ES_INSTALLATION_ENVIRONMENT}.make (eiffel_layout)).application_item ("default_server_url", "es_cloud", eiffel_layout.version_name) as v
@@ -50,7 +56,12 @@ feature {NONE} -- Default
 					-- For now, it is possible to change the server url this way.
 				Result := v.to_string_8
 			else
-				Result := "https://cloud.eiffel.com/api"
+				Result := "https://cloud.eiffel.com/api" -- Default
+			end
+			debug ("es_cloud")
+				if attached eiffel_layout.get_environment_8 ("ES_CLOUD_SERVER_URL") as l_env_url then
+					Result := l_env_url
+				end
 			end
 		end
 
@@ -68,12 +79,26 @@ feature {NONE} -- Initialization
 		local
 			inst: ES_INSTALLATION_ENVIRONMENT
 			s: detachable READABLE_STRING_32
+			l_id: STRING_32
 		do
 			create inst.make (eiffel_layout)
 			s := inst.application_item ("installation_id", env.product_name, env.version_name)
 			if s /= Void and then s.has_substring (env.version_name) and then s.is_valid_as_string_8 then
 				create installation.make_with_id (s.to_string_8)
 			else
+				create l_id.make_empty
+				l_id.append (env.product_name)
+				l_id.append_character ('_')
+				l_id.append (env.version_name)
+				l_id.append_character ('-')
+				l_id.append_character ('-')
+				l_id.append (env.eiffel_platform)
+				l_id.append_character ('-')
+				l_id.append_character ('-')
+				l_id.append (inst.device_name)
+				l_id.append_character ('-')
+				l_id.append_character ('-')
+				l_id.append ((create {UUID_GENERATOR}).generate_uuid.out)
 				create installation.make_with_id (env.product_name + "_" + env.version_name + "--" + env.eiffel_platform + "--" + (create {UUID_GENERATOR}).generate_uuid.out)
 				inst.set_application_item ("installation_id", env.product_name, env.version_name, installation.id)
 			end
@@ -96,6 +121,46 @@ feature {NONE} -- Access
 			-- Local storage for account related data.
 
 	web_api: ES_CLOUD_API
+
+feature -- Event
+
+	on_project_closed
+		do
+			if attached active_session as sess then
+				end_session (sess.account, sess)
+			end
+		end
+
+	on_project_loaded
+		local
+			l_title: STRING_32
+			sh: SHARED_WORKBENCH
+		do
+			if attached active_session as sess then
+				if
+					eiffel_project.initialized and then
+					attached eiffel_project.lace as l_ace
+				then
+					create l_title.make_empty
+					if attached l_ace.target_name as tgt then
+						l_title.append (tgt)
+						l_title.append_character (' ')
+					end
+					l_title.append_character ('(')
+					l_title.append (l_ace.project_location.location.name)
+					l_title.append_character (')')
+					if
+						attached eiffel_universe.conf_system as cfg and then
+						not cfg.is_generated_uuid
+					then
+						l_title.append_character (' ')
+						l_title.append_character ('#')
+						l_title.append (cfg.uuid.out)
+					end
+					sess.set_title (l_title)
+				end
+			end
+		end
 
 feature -- Access
 
@@ -133,6 +198,9 @@ feature -- Access
 
 	active_account: detachable ES_ACCOUNT
 			-- Active account if logged in, otherwise Void.
+
+	active_session: detachable ES_ACCOUNT_SESSION
+			-- Active session.
 
 	guest_mode_ending_date: detachable DATE_TIME
 
@@ -265,35 +333,89 @@ feature -- Sign
 				on_account_logged_in (acc)
 			else
 				active_account := Void
+				active_session := Void
 					-- If guest, remains guest.
 			end
 		end
 
 	logout
+		local
+			acc: like active_account
 		do
+			acc := active_account
 			if
-				attached active_account as acc and then
-				attached acc.access_token as tok
+				acc /= Void and then
+				attached acc.access_token as tok and then
+				attached active_session as sess
 			then
-				web_api.logout (tok.token)
+				web_api.logout (tok.token, installation.id, sess.id)
 			end
 			active_account := Void
+			active_session := Void
 			is_guest := False
 			store
 			on_account_logged_out
 		end
 
+	quit
+		do
+			(create {EXCEPTIONS}).die (-123)
+		end
+
 feature -- Updating
 
-	ping_installation (a_account: ES_ACCOUNT)
+	async_ping_installation (a_account: ES_ACCOUNT; a_session: ES_ACCOUNT_SESSION)
 		local
 			p: ES_CLOUD_ASYNC_PING
 		do
 			if
 				attached a_account.access_token as tok
 			then
-				create p.make (tok, installation, server_url)
+				create p.make (Current, tok, installation, a_session, server_url)
 				p.execute
+			end
+		end
+
+	ping_installation (a_account: ES_ACCOUNT; a_session: ES_ACCOUNT_SESSION)
+		local
+			opts: STRING_TABLE [READABLE_STRING_GENERAL]
+		do
+			if attached a_account.access_token as tok then
+				if attached a_session.title as l_title then
+					create opts.make (1)
+					opts["session_title"] := create {IMMUTABLE_STRING_32}.make_from_string_general (l_title)
+				end
+				web_api.ping_installation (tok.token, installation.id, a_session.id, opts)
+				if web_api.session_state_changed then
+					on_session_state_changed (a_session)
+				end
+			end
+		end
+
+	end_session (a_account: ES_ACCOUNT; a_session: ES_ACCOUNT_SESSION)
+		do
+			if
+				attached a_account.access_token as tok
+			then
+				web_api.end_session (tok.token, installation.id, a_session.id)
+			end
+		end
+
+	pause_session (a_account: ES_ACCOUNT; a_session: ES_ACCOUNT_SESSION)
+		do
+			if
+				attached a_account.access_token as tok
+			then
+				web_api.pause_session (tok.token, installation.id, a_session.id)
+			end
+		end
+
+	resume_session (a_account: ES_ACCOUNT; a_session: ES_ACCOUNT_SESSION)
+		do
+			if
+				attached a_account.access_token as tok
+			then
+				web_api.resume_session (tok.token, installation.id, a_session.id)
 			end
 		end
 
@@ -329,15 +451,43 @@ feature -- Updating
 			end
 		end
 
+	update_session (a_session: ES_ACCOUNT_SESSION)
+		do
+			if attached web_api.session (a_session.account, a_session.id) as sess then
+				a_session.set_is_paused (sess.is_paused)
+			else
+				end_session (a_session.account, a_session)
+			end
+		end
+
 	refresh_token (a_token: ES_ACCOUNT_ACCESS_TOKEN; acc: ES_ACCOUNT)
+		local
+			r: ES_CLOUD_ASYNC_REFRESH
 		do
 			if attached a_token.refresh_key as k then
-				web_api.refresh_token (a_token.token, k, acc)
-				if not web_api.has_error then
+				if attached web_api.refreshing_token (a_token.token, k) as tok then
+					acc.set_access_token (tok)
 					store
 					on_account_updated (acc)
+				else
+					logout
 				end
 			end
+		end
+
+feature -- Events
+
+	on_account_logged_in (acc: ES_ACCOUNT)
+		do
+			create active_session.make_new (acc)
+			if attached eiffel_project.manager as m then
+				m.load_agents.extend (agent	on_project_loaded)
+--				m.compile_stop_agents.extend (agent on_project_loaded)
+				m.close_agents.extend (agent on_project_closed)
+			else
+				check has_eiffel_project_manager: False end
+			end
+			Precursor (acc)
 		end
 
 feature -- Connection checking
@@ -464,7 +614,7 @@ feature -- Storage
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

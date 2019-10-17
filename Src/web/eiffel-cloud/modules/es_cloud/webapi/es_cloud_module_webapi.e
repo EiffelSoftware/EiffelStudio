@@ -37,6 +37,7 @@ feature {NONE} -- Router/administration
 				a_router.handle ("/cloud/{version}/account/{uid}", l_account, a_router.methods_get)
 				a_router.handle ("/cloud/{version}/account/{uid}/installations", create {ES_CLOUD_INSTALLATIONS_WEBAPI_HANDLER}.make (l_mod_api), a_router.methods_get_post)
 				a_router.handle ("/cloud/{version}/account/{uid}/installations/{installation_id}", create {ES_CLOUD_INSTALLATIONS_WEBAPI_HANDLER}.make (l_mod_api), a_router.methods_get_put_delete)
+				a_router.handle ("/cloud/{version}/account/{uid}/installations/{installation_id}/session/{session_id}", create {ES_CLOUD_INSTALLATIONS_WEBAPI_HANDLER}.make (l_mod_api), a_router.methods_get)
 			end
 		end
 

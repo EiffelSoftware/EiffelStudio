@@ -153,6 +153,15 @@ feature -- Conversion to string
 			append_date_time_to_rfc850_string (date_time, Result)
 		end
 
+	rfc3339_string: STRING
+			-- String representation following RFC 3339.
+			-- format: [yyyy-mm-ddThh:mi:ssZ]
+			-- https://www.rfc-editor.org/rfc/rfc3339.txt
+		do
+			create Result.make (25)
+			append_date_time_to_rfc3339_string (date_time, Result)
+		end
+
 	ansi_c_string: STRING
 			-- ANSI C's asctime() format	
 			--| Sun Nov  6 08:49:37 1994       ; ANSI C's asctime() format
@@ -232,6 +241,19 @@ feature -- Conversion into string
 			s.append (" GMT")								-- SPace + GMT
 		end
 
+	append_date_time_to_rfc3339_string (dt: DATE_TIME; s: STRING_GENERAL)
+			-- Append `dt' as [yyyy-mm-ddThh:mi:ssZ] format to `s'.
+		do
+			append_integer_to (dt.year, s)					-- yyyy
+			s.append_code (45) -- 45 '-'					-- '-'
+			append_2_digits_integer_to (dt.month, s)		-- mm
+			s.append_code (45) -- 45 '-'					-- '-'
+			append_2_digits_integer_to (dt.day, s)			-- dd
+			s.append_code (84) -- 84 'T'					-- 'T'
+			append_2_digits_fine_time_to (dt.time, s)			-- hh:mi:ss
+			s.append ("Z")									-- Z
+		end
+
 	append_date_time_to_ansi_c_string (dt: DATE_TIME; s: STRING_GENERAL)
 			-- Append `dt' as ANSI C's asctime format to `s'.
 			-- Sun Nov  6 08:49:37 1994    ; ANSI C's asctime() format
@@ -279,6 +301,31 @@ feature -- Helper routines.
 			append_2_digits_integer_to (t.minute, s)	-- mi
 			s.append_code (58) -- 58 ':'				-- :
 			append_2_digits_integer_to (t.second, s)	-- ss
+		end
+
+	append_2_digits_fine_time_to (t: TIME; s: STRING_GENERAL)
+		local
+			fd: FORMAT_DOUBLE
+			r64: REAL_64
+			f: STRING
+		do
+			append_2_digits_integer_to (t.hour, s)		-- hh
+			s.append_code (58) -- 58 ':'				-- :
+			append_2_digits_integer_to (t.minute, s)	-- mi
+			s.append_code (58) -- 58 ':'				-- :
+			create fd.make (2, 2)
+			fd.show_trailing_zeros
+			fd.show_zero
+			r64 := t.fine_second
+			f := fd.formatted (r64)
+			if f.ends_with_general (".00") then
+				append_2_digits_integer_to (t.second, s)	-- ss				
+			else
+				if r64 < 10 then
+					s.append_code (48) -- 48 '0'
+				end
+				s.append (f)		-- ss.nn
+			end
 		end
 
 	append_day_ddd_to (d: INTEGER; s: STRING_GENERAL)
@@ -875,7 +922,7 @@ feature {NONE} -- Implementation
 invariant
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Eiffel Software and others"
+	copyright: "2011-2019, Jocelyn Fiat, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -120,9 +120,7 @@ feature -- Request execution
 			if attached user_by_uid (a_uid) as l_user then
 				if attached api.user as u then
 					if u.same_as (l_user) or api.user_api.is_admin_user (u) then
-						if
-							attached req.string_item ("refresh") as s_refresh_key
-						then
+						if attached req.string_item ("refresh") as s_refresh_key then
 							if
 								attached {WSF_STRING} req.form_parameter ("token") as s_token and then
 								attached jwt_auth_api.refresh_token (l_user, s_token.value, s_refresh_key) as l_refreshed_token
@@ -132,6 +130,22 @@ feature -- Request execution
 								rep.add_string_field ("refresh_key", l_refreshed_token.refresh_key)
 							else
 								rep := new_error_response ("Could not refresh token", req, res)
+							end
+						elseif
+							attached req.string_item ("op") as s_op and then
+							s_op.is_case_insensitive_equal ("discard")
+						then
+							if
+								attached {WSF_STRING} req.form_parameter ("token") as s_token
+							then
+								jwt_auth_api.discard_user_token (l_user, s_token.value)
+								if attached jwt_auth_api.user_for_token (s_token.value) then
+									rep := new_error_response ("Could not discard token", req, res)
+								else
+									rep := new_response (req, res)
+								end
+							else
+								rep := new_error_response ("Could not discard token", req, res)
 							end
 						else
 							if attached {WSF_STRING} req.form_parameter ("applications") as s_app then

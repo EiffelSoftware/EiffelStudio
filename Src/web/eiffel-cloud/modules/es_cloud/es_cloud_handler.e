@@ -49,10 +49,20 @@ feature -- Execution
 			r: like new_generic_response
 			s: STRING
 			l_plan: detachable ES_CLOUD_PLAN
+			l_session: detachable ES_CLOUD_SESSION
+			l_sessions: detachable LIST [ES_CLOUD_SESSION]
+			l_display_all: BOOLEAN
+			k: READABLE_STRING_32
+			ago: DATE_TIME_AGO_CONVERTER
 		do
+			if attached req.query_parameter ("display") as d and then d.is_case_insensitive_equal ("all") then
+				l_display_all := True
+			end
 			r := new_generic_response (req, res)
 			r.set_title ("EiffelStudio account")
 			s := ""
+
+			create ago.make
 
 			if attached api.user as u then
 				s.append ("<p class=%"es-message%">User "+ api.html_encoded (api.real_user_display_name (u)) +"</p>")
@@ -63,24 +73,88 @@ feature -- Execution
 					attached es_cloud_api.user_installations (u) as l_installations and then
 					not l_installations.is_empty
 				then
-					s.append ("<p>EiffelStudio is installed on: <ul>")
+					s.append ("<p>EiffelStudio is installed on: ")
+					if l_display_all then
+						s.append ("<a class=%"note%" href=%"" + req.percent_encoded_path_info + "%">only active sessions</a>")
+					else
+						s.append ("<a class=%"note%" href=%"" + req.percent_encoded_path_info +"?display=all%">include ended or expired</a>")
+					end
+					s.append ("<ul>")
 					across
 						l_installations as ic
 					loop
-						s.append ("<li class=%"es-installation%">")
+						l_sessions := es_cloud_api.user_sessions (u, ic.item.installation_id, not l_display_all)
+						s.append ("<li class=%"es-installation")
+						-- FIXME: [2019-10-10]
+						if l_sessions = Void then
+							s.append (" never")
+						elseif across l_sessions as sess_ic all sess_ic.item.is_ended end then
+							s.append (" closed")
+						elseif across l_sessions as sess_ic all sess_ic.item.is_expired (es_cloud_api) end then
+							s.append (" expired")
+						elseif across l_sessions as sess_ic some not sess_ic.item.is_paused end then
+							s.append (" active")
+						else
+							s.append (" paused")
+						end
+						s.append ("%">")
 						s.append (html_encoded (ic.item.installation_id))
+
 						if attached ic.item.creation_date as l_creation_date then
-							s.append (" <span class=%"creation%">")
-							s.append (date_time_to_string (l_creation_date))
+							s.append (" <span class=%"creation%" title=%"" + date_time_to_string (l_creation_date) + "%">")
+							ago.append_date_to ("", l_creation_date, s)
+--							s.append (date_time_to_string (l_creation_date))
 							s.append ("</span>")
 						end
-						if attached ic.item.access_date as l_access_date then
-							s.append (" <span class=%"access%">")
-							s.append (date_time_to_string (l_access_date))
-							s.append ("</span>")
+						if l_sessions /= Void and then not l_sessions.is_empty then
+							s.append ("<ul>")
+							across
+								l_sessions as sess_ic
+							loop
+								l_session := sess_ic.item
+								if l_display_all or not (l_session.is_ended or l_session.is_expired (es_cloud_api)) then
+									s.append ("<li class=%"session")
+									if l_session.is_paused then
+										k := "paused"
+										s.append (" paused")
+									elseif l_session.is_ended then
+										k := "closed"
+										s.append (" closed")
+									elseif l_session.is_expired (es_cloud_api) then
+										k := "expired"
+										s.append (" expired")
+									else
+										k := "active"
+										s.append (" active")
+									end
+									s.append ("%"")
+									s.append (" data-session-id=%"" + html_encoded (l_session.id) + "%"")
+									s.append (">")
+									if attached l_session.title as l_session_title then
+										s.append (html_encoded (l_session_title))
+									else
+										s.append (html_encoded (l_session.id))
+									end
+									s.append (" <em>")
+									s.append (html_encoded (k))
+									s.append ("</em>")
+
+									s.append (" <span class=%"creation datetime_ago%" datetime=%""+ date_time_to_timestamp_string (l_session.first_date) +"%" title=%"" + date_time_to_string (l_session.first_date) + "%">")
+									ago.append_date_to ("", l_session.first_date, s)
+--									s.append (date_time_to_string (l_session.first_date))
+									s.append ("</span>")
+									s.append (" <span class=%"access datetime_ago%" datetime=%""+ date_time_to_timestamp_string (l_session.last_date) +"%" title=%"" + date_time_to_string (l_session.last_date) + "%">")
+									ago.append_date_to ("", l_session.last_date, s)
+--									s.append (date_time_to_string (l_session.last_date))
+									s.append ("</span>")
+									s.append ("</li>")
+								end
+							end
+							s.append ("</ul>")
 						end
 						s.append ("</li>%N")
 					end
+
 					s.append ("</ul></p>")
 				else
 					s.append ("<p>EiffelStudio is not yet installed.</p>")

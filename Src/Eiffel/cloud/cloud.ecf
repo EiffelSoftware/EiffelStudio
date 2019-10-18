@@ -7,6 +7,10 @@
 			<exclude>/EIFGENs$</exclude>
 			<exclude>/\.svn</exclude>
 		</file_rule>
+		<capability>
+			<concurrency use="thread"/>
+			<void_safety use="none"/>
+		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf" readonly="false"/>
 		<library name="ec_kernel" location="$EIFFEL_SRC\Eiffel\Ace\ec_kernel.ecf" />

@@ -2,7 +2,8 @@ CREATE TABLE es_plans(
   `pid` INTEGER PRIMARY KEY AUTO_INCREMENT NOT NULL,
   `name` 	TEXT NOT NULL,
   `title` 	TEXT NOT NULL,
-  `description`	TEXT
+  `description`	TEXT,
+  `data`	TEXT
 );
 CREATE TABLE es_plan_subscriptions(
   `pid` INTEGER AUTO_INCREMENT NOT NULL,
@@ -23,4 +24,14 @@ CREATE TABLE es_installations(
   `session_end` DATETIME,
   `session_state` INTEGER NOT NULL,
   `access` DATETIME
+);
+
+CREATE TABLE es_sessions(
+  `sid` VARCHAR(255) PRIMARY KEY NOT NULL ,
+  `iid` VARCHAR(255) NOT NULL ,
+  `uid`	INTEGER NOT NULL,
+  `state` INTEGER NOT NULL,
+  `first` DATETIME NOT NULL,
+  `last` DATETIME NOT NULL,
+  `title` TEXT
 );

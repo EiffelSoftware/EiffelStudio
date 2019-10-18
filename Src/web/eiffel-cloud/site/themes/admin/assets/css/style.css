@@ -1,3 +1,7 @@
+div {
+	background-color: #ffdddd;
+}
+
 ul.horizontal li {
   display: inline-block;
 }
@@ -92,13 +96,6 @@ ul.horizontal li {
   background-color: #f99;
   border: solid 1px red;
   padding: 5px 2px 5px 2px;
-}
-
-table thead td, table th {
-  font-weight: bold;
-}
-table td {
-  padding: 0 2px 0 2px;
 }
 
 table.with_border thead td {

@@ -59,7 +59,8 @@ feature -- Process
 		do
 			create is_polymorphic_offset_table.make_filled (count)
 			create is_polymorphic_body_table.make_filled (count)
-			create min_id_table.make_filled (0, 0, count)
+			create min_id_table_for_offset.make_filled (0, 0, count)
+			create min_id_table_for_body.make_filled (0, 0, count)
 		end
 
 feature -- Status
@@ -104,7 +105,7 @@ feature -- Status
 				end
 				if attached bool_array then
 						-- Compute minimum class type id for current `rout_id'.
-					min_id := min_id_table.item (rout_id)
+					min_id := min_id_table_for_offset.item (rout_id)
 						-- We already have computed something for this polymorphic
 						-- table, we just need to search for the requested `class_type_id'
 						-- to know if we can retrieve the value or if we had to compute it.
@@ -143,7 +144,7 @@ feature -- Status
 							-- the `min_used' id, otherwise its enough to store the
 							-- `min_type_id'.
 						min_id := t.min_type_id - 1
-						min_id_table.put (min_id, rout_id)
+						min_id_table_for_offset.put (min_id, rout_id)
 							-- We can only buffer when the target of the call is not generic.
 							-- TODO: we could still buffer if all the actual generic parameters are expanded.
 						if not is_generic then
@@ -203,7 +204,7 @@ feature -- Status
 				end
 				if attached bool_array then
 						-- Compute minimum class type id for current `rout_id'.
-					min_id := min_id_table.item (rout_id)
+					min_id := min_id_table_for_body.item (rout_id)
 						-- We already have computed something for this polymorphic
 						-- table, we just need to search for the requested `class_type_id'
 						-- to know if we can retrieve the value or if we had to compute it.
@@ -242,7 +243,7 @@ feature -- Status
 							-- the `min_used' id, otherwise its enough to store the
 							-- `min_type_id'.
 						min_id := t.min_used - 1
-						min_id_table.put (min_id, rout_id)
+						min_id_table_for_body.put (min_id, rout_id)
 							-- We can only buffer when the target of the call is not generic.
 							-- TODO: we could still buffer if all the actual generic parameters are expanded.
 						if not is_generic then
@@ -293,7 +294,8 @@ feature -- Element change
 	wipe_out
 			-- Wipe out the structure
 		do
-			min_id_table := Void
+			min_id_table_for_offset := Void
+			min_id_table_for_body := Void
 			is_polymorphic_offset_table := Void
 			is_polymorphic_body_table := Void
 			used.clear_all
@@ -357,9 +359,11 @@ feature -- Cache
 
 feature {NONE} -- Implementation
 
-	min_id_table: ARRAY [INTEGER]
-			-- Array of INTEGER which contains for each
-			-- Poly_table its `min_type_id' and `min_used_id'.
+	min_id_table_for_offset: ARRAY [INTEGER]
+			-- Array of INTEGER which contains for each `{ATTR_TABLE}` its `{ATTR_TABLE}.min_type_id`.
+
+	min_id_table_for_body: ARRAY [INTEGER]
+			-- Array of INTEGER which contains for each `{ROUT_TABLE}` its `{ROUT_TABLE}.min_used`.
 
 	put_value (bool_array: PACKED_BOOLEANS; index: INTEGER; is_polymorphic: BOOLEAN)
 			-- Mark feature call to routine represented by `bool_array' with

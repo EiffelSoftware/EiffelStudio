@@ -19,11 +19,7 @@ CREATE TABLE es_installations(
   `uid`	INTEGER NOT NULL,
   `info` TEXT NOT NULL,
   `status` INTEGER NOT NULL,
-  `creation` DATETIME NOT NULL,
-  `session_begin` DATETIME,
-  `session_end` DATETIME,
-  `session_state` INTEGER NOT NULL,
-  `access` DATETIME
+  `creation` DATETIME NOT NULL
 );
 
 CREATE TABLE es_sessions(

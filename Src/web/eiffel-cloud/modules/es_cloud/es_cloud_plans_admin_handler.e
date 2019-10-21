@@ -60,7 +60,7 @@ feature -- Execution
 		local
 			r: like new_generic_response
 			l_plan: detachable ES_CLOUD_PLAN
-			l_plan_name, l_plan_title, l_plan_description, l_plan_data: detachable READABLE_STRING_32
+			l_plan_name, l_plan_title, l_plan_description, l_plan_data, l_op: detachable READABLE_STRING_32
 			s: STRING
 		do
 			r := new_generic_response (req, res)
@@ -72,24 +72,39 @@ feature -- Execution
 					l_plan_title := fd.string_item ("title")
 					l_plan_description := fd.string_item ("description")
 					l_plan_data := fd.string_item ("data")
+					l_op := fd.string_item ("op")
 					if l_plan_name = Void then
 						fd.report_invalid_field ("name", "Missing name")
 					else
 						l_plan := es_cloud_api.plan_by_name (l_plan_name)
-						if l_plan /= Void then
-							r.add_warning_message ("Updating existing plan.")
+						if l_op /= Void and then l_op.same_string (delete_plan_text) then
+							if l_plan /= Void then
+								es_cloud_api.delete_plan (l_plan)
+								if es_cloud_api.has_error then
+									fd.report_error ("Issue while deleting plan!")
+								else
+									r.add_success_message ("Plan successfully deleted.")
+									r.set_redirection (api.administration_path ("/cloud/plans/"))
+								end
+							else
+								fd.report_error ("Can not delete plan!")
+							end
 						else
-							create l_plan.make (l_plan_name)
-						end
-						l_plan.set_title (l_plan_title)
-						l_plan.set_description (l_plan_description)
-						l_plan.set_data (l_plan_data)
-						es_cloud_api.save_plan (l_plan)
-						if es_cloud_api.has_error then
-							fd.report_error ("Issue while saving plan!")
-						else
-							r.add_success_message ("Plan successfully saved.")
-							r.set_redirection (api.administration_path ("/cloud/plans/"))
+							if l_plan /= Void then
+								r.add_warning_message ("Updating existing plan.")
+							else
+								create l_plan.make (l_plan_name)
+							end
+							l_plan.set_title (l_plan_title)
+							l_plan.set_description (l_plan_description)
+							l_plan.set_data (l_plan_data)
+							es_cloud_api.save_plan (l_plan)
+							if es_cloud_api.has_error then
+								fd.report_error ("Issue while saving plan!")
+							else
+								r.add_success_message ("Plan successfully saved.")
+								r.set_redirection (api.administration_path ("/cloud/plans/"))
+							end
 						end
 					end
 					if fd.has_error then
@@ -226,11 +241,22 @@ feature -- Execution
 			Result.extend (tf)
 
 			if a_plan /= Void then
-				create l_submit.make_with_text ("op", "Save Plan")
+				create l_submit.make_with_text ("op", add_plan_text)
+				Result.extend (l_submit)
+				if attached es_cloud_api.plan_subscriptions (a_plan) as subs and then not subs.is_empty then
+					Result.extend_raw_text ("Plan has " + subs.count.out + " subscription(s).")
+				else
+					create l_submit.make_with_text ("op", delete_plan_text)
+					Result.extend (l_submit)
+				end
 			else
-				create l_submit.make_with_text ("op", "Add Plan")
+				create l_submit.make_with_text ("op", add_plan_text)
+				Result.extend (l_submit)
 			end
-			Result.extend (l_submit)
 		end
+
+	add_plan_text: STRING_32 = "Add Plan"
+	save_plan_text: STRING_32 = "Save Plan"
+	delete_plan_text: STRING_32 = "Delete Plan"
 
 end

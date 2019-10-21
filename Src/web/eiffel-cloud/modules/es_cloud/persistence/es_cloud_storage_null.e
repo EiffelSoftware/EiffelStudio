@@ -28,6 +28,10 @@ feature -- Access
 		do
 		end
 
+	plan_subscriptions (a_plan: ES_CLOUD_PLAN): detachable LIST [ES_CLOUD_PLAN_SUBSCRIPTION]
+		do
+		end
+
 	user_installations (a_user: CMS_USER): LIST [ES_CLOUD_INSTALLATION]
 		do
 			create {ARRAYED_LIST [ES_CLOUD_INSTALLATION]} Result.make (0)
@@ -48,6 +52,10 @@ feature -- Access
 feature -- Change
 
 	save_plan (a_plan: ES_CLOUD_PLAN)
+		do
+		end
+
+	delete_plan (a_plan: ES_CLOUD_PLAN)
 		do
 		end
 

@@ -64,6 +64,11 @@ feature -- Access
 			end
 		end
 
+	plan_subscriptions (a_plan: ES_CLOUD_PLAN): detachable LIST [ES_CLOUD_PLAN_SUBSCRIPTION]
+		do
+			Result := es_cloud_storage.plan_subscriptions (a_plan)
+		end
+
 feature -- Access: users
 
 	user_concurrent_sessions_limit (a_user: CMS_USER): NATURAL
@@ -192,6 +197,11 @@ feature -- Change
 	save_plan (a_plan: ES_CLOUD_PLAN)
 		do
 			es_cloud_storage.save_plan (a_plan)
+		end
+
+	delete_plan (a_plan: ES_CLOUD_PLAN)
+		do
+			es_cloud_storage.delete_plan (a_plan)
 		end
 
 	subscribe_user_to_plan (a_user: CMS_USER; a_plan: ES_CLOUD_PLAN; nb_months: INTEGER)

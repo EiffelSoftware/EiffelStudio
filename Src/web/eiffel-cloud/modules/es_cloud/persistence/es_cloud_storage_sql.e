@@ -62,6 +62,34 @@ feature -- Access
 			sql_finalize_query (sql_select_plan_by_id)
 		end
 
+	plan_subscriptions (a_plan: ES_CLOUD_PLAN): detachable LIST [ES_CLOUD_PLAN_SUBSCRIPTION]
+		local
+			l_params: STRING_TABLE [detachable ANY]
+			pid: INTEGER
+		do
+			reset_error
+			create {ARRAYED_LIST [ES_CLOUD_PLAN_SUBSCRIPTION]} Result.make (0)
+			create l_params.make (1)
+			l_params["pid"] := a_plan.id.out
+			sql_query (sql_select_plan_subscriptions, l_params)
+			sql_start
+			if not has_error then
+				from
+					sql_start
+				until
+					sql_after or has_error
+				loop
+					if attached fetch_plan_subscription (a_plan) as sub then
+						Result.force (sub)
+					else
+						check valid_record: False end
+					end
+					sql_forth
+				end
+			end
+			sql_finalize_query (sql_select_plan_subscriptions)
+		end
+
 	user_subscription (a_user: CMS_USER): detachable ES_CLOUD_PLAN_SUBSCRIPTION
 		local
 			l_params: STRING_TABLE [detachable ANY]
@@ -318,6 +346,18 @@ feature -- Change
 			end
 		end
 
+
+	delete_plan (a_plan: ES_CLOUD_PLAN)
+		local
+			l_params: STRING_TABLE [detachable ANY]
+		do
+			reset_error
+			create l_params.make (1)
+			l_params.force (a_plan.id, "pid")
+			sql_delete (sql_delete_plan, l_params)
+			sql_finalize_delete (sql_delete_plan)
+		end
+
 	save_subscription (sub: ES_CLOUD_PLAN_SUBSCRIPTION)
 		local
 			l_params: STRING_TABLE [detachable ANY]
@@ -455,6 +495,29 @@ feature {NONE} -- Fetcher
 			Result.set_data (sql_read_string_32 (5))
 		end
 
+	fetch_plan_subscription (a_plan: ES_CLOUD_PLAN): detachable ES_CLOUD_PLAN_SUBSCRIPTION
+		local
+			pid: INTEGER
+			l_name: READABLE_STRING_8
+			pl: ES_CLOUD_PLAN
+			u: CMS_PARTIAL_USER
+		do
+				--	"SELECT pid, uid, creation, expiration, notes FROM es_plan_subscriptions WHERE pid=:pid;"
+			pid := sql_read_integer_32 (1)
+			check pid = a_plan.id end
+			pl := a_plan
+			pid := sql_read_integer_32 (1)
+			create u.make_with_id (sql_read_integer_32 (2))
+			create Result.make (u, pl)
+			if attached sql_read_date_time (3) as dt then
+				Result.set_creation_date (dt)
+			else
+				check has_creation_date: False end
+			end
+			Result.set_expiration_date (sql_read_date_time (4))
+			Result.set_notes (sql_read_string_32 (5))
+		end
+
 feature {NONE} -- Queries: installations
 
 	sql_select_user_installation: STRING = "SELECT iid, uid, info, status, creation FROM es_installations WHERE iid=:iid AND uid=:uid;"
@@ -501,9 +564,11 @@ feature {NONE} -- Queries: plans
 
 	sql_update_plan: STRING = "UPDATE es_plans SET name=:name, title=:title, description=:description, data=:data WHERE pid=:pid;"
 
---	sql_delete_plan: STRING = "DELETE FROM es_plans WHERE pid=:pid;"
+	sql_delete_plan: STRING = "DELETE FROM es_plans WHERE pid=:pid;"
 
 feature {NONE} -- Queries: subscriptions
+
+	sql_select_plan_subscriptions: STRING = "SELECT pid, uid, creation, expiration, notes FROM es_plan_subscriptions WHERE pid=:pid;"
 
 	sql_select_user_subscription: STRING = "SELECT pid, uid, creation, expiration, notes FROM es_plan_subscriptions WHERE uid=:uid;"
 

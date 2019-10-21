@@ -23,6 +23,10 @@ feature -- Access
 		deferred
 		end
 
+	plan_subscriptions (a_plan: ES_CLOUD_PLAN): detachable LIST [ES_CLOUD_PLAN_SUBSCRIPTION]
+		deferred
+		end
+
 	user_installations (a_user: CMS_USER): LIST [ES_CLOUD_INSTALLATION]
 		deferred
 		end
@@ -42,6 +46,10 @@ feature -- Access
 feature -- Change
 
 	save_plan (a_plan: ES_CLOUD_PLAN)
+		deferred
+		end
+
+	delete_plan (a_plan: ES_CLOUD_PLAN)
 		deferred
 		end
 

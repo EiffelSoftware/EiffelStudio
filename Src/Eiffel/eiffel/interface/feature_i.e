@@ -737,7 +737,7 @@ feature -- Setting
 			-- Assign `a_id' to `feature_name_id'.
 		require
 			valid_id: Names_heap.valid_index (a_id)
-			valid_alias_id: a_alias_id /= Void implies Names_heap.valid_index (a_alias_id)
+			valid_alias_id: a_alias_id /= 0 implies Names_heap.valid_index (a_alias_id)
 		do
 			feature_name_id := a_id
 			alias_name_ids := Void
@@ -753,7 +753,7 @@ feature -- Setting
 			-- Assign `a_id' to `feature_name_id'.
 		require
 			valid_id: Names_heap.valid_index (a_id)
-			valid_alias_id: a_alias_id /= Void implies Names_heap.valid_index (a_alias_id)
+			valid_alias_id: a_alias_id /= 0 implies Names_heap.valid_index (a_alias_id)
 		do
 			feature_name_id := a_id
 			alias_name_ids := Void

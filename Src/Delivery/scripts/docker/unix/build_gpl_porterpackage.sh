@@ -14,7 +14,7 @@ if [ -d "$var_dir/eiffel" ]; then
 fi
 docker run --rm \
         --name=eiffel-deliv-pp \
-        -v $var_dir/deliv-output:/home/eiffel/deliv/output \
+        -v $var_dir/gpl:/home/eiffel/deliv/output \
         ${t_docker_vol_opts} \
         --network host \
         -e SVN_ISE_REPO=svn://svn.ise/ise_svn \

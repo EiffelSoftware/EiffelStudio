@@ -14,15 +14,15 @@ if [ -d "$var_dir/eiffel" ]; then
 fi
 docker run --rm \
         --name=eiffel-deliv-pp-ent \
-        -v $var_dir/deliv-output:/home/eiffel/deliv/output \
+        -v $var_dir/ent:/home/eiffel/deliv/output \
         ${t_docker_vol_opts} \
         --network host \
-	-e INCLUDE_ENTERPRISE=true \
         -e SVN_ISE_REPO=svn://svn.ise/ise_svn \
         -e SVN_ISE_BRANCH=$SVN_ISE_BRANCH \
         -e SVN_EIFFELSTUDIO_REPO=svn://svn.ise/mirrors/eiffelstudio \
         -e SVN_EIFFELSTUDIO_REPO_REVISION=$SVN_EIFFELSTUDIO_REPO_REVISION \
         -e SVN_EIFFELSTUDIO_BRANCH=$SVN_EIFFELSTUDIO_BRANCH \
+	-e INCLUDE_ENTERPRISE=true \
         ${docker_image_name}
 #docker rmi ${docker_image_name}
 

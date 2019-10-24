@@ -1,7 +1,7 @@
 setlocal
 
 set TMP_ROOTDIR=%~dp0rootdir
-set TMP_TARGETNAME=wizard
+set TMP_TARGETNAME=library_wizard
 
 set WIZ_TARGET=%ISE_EIFFEL%\studio\wizards\new_projects\library
 rd /q/s %WIZ_TARGET%

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="wizard" uuid="BD4055F3-065F-4E3A-8765-2E471E8EA3C8">
-	<target name="wizard">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="library_wizard" uuid="BD4055F3-065F-4E3A-8765-2E471E8EA3C8">
+	<target name="library_wizard">
 		<root class="LIBRARY_CONSOLE_WIZARD_APPLICATION" feature="make"/>
 		<file_rule>
 			<exclude>/EIFGENs$</exclude>

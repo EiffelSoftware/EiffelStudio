@@ -32,6 +32,24 @@ feature -- Tests
 			test_http_client_ssl
 		end
 
+	test_libcurl_http_client_ssl_with_valid_certs
+		do
+			test_http_client_ssl_with_valid_certs
+		end
+
+	test_libcurl_http_client_ssl_with_missing_certs
+		do
+			test_http_client_ssl_with_missing_certs
+		end
+
+	test_libcurl_http_client_ssl_with_certs_missing_passphrase
+		do
+			test_http_client_ssl_with_certs_missing_passphrase
+		end
+
+
+
+
 	test_libcurl_abs_url
 		do
 			test_abs_url

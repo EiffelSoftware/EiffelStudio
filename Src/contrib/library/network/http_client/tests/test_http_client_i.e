@@ -74,6 +74,89 @@ feature -- Test routines
 			end
 		end
 
+	test_http_client_ssl_with_valid_certs
+			-- New test routine
+		local
+			sess: like new_session
+			h: STRING_8
+			config: HTTP_CLIENT_SECURE_CONFIG
+		do
+				--| Set secure configuration
+			create config
+			config.set_tls_version ({HTTP_CLIENT_SECURE_CONFIG}.tls_1_2)
+			config.set_certificate_type ("PEM")
+			config.set_client_certificate ("./client.pem")
+			config.set_passphrase ("badssl.com")
+			config.enable_verify_host
+			config.enable_verify_peer
+
+
+			sess := new_session ("https://client.badssl.com")
+			sess.set_secure_config (config)
+
+			if attached sess.get ("/", Void) as res then
+				assert ("Get returned without error", not res.error_occurred)
+				create h.make_empty
+				if attached res.headers as hds then
+					across
+						hds as c
+					loop
+						h.append (c.item.name + ": " + c.item.value + "%R%N")
+					end
+				end
+				assert ("200 ok", res.status = 200)
+			end
+		end
+
+	test_http_client_ssl_with_certs_missing_passphrase
+			-- New test routine
+		local
+			sess: like new_session
+			h: STRING_8
+			config: HTTP_CLIENT_SECURE_CONFIG
+		do
+				--| Set secure configuration
+			create config
+			config.set_tls_version ({HTTP_CLIENT_SECURE_CONFIG}.tls_1_2)
+			config.set_certificate_type ({STRING_8}"PEM")
+			config.set_client_certificate ("./client.pem")
+			config.enable_verify_host
+			config.enable_verify_peer
+
+
+			sess := new_session ("https://client.badssl.com")
+			sess.set_secure_config (config)
+
+			if attached sess.get ("/", Void) as res then
+				assert ("Get returned without error", res.error_occurred)
+			end
+		end
+
+
+	test_http_client_ssl_with_missing_certs
+			-- New test routine
+		local
+			sess: like new_session
+			h: STRING_8
+		do
+
+			sess := new_session ("https://client.badssl.com")
+
+			if attached sess.get ("/", Void) as res then
+				assert ("Get returned without error", not res.error_occurred)
+				create h.make_empty
+				if attached res.headers as hds then
+					across
+						hds as c
+					loop
+						h.append (c.item.name + ": " + c.item.value + "%R%N")
+					end
+				end
+				assert ("400", res.status = 400)
+			end
+		end
+
+
 	test_abs_url
 		local
 			sess: like new_session

@@ -82,6 +82,11 @@ feature -- Execution
 				--| Configure cURL session
 				initialize_curl_session (ctx, curl, curl_easy, curl_handle)
 
+				--| Condigure cURL secure session
+				if attached {HTTP_CLIENT_SECURE_CONFIG} session.secure_config as l_config then
+					initialize_curl_security_session (curl_easy, curl_handle, l_config)
+				end
+
 				--| URL
 				l_url := url
 
@@ -400,6 +405,56 @@ feature -- Execution
 			end
 		end
 
+
+	initialize_curl_security_session (curl_easy: CURL_EASY_EXTERNALS; curl_handle: POINTER; a_config: HTTP_CLIENT_SECURE_CONFIG)
+		do
+			--| TLS version.
+			if a_config.is_valid_tls_verion (a_config.tls_version) then
+				if a_config.is_tls_1_2 then
+						-- ask libcurl to use TLS version 1.2 or later */
+					curl_easy.setopt_integer (curl_handle, {CURL_OPT_CONSTANTS}.CURLOPT_SSLVERSION, {CURL_OPT_CONSTANTS}.CURL_SSLVERSION_TLSv1_2)
+				end
+				if a_config.is_tls_1_3 then
+						-- ask libcurl to use TLS version 1.3 or later */
+					curl_easy.setopt_integer (curl_handle, {CURL_OPT_CONSTANTS}.CURLOPT_SSLVERSION, {CURL_OPT_CONSTANTS}.CURL_SSLVERSION_TLSv1_3)
+				end
+			end
+
+			--| Cert Type
+			if attached a_config.certificate_type as cert_type then
+					-- Format P12, PEM
+				curl_easy.setopt_string (curl_handle, {CURL_OPT_CONSTANTS}.CURLOPT_SSLCERTTYPE, cert_type)
+			end
+
+			--| set the passphrase (if the key has one...)
+			if attached a_config.passphrase as passphrase then
+				curl_easy.setopt_string (curl_handle, {CURL_OPT_CONSTANTS}.CURLOPT_KEYPASSWD, passphrase)
+			end
+
+			--| set the cert for client authentication
+			if attached a_config.client_certificate as client_certificate then
+				curl_easy.setopt_string (curl_handle, {CURL_OPT_CONSTANTS}.CURLOPT_SSLCERT, client_certificate)
+			end
+
+			--| set the file with the certs vaildating the server
+			if attached a_config.certificate_authority as certificate_authority then
+				curl_easy.setopt_string (curl_handle, {CURL_OPT_CONSTANTS}.CURLOPT_CAINFO, certificate_authority)
+			end
+
+			--| Verify the peer's SSL certificate
+			if a_config.verify_peer then
+				-- if the verification fails to prove that the certificate is authentic, the connection fails.
+				curl_easy.setopt_integer (curl_handle, {CURL_OPT_CONSTANTS}.CURLOPT_SSL_VERIFYPEER, 1)
+			end
+
+			--| Verify the certificate's name against host
+			if a_config.verify_host then
+				-- checking the server's certificate's claimed identity.
+				curl_easy.setopt_integer (curl_handle, {CURL_OPT_CONSTANTS}.CURLOPT_SSL_VERIFYHOST, 2)
+			end
+
+		end
+
 feature {NONE} -- Implementation		
 
 	response_status_code (curl_easy: CURL_EASY_EXTERNALS; curl_handle: POINTER): INTEGER
@@ -452,7 +507,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2019, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

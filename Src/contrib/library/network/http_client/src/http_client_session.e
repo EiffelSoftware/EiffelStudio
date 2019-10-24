@@ -270,6 +270,10 @@ feature -- Settings
 	proxy: detachable TUPLE [host: READABLE_STRING_8; port: INTEGER]
 			-- Proxy information [`host' and `port']
 
+	secure_config: detachable HTTP_CLIENT_SECURE_CONFIG
+			-- http client secure configuration.
+			--| HTTPS usage with client certificates.
+
 feature -- Access
 
 	base_url: READABLE_STRING_8
@@ -445,8 +449,17 @@ feature -- Element change
 			ciphers_setting_set: attached ciphers_setting as c_setting and then c_setting.same_string (a_ciphers_setting)
 		end
 
+
+	set_secure_config (a_config: like secure_config)
+			-- Set 'secure_config' with 'a_config'.
+		do
+			secure_config := a_config
+		ensure
+			secure_config_set: secure_config = a_config
+		end
+
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2019, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

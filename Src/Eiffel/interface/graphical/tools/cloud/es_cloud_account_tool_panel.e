@@ -124,13 +124,11 @@ feature {NONE} -- Action handlers
 			s: STRING
 			l_dbg: BOOLEAN
 		do
-			debug ("es_cloud")
-				l_dbg := True
-			end
 			b := main_box
 			b.wipe_out
 			if attached es_cloud_s.service as cld then
 				if cld.is_available	then
+					l_dbg := cld.is_debug_enabled
 					if attached {ES_ACCOUNT} cld.active_account as acc then
 						create lab.make_with_text ({STRING_32} "Welcome " + acc.username)
 						b.extend (lab)

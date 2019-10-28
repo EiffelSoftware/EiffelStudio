@@ -24,6 +24,7 @@ feature {NONE} -- Initialization
 			session := a_session
 			session_id := a_session.id
 			create server_url.make_from_string (a_server_url)
+			create mutex.make
 			if attached a_session.title as l_title then
 				create opts.make (1)
 				opts["session_title"] := create {IMMUTABLE_STRING_32}.make_from_string_general (l_title)
@@ -37,6 +38,8 @@ feature -- Access: Current
 	session: ES_ACCOUNT_SESSION
 
 feature {NONE} -- Access: thread synchro
+
+	mutex: MUTEX
 
 	completed: BOOLEAN
 
@@ -64,8 +67,13 @@ feature -- Access
 		do
 			create t
 			t.actions.extend (agent (i_t: EV_TIMEOUT)
+					local
+						b: BOOLEAN
 					do
-						if completed then
+						mutex.lock
+						b := completed
+						mutex.unlock
+						if b then
 							i_t.destroy
 							on_completion
 						else
@@ -81,7 +89,7 @@ feature -- Access
 			sess: ES_ACCOUNT_SESSION
 		do
 			debug ("es_cloud")
-				print ("ping done%N")
+				print ("[" + (create {DATE_TIME}.make_now_utc).out + "] ping done.%N")
 			end
 			if session_state_changed then
 				reset
@@ -111,11 +119,13 @@ feature -- Access
 		do
 			create wapi.make (server_url)
 			debug ("es_cloud")
-				print ("Pinging...")
+				print ("[" + (create {DATE_TIME}.make_now_utc).out + "] Pinging...")
 			end
 			wapi.ping_installation (token, installation_id, session_id, opts)
 			session_state_changed := wapi.session_state_changed
+			mutex.lock
 			completed := True
+			mutex.unlock
 		end
 
 note

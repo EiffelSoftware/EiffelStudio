@@ -1,5 +1,9 @@
 note
-	description: "Asynchronous call to refresh_token."
+	description: "[
+			Asynchronous call to refresh_token.
+			
+		]"
+	status: "Under development, currently not used!"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -52,7 +56,7 @@ feature -- Access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

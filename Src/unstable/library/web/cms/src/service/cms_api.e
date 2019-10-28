@@ -543,6 +543,13 @@ feature -- CMS links
 			Result := link (real_user_display_name (u), "user/" + u.id.out, Void)
 		end
 
+	user_html_administration_link (u: CMS_USER): STRING
+		require
+			u_with_name: not u.name.is_whitespace
+		do
+			Result := link (real_user_display_name (u), administration_path_location ("user/" + u.id.out), Void)
+		end
+
 feature -- Helpers: URLs
 
 	location_absolute_url (a_location: READABLE_STRING_8; opts: detachable CMS_API_OPTIONS): STRING
@@ -1689,7 +1696,7 @@ feature {NONE} -- Implementation: current user
 		end
 
 note
-	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2019, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end
 

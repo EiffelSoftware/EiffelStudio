@@ -17,6 +17,7 @@ branches:
   - develop
 git:
   depth: 1
+  quiet: true
 env:
   - COMPILEALL_DIR=Eiffel
   - COMPILEALL_DIR=library/base
@@ -35,6 +36,7 @@ env:
   - COMPILEALL_DIR=library/uuid
   - COMPILEALL_DIR=library/vision2
   - COMPILEALL_DIR=library/wel
+  - COMPILEALL_DIR=web
   - COMPILEALL_DIR=examples
   - COMPILEALL_DIR=tools/compile_all
   - COMPILEALL_DIR=tools/eiffel_make

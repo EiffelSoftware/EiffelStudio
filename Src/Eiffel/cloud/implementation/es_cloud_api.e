@@ -524,7 +524,9 @@ feature -- Installation
 		do
 			reset_api_call
 				-- Update endpoints ...
-			ping_installation (acc.access_token.token, acc.installation.id, a_session_id, Void)
+			if attached acc.installation as inst then
+				ping_installation (acc.access_token.token, inst.id, a_session_id, Void)
+			end
 			reset_api_call
 
 			l_session_href := endpoint_for_token (acc.access_token.token, {STRING_32} "_links|es:session|href;session=" + a_session_id.as_string_32)

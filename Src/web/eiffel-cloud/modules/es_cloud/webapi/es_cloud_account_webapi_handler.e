@@ -18,7 +18,8 @@ feature -- Execution
 	execute (a_version: READABLE_STRING_GENERAL; req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Execute handler for `req' and respond in `res'.
 		local
-			l_user: detachable CMS_USER
+			l_cms_user: detachable CMS_USER
+			l_user: ES_CLOUD_USER
 			l_uid: READABLE_STRING_GENERAL
 			r: like new_response
 			tb: STRING_TABLE [detachable ANY]
@@ -26,9 +27,12 @@ feature -- Execution
 			if req.is_get_request_method then
 				if attached api.user as u then
 					if attached {WSF_STRING} req.path_parameter ("uid") as p_uid then
-						l_user := user_by_uid (p_uid.value)
+						l_cms_user := user_by_uid (p_uid.value)
 					else
-						l_user := u
+						l_cms_user := u
+					end
+					if l_cms_user /= Void then
+						create l_user.make (l_cms_user)
 					end
 					if l_user = Void then
 						r := new_not_found_error_response ("User not found", req, res)

@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {ES_CLOUD_INSTALLATION}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,10 +8,10 @@ class
 
 create
 	make
-	
+
 feature {NONE} -- Creation
 
-	make (a_installation_id: READABLE_STRING_GENERAL; a_user: CMS_USER)
+	make (a_installation_id: READABLE_STRING_GENERAL; a_user: ES_CLOUD_USER)
 		do
 			user := a_user
 			create installation_id.make_from_string_general (a_installation_id)
@@ -24,7 +23,7 @@ feature -- Access
 
 	installation_id: IMMUTABLE_STRING_32
 
-	user: CMS_USER
+	user: ES_CLOUD_USER
 
 	info: IMMUTABLE_STRING_32
 

@@ -8,25 +8,12 @@ class
 	ES_CLOUD_PLANS_ADMIN_HANDLER
 
 inherit
-	CMS_HANDLER
-		rename
-			make as make_handler
-		end
+	ES_CLOUD_ADMIN_HANDLER
 
 	WSF_URI_TEMPLATE_HANDLER
 
 create
 	make
-
-feature {NONE} -- Creation
-
-	make (a_es_cloud_api: ES_CLOUD_API)
-		do
-			es_cloud_api := a_es_cloud_api
-			make_handler (a_es_cloud_api.cms_api)
-		end
-
-	es_cloud_api: ES_CLOUD_API
 
 feature -- Execution
 
@@ -61,22 +48,30 @@ feature -- Execution
 			r: like new_generic_response
 			l_plan: detachable ES_CLOUD_PLAN
 			l_plan_name, l_plan_title, l_plan_description, l_plan_data, l_op: detachable READABLE_STRING_32
+			l_plan_id: INTEGER
 			s: STRING
 		do
 			r := new_generic_response (req, res)
+			add_primary_tabs (r)
 			create s.make_empty
 			if attached {CMS_FORM} new_edit_plan_form (req, Void) as f then
 				f.process (r)
 				if attached f.last_data as fd then
+					l_plan_id := fd.integer_item ("id")
 					l_plan_name := fd.string_item ("name")
 					l_plan_title := fd.string_item ("title")
 					l_plan_description := fd.string_item ("description")
 					l_plan_data := fd.string_item ("data")
 					l_op := fd.string_item ("op")
+					if l_plan_id /= 0 then
+						l_plan := es_cloud_api.plan (l_plan_id)
+					end
 					if l_plan_name = Void then
 						fd.report_invalid_field ("name", "Missing name")
 					else
-						l_plan := es_cloud_api.plan_by_name (l_plan_name)
+						if l_plan = Void then
+							l_plan := es_cloud_api.plan_by_name (l_plan_name)
+						end
 						if l_op /= Void and then l_op.same_string (delete_plan_text) then
 							if l_plan /= Void then
 								es_cloud_api.delete_plan (l_plan)
@@ -122,12 +117,12 @@ feature -- Execution
 			s: STRING
 		do
 			r := new_generic_response (req, res)
-			r.add_to_primary_tabs (api.administration_link ("ES Subscriptions", "/cloud/subscriptions/"))
+			add_primary_tabs (r)
 			create s.make_from_string ("<h1>Plans...</h1>")
 			s.append ("<table class=%"with_border%" style=%"border: solid 1px black%"><tr><th>Name</th><th>Title</th><th>Description</th><th>data</th><th/>")
 			s.append ("</tr>")
 			across
-				es_cloud_api.plans as ic
+				es_cloud_api.sorted_plans as ic
 			loop
 				s.append ("<tr><td>")
 				s.append ("<a href=%""+ api.administration_path ("/cloud/plans/" + url_encoded (ic.item.name)) + "%">")
@@ -181,8 +176,7 @@ feature -- Execution
 			s: STRING
 		do
 			r := new_generic_response (req, res)
-			r.add_to_primary_tabs (api.administration_link ("ES Subscriptions", "/cloud/subscriptions/"))
-			r.add_to_primary_tabs (api.administration_link ("ES Plans", "/cloud/plans/"))
+			add_primary_tabs (r)
 			if api.has_permission ("admin es plans") then
 
 				create s.make_from_string ("<h1>Plan "+ html_encoded (a_plan.name) +"</h1>")
@@ -202,12 +196,17 @@ feature -- Execution
 
 	new_edit_plan_form (req: WSF_REQUEST; a_plan: detachable ES_CLOUD_PLAN): CMS_FORM
 		local
+			hf: WSF_FORM_HIDDEN_INPUT
 			tf: WSF_FORM_TEXT_INPUT
 			l_area: WSF_FORM_TEXTAREA
 			l_submit: WSF_FORM_SUBMIT_INPUT
 		do
 			create Result.make (req.percent_encoded_path_info, "es-cloud-edit-plan")
 			Result.extend_html_text ("<h1>Create a new plan...</h1>")
+			create hf.make ("id")
+			if a_plan /= Void and then a_plan.has_id then
+				hf.set_text_value (a_plan.id.out)
+			end
 			create tf.make ("name")
 			if a_plan /= Void then
 				tf.set_text_value (a_plan.name.as_string_32)
@@ -241,7 +240,7 @@ feature -- Execution
 			Result.extend (tf)
 
 			if a_plan /= Void then
-				create l_submit.make_with_text ("op", add_plan_text)
+				create l_submit.make_with_text ("op", save_plan_text)
 				Result.extend (l_submit)
 				if attached es_cloud_api.plan_subscriptions (a_plan) as subs and then not subs.is_empty then
 					Result.extend_raw_text ("Plan has " + subs.count.out + " subscription(s).")

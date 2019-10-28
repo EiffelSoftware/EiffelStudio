@@ -32,6 +32,11 @@
   list-style: none;
   display: inline-flex;
 }
+#main div.es-plans li.es-plan-box .description {
+  border: solid 1px red;
+  display: block;
+  clear: both;
+}
 #main div.es-installations > p {
   font-weight: bold;
 }

@@ -18,11 +18,13 @@ feature -- Execution
 			-- Execute handler for `req' and respond in `res'.
 		local
 			l_uid: READABLE_STRING_GENERAL
+			l_user: ES_CLOUD_USER
 		do
 			if
 				attached {WSF_STRING} req.path_parameter ("uid") as p_uid and then
-				attached user_by_uid (p_uid.value) as l_user
+				attached user_by_uid (p_uid.value) as l_cms_user
 			then
+				create l_user.make (l_cms_user)
 				if req.is_get_request_method then
 					if attached {WSF_STRING} req.path_parameter ("installation_id") as iid then
 						if attached {WSF_STRING} req.path_parameter ("session_id") as sid then
@@ -43,7 +45,7 @@ feature -- Execution
 			end
 		end
 
-	handle_installation (a_user: CMS_USER; iid: READABLE_STRING_GENERAL; req: WSF_REQUEST; res: WSF_RESPONSE)
+	handle_installation (a_user: ES_CLOUD_USER; iid: READABLE_STRING_GENERAL; req: WSF_REQUEST; res: WSF_RESPONSE)
 		require
 			req.is_get_request_method
 		local
@@ -93,7 +95,7 @@ feature -- Execution
 			r.execute
 		end
 
-	list_installations (a_user: CMS_USER; req: WSF_REQUEST; res: WSF_RESPONSE)
+	list_installations (a_user: ES_CLOUD_USER; req: WSF_REQUEST; res: WSF_RESPONSE)
 		require
 			req.is_get_request_method
 		local
@@ -120,7 +122,7 @@ feature -- Execution
 			r.execute
 		end
 
-	handle_installation_session (a_user: CMS_USER; iid, sid: READABLE_STRING_GENERAL; req: WSF_REQUEST; res: WSF_RESPONSE)
+	handle_installation_session (a_user: ES_CLOUD_USER; iid, sid: READABLE_STRING_GENERAL; req: WSF_REQUEST; res: WSF_RESPONSE)
 		require
 			req.is_get_request_method
 		local
@@ -168,13 +170,14 @@ feature -- Execution
 			r.execute
 		end
 
-	handle_user_post (a_user: CMS_USER; req: WSF_REQUEST; res: WSF_RESPONSE)
+	handle_user_post (a_user: ES_CLOUD_USER; req: WSF_REQUEST; res: WSF_RESPONSE)
 		require
 			req.is_post_request_method
 		local
 			r: like new_response
 			tb: STRING_TABLE [detachable ANY]
 			f: CMS_FORM
+			l_user: ES_CLOUD_USER
 			l_install_id, l_session_id: detachable READABLE_STRING_GENERAL
 			l_installation: detachable ES_CLOUD_INSTALLATION
 			l_active_sessions: detachable LIST [ES_CLOUD_SESSION]
@@ -184,6 +187,7 @@ feature -- Execution
 			n, l_sess_limit: NATURAL
 		do
 			if a_user.same_as (api.user) or else api.has_permission ("manage es accounts") then
+
 				create f.make (req.percent_encoded_path_info, "es-form")
 				f.extend_text_field ("installation_id", Void)
 				f.extend_text_field ("session_id", Void)

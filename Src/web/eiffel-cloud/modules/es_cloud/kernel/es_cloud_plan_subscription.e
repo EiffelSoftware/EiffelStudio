@@ -4,24 +4,15 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 
-class
+deferred class
 	ES_CLOUD_PLAN_SUBSCRIPTION
-
-create
-	make
-
-feature {NONE} -- Creation
-
-	make (u: CMS_USER; a_plan: ES_CLOUD_PLAN)
-		do
-			user := u
-			plan := a_plan
-			create creation_date.make_now_utc
-		end
 
 feature -- Access
 
-	user: CMS_USER
+	entity_id: INTEGER_64
+			-- Id of the user or organization entity.
+		deferred
+		end
 
 	plan: ES_CLOUD_PLAN
 
@@ -40,6 +31,11 @@ feature -- Status report
 			else
 				Result := True
 			end
+		end
+
+	is_expired: BOOLEAN
+		do
+			Result := not is_active
 		end
 
 	days_remaining: INTEGER

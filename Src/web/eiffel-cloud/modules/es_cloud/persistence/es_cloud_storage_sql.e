@@ -16,7 +16,7 @@ inherit
 create
 	make
 
-feature -- Access
+feature -- Access: plan
 
 	plans: LIST [ES_CLOUD_PLAN]
 		local
@@ -62,6 +62,215 @@ feature -- Access
 			sql_finalize_query (sql_select_plan_by_id)
 		end
 
+	subscriptions: LIST [ES_CLOUD_PLAN_SUBSCRIPTION]
+		do
+			create {ARRAYED_LIST [ES_CLOUD_PLAN_SUBSCRIPTION]} Result.make (10)
+			Result.append (organization_subscriptions)
+			Result.append (user_subscriptions)
+		end
+
+feature -- Access: organization
+
+	organizations: LIST [ES_CLOUD_ORGANIZATION]
+		do
+			reset_error
+			create {ARRAYED_LIST [ES_CLOUD_ORGANIZATION]} Result.make (0)
+			sql_query (sql_select_organizations, Void)
+			sql_start
+			if not has_error then
+				from
+					sql_start
+				until
+					sql_after or has_error
+				loop
+					if attached fetch_organization as org then
+						Result.force (org)
+					else
+						check valid_record: False end
+					end
+					sql_forth
+				end
+			end
+			sql_finalize_query (sql_select_organizations)
+		end
+
+	organization (oid: like {ES_CLOUD_ORGANIZATION}.id): detachable ES_CLOUD_ORGANIZATION
+		local
+			l_params: STRING_TABLE [detachable ANY]
+		do
+			reset_error
+			create l_params.make (1)
+			l_params.force (oid, "oid")
+
+			sql_query (sql_select_organization_by_id, l_params)
+			sql_start
+			if not has_error and not sql_after then
+				Result := fetch_organization
+			end
+			sql_finalize_query (sql_select_organization_by_id)
+		end
+
+	user_organizations (a_user: ES_CLOUD_USER): detachable LIST [ES_CLOUD_ORGANIZATION]
+		local
+			l_params: STRING_TABLE [detachable ANY]
+			lst: ARRAYED_LIST [like {ES_CLOUD_ORGANIZATION}.id]
+		do
+			reset_error
+
+			create lst.make (1)
+			create l_params.make (1)
+			l_params["uid"] := a_user.id
+			sql_query (sql_select_user_organizations, l_params)
+			sql_start
+			if not has_error then
+				from
+					sql_start
+				until
+					sql_after or has_error
+				loop
+					lst.force (sql_read_integer_64 (2))
+					sql_forth
+				end
+			end
+			sql_finalize_query (sql_select_user_organizations)
+			if not lst.is_empty then
+				create {ARRAYED_LIST [ES_CLOUD_ORGANIZATION]} Result.make (lst.count)
+				across
+					lst as ic
+				loop
+					if attached organization (ic.item) as org then
+						Result.force (org)
+					end
+				end
+			end
+		end
+
+	save_organization (org: ES_CLOUD_ORGANIZATION)
+		local
+			l_params: STRING_TABLE [detachable ANY]
+			l_name: detachable READABLE_STRING_32
+			l_is_new: BOOLEAN
+		do
+			l_is_new := not org.has_id
+
+			reset_error
+			if l_is_new then
+				create l_params.make (4)
+			else
+				create l_params.make (5)
+				l_params.force (org.id, "oid")
+			end
+			l_params.force (org.name, "name")
+			l_params.force (org.title, "title")
+			l_params.force (org.description, "description")
+			l_params.force (org.data, "data")
+			if l_is_new then
+				sql_insert (sql_insert_organization, l_params)
+				sql_finalize_insert (sql_insert_organization)
+			else
+				sql_modify (sql_update_organization, l_params)
+				sql_finalize_modify (sql_update_organization)
+			end
+		end
+
+	delete_organization (org: ES_CLOUD_ORGANIZATION)
+		local
+			l_params: STRING_TABLE [detachable ANY]
+		do
+			reset_error
+			create l_params.make (1)
+			l_params.force (org.id, "oid")
+			sql_delete (sql_delete_organization, l_params)
+			sql_finalize_delete (sql_delete_organization)
+		end
+
+	organization_members (org: ES_CLOUD_ORGANIZATION; a_role: INTEGER): LIST [ES_CLOUD_USER]
+		local
+			l_params: STRING_TABLE [detachable ANY]
+			oid,uid: INTEGER_64
+			r: INTEGER
+		do
+			reset_error
+			create {ARRAYED_LIST [ES_CLOUD_USER]} Result.make (0)
+			create l_params.make (2)
+			l_params["oid"] := org.id
+			if a_role /= 0 then
+				l_params["role"] := a_role
+				sql_query (sql_select_members_with_role, l_params)
+			else
+				sql_query (sql_select_members, l_params)
+			end
+
+			sql_start
+			if not has_error then
+				from
+					sql_start
+				until
+					sql_after or has_error
+				loop
+					uid := sql_read_integer_64 (1)
+					oid := sql_read_integer_64 (2)
+					r := sql_read_integer_32 (3)
+					if a_role = 0 or else r = a_role then
+						Result.force (create {ES_CLOUD_USER}.make (create {CMS_PARTIAL_USER}.make_with_id (uid)))
+					end
+					sql_forth
+				end
+			end
+			if a_role /= 0 then
+				sql_finalize_query (sql_select_members_with_role)
+			else
+				sql_finalize_query (sql_select_members)
+			end
+		end
+
+	save_membership (org: ES_CLOUD_ORGANIZATION; a_user: ES_CLOUD_USER; a_role: INTEGER)
+		local
+			l_params: STRING_TABLE [detachable ANY]
+			l_name: detachable READABLE_STRING_32
+			l_exists: BOOLEAN
+		do
+			l_exists := has_membership (org, a_user)
+			reset_error
+			create l_params.make (3)
+			l_params.force (a_user.id, "uid")
+			l_params.force (org.id, "oid")
+			l_params.force (a_role, "role")
+			if a_role = {ES_CLOUD_ORGANIZATION}.role_none_id then
+				if l_exists then
+					sql_delete (sql_delete_member, l_params)
+					sql_finalize_delete (sql_delete_member)
+				end
+			else
+				if l_exists then
+					sql_modify (sql_update_member, l_params)
+					sql_finalize_modify (sql_update_member)
+				else
+					sql_insert (sql_insert_member, l_params)
+					sql_finalize_insert (sql_insert_member)
+				end
+			end
+		end
+
+	has_membership (org: ES_CLOUD_ORGANIZATION; a_user: ES_CLOUD_USER): BOOLEAN
+		local
+			l_params: STRING_TABLE [detachable ANY]
+		do
+			reset_error
+			create l_params.make (2)
+			l_params.force (a_user.id, "uid")
+			l_params.force (org.id, "oid")
+
+			sql_query (sql_select_member_with_role, l_params)
+			sql_start
+			if not has_error and not sql_after then
+				Result := True
+			end
+			sql_finalize_query (sql_select_member_with_role)
+		end
+
+feature -- Access: subscriptions				
+
 	plan_subscriptions (a_plan: ES_CLOUD_PLAN): detachable LIST [ES_CLOUD_PLAN_SUBSCRIPTION]
 		local
 			l_params: STRING_TABLE [detachable ANY]
@@ -79,7 +288,7 @@ feature -- Access
 				until
 					sql_after or has_error
 				loop
-					if attached fetch_plan_subscription (a_plan) as sub then
+					if attached fetch_plan_user_subscription (a_plan) as sub then
 						Result.force (sub)
 					else
 						check valid_record: False end
@@ -90,7 +299,51 @@ feature -- Access
 			sql_finalize_query (sql_select_plan_subscriptions)
 		end
 
-	user_subscription (a_user: CMS_USER): detachable ES_CLOUD_PLAN_SUBSCRIPTION
+	user_subscriptions: LIST [ES_CLOUD_PLAN_USER_SUBSCRIPTION]
+		local
+			pl: ES_CLOUD_PLAN
+			pid, uid: INTEGER
+			sub: ES_CLOUD_PLAN_USER_SUBSCRIPTION
+			s: READABLE_STRING_8
+		do
+			reset_error
+			create {ARRAYED_LIST [ES_CLOUD_PLAN_USER_SUBSCRIPTION]} Result.make (0)
+			sql_query (sql_select_user_subscriptions, Void)
+			sql_start
+			if not has_error then
+				from
+					sql_start
+				until
+					sql_after or has_error
+				loop
+					pid := sql_read_integer_32 (1)
+					s := sql_read_string (2)
+					if s /= Void then
+						create pl.make_with_id_and_name (pid, s)
+					else
+						create pl.make_with_id_and_name (pid, "plan#" + pid.out)
+					end
+					pl.set_title (sql_read_string_32 (3))
+					pl.set_description (sql_read_string_32 (4))
+					pl.set_data (sql_read_string_32 (5))
+
+					uid := sql_read_integer_32 (6)
+					create sub.make (create {ES_CLOUD_USER}.make (create {CMS_PARTIAL_USER}.make_with_id (uid)), pl)
+					if attached sql_read_date_time (7) as dt then
+						sub.set_creation_date (dt)
+					else
+						check has_creation_date: False end
+					end
+					sub.set_expiration_date (sql_read_date_time (8))
+					sub.set_notes (sql_read_string_32 (9))
+					Result.force (sub)
+					sql_forth
+				end
+			end
+			sql_finalize_query (sql_select_user_subscriptions)
+		end
+
+	user_subscription (a_user: ES_CLOUD_USER): detachable ES_CLOUD_PLAN_USER_SUBSCRIPTION
 		local
 			l_params: STRING_TABLE [detachable ANY]
 			pid: INTEGER
@@ -103,8 +356,8 @@ feature -- Access
 			sql_query (sql_select_user_subscription, l_params)
 			sql_start
 			if not has_error and not sql_after then
-				create pl.make ("free")
 				pid := sql_read_integer_32 (1)
+				create pl.make_with_id_and_name (pid, "_")
 				check same_uid: sql_read_integer_64 (2) = a_user.id end
 				create Result.make (a_user, pl)
 				if attached sql_read_date_time (3) as dt then
@@ -126,7 +379,98 @@ feature -- Access
 			end
 		end
 
-	user_installation (a_user: CMS_USER; a_installation_id: READABLE_STRING_GENERAL): detachable ES_CLOUD_INSTALLATION
+	organization_subscriptions: LIST [ES_CLOUD_PLAN_ORGANIZATION_SUBSCRIPTION]
+		local
+			pl: ES_CLOUD_PLAN
+			pid, oid: INTEGER
+			sub: ES_CLOUD_PLAN_ORGANIZATION_SUBSCRIPTION
+			org: ES_CLOUD_ORGANIZATION
+			s: READABLE_STRING_8
+		do
+			reset_error
+			create {ARRAYED_LIST [ES_CLOUD_PLAN_ORGANIZATION_SUBSCRIPTION]} Result.make (0)
+			sql_query (sql_select_organization_subscriptions, Void)
+			sql_start
+			if not has_error then
+				from
+					sql_start
+				until
+					sql_after or has_error
+				loop
+					pid := sql_read_integer_32 (1)
+					s := sql_read_string (2)
+					if s = Void then
+						s := "plan#" + pid.out
+					end
+					create pl.make_with_id_and_name (pid, s)
+					pl.set_title (sql_read_string_32 (3))
+					pl.set_description (sql_read_string_32 (4))
+					pl.set_data (sql_read_string_32 (5))
+
+					oid := sql_read_integer_32 (6)
+					s := sql_read_string (7)
+					if s = Void then
+						s := "org#" + oid.out
+					end
+					create org.make (oid, s)
+					org.set_title (sql_read_string_32 (8))
+					org.set_description (sql_read_string_32 (9))
+					org.set_data (sql_read_string_32 (10))
+
+					create sub.make (org, pl)
+					if attached sql_read_date_time (11) as dt then
+						sub.set_creation_date (dt)
+					else
+						check has_creation_date: False end
+					end
+					sub.set_expiration_date (sql_read_date_time (12))
+					sub.set_notes (sql_read_string_32 (13))
+					Result.force (sub)
+					sql_forth
+				end
+			end
+			sql_finalize_query (sql_select_organization_subscriptions)
+		end
+
+	organization_subscription (org: ES_CLOUD_ORGANIZATION): detachable ES_CLOUD_PLAN_ORGANIZATION_SUBSCRIPTION
+		local
+			l_params: STRING_TABLE [detachable ANY]
+			pid: INTEGER
+			l_name: detachable READABLE_STRING_32
+			pl: ES_CLOUD_PLAN
+		do
+			reset_error
+			create l_params.make (1)
+			l_params.force (org.id, "oid")
+			sql_query (sql_select_organization_subscription, l_params)
+			sql_start
+			if not has_error and not sql_after then
+				create pl.make ("_")
+				pid := sql_read_integer_32 (1)
+				check same_uid: sql_read_integer_64 (2) = org.id end
+				create Result.make (org, pl)
+				if attached sql_read_date_time (3) as dt then
+					Result.set_creation_date (dt)
+				else
+					check has_creation_date: False end
+				end
+				Result.set_expiration_date (sql_read_date_time (4))
+				Result.set_notes (sql_read_string_32 (5))
+			end
+			sql_finalize_query (sql_select_organization_subscription)
+			if Result /= Void then
+				if pid > 0 and then attached plan (pid) as l_plan then
+					Result.set_plan (l_plan)
+				else
+					check valid_record: False end
+					Result := Void
+				end
+			end
+		end
+
+feature -- Access: installations		
+
+	user_installation (a_user: ES_CLOUD_USER; a_installation_id: READABLE_STRING_GENERAL): detachable ES_CLOUD_INSTALLATION
 		local
 			l_params: STRING_TABLE [detachable ANY]
 			iid: detachable READABLE_STRING_32
@@ -152,13 +496,14 @@ feature -- Access
 			sql_finalize_query (sql_select_user_installation)
 		end
 
-	user_installations (a_user: CMS_USER): LIST [ES_CLOUD_INSTALLATION]
+	user_installations (a_user: ES_CLOUD_USER): LIST [ES_CLOUD_INSTALLATION]
 		local
 			id: READABLE_STRING_GENERAL
 			uid: INTEGER_64
 			inst: ES_CLOUD_INSTALLATION
 			l_session: ES_CLOUD_SESSION
 			l_params: STRING_TABLE [detachable ANY]
+			u: CMS_PARTIAL_USER
 		do
 			reset_error
 			create {ARRAYED_LIST [ES_CLOUD_INSTALLATION]} Result.make (0)
@@ -176,7 +521,8 @@ feature -- Access
 					if
 						id /= Void and then uid > 0
 					then
-						create inst.make (id, create {CMS_PARTIAL_USER}.make_with_id (uid))
+						create u.make_with_id (uid)
+						create inst.make (id, create {ES_CLOUD_USER}.make (u))
 						inst.set_info (sql_read_string_32 (3))
 						inst.set_status (sql_read_integer_32 (4))
 						inst.set_creation_date (sql_read_date_time (5))
@@ -194,6 +540,7 @@ feature -- Access
 		local
 			id: READABLE_STRING_GENERAL
 			uid: INTEGER_64
+			u: CMS_PARTIAL_USER
 			inst: ES_CLOUD_INSTALLATION
 			l_session: ES_CLOUD_SESSION
 		do
@@ -211,7 +558,8 @@ feature -- Access
 					if
 						id /= Void and then uid > 0
 					then
-						create inst.make (id, create {CMS_PARTIAL_USER}.make_with_id (uid))
+						create u.make_with_id (uid)
+						create inst.make (id, create {ES_CLOUD_USER}.make (u))
 						inst.set_info (sql_read_string_32 (3))
 						inst.set_status (sql_read_integer_32 (4))
 						inst.set_creation_date (sql_read_date_time (5))
@@ -225,7 +573,9 @@ feature -- Access
 			sql_finalize_query (sql_select_installations)
 		end
 
-	user_sessions (a_user: CMS_USER; a_install_id: detachable READABLE_STRING_GENERAL; a_only_active: BOOLEAN): detachable LIST [ES_CLOUD_SESSION]
+feature -- Access: sessions		
+
+	user_sessions (a_user: ES_CLOUD_USER; a_install_id: detachable READABLE_STRING_GENERAL; a_only_active: BOOLEAN): detachable LIST [ES_CLOUD_SESSION]
 		local
 			sid, iid: READABLE_STRING_GENERAL
 			uid: INTEGER_64
@@ -282,7 +632,7 @@ feature -- Access
 			sql_finalize_query (l_query)
 		end
 
-	user_session (a_user: CMS_USER; a_installation_id, a_session_id: READABLE_STRING_GENERAL): detachable ES_CLOUD_SESSION
+	user_session (a_user: ES_CLOUD_USER; a_installation_id, a_session_id: READABLE_STRING_GENERAL): detachable ES_CLOUD_SESSION
 		local
 			l_params: STRING_TABLE [detachable ANY]
 			sid, iid: detachable READABLE_STRING_32
@@ -346,7 +696,6 @@ feature -- Change
 			end
 		end
 
-
 	delete_plan (a_plan: ES_CLOUD_PLAN)
 		local
 			l_params: STRING_TABLE [detachable ANY]
@@ -358,7 +707,7 @@ feature -- Change
 			sql_finalize_delete (sql_delete_plan)
 		end
 
-	save_subscription (sub: ES_CLOUD_PLAN_SUBSCRIPTION)
+	save_user_subscription (sub: ES_CLOUD_PLAN_USER_SUBSCRIPTION)
 		local
 			l_params: STRING_TABLE [detachable ANY]
 			pid: INTEGER
@@ -384,13 +733,9 @@ feature -- Change
 			end
 		end
 
-	discard_subscription (sub: ES_CLOUD_PLAN_SUBSCRIPTION)
+	discard_user_subscription (sub: ES_CLOUD_PLAN_USER_SUBSCRIPTION)
 		local
 			l_params: STRING_TABLE [detachable ANY]
-			pid: INTEGER
-			l_name: detachable READABLE_STRING_32
-			pl: ES_CLOUD_PLAN
-			l_is_new: BOOLEAN
 		do
 			reset_error
 			create l_params.make (1)
@@ -398,6 +743,49 @@ feature -- Change
 			l_params.force (sub.user.id, "uid")
 			sql_delete (sql_delete_user_subscription, l_params)
 			sql_finalize_delete (sql_delete_user_subscription)
+		end
+
+	save_organization_subscription (sub: ES_CLOUD_PLAN_ORGANIZATION_SUBSCRIPTION)
+		local
+			l_params: STRING_TABLE [detachable ANY]
+			pid: INTEGER
+			l_name: detachable READABLE_STRING_32
+			pl: ES_CLOUD_PLAN
+			l_is_new: BOOLEAN
+		do
+			l_is_new := organization_subscription (sub.organization) = Void
+
+			reset_error
+			create l_params.make (5)
+			l_params.force (sub.plan.id, "pid")
+			l_params.force (sub.organization.id, "oid")
+			l_params.force (sub.creation_date, "creation")
+			l_params.force (sub.expiration_date, "expiration")
+			l_params.force (sub.notes, "notes")
+			if l_is_new then
+				sql_insert (sql_insert_organization_subscription, l_params)
+				sql_finalize_insert (sql_insert_organization_subscription)
+			else
+				sql_modify (sql_update_organization_subscription, l_params)
+				sql_finalize_modify (sql_update_organization_subscription)
+			end
+		end
+
+	discard_organization_subscription (sub: ES_CLOUD_PLAN_ORGANIZATION_SUBSCRIPTION)
+		local
+			l_params: STRING_TABLE [detachable ANY]
+			pid: INTEGER
+			l_name: detachable READABLE_STRING_32
+			pl: ES_CLOUD_PLAN
+			l_is_new: BOOLEAN
+			l_is_org: BOOLEAN
+		do
+			reset_error
+			create l_params.make (1)
+			l_params.force (sub.plan.id, "pid")
+			l_params.force (sub.organization.id, "oid")
+			sql_delete (sql_delete_organization_subscription, l_params)
+			sql_finalize_delete (sql_delete_organization_subscription)
 		end
 
 	save_installation (inst: ES_CLOUD_INSTALLATION)
@@ -478,6 +866,22 @@ feature -- Change
 
 feature {NONE} -- Fetcher
 
+	fetch_organization: detachable ES_CLOUD_ORGANIZATION
+		local
+			oid: INTEGER
+			l_name: READABLE_STRING_32
+		do
+			oid := sql_read_integer_32 (1)
+			l_name := sql_read_string_32 (2)
+			if l_name = Void then
+				l_name := "org#" + oid.out
+			end
+			create Result.make (oid, l_name)
+			Result.set_title (sql_read_string_32 (3))
+			Result.set_description (sql_read_string_32 (4))
+			Result.set_data (sql_read_string_32 (5))
+		end
+
 	fetch_plan: detachable ES_CLOUD_PLAN
 		local
 			pid: INTEGER
@@ -485,17 +889,16 @@ feature {NONE} -- Fetcher
 		do
 			pid := sql_read_integer_32 (1)
 			l_name := sql_read_string (2)
-			if l_name /= Void then
-				create Result.make_with_id_and_name (pid, l_name)
-			else
-				create Result.make_with_id_and_name (pid, "plan#" + pid.out)
+			if l_name = Void then
+				l_name := "plan#" + pid.out
 			end
+			create Result.make_with_id_and_name (pid, l_name)
 			Result.set_title (sql_read_string_32 (3))
 			Result.set_description (sql_read_string_32 (4))
 			Result.set_data (sql_read_string_32 (5))
 		end
 
-	fetch_plan_subscription (a_plan: ES_CLOUD_PLAN): detachable ES_CLOUD_PLAN_SUBSCRIPTION
+	fetch_plan_user_subscription (a_plan: ES_CLOUD_PLAN): detachable ES_CLOUD_PLAN_USER_SUBSCRIPTION
 		local
 			pid: INTEGER
 			l_name: READABLE_STRING_8
@@ -508,7 +911,29 @@ feature {NONE} -- Fetcher
 			pl := a_plan
 			pid := sql_read_integer_32 (1)
 			create u.make_with_id (sql_read_integer_32 (2))
-			create Result.make (u, pl)
+			create Result.make (create {ES_CLOUD_USER}.make (u), pl)
+			if attached sql_read_date_time (3) as dt then
+				Result.set_creation_date (dt)
+			else
+				check has_creation_date: False end
+			end
+			Result.set_expiration_date (sql_read_date_time (4))
+			Result.set_notes (sql_read_string_32 (5))
+		end
+
+	fetch_plan_organization_subscription (a_plan: ES_CLOUD_PLAN): detachable ES_CLOUD_PLAN_ORGANIZATION_SUBSCRIPTION
+		local
+			pid: INTEGER
+			l_name: READABLE_STRING_8
+			pl: ES_CLOUD_PLAN
+			u: CMS_PARTIAL_USER
+		do
+				--	"SELECT pid, uid, creation, expiration, notes FROM es_plan_subscriptions WHERE pid=:pid;"
+			pid := sql_read_integer_32 (1)
+			check pid = a_plan.id end
+			pl := a_plan
+			pid := sql_read_integer_32 (1)
+			create Result.make (create {ES_CLOUD_ORGANIZATION}.make_with_id (sql_read_integer_32 (2)), pl)
 			if attached sql_read_date_time (3) as dt then
 				Result.set_creation_date (dt)
 			else
@@ -566,9 +991,41 @@ feature {NONE} -- Queries: plans
 
 	sql_delete_plan: STRING = "DELETE FROM es_plans WHERE pid=:pid;"
 
+feature {NONNE} -- organizations
+
+	sql_select_organizations: STRING = "SELECT oid, name, title, description, data FROM es_orgs ;"
+
+	sql_select_organization_by_id: STRING = "SELECT oid, name, title, description, data FROM es_orgs WHERE oid=:oid;"
+
+	sql_insert_organization: STRING = "INSERT INTO es_orgs (name, title, description, data) VALUES (:name, :title, :description, :data);"
+
+	sql_update_organization: STRING = "UPDATE es_orgs SET name=:name, title=:title, description=:description, data=:data WHERE oid=:oid;"
+
+	sql_delete_organization: STRING = "DELETE FROM es_orgs WHERE oid=:oid;"
+
+	sql_select_members: STRING = "SELECT uid, oid, role FROM es_members WHERE oid=:oid ;"
+
+	sql_select_members_with_role: STRING = "SELECT uid, oid, role FROM es_members WHERE oid=:oid AND role=:role;"
+
+	sql_select_member_with_role: STRING = "SELECT uid, oid, role FROM es_members WHERE oid=:oid AND uid=:uid;"
+
+	sql_select_user_organizations: STRING = "SELECT uid, oid, role FROM es_members WHERE uid=:uid ;"
+
+	sql_insert_member: STRING = "INSERT INTO es_members (uid, oid, role) VALUES (:uid, :oid, :role);"
+
+	sql_update_member: STRING = "UPDATE es_members SET uid=:uid, oid=:oid, role=:role WHERE uid=:uid AND oid=:oid;"
+
+	sql_delete_member: STRING = "DELETE FROM es_members WHERE uid=:uid AND oid=:oid;"
+
 feature {NONE} -- Queries: subscriptions
 
 	sql_select_plan_subscriptions: STRING = "SELECT pid, uid, creation, expiration, notes FROM es_plan_subscriptions WHERE pid=:pid;"
+
+	sql_select_user_subscriptions: STRING = "[
+			SELECT es_plan_subscriptions.pid, es_plans.name, es_plans.title, es_plans.description, es_plans.data, 
+				   es_plan_subscriptions.uid, es_plan_subscriptions.creation, es_plan_subscriptions.expiration, es_plan_subscriptions.notes 
+			FROM es_plan_subscriptions INNER JOIN es_plans ON es_plan_subscriptions.pid = es_plans.pid;
+			]"
 
 	sql_select_user_subscription: STRING = "SELECT pid, uid, creation, expiration, notes FROM es_plan_subscriptions WHERE uid=:uid;"
 
@@ -578,7 +1035,27 @@ feature {NONE} -- Queries: subscriptions
 
 	sql_delete_user_subscription: STRING = "DELETE FROM es_plan_subscriptions WHERE pid=:pid AND uid=:uid;"
 
+
+	sql_select_plan_organization_subscriptions: STRING = "SELECT pid, oid, creation, expiration, notes FROM es_plan_org_sub WHERE pid=:pid;"
+
+	sql_select_organization_subscriptions: STRING = "[
+			SELECT es_plan_org_sub.pid, es_plans.name, es_plans.title, es_plans.description, es_plans.data, 
+				   es_plan_org_sub.oid, es_orgs.name, es_orgs.title, es_orgs.description, es_orgs.data,
+				   es_plan_org_sub.creation, es_plan_org_sub.expiration, es_plan_org_sub.notes
+			FROM ((es_plan_org_sub 
+				INNER JOIN es_plans ON es_plan_org_sub.pid = es_plans.pid)
+				INNER JOIN es_orgs ON es_plan_org_sub.oid = es_orgs.oid);
+			]"
+
+	sql_select_organization_subscription: STRING = "SELECT pid, oid, creation, expiration, notes FROM es_plan_org_sub WHERE oid=:oid;"
+
+	sql_insert_organization_subscription: STRING = "INSERT INTO es_plan_org_sub (pid, oid, creation, expiration, notes) VALUES (:pid, :oid, :creation, :expiration, :notes);"
+
+	sql_update_organization_subscription: STRING = "UPDATE es_plan_org_sub SET pid=:pid, creation=:creation, expiration=:expiration, notes=:notes WHERE oid=:oid;"
+
+	sql_delete_organization_subscription: STRING = "DELETE FROM es_plan_org_sub WHERE pid=:pid AND oid=:oid;"
+
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2019, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

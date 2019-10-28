@@ -8,25 +8,12 @@ class
 	ES_CLOUD_INSTALLATIONS_ADMIN_HANDLER
 
 inherit
-	CMS_HANDLER
-		rename
-			make as make_handler
-		end
+	ES_CLOUD_ADMIN_HANDLER
 
 	WSF_URI_HANDLER
 
 create
 	make
-
-feature {NONE} -- Creation
-
-	make (a_es_cloud_api: ES_CLOUD_API)
-		do
-			es_cloud_api := a_es_cloud_api
-			make_handler (a_es_cloud_api.cms_api)
-		end
-
-	es_cloud_api: ES_CLOUD_API
 
 feature -- Execution
 
@@ -36,20 +23,22 @@ feature -- Execution
 			s: STRING
 			inst_nb, sess_nb: INTEGER
 			l_installations: LIST [ES_CLOUD_INSTALLATION]
-			l_user: detachable CMS_USER
+			l_user: detachable ES_CLOUD_USER
 			inst: ES_CLOUD_INSTALLATION
 		do
 			if api.has_permission ("manage es accounts") then
-				if attached {WSF_STRING} req.query_parameter ("user") as p_user then
-					l_user := api.user_api.user_by_id_or_name (p_user.value)
+				if
+					attached {WSF_STRING} req.query_parameter ("user") as p_user and then
+					attached api.user_api.user_by_id_or_name (p_user.value) as l_cms_user
+				then
+					create l_user.make (l_cms_user)
 				end
 				if l_user = Void then
 					send_bad_request (req, res)
 				else
 					r := new_generic_response (req, res)
-					r.add_to_primary_tabs (api.administration_link ("Available plans", "/cloud/plans/"))
-					r.add_to_primary_tabs (api.administration_link ("ES Subscriptions", "/cloud/subscriptions/"))
-					create s.make_from_string ("<h1>Installations for user " + api.user_html_link (l_user) + "</h1>")
+					add_primary_tabs (r)
+					create s.make_from_string ("<h1>Installations for user " + api.user_html_administration_link (l_user) + "</h1>")
 					s.append ("Click <a href=%"" + req.script_url (req.percent_encoded_path_info) + "%">for any user</a>.")
 					s.append ("<table class=%"with_border%" style=%"border: solid 1px black%"><tr><th>Users</th><th>Installation</th><th>Session</th><th>Started</th><th>Last-used</th>")
 		--			s.append ("<th>Action</th>")
@@ -61,7 +50,7 @@ feature -- Execution
 					loop
 						inst := ic.item
 						s.append ("<tr>")
-						s.append ("<td>" + api.user_html_link (l_user) + "</td>")
+						s.append ("<td>" + api.user_html_administration_link (l_user) + "</td>")
 						s.append ("<td>" + inst.installation_id + "</td>")
 						if
 							attached es_cloud_api.user_sessions (l_user, inst.installation_id, True) as l_sessions and then

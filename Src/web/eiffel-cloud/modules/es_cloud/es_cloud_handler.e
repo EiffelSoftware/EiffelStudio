@@ -46,9 +46,11 @@ feature -- Execution
 
 	get_cloud (req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
+			l_user: ES_CLOUD_USER
 			r: like new_generic_response
 			s: STRING
 			l_plan: detachable ES_CLOUD_PLAN
+			l_org: detachable ES_CLOUD_ORGANIZATION
 			l_session: detachable ES_CLOUD_SESSION
 			l_sessions: detachable LIST [ES_CLOUD_SESSION]
 			l_display_all: BOOLEAN
@@ -65,12 +67,13 @@ feature -- Execution
 			create ago.make
 
 			if attached api.user as u then
+				create l_user.make (u)
 				s.append ("<p class=%"es-message%">User "+ api.html_encoded (api.real_user_display_name (u)) +"</p>")
 					-- Plan
 					-- Installation ...
 				s.append ("<div class=%"es-installations%">")
 				if
-					attached es_cloud_api.user_installations (u) as l_installations and then
+					attached es_cloud_api.user_installations (l_user) as l_installations and then
 					not l_installations.is_empty
 				then
 					s.append ("<p>EiffelStudio is installed on: ")
@@ -83,7 +86,7 @@ feature -- Execution
 					across
 						l_installations as ic
 					loop
-						l_sessions := es_cloud_api.user_sessions (u, ic.item.installation_id, not l_display_all)
+						l_sessions := es_cloud_api.user_sessions (l_user, ic.item.installation_id, not l_display_all)
 						s.append ("<li class=%"es-installation")
 						-- FIXME: [2019-10-10]
 						if l_sessions = Void then
@@ -160,13 +163,39 @@ feature -- Execution
 					s.append ("<p>EiffelStudio is not yet installed.</p>")
 				end
 				s.append ("</div>")
+
+				s.append ("<div class=%"es-organizations%">")
+				if attached es_cloud_api.user_organizations (l_user) as l_orgs then
+					across
+						l_orgs as o_ic
+					loop
+						l_org := o_ic.item
+						if es_cloud_api.is_organization_manager (l_user, l_org) then
+							s.append ("<p>Manager of organization: <span class=%"es-org-title%">")
+							s.append ("<a href=%"" + api.administration_path ("cloud/organizations/?org=" + l_org.id.out) + "%">")
+							s.append (html_encoded (l_org.title_or_name))
+							s.append ("</a></span></p>")
+						else
+							s.append ("<p>Member of organization: <span class=%"es-org-title%">")
+							s.append (html_encoded (l_org.title_or_name))
+							s.append ("</span></p>")
+						end
+					end
+				end
+				s.append ("</div>")
+
 				s.append ("<div class=%"es-subscription%">")
-				if attached es_cloud_api.user_subscription (u) as sub then
+				if attached es_cloud_api.user_subscription (l_user) as sub then
 					l_plan := sub.plan
 					s.append ("<p>You are subscribed to plan: <span class=%"es-plan-title%">")
 					s.append (html_encoded (l_plan.title_or_name))
 					s.append ("</span>")
 					s.append ("<ul>")
+					if attached {ES_CLOUD_PLAN_ORGANIZATION_SUBSCRIPTION} sub as org_sub then
+						s.append (" <li class=%"organization%">As member of organization ")
+						s.append (html_encoded (org_sub.organization.title_or_name))
+						s.append ("</li>")
+					end
 					s.append ("<li class=%"creation%">Started ")
 					s.append (api.date_time_to_string (sub.creation_date))
 					s.append ("</li>")
@@ -196,11 +225,14 @@ feature -- Execution
 				s.append ("<div class=%"es-plans%">")
 				s.append ("<strong>Plans</strong><ul>")
 				across
-					es_cloud_api.plans as ic
+					es_cloud_api.sorted_plans as ic
 				loop
 					l_plan := ic.item
 					s.append ("<li class=%"es-plan-box%">")
 					s.append (html_encoded (l_plan.title_or_name))
+					if attached l_plan.description as l_plan_description then
+						s.append ("<div class=%"description%">"+ html_encoded (l_plan_description) + "</div>")
+					end
 					s.append ("</li>")
 				end
 				s.append ("</ul>")

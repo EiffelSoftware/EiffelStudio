@@ -17,6 +17,11 @@
 			@extend .box;
 			list-style: none;
 			display: inline-flex;
+			.description {
+				border: solid 1px red;
+				display: block;
+				clear: both;
+			}
 		}
 	}
 	div.es-installations {

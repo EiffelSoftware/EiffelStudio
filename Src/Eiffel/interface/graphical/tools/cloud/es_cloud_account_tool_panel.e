@@ -124,7 +124,9 @@ feature {NONE} -- Action handlers
 			s: STRING
 			l_dbg: BOOLEAN
 		do
-			l_dbg := True
+			debug ("es_cloud")
+				l_dbg := True
+			end
 			b := main_box
 			b.wipe_out
 			if attached es_cloud_s.service as cld then

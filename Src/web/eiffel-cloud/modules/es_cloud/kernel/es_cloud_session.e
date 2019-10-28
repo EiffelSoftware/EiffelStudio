@@ -12,7 +12,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_user: CMS_USER; a_installation_id, a_session_id: READABLE_STRING_GENERAL; a_first: detachable DATE_TIME)
+	make (a_user: ES_CLOUD_USER; a_installation_id, a_session_id: READABLE_STRING_GENERAL; a_first: detachable DATE_TIME)
 		local
 			d: DATE_TIME
 		do
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			last_date := d
 		end
 
-	make_new (a_user: CMS_USER; a_installation_id: READABLE_STRING_GENERAL; a_first: detachable DATE_TIME)
+	make_new (a_user: ES_CLOUD_USER; a_installation_id: READABLE_STRING_GENERAL; a_first: detachable DATE_TIME)
 		local
 			d: DATE_TIME
 			uuidg: UUID_GENERATOR
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	user: CMS_USER
+	user: ES_CLOUD_USER
 
 	id: IMMUTABLE_STRING_32
 

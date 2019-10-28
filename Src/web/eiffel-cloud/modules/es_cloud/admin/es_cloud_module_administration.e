@@ -20,6 +20,8 @@ inherit
 
 	CMS_HOOK_FORM_ALTER
 
+	CMS_HOOK_RESPONSE_ALTER
+
 create
 	make
 
@@ -31,14 +33,19 @@ feature -- Security
 			Result := Precursor
 			Result.force ("admin es subscriptions")
 			Result.force ("admin es plans")
+			Result.force ("admin es organizations")
 		end
 
 feature {NONE} -- Router/administration
 
 	setup_administration_router (a_router: WSF_ROUTER; a_api: CMS_API)
 			-- <Precursor>
+		local
+			org_hlr: ES_CLOUD_ORGANIZATIONS_ADMIN_HANDLER
 		do
 			if attached module.es_cloud_api as l_es_cloud_api then
+				create org_hlr.make (l_es_cloud_api)
+				org_hlr.setup_router (a_router, "/cloud/organizations/")
 				a_router.handle ("/cloud/subscriptions/", create {ES_CLOUD_SUBSCRIPTIONS_ADMIN_HANDLER}.make (l_es_cloud_api), a_router.methods_get_post)
 				a_router.handle ("/cloud/installations/", create {ES_CLOUD_INSTALLATIONS_ADMIN_HANDLER}.make (l_es_cloud_api), a_router.methods_get_post)
 				a_router.handle ("/cloud/plans/", create {ES_CLOUD_PLANS_ADMIN_HANDLER}.make (l_es_cloud_api), a_router.methods_get_post)
@@ -52,6 +59,13 @@ feature -- Hooks configuration
 			-- Module hooks configuration.
 		do
 			a_hooks.subscribe_to_menu_system_alter_hook (Current)
+			a_hooks.subscribe_to_response_alter_hook (Current)
+		end
+
+	response_alter (a_response: CMS_RESPONSE)
+		do
+			module.response_alter (a_response)
+			a_response.add_style (a_response.module_resource_url (Current, "/files/css/es_cloud-admin.css", Void), Void)
 		end
 
 	menu_system_alter (a_menu_system: CMS_MENU_SYSTEM; a_response: CMS_RESPONSE)
@@ -66,6 +80,9 @@ feature -- Hooks configuration
 				a_menu_system.management_menu.extend_into (lnk, "Admin", a_response.api.administration_path_location (""))
 				lnk := a_response.api.administration_link ("ES Plans", "cloud/plans/")
 				a_menu_system.management_menu.extend_into (lnk, "Admin", a_response.api.administration_path_location (""))
+				lnk := a_response.api.administration_link ("ES organizations", "cloud/organizations/")
+				a_menu_system.management_menu.extend_into (lnk, "Admin", a_response.api.administration_path_location (""))
+
 			end
 		end
 
@@ -78,7 +95,7 @@ feature -- Hooks configuration
 			num: WSF_FORM_NUMBER_INPUT
 			s: STRING
 			l_submit: WSF_FORM_SUBMIT_INPUT
-			l_user: detachable CMS_USER
+			l_user: detachable ES_CLOUD_USER
 			l_sub: detachable ES_CLOUD_PLAN_SUBSCRIPTION
 			l_plan: detachable ES_CLOUD_PLAN
 		do
@@ -95,11 +112,11 @@ feature -- Hooks configuration
 						attached l_field.default_value as l_user_id and then
 						attached a_response.api.user_api.user_by_id_or_name (l_user_id) as u
 					then
-						l_user := u
+						create l_user.make (u)
 						if a_form_data = Void then
 							create fset.make
 							fset.set_legend ("Subscription plan")
-							l_sub := l_cloud_api.user_subscription (l_user)
+							l_sub := l_cloud_api.user_direct_subscription (l_user)
 							if l_sub /= Void then
 								l_plan := l_sub.plan
 								create s.make_empty
@@ -124,7 +141,7 @@ feature -- Hooks configuration
 							create num.make ("es-plan-duration-in-month")
 							num.set_min (0)
 							num.set_max (5*12)
-							num.set_step (1)
+							num.set_step (0.5)
 							num.set_label ("Additional time")
 							num.set_size (3)
 							num.set_description ("number of additional months.")
@@ -132,9 +149,14 @@ feature -- Hooks configuration
 							create l_submit.make_with_text ("op", "Save plan")
 							fset.extend (l_submit)
 							a_form.extend (fset)
-							a_form.validation_actions.extend (agent (i_fd: WSF_FORM_DATA; i_user: CMS_USER; i_sub: detachable ES_CLOUD_PLAN_SUBSCRIPTION; i_cloud_api: ES_CLOUD_API)
+							a_form.validation_actions.extend (agent (i_fd: WSF_FORM_DATA; i_user: ES_CLOUD_USER; i_sub: detachable ES_CLOUD_PLAN_SUBSCRIPTION; i_cloud_api: ES_CLOUD_API)
 									local
 										n: INTEGER
+										orig: DATE_TIME
+										dt: DATE_TIME
+										y,mo: INTEGER
+										nb_months: INTEGER
+										nb_days: INTEGER
 									do
 											-- Only update plan, if validated via the [Save plan] button!
 										if
@@ -144,15 +166,34 @@ feature -- Hooks configuration
 											attached i_cloud_api.plan_by_name (l_plan_name) as l_new_plan
 										then
 											if
-												attached i_fd.string_item ("es-plan-duration-in-month") as s_nb and then
-												s_nb.is_integer
+												attached i_fd.string_item ("es-plan-duration-in-month") as s_nb
 											then
-												n := s_nb.to_integer
+												if s_nb.is_integer then
+													nb_months := s_nb.to_integer --months
+												elseif s_nb.is_real then
+													nb_days := (31 * s_nb.to_real).truncated_to_integer --days
+												end
 											end
 											if i_sub /= Void and then i_sub.plan.same_plan (l_new_plan) then
-												n := n + i_sub.days_remaining // 30
+												orig := i_sub.creation_date
+												nb_days := nb_days + i_sub.days_remaining
+											else
+												create orig.make_now_utc
 											end
-											i_cloud_api.subscribe_user_to_plan (i_user, l_new_plan, n)
+											if nb_months > 0 then
+												n := nb_months
+												y := orig.year
+												mo := orig.month + n
+												if mo <= 12 then
+												else
+													y := y + mo // 12
+													mo := mo \\ 12
+												end
+												create dt.make_by_date_time (create {DATE}.make (y, mo, orig.day), orig.time)
+												n := (dt.relative_duration (orig).seconds_count // 3600 // 24).to_integer
+												nb_days := nb_days + n
+											end
+											i_cloud_api.subscribe_user_to_plan (i_user, l_new_plan, nb_days)
 										end
 									end(?, l_user, l_sub, l_cloud_api)
 								)

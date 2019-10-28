@@ -772,7 +772,6 @@ feature {NONE} -- Implementation
 			l_sorted_preferences: like sorted_known_preferences_by
 			l_row: detachable EV_GRID_ROW
 			l_pref: PREFERENCE
-			show_this_pref: BOOLEAN
 		do
 			if grid.column_count >= flat_sorting_info.abs then
 				grid.column (flat_sorting_info.abs).header_item.remove_pixmap
@@ -807,9 +806,7 @@ feature {NONE} -- Implementation
 						else
 							l_row := Void
 						end
-						show_this_pref := show_hidden_preferences
-									or (not show_hidden_preferences and then not l_pref.is_hidden)
-						if show_this_pref then
+						if show_hidden_preferences or else not l_pref.is_hidden then
 							add_short_preference_row (l_row, l_pref)
 								--| We assume we build the whole tree at once
 								--| then the last inserted row is the one we care

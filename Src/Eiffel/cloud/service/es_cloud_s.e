@@ -26,6 +26,12 @@ feature -- Status report
 		deferred
 		end
 
+feature -- Debug purpose
+
+	is_debug_enabled: BOOLEAN
+		deferred
+		end
+
 feature -- Access
 
 	server_url: READABLE_STRING_8

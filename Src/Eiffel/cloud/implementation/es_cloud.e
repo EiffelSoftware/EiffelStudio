@@ -256,6 +256,15 @@ feature -- Status report
 			end
 		end
 
+feature -- Debug purpose
+
+	is_debug_enabled: BOOLEAN
+		do
+			if attached eiffel_layout.get_environment_8 ("ES_CLOUD_DEBUG_ENABLED") as v then
+				Result := v.is_case_insensitive_equal_general ("yes")
+			end
+		end
+
 feature {NONE} -- Status report
 
 	cell_is_available: detachable CELL [TUPLE [available: BOOLEAN; last_time: detachable DATE_TIME]]

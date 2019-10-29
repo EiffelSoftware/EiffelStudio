@@ -1883,7 +1883,7 @@ test	target-manifest-array-type-computation	exec372 tcf pass execution manifest 
 test	type-with-none				exec373	tcf pass execution conformance
 test	floating-point-comparison		exec374 tcf pass execution ieee
 test	anchored-tuple-creation			exec375 tcf pass execution creation anchored_type tuple
-test	manifest-array-of-qualified-types	exec376 tcf fail execution manifest array
+test	manifest-array-of-qualified-types	exec376 tcf pass execution manifest array
 
 -- Once specific
 

@@ -990,6 +990,7 @@ feature -- Menu mnenomics
 	m_Display_system_info: STRING_32	do Result := locale.translation("S&ystem Info")	end
 	m_Edit: STRING_32					do Result := locale.translation("&Edit")	end
 	m_Edit_condition: STRING_32			do Result := locale.translation("E&dit Condition")	end
+	m_Set_condition: STRING_32			do Result := locale.translation("Set Condition")	end
 	m_Edit_exported_feature: STRING_32	do Result := locale.translation("&Edit...")	end
 	m_Edit_external_commands: STRING_32	do Result := locale.translation("&External Commands...")	end
 	m_Enable_this_bkpt: STRING_32		do Result := locale.translation("&Enable This Breakpoint")	end
@@ -1002,8 +1003,17 @@ feature -- Menu mnenomics
 			Result := << locale.translation("Text Generators"), locale.translation("Class Relations"),
 				     locale.translation("Restrictors"), locale.translation("Main Editor Views")>>
 		end
-	m_History: STRING_32					do Result := locale.translation("&Go to")	end
-	m_Hit_count: STRING_32				do Result := locale.translation("Hit Count")	end
+	m_History: STRING_32				do Result := locale.translation("&Go to")	end
+	m_Hit_count: STRING_32				do Result := locale.translation("Hit Count") end
+	m_Hit_count_with_value (nb: INTEGER): STRING_32
+		do
+			if nb = 0 then
+				Result := locale.translation("Hit Count")
+			else
+				Result := locale.formatted_string (locale.translation ("Hit Count ($1)"), [nb.out])
+			end
+		end
+
 	m_Maximize: STRING_32				do Result := locale.translation("Ma&ximize")	end
 	m_Maximize_Editor_Area: STRING_32	do Result := locale.translation("Ma&ximize Editor Area")	end
 	m_Minimize: STRING_32				do Result := locale.translation("Mi&nimize")	end

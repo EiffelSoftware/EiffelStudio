@@ -147,7 +147,7 @@ feature -- Basic operations
 
 			create menu
 			create item.make_with_text (Interface_names.m_Breakpoint_index)
-			item.set_text (item.text + index.out)
+			item.set_text (item.text + " " + index.out)
 			item.select_actions.extend (agent (abp: BREAKPOINT)
 					do
 						if abp /= Void then
@@ -168,25 +168,20 @@ feature -- Basic operations
 			end
 			menu.extend (item)
 
-				-- "Disable"
-			create item.make_with_text (Interface_names.m_Disable_this_bkpt)
-			item.select_actions.extend (agent bpm.disable_user_breakpoint (routine, index))
-			item.select_actions.extend (agent bpm.notify_breakpoints_changes)
-			if bp /= Void and then bp.is_disabled then
-				item.disable_sensitive
-			end
-			menu.extend (item)
-
 			if bp /= Void then
-					-- "Remove"
-				create item.make_with_text (Interface_names.m_Remove_this_bkpt)
-				item.select_actions.extend (agent bpm.remove_user_breakpoint (routine, index))
+					-- "Disable"
+				create item.make_with_text (Interface_names.m_Disable_this_bkpt)
+				item.select_actions.extend (agent bpm.disable_user_breakpoint (routine, index))
 				item.select_actions.extend (agent bpm.notify_breakpoints_changes)
+				if bp /= Void and then bp.is_disabled then
+					item.disable_sensitive
+				end
 				menu.extend (item)
 			end
 
 				--| Conditional breakpoint
 			menu.extend (create {EV_MENU_SEPARATOR})
+
 			if bp /= Void then
 					-- "Edit"
 				create item.make_with_text (Interface_names.m_Edit_this_bkpt)
@@ -196,24 +191,23 @@ feature -- Basic operations
 
 			if bp = Void then
 				create item.make_with_text (Interface_names.m_Set_conditional_breakpoint)
-			else
-				create item.make_with_text (Interface_names.m_Edit_condition)
-			end
-			item.select_actions.extend (agent edit_conditional_breakpoint)
-			menu.extend (item)
-
-			if bp /= Void and then bp.has_condition then
-				create item.make_with_text (Interface_names.m_Remove_condition)
-				item.select_actions.extend (agent bp.remove_condition)
-				item.select_actions.extend (agent bpm.notify_breakpoints_changes)
+				item.select_actions.extend (agent edit_conditional_breakpoint)
 				menu.extend (item)
 			end
 
 			if bp /= Void then
 				menu.extend (create {EV_MENU_SEPARATOR})
+				if bp.has_condition then
+					create item.make_with_text (Interface_names.m_Edit_condition)
+				else
+					create item.make_with_text (Interface_names.m_Set_condition)
+				end
+				item.select_actions.extend (agent edit_conditional_breakpoint)
+				menu.extend (item)
+
 
 					--| Hit count
-				create cmi.make_with_text (Interface_names.m_Hit_count)
+				create cmi.make_with_text (Interface_names.m_Hit_count_with_value (bp.hits_count))
 				cmi.select_actions.extend (agent edit_hit_count_breakpoint)
 				if bp.has_hit_count_condition then
 					cmi.enable_select
@@ -227,6 +221,15 @@ feature -- Basic operations
 					cmi.enable_select
 				end
 				menu.extend (cmi)
+			end
+
+			if bp /= Void then
+				menu.extend (create {EV_MENU_SEPARATOR})
+					-- "Remove"
+				create item.make_with_text (Interface_names.m_Remove_this_bkpt)
+				item.select_actions.extend (agent bpm.remove_user_breakpoint (routine, index))
+				item.select_actions.extend (agent bpm.notify_breakpoints_changes)
+				menu.extend (item)
 			end
 
 				--| Run to this point
@@ -420,7 +423,7 @@ feature {NONE} -- Internationalization
 	e_break_point_in: STRING = "Breakpoint in "
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

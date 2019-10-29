@@ -160,6 +160,28 @@ feature -- Comparison
 			end
 		end
 
+	is_equivalent (other: like Current): BOOLEAN
+			-- Is `other' equivalent to the current object ?
+		do
+			Result :=
+				equivalent (qualifier, other.qualifier) and then
+				chain ~ other.chain and then
+				has_same_marks (other)
+		end
+
+	is_syntactically_equal (other: TYPE_A): BOOLEAN
+			-- <Precursor>
+		do
+			if attached {like Current} other then
+				Result := same_as (other)
+			elseif attached {UNEVALUATED_QUALIFIED_ANCHORED_TYPE} other as o then
+				Result :=
+					qualifier.is_syntactically_equal (o.qualifier) and then
+					chain ~ o.chain and then
+					has_same_marks (o)
+			end
+		end
+
 feature -- Code generation
 
 	description: ATTR_DESC
@@ -383,7 +405,7 @@ feature {TYPE_A_CHECKER, QUALIFIED_ANCHORED_TYPE_A} -- Modification
 			class_id_set: class_id = c.class_id
 		end
 
-feature {TYPE_A_CHECKER, QUALIFIED_ANCHORED_TYPE_A} -- Modification
+feature {TYPE_A_CHECKER, QUALIFIED_ANCHORED_TYPE_A, LIKE_FEATURE} -- Modification
 
 	set_routine_id (r: like routine_id)
 			-- Set `routine_id' to `r'.
@@ -552,10 +574,10 @@ feature -- Primitives
 	evaluated_type_in_descendant (a_ancestor, a_descendant: CLASS_C; a_feature: FEATURE_I): QUALIFIED_ANCHORED_TYPE_A
 			-- <Precursor>
 		do
-			if a_ancestor /= a_descendant then
-				Result := recompute (qualifier.evaluated_type_in_descendant (a_ancestor, a_descendant, a_feature), a_descendant.class_id)
-			else
+			if a_ancestor = a_descendant then
 				Result := Current
+			else
+				Result := recompute (qualifier.evaluated_type_in_descendant (a_ancestor, a_descendant, a_feature), a_descendant.class_id)
 			end
 		end
 
@@ -617,30 +639,6 @@ feature {NONE} -- Recomputation in a different context
 			end
 		end
 
-feature -- Comparison
-
-	is_equivalent (other: like Current): BOOLEAN
-			-- Is `other' equivalent to the current object ?
-		do
-			Result :=
-				equivalent (qualifier, other.qualifier) and then
-				chain ~ other.chain and then
-				has_same_marks (other)
-		end
-
-	is_syntactically_equal (other: TYPE_A): BOOLEAN
-			-- <Precursor>
-		do
-			if attached {like Current} other then
-				Result := same_as (other)
-			elseif attached {UNEVALUATED_QUALIFIED_ANCHORED_TYPE} other as o then
-				Result :=
-					qualifier.is_syntactically_equal (o.qualifier) and then
-					chain ~ o.chain and then
-					has_same_marks (o)
-			end
-		end
-
 feature {NONE} -- Lookup
 
 	feature_finder: TYPE_A_FEATURE_FINDER
@@ -652,6 +650,7 @@ feature {NONE} -- Lookup
 		end
 
 note
+	ca_ignore: "CA011", "CA011: too many arguments"
 	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

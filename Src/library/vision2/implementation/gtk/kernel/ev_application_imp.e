@@ -654,19 +654,19 @@ feature {EV_ANY_I} -- Implementation
 						end
 					when GDK_DRAG_ENTER then
 						debug ("GDK_EVENT")
-							print ("GDK_DRAG_ENTER")
+							print ("GDK_DRAG_ENTER%N")
 						end
 					when GDK_DRAG_LEAVE then
 						debug ("GDK_EVENT")
-							print ("GDK_DRAG_LEAVE")
+							print ("GDK_DRAG_LEAVE%N")
 						end
 					when GDK_DRAG_MOTION then
 						debug ("GDK_EVENT")
-							print ("GDK_DRAG_MOTION")
+							print ("GDK_DRAG_MOTION%N")
 						end
 					when GDK_DRAG_STATUS then
 						debug ("GDK_EVENT")
-							print ("GDK_DRAG_STATUS")
+							print ("GDK_DRAG_STATUS%N")
 						end
 					when GDK_DROP_START then
 						debug ("GDK_EVENT")
@@ -676,7 +676,7 @@ feature {EV_ANY_I} -- Implementation
 						handle_dnd (gdk_event)
 					when GDK_DROP_FINISHED then
 						debug ("GDK_EVENT")
-							print ("GDK_DROP_FINISHED")
+							print ("GDK_DROP_FINISHED%N")
 						end
 					when GDK_NOTHING then
 						debug ("GDK_NOTHING")
@@ -968,6 +968,8 @@ feature -- Basic operation
 			use_stored_display_data := False
 		end
 
+
+
 	handle_dnd (a_event: POINTER)
 			-- Handle drag and drop event.
 		local
@@ -986,10 +988,10 @@ feature -- Basic operation
 		do
 			from
 				a_context := {GTK}.gdk_event_dnd_struct_context (a_event)
-				src_window := {GTK}.gdk_drag_context_struct_source_window (a_context)
+				src_window := {GTK}.gdk_drag_context_get_source_window (a_context)
 				a_selection := {GTK}.gdk_drag_get_selection (a_context)
 				a_time := {GTK}.gdk_event_dnd_struct_time (a_event)
-				a_target_list := {GTK}.gdk_drag_context_struct_targets (a_context)
+				a_target_list := {GTK}.gdk_drag_context_list_targets (a_context)
 				l_string := {STRING_32} "STRING"
 				l_file := {STRING_32} "file://"
 			until
@@ -1002,7 +1004,10 @@ feature -- Basic operation
 					prop_length := {GTK}.gdk_selection_property_get (src_window, $prop_data, $prop_type, $prop_format)
 					if prop_data /= {GTK}.null_pointer then
 						create a_string.make_from_c ({GTK}.gdk_atom_name (a_target))
-						if a_string.is_equal (l_string) then
+						debug ("GDK_EVENT")
+							print ("%NTarget Type: " + a_string + " %N" )
+						end
+						if a_string.is_equal (l_string)  then
 							create a_string.make_from_c (prop_data)
 							l_file_list := a_string.split ('%N')
 							from
@@ -1044,6 +1049,9 @@ feature -- Basic operation
 				end
 			end
 			{GTK}.gdk_drop_finish (a_context, l_success, a_time)
+			{GTK}.gtk_drag_finish (a_context, l_success, False, a_time)
+			{GTK}.g_free (prop_data)
+			{GTK}.g_free (a_target_list)
 		end
 
 
@@ -1463,7 +1471,7 @@ feature {NONE} -- Externals
 		-- Pointer to the global static mutex
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

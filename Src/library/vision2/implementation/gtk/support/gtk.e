@@ -886,6 +886,15 @@ feature
 			is_class: class
 		end
 
+	frozen GDK_ALL_EVENTS_MASK_ENUM: INTEGER_32
+		external
+			"C macro use <ev_gtk.h>"
+		alias
+			"GDK_ALL_EVENTS_MASK"
+		ensure
+			is_class: class
+		end
+
 	frozen gtk_has_focus_enum: INTEGER_32
 		external
 			"C macro use <ev_gtk.h>"
@@ -1379,8 +1388,19 @@ feature
 		end
 
 	frozen gdk_drag_context_struct_source_window (a_drag_context: POINTER): POINTER
+		obsolete
+			"Use 'gdk_drag_context_get_source_window' instead. [2020-05-31]"
 		external
 			"C struct GdkDragContext access source_window use <ev_gtk.h>"
+		ensure
+			is_class: class
+		end
+
+	frozen gdk_drag_context_get_source_window (a_drag_context: POINTER): POINTER
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"return gdk_drag_context_get_source_window ((GdkDragContext *)$a_drag_context);"
 		ensure
 			is_class: class
 		end
@@ -1393,8 +1413,19 @@ feature
 		end
 
 	frozen gdk_drag_context_struct_targets (a_drag_context: POINTER): POINTER
+		obsolete
+			"Use 'gdk_drag_context_list_targets' instead. [2020-05-31]"
 		external
 			"C struct GdkDragContext access targets use <ev_gtk.h>"
+		ensure
+			is_class: class
+		end
+
+	frozen gdk_drag_context_list_targets (a_drag_context: POINTER): POINTER
+		external
+			"C inline use <ev_gtk.h>"
+		alias
+			"return gdk_drag_context_list_targets ((GdkDragContext *)$a_drag_context);"
 		ensure
 			is_class: class
 		end
@@ -1535,6 +1566,13 @@ feature
 	frozen gdk_drop_finish (a_context: POINTER; a_success: BOOLEAN; a_time: NATURAL_32)
 		external
 			"C (GdkDragContext*, gboolean, guint32) | <ev_gtk.h>"
+		ensure
+			is_class: class
+		end
+
+	frozen gtk_drag_finish (a_context: POINTER; a_success: BOOLEAN; del: BOOLEAN; a_time: NATURAL_32)
+		external
+			"C (GdkDragContext*, gboolean, gboolean, guint32) | <ev_gtk.h>"
 		ensure
 			is_class: class
 		end
@@ -4545,7 +4583,7 @@ feature
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

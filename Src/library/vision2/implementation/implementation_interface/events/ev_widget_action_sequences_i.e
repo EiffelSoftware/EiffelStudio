@@ -349,7 +349,6 @@ feature -- Event handling
 			not_void: Result /= Void
 		end
 
-
 	dpi_changed_actions: EV_DPI_ACTION_SEQUENCE
 			-- Actions to be performed when dpi changes.
 		do

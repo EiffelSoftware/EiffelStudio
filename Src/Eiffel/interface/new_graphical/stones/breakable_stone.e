@@ -146,72 +146,39 @@ feature -- Basic operations
 			end
 
 			create menu
-			create item.make_with_text (Interface_names.m_Breakpoint_index)
-			item.set_text (item.text + " " + index.out)
-			item.select_actions.extend (agent (abp: BREAKPOINT)
-					do
-						if abp /= Void then
-							(create {EV_SHARED_APPLICATION}).ev_application.clipboard.set_text ("bp:" + abp.to_tag_path)
-						end
-					end(bp)
-				)
-			menu.extend (item)
-			menu.extend (create {EV_MENU_SEPARATOR})
 
-				-- "Enable"
-			create item.make_with_text (Interface_names.m_Enable_this_bkpt)
-			item.select_actions.extend (agent bpm.enable_user_breakpoint (routine, index))
-			item.select_actions.extend (agent bpm.notify_breakpoints_changes)
-
-			if bp /= Void and then bp.is_enabled then
-				item.disable_sensitive
-			end
-			menu.extend (item)
-
-			if bp /= Void then
-					-- "Disable"
-				create item.make_with_text (Interface_names.m_Disable_this_bkpt)
+				-- "Enable/Disable"
+			if bp /= Void and then not bp.is_disabled then
+				create item.make_with_text (Interface_names.m_Disable_this_bkpt (index))
 				item.select_actions.extend (agent bpm.disable_user_breakpoint (routine, index))
-				item.select_actions.extend (agent bpm.notify_breakpoints_changes)
-				if bp /= Void and then bp.is_disabled then
+				if not bp.is_enabled then
 					item.disable_sensitive
 				end
-				menu.extend (item)
+			else
+				create item.make_with_text (Interface_names.m_Enable_this_bkpt (index))
+				item.select_actions.extend (agent bpm.enable_user_breakpoint (routine, index))
 			end
+			item.select_actions.extend (agent bpm.notify_breakpoints_changes)
+			menu.extend (item)
 
-				--| Conditional breakpoint
-			menu.extend (create {EV_MENU_SEPARATOR})
-
-			if bp /= Void then
+			if bp = Void then
+				menu.extend (create {EV_MENU_SEPARATOR})
+				create item.make_with_text (Interface_names.m_Set_conditional_breakpoint)
+				item.select_actions.extend (agent edit_conditional_breakpoint)
+				menu.extend (item)
+			else
 					-- "Edit"
 				create item.make_with_text (Interface_names.m_Edit_this_bkpt)
 				item.select_actions.extend (agent open_breakpoint_dialog)
 				menu.extend (item)
-			end
 
-			if bp = Void then
-				create item.make_with_text (Interface_names.m_Set_conditional_breakpoint)
-				item.select_actions.extend (agent edit_conditional_breakpoint)
-				menu.extend (item)
-			end
-
-			if bp /= Void then
 				menu.extend (create {EV_MENU_SEPARATOR})
+
+				create cmi.make_with_text (Interface_names.m_Breakpoint_condition)
 				if bp.has_condition then
-					create item.make_with_text (Interface_names.m_Edit_condition)
-				else
-					create item.make_with_text (Interface_names.m_Set_condition)
-				end
-				item.select_actions.extend (agent edit_conditional_breakpoint)
-				menu.extend (item)
-
-
-					--| Hit count
-				create cmi.make_with_text (Interface_names.m_Hit_count_with_value (bp.hits_count))
-				cmi.select_actions.extend (agent edit_hit_count_breakpoint)
-				if bp.has_hit_count_condition then
 					cmi.enable_select
 				end
+				cmi.select_actions.extend (agent edit_conditional_breakpoint)
 				menu.extend (cmi)
 
 					--| When hits breakpoint
@@ -221,15 +188,14 @@ feature -- Basic operations
 					cmi.enable_select
 				end
 				menu.extend (cmi)
-			end
 
-			if bp /= Void then
-				menu.extend (create {EV_MENU_SEPARATOR})
-					-- "Remove"
-				create item.make_with_text (Interface_names.m_Remove_this_bkpt)
-				item.select_actions.extend (agent bpm.remove_user_breakpoint (routine, index))
-				item.select_actions.extend (agent bpm.notify_breakpoints_changes)
-				menu.extend (item)
+					--| Hit count
+				create cmi.make_with_text (Interface_names.m_Hit_count_with_value (bp.hits_count))
+				cmi.select_actions.extend (agent edit_hit_count_breakpoint)
+				if bp.has_hit_count_condition then
+					cmi.enable_select
+				end
+				menu.extend (cmi)
 			end
 
 				--| Run to this point

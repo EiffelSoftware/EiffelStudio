@@ -397,6 +397,7 @@ feature {NONE} -- Operations
 			hb: EV_HORIZONTAL_BOX
 			location_lb: EV_LABEL
 			tags_lb: EV_LABEL
+			but: EV_BUTTON
 --			move_to_bt, copy_to_bt: EV_BUTTON
 
 			s: STRING_32
@@ -428,6 +429,20 @@ feature {NONE} -- Operations
 			extend_non_expandable_to (hb, details_routine_lb)
 			extend_non_expandable_to (hb, create {EV_LABEL}.make_with_text (" @ "))
 			extend_non_expandable_to (hb, details_index_lb)
+
+			hb.extend (create {EV_CELL})
+
+			create but
+			but.set_pixmap (stock_pixmaps.general_copy_icon)
+			but.set_tooltip (Interface_names.l_copy_breakpoint_location_to_clipboard)
+			but.select_actions.extend (agent
+					do
+						if attached associated_breakpoint as bp then
+							(create {EV_SHARED_APPLICATION}).ev_application.clipboard.set_text ("bp:" + bp.to_tag_path)
+						end
+					end
+				)
+			extend_non_expandable_to (hb, but)
 
 --			create move_to_bt.make_with_text ("Move to") -- FIXME
 --			create copy_to_bt.make_with_text ("Copy to") -- FIXME
@@ -1053,7 +1068,7 @@ feature -- change
 			cl.put (pb)
 			extend_non_expandable_to (vb, cl)
 				--| Print message: Action
-			add_toggle_status_on_check_button (cb,<<pb>>, cl, pb)
+			add_toggle_status_on_check_button (cb, {ARRAY [EV_WIDGET]} <<pb>>, cl, pb)
 				--| Specific actions
 			register_action (msg_ins_bt.select_actions, agent when_hits_print_message_menu (msg_ins_bt, tf))
 
@@ -1251,7 +1266,7 @@ feature -- change
 			extend_non_expandable_to (box, hb)
 
 				--| Exec replay: actions
-			add_toggle_status_on_check_button (cb, <<start_rb, stop_rb>>, Void, Void)
+			add_toggle_status_on_check_button (cb, {ARRAY [EV_WIDGET]} <<start_rb, stop_rb>>, Void, Void)
 				--| Exec replay: default
 
 			if a /= Void then
@@ -1315,7 +1330,7 @@ feature -- change
 			extend_non_expandable_to (box, hb)
 
 				--| Assertion checking: actions
-			add_toggle_status_on_check_button (cb, <<disable_rb, restore_rb>>, Void, Void)
+			add_toggle_status_on_check_button (cb, {ARRAY [EV_WIDGET]} <<disable_rb, restore_rb>>, Void, Void)
 				--| Assertion checking: default
 
 			if a /= Void then

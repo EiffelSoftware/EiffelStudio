@@ -694,15 +694,17 @@ feature {NONE} -- Menu section, Granularity 1.
 				l_menu_item.disable_sensitive
 			end
 
-			l_menu_item := dev_window.commands.editor_insert_symbol_cmd.new_menu_item_unmanaged
-			a_menu.extend (l_menu_item)
-			if l_unmanaged_editor then
-				l_menu_item.select_actions.wipe_out
-			end
-			if is_editable then
-				l_menu_item.enable_sensitive
-			else
-				l_menu_item.disable_sensitive
+			if attached dev_window.commands.editor_insert_symbol_cmd as cmd then
+				l_menu_item := cmd.new_menu_item_unmanaged
+				a_menu.extend (l_menu_item)
+				if l_unmanaged_editor then
+					l_menu_item.select_actions.wipe_out
+				end
+				if is_editable then
+					l_menu_item.enable_sensitive
+				else
+					l_menu_item.disable_sensitive
+				end
 			end
 
 			extend_separator (a_menu)

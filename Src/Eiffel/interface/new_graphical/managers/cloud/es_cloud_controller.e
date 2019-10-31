@@ -49,8 +49,9 @@ feature {NONE} -- Background ping
 			end
 		end
 
-	ping_delay: INTEGER = 900_000 -- 15 * 60 * 1000 ms = 15 minutes
+--	ping_delay: INTEGER = 900_000 -- 15 * 60 * 1000 ms = 15 minutes
 --	ping_delay: INTEGER = 300_000 -- 5 * 60 * 1000 ms = 5 minutes
+	ping_delay: INTEGER = 60_000 -- 1 * 60 * 1000 ms = 1 minutes
 --	ping_delay: INTEGER = 30_000 -- 30 * 1000 ms = 30 sec		
 
 	process_ping (acc: ES_ACCOUNT)
@@ -95,7 +96,7 @@ feature -- Events
 		do
 			if attached es_cloud_s.service as l_cloud_service then
 				if sess.is_paused then
-					create dlg.make (l_cloud_service, "PAUSED!!!!!")
+					create dlg.make (l_cloud_service, "Session PAUSED")
 					w := window_manager.last_focused_development_window
 					if
 						w = Void and then

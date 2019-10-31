@@ -31,9 +31,15 @@ feature {NONE} -- Initialization
 			hb: EV_HORIZONTAL_BOX
 			vb: EV_VERTICAL_BOX
 			sep: EV_HORIZONTAL_SEPARATOR
+			min_but_w: INTEGER
+			l_scaler: EVS_DPI_SCALER
 		do
 			Precursor
-			set_size (400, 400)
+
+			create l_scaler.make
+
+			set_size (l_scaler.scaled_size (350), l_scaler.scaled_size (150))
+			min_but_w := l_scaler.scaled_size (80)
 			create lab.make_with_text ("[
 					Another EiffelStudio session is running...
 					
@@ -42,22 +48,22 @@ feature {NONE} -- Initialization
 			create b_continue.make_with_text ("Continue")
 			create b_quit.make_with_text ("Quit")
 			create vb
-			vb.set_padding_width (5)
-			vb.set_border_width (3)
+			vb.set_padding_width (l_scaler.scaled_size (5))
+			vb.set_border_width (l_scaler.scaled_size (3))
 			vb.extend (lab)
 			create sep
 			vb.extend (sep)
 			vb.disable_item_expand (sep)
 			create hb
-			vb.set_padding_width (5)
+			vb.set_padding_width (l_scaler.scaled_size (5))
 			vb.extend (hb)
 			vb.disable_item_expand (hb)
 			hb.extend (create {EV_CELL})
 			hb.extend (b_quit)
-			b_quit.set_minimum_width (200)
+			b_quit.set_minimum_width (min_but_w)
 			hb.disable_item_expand (b_quit)
 			hb.extend (b_continue)
-			b_continue.set_minimum_width (200)
+			b_continue.set_minimum_width (min_but_w)
 			hb.disable_item_expand (b_continue)
 			set_default_cancel_button (b_continue)
 

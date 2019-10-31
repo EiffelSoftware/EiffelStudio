@@ -20,7 +20,8 @@ inherit
 			on_account_logged_in,
 			on_account_logged_out,
 			on_account_updated,
-			on_cloud_available
+			on_cloud_available,
+			on_session_state_changed
 		end
 
 	SHARED_ES_CLOUD_SERVICE
@@ -64,6 +65,11 @@ feature -- Operations
 feature -- Events
 
 	on_cloud_available (a_is_available: BOOLEAN)
+		do
+			refresh
+		end
+
+	on_session_state_changed (sess: ES_ACCOUNT_SESSION)
 		do
 			refresh
 		end
@@ -143,8 +149,12 @@ feature {NONE} -- Action handlers
 							append_bold_text_to ("Plan: ", txt)
 							append_text_to (l_plan.name, txt)
 							append_text_to ("%N", txt)
-							nb_days := l_plan.days_remaining
-							if attached l_plan.expiration_date then
+							if attached l_plan.expiration_date as dt then
+								nb_days := l_plan.days_remaining
+								append_bold_text_to ("Expires: ", txt)
+								append_text_to (dt.out, txt)
+								append_text_to ("%N", txt)
+
 								if nb_days >= 0 then
 									append_bold_text_to ("Days remaining: ", txt)
 									append_text_to (nb_days.out, txt)
@@ -153,6 +163,11 @@ feature {NONE} -- Action handlers
 									append_bold_text_to ("Subscription: EXPIRED!%N", txt)
 								end
 							end
+						end
+						if attached cld.active_session as sess then
+							append_bold_text_to ("Session: ", txt)
+							append_text_to (sess.id.out, txt)
+							append_text_to ("%N", txt)
 						end
 						if l_dbg then
 							append_bold_text_to ("Cloud: ", txt)
@@ -219,21 +234,13 @@ feature {NONE} -- Action handlers
 								append_text_to (")%N", txt)
 
 							end
-						end
 
-						if l_dbg then
 							if
 								attached {ES_ACCOUNT_ACCESS_TOKEN} acc.access_token as tok
 							then
 								create hb
 								b.extend (hb)
 								b.disable_item_expand (hb)
-
-								create but.make_with_text_and_action ("Update", agent on_account_update (cld, acc))
-								hb.extend (create {EV_CELL})
-								hb.extend (but)
-								layout_constants.set_default_size_for_button (but)
-								hb.disable_item_expand (but)
 
 								if attached cld.active_session as sess then
 									create but.make_with_text_and_action ("Ping", agent on_account_ping (cld, acc, sess))
@@ -272,6 +279,12 @@ feature {NONE} -- Action handlers
 						end
 
 						create hb
+						create but.make_with_text_and_action ("Update", agent on_account_update (cld, acc))
+						hb.extend (create {EV_CELL})
+						hb.extend (but)
+						layout_constants.set_default_size_for_button (but)
+						hb.disable_item_expand (but)
+
 						create but.make_with_text_and_action ("Logout", agent on_logout (cld))
 						hb.extend (create {EV_CELL})
 						hb.extend (but)

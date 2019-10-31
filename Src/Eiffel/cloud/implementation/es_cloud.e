@@ -154,7 +154,7 @@ feature -- Event
 						not cfg.is_generated_uuid
 					then
 						l_title.append_character (' ')
-						l_title.append_character ('#')
+						l_title.append ("UUID=")
 						l_title.append (cfg.uuid.out)
 					end
 					sess.set_title (l_title)
@@ -425,6 +425,7 @@ feature -- Updating
 				attached a_account.access_token as tok
 			then
 				web_api.resume_session (tok.token, installation.id, a_session.id)
+				update_session (a_session)
 			end
 		end
 
@@ -464,7 +465,7 @@ feature -- Updating
 		do
 			if attached web_api.session (a_session.account, a_session.id) as sess then
 				a_session.set_is_paused (sess.is_paused)
-			else
+			elseif not web_api.has_error then
 				end_session (a_session.account, a_session)
 			end
 		end
@@ -511,9 +512,9 @@ feature -- Connection checking
 				cl.item.last_time := Void -- Force new check
 			end
 			b := is_available
-			if l_was_available /= b then
+--			if l_was_available /= b then
 				on_cloud_available (b)
-			end
+--			end
 		end
 
 feature -- Account Registration	

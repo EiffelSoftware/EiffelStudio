@@ -197,45 +197,45 @@ feature {EB_DEVELOPMENT_WINDOW_BUILDER} -- Initialization
 
 feature -- DPI handling
 
+	dpi_scaler: EVS_DPI_SCALER
+		do
+			Result := internal_dpi_scaler
+			if Result = Void then
+				create Result.make
+				internal_dpi_scaler := Result
+			end
+		end
+
+	internal_dpi_scaler: detachable like dpi_scaler
+
 	dpi: NATURAL
 			-- Return the dots per inch (dpi) of the monitor
 			-- DPI sizes 96, 120, 144, 192, etc.
 		do
-			Result := dpi_cache
-			if Result = 0 then
-				update_dpi ({EV_MONITOR_DPI_DETECTOR_IMP}.dpi.to_integer_32)
-				Result := dpi_cache
-			end
+			Result := dpi_scaler.dpi
 		end
 
 	update_dpi (a_dpi: INTEGER)
 		require
 			a_dpi > 0
+		local
+			l_dpi: NATURAL
 		do
 			if attached {EXECUTION_ENVIRONMENT}.item ("ISE_STUDIO_DPI") as l_forced_dpi and then l_forced_dpi.is_integer then
-				dpi_cache := l_forced_dpi.to_natural_32
-				if dpi_cache <= 0 then
-					dpi_cache := a_dpi.to_natural_32
+				l_dpi := l_forced_dpi.to_natural_32
+				if l_dpi <= 0 then
+					l_dpi := a_dpi.to_natural_32
 				end
 			else
-				dpi_cache := a_dpi.to_natural_32
+				l_dpi := a_dpi.to_natural_32
 			end
-		ensure
-			dpi_cache_updated: dpi_cache = a_dpi.to_natural_32 or else dpi_cache /= 0
+			dpi_scaler.update_dpi (l_dpi)
 		end
-
-	dpi_cache: like dpi
 
 	scaled_size (a_size: INTEGER): INTEGER
 			-- Scaled size of `a_size`.
-		local
-			l_dpi: like dpi
 		do
-			Result := a_size
-			l_dpi := dpi
-			if l_dpi > 0 then
-				Result := (Result * (dpi / 96)).rounded
-			end
+			Result := dpi_scaler.scaled_size (a_size)
 		end
 
 feature {NONE} -- Clean up

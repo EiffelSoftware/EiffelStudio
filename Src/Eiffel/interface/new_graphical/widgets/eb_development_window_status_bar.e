@@ -45,6 +45,8 @@ inherit
 
 	EB_SHARED_INTERFACE_TOOLS
 
+	SHARED_NOTIFICATION_SERVICE
+
 create
 	make
 
@@ -90,6 +92,11 @@ feature {NONE} -- Initialization
 
 			compiling_icon_index := 1
 			running_icon_index := 1
+
+			if attached notification_s.service as l_notif_service then
+				create notification_manager.make (Current)
+				l_notif_service.register_observer (notification_manager)
+			end
 		end
 
 	build_interface
@@ -98,7 +105,9 @@ feature {NONE} -- Initialization
 			vp: EV_VIEWPORT
 			f: EV_FRAME
 			cel: EV_CELL
+			l_icon_size: INTEGER
 		do
+			l_icon_size := {EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (16)
 				-- Create all widgets.
 			create widget
 			create label
@@ -107,10 +116,11 @@ feature {NONE} -- Initialization
 			create progress_bar
 			create project_label
 			create coordinate_label
-			create compilation_icon.make_with_size (16, 16)
+			create compilation_icon.make_with_size (l_icon_size, l_icon_size)
 			create debugger_cell
-			create debugger_icon.make_with_size (16, 16)
-			create edition_icon.make_with_size (16, 16)
+			create debugger_icon.make_with_size (l_icon_size, l_icon_size)
+			create edition_icon.make_with_size (l_icon_size, l_icon_size)
+			notifications_icon := pixmaps.icon_pixmaps.general_information_icon
 
 				-- Set widget properties.
 			project_label.align_text_center
@@ -125,7 +135,7 @@ feature {NONE} -- Initialization
 
 			create vp
 			vp.extend (label)
-			vp.set_offset (-1, -(16 - label.height) // 2)
+			vp.set_offset (-1, -(l_icon_size - label.height) // 2)
 
 			create f
 			f.set_style ({EV_FRAME_CONSTANTS}.Ev_frame_lowered)
@@ -154,8 +164,8 @@ feature {NONE} -- Initialization
 			create cel
 			cel.extend (edition_icon)
 				-- 16: Size of the icons.
-			cel.set_minimum_width (16)
-			cel.set_minimum_height (16)
+			cel.set_minimum_width (l_icon_size)
+			cel.set_minimum_height (l_icon_size)
 			f.extend (cel)
 			widget.extend (f)
 			widget.disable_item_expand (f)
@@ -165,7 +175,7 @@ feature {NONE} -- Initialization
 			cel.extend (compilation_icon)
 				-- We cannot set the minimum width on the frame directly because
 				-- the width of the frame includes its border.
-			cel.set_minimum_width (16)
+			cel.set_minimum_width (l_icon_size)
 			f.extend (cel)
 			widget.extend (f)
 			widget.disable_item_expand (f)
@@ -173,10 +183,26 @@ feature {NONE} -- Initialization
 			f.set_style ({EV_FRAME_CONSTANTS}.Ev_frame_lowered)
 			create debugger_cell
 			debugger_cell.extend (debugger_icon)
-			debugger_cell.set_minimum_width (16)
+			debugger_cell.set_minimum_width (l_icon_size)
 			f.extend (debugger_cell)
 			widget.extend (f)
 			widget.disable_item_expand (f)
+
+			if attached notification_s.service as l_notif_service then
+				create f
+				f.set_style ({EV_FRAME_CONSTANTS}.Ev_frame_lowered)
+				create cel
+				cel.extend (notifications_icon)
+				cel.set_minimum_width (l_icon_size)
+				f.extend (cel)
+				widget.extend (f)
+				widget.disable_item_expand (f)
+				notifications_icon.pointer_double_press_actions.extend (agent (i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER)
+						do
+							on_notification_messages_selected
+						end
+					)
+			end
 
 				-- Initialize timers.
 			create running_timer.make_with_interval (0)
@@ -298,6 +324,8 @@ feature -- Access
 	widget: EV_STATUS_BAR
 			-- Widget representing `Current'.
 
+	notification_manager: detachable ES_NOTIFICATION_MANAGER
+
 feature -- Access
 
 	current_progress_value: INTEGER
@@ -362,10 +390,13 @@ feature {NONE} -- Implementation: widgets
 			-- Pixmap that represents the current debugger status.
 
 	edition_icon: EV_PIXMAP
-			-- Cell that contains the icon giving the current edition status of the project.
+			-- Pixmap that represents the current edition status of the project.
 
 	debugger_cell: EV_CELL
 			-- Cell that contains the debugger_icon.
+
+	notifications_icon: EV_PIXMAP
+			-- Pixmap that represents the current notifications status.	
 
 feature {NONE} -- Implementation: event handling
 
@@ -526,6 +557,13 @@ feature {NONE} -- Implementation: event handling
 	compile_stop_agent: PROCEDURE [BOOLEAN]
 			-- Agent called when the project's compilation is over.
 
+	on_notification_messages_selected
+		do
+			if attached notification_manager as m then
+				m.show_notification_messages
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	set_project_name (n: READABLE_STRING_GENERAL)
@@ -619,7 +657,7 @@ invariant
 	running_icon_index_positive: running_icon_index > 0
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

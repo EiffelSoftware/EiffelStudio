@@ -97,6 +97,9 @@ fullrf studio/wizards/new_projects/wel.dsc
 remtrace studio ewf wizard
 exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/help/wizards/ewf/rootdir studio/wizards/new_projects/ewf
 move studio/wizards/new_projects/ewf/ewf.dsc studio/wizards/new_projects/ewf.dsc
+remtrace studio library wizard
+exprt -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/Src/help/wizards/library/rootdir studio/wizards/new_projects/library
+move studio/wizards/new_projects/library/library.dsc studio/wizards/new_projects/library.dsc
 
 remtrace eweasel
 exprt -N -r $ORIGO_SVN_REVISION $DEFAULT_ORIGO_SVN/eweasel eweasel

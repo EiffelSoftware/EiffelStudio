@@ -46,6 +46,17 @@ if [ $rep = y ]; then
 	# Copy the file.
 	mkdir -p $ISE_EIFFEL/studio/wizards/new_projects/ewf/spec/$ISE_PLATFORM/
 	cp EIFGENs/wizard/F_code/wizard $ISE_EIFFEL/studio/wizards/new_projects/ewf/spec/$ISE_PLATFORM/
-	echo Vision2 wizard Built!
+	echo EWF wizard Built!
 fi
 
+echo Make the Library wizard [y]? 
+read rep
+if [ $rep = y ]; then
+	echo Building the Library wizard
+	# Launch the finalization.
+	ecb -finalize -c_compile -config library_wizard.ecf
+	# Copy the file.
+	mkdir -p $ISE_EIFFEL/studio/wizards/new_projects/library/spec/$ISE_PLATFORM/
+	cp EIFGENs/wizard/F_code/wizard $ISE_EIFFEL/studio/wizards/new_projects/library/spec/$ISE_PLATFORM/
+	echo Library wizard Built!
+fi

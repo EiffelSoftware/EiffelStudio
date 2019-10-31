@@ -13,6 +13,21 @@ inherit
 
 	SHARED_EIFFEL_PROJECT
 
+	SHARED_NOTIFICATION_SERVICE
+		export
+			{NONE} all
+		end
+
+	SHARED_ES_CLOUD_SERVICE
+		export
+			{NONE} all
+		end
+
+	EV_SHARED_APPLICATION
+		export
+			{NONE} all
+		end
+
 	ES_ARGUMENTS
 
 	EB_SHARED_PREFERENCES
@@ -148,6 +163,14 @@ feature {NONE} -- Initialization
 			(create {EB_DEBUGGER_MANAGER}.make).register
 		end
 
+	initialize_notifications
+		do
+-- Add global notifications if needed here.
+--			if attached notification_s.service as l_notif_service then
+--
+--			end
+		end
+
 feature {NONE} -- Access
 
 	service_initializer: SERVICE_INITIALIZER
@@ -181,6 +204,8 @@ feature {NONE} -- Implementation (preparation of all widgets)
 
 			initialize_debugger
 
+			initialize_notifications
+
 				-- Create a development window
 			window_manager.create_window
 
@@ -209,23 +234,34 @@ feature {NONE} -- Implementation (preparation of all widgets)
 
 feature {NONE} -- Welcome dialog
 
-	update_manager_api: ES_UPDATE_MANAGER
-			-- Update manager.
-		do
-			create Result.make (create {ES_UPDATE_CLIENT_CONFIGURATION}.make ({ES_UPDATE_CONSTANTS}.update_service_url))
-		end
-
 	display_launching_page
 		do
-			if
-				is_eiffel_layout_defined and then
-				preferences.dialog_data.show_update_manager_dialog and then
-				attached update_manager_api.available_release_update_for_channel (preferences.misc_data.update_channel,
-										eiffel_layout.eiffel_platform, eiffel_layout.version_name) as l_release
-			then
-				display_update_manager_dialog (l_release, agent display_startup_page)
+			if preferences.dialog_data.show_update_manager_dialog then
+				display_version_updater_check (agent display_startup_page)
 			else
 				display_startup_page
+			end
+		end
+
+	display_version_updater_check (cb: PROCEDURE)
+		local
+			up_checker: ES_RELEASE_UPDATE_CHECKER
+		do
+			if is_eiffel_layout_defined then
+				create up_checker.make (preferences.misc_data.update_channel, eiffel_layout.eiffel_platform, eiffel_layout.version_name)
+				up_checker.async_check_for_update (agent (a_rel: detachable ES_UPDATE_RELEASE)
+						do
+							if a_rel /= Void then
+								if attached notification_s.service as s_notif then
+									s_notif.notify (create {NOTIFICATION_MESSAGE}.make ("Update is available: " + a_rel.link))
+								end
+								ev_application.add_idle_action_kamikaze (agent display_update_manager_dialog (a_rel, Void))
+							end
+						end(?)
+					)
+				cb.call (Void)
+			else
+				cb.call (Void)
 			end
 		end
 

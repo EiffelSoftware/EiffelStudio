@@ -191,7 +191,7 @@ feature -- Execute POST
 							rep := new_error_response ("Bad file format" , req, res)
 							rep.set_status_code ({HTTP_STATUS_CODE}.bad_request)
 						end
-					elseif l_data /= void then
+					elseif l_data /= Void then
 						if attached  process_uploaded_data (l_data) as l_uploaded then
 							create l_dir.make_with_path (api.module_location_by_name ("eiffel_download").extended ("channel").extended (l_channel))
 							if l_dir.exists then
@@ -222,11 +222,35 @@ feature -- Execute POST
 
 feature {NONE} -- Implementation
 
+	product_options_link (a_prod: DOWNLOAD_PRODUCT; a_prod_opts: DOWNLOAD_PRODUCT_OPTIONS; a_mirror: READABLE_STRING_8): detachable STRING
+		do
+			if attached a_prod_opts.filename as l_filename then
+				a_prod_opts.get_link
+				if attached a_prod_opts.link as lnk then
+					Result := lnk
+				elseif
+					attached a_prod.build as l_build and then
+					attached a_prod.name as l_name and then
+					attached a_prod.number as l_number
+				then
+					create Result.make_from_string (a_mirror)
+					Result.append (url_encoded (l_name))
+					Result.append_character (' ')
+					Result.append (url_encoded (l_number))
+					Result.append_character ('/')
+					Result.append (url_encoded (l_build))
+					Result.append_character ('/')
+					Result.append (url_encoded (l_filename))
+				end
+			end
+		end
+
 	retrieve_by_release_and_platform (req: WSF_REQUEST; res: WSF_RESPONSE; a_release: READABLE_STRING_32; a_platform: READABLE_STRING_32): HM_WEBAPI_RESPONSE
 		local
-			l_link: STRING
 			l_list: LIST [EIFFEL_DOWNLOAD_RESOURCE]
 			l_url: STRING
+			l_product: DOWNLOAD_PRODUCT
+			l_prod_options: DOWNLOAD_PRODUCT_OPTIONS
 		do
 			Result := new_response (req, res)
 			if attached download_api as l_download_api then
@@ -241,29 +265,20 @@ feature {NONE} -- Implementation
 					across
 						l_all_products as ic
 					loop
+						l_product := ic.item
 						if
-							attached ic.item.downloads as l_downloads and then
-							attached ic.item.name as l_name and then
-							attached ic.item.number as l_number and then
-							attached ic.item.build as l_build
+							attached l_product.number as l_number and then
+							attached l_product.downloads as l_downloads
 						then
-							create {ARRAYED_LIST [EIFFEL_DOWNLOAD_RESOURCE]} l_list.make (1)
-							l_link := l_mirror
-							l_link.append_character ('/')
-							l_link.append (url_encoded (l_name))
-							l_link.append_character (' ')
-							l_link.append (url_encoded (l_number))
-							l_link.append_character ('/')
-							l_link.append (url_encoded (l_build))
-							l_link.append_character ('/')
-							across l_downloads as ic1  loop
+							create {ARRAYED_LIST [EIFFEL_DOWNLOAD_RESOURCE]} l_list.make (l_downloads.count)
+							across l_downloads as ic1 loop
+								l_prod_options := ic1.item
 								if
-									attached ic1.item.filename as l_filename and then
-									attached ic1.item.platform as l_platform
+									attached l_prod_options.filename as l_filename and then
+									attached product_options_link (l_product, l_prod_options, l_mirror) as l_link
 								then
-									create l_url.make_from_string (l_link)
-									l_url.append (url_encoded (l_filename))
-									l_list.force (create {EIFFEL_DOWNLOAD_RESOURCE}.make (l_filename, l_url, ic1.item.size, l_platform))
+									l_url := l_link.twin
+									l_list.force (create {EIFFEL_DOWNLOAD_RESOURCE}.make (l_filename, l_url, l_prod_options.size, l_prod_options.platform))
 								end
 							end
 							Result.add_iterator_field ("downloads_" + l_number , l_list)
@@ -282,29 +297,21 @@ feature {NONE} -- Implementation
 						l_all_products as ic
 					loop
 						if
-							attached ic.item.downloads as l_downloads and then
-							attached ic.item.name as l_name and then
 							attached ic.item.number as l_number and then
-							attached ic.item.build as l_build
+							attached ic.item.downloads as l_downloads
 						then
-							create {ARRAYED_LIST [EIFFEL_DOWNLOAD_RESOURCE]} l_list.make (1)
-							l_link := l_mirror
-							l_link.append_character ('/')
-							l_link.append (url_encoded (l_name))
-							l_link.append_character (' ')
-							l_link.append (url_encoded (l_number))
-							l_link.append_character ('/')
-							l_link.append (url_encoded (l_build))
-							l_link.append_character ('/')
-							across l_downloads as ic1  loop
+							create {ARRAYED_LIST [EIFFEL_DOWNLOAD_RESOURCE]} l_list.make (l_downloads.count)
+							across l_downloads as ic1 loop
+								l_prod_options := ic1.item
 								if
-									attached ic1.item.filename as l_filename and then
-									attached ic1.item.platform as l_platform and then
+									attached l_prod_options.filename as l_filename and then
+									attached l_prod_options.platform as l_platform and then
 									l_platform.is_case_insensitive_equal (a_platform)
 								then
-									create l_url.make_from_string (l_link)
-									l_url.append (url_encoded (l_filename))
-									l_list.force (create {EIFFEL_DOWNLOAD_RESOURCE}.make (l_filename, l_url, ic1.item.size, l_platform))
+									if attached product_options_link (ic.item, l_prod_options, l_mirror) as l_link then
+										l_url := l_link.twin
+										l_list.force (create {EIFFEL_DOWNLOAD_RESOURCE}.make (l_filename, l_url, l_prod_options.size, l_prod_options.platform))
+									end
 								end
 							end
 							Result.add_iterator_field ("downloads_" + l_number , l_list)
@@ -315,36 +322,23 @@ feature {NONE} -- Implementation
 					not a_release.is_case_insensitive_equal ("all") and then
 					not a_platform.is_case_insensitive_equal ("all") and then
 					attached l_download_api.download_channel_configuration (Void) as cfg and then
-					attached l_download_api.retrieve_product_gpl_by_version (cfg, a_release) as l_product and then
+					attached l_download_api.retrieve_product_gpl_by_version (cfg, a_release) as prod and then
 					attached l_download_api.retrieve_mirror_gpl (cfg) as l_mirror and then
-					attached l_product.build as l_build and then
-					attached l_product.name as l_name and then
-					attached l_product.version as l_version and then
-					attached l_product.number as l_number
+					attached prod.build as l_build and then
+					attached prod.name as l_name and then
+					attached prod.version as l_version and then
+					attached prod.number as l_number
 				then
 					Result.add_string_field ("name", l_name)
 					Result.add_string_field ("build", l_build)
 					Result.add_string_field ("version", l_version)
 					Result.add_string_field ("number", l_number)
-						-- filter by plarform
-					l_link := l_mirror
-					l_link.append_character ('/')
-					l_link.append (url_encoded (l_name))
-					l_link.append_character (' ')
-					l_link.append (url_encoded (l_number))
-					l_link.append_character ('/')
-					l_link.append (url_encoded (l_build))
-					l_link.append_character ('/')
-
+						-- filter by platform
 					if
-						attached l_download_api.selected_platform (l_product.downloads, a_platform) as l_selected and then
-						attached l_selected.filename as l_filename
+						attached l_download_api.selected_platform (prod.downloads, a_platform) as l_selected and then
+						attached l_selected.filename as l_filename and then
+						attached product_options_link (prod, l_selected, l_mirror) as l_link
 					then
-						l_link.append (url_encoded (l_filename))
-						Result.add_string_field ("name", l_name)
-						Result.add_string_field ("build", l_build)
-						Result.add_string_field ("version", l_version)
-						Result.add_string_field ("number", l_number)
 						Result.add_link ("download", utf_8_encoded (l_filename), l_link)
 					end
 				end
@@ -357,9 +351,9 @@ feature {NONE} -- Implementation
 	retrieve_by_release (req: WSF_REQUEST; res: WSF_RESPONSE; a_release: READABLE_STRING_32): HM_WEBAPI_RESPONSE
 				-- Retrieve EiffelStudio filtered by release 'a_release'.
 		local
-			l_link: STRING
 			l_list: LIST [EIFFEL_DOWNLOAD_RESOURCE]
 			l_url: STRING
+			l_prod_options: DOWNLOAD_PRODUCT_OPTIONS
 		do
 			Result := new_response (req, res)
 			if attached download_api as l_download_api then
@@ -380,23 +374,16 @@ feature {NONE} -- Implementation
 					Result.add_string_field ("version", l_version)
 					Result.add_string_field ("number", l_number)
 					if attached l_product.downloads as l_downloads then
-						l_link := l_mirror
-						l_link.append_character ('/')
-						l_link.append (url_encoded (l_name))
-						l_link.append_character (' ')
-						l_link.append (url_encoded (l_number))
-						l_link.append_character ('/')
-						l_link.append (url_encoded (l_build))
-						l_link.append_character ('/')
-						create {ARRAYED_LIST [EIFFEL_DOWNLOAD_RESOURCE]} l_list.make (1)
+						create {ARRAYED_LIST [EIFFEL_DOWNLOAD_RESOURCE]} l_list.make (l_downloads.count)
 						across l_downloads as ic loop
+							l_prod_options := ic.item
 							if
-								attached ic.item.filename as l_filename and then
-								attached ic.item.platform as l_platform
+								attached l_prod_options.filename as l_filename and then
+								attached l_prod_options.platform as l_platform and then
+								attached product_options_link (l_product, l_prod_options, l_mirror) as l_link
 							then
 								create l_url.make_from_string (l_link)
-								l_url.append (url_encoded (l_filename))
-								l_list.force (create {EIFFEL_DOWNLOAD_RESOURCE}.make (l_filename, l_url, ic.item.size, l_platform))
+								l_list.force (create {EIFFEL_DOWNLOAD_RESOURCE}.make (l_filename, l_url, l_prod_options.size, l_platform))
 							end
 						end
 						Result.add_iterator_field ("downloads", l_list)
@@ -415,8 +402,8 @@ feature {NONE} -- Implementation
 				-- Retrieve all EiffelStudio available downloads from channel `a_channel` (or stable if not defined).
 		local
 			l_list: LIST [EIFFEL_DOWNLOAD_RESOURCE]
-			l_link: STRING_8
 			l_url: STRING_8
+			l_prod_options: DOWNLOAD_PRODUCT_OPTIONS
 		do
 			Result := new_response (req, res)
 			if attached download_api as l_download_api then
@@ -434,23 +421,16 @@ feature {NONE} -- Implementation
 					Result.add_string_field ("version", l_version)
 					Result.add_string_field ("number", l_number)
 					if attached l_product.downloads as l_downloads then
-						l_link := l_mirror
-						l_link.append_character ('/')
-						l_link.append (url_encoded (l_name))
-						l_link.append_character (' ')
-						l_link.append (url_encoded (l_number))
-						l_link.append_character ('/')
-						l_link.append (url_encoded (l_build))
-						l_link.append_character ('/')
 						create {ARRAYED_LIST [EIFFEL_DOWNLOAD_RESOURCE]} l_list.make (1)
 						across l_downloads as ic loop
+							l_prod_options := ic.item
 							if
-								attached ic.item.filename as l_filename and then
-								attached ic.item.platform as l_platform
+								attached l_prod_options.filename as l_filename and then
+								attached l_prod_options.platform as l_platform and then
+								attached product_options_link (l_product, l_prod_options, l_mirror) as l_link
 							then
 								create l_url.make_from_string (l_link)
-								l_url.append (url_encoded (l_filename))
-								l_list.force (create {EIFFEL_DOWNLOAD_RESOURCE}.make (l_filename, l_url, ic.item.size, l_platform))
+								l_list.force (create {EIFFEL_DOWNLOAD_RESOURCE}.make (l_filename, l_url, l_prod_options.size, l_platform))
 							end
 						end
 						Result.add_iterator_field ("downloads", l_list)

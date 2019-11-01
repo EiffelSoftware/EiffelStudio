@@ -228,7 +228,7 @@ start_test: "if [ ! -f finished ] ; then"
 end_test: "; fi"
 
 create_test: "%"$(ISE_EIFFEL)/gcc/$(ISE_PLATFORM)/msys/1.0/bin/touch%" finished%N%
-%PATH := $(ISE_EIFFEL)/gcc/$(ISE_PLATFORM)/mingw/libexec/gcc/mingw32/3.4.2;$(PATH)"
+%PATH := $(ISE_EIFFEL)/gcc/$(ISE_PLATFORM)/mingw/libexec/gcc/x86_64-w64-mingw32/4.4.5;$(PATH)"
 
 -- Layout variables
 

@@ -49,9 +49,9 @@ feature {NONE} -- Background ping
 			end
 		end
 
---	ping_delay: INTEGER = 900_000 -- 15 * 60 * 1000 ms = 15 minutes
+	ping_delay: INTEGER = 900_000 -- 15 * 60 * 1000 ms = 15 minutes
 --	ping_delay: INTEGER = 300_000 -- 5 * 60 * 1000 ms = 5 minutes
-	ping_delay: INTEGER = 60_000 -- 1 * 60 * 1000 ms = 1 minutes
+--	ping_delay: INTEGER = 60_000 -- 1 * 60 * 1000 ms = 1 minutes
 --	ping_delay: INTEGER = 30_000 -- 30 * 1000 ms = 30 sec		
 
 	process_ping (acc: ES_ACCOUNT)

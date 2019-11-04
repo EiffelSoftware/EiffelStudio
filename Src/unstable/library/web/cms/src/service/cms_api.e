@@ -1660,7 +1660,7 @@ feature {CMS_API_ACCESS, CMS_RESPONSE, CMS_MODULE} -- Request utilities
 			-- Current user or Void in case of Guest user.
 		do
 			check req = request end
-			if attached {CMS_USER} execution_variable (cms_execution_variable_name ("user")) as l_user then
+			if attached {CMS_USER} execution_variable (cms_execution_variable_name_for_user) as l_user then
 				Result := l_user
 			end
 		end
@@ -1669,7 +1669,7 @@ feature {CMS_API_ACCESS, CMS_RESPONSE, CMS_MODULE} -- Request utilities
 			-- Set `a_user' as `current_user'.
 		do
 			check req = request end
-			set_execution_variable (cms_execution_variable_name ("user"), a_user)
+			set_execution_variable (cms_execution_variable_name_for_user, a_user)
 		ensure
 			user_set: current_user (req) ~ a_user
 		end
@@ -1678,20 +1678,33 @@ feature {CMS_API_ACCESS, CMS_RESPONSE, CMS_MODULE} -- Request utilities
 			-- Unset current user.
 		do
 			check req = request end
-			req.unset_execution_variable (cms_execution_variable_name ("user"))
+			req.unset_execution_variable (cms_execution_variable_name_for_user)
 		ensure
 			user_unset: current_user (req) = Void
 		end
 
 feature {NONE} -- Implementation: current user
 
+	internal_cms_execution_variable_name_for_user: detachable like cms_execution_variable_name_for_user
+
+	cms_execution_variable_name_for_user: READABLE_STRING_GENERAL
+		do
+			Result := internal_cms_execution_variable_name_for_user
+			if Result = Void then
+				Result := cms_execution_variable_name ("user")
+				internal_cms_execution_variable_name_for_user := Result
+			end
+		end
+
 	cms_execution_variable_name (a_name: READABLE_STRING_GENERAL): READABLE_STRING_GENERAL
 			-- Execution variable name for `a_name'.
 		local
 			s32: STRING_32
 		do
-			create s32.make_from_string_general (once "_roccms_.")
-			s32.append_string_general (a_name)
+			create s32.make (19 + a_name.count)
+			s32.append_integer_64 (request.request_time_stamp) -- About 10 characters
+			s32.append (once {STRING_32} "_roccms_.") -- 9 characters
+			s32.append_string_general (a_name) -- a_name.count characters.
 			Result := s32
 		end
 

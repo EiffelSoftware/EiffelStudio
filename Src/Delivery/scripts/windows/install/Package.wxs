@@ -71,7 +71,7 @@
     <Property Id="C_CONFIG_INSTALL_URL">http://dev.eiffel.com/Installing_Microsoft_C_compiler</Property>
     <!-- Eiffel C configuration name -->
     <Property Id="C_CONFIG_NAME"><?ifdef EiffelStudio?>mingw<?else?>msc<?endif?></Property>
-	<!-- The name of a MS compiler environment. Filled by `evaluate_c_ompiler' custom actions in `setup.dll' for debugging purposes. -->
+	<!-- The name of a MS compiler environment. Filled by `evaluate_c_compiler' custom actions in `setup.dll' for debugging purposes. -->
     <Property Id="C_CONFIG_MSC_ENVIRONMENT">Unused</Property>
     <!-- Inidicates if a C compilation can be performed -->
     <Property Id="C_CONFIG_CAN_COMPILE">0</Property>

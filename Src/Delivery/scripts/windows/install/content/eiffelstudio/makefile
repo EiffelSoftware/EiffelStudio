@@ -31,6 +31,28 @@ WXS = \
 	studio_ent_ec.wxs \
 	studio_gpl_ec.wxs
 
+WXS_GPL = \
+	studio_gcc.wxs \
+	studio_core.wxs \
+	studio_examples.wxs \
+	studio_libraries.wxs \
+	studio_gobo.wxs \
+	studio_experimental.wxs \
+	studio_gobo_experimental.wxs \
+	studio_gdiplus.wxs \
+	studio_gpl_ec.wxs
+
+WXS_ENT = \
+	studio_gcc.wxs \
+	studio_core.wxs \
+	studio_examples.wxs \
+	studio_libraries.wxs \
+	studio_gobo.wxs \
+	studio_experimental.wxs \
+	studio_gobo_experimental.wxs \
+	studio_gdiplus.wxs \
+	studio_ent_ec.wxs
+
 
 build: $(WXS)
 
@@ -94,16 +116,16 @@ studio_gpl_ec.wxs:
 #
 ###################################################################
 
-enterprise_x86: $(WXS)
+enterprise_x86: $(WXS_ENT)
 	$(MSBUILD) $(MSBUILD_FLAGS) /p:Configuration=studio_ent_x86 /p:Platform=x86 ..\..\package.sln
 
-gpl_x86: $(WXS)
+gpl_x86: $(WXS_GPL)
 	$(MSBUILD) $(MSBUILD_FLAGS) /p:Configuration=studio_gpl_x86 /p:Platform=x86 ..\..\package.sln
 
-enterprise_x64: $(WXS)
+enterprise_x64: $(WXS_ENT)
 	$(MSBUILD) $(MSBUILD_FLAGS) /p:Configuration=studio_ent_x64 /p:Platform=x64 ..\..\package.sln
 
-gpl_x64: $(WXS)
+gpl_x64: $(WXS_GPL)
 	$(MSBUILD) $(MSBUILD_FLAGS) /p:Configuration=studio_gpl_x64 /p:Platform=x64 ..\..\package.sln
 
 
@@ -114,5 +136,6 @@ gpl_x64: $(WXS)
 ###################################################################
 
 clean:
-	for %i in ($(WXS)) do if exist %i del %i
+	for %i in ($(WXS_GPL)) do if exist %i del %i
+	for %i in ($(WXS_ENT)) do if exist %i del %i
 	if exist *.msi del *.msi

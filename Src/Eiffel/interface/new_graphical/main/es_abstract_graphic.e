@@ -151,7 +151,7 @@ feature {NONE} -- Initialization
 		local
 			ctlr: ES_CLOUD_CONTROLLER
 		do
-			create ctlr
+			create ctlr.make
 			if attached ctlr.es_cloud_s.service as s then
 				s.register_observer (ctlr)
 			end

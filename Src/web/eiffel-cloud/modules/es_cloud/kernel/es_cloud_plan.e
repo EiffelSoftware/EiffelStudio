@@ -109,7 +109,7 @@ feature -- Element change
 						inst := s.substring (s.index_of ('=', 1) + 1, s.count).to_natural
 					elseif s.starts_with ("session.limit=") then
 						sess := s.substring (s.index_of ('=', 1) + 1, s.count).to_natural
-					elseif s.starts_with ("order.heartbeat=") then
+					elseif s.starts_with ("session.heartbeat=") then
 						l_heartbeat := s.substring (s.index_of ('=', 1) + 1, s.count).to_natural
 					elseif s.starts_with ("order.weight=") then
 						l_weight := s.substring (s.index_of ('=', 1) + 1, s.count).to_integer

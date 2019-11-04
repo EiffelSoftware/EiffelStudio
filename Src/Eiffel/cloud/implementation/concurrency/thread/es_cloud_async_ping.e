@@ -93,11 +93,11 @@ feature -- Access
 			debug ("es_cloud")
 				print ("[" + (create {DATE_TIME}.make_now_utc).out + "] ping done.%N")
 			end
+			if session_heartbeat > 0 then
+				service.on_session_heartbeat_updated (session_heartbeat)
+			end
 			if session_state_changed then
 				reset
-				if session_heartbeat > 0 then
-					service.on_session_heartbeat_updated (session_heartbeat)
-				end
 				service.on_session_state_changed (session)
 			end
 		end

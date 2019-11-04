@@ -207,13 +207,13 @@ feature -- Execution
 							l_session := es_cloud_api.user_session (a_user, l_install_id, l_session_id)
 							if l_session /= Void then
 								l_active_sessions := es_cloud_api.user_active_concurrent_sessions (a_user, l_install_id, l_session)
-								if attached es_cloud_api.user_subscription (a_user) as l_plan then
-									l_sess_limit := l_plan.concurrent_sessions_limit
-									l_heartbeat :=  l_plan.heartbeat
-								else
-									l_sess_limit := es_cloud_api.default_concurrent_sessions_limit
-									l_heartbeat :=  es_cloud_api.default_heartbeat
-								end
+							end
+							if attached es_cloud_api.user_subscription (a_user) as l_plan then
+								l_sess_limit := l_plan.concurrent_sessions_limit
+								l_heartbeat :=  l_plan.heartbeat
+							else
+								l_sess_limit := es_cloud_api.default_concurrent_sessions_limit
+								l_heartbeat :=  es_cloud_api.default_heartbeat
 							end
 							if attached {WSF_STRING} req.form_parameter ("operation") as l_op then
 								if l_op.is_case_insensitive_equal ("ping") then

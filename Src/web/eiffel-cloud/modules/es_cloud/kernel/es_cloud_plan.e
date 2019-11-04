@@ -46,6 +46,10 @@ feature -- Access
 			-- Maximum number of concurrent sessions for the same plan.
 			-- `0` means no limit
 
+	heartbeat: NATURAL
+			-- Delay between each ping in seconds
+			-- `0` means no constraint.
+
 	weight: INTEGER
 			-- Weight of Current plan among other plans
 			-- used to sort list of plans.
@@ -56,7 +60,7 @@ feature -- Access
 		do
 			mi := installations_limit
 			ms := concurrent_sessions_limit
-			Result := "install.limit=" + mi.out + ";session.limit=" + ms.out + ";order.weight=" + weight.out
+			Result := "install.limit=" + mi.out + ";session.limit=" + ms.out + ";session.heartbeat=" + heartbeat.out + ";order.weight=" + weight.out
 		end
 
 feature -- Status report	
@@ -88,12 +92,13 @@ feature -- Element change
 
 	set_data (a_data: detachable READABLE_STRING_GENERAL)
 		local
-			sess,inst: NATURAL
+			sess,inst,l_heartbeat: NATURAL
 			l_weight: INTEGER
 			s: READABLE_STRING_GENERAL
 		do
 			sess := 0
 			inst := 0
+			l_heartbeat := 0
 			l_weight := 0
 			if a_data /= Void then
 				across
@@ -104,6 +109,8 @@ feature -- Element change
 						inst := s.substring (s.index_of ('=', 1) + 1, s.count).to_natural
 					elseif s.starts_with ("session.limit=") then
 						sess := s.substring (s.index_of ('=', 1) + 1, s.count).to_natural
+					elseif s.starts_with ("order.heartbeat=") then
+						l_heartbeat := s.substring (s.index_of ('=', 1) + 1, s.count).to_natural
 					elseif s.starts_with ("order.weight=") then
 						l_weight := s.substring (s.index_of ('=', 1) + 1, s.count).to_integer
 					end
@@ -111,6 +118,7 @@ feature -- Element change
 			end
 			installations_limit := inst
 			concurrent_sessions_limit := sess
+			heartbeat := l_heartbeat
 			weight := l_weight
 		end
 

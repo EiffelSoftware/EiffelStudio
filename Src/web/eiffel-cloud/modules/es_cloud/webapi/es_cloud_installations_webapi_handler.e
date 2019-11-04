@@ -184,7 +184,7 @@ feature -- Execution
 			l_session: detachable ES_CLOUD_SESSION
 			l_user_plan: detachable ES_CLOUD_PLAN_SUBSCRIPTION
 			err: BOOLEAN
-			n, l_sess_limit: NATURAL
+			n, l_sess_limit, l_heartbeat: NATURAL
 		do
 			if a_user.same_as (api.user) or else api.has_permission ("manage es accounts") then
 
@@ -207,7 +207,13 @@ feature -- Execution
 							l_session := es_cloud_api.user_session (a_user, l_install_id, l_session_id)
 							if l_session /= Void then
 								l_active_sessions := es_cloud_api.user_active_concurrent_sessions (a_user, l_install_id, l_session)
-								l_sess_limit := es_cloud_api.user_concurrent_sessions_limit (a_user)
+								if attached es_cloud_api.user_subscription (a_user) as l_plan then
+									l_sess_limit := l_plan.concurrent_sessions_limit
+									l_heartbeat :=  l_plan.heartbeat
+								else
+									l_sess_limit := es_cloud_api.default_concurrent_sessions_limit
+									l_heartbeat :=  es_cloud_api.default_heartbeat
+								end
 							end
 							if attached {WSF_STRING} req.form_parameter ("operation") as l_op then
 								if l_op.is_case_insensitive_equal ("ping") then
@@ -301,6 +307,9 @@ feature -- Execution
 							r.add_string_field ("es:session_state", "ended")
 						else
 							r.add_string_field ("es:session_state", "state#" + l_session.state.out)
+						end
+						if l_heartbeat > 0 then
+							r.add_integer_64_field ("es:session_heartbeat", l_heartbeat)
 						end
 						r.add_link ("es:session", "session", api.absolute_url (r.location, Void)
 									+ "/" + api.url_encoded (l_session.installation_id)

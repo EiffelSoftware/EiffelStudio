@@ -73,6 +73,11 @@ feature -- Status report
 			Result := plan.installations_limit
 		end
 
+	heartbeat: NATURAL
+		do
+			Result := plan.heartbeat
+		end
+
 feature -- Element change
 
 	set_plan (p: like plan)

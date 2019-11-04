@@ -232,12 +232,18 @@ feature -- Access: users
 			Result := es_cloud_storage.subscriptions
 		end
 
+	default_concurrent_sessions_limit: NATURAL = 1
+	 		-- Default, a unique concurrent session!
+
+	default_heartbeat: NATURAL = 900 -- 15 * 60
+	 		-- Default heartbeat in seconds	 		
+
 	user_concurrent_sessions_limit (a_user: ES_CLOUD_USER): NATURAL
 		do
-			if attached user_subscription (a_user) as l_plan_subs then
-				Result := l_plan_subs.concurrent_sessions_limit
+			if attached user_subscription (a_user) as l_plan_sub then
+				Result := l_plan_sub.concurrent_sessions_limit
 			else
-				Result := 1 -- Default, a unique concurrent session!
+				Result := default_concurrent_sessions_limit
 			end
 		end
 

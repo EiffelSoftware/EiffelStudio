@@ -158,7 +158,7 @@
 	<PREF NAME="tools.error_list.color.success_background" DESCRIPTION="Background color for hints."><COLOR>230;255;230</COLOR></PREF>
 	<PREF NAME="tools.error_list.color.warning_background" DESCRIPTION="Background color for warnings."><COLOR>255;255;216</COLOR></PREF>
 	<PREF NAME="tools.error_list.expand_errors" DESCRIPTION="Specifies if errors in the Error List tool should be expanded automatically, to show the verbose error information."><BOOLEAN>False</BOOLEAN></PREF>
-	<PREF NAME="tools.error_list.expand_n_errors" DESCRIPTION="Specifies if errors in the Error List tool should be expanded automatically, to show the verbose error information. <0: auto expand all, 0: disabled, and >0: enabled ... expand N first errors."><INTEGER>1</INTEGER></PREF>
+	<PREF NAME="tools.error_list.expand_n_errors" DESCRIPTION="Specifies if errors in the Error List tool should be expanded automatically, to show the verbose error information. &lt;0: auto expand all, 0: disabled, and &gt;0: enabled ... expand N first errors."><INTEGER>1</INTEGER></PREF>
 	<PREF NAME="tools.error_list.report_c_compiler_errors" DESCRIPTION="Specifies what level of error/warning report to perform on C compiler output."><LIST>none;[errors];errors_and_warnings</LIST></PREF>	
 	<PREF NAME="tools.error_list.show_tooltip" DESCRIPTION="Specifies if rich tooltip window should be shown automatically in the Error List tool."><BOOLEAN>True</BOOLEAN></PREF>
 

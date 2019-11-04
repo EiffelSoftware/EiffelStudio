@@ -18,6 +18,9 @@ feature -- Access
 
 	guest_mode_loging_count: INTEGER assign set_guest_mode_loging_count
 
+	session_heartbeat: NATURAL assign set_session_heartbeat
+			-- <Precursor>
+
 feature -- Element change
 
 	set_installation (v: like installation)
@@ -40,8 +43,13 @@ feature -- Element change
 			guest_mode_loging_count := v
 		end
 
+	set_session_heartbeat (v: like session_heartbeat)
+		do
+			session_heartbeat := v
+		end
+
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

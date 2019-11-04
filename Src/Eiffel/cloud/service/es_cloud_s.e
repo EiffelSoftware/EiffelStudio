@@ -79,6 +79,11 @@ feature -- Access
 		deferred
 		end
 
+	session_heartbeat: NATURAL_32
+			-- Delay between two session ping (heartbeat), in seconds.
+		deferred
+		end
+
 feature -- Sign in
 
 	login_as_guest
@@ -181,6 +186,17 @@ feature -- Events
 					lst as ic
 				loop
 					ic.item.on_session_state_changed (sess)
+				end
+			end
+		end
+
+	on_session_heartbeat_updated (a_heartbeat: NATURAL)
+		do
+			if attached observers as lst then
+				across
+					lst as ic
+				loop
+					ic.item.on_session_heartbeat_updated (a_heartbeat)
 				end
 			end
 		end

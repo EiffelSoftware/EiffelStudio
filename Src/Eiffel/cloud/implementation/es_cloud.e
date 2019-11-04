@@ -40,6 +40,8 @@ feature {NONE} -- Creation
 				version := "unknown"
 				create installation.make_with_id ("")
 			end
+				-- Initialization
+			session_heartbeat := 900 -- 15 * 60 s = 15 minutes
 			load
 		end
 
@@ -208,6 +210,9 @@ feature -- Access
 
 	remaining_days_for_guest: INTEGER
 			-- Remaining days for guest mode.
+
+	session_heartbeat: NATURAL
+			-- <Precursor>			
 
 feature -- Status report
 
@@ -388,15 +393,20 @@ feature -- Updating
 	ping_installation (a_account: ES_ACCOUNT; a_session: ES_ACCOUNT_SESSION)
 		local
 			opts: STRING_TABLE [READABLE_STRING_GENERAL]
+			d: ES_CLOUD_PING_DATA
 		do
 			if attached a_account.access_token as tok then
 				if attached a_session.title as l_title then
 					create opts.make (1)
 					opts["session_title"] := create {IMMUTABLE_STRING_32}.make_from_string_general (l_title)
 				end
-				web_api.ping_installation (tok.token, installation.id, a_session.id, opts)
-				if web_api.session_state_changed then
+				create d
+				web_api.ping_installation (tok.token, installation.id, a_session.id, opts, d)
+				if d.session_state_changed then
 					on_session_state_changed (a_session)
+				end
+				if d.heartbeat > 0 then
+					on_session_heartbeat_updated (d.heartbeat)
 				end
 			end
 		end
@@ -560,6 +570,9 @@ feature -- Storage
 							end
 							guest_mode_ending_date := d.guest_mode_ending_date
 							guest_mode_loging_count := d.guest_mode_loging_count
+							if d.session_heartbeat > 0 then
+								session_heartbeat := d.session_heartbeat
+							end
 						end
 					else
 							-- FIXME: should be created at installation... and presence may be mandatory

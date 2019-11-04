@@ -14,45 +14,64 @@ inherit
 			on_account_logged_out,
 			on_account_updated,
 			on_cloud_available,
-			on_session_state_changed
+			on_session_state_changed,
+			on_session_heartbeat_updated
 		end
 
 	SHARED_ES_CLOUD_SERVICE
 
 	EB_SHARED_WINDOW_MANAGER
 
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make
+		do
+				-- Default
+			ping_heartbeat := 900 -- 15 * 60 s = 15 minutes
+--			ping_heartbeat := 300 --  5 * 60 s =  5 minutes
+--			ping_heartbeat := 60  --  1 * 60 s =  1 minutes
+--			ping_heartbeat := 30  --      30 s = 30 seconds
+		end
+
 feature {NONE} -- Background ping
 
-	timeout: detachable EV_TIMEOUT
+	ping_heartbeat: NATURAL_32
+			-- ping delay in seconds.
+
+	ping_timeout: detachable EV_TIMEOUT
 
 	start_background_pinging (acc: ES_ACCOUNT)
 		local
 			t: EV_TIMEOUT
 		do
+			if
+				attached es_cloud_s.service as l_service and then
+				l_service.session_heartbeat > 0
+			then
+				ping_heartbeat := l_service.session_heartbeat
+			end
 			process_ping (acc)
 
-			t := timeout
+			t := ping_timeout
 			if t /= Void then
 				t.destroy
 			end
 			create t
 			t.actions.extend (agent process_ping (acc))
-			t.set_interval (ping_delay)
-			timeout := t
+			t.set_interval (ping_heartbeat.to_integer_32 * 1_000) -- converted to milliseconds.
+			ping_timeout := t
 		end
 
 	stop_background_pinging
 		do
-			if attached timeout as t then
+			if attached ping_timeout as t then
 				t.destroy
-				timeout := t
+				ping_timeout := t
 			end
 		end
-
-	ping_delay: INTEGER = 900_000 -- 15 * 60 * 1000 ms = 15 minutes
---	ping_delay: INTEGER = 300_000 -- 5 * 60 * 1000 ms = 5 minutes
---	ping_delay: INTEGER = 60_000 -- 1 * 60 * 1000 ms = 1 minutes
---	ping_delay: INTEGER = 30_000 -- 30 * 1000 ms = 30 sec		
 
 	process_ping (acc: ES_ACCOUNT)
 		do
@@ -112,6 +131,15 @@ feature -- Events
 						dlg.show
 					end
 				end
+			end
+		end
+
+	on_session_heartbeat_updated (a_new_hearbeat: NATURAL_32)
+			-- New hearbeat in seconds.
+		do
+			ping_heartbeat := a_new_hearbeat
+			if attached ping_timeout as t then
+				t.set_interval (a_new_hearbeat.to_integer_32 * 1_000) -- converted to milliseconds
 			end
 		end
 

@@ -47,6 +47,8 @@ feature {NONE} -- Access: after thread completed
 
 	session_state_changed: BOOLEAN
 
+	session_heartbeat: NATURAL_32
+
 feature {NONE} -- Access: worker thread
 
 	token: IMMUTABLE_STRING_8
@@ -93,6 +95,9 @@ feature -- Access
 			end
 			if session_state_changed then
 				reset
+				if session_heartbeat > 0 then
+					service.on_session_heartbeat_updated (session_heartbeat)
+				end
 				service.on_session_state_changed (session)
 			end
 		end
@@ -116,13 +121,18 @@ feature -- Access
 	ping_installation
 		local
 			wapi: ES_CLOUD_API
+			d: ES_CLOUD_PING_DATA
 		do
 			create wapi.make (server_url)
 			debug ("es_cloud")
 				print ("[" + (create {DATE_TIME}.make_now_utc).out + "] Pinging...")
 			end
-			wapi.ping_installation (token, installation_id, session_id, opts)
-			session_state_changed := wapi.session_state_changed
+			create d
+			wapi.ping_installation (token, installation_id, session_id, opts, d)
+			session_state_changed := d.session_state_changed
+			if d.heartbeat > 0 then
+				session_heartbeat := d.heartbeat
+			end
 			mutex.lock
 			completed := True
 			mutex.unlock

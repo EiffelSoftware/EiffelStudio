@@ -86,10 +86,7 @@ feature -- Access from last api call.
 	reset_api_call
 		do
 			reset_error
-			session_state_changed := False
 		end
-
-	session_state_changed: BOOLEAN
 
 feature -- Account: register
 
@@ -350,8 +347,11 @@ feature -- Installation
 		end
 
 	begin_session (a_token: READABLE_STRING_8; a_installation_id, a_session_id: READABLE_STRING_8)
+		local
+			d: ES_CLOUD_PING_DATA
 		do
-			ping_installation (a_token, a_installation_id, a_session_id, Void)
+			create d
+			ping_installation (a_token, a_installation_id, a_session_id, Void, d)
 		end
 
 	end_session (a_token: READABLE_STRING_8; a_installation_id, a_session_id: READABLE_STRING_GENERAL)
@@ -432,7 +432,9 @@ feature -- Installation
 			end
 		end
 
-	ping_installation (a_token: READABLE_STRING_8; a_installation_id, a_session_id: READABLE_STRING_GENERAL; a_opts: detachable STRING_TABLE [READABLE_STRING_GENERAL])
+	ping_installation (a_token: READABLE_STRING_8; a_installation_id, a_session_id: READABLE_STRING_GENERAL;
+			a_opts: detachable STRING_TABLE [READABLE_STRING_GENERAL];
+			a_output: detachable ES_CLOUD_PING_DATA)
 		local
 			ctx: HTTP_CLIENT_REQUEST_CONTEXT
 			resp: like response
@@ -459,6 +461,9 @@ feature -- Installation
 					end
 					resp := response (sess.post (l_installations_href, ctx, Void))
 					if resp.has_error then
+						if a_output /= Void then
+							a_output.has_error := True
+						end
 							-- Too bad, but not critical
 						reset_error
 					else
@@ -468,12 +473,16 @@ feature -- Installation
 						if attached resp.string_8_item ("_links|es:session|href") as v then
 							record_endpoint_for_token (a_token, {STRING_32} "_links|es:session|href;session=" + a_session_id.as_string_32, v)
 						end
-						if attached resp.string_32_item ("es:session_state") as l_sess_state then
-							debug ("es_cloud")
-								print ("session.state="+ l_sess_state + "%N")
+						if a_output /= Void then
+							if
+								attached resp.string_32_item ("es:session_state") as l_sess_state and then
+								not l_sess_state.is_case_insensitive_equal_general ("normal")
+							then
+								a_output.session_state_changed := True
+								a_output.session_state := l_sess_state
 							end
-							if not l_sess_state.is_case_insensitive_equal_general ("normal") then
-								session_state_changed := True
+							if attached resp.integer_64_item ("es:session_heartbeat") as l_heartbeat then
+								a_output.heartbeat := l_heartbeat.to_natural_32
 							end
 						end
 					end
@@ -525,7 +534,7 @@ feature -- Installation
 			reset_api_call
 				-- Update endpoints ...
 			if attached acc.installation as inst then
-				ping_installation (acc.access_token.token, inst.id, a_session_id, Void)
+				ping_installation (acc.access_token.token, inst.id, a_session_id, Void, Void)
 			end
 			reset_api_call
 

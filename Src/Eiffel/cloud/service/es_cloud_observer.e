@@ -29,6 +29,11 @@ feature -- Event
 		do
 		end
 
+	on_session_heartbeat_updated (a_new_hearbeat: NATURAL_32)
+			-- New hearbeat expressed in seconds.
+		do
+		end
+
 note
 	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"

@@ -1,46 +1,82 @@
 note
-	description: "Summary description for {ES_NOTIFICATION_MESSAGE}."
+	description: "Summary description for {ES_NOTIFICATION_WINDOW}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	NOTIFICATION_MESSAGE
+	ES_NOTIFICATION_WINDOW
+
+inherit
+	EV_POPUP_WINDOW
+
+	ES_SHARED_FONTS_AND_COLORS
+		undefine
+			default_create,
+			copy
+		end
 
 create
 	make
 
-create {NOTIFICATION_MESSAGE}
-	make_with_date
+feature {NONE} -- Initialization
 
-feature {NONE} -- Creation
-
-	make (txt: READABLE_STRING_GENERAL)
+	make (a_message: NOTIFICATION_MESSAGE; a_manager: ES_NOTIFICATION_MANAGER)
 		do
-			make_with_date (txt, create {DATE_TIME}.make_now)
-		end
-
-	make_with_date (txt: READABLE_STRING_GENERAL; dt: like date)
-		do
-			create text.make_from_string_general (txt)
-			date := dt
+			make_with_shadow
+			message := a_message
+			manager := a_manager
+			build_interface
 		end
 
 feature -- Access
 
-	date: DATE_TIME
+	manager: ES_NOTIFICATION_MANAGER
 
-	text: IMMUTABLE_STRING_32
+	message: NOTIFICATION_MESSAGE
 
-feature -- Conversion
+feature -- Element change
 
-	to_archive: NOTIFICATION_MESSAGE
-			-- Copy of Current message for archiving.
+	build_interface
+		local
+			l_widget: ES_NOTIFICATION_WIDGET
 		do
-			create Result.make_with_date (text, date.twin)
+			create l_widget.make (message, manager)
+			l_widget.set_terminate_action (agent close)
+			extend (l_widget)
 		end
 
-;note
+	close
+		do
+			if attached auto_close_timeout as l_timeout then
+				l_timeout.destroy
+				auto_close_timeout := Void
+			end
+			manager.deactivate_notification (Current)
+			destroy
+		end
+
+	set_auto_close_delay (a_delay_ms: INTEGER)
+		local
+			t: EV_TIMEOUT
+		do
+			t := auto_close_timeout
+			if t /= Void then
+				t.destroy
+			end
+			create t
+			auto_close_timeout := t
+			t.actions.extend (agent close)
+			t.set_interval (a_delay_ms)
+		end
+
+feature {NONE} -- Implementation
+
+	auto_close_timeout: detachable EV_TIMEOUT
+
+invariant
+
+note
 	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

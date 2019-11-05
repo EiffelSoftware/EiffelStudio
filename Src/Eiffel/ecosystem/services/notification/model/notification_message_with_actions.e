@@ -1,46 +1,61 @@
 note
-	description: "Summary description for {ES_NOTIFICATION_MESSAGE}."
+	description: "Summary description for {NOTIFICATION_MESSAGE_WITH_ACTION}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
+	NOTIFICATION_MESSAGE_WITH_ACTIONS
+
+inherit
 	NOTIFICATION_MESSAGE
+		redefine
+			make,
+			to_archive
+		end
 
 create
 	make
-
-create {NOTIFICATION_MESSAGE}
-	make_with_date
 
 feature {NONE} -- Creation
 
 	make (txt: READABLE_STRING_GENERAL)
 		do
-			make_with_date (txt, create {DATE_TIME}.make_now)
-		end
-
-	make_with_date (txt: READABLE_STRING_GENERAL; dt: like date)
-		do
-			create text.make_from_string_general (txt)
-			date := dt
+			Precursor (txt)
+			create actions.make (1)
 		end
 
 feature -- Access
 
-	date: DATE_TIME
+	actions: STRING_TABLE [PROCEDURE]
+			-- Action indexed by label.
 
-	text: IMMUTABLE_STRING_32
+	register_action (a_action: PROCEDURE; a_label: READABLE_STRING_GENERAL)
+		do
+			actions [a_label] := a_action
+		end
 
 feature -- Conversion
 
 	to_archive: NOTIFICATION_MESSAGE
-			-- Copy of Current message for archiving.
+		local
+			s: STRING_32
 		do
-			create Result.make_with_date (text, date.twin)
+			create s.make_from_string_general (text)
+			across
+				actions as ic
+			loop
+				s.append_character (' ')
+				s.append_character ('[')
+				s.append_string_general (ic.key)
+				s.append_character (']')
+			end
+			create Result.make (s)
 		end
 
-;note
+invariant
+
+note
 	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

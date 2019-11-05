@@ -22,7 +22,8 @@ feature {NONE} -- Initialization
 				s_notif.notification_connection.connect_events (Current)
 			end
 			status_bar := a_status_bar
-			create popup_list.make (5)
+			create notification_windows.make (5)
+			create message_archive.make (100)
 		end
 
 feature -- Access
@@ -33,101 +34,71 @@ feature -- Access
 
 feature -- Actions
 
+	archive_dialog: detachable ES_NOTIFICATION_ARCHIVE_DIALOG
+
 	show_notification_messages
+		local
+			l_dialog: like archive_dialog
+			l_scaler: EVS_DPI_SCALER
 		do
-			on_notification (create {NOTIFICATION_MESSAGE}.make ("Not Yet implemeted!"))
+			deactivate_all_windows
+			l_dialog := archive_dialog
+			if l_dialog = Void or else l_dialog.is_destroyed then
+				create l_dialog.make (Current)
+				create l_scaler.make
+				l_dialog.set_size (l_scaler.scaled_size (400), l_scaler.scaled_size (400))
+				archive_dialog := l_dialog
+			end
+			l_dialog.update
+			l_dialog.show
 		end
 
 feature {NOTIFICATION_S} -- Event handlers
 
 	on_notification (m: NOTIFICATION_MESSAGE)
 		do
-			ev_application.add_idle_action_kamikaze (agent popup_notification (m))
+			ev_application.add_idle_action_kamikaze (agent show_notification (m))
 		end
 
-	popup_notification (m: NOTIFICATION_MESSAGE)
+feature {NOTIFICATION_S, ES_NOTIFICATION_WINDOW} -- Event handlers		
+
+	show_notification (m: NOTIFICATION_MESSAGE)
 		local
-			popup: EV_POPUP_WINDOW
-			lab: EVS_LABEL
-			t: EV_TIMEOUT
-			w: EV_WIDGET
-			vb, fr: EV_VERTICAL_BOX
+			win: ES_NOTIFICATION_WINDOW
 		do
-			create popup.make_with_shadow
-			create lab.make_with_text (m.text)
-			lab.set_is_text_wrapped (True)
-			lab.set_minimum_width ({EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (200))
-
-			create fr
-			popup.extend (fr)
-			fr.set_background_color (colors.stock_colors.blue)
-			fr.set_padding_width (3)
-			fr.set_border_width (3)
-
-			create vb
-			vb.set_border_width (10)
-			fr.extend (vb)
-
-			vb.extend (lab)
-			vb.set_background_color (colors.stock_colors.white)
-			vb.set_foreground_color (colors.stock_colors.blue)
-			vb.propagate_background_color
-			vb.propagate_foreground_color
-
-			activate_popup (popup, <<lab>>)
+			create win.make (m, Current)
+			activate_notification (win)
 		end
 
-	activate_popup (a_popup: EV_POPUP_WINDOW; a_contents: detachable ITERABLE [EV_WIDGET])
+	activate_notification (a_window: ES_NOTIFICATION_WINDOW)
 		local
-			t: EV_TIMEOUT
 			w: EV_WIDGET
 			y,ny: INTEGER
 		do
 			w := status_bar.widget
 			y := w.screen_y + w.height
 			across
-				popup_list as ic
+				notification_windows as ic
 			loop
 				ny := ic.item.screen_y
 				if ny < y then
 					y := ny
 				end
 			end
-			popup_list.force (a_popup)
-			create t
-			a_popup.set_data (t)
-			if a_contents /= Void then
-				across
-					a_contents as ic
-				loop
-					ic.item.pointer_double_press_actions.extend (agent (p: EV_WINDOW; i_t: EV_TIMEOUT;
-								i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER)
-							do
-								i_t.destroy
-								deactivate_popup (p)
-							end(a_popup,t,?,?,?,?,?,?,?,?)
-						)
-				end
-			end
-			t.actions.extend (agent (p: EV_WINDOW; i_t: EV_TIMEOUT)
-					do
-						i_t.destroy
-						deactivate_popup (p)
-					end (a_popup, t)
-				)
+			notification_windows.force (a_window)
+			a_window.set_auto_close_delay (delay_ms)
 			if attached parent_window (w) as win then
-				a_popup.show_relative_to_window (win)
+				a_window.show_relative_to_window (win)
 			else
-				a_popup.show
+				a_window.show
 			end
-			a_popup.set_position (w.screen_x + w.width - a_popup.width, y - a_popup.height - 1)
-			t.set_interval (delay_ms)
+			a_window.set_position (w.screen_x + w.width - a_window.width, y - a_window.height - 1)
 			ev_application.add_idle_action_kamikaze (agent update_notification_positions)
 		end
 
 	update_notification_positions
 		local
-			x,y,h, min_y: INTEGER
+			x,y, min_y: INTEGER
 			pwin, win: EV_WINDOW
 			sep_size: INTEGER
 		do
@@ -141,7 +112,7 @@ feature {NOTIFICATION_S} -- Event handlers
 				end
 			end
 			across
-				popup_list as ic
+				notification_windows as ic
 			loop
 				win := ic.item
 				if not win.is_destroyed then
@@ -151,20 +122,46 @@ feature {NOTIFICATION_S} -- Event handlers
 			end
 		end
 
-	deactivate_popup (p: EV_WINDOW)
+	deactivate_all_windows
+		do
+			if attached notification_windows as lst then
+				from
+				until
+					lst.is_empty
+				loop
+					deactivate_notification (lst.first)
+				end
+			end
+		end
+
+	deactivate_notification (p: ES_NOTIFICATION_WINDOW)
 		local
 			y,h: INTEGER
 		do
+			archive (p.message)
 			if not p.is_destroyed then
 				h := p.height
 				y := p.screen_y
-				p.destroy
 			end
-			popup_list.prune (p)
+			notification_windows.prune (p)
 			ev_application.add_idle_action_kamikaze (agent update_notification_positions)
 		end
 
-	popup_list: ARRAYED_SET [EV_WINDOW]
+	notification_windows: ARRAYED_SET [ES_NOTIFICATION_WINDOW]
+
+feature {ES_NOTIFICATION_ARCHIVE_DIALOG} -- Archive	
+
+	clear_message_archive
+		do
+			message_archive.wipe_out
+		end
+
+	archive (a_message: NOTIFICATION_MESSAGE)
+		do
+			message_archive.put (a_message.to_archive)
+		end
+
+	message_archive: ES_NOTIFICATION_ARCHIVE
 
 feature {NONE} -- Implementation
 

@@ -1,46 +1,86 @@
 note
-	description: "Summary description for {ES_NOTIFICATION_MESSAGE}."
+	description: "Summary description for {ES_NOTIFICATION_ARCHIVE}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	NOTIFICATION_MESSAGE
+	ES_NOTIFICATION_ARCHIVE
 
 create
 	make
 
-create {NOTIFICATION_MESSAGE}
-	make_with_date
+feature {NONE} -- Initialization
 
-feature {NONE} -- Creation
-
-	make (txt: READABLE_STRING_GENERAL)
+	make (a_count: INTEGER)
 		do
-			make_with_date (txt, create {DATE_TIME}.make_now)
+			create items.make (1, a_count)
+			insertion_index := items.lower
 		end
 
-	make_with_date (txt: READABLE_STRING_GENERAL; dt: like date)
+feature -- Element change
+
+	wipe_out
 		do
-			create text.make_from_string_general (txt)
-			date := dt
+			items.wipe_out
+			insertion_index := items.lower
+		end
+
+	put (m: NOTIFICATION_MESSAGE)
+		local
+			i: INTEGER
+		do
+			i := insertion_index
+			items.put (m, i)
+			i := i + 1
+			if i > items.upper then
+				i := items.lower
+			end
+			insertion_index := i
 		end
 
 feature -- Access
 
-	date: DATE_TIME
-
-	text: IMMUTABLE_STRING_32
-
-feature -- Conversion
-
-	to_archive: NOTIFICATION_MESSAGE
-			-- Copy of Current message for archiving.
+	linear: LIST [NOTIFICATION_MESSAGE]
+		local
+			i: INTEGER
 		do
-			create Result.make_with_date (text, date.twin)
+			create {ARRAYED_LIST [NOTIFICATION_MESSAGE]} Result.make (items.count)
+			i := insertion_index + 1
+			from
+				i := insertion_index
+			until
+				i > items.upper
+			loop
+				if attached items[i] as m then
+					Result.force (m)
+				end
+				i := i + 1
+			end
+			if insertion_index > items.lower then
+				i := items.lower
+				from
+					i := items.lower
+				until
+					i > insertion_index
+				loop
+					if attached items[i] as m then
+						Result.force (m)
+					end
+					i := i + 1
+				end
+			end
 		end
 
-;note
+feature {NONE} -- Implementation
+
+	insertion_index: INTEGER
+
+	items: ARRAY [detachable NOTIFICATION_MESSAGE]
+
+invariant
+
+note
 	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

@@ -92,7 +92,7 @@ feature {NOTIFICATION_S, ES_NOTIFICATION_WINDOW} -- Event handlers
 			else
 				a_window.show
 			end
-			a_window.set_position (w.screen_x + w.width - a_window.width, y - a_window.height - 1)
+			a_window.set_position (w.screen_x + w.width - a_window.width - 1, y - a_window.height - 1)
 			ev_application.add_idle_action_kamikaze (agent update_notification_positions)
 		end
 
@@ -104,7 +104,7 @@ feature {NOTIFICATION_S, ES_NOTIFICATION_WINDOW} -- Event handlers
 		do
 			sep_size := {EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (3)
 			if attached status_bar.widget as w then
-				x := w.screen_x + w.width
+				x := w.screen_x + w.width - 1
 				y := w.screen_y
 				pwin := parent_window (w)
 				if pwin /= Void then

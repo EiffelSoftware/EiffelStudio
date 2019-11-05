@@ -30,7 +30,6 @@ feature {NONE} -- Initialization
 			g: like grid
 			but: EV_BUTTON
 			hb: EV_HORIZONTAL_BOX
-			lab: EV_LABEL
 		do
 			Precursor
 			create vb

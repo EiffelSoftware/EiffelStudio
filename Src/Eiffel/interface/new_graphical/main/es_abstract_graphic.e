@@ -250,10 +250,22 @@ feature {NONE} -- Welcome dialog
 			if is_eiffel_layout_defined then
 				create up_checker.make (preferences.misc_data.update_channel, eiffel_layout.eiffel_platform, eiffel_layout.version_name)
 				up_checker.async_check_for_update (agent (a_rel: detachable ES_UPDATE_RELEASE)
+						local
+							m: NOTIFICATION_MESSAGE_WITH_ACTIONS
 						do
 							if a_rel /= Void then
 								if attached notification_s.service as s_notif then
-									s_notif.notify (create {NOTIFICATION_MESSAGE}.make ("Update is available: " + a_rel.link))
+									create m.make ({STRING_32} "Update is available: " + a_rel.filename)
+									m.register_action (agent (i_link: READABLE_STRING_GENERAL)
+											local
+												l_launcher: URI_LAUNCHER
+												b: BOOLEAN
+											do
+												create l_launcher
+												b := l_launcher.launch (i_link)
+											end(a_rel.link)
+										, "Try it now!")
+									s_notif.notify (m)
 								end
 								ev_application.add_idle_action_kamikaze (agent display_update_manager_dialog (a_rel, Void))
 							end

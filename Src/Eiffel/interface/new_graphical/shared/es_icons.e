@@ -4835,6 +4835,46 @@ feature -- Icons
 			general_information_icon_buffer_attached: Result /= Void
 		end
 
+	frozen general_notifications_icon: EV_PIXMAP
+			-- Access to 'notifications' pixmap.
+		require
+			has_named_icon: has_named_icon (general_notifications_name)
+		once
+			Result := named_icon (general_notifications_name)
+		ensure
+			general_notifications_icon_attached: Result /= Void
+		end
+
+	frozen general_notifications_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'notifications' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (general_notifications_name)
+		once
+			Result := named_icon_buffer (general_notifications_name)
+		ensure
+			general_notifications_icon_buffer_attached: Result /= Void
+		end
+
+	frozen general_notifications_not_empty_icon: EV_PIXMAP
+			-- Access to 'notifications_not_empty' pixmap.
+		require
+			has_named_icon: has_named_icon (general_notifications_not_empty_name)
+		once
+			Result := named_icon (general_notifications_not_empty_name)
+		ensure
+			general_notifications_not_empty_icon_attached: Result /= Void
+		end
+
+	frozen general_notifications_not_empty_icon_buffer: EV_PIXEL_BUFFER
+			-- Access to 'notifications_not_empty' pixmap pixel buffer.
+		require
+			has_named_icon: has_named_icon (general_notifications_not_empty_name)
+		once
+			Result := named_icon_buffer (general_notifications_not_empty_name)
+		ensure
+			general_notifications_not_empty_icon_buffer_attached: Result /= Void
+		end
+
 	frozen sort_descending_icon: EV_PIXMAP
 			-- Access to 'descending' pixmap.
 		require
@@ -10061,6 +10101,8 @@ feature -- Constants: Icon names
 	general_refresh_name: STRING = "general refresh"
 	general_filter_name: STRING = "general filter"
 	general_information_name: STRING = "general information"
+	general_notifications_name: STRING = "general notifications"
+	general_notifications_not_empty_name: STRING = "general notifications_not_empty"
 	sort_descending_name: STRING = "sort descending"
 	sort_acending_name: STRING = "sort acending"
 	sort_grouped_name: STRING = "sort grouped"
@@ -10553,6 +10595,8 @@ feature {NONE} -- Basic operations
 			a_table.put ([{NATURAL_8} 5, {NATURAL_8} 11], general_refresh_name)
 			a_table.put ([{NATURAL_8} 6, {NATURAL_8} 11], general_filter_name)
 			a_table.put ([{NATURAL_8} 7, {NATURAL_8} 11], general_information_name)
+			a_table.put ([{NATURAL_8} 8, {NATURAL_8} 11], general_notifications_name)
+			a_table.put ([{NATURAL_8} 9, {NATURAL_8} 11], general_notifications_not_empty_name)
 			a_table.put ([{NATURAL_8} 1, {NATURAL_8} 12], sort_descending_name)
 			a_table.put ([{NATURAL_8} 2, {NATURAL_8} 12], sort_acending_name)
 			a_table.put ([{NATURAL_8} 3, {NATURAL_8} 12], sort_grouped_name)

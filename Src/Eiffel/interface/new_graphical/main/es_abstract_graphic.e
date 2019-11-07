@@ -255,7 +255,7 @@ feature {NONE} -- Welcome dialog
 						do
 							if a_rel /= Void then
 								if attached notification_s.service as s_notif then
-									create m.make ({STRING_32} "Update is available: " + a_rel.filename)
+									create m.make ({STRING_32} "Update is available: " + a_rel.filename, "version_check")
 									m.register_action (agent (i_link: READABLE_STRING_GENERAL)
 											local
 												l_launcher: URI_LAUNCHER

@@ -21,7 +21,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_message: NOTIFICATION_MESSAGE; a_manager: ES_NOTIFICATION_MANAGER)
+	make (a_message: NOTIFICATION_MESSAGE; a_manager: like manager)
 		do
 			make_with_shadow
 			message := a_message
@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	manager: ES_NOTIFICATION_MANAGER
+	manager: detachable ES_NOTIFICATION_MANAGER
 
 	message: NOTIFICATION_MESSAGE
 
@@ -41,18 +41,26 @@ feature -- Element change
 		local
 			l_widget: ES_NOTIFICATION_WIDGET
 		do
-			create l_widget.make (message, manager)
+			create l_widget.make (message)
 			l_widget.set_terminate_action (agent close)
 			extend (l_widget)
 		end
 
+	auto_close
+		do
+			reset_auto_close_timeout
+			if attached manager as l_manager then
+				l_manager.deactivate_notification (Current, True)
+			end
+			destroy
+		end
+
 	close
 		do
-			if attached auto_close_timeout as l_timeout then
-				l_timeout.destroy
-				auto_close_timeout := Void
+			reset_auto_close_timeout
+			if attached manager as l_manager then
+				l_manager.deactivate_notification (Current, False)
 			end
-			manager.deactivate_notification (Current)
 			destroy
 		end
 
@@ -66,11 +74,19 @@ feature -- Element change
 			end
 			create t
 			auto_close_timeout := t
-			t.actions.extend (agent close)
+			t.actions.extend (agent auto_close)
 			t.set_interval (a_delay_ms)
 		end
 
 feature {NONE} -- Implementation
+
+	reset_auto_close_timeout
+		do
+			if attached auto_close_timeout as l_timeout then
+				l_timeout.destroy
+				auto_close_timeout := Void
+			end
+		end
 
 	auto_close_timeout: detachable EV_TIMEOUT
 

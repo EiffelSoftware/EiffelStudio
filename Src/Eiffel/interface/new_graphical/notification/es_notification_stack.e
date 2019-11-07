@@ -5,7 +5,7 @@ note
 	revision: "$Revision$"
 
 class
-	ES_NOTIFICATION_ARCHIVE
+	ES_NOTIFICATION_STACK
 
 create
 	make
@@ -24,6 +24,7 @@ feature -- Element change
 		do
 			items.wipe_out
 			insertion_index := items.lower
+			count := 0
 		end
 
 	put (m: NOTIFICATION_MESSAGE)
@@ -37,9 +38,24 @@ feature -- Element change
 				i := items.lower
 			end
 			insertion_index := i
+			count := count + 1
+--			count := items.count.min (count + 1)
 		end
 
 feature -- Access
+
+	count: INTEGER
+
+	count_of_unacknowledged_items: INTEGER
+		do
+			across
+				items as ic
+			loop
+				if attached ic.item as msg and then not msg.is_acknowledged then
+					Result := Result + 1
+				end
+			end
+		end
 
 	linear: LIST [NOTIFICATION_MESSAGE]
 		local

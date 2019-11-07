@@ -1,16 +1,22 @@
 note
-	description: "Summary description for {ES_NOTIFICATION_ARCHIVE_DIALOG}."
+	description: "Summary description for {ES_NOTIFICATION_STACK_DIALOG}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ES_NOTIFICATION_ARCHIVE_DIALOG
+	ES_NOTIFICATION_STACK_DIALOG
 
 inherit
 	EV_DIALOG
 		redefine
 			initialize
+		end
+
+	ES_SHARED_FONTS_AND_COLORS
+		undefine
+			default_create,
+			copy
 		end
 
 create
@@ -30,14 +36,20 @@ feature {NONE} -- Initialization
 			g: like grid
 			but: EV_BUTTON
 			hb: EV_HORIZONTAL_BOX
+			cl: EV_CELL
 		do
 			Precursor
 			create vb
 			extend (vb)
+			create cl
+			display_cell := cl
+			vb.extend (cl)
+			vb.disable_item_expand (cl)
 			create g
-			g.set_column_count_to (2)
-			g.column (1).set_title ("Message")
-			g.column (2).set_title ("Time")
+			g.set_column_count_to (3)
+			g.column (column_message).set_title ("Message")
+			g.column (column_time).set_title ("Time")
+			g.column (column_category).set_title ("Category")
 			grid := g
 			vb.extend (g)
 			create hb
@@ -57,17 +69,23 @@ feature {NONE} -- Initialization
 			set_default_cancel_button (but)
 		end
 
+	column_message: INTEGER = 1
+	column_time: INTEGER = 2
+	column_category: INTEGER = 3
+
 feature -- Access
 
 	manager: ES_NOTIFICATION_MANAGER
 
 	grid: ES_GRID
 
+	display_cell: EV_CELL
+
 feature -- Action
 
 	clear
 		do
-			manager.clear_message_archive
+			manager.clear_messages
 			update
 		end
 
@@ -80,26 +98,78 @@ feature -- Action
 		local
 			lst: LIST [NOTIFICATION_MESSAGE]
 			g: like grid
-			glab: EV_GRID_LABEL_ITEM
 			r: INTEGER
 		do
 			g := grid
+			g.clear
+			g.enable_single_row_selection
 
-			if attached manager.message_archive as l_archive then
-				lst := l_archive.linear
+			if attached manager.messages as l_messages then
+				lst := l_messages.linear
 				g.set_row_count_to (lst.count)
 				across
 					lst.new_cursor.reversed as ic
 				loop
 					r := r + 1
-					create glab.make_with_text (ic.item.date.out)
-					g.set_item (2, r, glab)
-
-					create glab.make_with_text (ic.item.text)
-					g.set_item (1, r, glab)
+--					g.insert_new_row (r)
+					fill_notification_row (g.row (r), ic.item)
 				end
-				g.set_auto_resizing_column (1, True)
-				g.enable_auto_size_best_fit_column (1)
+--				g.item_select_actions.extend (agent on_item_selected)
+				g.row_select_actions.extend (agent on_row_selected)
+				g.row_deselect_actions.extend (agent on_row_deselected)
+
+				g.set_auto_resizing_column (column_message, True)
+				g.set_auto_resizing_column (column_category, True)
+				g.enable_auto_size_best_fit_column (column_message)
+			end
+		end
+
+	fill_notification_row (a_row: EV_GRID_ROW; a_message: NOTIFICATION_MESSAGE)
+		local
+			glab: EV_GRID_LABEL_ITEM
+		do
+			a_row.set_data (a_message)
+			create glab.make_with_text (a_message.text)
+			a_row.set_item (column_message, glab)
+			if not a_message.is_acknowledged then
+				glab.set_font (fonts.highlighted_label_font)
+			end
+
+			if attached a_message.category as cat then
+				create glab.make_with_text (cat)
+			else
+				create glab
+			end
+			a_row.set_item (column_category, glab)
+
+			create glab.make_with_text (a_message.date.out)
+			a_row.set_item (column_time, glab)
+		end
+
+--	on_item_selected (a_item: EV_GRID_ITEM)
+	on_row_deselected (a_row: EV_GRID_ROW)
+		do
+			display_cell.wipe_out
+			if attached {NOTIFICATION_MESSAGE} a_row.data as l_message then
+				l_message.mark_acknowledged
+				ev_application.add_idle_action_kamikaze (agent fill_notification_row (a_row, l_message))
+			end
+		end
+
+	on_row_selected (a_row: EV_GRID_ROW)
+		local
+			w: ES_NOTIFICATION_WIDGET
+		do
+			if
+				attached a_row.parent as g and then
+				attached {NOTIFICATION_MESSAGE} a_row.data as l_message
+			then
+				create w.make (l_message)
+				display_cell.wipe_out
+				display_cell.extend (w)
+
+				l_message.mark_acknowledged
+				w.set_terminate_action (agent fill_notification_row (a_row, l_message))
 			end
 		end
 

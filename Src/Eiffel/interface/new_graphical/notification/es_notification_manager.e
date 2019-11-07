@@ -10,6 +10,11 @@ inherit
 
 	SHARED_NOTIFICATION_SERVICE
 
+	EB_CONSTANTS
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -23,7 +28,94 @@ feature {NONE} -- Initialization
 			end
 			status_bar := a_status_bar
 			create notification_windows.make (5)
-			create message_archive.make (100)
+			create messages.make (100)
+			activate_notifications_icon (a_status_bar)
+		end
+
+	activate_notifications_icon (a_status_bar: EB_DEVELOPMENT_WINDOW_STATUS_BAR)
+		do
+			a_status_bar.notifications_icon.pointer_double_press_actions.extend (agent (i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER)
+					do
+						if i_button = {EV_POINTER_CONSTANTS}.left then
+							show_notification_messages
+						end
+					end
+				)
+			a_status_bar.notifications_icon.pointer_button_press_actions.extend (agent (i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER)
+					local
+						m,pm: EV_MENU
+						mi: EV_MENU_ITEM
+					do
+						if i_button = {EV_POINTER_CONSTANTS}.right then
+							create m.make_with_text ("Notifications")
+							create mi.make_with_text ("Show messages (" + messages.count.out + ")")
+							mi.select_actions.extend (agent show_notification_messages)
+							m.extend (mi)
+							m.extend (create {EV_MENU_SEPARATOR})
+							if attached notifications_suspended_until as dt and then (create {DATE_TIME}.make_now) <= dt then
+								create mi.make_with_text ("Resume")
+								mi.select_actions.extend (agent resume_notifications)
+								m.extend (mi)
+							end
+							create pm.make_with_text ("Suspend ...")
+							pm.select_actions.extend (agent suspend_notifications_for (0))
+							m.extend (pm)
+
+							if not notifications_suspended then
+								create mi.make_with_text ("for ever")
+								mi.select_actions.extend (agent suspend_notifications_for (15))
+								pm.extend (mi)
+							end
+
+							create mi.make_with_text ("for 1 minute")
+							mi.select_actions.extend (agent suspend_notifications_for (1))
+							pm.extend (mi)
+
+							create mi.make_with_text ("for 5 minutes")
+							mi.select_actions.extend (agent suspend_notifications_for (5))
+							pm.extend (mi)
+
+							create mi.make_with_text ("for 15 minutes")
+							mi.select_actions.extend (agent suspend_notifications_for (15))
+							pm.extend (mi)
+
+							create mi.make_with_text ("for 1 hour")
+							mi.select_actions.extend (agent suspend_notifications_for (60))
+							pm.extend (mi)
+
+							create mi.make_with_text ("for 1 day")
+							mi.select_actions.extend (agent suspend_notifications_for (24 * 60))
+							pm.extend (mi)
+
+							m.extend (create {EV_MENU_SEPARATOR})
+
+							create mi.make_with_text ("Test")
+							mi.select_actions.extend (agent
+								local
+									msg: NOTIFICATION_MESSAGE_WITH_ACTIONS
+								do
+									if attached notification_s.service as l_service then
+										create msg.make ("Testing notification", "debugging")
+										msg.register_action (agent l_service.notify_message ("Testing ...", "newtest"), "ONE")
+										msg.register_action (agent (s: NOTIFICATION_S)
+											do
+												across
+													1 |..| 5 is i
+												loop
+													s.notify_message ("Testing " + i.out, "newtest")
+												end
+											end(l_service), "FIVE")
+
+										l_service.notify (msg)
+									end
+								end)
+							m.extend (mi)
+
+							m.show
+						end
+					end
+				)
+			update_status_bar
 		end
 
 feature -- Access
@@ -32,32 +124,102 @@ feature -- Access
 
 	delay_ms: INTEGER = 10_000
 
+feature -- Settings
+
+	notifications_suspended_until: detachable DATE_TIME
+	notifications_suspended: BOOLEAN
+
+	suspend_notifications_for (a_delay_in_minutes: INTEGER)
+		local
+			dt: DATE_TIME
+		do
+			if a_delay_in_minutes <= 0 then
+				notifications_suspended := True
+				notifications_suspended_until := Void
+			else
+				notifications_suspended := False
+				create dt.make_now
+				dt.minute_add (a_delay_in_minutes)
+				notifications_suspended_until := dt
+			end
+		end
+
+	resume_notifications
+		do
+			notifications_suspended_until := Void
+			notifications_suspended := False
+		end
+
 feature -- Actions
 
-	archive_dialog: detachable ES_NOTIFICATION_ARCHIVE_DIALOG
+	messages_dialog: detachable ES_NOTIFICATION_STACK_DIALOG
 
 	show_notification_messages
 		local
-			l_dialog: like archive_dialog
+			l_dialog: like messages_dialog
 			l_scaler: EVS_DPI_SCALER
 		do
 			deactivate_all_windows
-			l_dialog := archive_dialog
+			l_dialog := messages_dialog
 			if l_dialog = Void or else l_dialog.is_destroyed then
 				create l_dialog.make (Current)
 				create l_scaler.make
 				l_dialog.set_size (l_scaler.scaled_size (400), l_scaler.scaled_size (400))
-				archive_dialog := l_dialog
+				messages_dialog := l_dialog
 			end
 			l_dialog.update
-			l_dialog.show
+			if attached parent_window (status_bar.widget) as pwin then
+				l_dialog.set_height (pwin.height)
+				l_dialog.set_position (pwin.x_position + pwin.width - l_dialog.width, pwin.y_position)
+--				l_dialog.show_modal_to_window (pwin)
+				l_dialog.show_relative_to_window (pwin)
+			else
+				if l_dialog.is_show_requested then
+					l_dialog.raise
+				else
+					l_dialog.show
+				end
+			end
+		end
+
+feature {NONE} -- Status bar
+
+	update_status_bar
+		do
+			if attached status_bar.notifications_icon as l_icon then
+				if
+					attached messages as l_messages and then
+					l_messages.count_of_unacknowledged_items > 0
+				then
+					l_icon.clear
+					l_icon.draw_pixmap (1, 1, pixmaps.icon_pixmaps.general_notifications_not_empty_icon)
+				else
+					l_icon.clear
+					l_icon.draw_pixmap (1, 1, pixmaps.icon_pixmaps.general_notifications_icon)
+				end
+			end
 		end
 
 feature {NOTIFICATION_S} -- Event handlers
 
 	on_notification (m: NOTIFICATION_MESSAGE)
+		local
+			l_is_suspended: BOOLEAN
 		do
-			ev_application.add_idle_action_kamikaze (agent show_notification (m))
+			record (m)
+			if notifications_suspended then
+				l_is_suspended := True
+			elseif attached notifications_suspended_until as dt then
+				if (create {DATE_TIME}.make_now) >= dt then
+					resume_notifications
+				else
+					l_is_suspended := True
+				end
+			end
+			if not l_is_suspended then
+				ev_application.add_idle_action_kamikaze (agent show_notification (m))
+			end
+			ev_application.add_idle_action_kamikaze (agent update_status_bar)
 		end
 
 feature {NOTIFICATION_S, ES_NOTIFICATION_WINDOW} -- Event handlers		
@@ -129,39 +291,43 @@ feature {NOTIFICATION_S, ES_NOTIFICATION_WINDOW} -- Event handlers
 				until
 					lst.is_empty
 				loop
-					deactivate_notification (lst.first)
+					deactivate_notification (lst.first, True)
 				end
 			end
 		end
 
-	deactivate_notification (p: ES_NOTIFICATION_WINDOW)
+	deactivate_notification (p: ES_NOTIFICATION_WINDOW; is_auto: BOOLEAN)
 		local
 			y,h: INTEGER
 		do
-			archive (p.message)
 			if not p.is_destroyed then
 				h := p.height
 				y := p.screen_y
 			end
 			notification_windows.prune (p)
 			ev_application.add_idle_action_kamikaze (agent update_notification_positions)
+			if not is_auto then
+				p.message.mark_acknowledged
+			end
+			ev_application.add_idle_action_kamikaze (agent update_status_bar)
 		end
 
 	notification_windows: ARRAYED_SET [ES_NOTIFICATION_WINDOW]
 
-feature {ES_NOTIFICATION_ARCHIVE_DIALOG} -- Archive	
+feature {ES_NOTIFICATION_STACK_DIALOG} -- Archive	
 
-	clear_message_archive
+	clear_messages
 		do
-			message_archive.wipe_out
+			messages.wipe_out
+			update_status_bar
 		end
 
-	archive (a_message: NOTIFICATION_MESSAGE)
+	record (a_message: NOTIFICATION_MESSAGE)
 		do
-			message_archive.put (a_message.to_archive)
+			messages.put (a_message) --.to_archive)
 		end
 
-	message_archive: ES_NOTIFICATION_ARCHIVE
+	messages: ES_NOTIFICATION_STACK
 
 feature {NONE} -- Implementation
 

@@ -105,6 +105,7 @@ feature {NONE} -- Initialization
 			vp: EV_VIEWPORT
 			f: EV_FRAME
 			cel: EV_CELL
+
 			l_icon_size: INTEGER
 		do
 			l_icon_size := {EV_MONITOR_DPI_DETECTOR_IMP}.scaled_size (16)
@@ -120,7 +121,7 @@ feature {NONE} -- Initialization
 			create debugger_cell
 			create debugger_icon.make_with_size (l_icon_size, l_icon_size)
 			create edition_icon.make_with_size (l_icon_size, l_icon_size)
-			notifications_icon := pixmaps.icon_pixmaps.general_information_icon
+			create notifications_icon.make_with_size (l_icon_size, l_icon_size)
 
 				-- Set widget properties.
 			project_label.align_text_center
@@ -197,11 +198,6 @@ feature {NONE} -- Initialization
 				f.extend (cel)
 				widget.extend (f)
 				widget.disable_item_expand (f)
-				notifications_icon.pointer_double_press_actions.extend (agent (i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER)
-						do
-							on_notification_messages_selected
-						end
-					)
 			end
 
 				-- Initialize timers.
@@ -395,8 +391,10 @@ feature {NONE} -- Implementation: widgets
 	debugger_cell: EV_CELL
 			-- Cell that contains the debugger_icon.
 
+feature {ES_NOTIFICATION_MANAGER} -- Implementation: widgets			
+
 	notifications_icon: EV_PIXMAP
-			-- Pixmap that represents the current notifications status.	
+			-- Pixmap that represents the notification messages.	
 
 feature {NONE} -- Implementation: event handling
 
@@ -556,13 +554,6 @@ feature {NONE} -- Implementation: event handling
 
 	compile_stop_agent: PROCEDURE [BOOLEAN]
 			-- Agent called when the project's compilation is over.
-
-	on_notification_messages_selected
-		do
-			if attached notification_manager as m then
-				m.show_notification_messages
-			end
-		end
 
 feature {NONE} -- Implementation
 

@@ -188,7 +188,7 @@ feature {NONE} -- Implementation
 					do
 						if a_rel /= Void then
 							if attached notification_s.service as s_notif then
-								create m.make ({STRING_32} "Update is available: " + a_rel.filename)
+								create m.make ({STRING_32} "Update is available: " + a_rel.filename, "version_check")
 								m.register_action (agent (i_link: READABLE_STRING_GENERAL)
 										local
 											l_launcher: URI_LAUNCHER
@@ -212,7 +212,7 @@ feature {NONE} -- Implementation
 								end(a_rel.link))
 						else
 							if attached notification_s.service as s_notif then
-								s_notif.notify (create {NOTIFICATION_MESSAGE}.make ("The latest version is already installed."))
+								s_notif.notify (create {NOTIFICATION_MESSAGE}.make ("The latest version is already installed.", "version_check"))
 							end
 							i_lnk.set_text ("Latest %"" + preferences.misc_data.update_channel + "%" version is installed")
 						end

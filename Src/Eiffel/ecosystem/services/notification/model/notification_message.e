@@ -15,14 +15,17 @@ create {NOTIFICATION_MESSAGE}
 
 feature {NONE} -- Creation
 
-	make (txt: READABLE_STRING_GENERAL)
+	make (txt: READABLE_STRING_GENERAL; a_category: detachable READABLE_STRING_GENERAL)
 		do
-			make_with_date (txt, create {DATE_TIME}.make_now)
+			make_with_date (txt, a_category, create {DATE_TIME}.make_now)
 		end
 
-	make_with_date (txt: READABLE_STRING_GENERAL; dt: like date)
+	make_with_date (txt: READABLE_STRING_GENERAL; a_category: detachable READABLE_STRING_GENERAL; dt: like date)
 		do
 			create text.make_from_string_general (txt)
+			if a_category /= Void then
+				create category.make_from_string_general (a_category.as_lower)
+			end
 			date := dt
 		end
 
@@ -32,12 +35,29 @@ feature -- Access
 
 	text: IMMUTABLE_STRING_32
 
+	category: detachable IMMUTABLE_STRING_32
+
+	is_acknowledged: BOOLEAN
+			-- Message acknowledged?
+			-- i.e either dismissed by user, or action taken by user.
+			-- if auto dismissed, then not acknowledged.
+
+feature -- Element change
+
+	mark_acknowledged
+		do
+			is_acknowledged := True
+		end
+
 feature -- Conversion
 
 	to_archive: NOTIFICATION_MESSAGE
 			-- Copy of Current message for archiving.
 		do
-			create Result.make_with_date (text, date.twin)
+			create Result.make_with_date (text, category, date.twin)
+			if is_acknowledged then
+				Result.mark_acknowledged
+			end
 		end
 
 ;note

@@ -27,6 +27,14 @@ feature -- Execution
 		deferred
 		end
 
+	notify_message (a_text: READABLE_STRING_GENERAL; a_category: detachable READABLE_STRING_GENERAL)
+		local
+			msg: NOTIFICATION_MESSAGE
+		do
+			create msg.make (a_text, a_category)
+			notify (msg)
+		end
+
 feature -- Observer
 
 	register_observer (obs: NOTIFICATION_OBSERVER)

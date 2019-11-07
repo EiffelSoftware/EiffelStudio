@@ -19,9 +19,9 @@ create
 
 feature {NONE} -- Creation
 
-	make (txt: READABLE_STRING_GENERAL)
+	make (txt: READABLE_STRING_GENERAL; a_category: detachable READABLE_STRING_GENERAL)
 		do
-			Precursor (txt)
+			Precursor (txt, a_category)
 			create actions.make (1)
 		end
 
@@ -50,7 +50,7 @@ feature -- Conversion
 				s.append_string_general (ic.key)
 				s.append_character (']')
 			end
-			create Result.make (s)
+			create Result.make (s, category)
 		end
 
 invariant

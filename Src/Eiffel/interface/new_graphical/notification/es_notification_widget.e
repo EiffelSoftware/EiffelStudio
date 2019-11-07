@@ -27,17 +27,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_message: like message; a_manager: like manager)
+	make (a_message: like message)
 		do
 			default_create
 			message := a_message
-			manager := a_manager
 			build_interface
 		end
 
 feature -- Access
-
-	manager: ES_NOTIFICATION_MANAGER
 
 	message: NOTIFICATION_MESSAGE
 
@@ -103,14 +100,16 @@ feature -- Element change
 				end
 			end
 
-			lab.pointer_double_press_actions.extend (agent (i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER)
-							do
-								terminate
-							end(?,?,?,?,?,?,?,?)
-						)
+			lab.pointer_double_press_actions.extend (agent terminate_on_double_press_action)
+			l_main.pointer_double_press_actions.extend (agent terminate_on_double_press_action)
 		end
 
 feature -- Actions
+
+	terminate_on_double_press_action (i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER)
+		do
+			terminate
+		end
 
 	terminate
 		do

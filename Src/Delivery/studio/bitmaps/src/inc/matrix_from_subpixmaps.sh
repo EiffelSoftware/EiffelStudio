@@ -22,8 +22,8 @@ if [ -z "$target" ]
 then
 	target=$1.png
 fi
-w=$( basename -- $target | cut -d'x' -f 1)
-h=$( basename -- $target | cut -d'x' -f 2 | cut -d'.' -f1 | cut -d'_' -f 1)
+w=$( basename -- $target | cut -d'x' -f 1 | cut -d'_' -f 2)
+h=$( basename -- $target | cut -d'_' -f 2 | cut -d'x' -f 2 | cut -d'.' -f1 )
 
 wsep=1
 hsep=1

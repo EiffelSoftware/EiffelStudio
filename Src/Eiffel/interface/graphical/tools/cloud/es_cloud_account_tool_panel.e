@@ -173,7 +173,7 @@ feature {NONE} -- Action handlers
 							append_bold_text_to ("Cloud: ", txt)
 							append_text_to (cld.server_url, txt)
 							append_text_to ("%N", txt)
-							if attached acc.installation as l_installation then
+							if attached cld.installation as l_installation then
 								append_bold_text_to ("Installation: ", txt)
 								append_text_to (l_installation.id, txt)
 								if attached l_installation.creation_date as dt then

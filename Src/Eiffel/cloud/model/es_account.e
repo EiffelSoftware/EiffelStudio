@@ -27,8 +27,6 @@ feature -- Access
 
 	plan: detachable ES_ACCOUNT_PLAN
 
-	installation: detachable ES_ACCOUNT_INSTALLATION
-
 feature -- Status report
 
 	is_expired: BOOLEAN
@@ -55,11 +53,6 @@ feature -- Element change
 	set_plan (a_plan: like plan)
 		do
 			plan := a_plan
-		end
-
-	set_installation (a_inst: like installation)
-		do
-			installation := a_inst
 		end
 
 feature -- Comparison

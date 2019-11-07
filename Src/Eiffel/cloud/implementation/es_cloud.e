@@ -88,11 +88,7 @@ feature {NONE} -- Initialization
 			l_app_name: STRING
 		do
 			create inst.make (eiffel_layout)
-			if is_eiffel_layout_defined and then eiffel_layout.is_workbench then
-				l_app_name := env.product_name + "_workbench"
-			else
-				l_app_name := env.product_name
-			end
+			l_app_name := env.product_name
 			s := inst.application_item ("installation_id", l_app_name, env.version_name)
 			if s /= Void and then s.has_substring (env.version_name) and then s.is_valid_as_string_8 then
 				create installation.make_with_id (s.to_string_8)
@@ -465,12 +461,12 @@ feature -- Updating
 				a_account.set_plan (acc.plan)
 				if attached web_api.installation (tok.token, installation.id) as inst then
 						-- Ok good.
-					a_account.set_installation (inst)
+					installation := inst
 				elseif attached	web_api.register_installation (tok.token, installation) as inst then
-					a_account.set_installation (inst)
+					installation := inst
 				else
 						-- Error!
-					a_account.set_installation (Void)
+						-- Keep the same
 				end
 				store
 
@@ -482,7 +478,7 @@ feature -- Updating
 
 	update_session (a_session: ES_ACCOUNT_SESSION)
 		do
-			if attached web_api.session (a_session.account, a_session.id) as sess then
+			if attached web_api.session (a_session.account, installation, a_session.id) as sess then
 				a_session.set_is_paused (sess.is_paused)
 			elseif not web_api.has_error then
 				end_session (a_session.account, a_session)

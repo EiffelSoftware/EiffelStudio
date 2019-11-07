@@ -525,7 +525,7 @@ feature -- Installation
 			end
 		end
 
-	session (acc: ES_ACCOUNT; a_session_id: READABLE_STRING_GENERAL): detachable ES_ACCOUNT_SESSION
+	session (acc: ES_ACCOUNT; a_installation: ES_ACCOUNT_INSTALLATION; a_session_id: READABLE_STRING_GENERAL): detachable ES_ACCOUNT_SESSION
 		local
 			l_installation_href, l_session_href: READABLE_STRING_8
 			ctx: HTTP_CLIENT_REQUEST_CONTEXT
@@ -533,14 +533,14 @@ feature -- Installation
 		do
 			reset_api_call
 				-- Update endpoints ...
-			if attached acc.installation as inst then
-				ping_installation (acc.access_token.token, inst.id, a_session_id, Void, Void)
+			if a_installation /= Void then
+				ping_installation (acc.access_token.token, a_installation.id, a_session_id, Void, Void)
 			end
 			reset_api_call
 
 			l_session_href := endpoint_for_token (acc.access_token.token, {STRING_32} "_links|es:session|href;session=" + a_session_id.as_string_32)
 			if l_session_href = Void then
-				l_installation_href := endpoint_for_token (acc.access_token.token, {STRING_32} "_links|es:installation|href;installation=" + acc.installation.id.as_string_32)
+				l_installation_href := endpoint_for_token (acc.access_token.token, {STRING_32} "_links|es:installation|href;installation=" + a_installation.id.as_string_32)
 				if l_installation_href /= Void then
 					l_session_href := l_installation_href + "/session/" + a_session_id
 				end

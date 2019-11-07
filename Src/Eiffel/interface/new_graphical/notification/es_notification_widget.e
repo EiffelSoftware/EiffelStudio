@@ -22,6 +22,12 @@ inherit
 			copy
 		end
 
+	EB_CONSTANTS
+		undefine
+			default_create,
+			copy
+		end
+
 create
 	make
 
@@ -48,6 +54,9 @@ feature -- Element change
 			l_main: EV_BOX
 			fr, l_action_frame: EV_VERTICAL_BOX
 			l_scaler: EVS_DPI_SCALER
+			l_in: EV_VERTICAL_BOX
+			l_cross: EV_PIXMAP
+			hb: EV_HORIZONTAL_BOX
 		do
 			create l_scaler.make
 			set_minimum_width (l_scaler.scaled_size (200))
@@ -55,28 +64,42 @@ feature -- Element change
 			create lab.make_with_text (message.text)
 			lab.set_is_text_wrapped (True)
 
-			create fr
-			extend (fr)
-			fr.set_background_color (colors.stock_colors.blue)
-			fr.set_padding_width (l_scaler.scaled_size (3))
-			fr.set_border_width (l_scaler.scaled_size (3))
-
 			if lab.font.string_width (lab.text) > minimum_width then
 				create {EV_VERTICAL_BOX} l_main
 			else
 				create {EV_HORIZONTAL_BOX} l_main
 			end
-			l_main.set_border_width (l_scaler.scaled_size (10))
-			fr.extend (l_main)
+			l_main.set_border_width (l_scaler.scaled_size (5))
 
 			create l_action_box
 			l_action_box.set_padding_width (l_scaler.scaled_size (1))
 			l_main.extend (lab)
 			l_main.extend (l_action_box)
-			l_main.set_background_color (colors.stock_colors.white)
-			l_main.set_foreground_color (colors.stock_colors.blue)
-			l_main.propagate_background_color
-			l_main.propagate_foreground_color
+
+			create fr
+			extend (fr)
+			fr.set_background_color (colors.stock_colors.blue)
+			fr.set_border_width (l_scaler.scaled_size (3))
+			fr.set_padding_width (l_scaler.scaled_size (3))
+
+			l_cross := pixmaps.mini_pixmaps.toolbar_close_icon.twin
+			l_cross.set_minimum_size (l_cross.width, l_cross.height)
+
+			create l_in
+			fr.extend (l_in)
+			create hb
+			l_in.extend (hb)
+			l_in.disable_item_expand (hb)
+			l_in.extend (l_main)
+
+			hb.extend (create {EV_CELL})
+			hb.extend (l_cross)
+			hb.disable_item_expand (l_cross)
+
+			l_in.set_background_color (colors.stock_colors.white)
+			l_in.set_foreground_color (colors.stock_colors.blue)
+			l_in.propagate_background_color
+			l_in.propagate_foreground_color
 
 			if attached {NOTIFICATION_MESSAGE_WITH_ACTIONS} message as mwa then
 				across
@@ -100,15 +123,19 @@ feature -- Element change
 				end
 			end
 
-			lab.pointer_double_press_actions.extend (agent terminate_on_double_press_action)
-			l_main.pointer_double_press_actions.extend (agent terminate_on_double_press_action)
+			lab.pointer_double_press_actions.extend (agent terminate_on_pointer_action)
+			l_main.pointer_double_press_actions.extend (agent terminate_on_pointer_action)
+			l_cross.pointer_button_release_actions.extend (agent terminate_on_pointer_action)
+
 		end
 
 feature -- Actions
 
-	terminate_on_double_press_action (i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER)
+	terminate_on_pointer_action (i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER)
 		do
-			terminate
+			if i_button = {EV_POINTER_CONSTANTS}.left then
+				terminate
+			end
 		end
 
 	terminate

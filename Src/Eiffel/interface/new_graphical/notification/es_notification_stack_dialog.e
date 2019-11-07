@@ -101,7 +101,8 @@ feature -- Action
 			r: INTEGER
 		do
 			g := grid
-			g.clear
+			g.wipe_out
+			g.set_row_count_to (0)
 			g.enable_single_row_selection
 
 			if attached manager.messages as l_messages then
@@ -142,7 +143,6 @@ feature -- Action
 			a_row.set_item (column_time, glab)
 		end
 
---	on_item_selected (a_item: EV_GRID_ITEM)
 	on_row_deselected (a_row: EV_GRID_ROW)
 		do
 			display_cell.wipe_out

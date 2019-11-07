@@ -29,11 +29,14 @@ feature {NONE} -- Initialization
 			status_bar := a_status_bar
 			create notification_windows.make (5)
 			create messages.make (100)
-			activate_notifications_icon (a_status_bar)
+			attach_to_status_bar (a_status_bar)
 		end
 
-	activate_notifications_icon (a_status_bar: EB_DEVELOPMENT_WINDOW_STATUS_BAR)
+feature -- Association
+
+	attach_to_status_bar (a_status_bar: EB_DEVELOPMENT_WINDOW_STATUS_BAR)
 		do
+			is_attachment_to_status_bar_completed := False
 			a_status_bar.notifications_icon.pointer_double_press_actions.extend (agent (i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER)
 					do
 						if i_button = {EV_POINTER_CONSTANTS}.left then
@@ -118,6 +121,23 @@ feature {NONE} -- Initialization
 			update_status_bar
 		end
 
+	ensure_attachment_to_status_bar_is_completed
+		do
+			if
+				not is_attachment_to_status_bar_completed and then
+				attached parent_window (status_bar.widget) as pwin
+			then
+				pwin.move_actions.extend (agent (i_x: INTEGER; i_y: INTEGER; i_width: INTEGER; i_height: INTEGER)
+							do
+								update_notification_positions
+							end
+						)
+				is_attachment_to_status_bar_completed := True
+			end
+		end
+
+	is_attachment_to_status_bar_completed: BOOLEAN
+
 feature -- Access
 
 	status_bar: EB_DEVELOPMENT_WINDOW_STATUS_BAR
@@ -142,12 +162,14 @@ feature -- Settings
 				dt.minute_add (a_delay_in_minutes)
 				notifications_suspended_until := dt
 			end
+			ev_application.add_idle_action_kamikaze (agent update_status_bar)
 		end
 
 	resume_notifications
 		do
 			notifications_suspended_until := Void
 			notifications_suspended := False
+			ev_application.add_idle_action_kamikaze (agent update_status_bar)
 		end
 
 feature -- Actions
@@ -193,6 +215,12 @@ feature {NONE} -- Status bar
 				then
 					l_icon.clear
 					l_icon.draw_pixmap (1, 1, pixmaps.icon_pixmaps.general_notifications_not_empty_icon)
+				elseif
+					notifications_suspended
+					or else	(attached notifications_suspended_until as dt and then (create {DATE_TIME}.make_now) <= dt)
+				 then
+					l_icon.clear
+					l_icon.draw_pixmap (1, 1, pixmaps.icon_pixmaps.general_notifications_suspended_icon)
 				else
 					l_icon.clear
 					l_icon.draw_pixmap (1, 1, pixmaps.icon_pixmaps.general_notifications_icon)
@@ -206,6 +234,7 @@ feature {NOTIFICATION_S} -- Event handlers
 		local
 			l_is_suspended: BOOLEAN
 		do
+			ensure_attachment_to_status_bar_is_completed
 			record (m)
 			if notifications_suspended then
 				l_is_suspended := True

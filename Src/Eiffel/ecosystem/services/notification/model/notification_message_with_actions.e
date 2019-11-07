@@ -1,6 +1,9 @@
 note
-	description: "Summary description for {NOTIFICATION_MESSAGE_WITH_ACTION}."
-	author: ""
+	description: "[
+			Message handled by service {NOTIFICATION_S}, with action associated with label.
+			Such action labels, could be represented by a button or a link in the 
+			notification widget.
+		]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -20,6 +23,7 @@ create
 feature {NONE} -- Creation
 
 	make (txt: READABLE_STRING_GENERAL; a_category: detachable READABLE_STRING_GENERAL)
+			-- <Precursor>
 		do
 			Precursor (txt, a_category)
 			create actions.make (1)
@@ -30,7 +34,10 @@ feature -- Access
 	actions: STRING_TABLE [PROCEDURE]
 			-- Action indexed by label.
 
+feature -- Element change			
+
 	register_action (a_action: PROCEDURE; a_label: READABLE_STRING_GENERAL)
+			-- Register action `a_action` with title `a_label`.
 		do
 			actions [a_label] := a_action
 		end
@@ -41,6 +48,7 @@ feature -- Conversion
 		local
 			s: STRING_32
 		do
+			Result := Precursor
 			create s.make_from_string_general (text)
 			across
 				actions as ic
@@ -50,7 +58,7 @@ feature -- Conversion
 				s.append_string_general (ic.key)
 				s.append_character (']')
 			end
-			create Result.make (s, category)
+			Result.set_text (s)
 		end
 
 invariant

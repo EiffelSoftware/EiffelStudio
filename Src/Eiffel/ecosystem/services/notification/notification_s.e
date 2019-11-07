@@ -24,10 +24,12 @@ feature -- Status report
 feature -- Execution
 
 	notify (m: NOTIFICATION_MESSAGE)
+			-- Sent message `m` as notification.
 		deferred
 		end
 
 	notify_message (a_text: READABLE_STRING_GENERAL; a_category: READABLE_STRING_GENERAL)
+			-- Sent message text `a_text` with `a_category` as notification.
 		local
 			msg: NOTIFICATION_MESSAGE
 		do
@@ -38,6 +40,7 @@ feature -- Execution
 feature -- Observer
 
 	register_observer (obs: NOTIFICATION_OBSERVER)
+			-- Register `obs` as an observer on notification events.
 		local
 			lst: like observers
 		do
@@ -50,6 +53,7 @@ feature -- Observer
 		end
 
 	unregister_observer (obs: NOTIFICATION_OBSERVER)
+			-- Unregister `obs` from being an observer on notification events.	
 		local
 			lst: like observers
 		do

@@ -1,6 +1,5 @@
 note
-	description: "Summary description for {ES_NOTIFICATION_MESSAGE}."
-	author: ""
+	description: "Message handled by service {NOTIFICATION_S}."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -16,24 +15,29 @@ create {NOTIFICATION_MESSAGE}
 feature {NONE} -- Creation
 
 	make (txt: READABLE_STRING_GENERAL; a_category: READABLE_STRING_GENERAL)
+			-- Create a message for notification, with `txt` and `a_category`.
 		do
 			make_with_date (txt, a_category, create {DATE_TIME}.make_now)
 		end
 
 	make_with_date (txt: READABLE_STRING_GENERAL; a_category: detachable READABLE_STRING_GENERAL; dt: like date)
+			-- Create a message for notification, with `txt` and `a_category`, with creation date `dt`.
 		do
-			create text.make_from_string_general (txt)
-			create category.make_from_string_general (a_category.as_lower)
+			set_text (txt)
+			set_category (a_category)
 			date := dt
 		end
 
 feature -- Access
 
 	date: DATE_TIME
+			-- Notification date, when it was created.
 
 	text: IMMUTABLE_STRING_32
+			-- Message text.
 
 	category: IMMUTABLE_STRING_32
+			-- Mandatory category to allow filtering.
 
 	is_acknowledged: BOOLEAN
 			-- Message acknowledged?
@@ -42,7 +46,20 @@ feature -- Access
 
 feature -- Element change
 
+	set_text (txt: READABLE_STRING_GENERAL)
+			-- Set message `text` to `txt`.
+		do
+			create text.make_from_string_general (txt)
+		end
+
+	set_category (a_category: READABLE_STRING_GENERAL)
+			-- Set message `category` to `a_category.as_lower`.
+		do
+			create category.make_from_string_general (a_category.as_lower)
+		end
+
 	mark_acknowledged
+			-- Mark message as acknowledged / read.
 		do
 			is_acknowledged := True
 		end

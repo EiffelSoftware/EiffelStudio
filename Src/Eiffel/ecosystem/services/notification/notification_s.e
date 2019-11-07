@@ -27,7 +27,7 @@ feature -- Execution
 		deferred
 		end
 
-	notify_message (a_text: READABLE_STRING_GENERAL; a_category: detachable READABLE_STRING_GENERAL)
+	notify_message (a_text: READABLE_STRING_GENERAL; a_category: READABLE_STRING_GENERAL)
 		local
 			msg: NOTIFICATION_MESSAGE
 		do

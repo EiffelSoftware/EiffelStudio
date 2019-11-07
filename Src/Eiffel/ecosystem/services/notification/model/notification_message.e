@@ -15,7 +15,7 @@ create {NOTIFICATION_MESSAGE}
 
 feature {NONE} -- Creation
 
-	make (txt: READABLE_STRING_GENERAL; a_category: detachable READABLE_STRING_GENERAL)
+	make (txt: READABLE_STRING_GENERAL; a_category: READABLE_STRING_GENERAL)
 		do
 			make_with_date (txt, a_category, create {DATE_TIME}.make_now)
 		end
@@ -23,9 +23,7 @@ feature {NONE} -- Creation
 	make_with_date (txt: READABLE_STRING_GENERAL; a_category: detachable READABLE_STRING_GENERAL; dt: like date)
 		do
 			create text.make_from_string_general (txt)
-			if a_category /= Void then
-				create category.make_from_string_general (a_category.as_lower)
-			end
+			create category.make_from_string_general (a_category.as_lower)
 			date := dt
 		end
 
@@ -35,7 +33,7 @@ feature -- Access
 
 	text: IMMUTABLE_STRING_32
 
-	category: detachable IMMUTABLE_STRING_32
+	category: IMMUTABLE_STRING_32
 
 	is_acknowledged: BOOLEAN
 			-- Message acknowledged?

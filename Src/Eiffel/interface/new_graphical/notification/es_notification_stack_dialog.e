@@ -135,11 +135,7 @@ feature -- Action
 				glab.set_font (fonts.highlighted_label_font)
 			end
 
-			if attached a_message.category as cat then
-				create glab.make_with_text (cat)
-			else
-				create glab
-			end
+			create glab.make_with_text (a_message.category)
 			a_row.set_item (column_category, glab)
 
 			create glab.make_with_text (a_message.date.out)

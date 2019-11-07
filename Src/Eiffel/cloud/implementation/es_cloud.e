@@ -36,6 +36,9 @@ feature {NONE} -- Creation
 				version := eiffel_layout.version_name
 				get_local_installation (eiffel_layout)
 				accounts_location := eiffel_layout.hidden_files_path.extended ("accounts")
+				if eiffel_layout.is_workbench then
+					accounts_location := accounts_location.extended ("workbench")
+				end
 			else
 				version := "unknown"
 				create installation.make_with_id ("")
@@ -82,9 +85,15 @@ feature {NONE} -- Initialization
 			inst: ES_INSTALLATION_ENVIRONMENT
 			s: detachable READABLE_STRING_32
 			l_id: STRING_32
+			l_app_name: STRING
 		do
 			create inst.make (eiffel_layout)
-			s := inst.application_item ("installation_id", env.product_name, env.version_name)
+			if is_eiffel_layout_defined and then eiffel_layout.is_workbench then
+				l_app_name := env.product_name + "_workbench"
+			else
+				l_app_name := env.product_name
+			end
+			s := inst.application_item ("installation_id", l_app_name, env.version_name)
 			if s /= Void and then s.has_substring (env.version_name) and then s.is_valid_as_string_8 then
 				create installation.make_with_id (s.to_string_8)
 			else
@@ -101,8 +110,8 @@ feature {NONE} -- Initialization
 				l_id.append_character ('-')
 				l_id.append_character ('-')
 				l_id.append ((create {UUID_GENERATOR}).generate_uuid.out)
-				create installation.make_with_id (env.product_name + "_" + env.version_name + "--" + env.eiffel_platform + "--" + (create {UUID_GENERATOR}).generate_uuid.out)
-				inst.set_application_item ("installation_id", env.product_name, env.version_name, installation.id)
+				create installation.make_with_id (l_id)
+				inst.set_application_item ("installation_id", l_app_name, env.version_name, installation.id)
 			end
 			installation.set_platform (env.eiffel_platform)
 		end
@@ -545,6 +554,15 @@ feature -- Account Registration
 
 feature -- Storage
 
+	storage_filename: detachable PATH
+		do
+			Result := accounts_location
+			if Result /= Void then
+				Result := Result.extended (installation.id)
+				Result := Result.appended ("-local.dat")
+			end
+		end
+
 	load
 		local
 			retried: BOOLEAN
@@ -554,9 +572,8 @@ feature -- Storage
 			l_found_data: BOOLEAN
 		do
 			if not retried then
-				p := accounts_location
+				p := storage_filename
 				if p /= Void then
-					p := p.extended (installation.id).appended ("-local.dat")
 					create f.make_with_path (p)
 					if f.exists and then f.is_access_readable then
 						f.open_read
@@ -598,9 +615,8 @@ feature -- Storage
 			f: RAW_FILE
 		do
 			-- FIXME: use json or xml storage!
-			p := accounts_location
+			p := storage_filename
 			if p /= Void then
-				p := p.extended (installation.id).appended ("-local.dat")
 				create f.make_with_path (p)
 				if not f.exists or else f.is_access_writable then
 					if ensure_parent_exists (p) then

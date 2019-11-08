@@ -92,26 +92,8 @@ feature -- Association
 
 							m.extend (create {EV_MENU_SEPARATOR})
 
-							create mi.make_with_text ("Test")
-							mi.select_actions.extend (agent
-								local
-									msg: NOTIFICATION_MESSAGE_WITH_ACTIONS
-								do
-									if attached notification_s.service as l_service then
-										create msg.make ("Testing notification", "debugging")
-										msg.register_action (agent l_service.notify_message ("Testing ...", "newtest"), "ONE")
-										msg.register_action (agent (s: NOTIFICATION_S)
-											do
-												across
-													1 |..| 5 is i
-												loop
-													s.notify_message ("Testing " + i.out, "newtest")
-												end
-											end(l_service), "FIVE")
-
-										l_service.notify (msg)
-									end
-								end)
+							create mi.make_with_text ("Clear all messages")
+							mi.select_actions.extend (agent clear_messages)
 							m.extend (mi)
 
 							m.show

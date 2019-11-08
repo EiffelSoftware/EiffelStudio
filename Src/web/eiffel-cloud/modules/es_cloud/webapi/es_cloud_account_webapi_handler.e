@@ -40,8 +40,8 @@ feature -- Execution
 						l_user.same_as (u) or else api.has_permissions (<<"view es account", "manage es acounts">>)
 					then
 						r := new_response (req, res)
-						r.add_integer_64_field ("uid", u.id)
-						r.add_string_field ("name", api.real_user_display_name (u))
+						r.add_integer_64_field ("uid", l_user.id)
+						r.add_string_field ("name", api.real_user_display_name (l_user))
 						if attached es_cloud_api.user_subscription (l_user) as sub then
 							create tb.make (3)
 							tb.force (sub.plan.id, "id")
@@ -57,6 +57,7 @@ feature -- Execution
 							r.add_string_field ("es:plan", "none")
 							-- Add link to subscription ...
 						end
+						add_cloud_user_links_to (l_user, r)
 						add_user_links_to (l_user, r)
 						r.add_link ("es:installations", Void, req.percent_encoded_path_info + "/installations")
 						r.add_self (req.percent_encoded_path_info)

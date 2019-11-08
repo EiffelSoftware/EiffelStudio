@@ -57,6 +57,11 @@ feature -- Helper
 			Result := api.user_api.user_by_id_or_name (a_uid)
 		end
 
+	add_cloud_user_links_to (a_version: READABLE_STRING_GENERAL; u: ES_CLOUD_USER; rep: HM_WEBAPI_RESPONSE)
+		do
+			rep.add_link ("cloud_account", "user/" + u.id.out, cloud_user_link (a_version, u))
+		end
+
 	cloud_link (a_version: READABLE_STRING_GENERAL): STRING
 		do
 			Result := api.webapi_path ("/cloud/" + url_encoded (a_version) + "/")

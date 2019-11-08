@@ -399,11 +399,6 @@ feature -- Execution
 
 feature {NONE} -- Implementation
 
-	add_cloud_user_links_to (a_version: READABLE_STRING_GENERAL; u: ES_CLOUD_USER; rep: HM_WEBAPI_RESPONSE)
-		do
-			rep.add_link ("cloud_account", "user/" + u.id.out, cloud_user_link (a_version, u))
-		end
-
 	remove_last_segment (a_location: STRING_8; a_keep_ending_slash: BOOLEAN)
 		local
 			i: INTEGER

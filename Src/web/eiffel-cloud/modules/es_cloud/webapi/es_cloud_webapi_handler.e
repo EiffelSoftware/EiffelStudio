@@ -57,6 +57,36 @@ feature -- Helper
 			Result := api.user_api.user_by_id_or_name (a_uid)
 		end
 
+	cloud_link (a_version: READABLE_STRING_GENERAL): STRING
+		do
+			Result := api.webapi_path ("/cloud/" + url_encoded (a_version) + "/")
+		end
+
+	cloud_user_link (a_version: READABLE_STRING_GENERAL; a_user: ES_CLOUD_USER): STRING
+		do
+			Result := cloud_link (a_version) + "account/" + a_user.id.out
+		end
+
+	cloud_user_installations_link (a_version: READABLE_STRING_GENERAL; a_user: ES_CLOUD_USER): STRING
+		do
+			Result := cloud_user_link (a_version, a_user) + "/installations"
+		end
+
+	cloud_user_installation_link (a_version: READABLE_STRING_GENERAL; a_user: ES_CLOUD_USER; iid: READABLE_STRING_GENERAL): STRING
+		do
+			Result := cloud_user_installations_link (a_version, a_user) + "/" + url_encoded (iid)
+		end
+
+	cloud_user_installation_sessions_link (a_version: READABLE_STRING_GENERAL; a_user: ES_CLOUD_USER; iid: READABLE_STRING_GENERAL): STRING
+		do
+			Result := cloud_user_installation_link (a_version, a_user, iid) + "/session/"
+		end
+
+	cloud_user_installation_session_link (a_version: READABLE_STRING_GENERAL; a_user: ES_CLOUD_USER; iid, sid: READABLE_STRING_GENERAL): STRING
+		do
+			Result := cloud_user_installation_sessions_link (a_version, a_user, iid) + url_encoded (sid)
+		end
+
 note
 	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

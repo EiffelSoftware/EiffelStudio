@@ -28,15 +28,15 @@ feature -- Execution
 				if req.is_get_request_method then
 					if attached {WSF_STRING} req.path_parameter ("installation_id") as iid then
 						if attached {WSF_STRING} req.path_parameter ("session_id") as sid then
-							handle_installation_session (l_user, iid.value, sid.value, req, res)
+							handle_installation_session (a_version, l_user, iid.value, sid.value, req, res)
 						else
-							handle_installation (l_user, iid.value, req, res)
+							handle_installation (a_version, l_user, iid.value, req, res)
 						end
 					else
-						list_installations (l_user, req, res)
+						list_installations (a_version, l_user, req, res)
 					end
 				elseif req.is_post_request_method then
-					handle_user_post (l_user, req, res)
+					handle_user_post (a_version, l_user, req, res)
 				else
 					new_bad_request_error_response (Void, req, res).execute
 				end
@@ -45,17 +45,20 @@ feature -- Execution
 			end
 		end
 
-	handle_installation (a_user: ES_CLOUD_USER; iid: READABLE_STRING_GENERAL; req: WSF_REQUEST; res: WSF_RESPONSE)
+	handle_installation (a_version: READABLE_STRING_GENERAL; a_user: ES_CLOUD_USER; iid: READABLE_STRING_GENERAL; req: WSF_REQUEST; res: WSF_RESPONSE)
 		require
 			req.is_get_request_method
 		local
 			r: like new_response
-			tb: STRING_TABLE [detachable ANY]
+			tb,tb_sessions: STRING_TABLE [detachable ANY]
 			inst: ES_CLOUD_INSTALLATION
+			sess: ES_CLOUD_SESSION
+			l_include_sessions: BOOLEAN
 		do
 			if a_user.same_as (api.user) or else api.has_permission ("manage es acounts") then
 				r := new_response (req, res)
 				if attached es_cloud_api.user_installations (a_user) as lst then
+					l_include_sessions := req.percent_encoded_path_info.ends_with_general ("/session/")
 					across
 						lst as ic
 					until
@@ -70,9 +73,12 @@ feature -- Execution
 						r := new_response (req, res)
 						create tb.make (2)
 						tb.force (inst.installation_id, "id")
+						if attached inst.name as l_name then
+							tb.force (l_name, "name")
+						end
 						tb.force (inst.info, "info")
 						if attached inst.creation_date as dt then
-							tb.force (dt, "creation_date")
+							tb.force (date_time_to_string (dt), "creation_date")
 						end
 						if inst.is_active then
 							tb.force ("yes", "is_active")
@@ -80,6 +86,43 @@ feature -- Execution
 							tb.force ("no", "is_active")
 						end
 						r.add_table_iterator_field ("es:installation", tb)
+						if l_include_sessions then
+							if attached es_cloud_api.user_sessions (a_user, inst.installation_id, False) as l_sessions then
+								create tb_sessions.make (l_sessions.count)
+								across
+									l_sessions as ic
+								loop
+									sess := ic.item
+									create tb.make (5)
+									tb.force (sess.id, "id")
+									if attached sess.title as l_title then
+										tb.force (l_title, "title")
+									end
+									inspect
+										sess.state
+									when {ES_CLOUD_SESSION}.state_paused_id then
+										tb.force ("paused", "state")
+									when {ES_CLOUD_SESSION}.state_ended_id then
+										tb.force ("ended", "state")
+									else -- state_normal_id
+										tb.force ("normal", "state")
+									end
+									if sess.is_expired (es_cloud_api) then
+										tb.force (True, "is_expired")
+									end
+									tb.force (date_time_to_string (sess.first_date), "first_date")
+									tb.force (date_time_to_string (sess.last_date), "last_date")
+									tb_sessions.force (tb, sess.id)
+									r.add_link (url_encoded (sess.id), detachable_html_encoded (sess.title), r.api.absolute_url (r.location + url_encoded (sess.id), Void))
+								end
+							else
+								create tb_sessions.make (0)
+							end
+							r.add_table_iterator_field ("es:sessions", tb_sessions)
+						else
+							r.add_link ("sessions", "sessions", r.api.absolute_url (r.location + "/session/", Void))
+						end
+						r.add_link ("installation", "installation", cloud_user_installation_link (a_version, a_user, iid))
 						r.add_self (r.location)
 					else
 						r := new_error_response ("Installation not found", req, res)
@@ -88,6 +131,7 @@ feature -- Execution
 				else
 					r := new_error_response ("No installation found", req, res)
 				end
+				add_cloud_user_links_to (a_version, a_user, r)
 				add_user_links_to (a_user, r)
 			else
 				r := new_access_denied_error_response (Void, req, res)
@@ -95,26 +139,34 @@ feature -- Execution
 			r.execute
 		end
 
-	list_installations (a_user: ES_CLOUD_USER; req: WSF_REQUEST; res: WSF_RESPONSE)
+	list_installations (a_version: READABLE_STRING_GENERAL; a_user: ES_CLOUD_USER; req: WSF_REQUEST; res: WSF_RESPONSE)
 		require
 			req.is_get_request_method
 		local
 			r: like new_response
 			tb: STRING_TABLE [detachable ANY]
+			tb_installations: STRING_TABLE [detachable ANY]
 		do
 			if a_user.same_as (api.user) or else api.has_permission ("manage es acounts") then
 				r := new_response (req, res)
 				if attached es_cloud_api.user_installations (a_user) as lst then
-					create tb.make (lst.count)
+					create tb_installations.make (lst.count)
 					across
 						lst as ic
 					loop
 						if attached ic.item as inst then
-							tb.force (ic.item.info, ic.item.installation_id)
+							create tb.make (1)
+							tb.force (inst.info, "info")
+							if attached inst.name as l_name then
+								tb.force (l_name, "name")
+							end
+							tb_installations.force (tb, inst.installation_id)
+							r.add_link (url_encoded (inst.installation_id), detachable_html_encoded (inst.name), r.api.absolute_url (r.location + "/" + url_encoded (inst.installation_id), Void))
 						end
 					end
-					r.add_table_iterator_field ("es:installations", tb)
+					r.add_table_iterator_field ("es:installations", tb_installations)
 				end
+				add_cloud_user_links_to (a_version, a_user, r)
 				add_user_links_to (a_user, r)
 			else
 				r := new_access_denied_error_response (Void, req, res)
@@ -122,13 +174,14 @@ feature -- Execution
 			r.execute
 		end
 
-	handle_installation_session (a_user: ES_CLOUD_USER; iid, sid: READABLE_STRING_GENERAL; req: WSF_REQUEST; res: WSF_RESPONSE)
+	handle_installation_session (a_version: READABLE_STRING_GENERAL; a_user: ES_CLOUD_USER; iid, sid: READABLE_STRING_GENERAL; req: WSF_REQUEST; res: WSF_RESPONSE)
 		require
 			req.is_get_request_method
 		local
 			r: like new_response
 			tb: STRING_TABLE [detachable ANY]
 			inst: ES_CLOUD_INSTALLATION
+			l_inst_location: STRING
 		do
 			if a_user.same_as (api.user) or else api.has_permission ("manage es acounts") then
 				r := new_response (req, res)
@@ -148,21 +201,29 @@ feature -- Execution
 					else
 						tb.force (sess.state.out, "state")
 					end
+					if sess.is_expired (es_cloud_api) then
+						tb.force (True, "is_expired")
+					end
 					if attached sess.first_date as dt then
-						tb.force (dt, "first_date")
+						tb.force (date_time_to_string (dt), "first_date")
 					end
 					if attached sess.last_date as dt then
-						tb.force (dt, "last_date")
+						tb.force (date_time_to_string (dt), "last_date")
 					end
 					if attached sess.title as l_title then
 						tb.force (l_title, "title")
 					end
 					r.add_table_iterator_field ("es:session", tb)
 					r.add_self (r.location)
-					r.add_link ("es:installation", "installation", (api.absolute_url (r.location, Void) + "/" + api.url_encoded (sess.installation_id)))
+					l_inst_location := r.location.twin
+					remove_last_segment (l_inst_location, False)
+					remove_last_segment (l_inst_location, False)
+					r.add_link ("es:installation", "installation", (api.absolute_url (l_inst_location, Void)))
 				else
 					r := new_error_response ("Session not found", req, res)
 				end
+				r.add_link ("installation", "installation", cloud_user_installation_link (a_version, a_user, iid))
+				add_cloud_user_links_to (a_version, a_user, r)
 				add_user_links_to (a_user, r)
 			else
 				r := new_access_denied_error_response (Void, req, res)
@@ -170,7 +231,7 @@ feature -- Execution
 			r.execute
 		end
 
-	handle_user_post (a_user: ES_CLOUD_USER; req: WSF_REQUEST; res: WSF_RESPONSE)
+	handle_user_post (a_version: READABLE_STRING_GENERAL; a_user: ES_CLOUD_USER; req: WSF_REQUEST; res: WSF_RESPONSE)
 		require
 			req.is_post_request_method
 		local
@@ -185,6 +246,7 @@ feature -- Execution
 			l_user_plan: detachable ES_CLOUD_PLAN_SUBSCRIPTION
 			err: BOOLEAN
 			n, l_sess_limit, l_heartbeat: NATURAL
+			l_inst_location: STRING
 		do
 			if a_user.same_as (api.user) or else api.has_permission ("manage es accounts") then
 
@@ -294,7 +356,14 @@ feature -- Execution
 					r := new_response (req, res)
 					if l_install_id /= Void then
 						--FIXME
-						r.add_link ("es:installation", "installation", (api.absolute_url (r.location, Void) + "/" + api.url_encoded (l_install_id)))
+						if l_session_id /= Void then
+							l_inst_location := r.location.twin
+							remove_last_segment (l_inst_location, False)
+							remove_last_segment (l_inst_location, False)
+							r.add_link ("es:installation", "installation", (api.absolute_url (l_inst_location, Void)))
+						else
+							r.add_link ("es:installation", "installation", (api.absolute_url (r.location, Void) + "/" + api.url_encoded (l_install_id)))
+						end
 					end
 					if l_installation /= Void and then l_session /= Void then
 						inspect
@@ -308,6 +377,9 @@ feature -- Execution
 						else
 							r.add_string_field ("es:session_state", "state#" + l_session.state.out)
 						end
+						if l_session.is_expired (es_cloud_api) then
+							r.add_boolean_field ("es:session_expired", True)
+						end
 						if l_heartbeat > 0 then
 							r.add_integer_64_field ("es:session_heartbeat", l_heartbeat)
 						end
@@ -317,11 +389,46 @@ feature -- Execution
 								)
 					end
 				end
+				add_cloud_user_links_to (a_version, a_user, r)
 				add_user_links_to (a_user, r)
 			else
 				r := new_access_denied_error_response (Void, req, res)
 			end
 			r.execute
+		end
+
+feature {NONE} -- Implementation
+
+	add_cloud_user_links_to (a_version: READABLE_STRING_GENERAL; u: ES_CLOUD_USER; rep: HM_WEBAPI_RESPONSE)
+		do
+			rep.add_link ("cloud_account", "user/" + u.id.out, cloud_user_link (a_version, u))
+		end
+
+	remove_last_segment (a_location: STRING_8; a_keep_ending_slash: BOOLEAN)
+		local
+			i: INTEGER
+		do
+			if a_location.ends_with_general ("/") then
+				i := a_location.count - 1
+			else
+				i := a_location.count
+			end
+			i := a_location.last_index_of ('/', i)
+			if i > 0 then
+				if a_keep_ending_slash then
+					a_location.keep_head (i)
+				else
+					a_location.keep_head (i - 1)
+				end
+			end
+		end
+
+	detachable_html_encoded (s: detachable READABLE_STRING_GENERAL): detachable STRING_8
+			-- html encoded version of `s` if set, otherwise Void.
+		do
+			if s /= Void then
+				Result := api.html_encoded (s)
+			end
 		end
 
 note

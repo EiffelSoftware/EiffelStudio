@@ -26,6 +26,7 @@ feature {NONE} -- Router/administration
 		local
 			l_root: ES_CLOUD_ROOT_WEBAPI_HANDLER
 			l_account: ES_CLOUD_ACCOUNT_WEBAPI_HANDLER
+			l_inst_hlr: ES_CLOUD_INSTALLATIONS_WEBAPI_HANDLER
 		do
 			if attached module.es_cloud_api as l_mod_api then
 				create l_root.make (l_mod_api)
@@ -35,9 +36,11 @@ feature {NONE} -- Router/administration
 				create l_account.make (l_mod_api)
 				a_router.handle ("/cloud/{version}/account/", l_account, a_router.methods_get)
 				a_router.handle ("/cloud/{version}/account/{uid}", l_account, a_router.methods_get)
-				a_router.handle ("/cloud/{version}/account/{uid}/installations", create {ES_CLOUD_INSTALLATIONS_WEBAPI_HANDLER}.make (l_mod_api), a_router.methods_get_post)
-				a_router.handle ("/cloud/{version}/account/{uid}/installations/{installation_id}", create {ES_CLOUD_INSTALLATIONS_WEBAPI_HANDLER}.make (l_mod_api), a_router.methods_get_put_delete)
-				a_router.handle ("/cloud/{version}/account/{uid}/installations/{installation_id}/session/{session_id}", create {ES_CLOUD_INSTALLATIONS_WEBAPI_HANDLER}.make (l_mod_api), a_router.methods_get)
+				create l_inst_hlr.make (l_mod_api)
+				a_router.handle ("/cloud/{version}/account/{uid}/installations", l_inst_hlr, a_router.methods_get_post)
+				a_router.handle ("/cloud/{version}/account/{uid}/installations/{installation_id}", l_inst_hlr, a_router.methods_get_put_delete)
+				a_router.handle ("/cloud/{version}/account/{uid}/installations/{installation_id}/session/", l_inst_hlr, a_router.methods_get)
+				a_router.handle ("/cloud/{version}/account/{uid}/installations/{installation_id}/session/{session_id}", l_inst_hlr, a_router.methods_get)
 			end
 		end
 

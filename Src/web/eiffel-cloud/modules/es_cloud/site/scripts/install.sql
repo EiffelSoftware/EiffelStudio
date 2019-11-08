@@ -38,6 +38,7 @@ CREATE TABLE es_plan_org_sub(
 CREATE TABLE es_installations(
   `iid` VARCHAR(255) PRIMARY KEY NOT NULL ,
   `uid`	INTEGER NOT NULL,
+  `name` TEXT,
   `info` TEXT NOT NULL,
   `status` INTEGER NOT NULL,
   `creation` DATETIME NOT NULL

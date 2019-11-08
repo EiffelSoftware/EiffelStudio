@@ -484,14 +484,7 @@ feature -- Access: installations
 			sql_query (sql_select_user_installation, l_params)
 			sql_start
 			if not has_error and not sql_after then
-				iid := sql_read_string_32 (1)
-				if iid /= Void and then not iid.is_whitespace then
-					check same_uid: sql_read_integer_64 (2) = a_user.id end
-					create Result.make (iid, a_user)
-					Result.set_info (sql_read_string_32 (3))
-					Result.set_status (sql_read_integer_32 (4))
-					Result.set_creation_date (sql_read_date_time (5))
-				end
+				Result := fetch_installation (a_user)
 			end
 			sql_finalize_query (sql_select_user_installation)
 		end
@@ -500,7 +493,6 @@ feature -- Access: installations
 		local
 			id: READABLE_STRING_GENERAL
 			uid: INTEGER_64
-			inst: ES_CLOUD_INSTALLATION
 			l_session: ES_CLOUD_SESSION
 			l_params: STRING_TABLE [detachable ANY]
 			u: CMS_PARTIAL_USER
@@ -516,16 +508,7 @@ feature -- Access: installations
 				until
 					sql_after or has_error
 				loop
-					id := sql_read_string_32 (1)
-					uid := sql_read_integer_64 (2)
-					if
-						id /= Void and then uid > 0
-					then
-						create u.make_with_id (uid)
-						create inst.make (id, create {ES_CLOUD_USER}.make (u))
-						inst.set_info (sql_read_string_32 (3))
-						inst.set_status (sql_read_integer_32 (4))
-						inst.set_creation_date (sql_read_date_time (5))
+					if attached fetch_installation (a_user) as inst then
 						Result.force (inst)
 					else
 						check valid_record: False end
@@ -541,7 +524,6 @@ feature -- Access: installations
 			id: READABLE_STRING_GENERAL
 			uid: INTEGER_64
 			u: CMS_PARTIAL_USER
-			inst: ES_CLOUD_INSTALLATION
 			l_session: ES_CLOUD_SESSION
 		do
 			reset_error
@@ -553,16 +535,7 @@ feature -- Access: installations
 				until
 					sql_after or has_error
 				loop
-					id := sql_read_string_32 (1)
-					uid := sql_read_integer_64 (2)
-					if
-						id /= Void and then uid > 0
-					then
-						create u.make_with_id (uid)
-						create inst.make (id, create {ES_CLOUD_USER}.make (u))
-						inst.set_info (sql_read_string_32 (3))
-						inst.set_status (sql_read_integer_32 (4))
-						inst.set_creation_date (sql_read_date_time (5))
+					if attached fetch_installation (Void) as inst then
 						Result.force (inst)
 					else
 						check valid_record: False end
@@ -799,9 +772,10 @@ feature -- Change
 			l_is_new := user_installation (inst.user, inst.installation_id) = Void
 
 			reset_error
-			create l_params.make (9)
+			create l_params.make (10)
 			l_params.force (inst.installation_id, "iid")
 			l_params.force (inst.user.id, "uid")
+			l_params.force (inst.name, "name")
 			l_params.force (inst.info, "info")
 			l_params.force (1, "status")
 			if attached inst.creation_date as dt then
@@ -943,17 +917,45 @@ feature {NONE} -- Fetcher
 			Result.set_notes (sql_read_string_32 (5))
 		end
 
+	fetch_installation (a_user: detachable ES_CLOUD_USER): detachable ES_CLOUD_INSTALLATION
+		local
+			iid: READABLE_STRING_32
+			uid: INTEGER_64
+			l_user: ES_CLOUD_USER
+		do
+			iid := sql_read_string_32 (1)
+			uid := sql_read_integer_64 (2)
+			if
+				iid /= Void and then not iid.is_whitespace and then
+				(a_user /= Void or uid > 0)
+			then
+				if a_user /= Void then
+					l_user := a_user
+					check same_uid: uid = a_user.id end
+				else
+					create l_user.make (create {CMS_PARTIAL_USER}.make_with_id (uid))
+				end
+				create Result.make (iid, l_user)
+				Result.set_name (sql_read_string_32 (3))
+				Result.set_info (sql_read_string_32 (4))
+				Result.set_status (sql_read_integer_32 (5))
+				Result.set_creation_date (sql_read_date_time (6))
+			else
+				check valid_record: False end
+			end
+		end
+
 feature {NONE} -- Queries: installations
 
-	sql_select_user_installation: STRING = "SELECT iid, uid, info, status, creation FROM es_installations WHERE iid=:iid AND uid=:uid;"
+	sql_select_user_installation: STRING = "SELECT iid, uid, name, info, status, creation FROM es_installations WHERE iid=:iid AND uid=:uid;"
 
-	sql_select_user_installations: STRING = "SELECT iid, uid, info, status, creation FROM es_installations WHERE uid=:uid;"
+	sql_select_user_installations: STRING = "SELECT iid, uid, name, info, status, creation FROM es_installations WHERE uid=:uid;"
 
-	sql_select_installations: STRING = "SELECT iid, uid, info, status, creation FROM es_installations;"
+	sql_select_installations: STRING = "SELECT iid, uid, name, info, status, creation FROM es_installations;"
 
-	sql_insert_installation: STRING = "INSERT INTO es_installations (iid, uid, info, status, creation) VALUES (:iid, :uid, :info, :status, :creation);"
+	sql_insert_installation: STRING = "INSERT INTO es_installations (iid, uid, name, info, status, creation) VALUES (:iid, :uid, :name, :info, :status, :creation);"
 
-	sql_update_installation: STRING = "UPDATE es_installations SET info=:info, status=:status WHERE iid=:iid AND uid=:uid;"
+	sql_update_installation: STRING = "UPDATE es_installations SET info=:info, name=:name, status=:status WHERE iid=:iid AND uid=:uid;"
 
 	sql_delete_installation: STRING = "DELETE FROM es_installations WHERE iid=:iid AND uid=:uid;"
 

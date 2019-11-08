@@ -23,6 +23,8 @@ feature -- Access
 
 	installation_id: IMMUTABLE_STRING_32
 
+	name: detachable IMMUTABLE_STRING_32
+
 	user: ES_CLOUD_USER
 
 	info: IMMUTABLE_STRING_32
@@ -52,6 +54,15 @@ feature -- Element change
 				create info.make_empty
 			else
 				create info.make_from_string_general (inf)
+			end
+		end
+
+	set_name (s: detachable READABLE_STRING_GENERAL)
+		do
+			if s = Void then
+				name := Void
+			else
+				create name.make_from_string_general (s)
 			end
 		end
 

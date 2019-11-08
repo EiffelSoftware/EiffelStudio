@@ -9,6 +9,8 @@ class
 inherit
 	EV_SHARED_APPLICATION
 
+	SHARED_LOGGER_SERVICE
+
 create
 	make
 
@@ -91,7 +93,14 @@ feature -- Access
 			sess: ES_ACCOUNT_SESSION
 		do
 			debug ("es_cloud")
-				print ("[" + (create {DATE_TIME}.make_now_utc).out + "] ping done.%N")
+				if attached logger_s.service as logger_service then
+						-- Log error.
+					logger_service.put_message_format_with_severity (
+						"Cloud service pong {1} [{2}]",
+						[installation_id, create {DATE_TIME}.make_now],
+						{ENVIRONMENT_CATEGORIES}.cloud,
+						{PRIORITY_LEVELS}.low)
+				end
 			end
 			if session_heartbeat > 0 then
 				service.on_session_heartbeat_updated (session_heartbeat)
@@ -115,6 +124,16 @@ feature -- Access
 			reset
 			create wt.make (agent ping_installation)
 			ev_application.add_idle_action_kamikaze (agent check_for_completion)
+			debug ("es_cloud")
+				if attached logger_s.service as logger_service then
+						-- Log error.
+					logger_service.put_message_format_with_severity (
+						"Pinging cloud service {1} [{2}]",
+						[installation_id, create {DATE_TIME}.make_now],
+						{ENVIRONMENT_CATEGORIES}.cloud,
+						{PRIORITY_LEVELS}.low)
+				end
+			end
 			wt.launch
 		end
 
@@ -124,9 +143,6 @@ feature -- Access
 			d: ES_CLOUD_PING_DATA
 		do
 			create wapi.make (server_url)
-			debug ("es_cloud")
-				print ("[" + (create {DATE_TIME}.make_now_utc).out + "] Pinging...")
-			end
 			create d
 			wapi.ping_installation (token, installation_id, session_id, opts, d)
 			session_state_changed := d.session_state_changed

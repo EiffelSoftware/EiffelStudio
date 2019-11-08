@@ -34,6 +34,12 @@ feature -- Access
 	static_analysis: NATURAL_8 = 7
 			-- Static analyzer.
 
+	tools: NATURAL_8 = 8
+			-- Cloud related.
+
+	cloud: NATURAL_8 = 9
+			-- Cloud related.
+
 feature -- Query
 
 	is_valid_category (a_cat: NATURAL_8): BOOLEAN
@@ -51,7 +57,9 @@ feature -- Query
 				editor,
 				refactoring,
 				testing,
-				static_analysis
+				static_analysis,
+				tools,
+				cloud
 			then
 				Result := True
 			else
@@ -60,7 +68,7 @@ feature -- Query
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

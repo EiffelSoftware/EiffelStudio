@@ -57,7 +57,7 @@ feature -- Execution
 							r.add_string_field ("es:plan", "none")
 							-- Add link to subscription ...
 						end
-						add_cloud_user_links_to (l_user, r)
+						add_cloud_user_links_to (a_version, l_user, r)
 						add_user_links_to (l_user, r)
 						r.add_link ("es:installations", Void, req.percent_encoded_path_info + "/installations")
 						r.add_self (req.percent_encoded_path_info)

@@ -55,7 +55,7 @@ feature -- Execution
 			sess: ES_CLOUD_SESSION
 			l_include_sessions: BOOLEAN
 		do
-			if a_user.same_as (api.user) or else api.has_permission ("manage es acounts") then
+			if a_user.same_as (api.user) or else api.has_permission ("manage es accounts") then
 				r := new_response (req, res)
 				if attached es_cloud_api.user_installations (a_user) as lst then
 					l_include_sessions := req.percent_encoded_path_info.ends_with_general ("/session/")
@@ -147,7 +147,7 @@ feature -- Execution
 			tb: STRING_TABLE [detachable ANY]
 			tb_installations: STRING_TABLE [detachable ANY]
 		do
-			if a_user.same_as (api.user) or else api.has_permission ("manage es acounts") then
+			if a_user.same_as (api.user) or else api.has_permission ("manage es accounts") then
 				r := new_response (req, res)
 				if attached es_cloud_api.user_installations (a_user) as lst then
 					create tb_installations.make (lst.count)
@@ -183,7 +183,7 @@ feature -- Execution
 			inst: ES_CLOUD_INSTALLATION
 			l_inst_location: STRING
 		do
-			if a_user.same_as (api.user) or else api.has_permission ("manage es acounts") then
+			if a_user.same_as (api.user) or else api.has_permission ("manage es accounts") then
 				r := new_response (req, res)
 				if attached {ES_CLOUD_SESSION} es_cloud_api.user_session (a_user, iid, sid) as sess then
 					r := new_response (req, res)
@@ -395,35 +395,6 @@ feature -- Execution
 				r := new_access_denied_error_response (Void, req, res)
 			end
 			r.execute
-		end
-
-feature {NONE} -- Implementation
-
-	remove_last_segment (a_location: STRING_8; a_keep_ending_slash: BOOLEAN)
-		local
-			i: INTEGER
-		do
-			if a_location.ends_with_general ("/") then
-				i := a_location.count - 1
-			else
-				i := a_location.count
-			end
-			i := a_location.last_index_of ('/', i)
-			if i > 0 then
-				if a_keep_ending_slash then
-					a_location.keep_head (i)
-				else
-					a_location.keep_head (i - 1)
-				end
-			end
-		end
-
-	detachable_html_encoded (s: detachable READABLE_STRING_GENERAL): detachable STRING_8
-			-- html encoded version of `s` if set, otherwise Void.
-		do
-			if s /= Void then
-				Result := api.html_encoded (s)
-			end
 		end
 
 note

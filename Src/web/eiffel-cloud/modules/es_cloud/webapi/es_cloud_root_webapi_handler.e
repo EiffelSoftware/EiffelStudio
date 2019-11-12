@@ -21,18 +21,19 @@ feature -- Execution
 			-- Execute handler for `req' and respond in `res'.
 		local
 			rep: like new_response
-			l_url: READABLE_STRING_8
+			l_user: ES_CLOUD_USER
 		do
 			rep := new_response (req, res)
-			l_url := api.url (rep.location + "account/", Void)
 			if attached api.user as u then
-				l_url := l_url + u.id.out
-				rep.add_link ("es:account", Void, l_url)
-				rep.add_link ("es:installations", Void, l_url + "/installations")
+				create l_user.make (u)
+				add_cloud_user_links_to (a_version, l_user, rep)
+				rep.add_link ("es:account", Void, cloud_user_link (a_version, l_user))
+				rep.add_link ("es:installations", Void, cloud_user_installations_link (a_version, l_user))
 				add_user_links_to (u, rep)
 			else
-				rep.add_link ("es:account", Void, l_url)
+				rep.add_link ("es:account", Void, cloud_link (a_version) + "/account/")
 			end
+			rep.add_link ("es:plans", Void, cloud_plans_link (a_version))
 			rep.add_self (req.request_uri)
 			rep.execute
 		end

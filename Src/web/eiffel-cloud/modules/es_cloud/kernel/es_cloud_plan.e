@@ -46,6 +46,8 @@ feature -- Access
 			-- Maximum number of concurrent sessions for the same plan.
 			-- `0` means no limit
 
+feature -- Access: private
+
 	heartbeat: NATURAL
 			-- Delay between each ping in seconds
 			-- `0` means no constraint.

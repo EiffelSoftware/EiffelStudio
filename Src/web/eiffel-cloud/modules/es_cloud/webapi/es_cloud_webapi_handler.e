@@ -67,6 +67,16 @@ feature -- Helper
 			Result := api.webapi_path ("/cloud/" + url_encoded (a_version) + "/")
 		end
 
+	cloud_plans_link (a_version: READABLE_STRING_GENERAL): STRING
+		do
+			Result := cloud_link (a_version) + "plan/"
+		end
+
+	cloud_plan_link (a_version: READABLE_STRING_GENERAL; pid: INTEGER): STRING
+		do
+			Result := cloud_plans_link (a_version) + pid.out
+		end
+
 	cloud_user_link (a_version: READABLE_STRING_GENERAL; a_user: ES_CLOUD_USER): STRING
 		do
 			Result := cloud_link (a_version) + "account/" + a_user.id.out
@@ -90,6 +100,35 @@ feature -- Helper
 	cloud_user_installation_session_link (a_version: READABLE_STRING_GENERAL; a_user: ES_CLOUD_USER; iid, sid: READABLE_STRING_GENERAL): STRING
 		do
 			Result := cloud_user_installation_sessions_link (a_version, a_user, iid) + url_encoded (sid)
+		end
+
+feature {NONE} -- Implementation
+
+	remove_last_segment (a_location: STRING_8; a_keep_ending_slash: BOOLEAN)
+		local
+			i: INTEGER
+		do
+			if a_location.ends_with_general ("/") then
+				i := a_location.count - 1
+			else
+				i := a_location.count
+			end
+			i := a_location.last_index_of ('/', i)
+			if i > 0 then
+				if a_keep_ending_slash then
+					a_location.keep_head (i)
+				else
+					a_location.keep_head (i - 1)
+				end
+			end
+		end
+
+	detachable_html_encoded (s: detachable READABLE_STRING_GENERAL): detachable STRING_8
+			-- html encoded version of `s` if set, otherwise Void.
+		do
+			if s /= Void then
+				Result := api.html_encoded (s)
+			end
 		end
 
 note

@@ -25,6 +25,7 @@ feature {NONE} -- Router/administration
 			-- <Precursor>
 		local
 			l_root: ES_CLOUD_ROOT_WEBAPI_HANDLER
+			l_plans: ES_CLOUD_PLANS_WEBAPI_HANDLER
 			l_account: ES_CLOUD_ACCOUNT_WEBAPI_HANDLER
 			l_inst_hlr: ES_CLOUD_INSTALLATIONS_WEBAPI_HANDLER
 		do
@@ -33,6 +34,9 @@ feature {NONE} -- Router/administration
 				a_router.handle ("/cloud", l_root, a_router.methods_get)
 					-- FIXME: switch earlier for version. Using WSF_ROUTING_HANDLER.
 				a_router.handle ("/cloud/{version}/", l_root, a_router.methods_get)
+				create l_plans.make (l_mod_api)
+				a_router.handle ("/cloud/{version}/plan/", l_plans, a_router.methods_get)
+				a_router.handle ("/cloud/{version}/plan/{pid}", l_plans, a_router.methods_get)
 				create l_account.make (l_mod_api)
 				a_router.handle ("/cloud/{version}/account/", l_account, a_router.methods_get)
 				a_router.handle ("/cloud/{version}/account/{uid}", l_account, a_router.methods_get)

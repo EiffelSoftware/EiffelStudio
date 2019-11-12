@@ -79,11 +79,16 @@ feature -- Access
 
 	search_bar: QUICK_SEARCH_BAR
 
-	search_tool: ES_MULTI_SEARCH_TOOL_PANEL
+	search_tool: detachable ES_MULTI_SEARCH_TOOL_PANEL
 			-- Current search tool.
 		do
-			if dev_window /= Void and then dev_window.shell_tools.is_interface_usable then
-				Result ?= dev_window.shell_tools.tool ({ES_SEARCH_TOOL}).panel
+			if
+				attached dev_window as dwin and then
+				attached dwin.shell_tools as l_shell_tools and then
+				l_shell_tools.is_interface_usable and then
+				attached {ES_SEARCH_TOOL} l_shell_tools.tool ({ES_SEARCH_TOOL}) as l_search_tool
+			then
+				Result := l_search_tool.panel
 			end
 		end
 
@@ -112,9 +117,9 @@ feature -- Quick search bar basic operation
 		local
 			l_string : STRING_32
 		do
-			if search_tool /= Void then
-				if search_tool.is_shown then
-					search_tool.close
+			if attached search_tool as l_search_tool then
+				if l_search_tool.is_shown then
+					l_search_tool.close
 				end
 				show_search_bar
 				if has_selection then
@@ -789,7 +794,7 @@ feature {NONE} -- Internal implentation cache
 			-- Note: Do not use directly!
 
 ;note
-	copyright: "Copyright (c) 1984-2011, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

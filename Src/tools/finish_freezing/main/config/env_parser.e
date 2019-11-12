@@ -16,6 +16,8 @@ inherit
 
 	NATIVE_STRING_HANDLER
 
+	SHARED_EXECUTION_ENVIRONMENT
+
 create
 	make
 
@@ -111,6 +113,7 @@ feature {NONE} -- Basic operations
 			l_cmd: STRING_32
 			l_process_factory: BASE_PROCESS_FACTORY
 			l_launcher: BASE_PROCESS
+			l_exit_code: INTEGER
 			l_pair: like parse_variable_name_value_pair
 			l_appliable: like applicable_variables
 			retry_count: INTEGER
@@ -124,7 +127,7 @@ feature {NONE} -- Basic operations
 				l_result.compare_objects
 
 				if retry_count < 2 then
-					l_eval_file_name := new_temp_file (env_eval_tmp_file_name)
+					l_eval_file_name := new_temp_filename (env_eval_tmp_file_name)
 
 					l_com_spec := Void
 					if retry_count = 0 then
@@ -142,10 +145,12 @@ feature {NONE} -- Basic operations
 						l_cmd.append_character (' ')
 						l_cmd.append (batch_options)
 						l_cmd.append ({STRING_32} " /c ")
-						l_cmd.append (save_variables_command (l_eval_file_name))
+						l_cmd.append (save_variables_command (Void))
 
 						create l_process_factory
 						l_launcher := l_process_factory.process_launcher_with_command_line (l_cmd, Void)
+						l_launcher.redirect_output_to_file (l_eval_file_name)
+						l_launcher.redirect_error_to_same_as_output
 
 							-- Some Microsoft scripts reuse the value of VSINSTALLDIR instead of starting fresh.
 							-- We make sure to remove this before executing our scripts.
@@ -159,41 +164,40 @@ feature {NONE} -- Basic operations
 						l_launcher.launch
 						if l_launcher.launched then
 							l_launcher.wait_for_exit
-							if l_launcher.exit_code = 0 then
-								create l_file.make_with_name (l_eval_file_name)
-								if l_file.exists then
-									l_file.open_read
-									if l_file.count > 0 then
-										l_appliable := applicable_variables
-										from l_file.start until l_file.end_of_file loop
-											debug
-												;(create {REFACTORING_HELPER}).fixme ("Support reading unicode strings from the generated file.")
-											end
-											l_file.read_line
+							l_exit_code := l_launcher.exit_code
+							create l_file.make_with_name (l_eval_file_name)
+							if l_file.exists then
+								l_file.open_read
+								if l_file.count > 0 then
+									l_appliable := applicable_variables
+									from l_file.start until l_file.end_of_file loop
+										debug
+											;(create {REFACTORING_HELPER}).fixme ("Support reading unicode strings from the generated file.")
+										end
+										l_file.read_line
+										if
+											attached l_file.last_string as l_line_8 and then
+											attached l_line_8.as_string_32 as l_line and then
+											is_valid_variable_name_value_pair_string (l_line)
+										then
+											l_pair := parse_variable_name_value_pair (l_line)
 											if
-												attached l_file.last_string as l_line_8 and then
-												attached l_line_8.as_string_32 as l_line and then
-												is_valid_variable_name_value_pair_string (l_line)
+												l_pair /= Void and then
+												(
+													l_pair.value /= Void and
+													(l_pair.name /= Void and then l_appliable.has (l_pair.name.as_upper))
+												)
 											then
-												l_pair := parse_variable_name_value_pair (l_line)
-												if
-													l_pair /= Void and then
-													(
-														l_pair.value /= Void and
-														(l_pair.name /= Void and then l_appliable.has (l_pair.name.as_upper))
-													)
-												then
-													l_result.extend (l_pair.value, l_pair.name.as_upper)
-												end
+												l_result.extend (l_pair.value, l_pair.name.as_upper)
 											end
 										end
 									end
-
-									l_file.close
-									l_file.delete
 								end
-							else
-								(create {EXCEPTIONS}).raise ("Process has terminated with an error.")
+								l_file.close
+								l_file.delete
+							end
+							if l_exit_code /= 0 then
+								(create {EXCEPTIONS}).raise ("Process has terminated with an error [code:" + l_exit_code.out + "].")
 							end
 						else
 							(create {EXCEPTIONS}).raise ("Unable to launch process.")
@@ -207,7 +211,9 @@ feature {NONE} -- Basic operations
 						if not l_file.is_closed then
 							l_file.close
 						end
-						l_file.delete
+						if l_file.exists then
+							l_file.delete
+						end
 					end
 				end
 
@@ -252,11 +258,10 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	save_variables_command (a_out: STRING): STRING_32
+	save_variables_command (a_out: detachable READABLE_STRING_GENERAL): STRING_32
 			-- Command to write environment variables to the file `a_out'.
 		require
-			a_out_attached: a_out /= Void
-			not_a_out_is_empty: not a_out.is_empty
+			not_a_out_is_empty: a_out /= Void implies not a_out.is_empty
 		do
 			create Result.make (256)
 			Result.append ({STRING_32} "%"CALL %"")
@@ -265,10 +270,12 @@ feature {NONE} -- Basic operations
 			if attached batch_arguments as l_args then
 				Result.append (l_args)
 			end
-			Result.append ({STRING_32} " > ")
-			Result.append (a_out.as_string_32)
-			Result.append ({STRING_32} " && SET > ")
-			Result.append (a_out.as_string_32)
+			Result.append ({STRING_32} " > :NUL ")
+			Result.append ({STRING_32} " && SET ")
+			if a_out /= Void then
+				Result.append (" > ")
+				Result.append (a_out.as_string_32)
+			end
 			Result.append_character ({CHARACTER_32} '"')
 		ensure
 			result_attached: Result /= Void
@@ -290,21 +297,51 @@ feature {NONE} -- Basic operations
 			result_compares_objects: Result.object_comparison
 		end
 
-	new_temp_file (a_temp_name: STRING): STRING
+	new_temp_plaintext_file (a_temp_name: READABLE_STRING_GENERAL): PLAIN_TEXT_FILE
+			-- Create a temporary file.
+		local
+			retried: BOOLEAN
+		do
+
+			if not retried then
+					-- Create file in the current working directory if possible
+				create Result.make_open_write (a_temp_name)
+			else
+					-- We could not create our temporary file,
+					-- let's create one in the temporary directory of the OS.
+				create Result.make_open_temporary_with_prefix (a_temp_name)
+			end
+		rescue
+				-- We only allow one failure
+			if not retried then
+				retried := True
+				retry
+			end
+		end
+
+	new_temp_filename (a_temp_name: READABLE_STRING_GENERAL): STRING_32
 			-- Create a temporary file.
 		local
 			retried: BOOLEAN
 			l_file: PLAIN_TEXT_FILE
+			p: PATH
 		do
+
 			if not retried then
 					-- Create file in the current working directory if possible
-				Result := a_temp_name
+				if attached execution_environment.temporary_directory_path as tmp then
+					Result := tmp.extended (a_temp_name).name
+				else
+					Result := a_temp_name.as_string_32
+				end
 				create l_file.make_open_write (Result)
 				l_file.close
 			else
 					-- We could not create our temporary file,
 					-- let's create one in the temporary directory of the OS.
-				Result := (create {FILE_NAME}.make_temporary_name).string + "_" + a_temp_name
+				create l_file.make_open_temporary_with_prefix (a_temp_name)
+				Result := l_file.path.name
+				l_file.close
 				create l_file.make_open_write (Result)
 				l_file.close
 			end
@@ -410,7 +447,7 @@ invariant
 	batch_options_attached: batch_options /= Void
 
 ;note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

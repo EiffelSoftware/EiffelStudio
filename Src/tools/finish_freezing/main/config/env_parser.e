@@ -107,7 +107,7 @@ feature {NONE} -- Basic operations
 			-- Using a batch file provided by `vsvars_batch_file'.
 		local
 			l_result: like internal_variables_via_evaluation
-			l_eval_file_name: STRING
+			l_eval_file_name: READABLE_STRING_GENERAL
 			l_file: detachable PLAIN_TEXT_FILE
 			l_com_spec: detachable STRING_32
 			l_cmd: STRING_32
@@ -335,7 +335,6 @@ feature {NONE} -- Basic operations
 		local
 			retried: BOOLEAN
 			l_file: PLAIN_TEXT_FILE
-			p: PATH
 		do
 
 			if not retried then

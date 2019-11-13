@@ -48,6 +48,7 @@ feature -- Execute
 			l_upload_new_archive: BOOLEAN
 			l_iron_archive: detachable IRON_ARCHIVE
 			l_local_hash: detachable READABLE_STRING_8
+			b: BOOLEAN
 		do
 			err := False
 
@@ -336,7 +337,26 @@ feature -- Execute
 					print_new_line
 				end
 			else
-				print ({STRING_32} "[ERROR] Missing required arguments!")
+				b := False
+				if u = Void then
+					b := True
+					print ({STRING_32} "[ERROR] Missing required argument %"username%!")
+				end
+				if p = Void then
+					b := True
+					print ({STRING_32} "[ERROR] Missing required argument %"password%!")
+				end
+				if repo_url = Void then
+					b := True
+					print ({STRING_32} "[ERROR] Missing required argument %"repository%!")
+				end
+				if args.operation = Void then
+					b := True
+					print ({STRING_32} "[ERROR] Missing required argument %"operation%!")
+				end
+				if not b then
+					print ({STRING_32} "[ERROR] Missing arguments!")
+				end
 				print_new_line
 			end
 		end

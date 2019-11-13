@@ -194,7 +194,7 @@ feature {NONE} -- Basic operations
 									end
 								end
 								l_file.close
-								l_file.delete
+								try_delete (l_file)
 							end
 							if l_exit_code /= 0 then
 								(create {EXCEPTIONS}).raise ("Process has terminated with an error [code:" + l_exit_code.out + "].")
@@ -211,9 +211,7 @@ feature {NONE} -- Basic operations
 						if not l_file.is_closed then
 							l_file.close
 						end
-						if l_file.exists then
-							l_file.delete
-						end
+						try_delete (l_file)
 					end
 				end
 
@@ -228,6 +226,19 @@ feature {NONE} -- Basic operations
 				retry_count := retry_count + 1
 				retry
 			end
+		end
+
+	try_delete (f: FILE)
+			-- Try to delete file `f` and rescue any exception.
+		local
+			retried: BOOLEAN
+		do
+			if not retried and f.exists then
+				f.delete
+			end
+		rescue
+			retried := True
+			retry
 		end
 
 	parse_variable_name_value_pair (a_string: STRING_32): detachable TUPLE [name: STRING_32; value: STRING_32]

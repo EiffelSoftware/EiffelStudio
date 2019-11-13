@@ -1,5 +1,5 @@
-note
-	description: "Facility routines to check the validity of DATEs"
+﻿note
+	description: "Facility routines to check the validity of DATEs."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -23,7 +23,7 @@ inherit
 
 feature -- Preconditions
 
-	date_valid (s: STRING; code_string: STRING): BOOLEAN
+	date_valid (s: READABLE_STRING_8; code_string: READABLE_STRING_8): BOOLEAN
 			-- Is the code_string enough precise
 			-- To create an instance of type DATE
 			-- And does the string `s' correspond to `code_string'?
@@ -36,9 +36,11 @@ feature -- Preconditions
 			create code.make (code_string)
 			Result := code.precise_date and code.correspond (s) and then
 				code.is_date (s)
+		ensure
+			class
 		end
 
-	date_valid_with_base (s: STRING; code_string: STRING;
+	date_valid_with_base (s: READABLE_STRING_8; code_string: READABLE_STRING_8;
 							base: INTEGER): BOOLEAN
 			-- Is the code_string enough precise
 			-- To create an instance of type DATE
@@ -57,7 +59,7 @@ feature -- Preconditions
 				code.is_date (s)
 		end
 
-	date_valid_default (s: STRING): BOOLEAN
+	date_valid_default (s: READABLE_STRING_8): BOOLEAN
 			-- Is the code_string enough precise
 			-- To create an instance of type DATE
 			-- And does the string `s' correspond to
@@ -68,7 +70,7 @@ feature -- Preconditions
 			Result := date_valid (s, date_default_format_string)
 		end
 
-	date_valid_default_with_base (s: STRING; base: INTEGER): BOOLEAN
+	date_valid_default_with_base (s: READABLE_STRING_8; base: INTEGER): BOOLEAN
 			-- Is the code_string enough precise
 			-- To create an instance of type DATE
 			-- And does the string `s' correspond to
@@ -83,6 +85,7 @@ feature -- Preconditions
 
 	compact_date_valid (c_d: INTEGER): BOOLEAN
 			-- Is compact date `c_d' valid?
+		obsolete "Use `ordered_compact_date_valid` taking into account that it uses a different encoding. [2020-05-31]"
 		local
 			l_cd: INTEGER
 			y, m, d: INTEGER
@@ -119,19 +122,14 @@ feature -- Preconditions
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class DATE_VALIDITY_CHECKER
-
-
+end

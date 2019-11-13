@@ -10,7 +10,7 @@ class
 
 feature -- Preconditions
 
-	is_code (s: STRING): BOOLEAN
+	is_code (s: READABLE_STRING_8): BOOLEAN
 			-- Is the string a code?
 		require
 			s_exists: s /= Void
@@ -29,7 +29,7 @@ feature -- Preconditions
 			is_year2 (s) or is_year4 (s)
 		end
 
-	is_day (s: STRING): BOOLEAN
+	is_day (s: READABLE_STRING_8): BOOLEAN
 			-- Is the code a day-numeric?
 		require
 			s_exists: s /= Void
@@ -39,7 +39,7 @@ feature -- Preconditions
 			definition: Result = s.same_string ("dd")
 		end
 
-	is_day0 (s: STRING): BOOLEAN
+	is_day0 (s: READABLE_STRING_8): BOOLEAN
 			-- Is the code a day-numeric
 			-- Padded with zero?
 		require
@@ -50,7 +50,7 @@ feature -- Preconditions
 			definition: Result = s.same_string ("[0]dd")
 		end
 
-	is_day_text (s: STRING): BOOLEAN
+	is_day_text (s: READABLE_STRING_8): BOOLEAN
 			-- Is the code a day-text?
 		require
 			s_exists: s /= Void
@@ -60,7 +60,7 @@ feature -- Preconditions
 			definition: Result = s.same_string ("ddd")
 		end
 
-	is_year4 (s: STRING): BOOLEAN
+	is_year4 (s: READABLE_STRING_8): BOOLEAN
 			-- Is the code a year-numeric
 			-- On 4 figures?
 		require
@@ -71,8 +71,7 @@ feature -- Preconditions
 			definition: Result = s.same_string ("yyyy")
 		end
 
-
-	is_year2 (s: STRING): BOOLEAN
+	is_year2 (s: READABLE_STRING_8): BOOLEAN
 			-- Is the code a year-numeric
 			-- On 2 figures?
 		require
@@ -83,8 +82,7 @@ feature -- Preconditions
 			definition: Result = s.same_string ("yy")
 		end
 
-
-	is_month (s: STRING): BOOLEAN
+	is_month (s: READABLE_STRING_8): BOOLEAN
 			-- Is the code a month-numeric?
 		require
 			s_exists: s /= Void
@@ -94,7 +92,7 @@ feature -- Preconditions
 			definition: Result = s.same_string ("mm")
 		end
 
-	is_month0 (s: STRING): BOOLEAN
+	is_month0 (s: READABLE_STRING_8): BOOLEAN
 			-- Is the code a month-numeric
 			-- Padded with zero?
 		require
@@ -105,8 +103,7 @@ feature -- Preconditions
 			definition: Result = s.same_string ("[0]mm")
 		end
 
-
-	is_month_text (s: STRING): BOOLEAN
+	is_month_text (s: READABLE_STRING_8): BOOLEAN
 			-- Is the code a month-text?
 		require
 			s_exists: s /= Void
@@ -116,8 +113,7 @@ feature -- Preconditions
 			definition: Result = s.same_string ("mmm")
 		end
 
-
-	is_hour (s: STRING): BOOLEAN
+	is_hour (s: READABLE_STRING_8): BOOLEAN
 			-- Is the code a 24-hour-clock-scale?
 		require
 			s_exists: s /= Void
@@ -127,8 +123,7 @@ feature -- Preconditions
 			definition: Result = s.same_string ("hh")
 		end
 
-
-	is_hour0 (s: STRING): BOOLEAN
+	is_hour0 (s: READABLE_STRING_8): BOOLEAN
 			-- Is the code a 24-hour-clock-scale
 			-- Padded with zero?
 		require
@@ -139,8 +134,7 @@ feature -- Preconditions
 			definition: Result = s.same_string ("[0]hh")
 		end
 
-
-	is_hour12 (s: STRING): BOOLEAN
+	is_hour12 (s: READABLE_STRING_8): BOOLEAN
 			-- Is the code a 12-hour-clock-scale?
 		require
 			s_exists: s /= Void
@@ -150,7 +144,7 @@ feature -- Preconditions
 			definition: Result = s.same_string ("hh12")
 		end
 
-	is_hour12_0 (s: STRING): BOOLEAN
+	is_hour12_0 (s: READABLE_STRING_8): BOOLEAN
 			-- Is the code a 12-hour-clock-scale padded with zero?
 		require
 			s_exists: s /= Void
@@ -160,7 +154,7 @@ feature -- Preconditions
 			definition: Result = s.same_string ("[0]hh12")
 		end
 
-	is_minute (s: STRING): BOOLEAN
+	is_minute (s: READABLE_STRING_8): BOOLEAN
 			-- Is the code a minute-numeric?
 		require
 			s_exists: s /= Void
@@ -170,8 +164,7 @@ feature -- Preconditions
 			definition: Result = s.same_string ("mi")
 		end
 
-
-	is_minute0 (s: STRING): BOOLEAN
+	is_minute0 (s: READABLE_STRING_8): BOOLEAN
 			-- Is the code a minute-numeric
 			-- Padded with zero?
 		require
@@ -182,8 +175,7 @@ feature -- Preconditions
 			definition: Result = s.same_string ("[0]mi")
 		end
 
-
-	is_second (s: STRING): BOOLEAN
+	is_second (s: READABLE_STRING_8): BOOLEAN
 			-- Is the code a second-numeric?
 		require
 			s_exists: s /= Void
@@ -193,8 +185,7 @@ feature -- Preconditions
 			definition: Result = s.same_string ("ss")
 		end
 
-
-	is_second0 (s: STRING): BOOLEAN
+	is_second0 (s: READABLE_STRING_8): BOOLEAN
 			-- Is the code a second-numeric
 			-- Padded with zero?
 		require
@@ -205,7 +196,7 @@ feature -- Preconditions
 			definition: Result = s.same_string ("[0]ss")
 		end
 
-	is_fractional_second (s: STRING): BOOLEAN
+	is_fractional_second (s: READABLE_STRING_8): BOOLEAN
 			-- Is the code a fractional-second
 			-- With precision to n figures?
 		require
@@ -219,7 +210,7 @@ feature -- Preconditions
 									s.substring (3, s.count).is_integer))
 		end
 
-	is_colon (s: STRING): BOOLEAN
+	is_colon (s: READABLE_STRING_8): BOOLEAN
 			-- Is the code a separator-colomn?
 		require
 			s_exists: s /= Void
@@ -229,8 +220,7 @@ feature -- Preconditions
 			definition: Result = s.same_string (":")
 		end
 
-
-	is_slash (s: STRING): BOOLEAN
+	is_slash (s: READABLE_STRING_8): BOOLEAN
 			-- Is the code a separator-slash?
 		require
 			s_exists: s /= Void
@@ -240,8 +230,7 @@ feature -- Preconditions
 			definition: Result = s.same_string ("/")
 		end
 
-
-	is_minus (s: STRING): BOOLEAN
+	is_minus (s: READABLE_STRING_8): BOOLEAN
 			-- Is the code a separator-minus?
 		require
 			s_exists: s /= Void
@@ -251,8 +240,7 @@ feature -- Preconditions
 			definition: Result = s.same_string ("-")
 		end
 
-
-	is_comma (s: STRING): BOOLEAN
+	is_comma (s: READABLE_STRING_8): BOOLEAN
 			-- Is the code a separator-coma?
 		require
 			s_exists: s /= Void
@@ -262,8 +250,7 @@ feature -- Preconditions
 			definition: Result = s.same_string (",")
 		end
 
-
-	is_space (s: STRING): BOOLEAN
+	is_space (s: READABLE_STRING_8): BOOLEAN
 			-- Is the code a separator-space?
 		require
 			s_exists: s /= Void
@@ -273,8 +260,7 @@ feature -- Preconditions
 			definition: Result = s.same_string (" ")
 		end
 
-
-	is_dot (s: STRING): BOOLEAN
+	is_dot (s: READABLE_STRING_8): BOOLEAN
 			-- Is the code a separator-dot?
 		require
 			s_exists: s /= Void
@@ -284,7 +270,7 @@ feature -- Preconditions
 			definition: Result = s.same_string (".")
 		end
 
-	is_separator (s: STRING): BOOLEAN
+	is_separator (s: READABLE_STRING_8): BOOLEAN
 			-- Is the code a separator?
 		require
 			s_exists: s /= Void
@@ -298,22 +284,19 @@ feature -- Preconditions
 						is_space (s) or else is_dot (s)
 		end
 
-	is_meridiem (s: STRING): BOOLEAN
+	is_meridiem (s: READABLE_STRING_8): BOOLEAN
 			-- Is the code a meridiem notation?
 		require
 			s_exists: s /= Void
-		local
-			tmp: STRING
 		do
-			tmp := s.as_upper
-			Result := tmp.same_string ("AM") or tmp.same_string ("PM")
+			Result := s.is_case_insensitive_equal ("AM") or s.is_case_insensitive_equal ("PM")
 		ensure
-			definition: Result = s.as_upper.same_string ("AM") or
-								s.as_upper.same_string ("PM")
+			definition: Result = s.is_case_insensitive_equal ("AM") or
+								s.is_case_insensitive_equal ("PM")
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

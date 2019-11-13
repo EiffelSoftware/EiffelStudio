@@ -366,7 +366,8 @@ invariant
 				(time.is_negative or time.is_zero))
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	ca_ignore: "CA011", "CA011: too many arguments"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -49,7 +49,6 @@ create
 	make_from_string_default_with_base,
 	make_from_string,
 	make_from_string_with_base,
-	make_by_compact_date,
 	make_by_ordered_compact_date
 
 feature -- Initialization
@@ -132,7 +131,7 @@ feature -- Initialization
 			days_set: days = n
 		end
 
-	make_from_string_default (s: STRING)
+	make_from_string_default (s: READABLE_STRING_8)
 			-- Initialize from a "standard" string of form
 			-- `date_default_format_string'.
 			-- (For 2-digit year specifications, the current century is used as
@@ -144,7 +143,7 @@ feature -- Initialization
 			make_from_string (s, Date_default_format_string)
 		end
 
-	make_from_string_default_with_base (s: STRING; base: INTEGER)
+	make_from_string_default_with_base (s: READABLE_STRING_8; base: INTEGER)
 			-- Initialize from a "standard" string of form
 			-- `date_default_format_string' with base century `base'.
 		require
@@ -156,7 +155,7 @@ feature -- Initialization
 			make_from_string_with_base (s, Date_default_format_string, base)
 		end
 
-	make_from_string (s: STRING; code: STRING)
+	make_from_string (s: READABLE_STRING_8; code: READABLE_STRING_8)
 			-- Initialize from a "standard" string of form
 			-- `code'.
 			-- (For 2-digit year specifications, the current century is used as
@@ -172,7 +171,7 @@ feature -- Initialization
 			make (date.year, date.month, date.day)
 		end
 
-	make_from_string_with_base (s: STRING; code: STRING; base: INTEGER)
+	make_from_string_with_base (s: READABLE_STRING_8; code: READABLE_STRING_8; base: INTEGER)
 			-- Initialize from a "standard" string of form
 			-- `code' with base century `base'.
 		require
@@ -188,20 +187,6 @@ feature -- Initialization
 			code_string.set_base_century (base)
 			date := code_string.create_date (s)
 			make (date.year, date.month, date.day)
-		end
-
-	make_by_compact_date (c_d: INTEGER)
-			-- Initialize from a `compact_date'.
-		obsolete
-			"Use `make_by_ordered_compact_date' instead. But be careful in your update %
-			%since `compact_date' and `ordered_compact_date' do not have the same %
-			%encoding. [2017-05-31]"
-		require
-			c_d_valid: compact_date_valid (c_d)
-		do
-			set_private_internal_compact_date (c_d)
-		ensure
-			compact_date_set: year | (month |<< 16) | (day |<< 24) = c_d
 		end
 
 	make_by_ordered_compact_date (c_d: INTEGER)
@@ -556,7 +541,7 @@ feature -- Output
 			Result := formatted_out (date_default_format_string)
 		end
 
-	formatted_out (s: STRING): STRING
+	formatted_out (s: READABLE_STRING_8): STRING
 			-- Printable representation of `Current' with "standard"
 			-- Form: `s'
 		require
@@ -588,7 +573,7 @@ invariant
 	year_non_negative: year >= 0
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

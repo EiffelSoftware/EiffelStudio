@@ -15,7 +15,7 @@ create
 
 feature -- Creation
 
-	make (s: STRING)
+	make (s: READABLE_STRING_8)
 			-- Create code descriptors and hash-table from `s'.
 		require
 			s_exists: s /= Void
@@ -23,7 +23,7 @@ feature -- Creation
 			i, pos1, pos2: INTEGER
 			date_constants: DATE_CONSTANTS
 			l_substrgs: like extracted_substrings
-			l_substrg, l_substrg2: STRING
+			l_substrg, l_substrg2: READABLE_STRING_8
 		do
 			create value.make (20)
 			pos1 := 1
@@ -39,9 +39,8 @@ feature -- Creation
 				l_substrgs := extracted_substrings (s, pos1, pos2)
 				pos2 := pos2.abs
 				l_substrg := l_substrgs.substrg
-				l_substrg.to_lower
 				if l_substrg.count > 0 then
-					value.put (create {DATE_TIME_CODE}.make (l_substrg), i)
+					value.put (create {DATE_TIME_CODE}.make (l_substrg.as_lower), i)
 					i := i + 1
 				end
 				l_substrg2 := l_substrgs.substrg2
@@ -91,7 +90,7 @@ feature -- Attributes
 
 feature -- Status report
 
-	is_date (s: STRING): BOOLEAN
+	is_date (s: READABLE_STRING_8): BOOLEAN
 			-- Does `s' contain a DATE?
 		require
 			non_empty_string: s /= Void and then not s.is_empty
@@ -99,7 +98,7 @@ feature -- Status report
 			Result := parser (s).is_date
 		end
 
-	is_time (s: STRING): BOOLEAN
+	is_time (s: READABLE_STRING_8): BOOLEAN
 			-- Does `s' contain a TIME?
 		require
 			non_empty_string: s /= Void and then not s.is_empty
@@ -107,7 +106,7 @@ feature -- Status report
 			Result := parser (s).is_time
 		end
 
-	is_date_time (s: STRING): BOOLEAN
+	is_date_time (s: READABLE_STRING_8): BOOLEAN
 			-- Does `s' contain a DATE_TIME?
 		require
 			non_empty_string: s /= Void and then not s.is_empty
@@ -115,7 +114,7 @@ feature -- Status report
 			Result := parser (s).is_date_time
 		end
 
-	is_value_valid (s: STRING): BOOLEAN
+	is_value_valid (s: READABLE_STRING_8): BOOLEAN
 			-- Does `s' contain a valid date or time as string representation?
 		require
 			non_empty_string: s /= Void and then not s.is_empty
@@ -143,7 +142,7 @@ feature -- Status setting
 
 feature -- Interface
 
-	correspond (s: STRING): BOOLEAN
+	correspond (s: READABLE_STRING_8): BOOLEAN
 			-- Does the user string `s' correspond to the code string?
 		require
 			s_exists: s /= Void
@@ -152,7 +151,7 @@ feature -- Interface
 			code: detachable DATE_TIME_CODE
 			has_seps: BOOLEAN
 			l_substrgs: like extracted_substrings
-			l_substrg, l_substrg2: STRING
+			l_substrg, l_substrg2: READABLE_STRING_8
 		do
 			pos1 := 1
 			if s.is_empty then
@@ -376,7 +375,7 @@ feature -- Interface
 			string_correspond: correspond (Result)
 		end
 
-	create_date_time (s: STRING): DATE_TIME
+	create_date_time (s: READABLE_STRING_8): DATE_TIME
 			-- Create DATE_TIME according to `s'.
 		require
 			s_exist: s /= Void
@@ -385,7 +384,7 @@ feature -- Interface
 			valid: is_value_valid (s)
 		local
 			l_parser: like parser
-			l_day_text: detachable STRING
+			l_day_text: detachable READABLE_STRING_8
 		do
 			right_day_text := True
 			l_parser := parser (s)
@@ -401,7 +400,7 @@ feature -- Interface
 			day_text_equal_day: right_day_text
 		end
 
-	create_date (s: STRING): DATE
+	create_date (s: READABLE_STRING_8): DATE
 			-- Create a DATE according to the format in `s'.
 		require
 			s_exists: s /= Void
@@ -427,9 +426,7 @@ feature -- Interface
 				value.put (tmp_code, i + 4)
 				create tmp_code.make ("ss")
 				value.put (tmp_code, i + 5)
-				s.append (" 0:0:0")
-				Result := create_date_time (s).date
-				s.replace_substring_all (" 0:0:0", "")
+				Result := create_date_time (s + " 0:0:0").date
 			else
 				create tmp_code.make ("[0]hh")
 				value.put (tmp_code, i)
@@ -437,9 +434,7 @@ feature -- Interface
 				value.put (tmp_code, i + 1)
 				create tmp_code.make ("[0]ss")
 				value.put (tmp_code, i + 2)
-				s.append ("000000")
-				Result := create_date_time (s).date
-				s.remove_tail (6)
+				Result := create_date_time (s + "000000").date
 			end
 			value := tmp_ht
 		ensure
@@ -447,7 +442,7 @@ feature -- Interface
 			day_text_equal_day: right_day_text
 		end
 
-	create_time (s: STRING): TIME
+	create_time (s: READABLE_STRING_8): TIME
 			-- Create a TIME according to the format in `s'.
 		require
 			s_exists: s /= Void
@@ -473,9 +468,7 @@ feature -- Interface
 				value.put (tmp_code, i + 4)
 				create tmp_code.make ("yy")
 				value.put (tmp_code, i + 5)
-				s.append (" 1/1/01")
-				Result := create_date_time (s).time
-				s.replace_substring_all (" 1/1/01", "")
+				Result := create_date_time (s + " 1/1/01").time
 			else
 				create tmp_code.make ("[0]dd")
 				value.put (tmp_code, i)
@@ -483,9 +476,7 @@ feature -- Interface
 				value.put (tmp_code, i + 1)
 				create tmp_code.make ("yy")
 				value.put (tmp_code, i + 2)
-				s.append ("010101")
-				Result := create_date_time (s).time
-				s.remove_tail (6)
+				Result := create_date_time (s + "010101").time
 			end
 			value := tmp_ht
 		ensure
@@ -603,14 +594,14 @@ feature -- Interface
 
 feature {NONE} -- Implementation
 
-	days: ARRAY [STRING]
+	days: ARRAY [READABLE_STRING_8]
 
-	months: ARRAY [STRING]
+	months: ARRAY [READABLE_STRING_8]
 
 	right_day_text: BOOLEAN
 			-- Is the name of the day the right one?
 
-	parser (s: STRING): DATE_TIME_PARSER
+	parser (s: READABLE_STRING_8): DATE_TIME_PARSER
 			-- Parser from `s'.
 			-- Build a new one if necessary.
 		require
@@ -634,7 +625,7 @@ feature {NONE} -- Implementation
 			-- Cached instance of date-time string parser
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

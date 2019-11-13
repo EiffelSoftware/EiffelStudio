@@ -36,16 +36,6 @@ feature -- Access
 			Result := ((ordered_compact_date & year_mask) |>> year_shift) & 0x0000FFFF
 		end
 
-	compact_date: INTEGER
-			-- Day, month and year coded.
-		obsolete
-			"Use `ordered_compact_date' instead. But be careful in your update %
-			%since `compact_date' and `ordered_compact_date' do not have the same %
-			%encoding. [2017-05-31]"
-		do
-			Result := year | (month |<< 16) | (day |<< 24)
-		end
-
 	ordered_compact_date: INTEGER
 			-- Year, month, day coded for fast comparison between dates.
 
@@ -102,18 +92,6 @@ feature -- Element change
 			ordered_compact_date := l_date
 		end
 
-	set_internal_compact_date (a_compact_date: like compact_date)
-			-- Set `a_compact_date' to `compact_date'.
-		obsolete
-			"Use `ordered_compact_date' instead. But be careful in your update %
-			%since `compact_date' and `ordered_compact_date' do not have the same %
-			%encoding. [2017-05-31]"
-		do
-			set_private_internal_compact_date (a_compact_date)
-		ensure
-			compact_date_set: year | (month |<< 16) | (day |<< 24) = a_compact_date
-		end
-
 	set_internal_ordered_compact_date (a_ordered_compact_date: like ordered_compact_date)
 			-- Set `a_ordered_compact_date' to `ordered_compact_date'.
 		do
@@ -153,9 +131,10 @@ feature {NONE} -- Implementation
 	compact_date_attribute_name: STRING = "compact_date"
 			-- Name of `compacte_date' attribute in 5.3 and older version.
 
-	set_private_internal_compact_date (a_compact_date: like compact_date)
+	set_private_internal_compact_date (a_compact_date: INTEGER)
 			-- Set `a_compact_date' to `compact_date'.
 		do
+				-- TODO: Remove the feature when there are no callers anymore. [2020-05-31]
 			set_date (
 				a_compact_date & 0x000FFFF,
 				(a_compact_date & 0x00FF0000) |>> 16,
@@ -165,7 +144,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

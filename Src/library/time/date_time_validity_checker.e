@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Facility routines to check the validity of DATE_TIMEs"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ inherit
 
 feature -- Preconditions
 
-	date_time_valid (s: STRING; code_string: STRING): BOOLEAN
+	date_time_valid (s: READABLE_STRING_8; code_string: READABLE_STRING_8): BOOLEAN
 			-- Is the code_string enough precise
 			-- To create an instance of type DATE_TIME
 			-- And does the string `s' correspond to `code_string'?
@@ -38,7 +38,7 @@ feature -- Preconditions
 				code.is_date_time (s)
 		end
 
-	date_time_valid_with_base (s: STRING; code_string: STRING;
+	date_time_valid_with_base (s: READABLE_STRING_8; code_string: READABLE_STRING_8;
 					base: INTEGER): BOOLEAN
 			-- Is the code_string enough precise
 			-- To create an instance of type DATE_TIME
@@ -69,19 +69,15 @@ feature -- Preconditions
 		end
 
 note
-	copyright: "Copyright (c) 1984-2009, Eiffel Software and others"
+	ca_ignore: "CA011", "CA011: too many arguments"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
-			 Eiffel Software
-			 5949 Hollister Ave., Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class DATE_TIME_VALIDITY_CHECKER
-
-
+end

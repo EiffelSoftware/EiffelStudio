@@ -76,13 +76,6 @@ feature -- Access
 
 feature -- Status report
 
-	i_th_leap_year (i: INTEGER): BOOLEAN
-		obsolete "Use `is_leap_year' instead. [2017-05-31]"
-			-- Is the `i'-th year a leap year?
-		do
-			Result := is_leap_year (i)
-		end
-
 	is_leap_year (y: INTEGER): BOOLEAN
 			-- Is year `y' a leap year?
 		do
@@ -103,7 +96,8 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	ca_ignore: "CA011", "CA011: too many arguments"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

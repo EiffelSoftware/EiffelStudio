@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Facility routines to check the validity of TIMEs"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ inherit
 
 feature -- Preconditions
 
-	time_valid (s: STRING; code_string: STRING): BOOLEAN
+	time_valid (s: READABLE_STRING_8; code_string: READABLE_STRING_8): BOOLEAN
 			-- Is the code_string enough precise
 			-- to create an instance of type TIME?
 			-- And does the string `s' correspond to `code_string'?
@@ -78,7 +78,7 @@ feature -- Preconditions
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -88,9 +88,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class TIME_VALIDITY_CHECKER
-
-
+end

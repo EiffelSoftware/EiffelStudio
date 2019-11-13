@@ -340,19 +340,19 @@ feature -- Execute
 				b := False
 				if u = Void then
 					b := True
-					print ({STRING_32} "[ERROR] Missing required argument %"username%!")
+					print ({STRING_32} "[ERROR] Missing required argument %"username%"!")
 				end
 				if p = Void then
 					b := True
-					print ({STRING_32} "[ERROR] Missing required argument %"password%!")
+					print ({STRING_32} "[ERROR] Missing required argument %"password%"!")
 				end
 				if repo_url = Void then
 					b := True
-					print ({STRING_32} "[ERROR] Missing required argument %"repository%!")
+					print ({STRING_32} "[ERROR] Missing required argument %"repository%"!")
 				end
 				if args.operation = Void then
 					b := True
-					print ({STRING_32} "[ERROR] Missing required argument %"operation%!")
+					print ({STRING_32} "[ERROR] Missing required argument %"operation%"!")
 				end
 				if not b then
 					print ({STRING_32} "[ERROR] Missing arguments!")

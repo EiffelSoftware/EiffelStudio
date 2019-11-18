@@ -1,4 +1,4 @@
-.box, #main .es-message, #main div.es-plans li.es-plan-box, div.login-box {
+.box, #main .es-message, #main div.es-plans ul li.es-plan-box, div.login-box {
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
   -ms-border-radius: 10px;
@@ -8,7 +8,7 @@
   background-color: #eee;
 }
 
-.box, #main .es-message, #main div.es-plans li.es-plan-box, div.login-box {
+.box, #main .es-message, #main div.es-plans ul li.es-plan-box, div.login-box {
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
   -ms-border-radius: 10px;
@@ -28,14 +28,26 @@
   margin-right: auto;
   font-family: roboto;
 }
-#main div.es-plans li.es-plan-box {
-  list-style: none;
+#main div.es-plans ul {
   display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: stretch;
 }
-#main div.es-plans li.es-plan-box .description {
-  border: solid 1px red;
+#main div.es-plans ul li.es-plan-box {
+  flex-grow: 1;
+  flex-basis: 100px;
+  align-self: auto;
+  margin: 2px;
+  list-style: none;
+}
+#main div.es-plans ul li.es-plan-box > div.title {
+  font-weight: bold;
+}
+#main div.es-plans ul li.es-plan-box div.description {
+  margin: 5px;
+  font-style: italic;
   display: block;
-  clear: both;
 }
 #main div.es-installations > p {
   font-weight: bold;

@@ -228,12 +228,15 @@ feature -- Execution
 					es_cloud_api.sorted_plans as ic
 				loop
 					l_plan := ic.item
-					s.append ("<li class=%"es-plan-box%">")
-					s.append (html_encoded (l_plan.title_or_name))
-					if attached l_plan.description as l_plan_description then
-						s.append ("<div class=%"description%">"+ html_encoded (l_plan_description) + "</div>")
+					if l_plan.is_public then
+						s.append ("<li class=%"es-plan-box%"><div class=%"title%">")
+						s.append (html_encoded (l_plan.title_or_name))
+						s.append ("</div>")
+						if attached l_plan.description as l_plan_description then
+							s.append ("<div class=%"description%">"+ html_encoded (l_plan_description) + "</div>")
+						end
+						s.append ("</li>")
 					end
-					s.append ("</li>")
 				end
 				s.append ("</ul>")
 				s.append ("</div>")

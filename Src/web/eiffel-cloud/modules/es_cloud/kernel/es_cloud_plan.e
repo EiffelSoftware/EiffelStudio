@@ -38,6 +38,8 @@ feature -- Access
 
 	description: detachable IMMUTABLE_STRING_32
 
+	is_public: BOOLEAN
+
 	installations_limit: NATURAL
 			-- Maximum number of installation for the same plan.
 			-- `0` means no limit
@@ -58,12 +60,22 @@ feature -- Access: private
 
 	data: detachable IMMUTABLE_STRING_32
 		local
-			mi,ms: NATURAL
+			s: STRING_32
 		do
-			mi := installations_limit
-			ms := concurrent_sessions_limit
-			Result := "install.limit=" + mi.out + ";session.limit=" + ms.out + ";session.heartbeat=" + heartbeat.out + ";order.weight=" + weight.out
+			create s.make (50)
+			s.append ("install.limit="); s.append_natural_32 (installations_limit)
+			s.append (";session.limit="); s.append_natural_32 (concurrent_sessions_limit)
+			s.append (";session.heartbeat="); s.append_natural_32 (heartbeat)
+			s.append (";order.weight="); s.append_integer (weight)
+			s.append (";public=")
+			if is_public then
+				s.append ("yes")
+			else
+				s.append ("no")
+			end
+			create Result.make_from_string_32 (s)
 		end
+
 
 feature -- Status report	
 
@@ -115,6 +127,9 @@ feature -- Element change
 						l_heartbeat := s.substring (s.index_of ('=', 1) + 1, s.count).to_natural
 					elseif s.starts_with ("order.weight=") then
 						l_weight := s.substring (s.index_of ('=', 1) + 1, s.count).to_integer
+					elseif s.starts_with ("public=") then
+						s := s.substring (s.index_of ('=', 1) + 1, s.count)
+						is_public := s.is_case_insensitive_equal ("yes")
 					end
 				end
 			end

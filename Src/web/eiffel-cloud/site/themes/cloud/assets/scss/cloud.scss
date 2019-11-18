@@ -13,14 +13,26 @@
 		font-family: roboto;
 	}
 	div.es-plans {
-		li.es-plan-box {
-			@extend .box;
-			list-style: none;
+		ul {
 			display: inline-flex;
-			.description {
-				border: solid 1px red;
-				display: block;
-				clear: both;
+			flex-wrap: wrap;
+			justify-content: center;
+			align-items: stretch;
+			li.es-plan-box {
+				flex-grow: 1;
+				flex-basis: 100px;
+				align-self: auto;
+				margin: 2px;
+				@extend .box;
+				list-style: none;
+				&>div.title {
+					font-weight: bold;
+				}
+				div.description {
+					margin: 5px;
+					font-style: italic;
+					display: block;
+				}
 			}
 		}
 	}

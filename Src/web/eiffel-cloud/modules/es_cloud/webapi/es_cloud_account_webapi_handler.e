@@ -66,6 +66,7 @@ feature -- Execution
 					end
 				else
 					r := new_access_denied_error_response ("No authenticated user!", req, res)
+					add_cloud_link_to (a_version, r)
 				end
 			else
 				r := new_bad_request_error_response ("Only GET request!", req, res)

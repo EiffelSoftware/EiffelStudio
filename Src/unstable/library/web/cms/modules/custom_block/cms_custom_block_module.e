@@ -99,13 +99,12 @@ feature -- Hooks
 						lst as ic
 					loop
 						l_name := ic.item
+						l_conds := Void
 						if l_name.is_valid_as_string_8 then
 							l_block_id := l_name.to_string_8
 							if a_response /= Void then
 								if attached cfg.text_list_item ("blocks." + l_block_id + ".conditions") as l_cond_expressions then
-									if l_conds = Void then
-										create l_conds.make (l_cond_expressions.count)
-									end
+									create l_conds.make (l_cond_expressions.count)
 									across
 										l_cond_expressions as exp_ic
 									loop

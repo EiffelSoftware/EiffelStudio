@@ -379,6 +379,8 @@ feature -- Basic Operations
 										else
 											create {FEATURE_STONE} Result.make (feat)
 										end
+									else
+										feat := Void
 									end
 								else
 								end

@@ -98,6 +98,8 @@ feature -- Basic operation
 					then
 						if attached described_access_id (token, line, ft) as tu then
 							feat := tu.feat
+						else
+							feat := Void
 						end
 					else
 					end

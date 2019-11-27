@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: EiffelStudio $Revision$\n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2019-04-30 12:47+0300\n"
+"PO-Revision-Date: 2019-11-27 17:34+0300\n"
 "Last-Translator: Alexander Kogtenkov <kwaxer@mail.ru>\n"
 "Language-Team: Eiffel Software and others <support@eiffel.com>\n"
 "Language: ru\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Generator: Poedit 2.1.1\n"
+"X-Generator: Poedit 2.2.4\n"
 
 #. Source code: default_quick_melt_the_system: STRING_32				do Result := locale.translation ("%Tdefault (no option): quick melt the system.%N%N") end
 #: ewb_names.e:45
@@ -1392,7 +1392,7 @@ msgstr "Панель &проекта"
 #. Source code: m_diagram_link_tool: STRING_32		do Result := locale.translation("&Put Right Angles")	end
 #: interface_names.e:528
 msgid "&Put Right Angles"
-msgstr "&Поставить угловые скобки"
+msgstr "&Поворачивать под прямым углом"
 
 #. Source code: m_Raise: STRING_32					do Result := locale.translation("&Raise")	end
 #: interface_names.e:1024
@@ -2267,7 +2267,7 @@ msgstr "--> Используемый профайлер (по умолчанию
 #. Source code: do Result := locale.translation ("--> Working directory: ") end
 #: debugger_names.e:204
 msgid "--> Working directory: "
-msgstr "--> Рабочий каталог:"
+msgstr "--> Рабочий каталог: "
 
 #. Source code: do Result := translation_in_context (".", once "code_analyzer.violation") end
 #: ca_messages.e:390
@@ -2360,7 +2360,7 @@ msgstr "< Назад"
 #. Source code: b_back: STRING_32 do Result := locale.translation ("< Back ") end
 #: wizard_shared.e:252
 msgid "< Back "
-msgstr "< Назад"
+msgstr "< Назад "
 
 #. Source code: Result := locale.translation ("<- Remove")
 #: docking_names.e:141
@@ -3400,7 +3400,7 @@ msgstr "Адрес"
 #. Source code: t_Address_toolbar: STRING_32					do Result := locale.translation ("Address Bar") end
 #: interface_names.e:2645
 msgid "Address Bar"
-msgstr "Адресная панель "
+msgstr "Адресная панель"
 
 #. Source code: target_address_expression_name: STRING_32 do Result := locale.translation ("Address Expression")	end
 #: conf_interface_names.e:121
@@ -3606,7 +3606,7 @@ msgstr ""
 #. Source code: locale.translation ("All void safety rules are satisfied")
 #: conf_interface_names.e:431
 msgid "All void safety rules are satisfied"
-msgstr "Все правила ссылочной безопасности удовлетворены."
+msgstr "Все правила ссылочной безопасности удовлетворены"
 
 #. <PREF NAME="editor.general.editor_font" DESCRIPTION="All-purpose editor font."><FONT>Courier New-r-regular-8-modern</FONT></PREF>
 #. <PREF NAME="editor.general.editor_font" DESCRIPTION="All-purpose editor font."><FONT>Monospace-r-regular-9-sans</FONT></PREF>
@@ -4251,7 +4251,7 @@ msgstr "Анализ кластера "
 #. Source code: lb_degree_4: STRING = "Analyzing Inheritance"
 #: degree_output.e:690
 msgid "Analyzing Inheritance"
-msgstr "Анализ наследования "
+msgstr "Анализ наследования"
 
 #. Source code: do Result := locale.formatted_string (translation_in_context ("Analyzing class $1...", once "code_analyzer.status"), [a_class_name]) end
 #: ca_messages.e:135
@@ -4279,7 +4279,7 @@ msgstr "Глубина предков"
 #. Source code: l_ancestor_of: STRING_32 do Result := locale.translation ("Ancestor of ") end
 #: interface_names.e:2154
 msgid "Ancestor of "
-msgstr "Предок"
+msgstr "Предок "
 
 #. Source code: l_Routine_ancestors: STRING_32		do Result := locale.translation("Ancestor versions")	end
 #: interface_names.e:1668
@@ -8908,7 +8908,7 @@ msgstr "Клиенты"
 #. Source code: t_Clients_of: STRING_32						do Result := locale.translation("Clients of Class ")	end
 #: interface_names.e:2350
 msgid "Clients of Class "
-msgstr "Клиенты класса"
+msgstr "Клиенты класса "
 
 #. Source code: m_clone_metric: STRING_32			do Result := locale.translation ("Clone metric") end
 #: interface_names.e:1067
@@ -9051,7 +9051,7 @@ msgstr "Иерархия кластеров"
 #. Source code: l_Cluster_name: STRING_32			do Result := locale.translation("Cluster name ")	end
 #: interface_names.e:1248
 msgid "Cluster name "
-msgstr "Имя кластера"
+msgstr "Имя кластера "
 
 #. Source code: "Cluster names may only include %N%
 #: warning_messages.e:480
@@ -13427,7 +13427,7 @@ msgstr "Число панелей наблюдения по умолчанию."
 #. Source code: dialog_create_precompile_defaults: STRING_32 do Result := locale.translation ("Default precompiles")	end
 #: conf_interface_names.e:785
 msgid "Default precompiles"
-msgstr "Прекомпилированные модули по умолчанию."
+msgstr "Прекомпилированные модули по умолчанию"
 
 #. Source code: types_text: STRING = "Default types to test"
 #: es_test_generation_wizard_page_panel.e:559
@@ -13651,7 +13651,7 @@ msgstr "Глубина потомков"
 #. Source code: l_descendant_of: STRING_32 do Result := locale.translation ("Descendant of ") end
 #: interface_names.e:2155
 msgid "Descendant of "
-msgstr "Потомок"
+msgstr "Потомок "
 
 #. Source code: l_Routine_descendants: STRING_32		do Result := locale.translation("Descendant versions")	end
 #: interface_names.e:1669
@@ -14275,7 +14275,7 @@ msgstr "Запретить запись выполнения"
 #. Source code: t_Diagram_disable_high_quality: STRING_32	do Result := locale.translation("Disable High Quality")	end
 #: interface_names.e:2602
 msgid "Disable High Quality"
-msgstr "Запретить высокое качество."
+msgstr "Запретить высокое качество"
 
 #. Source code: f_Disable_stop_points: STRING_32		do Result := locale.translation("Disable all breakpoints")	end
 #: interface_names.e:587
@@ -17940,7 +17940,7 @@ msgstr "Ошибка"
 #. Source code: err_error: STRING_32 do Result := locale.translation ("Error ") end
 #: interface_names.e:2945
 msgid "Error "
-msgstr "Ошибка"
+msgstr "Ошибка "
 
 #. Source code: t_tool_title: STRING = "Error List"
 #: es_error_list_tool.e:108
@@ -20033,7 +20033,7 @@ msgstr "Исправление: "
 #: $EIFFEL_SRC/Delivery/studio/eifinit/code_analysis.xml:42
 msgctxt "code_analysis.preference"
 msgid "Fixed attribute value"
-msgstr "Значение атрибута фиксировано."
+msgstr "Значение атрибута фиксировано"
 
 #. Source code: l_flat_contracts:  STRING_32		do Result := locale.translation("Flat contracts")	end
 #: interface_names.e:1195
@@ -20077,7 +20077,7 @@ msgstr "Цвет фона выделенного текста без фокус�
 #. Source code: s_folder_stone: STRING_32			do Result := locale.translation("Folder ")	end
 #: interface_names.e:2303
 msgid "Folder "
-msgstr "Папка"
+msgstr "Папка "
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Folder %"$1%" (ID = %"$2%") is invalid."), [a_folder_name, a_domain_item_id])
 #: eb_metric_names.e:875
@@ -20289,7 +20289,7 @@ msgstr "Вставлять наследование детских элемен�
 #. Source code: f_diagram_put_right_angles: STRING_32		do Result := locale.translation("Force right angles")	end
 #: interface_names.e:526
 msgid "Force right angles"
-msgstr "Вставлять угловые скобки"
+msgstr "Вставлять прямые углы"
 
 #. Source code: e_force_execution_mode: STRING_32		do Result := locale.translation("Force the environment to stay in execution mode")	end
 #: interface_names.e:2796
@@ -24153,7 +24153,7 @@ msgstr "Библиотека"
 #. Source code: s_library_stone: STRING_32			do Result := locale.translation("Library ")	end
 #: interface_names.e:2304
 msgid "Library "
-msgstr "Библиотека"
+msgstr "Библиотека "
 
 #. Source code: l_Library_name: STRING_32			do Result := locale.translation ("Library Name") end
 #: interface_names.e:17
@@ -24457,7 +24457,7 @@ msgstr "local"
 #. Source code: s_Local_stone: STRING_32			do Result := locale.translation("Local ")	end
 #: interface_names.e:2301
 msgid "Local "
-msgstr "Локальная переменная"
+msgstr "Локальная переменная "
 
 #. <PREF NAME="editor.eiffel.colors.local_background_color" DESCRIPTION="Background color for locals."><COLOR>auto</COLOR></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:315
@@ -26257,7 +26257,7 @@ msgstr "Имя:"
 #. Source code: dialog_visible_name: STRING_32 do Result := locale.translation ("Name: ")	end
 #: conf_interface_names.e:587
 msgid "Name: "
-msgstr "Имя:"
+msgstr "Имя: "
 
 #. <PREF NAME="tools.diagram_tool.excluded_class_figures" DESCRIPTION="Names of classes that should not appear in generated diagrams."><LIST>INTEGER;BOOLEAN;STRING;CHARACTER;REAL;DOUBLE</LIST></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:105
@@ -29404,7 +29404,7 @@ msgstr "Переместить на одну позицию вправо"
 #. Source code: t_Diagram_put_right_angles_cmd: STRING_32	do Result := locale.translation("Put Right Angles")	end
 #: interface_names.e:2577
 msgid "Put Right Angles"
-msgstr "Поставить угловые скобки"
+msgstr "Поворачивать под прямым углом"
 
 #. Source code: t_Diagram_put_two_handles_left_cmd: STRING_32	do Result := locale.translation("Put Two Handles Left")	end
 #: interface_names.e:2581
@@ -29989,7 +29989,7 @@ msgstr "Удалить проект"
 #. Source code: t_Diagram_remove_right_angles_cmd: STRING_32	do Result := locale.translation("Remove Right Angles")	end
 #: interface_names.e:2578
 msgid "Remove Right Angles"
-msgstr "Удалить угловые скобки"
+msgstr "Убрать прямые углы"
 
 #. Source code: e_Remove_class_cluster: STRING_32	do Result := locale.translation("Remove a class or a cluster from the system")	end
 #: interface_names.e:2872
@@ -30136,7 +30136,7 @@ msgstr "Удалить старые"
 #. Source code: f_diagram_remove_right_angles: STRING_32	do Result := locale.translation("Remove right angles")	end
 #: interface_names.e:527
 msgid "Remove right angles"
-msgstr "Убрать угловые скобки"
+msgstr "Убрать прямые углы"
 
 #. Source code: dialog_file_rule_remove_rule: STRING_32 do Result := locale.translation ("Remove rule")	end
 #: conf_interface_names.e:579
@@ -30445,7 +30445,7 @@ msgstr "Проиграть выполнение: предудущий шаг"
 #. Source code: t_Exec_replay_to: STRING_32					do Result := locale.translation("Replay execution to selected call.")	end
 #: interface_names.e:246
 msgid "Replay execution to selected call."
-msgstr "Проиграть выполнение до выбранного вызова"
+msgstr "Проиграть выполнение до выбранного вызова."
 
 #. Source code: b_Activate_execution_replay_mode: STRING_32 	do Result := locale.translation("Replay mode")	end
 #: interface_names.e:238
@@ -30910,7 +30910,7 @@ msgstr "Недопустимое имя корневого класса."
 #. Source code: l_Root_class: STRING_32				do Result := locale.translation("Root class name: ")	end
 #: interface_names.e:1664
 msgid "Root class name: "
-msgstr "Имя корневого класса:"
+msgstr "Имя корневого класса: "
 
 #. Source code: l_Root_class_name: STRING_32			do Result := locale.translation("Root class: ")	end
 #: interface_names.e:1665
@@ -31666,13 +31666,13 @@ msgstr "Область >>"
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:227
 msgctxt "preference"
 msgid "Screen x position of the project settings dialog."
-msgstr "x-координата диалога установок проекта."
+msgstr "Координата x диалога установок проекта."
 
 #. <PREF NAME="interface.dialogs.project_settings_position_y" DESCRIPTION="Screen y position of the project settings dialog." HIDDEN="True"><INTEGER>100</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:228
 msgctxt "preference"
 msgid "Screen y position of the project settings dialog."
-msgstr "y-координата диалога установок проекта."
+msgstr "Координата y диалога установок проекта."
 
 #. <PREF NAME="editor.general.scrolling_common_line_count" DESCRIPTION="Number of lines that will stay visible when you perform a page down or a page up operation."><INTEGER>1</INTEGER></PREF>
 #: $EIFFEL_SRC/Delivery/studio/eifinit/default.xml:650
@@ -32165,7 +32165,7 @@ msgstr "Выберите режим компиляции."
 #. Source code: l_Choose_folder: STRING_32			do Result := locale.translation("Select the destination folder ")	end
 #: interface_names.e:1197
 msgid "Select the destination folder "
-msgstr "Выбрать каталог назначения"
+msgstr "Выбрать каталог назначения "
 
 #. Source code: l_select_diagrams_to_generate: STRING_32 do Result := locale.translation("Select the diagrams to generate")	end
 #: interface_names.e:2114
@@ -35841,7 +35841,7 @@ msgstr "Задание"
 #. Source code: s_target_stone: STRING_32 			do Result := locale.translation("Target ")	end
 #: interface_names.e:2305
 msgid "Target "
-msgstr "Задание"
+msgstr "Задание "
 
 #. Source code: dialog_create_remote_target_name: STRING_32 do Result := locale.translation ("Target Name") end
 #: conf_interface_names.e:611
@@ -40924,7 +40924,7 @@ msgstr "Вид"
 #. Source code: l_view: STRING_32 do Result := locale.translation ("View ") end
 #: interface_names.e:2132
 msgid "View "
-msgstr "Вид"
+msgstr "Вид "
 
 #. Source code: l_view_contracts: STRING = "View Contracts..."
 #: es_contract_viewer_widget.e:506
@@ -41999,7 +41999,7 @@ msgstr "Всегда подтверждать, не спрашивая."
 #. Source code: l_always_compile_before_debug:STRING_32 	do Result := locale.translation ("always compile before executing.") end
 #: interface_names.e:2249
 msgid "always compile before executing."
-msgstr "Всегда компилировать перед выполнением"
+msgstr "Всегда компилировать перед выполнением."
 
 #. Source code: l_always_delete_without_asking:STRING_32 do Result := locale.translation ("always delete without asking.") end
 #: interface_names.e:2250

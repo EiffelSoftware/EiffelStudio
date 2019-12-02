@@ -737,14 +737,13 @@ feature {NONE} -- Implementation
 							l_classname_finder := classname_finder
 							l_classname_finder.parse (l_file)
 							l_file.close
-							l_name := l_classname_finder.classname
-							if l_name = Void then
+							if not attached l_classname_finder.classname as n then
 								add_and_raise_error (create {CONF_ERROR_CLASSN}.make (a_file, a_cluster.target.system.file_name))
-							elseif l_name.is_case_insensitive_equal ("NONE") then
+							elseif n.is_case_insensitive_equal ("NONE") then
 								add_and_raise_error (create {CONF_ERROR_CLASSNONE}.make (a_file, a_cluster.target.system.file_name))
 							else
+								l_name := {UTF_CONVERTER}.utf_8_string_8_to_escaped_string_32 (n)
 								l_name.to_upper
-
 								if l_classname_finder.is_partial_class then
 										-- partial classes	
 									p := partial_classes

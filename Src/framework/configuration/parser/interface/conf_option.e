@@ -432,7 +432,7 @@ feature {NONE} -- Warning: access
 
 	warning_name: ARRAY [READABLE_STRING_32]
 			-- Available values for `warning` option.
-		once ("PROCESS")
+		once
 			Result := <<{STRING_32} "none", {STRING_32} "warning", {STRING_32} "error">>
 		ensure
 			result_attached: Result /= Void
@@ -444,7 +444,7 @@ feature {NONE} -- Warning: access
 			-- • `warning_term_index_none`
 			-- • `warning_term_index_current`
 			-- • `warning_term_index_all`
-		once ("PROCESS")
+		once
 			Result := <<{STRING_32} "none", {STRING_32} "current", {STRING_32} "all">>
 		ensure
 			result_attached: Result /= Void

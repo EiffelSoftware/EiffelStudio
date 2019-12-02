@@ -2,7 +2,7 @@ test_name 	 obsolete-feature-call-date
 test_description Obsolete feature call should be reported with different severity levels depending on the specified date. See also test#codeanalysis023.
 
 	-- Options: report warnings.
-define	WARNING	<option warning="true"/>
+define	WARNING ""
 copy_sub	Ace $TEST Ace
 
 	-- 4 years ago: error.
@@ -23,11 +23,17 @@ cleanup_compile
 define_date     DATE 31
 copy_sub	test.e $CLUSTER test.e
 compile_melted
+compile_result 	ok
+cleanup_compile
+
+define	WARNING	<option><warning name="obsolete_feature" value="all"/></option>
+copy_sub	Ace $TEST Ace
+compile_melted
 compile_result 	validity_warning TEST "Obsolete Call:10" "Obsolete Call:11" "Obsolete Call:12"
 cleanup_compile
 
 	-- Options: disable warnings.
-define	WARNING	<option warning="false"/>
+define	WARNING	<option warning="none"/>
 copy_sub	Ace $TEST Ace
 
 	-- 4 years ago: error.
@@ -47,6 +53,12 @@ cleanup_compile
 	-- In a month: hint.
 define_date     DATE 31
 copy_sub	test.e $CLUSTER test.e
+compile_melted
+compile_result 	ok
+cleanup_compile
+
+define	WARNING	<option warning="none"><warning name="obsolete_feature" value="all"/></option>
+copy_sub	Ace $TEST Ace
 compile_melted
 compile_result 	ok
 cleanup_compile

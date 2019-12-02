@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Services implementation for supporting the wizard engine, based on the service description {WIZARD_ENGINE_S}.
 	]"
@@ -134,7 +134,7 @@ feature -- Basic operations
 
 feature {NONE} -- Basic operations
 
-	build_code_template (a_template: STRING_32; a_parameters: detachable HASH_TABLE [ANY, STRING_32]): TUPLE [template: CODE_TEMPLATE_DEFINITION; symbol_table: CODE_SYMBOL_TABLE]
+	build_code_template (a_template: STRING_32; a_parameters: detachable HASH_TABLE [ANY, READABLE_STRING_32]): TUPLE [template: CODE_TEMPLATE_DEFINITION; symbol_table: CODE_SYMBOL_TABLE]
 			-- Builds a code template definition file from a template text.
 			--
 			-- `a_template': The tokenized text to render with the supplied parameters.
@@ -191,7 +191,7 @@ feature {NONE} -- Basic operations
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

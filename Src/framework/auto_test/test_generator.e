@@ -1,6 +1,5 @@
-note
+﻿note
 	description: "Test creator representing AutoTest"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -77,7 +76,7 @@ feature -- Access
 			if attached {ETEST_MELT_TASK} sub_task then
 				Result := {REAL_32} 0.1
 			elseif attached {ETEST_GENERATION_TESTING} sub_task as l_task then
-				Result := {REAL_32} 0.1 + l_task.progress * ({REAL_32} 0.85)
+				Result := {REAL_32} 0.1 + l_task.progress * {REAL_32} 0.85
 			else
 				Result := {REAL_32} 0.95
 			end
@@ -194,7 +193,7 @@ feature -- Status setting
 			output_dirname_set: output_dirname.same_string (a_dirname)
 		end
 
-	add_class_name (a_class_name: STRING_8)
+	add_class_name (a_class_name: READABLE_STRING_32)
 			-- Add given name to `class_names'.
 			--
 			-- `a_class_name': New class name to test.
@@ -399,7 +398,7 @@ feature {NONE} -- Implementation: preparation
 
 feature{NONE} -- Test result analyizing
 
-	print_new_class (a_file: KL_TEXT_OUTPUT_FILE_32; a_class_name: STRING)
+	print_new_class (a_file: KL_TEXT_OUTPUT_FILE_32; a_class_name: READABLE_STRING_32)
 			-- <Precursor>
 		local
 			l_system: like system
@@ -485,7 +484,7 @@ feature {NONE} -- Constants
 			-- Maximal number of test routines in a single class
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

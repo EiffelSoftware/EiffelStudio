@@ -110,11 +110,11 @@ feature {NONE} -- Rule Checking
 	process_routine (r: ROUTINE_AS)
 			-- Process a routine `r`.
 		local
-			stamp: like date
+			stamp: like {OBSOLETE_MESSAGE_PARSER}.date
 			expires_in: INTEGER
 		do
 			if attached r.obsolete_message as m then
-				stamp := date (m.value)
+				stamp := {OBSOLETE_MESSAGE_PARSER}.date (m.value)
 				expires_in := stamp.date.relative_duration (create {DATE}.make_now_utc).days_count
 				if attached feature_names as names then
 					if not stamp.is_specified then
@@ -125,7 +125,7 @@ feature {NONE} -- Rule Checking
 									Result := agent {TEXT_FORMATTER}.add_feature_name (feature_name.visual_name_32, feature_class)
 								end (?, current_context.checking_class), names))>>,
 							ca_messages.obsolete_feature_invalid_date_violation,
-							<<element (agent {TEXT_FORMATTER}.add (default_date.formatted_out (date_code)))>>,
+							<<element (agent {TEXT_FORMATTER}.add ({OBSOLETE_MESSAGE_PARSER}.default_date_string))>>,
 							Void,
 							m.index)
 					end

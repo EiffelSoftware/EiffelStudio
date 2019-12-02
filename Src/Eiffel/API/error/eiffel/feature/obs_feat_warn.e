@@ -33,6 +33,9 @@ feature -- Properties
 	obsolete_feature: E_FEATURE
 			-- feature name
 
+	expiration: INTEGER
+			-- Number of days before the call will be reported as an error.
+
 feature -- Access
 
 	is_defined: BOOLEAN
@@ -67,6 +70,11 @@ feature -- Output
 			obsolete_class.append_name (a_text_formatter)
 			a_text_formatter.add (")")
 			a_text_formatter.add_new_line
+			if expiration > 0 then
+				a_text_formatter.add ("Days before expiration: ")
+				a_text_formatter.add_int (expiration)
+				a_text_formatter.add_new_line
+			end
 			a_text_formatter.add ("Obsolete message: ")
 			m := obsolete_feature.obsolete_message_32
 			if m.has ('%N') then
@@ -122,8 +130,16 @@ feature -- Setting
 			obsolete_feature := f.api_feature (f.written_in)
 		end
 
+	set_expiration (days: like expiration)
+			-- Set `expiration` to `days`.
+		do
+			expiration := days
+		ensure
+			expiration = days
+		end
+
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Factory for configuration objects, used by the compiler."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -23,7 +23,7 @@ inherit
 
 feature -- Factory
 
-	new_class (a_file_name: STRING_32; a_group: CLUSTER_I; a_path: STRING_32; a_classname: STRING_8): EIFFEL_CLASS_I
+	new_class (a_file_name: STRING_32; a_group: CLUSTER_I; a_path: STRING_32; a_classname: READABLE_STRING_32): EIFFEL_CLASS_I
 			-- Create a `CONF_CLASS' object.
 		do
 			create Result.make (a_file_name, a_group, a_path, a_classname, Current)
@@ -72,7 +72,7 @@ feature -- Factory
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -257,15 +257,12 @@ feature -- Visit nodes
 
 								-- only assemblies that have not been reused remain in `old_assemblies'
 							if l_old_assemblies /= Void then
-								from
-									l_old_assemblies.start
-								until
-									l_old_assemblies.after
+								across
+									l_old_assemblies as a
 								loop
-									l_old_group := l_old_assemblies.item_for_iteration
+									l_old_group := a.item
 									l_old_group.invalidate
 									process_removed_classes (l_old_group.classes)
-									l_old_assemblies.forth
 								end
 							end
 						end
@@ -334,16 +331,13 @@ feature -- Visit nodes
 				-- if the renaming/prefix changed, mark classes as partly removed
 			if l_old_assembly /= Void and then not (l_old_assembly.name_prefix ~ an_assembly.name_prefix and l_old_assembly.renaming ~ an_assembly.renaming) then
 				if attached l_old_assembly.classes as l_classes then
-					from
-						l_classes.start
-					until
-						l_classes.after
+					across
+						l_classes as c
 					loop
-						l_cl := l_classes.item_for_iteration
+						l_cl := c.item
 						if l_cl.is_compiled then
 							partly_removed_classes.force ([l_cl, l_current_system])
 						end
-						l_classes.forth
 					end
 				else
 					check classes_set: False end
@@ -410,39 +404,30 @@ feature -- Visit nodes
 
 					-- if the renaming/prefix changed we have to add the classes to the partly_removed_classes list
 				if l_old_library /= Void and then not (l_old_library.name_prefix ~ a_library.name_prefix and l_old_library.renaming ~ a_library.renaming) then
-					from
-						l_current_classes.start
-					until
-						l_current_classes.after
+					across
+						l_current_classes as c
 					loop
-						l_cl := l_current_classes.item_for_iteration
+						l_cl := c.item
 						if l_cl.is_compiled then
 							l_partly_removed_classes.force ([l_cl, l_current_system])
 						end
-						l_current_classes.forth
 					end
 				end
 
 					-- do renaming prefixing if necessary
 				if attached a_library.renaming as l_ren then
-					from
-						l_ren.start
-					until
-						l_ren.after
+					across
+						l_ren as r
 					loop
-						l_current_classes.replace_key (l_ren.item_for_iteration, l_ren.key_for_iteration)
-						l_ren.forth
+						l_current_classes.replace_key (r.item, r.key)
 					end
 				end
 				if attached a_library.name_prefix as l_pre and then not l_pre.is_empty then
 					create l_prefixed_classes.make (l_current_classes.count)
-					from
-						l_current_classes.start
-					until
-						l_current_classes.after
+					across
+						l_current_classes as c
 					loop
-						l_prefixed_classes.put (l_current_classes.item_for_iteration, l_pre+l_current_classes.key_for_iteration)
-						l_current_classes.forth
+						l_prefixed_classes.put (c.item, l_pre + c.key)
 					end
 					a_library.set_classes (l_prefixed_classes)
 				else
@@ -507,16 +492,13 @@ feature -- Visit nodes
 				attached {CONF_CLUSTER} old_group as l_old_cluster and then
 				not l_old_cluster.mapping.is_equal (a_cluster.mapping)
 			then
-				from
-					l_current_classes.start
-				until
-					l_current_classes.after
+				across
+					l_current_classes as c
 				loop
-					l_class := l_current_classes.item_for_iteration
+					l_class := c.item
 					if l_class.is_compiled then
 						l_modified_classes.force (l_class)
 					end
-					l_current_classes.forth
 				end
 			end
 
@@ -659,7 +641,7 @@ feature {NONE} -- Implementation
 	old_group: detachable CONF_GROUP
 			-- The old group that corresponds to `current_group'.
 
-	partial_classes: detachable HASH_TABLE [ARRAYED_LIST [READABLE_STRING_GENERAL], STRING]
+	partial_classes: detachable HASH_TABLE [ARRAYED_LIST [READABLE_STRING_GENERAL], READABLE_STRING_32]
 			-- The partial classes in the current string mapped to their class name.
 
 	partial_location: CONF_DIRECTORY_LOCATION
@@ -670,7 +652,7 @@ feature {NONE} -- Implementation
 		local
 			l_file: KL_BINARY_INPUT_FILE_32
 			l_class: CONF_CLASS
-			l_name: STRING
+			l_name: STRING_32
 			l_full_file: PATH
 			l_pc: ARRAYED_LIST [READABLE_STRING_GENERAL]
 			l_file_path: PATH
@@ -817,21 +799,20 @@ feature {NONE} -- Implementation
 				end
 					-- Check if classname matches filename
 				if
-					(l_class /= Void and then l_class.options.is_warning_enabled (w_classname_filename_mismatch)) or else
-					 application_target.options.is_warning_enabled (w_classname_filename_mismatch)
-				then
+					(l_class /= Void and then l_class.options.is_warning_enabled (w_classname_filename_mismatch) or else
+					application_target.options.is_warning_enabled (w_classname_filename_mismatch)) and then
 						-- l_name is set by all execution paths since the ones where it is not set raise an error.
 						-- Check file name against class name
-					if not a_file.substring (1, a_file.count - 1 - eiffel_file_extension.count).is_case_insensitive_equal_general (l_name) then
-							-- We propose the correct file name. The file name construction follows the same schema as above
-						create l_suggested_filename.make (25)
-						l_suggested_filename.append_string (a_cluster.location.evaluated_directory.name)
-						l_suggested_filename.append_string ({STRING_32} "/" + a_path + "/" + l_name.as_lower + "." + eiffel_file_extension)
-						if l_full_file = Void then
-							l_full_file := a_cluster.location.evaluated_directory.extended_path (l_file_path)
-						end
-						add_warning (create {CONF_ERROR_FILENAME}.make (l_full_file.name, l_name, l_suggested_filename))
+					not a_file.substring (1, a_file.count - 1 - eiffel_file_extension.count).is_case_insensitive_equal_general (l_name)
+				then
+						-- We propose the correct file name. The file name construction follows the same schema as above
+					create l_suggested_filename.make (25)
+					l_suggested_filename.append_string (a_cluster.location.evaluated_directory.name)
+					l_suggested_filename.append_string ({STRING_32} "/" + a_path + "/" + l_name.as_lower + "." + eiffel_file_extension)
+					if l_full_file = Void then
+						l_full_file := a_cluster.location.evaluated_directory.extended_path (l_file_path)
 					end
+					add_warning (create {CONF_ERROR_FILENAME}.make (l_full_file.name, l_name, l_suggested_filename))
 				end
 			end
 		ensure then
@@ -857,21 +838,17 @@ feature {NONE} -- Implementation
 	process_removed (a_groups: detachable STRING_TABLE [CONF_GROUP])
 			-- Add the classes that have been removed to `removed_classes'
 		local
-			l_group: CONF_GROUP
 			l_done: BOOLEAN
 		do
 			if a_groups /= Void then
-				from
-					a_groups.start
-				until
-					a_groups.after
+				across
+					a_groups as g
 				loop
 					l_done := False
-					l_group := a_groups.item_for_iteration
-					check
-						not_assembly: not l_group.is_assembly
-					end
-					if l_group /= Void then
+					if attached g.item as l_group then
+						check
+							not_assembly: not l_group.is_assembly
+						end
 							-- check if the group has already been handled
 						if handled_groups.has (l_group) then
 							l_done := True
@@ -882,28 +859,24 @@ feature {NONE} -- Implementation
 
 							-- check if it's a library that still is used and therefore is alredy done
 							-- (needed if the same library is used multiple times)
-						if not l_done and then attached {CONF_LIBRARY} l_group as l_library then
-							check l_group.is_library end
+						if
+							not l_done and then
+							attached {CONF_LIBRARY} l_group as l_library and then
 								-- although the classes are still there, we have to recheck all clients
 								-- of this class in `current_system' because they no longer
 								-- have access to those classes.
-							if
-								attached l_library.library_target as l_library_target and then
-								attached all_libraries as ls and then
-								ls.has (l_library_target.system.uuid)
-							then
-								l_done := True
-								if attached l_library.classes as l_classes then
-									check classes_set: l_library.classes_set end
-									from
-										l_classes.start
-									until
-										l_classes.after
-									loop
-										if l_classes.item_for_iteration.is_compiled then
-											partly_removed_classes.force ([l_classes.item_for_iteration, current_system])
-										end
-										l_classes.forth
+							attached l_library.library_target as l_library_target and then
+							attached all_libraries as ls and then
+							ls.has (l_library_target.system.uuid)
+						then
+							l_done := True
+							if attached l_library.classes as l_classes then
+								check classes_set: l_library.classes_set end
+								across
+									l_classes as c
+								loop
+									if c.item.is_compiled then
+										partly_removed_classes.force ([c.item, current_system])
 									end
 								end
 							end
@@ -913,7 +886,6 @@ feature {NONE} -- Implementation
 							process_removed_classes (l_group.classes)
 						end
 					end
-					a_groups.forth
 				end
 			end
 		end
@@ -921,18 +893,15 @@ feature {NONE} -- Implementation
 	process_removed_classes (a_classes: detachable STRING_TABLE [CONF_CLASS])
 			-- Add compiled classes from `a_classes' that are not in `reused_classes' to `removed_classes'.
 		local
-			l_overrides: detachable ARRAYED_LIST [CONF_CLASS]
 			l_cl: CONF_CLASS
 			l_cl_over: CONF_CLASS
 			l_file: RAW_FILE
 		do
 			if a_classes /= Void then
-				from
-					a_classes.start
-				until
-					a_classes.after
+				across
+					a_classes as c
 				loop
-					l_cl := a_classes.item_for_iteration
+					l_cl := c.item
 						-- only if the class realy has been removed
 					if not reused_classes.has (l_cl) then
 							-- remove partial class files
@@ -943,19 +912,15 @@ feature {NONE} -- Implementation
 							end
 						end
 							-- for override classes, mark the classes that used to be overriden as modified
-						l_overrides := l_cl.overrides
-						if l_overrides /= Void then
+						if attached l_cl.overrides as l_overrides then
 							removed_classes_from_override.force (l_cl)
-							from
-								l_overrides.start
-							until
-								l_overrides.after
+							across
+								l_overrides as o
 							loop
-								l_cl_over := l_overrides.item
+								l_cl_over := o.item
 								if l_cl_over.is_compiled and then l_cl_over.is_valid then
 									modified_classes.force (l_cl_over)
 								end
-								l_overrides.forth
 							end
 						end
 
@@ -964,7 +929,6 @@ feature {NONE} -- Implementation
 							removed_classes.force (l_cl)
 						end
 					end
-					a_classes.forth
 				end
 			end
 		end
@@ -977,12 +941,10 @@ feature {NONE} -- Implementation
 			l_group: CONF_GROUP
 			l_old_group: detachable like old_group
 		do
-			from
-				a_new_groups.start
-			until
-				a_new_groups.after
+			across
+				a_new_groups as g
 			loop
-				l_group := a_new_groups.item_for_iteration
+				l_group := g.item
 				if l_group.is_enabled (state) then
 						-- Look for a group in old groups with the same name
 						-- this should work in most situations, in the rest of
@@ -993,11 +955,11 @@ feature {NONE} -- Implementation
 						if l_old_group /= Void then
 							if l_old_group.classes /= Void then
 								handled_groups.force (l_old_group)
-								if l_old_group /= l_group then
+								if l_old_group = l_group then
+									old_group := l_old_group.twin
+								else
 									l_old_group.invalidate
 									old_group := l_old_group
-								else
-									old_group := l_old_group.twin
 								end
 							else
 								old_group := Void
@@ -1007,8 +969,6 @@ feature {NONE} -- Implementation
 					l_group.process (Current)
 					old_group := Void
 				end
-
-				a_new_groups.forth
 			end
 		ensure
 			old_group_void: old_group = Void
@@ -1023,7 +983,7 @@ feature {NONE} -- Implementation
 			current_cluster_not_void: current_cluster /= Void
 		local
 			l_class: detachable CONF_CLASS_PARTIAL
-			l_name: STRING
+			l_name: READABLE_STRING_32
 			l_old_group_classes: like old_group.classes
 		do
 			if
@@ -1077,7 +1037,7 @@ feature {NONE} -- Implementation
 				check precondition__partial_classes_not_void: False end
 			end
 		ensure
-			classes_added: not is_error implies attached current_classes as c and then c.count = old (if attached current_classes as o then o.count else 0 end) + (if attached partial_classes as p then p.count else 0 end)
+			classes_added: not is_error implies attached current_classes as c and then c.count = if attached partial_classes as p then p.count else 0 end + old if attached current_classes as o then o.count else 0 end
 		end
 
 feature {NONE} -- contracts
@@ -1149,7 +1109,7 @@ invariant
 	last_warnings_not_void: last_warnings /= Void
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,7 +1,5 @@
-note
-	description: "{
-		Test extraction implementation.
-	}"
+﻿note
+	description: "Test extraction implementation."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -104,7 +102,7 @@ feature {NONE} -- Status setting
 			progress := {REAL_32} 0.5
 		end
 
-	print_new_class (a_file: KL_TEXT_OUTPUT_FILE_32; a_class_name: STRING)
+	print_new_class (a_file: KL_TEXT_OUTPUT_FILE_32; a_class_name: READABLE_STRING_32)
 			-- <Precursor>
 		local
 			l_source_writer: TEST_EXTRACTED_SOURCE_WRITER
@@ -152,28 +150,21 @@ feature {NONE} -- Status setting
 			capturer.observers.remove
 
 			if l_routines /= Void then
-				from
-					l_routines.start
-				until
-					l_routines.after
+				across
+					l_routines as r
 				loop
 					create l_name.make (30)
-					l_name.append_string_general (a_class_name)
+					l_name.append (a_class_name)
 					l_name.append_string_general (".test_")
-					l_name.append (l_routines.key_for_iteration)
+					l_name.append (r.key)
 					from
 						i := 1
 					until
-						i > l_routines.item_for_iteration
+						i > r.item
 					loop
-						if i > 1 then
-							publish_test_creation (l_name + "_" + i.out)
-						else
-							publish_test_creation (l_name)
-						end
+						publish_test_creation (if i > 1 then l_name + "_" + i.out else l_name end)
 						i := i + 1
 					end
-					l_routines.forth
 				end
 			end
 		end
@@ -182,16 +173,15 @@ feature -- Query
 
 	is_valid_call_stack_element (a_index: INTEGER): BOOLEAN
 			-- <Precursor>
-		local
-			l_cs: EIFFEL_CALL_STACK
 		do
-			if debugger_manager.application_is_executing and then debugger_manager.application_is_stopped then
-				l_cs := debugger_manager.application_status.current_call_stack
-				if l_cs /= Void and then l_cs.count >= a_index then
-					if attached {EIFFEL_CALL_STACK_ELEMENT} l_cs.i_th(a_index) as l_cse then
-						Result := capturer.is_valid_call_stack_element (l_cse)
-					end
-				end
+			if
+				debugger_manager.application_is_executing and then
+				debugger_manager.application_is_stopped and then
+				attached debugger_manager.application_status.current_call_stack as l_cs and then
+				l_cs.count >= a_index and then
+				attached {EIFFEL_CALL_STACK_ELEMENT} l_cs.i_th(a_index) as l_cse
+			then
+				Result := capturer.is_valid_call_stack_element (l_cse)
 			end
 		end
 
@@ -208,7 +198,7 @@ feature {NONE} -- Constants
 	e_no_application_status: STRING = "Could not retrieve application status"
 
 ;note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

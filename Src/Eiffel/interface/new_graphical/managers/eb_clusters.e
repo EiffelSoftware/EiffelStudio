@@ -1,12 +1,12 @@
-note
-	description	: "[
+﻿note
+	description: "[
 				Object that encapsulates all the clusters and the classes of the project
 				The favorites are project-wide.
 			]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EB_CLUSTERS
@@ -84,32 +84,26 @@ feature -- Initialization
 				l_target := universe.target
 			end
 			if l_target /= Void then
-				from
-					l_cls := l_target.clusters
-					create l_cls_lst.make (l_cls.count)
-					l_cls.start
-				until
-					l_cls.after
+				l_cls := l_target.clusters
+				create l_cls_lst.make (l_cls.count)
+				across
+					l_cls as c
 				loop
-					l_cluster := l_cls.item_for_iteration
+					l_cluster := c.item
 					if l_cluster.parent = Void and l_cluster.classes_set then
 						l_cls_lst.force (l_cluster, l_cluster.name)
 					end
-					l_cls.forth
 				end
 				clusters := create_groups (l_cls_lst)
-				from
-					l_cls := l_target.overrides
-					create l_cls_lst.make (l_cls.count)
-					l_cls.start
-				until
-					l_cls.after
+				l_cls := l_target.overrides
+				create l_cls_lst.make (l_cls.count)
+				across
+					l_cls as c
 				loop
-					l_cluster := l_cls.item_for_iteration
+					l_cluster := c.item
 					if l_cluster.parent = Void and l_cluster.classes_set then
 						l_cls_lst.force (l_cluster, l_cluster.name)
 					end
-					l_cls.forth
 				end
 				overrides := create_groups (l_cls_lst)
 				l_libs := l_target.libraries
@@ -202,7 +196,7 @@ feature -- Observer Pattern
 			end
 		end
 
-	on_class_moved (a_class: CONF_CLASS; old_group: CONF_GROUP; old_path: STRING)
+	on_class_moved (a_class: CONF_CLASS; old_group: CONF_GROUP; old_path: READABLE_STRING_32)
 			-- `a_class' has been moved away from `old_cluster'.
 			-- `old_path' is old relative path in `old_group'
 		require
@@ -374,11 +368,9 @@ feature -- Element change
 			new_file: RAW_FILE
 			input: STRING
 			retried: BOOLEAN
-			fname: PATH
 			tdirsrc, tdirdes: DIRECTORY
 			l_lib_usage: ARRAYED_LIST [CONF_LIBRARY]
 			l_src_path, l_dst_path: PATH
-			l_classes: STRING_TABLE [CONF_CLASS]
 			l_old_relative_path: STRING_32
 		do
 			if
@@ -402,8 +394,7 @@ feature -- Element change
 					then
 						if not l_src_path.same_as (l_dst_path) then
 							create old_file.make_with_path (a_class.full_file_name)
-							fname := l_dst_path.extended (a_class.file_name)
-							create new_file.make_with_path (fname)
+							create new_file.make_with_path (l_dst_path.extended (a_class.file_name))
 							if
 								old_file.exists and then
 								old_file.is_readable and then
@@ -421,7 +412,9 @@ feature -- Element change
 								old_file.delete
 
 									-- if the group changed we have to do some things
-								if old_group /= new_cluster then
+								if old_group = new_cluster then
+									a_class.rebuild (a_class.file_name, new_cluster, new_path)
+								else
 										-- Remove `a_class' from the old_group
 									old_group.classes.remove (a_class.name)
 									l_lib_usage := old_group.target.system.used_in_libraries
@@ -439,15 +432,12 @@ feature -- Element change
 										-- Add `a_class' to the new cluster
 									a_class.rebuild (a_class.file_name, new_cluster, new_path)
 									if not new_cluster.classes_set then
-										create l_classes.make (1)
-										new_cluster.set_classes (l_classes)
+										new_cluster.set_classes (create {STRING_TABLE [CONF_CLASS]}.make (1))
 									end
 									new_cluster.classes.force (a_class, a_class.name)
 
 										-- force a rebuild to handle the rest
 									system.force_rebuild
-								else
-									a_class.rebuild (a_class.file_name, new_cluster, new_path)
 								end
 
 									-- Rebuild old and new folders
@@ -476,7 +466,7 @@ feature -- Element change
 			retry
 		end
 
-	add_class_to_cluster (a_class: READABLE_STRING_GENERAL; a_cluster: CONF_CLUSTER; a_path: READABLE_STRING_GENERAL; a_class_name: STRING; a_perform_quickmelt: BOOLEAN)
+	add_class_to_cluster (a_class: READABLE_STRING_GENERAL; a_cluster: CONF_CLUSTER; a_path: READABLE_STRING_GENERAL; a_class_name: READABLE_STRING_32; a_perform_quickmelt: BOOLEAN)
 			-- Add class with file name `a_class' to `a_cluster' under `a_path' and notify observers.
 		require
 			a_class_not_void: a_class /= Void
@@ -485,7 +475,6 @@ feature -- Element change
 			a_class_name_not_void: a_class_name /= Void
 			a_class_name_not_empty: not a_class_name.is_empty
 		local
-			l_folder: EB_SORTED_CLUSTER
 			l_new_class: EIFFEL_CLASS_I
 			l_clu: CLUSTER_I
 			l_fact: CONF_COMP_FACTORY
@@ -505,8 +494,7 @@ feature -- Element change
 			l_clu.classes_by_filename.force (l_new_class, l_file_path)
 
 				-- update folder
-			l_folder := folder_from_cluster (a_cluster)
-			l_folder.reinitialize
+			folder_from_cluster (a_cluster).reinitialize
 			on_class_added (l_new_class)
 
 				-- force rebuild
@@ -623,20 +611,14 @@ feature {NONE} -- Implementation
 			-- Create sorted groups out of `a_groups'.
 		require
 			a_groups_not_void: a_groups /= Void
-		local
-			l_grp: EB_SORTED_CLUSTER
 		do
 			create Result.make (a_groups.count)
-			from
-				a_groups.start
-			until
-				a_groups.after
+			across
+				a_groups as g
 			loop
-				if a_groups.item_for_iteration.classes_set then
-					create l_grp.make (a_groups.item_for_iteration)
-					Result.force_last (l_grp)
+				if g.item.classes_set then
+					Result.force_last (create {EB_SORTED_CLUSTER}.make (g.item))
 				end
-				a_groups.forth
 			end
 			Result.sort (create {DS_QUICK_SORTER [EB_SORTED_CLUSTER]}.make (create {KL_COMPARABLE_COMPARATOR [EB_SORTED_CLUSTER]}.make))
 		ensure
@@ -735,17 +717,11 @@ feature {NONE} -- Implementation
 			-- Find a sorted cluster representing `a_cluster'.
 		require
 			a_cluster_not_void: a_group /= Void
-		local
-			path: LINKED_LIST [CONF_GROUP]
 		do
-			path := cluster_parents (a_group)
-			from
-				path.start
-			until
-				path.after
+			across
+				cluster_parents (a_group) as p
 			loop
-				Result := find_cluster_in (path.item, Result)
-				path.forth
+				Result := find_cluster_in (p.item, Result)
 			end
 		end
 
@@ -948,7 +924,7 @@ invariant
 	assemblies_not_void: assemblies /= Void
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

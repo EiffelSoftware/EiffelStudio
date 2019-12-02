@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Services interface for supporting the wizard engine.
 	]"
@@ -61,7 +61,7 @@ feature -- Basic operations
 		deferred
 		end
 
-	render_template_to_file (a_template: READABLE_STRING_GENERAL; a_parameters: detachable HASH_TABLE [ANY, STRING_32]; a_destination_file: PATH)
+	render_template_to_file (a_template: READABLE_STRING_GENERAL; a_parameters: detachable HASH_TABLE [ANY, READABLE_STRING_32]; a_destination_file: PATH)
 			-- Renders a text template to a destination file.
 			--
 			-- `a_template': The tokenized text to render with the supplied parameters.
@@ -76,7 +76,7 @@ feature -- Basic operations
 		deferred
 		end
 
-	render_template_from_file_to_file (a_file_name: PATH; a_parameters: detachable HASH_TABLE [ANY, STRING_32]; a_destination_file: PATH)
+	render_template_from_file_to_file (a_file_name: PATH; a_parameters: detachable HASH_TABLE [ANY, READABLE_STRING_32]; a_destination_file: PATH)
 			-- Renders a text template from a file to a destination file.
 			--
 			-- `a_file_name': The source file name to retrieve a tokenized template from.
@@ -93,7 +93,7 @@ feature -- Basic operations
 		end
 
 ;note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

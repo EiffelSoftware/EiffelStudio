@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Tree showing the classes present in the system."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -305,7 +305,7 @@ feature -- Activation
 			classi_stone: CLASSI_STONE
 			cluster_stone: CLUSTER_STONE
 			l_grp: CONF_GROUP
-			l_path: STRING
+			l_path: STRING_32
 		do
 			classi_stone ?= a_stone
 			if classi_stone /= Void then
@@ -404,23 +404,23 @@ feature -- Activation
 			a_target_item := show_target_in (a_target, Void)
 		end
 
-	path_name_from_tree_node (tree_node: EV_TREE_NODE): STRING
+	path_name_from_tree_node (tree_node: EV_TREE_NODE): STRING_32
 			-- `Result' is a path name representing `tree_node' in the
 			-- form "base.kernel.COMPARABLE".
 		require
 			tree_node_not_void: tree_node /= Void
 		local
-			l_parent: EV_TREE_NODE
+			n: EV_TREE_NODE
 		do
 			from
-				l_parent ?= tree_node.parent
+				n := tree_node
 				Result := tree_node.text
 			until
-				l_parent = Void
+				not attached {EV_TREE_NODE} n.parent as p
 			loop
 				Result.prepend_character ('.')
-				Result.prepend (l_parent.text)
-				l_parent ?= l_parent.parent
+				Result.prepend (p.text)
+				n := p
 			end
 		ensure
 			Result_not_void: Result /= Void
@@ -460,7 +460,7 @@ feature -- Observer pattern
 			refresh
 		end
 
-	on_class_moved (a_class: CONF_CLASS; old_group: CONF_GROUP; old_path: STRING)
+	on_class_moved (a_class: CONF_CLASS; old_group: CONF_GROUP; old_path: READABLE_STRING_32)
 			-- Refresh the tree to display `a_class' in its new folder.
 			-- `old_path' is old relative path in `old_group'
 		do
@@ -549,11 +549,11 @@ feature {NONE} -- Rebuilding
 	library_header: EB_CLASSES_TREE_HEADER_ITEM
 			-- Header for libraries.
 
-	expanded_clusters: HASH_TABLE [STRING, STRING]
+	expanded_clusters: HASH_TABLE [READABLE_STRING_32, READABLE_STRING_32]
 		-- All cluster names marked as expanded during last call to
 		-- `store_expanded_state'.
 
-	selected_name: STRING
+	selected_name: STRING_32
 		-- Full name of item selected in `Current' before rebuilding,
 		-- including path.
 
@@ -580,7 +580,7 @@ feature {NONE} -- Rebuilding
 		local
 			current_node: EV_TREE_NODE
 			l_parent: EV_TREE_NODE
-			l_name: STRING
+			l_name: STRING_32
 		do
 			from
 				tree_list.start
@@ -600,20 +600,11 @@ feature {NONE} -- Rebuilding
 
 	restore_expanded_state
 			-- Restore all nodes of `Current', represented in `expanded_clusters'.
-		local
-			keys: ARRAY [STRING]
-			counter: INTEGER
-			key: STRING
 		do
-			keys := expanded_clusters.current_keys
-			from
-				counter := 1
-			until
-				counter > keys.count
+			across
+				expanded_clusters as c
 			loop
-				key := keys.item (counter)
-				expand_tree_item (key, Current)
-				counter := counter + 1
+				expand_tree_item (c.key, Current)
 			end
 			if selected_name /= Void then
 					-- If an item was selected before the rebuild, re-select
@@ -632,14 +623,14 @@ feature {NONE} -- Rebuilding
 			end
 		end
 
-	select_tree_item (full_path: STRING; tree_list: EV_TREE_NODE_LIST)
+	select_tree_item (full_path: STRING_32; tree_list: EV_TREE_NODE_LIST)
 			-- Select item in `tree_list' recursively, whose data path matches `full_path'.
 		require
 			full_path_not_void: full_path /= Void
 			tree_list_not_void: tree_list /= Void
 		local
-			key: STRING
-			item_key: STRING
+			key: STRING_32
+			item_key: STRING_32
 			dot_index: INTEGER
 		do
 			key := full_path
@@ -667,14 +658,14 @@ feature {NONE} -- Rebuilding
 			end
 		end
 
-	expand_tree_item (full_path: STRING; tree_item: EV_TREE_NODE_LIST)
+	expand_tree_item (full_path: STRING_32; tree_item: EV_TREE_NODE_LIST)
 			-- Expand item of `tree_item', whose data matches `full_path'.
 		require
 			full_path_not_void: full_path /= Void
 			tree_item_not_void: tree_item /= Void
 		local
-			key: STRING
-			item_key: STRING
+			key: STRING_32
+			item_key: STRING_32
 			dot_index: INTEGER
 		do
 			key := full_path
@@ -1159,7 +1150,7 @@ invariant
 	expanded_clusters_not_void: expanded_clusters /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

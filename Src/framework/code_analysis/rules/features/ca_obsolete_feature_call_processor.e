@@ -19,11 +19,11 @@ create
 
 feature -- Processing
 
-	process (message: READABLE_STRING_8; is_warning_enabled: BOOLEAN; context: CONTEXT; reporter: OBSOLETE_CALL_REPORTER [CONTEXT])
+	process (message: READABLE_STRING_8; warning_index: like {CONF_OPTION}.warning_term_index_none; context: CONTEXT; reporter: OBSOLETE_CALL_REPORTER [CONTEXT])
 			-- A procedure to process the osbolete message `message` with the flag indicating whether the warning is enabled `is_warning_enabled`
 			-- and report it using one of `report_error`, `report_warning` or `report_hint` accordingly.
 		local
-			stamp: like date
+			stamp: like {OBSOLETE_MESSAGE_PARSER}.date
 			expires_in: INTEGER
 			clean_message: READABLE_STRING_32
 			obsolete_message: READABLE_STRING_32
@@ -32,14 +32,17 @@ feature -- Processing
 			is_warning: BOOLEAN
 			is_hint: BOOLEAN
 		do
-			stamp := date (message)
+			stamp := {OBSOLETE_MESSAGE_PARSER}.date (message)
 			obsolete_message := u.utf_8_string_8_to_string_32 (message)
 			clean_message := u.utf_8_string_8_to_string_32 (stamp.message)
 			expires_in := stamp.date.relative_duration (create {DATE}.make_now_utc).days_count
-			if is_warning_enabled or else expires_in + feature_call_suppression_period.value <= 0 then
+			if
+				warning_index /= {CONF_OPTION}.warning_term_index_none or else
+				expires_in + feature_call_suppression_period.value <= 0
+			then
 					-- Warnings are either enabled or cannot be suppressed.
 				if expires_in > 0 then
-					is_hint := True
+					is_hint := warning_index = {CONF_OPTION}.warning_term_index_all
 				else
 					is_warning := True
 				end
@@ -47,11 +50,11 @@ feature -- Processing
 			expires_in := expires_in + feature_call_expiration.value
 			is_error := expires_in <= 0
 			if is_error then
-				reporter.report_obsolete_call (obsolete_message, clean_message, expires_in, reporter.obsolete_call_error, context)
+				reporter.report_obsolete_call (obsolete_message, clean_message, expires_in, {OBSOLETE_CALL_REPORTER [CONTEXT]}.obsolete_call_error, context)
 			elseif is_warning then
-				reporter.report_obsolete_call (obsolete_message, clean_message, expires_in, reporter.obsolete_call_warning, context)
+				reporter.report_obsolete_call (obsolete_message, clean_message, expires_in, {OBSOLETE_CALL_REPORTER [CONTEXT]}.obsolete_call_warning, context)
 			elseif is_hint then
-				reporter.report_obsolete_call (obsolete_message, clean_message, expires_in, reporter.obsolete_call_hint, context)
+				reporter.report_obsolete_call (obsolete_message, clean_message, expires_in, {OBSOLETE_CALL_REPORTER [CONTEXT]}.obsolete_call_hint, context)
 			end
 		end
 

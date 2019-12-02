@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that represent a class on the configuration level, if the project is compiled."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -34,7 +34,7 @@ create {CONF_PARSE_FACTORY}
 
 feature {NONE} -- Initialization
 
-	make (a_file_name: like file_name; a_group: like group; a_path: like path; a_classname: STRING; a_factory: like factory)
+	make (a_file_name: like file_name; a_group: like group; a_path: like path; a_classname: READABLE_STRING_32; a_factory: like factory)
 			-- Create
 		require
 			a_file_name_ok: a_file_name /= Void and then not a_file_name.is_empty
@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			file_name := a_file_name
 			group := a_group
 			path := a_path
-			name := a_classname
+			name := {UTF_CONVERTER}.string_32_to_utf_8_string_8 (a_classname)
 			is_valid := True
 			check_changed
 			is_renamed := False
@@ -76,7 +76,15 @@ feature -- Access, in compiled only, not stored to configuration file
 	options: CONF_OPTION
 			-- Options (Debuglevel, assertions, ...)
 		do
-			Result := actual_class.group.get_class_options (name)
+			if attached overriden_by as o then
+					-- Retrieve options from the group with an overrride.
+				Result := o.group.get_class_options (name)
+					-- Use settings from the original group
+					-- to make sure they are compatible to the rest of the original group.
+				Result.override_settings_from (group.get_class_options (name))
+			else
+				Result := group.get_class_options (name)
+			end
 			if Result.assertions = Void then
 				Result.set_assertions (factory.new_assertions)
 			end
@@ -550,7 +558,7 @@ invariant
 	factory_not_void: factory /= Void
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

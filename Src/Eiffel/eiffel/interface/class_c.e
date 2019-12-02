@@ -389,9 +389,22 @@ feature -- Status report
 	is_warning_reported_as_error (w: STRING): BOOLEAN
 			-- Should warning `w` be reported as an error?
 		require
-			is_warning_enabled (w)
+			is_warning_enabled (w) or else w.same_string ({CONF_CONSTANTS}.w_obsolete_feature)
 		do
 			Result := lace_class.options.is_warning_as_error
+		end
+
+	obsolete_call_warning_index: like {CONF_OPTION}.warning_term_index_none
+			-- Index of current value of an obsolete feature call warning.
+		do
+			Result :=
+				if lace_class.options.warning.index = {CONF_OPTION}.warning_index_none then
+					{CONF_OPTION}.warning_term_index_none
+				else
+					lace_class.options.warning_obsolete_call.index
+				end
+		ensure
+			{CONF_OPTION}.is_valid_warning_term_index (Result)
 		end
 
 	apply_msil_application_optimizations: BOOLEAN

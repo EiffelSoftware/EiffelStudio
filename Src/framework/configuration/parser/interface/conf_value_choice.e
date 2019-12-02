@@ -14,12 +14,15 @@ class CONF_VALUE_CHOICE
 inherit
 	CONF_VALUE
 		redefine
+			is_equal,
 			out,
+			set_safely,
 			unset
 		end
 
 	DEBUG_OUTPUT
 		redefine
+			is_equal,
 			out
 		end
 
@@ -68,6 +71,16 @@ feature -- Status report
 		end
 
 feature -- Comparison
+
+	is_equal (other: CONF_VALUE_CHOICE): BOOLEAN
+			-- <Precursor>
+		do
+			Result :=
+				index = other.index and then
+				default_index = other.default_index and then
+				is_set = other.is_set and then
+				content ~ other.content
+		end
 
 	same_kind (other: CONF_VALUE_CHOICE): BOOLEAN
 			-- Does `Current' represent the same option value as `other'?
@@ -134,6 +147,17 @@ feature -- Access
 		end
 
 feature -- Modification
+
+	set_safely (other: CONF_VALUE_CHOICE)
+			-- <Precursor>
+		local
+			d: like default_index
+		do
+			d := default_index
+			Precursor (other)
+				-- Restore default index (maybe required if default indexes are different due to different versions).
+			default_index := d
+		end
 
 	put_default_index (value: like index)
 			-- Set `default_index' to `value'.
@@ -219,7 +243,7 @@ invariant
 	unset_index: not is_set implies index = default_index
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

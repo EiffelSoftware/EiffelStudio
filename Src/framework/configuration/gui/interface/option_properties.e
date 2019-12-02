@@ -456,13 +456,12 @@ feature {NONE} -- Modification
 			an_inherited_options_not_void: an_inherited_options /= Void
 			properties_not_void: properties /= Void
 		local
-			c: CONF_VALUE_CHOICE
 			l_bool_prop: BOOLEAN_PROPERTY
-			l_warning: READABLE_STRING_GENERAL
+			l_warning: READABLE_STRING_32
+			p: PROPERTY
 		do
 			properties.add_section (conf_interface_names.section_warning)
 
-			c := if a_inherits then an_inherited_options.warning else Void end
 			add_choice_property (
 				locale.translation_in_context ("Warning", "configuration.option"),
 				locale.translation_in_context ({STRING_32} "[
@@ -476,7 +475,7 @@ feature {NONE} -- Modification
 					locale.translation_in_context ("Warning", "configuration.option"),
 					locale.translation_in_context ("Error", "configuration.option")>>),
 				an_options.warning,
-				c
+				if a_inherits then an_inherited_options.warning else Void end
 			)
 			if attached last_added_choice_property as l_prop then
 				l_prop.change_value_actions.extend (agent change_no_argument_wrapper ({READABLE_STRING_32}?, agent refresh))
@@ -490,28 +489,54 @@ feature {NONE} -- Modification
 				end
 			end
 
-			from
-				known_warnings.start
-			until
-				known_warnings.after
+			across
+				known_warnings as w
 			loop
-				l_warning := known_warnings.key_for_iteration
+				l_warning := w.key.as_string_32
 					-- Search if it is a warning that we show in the UI.
 					-- (we hide the obsolete warnings in the UI).
 				conf_interface_names.warning_names.search (l_warning)
 				if attached conf_interface_names.warning_names.item (l_warning) as n then
-					l_bool_prop := new_boolean_property (n, an_inherited_options.is_warning_enabled (l_warning))
-					if attached conf_interface_names.warning_descriptions.item (l_warning) as d then
-						l_bool_prop.set_description (d)
+					p := Void
+					if l_warning.same_string (w_obsolete_feature) then
+						add_choice_property (
+							l_warning,
+							locale.translation_in_context ({STRING_32} "[
+								What warnings about obsolete feature calls should be reported?
+								 • None: None;
+								 • Current: Only warnings that are relevant now (with the date that passed already);
+								 • All: All warnings (regardless of the associated date).
+							]", "configuration.option"),
+							create {ARRAYED_LIST [STRING_32]}.make_from_array (
+								<<locale.translation_in_context ("None", "configuration.option"),
+								locale.translation_in_context ("Current", "configuration.option"),
+								locale.translation_in_context ("All", "configuration.option")>>),
+							an_options.warning_obsolete_call,
+							if a_inherits then an_inherited_options.warning_obsolete_call else Void end
+						)
+						if attached last_added_choice_property as l_prop then
+							l_prop.change_value_actions.extend (agent change_no_argument_wrapper ({READABLE_STRING_32}?, agent refresh))
+							l_prop.change_value_actions.extend (agent change_no_argument_wrapper ({READABLE_STRING_32}?, agent handle_value_changes (False)))
+							if a_inherits then
+								l_prop.use_inherited_actions.extend (agent refresh)
+								l_prop.use_inherited_actions.extend (agent handle_value_changes (False))
+							end
+							p := l_prop
+						end
+					else
+						l_bool_prop := new_boolean_property (n, an_inherited_options.is_warning_enabled (l_warning))
+						if attached conf_interface_names.warning_descriptions.item (l_warning) as d then
+							l_bool_prop.set_description (d)
+						end
+						l_bool_prop.change_value_actions.extend (agent an_options.add_warning (l_warning, ?))
+						l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
+						properties.add_property (l_bool_prop)
+						p := l_bool_prop
 					end
-					l_bool_prop.change_value_actions.extend (agent an_options.add_warning (l_warning, ?))
-					l_bool_prop.change_value_actions.extend (agent change_no_argument_boolean_wrapper (?, agent handle_value_changes (False)))
-					properties.add_property (l_bool_prop)
-					if an_inherited_options.warning.index = {CONF_OPTION}.warning_index_none then
-						l_bool_prop.enable_readonly
+					if attached p and then an_inherited_options.warning.index = {CONF_OPTION}.warning_index_none then
+						p.enable_readonly
 					end
 				end
-				known_warnings.forth
 			end
 
 			properties.current_section.expand

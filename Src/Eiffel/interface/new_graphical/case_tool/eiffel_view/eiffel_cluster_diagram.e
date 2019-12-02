@@ -442,7 +442,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Cluster manager observer
 
-	on_class_moved (a_class: CONF_CLASS; old_cluster: CONF_GROUP; old_path: STRING)
+	on_class_moved (a_class: CONF_CLASS; old_cluster: CONF_GROUP; old_path: READABLE_STRING_32)
 			-- `a_class' has been moved away from `old_cluster'.
 			-- `old_path' is old relative path in `old_group'
 		local
@@ -539,17 +539,11 @@ feature {NONE} -- Cluster manager observer
 
 	on_cluster_changed (a_cluster: CLUSTER_I)
 			-- `a_cluster' was renamed.
-		local
-			l_clusters: ARRAYED_LIST [ES_CLUSTER]
 		do
-			l_clusters := model.cluster_from_interface (a_cluster)
-			from
-				l_clusters.start
-			until
-				l_clusters.after
+			across
+				model.cluster_from_interface (a_cluster) as c
 			loop
-				l_clusters.item.set_name (a_cluster.cluster_name)
-				l_clusters.forth
+				c.item.set_name_32 (a_cluster.cluster_name)
 			end
 		end
 
@@ -798,7 +792,7 @@ feature {NONE} -- Implementation
 			es_class: ES_CLASS
 			l_array_redo: ARRAYED_LIST [PROCEDURE]
 			l_array_undo: ARRAYED_LIST [PROCEDURE]
-			l_old_path: STRING
+			l_old_path: STRING_32
 		do
 			dropped_on_cluster := top_cluster_at (Current, drop_x, drop_y)
 			if dropped_on_cluster /= Void then
@@ -919,14 +913,11 @@ feature {NONE} -- Implementation
 		require
 			a_classes_not_void: a_classes /= Void
 		do
-			from
-				create {ARRAYED_LIST [ES_ITEM]} Result.make (a_classes.count * 2)
-				a_classes.start
-			until
-				a_classes.after
+			create {ARRAYED_LIST [ES_ITEM]} Result.make (a_classes.count * 2)
+			across
+				a_classes as c
 			loop
-				Result.append (a_classes.item.figure.model.needed_links)
-				a_classes.forth
+				Result.append (c.item.figure.model.needed_links)
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -952,27 +943,21 @@ feature {NONE} -- Implementation
 
 	top_cluster_at (a_group: EV_MODEL_GROUP; ax, ay: INTEGER): EIFFEL_CLUSTER_FIGURE
 			-- Top cluster at `ax', `ay'. Void if none.
-		local
-			l_item: EIFFEL_CLUSTER_FIGURE
 		do
-			from
-				a_group.start
-			until
-				a_group.after
+			across
+				a_group as g
 			loop
-				l_item ?= a_group.item
-				if l_item /= Void and then l_item.model.is_needed_on_diagram
-						and then
-				   (ax >= l_item.left and then ax <= l_item.right)
-						and then
-				   (ay >= l_item.top and then ay <= l_item.bottom)
+				if
+					attached {EIFFEL_CLUSTER_FIGURE} g.item as l_item and then
+					l_item.model.is_needed_on_diagram and then
+					(l_item.left <= ax and then ax <= l_item.right) and then
+					(l_item.top <= ay and then ay <= l_item.bottom)
 				then
 					Result := top_cluster_at (l_item, ax, ay)
 					if Result = Void then
 						Result := l_item
 					end
 				end
-				a_group.forth
 			end
 		end
 
@@ -985,7 +970,6 @@ feature {NONE} -- Implementation
 			l_lib: CONF_LIBRARY
 			l_as: CONF_ASSEMBLY
 			l_phys_as: CONF_PHYSICAL_ASSEMBLY
-			l_assemblies: ARRAYED_LIST [CONF_ASSEMBLY]
 		do
 			l_cluster ?= a_cluster
 			l_lib ?= a_cluster
@@ -1003,14 +987,10 @@ feature {NONE} -- Implementation
 				Result := library_usage_parents (l_as.target)
 			elseif l_phys_as /= Void then
 				create Result.make (5)
-				from
-					l_assemblies := l_phys_as.assemblies
-					l_assemblies.start
-				until
-					l_assemblies.after
+				across
+					l_phys_as.assemblies as p
 				loop
-					Result.append (model.cluster_from_interface (l_assemblies.item))
-					l_assemblies.forth
+					Result.append (model.cluster_from_interface (p.item))
 				end
 			else
 				check error: False end
@@ -1023,19 +1003,13 @@ feature {NONE} -- Implementation
 			-- Return groups because of library usage of `a_target'.
 		require
 			a_target_not_void: a_target /= Void
-		local
-			l_libs: ARRAYED_LIST [CONF_LIBRARY]
 		do
 			create Result.make (5)
-			l_libs := a_target.system.used_in_libraries
-			if l_libs /= Void then
-				from
-					l_libs.start
-				until
-					l_libs.after
+			if attached a_target.system.used_in_libraries as l_libs then
+				across
+					l_libs as l
 				loop
-					Result.append (model.cluster_from_interface (l_libs.item))
-					l_libs.forth
+					Result.append (model.cluster_from_interface (l.item))
 				end
 			end
 		ensure
@@ -1245,7 +1219,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

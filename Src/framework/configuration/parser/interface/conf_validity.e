@@ -58,10 +58,11 @@ feature -- Basic validity queries
 			a_warning_lower: a_warning.same_string (a_warning.as_lower)
 		do
 			Result :=
-				is_after_or_equal (a_namespace, namespace_1_18_0) and then valid_warnings_1_18_0.has (a_warning) or else
-				is_between_or_equal (a_namespace, namespace_1_17_0, namespace_1_17_0) and then valid_warnings_1_17_0.has (a_warning) or else
-				is_between_or_equal (a_namespace, namespace_1_10_0, namespace_1_16_0) and then valid_warnings_1_10_0.has (a_warning) or else
-				is_before_or_equal (a_namespace, namespace_1_9_0) and then valid_warnings_default.has (a_warning)
+				is_after_or_equal (a_namespace, namespace_1_21_0) and then valid_warnings_1_21_0 [a_warning] or else
+				is_between_or_equal (a_namespace, namespace_1_18_0, namespace_1_20_0) and then valid_warnings_1_18_0 [a_warning] or else
+				is_between_or_equal (a_namespace, namespace_1_17_0, namespace_1_17_0) and then valid_warnings_1_17_0 [a_warning] or else
+				is_between_or_equal (a_namespace, namespace_1_10_0, namespace_1_16_0) and then valid_warnings_1_10_0 [a_warning] or else
+				is_before_or_equal (a_namespace, namespace_1_9_0) and then valid_warnings_default [a_warning]
 		end
 
 	valid_regexp (a_regexp: READABLE_STRING_GENERAL): BOOLEAN
@@ -440,7 +441,7 @@ feature {NONE} -- Implementation
 	known_warnings: STRING_TABLE [BOOLEAN]
 			-- The codes of known warnings.
 		once
-			Result := valid_warnings_1_18_0
+			Result := valid_warnings_1_21_0
 		end
 
 	valid_warnings_default: STRING_TABLE [BOOLEAN]
@@ -487,6 +488,15 @@ feature {NONE} -- Implementation
 		once
 			Result := valid_warnings_1_17_0.twin
 			Result.force (False, w_manifest_array_type)
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	valid_warnings_1_21_0: STRING_TABLE [BOOLEAN]
+			-- The codes of valid warnings in `namespace_1_21_0` and above.
+		once
+			Result := valid_warnings_1_18_0.twin
+			Result.force (False, w_obsolete_feature)
 		ensure
 			Result_not_void: Result /= Void
 		end

@@ -1,6 +1,5 @@
 ﻿note
 	description: "Class providing base implementation for {ETEST} creation sessions."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -165,8 +164,8 @@ feature {NONE} -- Basic operations
 			l_location: like {PROJECT_DIRECTORY}.path
 			l_directory: DIRECTORY
 			l_file: KL_TEXT_OUTPUT_FILE_32
-			l_filename: STRING
-			l_class_name: STRING
+			l_filename: STRING_32
+			l_class_name: STRING_32
 			l_retry: BOOLEAN
 		do
 			l_cluster := cluster
@@ -187,7 +186,7 @@ feature {NONE} -- Basic operations
 					from until
 						l_file /= Void
 					loop
-						l_class_name := class_name.as_string_8
+						l_class_name := class_name
 						l_class_name.to_lower
 						if creates_multiple_classes or l_retry then
 							create l_filename.make (l_class_name.count + 6)
@@ -247,7 +246,7 @@ feature {NONE} -- Basic operations
 			end
 		end
 
-	print_new_class (a_file: KL_TEXT_OUTPUT_FILE_32; a_class_name: STRING)
+	print_new_class (a_file: KL_TEXT_OUTPUT_FILE_32; a_class_name: READABLE_STRING_32)
 			-- Print new class text to `a_file'.
 		require
 			a_file_attached: a_file /= Void
@@ -291,7 +290,7 @@ invariant
 	class_name_not_empty: not class_name.is_empty
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

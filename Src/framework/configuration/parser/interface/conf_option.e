@@ -59,6 +59,7 @@ feature {NONE} -- Creation
 			create catcall_detection.make (catcall_detection_values, catcall_detection_index_none)
 			is_obsolete_routine_type := True
 			create warning.make (warning_name, warning_index_none)
+			create warning_obsolete_call.make (warning_term_name, warning_term_index_current)
 		end
 
 	make_6_4
@@ -179,7 +180,8 @@ feature -- Status
 				debugs /= Void or
 				syntax.is_set or
 				array.is_set or
-				warning.is_set)
+				warning.is_set or
+				warning_obsolete_call.is_set)
 		end
 
 	is_empty_for (n: detachable READABLE_STRING_32): BOOLEAN
@@ -201,6 +203,7 @@ feature -- Status
 				syntax.is_set or
 				array.is_set or
 				warning.is_set or
+				warning_obsolete_call.is_set or
 					-- Void safety and catcall detection options are used only before `namespace_1_15_0`.
 				(is_before_or_equal (n, namespace_1_15_0) and then
 					(catcall_detection.is_set or
@@ -354,7 +357,7 @@ feature {NONE} -- Access: manifest array type
 			result_attached: Result /= Void
 		end
 
-feature -- Access: warnings
+feature -- Warning: access
 
 	warning: CONF_VALUE_CHOICE
 			-- Expected way to report warnings.
@@ -368,14 +371,105 @@ feature -- Access: warnings
 	warning_index_error: NATURAL_8 = 3
 			-- Option index to report warnings as errors.
 
-feature {NONE} -- Access: warnings
+	warnings: detachable STRING_TABLE [BOOLEAN]
+			-- Warning settings.
+
+	warning_obsolete_call: CONF_VALUE_CHOICE
+			-- Expected way to detect calls to obsolete features.
+			-- Associated indexes are:
+			-- • `warning_term_index_none`
+			-- • `warning_term_index_current`
+			-- • `warning_term_index_all`
+			-- Associated names are `warning_term_name`.
+
+	warning_term_index_none: NATURAL_8 = 1
+			-- Option index to suppress warnings.
+			-- Associated names are `warning_term_name`.
+
+	warning_term_index_current: NATURAL_8 = 2
+			-- Option index to report warnings relevant now.
+			-- Associated names are `warning_term_name`.
+
+	warning_term_index_all: NATURAL_8 = 3
+			-- Option index to report all warnings.
+			-- Associated names are `warning_term_name`.
+
+feature -- Warning: status report
+
+	is_valid_warning_term_index (i: like warning_term_index_none): BOOLEAN
+			-- Does `i` represent a valid index of a term warning (such as `warning_obsolete_call`)?
+		do
+			inspect i
+			when
+				warning_term_index_none,
+				warning_term_index_current,
+				warning_term_index_all
+			then
+				Result := True
+			else
+					-- False by default.
+			end
+		ensure
+			class
+			definition: Result = (<<warning_term_index_none, warning_term_index_current, warning_term_index_all>>).has (i)
+		end
+
+	is_warning_enabled (a_warning: READABLE_STRING_GENERAL): BOOLEAN
+			-- Is `a_warning` enabled?
+		require
+			a_warning_valid: is_warning_known (a_warning) and then not a_warning.is_case_insensitive_equal (w_obsolete_feature)
+		do
+			Result := warning.index /= warning_index_none and then (attached warnings as w implies (w.has_key (a_warning) implies w.found_item))
+		end
+
+	is_warning_as_error: BOOLEAN
+			-- Should a warning be reported as an error?
+		do
+			Result := warning.index = warning_index_error
+		end
+
+feature {NONE} -- Warning: access
 
 	warning_name: ARRAY [READABLE_STRING_32]
 			-- Available values for `warning` option.
-		once
+		once ("PROCESS")
 			Result := <<{STRING_32} "none", {STRING_32} "warning", {STRING_32} "error">>
 		ensure
 			result_attached: Result /= Void
+		end
+
+	warning_term_name: ARRAY [READABLE_STRING_32]
+			-- Available values for `warning_obsolete_call` option.
+			-- Associated indexes are:
+			-- • `warning_term_index_none`
+			-- • `warning_term_index_current`
+			-- • `warning_term_index_all`
+		once ("PROCESS")
+			Result := <<{STRING_32} "none", {STRING_32} "current", {STRING_32} "all">>
+		ensure
+			result_attached: Result /= Void
+		end
+
+feature -- Warning: modification
+
+	add_warning (a_name: READABLE_STRING_GENERAL; an_enabled: BOOLEAN)
+			-- Add a warning.
+		require
+			a_name_ok: a_name /= Void and then not a_name.is_empty
+			a_name_lower: a_name.same_string (a_name.as_lower)
+			known_warning: is_warning_known (a_name) and then not a_name.is_case_insensitive_equal (w_obsolete_feature)
+		local
+			w: like warnings
+		do
+			w := warnings
+			if w = Void then
+				create w.make_equal (1)
+				warnings := w
+			end
+			w.force (an_enabled, a_name)
+		ensure
+			warnings_set: attached warnings as el_warnings
+			added: el_warnings.has (a_name) and then el_warnings.item (a_name) = an_enabled
 		end
 
 feature -- Access: catcall
@@ -443,9 +537,6 @@ feature -- Access, stored in configuration file.
 	debugs: detachable STRING_TABLE [BOOLEAN]
 			-- Debug settings.
 
-	warnings: detachable STRING_TABLE [BOOLEAN]
-			-- Warning settings.
-
 feature -- Access queries
 
 	is_debug_enabled (a_debug: STRING): BOOLEAN
@@ -453,20 +544,6 @@ feature -- Access queries
 		do
 			Result := is_debug and then
 					attached debugs as l_debugs and then l_debugs.item (a_debug)
-		end
-
-	is_warning_enabled (a_warning: READABLE_STRING_GENERAL): BOOLEAN
-			-- Is `a_warning' enabled?
-		require
-			a_warning_valid: is_warning_known (a_warning)
-		do
-			Result := warning.index /= warning_index_none and then (attached warnings as w implies (w.has_key (a_warning) implies w.found_item))
-		end
-
-	is_warning_as_error: BOOLEAN
-			-- Should a warning be reported as an error?
-		do
-			Result := warning.index = warning_index_error
 		end
 
 feature {CONF_ACCESS} -- Update, stored in configuration file.
@@ -496,26 +573,6 @@ feature {CONF_ACCESS} -- Update, stored in configuration file.
 		ensure
 			debugs_set: attached debugs as el_debugs
 			added: el_debugs.has (a_name) and then el_debugs.item (a_name) = an_enabled
-		end
-
-	add_warning (a_name: READABLE_STRING_GENERAL; an_enabled: BOOLEAN)
-			-- Add a warning.
-		require
-			a_name_ok: a_name /= Void and then not a_name.is_empty
-			a_name_lower: a_name.same_string (a_name.as_lower)
-			known_warning: is_warning_known (a_name)
-		local
-			w: like warnings
-		do
-			w := warnings
-			if w = Void then
-				create w.make_equal (1)
-				warnings := w
-			end
-			w.force (an_enabled, a_name)
-		ensure
-			warnings_set: attached warnings as el_warnings
-			added: el_warnings.has (a_name) and then el_warnings.item (a_name) = an_enabled
 		end
 
 	set_local_namespace (a_namespace: like local_namespace)
@@ -663,14 +720,14 @@ feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN
 		do
-			if equal (assertions, other.assertions)
-			and then equal (debugs, other.debugs)
-			and then equal (description, other.description)
+			if assertions ~ other.assertions
+			and then debugs ~ other.debugs
+			and then description ~ other.description
 			and then is_attached_by_default = other.is_attached_by_default
 			and then is_attached_by_default_configured = other.is_attached_by_default_configured
 			and then is_obsolete_routine_type = other.is_obsolete_routine_type
 			and then is_obsolete_routine_type_configured = other.is_obsolete_routine_type_configured
-			and then catcall_detection.is_equal (other.catcall_detection)
+			and then catcall_detection ~ other.catcall_detection
 			and then is_debug = other.is_debug
 			and then is_debug_configured = other.is_debug_configured
 			and then is_full_class_checking = other.is_full_class_checking
@@ -683,13 +740,14 @@ feature -- Comparison
 			and then is_profile_configured = other.is_profile_configured
 			and then is_trace = other.is_trace
 			and then is_trace_configured = other.is_trace_configured
-			and then equal (local_namespace, other.local_namespace)
-			and then equal (namespace, other.namespace)
-			and then void_safety.is_equal (other.void_safety)
-			and then syntax.is_equal (other.syntax)
-			and then array.is_equal (other.array)
-			and then warning.is_equal (other.warning)
-			and then equal (warnings, other.warnings)
+			and then local_namespace ~ other.local_namespace
+			and then namespace ~ other.namespace
+			and then void_safety ~ other.void_safety
+			and then syntax ~ other.syntax
+			and then array ~ other.array
+			and then warning ~ other.warning
+			and then warning_obsolete_call ~ other.warning_obsolete_call
+			and then warnings ~ other.warnings
 			then
 				Result := True
 			end
@@ -805,12 +863,8 @@ feature -- Merging
 					is_debug_configured := other.is_debug_configured or else is_debug /~ other.is_debug
 					is_debug := other.is_debug
 				end
-				if
-					not warning.is_set and then
-					(other.warning.is_set or else warning.index /= other.warning.index)
-				then
-					warning.put_index (other.warning.index)
-				end
+				warning.set_safely (other.warning)
+				warning_obsolete_call.set_safely (other.warning_obsolete_call)
 				if not is_msil_application_optimize_configured then
 					is_msil_application_optimize_configured := other.is_msil_application_optimize_configured or else is_msil_application_optimize /~ other.is_msil_application_optimize
 					is_msil_application_optimize := other.is_msil_application_optimize
@@ -821,29 +875,20 @@ feature -- Merging
 	merge (other: like Current)
 			-- Merge with other, if the values aren't defined in `Current' take the values of `other'.
 			-- Apply this to all options.
-		local
-			l_namespace: like local_namespace
 		do
-			if other /= Void then
+			if attached other then
 				merge_client (other)
 					-- Computation of `namespace' by using values in `other'.
-				if attached other.namespace as l_other_namespace then
-					l_namespace := l_other_namespace
-				else
-					l_namespace := other.local_namespace
-				end
-				if attached local_namespace as l_local_namespace then
-					if l_namespace /= Void then
-						namespace := l_namespace + "." + l_local_namespace
+				namespace :=
+					if
+						attached if attached other.namespace as n then n else other.local_namespace end as o
+					then
+						if attached local_namespace as l then o + "." + l else o.twin end
+					elseif attached local_namespace as l then
+						l.twin
 					else
-						namespace := l_local_namespace.twin
+						Void
 					end
-				elseif l_namespace /= Void then
-					namespace := l_namespace.twin
-				else
-					namespace := Void
-				end
-
 				if not is_full_class_checking_configured then
 					is_full_class_checking_configured := other.is_full_class_checking_configured or else is_full_class_checking /~ other.is_full_class_checking
 					is_full_class_checking := other.is_full_class_checking

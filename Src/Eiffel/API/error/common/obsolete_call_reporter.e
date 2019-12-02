@@ -2,7 +2,7 @@
 	description: "An reporter for obsolete calls."
 	date: "$Date$"
 	revision: "$Revision$"
-	ca_ignore: "CA011", "CA011 – too many arguments"
+	ca_ignore: "CA011", "CA011: too many arguments"
 
 deferred class OBSOLETE_CALL_REPORTER [CONTEXT]
 
@@ -32,6 +32,7 @@ feature -- Severity
 					-- False otherwise.
 			end
 		ensure
+			class
 			definition: Result = (<<obsolete_call_error, obsolete_call_warning, obsolete_call_hint>>).has (obsolete_call_severity)
 		end
 
@@ -59,7 +60,7 @@ feature {NONE} -- Typing
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

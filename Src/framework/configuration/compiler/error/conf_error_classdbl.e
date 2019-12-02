@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Error for two classes with same name in same cluster."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,10 +16,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_class: READABLE_STRING_8; a_file1, a_file2, a_config: READABLE_STRING_32)
+	make (a_class: READABLE_STRING_32; a_file1, a_file2, a_config: READABLE_STRING_32)
 			-- Create.
 		do
-			text := {STRING_32} "Duplicate class: " + a_class.as_string_32 + "%N" + a_file1 + "%N" + a_file2 + "%NConfiguration: " + a_config
+			text := {STRING_32} "Duplicate class: " + a_class + "%N" + a_file1 + "%N" + a_file2 + "%NConfiguration: " + a_config
 		end
 
 feature -- Access
@@ -28,7 +28,7 @@ feature -- Access
 		-- The error message.
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

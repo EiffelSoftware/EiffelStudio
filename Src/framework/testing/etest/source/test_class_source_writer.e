@@ -1,6 +1,5 @@
 ﻿note
 	description: "Objects that write class text to file."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -9,7 +8,7 @@ deferred class
 
 feature -- Access
 
-	class_name: STRING
+	class_name: READABLE_STRING_32
 			-- Name of class
 		deferred
 		end
@@ -83,7 +82,7 @@ feature {NONE} -- Output
 		do
 			stream.put_line ("class")
 			stream.indent
-			stream.put_line (class_name)
+			stream.put_line ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (class_name))
 			stream.put_line ("")
 			stream.dedent
 
@@ -128,7 +127,7 @@ feature {NONE} -- Output
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

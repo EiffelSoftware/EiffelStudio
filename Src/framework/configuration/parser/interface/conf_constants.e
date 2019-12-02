@@ -89,7 +89,18 @@ feature -- Version types
 	v_compiler: STRING = "compiler"
 	v_msil_clr: STRING = "msil_clr"
 
-feature -- Warnings
+feature -- Warning: attributes
+
+	wa_name: STRING = "name"
+			-- Name of attribute "name".
+
+	wa_enabled: STRING = "enabled"
+			-- Name of attribute "enabled".
+
+	wa_value: STRING = "value"
+			-- Name of attribute "value".
+
+feature -- Warning: names
 
 	w_unused_local: STRING = "unused_local"
 	w_vwab: STRING = "vwab"

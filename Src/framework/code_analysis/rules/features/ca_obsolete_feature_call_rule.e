@@ -29,7 +29,6 @@ inherit
 			location: LOCATION_AS]]
 
 	CA_STANDARD_RULE
-	DATE_VALIDITY_CHECKER
 	INTERNAL_COMPILER_STRING_EXPORTER
 
 create
@@ -217,7 +216,7 @@ feature {NONE} -- Rule Checking
 					end
 				end
 				if attached f and attached m then
-					process (m, True, f.e_feature, c, feature_names, current_context.checking_class, call.first_token (current_context.matchlist), Current)
+					process (m, {CONF_OPTION}.warning_term_index_all, f.e_feature, c, feature_names, current_context.checking_class, call.first_token (current_context.matchlist), Current)
 				end
 			end
 		end

@@ -1,9 +1,9 @@
-note
+﻿note
 	description	: "Dialog for choosing where to put a new class"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	EB_CREATE_CLASS_DIALOG
@@ -103,7 +103,6 @@ feature {NONE} -- Initialization
 			cluster_label, name_label, file_label, creation_label: EV_LABEL
 			cancel_b: EV_BUTTON	-- Button to discard the class
 			bbox: EV_HORIZONTAL_BOX
-			l_cell: EV_CELL
 			sz: INTEGER
 			l_window: EB_DEVELOPMENT_WINDOW
 			l_factory: EB_CONTEXT_MENU_FACTORY
@@ -175,8 +174,6 @@ feature {NONE} -- Initialization
 			extend_no_expand (vb, bbox)
 
 			create bbox
-			create l_cell
-			l_cell.set_minimum_width (22)
 
 			create creation_label.make_with_text (Interface_names.l_creation)
 			creation_label.align_text_left
@@ -347,11 +344,10 @@ feature {NONE} -- Basic operations
 			l_wizard: SERVICE_CONSUMER [WIZARD_ENGINE_S]
 			l_source_file: PATH
 			l_user_file: detachable PATH
-			l_params: HASH_TABLE [ANY, STRING_32]
+			l_params: HASH_TABLE [ANY, READABLE_STRING_32]
 			l_buffer: attached STRING_32
 			l_parents: EV_LIST
 			l_creation_routine: detachable STRING_32
-			l_class_name: detachable STRING_32
 			l_has_conforming_inheritance, l_has_non_conforming_inheritance: BOOLEAN
 			retried: BOOLEAN
 		do
@@ -374,9 +370,8 @@ feature {NONE} -- Basic operations
 
 					create l_params.make (10)
 						-- Class name
-					l_class_name := class_name.as_string_32
-					if l_class_name /= Void then
-						l_params.force (l_class_name, class_name_symbol)
+					if attached class_name as n then
+						l_params.force (n, class_name_symbol)
 					end
 
 						-- Note keyword
@@ -500,18 +495,16 @@ feature {NONE} -- Access
 	change_cluster
 			-- Set `cluster' to selected cluster from tree.
 		local
-			l_folder: EB_CLASSES_TREE_FOLDER_ITEM
 			clu: EB_SORTED_CLUSTER
+			f: EB_CLASSES_TREE_FOLDER_ITEM
 		do
-			if cluster_list.selected_item /= Void then
-				l_folder ?= cluster_list.selected_item
-				if l_folder /= Void then
+			if attached cluster_list.selected_item as c then
+				if attached {EB_CLASSES_TREE_FOLDER_ITEM} c as l_folder then
 					clu := l_folder.data
-				else
-					l_folder ?= cluster_list.selected_item.parent
-					if l_folder /= Void then
-						clu := l_folder.data
-					end
+					f := l_folder
+				elseif attached {EB_CLASSES_TREE_FOLDER_ITEM} c.parent as l_folder then
+					clu := l_folder.data
+					f := l_folder
 				end
 				if clu = Void or else not clu.is_cluster then
 					aok := False
@@ -522,7 +515,8 @@ feature {NONE} -- Access
 				else
 					aok := True
 					cluster := clu.actual_cluster
-					path := l_folder.path
+					check from_condition: attached f then end
+					path := f.path
 				end
 			else
 				aok := False
@@ -532,7 +526,7 @@ feature {NONE} -- Access
 
 feature {NONE} -- Implementation
 
-	class_name: STRING
+	class_name: READABLE_STRING_32
 			-- Name of the class entered by the user.
 		do
 			Result := class_entry.text.as_upper
@@ -555,8 +549,8 @@ feature {NONE} -- Implementation
 				create Result.make_from_string (file_entry.text)
 			else
 				if
-					str @ (str.count) /= 'e' or else
-					str @ (str.count - 1) /= '.'
+					str [str.count] /= 'e' or else
+					str [str.count - 1] /= '.'
 				then
 					dotpos := str.last_index_of ('.', str.count) - 1
 					if dotpos > 0 then
@@ -677,7 +671,7 @@ feature {NONE} -- Implementation
 		require
 			current_state_is_valid: aok
 		local
-			cn: STRING
+			cn: like class_name
 		do
 			cn := class_name
 			aok := (create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_name (cn)
@@ -692,7 +686,7 @@ feature {NONE} -- Implementation
 			current_state_is_valid: aok
 			creation_check_selected: creation_check.is_selected
 		local
-			fn: STRING
+			fn: STRING_32
 		do
 			fn := creation_entry.text
 			aok := (create {EIFFEL_SYNTAX_CHECKER}).is_valid_feature_name_32 (fn)
@@ -704,7 +698,7 @@ feature {NONE} -- Implementation
 	update_file_entry
 			-- Update the file name according to the class name.
 		local
-			str: STRING
+			str: STRING_32
 		do
 			str := class_entry.text
 			str.right_adjust
@@ -914,7 +908,7 @@ invariant
 	cluster_implies_path: cluster /= Void implies path /= Void
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

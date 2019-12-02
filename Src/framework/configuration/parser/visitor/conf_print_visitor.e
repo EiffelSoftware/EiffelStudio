@@ -1135,23 +1135,29 @@ feature {NONE} -- Implementation
 			end
 
 			l_warnings := an_options.warnings
-			if l_warnings /= Void and then not l_warnings.is_empty then
-				create l_sorted_list.make_from_array (l_warnings.current_keys)
-				create l_sorter.make (create {STRING_COMPARATOR}.make)
-				l_sorter.sort (l_sorted_list)
-				from
-					l_sorted_list.start
-				until
-					l_sorted_list.after
-				loop
-					w := l_sorted_list.item_for_iteration
-					if valid_warning (w, namespace) then
-						append_tag_open ({STRING_32} "warning")
-						append_text_attribute ("name", w)
-						append_boolean_attribute ("enabled", l_warnings.item (w))
-						append_tag_close_empty
-					end
-					l_sorted_list.forth
+			if not attached l_warnings then
+				create l_warnings.make (0)
+			end
+			if an_options.warning_obsolete_call.is_set then
+				l_warnings.force (an_options.warning_obsolete_call.index /= {CONF_OPTION}.warning_term_index_none, w_obsolete_feature)
+			end
+			create l_sorted_list.make_from_array (l_warnings.current_keys)
+			create l_sorter.make (create {STRING_COMPARATOR}.make)
+			l_sorter.sort (l_sorted_list)
+			across
+				l_sorted_list as i
+			loop
+				w := i.item
+				if is_after_or_equal (namespace, namespace_1_21_0) and then w.same_string (w_obsolete_feature) then
+					append_tag_open ({STRING_32} "warning")
+					append_text_attribute (wa_name, w)
+					append_text_attribute (wa_value, an_options.warning_obsolete_call.item)
+					append_tag_close_empty
+				elseif valid_warning (w, namespace) then
+					append_tag_open ({STRING_32} "warning")
+					append_text_attribute (wa_name, w)
+					append_boolean_attribute (wa_enabled, l_warnings.item (w))
+					append_tag_close_empty
 				end
 			end
 		end

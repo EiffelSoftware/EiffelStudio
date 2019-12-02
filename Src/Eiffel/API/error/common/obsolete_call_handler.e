@@ -12,7 +12,7 @@ inherit
 		obsolete_class: CLASS_C
 		current_feature: detachable FEATURE_I
 		current_class: CLASS_C
-		is_warning_enabled: BOOLEAN
+		warning_index: NATURAL_8
 		location: detachable LOCATION_AS]]
 
 	COMPILER_EXPORTER
@@ -36,7 +36,7 @@ feature {NONE} -- Report
 		local
 			issue: OBS_FEAT_WARN
 		do
-			if context.is_warning_enabled then
+			if context.warning_index /= {CONF_OPTION}.warning_term_index_none then
 					-- Report an obsolete warning for this call.
 				create issue.make_with_class (context.current_class)
 				if attached context.current_feature as current_feature then
@@ -47,10 +47,9 @@ feature {NONE} -- Report
 				if attached context.location as location then
 					issue.set_location (location)
 				end
-					-- TODO: support expiration information in the message.
-				-- if expiration > 0 then
-				-- 	issue.set_expiration (expiration)
-				-- end
+				 if expiration > 0 then
+				 	issue.set_expiration (expiration)
+				 end
 				if severity = obsolete_call_error then
 					issue.set_error
 				end
@@ -90,38 +89,41 @@ feature {NONE} -- Report
 feature {NONE} -- Processing
 
 	process_cell: CELL
-		[PROCEDURE [TUPLE [obsolete_message: READABLE_STRING_8; is_warning_enabled: BOOLEAN;
-			context:
-				TUPLE [obsolete_feature: FEATURE_I; obsolete_class: CLASS_C; current_feature: detachable FEATURE_I; current_class: CLASS_C; is_warning_enabled: BOOLEAN; location: detachable LOCATION_AS];
-			reporter: OBSOLETE_CALL_REPORTER
-				[TUPLE [obsolete_feature: FEATURE_I; obsolete_class: CLASS_C; current_feature: detachable FEATURE_I; current_class: CLASS_C; is_warning_enabled: BOOLEAN; location: detachable LOCATION_AS]]]]]
+		[PROCEDURE [TUPLE [obsolete_message: READABLE_STRING_8; warning_index: like {CONF_OPTION}.warning_term_index_none;
+			context: like {OBSOLETE_CALL_HANDLER}.context_type;
+			reporter: OBSOLETE_CALL_REPORTER [like {OBSOLETE_CALL_HANDLER}.context_type]]]]
 			-- A storage for the value of `process`.
 		once
 			create Result.put
-				(agent (obsolete_message: READABLE_STRING_8; is_warning_enabled: BOOLEAN; context: like context_type; reporter: OBSOLETE_CALL_REPORTER [like context_type])
+				(agent (obsolete_message: READABLE_STRING_8; warning_index: like {CONF_OPTION}.warning_term_index_none; context: like context_type; reporter: OBSOLETE_CALL_REPORTER [like context_type])
 					local
-						u: UTF_CONVERTER
-						m: READABLE_STRING_32
+						stamp: like {OBSOLETE_MESSAGE_PARSER}.date
+						clean_message: READABLE_STRING_32
+						original_message: READABLE_STRING_32
 					do
-						m := u.utf_8_string_8_to_string_32 (obsolete_message)
-						report_obsolete_call (m, m, 0, obsolete_call_warning, context)
+						stamp := {OBSOLETE_MESSAGE_PARSER}.date (obsolete_message)
+						original_message := {UTF_CONVERTER}.utf_8_string_8_to_string_32 (obsolete_message)
+						clean_message := {UTF_CONVERTER}.utf_8_string_8_to_string_32 (stamp.message)
+						report_obsolete_call (original_message, clean_message, stamp.date.relative_duration (create {DATE}.make_now_utc).days_count, obsolete_call_warning, context)
 					end)
 		end
 
-	process: PROCEDURE [TUPLE [obsolete_message: READABLE_STRING_8; is_warning_enabled: BOOLEAN; context: like context_type; reporter: OBSOLETE_CALL_REPORTER [like context_type]]]
+	process: PROCEDURE [TUPLE [obsolete_message: READABLE_STRING_8; warning_index: like {CONF_OPTION}.warning_term_index_none; context: like context_type; reporter: OBSOLETE_CALL_REPORTER [like context_type]]]
 			-- A procedure to process the osbolete message `obsolete_message` with the flag indicating whether the warning is enabled `is_warning_enabled`
 			-- and report it using one of `report_error`, `report_warning` or `report_hint` accordingly.
 		do
 			Result := process_cell.item
 		end
 
-	report (obsolete_feature: FEATURE_I; obsolete_class: CLASS_C; current_feature: detachable FEATURE_I; current_class: CLASS_C; location: detachable LOCATION_AS; is_warning_enabled: BOOLEAN)
+	report (obsolete_feature: FEATURE_I; obsolete_class: CLASS_C; current_feature: detachable FEATURE_I; current_class: CLASS_C; location: detachable LOCATION_AS; warning_index: like {CONF_OPTION}.warning_term_index_none)
 			-- Report an obsolete feature call warning or error for `obsolete_feature` from `obsolete_class` in `current_feature` of `currect_class` at `location`.
 			-- If `current_feature` is `Void`, then the issue is reported in the class invariant.
 			-- The flag `is_warning_enabled` tells if the corresponding warning message is allowed. Otherwise (i.e., when it is disabled or not a warning), it is suppressed.
+		require
+			{CONF_OPTION}.is_valid_warning_term_index (warning_index)
 		do
 			if attached obsolete_feature.obsolete_message as m then
-				process (m, is_warning_enabled, [obsolete_feature, obsolete_class, current_feature, current_class, is_warning_enabled, location], Current)
+				process (m, warning_index, [obsolete_feature, obsolete_class, current_feature, current_class, warning_index, location], Current)
 			end
 		end
 

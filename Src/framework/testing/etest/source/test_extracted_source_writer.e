@@ -43,13 +43,13 @@ feature {NONE} -- Initialization
 	make
 			-- Initialize `Current'.
 		do
-			create class_name.make_empty
+			create {STRING_32} class_name.make_empty
 			create used_routine_names.make (10)
 		end
 
 feature -- Access
 
-	class_name: STRING
+	class_name: READABLE_STRING_32
 			-- <Precursor>
 
 	ancestor_names: ARRAY [STRING]
@@ -94,7 +94,7 @@ feature {TEST_CAPTURER} -- Status report
 
 feature -- Status setting
 
-	prepare (a_file: KI_TEXT_OUTPUT_STREAM; a_class_name: STRING)
+	prepare (a_file: KI_TEXT_OUTPUT_STREAM; a_class_name: READABLE_STRING_32)
 			-- Prepare printing a new axtracted application state to `a_file'.
 		require
 			not_writing: not is_writing
@@ -108,15 +108,10 @@ feature -- Status setting
 
 feature {NONE} -- Query
 
-	test_routine_name (a_feature: E_FEATURE): STRING
+	test_routine_name (a_feature: E_FEATURE): STRING_32
 			-- Valid test routine name for feature in `a_stack_element'.
-		local
-			i: INTEGER_32
-			l_custom_symbol: STRING_8
-			l_symbol: STRING
 		do
-				-- |FIXME: Unicode encoding handling.
-			create Result.make_from_string (a_feature.name_32.as_string_8)
+			create Result.make_from_string (a_feature.name_32)
 		ensure
 			result_not_empty: not Result.is_empty
 		end
@@ -127,7 +122,7 @@ feature {TEST_CAPTURER} -- Events
 			-- <Precursor>
 		local
 			l_feat: E_FEATURE
-			l_name: STRING
+			l_name: READABLE_STRING_32
 			l_count: NATURAL
 			l_list: LIST [STRING]
 			i: INTEGER
@@ -143,7 +138,7 @@ feature {TEST_CAPTURER} -- Events
 
 			stream.indent
 			stream.put_string ("test_")
-			stream.put_string (l_name)
+			stream.put_string ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (l_name))
 			if l_count > 1 then
 				stream.put_character ('_')
 				stream.put_line (l_count.out)
@@ -158,7 +153,7 @@ feature {TEST_CAPTURER} -- Events
 			stream.put_string ("testing: %"covers/{")
 			stream.put_string (a_stack_element.called_feature.associated_class.name)
 			stream.put_string ("}.")
-			stream.put_string (l_name)
+			stream.put_string ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (l_name))
 			stream.put_line ("%"")
 			stream.dedent
 
@@ -202,8 +197,7 @@ feature {TEST_CAPTURER} -- Events
 				stream.put_string ("create {")
 				stream.put_string (a_stack_element.type)
 				stream.put_string ("}.")
-					-- |FIXME: Handle encoding
-				stream.put_string (l_feat.name_32.as_string_8)
+				stream.put_string ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (l_feat.name_32))
 				if a_stack_element.operands.count > 0 then
 					stream.put_character ('(')
 					from
@@ -229,7 +223,7 @@ feature {TEST_CAPTURER} -- Events
 				stream.put_character ('}')
 				stream.put_character ('.')
 					-- |FIXME: Unicode encoding
-				stream.put_string (l_feat.name_32.as_string_8)
+				stream.put_string ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (l_feat.name_32))
 			end
 			stream.put_string (", [")
 			from

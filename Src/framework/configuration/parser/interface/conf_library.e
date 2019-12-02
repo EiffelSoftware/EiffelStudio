@@ -37,11 +37,8 @@ feature {NONE} -- Initialization
 
 feature -- Status
 
-	is_library: BOOLEAN
+	is_library: BOOLEAN = True
 			-- Is this a library?
-		once
-			Result := True
-		end
 
 	is_readonly: BOOLEAN
 			-- Is this library readonly?

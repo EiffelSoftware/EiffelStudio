@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "File name does not correspond to class name."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_file_name: READABLE_STRING_32; a_class_name: STRING; a_suggested_file_name: READABLE_STRING_32)
+	make (a_file_name: READABLE_STRING_32; a_class_name: READABLE_STRING_32; a_suggested_file_name: READABLE_STRING_32)
 			-- Create.
 		require
 			a_file_name_not_void: a_file_name /= Void
@@ -33,7 +33,7 @@ feature -- Access
 		-- Error text.
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

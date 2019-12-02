@@ -16,7 +16,7 @@ inherit
 
 feature -- Access
 
-	class_name: attached STRING
+	class_name: attached READABLE_STRING_32
 			-- <Precursor>
 
 	ancestor_names: attached ARRAY [attached STRING]
@@ -43,7 +43,7 @@ feature {NONE} -- Access
 
 feature -- Status setting
 
-	prepare (a_file: KI_TEXT_OUTPUT_STREAM; a_class_name: STRING; a_system: SYSTEM_I)
+	prepare (a_file: KI_TEXT_OUTPUT_STREAM; a_class_name: READABLE_STRING_32; a_system: SYSTEM_I)
 			-- Prepare printing a new axtracted application state to `a_file'.
 		require
 			not_writing: not is_writing
@@ -98,7 +98,7 @@ invariant
 	writing_implies_correct_stream: is_writing implies test_writer.output_stream = stream.output_stream
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

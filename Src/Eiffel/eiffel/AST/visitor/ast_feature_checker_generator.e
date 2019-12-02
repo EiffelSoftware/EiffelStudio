@@ -11158,11 +11158,11 @@ feature {NONE} -- Implementation: type validation
 			rx, ry: TYPE_A
 		do
 			if y.is_attached or else y.is_implicitly_attached and then not x.is_attached then
-					-- `x` is less attached, use its attachment status.
+						-- `x` is less attached, use its attachment status.
 				rx := x
 				ry := y.to_other_immediate_attachment (x)
 			else
-					-- `y` is less attached, use its attachment status.
+						-- `y` is less attached, use its attachment status.
 				rx := x.to_other_immediate_attachment (y)
 				ry := y
 			end
@@ -12144,7 +12144,7 @@ feature {INSPECT_CONTROL} -- Checks for obsolete features
 					-- Or of a creation instruction.
 				and then not is_target_of_creation_instruction
 			then
-				report (f, c, current_feature, context.current_class, l, context.current_class.is_warning_enabled (w_obsolete_feature))
+				report (f, c, current_feature, context.current_class, l, context.current_class.obsolete_call_warning_index)
 			end
 		end
 

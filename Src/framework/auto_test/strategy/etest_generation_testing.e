@@ -1,8 +1,7 @@
-note
+﻿note
 	description: "[
 		Task performing testing part of test generation either randomly or by replaying a log.
 	]"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -221,7 +220,7 @@ feature {ROTA_S, ROTA_TASK_I} -- Status setting
 				else
 					l_progress := {REAL} 1.0 - l_progress
 				end
-				progress := {REAL} 0.1 + ({REAL} 0.5)*l_progress
+				progress := {REAL} 0.1 + {REAL} 0.5 * l_progress
 				if l_cancel then
 					sub_task.cancel
 					remove_task (sub_task, False)
@@ -274,13 +273,11 @@ feature {NONE} -- Status setting
 			minimization_enabled: generation.is_minimization_enabled
 			not_minimizing: sub_task /= minimize_task or not has_next_step
 		local
-			l_repo: AUT_TEST_CASE_RESULT_REPOSITORY
 			l_witnesses: DS_ARRAYED_LIST [AUT_WITNESS]
 			l_witness: AUT_WITNESS
 			l_task: like minimize_task
 		do
-			l_repo := result_repository_builder.result_repository
-			l_witnesses := l_repo.witnesses
+			l_witnesses := result_repository_builder.result_repository.witnesses
 			if l_witnesses.count > last_minimized_witness then
 				last_minimized_witness := last_minimized_witness + 1
 				l_witness := l_witnesses.item (last_minimized_witness)
@@ -408,7 +405,7 @@ invariant
 	minimizing_implies_test_task_has_next_step: minimize_task_cache = sub_task implies test_task.has_next_step
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

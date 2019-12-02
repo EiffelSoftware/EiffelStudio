@@ -131,14 +131,14 @@ feature {NONE} -- Status setting
 
 feature {NONE} -- Basic operations
 
-	print_new_class (a_file: KL_TEXT_OUTPUT_FILE_32; a_class_name: STRING)
+	print_new_class (a_file: KL_TEXT_OUTPUT_FILE_32; a_class_name: READABLE_STRING_32)
 			-- Create test routine in new class
 		do
 			a_file.close
 			render_class_text (a_file.path, a_class_name)
 		end
 
-	render_class_text (a_file_name: PATH; a_class_name: STRING)
+	render_class_text (a_file_name: PATH; a_class_name: READABLE_STRING_32)
 			-- Render test class text from default template to file.
 			--
 			-- `a_file_name': Name of file to which class text will be rendered.
@@ -180,23 +180,25 @@ feature {NONE} -- Basic operations
 			retry
 		end
 
-	template_parameters (a_class_name: STRING): HASH_TABLE [STRING, STRING_32]
+	template_parameters (a_class_name: READABLE_STRING_32): HASH_TABLE [READABLE_STRING_32, READABLE_STRING_32]
 			-- Template parameters for creating actual class text from template file.
 		local
-			l_redefine, l_body, l_indexing: STRING
+			l_redefine, l_body, l_indexing: STRING_32
 			l_count: INTEGER
 			l_tags: like tags
 		do
 			create Result.make (10)
-			if attached cluster as l_cluster and then l_cluster.options.syntax.index = {CONF_OPTION}.syntax_index_obsolete then
-					-- Use old syntax
-				Result.force ({EIFFEL_KEYWORD_CONSTANTS}.indexing_keyword, v_note_keyword)
-			else
-					-- Use new syntax
-				Result.force ({EIFFEL_KEYWORD_CONSTANTS}.note_keyword, v_note_keyword)
-			end
+			Result.force
+				(if attached cluster as l_cluster and then l_cluster.options.syntax.index = {CONF_OPTION}.syntax_index_obsolete then
+						-- Use old syntax
+					{EIFFEL_KEYWORD_CONSTANTS}.indexing_keyword
+				else
+						-- Use new syntax
+					{EIFFEL_KEYWORD_CONSTANTS}.note_keyword
+				end,
+				v_note_keyword)
 			Result.force (a_class_name, v_class_name)
-			if False then--configuration.is_system_level_test then
+			if False then --configuration.is_system_level_test then
 					-- TODO: switch to system level tests
 				Result.force (system_level_test_ancestor, v_test_set_ancestor)
 			else
@@ -240,7 +242,7 @@ feature {NONE} -- Basic operations
 				end
 				Result.force (l_redefine, v_redefine_events)
 			end
-			Result.force (test_routine_name, v_test_name)
+			Result.force (test_routine_name.as_string_32, v_test_name)
 			l_tags := tags
 			if not l_tags.is_empty then
 				create l_indexing.make (100)
@@ -261,11 +263,7 @@ feature {NONE} -- Basic operations
 					l_indexing.append (l_tags.item_for_iteration)
 					l_indexing.append_character ('"')
 					l_tags.forth
-					if not l_tags.after then
-						l_indexing.append_character (',')
-					else
-						l_indexing.append_character ('%N')
-					end
+					l_indexing.append_character (if not l_tags.after then ',' else '%N' end)
 				end
 				Result.force (l_indexing, v_indexing)
 			end
@@ -301,7 +299,7 @@ feature {NONE} -- Constants
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

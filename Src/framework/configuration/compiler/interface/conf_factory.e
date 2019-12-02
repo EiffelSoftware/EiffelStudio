@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Factory for configuration objects."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -13,7 +13,7 @@ inherit
 
 feature
 
-	new_class (a_file_name: STRING_32; a_group: CONF_CLUSTER; a_path: STRING_32; a_classname: STRING): CONF_CLASS
+	new_class (a_file_name: STRING_32; a_group: CONF_CLUSTER; a_path: STRING_32; a_classname: READABLE_STRING_32): CONF_CLASS
 			-- Create a `CONF_CLASS' object.
 		require
 			a_file_name_ok: a_file_name /= Void and then not a_file_name.is_empty
@@ -66,7 +66,7 @@ feature
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

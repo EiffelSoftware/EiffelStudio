@@ -1,10 +1,11 @@
-note
+﻿note
 	description	: "Observer for EB_WINDOW_MANAGER"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "Xavier Rousselot"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	author: "Xavier Rousselot"
+	revised_by: "Alexander Kogtenkov"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class
 	EB_CLUSTER_MANAGER_OBSERVER
@@ -32,7 +33,7 @@ feature -- Updates
 		do
 		end
 
-	on_class_moved (a_class: CONF_CLASS; old_group: CONF_GROUP; old_path: STRING)
+	on_class_moved (a_class: CONF_CLASS; old_group: CONF_GROUP; old_path: READABLE_STRING_32)
 			-- `a_class' has been moved away from `old_group'.
 			-- `old_path' is old relative path in `old_group'
 		require
@@ -94,7 +95,7 @@ feature -- Updates
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -125,4 +126,4 @@ note
 			 Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_CLUSTER_MANAGER_OBSERVER
+end

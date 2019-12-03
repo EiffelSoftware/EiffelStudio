@@ -175,7 +175,11 @@ feature -- Request processing
 					l_server_port := l_host.substring (p+1, l_host.count)
 				else
 					l_server_name := l_host
-					l_server_port := "80" -- Default
+					if is_secure then
+						l_server_port := "443" -- Default for https://
+					else
+						l_server_port := "80" -- Default for http://
+					end
 				end
 			else
 				check host_available: False end

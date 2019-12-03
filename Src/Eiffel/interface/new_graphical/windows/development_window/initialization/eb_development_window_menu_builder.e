@@ -953,6 +953,11 @@ feature {EB_EXTERNAL_COMMANDS_EDITOR} -- Menu Building
 			create l_tools_menu.make_with_text (develop_window.Interface_names.m_tools)
 			develop_window.menus.set_tools_menu (l_tools_menu)
 
+				-- New Library command.
+			l_command_menu_item := develop_window.commands.new_library_cmd.new_menu_item
+			auto_recycle (l_command_menu_item)
+			develop_window.menus.tools_menu.extend (l_command_menu_item)
+
 				-- New Cluster command.
 			l_command_menu_item := develop_window.commands.new_cluster_cmd.new_menu_item
 			auto_recycle (l_command_menu_item)

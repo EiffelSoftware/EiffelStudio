@@ -1518,7 +1518,7 @@ if not DOTNET test	scoop-creation-exception-access			scoop079 tcf fail scoop mul
 if not DOTNET test	scoop-separate-call-class-invariant		scoop080 tcf pass scoop multithreaded execution invariant assertion 
 if not DOTNET test	scoop-recursive-precondition			scoop081 tcf pass scoop multithreaded execution precondition assertion
 if not DOTNET test	scoop-creation-instruction-without-arguments	scoop082 tcf fail scoop c_compilation bug#19507
-if not DOTNET test	scoop-call-with-basic-generic-argument		scoop083 tcf fail manual scoop multithreaded execution
+if not DOTNET test	scoop-call-with-basic-generic-argument		scoop083 tcf pass scoop multithreaded execution
 
 test	deadlock-simple-symmetric-cycle			deadlock001 tcf manual scoop multithreaded deadlock
 test	deadlock-simple-asymmetric-cycle		deadlock002 tcf manual scoop multithreaded deadlock
@@ -2124,7 +2124,7 @@ test	qat-greater-number-of-formal	term214 tcf pass validity anchored_type system
 test	large-integer-64-crash			term215 tcf pass syntax
 test	conversion-by-constant-attribute	term216 tcf pass termination conversion
 test	generic-assignment-to-tuple-field	term217 tcf pass termination tuple assigner
-test	sequence-type-computation-hanging	term218 tcf fail manual manifest array conditional expression
+test	sequence-type-computation-hanging	term218	tcf fail manual manifest array conditional expression
 
 -- Config
 

@@ -551,7 +551,7 @@ feature -- C generation
 					buf.put_two_character (',', ' ')
 					l_argument.c_type.generate_typed_field (buf)
 					buf.put_two_character (',', ' ')
-					l_argument.c_type.generate_sk_value (buf)
+					l_argument.generate_sk_value
 					buf.put_two_character (',', ' ')
 					buf.put_integer (l_count)
 					buf.put_two_character (')', ';')

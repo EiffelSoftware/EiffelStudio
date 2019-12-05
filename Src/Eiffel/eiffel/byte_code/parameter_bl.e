@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Enlarged parameter expression."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,9 +11,19 @@ inherit
 
 	PARAMETER_B
 		redefine
-			analyze, generate, unanalyze, register, set_register,
-			free_register, print_register, propagate, c_type
+			analyze,
+			c_type,
+			free_register,
+			generate,
+			generate_sk_value,
+			print_register,
+			propagate,
+			register,
+			set_register,
+			unanalyze
 		end
+
+	SHARED_TYPE_I
 
 feature -- Status report
 
@@ -29,6 +39,13 @@ feature -- Access
 			-- C type of the attachment target
 		do
 			Result := real_type (attachment_type).c_type
+		end
+
+	generate_sk_value
+			-- <Precursor>
+		do
+				-- Make sure the run-time does not attempt to dereference the value without associated type information.
+			(if is_address_needed then pointer_c_type else c_type end).generate_sk_value (buffer)
 		end
 
 feature -- Element change
@@ -226,7 +243,7 @@ feature -- Settings
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2008, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -239,22 +256,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

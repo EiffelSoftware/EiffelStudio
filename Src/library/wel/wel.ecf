@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd" name="wel" uuid="804E870E-1EED-4F7B-9C7D-4769938A62D7" library_target="wel">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="wel" uuid="804E870E-1EED-4F7B-9C7D-4769938A62D7" library_target="wel">
 	<target name="wel">
 		<description>WEL: Windows Eiffel Library, reusable Eiffel components for Windows programming.
 			Copyright (c) 1984-2019, Eiffel Software and others.
 			Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt).</description>
 		<root all_classes="true"/>
-		<option warning="true" namespace="EiffelSoftware.Library">
+		<option warning="error" namespace="EiffelSoftware.Library">
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<external_include location="$(ISE_LIBRARY)\library\wel\spec\windows\include">
@@ -51,7 +51,7 @@
 			<option namespace="Wel">
 			</option>
 			<class_option class="WEL_WINDOW">
-				<warning name="obsolete_feature" enabled="false"/>
+				<warning name="obsolete_feature" value="none"/>
 			</class_option>
 			<file_rule>
 				<exclude>/\.svn$</exclude>

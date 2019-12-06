@@ -211,7 +211,7 @@ eStripeMod.createElements = function (content, paymentIntent, publicKey) {
       .confirmCardPayment(paymentIntent.client_secret, {
         payment_method: {
           card: card,
-          billing_details: { name: content.customerName }
+          billing_details: { email: content.customerEmail, name: content.customerName }
         }
       })
       .then(function(result) {

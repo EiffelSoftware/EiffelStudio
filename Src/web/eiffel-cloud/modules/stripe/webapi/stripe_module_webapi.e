@@ -116,7 +116,7 @@ feature -- Handle
 			rep := new_response (req, res, api)
 			p := api.cms_api.site_location.extended ("stripe")
 			if fut.directory_path_exists (p) then
-				fp := p.extended (api.cms_api.formatted_date_time_yyyy_mm_dd__hh_min_ss (create {DATE_TIME}.make_now_utc) + "." + req.request_time_stamp.out)
+				fp := p.extended (req.request_time_stamp.out + ".req")
 				create f.make_with_path (fp)
 				f.create_read_write
 				if attached req.raw_header_data as h then

@@ -54,6 +54,7 @@ feature -- Hooks configuration
 			-- Module hooks configuration.
 		do
 			a_hooks.subscribe_to_webapi_response_alter_hook (Current)
+			a_hooks.subscribe_to_hook (module, {STRIPE_HOOK})
 		end
 
 feature -- Hook

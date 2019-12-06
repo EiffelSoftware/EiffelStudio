@@ -1,0 +1,20 @@
+{
+	"trial": {
+		"plan": "trial",
+		"title": "Trial - free",
+		"price": 0,
+		"currency": "usd"
+	},
+	"perso": {
+		"plan": "perso",
+		"title": "Personal",
+		"price": 10,
+		"currency": "usd"
+	},
+	"pro": {
+		"plan": "pro",
+		"title": "Professional",
+		"price": 100,
+		"currency": "usd"
+	}
+}

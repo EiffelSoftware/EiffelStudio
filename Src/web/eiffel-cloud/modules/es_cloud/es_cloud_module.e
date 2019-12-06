@@ -208,7 +208,7 @@ feature -- Hooks: block
 			l_item: ES_CLOUD_STORE_ITEM
 		do
 			create l_html.make (1024)
-			l_html.append ("<h1>Store</h1><div class=%"pricing%">")
+			l_html.append ("<div class=%"pricing%">")
 			if
 				attached api.store as l_store
 			then

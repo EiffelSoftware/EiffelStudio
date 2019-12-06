@@ -139,6 +139,11 @@ feature -- Element change
 			weight := l_weight
 		end
 
+	set_name (s: READABLE_STRING_8)
+		do
+			create name.make_from_string (s)
+		end
+
 	set_title (s: detachable READABLE_STRING_GENERAL)
 		do
 			if s = Void then

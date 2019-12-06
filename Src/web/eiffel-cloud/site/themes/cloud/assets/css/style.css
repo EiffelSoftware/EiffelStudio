@@ -153,6 +153,10 @@
   border-left: solid 5px #900;
 }
 
+div.cms-node div.info {
+  display: none;
+}
+
 body {
   margin: 0;
   background-color: white;
@@ -214,4 +218,29 @@ div#content {
 
 div#footer {
   background-color: #006;
+}
+
+div.menu ul.horizontal {
+  list-style-type: none;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-start;
+}
+div.menu ul.horizontal li {
+  padding-left: 1em;
+  padding-right: 1em;
+  padding-top: 2px;
+  border-left: solid 1px #ccc;
+  border-top: solid 2px #eee;
+  border-bottom: solid 1px #ddd;
+}
+div.menu ul.horizontal li:hover {
+  font-weight: bold;
+}
+div.menu ul.horizontal li.active {
+  border-top: solid 2px #ccc;
+  border-bottom: solid 1px transparent;
+}
+div.menu ul.horizontal li:last-child {
+  border-right: solid 1px #ccc;
 }

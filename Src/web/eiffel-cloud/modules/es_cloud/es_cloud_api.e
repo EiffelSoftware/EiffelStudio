@@ -23,8 +23,12 @@ feature {NONE} -- Initialization
 			-- <Precursor>
 		do
 			Precursor
-				-- Config (TODO: use config file)
-			create config
+			create config.make
+			if attached cms_api.module_configuration_by_name ({ES_CLOUD_MODULE}.name, "config") as cfg then
+				if attached cfg.resolved_text_item ("session.expiration_delay") as s then
+					config.session_expiration_delay := s.to_integer
+				end
+			end
 
 				-- Storage initialization
 			if attached cms_api.storage.as_sql_storage as l_storage_sql then
@@ -224,6 +228,45 @@ feature -- Access: organizations
 		do
 			es_cloud_storage.discard_membership (org, a_user, a_role)
 		end
+
+feature -- Access: store
+
+	store: ES_CLOUD_STORE
+		local
+			l_item: ES_CLOUD_STORE_ITEM
+			l_cents: INTEGER
+		do
+			Result := internal_store
+			if Result = Void then
+				create Result.make
+				if attached cms_api.module_configuration_by_name ({ES_CLOUD_MODULE}.name, "store") as cfg then
+					if attached cfg.table_keys ("") as lst then
+						across
+							lst as ic
+						loop
+							if
+								attached cfg.text_table_item (ic.item) as tb and then
+								attached tb.item ("plan") as l_plan and then
+								attached tb.item ("price") as l_price and then
+								attached tb.item ("currency") as l_currency
+							then
+								if attached tb.item ("price.cents") as l_cents_price then
+									l_cents := l_cents_price.to_integer
+								else
+									l_cents := 0
+								end
+								create l_item.make (l_plan)
+								l_item.set_price (l_price.to_integer, l_cents, l_currency.as_string_8)
+								Result.extend (l_item)
+							end
+						end
+					end
+				end
+			end
+		end
+
+	internal_store: detachable ES_CLOUD_STORE
+
 
 feature -- Access: users
 

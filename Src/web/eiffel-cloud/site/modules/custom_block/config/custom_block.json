@@ -1,5 +1,11 @@
 {
 	"blocks": {
+		"es_cloud_plans": {
+			"is_raw": "yes",
+			"region": "content",
+			"weight": 0,
+			"conditions": ["path:cloud"]
+		},
 		"cloud_front":	{
 			"is_raw": "yes",
 			"region": "content",
@@ -8,3 +14,4 @@
 		}
 	}
 }
+

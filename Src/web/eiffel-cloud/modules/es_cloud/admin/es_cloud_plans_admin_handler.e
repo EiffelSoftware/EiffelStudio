@@ -47,7 +47,8 @@ feature -- Execution
 		local
 			r: like new_generic_response
 			l_plan: detachable ES_CLOUD_PLAN
-			l_plan_name, l_plan_title, l_plan_description, l_plan_data, l_op: detachable READABLE_STRING_32
+			l_plan_name: detachable READABLE_STRING_8
+			l_plan_title, l_plan_description, l_plan_data, l_op: detachable READABLE_STRING_32
 			l_plan_id: INTEGER
 			s: STRING
 		do
@@ -58,7 +59,14 @@ feature -- Execution
 				f.process (r)
 				if attached f.last_data as fd then
 					l_plan_id := fd.integer_item ("id")
-					l_plan_name := fd.string_item ("name")
+					if
+						attached fd.string_item ("name") as l_plan_name_32 and then
+						l_plan_name_32.is_valid_as_string_8
+					then
+						l_plan_name := l_plan_name_32.to_string_8
+					else
+						l_plan_name := Void
+					end
 					l_plan_title := fd.string_item ("title")
 					l_plan_description := fd.string_item ("description")
 					l_plan_data := fd.string_item ("data")
@@ -87,6 +95,7 @@ feature -- Execution
 						else
 							if l_plan /= Void then
 								r.add_warning_message ("Updating existing plan.")
+								l_plan.set_name (l_plan_name)
 							else
 								create l_plan.make (l_plan_name)
 							end
@@ -207,6 +216,7 @@ feature -- Execution
 			if a_plan /= Void and then a_plan.has_id then
 				hf.set_text_value (a_plan.id.out)
 			end
+			Result.extend (hf)
 			create tf.make ("name")
 			if a_plan /= Void then
 				tf.set_text_value (a_plan.name.as_string_32)

@@ -123,6 +123,10 @@ feature -- Handle
 					f.put_string (h)
 					f.put_new_line
 				end
+				if attached req.meta_string_variable ("HTTP_STRIPE_SIGNATURE") as l_sign then
+					f.put_string ("HTTP_STRIPE_SIGNATURE=" + utf_8_encoded (l_sign))
+					f.put_new_line
+				end
 				create buf.make (req.content_length_value.to_integer_32)
 				req.read_input_data_into (buf)
 				f.put_string (create {STRING}.make_filled ('=', 8))

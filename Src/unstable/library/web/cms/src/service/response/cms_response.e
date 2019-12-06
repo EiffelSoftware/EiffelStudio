@@ -110,6 +110,16 @@ feature -- Head customization
 			add_additional_head_line (s, True)
 		end
 
+	add_defer_javascript_url (a_src: STRING)
+		local
+			s: STRING_8
+		do
+			create s.make_from_string ("<script type=%"text/javascript%" src=%"")
+			s.append (a_src)
+			s.append ("%" defer></script>")
+			add_additional_head_line (s, False)
+		end
+
 	add_javascript_url (a_src: STRING)
 		local
 			s: STRING_8
@@ -1182,6 +1192,6 @@ feature {NONE} -- Execution
 		end
 
 note
-	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2019, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

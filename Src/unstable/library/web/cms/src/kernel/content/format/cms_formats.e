@@ -97,6 +97,11 @@ feature -- Built-in formats
 			create Result
 		end
 
+	full_html: FULL_HTML_CONTENT_FORMAT
+		once
+			create Result
+		end
+
 	filtered_html: FILTERED_HTML_CONTENT_FORMAT
 		once
 			create Result
@@ -110,7 +115,7 @@ invariant
 	items /= Void
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2019, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

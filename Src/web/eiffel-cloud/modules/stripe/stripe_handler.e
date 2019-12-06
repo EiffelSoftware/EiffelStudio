@@ -51,7 +51,7 @@ feature -- Execution
 						rep := new_generic_response (req, res)
 						rep.set_redirection (rep.api.location_url ("/terms_of_use", Void)) -- Global site terms of use
 						rep.set_main_content ("Terms of use ....")
-					else
+					elseif attached stripe_api.cms_api.user as l_user then
 						create pay.make (p_cat.value, p_prod.value)
 						if attached api.hooks.subscribers ({STRIPE_HOOK}) as lst then
 							across
@@ -88,6 +88,9 @@ feature -- Execution
 									+ "</strong> !"
 								)
 						end
+					else
+						rep := new_generic_response (req, res)
+						rep.set_main_content ("Please login or register an account first.")
 					end
 					rep.execute
 				else

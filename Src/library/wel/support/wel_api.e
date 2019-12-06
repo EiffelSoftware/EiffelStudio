@@ -937,6 +937,8 @@ feature -- Error
 
 	get_last_error: INTEGER
 			-- SDK GetLastError
+			-- WARNING: it mays return wrong value in Multithreaded or SCOOP mode
+			-- it is recommended to get the last error within the same C external.
 		external
 			"C inline use <windows.h>"
 		alias

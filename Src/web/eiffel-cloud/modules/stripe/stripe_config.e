@@ -16,6 +16,7 @@ feature {NONE} -- Initialization
 		do
 			public_key := a_public_key
 			secret_key := a_secret_key
+			base_path := default_base_path
 		end
 
 feature -- Access
@@ -26,7 +27,9 @@ feature -- Access
 
 	is_testing: BOOLEAN
 
-	base_path: STRING = "/stripe"
+	base_path: IMMUTABLE_STRING_8
+
+	default_base_path: STRING = "/checkout"
 
 	is_valid: BOOLEAN
 		local
@@ -39,6 +42,11 @@ feature -- Access
 		end
 
 feature -- Element change
+
+	set_base_path (p: READABLE_STRING_8)
+		do
+			base_path := p
+		end
 
 	enable_testing
 		do

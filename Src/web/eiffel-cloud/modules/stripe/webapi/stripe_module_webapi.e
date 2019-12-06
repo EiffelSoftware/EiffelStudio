@@ -25,12 +25,14 @@ feature {NONE} -- Router/administration
 			-- <Precursor>
 		local
 			cfg: STRIPE_CONFIG
+			l_base_path: READABLE_STRING_8
 		do
 			if attached module.stripe_api as l_mod_api then
 				cfg := l_mod_api.config
-				a_router.handle (l_mod_api.config.base_path + "/public-key", create {WSF_URI_AGENT_HANDLER}.make (agent get_public_key (?,?,l_mod_api)), a_router.methods_get)
-				a_router.handle (l_mod_api.config.base_path + "/payment_intents", create {WSF_URI_AGENT_HANDLER}.make (agent post_payment_intents (?,?,l_mod_api)), a_router.methods_post)
-				a_router.handle (l_mod_api.config.base_path + "/webhook", create {WSF_URI_AGENT_HANDLER}.make (agent post_webhook (?,?,l_mod_api)), a_router.methods_post)
+				l_base_path := cfg.base_path
+				a_router.handle (l_base_path + "/public-key", create {WSF_URI_AGENT_HANDLER}.make (agent get_public_key (?,?,l_mod_api)), a_router.methods_get)
+				a_router.handle (l_base_path + "/payment_intents", create {WSF_URI_AGENT_HANDLER}.make (agent post_payment_intents (?,?,l_mod_api)), a_router.methods_post)
+				a_router.handle (l_base_path + "/callback", create {WSF_URI_AGENT_HANDLER}.make (agent post_webhook (?,?,l_mod_api)), a_router.methods_post)
 			end
 		end
 
@@ -106,8 +108,28 @@ feature -- Handle
 	post_webhook (req: WSF_REQUEST; res: WSF_RESPONSE; api: STRIPE_API)
 		local
 			rep: like new_response
+			buf: STRING
+			p, fp: PATH
+			f: RAW_FILE
+			fut: FILE_UTILITIES
 		do
 			rep := new_response (req, res, api)
+			p := api.cms_api.site_location.extended ("stripe")
+			if fut.directory_path_exists (p) then
+				fp := p.extended (api.cms_api.formatted_date_time_yyyy_mm_dd__hh_min_ss (create {DATE_TIME}.make_now_utc) + "." + req.request_time_stamp.out)
+				create f.make_with_path (fp)
+				f.create_read_write
+				if attached req.raw_header_data as h then
+					f.put_string (h)
+					f.put_new_line
+				end
+				create buf.make (req.content_length_value.to_integer_32)
+				req.read_input_data_into (buf)
+				f.put_string (create {STRING}.make_filled ('=', 8))
+				f.put_new_line
+				f.put_string (buf)
+				f.close
+			end
 			rep.add_string_field ("status" , "ok")
 			rep.execute
 		end

@@ -69,6 +69,13 @@ feature {CMS_API} -- Module Initialization
 						if attached l_cfg.resolved_text_item ("stripe.testing") as s and then s.is_case_insensitive_equal_general ("yes") then
 							cfg.enable_testing
 						end
+						if attached l_cfg.utf_8_text_item ("stripe.base_path") as l_base_path then
+							if l_base_path.starts_with_general ("/") then
+								cfg.set_base_path (l_base_path)
+							else
+								cfg.set_base_path ("/" + l_base_path)
+							end
+						end
 
 						create stripe_api.make (api, cfg)
 					end
@@ -123,7 +130,7 @@ feature -- Helper
 			if attached stripe_api as l_stripe_api and then l_stripe_api.config.is_valid then
 				Result := l_stripe_api.config.base_path + "/pay/" + html_encoded (a_category) + "/" + html_encoded (a_product)
 			else
-				Result := {STRIPE_CONFIG}.base_path + "/not_available"
+				Result := {STRIPE_CONFIG}.default_base_path + "/not_available"
 			end
 		end
 

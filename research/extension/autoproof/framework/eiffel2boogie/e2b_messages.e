@@ -79,7 +79,7 @@ feature -- Validity error messages
 		do Result := locale.translation_in_context ("Update guard has to be of type BOOLEAN.", "autoproof") end
 
 	guard_feature_arg_count: STRING_32
-		do Result := locale.translation_in_context ("Update guard has to have exctly two argument.", "autoproof") end
+		do Result := locale.translation_in_context ("Update guard has to have exactly two argument.", "autoproof") end
 
 	guard_feature_arg1: STRING_32
 		do Result := locale.translation_in_context ("The first argument of an update guard has to be of the same type as the guarded attribute.", "autoproof") end

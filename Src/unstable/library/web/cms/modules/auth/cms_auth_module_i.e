@@ -114,10 +114,22 @@ feature {NONE} -- Template
 				end
 				if
 					l_destination /= Void and then
-					not l_destination.is_whitespace and then
-					l_destination.is_valid_as_string_8
+					(	l_destination.is_whitespace
+						or else	not l_destination.is_valid_as_string_8
+					)
 				then
+					l_destination := Void
+				end
+
+				if l_destination /= Void then
 					Result.set_value (secured_url_content (l_destination.to_string_8), "site_destination")
+				end
+				if a_cms_api.has_permission ({CMS_AUTHENTICATION_MODULE}.perm_account_register) then
+					if l_destination /= Void then
+						Result.set_value ({CMS_AUTHENTICATION_MODULE}.roc_register_location + "?destination=" + secured_url_content (l_destination.to_string_8), "site_register_url")
+					else
+						Result.set_value ({CMS_AUTHENTICATION_MODULE}.roc_register_location, "site_register_url")
+					end
 				end
 			end
 		end

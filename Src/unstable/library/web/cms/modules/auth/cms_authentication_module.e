@@ -75,7 +75,7 @@ feature -- Access
 			-- List of permission ids, used by this module, and declared.
 		do
 			Result := Precursor
-			Result.force ("account register")
+			Result.force (perm_account_register)
 			Result.force ("account auto activate")
 			Result.force ("edit own account")
 			Result.force ("change own username")
@@ -84,6 +84,8 @@ feature -- Access
 		end
 
 	auth_api: detachable CMS_AUTHENTICATION_API
+
+	perm_account_register: STRING = "account register"
 
 feature {CMS_EXECUTION} -- Administration
 
@@ -115,6 +117,8 @@ feature -- Access: docs
 		end
 
 feature -- Router
+
+	roc_register_location: STRING = "account/roc-register"
 
 	roc_login_location: STRING = "account/roc-login"
 
@@ -312,7 +316,16 @@ feature -- Handler
 			r.set_main_content (b)
 
 			if l_user = Void then
-				r.set_redirection (roc_login_location)
+				if
+					attached {WSF_STRING} req.item ("destination") as l_destination and then
+					attached l_destination.value as v and then
+					v.is_valid_as_string_8
+				then
+					r.set_redirection (roc_login_location + "?destination=" + secured_url_content (v.to_string_8))
+				else
+					r.set_redirection (roc_login_location)
+				end
+--				r.set_redirection (roc_login_location)
 			end
 			r.execute
 		end
@@ -430,8 +443,8 @@ feature -- Handler
 			loc: STRING
 		do
 			create {GENERIC_VIEW_CMS_RESPONSE} r.make (req, res, a_auth_api.cms_api)
-			if attached auth_strategy (req) as l_auth_strategy then
-				loc := l_auth_strategy
+			if attached auth_strategy (req) as l_auth_strategy and then l_auth_strategy.is_valid_as_string_8 then
+				loc := l_auth_strategy.to_string_8
 			else
 				loc := ""
 			end

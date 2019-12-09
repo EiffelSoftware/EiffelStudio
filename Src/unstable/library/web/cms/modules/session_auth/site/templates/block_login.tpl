@@ -1,7 +1,7 @@
 {unless isset="$user"}
 <div class="login-box">
 	<div class="description">The "Session" is the standard authentication system. (based on cookie)</div>
-	<h3>Login or <a href="{$site_url/}account/roc-register">Register</a></h3>
+	<h3>Login{unless isempty="$site_register_url"} or <a href="{$site_url/}{$site_register_url/}">Register</a>{/unless}</h3>
 	<div>
 		<form name="cms_session_auth" action="{$site_url/}account/auth/roc-session-login" method="POST">
 			{unless isempty="$site_destination"}<input type="hidden" name="destination" value="{htmlentities}{$site_destination/}{/htmlentities}">{/unless}

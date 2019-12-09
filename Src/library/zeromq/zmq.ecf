@@ -3,6 +3,7 @@
 	<target name="zmq">
 		<root all_classes="true"/>
 		<option warning="error">
+			<warning name="obsolete_feature" value="all"/>
 		</option>
 		<external_include location="$(ISE_LIBRARY)\library\zeromq\spec\include">
 			<condition>

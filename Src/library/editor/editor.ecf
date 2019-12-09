@@ -10,6 +10,7 @@
 			<exclude>/text_formatter\.e$</exclude>
 		</file_rule>
 		<option warning="error" namespace="EiffelSoftware.Library">
+			<warning name="obsolete_feature" value="all"/>
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<capability>

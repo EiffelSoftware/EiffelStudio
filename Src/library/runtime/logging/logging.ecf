@@ -3,7 +3,7 @@
 	<target name="logging">
 		<description>
 			Logging Cluster - Provide 1 interface to various logging mechanisms
-			Copyright (c) 2010-2017, ITPassion Ltd, Eiffel Software and others
+			Copyright (c) 2010-2019, ITPassion Ltd, Eiffel Software and others
 			Eiffel Forum License v2
 		</description>
 		<root all_classes="true"/>
@@ -11,6 +11,7 @@
 			<exclude>/\.svn</exclude>
 		</file_rule>
 		<option warning="error" namespace="EiffelSoftware.Library">
+			<warning name="obsolete_feature" value="all"/>
 		</option>
 		<external_include location="$(ISE_LIBRARY)/library/runtime/logging/Clib"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>

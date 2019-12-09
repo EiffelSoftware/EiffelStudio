@@ -15,6 +15,7 @@
 			<exclude>/tmp$</exclude>
 		</file_rule>
 		<option warning="error" namespace="EiffelSoftware.Library.Ribbon">
+			<warning name="obsolete_feature" value="all"/>
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
 		<setting name="platform" value="windows"/>

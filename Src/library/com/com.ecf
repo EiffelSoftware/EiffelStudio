@@ -11,6 +11,7 @@
 			<exclude>/\.svn</exclude>
 		</file_rule>
 		<option warning="error">
+			<warning name="obsolete_feature" value="all"/>
 		</option>
 		<setting name="platform" value="windows"/>
 		<capability>

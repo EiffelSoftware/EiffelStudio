@@ -31,6 +31,7 @@
 			</condition>
 		</file_rule>
 		<option warning="error">
+			<warning name="obsolete_feature" value="all"/>
 		</option>
 		<external_linker_flag value="`$(ISE_LIBRARY)/library/api_wrapper/implementation/unix/Clib/dl-config --library`">
 			<description>Library required for dynamic loading.</description>

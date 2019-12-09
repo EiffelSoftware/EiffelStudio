@@ -3,6 +3,7 @@
 	<target name="h2e">
 		<root class="H2E" feature="make"/>
 		<option warning="error">
+			<warning name="obsolete_feature" value="all"/>
 		</option>
 		<setting name="platform" value="windows"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>

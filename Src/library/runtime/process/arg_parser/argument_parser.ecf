@@ -21,6 +21,7 @@
 			</condition>
 		</file_rule>
 		<option warning="error" namespace="EiffelSoftware.Framework">
+			<warning name="obsolete_feature" value="all"/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>

@@ -3,6 +3,7 @@
 	<target name="all_store">
 		<root all_classes="true"/>
 		<option warning="error">
+			<warning name="obsolete_feature" value="all"/>
 		</option>
 		<setting name="console_application" value="true"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>

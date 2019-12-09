@@ -37,7 +37,7 @@ feature -- Access
 
 	link_name: detachable STRING
 			-- Name for linking.
-		obsolete "Use `link_name_32` instead. [2019-11-30]"
+		obsolete "Use `link_name_32` instead. [2020-05-31]"
 		require
 			set: name /= Void
 		do

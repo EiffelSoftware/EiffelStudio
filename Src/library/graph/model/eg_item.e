@@ -45,7 +45,7 @@ feature -- Access
 
 	name: detachable STRING
 			-- Name of `Current'.
-		obsolete "Use `name_32` instead. [2019-11-30]"
+		obsolete "Use `name_32` instead. [2020-05-31]"
 		do
 			if attached name_32 as n then
 				Result := {UTF_CONVERTER}.string_32_to_utf_8_string_8 (n)
@@ -68,7 +68,7 @@ feature -- Access
 
 	set_name (a_name: detachable STRING)
 			-- Set `name' to `a_name'.
-		obsolete "Use `set_name_32` instead. [2019-11-30]"
+		obsolete "Use `set_name_32` instead. [2020-05-31]"
 		do
 			if attached a_name then
 				set_name_32

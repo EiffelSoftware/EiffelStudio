@@ -85,7 +85,7 @@ feature -- Status report
 			-- Error message if an error occurred during last
 			-- database operation.
 		obsolete
-			"Use `error_message_32' instead  [2017-11-30]."
+			"Use `error_message_32` instead  [2017-11-30]."
 		do
 			if attached error_message_32 as l_s then
 				Result := l_s.as_string_8
@@ -122,7 +122,7 @@ feature -- Access
 	select_query: STRING
 			-- Select query to execute. Execute with `load_result_list'.
 		obsolete
-			"Use `select_query_32' instead  [2019-11-30]."
+			"Use `select_query_32` instead  [2020-05-31]."
 		require
 			select_query_prepared: select_query_prepared
 		local

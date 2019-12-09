@@ -26,7 +26,7 @@ feature -- Access
 
 	name: FILE_NAME
 			-- Name of the file.
-		obsolete "Use `path` instead. [2019-11-30]"
+		obsolete "Use `path` instead. [2020-05-31]"
 		do
 			create Result.make_from_string (path.utf_8_name)
 		end

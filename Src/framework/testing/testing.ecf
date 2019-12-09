@@ -7,6 +7,7 @@
 		</file_rule>
 		<option namespace="EiffelSoftware.Framework">
 			<assertions precondition="true"/>
+			<warning name="obsolete_feature" value="all"/>
 		</option>
 		<capability>
 			<concurrency support="thread"/>

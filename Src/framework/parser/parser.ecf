@@ -6,6 +6,7 @@
 			<exclude>/.svn$</exclude>
 		</file_rule>
 		<option namespace="EiffelSoftware.Language">
+			<warning name="obsolete_feature" value="all"/>
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>

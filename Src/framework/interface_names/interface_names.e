@@ -2297,7 +2297,7 @@ feature -- Label texts
 	l_update_manager_estudio_stable_help (a_version_name: READABLE_STRING_GENERAL): STRING_32
 		do
 			Result := locale.formatted_string (locale.translation ("[
-				A newer version of EiffelStudio is available: $1. This is the stable version that superseeds the installed one.
+				A newer version of EiffelStudio is available: $1. This is the stable version that supersedes the installed one.
 					]"), [a_version_name])
 		end
 

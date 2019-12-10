@@ -375,34 +375,53 @@ feature -- Access: users
 			end
 		end
 
-	user_active_concurrent_sessions (a_user: ES_CLOUD_USER; a_install_id: READABLE_STRING_GENERAL; a_current_session: ES_CLOUD_SESSION): detachable LIST [ES_CLOUD_SESSION]
+	user_active_concurrent_sessions (a_user: ES_CLOUD_USER; a_install_id: READABLE_STRING_GENERAL; a_current_session: ES_CLOUD_SESSION): detachable STRING_TABLE [LIST [ES_CLOUD_SESSION]]
+			-- Active sessions indexed by installation id.
 		local
 			l_session: ES_CLOUD_SESSION
+			lst, lst_by_installation: like user_sessions
 		do
-			Result := user_sessions (a_user, Void, True)
-			if Result /= Void then
+			lst := user_sessions (a_user, Void, True)
+			if lst /= Void then
 				from
-					Result.start
+					lst.start
 				until
-					Result.off
+					lst.off
 				loop
-					l_session := Result.item
+					l_session := lst.item
 					if
 						l_session.is_paused or else
 						a_current_session.same_as (l_session) or else
 						a_current_session.installation_id.same_string (l_session.installation_id)
 					then
-						Result.remove
+						lst.remove
 					else
-						Result.forth
+						lst.forth
 					end
 				end
-				if Result.is_empty then
-					Result := Void
+				if lst.is_empty then
+					lst := Void
+				end
+				if lst /= Void then
+					create Result.make_caseless (2)
+					from
+						lst.start
+					until
+						lst.after
+					loop
+						l_session := lst.item
+						lst_by_installation := Result [l_session.installation_id]
+						if lst_by_installation = Void then
+							create {ARRAYED_LIST [ES_CLOUD_SESSION]} lst_by_installation.make (3)
+							Result [l_session.installation_id] := lst_by_installation
+						end
+						lst_by_installation.force (l_session)
+						lst.forth
+					end
 				end
 			end
 		ensure
-			only_concurrent_sessions: Result /= Void implies across Result as ic all not a_current_session.same_as (ic.item) end
+			only_concurrent_sessions: Result /= Void implies across Result as ic all not a_current_session.installation_id.is_case_insensitive_equal_general (ic.key) end
 			not_empty: Result /= Void implies Result.count > 0
 		end
 

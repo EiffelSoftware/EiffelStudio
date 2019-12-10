@@ -241,7 +241,7 @@ feature -- Execution
 			l_user: ES_CLOUD_USER
 			l_install_id, l_session_id: detachable READABLE_STRING_GENERAL
 			l_installation: detachable ES_CLOUD_INSTALLATION
-			l_active_sessions: detachable LIST [ES_CLOUD_SESSION]
+			l_active_sessions: detachable STRING_TABLE [LIST [ES_CLOUD_SESSION]]
 			l_session: detachable ES_CLOUD_SESSION
 			l_user_plan: detachable ES_CLOUD_PLAN_SUBSCRIPTION
 			err: BOOLEAN
@@ -289,19 +289,33 @@ feature -- Execution
 									then
 											-- Pause expired sessions or current session!
 										n := l_active_sessions.count.to_natural_32 - l_sess_limit + 1
-										from
-											l_active_sessions.finish
+										across
+											-l_active_sessions.new_cursor as ic
 										until
-											l_active_sessions.off or n = 0
+											n = 0
 										loop
-											if l_active_sessions.item.is_expired (es_cloud_api) then
-												es_cloud_api.pause_session (a_user, l_active_sessions.item)
-												n := n - 1
-												l_active_sessions.remove
-											else
-												l_active_sessions.back
+											across
+												-ic.item.new_cursor as sess_ic
+											loop
+												if sess_ic.item.is_expired (es_cloud_api) then
+													es_cloud_api.pause_session (a_user, sess_ic.item)
+												end
 											end
+											n := n - 1
 										end
+--										from
+--											l_active_sessions.finish
+--										until
+--											l_active_sessions.off or n = 0
+--										loop
+--											if l_active_sessions.item.is_expired (es_cloud_api) then
+--												es_cloud_api.pause_session (a_user, l_active_sessions.item)
+--												n := n - 1
+--												l_active_sessions.remove
+--											else
+--												l_active_sessions.back
+--											end
+--										end
 										if n > 0 then
 											es_cloud_api.pause_session (a_user, l_session)
 										end
@@ -325,7 +339,11 @@ feature -- Execution
 												if n > 1 then
 													n := n - 1
 												else
-													es_cloud_api.pause_session (a_user, ic.item)
+													across
+														-ic.item.new_cursor as sess_ic
+													loop
+														es_cloud_api.pause_session (a_user, sess_ic.item)
+													end
 												end
 											end
 										end

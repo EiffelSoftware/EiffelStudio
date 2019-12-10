@@ -151,7 +151,7 @@ feature -- Request execution
 							rep := new_generic_response (req, res)
 
 							create s.make_empty
-							print (jwt_auth_api.user_tokens (l_user, Void))
+--							print (jwt_auth_api.user_tokens (l_user, Void))
 							jwt_auth_api.discard_user_token (l_user, p_token.value)
 							if jwt_auth_api.has_error then
 								rep.add_error_message ("Error when trying to discard token " + p_token.value + " !")

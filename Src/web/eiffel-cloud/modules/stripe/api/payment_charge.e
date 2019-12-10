@@ -1,11 +1,11 @@
 note
-	description: "Summary description for {PAYMENT_INTENT}."
+	description: "Summary description for {PAYMENT_CHARGE}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	PAYMENT_INTENT
+	PAYMENT_CHARGE
 
 inherit
 	STRIPE_OBJECT
@@ -22,8 +22,12 @@ feature {NONE} -- Initialization
 	make_with_json (j: like json)
 		do
 			Precursor (j)
-			id := safe_string_8_item (j, "id", "")
-			client_secret := safe_string_8_item (j, "client_secret", "")
+			if attached {JSON_OBJECT} j.item ("billing_details") as jv then
+				create billing_details.make_with_json (jv)
+			end
+			if attached j.boolean_item ("paid") as b then
+				paid := b.item
+			end
 			currency := safe_string_8_item (j, "currency", "usd")
 			if attached {JSON_NUMBER} j.item ("amount") as num then
 				amount := num.integer_64_item.to_integer
@@ -32,28 +36,21 @@ feature {NONE} -- Initialization
 			else
 				amount := 0
 			end
+
+			receipt_url := string_8_item (j, "receipt_url")
 		end
 
 feature -- Access
 
-	id: IMMUTABLE_STRING_8
-
-	client_secret: IMMUTABLE_STRING_8
+	paid: BOOLEAN
 
 	amount: INTEGER_32
 
 	currency: READABLE_STRING_8
 
-feature -- Element change
+	receipt_url: detachable READABLE_STRING_8
 
-	set_id (v: READABLE_STRING_8)
-		do
-			id := v
-		end
+	billing_details: detachable BILLING_DETAILS
 
-	set_client_secret (v: READABLE_STRING_8)
-		do
-			client_secret := v
-		end
 
 end

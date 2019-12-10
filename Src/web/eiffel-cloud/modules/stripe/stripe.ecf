@@ -7,6 +7,7 @@
 		</file_rule>
 		<option warning="none">
 		</option>
+		<library name="auth_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\auth\auth.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="base_extension" location="$ISE_LIBRARY\library\base_extension\base_extension.ecf"/>
 		<library name="cms" location="$ISE_LIBRARY\unstable\library\web\cms\cms.ecf" readonly="false"/>

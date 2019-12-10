@@ -209,6 +209,8 @@ eStripeMod.createElements = function (content, paymentIntent, publicKey) {
 
     stripe
       .confirmCardPayment(paymentIntent.client_secret, {
+		description: content.productName,
+		receipt_email: content.customerEmail,
         payment_method: {
           card: card,
           billing_details: { email: content.customerEmail, name: content.customerName }

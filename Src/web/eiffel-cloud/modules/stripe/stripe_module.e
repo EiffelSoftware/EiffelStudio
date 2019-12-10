@@ -34,6 +34,7 @@ feature {NONE} -- Initialization
 			version := "1.0"
 			description := "Stripe"
 			package := "payment"
+			add_dependency ({CMS_AUTHENTICATION_MODULE})
 		end
 
 feature -- Access

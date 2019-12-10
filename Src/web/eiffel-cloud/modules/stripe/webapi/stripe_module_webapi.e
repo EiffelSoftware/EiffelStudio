@@ -109,26 +109,67 @@ feature -- Handle
 		local
 			rep: like new_response
 			buf: STRING
-			p, fp: PATH
+			p: PATH
 			f: RAW_FILE
 			fut: FILE_UTILITIES
+			jp: JSON_PARSER
+			l_sign: READABLE_STRING_32
+			l_type: READABLE_STRING_32
+			l_user: READABLE_STRING_32
+			s32: STRING_32
+			l_payment_intent_res: PAYMENT_INTENT_SUCCEEDED
 		do
+			create buf.make (req.content_length_value.to_integer_32)
+			req.read_input_data_into (buf)
+
+			l_sign := req.meta_string_variable ("HTTP_STRIPE_SIGNATURE")
+
+			create jp.make_with_string (buf)
+			jp.parse_content
+			if
+				jp.is_parsed and then jp.is_valid and then attached jp.parsed_json_object as jo and then
+				attached jo.string_item ("type") as js
+			then
+				l_type := js.unescaped_string_32
+				if l_type.is_case_insensitive_equal_general ("payment_intent.succeeded") then
+					create l_payment_intent_res.make_with_json (jo)
+					across
+						l_payment_intent_res.charges as ic
+					loop
+						if
+							attached ic.item.billing_details as l_billing and then
+							attached l_billing.email as l_email
+						then
+
+						end
+					end
+				elseif l_type.is_case_insensitive_equal_general ("payment_intent.created") then
+
+				end
+			else
+				l_type := "webhook"
+			end
+
 			rep := new_response (req, res, api)
 			p := api.cms_api.site_location.extended ("stripe")
 			if fut.directory_path_exists (p) then
-				fp := p.extended (req.request_time_stamp.out + ".req")
-				create f.make_with_path (fp)
+				create s32.make_from_string_general (req.request_time_stamp.out)
+				s32.append_character ('.')
+				s32.append (l_type)
+
+				create f.make_with_path (p.extended (s32))
 				f.create_read_write
+
 				if attached req.raw_header_data as h then
 					f.put_string (h)
 					f.put_new_line
 				end
-				if attached req.meta_string_variable ("HTTP_STRIPE_SIGNATURE") as l_sign then
+
+				if l_sign /= Void then
 					f.put_string ("HTTP_STRIPE_SIGNATURE=" + utf_8_encoded (l_sign))
 					f.put_new_line
 				end
-				create buf.make (req.content_length_value.to_integer_32)
-				req.read_input_data_into (buf)
+
 				f.put_string (create {STRING}.make_filled ('=', 8))
 				f.put_new_line
 				f.put_string (buf)
@@ -147,17 +188,13 @@ feature -- Hooks configuration
 --			a_hooks.subscribe_to_hook (Current, {STRIPE_HOOK})
 		end
 
---	prepare_payment (pay: STRIPE_PAYMENT)
---		do
---			if
---		end
-
 feature {NONE} -- Implementation
 
 	new_response (req: WSF_REQUEST; res: WSF_RESPONSE; api: STRIPE_API): HM_WEBAPI_RESPONSE
 		do
 			create {JSON_WEBAPI_RESPONSE} Result.make (req, res, api.cms_api)
 		end
+
 
 note
 	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"

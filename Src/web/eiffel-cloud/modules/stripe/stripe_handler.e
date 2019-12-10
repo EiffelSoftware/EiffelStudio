@@ -90,7 +90,11 @@ feature -- Execution
 						end
 					else
 						rep := new_generic_response (req, res)
+						if attached {CMS_AUTHENTICATION_MODULE} api.module ({CMS_AUTHENTICATION_MODULE}) as l_auth_module  then
+							rep.set_redirection (api.url (l_auth_module.roc_login_location, create {CMS_API_OPTIONS}.make_from_manifest (<<["query", "destination=" + secured_url_content (rep.location)]>>)))
+						end
 						rep.set_main_content ("Please login or register an account first.")
+
 					end
 					rep.execute
 				else

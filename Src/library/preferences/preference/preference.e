@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Resource type abstraction."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -103,18 +103,6 @@ feature -- Access
 			end
 		end
 
-	string_value: STRING_8
-			-- String value for this preference.
-		obsolete
-			"Use `value` instead of accessing implementation function [2017-05-31]"
-		require
-			has_value: has_value
-		do
-			Result := text_value.as_string_8_conversion
-		ensure
-			not_void: Result /= Void
-		end
-
 	string_type: STRING
 			-- String description of this preference type.
 		deferred
@@ -147,7 +135,7 @@ feature {PREFERENCE_EXPORTER} -- Access
 			not_void: Result /= Void
 		end
 
-feature -- Query
+feature -- Status report
 
 	has_value: BOOLEAN
 			-- Does this preference have a value to use?
@@ -179,14 +167,6 @@ feature -- Query
 	is_auto: BOOLEAN
 			-- Is Current using auto value?
 
-feature -- Validation		
-
-	validation_agent: detachable FUNCTION [READABLE_STRING_GENERAL, BOOLEAN]
-			-- Validation agent to test if a READABLE_STRING_GENERAL is a valid text value for Current
-			--| This can be used to validate only existing path, or existing directory, ...
-
-feature -- Query
-
 	valid_value_string (a_string: READABLE_STRING_GENERAL): BOOLEAN
 			-- Is `a_string' valid for this preference type to convert into a value?
 			-- note: this ignores the `validation_agent'
@@ -211,6 +191,12 @@ feature -- Query
 		do
 			Result := validation_agent /= Void
 		end
+
+feature -- Validation
+
+	validation_agent: detachable FUNCTION [READABLE_STRING_GENERAL, BOOLEAN]
+			-- Validation agent to test if a READABLE_STRING_GENERAL is a valid text value for Current
+			--| This can be used to validate only existing path, or existing directory, ...
 
 feature -- Change
 
@@ -254,7 +240,7 @@ invariant
 	has_change_actions: change_actions /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -264,7 +250,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class PREFERENCE
+end

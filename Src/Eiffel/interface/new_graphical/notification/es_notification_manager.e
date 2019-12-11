@@ -8,6 +8,8 @@ inherit
 
 	ES_SHARED_FONTS_AND_COLORS
 
+	EB_SHARED_PREFERENCES
+
 	SHARED_NOTIFICATION_SERVICE
 
 	EB_CONSTANTS
@@ -29,6 +31,7 @@ feature {NONE} -- Initialization
 			status_bar := a_status_bar
 			create notification_windows.make (5)
 			create messages.make (100)
+			autoclose_delay_ms := preferences.dialog_data.notification_autoclose_delay_ms -- Default: 30_000 -- 30 sec
 			attach_to_status_bar (a_status_bar)
 		end
 
@@ -124,7 +127,7 @@ feature -- Access
 
 	status_bar: EB_DEVELOPMENT_WINDOW_STATUS_BAR
 
-	delay_ms: INTEGER = 10_000
+	autoclose_delay_ms: INTEGER
 
 feature -- Settings
 
@@ -189,24 +192,28 @@ feature -- Actions
 feature {NONE} -- Status bar
 
 	update_status_bar
+		local
+			p: EV_PIXMAP
 		do
 			if attached status_bar.notifications_icon as l_icon then
 				if
 					attached messages as l_messages and then
 					l_messages.count_of_unacknowledged_items > 0
 				then
-					l_icon.clear
-					l_icon.draw_pixmap (1, 1, pixmaps.icon_pixmaps.general_notifications_not_empty_icon)
+					p := pixmaps.icon_pixmaps.general_notifications_not_empty_icon
 				elseif
 					notifications_suspended
 					or else	(attached notifications_suspended_until as dt and then (create {DATE_TIME}.make_now) <= dt)
 				 then
-					l_icon.clear
-					l_icon.draw_pixmap (1, 1, pixmaps.icon_pixmaps.general_notifications_suspended_icon)
+				 	p := pixmaps.icon_pixmaps.general_notifications_suspended_icon
 				else
-					l_icon.clear
-					l_icon.draw_pixmap (1, 1, pixmaps.icon_pixmaps.general_notifications_icon)
+					p := pixmaps.icon_pixmaps.general_notifications_icon
 				end
+				if attached status_bar.notifications_cell as cell then
+					l_icon.set_background_color (cell.background_color)
+				end
+				l_icon.clear
+				l_icon.draw_pixmap (1, 1, p)
 			end
 		end
 
@@ -259,7 +266,7 @@ feature {NOTIFICATION_S, ES_NOTIFICATION_WINDOW} -- Event handlers
 				end
 			end
 			notification_windows.force (a_window)
-			a_window.set_auto_close_delay (delay_ms)
+			a_window.set_auto_close_delay (autoclose_delay_ms)
 			if attached parent_window (w) as win then
 				a_window.show_relative_to_window (win)
 			else
@@ -333,9 +340,35 @@ feature {ES_NOTIFICATION_STACK_DIALOG} -- Archive
 			update_status_bar
 		end
 
+	refresh (m: detachable NOTIFICATION_MESSAGE)
+		local
+			win: detachable ES_NOTIFICATION_WINDOW
+		do
+			if m /= Void then
+				across
+					notification_windows as ic
+				until
+					win /= Void
+				loop
+					if ic.item.message = m then
+						win := ic.item
+					end
+				end
+				if win /= Void then
+					win.close
+				end
+			end
+			update_status_bar
+		end
+
 	record (a_message: NOTIFICATION_MESSAGE)
 		do
 			messages.put (a_message) --.to_archive)
+		end
+
+	delete (a_message: NOTIFICATION_MESSAGE)
+		do
+			messages.delete (a_message)
 		end
 
 	messages: ES_NOTIFICATION_STACK

@@ -1,6 +1,5 @@
 note
 	description: "Summary description for {ES_NOTIFICATION_WIDGET}."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -23,6 +22,12 @@ inherit
 		end
 
 	EB_CONSTANTS
+		undefine
+			default_create,
+			copy
+		end
+
+	EB_SHARED_PREFERENCES
 		undefine
 			default_create,
 			copy
@@ -56,12 +61,14 @@ feature -- Element change
 			l_scaler: EVS_DPI_SCALER
 			l_in: EV_VERTICAL_BOX
 			l_cross: EV_PIXMAP
-			hb: EV_HORIZONTAL_BOX
+			l_title_bar: EV_HORIZONTAL_BOX
+			l_label_title: EV_LABEL
 		do
 			create l_scaler.make
-			set_minimum_width (l_scaler.scaled_size (200))
+			set_minimum_width (l_scaler.scaled_size (300))
 
 			create lab.make_with_text (message.text)
+			lab.set_font (text_font)
 			lab.set_is_text_wrapped (True)
 
 			if lab.font.string_width (lab.text) > minimum_width then
@@ -78,34 +85,47 @@ feature -- Element change
 
 			create fr
 			extend (fr)
-			fr.set_background_color (colors.stock_colors.blue)
-			fr.set_border_width (l_scaler.scaled_size (3))
-			fr.set_padding_width (l_scaler.scaled_size (3))
+			fr.set_background_color (colors.stock_colors.color_3d_shadow)
+			fr.set_border_width (l_scaler.scaled_size (1))
+			fr.set_padding_width (l_scaler.scaled_size (1))
 
-			l_cross := pixmaps.mini_pixmaps.toolbar_close_icon.twin
-			l_cross.set_minimum_size (l_cross.width, l_cross.height)
+			l_cross := close_icon
 
-			create l_in
-			fr.extend (l_in)
-			create hb
-			l_in.extend (hb)
-			l_in.disable_item_expand (hb)
-			l_in.extend (l_main)
+			create l_label_title.make_with_text (title_from_category (message.category))
+			l_label_title.align_text_left
+			l_label_title.set_font (title_font)
 
-			hb.extend (create {EV_CELL})
-			hb.extend (l_cross)
-			hb.disable_item_expand (l_cross)
+--			create l_in
+--			fr.extend (l_in)
+			create l_title_bar
+			l_title_bar.set_border_width (l_scaler.scaled_size (5))
+			l_title_bar.set_padding_width (l_scaler.scaled_size (5))
+			l_title_bar.extend (l_label_title)
+--			l_title_bar.extend (create {EV_CELL})
+			l_title_bar.extend (l_cross)
+			l_title_bar.disable_item_expand (l_cross)
 
-			l_in.set_background_color (colors.stock_colors.white)
-			l_in.set_foreground_color (colors.stock_colors.blue)
-			l_in.propagate_background_color
-			l_in.propagate_foreground_color
+			fr.extend (l_title_bar)
+			fr.disable_item_expand (l_title_bar)
+			fr.extend (l_main)
+
+
+			l_main.set_foreground_color (text_foreground_color)
+			l_main.set_background_color (text_background_color)
+			l_main.propagate_background_color
+			l_main.propagate_foreground_color
+
+			l_title_bar.set_foreground_color (title_foreground_color)
+			l_title_bar.set_background_color (title_background_color)
+			l_title_bar.propagate_foreground_color
+			l_title_bar.propagate_background_color
 
 			if attached {NOTIFICATION_MESSAGE_WITH_ACTIONS} message as mwa then
 				across
 					mwa.actions as ic
 				loop
 					create l_action_label.make_with_text (ic.key)
+					l_action_label.set_font (text_font)
 					create l_action_frame
 					l_action_frame.set_border_width (l_scaler.scaled_size (1))
 					l_action_frame.extend (l_action_label)
@@ -127,6 +147,79 @@ feature -- Element change
 			l_main.pointer_double_press_actions.extend (agent terminate_on_pointer_action)
 			l_cross.pointer_button_release_actions.extend (agent terminate_on_pointer_action)
 
+		end
+
+feature -- Helpers
+
+	title_from_category (a_cat: READABLE_STRING_32): STRING_32
+		local
+			l_up: BOOLEAN
+			i,n: INTEGER
+			c: CHARACTER_32
+		do
+			create Result.make (a_cat.count)
+			l_up := True
+			from
+				i := 1
+				n := a_cat.count
+			until
+				i > n
+			loop
+				c := a_cat [i]
+				if c = '_' then
+					c := ' '
+				end
+				if c.is_space then
+					l_up := True
+				elseif l_up then
+					c := c.as_upper
+					l_up := False
+				else
+					c := c.as_lower
+				end
+				Result.extend (c)
+				i := i + 1
+			end
+		end
+
+feature -- Colors
+
+	title_font: EV_FONT
+		do
+			Result := preferences.dialog_data.notification_title_font
+		end
+
+	title_foreground_color: EV_COLOR
+		do
+			Result := preferences.dialog_data.notification_title_foreground_color
+		end
+
+	title_background_color: EV_COLOR
+		do
+			Result := preferences.dialog_data.notification_title_background_color
+		end
+
+	text_font: EV_FONT
+		do
+			Result := preferences.dialog_data.notification_text_font
+		end
+
+	text_foreground_color: EV_COLOR
+		do
+			Result := preferences.dialog_data.notification_text_foreground_color
+		end
+
+	text_background_color: EV_COLOR
+		do
+			Result := preferences.dialog_data.notification_text_background_color
+		end
+
+feature -- Icons
+
+	close_icon: EV_PIXMAP
+		do
+			Result := pixmaps.mini_pixmaps.toolbar_close_icon.twin
+			Result.set_minimum_size (Result.width, Result.height)
 		end
 
 feature -- Actions

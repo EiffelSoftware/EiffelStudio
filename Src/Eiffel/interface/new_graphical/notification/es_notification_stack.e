@@ -42,6 +42,26 @@ feature -- Element change
 --			count := items.count.min (count + 1)
 		end
 
+	delete (m: NOTIFICATION_MESSAGE)
+		local
+			i,n: INTEGER
+			done: BOOLEAN
+		do
+			from
+				i := items.lower
+			until
+				i > items.upper or done
+			loop
+				if items [i] = m then
+					done := True
+					items [i] := Void
+					count := count - 1
+				else
+					i := i + 1
+				end
+			end
+		end
+
 feature -- Access
 
 	count: INTEGER

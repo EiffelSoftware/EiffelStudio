@@ -133,6 +133,7 @@ feature {NONE} -- Initialization
 			project_label.set_tooltip (Interface_names.e_Project_name)
 			coordinate_label.set_tooltip (Interface_names.e_Cursor_position)
 			debugger_icon.clear
+			notifications_icon.clear
 
 			create vp
 			vp.extend (label)
@@ -193,6 +194,7 @@ feature {NONE} -- Initialization
 				create f
 				f.set_style ({EV_FRAME_CONSTANTS}.Ev_frame_lowered)
 				create cel
+				notifications_cell := cel
 				cel.extend (notifications_icon)
 				cel.set_minimum_width (l_icon_size)
 				f.extend (cel)
@@ -389,12 +391,15 @@ feature {NONE} -- Implementation: widgets
 			-- Pixmap that represents the current edition status of the project.
 
 	debugger_cell: EV_CELL
-			-- Cell that contains the debugger_icon.
+			-- Cell that contains the `debugger_icon`.
 
 feature {ES_NOTIFICATION_MANAGER} -- Implementation: widgets			
 
 	notifications_icon: EV_PIXMAP
-			-- Pixmap that represents the notification messages.	
+			-- Pixmap that represents the notification messages.
+
+	notifications_cell: EV_CELL
+			-- Cell that contains the `notifications_icon`.
 
 feature {NONE} -- Implementation: event handling
 

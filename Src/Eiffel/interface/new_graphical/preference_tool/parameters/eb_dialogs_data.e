@@ -8,6 +8,9 @@ note
 class
 	EB_DIALOGS_DATA
 
+inherit
+	ES_SHARED_FONTS_AND_COLORS
+
 create
 	make
 
@@ -279,6 +282,43 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			end
 		end
 
+feature {EB_SHARED_PREFERENCES} -- Notification/Value
+
+	notification_autoclose_delay_ms: INTEGER
+		do
+			Result := notification_autoclose_delay_ms_preference.value
+		end
+
+	notification_title_font: EV_FONT
+		do
+			Result := notification_title_font_preference.value
+		end
+
+	notification_text_font: EV_FONT
+		do
+			Result := notification_text_font_preference.value
+		end
+
+	notification_title_background_color: EV_COLOR
+		do
+			Result := notification_title_background_color_preference.value
+		end
+
+	notification_title_foreground_color: EV_COLOR
+		do
+			Result := notification_title_foreground_color_preference.value
+		end
+
+	notification_text_background_color: EV_COLOR
+		do
+			Result := notification_text_background_color_preference.value
+		end
+
+	notification_text_foreground_color: EV_COLOR
+		do
+			Result := notification_text_foreground_color_preference.value
+		end
+
 feature {EB_SHARED_PREFERENCES, EB_TOOL} -- Preference
 
 	confirm_on_terminate_freezing_preference: BOOLEAN_PREFERENCE
@@ -415,6 +455,14 @@ feature {EB_SHARED_PREFERENCES, EB_TOOL} -- Preference
 
 	last_saved_basic_project_directory_preference: PATH_PREFERENCE
 
+	notification_autoclose_delay_ms_preference: INTEGER_PREFERENCE
+	notification_title_font_preference: FONT_PREFERENCE
+	notification_text_font_preference: FONT_PREFERENCE
+	notification_title_background_color_preference: COLOR_PREFERENCE
+	notification_title_foreground_color_preference: COLOR_PREFERENCE
+	notification_text_background_color_preference: COLOR_PREFERENCE
+	notification_text_foreground_color_preference: COLOR_PREFERENCE
+
 feature -- Preference strings
 
 	confirm_on_terminate_freezing_string: STRING = "interface.dialogs.confirm_on_terminate_freezing"
@@ -487,6 +535,14 @@ feature -- Preference strings
 	discard_target_scope_customized_formatter_string: STRING = "interface.dialogs.discard_target_scope_customized_formatter"
 
 	last_saved_basic_project_directory_string: STRING = "interface.dialogs.last_saved_basic_project_directory"
+
+	notification_autoclose_delay_ms_string: STRING = "interface.dialogs.notification_autoclose_delay_ms"
+	notification_title_font_string: STRING = "interface.dialogs.notification_title_font"
+	notification_text_font_string: STRING = "interface.dialogs.notification_text_font"
+	notification_title_background_color_string: STRING = "interface.dialogs.notification_title_background_color"
+	notification_title_foreground_color_string: STRING = "interface.dialogs.notification_title_foreground_color"
+	notification_text_background_color_string: STRING = "interface.dialogs.notification_text_background_color"
+	notification_text_foreground_color_string: STRING = "interface.dialogs.notification_text_foreground_color"
 
 feature {NONE} -- Implementation
 
@@ -564,6 +620,15 @@ feature {NONE} -- Implementation
 			discard_target_scope_customized_formatter_preference := l_manager.new_boolean_preference_value (l_manager, discard_target_scope_customized_formatter_string, True)
 
 			last_saved_basic_project_directory_preference := l_manager.new_path_preference_value (l_manager, last_saved_basic_project_directory_string, create {PATH}.make_empty)
+
+
+			notification_autoclose_delay_ms_preference := l_manager.new_integer_preference_value (l_manager, notification_autoclose_delay_ms_string, 45_000) -- 45 seconds
+			notification_title_font_preference := l_manager.new_font_preference_value (l_manager, notification_title_font_string, fonts.highlighted_label_font)
+			notification_text_font_preference := l_manager.new_font_preference_value (l_manager, notification_text_font_string, fonts.standard_label_font)
+			notification_title_background_color_preference := l_manager.new_color_preference_value (l_manager, notification_title_background_color_string, colors.stock_colors.color_dialog)
+			notification_title_foreground_color_preference := l_manager.new_color_preference_value (l_manager, notification_title_foreground_color_string, colors.stock_colors.default_foreground_color)
+			notification_text_background_color_preference := l_manager.new_color_preference_value (l_manager, notification_text_background_color_string, colors.stock_colors.default_background_color)
+			notification_text_foreground_color_preference := l_manager.new_color_preference_value (l_manager, notification_text_foreground_color_string, colors.stock_colors.default_foreground_color)
 		end
 
 	preferences: PREFERENCES
@@ -613,6 +678,14 @@ invariant
 	open_project_dialog_height_preference_not_void: open_project_dialog_height_preference /= Void
 
 	last_saved_basic_project_directory_preference_not_void: last_saved_basic_project_directory_preference /= Void
+
+	notification_autoclose_delay_ms_preference_not_void: notification_autoclose_delay_ms_preference /= Void
+	notification_title_font_preference_not_void: notification_title_font_preference /= Void
+	notification_text_font_preference_not_void: notification_text_font_preference /= Void
+	notification_title_background_color_preference_not_void: notification_title_background_color_preference /= Void
+	notification_title_foreground_color_preference_not_void: notification_title_foreground_color_preference /= Void
+	notification_text_background_color_preference_not_void: notification_text_background_color_preference /= Void
+	notification_text_foreground_color_preference_not_void: notification_text_foreground_color_preference /= Void
 
 note
 	copyright: "Copyright (c) 1984-2019, Eiffel Software"

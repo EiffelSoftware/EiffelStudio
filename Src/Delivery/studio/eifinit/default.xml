@@ -237,6 +237,14 @@
 	<PREF NAME="interface.dialogs.confirm_save_before_prettifying" DESCRIPTION="Display confirmation dialog to save source code before prettifying it."><BOOLEAN>True</BOOLEAN></PREF>
 	<PREF NAME="interface.dialogs.dbg_confirm_detach" DESCRIPTION="Display confirmation dialog before detaching debugger from a process."><BOOLEAN>True</BOOLEAN></PREF>
 
+	<PREF NAME="interface.dialogs.notification_autoclose_delay_ms" DESCRIPTION="Delay in milliseconds before closing automatically the notification widget."><INTEGER>45000</INTEGER></PREF>
+	<PREF NAME="interface.dialogs.notification_title_font" DESCRIPTION="Font for the title of notification widget."><FONT>Segoe UI-r-bold-9-screen</FONT></PREF>
+	<PREF NAME="interface.dialogs.notification_text_font" DESCRIPTION="Font for the text of notification widget."><FONT>Segoe UI-r-regular-9-screen</FONT></PREF>
+	<PREF NAME="interface.dialogs.notification_title_background_color" DESCRIPTION="Background color of the notification title bar."><COLOR>240;240;240</COLOR></PREF>
+	<PREF NAME="interface.dialogs.notification_title_foreground_color" DESCRIPTION="Foreground color of the notification title bar."><COLOR>0;0;0</COLOR></PREF>
+	<PREF NAME="interface.dialogs.notification_text_background_color" DESCRIPTION="Background color of the notification text."><COLOR>240;240;240</COLOR></PREF>
+	<PREF NAME="interface.dialogs.notification_text_foreground_color" DESCRIPTION="Foreground color of the notification text."><COLOR>0;0;0</COLOR></PREF>
+
 	<PREF NAME="interface.property.inherit_background_color" DESCRIPTION="Background color of inherited property."><COLOR>245;245;245</COLOR></PREF>
 	<PREF NAME="interface.property.override_background_color" DESCRIPTION="Background color of overridden property."><COLOR>255;245;245</COLOR></PREF>
 

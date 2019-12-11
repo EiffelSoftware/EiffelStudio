@@ -67,6 +67,9 @@ feature {NONE} -- Initialization
 			hb.extend (but)
 			hb.disable_item_expand (but)
 			set_default_cancel_button (but)
+
+			g.enable_single_row_selection
+			g.key_press_actions.extend (agent key_pressed_on_grid (g, ?))
 		end
 
 	column_message: INTEGER = 1
@@ -103,7 +106,6 @@ feature -- Action
 			g := grid
 			g.wipe_out
 			g.set_row_count_to (0)
-			g.enable_single_row_selection
 
 			if attached manager.messages as l_messages then
 				lst := l_messages.linear
@@ -143,11 +145,35 @@ feature -- Action
 			a_row.set_item (column_time, glab)
 		end
 
+	key_pressed_on_grid (g: EV_GRID; k: EV_KEY)
+		do
+			if
+				k.code = {EV_KEY_CONSTANTS}.key_delete and then
+				attached g.selected_rows as lst and then
+				not lst.is_empty
+			then
+				across
+					lst as ic
+				loop
+					if attached {NOTIFICATION_MESSAGE} ic.item.data as l_message then
+						manager.delete (l_message)
+						ic.item.hide
+						ic.item.set_data (Void)
+					end
+				end
+				display_cell.wipe_out
+				ev_application.add_idle_action_kamikaze (agent manager.refresh (Void))
+			end
+		end
+
 	on_row_deselected (a_row: EV_GRID_ROW)
 		do
 			display_cell.wipe_out
 			if attached {NOTIFICATION_MESSAGE} a_row.data as l_message then
-				l_message.mark_acknowledged
+				if not l_message.is_acknowledged then
+					l_message.mark_acknowledged
+					ev_application.add_idle_action_kamikaze (agent manager.refresh (l_message))
+				end
 				ev_application.add_idle_action_kamikaze (agent fill_notification_row (a_row, l_message))
 			end
 		end
@@ -164,7 +190,10 @@ feature -- Action
 				display_cell.wipe_out
 				display_cell.extend (w)
 
-				l_message.mark_acknowledged
+				if not l_message.is_acknowledged then
+					l_message.mark_acknowledged
+					ev_application.add_idle_action_kamikaze (agent manager.refresh (l_message))
+				end
 				w.set_terminate_action (agent fill_notification_row (a_row, l_message))
 			end
 		end

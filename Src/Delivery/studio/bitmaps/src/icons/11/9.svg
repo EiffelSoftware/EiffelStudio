@@ -15,8 +15,8 @@
    sodipodi:docname="9.svg"
    inkscape:version="0.92.3 (2405546, 2018-03-11)"
    inkscape:export-filename="E:\eiffelstudio\trunk\Src\Delivery\studio\bitmaps\src\icons\11\9.png"
-   inkscape:export-xdpi="16"
-   inkscape:export-ydpi="16">
+   inkscape:export-xdpi="15.36"
+   inkscape:export-ydpi="15.36">
   <metadata
      id="metadata4568">
     <rdf:RDF>
@@ -46,9 +46,9 @@
      showgrid="true"
      showguides="true"
      inkscape:guide-bbox="true"
-     inkscape:zoom="0.3209375"
-     inkscape:cx="-328.28975"
-     inkscape:cy="-216.59012"
+     inkscape:zoom="4.7080324"
+     inkscape:cx="50"
+     inkscape:cy="76.333594"
      inkscape:window-x="-8"
      inkscape:window-y="949"
      inkscape:window-maximized="1"
@@ -58,7 +58,7 @@
        id="grid4587" />
   </sodipodi:namedview>
   <path
-     style="opacity:1;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#2e2e2e;stroke-width:0;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
+     style="opacity:1;fill:#ffd800;fill-opacity:1;fill-rule:evenodd;stroke:#070707;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
      d="m 50,10 a 5,5 0 0 0 -5,4.999999 v 5.53125 a 25,25 0 0 0 -20,24.46875 v 20 L 15,75 v 5 H 85 V 75 L 75,65 V 45 A 25,25 0 0 0 55,20.505858 V 14.999999 A 5,5 0 0 0 50,10 Z M 40,83 c 0,5.52285 4.477153,10 10,10 5.522847,0 10,-4.47715 10,-10 z"
      id="rect4593"
      inkscape:connector-curvature="0" />
@@ -69,7 +69,8 @@
      cy="45"
      cx="50" />
   <path
-     style="opacity:1;fill:#ff9955;fill-opacity:1;fill-rule:evenodd;stroke:#2e2e2e;stroke-width:0;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
-     d="M 27.691406 5.9589844 A 45 45 0 0 0 5 45 L 20 45 A 30 30 0 0 1 35.134766 18.984375 L 27.691406 5.9589844 z M 72.298828 5.9785156 L 64.873047 18.972656 A 30 30 0 0 1 80 45 L 95 45 A 45 45 0 0 0 72.298828 5.9785156 z "
-     id="path843" />
+     style="opacity:1;fill:#ffd800;fill-opacity:1;fill-rule:evenodd;stroke:#151515;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
+     d="M 26.423557,4.299224 A 47.556647,47.556647 0 0 0 2.4429524,45.55833 H 18.295168 A 31.704431,31.704431 0 0 1 34.289807,18.064643 Z M 73.565321,4.3198647 65.717647,18.052258 A 31.704431,31.704431 0 0 1 81.70403,45.55833 H 97.556242 A 47.556647,47.556647 0 0 0 73.565321,4.3198647 Z"
+     id="path843"
+     inkscape:connector-curvature="0" />
 </svg>

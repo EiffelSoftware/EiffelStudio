@@ -15,8 +15,8 @@
    sodipodi:docname="8.svg"
    inkscape:version="0.92.3 (2405546, 2018-03-11)"
    inkscape:export-filename="E:\eiffelstudio\trunk\Src\Delivery\studio\bitmaps\src\icons\11\8.png"
-   inkscape:export-xdpi="16"
-   inkscape:export-ydpi="16">
+   inkscape:export-xdpi="15.36"
+   inkscape:export-ydpi="15.36">
   <metadata
      id="metadata4568">
     <rdf:RDF>
@@ -47,7 +47,7 @@
      showguides="true"
      inkscape:guide-bbox="true"
      inkscape:zoom="5.135"
-     inkscape:cx="-22.687611"
+     inkscape:cx="-22.395498"
      inkscape:cy="20.160803"
      inkscape:window-x="-8"
      inkscape:window-y="949"
@@ -58,7 +58,7 @@
        id="grid4587" />
   </sodipodi:namedview>
   <path
-     style="opacity:1;fill:#787878;fill-opacity:0.94117647;fill-rule:evenodd;stroke:#2e2e2e;stroke-width:0;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
+     style="opacity:1;fill:#787878;fill-opacity:1;fill-rule:evenodd;stroke:#ffffff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:fill markers stroke"
      d="m 50,10 a 5,5 0 0 0 -5,5 v 5.53125 A 25,25 0 0 0 25,45 V 65 L 15,75 v 5 H 85 V 75 L 75,65 V 45 A 25,25 0 0 0 55,20.505859 V 15 A 5,5 0 0 0 50,10 Z M 40,83 c 0,5.52285 4.477153,10 10,10 5.522847,0 10,-4.47715 10,-10 z"
      id="rect4593"
      inkscape:connector-curvature="0" />

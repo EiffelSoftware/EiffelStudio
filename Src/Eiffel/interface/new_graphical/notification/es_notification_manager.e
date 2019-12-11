@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 			status_bar := a_status_bar
 			create notification_windows.make (5)
 			create messages.make (100)
-			autoclose_delay_ms := preferences.dialog_data.notification_autoclose_delay_ms -- Default: 30_000 -- 30 sec
+			autoclose_delay_ms := preferences.dialog_data.notification_autoclose_delay_ms
 			attach_to_status_bar (a_status_bar)
 		end
 
@@ -213,7 +213,7 @@ feature {NONE} -- Status bar
 					l_icon.set_background_color (cell.background_color)
 				end
 				l_icon.clear
-				l_icon.draw_pixmap (1, 1, p)
+				l_icon.draw_pixmap (0, 0, p)
 			end
 		end
 

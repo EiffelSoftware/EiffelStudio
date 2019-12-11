@@ -1,8 +1,6 @@
-note
-	description: "Objects that ..."
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -29,19 +27,23 @@ feature {NONE} -- Initialization
 			create misc_data.make (a_preferences)
 			create feature_tool_data.make (a_preferences)
 			create flat_short_data.make (a_preferences)
+			create pretty_printer_preferences.make (a_preferences)
 			preferences := a_preferences
 		end
 
 feature -- Access
 
 	flat_short_data: EB_FLAT_SHORT_DATA
-		-- Preference data for class flat short.
+			-- Preference data for class flat short.
 
 	feature_tool_data: EB_FEATURE_TOOL_DATA
-		-- Preference data for the feature tool.
+			-- Preference data for the feature tool.
 
 	misc_data: EB_MISC_DATA
-		-- Misc data.  This should be removed.  neilc
+			-- Misc data.  This should be removed.  neilc
+
+	pretty_printer_preferences: PRETTY_PRINTER_PREFERENCES
+			-- Preferences of the pretty printer.
 
 invariant
 	feature_tool_data_not_void: feature_tool_data /= Void
@@ -49,7 +51,7 @@ invariant
 	flat_short_data_not_void: flat_short_data /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -80,4 +82,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EC_PREFERENCES
+end

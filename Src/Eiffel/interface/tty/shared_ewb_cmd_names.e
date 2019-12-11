@@ -1,5 +1,5 @@
 ﻿note
-	description:	"Command names for menu entries."
+	description: "Command names for menu entries."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -142,6 +142,8 @@ feature {NONE}
 	precompile_cmd_name: STRING = "precompile"
 
 	pretty_cmd_name: STRING = "pretty"
+
+	preference_cmd_name: STRING = "preference"
 
 	finalized_precompile_cmd_name: STRING = "finalize_precompile"
 

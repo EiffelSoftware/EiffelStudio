@@ -3,7 +3,7 @@
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class SHARED_EWB_HELP
 
@@ -160,6 +160,8 @@ feature {NONE}
 
 	project_help: STRING_GENERAL do Result := locale.translation ("specify the project file to load (obsolete)") end
 
+	preference_help: READABLE_STRING_32 do Result := locale.translation_in_context ("override default or stored preference value", "compiler.command-line.option") end
+
 	queries_help: STRING_GENERAL do Result := locale.translation ("manipulate subqueries") end
 
 	quick_melt_help: STRING_GENERAL do Result := locale.translation ("quick melt the system") end
@@ -233,7 +235,8 @@ feature {NONE}
 	gc_stats_help: STRING_GENERAL do Result := locale.translation ("Show GC statistics") end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	ca_ignore: "CA033", "CA033: too large class"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,4 +1,4 @@
-	note
+﻿	note
 	description: "Generic PREFERENCE."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -59,7 +59,15 @@ feature {NONE} --Initialization
 			set_value_from_string (a_value)
 		end
 
-feature -- Setting
+feature -- Status report
+
+	is_valid_string_for_selection (s: READABLE_STRING_32): BOOLEAN
+			-- <Precursor>
+		do
+			Result := is_string_value_validated (s)
+		end
+
+feature -- Modification
 
 	set_value (a_value: G)
 			-- Set the value.
@@ -95,7 +103,11 @@ feature -- Setting
 			value_set: (attached auto_preference as el_auto_preference) and then internal_value = el_auto_preference.value
 		end
 
-feature -- Status Setting
+	select_value_from_string (s: READABLE_STRING_32)
+			-- <Precursor>
+		do
+			set_value_from_string (s)
+		end
 
 	set_auto_preference (a_pref: like Current)
 			-- Use value of `a_pref' for "auto" value for Current.
@@ -188,7 +200,7 @@ invariant
 	attached_auto_preference_has_value: (attached auto_preference as l_auto_preference) implies l_auto_preference.has_value
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

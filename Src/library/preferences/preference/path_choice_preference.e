@@ -1,9 +1,5 @@
-note
-	description	: "preference for a choice between path."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
-	date: "$Date:"
-	revision: "$Revision$"
+﻿note
+	description: "Preference for a choice among paths."
 
 class
 	PATH_CHOICE_PREFERENCE
@@ -13,18 +9,22 @@ inherit
 
 	PATH_LIST_PREFERENCE
 		undefine
-			text_value,
-			set_value_from_string,
+			escaped_characters,
 			generating_preference_type,
+			is_valid_string_for_selection,
+			select_value_from_string,
+			set_value_from_string,
 			string_type,
-			escaped_characters
+			text_value
 		end
 
 create {PREFERENCE_FACTORY}
 	make, make_from_string_value
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software and others"
+	date: "$Date: вы$"
+	revision: "$Revision$"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

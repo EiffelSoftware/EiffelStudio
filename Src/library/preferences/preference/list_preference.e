@@ -1,10 +1,4 @@
-note
-	description: "Summary description for {LIST_PREFERENCE}."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
-
-deferred class
+﻿deferred class
 	LIST_PREFERENCE [G]
 
 inherit
@@ -33,9 +27,38 @@ feature -- Access
 				end
 			end
 		ensure
-			value_unmodified: value.count = old (value.count)
+			value_unmodified: value.count = old value.count
 			same_count: Result.count = value.count
-			same: not value.is_empty implies (across value as c all c.item ~ Result[Result.lower + c.target_index - c.first_index] end)
+			same: not value.is_empty implies across value as c all c.item ~ Result [Result.lower + c.target_index - c.first_index] end
+		end
+
+	value_as_list_of_text: LIST [STRING_32]
+		local
+			l_value: like value
+			lst: ARRAYED_LIST [STRING_32]
+		do
+			l_value := value
+			create lst.make (l_value.count)
+			lst.compare_objects
+			across
+				l_value as c
+			loop
+				lst.force (item_to_string_representation (c.item))
+			end
+			Result := lst
+		end
+
+	string_type: STRING
+			-- String description of this preference type.
+		once
+			Result := "LIST"
+		end
+
+feature -- Measurement
+
+	value_count: INTEGER
+		do
+			Result := value.count
 		end
 
 feature {PREFERENCE_EXPORTER} -- Access
@@ -93,10 +116,8 @@ feature -- Formatting
 				i > n
 			loop
 				c := s[i]
-				if i < n then
-					if l_escaped_characters.has (c) then
-						Result.append_character (escape_character)
-					end
+				if i < n and then l_escaped_characters.has (c) then
+					Result.append_character (escape_character)
 				end
 				Result.append_character (c)
 				i := i + 1
@@ -115,46 +136,14 @@ feature -- Formatting
 			until
 				i > n
 			loop
-				c := s[i]
-				if c = escape_character and i < n then
-					if escaped_characters.has (s[i+1]) then
-						i := i + 1
-						c := s[i]
-					end
+				c := s [i]
+				if c = escape_character and i < n and then escaped_characters.has (s [i+1]) then
+					i := i + 1
+					c := s [i]
 				end
 				Result.append_character (c)
 				i := i + 1
 			end
-		end
-
-feature -- Access
-
-	value_count: INTEGER
-		do
-			Result := value.count
-		end
-
-	value_as_list_of_text: LIST [STRING_32]
-		local
-			l_value: like value
-			lst: ARRAYED_LIST [STRING_32]
-		do
-			l_value := value
-			create lst.make (l_value.count)
-			across
-				l_value as c
-			loop
-				lst.force (item_to_string_representation (c.item))
-			end
-			Result := lst
-		end
-
-feature -- Access
-
-	string_type: STRING
-			-- String description of this preference type.
-		once
-			Result := "LIST"
 		end
 
 feature -- Change
@@ -244,7 +233,9 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

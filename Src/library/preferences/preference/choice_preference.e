@@ -1,14 +1,11 @@
-note
-	description: "Summary description for {CHOICE_PREFERENCE}."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
-
-deferred class
+﻿deferred class
 	CHOICE_PREFERENCE [G]
 
 inherit
 	LIST_PREFERENCE [G]
+		undefine
+			is_valid_string_for_selection,
+			select_value_from_string
 		redefine
 			text_value,
 			set_value_from_string,
@@ -124,12 +121,8 @@ feature -- Change
 
 	set_selected_index (a_index: INTEGER)
 			-- Set `selected_index'
---		require
---			index_valid: a_index > 0
 		do
 			selected_index := a_index
---		ensure
---			index_set: selected_index = a_index
 		end
 
 feature {PREFERENCES} -- Access
@@ -141,7 +134,9 @@ feature {PREFERENCES} -- Access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

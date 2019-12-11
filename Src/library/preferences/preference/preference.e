@@ -11,7 +11,7 @@ deferred class
 inherit
 	PREFERENCE_EXPORTER
 
-feature -- Status setting
+feature -- Modification
 
 	set_name (new_name: STRING)
 			-- Set `name' to `new_name'.
@@ -62,6 +62,15 @@ feature -- Status setting
 		require
 			a_value_not_void: a_value /= Void
 			a_value_valid: is_string_value_validated (a_value)
+		deferred
+		end
+
+	select_value_from_string (s: READABLE_STRING_32)
+			-- Select current value to match `s`.
+			-- Same as `set_value_from_string` for a single-valued preference.
+			-- Selects an item corresponding to `s` for a multi-valued preference.
+		require
+			is_valid_string_for_selection (s)
 		deferred
 		end
 
@@ -185,6 +194,13 @@ feature -- Status report
 			else
 				Result := valid_value_string (a_string)
 			end
+		end
+
+	is_valid_string_for_selection (s: READABLE_STRING_32): BOOLEAN
+			-- Can the string `s` be used to select a value?
+			-- Same as `is_string_value_validated` for a single-valued preference.
+			-- Checks against a list of known values for a multi-valued (choice) preference.
+		deferred
 		end
 
 	has_validation_agent: BOOLEAN

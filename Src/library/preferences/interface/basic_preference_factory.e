@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		This is a helper class used to initialize preferences.  To initialize a preference
 		use the `new_*_preference_value' functions.  In doing so the following rules apply:
@@ -16,7 +16,6 @@ note
 		]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -129,7 +128,7 @@ feature -- Access: Lists
 			else
 				create {ARRAYED_LIST [STRING_32]} lst.make (0)
 				across
-					lst as c
+					a_fallback_value as c
 				loop
 					lst.extend (c.item.to_string_32)
 				end
@@ -156,12 +155,7 @@ feature -- Access: Lists
 			if attached {LIST [PATH]} a_fallback_value as l_fb then
 				lst := l_fb
 			else
-				create {ARRAYED_LIST [PATH]} lst.make (0)
-				across
-					lst as c
-				loop
-					lst.extend (c.item)
-				end
+				create {ARRAYED_LIST [PATH]} lst.make_from_iterable (a_fallback_value)
 			end
 			Result := (create {PREFERENCE_FACTORY [like {PATH_LIST_PREFERENCE}.value, PATH_LIST_PREFERENCE]}).
 				new_preference (a_manager.preferences, a_manager, a_name, lst)
@@ -189,7 +183,7 @@ feature -- Access: Choices
 			else
 				create {ARRAYED_LIST [STRING_32]} lst.make (0)
 				across
-					lst as c
+					a_fallback_value as c
 				loop
 					lst.extend (c.item.to_string_32)
 				end
@@ -216,12 +210,7 @@ feature -- Access: Choices
 			if attached {LIST [PATH]} a_fallback_value as l_fb then
 				lst := l_fb
 			else
-				create {ARRAYED_LIST [PATH]} lst.make (0)
-				across
-					lst as c
-				loop
-					lst.extend (c.item)
-				end
+				create {ARRAYED_LIST [PATH]} lst.make_from_iterable (a_fallback_value)
 			end
 			Result := (create {PREFERENCE_FACTORY [like {PATH_CHOICE_PREFERENCE}.value, PATH_CHOICE_PREFERENCE]}).
 				new_preference (a_manager.preferences, a_manager, a_name, lst)
@@ -250,50 +239,6 @@ feature -- Access: Arrays
 			preference_added: a_manager.preferences.has_preference (a_name)
 		end
 
-	new_array_string_32_preference_value (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_fallback_value: ARRAY [STRING_32]): ARRAY_STRING_32_PREFERENCE
-			-- Add a new array preference with name `a_name'.  If preference cannot be found in
-			-- underlying datastore or in a default values then `a_fallback_value' is used for the value.
-		obsolete "Use `new_string_list_preference_value` [2017-05-31]"
-		require
-			name_valid: a_name /= Void
-			name_not_empty: not a_name.is_empty
-			value_not_void: a_fallback_value /= Void
-			not_has_preference: not a_manager.known_preference (a_name)
-		do
-			Result := (create {PREFERENCE_FACTORY [ARRAY [STRING_32], ARRAY_STRING_32_PREFERENCE]}).
-				new_preference (a_manager.preferences, a_manager, a_name, a_fallback_value)
-		ensure
-			has_result: Result /= Void
-			preference_name_set: Result.name.is_equal (a_name)
-			preference_added: a_manager.preferences.has_preference (a_name)
-		end
-
-feature -- Obsolete		
-
-	new_boolean_resource_value (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_fallback_value: BOOLEAN): BOOLEAN_PREFERENCE
-		obsolete "use `new_boolean_preference_value` [2017-05-31]."
-		do
-			Result := new_boolean_preference_value (a_manager, a_name, a_fallback_value)
-		end
-
-	new_integer_resource_value (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_fallback_value: INTEGER): INTEGER_PREFERENCE
-		obsolete "use `new_integer_preference_value` [2017-05-31]."
-		do
-			Result := new_integer_preference_value (a_manager, a_name, a_fallback_value)
-		end
-
-	new_string_resource_value (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_fallback_value: STRING): STRING_PREFERENCE
-		obsolete "Use `new_string_preference_value` [2017-05-31]."
-		do
-			Result := new_string_preference_value (a_manager, a_name, a_fallback_value)
-		end
-
-	new_array_resource_value (a_manager: PREFERENCE_MANAGER; a_name: STRING; a_fallback_value: ARRAY [STRING]): ARRAY_PREFERENCE
-		obsolete "Use `new_array_preference_value` [2017-05-31]."
-		do
-			Result := new_array_preference_value (a_manager, a_name, a_fallback_value)
-		end
-
 note
 	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
@@ -304,8 +249,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
-
 
 end

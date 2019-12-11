@@ -457,7 +457,6 @@ feature -- Class names completion
 		require
 			a_token_not_void: a_token /= Void
 		local
-			name_name: EB_NAME_FOR_COMPLETION
 			l_poss: like alias_name_completion_possibilities
 		do
 			create insertion.put ("")

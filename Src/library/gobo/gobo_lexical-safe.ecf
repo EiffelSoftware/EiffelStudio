@@ -1,3 +1,3 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<redirection xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" uuid="6C83C78B-D8F2-4101-9E3C-EF8E8A7CD816" message="Obsolete: use gobo_lexical.ecf !" location="gobo_lexical.ecf">
+<redirection xmlns="http://www.eiffel.com/developers/xml/configuration-1-16-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-16-0 http://www.eiffel.com/developers/xml/configuration-1-16-0.xsd" message="Obsolete: use gobo_lexical.ecf !" location="gobo_lexical.ecf">
 </redirection>

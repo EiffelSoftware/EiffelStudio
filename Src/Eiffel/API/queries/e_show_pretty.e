@@ -1,9 +1,9 @@
-note
+﻿note
 	description: "Show the pretty form of a class."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class E_SHOW_PRETTY
 
@@ -11,6 +11,7 @@ inherit
 	SHARED_BATCH_NAMES
 	KL_SHARED_STANDARD_FILES
 	SHARED_ERROR_HANDLER
+	EC_SHARED_PREFERENCES
 
 create
 	make_file,
@@ -120,18 +121,26 @@ feature {NONE} -- Implementation
 			is_parsed: not error and parser /= Void and then parser.root_node /= Void
 		local
 			p: PRETTY_PRINTER
+			pretty_printer_preferences: PRETTY_PRINTER_PREFERENCES
 		do
 			check
 				root_node_attached: attached parser.root_node as r
 				match_list_attached: attached parser.match_list as l
 			then
 				create p.make (s, r, l)
+					-- TODO: Use preferences in the following priority order:
+					-- • project-specific;
+					-- • user-specific;
+					-- • common.
+				pretty_printer_preferences := preferences.pretty_printer_preferences
+				p.set_loop_expression_style (pretty_printer_preferences.loop_expression_style)
+				p.set_line_processing (pretty_printer_preferences.line_processing)
 				parser.root_node.process (p)
 			end
 		end
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -162,4 +171,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class E_SHOW_PRETTY
+end

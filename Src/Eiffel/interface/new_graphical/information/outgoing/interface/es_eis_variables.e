@@ -122,6 +122,7 @@ feature -- Access
 			create Result.make (5)
 			Result.put ({STRING_32} "https://dev.eiffel.com", "ISE_WIKI")
 			Result.put ({STRING_32} "https://room.eiffel.com", "EIFFELROOM")
+			Result.put ({STRING_32} "https://www.eiffel.org", "EIFFELORG")
 			Result.put ({STRING_32} "https://www.eiffel.org/documentation", "ISE_DOC")
 			Result.put ({STRING_32} "https://www.eiffel.org/doc/uuid", "ISE_DOC_UUID")
 			Result.put ({STRING_32} "https://www.eiffel.org/doc/eis", "ISE_DOC_REF")

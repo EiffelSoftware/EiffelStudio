@@ -116,7 +116,7 @@ feature {NONE} -- Initialization
 			initialize
 
 				-- Execution
-			execute
+			execute (l_preference_access)
 
 			l_eifgen_init.dispose
 		end
@@ -130,7 +130,7 @@ feature {NONE} -- Initialization
 			;(create {CA_CODE_ANALYZER}.make).install_obsolete_call_processor
 		end
 
-	execute
+	execute (preferences: PREFERENCES)
 			-- Analyze the command line options and
 			-- execute the appropriate command.
 		local
@@ -149,7 +149,7 @@ feature {NONE} -- Initialization
 						-- Reset errors
 					option_error_message := Void
 					option_warning_messages := Void
-					analyze_options
+					analyze_options (preferences)
 					if has_error then
 						print_option_error
 						print_option_warnings
@@ -385,53 +385,57 @@ feature -- Properties
 			-- Did use specify one of `-experiment' or `-compat' argument?
 
 	help_messages: HASH_TABLE [READABLE_STRING_GENERAL, STRING]
-			-- Help message table
+			-- Help message table.
 		once
-			create Result.make (35)
-			Result.put (ancestors_help, ancestors_cmd_name)
-			Result.put (aversions_help, aversions_cmd_name)
-			Result.put (config_help, config_cmd_name)
-			Result.put (config_option_help, config_option_cmd_name)
-			Result.put (callers_help, callers_cmd_name)
-			Result.put (callees_help, callees_cmd_name)
-			Result.put (clients_help, clients_cmd_name)
-			Result.put (descendants_help, descendants_cmd_name)
-			Result.put (dversions_help, dversions_cmd_name)
-			Result.put (file_help, file_cmd_name)
-			Result.put (filter_help, filter_cmd_name)
-			Result.put (flat_help, flat_cmd_name)
-			Result.put (flatshort_help, flatshort_cmd_name)
-			Result.put (help_help, help_cmd_name)
-			Result.put (implementers_help, implementers_cmd_name)
-			Result.put (library_help, library_cmd_name)
-			Result.put (loop_help, loop_cmd_name)
-			Result.put (debug_help, debug_cmd_name)
-			Result.put (melt_help, melt_cmd_name)
-			Result.put (overwrite_old_project_help, overwrite_old_project_cmd_name)
-			Result.put (pretty_help, pretty_cmd_name)
-			Result.put (project_help, project_cmd_name)
-			Result.put (project_path_help, project_path_cmd_name)
-			Result.put (quick_melt_help, quick_melt_cmd_name)
-			Result.put (short_help, short_cmd_name)
-			Result.put (single_file_compilation_help, single_file_compilation_cmd_name)
-			Result.put (stop_help, stop_cmd_name)
-			Result.put (suppliers_help, suppliers_cmd_name)
-			Result.put (target_help, target_cmd_name)
-			Result.put (use_settings_help, use_settings_cmd_name)
-			Result.put (no_library_help, no_library_cmd_name)
-			Result.put (version_help, version_cmd_name)
-			Result.put (batch_help, batch_cmd_name)
-			Result.put (clean_help, clean_cmd_name)
-			Result.put (gui_help, gui_cmd_name)
-			Result.put (gc_stats_help, gc_stats_cmd_name)
-			Result.put (compat_help, compat_cmd_name)
-			Result.put (experiment_help, experiment_cmd_name)
-			Result.put (full_help, full_class_checking_cmd_name)
-			Result.put (ca_class_help, ca_class_cmd_name)
-			Result.put (ca_default_help, ca_default_cmd_name)
-			Result.put (ca_rule_help, ca_rule_cmd_name)
-			Result.put (ca_setting_help, ca_setting_cmd_name)
-			add_help_special_cmds
+			create Result.make (48)
+			Result [ancestors_cmd_name] := ancestors_help
+			Result [aversions_cmd_name] := aversions_help
+			Result [batch_cmd_name] := batch_help
+			Result [c_compile_cmd_name] := c_compile_help
+			Result [ca_class_cmd_name] := ca_class_help
+			Result [ca_default_cmd_name] := ca_default_help
+			Result [ca_rule_cmd_name] := ca_rule_help
+			Result [ca_setting_cmd_name] := ca_setting_help
+			Result [callees_cmd_name] := callees_help
+			Result [callers_cmd_name] := callers_help
+			Result [clean_cmd_name] := clean_help
+			Result [clients_cmd_name] := clients_help
+			Result [compat_cmd_name] := compat_help
+			Result [config_cmd_name] := config_help
+			Result [config_option_cmd_name] := config_option_help
+			Result [debug_cmd_name] := debug_help
+			Result [descendants_cmd_name] := descendants_help
+			Result [dversions_cmd_name] := dversions_help
+			Result [experiment_cmd_name] := experiment_help
+			Result [file_cmd_name] := file_help
+			Result [filter_cmd_name] := filter_help
+			Result [finalize_cmd_name] := finalize_help
+			Result [flat_cmd_name] := flat_help
+			Result [flatshort_cmd_name] := flatshort_help
+			Result [freeze_cmd_name] := freeze_help
+			Result [full_class_checking_cmd_name] := full_help
+			Result [gc_stats_cmd_name] := gc_stats_help
+			Result [gui_cmd_name] := gui_help
+			Result [help_cmd_name] := help_help
+			Result [implementers_cmd_name] := implementers_help
+			Result [library_cmd_name] := library_help
+			Result [loop_cmd_name] := loop_help
+			Result [melt_cmd_name] := melt_help
+			Result [no_library_cmd_name] := no_library_help
+			Result [overwrite_old_project_cmd_name] := overwrite_old_project_help
+			Result [precompile_cmd_name] := precompile_help
+			Result [preference_cmd_name] := preference_help
+			Result [pretty_cmd_name] := pretty_help
+			Result [project_cmd_name] := project_help
+			Result [project_path_cmd_name] := project_path_help
+			Result [quick_melt_cmd_name] := quick_melt_help
+			Result [short_cmd_name] := short_help
+			Result [single_file_compilation_cmd_name] := single_file_compilation_help
+			Result [stop_cmd_name] := stop_help
+			Result [suppliers_cmd_name] := suppliers_help
+			Result [target_cmd_name] := target_help
+			Result [use_settings_cmd_name] := use_settings_help
+			Result [version_cmd_name] := version_help
 		end
 
 	loop_cmd: EWB_LOOP
@@ -504,35 +508,31 @@ feature {NONE} -- Output
 			-- Print the usage of command line options.
 		do
 			print_version
-			localized_print ("%N")
+			io.put_new_line
 			localized_print (ewb_names.usage)
 			localized_print (argument (0))
-			io.put_string (" [-help | [-compat | -experiment] | -version | -full%N%T")
-			io.put_string ("-batch | -clean | -verbose | -use_settings |%N%T")
-			io.put_string ("-freeze | -finalize [-keep] | -precompile [-finalize [-keep]] | -c_compile |%N%T")
-			io.put_string ("-loop | -debug | -quick_melt | -melt | ")
-			io.put_string ("-clients [-filter filtername] class |%N%
-				%%T-suppliers [-filter filtername] class |%N%
-				%%T-flatshort [-filter filtername] [-all | -all_and_parents | class] |%N%
-				%%T-flat [-filter filtername] [-all | -all_and_parents | class] |%N%
-				%%T-short [-filter filtername] [-all | -all_and_parents | class] | %N%
-				%%T-pretty input_filename [output_filename] |%N%
-				%%T-filter filtername [-all | class] |%N%
-				%%T-descendants [-filter filtername] class |%N")
-			io.put_string ("%
-				%%T-ancestors [-filter filtername] class |%N%
-				%%T-aversions [-filter filtername] class feature |%N%
-				%%T-dversions [-filter filtername] class feature |%N%
-				%%T-implementers [-filter filtername] class feature |%N%
-				%%T-callers [-filter filtername] [-show_all] [-assigners | -creators] class feature |%N%
-				%%T-callees [-filter filtername] [-show_all] [-assignees | -creators] class feature |%N")
-			io.put_string ("%
-				%%T[[-config config.ecf] [-target target] [-config_option option]|%N%
-				%%T[class_file.e [-library library_name]] |%N%
-				%%T-stop | -no_library |%N%
-				%%T-project_path Project_directory_path | -file File |%N%
-				%%T-ca_class (-all | class) | -ca_default | -ca_rule rule | -ca_setting file |%N%
-				%%T-gc_stats]%N")
+				-- The leading space on the first line is required to delimit options from the command name.
+			io.put_string ("[
+				 -help | [-compat | -experiment] | -version | -full |
+				-batch | -clean | -verbose | -use_settings |
+				-freeze | -finalize [-keep] | -precompile [-finalize [-keep]] | -c_compile |
+				-loop | -debug | -quick_melt | -melt |
+				(-clients | -suppliers | -ancestors | -descendants) [-filter filtername] class |
+				(-flatshort | -flat | -short) [-filter filtername] [-all | -all_and_parents | class] |
+				(-aversions | -dversions | -implementers) [-filter filtername] class feature |
+				-callers [-filter filtername] [-show_all] [-assigners | -creators] class feature |
+				-callees [-filter filtername] [-show_all] [-assignees | -creators] class feature |
+				-filter filtername [-all | class] |
+				-pretty input_filename [output_filename] |
+				[[-config config.ecf] [-target target] [-config_option option] |
+				[class_file.e [-library library_name]] |
+				-stop | -no_library |
+				-project_path project_directory | -file file |
+				-preference preference_name preference_value |
+				-ca_class (-all | class) | -ca_default | -ca_rule rule | -ca_setting file |
+				-gc_stats]
+				
+			]")
 		end
 
 	print_version
@@ -648,15 +648,7 @@ feature {NONE} -- Output
 
 feature {NONE} -- Update
 
-	add_help_special_cmds
-		do
-			help_messages.put (freeze_help, freeze_cmd_name)
-			help_messages.put (precompile_help, precompile_cmd_name)
-			help_messages.put (finalize_help, finalize_cmd_name)
-			Help_messages.put (c_compile_help, c_compile_cmd_name)
-		end
-
-	analyze_options
+	analyze_options (preferences: PREFERENCES)
 			-- Analyze the options entered by the user.
 		do
 				-- Reset compiler_profile
@@ -668,7 +660,7 @@ feature {NONE} -- Update
 			until
 				(current_option > argument_count) or else has_error
 			loop
-				analyze_one_option
+				analyze_one_option (preferences)
 			end
 				-- Default command
 			if (not has_error) and then (command = Void) then
@@ -691,7 +683,7 @@ feature {NONE} -- Update
 	configuration_option_parser: CONF_STRING_PARSER
 			-- A parser of configuration options.
 
-	analyze_one_option
+	analyze_one_option (preferences: PREFERENCES)
 			-- Analyze current option.
 		local
 			cn, fn: STRING_32
@@ -1146,13 +1138,42 @@ feature {NONE} -- Update
 					if attached configuration_option_parser.error as e then
 							-- Add option name to the error message.
 						option_error_message := locale.formatted_string (locale.translation_in_context
-							("Error in command-line option %"$1%": $2", once "compiler.command-line.option"), option, e)
+							("Error in command-line option %"$1%": $2.", once "compiler.command-line.option"), option, e)
 							-- Reset configuration settings.
 						configuration_settings := Void
 					end
 				else
 					option_error_message := locale.formatted_string (locale.translation_in_context
-						("Missing configuration option for option %"$1%"", once "compiler.command-line.option"), option)
+						("Missing configuration option for option %"$1%".", once "compiler.command-line.option"), option)
+				end
+			elseif option.same_string_general ("-preference") then
+					-- Set specified preference to the given value.
+				if current_option >= argument_count then
+					option_error_message := locale.formatted_string (locale.translation_in_context
+						("[
+							Missing preference name for option "$1".
+						]", once "compiler.command-line.option"), option)
+				elseif current_option + 1 >= argument_count then
+					current_option := current_option + 1
+					option_error_message := locale.formatted_string (locale.translation_in_context
+						("[
+							Missing preference value for option "$1".
+						]", once "compiler.command-line.option"), option)
+				else
+					current_option := current_option + 2
+					if not attached preferences.get_preference ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (argument (current_option - 1))) as p then
+						option_error_message := locale.formatted_string (locale.translation_in_context
+							("[
+								Unknown preference preference name for option "$1": "$2".
+							]", once "compiler.command-line.option"), option, argument (current_option - 1))
+					elseif not p.is_valid_string_for_selection (argument (current_option)) then
+						option_error_message := locale.formatted_string (locale.translation_in_context
+							("[
+								Invalid preference value "$3" for preference of name "$2" in option "$1".
+							]", once "compiler.command-line.option"), option, argument (current_option - 1), argument (current_option))
+					else
+						p.select_value_from_string (argument (current_option))
+					end
 				end
 			elseif option.same_string_general ("-target") then
 				if is_single_file_compilation then

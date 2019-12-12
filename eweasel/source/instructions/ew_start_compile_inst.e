@@ -80,7 +80,15 @@ feature {NONE} -- Implementation
 			Result.extend (env.value (Test_dir_name))
 				-- Ignore user file for testing
 			Result.extend ({STRING_32} "-local")
-				-- Path to configuration file
+				-- Pass explicitly specified preferences.
+			across
+				test.preferences as p
+			loop
+				Result.extend ({STRING_32} "-preference")
+				Result.extend (p.key.as_string_32)
+				Result.extend (p.item)
+			end
+				-- Path to configuration file.
 			Result.extend ({STRING_32} "-config")
 			Result.extend (os.full_file_name (env.value (Test_dir_name), test.ace_name))
 			if attached test.target_name as n then

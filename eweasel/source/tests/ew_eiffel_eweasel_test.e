@@ -1,5 +1,5 @@
 ﻿note
-	description: "An Eiffel compilation/execution test"
+	description: "An Eiffel compilation/execution test."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 
@@ -136,6 +136,7 @@ feature -- Test properties
 			-- Set test properties to default values
 			-- where appropriate.
 		do
+			create preferences.make (0)
 			system_name := Default_system_name
 			ace_name := Default_ace_name
 		end
@@ -154,6 +155,9 @@ feature -- Test properties
 
 	target_name: READABLE_STRING_32
 			-- Name of target of current project config file
+
+	preferences: STRING_TABLE [READABLE_STRING_32]
+			-- Preferences to be explicitly passed to the compiler.
 
 	cpu_limit: INTEGER
 			-- CPU limit in seconds of spawned processes.
@@ -251,6 +255,12 @@ feature {EW_TEST_INSTRUCTION} -- Set test properties
 			environment.define (Final_execution_dir_name, os.full_directory_name (dir, Final_c_code_directory))
 		ensure
 			set: target_name = a_target
+		end
+
+	set_preference (name, value: READABLE_STRING_32)
+			-- Add/override a preference of name `name` with value `value`.
+		do
+			preferences [name] := value
 		end
 
 	set_cpu_limit (limit: INTEGER)

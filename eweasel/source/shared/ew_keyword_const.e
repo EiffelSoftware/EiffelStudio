@@ -41,6 +41,7 @@ feature
 	If_keyword: 			STRING_32 = "if"
 	Include_keyword: 		STRING_32 = "include"
 	Not_keyword: 			STRING_32 = "not"
+	preference_keyword:		STRING_32 = "preference"
 	Prettify_keyword:		STRING_32 = "prettify"
 	Resume_compile_keyword: 	STRING_32 = "resume_compile"
 	Setenv_keyword: 		STRING_32 = "setenv"
@@ -59,7 +60,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 	copyright: "[
-			Copyright (c) 1984-2018, University of Southern California, Eiffel Software and contributors.
+			Copyright (c) 1984-2019, University of Southern California, Eiffel Software and contributors.
 			All rights reserved.
 		]"
 	license:   "Your use of this work is governed under the terms of the GNU General Public License version 2"

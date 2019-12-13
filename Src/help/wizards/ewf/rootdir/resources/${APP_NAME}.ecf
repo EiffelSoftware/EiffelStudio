@@ -9,15 +9,15 @@
 		<option warning="true">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http-safe.ecf"/>
-		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf-safe.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http.ecf"/>
+		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf.ecf"/>
 	</target>
 	<target name="{$WIZ.project.name/}_any" extends="common">
 		<root class="{$APP_ROOT/}" feature="make_and_launch"/>
-		{if condition="$WIZ.connectors.use_standalone ~ $WIZ_YES"}<library name="standalone" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\standalone-safe.ecf"/>{/if}
-		{if condition="$WIZ.connectors.use_cgi ~ $WIZ_YES"}<library name="cgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\cgi-safe.ecf"/>{/if}
-		{if condition="$WIZ.connectors.use_libfcgi ~ $WIZ_YES"}<library name="libfcgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\libfcgi-safe.ecf"/>{/if}
+		{if condition="$WIZ.connectors.use_standalone ~ $WIZ_YES"}<library name="standalone" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\standalone.ecf"/>{/if}
+		{if condition="$WIZ.connectors.use_cgi ~ $WIZ_YES"}<library name="cgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\cgi.ecf"/>{/if}
+		{if condition="$WIZ.connectors.use_libfcgi ~ $WIZ_YES"}<library name="libfcgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\libfcgi.ecf"/>{/if}
 		<cluster name="launcher" location=".\launcher\">
 			<cluster name="any_launcher" location="$|any"/>
 		</cluster>
@@ -27,7 +27,7 @@
 	<target name="{$WIZ.project.name/}_standalone" extends="common">
 		<root class="{$APP_ROOT/}" feature="make_and_launch"/>
 		<variable name="httpd_ssl_disabled" value="true"/><!-- for now ... due to issue with libcurl+eiffelnet ssl -->
-		<library name="default_standalone" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\standalone-safe.ecf"/>
+		<library name="default_standalone" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\standalone.ecf"/>
 		<cluster name="launcher" location=".\launcher\">
 			<cluster name="default_launcher" location="$|default"/>
 		</cluster>
@@ -39,7 +39,7 @@
 		<capability>
 			<concurrency use="none" />
 		</capability>
-		<library name="default_cgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\cgi-safe.ecf"/>
+		<library name="default_cgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\cgi.ecf"/>
 		<cluster name="launcher" location=".\launcher\">
 			<cluster name="default_launcher" location="$|default"/>
 		</cluster>
@@ -51,7 +51,7 @@
 		<capability>
 			<concurrency use="none" />
 		</capability>
-		<library name="default_libfcgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\libfcgi-safe.ecf"/>
+		<library name="default_libfcgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\libfcgi.ecf"/>
 		<cluster name="launcher" location=".\launcher\">
 			<cluster name="default_launcher" location="$|default"/>
 		</cluster>

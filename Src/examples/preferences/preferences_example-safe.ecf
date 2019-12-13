@@ -1,3 +1,0 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
-<redirection xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd" uuid="F824BD73-1E99-428F-8FC9-5BFF5D5C0ADA" message="Obsolete: use preferences_example.ecf !" location="preferences_example.ecf">
-</redirection>

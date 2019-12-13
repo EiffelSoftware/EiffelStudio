@@ -8,11 +8,11 @@
 		<capability>
 			<concurrency support="scoop" use="scoop"/>
 		</capability>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="default_standalone" location="..\..\..\..\library\web\framework\ewf\wsf\default\standalone-safe.ecf"/>
-		<library name="http" location="..\..\..\..\library\network\protocol\http\http-safe.ecf"/>
-		<library name="wsf" location="..\..\..\..\library\web\framework\ewf\wsf\wsf-safe.ecf" readonly="false"/>
-		<library name="wsf_compression" location="..\..\..\..\library\web\framework\ewf\wsf\wsf_compression-safe.ecf" readonly="false"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="default_standalone" location="..\..\..\..\library\web\framework\ewf\wsf\default\standalone.ecf"/>
+		<library name="http" location="..\..\..\..\library\network\protocol\http\http.ecf"/>
+		<library name="wsf" location="..\..\..\..\library\web\framework\ewf\wsf\wsf.ecf" readonly="false"/>
+		<library name="wsf_compression" location="..\..\..\..\library\web\framework\ewf\wsf\wsf_compression.ecf" readonly="false"/>
 		<cluster name="service_compression" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/.svn$</exclude>

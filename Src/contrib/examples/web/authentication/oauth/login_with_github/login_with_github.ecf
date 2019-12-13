@@ -13,20 +13,20 @@
 		<capability>
 			<concurrency use="none"/>
 		</capability>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="cypress" location="$ISE_LIBRARY\contrib\library\web\authentication\oauth\cypress\consumer\consumer-safe.ecf"/>
-		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http-safe.ecf"/>
-		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json-safe.ecf" readonly="false"/>
-		<library name="login_with_github" location="$ISE_LIBRARY\contrib\library\web\authentication\oauth\cypress\login_with\github\github-safe.ecf"/>
-		<library name="smarty" location="$ISE_LIBRARY\contrib\library\text\template\smarty\smarty-safe.ecf"/>
-		<library name="time" location="$ISE_LIBRARY\library\time\time-safe.ecf"/>
-		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf-safe.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="cypress" location="$ISE_LIBRARY\contrib\library\web\authentication\oauth\cypress\consumer\consumer.ecf"/>
+		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http.ecf"/>
+		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json.ecf" readonly="false"/>
+		<library name="login_with_github" location="$ISE_LIBRARY\contrib\library\web\authentication\oauth\cypress\login_with\github\github.ecf"/>
+		<library name="smarty" location="$ISE_LIBRARY\contrib\library\text\template\smarty\smarty.ecf"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
+		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf.ecf"/>
 	</target>
 	<target name="login_with_github_any" extends="common">
 		<root class="LOGIN_WITH_GITHUB" feature="make_and_launch"/>
-		<library name="cgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\cgi-safe.ecf"/>
-		<library name="libfcgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\libfcgi-safe.ecf"/>
-		<library name="standalone" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\standalone-safe.ecf"/>
+		<library name="cgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\cgi.ecf"/>
+		<library name="libfcgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\libfcgi.ecf"/>
+		<library name="standalone" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\connector\standalone.ecf"/>
 		<cluster name="launcher" location=".\launcher\">
 			<cluster name="any_launcher" location="$|any\"/>
 		</cluster>
@@ -39,7 +39,7 @@
 		</capability>
 		<variable name="httpd_ssl_disabled" value="true"/>
 		<variable name="ssl_enabled" value="true"/>
-		<library name="default_standalone" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\standalone-safe.ecf"/>
+		<library name="default_standalone" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\standalone.ecf"/>
 		<cluster name="launcher" location=".\launcher\">
 			<cluster name="default_launcher" location="$|default\"/>
 		</cluster>
@@ -50,7 +50,7 @@
 		<capability>
 			<concurrency use="none"/>
 		</capability>
-		<library name="default_cgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\cgi-safe.ecf"/>
+		<library name="default_cgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\cgi.ecf"/>
 		<cluster name="launcher" location=".\launcher\">
 			<cluster name="default_launcher" location="$|default\"/>
 		</cluster>
@@ -61,7 +61,7 @@
 		<capability>
 			<concurrency use="none"/>
 		</capability>
-		<library name="default_libfcgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\libfcgi-safe.ecf"/>
+		<library name="default_libfcgi" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\default\libfcgi.ecf"/>
 		<cluster name="launcher" location=".\launcher\">
 			<cluster name="default_launcher" location="$|default\"/>
 		</cluster>

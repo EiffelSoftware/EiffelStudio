@@ -15,10 +15,10 @@
 			<void_safety support="all"/>
 		</capability>
 		<external_resource location="new"/>
-		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="cypress_consumer" location="..\consumer-safe.ecf" readonly="false"/>
-		<library name="encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder-safe.ecf"/>
-		<library name="uri" location="$ISE_LIBRARY\library\text\uri\uri-safe.ecf"/>
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<library name="cypress_consumer" location="..\consumer.ecf" readonly="false"/>
+		<library name="encoder" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\text\encoder\encoder.ecf"/>
+		<library name="uri" location="$ISE_LIBRARY\library\text\uri\uri.ecf"/>
 	</target>
 	<target name="foursquare_example" extends="oauth_examples">
 		<root class="FOURSQUARE_20_API_EXAMPLE" feature="make"/>
@@ -111,7 +111,7 @@
 	</target>
 	<target name="github_example" extends="oauth_examples">
 		<root class="GITHUB_OAUTH_20_API_EXAMPLE" feature="make"/>
-		<library name="login_with_github" location="..\..\login_with\github\github-safe.ecf" readonly="false"/>
+		<library name="login_with_github" location="..\..\login_with\github\github.ecf" readonly="false"/>
 		<cluster name="examples" location=".\" recursive="true"/>
 	</target>
 	<target name="twitter_example" extends="oauth_examples">

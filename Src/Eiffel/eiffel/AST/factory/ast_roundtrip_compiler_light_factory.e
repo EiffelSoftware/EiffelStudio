@@ -27,6 +27,7 @@ inherit
 			new_integer_value,
 			new_real_value,
 			new_external_lang_as,
+			new_feature_name_alias_as,
 			new_formal_dec_as,
 			new_vtgc1_error,
 			new_vvok1_error, new_vvok2_error,

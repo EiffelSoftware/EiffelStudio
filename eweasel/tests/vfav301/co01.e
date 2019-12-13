@@ -1,9 +1,23 @@
 class C
 
+create
+
+	make
+
+feature {NONE} -- Creation
+
+	make (value: BOOLEAN)
+		do
+			item := value
+		end
+
 feature
 
-	f alias "[]" convert (x: BOOLEAN): BOOLEAN is
+	item: BOOLEAN
+
+	f alias "$(OPERATOR)" (x: like Current): BOOLEAN
 		do
+			Result := item $(OPERATOR) x.item
 		end
 
 end

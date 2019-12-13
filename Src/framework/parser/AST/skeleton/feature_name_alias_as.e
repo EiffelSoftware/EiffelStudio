@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Feature name with alias."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -33,11 +33,15 @@ create
 
 feature {NONE} -- Creation
 
-	initialize_with_list (feature_id: like feature_name; a_alias_list: LIST [ALIAS_NAME_INFO]; a_convert_keyword: detachable KEYWORD_AS)
+	initialize_with_list (feature_id: like feature_name; alias_names: LIST [ALIAS_NAME_INFO]; a_convert_keyword: detachable KEYWORD_AS)
 		require
 			feature_id_not_void: feature_id /= Void
-			alias_list_not_empty: not a_alias_list.is_empty
-			has_alias_name: attached a_alias_list.first.alias_name as a_n and then not a_n.value.is_empty
+			alias_list_not_empty: not alias_names.is_empty
+			has_alias_name: across alias_names as a all not a.item.alias_name.value.is_empty end
+			no_alias_duplicates:
+				across alias_names as x all across alias_names as y all
+					x.item.alias_name.value.same_string (y.item.alias_name.value) implies x.target_index = y.target_index
+				end end
 		local
 			l_alias: FEATURE_ALIAS_NAME
 			l_alias_name: STRING_AS
@@ -47,9 +51,9 @@ feature {NONE} -- Creation
 				convert_keyword_index := a_convert_keyword.index
 				has_convert_mark := True
 			end
-			create aliases.make (a_alias_list.count)
+			create aliases.make (alias_names.count)
 			across
-				a_alias_list as ic
+				alias_names as ic
 			loop
 				l_alias_name := ic.item.alias_name
 				if l_alias_name /= Void then
@@ -363,4 +367,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class FEATURE_NAME_ALIAS_AS
+end

@@ -2014,7 +2014,7 @@ feature {NONE} -- Implementation
 				if f.is_bracket then
 					create {VFAV2} vfav
 				elseif f.is_parentheses then
-					create {VFAV4} vfav
+					create {VFAV3} vfav
 				else
 					create {VFAV1} vfav
 				end

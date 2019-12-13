@@ -3,7 +3,7 @@ class TEST
 inherit
 	TEST1
 		rename
-			prefix "@" as xxx alias "@"
+			xxx as xxx alias "@"
 		end
 create
 	make

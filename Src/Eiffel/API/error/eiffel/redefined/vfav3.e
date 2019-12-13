@@ -1,21 +1,22 @@
 ﻿note
 
-	description: "Error for invalid parenthesis alias name in renaming."
+	description: "Parenthesis alias name error."
 
-class VFAV4_VHRC
+class VFAV3
 
 inherit
-	VFAV_VHRC
+
+	VFAV
 
 feature -- Properties
 
-	subcode: INTEGER = 4;
+	subcode: INTEGER = 3;
 			-- Error subcode
 
 note
-	date: "$Date$";
-	revision: "$Revision $"
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

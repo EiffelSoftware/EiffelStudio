@@ -16,6 +16,7 @@ inherit
 			new_debug_as,
 			new_expr_address_as,
 			new_feature_as,
+			new_feature_name_alias_as,
 			new_formal_dec_as,
 			new_integer_as,
 			new_integer_hexa_as,
@@ -173,15 +174,15 @@ feature -- Access
 								create {VFAV2_SYNTAX} vfav.make (l_feat_name_alias_as, l_feat_name_alias_as.bracket_alias_as)
 							elseif l_feat_name_alias_as.has_convert_mark then
 									-- Invalid convert mark.
-								create {VFAV3_SYNTAX} vfav.make (l_feat_name_alias_as, l_feat_name_alias_as.bracket_alias_as)
+								create {VFAV5_SYNTAX} vfav.make (l_feat_name_alias_as, l_feat_name_alias_as.bracket_alias_as)
 							end
 						elseif l_feat_name_alias_as.has_parentheses_alias then
 							if argument_count < 1 then
 									-- Invalid parenthesis alias.
-								create {VFAV4_SYNTAX} vfav.make (l_feat_name_alias_as, l_feat_name_alias_as.parenthesis_alias_as)
+								create {VFAV3_SYNTAX} vfav.make (l_feat_name_alias_as, l_feat_name_alias_as.parenthesis_alias_as)
 							elseif l_feat_name_alias_as.has_convert_mark then
 									-- Invalid convert mark.
-								create {VFAV3_SYNTAX} vfav.make (l_feat_name_alias_as, l_feat_name_alias_as.parenthesis_alias_as)
+								create {VFAV5_SYNTAX} vfav.make (l_feat_name_alias_as, l_feat_name_alias_as.parenthesis_alias_as)
 							end
 						elseif is_query then
 							across
@@ -196,7 +197,7 @@ feature -- Access
 										-- FIXME: maybe move this check outside the loop [2019-09-25].
 									if argument_count = 0 and then l_feat_name_alias_as.has_convert_mark then
 											-- Invalid convert mark
-										create {VFAV3_SYNTAX} vfav.make (l_feat_name_alias_as, ic.item.alias_name)
+										create {VFAV5_SYNTAX} vfav.make (l_feat_name_alias_as, ic.item.alias_name)
 									end
 								else
 										-- Invalid operator alias
@@ -208,7 +209,7 @@ feature -- Access
 							elseif argument_count = 1 then
 								l_feat_name_alias_as.set_is_binary
 							elseif l_feat_name_alias_as.has_convert_mark then
-								create {VFAV3_SYNTAX} vfav.make (l_feat_name_alias_as, Void)
+								create {VFAV5_SYNTAX} vfav.make (l_feat_name_alias_as, Void)
 							else
 								l_feat_name_alias_as.set_is_unary
 							end
@@ -254,6 +255,38 @@ feature -- Access
 
 				if b.is_unique and then attached {CLASS_C} parser.current_class as l_class_c then
 					l_class_c.set_has_unique
+				end
+			end
+		end
+
+	new_feature_name_alias_as (feature_name: detachable ID_AS; alias_names: detachable LIST [ALIAS_NAME_INFO]; convert_keyword: detachable KEYWORD_AS): detachable FEATURE_NAME_ALIAS_AS
+			-- <Precursor>
+		local
+			first_operator, second_operator:  STRING_AS
+			has_error: BOOLEAN
+		do
+			if attached feature_name and then attached alias_names as aliases then
+				across
+					aliases as a
+				loop
+					first_operator := a.item.alias_name
+					across
+						aliases as b
+					loop
+						second_operator := b.item.alias_name
+						if
+								-- Avoid processing already processed operators.
+							a.target_index < b.target_index and then
+								-- Check whether aliases have the same name.
+							first_operator.value.same_string (second_operator.value)
+						then
+							error_handler.insert_error (create {VFAV4_SYNTAX}.make (feature_name, first_operator, second_operator))
+							has_error := True
+						end
+					end
+				end
+				if not has_error then
+					Result := Precursor (feature_name, alias_names, convert_keyword)
 				end
 			end
 		end

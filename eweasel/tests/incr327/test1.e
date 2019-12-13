@@ -7,6 +7,6 @@ feature
 
 	xxx alias "@": INTEGER
 	
-	prefix "+": INTEGER
+	yyy alias "+": INTEGER
 
 end

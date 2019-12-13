@@ -1,7 +1,7 @@
 ﻿note
-	description: "VFAV(4) error detected at parse time."
+	description: "VFAV(5) error detected at parse time."
 
-class VFAV4_SYNTAX
+class VFAV5_SYNTAX
 
 inherit
 	VFAV_SYNTAX
@@ -11,7 +11,7 @@ create
 
 feature -- Access
 
-	subcode: INTEGER = 4;
+	subcode: INTEGER = 5;
 			-- Error subcode
 
 note

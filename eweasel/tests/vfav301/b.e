@@ -1,17 +1,14 @@
 class B
 
+feature -- Access
+
+	item: BOOLEAN
+
 feature -- Functions with different number of arguments
 
-	f0: BOOLEAN is
+	f1 alias "$(OPERATOR)" (x: like Current): BOOLEAN
 		do
-		end
-
-	f1 (x: BOOLEAN): BOOLEAN is
-		do
-		end
-
-	f2 (x, y: BOOLEAN): BOOLEAN is
-		do
+			Result := item $(OPERATOR) x.item
 		end
 
 end

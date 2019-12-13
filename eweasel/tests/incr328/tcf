@@ -1,5 +1,5 @@
 
---| Copyright (c) 1993-2006 University of Southern California and contributors.
+--| Copyright (c) 1993-2019 University of Southern California and contributors.
 --| All rights reserved.
 --| Your use of this work is governed under the terms of the GNU General
 --| Public License version 2.
@@ -7,7 +7,7 @@
 -- This is a test control file
 
 test_name 	 vfav-sneak
-test_description A system with a VFAV(1) error (trying to rename an infix feature to a prefix feature in a generic constraint) is correctly detected but resuming the compile causes the compiler to accept the classes even though the error is still present
+test_description A system with a VFAV(1) error (trying to rename an feature to a feature with existing alias in a generic constraint) is correctly detected but resuming the compile causes the compiler to accept the classes even though the error is still present.
 
 copy_sub 	Ace $TEST Ace
 copy_raw 	test.e $CLUSTER test.e

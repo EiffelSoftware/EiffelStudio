@@ -1004,8 +1004,8 @@ test	change-obsolete-syntax-to-transitional	incr323	tcf pass incrementality
 test	vd71-called-syntax-error		incr324	tcf pass incrementality
 test	c-syntax-error				incr325	tcf pass incrementality
 test	override-checkin-crash		incr326	tcf pass incrementality termination
-test	bogus-vfav			incr327	tcf fail used_to_pass incrementality
-test	vfav-sneak			incr328	tcf fail used_to_pass incrementality
+test	bogus-vfav			incr327	tcf pass incrementality vfav
+test	vfav-sneak			incr328	tcf fail used_to_pass incrementality vfav
 test	add-class-then-make-expanded	incr329	tcf pass incrementality
 test	dead-code-removal-crash		incr330	tcf pass incrementality
 test	return-value-type-mismatch	incr331	tcf pass incrementality
@@ -2483,14 +2483,14 @@ test	validity-vcrn-basic		vcrn001	 tcf pass validity vcrn
 test	validity-vfav1-basic		vfav101  tcf pass validity vfav
 test	validity-vfav2-basic		vfav201  tcf pass validity vfav
 test	validity-vfav3-basic		vfav301  tcf pass validity vfav
-test	validity-vfav4-basic		vfav401  tcf pass validity vfav
-test	validity-vfav4-duplicated-1	vfav402  tcf pass validity vfav parenthesis_alias
-test	validity-vfav4-argumentless-1	vfav403  tcf pass validity vfav parenthesis_alias
-test	validity-vfav4-duplicated-2	vfav404  tcf pass validity vfav parenthesis_alias
-test	validity-vfav4-duplicated-3	vfav405  tcf pass validity vfav parenthesis_alias
-test	validity-vfav4-duplicated-4	vfav406  tcf pass validity vfav parenthesis_alias
-test	validity-vfav4-argumentless-2	vfav407  tcf pass validity vfav parenthesis_alias
-test	validity-vfav4-argumentless-3	vfav408  tcf pass validity vfav parenthesis_alias
+test	validity-vfav3-duplicated-1	vfav302  tcf pass validity vfav parenthesis_alias
+test	validity-vfav3-argumentless-1	vfav303  tcf pass validity vfav parenthesis_alias
+test	validity-vfav3-duplicated-2	vfav304  tcf pass validity vfav parenthesis_alias
+test	validity-vfav3-duplicated-3	vfav305  tcf pass validity vfav parenthesis_alias
+test	validity-vfav3-duplicated-4	vfav306  tcf pass validity vfav parenthesis_alias
+test	validity-vfav3-argumentless-2	vfav307  tcf pass validity vfav parenthesis_alias
+test	validity-vfav3-argumentless-3	vfav308  tcf pass validity vfav parenthesis_alias
+test	validity-vfav5-basic		vfav501  tcf pass validity vfav
 
 test	validity-vffd1-attribute	vffd101	 tcf pass validity vffd attribute
 test	validity-vffd2-basic		vffd201	 tcf pass validity vffd

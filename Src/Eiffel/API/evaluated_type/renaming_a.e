@@ -323,15 +323,15 @@ feature {NONE} -- Implementation
 						create {VFAV2_SYNTAX} l_vfav.make (l_feat_name_alias_as, l_feat_name_alias_as.bracket_alias_as)
 					elseif l_feat_name_alias_as.has_convert_mark then
 							-- Invalid convert mark
-						create {VFAV3_SYNTAX} l_vfav.make (l_feat_name_alias_as, l_feat_name_alias_as.bracket_alias_as)
+						create {VFAV5_SYNTAX} l_vfav.make (l_feat_name_alias_as, l_feat_name_alias_as.bracket_alias_as)
 					end
 				elseif l_feat_name_alias_as.has_parentheses_alias then
 					if l_argument_count < 1 then
 							-- Invalid parenthesis alias.
-						create {VFAV4_SYNTAX} l_vfav.make (l_feat_name_alias_as, l_feat_name_alias_as.parenthesis_alias_as)
+						create {VFAV3_SYNTAX} l_vfav.make (l_feat_name_alias_as, l_feat_name_alias_as.parenthesis_alias_as)
 					elseif l_feat_name_alias_as.has_convert_mark then
 							-- Invalid convert mark.
-						create {VFAV3_SYNTAX} l_vfav.make (l_feat_name_alias_as, l_feat_name_alias_as.parenthesis_alias_as)
+						create {VFAV5_SYNTAX} l_vfav.make (l_feat_name_alias_as, l_feat_name_alias_as.parenthesis_alias_as)
 					end
 				elseif a_old_feature.has_return_value then
 					if l_feat_name_alias_as.has_alias then
@@ -346,7 +346,7 @@ feature {NONE} -- Implementation
 							then
 								if l_argument_count = 0 and then l_feat_name_alias_as.has_convert_mark then
 										-- Invalid convert mark
-									create {VFAV3_SYNTAX} l_vfav.make (l_feat_name_alias_as, ic.item.alias_name)
+									create {VFAV5_SYNTAX} l_vfav.make (l_feat_name_alias_as, ic.item.alias_name)
 								end
 							else
 									-- Invalid operator alias
@@ -359,7 +359,7 @@ feature {NONE} -- Implementation
 							l_feat_name_alias_as.set_is_binary
 						elseif l_feat_name_alias_as.has_convert_mark then
 								-- Invalid convert mark
-							create {VFAV3_SYNTAX} l_vfav.make (l_feat_name_alias_as, Void)
+							create {VFAV5_SYNTAX} l_vfav.make (l_feat_name_alias_as, Void)
 						else
 							l_feat_name_alias_as.set_is_unary
 						end

@@ -20,6 +20,7 @@ inherit
 			new_integer_octal_as,
 			new_integer_binary_as,
 			new_feature_as,
+			new_feature_name_alias_as,
 			new_class_as,
 			new_class_type_as,
 			set_expanded_class_type,

@@ -30,8 +30,12 @@ feature {NONE} -- Creation
 		end
 
 	make_with_url (a_server_url: READABLE_STRING_8)
+		local
+			cfg: ES_CLOUD_CONFIG
 		do
-			set_server_url (a_server_url)
+			create cfg.make (a_server_url)
+			create web_api.make (cfg)
+
 			if is_eiffel_layout_defined then
 				version := eiffel_layout.version_name
 				get_local_installation (eiffel_layout)
@@ -68,14 +72,6 @@ feature {NONE} -- Default
 					Result := l_env_url
 				end
 			end
-		end
-
-feature -- Element change
-
-	set_server_url (a_server_url: READABLE_STRING_8)
-		do
-			server_url := a_server_url
-			create web_api.make (server_url)
 		end
 
 feature {NONE} -- Initialization
@@ -171,8 +167,16 @@ feature -- Event
 
 feature -- Access
 
+	config: ES_CLOUD_CONFIG
+		do
+			Result := web_api.config
+		end
+
 	server_url: READABLE_STRING_8
 			-- Web service url.
+		do
+			Result := config.server_url
+		end
 
 	associated_website_url: READABLE_STRING_8
 			-- Web site associated to the cloud webapi.
@@ -264,6 +268,19 @@ feature -- Status report
 			if attached web_api.last_error as err then
 				Result := err.message
 			end
+		end
+
+feature -- Element change
+
+	set_server_url (a_server_url: READABLE_STRING_8)
+		local
+			cfg: ES_CLOUD_CONFIG
+		do
+			create cfg.make (a_server_url)
+			if attached web_api as w then
+				cfg.import_settings (w.config)
+			end
+			create web_api.make (cfg)
 		end
 
 feature -- Debug purpose
@@ -390,7 +407,7 @@ feature -- Updating
 			if
 				attached a_account.access_token as tok
 			then
-				create p.make (Current, tok, installation, a_session, server_url)
+				create p.make (Current, tok, installation, a_session, web_api.config)
 				p.execute
 			end
 		end
@@ -471,8 +488,10 @@ feature -- Updating
 				store
 
 				on_account_updated (a_account)
-			else
+			elseif is_available then
 				logout
+			else
+				on_cloud_available (False)
 			end
 		end
 
@@ -494,8 +513,10 @@ feature -- Updating
 					acc.set_access_token (tok)
 					store
 					on_account_updated (acc)
-				else
+				elseif is_available then
 					logout
+				else
+					on_cloud_available (False)
 				end
 			end
 		end

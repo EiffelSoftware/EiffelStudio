@@ -55,6 +55,10 @@ feature -- Widgets
 
 	main_box: EV_VERTICAL_BOX
 
+feature -- Status
+
+	is_cloud_available: BOOLEAN
+
 feature -- Operations
 
 	update
@@ -66,6 +70,7 @@ feature -- Events
 
 	on_cloud_available (a_is_available: BOOLEAN)
 		do
+			is_cloud_available := a_is_available
 			refresh
 		end
 
@@ -129,200 +134,201 @@ feature {NONE} -- Action handlers
 			nb_days: INTEGER_64
 			s: STRING
 			l_dbg: BOOLEAN
+			acc: detachable ES_ACCOUNT
 		do
 			b := main_box
 			b.wipe_out
 			if attached es_cloud_s.service as cld then
-				if cld.is_available	then
-					l_dbg := cld.is_debug_enabled
-					if attached {ES_ACCOUNT} cld.active_account as acc then
-						create lab.make_with_text ({STRING_32} "Welcome " + acc.username)
-						b.extend (lab)
-						b.disable_item_expand (lab)
+				if not is_cloud_available then
+					is_cloud_available := cld.is_available
+					if is_cloud_available then
+						cld.on_cloud_available (True)
+					end
+				end
+				l_dbg := cld.is_debug_enabled
+				acc := cld.active_account
+				if acc /= Void then
+					create lab.make_with_text ({STRING_32} "Welcome " + acc.username)
+					b.extend (lab)
+					b.disable_item_expand (lab)
 
-						create txt
-						b.extend (txt)
-						append_bold_text_to ("User: ", txt)
-						append_text_to (acc.username, txt)
-						append_text_to ("%N%N", txt)
-						if attached acc.plan as l_plan then
-							append_bold_text_to ("Plan: ", txt)
-							append_text_to (l_plan.name, txt)
+					create txt
+					b.extend (txt)
+					append_bold_text_to ("User: ", txt)
+					append_text_to (acc.username, txt)
+					append_text_to ("%N%N", txt)
+					if attached acc.plan as l_plan then
+						append_bold_text_to ("Plan: ", txt)
+						append_text_to (l_plan.name, txt)
+						append_text_to ("%N", txt)
+						if attached l_plan.expiration_date as dt then
+							nb_days := l_plan.days_remaining
+							append_bold_text_to ("Expires: ", txt)
+							append_text_to (dt.out, txt)
 							append_text_to ("%N", txt)
-							if attached l_plan.expiration_date as dt then
-								nb_days := l_plan.days_remaining
-								append_bold_text_to ("Expires: ", txt)
-								append_text_to (dt.out, txt)
-								append_text_to ("%N", txt)
 
-								if nb_days >= 0 then
-									append_bold_text_to ("Days remaining: ", txt)
-									append_text_to (nb_days.out, txt)
-									append_text_to ("%N", txt)
-								else
-									append_bold_text_to ("Subscription: EXPIRED!%N", txt)
-								end
+							if nb_days >= 0 then
+								append_bold_text_to ("Days remaining: ", txt)
+								append_text_to (nb_days.out, txt)
+								append_text_to ("%N", txt)
+							else
+								append_bold_text_to ("Subscription: EXPIRED!%N", txt)
 							end
 						end
-						if attached cld.active_session as sess then
-							append_bold_text_to ("Session: ", txt)
-							append_text_to (sess.id.out, txt)
+					end
+					if attached cld.active_session as sess then
+						append_bold_text_to ("Session: ", txt)
+						append_text_to (sess.id.out, txt)
+						append_text_to ("%N", txt)
+					end
+					if l_dbg then
+						append_bold_text_to ("Cloud: ", txt)
+						append_text_to (cld.server_url, txt)
+						append_text_to ("%N", txt)
+						if attached cld.installation as l_installation then
+							append_bold_text_to ("Installation: ", txt)
+							append_text_to (l_installation.id, txt)
+							if attached l_installation.creation_date as dt then
+								append_italic_text_to (" (since " + dt.out + ")" , txt)
+							end
 							append_text_to ("%N", txt)
 						end
-						if l_dbg then
-							append_bold_text_to ("Cloud: ", txt)
-							append_text_to (cld.server_url, txt)
-							append_text_to ("%N", txt)
-							if attached cld.installation as l_installation then
-								append_bold_text_to ("Installation: ", txt)
-								append_text_to (l_installation.id, txt)
-								if attached l_installation.creation_date as dt then
-									append_italic_text_to (" (since " + dt.out + ")" , txt)
-								end
-								append_text_to ("%N", txt)
+						if attached {ES_ACCOUNT_ACCESS_TOKEN} acc.access_token as tok then
+							append_bold_text_to ("Session (%N", txt)
+							append_text_to ("%Tid=", txt)
+							if attached cld.active_session as sess then
+								append_text_to (sess.id, txt)
 							end
-							if attached {ES_ACCOUNT_ACCESS_TOKEN} acc.access_token as tok then
-								append_bold_text_to ("Session (%N", txt)
-								append_text_to ("%Tid=", txt)
-								if attached cld.active_session as sess then
-									append_text_to (sess.id, txt)
+							append_text_to ("%N", txt)
+							append_text_to ("%Ttoken=", txt)
+							append_text_to (tok.token, txt)
+							append_text_to ("%N", txt)
+							append_text_to ("%Texpiration=", txt)
+							append_text_to (tok.expiration_date.out, txt)
+							if attached tok.expiration_delay_in_seconds as nb and then nb >= 0 then
+								append_text_to (" ", txt)
+								create s.make_empty
+								q := nb
+								r := q \\ 60
+								if r > 0 then
+									s.append (r.out + " secs")
 								end
-								append_text_to ("%N", txt)
-								append_text_to ("%Ttoken=", txt)
-								append_text_to (tok.token, txt)
-								append_text_to ("%N", txt)
-								append_text_to ("%Texpiration=", txt)
-								append_text_to (tok.expiration_date.out, txt)
-								if attached tok.expiration_delay_in_seconds as nb and then nb >= 0 then
-									append_text_to (" ", txt)
-									create s.make_empty
-									q := nb
+								q := q // 60
+								if q > 0 then
 									r := q \\ 60
-									if r > 0 then
-										s.append (r.out + " secs")
+									if q > 0 then
+										s.prepend (r.out + " minutes ")
 									end
 									q := q // 60
 									if q > 0 then
-										r := q \\ 60
+										r := q \\ 24
 										if q > 0 then
-											s.prepend (r.out + " minutes ")
+											s.prepend (r.out + " hours ")
 										end
-										q := q // 60
+										q := q // 24
 										if q > 0 then
-											r := q \\ 24
-											if q > 0 then
-												s.prepend (r.out + " hours ")
-											end
-											q := q // 24
-											if q > 0 then
-												s.prepend (q.out + " days ")
-											end
+											s.prepend (q.out + " days ")
 										end
 									end
-
-
-									append_text_to (s, txt)
-									append_text_to ("%N", txt)
-
-								end
-								if attached tok.refresh_key as k then
-									append_text_to ("%Trefresh_key=", txt)
-									append_text_to (k, txt)
-									append_text_to ("%N", txt)
 								end
 
-								append_text_to (")%N", txt)
+
+								append_text_to (s, txt)
+								append_text_to ("%N", txt)
 
 							end
-
-							if
-								attached {ES_ACCOUNT_ACCESS_TOKEN} acc.access_token as tok
-							then
-								create hb
-								b.extend (hb)
-								b.disable_item_expand (hb)
-
-								if attached cld.active_session as sess then
-									create but.make_with_text_and_action ("Ping", agent on_account_ping (cld, acc, sess))
-									hb.extend (create {EV_CELL})
-									hb.extend (but)
-									layout_constants.set_default_size_for_button (but)
-									hb.disable_item_expand (but)
-
-									create but.make_with_text_and_action ("End", agent on_session_end (cld, acc, sess))
-									hb.extend (create {EV_CELL})
-									hb.extend (but)
-									layout_constants.set_default_size_for_button (but)
-									hb.disable_item_expand (but)
-
-									create but.make_with_text_and_action ("Pause", agent on_session_pause (cld, acc, sess))
-									hb.extend (create {EV_CELL})
-									hb.extend (but)
-									layout_constants.set_default_size_for_button (but)
-									hb.disable_item_expand (but)
-
-									create but.make_with_text_and_action ("Resume", agent on_session_resume (cld, acc, sess))
-									hb.extend (create {EV_CELL})
-									hb.extend (but)
-									layout_constants.set_default_size_for_button (but)
-									hb.disable_item_expand (but)
-								end
-
-								if attached tok.has_refresh_key then
-									create but.make_with_text_and_action ("Refresh", agent on_account_refresh_token (cld, tok, acc))
-									hb.extend (create {EV_CELL})
-									hb.extend (but)
-									layout_constants.set_default_size_for_button (but)
-									hb.disable_item_expand (but)
-								end
+							if attached tok.refresh_key as k then
+								append_text_to ("%Trefresh_key=", txt)
+								append_text_to (k, txt)
+								append_text_to ("%N", txt)
 							end
+
+							append_text_to (")%N", txt)
+
 						end
 
-						create hb
-						create but.make_with_text_and_action ("Update", agent on_account_update (cld, acc))
-						hb.extend (create {EV_CELL})
-						hb.extend (but)
-						layout_constants.set_default_size_for_button (but)
-						hb.disable_item_expand (but)
-
-						create but.make_with_text_and_action ("Logout", agent on_logout (cld))
-						hb.extend (create {EV_CELL})
-						hb.extend (but)
-						layout_constants.set_default_size_for_button (but)
-						hb.disable_item_expand (but)
-
-						hb.extend (create {EV_CELL})
-						b.extend (hb)
-						b.disable_item_expand (hb)
-					else
-						if cld.is_guest then
-							create lab.make_with_text ("Welcome guess, please login ...")
-						else
-							create lab.make_with_text ("Please login first...")
-						end
-						b.extend (lab)
-						b.disable_item_expand (lab)
-
-						create wid.make
-						b.extend (wid)
 					end
-					create lab.make_with_text ("Installation: " + cld.installation.id)
+
+				else
+					if cld.is_guest then
+						create lab.make_with_text ("Welcome guess, please login ...")
+					else
+						create lab.make_with_text ("Please login first...")
+					end
 					b.extend (lab)
 					b.disable_item_expand (lab)
-				else
-					create lab.make_with_text ("Not available, please try again later!")
-					b.extend (lab)
-					create but.make_with_text_and_action ("Retry", agent update)
-					layout_constants.set_default_size_for_button (but)
-					b.extend (but)
-					b.disable_item_expand (but)
+
+					create wid.make
+					b.extend (wid)
 				end
+
+				create hb
+				b.extend (hb)
+				b.disable_item_expand (hb)
+				hb.extend (create {EV_CELL})
+
+				if is_cloud_available then
+--					create hb
+					create but.make_with_text_and_action ("Update", agent on_account_update (cld, acc))
+					hb.extend (but)
+					layout_constants.set_default_size_for_button (but)
+					hb.disable_item_expand (but)
+
+					create but.make_with_text_and_action ("Logout", agent on_logout (cld))
+					hb.extend (but)
+					layout_constants.set_default_size_for_button (but)
+					hb.disable_item_expand (but)
+
+					if l_dbg and then attached cld.active_session as sess then
+						create but.make_with_text_and_action ("Ping", agent on_account_ping (cld, acc, sess))
+						hb.extend (but)
+						layout_constants.set_default_size_for_button (but)
+						hb.disable_item_expand (but)
+
+						create but.make_with_text_and_action ("End", agent on_session_end (cld, acc, sess))
+						hb.extend (but)
+						layout_constants.set_default_size_for_button (but)
+						hb.disable_item_expand (but)
+
+						create but.make_with_text_and_action ("Pause", agent on_session_pause (cld, acc, sess))
+						hb.extend (but)
+						layout_constants.set_default_size_for_button (but)
+						hb.disable_item_expand (but)
+
+						create but.make_with_text_and_action ("Resume", agent on_session_resume (cld, acc, sess))
+						hb.extend (but)
+						layout_constants.set_default_size_for_button (but)
+						hb.disable_item_expand (but)
+					end
+
+					if acc /= Void and then attached acc.access_token as tok and then tok.has_refresh_key then
+						create but.make_with_text_and_action ("Refresh", agent on_account_refresh_token (cld, tok, acc))
+						hb.extend (but)
+						layout_constants.set_default_size_for_button (but)
+						hb.disable_item_expand (but)
+					end
+				else
+					create lab.make_with_text ("Cloud service unavailable! ")
+					hb.extend (lab)
+					hb.disable_item_expand (lab)
+					create but.make_with_text_and_action ("Try to reconnect", agent update)
+					layout_constants.set_default_size_for_button (but)
+					hb.extend (but)
+					hb.disable_item_expand (but)
+				end
+				hb.extend (create {EV_CELL})
+--				b.extend (hb)
+--				b.disable_item_expand (hb)
+
+				create lab.make_with_text ("Installation: " + cld.installation.id)
+				b.extend (lab)
+				b.disable_item_expand (lab)
 			else
 				create lab.make_with_text ("Service not activated!")
 				b.extend (lab)
 			end
 
-			b.set_background_color (colors.stock_colors.white)
+			b.set_background_color (colors.stock_colors.default_background_color)
 			b.propagate_background_color
 		end
 
@@ -339,6 +345,9 @@ feature {NONE} -- Action handlers
 			widget.set_pointer_style (pixmaps.stock_pixmaps.busy_cursor)
 			cld.refresh_token (tok, acc)
 			widget.set_pointer_style (l_style)
+			if not is_cloud_available then
+				refresh
+			end
 		end
 
 	on_account_update (cld: ES_CLOUD_S; acc: ES_ACCOUNT)
@@ -349,6 +358,9 @@ feature {NONE} -- Action handlers
 			widget.set_pointer_style (pixmaps.stock_pixmaps.busy_cursor)
 			cld.update_account (acc)
 			widget.set_pointer_style (l_style)
+			if not is_cloud_available then
+				refresh
+			end
 		end
 
 	on_account_ping (cld: ES_CLOUD_S; acc: ES_ACCOUNT; sess: ES_ACCOUNT_SESSION)

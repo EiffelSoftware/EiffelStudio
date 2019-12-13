@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_service: ES_CLOUD_S; a_token: ES_ACCOUNT_ACCESS_TOKEN; a_installation: ES_ACCOUNT_INSTALLATION; a_session: ES_ACCOUNT_SESSION; a_server_url: READABLE_STRING_8)
+	make (a_service: ES_CLOUD_S; a_token: ES_ACCOUNT_ACCESS_TOKEN; a_installation: ES_ACCOUNT_INSTALLATION; a_session: ES_ACCOUNT_SESSION; cfg: ES_CLOUD_CONFIG)
 		require
 			a_session /= Void
 		do
@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			installation_id := a_installation.id
 			session := a_session
 			session_id := a_session.id
-			create server_url.make_from_string (a_server_url)
+			config := cfg
 			create mutex.make
 			if attached a_session.title as l_title then
 				create opts.make (1)
@@ -61,7 +61,7 @@ feature {NONE} -- Access: worker thread
 
 	opts: detachable STRING_TABLE [READABLE_STRING_GENERAL]
 
-	server_url: IMMUTABLE_STRING_8
+	config: ES_CLOUD_CONFIG
 
 feature -- Access
 
@@ -142,7 +142,7 @@ feature -- Access
 			wapi: ES_CLOUD_API
 			d: ES_CLOUD_PING_DATA
 		do
-			create wapi.make (server_url)
+			create wapi.make (config)
 			create d
 			wapi.ping_installation (token, installation_id, session_id, opts, d)
 			session_state_changed := d.session_state_changed

@@ -1,66 +1,64 @@
 note
-	description: "[
-			Asynchronous call to refresh_token.
-
-		]"
-	status: "Under development, currently not used!"
+	description: "Configuration for the cloud api."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ES_CLOUD_ASYNC_REFRESH
+	ES_CLOUD_CONFIG
 
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_access_token: ES_ACCOUNT_ACCESS_TOKEN; cfg: ES_CLOUD_CONFIG)
-		require
-			has_refresh_key: a_access_token.has_refresh_key
+	make (a_webapi_url: READABLE_STRING_8)
+		local
+			uri: URI
 		do
-			access_token := a_access_token
-			config := cfg
+			create uri.make_from_string (a_webapi_url)
+			create root_endpoint.make_from_string (uri.path)
+			uri.set_path ("")
+			create server_url.make_from_string (uri.string)
+
+			connection_timeout := 3 -- seconds
+			timeout := 10 -- seconds
 		end
-
-	access_token: ES_ACCOUNT_ACCESS_TOKEN
-
-	server_url: IMMUTABLE_STRING_8
-		do
-			Result := config.server_url
-		end
-
-	config: ES_CLOUD_CONFIG
-
-feature -- Output
-
-	refreshed_token: detachable ES_ACCOUNT_ACCESS_TOKEN
 
 feature -- Access
 
-	execute
-		local
-			wt: WORKER_THREAD
+	root_endpoint: IMMUTABLE_STRING_8
+
+	server_url: IMMUTABLE_STRING_8
+
+feature -- Settings	
+
+	connection_timeout: INTEGER
+			-- Connection timeout in seconds.
+
+	timeout: INTEGER
+			-- Timeout in seconds.			
+
+feature -- Conversion
+
+	import_settings (cfg: like Current)
 		do
-			if attached access_token.refresh_key as k then
-				create wt.make (agent refresh_token (create {IMMUTABLE_STRING_8}.make_from_string (access_token.token), create {IMMUTABLE_STRING_8}.make_from_string (k)))
-				wt.launch
-			end
+			connection_timeout := cfg.connection_timeout
+			timeout := cfg.timeout
 		end
 
-	refresh_token (a_token: READABLE_STRING_8; a_refresh_key: READABLE_STRING_8)
-		local
-			wapi: ES_CLOUD_API
+feature -- Element change
+
+	set_connection_timeout (a_secs: like connection_timeout)
 		do
-			print ("Going to ping%N")
-			(create {EXECUTION_ENVIRONMENT}).sleep (10_000_000_000)
-			create wapi.make (config)
-			print ("Pinging%N")
-			refreshed_token := wapi.refreshing_token (a_token, a_refresh_key)
-			print ("Ping done.%N")
+			connection_timeout := a_secs
 		end
 
-note
+	set_timeout (a_secs: like timeout)
+		do
+			timeout := a_secs
+		end
+
+;note
 	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

@@ -12,14 +12,9 @@ create
 
 feature {NONE} -- Creation
 
-	make (a_webapi_url: READABLE_STRING_8)
-		local
-			uri: URI
+	make (cfg: ES_CLOUD_CONFIG)
 		do
-			create uri.make_from_string (a_webapi_url)
-			create root_endpoint.make_from_string (uri.path)
-			uri.set_path ("")
-			create server_url.make_from_string (uri.string)
+			config := cfg
 			initialize
 		end
 
@@ -29,7 +24,7 @@ feature {NONE} -- Creation
 			is_available := False
 			if
 				attached new_http_client_session as sess and then
-				attached response (sess.get (root_endpoint, Void)) as resp
+				attached response (sess.get (config.root_endpoint, Void)) as resp
 			then
 				if not has_error then
 					is_available := True
@@ -61,9 +56,7 @@ feature -- Status report
 
 feature -- Access
 
-	root_endpoint: IMMUTABLE_STRING_8
-
-	server_url: IMMUTABLE_STRING_8
+	config: ES_CLOUD_CONFIG
 
 feature -- Errors
 
@@ -219,7 +212,7 @@ feature -- ROC Account
 			if sess /= Void then
 				ctx := new_basic_auth_context (a_username, a_password)
 
-				resp := response (sess.get (root_endpoint, ctx))
+				resp := response (sess.get (config.root_endpoint, ctx))
 				if not has_error then
 					if attached resp.string_8_item ("_links|jwt:access_token|href") as v then
 						l_jwt_access_token_href := v
@@ -616,7 +609,7 @@ feature {NONE} -- Endpoints
 		do
 			-- Get `is_available` value.
 			if
-				attached response (sess.get (root_endpoint, Void)) as resp
+				attached response (sess.get (config.root_endpoint, Void)) as resp
 			then
 				if has_error then
 					reset_error
@@ -645,7 +638,7 @@ feature {NONE} -- JWT endpoints
 			resp: like response
 		do
 			reset_api_call
-			resp := response (sess.get (root_endpoint, ctx))
+			resp := response (sess.get (config.root_endpoint, ctx))
 			if has_error then
 				reset_api_call
 			else
@@ -764,10 +757,10 @@ feature {NONE} -- Implementation
 			cl: DEFAULT_HTTP_CLIENT
 		do
 			create cl
-			Result := cl.new_session (server_url)
+			Result := cl.new_session (config.server_url)
 			Result.add_header ("Accept", "application/json,text/html;q=0.9,*.*;q=0.8")
-			Result.set_connect_timeout (5) --- 10 seconds
-			Result.set_timeout (30) -- 30 seconds
+			Result.set_connect_timeout (config.connection_timeout)
+			Result.set_timeout (config.timeout)
 			Result.set_is_insecure (True) -- For now api.eiffel.com has no valid SSL certificate.
 			if not Result.is_available then
 				Result := Void

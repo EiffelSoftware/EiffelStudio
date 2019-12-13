@@ -766,6 +766,8 @@ feature {NONE} -- Implementation
 			create cl
 			Result := cl.new_session (server_url)
 			Result.add_header ("Accept", "application/json,text/html;q=0.9,*.*;q=0.8")
+			Result.set_connect_timeout (5) --- 10 seconds
+			Result.set_timeout (30) -- 30 seconds
 			Result.set_is_insecure (True) -- For now api.eiffel.com has no valid SSL certificate.
 			if not Result.is_available then
 				Result := Void

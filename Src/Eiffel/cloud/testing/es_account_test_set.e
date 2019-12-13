@@ -17,7 +17,7 @@ feature -- Tests
 			tok: detachable READABLE_STRING_8
 			tb: STRING_TABLE [READABLE_STRING_GENERAL]
 		do
-			create api.make ("http://localhost:9090/es")
+			create api.make (create {ES_CLOUD_CONFIG}.make ("http://localhost:9090/es"))
 			if api.is_available then
 				create tb.make (2)
 				tb.force ("Foo", "first_name")

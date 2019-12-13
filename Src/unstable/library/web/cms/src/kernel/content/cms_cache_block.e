@@ -80,14 +80,20 @@ feature -- Conversion
 			end
 				-- Why in this particular case theme is not used to generate the content?
 			if attached cache.item as l_content then
-				Result := l_content
+				create Result.make (l_content.count + 50)
+				Result.append ("<!-- Block %"")
+				Result.append (name)
+				Result.append ("%" cached: ")
+				Result.append (cache.cache_date_time.out)
+				Result.append (" -->%N")
+				Result.append (l_content)
 			else
 				Result := ""
 				check exists: False end
 			end
 		end
 note
-	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2019, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

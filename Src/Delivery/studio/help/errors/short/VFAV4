@@ -1,0 +1,2 @@
+Error: two alias clauses specify the same alias name.
+What to do: ensure that all aliases have different names.

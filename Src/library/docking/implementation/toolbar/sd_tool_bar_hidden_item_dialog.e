@@ -98,12 +98,15 @@ feature {NONE}  -- Initlization
 			until
 				a_hidden_items.after
 			loop
-				if attached {SD_TOOL_BAR_SEPARATOR} a_hidden_items.item as l_separator then
+				if attached {SD_TOOL_BAR_SEPARATOR} a_hidden_items.item then
+						-- Ignore
+				else
 					if
 						attached {SD_TOOL_BAR_WIDGET_ITEM} a_hidden_items.item as l_widget_item and then
-						l_widget_item.widget /= Void and then attached l_widget_item.widget.parent as l_parent
+						attached l_widget_item.widget as w and then 
+						attached w.parent as l_parent
 					then
-						l_parent.prune (l_widget_item.widget)
+						l_parent.prune (w)
 					end
 					internal_tool_bar.extend (a_hidden_items.item)
 				end

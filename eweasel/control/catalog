@@ -543,7 +543,7 @@ test	infix-prefix-alias-compatibility	valid248 tcf pass validity
 test	assigner-validity-rules				valid249 tcf pass assigner validity
 test	assigner-wrong-vbac					valid250 tcf pass assigner validity
 test	bogus-veen-on-object-test-local		valid251 tcf fail used_to_pass validity
-test	undetected-vuot-error			valid252 tcf pass used_to_pass validity
+test	undetected-vuot-error			valid252 tcf pass validity
 test	equality-of-conforming-classes		valid253 tcf pass validity equality conformance attached_types
 test	missing-vhpr-with-different-generic-derivation	valid255 tcf pass validity incrementality
 test	wrong-vdpr-errors			valid256 tcf fail used_to_pass validity
@@ -552,7 +552,7 @@ test	select-stable-attribute		valid258 tcf pass validity stable attribute
 test	precompilation-task-failure		valid259 tcf pass validity
 test	manifest_char_type			valid260 tcf pass validity
 test	inherited-generic-agent-argument	valid261 tcf pass validity formal generic agents
-test	conversion_without_binary_operator	valid262 tcf pass used_to_pass validity
+test	conversion_without_binary_operator	valid262 tcf pass validity
 test	manifest-real-to-real-32-conformance	valid263 tcf pass validity ieee
 test	generic-rename-with-alias		valid264 tcf fail validity generic rename
 test	variant-with-anchored-type		valid265 tcf pass validity
@@ -3080,20 +3080,20 @@ test	qat-inference-crash		anchor086 tcf pass anchored_type inference
 test	qat-cycle-in-generic		anchor087 tcf manual anchored_type formal generic validity
 
 -- Type inference
-test	inference-single-lower-bound	inference001 tcf pass used_to_pass inference
+test	inference-single-lower-bound	inference001 tcf pass inference
 test	inference-multiple-lower-bound	inference002 tcf pass inference
-test	inference-untyped-call-target	inference003 tcf pass used_to_pass inference
-test	inference-direct-dependency	inference004 tcf pass used_to_pass inference
-test	inference-creation-instruction	inference005 tcf pass used_to_pass inference
+test	inference-untyped-call-target	inference003 tcf pass inference
+test	inference-direct-dependency	inference004 tcf pass inference
+test	inference-creation-instruction	inference005 tcf pass inference
 test	inference-recursive-tuple	inference006 tcf pass inference
-test	inference-formal-generic	inference007 tcf pass used_to_pass inference formal generic
-test	inference-implicit-typing	inference008 tcf pass used_to_pass inference object_test across iteration
-test	inference-boolean-expression	inference009 tcf pass used_to_pass inference across iteration conditional expression check instruction loop invariant
-test	inference-manifest-array	inference010 tcf pass used_to_pass inference
+test	inference-formal-generic	inference007 tcf pass inference formal generic
+test	inference-implicit-typing	inference008 tcf pass inference object_test across iteration
+test	inference-boolean-expression	inference009 tcf pass inference across iteration conditional expression check instruction loop invariant
+test	inference-manifest-array	inference010 tcf pass inference
 test	inference-agent-expression	inference011 tcf pass inference agents
 test	inference-untyped-agent-target	inference012 tcf pass inference agents
 test	inference-inspect-instruction	inference013 tcf pass inference inspect
-test	inference-integer-plus-untyped	inference014 tcf pass used_to_pass inference
+test	inference-integer-plus-untyped	inference014 tcf pass inference
 
 -- Prettify
 test	pretty-smoke-test			pretty001 tcf pass pretty

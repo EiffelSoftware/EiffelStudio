@@ -32,7 +32,14 @@ feature -- Factory
 				end
 				log.write_information (generator + ".esa_config " + l_layout.path.name.out)
 
-				create l_notification_service.make ((create {JSON_CONFIGURATION}).new_smtp_configuration(l_layout.application_config_path))
+				if
+					attached (create {JSON_CONFIGURATION}).new_smtp_configuration (l_layout.application_config_path) as l_smtp_server and then
+					not l_smtp_server.is_whitespace
+				then
+					create l_notification_service.make (l_smtp_server)
+				else
+					create l_notification_service.make_sendmail
+				end
 
 				if attached (create {JSON_CONFIGURATION}).new_database_configuration (l_layout.application_config_path) as l_database_config then
 					create {DATABASE_CONNECTION_ODBC} l_database.login_with_connection_string (l_database_config.connection_string)
@@ -52,7 +59,14 @@ feature -- Factory
 				else
 					create l_layout.make_default
 				end
-				create l_notification_service.make ((create {JSON_CONFIGURATION}).new_smtp_configuration(l_layout.application_config_path))
+				if
+					attached (create {JSON_CONFIGURATION}).new_smtp_configuration (l_layout.application_config_path) as l_smtp_server and then
+					not l_smtp_server.is_whitespace
+				then
+					create l_notification_service.make (l_smtp_server)
+				else
+					create l_notification_service.make_sendmail
+				end
 
 				create {DATABASE_CONNECTION_NULL} l_database.make_common
 				create l_api_service.make_with_database (l_database)
@@ -81,7 +95,14 @@ feature -- Factory
 					create l_layout.make_default
 				end
 
-				create l_notification_service.make ((create {JSON_CONFIGURATION}).new_smtp_configuration(l_layout.application_config_path))
+				if
+					attached (create {JSON_CONFIGURATION}).new_smtp_configuration (l_layout.application_config_path) as l_smtp_server and then
+					not l_smtp_server.is_whitespace
+				then
+					create l_notification_service.make (l_smtp_server)
+				else
+					create l_notification_service.make_sendmail
+				end
 
 
 				if attached (create {JSON_CONFIGURATION}).new_database_configuration_test (l_layout.application_config_path) as l_database_config then
@@ -101,8 +122,15 @@ feature -- Factory
 				else
 					create l_layout.make_default
 				end
-				create l_notification_service.make ((create {JSON_CONFIGURATION}).new_smtp_configuration(l_layout.application_config_path))
-
+				if
+					attached (create {JSON_CONFIGURATION}).new_smtp_configuration (l_layout.application_config_path) as l_smtp_server and then
+					not l_smtp_server.is_whitespace
+				then
+					create l_notification_service.make (l_smtp_server)
+				else
+					create l_notification_service.make_sendmail
+				end
+				
 				create {DATABASE_CONNECTION_NULL} l_database.make_common
 				create l_api_service.make_with_database (l_database)
 				create Result.make (l_database, l_api_service, l_notification_service, l_layout)

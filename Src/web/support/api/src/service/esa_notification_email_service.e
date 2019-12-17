@@ -12,17 +12,23 @@ inherit
 	SHARED_ERROR
 
 create
-	make
+	make,
+	make_sendmail
 
 feature {NONE} -- Initialization
 
 	make (a_smtp_server: READABLE_STRING_32)
-			-- Create an instance of {ESA_EMAIL_SERVICE} with an smtp_server `a_smtp_server'.
+			-- Create an instance of {ESA_NOTIFICATION_EMAIL_SERVICE} with an smtp_server `a_smtp_server'.
 			-- Using "noreplies@eiffel.com" as admin email.
-		local
 		do
 					-- Get local host name needed in creation of SMTP_PROTOCOL.
-			create {NOTIFICATION_SMTP_MAILER} smtp_protocol.make (a_smtp_server.to_string_8)
+			create {NOTIFICATION_SMTP_MAILER} mailer.make (a_smtp_server.to_string_8)
+			set_successful
+		end
+
+	make_sendmail
+		do
+			create {NOTIFICATION_SENDMAIL_MAILER} mailer
 			set_successful
 		end
 
@@ -38,8 +44,8 @@ feature {NONE} -- Initialization
 			Result := "webmaster@eiffel.com"
 		end
 
-	smtp_protocol: NOTIFICATION_MAILER
-			-- SMTP protocol.
+	mailer: NOTIFICATION_MAILER
+			-- Mailer.
 
 feature -- Basic Operations
 
@@ -77,7 +83,7 @@ feature -- Basic Operations
 				l_content.append (Disclaimer)
 					-- Create our message.
 				create l_email.make (admin_email, a_to, "Eiffel Support Site: Account Activation", l_content)
-				smtp_protocol.safe_process_email (l_email)
+				mailer.safe_process_email (l_email)
 			end
 		end
 
@@ -106,7 +112,7 @@ feature -- Basic Operations
 
 				-- Create our message.
 			create l_email.make (admin_email, a_new_email, "Eiffel Support Site: Email Activation", l_message)
-			smtp_protocol.safe_process_email (l_email)
+			mailer.safe_process_email (l_email)
 		end
 
 	send_new_email_confirmed_email (a_old_email, a_new_email: STRING)
@@ -134,7 +140,7 @@ feature -- Basic Operations
 				create l_email.make (admin_email, a_to, "Eiffel Support Site: Password Reset" , a_message)
 				l_email.add_header_line ("MIME-Version: 1.0")
 				l_email.add_header_line ("Content-Type: text/plain; charset=UTF-8")
-				smtp_protocol.safe_process_email (l_email)
+				mailer.safe_process_email (l_email)
 			end
 		end
 
@@ -155,7 +161,7 @@ feature -- Basic Operations
 				end
 				l_email.add_header_line ("MIME-Version: 1.0")
 				l_email.add_header_line ("Content-Type: text/plain; charset=UTF-8")
-				smtp_protocol.safe_process_email (l_email)
+				mailer.safe_process_email (l_email)
 			else
 				log.write_error (generator + ".send_new_report_email " + a_report.number.out + " " + last_error_message)
 			end
@@ -198,7 +204,7 @@ feature -- Basic Operations
 							l_email.add_bcc_address (ic.item)
 						end
 					end
-					smtp_protocol.safe_process_email (l_email)
+					mailer.safe_process_email (l_email)
 				else
 					log.write_error (generator + ".send_new_interaction_email " + a_report.number.out + " " + last_error_message)
 				end
@@ -224,7 +230,7 @@ feature -- Basic Operations
 				l_content.append ( report_email_links (a_url + "/report_detail", a_report.number))
 
 				create l_email.make (user_mail (a_user.displayed_name), ll_email, report_email_subject (a_report, 0), l_content)
-				smtp_protocol.safe_process_email (l_email)
+				mailer.safe_process_email (l_email)
 			else
 				log.write_error (generator + ".send_responsible_change_email " + a_report.number.out + " " + last_error_message)
 			end
@@ -240,7 +246,7 @@ feature -- Basic Operations
 			l_content.append (a_message.as_string_32)
 
 			create l_email.make (admin_email, webmaster_email, "ESA API exception", l_content)
-			smtp_protocol.safe_process_email (l_email)
+			mailer.safe_process_email (l_email)
 		end
 
 feature {NONE} -- Implementation

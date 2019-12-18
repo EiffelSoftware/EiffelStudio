@@ -578,12 +578,12 @@ test	missing-vjar-error			valid284 tcf pass validity anchored_type system-validi
 test	missing-vjar-error-2		valid285 tcf pass validity anchored_type system-validity
 test	parenthesis-alias-tuple-vuar	valid286 tcf pass validity parenthesis_alias conversion tuple conformance
 test	conversion-on-separate-target	valid287 tcf fail validity conversion scoop
-test	wrong-type-for-manifest-array-in-across	valid288 tcf pass validity manifest-array across
+test	wrong-type-for-manifest-array-in-across	valid288 tcf pass validity manifest_array across
 test	obsolete-feature-call-with-body	valid289 tcf pass validity warning attribute obsolete_call
 test	obsolete-assigner-query		valid290 tcf pass validity warning obsolete_call
 test	obsolete-assigner-command	valid291 tcf pass validity warning obsolete_call
-test	typed-manifest-array-item-validity	valid292 tcf pass validity manifest array
-test	typed-manifest-array-type-validity	valid293 tcf pass validity manifest array
+test	typed-manifest-array-item-validity	valid292 tcf pass validity manifest_array
+test	typed-manifest-array-type-validity	valid293 tcf pass validity manifest_array
 test	identifier-scope-validity		valid294 tcf pass validity scope argument local object_test separate iteration agent
 test	identifier-scope-validity-recompilation	valid295 tcf pass validity scope argument local object_test separate iteration agent incrementality
 test	obsolete-feature-call-date	valid296 tcf pass validity warning obsolete_call
@@ -1876,15 +1876,15 @@ test	void-safe-like-argument		exec364 tcf pass execution attached_types anchored
 test	once-manifest-string-extended-ascii exec365 tcf pass execution
 test	ieee-nan-deep-comparison	exec366 tcf pass execution ieee
 test	types-and-attachement 		exec367 tcf pass execution conformance void_safe
-test	manifest-array-type-computation	exec368 tcf pass execution manifest array
+test	manifest-array-type-computation	exec368 tcf pass execution manifest_array
 test	conditional-expression-type-computation	exec369 tcf pass execution conditional expression
 test	conditional-expression-expanded-type	exec370 tcf pass execution conditional expression
 test	old-expression-in-feature-body		exec371 tcf fail execution old expression
-test	target-manifest-array-type-computation	exec372 tcf pass execution manifest array
+test	target-manifest-array-type-computation	exec372 tcf pass execution manifest_array
 test	type-with-none				exec373	tcf pass execution conformance
 test	floating-point-comparison		exec374 tcf pass execution ieee
 test	anchored-tuple-creation			exec375 tcf pass execution creation anchored_type tuple
-test	manifest-array-of-qualified-types	exec376 tcf pass execution manifest array
+test	manifest-array-of-qualified-types	exec376 tcf pass execution manifest_array
 
 -- Once specific
 
@@ -2124,7 +2124,7 @@ test	qat-greater-number-of-formal	term214 tcf pass validity anchored_type system
 test	large-integer-64-crash			term215 tcf pass syntax
 test	conversion-by-constant-attribute	term216 tcf pass termination conversion
 test	generic-assignment-to-tuple-field	term217 tcf pass termination tuple assigner
-test	sequence-type-computation-hanging	term218	tcf fail manual manifest array conditional expression
+test	sequence-type-computation-hanging	term218	tcf fail manual manifest_array conditional expression
 
 -- Config
 
@@ -3126,7 +3126,7 @@ test	pretty-feature-call-comment		pretty027 tcf pass pretty
 test	pretty-comments-between-features	pretty028 tcf pass pretty
 test	pretty-loop-invariant			pretty029 tcf pass pretty
 test	pretty-inline-separate-instruction	pretty030 tcf pass pretty
-test	pretty-manifest-array			pretty031 tcf pass pretty manifest array
+test	pretty-manifest-array			pretty031 tcf pass pretty manifest_array
 test	pretty-across-loop			pretty032 tcf pass pretty across iteration loop
 
 -- Benchmarks

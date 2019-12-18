@@ -1,6 +1,5 @@
-
 test_name	qat-vwce-sneak
-test_description Changing the type of a feature referenced by a qualified anchored type that is inside a conditional expression introduces a VWCE error but the compiler does not detect it
+test_description Changing the type of a feature referenced by a qualified anchored type that is inside a conditional expression changes type of the expression. (Was: introduces a VWCE error but the compiler does not detect it)
 
 define TYPE	"TEST2"
 copy_sub 	Ace $TEST Ace
@@ -15,7 +14,8 @@ define TYPE	"TEST3"
 copy_sub 	test2.e $CLUSTER test2.e
 
 compile_melted
-compile_result 	validity_error TEST VWCE
+-- Was: compile_result 	validity_error TEST VWCE
+compile_result 	ok
 
 test_end
 

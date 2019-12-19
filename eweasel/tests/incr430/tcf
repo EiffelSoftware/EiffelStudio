@@ -15,7 +15,7 @@ copy_sub 	test2.e $CLUSTER test2.e
 
 compile_melted
 -- Was: compile_result 	validity_error TEST VWCE
-compile_result 	ok
+compile_result 	validity_error TEST VJAR:12
 
 test_end
 

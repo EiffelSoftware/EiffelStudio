@@ -2124,7 +2124,7 @@ test	qat-greater-number-of-formal	term214 tcf pass validity anchored_type system
 test	large-integer-64-crash			term215 tcf pass syntax
 test	conversion-by-constant-attribute	term216 tcf pass termination conversion
 test	generic-assignment-to-tuple-field	term217 tcf pass termination tuple assigner
-test	sequence-type-computation-hanging	term218	tcf fail manual manifest_array conditional expression
+test	sequence-type-computation-hanging	term218	tcf pass manifest_array conditional expression
 
 -- Config
 

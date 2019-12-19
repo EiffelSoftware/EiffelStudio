@@ -1,12 +1,12 @@
-note
+﻿note
 	description: "Cursor trees in linked representation"
 	library: "Free implementation of ELKS library"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	names: linked_cursor_tree, cursor_tree;
-	access: cursor, membership;
-	representation: recursive, linked;
-	contents: generic;
+	names: linked_cursor_tree, cursor_tree
+	access: cursor, membership
+	representation: recursive, linked
+	contents: generic
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,7 +14,6 @@ class LINKED_CURSOR_TREE [G] inherit
 
 	RECURSIVE_CURSOR_TREE [G]
 		redefine
-			put_right,
 			active, cursor, is_leaf
 		end
 
@@ -149,7 +148,7 @@ feature {NONE} -- Implementation
 			-- Current node
 
 note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

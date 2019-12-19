@@ -257,7 +257,7 @@ test	external-tab-after-macro	syntax031 tcf pass syntax
 test	external-proc-sig-return-type	syntax032 tcf pass syntax
 test	point-e-one-real-constant	syntax033 tcf pass syntax
 test	qualified-call-e-forty-seven	syntax034 tcf pass syntax
-test	infix-pass-feature-address	syntax035 tcf pass syntax
+test	alias-pass-feature-address	syntax035 tcf pass syntax
 test	assign-addr-expr-to-pointer	syntax036 tcf fail syntax
 test	cast-arg-type-with-parens	syntax037 tcf fail syntax
 test	bogus-string-syntax-error	syntax038 tcf pass syntax
@@ -2994,7 +2994,7 @@ test	reflector-new_instance_of-marks		reflection010 tcf pass reflection creation
 test	qat-evaluation-order			anchor001 tcf pass anchored_type
 test	qat-redeclaration-check			anchor002 tcf pass anchored_type redeclaration validity conformance incrementality
 test	inherited-qat-failure			anchor003 tcf pass anchored_type system-validity
-test	delayed-check-failure-with-infix	anchor004 tcf pass anchored_type termination
+test	delayed-check-failure-with-alias	anchor004 tcf pass anchored_type termination
 test	qat-creation-with-deferred              anchor005 tcf pass anchored_type creation execution
 test	qat-creation-with-like-current		anchor006 tcf pass anchored_type creation execution
 test	qat-creation-with-generic		anchor007 tcf pass anchored_type creation execution formal generic stable attribute

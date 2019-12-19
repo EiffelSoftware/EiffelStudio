@@ -9592,7 +9592,7 @@ feature {NONE} -- Implementation
 			l_vape: VAPE
 			l_vwoe1: VWOE1
 		do
-			if not (context.is_ignoring_export or a_feature.is_exported_for (a_context_class)) then
+			if not (context.is_ignoring_export or a_feature.is_exported_for (context.current_class)) then
 				create l_vuex
 				context.init_error (l_vuex)
 				l_vuex.set_static_class (a_context_class)
@@ -9649,7 +9649,7 @@ feature {NONE} -- Implementation
 			l_vuex: VUEX
 			l_vape: VAPE
 		do
-			if not (context.is_ignoring_export or a_feature.is_exported_for (a_context_class)) then
+			if not (context.is_ignoring_export or a_feature.is_exported_for (context.current_class)) then
 				create l_vuex
 				context.init_error (l_vuex)
 				l_vuex.set_static_class (a_context_class)

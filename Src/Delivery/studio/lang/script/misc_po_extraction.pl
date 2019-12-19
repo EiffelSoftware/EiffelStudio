@@ -130,6 +130,8 @@ sub escape_xml {
 	s/\&amp\;/&/g;
 	s/\&apos\;/'/g;
 	s/\&quot\;/"/g;
+	s/\&\#xA\;/\\n/g;
+	s/\&\#x9\;/\\t/g;
 	$_;
 }
 

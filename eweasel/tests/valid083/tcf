@@ -21,7 +21,7 @@ copy_sub 	 test.e $CLUSTER test.e
 resume_compile
 compile_result 	 validity_error TEST VUEX(2)
 
-define		 EXPRESSION "x.weasel"
+define		 EXPRESSION "x.weasel (1)"
 copy_sub 	 test.e $CLUSTER test.e
 resume_compile
 compile_result 	 validity_error TEST VUEX(2)

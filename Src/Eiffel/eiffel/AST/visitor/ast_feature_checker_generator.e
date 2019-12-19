@@ -11145,91 +11145,27 @@ feature {NONE} -- Implementation: type validation
 			adapated_type_not_void: Result /= Void
 		end
 
-	upper_type (x, y: TYPE_A): detachable TYPE_A
-			-- A type that is computed as a tripple for tripples <xc, xa, xs> and <yc, ya, ys> corresponding to `x` and `y` as follows:
-			-- • xc, yc - marks free types, using only class conformance rules
-			-- • xa, ya - attachment status
-			-- • xs, ys - separateness status
-			-- The resulting type is <zc, za, zs> where
-			-- • zc = xc if yc -> xc, zc = yc if xc -> yc, zc = Void otherwise
-			-- • za = attached , if xa or ya is attached, detachable otherwise
-			-- • zs = separate, if xs or ys is separate, non-separate otherwise
-		local
-			rx, ry: TYPE_A
-		do
-			if y.is_attached or else y.is_implicitly_attached and then not x.is_attached then
-						-- `x` is less attached, use its attachment status.
-				rx := x
-				ry := y.to_other_immediate_attachment (x)
-			else
-						-- `y` is less attached, use its attachment status.
-				rx := x.to_other_immediate_attachment (y)
-				ry := y
-			end
-				-- Source types should conform to the computed ones.
-			check
-				x_conforms_to_rx: x.conform_to (context.current_class, rx)
-				y_conforms_to_ry: y.conform_to (context.current_class, ry)
-			end
-			if rx.is_separate then
-					-- Use `x` separateness status.
-				ry := ry.to_other_separateness (rx)
-			else
-					-- Use `y` separateness status.
-				rx := rx.to_other_separateness (ry)
-			end
-				-- Source types should conform to the computed ones.
-			check
-				x_conforms_to_rx: x.conform_to (context.current_class, rx)
-				y_conforms_to_ry: y.conform_to (context.current_class, ry)
-			end
-				-- Use the type to which both `x` and `y` conform.
-			if x.conform_to (context.current_class, ry) then
-				Result := ry
-			elseif y.conform_to (context.current_class, rx) then
-				Result := rx
-			end
-		ensure
-			x_conforms_to_Result: attached Result implies x.conform_to (context.current_class, Result)
-			y_conforms_to_Result: attached Result implies y.conform_to (context.current_class, Result)
-		end
-
 	maximal_type (ts: ARRAYED_LIST [TYPE_A]): TYPE_A
 			-- A type that is maximal in the list `ts`, if present, or a properly adapted version of "ANY".
 		local
-			t: TYPE_A
-			i, j, n: INTEGER
+			c: CLASS_C
+			l: LOCAL_TYPE_A
 		do
-				-- Use "(attached) NONE" as the initial lowest type, it conforms to any other type.
-			Result := none_type.as_normally_attached (context.current_class)
-			from
-				n := ts.count
-			until
-				i >= n
+			c := context.current_class
+				-- Use `l` to collect type information about all types.
+			create l.make (0, System.detachable_separate_any_type, c)
+				-- Iterate over all types.
+			across
+				ts as t
 			loop
-				i := i + 1
-				t := ts [i]
-				if attached upper_type (t, Result) as x then
-					Result := x
-				else
-					if i >= n or else j >= n then
-							-- Cannot find a common type, use "(attached) ANY".
-						Result := system.any_type.as_normally_attached (context.current_class)
-					else
-							-- Start over from the next unprocessed element type as the initial one.
-						if i > j then
-							j := i + 1
-						else
-							j := j + 1
-						end
-						Result := ts [j]
-					end
-						-- Recheck with the new type, adapting it if necessary.
-					i := 0
-				end
+					-- Mimic attachment of `t.item` to a local of type `l`.
+				l.backward_conform_to (c, t.item).do_nothing
 			end
-		ensure
-			types_conform_to_result: across ts as x all x.item.conform_to (context.current_class, Result) end
+				-- Obtain a type to which all elements conform.
+			Result := l.minimum
+				-- There is no restriction on the type to which the found type should conform.
+				-- Therefore, the type always exists.
+			check attached Result end
 		end
 
 feature {NONE} -- Implementation: checking locals

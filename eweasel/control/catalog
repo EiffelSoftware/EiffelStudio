@@ -1921,7 +1921,6 @@ test once-creation-procedures-generic       once026 tcf fail once
 test once-creation-procedures-not-qualified-call once027 tcf fail once 
 test once-creation-procedures-qualified-call once028 tcf fail once 
 test once-creation-procedures-creation-call once029 tcf fail once 
-test once-creation-procedures-creation-invalid-call once030 tcf fail once 
 
 -- Compiler termination (exception trace, panic, etc.)
 

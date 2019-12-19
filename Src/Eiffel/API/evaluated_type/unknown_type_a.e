@@ -73,7 +73,7 @@ feature -- Comparison
 	backward_conform_to (a_context_class: CLASS_C; other: TYPE_A): BOOLEAN
 			-- <Precursor>
 		do
-				-- `Result = true', but type information may be recorded by this call.
+				-- `Result = True', but type information may be recorded by this call.
 			Precursor (a_context_class, other).do_nothing
 				-- Assume that the code is correct.
 			Result := True
@@ -120,7 +120,7 @@ feature {TYPE_A} -- Helpers
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

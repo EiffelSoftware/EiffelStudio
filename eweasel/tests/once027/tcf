@@ -1,6 +1,5 @@
-
 test_name 	once-creation-procedures-not-qualified-call
-test_description Violate the validity rule on once creation procedure can't b used in a not qualified Call
+test_description Test the validity rule that once creation procedure can't be used in an unqualified Call.
 
 
 copy_sub 	Ace $TEST Ace
@@ -8,5 +7,6 @@ copy_raw 	a.e $CLUSTER a.e
 copy_raw 	test.e $CLUSTER test.e
 
 compile_melted
-compile_result 	validity_error VUEX(3)
+compile_result 	validity_error TEST UNKNOWN_VALIDITY_ERROR
 
+test_end

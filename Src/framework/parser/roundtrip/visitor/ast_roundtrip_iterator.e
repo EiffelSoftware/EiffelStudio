@@ -980,16 +980,32 @@ feature
 		end
 
 	process_loop_expr_as (l_as: LOOP_EXPR_AS)
+		local
+			i: ITERATION_AS
 		do
-			l_as.iteration.process (Current)
-			safe_process (l_as.invariant_keyword (match_list))
-			safe_process (l_as.full_invariant_list)
-			safe_process (l_as.until_keyword (match_list))
-			safe_process (l_as.exit_condition)
-			safe_process (l_as.qualifier_keyword (match_list))
-			l_as.expression.process (Current)
-			safe_process (l_as.variant_part)
-			safe_process (l_as.end_keyword)
+			i := l_as.iteration
+			if i.is_symbolic then
+					-- The loop is of the form
+					-- ∀ var: expr | expr
+				safe_process (l_as.qualifier_symbol (match_list))
+				i.identifier.process (Current)
+				safe_process (i.in_symbol (match_list))
+				i.expression.process (Current)
+				safe_process (i.bar_symbol (match_list))
+				l_as.expression.process (Current)
+			else
+					-- The loop is of the form
+					-- across expr as var [invariant expr] [until expr] all expr [variant expr] end
+				i.process (Current)
+				safe_process (l_as.invariant_keyword (match_list))
+				safe_process (l_as.full_invariant_list)
+				safe_process (l_as.until_keyword (match_list))
+				safe_process (l_as.exit_condition)
+				safe_process (l_as.qualifier_keyword (match_list))
+				l_as.expression.process (Current)
+				safe_process (l_as.variant_part)
+				safe_process (l_as.end_keyword)
+			end
 		end
 
 	process_separate_instruction_as (a: SEPARATE_INSTRUCTION_AS)
@@ -1505,18 +1521,17 @@ feature{NONE} -- Implementation
 				attached l_as.id_list as l_ids and then
 				l_ids.count > 0
 			then
+				across
+					l_ids as id_as_index
 				from
-					l_ids.start
 					i := 1
 						-- Temporary/reused objects to print identifiers.
 					create l_id_as.initialize_from_id (1)
 					if attached l_as.separator_list as l_sep_list then
 						l_count := l_sep_list.count
 					end
-				until
-					l_ids.after
 				loop
-					l_index := l_ids.item
+					l_index := id_as_index.item
 					if match_list.valid_index (l_index) then
 						l_leaf := match_list.i_th (l_index)
 							-- Note that we do not set the `name_id' for `l_id_as' since it will require
@@ -1531,7 +1546,6 @@ feature{NONE} -- Implementation
 						safe_process (l_as.separator_list_i_th (i, match_list))
 						i := i + 1
 					end
-					l_ids.forth
 				end
 			end
 		end
@@ -1539,9 +1553,8 @@ feature{NONE} -- Implementation
 	internal_match_list: detachable like match_list
 			-- Storage for `match_list'.
 
-invariant
-
-note
+;note
+	ca_ignore: "CA033", "CA033: too large class"
 	date: "$Date$"
 	revision: "$Revision$"
 	copyright: "Copyright (c) 1984-2019, Eiffel Software"

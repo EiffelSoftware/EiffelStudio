@@ -41500,7 +41500,7 @@ msgstr ""
 #. Source code: ("[
 #: es.e:1166
 msgctxt "compiler.command-line.option"
-msgid "Unknown preference preference name for option \"$1\": \"$2\"."
+msgid "Unknown preference name for option \"$1\": \"$2\"."
 msgstr ""
 
 #. Source code: Result := locale.formatted_string (locale.translation ("Unknown protocol name:%N$1"), [a_content])

@@ -193,6 +193,8 @@ feature -- Basic Operations
 						create l_email.make (user_mail (a_user.displayed_name), ll_email, report_email_subject (a_report, l_interactions.count), l_message)
 
 					end
+					l_email.add_header_line ("MIME-Version: 1.0")
+					l_email.add_header_line ("Content-Type: text/plain; charset=UTF-8")
 
 					if not a_subscribers.is_empty then
 						create  l_etable.make_caseless (2)
@@ -263,6 +265,9 @@ feature {NONE} -- Implementation
 
 	report_email_subject (a_report: REPORT; a_interactions_count: INTEGER): STRING
 			-- Subject of email related to report `a_report'
+		local
+			utf_encoder: UTF_CONVERTER
+			base64: BASE64
 		do
 			create Result.make (1024)
 			Result.append_character ('[')
@@ -276,7 +281,15 @@ feature {NONE} -- Implementation
 				Result.append_integer (a_interactions_count)
 			end
 			Result.append ("] ")
-			Result.append (a_report.synopsis.to_string_8)
+			if a_report.synopsis.is_valid_as_string_8 then
+				Result.append (a_report.synopsis.to_string_8)
+			else
+				create base64
+				Result.append ("=?utf-8?B?")
+				Result.append (base64.encoded_string (utf_encoder.string_32_to_utf_8_string_8 (a_report.synopsis)))
+				Result.append ("?=")
+			end
+
 		end
 
 	recipients_to_array (a_recipients: LIST [STRING]; a_emails: STRING_TABLE[STRING]): ARRAY [STRING]

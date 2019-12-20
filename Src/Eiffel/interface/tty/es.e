@@ -1164,7 +1164,7 @@ feature {NONE} -- Update
 					if not attached preferences.get_preference ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (argument (current_option - 1))) as p then
 						option_error_message := locale.formatted_string (locale.translation_in_context
 							("[
-								Unknown preference preference name for option "$1": "$2".
+								Unknown preference name for option "$1": "$2".
 							]", once "compiler.command-line.option"), option, argument (current_option - 1))
 					elseif not p.is_valid_string_for_selection (argument (current_option)) then
 						option_error_message := locale.formatted_string (locale.translation_in_context

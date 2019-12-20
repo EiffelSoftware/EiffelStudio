@@ -1286,7 +1286,7 @@ feature -- Basic Operations
 			post_execution
 		end
 
-	initialize_interaction (a_interaction_id: INTEGER; a_category_id: INTEGER; a_content: STRING; a_new_status: INTEGER; a_private: BOOLEAN)
+	initialize_interaction (a_interaction_id: INTEGER; a_category_id: INTEGER; a_content: STRING_32; a_new_status: INTEGER; a_private: BOOLEAN)
 			-- Initialize temporary interaction `a_interaction_id' with content `a_content'.
 		require
 			attached_content: a_content /= Void
@@ -2022,7 +2022,7 @@ feature {NONE} -- Implementation
 				Result.set_submission_date (l_item_1)
 			end
 				--Synopsis
-			if attached db_handler.read_string (2) as l_item_2 then
+			if attached db_handler.read_string_32 (2) as l_item_2 then
 				Result.set_synopsis (l_item_2)
 			end
 
@@ -2042,12 +2042,13 @@ feature {NONE} -- Implementation
 			end
 
 				--Description
-			if attached db_handler.read_string (6) as l_item_6 then
-				Result.set_description (utf.utf_8_string_8_to_string_32 (l_item_6))
+			if attached db_handler.read_string_32 (6) as l_item_6 then
+				-- Result.set_description (utf.utf_8_string_8_to_string_32 (l_item_6))
+				Result.set_description (l_item_6)
 			end
 
 				--To Reproduce
-			if attached db_handler.read_string (7) as l_item_7 then
+			if attached db_handler.read_string_32 (7) as l_item_7 then
 				Result.set_to_reproduce (l_item_7)
 			end
 
@@ -2099,7 +2100,7 @@ feature {NONE} -- Implementation
 				Result.set_number (l_number)
 			end
 				--Synopsis
-			if attached db_handler.read_string (2) as l_synopsis then
+			if attached db_handler.read_string_32 (2) as l_synopsis then
 				Result.set_synopsis (l_synopsis)
 			end
 				--Submission Date
@@ -2199,7 +2200,7 @@ feature {NONE} -- Implementation
 			end
 
 				--Content
-			if attached db_handler.read_string (2) as l_item_2 then
+			if attached db_handler.read_string_32 (2) as l_item_2 then
 				Result.set_content (l_item_2)
 			end
 

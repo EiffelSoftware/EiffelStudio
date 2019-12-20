@@ -599,7 +599,7 @@ feature -- Basic Operations
 			post_data_provider_execution
 		end
 
-	initialize_interaction (a_interaction_id: INTEGER_32; a_category_id: INTEGER; a_content: STRING_8; a_new_status: INTEGER_32; a_private: BOOLEAN)
+	initialize_interaction (a_interaction_id: INTEGER_32; a_category_id: INTEGER; a_content: STRING_32; a_new_status: INTEGER_32; a_private: BOOLEAN)
 			-- Initialize temporary interaction `a_interaction_id' with content `a_content'.
 		do
 			log.write_debug (generator + ".initialize_interaction [Interaction_Id:" + a_interaction_id.out + ", content: " + a_content + ", new_status: " + a_new_status.out + ", private: "+ a_private.out)

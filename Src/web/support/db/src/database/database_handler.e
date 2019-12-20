@@ -128,7 +128,9 @@ feature -- Access
 		do
 				-- FIXME: handle string_32 !
 			if attached {DB_TUPLE} item as l_item then
-				if attached {READABLE_STRING_32} l_item as l_string then
+				if attached {READABLE_STRING_32}  l_item.item (a_index) as l_string then
+					Result := l_string
+				elseif  attached {STRING_32} l_item.item (a_index) as l_string then
 					Result := l_string
 				else
 					if attached read_string (a_index) as s8 then

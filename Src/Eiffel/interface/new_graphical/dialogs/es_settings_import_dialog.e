@@ -343,115 +343,128 @@ feature -- Event
 			text_widget: detachable EV_TEXT
 			vb: EV_VERTICAL_BOX
 			lab: EV_LABEL
+			retried: BOOLEAN
 		do
-			import_button.hide
-			back_button.show
-			main_cell.wipe_out
-			create vb
-			progress_bar.set_value (1)
-
-			vb.extend (progress_bar)
-			vb.disable_item_expand (progress_bar)
-			create lab
-			lab.set_text ({STRING_32} "Importing from " + selected_version_name.as_string_32)
-			vb.extend (lab)
-			vb.disable_item_expand (lab)
-
-			if advanced_button.is_selected then
-				create text_widget
-				text_widget.set_text ({STRING_32} "Importing from " + selected_version_name.as_string_32 + " ...%N")
-				vb.extend (text_widget)
+			if retried then
+				back_button.show
+				main_cell.wipe_out
+				create lab
+				lab.set_text ("Import failed (exception)!")
+				main_cell.extend (lab)
+				lab.refresh_now
 			else
-				text_widget := Void
-			end
-			main_cell.replace (vb)
+				import_button.hide
+				back_button.show
+				main_cell.wipe_out
+				create vb
+				progress_bar.set_value (1)
 
-			is_verbose := True
-			lab.refresh_now
+				vb.extend (progress_bar)
+				vb.disable_item_expand (progress_bar)
+				create lab
+				lab.set_text ({STRING_32} "Importing from " + selected_version_name.as_string_32)
+				vb.extend (lab)
+				vb.disable_item_expand (lab)
 
-			if preferences_cb.is_sensitive and then preferences_cb.is_selected then
-				if text_widget /= Void then
-					text_widget.append_text ("- Preferences from %"")
-					text_widget.append_text (preferences_tf.text)
-					text_widget.append_text ("%"%N")
+				if advanced_button.is_selected then
+					create text_widget
+					text_widget.set_text ({STRING_32} "Importing from " + selected_version_name.as_string_32 + " ...%N")
+					vb.extend (text_widget)
+				else
+					text_widget := Void
 				end
+				main_cell.replace (vb)
 
-				create l_prefs_versions
-				create l_prefs.make_with_location_and_version (preferences_tf.text, l_prefs_versions.version_2_0)
+				is_verbose := True
+				lab.refresh_now
 
-				if is_verbose then
-					l_prefs_import_callback := agent (itxt: detachable EV_TEXT; ith: INTEGER_32; total: INTEGER_32; name, value: READABLE_STRING_GENERAL)
-								do
-									progress_bar.set_value ((100 * ith) // total)
-									progress_bar.refresh_now
-									if itxt /= Void then
-										itxt.append_text (" [" + ith.out + "/" + total.out + "] ")
-										itxt.append_text (name)
-										itxt.append_text (": ")
-										itxt.append_text (value)
-										itxt.append_text ("%N")
-									end
-								end(text_widget, ?,?,?,?)
-				end
-				if attached preferences as prefs then
-					prefs.preferences.import_from_storage_with_callback_and_exclusion (l_prefs,
-							True, -- Ignore hidden preferences
-							l_prefs_import_callback,
-							agent (itxt: detachable EV_TEXT; ith: INTEGER; total: INTEGER; k, v: READABLE_STRING_GENERAL): BOOLEAN
-								do
-									progress_bar.set_value ((100 * ith) // total)
-									progress_bar.refresh_now
-									Result := is_excluded_preference (k, v)
-									if Result and itxt /= Void then
-										itxt.append_text (" [" + ith.out + "/" + total.out + "] ")
-										itxt.append_text (k)
-										itxt.append_text (": Excluded!%N")
-									end
-								end(text_widget, ?,?,?,?)
-						)
-						-- Save imported preferences!
-					prefs.preferences.save_preferences
-				end
-			end
-			if ui_layout_cb.is_sensitive and then ui_layout_cb.is_selected then
-				if text_widget /= Void then
-					text_widget.append_text ("- UI layout settings.%N")
-				end
-				safe_copy_directory_content_into (create {PATH}.make_from_string (ui_layout_tf.text), eiffel_layout.docking_data_path, text_widget, Void)
-				reload_docking_layout (text_widget)
-			end
-			if studio_config_cb.is_sensitive and then studio_config_cb.is_selected then
-				if text_widget /= Void then
-					text_widget.append_text ("- Configuration file.%N")
-				end
-				safe_copy_directory_content_into (create {PATH}.make_from_string (studio_config_tf.text), eiffel_layout.user_files_path.extended ("studio"), text_widget, <<"code_analysis.xml">>)
-			end
-			if templates_cb.is_sensitive and then templates_cb.is_selected then
-				if text_widget /= Void then
-					text_widget.append_text ("- Templates.%N")
-				end
-				safe_copy_directory_content_into (create {PATH}.make_from_string (templates_tf.text), eiffel_layout.user_templates_path, text_widget, Void)
-			end
-			if ini_files_cb.is_sensitive and then ini_files_cb.is_selected then
-				if text_widget /= Void then
-					text_widget.append_text ("- *.ini files.%N")
-				end
-				create d.make_with_name (ini_files_tf.text)
-				across
-					d.entries as ic
-				loop
-					if ic.item.is_current_symbol or ic.item.is_parent_symbol then
-					elseif attached ic.item.extension as ext and then ext.same_string ("ini") then
-						safe_copy_file_to (create {RAW_FILE}.make_with_path (d.path.extended_path (ic.item)),
-								create {RAW_FILE}.make_with_path (eiffel_layout.user_files_path.extended_path (ic.item)), text_widget)
+				if preferences_cb.is_sensitive and then preferences_cb.is_selected then
+					if text_widget /= Void then
+						text_widget.append_text ("- Preferences from %"")
+						text_widget.append_text (preferences_tf.text)
+						text_widget.append_text ("%"%N")
+					end
+
+					create l_prefs_versions
+					create l_prefs.make_with_location_and_version (preferences_tf.text, l_prefs_versions.version_2_0)
+
+					if is_verbose then
+						l_prefs_import_callback := agent (itxt: detachable EV_TEXT; ith: INTEGER_32; total: INTEGER_32; name, value: READABLE_STRING_GENERAL)
+									do
+										progress_bar.set_value ((100 * ith) // total)
+										progress_bar.refresh_now
+										if itxt /= Void then
+											itxt.append_text (" [" + ith.out + "/" + total.out + "] ")
+											itxt.append_text (name)
+											itxt.append_text (": ")
+											itxt.append_text (value)
+											itxt.append_text ("%N")
+										end
+									end(text_widget, ?,?,?,?)
+					end
+					if attached preferences as prefs then
+						prefs.preferences.import_from_storage_with_callback_and_exclusion (l_prefs,
+								True, -- Ignore hidden preferences
+								l_prefs_import_callback,
+								agent (itxt: detachable EV_TEXT; ith: INTEGER; total: INTEGER; k, v: READABLE_STRING_GENERAL): BOOLEAN
+									do
+										progress_bar.set_value ((100 * ith) // total)
+										progress_bar.refresh_now
+										Result := is_excluded_preference (k, v)
+										if Result and itxt /= Void then
+											itxt.append_text (" [" + ith.out + "/" + total.out + "] ")
+											itxt.append_text (k)
+											itxt.append_text (": Excluded!%N")
+										end
+									end(text_widget, ?,?,?,?)
+							)
+							-- Save imported preferences!
+						prefs.preferences.save_preferences
 					end
 				end
+				if ui_layout_cb.is_sensitive and then ui_layout_cb.is_selected then
+					if text_widget /= Void then
+						text_widget.append_text ("- UI layout settings.%N")
+					end
+					safe_copy_directory_content_into (create {PATH}.make_from_string (ui_layout_tf.text), eiffel_layout.docking_data_path, text_widget, Void)
+					reload_docking_layout (text_widget)
+				end
+				if studio_config_cb.is_sensitive and then studio_config_cb.is_selected then
+					if text_widget /= Void then
+						text_widget.append_text ("- Configuration file.%N")
+					end
+					safe_copy_directory_content_into (create {PATH}.make_from_string (studio_config_tf.text), eiffel_layout.user_files_path.extended ("studio"), text_widget, <<"code_analysis.xml">>)
+				end
+				if templates_cb.is_sensitive and then templates_cb.is_selected then
+					if text_widget /= Void then
+						text_widget.append_text ("- Templates.%N")
+					end
+					safe_copy_directory_content_into (create {PATH}.make_from_string (templates_tf.text), eiffel_layout.user_templates_path, text_widget, Void)
+				end
+				if ini_files_cb.is_sensitive and then ini_files_cb.is_selected then
+					if text_widget /= Void then
+						text_widget.append_text ("- *.ini files.%N")
+					end
+					create d.make_with_name (ini_files_tf.text)
+					across
+						d.entries as ic
+					loop
+						if ic.item.is_current_symbol or ic.item.is_parent_symbol then
+						elseif attached ic.item.extension as ext and then ext.same_string ("ini") then
+							safe_copy_file_to (create {RAW_FILE}.make_with_path (d.path.extended_path (ic.item)),
+									create {RAW_FILE}.make_with_path (eiffel_layout.user_files_path.extended_path (ic.item)), text_widget)
+						end
+					end
+				end
+				progress_bar.set_value (100)
+				progress_bar.refresh_now;
+				(create {EXECUTION_ENVIRONMENT}).sleep (1_000_000_000)
+				lab.set_text ("Import completed!")
+				lab.refresh_now
 			end
-			progress_bar.set_value (100)
-			progress_bar.refresh_now;
-			(create {EXECUTION_ENVIRONMENT}).sleep (1_000_000_000)
-			lab.set_text ("Importation completed!")
-			lab.refresh_now
+		rescue
+			retried := True
+			retry
 		end
 
 	is_excluded_preference (a_name, a_value: READABLE_STRING_GENERAL): BOOLEAN

@@ -189,9 +189,11 @@ feature {NONE} -- Persistency
 			if s.starts_with_general ("0x") then
 				i := {HEXADECIMAL_STRING_CONVERTER}.hex_to_integer_32 (s.substring (3, s.count))
 				Result := i.to_character_32
-			elseif s.count >= 4 and s.is_integer then
+			elseif s.count >= 3 and s.is_integer then
 				i := s.to_integer
-				Result := i.to_character_32
+				if i >= 128 then
+					Result := i.to_character_32
+				end
 			else
 				s32 := utf.utf_8_string_8_to_string_32 (s)
 				if s32.count = 1 then

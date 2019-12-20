@@ -213,6 +213,7 @@ feature -- Button texts
 	b_append: STRING_32							do Result := locale.translation("Append") end
 	b_ignore: STRING_32							do Result := locale.translation("Ignore") end
 	b_import: STRING_32							do Result := locale.translation ("Import") end
+	b_insert: STRING_32							do Result := locale.translation ("Insert") end
 
 	b_force_exit: STRING_32						do Result := locale.translation("Force Exit") end
 

@@ -17,6 +17,11 @@ inherit
 			default_create, copy
 		end
 
+	EB_CONSTANTS
+		undefine
+			default_create, copy
+		end
+
 create
 	make
 
@@ -88,9 +93,12 @@ feature {NONE} -- Initialization
 			hb.set_border_width (default_border_size)
 			hb.set_padding_width (default_padding_size)
 			vb.extend (hb); vb.disable_item_expand (hb)
-			cancel_button.set_text ("Cancel")
+			cancel_button.set_text (interface_names.b_cancel)
 			cancel_button.select_actions.extend (agent on_close)
-			insert_button.set_text ("Insert")
+			clipboard_button.set_pixmap (pixmaps.icon_pixmaps.general_copy_icon)
+			clipboard_button.set_tooltip (interface_names.l_copy_text_to_clipboard)
+			clipboard_button.select_actions.extend (agent on_copy_symbol)
+			insert_button.set_text (interface_names.b_insert)
 			insert_button.select_actions.extend (agent on_insert_symbol)
 			set_default_cancel_button (cancel_button)
 			set_default_push_button (insert_button)
@@ -103,6 +111,7 @@ feature {NONE} -- Initialization
 			hb.extend (create {EV_CELL})
 			hb.extend (cancel_button); hb.disable_item_expand (cancel_button); cancel_button.hide
 			hb.extend (insert_button); hb.disable_item_expand (insert_button)
+			hb.extend (clipboard_button); hb.disable_item_expand (clipboard_button)
 
 			across
 				symbols.sections as ic
@@ -123,8 +132,18 @@ feature {NONE} -- Initialization
 			symbols_grid.item_select_actions.extend (agent on_grid_item_selected)
 			symbols_grid.pointer_double_press_item_actions.extend (agent on_grid_item_double_pressed)
 			symbols_grid.pointer_button_press_item_actions.extend (agent on_grid_item_single_pressed)
+			symbols_grid.enable_column_separators
+			symbols_grid.enable_row_separators
+			symbols_grid.enable_row_height_fixed
+
+			preview_label.pointer_double_press_actions.extend (agent (i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER)
+					do
+						on_copy_symbol
+					end
+				)
 
 			on_category_changed
+			show_actions.extend (agent categories_choice.set_focus)
 		end
 
 	create_interface_objects
@@ -135,6 +154,7 @@ feature {NONE} -- Initialization
 			create symbols_grid
 			create insert_button
 			create cancel_button
+			create clipboard_button
 			create preview_label
 		end
 
@@ -210,19 +230,27 @@ feature -- Events
 	fill_grid_with (lst: detachable LIST [TUPLE [symbol: CHARACTER_32; description: READABLE_STRING_GENERAL]])
 		local
 			i,j: INTEGER
-			nb,n: INTEGER
+			colw,nb,n: INTEGER
 			gi: EV_GRID_LABEL_ITEM
 			s: STRING_32
+			g: like symbols_grid
 		do
-			symbols_grid.clear
-			symbols_grid.wipe_out
+			g := symbols_grid
+			g.clear
+			g.wipe_out
 			if lst /= Void and then not lst.is_empty then
 				n := lst.count
 				i := 1
 				j := 0
-				nb := 10
-				symbols_grid.set_column_count_to (nb)
-				symbols_grid.insert_new_rows (n // nb, 1)
+				colw := 5 * (create {EV_GRID_LABEL_ITEM}.make_with_text ("_")).text_width
+				nb := (g.width // colw)
+				if nb <= 0 then
+					nb := 3
+				end
+				g.set_column_count_to (nb + 1)
+				g.set_row_height (colw)
+
+				g.insert_new_rows (n // nb, 1)
 				across
 					lst as ic
 				loop
@@ -243,7 +271,15 @@ feature -- Events
 						j := 1
 						i := i + 1
 					end
-					symbols_grid.set_item (j, i, gi)
+					g.set_item (j, i, gi)
+				end
+				across
+					1 |..| g.column_count as ic
+				loop
+					if attached {EV_GRID_COLUMN} g.column (ic.item) as col then
+						col.set_width (colw)
+--						col.resize_to_content
+					end
 				end
 			end
 		end
@@ -271,6 +307,16 @@ feature -- Events
 			on_grid_item_selected (a_grid_item)
 		end
 
+	on_copy_symbol
+		local
+			s: STRING_32
+		do
+			if attached current_symbol as curr then
+				create s.make_filled (curr.symbol, 1)
+				ev_application.clipboard.set_text (s)
+			end
+		end
+
 	on_insert_symbol
 		do
 			if attached current_symbol as curr then
@@ -288,6 +334,7 @@ feature -- Access
 
 	preview_label: EV_LABEL
 
+	clipboard_button,
 	insert_button,
 	cancel_button: EV_BUTTON
 
@@ -295,7 +342,7 @@ feature -- Access
 
 	search_field: EV_TEXT_FIELD
 
-	symbols_grid: EV_GRID
+	symbols_grid: ES_GRID
 
 	symbols: EB_COMPLETION_UNICODE_SYMBOLS
 		once

@@ -34,3 +34,9 @@ remtrace *                 Compiling EWF Wizard                          *
 remtrace *****************************************************************
 call make_a_wizard.btm new_projects ewf ewf_wizard >>& %INSTALL_LOG
 goto eof
+
+remtrace *****************************************************************
+remtrace *                 Compiling Library Wizard                          *
+remtrace *****************************************************************
+call make_a_wizard.btm new_projects library library_wizard >>& %INSTALL_LOG
+goto eof

@@ -409,6 +409,8 @@ feature {NONE} -- Implementation
 
 	new_interaction_email_message (a_user: USER_INFORMATION; a_report_interaction: REPORT_INTERACTION; a_report: REPORT; a_old_report: REPORT; a_url: STRING): STRING
 			-- New interaction message.
+		local
+			utf: UTF_CONVERTER
 		do
 			create Result.make (4096)
 
@@ -436,7 +438,7 @@ feature {NONE} -- Implementation
 			end
 
 			if attached a_report_interaction.content as l_content then
-				Result.append ((create{UTF8_ENCODER}).decoded_string (l_content.to_string_8))
+				utf.escaped_utf_32_string_into_utf_8_string_8 (l_content, Result)
 				Result.append ("%N%N")
 			end
 

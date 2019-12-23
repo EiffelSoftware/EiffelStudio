@@ -8,7 +8,7 @@
 		<div class="holder">
 			<div class="btn-holder">
 				<div class="row">
-					<span class="release">{$last_release/} - {$platform/}</span>
+					<span class="release">{$last_release/}<!-- - {$platform/}--></span>
 				</div>
 				<a class="btn-download" href="{$download_link/}">Download 
                     {unless condition="$download_channel ~ $stable_channel"}{$download_channel/}{/unless}

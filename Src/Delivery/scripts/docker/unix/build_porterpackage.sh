@@ -5,7 +5,13 @@ if [ "$SVN_EIFFELSTUDIO_REPO_REVISION" = "" ]; then
 fi
 
 var_dir=`pwd`/var
-docker_image_name=local/eiffel-deliv-porterpackage-ent
+
+if [ "$include_enterprise" = "true" ]; then
+	output_dir=$var_dir/ent
+else
+	output_dir=$var_dir/community
+fi
+docker_image_name=local/eiffel-deliv-porterpackage
 docker rmi ${docker_image_name}
 docker build -t ${docker_image_name} -f ./porterpackage/dockerfile porterpackage
 if [ -d "$var_dir/eiffel" ]; then
@@ -13,8 +19,8 @@ if [ -d "$var_dir/eiffel" ]; then
         t_docker_vol_opts="-v $var_dir/eiffel:/home/eiffel/Eiffel"
 fi
 docker run --rm \
-        --name=eiffel-deliv-pp-ent \
-        -v $var_dir/ent:/home/eiffel/deliv/output \
+        --name=eiffel-deliv-pp \
+        -v $output_dir:/home/eiffel/deliv/output \
         ${t_docker_vol_opts} \
         --network host \
         -e SVN_ISE_REPO=svn://svn.ise/ise_svn \
@@ -22,13 +28,7 @@ docker run --rm \
         -e SVN_EIFFELSTUDIO_REPO=svn://svn.ise/mirrors/eiffelstudio \
         -e SVN_EIFFELSTUDIO_REPO_REVISION=$SVN_EIFFELSTUDIO_REPO_REVISION \
         -e SVN_EIFFELSTUDIO_BRANCH=$SVN_EIFFELSTUDIO_BRANCH \
-	-e INCLUDE_ENTERPRISE=true \
+	-e INCLUDE_ENTERPRISE=$include_enterprise \
         ${docker_image_name}
 #docker rmi ${docker_image_name}
-
-
-	#-e EIFFEL_SETUP_CHANNEL=18.11.102592 \
-	#-e SVN_ISE_BRANCH=/tags/Eiffel_18.11 \
-	#-e SVN_EIFFELSTUDIO_BRANCH=/tags/Eiffel_18.11/R1 \
-
 

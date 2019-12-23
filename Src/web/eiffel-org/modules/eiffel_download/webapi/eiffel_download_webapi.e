@@ -21,7 +21,7 @@ note
 			                                                           "files":
 			                                                          		[
 																			 {
-																				"name":"Eiffel_13.11_gpl_93542-macosx-x86-64.tar.bz2", 
+																				"name":"Eiffel_13.11_community_93542-macosx-x86-64.tar.bz2", 
 																				"size":67432962, 
 																				"sha256":"073da134c26ca9f5fc2bdf9aa730e5b33ba7e22d97f46db73d88e5748b288e28", 
 																				"version":"13_11", 

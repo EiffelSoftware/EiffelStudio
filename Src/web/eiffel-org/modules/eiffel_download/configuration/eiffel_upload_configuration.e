@@ -12,7 +12,7 @@ feature -- Access
 			-- product's location.
 
 	files: detachable LIST [TUPLE [name: STRING; size: INTEGER_64; sha256: STRING; version: STRING; major: STRING; minor: STRING; revision: INTEGER_64; platform: STRING]]
-			-- {"name":"Eiffel_14.05_gpl_95417-freebsd-x86-64.tar.bz2", "size":88997196, "sha256":"8013063380a1faae30e0bc429f3ad1423ea8470045dfa57d0f6f83d901e3982e", "version":"14_05", "major":"14", "minor":"05", "revision":95417, "platform":"freebsd-x86-64"},
+			-- {"name":"Eiffel_14.05_community_95417-freebsd-x86-64.tar.bz2", "size":88997196, "sha256":"8013063380a1faae30e0bc429f3ad1423ea8470045dfa57d0f6f83d901e3982e", "version":"14_05", "major":"14", "minor":"05", "revision":95417, "platform":"freebsd-x86-64"},
 
 	id:  STRING = "eiffelstudio"
 
@@ -236,7 +236,7 @@ feature -- Element Change
 				attached files as l_files and then
 				not l_files.is_empty
 			then
-				Result := number + " GPL"
+				Result := number + " Community"
 			else
 				Result := ""
 			end

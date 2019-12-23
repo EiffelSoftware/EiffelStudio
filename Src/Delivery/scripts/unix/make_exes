@@ -89,7 +89,7 @@ move esbuilder.tar.bz2 $EXPORT_DIR/esbuilder
 if [ ! "$NO_NEW_EC" ]; then
 	safe_md $EXPORT_DIR/bin
 	remtrace Recompile EiffelStudio
-	remtrace GPL edition
+	remtrace Community edition
 	if [ ! -d $FINALIZATION_DIR ]; then
 		md $FINALIZATION_DIR
 	fi
@@ -106,7 +106,7 @@ if [ ! "$NO_NEW_EC" ]; then
 		CANCEL
 	fi
 	clean_project
-	move ec.tar.bz2 $EXPORT_DIR/bin/ec_gpl.tar.bz2
+	move ec.tar.bz2 $EXPORT_DIR/bin/ec_Community.tar.bz2
 
 	remtrace Batch version
 	clean_project
@@ -117,13 +117,13 @@ if [ ! "$NO_NEW_EC" ]; then
 		CANCEL
 	fi
 	clean_project
-	move ecb.tar.bz2 $EXPORT_DIR/bin/ecb_gpl.tar.bz2
+	move ecb.tar.bz2 $EXPORT_DIR/bin/ecb_community.tar.bz2
 
 	if [ "$MULTIPLE_EDITIONS" ]; then
 		remtrace Enterprise version edition
 		cd $FINALIZATION_DIR
 		cd $EIFFEL_SRC/Eiffel/API/constants
-		sed -e "s/Version_type_name:\ STRING\ =\ \"GPL\ Edition\"/Version_type_name:\ STRING\ =\ \"Enterprise\ Edition\"/g" system_constants.e >> new_system_constants.e
+		sed -e "s/Version_type_name:\ STRING\ =\ \"Community\ Edition\"/Version_type_name:\ STRING\ =\ \"Enterprise\ Edition\"/g" system_constants.e >> new_system_constants.e
 		move new_system_constants.e system_constants.e
 		cd $FINALIZATION_DIR
 		copy $EIFFEL_SRC/tools/estudio_enterprise/ec.ecf ec.ecf

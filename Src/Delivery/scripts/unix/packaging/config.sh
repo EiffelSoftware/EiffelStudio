@@ -35,8 +35,8 @@ DOCS_DIR=/usr/share/doc/$PRODUCT/docs
 SUMMARY="EiffelStudio Integrated Development Environment"
 NAME="Eiffel Software Inc. <manus@eiffel.com>"
 LICENSE=GPL
-URL=http://www.eiffel.com
-DOWNLOAD=http://download.origo.ethz.ch/download
+URL=https://www.eiffel.com
+DOWNLOAD=https://www.eiffel.org/downloads
 KEY=A03DDC5C
 PASS_PHRASE=""
 

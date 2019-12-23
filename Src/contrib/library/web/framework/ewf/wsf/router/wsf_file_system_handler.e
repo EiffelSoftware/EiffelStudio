@@ -213,7 +213,6 @@ feature -- Execution
 		local
 			f: RAW_FILE
 			fn: like resource_filename
-			l_request_uri: READABLE_STRING_8
 		do
 			fn := resource_filename (uri)
 			create f.make_with_path (fn)

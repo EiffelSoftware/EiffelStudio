@@ -27,7 +27,15 @@ feature -- Configuration
 				create l_layout.make_default
 			end
 			create Result.make (l_layout)
-			create email_service.make ((create {JSON_CONFIGURATION}).new_smtp_configuration (l_layout.application_config_path))
+			if
+				attached (create {JSON_CONFIGURATION}).new_smtp_configuration (l_layout.application_config_path) as l_smtp_server and then
+				not l_smtp_server.is_whitespace
+			then
+				create email_service.make (l_smtp_server)
+			else
+				create email_service.make_sendmail
+			end
+			
 			if attached (create {JSON_CONFIGURATION}).new_database_configuration (l_layout.application_config_path) as l_database_config then
 				create {DATABASE_CONNECTION_ODBC} l_database.login_with_connection_string (l_database_config.connection_string)
 				create database_service.make (l_database)

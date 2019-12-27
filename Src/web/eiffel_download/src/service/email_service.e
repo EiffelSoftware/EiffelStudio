@@ -11,19 +11,22 @@ inherit
 	SHARED_ERROR
 
 create
-	make
+	make,
+	make_sendmail
 
 feature {NONE} -- Initialization
 
 	make (a_smtp_server: READABLE_STRING_32)
 			-- Create an instance of {EMAIL_SERVICE} with an smtp_server `a_smtp_server'.
 			-- Using "noreplies@eiffel.com" as admin email.
-		local
-			l_address_factory: INET_ADDRESS_FACTORY
 		do
-					-- Get local host name needed in creation of SMTP_PROTOCOL.
-			create l_address_factory
-			create smtp_protocol.make (a_smtp_server, l_address_factory.create_localhost.host_name)
+			create {NOTIFICATION_SMTP_MAILER} mailer.make (a_smtp_server)
+			set_successful
+		end
+
+	make_sendmail
+		do
+			create {NOTIFICATION_SENDMAIL_MAILER} mailer
 			set_successful
 		end
 
@@ -45,7 +48,7 @@ feature {NONE} -- Initialization
 			Result := "Eiffel Software Evaluation <download@eiffel.com>"
 		end
 
-	smtp_protocol: SMTP_PROTOCOL
+	mailer: NOTIFICATION_MAILER
 			-- SMTP protocol.
 
 feature -- Basic Operations
@@ -56,14 +59,11 @@ feature -- Basic Operations
 			attached_to: a_to /= Void
 			attached_host: a_host /= Void
 		local
-			l_email: EMAIL
+			l_email: NOTIFICATION_EMAIL
 		do
-				-- Create our message.
-			create l_email.make_with_entry (admin_email, a_to)
-			l_email.set_message (a_content)
-			l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, "Your EiffelStudio "+ a_release +" Download")
-			l_email.add_header_entry ("MIME-Version:", "1.0")
-			l_email.add_header_entry ("Content-Type", "text/html; charset=ISO-8859-1")
+			create l_email.make (admin_email, a_to, "Your EiffelStudio "+ a_release +" Download", a_content)
+			l_email.add_header_line ("MIME-Version: 1.0")
+			l_email.add_header_line ("Content-Type: text/html; charset=ISO-8859-1")
 			send_email (l_email)
 		end
 
@@ -72,54 +72,47 @@ feature -- Basic Operations
 		require
 			attached_to: a_to /= Void
 		local
-			l_email: EMAIL
+			l_email: NOTIFICATION_EMAIL
 		do
-				-- Create our message.
-			create l_email.make_with_entry (admin_email, a_to)
-			l_email.set_message (a_content)
-			l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, "Video resources for a smooth EiffelStudio installation")
-			l_email.add_header_entry ("MIME-Version:", "1.0")
-			l_email.add_header_entry ("Content-Type", "text/html; charset=ISO-8859-1")
+			create l_email.make (admin_email, a_to, "Video resources for a smooth EiffelStudio installation", a_content)
+			l_email.add_header_line ("MIME-Version: 1.0")
+			l_email.add_header_line ("Content-Type: text/html; charset=ISO-8859-1")
 			send_email (l_email)
 		end
 
 	send_email_download_notification (a_content: READABLE_STRING_32)
 		do
-			send_download_notification (a_content,"Notification EiffelStudio Download")
+			send_download_notification (a_content, "Notification EiffelStudio Download")
 		end
 
 	send_email_internal_server_error (a_content: READABLE_STRING_32)
 		local
-			l_email: EMAIL
+			l_email: NOTIFICATION_EMAIL
 		do
-				-- Create our message.
-			create l_email.make_with_entry (admin_email, webmaster_email)
-			l_email.set_message (a_content)
-			l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, "Internal Server Error")
+			create l_email.make (admin_email, webmaster_email, "Internal Server Error", a_content)
+			l_email.add_header_line ("MIME-Version: 1.0")
+			l_email.add_header_line ("Content-Type: text/html; charset=ISO-8859-1")
 			send_email (l_email)
 		end
 
 	send_email_bad_request_error (a_content: READABLE_STRING_32)
 		local
-				l_email: EMAIL
+			l_email: NOTIFICATION_EMAIL
 		do
-				-- Create our message.
-			create l_email.make_with_entry (admin_email, webmaster_email)
-			l_email.set_message (a_content)
-			l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, "Bad request")
+			create l_email.make (admin_email, webmaster_email, "Bad request", a_content)
+			l_email.add_header_line ("MIME-Version: 1.0")
+			l_email.add_header_line ("Content-Type: text/html; charset=ISO-8859-1")
 			send_email (l_email)
 		end
 
-	send_email (a_email: EMAIL)
+	send_email (a_email: NOTIFICATION_EMAIL)
 			-- Send the email represented by `a_email'.
 		local
 			l_retried: BOOLEAN
 		do
 			if not l_retried then
 				log.write_information (generator + ".send_email Process send email.")
-				smtp_protocol.initiate_protocol
-				smtp_protocol.transfer (a_email)
-				smtp_protocol.close_protocol
+				mailer.safe_process_email (a_email)
 				log.write_information (generator + ".send_email Email sent.")
 				set_successful
 			else
@@ -139,12 +132,12 @@ feature {NONE} -- Implemenation
 	send_download_notification (a_content: READABLE_STRING_32; a_subject: READABLE_STRING_32)
 				-- Send a notification email with content `a_content' with subject `a_subject'.
 		local
-			l_email: EMAIL
+			l_email: NOTIFICATION_EMAIL
 		do
-				-- Create our message.
-			create l_email.make_with_entry (admin_email, download_email)
-			l_email.set_message (a_content)
-			l_email.add_header_entry ({EMAIL_CONSTANTS}.H_subject, a_subject.to_string_8)
+			create l_email.make (admin_email, download_email, "Bad request", a_subject.to_string_8)
+			l_email.add_header_line ("MIME-Version: 1.0")
+			l_email.add_header_line ("Content-Type: text/html; charset=ISO-8859-1")
+
 			send_email (l_email)
 		end
 

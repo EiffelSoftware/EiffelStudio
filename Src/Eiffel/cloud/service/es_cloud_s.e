@@ -49,6 +49,11 @@ feature -- Access
 		deferred
 		end
 
+	is_enterprise_edition: BOOLEAN
+			-- Is associated with Enterprise edition of EiffelStudio.
+		deferred
+		end
+
 	is_logged_in: BOOLEAN
 		do
 			Result := active_account /= Void or else is_guest
@@ -167,6 +172,10 @@ feature -- Registration
 
 	set_server_url (a_server_url: READABLE_STRING_8)
 			-- Change the cloud server url to `a_server_url`.
+		deferred
+		end
+
+	set_is_enterprise_edition (b: BOOLEAN)
 		deferred
 		end
 

@@ -198,9 +198,9 @@ feature-- Versioning
 			end
 		end
 
-	Version_type_name: STRING = "GPL Edition";
-			-- Name of version, e.g. GPL edition, Enterprise Edition,...
-			-- Default: "GPL Edition"
+	Version_type_name: STRING = "Community Edition";
+			-- Name of version, e.g. Community edition, Enterprise Edition,...
+			-- Default: "Community Edition"
 
 feature {AUXILIARY_FILES} -- Versioning
 
@@ -221,7 +221,7 @@ feature {AUXILIARY_FILES} -- Versioning
 			-- displayed on About dialog
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

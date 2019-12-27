@@ -23,9 +23,10 @@ create
 
 feature {NONE} -- Initialization
 
-	make
+	make (a_is_community_edition: like is_community_edition)
 			-- Initialize `Current'.
 		do
+			is_community_edition := a_is_community_edition
 			build_interface
 		end
 
@@ -49,9 +50,9 @@ feature -- Execution
 
 	start (win: EV_WINDOW)
 		do
-			if is_gpl_edition then
+			if is_community_edition then
 				if not license_accepted then
-					switch_to_gpl_agreement_page
+					switch_to_community_agreement_page
 					show_modal_to_window (win)
 				elseif is_cloud_enabled then
 					if is_logged_in then
@@ -74,7 +75,7 @@ feature -- Execution
 			end
 		end
 
-	switch_to_gpl_agreement_page
+	switch_to_community_agreement_page
 		local
 			vb: EV_VERTICAL_BOX
 			hb: EV_HORIZONTAL_BOX
@@ -94,7 +95,7 @@ feature -- Execution
 			hb.set_padding_width (layout_constants.default_padding_size)
 
 			main_box.replace (hb)
-			if is_gpl_edition then
+			if is_community_edition then
 				create vb
 				eiffel_image :=	Pixmaps.bm_About.twin
 				eiffel_image.set_minimum_size (eiffel_image.width, eiffel_image.height)
@@ -113,7 +114,7 @@ feature -- Execution
 
 				create txt
 				l_agreement_text := "[
-About the EiffelStudio GPL license
+About the EiffelStudio Community license
 
 The terms of the EiffelStudio license appear below; they are those of the Gnu Public License (GPL), with no change. The spirit of the EiffelStudio license is to encourage the production of free Eiffel software, in the spirit of both the GPL and the Eiffel method's promotion of software reuse. As a consequence, users relying on the GPL are expected to make their own software, developed with EiffelStudio, available under the GPL or another open-source  software license.
 
@@ -205,7 +206,11 @@ We look forward to your contributions
 
 			vb.set_padding_width (layout_constants.default_padding_size)
 
-			create wid.make
+			if is_community_edition then
+				create wid.make_community
+			else
+				create wid.make_enterprise
+			end
 			wid.next_actions.extend (agent on_next)
 			vb.extend (wid)
 			vb.disable_item_expand (wid)
@@ -224,11 +229,8 @@ We look forward to your contributions
 
 feature -- Status
 
-	is_gpl_edition: BOOLEAN
-			-- Is Current EiffelStudio the GPL edition?
-		do
-			Result := {SYSTEM_CONSTANTS}.version_type_name.is_case_insensitive_equal_general ("GPL Edition")
-		end
+	is_community_edition: BOOLEAN
+			-- Is Current EiffelStudio the Community edition?
 
 	license_accepted: BOOLEAN
 		do

@@ -80,12 +80,14 @@ feature {NONE} -- Initialization
 		local
 			inst: ES_INSTALLATION_ENVIRONMENT
 			s: detachable READABLE_STRING_32
+			v: STRING
 			l_id: STRING_32
 			l_app_name: STRING
+			i,n: INTEGER
 		do
 			create inst.make (eiffel_layout)
 			l_app_name := env.product_name
-			s := inst.application_item ("installation_id", l_app_name, env.version_name)
+			s := inst.application_item ("ddd-installation_id", l_app_name, env.version_name)
 			if s /= Void and then s.has_substring (env.version_name) and then s.is_valid_as_string_8 then
 				create installation.make_with_id (s.to_string_8)
 			else
@@ -97,6 +99,20 @@ feature {NONE} -- Initialization
 				l_id.append_character ('-')
 				l_id.append (env.eiffel_platform)
 				l_id.append_character ('-')
+				v := {SYSTEM_CONSTANTS}.version_type_name
+				from
+					i := 1
+					n := v.count
+				until
+					i > n
+				loop
+					if (v [i]).is_alpha_numeric then
+						l_id.append_character (v [i])
+					else
+						l_id.append_character ('_')
+					end
+					i := i + 1
+				end
 				l_id.append_character ('-')
 				l_id.append (inst.device_name)
 				l_id.append_character ('-')
@@ -166,6 +182,9 @@ feature -- Event
 		end
 
 feature -- Access
+
+	is_enterprise_edition: BOOLEAN
+			-- <Precursor>
 
 	config: ES_CLOUD_CONFIG
 		do
@@ -271,6 +290,11 @@ feature -- Status report
 		end
 
 feature -- Element change
+
+	set_is_enterprise_edition (b: BOOLEAN)
+		do
+			is_enterprise_edition := b
+		end
 
 	set_server_url (a_server_url: READABLE_STRING_8)
 		local

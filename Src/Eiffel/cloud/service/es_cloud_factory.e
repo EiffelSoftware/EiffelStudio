@@ -12,11 +12,10 @@ feature -- Creation
 	new_es_cloud: ES_CLOUD_S
 		do
 			create {ES_CLOUD} Result.make
---			create {ES_CLOUD} Result.make_with_url ("http://localhost:9090/es")
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

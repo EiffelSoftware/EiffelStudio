@@ -181,12 +181,6 @@ feature -- Value
 			Result := license_accepted_preference.value
 		end
 
-	es_cloud_enabled: BOOLEAN
-			-- EiffelStudio enabled?
-		do
-			Result := es_cloud_enabled_preference.value
-		end
-
 feature -- Element change
 
 	set_license_accepted (b: BOOLEAN)
@@ -215,7 +209,6 @@ feature -- Preference
 	eis_path_preference: STRING_32_PREFERENCE
 	use_postscript_preference: BOOLEAN_PREFERENCE
 	license_accepted_preference: BOOLEAN_PREFERENCE
-	es_cloud_enabled_preference: BOOLEAN_PREFERENCE
 
 feature {NONE} -- Preference Strings
 
@@ -236,7 +229,6 @@ feature {NONE} -- Preference Strings
 	eis_path_preference_string: STRING = "general.eis_path"
 	use_postscript_preference_string: STRING = "general.use_postscript"
 	license_accepted_preference_string: STRING = "general.license_accepted"
-	es_cloud_enabled_preference_string: STRING = "general.es_cloud_enabled"
 
 feature {NONE} -- Implementation
 
@@ -289,10 +281,6 @@ feature {NONE} -- Implementation
 
 			license_accepted_preference := l_manager.new_boolean_preference_value (l_manager, license_accepted_preference_string, False)
 			license_accepted_preference.set_hidden (True)
-
-			es_cloud_enabled_preference := l_manager.new_boolean_preference_value (l_manager, es_cloud_enabled_preference_string, False)
-			es_cloud_enabled_preference.set_hidden (True)
-			es_cloud_enabled_preference.set_restart_required (True)
 		end
 
 	preferences: PREFERENCES
@@ -419,7 +407,6 @@ invariant
 	eis_preference_not_void: eis_path_preference /= Void
 	use_postscript_preference_not_void: use_postscript_preference /= Void
 	license_accepted_preference_not_void: license_accepted_preference /= Void
-	es_cloud_enabled_preference_not_void: es_cloud_enabled_preference /= Void
 
 note
 	copyright: "Copyright (c) 1984-2019, Eiffel Software"

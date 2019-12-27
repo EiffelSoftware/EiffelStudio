@@ -145,9 +145,7 @@ feature {NONE} -- Factory
 	new_es_cloud_service: detachable ES_CLOUD_S
 			-- New EiffelStudio cloud service.
 		do
-			if preferences.misc_data.es_cloud_enabled then
-				Result := (create {ES_CLOUD_FACTORY}).new_es_cloud
-			end
+			Result := (create {ES_CLOUD_FACTORY}).new_es_cloud
 		end
 
 	new_notification_service: detachable NOTIFICATION_S

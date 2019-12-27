@@ -157,7 +157,9 @@ feature {NONE} -- Action handlers
 					append_bold_text_to ("User: ", txt)
 					append_text_to (acc.username, txt)
 					append_text_to ("%N%N", txt)
-					if attached acc.plan as l_plan then
+					if cld.is_enterprise_edition then
+						append_bold_text_to ("Edition: enterprise%N", txt)
+					elseif attached acc.plan as l_plan then
 						append_bold_text_to ("Plan: ", txt)
 						append_text_to (l_plan.name, txt)
 						append_text_to ("%N", txt)
@@ -246,9 +248,7 @@ feature {NONE} -- Action handlers
 							append_text_to (")%N", txt)
 
 						end
-
 					end
-
 				else
 					if cld.is_guest then
 						create lab.make_with_text ("Welcome guess, please login ...")
@@ -259,6 +259,7 @@ feature {NONE} -- Action handlers
 					b.disable_item_expand (lab)
 
 					create wid.make
+
 					b.extend (wid)
 				end
 

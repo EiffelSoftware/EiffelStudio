@@ -146,7 +146,7 @@ feature {NONE} -- Initialization
 			eiffel_layout_not_void: eiffel_layout /= Void
 		end
 
-	initialize_account
+	initialize_cloud
 			-- Initialization for the account system.
 		local
 			ctlr: ES_CLOUD_CONTROLLER
@@ -154,6 +154,9 @@ feature {NONE} -- Initialization
 			create ctlr.make
 			if attached ctlr.es_cloud_s.service as s then
 				s.register_observer (ctlr)
+				if not is_community_edition then
+					s.set_is_enterprise_edition (True)
+				end
 			end
 		end
 
@@ -172,6 +175,11 @@ feature {NONE} -- Initialization
 		end
 
 feature {NONE} -- Access
+
+	is_community_edition: BOOLEAN
+			-- Is Community edition?
+		deferred
+		end
 
 	service_initializer: SERVICE_INITIALIZER
 			-- Initializer used to register all services.
@@ -200,7 +208,7 @@ feature {NONE} -- Implementation (preparation of all widgets)
 			initialize_services
 			compiler_initialization
 
-			initialize_account
+			initialize_cloud
 
 			initialize_debugger
 
@@ -289,7 +297,7 @@ feature {NONE} -- Welcome dialog
 			end
 			win := first_window.window
 
-			create pg.make
+			create pg.make (is_community_edition)
 			pg.set_quit_action (agent do (create {EXCEPTIONS}).die (0) end)
 			pg.set_next_action (agent load_interface)
 			pg.dialog.set_size (100, 100)

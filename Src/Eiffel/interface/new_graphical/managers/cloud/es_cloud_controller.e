@@ -74,13 +74,25 @@ feature {NONE} -- Background ping
 		end
 
 	process_ping (acc: ES_ACCOUNT)
+		local
+			nb: INTEGER_64
 		do
-			if
-				attached es_cloud_s.service as cld and then
-				attached cld.active_session as sess and then
-				not sess.is_paused
-			then
-				cld.async_ping_installation (acc, sess)
+			if attached es_cloud_s.service as cld then
+				if attached acc.access_token as l_access_token then
+					nb := l_access_token.expiration_delay_in_seconds
+					if
+						nb <= (3 * 24 * 60 * 60) -- remains less than 3 days, a long weekend
+						or nb <= 5 * ping_heartbeat.to_integer_64  -- remains less than 5 heartbeat
+					then
+						cld.refresh_token (l_access_token, acc)
+					end
+				end
+				if
+					attached cld.active_session as sess and then
+					not sess.is_paused
+				then
+					cld.async_ping_installation (acc, sess)
+				end
 			end
 		end
 

@@ -16,6 +16,8 @@ inherit
 	SHARED_ES_CLOUD_SERVICE
 
 create
+	make_community,
+	make_enterprise,
 	make
 
 convert
@@ -24,6 +26,7 @@ convert
 feature {NONE} -- Initialization
 
 	make
+			-- Initialize `Current'.
 		local
 			w: EV_VERTICAL_BOX
 		do
@@ -31,15 +34,31 @@ feature {NONE} -- Initialization
 			widget := w
 
 			create next_actions
-
 			build_interface (w)
 		end
+
+	make_community
+		do
+			is_community_edition := True
+			is_enterprise_edition := False
+			make
+		end
+
+	make_enterprise
+		do
+			is_enterprise_edition := True
+			is_community_edition := False
+			make
+		end
+
+feature {NONE} -- Initialization
 
 	build_interface (a_box: EV_VERTICAL_BOX)
 		local
 			vb,vb_login,vb_register,vb_off: EV_VERTICAL_BOX
 			fr_login, fr_register, fr_off: EV_FRAME
 			txt: ES_SCROLLABLE_LABEL
+			lab: EV_LABEL
 			lnk: EVS_LINK_LABEL
 			l_width: INTEGER
 			w: EV_WIDGET
@@ -55,19 +74,18 @@ feature {NONE} -- Initialization
 			a_box.disable_item_expand (vb)
 
 			l_width := 200
-			create txt
-			if is_gpl_edition then
-				txt.set_text ("[
-					Please login, to use the EiffelStudio GPL (Community Edition).
-				]")
-			else
-				txt.set_text ("[
-						To use additional online services, please login.
-					]")
+			if is_community_edition then
+				create txt
+				txt.set_text ("Please login, to use the EiffelStudio Community Edition.")
+			elseif is_enterprise_edition then
+				create txt
+				txt.set_text ("To use additional online services, please login.")
 			end
-			vb.extend (txt)
-			txt.set_minimum_height (50)
-			vb.disable_item_expand (txt)
+			if txt /= Void then
+				vb.extend (txt)
+				txt.set_minimum_height (50)
+				vb.disable_item_expand (txt)
+			end
 
 				-- Login vs Register					
 			create fr_login.make_with_text (interface_names.l_login_with_credentials)
@@ -93,6 +111,13 @@ feature {NONE} -- Initialization
 
 			layout_constants.set_default_width_for_button (but)
 			append_label_and_item_horizontally ("", but, vb_login)
+
+			create lab.make_with_text ("note: use https://support.eiffel.com/ account.")
+			lab.set_foreground_color (colors.stock_colors.dark_grey)
+			lab.set_font (fonts.italic_label_font)
+			lab.align_text_right
+			vb_login.extend (lab)
+			vb_login.disable_item_expand (lab)
 
 			create lnk.make_with_text (interface_names.l_register_new_account)
 			lnk.align_text_left
@@ -144,6 +169,7 @@ feature {NONE} -- Initialization
 					>>)))
 			layout_constants.set_default_width_for_button (but)
 			append_label_and_item_horizontally ("", but, vb_register)
+
 			create lnk.make_with_text (interface_names.l_login_with_existing_account)
 			lnk.align_text_left
 			lnk.select_actions.extend (agent (i_fr_login, i_fr_register: EV_WIDGET)
@@ -234,15 +260,15 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
-	is_gpl_edition: BOOLEAN
-			-- Is Current EiffelStudio the GPL edition?
-		do
-			Result := {SYSTEM_CONSTANTS}.version_type_name.is_case_insensitive_equal_general ("GPL Edition")
-		end
+	is_community_edition: BOOLEAN
+			-- Is Current EiffelStudio the community edition?
+
+	is_enterprise_edition: BOOLEAN
+			-- Is Current EiffelStudio the enterprise edition?
 
 	is_offline_allowed: BOOLEAN
 		do
-			Result := not is_gpl_edition and False  -- FIXME: for now, let's disable offline access.
+			Result := not is_community_edition and False  -- FIXME: for now, let's disable offline access.
 		end
 
 	is_guest_logged_in: BOOLEAN
@@ -505,7 +531,7 @@ feature {NONE} -- Implementation
 
 
 ;note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

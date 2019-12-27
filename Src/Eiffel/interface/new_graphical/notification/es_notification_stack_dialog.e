@@ -43,8 +43,6 @@ feature {NONE} -- Initialization
 			extend (vb)
 			create cl
 			display_cell := cl
-			vb.extend (cl)
-			vb.disable_item_expand (cl)
 			create g
 			g.set_column_count_to (3)
 			g.column (column_message).set_title ("Message")
@@ -52,6 +50,10 @@ feature {NONE} -- Initialization
 			g.column (column_category).set_title ("Category")
 			grid := g
 			vb.extend (g)
+
+			vb.extend (cl)
+			vb.disable_item_expand (cl)
+
 			create hb
 			vb.extend (hb)
 			vb.disable_item_expand (hb)
@@ -105,6 +107,10 @@ feature -- Action
 		do
 			g := grid
 			g.wipe_out
+			g.set_column_count_to (3)
+			g.column (column_message).set_title ("Message")
+			g.column (column_time).set_title ("Time")
+			g.column (column_category).set_title ("Category")
 			g.set_row_count_to (0)
 
 			if attached manager.messages as l_messages then

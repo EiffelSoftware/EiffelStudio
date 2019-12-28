@@ -28,14 +28,14 @@
 #  $ curl -sSL https://www.eiffel.org/setup/install.sh | bash -s -- --url https://ftp.eiffel.com/pub/beta/nightly/Eiffel_19.04_gpl_103127-linux-x86-64.tar.bz2 --install-dir /opt/eiffel/test --dir /opt/eiffel
 
 # Default values
-ISE_MAJOR_MINOR_LATEST=19.05
-ISE_BUILD_LATEST=103187
+ISE_MAJOR_MINOR_LATEST=19.12
+ISE_BUILD_LATEST=103819
 
-ISE_MAJOR_MINOR_NIGHTLY=19.11
-ISE_BUILD_NIGHTLY=103699
+ISE_MAJOR_MINOR_NIGHTLY=19.12
+ISE_BUILD_NIGHTLY=103819
 
-ISE_MAJOR_MINOR_BETA=19.11
-ISE_BUILD_BETA=103699
+ISE_MAJOR_MINOR_BETA=19.12
+ISE_BUILD_BETA=103819
 #ISE_BETA_DOWNLOAD_URL=http://downloads.sourceforge.net/eiffelstudio
 
 # predefined

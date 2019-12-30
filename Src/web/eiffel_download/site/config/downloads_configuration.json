@@ -6,7 +6,7 @@
     "id": "eiffelstudio-ent", "name": "EiffelStudio",
     "version": "19.12 Enterprise Evaluation Edition",
     "number": "19.12",
-    "build": "Build_103819",
+    "build": "Build_103823",
     "release": "Official Release",
     "date": "12/2019",
     "sub_directory": "19.12",
@@ -19,52 +19,52 @@
     "download": [
       {
         "cdkey": "20383-15315-51084-52701-92191-73750",
-        "filename": "Eiffel_19.12_ent_103819-freebsd-x86-64.tar.bz2",
-        "platform": "freebsd-x86-64",
-        "size": "104878404",
-        "hash": "117f20f11a50e06dc617db93d91d5c484c398a34860a5fe8a0d4140d0be39bf6" 
-      }
-      ,{
-        "cdkey": "20383-15315-51084-52701-92191-73750",
-        "filename": "Eiffel_19.12_ent_103819-win64.7z",
+        "filename": "Eiffel_19.12_ent_103823-win64.msi",
         "platform": "win64",
-        "size": "96228725",
-        "hash": "c3ef1dd8d0661a3099ccf5f79f01fb9764c73fef8a0b45f426b06b64dc1fd222" 
+        "size": "157451333",
+        "hash": "9d6a11168b8ab1dfd25a920ea1e588fcdf793e673f6d435bb1657f054a500824"
       }
       ,{
         "cdkey": "20383-15315-51084-52701-92191-73750",
-        "filename": "Eiffel_19.12_ent_103819-win64.msi",
-        "platform": "win64",
-        "size": "157459525",
-        "hash": "0dc1e4a83d7c053193ca687bbea76c16218b1ca358c2bc547048471b9b57afba" 
-      }
-      ,{
-        "cdkey": "20383-15315-51084-52701-92191-73750",
-        "filename": "Eiffel_19.12_ent_103819-windows.msi",
+        "filename": "Eiffel_19.12_ent_103823-windows.7z",
         "platform": "windows",
-        "size": "140262826",
-        "hash": "e027e549d1fab0d6edf49648b7fb30089f959138bc2cd3894b1f7f54c6e0d70d" 
+        "size": "87233952",
+        "hash": "b781eedb81a5f2677a8777a366e522279108885d06b7116aaede1b70168667c8"
       }
       ,{
         "cdkey": "20383-15315-51084-52701-92191-73750",
-        "filename": "Eiffel_19.12_ent_103819-linux-x86.tar.bz2",
-        "platform": "linux-x86",
-        "size": "108167320",
-        "hash": "d40f738466e2665f6114c1190a71308db113122b833138e9f43575d184e0620d" 
+        "filename": "Eiffel_19.12_ent_103823-win64.7z",
+        "platform": "win64",
+        "size": "96223784",
+        "hash": "1a4d3b6946d67499dcd159631ae8e0aa2504c5cc776c211a4fc2399a6a9c5989"
       }
       ,{
         "cdkey": "20383-15315-51084-52701-92191-73750",
-        "filename": "Eiffel_19.12_ent_103819-linux-x86-64.tar.bz2",
+        "filename": "Eiffel_19.12_ent_103823-linux-x86-64.tar.bz2",
         "platform": "linux-x86-64",
-        "size": "108974867",
-        "hash": "bee037a7f0e5eaca5e2e747450b69926d2fcf7d33a2ac8018a89af69145ed5bb" 
+        "size": "108969547",
+        "hash": "509f23632e52e6ea2a740fbea5dde47d35c5f817e91c1c7d568d317520067228"
       }
       ,{
         "cdkey": "20383-15315-51084-52701-92191-73750",
-        "filename": "Eiffel_19.12_ent_103819-windows.7z",
+        "filename": "Eiffel_19.12_ent_103823-windows.msi",
         "platform": "windows",
-        "size": "87231894",
-        "hash": "4d26958c8f171d22f2cddb2954c0c1d62a09b3e308ba70608eae2b821fb42a4d" 
+        "size": "140246442",
+        "hash": "2bfacdc33c5cae9c9a42d0450c0c79536c2ae71de38ff6cd055e7c9e070cf499"
+      }
+      ,{
+        "cdkey": "20383-15315-51084-52701-92191-73750",
+        "filename": "Eiffel_19.12_ent_103823-freebsd-x86-64.tar.bz2",
+        "platform": "freebsd-x86-64",
+        "size": "104866074",
+        "hash": "f42887a9d38ef4be56f006b62346950802ccb1b565a7e7a0dc68760c46cbaec2"
+      }
+      ,{
+        "cdkey": "20383-15315-51084-52701-92191-73750",
+        "filename": "Eiffel_19.12_ent_103823-linux-x86.tar.bz2",
+        "platform": "linux-x86",
+        "size": "108162909",
+        "hash": "e0b2ba045566abf01d79fa767d3d74d195ec41b3e5f460b1a44b794f35e16310"
       }
     ]
 }

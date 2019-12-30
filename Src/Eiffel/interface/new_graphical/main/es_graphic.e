@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Access
 
-	is_community_edition: BOOLEAN = False
+	is_community_edition: BOOLEAN = True
 			-- Is Community edition?
 
 note

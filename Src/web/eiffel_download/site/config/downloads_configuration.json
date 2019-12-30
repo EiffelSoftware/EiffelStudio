@@ -26,20 +26,6 @@
       }
       ,{
         "cdkey": "20383-15315-51084-52701-92191-73750",
-        "filename": "Eiffel_19.12_ent_103823-windows.7z",
-        "platform": "windows",
-        "size": "87233952",
-        "hash": "b781eedb81a5f2677a8777a366e522279108885d06b7116aaede1b70168667c8"
-      }
-      ,{
-        "cdkey": "20383-15315-51084-52701-92191-73750",
-        "filename": "Eiffel_19.12_ent_103823-win64.7z",
-        "platform": "win64",
-        "size": "96223784",
-        "hash": "1a4d3b6946d67499dcd159631ae8e0aa2504c5cc776c211a4fc2399a6a9c5989"
-      }
-      ,{
-        "cdkey": "20383-15315-51084-52701-92191-73750",
         "filename": "Eiffel_19.12_ent_103823-linux-x86-64.tar.bz2",
         "platform": "linux-x86-64",
         "size": "108969547",

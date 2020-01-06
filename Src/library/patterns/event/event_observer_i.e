@@ -1,6 +1,6 @@
 note
 	description: "[
-		Base interface for an observer obeserving events on a interface implementing {EVENT_CONNECTION_I}.
+		Base interface for an observer observing events on a interface implementing {EVENT_CONNECTION_I}.
 		
 		Some observers will inherit {USABLE_I} so be sure to perform pre-condition checks on the event handler
 		routines in the form of:
@@ -14,7 +14,7 @@ note
 	legal: "See notice at end of class."
 	status: "See notice at end of class.";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 deferred class
 	EVENT_OBSERVER_I

@@ -71,10 +71,6 @@ do_sed "s/Eiffel_[0-9][0-9]\.[0-9][0-9]/Eiffel_$to_version/g" ${EIF_DELIV_SCRIPT
 do_sed "s/Eiffel_[0-9][0-9]\.[0-9][0-9]/Eiffel_$to_version/g" ${EIF_DELIV_SCRIPTS_DIR}/unix/set_aliases
 do_sed "s/\(STUDIO_VERSION_MAJOR_MINOR\)=[0-9][0-9]\.[0-9][0-9]/\1=$to_version/g" ${EIF_DELIV_SCRIPTS_DIR}/unix/set_aliases
 
-# - docker
-do_sed "s/\(STUDIO_VERSION_MAJOR_MINOR\)=[0-9][0-9]\.[0-9][0-9]/\1=$to_version/g" ${EIF_DELIV_SCRIPTS_DIR}/docker/unix/docker-compose.yml
-do_sed "s/\(STUDIO_VERSION_MAJOR_MINOR\)=[0-9][0-9]\.[0-9][0-9]/\1=$to_version/g" ${EIF_DELIV_SCRIPTS_DIR}/docker/unix/docker-compose-32bits.yml
-
 # $EIFFEL_SRC/Delivery/studio/config/windows/esvars.bat
 do_sed "s/Eiffel_[0-9][0-9]\.[0-9][0-9]/Eiffel_$to_version/g" $EIFFEL_SRC/Delivery/studio/config/windows/esvars.bat
 

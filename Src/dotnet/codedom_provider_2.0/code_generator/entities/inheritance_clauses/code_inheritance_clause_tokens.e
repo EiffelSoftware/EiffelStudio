@@ -1,7 +1,7 @@
 note
 
 	description: "Parser token codes"
-	generator: "geyacc version 3.9"
+	generator: "geyacc"
 
 deferred class CODE_INHERITANCE_CLAUSE_TOKENS
 

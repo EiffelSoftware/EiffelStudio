@@ -106,7 +106,7 @@ if [ ! "$NO_NEW_EC" ]; then
 		CANCEL
 	fi
 	clean_project
-	move ec.tar.bz2 $EXPORT_DIR/bin/ec_Community.tar.bz2
+	move ec.tar.bz2 $EXPORT_DIR/bin/ec_community.tar.bz2
 
 	remtrace Batch version
 	clean_project

@@ -1,36 +1,17 @@
 <?xml version="1.0"?>
 
-<project name="geant_unit_test" default="help">
+<project name="geant_test" default="help">
 
 	<description>
-		system: "Gobo Eiffel Ant Unit Tester"
-		copyright: "Copyright (c) 2002-2018, Sven Ehrke and others"
+		description: "Gobo Eiffel Ant Tester"
+		copyright: "Copyright (c) 2016, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
 	</description>
 
 	<inherit>
-		<parent location="${GOBO}/library/common/config/test.eant">
-			<redefine target="other_clean"/>
-			<redefine target="init_system"/>
-		</parent>
+		<parent location="${GOBO}/library/common/config/tests.eant"/>
 	</inherit>
-
-<!-- Implementation -->
-
-	<target name="other_clean" depend="init" export="NONE">
-		<description>
-			Remove other intermediary generated files.
-		</description>
-		
-		<delete directory="Tgeant_unit"/>
-	</target>
-
-	<target name="init_system" export="NONE">
-		<set name="system" value="xgeant"/>
-		<set name="tool" value="geant"/>
-		<set name="system_dir" value="${GOBO}/tool/${tool}/test/unit"/>
-	</target>
-
+	
 </project>

@@ -1,27 +1,17 @@
 <?xml version="1.0"?>
 
-<project name="namespaces" default="help" >
+<project name="xml_tree" default="help">
 
 	<description>
-		system: "Namespaces example"
-		copyright: "Copyright (c) 2002-2016, Eric Bezault and others"
+		description: "Eiffel Ant file for Gobo Eiffel XML Library 'tree' examples"
+		copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
 	</description>
 
 	<inherit>
-		<parent location="${GOBO}/library/common/config/eiffel.eant">
-			<redefine target="init_system"/>
-		</parent>
+		<parent location="${GOBO}/library/common/config/basic_all.eant"/>
 	</inherit>
-
-<!-- Implementation -->
-
-	<target name="init_system" export="NONE">
-		<set name="system" value="namespaces"/>
-		<set name="library" value="xml"/>
-		<set name="system_dir" value="${GOBO}/library/${library}/example/tree/${system}"/>
-	</target>
 
 </project>

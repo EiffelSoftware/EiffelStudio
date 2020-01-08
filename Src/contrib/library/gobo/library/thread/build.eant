@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 
-<project name="thread_unit_test" default="help">
+<project name="thread" default="help">
 
 	<description>
-		system: "Gobo Eiffel Thread Library Unit Tester"
+		description: "Gobo Eiffel Thread Library"
 		copyright: "Copyright (c) 2017, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
@@ -11,17 +11,7 @@
 	</description>
 
 	<inherit>
-		<parent location="${GOBO}/library/common/config/test.eant">
-			<redefine target="init_system"/>
-		</parent>
+		<parent location="${GOBO}/library/common/config/library.eant"/>
 	</inherit>
-
-<!-- Implementation -->
-
-	<target name="init_system" export="NONE">
-		<set name="system" value="xthread"/>
-		<set name="library" value="thread"/>
-		<set name="system_dir" value="${GOBO}/library/${library}/test/unit"/>
-	</target>
 
 </project>

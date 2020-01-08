@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 
-<project name="gexslt_extensions_doc" default="help">
+<project name="gexslt_doc" default="help">
 
 	<description>
-		description: "Gobo Eiffel XSLT Extensions documentation"
+		description: "Gobo Eiffel XSLT documentation"
 		system: "Gobo Eiffel XSLT"
 		copyright: "Copyright (c) 2004-2016, Colin Adams and others"
 		license: "MIT License"
@@ -13,17 +13,20 @@
 
 	<inherit>
 		<parent location="${GOBO}/library/common/config/doc.eant">
-			<redefine target="init"/>
+			<redefine target="help"/>
 			<redefine target="for_each"/>
 		</parent>
 	</inherit>
 
-<!-- Implementation -->
-
-	<target name="init" export="NONE">
-		<precursor/>
-		<set name="path_to_doc" value="../"/>
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message="   geant install"/>
+		<echo message="   geant -DGESTALT install"/>
+		<echo message="   geant clean"/>
+		<echo message="   geant clobber"/>
 	</target>
+	
+<!-- Implementation -->
 
 	<target name="for_each" export="NONE">
 		<description>
@@ -32,7 +35,11 @@
 		</description>
 		<argument name="target"/>
 
+		<set name="input_wrapper" value="_wrapper" unless="${GESTALT}"/>
+		<set name="input_wrapper" value="_wrapper_2" if="${GESTALT}"/>
 		<geant target="${target}" arguments="index"/>
+		<geant target="${target}" arguments="options"/>
+		<set name="input_wrapper" value=""/>
 	</target>
 
 </project>

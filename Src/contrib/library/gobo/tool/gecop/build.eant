@@ -1,24 +1,17 @@
 <?xml version="1.0"?>
 
-<project name="aa" default="help">
+<project name="gecop" default="help">
 
 	<description>
-		description: "Eiffel Ant file for 'aa'"
+		description: "Gobo Eiffel Cop"
 		copyright: "Copyright (c) 2018, Eric Bezault and others"
 		license: "MIT License"
+		date: "$Date$"
+		revision: "$Revision$"
 	</description>
 
 	<inherit>
-		<parent location="${GOBO}/library/common/config/eiffel.eant">
-			<redefine target="init_system"/>
-		</parent>
+		<parent location="${GOBO}/library/common/config/tool.eant"/>
 	</inherit>
-
-<!-- Implementation -->
-
-	<target name="init_system" export="NONE">
-		<set name="system" value="aa"/>
-		<set name="system_dir" value="${aa.dir}"/>
-	</target>
 
 </project>

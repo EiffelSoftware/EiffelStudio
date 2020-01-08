@@ -1,27 +1,17 @@
 <?xml version="1.0"?>
 
-<project name="acceptance" default="help">
+<project name="math" default="help">
 
 	<description>
-		system: "Gobo Eiffel Math Library Unit Tester"
-		copyright: "Copyright (c) 2005-2016, Eric Bezault and others"
+		description: "Gobo Eiffel Math Library"
+		copyright: "Copyright (c) 2016, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
+		revision: "$Revision$"
 	</description>
 
 	<inherit>
-		<parent location="${GOBO}/library/common/config/test.eant">
-			<redefine target="init_system"/>
-		</parent>
+		<parent location="${GOBO}/library/common/config/library.eant"/>
 	</inherit>
-
-
-<!-- Implementation -->
-
-	<target name="init_system" export="NONE">
-		<set name="system" value="xacceptance"/>
-		<set name="library" value="math"/>
-		<set name="system_dir" value="${GOBO}/library/${library}/test/unit/decimal/acceptance"/>
-	</target>
 
 </project>

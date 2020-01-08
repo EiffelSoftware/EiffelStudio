@@ -10,7 +10,6 @@ GOBO_LEX="$(GOBO_BIN)/gelex" $(GOBO_LEX_FLAGS)
 
 # Gobo flag for geyaxx
 # To have verbose mode, simply add -v FILE_NAME
-GOBO_YACC_FLAGS=--new_typing --pragma=noline -x
 GOBO_YACC_FLAGS=--pragma=noline -x
 GOBO_YACC="$(GOBO_BIN)/geyacc" $(GOBO_YACC_FLAGS)
 

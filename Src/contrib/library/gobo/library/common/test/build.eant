@@ -1,100 +1,37 @@
 <?xml version="1.0"?>
 
-<project name="common_test" default="help">
+<project name="integration" default="help">
 
 	<description>
-		description: "Gobo Eiffel Library Tester"
-		copyright: "Copyright (c) 2016-2018, Eric Bezault and others"
+		system: "Gobo Eiffel Library Tester"
+		copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
 	</description>
 
 	<inherit>
-		<parent location="${GOBO}/library/common/config/tests.eant">
-			<redefine target="test"/>
+		<parent location="${GOBO}/library/common/config/test.eant">
+			<redefine target="other_clean"/>
+			<redefine target="init_system"/>
 		</parent>
 	</inherit>
 
-	<target name="test" depend="init">
+
+<!-- Implementation -->
+
+	<target name="other_clean" depend="init" export="NONE">
 		<description>
-			Run all tests.
-			Use Eiffel compiler set in ${GOBO_EIFFEL}
-			or 'ge' if this variable is not defined.
-			Compile in debug mode if ${debug} is defined.
-			Remove intermediary generated files after running tests.
+			Remove other intermediary generated files.
 		</description>
 
-		<precursor/>
-		<geant target="test_integration${debug_suffix}${eiffel_suffix}"/>
+		<delete directory="Tintegration"/>
 	</target>
 
-	<target name="test_integration" depend="init">
-		<description>
-			Run all integration tests.
-			Use Eiffel compiler set in ${GOBO_EIFFEL}
-			or 'ge' if this variable is not defined.
-			Compile in debug mode if ${debug} is defined.
-			Remove intermediary generated files after running tests.
-		</description>
-
-		<geant target="test_in_subfolder" arguments="integration"/>
+	<target name="init_system" export="NONE">
+		<set name="system" value="xintegration"/>
+		<set name="library" value="integration"/>
+		<set name="system_dir" value="${GOBO}/library/common/test/${library}"/>
 	</target>
 
-	<target name="test_integration_ge" depend="init">
-		<description>
-			Run all integration tests with Gobo Eiffel.
-			Compile in debug mode if ${debug} is defined.
-			Remove intermediary generated files after running tests.
-		</description>
-
-		<set name="eiffel" value="ge"/>
-		<geant target="test_integration"/>
-	</target>
-
-	<target name="test_integration_ise" depend="init">
-		<description>
-			Run all integration tests with ISE Eiffel.
-			Compile in debug mode if ${debug} is defined.
-			Remove intermediary generated files after running tests.
-		</description>
-
-		<set name="eiffel" value="ise"/>
-		<geant target="test_integration"/>
-	</target>
-
-	<target name="test_integration_debug" depend="init">
-		<description>
-			Run all integration tests in debug mode.
-			Use Eiffel compiler set in ${GOBO_EIFFEL}
-			or 'ge' if this variable is not defined.
-			Remove intermediary generated files after running tests.
-		</description>
-
-		<set name="debug" value="true"/>
-		<geant target="test_integration"/>
-	</target>
-
-	<target name="test_integration_debug_ge" depend="init">
-		<description>
-			Run all integration tests with Gobo Eiffel in debug mode.
-			Remove intermediary generated files after running tests.
-		</description>
-
-		<set name="eiffel" value="ge"/>
-		<set name="debug" value="true"/>
-		<geant target="test_integration"/>
-	</target>
-
-	<target name="test_integration_debug_ise" depend="init">
-		<description>
-			Run all integration tests with ISE Eiffel in debug mode.
-			Remove intermediary generated files after running tests.
-		</description>
-
-		<set name="eiffel" value="ise"/>
-		<set name="debug" value="true"/>
-		<geant target="test_integration"/>
-	</target>
-	
 </project>

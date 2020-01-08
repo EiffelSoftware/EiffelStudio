@@ -129,7 +129,7 @@ feature {NONE} -- Table templates
 			-- Template for `yy_nxt'
 		once
 			Result := yy_fixed_array (<<
-			    0,    4,    5,    6,    7,    8,    9,   10,   10,   10,
+			    0,    5,    6,    7,    8,    9,   10,   10,   10,    4,
 			   11,   12,   11,   13,    3,   13,   13,   13,   13,   13,
 			   13,   13,   13,   13, yy_Dummy>>)
 		end
@@ -147,8 +147,8 @@ feature {NONE} -- Table templates
 			-- Template for `yy_base'
 		once
 			Result := yy_fixed_array (<<
-			    0,    0,    0,   13,   11,   14,   14,   14,    8,   14,
-			   14,    9,   14,   14, yy_Dummy>>)
+			    0,    0,    0,   13,    3,   14,   14,   14,    9,   14,
+			   14,    1,   14,   14, yy_Dummy>>)
 		end
 
 	yy_def_template: SPECIAL [INTEGER]
@@ -164,9 +164,11 @@ feature {NONE} -- Table templates
 		local
 			an_array: ARRAY [INTEGER]
 		once
-			create an_array.make_filled (0, 0, 256)
+			create an_array.make_filled (0, 0, 257)
 			yy_ec_template_1 (an_array)
-			yy_ec_template_2 (an_array)
+			an_array.area.fill_with (9, 42, 91)
+			an_array.put (8, 92)
+			an_array.area.fill_with (9, 93, 257)
 			Result := yy_fixed_array (an_array)
 		end
 
@@ -174,41 +176,12 @@ feature {NONE} -- Table templates
 			-- Fill chunk #1 of template for `yy_ec'.
 		do
 			yy_array_subcopy (an_array, <<
-			    0,    1,    1,    1,    1,    1,    1,    1,    1,    2,
-			    3,    1,    4,    5,    1,    1,    1,    1,    1,    1,
-			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    1,    6,    1,    1,    1,    1,    1,    1,    1,
-			    7,    8,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    1,    9,    1,    1,    1,    1,    1,    1,    1,
-
-			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1, yy_Dummy>>,
-			1, 200, 0)
-		end
-
-	yy_ec_template_2 (an_array: ARRAY [INTEGER])
-			-- Fill chunk #2 of template for `yy_ec'.
-		do
-			yy_array_subcopy (an_array, <<
-			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    1,    1,    1,    1,    1,    1, yy_Dummy>>,
-			1, 57, 200)
+			    0,    9,    9,    9,    9,    9,    9,    9,    9,    1,
+			    2,    9,    3,    4,    9,    9,    9,    9,    9,    9,
+			    9,    9,    9,    9,    9,    9,    9,    9,    9,    9,
+			    9,    9,    5,    9,    9,    9,    9,    9,    9,    9,
+			    6,    7, yy_Dummy>>,
+			1, 42, 0)
 		end
 
 	yy_meta_template: SPECIAL [INTEGER]
@@ -238,8 +211,12 @@ feature {NONE} -- Constants
 	yyTemplate_mark: INTEGER = 14
 			-- Mark between normal states and templates
 
-	yyNull_equiv_class: INTEGER = 1
+	yyNull_equiv_class: INTEGER = 9
 			-- Equivalence code for NULL character
+
+	yyMax_symbol_equiv_class: INTEGER = 256
+			-- All symbols greater than this symbol will have
+			-- the same equivalence class as this symbol
 
 	yyReject_used: BOOLEAN = false
 			-- Is `reject' called?

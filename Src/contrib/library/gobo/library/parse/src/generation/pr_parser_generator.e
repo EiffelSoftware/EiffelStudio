@@ -5,7 +5,7 @@ note
 		"Parser generators"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -110,6 +110,9 @@ feature -- Generation
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		do
+			if machine.grammar.has_utf8_enconding then
+				print_bom (a_file)
+			end
 			print_eiffel_header (a_file)
 			if tokens_needed then
 				a_file.put_new_line
@@ -155,21 +158,17 @@ feature -- Generation
 			print_eiffel_code (a_file)
 		end
 
-	print_token_class (class_name, version: STRING; a_file: KI_TEXT_OUTPUT_STREAM)
+	print_token_class (class_name: STRING; a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print class text with token code constants to `a_file'.
-			-- `class_name' is the name of the generated class
-			-- and `version' is the verrsion number of geyacc.
+			-- `class_name' is the name of the generated class.
 		require
 			class_name_not_void: class_name /= Void
-			version_not_void: version /= Void
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		do
 			a_file.put_string ("note%N%N%
 				%%Tdescription: %"Parser token codes%"%N%
-				%%Tgenerator: %"geyacc version ")
-			a_file.put_string (version)
-			a_file.put_string ("%"%N%Ndeferred class ")
+				%%Tgenerator: %"geyacc%"%N%Ndeferred class ")
 			a_file.put_string (class_name)
 			a_file.put_string ("%N%Ninherit%N%N%
 				%%TYY_PARSER_TOKENS%N")
@@ -179,6 +178,16 @@ feature -- Generation
 		end
 
 feature {NONE} -- Generation
+
+	print_bom (a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Print byte order mark (BOM) for UTF-8 (0xEF,0xBB,0xBF) to `a_file'.
+			-- See http://en.wikipedia.org/wiki/Byte_order_mark
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			a_file.put_string ({UC_UTF8_ROUTINES}.utf8_bom)
+		end
 
 	print_token_codes (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print token codes to `a_file'.

@@ -5,7 +5,7 @@ note
 		"Parser skeletons for parser generators such as 'geyacc'"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,6 +25,8 @@ inherit
 		rename
 			make as make_yacc_scanner,
 			reset as reset_yacc_scanner
+		redefine
+			report_invalid_unicode_character_error
 		end
 
 	KL_IMPORTED_INTEGER_ROUTINES
@@ -69,20 +71,28 @@ feature -- Parsing
 
 	parse_file (a_file: KI_CHARACTER_INPUT_STREAM)
 			-- Parse grammar description from `a_file'.
+			-- `a_file' is expected to be encoded in UTF-8
+			-- or ISO-8859-1.
 		require
 			a_file_not_void: a_file /= Void
 			a_file_open_read: a_file.is_open_read
+		local
+			l_input_buffer: like new_unicode_file_buffer
 		do
-			set_input_buffer (new_file_buffer (a_file))
+			l_input_buffer := new_unicode_file_buffer (a_file)
+			set_input_buffer (l_input_buffer)
 			parse
+			last_grammar.set_has_utf8_enconding (l_input_buffer.has_utf8_enconding)
 		end
 
-	parse_string (a_string: STRING)
+	parse_string (a_string: READABLE_STRING_GENERAL)
 			-- Parse grammar description from `a_string'.
+			-- `a_string' is expected to contain valid
+			-- non-surrogate Unicode characters.
 		require
 			a_string_not_void: a_string /= Void
 		do
-			set_input_buffer (new_string_buffer (a_string))
+			set_input_buffer (new_unicode_string_buffer (a_string))
 			parse
 		end
 
@@ -151,17 +161,17 @@ feature {NONE} -- Factory
 			type_set: Result.type = a_type
 		end
 
-	new_char_terminal (a_char: STRING; a_type: PR_TYPE): PR_TOKEN
+	new_char_terminal (a_char: STRING_32; a_type: PR_TYPE): PR_TOKEN
 			-- Terminal symbol declared as:
 			--   %token <a_type> a_char
 		require
 			a_char_not_void: a_char /= Void
---			valid_char: (\'(.|\\(.|[0-7]{1,3}|x[0-9a-f]{1,2}))\').recognizes (a_char)
+			valid_char: {RX_PCRE_ROUTINES}.regexp ("(?i)\'(.|\\(.|[0-7]{1,3}|[xu][0-9a-f]{1,6}|[xu]\{[0-9a-f]{1,6}\}))\'").recognizes (a_char)
 			a_type_not_void: a_type /= Void
 		do
 			Result := new_char_token (a_char)
 			if Result.is_declared then
-				report_token_declared_twice_error (a_char)
+				report_token_declared_twice_error ({UC_UTF8_ROUTINES}.string_to_utf8 (a_char))
 			else
 				Result.set_declared
 			end
@@ -192,12 +202,12 @@ feature {NONE} -- Factory
 			precedence_set: Result.precedence = a_precedence
 		end
 
-	new_left_char_terminal (a_char: STRING; a_precedence: INTEGER): PR_TOKEN
+	new_left_char_terminal (a_char: STRING_32; a_precedence: INTEGER): PR_TOKEN
 			-- Terminal symbol declared as:
 			--   %left a_char
 		require
 			a_char_not_void: a_char /= Void
---			valid_char: (\'(.|\\(.|[0-7]{1,3}|x[0-9a-f]{1,2}))\').recognizes (a_char)
+			valid_char: {RX_PCRE_ROUTINES}.regexp ("(?i)\'(.|\\(.|[0-7]{1,3}|[xu][0-9a-f]{1,6}|[xu]\{[0-9a-f]{1,6}\}))\'").recognizes (a_char)
 		do
 			Result := new_char_token (a_char)
 			Result.set_left_associative
@@ -229,12 +239,12 @@ feature {NONE} -- Factory
 			precedence_set: Result.precedence = a_precedence
 		end
 
-	new_right_char_terminal (a_char: STRING; a_precedence: INTEGER): PR_TOKEN
+	new_right_char_terminal (a_char: STRING_32; a_precedence: INTEGER): PR_TOKEN
 			-- Terminal symbol declared as:
 			--   %right a_char
 		require
 			a_char_not_void: a_char /= Void
---			valid_char: (\'(.|\\(.|[0-7]{1,3}|x[0-9a-f]{1,2}))\').recognizes (a_char)
+			valid_char: {RX_PCRE_ROUTINES}.regexp ("(?i)\'(.|\\(.|[0-7]{1,3}|[xu][0-9a-f]{1,6}|[xu]\{[0-9a-f]{1,6}\}))\'").recognizes (a_char)
 		do
 			Result := new_char_token (a_char)
 			Result.set_right_associative
@@ -266,12 +276,12 @@ feature {NONE} -- Factory
 			precedence_set: Result.precedence = a_precedence
 		end
 
-	new_nonassoc_char_terminal (a_char: STRING; a_precedence: INTEGER): PR_TOKEN
+	new_nonassoc_char_terminal (a_char: STRING_32; a_precedence: INTEGER): PR_TOKEN
 			-- Terminal symbol declared as:
 			--   %nonassoc a_char
 		require
 			a_char_not_void: a_char /= Void
---			valid_char: (\'(.|\\(.|[0-7]{1,3}|x[0-9a-f]{1,2}))\').recognizes (a_char)
+			valid_char: {RX_PCRE_ROUTINES}.regexp ("(?i)\'(.|\\(.|[0-7]{1,3}|[xu][0-9a-f]{1,6}|[xu]\{[0-9a-f]{1,6}\}))\'").recognizes (a_char)
 		do
 			Result := new_char_token (a_char)
 			Result.set_non_associative
@@ -334,18 +344,18 @@ feature {NONE} -- Factory
 			token_not_void: Result /= Void
 		end
 
-	new_char_token (a_char: STRING): PR_TOKEN
+	new_char_token (a_char: STRING_32): PR_TOKEN
 			-- Terminal symbol associated with `a_char';
 			-- Create a new symbol if it does not exist
 			-- yet, and add it to the list of tokens of
 			-- `last_grammar'.
 		require
 			a_char_not_void: a_char /= Void
---			valid_char: (\'(.|\\(.|[0-7]{1,3}|x[0-9a-f]{1,2}))\').recognizes (a_char)
+			valid_char: {RX_PCRE_ROUTINES}.regexp ("(?i)\'(.|\\(.|[0-7]{1,3}|[xu][0-9a-f]{1,6}|[xu]\{[0-9a-f]{1,6}\}))\'").recognizes (a_char)
 		local
 			a_code: INTEGER
 			a_key: STRING
-			c: CHARACTER
+			c: CHARACTER_32
 			i, nb: INTEGER
 			an_id: INTEGER
 		do
@@ -380,7 +390,7 @@ feature {NONE} -- Factory
 						a_code := a_code * 8 + a_char.item (i).code - Zero_code
 						i := i + 1
 					end
-				when 'x', 'X' then
+				when 'x', 'X', 'u', 'U' then
 					nb := a_char.count - 1
 					if nb = 3 then
 						a_code := c.code
@@ -389,6 +399,10 @@ feature {NONE} -- Factory
 						a_code := 0
 						from
 							i := 4
+							if a_char.item (i) = '{' then
+								i := i + 1
+								nb := nb - 1
+							end
 						until
 							i > nb
 						loop
@@ -397,9 +411,9 @@ feature {NONE} -- Factory
 							inspect c
 							when '0' .. '9' then
 								a_code := a_code + c.code - Zero_code
-							when 'a' .. 'z' then
+							when 'a' .. 'f' then
 								a_code := a_code + c.code - Lower_a_code + 10
-							when 'A' .. 'Z' then
+							when 'A' .. 'F' then
 								a_code := a_code + c.code - Upper_a_code + 10
 							end
 							i := i + 1
@@ -409,6 +423,9 @@ feature {NONE} -- Factory
 					a_code := c.code
 				end
 			end
+			if not {UC_UNICODE_ROUTINES}.valid_non_surrogate_code (a_code) then
+				report_invalid_character_error ({UC_UTF8_ROUTINES}.string_to_utf8 (a_char))
+			end
 			a_key := a_code.out
 			terminal_symbols.search (a_key)
 			if terminal_symbols.found then
@@ -417,7 +434,7 @@ feature {NONE} -- Factory
 					-- Tokens are indexed from 0, but token
 					-- of id 0 is reserved for EOF.
 				an_id := last_grammar.tokens.count + 1
-				create Result.make (an_id, a_char, Unknown_type)
+				create Result.make (an_id, a_char.to_string_8, Unknown_type)
 				Result.set_token_id (a_code)
 				terminal_symbols.force_new (Result, a_key)
 				last_grammar.put_token (Result)
@@ -432,7 +449,7 @@ feature {NONE} -- Factory
 			-- with this string.
 		require
 			a_string_not_void: a_string /= Void
---			valid_string: (\"[^"\n]*\").recognizes (a_string)
+			valid_string: {RX_PCRE_ROUTINES}.regexp ("\%"[^%"\n]*\%"").recognizes (a_string)
 		local
 			an_id: INTEGER
 		do
@@ -811,10 +828,8 @@ feature {NONE} -- Implementation
 		do
 				-- Make sure ANY is the first type in grammar.
 			a_type := new_type ("detachable", "ANY")
-				-- Error token. The token id value 256
-				-- is specified by POSIX.
+				-- Error token.
 			a_token := new_token ("error")
-			a_token.set_token_id (256)
 			a_token.set_useful (True)
 				-- Token that represents all undefined
 				-- literal tokens. It is always the
@@ -1012,7 +1027,7 @@ feature {NONE} -- Implementation
 		require
 			a_token_not_void: a_token /= Void
 			a_string_not_void: a_string /= Void
---			valid_string: (\"[^"\n]*\").recognizes (a_string)
+			valid_string: {RX_PCRE_ROUTINES}.regexp ("\%"[^%"\n]*\%"").recognizes (a_string)
 		do
 			if attached a_token.literal_string as l_literal_string and then not l_literal_string.is_equal (a_string) then
 				report_two_strings_token_error (a_token.name, l_literal_string, a_string)
@@ -1075,11 +1090,24 @@ feature {NONE} -- Implementation
 			variables: DS_ARRAYED_LIST [PR_VARIABLE]
 			a_variable: PR_VARIABLE
 			max_token_id: INTEGER
+			l_used_token_ids: DS_HASH_SET [INTEGER]
 			translate: ARRAY [detachable PR_TOKEN]
 		do
 			tokens := last_grammar.tokens
-			last_token_id := 256
+			last_token_id := 255
 			nb := tokens.count
+			create l_used_token_ids.make (nb)
+			from
+				i := 1
+			until
+				i > nb
+			loop
+				a_token := tokens.item (i)
+				if a_token.has_token_id then
+					l_used_token_ids.put (a_token.token_id)
+				end
+				i := i + 1
+			end
 			from
 				i := 1
 			until
@@ -1087,7 +1115,13 @@ feature {NONE} -- Implementation
 			loop
 				a_token := tokens.item (i)
 				if not a_token.has_token_id then
-					last_token_id := last_token_id + 1
+					from
+						last_token_id := last_token_id + 1
+					until
+						not l_used_token_ids.has (last_token_id)
+					loop
+						last_token_id := last_token_id + 1
+					end
 					a_token.set_token_id (last_token_id)
 				end
 				if a_token.token_id > max_token_id then
@@ -1192,6 +1226,16 @@ feature {NONE} -- Error handling
 			create an_error.make (filename, line_nb)
 			error_handler.report_error (an_error)
 			successful := False
+		ensure then
+			not_successful: not successful
+		end
+
+	report_invalid_unicode_character_error (a_code: NATURAL_32)
+			-- Report that the surrogate or invalid Unicode character
+			-- with code `a_code' has been read from the input
+			-- buffer and caused the scanner to fail.
+		do
+			report_invalid_character_error ("'\u{" + a_code.to_hex_string + "}'")
 		ensure then
 			not_successful: not successful
 		end
@@ -1536,6 +1580,21 @@ feature {NONE} -- Error handling
 		do
 			create an_error.make (filename, line_nb, a_token, id1, id2)
 			error_handler.report_error (an_error)
+			successful := False
+		ensure
+			not_successful: not successful
+		end
+
+	report_invalid_character_error (a_char: STRING)
+			-- Report that the character `a_char' is a
+			-- surrogate or invalid Unicode character.
+		require
+			a_char_not_void: a_char /= Void
+		local
+			l_error: PR_INVALID_UNICODE_CHARACTER_ERROR
+		do
+			create l_error.make (filename, line_nb, a_char)
+			error_handler.report_error (l_error)
 			successful := False
 		ensure
 			not_successful: not successful

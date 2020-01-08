@@ -4,12 +4,17 @@ Running Test Cases
 
 Test Summary for validation
 
-    # Passed:     158 tests
-    # FAILED:     49 tests
+    # Passed:     162 tests
+    # FAILED:     52 tests
     # Aborted:    0 test
-    # Total:      207 tests
+    # Total:      214 tests
 
 Test Results:</br>
+FAIL:  \[[definition/dlcf3/test\_export\_all\_f\_repeated\_1](definition/dlcf3/test\_export\_all\_f\_repeated\_1)\] test\_failed</br>
+FAIL:  \[[definition/dlcf3/test\_export\_all\_redeclared\_1](definition/dlcf3/test\_export\_all\_redeclared\_1)\] test\_failed</br>
+FAIL:  \[[definition/dlcf3/test\_export\_all\_repeated\_1](definition/dlcf3/test\_export\_all\_repeated\_1)\] test\_failed</br>
+FAIL:  \[[definition/dlcf3/test\_export\_f\_redeclared\_1](definition/dlcf3/test\_export\_f\_redeclared\_1)\] test\_failed</br>
+FAIL:  \[[definition/dlcf3/test\_export\_f\_repeated\_1](definition/dlcf3/test\_export\_f\_repeated\_1)\] test\_failed</br>
 FAIL:  \[[validity/vape1/test10](validity/vape1/test10)\] test\_failed</br>
 FAIL:  \[[validity/vape1/test11](validity/vape1/test11)\] test\_failed</br>
 FAIL:  \[[validity/vape1/test13](validity/vape1/test13)\] test\_failed</br>
@@ -27,8 +32,6 @@ FAIL:  \[[validity/vape2/test3](validity/vape2/test3)\] test\_failed</br>
 FAIL:  \[[validity/vape2/test4](validity/vape2/test4)\] test\_failed</br>
 FAIL:  \[[validity/vape2/test5](validity/vape2/test5)\] test\_failed</br>
 FAIL:  \[[validity/vape2/test6](validity/vape2/test6)\] test\_failed</br>
-FAIL:  \[[validity/vfav1/test12](validity/vfav1/test12)\] test\_failed</br>
-FAIL:  \[[validity/vfav1/test13](validity/vfav1/test13)\] test\_failed</br>
 FAIL:  \[[validity/vfav1/test8](validity/vfav1/test8)\] test\_failed</br>
 FAIL:  \[[validity/vfav1/test9](validity/vfav1/test9)\] test\_failed</br>
 FAIL:  \[[validity/vfav2/test11](validity/vfav2/test11)\] test\_failed</br>

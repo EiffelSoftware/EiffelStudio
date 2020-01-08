@@ -29,6 +29,7 @@ inherit
 			process_agent_typed_open_argument,
 			process_alias_free_name,
 			process_alias_name,
+			process_alias_name_list,
 			process_aliased_feature_name,
 			process_all_export,
 			process_assertion_semicolon,
@@ -132,7 +133,6 @@ inherit
 			process_infix_cast_expression,
 			process_infix_and_then_operator,
 			process_infix_expression,
-			process_infix_name,
 			process_infix_or_else_operator,
 			process_inspect_instruction,
 			process_invariants,
@@ -178,18 +178,19 @@ inherit
 			process_precursor_expression,
 			process_precursor_instruction,
 			process_prefix_expression,
-			process_prefix_name,
 			process_qualified_call,
 			process_qualified_call_expression,
 			process_qualified_call_instruction,
 			process_qualified_like_braced_type,
 			process_qualified_like_type,
+			process_quantifier_expression,
 			process_regular_integer_constant,
 			process_regular_manifest_string,
 			process_regular_real_constant,
 			process_rename,
 			process_rename_comma,
 			process_rename_list,
+			process_repeat_instruction,
 			process_result_address,
 			process_special_manifest_string,
 			process_static_call_expression,
@@ -388,6 +389,14 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if not excluded_nodes.has (a_name) then
 				precursor (a_name)
+			end
+		end
+
+	process_alias_name_list (a_list: ET_ALIAS_NAME_LIST)
+			-- Process `a_list'.
+		do
+			if not excluded_nodes.has (a_list) then
+				precursor (a_list)
 			end
 		end
 
@@ -1222,14 +1231,6 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_infix_name (a_name: ET_INFIX_NAME)
-			-- Process `a_name'.
-		do
-			if not excluded_nodes.has (a_name) then
-				precursor (a_name)
-			end
-		end
-
 	process_infix_or_else_operator (an_operator: ET_INFIX_OR_ELSE_OPERATOR)
 			-- Process `an_operator'.
 		do
@@ -1601,14 +1602,6 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
-	process_prefix_name (a_name: ET_PREFIX_NAME)
-			-- Process `a_name'.
-		do
-			if not excluded_nodes.has (a_name) then
-				precursor (a_name)
-			end
-		end
-
 	process_qualified_call (a_call: ET_QUALIFIED_CALL)
 			-- Process `a_call'.
 		do
@@ -1646,6 +1639,14 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if not excluded_nodes.has (a_type) then
 				precursor (a_type)
+			end
+		end
+
+	process_quantifier_expression (a_expression: ET_QUANTIFIER_EXPRESSION)
+			-- Process `a_expression'.
+		do
+			if not excluded_nodes.has (a_expression) then
+				precursor (a_expression)
 			end
 		end
 
@@ -1697,6 +1698,14 @@ feature {ET_AST_NODE} -- Processing
 		do
 			if not excluded_nodes.has (a_list) then
 				precursor (a_list)
+			end
+		end
+
+	process_repeat_instruction (a_instruction: ET_REPEAT_INSTRUCTION)
+			-- Process `a_instruction'.
+		do
+			if not excluded_nodes.has (a_instruction) then
+				precursor (a_instruction)
 			end
 		end
 

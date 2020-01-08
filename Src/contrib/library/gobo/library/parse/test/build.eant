@@ -1,17 +1,40 @@
 <?xml version="1.0"?>
 
-<project name="parse_test" default="help">
+<project name="parse_example_test" default="help">
 
 	<description>
-		description: "Gobo Eiffel Parse Library Tester"
-		copyright: "Copyright (c) 2016, Eric Bezault and others"
+		system: "Gobo Eiffel Parse Example Tester"
+		copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
 	</description>
 
 	<inherit>
-		<parent location="${GOBO}/library/common/config/tests.eant"/>
+		<parent location="${GOBO}/library/common/config/test.eant">
+			<redefine target="other_clean"/>
+			<redefine target="init_system"/>
+		</parent>
 	</inherit>
+
+<!-- Implementation -->
+
+	<target name="other_clean" depend="init" export="NONE">
+		<description>
+			Remove other intermediary generated files.
+		</description>
+
+		<delete directory="Tcalc"/>
+		<delete directory="Teiffel_parser"/>
+		<delete directory="Tmcalc"/>
+		<delete directory="Trpcalc"/>
+		<delete directory="Tscalc"/>
+	</target>
+
+	<target name="init_system" export="NONE">
+		<set name="system" value="xparse_example"/>
+		<set name="library" value="parse"/>
+		<set name="system_dir" value="${GOBO}/library/${library}/test/example"/>
+	</target>
 
 </project>

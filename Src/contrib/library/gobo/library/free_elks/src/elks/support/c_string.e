@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "A low-level string class to solve some garbage %
 		%collector problems (mainly objects moving around) when %
 		%interfacing with C APIs."
@@ -434,7 +434,7 @@ invariant
 	count_not_negative: count >= 0
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

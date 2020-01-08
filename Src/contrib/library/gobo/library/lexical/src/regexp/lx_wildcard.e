@@ -17,6 +17,9 @@ note
 		\0         a null character (ASCII code 0).
 		\123       the character with octal value 123.
 		\x2a       the character with hexadecimal value 2a.
+		\x{2a3f}   the character with hexadecimal value 2a3f.
+		\u03B2     the character with Unicode (hexadecimal) code U+03B2.
+		\u{03B2}   the character with Unicode (hexadecimal) code U+03B2.
 		[xyz]      a character class; in this case, the pattern matches
 		           either an 'x', a 'y' or a 'z'.
 		[abj-oZ]   a character class with a range in it; matches an 'a', a
@@ -25,6 +28,8 @@ note
 		           in the class. In this case, any character except an
 		           uppercase letter.
 		[^A-Z\n]   any character except an uppercase letter or a newline.
+		[ab]{+}[bc]      the union of character classes ([abc])
+		[a-z]{-}[aeiouy] the subtraction of character classes (consonants)
 		wv         the wildcard w followed by the wildcard v; called
 		           concatenation.
 		"[xyz]\"foo"     the literal string: '[xyz]"foo'.
@@ -36,7 +41,7 @@ note
 		                 patterns separated by a '|'.
 	]"
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"

@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 
-<project name="singleton" default="help">
+<project name="do_nothing" default="help">
 
 	<description>
-		description: "Eiffel Ant file for Gobo Eiffel Pattern Library singleton examples"
+		system: "Example for the Singleton pattern with does nothing"
 		copyright: "Copyright (c) 2003-2016, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
@@ -11,7 +11,18 @@
 	</description>
 
 	<inherit>
-		<parent location="${GOBO}/library/common/config/do_all.eant"/>
+		<parent location="${GOBO}/library/common/config/eiffel.eant">
+			<redefine target="init_system"/>
+		</parent>
 	</inherit>
+
+
+<!-- Implementation -->
+
+	<target name="init_system" export="NONE">
+		<set name="system" value="do_nothing"/>
+		<set name="library" value="pattern"/>
+		<set name="system_dir" value="${GOBO}/library/${library}/example/singleton/${system}"/>
+	</target>
 
 </project>

@@ -5,7 +5,7 @@ note
 		"Eiffel variable attributes"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -69,7 +69,7 @@ feature -- Status report
 
 	is_prefixable: BOOLEAN = True
 			-- Can current feature have a name of
-			-- the form 'prefix ...'?
+			-- the form unary 'alias "..."'?
 
 feature -- Access
 
@@ -118,7 +118,7 @@ feature -- Duplication
 			Result.set_feature_clause (feature_clause)
 			Result.set_first_indexing (first_indexing)
 			Result.set_object_tests (object_tests)
-			Result.set_across_components (across_components)
+			Result.set_iteration_components (iteration_components)
 			Result.set_synonym (Current)
 		end
 
@@ -139,7 +139,7 @@ feature -- Conversion
 			Result.set_feature_clause (feature_clause)
 			Result.set_first_indexing (first_indexing)
 			Result.set_object_tests (object_tests)
-			Result.set_across_components (across_components)
+			Result.set_iteration_components (iteration_components)
 			Result.set_first_seed (first_seed)
 			Result.set_other_seeds (other_seeds)
 		end

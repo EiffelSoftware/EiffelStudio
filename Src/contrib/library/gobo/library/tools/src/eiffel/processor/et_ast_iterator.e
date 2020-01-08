@@ -184,11 +184,23 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
+	process_alias_name_list (a_list: ET_ALIAS_NAME_LIST)
+			-- Process `a_list'.
+		local
+			i, nb: INTEGER
+		do
+			nb := a_list.count
+			from i := 1 until i > nb loop
+				a_list.item (i).process (Current)
+				i := i + 1
+			end
+		end
+
 	process_aliased_feature_name (a_name: ET_ALIASED_FEATURE_NAME)
 			-- Process `a_name'.
 		do
 			a_name.feature_name.process (Current)
-			a_name.alias_name.process (Current)
+			a_name.alias_names.process (Current)
 		end
 
 	process_all_export (an_export: ET_ALL_EXPORT)
@@ -1742,19 +1754,6 @@ feature {ET_AST_NODE} -- Processing
 			an_expression.right.process (Current)
 		end
 
-	process_infix_free_name (a_name: ET_INFIX_FREE_NAME)
-			-- Process `a_name'.
-		do
-			process_infix_name (a_name)
-		end
-
-	process_infix_name (a_name: ET_INFIX_NAME)
-			-- Process `a_name'.
-		do
-			a_name.infix_keyword.process (Current)
-			a_name.operator_string.process (Current)
-		end
-
 	process_infix_or_else_operator (an_operator: ET_INFIX_OR_ELSE_OPERATOR)
 			-- Process `an_operator'.
 		do
@@ -2445,19 +2444,6 @@ feature {ET_AST_NODE} -- Processing
 			an_expression.expression.process (Current)
 		end
 
-	process_prefix_free_name (a_name: ET_PREFIX_FREE_NAME)
-			-- Process `a_name'.
-		do
-			process_prefix_name (a_name)
-		end
-
-	process_prefix_name (a_name: ET_PREFIX_NAME)
-			-- Process `a_name'.
-		do
-			a_name.prefix_keyword.process (Current)
-			a_name.operator_string.process (Current)
-		end
-
 	process_qualified_call (a_call: ET_QUALIFIED_CALL)
 			-- Process `a_call'.
 		do
@@ -2512,6 +2498,17 @@ feature {ET_AST_NODE} -- Processing
 			if attached a_call.arguments as l_arguments then
 				l_arguments.process (Current)
 			end
+		end
+
+	process_quantifier_expression (a_expression: ET_QUANTIFIER_EXPRESSION)
+			-- Process `a_expression'.
+		do
+			a_expression.quantifier_symbol.process (Current)
+			a_expression.cursor_name.process (Current)
+			a_expression.colon_symbol.process (Current)
+			a_expression.iterable_expression.process (Current)
+			a_expression.bar_symbol.process (Current)
+			a_expression.iteration_expression.process (Current)
 		end
 
 	process_question_mark_symbol (a_symbol: ET_QUESTION_MARK_SYMBOL)
@@ -2576,6 +2573,26 @@ feature {ET_AST_NODE} -- Processing
 				a_list.item (i).process (Current)
 				i := i + 1
 			end
+		end
+
+	process_repeat_instruction (a_instruction: ET_REPEAT_INSTRUCTION)
+			-- Process `a_instruction'.
+		local
+			i, nb: INTEGER
+		do
+			a_instruction.open_repeat_symbol.process (Current)
+			a_instruction.cursor_name.process (Current)
+			a_instruction.colon_symbol.process (Current)
+			a_instruction.iterable_expression.process (Current)
+			a_instruction.bar_symbol.process (Current)
+			if attached a_instruction.loop_compound as l_loop_compound then
+				nb := l_loop_compound.count
+				from i := 1 until i > nb loop
+					l_loop_compound.item (i).process (Current)
+					i := i + 1
+				end
+			end
+			a_instruction.close_repeat_symbol.process (Current)
 		end
 
 	process_result (an_expression: ET_RESULT)

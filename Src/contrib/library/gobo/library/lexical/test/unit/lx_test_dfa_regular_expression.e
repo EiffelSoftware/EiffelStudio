@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -6,7 +6,7 @@ note
 
 	test_status: "ok_to_run"
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 2009, Eric Bezault and others"
+	copyright: "Copyright (c) 2009-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -29,18 +29,18 @@ feature -- Test
 			l_regexp: LX_DFA_REGULAR_EXPRESSION
 		do
 			create l_regexp.make
-			l_regexp.compile ("foo$", True)
+			l_regexp.compile ("foo$", False)
 			assert ("compiled1", l_regexp.is_compiled)
 			assert ("has_dollar1a", l_regexp.matches ("foo"))
 			assert ("has_dollar1b", not l_regexp.matches ("foo$"))
 			create l_regexp.make
-			l_regexp.compile ("foo\$", True)
+			l_regexp.compile ("foo\$", False)
 			assert ("compiled2", l_regexp.is_compiled)
 			assert ("not_has_dollar2a", l_regexp.matches ("foo$bar"))
 			assert ("not_has_dollar2b", not l_regexp.matches ("foo\"))
 			assert ("not_has_dollar2c", not l_regexp.matches ("foo\$"))
 			create l_regexp.make
-			l_regexp.compile ("foo\\$", True)
+			l_regexp.compile ("foo\\$", False)
 			assert ("compiled3", l_regexp.is_compiled)
 			assert ("has_dollar3a", l_regexp.matches ("foo\"))
 			assert ("has_dollar3b", not l_regexp.matches ("foo\$"))
@@ -186,6 +186,73 @@ feature -- Test
 			assert ("matched1", a_regexp.has_matched)
 		end
 
+	test_null_character
+			-- Test with a null character.
+		local
+			l_regexp: LX_DFA_REGULAR_EXPRESSION
+		do
+			create l_regexp.make
+			l_regexp.compile ("a%Ub", False)
+			assert ("is_compiled", l_regexp.is_compiled)
+			assert ("recognizes", l_regexp.recognizes ("a%Ub"))
+		end
+
+feature -- Test character class expressions
+
+	test_character_class_addition
+			-- Test addition of character classes.
+		local
+			l_regexp: LX_DFA_REGULAR_EXPRESSION
+		do
+				-- [bc]{+}[cd] = [bcd]
+			create l_regexp.make
+			l_regexp.compile ("([bc]{+}[cd])+", False)
+			assert ("compiled1", l_regexp.is_compiled)
+			assert ("recognizes1", l_regexp.recognizes ("bcd"))
+				-- [bc]{+}[^cd] = [^d]
+			create l_regexp.make
+			l_regexp.compile ("([bc]{+}[^cd])+", False)
+			assert ("compiled2", l_regexp.is_compiled)
+			assert ("recognizes2", l_regexp.recognizes ("abce"))
+				-- [^bc]{+}[cd] = [^b]
+			create l_regexp.make
+			l_regexp.compile ("([^bc]{+}[cd])+", False)
+			assert ("compiled3", l_regexp.is_compiled)
+			assert ("recognizes3", l_regexp.recognizes ("acde"))
+				-- [^bc]{+}[^cd] = [^c]
+			create l_regexp.make
+			l_regexp.compile ("([^bc]{+}[^cd])+", False)
+			assert ("compiled4", l_regexp.is_compiled)
+			assert ("recognizes4", l_regexp.recognizes ("abde"))
+		end
+
+	test_character_class_subtraction
+			-- Test subtraction of character classes.
+		local
+			l_regexp: LX_DFA_REGULAR_EXPRESSION
+		do
+				-- [bc]{-}[cd] = [b]
+			create l_regexp.make
+			l_regexp.compile ("([bc]{-}[cd])+", False)
+			assert ("compiled1", l_regexp.is_compiled)
+			assert ("recognizes1", l_regexp.recognizes ("b"))
+				-- [bc]{-}[^cd] = [c]
+			create l_regexp.make
+			l_regexp.compile ("([bc]{-}[^cd])+", False)
+			assert ("compiled2", l_regexp.is_compiled)
+			assert ("recognizes2", l_regexp.recognizes ("c"))
+				-- [^bc]{-}[cd] = [^bcd]
+			create l_regexp.make
+			l_regexp.compile ("([^bc]{-}[cd])+", False)
+			assert ("compiled3", l_regexp.is_compiled)
+			assert ("recognizes3", l_regexp.recognizes ("ae"))
+				-- [^bc]{-}[^cd] = [d]
+			create l_regexp.make
+			l_regexp.compile ("([^bc]{-}[^cd])+", False)
+			assert ("compiled4", l_regexp.is_compiled)
+			assert ("recognizes4", l_regexp.recognizes ("d"))
+		end
+
 feature -- Test Input 1
 
 	test_input1_regexp1
@@ -240,6 +307,277 @@ feature -- Test replacement
 			a_regexp.match ("foo")
 			a_replacement := a_regexp.replace_all ("AA")
 			assert_equal ("relacement2", "AAfAAoAAoAA", a_replacement)
+		end
+
+feature -- Test Unicode
+
+	test_unicode_character
+			-- Test regexps with unicode characters.
+		local
+			l_regexp: LX_DFA_REGULAR_EXPRESSION
+		do
+			create l_regexp.make
+			l_regexp.compile ({STRING_32} "[a-z]+: ∀", False)
+			assert ("compiled1", l_regexp.is_compiled)
+			assert ("recognizes1", l_regexp.recognizes ({STRING_32} "forall: ∀"))
+		end
+
+	test_invalid_unicode_character
+			-- Test regexps with invalid unicode characters.
+		local
+			l_regexp: LX_DFA_REGULAR_EXPRESSION
+			l_pattern: STRING_32
+		do
+			create l_regexp.make
+			create l_pattern.make_empty
+			l_pattern.append_code (0x200000)
+			l_regexp.compile (l_pattern, False)
+			assert_false ("not_compiled1", l_regexp.is_compiled)
+		end
+
+	test_surrogate_unicode_character
+			-- Test regexps with surrogate unicode characters.
+		local
+			l_regexp: LX_DFA_REGULAR_EXPRESSION
+			l_pattern: STRING_32
+		do
+			create l_regexp.make
+			create l_pattern.make_empty
+			l_pattern.append_code (0xDDDD)
+			l_regexp.compile (l_pattern, False)
+			assert_false ("not_compiled1", l_regexp.is_compiled)
+		end
+
+	test_escaped_unicode_character
+			-- Test regexps with escaped unicode characters.
+		local
+			l_regexp: LX_DFA_REGULAR_EXPRESSION
+		do
+			create l_regexp.make
+			l_regexp.compile ("d\u00E9j\u00E0 vu", False)
+			assert ("compiled1", l_regexp.is_compiled)
+			assert ("recognizes1", l_regexp.recognizes ("déjà vu"))
+		end
+
+	test_escaped_invalid_unicode_character
+			-- Test regexps with escaped invalid unicode characters.
+		local
+			l_regexp: LX_DFA_REGULAR_EXPRESSION
+		do
+			create l_regexp.make
+			l_regexp.compile ("\u{200000}", False)
+			assert_false ("not_compiled1", l_regexp.is_compiled)
+		end
+
+	test_escaped_surrogate_unicode_character
+			-- Test regexps with escaped surrogate unicode characters.
+		local
+			l_regexp: LX_DFA_REGULAR_EXPRESSION
+		do
+			create l_regexp.make
+			l_regexp.compile ("\u{DDDD}", False)
+			assert_false ("not_compiled1", l_regexp.is_compiled)
+		end
+
+	test_unicode_character_class
+			-- Test regexps with unicode character class.
+		local
+			l_regexp: LX_DFA_REGULAR_EXPRESSION
+		do
+			create l_regexp.make
+			l_regexp.compile ("[a-z \u00E9\u00E0]+", False)
+			assert ("compiled1", l_regexp.is_compiled)
+			assert ("recognizes1", l_regexp.recognizes ("déjà vu"))
+			assert ("recognizes2", l_regexp.recognizes ({STRING_32} "déjà vu"))
+			create l_regexp.make
+			l_regexp.compile ({STRING_32} "[a-z é\u00E0∀]+", False)
+			assert ("compiled2", l_regexp.is_compiled)
+			assert ("recognizes3", l_regexp.recognizes ({STRING_32} "∀ déjà vu ∀"))
+			create l_regexp.make
+			l_regexp.compile ("déjà vu", False)
+			assert ("compiled3", l_regexp.is_compiled)
+			assert ("recognizes4", l_regexp.recognizes ("déjà vu"))
+			assert ("recognizes5", l_regexp.recognizes ({STRING_32} "déjà vu"))
+		end
+
+	test_unicode_character_class_with_range
+			-- Test regexps with unicode character class with a range.
+		local
+			l_regexp: LX_DFA_REGULAR_EXPRESSION
+		do
+			create l_regexp.make
+			l_regexp.compile ({STRING_32} "[∀-∃]", False)
+			assert ("compiled1", l_regexp.is_compiled)
+			assert ("recognizes1", l_regexp.recognizes ({STRING_32} "∀"))
+		end
+
+	test_unicode_character_class_with_invalid_range
+			-- Test regexps with unicode character class with an invalid range.
+		local
+			l_regexp: LX_DFA_REGULAR_EXPRESSION
+		do
+			create l_regexp.make
+			l_regexp.compile ({STRING_32} "[∃-∀]", False)
+			assert_false ("not_compiled1", l_regexp.is_compiled)
+		end
+
+	test_unicode_character_class_with_invalid_character
+			-- Test regexps with unicode character class with an invalid unicode character.
+		local
+			l_regexp: LX_DFA_REGULAR_EXPRESSION
+			l_pattern: STRING_32
+		do
+			create l_regexp.make
+			create l_pattern.make_empty
+			l_pattern.append_character ({CHARACTER_32} '[')
+			l_pattern.append_code (0x200000)
+			l_pattern.append_character ({CHARACTER_32} ']')
+			l_regexp.compile (l_pattern, False)
+			assert_false ("not_compiled1", l_regexp.is_compiled)
+		end
+
+	test_unicode_character_class_with_surrogate_character
+			-- Test regexps with unicode character class with a surrogate unicode character.
+		local
+			l_regexp: LX_DFA_REGULAR_EXPRESSION
+			l_pattern: STRING_32
+		do
+			create l_regexp.make
+			create l_pattern.make_empty
+			l_pattern.append_character ({CHARACTER_32} '[')
+			l_pattern.append_code (0xDDDD)
+			l_pattern.append_character ({CHARACTER_32} ']')
+			l_regexp.compile (l_pattern, False)
+			assert_false ("not_compiled1", l_regexp.is_compiled)
+		end
+
+	test_unicode_character_class_with_escaped_character
+			-- Test regexps with unicode character class with escaped unicode characters.
+		local
+			l_regexp: LX_DFA_REGULAR_EXPRESSION
+		do
+			create l_regexp.make
+			l_regexp.compile ("[\u{2200}]", False)
+			assert ("compiled1", l_regexp.is_compiled)
+			assert ("recognizes1", l_regexp.recognizes ({STRING_32} "∀"))
+		end
+
+	test_unicode_character_class_with_escaped_invalid_character
+			-- Test regexps with unicode character class with escaped invalid unicode characters.
+		local
+			l_regexp: LX_DFA_REGULAR_EXPRESSION
+		do
+			create l_regexp.make
+			l_regexp.compile ("([\u{200000})", False)
+			assert_false ("not_compiled1", l_regexp.is_compiled)
+		end
+
+	test_unicode_character_class_with_escaped_surrogate_character
+			-- Test regexps with unicode character class with escaped surrogate unicode characters.
+		local
+			l_regexp: LX_DFA_REGULAR_EXPRESSION
+		do
+			create l_regexp.make
+			l_regexp.compile ("[\u{DDDD}]", False)
+			assert_false ("not_compiled1", l_regexp.is_compiled)
+		end
+
+	test_unicode_character_class_addition
+			-- Test addition of Unicode character classes.
+		local
+			l_regexp: LX_DFA_REGULAR_EXPRESSION
+			l_string: STRING_32
+		do
+				-- [\u{111B}\u{111C}]{+}[\u{111C}\u{111D}] = [\u{111B}\u{111C}\u{111D}]
+			create l_regexp.make
+			l_regexp.compile ("([\u{111B}\u{111C}]{+}[\u{111C}\u{111D}])+", False)
+			assert ("compiled1", l_regexp.is_compiled)
+			create l_string.make_empty
+			l_string.append_code (0x111B)
+			l_string.append_code (0x111C)
+			l_string.append_code (0x111D)
+			assert ("recognizes1", l_regexp.recognizes (l_string))
+				-- [\u{111B}\u{111C}]{+}[^\u{111C}\u{111D}] = [^\u{111D}]
+			create l_regexp.make
+			l_regexp.compile ("([\u{111B}\u{111C}]{+}[^\u{111C}\u{111D}])+", False)
+			assert ("compiled2", l_regexp.is_compiled)
+			create l_string.make_empty
+			l_string.append_code (0x111A)
+			l_string.append_code (0x111B)
+			l_string.append_code (0x111C)
+			l_string.append_code (0x111E)
+			assert ("recognizes2", l_regexp.recognizes (l_string))
+				-- [^\u{111B}\u{111C}]{+}[\u{111C}\u{111D}] = [^\u{111B}]
+			create l_regexp.make
+			l_regexp.compile ("([^\u{111B}\u{111C}]{+}[\u{111C}\u{111D}])+", False)
+			assert ("compiled3", l_regexp.is_compiled)
+			create l_string.make_empty
+			l_string.append_code (0x111A)
+			l_string.append_code (0x111C)
+			l_string.append_code (0x111D)
+			l_string.append_code (0x111E)
+			assert ("recognizes3", l_regexp.recognizes (l_string))
+				-- [^\u{111B}\u{111C}]{+}[^\u{111C}\u{111D}] = [^\u{111C}]
+			create l_regexp.make
+			l_regexp.compile ("([^\u{111B}\u{111C}]{+}[^\u{111C}\u{111D}])+", False)
+			assert ("compiled4", l_regexp.is_compiled)
+			create l_string.make_empty
+			l_string.append_code (0x111A)
+			l_string.append_code (0x111B)
+			l_string.append_code (0x111D)
+			l_string.append_code (0x111E)
+			assert ("recognizes4", l_regexp.recognizes (l_string))
+		end
+
+	test_unicode_character_class_subtraction
+			-- Test subtraction of Unicode character classes.
+		local
+			l_regexp: LX_DFA_REGULAR_EXPRESSION
+			l_string: STRING_32
+		do
+				-- [\u{111B}\u{111C}]{-}[\u{111C}\u{111D}] = [\u{111B}]
+			create l_regexp.make
+			l_regexp.compile ("([\u{111B}\u{111C}]{-}[\u{111C}\u{111D}])+", False)
+			assert ("compiled1", l_regexp.is_compiled)
+			create l_string.make_empty
+			l_string.append_code (0x111B)
+			assert ("recognizes1", l_regexp.recognizes (l_string))
+				-- [\u{111B}\u{111C}]{-}[^\u{111C}\u{111D}] = [\u{111C}]
+			create l_regexp.make
+			l_regexp.compile ("([\u{111B}\u{111C}]{-}[^\u{111C}\u{111D}])+", False)
+			assert ("compiled2", l_regexp.is_compiled)
+			create l_string.make_empty
+			l_string.append_code (0x111C)
+			assert ("recognizes2", l_regexp.recognizes (l_string))
+				-- [^\u{111B}\u{111C}]{-}[\u{111C}\u{111D}] = [^\u{111B}\u{111C}\u{111D}]
+			create l_regexp.make
+			l_regexp.compile ("([^\u{111B}\u{111C}]{-}[\u{111C}\u{111D}])+", False)
+			assert ("compiled3", l_regexp.is_compiled)
+			create l_string.make_empty
+			l_string.append_code (0x111A)
+			l_string.append_code (0x111E)
+			assert ("recognizes3", l_regexp.recognizes (l_string))
+				-- [^\u{111B}\u{111C}]{-}[^\u{111C}\u{111D}] = [\u{111D}]
+			create l_regexp.make
+			l_regexp.compile ("([^\u{111B}\u{111C}]{-}[^\u{111C}\u{111D}])+", False)
+			assert ("compiled4", l_regexp.is_compiled)
+			create l_string.make_empty
+			l_string.append_code (0x111D)
+			assert ("recognizes4", l_regexp.recognizes (l_string))
+		end
+
+	test_unicode_greater_than_max_surrogate
+			-- Test matching a Unicode character greater than the maximun surrogate.
+		local
+			l_regexp: LX_DFA_REGULAR_EXPRESSION
+			l_string: STRING_32
+		do
+			create l_regexp.make
+			l_regexp.compile ("[^a-z]+", False)
+			assert ("compiled1", l_regexp.is_compiled)
+			create l_string.make_empty
+			l_string.append_code ({UC_UNICODE_CONSTANTS}.maximum_unicode_surrogate_natural_32_code + 1)
+			assert ("recognizes1", l_regexp.recognizes (l_string))
 		end
 
 end

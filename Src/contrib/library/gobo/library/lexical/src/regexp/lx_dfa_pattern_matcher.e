@@ -5,7 +5,7 @@ note
 		"Pattern matchers implemented with DFA engines"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 2001, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -31,7 +31,7 @@ feature -- Status report
 			yy_accept_not_void: Result implies yy_accept /= Void
 		end
 
-	matches (a_string: STRING): BOOLEAN
+	matches (a_string: like subject): BOOLEAN
 			-- Does `a_string' include a token of the language
 			-- described by current pattern?
 		local
@@ -39,7 +39,7 @@ feature -- Status report
 			e: INTEGER
 		do
 			nb := a_string.count
-			subject := a_string
+			set_subject (a_string)
 			subject_start := 1
 			subject_end := nb
 			match_count := 0
@@ -62,14 +62,14 @@ feature -- Status report
 			end
 		end
 
-	recognizes (a_string: STRING): BOOLEAN
+	recognizes (a_string: like subject): BOOLEAN
 			-- Is `a_string' a token of the language
 			-- described by current pattern?
 		local
 			nb: INTEGER
 		do
 			nb := a_string.count
-			subject := a_string
+			set_subject (a_string)
 			subject_start := 1
 			subject_end := nb
 			if longest_end_position (a_string, 1) = nb then
@@ -102,7 +102,7 @@ feature -- Access
 
 feature -- Matching
 
-	match_substring (a_subject: STRING; a_from, a_to: INTEGER)
+	match_substring (a_subject: like subject; a_from, a_to: INTEGER)
 			-- Try to match the substring of `a_subject' between
 			-- positions `a_from' and `a_to' with the current pattern.
 			-- Make result available in `has_matched' and the various
@@ -111,7 +111,7 @@ feature -- Matching
 			i, e: INTEGER
 		do
 			match_count := 0
-			subject := a_subject
+			set_subject (a_subject)
 			subject_start := a_from
 			subject_end := a_to
 			from
@@ -132,7 +132,7 @@ feature -- Matching
 			end
 		end
 
-	match_unbounded_substring (a_subject: STRING; a_from, a_to: INTEGER)
+	match_unbounded_substring (a_subject: like subject; a_from, a_to: INTEGER)
 			-- Try to match the substring of `a_subject' between
 			-- positions `a_from' and `a_to' with the current pattern.
 			-- Make result available in `has_matched' and the various
@@ -154,7 +154,10 @@ feature -- Resetting
 			wipe_out
 			yy_nxt := Void
 			yy_accept := Void
+			yy_ec := Void
 			yyNb_rows := 0
+			yyNull_equiv_class := 0
+			yyMax_symbol_equiv_class := 0
 		end
 
 feature {NONE} -- Matching
@@ -165,7 +168,7 @@ feature {NONE} -- Matching
 	matched_end: INTEGER
 			-- End position of the last match
 
-	smallest_end_position (a_string: STRING; start_pos: INTEGER): INTEGER
+	smallest_end_position (a_string: like subject; start_pos: INTEGER): INTEGER
 			-- Position of the last character of the smallest
 			-- token in `a_string' starting at position `start_pos'
 			-- and matched by current pattern;
@@ -176,15 +179,25 @@ feature {NONE} -- Matching
 			valid_start_pos: start_pos >= 1 and start_pos <= a_string.count + 1
 		local
 			i, nb: INTEGER
-			a_state: INTEGER
-			a_symbol: INTEGER
+			l_state: INTEGER
+			l_code: NATURAL_32
+			l_symbol: INTEGER
+			l_yy_nxt: like yy_nxt
+			l_yy_accept: like yy_accept
+			l_yy_ec: like yy_ec
 		do
-			check is_compiled: attached yy_nxt as l_yy_nxt and attached yy_accept as l_yy_accept then
+			l_yy_nxt := yy_nxt
+			l_yy_accept := yy_accept
+			if l_yy_nxt = Void or l_yy_accept = Void then
+				check is_compiled: False end
+				Result := -1
+			else
+				l_yy_ec := yy_ec
 				from
 					i := start_pos
 					nb := a_string.count
-					a_state := 1
-					if l_yy_accept.item (a_state) /= 0 then
+					l_state := 1
+					if l_yy_accept.item (l_state) /= 0 then
 						Result := i - 1
 					else
 						Result := -1
@@ -192,13 +205,39 @@ feature {NONE} -- Matching
 				until
 					Result /= -1 or i > nb
 				loop
-					a_symbol := a_string.item (i).code
-					a_state := l_yy_nxt.item (a_state * yyNb_rows + a_symbol)
-					if a_state > 0 then
-						if l_yy_accept.item (a_state) /= 0 then
-							Result := i
+					l_code := a_string.code (i)
+					if l_code < {UC_UNICODE_CONSTANTS}.minimum_unicode_surrogate_natural_32_code then
+						l_symbol := l_code.to_integer_32
+					elseif l_code <= {UC_UNICODE_CONSTANTS}.maximum_unicode_surrogate_natural_32_code then
+							-- Surrogate.
+						l_symbol := -1
+					elseif l_code > {UC_UNICODE_CONSTANTS}.maximum_unicode_character_natural_32_code then
+							-- Invalid Unicode character.
+						l_symbol := -1
+					else
+						l_symbol := l_code.to_integer_32
+						l_symbol := l_symbol - {UC_UNICODE_CONSTANTS}.unicode_surrogate_count
+					end
+					if l_symbol >= 0 then
+						if l_symbol = 0 then
+							l_symbol := yyNull_equiv_class
 						else
-							i := i + 1
+							if l_symbol > yyMax_symbol_equiv_class then
+								l_symbol := yyMax_symbol_equiv_class
+							end
+							if l_yy_ec /= Void then
+								l_symbol := l_yy_ec.item (l_symbol)
+							end
+						end
+						l_state := l_yy_nxt.item (l_state * yyNb_rows + l_symbol)
+						if l_state > 0 then
+							if l_yy_accept.item (l_state) /= 0 then
+								Result := i
+							else
+								i := i + 1
+							end
+						else
+							i := nb + 1
 						end
 					else
 						i := nb + 1
@@ -209,7 +248,7 @@ feature {NONE} -- Matching
 			valid_position: Result /= -1 implies (start_pos <= Result + 1 and Result <= a_string.count)
 		end
 
-	longest_end_position (a_string: STRING; start_pos: INTEGER): INTEGER
+	longest_end_position (a_string: like subject; start_pos: INTEGER): INTEGER
 			-- Position of the last character of the longest
 			-- token in `a_string' starting at position `start_pos'
 			-- and matched by current pattern;
@@ -220,15 +259,25 @@ feature {NONE} -- Matching
 			valid_start_pos: start_pos >= 1 and start_pos <= a_string.count + 1
 		local
 			i, nb: INTEGER
-			a_state: INTEGER
-			a_symbol: INTEGER
+			l_state: INTEGER
+			l_code: NATURAL_32
+			l_symbol: INTEGER
+			l_yy_nxt: like yy_nxt
+			l_yy_accept: like yy_accept
+			l_yy_ec: like yy_ec
 		do
-			check is_compiled: attached yy_nxt as l_yy_nxt and attached yy_accept as l_yy_accept then
+			l_yy_nxt := yy_nxt
+			l_yy_accept := yy_accept
+			if l_yy_nxt = Void or l_yy_accept = Void then
+				check is_compiled: False end
+				Result := -1
+			else
+				l_yy_ec := yy_ec
 				from
 					i := start_pos
 					nb := a_string.count
-					a_state := 1
-					if l_yy_accept.item (a_state) /= 0 then
+					l_state := 1
+					if l_yy_accept.item (l_state) /= 0 then
 						Result := i - 1
 					else
 						Result := -1
@@ -236,13 +285,39 @@ feature {NONE} -- Matching
 				until
 					i > nb
 				loop
-					a_symbol := a_string.item (i).code
-					a_state := l_yy_nxt.item (a_state * yyNb_rows + a_symbol)
-					if a_state > 0 then
-						if l_yy_accept.item (a_state) /= 0 then
-							Result := i
+					l_code := a_string.code (i)
+					if l_code < {UC_UNICODE_CONSTANTS}.minimum_unicode_surrogate_natural_32_code then
+						l_symbol := l_code.to_integer_32
+					elseif l_code <= {UC_UNICODE_CONSTANTS}.maximum_unicode_surrogate_natural_32_code then
+							-- Surrogate.
+						l_symbol := -1
+					elseif l_code > {UC_UNICODE_CONSTANTS}.maximum_unicode_character_natural_32_code then
+							-- Invalid Unicode character.
+						l_symbol := -1
+					else
+						l_symbol := l_code.to_integer_32
+						l_symbol := l_symbol - {UC_UNICODE_CONSTANTS}.unicode_surrogate_count
+					end
+					if l_symbol >= 0 then
+						if l_symbol = 0 then
+							l_symbol := yyNull_equiv_class
+						else
+							if l_symbol > yyMax_symbol_equiv_class then
+								l_symbol := yyMax_symbol_equiv_class
+							end
+							if l_yy_ec /= Void then
+								l_symbol := l_yy_ec.item (l_symbol)
+							end
 						end
-						i := i + 1
+						l_state := l_yy_nxt.item (l_state * yyNb_rows + l_symbol)
+						if l_state > 0 then
+							if l_yy_accept.item (l_state) /= 0 then
+								Result := i
+							end
+							i := i + 1
+						else
+							i := nb + 1
+						end
 					else
 						i := nb + 1
 					end
@@ -261,7 +336,18 @@ feature {NONE} -- Engine Data
 	yy_accept: detachable ARRAY [INTEGER]
 			-- Accepting ids indexed by state ids
 
+	yy_ec: detachable ARRAY [INTEGER]
+			-- Equivalence classes;
+			-- Void if equivalence classes are not used
+
 	yyNb_rows: INTEGER
 			-- Number of rows in `yy_nxt'
+
+	yyNull_equiv_class: INTEGER
+			-- Equivalence code for NULL character
+
+	yyMax_symbol_equiv_class: INTEGER
+			-- All symbols greater than this symbol will have
+			-- the same equivalence class as this symbol
 
 end

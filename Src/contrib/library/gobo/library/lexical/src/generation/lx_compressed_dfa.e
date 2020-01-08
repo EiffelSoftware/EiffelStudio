@@ -5,7 +5,7 @@ note
 		"DFA which can generate scanners implemented with compressed tables"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -205,6 +205,10 @@ feature {NONE} -- Generation
 				%%TyyNull_equiv_class: INTEGER = ")
 			a_file.put_integer (yyNull_equiv_class)
 			a_file.put_string ("%N%T%T%T-- Equivalence code for NULL character%
+				%%N%N%TyyMax_symbol_equiv_class: INTEGER = ")
+			a_file.put_integer (yyMax_symbol_equiv_class)
+			a_file.put_string ("%N%T%T%T-- All symbols greater than this symbol will have%
+				%%N%T%T%T-- the same equivalence class as this symbol%
 				%%N%N%TyyReject_used: BOOLEAN = ")
 			BOOLEAN_FORMATTER_.put_eiffel_boolean (a_file, yyReject_used)
 			a_file.put_string ("%N%T%T%T-- Is `reject' called?%N%N%
@@ -339,7 +343,7 @@ feature {NONE} -- Building
 			i, nb: INTEGER
 		do
 				-- `yy_base' and `yy_def' are indexed
-				-- from 1 to `count'+`templates_count'.
+				-- from 1 to `states.count'+`templates_count'.
 			nb := states.count + templates_count
 			create yy_base_.make_filled (0, 0, nb)
 			create yy_def_.make_filled (0, 0, nb)
@@ -490,13 +494,14 @@ feature {NONE} -- Compression
 			singletons_not_void: singletons /= Void
 		local
 			transitions: LX_TRANSITION_TABLE [LX_DFA_STATE]
+			l_transitions_cursor: DS_HASH_TABLE_CURSOR [LX_DFA_STATE, INTEGER]
 			template: LX_TRANSITION_TABLE [LX_DFA_STATE]
 			trans_nb, symb_nb: INTEGER
 			i, j, nb: INTEGER
 			common_states: DS_ARRAYED_LIST [LX_DFA_STATE]
 			frequencies: DS_ARRAYED_LIST [INTEGER]
 			st_cursor: DS_ARRAYED_LIST_CURSOR [LX_DFA_STATE]
-			common_state: detachable LX_DFA_STATE
+			common_state: LX_DFA_STATE
 			common_freq: INTEGER
 			proto: detachable LX_PROTO
 			new_proto: LX_PROTO
@@ -510,7 +515,7 @@ feature {NONE} -- Compression
 			trans_nb := transitions.count
 			symb_nb := transitions.capacity
 			if trans_nb * 100 < symb_nb * Proto_size_percentage then
-				put_entry (state.id, Jam_id, transitions)
+				put_entry (state.id, Jam_id, transitions, maximum_symbol)
 			else
 				check protos_not_void: attached protos as l_protos then
 						-- Search for the state which the most frequently targeted
@@ -518,32 +523,26 @@ feature {NONE} -- Compression
 					create common_states.make (trans_nb)
 					create frequencies.make (trans_nb)
 					st_cursor := common_states.new_cursor
-					nb := maximum_symbol
-					from
-						i := minimum_symbol
-					until
-						i > nb
-					loop
-						common_state := transitions.target (i)
-						if common_state /= Void then
-							st_cursor.start
-							st_cursor.search_forth (common_state)
-							if not st_cursor.after then
-								j := st_cursor.index
-								frequencies.replace (frequencies.item (j) + 1, j)
-							else
-								common_states.put_last (common_state)
-								frequencies.put_last (1)
-							end
+					l_transitions_cursor := transitions.transitions.new_cursor
+					from l_transitions_cursor.start until l_transitions_cursor.after loop
+						common_state := l_transitions_cursor.item
+						st_cursor.start
+						st_cursor.search_forth (common_state)
+						if not st_cursor.after then
+							j := st_cursor.index
+							frequencies.replace (frequencies.item (j) + 1, j)
+						else
+							common_states.put_last (common_state)
+							frequencies.put_last (1)
 						end
-						i := i + 1
+						l_transitions_cursor.forth
 					end
 						-- Release cursor to GC.
 					st_cursor.go_after
 					common_state := null_state
-					nb := common_states.count
 					from
 						i := 1
+						nb := common_states.count
 					until
 						i > nb
 					loop
@@ -627,16 +626,16 @@ feature {NONE} -- Compression
 								template := l_templates.last
 								default_id := -l_templates.count
 								l_protos.put (default_id, template, common_state)
-								put_entry (state.id, default_id, transitions.difference (template, null_state))
+								put_entry (state.id, default_id, transitions.difference (template, null_state), maximum_symbol)
 							end
 						else
 							l_protos.put (state.id, transitions.cloned_object, common_state)
-							put_entry (state.id, Jam_id, transitions)
+							put_entry (state.id, Jam_id, transitions, maximum_symbol)
 						end
 					else
 							-- Use the proto.
 						check proto /= Void and difference /= Void then
-							put_entry (state.id, proto.state_id, difference)
+							put_entry (state.id, proto.state_id, difference, maximum_symbol)
 								-- Move `proto' to the front of the proto queue.
 							l_protos.move_to_front (proto_cursor)
 								-- If this state was sufficiently different from
@@ -652,9 +651,11 @@ feature {NONE} -- Compression
 			end
 		end
 
-	put_entry (state_id, default_id: INTEGER; transitions: LX_TRANSITION_TABLE [LX_DFA_STATE])
+	put_entry (state_id, default_id: INTEGER; transitions: LX_TRANSITION_TABLE [LX_DFA_STATE]; a_maximum_symbol: INTEGER)
 			-- Create base/default and next/check entries for
 			-- `transitions' out of state `state_id'.
+			-- `a_maximum_symbol' takes into account whether the symbols are coming from the
+			-- equivalence classes or the meta equivalence classes.
 		require
 			valid_state_id: yy_base.valid_index (state_id)
 			transitions_not_void: transitions /= Void
@@ -665,6 +666,8 @@ feature {NONE} -- Compression
 			base_addr, table_base, table_last: INTEGER
 			yy_chk_, yy_nxt_: ARRAY [INTEGER]
 			singleton: LX_SINGLETON
+			l_symbol: INTEGER
+			l_cursor: DS_HASH_TABLE_CURSOR [LX_DFA_STATE, INTEGER]
 		do
 			check transitions_not_void: attached transitions as l_transitions then
 				inspect transitions.count
@@ -680,14 +683,17 @@ feature {NONE} -- Compression
 					check singletons_not_void: attached singletons as l_singletons then
 							-- There is only one out-transition.
 							-- Save it for later to fill in holes in tables.
-						min_label := l_transitions.minimum_label
-						check attached l_transitions.target (min_label) as l_target then
-							create singleton.make (state_id, default_id, min_label, l_target.id)
-							if not l_singletons.is_full then
-								l_singletons.put_last (singleton)
-							else
-								put_singleton (singleton)
-							end
+						l_symbol := l_transitions.minimum_label
+						if l_symbol = 0 then
+								-- 	. end-of-buffer           -> 0
+								--  . minumum_symbol (if 0)   -> maximum_symbol + 1
+							l_symbol := a_maximum_symbol + 1
+						end
+						create singleton.make (state_id, default_id, l_symbol, l_transitions.transitions.first.id)
+						if not l_singletons.is_full then
+							l_singletons.put_last (singleton)
+						else
+							put_singleton (singleton)
 						end
 					end
 				else
@@ -703,7 +709,15 @@ feature {NONE} -- Compression
 						-- Find the first transition of `state' that we
 						-- need to worry about.
 					min_label := l_transitions.minimum_label
-					max_label := l_transitions.maximum_label
+					if min_label = 0 then
+							-- 	. end-of-buffer           -> 0
+							--  . minumum_symbol (if 0)   -> maximum_symbol + 1
+						min_label := l_transitions.second_minimum_label
+						max_label := a_maximum_symbol + 1
+					else
+						max_label := l_transitions.maximum_label
+					end
+					l_cursor := l_transitions.transitions.new_cursor
 					trans_nb := l_transitions.count
 					symb_nb := l_transitions.capacity
 					if trans_nb * 100 <= symb_nb * Interior_fit_percentage then
@@ -730,12 +744,14 @@ feature {NONE} -- Compression
 							INTEGER_ARRAY_.resize_with_default (yy_nxt_, 0, 0, max_index)
 							INTEGER_ARRAY_.resize_with_default (yy_chk_, 0, 0, max_index)
 						end
-						from
-							i := min_label
-						until
-							i > max_label
-						loop
-							if l_transitions.target (i) /= Void and yy_chk_.item (base_addr + i - min_label) /= 0 then
+						from l_cursor.start until l_cursor.after loop
+							l_symbol := l_cursor.key
+							if l_symbol = 0 then
+									-- 	. end-of-buffer           -> 0
+									--  . minumum_symbol (if 0)   -> maximum_symbol + 1
+								l_symbol := max_label
+							end
+							if yy_chk_.item (base_addr + l_symbol - min_label) /= 0 then
 									-- `base_addr' unsuitable. Find another.
 								from
 									base_addr := base_addr + 1
@@ -753,9 +769,9 @@ feature {NONE} -- Compression
 								end
 									-- Reset the loop counter so we'll start
 									-- all over again.
-								i := min_label
+								l_cursor.start
 							else
-								i := i + 1
+								l_cursor.forth
 							end
 						end
 					else
@@ -773,16 +789,16 @@ feature {NONE} -- Compression
 					end
 					yy_base.put (table_base, state_id)
 					yy_def.put (default_id, state_id)
-					from
-						i := min_label
-					until
-						i > max_label
-					loop
-						if attached l_transitions.target (i) as l_target then
-							yy_nxt_.put (l_target.id, table_base + i)
-							yy_chk_.put (state_id, table_base + i)
+					from l_cursor.start until l_cursor.after loop
+						l_symbol := l_cursor.key
+						if l_symbol = 0 then
+								-- 	. end-of-buffer           -> 0
+								--  . minumum_symbol (if 0)   -> maximum_symbol + 1
+							l_symbol := max_label
 						end
-						i := i + 1
+						yy_nxt_.put (l_cursor.item.id, table_base + l_symbol)
+						yy_chk_.put (state_id, table_base + l_symbol)
+						l_cursor.forth
 					end
 					if base_addr = first_free then
 							-- Find next free slot in tables.
@@ -810,32 +826,44 @@ feature {NONE} -- Compression
 			state_id: INTEGER
 			max_index: INTEGER
 			yy_chk_: ARRAY [INTEGER]
+			l_index: INTEGER
 		do
 			symbol := singleton.symbol
 			state_id := singleton.state_id
-			if first_free < symbol then
-				first_free := symbol
+			l_index := first_free
+			if l_index < symbol then
+				l_index := symbol
 			end
 			from
 				yy_chk_ := yy_chk
 				max_index := yy_nxt.upper
 			until
-				first_free > max_index or else yy_chk_.item (first_free) = 0
+				l_index > max_index or else yy_chk_.item (l_index) = 0
 			loop
-				first_free := first_free + 1
+				l_index := l_index + 1
 			end
-			if first_free > max_index then
+			if l_index > max_index then
 				max_index := max_index + Max_xpairs_increment
 				INTEGER_ARRAY_.resize_with_default (yy_nxt, 0, 0, max_index)
 				INTEGER_ARRAY_.resize_with_default (yy_chk_, 0, 0, max_index)
 			end
-			yy_base.put (first_free - symbol, state_id)
+			yy_base.put (l_index - symbol, state_id)
 			yy_def.put (singleton.default_id, state_id)
-			yy_chk_.put (state_id, first_free)
-			yy_nxt.put (singleton.target_id, first_free)
-			if first_free > table_end then
-				table_end := first_free
-				first_free := first_free + 1
+			yy_chk_.put (state_id, l_index)
+			yy_nxt.put (singleton.target_id, l_index)
+			if l_index > table_end then
+				table_end := l_index
+			end
+			if l_index = first_free then
+					-- Find next free slot in tables.
+				from
+					l_index := l_index + 1
+				until
+					yy_chk_.item (l_index) = 0
+				loop
+					l_index := l_index + 1
+				end
+				first_free := l_index
 				max_index := yy_nxt.upper
 				if first_free > max_index then
 					max_index := max_index + Max_xpairs_increment
@@ -853,13 +881,35 @@ feature {NONE} -- Compression
 		local
 			cursor: DS_LINKED_LIST_CURSOR [LX_TRANSITION_TABLE [LX_DFA_STATE]]
 			template: LX_TRANSITION_TABLE [LX_DFA_STATE]
-			i, max_index: INTEGER
+			i, nb, max_index: INTEGER
+			l_yy_meta: like yy_meta
+			l_max: INTEGER
 		do
 			yyTemplate_mark := states.count + 2
 			if attached meta_equiv_classes as l_meta_equiv_classes then
 				l_meta_equiv_classes.build
-				yy_meta := l_meta_equiv_classes.to_array (0, maximum_symbol)
+					-- 	. end-of-buffer           -> 0
+					--  . minumum_symbol (if 0)   -> maximum_symbol + 1
+				l_yy_meta := l_meta_equiv_classes.to_array (0, maximum_symbol + 1)
+				l_max := l_meta_equiv_classes.new_upper
+				if minimum_symbol = 0 then
+					from
+						i := minimum_symbol
+						nb := maximum_symbol
+					until
+						i > nb
+					loop
+						if l_yy_meta.item (i) = 0 then
+							l_yy_meta.put (l_max + 1, i)
+						end
+						i := i + 1
+					end
+					l_yy_meta.put (l_yy_meta.item (0), nb + 1)
+					l_yy_meta.put (0, 0)
+				end
+				yy_meta := l_yy_meta
 			else
+				l_max := maximum_symbol
 				yy_meta := Void
 			end
 			check templates_not_void: attached templates as l_templates then
@@ -883,7 +933,7 @@ feature {NONE} -- Compression
 						-- templates is the jam template, i.e. templates never
 						-- default to other non-jam table entries (e.g. another
 						-- template).
-					put_entry (i, Jam_id, template)
+					put_entry (i, Jam_id, template, l_max)
 					i := i + 1
 					cursor.forth
 				end

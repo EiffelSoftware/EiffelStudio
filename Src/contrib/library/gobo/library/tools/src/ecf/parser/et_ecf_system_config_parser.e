@@ -8,7 +8,7 @@ note
 	]"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2017-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2017-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -65,7 +65,7 @@ feature -- Parsing
 		do
 			last_system_config := Void
 			create l_result.make (Void)
-			parse_file_with_action (a_file, agent build_system_config (?, ?, ?, a_universe, l_result))
+			parse_file_with_action (a_file, True, agent build_system_config (?, ?, ?, a_universe, l_result))
 			last_system_config := l_result.item
 		ensure
 			universe_set: attached last_system_config as l_last_system_config implies l_last_system_config.universe = a_universe

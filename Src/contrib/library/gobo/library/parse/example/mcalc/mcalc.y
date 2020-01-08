@@ -5,7 +5,7 @@ note
 
 		"Calculator with memory"
 
-	copyright: "Copyright (c) 1999-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -19,8 +19,6 @@ inherit
 			make as make_parser_skeleton
 		end
 
-	KL_IMPORTED_STRING_ROUTINES
-
 create
 
 	make, execute
@@ -29,7 +27,7 @@ create
 
 	-- geyacc declarations.
 %token <DOUBLE> NUM  -- Double precision number
-%token <detachable STRING> VAR  -- Memory name
+%token <STRING> VAR  -- Memory name
 %type <DOUBLE> exp
 
 %right ASSIGNMENT    -- Assignment sign `:='
@@ -45,13 +43,13 @@ input: -- Empty
 	;
 
 line: '\n'
-	| exp '\n'		{ print ($1.out); print ("%N") }
+	| exp '\n'		{ print ($1); print ("%N") }
 	| error '\n'	{ recover }
 	;
 
 exp: NUM					{ $$ := $1 }
-	| VAR					{ if attached $1 as l_name then $$ := memory_value (l_name) end }
-	| VAR ASSIGNMENT exp	{ $$ := $3; if attached $1 as l_name then set_memory_value ($$, l_name) end }
+	| VAR					{ $$ := memory_value ($1) }
+	| VAR ASSIGNMENT exp	{ $$ := $3; set_memory_value ($$, $1) }
 	| exp '+' exp			{ $$ := $1 + $3 }
 	| exp '-' exp			{ $$ := $1 - $3 }
 	| exp '*' exp			{ $$ := $1 * $3 }
@@ -68,6 +66,7 @@ feature {NONE} -- Initialization
 			-- Create a new calculator with memory.
 		do
 			make_parser_skeleton
+			last_string_value := ""
 			create memory_values.make (10)
 		end
 
@@ -108,7 +107,7 @@ feature {NONE} -- Scanner
 	read_token
 			-- Lexical analyzer returns a double floating point
 			-- number on the stack and the token NUM, a STRING and
-			-- and the token VAR, a token ASSIGNMENT, or the ASCII
+			-- and the token VAR, a token ASSIGNMENT, or the
 			-- character read if not a number. Skips all blanks
 			-- and tabs, returns 0 for EOF.
 		local
@@ -193,7 +192,7 @@ feature {NONE} -- Scanner
 						pending_character := c
 						has_pending_character := True
 					end
-					last_detachable_string_value := buffer
+					last_string_value := buffer
 				when ':' then
 					std.input.read_character
 					c := std.input.last_character

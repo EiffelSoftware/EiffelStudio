@@ -5,7 +5,7 @@ note
 		"DFA equipped with lexical analyzer generator"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -42,16 +42,17 @@ feature {NONE} -- Initialization
 		require
 			a_description_not_void: a_description /= Void
 		local
-			max: INTEGER
+			min, max: INTEGER
 			equiv_classes: detachable LX_EQUIVALENCE_CLASSES
 			l_yy_ec: ARRAY [INTEGER]
+			i, nb: INTEGER
 		do
 			if attached a_description.input_filename as l_input_filename then
 				input_filename := l_input_filename
 			else
 				input_filename := Default_input_filename
 			end
-			characters_count := a_description.characters_count
+			has_utf8_enconding := a_description.has_utf8_enconding
 			array_size := a_description.array_size
 			inspect_used := a_description.inspect_used
 			actions_separated := a_description.actions_separated
@@ -66,23 +67,38 @@ feature {NONE} -- Initialization
 			yy_start_conditions := a_description.start_conditions.names
 			build_rules (a_description.rules)
 			build_eof_rules (a_description.eof_rules, 0, yy_start_conditions.count - 1)
-			max := characters_count
+			min := a_description.minimum_symbol
+			max := a_description.maximum_symbol
+			yyMax_symbol_equiv_class := max
 			equiv_classes := a_description.equiv_classes
 			if equiv_classes /= Void and then equiv_classes.built then
-				l_yy_ec := equiv_classes.to_array (0, max)
+					-- 	. end-of-buffer           -> 0
+					--  . minumum_symbol (if 0)   -> maximum_symbol + 1
+				l_yy_ec := equiv_classes.to_array (0, max + 1)
+				from
+					i := min
+					nb := max
+					max := equiv_classes.new_upper
+				until
+					i > nb
+				loop
+					if l_yy_ec.item (i) = 0 then
+						l_yy_ec.put (max + 1, i)
+					end
+					i := i + 1
+				end
+				yyNull_equiv_class := l_yy_ec.item (0)
+				l_yy_ec.put (yyNull_equiv_class, nb + 1)
+				l_yy_ec.put (0, 0)
 				yy_ec := l_yy_ec
-				yyNull_equiv_class := l_yy_ec.item (max)
-				max := equiv_classes.count
 			else
-				yyNull_equiv_class := max
+				yyNull_equiv_class := max + 1
 			end
 			yyNb_rules := yy_rules.upper
 			yyEnd_of_buffer := yyNb_rules + 1
 			yyLine_used := a_description.line_used
 			yyPosition_used := a_description.position_used
-				-- Symbols start at 1 and NULL transitions
-				-- are indexed by `maximum_symbol'.
-			initialize_dfa (a_description.start_conditions, 1, max)
+			initialize_dfa (a_description.start_conditions, min, max)
 		end
 
 	put_eob_state
@@ -118,6 +134,9 @@ feature -- Generation
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		do
+			if has_utf8_enconding then
+				print_bom (a_file)
+			end
 			print_eiffel_header (a_file)
 			a_file.put_string ("%Nfeature -- Status report%N%N")
 			print_status_report_routines (a_file)
@@ -167,6 +186,16 @@ feature -- Generation
 		end
 
 feature {NONE} -- Generation
+
+	print_bom (a_file: KI_TEXT_OUTPUT_STREAM)
+			-- Print byte order mark (BOM) for UTF-8 (0xEF,0xBB,0xBF) to `a_file'.
+			-- See http://en.wikipedia.org/wiki/Byte_order_mark
+		require
+			a_file_not_void: a_file /= Void
+			a_file_open_write: a_file.is_open_write
+		do
+			a_file.put_string ({UC_UTF8_ROUTINES}.utf8_bom)
+		end
 
 	print_eiffel_header (a_file: KI_TEXT_OUTPUT_STREAM)
 			-- Print user-defined eiffel header to `a_file'.
@@ -443,7 +472,7 @@ feature {NONE} -- Generation
 						a_file.put_integer (column_count)
 						a_file.put_character ('%N')
 					elseif column_count /= 0 then
-							-- yy_column := yy_column + text_count
+							-- The next line means: "yy_column := yy_column + text_count"
 						a_file.put_string ("%Tyy_column := yy_column + yy_end - yy_start - yy_more_len%N")
 					end
 				elseif line_count > 0 then
@@ -687,9 +716,14 @@ feature {NONE} -- Generation
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		local
-			i, j, k, nb: INTEGER
-			a_table_upper: INTEGER
+			i, j, nb: INTEGER
+			l_table_lower, l_table_upper: INTEGER
+			l_index, l_upper, l_value: INTEGER
+			l_consecutive_chunk_size: INTEGER
 		do
+			l_consecutive_chunk_size := 25
+			l_table_lower := a_table.lower
+			l_table_upper := a_table.upper
 			a_file.put_character ('%T')
 			a_file.put_string (a_name)
 			a_file.put_string (": SPECIAL [INTEGER]%N")
@@ -719,58 +753,132 @@ feature {NONE} -- Generation
 			else
 				a_file.put_string ("%T%Tlocal%N%T%T%Tan_array: ARRAY [INTEGER]%N%
 					%%T%Tonce%N%T%T%Tcreate an_array.make_filled (0, ")
-				a_file.put_integer (a_table.lower)
+				a_file.put_integer (l_table_lower)
 				a_file.put_string (", ")
-				a_file.put_integer (a_table.upper)
+				a_file.put_integer (l_table_upper)
 				a_file.put_string (")%N")
 				from
 					j := 1
+					i := l_table_lower
 				until
-					j > nb
+					i > l_table_upper
 				loop
-					a_file.put_string (Indentation)
-					a_file.put_string (a_name)
-					a_file.put_character ('_')
-					a_file.put_integer (j)
-					a_file.put_string (" (an_array)%N")
-					j := j + 1
+					from
+						l_index := i
+						l_upper := (i + array_size - 1).min (l_table_upper)
+					until
+						l_index > l_upper or else l_table_upper - l_index + 1 >= l_consecutive_chunk_size and then a_table.area.filled_with (a_table.item (l_index), l_index - l_table_lower, l_index - l_table_lower + l_consecutive_chunk_size - 1)
+					loop
+						l_index := l_index + 1
+					end
+					if l_index = i then
+						l_value := a_table.item (i)
+						from
+							l_upper := i + l_consecutive_chunk_size
+						until
+							l_upper > l_table_upper or else a_table.item (l_upper) /= l_value
+						loop
+							l_upper := l_upper + 1
+						end
+						l_upper := l_upper - 1
+						a_file.put_string (Indentation)
+						a_file.put_string ("an_array.area.fill_with (")
+						a_file.put_integer (l_value)
+						a_file.put_string (", ")
+						a_file.put_integer (i - l_table_lower)
+						a_file.put_string (", ")
+						a_file.put_integer (l_upper - l_table_lower)
+						a_file.put_string (")%N")
+					else
+						if l_index <= l_upper then
+							l_upper := l_index - 1
+						end
+						if l_upper = i then
+							a_file.put_string (Indentation)
+							a_file.put_string ("an_array.put (")
+							a_file.put_integer (a_table.item (i))
+							a_file.put_string (", ")
+							a_file.put_integer (i)
+							a_file.put_string (")%N")
+						elseif a_table.area.filled_with (a_table.item (i), i - l_table_lower, l_upper - l_table_lower) then
+							a_file.put_string (Indentation)
+							a_file.put_string ("an_array.area.fill_with (")
+							a_file.put_integer (a_table.item (i))
+							a_file.put_string (", ")
+							a_file.put_integer (i - l_table_lower)
+							a_file.put_string (", ")
+							a_file.put_integer (l_upper - l_table_lower)
+							a_file.put_string (")%N")
+						else
+							a_file.put_string (Indentation)
+							a_file.put_string (a_name)
+							a_file.put_character ('_')
+							a_file.put_integer (j)
+							a_file.put_string (" (an_array)%N")
+							j := j + 1
+						end
+					end
+					i := l_upper + 1
 				end
 				a_file.put_string ("%T%T%TResult := yy_fixed_array (an_array)%N%T%Tend%N")
 				from
 					j := 1
-					i := a_table.lower
-					a_table_upper := a_table.upper
+					i := l_table_lower
 				until
-					j > nb
+					i > l_table_upper
 				loop
-					a_file.put_string ("%N%T")
-					a_file.put_string (a_name)
-					a_file.put_character ('_')
-					a_file.put_integer (j)
-					a_file.put_string (" (an_array: ARRAY [INTEGER])%N")
-					a_file.put_string ("%T%T%T-- Fill chunk #")
-					a_file.put_integer (j)
-					a_file.put_string (" of ")
-					if a_name.ends_with ("_template") then
-						a_file.put_string ("template for `")
-						a_file.put_string (a_name.substring (1, a_name.count - 9))
-					else
-						a_file.put_character ('`')
-						a_file.put_string (a_name)
+					from
+						l_index := i
+						l_upper := (i + array_size - 1).min (l_table_upper)
+					until
+						l_index > l_upper or else l_table_upper - l_index + 1 >= l_consecutive_chunk_size and then a_table.area.filled_with (a_table.item (l_index), l_index - l_table_lower, l_index - l_table_lower + l_consecutive_chunk_size - 1)
+					loop
+						l_index := l_index + 1
 					end
-					a_file.put_string ("%'.%N")
-					a_file.put_string ("%T%Tdo%N%T%T%Tyy_array_subcopy (an_array, <<%N")
-					k := a_table_upper.min (i + array_size - 1)
-					ARRAY_FORMATTER_.put_integer_array (a_file, a_table, i, k)
-					a_file.put_string (", yy_Dummy>>,%N%T%T%T")
-					a_file.put_integer (1)
-					a_file.put_string (", ")
-					a_file.put_integer (k - i + 1)
-					a_file.put_string (", ")
-					a_file.put_integer (i)
-					a_file.put_string (")%N%T%Tend%N")
-					i := k + 1
-					j := j + 1
+					if l_index = i then
+						l_value := a_table.item (i)
+						from
+							l_upper := i + l_consecutive_chunk_size
+						until
+							l_upper > l_table_upper or else a_table.item (l_upper) /= l_value
+						loop
+							l_upper := l_upper + 1
+						end
+						l_upper := l_upper - 1
+					else
+						if l_index <= l_upper then
+							l_upper := l_index - 1
+						end
+						if l_upper /= i and then not a_table.area.filled_with (a_table.item (i), i - l_table_lower, l_upper - l_table_lower) then
+							a_file.put_string ("%N%T")
+							a_file.put_string (a_name)
+							a_file.put_character ('_')
+							a_file.put_integer (j)
+							a_file.put_string (" (an_array: ARRAY [INTEGER])%N")
+							a_file.put_string ("%T%T%T-- Fill chunk #")
+							a_file.put_integer (j)
+							a_file.put_string (" of ")
+							if a_name.ends_with ("_template") then
+								a_file.put_string ("template for `")
+								a_file.put_string (a_name.substring (1, a_name.count - 9))
+							else
+								a_file.put_character ('`')
+								a_file.put_string (a_name)
+							end
+							a_file.put_string ("%'.%N")
+							a_file.put_string ("%T%Tdo%N%T%T%Tyy_array_subcopy (an_array, <<%N")
+							ARRAY_FORMATTER_.put_integer_array (a_file, a_table, i, l_upper)
+							a_file.put_string (", yy_Dummy>>,%N%T%T%T")
+							a_file.put_integer (1)
+							a_file.put_string (", ")
+							a_file.put_integer (l_upper - i + 1)
+							a_file.put_string (", ")
+							a_file.put_integer (i)
+							a_file.put_string (")%N%T%Tend%N")
+							j := j + 1
+						end
+					end
+					i := l_upper + 1
 				end
 			end
 		end
@@ -843,52 +951,70 @@ feature {NONE} -- Generation
 			a_file_not_void: a_file /= Void
 			a_file_open_write: a_file.is_open_write
 		local
-			i, j, nb: INTEGER
+			i, j: INTEGER
 			transitions: LX_TRANSITION_TABLE [LX_DFA_STATE]
 			has_transition: ARRAY [BOOLEAN]
+			l_minimum_symbol, l_maximum_symbol: INTEGER
 		do
-			nb := characters_count
 			transitions := a_state.transitions
-			create has_transition.make_filled (False, 0, nb - 1)
 			if attached yy_ec as l_yy_ec then
 					-- Equivalence classes are used.
+					--
+					-- Following are the minimum and maximum symbols
+					-- before applying the equivalence classes
+					-- (`minimum_symbol' and `maximum_symbol' being
+					-- the values after applying the equivalence classes).
+				l_minimum_symbol := minimum_symbol
+				l_maximum_symbol := l_yy_ec.upper - 1
+				create has_transition.make_filled (False, l_minimum_symbol, l_maximum_symbol)
 				from
 					i := 1
 				until
-					i >= nb
+					i > l_maximum_symbol
 				loop
 					j := l_yy_ec.item (i)
+					if j = maximum_symbol + 1 then
+							-- 	. end-of-buffer           -> 0
+							--  . minumum_symbol (if 0)   -> maximum_symbol + 1
+						j := 0
+					end
 					if transitions.valid_label (j) then
 						has_transition.put (transitions.target (j) /= Void, i)
 					end
 					i := i + 1
 				end
 					-- Null transition.
-				j := l_yy_ec.item (nb)
-				if transitions.valid_label (j) then
-					has_transition.put (transitions.target (j) /= Void, 0)
+				if l_minimum_symbol = 0 then
+					j := l_yy_ec.item (l_maximum_symbol + 1)
+					if j = maximum_symbol + 1 then
+							-- 	. end-of-buffer           -> 0
+							--  . minumum_symbol (if 0)   -> maximum_symbol + 1
+						j := 0
+					end
+					if transitions.valid_label (j) then
+						has_transition.put (transitions.target (j) /= Void, l_minimum_symbol)
+					end
 				end
 			else
+				l_minimum_symbol := minimum_symbol
+				l_maximum_symbol := maximum_symbol
+				create has_transition.make_filled (False, l_minimum_symbol, l_maximum_symbol)
 				from
-					i := 1
+					i := l_minimum_symbol
 				until
-					i >= nb
+					i > l_maximum_symbol
 				loop
 					if transitions.valid_label (i) then
 						has_transition.put (transitions.target (i) /= Void, i)
 					end
 					i := i + 1
 				end
-					-- Null transition.
-				if transitions.valid_label (i) then
-					has_transition.put (transitions.target (nb) /= Void, 0)
-				end
 			end
 			a_file.put_string (" out-transitions: [")
 			from
-				i := 0
+				i := l_minimum_symbol
 			until
-				i >= nb
+				i > l_maximum_symbol
 			loop
 				if has_transition.item (i) then
 					a_file.put_character (' ')
@@ -897,7 +1023,7 @@ feature {NONE} -- Generation
 						j := i
 						i := i + 1
 					until
-						i >= nb or not has_transition.item (i)
+						i > l_maximum_symbol or else not has_transition.item (i)
 					loop
 						i := i + 1
 					end
@@ -912,9 +1038,9 @@ feature {NONE} -- Generation
 			end
 			a_file.put_string ("]%N jam-transitions: EOF [")
 			from
-				i := 0
+				i := l_minimum_symbol
 			until
-				i >= nb
+				i > l_maximum_symbol
 			loop
 				if not has_transition.item (i) then
 					a_file.put_character (' ')
@@ -923,7 +1049,7 @@ feature {NONE} -- Generation
 						j := i
 						i := i + 1
 					until
-						i >= nb or has_transition.item (i)
+						i > l_maximum_symbol or else has_transition.item (i)
 					loop
 						i := i + 1
 					end
@@ -1057,6 +1183,9 @@ feature {NONE} -- Access
 	input_filename: STRING
 			-- Input filename
 
+	has_utf8_enconding: BOOLEAN
+			-- Has the input file describing the scanner been considered to be encoded with UTF-8?
+
 	eiffel_code: detachable STRING
 			-- User-defined Eiffel code
 
@@ -1085,11 +1214,6 @@ feature {NONE} -- Access
 
 	line_pragma: BOOLEAN
 			-- Should line pragma be generated?
-
-	characters_count: INTEGER
-			-- Number of characters in character set
-			-- handled by the generated scanners
-			-- (The character set is always assumed to start from 0.)
 
 	array_size: INTEGER
 			-- Maximum size supported for manifest arrays
@@ -1122,9 +1246,7 @@ feature {NONE} -- Constants
 
 invariant
 
-	minimum_symbol: minimum_symbol = 1
 	no_void_eiffel_header: eiffel_header /= Void implies not eiffel_header.has_void
-	characters_count_positive: characters_count > 0
 	array_size_positive: array_size >= 0
 	input_filename_not_void: input_filename /= Void
 

@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -33,6 +33,7 @@ inherit
 	ET_CLASS_PROCESSOR
 		rename
 			process_identifier as process_ast_identifier,
+			process_c1_character_constant as process_ast_c1_character_constant,
 			process_c2_character_constant as process_ast_c2_character_constant,
 			process_regular_manifest_string as process_ast_regular_manifest_string
 		undefine
@@ -46,6 +47,7 @@ inherit
 		rename
 			make as make_ast_processor,
 			process_identifier as process_ast_identifier,
+			process_c1_character_constant as process_ast_c1_character_constant,
 			process_c2_character_constant as process_ast_c2_character_constant,
 			process_regular_manifest_string as process_ast_regular_manifest_string
 		redefine
@@ -72,8 +74,8 @@ feature {NONE} -- Initialization
 			create last_symbols.make (Initial_last_symbols_capacity)
 			create last_object_tests_stack.make (Initial_last_object_tests_capacity)
 			create last_object_tests_pool.make (Initial_last_object_tests_capacity)
-			create last_across_components_stack.make (Initial_last_across_components_capacity)
-			create last_across_components_pool.make (Initial_last_across_components_capacity)
+			create last_iteration_components_stack.make (Initial_last_iteration_components_capacity)
+			create last_iteration_components_pool.make (Initial_last_iteration_components_capacity)
 			create assertions.make (Initial_assertions_capacity)
 			create assertion_counters.make (Initial_assertion_counters_capacity)
 			create assertion_kinds.make (Initial_assertion_counters_capacity)
@@ -97,7 +99,7 @@ feature -- Initialization
 			wipe_out_last_formal_arguments_stack
 			wipe_out_last_local_variables_stack
 			wipe_out_last_object_tests_stack
-			wipe_out_last_across_components_stack
+			wipe_out_last_iteration_components_stack
 			last_keywords.wipe_out
 			last_symbols.wipe_out
 			providers.wipe_out
@@ -521,16 +523,16 @@ feature {NONE} -- Basic operations
 				if attached last_object_tests as l_last_object_tests then
 					a_query.set_object_tests (l_last_object_tests.cloned_object_test_list)
 				end
-				if attached last_across_components as l_last_across_components then
-					a_query.set_across_components (l_last_across_components.cloned_across_component_list)
+				if attached last_iteration_components as l_last_iteration_components then
+					a_query.set_iteration_components (l_last_iteration_components.cloned_iteration_component_list)
 				end
 			end
 				-- Reset local variables, formal arguments, object-tests
-				-- and across components before reading the next feature.
+				-- and iteration components before reading the next feature.
 			wipe_out_last_formal_arguments_stack
 			wipe_out_last_local_variables_stack
 			wipe_out_last_object_tests_stack
-			wipe_out_last_across_components_stack
+			wipe_out_last_iteration_components_stack
 		end
 
 	register_query_synonym (a_query: detachable ET_QUERY)
@@ -554,16 +556,16 @@ feature {NONE} -- Basic operations
 				if attached last_object_tests as l_last_object_tests then
 					a_procedure.set_object_tests (l_last_object_tests.cloned_object_test_list)
 				end
-				if attached last_across_components as l_last_across_components then
-					a_procedure.set_across_components (l_last_across_components.cloned_across_component_list)
+				if attached last_iteration_components as l_last_iteration_components then
+					a_procedure.set_iteration_components (l_last_iteration_components.cloned_iteration_component_list)
 				end
 			end
 				-- Reset local variables, formal arguments, object-tests
-				-- and across components before reading the next feature.
+				-- and iteration components before reading the next feature.
 			wipe_out_last_formal_arguments_stack
 			wipe_out_last_local_variables_stack
 			wipe_out_last_object_tests_stack
-			wipe_out_last_across_components_stack
+			wipe_out_last_iteration_components_stack
 		end
 
 	register_procedure_synonym (a_procedure: detachable ET_PROCEDURE)
@@ -585,8 +587,8 @@ feature {NONE} -- Basic operations
 				if attached last_object_tests as l_last_object_tests then
 					a_inline_agent.set_object_tests (l_last_object_tests.cloned_object_test_list)
 				end
-				if attached last_across_components as l_last_across_components then
-					a_inline_agent.set_across_components (l_last_across_components.cloned_across_component_list)
+				if attached last_iteration_components as l_last_iteration_components then
+					a_inline_agent.set_iteration_components (l_last_iteration_components.cloned_iteration_component_list)
 				end
 					-- Clean up after the inline agent has been parsed.
 				set_end_closure
@@ -925,7 +927,7 @@ feature {NONE} -- Basic operations
 			-- new closure (i.e. feature, invariant or inline agent).
 			-- Keep track of the values of `last_formal_arguments',
 			-- `last_local_variables', `last_object_tests' and
-			-- `last_across_components' for the enclosing closure.
+			-- `last_iteration_components' for the enclosing closure.
 			-- They will be restored when we reach the end of the
 			-- closure by `set_end_closure'.
 		do
@@ -935,15 +937,15 @@ feature {NONE} -- Basic operations
 			last_local_variables := Void
 			last_object_tests_stack.force (last_object_tests)
 			last_object_tests := Void
-			last_across_components_stack.force (last_across_components)
-			last_across_components := Void
+			last_iteration_components_stack.force (last_iteration_components)
+			last_iteration_components := Void
 		end
 
 	set_end_closure
 			-- Indicate that the end of the closure (i.e. feature, invariant
 			-- or inline agent) being parsed has been reached. Restore
 			-- `last_formal_arguments', `last_local_variables',
-			-- `last_object_tests' and `last_across_components'
+			-- `last_object_tests' and `last_iteration_components'
 			-- for the enclosing closure if any.
 		do
 			if not last_formal_arguments_stack.is_empty then
@@ -968,15 +970,15 @@ feature {NONE} -- Basic operations
 			else
 				last_object_tests := Void
 			end
-			if attached last_across_components as l_last_across_components then
-				l_last_across_components.wipe_out
-				last_across_components_pool.force (l_last_across_components)
+			if attached last_iteration_components as l_last_iteration_components then
+				l_last_iteration_components.wipe_out
+				last_iteration_components_pool.force (l_last_iteration_components)
 			end
-			if not last_across_components_stack.is_empty then
-				last_across_components := last_across_components_stack.item
-				last_across_components_stack.remove
+			if not last_iteration_components_stack.is_empty then
+				last_iteration_components := last_iteration_components_stack.item
+				last_iteration_components_stack.remove
 			else
-				last_across_components := Void
+				last_iteration_components := Void
 			end
 		end
 
@@ -1235,49 +1237,49 @@ feature {ET_CONSTRAINT_ACTUAL_PARAMETER_ITEM, ET_CONSTRAINT_ACTUAL_PARAMETER_LIS
 feature {NONE} -- AST factory
 
 	new_across_all_expression (a_across_header: detachable ET_ACROSS_EXPRESSION; an_invariant: detachable ET_LOOP_INVARIANTS;
-			an_until_conditional: detachable ET_CONDITIONAL; a_all_conditional: detachable ET_CONDITIONAL;
-			a_variant: detachable ET_VARIANT; an_end: detachable ET_KEYWORD): detachable ET_ACROSS_EXPRESSION
-				-- New across all expression
-			do
-				if a_across_header /= Void and a_all_conditional /= Void then
-					Result := a_across_header
-					Result.set_until_conditional (an_until_conditional)
-					Result.set_iteration_conditional (a_all_conditional)
-					Result.set_all (True)
-					Result.set_invariant_part (an_invariant)
-					Result.set_variant_part (a_variant)
-					if an_end /= Void then
-						Result.set_end_keyword (an_end)
-					end
-						-- We set 'cursor_name.is_across_cursor' to False when
-						-- parsing within its scope.
-					Result.cursor_name.set_across_cursor (True)
+		an_until_conditional: detachable ET_CONDITIONAL; a_all_conditional: detachable ET_CONDITIONAL;
+		a_variant: detachable ET_VARIANT; an_end: detachable ET_KEYWORD): detachable ET_ACROSS_EXPRESSION
+			-- New across all expression
+		do
+			if a_across_header /= Void and a_all_conditional /= Void then
+				Result := a_across_header
+				Result.set_until_conditional (an_until_conditional)
+				Result.set_iteration_conditional (a_all_conditional)
+				Result.set_all (True)
+				Result.set_invariant_part (an_invariant)
+				Result.set_variant_part (a_variant)
+				if an_end /= Void then
+					Result.set_end_keyword (an_end)
 				end
+					-- We set 'cursor_name.is_iteration_cursor' to False when
+					-- parsing within its scope.
+				Result.cursor_name.set_iteration_cursor (True)
 			end
+		end
 
 	new_across_expression_header (a_across: detachable ET_KEYWORD; a_iterable_expression: detachable ET_EXPRESSION;
 		a_as: detachable ET_KEYWORD; a_cursor_name: detachable ET_IDENTIFIER): detachable ET_ACROSS_EXPRESSION
-				-- New across expression header
+			-- New across expression header
 		local
-			l_last_across_components: like last_across_components
+			l_last_iteration_components: like last_iteration_components
 			l_cursor_name: ET_IDENTIFIER
 		do
 			Result := ast_factory.new_across_all_expression (a_across, a_iterable_expression, a_as, a_cursor_name, Void, Void, tokens.true_keyword, Void, Void)
 			if Result /= Void then
-				l_last_across_components := last_across_components
-				if l_last_across_components = Void then
-					l_last_across_components := new_across_component_list
-					last_across_components := l_last_across_components
+				l_last_iteration_components := last_iteration_components
+				if l_last_iteration_components = Void then
+					l_last_iteration_components := new_iteration_component_list
+					last_iteration_components := l_last_iteration_components
 				end
-				l_last_across_components.force_last (Result)
-					-- We set 'cursor_name.is_across_cursor' to False when
+				l_last_iteration_components.force_last (Result)
+					-- We set 'cursor_name.is_iteration_cursor' to False when
 					-- parsing within its scope.
 				l_cursor_name := Result.cursor_name
-				l_cursor_name.set_across_cursor (False)
-				l_cursor_name.set_seed (l_last_across_components.count)
+				l_cursor_name.set_iteration_cursor (False)
+				l_cursor_name.set_seed (l_last_iteration_components.count)
 				l_cursor_name := Result.unfolded_cursor_name
-				l_cursor_name.set_across_cursor (True)
-				l_cursor_name.set_seed (l_last_across_components.count)
+				l_cursor_name.set_iteration_cursor (True)
+				l_cursor_name.set_seed (l_last_iteration_components.count)
 			end
 		end
 
@@ -1297,9 +1299,9 @@ feature {NONE} -- AST factory
 				if an_end /= Void then
 					Result.set_end_keyword (an_end)
 				end
-					-- We set 'cursor_name.is_across_cursor' to False when
+					-- We set 'cursor_name.is_iteration_cursor' to False when
 					-- parsing within its scope.
-				Result.cursor_name.set_across_cursor (True)
+				Result.cursor_name.set_iteration_cursor (True)
 			end
 		end
 
@@ -1308,51 +1310,51 @@ feature {NONE} -- AST factory
 		a_cursor_name: detachable ET_IDENTIFIER): detachable ET_ACROSS_INSTRUCTION
 			-- New across instruction header
 		local
-			l_last_across_components: like last_across_components
+			l_last_iteration_components: like last_iteration_components
 			l_cursor_name: ET_IDENTIFIER
 		do
 			Result := ast_factory.new_across_instruction (a_across, a_iterable_expression, a_as, a_cursor_name, Void, Void, Void, Void, Void, Void)
 			if Result /= Void then
-				l_last_across_components := last_across_components
-				if l_last_across_components = Void then
-					l_last_across_components := new_across_component_list
-					last_across_components := l_last_across_components
+				l_last_iteration_components := last_iteration_components
+				if l_last_iteration_components = Void then
+					l_last_iteration_components := new_iteration_component_list
+					last_iteration_components := l_last_iteration_components
 				end
-				l_last_across_components.force_last (Result)
-					-- We set 'cursor_name.is_across_cursor' to False when
+				l_last_iteration_components.force_last (Result)
+					-- We set 'cursor_name.is_iteration_cursor' to False when
 					-- parsing within its scope.
 				l_cursor_name := Result.cursor_name
-				l_cursor_name.set_across_cursor (False)
-				l_cursor_name.set_seed (l_last_across_components.count)
+				l_cursor_name.set_iteration_cursor (False)
+				l_cursor_name.set_seed (l_last_iteration_components.count)
 				l_cursor_name := Result.unfolded_cursor_name
-				l_cursor_name.set_across_cursor (True)
-				l_cursor_name.set_seed (l_last_across_components.count)
+				l_cursor_name.set_iteration_cursor (True)
+				l_cursor_name.set_seed (l_last_iteration_components.count)
 			end
 		end
 
 	new_across_some_expression (a_across_header: detachable ET_ACROSS_EXPRESSION;
 		an_invariant: detachable ET_LOOP_INVARIANTS;
-			an_until_conditional: detachable ET_CONDITIONAL;
-			a_some_conditional: detachable ET_CONDITIONAL;
-			a_variant: detachable ET_VARIANT;
-			an_end: detachable ET_KEYWORD): detachable ET_ACROSS_EXPRESSION
-				-- New across some expression
-			do
-				if a_across_header /= Void and a_some_conditional /= Void then
-					Result := a_across_header
-					Result.set_until_conditional (an_until_conditional)
-					Result.set_iteration_conditional (a_some_conditional)
-					Result.set_some (True)
-					Result.set_invariant_part (an_invariant)
-					Result.set_variant_part (a_variant)
-					if an_end /= Void then
-						Result.set_end_keyword (an_end)
-					end
-						-- We set 'cursor_name.is_across_cursor' to False when
-						-- parsing within its scope.
-					Result.cursor_name.set_across_cursor (True)
+		an_until_conditional: detachable ET_CONDITIONAL;
+		a_some_conditional: detachable ET_CONDITIONAL;
+		a_variant: detachable ET_VARIANT;
+		an_end: detachable ET_KEYWORD): detachable ET_ACROSS_EXPRESSION
+			-- New across some expression
+		do
+			if a_across_header /= Void and a_some_conditional /= Void then
+				Result := a_across_header
+				Result.set_until_conditional (an_until_conditional)
+				Result.set_iteration_conditional (a_some_conditional)
+				Result.set_some (True)
+				Result.set_invariant_part (an_invariant)
+				Result.set_variant_part (a_variant)
+				if an_end /= Void then
+					Result.set_end_keyword (an_end)
 				end
+					-- We set 'cursor_name.is_iteration_cursor' to False when
+					-- parsing within its scope.
+				Result.cursor_name.set_iteration_cursor (True)
 			end
+		end
 
 	new_agent_identifier_target (an_identifier: detachable ET_IDENTIFIER): detachable ET_EXPRESSION
 			-- New agent identifier target
@@ -1376,10 +1378,10 @@ feature {NONE} -- AST factory
 						l_last_local_variables.local_variable (a_seed).set_used (True)
 					end
 				end
-				if a_seed = 0 and then attached last_across_components as l_last_across_components then
-					a_seed := l_last_across_components.index_of_name (an_identifier)
+				if a_seed = 0 and then attached last_iteration_components as l_last_iteration_components then
+					a_seed := l_last_iteration_components.index_of_name (an_identifier)
 					if a_seed /= 0 then
-						an_identifier.set_across_cursor (True)
+						an_identifier.set_iteration_cursor (True)
 					end
 				end
 				if a_seed = 0 and then attached last_object_tests as l_last_object_tests then
@@ -1498,10 +1500,10 @@ feature {NONE} -- AST factory
 						l_last_local_variables.local_variable (a_seed).set_used (True)
 					end
 				end
-				if a_seed = 0 and then attached last_across_components as l_last_across_components then
-					a_seed := l_last_across_components.index_of_name (a_name)
+				if a_seed = 0 and then attached last_iteration_components as l_last_iteration_components then
+					a_seed := l_last_iteration_components.index_of_name (a_name)
 					if a_seed /= 0 then
-						a_name.set_across_cursor (True)
+						a_name.set_iteration_cursor (True)
 					end
 				end
 				if a_seed = 0 and then attached last_object_tests as l_last_object_tests then
@@ -1614,10 +1616,10 @@ feature {NONE} -- AST factory
 						l_last_local_variables.local_variable (l_seed).set_used (True)
 					end
 				end
-				if l_seed = 0 and then attached last_across_components as l_last_across_components then
-					l_seed := l_last_across_components.index_of_name (l_identifier)
+				if l_seed = 0 and then attached last_iteration_components as l_last_iteration_components then
+					l_seed := l_last_iteration_components.index_of_name (l_identifier)
 					if l_seed /= 0 then
-						l_identifier.set_across_cursor (True)
+						l_identifier.set_iteration_cursor (True)
 					end
 				end
 				if l_seed = 0 and then attached last_object_tests as l_last_object_tests then
@@ -1633,6 +1635,33 @@ feature {NONE} -- AST factory
 			Result := ast_factory.new_feature_address (d, a_name)
 		end
 
+	new_for_all_quantifier_expression_header (a_quantifier_symbol: detachable ET_SYMBOL;
+		a_cursor_name: detachable ET_IDENTIFIER; a_colon_symbol: detachable ET_SYMBOL;
+		a_iterable_expression: detachable ET_EXPRESSION; a_bar_symbol: detachable ET_SYMBOL): detachable ET_QUANTIFIER_EXPRESSION
+		 	-- New quantifier expression header of the form '∀'
+		local
+			l_last_iteration_components: like last_iteration_components
+			l_cursor_name: ET_IDENTIFIER
+		do
+			Result := ast_factory.new_for_all_quantifier_expression (a_quantifier_symbol, a_cursor_name, a_colon_symbol, a_iterable_expression, a_bar_symbol, tokens.true_keyword)
+			if Result /= Void then
+				l_last_iteration_components := last_iteration_components
+				if l_last_iteration_components = Void then
+					l_last_iteration_components := new_iteration_component_list
+					last_iteration_components := l_last_iteration_components
+				end
+				l_last_iteration_components.force_last (Result)
+					-- We set 'cursor_name.is_iteration_cursor' to False when
+					-- parsing within its scope.
+				l_cursor_name := Result.cursor_name
+				l_cursor_name.set_iteration_cursor (False)
+				l_cursor_name.set_seed (l_last_iteration_components.count)
+				l_cursor_name := Result.unfolded_cursor_name
+				l_cursor_name.set_iteration_cursor (True)
+				l_cursor_name.set_seed (l_last_iteration_components.count)
+			end
+		end
+
 	new_formal_arguments (a_left, a_right: detachable ET_SYMBOL; nb: INTEGER): detachable ET_FORMAL_ARGUMENT_LIST
 			-- New formal argument list with given capacity
 		require
@@ -1646,34 +1675,6 @@ feature {NONE} -- AST factory
 		do
 -- ERROR
 			Result := new_alias_free_name (an_alias, a_string, a_convert)
-		end
-
-	new_invalid_infix_name (an_infix: detachable ET_KEYWORD; an_operator: detachable ET_MANIFEST_STRING): detachable ET_INFIX_FREE_NAME
-			-- New invalid infix feature name
-		do
--- ERROR
-			Result := new_infix_free_name (an_infix, an_operator)
-		end
-
-	new_invalid_prefix_name (a_prefix: detachable ET_KEYWORD; an_operator: detachable ET_MANIFEST_STRING): detachable ET_PREFIX_FREE_NAME
-			-- New invalid prefix feature name
-		do
--- ERROR
-			Result := new_prefix_free_name (a_prefix, an_operator)
-		end
-
-	new_infix_free_name (an_infix: detachable ET_KEYWORD; an_operator: detachable ET_MANIFEST_STRING): detachable ET_INFIX_FREE_NAME
-			-- New infix free feature name
-		do
-			if an_operator /= Void then
-				if an_operator.value.count > 0 then
-					Result := ast_factory.new_infix_free_name (an_infix, an_operator)
-				else
-					-- TODO: error.
-				end
-			else
-				Result := ast_factory.new_infix_free_name (an_infix, an_operator)
-			end
 		end
 
 	new_invariants (an_invariant: detachable ET_KEYWORD): detachable ET_INVARIANTS
@@ -1718,8 +1719,8 @@ feature {NONE} -- AST factory
 				if attached last_object_tests as l_last_object_tests then
 					Result.set_object_tests (l_last_object_tests.cloned_object_test_list)
 				end
-				if attached last_across_components as l_last_across_components then
-					Result.set_across_components (l_last_across_components.cloned_across_component_list)
+				if attached last_iteration_components as l_last_iteration_components then
+					Result.set_iteration_components (l_last_iteration_components.cloned_iteration_component_list)
 				end
 			end
 				-- Reset local variables, formal arguments, object-tests
@@ -1727,7 +1728,7 @@ feature {NONE} -- AST factory
 			wipe_out_last_formal_arguments_stack
 			wipe_out_last_local_variables_stack
 			wipe_out_last_object_tests_stack
-			wipe_out_last_across_components_stack
+			wipe_out_last_iteration_components_stack
 		end
 
 	new_like_feature (a_type_mark: detachable ET_TYPE_MARK; a_like: detachable ET_KEYWORD;
@@ -1990,20 +1991,6 @@ feature {NONE} -- AST factory
 			end
 		end
 
-	new_prefix_free_name (a_prefix: detachable ET_KEYWORD; an_operator: detachable ET_MANIFEST_STRING): detachable ET_PREFIX_FREE_NAME
-			-- New prefix free feature name
-		do
-			if an_operator /= Void then
-				if an_operator.value.count > 0 then
-					Result := ast_factory.new_prefix_free_name (a_prefix, an_operator)
-				else
-					-- TODO: error.
-				end
-			else
-				Result := ast_factory.new_prefix_free_name (a_prefix, an_operator)
-			end
-		end
-
 	new_prefix_minus_expression (a_sign: detachable ET_SYMBOL_OPERATOR; an_expression: detachable ET_EXPRESSION): detachable ET_EXPRESSION
 			-- New prefix minus expression
 		do
@@ -2043,6 +2030,90 @@ feature {NONE} -- AST factory
 			end
 			if Result = Void then
 				Result := ast_factory.new_prefix_expression (ast_factory.new_prefix_plus_operator (a_sign), an_expression)
+			end
+		end
+
+	new_quantifier_expression (a_quantifier_expression_header: detachable ET_QUANTIFIER_EXPRESSION;
+		a_iteration_expression: detachable ET_EXPRESSION): detachable ET_QUANTIFIER_EXPRESSION
+			-- New quantifier expression of the form '∀' or '∃'
+		do
+			if a_quantifier_expression_header /= Void and a_iteration_expression /= Void then
+				Result := a_quantifier_expression_header
+				Result.set_iteration_expression (a_iteration_expression)
+					-- We set 'cursor_name.is_iteration_cursor' to False when
+					-- parsing within its scope.
+				Result.cursor_name.set_iteration_cursor (True)
+			end
+		end
+
+	new_repeat_instruction (a_repeat_instruction_header: detachable ET_REPEAT_INSTRUCTION;
+		a_loop_compound: detachable ET_COMPOUND; a_close_repeat_symbol: detachable ET_SYMBOL): detachable ET_REPEAT_INSTRUCTION
+			-- New repeat instruction of the form '⟳ ... ⟲'
+		do
+			if a_repeat_instruction_header /= Void then
+				Result := a_repeat_instruction_header
+				Result.set_loop_compound (a_loop_compound)
+				if a_close_repeat_symbol /= Void then
+					Result.set_close_repeat_symbol (a_close_repeat_symbol)
+				end
+					-- We set 'cursor_name.is_iteration_cursor' to False when
+					-- parsing within its scope.
+				Result.cursor_name.set_iteration_cursor (True)
+			end
+		end
+
+	new_repeat_instruction_header (a_open_repeat_symbol: detachable ET_SYMBOL;
+		a_cursor_name: detachable ET_IDENTIFIER; a_colon_symbol: detachable ET_SYMBOL;
+		a_iterable_expression: detachable ET_EXPRESSION;
+		a_bar_symbol: detachable ET_SYMBOL): detachable ET_REPEAT_INSTRUCTION
+			-- New repeat instruction header of the form '⟳ ... ⟲'
+		local
+			l_last_iteration_components: like last_iteration_components
+			l_cursor_name: ET_IDENTIFIER
+		do
+			Result := ast_factory.new_repeat_instruction (a_open_repeat_symbol, a_cursor_name, a_colon_symbol, a_iterable_expression, a_bar_symbol, Void, Void)
+			if Result /= Void then
+				l_last_iteration_components := last_iteration_components
+				if l_last_iteration_components = Void then
+					l_last_iteration_components := new_iteration_component_list
+					last_iteration_components := l_last_iteration_components
+				end
+				l_last_iteration_components.force_last (Result)
+					-- We set 'cursor_name.is_iteration_cursor' to False when
+					-- parsing within its scope.
+				l_cursor_name := Result.cursor_name
+				l_cursor_name.set_iteration_cursor (False)
+				l_cursor_name.set_seed (l_last_iteration_components.count)
+				l_cursor_name := Result.unfolded_cursor_name
+				l_cursor_name.set_iteration_cursor (True)
+				l_cursor_name.set_seed (l_last_iteration_components.count)
+			end
+		end
+
+	new_there_exists_quantifier_expression_header (a_quantifier_symbol: detachable ET_SYMBOL;
+		a_cursor_name: detachable ET_IDENTIFIER; a_colon_symbol: detachable ET_SYMBOL;
+		a_iterable_expression: detachable ET_EXPRESSION; a_bar_symbol: detachable ET_SYMBOL): detachable ET_QUANTIFIER_EXPRESSION
+		 	-- New quantifier expression header of the form '∃'
+		local
+			l_last_iteration_components: like last_iteration_components
+			l_cursor_name: ET_IDENTIFIER
+		do
+			Result := ast_factory.new_there_exists_quantifier_expression (a_quantifier_symbol, a_cursor_name, a_colon_symbol, a_iterable_expression, a_bar_symbol, tokens.true_keyword)
+			if Result /= Void then
+				l_last_iteration_components := last_iteration_components
+				if l_last_iteration_components = Void then
+					l_last_iteration_components := new_iteration_component_list
+					last_iteration_components := l_last_iteration_components
+				end
+				l_last_iteration_components.force_last (Result)
+					-- We set 'cursor_name.is_iteration_cursor' to False when
+					-- parsing within its scope.
+				l_cursor_name := Result.cursor_name
+				l_cursor_name.set_iteration_cursor (False)
+				l_cursor_name.set_seed (l_last_iteration_components.count)
+				l_cursor_name := Result.unfolded_cursor_name
+				l_cursor_name.set_iteration_cursor (True)
+				l_cursor_name.set_seed (l_last_iteration_components.count)
 			end
 		end
 
@@ -2091,10 +2162,10 @@ feature {NONE} -- AST factory
 						l_last_local_variables.local_variable (a_seed).set_used (True)
 					end
 				end
-				if a_seed = 0 and then attached last_across_components as l_last_across_components then
-					a_seed := l_last_across_components.index_of_name (a_name)
+				if a_seed = 0 and then attached last_iteration_components as l_last_iteration_components then
+					a_seed := l_last_iteration_components.index_of_name (a_name)
 					if a_seed /= 0 then
-						a_name.set_across_cursor (True)
+						a_name.set_iteration_cursor (True)
 					end
 				end
 				if a_seed = 0 and then attached last_object_tests as l_last_object_tests then
@@ -2136,10 +2207,10 @@ feature {NONE} -- AST factory
 						l_last_local_variables.local_variable (a_seed).set_used (True)
 					end
 				end
-				if a_seed = 0 and then attached last_across_components as l_last_across_components then
-					a_seed := l_last_across_components.index_of_name (a_name)
+				if a_seed = 0 and then attached last_iteration_components as l_last_iteration_components then
+					a_seed := l_last_iteration_components.index_of_name (a_name)
 					if a_seed /= 0 then
-						a_name.set_across_cursor (True)
+						a_name.set_iteration_cursor (True)
 					end
 				end
 				if a_seed = 0 and then attached last_object_tests as l_last_object_tests then
@@ -2434,60 +2505,60 @@ feature {NONE} -- Object-tests
 			last_object_tests_void: last_object_tests = Void
 		end
 
-feature {NONE} -- Across components
+feature {NONE} -- Iteration components
 
-	last_across_components: detachable ET_ACROSS_COMPONENT_LIST
-			-- Across components already found in the closure (i.e. feature,
+	last_iteration_components: detachable ET_ITERATION_COMPONENT_LIST
+			-- Iteration components already found in the closure (i.e. feature,
 			-- invariant or inline agent) being parsed
 
-	last_across_components_stack: DS_ARRAYED_STACK [detachable ET_ACROSS_COMPONENT_LIST]
-			-- Stack of across components already found in the enclosing
+	last_iteration_components_stack: DS_ARRAYED_STACK [detachable ET_ITERATION_COMPONENT_LIST]
+			-- Stack of iteration components already found in the enclosing
 			-- closures (i.e. feature, invariant or inline agents)
 			-- of the closure being parsed
 
-	last_across_components_pool: DS_ARRAYED_STACK [ET_ACROSS_COMPONENT_LIST]
-			-- Pool of across component lists available for usage
+	last_iteration_components_pool: DS_ARRAYED_STACK [ET_ITERATION_COMPONENT_LIST]
+			-- Pool of iteration component lists available for usage
 			-- whenever needed
 
-	new_across_component_list: ET_ACROSS_COMPONENT_LIST
-			-- New across component list;
-			-- Reuse items from `last_across_components_pool' if available.
+	new_iteration_component_list: ET_ITERATION_COMPONENT_LIST
+			-- New iteration component list;
+			-- Reuse items from `last_iteration_components_pool' if available.
 		do
-			if not last_across_components_pool.is_empty then
-				Result := last_across_components_pool.item
-				last_across_components_pool.remove
+			if not last_iteration_components_pool.is_empty then
+				Result := last_iteration_components_pool.item
+				last_iteration_components_pool.remove
 			else
-				create Result.make_with_capacity (Initial_last_across_components_capacity)
+				create Result.make_with_capacity (Initial_last_iteration_components_capacity)
 			end
 		ensure
-			new_across_component_list_not_void: Result /= Void
+			new_iteration_component_list_not_void: Result /= Void
 		end
 
-	wipe_out_last_across_components_stack
-			-- Wipe out `last_across_components_stack' and
-			-- set `last_across_components' to Void.
+	wipe_out_last_iteration_components_stack
+			-- Wipe out `last_iteration_components_stack' and
+			-- set `last_iteration_components' to Void.
 		local
-			l_across_component_list: detachable ET_ACROSS_COMPONENT_LIST
+			l_iteration_component_list: detachable ET_ITERATION_COMPONENT_LIST
 			i, nb: INTEGER
 		do
-			if attached last_across_components as l_last_across_components then
-				l_last_across_components.wipe_out
-				last_across_components_pool.force (l_last_across_components)
-				last_across_components := Void
+			if attached last_iteration_components as l_last_iteration_components then
+				l_last_iteration_components.wipe_out
+				last_iteration_components_pool.force (l_last_iteration_components)
+				last_iteration_components := Void
 			end
-			nb := last_across_components_stack.count
+			nb := last_iteration_components_stack.count
 			from i := 1 until i > nb loop
-				l_across_component_list := last_across_components_stack.i_th (i)
-				if l_across_component_list /= Void then
-					l_across_component_list.wipe_out
-					last_across_components_pool.force (l_across_component_list)
+				l_iteration_component_list := last_iteration_components_stack.i_th (i)
+				if l_iteration_component_list /= Void then
+					l_iteration_component_list.wipe_out
+					last_iteration_components_pool.force (l_iteration_component_list)
 				end
 				i := i + 1
 			end
-			last_across_components_stack.wipe_out
+			last_iteration_components_stack.wipe_out
 		ensure
-			last_across_components_stack_wiped_out: last_across_components_stack.is_empty
-			last_across_components_void: last_across_components = Void
+			last_iteration_components_stack_wiped_out: last_iteration_components_stack.is_empty
+			last_iteration_components_void: last_iteration_components = Void
 		end
 
 feature {NONE} -- Formal arguments
@@ -2627,12 +2698,12 @@ feature {NONE} -- Counters
 
 feature {NONE} -- Input buffer
 
-	eiffel_buffer: ET_EIFFEL_FILE_BUFFER
+	eiffel_buffer: YY_UNICODE_FILE_BUFFER
 			-- Eiffel file input buffer
 
 feature {NONE} -- Constants
 
-	Initial_eiffel_buffer_size: INTEGER = 100000
+	Initial_eiffel_buffer_size: INTEGER = 50000
 			-- Initial size for `eiffel_buffer'
 
 	Initial_counters_capacity: INTEGER = 10
@@ -2653,8 +2724,8 @@ feature {NONE} -- Constants
 	Initial_last_object_tests_capacity: INTEGER = 50
 			-- Initial capacity for `last_object_tests'
 
-	Initial_last_across_components_capacity: INTEGER = 50
-			-- Initial capacity for `last_across_components'
+	Initial_last_iteration_components_capacity: INTEGER = 50
+			-- Initial capacity for `last_iteration_components'
 
 	Initial_assertions_capacity: INTEGER = 20
 			-- Initial capacity for `assertions'
@@ -2746,10 +2817,10 @@ invariant
 	last_object_tests_stack_not_void: last_object_tests_stack /= Void
 	last_object_tests_pool_not_void: last_object_tests_pool /= Void
 	no_void_last_object_tests_in_pool: not last_object_tests_pool.has_void
-		-- Across components.
-	last_across_components_stack_not_void: last_across_components_stack /= Void
-	last_across_components_pool_not_void: last_across_components_pool /= Void
-	no_void_last_across_components_in_pool: not last_across_components_pool.has_void
+		-- Iteration components.
+	last_iteration_components_stack_not_void: last_iteration_components_stack /= Void
+	last_iteration_components_pool_not_void: last_iteration_components_pool /= Void
+	no_void_last_iteration_components_in_pool: not last_iteration_components_pool.has_void
 		-- Input buffer.
 	eiffel_buffer_not_void: eiffel_buffer /= Void
 

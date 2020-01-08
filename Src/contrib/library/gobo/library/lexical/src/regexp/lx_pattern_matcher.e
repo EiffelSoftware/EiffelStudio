@@ -1,11 +1,11 @@
-note
+﻿note
 
 	description:
 
 		"Pattern matchers"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 2001-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -29,10 +29,10 @@ feature {NONE} -- Initialization
 
 feature -- Element change
 
-	compile (a_pattern: STRING; i: BOOLEAN)
-			-- Compile `a_regexp'. Make the matching engine
-			-- case-insensitive if `i' is set. Set `compiled'
-			-- to True after successful compilation.
+	compile (a_pattern: READABLE_STRING_GENERAL; i: BOOLEAN)
+			-- Compile `a_pattern'.
+			-- Make the matching engine case-insensitive if `i' is set.
+			-- Set `compiled' to True after successful compilation.
 		require
 			a_pattern_not_void: a_pattern /= Void
 		deferred
@@ -43,20 +43,20 @@ feature -- Element change
 			not_matching: not is_matching
 		end
 
-	compile_case_sensitive (a_pattern: STRING)
-			-- Compile `a_pattern'. Make the matching engine
-			-- case-sensitive. Set `is_compiled' to True after
-			-- successful compilation.
+	compile_case_sensitive (a_pattern: READABLE_STRING_GENERAL)
+			-- Compile `a_pattern'.
+			-- Make the matching engine case-sensitive.
+			-- Set `is_compiled' to True after successful compilation.
 		do
 			compile (a_pattern, False)
 		ensure then
 			case_sensitive: not is_case_insensitive
 		end
 
-	compile_case_insensitive (a_pattern: STRING)
-			-- Compile `a_pattern'. Make the matching engine
-			-- case-insensitive. Set `is_compiled' to True after
-			-- successful compilation.
+	compile_case_insensitive (a_pattern: READABLE_STRING_GENERAL)
+			-- Compile `a_pattern'.
+			-- Make the matching engine case-insensitive.
+			-- Set `is_compiled' to True after successful compilation.
 		require
 			a_pattern_not_void: a_pattern /= Void
 		do
@@ -70,10 +70,10 @@ feature -- Element change
 
 feature -- Access
 
-	pattern: detachable STRING
+	pattern: detachable READABLE_STRING_GENERAL
 			-- Pattern being matched
 
-	matched_position (a_string: STRING): detachable DS_PAIR [INTEGER, INTEGER]
+	matched_position (a_string: like subject): detachable DS_PAIR [INTEGER, INTEGER]
 			-- Position of the longest-leftmost token matched
 			-- by current pattern in `a_string'
 		require
@@ -98,5 +98,7 @@ feature -- Status report
 
 	is_case_insensitive: BOOLEAN
 			-- Is current pattern matcher case-insensitive?
+			-- Note that only ASCII characters (code less than 128)
+			-- are taken into account.
 
 end

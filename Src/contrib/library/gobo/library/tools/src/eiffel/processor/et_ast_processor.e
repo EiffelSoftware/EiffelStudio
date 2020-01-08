@@ -5,7 +5,7 @@ note
 		"Eiffel AST processors"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 2002-20189, Eric Bezault and others"
+	copyright: "Copyright (c) 2002-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -127,6 +127,13 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_name'.
 		require
 			a_name_not_void: a_name /= Void
+		deferred
+		end
+
+	process_alias_name_list (a_list: ET_ALIAS_NAME_LIST)
+			-- Process `a_list'.
+		require
+			a_list_not_void: a_list /= Void
 		deferred
 		end
 
@@ -904,20 +911,6 @@ feature {ET_AST_NODE} -- Processing
 		deferred
 		end
 
-	process_infix_free_name (a_name: ET_INFIX_FREE_NAME)
-			-- Process `a_name'.
-		require
-			a_name_not_void: a_name /= Void
-		deferred
-		end
-
-	process_infix_name (a_name: ET_INFIX_NAME)
-			-- Process `a_name'.
-		require
-			a_name_not_void: a_name /= Void
-		deferred
-		end
-
 	process_infix_or_else_operator (an_operator: ET_INFIX_OR_ELSE_OPERATOR)
 			-- Process `an_operator'.
 		require
@@ -1270,20 +1263,6 @@ feature {ET_AST_NODE} -- Processing
 		deferred
 		end
 
-	process_prefix_free_name (a_name: ET_PREFIX_FREE_NAME)
-			-- Process `a_name'.
-		require
-			a_name_not_void: a_name /= Void
-		deferred
-		end
-
-	process_prefix_name (a_name: ET_PREFIX_NAME)
-			-- Process `a_name'.
-		require
-			a_name_not_void: a_name /= Void
-		deferred
-		end
-
 	process_qualified_call (a_call: ET_QUALIFIED_CALL)
 			-- Process `a_call'.
 		require
@@ -1316,6 +1295,13 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_type'.
 		require
 			a_type_not_void: a_type /= Void
+		deferred
+		end
+
+	process_quantifier_expression (a_expression: ET_QUANTIFIER_EXPRESSION)
+			-- Process `a_expression'.
+		require
+			a_expression_not_void: a_expression /= Void
 		deferred
 		end
 
@@ -1365,6 +1351,13 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_list'.
 		require
 			a_list_not_void: a_list /= Void
+		deferred
+		end
+
+	process_repeat_instruction (a_instruction: ET_REPEAT_INSTRUCTION)
+			-- Process `a_instruction'.
+		require
+			a_instruction_not_void: a_instruction /= Void
 		deferred
 		end
 

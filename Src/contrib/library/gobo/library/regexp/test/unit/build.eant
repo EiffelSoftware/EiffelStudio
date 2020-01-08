@@ -1,52 +1,41 @@
 <?xml version="1.0"?>
 
-<project name="regexp_unit_test" default="help">
+<project name="pcretest" default="help">
 
 	<description>
-		system: "Gobo Eiffel Regexp Library Unit Tester"
-		copyright: "Copyright (c) 2002-2016, Harald Erdbruegger and others"
+		description: "Eiffel Ant file for 'pcretest'"
+		system: "PCRE Test"
+		copyright: "Copyright (c) 2002-2016, Eric Bezault and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
 	</description>
 
 	<inherit>
-		<parent location="${GOBO}/library/common/config/test.eant">
-			<redefine target="other_install"/>
+		<parent location="${GOBO}/library/common/config/eiffel.eant">
 			<redefine target="other_clean"/>
-			<redefine target="other_clobber"/>
 			<redefine target="init_system"/>
 		</parent>
 	</inherit>
 
 <!-- Implementation -->
 
-	<target name="other_install" depend="init" export="NONE">
-		<description>
-			Install other items in ${system} directory.
-		</description>
-		<geant file="build.eant" target="install" dir="pcretest"/>
-	</target>
-
 	<target name="other_clean" depend="init" export="NONE">
 		<description>
 			Remove other intermediary generated files.
 		</description>
-		<geant file="build.eant" target="clean" dir="pcretest"/>
-		<delete directory="Tpcretest"/>
-	</target>
 
-	<target name="other_clobber" depend="init" export="NONE">
-		<description>
-			Remove other generated files.
-		</description>
-		<geant file="build.eant" target="clobber" dir="pcretest"/>
+		<delete file="out1"/>
+		<delete file="out2"/>
+		<delete file="out3"/>
+		<delete file="out4"/>
+		<delete file="out5"/>
+		<delete file="out6"/>
 	</target>
 
 	<target name="init_system" export="NONE">
-		<set name="system" value="xregexp"/>
-		<set name="library" value="regexp"/>
-		<set name="system_dir" value="${GOBO}/library/${library}/test/unit"/>
+		<set name="system" value="pcretest"/>
+		<set name="system_dir" value="${GOBO}/library/regexp/test/unit/${system}"/>
 	</target>
 
 </project>

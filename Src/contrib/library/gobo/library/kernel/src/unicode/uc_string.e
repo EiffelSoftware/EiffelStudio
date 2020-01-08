@@ -16,7 +16,7 @@ note
 		Use UC_UTF*_STRING to specify the encoding explicitly.
 	]"
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2018, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -51,7 +51,7 @@ inherit
 				-- reset the capacity to zero.
 			wipe_out as old_wipe_out,
 			empty as old_empty,
-				-- Note: The postcondition of `infix "<"' in ELKS 2001 STRING
+				-- Note: The postcondition of `is_less alias "<"' in ELKS 2001 STRING
 				-- is too constraining and does not allow a redefinition here.
 				-- Redefine version from COMPARABLE instead.
 			is_less as old_infix_less,
@@ -164,7 +164,7 @@ inherit
 				-- is too constraining and does not allow a redefinition here.
 				-- Redefine version from ANY instead.
 			is_equal as old_is_equal,
-				-- Note: The postcondition of `infix "<"' in ELKS 2001 STRING
+				-- Note: The postcondition of `is_less alias "<"' in ELKS 2001 STRING
 				-- is too constraining and does not allow a redefinition here.
 				-- Redefine version from COMPARABLE instead.
 			is_less as old_infix_less
@@ -239,7 +239,7 @@ inherit
 			copy,
 			out
 		select
-				-- Note: The postcondition of `infix "<"' in ELKS 2001 STRING
+				-- Note: The postcondition of `is_less alias "<"' in ELKS 2001 STRING
 				-- is too constraining and does not allow a redefinition here.
 				-- Redefine version from COMPARABLE instead.
 			is_less
@@ -844,7 +844,7 @@ feature -- Access
 			none_before: Result > start_index implies not substring (start_index, Result + other.count - 2).has_unicode_substring (other)
 		end
 
-	substring_index (other: STRING; start_index: INTEGER): INTEGER
+	substring_index (other: READABLE_STRING_8; start_index: INTEGER): INTEGER
 			-- Index of first occurrence of `other' at or after `start_index';
 			-- 0 if none. `other' and `Current' are considered with their
 			-- characters which do not fit in a CHARACTER replaced by a '%U'
@@ -1417,7 +1417,7 @@ feature -- Status report
 --			has_substring: Result implies has_substring (other)
 		end
 
-	has_substring (other: STRING): BOOLEAN
+	has_substring (other: READABLE_STRING_8): BOOLEAN
 			-- Does `Current' contain `other'?
 			-- `other' and `Current' are considered with their characters
 			-- which do not fit in a CHARACTER replaced by a '%U'.
@@ -1935,7 +1935,7 @@ feature -- Element change
 			if ANY_.same_types (a_string, dummy_string) then
 					-- Check if string does not contain non-ascii characters.
 					-- Unfortunately, this is a slow but necessary call.
-				nb := utf8.substring_byte_count (a_string.as_string_8, 1, a_string.count)
+				nb := utf8.substring_byte_count (a_string, 1, a_string.count)
 				if nb = a_string.count then
 						-- If not, we may use the native `append_string'.
 						-- Hopefully this one has a fast move.
@@ -2400,7 +2400,7 @@ feature -- Element change
 			a_string_count: INTEGER
 			k, nb: INTEGER
 			new_byte_count: INTEGER
-			str: STRING
+			str: READABLE_STRING_8
 		do
 			a_string_count := a_string.count
 			if a_string_count /= 0 then

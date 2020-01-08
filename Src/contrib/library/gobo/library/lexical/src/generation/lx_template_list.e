@@ -19,7 +19,7 @@ note
 		%transition symbol, and therefore cost only one difference"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -86,33 +86,21 @@ feature -- Access
 			template_not_void: template /= Void
 			meta_equiv_classes_built: attached meta_equiv_classes as l_meta_equiv_classes implies l_meta_equiv_classes.built
 		local
-			i, j, nb: INTEGER
-			target: detachable LX_DFA_STATE
-			transitions: LX_TRANSITION_TABLE [LX_DFA_STATE]
+			l_label: INTEGER
+			l_cursor: DS_HASH_TABLE_CURSOR [LX_DFA_STATE, INTEGER]
 		do
 			if not attached meta_equiv_classes as l_meta_equiv_classes then
 				Result := template
 			else
-					-- TODO: Bug in ISE 3.3.9 in final mode code generation.
-					-- Create `transitions' (not declared as "like anchor")
-					-- first and assign it to `Result'.
---				create Result.make (1, meta_equiv_classes.capacity)
-				create transitions.make (1, l_meta_equiv_classes.capacity)
-				Result := transitions
-				nb := template.upper
-				from
-					i := template.lower
-				until
-					i > nb
-				loop
-					if l_meta_equiv_classes.is_representative (i) then
-						target := template.target (i)
-						if target /= Void then
-							j := l_meta_equiv_classes.equivalence_class (i)
-							Result.set_target (target, j)
-						end
+				create Result.make (l_meta_equiv_classes.lower, l_meta_equiv_classes.upper)
+				l_cursor := template.transitions.new_cursor
+				from l_cursor.start until l_cursor.after loop
+					l_label := l_cursor.key
+					if l_meta_equiv_classes.is_representative (l_label) then
+						l_label := l_meta_equiv_classes.equivalence_class (l_label)
+						Result.set_target (l_cursor.item, l_label)
 					end
-					i := i + 1
+					l_cursor.forth
 				end
 			end
 		end
@@ -129,27 +117,30 @@ feature -- Element change
 		local
 			transitions: LX_TRANSITION_TABLE [LX_DFA_STATE]
 			template: LX_TRANSITION_TABLE [LX_DFA_STATE]
-			i, min_symbol, max_symbol: INTEGER
+			l_label, min_symbol, max_symbol: INTEGER
 			symbol_class: LX_SYMBOL_CLASS
+			l_meta_equiv_classes: like meta_equiv_classes
+			l_cursor: DS_HASH_TABLE_CURSOR [LX_DFA_STATE, INTEGER]
 		do
 			transitions := state.transitions
 			min_symbol := transitions.lower
 			max_symbol := transitions.upper
 			create template.make (min_symbol, max_symbol)
-			create symbol_class.make (transitions.capacity)
-			from
-				i := min_symbol
-			until
-				i > max_symbol
-			loop
-				if transitions.target (i) /= Void then
-					template.set_target (common_state, i)
-					symbol_class.put (i)
+			l_meta_equiv_classes := meta_equiv_classes
+			if l_meta_equiv_classes /= Void then
+				create symbol_class.make (min_symbol, max_symbol)
+			end
+			l_cursor := transitions.transitions.new_cursor
+			from l_cursor.start until l_cursor.after loop
+				l_label := l_cursor.key
+				template.set_target (common_state, l_label)
+				if symbol_class /= Void then
+					symbol_class.add_symbol (l_label)
 				end
-				i := i + 1
+				l_cursor.forth
 			end
 			put_last (template)
-			if attached meta_equiv_classes as l_meta_equiv_classes then
+			if l_meta_equiv_classes /= Void and symbol_class /= Void then
 				l_meta_equiv_classes.add (symbol_class)
 			end
 		end

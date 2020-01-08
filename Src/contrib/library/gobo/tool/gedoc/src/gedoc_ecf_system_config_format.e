@@ -104,19 +104,4 @@ feature {GEDOC_ECF_SYSTEM_CONFIG_FORMAT} -- Processing
 	last_system_config: detachable ET_ECF_SYSTEM_CONFIG
 			-- Last ECF system config parsed, if any
 
-feature -- Error handling
-
-	report_target_not_found_error (a_target_name: STRING)
-			-- Report that no target `a_target_name' was found.
-		require
-			a_target_name_not_void: a_target_name /= Void
-		local
-			l_error: UT_MESSAGE
-		do
-			create l_error.make ("Target '" + a_target_name + "' not found.")
-			report_error (l_error)
-		ensure
-			has_error: has_error
-		end
-
 end

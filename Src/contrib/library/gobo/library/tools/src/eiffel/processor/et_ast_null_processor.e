@@ -97,6 +97,11 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
+	process_alias_name_list (a_list: ET_ALIAS_NAME_LIST)
+			-- Process `a_list'.
+		do
+		end
+
 	process_aliased_feature_name (a_name: ET_ALIASED_FEATURE_NAME)
 			-- Process `a_name'.
 		do
@@ -647,16 +652,6 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
-	process_infix_free_name (a_name: ET_INFIX_FREE_NAME)
-			-- Process `a_name'.
-		do
-		end
-
-	process_infix_name (a_name: ET_INFIX_NAME)
-			-- Process `a_name'.
-		do
-		end
-
 	process_infix_or_else_operator (an_operator: ET_INFIX_OR_ELSE_OPERATOR)
 			-- Process `an_operator'.
 		do
@@ -907,16 +902,6 @@ feature {ET_AST_NODE} -- Processing
 		do
 		end
 
-	process_prefix_free_name (a_name: ET_PREFIX_FREE_NAME)
-			-- Process `a_name'.
-		do
-		end
-
-	process_prefix_name (a_name: ET_PREFIX_NAME)
-			-- Process `a_name'.
-		do
-		end
-
 	process_qualified_call (a_call: ET_QUALIFIED_CALL)
 			-- Process `a_call'.
 		do
@@ -939,6 +924,11 @@ feature {ET_AST_NODE} -- Processing
 
 	process_qualified_like_type (a_type: ET_QUALIFIED_LIKE_TYPE)
 			-- Process `a_type'.
+		do
+		end
+
+	process_quantifier_expression (a_expression: ET_QUANTIFIER_EXPRESSION)
+			-- Process `a_expression'.
 		do
 		end
 
@@ -974,6 +964,11 @@ feature {ET_AST_NODE} -- Processing
 
 	process_rename_list (a_list: ET_RENAME_LIST)
 			-- Process `a_list'.
+		do
+		end
+
+	process_repeat_instruction (a_instruction: ET_REPEAT_INSTRUCTION)
+			-- Process `a_instruction'.
 		do
 		end
 

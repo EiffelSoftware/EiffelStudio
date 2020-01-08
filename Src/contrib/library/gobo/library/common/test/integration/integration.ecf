@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system 
+<system
 	xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd"
 	name="integration"
-	library_target="integration"
 	uuid="E1FFE100-60B0-0003-3003-000000000001"
+	library_target="integration"
 >
 	<description>
 		system: "Gobo Eiffel all classes integration"
@@ -36,6 +36,9 @@
 		<library name="lexical_example_ascii2ps" location="${GOBO_LIBRARY}/library/lexical/example/ascii2ps/system.ecf" readonly="false"/>
 		<library name="lexical_example_eiffel_scanner" location="${GOBO_LIBRARY}/library/lexical/example/eiffel_scanner/system.ecf" readonly="false"/>
 		<library name="lexical_example_gegrep" location="${GOBO_LIBRARY}/library/lexical/example/gegrep/system.ecf" readonly="false"/>
+		<library name="lexical_example_unicode_byte_mode" location="${GOBO_LIBRARY}/library/lexical/example/unicode/byte_mode/system.ecf" readonly="false"/>
+		<library name="lexical_example_unicode_unicode_mode" location="${GOBO_LIBRARY}/library/lexical/example/unicode/unicode_mode/system.ecf" readonly="false"/>
+		<library name="lexical_example_utf8_byte_mode" location="${GOBO_LIBRARY}/library/lexical/example/unicode/utf8_mode/system.ecf" readonly="false"/>
 		<library name="lexical_test_example" location="${GOBO_LIBRARY}/library/lexical/test/example/system.ecf" readonly="false"/>
 		<library name="lexical_test_unit" location="${GOBO_LIBRARY}/library/lexical/test/unit/system.ecf" readonly="false"/>
 		<library name="math" location="${GOBO_LIBRARY}/library/math/library.ecf" readonly="false"/>
@@ -51,6 +54,7 @@
 		</library>
 		<library name="parse_example_mcalc" location="${GOBO_LIBRARY}/library/parse/example/mcalc/system.ecf" readonly="false"/>
 		<library name="parse_example_rpcalc" location="${GOBO_LIBRARY}/library/parse/example/rpcalc/system.ecf" readonly="false"/>
+		<library name="parse_example_scalc" location="${GOBO_LIBRARY}/library/parse/example/scalc/system.ecf" readonly="false"/>
 		<library name="parse_test_example" location="${GOBO_LIBRARY}/library/parse/test/example/system.ecf" readonly="false"/>
 		<library name="pattern" location="${GOBO_LIBRARY}/library/pattern/library.ecf" readonly="false"/>
 		<library name="pattern_example_singleton_do_nothing" location="${GOBO_LIBRARY}/library/pattern/example/singleton/do_nothing/system.ecf" readonly="false"/>

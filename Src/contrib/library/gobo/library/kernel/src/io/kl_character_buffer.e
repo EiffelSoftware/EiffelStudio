@@ -5,7 +5,7 @@ note
 		"Character buffers"
 
 	library: "Gobo Eiffel Kernel Library"
-	copyright: "Copyright (c) 2001-2008, Eric Bezault and others"
+	copyright: "Copyright (c) 2001-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -17,8 +17,12 @@ inherit
 	KI_CHARACTER_BUFFER
 		redefine
 			as_special,
+			unicode_substring,
+			utf8_substring,
 			append_substring_to_string,
-			fill_from_string,
+			append_unicode_substring_to_string,
+			append_utf8_substring_to_string,
+			fill_from_substring,
 			fill_from_stream,
 			move_left,
 			move_right
@@ -26,8 +30,6 @@ inherit
 
 	STRING_HANDLER
 		export {NONE} all end
-
-	KL_IMPORTED_ANY_ROUTINES
 
 create
 
@@ -46,13 +48,13 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	item (i: INTEGER): CHARACTER
+	item (i: INTEGER): CHARACTER_8
 			-- Item at position `i'
 		do
 			Result := as_special.item (i)
 		end
 
-	substring (s, e: INTEGER): STRING
+	substring (s, e: INTEGER): STRING_8
 			-- New string made up of characters held in
 			-- buffer between indexes `s' and `e'
 		do
@@ -61,6 +63,36 @@ feature -- Access
 				create Result.make (0)
 			else
 				Result := area.substring (s + 1, e + 1)
+			end
+		end
+
+	unicode_substring (s, e: INTEGER): STRING_32
+			-- New Unicode string made up of characters held in
+			-- buffer between indexes `s' and `e'
+		do
+			if e < s then
+					-- Empty string
+				create Result.make (0)
+			else
+				create Result.make (e - s + 1)
+				append_unicode_substring_to_string (s, e, Result)
+			end
+		end
+
+	utf8_substring (s, e: INTEGER): STRING_8
+			-- New STRING made up of bytes corresponding to
+			-- the UTF-8 representation of the characters held
+			-- in buffer between indexes `s' and `e'
+			--
+			-- Note that surrogate or invalid Unicode characters
+			-- are encoded with the single byte 0xFF (which is
+			-- an invalid byte in UTF-8).
+		do
+			if e < s then
+					-- Empty string
+				create Result.make (0)
+			else
+				Result := {UC_UTF8_ROUTINES}.substring_to_utf8 (area, s + 1, e + 1)
 			end
 		end
 
@@ -74,58 +106,53 @@ feature -- Measurement
 
 feature -- Conversion
 
-	as_special: SPECIAL [CHARACTER]
-			-- 'SPECIAL [CHARACTER]' version of current character buffer;
+	as_special: SPECIAL [CHARACTER_8]
+			-- 'SPECIAL [CHARACTER_8]' version of current character buffer;
 			-- Characters are indexed starting at 1;
 			-- Note that the result may share the internal data with `Current'.
 
 feature -- Element change
 
-	put (v: CHARACTER; i: INTEGER)
+	put (v: CHARACTER_8; i: INTEGER)
 			-- Replace character at position `i' by `v'.
 		do
 			as_special.put (v, i)
 		end
 
-	append_substring_to_string (s, e: INTEGER; a_string: STRING)
+	append_substring_to_string (s, e: INTEGER; a_string: STRING_8)
 			-- Append string made up of characters held in buffer
 			-- between indexes `s' and `e' to `a_string'.
-		local
-			i, nb: INTEGER
-			old_count, new_count: INTEGER
 		do
 			if s <= e then
-				nb := e - s + 1
-				old_count := a_string.count
-				new_count := old_count + nb
-				if new_count > a_string.capacity then
-					a_string.resize (new_count)
-				end
-				if ANY_.same_types (a_string, dummy_string) then
-					a_string.set_count (new_count)
-					a_string.subcopy (area, s + 1, e + 1, old_count + 1)
-				else
-					from
-						i := s
-					until
-						i > e
-					loop
-						a_string.append_character (as_special.item (i))
-						i := i + 1
-					end
-				end
+				a_string.append_substring (area, s + 1, e + 1)
 			end
 		end
 
-	fill_from_string (a_string: STRING; pos: INTEGER)
-			-- Copy characters of `a_string' to buffer
-			-- starting at position `pos'.
-		local
-			nb: INTEGER
+	append_unicode_substring_to_string (s, e: INTEGER; a_string: STRING_32)
+			-- Append string made up of characters held in buffer
+			-- between indexes `s' and `e' to `a_string'.
 		do
-			nb := a_string.count
-			if nb > 0 then
-				area.subcopy (a_string, 1, nb, pos + 1)
+			if s <= e then
+				a_string.append_substring_general (area, s + 1, e + 1)
+			end
+		end
+
+	append_utf8_substring_to_string (s, e: INTEGER; a_string: STRING_8)
+			-- Append bytes corresponding to the UTF-8 representation
+			-- of the characters held in buffer between indexes `s'
+			-- and `e' to `a_string'.
+		do
+			if s <= e then
+				{UC_UTF8_ROUTINES}.append_substring_to_utf8 (a_string, area, s + 1, e + 1)
+			end
+		end
+
+	fill_from_substring (a_string: STRING_8; s, e, pos: INTEGER)
+			-- Copy characters of `a_string' between indexes `s' and `e'
+			-- to buffer starting at position `pos'.
+		do
+			if s <= e then
+				area.subcopy (a_string, s, e, pos + 1)
 			end
 		end
 
@@ -174,11 +201,12 @@ feature -- Resizing
 
 feature {NONE} -- Implementation
 
-	area: STRING
+	area: STRING_8
 			-- Implementation
 
 invariant
 
 	area_not_void: area /= Void
+	as_special_not_void: as_special /= Void
 
 end

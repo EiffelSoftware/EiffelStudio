@@ -1,66 +1,14 @@
 note
 
 	description:
-
-		"Regular expressions implemented with DFA engines"
-
-	remark: "[
-		Pattern syntax:
-		x          match the character 'x'.
-		.          any character except new-line.
-		\X         if 'X' is an 'a', 'b', 'f', 'n', 'r', 't', or 'v', then
-		           the ANSI-C interpretation of \X. Otherwise, a literal 'X'
-		           (used to escape operators such as '*').
-		\0         a null character (ASCII code 0).
-		\123       the character with octal value 123.
-		\x2a       the character with hexadecimal value 2a.
-		[xyz]      a character class; in this case, the pattern matches
-		           either an 'x', a 'y' or a 'z'.
-		[abj-oZ]   a character class with a range in it; matches an 'a', a
-		           'b', any letter from 'j' through 'o', or a 'Z'.
-		[^A-Z]     a negated character class, i.e., any character but those
-		           in the class. In this case, any character except an
-		           uppercase letter.
-		[^A-Z\n]   any character except an uppercase letter or a newline.
-		r*         zero or more r's, where r is any regular expression.
-		r+         one or more r's.
-		r?         zero or one r's (that is, "an optional r").
-		r{2,5}     anywhere from two to five r's.
-		r{2,}      two or more r's.
-		r{4}       exactly four r's.
-		"[xyz]\"foo"     the literal string: '[xyz]"foo'.
-		(r)        match an r; parentheses are used to override precedence.
-		rs         the regular expression r followed by the regular
-		           expression s; called concatenation.
-		--------------------------------------------------------------------
-		r|s        either an r or an s.
-		--------------------------------------------------------------------
-		r/s        an r but only if it is followed by an s. The text matched
-		           by s is included when determining whether this rule is
-		           the 'longest match', but is not taken into account by
-		           `matched_position'. So `matched_position' only sees the
-		           text matched by r. This type of pattern is called
-		           trailing context. (There are some combinations of r/s
-		           that the regexp cannot match correctly, such as in
-		           zx*/xy. See $GOBO/doc/gelex/limitations.html for details.)
-		^r         an r, but only at the beginning of the input string or of
-		           a line (i.e., when just starting to scan, or right after
-		           a newline has been scanned).
-		r$         an r, but only at the end of a line (i.e., just before a
-		           new-line) or at the end of the input string. Equivalent
-		           to r/\n. Note that regexp's notion of 'newline' is
-		           exactly whatever the Eiffel compiler used to compile the
-		           regexp interprets %%N as; in particular, on some DOS
-		           systems you must either filter out \r's in the input
-		           yourself, or explicitly use r/\r\n for r$.
-
-		The regular expressions listed above are grouped according to
-		precedence, from highest precedence at the top to lowest at the
-		bottom. Those grouped together have equal precedence. For more
-		details, see $GOBO/doc/gelex/patterns.html.
+	"[
+		Regular expressions implemented with DFA engines.
+		See note clause in class LX_REGULAR_EXPRESSION
+		about pattern syntax.
 	]"
+
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2002, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -71,8 +19,9 @@ inherit
 
 	LX_REGULAR_EXPRESSION
 		undefine
-			matches,
 			recognizes
+		redefine
+			matches
 		end
 
 	LX_DFA_PATTERN_MATCHER
@@ -91,17 +40,17 @@ create
 
 feature -- Element change
 
-	compile (a_regexp: STRING; i: BOOLEAN)
-			-- Compile `a_regexp'. Make the matching engine
-			-- case-insensitive if `i' is set. Set `compiled'
-			-- to True after successful compilation.
+	compile (a_regexp: READABLE_STRING_GENERAL; i: BOOLEAN)
+			-- Compile `a_regexp'.
+			-- Make the matching engine case-insensitive if `i' is set.
+			-- Set `compiled' to True after successful compilation.
 		local
 			a_parser: LX_REGEXP_PARSER
 			a_description: LX_DESCRIPTION
 			an_error_handler: UT_ERROR_HANDLER
 			a_dfa: LX_FULL_DFA
 			a_full_tables: LX_FULL_TABLES
-			a_string: STRING
+			a_string: READABLE_STRING_GENERAL
 			j, nb: INTEGER
 		do
 			wipe_out
@@ -109,7 +58,7 @@ feature -- Element change
 			is_case_insensitive := i
 			create an_error_handler.make_null
 			create a_description.make
-			a_description.set_equiv_classes_used (False)
+			a_description.set_equiv_classes_used (True)
 			a_description.set_meta_equiv_classes_used (False)
 			a_description.set_full_table (True)
 			a_description.set_case_insensitive (i)
@@ -164,16 +113,23 @@ feature -- Element change
 				a_full_tables := a_dfa
 				yy_nxt := a_full_tables.yy_nxt
 				yy_accept := a_full_tables.yy_accept
+				yy_ec := a_full_tables.yy_ec
 				yyNb_rows := a_full_tables.yyNb_rows
+				yyNull_equiv_class := a_full_tables.yyNull_equiv_class
+				yyMax_symbol_equiv_class := a_full_tables.yyMax_symbol_equiv_class
 			else
 				yy_nxt := Void
 				yy_accept := Void
+				yy_ec := Void
+				yyNb_rows := 0
+				yyNull_equiv_class := 0
+				yyMax_symbol_equiv_class := 0
 			end
 		end
 
 feature -- Status report
 
-	matches (a_string: STRING): BOOLEAN
+	matches (a_string: like subject): BOOLEAN
 			-- Does `a_string' include a token of the language
 			-- described by current regular expression?
 		local
@@ -181,7 +137,7 @@ feature -- Status report
 			e: INTEGER
 		do
 			nb := a_string.count
-			subject := a_string
+			set_subject (a_string)
 			subject_start := 1
 			subject_end := nb
 			match_count := 0
@@ -244,7 +200,7 @@ feature -- Status report
 
 feature -- Matching
 
-	match_substring (a_subject: STRING; a_from, a_to: INTEGER)
+	match_substring (a_subject: like subject; a_from, a_to: INTEGER)
 			-- Try to match the substring of `a_subject' between
 			-- positions `a_from' and `a_to' with the current pattern.
 			-- Make result available in `has_matched' and the various
@@ -253,7 +209,7 @@ feature -- Matching
 			i, e: INTEGER
 		do
 			match_count := 0
-			subject := a_subject
+			set_subject (a_subject)
 			subject_start := a_from
 			subject_end := a_to
 			if has_caret then
@@ -310,7 +266,7 @@ feature -- Matching
 			end
 		end
 
-	match_unbounded_substring (a_subject: STRING; a_from, a_to: INTEGER)
+	match_unbounded_substring (a_subject: like subject; a_from, a_to: INTEGER)
 			-- Try to match the substring of `a_subject' between
 			-- positions `a_from' and `a_to' with the current pattern.
 			-- Make result available in `has_matched' and the various
@@ -321,7 +277,7 @@ feature -- Matching
 		do
 			if (has_caret and a_from /= 1) or (has_dollar and a_to /= a_subject.count) then
 				match_count := 0
-				subject := a_subject
+				set_subject (a_subject)
 				subject_start := a_from
 				subject_end := a_to
 			else

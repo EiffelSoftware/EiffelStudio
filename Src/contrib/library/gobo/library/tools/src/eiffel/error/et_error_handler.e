@@ -1240,9 +1240,9 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			f1_not_void: f1 /= Void
-			f1_no_alias: f1.alias_name /= Void
+			f1_no_alias: attached f1.alias_names as l_f1_alias_names and then not l_f1_alias_names.is_empty
 			f2_not_void: f2 /= Void
-			f2_alias: f2.alias_name = Void
+			f2_alias: not attached f2.alias_names as l_f2_alias_names or else l_f2_alias_names.is_empty
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
@@ -1261,10 +1261,10 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			f1_not_void: f1 /= Void
-			f1_alias: attached f1.alias_name as f1_alias_name
+			f1_alias: attached f1.alias_names as l_f1_alias_names and then not l_f1_alias_names.is_empty
 			f2_not_void: f2 /= Void
-			f2_alias: attached f2.alias_name as f2_alias_name
-			not_same_alias: not f1_alias_name.same_alias_name (f2_alias_name)
+			f2_alias: attached f2.alias_names as l_f2_alias_names and then not l_f2_alias_names.is_empty
+			not_same_alias: not l_f1_alias_names.same_alias_names (l_f2_alias_names)
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
@@ -1758,9 +1758,9 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			f1_not_void: f1 /= Void
-			f1_no_alias: f1.alias_name = Void
+			f1_no_alias: not attached f1.alias_names as l_f1_alias_names or else l_f1_alias_names.is_empty
 			f2_not_void: f2 /= Void
-			f2_alias: f2.alias_name /= Void
+			f2_alias: attached f2.alias_names as l_f2_alias_names and then not l_f2_alias_names.is_empty
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
@@ -1779,9 +1779,9 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			f1_not_void: f1 /= Void
-			f1_alias: f1.alias_name /= Void
+			f1_alias: attached f1.alias_names as l_f1_alias_names and then not l_f1_alias_names.is_empty
 			f2_not_void: f2 /= Void
-			f2_no_alias: f2.alias_name = Void
+			f2_no_alias: not attached f2.alias_names as l_f2_alias_names or else l_f2_alias_names.is_empty
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
@@ -1800,10 +1800,10 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			f1_not_void: f1 /= Void
-			f1_alias: attached f1.alias_name as f1_alias_name
+			f1_alias: attached f1.alias_names as l_f1_alias_names and then not l_f1_alias_names.is_empty
 			f2_not_void: f2 /= Void
-			f2_alias: attached f2.alias_name as f2_alias_name
-			not_same_alias: not f1_alias_name.same_alias_name (f2_alias_name)
+			f2_alias: attached f2.alias_names as l_f2_alias_names and then not l_f2_alias_names.is_empty
+			not_same_alias: not l_f1_alias_names.same_alias_names (l_f2_alias_names)
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
@@ -2275,14 +2275,14 @@ feature -- Validity errors
 	report_veen9a_error (a_class: ET_CLASS; an_identifier: ET_IDENTIFIER; a_feature: ET_FEATURE)
 			-- Report VEEN-9 error: `an_identifier', appearing in `a_feature'
 			-- of `a_class' or one of its (possibly nested) inline agents, is an
-			-- across cursor that is used outside of its scope.
+			-- iteration cursor that is used outside of its scope.
 			--
 			-- Not in ECMA-367-2.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			an_identifier_not_void: an_identifier /= Void
-			an_identifier_across_cursor: an_identifier.is_across_cursor
+			an_identifier_iteration_cursor: an_identifier.is_iteration_cursor
 			a_feature_not_void: a_feature /= Void
 		local
 			an_error: ET_VALIDITY_ERROR
@@ -2296,14 +2296,14 @@ feature -- Validity errors
 	report_veen9b_error (a_class: ET_CLASS; an_identifier: ET_IDENTIFIER)
 			-- Report VEEN-9 error: `an_identifier', appearing in the invariant
 			-- of `a_class' or one of its (possibly nested) inline agents, is an
-			-- across cursor that is used outside of its scope.
+			-- iteration cursor that is used outside of its scope.
 			--
 			-- Not in ECMA-367-2.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			an_identifier_not_void: an_identifier /= Void
-			an_identifier_across_cursor: an_identifier.is_across_cursor
+			an_identifier_iteration_cursor: an_identifier.is_iteration_cursor
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
@@ -2537,7 +2537,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vfav1a_error (a_class: ET_CLASS; a_feature: ET_FEATURE)
+	report_vfav1a_error (a_class: ET_CLASS; a_feature: ET_FEATURE; a_alias_name: ET_ALIAS_NAME)
 			-- Report VFAV-1 error: `a_feature' has a binary operator alias
 			-- but is not a query with exactly one argument.
 			--
@@ -2546,19 +2546,20 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature_not_void: a_feature /= Void
-			a_feature_has_alias: attached a_feature.alias_name as l_alias_name
-			a_feature_alias_infix: l_alias_name.is_infix
+			a_alias_name_not_void: a_alias_name /= Void
+			a_feature_has_alias: attached a_feature.alias_names as l_alias_names and then l_alias_names.has (a_alias_name)
+			a_alias_name_is_infix: a_alias_name.is_infix
 			a_feature_not_infixable: not a_feature.is_infixable
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vfav1_error (a_class) then
-				create an_error.make_vfav1a (a_class, a_feature)
+				create an_error.make_vfav1a (a_class, a_feature, a_alias_name)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vfav1b_error (a_class: ET_CLASS; a_feature: ET_FEATURE)
+	report_vfav1b_error (a_class: ET_CLASS; a_feature: ET_FEATURE; a_alias_name: ET_ALIAS_NAME)
 			-- Report VFAV-1 error: `a_feature' has a unary operator alias
 			-- but is not a query with no argument.
 			--
@@ -2567,19 +2568,20 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature_not_void: a_feature /= Void
-			a_feature_has_alias: attached a_feature.alias_name as l_alias_name
-			a_feature_alias_prefix: l_alias_name.is_prefix
+			a_alias_name_not_void: a_alias_name /= Void
+			a_feature_has_alias: attached a_feature.alias_names as l_alias_names and then l_alias_names.has (a_alias_name)
+			a_alias_name_is_prefix: a_alias_name.is_prefix
 			a_feature_not_prefixable: not a_feature.is_prefixable
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vfav1_error (a_class) then
-				create an_error.make_vfav1b (a_class, a_feature)
+				create an_error.make_vfav1b (a_class, a_feature, a_alias_name)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vfav1c_error (a_class: ET_CLASS; a_feature1, a_feature2: ET_FEATURE)
+	report_vfav1c_error (a_class: ET_CLASS; a_feature1: ET_FEATURE; a_alias_name1: ET_ALIAS_NAME; a_feature2: ET_FEATURE; a_alias_name2: ET_ALIAS_NAME)
 			-- Report VFAV-1 error: `a_feature1' and `a_feature2' have
 			-- the same unary operator alias.
 			--
@@ -2588,21 +2590,23 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature1_not_void: a_feature1 /= Void
-			a_feature1_has_alias: attached a_feature1.alias_name as l_feature1_alias_name
-			a_feature1_alias_prefix: l_feature1_alias_name.is_prefix
+			a_alias_name1_not_void: a_alias_name1 /= Void
+			a_feature1_has_alias: attached a_feature1.alias_names as l_feature1_alias_names and then l_feature1_alias_names.has (a_alias_name1)
+			a_alias_name1_is_prefix: a_alias_name1.is_prefix
 			a_feature2_not_void: a_feature2 /= Void
-			a_feature2_has_alias: attached a_feature2.alias_name as l_feature2_alias_name
-			a_feature2_alias_prefix: l_feature2_alias_name.is_prefix
+			a_alias_name2_not_void: a_alias_name2 /= Void
+			a_feature2_has_alias: attached a_feature2.alias_names as l_feature2_alias_names and then l_feature2_alias_names.has (a_alias_name2)
+			a_alias_name2_is_prefix: a_alias_name2.is_prefix
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vfav1_error (a_class) then
-				create an_error.make_vfav1c (a_class, a_feature1, a_feature2)
+				create an_error.make_vfav1c (a_class, a_feature1, a_alias_name1, a_feature2, a_alias_name2)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vfav1d_error (a_class: ET_CLASS; a_feature1: ET_FEATURE; a_feature2: ET_PARENT_FEATURE)
+	report_vfav1d_error (a_class: ET_CLASS; a_feature1: ET_FEATURE; a_alias_name1: ET_ALIAS_NAME; a_feature2: ET_PARENT_FEATURE; a_alias_name2: ET_ALIAS_NAME)
 			-- Report VFAV-1 error: `a_feature1' and `a_feature2' have
 			-- the same unary operator alias.
 			--
@@ -2611,21 +2615,23 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature1_not_void: a_feature1 /= Void
-			a_feature1_has_alias: attached a_feature1.alias_name as l_feature1_alias_name
-			a_feature1_alias_prefix: l_feature1_alias_name.is_prefix
+			a_alias_name1_not_void: a_alias_name1 /= Void
+			a_feature1_has_alias: attached a_feature1.alias_names as l_feature1_alias_names and then l_feature1_alias_names.has (a_alias_name1)
+			a_alias_name1_is_prefix: a_alias_name1.is_prefix
 			a_feature2_not_void: a_feature2 /= Void
-			a_feature2_has_alias: attached a_feature2.alias_name as l_feature2_alias_name
-			a_feature2_alias_prefix: l_feature2_alias_name.is_prefix
+			a_alias_name2_not_void: a_alias_name2 /= Void
+			a_feature2_has_alias: attached a_feature2.alias_names as l_feature2_alias_names and then l_feature2_alias_names.has (a_alias_name2)
+			a_alias_name2_is_prefix: a_alias_name2.is_prefix
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vfav1_error (a_class) then
-				create an_error.make_vfav1d (a_class, a_feature1, a_feature2)
+				create an_error.make_vfav1d (a_class, a_feature1, a_alias_name1, a_feature2, a_alias_name2)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vfav1e_error (a_class: ET_CLASS; a_feature1, a_feature2: ET_PARENT_FEATURE)
+	report_vfav1e_error (a_class: ET_CLASS; a_feature1: ET_PARENT_FEATURE; a_alias_name1: ET_ALIAS_NAME; a_feature2: ET_PARENT_FEATURE; a_alias_name2: ET_ALIAS_NAME)
 			-- Report VFAV-1 error: `a_feature1' and `a_feature2' have
 			-- the same unary operator alias.
 			--
@@ -2634,21 +2640,23 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature1_not_void: a_feature1 /= Void
-			a_feature1_has_alias: attached a_feature1.alias_name as l_feature1_alias_name
-			a_feature1_alias_prefix: l_feature1_alias_name.is_prefix
+			a_alias_name1_not_void: a_alias_name1 /= Void
+			a_feature1_has_alias: attached a_feature1.alias_names as l_feature1_alias_names and then l_feature1_alias_names.has (a_alias_name1)
+			a_alias_name1_is_prefix: a_alias_name1.is_prefix
 			a_feature2_not_void: a_feature2 /= Void
-			a_feature2_has_alias: attached a_feature2.alias_name as l_feature2_alias_name
-			a_feature2_alias_prefix: l_feature2_alias_name.is_prefix
+			a_alias_name2_not_void: a_alias_name2 /= Void
+			a_feature2_has_alias: attached a_feature2.alias_names as l_feature2_alias_names and then l_feature2_alias_names.has (a_alias_name2)
+			a_alias_name2_is_prefix: a_alias_name2.is_prefix
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vfav1_error (a_class) then
-				create an_error.make_vfav1e (a_class, a_feature1, a_feature2)
+				create an_error.make_vfav1e (a_class, a_feature1, a_alias_name1, a_feature2, a_alias_name2)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vfav1f_error (a_class: ET_CLASS; a_feature1, a_feature2: ET_FEATURE)
+	report_vfav1f_error (a_class: ET_CLASS; a_feature1: ET_FEATURE; a_alias_name1: ET_ALIAS_NAME; a_feature2: ET_FEATURE; a_alias_name2: ET_ALIAS_NAME)
 			-- Report VFAV-1 error: `a_feature1' and `a_feature2' have
 			-- the same binary operator alias.
 			--
@@ -2657,21 +2665,23 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature1_not_void: a_feature1 /= Void
-			a_feature1_has_alias: attached a_feature1.alias_name as l_feature1_alias_name
-			a_feature1_alias_infix: l_feature1_alias_name.is_infix
+			a_alias_name1_not_void: a_alias_name1 /= Void
+			a_feature1_has_alias: attached a_feature1.alias_names as l_feature1_alias_names and then l_feature1_alias_names.has (a_alias_name1)
+			a_alias_name1_is_infix: a_alias_name1.is_infix
 			a_feature2_not_void: a_feature2 /= Void
-			a_feature2_has_alias: attached a_feature2.alias_name as l_feature2_alias_name
-			a_feature2_alias_infix: l_feature2_alias_name.is_infix
+			a_alias_name2_not_void: a_alias_name2 /= Void
+			a_feature2_has_alias: attached a_feature2.alias_names as l_feature2_alias_names and then l_feature2_alias_names.has (a_alias_name2)
+			a_alias_name2_is_infix: a_alias_name2.is_infix
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vfav1_error (a_class) then
-				create an_error.make_vfav1f (a_class, a_feature1, a_feature2)
+				create an_error.make_vfav1f (a_class, a_feature1, a_alias_name1, a_feature2, a_alias_name2)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vfav1g_error (a_class: ET_CLASS; a_feature1: ET_FEATURE; a_feature2: ET_PARENT_FEATURE)
+	report_vfav1g_error (a_class: ET_CLASS; a_feature1: ET_FEATURE; a_alias_name1: ET_ALIAS_NAME; a_feature2: ET_PARENT_FEATURE; a_alias_name2: ET_ALIAS_NAME)
 			-- Report VFAV-1 error: `a_feature1' and `a_feature2' have
 			-- the same binary operator alias.
 			--
@@ -2680,21 +2690,23 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature1_not_void: a_feature1 /= Void
-			a_feature1_has_alias: attached a_feature1.alias_name as l_feature1_alias_name
-			a_feature1_alias_infix: l_feature1_alias_name.is_infix
+			a_alias_name1_not_void: a_alias_name1 /= Void
+			a_feature1_has_alias: attached a_feature1.alias_names as l_feature1_alias_names and then l_feature1_alias_names.has (a_alias_name1)
+			a_alias_name1_is_infix: a_alias_name1.is_infix
 			a_feature2_not_void: a_feature2 /= Void
-			a_feature2_has_alias: attached a_feature2.alias_name as l_feature2_alias_name
-			a_feature2_alias_infix: l_feature2_alias_name.is_infix
+			a_alias_name2_not_void: a_alias_name2 /= Void
+			a_feature2_has_alias: attached a_feature2.alias_names as l_feature2_alias_names and then l_feature2_alias_names.has (a_alias_name2)
+			a_alias_name2_is_infix: a_alias_name2.is_infix
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vfav1_error (a_class) then
-				create an_error.make_vfav1g (a_class, a_feature1, a_feature2)
+				create an_error.make_vfav1g (a_class, a_feature1, a_alias_name1, a_feature2, a_alias_name2)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vfav1h_error (a_class: ET_CLASS; a_feature1, a_feature2: ET_PARENT_FEATURE)
+	report_vfav1h_error (a_class: ET_CLASS; a_feature1: ET_PARENT_FEATURE; a_alias_name1: ET_ALIAS_NAME; a_feature2: ET_PARENT_FEATURE; a_alias_name2: ET_ALIAS_NAME)
 			-- Report VFAV-1 error: `a_feature1' and `a_feature2' have
 			-- the same binary operator alias.
 			--
@@ -2703,61 +2715,23 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature1_not_void: a_feature1 /= Void
-			a_feature1_has_alias: attached a_feature1.alias_name as l_alias_name1
-			a_feature1_alias_infix: l_alias_name1.is_infix
+			a_alias_name1_not_void: a_alias_name1 /= Void
+			a_feature1_has_alias: attached a_feature1.alias_names as l_alias_names1 and then l_alias_names1.has (a_alias_name1)
+			a_alias_name1_is_infix: a_alias_name1.is_infix
 			a_feature2_not_void: a_feature2 /= Void
-			a_feature2_has_alias: attached a_feature2.alias_name as l_alias_name2
-			a_feature2_alias_infix: l_alias_name2.is_infix
+			a_alias_name2_not_void: a_alias_name2 /= Void
+			a_feature2_has_alias: attached a_feature2.alias_names as l_alias_names2 and then l_alias_names2.has (a_alias_name2)
+			a_alias_name2_is_infix: a_alias_name2.is_infix
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vfav1_error (a_class) then
-				create an_error.make_vfav1h (a_class, a_feature1, a_feature2)
+				create an_error.make_vfav1h (a_class, a_feature1, a_alias_name1, a_feature2, a_alias_name2)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vfav1i_error (a_class: ET_CLASS; a_feature: ET_FEATURE)
-			-- Report VFAV-1 error: `a_feature' has a prefix name but is
-			-- not a query with no argument.
-			--
-			-- ECMA 367-2, 8.5.26 page 43.
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_name_prefix: a_feature.name.is_prefix
-			a_feature_not_prefixable: not a_feature.is_prefixable
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vfav1_error (a_class) then
-				create an_error.make_vfav1i (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vfav1j_error (a_class: ET_CLASS; a_feature: ET_FEATURE)
-			-- Report VFAV-1 error: `a_feature' has an infix name but is
-			-- not a query with exactly one argument.
-			--
-			-- ECMA 367-2, 8.5.26 page 43.
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_name_infix: a_feature.name.is_infix
-			a_feature_not_infixable: not a_feature.is_infixable
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vfav1_error (a_class) then
-				create an_error.make_vfav1j (a_class, a_feature)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vfav1k_error (a_class: ET_CLASS; a_feature: ET_FEATURE)
+	report_vfav1k_error (a_class: ET_CLASS; a_feature: ET_FEATURE; a_alias_name: ET_ALIAS_NAME)
 			-- Report VFAV-1 error: `a_feature' has an operator alias
 			-- which can be either unary or binary, but it is not a
 			-- query with no argument or exactly one argument.
@@ -2767,43 +2741,20 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature_not_void: a_feature /= Void
-			a_feature_has_alias: attached a_feature.alias_name as l_alias_name
-			a_feature_alias_prefixable_and_infixable: l_alias_name.is_prefixable and l_alias_name.is_infixable
+			a_alias_name_not_void: a_alias_name /= Void
+			a_feature_has_alias: attached a_feature.alias_names as l_alias_names and then l_alias_names.has (a_alias_name)
+			a_alias_name_is_prefixable_and_infixable: a_alias_name.is_prefixable and a_alias_name.is_infixable
 			a_feature_not_prefixable_nor_infixable: not a_feature.is_prefixable and not a_feature.is_infixable
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vfav1_error (a_class) then
-				create an_error.make_vfav1k (a_class, a_feature)
+				create an_error.make_vfav1k (a_class, a_feature, a_alias_name)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vfav1l_error (a_class: ET_CLASS; a_type: ET_BASE_TYPE; a_rename: ET_RENAME; f: ET_FEATURE)
-			-- Report VFAV-1 error: the Rename_pair
-			-- `a_rename' has a new name of the Prefix form,
-			-- but the corresponding feature `f' is not a
-			-- query with no argument.
-			-- `a_type' is either the parent or generic constraint
-			-- where the rename clause appears.
-			--
-			-- ECMA 367-2, 8.5.26 page 43.
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_type_not_void: a_type /= Void
-			a_rename_not_void: a_rename /= Void
-			f_not_void: f /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vfav1_error (a_class) then
-				create an_error.make_vfav1l (a_class, a_type, a_rename, f)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vfav1m_error (a_class: ET_CLASS; a_type: ET_BASE_TYPE; a_rename: ET_RENAME; f: ET_FEATURE)
+	report_vfav1m_error (a_class: ET_CLASS; a_type: ET_BASE_TYPE; a_rename: ET_RENAME; a_new_alias_name: ET_ALIAS_NAME; f: ET_FEATURE)
 			-- Report VFAV-1 error: the Rename_pair `a_rename' has
 			-- a new name with a binary operator alias,
 			-- but the corresponding feature `f' is not a
@@ -2817,20 +2768,21 @@ feature -- Validity errors
 			a_class_preparsed: a_class.is_preparsed
 			a_type_not_void: a_type /= Void
 			a_rename_not_void: a_rename /= Void
-			a_rename_has_alias: attached a_rename.new_name.alias_name as l_new_alias_name
-			a_rename_alias_infix: l_new_alias_name.is_infix
+			a_new_alias_name_not_void: a_new_alias_name /= Void
+			a_rename_has_alias: attached a_rename.new_name.alias_names as l_new_alias_names and then l_new_alias_names.has (a_new_alias_name)
+			a_new_alias_name_is_infix: a_new_alias_name.is_infix
 			f_not_void: f /= Void
 			f_not_infixable: not f.is_infixable
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vfav1_error (a_class) then
-				create an_error.make_vfav1m (a_class, a_type, a_rename, f)
+				create an_error.make_vfav1m (a_class, a_type, a_rename, a_new_alias_name, f)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vfav1n_error (a_class: ET_CLASS; a_type: ET_BASE_TYPE; a_rename: ET_RENAME; f: ET_FEATURE)
+	report_vfav1n_error (a_class: ET_CLASS; a_type: ET_BASE_TYPE; a_rename: ET_RENAME; a_new_alias_name: ET_ALIAS_NAME; f: ET_FEATURE)
 			-- Report VFAV-1 error: the Rename_pair `a_rename' has
 			-- a new name with a unary operator alias,
 			-- but the corresponding feature `f' is not a
@@ -2844,43 +2796,21 @@ feature -- Validity errors
 			a_class_preparsed: a_class.is_preparsed
 			a_type_not_void: a_type /= Void
 			a_rename_not_void: a_rename /= Void
-			a_rename_has_alias: attached a_rename.new_name.alias_name as l_new_name_alias_name
-			a_rename_alias_prefix: l_new_name_alias_name.is_prefix
+			a_new_alias_name_not_void: a_new_alias_name /= Void
+			a_rename_has_alias: attached a_rename.new_name.alias_names as l_new_name_alias_names and then l_new_name_alias_names.has (a_new_alias_name)
+			a_new_alias_name_is_prefix: a_new_alias_name.is_prefix
 			f_not_void: f /= Void
 			f_not_prefixable: not f.is_prefixable
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vfav1_error (a_class) then
-				create an_error.make_vfav1n (a_class, a_type, a_rename, f)
+				create an_error.make_vfav1n (a_class, a_type, a_rename, a_new_alias_name, f)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vfav1o_error (a_class: ET_CLASS; a_type: ET_BASE_TYPE; a_rename: ET_RENAME; f: ET_FEATURE)
-			-- Report VFAV-1 error: the Rename_pair `a_rename' has
-			-- a new name of the Infix form, but the corresponding feature
-			-- `f' is not a function with one argument.
-			-- `a_type' is either the parent or generic constraint
-			-- where the rename clause appears.
-			--
-			-- ECMA 367-2, 8.5.26 page 43.
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_type_not_void: a_type /= Void
-			a_rename_not_void: a_rename /= Void
-			f_not_void: f /= Void
-		local
-			an_error: ET_VALIDITY_ERROR
-		do
-			if reportable_vfav1_error (a_class) then
-				create an_error.make_vfav1o (a_class, a_type, a_rename, f)
-				report_validity_error (an_error)
-			end
-		end
-
-	report_vfav1p_error (a_class: ET_CLASS; a_type: ET_BASE_TYPE; a_rename: ET_RENAME; f: ET_FEATURE)
+	report_vfav1p_error (a_class: ET_CLASS; a_type: ET_BASE_TYPE; a_rename: ET_RENAME; a_new_alias_name: ET_ALIAS_NAME; f: ET_FEATURE)
 			-- Report VFAV-1 error: the Rename_pair `a_rename' has a new name
 			-- with an operator alias which can be either unary or binary,
 			-- but the corresponding feature `f' is not a query with no argument
@@ -2894,15 +2824,16 @@ feature -- Validity errors
 			a_class_preparsed: a_class.is_preparsed
 			a_type_not_void: a_type /= Void
 			a_rename_not_void: a_rename /= Void
-			a_rename_has_alias: attached a_rename.new_name.alias_name as l_new_name_alias_name
-			a_rename_alias_prefixable_and_infixable: l_new_name_alias_name.is_prefixable and l_new_name_alias_name.is_infixable
+			a_new_alias_name_not_void: a_new_alias_name /= Void
+			a_rename_has_alias: attached a_rename.new_name.alias_names as l_new_name_alias_names and then l_new_name_alias_names.has (a_new_alias_name)
+			a_new_alias_name_is_prefixable_and_infixable: a_new_alias_name.is_prefixable and a_new_alias_name.is_infixable
 			f_not_void: f /= Void
 			f_not_prefixable_nor_infixable: not f.is_prefixable and not not f.is_infixable
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vfav1_error (a_class) then
-				create an_error.make_vfav1p (a_class, a_type, a_rename, f)
+				create an_error.make_vfav1p (a_class, a_type, a_rename, a_new_alias_name, f)
 				report_validity_error (an_error)
 			end
 		end
@@ -2921,7 +2852,7 @@ feature -- Validity errors
 			a_rename1_not_void: a_rename1 /= Void
 			a_rename2_not_void: a_rename2 /= Void
 			a_alias_name_not_void: a_alias_name /= Void
-			a_alias_name_definition: a_alias_name = a_rename2.new_name.alias_name
+			a_rename2_has_alias: attached a_rename2.new_name.alias_names as l_new_alias_names and then l_new_alias_names.has (a_alias_name)
 			a_alias_name_is_prefix: a_alias_name.is_prefix
 			a_formal_not_void: a_formal /= Void
 		local
@@ -2947,7 +2878,7 @@ feature -- Validity errors
 			a_rename1_not_void: a_rename1 /= Void
 			a_rename2_not_void: a_rename2 /= Void
 			a_alias_name_not_void: a_alias_name /= Void
-			a_alias_name_definition: a_alias_name = a_rename2.new_name.alias_name
+			a_rename2_has_alias: attached a_rename2.new_name.alias_names as l_new_alias_names and then l_new_alias_names.has (a_alias_name)
 			a_alias_name_is_inefix: a_alias_name.is_infix
 			a_formal_not_void: a_formal /= Void
 		local
@@ -2959,7 +2890,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vfav1s_error (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_formal: ET_FORMAL_PARAMETER)
+	report_vfav1s_error (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_ALIAS_NAME; a_feature: ET_FEATURE; a_formal: ET_FORMAL_PARAMETER)
 			-- Report VFAV-1 error: the unary operator alias name which appears as second
 			-- element of the Rename_pair `a_rename' in the constraint `a_constraint'
 			-- of formal parameter `a_formal' in `a_class' is already the name of the
@@ -2972,7 +2903,7 @@ feature -- Validity errors
 			a_constraint_not_void: a_constraint /= Void
 			a_rename_not_void: a_rename /= Void
 			a_alias_name_not_void: a_alias_name /= Void
-			a_alias_name_definition: a_alias_name = a_rename.new_name.alias_name
+			a_rename_has_alias: attached a_rename.new_name.alias_names as l_new_alias_names and then l_new_alias_names.has (a_alias_name)
 			a_alias_name_is_prefix: a_alias_name.is_prefix
 			a_feature_not_void: a_feature /= Void
 			a_formal_not_void: a_formal /= Void
@@ -2985,7 +2916,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vfav1t_error (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_formal: ET_FORMAL_PARAMETER)
+	report_vfav1t_error (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_ALIAS_NAME; a_feature: ET_FEATURE; a_formal: ET_FORMAL_PARAMETER)
 			-- Report VFAV-1 error: the binary operator alias name which appears as second
 			-- element of the Rename_pair `a_rename' in the constraint `a_constraint'
 			-- of formal parameter `a_formal' in `a_class' is already the name of the
@@ -2998,7 +2929,7 @@ feature -- Validity errors
 			a_constraint_not_void: a_constraint /= Void
 			a_rename_not_void: a_rename /= Void
 			a_alias_name_not_void: a_alias_name /= Void
-			a_alias_name_definition: a_alias_name = a_rename.new_name.alias_name
+			a_rename_has_alias: attached a_rename.new_name.alias_names as l_new_alias_names and then l_new_alias_names.has (a_alias_name)
 			a_alias_name_is_infix: a_alias_name.is_infix
 			a_feature_not_void: a_feature /= Void
 			a_formal_not_void: a_formal /= Void
@@ -3011,7 +2942,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vfav2a_error (a_class: ET_CLASS; a_feature: ET_FEATURE)
+	report_vfav2a_error (a_class: ET_CLASS; a_feature: ET_FEATURE; a_alias_name: ET_ALIAS_NAME)
 			-- Report VFAV-2 error: `a_feature' has a bracket alias
 			-- but is not a function with at least one argument.
 			--
@@ -3020,19 +2951,20 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature_not_void: a_feature /= Void
-			a_feature_has_alias: attached a_feature.alias_name as l_alias_name
-			a_feature_alias_bracket: l_alias_name.is_bracket
+			a_alias_name_not_void: a_alias_name /= Void
+			a_feature_has_alias: attached a_feature.alias_names as l_alias_names and then l_alias_names.has (a_alias_name)
+			a_alias_name_is_bracket: a_alias_name.is_bracket
 			a_feature_not_bracketable: not a_feature.is_bracketable
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vfav2_error (a_class) then
-				create an_error.make_vfav2a (a_class, a_feature)
+				create an_error.make_vfav2a (a_class, a_feature, a_alias_name)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vfav2b_error (a_class: ET_CLASS; a_feature1, a_feature2: ET_FEATURE)
+	report_vfav2b_error (a_class: ET_CLASS; a_feature1: ET_FEATURE; a_alias_name1: ET_ALIAS_NAME; a_feature2: ET_FEATURE; a_alias_name2: ET_ALIAS_NAME)
 			-- Report VFAV-2 error: `a_feature1' and `a_feature2' have both
 			-- a bracket alias.
 			--
@@ -3041,21 +2973,23 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature1_not_void: a_feature1 /= Void
-			a_feature1_has_alias: attached a_feature1.alias_name as l_alias_name1
-			a_feature1_alias_bracket: l_alias_name1.is_bracket
+			a_alias_name1_not_void: a_alias_name1 /= Void
+			a_feature1_has_alias: attached a_feature1.alias_names as l_alias_names1 and then l_alias_names1.has (a_alias_name1)
+			a_alias_name1_is_bracket: a_alias_name1.is_bracket
 			a_feature2_not_void: a_feature2 /= Void
-			a_feature2_has_alias: attached a_feature2.alias_name as l_alias_name2
-			a_feature2_alias_bracket: l_alias_name2.is_bracket
+			a_alias_name2_not_void: a_alias_name2 /= Void
+			a_feature2_has_alias: attached a_feature2.alias_names as l_alias_names2 and then l_alias_names2.has (a_alias_name2)
+			a_alias_name2_is_bracket: a_alias_name2.is_bracket
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vfav2_error (a_class) then
-				create an_error.make_vfav2b (a_class, a_feature1, a_feature2)
+				create an_error.make_vfav2b (a_class, a_feature1, a_alias_name1, a_feature2, a_alias_name2)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vfav2c_error (a_class: ET_CLASS; a_feature1: ET_FEATURE; a_feature2: ET_PARENT_FEATURE)
+	report_vfav2c_error (a_class: ET_CLASS; a_feature1: ET_FEATURE; a_alias_name1: ET_ALIAS_NAME; a_feature2: ET_PARENT_FEATURE; a_alias_name2: ET_ALIAS_NAME)
 			-- Report VFAV-2 error: `a_feature1' and `a_feature2' have both
 			-- a bracket alias.
 			--
@@ -3064,21 +2998,23 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature1_not_void: a_feature1 /= Void
-			a_feature1_has_alias: attached a_feature1.alias_name as l_alias_name1
-			a_feature1_alias_bracket: l_alias_name1.is_bracket
+			a_alias_name1_not_void: a_alias_name1 /= Void
+			a_feature1_has_alias: attached a_feature1.alias_names as l_alias_names1 and then l_alias_names1.has (a_alias_name1)
+			a_alias_name1_is_bracket: a_alias_name1.is_bracket
 			a_feature2_not_void: a_feature2 /= Void
-			a_feature2_has_alias: attached a_feature2.alias_name as l_alias_name2
-			a_feature2_alias_bracket: l_alias_name2.is_bracket
+			a_alias_name2_not_void: a_alias_name2 /= Void
+			a_feature2_has_alias: attached a_feature2.alias_names as l_alias_names2 and then l_alias_names2.has (a_alias_name2)
+			a_alias_name2_is_bracket: a_alias_name2.is_bracket
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vfav2_error (a_class) then
-				create an_error.make_vfav2c (a_class, a_feature1, a_feature2)
+				create an_error.make_vfav2c (a_class, a_feature1, a_alias_name1, a_feature2, a_alias_name2)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vfav2d_error (a_class: ET_CLASS; a_feature1, a_feature2: ET_PARENT_FEATURE)
+	report_vfav2d_error (a_class: ET_CLASS; a_feature1: ET_PARENT_FEATURE; a_alias_name1: ET_ALIAS_NAME; a_feature2: ET_PARENT_FEATURE; a_alias_name2: ET_ALIAS_NAME)
 			-- Report VFAV-2 error: `a_feature1' and `a_feature2' have both
 			-- a bracket alias.
 			--
@@ -3087,21 +3023,23 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature1_not_void: a_feature1 /= Void
-			a_feature1_has_alias: attached a_feature1.alias_name as l_alias_name1
-			a_feature1_alias_bracket: l_alias_name1.is_bracket
+			a_alias_name1_not_void: a_alias_name1 /= Void
+			a_feature1_has_alias: attached a_feature1.alias_names as l_alias_names1 and then l_alias_names1.has (a_alias_name1)
+			a_alias_name1_is_bracket: a_alias_name1.is_bracket
 			a_feature2_not_void: a_feature2 /= Void
-			a_feature2_has_alias: attached a_feature2.alias_name as l_alias_name2
-			a_feature2_alias_bracket: l_alias_name2.is_bracket
+			a_alias_name2_not_void: a_alias_name2 /= Void
+			a_feature2_has_alias: attached a_feature2.alias_names as l_alias_names2 and then l_alias_names2.has (a_alias_name2)
+			a_alias_name2_is_bracket: a_alias_name2.is_bracket
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vfav2_error (a_class) then
-				create an_error.make_vfav2d (a_class, a_feature1, a_feature2)
+				create an_error.make_vfav2d (a_class, a_feature1, a_alias_name1, a_feature2, a_alias_name2)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vfav2e_error (a_class: ET_CLASS; a_type: ET_BASE_TYPE; a_rename: ET_RENAME; f: ET_FEATURE)
+	report_vfav2e_error (a_class: ET_CLASS; a_type: ET_BASE_TYPE; a_rename: ET_RENAME; a_new_alias_name: ET_ALIAS_NAME; f: ET_FEATURE)
 			-- Report VFAV-2 error: the Rename_pair
 			-- `a_rename' has a new_name with a bracket alias,
 			-- but the corresponding feature `f' is not a
@@ -3115,15 +3053,16 @@ feature -- Validity errors
 			a_class_preparsed: a_class.is_preparsed
 			a_type_not_void: a_type /= Void
 			a_rename_not_void: a_rename /= Void
-			a_rename_has_alias: attached a_rename.new_name.alias_name as l_new_alias_name
-			a_rename_alias_bracket: l_new_alias_name.is_bracket
+			a_new_alias_name_not_void: a_new_alias_name /= Void
+			a_rename_has_alias: attached a_rename.new_name.alias_names as l_new_alias_names and then l_new_alias_names.has (a_new_alias_name)
+			a_new_alias_name_is_bracket: a_new_alias_name.is_bracket
 			f_not_void: f /= Void
 			f_not_bracketable: not f.is_bracketable
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vfav2_error (a_class) then
-				create an_error.make_vfav2e (a_class, a_type, a_rename, f)
+				create an_error.make_vfav2e (a_class, a_type, a_rename, a_new_alias_name, f)
 				report_validity_error (an_error)
 			end
 		end
@@ -3142,7 +3081,7 @@ feature -- Validity errors
 			a_rename1_not_void: a_rename1 /= Void
 			a_rename2_not_void: a_rename2 /= Void
 			a_alias_name_not_void: a_alias_name /= Void
-			a_alias_name_definition: a_alias_name = a_rename2.new_name.alias_name
+			a_rename2_has_alias: attached a_rename2.new_name.alias_names as l_new_alias_names and then l_new_alias_names.has (a_alias_name)
 			a_alias_name_is_bracket: a_alias_name.is_bracket
 			a_formal_not_void: a_formal /= Void
 		local
@@ -3154,7 +3093,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vfav2g_error (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_formal: ET_FORMAL_PARAMETER)
+	report_vfav2g_error (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_ALIAS_NAME; a_feature: ET_FEATURE; a_formal: ET_FORMAL_PARAMETER)
 			-- Report VFAV-2 error: the bracket alias name which appears as second
 			-- element of the Rename_pair `a_rename' in the constraint `a_constraint'
 			-- of formal parameter `a_formal' in `a_class' is already the name of the
@@ -3167,7 +3106,7 @@ feature -- Validity errors
 			a_constraint_not_void: a_constraint /= Void
 			a_rename_not_void: a_rename /= Void
 			a_alias_name_not_void: a_alias_name /= Void
-			a_alias_name_definition: a_alias_name = a_rename.new_name.alias_name
+			a_rename_has_alias: attached a_rename.new_name.alias_names as l_new_alias_names and then l_new_alias_names.has (a_alias_name)
 			a_alias_name_is_bracket: a_alias_name.is_bracket
 			a_feature_not_void: a_feature /= Void
 			a_formal_not_void: a_formal /= Void
@@ -3180,7 +3119,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vfav3a_error (a_class: ET_CLASS; a_feature: ET_FEATURE)
+	report_vfav3a_error (a_class: ET_CLASS; a_feature: ET_FEATURE; a_alias_name: ET_ALIAS_NAME)
 			-- Report VFAV-3 error: `a_feature' has a parenthesis alias
 			-- but is not a feature with at least one argument.
 			--
@@ -3189,19 +3128,20 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature_not_void: a_feature /= Void
-			a_feature_has_alias: attached a_feature.alias_name as l_alias_name
-			a_feature_alias_parenthesis: l_alias_name.is_parenthesis
+			a_alias_name_not_void: a_alias_name /= Void
+			a_feature_has_alias: attached a_feature.alias_names as l_alias_names and then l_alias_names.has (a_alias_name)
+			aa_alias_name_is_parenthesis: a_alias_name.is_parenthesis
 			a_feature_not_parenthesisable: not a_feature.is_parenthesisable
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vfav3_error (a_class) then
-				create an_error.make_vfav3a (a_class, a_feature)
+				create an_error.make_vfav3a (a_class, a_feature, a_alias_name)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vfav3b_error (a_class: ET_CLASS; a_feature1, a_feature2: ET_FEATURE)
+	report_vfav3b_error (a_class: ET_CLASS; a_feature1: ET_FEATURE; a_alias_name1: ET_ALIAS_NAME; a_feature2: ET_FEATURE; a_alias_name2: ET_ALIAS_NAME)
 			-- Report VFAV-3 error: `a_feature1' and `a_feature2' have both
 			-- a parenthesis alias.
 			--
@@ -3210,21 +3150,23 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature1_not_void: a_feature1 /= Void
-			a_feature1_has_alias: attached a_feature1.alias_name as l_alias_name1
-			a_feature1_alias_parenthesis: l_alias_name1.is_parenthesis
+			a_alias_name1_not_void: a_alias_name1 /= Void
+			a_feature1_has_alias: attached a_feature1.alias_names as l_alias_names1 and then l_alias_names1.has (a_alias_name1)
+			a_alias_name1_is_parenthesis: a_alias_name1.is_parenthesis
 			a_feature2_not_void: a_feature2 /= Void
-			a_feature2_has_alias: attached a_feature2.alias_name as l_alias_name2
-			a_feature2_alias_parenthesis: l_alias_name2.is_parenthesis
+			a_alias_name2_not_void: a_alias_name2 /= Void
+			a_feature2_has_alias: attached a_feature2.alias_names as l_alias_names2 and then l_alias_names2.has (a_alias_name2)
+			a_alias_name2_is_parenthesis: a_alias_name2.is_parenthesis
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vfav3_error (a_class) then
-				create an_error.make_vfav3b (a_class, a_feature1, a_feature2)
+				create an_error.make_vfav3b (a_class, a_feature1, a_alias_name1, a_feature2, a_alias_name2)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vfav3c_error (a_class: ET_CLASS; a_feature1: ET_FEATURE; a_feature2: ET_PARENT_FEATURE)
+	report_vfav3c_error (a_class: ET_CLASS; a_feature1: ET_FEATURE; a_alias_name1: ET_ALIAS_NAME; a_feature2: ET_PARENT_FEATURE; a_alias_name2: ET_ALIAS_NAME)
 			-- Report VFAV-3 error: `a_feature1' and `a_feature2' have both
 			-- a parenthesis alias.
 			--
@@ -3233,21 +3175,23 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature1_not_void: a_feature1 /= Void
-			a_feature1_has_alias: attached a_feature1.alias_name as l_alias_name1
-			a_feature1_alias_parenthesis: l_alias_name1.is_parenthesis
+			a_alias_name1_not_void: a_alias_name1 /= Void
+			a_feature1_has_alias: attached a_feature1.alias_names as l_alias_names1 and then l_alias_names1.has (a_alias_name1)
+			a_alias_name1_is_parenthesis: a_alias_name1.is_parenthesis
 			a_feature2_not_void: a_feature2 /= Void
-			a_feature2_has_alias: attached a_feature2.alias_name as l_alias_name2
-			a_feature2_alias_parenthesis: l_alias_name2.is_parenthesis
+			a_alias_name2_not_void: a_alias_name2 /= Void
+			a_feature2_has_alias: attached a_feature2.alias_names as l_alias_names2 and then l_alias_names2.has (a_alias_name2)
+			a_alias_name2_is_parenthesis: a_alias_name2.is_parenthesis
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vfav3_error (a_class) then
-				create an_error.make_vfav3c (a_class, a_feature1, a_feature2)
+				create an_error.make_vfav3c (a_class, a_feature1, a_alias_name1, a_feature2, a_alias_name2)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vfav3d_error (a_class: ET_CLASS; a_feature1, a_feature2: ET_PARENT_FEATURE)
+	report_vfav3d_error (a_class: ET_CLASS; a_feature1: ET_PARENT_FEATURE; a_alias_name1: ET_ALIAS_NAME; a_feature2: ET_PARENT_FEATURE; a_alias_name2: ET_ALIAS_NAME)
 			-- Report VFAV-3 error: `a_feature1' and `a_feature2' have both
 			-- a parenthesis alias.
 			--
@@ -3256,21 +3200,23 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature1_not_void: a_feature1 /= Void
-			a_feature1_has_alias: attached a_feature1.alias_name as l_alias_name1
-			a_feature1_alias_parenthesis: l_alias_name1.is_parenthesis
+			a_alias_name1_not_void: a_alias_name1 /= Void
+			a_feature1_has_alias: attached a_feature1.alias_names as l_alias_names1 and then l_alias_names1.has (a_alias_name1)
+			a_alias_name1_is_parenthesis: a_alias_name1.is_parenthesis
 			a_feature2_not_void: a_feature2 /= Void
-			a_feature2_has_alias: attached a_feature2.alias_name as l_alias_name2
-			a_feature2_alias_parenthesis: l_alias_name2.is_parenthesis
+			a_alias_name2_not_void: a_alias_name2 /= Void
+			a_feature2_has_alias: attached a_feature2.alias_names as l_alias_names2 and then l_alias_names2.has (a_alias_name2)
+			a_alias_name2_is_parenthesis: a_alias_name2.is_parenthesis
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vfav3_error (a_class) then
-				create an_error.make_vfav3d (a_class, a_feature1, a_feature2)
+				create an_error.make_vfav3d (a_class, a_feature1, a_alias_name1, a_feature2, a_alias_name2)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vfav3e_error (a_class: ET_CLASS; a_type: ET_BASE_TYPE; a_rename: ET_RENAME; f: ET_FEATURE)
+	report_vfav3e_error (a_class: ET_CLASS; a_type: ET_BASE_TYPE; a_rename: ET_RENAME; a_new_alias_name: ET_ALIAS_NAME; f: ET_FEATURE)
 			-- Report VFAV-3 error: the Rename_pair
 			-- `a_rename' has a new_name with a parenthesis alias,
 			-- but the corresponding feature `f' is not a
@@ -3284,15 +3230,16 @@ feature -- Validity errors
 			a_class_preparsed: a_class.is_preparsed
 			a_type_not_void: a_type /= Void
 			a_rename_not_void: a_rename /= Void
-			a_rename_has_alias: attached a_rename.new_name.alias_name as l_new_alias_name
-			a_rename_alias_parenthesis: l_new_alias_name.is_parenthesis
+			a_new_alias_name_not_void: a_new_alias_name /= Void
+			a_rename_has_alias: attached a_rename.new_name.alias_names as l_new_alias_names and then l_new_alias_names.has (a_new_alias_name)
+			a_new_alias_name_is_parenthesis: a_new_alias_name.is_parenthesis
 			f_not_void: f /= Void
 			f_not_parenthesisable: not f.is_parenthesisable
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vfav3_error (a_class) then
-				create an_error.make_vfav3e (a_class, a_type, a_rename, f)
+				create an_error.make_vfav3e (a_class, a_type, a_rename, a_new_alias_name, f)
 				report_validity_error (an_error)
 			end
 		end
@@ -3311,7 +3258,7 @@ feature -- Validity errors
 			a_rename1_not_void: a_rename1 /= Void
 			a_rename2_not_void: a_rename2 /= Void
 			a_alias_name_not_void: a_alias_name /= Void
-			a_alias_name_definition: a_alias_name = a_rename2.new_name.alias_name
+			a_rename2_has_alias: attached a_rename2.new_name.alias_names as l_new_alias_names and then l_new_alias_names.has (a_alias_name)
 			a_alias_name_is_parenthesis: a_alias_name.is_parenthesis
 			a_formal_not_void: a_formal /= Void
 		local
@@ -3323,7 +3270,7 @@ feature -- Validity errors
 			end
 		end
 
-	report_vfav3g_error (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_formal: ET_FORMAL_PARAMETER)
+	report_vfav3g_error (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_ALIAS_NAME; a_feature: ET_FEATURE; a_formal: ET_FORMAL_PARAMETER)
 			-- Report VFAV-3 error: the parenthesis alias name which appears as second
 			-- element of the Rename_pair `a_rename' in the constraint `a_constraint'
 			-- of formal parameter `a_formal' in `a_class' is already the name of the
@@ -3336,7 +3283,7 @@ feature -- Validity errors
 			a_constraint_not_void: a_constraint /= Void
 			a_rename_not_void: a_rename /= Void
 			a_alias_name_not_void: a_alias_name /= Void
-			a_alias_name_definition: a_alias_name = a_rename.new_name.alias_name
+			a_rename_has_alias: attached a_rename.new_name.alias_names as l_new_alias_names and then l_new_alias_names.has (a_alias_name)
 			a_alias_name_is_parenthesis: a_alias_name.is_parenthesis
 			a_feature_not_void: a_feature /= Void
 			a_formal_not_void: a_formal /= Void
@@ -4631,9 +4578,9 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			f1_not_void: f1 /= Void
-			f1_no_alias: f1.alias_name /= Void
+			f1_no_alias: attached f1.alias_names as l_f1_alias_names and then not l_f1_alias_names.is_empty
 			f2_not_void: f2 /= Void
-			f2_alias: f2.alias_name = Void
+			f2_alias: not attached f2.alias_names as l_f2_alias_names or else l_f2_alias_names.is_empty
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
@@ -4652,10 +4599,10 @@ feature -- Validity errors
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			f1_not_void: f1 /= Void
-			f1_alias: attached f1.alias_name as l_f1_alias_name
+			f1_alias: attached f1.alias_names as l_f1_alias_names and then not l_f1_alias_names.is_empty
 			f2_not_void: f2 /= Void
-			f2_alias: attached f2.alias_name as l_f2_alias_name
-			not_same_alias: not l_f1_alias_name.same_alias_name (l_f2_alias_name)
+			f2_alias: attached f2.alias_names as l_f2_alias_names and then not l_f2_alias_names.is_empty
+			not_same_alias: not l_f1_alias_names.same_alias_names (l_f2_alias_names)
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
@@ -4789,27 +4736,27 @@ feature -- Validity errors
 			end
 		end
 
-	report_voit2a_error (a_class: ET_CLASS; a_across_component: ET_ACROSS_COMPONENT; a_feature: ET_FEATURE)
-			-- Report VOIT-2 error: The cursor of `a_across_component' has the same
+	report_voit2a_error (a_class: ET_CLASS; a_iteration_component: ET_ITERATION_COMPONENT; a_feature: ET_FEATURE)
+			-- Report VOIT-2 error: The cursor of `a_iteration_component' has the same
 			-- name as `a_feature' in `a_class'.
 			--
 			-- Not in ECMA.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
-			a_across_component_not_void: a_across_component /= Void
+			a_iteration_component_not_void: a_iteration_component /= Void
 			a_feature_not_void: a_feature /= Void
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_voit2_error (a_class) then
-				create an_error.make_voit2a (a_class, a_across_component, a_feature)
+				create an_error.make_voit2a (a_class, a_iteration_component, a_feature)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_voit2b_error (a_class: ET_CLASS; a_across_component: ET_ACROSS_COMPONENT; arg: ET_FORMAL_ARGUMENT)
-			-- Report VOIT-2 error: The cursor of `a_across_component' has
+	report_voit2b_error (a_class: ET_CLASS; a_iteration_component: ET_ITERATION_COMPONENT; arg: ET_FORMAL_ARGUMENT)
+			-- Report VOIT-2 error: The cursor of `a_iteration_component' has
 			-- the same name as argument `arg' of an enclosing feature or
 			-- inline agent.
 			--
@@ -4817,19 +4764,19 @@ feature -- Validity errors
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
-			a_across_component_not_void: a_across_component /= Void
+			a_iteration_component_not_void: a_iteration_component /= Void
 			arg_not_void: arg /= Void
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_voit2_error (a_class) then
-				create an_error.make_voit2b (a_class, a_across_component, arg)
+				create an_error.make_voit2b (a_class, a_iteration_component, arg)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_voit2c_error (a_class: ET_CLASS; a_across_component: ET_ACROSS_COMPONENT; a_local: ET_LOCAL_VARIABLE)
-			-- Report VOIT-2 error: The cursor of `a_across_component' has
+	report_voit2c_error (a_class: ET_CLASS; a_iteration_component: ET_ITERATION_COMPONENT; a_local: ET_LOCAL_VARIABLE)
+			-- Report VOIT-2 error: The cursor of `a_iteration_component' has
 			-- the same name as local variable `a_local' of an enclosing
 			-- feature or inline agent.
 			--
@@ -4837,51 +4784,51 @@ feature -- Validity errors
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
-			a_across_component_not_void: a_across_component /= Void
+			a_iteration_component_not_void: a_iteration_component /= Void
 			a_local_not_void: a_local /= Void
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_voit2_error (a_class) then
-				create an_error.make_voit2c (a_class, a_across_component, a_local)
+				create an_error.make_voit2c (a_class, a_iteration_component, a_local)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_voit2d_error (a_class: ET_CLASS; a_across_component: ET_ACROSS_COMPONENT; a_object_test: ET_NAMED_OBJECT_TEST)
-			-- Report VOIT-2 error: `a_across_component' appears in the scope
+	report_voit2d_error (a_class: ET_CLASS; a_iteration_component: ET_ITERATION_COMPONENT; a_object_test: ET_NAMED_OBJECT_TEST)
+			-- Report VOIT-2 error: `a_iteration_component' appears in the scope
 			-- of the local of `a_object_test' with the same local name.
 			--
 			-- Not in ECMA.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
-			a_across_component_not_void: a_across_component /= Void
+			a_iteration_component_not_void: a_iteration_component /= Void
 			a_object_test_not_void: a_object_test /= Void
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_voit2_error (a_class) then
-				create an_error.make_voit2d (a_class, a_across_component, a_object_test)
+				create an_error.make_voit2d (a_class, a_iteration_component, a_object_test)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_voit2e_error (a_class: ET_CLASS; a_across_component1, a_across_component2: ET_ACROSS_COMPONENT)
-			-- Report VOIT-2 error: `a_across_component1' appears in the scope
-			-- of the cursor of `a_across_component2' with the same cursor name.
+	report_voit2e_error (a_class: ET_CLASS; a_iteration_component1, a_iteration_component2: ET_ITERATION_COMPONENT)
+			-- Report VOIT-2 error: `a_iteration_component1' appears in the scope
+			-- of the cursor of `a_iteration_component2' with the same cursor name.
 			--
 			-- Not in ECMA.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
-			a_across_component1_not_void: a_across_component1 /= Void
-			a_across_component2_not_void: a_across_component2 /= Void
+			a_iteration_component1_not_void: a_iteration_component1 /= Void
+			a_iteration_component2_not_void: a_iteration_component2 /= Void
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_voit2_error (a_class) then
-				create an_error.make_voit2e (a_class, a_across_component1, a_across_component2)
+				create an_error.make_voit2e (a_class, a_iteration_component1, a_iteration_component2)
 				report_validity_error (an_error)
 			end
 		end
@@ -5295,9 +5242,9 @@ feature -- Validity errors
 			end
 		end
 
-	report_vpir1g_error (a_class: ET_CLASS; arg: ET_FORMAL_ARGUMENT; an_agent: ET_INLINE_AGENT; a_across_component: ET_ACROSS_COMPONENT)
+	report_vpir1g_error (a_class: ET_CLASS; arg: ET_FORMAL_ARGUMENT; an_agent: ET_INLINE_AGENT; a_iteration_component: ET_ITERATION_COMPONENT)
 			-- Report VPIR-1 error: `arg' in inline agent `an_agent' has
-			-- the same name as the cursor of `a_across_component' of an enclosing
+			-- the same name as the cursor of `a_iteration_component' of an enclosing
 			-- feature or inline agent whose scope contains the inline agent.
 			--
 			-- Not in ECMA.
@@ -5306,19 +5253,19 @@ feature -- Validity errors
 			a_class_preparsed: a_class.is_preparsed
 			arg_not_void: arg /= Void
 			an_agent_not_void: an_agent /= Void
-			a_across_component_not_void: a_across_component /= Void
+			a_iteration_component_not_void: a_iteration_component /= Void
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vpir1_error (a_class) then
-				create an_error.make_vpir1g (a_class, arg, an_agent, a_across_component)
+				create an_error.make_vpir1g (a_class, arg, an_agent, a_iteration_component)
 				report_validity_error (an_error)
 			end
 		end
 
-	report_vpir1h_error (a_class: ET_CLASS; a_local: ET_LOCAL_VARIABLE; an_agent: ET_INLINE_AGENT; a_across_component: ET_ACROSS_COMPONENT)
+	report_vpir1h_error (a_class: ET_CLASS; a_local: ET_LOCAL_VARIABLE; an_agent: ET_INLINE_AGENT; a_iteration_component: ET_ITERATION_COMPONENT)
 			-- Report VPIR-1 error: `a_local' in inline agent `an_agent' has
-			-- the same name as the cursor of `a_across_component' of an enclosing
+			-- the same name as the cursor of `a_iteration_component' of an enclosing
 			-- feature or inline agent whose scope contains the inline agent.
 			--
 			-- Not in ECMA.
@@ -5327,12 +5274,12 @@ feature -- Validity errors
 			a_class_preparsed: a_class.is_preparsed
 			a_local_not_void: a_local /= Void
 			an_agent_not_void: an_agent /= Void
-			a_across_component_not_void: a_across_component /= Void
+			a_iteration_component_not_void: a_iteration_component /= Void
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vpir1_error (a_class) then
-				create an_error.make_vpir1h (a_class, a_local, an_agent, a_across_component)
+				create an_error.make_vpir1h (a_class, a_local, an_agent, a_iteration_component)
 				report_validity_error (an_error)
 			end
 		end
@@ -6644,21 +6591,21 @@ feature -- Validity errors
 			end
 		end
 
-	report_vuot1e_error (a_class: ET_CLASS; a_object_test: ET_NAMED_OBJECT_TEST; a_across_component: ET_ACROSS_COMPONENT)
+	report_vuot1e_error (a_class: ET_CLASS; a_object_test: ET_NAMED_OBJECT_TEST; a_iteration_component: ET_ITERATION_COMPONENT)
 			-- Report VUOT-1 error: `a_object_test' appears in the scope
-			-- of the cursor of `a_across_component' with the same local name.
+			-- of the cursor of `a_iteration_component' with the same local name.
 			--
 			-- Not in ECMA.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_object_test_not_void: a_object_test /= Void
-			a_across_component_not_void: a_across_component /= Void
+			a_iteration_component_not_void: a_iteration_component /= Void
 		local
 			an_error: ET_VALIDITY_ERROR
 		do
 			if reportable_vuot1_error (a_class) then
-				create an_error.make_vuot1e (a_class, a_object_test, a_across_component)
+				create an_error.make_vuot1e (a_class, a_object_test, a_iteration_component)
 				report_validity_error (an_error)
 			end
 		end

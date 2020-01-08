@@ -111,13 +111,9 @@ create
 	make_vfav1f,
 	make_vfav1g,
 	make_vfav1h,
-	make_vfav1i,
-	make_vfav1j,
 	make_vfav1k,
-	make_vfav1l,
 	make_vfav1m,
 	make_vfav1n,
-	make_vfav1o,
 	make_vfav1p,
 	make_vfav1q,
 	make_vfav1r,
@@ -1162,9 +1158,9 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			f1_not_void: f1 /= Void
-			f1_alias_not_void: f1.alias_name /= Void
+			f1_no_alias: attached f1.alias_names as l_f1_alias_names and then not l_f1_alias_names.is_empty
 			f2_not_void: f2 /= Void
-			f2_no_alias: f2.alias_name = Void
+			f2_alias: not attached f2.alias_names as l_f2_alias_names or else l_f2_alias_names.is_empty
 		do
 			current_class := a_class
 			class_impl := a_class
@@ -1180,7 +1176,7 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (f1.name.lower_name, 7)
-			parameters.put (alias_lower_name (f1.alias_name), 8)
+			parameters.put (alias_lower_names (f1.alias_names), 8)
 			parameters.put (f1.parent.type.upper_name, 9)
 			parameters.put (f2.parent.type.upper_name, 10)
 			set_compilers (True)
@@ -1211,10 +1207,10 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			f1_not_void: f1 /= Void
-			f1_alias: attached f1.alias_name as l_f1_alias_name
+			f1_alias: attached f1.alias_names as l_f1_alias_names and then not l_f1_alias_names.is_empty
 			f2_not_void: f2 /= Void
-			f2_alias: attached f2.alias_name as l_f2_alias_name
-			not_same_alias: not l_f1_alias_name.same_alias_name (l_f2_alias_name)
+			f2_alias: attached f2.alias_names as l_f2_alias_names and then not l_f2_alias_names.is_empty
+			not_same_alias: not l_f1_alias_names.same_alias_names (l_f2_alias_names)
 		do
 			current_class := a_class
 			class_impl := a_class
@@ -1230,9 +1226,9 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (f1.name.lower_name, 7)
-			parameters.put (alias_lower_name (f1.alias_name), 8)
+			parameters.put (alias_lower_names (f1.alias_names), 8)
 			parameters.put (f1.parent.type.upper_name, 9)
-			parameters.put (alias_lower_name (f2.alias_name), 10)
+			parameters.put (alias_lower_names (f2.alias_names), 10)
 			parameters.put (f2.parent.type.upper_name, 11)
 			set_compilers (True)
 		ensure
@@ -2281,13 +2277,13 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			f1_not_void: f1 /= Void
-			f1_no_alias: f1.alias_name = Void
+			f1_no_alias: not attached f1.alias_names as l_f1_alias_names or else l_f1_alias_names.is_empty
 			f2_not_void: f2 /= Void
-			f2_alias: f2.alias_name /= Void
+			f2_alias: attached f2.alias_names as l_f2_alias_names and then not l_f2_alias_names.is_empty
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := ast_position (f2.alias_name)
+			position := first_alias_name (f2.alias_names).position
 			code := template_code (vdrd7a_template_code)
 			etl_code := vdrd7_etl_code
 			default_template := default_message_template (vdrd7a_default_template)
@@ -2301,7 +2297,7 @@ feature {NONE} -- Initialization
 			parameters.put (f1.name.lower_name, 7)
 			parameters.put (f1.parent.type.upper_name, 8)
 			parameters.put (f2.lower_name, 9)
-			parameters.put (alias_lower_name (f2.alias_name), 10)
+			parameters.put (alias_lower_names (f2.alias_names), 10)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -2318,7 +2314,7 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = inherited feature name
 			-- dollar8: $8 = parent base class
 			-- dollar9: $9 = redeclared feature name
-			-- dollar10: $10 = redeclared alias name
+			-- dollar10: $10 = redeclared alias names
 		end
 
 	make_vdrd7b (a_class: ET_CLASS; f1: ET_PARENT_FEATURE; f2: ET_FEATURE)
@@ -2330,9 +2326,9 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			f1_not_void: f1 /= Void
-			f1_alias: f1.alias_name /= Void
+			f1_alias: attached f1.alias_names as l_f1_alias_names and then not l_f1_alias_names.is_empty
 			f2_not_void: f2 /= Void
-			f2_no_alias: f2.alias_name = Void
+			f2_no_alias: not attached f2.alias_names as l_f2_alias_names or else l_f2_alias_names.is_empty
 		do
 			current_class := a_class
 			class_impl := a_class
@@ -2348,7 +2344,7 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (f1.name.lower_name, 7)
-			parameters.put (alias_lower_name (f1.alias_name), 8)
+			parameters.put (alias_lower_names (f1.alias_names), 8)
 			parameters.put (f1.parent.type.upper_name, 9)
 			parameters.put (f2.lower_name, 10)
 			set_compilers (True)
@@ -2365,7 +2361,7 @@ feature {NONE} -- Initialization
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = implementation class name
 			-- dollar7: $7 = inherited feature name
-			-- dollar8: $8 = inherited alias name
+			-- dollar8: $8 = inherited alias names
 			-- dollar9: $9 = parent base class
 			-- dollar10: $10 = redeclared feature name
 		end
@@ -2379,14 +2375,14 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			f1_not_void: f1 /= Void
-			f1_alias: attached f1.alias_name as f1_alias_name
+			f1_alias: attached f1.alias_names as l_f1_alias_names and then not l_f1_alias_names.is_empty
 			f2_not_void: f2 /= Void
-			f2_alias: attached f2.alias_name as f2_alias_name
-			not_same_alias: not f1_alias_name.same_alias_name (f2_alias_name)
+			f2_alias: attached f2.alias_names as l_f2_alias_names and then not l_f2_alias_names.is_empty
+			not_same_alias: not l_f1_alias_names.same_alias_names (l_f2_alias_names)
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := ast_position (f2.alias_name)
+			position := first_alias_name (f2.alias_names).position
 			code := template_code (vdrd7c_template_code)
 			etl_code := vdrd7_etl_code
 			default_template := default_message_template (vdrd7c_default_template)
@@ -2398,10 +2394,10 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (f1.name.lower_name, 7)
-			parameters.put (alias_lower_name (f1.alias_name), 8)
+			parameters.put (alias_lower_names (f1.alias_names), 8)
 			parameters.put (f1.parent.type.upper_name, 9)
 			parameters.put (f2.lower_name, 10)
-			parameters.put (alias_lower_name (f2.alias_name), 11)
+			parameters.put (alias_lower_names (f2.alias_names), 11)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -2416,10 +2412,10 @@ feature {NONE} -- Initialization
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = implementation class name
 			-- dollar7: $7 = inherited feature name
-			-- dollar8: $8 = inherited alias name
+			-- dollar8: $8 = inherited alias names
 			-- dollar9: $9 = parent base class
 			-- dollar10: $10 = redeclared feature name
-			-- dollar11: $11 = redeclared alias name
+			-- dollar11: $11 = redeclared alias names
 		end
 
 	make_vdrs1a (a_class: ET_CLASS; a_parent: ET_PARENT; f: ET_FEATURE_NAME)
@@ -3390,14 +3386,14 @@ feature {NONE} -- Initialization
 	make_veen9a (a_class: ET_CLASS; an_identifier: ET_IDENTIFIER; a_feature: ET_FEATURE)
 			-- Create a new VEEN-9 error: `an_identifier', appearing in `a_feature'
 			-- of `a_class' or one of its (possibly nested) inline agents, is an
-			-- across cursor that is used outside of its scope.
+			-- iteration cursor that is used outside of its scope.
 			--
 			-- Not in ECMA-367-2.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			an_identifier_not_void: an_identifier /= Void
-			an_identifier_across_cursor: an_identifier.is_across_cursor
+			an_identifier_iteration_cursor: an_identifier.is_iteration_cursor
 			a_feature_not_void: a_feature /= Void
 		do
 			current_class := a_class
@@ -3428,21 +3424,21 @@ feature {NONE} -- Initialization
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = across cursor
+			-- dollar7: $7 = iteration cursor
 			-- dollar8: $8 = feature name
 		end
 
 	make_veen9b (a_class: ET_CLASS; an_identifier: ET_IDENTIFIER)
 			-- Create a new VEEN-9 error: `an_identifier', appearing in the invariant
 			-- of `a_class' or one of its (possibly nested) inline agents, is an
-			-- across cursor that is used outside of its scope.
+			-- iteration cursor that is used outside of its scope.
 			--
 			-- Not in ECMA-367-2.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			an_identifier_not_void: an_identifier /= Void
-			an_identifier_across_cursor: an_identifier.is_across_cursor
+			an_identifier_iteration_cursor: an_identifier.is_iteration_cursor
 		do
 			current_class := a_class
 			class_impl := a_class
@@ -3471,7 +3467,7 @@ feature {NONE} -- Initialization
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = across cursor
+			-- dollar7: $7 = iteration cursor
 		end
 
 	make_vevi0a (a_class, a_class_impl: ET_CLASS; a_name: ET_IDENTIFIER; a_local: ET_LOCAL_VARIABLE)
@@ -3944,7 +3940,7 @@ feature {NONE} -- Initialization
 			-- dollar10: $10 = argument index in assigner procedure
 		end
 
-	make_vfav1a (a_class: ET_CLASS; a_feature: ET_FEATURE)
+	make_vfav1a (a_class: ET_CLASS; a_feature: ET_FEATURE; a_alias_name: ET_ALIAS_NAME)
 			-- Create a new VFAV-1 error: `a_feature' has a binary operator alias
 			-- but is not a query with exactly one argument.
 			--
@@ -3953,13 +3949,14 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature_not_void: a_feature /= Void
-			a_feature_has_alias: attached a_feature.alias_name as l_alias_name
-			a_feature_alias_infix: l_alias_name.is_infix
+			a_alias_name_not_void: a_alias_name /= Void
+			a_feature_has_alias: attached a_feature.alias_names as l_alias_names and then l_alias_names.has (a_alias_name)
+			a_alias_name_is_infix: a_alias_name.is_infix
 			a_feature_not_infixable: not a_feature.is_infixable
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := ast_position (a_feature.alias_name)
+			position := a_alias_name.position
 			code := template_code (vfav1a_template_code)
 			etl_code := vfav1_etl_code
 			default_template := default_message_template (vfav1a_default_template)
@@ -3971,7 +3968,7 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_feature.lower_name, 7)
-			parameters.put (alias_lower_name (a_feature.alias_name), 8)
+			parameters.put (a_alias_name.alias_lower_name, 8)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -3989,7 +3986,7 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = alias name
 		end
 
-	make_vfav1b (a_class: ET_CLASS; a_feature: ET_FEATURE)
+	make_vfav1b (a_class: ET_CLASS; a_feature: ET_FEATURE; a_alias_name: ET_ALIAS_NAME)
 			-- Create a new VFAV-1 error: `a_feature' has a unary operator alias
 			-- but is not a query with no argument.
 			--
@@ -3998,13 +3995,14 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature_not_void: a_feature /= Void
-			a_feature_has_alias: attached a_feature.alias_name as l_alias_name
-			a_feature_alias_prefix: l_alias_name.is_prefix
+			a_alias_name_not_void: a_alias_name /= Void
+			a_feature_has_alias: attached a_feature.alias_names as l_alias_names and then l_alias_names.has (a_alias_name)
+			a_alias_name_is_prefix: a_alias_name.is_prefix
 			a_feature_not_prefixable: not a_feature.is_prefixable
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := ast_position (a_feature.alias_name)
+			position := a_alias_name.position
 			code := template_code (vfav1b_template_code)
 			etl_code := vfav1_etl_code
 			default_template := default_message_template (vfav1b_default_template)
@@ -4016,7 +4014,7 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_feature.lower_name, 7)
-			parameters.put (alias_lower_name (a_feature.alias_name), 8)
+			parameters.put (a_alias_name.alias_lower_name, 8)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -4034,7 +4032,7 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = alias name
 		end
 
-	make_vfav1c (a_class: ET_CLASS; a_feature1, a_feature2: ET_FEATURE)
+	make_vfav1c (a_class: ET_CLASS; a_feature1: ET_FEATURE; a_alias_name1: ET_ALIAS_NAME; a_feature2: ET_FEATURE; a_alias_name2: ET_ALIAS_NAME)
 			-- Create a new VFAV-1 error: `a_feature1' and `a_feature2' have
 			-- the same unary operator alias.
 			--
@@ -4043,15 +4041,17 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature1_not_void: a_feature1 /= Void
-			a_feature1_has_alias: attached a_feature1.alias_name as l_feature1_alias_name
-			a_feature1_alias_prefix: l_feature1_alias_name.is_prefix
+			a_alias_name1_not_void: a_alias_name1 /= Void
+			a_feature1_has_alias: attached a_feature1.alias_names as l_feature1_alias_names and then l_feature1_alias_names.has (a_alias_name1)
+			a_alias_name1_is_prefix: a_alias_name1.is_prefix
 			a_feature2_not_void: a_feature2 /= Void
-			a_feature2_has_alias: attached a_feature2.alias_name as l_feature2_alias_name
-			a_feature2_alias_prefix: l_feature2_alias_name.is_prefix
+			a_alias_name2_not_void: a_alias_name2 /= Void
+			a_feature2_has_alias: attached a_feature2.alias_names as l_feature2_alias_names and then l_feature2_alias_names.has (a_alias_name2)
+			a_alias_name2_is_prefix: a_alias_name2.is_prefix
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := ast_position (a_feature1.alias_name)
+			position := a_alias_name1.position
 			code := template_code (vfav1c_template_code)
 			etl_code := vfav1_etl_code
 			default_template := default_message_template (vfav1c_default_template)
@@ -4063,9 +4063,9 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_feature1.lower_name, 7)
-			parameters.put (alias_lower_name (a_feature1.alias_name), 8)
+			parameters.put (a_alias_name1.alias_lower_name, 8)
 			parameters.put (a_feature2.lower_name, 9)
-			parameters.put (alias_lower_name (a_feature2.alias_name), 10)
+			parameters.put (a_alias_name2.alias_lower_name, 10)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -4085,7 +4085,7 @@ feature {NONE} -- Initialization
 			-- dollar10: $10 = second alias name
 		end
 
-	make_vfav1d (a_class: ET_CLASS; a_feature1: ET_FEATURE; a_feature2: ET_PARENT_FEATURE)
+	make_vfav1d (a_class: ET_CLASS; a_feature1: ET_FEATURE; a_alias_name1: ET_ALIAS_NAME; a_feature2: ET_PARENT_FEATURE; a_alias_name2: ET_ALIAS_NAME)
 			-- Create a new VFAV-1 error: `a_feature1' and `a_feature2' have
 			-- the same unary operator alias.
 			--
@@ -4094,15 +4094,17 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature1_not_void: a_feature1 /= Void
-			a_feature1_has_alias: attached a_feature1.alias_name as l_feature1_alias_name
-			a_feature1_alias_prefix: l_feature1_alias_name.is_prefix
+			a_alias_name1_not_void: a_alias_name1 /= Void
+			a_feature1_has_alias: attached a_feature1.alias_names as l_feature1_alias_names and then l_feature1_alias_names.has (a_alias_name1)
+			a_alias_name1_is_prefix: a_alias_name1.is_prefix
 			a_feature2_not_void: a_feature2 /= Void
-			a_feature2_has_alias: attached a_feature2.alias_name as l_feature2_alias_name
-			a_feature2_alias_prefix: l_feature2_alias_name.is_prefix
+			a_alias_name2_not_void: a_alias_name2 /= Void
+			a_feature2_has_alias: attached a_feature2.alias_names as l_feature2_alias_names and then l_feature2_alias_names.has (a_alias_name2)
+			a_alias_name2_is_prefix: a_alias_name2.is_prefix
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := ast_position (a_feature1.alias_name)
+			position := a_alias_name1.position
 			code := template_code (vfav1d_template_code)
 			etl_code := vfav1_etl_code
 			default_template := default_message_template (vfav1d_default_template)
@@ -4114,9 +4116,9 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_feature1.lower_name, 7)
-			parameters.put (alias_lower_name (a_feature1.alias_name), 8)
+			parameters.put (a_alias_name1.alias_lower_name, 8)
 			parameters.put (a_feature2.name.lower_name, 9)
-			parameters.put (alias_lower_name (a_feature2.alias_name), 10)
+			parameters.put (a_alias_name2.alias_lower_name, 10)
 			parameters.put (a_feature2.parent.type.upper_name, 11)
 			set_compilers (True)
 		ensure
@@ -4138,7 +4140,7 @@ feature {NONE} -- Initialization
 			-- dollar11: $11 = second parent base class
 		end
 
-	make_vfav1e (a_class: ET_CLASS; a_feature1, a_feature2: ET_PARENT_FEATURE)
+	make_vfav1e (a_class: ET_CLASS; a_feature1: ET_PARENT_FEATURE; a_alias_name1: ET_ALIAS_NAME; a_feature2: ET_PARENT_FEATURE; a_alias_name2: ET_ALIAS_NAME)
 			-- Create a new VFAV-1 error: `a_feature1' and `a_feature2' have
 			-- the same unary operator alias.
 			--
@@ -4147,11 +4149,13 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature1_not_void: a_feature1 /= Void
-			a_feature1_has_alias: attached a_feature1.alias_name as l_feature1_alias_name
-			a_feature1_alias_prefix: l_feature1_alias_name.is_prefix
+			a_alias_name1_not_void: a_alias_name1 /= Void
+			a_feature1_has_alias: attached a_feature1.alias_names as l_feature1_alias_names and then l_feature1_alias_names.has (a_alias_name1)
+			a_alias_name1_is_prefix: a_alias_name1.is_prefix
 			a_feature2_not_void: a_feature2 /= Void
-			a_feature2_has_alias: attached a_feature2.alias_name as l_feature2_alias_name
-			a_feature2_alias_prefix: l_feature2_alias_name.is_prefix
+			a_alias_name2_not_void: a_alias_name2 /= Void
+			a_feature2_has_alias: attached a_feature2.alias_names as l_feature2_alias_names and then l_feature2_alias_names.has (a_alias_name2)
+			a_alias_name2_is_prefix: a_alias_name2.is_prefix
 		do
 			current_class := a_class
 			class_impl := a_class
@@ -4167,10 +4171,10 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_feature1.name.lower_name, 7)
-			parameters.put (alias_lower_name (a_feature1.alias_name), 8)
+			parameters.put (a_alias_name1.alias_lower_name, 8)
 			parameters.put (a_feature1.parent.type.upper_name, 9)
 			parameters.put (a_feature2.name.lower_name, 10)
-			parameters.put (alias_lower_name (a_feature2.alias_name), 11)
+			parameters.put (a_alias_name2.alias_lower_name, 11)
 			parameters.put (a_feature2.parent.type.upper_name, 12)
 			set_compilers (True)
 		ensure
@@ -4193,7 +4197,7 @@ feature {NONE} -- Initialization
 			-- dollar12: $12 = second parent base class
 		end
 
-	make_vfav1f (a_class: ET_CLASS; a_feature1, a_feature2: ET_FEATURE)
+	make_vfav1f (a_class: ET_CLASS; a_feature1: ET_FEATURE; a_alias_name1: ET_ALIAS_NAME; a_feature2: ET_FEATURE; a_alias_name2: ET_ALIAS_NAME)
 			-- Create a new VFAV-1 error: `a_feature1' and `a_feature2' have
 			-- the same binary operator alias.
 			--
@@ -4202,15 +4206,17 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature1_not_void: a_feature1 /= Void
-			a_feature1_has_alias: attached a_feature1.alias_name as l_feature1_alias_name
-			a_feature1_alias_infix: l_feature1_alias_name.is_infix
+			a_alias_name1_not_void: a_alias_name1 /= Void
+			a_feature1_has_alias: attached a_feature1.alias_names as l_feature1_alias_names and then l_feature1_alias_names.has (a_alias_name1)
+			a_alias_name1_is_infix: a_alias_name1.is_infix
 			a_feature2_not_void: a_feature2 /= Void
-			a_feature2_has_alias: attached a_feature2.alias_name as l_feature2_alias_name
-			a_feature2_alias_infix: l_feature2_alias_name.is_infix
+			a_alias_name2_not_void: a_alias_name2 /= Void
+			a_feature2_has_alias: attached a_feature2.alias_names as l_feature2_alias_names and then l_feature2_alias_names.has (a_alias_name2)
+			a_alias_name2_is_infix: a_alias_name2.is_infix
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := ast_position (a_feature1.alias_name)
+			position := a_alias_name1.position
 			code := template_code (vfav1f_template_code)
 			etl_code := vfav1_etl_code
 			default_template := default_message_template (vfav1f_default_template)
@@ -4222,9 +4228,9 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_feature1.lower_name, 7)
-			parameters.put (alias_lower_name (a_feature1.alias_name), 8)
+			parameters.put (a_alias_name1.alias_lower_name, 8)
 			parameters.put (a_feature2.lower_name, 9)
-			parameters.put (alias_lower_name (a_feature2.alias_name), 10)
+			parameters.put (a_alias_name2.alias_lower_name, 10)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -4244,7 +4250,7 @@ feature {NONE} -- Initialization
 			-- dollar10: $10 = second alias name
 		end
 
-	make_vfav1g (a_class: ET_CLASS; a_feature1: ET_FEATURE; a_feature2: ET_PARENT_FEATURE)
+	make_vfav1g (a_class: ET_CLASS; a_feature1: ET_FEATURE; a_alias_name1: ET_ALIAS_NAME; a_feature2: ET_PARENT_FEATURE; a_alias_name2: ET_ALIAS_NAME)
 			-- Create a new VFAV-1 error: `a_feature1' and `a_feature2' have
 			-- the same binary operator alias.
 			--
@@ -4253,15 +4259,17 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature1_not_void: a_feature1 /= Void
-			a_feature1_has_alias: attached a_feature1.alias_name as l_feature1_alias_name
-			a_feature1_alias_infix: l_feature1_alias_name.is_infix
+			a_alias_name1_not_void: a_alias_name1 /= Void
+			a_feature1_has_alias: attached a_feature1.alias_names as l_feature1_alias_names and then l_feature1_alias_names.has (a_alias_name1)
+			a_alias_name1_is_infix: a_alias_name1.is_infix
 			a_feature2_not_void: a_feature2 /= Void
-			a_feature2_has_alias: attached a_feature2.alias_name as l_feature2_alias_name
-			a_feature2_alias_infix: l_feature2_alias_name.is_infix
+			a_alias_name2_not_void: a_alias_name2 /= Void
+			a_feature2_has_alias: attached a_feature2.alias_names as l_feature2_alias_names and then l_feature2_alias_names.has (a_alias_name2)
+			a_alias_name2_is_infix: a_alias_name2.is_infix
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := ast_position (a_feature1.alias_name)
+			position := a_alias_name1.position
 			code := template_code (vfav1g_template_code)
 			etl_code := vfav1_etl_code
 			default_template := default_message_template (vfav1g_default_template)
@@ -4273,9 +4281,9 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_feature1.lower_name, 7)
-			parameters.put (alias_lower_name (a_feature1.alias_name), 8)
+			parameters.put (a_alias_name1.alias_lower_name, 8)
 			parameters.put (a_feature2.name.lower_name, 9)
-			parameters.put (alias_lower_name (a_feature2.alias_name), 10)
+			parameters.put (a_alias_name2.alias_lower_name, 10)
 			parameters.put (a_feature2.parent.type.upper_name, 11)
 			set_compilers (True)
 		ensure
@@ -4297,7 +4305,7 @@ feature {NONE} -- Initialization
 			-- dollar11: $11 = second parent base class
 		end
 
-	make_vfav1h (a_class: ET_CLASS; a_feature1, a_feature2: ET_PARENT_FEATURE)
+	make_vfav1h (a_class: ET_CLASS; a_feature1: ET_PARENT_FEATURE; a_alias_name1: ET_ALIAS_NAME; a_feature2: ET_PARENT_FEATURE; a_alias_name2: ET_ALIAS_NAME)
 			-- Create a new VFAV-1 error: `a_feature1' and `a_feature2' have
 			-- the same binary operator alias.
 			--
@@ -4306,11 +4314,13 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature1_not_void: a_feature1 /= Void
-			a_feature1_has_alias: attached a_feature1.alias_name as l_alias_name1
-			a_feature1_alias_infix: l_alias_name1.is_infix
+			a_alias_name1_not_void: a_alias_name1 /= Void
+			a_feature1_has_alias: attached a_feature1.alias_names as l_alias_names1 and then l_alias_names1.has (a_alias_name1)
+			a_alias_name1_is_infix: a_alias_name1.is_infix
 			a_feature2_not_void: a_feature2 /= Void
-			a_feature2_has_alias: attached a_feature2.alias_name as l_alias_name2
-			a_feature2_alias_infix: l_alias_name2.is_infix
+			a_alias_name2_not_void: a_alias_name2 /= Void
+			a_feature2_has_alias: attached a_feature2.alias_names as l_alias_names2 and then l_alias_names2.has (a_alias_name2)
+			a_alias_name2_is_infix: a_alias_name2.is_infix
 		do
 			current_class := a_class
 			class_impl := a_class
@@ -4326,10 +4336,10 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_feature1.name.lower_name, 7)
-			parameters.put (alias_lower_name (a_feature1.alias_name), 8)
+			parameters.put (a_alias_name1.alias_lower_name, 8)
 			parameters.put (a_feature1.parent.type.upper_name, 9)
 			parameters.put (a_feature2.name.lower_name, 10)
-			parameters.put (alias_lower_name (a_feature2.alias_name), 11)
+			parameters.put (a_alias_name2.alias_lower_name, 11)
 			parameters.put (a_feature2.parent.type.upper_name, 12)
 			set_compilers (True)
 		ensure
@@ -4352,91 +4362,7 @@ feature {NONE} -- Initialization
 			-- dollar12: $12 = second parent base class
 		end
 
-	make_vfav1i (a_class: ET_CLASS; a_feature: ET_FEATURE)
-			-- Create a new VFAV-1 error: `a_feature' has a prefix name but is
-			-- not a query with no argument.
-			--
-			-- ECMA 367-2, 8.5.26 page 43.
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_name_prefix: a_feature.name.is_prefix
-			a_feature_not_prefixable: not a_feature.is_prefixable
-		do
-			current_class := a_class
-			class_impl := a_class
-			position := a_feature.name.position
-			code := template_code (vfav1i_template_code)
-			etl_code := vfav1_etl_code
-			default_template := default_message_template (vfav1i_default_template)
-			create parameters.make_filled (empty_string, 1, 7)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_feature.lower_name, 7)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = feature name
-		end
-
-	make_vfav1j (a_class: ET_CLASS; a_feature: ET_FEATURE)
-			-- Create a new VFAV-1 error: `a_feature' has an infix name but is
-			-- not a function with exactly one argument.
-			--
-			-- ECMA 367-2, 8.5.26 page 43.
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_feature_not_void: a_feature /= Void
-			a_feature_name_infix: a_feature.name.is_infix
-			a_feature_not_infixable: not a_feature.is_infixable
-		do
-			current_class := a_class
-			class_impl := a_class
-			position := a_feature.name.position
-			code := template_code (vfav1j_template_code)
-			etl_code := vfav1_etl_code
-			default_template := default_message_template (vfav1j_default_template)
-			create parameters.make_filled (empty_string, 1, 7)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_feature.lower_name, 7)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = feature name
-		end
-
-	make_vfav1k (a_class: ET_CLASS; a_feature: ET_FEATURE)
+	make_vfav1k (a_class: ET_CLASS; a_feature: ET_FEATURE; a_alias_name: ET_ALIAS_NAME)
 			-- Create a new VFAV-1 error: `a_feature' has an operator alias
 			-- which can be either unary or binary, but it is not a
 			-- query with no argument or exactly one argument.
@@ -4446,13 +4372,14 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature_not_void: a_feature /= Void
-			a_feature_has_alias: attached a_feature.alias_name as l_alias_name
-			a_feature_alias_prefixable_and_infixable: l_alias_name.is_prefixable and l_alias_name.is_infixable
+			a_alias_name_not_void: a_alias_name /= Void
+			a_feature_has_alias: attached a_feature.alias_names as l_alias_names and then l_alias_names.has (a_alias_name)
+			a_alias_name_is_prefixable_and_infixable: a_alias_name.is_prefixable and a_alias_name.is_infixable
 			a_feature_not_prefixable_nor_infixable: not a_feature.is_prefixable and not a_feature.is_infixable
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := ast_position (a_feature.alias_name)
+			position := a_alias_name.position
 			code := template_code (vfav1k_template_code)
 			etl_code := vfav1_etl_code
 			default_template := default_message_template (vfav1k_default_template)
@@ -4464,7 +4391,7 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_feature.lower_name, 7)
-			parameters.put (alias_lower_name (a_feature.alias_name), 8)
+			parameters.put (a_alias_name.alias_lower_name, 8)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -4482,57 +4409,7 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = alias name
 		end
 
-	make_vfav1l (a_class: ET_CLASS; a_type: ET_BASE_TYPE; a_rename: ET_RENAME; f: ET_FEATURE)
-			-- Create a new VFAV-1 error: the Rename_pair
-			-- `a_rename' has a new name of the Prefix form,
-			-- but the corresponding feature `f' is not a
-			-- query with no argument.
-			-- `a_type' is either the parent or generic constraint
-			-- where the rename clause appears.
-			--
-			-- ECMA 367-2, 8.5.26 page 43.
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_type_not_void: a_type /= Void
-			a_rename_not_void: a_rename /= Void
-			f_not_void: f /= Void
-		do
-			current_class := a_class
-			class_impl := a_class
-			position := a_rename.new_name.position
-			code := template_code (vfav1l_template_code)
-			etl_code := vfav1_etl_code
-			default_template := default_message_template (vfav1l_default_template)
-			create parameters.make_filled (empty_string, 1, 9)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_rename.new_name.feature_name.lower_name, 7)
-			parameters.put (f.lower_name, 8)
-			parameters.put (a_type.upper_name, 9)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = new prefix name
-			-- dollar8: $8 = old feature name
-			-- dollar9: $9 = parent or generic constraint base class
-		end
-
-	make_vfav1m (a_class: ET_CLASS; a_type: ET_BASE_TYPE; a_rename: ET_RENAME; f: ET_FEATURE)
+	make_vfav1m (a_class: ET_CLASS; a_type: ET_BASE_TYPE; a_rename: ET_RENAME; a_new_alias_name: ET_ALIAS_NAME; f: ET_FEATURE)
 			-- Create a new VFAV-1 error: the Rename_pair `a_rename' has
 			-- a new name with a binary operator alias,
 			-- but the corresponding feature `f' is not a
@@ -4544,16 +4421,17 @@ feature {NONE} -- Initialization
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
-			a_a_type_not_void: a_type /= Void
+			a_type_not_void: a_type /= Void
 			a_rename_not_void: a_rename /= Void
-			a_rename_has_alias: attached a_rename.new_name.alias_name as l_new_alias_name
-			a_rename_alias_infix: l_new_alias_name.is_infix
+			a_new_alias_name_not_void: a_new_alias_name /= Void
+			a_rename_has_alias: attached a_rename.new_name.alias_names as l_new_alias_names and then l_new_alias_names.has (a_new_alias_name)
+			a_new_alias_name_is_infix: a_new_alias_name.is_infix
 			f_not_void: f /= Void
 			f_not_infixable: not f.is_infixable
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := ast_position (a_rename.new_name.alias_name)
+			position := a_new_alias_name.position
 			code := template_code (vfav1m_template_code)
 			etl_code := vfav1_etl_code
 			default_template := default_message_template (vfav1m_default_template)
@@ -4565,7 +4443,7 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_rename.new_name.feature_name.lower_name, 7)
-			parameters.put (alias_lower_name (a_rename.new_name.alias_name), 8)
+			parameters.put (a_new_alias_name.alias_lower_name, 8)
 			parameters.put (f.lower_name, 9)
 			parameters.put (a_type.upper_name, 10)
 			set_compilers (True)
@@ -4587,7 +4465,7 @@ feature {NONE} -- Initialization
 			-- dollar10: $10 = parent or generic constraint base class
 		end
 
-	make_vfav1n (a_class: ET_CLASS; a_type: ET_BASE_TYPE; a_rename: ET_RENAME; f: ET_FEATURE)
+	make_vfav1n (a_class: ET_CLASS; a_type: ET_BASE_TYPE; a_rename: ET_RENAME; a_new_alias_name: ET_ALIAS_NAME; f: ET_FEATURE)
 			-- Create a new VFAV-1 error: the Rename_pair `a_rename' has
 			-- a new name with a unary operator alias,
 			-- but the corresponding feature `f' is not a
@@ -4601,14 +4479,15 @@ feature {NONE} -- Initialization
 			a_class_preparsed: a_class.is_preparsed
 			a_type_not_void: a_type /= Void
 			a_rename_not_void: a_rename /= Void
-			a_rename_has_alias: attached a_rename.new_name.alias_name as l_new_name_alias_name
-			a_rename_alias_prefix: l_new_name_alias_name.is_prefix
+			a_new_alias_name_not_void: a_new_alias_name /= Void
+			a_rename_has_alias: attached a_rename.new_name.alias_names as l_new_name_alias_names and then l_new_name_alias_names.has (a_new_alias_name)
+			a_new_alias_name_is_prefix: a_new_alias_name.is_prefix
 			f_not_void: f /= Void
 			f_not_prefixable: not f.is_prefixable
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := ast_position (a_rename.new_name.alias_name)
+			position := a_new_alias_name.position
 			code := template_code (vfav1n_template_code)
 			etl_code := vfav1_etl_code
 			default_template := default_message_template (vfav1n_default_template)
@@ -4620,7 +4499,7 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_rename.new_name.feature_name.lower_name, 7)
-			parameters.put (alias_lower_name (a_rename.new_name.alias_name), 8)
+			parameters.put (a_new_alias_name.alias_lower_name, 8)
 			parameters.put (f.lower_name, 9)
 			parameters.put (a_type.upper_name, 10)
 			set_compilers (True)
@@ -4642,56 +4521,7 @@ feature {NONE} -- Initialization
 			-- dollar10: $10 = parent or generic constraint base class
 		end
 
-	make_vfav1o (a_class: ET_CLASS; a_type: ET_BASE_TYPE; a_rename: ET_RENAME; f: ET_FEATURE)
-			-- Create a new VFAV-1 error: the Rename_pair `a_rename' has
-			-- a new name of the Infix form, but the corresponding feature
-			-- `f' is not a function with one argument.
-			-- `a_type' is either the parent or generic constraint
-			-- where the rename clause appears.
-			--
-			-- ECMA 367-2, 8.5.26 page 43.
-		require
-			a_class_not_void: a_class /= Void
-			a_class_preparsed: a_class.is_preparsed
-			a_type_not_void: a_type /= Void
-			a_rename_not_void: a_rename /= Void
-			f_not_void: f /= Void
-		do
-			current_class := a_class
-			class_impl := a_class
-			position := a_rename.new_name.position
-			code := template_code (vfav1o_template_code)
-			etl_code := vfav1_etl_code
-			default_template := default_message_template (vfav1o_default_template)
-			create parameters.make_filled (empty_string, 1, 9)
-			parameters.put (etl_code, 1)
-			parameters.put (filename, 2)
-			parameters.put (position.line.out, 3)
-			parameters.put (position.column.out, 4)
-			parameters.put (current_class.upper_name, 5)
-			parameters.put (class_impl.upper_name, 6)
-			parameters.put (a_rename.new_name.feature_name.lower_name, 7)
-			parameters.put (f.lower_name, 8)
-			parameters.put (a_type.upper_name, 9)
-			set_compilers (True)
-		ensure
-			current_class_set: current_class = a_class
-			class_impl_set: class_impl = a_class
-			all_reported: all_reported
-			all_fatal: all_fatal
-			-- dollar0: $0 = program name
-			-- dollar1: $1 = ETL code
-			-- dollar2: $2 = filename
-			-- dollar3: $3 = line
-			-- dollar4: $4 = column
-			-- dollar5: $5 = class name
-			-- dollar6: $6 = implementation class name
-			-- dollar7: $7 = new infix name
-			-- dollar8: $8 = old feature name
-			-- dollar9: $9 = parent or generic constraint base class
-		end
-
-	make_vfav1p (a_class: ET_CLASS; a_type: ET_BASE_TYPE; a_rename: ET_RENAME; f: ET_FEATURE)
+	make_vfav1p (a_class: ET_CLASS; a_type: ET_BASE_TYPE; a_rename: ET_RENAME; a_new_alias_name: ET_ALIAS_NAME; f: ET_FEATURE)
 			-- Create a new VFAV-1 error: the Rename_pair `a_rename' has a new_name
 			-- with an operator alias which can be either unary or binary,
 			-- but the corresponding feature `f' is not a query with no argument
@@ -4705,14 +4535,15 @@ feature {NONE} -- Initialization
 			a_class_preparsed: a_class.is_preparsed
 			a_type_not_void: a_type /= Void
 			a_rename_not_void: a_rename /= Void
-			a_rename_has_alias: attached a_rename.new_name.alias_name as l_new_name_alias_name
-			a_rename_alias_prefixable_and_infixable: l_new_name_alias_name.is_prefixable and l_new_name_alias_name.is_infixable
+			a_new_alias_name_not_void: a_new_alias_name /= Void
+			a_rename_has_alias: attached a_rename.new_name.alias_names as l_new_name_alias_names and then l_new_name_alias_names.has (a_new_alias_name)
+			a_new_alias_name_is_prefixable_and_infixable: a_new_alias_name.is_prefixable and a_new_alias_name.is_infixable
 			f_not_void: f /= Void
 			f_not_prefixable_nor_infixable: not f.is_prefixable and not not f.is_infixable
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := ast_position (a_rename.new_name.alias_name)
+			position := a_new_alias_name.position
 			code := template_code (vfav1p_template_code)
 			etl_code := vfav1_etl_code
 			default_template := default_message_template (vfav1p_default_template)
@@ -4724,7 +4555,7 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_rename.new_name.feature_name.lower_name, 7)
-			parameters.put (alias_lower_name (a_rename.new_name.alias_name), 8)
+			parameters.put (a_new_alias_name.alias_lower_name, 8)
 			parameters.put (f.lower_name, 9)
 			parameters.put (a_type.upper_name, 10)
 			set_compilers (True)
@@ -4760,7 +4591,7 @@ feature {NONE} -- Initialization
 			a_rename1_not_void: a_rename1 /= Void
 			a_rename2_not_void: a_rename2 /= Void
 			a_alias_name_not_void: a_alias_name /= Void
-			a_alias_name_definition: a_alias_name = a_rename2.new_name.alias_name
+			a_rename2_has_alias: attached a_rename2.new_name.alias_names as l_new_alias_names and then l_new_alias_names.has (a_alias_name)
 			a_alias_name_is_prefix: a_alias_name.is_prefix
 			a_formal_not_void: a_formal /= Void
 		do
@@ -4810,7 +4641,7 @@ feature {NONE} -- Initialization
 			a_rename1_not_void: a_rename1 /= Void
 			a_rename2_not_void: a_rename2 /= Void
 			a_alias_name_not_void: a_alias_name /= Void
-			a_alias_name_definition: a_alias_name = a_rename2.new_name.alias_name
+			a_rename2_has_alias: attached a_rename2.new_name.alias_names as l_new_alias_names and then l_new_alias_names.has (a_alias_name)
 			a_alias_name_is_infix: a_alias_name.is_infix
 			a_formal_not_void: a_formal /= Void
 		do
@@ -4846,7 +4677,7 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = constraint base class
 		end
 
-	make_vfav1s (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_formal: ET_FORMAL_PARAMETER)
+	make_vfav1s (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_ALIAS_NAME; a_feature: ET_FEATURE; a_formal: ET_FORMAL_PARAMETER)
 			-- Create a new VFAV-1 error: the unary operator alias name which appears as second
 			-- element of the Rename_pair `a_rename' in the constraint `a_constraint'
 			-- of formal parameter `a_formal' in `a_class' is already the name of the
@@ -4859,7 +4690,7 @@ feature {NONE} -- Initialization
 			a_constraint_not_void: a_constraint /= Void
 			a_rename_not_void: a_rename /= Void
 			a_alias_name_not_void: a_alias_name /= Void
-			a_alias_name_definition: a_alias_name = a_rename.new_name.alias_name
+			a_rename_has_alias: attached a_rename.new_name.alias_names as l_new_alias_names and then l_new_alias_names.has (a_alias_name)
 			a_alias_name_is_prefix: a_alias_name.is_prefix
 			a_feature_not_void: a_feature /= Void
 			a_formal_not_void: a_formal /= Void
@@ -4898,7 +4729,7 @@ feature {NONE} -- Initialization
 			-- dollar9: $9 = constraint base class
 		end
 
-	make_vfav1t (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_formal: ET_FORMAL_PARAMETER)
+	make_vfav1t (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_ALIAS_NAME; a_feature: ET_FEATURE; a_formal: ET_FORMAL_PARAMETER)
 			-- Create a new VFAV-1 error: the binary operator alias name which appears as second
 			-- element of the Rename_pair `a_rename' in the constraint `a_constraint'
 			-- of formal parameter `a_formal' in `a_class' is already the name of the
@@ -4911,7 +4742,7 @@ feature {NONE} -- Initialization
 			a_constraint_not_void: a_constraint /= Void
 			a_rename_not_void: a_rename /= Void
 			a_alias_name_not_void: a_alias_name /= Void
-			a_alias_name_definition: a_alias_name = a_rename.new_name.alias_name
+			a_rename_has_alias: attached a_rename.new_name.alias_names as l_new_alias_names and then l_new_alias_names.has (a_alias_name)
 			a_alias_name_is_infix: a_alias_name.is_infix
 			a_feature_not_void: a_feature /= Void
 			a_formal_not_void: a_formal /= Void
@@ -4950,7 +4781,7 @@ feature {NONE} -- Initialization
 			-- dollar9: $9 = constraint base class
 		end
 
-	make_vfav2a (a_class: ET_CLASS; a_feature: ET_FEATURE)
+	make_vfav2a (a_class: ET_CLASS; a_feature: ET_FEATURE; a_alias_name: ET_ALIAS_NAME)
 			-- Create a new VFAV-2 error: `a_feature' has a bracket alias
 			-- but is not a function with at least one argument.
 			--
@@ -4959,13 +4790,14 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature_not_void: a_feature /= Void
-			a_feature_has_alias: attached a_feature.alias_name as l_alias_name
-			a_feature_alias_bracket: l_alias_name.is_bracket
+			a_alias_name_not_void: a_alias_name /= Void
+			a_feature_has_alias: attached a_feature.alias_names as l_alias_names and then l_alias_names.has (a_alias_name)
+			a_alias_name_is_bracket: a_alias_name.is_bracket
 			a_feature_not_bracketable: not a_feature.is_bracketable
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := ast_position (a_feature.alias_name)
+			position := a_alias_name.position
 			code := template_code (vfav2a_template_code)
 			etl_code := vfav2_etl_code
 			default_template := default_message_template (vfav2a_default_template)
@@ -4977,7 +4809,7 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_feature.lower_name, 7)
-			parameters.put (alias_lower_name (a_feature.alias_name), 8)
+			parameters.put (a_alias_name.alias_lower_name, 8)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -4995,7 +4827,7 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = alias name
 		end
 
-	make_vfav2b (a_class: ET_CLASS; a_feature1, a_feature2: ET_FEATURE)
+	make_vfav2b (a_class: ET_CLASS; a_feature1: ET_FEATURE; a_alias_name1: ET_ALIAS_NAME; a_feature2: ET_FEATURE; a_alias_name2: ET_ALIAS_NAME)
 			-- Create a new VFAV-2 error: `a_feature1' and `a_feature2' have both
 			-- a bracket alias.
 			--
@@ -5004,15 +4836,17 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature1_not_void: a_feature1 /= Void
-			a_feature1_has_alias: attached a_feature1.alias_name as l_alias_name1
-			a_feature1_alias_bracket: l_alias_name1.is_bracket
+			a_alias_name1_not_void: a_alias_name1 /= Void
+			a_feature1_has_alias: attached a_feature1.alias_names as l_alias_names1 and then l_alias_names1.has (a_alias_name1)
+			a_alias_name1_is_bracket: a_alias_name1.is_bracket
 			a_feature2_not_void: a_feature2 /= Void
-			a_feature2_has_alias: attached a_feature2.alias_name as l_alias_name2
-			a_feature2_alias_bracket: l_alias_name2.is_bracket
+			a_alias_name2_not_void: a_alias_name2 /= Void
+			a_feature2_has_alias: attached a_feature2.alias_names as l_alias_names2 and then l_alias_names2.has (a_alias_name2)
+			a_alias_name2_is_bracket: a_alias_name2.is_bracket
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := ast_position (a_feature1.alias_name)
+			position := a_alias_name1.position
 			code := template_code (vfav2b_template_code)
 			etl_code := vfav2_etl_code
 			default_template := default_message_template (vfav2b_default_template)
@@ -5024,9 +4858,9 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_feature1.lower_name, 7)
-			parameters.put (alias_lower_name (a_feature1.alias_name), 8)
+			parameters.put (a_alias_name1.alias_lower_name, 8)
 			parameters.put (a_feature2.lower_name, 9)
-			parameters.put (alias_lower_name (a_feature2.alias_name), 10)
+			parameters.put (a_alias_name2.alias_lower_name, 10)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -5046,7 +4880,7 @@ feature {NONE} -- Initialization
 			-- dollar10: $10 = second alias name
 		end
 
-	make_vfav2c (a_class: ET_CLASS; a_feature1: ET_FEATURE; a_feature2: ET_PARENT_FEATURE)
+	make_vfav2c (a_class: ET_CLASS; a_feature1: ET_FEATURE; a_alias_name1: ET_ALIAS_NAME; a_feature2: ET_PARENT_FEATURE; a_alias_name2: ET_ALIAS_NAME)
 			-- Create a new VFAV-2 error: `a_feature1' and `a_feature2' have both
 			-- a bracket alias.
 			--
@@ -5055,15 +4889,17 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature1_not_void: a_feature1 /= Void
-			a_feature1_has_alias: attached a_feature1.alias_name as l_alias_name1
-			a_feature1_alias_bracket: l_alias_name1.is_bracket
+			a_alias_name1_not_void: a_alias_name1 /= Void
+			a_feature1_has_alias: attached a_feature1.alias_names as l_alias_names1 and then l_alias_names1.has (a_alias_name1)
+			a_alias_name1_is_bracket: a_alias_name1.is_bracket
 			a_feature2_not_void: a_feature2 /= Void
-			a_feature2_has_alias: attached a_feature2.alias_name as l_alias_name2
-			a_feature2_alias_bracket: l_alias_name2.is_bracket
+			a_alias_name2_not_void: a_alias_name2 /= Void
+			a_feature2_has_alias: attached a_feature2.alias_names as l_alias_names2 and then l_alias_names2.has (a_alias_name2)
+			a_alias_name2_is_bracket: a_alias_name2.is_bracket
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := ast_position (a_feature1.alias_name)
+			position := a_alias_name1.position
 			code := template_code (vfav2c_template_code)
 			etl_code := vfav2_etl_code
 			default_template := default_message_template (vfav2c_default_template)
@@ -5075,9 +4911,9 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_feature1.lower_name, 7)
-			parameters.put (alias_lower_name (a_feature1.alias_name), 8)
+			parameters.put (a_alias_name1.alias_lower_name, 8)
 			parameters.put (a_feature2.name.lower_name, 9)
-			parameters.put (alias_lower_name (a_feature2.alias_name), 10)
+			parameters.put (a_alias_name2.alias_lower_name, 10)
 			parameters.put (a_feature2.parent.type.upper_name, 11)
 			set_compilers (True)
 		ensure
@@ -5099,7 +4935,7 @@ feature {NONE} -- Initialization
 			-- dollar11: $11 = second parent base class
 		end
 
-	make_vfav2d (a_class: ET_CLASS; a_feature1, a_feature2: ET_PARENT_FEATURE)
+	make_vfav2d (a_class: ET_CLASS; a_feature1: ET_PARENT_FEATURE; a_alias_name1: ET_ALIAS_NAME; a_feature2: ET_PARENT_FEATURE; a_alias_name2: ET_ALIAS_NAME)
 			-- Create a new VFAV-2 error: `a_feature1' and `a_feature2' have both
 			-- a bracket alias.
 			--
@@ -5108,11 +4944,13 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature1_not_void: a_feature1 /= Void
-			a_feature1_has_alias: attached a_feature1.alias_name as l_alias_name1
-			a_feature1_alias_bracket: l_alias_name1.is_bracket
+			a_alias_name1_not_void: a_alias_name1 /= Void
+			a_feature1_has_alias: attached a_feature1.alias_names as l_alias_names1 and then l_alias_names1.has (a_alias_name1)
+			a_alias_name1_is_bracket: a_alias_name1.is_bracket
 			a_feature2_not_void: a_feature2 /= Void
-			a_feature2_has_alias: attached a_feature2.alias_name as l_alias_name2
-			a_feature2_alias_bracket: l_alias_name2.is_bracket
+			a_alias_name2_not_void: a_alias_name2 /= Void
+			a_feature2_has_alias: attached a_feature2.alias_names as l_alias_names2 and then l_alias_names2.has (a_alias_name2)
+			a_alias_name2_is_bracket: a_alias_name2.is_bracket
 		do
 			current_class := a_class
 			class_impl := a_class
@@ -5128,10 +4966,10 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_feature1.name.lower_name, 7)
-			parameters.put (alias_lower_name (a_feature1.alias_name), 8)
+			parameters.put (a_alias_name1.alias_lower_name, 8)
 			parameters.put (a_feature1.parent.type.upper_name, 9)
 			parameters.put (a_feature2.name.lower_name, 10)
-			parameters.put (alias_lower_name (a_feature2.alias_name), 11)
+			parameters.put (a_alias_name2.alias_lower_name, 11)
 			parameters.put (a_feature2.parent.type.upper_name, 12)
 			set_compilers (True)
 		ensure
@@ -5154,7 +4992,7 @@ feature {NONE} -- Initialization
 			-- dollar12: $12 = second parent base class
 		end
 
-	make_vfav2e (a_class: ET_CLASS; a_type: ET_BASE_TYPE; a_rename: ET_RENAME; f: ET_FEATURE)
+	make_vfav2e (a_class: ET_CLASS; a_type: ET_BASE_TYPE; a_rename: ET_RENAME; a_new_alias_name: ET_ALIAS_NAME; f: ET_FEATURE)
 			-- Create a new VFAV-2 error: the Rename_pair
 			-- `a_rename' has a new_name with a bracket alias,
 			-- but the corresponding feature `f' is not a
@@ -5168,14 +5006,15 @@ feature {NONE} -- Initialization
 			a_class_preparsed: a_class.is_preparsed
 			a_type_not_void: a_type /= Void
 			a_rename_not_void: a_rename /= Void
-			a_rename_has_alias: attached a_rename.new_name.alias_name as l_new_alias_name
-			a_rename_alias_bracket: l_new_alias_name.is_bracket
+			a_new_alias_name_not_void: a_new_alias_name /= Void
+			a_rename_has_alias: attached a_rename.new_name.alias_names as l_new_alias_names and then l_new_alias_names.has (a_new_alias_name)
+			a_new_alias_name_is_bracket: a_new_alias_name.is_bracket
 			f_not_void: f /= Void
 			f_not_bracketable: not f.is_bracketable
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := ast_position (a_rename.new_name.alias_name)
+			position := a_new_alias_name.position
 			code := template_code (vfav2e_template_code)
 			etl_code := vfav2_etl_code
 			default_template := default_message_template (vfav2e_default_template)
@@ -5187,7 +5026,7 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_rename.new_name.feature_name.lower_name, 7)
-			parameters.put (alias_lower_name (a_rename.new_name.alias_name), 8)
+			parameters.put (a_new_alias_name.alias_lower_name, 8)
 			parameters.put (f.lower_name, 9)
 			parameters.put (a_type.upper_name, 10)
 			set_compilers (True)
@@ -5223,7 +5062,7 @@ feature {NONE} -- Initialization
 			a_rename1_not_void: a_rename1 /= Void
 			a_rename2_not_void: a_rename2 /= Void
 			a_alias_name_not_void: a_alias_name /= Void
-			a_alias_name_definition: a_alias_name = a_rename2.new_name.alias_name
+			a_rename2_has_alias: attached a_rename2.new_name.alias_names as l_new_alias_names and then l_new_alias_names.has (a_alias_name)
 			a_alias_name_is_bracket: a_alias_name.is_bracket
 			a_formal_not_void: a_formal /= Void
 		do
@@ -5259,7 +5098,7 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = constraint base class
 		end
 
-	make_vfav2g (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_formal: ET_FORMAL_PARAMETER)
+	make_vfav2g (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_ALIAS_NAME; a_feature: ET_FEATURE; a_formal: ET_FORMAL_PARAMETER)
 			-- Create a new VFAV-2 error: the bracket alias name which appears as second
 			-- element of the Rename_pair `a_rename' in the constraint `a_constraint'
 			-- of formal parameter `a_formal' in `a_class' is already the name of the
@@ -5272,7 +5111,7 @@ feature {NONE} -- Initialization
 			a_constraint_not_void: a_constraint /= Void
 			a_rename_not_void: a_rename /= Void
 			a_alias_name_not_void: a_alias_name /= Void
-			a_alias_name_definition: a_alias_name = a_rename.new_name.alias_name
+			a_rename_has_alias: attached a_rename.new_name.alias_names as l_new_alias_names and then l_new_alias_names.has (a_alias_name)
 			a_alias_name_is_bracket: a_alias_name.is_bracket
 			a_feature_not_void: a_feature /= Void
 			a_formal_not_void: a_formal /= Void
@@ -5311,7 +5150,7 @@ feature {NONE} -- Initialization
 			-- dollar9: $9 = constraint base class
 		end
 
-	make_vfav3a (a_class: ET_CLASS; a_feature: ET_FEATURE)
+	make_vfav3a (a_class: ET_CLASS; a_feature: ET_FEATURE; a_alias_name: ET_ALIAS_NAME)
 			-- Create a new VFAV-3 error: `a_feature' has a parenthesis alias
 			-- but is not a feature with at least one argument.
 			--
@@ -5320,13 +5159,14 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature_not_void: a_feature /= Void
-			a_feature_has_alias: attached a_feature.alias_name as l_alias_name
-			a_feature_alias_parenthesis: l_alias_name.is_parenthesis
+			a_alias_name_not_void: a_alias_name /= Void
+			a_feature_has_alias: attached a_feature.alias_names as l_alias_names and then l_alias_names.has (a_alias_name)
+			aa_alias_name_is_parenthesis: a_alias_name.is_parenthesis
 			a_feature_not_parenthesisable: not a_feature.is_parenthesisable
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := ast_position (a_feature.alias_name)
+			position := a_alias_name.position
 			code := template_code (vfav3a_template_code)
 			etl_code := vfav3_etl_code
 			default_template := default_message_template (vfav3a_default_template)
@@ -5338,7 +5178,7 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_feature.lower_name, 7)
-			parameters.put (alias_lower_name (a_feature.alias_name), 8)
+			parameters.put (a_alias_name.alias_lower_name, 8)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -5356,7 +5196,7 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = alias name
 		end
 
-	make_vfav3b (a_class: ET_CLASS; a_feature1, a_feature2: ET_FEATURE)
+	make_vfav3b (a_class: ET_CLASS; a_feature1: ET_FEATURE; a_alias_name1: ET_ALIAS_NAME; a_feature2: ET_FEATURE; a_alias_name2: ET_ALIAS_NAME)
 			-- Create a new VFAV-3 error: `a_feature1' and `a_feature2' have both
 			-- a parenthesis alias.
 			--
@@ -5365,15 +5205,17 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature1_not_void: a_feature1 /= Void
-			a_feature1_has_alias: attached a_feature1.alias_name as l_alias_name1
-			a_feature1_alias_parenthesis: l_alias_name1.is_parenthesis
+			a_alias_name1_not_void: a_alias_name1 /= Void
+			a_feature1_has_alias: attached a_feature1.alias_names as l_alias_names1 and then l_alias_names1.has (a_alias_name1)
+			a_alias_name1_is_parenthesis: a_alias_name1.is_parenthesis
 			a_feature2_not_void: a_feature2 /= Void
-			a_feature2_has_alias: attached a_feature2.alias_name as l_alias_name2
-			a_feature2_alias_parenthesis: l_alias_name2.is_parenthesis
+			a_alias_name2_not_void: a_alias_name2 /= Void
+			a_feature2_has_alias: attached a_feature2.alias_names as l_alias_names2 and then l_alias_names2.has (a_alias_name2)
+			a_alias_name2_is_parenthesis: a_alias_name2.is_parenthesis
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := ast_position (a_feature1.alias_name)
+			position := a_alias_name1.position
 			code := template_code (vfav3b_template_code)
 			etl_code := vfav3_etl_code
 			default_template := default_message_template (vfav3b_default_template)
@@ -5385,9 +5227,9 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_feature1.lower_name, 7)
-			parameters.put (alias_lower_name (a_feature1.alias_name), 8)
+			parameters.put (a_alias_name1.alias_lower_name, 8)
 			parameters.put (a_feature2.lower_name, 9)
-			parameters.put (alias_lower_name (a_feature2.alias_name), 10)
+			parameters.put (a_alias_name2.alias_lower_name, 10)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -5407,7 +5249,7 @@ feature {NONE} -- Initialization
 			-- dollar10: $10 = second alias name
 		end
 
-	make_vfav3c (a_class: ET_CLASS; a_feature1: ET_FEATURE; a_feature2: ET_PARENT_FEATURE)
+	make_vfav3c (a_class: ET_CLASS; a_feature1: ET_FEATURE; a_alias_name1: ET_ALIAS_NAME; a_feature2: ET_PARENT_FEATURE; a_alias_name2: ET_ALIAS_NAME)
 			-- Create a new VFAV-3 error: `a_feature1' and `a_feature2' have both
 			-- a parenthesis alias.
 			--
@@ -5416,15 +5258,17 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature1_not_void: a_feature1 /= Void
-			a_feature1_has_alias: attached a_feature1.alias_name as l_alias_name1
-			a_feature1_alias_parenthesis: l_alias_name1.is_parenthesis
+			a_alias_name1_not_void: a_alias_name1 /= Void
+			a_feature1_has_alias: attached a_feature1.alias_names as l_alias_names1 and then l_alias_names1.has (a_alias_name1)
+			a_alias_name1_is_parenthesis: a_alias_name1.is_parenthesis
 			a_feature2_not_void: a_feature2 /= Void
-			a_feature2_has_alias: attached a_feature2.alias_name as l_alias_name2
-			a_feature2_alias_parenthesis: l_alias_name2.is_parenthesis
+			a_alias_name2_not_void: a_alias_name2 /= Void
+			a_feature2_has_alias: attached a_feature2.alias_names as l_alias_names2 and then l_alias_names2.has (a_alias_name2)
+			a_alias_name2_is_parenthesis: a_alias_name2.is_parenthesis
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := ast_position (a_feature1.alias_name)
+			position := a_alias_name1.position
 			code := template_code (vfav3c_template_code)
 			etl_code := vfav3_etl_code
 			default_template := default_message_template (vfav3c_default_template)
@@ -5436,9 +5280,9 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_feature1.lower_name, 7)
-			parameters.put (alias_lower_name (a_feature1.alias_name), 8)
+			parameters.put (a_alias_name1.alias_lower_name, 8)
 			parameters.put (a_feature2.name.lower_name, 9)
-			parameters.put (alias_lower_name (a_feature2.alias_name), 10)
+			parameters.put (a_alias_name2.alias_lower_name, 10)
 			parameters.put (a_feature2.parent.type.upper_name, 11)
 			set_compilers (True)
 		ensure
@@ -5460,7 +5304,7 @@ feature {NONE} -- Initialization
 			-- dollar11: $11 = second parent base class
 		end
 
-	make_vfav3d (a_class: ET_CLASS; a_feature1, a_feature2: ET_PARENT_FEATURE)
+	make_vfav3d (a_class: ET_CLASS; a_feature1: ET_PARENT_FEATURE; a_alias_name1: ET_ALIAS_NAME; a_feature2: ET_PARENT_FEATURE; a_alias_name2: ET_ALIAS_NAME)
 			-- Create a new VFAV-3 error: `a_feature1' and `a_feature2' have both
 			-- a parenthesis alias.
 			--
@@ -5469,11 +5313,13 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_feature1_not_void: a_feature1 /= Void
-			a_feature1_has_alias: attached a_feature1.alias_name as l_alias_name1
-			a_feature1_alias_parenthesis: l_alias_name1.is_parenthesis
+			a_alias_name1_not_void: a_alias_name1 /= Void
+			a_feature1_has_alias: attached a_feature1.alias_names as l_alias_names1 and then l_alias_names1.has (a_alias_name1)
+			a_alias_name1_is_parenthesis: a_alias_name1.is_parenthesis
 			a_feature2_not_void: a_feature2 /= Void
-			a_feature2_has_alias: attached a_feature2.alias_name as l_alias_name2
-			a_feature2_alias_parenthesis: l_alias_name2.is_parenthesis
+			a_alias_name2_not_void: a_alias_name2 /= Void
+			a_feature2_has_alias: attached a_feature2.alias_names as l_alias_names2 and then l_alias_names2.has (a_alias_name2)
+			a_alias_name2_is_parenthesis: a_alias_name2.is_parenthesis
 		do
 			current_class := a_class
 			class_impl := a_class
@@ -5489,10 +5335,10 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_feature1.name.lower_name, 7)
-			parameters.put (alias_lower_name (a_feature1.alias_name), 8)
+			parameters.put (a_alias_name1.alias_lower_name, 8)
 			parameters.put (a_feature1.parent.type.upper_name, 9)
 			parameters.put (a_feature2.name.lower_name, 10)
-			parameters.put (alias_lower_name (a_feature2.alias_name), 11)
+			parameters.put (a_alias_name2.alias_lower_name, 11)
 			parameters.put (a_feature2.parent.type.upper_name, 12)
 			set_compilers (True)
 		ensure
@@ -5515,7 +5361,7 @@ feature {NONE} -- Initialization
 			-- dollar12: $12 = second parent base class
 		end
 
-	make_vfav3e (a_class: ET_CLASS; a_type: ET_BASE_TYPE; a_rename: ET_RENAME; f: ET_FEATURE)
+	make_vfav3e (a_class: ET_CLASS; a_type: ET_BASE_TYPE; a_rename: ET_RENAME; a_new_alias_name: ET_ALIAS_NAME; f: ET_FEATURE)
 			-- Create a new VFAV-3 error: the Rename_pair
 			-- `a_rename' has a new_name with a parenthesis alias,
 			-- but the corresponding feature `f' is not a
@@ -5529,14 +5375,15 @@ feature {NONE} -- Initialization
 			a_class_preparsed: a_class.is_preparsed
 			a_type_not_void: a_type /= Void
 			a_rename_not_void: a_rename /= Void
-			a_rename_has_alias: attached a_rename.new_name.alias_name as l_new_alias_name
-			a_rename_alias_parenthesis: l_new_alias_name.is_parenthesis
+			a_new_alias_name_not_void: a_new_alias_name /= Void
+			a_rename_has_alias: attached a_rename.new_name.alias_names as l_new_alias_names and then l_new_alias_names.has (a_new_alias_name)
+			a_new_alias_name_is_parenthesis: a_new_alias_name.is_parenthesis
 			f_not_void: f /= Void
 			f_not_parenthesisable: not f.is_parenthesisable
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := ast_position (a_rename.new_name.alias_name)
+			position := a_new_alias_name.position
 			code := template_code (vfav3e_template_code)
 			etl_code := vfav3_etl_code
 			default_template := default_message_template (vfav3e_default_template)
@@ -5548,7 +5395,7 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (a_rename.new_name.feature_name.lower_name, 7)
-			parameters.put (alias_lower_name (a_rename.new_name.alias_name), 8)
+			parameters.put (a_new_alias_name.alias_lower_name, 8)
 			parameters.put (f.lower_name, 9)
 			parameters.put (a_type.upper_name, 10)
 			set_compilers (True)
@@ -5584,7 +5431,7 @@ feature {NONE} -- Initialization
 			a_rename1_not_void: a_rename1 /= Void
 			a_rename2_not_void: a_rename2 /= Void
 			a_alias_name_not_void: a_alias_name /= Void
-			a_alias_name_definition: a_alias_name = a_rename2.new_name.alias_name
+			a_rename2_has_alias: attached a_rename2.new_name.alias_names as l_new_alias_names and then l_new_alias_names.has (a_alias_name)
 			a_alias_name_is_parenthesis: a_alias_name.is_parenthesis
 			a_formal_not_void: a_formal /= Void
 		do
@@ -5620,7 +5467,7 @@ feature {NONE} -- Initialization
 			-- dollar8: $8 = constraint base class
 		end
 
-	make_vfav3g (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_CALL_NAME; a_feature: ET_FEATURE; a_formal: ET_FORMAL_PARAMETER)
+	make_vfav3g (a_class: ET_CLASS; a_constraint: ET_BASE_TYPE; a_rename: ET_RENAME; a_alias_name: ET_ALIAS_NAME; a_feature: ET_FEATURE; a_formal: ET_FORMAL_PARAMETER)
 			-- Create a new VFAV-3 error: the parenthesis alias name which appears as second
 			-- element of the Rename_pair `a_rename' in the constraint `a_constraint'
 			-- of formal parameter `a_formal' in `a_class' is already the name of the
@@ -5633,7 +5480,7 @@ feature {NONE} -- Initialization
 			a_constraint_not_void: a_constraint /= Void
 			a_rename_not_void: a_rename /= Void
 			a_alias_name_not_void: a_alias_name /= Void
-			a_alias_name_definition: a_alias_name = a_rename.new_name.alias_name
+			a_rename_has_alias: attached a_rename.new_name.alias_names as l_new_alias_names and then l_new_alias_names.has (a_alias_name)
 			a_alias_name_is_parenthesis: a_alias_name.is_parenthesis
 			a_feature_not_void: a_feature /= Void
 			a_formal_not_void: a_formal /= Void
@@ -5686,7 +5533,7 @@ feature {NONE} -- Initialization
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := ast_position (a_alias_name)
+			position := a_alias_name.position
 			code := template_code (vfav4a_template_code)
 			etl_code := vfav4_etl_code
 			default_template := default_message_template (vfav4a_default_template)
@@ -8145,6 +7992,9 @@ feature {NONE} -- Initialization
 			current_class := a_class
 			class_impl := a_class
 			position := all2.all_keyword.position
+			if position.is_null then
+				position := all2.position
+			end
 			code := template_code (vlel1a_template_code)
 			etl_code := vlel1_etl_code
 			default_template := default_message_template (vlel1a_default_template)
@@ -8411,9 +8261,9 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			f1_not_void: f1 /= Void
-			f1_no_alias: f1.alias_name /= Void
+			f1_no_alias: attached f1.alias_names as l_f1_alias_names and then not l_f1_alias_names.is_empty
 			f2_not_void: f2 /= Void
-			f2_alias: f2.alias_name = Void
+			f2_alias: not attached f2.alias_names as l_f2_alias_names or else l_f2_alias_names.is_empty
 		do
 			current_class := a_class
 			class_impl := a_class
@@ -8429,7 +8279,7 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (f1.name.lower_name, 7)
-			parameters.put (alias_lower_name (f1.alias_name), 8)
+			parameters.put (alias_lower_names (f1.alias_names), 8)
 			parameters.put (f1.parent.type.upper_name, 9)
 			parameters.put (f2.parent.type.upper_name, 10)
 			set_compilers (True)
@@ -8446,7 +8296,7 @@ feature {NONE} -- Initialization
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = implementation class name
 			-- dollar7: $7 = feature name
-			-- dollar7: $8 = first alias name
+			-- dollar7: $8 = first alias names
 			-- dollar9: $9 = first parent base class
 			-- dollar10: $10 = second parent base class
 		end
@@ -8460,10 +8310,10 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			f1_not_void: f1 /= Void
-			f1_alias: attached f1.alias_name as l_f1_alias_name
+			f1_alias: attached f1.alias_names as l_f1_alias_names and then not l_f1_alias_names.is_empty
 			f2_not_void: f2 /= Void
-			f2_alias: attached f2.alias_name as l_f2_alias_name
-			not_same_alias: not l_f1_alias_name.same_alias_name (l_f2_alias_name)
+			f2_alias: attached f2.alias_names as l_f2_alias_names and then not l_f2_alias_names.is_empty
+			not_same_alias: not l_f1_alias_names.same_alias_names (l_f2_alias_names)
 		do
 			current_class := a_class
 			class_impl := a_class
@@ -8479,9 +8329,9 @@ feature {NONE} -- Initialization
 			parameters.put (current_class.upper_name, 5)
 			parameters.put (class_impl.upper_name, 6)
 			parameters.put (f1.name.lower_name, 7)
-			parameters.put (alias_lower_name (f1.alias_name), 8)
+			parameters.put (alias_lower_names (f1.alias_names), 8)
 			parameters.put (f1.parent.type.upper_name, 9)
-			parameters.put (alias_lower_name (f2.alias_name), 10)
+			parameters.put (alias_lower_names (f2.alias_names), 10)
 			parameters.put (f2.parent.type.upper_name, 11)
 			set_compilers (True)
 		ensure
@@ -8497,9 +8347,9 @@ feature {NONE} -- Initialization
 			-- dollar5: $5 = class name
 			-- dollar6: $6 = implementation class name
 			-- dollar7: $7 = feature name
-			-- dollar8: $8 = first alias name
+			-- dollar8: $8 = first alias names
 			-- dollar9: $9 = first parent base class
-			-- dollar10: $10 = second alias name
+			-- dollar10: $10 = second alias names
 			-- dollar11: $11 = second parent base class
 		end
 
@@ -8818,20 +8668,20 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = base type of across iterable expression
 		end
 
-	make_voit2a (a_class: ET_CLASS; a_across_component: ET_ACROSS_COMPONENT; a_feature: ET_FEATURE)
-			-- Create a new VOIT-2 error: The cursor of `a_across_component' has the same
+	make_voit2a (a_class: ET_CLASS; a_iteration_component: ET_ITERATION_COMPONENT; a_feature: ET_FEATURE)
+			-- Create a new VOIT-2 error: The cursor of `a_iteration_component' has the same
 			-- name as `a_feature' in `a_class'.
 			--
 			-- Not in ECMA.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
-			a_across_component_not_void: a_across_component /= Void
+			a_iteration_component_not_void: a_iteration_component /= Void
 			a_feature_not_void: a_feature /= Void
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := a_across_component.cursor_name.position
+			position := a_iteration_component.cursor_name.position
 			code := template_code (voit2a_template_code)
 			etl_code := voit2_etl_code
 			default_template := default_message_template (voit2a_default_template)
@@ -8841,7 +8691,7 @@ feature {NONE} -- Initialization
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.upper_name, 5)
-			parameters.put (a_across_component.cursor_name.lower_name, 6)
+			parameters.put (a_iteration_component.cursor_name.lower_name, 6)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -8854,11 +8704,11 @@ feature {NONE} -- Initialization
 			-- dollar3: $3 = line
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
-			-- dollar6: $6 = across cursor name
+			-- dollar6: $6 = iteration cursor name
 		end
 
-	make_voit2b (a_class: ET_CLASS; a_across_component: ET_ACROSS_COMPONENT; arg: ET_FORMAL_ARGUMENT)
-			-- Create a new VOIT-2 error: The cursor of `a_across_component' has
+	make_voit2b (a_class: ET_CLASS; a_iteration_component: ET_ITERATION_COMPONENT; arg: ET_FORMAL_ARGUMENT)
+			-- Create a new VOIT-2 error: The cursor of `a_iteration_component' has
 			-- the same name as argument `arg' of an enclosing feature or
 			-- inline agent.
 			--
@@ -8866,12 +8716,12 @@ feature {NONE} -- Initialization
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
-			a_across_component_not_void: a_across_component /= Void
+			a_iteration_component_not_void: a_iteration_component /= Void
 			arg_not_void: arg /= Void
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := a_across_component.cursor_name.position
+			position := a_iteration_component.cursor_name.position
 			code := template_code (voit2b_template_code)
 			etl_code := voit2_etl_code
 			default_template := default_message_template (voit2b_default_template)
@@ -8881,7 +8731,7 @@ feature {NONE} -- Initialization
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.upper_name, 5)
-			parameters.put (a_across_component.cursor_name.lower_name, 6)
+			parameters.put (a_iteration_component.cursor_name.lower_name, 6)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -8894,11 +8744,11 @@ feature {NONE} -- Initialization
 			-- dollar3: $3 = line
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
-			-- dollar6: $6 = across cursor name
+			-- dollar6: $6 = iteration cursor name
 		end
 
-	make_voit2c (a_class: ET_CLASS; a_across_component: ET_ACROSS_COMPONENT; a_local: ET_LOCAL_VARIABLE)
-			-- Create a new VOIT-2 error: The cursor of `a_across_component' has
+	make_voit2c (a_class: ET_CLASS; a_iteration_component: ET_ITERATION_COMPONENT; a_local: ET_LOCAL_VARIABLE)
+			-- Create a new VOIT-2 error: The cursor of `a_iteration_component' has
 			-- the same name as local variable `a_local' of an enclosing
 			-- feature or inline agent.
 			--
@@ -8906,12 +8756,12 @@ feature {NONE} -- Initialization
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
-			a_across_component_not_void: a_across_component /= Void
+			a_iteration_component_not_void: a_iteration_component /= Void
 			a_local_not_void: a_local /= Void
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := a_across_component.cursor_name.position
+			position := a_iteration_component.cursor_name.position
 			code := template_code (voit2c_template_code)
 			etl_code := voit2_etl_code
 			default_template := default_message_template (voit2c_default_template)
@@ -8921,7 +8771,7 @@ feature {NONE} -- Initialization
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.upper_name, 5)
-			parameters.put (a_across_component.cursor_name.lower_name, 6)
+			parameters.put (a_iteration_component.cursor_name.lower_name, 6)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -8934,23 +8784,23 @@ feature {NONE} -- Initialization
 			-- dollar3: $3 = line
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
-			-- dollar6: $6 = across cursor name
+			-- dollar6: $6 = iteration cursor name
 		end
 
-	make_voit2d (a_class: ET_CLASS; a_across_component: ET_ACROSS_COMPONENT; a_object_test: ET_NAMED_OBJECT_TEST)
-			-- Create a new VOIT-2 error: `a_across_component' appears in the scope
+	make_voit2d (a_class: ET_CLASS; a_iteration_component: ET_ITERATION_COMPONENT; a_object_test: ET_NAMED_OBJECT_TEST)
+			-- Create a new VOIT-2 error: `a_iteration_component' appears in the scope
 			-- of the local of `a_object_test' with the same local name.
 			--
 			-- ECMA 367-2: p.127
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
-			a_across_component_not_void: a_across_component /= Void
+			a_iteration_component_not_void: a_iteration_component /= Void
 			a_object_test_not_void: a_object_test /= Void
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := a_across_component.cursor_name.position
+			position := a_iteration_component.cursor_name.position
 			code := template_code (voit2d_template_code)
 			etl_code := voit2_etl_code
 			default_template := default_message_template (voit2d_default_template)
@@ -8960,7 +8810,7 @@ feature {NONE} -- Initialization
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.upper_name, 5)
-			parameters.put (a_across_component.cursor_name.lower_name, 6)
+			parameters.put (a_iteration_component.cursor_name.lower_name, 6)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -8973,23 +8823,23 @@ feature {NONE} -- Initialization
 			-- dollar3: $3 = line
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
-			-- dollar6: $6 = across cursor name
+			-- dollar6: $6 = iteration cursor name
 		end
 
-	make_voit2e (a_class: ET_CLASS; a_across_component1, a_across_component2: ET_ACROSS_COMPONENT)
-			-- Create a new VUOT-1 error: `a_across_component1' appears in the scope
-			-- of the cursor of `a_across_component2' with the same cursor name.
+	make_voit2e (a_class: ET_CLASS; a_iteration_component1, a_iteration_component2: ET_ITERATION_COMPONENT)
+			-- Create a new VUOT-1 error: `a_iteration_component1' appears in the scope
+			-- of the cursor of `a_iteration_component2' with the same cursor name.
 			--
 			-- Not in ECMA.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
-			a_across_component1_not_void: a_across_component1 /= Void
-			a_across_component2_not_void: a_across_component2 /= Void
+			a_iteration_component1_not_void: a_iteration_component1 /= Void
+			a_iteration_component2_not_void: a_iteration_component2 /= Void
 		do
 			current_class := a_class
 			class_impl := a_class
-			position := a_across_component1.cursor_name.position
+			position := a_iteration_component1.cursor_name.position
 			code := template_code (voit2e_template_code)
 			etl_code := voit2_etl_code
 			default_template := default_message_template (voit2e_default_template)
@@ -8999,7 +8849,7 @@ feature {NONE} -- Initialization
 			parameters.put (position.line.out, 3)
 			parameters.put (position.column.out, 4)
 			parameters.put (current_class.upper_name, 5)
-			parameters.put (a_across_component1.cursor_name.lower_name, 6)
+			parameters.put (a_iteration_component1.cursor_name.lower_name, 6)
 			set_compilers (True)
 		ensure
 			current_class_set: current_class = a_class
@@ -9012,7 +8862,7 @@ feature {NONE} -- Initialization
 			-- dollar3: $3 = line
 			-- dollar4: $4 = column
 			-- dollar5: $5 = class name
-			-- dollar6: $6 = across cursor name
+			-- dollar6: $6 = iteration cursor name
 		end
 
 	make_vomb1a (a_class, a_class_impl: ET_CLASS; an_expression: ET_EXPRESSION; a_type: ET_NAMED_TYPE)
@@ -9880,9 +9730,9 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = local name
 		end
 
-	make_vpir1g (a_class: ET_CLASS; arg: ET_FORMAL_ARGUMENT; an_agent: ET_INLINE_AGENT; a_across_component: ET_ACROSS_COMPONENT)
+	make_vpir1g (a_class: ET_CLASS; arg: ET_FORMAL_ARGUMENT; an_agent: ET_INLINE_AGENT; a_iteration_component: ET_ITERATION_COMPONENT)
 			-- Create a new VPIR-1 error: `arg' in inline agent `an_agent' has
-			-- the same name as the cursor of `a_across_component' of an enclosing
+			-- the same name as the cursor of `a_iteration_component' of an enclosing
 			-- feature or inline agent whose scope contains the inline agent.
 			--
 			-- Not in ECMA.
@@ -9891,7 +9741,7 @@ feature {NONE} -- Initialization
 			a_class_preparsed: a_class.is_preparsed
 			arg_not_void: arg /= Void
 			an_agent_not_void: an_agent /= Void
-			a_across_component_not_void: a_across_component /= Void
+			a_iteration_component_not_void: a_iteration_component /= Void
 		do
 			current_class := a_class
 			class_impl := a_class
@@ -9923,9 +9773,9 @@ feature {NONE} -- Initialization
 			-- dollar7: $7 = argument name
 		end
 
-	make_vpir1h (a_class: ET_CLASS; a_local: ET_LOCAL_VARIABLE; an_agent: ET_INLINE_AGENT; a_across_component: ET_ACROSS_COMPONENT)
+	make_vpir1h (a_class: ET_CLASS; a_local: ET_LOCAL_VARIABLE; an_agent: ET_INLINE_AGENT; a_iteration_component: ET_ITERATION_COMPONENT)
 			-- Create a new VPIR-1 error: `a_local' in inline agent `an_agent' has
-			-- the same name as the cursor of `a_across_component' of an enclosing
+			-- the same name as the cursor of `a_iteration_component' of an enclosing
 			-- feature or inline agent whose scope contains the inline agent.
 			--
 			-- Not in ECMA.
@@ -9934,7 +9784,7 @@ feature {NONE} -- Initialization
 			a_class_preparsed: a_class.is_preparsed
 			a_local_not_void: a_local /= Void
 			an_agent_not_void: an_agent /= Void
-			a_across_component_not_void: a_across_component /= Void
+			a_iteration_component_not_void: a_iteration_component /= Void
 		do
 			current_class := a_class
 			class_impl := a_class
@@ -12873,16 +12723,16 @@ feature {NONE} -- Initialization
 			-- dollar6: $6 = object-test local name
 		end
 
-	make_vuot1e (a_class: ET_CLASS; a_object_test: ET_NAMED_OBJECT_TEST; a_across_component: ET_ACROSS_COMPONENT)
+	make_vuot1e (a_class: ET_CLASS; a_object_test: ET_NAMED_OBJECT_TEST; a_iteration_component: ET_ITERATION_COMPONENT)
 			-- Create a new VUOT-1 error: `a_object_test' appears in the scope
-			-- of the cursor of `a_across_component' with the same local name.
+			-- of the cursor of `a_iteration_component' with the same local name.
 			--
 			-- Not in ECMA.
 		require
 			a_class_not_void: a_class /= Void
 			a_class_preparsed: a_class.is_preparsed
 			a_object_test_not_void: a_object_test /= Void
-			a_across_component_not_void: a_across_component /= Void
+			a_iteration_component_not_void: a_iteration_component /= Void
 		do
 			current_class := a_class
 			class_impl := a_class
@@ -15938,8 +15788,8 @@ feature {NONE} -- Implementation
 	veen2g_default_template: STRING = "entity 'Result' appears in the body, postcondition or rescue clause of an inline agent whose associated feature is a procedure."
 	veen8a_default_template: STRING = "`$7' appearing in feature `$8' or one of its possibly nested inline agents, is an object-test local that is used outside of its scope."
 	veen8b_default_template: STRING = "`$7' appearing in the invariant or one of its possibly nested inline agents, is an object-test local that is used outside of its scope."
-	veen9a_default_template: STRING = "`$7' appearing in feature `$8' or one of its possibly nested inline agents, is an across cursor that is used outside of its scope."
-	veen9b_default_template: STRING = "`$7' appearing in the invariant or one of its possibly nested inline agents, is an across cursor that is used outside of its scope."
+	veen9a_default_template: STRING = "`$7' appearing in feature `$8' or one of its possibly nested inline agents, is an iteration cursor that is used outside of its scope."
+	veen9b_default_template: STRING = "`$7' appearing in the invariant or one of its possibly nested inline agents, is an iteration cursor that is used outside of its scope."
 	vevi0a_default_template: STRING = "local entity `$7' declared as attached is used before being initialized."
 	vevi0b_default_template: STRING = "entity 'Result' declared as attached is used before being initialized."
 	vevi0c_default_template: STRING = "entity 'Result' declared as attached is not initialized at the end of the body of function `$7'."
@@ -15958,13 +15808,9 @@ feature {NONE} -- Implementation
 	vfav1f_default_template: STRING = "features `$7' and `$9' have both the same binary Operator alias `$8'."
 	vfav1g_default_template: STRING = "features `$7' and `$9' inherited from $11 have both the same binary Operator alias `$8'."
 	vfav1h_default_template: STRING = "features `$7' inherited from $9 and `$10' inherited from $12 have both the same binary Operator alias `$8'."
-	vfav1i_default_template: STRING = "feature `$7' has a Prefix name but is not a query with no argument."
-	vfav1j_default_template: STRING = "feature `$7' has an Infix name but is not a query with exactly one argument."
 	vfav1k_default_template: STRING = "feature `$7' has an Operator alias `$8' which can be either unary or binary, but it is not a query with no argument or exactly one argument."
-	vfav1l_default_template: STRING = "`$7' is of the Prefix form but `$8' in $9 is not a query with no argument."
 	vfav1m_default_template: STRING = "`$7' has a binary Operator alias `$8' but `$9' in $10 is not a query with exactly one argument."
 	vfav1n_default_template: STRING = "`$7' has a unary Operator alias `$8' but `$9' in $10 is not a query with no argument."
-	vfav1o_default_template: STRING = "`$7' is of the Infix form but `$8' in $9 is not a query with one argument."
 	vfav1p_default_template: STRING = "`$7' has an Operator alias `$8' which can be either unary or binary, but `$9' in $10 is not a query with no argument or exactly one argument."
 	vfav1q_default_template: STRING = "unary Operator alias `$7' appears on the right-hand-side of more than one rename pair in generic constraint $8."
 	vfav1r_default_template: STRING = "binary Operator alias `$7' appears on the right-hand-side of more than one rename pair in generic constraint $8."
@@ -16051,11 +15897,11 @@ feature {NONE} -- Implementation
 	vmss2a_default_template: STRING = "feature name `$7' appears twice in the Select subclause of parent $8."
 	vmss3a_default_template: STRING = "feature name `$7' appears in the Select subclause of parent $8 but is not replicated."
 	voit1a_default_template: STRING = "the type '$7' of the across iterable expression does not conform to any generic derivation of ITERABLE."
-	voit2a_default_template: STRING = "across cursor name '$6' is also the final name of a feature."
-	voit2b_default_template: STRING = "across cursor name '$6' is also the name of a formal argument of an enclosing feature or inline agent."
-	voit2c_default_template: STRING = "across cursor name '$6' is also the name of a local variable of an enclosing feature or inline agent."
-	voit2d_default_template: STRING = "across with cursor name '$6' appears in the scope of an object-test local with the same name."
-	voit2e_default_template: STRING = "across with cursor name '$6' appears in the scope of another across cursor with the same name."
+	voit2a_default_template: STRING = "iteration cursor name '$6' is also the final name of a feature."
+	voit2b_default_template: STRING = "iteration cursor name '$6' is also the name of a formal argument of an enclosing feature or inline agent."
+	voit2c_default_template: STRING = "iteration cursor name '$6' is also the name of a local variable of an enclosing feature or inline agent."
+	voit2d_default_template: STRING = "iteration with cursor name '$6' appears in the scope of an object-test local with the same name."
+	voit2e_default_template: STRING = "iteration with cursor name '$6' appears in the scope of another across cursor with the same name."
 	vomb1a_default_template: STRING = "inspect expression of type '$7' different from INTEGER or CHARACTER."
 	vomb2a_default_template: STRING = "inspect constant of type '$7' different from type '$8' of inspect expression."
 	vomb2b_default_template: STRING = "inspect choice `$7' is not a constant attribute."
@@ -16074,8 +15920,8 @@ feature {NONE} -- Implementation
 	vpir1d_default_template: STRING = "local variable name '$7' in inline agent is also the name of a local variable of an enclosing feature or inline agent."
 	vpir1e_default_template: STRING = "argument name '$7' in inline agent is also the name of an object-test local of an enclosing feature or inline agent whose scope contains the inline agent."
 	vpir1f_default_template: STRING = "local variable name '$7' in inline agent is also the name of an object-test local of an enclosing feature or inline agent whose scope contains the inline agent."
-	vpir1g_default_template: STRING = "argument name '$7' in inline agent is also the name of an across cursor of an enclosing feature or inline agent whose scope contains the inline agent."
-	vpir1h_default_template: STRING = "local variable name '$7' in inline agent is also the name of an across cursor of an enclosing feature or inline agent whose scope contains the inline agent."
+	vpir1g_default_template: STRING = "argument name '$7' in inline agent is also the name of an iteration cursor of an enclosing feature or inline agent whose scope contains the inline agent."
+	vpir1h_default_template: STRING = "local variable name '$7' in inline agent is also the name of an iteration cursor of an enclosing feature or inline agent whose scope contains the inline agent."
 	vpir3a_default_template: STRING = "inline agents cannot be of the once form."
 	vpir3b_default_template: STRING = "inline agents cannot be of the external form."
 	vqmc1a_default_template: STRING = "boolean constant attribute `$7' is not declared of type BOOLEAN."
@@ -16139,7 +15985,7 @@ feature {NONE} -- Implementation
 	vuot1b_default_template: STRING = "object-test local name '$6' is also the name of a formal argument of an enclosing feature or inline agent."
 	vuot1c_default_template: STRING = "object-test local name '$6' is also the name of a local variable of an enclosing feature or inline agent."
 	vuot1d_default_template: STRING = "object-test with local name '$6' appears in the scope of another object-test local with the same name."
-	vuot1e_default_template: STRING = "object-test with local name '$6' appears in the scope of an across cursor with the same name."
+	vuot1e_default_template: STRING = "object-test with local name '$6' appears in the scope of an iteration cursor with the same name."
 	vuot1f_default_template: STRING = "the scope of object-test with local name '$6' overlaps with the scope of another object-test with the same local name."
 	vuot3a_default_template: STRING = "object-test with local name '$6' has the same name as another object-test local appearing in the same feature `$7' or in the same inline agent."
 	vuot3b_default_template: STRING = "object-test with local name '$6' has the same name as another object-test local appearing in the invariant or in the same inline agent."
@@ -16471,13 +16317,9 @@ feature {NONE} -- Implementation
 	vfav1f_template_code: STRING = "vfav1f"
 	vfav1g_template_code: STRING = "vfav1g"
 	vfav1h_template_code: STRING = "vfav1h"
-	vfav1i_template_code: STRING = "vfav1i"
-	vfav1j_template_code: STRING = "vfav1j"
 	vfav1k_template_code: STRING = "vfav1k"
-	vfav1l_template_code: STRING = "vfav1l"
 	vfav1m_template_code: STRING = "vfav1m"
 	vfav1n_template_code: STRING = "vfav1n"
-	vfav1o_template_code: STRING = "vfav1o"
 	vfav1p_template_code: STRING = "vfav1p"
 	vfav1q_template_code: STRING = "vfav1q"
 	vfav1r_template_code: STRING = "vfav1r"
@@ -16760,20 +16602,46 @@ feature {NONE} -- Implementation
 			feature_lower_name_not_void: Result /= Void
 		end
 
-	alias_lower_name (a_alias_name: detachable ET_ALIAS_NAME): STRING
-			-- Lower-name of `a_alias_name'
+	alias_lower_names (a_alias_names: detachable ET_ALIAS_NAME_LIST): STRING
+			-- Lower-name of `a_alias_names'
 			--
 			-- This routine is used to work around void-safety limitations.
 		require
-			a_alias_name_not_void: a_alias_name /= Void
+			a_alias_names_not_void: a_alias_names /= Void
+			a_alias_names_not_empty: not a_alias_names.is_empty
+		local
+			i, nb: INTEGER
 		do
-			if a_alias_name /= Void then
-				Result := a_alias_name.alias_lower_name
+			if a_alias_names /= Void then
+				nb := a_alias_names.count
+				create Result.make (nb * 15)
+				from i := 1 until i > nb loop
+					if i /= 1 then
+						Result.append_character (' ')
+					end
+					Result.append_string (a_alias_names.item (i).alias_lower_name)
+					i := i + 1
+				end
 			else
 				Result := "**unknown**"
 			end
 		ensure
-			alias_lower_name_not_void: Result /= Void
+			alias_lower_names_not_void: Result /= Void
+		end
+
+	first_alias_name (a_alias_names: detachable ET_ALIAS_NAME_LIST): ET_ALIAS_NAME
+			-- First item in `a_alias_names'
+			--
+			-- This routine is used to work around void-safety limitations.
+		require
+			a_alias_names_not_void: a_alias_names /= Void
+			a_alias_names_not_empty: not a_alias_names.is_empty
+		do
+			check a_alias_names /= Void then
+				Result := a_alias_names.first
+			end
+		ensure
+			first_alias_name_not_void: Result /= Void
 		end
 
 	type_name (a_type: detachable ET_TARGET_TYPE): STRING

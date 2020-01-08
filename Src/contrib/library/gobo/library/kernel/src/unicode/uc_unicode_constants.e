@@ -18,6 +18,15 @@ inherit
 
 feature -- Access
 
+	bom_character: CHARACTER_32
+			-- Byte order mark (BOM) U+FEFF
+			-- See http://en.wikipedia.org/wiki/Byte_order_mark
+		once
+			Result := (0xFEFF).to_character_32
+		ensure
+			instance_free: class
+		end
+
 	minimum_unicode_character_code: INTEGER = 0
 			-- Smallest code for unicode characters
 --		ensure
@@ -66,6 +75,12 @@ feature -- Access
 			-- Highest unicode surrogate code-point (0xDFFF)
 --		ensure
 --			definition: Result = 57343
+--		end
+
+	unicode_surrogate_count: INTEGER = 2048
+			-- Number of unicode surrogate code-points
+--		ensure
+--			definition: Result = maximum_unicode_surrogate_code - minimum_unicode_surrogate_code + 1
 --		end
 
 	maximum_bmp_character_code: INTEGER = 65535

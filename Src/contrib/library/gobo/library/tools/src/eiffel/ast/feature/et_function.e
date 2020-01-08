@@ -5,7 +5,7 @@ note
 		"Eiffel functions"
 
 	library: "Gobo Eiffel Tools Library"
-	copyright: "Copyright (c) 1999-2014, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -68,14 +68,14 @@ feature -- Status report
 
 	is_infixable: BOOLEAN
 			-- Can current feature have a name of
-			-- the form 'infix ...'?
+			-- the form binary 'alias "..."'?
 		do
 			Result := attached arguments as l_arguments and then l_arguments.count = 1
 		end
 
 	is_prefixable: BOOLEAN
 			-- Can current feature have a name of
-			-- the form 'prefix ...'?
+			-- the form unary 'alias "..."'?
 		do
 			Result := not attached arguments as l_arguments or else l_arguments.count = 0
 		end
@@ -131,7 +131,7 @@ feature -- Conversion
 			Result.set_feature_clause (feature_clause)
 			Result.set_first_indexing (first_indexing)
 			Result.set_object_tests (object_tests)
-			Result.set_across_components (across_components)
+			Result.set_iteration_components (iteration_components)
 			Result.set_first_seed (first_seed)
 			Result.set_other_seeds (other_seeds)
 		end

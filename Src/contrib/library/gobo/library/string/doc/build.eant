@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 
-<project name="string_doc" default="help">
+<project name="unicode_doc" default="help">
 
 	<description>
-		description: "Gobo Eiffel String Library documentation"
-		copyright: "Copyright (c) 2005-2016, Eric Bezault and others"
+		description: "Gobo Eiffel Unicode Library documentation"
+		copyright: "Copyright (c) 2005-2016, Colin Adams and others"
 		license: "MIT License"
 		date: "$Date$"
 		revision: "$Revision$"
@@ -12,11 +12,17 @@
 
 	<inherit>
 		<parent location="${GOBO}/library/common/config/doc.eant">
+			<redefine target="init"/>
 			<redefine target="for_each"/>
 		</parent>
 	</inherit>
-	
+
 <!-- Implementation -->
+
+	<target name="init" export="NONE">
+		<precursor/>
+		<set name="path_to_doc" value="../"/>
+	</target>
 
 	<target name="for_each" export="NONE">
 		<description>
@@ -26,6 +32,11 @@
 		<argument name="target"/>
 
 		<geant target="${target}" arguments="index"/>
+		<geant target="${target}" arguments="classes"/>
+		<geant target="${target}" arguments="case"/>
+		<geant target="${target}" arguments="about"/>
+		<geant target="${target}" arguments="routines"/>
+		<geant target="${target}" arguments="see_also"/>
 	</target>
 
 </project>

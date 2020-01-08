@@ -30,6 +30,7 @@ inherit
 			process_agent_typed_open_argument,
 			process_alias_free_name,
 			process_alias_name,
+			process_alias_name_list,
 			process_aliased_feature_name,
 			process_all_export,
 			process_assign_feature_name,
@@ -109,7 +110,6 @@ inherit
 			process_indexing_term_list,
 			process_infix_and_then_operator,
 			process_infix_expression,
-			process_infix_name,
 			process_infix_or_else_operator,
 			process_inspect_instruction,
 			process_invariants,
@@ -149,18 +149,19 @@ inherit
 			process_precursor_expression,
 			process_precursor_instruction,
 			process_prefix_expression,
-			process_prefix_name,
 			process_qualified_call,
 			process_qualified_call_expression,
 			process_qualified_call_instruction,
 			process_qualified_like_braced_type,
 			process_qualified_like_type,
 			process_qualified_regular_feature_call,
+			process_quantifier_expression,
 			process_regular_integer_constant,
 			process_regular_manifest_string,
 			process_regular_real_constant,
 			process_rename,
 			process_rename_list,
+			process_repeat_instruction,
 			process_result,
 			process_result_address,
 			process_retry_instruction,
@@ -191,9 +192,6 @@ inherit
 		end
 
 	KL_IMPORTED_STRING_ROUTINES
-		export {NONE} all end
-
-	KL_IMPORTED_ANY_ROUTINES
 		export {NONE} all end
 
 	ET_SHARED_TOKEN_CONSTANTS
@@ -565,12 +563,27 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
+	process_alias_name_list (a_list: ET_ALIAS_NAME_LIST)
+			-- Process `a_list'.
+		local
+			i, nb: INTEGER
+		do
+			nb := a_list.count
+			from i := 1 until i > nb loop
+				a_list.item (i).process (Current)
+				if i /= nb then
+					print_space
+				end
+				i := i + 1
+			end
+		end
+
 	process_aliased_feature_name (a_name: ET_ALIASED_FEATURE_NAME)
 			-- Process `a_name'.
 		do
 			a_name.feature_name.process (Current)
 			print_space
-			a_name.alias_name.process (Current)
+			a_name.alias_names.process (Current)
 		end
 
 	process_all_export (an_export: ET_ALL_EXPORT)
@@ -2472,11 +2485,10 @@ feature {ET_AST_NODE} -- Processing
 		do
 			l_feature_name := a_extended_feature_name.feature_name
 			l_feature_name.process (Current)
-			if attached a_extended_feature_name.alias_name as l_alias_name and then not ANY_.same_objects (l_alias_name, l_feature_name) then
-					-- For infix and prefix features, do not repeat the name twice.
+			if attached a_extended_feature_name.alias_names as l_alias_names and then not l_alias_names.is_empty then
 				print_space
-				l_alias_name.process (Current)
-				comment_finder.add_excluded_node (l_alias_name)
+				l_alias_names.process (Current)
+				comment_finder.add_excluded_node (l_alias_names)
 			end
 			comment_finder.add_excluded_node (l_feature_name)
 			comment_finder.find_comments (a_extended_feature_name, comment_list)
@@ -2494,11 +2506,10 @@ feature {ET_AST_NODE} -- Processing
 			l_extended_feature_name := a_feature.extended_name
 			l_feature_name := l_extended_feature_name.feature_name
 			l_feature_name.process (Current)
-			if attached l_extended_feature_name.alias_name as l_alias_name and then not ANY_.same_objects (l_alias_name, l_feature_name) then
-					-- For infix and prefix features, do not repeat the name twice.
+			if attached l_extended_feature_name.alias_names as l_alias_names and then not l_alias_names.is_empty then
 				print_space
-				l_alias_name.process (Current)
-				comment_finder.add_excluded_node (l_alias_name)
+				l_alias_names.process (Current)
+				comment_finder.add_excluded_node (l_alias_names)
 			end
 			comment_finder.add_excluded_node (l_feature_name)
 			comment_finder.find_comments (l_extended_feature_name, comment_list)
@@ -3359,14 +3370,6 @@ feature {ET_AST_NODE} -- Processing
 			an_expression.name.process (Current)
 			print_space
 			an_expression.right.process (Current)
-		end
-
-	process_infix_name (a_name: ET_INFIX_NAME)
-			-- Process `a_name'.
-		do
-			a_name.infix_keyword.process (Current)
-			print_space
-			a_name.operator_string.process (Current)
 		end
 
 	process_infix_or_else_operator (an_operator: ET_INFIX_OR_ELSE_OPERATOR)
@@ -4700,14 +4703,6 @@ feature {ET_AST_NODE} -- Processing
 			an_expression.expression.process (Current)
 		end
 
-	process_prefix_name (a_name: ET_PREFIX_NAME)
-			-- Process `a_name'.
-		do
-			a_name.prefix_keyword.process (Current)
-			print_space
-			a_name.operator_string.process (Current)
-		end
-
 	process_qualified_call (a_call: ET_QUALIFIED_CALL)
 			-- Process `a_call'.
 		local
@@ -4831,6 +4826,21 @@ feature {ET_AST_NODE} -- Processing
 			end
 		end
 
+	process_quantifier_expression (a_expression: ET_QUANTIFIER_EXPRESSION)
+			-- Process `a_expression'.
+		do
+			a_expression.quantifier_symbol.process (Current)
+			print_space
+			a_expression.cursor_name.process (Current)
+			a_expression.colon_symbol.process (Current)
+			print_space
+			a_expression.iterable_expression.process (Current)
+			print_space
+			a_expression.bar_symbol.process (Current)
+			print_space
+			a_expression.iteration_expression.process (Current)
+		end
+
 	process_real_constant (a_constant: ET_REAL_CONSTANT)
 			-- Process `a_constant'.
 		do
@@ -4923,6 +4933,35 @@ feature {ET_AST_NODE} -- Processing
 				i := i + 1
 			end
 			dedent
+		end
+
+	process_repeat_instruction (a_instruction: ET_REPEAT_INSTRUCTION)
+			-- Process `a_instruction'.
+		do
+			a_instruction.open_repeat_symbol.process (Current)
+			print_space
+			a_instruction.cursor_name.process (Current)
+			a_instruction.colon_symbol.process (Current)
+			print_space
+			a_instruction.iterable_expression.process (Current)
+			print_space
+			a_instruction.bar_symbol.process (Current)
+			if not attached a_instruction.loop_compound as l_loop_compound or else l_loop_compound.is_empty then
+				print_space
+			elseif l_loop_compound.count = 1 then
+				print_space
+				l_loop_compound.first.process (Current)
+				print_space
+			else
+				print_new_line
+				process_comments
+				indent
+				process_instruction_list (l_loop_compound)
+				dedent
+				print_new_line
+				process_comments
+			end
+			a_instruction.close_repeat_symbol.process (Current)
 		end
 
 	process_result (an_expression: ET_RESULT)

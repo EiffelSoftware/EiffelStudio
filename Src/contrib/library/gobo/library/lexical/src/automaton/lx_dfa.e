@@ -5,7 +5,7 @@ note
 		"Deterministic finite automota"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -29,6 +29,8 @@ feature {NONE} -- Initialization
 		require
 			start_conditions_not_void: start_conditions /= Void
 			start_conditions_not_empty: not start_conditions.is_empty
+			min_large_enough: min >= 0
+			max_large_enough: max >= min
 		do
 			initialize (start_conditions, min, max)
 			build
@@ -45,7 +47,8 @@ feature {NONE} -- Initialization
 		require
 			start_conditions_not_void: start_conditions /= Void
 			start_conditions_not_empty: not start_conditions.is_empty
-			valid_bounds: min <= max + 1
+			min_large_enough: min >= 0
+			max_large_enough: max >= min
 		local
 			i, nb: INTEGER
 		do
@@ -283,7 +286,7 @@ feature {NONE} -- Implementation
 			previous: INTEGER
 			dfa_state: LX_DFA_STATE
 			transitions: LX_TRANSITION_TABLE [LX_DFA_STATE]
-			symbols: ARRAY [BOOLEAN]
+			symbols: DS_HASH_SET [INTEGER]
 		do
 			check paritions_not_void: attached partitions as l_partitions then
 				nb := l_partitions.capacity
@@ -299,7 +302,7 @@ feature {NONE} -- Implementation
 				until
 					i > maximum_symbol
 				loop
-					if symbols.item (i) then
+					if symbols.has (i) then
 							-- There is a transition labeled `i'
 							-- leaving `new_state'.
 						if l_partitions.is_representative (i) then
@@ -379,6 +382,8 @@ invariant
 	positive_start_states_count: start_states_count > 0
 	start_states_count_small_enough: start_states_count <= states.count
 	positive_backing_up_count: backing_up_count >= 0
+	minimum_symbol_large_enough: minimum_symbol >= 0
+	maximum_symbol_large_enough: maximum_symbol >= minimum_symbol
 --	min_symbol: forall state in states, state.minimum_symbol = minimum_symbol
 --	max_symbol: forall state in states, state.maximum_symbol = maximum_symbol
 

@@ -6,7 +6,7 @@ note
 		"Parsers for parser generators such as 'geyacc'"
 
 	library: "Gobo Eiffel Parse Library"
-	copyright: "Copyright (c) 1999-2013, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,6 +21,8 @@ inherit
 		rename
 			make as make_yacc_scanner,
 			reset as reset_yacc_scanner
+		undefine
+			report_invalid_unicode_character_error
 		end
 
 create
@@ -32,7 +34,8 @@ create
 %token T_TOKEN T_LEFT T_RIGHT T_NONASSOC T_EXPECT T_PREC T_START T_TYPE
 %token T_2PERCENTS T_UNKNOWN
 
-%token <STRING> T_EIFFEL T_IDENTIFIER T_ACTION T_USER_CODE T_CHAR T_STR
+%token <STRING_32> T_CHAR
+%token <STRING> T_EIFFEL T_IDENTIFIER T_ACTION T_USER_CODE T_STR
 %token <STRING> T_BOOLEAN T_POINTER T_TUPLE T_AS
 %token <STRING> T_INTEGER T_INTEGER_8 T_INTEGER_16 T_INTEGER_32 T_INTEGER_64
 %token <STRING> T_NATURAL T_NATURAL_8 T_NATURAL_16 T_NATURAL_32 T_NATURAL_64

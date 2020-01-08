@@ -14,7 +14,11 @@ class ET_ECF_PRINTER
 
 inherit
 
-	ANY
+	ET_ECF_CONFIG_PROCESSOR
+		rename
+			process_redirection_config as print_redirection,
+			process_system_config as print_system
+		end
 
 	ET_ECF_SETTING_DEFAULTS
 		export {NONE} all end
@@ -1348,6 +1352,62 @@ feature -- Output
 			end
 		end
 
+	print_redirection (a_redirection: ET_ECF_REDIRECTION_CONFIG)
+			-- Print `a_redirection' to `file'.
+		do
+			print_indentation
+			file.put_line ("<?xml version=%"1.0%" encoding=%"ISO-8859-1%"?>")
+			print_indentation
+			file.put_character ('<')
+			file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_redirection)
+			file.put_new_line
+			indent
+			print_indentation
+			file.put_string ("xmlns=%"http://www.eiffel.com/developers/xml/configuration-")
+			print_ecf_version
+			file.put_character ('%"')
+			file.put_new_line
+			print_indentation
+			file.put_string ("xmlns:xsi=%"http://www.w3.org/2001/XMLSchema-instance%"")
+			file.put_new_line
+			print_indentation
+			file.put_string ("xsi:schemaLocation=%"http://www.eiffel.com/developers/xml/configuration-")
+			print_ecf_version
+			file.put_string (" http://www.eiffel.com/developers/xml/configuration-")
+			print_ecf_version
+			file.put_string (".xsd%"")
+			file.put_new_line
+			print_indentation
+			file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_location)
+			file.put_character ('=')
+			print_quoted_string (a_redirection.location)
+			file.put_new_line
+			if attached a_redirection.uuid as l_uuid then
+				print_indentation
+				file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_uuid)
+				file.put_character ('=')
+				print_quoted_string (l_uuid)
+				file.put_new_line
+			end
+			if attached a_redirection.message as l_message then
+				print_indentation
+				file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_message)
+				file.put_character ('=')
+				print_quoted_string (l_message)
+				file.put_new_line
+			end
+			dedent
+			print_indentation
+			file.put_character ('>')
+			file.put_new_line
+			print_indentation
+			file.put_character ('<')
+			file.put_character ('/')
+			file.put_string ({ET_ECF_ELEMENT_NAMES}.xml_redirection)
+			file.put_character ('>')
+			file.put_new_line
+		end
+
 	print_renamings (a_renamings: DS_HASH_TABLE [STRING, STRING])
 			-- Print `a_renamings' to `file'.
 		require
@@ -1447,8 +1507,6 @@ feature -- Output
 
 	print_system (a_system: ET_ECF_SYSTEM_CONFIG)
 			-- Print `a_system' to `file'.
-		require
-			a_system_not_void: a_system /= Void
 		do
 			print_indentation
 			file.put_line ("<?xml version=%"1.0%" encoding=%"ISO-8859-1%"?>")
@@ -1653,7 +1711,7 @@ feature -- Output
 						print_external_values (l_external_cflags, {ET_ECF_ELEMENT_NAMES}.xml_external_cflag, {ET_ECF_ELEMENT_NAMES}.xml_value)
 					else
 							-- <external_cflag> was introduced in ECF 1.10.0.
-						print_external_values (l_external_cflags, {ET_ECF_ELEMENT_NAMES}.xml_external_object, {ET_ECF_ELEMENT_NAMES}.xml_value)
+						print_external_values (l_external_cflags, {ET_ECF_ELEMENT_NAMES}.xml_external_object, {ET_ECF_ELEMENT_NAMES}.xml_location)
 					end
 				end
 				if attached a_target.external_objects as l_external_objects and then not l_external_objects.is_empty then
@@ -1667,7 +1725,7 @@ feature -- Output
 				end
 				if attached a_target.external_linker_flags as l_external_linker_flags and then not l_external_linker_flags.is_empty then
 					if ecf_version >= ecf_1_10_0 then
-						print_external_values (l_external_linker_flags, {ET_ECF_ELEMENT_NAMES}.xml_external_linker_flag, {ET_ECF_ELEMENT_NAMES}.xml_location)
+						print_external_values (l_external_linker_flags, {ET_ECF_ELEMENT_NAMES}.xml_external_linker_flag, {ET_ECF_ELEMENT_NAMES}.xml_value)
 					else
 							-- <external_linker_flag> was introduced in ECF 1.10.0.
 						print_external_values (l_external_linker_flags, {ET_ECF_ELEMENT_NAMES}.xml_external_library, {ET_ECF_ELEMENT_NAMES}.xml_location)
@@ -2026,21 +2084,9 @@ feature {NONE} -- Adaptation
 					-- Values of setting "dead_code_removal" have changed in ECF 1.20.0.
 				if attached a_target.settings.primary_value ({ET_ECF_SETTING_NAMES}.dead_code_removal_setting_name) as l_value then
 					if STRING_.same_case_insensitive (l_value, {ET_ECF_SETTING_NAMES}.none_setting_value) then
-						Result.set_primary_value ({ET_ECF_SETTING_NAMES}.false_setting_value, {ET_ECF_SETTING_NAMES}.dead_code_removal_setting_name)
+						Result.set_primary_value ({ET_ECF_SETTING_NAMES}.dead_code_removal_setting_name, {ET_ECF_SETTING_NAMES}.false_setting_value)
 					else
-						Result.set_primary_value ({ET_ECF_SETTING_NAMES}.true_setting_value, {ET_ECF_SETTING_NAMES}.dead_code_removal_setting_name)
-					end
-				elseif a_target.parent = Void then
-					if attached a_target.settings.value ({ET_ECF_SETTING_NAMES}.dead_code_removal_setting_name) as l_value then
-						if attached l_default_settings.value ({ET_ECF_SETTING_NAMES}.dead_code_removal_setting_name) as l_default_value then
-							if not STRING_.same_case_insensitive (l_value, l_default_value) then
-								if STRING_.same_case_insensitive (l_value, {ET_ECF_SETTING_NAMES}.none_setting_value) then
-									Result.set_primary_value ({ET_ECF_SETTING_NAMES}.false_setting_value, {ET_ECF_SETTING_NAMES}.dead_code_removal_setting_name)
-								else
-									Result.set_primary_value ({ET_ECF_SETTING_NAMES}.true_setting_value, {ET_ECF_SETTING_NAMES}.dead_code_removal_setting_name)
-								end
-							end
-						end
+						Result.set_primary_value ({ET_ECF_SETTING_NAMES}.dead_code_removal_setting_name, {ET_ECF_SETTING_NAMES}.true_setting_value)
 					end
 				end
 			end
@@ -2071,14 +2117,14 @@ feature {NONE} -- Adaptation
 				end
 				if l_concurrency_value /= Void then
 					if ecf_version >= ecf_1_7_0 then
-						Result.set_primary_value (l_concurrency_value, {ET_ECF_SETTING_NAMES}.concurrency_setting_name)
+						Result.set_primary_value ({ET_ECF_SETTING_NAMES}.concurrency_setting_name, l_concurrency_value)
 					else
 						if STRING_.same_case_insensitive (l_concurrency_value, {ET_ECF_CAPABILITY_NAMES}.none_capability_value) then
 							l_multithreaded_value := {ET_ECF_SETTING_NAMES}.false_setting_value
 						else
 							l_multithreaded_value := {ET_ECF_SETTING_NAMES}.true_setting_value
 						end
-						Result.set_primary_value (l_multithreaded_value, {ET_ECF_SETTING_NAMES}.multithreaded_setting_name)
+						Result.set_primary_value ({ET_ECF_SETTING_NAMES}.multithreaded_setting_name, l_multithreaded_value)
 					end
 				end
 			end
@@ -2087,13 +2133,13 @@ feature {NONE} -- Adaptation
 					-- by option "full_class_checking" in ECF 1.2.0.
 				Result.primary_settings.remove ({ET_ECF_SETTING_NAMES}.full_type_checking_setting_name)
 				if attached a_target.options.primary_value ({ET_ECF_OPTION_NAMES}.full_class_checking_option_name) as l_value then
-					Result.set_primary_value (l_value, {ET_ECF_SETTING_NAMES}.full_type_checking_setting_name)
+					Result.set_primary_value ({ET_ECF_SETTING_NAMES}.full_type_checking_setting_name, l_value)
 				elseif a_target.parent = Void then
 					l_default_options := default_options (ecf_version)
 					if attached a_target.options.value ({ET_ECF_OPTION_NAMES}.full_class_checking_option_name) as l_value then
 						if attached l_default_options.value ({ET_ECF_OPTION_NAMES}.full_class_checking_option_name) as l_default_value then
 							if not STRING_.same_case_insensitive (l_value, l_default_value) then
-								Result.set_primary_value (l_value, {ET_ECF_SETTING_NAMES}.full_type_checking_setting_name)
+								Result.set_primary_value ({ET_ECF_SETTING_NAMES}.full_type_checking_setting_name, l_value)
 							end
 						end
 					end
@@ -2215,7 +2261,7 @@ feature {NONE} -- Adaptation
 			l_default_options := default_options (ecf_version)
 			l_original_options := a_target.options
 			if a_target.parent /= Void or l_original_options.secondary_options = l_default_options then
-				if ecf_version >= ecf_1_18_0 then
+				if ecf_version >= ecf_1_21_0 then
 					Result := l_original_options
 				else
 					create Result.make
@@ -2235,7 +2281,7 @@ feature {NONE} -- Adaptation
 			else
 				Result := explicit_options (l_original_options, l_default_options)
 			end
-			if ecf_version < ecf_1_18_0 then
+			if ecf_version < ecf_1_21_0 then
 				if ecf_version < ecf_1_16_0 then
 						-- Option "cat_call_detection" has been superseded by capability "catcall_detection" in ECF 1.16.0.
 					Result.primary_options.remove ({ET_ECF_OPTION_NAMES}.cat_call_detection_option_name)
@@ -2262,14 +2308,14 @@ feature {NONE} -- Adaptation
 						end
 						if l_catcall_detection_value /= Void then
 							if ecf_version >= ecf_1_14_0 then
-								Result.set_primary_value (l_catcall_detection_value, {ET_ECF_OPTION_NAMES}.cat_call_detection_option_name)
+								Result.set_primary_value ({ET_ECF_OPTION_NAMES}.cat_call_detection_option_name, l_catcall_detection_value)
 							else
 								if STRING_.same_case_insensitive (l_catcall_detection_value, {ET_ECF_CAPABILITY_NAMES}.none_capability_value) then
 									l_catcall_detection_boolean_value := {ET_ECF_OPTION_NAMES}.false_option_value
 								else
 									l_catcall_detection_boolean_value := {ET_ECF_OPTION_NAMES}.true_option_value
 								end
-								Result.set_primary_value (l_catcall_detection_boolean_value, {ET_ECF_OPTION_NAMES}.cat_call_detection_option_name)
+								Result.set_primary_value ({ET_ECF_OPTION_NAMES}.cat_call_detection_option_name, l_catcall_detection_boolean_value)
 							end
 						end
 					end
@@ -2305,23 +2351,23 @@ feature {NONE} -- Adaptation
 								else
 									l_void_safety_boolean_value := {ET_ECF_OPTION_NAMES}.true_option_value
 								end
-								Result.set_primary_value (l_void_safety_boolean_value, {ET_ECF_OPTION_NAMES}.is_void_safe_option_name)
+								Result.set_primary_value ({ET_ECF_OPTION_NAMES}.is_void_safe_option_name, l_void_safety_boolean_value)
 							elseif ecf_version < ecf_1_11_0 then
 								if STRING_.same_case_insensitive (l_void_safety_value, {ET_ECF_CAPABILITY_NAMES}.all_capability_value) then
 									if ecf_version < ecf_1_9_0 then
-										Result.set_primary_value ({ET_ECF_OPTION_NAMES}.true_option_value, {ET_ECF_OPTION_NAMES}.is_void_safe_option_name)
+										Result.set_primary_value ({ET_ECF_OPTION_NAMES}.is_void_safe_option_name, {ET_ECF_OPTION_NAMES}.true_option_value)
 									else
-										Result.set_primary_value (l_void_safety_value, {ET_ECF_OPTION_NAMES}.void_safety_option_name)
+										Result.set_primary_value ({ET_ECF_OPTION_NAMES}.void_safety_option_name, l_void_safety_value)
 									end
 								elseif STRING_.same_case_insensitive (l_void_safety_value, {ET_ECF_CAPABILITY_NAMES}.transitional_capability_value) then
-									Result.set_primary_value ({ET_ECF_OPTION_NAMES}.all_option_value, {ET_ECF_OPTION_NAMES}.void_safety_option_name)
+									Result.set_primary_value ({ET_ECF_OPTION_NAMES}.void_safety_option_name, {ET_ECF_OPTION_NAMES}.all_option_value)
 								elseif STRING_.same_case_insensitive (l_void_safety_value, {ET_ECF_CAPABILITY_NAMES}.none_capability_value) then
-									Result.set_primary_value (l_void_safety_value, {ET_ECF_OPTION_NAMES}.void_safety_option_name)
+									Result.set_primary_value ({ET_ECF_OPTION_NAMES}.void_safety_option_name, l_void_safety_value)
 								else
-									Result.set_primary_value ({ET_ECF_OPTION_NAMES}.initialization_option_value, {ET_ECF_OPTION_NAMES}.void_safety_option_name)
+									Result.set_primary_value ({ET_ECF_OPTION_NAMES}.void_safety_option_name, {ET_ECF_OPTION_NAMES}.initialization_option_value)
 								end
 							else
-								Result.set_primary_value (l_void_safety_value, {ET_ECF_OPTION_NAMES}.void_safety_option_name)
+								Result.set_primary_value ({ET_ECF_OPTION_NAMES}.void_safety_option_name, l_void_safety_value)
 							end
 						end
 					end
@@ -2342,7 +2388,7 @@ feature {NONE} -- Adaptation
 			l_default_options: ET_ECF_OPTIONS
 		do
 			l_default_options := default_options (ecf_version)
-			if ecf_version >= ecf_1_18_0 then
+			if ecf_version >= ecf_1_21_0 then
 				Result := a_options
 			else
 				create Result.make
@@ -2359,7 +2405,7 @@ feature {NONE} -- Adaptation
 					Result.set_primary_warning_value (l_primary_warnings.key, l_primary_warnings.item)
 				end
 			end
-			if ecf_version < ecf_1_18_0 then
+			if ecf_version < ecf_1_21_0 then
 				if ecf_version < ecf_1_16_0 then
 						-- Option "cat_call_detection" has been superseded by capability "catcall_detection" in ECF 1.16.0.
 					Result.primary_options.remove ({ET_ECF_OPTION_NAMES}.cat_call_detection_option_name)
@@ -2439,16 +2485,26 @@ feature {NONE} -- Adaptation
 		require
 			a_options_not_void: a_options /= Void
 		do
+			if ecf_version < ecf_1_21_0 then
+				if attached a_options.primary_value ({ET_ECF_OPTION_NAMES}.warning_option_name) as l_value then
+						-- Values of option "warning" have changed in ECF 1.21.0.
+					if STRING_.same_case_insensitive (l_value, {ET_ECF_OPTION_NAMES}.none_option_value) then
+						a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.warning_option_name, {ET_ECF_OPTION_NAMES}.false_option_value)
+					else
+						a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.warning_option_name, {ET_ECF_OPTION_NAMES}.true_option_value)
+					end
+				end
+			end
 			if ecf_version >= ecf_1_4_0 and ecf_version < ecf_1_5_0 then
 					-- Option "syntax_level" has been superseded by option "syntax" in ECF 1.5.0.
 				a_options.primary_options.remove ({ET_ECF_OPTION_NAMES}.syntax_level_option_name)
 				if attached a_options.primary_value ({ET_ECF_OPTION_NAMES}.syntax_option_name) as l_value then
 					if STRING_.same_case_insensitive (l_value, {ET_ECF_OPTION_NAMES}.obsolete_option_value) then
-						a_options.set_primary_value ("0", {ET_ECF_OPTION_NAMES}.syntax_level_option_name)
+						a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.syntax_level_option_name, "0")
 					elseif STRING_.same_case_insensitive (l_value, {ET_ECF_OPTION_NAMES}.transitional_option_value) then
-						a_options.set_primary_value ("1", {ET_ECF_OPTION_NAMES}.syntax_level_option_name)
+						a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.syntax_level_option_name, "1")
 					else
-						a_options.set_primary_value ("2", {ET_ECF_OPTION_NAMES}.syntax_level_option_name)
+						a_options.set_primary_value ({ET_ECF_OPTION_NAMES}.syntax_level_option_name, "2")
 					end
 				end
 			end

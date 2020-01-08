@@ -474,7 +474,7 @@ feature {NONE} -- Processing
 	build_input_classes (a_system: ET_SYSTEM)
 			-- Build `input_classes' using `class_filters' if not done yet.
 		local
-			l_last_wildcard: detachable STRING
+			l_last_wildcard: detachable READABLE_STRING_GENERAL
 			l_input_classes: DS_HASH_SET [ET_CLASS]
 		do
 			if not input_classes.is_empty then
@@ -794,7 +794,7 @@ feature -- Error handling
 			has_error: has_error
 		end
 
-	report_no_class_matching_wildcard_error (a_wildcard: STRING)
+	report_no_class_matching_wildcard_error (a_wildcard: READABLE_STRING_GENERAL)
 			-- Report that no class matches `a_wildcard'.
 		require
 			a_wildcard_not_void: a_wildcard /= Void
@@ -802,6 +802,19 @@ feature -- Error handling
 			l_error: UT_MESSAGE
 		do
 			create l_error.make ("No class matches wildcard '" + a_wildcard + "'.")
+			report_error (l_error)
+		ensure
+			has_error: has_error
+		end
+
+	report_target_not_found_error (a_target_name: STRING)
+			-- Report that no ECF target `a_target_name' was found.
+		require
+			a_target_name_not_void: a_target_name /= Void
+		local
+			l_error: UT_MESSAGE
+		do
+			create l_error.make ("Target '" + a_target_name + "' not found.")
 			report_error (l_error)
 		ensure
 			has_error: has_error

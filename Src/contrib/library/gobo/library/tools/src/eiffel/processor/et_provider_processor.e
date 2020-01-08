@@ -116,9 +116,11 @@ inherit
 			process_qualified_call_instruction,
 			process_qualified_like_braced_type,
 			process_qualified_like_type,
+			process_quantifier_expression,
 			process_regular_integer_constant,
 			process_regular_manifest_string,
 			process_regular_real_constant,
+			process_repeat_instruction,
 			process_special_manifest_string,
 			process_static_call_expression,
 			process_static_call_instruction,
@@ -149,7 +151,7 @@ feature {ET_AST_NODE} -- Processing
 			if attached an_expression.until_conditional as a_conditional then
 				process_expression (a_conditional.expression)
 			end
-			process_expression (an_expression.iteration_conditional.expression)
+			process_expression (an_expression.iteration_expression)
 			if attached an_expression.variant_part as a_variant_part then
 				process_variant (a_variant_part)
 			end
@@ -1245,6 +1247,13 @@ feature {ET_AST_NODE} -- Processing
 			process_type (a_type.target_type)
 		end
 
+	process_quantifier_expression (a_expression: ET_QUANTIFIER_EXPRESSION)
+			-- Process `a_expression'.
+		do
+			process_expression (a_expression.iterable_expression)
+			process_expression (a_expression.iteration_expression)
+		end
+
 	process_real_constant (a_constant: ET_REAL_CONSTANT)
 			-- Process `a_constant'.
 		do
@@ -1269,6 +1278,15 @@ feature {ET_AST_NODE} -- Processing
 			-- Process `a_constant'.
 		do
 			process_real_constant (a_constant)
+		end
+
+	process_repeat_instruction (a_instruction: ET_REPEAT_INSTRUCTION)
+			-- Process `a_instruction'.
+		do
+			process_expression (a_instruction.iterable_expression)
+			if attached a_instruction.loop_compound as l_loop_compound then
+				process_compound (l_loop_compound)
+			end
 		end
 
 	process_special_manifest_string (a_string: ET_SPECIAL_MANIFEST_STRING)

@@ -31,8 +31,8 @@ inherit
 			argument_name,
 			object_test_local_name,
 			is_object_test_local,
-			across_cursor_name,
-			is_across_cursor
+			iteration_cursor_name,
+			is_iteration_cursor
 		end
 
 	ET_CLASS_NAME
@@ -316,10 +316,10 @@ feature -- Status report
 			Result := (status_code = object_test_local_code)
 		end
 
-	is_across_cursor: BOOLEAN
-			-- Is current identifier actually an across cursor name?
+	is_iteration_cursor: BOOLEAN
+			-- Is current identifier actually an iteration cursor name?
 		do
-			Result := (status_code = across_cursor_code)
+			Result := (status_code = iteration_cursor_code)
 		end
 
 	is_temporary: BOOLEAN
@@ -377,6 +377,17 @@ feature -- Status report
 			Result := STRING_.same_case_insensitive (name, a_value)
 		end
 
+	valid_name (a_name: READABLE_STRING_GENERAL): BOOLEAN
+			-- Is `a_name' a valid value for `name'?
+		require
+			a_name_not_void: a_name /= Void
+		do
+			Result := {RX_PCRE_ROUTINES}.regexp (name_regexp).recognizes (a_name)
+		ensure
+			instance_free: class
+			definition: Result = {RX_PCRE_ROUTINES}.regexp (name_regexp).recognizes (a_name)
+		end
+
 feature -- Status setting
 
 	set_feature_name (b: BOOLEAN)
@@ -415,16 +426,16 @@ feature -- Status setting
 			object_test_local_set: is_object_test_local = b
 		end
 
-	set_across_cursor (b: BOOLEAN)
-			-- Set `is_across_cursor' to `b'.
+	set_iteration_cursor (b: BOOLEAN)
+			-- Set `is_iteration_cursor' to `b'.
 		do
 			if b then
-				status_code := across_cursor_code
+				status_code := iteration_cursor_code
 			else
 				status_code := no_code
 			end
 		ensure
-			across_local_set: is_across_cursor = b
+			iteration_cursor_set: is_iteration_cursor = b
 		end
 
 	set_temporary (b: BOOLEAN)
@@ -606,8 +617,8 @@ feature -- Conversion
 			Result := Current
 		end
 
-	across_cursor_name: ET_IDENTIFIER
-			-- Current name viewed as an across cursor name
+	iteration_cursor_name: ET_IDENTIFIER
+			-- Current name viewed as an iteration cursor name
 		do
 			Result := Current
 		end
@@ -644,11 +655,15 @@ feature {NONE} -- Implementation
 			new_hash_code_not_negatige: Result >= 0
 		end
 
+
+	name_regexp: STRING = "[a-zA-Z][a-zA-Z0-9_]*"
+			-- Regular expression for `name'
+
 	status_code: CHARACTER
 	feature_name_code: CHARACTER = 'f'
 	local_code: CHARACTER = 'l'
 	object_test_local_code: CHARACTER = 'm'
-	across_cursor_code: CHARACTER = 'u'
+	iteration_cursor_code: CHARACTER = 'i'
 	argument_code: CHARACTER = 'a'
 	temporary_code: CHARACTER = 'v'
 	tuple_label_code: CHARACTER = 't'

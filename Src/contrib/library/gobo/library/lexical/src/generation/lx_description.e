@@ -5,7 +5,7 @@ note
 		"Lexical analyzer descriptions"
 
 	library: "Gobo Eiffel Lexical Library"
-	copyright: "Copyright (c) 1999-2016, Eric Bezault and others"
+	copyright: "Copyright (c) 1999-2019, Eric Bezault and others"
 	license: "MIT License"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 		do
 			equiv_classes_used := True
 			meta_equiv_classes_used := True
-			characters_count := 256
+			maximum_symbol := {UC_UNICODE_CONSTANTS}.maximum_unicode_character_code - {UC_UNICODE_CONSTANTS}.unicode_surrogate_count
 			array_size := default_array_size
 			line_pragma := True
 			inspect_used := True
@@ -40,7 +40,7 @@ feature -- Initialization
 		do
 			equiv_classes_used := True
 			meta_equiv_classes_used := True
-			characters_count := 256
+			maximum_symbol := {UC_UNICODE_CONSTANTS}.maximum_unicode_character_code - {UC_UNICODE_CONSTANTS}.unicode_surrogate_count
 			array_size := default_array_size
 			rules.wipe_out
 			eof_rules.wipe_out
@@ -87,11 +87,23 @@ feature -- User-defined options
 	case_insensitive: BOOLEAN
 			-- Should a case-insensitive scanner be generated?
 			-- ("-i" option)
+			-- Note that only ASCII characters (with code less than 128)
+			-- are taken into account.
 
-	characters_count: INTEGER
-			-- Number of characters in character set handled by the
-			-- generated scanner
-			-- (Note: the character set is always assumed to start from 0.)
+	minimum_symbol: INTEGER = 0
+			-- Minimum symbol handled by the generated scanners
+
+	maximum_symbol: INTEGER
+			-- Maximum symbol handled by the generated scanners.
+			-- (Note that when dealing with Unicode characters,
+			-- symbols for characters greater than the maximum
+			-- surrogate code are shifted to the left by the number
+			-- of surrogates.)
+
+	utf8_mode: BOOLEAN
+			-- Should characters be handled as their sequence of UTF-8 byes?
+			-- (One can then use "(b:regexp)" and "(u:regexp)" to
+			-- switch between byte mode and UTF-8 mode.)
 
 	debug_mode: BOOLEAN
 			-- Should a debug-mode scanner be generated?
@@ -204,14 +216,25 @@ feature -- Option setting
 			case_insensitive_set: case_insensitive = b
 		end
 
-	set_characters_count (nb: INTEGER)
-			-- Set `characters_count' to `nb'.
+	set_maximum_symbol (nb: INTEGER)
+			-- Set `maximum_symbol' to `nb'.
 		require
-			positive_nb: nb > 0
+			nb_not_negative: nb > 0
+			unicode: utf8_mode implies nb >= {CHARACTER_8}.max_value
 		do
-			characters_count := nb
+			maximum_symbol := nb
 		ensure
-			characters_count_set: characters_count = nb
+			maximum_symbol_set: maximum_symbol = nb
+		end
+
+	set_utf8_mode (b: BOOLEAN)
+			-- Set `utf8_mode' to `b'.
+		require
+			symbol_count_large_enough: b implies maximum_symbol >= {CHARACTER_8}.max_value
+		do
+			utf8_mode := b
+		ensure
+			utf8_mode_set: utf8_mode = b
 		end
 
 	set_debug_mode (b: BOOLEAN)
@@ -382,6 +405,9 @@ feature -- Access
 			-- head and trailing context?
 			-- (Back-up tables must be generated.)
 
+	has_utf8_enconding: BOOLEAN
+			-- Has the input file describing the scanner been considered to be encoded with UTF-8?
+
 feature -- User-defined Eiffel code
 
 	eiffel_code: detachable STRING
@@ -436,18 +462,6 @@ feature -- Setting
 			equiv_classes_set: equiv_classes = ec
 		end
 
-	create_equiv_classes
-			-- Create `equiv_classes'.
-		require
-			equiv_classes_used: equiv_classes_used
-		do
-			create equiv_classes.make (1, characters_count)
-		ensure
-			equiv_classes_created: attached equiv_classes as l_equiv_classes
-			lower_set: l_equiv_classes.lower = 1
-			upper_set: l_equiv_classes.upper = characters_count
-		end
-
 	set_bol_needed (b: like bol_needed)
 			-- Set `bol_needed' to `b'.
 		do
@@ -462,6 +476,14 @@ feature -- Setting
 			variable_trail_context := b
 		ensure
 			variable_trail_context_set: variable_trail_context = b
+		end
+
+	set_has_utf8_enconding (b: BOOLEAN)
+			-- Set `has_utf8_enconding' to `b.
+		do
+			has_utf8_enconding := b
+		ensure
+			has_utf8_enconding_set: has_utf8_enconding = b
 		end
 
 	set_eiffel_code (code: like eiffel_code)
@@ -490,7 +512,9 @@ invariant
 	eof_rules_not_void: eof_rules /= Void
 	no_void_eof_rule: not eof_rules.has_void
 	start_conditions_not_void: start_conditions /= Void
-	positive_characters_count: characters_count > 0
+	minimum_symbol_large_enough: minimum_symbol >= 0
+	maximum_symbol_large_enough: maximum_symbol >= minimum_symbol
+	utf8_mode: utf8_mode implies maximum_symbol >= {CHARACTER_8}.max_value
 	eiffel_header_not_void: eiffel_header /= Void
 	no_void_eiffel_header: not eiffel_header.has_void
 	array_size_positive: array_size >= 0

@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -151,6 +151,15 @@ feature -- Class names
 		ensure
 			instance_free: class
 			identified_routines_class_name_not_void: Result /= Void
+		end
+
+	immutable_string_8_class_name: ET_CLASS_NAME
+			-- "IMMUTABLE_STRING_8" class name
+		once
+			create {ET_IDENTIFIER} Result.make (capitalized_immutable_string_8_name)
+		ensure
+			instance_free: class
+			immutable_string_8_class_name_not_void: Result /= Void
 		end
 
 	immutable_string_32_class_name: ET_CLASS_NAME
@@ -1678,222 +1687,6 @@ feature -- Feature names
 			in_assertion_feature_name_not_void: Result /= Void
 		end
 
-	infix_and_feature_name: ET_FEATURE_NAME
-			-- 'infix "and"' feature name
-		local
-			l_string: ET_REGULAR_MANIFEST_STRING
-		once
-			create l_string.make (and_keyword_name)
-			create {ET_INFIX_NAME} Result.make_and (l_string)
-		ensure
-			instance_free: class
-			infix_and_feature_name_not_void: Result /= Void
-		end
-
-	infix_and_then_feature_name: ET_FEATURE_NAME
-			-- 'infix "and then"' feature name
-		local
-			l_string: ET_REGULAR_MANIFEST_STRING
-		once
-			create l_string.make (and_then_keywords_name)
-			create {ET_INFIX_NAME} Result.make_and_then (l_string)
-		ensure
-			instance_free: class
-			infix_and_then_feature_name_not_void: Result /= Void
-		end
-
-	infix_at_feature_name: ET_FEATURE_NAME
-			-- 'infix "@"' feature name
-		local
-			l_string: ET_REGULAR_MANIFEST_STRING
-		once
-			create l_string.make (at_symbol_name)
-			create {ET_INFIX_FREE_NAME} Result.make (l_string)
-		ensure
-			instance_free: class
-			infix_at_feature_name_not_void: Result /= Void
-		end
-
-	infix_div_feature_name: ET_FEATURE_NAME
-			-- 'infix "//"' feature name
-		local
-			l_string: ET_REGULAR_MANIFEST_STRING
-		once
-			create l_string.make (div_symbol_name)
-			create {ET_INFIX_NAME} Result.make_div (l_string)
-		ensure
-			instance_free: class
-			infix_div_feature_name_not_void: Result /= Void
-		end
-
-	infix_divide_feature_name: ET_FEATURE_NAME
-			-- 'infix "/"' feature name
-		local
-			l_string: ET_REGULAR_MANIFEST_STRING
-		once
-			create l_string.make (divide_symbol_name)
-			create {ET_INFIX_NAME} Result.make_divide (l_string)
-		ensure
-			instance_free: class
-			infix_divide_feature_name_not_void: Result /= Void
-		end
-
-	infix_ge_feature_name: ET_FEATURE_NAME
-			-- 'infix ">="' feature name
-		local
-			l_string: ET_REGULAR_MANIFEST_STRING
-		once
-			create l_string.make (le_symbol_name)
-			create {ET_INFIX_NAME} Result.make_ge (l_string)
-		ensure
-			instance_free: class
-			infix_ge_feature_name_not_void: Result /= Void
-		end
-
-	infix_gt_feature_name: ET_FEATURE_NAME
-			-- 'infix ">"' feature name
-		local
-			l_string: ET_REGULAR_MANIFEST_STRING
-		once
-			create l_string.make (gt_symbol_name)
-			create {ET_INFIX_NAME} Result.make_gt (l_string)
-		ensure
-			instance_free: class
-			infix_gt_feature_name_not_void: Result /= Void
-		end
-
-	infix_implies_feature_name: ET_FEATURE_NAME
-			-- 'infix "implies"' feature name
-		local
-			l_string: ET_REGULAR_MANIFEST_STRING
-		once
-			create l_string.make (implies_keyword_name)
-			create {ET_INFIX_NAME} Result.make_implies (l_string)
-		ensure
-			instance_free: class
-			infix_implies_feature_name_not_void: Result /= Void
-		end
-
-	infix_le_feature_name: ET_FEATURE_NAME
-			-- 'infix "<="' feature name
-		local
-			l_string: ET_REGULAR_MANIFEST_STRING
-		once
-			create l_string.make (le_symbol_name)
-			create {ET_INFIX_NAME} Result.make_le (l_string)
-		ensure
-			instance_free: class
-			infix_le_feature_name_not_void: Result /= Void
-		end
-
-	infix_lt_feature_name: ET_FEATURE_NAME
-			-- 'infix "<"' feature name
-		local
-			l_string: ET_REGULAR_MANIFEST_STRING
-		once
-			create l_string.make (lt_symbol_name)
-			create {ET_INFIX_NAME} Result.make_lt (l_string)
-		ensure
-			instance_free: class
-			infix_lt_feature_name_not_void: Result /= Void
-		end
-
-	infix_minus_feature_name: ET_FEATURE_NAME
-			-- 'infix "-"' feature name
-		local
-			l_string: ET_REGULAR_MANIFEST_STRING
-		once
-			create l_string.make (minus_symbol_name)
-			create {ET_INFIX_NAME} Result.make_minus (l_string)
-		ensure
-			instance_free: class
-			infix_minus_feature_name_not_void: Result /= Void
-		end
-
-	infix_mod_feature_name: ET_FEATURE_NAME
-			-- 'infix "\\"' feature name
-		local
-			l_string: ET_REGULAR_MANIFEST_STRING
-		once
-			create l_string.make (mod_symbol_name)
-			create {ET_INFIX_NAME} Result.make_mod (l_string)
-		ensure
-			instance_free: class
-			infix_mod_feature_name_not_void: Result /= Void
-		end
-
-	infix_or_feature_name: ET_FEATURE_NAME
-			-- 'infix "or"' feature name
-		local
-			l_string: ET_REGULAR_MANIFEST_STRING
-		once
-			create l_string.make (or_keyword_name)
-			create {ET_INFIX_NAME} Result.make_or (l_string)
-		ensure
-			instance_free: class
-			infix_or_feature_name_not_void: Result /= Void
-		end
-
-	infix_or_else_feature_name: ET_FEATURE_NAME
-			-- 'infix "or else"' feature name
-		local
-			l_string: ET_REGULAR_MANIFEST_STRING
-		once
-			create l_string.make (or_else_keywords_name)
-			create {ET_INFIX_NAME} Result.make_or_else (l_string)
-		ensure
-			instance_free: class
-			infix_or_else_feature_name_not_void: Result /= Void
-		end
-
-	infix_plus_feature_name: ET_FEATURE_NAME
-			-- 'infix "+"' feature name
-		local
-			l_string: ET_REGULAR_MANIFEST_STRING
-		once
-			create l_string.make (plus_symbol_name)
-			create {ET_INFIX_NAME} Result.make_plus (l_string)
-		ensure
-			instance_free: class
-			infix_plus_feature_name_not_void: Result /= Void
-		end
-
-	infix_power_feature_name: ET_FEATURE_NAME
-			-- 'infix "^"' feature name
-		local
-			l_string: ET_REGULAR_MANIFEST_STRING
-		once
-			create l_string.make (power_symbol_name)
-			create {ET_INFIX_NAME} Result.make_power (l_string)
-		ensure
-			instance_free: class
-			infix_power_feature_name_not_void: Result /= Void
-		end
-
-	infix_times_feature_name: ET_FEATURE_NAME
-			-- 'infix "*"' feature name
-		local
-			l_string: ET_REGULAR_MANIFEST_STRING
-		once
-			create l_string.make (times_symbol_name)
-			create {ET_INFIX_NAME} Result.make_times (l_string)
-		ensure
-			instance_free: class
-			infix_times_feature_name_not_void: Result /= Void
-		end
-
-	infix_xor_feature_name: ET_FEATURE_NAME
-			-- 'infix "xor"' feature name
-		local
-			l_string: ET_REGULAR_MANIFEST_STRING
-		once
-			create l_string.make (xor_keyword_name)
-			create {ET_INFIX_NAME} Result.make_xor (l_string)
-		ensure
-			instance_free: class
-			infix_xor_feature_name_not_void: Result /= Void
-		end
-
 	init_exception_manager_feature_name: ET_FEATURE_NAME
 			-- 'init_exception_manager' feature name
 		once
@@ -2819,42 +2612,6 @@ feature -- Feature names
 		ensure
 			instance_free: class
 			pre_ecma_mapping_status_feature_name_not_void: Result /= Void
-		end
-
-	prefix_minus_feature_name: ET_FEATURE_NAME
-			-- 'prefix "-"' feature name
-		local
-			l_string: ET_REGULAR_MANIFEST_STRING
-		once
-			create l_string.make (minus_symbol_name)
-			create {ET_PREFIX_NAME} Result.make_minus (l_string)
-		ensure
-			instance_free: class
-			prefix_minus_feature_name_not_void: Result /= Void
-		end
-
-	prefix_not_feature_name: ET_FEATURE_NAME
-			-- 'prefix "not"' feature name
-		local
-			l_string: ET_REGULAR_MANIFEST_STRING
-		once
-			create l_string.make (not_keyword_name)
-			create {ET_PREFIX_NAME} Result.make_not (l_string)
-		ensure
-			instance_free: class
-			prefix_not_feature_name_not_void: Result /= Void
-		end
-
-	prefix_plus_feature_name: ET_FEATURE_NAME
-			-- 'prefix "+"' feature name
-		local
-			l_string: ET_REGULAR_MANIFEST_STRING
-		once
-			create l_string.make (plus_symbol_name)
-			create {ET_PREFIX_NAME} Result.make_plus (l_string)
-		ensure
-			instance_free: class
-			prefix_plus_feature_name_not_void: Result /= Void
 		end
 
 	product_feature_name: ET_FEATURE_NAME
@@ -4144,6 +3901,24 @@ feature -- Symbols
 			symbol_not_void: Result /= Void
 		end
 
+	bar_symbol: ET_SYMBOL
+			-- '¦' symbol
+		once
+			create Result.make_bar
+		ensure
+			instance_free: class
+			symbol_not_void: Result /= Void
+		end
+
+	close_repeat_symbol: ET_SYMBOL
+			-- '⟲' symbol
+		once
+			create Result.make_close_repeat
+		ensure
+			instance_free: class
+			symbol_not_void: Result /= Void
+		end
+
 	colon_symbol: ET_SYMBOL
 			-- ':' symbol
 		once
@@ -4193,6 +3968,15 @@ feature -- Symbols
 			-- '=' symbol
 		once
 			create Result.make_equal
+		ensure
+			instance_free: class
+			symbol_not_void: Result /= Void
+		end
+
+	for_all_symbol: ET_SYMBOL
+			-- '∀' symbol
+		once
+			create Result.make_for_all
 		ensure
 			instance_free: class
 			symbol_not_void: Result /= Void
@@ -4252,6 +4036,15 @@ feature -- Symbols
 			symbol_not_void: Result /= Void
 		end
 
+	open_repeat_symbol: ET_SYMBOL
+			-- '⟳' symbol
+		once
+			create Result.make_open_repeat
+		ensure
+			instance_free: class
+			symbol_not_void: Result /= Void
+		end
+
 	question_mark_symbol: ET_QUESTION_MARK_SYMBOL
 			-- '?' symbol
 		once
@@ -4301,6 +4094,15 @@ feature -- Symbols
 			-- ';' symbol
 		once
 			create Result.make
+		ensure
+			instance_free: class
+			symbol_not_void: Result /= Void
+		end
+
+	there_exists_symbol: ET_SYMBOL
+			-- '∃' symbol
+		once
+			create Result.make_there_exists
 		ensure
 			instance_free: class
 			symbol_not_void: Result /= Void
@@ -4614,15 +4416,6 @@ feature -- Keywords
 			keyword_not_void: Result /= Void
 		end
 
-	infix_keyword: ET_KEYWORD
-			-- 'infix' keyword
-		once
-			create Result.make_infix
-		ensure
-			instance_free: class
-			keyword_not_void: Result /= Void
-		end
-
 	inherit_keyword: ET_KEYWORD
 			-- 'inherit' keyword
 		once
@@ -4735,15 +4528,6 @@ feature -- Keywords
 			-- 'precursor' keyword
 		once
 			create Result.make
-		ensure
-			instance_free: class
-			keyword_not_void: Result /= Void
-		end
-
-	prefix_keyword: ET_KEYWORD
-			-- 'prefix' keyword
-		once
-			create Result.make_prefix
 		ensure
 			instance_free: class
 			keyword_not_void: Result /= Void
@@ -4946,6 +4730,7 @@ feature -- Keyword and symbol names
 	capitalized_exception_manager_factory_name: STRING = "EXCEPTION_MANAGER_FACTORY"
 	capitalized_function_name: STRING = "FUNCTION"
 	capitalized_identified_routines_name: STRING = "IDENTIFIED_ROUTINES"
+	capitalized_immutable_string_8_name: STRING = "IMMUTABLE_STRING_8"
 	capitalized_immutable_string_32_name: STRING = "IMMUTABLE_STRING_32"
 	capitalized_integer_name: STRING = "INTEGER"
 	capitalized_integer_8_name: STRING = "INTEGER_8"
@@ -5968,7 +5753,6 @@ feature -- Keyword and symbol names
 	if_keyword_name: STRING = "if"
 	implies_keyword_name: STRING = "implies"
 	indexing_keyword_name: STRING = "indexing"
-	infix_keyword_name: STRING = "infix"
 	inherit_keyword_name: STRING = "inherit"
 	inspect_keyword_name: STRING = "inspect"
 	invariant_keyword_name: STRING = "invariant"
@@ -5984,7 +5768,6 @@ feature -- Keyword and symbol names
 	or_keyword_name: STRING = "or"
 	or_else_keywords_name: STRING = "or else"
 	precursor_keyword_name: STRING = "precursor"
-	prefix_keyword_name: STRING = "prefix"
 	redefine_keyword_name: STRING = "redefine"
 	reference_keyword_name: STRING = "reference"
 	rename_keyword_name: STRING = "rename"
@@ -6018,9 +5801,10 @@ feature -- Keyword and symbol names
 	arrow_symbol_name: STRING = "->"
 	assign_symbol_name: STRING = ":="
 	assign_attempt_symbol_name: STRING = "?="
-	at_symbol_name: STRING = "@"
 	bang_symbol_name: STRING = "!"
+	bar_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "¦") end
 	brackets_symbol_name: STRING = "[]"
+	close_repeat_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "⟲") end
 	colon_symbol_name: STRING = ":"
 	comma_symbol_name: STRING = ","
 	div_symbol_name: STRING = "//"
@@ -6029,6 +5813,7 @@ feature -- Keyword and symbol names
 	dot_symbol_name: STRING = "."
 	dotdot_symbol_name: STRING = ".."
 	equal_symbol_name: STRING = "="
+	for_all_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "∀") end
 	ge_symbol_name: STRING = ">="
 	gt_symbol_name: STRING = ">"
 	le_symbol_name: STRING = "<="
@@ -6041,6 +5826,7 @@ feature -- Keyword and symbol names
 	mod_symbol_name: STRING = "\\"
 	not_equal_symbol_name: STRING = "/="
 	not_tilde_symbol_name: STRING = "/~"
+	open_repeat_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "⟳") end
 	parentheses_symbol_name: STRING = "()"
 	plus_symbol_name: STRING = "+"
 	power_symbol_name: STRING = "^"
@@ -6050,6 +5836,7 @@ feature -- Keyword and symbol names
 	right_bracket_symbol_name: STRING = "]"
 	right_parenthesis_symbol_name: STRING = ")"
 	semicolon_symbol_name: STRING = ";"
+	there_exists_symbol_name: STRING once Result := {UC_UTF8_ROUTINES}.string_to_utf8 ({STRING_32} "∃") end
 	tilde_symbol_name: STRING = "~"
 	times_symbol_name: STRING = "*"
 			-- Eiffel symbol names
@@ -6081,32 +5868,7 @@ feature -- Keyword and symbol names (used for compatibility with 5.6.0610, to be
 	capitalized_wide_character_ref_name: STRING = "WIDE_CHARACTER_REF"
 		-- Eiffel class names
 
-feature -- Infix, prefix and alias feature names
-
-	infix_and_name: STRING = "infix %"and%""
-	infix_implies_name: STRING = "infix %"implies%""
-	infix_or_name: STRING = "infix %"or%""
-	infix_xor_name: STRING = "infix %"xor%""
-	infix_div_name: STRING = "infix %"//%""
-	infix_divide_name: STRING = "infix %"/%""
-	infix_ge_name: STRING = "infix %">=%""
-	infix_gt_name: STRING = "infix %">%""
-	infix_le_name: STRING = "infix %"<=%""
-	infix_lt_name: STRING = "infix %"<%""
-	infix_minus_name: STRING = "infix %"-%""
-	infix_mod_name: STRING = "infix %"\\%""
-	infix_plus_name: STRING = "infix %"+%""
-	infix_power_name: STRING = "infix %"^%""
-	infix_times_name: STRING = "infix %"*%""
-	infix_dotdot_name: STRING = "infix %"..%""
-	infix_and_then_name: STRING = "infix %"and then%""
-	infix_or_else_name: STRING = "infix %"or else%""
-			-- Infix feature names
-
-	prefix_not_name: STRING = "prefix %"not%""
-	prefix_minus_name: STRING = "prefix %"-%""
-	prefix_plus_name: STRING = "prefix %"+%""
-			-- Prefix feature names
+feature -- Alias names
 
 	alias_and_name: STRING = "alias %"and%""
 	alias_implies_name: STRING = "alias %"implies%""

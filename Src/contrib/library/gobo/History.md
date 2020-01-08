@@ -1,11 +1,71 @@
 # Release History
 
-## Version ?? - ??
+## Version 19.11.03.1 - 3 November 2019
+
+### gedoc
+
+* Fixed ECF pretty-printer when printing `<external_linker>`. The attribute
+  name is `value` and not `location`.
+* Fixed ECF pretty-printer when processing files of the form `<redirection>`.
+  It was printing the file it was redirected to.
 
 ### gelex
 
-* Fixed bug when computing equivalence classes. The generated arrays should be
-  slightly smaller.
+* Improved `gelex` to generate smaller manifest arrays.
+
+### Gobo Eiffel Tools Library
+
+* Added support for manifest immutable strings `{IMMUTABLE_STRING_8} "..."`
+  and `{IMMUTABLE_STRING_32} "..."`. More generally, `IMMUTABLE_STRING_8`
+  and `IMMUTABLE_STRING_32` are considered as as sized variants of `STRING`
+  (like `STRING_8` and `STRING_32`).
+* Removed support for `infix "..."` and `prefix "..."` syntax notations.
+  We should use `alias "..."` instead, as described in the ECMA standard.
+* Added support for multiple aliases (e.g. `f alias "[]" alias "@" (i: INTEGER): T`).
+* Added support for quantifier expressions of the form `∀ x: list ¦ x > 0`
+  as syntactic sugar for `across list is x all x > 0 end`.
+* Added support for quantifier expressions of the form `∃ x: list ¦ x > 0`
+  as syntactic sugar for `across list is x some x > 0 end`.
+* Added support for repeat instructions of the form `⟳ x: list ¦ x.do_something ⟲`
+  as syntactic sugar for `across list is x loop x.do_something end`.
+* Relaxed the implementation of export status of inherited features
+  in order to be compliant with the ECMA standard.
+* Refined the way dynamic type sets for tuple items are computed.
+* Added support for new values `none|warning|error` for option `warning`
+  in ECF classes as introduced in ECF 1.21.0. Note that `gec` does not take
+  this option into account.
+
+## Version 19.10.03.1 - 3 October 2019
+
+### gelex
+
+* Fixed bug when computing equivalence classes. The generated arrays should
+  be slightly smaller.
+* Added support for Unicode. Regular expressions and embedded Eiffel code in
+  the `.l` input file can contain Unicode characters. Unicode is supported 
+  natively by default, with no increase in size and execution time when the
+  regular expressions only contain 8-bit characters. Alternatively, with the
+  option `utf8` Unicode characters are internally converted to their UTF-8
+  byte sequence in the generated scanner. This can be useful when the file
+  to scan is already encoded with UTF-8, although the generated scanner will
+  be larger and not necessarily faster.
+* Added support for addition and subtraction of character classes.
+* Fixed bug when an Eiffel verbatim string in a semantic action contains a
+  closing brace `}`, which was wrongly interpreted as the end of the
+  Eiffel code for this semantic action.
+* Updated the documentation.
+
+### geyacc
+
+* Added support for Unicode. Embedded Eiffel code in the `.y` input file
+  can contain Unicode characters. Characters in `%token` declarations can
+  also be Unicode characters or their escaped versions  (e.g `%token '\u03B2'`
+  where `03B2` is the hexadecimal code for Greek character beta).
+* Removed command-line option `--new_typing`.
+* Fixed bug when an Eiffel verbatim string in a semantic action contains a
+  closing brace `}`, which was wrongly interpreted as the end of the
+  Eiffel code for this semantic action.
+* Updated the documentation.
 
 ### Gobo Eiffel Kernel Library
 
@@ -14,10 +74,37 @@
   of type `READABLE_STRING_8` instead of `STRING_8`. This is to follow the
   same change in class `IO_MEDIUM`.
 
+### Gobo Eiffel Lexical Library
+
+* Added support for Unicode. Does not support properties yet (e.g. `\p{L}`).
+  Unicode is supported natively, there is no internal conversion to UTF-8.
+  Unicode characters can be entered verbatim in the string (`STRING_32`) or
+  with their escaped form (e.g. `\u03B2` or `\x{03B2}` where `03B2` is the
+  hexadecimal code for Greek character beta). Surrogate and invalid  Unicode
+  characters produce a regular expression syntax error.   
+* Fixed bug in `LX_DFA_REGULAR_EXPRESSION` and `LX_DFA_WILDCARD` when the
+  string to be matched contains a null character.
+* Added support for addition and subtraction of character classes.
+
+### Gobo Eiffel Parse Library
+
+* Removed obsolete class `YY_NEW_PARSER_SKELETON`.
+  
+### Gobo Eiffel Regexp Library
+
+* Added support for Unicode. Does not support properties yet (e.g. `\p{L}`).
+  POSIX character set names (e.g `[:alpha:]`) recognize only ASCII characters
+  (code less than 128). Unicode is supported natively, there is no internal
+  conversion to UTF-8. Unicode characters can be entered verbatim in the
+  string (`STRING_32`) or with their escaped form (e.g. `\u{03B2}` or 
+  `\x{03B2}` where `03B2` is the hexadecimal code for Greek character beta).
+  Surrogate and invalid Unicode characters produce a regular expression
+  syntax error.
+
 ### Gobo Eiffel Tools Library
 
 * Added support for `across ... is ...`.
-
+* Fixed bug in ECF printer when converting files between different ECF versions.
 
 ## Version 19.06.21.1 - 21 June 2019
 

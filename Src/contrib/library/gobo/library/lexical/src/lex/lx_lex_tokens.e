@@ -1,7 +1,7 @@
 note
 
 	description: "Parser token codes"
-	generator: "geyacc version 4.3"
+	generator: "geyacc"
 
 deferred class LX_LEX_TOKENS
 
@@ -12,6 +12,7 @@ inherit
 feature -- Last values
 
 	last_detachable_any_value: detachable ANY
+	last_string_32_value: STRING_32
 	last_string_value: STRING
 	last_integer_value: INTEGER
 	last_lx_symbol_class_value: LX_SYMBOL_CLASS
@@ -34,6 +35,12 @@ feature -- Access
 				Result := "PIPED"
 			when EMPTY then
 				Result := "EMPTY"
+			when UNICODE_MODE_START then
+				Result := "UNICODE_MODE_START"
+			when BYTE_MODE_START then
+				Result := "BYTE_MODE_START"
+			when CCL_BRACKET then
+				Result := "CCL_BRACKET"
 			when EIF_CODE then
 				Result := "EIF_CODE"
 			when NAME then
@@ -44,6 +51,10 @@ feature -- Access
 				Result := "NUMBER"
 			when CCL_OP then
 				Result := "CCL_OP"
+			when CCL_PLUS then
+				Result := "CCL_PLUS"
+			when CCL_MINUS then
+				Result := "CCL_MINUS"
 			else
 				Result := yy_character_token_name (a_token)
 			end
@@ -55,10 +66,15 @@ feature -- Token codes
 	EOF_OP: INTEGER = 259
 	PIPED: INTEGER = 260
 	EMPTY: INTEGER = 261
-	EIF_CODE: INTEGER = 262
-	NAME: INTEGER = 263
-	CHAR: INTEGER = 264
-	NUMBER: INTEGER = 265
-	CCL_OP: INTEGER = 266
+	UNICODE_MODE_START: INTEGER = 262
+	BYTE_MODE_START: INTEGER = 263
+	CCL_BRACKET: INTEGER = 264
+	EIF_CODE: INTEGER = 265
+	NAME: INTEGER = 266
+	CHAR: INTEGER = 267
+	NUMBER: INTEGER = 268
+	CCL_OP: INTEGER = 269
+	CCL_PLUS: INTEGER = 270
+	CCL_MINUS: INTEGER = 271
 
 end

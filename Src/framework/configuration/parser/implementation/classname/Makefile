@@ -1,7 +1,7 @@
 # General tools
 RM=del
 GOBO_BIN=$(ISE_EIFFEL)/library/gobo/spec/$(ISE_PLATFORM)/bin
-GOBO_BIN=$(EIFFEL_SRC)/contrib/library/gobo/bin
+#GOBO_BIN=$(EIFFEL_SRC)/contrib/library/gobo/bin
 SYNTAX_UPDATER="$(ISE_EIFFEL)/tools/spec/$(ISE_PLATFORM)/bin/syntax_updater"
 
 # Gobo flag for gelex

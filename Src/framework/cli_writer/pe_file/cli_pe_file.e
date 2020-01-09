@@ -248,12 +248,12 @@ feature -- Saving
 				-- Store .text section
 			l_pe_file.put_managed_pointer (iat, 0, iat.count)
 			l_pe_file.put_managed_pointer (cli_header, 0, cli_header.count)
-			if method_writer /= Void then
+			if attached method_writer as l_method_writer then
 					-- No need for padding as it is correctly aligned of 4 bytes
 				check
 					correctly_aligned: (iat.count + cli_header.count) \\ 4 = 0
 				end
-				l_pe_file.put_managed_pointer (method_writer.item, 0, code_size)
+				l_pe_file.put_managed_pointer (l_method_writer.item, 0, code_size)
 			end
 
 			if
@@ -317,7 +317,11 @@ feature -- Saving
 			l_pe_file.close
 			is_valid := False
 
-			if has_strong_name then
+			if
+				has_strong_name and
+				attached signing as l_signing and
+				attached public_key as l_public_key
+			then
 				create l_pe_file.make_with_name (file_name)
 				l_pe_file.open_read
 				create l_padding.make (l_pe_file.count)
@@ -325,7 +329,7 @@ feature -- Saving
 				l_pe_file.close
 
 				create l_uni_string.make (file_name)
-				l_signature := signing.assembly_signature (l_uni_string, public_key.key_pair)
+				l_signature := l_signing.assembly_signature (l_uni_string, l_public_key.key_pair)
 				(l_padding.item + l_strong_name_location).memory_copy (l_signature.item,
 					l_signature.count)
 
@@ -348,8 +352,8 @@ feature {NONE} -- Saving
 				-- Size of meta data and code.
 			meta_data_size := emitter.save_size
 
-			if method_writer /= Void then
-				code_size := method_writer.count
+			if attached method_writer as l_method_writer then
+				code_size := l_method_writer.count
 			else
 				code_size := 0
 			end
@@ -363,14 +367,18 @@ feature {NONE} -- Saving
 				debug_size := 0
 			end
 
-			if has_strong_name then
-				strong_name_size := signing.assembly_signature_size (public_key.item)
+			if
+				has_strong_name and
+				attached signing as l_signing and then
+				attached public_key as l_public_key
+			then
+				strong_name_size := l_signing.assembly_signature_size (l_public_key.item)
 			else
 				strong_name_size := 0
 			end
 
-			if has_resources then
-				resources_size := resources.count
+			if has_resources and attached resources as l_resources then
+				resources_size := l_resources.count
 			else
 				resources_size := 0
 			end
@@ -512,8 +520,8 @@ feature {NONE} -- Saving
 				entry_data.jump_size)
 
 				-- Set method RVAs now.
-			if method_writer /= Void then
-				method_writer.update_rvas (emitter, code_rva)
+			if attached method_writer as l_method_writer then
+				l_method_writer.update_rvas (emitter, code_rva)
 			end
 		end
 
@@ -566,7 +574,7 @@ invariant
 	public_key_not_void: (is_valid and has_strong_name) implies public_key /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

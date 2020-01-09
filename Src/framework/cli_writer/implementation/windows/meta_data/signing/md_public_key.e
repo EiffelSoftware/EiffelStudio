@@ -55,22 +55,24 @@ feature -- Access
 			-- String representation of `public_key_token'.
 		require
 			key_is_valid: is_valid
-			public_key_token_not_void: public_key_token /= Void
-			public_key_token_not_empty: public_key_token.count > 0
+			public_key_token_not_void: attached public_key_token as pub_key_token
+			public_key_token_not_empty: pub_key_token.count > 0
 		local
 			i, nb: INTEGER
 		do
-			from
-				i := 0
-				nb := public_key_token.count - 1
-				create Result.make (2 * (nb + 1))
-			until
-				i > nb
-			loop
-				Result.append_string_general (public_key_token.read_integer_8 (i).to_hex_string)
-				i := i + 1
+			check attached public_key_token as l_public_key_token then
+				from
+					i := 0
+					nb := l_public_key_token.count - 1
+					create Result.make (2 * (nb + 1))
+				until
+					i > nb
+				loop
+					Result.append_string_general (l_public_key_token.read_integer_8 (i).to_hex_string)
+					i := i + 1
+				end
+				Result.to_lower
 			end
-			Result.to_lower
 		end
 
 feature {NONE} -- Implementation
@@ -114,7 +116,7 @@ invariant
 	key_pair_not_void: key_pair /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -133,106 +133,107 @@ feature -- Settings
 			i: INTEGER
 			l_old_exceptions: detachable ARRAY [MD_EXCEPTION_CATCH]
 		do
-			l_meth := internal_method_body
 			l_pos := current_position
-			l_meth_size := l_meth.count
 			l_m := item
-			method_locations.put (l_pos, l_meth.method_token)
+			l_meth := internal_method_body
+			check l_meth /= Void then
+				l_meth_size := l_meth.count
+				method_locations.put (l_pos, l_meth.method_token)
+				update_size (l_pos + l_meth_size + {MD_FAT_METHOD_HEADER}.Count)
 
-			update_size (l_pos + l_meth_size + {MD_FAT_METHOD_HEADER}.Count)
+				if
+					not l_meth.has_locals and then not l_meth.has_exceptions_handling
+					and then l_meth.max_stack <= 8 and then l_meth_size < 64
+				then
+						-- Valid candidate for tiny header.
+					Tiny_method_header.set_code_size (l_meth_size)
+					Tiny_method_header.write_to_stream (l_m, l_pos)
+					l_pos := l_pos + Tiny_method_header.count
+				else
+						-- Valid candidate for fat header.
+					Fat_method_header.remake (l_meth.max_stack.to_integer_16,
+						l_meth_size, l_meth.local_token)
 
-			if
-				not l_meth.has_locals and then not l_meth.has_exceptions_handling
-				and then l_meth.max_stack <= 8 and then l_meth_size < 64
-			then
-					-- Valid candidate for tiny header.
-				Tiny_method_header.set_code_size (l_meth_size)
-				Tiny_method_header.write_to_stream (l_m, l_pos)
-				l_pos := l_pos + Tiny_method_header.count
-			else
-					-- Valid candidate for fat header.
-				Fat_method_header.remake (l_meth.max_stack.to_integer_16,
-					l_meth_size, l_meth.local_token)
+					if l_meth.has_exceptions_handling then
+						Fat_method_header.set_flags ({MD_METHOD_CONSTANTS}.More_sections)
+					end
+
+					Fat_method_header.write_to_stream (l_m, l_pos)
+					l_pos := l_pos + Fat_method_header.count
+				end
+
+				l_meth.write_to_stream (l_m, l_pos)
+				l_pos := l_pos + l_meth_size
 
 				if l_meth.has_exceptions_handling then
-					Fat_method_header.set_flags ({MD_METHOD_CONSTANTS}.More_sections)
-				end
-
-				Fat_method_header.write_to_stream (l_m, l_pos)
-				l_pos := l_pos + Fat_method_header.count
-			end
-
-			l_meth.write_to_stream (l_m, l_pos)
-			l_pos := l_pos + l_meth_size
-
-			if l_meth.has_exceptions_handling then
-				l_pos := pad_up (l_pos, 4)
-				Exception_header.reset
-				l_old_exceptions := l_meth.old_exception_catch_blocks
-				if l_old_exceptions /= Void then
-					from
-						i := l_old_exceptions.lower
-					until
-						i > l_old_exceptions.upper
-					loop
-						l_ex := l_old_exceptions.item (i)
-						if l_ex.is_defined then
-							Exception_header.register_exception_clause (l_ex)
+					l_pos := pad_up (l_pos, 4)
+					Exception_header.reset
+					l_old_exceptions := l_meth.old_exception_catch_blocks
+					if l_old_exceptions /= Void then
+						from
+							i := l_old_exceptions.lower
+						until
+							i > l_old_exceptions.upper
+						loop
+							l_ex := l_old_exceptions.item (i)
+							if l_ex.is_defined then
+								Exception_header.register_exception_clause (l_ex)
+							end
+							i := i + 1
 						end
-						i := i + 1
+					end
+					l_ex := l_meth.exception_block
+					if l_ex.is_defined then
+						Exception_header.register_exception_clause (l_ex)
+					end
+					l_ex := l_meth.once_catch_block
+					if l_ex.is_defined then
+						Exception_header.register_exception_clause (l_ex)
+					end
+					l_ex := l_meth.once_finally_block
+					if l_ex.is_defined then
+						Exception_header.register_exception_clause (l_ex)
+					end
+
+					update_size (l_pos + Exception_header.count)
+					Exception_header.write_to_stream (l_m, l_pos)
+					l_pos := l_pos + Exception_header.count
+					is_fat_seh := Exception_header.is_fat
+					if l_old_exceptions /= Void then
+						from
+							i := l_old_exceptions.lower
+						until
+							i > l_old_exceptions.upper
+						loop
+							l_ex := l_old_exceptions.item (i)
+							if l_ex.is_defined then
+								l_ex.write_to_stream (is_fat_seh, l_m, l_pos)
+								l_pos := l_pos + l_ex.count (is_fat_seh)
+							end
+							i := i + 1
+						end
+					end
+					l_ex := l_meth.exception_block
+					if l_ex.is_defined then
+						l_ex.write_to_stream (is_fat_seh, l_m, l_pos)
+						l_pos := l_pos + l_ex.count (is_fat_seh)
+					end
+					l_ex := l_meth.once_catch_block
+					if l_ex.is_defined then
+						l_ex.write_to_stream (is_fat_seh, l_m, l_pos)
+						l_pos := l_pos + l_ex.count (is_fat_seh)
+					end
+					l_ex := l_meth.once_finally_block
+					if l_ex.is_defined then
+						l_ex.write_to_stream (is_fat_seh, l_m, l_pos)
+						l_pos := l_pos + l_ex.count (is_fat_seh)
 					end
 				end
-				l_ex := l_meth.exception_block
-				if l_ex.is_defined then
-					Exception_header.register_exception_clause (l_ex)
-				end
-				l_ex := l_meth.once_catch_block
-				if l_ex.is_defined then
-					Exception_header.register_exception_clause (l_ex)
-				end
-				l_ex := l_meth.once_finally_block
-				if l_ex.is_defined then
-					Exception_header.register_exception_clause (l_ex)
-				end
 
-				update_size (l_pos + Exception_header.count)
-				Exception_header.write_to_stream (l_m, l_pos)
-				l_pos := l_pos + Exception_header.count
-				is_fat_seh := Exception_header.is_fat
-				if l_old_exceptions /= Void then
-					from
-						i := l_old_exceptions.lower
-					until
-						i > l_old_exceptions.upper
-					loop
-						l_ex := l_old_exceptions.item (i)
-						if l_ex.is_defined then
-							l_ex.write_to_stream (is_fat_seh, l_m, l_pos)
-							l_pos := l_pos + l_ex.count (is_fat_seh)
-						end
-						i := i + 1
-					end
-				end
-				l_ex := l_meth.exception_block
-				if l_ex.is_defined then
-					l_ex.write_to_stream (is_fat_seh, l_m, l_pos)
-					l_pos := l_pos + l_ex.count (is_fat_seh)
-				end
-				l_ex := l_meth.once_catch_block
-				if l_ex.is_defined then
-					l_ex.write_to_stream (is_fat_seh, l_m, l_pos)
-					l_pos := l_pos + l_ex.count (is_fat_seh)
-				end
-				l_ex := l_meth.once_finally_block
-				if l_ex.is_defined then
-					l_ex.write_to_stream (is_fat_seh, l_m, l_pos)
-					l_pos := l_pos + l_ex.count (is_fat_seh)
-				end
+					-- Find next location that must be 4 bytes aligned.
+				current_position := pad_up (l_pos, 4)
+				is_previous_body_written := True
 			end
-
-				-- Find next location that must be 4 bytes aligned.
-			current_position := pad_up (l_pos, 4)
-			is_previous_body_written := True
 		end
 
 feature {NONE} -- Implementation
@@ -295,7 +296,7 @@ invariant
 	method_locations_not_void: method_locations /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

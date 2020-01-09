@@ -35,11 +35,15 @@ feature -- Settings
 			-- Mark `pos' in current MD_METHOD_BODY as it
 			-- will need to be updated once position of current
 			-- label is known
+		local
+			l_mark_offsets: like mark_offsets
 		do
-			if  mark_offsets = Void then
-				create mark_offsets.make (10)
+			l_mark_offsets := mark_offsets
+			if  l_mark_offsets = Void then
+				create l_mark_offsets.make (10)
+				mark_offsets := l_mark_offsets
 			end
-			mark_offsets.extend (pos)
+			l_mark_offsets.extend (pos)
 		end
 
 	mark_position (pos: INTEGER; body: MD_METHOD_BODY)
@@ -78,7 +82,7 @@ feature -- Integer
 			-- offset as soon as we now current label's position.
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

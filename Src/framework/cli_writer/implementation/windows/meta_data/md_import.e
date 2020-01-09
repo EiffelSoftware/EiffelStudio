@@ -487,7 +487,7 @@ feature -- Queries
 			l_tp := $l_enum_hdl --| BUG: ... TUPLE with typed_pointer !!!
 			l_tokens_array := enum_agent.item ([l_tp, a_class_token, 10])
 			l_tokens_count := count_enum (l_enum_hdl)
-			if l_tokens_count > 0 then
+			if l_tokens_array /= Void and l_tokens_count > 0 then
 				if l_tokens_count > l_tokens.capacity - l_tokens.count then
 					l_tokens.resize (l_tokens.count + l_tokens_count)
 				end
@@ -504,16 +504,17 @@ feature -- Queries
 						-- We need to retrieve the rest of the data
 
 					l_tokens_array := enum_agent.item ([l_tp, a_class_token, l_tokens_count - 10])
-
-					from
-						l_t_upper := l_tokens_array.upper
-						l_t_index := l_tokens_array.lower
-					until
-						l_t_index > l_t_upper
-					loop
-						l_token := l_tokens_array.item (l_t_index)
-						l_tokens.force (l_token)
-						l_t_index := l_t_index + 1
+					check l_tokens_array /= Void then
+						from
+							l_t_upper := l_tokens_array.upper
+							l_t_index := l_tokens_array.lower
+						until
+							l_t_index > l_t_upper
+						loop
+							l_token := l_tokens_array.item (l_t_index)
+							l_tokens.force (l_token)
+							l_t_index := l_t_index + 1
+						end
 					end
 				end
 			end
@@ -919,7 +920,7 @@ feature {NONE} -- Implementation : helper
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

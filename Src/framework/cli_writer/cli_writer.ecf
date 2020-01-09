@@ -8,7 +8,6 @@
 		<option warning="true">
 		</option>
 		<capability>
-			<void_safety support="initialization"/>
 		</capability>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="cli_writer_clib" location="$EIFFEL_SRC\framework\cli_writer\cli_writer_clib.ecf"/>

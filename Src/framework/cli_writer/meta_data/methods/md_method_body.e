@@ -109,10 +109,12 @@ feature -- Access
 	old_exception_catch_blocks: detachable ARRAY [MD_EXCEPTION_CATCH]
 			-- Exception clause for catching exception for old expression evaluation.
 
-	current_old_exception_catch_block: MD_EXCEPTION_CATCH
+	current_old_exception_catch_block: detachable MD_EXCEPTION_CATCH
 			-- Current old exception catch block
 		do
-			Result := old_exception_catch_blocks.item (current_old_expression_block_position)
+			if attached old_exception_catch_blocks as l_old_exception_catch_blocks then
+				Result := l_old_exception_catch_blocks.item (current_old_expression_block_position)
+			end
 		end
 
 feature -- Status report
@@ -137,15 +139,15 @@ feature -- Status report
 		local
 			i: INTEGER
 		do
-			if old_exception_catch_blocks /= Void and then
-				old_exception_catch_blocks.count /= 0
+			if attached old_exception_catch_blocks as l_old_exception_catch_blocks and then
+				l_old_exception_catch_blocks.count /= 0
 			then
 				from
-					i := old_exception_catch_blocks.lower
+					i := l_old_exception_catch_blocks.lower
 				until
-					i > old_exception_catch_blocks.upper or Result
+					i > l_old_exception_catch_blocks.upper or Result
 				loop
-					Result := Result or old_exception_catch_blocks.item (i).is_defined
+					Result := Result or l_old_exception_catch_blocks.item (i).is_defined
 					i := i + 1
 				end
 			end
@@ -161,7 +163,8 @@ feature -- Status report
 	is_last_old_expression_exception_block: BOOLEAN
 			-- Is `current_old_exception_catch_block' the last one?
 		do
-			Result := (current_old_expression_block_position = old_exception_catch_blocks.upper)
+			Result := attached old_exception_catch_blocks as l_old_exception_catch_blocks
+					and then (current_old_expression_block_position = l_old_exception_catch_blocks.upper)
 		end
 
 feature -- Savings
@@ -214,21 +217,23 @@ feature -- Settings
 		local
 			l_block: MD_EXCEPTION_CATCH
 			i: INTEGER
+			l_old_exception_catch_blocks: like old_exception_catch_blocks
 		do
 			create l_block.make
-			create old_exception_catch_blocks.make_filled (l_block, 0, a_count - 1)
+			create l_old_exception_catch_blocks.make_filled (l_block, 0, a_count - 1)
+			old_exception_catch_blocks := l_old_exception_catch_blocks
 			from
 				i := 1
 			until
 				i >= a_count
 			loop
 				create l_block.make
-				old_exception_catch_blocks.put (l_block, i)
+				l_old_exception_catch_blocks.put (l_block, i)
 				i := i + 1
 			end
 		ensure
-			old_exception_catch_blocks_not_void: old_exception_catch_blocks /= Void
-			old_exception_catch_blocks_created: old_exception_catch_blocks.count = a_count
+			old_exception_catch_blocks_not_void: attached old_exception_catch_blocks as el_blocks
+			old_exception_catch_blocks_created: el_blocks.count = a_count
 		end
 
 	forth_old_expression_exception_block
@@ -277,7 +282,9 @@ feature -- Opcode insertion
 			l_pos, l_incr: INTEGER
 			l_stack_transition: INTEGER
 		do
-			l_stack_transition := opcodes.item (opcode).stack_depth_transition
+			check attached opcodes.item (opcode) as l_opcodes_item then
+				l_stack_transition := l_opcodes_item.stack_depth_transition
+			end
 
 			if l_stack_transition /= 0xFF000000 then
 				update_stack_depth (l_stack_transition)
@@ -773,7 +780,7 @@ invariant
 	once_finally_block_not_void: once_finally_block /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

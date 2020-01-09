@@ -3,13 +3,13 @@ setlocal
 
 :: Default values
 set ISE_MAJOR_MINOR_LATEST=19.12
-set ISE_BUILD_LATEST=103823
+set ISE_BUILD_LATEST=103842
 
 set ISE_MAJOR_MINOR_NIGHTLY=19.12
-set ISE_BUILD_NIGHTLY=103823
+set ISE_BUILD_NIGHTLY=103842
 
 set ISE_MAJOR_MINOR_BETA=19.12
-set ISE_BUILD_BETA=103823
+set ISE_BUILD_BETA=103842
 ::set ISE_BETA_DOWNLOAD_URL=http://downloads.sourceforge.net/eiffelstudio
 
 set ISE_SF_DOWNLOAD_URL=http://downloads.sourceforge.net/eiffelstudio

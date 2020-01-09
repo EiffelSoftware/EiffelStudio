@@ -84,10 +84,12 @@ feature {NONE} -- Initialization
 			l_id: STRING_32
 			l_app_name: STRING
 			i,n: INTEGER
+			l_var_name: READABLE_STRING_8
 		do
 			create inst.make (eiffel_layout)
 			l_app_name := env.product_name
-			s := inst.application_item ("ddd-installation_id", l_app_name, env.version_name)
+			l_var_name := "installation_id"
+			s := inst.application_item (l_var_name, l_app_name, env.version_name)
 			if s /= Void and then s.has_substring (env.version_name) and then s.is_valid_as_string_8 then
 				create installation.make_with_id (s.to_string_8)
 			else
@@ -119,7 +121,7 @@ feature {NONE} -- Initialization
 				l_id.append_character ('-')
 				l_id.append ((create {UUID_GENERATOR}).generate_uuid.out)
 				create installation.make_with_id (l_id)
-				inst.set_application_item ("installation_id", l_app_name, env.version_name, installation.id)
+				inst.set_application_item (l_var_name, l_app_name, env.version_name, installation.id)
 			end
 			installation.set_platform (env.eiffel_platform)
 		end
@@ -694,7 +696,7 @@ feature -- Storage
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

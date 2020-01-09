@@ -117,7 +117,9 @@ do_install() {
 			armv6l|armv6)
 				ISE_PLATFORM=linux-armv6
 				;;
-			# not supported armv7 ...
+			armv7l|armv7)
+				ISE_PLATFORM=linux-armv7
+				;;
 			*)
 				echo >&2 Error: $architecture is not a recognized platform.
 				exit 1

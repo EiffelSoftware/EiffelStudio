@@ -164,18 +164,22 @@ feature -- Event
 					attached eiffel_project.lace as l_ace
 				then
 					create l_title.make_empty
-					if attached l_ace.target_name as tgt then
-						l_title.append (tgt)
-						l_title.append_character (' ')
+					if is_debug_enabled then
+						if attached l_ace.target_name as tgt then
+							l_title.append (tgt)
+							l_title.append_character (' ')
+						end
+						l_title.append_character ('(')
+						l_title.append (l_ace.project_location.location.name)
+						l_title.append_character (')')
 					end
-					l_title.append_character ('(')
-					l_title.append (l_ace.project_location.location.name)
-					l_title.append_character (')')
 					if
 						attached eiffel_universe.conf_system as cfg and then
 						not cfg.is_generated_uuid
 					then
-						l_title.append_character (' ')
+						if not l_title.is_empty then
+							l_title.append_character (' ')
+						end
 						l_title.append ("UUID=")
 						l_title.append (cfg.uuid.out)
 					end

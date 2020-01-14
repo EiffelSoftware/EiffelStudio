@@ -6,39 +6,13 @@ note
 class
 	ES_INSTALLATION_ENVIRONMENT
 
+inherit
+	ES_INSTALLATION_ENVIRONMENT_I
+
 create
 	make
 
-feature {NONE} -- Creation
-
-	make (env: EIFFEL_ENV)
-		do
-			eiffel_env := env
-		end
-
-	eiffel_env: EIFFEL_ENV
-
 feature -- Access
-
-	username: detachable STRING_32
-		do
-			Result := eiffel_env.get_environment_32 ("USERNAME")
-			if Result = Void then
-				Result := eiffel_env.get_environment_32 ("USER")
-				if Result = Void then
-					Result := eiffel_env.get_environment_32 ("LOGNAME")
-				end
-			end
-		end
-
-	device_name: STRING_32
-		do
-			if attached eiffel_env.get_environment_32 ("COMPUTERNAME") as n then
-				Result := n
-			else
-				Result := {STRING_32} "unknown"
-			end
-		end
 
 	application_item (a_var: READABLE_STRING_GENERAL; a_app: detachable READABLE_STRING_GENERAL; a_version: detachable STRING): detachable STRING_32
 			-- Variable `a_var' as if we were `a_app' for version `a_version` (formatted as MM.mm).
@@ -113,7 +87,7 @@ feature -- Element change
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

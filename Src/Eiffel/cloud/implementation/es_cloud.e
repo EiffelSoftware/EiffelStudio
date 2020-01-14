@@ -85,6 +85,7 @@ feature {NONE} -- Initialization
 			l_app_name: STRING
 			i,n: INTEGER
 			l_var_name: READABLE_STRING_8
+			syscsts: SYSTEM_CONSTANTS
 		do
 			create inst.make (eiffel_layout)
 			l_app_name := env.product_name
@@ -96,12 +97,14 @@ feature {NONE} -- Initialization
 				create l_id.make_empty
 				l_id.append (env.product_name)
 				l_id.append_character ('_')
-				l_id.append (env.version_name)
-				l_id.append_character ('-')
+				create syscsts
+				l_id.append (syscsts.Compiler_version_number.version)
+
 				l_id.append_character ('-')
 				l_id.append (env.eiffel_platform)
 				l_id.append_character ('-')
-				v := {SYSTEM_CONSTANTS}.version_type_name
+				l_id.append_character ('-')
+				v := syscsts.version_type_name
 				from
 					i := 1
 					n := v.count
@@ -115,8 +118,6 @@ feature {NONE} -- Initialization
 					end
 					i := i + 1
 				end
-				l_id.append_character ('-')
-				l_id.append (inst.device_name)
 				l_id.append_character ('-')
 				l_id.append_character ('-')
 				l_id.append ((create {UUID_GENERATOR}).generate_uuid.out)

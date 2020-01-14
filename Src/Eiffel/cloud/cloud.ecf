@@ -42,6 +42,7 @@
 			<cluster name="service" location="$|service\"/>
 			<cluster name="model" location="$|model\"/>
 			<cluster name="implementation" location="$|implementation\" hidden="true">
+				<cluster name="common" location="$|spec\common"/>
 				<cluster name="unix" location="$|spec\unix\">
 					<condition>
 						<platform excluded_value="windows"/>

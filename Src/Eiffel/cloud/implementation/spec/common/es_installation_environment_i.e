@@ -1,73 +1,65 @@
 note
-	description: "Summary description for {ES_ACCOUNT_SESSION}."
-	author: ""
+	description: "Summary description for {ES_INSTALLATION_ENVIRONMENT}."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ES_ACCOUNT_SESSION
+	ES_INSTALLATION_ENVIRONMENT_I
 
-inherit
-	EIFFEL_LAYOUT
+feature {NONE} -- Creation
 
-create
-	make,
-	make_new
-
-feature {NONE} -- Initialization
-
-	make (acc: ES_ACCOUNT; a_session_id: READABLE_STRING_32)
+	make (env: EIFFEL_ENV)
 		do
-			account := acc
-			set_id (a_session_id)
+			eiffel_env := env
 		end
 
-	make_new (acc: ES_ACCOUNT)
-		local
-			inst: ES_INSTALLATION_ENVIRONMENT
-			s: STRING_32
-		do
-			create s.make_from_string_general ((create {UUID_GENERATOR}).generate_uuid.out)
-			create inst.make (eiffel_layout)
-			if attached inst.c_compiler_info as cci then
-				s.append_character ('-')
-				s.append (cci)
-			end
-			make (acc, s)
-		end
+	eiffel_env: EIFFEL_ENV
 
 feature -- Access
 
-	account: ES_ACCOUNT
-
-	is_paused: BOOLEAN
-
-	id: IMMUTABLE_STRING_32
-
-	title: detachable READABLE_STRING_32
-
-feature -- Element change
-
-	set_is_paused (b: like is_paused)
+	c_compiler_info: detachable STRING_8
+			-- Information about the C compiler if any.
 		do
-			is_paused := b
-		end
-
-	set_id (a_sid: READABLE_STRING_GENERAL)
-		do
-			if attached {IMMUTABLE_STRING_32} a_sid as s then
-				id := s
-			else
-				create id.make_from_string_general (a_sid)
+			Result := eiffel_env.eiffel_c_compiler
+			if
+				attached eiffel_env.eiffel_c_compiler_version as s and then
+				not s.is_whitespace
+			then
+				if Result = Void then
+					Result := s
+				else
+					if not Result.is_empty then
+						Result.append_character ('.')
+					end
+					Result.append (s)
+				end
+			end
+			if Result /= Void and then Result.is_whitespace then
+				Result := Void
 			end
 		end
 
-	set_title (a_title: detachable READABLE_STRING_32)
+	username: detachable STRING_32
 		do
-			title := a_title
+			Result := eiffel_env.get_environment_32 ("USERNAME")
+			if Result = Void then
+				Result := eiffel_env.get_environment_32 ("USER")
+				if Result = Void then
+					Result := eiffel_env.get_environment_32 ("LOGNAME")
+				end
+			end
 		end
 
-;note
+	device_name: STRING_32
+		do
+			if attached eiffel_env.get_environment_32 ("COMPUTERNAME") as n then
+				Result := n
+			else
+				Result := {STRING_32} "unknown"
+			end
+		end
+
+note
 	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

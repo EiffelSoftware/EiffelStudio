@@ -212,7 +212,7 @@ feature {AUXILIARY_FILES} -- Versioning
 			Result := 0000
 		end
 
-	Version_tag: INTEGER = 0x026
+	Version_tag: INTEGER = 0x027
 
 	Version_info: STRING = "";
 			-- Information on the version
@@ -221,7 +221,7 @@ feature {AUXILIARY_FILES} -- Versioning
 			-- displayed on About dialog
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

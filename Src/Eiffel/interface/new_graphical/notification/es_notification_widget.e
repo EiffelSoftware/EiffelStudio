@@ -1,5 +1,4 @@
-note
-	description: "Summary description for {ES_NOTIFICATION_WIDGET}."
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -59,7 +58,6 @@ feature -- Element change
 			l_main: EV_BOX
 			fr, l_action_frame: EV_VERTICAL_BOX
 			l_scaler: EVS_DPI_SCALER
-			l_in: EV_VERTICAL_BOX
 			l_cross: EV_PIXMAP
 			l_title_bar: EV_HORIZONTAL_BOX
 			l_label_title: EV_LABEL

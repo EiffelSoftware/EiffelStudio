@@ -1,6 +1,4 @@
-note
-	description: "Summary description for {ES_NOTIFICATION_ARCHIVE}."
-	author: ""
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -44,7 +42,7 @@ feature -- Element change
 
 	delete (m: NOTIFICATION_MESSAGE)
 		local
-			i,n: INTEGER
+			i: INTEGER
 			done: BOOLEAN
 		do
 			from

@@ -190,7 +190,7 @@ feature -- Element change
 			create l_header.make_empty
 			unified_header := l_header
 			l_header.append ("--- ")
-			l_header.append (utf.string_32_to_utf_8_string_8 (file_src.path.name))
+			l_header.append (utf.escaped_utf_32_string_to_utf_8_string_8 (file_src.path.name))
 
 			l_header.append_character (line_delimiter)
 			from
@@ -213,7 +213,7 @@ feature -- Element change
 			l_dst.rebase (0)
 			dst := l_dst
 			l_header.append ("+++ ")
-			l_header.append (utf.string_32_to_utf_8_string_8 (file_dst.path.name))
+			l_header.append (utf.escaped_utf_32_string_to_utf_8_string_8 (file_dst.path.name))
 			l_header.append_character (line_delimiter)
 			from
 				i := 0
@@ -332,8 +332,9 @@ feature {NONE} -- Implementation
 
 	unified_header: detachable STRING
 			-- The header for the unified diff.
+
 ;note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

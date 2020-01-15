@@ -76,8 +76,8 @@ feature -- Access
 			end
 		end
 
-	description: detachable STRING_32
-			-- Detailed description of current exception
+	description: detachable READABLE_STRING_32
+			-- Detailed description of current exception.
 		do
 			if attached internal_description as l_m then
 				Result := l_m.as_string_32
@@ -87,7 +87,7 @@ feature -- Access
 	exception_trace: detachable STRING
 			-- String representation of current exception trace
 		obsolete
-			"Use `exception_trace_32' instead. [2017-05-31]"
+			"Use `trace' instead. [2017-05-31]"
 		do
 			create Result.make_from_cil (stack_trace)
 		end
@@ -148,7 +148,7 @@ feature -- Access obselete
 	trace_as_string: detachable STRING
 			-- Exception trace represented as a string
 		obsolete
-			"Use `exception_trace' instead. [2017-05-31]"
+			"Use `trace' instead. [2017-05-31]"
 		do
 			Result := exception_trace
 		end
@@ -170,7 +170,7 @@ feature -- Status settings
 		do
 			internal_description := a_description
 		ensure
-			description_set: (attached a_description as a_des and then attached description as l_des and then l_des.same_string (l_des)) or else
+			description_set: (attached a_description as a_des and then attached description as l_des and then a_des.same_string (l_des)) or else
 							(a_description = Void and then description = Void)
 		end
 
@@ -189,7 +189,7 @@ feature -- Status report
 		end
 
 	frozen is_ignored: BOOLEAN
-			-- If set, no exception is raised.
+			-- If set, current exception is not raised.
 		do
 			Result := exception_manager.is_ignored (generating_type)
 		ensure
@@ -198,7 +198,7 @@ feature -- Status report
 		end
 
 	frozen is_caught: BOOLEAN
-			-- If set, exception is raised.
+			-- If set, current exception is raised.
 		do
 			Result := not is_ignored
 		ensure
@@ -212,10 +212,10 @@ feature -- Output
 			-- New string containing terse printable representation
 			-- of current object
 		do
-			Result := {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (generating_type.name_32)
-			Result.append_character ('%N')
-			if attached trace as l_t then
-				{UTF_CONVERTER}.utf_32_string_into_utf_8_string_8 (l_t, Result)
+			Result := {UTF_CONVERTER}.string_32_to_utf_8_string_8 (generating_type.name_32)
+			if attached trace as t then
+				Result.append_character ('%N')
+				{UTF_CONVERTER}.escaped_utf_32_string_into_utf_8_string_8 (t, Result)
 			end
 		end
 
@@ -275,7 +275,7 @@ feature {NONE} -- Implementation
 			-- Backend storage for description
 
 ;note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

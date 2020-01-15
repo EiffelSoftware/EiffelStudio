@@ -184,12 +184,12 @@ feature {NONE} -- Implementation
 			u: UTF_CONVERTER
 		do
 			if attached input_file_name as l_file_name then
-				child_process.set_input_file_name (u.string_32_to_utf_8_string_8 (l_file_name))
+				child_process.set_input_file_name (u.escaped_utf_32_string_to_utf_8_string_8 (l_file_name))
 			else
 				child_process.set_input_file_name (Void)
 			end
 			if attached output_file_name as l_file_name then
-				child_process.set_output_file_name (u.string_32_to_utf_8_string_8 (l_file_name))
+				child_process.set_output_file_name (u.escaped_utf_32_string_to_utf_8_string_8 (l_file_name))
 			else
 				child_process.set_output_file_name (Void)
 			end
@@ -197,7 +197,7 @@ feature {NONE} -- Implementation
 				child_process.set_error_same_as_output
 			else
 				if attached error_file_name as l_file_name then
-					child_process.set_error_file_name (u.string_32_to_utf_8_string_8 (l_file_name))
+					child_process.set_error_file_name (u.escaped_utf_32_string_to_utf_8_string_8 (l_file_name))
 				else
 					child_process.set_error_file_name (Void)
 				end
@@ -262,7 +262,7 @@ feature {NONE} -- Access
 			-- Child process.
 
 ;note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

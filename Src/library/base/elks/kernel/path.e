@@ -896,7 +896,7 @@ feature -- Output
 		local
 			u: UTF_CONVERTER
 		do
-			Result := u.utf_32_string_to_utf_8_string_8 (name)
+			Result := u.escaped_utf_32_string_to_utf_8_string_8 (name)
 		end
 
 	name: IMMUTABLE_STRING_32
@@ -1449,7 +1449,7 @@ invariant
 	no_forward_slash_on_windows: {PLATFORM}.is_windows implies not storage.has_substring ("/%U")
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

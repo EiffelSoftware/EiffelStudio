@@ -71,7 +71,7 @@ feature -- Initialization
 			copyright_label: EV_LABEL
 			registration_label: EV_TEXT
 			info_label: EV_LABEL
-			l_update_check_link: EVS_LINK_LABEL
+			l_update_check_link, l_license_link: EVS_HIGHLIGHT_LINK_LABEL
 			hsep: EV_HORIZONTAL_SEPARATOR
 			ok_button: EV_BUTTON
 			white_cell: EV_CELL
@@ -103,6 +103,8 @@ feature -- Initialization
 			create l_update_check_link.make_with_text ("Check for update (channel: " + preferences.misc_data.update_channel + ")")
 			l_update_check_link.select_actions.extend (agent check_for_update (l_update_check_link))
 
+			create l_license_link.make_with_text (interface_names.l_read_license_text)
+			l_license_link.select_actions.extend (agent do (create {EB_LICENSE_COMMAND}).execute end)
 
 			create copyright_label.make_with_text (t_Copyright_info)
 			copyright_label.align_text_left
@@ -124,8 +126,15 @@ feature -- Initialization
 			eiffel_text_box.disable_item_expand (l_update_check_link)
 			eiffel_text_box.extend (copyright_label)
 			eiffel_text_box.disable_item_expand (copyright_label)
+
 			eiffel_text_box.extend (info_label)
 			eiffel_text_box.disable_item_expand (info_label)
+
+			eiffel_text_box.extend (l_license_link)
+			eiffel_text_box.disable_item_expand (l_license_link)
+			l_license_link.align_text_left
+			l_license_link.set_background_color (eiffel_text_box.background_color)
+
 			eiffel_text_box.extend (registration_label)
 
 				-- Texts box			
@@ -281,7 +290,7 @@ feature {NONE} -- Constant strings
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

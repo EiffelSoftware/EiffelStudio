@@ -62,6 +62,8 @@ feature -- Initialization
 					--set the cert for client authentication
 				curl_easy.setopt_string (curl_handle, {CURL_OPT_CONSTANTS}.CURLOPT_SSLCERT, "./client.p12")
 
+				curl_easy.setopt_string (curl_handle, {CURL_OPT_CONSTANTS}.curlopt_cainfo, "./cacert.pem")
+
 					-- Verify the peer's SSL certificate,set to 1 is enabled, and the verification fails to prove that the certificate is authentic, the connection fails.
 				curl_easy.setopt_integer (curl_handle, {CURL_OPT_CONSTANTS}.CURLOPT_SSL_VERIFYPEER, 1)
 					-- Verify the certificate's name against host. checking the server's certificate's claimed identity.

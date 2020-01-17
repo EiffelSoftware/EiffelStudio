@@ -1,14 +1,45 @@
 @import "common.scss";
 @import "cloud.scss";
 
-$header-text-fgcolor: yellow;
-$header-bgcolor: black;
-$header-hover-bgcolor: #333;
+$header-text-fgcolor: black;
+$header-bgcolor: transparent;
+$header-hover-bgcolor: #888;
+$header-hover-fgcolor: #fff;
+$footer-bgcolor: #ccc;
+$footer-fgcolor: #333;
+$footer-hover-fgcolor: #33f;
 
+html,
 body {
 	margin: 0;
+	padding: 0;
+	height:100%;
 	background-color: white;
 	font-family: roboto;
+}
+body > div#container {
+	min-height:100%;
+	position: relative;
+
+	> div#footer, > footer {
+		position: absolute;
+		bottom: 0;
+		width: 100%;
+		height: 40px;
+		padding-top: 5px;
+		padding-top: 10px;
+		color: $footer-fgcolor;
+		background-color: $footer-bgcolor;
+		div.footer_copyright {
+			text-align: center;
+			a {
+				color: $footer-hover-fgcolor;
+			}
+		}
+	}
+	> div#body {
+		padding-bottom: 40px;
+	}
 }
 
 a {
@@ -31,10 +62,15 @@ div.login-box {
 
 #header {
 	background-color: $header-bgcolor;
+	background: url(../images/outer_header_bg.jpg) repeat-x 0 0;
 	color: $header-text-fgcolor;
 	font-family: roboto;
 	font-size: x-large;
-	padding: 10px;
+	padding: 0;
+	#logo {
+		float: left;
+		margin-left: 20px;
+	}
 	#menu-bar {
 	}
 	ul.horizontal {
@@ -48,11 +84,11 @@ div.login-box {
 					color: $header-text-fgcolor;
 			}
 			&.active {
-				border: solid 2px #ffc;
+				border: solid 2px $header-text-fgcolor;
 			}
 			&:hover {
 				a {
-					color: #ff0;
+					color: $header-hover-fgcolor;
 				}
 				background-color: $header-hover-bgcolor;
 				border-bottom: solid 5px $header-text-fgcolor;
@@ -66,9 +102,6 @@ div#content {
 	padding: 10px;
 	margin-left: auto;
 	margin-right: auto;
-}
-div#footer {
-	background-color: #006;
 }
 
 div.menu ul.horizontal {

@@ -12,14 +12,16 @@
         <title>{$head_title/}</title>
 </head>
 <body>
+<div id="container">
   <!-- Page Top -->
   {if isset="$region_top"}
     {$region_top/}
   {/if}
   <!-- Body -->
-  <div>
+  <div id="body">
     <!-- Page Header -->
     <div id="header">
+	  <img src="{$theme_path/}images/logo.png" alt="" id="logo"/>
       {if isset="$page.primary_nav"}
           {$page.primary_nav/}
       {/if}
@@ -53,14 +55,16 @@
           <!-- Main Content Section -->
 		  {unless isempty="$page_title"}<h1 class="page-title">{$page_title/}</h1>{/unless}
           {$page.region_content/}   
-          </div>
-      </div>
+        </div>
     </div>
+  </div>
 
+  <div id="footer">
   <!--Page footer -->
   {$page.region_footer/}
-
   <!-- Page Bottom -->
   {$page.region_bottom/}
+  </div>
+</div><!-- id="container" -->
 </body>
 </html>

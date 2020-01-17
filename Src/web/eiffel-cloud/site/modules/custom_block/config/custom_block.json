@@ -5,6 +5,12 @@
 			"region": "content",
 			"weight": 0,
 			"conditions": ["is_front"]
+		},
+		"cloud_footer":	{
+			"is_raw": "yes",
+			"region": "footer",
+			"weight": 99,
+			"conditions": ["*"]
 		}
 	}
 }

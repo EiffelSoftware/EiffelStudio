@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Check if renamings, options and visiblities are done on valid classes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -59,7 +59,7 @@ feature -- Visit nodes
 				end
 					-- check class options
 				if l_options.is_warning_enabled (w_option_unknown_class) then
-					if attached a_group.class_options as l_c_opt then
+					if attached a_group.internal_class_options as l_c_opt then
 						from
 							l_c_opt.start
 						until
@@ -86,7 +86,7 @@ feature -- Visit nodes
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -157,10 +157,37 @@ div.cms-node div.info {
   display: none;
 }
 
+html,
 body {
   margin: 0;
+  padding: 0;
+  height: 100%;
   background-color: white;
   font-family: roboto;
+}
+
+body > div#container {
+  min-height: 100%;
+  position: relative;
+}
+body > div#container > div#footer, body > div#container > footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 40px;
+  padding-top: 5px;
+  padding-top: 10px;
+  color: #333;
+  background-color: #ccc;
+}
+body > div#container > div#footer div.footer_copyright, body > div#container > footer div.footer_copyright {
+  text-align: center;
+}
+body > div#container > div#footer div.footer_copyright a, body > div#container > footer div.footer_copyright a {
+  color: #33f;
+}
+body > div#container > div#body {
+  padding-bottom: 40px;
 }
 
 a {
@@ -181,11 +208,16 @@ div.login-box {
 }
 
 #header {
-  background-color: black;
-  color: yellow;
+  background-color: transparent;
+  background: url(../images/outer_header_bg.jpg) repeat-x 0 0;
+  color: black;
   font-family: roboto;
   font-size: x-large;
-  padding: 10px;
+  padding: 0;
+}
+#header #logo {
+  float: left;
+  margin-left: 20px;
 }
 #header ul.horizontal li {
   margin-right: 10px;
@@ -195,18 +227,18 @@ div.login-box {
   border: solid 1px #ffc;
 }
 #header ul.horizontal li a {
-  color: yellow;
+  color: black;
 }
 #header ul.horizontal li.active {
-  border: solid 2px #ffc;
+  border: solid 2px black;
 }
 #header ul.horizontal li:hover {
-  background-color: #333;
-  border-bottom: solid 5px yellow;
+  background-color: #888;
+  border-bottom: solid 5px black;
   margin-bottom: 0;
 }
 #header ul.horizontal li:hover a {
-  color: #ff0;
+  color: #fff;
 }
 
 div#content {
@@ -214,10 +246,6 @@ div#content {
   padding: 10px;
   margin-left: auto;
   margin-right: auto;
-}
-
-div#footer {
-  background-color: #006;
 }
 
 div.menu ul.horizontal {

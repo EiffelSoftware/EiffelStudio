@@ -83,13 +83,9 @@ feature -- Visitor
 			append_content_tag_to ("summary", Void, a_entry.description, buffer)
 			if attached a_entry.content as l_content then
 				if attached a_entry.content_type_or_default ("xhtml").is_case_insensitive_equal_general ("xhtml") then
---					if l_content.has_substring ("<div xmlns=%"http://www.w3.org/1999/xhtml%">") then
-						append_content_tag_to ("content", <<["type", "xhtml"]>>, l_content, buffer)
---					else
---						append_content_tag_to ("content", <<["type", "xhtml"]>>, {STRING_32} "<div xmlns=%"http://www.w3.org/1999/xhtml%">" + l_content + {STRING_32} "</div>", buffer)
---					end
+					append_content_tag_to ("content", <<["type", "xhtml"]>>, {STRING_32} "<div xmlns=%"http://www.w3.org/1999/xhtml%">" + l_content + {STRING_32} "</div>", buffer)
 				else
-					append_content_tag_to ("content", <<["type", a_entry.content_type]>>, a_entry.content, buffer)
+					append_content_tag_to ("content", <<["type", a_entry.content_type]>>, l_content, buffer)
 				end
 			end
 

@@ -138,6 +138,18 @@ feature -- Element change
 			Result.sort
 		end
 
+	set_link (a_url: READABLE_STRING_8; rel: detachable READABLE_STRING_GENERAL)
+			-- Set link `a_url` for relation `rel`.
+		local
+			lnk: FEED_LINK
+		do
+			create lnk.make (a_url)
+			if rel /= Void then
+				lnk.set_relation (rel)
+			end
+			links.force (lnk, lnk.relation)
+		end
+
 	sort
 			-- Sort `items', (recent first).
 		local

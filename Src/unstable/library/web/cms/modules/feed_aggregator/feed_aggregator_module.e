@@ -296,6 +296,7 @@ feature -- Hook
 				nb := a_count
 			end
 			if attached a_feed_api.aggregation_feed (a_feed_agg) as l_feed then
+				l_feed.set_link (a_feed_api.cms_api.site_url, Void)
 				if attached l_feed.items as lst then
 					if a_feed_agg.has_category_filter then
 						from

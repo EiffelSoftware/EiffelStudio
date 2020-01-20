@@ -46,6 +46,8 @@ feature {NONE} -- Helpers
 	indentation: STRING
 
 	append_content_tag_to (a_tagname: READABLE_STRING_8; a_attr: detachable ITERABLE [TUPLE [name: READABLE_STRING_8; value: detachable READABLE_STRING_GENERAL]]; a_content: detachable READABLE_STRING_GENERAL; a_output: STRING)
+		local
+			l_is_xhtml_type: BOOLEAN
 		do
 			if a_content /= Void or a_attr /= Void then
 				a_output.append (indentation)
@@ -62,6 +64,9 @@ feature {NONE} -- Helpers
 							a_output.append_character ('%"')
 							a_output.append (escaped_xml (l_att_value))
 							a_output.append_character ('%"')
+							if ic.item.name.same_string ("type") and then l_att_value.same_string ("xhtml") then
+								l_is_xhtml_type := True
+							end
 						end
 					end
 				end
@@ -69,7 +74,13 @@ feature {NONE} -- Helpers
 					a_output.append ("/>%N")
 				else
 					a_output.append (">")
-					a_output.append (escaped_xml (a_content))
+					if l_is_xhtml_type then
+						a_output.append ("<div xmlns=%"http://www.w3.org/1999/xhtml%">")
+						a_output.append (escaped_xml (a_content))
+						a_output.append ("</div>")
+					else
+						a_output.append (escaped_xml (a_content))
+					end
 					a_output.append ("</" + a_tagname + ">%N")
 				end
 			end

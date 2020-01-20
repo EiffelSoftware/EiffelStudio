@@ -31,7 +31,6 @@ feature -- Encoder
 		local
 			i, n: INTEGER
 			l_code: NATURAL_32
-			uc: CHARACTER_32
 			c: CHARACTER_8
 		do
 			has_error := False
@@ -39,9 +38,8 @@ feature -- Encoder
 			n := s.count
 			from i := 1 until i > n loop
 				l_code := s.code (i)
-				uc := l_code.to_character_32
-				if uc.is_character_8 then
-					c := uc.to_character_8
+				if l_code <= {CHARACTER_8}.max_ascii_value.to_natural_32 then
+					c := l_code.to_character_8
 					inspect c
 					when '%"' then Result.append_string ("&quot;")
 					when '&' then Result.append_string ("&amp;")

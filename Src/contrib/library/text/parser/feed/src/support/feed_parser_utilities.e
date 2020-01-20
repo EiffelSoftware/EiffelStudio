@@ -50,7 +50,7 @@ feature -- Access
 					if attached xml_attribute_text (x_link, "href") as l_href and then
 						l_href.is_valid_as_string_8
 					then
-						create lnk.make (l_href.as_string_8)
+						create lnk.make (l_href.to_string_8)
 						lnk.set_relation (xml_attribute_text (x_link, "rel"))
 						lnk.set_type (xml_attribute_text (x_link, "type"))
 						Result.force (lnk)

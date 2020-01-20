@@ -60,7 +60,7 @@ feature {NONE} -- Helpers
 							a_output.append (ic.item.name)
 							a_output.append_character ('=')
 							a_output.append_character ('%"')
-							a_output.append (escaped_unicode_xml (l_att_value.as_string_32))
+							a_output.append (escaped_xml (l_att_value.as_string_32))
 							a_output.append_character ('%"')
 						end
 					end
@@ -69,7 +69,7 @@ feature {NONE} -- Helpers
 					a_output.append ("/>%N")
 				else
 					a_output.append (">")
-					a_output.append (escaped_unicode_xml (a_content.as_string_32))
+					a_output.append (escaped_xml (a_content.as_string_32))
 					a_output.append ("</" + a_tagname + ">%N")
 				end
 			end
@@ -89,7 +89,7 @@ feature {NONE} -- Helpers
 						a_output.append (ic.item.name)
 						a_output.append_character ('=')
 						a_output.append_character ('%"')
-						a_output.append (escaped_unicode_xml (ic.item.value))
+						a_output.append (escaped_xml (ic.item.value))
 						a_output.append_character ('%"')
 					end
 				end

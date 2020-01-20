@@ -33,7 +33,11 @@ feature -- Visitor
 			indent
 			indent
 			append_content_tag_to ("title", Void, a_feed.title, buffer)
-			append_content_tag_to ("description", Void, a_feed.description, buffer)
+			if attached a_feed.description as desc then
+				append_content_tag_to ("description", Void, desc, buffer)
+			else
+				append_content_tag_to ("description", Void, a_feed.title, buffer)
+			end
 			across
 				a_feed.links as tb
 			loop
@@ -120,7 +124,7 @@ feature {NONE} -- Helpers
 			htdate: HTTP_DATE
 		do
 			create htdate.make_from_date_time (dt)
-			Result := htdate.rfc850_string
+			Result := htdate.rfc1123_string
 		end
 
 end

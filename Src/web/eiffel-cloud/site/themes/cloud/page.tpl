@@ -12,7 +12,6 @@
         <title>{$head_title/}</title>
 </head>
 <body>
-<div id="container">
   <!-- Page Top -->
   {if isset="$region_top"}
     {$region_top/}
@@ -65,6 +64,5 @@
   <!-- Page Bottom -->
   {$page.region_bottom/}
   </div>
-</div><!-- id="container" -->
 </body>
 </html>

@@ -9,36 +9,32 @@ $footer-bgcolor: #ccc;
 $footer-fgcolor: #333;
 $footer-hover-fgcolor: #33f;
 
-html,
+html {
+	height:100%;
+}
 body {
 	margin: 0;
 	padding: 0;
-	height:100%;
+	min-height:100%;
+	position: relative;
 	background-color: white;
 	font-family: roboto;
 }
-body > div#container {
-	min-height:100%;
-	position: relative;
 
-	> div#footer, > footer {
-		position: absolute;
-		bottom: 0;
-		width: 100%;
-		height: 40px;
-		padding-top: 5px;
-		padding-top: 10px;
-		color: $footer-fgcolor;
-		background-color: $footer-bgcolor;
-		div.footer_copyright {
-			text-align: center;
-			a {
-				color: $footer-hover-fgcolor;
-			}
+div#footer, footer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	height: 60px;
+	padding-top: 5px;
+	color: $footer-fgcolor;
+	background-color: $footer-bgcolor;
+	div.footer_copyright {
+		height: 30px;
+		text-align: center;
+		a {
+			color: $footer-hover-fgcolor;
 		}
-	}
-	> div#body {
-		padding-bottom: 40px;
 	}
 }
 
@@ -69,30 +65,31 @@ div.login-box {
 	padding: 0;
 	#logo {
 		float: left;
-		margin-left: 20px;
+		padding-left: 20px;
+		padding-right: 20px;
 	}
 	#menu-bar {
-	}
-	ul.horizontal {
-		li {
-			margin-right: 10px;
-			margin-bottom: 5px;
-			padding: 5px 10px;
-			display: inline-block;
-			border: solid 1px #ffc;
-			a {
-					color: $header-text-fgcolor;
-			}
-			&.active {
-				border: solid 2px $header-text-fgcolor;
-			}
-			&:hover {
+		ul.horizontal {
+			li {
+				margin-right: 10px;
+				margin-bottom: 5px;
+				padding: 5px 10px;
+				display: inline-block;
+				border: none;
 				a {
-					color: $header-hover-fgcolor;
+						color: $header-text-fgcolor;
 				}
-				background-color: $header-hover-bgcolor;
-				border-bottom: solid 5px $header-text-fgcolor;
-				margin-bottom: 0;
+				&.active {
+					border: solid 2px $header-text-fgcolor;
+				}
+				&:hover {
+					a {
+						color: $header-hover-fgcolor;
+					}
+					background-color: $header-hover-bgcolor;
+					border-bottom: solid 4px $header-text-fgcolor;
+					margin-bottom: 1px;
+				}
 			}
 		}
 	}
@@ -104,7 +101,7 @@ div#content {
 	margin-right: auto;
 }
 
-div.menu ul.horizontal {
+div.menu.tabs ul.horizontal {
 	list-style-type: none;
 	display: flex;
 	flex-flow: row wrap;

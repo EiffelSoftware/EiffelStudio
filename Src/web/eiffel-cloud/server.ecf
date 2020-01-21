@@ -30,8 +30,9 @@
 		<library name="cms_messaging_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\messaging\messaging.ecf" readonly="false"/>
 		<library name="cms_node_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\node\node.ecf" readonly="false"/>
 		<library name="cms_persistence_sqlite3" location="$ISE_LIBRARY\unstable\library\web\cms\library\persistence\sqlite3\sqlite3.ecf" readonly="false"/>
-		<library name="cms_persistence_store_mysql" location="$ISE_LIBRARY\unstable\library\web\cms\library\persistence\store_mysql\store_mysql.ecf" readonly="false"/>
+		<library name="cms_persistence_store_mysql" location="$ISE_LIBRARY\unstable\library\web\cms\library\persistence\store_mysql_fake\store_mysql.ecf" readonly="false"/>
 		<library name="cms_session_auth_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\session_auth\cms_session_auth.ecf" readonly="false"/>
+		<library name="cms_sitemap_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\sitemap\sitemap.ecf" readonly="false" use_application_options="true"/>
 		<library name="cms_taxonomy_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\taxonomy\taxonomy.ecf" readonly="false"/>
 		<library name="cms_wikitext_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\wikitext\wikitext.ecf" readonly="false" use_application_options="true"/>
 		<library name="es_cloud_module" location="modules\es_cloud\es_cloud.ecf" readonly="false"/>

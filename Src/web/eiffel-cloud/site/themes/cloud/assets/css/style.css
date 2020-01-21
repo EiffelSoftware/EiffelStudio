@@ -157,37 +157,34 @@ div.cms-node div.info {
   display: none;
 }
 
-html,
+html {
+  height: 100%;
+}
+
 body {
   margin: 0;
   padding: 0;
-  height: 100%;
+  min-height: 100%;
+  position: relative;
   background-color: white;
   font-family: roboto;
 }
 
-body > div#container {
-  min-height: 100%;
-  position: relative;
-}
-body > div#container > div#footer, body > div#container > footer {
+div#footer, footer {
   position: absolute;
   bottom: 0;
   width: 100%;
-  height: 40px;
+  height: 60px;
   padding-top: 5px;
-  padding-top: 10px;
   color: #333;
   background-color: #ccc;
 }
-body > div#container > div#footer div.footer_copyright, body > div#container > footer div.footer_copyright {
+div#footer div.footer_copyright, footer div.footer_copyright {
+  height: 30px;
   text-align: center;
 }
-body > div#container > div#footer div.footer_copyright a, body > div#container > footer div.footer_copyright a {
+div#footer div.footer_copyright a, footer div.footer_copyright a {
   color: #33f;
-}
-body > div#container > div#body {
-  padding-bottom: 40px;
 }
 
 a {
@@ -217,27 +214,28 @@ div.login-box {
 }
 #header #logo {
   float: left;
-  margin-left: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
 }
-#header ul.horizontal li {
+#header #menu-bar ul.horizontal li {
   margin-right: 10px;
   margin-bottom: 5px;
   padding: 5px 10px;
   display: inline-block;
-  border: solid 1px #ffc;
+  border: none;
 }
-#header ul.horizontal li a {
+#header #menu-bar ul.horizontal li a {
   color: black;
 }
-#header ul.horizontal li.active {
+#header #menu-bar ul.horizontal li.active {
   border: solid 2px black;
 }
-#header ul.horizontal li:hover {
+#header #menu-bar ul.horizontal li:hover {
   background-color: #888;
-  border-bottom: solid 5px black;
-  margin-bottom: 0;
+  border-bottom: solid 4px black;
+  margin-bottom: 1px;
 }
-#header ul.horizontal li:hover a {
+#header #menu-bar ul.horizontal li:hover a {
   color: #fff;
 }
 
@@ -248,13 +246,13 @@ div#content {
   margin-right: auto;
 }
 
-div.menu ul.horizontal {
+div.menu.tabs ul.horizontal {
   list-style-type: none;
   display: flex;
   flex-flow: row wrap;
   justify-content: flex-start;
 }
-div.menu ul.horizontal li {
+div.menu.tabs ul.horizontal li {
   padding-left: 1em;
   padding-right: 1em;
   padding-top: 2px;
@@ -262,13 +260,13 @@ div.menu ul.horizontal li {
   border-top: solid 2px #eee;
   border-bottom: solid 1px #ddd;
 }
-div.menu ul.horizontal li:hover {
+div.menu.tabs ul.horizontal li:hover {
   font-weight: bold;
 }
-div.menu ul.horizontal li.active {
+div.menu.tabs ul.horizontal li.active {
   border-top: solid 2px #ccc;
   border-bottom: solid 1px transparent;
 }
-div.menu ul.horizontal li:last-child {
+div.menu.tabs ul.horizontal li:last-child {
   border-right: solid 1px #ccc;
 }

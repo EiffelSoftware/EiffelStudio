@@ -25,12 +25,10 @@ div#footer, footer {
 	position: absolute;
 	bottom: 0;
 	width: 100%;
-	height: 60px;
-	padding-top: 5px;
+	padding: 10px 0 10px 0;
 	color: $footer-fgcolor;
 	background-color: $footer-bgcolor;
 	div.footer_copyright {
-		height: 30px;
 		text-align: center;
 		a {
 			color: $footer-hover-fgcolor;
@@ -57,22 +55,21 @@ div.login-box {
 }
 
 #header {
+	display: flex;
+	flex-direction: row wrap;
 	background-color: $header-bgcolor;
 	background: url(../images/outer_header_bg.jpg) repeat-x 0 0;
 	color: $header-text-fgcolor;
 	font-family: roboto;
 	font-size: x-large;
-	padding: 0;
 	#logo {
-		float: left;
-		padding-left: 20px;
-		padding-right: 20px;
+		padding: 10px 20px 0 20px;
 	}
 	#menu-bar {
 		ul.horizontal {
+			margin: 6px 0 0 0;
 			li {
-				margin-right: 10px;
-				margin-bottom: 5px;
+				margin: 0 10px 5px 0;
 				padding: 5px 10px;
 				display: inline-block;
 				border: none;

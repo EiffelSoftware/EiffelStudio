@@ -174,13 +174,11 @@ div#footer, footer {
   position: absolute;
   bottom: 0;
   width: 100%;
-  height: 60px;
-  padding-top: 5px;
+  padding: 10px 0 10px 0;
   color: #333;
   background-color: #ccc;
 }
 div#footer div.footer_copyright, footer div.footer_copyright {
-  height: 30px;
   text-align: center;
 }
 div#footer div.footer_copyright a, footer div.footer_copyright a {
@@ -205,21 +203,22 @@ div.login-box {
 }
 
 #header {
+  display: flex;
+  flex-direction: row wrap;
   background-color: transparent;
   background: url(../images/outer_header_bg.jpg) repeat-x 0 0;
   color: black;
   font-family: roboto;
   font-size: x-large;
-  padding: 0;
 }
 #header #logo {
-  float: left;
-  padding-left: 20px;
-  padding-right: 20px;
+  padding: 10px 20px 0 20px;
+}
+#header #menu-bar ul.horizontal {
+  margin: 6px 0 0 0;
 }
 #header #menu-bar ul.horizontal li {
-  margin-right: 10px;
-  margin-bottom: 5px;
+  margin: 0 10px 5px 0;
   padding: 5px 10px;
   display: inline-block;
   border: none;

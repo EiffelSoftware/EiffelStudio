@@ -12,7 +12,7 @@
 		<library name="cms_config" location="$ISE_LIBRARY\unstable\library\web\cms\library\configuration\config.ecf"/>
 		<library name="cms_model" location="$ISE_LIBRARY\unstable\library\web\cms\library\model\cms_model.ecf"/>
 		<library name="error" location="$ISE_LIBRARY\contrib\library\utility\general\error\error.ecf"/>
-		<library name="esa_client" location="..\..\..\support\client\esa_client.ecf" readonly="false"/>
+		<library name="esa_client" location="..\..\support\client\esa_client.ecf" readonly="false"/>
 		<library name="http_authorization" location="$ISE_LIBRARY\contrib\library\web\authentication\http_authorization\http_authorization.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="wsf" location="$ISE_LIBRARY\contrib\library\web\framework\ewf\wsf\wsf.ecf"/>

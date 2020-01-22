@@ -163,6 +163,7 @@ feature -- Forms
 
 	new_registration_form (req: WSF_REQUEST): CMS_FORM
 		local
+			fset: WSF_FORM_FIELD_SET
 			tf: WSF_FORM_TEXT_INPUT
 			pf: WSF_FORM_PASSWORD_INPUT
 			ef: WSF_FORM_EMAIL_INPUT
@@ -170,38 +171,61 @@ feature -- Forms
 		do
 			create Result.make (req.percent_encoded_path_info, "esa-registration")
 			Result.set_method_post
+
+			Result.extend_html_text ("[
+				<p>
+				<strong>Register yourself with Eiffel's web site.</strong> <br/><br/>
+				With this account, you will be able to sign in various Eiffel services (support, cloud, EiffelStudio IDE, ...).<br/>
+				An activation code from <a href="https://support.eiffel.com/">//support.eiffel.com/</a> will be sent to the email address below for verification.
+				(Check your spam folder)
+				</p>
+			]")
+
+			create fset.make
+			fset.set_legend ("Register an account for eiffel.com services")
+			Result.extend (fset)
+
 			create tf.make ("user_name"); tf.set_label ("User name")
+			tf.set_description ("This is your main identifier")
 			tf.enable_required
 			tf.set_size (32)
-			Result.extend (tf)
+			fset.extend (tf)
 
 			create tf.make ("first_name"); tf.set_label ("First name")
 			tf.enable_required
 			tf.set_size (32)
-			Result.extend (tf)
+			fset.extend (tf)
 
 			create tf.make ("last_name"); tf.set_label ("Last name")
 			tf.enable_required
 			tf.set_size (32)
-			Result.extend (tf)
+			fset.extend (tf)
 
 			create pf.make ("password"); pf.set_label ("Password")
 			pf.enable_required
 			pf.set_size (32)
-			Result.extend (pf)
+			fset.extend (pf)
 			create pf.make ("password-bis"); pf.set_label ("Password")
 			pf.enable_required
 			pf.set_description ("Confirm password value.")
 			pf.set_size (32)
-			Result.extend (pf)
+			fset.extend (pf)
 
 			create ef.make ("email"); ef.set_label ("Email")
+			ef.set_description ("You will get an activation code by email to validate your account.")
 			ef.enable_required
 			ef.set_size (32)
-			Result.extend (ef)
+			fset.extend (ef)
 
+			fset.extend_html_text ("<br/>")
 			create sub.make_with_text ("op", "Register")
-			Result.extend (sub)
+			fset.extend (sub)
+			
+			Result.extend_html_text ("[
+			<p>
+			Check the Eiffel.com <a href="https://www.eiffel.com/privacy-policy/">Privacy policy</a>.
+			</p>
+			]")
 		end
 
 end

@@ -45,6 +45,48 @@ feature -- File path
 
 feature -- Read
 
+	file_content (a_loc: PATH): detachable STRING
+			-- Content of file located at `a_loc`.
+		local
+			f: PLAIN_TEXT_FILE
+			rescued: BOOLEAN
+			c: INTEGER
+			done: BOOLEAN
+		do
+			if not rescued then
+				create f.make_with_path (a_loc)
+				if f.exists and then f.is_access_readable then
+					c := f.count
+					if c > 0 then
+						f.open_read
+						from
+							create Result.make (c)
+						until
+							done
+						loop
+							f.read_stream (1_024)
+							Result.append (f.last_string)
+							done := f.last_string.count < 1_024 or f.exhausted
+						end
+						f.close
+					end
+				end
+			end
+		rescue
+			rescued := True
+			retry
+		end
+
+	unicode_file_content (a_loc: PATH): detachable STRING_32
+			-- Unicode content of file located at `a_loc` (utf-8 encoded).
+		local
+			utf: UTF_CONVERTER
+		do
+			if attached file_content (a_loc) as s then
+				Result := utf.utf_8_string_8_to_string_32 (s)
+			end
+		end
+
 	files_from_location (a_loc: PATH; is_recursive: BOOLEAN): detachable LIST [PATH]
 		local
 			d: DIRECTORY
@@ -169,6 +211,6 @@ feature -- Create
 		end
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

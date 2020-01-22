@@ -105,7 +105,7 @@ feature -- Access: router
 			-- <Precursor>
 		do
 			if attached login_with_esa_api as l_esa_api then
-				a_router.handle ("/esa/register", create {LOGIN_WITH_ESA_REGISTER_HANDLER}.make (l_esa_api), a_router.methods_get_post)
+				a_router.handle ("/esa/register", create {LOGIN_WITH_ESA_REGISTER_HANDLER}.make (Current, l_esa_api), a_router.methods_get_post)
 			end
 		end
 

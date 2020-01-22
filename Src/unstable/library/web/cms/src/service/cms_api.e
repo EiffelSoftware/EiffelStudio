@@ -787,6 +787,24 @@ feature -- Filters and Formats
 			end
 		end
 
+feature -- Template
+
+	resolved_smarty_template_text (a_loc: PATH): detachable STRING_8
+			-- Resolved smarty template located at `a_loc`.
+		local
+			smt: CMS_SMARTY_TEMPLATE_TEXT
+		do
+			if attached file_content (a_loc) as txt then
+				create smt.make (txt)
+				across
+					builtin_variables as ic
+				loop
+					smt.set_value (ic.item, ic.key)
+				end
+				Result := smt.string
+			end
+		end
+
 feature -- Status Report
 
 	has_error: BOOLEAN
@@ -1709,7 +1727,7 @@ feature {NONE} -- Implementation: current user
 		end
 
 note
-	copyright: "2011-2019, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end
 

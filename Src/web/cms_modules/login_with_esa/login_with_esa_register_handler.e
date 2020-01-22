@@ -20,8 +20,9 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_mod_api: LOGIN_WITH_ESA_API)
+	make (a_mod: CMS_MODULE; a_mod_api: LOGIN_WITH_ESA_API)
 		do
+			module := a_mod
 			make_with_cms_api (a_mod_api.cms_api)
 			login_with_esa_api := a_mod_api
 		end
@@ -29,6 +30,8 @@ feature {NONE} -- Initialization
 feature -- API
 
 	login_with_esa_api: LOGIN_WITH_ESA_API
+
+	module: CMS_MODULE
 
 feature -- Execution
 
@@ -168,21 +171,22 @@ feature -- Forms
 			pf: WSF_FORM_PASSWORD_INPUT
 			ef: WSF_FORM_EMAIL_INPUT
 			sub: WSF_FORM_SUBMIT_INPUT
+			tpl_p: PATH
 		do
 			create Result.make (req.percent_encoded_path_info, "esa-registration")
 			Result.set_method_post
 
-			Result.extend_html_text ("[
-				<p>
-				<strong>Register yourself with Eiffel's web site.</strong> <br/><br/>
-				With this account, you will be able to sign in various Eiffel services (support, cloud, EiffelStudio IDE, ...).<br/>
-				An activation code from <a href="https://support.eiffel.com/">//support.eiffel.com/</a> will be sent to the email address below for verification.
-				(Check your spam folder)
-				</p>
-			]")
+			create tpl_p.make_from_string ("templates")
+
+			if
+				attached api.module_theme_resource_location (module, tpl_p.extended ("signup_header.tpl")) as loc and then
+				attached api.resolved_smarty_template_text (loc) as s
+			then
+				Result.extend_html_text (s)
+			end
 
 			create fset.make
-			fset.set_legend ("Register an account for eiffel.com services")
+			fset.set_legend ("Sign up for an eiffel.com account")
 			Result.extend (fset)
 
 			create tf.make ("user_name"); tf.set_label ("User name")
@@ -218,14 +222,15 @@ feature -- Forms
 			fset.extend (ef)
 
 			fset.extend_html_text ("<br/>")
-			create sub.make_with_text ("op", "Register")
+			create sub.make_with_text ("op", "Sign up for Eiffel")
 			fset.extend (sub)
-			
-			Result.extend_html_text ("[
-			<p>
-			Check the Eiffel.com <a href="https://www.eiffel.com/privacy-policy/">Privacy policy</a>.
-			</p>
-			]")
+
+			if
+				attached api.module_theme_resource_location (module, tpl_p.extended ("signup_footer.tpl")) as loc and then
+				attached api.resolved_smarty_template_text (loc) as s
+			then
+				Result.extend_html_text (s)
+			end
 		end
 
 end

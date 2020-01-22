@@ -170,21 +170,6 @@ body {
   font-family: roboto;
 }
 
-div#footer, footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  padding: 10px 0 10px 0;
-  color: #333;
-  background-color: #ccc;
-}
-div#footer div.footer_copyright, footer div.footer_copyright {
-  text-align: center;
-}
-div#footer div.footer_copyright a, footer div.footer_copyright a {
-  color: #33f;
-}
-
 a {
   color: blue;
   text-decoration: none;
@@ -240,9 +225,24 @@ div.login-box {
 
 div#content {
   max-width: 800px;
-  padding: 10px;
-  margin-left: auto;
-  margin-right: auto;
+  padding: 10px 0 50px 0;
+  margin: 0 auto 0 auto;
+}
+
+div#footer, footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 10px 0 10px 0;
+  margin-top: 10px;
+  color: #333;
+  background-color: #ccc;
+}
+div#footer div.footer_copyright, footer div.footer_copyright {
+  text-align: center;
+}
+div#footer div.footer_copyright a, footer div.footer_copyright a {
+  color: #33f;
 }
 
 div.menu.tabs ul.horizontal {

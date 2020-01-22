@@ -16,46 +16,43 @@
   {if isset="$region_top"}
     {$region_top/}
   {/if}
-  <!-- Body -->
-  <div id="body">
-    <!-- Page Header -->
-    <div id="header">
-	  <img src="{$theme_path/}images/logo.png" alt="" id="logo"/>
-      {if isset="$page.primary_nav"}
-          {$page.primary_nav/}
-      {/if}
-    </div> 
-	{if isset="$page.regions.search"}
-	<!-- Page search -->
-	<div class="search">{$page.regions.search/}</div>
-	{/if}
-    <!-- General Page Content -->
-    <div id='content'>
-		<!-- Left Sidebar sidebar_first -->
-		{unless isempty="$page.region_sidebar_first"}
-		<div id="sidebar_first" class="sidebar">{$page.region_sidebar_first/}</div>
-		{/unless}
-		<!-- Right Sidebar sidebar_second-->
-		{unless isempty="$page.region_sidebar_second"}
-		<div id="sidebar_second" class="sidebar">{$page.region_sidebar_second/}</div>
-		{/unless}
+  <!-- Page Header -->
+  <div id="header">
+    <img src="{$theme_path/}images/logo.png" alt="" id="logo"/>
+    {if isset="$page.primary_nav"}
+        {$page.primary_nav/}
+    {/if}
+  </div> 
+  {if isset="$page.regions.search"}
+  <!-- Page search -->
+  <div class="search">{$page.regions.search/}</div>
+  {/if}
+  <!-- General Page Content -->
+  <div id='content'>
+  	<!-- Left Sidebar sidebar_first -->
+  	{unless isempty="$page.region_sidebar_first"}
+  	<div id="sidebar_first" class="sidebar">{$page.region_sidebar_first/}</div>
+  	{/unless}
+  	<!-- Right Sidebar sidebar_second-->
+  	{unless isempty="$page.region_sidebar_second"}
+  	<div id="sidebar_second" class="sidebar">{$page.region_sidebar_second/}</div>
+  	{/unless}
 
-        <!-- Highlighted, Help, Content -->      
-        <div id='main'>
-          <!-- Highlighted Section -->
-          {unless isempty="$page.region_highlighted"}
-		  <div id="highlighted">{$page.region_highlighted/}</div>
-		  {/unless}
-          <!-- Help Section -->
-          {unless isempty="$page.region_help"}
-		  <div id="help">{$page.region_help/}</div>
-		  {/unless}
+      <!-- Highlighted, Help, Content -->      
+      <div id='main'>
+        <!-- Highlighted Section -->
+        {unless isempty="$page.region_highlighted"}
+  	  <div id="highlighted">{$page.region_highlighted/}</div>
+  	  {/unless}
+        <!-- Help Section -->
+        {unless isempty="$page.region_help"}
+  	  <div id="help">{$page.region_help/}</div>
+  	  {/unless}
 
-          <!-- Main Content Section -->
-		  {unless isempty="$page_title"}<h1 class="page-title">{$page_title/}</h1>{/unless}
-          {$page.region_content/}   
-        </div>
-    </div>
+        <!-- Main Content Section -->
+  	  {unless isempty="$page_title"}<h1 class="page-title">{$page_title/}</h1>{/unless}
+        {$page.region_content/}   
+      </div>
   </div>
 
   <div id="footer">

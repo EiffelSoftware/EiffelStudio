@@ -345,7 +345,7 @@ feature -- Output
 				else
 					l_duration_time := l_duration.time
 					if d = 1 then
-						Result := "yesturday"
+						Result := "yesterday"
 					else
 						Result := d.out + " days"
 	--							if d = 1 then
@@ -396,6 +396,6 @@ feature -- Output
 		end
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

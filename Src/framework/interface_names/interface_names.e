@@ -2740,9 +2740,11 @@ feature -- Sub titles
 feature -- Startup pages
 
 	l_read_license_text: STRING_32 do Result := locale.translation ("Read License Text") end
-	l_agree_and_continue_with_gpl: STRING_32 do Result := locale.translation ("I agree and continue with GPL Edition") end
+	l_please_read_and_accept_terms: STRING_32 do Result := locale.translation ("Please read and accept these terms and conditions. Scroll down for full text:") end
+	l_agree_and_continue_with_terms: STRING_32 do Result := locale.translation ("I confirm that I have read and accept the terms") end
 	l_purchase_enterprise_edition: STRING_32 do Result := locale.translation ("Purchase Enterprise edition") end
 	l_login_with_credentials: STRING_32 do Result := locale.translation ("Login with credentials") end
+	l_learn_more: STRING_32 do Result := locale.translation ("Learn more ...") end
 
 	l_user_name: STRING_32 do Result := locale.translation ("User Name") end
 	l_first_name: STRING_32 do Result := locale.translation ("First Name") end
@@ -3082,7 +3084,7 @@ feature -- String escape
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

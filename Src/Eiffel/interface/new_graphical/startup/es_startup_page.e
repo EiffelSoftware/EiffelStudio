@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 		local
 			cl: EV_CELL
 		do
-			create dialog.make_with_title ("EiffelStudio Startup")
+			create dialog.make_with_title ("EiffelStudio")
 			dialog.set_icon_pixmap (Pixmaps.icon_pixmaps.general_dialog_icon)
 			dialog.set_icon_name ("Startup")
 			create cl
@@ -79,8 +79,8 @@ feature -- Execution
 		local
 			vb: EV_VERTICAL_BOX
 			hb: EV_HORIZONTAL_BOX
+			lab: EVS_LABEL
 			txt: EV_TEXT
-			l_agreement_text: STRING
 			lnk: EVS_LINK_LABEL
 			eiffel_image: EV_PIXMAP
 			but: EV_BUTTON
@@ -112,20 +112,12 @@ feature -- Execution
 				hb.extend (vb)
 				vb.set_padding_width (layout_constants.default_padding_size)
 
+				create lab.make_with_text (interface_names.l_please_read_and_accept_terms)
+				vb.extend (lab)
+				vb.disable_item_expand (lab)
+
 				create txt
-				l_agreement_text := "[
-About the EiffelStudio Community license
-
-The terms of the EiffelStudio license appear below; they are those of the Gnu Public License (GPL), with no change. The spirit of the EiffelStudio license is to encourage the production of free Eiffel software, in the spirit of both the GPL and the Eiffel method's promotion of software reuse. As a consequence, users relying on the GPL are expected to make their own software, developed with EiffelStudio, available under the GPL or another open-source  software license.
-
-There are a variety of ways to distribute EiffelStudio-produced software, from Github to BitBucket, SourceForge and others, as well as Eiffel's own Iron repository. You are free to choose whichever medium suits you best. We do request that you make the software known and available to other Eiffel users by providing a link to it. Simply log into your account at http://myprojects.eiffel.org and follow the instructions.
-
-If you prefer to develop proprietary software, or do not agree with the terms of the GPL, other possibilities are available.
-
-We look forward to your contributions
-				]"
-
-				txt.set_text (l_agreement_text)
+				txt.set_text (terms_agreement_text)
 				txt.disable_edit
 				txt.set_background_color (bg)
 				txt.set_foreground_color (fg)
@@ -151,10 +143,10 @@ We look forward to your contributions
 				hb.disable_item_expand (vb)
 
 
-				create but.make_with_text_and_action (interface_names.b_continue, agent on_gpl_usage_accepted)
+				create but.make_with_text_and_action (interface_names.b_continue, agent on_usage_accepted)
 				layout_constants.set_default_size_for_button (but)
 				l_focus := but
-				append_label_and_item_horizontally (interface_names.l_agree_and_continue_with_gpl, but, vb)
+				append_label_and_item_horizontally (interface_names.l_agree_and_continue_with_terms, but, vb)
 
 				create but.make_with_text_and_action (interface_names.b_purchase, agent on_purchase_selected)
 				layout_constants.set_default_size_for_button (but)
@@ -252,6 +244,20 @@ feature -- Status
 			end
 		end
 
+feature -- Text
+
+	terms_agreement_text: STRING
+		once
+			Result := "[
+About the EiffelStudio Community License
+
+The terms of the EiffelStudio Community License appear below; they are those of the Gnu Public License (GPL). The spirit of the EiffelStudio Community License is to encourage the production of free, reusable Eiffel software. Users relying on the Eiffel Community License are expected to make their own EiffelStudio-produced software available under GPL or another open-source software license.
+There are a variety of ways to distribute EiffelStudio-produced software, from Github to BitBucket, SourceForge and others, as well as Eiffel's own Iron repository. We request that you make the software known and available to other Eiffel users by providing a link to it. Simply log into your account at https://myprojects.eiffel.org and follow the instructions.
+If you prefer to develop proprietary software, or do not agree with the terms of the EiffelStudio Community License, use another of the available EiffelStudio licenses.
+We look forward to your contributions.
+]"
+		end
+
 feature -- Access: widgets
 
 	main_box: EV_CELL
@@ -273,7 +279,7 @@ feature -- Event: license
 			cmd.execute
 		end
 
-	on_gpl_usage_accepted
+	on_usage_accepted
 		do
 			preferences.misc_data.set_license_accepted (True)
 				-- Save preferences right away.
@@ -389,7 +395,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

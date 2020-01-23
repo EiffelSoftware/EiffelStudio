@@ -127,7 +127,7 @@ feature {NONE} -- Action handlers
 			lab: EV_LABEL
 			b: like main_box
 			but: EV_BUTTON
-			wid: ES_ACCOUNT_LOGIN_REGISTER_BOX
+			lnk: EVS_HIGHLIGHT_LINK_LABEL
 			hb: EV_HORIZONTAL_BOX
 			txt: EV_RICH_TEXT
 			q,r: INTEGER_64
@@ -148,19 +148,17 @@ feature {NONE} -- Action handlers
 				l_dbg := cld.is_debug_enabled
 				acc := cld.active_account
 				if acc /= Void then
-					create lab.make_with_text ({STRING_32} "Welcome " + acc.username)
+					create lab.make_with_text (acc.username)
 					b.extend (lab)
 					b.disable_item_expand (lab)
 
 					create txt
 					b.extend (txt)
-					append_bold_text_to ("User: ", txt)
-					append_text_to (acc.username, txt)
 					append_text_to ("%N%N", txt)
 					if cld.is_enterprise_edition then
 						append_bold_text_to ("Edition: enterprise%N", txt)
 					elseif attached acc.plan as l_plan then
-						append_bold_text_to ("Plan: ", txt)
+						append_bold_text_to ("License: ", txt)
 						append_text_to (l_plan.name, txt)
 						append_text_to ("%N", txt)
 						if attached l_plan.expiration_date as dt then
@@ -249,66 +247,85 @@ feature {NONE} -- Action handlers
 
 						end
 					end
+					create hb
+					b.extend (hb)
+					b.disable_item_expand (hb)
+					hb.extend (create {EV_CELL})
+
+					if is_cloud_available then
+	--					create hb
+						create but.make_with_text_and_action ("Reload", agent on_account_reload (cld, acc))
+						hb.extend (but)
+						layout_constants.set_default_size_for_button (but)
+						hb.disable_item_expand (but)
+
+						create but.make_with_text_and_action ("Logout", agent on_logout (cld))
+						hb.extend (but)
+						layout_constants.set_default_size_for_button (but)
+						hb.disable_item_expand (but)
+
+						if l_dbg and then attached cld.active_session as sess then
+							create but.make_with_text_and_action ("Ping", agent on_account_ping (cld, acc, sess))
+							hb.extend (but)
+							layout_constants.set_default_size_for_button (but)
+							hb.disable_item_expand (but)
+
+							create but.make_with_text_and_action ("End", agent on_session_end (cld, acc, sess))
+							hb.extend (but)
+							layout_constants.set_default_size_for_button (but)
+							hb.disable_item_expand (but)
+
+							create but.make_with_text_and_action ("Pause", agent on_session_pause (cld, acc, sess))
+							hb.extend (but)
+							layout_constants.set_default_size_for_button (but)
+							hb.disable_item_expand (but)
+
+							create but.make_with_text_and_action ("Resume", agent on_session_resume (cld, acc, sess))
+							hb.extend (but)
+							layout_constants.set_default_size_for_button (but)
+							hb.disable_item_expand (but)
+
+							if acc /= Void and then attached acc.access_token as tok and then tok.has_refresh_key then
+								create but.make_with_text_and_action ("Refresh", agent on_account_refresh_token (cld, tok, acc))
+								hb.extend (but)
+								layout_constants.set_default_size_for_button (but)
+								hb.disable_item_expand (but)
+							end
+						end
+					end
 				else
 					if cld.is_guest then
-						create lab.make_with_text ("Welcome guess, please login ...")
+						create lab.make_with_text ("Welcome guess ...")
 					else
-						create lab.make_with_text ("Please login first...")
+						create lab.make_with_text ("You are not connected with an account ...")
 					end
+					lab.align_text_left
+
 					b.extend (lab)
 					b.disable_item_expand (lab)
-
-					create wid.make
-
-					b.extend (wid)
+					if is_cloud_available then
+						create lnk.make_with_text ("Connect your account to use EiffelStudio.")
+						lnk.align_text_left
+						lnk.align_text_top
+						lnk.select_actions.extend (agent (i_cld: ES_CLOUD_S)
+							local
+								l_startup_page: ES_STARTUP_PAGE
+							do
+								create l_startup_page.make (not i_cld.is_enterprise_edition)
+								l_startup_page.switch_to_account_page
+								l_startup_page.show_modal_to_window (develop_window.window)
+							end(cld)
+						)
+						b.extend (lnk)
+					end
 				end
 
-				create hb
-				b.extend (hb)
-				b.disable_item_expand (hb)
-				hb.extend (create {EV_CELL})
+				if not is_cloud_available then
+					create hb
+					b.extend (hb)
+					b.disable_item_expand (hb)
+					hb.extend (create {EV_CELL})
 
-				if is_cloud_available then
---					create hb
-					create but.make_with_text_and_action ("Update", agent on_account_update (cld, acc))
-					hb.extend (but)
-					layout_constants.set_default_size_for_button (but)
-					hb.disable_item_expand (but)
-
-					create but.make_with_text_and_action ("Logout", agent on_logout (cld))
-					hb.extend (but)
-					layout_constants.set_default_size_for_button (but)
-					hb.disable_item_expand (but)
-
-					if l_dbg and then attached cld.active_session as sess then
-						create but.make_with_text_and_action ("Ping", agent on_account_ping (cld, acc, sess))
-						hb.extend (but)
-						layout_constants.set_default_size_for_button (but)
-						hb.disable_item_expand (but)
-
-						create but.make_with_text_and_action ("End", agent on_session_end (cld, acc, sess))
-						hb.extend (but)
-						layout_constants.set_default_size_for_button (but)
-						hb.disable_item_expand (but)
-
-						create but.make_with_text_and_action ("Pause", agent on_session_pause (cld, acc, sess))
-						hb.extend (but)
-						layout_constants.set_default_size_for_button (but)
-						hb.disable_item_expand (but)
-
-						create but.make_with_text_and_action ("Resume", agent on_session_resume (cld, acc, sess))
-						hb.extend (but)
-						layout_constants.set_default_size_for_button (but)
-						hb.disable_item_expand (but)
-					end
-
-					if acc /= Void and then attached acc.access_token as tok and then tok.has_refresh_key then
-						create but.make_with_text_and_action ("Refresh", agent on_account_refresh_token (cld, tok, acc))
-						hb.extend (but)
-						layout_constants.set_default_size_for_button (but)
-						hb.disable_item_expand (but)
-					end
-				else
 					create lab.make_with_text ("Cloud service unavailable! ")
 					hb.extend (lab)
 					hb.disable_item_expand (lab)
@@ -316,19 +333,17 @@ feature {NONE} -- Action handlers
 					layout_constants.set_default_size_for_button (but)
 					hb.extend (but)
 					hb.disable_item_expand (but)
+					hb.extend (create {EV_CELL})
 				end
-				hb.extend (create {EV_CELL})
---				b.extend (hb)
---				b.disable_item_expand (hb)
-
-				create lab.make_with_text ("Installation: " + cld.installation.id)
-				b.extend (lab)
-				b.disable_item_expand (lab)
+				if l_dbg then
+					create lab.make_with_text ("Installation: " + cld.installation.id)
+					b.extend (lab)
+					b.disable_item_expand (lab)
+				end
 			else
 				create lab.make_with_text ("Service not activated!")
 				b.extend (lab)
 			end
-
 			b.set_background_color (colors.stock_colors.default_background_color)
 			b.propagate_background_color
 		end
@@ -351,7 +366,7 @@ feature {NONE} -- Action handlers
 			end
 		end
 
-	on_account_update (cld: ES_CLOUD_S; acc: ES_ACCOUNT)
+	on_account_reload (cld: ES_CLOUD_S; acc: ES_ACCOUNT)
 		local
 			l_style: EV_POINTER_STYLE
 		do
@@ -493,7 +508,7 @@ feature -- Rich text helper
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

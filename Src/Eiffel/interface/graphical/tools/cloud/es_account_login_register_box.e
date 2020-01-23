@@ -55,69 +55,104 @@ feature {NONE} -- Initialization
 
 	build_interface (a_box: EV_VERTICAL_BOX)
 		local
-			vb,vb_login,vb_register,vb_off: EV_VERTICAL_BOX
-			fr_login, fr_register, fr_off: EV_FRAME
-			txt: ES_SCROLLABLE_LABEL
-			lab: EV_LABEL
+			l_main: EV_VERTICAL_BOX
+			vb,vb_learn,vb_off,vb_terms: EV_VERTICAL_BOX
+			hb: EV_HORIZONTAL_BOX
+			fr_login, fr_register, l_learn_more_box, fr_off: EV_FRAME
+			box_login: like new_register_box
+			box_register: like new_login_box
+			txt: EVS_LABEL
 			lnk: EVS_LINK_LABEL
-			l_width: INTEGER
+			l_weblnk: EVS_HIGHLIGHT_LINK_LABEL
+			l_field_width: INTEGER
 			w: EV_WIDGET
-			tf_password: EV_PASSWORD_FIELD
-			tf_username, tf_email, tf_firstname, tf_lastname: EV_TEXT_FIELD
 			but: EV_BUTTON
 			cbut: EV_CHECK_BUTTON
-			l_focus: detachable EV_WIDGET
+			s: STRING_32
 		do
+			create l_main
+			a_box.extend (l_main)
+			a_box.disable_item_expand (l_main)
+
 			create vb
 			vb.set_padding_width (layout_constants.default_padding_size)
-			a_box.extend (vb)
-			a_box.disable_item_expand (vb)
 
-			l_width := 200
+			create vb_terms
+			vb_terms.set_padding_width (layout_constants.default_padding_size)
+			vb_terms.set_minimum_width (50)
+
 			if is_community_edition then
 				create txt
-				txt.set_text ("Please login, to use the EiffelStudio Community Edition.")
+				s := "Please login, to use the EiffelStudio Community Edition."
 			elseif is_enterprise_edition then
 				create txt
-				txt.set_text ("To use additional online services, please login.")
+				s := "To use additional online services, please login."
 			end
-			if txt /= Void then
+			if s /= Void then
+				s.append ("%NBy registering EiffelStudio you agree to the terms of use and the rules on user-provided information.")
+				create txt
+				txt.set_text (s)
+				txt.set_is_text_wrapped (True); txt.align_text_left; txt.align_text_top
 				vb.extend (txt)
-				txt.set_minimum_height (50)
-				vb.disable_item_expand (txt)
 			end
+
+				-- learn more
+			create l_learn_more_box
+			create vb_learn
+			vb_learn.set_padding_width (layout_constants.default_padding_size)
+			vb_learn.set_border_width (layout_constants.default_border_size)
+			create txt
+			txt.set_text ("User information provided during the registration process is used solely for the purpose of creating a user account at //cloud.eiffel.com and enforcing the usage rules (number of concurrent sessions) according to the terms of the EiffelStudio license. Eiffel Software does not share such information with any third party.")
+			txt.set_is_text_wrapped (True); txt.align_text_left; txt.align_text_top
+			vb_learn.extend (txt)
+			create l_weblnk.make_with_text ("Terms of use")
+			l_weblnk.select_actions.extend (agent
+				do
+					open_url ("https://cloud.eiffel.com/site/terms")
+				end)
+			vb_learn.extend (l_weblnk)
+			vb_learn.disable_item_expand (l_weblnk)
+
+			l_learn_more_box.extend (vb_learn)
+			l_learn_more_box.hide
+			create lnk.make_with_text (interface_names.l_learn_more)
+			lnk.align_text_left
+			lnk.select_actions.extend (agent (i_learn_more_box: EV_WIDGET; i_lnk: EV_WIDGET)
+				do
+					i_learn_more_box.show
+					i_lnk.hide
+				end(l_learn_more_box, lnk))
+			txt.pointer_double_press_actions.extend (agent (i_learn_more_box: EV_WIDGET; i_lnk: EV_WIDGET; i_x, i_y, i_button: INTEGER; i_x_tilt, i_y_tilt, i_pressure: DOUBLE; i_screen_x, i_screen_y: INTEGER)
+					do
+						i_learn_more_box.hide
+						i_lnk.show
+					end(l_learn_more_box, lnk,?,?,?,?,?,?,?,?)
+				)
+			vb_terms.extend (lnk)
+			vb_terms.disable_item_expand (lnk)
+			vb_terms.extend (l_learn_more_box)
+
+				-- Main layout			
+			l_main.extend (vb)
+			l_main.disable_item_expand (vb)
+--			l_main.extend (vb_terms)
+--			l_main.disable_item_expand (vb_terms)
+--			vb_terms.set_border_width (layout_constants.default_border_size)
+			vb.extend (vb_terms)
+			vb.disable_item_expand (vb_terms)
+
 
 				-- Login vs Register					
 			create fr_login.make_with_text (interface_names.l_login_with_credentials)
 			create fr_register.make_with_text (interface_names.l_register_new_account)
-
-				-- Login
 			fr_login.hide
-			create vb_login
-			fr_login.extend (vb_login)
-			vb_login.set_border_width (layout_constants.default_border_size)
-			vb_login.set_padding_width (layout_constants.default_padding_size)
-			create tf_username
-			create tf_password
-			w := tf_username
-			w.set_minimum_width (l_width)
-			append_label_and_item_horizontally (interface_names.l_user_name, w, vb_login)
-			l_focus := w
-			w := tf_password
-			w.set_minimum_width (l_width)
-			append_label_and_item_horizontally (interface_names.l_password, w, vb_login)
+			fr_register.hide
 
-			create but.make_with_text_and_action (interface_names.b_login, agent process_account_loging (new_gui_form (<<["user_name", tf_username], ["password", tf_password]>>)))
+			box_login := new_login_box
+			fr_login.extend (box_login)
 
-			layout_constants.set_default_width_for_button (but)
-			append_label_and_item_horizontally ("", but, vb_login)
-
-			create lab.make_with_text ("note: use https://support.eiffel.com/ account.")
-			lab.set_foreground_color (colors.stock_colors.dark_grey)
-			lab.set_font (fonts.italic_label_font)
-			lab.align_text_right
-			vb_login.extend (lab)
-			vb_login.disable_item_expand (lab)
+			box_register := new_register_box
+			fr_register.extend (box_register)
 
 			create lnk.make_with_text (interface_names.l_register_new_account)
 			lnk.align_text_left
@@ -127,48 +162,8 @@ feature {NONE} -- Initialization
 						i_fr_register.show
 					end(fr_login, fr_register)
 				)
-			vb_login.extend (lnk)
-			vb_login.disable_item_expand (lnk)
-			tf_username.return_actions.extend (agent tf_password.set_focus)
-			tf_password.return_actions.extend (agent (i_but: EV_BUTTON) do i_but.select_actions.call (Void) end(but))
-
-				-- Register
-			fr_register.hide
-			create vb_register
-			fr_register.extend (vb_register)
-			vb_register.set_border_width (layout_constants.default_border_size)
-			vb_register.set_padding_width (layout_constants.default_padding_size)
-			create tf_username
-			create tf_password
-			create tf_firstname
-			create tf_lastname
-			create tf_email
-			w := tf_username
-			w.set_minimum_width (l_width)
-			append_label_and_item_horizontally (interface_names.l_user_name, w, vb_register)
-			w := tf_password
-			w.set_minimum_width (l_width)
-			append_label_and_item_horizontally (interface_names.l_password, w, vb_register)
-
-			w := tf_firstname
-			w.set_minimum_width (l_width)
-			append_label_and_item_horizontally (interface_names.l_first_name, w, vb_register)
-			w := tf_lastname
-			w.set_minimum_width (l_width)
-			append_label_and_item_horizontally (interface_names.l_last_name, w, vb_register)
-
-			w := tf_email
-			w.set_minimum_width (l_width)
-			append_label_and_item_horizontally (interface_names.l_email, w, vb_register)
-			create but.make_with_text_and_action (interface_names.b_register, agent process_account_registration (new_gui_form (<<
-						["user_name", tf_username],
-						["password", tf_password],
-						["first_name", tf_firstname],
-						["last_name", tf_lastname],
-						["email", tf_email]
-					>>)))
-			layout_constants.set_default_width_for_button (but)
-			append_label_and_item_horizontally ("", but, vb_register)
+			box_login.extend (lnk)
+			box_login.disable_item_expand (lnk)
 
 			create lnk.make_with_text (interface_names.l_login_with_existing_account)
 			lnk.align_text_left
@@ -178,17 +173,17 @@ feature {NONE} -- Initialization
 						i_fr_login.show
 					end(fr_login, fr_register)
 				)
-			tf_username.return_actions.extend (agent tf_password.set_focus)
-			tf_password.return_actions.extend (agent (i_but: EV_BUTTON) do i_but.select_actions.call (Void) end(but))
-
-			vb_register.extend (lnk)
-			vb_register.disable_item_expand (lnk)
+			box_register.extend (lnk)
+			box_register.disable_item_expand (lnk)
 
 				-- Layout
-			vb.extend (fr_login)
-			vb.disable_item_expand (fr_login)
-			vb.extend (fr_register)
-			vb.disable_item_expand (fr_register)
+			create hb
+			hb.extend (fr_login); hb.disable_item_expand (fr_login)
+			hb.extend (fr_register); hb.disable_item_expand (fr_register)
+			hb.extend (create {EV_CELL})
+
+			vb.extend (hb)
+			vb.disable_item_expand (hb)
 
 --			fr_register.show
 			fr_login.show
@@ -202,8 +197,8 @@ feature {NONE} -- Initialization
 			end
 
 
+				-- Offline access token.
 			if is_offline_allowed then
-					-- Offline access token.
 				create cbut.make_with_text ("Offline?")
 
 				create fr_off.make_with_text ("Offline access")
@@ -227,7 +222,7 @@ feature {NONE} -- Initialization
 					)
 
 				create {EV_TEXT_FIELD} w
-				w.set_minimum_width (l_width)
+				w.set_minimum_width (l_field_width)
 				append_label_and_item_horizontally ("Offline token", w, vb_off)
 				vb_off.extend (create {EV_LABEL}.make_with_text ("You can get that token from the web site."))
 
@@ -256,6 +251,103 @@ feature {NONE} -- Initialization
 			end
 			a_box.set_background_color (colors.stock_colors.white)
 			a_box.propagate_background_color
+		end
+
+	new_login_box: EV_VERTICAL_BOX
+		local
+			vb_login: EV_VERTICAL_BOX
+			lab: EV_LABEL
+			lnk: EVS_LINK_LABEL
+			l_field_width: INTEGER
+			w: EV_WIDGET
+			tf_password: EV_PASSWORD_FIELD
+			tf_username: EV_TEXT_FIELD
+			but: EV_BUTTON
+			l_focus: detachable EV_WIDGET
+			l_scaler: EVS_DPI_SCALER
+		do
+			create l_scaler.make
+			l_field_width := l_scaler.scaled_size (300)
+
+			create Result
+			Result.set_border_width (layout_constants.default_border_size)
+			Result.set_padding_width (layout_constants.default_padding_size)
+			create tf_username
+			create tf_password
+			w := tf_username
+			w.set_minimum_width (l_field_width)
+			append_label_and_item_horizontally (interface_names.l_user_name, w, Result)
+			l_focus := w
+			w := tf_password
+			w.set_minimum_width (l_field_width)
+			append_label_and_item_horizontally (interface_names.l_password, w, Result)
+
+			create but.make_with_text_and_action (interface_names.b_login, agent process_account_loging (new_gui_form (<<["user_name", tf_username], ["password", tf_password]>>)))
+
+			layout_constants.set_default_width_for_button (but)
+			append_label_and_item_horizontally ("", but, Result)
+
+			create lab.make_with_text ("note: you can use https://support.eiffel.com/ account.")
+			lab.set_foreground_color (colors.stock_colors.dark_grey)
+			lab.set_font (fonts.italic_label_font)
+			lab.align_text_right
+			Result.extend (lab)
+			Result.disable_item_expand (lab)
+
+			tf_username.return_actions.extend (agent tf_password.set_focus)
+			tf_password.return_actions.extend (agent (i_but: EV_BUTTON) do i_but.select_actions.call (Void) end(but))
+		end
+
+	new_register_box: EV_VERTICAL_BOX
+		local
+			lnk: EVS_LINK_LABEL
+			l_field_width: INTEGER
+			w: EV_WIDGET
+			tf_password: EV_PASSWORD_FIELD
+			tf_username, tf_email, tf_firstname, tf_lastname: EV_TEXT_FIELD
+			but: EV_BUTTON
+			l_scaler: EVS_DPI_SCALER
+		do
+			create l_scaler.make
+			l_field_width := l_scaler.scaled_size (300)
+
+			create Result
+			Result.set_border_width (layout_constants.default_border_size)
+			Result.set_padding_width (layout_constants.default_padding_size)
+			create tf_username
+			create tf_password
+			create tf_firstname
+			create tf_lastname
+			create tf_email
+			w := tf_username
+			w.set_minimum_width (l_field_width)
+			append_label_and_item_horizontally (interface_names.l_user_name, w, Result)
+			w := tf_password
+			w.set_minimum_width (l_field_width)
+			append_label_and_item_horizontally (interface_names.l_password, w, Result)
+
+			w := tf_firstname
+			w.set_minimum_width (l_field_width)
+			append_label_and_item_horizontally (interface_names.l_first_name, w, Result)
+			w := tf_lastname
+			w.set_minimum_width (l_field_width)
+			append_label_and_item_horizontally (interface_names.l_last_name, w, Result)
+
+			w := tf_email
+			w.set_minimum_width (l_field_width)
+			append_label_and_item_horizontally (interface_names.l_email, w, Result)
+			create but.make_with_text_and_action (interface_names.b_register, agent process_account_registration (new_gui_form (<<
+						["user_name", tf_username],
+						["password", tf_password],
+						["first_name", tf_firstname],
+						["last_name", tf_lastname],
+						["email", tf_email]
+					>>)))
+			layout_constants.set_default_width_for_button (but)
+			append_label_and_item_horizontally ("", but, Result)
+
+			tf_username.return_actions.extend (agent tf_password.set_focus)
+			tf_password.return_actions.extend (agent (i_but: EV_BUTTON) do i_but.select_actions.call (Void) end(but))
 		end
 
 feature -- Status report
@@ -531,7 +623,7 @@ feature {NONE} -- Implementation
 
 
 ;note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

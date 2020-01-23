@@ -300,7 +300,7 @@ feature {NONE} -- Welcome dialog
 			create pg.make (is_community_edition)
 			pg.set_quit_action (agent do (create {EXCEPTIONS}).die (0) end)
 			pg.set_next_action (agent load_interface)
-			pg.dialog.set_size (100, 100)
+			pg.dialog.set_size (first_window.scaled_size (300), first_window.scaled_size (100))
 			pg.dialog.show_actions.extend_kamikaze (agent (i_dlg: EV_DIALOG; i_win: EV_WINDOW)
 					do
 						i_dlg.set_position (
@@ -569,7 +569,7 @@ feature {NONE} -- Factory
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -16,8 +16,7 @@ inherit
 	SHARED_ES_CLOUD_SERVICE
 
 create
-	make_community,
-	make_enterprise,
+	make_cloud_required,
 	make
 
 convert
@@ -37,17 +36,9 @@ feature {NONE} -- Initialization
 			build_interface (w)
 		end
 
-	make_community
+	make_cloud_required
 		do
-			is_community_edition := True
-			is_enterprise_edition := False
-			make
-		end
-
-	make_enterprise
-		do
-			is_enterprise_edition := True
-			is_community_edition := False
+			is_cloud_required := True
 			make
 		end
 
@@ -81,12 +72,12 @@ feature {NONE} -- Initialization
 			vb_terms.set_padding_width (layout_constants.default_padding_size)
 			vb_terms.set_minimum_width (50)
 
-			if is_community_edition then
+			if is_cloud_required then
 				create txt
-				s := "Please login, to use the EiffelStudio Community Edition."
-			elseif is_enterprise_edition then
+				s := "Please login, to use the EiffelStudio " + {ES_IDE_SETTINGS}.edition_title + " ."
+			else
 				create txt
-				s := "To use additional online services, please login."
+				s := "To use additional cloud services, please login."
 			end
 			if s /= Void then
 				s.append ("%NBy registering EiffelStudio you agree to the terms of use and the rules on user-provided information.")
@@ -255,9 +246,7 @@ feature {NONE} -- Initialization
 
 	new_login_box: EV_VERTICAL_BOX
 		local
-			vb_login: EV_VERTICAL_BOX
 			lab: EV_LABEL
-			lnk: EVS_LINK_LABEL
 			l_field_width: INTEGER
 			w: EV_WIDGET
 			tf_password: EV_PASSWORD_FIELD
@@ -300,7 +289,6 @@ feature {NONE} -- Initialization
 
 	new_register_box: EV_VERTICAL_BOX
 		local
-			lnk: EVS_LINK_LABEL
 			l_field_width: INTEGER
 			w: EV_WIDGET
 			tf_password: EV_PASSWORD_FIELD
@@ -352,6 +340,9 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
+	is_cloud_required: BOOLEAN
+			-- Is cloud required?
+
 	is_community_edition: BOOLEAN
 			-- Is Current EiffelStudio the community edition?
 
@@ -360,7 +351,7 @@ feature -- Status report
 
 	is_offline_allowed: BOOLEAN
 		do
-			Result := not is_community_edition and False  -- FIXME: for now, let's disable offline access.
+			Result := False  -- FIXME: for now, let's disable offline access.
 		end
 
 	is_guest_logged_in: BOOLEAN

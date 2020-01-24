@@ -233,7 +233,7 @@ feature {NONE} -- Implementation
 			-- Clause in the about dialog concerning the license.
 		do
 			create Result.make (50)
-			Result.append ("Installation information:%N")
+			Result.append ("Installation information (" + {ES_IDE_SETTINGS}.edition_title + "):%N")
 			Result.append ("Version = " + t_version_info (True) + "%N")
 			Result.append ("Monitor DPI = " + {EV_MONITOR_DPI_DETECTOR_IMP}.dpi.out + "%N")
 			Result.append ("%N")
@@ -242,7 +242,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Constant strings
 
-	t_version_info (a_full: BOOLEAN): STRING
+	t_version_info (a_full: BOOLEAN): STRING_32
 		once
 			create Result.make (100)
 			Result.append (Interface_names.t_Project)

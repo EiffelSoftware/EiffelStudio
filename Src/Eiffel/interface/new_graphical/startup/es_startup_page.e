@@ -63,9 +63,11 @@ feature -- Execution
 							cld.on_account_logged_in (acc)
 						end
 						on_next
-					else
+					elseif {ES_IDE_SETTINGS}.cloud_required then
 						switch_to_account_page
 						show_modal_to_window (win)
+					else
+						on_next
 					end
 				else
 					on_next
@@ -166,6 +168,8 @@ feature -- Execution
 		end
 
 	switch_to_account_page
+		require
+			is_cloud_enabled: is_cloud_enabled
 		local
 			vb: EV_VERTICAL_BOX
 			hb: EV_HORIZONTAL_BOX
@@ -198,10 +202,10 @@ feature -- Execution
 
 			vb.set_padding_width (layout_constants.default_padding_size)
 
-			if is_community_edition then
-				create wid.make_community
+			if {ES_IDE_SETTINGS}.cloud_required then
+				create wid.make_cloud_required
 			else
-				create wid.make_enterprise
+				create wid.make
 			end
 			wid.next_actions.extend (agent on_next)
 			vb.extend (wid)

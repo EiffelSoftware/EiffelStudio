@@ -50,7 +50,9 @@ feature -- Services
 			a_container.register_with_activator ({WIZARD_ENGINE_S}, agent new_wizard_service, False)
 			a_container.register_with_activator ({ES_CODE_TEMPLATE_CATALOG_S}, agent new_es_code_template_catalog_service, False)
 			a_container.register_with_activator ({CODE_ANALYZER_S [STONE, CA_RULE_VIOLATION]}, agent new_code_analyzer_service, False)
-			a_container.register_with_activator ({ES_CLOUD_S}, agent new_es_cloud_service, False)
+			if {ES_IDE_SETTINGS}.cloud_enabled then
+				a_container.register_with_activator ({ES_CLOUD_S}, agent new_es_cloud_service, False)
+			end
 			a_container.register_with_activator ({NOTIFICATION_S}, agent new_notification_service, False)
 		end
 
@@ -271,7 +273,7 @@ feature {NONE} -- Internationalization
 	lb_external_compilation: STRING = "External Compilation"
 
 ;note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

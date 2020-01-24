@@ -81,8 +81,15 @@ feature -- Basic Operations
 		end
 
 	send_email_download_notification (a_content: READABLE_STRING_32)
+				-- Send a notification email with content `a_content' with subject `a_subject'.
+		local
+			l_email: NOTIFICATION_EMAIL
 		do
-			send_download_notification (a_content, "Notification EiffelStudio Download")
+			create l_email.make (admin_email, download_email, a_content, "Notification EiffelStudio Download")
+			l_email.add_header_line ("MIME-Version: 1.0")
+			l_email.add_header_line ("Content-Type: text/html; charset=ISO-8859-1")
+
+			send_email (l_email)
 		end
 
 	send_email_internal_server_error (a_content: READABLE_STRING_32)
@@ -127,18 +134,5 @@ feature -- Basic Operations
 	Disclaimer: STRING = "This email is generated automatically, and the address is not monitored for responses. If you try contacting us by using %"reply%", you will not receive an answer."
 		-- Email not monitored disclaimer.
 
-feature {NONE} -- Implemenation
-
-	send_download_notification (a_content: READABLE_STRING_32; a_subject: READABLE_STRING_32)
-				-- Send a notification email with content `a_content' with subject `a_subject'.
-		local
-			l_email: NOTIFICATION_EMAIL
-		do
-			create l_email.make (admin_email, download_email, "Bad request", a_subject.to_string_8)
-			l_email.add_header_line ("MIME-Version: 1.0")
-			l_email.add_header_line ("Content-Type: text/html; charset=ISO-8859-1")
-
-			send_email (l_email)
-		end
 
 end

@@ -377,8 +377,8 @@ test	vkcn-sneak				valid078 tcf pass validity
 test	replicated-feat-multiple-select	valid079 tcf fail validity
 test	double-assigned-to-real		valid080 tcf pass validity
 test	precondition-too-secret		valid081 tcf pass validity
-test	selective-export-operator-feat	valid082 tcf fail validity
-test	operator-feat-export-to-self	valid083 tcf fail validity
+test	selective-export-operator-feat	valid082 tcf pass validity
+test	operator-feat-export-to-self	valid083 tcf pass validity
 test	vape-involving-current		valid084 tcf pass validity
 test	secret-precondition-heir-export	valid085 tcf pass validity
 test	secret-func-arg-in-precondition	valid086 tcf pass validity

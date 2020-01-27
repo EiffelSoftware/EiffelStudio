@@ -1,5 +1,4 @@
 note
-	description: "Summary description for {ES_ACCOUNT_LOGIN_REGISTER_BOX}."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -489,17 +488,17 @@ feature -- UI callbacks
 
 	on_user_loging_error (a_form: like new_gui_form)
 		do
-			popup_message ("Error while loging ...")
+			popup_message ("Error while logging in")
 		end
 
 	on_user_registered (acc: ES_ACCOUNT)
 		do
-			popup_message ("Thank you for the registration ...")
+			popup_message ("Thank you for the registration")
 		end
 
 	on_user_registration_error (a_form: like new_gui_form)
 		do
-			popup_message ("Error while registrating ...")
+			popup_message ("Error while registering")
 		end
 
 feature {NONE} -- Implementation

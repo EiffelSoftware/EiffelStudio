@@ -50,7 +50,9 @@ feature {NONE} -- Implementation
 			l_file_prop.enable_readonly
 			properties.add_property (l_file_prop)
 
-			properties.current_section.expand
+			if attached properties.current_section as l_current_section then
+				l_current_section.expand
+			end
 		ensure
 			properties_not_void: properties /= Void
 		end
@@ -121,7 +123,9 @@ feature {NONE} -- Implementation
 			l_root_prop.use_inherited_actions.extend (agent handle_value_changes (True))
 			update_inheritance_root (Void, l_root_prop)
 			properties.add_property (l_root_prop)
-			properties.current_section.expand
+			if attached properties.current_section as l_current_section then
+				l_current_section.expand
+			end
 
 				-- Language section.
 			properties.add_section (conf_interface_names.section_language)
@@ -155,13 +159,17 @@ feature {NONE} -- Implementation
 			else
 				inherited_capability := Void
 			end
-			add_use_capability_property
-				(conf_interface_names.option_concurrency_name,
-				conf_interface_names.option_concurrency_description,
-				conf_interface_names.option_concurrency_value,
-				current_target.changeable_internal_options.concurrency_capability,
-				inherited_capability)
-			properties.current_section.expand
+			add_use_capability_property (
+					conf_interface_names.option_concurrency_name,
+					conf_interface_names.option_concurrency_description,
+					conf_interface_names.option_concurrency_value,
+					current_target.changeable_internal_options.concurrency_capability,
+					inherited_capability
+				)
+
+			if attached properties.current_section as l_current_section then
+				l_current_section.expand
+			end
 
 				-- Execution section.
 			properties.add_section (conf_interface_names.section_execution)
@@ -203,7 +211,9 @@ feature {NONE} -- Implementation
 			l_version_prop.use_inherited_actions.extend (agent handle_value_changes (False))
 			update_inheritance_version (Void, l_version_prop)
 			properties.add_property (l_version_prop)
-			properties.current_section.expand
+			if attached properties.current_section as l_current_section then
+				l_current_section.expand
+			end
 
 				-- Capability section.
 			properties.add_section (conf_interface_names.section_capability)
@@ -222,7 +232,9 @@ feature {NONE} -- Implementation
 				current_target.changeable_internal_options.concurrency,
 				inherited_choice
 			)
-			properties.current_section.collapse
+			if attached properties.current_section as l_current_section then
+				l_current_section.collapse
+			end
 		ensure
 			properties_not_void: properties /= Void
 		end
@@ -302,7 +314,10 @@ feature {NONE} -- Implementation
 				l_bool_prop.enable_readonly
 			end
 			properties.add_property (l_bool_prop)
-			properties.current_section.expand
+			if attached properties.current_section as l_current_section then
+				l_current_section.expand
+			end
+
 				-- Absent explicit assertion.
 			l_bool_prop := new_boolean_property (conf_interface_names.target_absent_explicit_assertion_name, current_target.setting_absent_explicit_assertion)
 			l_bool_prop.set_description (conf_interface_names.target_absent_explicit_assertion_description)
@@ -761,7 +776,7 @@ feature {NONE} -- Validation and warning generation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -32,6 +32,8 @@ feature {NONE} -- Initialization
 			target := a_target
 			create on_ok_actions
 			create on_cancel_actions
+			create button_location_browse
+			create field_info
 
 			create fr
 			create vb2
@@ -80,11 +82,12 @@ feature {NONE} -- Initialization
 			create field_location
 			hb2.extend (field_location)
 
-			create l_btn.make_with_text_and_action (conf_interface_names.browse, agent browse)
+			l_btn := button_location_browse
+			l_btn.set_text (conf_interface_names.browse)
+			l_btn.select_actions.extend (agent browse)
 			l_btn.set_pixmap (conf_pixmaps.general_open_icon)
 			hb2.extend (l_btn)
 			hb2.disable_item_expand (l_btn)
-			button_location_browse := l_btn
 
 				-- Information
 			create hb
@@ -97,7 +100,7 @@ feature {NONE} -- Initialization
 			hb.disable_item_expand (l_info_label)
 			l_info_label.align_text_right
 
-			create field_info
+--			create field_info
 			field_info.disable_edit
 			field_info.set_minimum_height (60)
 			hb.extend (field_info)
@@ -404,7 +407,7 @@ feature {NONE} -- Actions
 invariant
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

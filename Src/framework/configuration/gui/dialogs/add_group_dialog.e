@@ -72,7 +72,7 @@ feature {NONE} -- Implementation
 			l_groups: STRING_TABLE [CONF_GROUP]
 		do
 			l_groups := a_target.groups
-			Result := l_groups.has_key (a_group.as_lower) and then l_groups.found_item.name.same_string_general (a_group.as_lower)
+			Result := attached l_groups.item (a_group.as_lower) as g and then g.name.same_string_general (a_group.as_lower)
 			if not Result then
 				Result := a_target.child_targets.there_exists (agent group_exists(a_group.as_lower, ?))
 			end
@@ -83,7 +83,7 @@ invariant
 	factory_not_void: factory /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

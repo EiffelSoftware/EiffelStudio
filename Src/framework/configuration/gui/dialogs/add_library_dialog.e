@@ -12,6 +12,7 @@ inherit
 	ADD_GROUP_DIALOG
 		redefine
 			initialize,
+			create_interface_objects,
 			last_group
 		end
 
@@ -58,17 +59,31 @@ create
 
 feature {NONE} -- Initialization
 
+	create_interface_objects
+		local
+			l_service: ES_GUI_IRON_SERVICE
+		do
+			Precursor
+			create l_service
+			iron_service := l_service
+
+			create filter
+			create selection_cell
+			create search_results_box.make (target)
+			create library_widget.make (target)
+			create iron_package_widget.make (l_service)
+		end
+
 	initialize
 			-- Initialize.
 		local
 			fr: EV_FRAME
 			main, vb: EV_VERTICAL_BOX
 			cl: EV_CELL
-			l_service: ES_GUI_IRON_SERVICE
 			hsp: EV_VERTICAL_SPLIT_AREA
+			l_service: like iron_service
 		do
-			create l_service
-			iron_service := l_service
+			l_service := iron_service
 
 			Precursor
 
@@ -90,9 +105,8 @@ feature {NONE} -- Initialization
 			hsp.set_first (fr)
 			build_search_box (vb)
 
-			create cl
+			cl := selection_cell
 			hsp.set_second (cl)
-			selection_cell := cl
 			build_iron_package_box
 			build_library_selection_box
 			cl.extend (library_selection_box)
@@ -162,7 +176,7 @@ feature {NONE} -- Initialization
 
 
 				-- Create grid
-			create search_results_box.make (target)
+--			create search_results_box.make (target)
 			search_results_box.set_minimum_size (600, 100)
 			search_results_box.on_item_selected_actions.extend (agent on_search_item_selected ({ES_LIBRARY_PROVIDER_ITEM}?))
 
@@ -197,7 +211,6 @@ feature {NONE} -- Initialization
 			l_update_index_button.enable_sensitive
 			hb1.extend (l_update_index_button)
 			hb1.disable_item_expand (l_update_index_button)
-			update_button := l_update_index_button
 			layout_constants.set_default_width_for_button (l_update_index_button)
 
 			create l_btn
@@ -242,8 +255,7 @@ feature {NONE} -- Initialization
 			create hbf
 			hbf.extend (create {EV_LABEL}.make_with_text (Names.l_filter))
 			hbf.disable_item_expand (hbf.last)
-			create l_filter
-			filter := l_filter
+			l_filter := filter
 			hbf.extend (l_filter)
 			l_filter.change_actions.extend (agent request_update_filter)
 			create l_clear_filter_button
@@ -308,7 +320,7 @@ feature {NONE} -- Initialization
 			else
 				hb2.set_padding (layout_constants.small_padding_size)
 				create l_radio2.make_with_text (conf_interface_names.dialog_search_library_by_class)
-				l_radio1.set_tooltip (conf_interface_names.dialog_search_library_by_class_tooltip)
+				l_radio2.set_tooltip (conf_interface_names.dialog_search_library_by_class_tooltip)
 				l_radio2.align_text_left
 				hb2.extend (l_radio2)
 				hb2.disable_item_expand (l_radio2)
@@ -365,8 +377,7 @@ feature {NONE} -- Initialization
 			hb: EV_HORIZONTAL_BOX
 			but: EV_BUTTON
 		do
-			create w.make (iron_service)
-			iron_package_widget := w
+			w := iron_package_widget
 
 			create vb
 			vb.extend (w.widget)
@@ -400,8 +411,7 @@ feature {NONE} -- Initialization
 		local
 			w: like library_widget
 		do
-			create w.make (target)
-			library_widget := w
+			w := library_widget
 			w.on_ok_actions.extend (agent on_ok)
 			w.on_cancel_actions.extend (agent on_cancel)
 		end
@@ -474,7 +484,7 @@ feature {NONE} -- GUI elements
 
 	selection_cell: EV_CELL
 
-	iron_package_box: EV_WIDGET
+	iron_package_box: detachable EV_WIDGET
 
 	iron_package_widget: IRON_PACKAGE_WIDGET
 
@@ -497,7 +507,7 @@ feature {NONE} -- GUI elements
 			Result := filter.text
 		end
 
-	provider_checkboxes: STRING_TABLE [EV_CHECK_BUTTON]
+	provider_checkboxes: detachable STRING_TABLE [EV_CHECK_BUTTON]
 
 	provider_ids: detachable ARRAYED_LIST [READABLE_STRING_GENERAL]
 		do
@@ -515,9 +525,6 @@ feature {NONE} -- GUI elements
 				end
 			end
 		end
-
-	update_button: EV_BUTTON
-			-- Update libraries cache.
 
 feature -- Access
 
@@ -561,12 +568,14 @@ feature {NONE} -- Libraries cache.
 			nb: INTEGER
 		do
 			if attached lib_manager as m then
-				across
-					provider_checkboxes as ic
-				loop
-					if ic.item.is_sensitive and then ic.item.is_selected then
-						m.reset_provider (ic.key, target)
-						nb := nb + 1
+				if attached provider_checkboxes as l_provider_checkboxes then
+					across
+						l_provider_checkboxes as ic
+					loop
+						if ic.item.is_sensitive and then ic.item.is_selected then
+							m.reset_provider (ic.key, target)
+							nb := nb + 1
+						end
 					end
 				end
 				if nb = 0 then
@@ -590,12 +599,12 @@ feature {NONE} -- Configuration settings for libraries
 			l_close_button: EV_BUTTON
 		do
 			p1 := eiffel_layout.libraries_config_name
-			if eiffel_layout.is_user_files_supported then
-				us1 := eiffel_layout.user_priority_file_name (p1, False).name
+			if eiffel_layout.is_user_files_supported and then attached eiffel_layout.user_priority_file_name (p1, False) as p then
+				us1 := p.name
 			end
 			p2 := eiffel_layout.precompiles_config_name
-			if eiffel_layout.is_user_files_supported then
-				us2 := eiffel_layout.user_priority_file_name (p2, False).name
+			if eiffel_layout.is_user_files_supported and then attached eiffel_layout.user_priority_file_name (p2, False) as p then
+				us2 := p.name
 			end
 
 			create dlg
@@ -710,7 +719,9 @@ feature {NONE} -- Action handlers
 			end
 			if cl_item /= w then
 				selection_cell.wipe_out
-				selection_cell.extend (w)
+				if w /= Void then
+					selection_cell.extend (w)
+				end
 			end
 		end
 
@@ -848,7 +859,7 @@ feature {NONE} -- Basic operation
 
 feature {NONE} -- Implementation: iron api
 
-	iron_service: ES_IRON_SERVICE
+	iron_service: ES_GUI_IRON_SERVICE
 
 feature {NONE} -- Implementation
 
@@ -863,7 +874,7 @@ invariant
 	target_set_in_boxes: search_results_box.target = target
 
 ;note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

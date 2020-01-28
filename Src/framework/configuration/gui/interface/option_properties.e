@@ -39,7 +39,7 @@ feature -- Access
 	window: detachable EV_WINDOW
 			-- Window to show errors modal. If `Void' it will be shown using the default from ES_PROMPT_PROVIDER.
 
-	properties: detachable PROPERTY_GRID
+	properties: PROPERTY_GRID
 			-- Grid where properties get added.
 
 	debug_clauses: ARRAYED_LIST [STRING]
@@ -324,7 +324,9 @@ feature {NONE} -- Modification
 			add_syntax_property (an_options, an_inherited_options, a_inherits, a_check_non_client_option)
 				-- Manifest array type checks.
 			add_array_property (an_options, an_inherited_options, a_inherits, a_check_non_client_option)
-			properties.current_section.expand
+			if attached properties.current_section as l_current_section then
+				l_current_section.expand
+			end
 
 				-- Execution section.
 			properties.add_section (conf_interface_names.section_execution)
@@ -446,7 +448,9 @@ feature {NONE} -- Modification
 				update_inheritance_assertion (l_require, l_ensure, l_check, l_invariant, l_loop, l_sup_require, l_assertions /= Void)
 			end
 
-			properties.current_section.expand
+			if attached properties.current_section as l_current_section then
+				l_current_section.expand
+			end
 		end
 
 	add_warning_option_properties (an_options, an_inherited_options: CONF_OPTION; a_inherits: BOOLEAN; a_check_non_client_option: BOOLEAN)
@@ -539,7 +543,9 @@ feature {NONE} -- Modification
 				end
 			end
 
-			properties.current_section.expand
+			if attached properties.current_section as l_current_section then
+				l_current_section.expand
+			end
 		end
 
 	add_debug_option_properties (an_options, an_inherited_options: CONF_OPTION; a_inherits: BOOLEAN; a_check_non_client_option: BOOLEAN)
@@ -599,8 +605,9 @@ feature {NONE} -- Modification
 
 				debug_clauses.forth
 			end
-
-			properties.current_section.expand
+			if attached properties.current_section as l_current_section then
+				l_current_section.expand
+			end
 		end
 
 	add_dotnet_option_properties (an_options, an_inherited_options: CONF_OPTION; a_inherits, a_il_generation: BOOLEAN; a_check_non_client_option: BOOLEAN)
@@ -613,10 +620,12 @@ feature {NONE} -- Modification
 			properties.add_section (conf_interface_names.section_dotnet)
 			add_dotnet_namespace_property (an_options, an_inherited_options, a_inherits, a_il_generation, a_check_non_client_option)
 			add_dotnet_optimization_property (an_options, an_inherited_options, a_inherits, a_check_non_client_option)
-			if a_il_generation then
-				properties.current_section.expand
-			else
-				properties.current_section.collapse
+			if attached properties.current_section as l_current_section then
+				if a_il_generation then
+					l_current_section.expand
+				else
+					l_current_section.collapse
+				end
 			end
 		end
 
@@ -883,7 +892,7 @@ feature {NONE} -- Refresh displayed data.
 			-- Last added choice property
 
 ;note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

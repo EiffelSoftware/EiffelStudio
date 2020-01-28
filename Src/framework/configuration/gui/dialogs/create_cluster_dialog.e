@@ -11,6 +11,7 @@ class
 inherit
 	ADD_GROUP_DIALOG
 		redefine
+			create_interface_objects,
 			initialize,
 			last_group
 		end
@@ -37,6 +38,13 @@ create
 	make
 
 feature {NONE} -- Initialization
+
+	create_interface_objects
+		do
+			Precursor
+			create location
+			create name
+		end
 
 	initialize
 			-- Initialize.
@@ -66,7 +74,7 @@ feature {NONE} -- Initialization
 			vb2.disable_item_expand (l_lbl)
 			l_lbl.align_text_left
 
-			create name
+--			create name
 			vb2.extend (name)
 			vb2.disable_item_expand (name)
 
@@ -87,7 +95,7 @@ feature {NONE} -- Initialization
 			vb2.disable_item_expand (hb2)
 			hb2.set_padding (layout_constants.default_padding_size)
 
-			create location
+--			create location
 			hb2.extend (location)
 
 			create l_btn.make_with_text_and_action (conf_interface_names.browse, agent browse)
@@ -215,10 +223,10 @@ feature {NONE} -- Actions
 					l_loc := factory.new_location_from_path (location.text, target)
 					g := factory.new_cluster (name.text, l_loc, target)
 					last_group := g
-					if parent_cluster /= Void then
-						g.set_parent (parent_cluster)
+					if attached parent_cluster as l_parent_cluster then
+						g.set_parent (l_parent_cluster)
 						g.set_classes (create {STRING_TABLE [CONF_CLASS]}.make (0))
-						parent_cluster.add_child (g)
+						l_parent_cluster.add_child (g)
 					end
 					g.set_recursive (True)
 					target.add_cluster (g)
@@ -230,7 +238,7 @@ feature {NONE} -- Actions
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

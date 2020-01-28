@@ -58,6 +58,8 @@ feature {NONE} -- Initialization
 		do
 			target := a_target
 			factory := a_factory
+			create location
+			create name
 			default_create
 		ensure
 			target_set: target = a_target
@@ -99,7 +101,7 @@ feature {NONE} -- Initialization
 			vb2.disable_item_expand (hb2)
 			hb2.set_padding (layout_constants.default_padding_size)
 
-			create location
+--			create location
 			hb2.extend (location)
 
 			create l_btn.make_with_text_and_action (conf_interface_names.browse, agent browse)
@@ -119,7 +121,7 @@ feature {NONE} -- Initialization
 			vb2.disable_item_expand (l_lbl)
 			l_lbl.align_text_left
 
-			create name
+--			create name
 			vb2.extend (name)
 			vb2.disable_item_expand (name)
 
@@ -295,7 +297,7 @@ invariant
 	factory_not_void: factory /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

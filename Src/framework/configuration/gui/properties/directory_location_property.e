@@ -24,8 +24,8 @@ feature {NONE} -- Creation
 	make (n: like name; t: like target)
 			-- Initialize with property name `n` and target `t`.
 		do
-			make_property (n)
 			target := t
+			make_property (n)
 		end
 
 feature -- Access
@@ -51,7 +51,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

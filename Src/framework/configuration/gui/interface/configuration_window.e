@@ -110,13 +110,13 @@ feature {NONE}-- Initialization
 				debug_clauses := a_debugs
 			end
 			current_target := a_factory.new_target ({STRING_32} "*", a_system)
-			refresh_current := agent do_nothing
 			selected_target := a_target
 			set_pixmaps (a_pixmaps)
 			conf_system := a_system
 			conf_factory := a_factory
 			external_editor_command := a_editor
 			default_create
+			refresh_current := agent do_nothing
 			window := Current
 			config_windows.force (Current, conf_system.file_name)
 		ensure
@@ -144,6 +144,7 @@ feature {NONE}-- Initialization
 	create_interface_objects
 		do
 			Precursor
+			create properties
 			create toolbar.make
 			create section_tree
 			create configuration_space
@@ -353,8 +354,7 @@ feature {NONE} -- Element initialization
 			container.extend (l_frame)
 			l_frame.set_style ({EV_FRAME_CONSTANTS}.ev_frame_lowered)
 
-			create p
-			properties := p
+			p := properties
 			l_frame.extend (p)
 			p.focus_in_actions.extend (agent
 				do
@@ -427,7 +427,8 @@ feature {NONE} -- Element initialization
 			b: EV_BUTTON
 			g: ES_GRID
 		do
-			if grid = Void then
+			g := grid
+			if g = Void then
 				configuration_space.wipe_out
 
 					-- border
@@ -473,30 +474,30 @@ feature {NONE} -- Element initialization
 				hb.disable_item_expand (b)
 
 					-- remove properties
-				if properties /= Void then
-					properties.destroy
+				if attached properties as props then
+					props.destroy
 					properties := Void
 				end
 			else
-				l_column_width1 := grid.column (1).width
-				l_column_width2 := grid.column (2).width
-				grid.wipe_out
-				grid.set_column_count_to (2)
-				grid.column (1).set_width (l_column_width1)
-				grid.column (2).set_width (l_column_width2)
+				l_column_width1 := g.column (1).width
+				l_column_width2 := g.column (2).width
+				g.wipe_out
+				g.set_column_count_to (2)
+				g.column (1).set_width (l_column_width1)
+				g.column (2).set_width (l_column_width2)
 
 					-- clear button actions
 				add_button.select_actions.wipe_out
 				remove_button.select_actions.wipe_out
 			end
 
-			grid.enable_border
-			grid.enable_last_column_use_all_width
-			grid.enable_single_row_selection
+			g.enable_border
+			g.enable_last_column_use_all_width
+			g.enable_single_row_selection
 		ensure
-			grid_ok: grid /= Void and then not grid.is_destroyed
-			add_button_ok: add_button /= Void and then not add_button.is_destroyed
-			remove_button_ok: remove_button /= Void and then not remove_button.is_destroyed
+			grid_ok: attached grid as el_g and then not el_g.is_destroyed
+			add_button_ok: attached add_button as ab and then not ab.is_destroyed
+			remove_button_ok: attached remove_button as rb and then not rb.is_destroyed
 			properties_void: properties = Void
 		end
 
@@ -1517,46 +1518,49 @@ feature {CONFIGURATION_SECTION} -- Section tree selection agents
 			refresh_current := agent show_properties_target_mapping (a_target)
 			lock_update
 
-			initialize_grid
-
-			grid.column (1).set_title (conf_interface_names.mapping_old_name)
-			grid.column (2).set_title (conf_interface_names.mapping_new_name)
-			if current_target.extends /= Void then
-				l_inh_vars := current_target.extends.mapping
+			if attached current_target.extends as l_extends then
+				l_inh_vars := l_extends.mapping
 			else
 				create l_inh_vars.make_equal (0)
 			end
-			from
-				l_vars := current_target.mapping
-				l_vars.start
-			until
-				l_vars.after
-			loop
-				i := grid.row_count
-				create l_item.make ("")
-				l_var_key := l_vars.key_for_iteration
-				l_item.set_value (l_var_key)
-				l_item.pointer_button_press_actions.wipe_out
-				l_item.activate_when_pointer_is_double_pressed
-				l_item.change_value_actions.extend (agent update_mapping_key (l_var_key, ?))
-				grid.set_item (1, i + 1, l_item)
-				create l_item.make ("")
-				l_item.set_value (l_vars.item_for_iteration)
-				l_item.pointer_button_press_actions.wipe_out
-				l_item.activate_when_pointer_is_double_pressed
-				l_item.change_value_actions.extend (agent update_mapping_value (l_var_key, ?))
-				grid.set_item (2, i + 1, l_item)
-				l_inh_vars.search (l_var_key)
-				if l_inh_vars.found then
-					if l_inh_vars.found_item.is_equal (l_vars.item_for_iteration) then
-						-- inherited
-						grid.row (i + 1).set_background_color (inherit_color)
-					else
-						-- overriden
-						grid.row (i + 1).set_background_color (override_color)
+
+			initialize_grid
+			check attached grid as g then
+				g.column (1).set_title (conf_interface_names.mapping_old_name)
+				g.column (2).set_title (conf_interface_names.mapping_new_name)
+
+				from
+					l_vars := current_target.mapping
+					l_vars.start
+				until
+					l_vars.after
+				loop
+					i := grid.row_count
+					create l_item.make ("")
+					l_var_key := l_vars.key_for_iteration
+					l_item.set_value (l_var_key)
+					l_item.pointer_button_press_actions.wipe_out
+					l_item.activate_when_pointer_is_double_pressed
+					l_item.change_value_actions.extend (agent update_mapping_key (l_var_key, ?))
+					grid.set_item (1, i + 1, l_item)
+					create l_item.make ("")
+					l_item.set_value (l_vars.item_for_iteration)
+					l_item.pointer_button_press_actions.wipe_out
+					l_item.activate_when_pointer_is_double_pressed
+					l_item.change_value_actions.extend (agent update_mapping_value (l_var_key, ?))
+					grid.set_item (2, i + 1, l_item)
+					l_inh_vars.search (l_var_key)
+					if l_inh_vars.found then
+						if l_inh_vars.found_item.is_equal (l_vars.item_for_iteration) then
+							-- inherited
+							grid.row (i + 1).set_background_color (inherit_color)
+						else
+							-- overriden
+							grid.row (i + 1).set_background_color (override_color)
+						end
 					end
+					l_vars.forth
 				end
-				l_vars.forth
 			end
 
 			add_button.select_actions.extend (agent add_mapping)
@@ -1566,7 +1570,7 @@ feature {CONFIGURATION_SECTION} -- Section tree selection agents
 			is_refreshing := False
 		ensure
 			not_refreshing: not is_refreshing
-			grid_ok: grid /= Void and then not grid.is_destroyed
+			grid_ok: attached grid as el_grid and then not el_grid.is_destroyed
 		end
 
 	show_properties_target_advanced (a_target: CONF_TARGET)
@@ -1617,8 +1621,8 @@ feature {NONE} -- Implementation
 	refresh
 			-- Regenerate currently displayed data.
 		do
-			if refresh_current /= Void then
-				refresh_current.call (Void)
+			if attached refresh_current as act then
+				act.call (Void)
 				set_focus
 				section_tree.set_focus
 			end
@@ -1706,8 +1710,8 @@ feature {NONE} -- Implementation
 			create l_mls_prop.make (conf_interface_names.system_description_name)
 			l_mls_prop.enable_text_editing
 			l_mls_prop.set_description (conf_interface_names.system_description_description)
-			if conf_system.description /= Void then
-				l_mls_prop.set_value (conf_system.description)
+			if attached conf_system.description as desc then
+				l_mls_prop.set_value (desc)
 			end
 			l_mls_prop.change_value_actions.extend (agent conf_system.set_description ({READABLE_STRING_32}?))
 			l_mls_prop.change_value_actions.extend (agent change_no_argument_wrapper ({READABLE_STRING_32}?, agent handle_value_changes (False)))
@@ -1716,8 +1720,8 @@ feature {NONE} -- Implementation
 				-- library target
 			create l_choice_prop.make_with_choices (conf_interface_names.system_library_target_name, l_targets_none)
 			l_choice_prop.set_description (conf_interface_names.system_library_target_description)
-			if conf_system.library_target /= Void then
-				l_choice_prop.set_value (conf_system.library_target.name)
+			if attached conf_system.library_target as l_lib_target then
+				l_choice_prop.set_value (l_lib_target.name)
 			end
 			l_choice_prop.validate_value_actions.extend (agent check_library_target)
 			l_choice_prop.change_value_actions.extend (agent conf_system.set_library_target_by_name)
@@ -1745,7 +1749,9 @@ feature {NONE} -- Implementation
 			l_string_prop.set_value (conf_system.uuid.out)
 			properties.add_property (l_string_prop)
 
-			properties.current_section.expand
+			if attached properties.current_section as l_current_section then
+				l_current_section.expand
+			end
 		end
 
 	initialize_properties_target_externals (an_external: CONF_EXTERNAL)
@@ -1845,7 +1851,9 @@ feature {NONE} -- Implementation
 			l_dial.change_value_actions.extend (agent change_no_argument_wrapper ({CONF_CONDITION_LIST}?, agent handle_value_changes (False)))
 			properties.add_property (l_dial)
 
-			properties.current_section.expand
+			if attached properties.current_section as l_current_section then
+				l_current_section.expand
+			end
 		end
 
 	initialize_properties_target_tasks (a_task: CONF_ACTION; a_type: STRING_GENERAL)
@@ -1931,7 +1939,9 @@ feature {NONE} -- Implementation
 			l_dial.change_value_actions.extend (agent change_no_argument_wrapper ({CONF_CONDITION_LIST}?, agent handle_value_changes (False)))
 			properties.add_property (l_dial)
 
-			properties.current_section.expand
+			if attached properties.current_section as l_current_section then
+				l_current_section.expand
+			end
 		end
 
 feature {NONE} -- Configuration setting
@@ -1953,16 +1963,19 @@ feature {NONE} -- Configuration setting
 			current_target: current_target /= Void
 			variables: grid /= Void
 		do
-			if grid.has_selected_row then
-				if attached {TEXT_PROPERTY [READABLE_STRING_GENERAL]} grid.selected_rows.first.item (1) as l_item then
+			if attached grid as g and then g.has_selected_row then
+				if attached {TEXT_PROPERTY [READABLE_STRING_GENERAL]} g.selected_rows.first.item (1) as l_item then
 					check
-						valid_value: l_item.value /= Void
+						valid_value: attached l_item.value as v
+					then
+						current_target.remove_variable (v.as_string_8)
 					end
-					current_target.remove_variable (l_item.value.as_string_8)
 				else
 					check expected_selected_row_item_type: False end
 				end
 				show_properties_target_variables (current_target)
+			else
+				check has_grid: False end
 			end
 		end
 
@@ -2009,13 +2022,15 @@ feature {NONE} -- Configuration setting
 			current_target: current_target /= Void
 			variables: grid /= Void
 		do
-			if grid.has_selected_row then
-				if attached {TEXT_PROPERTY [READABLE_STRING_GENERAL]} grid.selected_rows.first.item (1) as l_item then
+			if attached grid as g and then g.has_selected_row then
+				if attached {TEXT_PROPERTY [READABLE_STRING_GENERAL]} g.selected_rows.first.item (1) as l_item then
 					current_target.remove_mapping (l_item.text)
 				else
 					check expected_selected_row_item_type: False end
 				end
 				show_properties_target_mapping (current_target)
+			else
+				check has_grid: False end
 			end
 		end
 
@@ -2027,7 +2042,11 @@ feature {NONE} -- Configuration setting
 			an_old_key_valid: current_target.mapping.has (an_old_key)
 		do
 			if (create {EIFFEL_SYNTAX_CHECKER}).is_valid_class_name (a_new_key) then
-				current_target.internal_mapping.replace_key (a_new_key.as_upper, an_old_key)
+				if attached current_target.internal_mapping as m then
+					m.replace_key (a_new_key.as_upper, an_old_key)
+				else
+					check has_internal_mapping: False end
+				end
 			end
 			show_properties_target_mapping (current_target)
 		end
@@ -2056,7 +2075,7 @@ feature {NONE} -- Validation and warning generation
 		do
 			if a_target /= Void and then not a_target.is_empty then
 				l_target := conf_system.targets.item (a_target)
-				if not l_target.overrides.is_empty then
+				if l_target /= Void and then not l_target.overrides.is_empty then
 					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (conf_interface_names.library_target_override, Current, Void)
 				else
 					Result := True
@@ -2091,7 +2110,7 @@ invariant
 	selected_target_ok: selected_target /= Void and then not selected_target.is_empty
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

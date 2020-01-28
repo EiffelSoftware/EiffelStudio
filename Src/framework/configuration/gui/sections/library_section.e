@@ -53,15 +53,15 @@ feature -- Basic operations
 			l_config := group.path
 				-- see if we already have a window for this configuration and reuse it
 			config_windows.search (l_config)
-			if config_windows.found and then config_windows.found_item.is_show_requested then
-				l_lib_conf := config_windows.found_item
+			if attached config_windows.found_item as win and then win.is_show_requested then
+				l_lib_conf := win
 				l_lib_conf.raise
 			else
 				create l_load.make (configuration_window.conf_factory)
 				l_load.retrieve_and_check_configuration (l_config)
 				if l_load.is_error then
-					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (l_load.last_error.text, configuration_window, Void)
-				elseif not attached l_load.last_system as system or else not attached l_load.last_system.library_target then
+					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (if attached l_load.last_error as err then err.text else {STRING_32} "Error ..." end, configuration_window, Void)
+				elseif not attached l_load.last_system as system or else not attached system.library_target as l_lib_target then
 					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt ((create {CONF_ERROR_NOLIB}.make (group.name)).text, configuration_window, Void)
 				else
 					if l_load.is_warning and then attached l_load.last_warning_messages as w then
@@ -69,7 +69,7 @@ feature -- Basic operations
 						(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_warning_prompt (w, configuration_window, Void)
 					end
 
-					create l_lib_conf.make_for_target (system, system.library_target.name, configuration_window.conf_factory, create {ARRAYED_LIST [STRING]}.make (0), conf_pixmaps, configuration_window.external_editor_command)
+					create l_lib_conf.make_for_target (system, l_lib_target.name, configuration_window.conf_factory, create {ARRAYED_LIST [STRING]}.make (0), conf_pixmaps, configuration_window.external_editor_command)
 
 					l_lib_conf.set_size (configuration_window.width, configuration_window.height)
 					l_lib_conf.set_position (configuration_window.x_position, configuration_window.y_position)
@@ -120,7 +120,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

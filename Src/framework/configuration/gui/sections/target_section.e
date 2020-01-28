@@ -257,9 +257,17 @@ feature {NONE} -- Implementation
 			configuration_window.conf_system.remove_target (target.name)
 			l_parent := parent
 			l_parent_tree := parent_tree
-			l_parent.start
-			l_parent.prune (Current)
-			(if attached {EV_TREE_NODE} l_parent as n then n else l_parent_tree.first end).enable_select
+			if l_parent /= Void then
+				l_parent.start
+				l_parent.prune (Current)
+			end
+			if attached {EV_TREE_NODE} l_parent as n then
+				n.enable_select
+			elseif l_parent_tree /= Void and then attached l_parent_tree.first as n then
+				n.enable_select
+			else
+				check has_parent: False end
+			end
 		end
 
 	context_menu: ARRAYED_LIST [EV_MENU_ITEM]
@@ -326,7 +334,7 @@ invariant
 	target_not_void: target /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

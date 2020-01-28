@@ -83,16 +83,15 @@ feature -- Basic operations
 
 				-- see if we already have a window for this configuration and reuse it
 			config_windows.search (l_config)
-			if config_windows.found and then config_windows.found_item.is_show_requested then
-				l_conf_window := config_windows.found_item
+			if attached config_windows.found_item as win and then win.is_show_requested then
+				l_conf_window := win
 				l_conf_window.raise
 			else
 				create l_load.make (configuration_window.conf_factory)
 				l_load.retrieve_and_check_configuration (l_config)
 				if l_load.is_error or else not attached l_load.last_system as l_last_system then
-					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (l_load.last_error.text, configuration_window, Void)
+					(create {ES_SHARED_PROMPT_PROVIDER}).prompts.show_error_prompt (if attached l_load.last_error as err then err.text else {STRING_32} "Error ..." end, configuration_window, Void)
 				else
-
 					t := l_last_system.target (target.name)
 					if t = Void then
 						t := l_last_system.library_target
@@ -197,10 +196,10 @@ feature {NONE} -- Implementation
 				end
 			end
 			l_parent_tree := parent_tree
-			l_parent.start
-			l_parent.prune (Current)
-			if l_targets /= Void and then not l_targets.is_empty then
-				if l_parent /= Void then
+			if l_parent /= Void then
+				l_parent.start
+				l_parent.prune (Current)
+				if l_targets /= Void and then not l_targets.is_empty then
 					across
 						l_targets as ic
 					loop
@@ -210,7 +209,7 @@ feature {NONE} -- Implementation
 			end
 			if attached {EV_TREE_NODE} l_parent as l_par_node then
 				l_par_node.enable_select
-			else
+			elseif l_parent_tree /= Void then
 				l_parent_tree.first.enable_select
 			end
 		end
@@ -255,7 +254,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

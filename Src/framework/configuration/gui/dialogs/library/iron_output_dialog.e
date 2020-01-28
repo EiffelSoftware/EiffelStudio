@@ -9,7 +9,8 @@ class
 inherit
 	EV_DIALOG
 		redefine
-			initialize
+			initialize,
+			create_interface_objects
 		end
 
 	EV_LAYOUT_CONSTANTS
@@ -28,6 +29,16 @@ inherit
 
 feature {NONE} -- Initialization
 
+	create_interface_objects
+		do
+			Precursor
+			create text_field
+			create mutex.make
+			create action_queue
+			create timer
+			create cancel_button
+		end
+
 	initialize
 			-- Initialize
 		local
@@ -43,12 +54,12 @@ feature {NONE} -- Initialization
 			l_vb.set_padding (default_padding_size)
 			l_vb.set_border_width (default_border_size)
 
-			create text_field
 			text_field.disable_word_wrapping
 			text_field.disable_edit
 			l_vb.extend (text_field)
 
-			create cancel_button.make_with_text_and_action (names.b_cancel, agent
+			cancel_button.set_text (names.b_cancel)
+			cancel_button.select_actions.extend (agent
 				do
 					if attached process as p then
 						p.terminate_tree
@@ -63,10 +74,6 @@ feature {NONE} -- Initialization
 			l_hb.disable_item_expand (cancel_button)
 			l_hb.extend (create {EV_CELL})
 
-			create mutex.make
-			create action_queue
-
-			create timer.make_with_interval (100)
 			timer.actions.extend (agent
 				do
 					mutex.lock
@@ -76,7 +83,8 @@ feature {NONE} -- Initialization
 					end
 					mutex.unlock
 				end
-			)
+				)
+			timer.set_interval (100)
 		end
 
 feature {NONE} -- GUI elements
@@ -158,7 +166,7 @@ invariant
 	initialized: text_field /= Void and mutex /= Void and action_queue /= Void
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

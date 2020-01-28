@@ -86,7 +86,7 @@ feature {NONE} -- Action handlers
 			-- <Precursor>
 		do
 			library_widget.set_library (a_library)
-			library_widget.set_name (if attached a_library.library_target_name as n then n else {STRING_32} "Unknown" end + "_precompile")
+			library_widget.set_name (if a_library /= Void and then attached a_library.library_target_name as n then n else {STRING_32} "Unknown" end + "_precompile")
 		end
 
 	on_ok (w: ADD_LIBRARY_WIDGET)
@@ -111,7 +111,7 @@ feature {NONE} -- Action handlers
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

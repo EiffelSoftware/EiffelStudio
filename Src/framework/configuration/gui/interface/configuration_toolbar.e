@@ -52,6 +52,8 @@ feature {NONE} -- Initialization
 			create add_resource_button.make
 			create add_linker_flag_button.make
 			create add_make_button.make
+
+			create accelerators
 		end
 
 	initialize
@@ -60,8 +62,6 @@ feature {NONE} -- Initialization
 			l_ac: EV_ACCELERATOR
 		do
 			Precursor {SD_TOOL_BAR}
-
-			create accelerators
 
 			add_target_button.set_pixmap (conf_pixmaps.new_target_icon)
 			add_target_button.set_pixel_buffer (conf_pixmaps.new_target_icon_buffer)
@@ -383,7 +383,7 @@ invariant
 	edit_library: edit_library /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

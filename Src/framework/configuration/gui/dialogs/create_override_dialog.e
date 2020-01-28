@@ -51,10 +51,10 @@ feature {NONE} -- Actions
 					l_loc := factory.new_location_from_path (location.text, target)
 					g := factory.new_override (name.text, l_loc, target)
 					last_group := g
-					if parent_cluster /= Void then
-						g.set_parent (parent_cluster)
+					if attached parent_cluster as l_parent_cluster then
+						g.set_parent (l_parent_cluster)
 						g.set_classes (create {STRING_TABLE [CONF_CLASS]}.make (0))
-						parent_cluster.add_child (g)
+						l_parent_cluster.add_child (g)
 					end
 					g.set_recursive (True)
 					target.add_override (g)
@@ -64,7 +64,7 @@ feature {NONE} -- Actions
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

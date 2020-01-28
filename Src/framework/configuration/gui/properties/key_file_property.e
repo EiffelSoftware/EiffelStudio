@@ -24,8 +24,8 @@ feature {NONE} -- Creation
 	make (version: like il_version; property_name: like name)
 			-- Create a new key file property of name `property_name` with version `version`.
 		do
-			make_property (property_name)
 			il_version := version
+			make_property (property_name)
 		ensure
 			il_version_set: il_version = version
 		end
@@ -69,7 +69,7 @@ feature {NONE} -- Actions
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

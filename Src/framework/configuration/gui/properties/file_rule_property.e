@@ -31,15 +31,12 @@ feature -- Display
 			l_fr: CONF_FILE_RULE
 		do
 			create Result.make_empty
-			if value /= Void and then not value.is_empty then
+			if attached value as l_value and then not l_value.is_empty then
 				create l_fr.make
-				from
-					value.start
-				until
-					value.after
+				across
+					l_value as ic
 				loop
-					l_fr.merge (value.item)
-					value.forth
+					l_fr.merge (ic.item)
 				end
 				if not l_fr.is_empty then
 					if attached l_fr.ordered_exclude as p and then not p.is_empty then
@@ -75,7 +72,7 @@ feature {NONE} -- Dialog
 			-- Dialog to edit the value.
 
 ;note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -85,29 +85,35 @@ feature {NONE} -- Implementation
 			-- Remove `Current' from the configuration and from the tree where it is displayed.
 			-- Also remove the parent node if it is empty.
 		local
-			l_parent, l_grand_parent: EV_TREE_NODE_LIST
-			l_par_node, l_grand_par_node: EV_TREE_NODE
+			l_grand_parent: EV_TREE_NODE_LIST
 		do
 			target.remove_action (task)
 
-			l_parent := parent
-			l_parent.start
-			l_parent.prune (Current)
-			l_par_node ?= l_parent
-			check
-				correct_parent: l_par_node /= Void
-			end
-			if l_parent.is_empty then
-				l_grand_parent := l_par_node.parent
-				l_grand_parent.start
-				l_grand_parent.prune (l_par_node)
-				l_grand_par_node ?= l_grand_parent
-				check
-					correct_grand_parent: l_grand_par_node /= Void
+			if attached parent as l_parent then
+				l_parent.start
+				l_parent.prune (Current)
+				if attached {EV_TREE_NODE} l_parent as l_par_node then
+					if l_parent.is_empty then
+						l_grand_parent := l_par_node.parent
+						if l_grand_parent /= Void then
+							l_grand_parent.start
+							l_grand_parent.prune (l_par_node)
+							check
+								correct_grand_parent: attached {EV_TREE_NODE} l_grand_parent as  l_grand_par_node
+							then
+								l_grand_par_node.enable_select
+							end
+						else
+							check correct_grand_parent: False end
+						end
+					else
+						l_par_node.enable_select
+					end
+				else
+					check correct_parent: False end
 				end
-				l_grand_par_node.enable_select
 			else
-				l_par_node.enable_select
+				check correct_parent: False end
 			end
 		end
 
@@ -148,34 +154,34 @@ invariant
 	type_ok: type.is_equal (conf_interface_names.task_pre) or type.is_equal (conf_interface_names.task_post)
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.
-
+			
 			Eiffel Software's Eiffel Development Environment is free
 			software; you can redistribute it and/or modify it under
 			the terms of the GNU General Public License as published
 			by the Free Software Foundation, version 2 of the License
 			(available at the URL listed under "license" above).
-
+			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
-
+			See the GNU General Public License for more details.
+			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

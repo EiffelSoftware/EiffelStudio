@@ -30,6 +30,8 @@ feature {NONE} -- Initialization
 		do
 			create on_install_actions
 			create on_uninstall_actions
+			create button_install
+			create button_uninstall
 
 			iron_service := a_iron_service
 
@@ -94,17 +96,17 @@ feature {NONE} -- Initialization
 			hb.extend (vb3)
 			hb.disable_item_expand (vb3)
 
-			create l_btn.make_with_text (conf_interface_names.iron_box_install_label)
+			l_btn := button_install
+			l_btn.set_text (conf_interface_names.iron_box_install_label)
 			l_btn.disable_sensitive
-			button_install := l_btn
 			vb3.extend (l_btn)
 			vb3.disable_item_expand (l_btn)
 			l_btn.select_actions.extend (agent on_install)
 			layout_constants.set_default_width_for_button (l_btn)
 
-			create l_btn.make_with_text (conf_interface_names.iron_box_remove_label)
+			l_btn := button_uninstall
+			l_btn.set_text (conf_interface_names.iron_box_remove_label)
 			l_btn.disable_sensitive
-			button_uninstall := l_btn
 			vb3.extend (l_btn)
 			vb3.disable_item_expand (l_btn)
 			l_btn.select_actions.extend (agent on_uninstall)
@@ -384,7 +386,7 @@ feature -- Element change
 invariant
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

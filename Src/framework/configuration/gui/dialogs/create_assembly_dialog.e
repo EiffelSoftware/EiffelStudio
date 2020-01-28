@@ -222,8 +222,8 @@ feature {NONE} -- Actions
 			else
 				create l_il_env.make (target.setting_msil_clr_version)
 			end
-			if l_il_env.is_dotnet_installed then
-				create l_alb.make (l_il_env.dotnet_framework_path.name, l_il_env.version)
+			if l_il_env.is_dotnet_installed and attached l_il_env.dotnet_framework_path as l_dotnet_framework_path then
+				create l_alb.make (l_dotnet_framework_path.name, l_il_env.version)
 				l_properties := l_alb.assemblies_properties
 				l_assemblies.set_row_count_to (l_properties.count)
 				from
@@ -243,7 +243,9 @@ feature {NONE} -- Actions
 					if l_property.is_neutral_locale then
 						l_value := {STRING_32} "Netural"
 					else
-						l_value := l_property.locales.first
+						check attached l_property.locales as l_property_locales then
+							l_value := l_property_locales.first
+						end
 					end
 					l_row.set_item (3, create {EV_GRID_LABEL_ITEM}.make_with_text (l_value))
 
@@ -290,7 +292,11 @@ feature {NONE} -- Actions
 				create l_il_env.make (target.setting_msil_clr_version)
 			end
 			create l_loc.make_from_string_general (a_path)
-			l_loc.replace_substring_all (l_il_env.dotnet_framework_path.name, "$ISE_DOTNET_FRAMEWORK")
+			if attached l_il_env.dotnet_framework_path as l_path then
+				l_loc.replace_substring_all (l_path.name, "$ISE_DOTNET_FRAMEWORK")
+			else
+				l_loc.replace_substring_all ("", "$ISE_DOTNET_FRAMEWORK")
+			end
 			location.set_text (l_loc)
 		end
 
@@ -347,8 +353,8 @@ feature {NONE} -- Actions
 			l_file_name := browse_dialog.file_name
 			if (create {PE_FILE_INFO}).is_com2_pe_file (l_file_name) then
 				l_properties := l_reader.retrieve_assembly_properties (l_file_name)
-				l_added := l_properties /= Void
-				if l_added then
+				if l_properties /= Void then
+					l_added := True
 					name.set_text (l_properties.name)
 					location.set_text (l_properties.location)
 				end
@@ -393,7 +399,7 @@ feature {NONE} -- Actions
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

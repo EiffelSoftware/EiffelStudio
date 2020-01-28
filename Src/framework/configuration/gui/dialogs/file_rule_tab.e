@@ -11,7 +11,8 @@ class
 inherit
 	EV_VERTICAL_BOX
 		redefine
-			data
+			data,
+			create_interface_objects
 		end
 
 	PROPERTY_GRID_LAYOUT
@@ -58,8 +59,8 @@ feature {NONE} -- Initialization
 			hb_main, hb: EV_HORIZONTAL_BOX
 			l_label: EV_LABEL
 		do
-			default_create
 			data := a_file_rule
+			default_create
 
 			create hb_main
 			extend (hb_main)
@@ -74,17 +75,16 @@ feature {NONE} -- Initialization
 			vb.set_border_width (layout_constants.default_border_size)
 			vb.set_padding (layout_constants.default_padding_size)
 
+--			create exclude_pattern
 			if attached data.ordered_exclude as o then
-				create exclude_pattern.make_with_strings (o)
-			else
-				create exclude_pattern
+				exclude_pattern.set_strings (o)
 			end
 			exclude_pattern.set_minimum_width (200)
 			vb.extend (exclude_pattern)
 			create hb
 			vb.extend (hb)
 			vb.disable_item_expand (hb)
-			create new_exclude
+--			create new_exclude
 			hb.extend (new_exclude)
 			create l_btn.make_with_text_and_action (plus_button_text, agent add_exclude)
 			l_btn.set_minimum_width (l_btn.minimum_width.max (small_button_width))
@@ -105,17 +105,16 @@ feature {NONE} -- Initialization
 			vb.set_padding (layout_constants.default_padding_size)
 			vb.set_border_width (layout_constants.default_border_size)
 
+--			create include_pattern
 			if attached data.ordered_include as o then
-				create include_pattern.make_with_strings (o)
-			else
-				create include_pattern
+				include_pattern.set_strings (o)
 			end
 			include_pattern.set_minimum_width (200)
 			vb.extend (include_pattern)
 			create hb
 			vb.extend (hb)
 			vb.disable_item_expand (hb)
-			create new_include
+--			create new_include
 			hb.extend (new_include)
 			create l_btn.make_with_text_and_action (plus_button_text, agent add_include)
 			l_btn.set_minimum_width (l_btn.minimum_width.max (small_button_width))
@@ -137,7 +136,7 @@ feature {NONE} -- Initialization
 			disable_item_expand (l_label)
 			l_label.align_text_left
 
-			create description
+--			create description
 			if attached data.description as d then
 				description.set_text (d)
 			end
@@ -167,11 +166,11 @@ feature {NONE} -- Initialization
 			create hb
 			extend (hb)
 			disable_item_expand (hb)
-			create condition
+--			create condition
 			hb.extend (condition)
 			condition.disable_edit
-			if data.internal_conditions /= Void then
-				condition.set_text (data.internal_conditions.text)
+			if attached data.internal_conditions as l_data_internal_conditions then
+				condition.set_text (l_data_internal_conditions.text)
 			end
 
 			create l_btn.make_with_text_and_action (conf_interface_names.dialog_file_rule_edit_condition, agent edit_condition)
@@ -182,6 +181,17 @@ feature {NONE} -- Initialization
 			append_small_margin (Current)
 		ensure
 			file_rule_set: data = a_file_rule
+		end
+
+	create_interface_objects
+		do
+			Precursor
+			create exclude_pattern
+			create include_pattern
+			create new_exclude
+			create new_include
+			create description
+			create condition
 		end
 
 feature -- Access
@@ -217,7 +227,7 @@ feature {NONE} -- Actions
 			l_pattern: STRING_32
 		do
 			l_pattern := new_exclude.text
-			if not l_pattern.is_empty and (data.exclude = Void or else not data.exclude.has (l_pattern)) then
+			if not l_pattern.is_empty and (not attached data.exclude as l_data_exclude or else not l_data_exclude.has (l_pattern)) then
 				if attached data.regexp_error (l_pattern) as e then
 					prompts.show_error_prompt (conf_interface_names.e_parse_invalid_regexp
 						(l_pattern, Void, e.message, e.position), Void, Void)
@@ -234,7 +244,7 @@ feature {NONE} -- Actions
 			l_pattern: STRING_32
 		do
 			l_pattern := new_include.text
-			if not l_pattern.is_empty and (data.include = Void or else not data.include.has (l_pattern)) then
+			if not l_pattern.is_empty and (not attached data.include as l_data_include or else not l_data_include.has (l_pattern)) then
 				if attached data.regexp_error (l_pattern) as e then
 					prompts.show_error_prompt (conf_interface_names.e_parse_invalid_regexp
 						(l_pattern, Void, e.message, e.position), Void, Void)
@@ -288,8 +298,8 @@ feature {NONE} -- Actions
 			if l_dial.is_ok then
 				data.set_conditions (l_dial.value)
 			end
-			if data.internal_conditions /= Void then
-				condition.set_text (data.internal_conditions.text)
+			if attached data.internal_conditions as l_data_internal_conditions then
+				condition.set_text (l_data_internal_conditions.text)
 			else
 				condition.set_text ("")
 			end
@@ -300,7 +310,7 @@ invariant
 	gui_elements_created: is_initialized implies exclude_pattern /= Void and new_exclude /= Void and include_pattern /= Void and new_include /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

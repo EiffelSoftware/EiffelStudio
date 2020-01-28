@@ -11,6 +11,7 @@ class
 inherit
 	PROPERTY_DIALOG [STRING_TABLE [CONF_OPTION]]
 		redefine
+			create_interface_objects,
 			initialize
 		end
 
@@ -44,6 +45,12 @@ feature {NONE} -- Initialization
 		ensure
 			factory_set: conf_factory = a_factory
 			group_options_set: group_options = o
+		end
+
+	create_interface_objects
+		do
+			Precursor
+			create properties
 		end
 
 	initialize
@@ -104,8 +111,7 @@ feature {NONE} -- Initialization
 			vb2.set_padding (layout_constants.default_padding_size)
 			vb2.set_border_width (layout_constants.default_border_size)
 
-			create p
-			properties := p
+			p := properties
 			vb2.extend (p)
 
 			create l_description
@@ -266,7 +272,7 @@ invariant
 	elements: is_initialized implies class_list /= Void and new_class /= Void
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

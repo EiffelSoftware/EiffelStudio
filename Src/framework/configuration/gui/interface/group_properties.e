@@ -80,8 +80,12 @@ feature {NONE} -- Implementation
 				if l_library.library_target = Void then
 					create l_load.make (create {CONF_PARSE_FACTORY})
 					l_load.retrieve_configuration (l_library.path)
-					if not l_load.is_error and then attached l_load.last_system.library_target as t then
-						l_load.last_system.set_application_target (l_library.target)
+					if
+						not l_load.is_error and then
+						attached l_load.last_system as l_last_system and then
+						attached l_last_system.library_target as t
+					then
+						l_last_system.set_application_target (l_library.target)
 						l_library.set_library_target (t)
 					end
 				end
@@ -147,8 +151,8 @@ feature {NONE} -- Implementation
 			if l_precompile /= Void then
 				create l_dir_prop.make (conf_interface_names.group_eifgens_location_name, a_target)
 				l_dir_prop.set_description (conf_interface_names.group_eifgens_location_description)
-				if l_precompile.eifgens_location /= Void then
-					l_dir_prop.set_value (l_precompile.eifgens_location.original_path)
+				if attached l_precompile.eifgens_location as l_eifgens_location then
+					l_dir_prop.set_value (l_eifgens_location.original_path)
 				end
 				l_dir_prop.change_value_actions.extend (agent update_eifgens_location (l_precompile, ?, a_target))
 				l_dir_prop.change_value_actions.extend (agent change_no_argument_wrapper ({READABLE_STRING_32}?, agent handle_value_changes (True)))
@@ -252,7 +256,9 @@ feature {NONE} -- Implementation
 			l_dial.change_value_actions.extend (agent a_group.set_conditions)
 			l_dial.change_value_actions.extend (agent change_no_argument_wrapper ({CONF_CONDITION_LIST}?, agent handle_value_changes (True)))
 			properties.add_property (l_dial)
-			properties.current_section.expand
+			if attached properties.current_section as l_current_section then
+				l_current_section.expand
+			end
 
 				-- Language section.
 			if not a_group.is_assembly then
@@ -585,7 +591,7 @@ feature {NONE} -- Inheritance handling
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

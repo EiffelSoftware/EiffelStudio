@@ -28,6 +28,7 @@ feature {NONE} -- Initialization
 			a_iron_service_set: a_iron_service /= Void
 		do
 			iron_service := a_iron_service
+			create iron_box.make (a_iron_service)
 			default_create
 		end
 
@@ -39,7 +40,6 @@ feature {NONE} -- Initialization
 		do
 			Precursor
 
-			create iron_box.make (iron_service)
 			create v
 			v.set_padding_width (layout_constants.default_padding_size)
 			v.set_border_width (layout_constants.large_border_size)
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 
 			create hb
 			hb.set_padding_width (layout_constants.default_padding_size)
-			
+
 			v.extend (hb)
 			v.disable_item_expand (hb)
 
@@ -88,7 +88,7 @@ feature -- Events
 		end
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

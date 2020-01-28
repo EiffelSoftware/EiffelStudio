@@ -98,27 +98,29 @@ feature {NONE} -- Implementation
 			-- Remove `Current' from the tree where it is displayed.
 			-- Also remove the parent node if it is empty.
 		local
-			l_parent, l_grand_parent: EV_TREE_NODE_LIST
-			l_par_node, l_grand_par_node: EV_TREE_NODE
+			l_grand_parent: EV_TREE_NODE_LIST
 		do
-			l_parent := parent
-			l_parent.start
-			l_parent.prune (Current)
-			l_par_node ?= l_parent
-			check
-				correct_parent: l_par_node /= Void
-			end
-			if l_parent.is_empty then
-				l_grand_parent := l_par_node.parent
-				l_grand_parent.start
-				l_grand_parent.prune (l_par_node)
-				l_grand_par_node ?= l_grand_parent
+			check has_parent: attached parent as l_parent then
+				l_parent.start
+				l_parent.prune (Current)
 				check
-					correct_grand_parent: l_grand_par_node /= Void
+					correct_parent: attached {EV_TREE_NODE} l_parent as l_par_node
+				then
+					if l_parent.is_empty then
+						l_grand_parent := l_par_node.parent
+						if l_grand_parent /= Void then
+							l_grand_parent.start
+							l_grand_parent.prune (l_par_node)
+							check correct_grand_parent: attached {EV_TREE_NODE} l_grand_parent as l_grand_par_node then
+								l_grand_par_node.enable_select
+							end
+						else
+							check correct_grand_parent: False end
+						end
+					else
+						l_par_node.enable_select
+					end
 				end
-				l_grand_par_node.enable_select
-			else
-				l_par_node.enable_select
 			end
 		end
 
@@ -157,7 +159,7 @@ invariant
 	external_not_void: conf_external /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

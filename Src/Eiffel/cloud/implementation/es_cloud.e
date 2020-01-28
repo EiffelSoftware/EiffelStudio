@@ -292,6 +292,7 @@ feature -- Status report
 				web_api.get_is_available
 				Result := web_api.is_available
 				create cl.put ([Result, dt])
+				cell_is_available := cl
 			else
 				Result := cl.item.available
 				if
@@ -304,6 +305,7 @@ feature -- Status report
 					if b /= Result then
 						Result := b
 						create cl.put ([Result, dt])
+						cell_is_available := cl
 					end
 				end
 			end

@@ -270,7 +270,7 @@ feature {NONE} -- Initialization
 			w.set_minimum_width (l_field_width)
 			append_label_and_item_horizontally (interface_names.l_password, w, Result)
 
-			create but.make_with_text_and_action (interface_names.b_login, agent process_account_loging (new_gui_form (<<["user_name", tf_username], ["password", tf_password]>>)))
+			create but.make_with_text_and_action (interface_names.b_login, agent process_account_login (new_gui_form (<<["user_name", tf_username], ["password", tf_password]>>)))
 
 			layout_constants.set_default_width_for_button (but)
 			append_label_and_item_horizontally ("", but, Result)
@@ -412,7 +412,7 @@ feature -- UI callbacks
 			on_next
 		end
 
-	process_account_loging (a_form: like new_gui_form)
+	process_account_login (a_form: like new_gui_form)
 		local
 			l_style: detachable EV_POINTER_STYLE
 		do

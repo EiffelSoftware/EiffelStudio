@@ -30,6 +30,14 @@ feature -- Access
 
 	server_url: IMMUTABLE_STRING_8
 
+feature -- Builtin settings	
+
+	guest_period_in_days: INTEGER = 15
+			-- Number of days as guest.
+
+	default_session_heartbeat: NATURAL = 900 -- 15 * 60 s = 15 minutes
+			-- Delay between two heartbeat to track session activity.
+
 feature -- Settings	
 
 	connection_timeout: INTEGER
@@ -59,7 +67,7 @@ feature -- Element change
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

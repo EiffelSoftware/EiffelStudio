@@ -32,8 +32,34 @@ feature {NONE} -- Creation
 	make_with_url (a_server_url: READABLE_STRING_8)
 		local
 			cfg: ES_CLOUD_CONFIG
+			env: ES_INSTALLATION_ENVIRONMENT
+			i: INTEGER
 		do
 			create cfg.make (a_server_url)
+
+			if is_eiffel_layout_defined then
+					-- On Windows: Computer\HKEY_CURRENT_USER\Software\ISE\Eiffel_MM.mm\installation\es_cloud\$variable_name
+				create env.make (eiffel_layout)
+				if
+					attached env.application_item ("timeout", "es_cloud", eiffel_layout.version_name) as v and then
+					v.is_integer
+				then
+					i := v.to_integer
+					if i >= 0 then
+						cfg.set_timeout (i)
+					end
+				end
+				if
+					attached env.application_item ("connection_timeout", "es_cloud", eiffel_layout.version_name) as v and then
+					v.is_integer
+				then
+					i := v.to_integer
+					if i >= 0 then
+						cfg.set_connection_timeout (i)
+					end
+				end
+			end
+
 			create web_api.make (cfg)
 
 			if is_eiffel_layout_defined then
@@ -48,7 +74,7 @@ feature {NONE} -- Creation
 				create installation.make_with_id ("")
 			end
 				-- Initialization
-			session_heartbeat := 900 -- 15 * 60 s = 15 minutes
+			session_heartbeat := config.default_session_heartbeat -- in minutes
 			load
 		end
 
@@ -56,16 +82,18 @@ feature {NONE} -- Default
 
 	default_server_url: STRING
 		do
+			Result := "https://cloud.eiffel.com/api" -- Default
+
+			debug ("es_cloud")
 				-- On Windows: Computer\HKEY_CURRENT_USER\Software\ISE\Eiffel_19.09\installation\es_cloud\default_server_url
-			if
-				is_eiffel_layout_defined and then
-				attached (create {ES_INSTALLATION_ENVIRONMENT}.make (eiffel_layout)).application_item ("default_server_url", "es_cloud", eiffel_layout.version_name) as v
-				and then v.is_valid_as_string_8
-			then
-					-- For now, it is possible to change the server url this way.
-				Result := v.to_string_8
-			else
-				Result := "https://cloud.eiffel.com/api" -- Default
+				if
+					is_eiffel_layout_defined and then
+					attached (create {ES_INSTALLATION_ENVIRONMENT}.make (eiffel_layout)).application_item ("default_server_url", "es_cloud", eiffel_layout.version_name) as v
+					and then v.is_valid_as_string_8
+				then
+						-- For now, it is possible to change the server url this way.
+					Result := v.to_string_8
+				end
 			end
 			debug ("es_cloud")
 				if attached eiffel_layout.get_environment_8 ("ES_CLOUD_SERVER_URL") as l_env_url then
@@ -338,7 +366,7 @@ feature -- Get status
 			l_end := guest_mode_ending_date
 			if l_end = Void then
 				create l_end.make_now_utc
-				l_end.day_add (15)
+				l_end.day_add (config.guest_period_in_days)
 				guest_mode_ending_date := l_end
 			end
 			if dt > l_end then
@@ -371,12 +399,9 @@ feature -- Sign
 	login_with_credential (a_username: READABLE_STRING_GENERAL; a_password: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		do
-				-- TODO
 			if attached web_api.account_using_basic_authorization (a_username, a_password) as acc then
-				is_guest := False
+				reset_guest_session
 				active_account := acc
-				guest_mode_ending_date := Void
-				remaining_days_for_guest := 0
 				update_account (acc)
 				store
 				on_account_logged_in (acc)
@@ -391,10 +416,8 @@ feature -- Sign
 		do
 				-- TODO
 			if attached web_api.account (tok) as acc then
-				is_guest := False
 				active_account := acc
-				guest_mode_ending_date := Void
-				remaining_days_for_guest := 0
+				reset_guest_session
 				update_account (acc)
 				store
 				on_account_logged_in (acc)
@@ -416,6 +439,7 @@ feature -- Sign
 				attached active_session as sess
 			then
 				web_api.logout (tok.token, installation.id, sess.id)
+				reset_guest_session
 			end
 			active_account := Void
 			active_session := Void
@@ -681,6 +705,14 @@ feature -- Storage
 					end
 				end
 			end
+		end
+
+	reset_guest_session
+			-- Reset guest session in memory.
+		do
+			guest_mode_ending_date := Void
+			remaining_days_for_guest := 0
+			is_guest := False
 		end
 
 	ensure_parent_exists (p: PATH): BOOLEAN

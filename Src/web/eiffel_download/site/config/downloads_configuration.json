@@ -40,6 +40,13 @@
       }
       ,{
         "cdkey": "20383-15315-51084-52701-92191-73750",
+        "filename": "Eiffel_19.12_ent_103842-macosx-x86-64.tar.bz2",
+        "platform": "macosx-x86-64",
+        "size": "99099484",
+        "hash": "863176bc3ff5c7bdf2495761f3c76d24f03a5ba18d4cf33b2a6e20d779712d44"
+      }
+      ,{
+        "cdkey": "20383-15315-51084-52701-92191-73750",
         "filename": "Eiffel_19.12_ent_103842-freebsd-x86-64.tar.bz2",
         "platform": "freebsd-x86-64",
         "size": "104870525",

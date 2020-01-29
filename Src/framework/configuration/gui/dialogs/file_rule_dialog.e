@@ -11,6 +11,7 @@ class
 inherit
 	PROPERTY_DIALOG [ARRAYED_LIST [CONF_FILE_RULE]]
 		redefine
+			create_interface_objects,
 			initialize
 		end
 
@@ -22,6 +23,13 @@ inherit
 
 feature {NONE} -- Initialization
 
+	create_interface_objects
+		do
+			Precursor
+			create remove_button
+			create notebook
+		end
+
 	initialize
 			-- Initialization
 		local
@@ -32,7 +40,7 @@ feature {NONE} -- Initialization
 			enable_user_resize
 			set_minimum_height (600)
 
-			create notebook
+--			create notebook
 			element_container.extend (notebook)
 
 			create hb
@@ -46,7 +54,9 @@ feature {NONE} -- Initialization
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
 			layout_constants.set_default_width_for_button (l_btn)
-			create remove_button.make_with_text_and_action (conf_interface_names.dialog_file_rule_remove_rule, agent on_remove)
+--			create remove_button
+			remove_button.set_text (conf_interface_names.dialog_file_rule_remove_rule)
+			remove_button.select_actions.extend (agent on_remove)
 			remove_button.set_pixmap (conf_pixmaps.general_remove_icon)
 			hb.extend (remove_button)
 			hb.disable_item_expand (remove_button)
@@ -76,20 +86,20 @@ feature {NONE} -- Agents
 		do
 			notebook.wipe_out
 			notebook.selection_actions.extend (agent on_show_tab)
-			if value /= Void and then not value.is_empty then
+			if attached value as l_value and then not l_value.is_empty then
 					-- create a copy of the value, so that we can cancel without modifying anything
-				create l_new_value.make (value.count)
+				create l_new_value.make (l_value.count)
 				from
-					value.start
+					l_value.start
 				until
-					value.after
+					l_value.after
 				loop
-					l_fr := value.item.twin
+					l_fr := l_value.item.twin
 					l_new_value.force (l_fr)
 					create l_tab.make (l_fr)
 					notebook.extend (l_tab)
-					notebook.set_item_text (l_tab, conf_interface_names.dialog_file_rule_file_rule_x (value.index))
-					value.forth
+					notebook.set_item_text (l_tab, conf_interface_names.dialog_file_rule_file_rule_x (l_value.index))
+					l_value.forth
 				end
 				notebook.set_focus
 				value := l_new_value
@@ -102,20 +112,23 @@ feature {NONE} -- Agents
 	on_show_tab
 			-- Show a tab.
 		do
-			if notebook.selected_item /= Void then
-				notebook.selected_item.show
+			if attached notebook.selected_item as l_selected_item then
+				l_selected_item.show
 			end
 		end
 
 	on_remove
 			-- Remove a file rule.
 		do
-			if notebook.selected_item /= Void and value /= Void then
-				value.go_i_th (notebook.selected_item_index)
-				value.remove
+			if
+				attached notebook.selected_item as l_selected_item and
+				attached value as l_value
+			then
+				l_value.go_i_th (notebook.selected_item_index)
+				l_value.remove
 				notebook.go_i_th (notebook.selected_item_index)
 				notebook.remove
-				if value.is_empty then
+				if l_value.is_empty then
 					remove_button.disable_sensitive
 				end
 			end
@@ -126,15 +139,18 @@ feature {NONE} -- Agents
 		local
 			l_fr: CONF_FILE_RULE
 			l_tab: FILE_RULE_TAB
+			l_value: like value
 		do
-			if value = Void then
-				create value.make (1)
+			l_value := value
+			if l_value = Void then
+				create l_value.make (1)
+				value := l_value
 			end
 			create l_fr.make
-			value.force (l_fr)
+			l_value.force (l_fr)
 			create l_tab.make (l_fr)
 			notebook.extend (l_tab)
-			notebook.set_item_text (l_tab, conf_interface_names.dialog_file_rule_file_rule_x (value.count))
+			notebook.set_item_text (l_tab, conf_interface_names.dialog_file_rule_file_rule_x (l_value.count))
 			notebook.select_item (l_tab)
 			remove_button.enable_sensitive
 		end
@@ -143,7 +159,7 @@ invariant
 	elements_created: is_initialized implies notebook /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -156,21 +172,21 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 end

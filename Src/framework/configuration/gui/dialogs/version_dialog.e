@@ -11,6 +11,7 @@ class
 inherit
 	PROPERTY_DIALOG [CONF_VERSION]
 		redefine
+			create_interface_objects,
 			initialize,
 			on_ok
 		end
@@ -27,6 +28,20 @@ inherit
 
 feature {NONE} -- Initialization
 
+	create_interface_objects
+		do
+			Precursor
+			create major
+			create minor
+			create release
+			create build
+
+			create product
+			create company
+			create copyright
+			create trademark
+		end
+
 	initialize
 			-- Initialization
 		local
@@ -39,19 +54,19 @@ feature {NONE} -- Initialization
 			element_container.extend (hb)
 			element_container.disable_item_expand (hb)
 
-			create major
+--			create major
 			hb.extend (major)
 			major.value_range.adapt (create {INTEGER_INTERVAL}.make (0, {NATURAL_16}.max_value))
 			append_small_margin (hb)
-			create minor
+--			create minor
 			hb.extend (minor)
 			minor.value_range.adapt (create {INTEGER_INTERVAL}.make (0, {NATURAL_16}.max_value))
 			append_small_margin (hb)
-			create release
+--			create release
 			hb.extend (release)
 			release.value_range.adapt (create {INTEGER_INTERVAL}.make (0, {NATURAL_16}.max_value))
 			append_small_margin (hb)
-			create build
+--			create build
 			hb.extend (build)
 			build.value_range.adapt (create {INTEGER_INTERVAL}.make (0, {NATURAL_16}.max_value))
 			append_small_margin (element_container)
@@ -60,7 +75,7 @@ feature {NONE} -- Initialization
 			element_container.extend (l_label)
 			element_container.disable_item_expand (l_label)
 			l_label.align_text_left
-			create product
+--			create product
 			element_container.extend (product)
 			element_container.disable_item_expand (product)
 			append_small_margin (element_container)
@@ -69,7 +84,7 @@ feature {NONE} -- Initialization
 			element_container.extend (l_label)
 			element_container.disable_item_expand (l_label)
 			l_label.align_text_left
-			create company
+--			create company
 			element_container.extend (company)
 			element_container.disable_item_expand (company)
 			append_small_margin (element_container)
@@ -78,7 +93,7 @@ feature {NONE} -- Initialization
 			element_container.extend (l_label)
 			element_container.disable_item_expand (l_label)
 			l_label.align_text_left
-			create copyright
+--			create copyright
 			element_container.extend (copyright)
 			element_container.disable_item_expand (copyright)
 			append_small_margin (element_container)
@@ -87,7 +102,7 @@ feature {NONE} -- Initialization
 			element_container.extend (l_label)
 			element_container.disable_item_expand (l_label)
 			l_label.align_text_left
-			create trademark
+--			create trademark
 			element_container.extend (trademark)
 			element_container.disable_item_expand (trademark)
 
@@ -164,7 +179,7 @@ invariant
 			product /= Void and company /= Void and copyright /= Void and trademark /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

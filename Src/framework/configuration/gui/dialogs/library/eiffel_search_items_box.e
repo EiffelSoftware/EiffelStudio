@@ -170,7 +170,7 @@ feature -- Event
 
 			lst := items
 			if
-				lst.count > 0
+				lst /= Void and then lst.count > 0
 			then
 					-- Build item widgets
 				g.set_row_count_to (lst.count)
@@ -538,7 +538,7 @@ feature {NONE} -- Constants
 
 
 ;note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

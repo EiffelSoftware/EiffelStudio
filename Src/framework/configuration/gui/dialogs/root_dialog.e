@@ -11,6 +11,7 @@ class
 inherit
 	PROPERTY_DIALOG [CONF_ROOT]
 		redefine
+			create_interface_objects,
 			initialize,
 			on_ok
 		end
@@ -39,6 +40,15 @@ feature {NONE} -- Initialization
 			target_set: target = t
 		end
 
+	create_interface_objects
+		do
+			Precursor
+			create all_classes
+			create feature_name
+			create class_name
+			create cluster_name
+		end
+
 	initialize
 			-- Initialization
 		local
@@ -50,7 +60,7 @@ feature {NONE} -- Initialization
 			element_container.extend (l_label)
 			element_container.disable_item_expand (l_label)
 			l_label.align_text_left
-			create cluster_name
+--			create cluster_name
 			element_container.extend (cluster_name)
 			element_container.disable_item_expand (cluster_name)
 			append_small_margin (element_container)
@@ -59,7 +69,7 @@ feature {NONE} -- Initialization
 			element_container.extend (l_label)
 			element_container.disable_item_expand (l_label)
 			l_label.align_text_left
-			create class_name
+--			create class_name
 			element_container.extend (class_name)
 			element_container.disable_item_expand (class_name)
 			append_small_margin (element_container)
@@ -68,12 +78,13 @@ feature {NONE} -- Initialization
 			element_container.extend (l_label)
 			element_container.disable_item_expand (l_label)
 			l_label.align_text_left
-			create feature_name
+--			create feature_name
 			element_container.extend (feature_name)
 			element_container.disable_item_expand (feature_name)
 			append_small_margin (element_container)
 
-			create all_classes.make_with_text (conf_interface_names.target_dialog_root_all)
+--			create all_classes
+			all_classes.set_text (conf_interface_names.target_dialog_root_all)
 			element_container.extend (all_classes)
 			element_container.disable_item_expand (all_classes)
 			append_small_margin (element_container)
@@ -190,7 +201,7 @@ invariant
 	elements: is_initialized implies cluster_name /= Void and class_name /= Void and feature_name /= Void and all_classes /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

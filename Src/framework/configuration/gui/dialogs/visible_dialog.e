@@ -11,6 +11,7 @@ class
 inherit
 	PROPERTY_DIALOG [STRING_TABLE [TUPLE [class_renamed: READABLE_STRING_32; features: detachable STRING_TABLE [READABLE_STRING_32]]]]
 		redefine
+			create_interface_objects,
 			initialize
 		end
 
@@ -34,6 +35,14 @@ inherit
 
 feature {NONE} -- Initialization
 
+	create_interface_objects
+		do
+			Precursor
+			create renamed_name
+			create original_name
+			create tree
+		end
+
 	initialize
 			-- Initialization
 		local
@@ -44,7 +53,7 @@ feature {NONE} -- Initialization
 			Precursor {PROPERTY_DIALOG}
 			element_container.set_padding (layout_constants.default_padding_size)
 
-			create tree
+--			create tree
 			element_container.extend (tree)
 			append_small_margin (element_container)
 
@@ -58,7 +67,7 @@ feature {NONE} -- Initialization
 
 			hb.extend (create {EV_CELL})
 
-			create original_name
+--			create original_name
 			hb.extend (original_name)
 			hb.disable_item_expand (original_name)
 			original_name.set_minimum_width (250)
@@ -73,7 +82,7 @@ feature {NONE} -- Initialization
 
 			hb.extend (create {EV_CELL})
 
-			create renamed_name
+--			create renamed_name
 			hb.extend (renamed_name)
 			hb.disable_item_expand (renamed_name)
 			renamed_name.set_minimum_width (250)
@@ -131,7 +140,7 @@ feature {NONE} -- Agents
 	show_class (a_class: READABLE_STRING_GENERAL)
 			-- Show information about `a_class'.
 		require
-			a_class_ok: a_class /= Void and then value /= Void and then value.has (a_class)
+			a_class_ok: a_class /= Void and then attached value as v and then v.has (a_class)
 		do
 			current_class := a_class.as_string_32
 			current_feature := Void
@@ -143,8 +152,10 @@ feature {NONE} -- Agents
 	show_feature (a_class, a_feature: READABLE_STRING_GENERAL)
 			-- Show information about `a_feature' in `a_class'.
 		require
-			a_class_ok: a_class /= Void and then value /= Void and then value.has (a_class)
-			a_feature_ok: a_feature /= Void and then value.item (a_class).features /= Void and then value.item (a_class).features.has (a_feature)
+			value_attached: attached value as v
+			a_class_ok: a_class /= Void and then v.has (a_class)
+			a_feature_ok: a_feature /= Void and then attached v.item (a_class) as v_item and then attached v_item.features as l_features and then
+							l_features.has (a_feature)
 		do
 			current_class := a_class.as_string_32
 			current_feature := a_feature.as_string_32
@@ -167,11 +178,14 @@ feature {NONE} -- Agents
 						value := Void
 					end
 					refresh
-				elseif attached v.item (c).features as fs then
+				elseif
+					attached v.item (c) as v_item and then
+					attached v_item.features as fs
+				then
 						-- A feature is selected.
 					fs.remove (f)
 					if fs.is_empty then
-						v.item (c).features := Void
+						v_item.features := Void
 					end
 					refresh
 				end
@@ -184,19 +198,27 @@ feature {NONE} -- Agents
 			l_name, l_vis_name: STRING_32
 			tu: like value.item
 			tb: detachable STRING_TABLE [READABLE_STRING_32]
+			l_value: like value
 		do
 			l_name := original_name.text.as_upper
 			l_vis_name := renamed_name.text.as_upper
 			if l_vis_name.is_empty then
 				l_vis_name := l_name
 			end
-			if is_valid_class_name (l_name) and then is_valid_class_name (l_vis_name) and then (value = Void or else not value.has (l_name)) then
-				if value = Void then
-					create value.make_equal (1)
+
+			l_value := value
+			if
+				is_valid_class_name (l_name) and then
+				is_valid_class_name (l_vis_name) and then
+				(l_value = Void or else not l_value.has (l_name))
+			then
+				if l_value = Void then
+					create l_value.make_equal (1)
+					value := l_value
 				end
 				tu := [l_vis_name, tb]
 				tu.compare_objects
-				value.force (tu, l_name)
+				l_value.force (tu, l_name)
 				original_name.set_text ("")
 				renamed_name.set_text ("")
 				current_class := l_name
@@ -210,24 +232,30 @@ feature {NONE} -- Agents
 			l_name, l_vis_name: READABLE_STRING_32
 			l_feats: STRING_TABLE [READABLE_STRING_32]
 		do
-			if attached current_class as c and then value /= Void and then value.has (c) then
+			if attached current_class as c and then attached value as l_value and then l_value.has (c) then
 				l_name := original_name.text.as_lower
 				l_vis_name := renamed_name.text.as_lower
 				if l_vis_name.is_empty then
 					l_vis_name := l_name
 				end
-				l_feats := value.item (c).features
-				if is_valid_feature_name (l_name) and then is_valid_feature_name (l_vis_name) and then (l_feats = Void or else not l_feats.has (l_name)) then
-					if l_feats = Void then
-						create l_feats.make_equal (1)
-						value.item (c).features := l_feats
-					end
+				if attached l_value.item (c) as l_value_item then
+					l_feats := l_value_item.features
+					if
+						is_valid_feature_name (l_name) and then
+						is_valid_feature_name (l_vis_name) and then
+						(l_feats = Void or else not l_feats.has (l_name))
+					then
+						if l_feats = Void then
+							create l_feats.make_equal (1)
+							l_value_item.features := l_feats
+						end
 
-					l_feats.force (l_vis_name, l_name)
-					original_name.set_text ("")
-					renamed_name.set_text ("")
-					current_feature := l_name
-					refresh
+						l_feats.force (l_vis_name, l_name)
+						original_name.set_text ("")
+						renamed_name.set_text ("")
+						current_feature := l_name
+						refresh
+					end
 				end
 			end
 		end
@@ -252,16 +280,16 @@ feature {NONE} -- Implementation
 			l_sorter: QUICK_SORTER [READABLE_STRING_GENERAL]
 		do
 			tree.wipe_out
-			if value /= Void then
+			if attached value as l_value then
 					-- sort class names alphabetically
 				from
-					create l_sorted_list.make (value.count)
-					value.start
+					create l_sorted_list.make (l_value.count)
+					l_value.start
 				until
-					value.after
+					l_value.after
 				loop
-					l_sorted_list.extend (value.key_for_iteration)
-					value.forth
+					l_sorted_list.extend (l_value.key_for_iteration)
+					l_value.forth
 				end
 				create l_sorter.make (create {COMPARABLE_COMPARATOR [READABLE_STRING_GENERAL]})
 				l_sorter.sort (l_sorted_list)
@@ -272,7 +300,11 @@ feature {NONE} -- Implementation
 					l_sorted_list.after
 				loop
 					l_class := l_sorted_list.item_for_iteration
-					l_vis_name := value.item (l_class).class_renamed
+					if attached l_value.item (l_class) as l_item then
+						l_vis_name := l_item.class_renamed
+					else
+						l_vis_name := Void
+					end
 					if l_vis_name /= Void and then not l_vis_name.same_string_general (l_class) then
 						create l_class_item.make_with_text (l_class+" ("+l_vis_name+")")
 					else
@@ -282,7 +314,7 @@ feature {NONE} -- Implementation
 					l_class_item.select_actions.extend (agent show_class (l_class))
 
 					tree.extend (l_class_item)
-					if current_class /= Void and then current_class.same_string_general (l_class) then
+					if attached current_class as l_current_class and then l_current_class.same_string_general (l_class) then
 						if current_feature = Void then
 							l_class_item.enable_select
 						else
@@ -290,7 +322,7 @@ feature {NONE} -- Implementation
 						end
 					end
 					if
-						attached value.item (l_class) as l_rena and then
+						attached l_value.item (l_class) as l_rena and then
 						attached l_rena.features as l_feat
 					then
 						from
@@ -308,7 +340,11 @@ feature {NONE} -- Implementation
 
 							l_class_item.extend (l_feat_item)
 							l_feat_item.select_actions.extend (agent show_feature (l_class, l_feat_name))
-							if l_cur_class and current_feature.same_string_general (l_feat_name) then
+							if
+								l_cur_class and then
+								attached current_feature as l_current_feature and then
+								l_current_feature.same_string_general (l_feat_name)
+							then
 								l_feat_item.enable_select
 								l_cur_class := False
 							end
@@ -328,7 +364,7 @@ invariant
 	elements: is_initialized implies tree /= Void and original_name /= Void and renamed_name /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -45,7 +45,14 @@ feature {NONE} -- Initialization
 			but: EV_BUTTON
 			l_filter: like filter_text
 		do
-				-- Repositoroes
+				-- Create attached attributes.
+			create info_widget.make (iron_service)
+			create packages_grid
+			create update_button
+			create on_iron_package_selected_actions
+			create on_iron_packages_changed_actions
+
+				-- Repositories
 			create hb
 			hb.set_padding (layout_constants.small_padding_size)
 			hb.set_border_width (layout_constants.small_border_size)
@@ -95,12 +102,11 @@ feature {NONE} -- Initialization
 			b.extend (hsp)
 
 				-- First part of the split area
-			create g
+			g := packages_grid
 			create vb
 			vb.set_border_width (3)
 			vb.extend (g)
 			hsp.set_first (vb)
-			packages_grid := g
 			g.set_column_count_to (4)
 			g.column (1).set_title (conf_interface_names.iron_box_package_label)
 			g.column (2).set_title (conf_interface_names.iron_box_installation_label)
@@ -124,13 +130,13 @@ feature {NONE} -- Initialization
 			hb.disable_item_expand (hb.last)
 			hb.extend (create {EV_CELL})
 
-			create but.make_with_text (conf_interface_names.iron_box_update_label)
+			but := update_button
+			but.set_text (conf_interface_names.iron_box_update_label)
 			layout_constants.set_default_size_for_button (but)
 			but.select_actions.extend (agent update_iron)
-			update_button := but
 			hb.extend (but)
 
-			create info_widget.make (iron_service)
+--			create info_widget.make (iron_service)
 			info_widget.on_install_actions.extend (agent install_selected_package)
 			info_widget.on_uninstall_actions.extend (agent remove_selected_package)
 			vb.extend (info_widget.widget)
@@ -140,9 +146,6 @@ feature {NONE} -- Initialization
 			hsp.set_split_position (hsp.height - vb.minimum_height)
 
 			b.focus_in_actions.extend_kamikaze (agent populate)
-
-			create on_iron_package_selected_actions
-			create on_iron_packages_changed_actions
 		end
 
 	iron_service: ES_IRON_SERVICE
@@ -394,20 +397,18 @@ feature -- Basic operations
 			api: IRON_INSTALLATION_API
 			glab: EV_GRID_LABEL_ITEM
 			s,t: STRING_32
-			g: EV_GRID
 			i: INTEGER
 			is_installed: BOOLEAN
 		do
 			api := iron_service.installation_api
 			i := a_row.index
-			g := a_row.parent
 			if attached {IRON_PACKAGE} a_row.data as l_package then
 				clear_row (a_row)
 
 					-- Package identifier
 				create glab.make_with_text (l_package.identifier)
-				g.set_item (1, i, glab)
-				g.row (i).set_data (l_package)
+				a_row.set_item (1, glab)
+				a_row.set_data (l_package)
 
 				is_installed := api.is_package_installed (l_package)
 
@@ -437,11 +438,11 @@ feature -- Basic operations
 					end
 				end
 				glab.set_data (l_package)
-				g.set_item (2, i, glab)
+				a_row.set_item (2, glab)
 
 					-- Location
 				create glab.make_with_text (l_package.location.string)
-				g.set_item (3, i, glab)
+				a_row.set_item (3, glab)
 
 					-- Information
 				create s.make_empty
@@ -465,7 +466,7 @@ feature -- Basic operations
 				else
 					create glab.make_with_text (s)
 				end
-				g.set_item (4, i, glab)
+				a_row.set_item (4, glab)
 			else
 				clear_row (a_row)
 
@@ -590,7 +591,7 @@ feature -- Events
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

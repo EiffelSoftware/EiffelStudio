@@ -39,7 +39,7 @@ feature -- Access
 	window: detachable EV_WINDOW
 			-- Window to show errors modal. If `Void' it will be shown using the default from ES_PROMPT_PROVIDER.
 
-	properties: detachable PROPERTY_GRID
+	properties: PROPERTY_GRID
 			-- Grid where properties get added.
 
 	debug_clauses: ARRAYED_LIST [STRING]

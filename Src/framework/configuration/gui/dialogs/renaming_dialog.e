@@ -11,6 +11,7 @@ class
 inherit
 	PROPERTY_DIALOG [STRING_TABLE [READABLE_STRING_32]]
 		redefine
+			create_interface_objects,
 			initialize,
 			dialog_key_press_action
 		end
@@ -22,6 +23,13 @@ inherit
 		end
 
 feature {NONE} -- Initialization
+
+	create_interface_objects
+		do
+			Precursor
+			create first_button
+			create grid
+		end
 
 	initialize
 			-- Initialization
@@ -37,7 +45,7 @@ feature {NONE} -- Initialization
 			vb_grid.set_border_width (1)
 			vb_grid.set_background_color ((create {EV_STOCK_COLORS}).black)
 
-			create grid
+--			create grid
 			vb_grid.extend (grid)
 			grid.set_column_count_to (2)
 			grid.column (Old_name_column).set_title (conf_interface_names.dialog_renaming_old_name)
@@ -51,8 +59,10 @@ feature {NONE} -- Initialization
 			element_container.extend (hb)
 			element_container.disable_item_expand (hb)
 			hb.extend (create {EV_CELL})
-			create l_btn.make_with_text_and_action (conf_interface_names.general_add, agent on_add)
-			first_button := l_btn
+
+			l_btn := first_button
+			l_btn.set_text (conf_interface_names.general_add)
+			l_btn.select_actions.extend (agent on_add)
 			l_btn.set_pixmap (conf_pixmaps.general_add_icon)
 			hb.extend (l_btn)
 			hb.disable_item_expand (l_btn)
@@ -93,12 +103,20 @@ feature {NONE} -- Agents
 			-- Called if we add a new renaming.
 		require
 			initialized: is_initialized
+		local
+			l_value: like value
 		do
-			if value = Void then
-				create value.make_equal (1)
+			l_value := value
+			if l_value = Void then
+				create l_value.make_equal (1)
+				value := l_value
 			end
-			if not (value.has (conf_interface_names.dialog_renaming_create_old) or value.has_item (conf_interface_names.dialog_renaming_create_new)) then
-				value.force (conf_interface_names.dialog_renaming_create_new, conf_interface_names.dialog_renaming_create_old)
+			if
+				not (l_value.has (conf_interface_names.dialog_renaming_create_old)
+						or l_value.has_item (conf_interface_names.dialog_renaming_create_new)
+					)
+			then
+				l_value.force (conf_interface_names.dialog_renaming_create_new, conf_interface_names.dialog_renaming_create_old)
 				refresh
 				grid.set_focus
 			end
@@ -119,11 +137,12 @@ feature {NONE} -- Agents
 			initialized: is_initialized
 		do
 			if
-				grid.single_selected_row /= Void and then
-				attached {STRING_PROPERTY} grid.single_selected_row.item (Old_name_column) as l_item and then
+				attached value as l_value and then
+				attached grid.single_selected_row as l_row and then
+				attached {STRING_PROPERTY} l_row.item (Old_name_column) as l_item and then
 				attached l_item.value as v
 			then
-				value.remove (v)
+				l_value.remove (v)
 				refresh
 			end
 		end
@@ -171,14 +190,19 @@ feature {NONE} -- Implementation
 	update_key (an_old_key: READABLE_STRING_GENERAL; a_new_key: READABLE_STRING_32)
 			-- Update `an_old_key' with `a_new_key'.
 		require
-			an_old_key_ok: value /= Void and then value.has (an_old_key)
+			an_old_key_ok: attached value as v and then v.has (an_old_key)
 		local
 			l_string: STRING_32
 			n, r: INTEGER
 		do
 			l_string := a_new_key.as_upper
-			if a_new_key /= Void and then not a_new_key.is_empty and then not value.has (l_string) then
-				value.replace_key (l_string, an_old_key)
+			if
+				attached value as l_value and then
+				a_new_key /= Void and then
+				not a_new_key.is_empty and then
+				not l_value.has (l_string)
+			then
+				l_value.replace_key (l_string, an_old_key)
 			end
 			if grid.row_count > 0 and grid.column_count >= Old_name_column then
 				from
@@ -208,13 +232,18 @@ feature {NONE} -- Implementation
 	update_value (a_key: READABLE_STRING_GENERAL; a_new_value: READABLE_STRING_32)
 			-- Update value of `a_key' to `a_new_value'
 		require
-			a_key_ok: value /= Void and then value.has (a_key)
+			a_key_ok: attached value as v and then v.has (a_key)
 		local
 			l_string: STRING_32
 		do
 			l_string := a_new_value.as_upper
-			if a_new_value /= Void and then not a_new_value.is_empty and then not value.has_item (l_string) then
-				value.force (l_string, a_key)
+			if
+				attached value as l_value and then
+				a_new_value /= Void and then
+				not a_new_value.is_empty and then
+				not l_value.has_item (l_string)
+			then
+				l_value.force (l_string, a_key)
 			end
 			refresh
 		end
@@ -241,7 +270,7 @@ feature {NONE} -- Implementation
 						(agent (x, y, b: INTEGER_32; xt, yt, p: REAL_64; sx, sy: INTEGER_32; tp: STRING_PROPERTY) do tp.activate end
 							(?, ?, ?, ?, ?, ?, ?, ?, l_tp))
 					l_tp.activate_actions.extend (agent on_item_activated (?, i, Old_name_column))
-					l_tp.set_value (value.key_for_iteration)
+					l_tp.set_value (v.key_for_iteration)
 					l_tp.change_value_actions.extend (agent update_key (v.key_for_iteration, ?))
 					grid.set_item (Old_name_column, i, l_tp)
 
@@ -251,7 +280,7 @@ feature {NONE} -- Implementation
 						(agent (x, y, b: INTEGER_32; xt, yt, p: REAL_64; sx, sy: INTEGER_32; tp: STRING_PROPERTY) do tp.activate end
 							(?, ?, ?, ?, ?, ?, ?, ?, l_tp))
 					l_tp.activate_actions.extend (agent on_item_activated (?, i, New_name_column))
-					l_tp.set_value (value.item_for_iteration)
+					l_tp.set_value (v.item_for_iteration)
 					l_tp.change_value_actions.extend (agent update_value (v.key_for_iteration, ?))
 					grid.set_item (New_name_column, i, l_tp)
 
@@ -286,7 +315,7 @@ invariant
 	elements: is_initialized implies grid /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

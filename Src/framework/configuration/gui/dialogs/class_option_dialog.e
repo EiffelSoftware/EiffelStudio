@@ -112,6 +112,10 @@ feature {NONE} -- Initialization
 			vb2.set_border_width (layout_constants.default_border_size)
 
 			p := properties
+			if p = Void then
+				create p
+				properties := p
+			end
 			vb2.extend (p)
 
 			create l_description

@@ -355,6 +355,10 @@ feature {NONE} -- Element initialization
 			l_frame.set_style ({EV_FRAME_CONSTANTS}.ev_frame_lowered)
 
 			p := properties
+			if p = Void then
+				create p
+				properties := p
+			end
 			l_frame.extend (p)
 			p.focus_in_actions.extend (agent
 				do
@@ -374,7 +378,7 @@ feature {NONE} -- Element initialization
 
 				-- Create description container.
 			create l_description_area
-			properties.set_description_field (l_description_area)
+			p.set_description_field (l_description_area)
 			l_description_area.set_minimum_height (description_height)
 			l_description_area.set_minimum_width (100)
 			l_frame.extend (l_description_area)

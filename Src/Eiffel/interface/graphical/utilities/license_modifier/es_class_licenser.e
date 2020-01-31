@@ -80,7 +80,7 @@ feature -- Basic operatons
 			l_libraries: LIST [CONF_LIBRARY]
 			l_library: CONF_LIBRARY
 			l_uuid: UUID
-			l_parameters: HASH_TABLE [ANY, STRING_32]
+			l_parameters: STRING_TABLE [ANY]
 			l_use_old_syntax: BOOLEAN
 			l_load_default: BOOLEAN
 			retried: BOOLEAN
@@ -240,7 +240,7 @@ feature {NONE} -- Basic operation
 			not_a_file_name_is_empty: not a_file_name.is_empty
 		local
 			l_name: detachable STRING_32
-			l_parameters: HASH_TABLE [ANY, STRING_32]
+			l_parameters: STRING_TABLE [ANY]
 			l_index: INTEGER
 			retried: BOOLEAN
 		do
@@ -340,7 +340,7 @@ feature {NONE} -- Internationalization
 			-- Default invalid license.
 
 ;note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

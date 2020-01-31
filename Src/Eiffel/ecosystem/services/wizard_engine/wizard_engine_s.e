@@ -33,7 +33,7 @@ feature -- Query
 
 feature -- Basic operations
 
-	render_template (a_template: READABLE_STRING_GENERAL; a_parameters: detachable HASH_TABLE [ANY, STRING_32]): STRING_32
+	render_template (a_template: READABLE_STRING_GENERAL; a_parameters: detachable STRING_TABLE [ANY]): STRING_32
 			-- Renders a text template.
 			--
 			-- `a_template': The tokenized text to render with the supplied parameters.
@@ -48,7 +48,7 @@ feature -- Basic operations
 			result_attached: Result /= Void
 		end
 
-	render_template_from_file (a_file_name: PATH; a_parameters: detachable HASH_TABLE [ANY, STRING_32]): detachable STRING_32
+	render_template_from_file (a_file_name: PATH; a_parameters: detachable STRING_TABLE [ANY]): detachable STRING_32
 			-- Renders a text template from a file.
 			--
 			-- `a_file_name': The source file name to retrieve a tokenized template from.
@@ -61,7 +61,7 @@ feature -- Basic operations
 		deferred
 		end
 
-	render_template_to_file (a_template: READABLE_STRING_GENERAL; a_parameters: detachable HASH_TABLE [ANY, READABLE_STRING_32]; a_destination_file: PATH)
+	render_template_to_file (a_template: READABLE_STRING_GENERAL; a_parameters: detachable STRING_TABLE [ANY]; a_destination_file: PATH)
 			-- Renders a text template to a destination file.
 			--
 			-- `a_template': The tokenized text to render with the supplied parameters.
@@ -76,7 +76,7 @@ feature -- Basic operations
 		deferred
 		end
 
-	render_template_from_file_to_file (a_file_name: PATH; a_parameters: detachable HASH_TABLE [ANY, READABLE_STRING_32]; a_destination_file: PATH)
+	render_template_from_file_to_file (a_file_name: PATH; a_parameters: detachable STRING_TABLE [ANY]; a_destination_file: PATH)
 			-- Renders a text template from a file to a destination file.
 			--
 			-- `a_file_name': The source file name to retrieve a tokenized template from.

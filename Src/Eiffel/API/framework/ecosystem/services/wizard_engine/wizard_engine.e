@@ -37,7 +37,7 @@ feature {NONE} -- Clean up
 
 feature -- Basic operations
 
-	render_template (a_template: READABLE_STRING_GENERAL; a_parameters: detachable HASH_TABLE [ANY, STRING_32]): STRING_32
+	render_template (a_template: READABLE_STRING_GENERAL; a_parameters: detachable STRING_TABLE [ANY]): STRING_32
 			-- <Precursor>
 		local
 			l_templates: like build_code_template
@@ -63,7 +63,7 @@ feature -- Basic operations
 			end
 		end
 
-	render_template_from_file (a_file_name: PATH; a_parameters: detachable HASH_TABLE [ANY, STRING_32]): detachable STRING_32
+	render_template_from_file (a_file_name: PATH; a_parameters: detachable STRING_TABLE [ANY]): detachable STRING_32
 			-- <Precursor>
 		local
 			l_file: RAW_FILE
@@ -91,7 +91,7 @@ feature -- Basic operations
 			end
 		end
 
-	render_template_to_file (a_template: READABLE_STRING_GENERAL; a_parameters: detachable HASH_TABLE [ANY, STRING_32]; a_destination_file: PATH)
+	render_template_to_file (a_template: READABLE_STRING_GENERAL; a_parameters: detachable STRING_TABLE [ANY]; a_destination_file: PATH)
 			-- <Precursor>
 		local
 			l_file: RAW_FILE
@@ -112,7 +112,7 @@ feature -- Basic operations
 			end
 		end
 
-	render_template_from_file_to_file (a_file_name: PATH; a_parameters: detachable HASH_TABLE [ANY, STRING_32]; a_destination_file: PATH)
+	render_template_from_file_to_file (a_file_name: PATH; a_parameters: detachable STRING_TABLE [ANY]; a_destination_file: PATH)
 			-- <Precursor>
 		local
 			l_file: RAW_FILE
@@ -134,7 +134,7 @@ feature -- Basic operations
 
 feature {NONE} -- Basic operations
 
-	build_code_template (a_template: STRING_32; a_parameters: detachable HASH_TABLE [ANY, READABLE_STRING_32]): TUPLE [template: CODE_TEMPLATE_DEFINITION; symbol_table: CODE_SYMBOL_TABLE]
+	build_code_template (a_template: STRING_32; a_parameters: detachable STRING_TABLE [ANY]): TUPLE [template: CODE_TEMPLATE_DEFINITION; symbol_table: CODE_SYMBOL_TABLE]
 			-- Builds a code template definition file from a template text.
 			--
 			-- `a_template': The tokenized text to render with the supplied parameters.
@@ -161,7 +161,7 @@ feature {NONE} -- Basic operations
 				-- Create template declarations
 			l_declarations := l_definition.declarations
 			across a_parameters as l_cursor loop
-				l_key := l_cursor.key
+				l_key := l_cursor.key.to_string_32
 				check l_key_attached: l_key /= Void end
 				l_literal_declaration := l_factory.new_code_literal_declaration (l_key, l_declarations)
 				if attached l_cursor.item as l_item then

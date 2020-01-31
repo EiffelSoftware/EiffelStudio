@@ -180,7 +180,7 @@ feature {NONE} -- Basic operations
 			retry
 		end
 
-	template_parameters (a_class_name: READABLE_STRING_32): HASH_TABLE [READABLE_STRING_32, READABLE_STRING_32]
+	template_parameters (a_class_name: READABLE_STRING_32): STRING_TABLE [READABLE_STRING_32]
 			-- Template parameters for creating actual class text from template file.
 		local
 			l_redefine, l_body, l_indexing: STRING_32

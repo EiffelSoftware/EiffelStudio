@@ -344,7 +344,7 @@ feature {NONE} -- Basic operations
 			l_wizard: SERVICE_CONSUMER [WIZARD_ENGINE_S]
 			l_source_file: PATH
 			l_user_file: detachable PATH
-			l_params: HASH_TABLE [ANY, READABLE_STRING_32]
+			l_params: STRING_TABLE [ANY]
 			l_buffer: attached STRING_32
 			l_parents: EV_LIST
 			l_creation_routine: detachable STRING_32

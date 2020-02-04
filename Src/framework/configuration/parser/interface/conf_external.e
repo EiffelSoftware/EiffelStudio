@@ -82,6 +82,11 @@ feature -- Access, stored in configuration file
 				s.replace_substring_all ({STRING_32} "$ECF_CONFIG_PATH", l_path.name)
 				s.replace_substring_all ({STRING_32} "$(ECF_CONFIG_PATH)", l_path.name)
 			end
+				-- There is no reason to have a location ending by backslash.
+				-- Remove it to avoid confusion with escaped double quote `\"`.
+			if s.count > 0 and then s [s.count] = {CHARACTER_32} '\' then
+				s.remove_tail (1)
+			end
 			Result := s
 		ensure
 			Result_not_void: Result /= Void
@@ -150,7 +155,7 @@ invariant
 	target_not_void: target /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -305,7 +305,11 @@ feature -- Execution
 						end
 					end
 				else
-					Result.set_error_message ("Error: cURL Error[" + l_result.out + "]")
+					if attached curl.error_message (l_result) as err_msg then
+						Result.set_error_message ("Error: " + {UTF_CONVERTER}.utf_32_string_to_utf_8_string_8 (err_msg))
+					else
+						Result.set_error_message ("Error: cURL Error[" + l_result.out + "]")
+					end
 					Result.status := response_status_code (curl_easy, curl_handle)
 				end
 

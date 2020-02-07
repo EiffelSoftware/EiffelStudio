@@ -62,16 +62,15 @@ feature -- Operation
 					create mi.default_create
 					auto_recycle (mi)
 					extend (mi)
-					mi.set_text ("Logout ...")
-					mi.select_actions.extend (agent cld.logout)
-
+					mi.set_text ("Sign out ...")
+					mi.select_actions.extend (agent cld.sign_out)
 				elseif cld.is_guest then
 						-- Show profile
 					l_acc_menu_item.set_text ({STRING_32} "Guest Account")
 					l_acc_menu_item.enable_sensitive
 				else
 						-- Show profile
-					l_acc_menu_item.set_text ({STRING_32} "Login")
+					l_acc_menu_item.set_text ({STRING_32} "Sign in")
 					l_acc_menu_item.enable_sensitive
 				end
 			else
@@ -99,7 +98,7 @@ feature {NONE} -- Clean up
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -23,11 +23,12 @@ convert
 
 feature {NONE} -- Initialization
 
-	make
+	make (cld: ES_CLOUD_S)
 			-- Initialize `Current'.
 		local
 			w: EV_VERTICAL_BOX
 		do
+			cloud_service := cld
 			create w
 			widget := w
 
@@ -35,30 +36,32 @@ feature {NONE} -- Initialization
 			build_interface (w)
 		end
 
-	make_cloud_required
+	make_cloud_required (cld: ES_CLOUD_S)
 		do
 			is_cloud_required := True
-			make
+			make (cld)
 		end
+
+feature -- Access
+
+	cloud_service: ES_CLOUD_S
+			-- Eiffel Cloud service.
 
 feature {NONE} -- Initialization
 
 	build_interface (a_box: EV_VERTICAL_BOX)
 		local
 			l_main: EV_VERTICAL_BOX
-			vb,vb_learn,vb_off,vb_terms: EV_VERTICAL_BOX
+			vb,vb_learn,vb_terms: EV_VERTICAL_BOX
 			hb: EV_HORIZONTAL_BOX
-			fr_login, fr_register, l_learn_more_box, fr_off: EV_FRAME
-			box_login: like new_register_box
-			box_register: like new_login_box
+			l_learn_more_box: EV_FRAME
 			txt: EVS_LABEL
 			lnk: EVS_LINK_LABEL
 			l_weblnk: EVS_HIGHLIGHT_LINK_LABEL
-			l_field_width: INTEGER
-			w: EV_WIDGET
 			but: EV_BUTTON
 			cbut: EV_CHECK_BUTTON
 			s: STRING_32
+			frame: EV_FRAME
 		do
 			create l_main
 			a_box.extend (l_main)
@@ -73,10 +76,10 @@ feature {NONE} -- Initialization
 
 			if is_cloud_required then
 				create txt
-				s := "Please login, to use the EiffelStudio " + {ES_IDE_SETTINGS}.edition_title + " ."
+				s := "Sign in to use EiffelStudio " + {ES_IDE_SETTINGS}.edition_title + " ."
 			else
 				create txt
-				s := "To use additional cloud services, please login."
+				s := "To use additional cloud services, please sign in."
 			end
 			if s /= Void then
 				s.append ("%NBy registering EiffelStudio you agree to the terms of use and the rules on user-provided information.")
@@ -92,14 +95,11 @@ feature {NONE} -- Initialization
 			vb_learn.set_padding_width (layout_constants.default_padding_size)
 			vb_learn.set_border_width (layout_constants.default_border_size)
 			create txt
-			txt.set_text ("User information provided during the registration process is used solely for the purpose of creating a user account at //cloud.eiffel.com and enforcing the usage rules (number of concurrent sessions) according to the terms of the EiffelStudio license. Eiffel Software does not share such information with any third party.")
+			txt.set_text ("User information provided during the registration process is used solely for the purpose of creating a user account at " + cloud_service.associated_website_url + " and enforcing the usage rules (number of concurrent sessions) according to the terms of the EiffelStudio license. Eiffel Software does not share such information with any third party.")
 			txt.set_is_text_wrapped (True); txt.align_text_left; txt.align_text_top
 			vb_learn.extend (txt)
 			create l_weblnk.make_with_text ("Terms of use")
-			l_weblnk.select_actions.extend (agent
-				do
-					open_url ("https://cloud.eiffel.com/site/terms")
-				end)
+			l_weblnk.select_actions.extend (agent open_url (cloud_service.associated_website_url + "/site/terms", Void))
 			vb_learn.extend (l_weblnk)
 			vb_learn.disable_item_expand (l_weblnk)
 
@@ -132,118 +132,150 @@ feature {NONE} -- Initialization
 			vb.disable_item_expand (vb_terms)
 
 
-				-- Login vs Register					
-			create fr_login.make_with_text (interface_names.l_login_with_credentials)
-			create fr_register.make_with_text (interface_names.l_register_new_account)
-			fr_login.hide
-			fr_register.hide
-
-			box_login := new_login_box
-			fr_login.extend (box_login)
-
-			box_register := new_register_box
-			fr_register.extend (box_register)
-
-			create lnk.make_with_text (interface_names.l_register_new_account)
-			lnk.align_text_left
-			lnk.select_actions.extend (agent (i_fr_login, i_fr_register: EV_WIDGET)
-					do
-						i_fr_login.hide
-						i_fr_register.show
-					end(fr_login, fr_register)
-				)
-			box_login.extend (lnk)
-			box_login.disable_item_expand (lnk)
-
-			create lnk.make_with_text (interface_names.l_login_with_existing_account)
-			lnk.align_text_left
-			lnk.select_actions.extend (agent (i_fr_login, i_fr_register: EV_WIDGET)
-					do
-						i_fr_register.hide
-						i_fr_login.show
-					end(fr_login, fr_register)
-				)
-			box_register.extend (lnk)
-			box_register.disable_item_expand (lnk)
+				-- Main frame to hold sign, ... widgets
+			create frame
 
 				-- Layout
 			create hb
-			hb.extend (fr_login); hb.disable_item_expand (fr_login)
-			hb.extend (fr_register); hb.disable_item_expand (fr_register)
+			hb.extend (frame); hb.disable_item_expand (frame)
 			hb.extend (create {EV_CELL})
 
 			vb.extend (hb)
 			vb.disable_item_expand (hb)
 
---			fr_register.show
-			fr_login.show
-
 			if attached es_cloud_s.service as cld then
 				create lnk.make_with_text (interface_names.l_open_eiffelstudio_account_web_site)
 				lnk.align_text_left
-				lnk.select_actions.extend (agent open_url (cld.associated_website_url))
+				lnk.select_actions.extend (agent open_url (cld.associated_website_url, Void))
 				vb.extend (lnk)
 				vb.disable_item_expand (lnk)
 			end
 
-
 				-- Offline access token.
 			if is_offline_allowed then
 				create cbut.make_with_text ("Offline?")
-
-				create fr_off.make_with_text ("Offline access")
-				fr_off.set_minimum_height (fr_login.height)
-				fr_login.set_minimum_height (fr_off.height)
-
-				create vb_off
-				vb_off.set_border_width (layout_constants.default_border_size)
-				vb_off.set_padding_width (layout_constants.default_padding_size)
-
-				cbut.select_actions.extend (agent (i_cb: EV_CHECK_BUTTON; i_login, i_off: EV_WIDGET)
+				cbut.select_actions.extend (agent (i_cb: EV_CHECK_BUTTON; fr: EV_FRAME)
 						do
 							if i_cb.is_selected then
-								i_login.hide
-								i_off.show
+								set_offline_mode (fr)
 							else
-								i_off.hide
-								i_login.show
+								set_sign_in_mode (fr)
 							end
-						end(cbut, fr_login, fr_off)
+						end(cbut, frame)
 					)
 
-				create {EV_TEXT_FIELD} w
-				w.set_minimum_width (l_field_width)
-				append_label_and_item_horizontally ("Offline token", w, vb_off)
-				vb_off.extend (create {EV_LABEL}.make_with_text ("You can get that token from the web site."))
-
-				create but.make_with_text_and_action ("Submit", agent do end)
-				layout_constants.set_default_width_for_button (but)
-				append_label_and_item_horizontally ("", but, vb_off)
-
-				fr_off.extend (vb_off)
-
-				fr_off.hide
-				vb.extend (fr_off)
-				vb.disable_item_expand (fr_off)
 				vb.extend (cbut)
 				vb.disable_item_expand (cbut)
 			end -- end of offline
 
-			if not is_guest_logged_in and then attached remaining_allowed_guest_days as l_days and then l_days > 0 then
+			if not is_guest_signed_in and then attached remaining_allowed_guest_days as l_days and then l_days > 0 then
 				create but.make_with_text_and_action (interface_names.b_guest, agent on_guest)
 				layout_constants.set_default_width_for_button (but)
-				append_label_and_item_horizontally (interface_names.l_can_login_as_guest_for_n_days (l_days), but, vb)
+				append_label_and_item_horizontally (interface_names.l_can_continue_as_guest_for_n_days (l_days), but, vb)
 				debug
-					if attached guest_mode_loging_count as nb and then nb > 0 then
+					if attached guest_mode_sign_in_count as nb and then nb > 0 then
 						append_label_and_item_horizontally ("(" + nb.out + ")", create {EV_CELL}, vb)
 					end
 				end
 			end
 			a_box.set_background_color (colors.stock_colors.white)
 			a_box.propagate_background_color
+
+			set_sign_in_mode (frame)
 		end
 
-	new_login_box: EV_VERTICAL_BOX
+	set_sign_in_mode (fr: EV_FRAME)
+		local
+			b: like new_sign_box
+			lnk: EVS_HIGHLIGHT_LINK_LABEL
+			hb: EV_HORIZONTAL_BOX
+			lab: EV_LABEL
+		do
+			fr.remove_text
+
+			b := new_sign_box
+			create hb
+
+			create lab.make_with_text (interface_names.l_no_account_text)
+			hb.extend (lab)
+			hb.disable_item_expand (lab)
+			create lab.make_with_text (" ")
+			hb.extend (lab)
+			hb.disable_item_expand (lab)
+
+			b.extend (hb)
+			b.disable_item_expand (hb)
+
+			create lab
+			lab.hide
+			b.extend (lab)
+			b.disable_item_expand (lab)
+
+			create lnk.make_with_text (interface_names.l_create_new_account)
+			lnk.align_text_left
+			lnk.select_actions.extend (agent open_url (cloud_service.new_account_website_url, lab))
+--			lnk.select_actions.extend (agent set_register_mode (fr))
+			hb.extend (lnk)
+			hb.disable_item_expand (lnk)
+
+
+
+			fr.wipe_out
+			fr.extend (b)
+			b.show
+			fr.propagate_background_color
+		end
+
+	set_offline_mode (fr: EV_FRAME)
+		local
+			vb_off: EV_VERTICAL_BOX
+			w: EV_TEXT_FIELD
+			but: EV_BUTTON
+			l_field_width: INTEGER
+			l_scaler: EVS_DPI_SCALER
+		do
+			create l_scaler.make
+			l_field_width := l_scaler.scaled_size (300)
+			fr.wipe_out
+			fr.set_text ("Offline access")
+
+			create vb_off
+			vb_off.set_border_width (layout_constants.default_border_size)
+			vb_off.set_padding_width (layout_constants.default_padding_size)
+
+
+			create {EV_TEXT_FIELD} w
+			w.set_minimum_width (l_field_width)
+			append_label_and_item_horizontally ("Offline token", w, vb_off)
+			vb_off.extend (create {EV_LABEL}.make_with_text ("You can get that token from the web site."))
+
+			create but.make_with_text_and_action ("Submit", agent do end)
+			layout_constants.set_default_width_for_button (but)
+			append_label_and_item_horizontally ("", but, vb_off)
+
+			fr.extend (vb_off)
+			fr.propagate_background_color
+		end
+
+	set_register_mode (fr: EV_FRAME)
+		local
+			b: like new_register_link_box
+			lnk: EVS_HIGHLIGHT_LINK_LABEL
+		do
+			fr.remove_text
+			b := new_register_link_box
+			create lnk.make_with_text (interface_names.l_sign_in_with_existing_account)
+			lnk.align_text_left
+			lnk.select_actions.extend (agent set_sign_in_mode (fr))
+			b.extend (lnk)
+			b.disable_item_expand (lnk)
+			fr.wipe_out
+			fr.extend (b)
+			b.show
+			fr.propagate_background_color
+		end
+
+	new_sign_box: EV_VERTICAL_BOX
 		local
 			lab: EV_LABEL
 			l_field_width: INTEGER
@@ -270,7 +302,12 @@ feature {NONE} -- Initialization
 			w.set_minimum_width (l_field_width)
 			append_label_and_item_horizontally (interface_names.l_password, w, Result)
 
-			create but.make_with_text_and_action (interface_names.b_login, agent process_account_login (new_gui_form (<<["user_name", tf_username], ["password", tf_password]>>)))
+			create lab
+			lab.hide
+			Result.extend (lab)
+			Result.disable_item_expand (lab)
+
+			create but.make_with_text_and_action (interface_names.b_sign_in, agent process_account_sign_in (new_gui_form (<<["user_name", tf_username], ["password", tf_password]>>), lab))
 
 			layout_constants.set_default_width_for_button (but)
 			append_label_and_item_horizontally ("", but, Result)
@@ -286,7 +323,7 @@ feature {NONE} -- Initialization
 			tf_password.return_actions.extend (agent (i_but: EV_BUTTON) do i_but.select_actions.call (Void) end(but))
 		end
 
-	new_register_box: EV_VERTICAL_BOX
+	new_register_form_box: EV_VERTICAL_BOX
 		local
 			l_field_width: INTEGER
 			w: EV_WIDGET
@@ -337,6 +374,33 @@ feature {NONE} -- Initialization
 			tf_password.return_actions.extend (agent (i_but: EV_BUTTON) do i_but.select_actions.call (Void) end(but))
 		end
 
+	new_register_link_box: EV_VERTICAL_BOX
+		local
+			l_field_width: INTEGER
+--			but: EV_BUTTON
+			l_scaler: EVS_DPI_SCALER
+			l_weblnk: EVS_HIGHLIGHT_LINK_LABEL
+			lab: EV_LABEL
+		do
+			create l_scaler.make
+			l_field_width := l_scaler.scaled_size (300)
+
+			create Result
+			Result.set_border_width (layout_constants.default_border_size)
+			Result.set_padding_width (layout_constants.default_padding_size)
+			create l_weblnk.make_with_text ("Create a new account")
+			l_weblnk.set_minimum_width (l_field_width)
+			Result.extend (l_weblnk)
+			Result.disable_item_expand (l_weblnk)
+
+			create lab
+			Result.extend (lab)
+			Result.disable_item_expand (lab)
+
+			l_weblnk.select_actions.extend (agent open_url (cloud_service.new_account_website_url, lab))
+
+		end
+
 feature -- Status report
 
 	is_cloud_required: BOOLEAN
@@ -350,10 +414,10 @@ feature -- Status report
 
 	is_offline_allowed: BOOLEAN
 		do
-			Result := False  -- FIXME: for now, let's disable offline access.
+			Result := True  -- FIXME: for now, let's disable offline access.
 		end
 
-	is_guest_logged_in: BOOLEAN
+	is_guest_signed_in: BOOLEAN
 		do
 			if attached es_cloud_s.service as cld then
 				Result := cld.is_guest
@@ -371,10 +435,10 @@ feature -- Status report
 			end
 		end
 
-	guest_mode_loging_count: INTEGER
+	guest_mode_sign_in_count: INTEGER
 		do
 			if attached es_cloud_s.service as cld then
-				Result := cld.guest_mode_loging_count
+				Result := cld.guest_mode_signed_in_count
 			else
 				check es_cloud_service_available: False end
 			end
@@ -395,7 +459,7 @@ feature -- Next actions
 
 feature -- UI callbacks
 
-	on_user_logged_in (acc: ES_ACCOUNT)
+	on_user_signed_in (acc: ES_ACCOUNT)
 		require
 			acc: attached es_cloud_s.service as cld and then
 				acc.same_as (cld.active_account) and then
@@ -407,33 +471,53 @@ feature -- UI callbacks
 	on_guest
 		do
 			if attached es_cloud_s.service as cld then
-				cld.login_as_guest
+				cld.continue_as_guest
 			end
 			on_next
 		end
 
-	process_account_login (a_form: like new_gui_form)
+	process_account_sign_in (a_form: like new_gui_form; a_report_label: detachable EV_LABEL)
 		local
 			l_style: detachable EV_POINTER_STYLE
+			s32: STRING_32
 		do
+			if a_report_label /= Void then
+				a_report_label.remove_text
+				a_report_label.hide
+			end
 			if
 				attached gui_form_string_item ("user_name", a_form) as u and then
 				attached gui_form_string_item ("password", a_form) as p
 			then
 				l_style := widget.pointer_style
 				widget.set_pointer_style ((create {EV_STOCK_PIXMAPS}).busy_cursor)
-				if
-					attached es_cloud_s.service as cld and then
-					cld.is_available
-				then
-					cld.login_with_credential (u, p)
-					if attached cld.active_account as acc then
-						on_user_logged_in (acc)
+				if attached es_cloud_s.service as cld then
+					if cld.is_available	then
+						cld.sign_in_with_credential (u, p)
+						if cld.has_error then
+							create s32.make_from_string_general ("Service error (try again later)!")
+							if attached cld.last_error_message as err then
+								s32.append_character ('%N')
+								s32.append (err)
+							end
+							s32.append_character ('%N')
+							on_system_error (s32, a_report_label)
+						elseif attached cld.active_account as acc then
+							on_user_signed_in (acc)
+						else
+							on_user_sign_in_error (a_form, a_report_label)
+						end
 					else
-						on_user_loging_error (a_form)
+						create s32.make_from_string_general ("Account service is not available for now (try again later)!")
+						if attached cld.last_error_message as err then
+							s32.append_character ('%N')
+							s32.append (err)
+						end
+						on_system_error (s32, a_report_label)
+						cld.check_cloud_availability
 					end
 				else
-					on_system_error ("Account service is not available for now (try again later)!")
+					on_system_error ("Cloud service not activated!", a_report_label)
 				end
 				widget.set_pointer_style (l_style)
 			else
@@ -441,15 +525,25 @@ feature -- UI callbacks
 			end
 		end
 
-	on_system_error (msg: READABLE_STRING_GENERAL)
+	on_system_error (msg: READABLE_STRING_GENERAL; a_report_label: detachable EV_LABEL)
 		do
-			popup_message (msg)
+			if a_report_label /= Void then
+				a_report_label.set_foreground_color (colors.stock_colors.red)
+				a_report_label.set_text (msg)
+--				clear_label_after_delay (5_000, a_report_label, not a_report_label.is_displayed ) -- 5 seconds
+				if not a_report_label.is_displayed then
+					a_report_label.show
+				end
+			else
+				popup_message (msg, True)
+			end
 		end
 
 	process_account_registration (a_form: like new_gui_form)
 		local
 			l_style: detachable EV_POINTER_STYLE
 			tb: STRING_TABLE [READABLE_STRING_GENERAL]
+			s32: STRING_32
 		do
 			if
 				attached gui_form_string_item ("user_name", a_form) as u and then
@@ -465,20 +559,25 @@ feature -- UI callbacks
 				l_style := widget.pointer_style
 				widget.set_pointer_style ((create {EV_STOCK_PIXMAPS}).busy_cursor)
 
-				if
-					attached es_cloud_s.service as cld and then
-					cld.is_available
-				then
-					if l_email.is_valid_as_string_8 then
-						cld.register_account (u, p, l_email.to_string_8, tb)
-					end
-					if attached cld.active_account as acc then
-						on_user_registered (acc)
+				if attached es_cloud_s.service as cld then
+					if cld.is_available	then
+						if l_email.is_valid_as_string_8 then
+							cld.register_account (u, p, l_email.to_string_8, tb)
+						end
+						if attached cld.active_account as acc then
+							on_user_registered (acc, Void)
+						else
+							on_user_registration_error (a_form, Void)
+						end
 					else
-						on_user_registration_error (a_form)
+						create s32.make_from_string_general ("Account service is not available for now (try again later)!")
+						if attached cld.last_error_message as err then
+							s32.append (err)
+						end
+						on_system_error (s32, Void)
 					end
 				else
-					on_system_error ("Account service is not available for now (try again later)!")
+					on_system_error ("Cloud service not activated!", Void)
 				end
 				widget.set_pointer_style (l_style)
 			else
@@ -486,19 +585,19 @@ feature -- UI callbacks
 			end
 		end
 
-	on_user_loging_error (a_form: like new_gui_form)
+	on_user_sign_in_error (a_form: like new_gui_form; a_report_label: detachable EV_LABEL)
 		do
-			popup_message ("Error while logging in")
+			on_system_error ("Error while signing in", a_report_label)
 		end
 
-	on_user_registered (acc: ES_ACCOUNT)
+	on_user_registered (acc: ES_ACCOUNT; a_report_label: detachable EV_LABEL)
 		do
-			popup_message ("Thank you for the registration")
+			on_system_error ("Thank you for the registration", a_report_label)
 		end
 
-	on_user_registration_error (a_form: like new_gui_form)
+	on_user_registration_error (a_form: like new_gui_form; a_report_label: detachable EV_LABEL)
 		do
-			popup_message ("Error while registering")
+			on_system_error ("Error while registering", a_report_label)
 		end
 
 feature {NONE} -- Implementation
@@ -549,15 +648,23 @@ feature {NONE} -- Implementation
 			hb.disable_item_expand (a_item)
 		end
 
-	popup_message (msg: READABLE_STRING_GENERAL)
+	popup_message (msg: READABLE_STRING_GENERAL; a_is_error: BOOLEAN)
 		local
 			popup: EV_POPUP_WINDOW
 			lab: EV_LABEL
+			l_scaler: EVS_DPI_SCALER
 		do
+			create l_scaler.make
 			create popup.make_with_shadow
 			create lab.make_with_text (msg)
+			lab.set_minimum_height (3 * lab.font.height)
+			lab.align_text_vertical_center
+			if a_is_error then
+				lab.set_foreground_color (colors.stock_colors.red)
+			end
 			popup.extend (lab)
-			popup.set_size (200, 50)
+
+			popup.set_size (l_scaler.scaled_size (200), 3 * lab.font.height)
 			if attached parent_window_of (widget) as win then
 				popup.set_position (win.x_position + (win.width - popup.width) // 2, win.y_position + (win.height - popup.height) // 2)
 				lab.pointer_button_release_actions.extend (agent (i_popup: EV_POPUP_WINDOW; x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
@@ -570,30 +677,39 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	open_url (a_url: READABLE_STRING_8)
+	open_url (a_url: READABLE_STRING_8; a_report_label: detachable EV_LABEL)
 		local
 			popup: EV_POPUP_WINDOW
 			t: EV_TIMEOUT
 			lab: EV_LABEL
 			is_launched: BOOLEAN
+			l_was_hidden: BOOLEAN
+			m: STRING_32
 		do
+			if a_report_label = Void then
+				create popup.make_with_shadow
+				create lab.make_with_text ("Launching link " + a_url)
+				popup.extend (lab)
+				popup.set_size (200, 50)
+				lab.pointer_button_release_actions.extend (agent (i_popup: EV_POPUP_WINDOW; x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
+					do
+						i_popup.destroy
+					end (popup, ?, ?, ?, ?, ?, ?, ?, ?))
 
-			create popup.make_with_shadow
-			create lab.make_with_text ("Open link " + a_url)
-			popup.extend (lab)
-			popup.set_size (200, 50)
-			lab.pointer_button_release_actions.extend (agent (i_popup: EV_POPUP_WINDOW; x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
-				do
-					i_popup.destroy
-				end (popup, ?, ?, ?, ?, ?, ?, ?, ?))
-
-			if attached parent_window_of (widget) as win then
-				popup.set_position (win.x_position + (win.width - popup.width) // 2, win.y_position + (win.height - popup.height) // 2)
-				popup.show_relative_to_window (win)
+				if attached parent_window_of (widget) as win then
+					popup.set_position (win.x_position + (win.width - popup.width) // 2, win.y_position + (win.height - popup.height) // 2)
+					popup.show_relative_to_window (win)
+				else
+					popup.show
+				end
 			else
-				popup.show
+				a_report_label.set_foreground_color (colors.stock_colors.gray)
+				a_report_label.set_text ("Launching link "+ a_url)
+				if not a_report_label.is_displayed then
+					l_was_hidden := True
+					a_report_label.show
+				end
 			end
-
 			if
 				attached {STRING_32_PREFERENCE} preferences.misc_data.internet_browser_preference as pref and then
 				attached pref.value as l_default_browser and then
@@ -606,9 +722,33 @@ feature {NONE} -- Implementation
 				check internet_browser_preference_set: False end
 			end
 			if is_launched then
-				create t.make_with_interval (5_000) -- 5 seconds
-				t.actions.extend (agent popup.destroy)
+				if popup /= Void then
+					create t.make_with_interval (5_000) -- 5 seconds
+					t.actions.extend (agent popup.destroy)
+				elseif a_report_label /= Void then
+					clear_label_after_delay (5_000, a_report_label, l_was_hidden) -- 5 seconds
+				end
+			else
+				create m.make_from_string_general ("Error: could not launch link " + a_url)
+				if a_report_label /= Void then
+					a_report_label.set_foreground_color (colors.stock_colors.red)
+					a_report_label.set_text (m)
+				elseif popup /= Void and lab /= Void then
+					lab.set_text (m)
+				end
 			end
+		end
+
+	clear_label_after_delay (a_timeout_delay: INTEGER; lab: EV_LABEL; a_hide: BOOLEAN)
+		local
+			t: EV_TIMEOUT
+		do
+			create t.make_with_interval (a_timeout_delay)
+			t.actions.extend (agent lab.remove_text)
+			if a_hide then
+				t.actions.extend (agent lab.hide)
+			end
+			t.actions.extend (agent t.destroy)
 		end
 
 

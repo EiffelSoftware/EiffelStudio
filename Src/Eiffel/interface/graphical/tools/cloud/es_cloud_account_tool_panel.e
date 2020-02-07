@@ -17,8 +17,8 @@ inherit
 
 	ES_CLOUD_OBSERVER
 		redefine
-			on_account_logged_in,
-			on_account_logged_out,
+			on_account_signed_in,
+			on_account_signed_out,
 			on_account_updated,
 			on_cloud_available,
 			on_session_state_changed
@@ -79,12 +79,12 @@ feature -- Events
 			refresh
 		end
 
-	on_account_logged_in (acc: ES_ACCOUNT)
+	on_account_signed_in (acc: ES_ACCOUNT)
 		do
 			refresh
 		end
 
-	on_account_logged_out
+	on_account_signed_out
 		do
 			refresh
 		end
@@ -180,6 +180,41 @@ feature {NONE} -- Action handlers
 						append_bold_text_to ("Session: ", txt)
 						append_text_to (sess.id.out, txt)
 						append_text_to ("%N", txt)
+						if attached {ES_ACCOUNT_ACCESS_TOKEN} acc.access_token as tok then
+							append_bold_text_to ("%NAuthentication token expiration: ", txt)
+							append_text_to (tok.expiration_date.out, txt)
+							if attached tok.expiration_delay_in_seconds as nb and then nb >= 0 then
+								append_text_to (" ", txt)
+								create s.make_empty
+								q := nb
+								r := q \\ 60
+								if r > 0 then
+									s.append (r.out + " secs")
+								end
+								q := q // 60
+								if q > 0 then
+									r := q \\ 60
+									if q > 0 then
+										s.prepend (r.out + " minutes ")
+									end
+									q := q // 60
+									if q > 0 then
+										r := q \\ 24
+										if q > 0 then
+											s.prepend (r.out + " hours ")
+										end
+										q := q // 24
+										if q > 0 then
+											s.prepend (q.out + " days ")
+										end
+									end
+								end
+
+
+								append_text_to (s, txt)
+								append_text_to ("%N", txt)
+							end
+						end
 					end
 					if l_dbg then
 						append_bold_text_to ("Cloud: ", txt)
@@ -259,7 +294,7 @@ feature {NONE} -- Action handlers
 						layout_constants.set_default_size_for_button (but)
 						hb.disable_item_expand (but)
 
-						create but.make_with_text_and_action ("Logout", agent on_logout (cld))
+						create but.make_with_text_and_action ("Sign out", agent on_sign_out (cld))
 						hb.extend (but)
 						layout_constants.set_default_size_for_button (but)
 						hb.disable_item_expand (but)
@@ -312,7 +347,7 @@ feature {NONE} -- Action handlers
 								l_startup_page: ES_STARTUP_PAGE
 							do
 								create l_startup_page.make (not i_cld.is_enterprise_edition)
-								l_startup_page.switch_to_account_page
+								l_startup_page.switch_to_account_page (i_cld, False)
 								l_startup_page.show_modal_to_window (develop_window.window)
 							end(cld)
 						)
@@ -348,9 +383,9 @@ feature {NONE} -- Action handlers
 			b.propagate_background_color
 		end
 
-	on_logout (cld: ES_CLOUD_S)
+	on_sign_out (cld: ES_CLOUD_S)
 		do
-			cld.logout
+			cld.sign_out
 		end
 
 	on_account_refresh_token (cld: ES_CLOUD_S; tok: ES_ACCOUNT_ACCESS_TOKEN; acc: ES_ACCOUNT)

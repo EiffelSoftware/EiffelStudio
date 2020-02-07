@@ -10,8 +10,8 @@ class
 inherit
 	ES_CLOUD_OBSERVER
 		redefine
-			on_account_logged_in,
-			on_account_logged_out,
+			on_account_signed_in,
+			on_account_signed_out,
 			on_account_updated,
 			on_cloud_available,
 			on_session_state_changed,
@@ -103,13 +103,13 @@ feature -- Events
 			update_account_menu
 		end
 
-	on_account_logged_in (acc: ES_ACCOUNT)
+	on_account_signed_in (acc: ES_ACCOUNT)
 		do
 			on_account_changed (acc)
 			start_background_pinging (acc)
 		end
 
-	on_account_logged_out
+	on_account_signed_out
 		do
 			stop_background_pinging
 			on_account_changed (Void)

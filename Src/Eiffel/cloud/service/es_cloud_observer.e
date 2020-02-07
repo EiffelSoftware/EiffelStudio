@@ -17,11 +17,11 @@ feature -- Event
 		do
 		end
 
-	on_account_logged_in (acc: ES_ACCOUNT)
+	on_account_signed_in (acc: ES_ACCOUNT)
 		do
 		end
 
-	on_account_logged_out
+	on_account_signed_out
 		do
 		end
 

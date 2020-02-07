@@ -54,17 +54,14 @@ feature -- Execution
 				if not license_accepted then
 					switch_to_community_agreement_page
 					show_modal_to_window (win)
-				elseif is_cloud_enabled then
+				elseif is_cloud_enabled and then attached es_cloud_s.service as cld then
 					if is_logged_in then
-						if
-							attached es_cloud_s.service as cld and then
-							attached cld.active_account as acc
-						then
-							cld.on_account_logged_in (acc)
+						if attached cld.active_account as acc then
+							cld.on_account_signed_in (acc)
 						end
 						on_next
 					elseif {ES_IDE_SETTINGS}.cloud_required then
-						switch_to_account_page
+						switch_to_account_page (cld, False)
 						show_modal_to_window (win)
 					else
 						on_next
@@ -167,7 +164,7 @@ feature -- Execution
 			main_box.propagate_background_color
 		end
 
-	switch_to_account_page
+	switch_to_account_page (cld: ES_CLOUD_S; a_sign_in_dialog: BOOLEAN)
 		require
 			is_cloud_enabled: is_cloud_enabled
 		local
@@ -203,18 +200,23 @@ feature -- Execution
 			vb.set_padding_width (layout_constants.default_padding_size)
 
 			if {ES_IDE_SETTINGS}.cloud_required then
-				create wid.make_cloud_required
+				create wid.make_cloud_required (cld)
 			else
-				create wid.make
+				create wid.make (cld)
 			end
 			wid.next_actions.extend (agent on_next)
 			vb.extend (wid)
 			vb.disable_item_expand (wid)
 			vb.extend (create {EV_CELL})
 
-			create but.make_with_text_and_action (interface_names.b_quit, agent on_quit)
+			if a_sign_in_dialog then
+				create but.make_with_text_and_action (interface_names.b_close, agent on_close)
+			else
+				create but.make_with_text_and_action (interface_names.b_quit, agent on_quit)
+			end
 			layout_constants.set_default_width_for_button (but)
 			append_label_and_item_horizontally ("", but, vb)
+
 
 			if l_focus /= Void then
 				l_focus.set_focus
@@ -288,11 +290,11 @@ feature -- Event: license
 			preferences.misc_data.set_license_accepted (True)
 				-- Save preferences right away.
 			preferences.preferences.save_preferences
-			if is_cloud_enabled then
+			if is_cloud_enabled and then attached {ES_CLOUD_S} es_cloud_s.service as cld then
 				if is_logged_in then
 					on_next
 				else
-					switch_to_account_page
+					switch_to_account_page (cld, False)
 				end
 			else
 				on_next

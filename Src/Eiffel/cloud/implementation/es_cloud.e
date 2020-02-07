@@ -9,7 +9,7 @@ class
 inherit
 	ES_CLOUD_S
 		redefine
-			on_account_logged_in
+			on_account_signed_in
 		end
 
 	DISPOSABLE_SAFE
@@ -262,14 +262,14 @@ feature -- Access
 			-- <Precursor>
 
 	active_account: detachable ES_ACCOUNT
-			-- Active account if logged in, otherwise Void.
+			-- Active account if signed in, otherwise Void.
 
 	active_session: detachable ES_ACCOUNT_SESSION
 			-- Active session.
 
 	guest_mode_ending_date: detachable DATE_TIME
 
-	guest_mode_loging_count: INTEGER
+	guest_mode_signed_in_count: INTEGER
 
 	remaining_days_for_guest: INTEGER
 			-- Remaining days for guest mode.
@@ -380,7 +380,7 @@ feature -- Get status
 
 feature -- Sign
 
-	login_as_guest
+	continue_as_guest
 			-- Sign as guest with limitation.
 		local
 			dt: detachable DATE_TIME
@@ -392,13 +392,13 @@ feature -- Sign
 				dt.day_add (15)
 				guest_mode_ending_date := dt
 			end
-			guest_mode_loging_count := guest_mode_loging_count + 1
+			guest_mode_signed_in_count := guest_mode_signed_in_count + 1
 			is_guest := True
 			store
-			on_account_logged_out
+			on_account_signed_out
 		end
 
-	login_with_credential (a_username: READABLE_STRING_GENERAL; a_password: READABLE_STRING_GENERAL)
+	sign_in_with_credential (a_username: READABLE_STRING_GENERAL; a_password: READABLE_STRING_GENERAL)
 			-- <Precursor>
 		do
 			if attached web_api.account_using_basic_authorization (a_username, a_password) as acc then
@@ -406,14 +406,17 @@ feature -- Sign
 				active_account := acc
 				update_account (acc)
 				store
-				on_account_logged_in (acc)
+				on_account_signed_in (acc)
 			else
 				active_account := Void
 					-- If guest, remains guest.
+				if web_api.has_error then
+					check_cloud_availability
+				end
 			end
 		end
 
-	login_with_access_token (a_username: READABLE_STRING_GENERAL; tok: READABLE_STRING_8)
+	sign_in_with_access_token (a_username: READABLE_STRING_GENERAL; tok: READABLE_STRING_8)
 			-- <Precursor>
 		do
 				-- TODO
@@ -422,7 +425,7 @@ feature -- Sign
 				reset_guest_session
 				update_account (acc)
 				store
-				on_account_logged_in (acc)
+				on_account_signed_in (acc)
 			else
 				active_account := Void
 				active_session := Void
@@ -430,7 +433,7 @@ feature -- Sign
 			end
 		end
 
-	logout
+	sign_out
 		local
 			acc: like active_account
 		do
@@ -440,14 +443,14 @@ feature -- Sign
 				attached acc.access_token as tok and then
 				attached active_session as sess
 			then
-				web_api.logout (tok.token, installation.id, sess.id)
+				web_api.sign_out (tok.token, installation.id, sess.id)
 				reset_guest_session
 			end
 			active_account := Void
 			active_session := Void
 			is_guest := False
 			store
-			on_account_logged_out
+			on_account_signed_out
 		end
 
 	quit
@@ -546,7 +549,7 @@ feature -- Updating
 
 				on_account_updated (a_account)
 			elseif is_available then
-				logout
+				sign_out
 			else
 				on_cloud_available (False)
 			end
@@ -571,7 +574,7 @@ feature -- Updating
 					store
 					on_account_updated (acc)
 				elseif is_available then
-					logout
+					sign_out
 				else
 					on_cloud_available (False)
 				end
@@ -580,7 +583,7 @@ feature -- Updating
 
 feature -- Events
 
-	on_account_logged_in (acc: ES_ACCOUNT)
+	on_account_signed_in (acc: ES_ACCOUNT)
 		do
 			create active_session.make_new (acc)
 			if attached eiffel_project.manager as m then
@@ -621,7 +624,7 @@ feature -- Account Registration
 				guest_mode_ending_date := Void
 				remaining_days_for_guest := 0
 				store
-				on_account_logged_in (acc)
+				on_account_signed_in (acc)
 			end
 			store
 		end
@@ -660,7 +663,7 @@ feature -- Storage
 								active_account := Void
 							end
 							guest_mode_ending_date := d.guest_mode_ending_date
-							guest_mode_loging_count := d.guest_mode_loging_count
+							guest_mode_signed_in_count := d.guest_mode_signed_in_count
 							if d.session_heartbeat > 0 then
 								session_heartbeat := d.session_heartbeat
 							end
@@ -697,7 +700,7 @@ feature -- Storage
 						create d
 						d.active_account := active_account
 						d.guest_mode_ending_date := guest_mode_ending_date
-						d.guest_mode_loging_count := guest_mode_loging_count
+						d.guest_mode_signed_in_count := guest_mode_signed_in_count
 						f.open_write
 						create sed
 						sed.store_in_medium (d, f)

@@ -262,7 +262,7 @@ feature -- ROC Account
 			end
 		end
 
-	logout (a_token: READABLE_STRING_8; a_installation_id, a_session_id: READABLE_STRING_GENERAL)
+	sign_out (a_token: READABLE_STRING_8; a_installation_id, a_session_id: READABLE_STRING_GENERAL)
 		local
 			b: BOOLEAN
 		do

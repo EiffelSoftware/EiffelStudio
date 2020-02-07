@@ -44,6 +44,11 @@ feature -- Access
 		deferred
 		end
 
+	new_account_website_url: READABLE_STRING_8
+		do
+			Result := associated_website_url + "/new_account"
+		end
+
 	is_guest: BOOLEAN
 			-- Is guest?
 		deferred
@@ -54,18 +59,18 @@ feature -- Access
 		deferred
 		end
 
-	is_logged_in: BOOLEAN
+	is_signed_in: BOOLEAN
 		do
 			Result := active_account /= Void or else is_guest
 		end
 
 	active_account: detachable ES_ACCOUNT
-			-- Active account if logged in, otherwise Void.
+			-- Active account if signed in, otherwise Void.
 		deferred
 		end
 
 	active_session: detachable ES_ACCOUNT_SESSION
-			-- Active session, if logged in, otherwise Void.
+			-- Active session, if signed in, otherwise Void.
 		deferred
 		end
 
@@ -79,8 +84,8 @@ feature -- Access
 		deferred
 		end
 
-	guest_mode_loging_count: INTEGER
-			-- Number of loging as guest.
+	guest_mode_signed_in_count: INTEGER
+			-- Number of signed in in as guest.
 		deferred
 		end
 
@@ -91,23 +96,23 @@ feature -- Access
 
 feature -- Sign in
 
-	login_as_guest
+	continue_as_guest
 			-- Sign as guest with limitation.
 		deferred
 		end
 
-	login_with_credential (a_username: READABLE_STRING_GENERAL; a_password: READABLE_STRING_GENERAL)
-			-- Login with `a_username:a_password`, on success set the associated `active_account`.
+	sign_in_with_credential (a_username: READABLE_STRING_GENERAL; a_password: READABLE_STRING_GENERAL)
+			-- Connect with `a_username:a_password`, on success set the associated `active_account`.
 		deferred
 		end
 
-	login_with_access_token (a_username: READABLE_STRING_GENERAL; tok: READABLE_STRING_8)
-			-- Login as `a_username` with token `tok`, on success set the associated `active_account`.
+	sign_in_with_access_token (a_username: READABLE_STRING_GENERAL; tok: READABLE_STRING_8)
+			-- Connect as `a_username` with token `tok`, on success set the associated `active_account`.
 		deferred
 		end
 
-	logout
-			-- Logout current session.
+	sign_out
+			-- Sign out current session.
 		deferred
 		end
 
@@ -221,24 +226,24 @@ feature -- Events
 			end
 		end
 
-	on_account_logged_in (acc: ES_ACCOUNT)
+	on_account_signed_in (acc: ES_ACCOUNT)
 		do
 			if attached observers as lst then
 				across
 					lst as ic
 				loop
-					ic.item.on_account_logged_in (acc)
+					ic.item.on_account_signed_in (acc)
 				end
 			end
 		end
 
-	on_account_logged_out
+	on_account_signed_out
 		do
 			if attached observers as lst then
 				across
 					lst as ic
 				loop
-					ic.item.on_account_logged_out
+					ic.item.on_account_signed_out
 				end
 			end
 				-- FIXME: if gpl edition, quit EiffelStudio?
@@ -289,7 +294,7 @@ feature {NONE} -- Implementation
 invariant
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -1297,6 +1297,10 @@ feature -- Panel
 	show_next_panel
 			-- Display next panel (features, templates, symbols, ...)
 		do
+			if attached tooltip_window as l_w and then l_w.is_shown and then not l_w.is_recycled then
+					-- Discard tooltip when changing panel
+				l_w.hide
+			end
 			show_panel_by_id (next_panel_id (current_panel_id))
 		end
 

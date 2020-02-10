@@ -1,11 +1,9 @@
 note
-	description: "[
-		Analyzers a series of editor tokens for evaluation expressions.
-	]"
+	description: "Analyzer of a series of editor tokens for evaluation expressions."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date: ": 2009-10-07 11:40:56 -0700 (Wed, 07 Oct 2009) "
-	revision: ": 81044 "
+	date:"$Date$"
+	revision: "$Revision$"
 
 class
 	ES_EDITOR_EXPRESSION_ANALYZER
@@ -51,9 +49,9 @@ feature -- Basic operations
 			a_line_has_a_token: a_line.has_token (a_token)
 			a_end_attached: a_end /= Void
 		local
-			l_expression: STRING
+			l_expression: like token_range_text
 		do
-			l_expression := token_range_text (a_token, a_line, a_end).as_string_8
+			l_expression := token_range_text (a_token, a_line, a_end)
 			if not l_expression.is_empty then
 					-- Parse the expression.
 				Result := expression_type_from_string (a_info, l_expression)
@@ -78,8 +76,6 @@ feature -- Basic operations
 			l_wrapper: EIFFEL_PARSER_WRAPPER
 			l_context: AST_CONTEXT
 			l_checker: ES_EXPRESSION_ANALYZER_FEATURE_CHECKER_GENERATOR
-			l_eval_locals: HASH_TABLE [TYPE_A, STRING_32]
-			l_local_type: TYPE_A
 			l_expression: STRING_32
 			l_saved: BOOLEAN
 			retried: BOOLEAN
@@ -106,13 +102,12 @@ feature -- Basic operations
 					l_context.set_current_feature (a_info.context_feature)
 
 					create l_checker.make (l_context)
-					l_eval_locals := a_info.current_frame.all_locals
-					from l_eval_locals.start until l_eval_locals.after loop
-						l_local_type := l_eval_locals.item_for_iteration
-						if l_local_type /= Void then
-							l_checker.add_local (l_local_type, l_eval_locals.key_for_iteration)
+					across
+						a_info.current_frame.all_locals as l
+					loop
+						if attached l.item as t then
+							l_checker.add_local (t, {UTF_CONVERTER}.string_32_to_utf_8_string_8 (l.key))
 						end
-						l_eval_locals.forth
 					end
 
 					l_checker.evaluate_expression (l_expr)
@@ -133,7 +128,7 @@ feature -- Basic operations
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

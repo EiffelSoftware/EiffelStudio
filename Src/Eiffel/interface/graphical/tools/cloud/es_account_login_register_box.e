@@ -414,7 +414,7 @@ feature -- Status report
 
 	is_offline_allowed: BOOLEAN
 		do
-			Result := True  -- FIXME: for now, let's disable offline access.
+			Result := False  -- FIXME: for now, let's disable offline access.
 		end
 
 	is_guest_signed_in: BOOLEAN

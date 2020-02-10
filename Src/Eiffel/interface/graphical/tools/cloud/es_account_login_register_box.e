@@ -74,20 +74,17 @@ feature {NONE} -- Initialization
 			vb_terms.set_padding_width (layout_constants.default_padding_size)
 			vb_terms.set_minimum_width (50)
 
-			if is_cloud_required then
-				create txt
-				s := "Sign in to use EiffelStudio " + {ES_IDE_SETTINGS}.edition_title + " ."
-			else
-				create txt
-				s := "To use additional cloud services, please sign in."
-			end
-			if s /= Void then
-				s.append ("%NBy registering EiffelStudio you agree to the terms of use and the rules on user-provided information.")
-				create txt
-				txt.set_text (s)
-				txt.set_is_text_wrapped (True); txt.align_text_left; txt.align_text_top
-				vb.extend (txt)
-			end
+			s :=
+				if is_cloud_required then
+					"Sign in to use EiffelStudio " + {ES_IDE_SETTINGS}.edition_title + "."
+				else
+					"Sign in to use EiffelStudio cloud services."
+				end
+			s.append ("%NBy registering EiffelStudio you agree to the terms of use and the rules on user-provided information.")
+			create txt
+			txt.set_text (s)
+			txt.set_is_text_wrapped (True); txt.align_text_left; txt.align_text_top
+			vb.extend (txt)
 
 				-- learn more
 			create l_learn_more_box
@@ -125,9 +122,6 @@ feature {NONE} -- Initialization
 				-- Main layout			
 			l_main.extend (vb)
 			l_main.disable_item_expand (vb)
---			l_main.extend (vb_terms)
---			l_main.disable_item_expand (vb_terms)
---			vb_terms.set_border_width (layout_constants.default_border_size)
 			vb.extend (vb_terms)
 			vb.disable_item_expand (vb_terms)
 
@@ -312,10 +306,10 @@ feature {NONE} -- Initialization
 			layout_constants.set_default_width_for_button (but)
 			append_label_and_item_horizontally ("", but, Result)
 
-			create lab.make_with_text ("note: you can use https://support.eiffel.com/ account.")
+			create lab.make_with_text ("Note: the account is also used at https://support.eiffel.com/")
 			lab.set_foreground_color (colors.stock_colors.dark_grey)
 			lab.set_font (fonts.italic_label_font)
-			lab.align_text_right
+			lab.align_text_left
 			Result.extend (lab)
 			Result.disable_item_expand (lab)
 

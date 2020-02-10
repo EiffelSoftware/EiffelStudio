@@ -31,12 +31,24 @@ feature -- Access
 
 	min_count: INTEGER
 
+feature -- Element change
+
+	set_minimum_count (nb: INTEGER)
+		require
+			nb >= 0
+		do
+			min_count := nb
+		end
+
 feature -- Match
 
 	prefix_string (a_prefix: STRING_32; a_string: STRING_32): BOOLEAN
 			-- Is `a_prefix' start of `a_string'?
 		do
-			if a_prefix.count >= min_count or else a_string.count < min_count then
+			if
+				a_prefix.count >= min_count
+				or else a_string.count < min_count
+			then
 				Result := Precursor (a_prefix, a_string)
 			end
 		end
@@ -51,8 +63,8 @@ feature -- Status report
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
-	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

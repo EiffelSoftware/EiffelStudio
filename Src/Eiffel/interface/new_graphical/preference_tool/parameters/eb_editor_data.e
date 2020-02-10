@@ -458,6 +458,9 @@ feature -- Preference
 	syntax_complete_enabled_preference: BOOLEAN_PREFERENCE
 			-- should main keywords be completed ?
 
+	minimum_count_for_unicode_symbols_completion_preference: INTEGER_PREFERENCE
+			-- Minimum number of character before showing unicode symbols in completion list.
+
 	customized_string_1_preference: STRING_PREFERENCE
 	customized_string_2_preference: STRING_PREFERENCE
 	customized_string_3_preference: STRING_PREFERENCE
@@ -566,6 +569,8 @@ feature {NONE} -- Preference Strings
 
 	syntax_complete_enabled_string: STRING = "editor.eiffel.syntax_complete_enabled"
 			-- should main keywords be completed ?
+
+	minimum_count_for_unicode_symbols_completion_preference_string: STRING = "editor.eiffel.minimum_count_for_unicode_symbols_completion"
 
 	customized_string_1_string: STRING = "editor.eiffel.customized_string_1"
 	customized_string_2_string: STRING = "editor.eiffel.customized_string_2"
@@ -704,6 +709,7 @@ feature {NONE} -- Initialization
 			show_completion_unicode_symbols_preference := l_manager.new_boolean_preference_value (l_manager, show_completion_unicode_symbols_string, True)
 			show_completion_obsolete_items_preference := l_manager.new_boolean_preference_value (l_manager, show_completion_obsolete_items_string, False)
 			show_completion_tooltip_preference := l_manager.new_boolean_preference_value (l_manager, show_completion_tooltip_string, True)
+			minimum_count_for_unicode_symbols_completion_preference := l_manager.new_integer_preference_value (l_manager, minimum_count_for_unicode_symbols_completion_preference_string, 3)
 			customized_string_1_preference := l_manager.new_string_preference_value (l_manager, customized_string_1_string, "")
 			customized_strings.extend (customized_string_1_preference)
 			customized_string_2_preference := l_manager.new_string_preference_value (l_manager, customized_string_2_string, "")
@@ -1340,6 +1346,7 @@ invariant
 	show_completion_unicode_symbols_preference_not_void: show_completion_unicode_symbols_preference /= Void
 	show_completion_obsolete_items_preference_not_void: show_completion_obsolete_items_preference /= Void
 	show_completion_tooltip_string_attached: show_completion_tooltip_string /= Void
+	minimum_count_for_unicode_symbols_completion_preference_not_void: minimum_count_for_unicode_symbols_completion_preference /= Void
 	syntax_complete_enabled_preference_not_void: syntax_complete_enabled_preference /= Void
 	customized_string_1_preference_not_void: customized_string_1_preference /= Void
 	customized_string_2_preference_not_void: customized_string_2_preference /= Void

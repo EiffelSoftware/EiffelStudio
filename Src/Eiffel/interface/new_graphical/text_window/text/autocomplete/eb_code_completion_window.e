@@ -27,6 +27,7 @@ inherit
 			code_completable,
 			sorted_names,
 			name_type,
+			is_binary_search_supported,
 			choice_list,
 			build_full_list,
 			on_key_down,
@@ -1943,6 +1944,11 @@ feature {NONE} -- Implementation
 	name_type: WILD_NAME_FOR_COMPLETION
 			-- <Precursor>
 		do
+		end
+
+	is_binary_search_supported (a_name: STRING_32): BOOLEAN
+		do
+			Result := not show_completion_unicode_symbols and then Precursor (a_name)
 		end
 
 note

@@ -21,17 +21,38 @@ create
 create {NAME_FOR_COMPLETION}
 	make_with_name
 
-
-feature {NONE} -- Implementation
+feature {EB_SYMBOLS_FOR_DELAYED_COMPLETION} -- Implementation
 
 	name_matcher: COMPLETION_NAME_MATCHER
 			-- Name matcher
+		local
+			n: INTEGER
 		once
-			create {UNICODE_SYMBOL_COMPLETION_NAME_MATCHER} Result.make_with_minimum_count (2)
+			if attached preferences.editor_data.minimum_count_for_unicode_symbols_completion_preference as p then
+					-- Due to annoying design based on onces!
+					-- this dirty code is to update the min_count value when associated preference is changed.
+				p.change_actions.extend (agent (ip: INTEGER_PREFERENCE)
+					local
+						c: EB_SYMBOLS_FOR_DELAYED_COMPLETION
+					do
+						create c.make_with_name ("_dummy_")
+						if
+							attached {UNICODE_SYMBOL_COMPLETION_NAME_MATCHER} c.name_matcher as nm and then
+							ip.value >= 0
+						then
+							nm.set_minimum_count (ip.value)
+						end
+					end(p))
+				n := p.value
+			else
+				n := 3
+			end
+			create {UNICODE_SYMBOL_COMPLETION_NAME_MATCHER} Result.make_with_minimum_count (n)
+
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1258,17 +1258,28 @@ feature -- Keybord shortcuts Customization
 
 				-- Shortcuts for completion window group
 			create l_hash.make (9)
-			l_hash.put ([False, False, False, key_strings.item (Key_F1).twin.as_string_8], "toggle_filter")
-			l_hash.put ([False, False, False, key_strings.item (Key_F2).twin.as_string_8], "toggle_show_type")
-			l_hash.put ([False, False, False, key_strings.item (Key_F3).twin.as_string_8], "toggle_show_signature")
-			l_hash.put ([False, False, False, key_strings.item (Key_F4).twin.as_string_8], "toggle_show_disambiguated_name")
-			l_hash.put ([False, False, False, key_strings.item (Key_F8).twin.as_string_8], "toggle_show_unicode_symbols")
-			l_hash.put ([False, False, False, key_strings.item (Key_F5).twin.as_string_8], "toggle_show_obsolete_items")
-			l_hash.put ([False, False, False, key_strings.item (Key_F6).twin.as_string_8], "toggle_show_tooltip")
-			l_hash.put ([False, False, False, key_strings.item (Key_F7).twin.as_string_8], "toggle_remember_size")
-			l_hash.put ([False, True, False, key_strings.item (key_space).twin.as_string_8], "next_completion_panel")
+			l_hash.put ([False, False, False, key_strings.item (Key_F1).twin.as_string_8], completion_shortcut_toggle_filter)
+			l_hash.put ([False, False, False, key_strings.item (Key_F2).twin.as_string_8], completion_shortcut_toggle_show_type)
+			l_hash.put ([False, False, False, key_strings.item (Key_F3).twin.as_string_8], completion_shortcut_toggle_show_signature)
+			l_hash.put ([False, False, False, key_strings.item (Key_F4).twin.as_string_8], completion_shortcut_toggle_show_disambiguated_name)
+			l_hash.put ([False, False, False, key_strings.item (Key_F8).twin.as_string_8], completion_shortcut_toggle_show_unicode_symbols)
+			l_hash.put ([False, False, False, key_strings.item (Key_F5).twin.as_string_8], completion_shortcut_toggle_show_obsolete_items)
+			l_hash.put ([False, False, False, key_strings.item (Key_F6).twin.as_string_8], completion_shortcut_toggle_show_tooltip)
+			l_hash.put ([False, False, False, key_strings.item (Key_F7).twin.as_string_8], completion_shortcut_toggle_remember_size)
+			l_hash.put ([False, True, False, key_strings.item (key_space).twin.as_string_8], completion_shortcut_next_completion_panel)
 			Result.extend ([l_hash, completion_window_group])
 		end
+
+	completion_shortcut_toggle_filter: STRING = "toggle_filter"
+	completion_shortcut_toggle_show_type: STRING = "toggle_show_type"
+	completion_shortcut_toggle_show_signature: STRING = "toggle_show_signature"
+	completion_shortcut_toggle_show_disambiguated_name: STRING = "toggle_show_disambiguated_name"
+	completion_shortcut_toggle_show_unicode_symbols: STRING = "toggle_show_unicode_symbols"
+	completion_shortcut_toggle_show_obsolete_items: STRING = "toggle_show_obsolete_items"
+	completion_shortcut_toggle_show_tooltip: STRING = "toggle_show_tooltip"
+	completion_shortcut_toggle_remember_size: STRING = "toggle_remember_size"
+	completion_shortcut_next_completion_panel: STRING = "next_completion_panel"
+
 
 invariant
 	preferences_not_void: preferences /= Void
@@ -1343,7 +1354,7 @@ invariant
 
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

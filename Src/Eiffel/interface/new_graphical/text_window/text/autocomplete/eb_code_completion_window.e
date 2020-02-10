@@ -409,21 +409,21 @@ feature {NONE} -- Initialization
 			l_pre: SHORTCUT_PREFERENCE
 		do
 			setup_accelerators_agent := agent setup_accelerators
-			l_pre := preferences.editor_data.shortcuts.item ("toggle_filter")
+			l_pre := preferences.editor_data.shortcuts.item ({EB_EDITOR_DATA}.completion_shortcut_toggle_filter)
 			l_pre.change_actions.extend (setup_accelerators_agent)
-			l_pre := preferences.editor_data.shortcuts.item ("toggle_show_type")
+			l_pre := preferences.editor_data.shortcuts.item ({EB_EDITOR_DATA}.completion_shortcut_toggle_show_type)
 			l_pre.change_actions.extend (setup_accelerators_agent)
-			l_pre := preferences.editor_data.shortcuts.item ("toggle_show_signature")
+			l_pre := preferences.editor_data.shortcuts.item ({EB_EDITOR_DATA}.completion_shortcut_toggle_show_signature)
 			l_pre.change_actions.extend (setup_accelerators_agent)
-			l_pre := preferences.editor_data.shortcuts.item ("toggle_show_disambiguated_name")
+			l_pre := preferences.editor_data.shortcuts.item ({EB_EDITOR_DATA}.completion_shortcut_toggle_show_disambiguated_name)
 			l_pre.change_actions.extend (setup_accelerators_agent)
-			l_pre := preferences.editor_data.shortcuts.item ("toggle_show_unicode_symbols")
+			l_pre := preferences.editor_data.shortcuts.item ({EB_EDITOR_DATA}.completion_shortcut_toggle_show_unicode_symbols)
 			l_pre.change_actions.extend (setup_accelerators_agent)
-			l_pre := preferences.editor_data.shortcuts.item ("toggle_show_obsolete_items")
+			l_pre := preferences.editor_data.shortcuts.item ({EB_EDITOR_DATA}.completion_shortcut_toggle_show_obsolete_items)
 			l_pre.change_actions.extend (setup_accelerators_agent)
-			l_pre := preferences.editor_data.shortcuts.item ("toggle_remember_size")
+			l_pre := preferences.editor_data.shortcuts.item ({EB_EDITOR_DATA}.completion_shortcut_toggle_show_tooltip)
 			l_pre.change_actions.extend (setup_accelerators_agent)
-			l_pre := preferences.editor_data.shortcuts.item ("toggle_show_tooltip")
+			l_pre := preferences.editor_data.shortcuts.item ({EB_EDITOR_DATA}.completion_shortcut_toggle_remember_size)
 			l_pre.change_actions.extend (setup_accelerators_agent)
 		end
 
@@ -434,32 +434,40 @@ feature {NONE} -- Initialization
 			l_pre: SHORTCUT_PREFERENCE
 		do
 			accelerators.wipe_out
-			l_pre := preferences.editor_data.shortcuts.item ("toggle_filter")
+			l_pre := preferences.editor_data.shortcuts.item ({EB_EDITOR_DATA}.completion_shortcut_toggle_filter)
 			create l_acc.make_with_key_combination (l_pre.key, l_pre.is_ctrl, l_pre.is_alt, l_pre.is_shift)
 			l_acc.actions.extend (agent toggle_button (filter_button))
 			accelerators.extend (l_acc)
-			l_pre := preferences.editor_data.shortcuts.item ("toggle_show_type")
+			l_pre := preferences.editor_data.shortcuts.item ({EB_EDITOR_DATA}.completion_shortcut_toggle_show_type)
 			create l_acc.make_with_key_combination (l_pre.key, l_pre.is_ctrl, l_pre.is_alt, l_pre.is_shift)
 			l_acc.actions.extend (agent toggle_button (show_return_type_button))
 			accelerators.extend (l_acc)
-			l_pre := preferences.editor_data.shortcuts.item ("toggle_show_signature")
+			l_pre := preferences.editor_data.shortcuts.item ({EB_EDITOR_DATA}.completion_shortcut_toggle_show_signature)
 			create l_acc.make_with_key_combination (l_pre.key, l_pre.is_ctrl, l_pre.is_alt, l_pre.is_shift)
 			l_acc.actions.extend (agent toggle_button (show_signature_button))
 			accelerators.extend (l_acc)
-			l_pre := preferences.editor_data.shortcuts.item ("toggle_show_disambiguated_name")
+			l_pre := preferences.editor_data.shortcuts.item ({EB_EDITOR_DATA}.completion_shortcut_toggle_show_disambiguated_name)
 			create l_acc.make_with_key_combination (l_pre.key, l_pre.is_ctrl, l_pre.is_alt, l_pre.is_shift)
 			l_acc.actions.extend (agent toggle_button (show_disambiguated_name_button))
 			accelerators.extend (l_acc)
-			l_pre := preferences.editor_data.shortcuts.item ("toggle_show_tooltip")
+			l_pre := preferences.editor_data.shortcuts.item ({EB_EDITOR_DATA}.completion_shortcut_toggle_show_unicode_symbols)
+			create l_acc.make_with_key_combination (l_pre.key, l_pre.is_ctrl, l_pre.is_alt, l_pre.is_shift)
+			l_acc.actions.extend (agent toggle_button (show_completion_unicode_symbols_button))
+			accelerators.extend (l_acc)
+			l_pre := preferences.editor_data.shortcuts.item ({EB_EDITOR_DATA}.completion_shortcut_toggle_show_obsolete_items)
+			create l_acc.make_with_key_combination (l_pre.key, l_pre.is_ctrl, l_pre.is_alt, l_pre.is_shift)
+			l_acc.actions.extend (agent toggle_button (show_obsolete_items_button))
+			accelerators.extend (l_acc)
+			l_pre := preferences.editor_data.shortcuts.item ({EB_EDITOR_DATA}.completion_shortcut_toggle_show_tooltip)
 			create l_acc.make_with_key_combination (l_pre.key, l_pre.is_ctrl, l_pre.is_alt, l_pre.is_shift)
 			l_acc.actions.extend (agent toggle_button (show_tooltip_button))
 			accelerators.extend (l_acc)
-			l_pre := preferences.editor_data.shortcuts.item ("toggle_remember_size")
+			l_pre := preferences.editor_data.shortcuts.item ({EB_EDITOR_DATA}.completion_shortcut_toggle_remember_size)
 			create l_acc.make_with_key_combination (l_pre.key, l_pre.is_ctrl, l_pre.is_alt, l_pre.is_shift)
 			l_acc.actions.extend (agent toggle_button (remember_size_button))
 			accelerators.extend (l_acc)
 
-			l_pre := preferences.editor_data.shortcuts.item ("next_completion_panel")
+			l_pre := preferences.editor_data.shortcuts.item ({EB_EDITOR_DATA}.completion_shortcut_next_completion_panel)
 			create l_acc.make_with_key_combination (l_pre.key, l_pre.is_ctrl, l_pre.is_alt, l_pre.is_shift)
 			l_acc.actions.extend (agent show_next_panel)
 			accelerators.extend (l_acc)
@@ -1929,7 +1937,7 @@ note
 	ca_ignore:
 		"CA011", "CA011: too many arguments",
 		"CA033", "CA033: too large class"
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

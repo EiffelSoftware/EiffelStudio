@@ -845,11 +845,14 @@ feature {NONE} -- Option behaviour
 			a_button_not_void: a_button /= Void
 		local
 			l_preference: BOOLEAN_PREFERENCE
+			l_update_selection: BOOLEAN
 		do
 			clicking_option_button := True
 			if a_button = filter_button then
 				l_preference := preferences.editor_data.filter_completion_list_preference
+				l_preference.set_value (a_button.is_selected)
 				apply_filter_completion_list (a_button.is_selected)
+				l_update_selection := True
 			elseif a_button = show_return_type_button then
 				l_preference := preferences.editor_data.show_completion_type_preference
 				apply_option_changes (a_button.is_selected)
@@ -863,10 +866,12 @@ feature {NONE} -- Option behaviour
 				l_preference := preferences.editor_data.show_completion_unicode_symbols_preference
 				l_preference.set_value (a_button.is_selected)
 				apply_show_completion_unicode_symbols (a_button.is_selected)
+				l_update_selection := True
 			elseif a_button = show_obsolete_items_button then
 				l_preference := preferences.editor_data.show_completion_obsolete_items_preference
 				l_preference.set_value (a_button.is_selected)
 				apply_show_obsolete_items (a_button.is_selected)
+				l_update_selection := True
 			elseif a_button = show_tooltip_button then
 				l_preference := preferences.editor_data.show_completion_tooltip_preference
 				apply_show_tooltip (a_button.is_selected)
@@ -883,6 +888,9 @@ feature {NONE} -- Option behaviour
 			end
 			l_preference.set_value (a_button.is_selected)
 			clicking_option_button := False
+			if l_update_selection then
+				select_closest_match
+			end
 		end
 
 	on_option_preferenced_changed (a_button: EV_TOOL_BAR_TOGGLE_BUTTON)

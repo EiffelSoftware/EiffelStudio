@@ -1,133 +1,29 @@
 ﻿note
-	description	: "Abstract description ao an alternative of a multi_branch instruction.."
-	legal: "See notice at end of class."
-	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Abstract description of an alternative of a multi_branch instruction."
 
 class CASE_AS
 
 inherit
-	AST_EIFFEL
+	CASE_ABSTRACTION_AS [detachable EIFFEL_LIST [INSTRUCTION_AS]]
+		rename
+			content as compound
+		end
 
 create
-	initialize
-
-feature {NONE} -- Initialization
-
-	initialize (i: like interval; c: like compound; w_as, t_as: like when_keyword)
-			-- Create a new WHEN AST node.
-		require
-			i_not_void: i /= Void
-		do
-			interval := i
-			compound := c
-			if w_as /= Void then
-				when_keyword_index := w_as.index
-			end
-			if t_as /= Void then
-				then_keyword_index := t_as.index
-			end
-		ensure
-			interval_set: interval = i
-			compound_set: compound = c
-			when_keyword_set: w_as /= Void implies when_keyword_index = w_as.index
-			then_keyword_set: t_as /= Void implies then_keyword_index = t_as.index
-		end
+	make
 
 feature -- Visitor
 
 	process (v: AST_VISITOR)
-			-- Process current element.
+			-- <Precursor>
 		do
 			v.process_case_as (Current)
 		end
 
-feature -- Roundtrip
-
-	when_keyword_index, then_keyword_index: INTEGER
-			-- Index of keyword "when" and "then" associated with this structure.
-
-	when_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
-			-- Keyword "when" associated with this structure.
-		require
-			a_list_not_void: a_list /= Void
-		do
-			Result := keyword_from_index (a_list, when_keyword_index)
-		end
-
-	then_keyword (a_list: LEAF_AS_LIST): detachable KEYWORD_AS
-			-- Keyword "then" ssociated with this structure.
-		require
-			a_list_not_void: a_list /= Void
-		do
-			Result := keyword_from_index (a_list, then_keyword_index)
-		end
-
-	index: INTEGER
-			-- <Precursor>
-		do
-			Result := when_keyword_index
-		end
-
-feature -- Attributes
-
-	interval: EIFFEL_LIST [INTERVAL_AS]
-			-- Interval of the alternative.
-
-	compound: detachable EIFFEL_LIST [INSTRUCTION_AS]
-			-- Compound.
-
-feature -- Roundtrip/Token
-
-	first_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
-		do
-			if a_list /= Void and when_keyword_index /= 0 then
-				Result := when_keyword (a_list)
-			else
-				Result := interval.first_token (a_list)
-			end
-		end
-
-	last_token (a_list: detachable LEAF_AS_LIST): detachable LEAF_AS
-		do
-			if attached compound as l_compound then
-				Result := l_compound.last_token (a_list)
-			elseif a_list /= Void and then_keyword_index /= 0 then
-				Result := then_keyword (a_list)
-			else
-				Result := interval.last_token (a_list)
-			end
-		end
-
-feature -- Comparison
-
-	is_equivalent (other: like Current): BOOLEAN
-			-- Is `other' equivalent to the current object?
-		do
-			Result := equivalent (compound, other.compound) and
-				equivalent (interval, other.interval)
-		end
-
-feature {CASE_AS} -- Replication
-
-	set_interval (i: like interval)
-		require
-			valid_arg: i /= Void
-		do
-			interval := i
-		end
-
-	set_compound (c: like compound)
-		do
-			compound := c
-		end
-
-invariant
-	interval_not_void: interval /= Void
-
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

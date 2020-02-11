@@ -131,6 +131,8 @@ inherit
 			process_un_strip_as,
 			process_if_expression_as,
 			process_elseif_expression_as,
+			process_inspect_expression_as,
+			process_case_expression_as,
 			process_loop_expr_as,
 			process_object_test_as,
 			process_paran_as,
@@ -1752,6 +1754,26 @@ feature {AST_VISITOR} -- Expressions
 			print_inline_indented (l_as.expression)
 		end
 
+	process_inspect_expression_as (a: INSPECT_EXPRESSION_AS)
+			-- <Precursor>
+		do
+			print_inline (a.inspect_keyword (match_list))
+			print_inline_indented (a.switch)
+			safe_process (a.case_list)
+			print_inline_unindented (a.else_keyword (match_list))
+			print_inline_indented (a.else_part)
+			print_inline_unindented (a.end_keyword)
+		end
+
+	process_case_expression_as (a: CASE_EXPRESSION_AS)
+			-- <Precursor>
+		do
+			print_inline_unindented (a.when_keyword (match_list))
+			process_and_print_eiffel_list (a.interval, list_separator_leading_space)
+			print_inline_unindented (a.then_keyword (match_list))
+			print_inline_indented (a.content)
+		end
+
 	process_loop_expr_as (l_as: LOOP_EXPR_AS)
 			-- Process the loop expression `l_as'.
 		local
@@ -2418,7 +2440,7 @@ note
 	ca_ignore: "CA033", "CA033: very large class"
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

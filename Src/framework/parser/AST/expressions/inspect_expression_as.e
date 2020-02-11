@@ -1,11 +1,11 @@
 ﻿note
-	description: "Abstract description of a multi_branch instruction."
+	description	: "Abstract description of a multi_branch expression."
 
-class INSPECT_AS
+class INSPECT_EXPRESSION_AS
 
 inherit
-	INSTRUCTION_AS
-	INSPECT_ABSTRACTION_AS [CASE_AS, detachable EIFFEL_LIST [INSTRUCTION_AS]]
+	EXPR_AS
+	INSPECT_ABSTRACTION_AS [CASE_EXPRESSION_AS, EXPR_AS]
 
 create
 	make
@@ -15,14 +15,15 @@ feature -- Visitor
 	process (v: AST_VISITOR)
 			-- <Precursor>
 		do
-			v.process_inspect_as (Current)
+			v.process_inspect_expression_as (Current)
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
+	author: "Alexander Kogtenkov"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

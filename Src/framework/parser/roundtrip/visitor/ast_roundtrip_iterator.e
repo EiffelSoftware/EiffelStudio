@@ -921,14 +921,25 @@ feature
 			safe_process (l_as.end_keyword)
 		end
 
-	process_inspect_as (l_as: INSPECT_AS)
+	process_inspect_abstraction (a: INSPECT_ABSTRACTION_AS [CASE_ABSTRACTION_AS [detachable AST_EIFFEL], detachable AST_EIFFEL])
+			-- Process `a`.
 		do
-			safe_process (l_as.inspect_keyword (match_list))
-			safe_process (l_as.switch)
-			safe_process (l_as.case_list)
-			safe_process (l_as.else_keyword (match_list))
-			safe_process (l_as.else_part)
-			safe_process (l_as.end_keyword)
+			safe_process (a.inspect_keyword (match_list))
+			safe_process (a.switch)
+			safe_process (a.case_list)
+			safe_process (a.else_keyword (match_list))
+			safe_process (a.else_part)
+			safe_process (a.end_keyword)
+		end
+
+	process_inspect_as (a: INSPECT_AS)
+		do
+			process_inspect_abstraction (a)
+		end
+
+	process_inspect_expression_as (a: INSPECT_EXPRESSION_AS)
+		do
+			process_inspect_abstraction (a)
 		end
 
 	process_instr_call_as (l_as: INSTR_CALL_AS)
@@ -1251,12 +1262,23 @@ feature
 			safe_process (l_as.clients)
 		end
 
-	process_case_as (l_as: CASE_AS)
+	process_case_abstraction (a: CASE_ABSTRACTION_AS [detachable AST_EIFFEL])
+			-- Process `a`.
 		do
-			safe_process (l_as.when_keyword (match_list))
-			safe_process (l_as.interval)
-			safe_process (l_as.then_keyword (match_list))
-			safe_process (l_as.compound)
+			safe_process (a.when_keyword (match_list))
+			safe_process (a.interval)
+			safe_process (a.then_keyword (match_list))
+			safe_process (a.content)
+		end
+
+	process_case_as (a: CASE_AS)
+		do
+			process_case_abstraction (a)
+		end
+
+	process_case_expression_as (a: CASE_EXPRESSION_AS)
+		do
+			process_case_abstraction (a)
 		end
 
 	process_ensure_as (l_as: ENSURE_AS)
@@ -1557,7 +1579,7 @@ feature{NONE} -- Implementation
 	ca_ignore: "CA033", "CA033: too large class"
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

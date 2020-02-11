@@ -2793,10 +2793,10 @@ feature {NONE} -- Implementation
 			l_as.then_expression.process (Current)
 			if not expr_type_visiting then
 				exdent.call (Void)
-				if l_as.elsif_list /= Void then
+				if attached l_as.elsif_list as l then
 					l_text_formatter_decorator.set_separator (ti_empty)
 					l_text_formatter_decorator.set_no_new_line_between_tokens
-					l_as.elsif_list.process (Current)
+					l.process (Current)
 					l_text_formatter_decorator.set_separator (Void)
 				end
 				l_text_formatter_decorator.process_keyword_text (ti_else_keyword, Void)
@@ -2811,7 +2811,9 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_inspect_as (l_as: INSPECT_AS)
+	process_inspect_abstraction
+		(a: INSPECT_ABSTRACTION_AS [CASE_ABSTRACTION_AS [detachable AST_EIFFEL], detachable AST_EIFFEL];
+		format_else_part_content: PROCEDURE)
 		local
 			l_text_formatter_decorator: like text_formatter_decorator
 		do
@@ -2823,27 +2825,46 @@ feature {NONE} -- Implementation
 			l_text_formatter_decorator.process_keyword_text (ti_inspect_keyword, Void)
 			l_text_formatter_decorator.put_space
 			l_text_formatter_decorator.indent
-			l_as.switch.process (Current)
+			a.switch.process (Current)
 			l_text_formatter_decorator.exdent
 			l_text_formatter_decorator.put_new_line
-			if l_as.case_list /= Void then
+			if attached a.case_list as l then
 				l_text_formatter_decorator.set_separator (ti_empty)
 				l_text_formatter_decorator.set_no_new_line_between_tokens
-				l_as.case_list.process (Current)
+				l.process (Current)
 			end
-			if l_as.else_part /= Void then
+			if attached a.else_part as e then
 				l_text_formatter_decorator.process_keyword_text (ti_else_keyword, Void)
 				l_text_formatter_decorator.indent
 				l_text_formatter_decorator.put_new_line
 				l_text_formatter_decorator.set_separator (Void)
 				l_text_formatter_decorator.set_new_line_between_tokens
-				if not l_as.else_part.is_empty then
-					format_compound (l_as.else_part)
-					l_text_formatter_decorator.put_new_line
-				end
+				format_else_part_content.call
 				l_text_formatter_decorator.exdent
 			end
 			l_text_formatter_decorator.process_keyword_text (ti_end_keyword, Void)
+		end
+
+	process_inspect_as (a: INSPECT_AS)
+		do
+			process_inspect_abstraction (a, agent (e: detachable EIFFEL_LIST [INSTRUCTION_AS])
+				do
+					if attached e and then not e.is_empty then
+						format_compound (e)
+						text_formatter_decorator.put_new_line
+					end
+				end (a.else_part))
+		end
+
+	process_inspect_expression_as (a: INSPECT_EXPRESSION_AS)
+		do
+			process_inspect_abstraction (a, agent (e: detachable EXPR_AS)
+				do
+					if attached e then
+						e.process (Current)
+						text_formatter_decorator.put_new_line
+					end
+				end (a.else_part))
 		end
 
 	process_instr_call_as (l_as: INSTR_CALL_AS)
@@ -3889,7 +3910,9 @@ feature {NONE} -- Implementation
 			l_text_formatter_decorator.commit
 		end
 
-	process_case_as (l_as: CASE_AS)
+	process_case_abstraction
+		(a: CASE_ABSTRACTION_AS [detachable AST_EIFFEL];
+		format_content: PROCEDURE)
 		local
 			l_text_formatter_decorator: like text_formatter_decorator
 		do
@@ -3901,17 +3924,32 @@ feature {NONE} -- Implementation
 			l_text_formatter_decorator.put_space
 			l_text_formatter_decorator.set_separator (ti_comma)
 			l_text_formatter_decorator.set_space_between_tokens
-			l_as.interval.process (Current)
+			a.interval.process (Current)
 			l_text_formatter_decorator.put_space
 			l_text_formatter_decorator.set_without_tabs
 			l_text_formatter_decorator.process_keyword_text (ti_then_keyword, Void)
 			l_text_formatter_decorator.put_new_line
-			if l_as.compound /= Void then
+			if attached a.content as c then
 				l_text_formatter_decorator.indent
-				format_compound (l_as.compound)
+				format_content.call
 				l_text_formatter_decorator.put_new_line
 				l_text_formatter_decorator.exdent
 			end
+		end
+
+	process_case_as (a: CASE_AS)
+		do
+			process_case_abstraction (a, agent (c: detachable EIFFEL_LIST [INSTRUCTION_AS])
+				do
+					if attached c then
+						format_compound (c)
+					end
+				end (a.compound))
+		end
+
+	process_case_expression_as (a: CASE_EXPRESSION_AS)
+		do
+			process_case_abstraction (a, agent (a.content).process (Current))
 		end
 
 	process_ensure_as (l_as: ENSURE_AS)

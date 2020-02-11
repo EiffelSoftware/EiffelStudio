@@ -1,11 +1,11 @@
 ﻿note
-	description: "List used in abstract syntax trees. Version for Bench."
+	description: "List used in abstract syntax trees."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class EIFFEL_LIST [reference T -> AST_EIFFEL]
+class EIFFEL_LIST [T -> AST_EIFFEL]
 
 inherit
 	AST_EIFFEL
@@ -199,7 +199,7 @@ feature -- Comparison
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

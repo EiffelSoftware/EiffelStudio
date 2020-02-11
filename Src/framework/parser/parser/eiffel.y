@@ -117,6 +117,7 @@ create
 %type <BOOLEAN>					Creation_region
 %type <detachable CALL_AS>				Call Remote_call Qualified_call
 %type <detachable CASE_AS>				When_part
+%type <detachable CASE_EXPRESSION_AS>				When_expression_part
 %type <detachable CHAR_AS>				Character_constant
 %type <detachable CHECK_AS>			Check
 %type <detachable KEYWORD_AS>			Class_mark
@@ -146,6 +147,7 @@ create
 %type <detachable IF_EXPRESSION_AS>			Conditional_expression
 %type <detachable INDEX_AS>			Index_clause Index_clause_impl Note_entry Note_entry_impl
 %type <detachable INSPECT_AS>			Multi_branch
+%type <detachable INSPECT_EXPRESSION_AS>		Multi_branch_expression
 %type <detachable INSTRUCTION_AS>		Instruction Instruction_impl
 %type <detachable INTEGER_AS>	Integer_constant Signed_integer Nosigned_integer Typed_integer Typed_nosigned_integer Typed_signed_integer
 %type <detachable INTERNAL_AS>			Internal
@@ -181,6 +183,7 @@ create
 
 %type <detachable EIFFEL_LIST [ATOMIC_AS]>			Index_terms Note_values
 %type <detachable EIFFEL_LIST [CASE_AS]>			When_part_list_opt When_part_list
+%type <detachable EIFFEL_LIST [CASE_EXPRESSION_AS]>			When_expression_part_list_opt When_expression_part_list
 %type <detachable CONVERT_FEAT_LIST_AS>			Convert_list Convert_clause
 %type <detachable EIFFEL_LIST [CREATE_AS]>			Creators Creation_clause_list
 %type <detachable EIFFEL_LIST [ELSIF_AS]>			Elseif_list Elseif_part_list
@@ -222,7 +225,7 @@ create
 %type <detachable CONSTRAINT_LIST_AS> Multiple_constraint_list
 %type <detachable CONSTRAINING_TYPE_AS> Single_constraint
 
-%expect 549
+%expect 553
 
 %%
 
@@ -3423,6 +3426,8 @@ Factor: TE_VOID
 			{ $$ := $1 }
 	|	Conditional_expression
 			{ $$ := $1 }
+	|	Multi_branch_expression
+			{ $$ := $1 }
 	;
 
 Qualified_factor:
@@ -3816,6 +3821,41 @@ Elseif_part_list_expression: Elseif_part_expression
 Elseif_part_expression: TE_ELSEIF Expression TE_THEN Expression
 			{ $$ := ast_factory.new_elseif_expression_as ($2, $4, $1, $3) }
 	;
+
+-- Multi-branch expression
+
+Multi_branch_expression: TE_INSPECT Expression When_expression_part_list_opt TE_END
+			{ $$ := ast_factory.new_inspect_expression_as ($2, $3, Void, $4, $1, Void) }
+	|	TE_INSPECT Expression When_expression_part_list_opt TE_ELSE Expression TE_END
+			{ $$ := ast_factory.new_inspect_expression_as ($2, $3, $5, $6, $1, $4) }
+	;
+
+When_expression_part_list_opt: -- Empty
+			-- { $$ := Void }
+	|	Add_counter When_expression_part_list Remove_counter
+			{ $$ := $2 }
+	;
+
+When_expression_part_list: When_expression_part
+			{
+				$$ := ast_factory.new_eiffel_list_case_expression_as (counter_value + 1)
+				if attached $$ as l_list and then attached $1 as l_val then
+					l_list.reverse_extend (l_val)
+				end
+			}
+	|	When_expression_part Increment_counter When_expression_part_list
+			{
+				$$ := $3
+				if attached $$ as l_list and then attached $1 as l_val then
+					l_list.reverse_extend (l_val)
+				end
+			}
+	;
+
+When_expression_part: TE_WHEN Add_counter Choices Remove_counter TE_THEN Expression
+			{ $$ := ast_factory.new_case_expression_as ($3, $6, $1, $5) }
+	;
+
 
 -- Constant value without any type qualifier.
 Manifest_value: Boolean_constant

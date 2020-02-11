@@ -78,7 +78,7 @@ feature -- Roundtrip
 		deferred
 		end
 
-feature -- Roundtrip
+feature -- Roundtrip: leaves
 
 	process_keyword_as (l_as: KEYWORD_AS)
 			-- Process `l_as'.
@@ -1070,6 +1070,22 @@ feature {AST_EIFFEL} -- Expressions visitors
 		deferred
 		end
 
+	process_inspect_expression_as (a: INSPECT_EXPRESSION_AS)
+			-- Process `a`.
+		require
+			is_valid_visitor: is_valid
+			a_attached: attached a
+		deferred
+		end
+
+	process_case_expression_as (a: CASE_EXPRESSION_AS)
+			-- Process `a`.
+		require
+			is_valid_visitor: is_valid
+			a_attached: attached a
+		deferred
+		end
+
 	process_operand_as (l_as: OPERAND_AS)
 			-- Process `l_as'.
 		require
@@ -1327,7 +1343,7 @@ feature {AST_EIFFEL} -- Clickable visitor
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

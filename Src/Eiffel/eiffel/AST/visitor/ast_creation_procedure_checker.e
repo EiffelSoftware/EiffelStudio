@@ -18,6 +18,7 @@ inherit
 			process_bin_ne_as,
 			process_binary_as,
 			process_case_as,
+			process_case_expression_as,
 			process_converted_expr_as,
 			process_creation_as,
 			process_creation_expr_as,
@@ -31,6 +32,7 @@ inherit
 			process_if_expression_as,
 			process_inline_agent_creation_as,
 			process_inspect_as,
+			process_inspect_expression_as,
 			process_iteration_as,
 			process_like_cur_as,
 			process_loop_as,
@@ -670,6 +672,14 @@ feature {AST_EIFFEL} -- Visitor: compound
 			keeper.save_sibling
 		end
 
+	process_case_expression_as (a: CASE_EXPRESSION_AS)
+			-- <Precursor>
+		do
+			a.interval.process (Current)
+			a.content.process (Current)
+			keeper.save_sibling
+		end
+
 	process_debug_as (a: DEBUG_AS)
 			-- <Precursor>
 		do
@@ -744,6 +754,19 @@ feature {AST_EIFFEL} -- Visitor: compound
 			safe_process (a.case_list)
 			if attached a.else_part as e then
 				process_compound (e)
+				keeper.save_sibling
+			end
+			keeper.leave_realm
+		end
+
+	process_inspect_expression_as (a: INSPECT_EXPRESSION_AS)
+			-- <Precursor>
+		do
+			a.switch.process (Current)
+			keeper.enter_realm
+			safe_process (a.case_list)
+			if attached a.else_part as e then
+				e.process (Current)
 				keeper.save_sibling
 			end
 			keeper.leave_realm
@@ -1076,9 +1099,10 @@ feature {NONE} -- Access
 			-- Bodies that are being processed.
 
 ;note
+	ca_ignore: "CA033", "CA033: too large class"
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

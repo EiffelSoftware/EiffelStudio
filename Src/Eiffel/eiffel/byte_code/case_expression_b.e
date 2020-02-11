@@ -1,28 +1,70 @@
 ﻿note
-	description: "Abstract description of a multi_branch instruction."
+	description: "Byte code for 'when...then' construct in multi-branch expression."
 
-class INSPECT_AS
+class CASE_EXPRESSION_B
 
 inherit
-	INSTRUCTION_AS
-	INSPECT_ABSTRACTION_AS [CASE_AS, detachable EIFFEL_LIST [INSTRUCTION_AS]]
+	ABSTRACT_CASE_B [EXPR_B]
+		redefine
+			enlarge_tree
+		end
 
 create
 	make
 
 feature -- Visitor
 
-	process (v: AST_VISITOR)
+	process (v: BYTE_NODE_VISITOR)
+			-- Process current element.
+		do
+			v.process_case_expression_b (Current)
+		end
+
+feature -- Status Report
+
+	has_content: BOOLEAN = True
+			-- <Precursor>
+
+
+feature -- Code generation: C
+
+	used (r: REGISTRABLE): BOOLEAN
 			-- <Precursor>
 		do
-			v.process_inspect_as (Current)
+			Result := content.used (r)
+		end
+
+	generate_for_attachment (target_register: REGISTRABLE; target_type: TYPE_A)
+			-- <Precursor>
+		local
+			buf: GENERATION_BUFFER
+		do
+			generate_frozen_debugger_hook
+			generate_line_info
+			interval.generate
+			buf := buffer
+			buf.indent
+			if attached content as c then
+				c.generate_for_attachment (target_register, target_type)
+			end
+			buf.put_new_line
+			buf.put_string ("break;")
+			buf.exdent
+		end
+
+	enlarge_tree
+			-- <Precursor>
+		do
+			interval := interval.enlarged
+			content := content.enlarged
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
+	author: "Alexander Kogtenkov"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

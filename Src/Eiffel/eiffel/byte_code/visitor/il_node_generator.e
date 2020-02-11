@@ -413,14 +413,14 @@ feature -- Generation
 			end
 		end
 
-	generate_il_load_value (a_node: INSPECT_B)
-			-- Load value of expression
+	generate_il_load_value (b: ABSTRACT_INSPECT_B [ABSTRACT_CASE_B [BYTE_NODE], BYTE_NODE])
+			-- Load value of the inspect expression of construct `b`.
 		require
 			is_valid: is_valid
-			a_node_not_void: a_node /= Void
+			node_attached: b /= Void
 		do
-			if a_node.switch.is_fast_as_local then
-				a_node.switch.process (Current)
+			if b.switch.is_fast_as_local then
+				b.switch.process (Current)
 			else
 				il_generator.duplicate_top
 			end
@@ -450,35 +450,48 @@ feature -- Generation
 			il_generator.generate_precondition_check (a_node.tag, a_failure_block)
 		end
 
-	generate_il_when_part (a_node: INSPECT_B; case_index: INTEGER; labels: ARRAY [detachable IL_LABEL])
+	generate_il_when_part (b: ABSTRACT_INSPECT_B [ABSTRACT_CASE_B [BYTE_NODE], BYTE_NODE]; case_index: INTEGER; labels: ARRAY [detachable IL_LABEL])
 			-- Generate code for When_part idetified by `case_index' and
 			-- adjust `labels' if required.
 		require
 			is_valid: is_valid
-			a_node_not_void: a_node /= Void
-			case_list_not_void: a_node.case_list /= Void
-			valid_case_index: 1 <= case_index and case_index <= a_node.case_list.count
-			labels_not_void: labels /= Void
-			valid_labels: labels.lower = -1 and labels.upper = a_node.case_list.count
+			node_attached: attached b
+			case_list_attached: attached b.case_list
+			valid_case_index: 1 <= case_index and case_index <= b.case_list.count
+			labels_attached: attached labels
+			valid_labels: labels.lower = -1 and labels.upper = b.case_list.count
 		local
-			case_label: detachable IL_LABEL
-			case_b: CASE_B
-			compound: BYTE_LIST [BYTE_NODE]
+			case_label: IL_LABEL
 		do
-			case_label := labels.item (case_index)
-			if case_label = Void then
+			case_label := labels [case_index]
+			if not attached case_label then
 				case_label := il_generator.create_label
-				labels.put (case_label, case_index)
+				labels [case_index] := case_label
 			end
 			il_generator.mark_label (case_label)
-			case_b ?= a_node.case_list.i_th (case_index)
-			compound := case_b.compound
-			if compound /= Void then
-				compound.process (Current)
+
+			if attached b.case_list as cs then
+				if attached {CASE_B} cs [case_index] as c then
+					if attached c.compound as compound then
+						compound.process (Current)
+					end
+				elseif attached {CASE_EXPRESSION_B} cs [case_index] as c then
+					if not b.switch.is_fast_as_local then
+							-- Remove the duplication made for case comparison.
+						il_generator.pop
+					end
+					generate_expression_il_for_type
+						(c.content,
+						context.real_type (if attached {INSPECT_EXPRESSION_B} b as e then e.type else any_type end))
+				else
+					check know_case_type: False end
+				end
+			else
+				check from_precondition: False end
 			end
 			il_generator.branch_to (labels.item (-1))
 		ensure
-			label_not_void: labels.item (case_index) /= Void
+			label_attached: attached labels [case_index]
 		end
 
 feature {NONE} -- Implementation
@@ -510,13 +523,10 @@ feature {NONE} -- Implementation
 		local
 			inh_assert: INHERITED_ASSERTION
 			end_of_assertion, success_block, failure_block: IL_LABEL
-			l_prec: BYTE_LIST [BYTE_NODE]
-			assert_b: ASSERT_B
 			need_end_label: BOOLEAN
 		do
 			context.set_assertion_type ({ASSERT_TYPE}.in_precondition)
 
-			l_prec := a_body.precondition
 			inh_assert := Context.inherited_assertion
 
 			end_of_assertion := il_generator.create_label
@@ -526,21 +536,14 @@ feature {NONE} -- Implementation
 			il_generator.generate_set_assertion_status
 			il_generator.put_boolean_constant (True)
 			il_generator.generate_set_precondition_status
-			if l_prec /= Void then
-				from
-					need_end_label := True
-					success_block := il_generator.create_label
-					failure_block := il_generator.create_label
-					l_prec.start
-				until
-					l_prec.after
+			if attached a_body.precondition as ps then
+				need_end_label := True
+				success_block := il_generator.create_label
+				failure_block := il_generator.create_label
+				across
+					ps is p
 				loop
-					assert_b ?= l_prec.item
-					check
-						assert_b_not_void: assert_b /= Void
-					end
-					generate_il_precondition_node (assert_b, failure_block)
-					l_prec.forth
+					generate_il_precondition_node (p, failure_block)
 				end
 				il_generator.branch_to (success_block)
 				il_generator.mark_label (failure_block)
@@ -573,7 +576,6 @@ feature {NONE} -- Implementation
 			local_list_not_void: local_list /= Void
 			local_list_not_empty: not local_list.is_empty
 		local
-			id_list: IDENTIFIER_LIST
 			rout_locals: EIFFEL_LIST [LIST_DEC_AS]
 			debug_generation: BOOLEAN
 			i: INTEGER
@@ -602,15 +604,11 @@ feature {NONE} -- Implementation
 						local_list.after
 					loop
 						if not rout_locals.after then
-							from
-								id_list := rout_locals.item.id_list
-								id_list.start
-							until
-								id_list.after
+							across
+								rout_locals.item.id_list as ids
 							loop
-								il_generator.put_local_info (context.real_type (local_list.item), id_list.item)
+								il_generator.put_local_info (context.real_type (local_list.item), ids.item)
 								local_list.forth
-								id_list.forth
 							end
 							rout_locals.forth
 						else
@@ -986,20 +984,19 @@ feature {NONE} -- Visitors
 
 					-- Let's try to prepare call to `XXX.attribute.copy' in
 					-- case of `attribute' is a basic type.
-				if a_node.parent /= Void and l_r_type.is_basic then
-					if
-						attached {FEATURE_B} a_node.parent.message as l_feature_call and then
-						attached {CL_TYPE_A} l_r_type as l_attribute_cl_type and then
-						il_special_routines.has (l_feature_call.feature_name_id, l_attribute_cl_type) and then
-						il_special_routines.function_type =
-							{IL_SPECIAL_FEATURES}.set_item_type
-					then
-							-- Since we do not need to load attribute value onto the stack,
-							-- we cancel the attribute generation.
-							-- IL_SPECIAL_FEATURES.generate_set_item will know that Object
-							-- where Current belongs is on top of the stack.
-						l_cancel_attribute_generation := True
-					end
+				if
+					a_node.parent /= Void and
+					l_r_type.is_basic and then
+					attached {FEATURE_B} a_node.parent.message as l_feature_call and then
+					attached {CL_TYPE_A} l_r_type as l_attribute_cl_type and then
+					il_special_routines.has (l_feature_call.feature_name_id, l_attribute_cl_type) and then
+					il_special_routines.function_type = {IL_SPECIAL_FEATURES}.set_item_type
+				then
+						-- Since we do not need to load attribute value onto the stack,
+						-- we cancel the attribute generation.
+						-- IL_SPECIAL_FEATURES.generate_set_item will know that Object
+						-- where Current belongs is on top of the stack.
+					l_cancel_attribute_generation := True
 				end
 
 				if not l_cancel_attribute_generation then
@@ -1372,6 +1369,12 @@ feature {NONE} -- Visitors
 			-- Process `a_node'.
 		do
 			-- Nothing to be done, as it is handled in INSPECT_B
+		end
+
+	process_case_expression_b (a_node: CASE_EXPRESSION_B)
+			-- <Precursor>
+		do
+				-- Nothing to be done, as it is handled in `process_inspect_expression_b`.
 		end
 
 	process_char_const_b (a_node: CHAR_CONST_B)
@@ -1909,26 +1912,24 @@ feature {NONE} -- Visitors
 					if l_native_array_class_type /= Void then
 						l_need_generation := False
 						l_native_array_class_type.generate_il (a_node.feature_name_id, l_cl_type, context.context_class_type.type)
-						if System.il_verifiable then
-							if
-								not l_return_type.is_expanded and then
-								not l_return_type.is_none and then
-								not l_return_type.is_void
-							then
-								il_generator.generate_check_cast (Void, l_return_type)
-							end
+						if
+							System.il_verifiable and then
+							not l_return_type.is_expanded and then
+							not l_return_type.is_none and then
+							not l_return_type.is_void
+						then
+							il_generator.generate_check_cast (Void, l_return_type)
 						end
 					elseif l_is_special_handled then
 						l_special_array_class_type.generate_il (a_node.feature_name_id, l_cl_type, context.context_class_type.type)
 						l_need_generation := False
-						if System.il_verifiable then
-							if
-								not l_return_type.is_expanded and then
-								not l_return_type.is_none and then
-								not l_return_type.is_void
-							then
-								il_generator.generate_check_cast (Void, l_return_type)
-							end
+						if
+							System.il_verifiable and then
+							not l_return_type.is_expanded and then
+							not l_return_type.is_none and then
+							not l_return_type.is_void
+						then
+							il_generator.generate_check_cast (Void, l_return_type)
 						end
 					end
 
@@ -2264,6 +2265,82 @@ feature {NONE} -- Visitors
 			end
 
 			il_generator.put_silent_debug_info (a_node.end_location)
+		end
+
+	process_inspect_expression_b (b: INSPECT_EXPRESSION_B)
+			-- <Precursor>
+		local
+			l_else_label: IL_LABEL
+			l_end_label: IL_LABEL
+			l_intervals: SORTED_TWO_WAY_LIST [INTERVAL_B]
+			l_spans: ARRAYED_LIST [INTERVAL_SPAN]
+			inspect_type: TYPE_A
+			min_value: INTERVAL_VAL_B
+			max_value: INTERVAL_VAL_B
+			labels: ARRAY [detachable IL_LABEL]
+			t: TYPE_A
+		do
+			t := context.real_type (b.type)
+			l_else_label := il_generator.create_label
+			l_end_label := il_generator.create_label
+			generate_il_line_info (b, True)
+				-- Generate inspect expression.
+			if not b.switch.is_fast_as_local then
+					-- Generate switch expression byte code.
+				b.switch.process (Current)
+			end
+				-- Generate cases.
+			if attached b.case_list as cs then
+					-- Sort and merge intervals.
+				l_intervals := create_sorted_interval_list (b)
+				merge_intervals (b, l_intervals)
+				if l_intervals.count > 0 then
+						-- Calculate minimum and maximum values
+					inspect_type := b.switch.type
+					if attached {CL_TYPE_A} inspect_type as l_cl_type_i and then l_cl_type_i.is_enum then
+						create {INT_VAL_B} min_value.make ({INTEGER_32}.min_value)
+						create {INT_VAL_B} max_value.make ({INTEGER_32}.max_value)
+					else
+						min_value := inspect_type.minimum_interval_value
+						max_value := inspect_type.maximum_interval_value
+					end
+
+						-- Make sure there are no different objects for the same boundary
+					if l_intervals.first.lower.is_equal (min_value) then
+						min_value := l_intervals.first.lower
+					end
+					if l_intervals.last.upper.is_equal (max_value) then
+						max_value := l_intervals.last.upper
+					end
+						-- Group intervals.
+					l_spans := build_spans (b, l_intervals, min_value, max_value)
+						-- Create array of labels for all cases, put `l_end_label' at position `-1' and `l_else_label' at position `0'.
+					create labels.make_filled (Void, -1, cs.count)
+					labels.put (l_end_label, -1)
+					labels.put (l_else_label, 0)
+					generate_spans (b, l_spans, 1, l_spans.count, min_value, max_value, True, True, labels)
+				end
+			end
+				-- Generate else part.
+			il_generator.mark_label (l_else_label)
+			if not b.switch.is_fast_as_local then
+					-- Remove the duplication made for case comparison.
+				il_generator.pop
+			end
+			if attached b.else_part as p then
+				generate_expression_il_for_type (p, t)
+			else
+					-- Throw an exception.
+				il_generator.generate_raise_exception ({EXCEP_CONST}.incorrect_inspect_value, Void)
+					-- Make sure the stack is in consistent state.
+				il_generator.put_default_value (t)
+			end
+				-- Final end.
+			il_generator.mark_label (l_end_label)
+			check
+				end_location_attached: attached b.end_location
+			end
+			il_generator.put_silent_debug_info (b.end_location)
 		end
 
 	process_instr_call_b (a_node: INSTR_CALL_B)
@@ -3298,7 +3375,7 @@ feature {NONE} -- Visitors
 			il_generator.put_void
 		end
 
-feature {NONE} -- Implementation
+feature {NONE} -- Access
 
 	need_access_address (a_node: ACCESS_B; a_is_target_of_call: BOOLEAN): BOOLEAN
 			-- Does `a_node' access need its address loaded in memory?
@@ -3349,6 +3426,8 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
+
+feature {NONE} -- Conversion
 
 	generate_expression_il_for_type (a_node: EXPR_B; a_target_type: TYPE_A)
 			-- Generate IL code for `expression' that is attached
@@ -3439,6 +3518,8 @@ feature {NONE} -- Implementation
 			end
 		end
 
+feature {NONE} -- Debug information
+
 	generate_il_line_info (a_node: BYTE_NODE; is_breakable_for_studio_dbg: BOOLEAN)
 			-- Generate source line information in IL code.
 		require
@@ -3466,10 +3547,11 @@ feature {NONE} -- Implementation
 			is_valid: is_valid
 			a_node_not_void: a_node /= Void
 		do
-			if System.line_generation or context.workbench_mode then
-				if system.is_precompile_finalized then
-					il_generator.put_ghost_debug_infos (a_node.line_number, n)
-				end
+			if
+				(System.line_generation or context.workbench_mode) and then
+				system.is_precompile_finalized
+			then
+				il_generator.put_ghost_debug_infos (a_node.line_number, n)
 			end
 		end
 
@@ -3711,54 +3793,45 @@ feature {NONE} -- Implementation: binary operators
 
 feature {NONE} -- Implementation: Inspect
 
-	create_sorted_interval_list (a_node: INSPECT_B): SORTED_TWO_WAY_LIST [INTERVAL_B]
-			-- Create sorted list of all intervals in inspect instruction
+	create_sorted_interval_list (b: ABSTRACT_INSPECT_B [ABSTRACT_CASE_B [BYTE_NODE], BYTE_NODE]): SORTED_TWO_WAY_LIST [INTERVAL_B]
+			-- Create a sorted list of all intervals in the multi-branch construct `b`.
 		require
 			is_valid: is_valid
-			a_node_not_void: a_node /= Void
-			case_list_not_void: not a_node.case_list.is_empty
+			node_attached: attached b
+			case_list_not_empty: not b.case_list.is_empty
 		local
-			l_case: BYTE_LIST [BYTE_NODE]
 			case_index: INTEGER
-			case_b: CASE_B
-			case_intervals: BYTE_LIST [INTERVAL_B]
-			case_compound: BYTE_LIST [BYTE_NODE]
+			case_b: ABSTRACT_CASE_B [BYTE_NODE]
 			interval_b: INTERVAL_B
-			has_empty_else_part: BOOLEAN
+			is_empty_else_part: BOOLEAN
 		do
-			has_empty_else_part := a_node.else_part /= Void and then a_node.else_part.is_empty
-			l_case := a_node.case_list
 			create Result.make
-			from
-				l_case.start
-			until
-				l_case.after
+			is_empty_else_part := attached b.else_part and then not b.has_else_code
+			across
+				b.case_list as cs
 			loop
-				case_index := l_case.index
-				case_b ?= l_case.item
+				case_b := cs.item
 					-- Add all intervals associated with current When_part unless they do the same as Else_part does
-				case_intervals := case_b.interval
-				case_compound := case_b.compound
-				if case_intervals /= Void and then (not has_empty_else_part or else case_compound /= Void and then not case_compound.is_empty) then
-					from
-						case_intervals.start
-					until
-						case_intervals.after
+				if
+					attached case_b.interval as case_intervals and then
+					(not is_empty_else_part or else case_b.has_content)
+				then
+					case_index := cs.target_index
+					across
+						case_intervals is i
 					loop
-						interval_b := case_intervals.item
+						interval_b := i
 						interval_b.set_case_index (case_index)
 						Result.extend (interval_b)
-						case_intervals.forth
 					end
 				end
-				l_case.forth
 			end
 		ensure
 			result_not_void: Result /= Void
 		end
 
-	merge_intervals (a_node: INSPECT_B; intervals: like create_sorted_interval_list)
-			-- Merge adjacent intervals with the same code
+	merge_intervals (a_node: ABSTRACT_INSPECT_B [ABSTRACT_CASE_B [BYTE_NODE], BYTE_NODE]; intervals: like create_sorted_interval_list)
+			-- Merge adjacent intervals with the same code.
 		require
 			is_valid: is_valid
 			a_node_not_void: a_node /= Void
@@ -3791,7 +3864,7 @@ feature {NONE} -- Implementation: Inspect
 			-- Minimum number of items in group for which switch IL instruction is generated
 			-- Switch instruction adds too much overhead when group consists of less than 7 items
 
-	build_spans (a_node: INSPECT_B; intervals: like create_sorted_interval_list; min_value, max_value: INTERVAL_VAL_B): ARRAYED_LIST [INTERVAL_SPAN]
+	build_spans (a_node: ABSTRACT_INSPECT_B [ABSTRACT_CASE_B [BYTE_NODE], BYTE_NODE]; intervals: like create_sorted_interval_list; min_value, max_value: INTERVAL_VAL_B): ARRAYED_LIST [INTERVAL_SPAN]
 			-- New sorted list of spans built from given `intervals' bounded with `min_value' and `max_value'
 		require
 			is_valid: is_valid
@@ -3872,13 +3945,13 @@ feature {NONE} -- Implementation: Inspect
 			result_not_void: Result /= Void
 		end
 
-	generate_spans (a_node: INSPECT_B; spans: like build_spans; lower, upper: INTEGER; min, max: INTERVAL_VAL_B; is_min_included, is_max_included: BOOLEAN; labels: ARRAY [detachable IL_LABEL])
+	generate_spans (b: ABSTRACT_INSPECT_B [ABSTRACT_CASE_B [BYTE_NODE], BYTE_NODE]; spans: like build_spans; lower, upper: INTEGER; min, max: INTERVAL_VAL_B; is_min_included, is_max_included: BOOLEAN; labels: ARRAY [detachable IL_LABEL])
 			-- Generate selectors for `spans' with indexes `lower'..`upper' within interval `min'..`max'
 			-- where these bounds are included according to `is_min_inclued' and `is_max_included'. Use
 			-- `else_label' to branch to Else_part.
 		require
 			is_valid: is_valid
-			a_node_not_void: a_node /= Void
+			node_attached: attached b
 		local
 			middle: INTEGER
 			span: INTERVAL_SPAN
@@ -3887,45 +3960,39 @@ feature {NONE} -- Implementation: Inspect
 			if lower = upper then
 					-- There is only one group
 				span := spans.i_th (lower)
-				generate_il_line_info (a_node, False)
-				span.generate_il (Current, min, max, is_min_included, is_max_included, labels, a_node)
+				generate_il_line_info (b, False)
+				span.generate_il (Current, min, max, is_min_included, is_max_included, labels, b)
 			else
 					-- Divide groups in two parts and recurse
 				middle := (lower + upper) // 2
 				span := spans.i_th (middle)
 				next_label := il_generator.create_label
-				generate_il_line_info (a_node, False)
-				generate_il_branch_on_greater (span.upper, span.is_upper_included, next_label, a_node)
-				generate_spans (a_node, spans, lower, middle, min, span.upper, is_min_included, span.is_upper_included, labels)
+				generate_il_line_info (b, False)
+				generate_il_branch_on_greater (span.upper, span.is_upper_included, next_label, b)
+				generate_spans (b, spans, lower, middle, min, span.upper, is_min_included, span.is_upper_included, labels)
 				il_generator.mark_label (next_label)
-				generate_spans (a_node, spans, middle + 1, upper, span.upper, max, not span.is_upper_included, is_max_included, labels)
+				generate_spans (b, spans, middle + 1, upper, span.upper, max, not span.is_upper_included, is_max_included, labels)
 			end
 		end
 
-	generate_il_branch_on_greater (an_interval: INTERVAL_VAL_B; is_included: BOOLEAN; label: IL_LABEL; instruction: INSPECT_B)
+	generate_il_branch_on_greater (an_interval: INTERVAL_VAL_B; is_included: BOOLEAN; label: IL_LABEL; multi_branch: ABSTRACT_INSPECT_B [ABSTRACT_CASE_B [BYTE_NODE], BYTE_NODE])
 			-- Generate branch to `label' if value on IL stack it greater than this value.
 			-- Assume that current value is included in lower interval if `is_included' is true.
 		require
 			is_valid: is_valid
 			an_interval_not_void: an_interval /= Void
 			label_not_void: label /= Void
-			instruction_not_void: instruction /= Void
+			multi_branch_attached: attached multi_branch
 		do
-			generate_il_load_value (instruction)
+			generate_il_load_value (multi_branch)
 			an_interval.il_load_value
-			if an_interval.is_signed then
-				if is_included then
-					il_generator.branch_on_condition ({MD_OPCODES}.bgt, label)
+			il_generator.branch_on_condition
+				(if an_interval.is_signed then
+					if is_included then {MD_OPCODES}.bgt else {MD_OPCODES}.bge end
 				else
-					il_generator.branch_on_condition ({MD_OPCODES}.bge, label)
-				end
-			else
-				if is_included then
-					il_generator.branch_on_condition ({MD_OPCODES}.bgt_un, label)
-				else
-					il_generator.branch_on_condition ({MD_OPCODES}.bge_un, label)
-				end
-			end
+					if is_included then {MD_OPCODES}.bgt_un else {MD_OPCODES}.bge_un end
+				end,
+				label)
 		end
 
 feature {NONE} -- Implementation: loop
@@ -4199,14 +4266,13 @@ feature {NONE} -- Implementation: Feature calls
 					a_node.feature_id, l_count, not l_return_type.is_void,
 					l_cl_type.is_reference or else l_real_metamorphose)
 			end
-			if System.il_verifiable then
-				if
-					not l_return_type.is_expanded and then
-					not l_return_type.is_none and then
-					not l_return_type.is_void
-				then
-					il_generator.generate_check_cast (Void, l_return_type)
-				end
+			if
+				System.il_verifiable and then
+				not l_return_type.is_expanded and then
+				not l_return_type.is_none and then
+				not l_return_type.is_void
+			then
+				il_generator.generate_check_cast (Void, l_return_type)
 			end
 			if l_invariant_checked then
 				generate_il_call_invariant_trailing (l_cl_type, l_return_type)
@@ -4319,14 +4385,13 @@ feature {NONE} -- Implementation: Feature calls
 					target_type, target_feature_id, l_count, not l_return_type.is_void,
 					is_virtual)
 			end
-			if System.il_verifiable then
-				if
-					not l_return_type.is_expanded and then
-					not l_return_type.is_none and then
-					not l_return_type.is_void
-				then
-					il_generator.generate_check_cast (Void, l_return_type)
-				end
+			if
+				System.il_verifiable and then
+				not l_return_type.is_expanded and then
+				not l_return_type.is_none and then
+				not l_return_type.is_void
+			then
+				il_generator.generate_check_cast (Void, l_return_type)
 			end
 		end
 
@@ -4939,9 +5004,10 @@ feature {NONE} -- Convenience
 		end
 
 note
+	ca_ignore: "CA033", "CA033: too large class"
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

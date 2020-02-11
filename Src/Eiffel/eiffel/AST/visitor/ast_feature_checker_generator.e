@@ -1602,10 +1602,10 @@ feature {NONE} -- Implementation
 											(l_feature, current_feature, context.current_class, context.written_class, a_name))
 									end,
 									l_feature_name)
-								if error_level /= l_error_level then
-									reset_types
-								else
+								if error_level = l_error_level then
 									has_vucr := w /= error_handler.warning_level
+								else
+									reset_types
 								end
 							end
 						end
@@ -7142,42 +7142,37 @@ feature {NONE} -- Visitor
 			end
 		end
 
-	process_inspect_as (l_as: INSPECT_AS)
+	process_inspect_abstraction
+		(a: INSPECT_ABSTRACTION_AS [CASE_ABSTRACTION_AS [detachable AST_EIFFEL], detachable AST_EIFFEL];
+		f: MULTI_BRANCH_FACTORY)
 		local
 			l_vomb1: VOMB1
 			l_controler: detachable INSPECT_CONTROL
-			l_inspect: INSPECT_B
-			l_expr: EXPR_B
-			l_list: BYTE_LIST [BYTE_NODE]
+			l_inspect: ABSTRACT_INSPECT_B [ABSTRACT_CASE_B [BYTE_NODE], BYTE_NODE]
 			l_constraint_type: TYPE_A
 			l_formal: FORMAL_A
 			l_type: TYPE_A
+			s: like context.scope
 		do
 			break_point_slot_count := break_point_slot_count + 1
 
-			l_as.switch.process (Current)
+			a.switch.process (Current)
 			if last_type /= Void then
-				if is_byte_node_enabled then
-					l_expr ?= last_byte_node
-					create l_inspect
-					l_inspect.set_switch (l_expr)
-					l_inspect.set_line_pragma (l_as.line_pragma)
+				if is_byte_node_enabled and then attached {EXPR_B} last_byte_node as e then
+					l_inspect := f.new_construct (e, a)
 				end
 
 					-- Type check if it is an expression conform either to
 					-- and integer or to a character
 				l_type := last_type.actual_type
-				if l_type.is_formal then
-					l_formal ?= l_type
-					if not l_formal.is_multi_constrained (context.current_class) then
-						l_constraint_type := l_formal.constrained_type (context.current_class)
-					end
-				else
+				if not l_type.is_formal then
 					l_constraint_type := l_type
+				elseif attached {FORMAL_A} l_type as formal_type and then not l_formal.is_multi_constrained (context.current_class) then
+					l_constraint_type := formal_type.constrained_type (context.current_class)
 				end
 
 				if
-					l_constraint_type = Void or else (
+					attached l_constraint_type implies (
 					not l_constraint_type.is_integer and then not l_constraint_type.is_character and then
 					not l_constraint_type.is_natural and then not l_constraint_type.is_enum and then
 					l_constraint_type.is_known)
@@ -7186,7 +7181,7 @@ feature {NONE} -- Visitor
 					create l_vomb1
 					context.init_error (l_vomb1)
 					l_vomb1.set_type (l_type)
-					l_vomb1.set_location (l_as.switch.end_location)
+					l_vomb1.set_location (a.switch.end_location)
 					error_handler.insert_error (l_vomb1)
 				else
 						-- Initialization of the multi-branch controler if no errors are detected.
@@ -7196,29 +7191,78 @@ feature {NONE} -- Visitor
 
 			inspect_controlers.put_front (l_controler)
 			context.enter_realm
-			if l_as.case_list /= Void then
-				l_as.case_list.process (Current)
-				if l_inspect /= Void and then attached {like {INSPECT_B}.case_list} last_byte_node as l then
-					l_inspect.set_case_list (l.remove_voids)
+			if attached a.case_list as l then
+				process_eiffel_list_with_matcher (l, Void, f.new_case_list (l.count))
+				if
+					attached l_inspect and then
+					attached {like {ABSTRACT_INSPECT_B [ABSTRACT_CASE_B [detachable BYTE_NODE], detachable BYTE_NODE]}.case_list} last_byte_node as b
+				then
+					l_inspect.set_case_list (b.remove_voids)
 				end
 			end
 
-			if l_as.else_part /= Void then
-				process_compound (l_as.else_part)
+			if attached a.else_part as e then
+				s := context.scope
+				e.process (Current)
+				context.set_scope (s)
 				context.save_sibling
-				if l_inspect /= Void then
-					l_list ?= last_byte_node
-					l_inspect.set_else_part (l_list)
+				if attached last_expressions_type as ts and then attached last_type as t then
+					ts.extend (t)
+				end
+				if attached l_inspect then
+					if attached {BYTE_LIST [BYTE_NODE]} last_byte_node as b then
+							-- Compound.
+						l_inspect.set_else_part (b)
+					elseif attached {EXPR_B} last_byte_node as b then
+							-- Expression.
+						l_inspect.set_else_part (b)
+					end
 				end
 			end
 			context.leave_realm
-			if l_inspect /= Void then
-				l_inspect.set_line_number (l_as.switch.start_location.line)
-				l_inspect.set_end_location (l_as.end_keyword)
+			if attached l_inspect then
+				l_inspect.set_line_number (a.switch.start_location.line)
+				l_inspect.set_end_location (a.end_keyword)
 				last_byte_node := l_inspect
 			end
 			inspect_controlers.start
 			inspect_controlers.remove
+		end
+
+	process_inspect_as (a: INSPECT_AS)
+			-- <Precursor>
+		local
+			old_type_list: like last_expressions_type
+		do
+			old_type_list := last_expressions_type
+			last_expressions_type := Void
+			process_inspect_abstraction (a, multi_branch_instruction_factory)
+			last_expressions_type := old_type_list
+		end
+
+	process_inspect_expression_as (a: INSPECT_EXPRESSION_AS)
+			-- <Precursor>
+		local
+			old_type_list: like last_expressions_type
+			old_error_level: like error_handler.error_level
+			t: TYPE_A
+		do
+			old_error_level := error_handler.error_level
+			old_type_list := last_expressions_type
+			create last_expressions_type.make
+				(if attached a.case_list as l then l.count else 0 end +
+				if attached a.else_part then 1 else 0 end)
+			process_inspect_abstraction (a, multi_branch_expression_factory)
+			if old_error_level = error_handler.error_level then
+				t := maximal_type (last_expressions_type)
+				if attached {INSPECT_EXPRESSION_B} last_byte_node as b then
+					b.set_type (t)
+				end
+				set_type (t, a)
+			else
+				reset_types
+			end
+			last_expressions_type := old_type_list
 		end
 
 	process_instr_call_as (l_as: INSTR_CALL_AS)
@@ -8427,35 +8471,44 @@ feature {NONE} -- Visitor
 			-- Nothing to be done
 		end
 
-	process_case_as (l_as: CASE_AS)
+	process_case_abstraction
+		(a: CASE_ABSTRACTION_AS [detachable AST_EIFFEL];
+		f: MULTI_BRANCH_FACTORY)
+			-- Process `a`.
 		local
 			l_intervals: SORTABLE_ARRAY [INTERVAL_B]
 			l_interval: INTERVAL_B
 			l_next_interval: INTERVAL_B
 			l_tmp: BYTE_LIST [INTERVAL_B]
-			l_case: CASE_B
+			l_case: ABSTRACT_CASE_B [BYTE_NODE]
 			l_is_empty: BOOLEAN
+			s: like context.scope
 		do
 			if not is_byte_node_enabled then
 				if attached inspect_control as l_inspect_control then
 					across
-						l_as.interval as interval_cursor
+						a.interval as interval_cursor
 					from
 						l_is_empty := True
 					loop
 						interval_cursor.item.process (Current)
-						if l_inspect_control.last_interval_byte_node /= Void then
+						if attached l_inspect_control.last_interval_byte_node then
 							l_is_empty := False
 						end
 					end
 				end
-				if l_as.compound /= Void then
-					process_compound (l_as.compound)
+				if attached a.content as c then
+					s := context.scope
+					c.process (Current)
+					context.set_scope (s)
+					if attached last_expressions_type as ts and then attached last_type as t then
+						ts.extend (t)
+					end
 				end
 			else
 						-- Collect all intervals in an array
 				across
-					l_as.interval as interval_cursor
+					a.interval as interval_cursor
 				from
 					create l_intervals.make_empty
 				loop
@@ -8466,8 +8519,13 @@ feature {NONE} -- Visitor
 				end
 				if l_intervals.is_empty then
 					l_is_empty := True
-					if l_as.compound /= Void then
-						process_compound (l_as.compound)
+					if attached a.content as c then
+						s := context.scope
+						c.process (Current)
+						context.set_scope (s)
+						if attached last_expressions_type as ts and then attached last_type as t then
+							ts.extend (t)
+						end
 						reset_byte_node
 					end
 				else
@@ -8493,15 +8551,18 @@ feature {NONE} -- Visitor
 							l_tmp.extend (l_interval)
 						end
 					end
-					create l_case
-					l_case.set_interval (l_tmp)
-					if l_as.compound /= Void then
-						process_compound (l_as.compound)
-						if attached {BYTE_LIST [BYTE_NODE]} last_byte_node as l_list then
-							l_case.set_compound (l_list)
+					if attached a.content as c then
+						s := context.scope
+						c.process (Current)
+						context.set_scope (s)
+						l_case := f.new_case (l_tmp, last_byte_node)
+						if attached last_expressions_type as ts and then attached last_type as t then
+							ts.extend (t)
 						end
+					else
+						l_case := f.new_case (l_tmp, Void)
 					end
-					l_case.set_line_number (l_as.interval.start_location.line)
+					l_case.set_line_number (a.interval.start_location.line)
 				end
 				last_byte_node := l_case
 			end
@@ -8509,6 +8570,18 @@ feature {NONE} -- Visitor
 					-- If all intervals are empty, the scope information is not changed, otherwise it's updated.
 				context.save_sibling
 			end
+		end
+
+	process_case_as (a: CASE_AS)
+			-- <Precursor>
+		do
+			process_case_abstraction (a, multi_branch_instruction_factory)
+		end
+
+	process_case_expression_as (a: CASE_EXPRESSION_AS)
+			-- <Precursor>
+		do
+			process_case_abstraction (a, multi_branch_expression_factory)
 		end
 
 	process_ensure_as (l_as: ENSURE_AS)
@@ -12084,6 +12157,20 @@ feature {INSPECT_CONTROL} -- Checks for obsolete features
 			end
 		end
 
+feature {NONE} -- Byte node factory
+
+	multi_branch_expression_factory: MULTI_BRANCH_EXPRESSION_FACTORY
+			-- A factory to generate multi-branch expression byte nodes.
+		once
+			create Result
+		end
+
+	multi_branch_instruction_factory: MULTI_BRANCH_INSTRUCTION_FACTORY
+			-- A factory to generate multi-branch instruction byte nodes.
+		once
+			create Result
+		end
+
 note
 	ca_ignore:
 		"CA011", "CA011 — too many arguments",
@@ -12091,7 +12178,7 @@ note
 		"CA033", "CA033 — too long class"
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

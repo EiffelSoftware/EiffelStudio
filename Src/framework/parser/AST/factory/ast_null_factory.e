@@ -14,11 +14,11 @@ inherit
 			new_bin_not_tilde_as, new_bin_or_as, new_bin_or_else_as, new_bin_plus_as,
 			new_bin_power_as, new_bin_slash_as, new_bin_star_as, new_bin_tilde_as,
 			new_bin_xor_as, new_built_in_as,
-			new_body_as, new_boolean_as, new_case_as, new_character_as, new_check_as, new_class_as,
+			new_body_as, new_boolean_as, new_case_as, new_case_expression_as, new_character_as, new_check_as, new_class_as,
 			new_class_type_as, new_client_as, new_constant_as, new_constraining_type, new_convert_feat_as, new_create_as,
 			new_current_as, new_custom_attribute_as,
 			new_debug_as, new_deferred_as, new_do_as, new_eiffel_list_atomic_as,
-			new_eiffel_list_case_as, new_eiffel_list_constraining_type_as, new_eiffel_list_convert, new_eiffel_list_create_as,
+			new_eiffel_list_case_as, new_eiffel_list_case_expression_as, new_eiffel_list_constraining_type_as, new_eiffel_list_convert, new_eiffel_list_create_as,
 			new_eiffel_list_elseif_as, new_eiffel_list_export_item_as, new_eiffel_list_expr_as,
 			new_eiffel_list_feature_as, new_eiffel_list_feature_clause_as,
 			new_eiffel_list_feature_name, new_eiffel_list_feature_name_id, new_eiffel_list_formal_dec_as, new_eiffel_list_id_as,
@@ -31,7 +31,7 @@ inherit
 			new_external_lang_as, new_feature_as, new_feature_clause_as, new_feature_list_as,
 			new_feature_name_alias_as, new_feature_name_id_as, new_formal_as, new_formal_dec_as, new_filled_id_as,
 			new_guard_as, new_identifier_list, new_if_as, new_if_expression_as, new_index_as,
-			new_inline_agent_creation_as, new_inspect_as,
+			new_inline_agent_creation_as, new_inspect_as, new_inspect_expression_as,
 			new_instr_call_as, new_integer_as, new_integer_hexa_as, new_integer_octal_as,
 			new_integer_binary_as, new_interval_as, new_invariant_as, new_iteration_as,
 			new_like_id_as, new_like_current_as, new_list_dec_as, new_location_as, new_loop_as, new_loop_expr_as,
@@ -207,7 +207,7 @@ feature -- Roundtrip: New AST node
 		do
 		end
 
-feature -- Roundtrip
+feature -- Roundtrip: constants
 
 	new_character_value_as (a_psr: EIFFEL_SCANNER_SKELETON; buffer: STRING; roundtrip_buffer: STRING): detachable CHAR_AS
 		do
@@ -505,6 +505,11 @@ feature -- Access
 		do
 		end
 
+	new_case_expression_as (i: detachable EIFFEL_LIST [INTERVAL_AS]; e: detachable EXPR_AS; w, t: detachable KEYWORD_AS): detachable CASE_EXPRESSION_AS
+			-- <Precursor>
+		do
+		end
+
 	new_character_as (c: CHARACTER_32; l, co, p, n, cc, cp, cs: INTEGER; a_text: STRING): detachable CHAR_AS
 			-- New CHARACTER AST node
 		do
@@ -594,6 +599,11 @@ feature -- Access
 
 	new_eiffel_list_case_as (n: INTEGER): detachable EIFFEL_LIST [CASE_AS]
 			-- New empty list of CASE_AS
+		do
+		end
+
+	new_eiffel_list_case_expression_as (n: INTEGER): detachable EIFFEL_LIST [CASE_EXPRESSION_AS]
+			-- <Precursor>
 		do
 		end
 
@@ -835,6 +845,12 @@ feature -- Access
 	new_inspect_as (s: detachable EXPR_AS; c: detachable EIFFEL_LIST [CASE_AS];
 			e: detachable EIFFEL_LIST [INSTRUCTION_AS]; end_location, i_as, e_as: detachable  KEYWORD_AS): detachable INSPECT_AS
 			-- New INSPECT AST node
+		do
+		end
+
+	new_inspect_expression_as (s: detachable EXPR_AS; c: detachable EIFFEL_LIST [CASE_EXPRESSION_AS];
+			e: detachable EXPR_AS; end_location, i_as, e_as: detachable  KEYWORD_AS): detachable INSPECT_EXPRESSION_AS
+			-- <Precursor>
 		do
 		end
 
@@ -1169,7 +1185,7 @@ note
 		"CA033", "CA033: very long class"
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,28 +1,40 @@
 ﻿note
-	description: "Abstract description of a multi_branch instruction."
+	description	: "A factory to build byte nodes for multi-branch expressions."
 
-class INSPECT_AS
+class MULTI_BRANCH_EXPRESSION_FACTORY
 
 inherit
-	INSTRUCTION_AS
-	INSPECT_ABSTRACTION_AS [CASE_AS, detachable EIFFEL_LIST [INSTRUCTION_AS]]
+	MULTI_BRANCH_FACTORY
 
-create
-	make
+feature -- Factory
 
-feature -- Visitor
-
-	process (v: AST_VISITOR)
+	new_construct (e: EXPR_B; a: INSPECT_ABSTRACTION_AS [CASE_ABSTRACTION_AS [detachable AST_EIFFEL], detachable AST_EIFFEL]): INSPECT_EXPRESSION_B
 			-- <Precursor>
 		do
-			v.process_inspect_as (Current)
+			create Result
+			Result.set_switch (e)
+		end
+
+	new_case_list (n: like new_case_list.count): BYTE_LIST [CASE_EXPRESSION_B]
+			-- <Precursor>
+		do
+			create Result.make (n)
+		end
+
+	new_case (i: BYTE_LIST [INTERVAL_B]; b: BYTE_NODE): CASE_EXPRESSION_B
+			-- <Precursor>
+		do
+			if attached {EXPR_B} b as e then
+				create Result.make (i, e)
+			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
+	author: "Alexander Kogtenkov"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

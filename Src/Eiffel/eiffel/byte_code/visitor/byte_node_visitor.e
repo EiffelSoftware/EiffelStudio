@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Visitor for BYTE_NODE objects."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -376,6 +376,15 @@ feature {BYTE_NODE} -- Visitors
 		deferred
 		end
 
+	process_case_expression_b (b: CASE_EXPRESSION_B)
+			-- Process node `b`.
+		require
+			is_valid: is_valid
+			is_node_attached: attached b
+			is_node_valid: is_node_valid (b)
+		deferred
+		end
+
 	process_char_const_b (a_node: CHAR_CONST_B)
 			-- Process `a_node'.
 		require
@@ -552,6 +561,15 @@ feature {BYTE_NODE} -- Visitors
 			is_valid: is_valid
 			a_node_not_void: a_node /= Void
 			a_node_valid: is_node_valid (a_node)
+		deferred
+		end
+
+	process_inspect_expression_b (b: INSPECT_EXPRESSION_B)
+			-- Process node `b`.
+		require
+			is_valid: is_valid
+			is_node_attached: attached b
+			is_node_valid: is_node_valid (b)
 		deferred
 		end
 
@@ -916,7 +934,7 @@ feature {BYTE_NODE} -- Visitors
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

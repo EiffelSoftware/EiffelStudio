@@ -1,10 +1,12 @@
-note
+﻿note
+	description: "[
+		List used in the byte code generation.
+		Defines some of the commonly used iterations.
+	]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
--- List used in the byte code generation.
--- Defines some of the commonly used iterations.
 
-class BYTE_LIST [reference T -> BYTE_NODE]
+class BYTE_LIST [T -> BYTE_NODE]
 
 inherit
 	BYTE_NODE
@@ -235,7 +237,6 @@ feature -- Convenience
 			nbr_void: INTEGER
 			l_area, r_area: SPECIAL [T]
 			i, j, nb: INTEGER
-			l_item: T
 		do
 			from
 				l_area := area
@@ -243,16 +244,16 @@ feature -- Convenience
 			until
 				i = nb
 			loop
-				if (l_area.item (i) = Void) then
+				if l_area [i] = Void then
 					nbr_void := nbr_void + 1
 				end
 				i := i + 1
 			end
 
-			if (nbr_void < count) then
-				--| Not all elements are void
+			if nbr_void < count then
+					-- Not all elements are void.
 				if nbr_void > 0 then
-					--| Remove the void elements
+						-- Remove the void elements.
 					from
 						create Result.make_filled (count - nbr_void)
 						r_area := Result.area
@@ -260,22 +261,23 @@ feature -- Convenience
 					until
 						i = nb
 					loop
-						l_item := l_area.item (i)
-						if (l_item /= Void) then
-							r_area.put (l_item, j)
+						if attached l_area [i] as l_item then
+							r_area [j] := l_item
 							j := j + 1
 						end
 						i := i + 1
 					end
 				else
-					--| There are no void elements
+						-- There are no void elements.
 					Result := Current
 				end
 			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	date: "$Date$"
+	revision: "$Revision$"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

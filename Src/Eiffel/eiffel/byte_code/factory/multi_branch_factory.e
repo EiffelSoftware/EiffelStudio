@@ -1,28 +1,33 @@
 ﻿note
-	description: "Abstract description of a multi_branch instruction."
+	description	: "An abstract factory to build byte nodes for multi-branch constructs."
 
-class INSPECT_AS
+deferred class MULTI_BRANCH_FACTORY
 
-inherit
-	INSTRUCTION_AS
-	INSPECT_ABSTRACTION_AS [CASE_AS, detachable EIFFEL_LIST [INSTRUCTION_AS]]
+feature -- Factory
 
-create
-	make
+	new_construct (e: EXPR_B; a: INSPECT_ABSTRACTION_AS [CASE_ABSTRACTION_AS [detachable AST_EIFFEL], detachable AST_EIFFEL]): ABSTRACT_INSPECT_B [ABSTRACT_CASE_B [BYTE_NODE], BYTE_NODE]
+			-- Create a new byte node for an inspect construct with inspect expression `e`
+			-- based on the AST construct `a`.
+		deferred
+		end
 
-feature -- Visitor
+	new_case_list (n: like new_case_list.count): BYTE_LIST [ABSTRACT_CASE_B [BYTE_NODE]]
+			-- Create a list of case byte nodes with estimated number of nodes `n`.
+		deferred
+		end
 
-	process (v: AST_VISITOR)
-			-- <Precursor>
-		do
-			v.process_inspect_as (Current)
+	new_case (i: BYTE_LIST [INTERVAL_B]; b: detachable BYTE_NODE): ABSTRACT_CASE_B [BYTE_NODE]
+			-- Create a new byte node for a multi-branch case with intervals specified by `i`
+			-- and associated content `b`.
+		deferred
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	date: "$Date$"
 	revision: "$Revision$"
+	author: "Alexander Kogtenkov"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
+	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

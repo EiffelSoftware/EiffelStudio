@@ -950,7 +950,15 @@ feature -- Access
 			-- New WHEN AST node
 		do
 			if i /= Void then
-				create Result.initialize (i, c, w_as, t_as)
+				create Result.make (i, c, w_as, t_as)
+			end
+		end
+
+	new_case_expression_as (i: detachable EIFFEL_LIST [INTERVAL_AS]; e: detachable EXPR_AS; w, t: detachable KEYWORD_AS): detachable CASE_EXPRESSION_AS
+			-- New WHEN expression AST node.
+		do
+			if attached i and then attached e then
+				create Result.make (i, e, w, t)
 			end
 		end
 
@@ -1115,7 +1123,17 @@ feature -- Access
 		do
 			create Result.make_filled (n)
 		ensure
-			list_full: Result /= Void implies Result.capacity = n and Result.all_default
+			list_full: Result /= Void implies (Result.capacity = n and Result.all_default)
+		end
+
+	new_eiffel_list_case_expression_as (n: INTEGER): detachable EIFFEL_LIST [CASE_EXPRESSION_AS]
+			-- New empty list of `{CASE_EXPRESSION_AS}`.
+		require
+			n_non_negative: n >= 0
+		do
+			create Result.make_filled (n)
+		ensure
+			list_full: attached Result implies (Result.capacity = n and Result.all_default)
 		end
 
 	new_eiffel_list_convert (n: INTEGER): detachable CONVERT_FEAT_LIST_AS
@@ -1568,7 +1586,16 @@ feature -- Access
 			-- New INSPECT AST node
 		do
 			if s /= Void and end_location /= Void then
-				create Result.initialize (s, c, e, end_location, i_as, e_as)
+				create Result.make (s, c, e, end_location, i_as, e_as)
+			end
+		end
+
+	new_inspect_expression_as (s: detachable EXPR_AS; c: detachable EIFFEL_LIST [CASE_EXPRESSION_AS];
+			e: detachable EXPR_AS; end_location, i_as, e_as: detachable  KEYWORD_AS): detachable INSPECT_EXPRESSION_AS
+			-- New INSPECT expression AST node
+		do
+			if attached s and attached end_location then
+				create Result.make (s, c, e, end_location, i_as, e_as)
 			end
 		end
 
@@ -2134,7 +2161,7 @@ note
 		"CA033", "CA033: very long class"
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

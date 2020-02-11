@@ -1,25 +1,28 @@
 ﻿note
-	description: "Byte code for multi-branch instruction."
+	description: "Byte code for multi-branch expression."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
-class INSPECT_B
+class INSPECT_EXPRESSION_B
 
 inherit
-	ABSTRACT_INSPECT_B [CASE_B, detachable BYTE_LIST [BYTE_NODE]]
+	ABSTRACT_INSPECT_B [CASE_EXPRESSION_B, EXPR_B]
 		undefine
+			free_register,
+			get_register,
+			need_enlarging,
+			print_register
+		redefine
+			analyze,
 			enlarged,
-			is_temporary,
-			line_number,
-			print_register,
-			set_line_number
+			register,
+			set_register
 		end
 
-	INSTR_B
+	EXPR_B
 		undefine
-			analyze,
 			assigns_to,
 			calls_special_features,
 			enlarge_tree,
@@ -29,15 +32,13 @@ inherit
 			optimized_byte_node,
 			pre_inlined_code,
 			size
-		end
-
-	VOID_REGISTER
-		rename
-			unused_context as context
-		export
-			{NONE} all
-		undefine
-			context
+		redefine
+			analyze,
+			enlarged,
+			free_register,
+			register,
+			set_register,
+			unanalyze
 		end
 
 feature -- Visitor
@@ -45,28 +46,102 @@ feature -- Visitor
 	process (v: BYTE_NODE_VISITOR)
 			-- Process current element.
 		do
-			v.process_inspect_b (Current)
+			v.process_inspect_expression_b (Current)
 		end
+
+feature -- Access
+
+	type: TYPE_A
+			-- Expression type.
 
 feature -- Status report
 
-	has_else_code: BOOLEAN
+	has_else_code: BOOLEAN = True
+			-- <Precursor>
+
+feature -- Modification
+
+	set_type (t: like type)
+			-- Set `type` to `t`.
+		do
+			type := t
+		ensure
+			type_set: type = t
+		end
+
+feature -- Access: C code generation
+
+	register: REGISTRABLE
+			-- <Precursor>
+
+feature -- Code generation: C
+
+	used (r: REGISTRABLE): BOOLEAN
 			-- <Precursor>
 		do
-			Result := attached else_part as e and then not e.is_empty
+			Result :=
+				switch.used (r) or else
+				attached else_part as p and then p.used (r) or else
+				attached case_list as cs and then ∃ c: cs ¦ c.used (r)
+		end
+
+	set_register (r: REGISTRABLE)
+			-- <Precursor>
+		do
+			register := r
+		end
+
+	free_register
+			-- <Precursor>
+		do
+			if attached register as r then
+				r.free_register
+			else
+				check register_attached: False end
+			end
+		end
+
+	analyze
+		do
+				-- Allocate a register for the expression result.
+			get_register
+				-- Do the analysis.
+			Precursor {ABSTRACT_INSPECT_B}
+		end
+
+	unanalyze
+			-- <Precursor>
+		do
+			Precursor
+			register := Void
+		end
+
+	enlarged: INSPECT_EXPRESSION_B
+			-- <Precursor>
+		local
+			l_value: VALUE_I
+			l_elseif_b: ELSIF_EXPRESSION_B
+			l_expr: EXPR_B
+		do
+			switch := switch.enlarged
+			if attached case_list as c then
+				c.enlarge_tree
+			end
+			if attached else_part as p then
+				else_part := p.enlarged
+			end
+			Result := Current
 		end
 
 feature {NONE} -- Code generation: C
 
-	generate_effect (c: detachable BYTE_LIST [BYTE_NODE])
+	generate_effect (c: EXPR_B)
 			-- <Precursor>
 		do
-			if attached c then
-				c.generate
-			end
+			c.generate_for_attachment (register, type)
 		end
 
-note
+;note
 	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"

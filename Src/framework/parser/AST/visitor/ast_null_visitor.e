@@ -1,5 +1,5 @@
-note
-	description: "Class that parses an Eiffel class an does nothing"
+﻿note
+	description: "Class that parses an Eiffel class an does nothing."
 
 class
 	AST_NULL_VISITOR
@@ -57,7 +57,7 @@ feature -- Roundtrip
 			process_creation_expr_as (l_as)
 		end
 
-feature -- Roundtrip
+feature -- Roundtrip: leaves
 
 	process_keyword_as (l_as: KEYWORD_AS)
 			-- Process `l_as'.
@@ -456,6 +456,10 @@ feature -- Implementation
 		do
 		end
 
+	process_inspect_expression_as (a: INSPECT_EXPRESSION_AS)
+		do
+		end
+
 	process_loop_expr_as (l_as: LOOP_EXPR_AS)
 		do
 		end
@@ -583,6 +587,10 @@ feature -- Implementation
 		end
 
 	process_case_as (l_as: CASE_AS)
+		do
+		end
+
+	process_case_expression_as (a: CASE_EXPRESSION_AS)
 		do
 		end
 
@@ -714,9 +722,10 @@ feature -- Implementation
 		end
 
 note
+	ca_ignore: "CA033", "CA033: too large class"
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

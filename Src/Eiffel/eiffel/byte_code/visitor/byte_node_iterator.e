@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 		Iterator for BYTE_NODE objects which process each node and for each
 		performs an operation in preorder or postorder traversal.
@@ -335,6 +335,15 @@ feature {BYTE_NODE} -- Visitors
 			postorder_process (a_node)
 		end
 
+	process_case_expression_b (b: CASE_EXPRESSION_B)
+			-- <Precursor>
+		do
+			preorder_process (b)
+			safe_process (b.interval)
+			safe_process (b.content)
+			postorder_process (b)
+		end
+
 	process_char_const_b (a_node: CHAR_CONST_B)
 			-- Process `a_node'.
 		do
@@ -524,6 +533,16 @@ feature {BYTE_NODE} -- Visitors
 			safe_process (a_node.case_list)
 			safe_process (a_node.else_part)
 			postorder_process (a_node)
+		end
+
+	process_inspect_expression_b (b: INSPECT_EXPRESSION_B)
+			-- <Precursor>
+		do
+			preorder_process (b)
+			safe_process (b.switch)
+			safe_process (b.case_list)
+			safe_process (b.else_part)
+			postorder_process (b)
 		end
 
 	process_instr_call_b (a_node: INSTR_CALL_B)
@@ -863,7 +882,8 @@ feature {BYTE_NODE} -- Visitors
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	ca_ignore: "CA033", "CA033: too large class"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

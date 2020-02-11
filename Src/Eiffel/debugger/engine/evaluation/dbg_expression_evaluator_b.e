@@ -4,7 +4,7 @@
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
-	fixme: "FIXME jfiat [2007/05/07] : factorize code between process_array_const_b and process_tuple_const_b"
+	fixme: "FIXME jfiat [2007/05/07]: factorize code between process_array_const_b and process_tuple_const_b"
 	fixme: "check all case where we do not create a tmp_result ... should we set it to Void? "
 
 class
@@ -133,10 +133,11 @@ feature {NONE} -- Evaluation
 
 				--| FIXME jfiat 2004-12-09 : check if this is a true error or not ..
 				-- and if this is handle later or not
-			if on_context then
-				if context.address = Void or else context.address.is_void then
-					l_error_occurred := True
-				end
+			if
+				on_context and then
+				(context.address = Void or else context.address.is_void)
+			then
+				l_error_occurred := True
 			end
 
 			if not l_error_occurred then
@@ -529,20 +530,19 @@ feature {BYTE_NODE} -- Visitor
 			-- Process `a_node'.
 		do
 			process_bin_tilde_b (a_node)
-			if not error_occurred then
-				if attached tmp_result as tmp_res and then tmp_res.has_value then
-					if
-						tmp_res.value.is_type_boolean and then
-						attached tmp_res.value.as_dump_value_basic as bval
-					then
-						create tmp_result.make_with_value (
-								debugger_manager.dump_value_factory.new_boolean_value (
-										not bval.value_boolean,
-										tmp_result.dynamic_class
-									)
+			if
+				not error_occurred and then
+				attached tmp_result as tmp_res and then
+				tmp_res.has_value and then
+				tmp_res.value.is_type_boolean and then
+				attached tmp_res.value.as_dump_value_basic as bval
+			then
+				create tmp_result.make_with_value (
+						debugger_manager.dump_value_factory.new_boolean_value (
+								not bval.value_boolean,
+								tmp_result.dynamic_class
 							)
-					end
-				end
+					)
 			end
 		end
 
@@ -650,6 +650,12 @@ feature {BYTE_NODE} -- Visitor
 			-- Process `a_node'.
 		do
 			dbg_error_handler.notify_error_not_supported (a_node)
+		end
+
+	process_case_expression_b (b: CASE_EXPRESSION_B)
+			-- <Precursor>
+		do
+			dbg_error_handler.notify_error_not_supported (b)
 		end
 
 	process_char_const_b (a_node: CHAR_CONST_B)
@@ -1031,10 +1037,11 @@ feature {BYTE_NODE} -- Visitor
 							l_result_value := standalone_evaluation_expr_b (l_else_expression)
 						end
 					end
-					if not error_occurred then
-						if l_result_value /= Void then
-							tmp_result := l_result_value
-						end
+					if
+						not error_occurred and then
+						attached l_result_value
+					then
+						tmp_result := l_result_value
 					end
 				end
 			end
@@ -1090,6 +1097,12 @@ feature {BYTE_NODE} -- Visitor
 			-- Process `a_node'.
 		do
 			dbg_error_handler.notify_error_should_not_occur_in_expression_evaluation (a_node)
+		end
+
+	process_inspect_expression_b (b: INSPECT_EXPRESSION_B)
+			-- <Precursor>
+		do
+			dbg_error_handler.notify_error_should_not_occur_in_expression_evaluation (b)
 		end
 
 	process_instr_call_b (a_node: INSTR_CALL_B)
@@ -1703,15 +1716,17 @@ feature {NONE} -- Visitor: implementation
 			l := o.left
 			r := o.right
 
-			if not error_occurred then
-				if l /= Void and r /= Void then
-					b := equal_sign_evaluation_on_values (l, r)
-					if a_is_not then
-						b := not b
-					end
-					if not error_occurred then
-						create tmp_result.make_with_value (Debugger_manager.Dump_value_factory.new_boolean_value (b, debugger_manager.compiler_data.boolean_class_c))
-					end
+			if
+				not error_occurred and then
+				l /= Void and
+				r /= Void
+			then
+				b := equal_sign_evaluation_on_values (l, r)
+				if a_is_not then
+					b := not b
+				end
+				if not error_occurred then
+					create tmp_result.make_with_value (Debugger_manager.Dump_value_factory.new_boolean_value (b, debugger_manager.compiler_data.boolean_class_c))
 				end
 			end
 		end
@@ -1881,27 +1896,24 @@ feature {NONE} -- Visitor: implementation
 			l_call_value: DBG_EVALUATED_VALUE
 			l_call: CALL_B
 			l_type_i: CL_TYPE_A
-			l_params: BYTE_LIST [PARAMETER_B]
 			l_dv: detachable DUMP_VALUE
 		do
 			l_tmp_target_backup := tmp_target
 			l_type_i := resolved_real_type_in_context (a_type_i)
 			if l_type_i.base_class.is_special then
-				if attached {GEN_TYPE_A} l_type_i as l_gen_type_i then
-					if l_gen_type_i.generics.valid_index (1) then
-						if attached {CL_TYPE_A} l_gen_type_i.generics[1] as l_elt_type_i then
-							if attached a_node.call as l_call_access then
-								l_params := l_call_access.parameters
-								if l_params /= Void and then l_params.count = 1 then
-									if attached parameter_evaluation (l_params.first) as r then
-										l_dv := r.value
-									end
-									if l_dv /= Void and then l_dv.is_type_integer_32 then
-										create_special_any_instance (resolved_real_type_in_context (l_type_i), l_dv.as_dump_value_basic.value_integer_32)
-									end
-								end
-							end
-						end
+				if
+					attached {GEN_TYPE_A} l_type_i as l_gen_type_i and then
+					l_gen_type_i.generics.valid_index (1) and then
+					attached {CL_TYPE_A} l_gen_type_i.generics[1] as l_elt_type_i and then
+					attached a_node.call as l_call_access and then
+					attached l_call_access.parameters as l_params and then
+					l_params.count = 1
+				then
+					if attached parameter_evaluation (l_params.first) as r then
+						l_dv := r.value
+					end
+					if l_dv /= Void and then l_dv.is_type_integer_32 then
+						create_special_any_instance (resolved_real_type_in_context (l_type_i), l_dv.as_dump_value_basic.value_integer_32)
 					end
 				end
 				if error_occurred or else l_dv = Void then
@@ -2557,7 +2569,8 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	ca_ignore: "CA033", "CA033: too large class"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

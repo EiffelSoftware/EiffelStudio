@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Visitor for BYTE_NODE objects which does nothing."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -202,6 +202,11 @@ feature {BYTE_NODE} -- Visitors
 		do
 		end
 
+	process_case_expression_b (b: CASE_EXPRESSION_B)
+			-- <Precursor>
+		do
+		end
+
 	process_char_const_b (a_node: CHAR_CONST_B)
 			-- Process `a_node'.
 		do
@@ -299,6 +304,11 @@ feature {BYTE_NODE} -- Visitors
 
 	process_inspect_b (a_node: INSPECT_B)
 			-- Process `a_node'.
+		do
+		end
+
+	process_inspect_expression_b (b: INSPECT_EXPRESSION_B)
+			-- <Precursor>
 		do
 		end
 
@@ -502,7 +512,8 @@ feature {BYTE_NODE} -- Visitors
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	ca_ignore: "CA033", "CA033: too large class"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

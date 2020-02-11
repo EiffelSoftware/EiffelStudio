@@ -1267,6 +1267,14 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	is_binary_search_supported (a_name: STRING_32): BOOLEAN
+			-- Is binary search supported with `a_name`?
+		require
+			a_name_set: a_name /= Void
+		do
+		 	Result := (create {like name_type}.make (a_name)).is_binary_searchable
+		end
+
 	mouse_wheel_scroll_full_page_internal: BOOLEAN = False
 
 	mouse_wheel_scroll_size_internal: INTEGER = 3
@@ -1382,7 +1390,7 @@ feature {NONE} -- String matching
 				then
 					l_full_list := full_list
 					create l_name_for_comparison.make (b)
-					if l_name_for_comparison.is_binary_searchable then
+					if is_binary_search_supported (b) then
 							-- Faster way getting to the position if binary search is appliable.
 						current_index := pos_of_first_greater (l_full_list, l_name_for_comparison)
 					else
@@ -1445,14 +1453,16 @@ feature {NONE} -- String matching
 				not l_full_list.is_empty and then
 				a_name /= Void and then not a_name.is_empty
 			then
-				create for_search.make (a_name)
-				if for_search.is_binary_searchable then
+				if is_binary_search_supported (a_name) then
 					create Result.make (2, 1)
 					from
 						create for_search.make (a_name)
 						l_index_offset := pos_of_first_greater (l_full_list, for_search) - 1
 					until
-						l_full_list.upper < (l_index_offset + cnt + 1) or else not l_full_list.item (l_index_offset + cnt + 1).begins_with (a_name)
+						l_full_list.upper < (l_index_offset + cnt + 1)
+						or else
+							not attached l_full_list.item (l_index_offset + cnt + 1) as l_list_item
+							or else not l_list_item.begins_with (a_name)
 					loop
 						cnt := cnt + 1
 					end
@@ -1546,7 +1556,7 @@ invariant
 	choice_list_attached: choice_list /= Void
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

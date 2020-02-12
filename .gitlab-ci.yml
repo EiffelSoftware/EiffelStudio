@@ -16,6 +16,7 @@ install_windows:
     - shared-windows
     - windows
     - windows-1809
+  when: manual
   script:
     - '& "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat" x86_amd64'
     - '& "$env:CI_PROJECT_DIR\bin\install.bat" -v msc'
@@ -28,6 +29,7 @@ install_linux:
   stage: integration
   tags:
     - linux
+  when: manual
   script:
     - cd $CI_PROJECT_DIR
     - export current_dir=$PWD ; echo current_dir=$current_dir ; cd ..

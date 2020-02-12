@@ -1,32 +1,17 @@
 variables:
   EIFFEL_SRC: '$CI_PROJECT_DIR/Src'
 
-integration:
-  stage: integration
+build:
+  stage: build
   script:
-    - Write-Host "Just to define the 'integration' stage name"
+    - Write-Host "Just to define the 'build' stage name"
   except:
     refs:
       - tags
       - branches
 
-install_windows:
-  stage: integration
-  tags:
-    - shared-windows
-    - windows
-    - windows-1809
-  when: manual
-  script:
-    - '& "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat" x86_amd64'
-    - '& "$env:CI_PROJECT_DIR\bin\install.bat" -v msc'
-  except:
-    refs:
-      - tags
-      - branches
-
-install_linux:
-  stage: integration
+linux_build_job:
+  stage: build
   tags:
     - linux
   when: manual
@@ -46,7 +31,12 @@ install_linux:
     - export COMPILEALL_DIR=library 
     - export COMPILEALL_IGNORE=scripts/CI/compile_all/stable_others.ini
     - sh $EIFFEL_SRC/scripts/CI/travis-ci-compile_all.sh $EIFFEL_SRC/$COMPILEALL_DIR $EIFFEL_SRC/$COMPILEALL_IGNORE
+  only:
+    refs:
+      - master
+      - merge_requests
+      - schedules
 
 stages:
-  - integration
+  - build
 

@@ -17,13 +17,13 @@ linux_build_job:
   when: manual
   script:
     - cd $CI_PROJECT_DIR
-    - export current_dir=$PWD ; echo current_dir=$current_dir ; cd ..
+    - export dir=`pwd` ; echo dir=$dir ; cd ..
     - curl -sSL https://www.eiffel.org/setup/install.sh | bash -s nightly > eiffel.rc
     - source ./eiffel.rc
     - echo `ec -version`
-    - cd $current_dir
-    - export EIFFEL_SRC=$PWD/Src
-    - export EWEASEL=$PWD/eweasel
+    - cd $dir
+    - export EIFFEL_SRC=$dir/Src
+    - export EWEASEL=$dir/eweasel
     - export ISE_LIBRARY=$EIFFEL_SRC
     - export XEBRA_LIBRARY=$EIFFEL_SRC/framework/web/xebra/eiffel_projects/library
     - echo Check projects compilation status...
@@ -37,6 +37,53 @@ linux_build_job:
       - merge_requests
       - schedules
 
+linux_compile_all_job:
+  stage: testing
+  tags:
+    - linux
+  when: manual
+  script:
+    - cd $CI_PROJECT_DIR
+    - export dir=`pwd` ; echo dir=$dir ; cd ..
+    - source ./eiffel.rc
+    - echo `ec -version`
+    - cd $dir
+    - export EIFFEL_SRC=$dir/Src
+    - export EWEASEL=$dir/eweasel
+    - export ISE_LIBRARY=$EIFFEL_SRC
+    - export XEBRA_LIBRARY=$EIFFEL_SRC/framework/web/xebra/eiffel_projects/library
+    - echo Check projects compilation status...
+    - export COMPILEALL_DIR=library 
+    - export COMPILEALL_IGNORE=scripts/CI/compile_all/stable_others.ini
+    - sh $EIFFEL_SRC/scripts/CI/travis-ci-compile_all.sh $EIFFEL_SRC/$COMPILEALL_DIR $EIFFEL_SRC/$COMPILEALL_IGNORE
+  only:
+    refs:
+      - master
+      - merge_requests
+      - schedules
+
+linux_eweasel_job:
+  stage: testing
+  tags:
+    - linux
+  when: manual
+  script:
+    - cd $CI_PROJECT_DIR
+    - export dir=`pwd` ; echo dir=$dir ; cd ..
+    - source ./eiffel.rc
+    - echo `ec -version`
+    - cd $dir
+    - export EIFFEL_SRC=$dir/Src
+    - export ISE_LIBRARY=$EIFFEL_SRC
+    - export EWEASEL=$EIFFEL_SRC/../eweasel
+    - sh $EIFFEL_SRC/scripts/CI/ci-eweasel.sh $dir $dir/test_dir
+  only:
+    refs:
+      - master
+      - merge_requests
+      - schedules
+
 stages:
   - build
+  - testing
 

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Abstract representation of an interval in an inspect clause."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -160,7 +160,7 @@ feature -- C code generation
 
 feature -- IL code generation
 
-	generate_il (a_generator: IL_NODE_GENERATOR; min_value, max_value: like lower; is_min_included, is_max_included: BOOLEAN; labels: ARRAY [detachable IL_LABEL]; instruction: INSPECT_B)
+	generate_il (a_generator: IL_NODE_GENERATOR; min_value, max_value: like lower; is_min_included, is_max_included: BOOLEAN; labels: ARRAY [detachable IL_LABEL]; multi_branch: ABSTRACT_INSPECT_B [ABSTRACT_CASE_B [BYTE_NODE], BYTE_NODE])
 			-- Generate code for single interval of `instruction' assuming that inspect value is in range `min_value'..`max_value'
 			-- where bounds are included in interval according to values of `is_min_included' and `is_max_included'.
 			-- Use `labels' to branch to the corresponding code.
@@ -181,7 +181,7 @@ feature -- IL code generation
 					else_label := label
 				else
 						-- Test upper bound
-					a_generator.generate_il_load_value (instruction)
+					a_generator.generate_il_load_value (multi_branch)
 					upper.il_load_value
 					if label = Void then
 						il_generator.branch_on_condition ({MD_OPCODES}.bgt, else_label)
@@ -192,7 +192,7 @@ feature -- IL code generation
 			elseif is_max_equal_upper then
 					-- No need to test upper bound
 					-- Test lower bound
-				a_generator.generate_il_load_value (instruction)
+				a_generator.generate_il_load_value (multi_branch)
 				lower.il_load_value
 				if label = Void then
 					il_generator.branch_on_condition ({MD_OPCODES}.blt, else_label)
@@ -202,7 +202,7 @@ feature -- IL code generation
 			elseif lower.is_equal (upper) then
 					-- This is a single value
 					-- Test for equality
-				a_generator.generate_il_load_value (instruction)
+				a_generator.generate_il_load_value (multi_branch)
 				lower.il_load_value
 				if label = Void then
 					il_generator.branch_on_condition ({MD_OPCODES}.bne_un, else_label)
@@ -213,7 +213,7 @@ feature -- IL code generation
 					-- General case
 					-- Generate unsigned test `val - lower <= upper - lower' which is equivalent to
 					-- signed test `lower <= val and val <= upper'.
-				a_generator.generate_il_load_value (instruction)
+				a_generator.generate_il_load_value (multi_branch)
 				lower.il_load_value
 				il_generator.generate_binary_operator (il_minus, True)
 				upper.il_load_difference (lower)
@@ -224,7 +224,7 @@ feature -- IL code generation
 				end
 			end
 			if label = Void then
-				a_generator.generate_il_when_part (instruction, case_index, labels)
+				a_generator.generate_il_when_part (multi_branch, case_index, labels)
 			else
 				il_generator.branch_to (else_label)
 			end
@@ -237,7 +237,7 @@ invariant
 	valid_range: lower <= upper
 
 note
-	copyright:	"Copyright (c) 1984-2006, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -250,22 +250,22 @@ note
 			(available at the URL listed under "license" above).
 			
 			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful,	but
+			distributed in the hope that it will be useful, but
 			WITHOUT ANY WARRANTY; without even the implied warranty
 			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the	GNU General Public License for more details.
+			See the GNU General Public License for more details.
 			
 			You should have received a copy of the GNU General Public
 			License along with Eiffel Software's Eiffel Development
 			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301  USA
+			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 		]"
 	source: "[
-			 Eiffel Software
-			 356 Storke Road, Goleta, CA 93117 USA
-			 Telephone 805-685-1006, Fax 805-685-6869
-			 Website http://www.eiffel.com
-			 Customer support http://support.eiffel.com
+			Eiffel Software
+			5949 Hollister Ave., Goleta, CA 93117 USA
+			Telephone 805-685-1006, Fax 805-685-6869
+			Website http://www.eiffel.com
+			Customer support http://support.eiffel.com
 		]"
 
 end

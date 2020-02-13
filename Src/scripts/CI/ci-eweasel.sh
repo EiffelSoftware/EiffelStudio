@@ -30,6 +30,7 @@ echo Clean eweasel workspace
 if [ -d $ISE_PRECOMP ]; then
 	\rm -rd $ISE_PRECOMP
 fi
+mkdir $ISE_PRECOMP
 
 
 #Prepare the precompile libraries

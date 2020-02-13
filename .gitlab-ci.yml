@@ -1,3 +1,5 @@
+image: gcc
+
 before_script:
   - apt-get update -qq && apt-get install -y -qq --no-install-recommends ca-certificates curl bzip2 gcc make libxtst-dev libgtk2.0-dev libssl-dev 
   - cd $CI_PROJECT_DIR
@@ -10,7 +12,7 @@ variables:
   EIFFEL_SRC: '$CI_PROJECT_DIR/Src'
 
 linux_compile_all_job:
-  stage: testing
+  stage: test
   tags:
     - linux
   when: manual
@@ -32,7 +34,7 @@ linux_compile_all_job:
       - schedules
 
 linux_eweasel_job:
-  stage: testing
+  stage: test
   tags:
     - linux
   when: manual
@@ -50,5 +52,5 @@ linux_eweasel_job:
       - schedules
 
 stages:
-  - testing
+  - test
 

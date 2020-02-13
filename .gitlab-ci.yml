@@ -16,14 +16,7 @@ linux_compile_all_job:
   when: manual
   script:
     - cd $CI_PROJECT_DIR
-    - export EIFFEL_SRC=$dir/Src
-    - export EWEASEL=$dir/eweasel
-    - export ISE_LIBRARY=$EIFFEL_SRC
-    - cd $CI_PROJECT_DIR
-    - export dir=`pwd` ; echo dir=$dir ; cd ..
-    - source ./eiffel.rc
-    - echo `ec -version`
-    - cd $dir
+    - export dir=$CI_PROJECT_DIR
     - export EIFFEL_SRC=$dir/Src
     - export EWEASEL=$dir/eweasel
     - export ISE_LIBRARY=$EIFFEL_SRC
@@ -45,6 +38,7 @@ linux_eweasel_job:
   when: manual
   script:
     - cd $CI_PROJECT_DIR
+    - export dir=$CI_PROJECT_DIR
     - export EIFFEL_SRC=$dir/Src
     - export ISE_LIBRARY=$EIFFEL_SRC
     - export EWEASEL=$EIFFEL_SRC/../eweasel

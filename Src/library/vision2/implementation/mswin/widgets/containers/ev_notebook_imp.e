@@ -555,11 +555,11 @@ feature {NONE} -- WEL Implementation
 
 	hide_current_selection
 			-- Hide the currently selected page.
-		local
-			ww: detachable EV_WIDGET_IMP
 		do
-			ww ?= selected_window
-			if ww /= Void and then ww.exists then
+			if 
+				attached {EV_WIDGET_IMP} selected_window as ww and then
+				ww.exists 
+			then
 				ww.show_window (ww.wel_item, Sw_hide)
 			end
 		end
@@ -574,12 +574,15 @@ feature {NONE} -- WEL Implementation
 	on_tcn_selchange
 			-- Selection has changed.
 			-- Shows the current selected page by default.
-		local
-			ww: detachable EV_WIDGET_IMP
 		do
-			ww ?= selected_window
-			check ww /= Void then end
-			ww.show_window (ww.wel_item, sw_show)
+			if 
+				attached {EV_WIDGET_IMP} selected_window as ww and then
+				ww.exists
+			then
+				ww.show_window (ww.wel_item, sw_show)
+			else
+				check has_selected_window: selected_window /= Void end
+			end
 
 			if selection_actions_internal /= Void then
 				selection_actions.call (Void)

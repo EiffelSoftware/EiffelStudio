@@ -8501,9 +8501,6 @@ feature {NONE} -- Visitor
 					s := context.scope
 					c.process (Current)
 					context.set_scope (s)
-					if attached last_expressions_type as ts and then attached last_type as t then
-						ts.extend (t)
-					end
 				end
 			else
 						-- Collect all intervals in an array
@@ -8523,9 +8520,6 @@ feature {NONE} -- Visitor
 						s := context.scope
 						c.process (Current)
 						context.set_scope (s)
-						if attached last_expressions_type as ts and then attached last_type as t then
-							ts.extend (t)
-						end
 						reset_byte_node
 					end
 				else
@@ -8556,9 +8550,6 @@ feature {NONE} -- Visitor
 						c.process (Current)
 						context.set_scope (s)
 						l_case := f.new_case (l_tmp, last_byte_node)
-						if attached last_expressions_type as ts and then attached last_type as t then
-							ts.extend (t)
-						end
 					else
 						l_case := f.new_case (l_tmp, Void)
 					end
@@ -8582,6 +8573,9 @@ feature {NONE} -- Visitor
 			-- <Precursor>
 		do
 			process_case_abstraction (a, multi_branch_expression_factory)
+			if attached last_expressions_type as ts and then attached last_type as t then
+				ts.extend (t)
+			end
 		end
 
 	process_ensure_as (l_as: ENSURE_AS)

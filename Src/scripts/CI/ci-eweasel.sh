@@ -14,7 +14,7 @@ export PATH=$PATH:$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin:$EWEASEL/spec/$ISE_P
 
 echo "  - hack the Eiffel installation to replace ec by ecb"
 mv $ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec $ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec-dist
-ln -s $ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ecb $NEW_ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec
+ln -s $ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ecb $ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/ec
 echo "  - set EC_NAME=ecb"
 export EC_NAME=ecb
 

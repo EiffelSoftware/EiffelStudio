@@ -1,3 +1,11 @@
+before_script:
+  - apt-get update -qq && apt-get install -y -qq --no-install-recommends ca-certificates curl bzip2 gcc make libxtst-dev libgtk2.0-dev libssl-dev 
+  - cd $CI_PROJECT_DIR
+  - export dir=`pwd` ; echo dir=$dir ; cd ..
+  - curl -sSL https://www.eiffel.org/setup/install.sh | bash -s nightly > eiffel.rc
+  - source ./eiffel.rc
+  - echo `ec -version`
+
 variables:
   EIFFEL_SRC: '$CI_PROJECT_DIR/Src'
 
@@ -8,10 +16,6 @@ linux_compile_all_job:
   when: manual
   script:
     - cd $CI_PROJECT_DIR
-    - export dir=`pwd` ; echo dir=$dir ; cd ..
-    - curl -sSL https://www.eiffel.org/setup/install.sh | bash -s nightly > eiffel.rc
-    - source ./eiffel.rc
-    - echo `ec -version`
     - export EIFFEL_SRC=$dir/Src
     - export EWEASEL=$dir/eweasel
     - export ISE_LIBRARY=$EIFFEL_SRC
@@ -41,10 +45,6 @@ linux_eweasel_job:
   when: manual
   script:
     - cd $CI_PROJECT_DIR
-    - export dir=`pwd` ; echo dir=$dir ; cd ..
-    - curl -sSL https://www.eiffel.org/setup/install.sh | bash -s nightly > eiffel.rc
-    - source ./eiffel.rc
-    - echo `ec -version`
     - export EIFFEL_SRC=$dir/Src
     - export ISE_LIBRARY=$EIFFEL_SRC
     - export EWEASEL=$EIFFEL_SRC/../eweasel

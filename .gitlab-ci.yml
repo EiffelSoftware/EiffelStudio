@@ -1,17 +1,8 @@
 variables:
   EIFFEL_SRC: '$CI_PROJECT_DIR/Src'
 
-build:
-  stage: build
-  script:
-    - Write-Host "Just to define the 'build' stage name"
-  except:
-    refs:
-      - tags
-      - branches
-
-linux_build_job:
-  stage: build
+linux_compile_all_job:
+  stage: testing
   tags:
     - linux
   when: manual
@@ -21,28 +12,9 @@ linux_build_job:
     - curl -sSL https://www.eiffel.org/setup/install.sh | bash -s nightly > eiffel.rc
     - source ./eiffel.rc
     - echo `ec -version`
-    - cd $dir
     - export EIFFEL_SRC=$dir/Src
     - export EWEASEL=$dir/eweasel
     - export ISE_LIBRARY=$EIFFEL_SRC
-    - export XEBRA_LIBRARY=$EIFFEL_SRC/framework/web/xebra/eiffel_projects/library
-    - echo Check projects compilation status...
-    - cd $EIFFEL_SRC/library
-    - export COMPILEALL_DIR=library 
-    - export COMPILEALL_IGNORE=scripts/CI/compile_all/stable_others.ini
-    - sh $EIFFEL_SRC/scripts/CI/travis-ci-compile_all.sh $EIFFEL_SRC/$COMPILEALL_DIR $EIFFEL_SRC/$COMPILEALL_IGNORE
-  only:
-    refs:
-      - master
-      - merge_requests
-      - schedules
-
-linux_compile_all_job:
-  stage: testing
-  tags:
-    - linux
-  when: manual
-  script:
     - cd $CI_PROJECT_DIR
     - export dir=`pwd` ; echo dir=$dir ; cd ..
     - source ./eiffel.rc
@@ -70,9 +42,9 @@ linux_eweasel_job:
   script:
     - cd $CI_PROJECT_DIR
     - export dir=`pwd` ; echo dir=$dir ; cd ..
+    - curl -sSL https://www.eiffel.org/setup/install.sh | bash -s nightly > eiffel.rc
     - source ./eiffel.rc
     - echo `ec -version`
-    - cd $dir
     - export EIFFEL_SRC=$dir/Src
     - export ISE_LIBRARY=$EIFFEL_SRC
     - export EWEASEL=$EIFFEL_SRC/../eweasel
@@ -84,6 +56,5 @@ linux_eweasel_job:
       - schedules
 
 stages:
-  - build
   - testing
 

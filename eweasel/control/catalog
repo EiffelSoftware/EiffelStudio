@@ -2543,7 +2543,7 @@ test	bracket-expression-on-current	vwbr101  tcf pass validity vwbr anchored_type
 test	validity-vwce-basic			vwce001  tcf pass validity vwce conditional expression
 test	validity-vwce-type-compatibility	vwce002  tcf pass validity vwce conditional expression conformance compatibility
 
-test	validity-vwmq-string-conversion	vwmq001  tcf pass vaildity vwmq
+test	validity-vwmq-string-conversion	vwmq001  tcf pass validity vwmq
 
 -- Systematic Lace validity tests
 

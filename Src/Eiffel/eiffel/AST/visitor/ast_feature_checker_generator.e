@@ -1232,6 +1232,7 @@ feature {NONE} -- Implementation
 			w: like {ERROR_HANDLER}.warning_level
 			has_vucr: BOOLEAN
 			l_is_qualified_call: BOOLEAN
+			old_expressions_type: like last_expressions_type
 		do
 				-- Reset any previously reported VUAR error.
 			last_vuar_error := Void
@@ -1399,8 +1400,10 @@ feature {NONE} -- Implementation
 							if l_parameters /= Void then
 								l_actual_count := l_parameters.count
 								current_target_type := Void
+								old_expressions_type := last_expressions_type
 								process_expressions_list (l_parameters)
 								l_arg_types := last_expressions_type
+								last_expressions_type := old_expressions_type
 								if l_needs_byte_node then
 									l_arg_nodes ?= last_byte_node
 								end
@@ -2278,7 +2281,9 @@ feature {NONE} -- Visitor
 			l_tuple_type: TUPLE_TYPE_A
 			l_list: BYTE_LIST [EXPR_B]
 			l_error_level: NATURAL_32
+			old_expressions_type: like last_expressions_type
 		do
+			old_expressions_type := last_expressions_type
 			reset_for_unqualified_call_checking
 
 				-- Type check expression list
@@ -2305,6 +2310,7 @@ feature {NONE} -- Visitor
 			else
 				reset_types
 			end
+			last_expressions_type := old_expressions_type
 		ensure then
 			last_tuple_type_set_if_no_error:
 				error_level /= old error_level or else
@@ -2364,6 +2370,7 @@ feature {NONE} -- Visitor
 			implicit_type: GEN_TYPE_A
 			default_element_type: TYPE_A
 			default_array_type: GEN_TYPE_A
+			old_expressions_type: like last_expressions_type
 		do
 			l_context := context
 			l_current_class := l_context.current_class
@@ -2411,8 +2418,10 @@ feature {NONE} -- Visitor
 					-- Type check expression list.
 					-- Use element type (if any) as a target type.
 				current_target_type := l_type_a
+				old_expressions_type := last_expressions_type
 				process_expressions_list (l_as.expressions)
 				l_last_types := last_expressions_type
+				last_expressions_type := old_expressions_type
 			end
 
 			if attached l_last_types then
@@ -7059,7 +7068,10 @@ feature {NONE} -- Visitor
 			l_expression_type: detachable TYPE_A
 			l_error_level: like error_level
 			l_type_list: like last_expressions_type
+			old_expressions_type: like last_expressions_type
 		do
+			old_expressions_type := last_expressions_type
+			last_expressions_type := Void
 			l_error_level := error_level
 			l_needs_byte_node := is_byte_node_enabled
 			break_point_slot_count := break_point_slot_count + 1
@@ -7140,6 +7152,7 @@ feature {NONE} -- Visitor
 			else
 				reset_types
 			end
+			last_expressions_type := old_expressions_type
 		end
 
 	process_inspect_abstraction
@@ -9230,7 +9243,6 @@ feature {NONE} -- Implementation
 		local
 			l_cursor: INTEGER
 			l_list: BYTE_LIST [EXPR_B]
-			l_expr: EXPR_B
 			l_type_list: like last_expressions_type
 			i, nb: INTEGER
 			l_cur_type: like current_target_type
@@ -9253,9 +9265,10 @@ feature {NONE} -- Implementation
 					reset_for_unqualified_call_checking
 					current_target_type := l_cur_type
 					l_as.item.process (Current)
-					l_expr ?= last_byte_node
-					l_list.extend (l_expr)
-					l_type_list.extend (last_type)
+					if attached {EXPR_B} last_byte_node as l_expr then
+						l_list.extend (l_expr)
+						l_type_list.extend (last_type)
+					end
 					i := i + 1
 					l_as.forth
 				end
@@ -9297,10 +9310,8 @@ feature {NONE} -- Implementation
 		local
 			l_cursor: INTEGER
 			l_list: BYTE_LIST [EXPR_B]
-			l_expr: EXPR_B
 			l_type_list: like last_expressions_type
 			i, nb: INTEGER
-			l_tuple_type: TUPLE_TYPE_A
 			l_types: ARRAYED_LIST [TYPE_A]
 			l_error_level: NATURAL_32
 		do
@@ -9310,8 +9321,7 @@ feature {NONE} -- Implementation
 			i := 1
 			nb := l_as.count
 			create l_type_list.make (nb)
-			l_tuple_type ?= current_target_type
-			if l_tuple_type /= Void then
+			if attached {TUPLE_TYPE_A} current_target_type as l_tuple_type then
 				l_types := l_tuple_type.generics
 			end
 			if is_byte_node_enabled then
@@ -9322,15 +9332,13 @@ feature {NONE} -- Implementation
 					i = nb
 				loop
 					reset_for_unqualified_call_checking
-					if l_types /= Void and then l_types.valid_index (i) then
-						current_target_type := l_types.i_th (i)
-					else
-						current_target_type := Void
-					end
+					current_target_type :=
+						if attached l_types and then l_types.valid_index (i) then l_types [i] else Void end
 					l_as.item.process (Current)
-					l_expr ?= last_byte_node
-					l_list.extend (l_expr)
-					l_type_list.extend (last_type)
+					if attached {EXPR_B} last_byte_node as l_expr then
+						l_list.extend (l_expr)
+						l_type_list.extend (last_type)
+					end
 					i := i + 1
 					l_as.forth
 				end
@@ -9342,11 +9350,8 @@ feature {NONE} -- Implementation
 					i = nb
 				loop
 					reset_for_unqualified_call_checking
-					if l_types /= Void and then l_types.valid_index (i) then
-						current_target_type := l_types.i_th (i)
-					else
-						current_target_type := Void
-					end
+					current_target_type :=
+						if attached l_types and then l_types.valid_index (i) then l_types [i] else Void end
 					l_as.item.process (Current)
 					if attached {LOCAL_TYPE_A} last_type as t and then attached t.minimum as m then
 							-- Use most appropriate type instead of a variable one.

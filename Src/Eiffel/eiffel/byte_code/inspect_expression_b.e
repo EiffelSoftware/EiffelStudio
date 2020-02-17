@@ -118,10 +118,6 @@ feature -- Code generation: C
 
 	enlarged: INSPECT_EXPRESSION_B
 			-- <Precursor>
-		local
-			l_value: VALUE_I
-			l_elseif_b: ELSIF_EXPRESSION_B
-			l_expr: EXPR_B
 		do
 			switch := switch.enlarged
 			if attached case_list as c then

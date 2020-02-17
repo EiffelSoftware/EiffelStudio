@@ -89,8 +89,6 @@ feature -- Access
 		end
 
 	on_completion
-		local
-			sess: ES_ACCOUNT_SESSION
 		do
 			debug ("es_cloud")
 				if attached logger_s.service as logger_service then
@@ -155,7 +153,7 @@ feature -- Access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

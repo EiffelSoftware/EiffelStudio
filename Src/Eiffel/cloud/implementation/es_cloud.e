@@ -184,7 +184,6 @@ feature -- Event
 	on_project_loaded
 		local
 			l_title: STRING_32
-			sh: SHARED_WORKBENCH
 		do
 			if attached active_session as sess then
 				if
@@ -565,8 +564,6 @@ feature -- Updating
 		end
 
 	refresh_token (a_token: ES_ACCOUNT_ACCESS_TOKEN; acc: ES_ACCOUNT)
-		local
-			r: ES_CLOUD_ASYNC_REFRESH
 		do
 			if attached a_token.refresh_key as k then
 				if attached web_api.refreshing_token (a_token.token, k) as tok then

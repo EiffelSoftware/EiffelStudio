@@ -1,18 +1,29 @@
-note
+﻿note
 	description: "Warning detected when parsing the Ace file specified in LACE."
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
-	revision: "$Revision $"
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class LACE_WARNING
 
 inherit
 	COMPILER_WARNING
+		redefine
+			has_associated_file
+		end
 
 	REFACTORING_HELPER
 		export
 			{NONE} all
+		end
+
+feature -- Status report
+
+	has_associated_file: BOOLEAN
+			-- <Precursor>
+		do
+			Result := attached associated_class
 		end
 
 feature -- Property
@@ -24,13 +35,15 @@ feature -- Property
 		end
 
 	file_name: like {ERROR}.file_name
-			-- File in which error occurs.
+			-- <Precursor>
 		do
-			to_implement ("May be we will never implement this when we go away from Lace?")
+			if attached associated_class as c then
+				Result := c.file_name
+			end
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

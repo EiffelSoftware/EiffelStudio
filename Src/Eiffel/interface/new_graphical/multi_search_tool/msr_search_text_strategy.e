@@ -193,7 +193,7 @@ feature -- Basic operations
 	launch
 			-- Launch searching.
 		local
-			l_compile_string, l_to_be_searched: STRING_8
+			l_compile_string, l_to_be_searched: READABLE_STRING_GENERAL
 			l_keyword: STRING_32
 		do
 			create item_matched_internal.make (0)
@@ -213,8 +213,8 @@ feature -- Basic operations
 				-- Gobo only supoorts partial Unicode at the moment.
 				-- Plus using UC_STRING is very slow. So we still do not
 				-- support Uncode search.
-			l_to_be_searched := text_to_be_searched.as_string_8
-			l_compile_string := l_keyword.as_string_8
+			l_to_be_searched := text_to_be_searched
+			l_compile_string := l_keyword
 			pcre_regex.compile (l_compile_string)
 			if pcre_regex.is_compiled then
 				pcre_regex.match (l_to_be_searched)
@@ -271,7 +271,7 @@ feature {NONE} -- Implementation
 								 text_to_be_searched_internal,
 								 l_utf32_start,
 								 l_utf32_end)
-			new_item.set_text (pcre_regex.captured_substring (0).as_string_32)
+			new_item.set_text (pcre_regex.unicode_captured_substring (0))
 			new_item.set_pcre_regex (pcre_regex)
 			if data /= Void then
 				new_item.set_data (data)
@@ -313,7 +313,7 @@ feature {NONE} -- Implementation
 			until
 				i >= pcre_regex.match_count
 			loop
-				new_item.captured_submatches.extend (pcre_regex.captured_substring (i))
+				new_item.captured_submatches.extend (pcre_regex.unicode_captured_substring (i))
 				i := i + 1
 			end
 			item_matched_internal.extend (new_item)
@@ -341,7 +341,7 @@ invariant
 	is_launched implies (class_name_internal /= Void)
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

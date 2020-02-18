@@ -27,9 +27,9 @@ feature {NONE} -- Initialization
 			create long_description_info.make
 			create fixes.make
 				-- Use a plain rule title by default.
-			title_generator := agent (t: TEXT_FORMATTER) do t.add (rule.title) end
+			title_generator := agent  (t: TEXT_FORMATTER) do t.add (rule.title) end
 				-- Just delegate to the rule by default. The rule knows about its violations.
-			description_generator := agent rule.format_violation_description (Current, ?)
+			description_generator := agent rule.format_violation_description(Current, ?)
 		ensure
 			rule_set: rule = r
 		end
@@ -166,7 +166,7 @@ feature -- String representation
 	out: like {ANY}.out
 			-- <Precursor>
 		do
-			create Result.make_from_string (severity.name)
+			create Result.make_from_string ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (severity.name))
 			Result.append_character (';')
 			Result.append (affected_class.name)
 			Result.append_character (';')
@@ -178,43 +178,43 @@ feature -- String representation
 				Result.append_character (';')
 			end
 			Result.append_character (';')
-			Result.append (rule.title)
+			Result.append ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (rule.title))
 			Result.append_character (';')
-			Result.append (rule.id)
+			Result.append ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (rule.id))
 			Result.append_character (';')
 			Result.append_integer (rule.severity_score.value)
 		end
 
 ;note
-	copyright:	"Copyright (c) 2014-2017, Eiffel Software"
-	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
-	licensing_options:	"http://www.eiffel.com/licensing"
+	copyright: "Copyright (c) 2014-2020, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
-			This file is part of Eiffel Software's Eiffel Development Environment.
-			
-			Eiffel Software's Eiffel Development Environment is free
-			software; you can redistribute it and/or modify it under
-			the terms of the GNU General Public License as published
-			by the Free Software Foundation, version 2 of the License
-			(available at the URL listed under "license" above).
-			
-			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful, but
-			WITHOUT ANY WARRANTY; without even the implied warranty
-			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the GNU General Public License for more details.
-			
-			You should have received a copy of the GNU General Public
-			License along with Eiffel Software's Eiffel Development
-			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
-		]"
+		This file is part of Eiffel Software's Eiffel Development Environment.
+		
+		Eiffel Software's Eiffel Development Environment is free
+		software; you can redistribute it and/or modify it under
+		the terms of the GNU General Public License as published
+		by the Free Software Foundation, version 2 of the License
+		(available at the URL listed under "license" above).
+		
+		Eiffel Software's Eiffel Development Environment is
+		distributed in the hope that it will be useful, but
+		WITHOUT ANY WARRANTY; without even the implied warranty
+		of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+		
+		You should have received a copy of the GNU General Public
+		License along with Eiffel Software's Eiffel Development
+		Environment; if not, write to the Free Software Foundation,
+		Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+	]"
 	source: "[
-			Eiffel Software
-			5949 Hollister Ave., Goleta, CA 93117 USA
-			Telephone 805-685-1006, Fax 805-685-6869
-			Website http://www.eiffel.com
-			Customer support http://support.eiffel.com
-		]"
+		Eiffel Software
+		5949 Hollister Ave., Goleta, CA 93117 USA
+		Telephone 805-685-1006, Fax 805-685-6869
+		Website http://www.eiffel.com
+		Customer support http://support.eiffel.com
+	]"
 
 end

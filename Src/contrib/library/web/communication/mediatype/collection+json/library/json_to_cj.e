@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Convert JSON string to Collection+JSON object."
 	author: "$Author$"
 	date: "$Date$"
@@ -8,8 +8,6 @@ class
 	JSON_TO_CJ
 
 inherit
-	ANY
-
 	CJ_TOKENS
 		export
 			{NONE} all
@@ -24,7 +22,6 @@ feature -- Access
 
 	to_collection (jv: detachable JSON_VALUE): detachable CJ_COLLECTION
 		local
-			l_classname: STRING
 			j: detachable JSON_OBJECT
 			i: INTEGER
 			l_version: detachable STRING_32
@@ -128,32 +125,33 @@ feature -- Access
 		local
 			i: INTEGER
 		do
-			if attached {JSON_OBJECT} jv as j then
-				if attached {JSON_STRING} j.item (href_key) as js then
-					create Result.make (js.unescaped_string_32)
-					if attached {JSON_ARRAY} j.item (data_key) as ja then
-						from
-							i := 1
-						until
-							i > ja.count
-						loop
-							if attached to_data (ja [i]) as l_data then
-								Result.add_data (l_data)
-							end
-							i := i + 1
+			if
+				attached {JSON_OBJECT} jv as j and then
+				attached {JSON_STRING} j.item (href_key) as js
+			then
+				create Result.make (js.unescaped_string_32)
+				if attached {JSON_ARRAY} j.item (data_key) as ja then
+					from
+						i := 1
+					until
+						i > ja.count
+					loop
+						if attached to_data (ja [i]) as l_data then
+							Result.add_data (l_data)
 						end
+						i := i + 1
 					end
-					if attached {JSON_ARRAY} j.item (links_key) as ja then
-						from
-							i := 1
-						until
-							i > ja.count
-						loop
-							if attached to_link (ja [i]) as l_link then
-								Result.add_link (l_link)
-							end
-							i := i + 1
+				end
+				if attached {JSON_ARRAY} j.item (links_key) as ja then
+					from
+						i := 1
+					until
+						i > ja.count
+					loop
+						if attached to_link (ja [i]) as l_link then
+							Result.add_link (l_link)
 						end
+						i := i + 1
 					end
 				end
 			end
@@ -292,6 +290,6 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2014, Javier Velilla, Jocelyn Fiat and others"
+	copyright: "2011-2020, Javier Velilla, Jocelyn Fiat and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

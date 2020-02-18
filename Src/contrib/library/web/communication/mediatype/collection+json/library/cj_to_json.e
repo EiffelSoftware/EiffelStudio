@@ -1,6 +1,5 @@
-note
+﻿note
 	description: "Convert Collection+JSON object to JSON content"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -8,8 +7,6 @@ class
 	CJ_TO_JSON
 
 inherit
-	ANY
-
 	CJ_TOKENS
 		export
 			{NONE} all
@@ -98,8 +95,6 @@ feature -- Access
 		end
 
 	query_to_json (a_query: CJ_QUERY): JSON_OBJECT
-		local
-			ja: JSON_ARRAY
 		do
 			create Result.make_with_capacity (5)
 			Result.put_string (a_query.href, href_key)
@@ -158,6 +153,6 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2014, Javier Velilla, Jocelyn Fiat and others"
+	copyright: "2011-2020, Javier Velilla, Jocelyn Fiat and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

@@ -522,12 +522,10 @@ feature {NONE} -- List processing
 								print_space_separator
 							end
 						when list_separator_delimiting_space then
-							if i > 1 then
-								if new_line_chars.has (last_printed) then
-									print_indent
-								else
-									print_space_separator
-								end
+							if new_line_chars.has (last_printed) then
+								print_indent
+							elseif i > 1 then
+								print_space_separator
 							end
 						end
 
@@ -1462,24 +1460,26 @@ feature {CLASS_AS} -- Instructions
 			print_compound (l_as.compound)
 		end
 
-	process_inspect_as (l_as: INSPECT_AS)
-			-- Process inspect instruction `l_as'.
+	process_inspect_as (a: INSPECT_AS)
+			-- <Precursor>
 		do
-			print_on_new_line (l_as.inspect_keyword (match_list))
-			safe_process_and_print (l_as.switch, " ", "")
-			safe_process (l_as.case_list)
-			print_on_new_line (l_as.else_keyword (match_list))
-			print_compound (l_as.else_part)
-			print_on_new_line (l_as.end_keyword)
+			print_on_new_line (a.inspect_keyword (match_list))
+			print_inline_indented (a.switch)
+			safe_process (a.case_list)
+			print_on_new_line (a.else_keyword (match_list))
+			print_compound (a.else_part)
+			print_on_new_line (a.end_keyword)
 		end
 
-	process_case_as (l_as: CASE_AS)
-			-- Process inspect case `l_as'
+	process_case_as (a: CASE_AS)
+			-- <Precursor>
 		do
-			print_on_new_line (l_as.when_keyword (match_list))
-			process_and_print_eiffel_list (l_as.interval, list_separator_leading_space)
-			safe_process_and_print (l_as.then_keyword (match_list), " ", "")
-			print_compound (l_as.compound)
+			print_on_new_line (a.when_keyword (match_list))
+			increase_indent
+			process_and_print_eiffel_list (a.interval, list_separator_leading_space)
+			decrease_indent
+			print_inline_unindented (a.then_keyword (match_list))
+			print_compound (a.compound)
 		end
 
 	process_instr_call_as (l_as: INSTR_CALL_AS)

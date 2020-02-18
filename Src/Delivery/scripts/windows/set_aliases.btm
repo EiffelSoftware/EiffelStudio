@@ -7,7 +7,7 @@ endiff
 
 set _SET_ALIAS_SET_=1
 
-set STUDIO_VERSION_MAJOR_MINOR=20.01
+set STUDIO_VERSION_MAJOR_MINOR=20.02
 
 REM The file where all output is stored
 set INSTALL_LOG=c:\work\%STUDIO_VERSION_MAJOR_MINOR%_deliv\install.log

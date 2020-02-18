@@ -8,10 +8,8 @@
 			<exclude>/CVS$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option warning="warning" namespace="EJSON.Library">
+		<option namespace="EJSON.Library">
 		</option>
-		<setting name="total_order_on_reals" value="false"/>
-		<setting name="dead_code_removal" value="feature"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<cluster name="json" location=".\">
 			<cluster name="json_kernel" location=".\kernel\" recursive="true"/>

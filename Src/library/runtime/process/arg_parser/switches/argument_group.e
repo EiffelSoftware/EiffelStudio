@@ -1,7 +1,5 @@
-note
-	description: "[
-			Represents a group of switches for group validation.
-		]"
+﻿note
+	description: "Represents a group of switches for group validation.]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -23,7 +21,7 @@ feature {NONE} -- Initialization
 			-- `a_allow_non_switched': True to allow non switched arguments; False to allow only switch qualified arguments.
 		require
 			a_switches_attached: a_switches /= Void
-			switches_contained_unique_items: across a_switches as c all a_switches.occurrences (c.item) = 1 end
+			switches_contained_unique_items: ∀ c: a_switches ¦ a_switches.occurrences (c) = 1
 		local
 			l_switches: like switches
 		do
@@ -50,7 +48,7 @@ feature {NONE} -- Initialization
 			-- `a_allow_non_switched': True to allow non switched arguments; False to allow only switch qualified arguments.
 		require
 			a_switches_attached: a_switches /= Void
-			switches_contained_unique_items: across a_switches as c all a_switches.occurrences (c.item) = 1 end
+			switches_contained_unique_items: ∀ c: a_switches ¦ a_switches.occurrences (c) = 1
 		do
 			make (a_switches, a_allow_non_switched)
 			is_hidden := True
@@ -75,30 +73,30 @@ feature -- Status report
 invariant
 	switches_attached: switches /= Void
 
-;note
-	copyright: "Copyright (c) 1984-2012, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+note
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
-			This file is part of Eiffel Software's Eiffel Development Environment.
-			
-			Eiffel Software's Eiffel Development Environment is free
-			software; you can redistribute it and/or modify it under
-			the terms of the GNU General Public License as published
-			by the Free Software Foundation, version 2 of the License
-			(available at the URL listed under "license" above).
-			
-			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful, but
-			WITHOUT ANY WARRANTY; without even the implied warranty
-			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the GNU General Public License for more details.
-			
-			You should have received a copy of the GNU General Public
-			License along with Eiffel Software's Eiffel Development
-			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
-		]"
+		This file is part of Eiffel Software's Eiffel Development Environment.
+		
+		Eiffel Software's Eiffel Development Environment is free
+		software; you can redistribute it and/or modify it under
+		the terms of the GNU General Public License as published
+		by the Free Software Foundation, version 2 of the License
+		(available at the URL listed under "license" above).
+		
+		Eiffel Software's Eiffel Development Environment is
+		distributed in the hope that it will be useful, but
+		WITHOUT ANY WARRANTY; without even the implied warranty
+		of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+		
+		You should have received a copy of the GNU General Public
+		License along with Eiffel Software's Eiffel Development
+		Environment; if not, write to the Free Software Foundation,
+		Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+	]"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

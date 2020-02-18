@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			a_value_attached: a_value /= Void
 			a_flags_attached: a_flags /= Void
 			a_switch_attached: a_switch /= Void
-			a_flags_contains_printable_items: across a_flags as c all a_switch.is_character_printable (c.item) end
+			a_flags_contains_printable_items: ∀ c: a_flags ¦ a_switch.is_character_printable (c.item)
 		do
 			make_with_value (a_value, a_switch)
 			flags := a_flags
@@ -70,32 +70,32 @@ feature -- Query
 invariant
 	flags_attached: flags /= Void
 	not_flags_is_empty: not flags.is_empty
-	flags_contains_printable_items: across flags as l_flag all switch.is_character_printable (l_flag.item) end
+	flags_contains_printable_items: ∀ l_flag: flags ¦ switch.is_character_printable (l_flag.item)
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
-	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
-			This file is part of Eiffel Software's Eiffel Development Environment.
-			
-			Eiffel Software's Eiffel Development Environment is free
-			software; you can redistribute it and/or modify it under
-			the terms of the GNU General Public License as published
-			by the Free Software Foundation, version 2 of the License
-			(available at the URL listed under "license" above).
-			
-			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful, but
-			WITHOUT ANY WARRANTY; without even the implied warranty
-			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the GNU General Public License for more details.
-			
-			You should have received a copy of the GNU General Public
-			License along with Eiffel Software's Eiffel Development
-			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
-		]"
+		This file is part of Eiffel Software's Eiffel Development Environment.
+		
+		Eiffel Software's Eiffel Development Environment is free
+		software; you can redistribute it and/or modify it under
+		the terms of the GNU General Public License as published
+		by the Free Software Foundation, version 2 of the License
+		(available at the URL listed under "license" above).
+		
+		Eiffel Software's Eiffel Development Environment is
+		distributed in the hope that it will be useful, but
+		WITHOUT ANY WARRANTY; without even the implied warranty
+		of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+		
+		You should have received a copy of the GNU General Public
+		License along with Eiffel Software's Eiffel Development
+		Environment; if not, write to the Free Software Foundation,
+		Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+	]"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make (rec: like recorder; ref: ANY; cid,fid: INTEGER; dep: INTEGER)
+	make (rec: like recorder; ref: ANY; cid, fid: INTEGER; dep: INTEGER)
 			-- Make as call `{cid}.fid' for object `ref' and depth `dep'
 		require
 			rec_attached: rec /= Void
@@ -92,7 +92,7 @@ feature -- Properties
 			is_flat: is_flat
 		do
 			if attached value_records as vals then
-				Result := across vals as c some c.item.is_local_record end
+				Result := ∃ c: vals ¦ c.is_local_record
 			end
 		end
 
@@ -132,7 +132,7 @@ feature -- Change
 				n := n + 1
 				object := Void
 			end
-			recorder.increment_records_count (-n)
+			recorder.increment_records_count (- n)
 		end
 
 	set_breakable_info (v: like breakable_info)
@@ -171,7 +171,7 @@ feature -- Status
 			is_not_closed: not is_closed
 		do
 			if attached call_records as l_calls then
-				Result := across l_calls.new_cursor.reversed as c all c.item.is_closed end
+				Result := ∀ c: l_calls.new_cursor.reversed ¦ c.is_closed
 			else
 				Result := True
 			end
@@ -293,7 +293,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 			debug ("RT_DBG_RECORD")
 				if attached {like value_records} rs as ot_rs then
 					dtrace_indent (depth); dtrace ("record_fields -> " + ot_rs.count.out + " value(s).%N")
-					ot_rs.do_all (agent (r: RT_DBG_VALUE_RECORD)
+					ot_rs.do_all (agent  (r: RT_DBG_VALUE_RECORD)
 						require
 							r_attached: r /= Void
 						do
@@ -427,8 +427,8 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 			else
 				if vrecs /= Void then
 					if vrecs = vals then --| i.e: rec = flattening call record
-						-- Remove local records, since the stack won't be accessible anymore
-						-- thus we won't be able to access those locals anymore
+							-- Remove local records, since the stack won't be accessible anymore
+							-- thus we won't be able to access those locals anymore
 						from
 							vals.start
 						until
@@ -443,8 +443,8 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 							end
 						end
 					else
-						--| Should not occurs, but in case it is not a closed call record
-						--| let's keep this code.
+							--| Should not occurs, but in case it is not a closed call record
+							--| let's keep this code.
 						c := vrecs.cursor
 						from
 							vrecs.start
@@ -535,7 +535,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 									create orcds.make (10)
 									ort.force (orcds, oi)
 								end
-							--else-- use previous values (ie: index)
+									--else-- use previous values (ie: index)
 							end
 							check
 								oi_positive: oi > 0
@@ -563,8 +563,8 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 								end
 							end
 						else
-							--| this is not an attribute(or field) record
-							--| thus forget about them, not kept for optimized flat fields
+								--| this is not an attribute(or field) record
+								--| thus forget about them, not kept for optimized flat fields
 						end
 
 						vals.forth
@@ -597,7 +597,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Change
 				debug ("RT_DBG_OPTIMIZATION")
 					dtrace_indent (depth); dtrace ("optimize_flat_value_records (depth=" + depth.out + "): to " + vals.count.out + " (-" + n.out + ")%N")
 				end
-				recorder.increment_records_count (-n)
+				recorder.increment_records_count (- n)
 			end
 		rescue
 			dtrace ("Error: optimize_flat_field_records : rescued%N")
@@ -681,7 +681,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Query
 			p := a_id.index_of ('.', 1)
 			if p > 0 then
 				sub_id := a_id.substring (p + 1, a_id.count)
-				i := a_id.substring (1, p-1).to_integer_32
+				i := a_id.substring (1, p - 1).to_integer_32
 			else
 				i := a_id.to_integer_32
 			end
@@ -701,7 +701,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Query
 				if Result = Void then
 					dtrace ("Void")
 				else
-					dtrace (Result.to_string(0))
+					dtrace (Result.to_string (0))
 				end
 				dtrace ("%N")
 			end
@@ -737,7 +737,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Query
 			i: INTEGER
 			val_cursor: detachable CURSOR
 			call_cursor: detachable CURSOR
-			c,v: INTEGER
+			c, v: INTEGER
 			l_calls: like call_records
 			l_values: like value_records
 		do
@@ -752,7 +752,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Query
 			Result.append_integer (feature_rout_id)
 			Result.append_character ('.')
 			if attached breakable_info as bi then
-				Result.append_integer (bi.line)  -- bp slot index
+				Result.append_integer (bi.line) -- bp slot index
 				Result.append_character ('.')
 				Result.append_integer (bi.nested) -- bp slot nested index
 			else
@@ -762,7 +762,7 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Query
 			end
 			if is_replaying and then attached replayed_position as rbi then
 				Result.append_character ('.')
-				Result.append_integer (rbi.line)  -- bp slot index
+				Result.append_integer (rbi.line) -- bp slot index
 				Result.append_character ('.')
 				Result.append_integer (rbi.nested) -- bp slot nested index
 			end
@@ -803,21 +803,21 @@ feature {RT_DBG_EXECUTION_RECORDER, RT_DBG_CALL_RECORD} -- Query
 						l_steps.after
 					loop
 						if l_steps.item then
---							if False then --| Do not include assignments
---								if l_values = Void then
---									--| l_values can be Void if `is_flat' is True
---								else
-----| Keep comment, if ever we want to show in the debugger, one entry by assignment step.
-----									if l_steps.index = i then
-----										subs.append_character ('!')
-----									end
---									l_values.move (1)
---								end
---							end
+								--							if False then --| Do not include assignments
+								--								if l_values = Void then
+								--									--| l_values can be Void if `is_flat' is True
+								--								else
+								----| Keep comment, if ever we want to show in the debugger, one entry by assignment step.
+								----									if l_steps.index = i then
+								----										subs.append_character ('!')
+								----									end
+								--									l_values.move (1)
+								--								end
+								--							end
 							v := v + 1
 						else
 							if l_calls = Void then
-								--| l_calls can be Void if we don't keep call records on close
+									--| l_calls can be Void if we don't keep call records on close
 							else
 								if l_steps.index = i then
 									at_subs.append_character ('!')
@@ -917,7 +917,7 @@ feature {RT_DBG_EXECUTION_RECORDER} -- Steps
 
 			debug ("RT_DBG_REPLAY")
 				dtrace_indent (depth); dtrace ("left_step -> ")
-				dtrace ("["+ l_steps.index.out +"/"+ l_steps.count.out +"]: ")
+				dtrace ("[" + l_steps.index.out + "/" + l_steps.count.out + "]: ")
 			end
 			if not l_steps.before then
 				if l_steps.item then --| Value
@@ -929,7 +929,7 @@ feature {RT_DBG_EXECUTION_RECORDER} -- Steps
 						Result.force (vrecs.item)
 						debug ("RT_DBG_REPLAY")
 							dtrace ("VALUE ")
-							dtrace (vrecs.index.out + "/" + vrecs.count.out )
+							dtrace (vrecs.index.out + "/" + vrecs.count.out)
 						end
 					end
 				else --| call
@@ -938,7 +938,7 @@ feature {RT_DBG_EXECUTION_RECORDER} -- Steps
 						crecs.move (-1)
 						debug ("RT_DBG_REPLAY")
 							dtrace ("CALL ")
-							dtrace (crecs.index.out + "/" + crecs.count.out )
+							dtrace (crecs.index.out + "/" + crecs.count.out)
 						end
 						check call_records_not_before: not crecs.before end
 						Result := changes_between (crecs.item, Void)
@@ -954,11 +954,11 @@ feature {RT_DBG_EXECUTION_RECORDER} -- Steps
 			end
 		ensure
 			value_records_cursor_valid: attached value_records as vrecs2 implies not vrecs2.before
-			call_records_cursor_valid:  attached call_records as crecs2   implies not crecs2.before
+			call_records_cursor_valid: attached call_records as crecs2 implies not crecs2.before
 			steps_before_implies_record_first: steps.before implies (
-						(not attached value_records as vrecs3 or else vrecs3.isfirst) and
-						(not attached call_records as crecs3   or else crecs3.isfirst)
-					)
+					(not attached value_records as vrecs3 or else vrecs3.isfirst) and
+					(not attached call_records as crecs3 or else crecs3.isfirst)
+				)
 		end
 
 	revert_left_step
@@ -999,7 +999,7 @@ feature {RT_DBG_EXECUTION_RECORDER} -- Steps
 			end
 		ensure
 			steps.after implies (attached call_records as crecs2 implies crecs2.after) and
-							(attached value_records as vrecs2  implies vrecs2.after)
+				(attached value_records as vrecs2 implies vrecs2.after)
 		end
 
 feature {NONE} -- Steps implementation
@@ -1054,7 +1054,7 @@ feature -- debug
 		local
 			l_steps: like steps
 			i: INTEGER
-			v,c: INTEGER
+			v, c: INTEGER
 			val_cursor: detachable CURSOR
 			call_cursor: detachable CURSOR
 			l_values: like value_records
@@ -1088,7 +1088,7 @@ feature -- debug
 				until
 					l_steps.after
 				loop
-					print ("%T" + l_steps.index.out + "=" )
+					print ("%T" + l_steps.index.out + "=")
 					if l_steps.item then
 						v := v + 1
 						print ("VALUE#" + v.out + ": ")
@@ -1146,7 +1146,7 @@ feature -- debug
 			if attached breakable_info as bi then
 				Result.append_character (' ')
 				Result.append_character ('(')
-				Result.append_integer (bi.line)  -- bp slot index
+				Result.append_integer (bi.line) -- bp slot index
 				Result.append_character (',')
 				Result.append_integer (bi.nested) -- bp slot nested index
 				Result.append_character (')')
@@ -1169,9 +1169,9 @@ invariant
 	value_records_not_void_if_flat: is_flat implies value_records /= Void
 
 note
-	library:   "EiffelBase: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
-	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	library: "EiffelBase: Library of reusable components for Eiffel."
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

@@ -66,7 +66,7 @@ feature -- Access
 			Result := internal_values
 		ensure
 			result_attached: Result /= Void
-			result_contains_attached_valid_items: across Result as l_c all not l_c.item.is_empty end
+			result_contains_attached_valid_items: ∀ l_c: Result ¦ not l_c.is_empty
 		end
 
 	frozen option_values: LIST [ARGUMENT_OPTION]
@@ -83,7 +83,7 @@ feature -- Access
 			create Result.make (0)
 		ensure
 			result_attached: Result /= Void
-			result_contains_attached_valid_items: across Result as l_c all not l_c.item.is_empty end
+			result_contains_attached_valid_items: ∀ l_c: Result ¦ not l_c.is_empty
 		end
 
 feature {NONE} -- Access
@@ -160,7 +160,7 @@ feature {NONE} -- Access
 									l_arg.item (j + 1) = switch_value_qualifer
 								then
 									create l_next_arg.make (1 + (nb - j))
-									l_next_arg.append_character (l_prefixes[1])
+									l_next_arg.append_character (l_prefixes [1])
 									l_next_arg.append (l_arg.substring (j, l_arg.count))
 
 										-- Exit loop
@@ -340,7 +340,7 @@ feature {NONE} -- Status report
 			-- Indicates if the Unix command switch style is being used by the application switches.
 			--| Note: Redefine to force use of Unix long name switches.
 		once
-			Result := across switches as s some s.item.has_short_name end
+			Result := ∃ s: switches ¦ s.has_short_name
 		end
 
 	frozen has_available_options: BOOLEAN
@@ -370,16 +370,13 @@ feature {NONE} -- Status report
 			l_cs: like is_case_sensitive
 		do
 			l_cs := is_case_sensitive
-			Result :=
-				across
-					available_switches as s
-				some
+			Result := 
+				∃ s: available_switches ¦
 					if l_cs then
-						s.item.id.same_string_general (a_name)
+						s.id.same_string_general (a_name)
 					else
-						s.item.id.is_case_insensitive_equal_general (a_name)
+						s.id.is_case_insensitive_equal_general (a_name)
 					end
-				end
 		ensure
 			available_switches_unmoved: available_switches.cursor ~ old available_switches.cursor
 		end
@@ -511,7 +508,7 @@ feature {NONE} -- Query
 			end
 		ensure
 			result_attached: Result /= Void
-			result_contains_attached_valid_items: across Result as l_c all not l_c.item.is_empty end
+			result_contains_attached_valid_items: ∀ l_c: Result ¦ not l_c.is_empty
 		end
 
 	unique_options_values_of_name (a_name: READABLE_STRING_8; a_ignore_case: BOOLEAN): ARRAYED_LIST [IMMUTABLE_STRING_32]
@@ -554,7 +551,7 @@ feature {NONE} -- Query
 			end
 		ensure
 			result_attached: Result /= Void
-			result_contains_valid_items: across Result as l_c all not l_c.item.is_empty end
+			result_contains_valid_items: ∀ l_c: Result ¦ not l_c.is_empty
 		end
 
 	switch_of_name (a_name: READABLE_STRING_GENERAL): ARGUMENT_SWITCH
@@ -1081,7 +1078,7 @@ feature {NONE} -- Validation
 			end
 				-- Check optional.
 			from Result.start until Result.after loop
-				if across Result.item.switches as s all s.item.optional or else has_option (s.item.id) end then
+				if ∀ s: Result.item.switches ¦ s.optional or else has_option (s.id) then
 					Result.forth
 				else
 					Result.remove
@@ -1263,7 +1260,7 @@ feature {NONE} -- Output
 	display_version
 			-- Displays version information.
 		do
-				-- Only display the version information if it was not already displayed			
+				-- Only display the version information if it was not already displayed
 			localized_print (name)
 			localized_print (" version ")
 			localized_print (version)
@@ -1329,7 +1326,7 @@ feature {NONE} -- Output
 				-- Output prefix option qualifiers
 			l_prefixes := switch_prefixes
 			create l_def_prefix.make (1)
-			l_def_prefix.append_character (l_prefixes[1])
+			l_def_prefix.append_character (l_prefixes [1])
 			if l_prefixes.count > 1 then
 				create l_prefix.make ((l_prefixes.count * 5) + 2)
 				from
@@ -1344,12 +1341,12 @@ feature {NONE} -- Output
 						end
 					end
 					l_prefix.append_character ('%'')
-					l_prefix.append_character (l_prefixes[i])
+					l_prefix.append_character (l_prefixes [i])
 					l_prefix.append_character ('%'')
 					i := i + 1
 				end
 				localized_print (tab_string)
-				localized_print("Options ")
+				localized_print ("Options ")
 				if is_case_sensitive then
 					localized_print ("are case-sensitive and ")
 				end
@@ -1377,7 +1374,7 @@ feature {NONE} -- Output
 
 			l_inline_args := is_showing_argument_usage_inline
 
-				-- Output available options	
+				-- Output available options
 
 			across
 				l_switches as s
@@ -1557,7 +1554,7 @@ feature {NONE} -- Usage
 			end
 		ensure
 			result_attached: Result /= Void
-			result_contains_valid_items: across Result as l_c all not l_c.item.is_empty end
+			result_contains_valid_items: ∀ l_c: Result ¦ not l_c.is_empty
 			available_switches_unmoved: available_switches.cursor ~ old available_switches.cursor
 			switch_groups_unmoved: switch_groups.cursor ~ old switch_groups.cursor
 		end
@@ -1584,11 +1581,11 @@ feature {NONE} -- Usage
 		do
 			if not a_group.is_empty then
 				l_dependencies := switch_dependencies
-				l_prefix := switch_prefixes[1]
+				l_prefix := switch_prefixes [1]
 				l_use_separated := is_using_separated_switch_values
 				l_verbose := is_usage_verbose
 				l_unix_style := is_using_unix_switch_style
-				create Result.make  (a_group.count * 12)
+				create Result.make (a_group.count * 12)
 
 				across
 					a_group as g
@@ -1931,7 +1928,7 @@ feature {NONE} -- Constants
 		ensure
 			result_attached: Result /= Void
 			not_result_is_empty: not Result.is_empty
-			result_contains_printable_items: across Result as l_c all is_character_printable (l_c.item) end
+			result_contains_printable_items: ∀ l_c: Result ¦ is_character_printable (l_c)
 		end
 
 	switch_value_qualifer: CHARACTER_32
@@ -2073,29 +2070,29 @@ invariant
 	is_successful_means_has_parsed: is_successful implies has_parsed
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
-	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
-			This file is part of Eiffel Software's Eiffel Development Environment.
-			
-			Eiffel Software's Eiffel Development Environment is free
-			software; you can redistribute it and/or modify it under
-			the terms of the GNU General Public License as published
-			by the Free Software Foundation, version 2 of the License
-			(available at the URL listed under "license" above).
-			
-			Eiffel Software's Eiffel Development Environment is
-			distributed in the hope that it will be useful, but
-			WITHOUT ANY WARRANTY; without even the implied warranty
-			of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-			See the GNU General Public License for more details.
-			
-			You should have received a copy of the GNU General Public
-			License along with Eiffel Software's Eiffel Development
-			Environment; if not, write to the Free Software Foundation,
-			Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
-		]"
+		This file is part of Eiffel Software's Eiffel Development Environment.
+		
+		Eiffel Software's Eiffel Development Environment is free
+		software; you can redistribute it and/or modify it under
+		the terms of the GNU General Public License as published
+		by the Free Software Foundation, version 2 of the License
+		(available at the URL listed under "license" above).
+		
+		Eiffel Software's Eiffel Development Environment is
+		distributed in the hope that it will be useful, but
+		WITHOUT ANY WARRANTY; without even the implied warranty
+		of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+		See the GNU General Public License for more details.
+		
+		You should have received a copy of the GNU General Public
+		License along with Eiffel Software's Eiffel Development
+		Environment; if not, write to the Free Software Foundation,
+		Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
+	]"
 	source: "[
 			Eiffel Software
 			5949 Hollister Ave., Goleta, CA 93117 USA

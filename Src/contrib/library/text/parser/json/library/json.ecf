@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="json" uuid="4E21C3BD-7951-4C6E-A673-431E762D7414" library_target="json">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="json" uuid="4E21C3BD-7951-4C6E-A673-431E762D7414" library_target="json">
 	<description>JSON parser</description>
 	<target name="json">
 		<root all_classes="true"/>
@@ -8,8 +8,10 @@
 			<exclude>/CVS$</exclude>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option warning="true" namespace="EJSON.Library">
+		<option warning="warning" namespace="EJSON.Library">
 		</option>
+		<setting name="total_order_on_reals" value="false"/>
+		<setting name="dead_code_removal" value="feature"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<cluster name="json" location=".\">
 			<cluster name="json_kernel" location=".\kernel\" recursive="true"/>

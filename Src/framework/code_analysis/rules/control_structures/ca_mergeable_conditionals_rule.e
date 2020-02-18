@@ -19,6 +19,8 @@ inherit
 			process_assign_as
 		end
 
+	INTERNAL_COMPILER_STRING_EXPORTER
+
 create
 	make
 
@@ -35,14 +37,14 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	register_actions (a_checker: attached CA_ALL_RULES_CHECKER)
+	register_actions (a_checker: CA_ALL_RULES_CHECKER)
 		do
 			a_checker.add_feature_pre_action (agent pre_process_feature)
 			a_checker.add_feature_post_action (agent post_process_feature)
 			a_checker.add_eiffel_list_pre_action (agent pre_process_eiffel_list)
 		end
 
-	pre_process_feature (a_feature: attached FEATURE_AS)
+	pre_process_feature (a_feature: FEATURE_AS)
 		do
 			if
 				attached a_feature.body.as_routine as l_routine
@@ -57,7 +59,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	post_process_feature (a_feature: attached FEATURE_AS)
+	post_process_feature (a_feature: FEATURE_AS)
 		do
 				-- Reset locals for the next feature.
 			all_locals.wipe_out
@@ -100,7 +102,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	is_condition_valid (a_cond: attached EXPR_AS): BOOLEAN
+	is_condition_valid (a_cond: EXPR_AS): BOOLEAN
 			-- Checks if the condition only contains local or constant booleans.
 		do
 			found_invalid_term := False
@@ -110,7 +112,7 @@ feature {NONE} -- Implementation
 			Result := not found_invalid_term
 		end
 
-	is_body_valid (a_if: attached IF_AS): BOOLEAN
+	is_body_valid (a_if: IF_AS): BOOLEAN
 			-- Checks if the body changes any of the locals used in the condition of the first if block.
 		do
 			local_accessed := False
@@ -126,18 +128,18 @@ feature {NONE} -- Implementation
 			Result := not local_accessed
 		end
 
-	process_access_id_as (a_access: attached ACCESS_ID_AS)
+	process_access_id_as (a_access: ACCESS_ID_AS)
 		do
-			if not all_locals.has (a_access.access_name_32) then
+			if not all_locals.has (a_access.access_name) then
 				found_invalid_term := True
 			else
-				locals_in_condition.extend (a_access.access_name_32)
+				locals_in_condition.extend (a_access.access_name)
 			end
 		end
 
-	process_assign_as (a_assign: attached ASSIGN_AS)
+	process_assign_as (a_assign: ASSIGN_AS)
 		do
-			if locals_in_condition.has (a_assign.target.access_name_32) then
+			if locals_in_condition.has (a_assign.target.access_name) then
 				local_accessed := True
 			end
 		end
@@ -153,7 +155,7 @@ feature {NONE} -- Implementation
 	local_accessed: BOOLEAN
 			-- Used for evaluating boolean expressions.
 
-	create_violation (a_if_1: attached IF_AS; a_if_2: attached IF_AS)
+	create_violation (a_if_1: IF_AS; a_if_2: IF_AS)
 		local
 			l_violation: CA_RULE_VIOLATION
 			l_fix: CA_MERGEABLE_CONDITIONALS_FIX
@@ -168,7 +170,7 @@ feature {NONE} -- Implementation
 			violations.extend (l_violation)
 		end
 
-	format_violation_description (a_violation: attached CA_RULE_VIOLATION; a_formatter: attached TEXT_FORMATTER)
+	format_violation_description (a_violation: CA_RULE_VIOLATION; a_formatter: TEXT_FORMATTER)
 		do
 			a_formatter.add (ca_messages.mergeable_conditionals_violation_1)
 		end

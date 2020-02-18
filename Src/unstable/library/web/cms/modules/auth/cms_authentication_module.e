@@ -124,6 +124,8 @@ feature -- Router
 
 	roc_logout_location: STRING = "account/roc-logout"
 
+	roc_account_location: STRING = "account"
+
 	setup_router (a_router: WSF_ROUTER; a_api: CMS_API)
 			-- <Precursor>
 		do
@@ -136,20 +138,20 @@ feature -- Router
 		local
 			m: WSF_URI_MAPPING
 		do
-			create m.make_trailing_slash_ignored ("/account", create {WSF_URI_AGENT_HANDLER}.make (agent handle_account (a_api, ?, ?)))
+			create m.make_trailing_slash_ignored ("/" + roc_account_location, create {WSF_URI_AGENT_HANDLER}.make (agent handle_account (a_api, ?, ?)))
 			a_router.map (m, a_router.methods_head_get)
 
-			create m.make_trailing_slash_ignored ("/account/edit", create {WSF_URI_AGENT_HANDLER}.make (agent handle_edit_account (a_api, ?, ?)))
+			create m.make_trailing_slash_ignored ("/" + roc_account_location + "/edit", create {WSF_URI_AGENT_HANDLER}.make (agent handle_edit_account (a_api, ?, ?)))
 			a_router.map (m, a_router.methods_head_get)
 
 
 			a_router.handle ("/" + roc_login_location, create {WSF_URI_AGENT_HANDLER}.make (agent handle_login(a_api, ?, ?)), a_router.methods_head_get)
 			a_router.handle ("/" + roc_logout_location, create {WSF_URI_AGENT_HANDLER}.make (agent handle_logout(a_api, ?, ?)), a_router.methods_head_get)
-			a_router.handle ("/account/roc-register", create {WSF_URI_AGENT_HANDLER}.make (agent handle_register(a_api, ?, ?)), a_router.methods_get_post)
+			a_router.handle ("/" + roc_register_location, create {WSF_URI_AGENT_HANDLER}.make (agent handle_register(a_api, ?, ?)), a_router.methods_get_post)
 
-			a_router.handle ("/account/new-password", create {WSF_URI_AGENT_HANDLER}.make (agent handle_new_password(a_api, ?, ?)), a_router.methods_get_post)
-			a_router.handle ("/account/reset-password", create {WSF_URI_AGENT_HANDLER}.make (agent handle_reset_password(a_api, ?, ?)), a_router.methods_get_post)
-			a_router.handle ("/account/change/{field}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_change_field (a_api, ?, ?)), a_router.methods_get_post)
+			a_router.handle ("/" + roc_account_location + "/new-password", create {WSF_URI_AGENT_HANDLER}.make (agent handle_new_password(a_api, ?, ?)), a_router.methods_get_post)
+			a_router.handle ("/" + roc_account_location + "/reset-password", create {WSF_URI_AGENT_HANDLER}.make (agent handle_reset_password(a_api, ?, ?)), a_router.methods_get_post)
+			a_router.handle ("/" + roc_account_location + "/change/{field}", create {WSF_URI_TEMPLATE_AGENT_HANDLER}.make (agent handle_change_field (a_api, ?, ?)), a_router.methods_get_post)
 		end
 
 feature -- Hooks configuration

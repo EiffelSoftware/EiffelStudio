@@ -78,11 +78,11 @@ feature {NONE} -- Rule checking
 				elseif attached {INTEGER_AS} l_internal_expr as l_int_as then
 						-- No sign is necessary for zero
 						-- Also, if the integer already has a sign, the current sign is redundant.
-					Result := (l_int_as.integer_64_value = 0 or l_int_as.sign_symbol (current_context.matchlist) /= Void)
+					Result := l_int_as.integer_64_value = 0 or l_int_as.sign_symbol (current_context.matchlist) /= Void
 				elseif attached {REAL_AS} l_internal_expr as l_real_as then
 						-- If the real already has a sign, the current sign is redundant.
 						-- Note that 0.0 and -0.0 are not the same (e.g. "1 / -0.0" yields -Infinity).
-					Result := (l_real_as.sign_symbol (current_context.matchlist) /= Void)
+					Result := l_real_as.sign_symbol (current_context.matchlist) /= Void
 				end
 			end
 		end
@@ -118,7 +118,7 @@ feature {NONE} -- Rule checking
 					l_expr := l_paran_as.expr
 				else
 					l_stop := true
-					Result := (attached {INTEGER_AS} l_expr or attached {REAL_AS} l_expr)
+					Result := attached {INTEGER_AS} l_expr or attached {REAL_AS} l_expr
 				end
 			end
 		end
@@ -137,11 +137,11 @@ feature {NONE} -- Rule checking
 				-- Sample violations:
 				--	+3
 				--	-0
-
-			if attached a_integer.sign_symbol (current_context.matchlist) as l_sign then
-				if l_sign.is_plus or a_integer.is_zero then
-					add_violation (l_sign.start_location, a_integer.text_32 (current_context.matchlist))
-				end
+			if
+				attached a_integer.sign_symbol (current_context.matchlist) as l_sign and then
+				(l_sign.is_plus or a_integer.is_zero)
+			then
+				add_violation (l_sign.start_location, a_integer.text_32 (current_context.matchlist))
 			end
 		end
 
@@ -150,17 +150,17 @@ feature {NONE} -- Rule checking
 		do
 				-- Sample violation:
 				--  +3.7
-
-			if attached a_real.sign_symbol (current_context.matchlist) as l_sign then
-					-- We do not check for the case (sign.is_minus and a_real.value.to_real_64 = 0)
-					-- as 0.0 and -0.0 are not the same (e.g. "1 / -0.0" yields -Infinity).
-				if l_sign.is_plus then
-					add_violation (l_sign.start_location, a_real.text_32 (current_context.matchlist))
-				end
+				-- We do not check for the case (sign.is_minus and a_real.value.to_real_64 = 0)
+				-- as 0.0 and -0.0 are not the same (e.g. "1 / -0.0" yields -Infinity).
+			if
+				attached a_real.sign_symbol (current_context.matchlist) as l_sign and then
+				l_sign.is_plus
+			then
+				add_violation (l_sign.start_location, a_real.text_32 (current_context.matchlist))
 			end
 		end
 
-	add_violation (a_location: LOCATION_AS; a_text: STRING)
+	add_violation (a_location: LOCATION_AS; a_text: READABLE_STRING_32)
 			-- Creates and adds to the violations list a new violation
 			-- with location `a_location' and text `a_text'.
 		local

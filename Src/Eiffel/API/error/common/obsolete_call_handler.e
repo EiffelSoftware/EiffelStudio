@@ -35,6 +35,7 @@ feature {NONE} -- Report
 			-- <Precursor>
 		local
 			issue: OBS_FEAT_WARN
+			warning: OBSOLETE_FEATURE_CALL_OPTION_WARNING
 		do
 			if context.warning_index /= {CONF_OPTION}.warning_term_index_none then
 					-- Report an obsolete warning for this call.
@@ -61,7 +62,12 @@ feature {NONE} -- Report
 				error_handler.warning_level < obsolete_warning_level_cell.item
 			then
 					-- Report that there are obsolete feature calls.
-				error_handler.insert_warning (create {OBSOLETE_FEATURE_CALL_OPTION_WARNING}, context.current_class.is_warning_reported_as_error ({CONF_CONSTANTS}.w_obsolete_feature))
+				create warning
+				warning.set_associated_class (context.current_class)
+				if attached context.location as location then
+					warning.set_location (location)
+				end
+				error_handler.insert_warning (warning, context.current_class.is_warning_reported_as_error ({CONF_CONSTANTS}.w_obsolete_feature))
 					-- Record current warning level to avoid further reports.
 				obsolete_warning_level_cell.put (error_handler.warning_level)
 			end
@@ -128,7 +134,7 @@ feature {NONE} -- Processing
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

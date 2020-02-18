@@ -16,6 +16,7 @@ create
 	make_with_break_and_regex
 
 feature {NONE} -- Initialization
+
 	make_with_break_and_regex (a_class: attached CLASS_C; a_break: attached BREAK_AS; a_regex: attached RX_PCRE_REGULAR_EXPRESSION)
 			-- Initializes `Current' with class `a_class'. `a_break' is the break node containing the comment.
 		do
@@ -27,10 +28,10 @@ feature {NONE} -- Initialization
 feature {NONE} -- Implementation
 
 	r: RX_PCRE_REGULAR_EXPRESSION
-		-- The regular expression that matched the comment.
+			-- The regular expression that matched the comment.
 
 	break: BREAK_AS
-		-- The break node containing the comment which is removed by this fix.
+			-- The break node containing the comment which is removed by this fix.
 
 	get_new_string (a_length: INTEGER): STRING
 		local
@@ -42,7 +43,7 @@ feature {NONE} -- Implementation
 			until
 				l_i = a_length
 			loop
-				Result.append(cursing_chars.at (random.item \\ cursing_chars.capacity).out)
+				Result.append (cursing_chars.at (random.item \\ cursing_chars.capacity).out)
 				random.forth
 				l_i := l_i + 1
 			end
@@ -55,7 +56,7 @@ feature {NONE} -- Implementation
 			Result.start
 		end
 
-	cursing_chars: ARRAY[CHARACTER]
+	cursing_chars: ARRAY [CHARACTER]
 		once
 			create Result.make_filled (' ', 0, 6)
 			Result.at (0) := '?'
@@ -77,9 +78,9 @@ feature {NONE} -- Implementation
 			until
 				not r.matches (l_comment)
 			loop
-				l_comment := r.replace (get_new_string (r.captured_substring_count (0) + 1))
+				l_comment := r.unicode_replace (get_new_string (r.captured_substring_count (0) + 1))
 			end
-			break.replace_text (l_comment, match_list)
+			break.replace_text ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (l_comment), match_list)
 		end
 
 end

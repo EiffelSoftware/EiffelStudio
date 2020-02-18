@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 feature {NONE} -- Implementation
 
 	feature_to_remove: FEATURE_AS
-		-- The creation procedure this fix will remove.
+			-- The creation procedure this fix will remove.
 
 	execute
 			-- <Precursor>
@@ -35,19 +35,19 @@ feature {NONE} -- Implementation
 			feature_to_remove.remove_text (match_list)
 
 			across parsed_class.creators as l_create_as loop
-				process_create(l_create_as.item)
+				process_create (l_create_as.item)
 			end
 		end
 
 	process_create (a_create_as: CREATE_AS)
 		local
-			l_new_feature_names: STRING_32
+			l_new_feature_names: STRING_8
 		do
 			create l_new_feature_names.make_empty
 
 			across a_create_as.feature_list as l_feature loop
 				if not feature_to_remove.feature_names.has (l_feature.item) then
-					l_new_feature_names.append ({STRING_32} "%T" + l_feature.item.visual_name_32 + ",%N")
+					l_new_feature_names.append ("%T" + l_feature.item.visual_name + ",%N")
 				end
 			end
 

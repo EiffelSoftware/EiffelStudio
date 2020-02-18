@@ -9,6 +9,7 @@
 					for there is no matching branch for any value of the inspected variable.
 	]"
 	author: "Paolo Antonucci"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -43,7 +44,6 @@ feature {NONE} -- Rule checking
 	process_inspect (a_inspect_as: INSPECT_AS)
 		local
 			l_viol: CA_RULE_VIOLATION
-			l_has_else: BOOLEAN
 		do
 				-- Sample violations:
 				--
@@ -59,8 +59,7 @@ feature {NONE} -- Rule checking
 			if a_inspect_as.case_list = Void or else a_inspect_as.case_list.is_empty then
 				create l_viol.make_with_rule (Current)
 				l_viol.set_location (a_inspect_as.start_location)
-				l_has_else := (a_inspect_as.else_keyword (current_context.matchlist) /= Void)
-				l_viol.long_description_info.extend (l_has_else)
+				l_viol.long_description_info.extend (attached a_inspect_as.else_keyword (current_context.matchlist))
 				violations.extend (l_viol)
 			end
 		end

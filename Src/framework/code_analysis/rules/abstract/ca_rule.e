@@ -165,7 +165,7 @@ feature -- Results
 feature {NONE} -- Violations: modification
 
 	put_violation
-		(violation_title: READABLE_STRING_32; title_arguments: ITERABLE [PROCEDURE [TEXT_FORMATTER]];
+ (violation_title: READABLE_STRING_32; title_arguments: ITERABLE [PROCEDURE [TEXT_FORMATTER]];
 		violation_description: READABLE_STRING_32; description_arguments: ITERABLE [PROCEDURE [TEXT_FORMATTER]];
 		location_index: like {AST_EIFFEL}.index)
 			-- Add a violation with the specified title `violation_title` with arguments `title_arguments`
@@ -176,9 +176,9 @@ feature {NONE} -- Violations: modification
 			m: LEAF_AS_LIST
 		do
 			create v.make_formatted
-				(agent format_elements (?, violation_title, title_arguments),
-				agent format_elements (?, violation_description, description_arguments),
-				Current)
+ (agent format_elements(?, violation_title, title_arguments),
+			agent format_elements(?, violation_description, description_arguments),
+			Current)
 			m := current_context.matchlist
 			if m.valid_index (location_index) then
 				v.set_location (m [location_index])
@@ -187,7 +187,7 @@ feature {NONE} -- Violations: modification
 		end
 
 	put_formattable_violation
-		(violation_title: READABLE_STRING_32; title_arguments: ITERABLE [like formattable];
+ (violation_title: READABLE_STRING_32; title_arguments: ITERABLE [like formattable];
 		violation_description: READABLE_STRING_32; description_arguments: ITERABLE [like formattable];
 		violation_severity: detachable like severity;
 		location_index: like {AST_EIFFEL}.index)
@@ -200,9 +200,9 @@ feature {NONE} -- Violations: modification
 			m: LEAF_AS_LIST
 		do
 			create v.make_formatted
-				(agent format (?, violation_title, title_arguments),
-				agent format (?, violation_description, description_arguments),
-				Current)
+ (agent format(?, violation_title, title_arguments),
+			agent format(?, violation_description, description_arguments),
+			Current)
 			if attached violation_severity then
 				v.set_severity (violation_severity)
 			end
@@ -253,4 +253,10 @@ feature {NONE} -- Preferences
 invariant
 	checks_some_classes: checks_library_classes or checks_nonlibrary_classes
 	valid_severity_score: severity_score.value >= 0 and severity_score.value <= 100
+
+note
+	ca_ignore:
+	"CA011", "CA011: too many arguments",
+	"CA082", "CA082: `is_equal` is not redefined in HASHABLE"
+
 end

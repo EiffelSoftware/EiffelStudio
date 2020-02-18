@@ -1,6 +1,7 @@
 ﻿note
 	description: "Fixes violations of rule #3 ('Feature never called')."
 	author: "Stefan Zurfluh"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -51,7 +52,6 @@ feature {NONE} -- Visitor
 			-- Removes `feature_name' from `a_feature'. If `a_feature_name' is the
 			-- only name of `a_feature' then the feature body will be removed, too.
 		local
-			l_exit: BOOLEAN
 			l_new_feature_names: STRING_32
 			l_feature_names: EIFFEL_LIST [FEATURE_NAME]
 		do
@@ -59,24 +59,18 @@ feature {NONE} -- Visitor
 
 			if l_feature_names.count > 1 then
 				create l_new_feature_names.make_empty
-
-				from
-					l_feature_names.start
-				until
-					l_exit or l_feature_names.after
+				across
+					l_feature_names as f
 				loop
 						-- Skip the feature name we are removing.
-					if not l_feature_names.item.visual_name_32.is_equal (feature_name) then
+					if not f.item.visual_name_32.is_equal (feature_name) then
 						l_new_feature_names.append (", ")
-						l_new_feature_names.append (l_feature_names.item.visual_name_32)
+						l_new_feature_names.append (f.item.visual_name_32)
 					end
-
-					l_feature_names.forth
 				end
-
 					-- Remove the first comma.
 				l_new_feature_names.remove_head (2)
-				l_feature_names.replace_text (l_new_feature_names, match_list)
+				l_feature_names.replace_text ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (l_new_feature_names), match_list)
 			else
 				if a_feature.is_equivalent (feature_to_remove) then
 					a_feature.remove_text (match_list)

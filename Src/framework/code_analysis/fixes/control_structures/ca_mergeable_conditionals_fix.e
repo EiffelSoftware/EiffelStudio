@@ -11,6 +11,7 @@ inherit
 		redefine
 			execute
 		end
+	INTERNAL_COMPILER_STRING_EXPORTER
 
 create
 	make_with_ifs
@@ -32,7 +33,6 @@ feature {NONE} -- Implementation
 			l_new, l_indent, l_temp: STRING_32
 		do
 			create l_new.make_empty
-			create l_indent.make_empty
 
 				-- Calculate the indentation of the first if block. TODO: Refactor.
 			l_temp := match_list.i_th (first.if_keyword (match_list).index - 1).text_32 (match_list)
@@ -65,7 +65,7 @@ feature {NONE} -- Implementation
 				l_new.append (l_indent + "end")
 			end
 
-			first.replace_text (l_new, match_list)
+			first.replace_text ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (l_new), match_list)
 				-- Remove second if block.
 			second.remove_text (match_list)
 		end

@@ -5,6 +5,7 @@
 			Inheritance with no adaptations from the ANY class need not explicitely be defined. This should be removed.
 		]"
 	author: "Samuel Schmid"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -15,6 +16,7 @@ class
 
 inherit
 	CA_STANDARD_RULE
+	INTERNAL_COMPILER_STRING_EXPORTER
 
 create
 	make
@@ -29,26 +31,27 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Activation
 
-	register_actions (a_checker: attached CA_ALL_RULES_CHECKER)
+	register_actions (a_checker: CA_ALL_RULES_CHECKER)
 		do
 			a_checker.add_class_pre_action (agent check_inheritance)
 		end
 
 feature {NONE} -- Rule checking
 
-	check_inheritance (a_class: attached CLASS_AS)
+	check_inheritance (a_class: CLASS_AS)
 		-- Checks whether `a_class' inherits explicitly from ANY or not.
 		do
-			if attached a_class.parent_with_name ("ANY") as l_any then
-				-- Explicit inheritance from ANY found
-				if not has_adaptations_to_any (a_class) then
-					-- Class has no adapations to ANY, inheritance is not needed.
-					create_violation(l_any)
-				end
+			if
+				attached a_class.parent_with_name ("ANY") as l_any and then
+				not has_adaptations_to_any (a_class)
+			then
+				-- Explicit inheritance from ANY found.
+				-- Class has no adapations to ANY, inheritance is not needed.
+				create_violation (l_any)
 			end
 		end
 
-	has_adaptations_to_any (a_class: attached CLASS_AS): BOOLEAN
+	has_adaptations_to_any (a_class: CLASS_AS): BOOLEAN
 		-- Does `a_class' have any adaptations to ANY?
 		do
 			if attached a_class.parents as l_parents then
@@ -73,11 +76,11 @@ feature {NONE} -- Rule checking
 						-- Set parameters for checking the changes to parents
 						current_class := current_context.universe.class_named (l_parents.item.type.class_name.name_8, current_context.checking_class.group).compiled_class
 						set_renamed_features (l_parents.item)
-
-						Result := (attached l_parents.item.renaming and then l_parents.item.renaming.there_exists (agent is_rename_written_by_any))
-							or (attached l_parents.item.undefining and then l_parents.item.undefining.there_exists (agent is_feature_written_by_any))
-							or (attached l_parents.item.redefining and then l_parents.item.redefining.there_exists (agent is_feature_written_by_any))
-							or has_adaptations_to_any (current_context.universe.class_named (l_parents.item.type.class_name.name_8, current_context.checking_class.group).compiled_class.ast)
+						Result :=
+							(attached l_parents.item.renaming and then l_parents.item.renaming.there_exists (agent is_rename_written_by_any)) or
+							(attached l_parents.item.undefining and then l_parents.item.undefining.there_exists (agent is_feature_written_by_any)) or
+							(attached l_parents.item.redefining and then l_parents.item.redefining.there_exists (agent is_feature_written_by_any)) or
+							has_adaptations_to_any (current_context.universe.class_named (l_parents.item.type.class_name.name_8, current_context.checking_class.group).compiled_class.ast)
 						l_parents.forth
 					end
 				end
@@ -94,13 +97,13 @@ feature {NONE} -- Rule checking
 			l_feature: FEATURE_NAME
 		do
 			-- For renames we need to check the old name.
-			if renames.has (a_feature.visual_name_32) then
-				l_feature := renames.at (a_feature.visual_name_32)
+			if renames.has (a_feature.visual_name) then
+				l_feature := renames.at (a_feature.visual_name)
 			else
 				l_feature := a_feature
 			end
 
-			Result := current_class.feature_named_32 (l_feature.visual_name_32).written_class.name_in_upper.is_equal ("ANY")
+			Result := current_class.feature_named (l_feature.visual_name).written_class.name_in_upper.is_equal ("ANY")
 		end
 
 	create_violation (a_parent: PARENT_AS)
@@ -123,7 +126,7 @@ feature {NONE} -- Rule checking
 			renames.wipe_out
 			if attached a_parent.renaming as l_renamings then
 				across l_renamings as l_rename loop
-					renames.extend (l_rename.item.old_name, l_rename.item.new_name.visual_name_32)
+					renames.extend (l_rename.item.old_name, l_rename.item.new_name.visual_name)
 				end
 			end
 		end
@@ -150,7 +153,7 @@ feature -- Properties
 		end
 
 
-	format_violation_description (a_violation: attached CA_RULE_VIOLATION; a_formatter: attached TEXT_FORMATTER)
+	format_violation_description (a_violation: CA_RULE_VIOLATION; a_formatter: TEXT_FORMATTER)
 		do
 			a_formatter.add (ca_messages.inherit_from_any_violation_1)
 			check
@@ -161,4 +164,5 @@ feature -- Properties
 			end
 			a_formatter.add (ca_messages.inherit_from_any_violation_2)
 		end
+
 end

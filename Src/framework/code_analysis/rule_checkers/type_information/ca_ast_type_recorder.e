@@ -99,6 +99,7 @@ feature {NONE} -- Implementation: Data Structures
 		end
 
 note
+	ca_ignore: "CA011", "CA011: too many arguments"
 	date: "$Date$"
 	revision: "$Revision$"
 	author: "Stefan Zurfluh"

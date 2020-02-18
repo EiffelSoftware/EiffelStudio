@@ -9,6 +9,7 @@
 			object of the relevant class and 'make' is its creation procedure.
 		]"
 	author: "Samuel Schmid"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -92,22 +93,23 @@ feature {NONE} -- AST Visitor
 			l_violation: CA_RULE_VIOLATION
 			l_fix: CA_EMPTY_CREATION_PROC_FIX
 		do
-			if attached creation_procedures then
-				across creation_procedures as p loop
-					if attached a_clause.feature_with_name(p.item.internal_name.name_id) as l_feature then
-						if l_feature.body.is_empty then
-							create l_violation.make_with_rule (Current)
-							l_violation.long_description_info.extend (p.item.visual_name_32)
-							l_violation.set_location (l_feature.start_location)
+			if attached creation_procedures as ps then
+				across ps as p loop
+					if
+						attached a_clause.feature_with_name(p.item.internal_name.name_id) as l_feature and then
+						l_feature.body.is_empty
+					then
+						create l_violation.make_with_rule (Current)
+						l_violation.long_description_info.extend (p.item.visual_name_32)
+						l_violation.set_location (l_feature.start_location)
 
-							l_violation.long_description_info.extend (current_context.checking_class.original_class.name)
+						l_violation.long_description_info.extend (current_context.checking_class.original_class.name)
 
 
-							create l_fix.make_with_create_proc (current_context.checking_class, l_feature)
-							l_violation.fixes.extend (l_fix)
+						create l_fix.make_with_create_proc (current_context.checking_class, l_feature)
+						l_violation.fixes.extend (l_fix)
 
-							violations.extend (l_violation)
-						end
+						violations.extend (l_violation)
 					end
 				end
 			end
@@ -117,4 +119,5 @@ feature {NONE} -- Attributes
 
 	creation_procedures: EIFFEL_LIST [FEATURE_NAME]
 			-- List of creation procedures of the current class.
+
 end

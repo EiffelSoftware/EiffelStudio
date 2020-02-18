@@ -1,6 +1,6 @@
 ﻿note
 	description: "Writes to a CSV file."
-	author: "Stefan Zurfluh", "Eiffel Software"
+	author: "Stefan Zurfluh", "Eiffel Software", "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -79,16 +79,10 @@ feature -- Modification
 				writable_output.replace_substring_all ({STRING_32} "%N", {STRING_32} " ")
 					-- Replace quotes with double quotes.
 				writable_output.replace_substring_all ({STRING_32} "%"", {STRING_32} "%"%"")
-				if is_unicode then
-					output_file.put_string (u.string_32_to_utf_8_string_8 (writable_output))
-				else
-					output_file.put_string (writable_output)
-				end
+				output_file.put_string (u.string_32_to_utf_8_string_8 (writable_output))
 				output_file.put_character ('"')
-			elseif is_unicode then
-				output_file.put_string (u.string_32_to_utf_8_string_8 (v))
 			else
-				output_file.put_string (v)
+				output_file.put_string (u.string_32_to_utf_8_string_8 (v))
 			end
 		end
 
@@ -173,7 +167,7 @@ invariant
 	separator_is_ascii: separator <= '%/127/'
 
 ;note
-	copyright:	"Copyright (c) 2014-2017, Eiffel Software"
+	copyright:	"Copyright (c) 2014-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

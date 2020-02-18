@@ -1,11 +1,12 @@
 ﻿note
 	description: "[
-			RULE #64: Feature naming convention violated
+		RULE #64: Feature naming convention violated
 		
-			Feature names should respect the Eiffel naming convention for features
-			(all lowercase, no trailing or two consecutive underscores).
-		]"
+		Feature names should respect the Eiffel naming convention for features
+		(all lowercase, no trailing or two consecutive underscores).
+	]"
 	author: "Paolo Antonucci"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -40,7 +41,7 @@ feature {NONE} -- Rule checking
 	process_feature (a_feature_as: FEATURE_AS)
 			-- Process `a_feature_as'.
 		local
-			l_name: STRING
+			l_name: READABLE_STRING_32
 			l_viol: CA_RULE_VIOLATION
 		do
 			l_name := a_feature_as.feature_name.text_32 (current_context.matchlist)
@@ -52,12 +53,11 @@ feature {NONE} -- Rule checking
 			end
 		end
 
-	is_valid_feature_name (a_name: STRING): BOOLEAN
+	is_valid_feature_name (a_name: READABLE_STRING_32): BOOLEAN
 			-- Does `a_name' respect the naming conventions for features?
 		do
 				-- Sample violations:
 				-- my_feature_, my__feature, _my_feature, MY_FEATURE, my_FEATURE
-
 			Result := not a_name.ends_with ("_") and not a_name.has_substring ("__") and (a_name.as_lower ~ a_name)
 		end
 

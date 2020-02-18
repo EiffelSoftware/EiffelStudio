@@ -46,7 +46,7 @@ feature {NONE} -- Implementation
 					-- This rule only applies if the Void-Safety is set to "Complete".
 				is_project_setting_void_safety_complete
 				and then attached {ROUTINE_AS} a_feature.body.content as l_routine
-				and then attached {REQUIRE_AS} l_routine.precondition as l_precondition
+				and then attached l_routine.precondition as l_precondition
 			then
 				checking_tagged := True
 				l_precondition.process (Current)
@@ -62,7 +62,7 @@ feature {NONE} -- Implementation
 					-- This rule only applies if the Void-Safety is set to "Complete".
 				is_project_setting_void_safety_complete
 				and then attached {ROUTINE_AS} a_feature.body.content as l_routine
-				and then attached {ENSURE_AS} l_routine.postcondition as l_postcondition
+				and then attached l_routine.postcondition as l_postcondition
 			then
 				checking_tagged := True
 				l_postcondition.process (Current)
@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 				if
 					attached {EXPR_CALL_AS} operand as l_expr_call
 					and then attached {ACCESS_ASSERT_AS} l_expr_call.call as l_access_assert
-					and then attached {ID_AS} l_access_assert.feature_name as l_id
+					and then attached l_access_assert.feature_name as l_id
 				then
 						-- It is sufficient to report one issues per argument.
 						-- The first one is kept only.
@@ -163,7 +163,7 @@ feature {NONE} -- Implementation
 			l_conf: CONF_OPTION
 		do
 			l_conf := current_context.universe.target.options
-			Result := (l_conf.void_safety.index = l_conf.void_safety_index_all)
+			Result := l_conf.void_safety.index = l_conf.void_safety_index_all
 		end
 
 feature -- Properties

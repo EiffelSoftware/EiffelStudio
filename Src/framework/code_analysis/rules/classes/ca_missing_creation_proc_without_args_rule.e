@@ -101,12 +101,13 @@ feature {NONE} -- AST Visitor
 	process_feature_clause (a_clause: FEATURE_CLAUSE_AS)
 			-- Checks `a_clause' for features that are creation procedures.
 		do
-			if creation_procedures /= Void then
-				across creation_procedures as ic loop
-					if attached a_clause.feature_with_name (ic.item.internal_name.name_id) as l_feature then
-						if not attached l_feature.body.arguments then
-							has_creation_procedure_with_no_args := True
-						end
+			if attached creation_procedures as ps then
+				across ps as ic loop
+					if
+						attached a_clause.feature_with_name (ic.item.internal_name.name_id) as l_feature and then
+						not attached l_feature.body.arguments
+					then
+						has_creation_procedure_with_no_args := True
 					end
 				end
 			end

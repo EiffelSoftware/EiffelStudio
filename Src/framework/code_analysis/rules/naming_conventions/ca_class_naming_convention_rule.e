@@ -1,11 +1,12 @@
 ﻿note
 	description: "[
-					RULE #63: Class naming convention violated
+		RULE #63: Class naming convention violated
 		
-					Class names should respect the Eiffel naming convention for classes
-					(all uppercase, no trailing or two consecutive underscores).
+		Class names should respect the Eiffel naming convention for classes
+		(all uppercase, no trailing or two consecutive underscores).
 	]"
 	author: "Paolo Antonucci"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -40,19 +41,17 @@ feature {NONE} -- Rule checking
 	process_class (a_class_as: CLASS_AS)
 			-- Process `a_class_as'.
 		local
-			l_name: STRING
 			l_viol: CA_RULE_VIOLATION
 		do
 				-- Retrieving the original text is the only way for checking the case (otherwise it's always lowercased).
-			l_name := a_class_as.class_name.text_32 (current_context.matchlist)
-			if not is_valid_class_name (l_name) then
+			if not is_valid_class_name (a_class_as.class_name.text_32 (current_context.matchlist)) then
 				create l_viol.make_with_rule (Current)
 				l_viol.set_location (a_class_as.class_name.start_location)
 				violations.extend (l_viol)
 			end
 		end
 
-	is_valid_class_name (a_name: STRING): BOOLEAN
+	is_valid_class_name (a_name: READABLE_STRING_32): BOOLEAN
 			-- Does `a_name' respect the naming conventions for classes?
 		do
 				-- Sample violations:

@@ -306,7 +306,8 @@ feature {NONE} -- Reporting
 		end
 
 note
-	copyright:	"Copyright (c) 2017, Eiffel Software"
+	ca_ignore: "CA011", "CA011: too many arguments"
+	copyright:	"Copyright (c) 2017-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

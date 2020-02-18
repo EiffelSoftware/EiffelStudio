@@ -9,6 +9,7 @@
 			publicly.
 		]"
 	author: "Samuel Schmid"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -52,7 +53,7 @@ feature {NONE} -- Initialization
 	initialize_regex
 			-- Initializes the regular expression for checking the comments.
 		local
-			l_regex_string: STRING
+			l_regex_string: STRING_32
 		do
 			create l_regex_string.make_empty
 
@@ -170,7 +171,7 @@ feature {NONE} -- Rule checking
 				across
 					l_comments as l_comment
 				loop
-					if (r.matches (l_comment.item.content_32)) then
+					if r.matches (l_comment.item.content_32) then
 						create l_violation.make_with_rule (Current)
 						l_violation.set_location (create {LOCATION_AS}.make (l_comment.item.line, l_comment.item.column, 0, 0, 0, 0, 0))
 						l_violation.long_description_info.extend (l_comment.item.content_32)

@@ -6,7 +6,7 @@
 			purposes or due to a programmer's mistake. One example is a series of instructions
 			(in the same block) which follows an assertion that always evaluates to false.
 		]"
-	author: ""
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -79,13 +79,15 @@ feature {NONE} -- Rule Checking
 				loop
 					if attached {CHECK_AS} l_compound.item as l_check then
 						across l_check.check_list as l_tagged loop
-							if not l_found_violation and then is_expr_false (l_tagged.item.expr) then
-								-- We found at least one assertion which is False.
-								if not l_compound.islast then
+							if
+								not l_found_violation and then
+								is_expr_false (l_tagged.item.expr) and then
+									-- We found at least one assertion which is False.
 									-- There are still more instructions after the check fails.
-									l_found_violation := True
-									create_violation (l_compound, l_index + 1)
-								end
+								not l_compound.islast
+							then
+								l_found_violation := True
+								create_violation (l_compound, l_index + 1)
 							end
 						end
 					elseif attached {INSTR_CALL_AS} l_compound.item as l_call and then

@@ -63,28 +63,30 @@ feature {NONE} -- Rule checking
 			check
 				attached current_feature
 			end
-			if attached current_feature as l_current_feature then
-				if (not attached a_as.compound or else a_as.compound.is_empty) and then l_current_feature.body.is_routine then
-					l_uncommented := True
+			if
+				attached current_feature as l_current_feature and then
+				(not attached a_as.compound or else a_as.compound.is_empty) and then
+				l_current_feature.body.is_routine
+			then
+				l_uncommented := True
 
-					l_comments := l_current_feature.comment (current_context.matchlist)
-					if not comments_are_empty (l_comments) then
-						l_uncommented := False
-					end
+				l_comments := l_current_feature.comment (current_context.matchlist)
+				if not comments_are_empty (l_comments) then
+					l_uncommented := False
+				end
 
-						-- The following line should never fail, at the very least we will have
-						-- two more 'end' keywords in the current class.
-					l_break_leaf := current_context.matchlist.at (a_do_once_keyword_index + 1)
-					if attached {BREAK_AS} l_break_leaf as l_break and then l_break.has_comment then
-						l_uncommented := False
-					end
+					-- The following line should never fail, at the very least we will have
+					-- two more 'end' keywords in the current class.
+				l_break_leaf := current_context.matchlist.at (a_do_once_keyword_index + 1)
+				if attached {BREAK_AS} l_break_leaf as l_break and then l_break.has_comment then
+					l_uncommented := False
+				end
 
-					if l_uncommented then
-						create l_viol.make_with_rule (Current)
-						l_viol.set_location (l_current_feature.start_location)
-						l_viol.long_description_info.extend (l_current_feature.feature_name.name_32)
-						violations.extend (l_viol)
-					end
+				if l_uncommented then
+					create l_viol.make_with_rule (Current)
+					l_viol.set_location (l_current_feature.start_location)
+					l_viol.long_description_info.extend (l_current_feature.feature_name.name_32)
+					violations.extend (l_viol)
 				end
 			end
 		end

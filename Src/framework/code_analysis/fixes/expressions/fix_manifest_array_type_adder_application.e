@@ -50,7 +50,6 @@ feature {AST_EIFFEL} -- Visitor
 	process_array_as (a: ARRAY_AS)
 			-- <Precursor>
 		local
-			t: AST_TYPE_OUTPUT_STRATEGY
 			y: YANK_STRING_WINDOW
 			u: UTF_CONVERTER
 		do
@@ -60,13 +59,13 @@ feature {AST_EIFFEL} -- Visitor
 				attached a.rarray_symbol (token_list) as right and then right.index = array.rarray_symbol_index
 			then
 				create y.make
-				create t
-				t.process (type, y, written_class, written_feature)
+				;(create {AST_TYPE_OUTPUT_STRATEGY}).process (type, y, written_class, written_feature)
 				a.prepend_text ("{" + u.string_32_to_utf_8_string_8 (y.stored_output) + "} ", token_list)
 			end
 		end
 
 note
+	ca_ignore: "CA011", "CA011: too many arguments"
 	date: "$Date$"
 	revision: "$Revision$"
 	copyright: "Copyright (c) 1984-2014, Eiffel Software"

@@ -1,6 +1,6 @@
 ﻿note
 	description: "Fixes violations of rule #49 ('Comparison of object references')."
-	author: ""
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -17,7 +17,8 @@ create
 	make_with_bin_eq
 
 feature {NONE} -- Initialization
-	make_with_bin_eq (a_class: attached CLASS_C; a_bin_eq_as: attached BIN_EQ_AS)
+
+	make_with_bin_eq (a_class: CLASS_C; a_bin_eq_as: BIN_EQ_AS)
 			-- Initializes `Current' with class `a_class'. `a_bin_eq_as' is the '='
 			-- operation comparing object references.
 		do
@@ -28,13 +29,14 @@ feature {NONE} -- Initialization
 feature {NONE} -- Implementation
 
 	bin_eq_to_change: BIN_EQ_AS
-		-- The '=' operation comparing object references.
+			-- The '=' operation comparing object references.
 
 feature {NONE} -- Visitor
 
 	execute
 			-- <Precursor>
 		do
-			bin_eq_to_change.replace_text (bin_eq_to_change.left.text_32 (match_list) + " - " + bin_eq_to_change.right.text_32 (match_list), match_list)
+			bin_eq_to_change.replace_text (bin_eq_to_change.left.text (match_list) + " - " + bin_eq_to_change.right.text (match_list), match_list)
 		end
+
 end

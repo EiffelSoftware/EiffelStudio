@@ -168,13 +168,11 @@ feature {NONE} -- Rule checking
 			-- Updates usage information if `a_access_id' represents a local.
 		local
 			l_id: ID_AS
-			l_used: INTEGER
 		do
 			if a_access_id.is_local then
 				l_id := a_access_id.feature_name
 				if locals_usage.has_key (l_id) then
-					l_used := locals_usage [l_id]
-					locals_usage.force (l_used + 1, l_id)
+					locals_usage.force (locals_usage [l_id] + 1, l_id)
 				else
 					locals_usage.extend (1, l_id)
 				end

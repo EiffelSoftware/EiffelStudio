@@ -1,11 +1,12 @@
 ﻿note
 	description: "[
-			RULE #2: Unused argument
-			
-			A feature should only have arguments which are actually
-			needed and used in the computation.
-		]"
+		RULE #2: Unused argument
+		
+		A feature should only have arguments which are actually
+		needed and used in the computation.
+	]"
 	author: "Stefan Zurfluh"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -54,7 +55,7 @@ feature -- Properties
 
 	description: STRING_32
 		do
-			Result :=  ca_names.unused_argument_description
+			Result := ca_names.unused_argument_description
 		end
 
 	format_violation_description (a_violation: attached CA_RULE_VIOLATION; a_formatter: attached TEXT_FORMATTER)
@@ -95,7 +96,7 @@ feature {NONE} -- Rule Checking
 		local
 			j: INTEGER
 		do
-			has_arguments := (a_body_as.arguments /= Void)
+			has_arguments := attached a_body_as.arguments
 			create args_used.make (0)
 			n_arguments := 0
 			if

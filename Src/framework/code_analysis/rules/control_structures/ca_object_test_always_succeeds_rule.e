@@ -1,12 +1,12 @@
 ﻿note
 	description: "[
-			RULE #29: Object test or non-Void test always succeeds
-	
-			For an attached variable object tests and non-Void tests
-			always succeed. Also, objects tests that check if an entity
-			is attached to a supertype always suceed. The tests should
-			be removed.
-		]"
+		RULE #29: Object test or non-Void test always succeeds
+		
+		For an attached variable object tests and non-Void tests
+		always succeed. Also, objects tests that check if an entity
+		is attached to a supertype always suceed. The tests should
+		be removed.
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -29,15 +29,15 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	register_actions (a_checker: attached CA_ALL_RULES_CHECKER)
+	register_actions (a_checker: CA_ALL_RULES_CHECKER)
 		do
 			a_checker.add_feature_pre_action (agent pre_process_feature)
-			a_checker.add_feature_post_action (agent (f: FEATURE_AS) do current_feature := Void end)
+			a_checker.add_feature_post_action (agent  (f: FEATURE_AS) do current_feature := Void end)
 			a_checker.add_bin_ne_pre_action (agent pre_process_bin_ne)
 			a_checker.add_object_test_pre_action (agent pre_process_object_test)
 		end
 
-	pre_process_bin_ne (a_bin_ne: attached BIN_NE_AS)
+	pre_process_bin_ne (a_bin_ne: BIN_NE_AS)
 		do
 			if
 				is_project_setting_void_safety_complete
@@ -56,7 +56,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	pre_process_object_test (a_object_test: attached OBJECT_TEST_AS)
+	pre_process_object_test (a_object_test: OBJECT_TEST_AS)
 		local
 			l_type_var, l_type_test: TYPE_A
 		do
@@ -79,23 +79,23 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	pre_process_feature (a_feature: attached FEATURE_AS)
+	pre_process_feature (a_feature: FEATURE_AS)
 		do
 			current_feature := current_context.checking_class.feature_named_32 (a_feature.feature_names.first.visual_name_32)
 		end
 
-	extract_feature_name (a_expr: attached EXPR_AS): STRING
+	extract_feature_name (a_expr: EXPR_AS): READABLE_STRING_32
 		do
 			if
 				attached {EXPR_CALL_AS} a_expr as l_expr_call
 				and then attached {ACCESS_ASSERT_AS} l_expr_call.call as l_access_assert
-				and then attached {ID_AS} l_access_assert.feature_name as l_id
+				and then attached l_access_assert.feature_name as l_id
 			then
 				Result := l_id.name_32
 			end
 		end
 
-	create_violation (a_expr: attached EXPR_AS; a_variable_name: STRING)
+	create_violation (a_expr: EXPR_AS; a_variable_name: READABLE_STRING_32)
 		local
 			l_violation: CA_RULE_VIOLATION
 			l_fix: CA_OBJECT_TEST_ALWAYS_SUCCEEDS_FIX
@@ -118,7 +118,7 @@ feature {NONE} -- Implementation
 	format_violation_description (a_violation: attached CA_RULE_VIOLATION; a_formatter: attached TEXT_FORMATTER)
 		do
 			if
-				attached {BOOLEAN} a_violation.long_description_info.at(2) as l_is_bin_ne
+				attached {BOOLEAN} a_violation.long_description_info.at (2) as l_is_bin_ne
 				and then l_is_bin_ne
 			then
 				a_formatter.add (ca_messages.object_test_succeeds_violation_1)
@@ -139,11 +139,11 @@ feature {NONE} -- Implementation
 			l_conf: CONF_OPTION
 		do
 			l_conf := current_context.universe.target.options
-			Result := (l_conf.void_safety.index = l_conf.void_safety_index_all)
+			Result := l_conf.void_safety.index = l_conf.void_safety_index_all
 		end
 
 	current_feature: FEATURE_I
-		-- The feature we are currently in.
+			-- The feature we are currently in.
 
 feature -- Properties
 

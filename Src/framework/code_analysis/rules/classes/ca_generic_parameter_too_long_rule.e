@@ -1,9 +1,9 @@
 ﻿note
 	description: "[
-			RULE #67: Formal generic parameter name has more than one character
-	
-			Names of formal generic parameters in generic class declarations should only have one character.
-		]"
+		RULE #67: Formal generic parameter name has more than one character
+		
+		Names of formal generic parameters in generic class declarations should only have one character.
+	]"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -18,12 +18,12 @@ create
 
 feature {NONE} -- Implementation
 
-	register_actions (a_checker: attached CA_ALL_RULES_CHECKER)
+	register_actions (a_checker: CA_ALL_RULES_CHECKER)
 		do
 			a_checker.add_class_pre_action (agent pre_check_class)
 		end
 
-	pre_check_class (a_class: attached CLASS_AS)
+	pre_check_class (a_class: CLASS_AS)
 		do
 			create first_chars.make
 			first_chars.compare_objects
@@ -35,14 +35,14 @@ feature {NONE} -- Implementation
 					-- First iteration to get all the single character parameters.
 				across l_generics as l_generic_decl loop
 					if l_generic_decl.item.name.name_32.count = 1 then
-						first_chars.extend (l_generic_decl.item.name.name_8.at(1))
+						first_chars.extend (l_generic_decl.item.name.name_8.at (1))
 					end
 				end
 
 					-- Second iteration to construct the violations.
 				across l_generics as l_generic_decl loop
 					if l_generic_decl.item.name.name_32.count > 1 then
-						if not first_chars.has (l_generic_decl.item.name.name_8.at(1)) then
+						if not first_chars.has (l_generic_decl.item.name.name_8.at (1)) then
 							create_violation (l_generic_decl.item.name.name_32)
 						else
 							create_violation_without_fix (l_generic_decl.item.name.name_32)
@@ -51,31 +51,22 @@ feature {NONE} -- Implementation
 				end
 			end
 
-				-- Adding the constructed violations
-			from
-				violations_for_char.start
-			until
-				violations_for_char.after
-			loop
-				across violations_for_char.item_for_iteration as l_violation loop
-					violations.extend (l_violation.item)
-				end
-				violations_for_char.forth
-			end
+				-- Add the constructed violations.
+			⟳ c: violations_for_char ¦ ⟳ v: c ¦ violations.extend (v) ⟲ ⟲
 		end
 
-	first_chars: LINKED_LIST [CHARACTER]
+	first_chars: LINKED_LIST [CHARACTER_32]
 
-	fixes_for_char: HASH_TABLE [LINKED_LIST [CA_GENERIC_PARAMETER_TOO_LONG_FIX], CHARACTER]
+	fixes_for_char: HASH_TABLE [LINKED_LIST [CA_GENERIC_PARAMETER_TOO_LONG_FIX], CHARACTER_32]
 
-	violations_for_char: HASH_TABLE [LINKED_LIST [CA_RULE_VIOLATION], CHARACTER]
+	violations_for_char: HASH_TABLE [LINKED_LIST [CA_RULE_VIOLATION], CHARACTER_32]
 
-	create_violation (a_name: STRING)
+	create_violation (a_name: READABLE_STRING_32)
 		local
 			l_violation: CA_RULE_VIOLATION
 			l_fix: CA_GENERIC_PARAMETER_TOO_LONG_FIX
-			l_fixes: LINKED_LIST[CA_GENERIC_PARAMETER_TOO_LONG_FIX]
-			l_violations: LINKED_LIST[CA_RULE_VIOLATION]
+			l_fixes: LINKED_LIST [CA_GENERIC_PARAMETER_TOO_LONG_FIX]
+			l_violations: LINKED_LIST [CA_RULE_VIOLATION]
 		do
 			create l_violation.make_with_rule (Current)
 
@@ -97,10 +88,10 @@ feature {NONE} -- Implementation
 				end
 
 				l_fixes.extend (l_fix)
-				fixes_for_char.replace (l_fixes, a_name.at (1))
+				fixes_for_char.replace (l_fixes, a_name [1])
 
 					-- Add this fix to all the other violations
-				l_violations := violations_for_char.at (a_name.at(1))
+				l_violations := violations_for_char.at (a_name [1])
 
 				from
 					l_violations.start
@@ -113,39 +104,34 @@ feature {NONE} -- Implementation
 
 				l_violations.extend (l_violation)
 
-				violations_for_char.replace (l_violations, a_name.at (1))
+				violations_for_char.replace (l_violations, a_name [1])
 			else
 				create l_fixes.make
 				l_fixes.extend (l_fix)
-				fixes_for_char.put (l_fixes, a_name.at (1))
+				fixes_for_char.put (l_fixes, a_name [1])
 
 				create l_violations.make
 				l_violations.extend (l_violation)
-				violations_for_char.put (l_violations, a_name.at (1))
+				violations_for_char.put (l_violations, a_name [1])
 			end
 		end
 
-	create_violation_without_fix (a_name: STRING)
+	create_violation_without_fix (a_name: READABLE_STRING_32)
 		local
 			l_violation: CA_RULE_VIOLATION
 		do
 			create l_violation.make_with_rule (Current)
-
 			l_violation.long_description_info.extend (a_name)
-
 			l_violation.set_location (current_context.checking_class.generics.start_location)
-
 			violations.extend (l_violation)
 		end
 
-	format_violation_description (a_violation: attached CA_RULE_VIOLATION; a_formatter: attached TEXT_FORMATTER)
+	format_violation_description (a_violation: CA_RULE_VIOLATION; a_formatter: TEXT_FORMATTER)
 		do
 			a_formatter.add (ca_messages.generic_param_too_long_violation_1)
-
 			if attached {READABLE_STRING_GENERAL} a_violation.long_description_info.first as l_param_name then
 				a_formatter.add (l_param_name)
 			end
-
 			a_formatter.add (ca_messages.generic_param_too_long_violation_2)
 		end
 

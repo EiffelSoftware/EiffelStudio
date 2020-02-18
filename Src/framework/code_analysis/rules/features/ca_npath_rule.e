@@ -8,6 +8,7 @@
 			functionality to separate routines.
 		]"
 	author: "Stefan Zurfluh, Eiffel Software"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -184,12 +185,11 @@ feature {NONE} -- Rule Checking
 			-- Combines the inner NPath of `a_if' with the next-outer
 			-- level.
 		local
-			inner_npath, outer_npath: INTEGER
+			inner_npath: INTEGER
 		do
 			inner_npath := npath_stack.item + 1
 			npath_stack.remove
-			outer_npath := npath_stack.item
-			npath_stack.replace (inner_npath * outer_npath)
+			npath_stack.replace (inner_npath * npath_stack.item)
 		end
 
 	pre_process_loop (a_loop: LOOP_AS)
@@ -202,12 +202,11 @@ feature {NONE} -- Rule Checking
 			-- Combines the inner NPath of `a_loop' with the next-outer
 			-- level.
 		local
-			inner_npath, outer_npath: INTEGER
+			inner_npath: INTEGER
 		do
 			inner_npath := npath_stack.item + 1
 			npath_stack.remove
-			outer_npath := npath_stack.item
-			npath_stack.replace (inner_npath * outer_npath)
+			npath_stack.replace (inner_npath * npath_stack.item)
 		end
 
 	pre_process_inspect (a_inspect: INSPECT_AS)
@@ -220,12 +219,11 @@ feature {NONE} -- Rule Checking
 			-- Combines the inner NPath of `a_inspect' with the next-outer
 			-- level.
 		local
-			inner_npath, outer_npath: INTEGER
+			inner_npath: INTEGER
 		do
 			inner_npath := npath_stack.item + 1
 			npath_stack.remove
-			outer_npath := npath_stack.item
-			npath_stack.replace (inner_npath * outer_npath)
+			npath_stack.replace (inner_npath * npath_stack.item)
 		end
 
 	process_and_then (a_and_then: BIN_AND_THEN_AS)

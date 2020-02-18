@@ -18,6 +18,7 @@ create
 	make_with_feature_type_and_index
 
 feature {NONE} -- Initialization
+
 	make_with_feature_type_and_index (a_class: attached CLASS_C; a_feature: attached FEATURE_AS; a_local_type: attached TYPE_A; a_local_index: attached INTEGER; a_access: attached ACCESS_ID_AS)
 			-- Initializes `Current' with class `a_class'. `a_local_type' is the type of the local variable which violates the rule.
 			-- `a_feature' is the feature in which the rule was violated. `a_local_index' is the internal index of the local from its local_dec_list_as.
@@ -80,4 +81,6 @@ feature {NONE} -- Implementation
 	feature_as: FEATURE_AS
 		-- The ast node of the feature in wich the rule was violated.
 
+;note
+	ca_ignore: "CA011", "CA011: too many arguments"
 end

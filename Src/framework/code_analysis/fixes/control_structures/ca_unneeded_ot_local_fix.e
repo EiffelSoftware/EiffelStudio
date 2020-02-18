@@ -13,13 +13,14 @@ inherit
 			process_if_as,
 			process_id_as
 		end
+	INTERNAL_COMPILER_STRING_EXPORTER
 
 create
 	make_with_ot
 
 feature {NONE} -- Initialization
 
-	make_with_ot (a_class: attached CLASS_C; a_ot: attached OBJECT_TEST_AS)
+	make_with_ot (a_class: CLASS_C; a_ot: OBJECT_TEST_AS)
 			-- Initializes `Current' with class `a_class' and affected object test `a_ot'.
 		do
 			make (ca_names.unneeded_ot_local_fix + a_ot.name.name_32 + "'", a_class)
@@ -34,7 +35,7 @@ feature {NONE} -- Implementation
 	ot_local: INTEGER
 			-- The object test local that is not needed.
 
-	tested_expression: STRING_32
+	tested_expression: STRING
 			-- The expression the object test tests.
 
 	within_ot: BOOLEAN
@@ -46,19 +47,19 @@ feature {NONE} -- Visitor
 	process_object_test_as (a_ot: OBJECT_TEST_AS)
 			-- Remove the object test local from `a_ot'.
 		local
-			l_new_string: STRING_32
+			l_new_string: STRING
 		do
 			if ot.is_equivalent (a_ot) then
 				ot_local := a_ot.name.name_id
-				tested_expression := a_ot.expression.text_32 (match_list)
+				tested_expression := a_ot.expression.text (match_list)
 					-- Let the visitor process all IDs until we have reached the end of the
 					-- current if block.
 				within_ot := True
 
 					-- Getting rid of the name.
-				l_new_string := a_ot.text_32 (match_list)
+				l_new_string := a_ot.text (match_list)
 
-				l_new_string.replace_substring_all (a_ot.name.name_32, "")
+				l_new_string.replace_substring_all (a_ot.name.name, "")
 				l_new_string.replace_substring_all ("as ", "")
 
 				a_ot.replace_text (l_new_string, match_list)

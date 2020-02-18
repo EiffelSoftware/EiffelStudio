@@ -1,10 +1,10 @@
 ﻿note
 	description: "[
-			RULE #88: Mergeable feature clauses
-			
-			Feature clauses with the same export status and comment could possibly
-			be merged into one, or their comments could be made more specific.
-		]"
+		RULE #88: Mergeable feature clauses
+		
+		Feature clauses with the same export status and comment could possibly
+		be merged into one, or their comments could be made more specific.
+	]"
 	author: "Paolo Antonucci"
 	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
@@ -14,7 +14,6 @@ class
 	CA_MERGEABLE_FEATURE_CLAUSES_RULE
 
 inherit
-
 	CA_STANDARD_RULE
 
 create
@@ -81,7 +80,6 @@ feature {NONE} -- Rule checking
 			if not l_comment_text.is_empty and attached seen_feature_table as l_seen_feature_table then
 					-- If the comment is empty, we ignore this feature clause.
 					-- There is another rule in charge of complaining about uncommented feature clauses.
-
 				l_key := l_comment_text.as_lower + stringify_clients (a_feature_clause_as.clients) -- Case insensitive on comments
 				if not l_seen_feature_table.has (l_key) then
 					l_seen_feature_table.put (a_feature_clause_as, l_key)
@@ -120,7 +118,7 @@ feature {NONE} -- Rule checking
 			l_inner_clients: CLASS_LIST_AS
 			l_client_list: ARRAYED_LIST [READABLE_STRING_GENERAL]
 			l_string_sorter: QUICK_SORTER [READABLE_STRING_GENERAL]
-			l_current_client: STRING
+			l_current_client: READABLE_STRING_32
 			i: INTEGER
 		do
 			if a_clients = Void or else a_clients.clients = Void then

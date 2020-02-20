@@ -1273,12 +1273,15 @@ feature {NONE} -- Visitors
 			if attached b.case_list as cs then
 				l_nb_jump := cs.count
 					-- Generate code for the inspect intervals.
-				across cs is c loop make_case_range (c) end
+					-- Because `ba.mark_forward2` and `ba.write_forward2`use a stack,
+					-- the order of intervals need to be reversed, so that compounds come
+					-- in source order to preserve breakpoints order.
+				across cs.new_cursor.reversed is c loop make_case_range (c) end
 					-- Go to else part.
 				ba.append (Bc_jmp)
 				ba.mark_forward3
 					-- Generate code for the inspect cases.
-				across cs.new_cursor.reversed is c loop process_case_b (c) end
+				across cs is c loop process_case_b (c) end
 				ba.write_forward3
 			end
 			if attached b.else_part as p then
@@ -1316,12 +1319,15 @@ feature {NONE} -- Visitors
 			if attached b.case_list as cs then
 				l_nb_jump := cs.count
 					-- Generate code for the inspect intervals.
-				across cs is c loop make_case_range (c) end
+					-- Because `ba.mark_forward2` and `ba.write_forward2`use a stack,
+					-- the order of intervals need to be reversed, so that compounds come
+					-- in source order to preserve breakpoints order.
+				across cs.new_cursor.reversed is c loop make_case_range (c) end
 					-- Go to else part.
 				ba.append (Bc_jmp)
 				ba.mark_forward3
 					-- Generate code for the inspect cases.
-				across cs.new_cursor.reversed is c loop process_case_expression_b_for_type (c, t) end
+				across cs is c loop process_case_expression_b_for_type (c, t) end
 				ba.write_forward3
 			end
 			if attached b.else_part as p then

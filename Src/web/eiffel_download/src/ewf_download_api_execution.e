@@ -140,8 +140,8 @@ feature -- Workflow
 						check
 							l_service.is_new_contact (l_form.email)
 						end
-							l_service.add_temporary_contact (l_form.first_name, l_form.last_name, l_form.email, l_form.newsletter.to_integer)
-							l_service.initialize_download (l_token, l_form)
+						l_service.add_temporary_contact (l_form.first_name, l_form.last_name, l_form.email, l_form.newsletter.to_integer)
+						l_service.initialize_download (l_token, l_form)
 					end
 							-- If the title is Student or Porfessor, they will not receive an email.
 					if l_form.title.same_string ("student") or else l_form.title.same_string ("professor") then
@@ -525,7 +525,6 @@ feature -- Response
 		do
 			create h.make
 			h.put_current_date
-			h.put_header_key_value ("Content-type", "application/octet-stream")
 			h.put_location (output)
 			res.set_status_code ({HTTP_STATUS_CODE}.see_other)
 			res.put_header_text (h.string)

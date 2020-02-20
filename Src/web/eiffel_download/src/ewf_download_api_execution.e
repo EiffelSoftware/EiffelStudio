@@ -519,15 +519,16 @@ feature -- Response
 
 
 	compute_download  (req: WSF_REQUEST; res: WSF_RESPONSE; output: STRING)
-			--Simple response to download content
+			-- Simple response to download content
 		local
-			h: HTTP_HEADER
+--			h: HTTP_HEADER
 		do
-			create h.make
-			h.put_current_date
-			h.put_location (output)
-			res.set_status_code ({HTTP_STATUS_CODE}.see_other)
-			res.put_header_text (h.string)
+			res.redirect_now (output)
+--			create h.make
+--			h.put_current_date
+--			h.put_location (output)
+--			res.set_status_code ({HTTP_STATUS_CODE}.see_other)
+--			res.put_header_text (h.string)
 		end
 
 

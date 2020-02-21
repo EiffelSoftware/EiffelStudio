@@ -600,6 +600,7 @@ feature {NONE} -- Visitors
 		local
 			i: INTEGER
 		do
+			generate_melted_debugger_hook (ba)
 			from
 				i := b.interval.count
 			until
@@ -619,6 +620,7 @@ feature {NONE} -- Visitors
 		local
 			i: INTEGER
 		do
+			generate_melted_debugger_hook (ba)
 			from
 				i := b.interval.count
 			until
@@ -1312,8 +1314,6 @@ feature {NONE} -- Visitors
 		do
 			t := context.real_type (b.type)
 
-			generate_melted_debugger_hook (ba)
-
 				-- Generate switch expression byte code.
 			b.switch.process (Current)
 			if attached b.case_list as cs then
@@ -1331,6 +1331,7 @@ feature {NONE} -- Visitors
 				ba.write_forward3
 			end
 			if attached b.else_part as p then
+				generate_melted_debugger_hook (ba)
 					-- Pop the value of the expression that is not needed anymore.
 				ba.append (bc_pop)
 				ba.append_natural_32 (1)

@@ -34,6 +34,11 @@ feature -- Status report
 		deferred
 		end
 
+	is_expression: BOOLEAN
+			-- Is Current a multi-branch expression?
+		deferred
+		end
+
 feature -- Modification
 
 	set_switch (s: like switch)
@@ -102,7 +107,9 @@ feature -- C code generation
 		do
 			buf := buffer
 			generate_line_info
-			generate_frozen_debugger_hook
+			if not is_expression then
+				generate_frozen_debugger_hook
+			end
 			switch.generate
 			buf.put_new_line
 			buf.put_string ("switch (")

@@ -56,6 +56,9 @@ feature -- Status report
 			Result := attached else_part as e and then not e.is_empty
 		end
 
+	is_expression: BOOLEAN = False
+			-- <Precursor>
+
 feature {NONE} -- Code generation: C
 
 	generate_effect (c: detachable BYTE_LIST [BYTE_NODE])

@@ -59,6 +59,9 @@ feature -- Status report
 	has_else_code: BOOLEAN = True
 			-- <Precursor>
 
+	is_expression: BOOLEAN = True
+			-- <Precursor>
+
 feature -- Modification
 
 	set_type (t: like type)
@@ -134,6 +137,7 @@ feature {NONE} -- Code generation: C
 	generate_effect (c: EXPR_B)
 			-- <Precursor>
 		do
+			generate_frozen_debugger_hook
 			c.generate_for_attachment (register, type)
 		end
 

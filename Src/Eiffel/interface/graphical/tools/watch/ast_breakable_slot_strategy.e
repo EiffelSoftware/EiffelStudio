@@ -88,6 +88,7 @@ inherit
 			process_guard_as,
 			process_if_as,
 			process_inspect_as,
+			process_inspect_expression_as,
 			process_instr_call_as,
 			process_loop_as,
 			process_retry_as,
@@ -118,6 +119,7 @@ inherit
 			process_create_as,
 			process_client_as,
 			process_case_as,
+			process_case_expression_as,
 			process_ensure_as,
 			process_ensure_then_as,
 			process_require_as,
@@ -1597,6 +1599,21 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	process_inspect_expression_as (l_as: INSPECT_EXPRESSION_AS)
+		do
+			check
+				not_expr_type_visiting: not expr_type_visiting
+			end
+			l_as.switch.process (Current)
+			if l_as.case_list /= Void then
+				l_as.case_list.process (Current)
+			end
+			if attached l_as.else_part as l_else_part then
+				put_breakable (l_as)
+				l_else_part.process (Current)
+			end
+		end
+
 	process_instr_call_as (l_as: INSTR_CALL_AS)
 		do
 			reset_last_class_and_type
@@ -1965,6 +1982,18 @@ feature {NONE} -- Implementation
 			l_as.interval.process (Current)
 			if l_as.compound /= Void then
 				format_compound (l_as.compound)
+			end
+		end
+
+	process_case_expression_as (l_as: CASE_EXPRESSION_AS)
+		do
+			check
+				not_expr_type_visiting: not expr_type_visiting
+			end
+			l_as.interval.process (Current)
+			if attached l_as.content as l_content then
+				put_breakable (l_as)
+				l_content.process (Current)
 			end
 		end
 
@@ -2787,7 +2816,7 @@ invariant
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

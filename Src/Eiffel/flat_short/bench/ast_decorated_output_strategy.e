@@ -2813,7 +2813,8 @@ feature {NONE} -- Implementation
 
 	process_inspect_abstraction
 		(a: INSPECT_ABSTRACTION_AS [CASE_ABSTRACTION_AS [detachable AST_EIFFEL], detachable AST_EIFFEL];
-		format_else_part_content: PROCEDURE)
+			a_is_expression: BOOLEAN;
+			format_else_part_content: PROCEDURE)
 		local
 			l_text_formatter_decorator: like text_formatter_decorator
 		do
@@ -2821,7 +2822,9 @@ feature {NONE} -- Implementation
 			check
 				not_expr_type_visiting: not expr_type_visiting
 			end
-			put_breakable
+			if not a_is_expression then
+				put_breakable
+			end
 			l_text_formatter_decorator.process_keyword_text (ti_inspect_keyword, Void)
 			l_text_formatter_decorator.put_space
 			l_text_formatter_decorator.indent
@@ -2847,7 +2850,7 @@ feature {NONE} -- Implementation
 
 	process_inspect_as (a: INSPECT_AS)
 		do
-			process_inspect_abstraction (a, agent (e: detachable EIFFEL_LIST [INSTRUCTION_AS])
+			process_inspect_abstraction (a, False, agent (e: detachable EIFFEL_LIST [INSTRUCTION_AS])
 				do
 					if attached e and then not e.is_empty then
 						format_compound (e)
@@ -2858,9 +2861,10 @@ feature {NONE} -- Implementation
 
 	process_inspect_expression_as (a: INSPECT_EXPRESSION_AS)
 		do
-			process_inspect_abstraction (a, agent (e: detachable EXPR_AS)
+			process_inspect_abstraction (a, True, agent (e: detachable EXPR_AS)
 				do
 					if attached e then
+						put_breakable
 						e.process (Current)
 						text_formatter_decorator.put_new_line
 					end
@@ -3949,7 +3953,13 @@ feature {NONE} -- Implementation
 
 	process_case_expression_as (a: CASE_EXPRESSION_AS)
 		do
-			process_case_abstraction (a, agent (a.content).process (Current))
+			process_case_abstraction (a, agent (c: detachable EXPR_AS)
+				do
+					if c /= Void then
+						put_breakable
+						c.process (Current)
+					end
+				end (a.content))
 		end
 
 	process_ensure_as (l_as: ENSURE_AS)
@@ -5129,7 +5139,7 @@ note
 	ca_ignore: "CA033", "CA033 — very long class"
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

@@ -432,7 +432,7 @@ feature -- Execute
 
 				Result := str_exp.expand_string_32 (a_string, True)
 				if not Result.same_string (a_string) then
-					l_mapping := text_mapping (a_String, Result)
+					l_mapping := text_mapping (a_string, Result)
 					debug ("update_ecf")
 						display_text_mapping (a_string, Result, l_mapping)
 					end

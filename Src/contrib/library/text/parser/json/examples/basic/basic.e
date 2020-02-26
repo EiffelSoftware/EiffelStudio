@@ -41,6 +41,8 @@ feature {NONE} -- Initialization
 				jv.accept (printer)
 				print ("The JSON formatted using a pretty printer:%N")
 				print (s)
+			else
+				print("Error(s) occurred while parsing the json string:%N" + json_content + "%NError:" + parser.errors_as_string)
 			end
 		end
 

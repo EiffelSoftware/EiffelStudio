@@ -117,6 +117,12 @@ feature -- Mesurement
 
 feature -- Status report
 
+	is_empty: BOOLEAN
+			-- Is structure empty?
+		do
+			Result := count = 0
+		end
+
 	valid_index (i: INTEGER): BOOLEAN
 			-- Is `i' a valid index?
 		do

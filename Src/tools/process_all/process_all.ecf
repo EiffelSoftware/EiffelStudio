@@ -9,7 +9,7 @@
 		<setting name="exception_trace" value="true"/>
 		<setting name="dead_code_removal" value="all"/>
 		<capability>
-			<concurrency support="thread"/>
+			<concurrency support="thread"/><!-- FIXME: when EiffelProcess supports SCOOP. -->
 			<void_safety support="none"/>
 		</capability>
 		<library name="argument_parser" location="$ISE_LIBRARY\library\runtime\process\arg_parser\argument_parser.ecf" readonly="false"/>
@@ -21,6 +21,7 @@
 		<library name="ini" location="$EIFFEL_SRC\framework\file_formats\ini.ecf"/>
 		<library name="pcre" location="$ISE_LIBRARY\unstable\library\text\regexp\pcre\pcre.ecf"/>
 		<library name="process" location="$ISE_LIBRARY\library\process\process.ecf"/>
+		<library name="scoop_patterns" location="$ISE_LIBRARY\unstable\library\scoop_patterns\library\scoop_patterns.ecf"/>
 		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="uuid" location="$ISE_LIBRARY\library\uuid\uuid.ecf"/>

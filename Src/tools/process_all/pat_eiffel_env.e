@@ -4,7 +4,7 @@ note
 	revision: "$Revision$"
 
 class
-	CAT_EIFFEL_ENV
+	PAT_EIFFEL_ENV
 
 inherit
 	EIFFEL_ENV

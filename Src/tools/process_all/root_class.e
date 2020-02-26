@@ -22,6 +22,8 @@ inherit
 
 	HELPER
 
+	SHARED_EXECUTION_ENVIRONMENT
+
 create
 	make
 
@@ -31,7 +33,7 @@ feature {NONE} -- Initialization
 			-- Creation procedure.
 		do
 				-- setup env
-			set_eiffel_layout (create {CAT_EIFFEL_ENV})
+			set_eiffel_layout (create {PAT_EIFFEL_ENV})
 			eiffel_layout.check_environment_variable
 
 			initialize_interface_texts
@@ -385,40 +387,8 @@ feature {NONE} -- Implementation
 
 	frozen available_cpus: NATURAL_32
 			--| FIXME: Copied from ISE_SCOOP_MANAGER. Remove it when available in base.
-		external
-			"C inline use %"eif_scoop.h%""
-		alias
-			"[
-				//#ifdef _WIN32
-				//#include <windows.h>
-				//#elif MACOS
-				//#include <sys/param.h>
-				//#include <sys/sysctl.h>
-				//#else
-				//#include <unistd.h>
-				//#endif
-				#ifdef EIF_WINDOWS
-				    SYSTEM_INFO sysinfo;
-				    GetSystemInfo(&sysinfo);
-				    return sysinfo.dwNumberOfProcessors;
-				#elif EIF_MACOSX
-				    int nm[2];
-				    size_t len = 4;
-				    uint32_t count;
-
-				    nm[0] = CTL_HW; nm[1] = HW_AVAILCPU;
-				    sysctl(nm, 2, &count, &len, NULL, 0);
-
-				    if(count < 1) {
-				        nm[1] = HW_NCPU;
-				        sysctl(nm, 2, &count, &len, NULL, 0);
-				        if(count < 1) { count = 1; }
-				    }
-				    return count;
-				#else
-				    return sysconf(_SC_NPROCESSORS_ONLN);
-				#endif
-			]"
+		do
+			Result := execution_environment.available_cpu_count
 		end
 
 feature {NONE} -- Error handling

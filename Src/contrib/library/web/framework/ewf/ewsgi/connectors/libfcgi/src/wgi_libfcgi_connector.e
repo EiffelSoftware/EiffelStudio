@@ -78,7 +78,7 @@ feature -- Execution
 				exec.clean
 			else
 				(create {WGI_RESCUE_EXECUTION}).execute (req, res, (create {EXCEPTION_MANAGER}).last_exception)
-			end
+			end				
 		rescue
 			if not rescued then
 				rescued := True

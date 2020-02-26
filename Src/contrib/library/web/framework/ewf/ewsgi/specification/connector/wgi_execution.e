@@ -48,7 +48,7 @@ feature {WGI_EXPORTER, WGI_CONNECTOR} -- Execution: rescue
 			-- Execute on rescue.
 		do
 			(create {WGI_RESCUE_EXECUTION}).execute (request, response, e)
-		end		
+		end
 
 feature -- Status report
 
@@ -69,6 +69,7 @@ invariant
 
 	wgi_request_set: request /= Void
 	wgi_response_set: response /= Void
+
 
 note
 	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"

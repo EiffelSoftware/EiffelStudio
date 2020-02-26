@@ -65,7 +65,7 @@ feature {NONE} -- Access
 			Result.extend (create {ARGUMENT_DIRECTORY_SWITCH}.make (compdir_switch, "Directory where projects will be compiled.", True, False, "directory", "A directory where the projects will be compiled", False))
 			Result.extend (create {ARGUMENT_DIRECTORY_SWITCH}.make (eifgen_switch, "Obsolete: see %"" + compdir_switch  + "%" option.", True, False, "directory", "...", False))
 			Result.extend (create {ARGUMENT_DIRECTORY_SWITCH}.make (logdir_switch, "Directory where logs will be stored (if verbose logging is enabled).", True, False, "directory", "A directory where the logs will be stored", False))
-			Result.extend (create {ARGUMENT_FILE_SWITCH}.make (ignore_switch, "Ignore file with files/targets to ignore.", True, False, "ignore.ini", "INI file with the ignores.", False))
+			Result.extend (create {ARGUMENT_VALUE_SWITCH}.make (ignore_switch, "Ignore file with files/targets to ignore.", True, False, "ignore.ini", "INI file with the ignores.", False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (log_verbose_switch, "Verbose logging of actions?", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (list_failures_switch, "Display a list of failed compilation(s) with associated log filename if available.", True, False))
 			Result.extend (create {ARGUMENT_SWITCH}.make (ecb_switch, "Use ecb instead of ec?", True, False))
@@ -443,7 +443,7 @@ feature {NONE} -- Switch names
 	;
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

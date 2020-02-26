@@ -314,7 +314,9 @@ feature {NONE} -- Implementation
 			l_fn: PATH
 			l_entries: ARRAYED_LIST [PATH]
 		do
-			if not path_regexp_ignored (a_directory.name) then
+			if path_regexp_ignored (a_directory.name) then
+				display_error ({STRING_32} "Directory ignored: " + a_directory.name + " .")
+			else
 				create l_dir.make_with_path (a_directory)
 				if not l_dir.is_readable then
 					display_error ({STRING_32} "Could not read "+a_directory.name+"!")
@@ -966,7 +968,7 @@ feature {NONE} -- Directory manipulation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

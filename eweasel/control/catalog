@@ -1383,6 +1383,7 @@ test	dead-code-removal-qat-and-generic	final129 tcf pass finalizing code_removal
 test	dead-code-removal-new_instance		final130 tcf pass finalizing code_removal
 test	dead-code-removal-sed_facilities	final131 tcf pass finalizing code_removal storable
 test	dead-code-removal-storable		final132 tcf pass finalizing code_removal storable
+test	finalized-agent-call			final133 tcf fail finalizing 
 
 -- Runtime
 test	gc-tracking-001					runtime001	tcf pass runtime

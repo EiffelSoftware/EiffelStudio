@@ -20,7 +20,6 @@ feature {NONE} -- Initialization
 			layout := a_layout
 		end
 
-
 feature --Access Services
 
 	layout: APPLICATION_LAYOUT
@@ -34,6 +33,8 @@ feature --Access Services
 	download_service: detachable DOWNLOAD_SERVICE
 			-- Download service.
 
+	is_using_safe_redirection: BOOLEAN assign set_is_using_safe_redirection
+			-- Use safe redirection when url contains embedded credential.
 
 feature -- Change Element
 
@@ -51,4 +52,10 @@ feature -- Change Element
 		do
 			download_service := a_download_service
 		end
+
+	set_is_using_safe_redirection (b: BOOLEAN)
+		do
+			is_using_safe_redirection := b
+		end
+
 end

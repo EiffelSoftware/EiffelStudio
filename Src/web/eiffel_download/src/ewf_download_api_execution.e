@@ -189,8 +189,10 @@ feature -- Workflow
 			l_error_message: STRING
 			l_wsf_debug: WSF_DEBUG_INFORMATION
 		do
-			if attached database_service as l_service  and then
-				l_service.is_available then
+			if
+				attached database_service as l_service and then
+				l_service.is_available
+			then
 				if
 					attached {WSF_STRING} req.query_parameter ("token") as l_token and then
 					attached {DOWNLOAD_INFORMATION} l_service.retrieve_download_details (l_token.value) as l_info and then
@@ -239,28 +241,26 @@ feature -- Workflow
 							generate_new_token (req, res, l_info)
 						end
 					end
-				else
-					if l_service.is_available then
-						create l_error_message.make_from_string ("process_workflow: The request was invalid " + req.request_uri )
-						if attached {WSF_STRING} req.query_parameter ("token") as l_token then
-							l_error_message.append ("%N The given token: "  + l_token.value +  " does not exist or is not available anymore.%N")
-						else
-							l_error_message.append ("%N Missing token.%N")
-						end
-							-- debug information
-						create l_wsf_debug.make
-						l_wsf_debug.append_information_to (req, res, l_error_message)
-						log.write_debug (generator + "." + l_error_message)
-						send_mail_bad_request (generator + "." + l_error_message)
-						bad_request (req, res, "")
+				elseif l_service.is_available then
+					create l_error_message.make_from_string ("process_workflow: The request was invalid " + req.request_uri )
+					if attached {WSF_STRING} req.query_parameter ("token") as l_token then
+						l_error_message.append ("%N The given token: "  + l_token.value +  " does not exist or is not available anymore.%N")
 					else
-						create l_error_message.make_from_string ("The database service is unavailable%N")
-						create l_wsf_debug.make
-						l_wsf_debug.append_information_to (req, res, l_error_message)
-						log.write_debug (generator + ".process_workflow " + l_error_message)
-						send_mail_internal_server_error (l_error_message)
-						internal_server_error (req, res, {HTTP_STATUS_CODE}.service_unavailable)
+						l_error_message.append ("%N Missing token.%N")
 					end
+						-- debug information
+					create l_wsf_debug.make
+					l_wsf_debug.append_information_to (req, res, l_error_message)
+					log.write_debug (generator + "." + l_error_message)
+					send_mail_bad_request (generator + "." + l_error_message)
+					bad_request (req, res, "")
+				else
+					create l_error_message.make_from_string ("The database service is unavailable%N")
+					create l_wsf_debug.make
+					l_wsf_debug.append_information_to (req, res, l_error_message)
+					log.write_debug (generator + ".process_workflow " + l_error_message)
+					send_mail_internal_server_error (l_error_message)
+					internal_server_error (req, res, {HTTP_STATUS_CODE}.service_unavailable)
 				end
 			else
 				log.write_debug (generator + ".process_workflow: The database service is unavailable")
@@ -414,7 +414,7 @@ feature {NONE} -- Implementation
 
 feature -- Response
 
-	enterprise_download_options (req: WSF_REQUEST; res: WSF_RESPONSE; a_link: STRING)
+	enterprise_download_options (req: WSF_REQUEST; res: WSF_RESPONSE; a_link: READABLE_STRING_8)
 		do
 			compute_download (req, res, a_link)
 		end
@@ -510,29 +510,66 @@ feature -- Response
 			h: HTTP_HEADER
 		do
 			create h.make
-			h.put_content_type_text_html
 			h.put_current_date
 			h.put_location (a_location.to_string_8)
 			res.set_status_code ({HTTP_STATUS_CODE}.see_other)
 			res.put_header_text (h.string)
 		end
 
-
-	compute_download  (req: WSF_REQUEST; res: WSF_RESPONSE; output: STRING)
+	compute_download  (req: WSF_REQUEST; res: WSF_RESPONSE; a_link: STRING)
 			-- Simple response to download content
 		local
---			h: HTTP_HEADER
+			h: HTTP_HEADER
+			msg: WSF_HTML_PAGE_RESPONSE
+
+			i,j,k: INTEGER
+			u,p: READABLE_STRING_8
+			lnk: READABLE_STRING_8
+			b: detachable STRING_8
 		do
-			res.redirect_now (output)
---			create h.make
---			h.put_current_date
---			h.put_location (output)
---			res.set_status_code ({HTTP_STATUS_CODE}.see_other)
---			res.put_header_text (h.string)
+			if config.is_using_safe_redirection then
+				i := a_link.substring_index ("://", 1)
+				if i > 0 then
+					i := i + 3
+					j := a_link.index_of ('@', i)
+					if j > 0 then
+						k := a_link.index_of (':', i)
+						if k > 0 then
+							u := a_link.substring (i, k - 1)
+							p := a_link.substring (k + 1, j - 1)
+							lnk := a_link.substring (1, i - 1) + a_link.substring (j + 1, a_link.count)
+							create b.make (1024)
+							b.append ("<div style=%"width: 80%%; margin: 2em auto auto; %">")
+							b.append ("<div style=%"padding: 5px; border: solid 1px blue; background-color: #fff; %">")
+							b.append ("<strong>Please download the file using the link</strong>:<ul><li><a href=%"" + a_link + "%">" + a_link + "</a></li></ul>")
+							b.append ("</div>")
+							b.append ("<div style=%"margin-top: 10px; padding: 5px; border: solid 1px #333; background-color: #ddd;%">")
+							b.append ("<strong>Note</strong>: if your browser does not support link with embedded credential,<br/><br/>Please download directly at <ul><li><a href=%"" + lnk + "%">" + lnk + "</a></li></ul>")
+							b.append ("<br/> ")
+							b.append ("And when asked, use the values:<ul><li>username: <input type=%"text%" size=%"" + u.count.out + "%" value=%""+ u + "%"></input></li><li>password: <input type=%"text%" size=%"" + p.count.out + "%" value=%""+ p + "%"></input></li></ul>")
+							b.append ("</div>")
+							b.append ("</div>")
+						end
+					end
+				end
+			end
+			if b /= Void then
+				create msg.make
+				msg.set_body (b)
+--				msg.header.put_location (a_url)
+--				msg.set_status_code ({HTTP_STATUS_CODE}.temp_redirect)
+				res.send (msg)
+			else
+				res.redirect_now (a_link)
+				create h.make
+				h.put_current_date
+				h.put_location (a_link)
+				res.set_status_code ({HTTP_STATUS_CODE}.see_other)
+				res.put_header_text (h.string)
+			end
 		end
 
-
-	direct_download (req: WSF_REQUEST; res: WSF_RESPONSE; output: STRING; filename: STRING; size: STRING)
+	direct_download (req: WSF_REQUEST; res: WSF_RESPONSE; a_url: STRING; filename: STRING; size: STRING)
 			--Simple response to download content
 		local
 			h: HTTP_HEADER
@@ -541,7 +578,7 @@ feature -- Response
 			h.put_current_date
 			h.put_header_key_value ("Content-type", "application/octet-stream")
 			h.put_cache_control ("no-store, no-cache")
-			h.put_location (output)
+			h.put_location (a_url)
 			res.set_status_code ({HTTP_STATUS_CODE}.see_other)
 			res.put_header_text (h.string)
 		end

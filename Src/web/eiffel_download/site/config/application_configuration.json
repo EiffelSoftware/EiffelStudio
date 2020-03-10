@@ -1,5 +1,5 @@
 {
-	"database": {
+	"atabase": {
 		"datasource": {
 			"driver": "SQL Server",
 			"environment": "test"
@@ -16,6 +16,9 @@
 			}
 		}
 	},
+	"settings": {
+		"use_safe_redirection": true
+		},
 	"smtp": {
 		"server": "localhost"
 		},

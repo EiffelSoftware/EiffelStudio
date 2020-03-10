@@ -1,5 +1,5 @@
 {
-	"atabase": {
+	"database": {
 		"datasource": {
 			"driver": "SQL Server",
 			"environment": "test"

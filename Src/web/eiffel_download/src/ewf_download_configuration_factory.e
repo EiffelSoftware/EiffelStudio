@@ -39,7 +39,7 @@ feature -- Configuration
 			end
 			Result.is_using_safe_redirection := j_cfg.using_safe_redirection_solution (l_layout.application_config_path)
 
-			if False and then attached (create {JSON_CONFIGURATION}).new_database_configuration (l_layout.application_config_path) as l_database_config then
+			if attached (create {JSON_CONFIGURATION}).new_database_configuration (l_layout.application_config_path) as l_database_config then
 				create {DATABASE_CONNECTION_ODBC} l_database.login_with_connection_string (l_database_config.connection_string)
 				create database_service.make (l_database)
 			end

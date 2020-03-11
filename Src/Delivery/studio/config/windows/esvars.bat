@@ -8,6 +8,8 @@ FOR /F "tokens=2* delims=	 " %%A IN ('REG QUERY "%RegKeyPath%" /v ISE_EIFFEL') D
 FOR /F "tokens=2* delims=	 " %%A IN ('REG QUERY "%RegKeyPath%" /v ISE_PLATFORM') DO SET ISE_PLATFORM=%%B
 FOR /F "tokens=2* delims=	 " %%A IN ('REG QUERY "%RegKeyPath%" /v ISE_C_COMPILER') DO SET ISE_C_COMPILER=%%B
 
+IF "%ISE_EIFFEL:~-1%"=="\" SET ISE_EIFFEL=%ISE_EIFFEL:~0,-1%
+
 ECHO EiffelStudio is ready to be used for the %ISE_PLATFORM% platform and %ISE_C_COMPILER% C compiler.
 
 REM Set PATH so that one can easily access to our compiler and associated tools.

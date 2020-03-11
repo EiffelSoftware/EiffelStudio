@@ -188,6 +188,7 @@ feature -- Workflow
 		local
 			l_error_message: STRING
 			l_wsf_debug: WSF_DEBUG_INFORMATION
+			l_safe_redir_confirm_page: BOOLEAN
 		do
 			if
 				attached database_service as l_service and then
@@ -199,6 +200,7 @@ feature -- Workflow
 					attached l_info.email  as email and then
 					attached l_info.platform as platform
 				then
+					l_safe_redir_confirm_page := attached {WSF_STRING} req.query_parameter ("safe")
 					l_info.set_platform (platform)
 					l_info.set_product ("EiffelStudio enterprise")
 					l_info.set_filename (downloaded_file (platform))
@@ -208,7 +210,7 @@ feature -- Workflow
 						if 	l_service.is_download_active (l_token.value) then
 							log.write_debug (generator + ".process_workflow:" + email +  " Download active")
 							l_service.add_download_interaction_membership (email, "EiffelStudio", platform, downloaded_file (platform), l_token.value)
-							enterprise_download_options (req, res, link (platform))
+							enterprise_download_options (req, res, link (platform), l_safe_redir_confirm_page)
 							send_email_download_notification (l_info)
 						else
 							log.write_debug (generator + ".process_workflow:" + email  +  " Download not active using token:" + l_token.value )
@@ -219,7 +221,7 @@ feature -- Workflow
 						if 	l_service.is_download_active (l_token.value) then
 							log.write_debug (generator + ".process_workflow:" + email +  " Download active")
 							l_service.add_download_interaction_contact (email, "EiffelStudio", platform, downloaded_file (platform), l_token.value)
-							enterprise_download_options (req, res, link (platform))
+							enterprise_download_options (req, res, link (platform), l_safe_redir_confirm_page)
 							send_email_download_notification (l_info)
 						else
 							log.write_debug (generator + ".process_workflow:" + email  +  " Download not active using token:" + l_token.value )
@@ -234,7 +236,7 @@ feature -- Workflow
 							log.write_debug (generator + ".process_workflow:" + email +  " Download active")
 							l_service.validate_contact (email) --(add a new contact, remove temporary contact)
 							l_service.add_download_interaction_contact (email, "EiffelStudio", platform, downloaded_file (platform), l_token.value)
-							enterprise_download_options (req, res, link (platform))
+							enterprise_download_options (req, res, link (platform), l_safe_redir_confirm_page)
 							send_email_download_notification (l_info)
 						else
 						  	log.write_debug (generator + ".process_workflow:" + email  +  " Download not active using token:" + l_token.value )
@@ -414,9 +416,9 @@ feature {NONE} -- Implementation
 
 feature -- Response
 
-	enterprise_download_options (req: WSF_REQUEST; res: WSF_RESPONSE; a_link: READABLE_STRING_8)
+	enterprise_download_options (req: WSF_REQUEST; res: WSF_RESPONSE; a_link: READABLE_STRING_8; a_is_safe_redir_confirmation_page: BOOLEAN)
 		do
-			compute_download (req, res, a_link)
+			compute_download (req, res, a_link, a_is_safe_redir_confirmation_page)
 		end
 
 	bad_request (req: WSF_REQUEST; res: WSF_RESPONSE; a_description: STRING)
@@ -516,16 +518,18 @@ feature -- Response
 			res.put_header_text (h.string)
 		end
 
-	compute_download  (req: WSF_REQUEST; res: WSF_RESPONSE; a_link: STRING)
+	compute_download  (req: WSF_REQUEST; res: WSF_RESPONSE; a_link: STRING; a_is_safe_redir_confirmation_page: BOOLEAN)
 			-- Simple response to download content
 		local
 			h: HTTP_HEADER
-			msg: WSF_HTML_PAGE_RESPONSE
+			msg: HTML_RESPONSE_MESSAGE
 
 			i,j,k: INTEGER
 			u,p: READABLE_STRING_8
 			lnk: READABLE_STRING_8
 			b: detachable STRING_8
+			l_html: HTML_SAFE_REDIRECTION
+			l_safe_url: STRING
 		do
 			if config.is_using_safe_redirection then
 				i := a_link.substring_index ("://", 1)
@@ -538,24 +542,26 @@ feature -- Response
 							u := a_link.substring (i, k - 1)
 							p := a_link.substring (k + 1, j - 1)
 							lnk := a_link.substring (1, i - 1) + a_link.substring (j + 1, a_link.count)
-							create b.make (1024)
-							b.append ("<div style=%"width: 80%%; margin: 2em auto auto; %">")
-							b.append ("<div style=%"padding: 5px; border: solid 1px blue; background-color: #fff; %">")
-							b.append ("<strong>Please download the file using the link</strong>:<ul><li><a href=%"" + a_link + "%">" + a_link + "</a></li></ul>")
-							b.append ("</div>")
-							b.append ("<div style=%"margin-top: 10px; padding: 5px; border: solid 1px #333; background-color: #ddd;%">")
-							b.append ("<strong>Note</strong>: if your browser does not support link with embedded credential,<br/><br/>Please download directly at <ul><li><a href=%"" + lnk + "%">" + lnk + "</a></li></ul>")
-							b.append ("<br/> ")
-							b.append ("And when asked, use the values:<ul><li>username: <input type=%"text%" size=%"" + u.count.out + "%" value=%""+ u + "%"></input></li><li>password: <input type=%"text%" size=%"" + p.count.out + "%" value=%""+ p + "%"></input></li></ul>")
-							b.append ("</div>")
-							b.append ("</div>")
+
+							if a_is_safe_redir_confirmation_page then
+								create l_html.make_safe (layout.html_template_path, a_link, u, p, lnk)
+							else
+								l_safe_url := req.absolute_script_url (req.path_info)
+								if attached req.query_string as l_qs and then not l_qs.is_empty then
+									l_safe_url := l_safe_url + "?" + l_qs + "&safe=true"
+								else
+									l_safe_url := l_safe_url + "?safe=true"
+								end
+								create l_html.make (layout.html_template_path, l_safe_url, a_link, u, p, lnk)
+							end
+
+							b := l_html.to_html
 						end
 					end
 				end
 			end
 			if b /= Void then
-				create msg.make
-				msg.set_body (b)
+				create msg.make (b)
 --				msg.header.put_location (a_url)
 --				msg.set_status_code ({HTTP_STATUS_CODE}.temp_redirect)
 				res.send (msg)

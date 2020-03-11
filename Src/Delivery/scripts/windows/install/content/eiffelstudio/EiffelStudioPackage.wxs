@@ -62,17 +62,17 @@
 					</RegistryKey>
 				</RegistryKey>
 				<RegistryKey Id="Reg.VS" Root="HKLM" Key="SOFTWARE\Microsoft\.NETFramework\AssemblyFolders\[ProductName]" Action="createAndRemoveOnUninstall">
-					<RegistryValue Id="RegVal.VS" Value="[INSTALLDIR]\studio\spec\$(var.IsePlatform)\lib\" Type="string"/>
+					<RegistryValue Id="RegVal.VS" Value="[INSTALLDIR]studio\spec\$(var.IsePlatform)\lib\" Type="string"/>
 				</RegistryKey>
 					<!-- Registry settings for eiffel protocol -->
 				<RegistryKey Id="Reg.eiffel_protocol" Root="HKCR" Key="eiffel" Action="createAndRemoveOnUninstall">
 					<RegistryValue Id="RegVal.eiffel_protocol.default" Value="URL:Eiffel Protocol" Type="string"/>
 					<RegistryValue Id="RegVal.eiffel_protocol.url" Name="URL Protocol" Value="" Type="string"/>
 					<RegistryKey Id="Reg.eiffel_protocol.defaulticon" Key="DefaultIcon" Action="createAndRemoveOnUninstall">
-						<RegistryValue Id="RegVal.eiffel_protocol.defaulticon.default" Value="[INSTALLDIR]\studio\spec\$(var.IsePlatform)\bin\estudio.exe" Type="string"/>
+						<RegistryValue Id="RegVal.eiffel_protocol.defaulticon.default" Value="[INSTALLDIR]studio\spec\$(var.IsePlatform)\bin\estudio.exe" Type="string"/>
 					</RegistryKey>
 					<RegistryKey Id="Reg.eiffel_protocol.shell" Key="shell\open\command" Action="createAndRemoveOnUninstall">
-						<RegistryValue Id="RegVal.eiffel_protocol.shell.default" Value="&quot;[INSTALLDIR]\studio\spec\$(var.IsePlatform)\bin\estudio.exe&quot; /ec_action eisi:&quot;%1&quot;" Type="string"/>
+						<RegistryValue Id="RegVal.eiffel_protocol.shell.default" Value="&quot;[INSTALLDIR]studio\spec\$(var.IsePlatform)\bin\estudio.exe&quot; /ec_action eisi:&quot;%1&quot;" Type="string"/>
 					</RegistryKey>
 				</RegistryKey>
 			</Component>

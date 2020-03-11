@@ -30,9 +30,7 @@ feature -- Execution
 		local
 			l_menu_item: EV_MENU_ITEM
 		do
-			create l_menu_item.make_with_text_and_action ("Replay Backup", agent on_replay_backup)
-			a_menu.extend (l_menu_item)
-			a_menu.extend (create {EV_MENU_SEPARATOR})
+--			a_menu.extend (create {EV_MENU_SEPARATOR})
 
 				--| Force Call on Void
 			create l_menu_item.make_with_text_and_action ("Raise Exception (debug)", agent local e: DEVELOPER_EXCEPTION
@@ -46,21 +44,7 @@ feature -- Execution
 
 feature -- Actions
 
-	on_replay_backup
-			-- Launch tool that enables us to replay precisely a backup.
-		do
-			replay_window.window.raise
-		end
-
 feature -- Access
-
-	replay_window: REPLAY_BACKUP_WINDOW
-			-- Replace backup window
-		once
-			create Result.make
-		ensure
-			replay_window_not_void: Result /= Void
-		end
 
 	menu_path: ARRAY [STRING]
 		do
@@ -76,7 +60,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

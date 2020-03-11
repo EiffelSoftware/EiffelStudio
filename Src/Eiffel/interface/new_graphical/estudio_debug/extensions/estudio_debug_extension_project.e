@@ -42,7 +42,10 @@ feature -- Execution
 		do
 			create l_menu_item.make_with_text_and_action ("Replay Backup", agent on_replay_backup)
 			a_menu.extend (l_menu_item)
+			a_menu.extend (create {EV_MENU_SEPARATOR})
 
+			create l_menu_item.make_with_text_and_action ("Reload project", agent on_reload_project)
+			a_menu.extend (l_menu_item)
 			a_menu.extend (create {EV_MENU_SEPARATOR})
 
 				--| Void safe helpers
@@ -100,6 +103,21 @@ feature {NONE} -- Actions
 			replay_window.window.raise
 		end
 
+	on_reload_project
+		local
+			p_ecf: PATH
+			cmd: READABLE_STRING_GENERAL
+			exit: EB_EXIT_APPLICATION_COMMAND
+		do
+			if attached workbench as wb then
+				create p_ecf.make_from_string (wb.lace.file_name)
+				cmd := eiffel_layout.studio_command_line (p_ecf, wb.lace.target_name, wb.lace.project_path, True, False) + " -melt"
+				create exit
+				exit.execute_with_confirmation (False)
+				{COMMAND_EXECUTOR}.execute (cmd)
+			end
+		end
+
 feature -- Access
 
 	menu_path: ARRAY [STRING]
@@ -142,7 +160,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

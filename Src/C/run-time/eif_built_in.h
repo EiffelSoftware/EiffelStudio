@@ -58,7 +58,7 @@ extern "C" {
 /* ANY class */
 #define eif_builtin_ANY_generator(object) 				c_generator ((object))
 #define eif_builtin_ANY_generating_type(object)			RTLNTY2(eif_object_type(object), 0)
-#define eif_builtin_ANY_conforms_to(source, target)		econfg ((target), (source)) 
+#define eif_builtin_ANY_conforms_to(source, target)		econfg ((target), (source))
 #define eif_builtin_ANY_same_type(obj1, obj2)			estypeg ((obj1), (obj2))
 #define eif_builtin_ANY_tagged_out(object)				c_tagged_out ((object))
 #define eif_builtin_ANY_copy(target, source)			ecopy ((source), (target))
@@ -95,8 +95,8 @@ extern "C" {
 #define eif_builtin_REFLECTOR_c_new_tuple_instance_of(type_id)			RTLNT(eif_decoded_type(type_id).id)
 #define eif_builtin_REFLECTOR_c_new_instance_of(type_id)			RTLNALIVE(eif_decoded_type(type_id).id)
 #define eif_builtin_REFLECTOR_field_count_of_type(type_id)			ei_count_field_of_type(type_id)
-#define eif_builtin_REFLECTOR_is_tuple_type(type_id)				eif_is_tuple_type(type_id)     
-#define eif_builtin_REFLECTOR_is_special_type(type_id)				eif_is_special_type(type_id) 
+#define eif_builtin_REFLECTOR_is_tuple_type(type_id)				eif_is_tuple_type(type_id)
+#define eif_builtin_REFLECTOR_is_special_type(type_id)				eif_is_special_type(type_id)
 #define eif_builtin_REFLECTOR_is_special_any_type(type_id)			eif_special_any_type(type_id)
 
 /* ISE_RUNTIME class */
@@ -279,7 +279,7 @@ rt_private rt_inline EIF_BOOLEAN rt_is_special_copy_semantics_item (EIF_INTEGER_
 #define eif_builtin_SPECIAL_set_count(area,n)				RT_SPECIAL_COUNT(area) = n
 
 /* TYPE class */
-#define eif_builtin_TYPE_has_default(obj)					eif_gen_has_default(eif_gen_param(Dftype(obj), 1))	
+#define eif_builtin_TYPE_has_default(obj)					eif_gen_has_default(eif_gen_param(Dftype(obj), 1))
 #define eif_builtin_TYPE_is_attached(obj)					eif_is_attached_type2(eif_gen_param(Dftype(obj), 1))
 #define eif_builtin_TYPE_is_deferred(obj)					eif_gen_is_deferred(eif_gen_param(Dftype(obj), 1).id)
 #define eif_builtin_TYPE_is_expanded(obj)					eif_gen_is_expanded(eif_gen_param(Dftype(obj), 1).id)
@@ -324,10 +324,6 @@ rt_private rt_inline EIF_BOOLEAN rt_is_special_copy_semantics_item (EIF_INTEGER_
 #define eif_builtin_TUPLE_real_64_item(obj,i)				eif_real_64_item((obj), (i))
 #define eif_builtin_TUPLE_reference_item(obj,i)				eif_reference_item((obj), (i))
 #define eif_builtin_TUPLE_set_object_comparison(obj,b)		eif_put_boolean_item((obj), 0, (b))
-
-/* WEL_IDENTIFIED class */
-#define eif_builtin_WEL_IDENTIFIED_eif_current_object_id(object)	eif_reference_id(object)
-#define eif_builtin_WEL_IDENTIFIED_eif_is_object_id_of_current(object,id) EIF_TEST(eif_id_object(id) == object)
 
 /* EQA_EXTERNALS class */
 #ifdef WORKBENCH

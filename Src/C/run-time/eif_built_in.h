@@ -74,10 +74,6 @@ extern "C" {
 #define eif_builtin_ARGUMENTS_32_i_th_argument_pointer(i)	(eif_arg_item(i))
 #define eif_builtin_ARGUMENTS_32_argument_count			(eif_arg_count() - 1)
 
-/* EV_ANY_IMP class */
-#define eif_builtin_EV_ANY_IMP_eif_current_object_id(object)	eif_reference_id(object)
-#define eif_builtin_EV_ANY_IMP_eif_is_object_id_of_current(object,id) EIF_TEST(eif_id_object(id) == object)
-
 /* EXCEPTION_MANAGER class */
 #define eif_builtin_ISE_EXCEPTION_MANAGER_developer_raise(code, meaning, message)			draise(code, meaning, message)
 

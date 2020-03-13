@@ -239,14 +239,6 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Access
 			end
 		end
 
-	eif_current_object_id: INTEGER
-			-- New identifier for Current
-		external
-			"built_in"
-		ensure
-			eif_current_object_id: Result > 0
-		end
-
 feature {EV_INTERMEDIARY_ROUTINES, EV_ANY_I, EV_STOCK_PIXMAPS_IMP} -- Implementation
 
 	App_implementation: EV_APPLICATION_IMP
@@ -273,7 +265,7 @@ feature -- Measurement
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

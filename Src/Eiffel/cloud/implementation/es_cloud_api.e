@@ -445,6 +445,9 @@ feature -- Installation
 					ctx.add_form_parameter ("operation", "ping")
 					ctx.add_form_parameter ("installation_id", a_installation_id)
 					ctx.add_form_parameter ("session_id", a_session_id)
+					ctx.add_form_parameter ("product_version", product_version_name)
+
+
 					if a_opts /= Void then
 						across
 							a_opts as ic
@@ -746,6 +749,21 @@ feature {NONE} -- Endpoints for token
 
 feature {NONE} -- Implementation
 
+	product_version_name: STRING_8
+			-- Version string.
+			-- I.e. MM.mm
+		local
+			csts: EIFFEL_CONSTANTS
+		once
+			create Result.make (5)
+			create csts
+			Result.append_string (csts.Two_digit_minimum_major_version)
+			Result.append_character ('.')
+			Result.append_string (csts.Two_digit_minimum_minor_version)
+		ensure
+			not_result_is_empty: not Result.is_empty
+		end
+
 	response (a_resp: HTTP_CLIENT_RESPONSE): ES_CLOUD_API_RESPONSE
 		do
 			create Result.make (a_resp)
@@ -882,7 +900,7 @@ feature {NONE} -- Json handling
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

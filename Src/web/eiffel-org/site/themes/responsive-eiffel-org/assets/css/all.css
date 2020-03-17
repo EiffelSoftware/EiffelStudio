@@ -3354,43 +3354,31 @@ code {
     background-color: #fff !important;
     border: dotted 1px #ddd !important;
     margin: 0; }
-    /* line 31, ../scss/site/code.scss */
-    code.inline.lang-eiffel .typ, code.inline.lang-eiffel .str, code.inline.lang-eiffel .atg, code.inline.lang-eiffel .fcl, code.inline.lang-eiffel .lit, code.inline.lang-eiffel .pln, code.inline.lang-eiffel .tag, code.inline.lang-eiffel .atn, code.inline.lang-eiffel .atvm .dec, code.inline.lang-eiffel .var, code.inline.lang-eiffel .fun {
-      color: #00f;
-      font-style: normal; }
-    /* line 32, ../scss/site/code.scss */
-    code.inline.lang-eiffel .pun, code.inline.lang-eiffel .opn, code.inline.lang-eiffel .clo, code.inline.lang-eiffel .kwd {
-      color: #00f;
-      font-weight: bold; }
-    /* line 33, ../scss/site/code.scss */
-    code.inline.lang-eiffel .com {
-      color: #00f;
-      font-style: italic; }
-  /* line 38, ../scss/site/code.scss */
+  /* line 31, ../scss/site/code.scss */
   code .lang-eiffel .typ {
     color: #00f; }
-  /* line 39, ../scss/site/code.scss */
+  /* line 32, ../scss/site/code.scss */
   code .lang-eiffel .atg {
     color: #000; }
-  /* line 40, ../scss/site/code.scss */
+  /* line 33, ../scss/site/code.scss */
   code .lang-eiffel .fcl {
     color: #000;
     font-style: normal; }
-  /* line 41, ../scss/site/code.scss */
+  /* line 34, ../scss/site/code.scss */
   code .lang-eiffel .com {
     font-style: italic; }
 
 /* ... */
 /* Contents ... */
-/* line 52, ../scss/site/code.scss */
+/* line 45, ../scss/site/code.scss */
 #primary-tabs ul.horizontal {
   list-style-type: none; }
-  /* line 54, ../scss/site/code.scss */
+  /* line 47, ../scss/site/code.scss */
   #primary-tabs ul.horizontal li {
     display: inline;
     padding: 2px 5px;
     border: solid 1px #ccf; }
-  /* line 59, ../scss/site/code.scss */
+  /* line 52, ../scss/site/code.scss */
   #primary-tabs ul.horizontal li.active {
     border-color: #99f #99f #ddd;
     border-style: solid solid none;

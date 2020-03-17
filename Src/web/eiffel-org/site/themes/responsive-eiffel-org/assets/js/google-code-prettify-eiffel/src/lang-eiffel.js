@@ -22,37 +22,37 @@
 var PR_TTT='ttt';
 
 PR['registerLangHandler'](
-    PR['createSimpleLexer'](
-        [
-            // Whitespace
-            // whitechar    ->    newline | vertab | space | tab | uniWhite
-            // newline      ->    return linefeed | return | linefeed | formfeed
-            [PR['PR_PLAIN'],       /^[\t\n\x0B\x0C\r ]+/, null, '\t\n\x0B\x0C\r '],
+	PR['createSimpleLexer'](
+		[
+			// Whitespace
+			// whitechar    ->    newline | vertab | space | tab | uniWhite
+			// newline      ->    return linefeed | return | linefeed | formfeed
+			[PR['PR_PLAIN'],       /^[\t\n\x0B\x0C\r ]+/, null, '\t\n\x0B\x0C\r '],
 
-            [PR['PR_STRING'],      /^\"(?:[^\"\\\n\x0C\r]|\\[\s\S])*(?:\"|$)/,
-                null, '"'],
+			[PR['PR_STRING'],      /^\"(?:[^\"\\\n\x0C\r]|\\[\s\S])*(?:\"|$)/,
+				null, '"'],
 
-            // Multi line strings delimited by "[ ]" or "{ }"
-            [PR['PR_STRING'],      /^\"[\[{][\s\S]*?(?:[\]}]\"|$)/, null,
-                '"'] ,
+			// Multi line strings delimited by "[ ]" or "{ }"
+			[PR['PR_STRING'],      /^\"[\[{][\s\S]*?(?:[\]}]\"|$)/, null,
+				'"'] ,
 
-            // decimal      ->    digit{digit}
-            // octal        ->    octit{octit}
-            // hexadecimal  ->    hexit{hexit}
-            // integer      ->    decimal
-            //               |    0o octal | 0O octal
-            //               |    0x hexadecimal | 0X hexadecimal
-            // float        ->    decimal . decimal [exponent]
-            //               |    decimal exponent
-            // exponent     ->    (e | E) [+ | -] decimal
-            // Warning: '_' can be used to separate digit groups.
-            [PR['PR_LITERAL'],
-                /^(?:0o[0-7_]+|0x[\da-f_]+|[0-9_]+(?:\.[0-9_]+)?(?:e[+\-]?\d+)?)/i,
-                null, '0123456789']
-        ],
-        [
-            // Comments in Eiffel are started with -- and go till a newline
-            [PR['PR_COMMENT'], /^--[^\n]*/],
+			// decimal      ->    digit{digit}
+			// octal        ->    octit{octit}
+			// hexadecimal  ->    hexit{hexit}
+			// integer      ->    decimal
+			//               |    0o octal | 0O octal
+			//               |    0x hexadecimal | 0X hexadecimal
+			// float        ->    decimal . decimal [exponent]
+			//               |    decimal exponent
+			// exponent     ->    (e | E) [+ | -] decimal
+			// Warning: '_' can be used to separate digit groups.
+			[PR['PR_LITERAL'],
+				/^(?:0o[0-7_]+|0x[\da-f_]+|[0-9_]+(?:\.[0-9_]+)?(?:e[+\-]?\d+)?)/i,
+				null, '0123456789']
+		],
+		[
+			// Comments in Eiffel are started with -- and go till a newline
+			[PR['PR_COMMENT'], /^--[^\n]*/],
 
 
 			/**
@@ -61,11 +61,11 @@ PR['registerLangHandler'](
 			[PR['PR_KEYWORD'], /^(?:across|agent|alias|all|and|as|assign|attached|attribute|check|class|convert|create|Current|debug|deferred|detachable|do|else|elseif|end|ensure|expanded|export|external|False|feature|from|frozen|if|is|implies|inherit|indexing|inspect|invariant|like|local|loop|not|note|obsolete|old|once|only|or|Precursor|redefine|reference|rename|require|rescue|Result|retry|select|separate|some|then|True|TUPLE|undefine|until|variant|Void|when|xor)\b/i, null],
 
 			/*
-			*  Eiffel specific
-			*
-			*  "atg" and "fcl" define new classes of tokens
-			*  there must be corresponding css clauses to render them.
-			*/
+			 *  Eiffel specific
+			 *
+			 *  "atg" and "fcl" define new classes of tokens
+			 *  there must be corresponding css clauses to render them.
+			 */
 
 			["atg", /^[a-zA-Z][a-z0-9_]*\:/ ], 	// Assertion TaG
 			["fcl", /^\.[a-zA-Z][a-z0-9_]*/], 			// Function CaLl
@@ -73,9 +73,12 @@ PR['registerLangHandler'](
 			[PR['PR_TYPE'], /^[A-Z][A-Z0-9_]*/],
 
 			[PR['PR_PLAIN'], /^[a-zA-Z][a-z0-9_]*/],
-			// matches the symbol production
 
+			[PR['PR_TAG'], /^(?:\{|\}|\(|\)|\[|\])/, null],  // "{}()[]"
+
+			// matches the symbol production
+			[PR['PR_PUNCTUATION'], /^(?:<|>|=|~|@|&|;|,|:|!|\-|\+|\*|\^|\.|\||\\|\/)/, null],
 			[PR['PR_PUNCTUATION'], /^[\.,;]/],
 			[PR['PR_PUNCTUATION'], /^\->/]
-			]),
-    ['eiffel']);
+		]),
+	['eiffel']);

@@ -67,7 +67,7 @@ feature -- Conversion
 			wk: WIKI_CONTENT_TEXT
 			utf: UTF_CONVERTER
 			l_wikitext: STRING_8
-			vis: WIKI_XHTML_GENERATOR
+			vis: WIKITEXT_FILTER_XHTML_GENERATOR
 			html: STRING
 		do
 			if attached {STRING_8} a_text as s8 then

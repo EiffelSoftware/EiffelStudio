@@ -8,7 +8,7 @@
 <link rel="shortcut icon" href="{$site_url/}favicon.ico"/>
 <link href="https://fonts.googleapis.com/css?family=Inconsolata|Open+Sans:400,700|Titillium+Web" rel="stylesheet" type="text/css" />
 
-<!--[if IE]><script type="text/javascript" src="{$theme_path/}js/ie.js"></script><![endif]-->
+<!--[if IE]><script src="{$theme_path/}js/ie.js"></script><![endif]-->
 
 {if isset="$head"}{$head/}{/if}
 {if isset="$styles"}{$styles/}{/if}
@@ -39,12 +39,12 @@
 <!-- Footer -->
 {include file="footer.tpl"/}
 
-	<script type="text/javascript" src="{$theme_path/}js/wdownloads.js"></script>
-	<script type="text/javascript" src="{$theme_path/}js/home.js"></script>
+	<script src="{$theme_path/}js/wdownloads.js"></script>
+	<script src="{$theme_path/}js/home.js"></script>
 
 	<link href="{$theme_path/}js/google-code-prettify-eiffel/styles/lang-eiffel.css" type="text/css" rel="stylesheet" />
 	<script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
-    <script type="text/javascript" src="{$theme_path/}js/google-code-prettify-eiffel/src/lang-eiffel.js"></script>
+    <script src="{$theme_path/}js/google-code-prettify-eiffel/src/lang-eiffel.js"></script>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </body>
 </html>

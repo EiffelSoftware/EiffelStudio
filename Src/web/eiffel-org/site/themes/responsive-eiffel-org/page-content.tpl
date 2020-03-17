@@ -26,7 +26,6 @@
 		{/if}
 		{assign name="myprojectsname" value="myprojects"/}
 		{if condition="$node.link.location ~ $myprojectsname"}{include file="3rd/node-comments.tpl"/}{/if}
-		</section>
 	</div>
 
 	{if value="False"}

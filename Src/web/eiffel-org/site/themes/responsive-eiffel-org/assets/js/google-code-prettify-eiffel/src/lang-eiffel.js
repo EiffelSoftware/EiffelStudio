@@ -59,7 +59,7 @@ PR['registerLangHandler'](
 			 * Keywords
 			 */
 			[PR['PR_KEYWORD'], /^(?:across|agent|alias|all|and|as|assign|attached|attribute|check|class|convert|create|Current|debug|deferred|detachable|do|else|elseif|end|ensure|expanded|export|external|False|feature|from|frozen|if|is|implies|inherit|indexing|inspect|invariant|like|local|loop|not|note|obsolete|old|once|only|or|Precursor|redefine|reference|rename|require|rescue|Result|retry|select|separate|some|then|True|TUPLE|undefine|until|variant|Void|when|xor)\b/i, null],
-			[PR['PR_KEYWORD'], /(\u2200|\u2203|\u00A7|\u27F3|\u27F2)/i, null],
+			[PR['PR_KEYWORD'], /(\u2200|\u2203|\u00A6|\u27F3|\u27F2)/i, null],
 
 			/*
 			 *  Eiffel specific

@@ -360,8 +360,9 @@ feature -- Access: cache system
 					s := ""
 				end
 				if s /= Void then
-					a_output.append ("<ul class=%"wdocs-versions%">")
+					a_output.append ("<div class=%"wdocs-versions%">")
 					a_output.append (cms_api.translation ("Version", Void))
+					a_output.append ("<ul>")
 					a_output.append ("<li class=%"active%">")
 					if a_version_id = Void then
 						l_version_id := default_version_id
@@ -412,7 +413,7 @@ feature -- Access: cache system
 						a_output.append ("</li>")
 					end
 					a_output.append ("</ul></li>")
-					a_output.append ("</ul>%N")
+					a_output.append ("</ul></div>%N")
 				end
 			end
 		end

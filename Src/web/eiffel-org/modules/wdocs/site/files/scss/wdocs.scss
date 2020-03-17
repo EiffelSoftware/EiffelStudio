@@ -10,6 +10,7 @@
 
 	border: solid 1px #ccc;
 	font-size: smaller;
+	>ul, >ol { padding: 0; }
 
 	&.wiki-toc-auto {
 		float: right;
@@ -142,41 +143,44 @@ div#content.doc {
 	}
 }
 
-ul.wdocs-versions {
+div.wdocs-versions {
 	float: right;
 	display: inline-block;
 	font-size: 80%;
-	list-style-type: none;
 	font-style: italic;
 	margin: 0;
-
-	&>li:not(:last-child) { border-right: solid 1px #ccc; } 
-	&>li {
-		a:hover {
-			text-decoration: underline;
-		}
-		padding: 0 6px 0 2px;
-		margin: 0 2px 0 2px;
+	&>ul {
+		padding-left: 2px;
+		list-style-type: none;
 		display: inline-block;
-		border: none;
-	}
-	li.active {
-		font-weight: bold;
-	}
-	&>li>ul {
-		padding: 10px;
-		background-color: white;
-		border: solid 1px #999;
-		display: none;
-		font-weight: normal;
-	}
-	&>li:hover>ul {
-		position: absolute;
-		display: block;
-		z-index: 99;
-		li {
-			display: block;
+		li.active {
+			font-weight: bold;
 		}
-	}	
+		&>li:not(:last-child) { border-right: solid 1px #ccc; } 
+		&>li {
+			a:hover {
+				text-decoration: underline;
+			}
+			padding: 0 6px 0 2px;
+			margin: 0 2px 0 2px;
+			display: inline-block;
+			border: none;
+		}
+		&>li>ul {
+			padding: 10px;
+			background-color: white;
+			border: solid 1px #999;
+			display: none;
+			font-weight: normal;
+		}
+		&>li:hover>ul {
+			position: absolute;
+			display: block;
+			z-index: 99;
+			li {
+				display: block;
+			}
+		}	
+	}
 }
 

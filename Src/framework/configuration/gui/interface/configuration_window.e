@@ -498,8 +498,9 @@ feature {NONE} -- Element initialization
 					-- grid
 				use_grid
 				g := grid
---				create g
---				grid := g
+				create g
+				grid := g
+				
 				vb_grid.extend (g)
 				g.set_column_count_to (2)
 				g.column (1).set_width (200)

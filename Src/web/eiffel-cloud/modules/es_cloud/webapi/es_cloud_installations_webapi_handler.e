@@ -98,15 +98,7 @@ feature -- Execution
 									if attached sess.title as l_title then
 										tb.force (l_title, "title")
 									end
-									inspect
-										sess.state
-									when {ES_CLOUD_SESSION}.state_paused_id then
-										tb.force ("paused", "state")
-									when {ES_CLOUD_SESSION}.state_ended_id then
-										tb.force ("ended", "state")
-									else -- state_normal_id
-										tb.force ("normal", "state")
-									end
+									tb.force (session_state_name (sess), "state")
 									if sess.is_expired (es_cloud_api) then
 										tb.force (True, "is_expired")
 									end
@@ -190,17 +182,7 @@ feature -- Execution
 					create tb.make (2)
 					tb.force (sess.installation_id, "installation_id")
 					tb.force (sess.id, "id")
-					inspect
-						sess.state
-					when {ES_CLOUD_SESSION}.state_normal_id then
-						tb.force ("normal", "state")
-					when {ES_CLOUD_SESSION}.state_paused_id then
-						tb.force ("paused", "state")
-					when {ES_CLOUD_SESSION}.state_ended_id then
-						tb.force ("ended", "state")
-					else
-						tb.force (sess.state.out, "state")
-					end
+					tb.force (session_state_name (sess), "state")
 					if sess.is_expired (es_cloud_api) then
 						tb.force (True, "is_expired")
 					end
@@ -239,7 +221,7 @@ feature -- Execution
 			tb: STRING_TABLE [detachable ANY]
 			f: CMS_FORM
 			l_user: ES_CLOUD_USER
-			l_install_id, l_session_id: detachable READABLE_STRING_GENERAL
+			l_install_id, l_session_id, l_product_version: detachable READABLE_STRING_GENERAL
 			l_installation: detachable ES_CLOUD_INSTALLATION
 			l_active_sessions: detachable STRING_TABLE [LIST [ES_CLOUD_SESSION]]
 			l_session: detachable ES_CLOUD_SESSION
@@ -255,6 +237,7 @@ feature -- Execution
 				f.extend_text_field ("session_id", Void)
 				f.extend_text_field ("info", Void)
 				f.extend_text_field ("session_title", Void)
+				f.extend_text_field ("product_version", Void)
 				r := new_response (req, res)
 				f.process (r)
 				if
@@ -263,6 +246,7 @@ feature -- Execution
 					l_install_id := fd.string_item ("installation_id")
 					l_session_id := fd.string_item ("session_id")
 					if l_session_id /= Void and l_install_id /= Void then
+						l_product_version := fd.string_item ("product_version")
 						l_installation := es_cloud_api.user_installation (a_user, l_install_id)
 						if l_installation /= Void then
 							l_installation.set_info (fd.string_item ("info"))
@@ -384,17 +368,7 @@ feature -- Execution
 						end
 					end
 					if l_installation /= Void and then l_session /= Void then
-						inspect
-							l_session.state
-						when {ES_CLOUD_SESSION}.state_normal_id then
-							r.add_string_field ("es:session_state", "normal")
-						when {ES_CLOUD_SESSION}.state_paused_id then
-							r.add_string_field ("es:session_state", "paused")
-						when {ES_CLOUD_SESSION}.state_ended_id then
-							r.add_string_field ("es:session_state", "ended")
-						else
-							r.add_string_field ("es:session_state", "state#" + l_session.state.out)
-						end
+						r.add_string_field ("es:session_state", session_state_name (l_session))
 						if l_session.is_expired (es_cloud_api) then
 							r.add_boolean_field ("es:session_expired", True)
 						end
@@ -414,6 +388,23 @@ feature -- Execution
 			end
 			r.execute
 		end
+
+feature {NONE} -- Implementation: Helpers
+
+	session_state_name (sess: ES_CLOUD_SESSION): STRING_8
+		do
+			inspect
+				sess.state
+			when {ES_CLOUD_SESSION}.state_paused_id then
+				Result := "paused"
+			when {ES_CLOUD_SESSION}.state_ended_id then
+				Result := "ended"
+			when {ES_CLOUD_SESSION}.state_normal_id then
+				Result := "normal"
+			else
+				Result := sess.state.out
+			end
+		end			
 
 note
 	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"

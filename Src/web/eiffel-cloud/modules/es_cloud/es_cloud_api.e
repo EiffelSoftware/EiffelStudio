@@ -459,6 +459,19 @@ feature -- Change
 			es_cloud_storage.delete_plan (a_plan)
 		end
 
+	subscribe_user_to_plan_until_date (a_user: ES_CLOUD_USER; a_plan: ES_CLOUD_PLAN; a_exp_date: DATE)
+		require
+			a_plan.has_id
+		local
+			sub: ES_CLOUD_PLAN_USER_SUBSCRIPTION
+			l_date: DATE
+			y,mo: INTEGER
+		do
+			create sub.make (a_user, a_plan)
+			sub.set_expiration_date (create {DATE_TIME}.make_by_date_time (a_exp_date, create {TIME}.make (23, 59, 59)))
+			es_cloud_storage.save_user_subscription (sub)
+		end
+
 	subscribe_user_to_plan (a_user: ES_CLOUD_USER; a_plan: ES_CLOUD_PLAN; nb_days: INTEGER)
 		require
 			a_plan.has_id

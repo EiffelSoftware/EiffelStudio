@@ -93,6 +93,7 @@ feature -- Hooks configuration
 			fset: WSF_FORM_FIELD_SET
 			r: WSF_FORM_RADIO_INPUT
 			num: WSF_FORM_NUMBER_INPUT
+			exp: WSF_FORM_DATE_INPUT
 			s: STRING
 			l_submit: WSF_FORM_SUBMIT_INPUT
 			l_user: detachable ES_CLOUD_USER
@@ -146,6 +147,16 @@ feature -- Hooks configuration
 							num.set_size (3)
 							num.set_description ("number of additional months.")
 							fset.extend (num)
+
+
+							create exp.make ("es-plan-expiration")
+							exp.set_label ("Expiration date")
+							exp.set_description ("Expiration date")
+							if l_sub /= Void and then attached l_sub.expiration_date as l_exp_date then
+								exp.set_description ("Current expiration date: " + l_exp_date.out + "%N")
+							end
+							fset.extend (exp)
+
 							create l_submit.make_with_text ("op", "Save plan")
 							fset.extend (l_submit)
 							a_form.extend (fset)
@@ -165,40 +176,60 @@ feature -- Hooks configuration
 											attached i_fd.string_item ("es-plan") as l_plan_name and then
 											attached i_cloud_api.plan_by_name (l_plan_name) as l_new_plan
 										then
-											if
-												attached i_fd.string_item ("es-plan-duration-in-month") as s_nb
-											then
-												if s_nb.is_integer then
-													nb_months := s_nb.to_integer --months
-												elseif s_nb.is_real then
-													nb_days := (31 * s_nb.to_real).truncated_to_integer --days
-												end
-											end
-											if i_sub /= Void and then i_sub.plan.same_plan (l_new_plan) then
-												orig := i_sub.creation_date
-												nb_days := nb_days + i_sub.days_remaining
+											if attached i_fd.string_item ("es-plan-expiration") as s_exp and then attached yyyy_mm_dd_to_date (s_exp) as l_exp_date then
+												i_cloud_api.subscribe_user_to_plan_until_date (i_user, l_new_plan, l_exp_date)
 											else
-												create orig.make_now_utc
-											end
-											if nb_months > 0 then
-												n := nb_months
-												y := orig.year
-												mo := orig.month + n
-												if mo <= 12 then
-												else
-													y := y + mo // 12
-													mo := mo \\ 12
+												if
+													attached i_fd.string_item ("es-plan-duration-in-month") as s_nb
+												then
+													if s_nb.is_integer then
+														nb_months := s_nb.to_integer --months
+													elseif s_nb.is_real then
+														nb_days := (31 * s_nb.to_real).truncated_to_integer --days
+													end
 												end
-												create dt.make_by_date_time (create {DATE}.make (y, mo, orig.day), orig.time)
-												n := (dt.relative_duration (orig).seconds_count // 3600 // 24).to_integer
-												nb_days := nb_days + n
+												if i_sub /= Void and then i_sub.plan.same_plan (l_new_plan) then
+													orig := i_sub.creation_date
+													nb_days := nb_days + i_sub.days_remaining
+												else
+													create orig.make_now_utc
+												end
+												if nb_months > 0 then
+													n := nb_months
+													y := orig.year
+													mo := orig.month + n
+													if mo <= 12 then
+													else
+														y := y + mo // 12
+														mo := mo \\ 12
+													end
+													create dt.make_by_date_time (create {DATE}.make (y, mo, orig.day), orig.time)
+													n := (dt.relative_duration (orig).seconds_count // 3600 // 24).to_integer
+													nb_days := nb_days + n
+												end
+
+												i_cloud_api.subscribe_user_to_plan (i_user, l_new_plan, nb_days)
 											end
-											i_cloud_api.subscribe_user_to_plan (i_user, l_new_plan, nb_days)
 										end
 									end(?, l_user, l_sub, l_cloud_api)
 								)
 						end
 					end
+				end
+			end
+		end
+
+
+	yyyy_mm_dd_to_date (s: READABLE_STRING_GENERAL): detachable DATE
+			-- YYYY-mm-dd to DATE object.
+		local
+			i,j: INTEGER
+		do
+			i := s.index_of ('-', 1)
+			if i = 5 then
+				j := s.index_of ('-', i + 1)
+				if j > 0 then
+					create Result.make (s.substring (1, i - 1).to_integer, s.substring (i + 1, j - 1).to_integer, s.substring (j + 1, s.count).to_integer)
 				end
 			end
 		end

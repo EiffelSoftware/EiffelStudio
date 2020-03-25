@@ -11,6 +11,7 @@
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="encoder" location="..\text\encoder\encoder.ecf"/>
+		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>
 		<library name="uri_template" location="..\..\..\..\text\parser\uri_template\uri_template.ecf"/>
 		<library name="wsf" location="..\wsf\wsf.ecf"/>
 		<cluster name="api" location=".\api\" recursive="true"/>

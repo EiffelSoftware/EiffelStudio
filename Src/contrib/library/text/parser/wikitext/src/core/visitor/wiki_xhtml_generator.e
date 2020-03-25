@@ -336,13 +336,14 @@ feature -- Processing
 					if is_auto_toc then
 						l_css_class.append (" wiki-toc-auto")
 					end
-					output ("%N<" + l_list_tag + " class=%"" + l_css_class + "%"")
+					output ("%N<div class=%""+ l_css_class + "%">")
+					output ("%N<" + l_list_tag)
 					if attached it.style as l_css_style then
 						output (" style=%"" + l_css_style + "%"")
 					end
 					output (">")
 					if is_auto_toc or not it.has_auto_generated_toc then
-						output ("<a name=%"toc%"></a>")
+						output ("<a id=%"toc%"></a>")
 					end
 					output ("<span class=%"title%">Contents</span>%N")
 					curr := 1
@@ -355,6 +356,7 @@ feature -- Processing
 						end
 					end
 					output ("</" + l_list_tag + ">%N")
+					output ("</div>%N")
 				end
 			end
 		end
@@ -418,7 +420,7 @@ feature -- Processing
 				unset_next_output_require_newline
 				output ("%N")
 				if attached a_section.text as l_text then
-					output ("<a name=%"")
+					output ("<a id=%"")
 					output (anchor_name (l_text.text, True))
 					output ("%"></a>")
 				end
@@ -725,6 +727,7 @@ feature -- Tag
 			l_tag: STRING
 			b: BOOLEAN
 		do
+			-- FIXME jfiat [2020/03/17] : convert lang="foo" into class="lang-foo" or class="language-foo"
 			if a_code.is_open_close_tag then
 					-- Ignore
 			else

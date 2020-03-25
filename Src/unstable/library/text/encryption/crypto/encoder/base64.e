@@ -18,6 +18,9 @@ feature -- Status report
 
 	has_error: BOOLEAN
 
+	has_incorrect_padding: BOOLEAN
+			-- Decoding reported incorrect padding.
+
 feature -- base64 encoder
 
 	bytes_encoded_string (a_bytes: READABLE_INDEXABLE [NATURAL_8]): STRING_8
@@ -113,6 +116,8 @@ feature -- Decoder
 			c: CHARACTER
 		do
 			has_error := False
+			has_incorrect_padding := False
+
 			n := v.count
 			from
 				nb_bytes := 4
@@ -142,6 +147,7 @@ feature -- Decoder
 						end
 					else
 							-- Consider as missing padding '='
+						has_incorrect_padding := True
 						bytes[i] := character_to_value (c)
 						byte_count := byte_count + 1
 					end
@@ -253,7 +259,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

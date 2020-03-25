@@ -78,6 +78,38 @@ feature -- Test routines
 			assert("test cases#07", base64_decoded_string ("Zm9vYmFy").same_string ("foobar"))
 		end
 
+	test_now_01
+		local
+			s,e: STRING
+			s32: STRING_32
+			utf: UTF_CONVERTER
+		do
+			s := "any carnal pleasure."
+			e := base64_encoded_string (s)
+			assert ("1", e.same_string ("YW55IGNhcm5hbCBwbGVhc3VyZS4="))
+
+			s := "any carnal pleasure"
+			e := base64_encoded_string (s)
+			assert ("1", e.same_string ("YW55IGNhcm5hbCBwbGVhc3VyZQ=="))
+
+			s := "any carnal pleasur"
+			e := base64_encoded_string (s)
+			assert ("1", e.same_string ("YW55IGNhcm5hbCBwbGVhc3Vy"))
+
+			s := "any carnal pleasu"
+			e := base64_encoded_string (s)
+			assert ("1", e.same_string ("YW55IGNhcm5hbCBwbGVhc3U="))
+
+			s := "any carnal pleas"
+			e := base64_encoded_string (s)
+			assert ("1", e.same_string ("YW55IGNhcm5hbCBwbGVhcw=="))
+
+			s := "LxtbuqgvDzwKHZySOPeTO02WbWfwfWHBxt5zIEWA+kDfE7w="
+			if attached base64_decoded_string (s) as d then
+				s32 := utf.utf_8_string_8_to_string_32 (d)
+			end
+		end
+
 feature -- Helpers
 
 	base64_bytes_encoded_string (a_bytes: ARRAY [NATURAL_8]): STRING

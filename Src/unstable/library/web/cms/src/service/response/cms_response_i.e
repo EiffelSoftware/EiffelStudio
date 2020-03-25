@@ -398,6 +398,14 @@ feature -- Helpers: URLs
 			Result := url ("/module/" + a_module.name + a_path, opts)
 		end
 
+	module_name_resource_url (a_module_name: READABLE_STRING_8; a_path: READABLE_STRING_8; opts: detachable CMS_API_OPTIONS): STRING_8
+			-- Url for resource `a_path` associated with module `a_module_name`.
+		require
+			a_valid_valid: a_path.is_empty or else a_path.starts_with ("/")
+		do
+			Result := url ("/module/" + a_module_name + a_path, opts)
+		end
+
 	user_url (u: CMS_USER): like url
 		require
 			u_with_id: u.has_id
@@ -412,6 +420,6 @@ feature -- Execution
 		end
 
 note
-	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

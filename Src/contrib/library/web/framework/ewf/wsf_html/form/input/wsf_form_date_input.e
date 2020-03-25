@@ -26,6 +26,31 @@ feature -- Access
 
 	input_type: STRING = "date"
 
+feature -- Element change
+
+	set_date_value (dt: DATE)
+			-- Set value using date `dt`.
+		local
+			y,m,d: INTEGER
+			s: STRING
+		do
+			y := dt.year
+			m := dt.month
+			d := dt.day
+			create s.make (10)
+			s.append_integer (y)
+			s.append_character ('-')
+			if m <= 9 then
+				s.append_character ('0')
+			end
+			s.append_integer (m)
+			s.append_character ('-')
+			if d <= 9 then
+				s.append_character ('0')
+			end
+			s.append_integer (d)
+			set_text_value (s)
+		end
 
 feature {NONE} -- Conversion
 

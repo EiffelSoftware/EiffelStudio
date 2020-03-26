@@ -301,19 +301,18 @@ feature {NONE} -- Initialization
 	 test_temporary_problem_report
 	 	local
 			l_db: REPORT_DATA_PROVIDER
-			l_tuple: detachable TUPLE[synopsis : detachable STRING;
-															   release: detachable STRING;
-															   confidential: detachable STRING;
-															   environment: detachable STRING;
-															   description: detachable STRING;
-															   toreproduce: detachable STRING;
-															   priority_synopsis: detachable STRING;
-															   category_synopsis: detachable STRING;
-															   severity_synopsis: detachable STRING;
-															   class_synopsis: detachable STRING;
-															   user_name: detachable STRING;
-															   responsible: detachable STRING
-															   ]
+			l_tuple: detachable TUPLE [synopsis: detachable STRING_32;
+										release: detachable STRING;
+										confidential: detachable STRING;
+										environment: detachable STRING;
+										description: detachable STRING_32;
+										toreproduce: detachable STRING_32;
+										priority_synopsis: detachable STRING_32;
+										category_synopsis: detachable STRING;
+										severity_synopsis: detachable STRING;
+										class_synopsis: detachable STRING;
+										user_name: detachable STRING;
+										responsible: detachable STRING]
 			l_report_number: INTEGER
 		do
 			create l_db.make (connection)

@@ -508,7 +508,7 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	Disclaimer: STRING = "This email is generated automatically, and the address is not monitored for responses. If you try contacting us by using %"reply%", you will not receive an answer."
+	Disclaimer: STRING = "This email is generated automatically, and the address is not monitored for responses. If you need to contact us further, please go through the support site."
 		-- Email not monitored disclaimer.
 
 end

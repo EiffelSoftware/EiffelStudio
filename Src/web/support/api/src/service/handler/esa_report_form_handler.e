@@ -141,7 +141,18 @@ feature {NONE} -- Edit Report Problem
 		do
 			create Result.make (api_service.all_categories, api_service.severities, api_service.classes, api_service.priorities)
 			Result.set_id (a_report_id)
-			if attached api_service.temporary_problem_report (a_report_id) as l_row then
+			if attached {TUPLE [synopsis: detachable STRING_32;
+							release: detachable STRING;
+							confidential: detachable STRING;
+							environment: detachable STRING;
+							description: detachable STRING_32;
+							toreproduce: detachable STRING_32;
+							priority_synopsis: detachable STRING_32;
+							category_synopsis: detachable STRING;
+							severity_synopsis: detachable STRING;
+							class_synopsis: detachable STRING;
+							user_name: detachable STRING;
+							responsible: detachable STRING]} api_service.temporary_problem_report (a_report_id) as l_row then
 				if attached l_row.synopsis as l_synopsis then
 					Result.set_synopsis (l_synopsis)
 				end

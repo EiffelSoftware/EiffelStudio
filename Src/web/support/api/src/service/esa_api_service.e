@@ -249,19 +249,18 @@ feature -- Access
 			post_data_provider_execution
 		end
 
-	temporary_problem_report (a_report_id: INTEGER): detachable TUPLE[synopsis : detachable STRING;
-															   release: detachable STRING;
-															   confidential: detachable STRING;
-															   environment: detachable STRING;
-															   description: detachable STRING;
-															   toreproduce: detachable STRING;
-															   priority_synopsis: detachable STRING;
-															   category_synopsis: detachable STRING;
-															   severity_synopsis: detachable STRING;
-															   class_synopsis: detachable STRING;
-															   user_name: detachable STRING;
-															   responsible: detachable STRING
-															   ]
+	temporary_problem_report (a_report_id: INTEGER): detachable TUPLE [synopsis: detachable STRING_32;
+																		release: detachable STRING;
+																		confidential: detachable STRING;
+																		environment: detachable STRING;
+																		description: detachable STRING_32;
+																		toreproduce: detachable STRING_32;
+																		priority_synopsis: detachable STRING_32;
+																		category_synopsis: detachable STRING;
+																		severity_synopsis: detachable STRING;
+																		class_synopsis: detachable STRING;
+																		user_name: detachable STRING;
+																		responsible: detachable STRING]
 				-- Temporary problem report `a_report_id', if any.
 		do
 			log.write_debug (generator + ".temporary_problem_report report_id:" + a_report_id.out)

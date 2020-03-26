@@ -130,6 +130,11 @@ feature {NONE} -- Initialization
 				then
 					secure_settings := [ssl_prot, opts.option_string_32_value ("ssl_ca_crt", Void), opts.option_string_32_value ("ssl_ca_key", Void)]
 				end
+				if is_secure then
+					if opts.has_integer_option ("secure_port") then
+						port_number := opts.option_integer_value ("secure_port", port_number)
+					end
+				end
 			end
 
 			create conn.make

@@ -654,7 +654,7 @@ feature -- Access
 	last_interaction_id: INTEGER
 			-- Number of last submitted interaction_id if `commit_interaction' was called successfully.
 
-	temporary_problem_report (a_id: INTEGER): detachable TUPLE [synopsis: detachable STRING; release: detachable STRING; confidential: detachable STRING; environment: detachable STRING; description: detachable STRING; toreproduce: detachable STRING; priority_synopsis: detachable STRING; category_synopsis: detachable STRING; severity_synopsis: detachable STRING; class_synopsis: detachable STRING; user_name: detachable STRING; responsible: detachable STRING]
+	temporary_problem_report (a_id: INTEGER): detachable TUPLE [synopsis: detachable STRING_32; release: detachable STRING; confidential: detachable STRING; environment: detachable STRING; description: detachable STRING_32; toreproduce: detachable STRING_32; priority_synopsis: detachable STRING_32; category_synopsis: detachable STRING; severity_synopsis: detachable STRING; class_synopsis: detachable STRING; user_name: detachable STRING; responsible: detachable STRING]
 			-- Temporary problem report
 			--			Synopsis,
 			--			Release,
@@ -685,7 +685,7 @@ feature -- Access
 				across
 					1 |..| 12 as i
 				loop
-					Result [i.item] := db_handler.read_string (i.item)
+					Result [i.item] := db_handler.read_string_32 (i.item)
 				end
 			end
 
@@ -759,9 +759,7 @@ feature -- Access
 				across
 					1 |..| 5 as i
 				loop
-					if attached db_handler.read_string (i.item) as l_item then
-						Result [i.item] := l_item.as_string_32
-					end
+					Result [i.item] := db_handler.read_string_32 (i.item)
 				end
 			end
 

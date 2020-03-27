@@ -329,6 +329,11 @@ feature -- Access: users
 			Result := es_cloud_storage.organization_subscription (org)
 		end
 
+	discard_installation (inst: ES_CLOUD_INSTALLATION)
+		do
+			es_cloud_storage.discard_installation (inst)
+		end
+
 	user_installations (a_user: ES_CLOUD_USER): LIST [ES_CLOUD_INSTALLATION]
 		do
 			Result := es_cloud_storage.user_installations (a_user)

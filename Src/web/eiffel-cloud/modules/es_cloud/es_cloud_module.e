@@ -55,9 +55,16 @@ feature {CMS_MODULE} -- Access control
 			-- <Precursor>
 		do
 			Result := Precursor
-			Result.force ("manager es accounts")
-			Result.force ("view es account")
+			Result.force (perm_manage_es_accounts)
+			Result.force (perm_view_es_accounts)
+			Result.force (perm_discard_own_installations)
 		end
+
+feature -- Access control
+
+	perm_manage_es_accounts: STRING = "manager es accounts"
+	perm_view_es_accounts: STRING = "view es account"
+	perm_discard_own_installations: STRING = "discard own installations"
 
 feature {CMS_API} -- Module Initialization			
 

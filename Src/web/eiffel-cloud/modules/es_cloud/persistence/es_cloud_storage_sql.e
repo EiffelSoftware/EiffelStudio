@@ -802,11 +802,20 @@ feature -- Change
 			l_is_new: BOOLEAN
 		do
 			reset_error
-			create l_params.make (1)
+
+			create l_params.make (2)
 			l_params.force (inst.installation_id, "iid")
-			l_params.force (if attached inst.user as u then u.id else {INTEGER_64} 0 end, "uid")
-			sql_delete (sql_delete_installation, l_params)
-			sql_finalize_delete (sql_delete_installation)
+			l_params.force (inst.user.id, "uid")
+			sql_delete (sql_delete_installation_sessions, l_params)
+			sql_finalize_delete (sql_delete_installation_sessions)
+
+			if not has_error then
+				create l_params.make (1)
+				l_params.force (inst.installation_id, "iid")
+				l_params.force (inst.user.id, "uid")
+				sql_delete (sql_delete_installation, l_params)
+				sql_finalize_delete (sql_delete_installation)
+			end
 		end
 
 	save_session (a_session: ES_CLOUD_SESSION)
@@ -958,6 +967,8 @@ feature {NONE} -- Queries: installations
 	sql_update_installation: STRING = "UPDATE es_installations SET info=:info, name=:name, status=:status WHERE iid=:iid AND uid=:uid;"
 
 	sql_delete_installation: STRING = "DELETE FROM es_installations WHERE iid=:iid AND uid=:uid;"
+
+	sql_delete_installation_sessions: STRING = "DELETE FROM es_sessions WHERE iid=:iid AND uid=:uid;"
 
 feature {NONE} -- Sessions
 

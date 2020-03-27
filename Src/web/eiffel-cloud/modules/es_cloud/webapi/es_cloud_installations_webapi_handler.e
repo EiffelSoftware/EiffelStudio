@@ -37,6 +37,8 @@ feature -- Execution
 					end
 				elseif req.is_post_request_method then
 					handle_user_post (a_version, l_user, req, res)
+				elseif req.is_delete_request_method then
+					handle_user_delete (a_version, l_user, req, res)
 				else
 					new_bad_request_error_response (Void, req, res).execute
 				end
@@ -213,6 +215,40 @@ feature -- Execution
 			r.execute
 		end
 
+	handle_user_delete (a_version: READABLE_STRING_GENERAL; a_user: ES_CLOUD_USER; req: WSF_REQUEST; res: WSF_RESPONSE)
+		local
+			r: like new_response
+			iid: READABLE_STRING_32
+		do
+			if
+				(a_user.same_as (api.user) and then api.has_permission ({ES_CLOUD_MODULE}.perm_discard_own_installations))
+				or else api.has_permission ("manage es accounts")
+			then
+				if attached {WSF_STRING} req.path_parameter ("installation_id") as p_iid then
+					iid := p_iid.value
+				end
+				if iid /= Void and then attached es_cloud_api.user_installation (a_user, iid) as l_installation then
+					es_cloud_api.discard_installation (l_installation)
+					if es_cloud_api.has_error or else es_cloud_api.user_installation (a_user, iid) /= Void then
+						r := new_error_response ("Can not discard installation", req, res)
+					else
+						r := new_response (req, res)
+						r.add_boolean_field ("success", True)
+						r.add_string_field ("message", "installation discarded")
+						r.add_string_field ("installation_id", iid)
+						r.add_link ("installation", "installation", cloud_user_installation_link (a_version, a_user, iid))
+						add_cloud_user_links_to (a_version, a_user, r)
+						add_user_links_to (a_user, r)
+					end
+				else
+					r := new_not_found_error_response ("Installation not found", req, res)
+				end
+			else
+				r := new_access_denied_error_response (Void, req, res)
+			end
+			r.execute
+		end
+
 	handle_user_post (a_version: READABLE_STRING_GENERAL; a_user: ES_CLOUD_USER; req: WSF_REQUEST; res: WSF_RESPONSE)
 		require
 			req.is_post_request_method
@@ -254,9 +290,10 @@ feature -- Execution
 							if l_session /= Void then
 								l_active_sessions := es_cloud_api.user_active_concurrent_sessions (a_user, l_install_id, l_session)
 							end
-							if attached es_cloud_api.user_subscription (a_user) as l_plan then
-								l_sess_limit := l_plan.concurrent_sessions_limit
-								l_heartbeat :=  l_plan.heartbeat
+							l_user_plan := es_cloud_api.user_subscription (a_user)
+							if l_user_plan /= Void then
+								l_sess_limit := l_user_plan.concurrent_sessions_limit
+								l_heartbeat :=  l_user_plan.heartbeat
 							else
 								l_sess_limit := es_cloud_api.default_concurrent_sessions_limit
 								l_heartbeat :=  es_cloud_api.default_heartbeat
@@ -367,6 +404,11 @@ feature -- Execution
 							r.add_link ("es:installation", "installation", (api.absolute_url (r.location, Void) + "/" + api.url_encoded (l_install_id)))
 						end
 					end
+					if l_user_plan /= Void then
+						if l_user_plan.is_expired then
+							r.add_boolean_field ("es:plan_expired", True)
+						end
+					end
 					if l_installation /= Void and then l_session /= Void then
 						r.add_string_field ("es:session_state", session_state_name (l_session))
 						if l_session.is_expired (es_cloud_api) then
@@ -404,7 +446,7 @@ feature {NONE} -- Implementation: Helpers
 			else
 				Result := sess.state.out
 			end
-		end			
+		end
 
 note
 	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"

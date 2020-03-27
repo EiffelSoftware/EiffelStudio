@@ -53,14 +53,18 @@ feature -- Execution
 			l_org: detachable ES_CLOUD_ORGANIZATION
 			l_session: detachable ES_CLOUD_SESSION
 			l_sessions: detachable LIST [ES_CLOUD_SESSION]
+			inst: ES_CLOUD_INSTALLATION
 			l_display_all: BOOLEAN
 			k: READABLE_STRING_32
 			ago: DATE_TIME_AGO_CONVERTER
+			l_can_be_deleted: BOOLEAN
 		do
 			if attached req.query_parameter ("display") as d and then d.is_case_insensitive_equal ("all") then
 				l_display_all := True
 			end
 			r := new_generic_response (req, res)
+			r.add_javascript_url (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/js/es_cloud.js", Void))
+			r.add_style (r.module_name_resource_url ({ES_CLOUD_MODULE}.name, "/files/css/es_cloud.css", Void), Void)
 			r.set_title ("EiffelStudio account")
 			s := ""
 
@@ -86,9 +90,11 @@ feature -- Execution
 					across
 						l_installations as ic
 					loop
-						l_sessions := es_cloud_api.user_sessions (l_user, ic.item.installation_id, not l_display_all)
+						inst := ic.item
+						l_sessions := es_cloud_api.user_sessions (l_user, inst.installation_id, not l_display_all)
 						s.append ("<li class=%"es-installation")
 						-- FIXME: [2019-10-10]
+						l_can_be_deleted := True
 						if l_sessions = Void then
 							s.append (" never")
 						elseif across l_sessions as sess_ic all sess_ic.item.is_ended end then
@@ -97,13 +103,18 @@ feature -- Execution
 							s.append (" expired")
 						elseif across l_sessions as sess_ic some not sess_ic.item.is_paused end then
 							s.append (" active")
+							l_can_be_deleted := False
 						else
 							s.append (" paused")
+							l_can_be_deleted := False
 						end
-						s.append ("%">")
-						s.append (html_encoded (ic.item.installation_id))
-
-						if attached ic.item.creation_date as l_creation_date then
+						if l_can_be_deleted and then api.has_permission ({ES_CLOUD_MODULE}.perm_discard_own_installations) then
+							s.append (" discardable%" data-user-id=%""+ l_user.id.out +"%" data-installation-id=%""+ url_encoded (inst.installation_id) +"%">")
+						else
+							s.append ("%">")
+						end
+						s.append (html_encoded (inst.installation_id))
+						if attached inst.creation_date as l_creation_date then
 							s.append (" <span class=%"creation%" title=%"" + date_time_to_string (l_creation_date) + "%">")
 							ago.append_date_to ("", l_creation_date, s)
 --							s.append (date_time_to_string (l_creation_date))

@@ -238,9 +238,9 @@ feature {NONE} -- Basic operations
 			a_routine_attached: a_routine /= Void
 			a_operands_attached: a_operands /= Void
 		do
-			if 
+			if
 				attached resolved_attributes (a_operands) as ops and then
-				a_routine.valid_operands (ops) 
+				a_routine.valid_operands (ops)
 			then
 				a_routine.flexible_call (ops)
 			else
@@ -502,7 +502,7 @@ feature {NONE} -- Object initialization
 		end
 
 	resolved_attributes (an_attributes: TUPLE): TUPLE
-			-- New TUPLE object with values from `an_attribute_list'.
+			-- New TUPLE object with object id string values from `an_attribute_list' replaced by the associated object.
 		require
 			an_attributes_attached: an_attributes /= Void
 		local
@@ -514,16 +514,13 @@ feature {NONE} -- Object initialization
 			until
 				i > an_attributes.count
 			loop
-				inspect
-					an_attributes.item_code (i)
-				when {TUPLE}.reference_code then
-					if an_attributes.is_reference_item (i) and then attached {STRING} an_attributes.reference_item (i) as l_id then
-						if is_existing_id (l_id) and then attached object_for_id (l_id) as l_obj then
-							Result.put_reference (l_obj, i)
-						end
-					end
-				else
-					-- Keep non reference item as they are.
+					-- Replace existing string id (ex: "#1", "#2", ...) by associated object for reference items.
+				if
+					an_attributes.is_reference_item (i) and then
+					attached {STRING} an_attributes.reference_item (i) as l_id and then
+					is_existing_id (l_id)
+				then
+					Result.put_reference (object_for_id (l_id), i)
 				end
 				i := i + 1
 			end

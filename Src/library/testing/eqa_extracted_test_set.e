@@ -238,8 +238,11 @@ feature {NONE} -- Basic operations
 			a_routine_attached: a_routine /= Void
 			a_operands_attached: a_operands /= Void
 		do
-			if a_routine.valid_operands (a_operands) then
-				a_routine.flexible_call (a_operands)
+			if 
+				attached resolved_attributes (a_operands) as ops and then
+				a_routine.valid_operands (ops) 
+			then
+				a_routine.flexible_call (ops)
 			else
 				assert_32 ("Correct operands for a feature call", False)
 			end
@@ -498,6 +501,35 @@ feature {NONE} -- Object initialization
 			end
 		end
 
+	resolved_attributes (an_attributes: TUPLE): TUPLE
+			-- New TUPLE object with values from `an_attribute_list'.
+		require
+			an_attributes_attached: an_attributes /= Void
+		local
+			i: INTEGER
+		do
+			Result := an_attributes.twin
+			from
+				i := 1
+			until
+				i > an_attributes.count
+			loop
+				inspect
+					an_attributes.item_code (i)
+				when {TUPLE}.reference_code then
+					if an_attributes.is_reference_item (i) and then attached {STRING} an_attributes.reference_item (i) as l_id then
+						if is_existing_id (l_id) and then attached object_for_id (l_id) as l_obj then
+							Result.put_reference (l_obj, i)
+						end
+					end
+				else
+					-- Keep non reference item as they are.
+				end
+				i := i + 1
+			end
+		end
+
+
 	set_tuple_attributes (a_tuple: TUPLE; an_attributes: TUPLE; a_offset: NATURAL)
 			-- Set items of `a_tuple' with values from `an_attribute_list'.
 		require
@@ -750,7 +782,7 @@ feature {NONE} -- Constants
 	dynamic_string_32_type: INTEGER once Result := ({STRING_32}).type_id end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

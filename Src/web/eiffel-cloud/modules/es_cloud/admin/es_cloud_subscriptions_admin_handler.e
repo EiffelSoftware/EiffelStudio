@@ -41,7 +41,7 @@ feature -- Execution
 					create s.make_from_string ("<h1>Subscriptions</h1>")
 					s.append ("See <a href=%"" + api.administration_path ("/cloud/plans/") + " %">available plans</a>.")
 				end
-				s.append ("<table class=%"with_border%" style=%"border: solid 1px black%"><tr><th>Entity</th><th>Plan</th><th>Until</th><th>organization(s)</th>")
+				s.append ("<table class=%"with_border%" style=%"border: solid 1px black%"><tr><th>Entity</th><th>Plan</th><th>Until</th><th>Last</th><th>organization(s)</th>")
 	--			s.append ("<th>Action</th>")
 				s.append ("</tr>")
 				across
@@ -104,17 +104,25 @@ feature -- Execution
 								end
 							end
 							s.append ("</td>")
-		--					s.append ("<td>")
-		--					s.append ("Cancel | Upgrade")
-		--					s.append ("</td>")
+							s.append ("<td>")
+							if l_user /= Void then
+								if
+									attached {ES_CLOUD_SESSION} es_cloud_api.last_user_session (l_user) as l_last and then
+									attached l_last.last_date as dt
+								then
+									s.append ("<time class=%"timeago%" datetime=%"" + date_time_to_timestamp_string (dt) + "%">")
+									s.append (html_encoded (date_time_to_string (dt)))
+									s.append ("</time>")
+								end
+							end
+							s.append ("</td>")
 						else
 							s.append ("<td>")
 							s.append ("</td>")
 							s.append ("<td>")
 							s.append ("</td>")
-		--					s.append ("<td>")
-		--					s.append ("Upgrade")
-		--					s.append ("</td>")
+							s.append ("<td>")
+							s.append ("</td>")
 						end
 						if l_user /= Void and orgs /= Void then
 							s.append ("<td>")

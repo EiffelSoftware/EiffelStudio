@@ -7,6 +7,9 @@
         <link rel="stylesheet" href="{$theme_path/}css/style.css"/>
 {if isset="$head"}{$head/}{/if}
 {if isset="$styles"}{$styles/}{/if}
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> 
+	<script src="{$theme_path/}js/jquery.timeago.js"/>
+
 {if isset="$scripts"}{$scripts/}{/if}
 {if isset="$head_lines"}{$head_lines/}{/if}
         <title>{$head_title/}</title>
@@ -61,5 +64,6 @@
   <!-- Page Bottom -->
   {$page.region_bottom/}
   </div>
+  <script src="{$theme_path/}js/index.js"/>
 </body>
 </html>

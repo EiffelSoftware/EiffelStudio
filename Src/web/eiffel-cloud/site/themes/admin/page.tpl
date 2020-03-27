@@ -7,8 +7,9 @@
 	<link rel="stylesheet" href="{$theme_path/}css/style.css">
  
 	<!-- jQuery dep -->
-	<script src="{$theme_path/}js/jquery-1.10.2.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 	<script src="{$theme_path/}js/popup_search.js"></script>
+	<script src="{$theme_path/}js/jquery.timeago.js"></script>
 
 {if isset="$head"}{$head/}{/if}
 {if isset="$styles"}{$styles/}{/if}
@@ -91,10 +92,9 @@
   <!-- Page Bottom -->
   {$page.region_bottom/}
 
-<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 <!-- Latest compiled and minified JavaScript -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+	<script src="{$theme_path/}js/index.js"></script>
 
 {include file="debug.tpl"/}
 </body>

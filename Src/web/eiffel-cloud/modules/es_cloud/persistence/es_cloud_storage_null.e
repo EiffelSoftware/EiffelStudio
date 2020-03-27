@@ -88,6 +88,10 @@ feature -- Access: installations
 
 feature -- Access: sessions		
 
+	last_user_session (a_user: ES_CLOUD_USER): detachable ES_CLOUD_SESSION
+		do
+		end
+
 	user_sessions (a_user: ES_CLOUD_USER; a_install_id: detachable READABLE_STRING_GENERAL; a_only_active: BOOLEAN): detachable LIST [ES_CLOUD_SESSION]
 		do
 		end

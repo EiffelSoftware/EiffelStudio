@@ -367,6 +367,11 @@ feature -- Access: users
 			create {QUICK_SORTER [ES_CLOUD_INSTALLATION]} Result.make (comp)
 		end
 
+	last_user_session (a_user: ES_CLOUD_USER): detachable ES_CLOUD_SESSION
+		do
+			Result := es_cloud_storage.last_user_session (a_user)
+		end
+
 	user_session (a_user: ES_CLOUD_USER; a_install_id, a_session_id: READABLE_STRING_GENERAL): detachable ES_CLOUD_SESSION
 		do
 			Result := es_cloud_storage.user_session (a_user, a_install_id, a_session_id)

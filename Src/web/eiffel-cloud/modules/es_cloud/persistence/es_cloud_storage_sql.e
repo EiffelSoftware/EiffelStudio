@@ -548,6 +548,34 @@ feature -- Access: installations
 
 feature -- Access: sessions		
 
+	last_user_session (a_user: ES_CLOUD_USER): detachable ES_CLOUD_SESSION
+		local
+			l_params: STRING_TABLE [detachable ANY]
+			sid, iid: detachable READABLE_STRING_32
+			l_name: detachable READABLE_STRING_32
+			l_session: ES_CLOUD_SESSION
+		do
+			reset_error
+			create l_params.make (1)
+			l_params.force (a_user.id, "uid")
+			sql_query (sql_select_last_user_session, l_params)
+			sql_start
+			if not has_error and not sql_after then
+				sid := sql_read_string_32 (1)
+				iid := sql_read_string_32 (2)
+				if iid /= Void and then sid /= Void and then not sid.is_whitespace then
+					check same_uid: sql_read_integer_64 (3) = a_user.id end
+					if attached sql_read_date_time (5) as dt_first then
+						create Result.make (a_user, iid, sid, dt_first)
+						Result.set_state (sql_read_integer_32 (4))
+						Result.set_last_date (sql_read_date_time (6))
+						Result.set_title (sql_read_string_32 (7))
+					end
+				end
+			end
+			sql_finalize_query (sql_select_last_user_session)
+		end
+
 	user_sessions (a_user: ES_CLOUD_USER; a_install_id: detachable READABLE_STRING_GENERAL; a_only_active: BOOLEAN): detachable LIST [ES_CLOUD_SESSION]
 		local
 			sid, iid: READABLE_STRING_GENERAL
@@ -971,6 +999,8 @@ feature {NONE} -- Queries: installations
 	sql_delete_installation_sessions: STRING = "DELETE FROM es_sessions WHERE iid=:iid AND uid=:uid;"
 
 feature {NONE} -- Sessions
+
+	sql_select_last_user_session: STRING = "SELECT sid, iid, uid, state, first, last, title FROM es_sessions WHERE uid=:uid ORDER BY last DESC LIMIT 1;"
 
 	sql_select_user_session: STRING = "SELECT sid, iid, uid, state, first, last, title FROM es_sessions WHERE sid=:sid AND iid=:iid AND uid=:uid;"
 

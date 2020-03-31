@@ -49,6 +49,8 @@ feature {NONE} -- Initialization
 feature -- Execution
 
 	start (win: EV_WINDOW)
+		local
+			acc: ES_ACCOUNT
 		do
 			if is_community_edition then
 				if not license_accepted then
@@ -56,12 +58,13 @@ feature -- Execution
 					show_modal_to_window (win)
 				elseif is_cloud_enabled and then attached es_cloud_s.service as cld then
 					if is_logged_in then
-						if attached cld.active_account as acc then
-							cld.on_account_signed_in (acc)
-						end
+						acc := cld.active_account
+					end
+					if acc /= Void and then not acc.is_expired and then acc.has_active_plan then
+						cld.on_account_signed_in (acc)
 						on_next
 					elseif {ES_IDE_SETTINGS}.cloud_required then
-						switch_to_account_page (cld, False)
+						switch_to_account_page (cld, if acc /= Void then acc.username else Void end, False)
 						show_modal_to_window (win)
 					else
 						on_next
@@ -164,7 +167,7 @@ feature -- Execution
 			main_box.propagate_background_color
 		end
 
-	switch_to_account_page (cld: ES_CLOUD_S; a_sign_in_dialog: BOOLEAN)
+	switch_to_account_page (cld: ES_CLOUD_S; a_username: READABLE_STRING_GENERAL; a_sign_in_dialog: BOOLEAN)
 		require
 			is_cloud_enabled: is_cloud_enabled
 		local
@@ -203,6 +206,9 @@ feature -- Execution
 				create wid.make_cloud_required (cld)
 			else
 				create wid.make (cld)
+			end
+			if a_username /= Void then
+				wid.set_username (a_username)
 			end
 			wid.next_actions.extend (agent on_next)
 			vb.extend (wid)
@@ -294,7 +300,7 @@ feature -- Event: license
 				if is_logged_in then
 					on_next
 				else
-					switch_to_account_page (cld, False)
+					switch_to_account_page (cld, Void, False)
 				end
 			else
 				on_next

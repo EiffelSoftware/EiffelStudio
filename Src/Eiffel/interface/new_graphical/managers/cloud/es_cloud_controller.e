@@ -12,6 +12,7 @@ inherit
 		redefine
 			on_account_signed_in,
 			on_account_signed_out,
+			on_account_plan_expired,
 			on_account_updated,
 			on_cloud_available,
 			on_session_state_changed,
@@ -78,6 +79,9 @@ feature {NONE} -- Background ping
 			nb: INTEGER_64
 		do
 			if attached es_cloud_s.service as cld then
+				debug ("es_cloud")
+					print (generator + ".process_ping (" + acc.username + ") HEARTBEAT=" + ping_heartbeat.out + "%N")
+				end
 				if attached acc.access_token as l_access_token then
 					nb := l_access_token.expiration_delay_in_seconds
 					if
@@ -105,8 +109,35 @@ feature -- Events
 
 	on_account_signed_in (acc: ES_ACCOUNT)
 		do
+			debug ("es_cloud")
+				print (generator + ".on_account_signed_in (" + acc.username + ")%N")
+			end
 			on_account_changed (acc)
 			start_background_pinging (acc)
+		end
+
+	on_account_plan_expired (acc: ES_ACCOUNT)
+		local
+			dlg: ES_CLOUD_EXPIRED_PLAN_DIALOG
+			w: detachable EB_DEVELOPMENT_WINDOW
+		do
+			if attached es_cloud_s.service as l_cloud_service then
+				create dlg.make (l_cloud_service, "Your plan expired!")
+				w := window_manager.last_focused_development_window
+				if
+					w = Void and then
+					attached window_manager.development_windows as win_lst and then
+					not win_lst.is_empty
+				then
+					w := win_lst.first
+				end
+				if w /= Void then
+					dlg.show_modal_to_window (w.window)
+--					dlg.show_relative_to_window (w.window)
+				else
+					dlg.show
+				end
+			end
 		end
 
 	on_account_signed_out
@@ -180,7 +211,7 @@ feature -- Operations
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

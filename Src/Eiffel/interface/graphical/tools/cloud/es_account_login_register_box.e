@@ -287,6 +287,7 @@ feature {NONE} -- Initialization
 			Result.set_border_width (layout_constants.default_border_size)
 			Result.set_padding_width (layout_constants.default_padding_size)
 			create tf_username
+			username_input := tf_username
 			create tf_password
 			w := tf_username
 			w.set_minimum_width (l_field_width)
@@ -315,6 +316,10 @@ feature {NONE} -- Initialization
 
 			tf_username.return_actions.extend (agent tf_password.set_focus)
 			tf_password.return_actions.extend (agent (i_but: EV_BUTTON) do i_but.select_actions.call (Void) end(but))
+
+			if username /= Void then
+				tf_username.set_text (username)
+			end
 		end
 
 	new_register_form_box: EV_VERTICAL_BOX
@@ -438,6 +443,29 @@ feature -- Status report
 			end
 		end
 
+feature -- Optional properties
+
+	username_input: detachable EV_TEXT_FIELD
+
+	username: detachable IMMUTABLE_STRING_32
+
+feature -- Optional element change
+
+	set_username (a_username: detachable READABLE_STRING_GENERAL)
+		do
+			if a_username = Void then
+				username := Void
+				if attached username_input as tf then
+					tf.remove_text
+				end
+			else
+				create username.make_from_string_general (a_username)
+				if attached username_input as tf then
+					tf.set_text (username)
+				end
+			end
+		end
+
 feature -- Conversion
 
 	widget: EV_VERTICAL_BOX
@@ -497,9 +525,13 @@ feature -- UI callbacks
 							s32.append_character ('%N')
 							on_system_error (s32, a_report_label)
 						elseif attached cld.active_account as acc then
-							on_user_signed_in (acc)
+							if acc.has_active_plan then
+								on_user_signed_in (acc)
+							else
+								on_user_expired_plan_in_error (a_form, a_report_label)
+							end
 						else
-							on_user_sign_in_error (a_form, a_report_label)
+							on_user_sign_in_refused (a_form, a_report_label)
 						end
 					else
 						create s32.make_from_string_general ("Account service is not available for now (try again later)!")
@@ -579,9 +611,14 @@ feature -- UI callbacks
 			end
 		end
 
-	on_user_sign_in_error (a_form: like new_gui_form; a_report_label: detachable EV_LABEL)
+	on_user_expired_plan_in_error (a_form: like new_gui_form; a_report_label: detachable EV_LABEL)
 		do
-			on_system_error ("Error while signing in", a_report_label)
+			on_system_error ("Your plan is expired, please renew or purchase a new one.", a_report_label)
+		end
+
+	on_user_sign_in_refused (a_form: like new_gui_form; a_report_label: detachable EV_LABEL)
+		do
+			on_system_error ("Error: invalid username or password!", a_report_label)
 		end
 
 	on_user_registered (acc: ES_ACCOUNT; a_report_label: detachable EV_LABEL)

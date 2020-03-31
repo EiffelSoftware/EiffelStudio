@@ -27,11 +27,7 @@ feature -- Access
 			l_lowered_var: READABLE_STRING_GENERAL
 		do
 			l_lowered_var := a_var.as_lower
-			if a_version /= Void then
-				l_eiffel := {STRING_32} "\SOFTWARE\ISE\Eiffel_" + a_version
-			else
-				l_eiffel := {STRING_32} "\SOFTWARE\ISE\Eiffel_" + eiffel_env.version_name
-			end
+			l_eiffel := eiffel_root_key_name (a_version)
 			create l_reg
 
 			if a_app /= Void then
@@ -61,13 +57,8 @@ feature -- Element change
 			kn: STRING_32
 		do
 			l_lowered_var := a_var.as_lower
-			if a_version /= Void then
-				l_eiffel := {STRING_32} "\SOFTWARE\ISE\Eiffel_" + a_version
-			else
-				l_eiffel := {STRING_32} "\SOFTWARE\ISE\Eiffel_" + eiffel_env.version_name
-			end
+			l_eiffel := eiffel_root_key_name (a_version)
 			create l_reg
-
 
 			create kn.make_from_string_general ("HKEY_CURRENT_USER")
 			kn.append (l_eiffel)
@@ -83,6 +74,21 @@ feature -- Element change
 				l_reg.save_key_value (kn, l_lowered_var, val)
 			else
 				l_reg.delete_key_value (kn, l_lowered_var)
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	eiffel_root_key_name (a_version: detachable STRING): STRING_32
+		do
+			if a_version /= Void then
+				Result := {STRING_32} "\SOFTWARE\ISE\Eiffel_" + a_version
+			else
+				Result := {STRING_32} "\SOFTWARE\ISE\Eiffel_" + eiffel_env.version_name
+			end
+			if eiffel_env.is_workbench then
+				Result.append_character ('_')
+				Result.append (eiffel_env.wkbench_suffix)
 			end
 		end
 

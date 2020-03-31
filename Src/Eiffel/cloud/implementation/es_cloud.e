@@ -405,7 +405,7 @@ feature -- Sign
 				active_account := acc
 				update_account (acc)
 				store
-				on_account_signed_in (acc)
+--				on_account_signed_in (acc)
 			else
 				active_account := Void
 					-- If guest, remains guest.
@@ -435,6 +435,7 @@ feature -- Sign
 	sign_out
 		local
 			acc: like active_account
+			params: ES_CLOUD_API_SESSION_PARAMETERS
 		do
 			acc := active_account
 			if
@@ -442,7 +443,8 @@ feature -- Sign
 				attached acc.access_token as tok and then
 				attached active_session as sess
 			then
-				web_api.sign_out (tok.token, installation.id, sess.id)
+				create params.make (installation.id, sess.id)
+				web_api.sign_out (tok.token, params)
 				reset_guest_session
 			end
 			active_account := Void
@@ -459,63 +461,88 @@ feature -- Sign
 
 feature -- Updating
 
+	fill_product_information (params: ES_CLOUD_API_SESSION_PARAMETERS)
+		do
+			params["product"] := eiffel_layout.product_name
+			params["product_version"] := eiffel_layout.version_name
+		end
+
 	async_ping_installation (a_account: ES_ACCOUNT; a_session: ES_ACCOUNT_SESSION)
 		local
 			p: ES_CLOUD_ASYNC_PING
+			params: ES_CLOUD_API_SESSION_PARAMETERS
 		do
 			if
 				attached a_account.access_token as tok
 			then
-				create p.make (Current, tok, installation, a_session, web_api.config)
+				create params.make (installation.id, a_session.id)
+				fill_product_information (params)
+				create p.make (Current, tok, a_session, params, web_api.config)
 				p.execute
 			end
 		end
 
 	ping_installation (a_account: ES_ACCOUNT; a_session: ES_ACCOUNT_SESSION)
 		local
-			opts: STRING_TABLE [READABLE_STRING_GENERAL]
+			params: ES_CLOUD_API_SESSION_PARAMETERS
 			d: ES_CLOUD_PING_DATA
 		do
 			if attached a_account.access_token as tok then
+				create params.make (installation.id, a_session.id)
+				fill_product_information (params)
 				if attached a_session.title as l_title then
-					create opts.make (1)
-					opts["session_title"] := create {IMMUTABLE_STRING_32}.make_from_string_general (l_title)
+					params["session_title"] := create {IMMUTABLE_STRING_32}.make_from_string_general (l_title)
 				end
 				create d
-				web_api.ping_installation (tok.token, installation.id, a_session.id, opts, d)
+				web_api.ping_installation (tok.token, params, d)
 				if d.session_state_changed then
 					on_session_state_changed (a_session)
 				end
 				if d.heartbeat > 0 then
 					on_session_heartbeat_updated (d.heartbeat)
 				end
+				if d.plan_expired then
+					on_account_plan_expired (a_account)
+				end
+				if False then
+					on_account_plan_expired (a_account)
+				end
 			end
 		end
 
 	end_session (a_account: ES_ACCOUNT; a_session: ES_ACCOUNT_SESSION)
+		local
+			params: ES_CLOUD_API_SESSION_PARAMETERS
 		do
 			if
 				attached a_account.access_token as tok
 			then
-				web_api.end_session (tok.token, installation.id, a_session.id)
+				create params.make (installation.id, a_session.id)
+				web_api.end_session (tok.token, params)
 			end
 		end
 
 	pause_session (a_account: ES_ACCOUNT; a_session: ES_ACCOUNT_SESSION)
+		local
+			params: ES_CLOUD_API_SESSION_PARAMETERS
 		do
 			if
 				attached a_account.access_token as tok
 			then
-				web_api.pause_session (tok.token, installation.id, a_session.id)
+				create params.make (installation.id, a_session.id)
+				web_api.pause_session (tok.token, params)
 			end
 		end
 
 	resume_session (a_account: ES_ACCOUNT; a_session: ES_ACCOUNT_SESSION)
+		local
+			params: ES_CLOUD_API_SESSION_PARAMETERS
 		do
 			if
 				attached a_account.access_token as tok
 			then
-				web_api.resume_session (tok.token, installation.id, a_session.id)
+				create params.make (installation.id, a_session.id)
+				web_api.resume_session (tok.token, params)
 				update_session (a_session)
 			end
 		end
@@ -545,8 +572,11 @@ feature -- Updating
 						-- Keep the same
 				end
 				store
-
-				on_account_updated (a_account)
+				if a_account.has_active_plan or else not a_account.is_expired then
+					on_account_updated (a_account)
+				else
+					on_account_signed_out
+				end
 			elseif is_available then
 				sign_out
 			else
@@ -582,6 +612,9 @@ feature -- Events
 
 	on_account_signed_in (acc: ES_ACCOUNT)
 		do
+			debug ("es_cloud")
+				print (generator + ".on_account_signed_in (" + acc.username + ")%N")
+			end
 			create active_session.make_new (acc)
 			if attached eiffel_project.manager as m then
 				m.load_agents.extend (agent	on_project_loaded)
@@ -624,6 +657,23 @@ feature -- Account Registration
 				on_account_signed_in (acc)
 			end
 			store
+		end
+
+feature -- Product
+
+	product_version_name: STRING_8
+			-- Version string.
+			-- I.e. MM.mm
+		local
+			csts: EIFFEL_CONSTANTS
+		once
+			create Result.make (5)
+			create csts
+			Result.append_string (csts.Two_digit_minimum_major_version)
+			Result.append_character ('.')
+			Result.append_string (csts.Two_digit_minimum_minor_version)
+		ensure
+			not_result_is_empty: not Result.is_empty
 		end
 
 feature -- Storage

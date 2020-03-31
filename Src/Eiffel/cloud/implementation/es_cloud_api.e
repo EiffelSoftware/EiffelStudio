@@ -262,12 +262,12 @@ feature -- ROC Account
 			end
 		end
 
-	sign_out (a_token: READABLE_STRING_8; a_installation_id, a_session_id: READABLE_STRING_GENERAL)
+	sign_out (a_token: READABLE_STRING_8; params: ES_CLOUD_API_SESSION_PARAMETERS)
 		local
 			b: BOOLEAN
 		do
 			reset_api_call
-			end_session (a_token, a_installation_id, a_session_id)
+			end_session (a_token, params)
 			b := discard_token (a_token)
 			endpoints_table_for_tokens := Void
 		end
@@ -339,15 +339,15 @@ feature -- Installation
 			end
 		end
 
-	begin_session (a_token: READABLE_STRING_8; a_installation_id, a_session_id: READABLE_STRING_8)
+	begin_session (a_token: READABLE_STRING_8; params: ES_CLOUD_API_SESSION_PARAMETERS)
 		local
 			d: ES_CLOUD_PING_DATA
 		do
 			create d
-			ping_installation (a_token, a_installation_id, a_session_id, Void, d)
+			ping_installation (a_token, params, d)
 		end
 
-	end_session (a_token: READABLE_STRING_8; a_installation_id, a_session_id: READABLE_STRING_GENERAL)
+	end_session (a_token: READABLE_STRING_8; params: ES_CLOUD_API_SESSION_PARAMETERS)
 		local
 			ctx: HTTP_CLIENT_REQUEST_CONTEXT
 			resp: like response
@@ -362,8 +362,8 @@ feature -- Installation
 				l_installations_href := es_account_installations_endpoint_for_token (a_token, sess)
 				if l_installations_href /= Void then
 					ctx.add_form_parameter ("operation", "end_session")
-					ctx.add_form_parameter ("installation_id", a_installation_id)
-					ctx.add_form_parameter ("session_id", a_session_id)
+					ctx.add_form_parameter ("installation_id", params.installation_id)
+					ctx.add_form_parameter ("session_id", params.session_id)
 					resp := response (sess.post (l_installations_href, ctx, Void))
 					if has_error then
 							-- Too bad, but not critical
@@ -373,7 +373,7 @@ feature -- Installation
 			end
 		end
 
-	pause_session (a_token: READABLE_STRING_8; a_installation_id, a_session_id: READABLE_STRING_GENERAL)
+	pause_session (a_token: READABLE_STRING_8; params: ES_CLOUD_API_SESSION_PARAMETERS)
 		local
 			ctx: HTTP_CLIENT_REQUEST_CONTEXT
 			resp: like response
@@ -388,8 +388,8 @@ feature -- Installation
 				l_installations_href := es_account_installations_endpoint_for_token (a_token, sess)
 				if l_installations_href /= Void then
 					ctx.add_form_parameter ("operation", "pause_session")
-					ctx.add_form_parameter ("installation_id", a_installation_id)
-					ctx.add_form_parameter ("session_id", a_session_id)
+					ctx.add_form_parameter ("installation_id", params.installation_id)
+					ctx.add_form_parameter ("session_id", params.session_id)
 					resp := response (sess.post (l_installations_href, ctx, Void))
 					if has_error then
 							-- Too bad, but not critical
@@ -399,7 +399,7 @@ feature -- Installation
 			end
 		end
 
-	resume_session (a_token: READABLE_STRING_8; a_installation_id, a_session_id: READABLE_STRING_GENERAL)
+	resume_session (a_token: READABLE_STRING_8; params: ES_CLOUD_API_SESSION_PARAMETERS)
 		local
 			ctx: HTTP_CLIENT_REQUEST_CONTEXT
 			resp: like response
@@ -414,8 +414,8 @@ feature -- Installation
 				l_installations_href := es_account_installations_endpoint_for_token (a_token, sess)
 				if l_installations_href /= Void then
 					ctx.add_form_parameter ("operation", "resume_session")
-					ctx.add_form_parameter ("installation_id", a_installation_id)
-					ctx.add_form_parameter ("session_id", a_session_id)
+					ctx.add_form_parameter ("installation_id", params.installation_id)
+					ctx.add_form_parameter ("session_id", params.session_id)
 					resp := response (sess.post (l_installations_href, ctx, Void))
 					if has_error then
 							-- Too bad, but not critical
@@ -425,14 +425,16 @@ feature -- Installation
 			end
 		end
 
-	ping_installation (a_token: READABLE_STRING_8; a_installation_id, a_session_id: READABLE_STRING_GENERAL;
-			a_opts: detachable STRING_TABLE [READABLE_STRING_GENERAL];
+	ping_installation (a_token: READABLE_STRING_8; params: ES_CLOUD_API_SESSION_PARAMETERS;
 			a_output: detachable ES_CLOUD_PING_DATA)
 		local
 			ctx: HTTP_CLIENT_REQUEST_CONTEXT
 			resp: like response
 			l_installations_href: READABLE_STRING_8
 		do
+			debug ("es_cloud")
+				print (generator + ".ping_installation (...)%N")
+			end
 				-- reset previous call data
 			reset_api_call
 			if
@@ -443,17 +445,13 @@ feature -- Installation
 				l_installations_href := es_account_installations_endpoint_for_token (a_token, sess)
 				if l_installations_href /= Void then
 					ctx.add_form_parameter ("operation", "ping")
-					ctx.add_form_parameter ("installation_id", a_installation_id)
-					ctx.add_form_parameter ("session_id", a_session_id)
-					ctx.add_form_parameter ("product_version", product_version_name)
+					ctx.add_form_parameter ("installation_id", params.installation_id)
+					ctx.add_form_parameter ("session_id", params.session_id)
 
-
-					if a_opts /= Void then
-						across
-							a_opts as ic
-						loop
-							ctx.add_form_parameter (ic.key, ic.item)
-						end
+					across
+						params.items as ic
+					loop
+						ctx.add_form_parameter (ic.key, ic.item)
 					end
 					resp := response (sess.post (l_installations_href, ctx, Void))
 					if resp.has_error then
@@ -464,12 +462,15 @@ feature -- Installation
 						reset_error
 					else
 						if attached resp.string_8_item ("_links|es:installation|href") as v then
-							record_endpoint_for_token (a_token, {STRING_32} "_links|es:installation|href;installation=" + a_installation_id.as_string_32, v)
+							record_endpoint_for_token (a_token, {STRING_32} "_links|es:installation|href;installation=" + params.installation_id.as_string_32, v)
 						end
 						if attached resp.string_8_item ("_links|es:session|href") as v then
-							record_endpoint_for_token (a_token, {STRING_32} "_links|es:session|href;session=" + a_session_id.as_string_32, v)
+							record_endpoint_for_token (a_token, {STRING_32} "_links|es:session|href;session=" + params.session_id.as_string_32, v)
 						end
 						if a_output /= Void then
+							if attached resp.boolean_item_is_true ("es:plan_expired") as l_plan_expired then
+								a_output.plan_expired := l_plan_expired
+							end
 							if
 								attached resp.string_32_item ("es:session_state") as l_sess_state and then
 								not l_sess_state.is_case_insensitive_equal_general ("normal")
@@ -526,11 +527,13 @@ feature -- Installation
 			l_installation_href, l_session_href: READABLE_STRING_8
 			ctx: HTTP_CLIENT_REQUEST_CONTEXT
 			resp: like response
+			params: ES_CLOUD_API_SESSION_PARAMETERS
 		do
 			reset_api_call
 				-- Update endpoints ...
 			if a_installation /= Void then
-				ping_installation (acc.access_token.token, a_installation.id, a_session_id, Void, Void)
+				create params.make (a_installation.id, a_session_id)
+				ping_installation (acc.access_token.token, params, Void)
 			end
 			reset_api_call
 
@@ -748,21 +751,6 @@ feature {NONE} -- Endpoints for token
 		end
 
 feature {NONE} -- Implementation
-
-	product_version_name: STRING_8
-			-- Version string.
-			-- I.e. MM.mm
-		local
-			csts: EIFFEL_CONSTANTS
-		once
-			create Result.make (5)
-			create csts
-			Result.append_string (csts.Two_digit_minimum_major_version)
-			Result.append_character ('.')
-			Result.append_string (csts.Two_digit_minimum_minor_version)
-		ensure
-			not_result_is_empty: not Result.is_empty
-		end
 
 	response (a_resp: HTTP_CLIENT_RESPONSE): ES_CLOUD_API_RESPONSE
 		do

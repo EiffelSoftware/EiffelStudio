@@ -29,6 +29,12 @@ feature -- Access
 
 feature -- Status report
 
+	has_active_plan: BOOLEAN
+			-- User account has associated active plan?
+		do
+			Result := attached plan as pl and then pl.is_active
+		end
+
 	is_expired: BOOLEAN
 		do
 			if attached access_token as tok then
@@ -65,7 +71,7 @@ feature -- Comparison
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

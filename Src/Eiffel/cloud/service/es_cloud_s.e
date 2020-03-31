@@ -249,6 +249,17 @@ feature -- Events
 				-- FIXME: if gpl edition, quit EiffelStudio?
 		end
 
+	on_account_plan_expired (acc: ES_ACCOUNT)
+		do
+			if attached observers as lst then
+				across
+					lst as ic
+				loop
+					ic.item.on_account_plan_expired (acc)
+				end
+			end
+		end
+
 	on_account_updated (acc: detachable ES_ACCOUNT)
 		do
 			if attached observers as lst then

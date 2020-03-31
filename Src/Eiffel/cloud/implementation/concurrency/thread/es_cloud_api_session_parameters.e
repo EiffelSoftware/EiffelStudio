@@ -1,60 +1,56 @@
 note
-	description: "Summary description for {ES_CLOUD_PING_RESPONSE}."
+	description: "Parameters to pass for ES_CLOUD_API feature related to sessions."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	ES_CLOUD_PING_DATA
+	ES_CLOUD_API_SESSION_PARAMETERS
+
+inherit
+	TABLE_ITERABLE [READABLE_STRING_GENERAL, READABLE_STRING_GENERAL]
+
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_installation_id: READABLE_STRING_8; a_session_id: READABLE_STRING_GENERAL)
+		do
+			create items.make_caseless (3)
+			create installation_id.make_from_string (a_installation_id)
+			create session_id.make_from_string_general (a_session_id)
+		end
 
 feature -- Access
 
-	has_error: BOOLEAN assign set_has_error
+	installation_id: IMMUTABLE_STRING_8
 
-	json: detachable STRING
+	session_id: IMMUTABLE_STRING_32
 
-feature -- Access: session
+	item alias "[]"(a_name: READABLE_STRING_GENERAL): detachable READABLE_STRING_GENERAL assign force
+		do
+			Result := items [a_name]
+		end
 
-	heartbeat: NATURAL_32 assign set_heartbeat
+	items: STRING_TABLE [READABLE_STRING_GENERAL]
 
-	session_state: detachable READABLE_STRING_32 assign set_session_state
+feature -- Access
 
-	session_state_changed: BOOLEAN assign set_session_state_changed
-
-	plan_expired: BOOLEAN assign set_plan_expired
+	new_cursor: TABLE_ITERATION_CURSOR [READABLE_STRING_GENERAL, READABLE_STRING_GENERAL]
+			-- Fresh cursor associated with current structure
+		do
+			Result := items.new_cursor
+		end
 
 feature -- Element change
 
-	set_has_error (v: like has_error)
+	force (a_value: READABLE_STRING_GENERAL; a_name: READABLE_STRING_GENERAL)
 		do
-			has_error := v
+			items [a_name] := a_value
 		end
 
-	set_heartbeat (v: like heartbeat)
-		do
-			heartbeat := v
-		end
-
-	set_plan_expired (b: BOOLEAN)
-		do
-			plan_expired := b
-		end
-
-	set_session_state (v: like session_state)
-		do
-			if v = Void then
-				session_state := Void
-			else
-				create {IMMUTABLE_STRING_32} session_state.make_from_string (v)
-			end
-		end
-
-	set_session_state_changed (v: like session_state_changed)
-		do
-			session_state_changed := v
-		end
-
-
-;note
+invariant
+note
 	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

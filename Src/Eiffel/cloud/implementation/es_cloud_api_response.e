@@ -147,6 +147,19 @@ feature -- Access
 			end
 		end
 
+feature -- Access
+
+	to_json_representation: STRING
+		local
+			pp: JSON_PRETTY_STRING_VISITOR
+		do
+			if attached json as j then
+				create Result.make (1024)
+				create pp.make (Result)
+				j.accept (pp)
+			end
+		end
+
 feature {NONE} -- Initialize
 
 	json_field (j: detachable JSON_VALUE; a_fn: READABLE_STRING_GENERAL): detachable JSON_VALUE
@@ -182,7 +195,7 @@ feature {NONE} -- Initialize
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

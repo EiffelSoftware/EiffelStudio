@@ -467,14 +467,20 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (default_type, {PREDEFINED_NAMES}.default_name_id)
 			Result.put (bit_and_type, {PREDEFINED_NAMES}.bit_and_name_id)
 			Result.put (bit_and_type, {PREDEFINED_NAMES}.infix_bit_and_name_id)
+			Result.put (bit_and_type, {PREDEFINED_NAMES}.bit_and_unicode_alias_id)
 			Result.put (bit_or_type, {PREDEFINED_NAMES}.bit_or_name_id)
 			Result.put (bit_or_type, {PREDEFINED_NAMES}.infix_bit_or_name_id)
+			Result.put (bit_or_type, {PREDEFINED_NAMES}.bit_or_unicode_alias_id)
 			Result.put (bit_xor_type, {PREDEFINED_NAMES}.bit_xor_name_id)
+			Result.put (bit_xor_type, {PREDEFINED_NAMES}.bit_xor_unicode_alias_id)
 			Result.put (bit_not_type, {PREDEFINED_NAMES}.bit_not_name_id)
+			Result.put (bit_not_type, {PREDEFINED_NAMES}.bit_not_unicode_alias_id)
 			Result.put (bit_shift_left_type, {PREDEFINED_NAMES}.bit_shift_left_name_id)
 			Result.put (bit_shift_left_type, {PREDEFINED_NAMES}.infix_shift_left_name_id)
+			Result.put (bit_shift_left_type, {PREDEFINED_NAMES}.bit_shift_left_unicode_alias_id)
 			Result.put (bit_shift_right_type, {PREDEFINED_NAMES}.bit_shift_right_name_id)
 			Result.put (bit_shift_right_type, {PREDEFINED_NAMES}.infix_shift_right_name_id)
+			Result.put (bit_shift_right_type, {PREDEFINED_NAMES}.bit_shift_right_unicode_alias_id)
 			Result.put (bit_test_type, {PREDEFINED_NAMES}.bit_test_name_id)
 			Result.put (set_bit_type, {PREDEFINED_NAMES}.set_bit_name_id)
 			Result.put (set_bit_with_mask_type, {PREDEFINED_NAMES}.set_bit_with_mask_name_id)
@@ -491,6 +497,7 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (is_digit_type, {PREDEFINED_NAMES}.is_digit_name_id)
 			Result.put (is_space_type, {PREDEFINED_NAMES}.is_space_name_id)
 			Result.put (three_way_comparison_type, {PREDEFINED_NAMES}.three_way_comparison_name_id)
+			Result.put (three_way_comparison_type, {PREDEFINED_NAMES}.three_way_comparison_unicode_alias_id)
 			Result.put (twin_type, {PREDEFINED_NAMES}.standard_twin_name_id)
 			Result.put (twin_type, {PREDEFINED_NAMES}.twin_name_id)
 			Result.put (twin_type, {PREDEFINED_NAMES}.deep_twin_name_id)
@@ -531,14 +538,20 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (default_type, {PREDEFINED_NAMES}.default_name_id)
 			Result.put (bit_and_type, {PREDEFINED_NAMES}.bit_and_name_id)
 			Result.put (bit_and_type, {PREDEFINED_NAMES}.infix_bit_and_name_id)
+			Result.put (bit_and_type, {PREDEFINED_NAMES}.bit_and_unicode_alias_id)
 			Result.put (bit_or_type, {PREDEFINED_NAMES}.bit_or_name_id)
 			Result.put (bit_or_type, {PREDEFINED_NAMES}.infix_bit_or_name_id)
+			Result.put (bit_or_type, {PREDEFINED_NAMES}.bit_or_unicode_alias_id)
 			Result.put (bit_xor_type, {PREDEFINED_NAMES}.bit_xor_name_id)
+			Result.put (bit_xor_type, {PREDEFINED_NAMES}.bit_xor_unicode_alias_id)
 			Result.put (bit_not_type, {PREDEFINED_NAMES}.bit_not_name_id)
+			Result.put (bit_not_type, {PREDEFINED_NAMES}.bit_not_unicode_alias_id)
 			Result.put (bit_shift_left_type, {PREDEFINED_NAMES}.bit_shift_left_name_id)
 			Result.put (bit_shift_left_type, {PREDEFINED_NAMES}.infix_shift_left_name_id)
+			Result.put (bit_shift_left_type, {PREDEFINED_NAMES}.bit_shift_left_unicode_alias_id)
 			Result.put (bit_shift_right_type, {PREDEFINED_NAMES}.bit_shift_right_name_id)
 			Result.put (bit_shift_right_type, {PREDEFINED_NAMES}.infix_shift_right_name_id)
+			Result.put (bit_shift_right_type, {PREDEFINED_NAMES}.bit_shift_right_unicode_alias_id)
 			Result.put (bit_test_type, {PREDEFINED_NAMES}.bit_test_name_id)
 			Result.put (set_bit_type, {PREDEFINED_NAMES}.set_bit_name_id)
 			Result.put (set_bit_with_mask_type, {PREDEFINED_NAMES}.set_bit_with_mask_name_id)
@@ -572,6 +585,7 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (to_real_64_type, {PREDEFINED_NAMES}.to_double_name_id)
 			Result.put (to_real_32_type, {PREDEFINED_NAMES}.to_real_name_id)
 			Result.put (three_way_comparison_type, {PREDEFINED_NAMES}.three_way_comparison_name_id)
+			Result.put (three_way_comparison_type, {PREDEFINED_NAMES}.three_way_comparison_unicode_alias_id)
 			Result.put (twin_type, {PREDEFINED_NAMES}.standard_twin_name_id)
 			Result.put (twin_type, {PREDEFINED_NAMES}.twin_name_id)
 			Result.put (twin_type, {PREDEFINED_NAMES}.deep_twin_name_id)
@@ -1397,7 +1411,7 @@ feature {NONE} -- Type information
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

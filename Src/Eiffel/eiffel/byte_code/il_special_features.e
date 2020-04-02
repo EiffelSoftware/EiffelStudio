@@ -76,9 +76,9 @@ feature -- Access
 						Result := True
 						inspect
 							feature_name_id
-						when infix_bit_and_name_id, bit_and_name_id then
+						when infix_bit_and_name_id, bit_and_name_id, bit_and_unicode_alias_id then
 							function_type := basic_type_table.item (infix_bit_and_name_id)
-						when infix_bit_or_name_id, bit_or_name_id then
+						when infix_bit_or_name_id, bit_or_name_id, bit_or_unicode_alias_id then
 							function_type := basic_type_table.item (infix_bit_or_name_id)
 						when to_integer_name_id then
 							function_type := from_enum_to_integer_type
@@ -470,14 +470,20 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (to_natural_64_type, to_natural_64_name_id)
 			Result.put (bit_and_type, bit_and_name_id)
 			Result.put (bit_and_type, infix_bit_and_name_id)
+			Result.put (bit_and_type, bit_and_unicode_alias_id)
 			Result.put (bit_or_type, bit_or_name_id)
 			Result.put (bit_or_type, infix_bit_or_name_id)
+			Result.put (bit_or_type, bit_or_unicode_alias_id)
 			Result.put (bit_xor_type, bit_xor_name_id)
+			Result.put (bit_xor_type, bit_xor_unicode_alias_id)
 			Result.put (bit_not_type, bit_not_name_id)
+			Result.put (bit_not_type, bit_not_unicode_alias_id)
 			Result.put (bit_shift_left_type, bit_shift_left_name_id)
 			Result.put (bit_shift_left_type, infix_shift_left_name_id)
+			Result.put (bit_shift_left_type, bit_shift_left_unicode_alias_id)
 			Result.put (bit_shift_right_type, bit_shift_right_name_id)
 			Result.put (bit_shift_right_type, infix_shift_right_name_id)
+			Result.put (bit_shift_right_type, bit_shift_right_unicode_alias_id)
 			Result.put (bit_test_type, bit_test_name_id)
 			Result.put (set_bit_type, set_bit_name_id)
 			Result.put (set_bit_with_mask_type, set_bit_with_mask_name_id)
@@ -506,6 +512,7 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (is_digit_type, is_digit_name_id)
  			Result.put (generator_type, generator_name_id)
  			Result.put (three_way_comparison_type, three_way_comparison_name_id)
+ 			Result.put (three_way_comparison_type, three_way_comparison_unicode_alias_id)
 			Result.put (twin_type, standard_twin_name_id)
 			Result.put (twin_type, twin_name_id)
 			Result.put (twin_type, deep_twin_name_id)
@@ -1007,7 +1014,7 @@ invariant
 	il_generation: System.il_generation
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

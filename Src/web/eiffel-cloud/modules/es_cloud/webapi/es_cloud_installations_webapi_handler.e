@@ -75,6 +75,12 @@ feature -- Execution
 						r := new_response (req, res)
 						create tb.make (2)
 						tb.force (inst.installation_id, "id")
+						if attached inst.product_id as l_pid then
+							tb.force (l_pid, "product_id")
+						end
+						if attached inst.product_version as l_pv then
+							tb.force (l_pv, "product_version")
+						end
 						if attached inst.name as l_name then
 							tb.force (l_name, "name")
 						end
@@ -280,104 +286,108 @@ feature -- Execution
 					attached f.last_data as fd and then not fd.has_error
 				then
 					l_install_id := fd.string_item ("installation_id")
-					l_session_id := fd.string_item ("session_id")
-					if l_session_id /= Void and l_install_id /= Void then
+					if l_install_id /= Void then
 						l_product_version := fd.string_item ("product_version")
 						l_installation := es_cloud_api.user_installation (a_user, l_install_id)
 						if l_installation /= Void then
 							l_installation.set_info (fd.string_item ("info"))
-							l_session := es_cloud_api.user_session (a_user, l_install_id, l_session_id)
-							if l_session /= Void then
-								l_active_sessions := es_cloud_api.user_active_concurrent_sessions (a_user, l_install_id, l_session)
-							end
-							l_user_plan := es_cloud_api.user_subscription (a_user)
-							if l_user_plan /= Void then
-								l_sess_limit := l_user_plan.concurrent_sessions_limit
-								l_heartbeat :=  l_user_plan.heartbeat
+							l_session_id := fd.string_item ("session_id")
+							if l_session_id = Void then
+								err := True
 							else
-								l_sess_limit := es_cloud_api.default_concurrent_sessions_limit
-								l_heartbeat :=  es_cloud_api.default_heartbeat
-							end
-							if attached {WSF_STRING} req.form_parameter ("operation") as l_op then
-								if l_op.is_case_insensitive_equal ("ping") then
-									if l_session = Void then
-										create l_session.make (a_user, l_install_id, l_session_id, Void)
-									end
-									if
-										l_sess_limit > 0 and then
-									 	l_active_sessions /= Void and then
-									 	l_active_sessions.count.to_natural_32 >= l_sess_limit
-									then
-											-- Pause expired sessions or current session!
-										n := l_active_sessions.count.to_natural_32 - l_sess_limit + 1
-										across
-											-l_active_sessions.new_cursor as ic
-										until
-											n = 0
-										loop
-											across
-												-ic.item.new_cursor as sess_ic
-											loop
-												if sess_ic.item.is_expired (es_cloud_api) then
-													es_cloud_api.pause_session (a_user, sess_ic.item)
-												end
-											end
-											n := n - 1
+								l_session := es_cloud_api.user_session (a_user, l_install_id, l_session_id)
+								if l_session /= Void then
+									l_active_sessions := es_cloud_api.user_active_concurrent_sessions (a_user, l_install_id, l_session)
+								end
+								l_user_plan := es_cloud_api.user_subscription (a_user)
+								if l_user_plan /= Void then
+									l_sess_limit := l_user_plan.concurrent_sessions_limit
+									l_heartbeat :=  l_user_plan.heartbeat
+								else
+									l_sess_limit := es_cloud_api.default_concurrent_sessions_limit
+									l_heartbeat :=  es_cloud_api.default_heartbeat
+								end
+								if attached {WSF_STRING} req.form_parameter ("operation") as l_op then
+									if l_op.is_case_insensitive_equal ("ping") then
+										if l_session = Void then
+											create l_session.make (a_user, l_install_id, l_session_id, Void)
 										end
---										from
---											l_active_sessions.finish
---										until
---											l_active_sessions.off or n = 0
---										loop
---											if l_active_sessions.item.is_expired (es_cloud_api) then
---												es_cloud_api.pause_session (a_user, l_active_sessions.item)
---												n := n - 1
---												l_active_sessions.remove
---											else
---												l_active_sessions.back
---											end
---										end
-										if n > 0 then
-											es_cloud_api.pause_session (a_user, l_session)
-										end
-									else
-										l_session.set_title (fd.string_item ("session_title"))
-										es_cloud_api.ping_installation (a_user, l_session)
-									end
-								elseif l_session /= Void then
-									if l_op.is_case_insensitive_equal ("end_session") then
-										es_cloud_api.end_session (a_user, l_session)
-									elseif l_op.is_case_insensitive_equal ("pause_session") then
-										es_cloud_api.pause_session (a_user, l_session)
-									elseif l_op.is_case_insensitive_equal ("resume_session") then
-										es_cloud_api.resume_session (a_user, l_session)
-										if l_active_sessions /= Void then
-											n := l_sess_limit
+										if
+											l_sess_limit > 0 and then
+											l_active_sessions /= Void and then
+											l_active_sessions.count.to_natural_32 >= l_sess_limit
+										then
+												-- Pause expired sessions or current session!
+											n := l_active_sessions.count.to_natural_32 - l_sess_limit + 1
 											across
-												l_active_sessions as ic
+												-l_active_sessions.new_cursor as ic
+											until
+												n = 0
 											loop
-													-- Keep first `l_sess_limit - 1` sessions active, and pause the others
-												if n > 1 then
-													n := n - 1
-												else
-													across
-														-ic.item.new_cursor as sess_ic
-													loop
+												across
+													-ic.item.new_cursor as sess_ic
+												loop
+													if sess_ic.item.is_expired (es_cloud_api) then
 														es_cloud_api.pause_session (a_user, sess_ic.item)
 													end
 												end
+												n := n - 1
 											end
+	--										from
+	--											l_active_sessions.finish
+	--										until
+	--											l_active_sessions.off or n = 0
+	--										loop
+	--											if l_active_sessions.item.is_expired (es_cloud_api) then
+	--												es_cloud_api.pause_session (a_user, l_active_sessions.item)
+	--												n := n - 1
+	--												l_active_sessions.remove
+	--											else
+	--												l_active_sessions.back
+	--											end
+	--										end
+											if n > 0 then
+												es_cloud_api.pause_session (a_user, l_session)
+											end
+										else
+											l_session.set_title (fd.string_item ("session_title"))
+											es_cloud_api.ping_installation (a_user, l_session)
+										end
+									elseif l_session /= Void then
+										if l_op.is_case_insensitive_equal ("end_session") then
+											es_cloud_api.end_session (a_user, l_session)
+										elseif l_op.is_case_insensitive_equal ("pause_session") then
+											es_cloud_api.pause_session (a_user, l_session)
+										elseif l_op.is_case_insensitive_equal ("resume_session") then
+											es_cloud_api.resume_session (a_user, l_session)
+											if l_active_sessions /= Void then
+												n := l_sess_limit
+												across
+													l_active_sessions as ic
+												loop
+														-- Keep first `l_sess_limit - 1` sessions active, and pause the others
+													if n > 1 then
+														n := n - 1
+													else
+														across
+															-ic.item.new_cursor as sess_ic
+														loop
+															es_cloud_api.pause_session (a_user, sess_ic.item)
+														end
+													end
+												end
+											end
+										else
+												-- default or error?
+											es_cloud_api.ping_installation (a_user, l_session)
 										end
 									else
-											-- default or error?
-										es_cloud_api.ping_installation (a_user, l_session)
+										err := True
 									end
 								else
+										-- default or error?
 									err := True
 								end
-							else
-									-- default or error?
-								err := True
 							end
 						else
 								-- default or error?
@@ -389,8 +399,12 @@ feature -- Execution
 				else
 					err := True
 				end
-				if l_install_id = Void or l_session_id = Void or err then
-					r := new_error_response ("Error: missing installation information", req, res)
+				if l_install_id = Void or err then
+					if l_install_id /= Void and l_session_id = Void then
+						r := new_error_response ("Error: missing session information", req, res)
+					else
+						r := new_error_response ("Error: missing installation information", req, res)
+					end
 				else
 					r := new_response (req, res)
 					if l_install_id /= Void then

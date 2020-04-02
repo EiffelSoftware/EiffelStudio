@@ -17,6 +17,34 @@ feature {NONE} -- Creation
 			create installation_id.make_from_string_general (a_installation_id)
 			create info.make_empty
 			status := status_active
+			get_product_info
+		end
+
+	get_product_info
+		local
+			i,j: INTEGER
+			s: like installation_id
+		do
+			s := installation_id
+			i := s.index_of ('_', 1)
+			if i > 0 then
+				product_id := s.head (i - 1)
+				j := s.index_of ('-', i + 1)
+				if j > 0 then
+					s := s.substring (i + 1, j - 1)
+					product_version := s
+					i := s.index_of ('.', 1)
+					if i > 0 then
+						i := s.index_of ('.', i + 1)
+						if i > 0 then
+							product_version := s.head (i - 1)
+						end
+					end
+				end
+			else
+				product_id := Void
+				product_version := Void
+			end
 		end
 
 feature -- Access
@@ -33,6 +61,10 @@ feature -- Access
 
 	creation_date: detachable DATE_TIME
 			-- Installation registration date.
+
+	product_id: detachable IMMUTABLE_STRING_32
+
+	product_version: detachable IMMUTABLE_STRING_32
 
 feature -- status report
 

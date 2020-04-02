@@ -125,14 +125,14 @@ feature -- Status report
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Element change
 
-	put (s: STRING)
-			-- Insert `s' in Current if not present,
-			-- otherwise does nothing.
-			-- In both cases, `found_item' is updated
-			-- to location in Current.
+	put (s: READABLE_STRING_8)
+			-- Insert `s' in Current if not present, otherwise does nothing.
+			-- In both cases, `found_item' is updated to location in Current.
+			-- The string should be encoded in UTF-8.
 		require
 			s_not_void: s /= Void
 			s_valid_type: s.same_type (string_type)
+			s_in_utf_8: {UTF_CONVERTER}.is_valid_utf_8_string_8 (s)
 		local
 			l_lookup_table: like lookup_table
 			l_count: INTEGER
@@ -158,7 +158,15 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Element change
 				l_lookup_table.put (l_count, l_new_entry)
 			end
 		ensure
-			elemented_inserted: equal (item (found_item), s)
+			element_inserted: attached item (found_item) as x and then x.same_string (s)
+		end
+
+	put_32 (s: READABLE_STRING_32)
+			-- Same as `put`, but allows inserting Unicode strings.
+		do
+			put ({UTF_CONVERTER}.string_32_to_utf_8_string_8 (s))
+		ensure
+			element_inserted: attached item_32 (found_item) as x and then x.same_string (s)
 		end
 
 feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Convenience
@@ -434,6 +442,15 @@ feature {NONE} -- Implementation: access
 			put ("ieee_maximum_number") check found_item = ieee_maximum_number_name_id end
 			put ("ieee_minimum_number") check found_item = ieee_minimum_number_name_id end
 			put ("make_from_c_byte_array") check found_item = make_from_c_byte_array_name_id end
+			put_32 ({IMMUTABLE_STRING_32} "infix %"⊗%"") check found_item = bit_and_unicode_alias_id end
+			put_32 ({IMMUTABLE_STRING_32} "infix %"⦶%"") check found_item = bit_or_unicode_alias_id end
+			put_32 ({IMMUTABLE_STRING_32} "infix %"⊕%"") check found_item = bit_xor_unicode_alias_id end
+			put_32 ({IMMUTABLE_STRING_32} "prefix %"⊝%"") check found_item = bit_not_unicode_alias_id end
+			put_32 ({IMMUTABLE_STRING_32} "infix %"⧀%"") check found_item = bit_shift_left_unicode_alias_id end
+			put_32 ({IMMUTABLE_STRING_32} "infix %"⧁%"") check found_item = bit_shift_right_unicode_alias_id end
+			put_32 ({IMMUTABLE_STRING_32} "infix %"∨%"") check found_item = max_unicode_alias_id end
+			put_32 ({IMMUTABLE_STRING_32} "infix %"∧%"") check found_item = min_unicode_alias_id end
+			put_32 ({IMMUTABLE_STRING_32} "infix %"⋚%"") check found_item = three_way_comparison_unicode_alias_id end
 		end
 
 invariant
@@ -442,7 +459,7 @@ invariant
 	found_item_positive: found_item >= 0
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

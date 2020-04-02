@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -1559,7 +1559,7 @@ feature -- Comparison
 --			same_string: Result implies same_string (other)
 		end
 
-	three_way_comparison (other: like Current): INTEGER
+	three_way_comparison alias "⋚" (other: like Current): INTEGER
 			-- If current object equal to `other', 0;
 			-- if smaller, -1; if greater, 1
 			-- (ELKS 2001 STRING, inherited from COMPARABLE)

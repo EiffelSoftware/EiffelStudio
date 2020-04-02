@@ -3,8 +3,8 @@
 		An event list service {EVENT_LIST_S} tool to show all errors and warning event items in a single list in the EiffelStudio UI
 	]"
 	legal: "See notice at end of class."
-	status: "See notice at end of class.";
-	date: "$Date$";
+	status: "See notice at end of class."
+	date: "$Date$"
 	revision: "$Revision$"
 
 class
@@ -2040,7 +2040,7 @@ feature {NONE} -- Exception handling
 			l_frame: EV_FRAME
 			l_error_box: EV_HORIZONTAL_BOX
 			l_error_label: EV_LABEL
-			l_exception_message: READABLE_STRING_GENERAL
+			l_exception_message: READABLE_STRING_32
 		do
 			l_exception_string := an_exception.trace
 			if l_exception_string /= Void then
@@ -2091,11 +2091,12 @@ feature {NONE} -- Exception handling
 			l_hbox.disable_item_expand (l_ignore)
 			l_hbox.set_border_width (5)
 			l_hbox.set_padding (5)
-			if attached an_exception.description as l_message then
-				l_exception_message := l_message
-			else
-				l_exception_message := ""
-			end
+			l_exception_message :=
+				if attached an_exception.description as l_message then
+					l_message
+				else
+					{STRING_32} ""
+				end
 			a_empty_dialog.set_title (ca_messages.inspector_eiffel_exception + l_exception_message)
 			a_empty_dialog.set_minimum_height (350)
 			a_empty_dialog.set_size (500, 300)
@@ -2166,7 +2167,7 @@ invariant
 	item_count_matches_error_and_warning_count: error_count + warning_count + hint_count = item_count
 
 ;note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

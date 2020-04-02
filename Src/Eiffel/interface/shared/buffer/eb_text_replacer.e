@@ -79,7 +79,7 @@ feature -- Access
 			result_attached: Result /= Void
 		end
 
-	text_fragment_cache: HASH_TABLE [EB_TEXT_FRAGMENT, STRING]
+	text_fragment_cache: HASH_TABLE [EB_TEXT_FRAGMENT, STRING_32]
 			-- Text fragment cache [text fragment, normalized text fragment name].
 			-- Cache is used to avoid duplicated calculation for replacements.
 			-- For example, if we want to replace all "$file_name" in string "$file_name, $file_name",

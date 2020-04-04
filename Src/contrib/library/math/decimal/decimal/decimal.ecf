@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-18-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-18-0 http://www.eiffel.com/developers/xml/configuration-1-18-0.xsd" name="decimal" uuid="B7221B98-67DD-4D50-A42C-14257EB75B49" library_target="decimal">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="decimal" uuid="B7221B98-67DD-4D50-A42C-14257EB75B49" library_target="decimal">
 	<target name="decimal">
 		<description>Decimal arbitrary precision arithmetic library</description>
 		<root all_classes="true"/>
-		<option warning="true">
+		<option warning="error">
 		</option>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<cluster name="decimal" location=".\" recursive="true">

@@ -267,6 +267,8 @@ feature -- Directory operations
 					d.recursive_create_dir
 				end
 			end
+		ensure
+			class
 		rescue
 			is_retried := True
 			retry
@@ -289,6 +291,8 @@ feature -- Directory operations
 					d.recursive_create_dir
 				end
 			end
+		ensure
+			class
 		rescue
 			is_retried := True
 			retry
@@ -399,7 +403,7 @@ feature -- File operations
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

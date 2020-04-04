@@ -165,7 +165,7 @@ feature -- Element change
 
 feature -- Comparison
 
-	three_way_comparison (other: like Current): INTEGER
+	three_way_comparison alias "⋚" (other: like Current): INTEGER
 			-- Compare `other'; Result is [-1,0,+1] if [Current < other, Current = other, Current > other] respectively
 		local
 			index, count_a, count_b, local_difference: INTEGER

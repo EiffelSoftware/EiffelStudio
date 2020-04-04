@@ -466,7 +466,7 @@ feature -- Comparison
 			Result := three_way_comparison (other) = 0
 		end
 
-	three_way_comparison (other: like Current): INTEGER
+	three_way_comparison alias "⋚" (other: like Current): INTEGER
 			-- Perform a three way comparison between `Current' and `other'
 		do
 			Result := compare (Current, other).three_way_comparison (0)
@@ -826,15 +826,12 @@ feature {INTEGER_X_FACILITIES}-- Element change
 			-- Initialize `Current' from `value_a'.
 		local
 			upper_limb: NATURAL_32
-			new_count: INTEGER
 		do
 			resize (2)
 			item [0] := value_a.to_natural_32
 			upper_limb := (value_a |>> 32).to_natural_32
 			item [1] := upper_limb
-			new_count := value_a.three_way_comparison (0)
-			new_count := new_count + (upper_limb /= 0).to_integer
-			count_set (new_count)
+			count_set (value_a.three_way_comparison (0) + (upper_limb /= 0).to_integer)
 		ensure
 			value_a = 0 implies count = 0
 			value_a /= 0 implies (count = 1 or count = 2)
@@ -846,13 +843,7 @@ feature {INTEGER_X_FACILITIES}-- Element change
 			-- Initialize `Current' from `value_a'.
 		do
 			item [0] := value_a
-			if
-				value_a /= 0
-			then
-				count_set (1)
-			else
-				count_set (0)
-			end
+			count_set (if value_a = 0 then 0 else 1 end)
 		ensure
 			value_a = 0 implies count = 0
 			value_a /= 0 implies count = 1
@@ -864,13 +855,7 @@ feature {INTEGER_X_FACILITIES}-- Element change
 			-- Initialize `Current' from `value_a'.
 		do
 			item [0] := value_a.to_natural_32
-			if
-				value_a /= 0
-			then
-				count_set (1)
-			else
-				count_set (0)
-			end
+			count_set (if value_a = 0 then 0 else 1 end)
 		ensure
 			value_a = 0 implies count = 0
 			value_a /= 0 implies count = 1
@@ -882,13 +867,7 @@ feature {INTEGER_X_FACILITIES}-- Element change
 			-- Initialize `Current' from `value_a'.
 		do
 			item [0] := value_a.to_natural_32
-			if
-				value_a /= 0
-			then
-				count_set (1)
-			else
-				count_set (0)
-			end
+			count_set (if value_a = 0 then 0 else 1 end)
 		ensure
 			value_a = 0 implies count = 0
 			value_a /= 0 implies count = 1
@@ -1163,11 +1142,8 @@ feature -- Lossless conversion
 			-- Convert the absolute value of `Current' to a byte array
 		require
 			big_enough: bytes <= target.upper - offset + 1
-		local
-			junk: TUPLE [junk: INTEGER]
 		do
-			create junk
-			output (target, offset, junk, 1, 1, -1, Current)
+			output (target, offset, create {TUPLE [junk: INTEGER]}, 1, 1, -1, Current)
 		ensure
 			reversable: create {INTEGER_X}.make_from_bytes (target, offset, offset + bytes - 1) ~ Current
 		end
@@ -1717,12 +1693,9 @@ feature {INTEGER_X_FACILITIES}
 
 	resize (new_alloc: INTEGER)
 			-- Change the space for integer to at least `new_alloc' limbs.
-		local
-			allocate_size: INTEGER_32
 		do
 			if new_alloc > capacity then
-				allocate_size := new_alloc.max (1)
-				item := item.aliased_resized_area_with_default (0, allocate_size)
+				item := item.aliased_resized_area_with_default (0, new_alloc.max (1))
 			end
 		end
 
@@ -1737,4 +1710,8 @@ invariant
 	capacity >= 1
 	count <= item.count
 	item.count = item.capacity
+
+note
+	ca_ignore: "CA033", "CA033: too large class"
+
 end

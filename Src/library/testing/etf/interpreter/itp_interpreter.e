@@ -78,7 +78,7 @@ feature {NONE} -- Initialization
 			create log_file.make_with_name (l_log_filename)
 			log_file.open_append
 			if not log_file.is_open_write then
-				report_error ("could not open log file '" + l_log_filename + "'.")
+				report_error ("could not open log file '" + {UTF_CONVERTER}.string_32_to_utf_8_string_8 (l_log_filename) + "'.")
 				die (1)
 			end
 
@@ -616,7 +616,7 @@ invariant
 	socket_attached: socket /= Void
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

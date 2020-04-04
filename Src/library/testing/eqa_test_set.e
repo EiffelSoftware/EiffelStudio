@@ -1,8 +1,5 @@
-note
-	description: "[
-		Sets of related testing operations.
-	]"
-	author: ""
+﻿note
+	description: "Sets of related testing operations."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -151,7 +148,7 @@ feature -- Basic operations
 			asserter.assert (a_tag, a_condition)
 		end
 
-	assert (a_tag: STRING; a_condition: BOOLEAN)
+	assert (a_tag: READABLE_STRING_GENERAL; a_condition: BOOLEAN)
 			-- Assert `a_condition'.
 		require
 			a_tag_not_void: a_tag /= Void
@@ -222,7 +219,7 @@ invariant
 	internal_file_system_valid: file_system.asserter = asserter
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

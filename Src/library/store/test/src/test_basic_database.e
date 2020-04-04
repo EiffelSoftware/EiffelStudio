@@ -138,7 +138,7 @@ feature {NONE}
 	reset_data (a_table_name: STRING)
 		do
 			db_change.modify ("DROP TABLE " + sql_table_name (a_table_name))
-			assert ("Reset data failed: " + db_change.error_message_32, db_change.is_ok)
+			assert ({STRING_32} "Reset data failed: " + db_change.error_message_32, db_change.is_ok)
 		end
 
 feature -- Spec helper

@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that manage breakpoints"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -439,7 +439,7 @@ feature -- Breakpoints tags
 			bps: like breakpoints
 			cursor: CURSOR
 			bp: BREAKPOINT
-			l_bp_tag_path: STRING
+			l_bp_tag_path: STRING_32
 		do
 			btp := breakpoints_tags_provider
 			tp := tags_provider
@@ -1427,7 +1427,7 @@ invariant
 	breakpoints_not_void: breakpoints /= Void
 
 ;note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

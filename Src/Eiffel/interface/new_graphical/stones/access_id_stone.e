@@ -1,5 +1,5 @@
 ﻿note
-	description	: "Stone representing an eiffel feature, local or argument stone."
+	description: "Stone representing an eiffel feature, local or argument stone."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -81,7 +81,7 @@ feature -- Status report
 
 feature -- dragging
 
-	origin_text: STRING
+	origin_text: STRING_32
 			-- Text of the feature
 		do
 			Result := Precursor {AST_STONE}
@@ -121,7 +121,7 @@ feature -- dragging
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

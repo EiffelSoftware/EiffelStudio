@@ -1,7 +1,5 @@
-note
-	description: "[
-			Common routines for XML extraction, saving and deserialization
-		]"
+﻿note
+	description: "Routines for XML extraction, saving and deserialization."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
@@ -71,7 +69,7 @@ feature {SHARED_XML_ROUTINES} -- Processing
 	xml_integer (elem: like xml_node; a_name: STRING): INTEGER
 			-- Find in sub-elememt of `elem' integer item with tag `a_name'.
 		local
-			int_str: STRING
+			int_str: READABLE_STRING_32
 		do
 			if attached {like xml_node} elem.element_by_name (a_name) as e then
 				int_str := e.text
@@ -107,7 +105,7 @@ feature {SHARED_XML_ROUTINES} -- Processing
 	xml_double (elem: like xml_node; a_name: STRING): DOUBLE
 			-- Find in sub-elememt of `elem' integer item with tag `a_name'.
 		local
-			double_str: STRING
+			double_str: READABLE_STRING_32
 		do
 			if attached {like xml_node} elem.element_by_name (a_name) as e then
 				double_str := e.text
@@ -122,7 +120,7 @@ feature {SHARED_XML_ROUTINES} -- Processing
 			end
 		end
 
-	xml_string (elem: like xml_node; a_name: STRING): STRING
+	xml_string (elem: like xml_node; a_name: STRING): detachable STRING_32
 			-- Find in sub-elememt of `elem' string item with tag `a_name'.
 		do
 			if attached {like xml_node} elem.element_by_name (a_name) as e then
@@ -136,7 +134,7 @@ feature {SHARED_XML_ROUTINES} -- Processing
 	xml_color (elem: like xml_node; a_name: STRING): EV_COLOR
 			-- Find in sub-elememt of `elem' color item with tag `a_name'.
 		local
-			s: STRING
+			s: READABLE_STRING_32
 			sc1, sc2: INTEGER
 			r, g, b: INTEGER
 			rescued: BOOLEAN
@@ -310,7 +308,7 @@ feature {SHARED_XML_ROUTINES} -- Error management
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -341,4 +339,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class SHARED_XML_ROUTINES
+end

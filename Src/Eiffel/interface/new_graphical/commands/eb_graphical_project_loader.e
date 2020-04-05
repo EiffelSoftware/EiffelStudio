@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Graphical version for project loading."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -290,7 +290,7 @@ feature {NONE} -- Actions
 			end
 		end
 
-	estudio_cmd_line: STRING
+	estudio_cmd_line: STRING_32
 			-- Command line to open/compile currently selected project.
 		require
 			not_has_error: not has_error
@@ -780,7 +780,7 @@ invariant
 	parent_window_not_destroyed: not parent_window.is_destroyed
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -1,8 +1,6 @@
-note
-	description: "Objects that ..."
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -59,8 +57,8 @@ feature -- Access
 	model_from_xml (node: like xml_element_type): EG_ITEM
 			-- Create an EG_ITEM from `node' if possible.
 		local
-			node_name, class_name, source_name, target_name: STRING
-			cluster_id, class_id, group_id: STRING
+			node_name, class_name, source_name, target_name: STRING_32
+			cluster_id, class_id, group_id: STRING_32
 			cluster_found: CONF_GROUP
 			class_found: CLASS_I
 			source, target: ES_CLASS
@@ -209,7 +207,7 @@ feature {NONE} -- Constants
 		-- Xml string constants
 
 note
-	copyright:	"Copyright (c) 1984-2012, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -240,4 +238,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EIFFEL_FACTORY
+end

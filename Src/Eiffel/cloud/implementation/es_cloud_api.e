@@ -1,6 +1,4 @@
-note
-	description: "Summary description for {ES_CLOUD_API}."
-	author: ""
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -522,11 +520,12 @@ feature -- Installation
 			end
 		end
 
-	session (acc: ES_ACCOUNT; a_installation: ES_ACCOUNT_INSTALLATION; a_session_id: READABLE_STRING_GENERAL): detachable ES_ACCOUNT_SESSION
+	session (acc: ES_ACCOUNT; a_installation: ES_ACCOUNT_INSTALLATION; a_session_id: READABLE_STRING_32): detachable ES_ACCOUNT_SESSION
 		local
-			l_installation_href, l_session_href: READABLE_STRING_8
+			l_session_href: READABLE_STRING_8
 			ctx: HTTP_CLIENT_REQUEST_CONTEXT
 			resp: like response
+			u: URI
 			params: ES_CLOUD_API_SESSION_PARAMETERS
 		do
 			reset_api_call
@@ -538,11 +537,13 @@ feature -- Installation
 			reset_api_call
 
 			l_session_href := endpoint_for_token (acc.access_token.token, {STRING_32} "_links|es:session|href;session=" + a_session_id.as_string_32)
-			if l_session_href = Void then
-				l_installation_href := endpoint_for_token (acc.access_token.token, {STRING_32} "_links|es:installation|href;installation=" + a_installation.id.as_string_32)
-				if l_installation_href /= Void then
-					l_session_href := l_installation_href + "/session/" + a_session_id
-				end
+			if
+				not attached l_session_href and then
+				attached endpoint_for_token (acc.access_token.token, {STRING_32} "_links|es:installation|href;installation=" + a_installation.id.as_string_32) as l_installation_href
+			then
+				create u.make_from_string (l_installation_href + "/session/")
+				u.add_unencoded_path_segment (a_session_id)
+				l_session_href := u.string
 			end
 			if l_session_href /= Void then
 				if

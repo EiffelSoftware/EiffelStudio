@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that represents a debugger"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -537,21 +537,21 @@ feature -- Breakpoints management
 			Result := bp_reached and not bp_continue
 		end
 
-	computed_breakpoint_message (bp: BREAKPOINT; a_msg: STRING): STRING
+	computed_breakpoint_message (bp: BREAKPOINT; a_msg: STRING_32): STRING_32
 			-- Computed message from breakpoint message `bp.message'.
 		require
 			bp_not_void: bp /= Void
 			bp_message_not_void: a_msg /= Void
 		local
-			m: STRING
-			m_area: SPECIAL [CHARACTER]
+			m: STRING_32
+			m_area: SPECIAL [CHARACTER_32]
 			m_max: INTEGER
 			cse: CALL_STACK_ELEMENT
 			dv: DUMP_VALUE
 			i: INTEGER
-			c: CHARACTER
-			s: STRING
-			v: STRING
+			c: CHARACTER_32
+			s: STRING_32
+			v: STRING_32
 			is_escaped,
 			in_expression,
 			in_keyword: BOOLEAN
@@ -561,7 +561,7 @@ feature -- Breakpoints management
 				m := a_msg
 				from
 					i := 0 --| iterate on SPECIAL
-					s := character_routines.unescaped_string (m)
+					s := character_routines.unescaped_string_32 (m)
 					if not character_routines.last_unescaping_raised_error then
 						m := s
 					end
@@ -1163,7 +1163,7 @@ feature -- Expression evaluation
 			attached_result: Result /= Void
 		end
 
-	expression_evaluation (a_expr: STRING): DUMP_VALUE
+	expression_evaluation (a_expr: STRING_32): DUMP_VALUE
 			-- Expression evaluation's result for `a_expr' in current context
 			-- (note: Result = Void implies an error occurred)
 		require
@@ -1845,7 +1845,7 @@ invariant
 	application_associated_to_current: application /= Void implies application.debugger_manager = Current
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

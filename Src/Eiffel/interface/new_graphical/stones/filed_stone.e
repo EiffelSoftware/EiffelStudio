@@ -1,9 +1,9 @@
-note
+﻿note
 	description: "Stone that has a file name associated with it."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 deferred class
 	FILED_STONE
@@ -24,7 +24,7 @@ feature -- Access
 			file_name_valid: Result /= Void
 		end
 
-	origin_text: STRING
+	origin_text: STRING_32
 			-- Content of the file named `file_name'
 			-- Void if unreadable file.
 		local
@@ -51,7 +51,7 @@ feature -- Access
 		end
 
 note
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -82,4 +82,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class FILED_STONE
+end

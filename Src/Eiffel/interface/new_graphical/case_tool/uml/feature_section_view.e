@@ -3,6 +3,7 @@
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "Benno Baumgartner"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -65,7 +66,7 @@ feature {NONE} -- Initialize
 			e_feature: E_FEATURE
 			visibility: STRING
 			once_line: EV_MODEL_LINE
-			signature: STRING
+			signature: STRING_32
 			f_names: EIFFEL_LIST [FEATURE_NAME]
 			l_text: STRING_32
 		do
@@ -304,7 +305,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -435,7 +435,7 @@ feature {NONE} -- Implementation: xml
 	xml_name_id: STRING = "name"
 	xml_value_id: STRING = "value"
 
-	new_xml_document (a_root_name: READABLE_STRING_GENERAL; a_xmlns_name_version: detachable READABLE_STRING_GENERAL): XML_DOCUMENT
+	new_xml_document (a_root_name: READABLE_STRING_GENERAL; a_xmlns_name_version: detachable READABLE_STRING_32): XML_DOCUMENT
 			-- New XML_DOCUMENT with predefined declaration and information.
 		local
 			decl: XML_DECLARATION
@@ -503,7 +503,7 @@ feature {NONE} -- Implementation: xml
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

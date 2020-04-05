@@ -568,7 +568,7 @@ feature {NONE} -- Implementation
 			-- Set texts in `name_labels'.
 			-- | With line wrap at `max_class_name_length'.
 		local
-			s, rest: STRING
+			s, rest: STRING_32
 			i: INTEGER
 			part_text: EV_MODEL_TEXT
 			l_bbox: EV_RECTANGLE
@@ -978,7 +978,7 @@ invariant
 	generics_label_not_void: generics_label /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

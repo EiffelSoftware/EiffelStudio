@@ -906,7 +906,7 @@ feature {NONE} -- Implementation
 			l_new_group: BOOLEAN
 			l_feature: EB_FEATURE_FOR_COMPLETION
 			l_father: EB_NAME_FOR_COMPLETION
-			l_father_name: STRING
+			l_father_name: STRING_32
 			l_e_feature: E_FEATURE
 		do
 			l_overloaded_names := a_class.feature_table.overloaded_names
@@ -1572,8 +1572,8 @@ feature {NONE} -- Implementation
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
-	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
+	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
 			This file is part of Eiffel Software's Eiffel Development Environment.

@@ -1,6 +1,4 @@
-note
-	description: "Summary description for {TAG_TREE_GRID}."
-	author: ""
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -190,8 +188,8 @@ feature {NONE} -- Access
 			a_node_has_row: is_node_in_grid (a_node)
 		local
 			l_formatter: TAG_FORMATTER
-			l_root_tag, l_node_tag: STRING
-			l_token, l_suffix: STRING
+			l_root_tag, l_node_tag: STRING_32
+			l_token, l_suffix: STRING_32
 		do
 			l_formatter := tree.formatter
 			l_root_tag := grid_node.tag
@@ -546,7 +544,7 @@ invariant
 	child_table_attached: child_table /= Void
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

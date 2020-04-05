@@ -1,9 +1,9 @@
 note
-	description	: "Controls execution of debugged application."
+	description: "Controls execution of debugged application."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class APPLICATION_EXECUTION
 
@@ -1170,7 +1170,7 @@ feature -- Query
 			result_attached: Result /= Void
 		end
 
-	internal_type_name_of_type (a_type_id: INTEGER): detachable STRING
+	internal_type_name_of_type (a_type_id: INTEGER): detachable STRING_32
 			-- Internal type_name_of_type for `a_type_id'
 			--| note: a_type_id is the runtime type_id (so don't forget to -1 from eiffel type id)
 		require
@@ -1368,7 +1368,7 @@ feature {NONE} -- fake
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

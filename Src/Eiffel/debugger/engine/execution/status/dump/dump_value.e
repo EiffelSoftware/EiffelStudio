@@ -381,7 +381,7 @@ feature -- Status report
 			end
 		end
 
-	full_output: STRING
+	full_output: STRING_32
 			-- Complete output, including string representation.
 			--| `output_value' = "This is a string"
 		do
@@ -648,6 +648,7 @@ feature {DUMP_VALUE} -- string_representation Implementation
 										end
 									end
 								end
+								
 							end
 							l_attributes_cursor.forth
 						end
@@ -722,7 +723,7 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			end
 		end
 
-	generating_type_evaluated_string: detachable STRING
+	generating_type_evaluated_string: detachable STRING_32
 			-- Full generic type using evaluation of generating_type on the related object
 			-- WARNING: This has to be an Eiffel type (descendant of ANY to implement generating_type)
 		require
@@ -747,7 +748,7 @@ feature {DUMP_VALUE} -- string_representation Implementation
 
 feature {NONE} -- Classic specific
 
-	classic_generating_type_evaluated_string: detachable STRING
+	classic_generating_type_evaluated_string: detachable STRING_32
 		require
 			is_stopped: debugger_manager.safe_application_is_stopped
 			is_valid_eiffel_type: dynamic_class /= Void and then not dynamic_class.is_true_external
@@ -759,9 +760,9 @@ feature {NONE} -- Classic specific
 			if
 				l_feat /= Void and then
 				attached classic_feature_result_value_on_current (l_feat, dynamic_class) as l_final_result_value and then
-				not l_final_result_value.is_void and then attached l_final_result_value.classic_string_representation (0, -1) as l_result
+				not l_final_result_value.is_void
 			then
-				Result := l_result
+				Result := l_final_result_value.classic_string_representation (0, -1)
 			end
 		end
 
@@ -842,7 +843,7 @@ feature -- Action
 			last_classic_send_value_succeed := True
 			inspect (type)
 			when Type_manifest_string then
-				s8 := value_string.as_string_8
+				s8 := value_string.to_string_8
 				value_string_c := s8.to_c
 				send_string_value ($value_string_c, s8.count)
 			when type_manifest_string_32 then
@@ -873,10 +874,10 @@ feature -- Action
 
 feature -- Access
 
-	generating_type_representation (generating_type_evaluation_enabled: BOOLEAN): STRING
+	generating_type_representation (generating_type_evaluation_enabled: BOOLEAN): STRING_32
 			-- {TYPE}.generating_type string representation
 		local
-			l_generating_type_string: STRING
+			l_generating_type_string: STRING_32
 		do
 			create Result.make (100)
 
@@ -934,10 +935,10 @@ feature -- Access
 				if format_result then
 					create Result.make (value_string.count + 2)
 					Result.append_character ('%"')
-					Result.append (value_string.as_string_8)
+					Result.append (value_string)
 					Result.append_character ('%"')
 				else
-					Result := value_string.as_string_8.twin
+					Result := value_string.twin
 				end
 			when Type_manifest_string_32 then
 				s := utf.utf_8_string_8_to_string_32 (value_string)
@@ -1210,7 +1211,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

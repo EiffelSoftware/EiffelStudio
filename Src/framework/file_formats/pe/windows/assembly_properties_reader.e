@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialize
 
-	make (a_runtime_version: READABLE_STRING_GENERAL)
+	make (a_runtime_version: READABLE_STRING_32)
 			-- Initialize Current. Initialize `exists' accordingly.
 		require
 			a_runtime_version_not_void: a_runtime_version /= Void
@@ -407,7 +407,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -962,7 +962,7 @@ feature {NONE} -- Impl filling
 				print ("breakpoints.count=" + breakpoints_manager.breakpoints.count.out + "%N")
 				breakpoints_manager.breakpoints.linear_representation.do_all (agent (abp: BREAKPOINT)
 						do
-							print (abp.string_representation (True) + "%N")
+							localized_print (abp.string_representation (True) + "%N")
 						end
 					)
 			end
@@ -1074,7 +1074,7 @@ feature {NONE} -- Dynamic item filling
 					if bp.has_tags then
 						t.append_character ('%N')
 						t.append_string_general ("Tags: ")
-						bp.tags.do_all (agent (atag: STRING_32; astr: STRING)
+						bp.tags.do_all (agent (atag: STRING_32; astr: STRING_32)
 								do
 									if atag /= Void then
 										astr.append (atag + ", ")
@@ -1405,7 +1405,7 @@ feature {NONE} -- Implementation, cosmetic
 			-- Row highlight background color.
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

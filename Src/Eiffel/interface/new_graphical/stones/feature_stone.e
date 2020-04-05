@@ -1,9 +1,9 @@
-note
-	description	: "Stone representing an eiffel feature stone."
+﻿note
+	description: "Stone representing an eiffel feature stone."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	date		: "$Date$"
-	revision	: "$Revision $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	FEATURE_STONE
@@ -140,7 +140,7 @@ feature -- Status report
 
 feature -- dragging
 
-	origin_text: STRING
+	origin_text: STRING_32
 			-- Text of the feature
 		local
 			temp: STRING
@@ -298,7 +298,7 @@ feature {NONE} -- Implementation
 			-- Line number of `internal_start_position'.
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -329,4 +329,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class FEATURE_STONE
+end

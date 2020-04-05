@@ -74,7 +74,7 @@ feature -- Access
 			-- Is `st' valid stone for Current?
 		local
 			dv: DUMP_VALUE
-			s: STRING
+			s: STRING_32
 		do
 			if attached {OBJECT_STONE} a_stone as st then
 				dv := debugger_manager.dump_value_factory.new_object_value (st.object_address, st.dynamic_class, 0)
@@ -157,7 +157,7 @@ feature {NONE} -- Event handling
 		end
 
 note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

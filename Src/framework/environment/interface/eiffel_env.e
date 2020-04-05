@@ -142,7 +142,7 @@ feature -- Access
 
 feature {NONE} -- Access
 
-	required_environment_variables: ARRAYED_LIST [TUPLE [var: READABLE_STRING_GENERAL; is_directory: BOOLEAN]]
+	required_environment_variables: ARRAYED_LIST [TUPLE [var: READABLE_STRING_8; is_directory: BOOLEAN]]
 			-- List of required environment variables.
 		once
 			create Result.make (4)
@@ -192,7 +192,7 @@ feature -- Status update
 			l_op_env: like operating_environment
 			l_value: detachable STRING_32
 			l_variables: like required_environment_variables
-			l_variable: TUPLE [var: READABLE_STRING_GENERAL; is_directory: BOOLEAN]
+			l_variable: like required_environment_variables.item
 			l_is_valid: like is_valid_environment
 			u: FILE_UTILITIES
 		do
@@ -2376,7 +2376,7 @@ feature {NONE} -- Helper
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

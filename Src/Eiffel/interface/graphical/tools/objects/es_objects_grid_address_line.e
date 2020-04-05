@@ -1,8 +1,6 @@
-note
-	description: "Objects that ..."
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -155,7 +153,7 @@ feature -- Query
 			Result := last_dump_value.output_for_debugger
 		end
 
-	object_type_representation: STRING
+	object_type_representation: STRING_32
 			-- Full ouput representation for related object
 		do
 			if last_dump_value = Void then
@@ -224,7 +222,7 @@ feature -- Graphical changes
 		end
 
 note
-	copyright: "Copyright (c) 1984-2014, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

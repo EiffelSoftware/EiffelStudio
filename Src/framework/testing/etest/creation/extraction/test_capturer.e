@@ -1,10 +1,9 @@
-note
+﻿note
 	description: "[
 		Objects retrieving the application state for given call stack elements. Each object referenced by
-		    the given call stack elements will be reported to `observers' in form of a
-		    {TEST_CAPTURED_OBJECT}.
+	    the given call stack elements will be reported to `observers' in form of a
+	    {TEST_CAPTURED_OBJECT}.
 	]"
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -186,7 +185,7 @@ feature -- Basic operations
 			l_element: TEST_CAPTURED_STACK_ELEMENT
 			i: INTEGER
 			l_abort: BOOLEAN
-			l_type, l_value: STRING
+			l_type, l_value: STRING_32
 			l_feature: detachable E_FEATURE
 			l_dbg_value: detachable ABSTRACT_DEBUG_VALUE
 		do
@@ -299,7 +298,7 @@ feature {NONE} -- Basic operations
 						last_value.append (char_text (l_char_value.value))
 						last_value.append_character ('%'')
 					else
-						l_manifest := l_value.dump_value.output_value (False)
+						l_manifest := l_value.dump_value.output_value (False).to_string_8
 						if attached {DEBUG_BASIC_VALUE [REAL_32]} l_value or attached {DEBUG_BASIC_VALUE [REAL_64]} l_value then
 							if not l_manifest.has ('.') then
 								l_manifest.append (".0")
@@ -323,7 +322,7 @@ feature {NONE} -- Basic operations
 			l_id, l_depth: NATURAL
 			l_system: SYSTEM_I
 			l_classi: EIFFEL_CLASS_I
-			l_type, l_dump: STRING
+			l_type, l_dump: STRING_32
 			l_object: TEST_CAPTURED_OBJECT
 			l_children: detachable ARRAY [ABSTRACT_DEBUG_VALUE]
 		do
@@ -338,7 +337,7 @@ feature {NONE} -- Basic operations
 				l_classi := l_class.original_class
 				l_system := l_class.system
 				if l_system.string_32_class = l_classi or l_system.string_8_class = l_classi then
-					l_dump := l_adv.dump_value.attached_truncated_string_representation (0, -1).to_string_8
+					l_dump := l_adv.dump_value.attached_truncated_string_representation (0, -1)
 					check l_dump /= Void end
 					create {TEST_CAPTURED_STRING_OBJECT} l_object.make (l_id, l_type, l_dump)
 
@@ -384,7 +383,7 @@ feature {NONE} -- Basic operations
 				if l_dbg_value /= Void then
 					if
 						attached l_dbg_value.dump_value.generating_type_representation (True) as l_type and then
-						not a_object.type.is_equal (l_type)
+						not a_object.type.same_string_general (l_type)
 					then
 							-- If the content referes to the same type, we do not increase the depth. That prevents
 							-- datastructures like linked list not to be cut off after `max_reference_depth' elements.
@@ -457,7 +456,7 @@ invariant
 	capturing_equals_object_queue_attached: is_capturing = (object_queue /= Void)
 
 note
-	copyright: "Copyright (c) 1984-2010, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

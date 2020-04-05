@@ -287,8 +287,6 @@ feature -- Commands
 			l_prc_launcher: BASE_PROCESS
 			l_success: BOOLEAN
 			l_wd: detachable IMMUTABLE_STRING_32
-			l_cmd: STRING_32
-			l_args: ARRAYED_LIST [STRING_8]
 			l_state: CONF_STATE
 		do
 			create l_prc_factory
@@ -305,16 +303,15 @@ feature -- Commands
 					else
 						l_wd := Void
 					end
-					if {PLATFORM}.is_windows then
-						l_cmd := l_action.command
-						l_prc_launcher := l_prc_factory.process_launcher_with_command_line (l_cmd, l_wd)
-					else
-						l_cmd := {STRING_32} "/bin/sh"
-						create l_args.make (2)
-						l_args.extend ("-c")
-						l_args.extend ("%'%'" + l_action.command + "%'%'")
-						l_prc_launcher := l_prc_factory.process_launcher (l_cmd, l_args, l_wd)
-					end
+					l_prc_launcher :=
+						if {PLATFORM}.is_windows then
+							l_prc_factory.process_launcher_with_command_line (l_action.command, l_wd)
+						else
+							l_prc_factory.process_launcher
+								("/bin/sh",
+								<<{STRING_32} "-c", {STRING_32} "%'%'" + l_action.command + "%'%'">>,
+								l_wd)
+						end
 					l_prc_launcher.set_separate_console (is_gui)
 
 					l_prc_launcher.launch
@@ -697,7 +694,7 @@ feature {NONE} -- Implementation
 			-- Was there a problem during running the pre and post compile actions?
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

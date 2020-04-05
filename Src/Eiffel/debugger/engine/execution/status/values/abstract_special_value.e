@@ -1,8 +1,6 @@
-note
-	description: "Objects that ..."
+﻿note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -104,15 +102,12 @@ feature {DEBUG_VALUE_EXPORTER} -- Output
 
 	output_value: STRING_32
 			-- Return a string representing `Current'.
-		local
-			str: STRING_32
 		do
 			if address = Void then
 				Result := NONE_representation
 			else
 				Result := Left_address_delim + address.output + Right_address_delim
-				str := string_value.as_string_8
-				if str /= Void then
+				if attached string_value as str then
 					Result.append (Equal_sign_str)
 					Result.append (str)
 				end
@@ -163,7 +158,7 @@ feature {DEBUGGER_TEXT_FORMATTER_VISITOR} -- Debug value type id
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -194,4 +189,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class ABSTRACT_SPECIAL_VALUE
+end

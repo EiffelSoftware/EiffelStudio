@@ -1,4 +1,4 @@
-note
+﻿note
 	description	: "[
 					Describes a breakpoint. A breakpoint is represented by its `body_index' 
 				  	and its `breakable_line_number' (line number in stop points view). 
@@ -7,9 +7,9 @@ note
 				]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "$Author$"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	author: "$Author$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class BREAKPOINT
 
@@ -87,7 +87,7 @@ feature {BREAK_LIST} -- Copy for saving
 
 feature -- debug output
 
-	debug_output: STRING
+	debug_output: STRING_32
 			-- Debug output.
 		do
 			Result := string_representation (True)
@@ -95,7 +95,7 @@ feature -- debug output
 
 feature -- Output
 
-	string_representation (with_details: BOOLEAN): STRING
+	string_representation (with_details: BOOLEAN): STRING_32
 			-- String representation of current Breakpoint.
 		local
 			lcl: CLASS_C
@@ -784,7 +784,7 @@ feature {NONE} -- Private constants
 	Bench_breakpoint_disabled: INTEGER 		= 2
 
 ;note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -815,5 +815,4 @@ feature {NONE} -- Private constants
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class BREAKPOINT
-
+end

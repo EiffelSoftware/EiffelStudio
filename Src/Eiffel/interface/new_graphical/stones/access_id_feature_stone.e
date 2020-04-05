@@ -1,8 +1,4 @@
-note
-	description: "[
-			Objects that ...
-		]"
-	author: "$Author$"
+﻿note
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -102,7 +98,7 @@ feature -- Change
 
 feature -- dragging
 
-	origin_text: STRING
+	origin_text: STRING_32
 			-- Text of the feature
 		do
 			Result := Precursor {ACCESS_ID_STONE}
@@ -184,7 +180,7 @@ feature -- dragging
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

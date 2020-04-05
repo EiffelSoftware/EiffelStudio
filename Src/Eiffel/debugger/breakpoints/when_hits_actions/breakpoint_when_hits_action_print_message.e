@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "[
 			Message to be print when Current is reached.
 			If Void, no message is printed.
@@ -14,7 +14,6 @@ note
 	]"
 	status: "See notice at end of class."
 	legal: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -29,14 +28,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make (a_message: STRING)
+	make (a_message: like message)
 		do
 			set_message (a_message)
 		end
 
 feature -- Access
 
-	message: STRING
+	message: STRING_32
 
 feature -- Persistence
 
@@ -64,7 +63,7 @@ feature -- Execute
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

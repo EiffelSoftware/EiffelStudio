@@ -25,7 +25,7 @@ feature -- Initialization
 			non_void_xml_file_path: xml_file_path /= Void
 		end
 
-	initialize (an_assembly_name: STRING)
+	initialize (an_assembly_name: READABLE_STRING_32)
 			-- Set `xml_file' with `an_xml_file' and create an instance of MEMBER_FILTER.
 		require
 			non_void_an_assembly_name: an_assembly_name /= Void
@@ -87,7 +87,7 @@ feature {NONE} -- Access
 	initialized: BOOLEAN
 			-- Did Current initialize correctly?
 
-	member_parser_table: HASH_TABLE [detachable MEMBER_FILTER, STRING]
+	member_parser_table: HASH_TABLE [detachable MEMBER_FILTER, READABLE_STRING_32]
 			-- Caching member_parser already calculated.
 		once
 			create Result.make (20)
@@ -323,7 +323,7 @@ invariant
 	non_void_xml_file_path: xml_file_path /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

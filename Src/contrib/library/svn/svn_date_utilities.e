@@ -1,5 +1,4 @@
 note
-	description: "Summary description for {SVN_DATE_UTILITIES}."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -8,7 +7,7 @@ class
 
 feature -- Access
 
-	svn_date_values (s: STRING): detachable TUPLE [year,month,day: INTEGER; hour,min,sec: INTEGER; fsec: REAL_64]
+	svn_date_values (s: STRING_32): detachable TUPLE [year,month,day: INTEGER; hour,min,sec: INTEGER; fsec: REAL_64]
 			-- "2010-11-30T23:33:40.105460Z" -> UTC
 		local
 			y, m,d: INTEGER
@@ -35,4 +34,12 @@ feature -- Access
 			end
 		end
 
+note
+	copyright: "Copyright (c) 2003-2020, Jocelyn Fiat, Alexander Kogtenkov"
+	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+	source: "[
+			 Jocelyn Fiat
+			 Contact: jocelyn@eiffelsolution.com
+			 Website http://www.eiffelsolution.com/
+		]"
 end

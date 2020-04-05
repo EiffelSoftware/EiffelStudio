@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Tool that displays the call stack during a debugging session."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -1031,9 +1031,9 @@ feature {NONE} -- Catcall warning access
 			l_max_type_id: INTEGER
 			ct: CLASS_TYPE
 			f: E_FEATURE
-			argname: STRING
+			argname: STRING_32
 			l_static_argtypename,
-			argtypename: STRING
+			argtypename: STRING_32
 			retried: BOOLEAN
 			ecse: EIFFEL_CALL_STACK_ELEMENT
 			l_status: APPLICATION_STATUS
@@ -2455,7 +2455,7 @@ feature {NONE} -- Implementation, cosmetic
 
 
 ;note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -2486,4 +2486,4 @@ feature {NONE} -- Implementation, cosmetic
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class EB_CALL_STACK_TOOL
+end

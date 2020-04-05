@@ -1414,7 +1414,7 @@ feature -- Action
 			bpm: BREAKPOINTS_MANAGER
 			err,
 			new: BOOLEAN
-			s: STRING
+			s: STRING_32
 			expr: DBG_EXPRESSION
 			i,v: INTEGER
 			wh_a: BREAKPOINT_WHEN_HITS_ACTION_I
@@ -1626,7 +1626,7 @@ feature -- Access
 ;note
 	ca_ignore:
 		"CA093", "CA093: manifest array type mismatch"
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

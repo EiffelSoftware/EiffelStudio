@@ -1,13 +1,13 @@
-note
+﻿note
 	description	: "[
 					Describes a breakpoint's location. It is by its `body_index' 
 				  	and its `breakable_line_number' (line number in stop points view).
 				  ]"
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author		: "$Author$"
-	date		: "$Date$"
-	revision	: "$Revision$"
+	author: "$Author$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 frozen class
 	BREAKPOINT_LOCATION
@@ -308,7 +308,7 @@ feature -- String representation
 
 feature -- debug output
 
-	debug_output: STRING
+	debug_output: STRING_32
 			-- Debug output.
 		do
 			Result := to_string
@@ -323,7 +323,7 @@ feature {NONE} -- Private constants
 	Application_breakpoint_not_set: INTEGER = 1
 
 ;note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[
@@ -353,6 +353,5 @@ feature {NONE} -- Private constants
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
 
 end

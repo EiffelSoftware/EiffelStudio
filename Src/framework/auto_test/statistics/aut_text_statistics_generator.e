@@ -68,7 +68,7 @@ feature -- Text generation
 		local
 			output_file: KL_TEXT_OUTPUT_FILE_32
 		do
-			file_system.recursive_create_directory (output_dirname)
+			{FILE_UTILITIES}.create_directory (output_dirname)
 			create output_file.make (absolute_index_filename)
 			output_file.open_write
 			if not output_file.is_open_write then
@@ -114,7 +114,7 @@ invariant
 	prefix_not_void: prefix_ /= Void
 
 note
-	copyright: "Copyright (c) 1984-2013, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

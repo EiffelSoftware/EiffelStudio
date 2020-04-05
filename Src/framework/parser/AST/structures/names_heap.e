@@ -442,15 +442,6 @@ feature {NONE} -- Implementation: access
 			put ("ieee_maximum_number") check found_item = ieee_maximum_number_name_id end
 			put ("ieee_minimum_number") check found_item = ieee_minimum_number_name_id end
 			put ("make_from_c_byte_array") check found_item = make_from_c_byte_array_name_id end
-			put_32 ({IMMUTABLE_STRING_32} "infix %"⊗%"") check found_item = bit_and_unicode_alias_id end
-			put_32 ({IMMUTABLE_STRING_32} "infix %"⦶%"") check found_item = bit_or_unicode_alias_id end
-			put_32 ({IMMUTABLE_STRING_32} "infix %"⊕%"") check found_item = bit_xor_unicode_alias_id end
-			put_32 ({IMMUTABLE_STRING_32} "prefix %"⊝%"") check found_item = bit_not_unicode_alias_id end
-			put_32 ({IMMUTABLE_STRING_32} "infix %"⧀%"") check found_item = bit_shift_left_unicode_alias_id end
-			put_32 ({IMMUTABLE_STRING_32} "infix %"⧁%"") check found_item = bit_shift_right_unicode_alias_id end
-			put_32 ({IMMUTABLE_STRING_32} "infix %"∨%"") check found_item = max_unicode_alias_id end
-			put_32 ({IMMUTABLE_STRING_32} "infix %"∧%"") check found_item = min_unicode_alias_id end
-			put_32 ({IMMUTABLE_STRING_32} "infix %"⋚%"") check found_item = three_way_comparison_unicode_alias_id end
 		end
 
 invariant

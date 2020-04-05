@@ -58,7 +58,7 @@ feature -- Access
 					type_of (target_type)
 				when
 					boolean_type_id, character_type_id, integer_type_id, real_32_type_id,
-					real_64_type_id, pointed_type_id
+					real_64_type_id, pointer_type_id
 				then
 					Result := basic_type_table.has_key (feature_name_id)
 					function_type := basic_type_table.found_item
@@ -76,9 +76,9 @@ feature -- Access
 						Result := True
 						inspect
 							feature_name_id
-						when infix_bit_and_name_id, bit_and_name_id, bit_and_unicode_alias_id then
+						when infix_bit_and_name_id, bit_and_name_id then
 							function_type := basic_type_table.item (infix_bit_and_name_id)
-						when infix_bit_or_name_id, bit_or_name_id, bit_or_unicode_alias_id then
+						when infix_bit_or_name_id, bit_or_name_id then
 							function_type := basic_type_table.item (infix_bit_or_name_id)
 						when to_integer_name_id then
 							function_type := from_enum_to_integer_type
@@ -122,9 +122,6 @@ feature -- IL code generation
 			type_not_void: type /= Void
 		local
 			f_type: INTEGER
-			long: INTEGER_A
-			nat: NATURAL_A
-			typed_pointer_i: TYPED_POINTER_A
 		do
 			f_type := function_type
 			inspect f_type
@@ -145,15 +142,11 @@ feature -- IL code generation
 					parameters.process (a_generator)
 				end
 				generate_il_operation_code (bit_shift_left_type, type.is_natural)
-				long ?= feat.real_type (feat.type)
-				if long /= Void and then long.size < 32 then
+				if attached {INTEGER_A} feat.real_type (feat.type) as long and then long.size < 32 then
 						-- IL extended "int8" and "int16" to "int32" which has to be converted back
 					il_generator.convert_to (long)
-				else
-					nat ?= feat.real_type (feat.type)
-					if nat /= Void and then nat.size < 32 then
-						il_generator.convert_to (nat)
-					end
+				elseif attached {NATURAL_A} feat.real_type (feat.type) as nat and then nat.size < 32 then
+					il_generator.convert_to (nat)
 				end
 
 			when bit_test_type then
@@ -314,12 +307,12 @@ feature -- IL code generation
 
 			when generator_type then
 				il_generator.pop
-				typed_pointer_i ?= type
-				if typed_pointer_i /= Void then
-					il_generator.put_manifest_string ("POINTER")
-				else
-					il_generator.put_manifest_string (type.dump)
-				end
+				il_generator.put_manifest_string
+					(if attached {TYPED_POINTER_A} type as typed_pointer_i then
+						"POINTER"
+					else
+						type.dump
+					end)
 
 			when from_integer_to_enum_type then
 					-- Argument value becomes the enum value, we discard
@@ -470,20 +463,14 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (to_natural_64_type, to_natural_64_name_id)
 			Result.put (bit_and_type, bit_and_name_id)
 			Result.put (bit_and_type, infix_bit_and_name_id)
-			Result.put (bit_and_type, bit_and_unicode_alias_id)
 			Result.put (bit_or_type, bit_or_name_id)
 			Result.put (bit_or_type, infix_bit_or_name_id)
-			Result.put (bit_or_type, bit_or_unicode_alias_id)
 			Result.put (bit_xor_type, bit_xor_name_id)
-			Result.put (bit_xor_type, bit_xor_unicode_alias_id)
 			Result.put (bit_not_type, bit_not_name_id)
-			Result.put (bit_not_type, bit_not_unicode_alias_id)
 			Result.put (bit_shift_left_type, bit_shift_left_name_id)
 			Result.put (bit_shift_left_type, infix_shift_left_name_id)
-			Result.put (bit_shift_left_type, bit_shift_left_unicode_alias_id)
 			Result.put (bit_shift_right_type, bit_shift_right_name_id)
 			Result.put (bit_shift_right_type, infix_shift_right_name_id)
-			Result.put (bit_shift_right_type, bit_shift_right_unicode_alias_id)
 			Result.put (bit_test_type, bit_test_name_id)
 			Result.put (set_bit_type, set_bit_name_id)
 			Result.put (set_bit_with_mask_type, set_bit_with_mask_name_id)
@@ -512,7 +499,6 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (is_digit_type, is_digit_name_id)
  			Result.put (generator_type, generator_name_id)
  			Result.put (three_way_comparison_type, three_way_comparison_name_id)
- 			Result.put (three_way_comparison_type, three_way_comparison_unicode_alias_id)
 			Result.put (twin_type, standard_twin_name_id)
 			Result.put (twin_type, twin_name_id)
 			Result.put (twin_type, deep_twin_name_id)
@@ -805,7 +791,6 @@ feature {NONE} -- IL code generation
 		local
 			l_parent: NESTED_B
 			l_access: ACCESS_B
-			l_arg: ARGUMENT_B
 		do
 			l_parent := feat.parent
 			if l_parent /= Void then
@@ -823,9 +808,8 @@ feature {NONE} -- IL code generation
 					if l_access.is_local or l_access.is_result then
 						parameters.process (a_generator)
 						a_generator.generate_il_assignment (l_access, type)
-					elseif l_access.is_argument then
+					elseif l_access.is_argument and then attached {ARGUMENT_B} l_access as l_arg then
 						parameters.process (a_generator)
-						l_arg ?= l_access
 						il_generator.generate_argument_assignment (l_arg.position)
 					end
 				end
@@ -950,7 +934,7 @@ feature {NONE} -- Type information
 	boolean_type_id: INTEGER = 1
 	character_type_id: INTEGER = 2
 	integer_type_id: INTEGER = 3
-	pointed_type_id: INTEGER = 4
+	pointer_type_id: INTEGER = 4
 	real_32_type_id: INTEGER = 5
 	real_64_type_id: INTEGER = 6
 	any_type_id: INTEGER = 7
@@ -968,35 +952,28 @@ feature {NONE} -- Type information
 			-- Returns corresponding type constants to `t'.
 		require
 			t_not_void: t /= Void
-		local
-			l_typed_pointer: TYPED_POINTER_A
 		do
 			inspect
 				t.sk_value (Void)
 			when {SK_CONST}.sk_char8, {SK_CONST}.sk_char32 then
 				Result := character_type_id
-			when {SK_CONST}.sk_bool then Result := boolean_type_id
-			when
-				{SK_CONST}.sk_int8, {SK_CONST}.sk_int16,
-				{SK_CONST}.sk_int32, {SK_CONST}.sk_int64
-			then
+			when {SK_CONST}.sk_bool then
+				Result := boolean_type_id
+			when {SK_CONST}.sk_int8, {SK_CONST}.sk_int16, {SK_CONST}.sk_int32, {SK_CONST}.sk_int64 then
 				Result := integer_type_id
 				is_signed_integer := True
-
-			when
-				{SK_CONST}.sk_uint8, {SK_CONST}.sk_uint16,
-				{SK_CONST}.sk_uint32, {SK_CONST}.sk_uint64
-			then
+			when {SK_CONST}.sk_uint8, {SK_CONST}.sk_uint16, {SK_CONST}.sk_uint32, {SK_CONST}.sk_uint64 then
 				Result := integer_type_id
 				is_signed_integer := False
-
-			when {SK_CONST}.sk_real32 then Result := real_32_type_id
-			when {SK_CONST}.sk_real64 then Result := real_64_type_id
-			when {SK_CONST}.sk_pointer then Result := pointed_type_id
+			when {SK_CONST}.sk_real32 then
+				Result := real_32_type_id
+			when {SK_CONST}.sk_real64 then
+				Result := real_64_type_id
+			when {SK_CONST}.sk_pointer then
+				Result := pointer_type_id
 			else
-				l_typed_pointer ?= t
-				if l_typed_pointer /= Void then
-					Result := pointed_type_id
+				if attached {TYPED_POINTER_A} t as l_typed_pointer then
+					Result := pointer_type_id
 				elseif t.base_class.is_class_any then
 					Result := any_type_id
 				else
@@ -1005,7 +982,7 @@ feature {NONE} -- Type information
 			end
 		ensure
 			valid_type: Result = boolean_type_id or else Result = character_type_id or else
-						Result = integer_type_id or else Result = pointed_type_id or else
+						Result = integer_type_id or else Result = pointer_type_id or else
 						Result = real_32_type_id or else Result = real_64_type_id or else
 						Result = any_type_id or else Result = unknown_type_id
 		end

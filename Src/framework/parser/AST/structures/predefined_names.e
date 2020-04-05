@@ -241,15 +241,6 @@ feature -- Constants
 	ieee_maximum_number_name_id: INTEGER = 228
 	ieee_minimum_number_name_id: INTEGER = 229
 	make_from_c_byte_array_name_id: INTEGER = 230
-	bit_and_unicode_alias_id: INTEGER = 231
-	bit_or_unicode_alias_id: INTEGER = 232
-	bit_xor_unicode_alias_id: INTEGER = 233
-	bit_not_unicode_alias_id: INTEGER = 234
-	bit_shift_left_unicode_alias_id: INTEGER = 235
-	bit_shift_right_unicode_alias_id: INTEGER = 236
-	max_unicode_alias_id: INTEGER = 237
-	min_unicode_alias_id: INTEGER = 238
-	three_way_comparison_unicode_alias_id: INTEGER = 239
 
 feature -- Classification
 

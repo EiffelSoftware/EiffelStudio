@@ -41,19 +41,9 @@ feature -- C code generation
 
 	analyze_on (r: REGISTRABLE)
 			-- <Precursor>
-		local
-			reg: REGISTRABLE
 		do
 			analyze_non_object_call_target
-			reg := target_register (r)
-			if attached {BASIC_A} context_type as basic_i and then not is_feature_special (True, basic_i) then
-					-- Get a register to store the metamorphosed basic type,
-					-- on which the attribute access is made. The lifetime of
-					-- this temporary is really short: just the time to make
-					-- the call...
-					-- We need it only when a metamorphose occurs.
-				create {REGISTER} basic_register.make (reference_c_type)
-			end
+			analyze_basic_type
 			if attached parameters as arguments then
 					-- If no arguments allocate memory, they can be generated inline.
 				if
@@ -80,7 +70,7 @@ feature -- C code generation
 					free_param_registers
 				end
 			end
-			if reg.is_current then
+			if target_register (r).is_current then
 				context.mark_current_used
 			end
 		end
@@ -252,7 +242,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 	author: "Alexander Kogtenkov"
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

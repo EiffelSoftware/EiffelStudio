@@ -51,11 +51,6 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_TYPE_I
-		export
-			{NONE} all
-		end
-
 feature {NONE} --Initialisation
 
 	fill_from (f: ROUTINE_B)
@@ -99,16 +94,8 @@ feature -- C code generation
 			reg: REGISTRABLE
 		do
 			analyze_non_object_call_target
+			analyze_basic_type
 			reg := target_register (r)
-			if attached {BASIC_A} context_type as basic_i and then not is_feature_special (True, basic_i) then
-					-- Get a register to store the metamorphosed basic type,
-					-- on which the attribute access is made. The lifetime of
-					-- this temporary is really short: just the time to make
-					-- the call...
-					-- We need it only when a metamorphose occurs or if we
-					-- are handling BIT objects.
-				create {REGISTER} basic_register.make (Reference_c_type)
-			end
 			if attached parameters as arguments then
 					-- If no arguments allocate memory, they can be generated inline.
 				if not across arguments as a some a.item.allocates_memory end then
@@ -893,7 +880,7 @@ feature {NONE} -- Inlining of calls to features from SPECIAL
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

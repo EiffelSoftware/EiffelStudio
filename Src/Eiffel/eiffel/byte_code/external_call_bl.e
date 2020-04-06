@@ -123,16 +123,7 @@ feature
 			-- Analyze call on an entity held in `r`.
 		do
 			analyze_non_object_call_target
-			if context_type.is_basic and then
-				attached {BASIC_A} context_type as basic_i and then
-				not is_feature_special (True, basic_i)
-			then
-					-- Get a register to store the metamorphosed basic type,
-					-- on which the attribute access is made. The lifetime of
-					-- this temporary is really short: just the time to make
-					-- the call...
-				create {REGISTER} basic_register.make (Reference_c_type)
-			end
+			analyze_basic_type
 			if parameters /= Void then
 				parameters.analyze
 					-- If No_register has been propagated, then this call will
@@ -315,7 +306,7 @@ feature {NONE} -- Status report
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

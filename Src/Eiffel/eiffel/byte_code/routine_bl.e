@@ -39,6 +39,11 @@ inherit
 			set_register
 		end
 
+	SHARED_TYPE_I
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	parent: NESTED_BL
@@ -158,6 +163,24 @@ feature {NONE} -- Target register
 			end
 		end
 
+	analyze_basic_type
+			-- Analyze whether this is a call to a regular feature on a basic type
+			-- that requires an intermediate register `basic_register` for the target,
+			-- or a call to a built-in feature that does not require result register.
+		do
+			if attached {BASIC_A} context_type as basic_i then
+				if not is_feature_special (True, basic_i) then
+						-- Get a register to store the metamorphosed basic type,
+						-- on which the attribute access is made. The lifetime of
+						-- this temporary is really short: just the time to make the call.
+					create {REGISTER} basic_register.make (Reference_c_type)
+				elseif real_type (type).is_basic and then not attached register then
+						-- Do not use a temporary register for built-in features of basic type.
+					set_register (no_register)
+				end
+			end
+		end
+
 feature {NONE} -- Code generation
 
 	generate_nested_flag (has_target: BOOLEAN)
@@ -248,7 +271,7 @@ feature {NONE} -- Access
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

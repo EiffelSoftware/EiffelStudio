@@ -867,8 +867,8 @@ feature -- Access: once manifest strings
 						if value.is_string_32 then
 							buf.put_string_literal (encoding_converter.string_32_to_stream (value_32))
 						else
-								-- This is an ASCII string, so it is safe to perform the `as_string_8` conversion.
-							value_8 := value_32.as_string_8
+								-- This is an ASCII string, so it is safe to perform the `to_string_8` conversion.
+							value_8 := value_32.to_string_8
 							buf.put_string_literal (value_8)
 						end
 						buf.put_character (',')
@@ -3172,7 +3172,7 @@ invariant
 note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

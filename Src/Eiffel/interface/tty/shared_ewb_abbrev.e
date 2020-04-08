@@ -71,8 +71,6 @@ feature
 
 	Help_abb: CHARACTER = 'h'
 
-	Ide_layout_reset_abb: CHARACTER = 'z'
-
 	Implementers_abb: CHARACTER = 'i'
 
 	Indexing_abb: CHARACTER = 'i'
@@ -169,9 +167,11 @@ feature
 
 	Text_doc_abb: CHARACTER = 't'
 
-	Version_abb: CHARACTER = 'v';
+	Version_abb: CHARACTER = 'v'
 
-note
+	reset_ide_layout_abb: CHARACTER = 'z'
+
+;note
 	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"

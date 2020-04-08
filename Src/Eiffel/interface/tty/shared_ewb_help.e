@@ -118,8 +118,6 @@ feature {NONE}
 
 	homonyms_help: STRING_GENERAL do Result := locale.translation ("shown the homonyms of a feature") end
 
-	ide_layout_reset_help: STRING_GENERAL do Result := locale.translation ("reset the IDE layout") end
-
 	implementers_help: STRING_GENERAL do Result := locale.translation ("show the classes implementing a feature") end
 
 	indexing_help: STRING_GENERAL do Result := locale.translation ("show indexing clauses of classes") end
@@ -177,6 +175,8 @@ feature {NONE}
 	reactivate_subquery_help: STRING_GENERAL do Result := locale.translation ("reactivate subquery") end
 
 	inactivate_subquery_help: STRING_GENERAL do Result := locale.translation ("inactivate subquery") end
+
+	reset_ide_layout_help: STRING_GENERAL do Result := locale.translation ("reset the IDE layout") end
 
 	routines_help: STRING_GENERAL do Result := locale.translation ("show the routines of a class") end
 

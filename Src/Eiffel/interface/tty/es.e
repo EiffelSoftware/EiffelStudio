@@ -429,6 +429,7 @@ feature -- Properties
 			Result [project_cmd_name] := project_help
 			Result [project_path_cmd_name] := project_path_help
 			Result [quick_melt_cmd_name] := quick_melt_help
+			Result [reset_ide_layout_cmd_name] := reset_ide_layout_help
 			Result [short_cmd_name] := short_help
 			Result [single_file_compilation_cmd_name] := single_file_compilation_help
 			Result [stop_cmd_name] := stop_help
@@ -1017,7 +1018,7 @@ feature {NONE} -- Update
 					no_project_needed := True
 
 					if not has_error then
-						create {EWB_IDE_LAYOUT_RESET} command.make
+						create {EWB_RESET_IDE_LAYOUT} command.make
 						command_option := option
 					end
 				end

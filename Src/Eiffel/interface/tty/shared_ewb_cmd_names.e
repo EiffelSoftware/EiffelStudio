@@ -109,8 +109,6 @@ feature {NONE}
 
 	homonyms_cmd_name: STRING = "homonyms"
 
-	ide_layout_reset_cmd_name: STRING = "reset_ide_layout"
-
 	implementers_cmd_name: STRING = "implementers"
 
 	indexing_cmd_name: STRING = "indexing"
@@ -164,6 +162,8 @@ feature {NONE}
 	reactivate_subquery_cmd_name: STRING = "reactivate"
 
 	inactivate_subquery_cmd_name: STRING = "inactivate"
+
+	reset_ide_layout_cmd_name: STRING = "reset_ide_layout"
 
 	routines_cmd_name: STRING = "routines"
 

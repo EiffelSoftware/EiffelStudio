@@ -6,14 +6,14 @@ note
 	revision: "$Revision $"
 
 class
-	EWB_IDE_LAYOUT_RESET
+	EWB_RESET_IDE_LAYOUT
 
 inherit
 	EWB_CMD
 		rename
-			name as ide_layout_reset_cmd_name,
-			help_message as ide_layout_reset_help,
-			abbreviation as ide_layout_reset_abb
+			name as reset_ide_layout_cmd_name,
+			help_message as reset_ide_layout_help,
+			abbreviation as reset_ide_layout_abb
 		end
 
 	SHARED_ERROR_HANDLER

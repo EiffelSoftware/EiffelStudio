@@ -118,6 +118,8 @@ feature {NONE}
 
 	homonyms_help: STRING_GENERAL do Result := locale.translation ("shown the homonyms of a feature") end
 
+	ide_layout_reset_help: STRING_GENERAL do Result := locale.translation ("reset the IDE layout") end
+
 	implementers_help: STRING_GENERAL do Result := locale.translation ("show the classes implementing a feature") end
 
 	indexing_help: STRING_GENERAL do Result := locale.translation ("show indexing clauses of classes") end
@@ -236,7 +238,7 @@ feature {NONE}
 
 note
 	ca_ignore: "CA033", "CA033: too large class"
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

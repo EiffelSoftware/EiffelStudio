@@ -524,6 +524,7 @@ feature {NONE} -- Output
 				-callees [-filter filtername] [-show_all] [-assignees | -creators] class feature |
 				-filter filtername [-all | class] |
 				-pretty input_filename [output_filename] |
+				-reset_ide_layout |
 				[[-config config.ecf] [-target target] [-config_option option] |
 				[class_file.e [-library library_name]] |
 				-stop | -no_library |
@@ -531,7 +532,7 @@ feature {NONE} -- Output
 				-preference preference_name preference_value |
 				-ca_class (-all | class) | -ca_default | -ca_rule rule | -ca_setting file |
 				-gc_stats]
-				
+
 			]")
 		end
 
@@ -1005,6 +1006,18 @@ feature {NONE} -- Update
 
 					if not has_error then
 						create {EWB_PRETTY} command.make (in_filename, out_filename)
+						command_option := option
+					end
+				end
+
+			elseif option.same_string_general ("-reset_ide_layout") then
+				if command /= Void then
+					option_error_message := locale.formatted_string ({STRING_32} "Option `$1' conflicts with `$2'.", [option, command_option])
+				else
+					no_project_needed := True
+
+					if not has_error then
+						create {EWB_IDE_LAYOUT_RESET} command.make
 						command_option := option
 					end
 				end
@@ -1570,7 +1583,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

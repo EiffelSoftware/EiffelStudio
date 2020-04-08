@@ -12,6 +12,11 @@
 				<platform excluded_value="windows"/>
 			</condition>
 		</external_include>
+		<external_object location="$(ISE_LIBRARY)\C_library\curl\spec\$(ISE_PLATFORM)\static\lib\libcurl_a.lib">
+			<condition>
+				<custom name="static_curl_enabled" value="true"/>
+			</condition>
+		</external_object>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 	</target>
 </system>

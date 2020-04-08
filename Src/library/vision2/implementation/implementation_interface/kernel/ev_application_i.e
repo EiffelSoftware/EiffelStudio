@@ -757,7 +757,7 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 			l_object_comparable: PROXY_COMPARABLE [EV_PND_TARGET_DATA]
 			l_comparator_agent: PREDICATE [EV_PND_TARGET_DATA, EV_PND_TARGET_DATA]
 			l_arrayed_list: ARRAYED_LIST [EV_PND_TARGET_DATA]
-			l_alphabetical_sort_agent: PROCEDURE [PROCEDURE, BINARY_SEARCH_TREE [PROXY_COMPARABLE [EV_PND_TARGET_DATA]],  ARRAYED_LIST [EV_PND_TARGET_DATA]]
+			l_alphabetical_sort_agent: PROCEDURE [PROCEDURE, detachable BINARY_SEARCH_TREE [PROXY_COMPARABLE [EV_PND_TARGET_DATA]],  ARRAYED_LIST [EV_PND_TARGET_DATA]]
 			l_configurable_item_added: BOOLEAN
 			l_menu: EV_MENU
 			l_menu_count: INTEGER
@@ -818,7 +818,7 @@ feature {EV_PICK_AND_DROPABLE_I} -- Pick and drop
 
 				if l_search_tree /= Void then
 						-- Sort items alphabetically using recursive inline agent
-					l_alphabetical_sort_agent := agent (l_sort_agent: PROCEDURE; a_node: BINARY_SEARCH_TREE [PROXY_COMPARABLE [EV_PND_TARGET_DATA]]; a_list: ARRAYED_LIST [EV_PND_TARGET_DATA])
+					l_alphabetical_sort_agent := agent (l_sort_agent: PROCEDURE; a_node: detachable BINARY_SEARCH_TREE [PROXY_COMPARABLE [EV_PND_TARGET_DATA]]; a_list: ARRAYED_LIST [EV_PND_TARGET_DATA])
 						do
 							if a_node /= Void then
 								l_sort_agent.call ([l_sort_agent, a_node.left_child, a_list])
@@ -1210,7 +1210,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

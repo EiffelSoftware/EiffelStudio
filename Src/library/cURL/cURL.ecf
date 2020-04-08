@@ -81,11 +81,7 @@
 				<custom name="static_curl_enabled" excluded_value="true"/>
 			</condition>
 		</external_object>
-		<external_object location="$(ISE_LIBRARY)\C_library\curl\builds\libcurl-vc-x64-release-static-sspi-winssl\lib\libcurl_a.lib">
-			<condition>
-				<custom name="static_curl_enabled" value="true"/>
-			</condition>
-		</external_object>
+
 		<library name="api_wrapper" location="$ISE_LIBRARY\library\api_wrapper\api_wrapper.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
 		<library name="clibs_libcurl" location="$ISE_LIBRARY\C_library\curl\clibs_libcurl.ecf"/>

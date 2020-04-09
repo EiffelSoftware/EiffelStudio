@@ -85,9 +85,6 @@ extern "C" {
 #define eif_builtin_IDENTIFIED_ROUTINES_eif_current_object_id(object)	eif_reference_id(object)
 #define eif_builtin_IDENTIFIED_ROUTINES_eif_is_object_id_of_current(object,id) EIF_TEST(eif_id_object(id) == object)
 
-/* REFLECTOR class */
-#define eif_builtin_REFLECTOR_c_set_dynamic_type(obj,enc_ftype)			eif_set_dynamic_type(obj,enc_ftype)
-
 /* ISE_RUNTIME class */
 /* Define helper to avoid code duplication. */
 rt_private rt_inline EIF_REFERENCE eif_obj_at (EIF_REFERENCE obj, EIF_INTEGER_32 offs) {

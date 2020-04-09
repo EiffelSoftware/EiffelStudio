@@ -102,8 +102,7 @@ feature -- Creation
 			type_id_nonnegative: type_id >= 0
 			special_type: is_special_any_type (type_id)
 		do
-			create Result.make_empty (a_capacity)
-			c_set_dynamic_type (Result, type_id)
+			Result := {ISE_RUNTIME}.new_special_of_reference_instance_of (type_id, a_capacity)
 		ensure
 			instance_free: class
 			dynamic_type_set: Result.generating_type.type_id = type_id
@@ -451,14 +450,6 @@ feature {NONE} -- Implementation
 		ensure
 			instance_free: class
 			id_to_storable_version_not_void: Result /= Void
-		end
-
-	c_set_dynamic_type (obj: SPECIAL [detachable ANY]; dtype: INTEGER)
-			-- Set `obj' dynamic type to `dtype'.
-		external
-			"built_in static"
-		ensure
-			instance_free: class
 		end
 
 note

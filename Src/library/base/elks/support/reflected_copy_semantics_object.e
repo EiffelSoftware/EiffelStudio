@@ -103,7 +103,7 @@ feature {REFLECTED_OBJECT} -- Access
 		note
 			compiler: no_gc
 		do
-			Result := dereference (referring_object.object_address, referring_physical_offset) + physical_offset
+			Result := {ISE_RUNTIME}.raw_reference_field_at (physical_offset, referring_object.object_address, referring_physical_offset)
 		end
 
 feature {REFLECTED_COPY_SEMANTICS_OBJECT} -- Access
@@ -115,11 +115,6 @@ feature {REFLECTED_COPY_SEMANTICS_OBJECT} -- Access
 			-- Actual offset in bytes of `object' in `referring_object'.
 
 feature {NONE} -- Implementation
-
-	dereference (ptr: POINTER; offset: INTEGER): POINTER
-		external
-			"built_in static"
-		end
 
 	object_from_address (ptr: POINTER): ANY
 		external

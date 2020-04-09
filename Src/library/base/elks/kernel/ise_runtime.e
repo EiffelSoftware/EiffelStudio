@@ -96,6 +96,46 @@ feature -- Internal C routines
 			instance_free: class
 		end
 
+	frozen new_instance_of (type_id: INTEGER): ANY
+			-- New instance of dynamic `type_id'.
+			-- Note: returned object is not initialized and may
+			-- hence violate its invariant.
+			-- `type_id' cannot represent a SPECIAL type, use
+			-- `new_special_of_reference_instance_of' instead.		
+		external
+ 			"built_in static"
+		ensure
+			instance_free: class
+		end
+
+	frozen new_special_of_reference_instance_of (type_id, a_capacity: INTEGER): SPECIAL [detachable ANY]
+			-- New instance of dynamic `type_id' that represents
+			-- a SPECIAL which can contain `a_capacity' elements of reference type.
+			-- To create a SPECIAL of basic type, use class SPECIAL directly.	
+		external
+ 			"built_in static"
+		ensure
+			instance_free: class
+		end
+
+	frozen new_tuple_instance_of (type_id: INTEGER): TUPLE
+			-- New instance of tuple of type `type_id'.
+			-- Note: returned object is not initialized and may
+			-- hence violate its invariant.
+		external
+ 			"built_in static"
+		ensure
+			instance_free: class
+		end
+
+	frozen new_type_instance_of (type_id: INTEGER): TYPE [detachable ANY]
+			-- New instance of TYPE for object of type `type_id'.
+		external
+ 			"built_in static"
+		ensure
+			instance_free: class
+		end
+
 	frozen is_attached_type (a_type_id: INTEGER): BOOLEAN
 			-- Is `a_type_id' an attached type?
 		external
@@ -376,6 +416,14 @@ feature -- Internal support
 			instance_free: class
 		end
 
+	frozen raw_reference_field_at (field_offset: INTEGER; a_object: POINTER; a_physical_offset: INTEGER): POINTER
+			-- Unprotected reference value of the field at `field_offset' in object `a_object + a_physical_offset'.
+		external
+			"built_in static"
+		ensure
+			instance_free: class
+		end		
+
 	frozen character_8_field_at (field_offset: INTEGER; a_object: POINTER; a_physical_offset: INTEGER): CHARACTER_8
 			-- Character value of the field at `field_offset' in object `a_object + a_physical_offset'.
 		external
@@ -524,6 +572,34 @@ feature -- Internal support
 
 	frozen is_tuple (object: POINTER): BOOLEAN
 			-- Is `object' a TUPLE object?
+		external
+			"built_in static"
+		ensure
+			instance_free: class
+		end
+
+	frozen is_special_of_reference_type (type_id: INTEGER): BOOLEAN
+			-- Is type represented by `type_id' represent
+			-- a SPECIAL [XX] where XX is a reference type.
+		external
+			"built_in static"
+		ensure
+			instance_free: class
+		end
+
+	frozen is_special_of_reference_or_basic_type (type_id: INTEGER): BOOLEAN
+			-- Is type represented by `type_id' represent
+			-- a SPECIAL [XX] where XX is a reference type
+			-- or a basic expanded type (note that user-defined
+			-- expanded types are excluded).
+		external
+			"built_in static"
+		ensure
+			instance_free: class
+		end
+
+	frozen is_tuple_type (type_id: INTEGER): BOOLEAN
+			-- Is type represented by `type_id' represent a TUPLE?
 		external
 			"built_in static"
 		ensure

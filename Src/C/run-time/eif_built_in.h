@@ -87,13 +87,6 @@ extern "C" {
 
 /* REFLECTOR class */
 #define eif_builtin_REFLECTOR_c_set_dynamic_type(obj,enc_ftype)			eif_set_dynamic_type(obj,enc_ftype)
-#define eif_builtin_REFLECTOR_c_new_type_instance_of(type_id)			eif_type_malloc(eif_decoded_type(type_id), 0)
-#define eif_builtin_REFLECTOR_c_new_tuple_instance_of(type_id)			RTLNT(eif_decoded_type(type_id).id)
-#define eif_builtin_REFLECTOR_c_new_instance_of(type_id)			RTLNALIVE(eif_decoded_type(type_id).id)
-#define eif_builtin_REFLECTOR_field_count_of_type(type_id)			ei_count_field_of_type(type_id)
-#define eif_builtin_REFLECTOR_is_tuple_type(type_id)				eif_is_tuple_type(type_id)
-#define eif_builtin_REFLECTOR_is_special_type(type_id)				eif_is_special_type(type_id)
-#define eif_builtin_REFLECTOR_is_special_any_type(type_id)			eif_special_any_type(type_id)
 
 /* ISE_RUNTIME class */
 /* Define helper to avoid code duplication. */
@@ -129,12 +122,20 @@ rt_private rt_inline EIF_BOOLEAN rt_is_special_copy_semantics_item (EIF_INTEGER_
 #define eif_builtin_ISE_RUNTIME_is_special_of_expanded(obj)			(HEADER(obj)->ov_flags & EO_COMP)
 #define eif_builtin_ISE_RUNTIME_is_special_of_reference(obj)		((HEADER(obj)->ov_flags & (EO_REF | EO_COMP)) == EO_REF)
 #define eif_builtin_ISE_RUNTIME_is_tuple(obj)						ei_tuple(obj)
+#define eif_builtin_ISE_RUNTIME_is_tuple_type(type_id)				eif_is_tuple_type(type_id)
+#define eif_builtin_ISE_RUNTIME_is_special_of_reference_or_basic_type(type_id)	eif_is_special_type(type_id)
+#define eif_builtin_ISE_RUNTIME_is_special_of_reference_type(type_id)	eif_special_any_type(type_id)
 #define eif_builtin_ISE_RUNTIME_is_object_marked(obj)				ei_is_marked(obj)
 #define eif_builtin_ISE_RUNTIME_mark_object(obj)					ei_mark(obj)
 #define eif_builtin_ISE_RUNTIME_object_size(obj)					ei_size(obj)
 #define eif_builtin_ISE_RUNTIME_unmark_object(obj)					ei_unmark(obj)
 #define eif_builtin_ISE_RUNTIME_raw_reference_field_at_offset(obj,offs)	eif_obj_at(obj,offs)
 #define eif_builtin_ISE_RUNTIME_reference_field_at_offset(obj,offs)		eif_obj_at(obj,offs)
+
+#define eif_builtin_ISE_RUNTIME_new_type_instance_of(type_id)		eif_type_malloc(eif_decoded_type(type_id), 0)
+#define eif_builtin_ISE_RUNTIME_new_special_of_reference_instance_of(type_id, a_capacity)	RTLNSP2(eif_decoded_type(type_id).id,EO_REF,a_capacity,sizeof(EIF_REFERENCE), EIF_FALSE)
+#define eif_builtin_ISE_RUNTIME_new_tuple_instance_of(type_id)		RTLNT(eif_decoded_type(type_id).id)
+#define eif_builtin_ISE_RUNTIME_new_instance_of(type_id)			RTLNALIVE(eif_decoded_type(type_id).id)
 
 #define eif_builtin_ISE_RUNTIME_reference_field(i,obj,offs)			*(EIF_REFERENCE *) ei_oref((i) - 1, eif_obj_at(obj,offs))
 #define eif_builtin_ISE_RUNTIME_character_8_field(i,obj,offs)		*(EIF_CHARACTER_8 *) ei_oref((i) - 1, eif_obj_at(obj,offs))
@@ -152,6 +153,7 @@ rt_private rt_inline EIF_BOOLEAN rt_is_special_copy_semantics_item (EIF_INTEGER_
 #define eif_builtin_ISE_RUNTIME_real_64_field(i,obj,offs)			*(EIF_REAL_64 *) ei_oref((i) -1, eif_obj_at(obj,offs))
 #define eif_builtin_ISE_RUNTIME_pointer_field(i,obj,offs)			*(EIF_POINTER *) ei_oref((i) -1, eif_obj_at(obj,offs))
 
+#define eif_builtin_ISE_RUNTIME_raw_reference_field_at(field_offs,obj,offs)		*(EIF_REFERENCE *) (eif_obj_at(obj,offs) + field_offs)
 #define eif_builtin_ISE_RUNTIME_reference_field_at(field_offs,obj,offs)			*(EIF_REFERENCE *) (eif_obj_at(obj,offs) + field_offs)
 #define eif_builtin_ISE_RUNTIME_character_8_field_at(field_offs,obj,offs)		*(EIF_CHARACTER_8 *) (eif_obj_at(obj,offs) + field_offs)
 #define eif_builtin_ISE_RUNTIME_character_32_field_at(field_offs,obj,offs)		*(EIF_CHARACTER_32 *) (eif_obj_at(obj,offs) + field_offs)
@@ -333,7 +335,7 @@ rt_private rt_inline EIF_BOOLEAN rt_is_special_copy_semantics_item (EIF_INTEGER_
 
 /*REFLECTED_COPY_SEMANTICS_OBJECT class*/
 #define eif_builtin_REFLECTED_COPY_SEMANTICS_OBJECT_object_from_address(ptr)	(EIF_REFERENCE) ptr
-#define eif_builtin_REFLECTED_COPY_SEMANTICS_OBJECT_dereference(ptr, offset)	*(EIF_REFERENCE *) eif_obj_at(ptr, offset)
+
 
 #ifdef __cplusplus
 }

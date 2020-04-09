@@ -86,7 +86,7 @@ feature -- Creation
 			not_special_type: not is_special_type (type_id)
 			not_deferred: not type_of_type (type_id).is_deferred
 		do
-			Result := c_new_instance_of (type_id)
+			Result := {ISE_RUNTIME}.new_instance_of (type_id)
 		ensure
 			instance_free: class
 			not_special_type: not attached {SPECIAL [detachable ANY]} Result
@@ -95,7 +95,7 @@ feature -- Creation
 
 	new_special_any_instance (type_id, a_capacity: INTEGER): SPECIAL [detachable ANY]
 			-- New instance of dynamic `type_id' that represents
-			--  a SPECIAL which can contain `a_capacity' elements of reference type.
+			-- a SPECIAL which can contain `a_capacity' elements of reference type.
 			-- To create a SPECIAL of basic type, use class SPECIAL directly.
 		require
 			a_capacity_valid: a_capacity >= 0
@@ -123,7 +123,7 @@ feature -- Creation
 			i: INTEGER
 			v: detachable separate ANY
 		do
-			Result := c_new_tuple_instance_of (type_id)
+			Result := {ISE_RUNTIME}.new_tuple_instance_of (type_id)
 			i := Result.count
 			if i <= values.count then
 				from
@@ -162,7 +162,7 @@ feature -- Creation
 			i: INTEGER
 			v: detachable separate ANY
 		do
-			Result := c_new_tuple_instance_of (type_id)
+			Result := {ISE_RUNTIME}.new_tuple_instance_of (type_id)
 			i := Result.count
 			if i <= source.count then
 				if source.object_comparison then
@@ -198,7 +198,7 @@ feature -- Creation
 		require
 			type_id_nonnegative: type_id >= 0
 		do
-			Result := c_new_type_instance_of (type_id)
+			Result := {ISE_RUNTIME}.new_type_instance_of (type_id)
 		ensure
 			instance_free: class
 			result_not_void: Result /= Void
@@ -211,8 +211,8 @@ feature -- Status report
 			-- a SPECIAL [XX] where XX is a reference type.
 		require
 			type_id_nonnegative: type_id >= 0
-		external
-			"built_in static"
+		do
+			Result := {ISE_RUNTIME}.is_special_of_reference_type (type_id)
 		ensure
 			instance_free: class
 		end
@@ -224,8 +224,8 @@ feature -- Status report
 			-- expanded types are excluded).
 		require
 			type_id_nonnegative: type_id >= 0
-		external
-			"built_in static"
+		do
+			Result := {ISE_RUNTIME}.is_special_of_reference_or_basic_type (type_id)
 		ensure
 			instance_free: class
 		end
@@ -234,8 +234,8 @@ feature -- Status report
 			-- Is type represented by `type_id' represent a TUPLE?
 		require
 			type_id_nonnegative: type_id >= 0
-		external
-			"built_in static"
+		do
+			Result := {ISE_RUNTIME}.is_tuple_type (type_id)
 		ensure
 			instance_free: class
 		end
@@ -417,8 +417,8 @@ feature -- Measurement
 			-- Number of logical fields in dynamic type `type_id'.
 		require
 			type_id_nonnegative: type_id >= 0
-		external
-			"built_in static"
+		do
+			Result := {ISE_RUNTIME}.field_count_of_type (type_id)
 		ensure
 			instance_free: class
 		end
@@ -451,36 +451,6 @@ feature {NONE} -- Implementation
 		ensure
 			instance_free: class
 			id_to_storable_version_not_void: Result /= Void
-		end
-
-	c_new_instance_of (type_id: INTEGER): ANY
-			-- New instance of dynamic `type_id'.
-			-- Note: returned object is not initialized and may
-			-- hence violate its invariant.
-			-- `type_id' cannot represent a SPECIAL type, use
-			-- `new_special_any_instance' instead.
-		external
-			"built_in static"
-		ensure
-			instance_free: class
-		end
-
-	c_new_tuple_instance_of (type_id: INTEGER): TUPLE
-			-- New instance of tuple of type `type_id'.
-			-- Note: returned object is not initialized and may
-			-- hence violate its invariant.
-		external
-			"built_in static"
-		ensure
-			instance_free: class
-		end
-
-	c_new_type_instance_of (type_id: INTEGER): TYPE [detachable ANY]
-			-- New instance of TYPE for object of type `type_id'.
-		external
-			"built_in static"
-		ensure
-			instance_free: class
 		end
 
 	c_set_dynamic_type (obj: SPECIAL [detachable ANY]; dtype: INTEGER)

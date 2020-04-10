@@ -77,8 +77,13 @@ feature -- Access
 
 	object: ANY
 			-- <Precursor>
+		note
+			compiler: no_gc
 		do
-			Result := object_from_address (object_address)
+			Result := {ISE_RUNTIME}.reference_field_at (physical_offset, referring_object.object_address, referring_physical_offset)
+			if Result = Void then
+				check object_exists: False then end
+			end
 		end
 
 	physical_offset: INTEGER
@@ -114,15 +119,8 @@ feature {REFLECTED_COPY_SEMANTICS_OBJECT} -- Access
 	referring_physical_offset: INTEGER
 			-- Actual offset in bytes of `object' in `referring_object'.
 
-feature {NONE} -- Implementation
-
-	object_from_address (ptr: POINTER): ANY
-		external
-			"built_in static"
-		end
-
-note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+;note
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

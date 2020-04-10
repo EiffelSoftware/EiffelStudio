@@ -330,10 +330,6 @@ rt_private rt_inline EIF_BOOLEAN rt_is_special_copy_semantics_item (EIF_INTEGER_
 #endif
 
 
-/*REFLECTED_COPY_SEMANTICS_OBJECT class*/
-#define eif_builtin_REFLECTED_COPY_SEMANTICS_OBJECT_object_from_address(ptr)	(EIF_REFERENCE) ptr
-
-
 #ifdef __cplusplus
 }
 #endif

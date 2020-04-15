@@ -1,4 +1,4 @@
-note
+﻿note
 
 	description:
 
@@ -621,7 +621,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	product alias "*" (other: like Current): like Current
+	product alias "*" alias "×" (other: like Current): like Current
 			-- Product by `other'
 		do
 			Result := multiply (other, shared_decimal_context)
@@ -645,7 +645,7 @@ feature -- Basic operations
 			sum_not_void: Result /= Void
 		end
 
-	opposite alias "-": like Current
+	opposite alias "-" alias "−": like Current
 			-- Unary minus
 		do
 			Result := minus (shared_decimal_context)
@@ -661,7 +661,7 @@ feature -- Basic operations
 			subtract_not_void: Result /= Void
 		end
 
-	quotient alias "/" (other: like Current): like Current
+	quotient alias "/" alias "÷" (other: like Current): like Current
 			-- Division by `other'
 		do
 			Result := divide (other, shared_decimal_context)

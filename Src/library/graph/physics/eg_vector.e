@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Objects that is a vector containing Gs."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -11,6 +11,9 @@ deferred class
 
 inherit
 	NUMERIC
+		rename
+			product as product alias "*"
+		end
 
 feature -- Basic operations
 
@@ -20,7 +23,7 @@ feature -- Basic operations
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -30,8 +33,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-
-
-
-end -- class EG_VECTOR
-
+end

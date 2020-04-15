@@ -99,7 +99,7 @@ feature -- Comparison
 				end_bound < other.end_bound
 		end
 
-	is_less_equal alias "<=" (other: like Current): BOOLEAN
+	is_less_equal alias "<=" alias "≤" (other: like Current): BOOLEAN
 			-- Is current interval before `other'?
 		do
 			Result := Current < other or else is_equal (other)
@@ -112,7 +112,7 @@ feature -- Comparison
 		end
 
 
-	is_greater_equal alias ">=" (other: like Current): BOOLEAN
+	is_greater_equal alias ">=" alias "≥" (other: like Current): BOOLEAN
 			-- Is current interval after `other'?
 		do
 			Result := other <= Current
@@ -348,7 +348,7 @@ invariant
 	between_bound: after (start_bound) and before (end_bound)
 
 note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

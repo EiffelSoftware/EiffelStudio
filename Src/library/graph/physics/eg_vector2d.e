@@ -3,6 +3,7 @@
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 	author: "Benno Baumgartner"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -33,7 +34,6 @@ feature -- Access
 
 	y: G
 			-- Y position of `Current'.
-
 
 	one: like Current
 			-- Neutral element for "*" and "/"
@@ -75,7 +75,7 @@ feature -- Basic operations
 			create Result.make (x + other.x, y + other.y)
 		end
 
-	minus alias "-" (other: like Current): like Current
+	minus alias "-" alias "−" (other: like Current): like Current
 			-- Result of subtracting `other'
 		do
 			create Result.make (x - other.x, y - other.y)
@@ -89,7 +89,7 @@ feature -- Basic operations
 			is_implemented: False
 		end
 
-	quotient alias "/" (other: like Current): like Current
+	quotient alias "/" alias "÷" (other: like Current): like Current
 			-- Division by `other'
 		do
 			check is_implemented: False then end
@@ -103,7 +103,7 @@ feature -- Basic operations
 			create Result.make (x, y)
 		end
 
-	opposite alias "-": like Current
+	opposite alias "-" alias "−": like Current
 			-- Unary minus
 		do
 			create Result.make (-x, -y)
@@ -116,7 +116,7 @@ feature -- Basic operations
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

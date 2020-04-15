@@ -296,7 +296,7 @@ test	inline-separate-instruction-syntax	syntax070 tcf pass syntax scoop separate
 test	object-test-with-operators	syntax071 tcf fail syntax attached_types void_safe
 test	bracket-expression-as-bracket-target	syntax072 tcf pass syntax bracket_expression
 test	across-loop-unicode-syntax		syntax073 tcf pass syntax loop across iteration unicode pretty
-test	built-in-unicode-operators-syntax	syntax074 tcf pass syntax unicode expression execution
+test	built-in-unicode-operators-syntax	syntax074 tcf fail syntax unicode expression execution
 
 -- Validity tests
 

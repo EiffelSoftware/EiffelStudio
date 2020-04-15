@@ -2749,9 +2749,11 @@ feature {NONE} -- Implementation state transitions
 			Result.force (l_trans, t_none)
 
 				-- system
+				-- => note
 				-- => description
 				-- => target
-			create l_trans.make (2)
+			create l_trans.make (3)
+			l_trans.force (t_note, "note")
 			l_trans.force (t_description, "description")
 			l_trans.force (t_target, "target")
 			Result.force (l_trans, t_system)
@@ -3392,7 +3394,7 @@ invariant
 	factory_not_void: factory /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

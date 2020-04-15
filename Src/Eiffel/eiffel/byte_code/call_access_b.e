@@ -191,7 +191,7 @@ feature -- Byte code generation
 			reg_not_void: reg /= Void
 			basic_type_not_void: basic_type /= Void
 		do
-			special_routines.generate (buffer, basic_type, reg, parameters)
+			special_routines.generate (basic_type, reg, parameters, type, buffer)
 		end
 
 	is_feature_special (compilation_type: BOOLEAN; target_type: BASIC_A): BOOLEAN
@@ -580,7 +580,7 @@ feature {NONE} -- Access
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

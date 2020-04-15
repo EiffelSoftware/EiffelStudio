@@ -112,7 +112,7 @@ feature -- Status
 
 feature -- IL code generation
 
-	generate_il (a_generator: IL_NODE_GENERATOR; feat: CALL_ACCESS_B; type: CL_TYPE_A; parameters: BYTE_LIST [EXPR_B])
+	generate_il (a_generator: IL_NODE_GENERATOR; feat: CALL_ACCESS_B; type: CL_TYPE_A; parameters: BYTE_LIST [PARAMETER_B])
 			-- Generate IL code sequence that will be used with basic types.
 		require
 			a_generator_not_void: a_generator /= Void
@@ -122,10 +122,16 @@ feature -- IL code generation
 			type_not_void: type /= Void
 		local
 			f_type: INTEGER
+			operator: like il_eq
 		do
 			f_type := function_type
 			inspect f_type
 			when
+				plus_type,
+				minus_type,
+				product_type,
+				integer_quotient_type,
+				integer_remainder_type,
 				bit_and_type,
 				bit_or_type,
 				bit_xor_type,
@@ -136,6 +142,17 @@ feature -- IL code generation
 					parameters.process (a_generator)
 				end
 				generate_il_operation_code (f_type, type.is_natural)
+
+			when quotient_type then
+				il_generator.convert_to_real_64
+				if parameters /= Void then
+					parameters.process (a_generator)
+				end
+				il_generator.convert_to_real_64
+				il_generator.generate_binary_operator (il_slash, False)
+
+			when power_type then
+				generate_power (parameters [1], type, a_generator)
 
 			when bit_shift_left_type then
 				if parameters /= Void then
@@ -178,17 +195,36 @@ feature -- IL code generation
 				end
 				generate_set_bit_with_mask (a_generator, type, parameters)
 
-			when is_equal_type then
+			when
+				is_equal_type,
+				is_less_type,
+				is_less_equal_type,
+				is_greater_type,
+				is_greater_equal_type
+			then
 				check
 					parameters_not_void: parameters /= Void
 				end
 				parameters.process (a_generator)
+				operator := inspect f_type
+					when is_equal_type then il_eq
+					when is_less_type then il_lt
+					when is_less_equal_type then il_le
+					when is_greater_type then il_gt
+					when is_greater_equal_type then il_ge
+					end
 				if system.total_order_on_reals and then (type.is_real_32 or else type.is_real_64) then
-					il_generator.generate_real_comparison_routine (il_eq, type.is_real_32, boolean_type)
+					il_generator.generate_real_comparison_routine (operator, type.is_real_32, boolean_type)
 				else
 						-- Generate unsigned comparison for natural numbers.
-					il_generator.generate_binary_operator (il_eq, type.is_natural)
+					il_generator.generate_binary_operator (operator, type.is_natural)
 				end
+
+			when negated_type then
+				il_generator.generate_unary_operator (il_not)
+
+			when opposite_type then
+				il_generator.generate_unary_operator (il_uminus)
 
 			when zero_type, default_type then
 					-- No need to keep pushed value as we are going
@@ -341,7 +377,7 @@ feature -- IL code generation
 			when upper_type then
 				il_generator.generate_upper_lower (True)
 
-			when twin_type, as_attached_type then
+			when identity_type, twin_type, as_attached_type then
 					-- Nothing to do, top of the stack has correct value
 
 			when is_nan_type then
@@ -439,6 +475,10 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (is_equal_type, is_deep_equal_name_id)
 			Result.put (is_equal_type, is_equal_name_id)
 			Result.put (is_equal_type, standard_is_equal_name_id)
+			Result.put (is_less_type, is_less_name_id)
+			Result.put (is_less_equal_type, is_less_equal_name_id)
+			Result.put (is_greater_type, is_greater_name_id)
+			Result.put (is_greater_equal_type, is_greater_equal_name_id)
 			Result.put (zero_type, zero_name_id)
 			Result.put (one_type, one_name_id)
 			Result.put (as_integer_8_type, as_integer_8_name_id)
@@ -461,6 +501,16 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (to_natural_16_type, to_natural_16_name_id)
 			Result.put (to_natural_32_type, to_natural_32_name_id)
 			Result.put (to_natural_64_type, to_natural_64_name_id)
+			Result.put (identity_type, identity_name_id)
+			Result.put (opposite_type, opposite_name_id)
+			Result.put (plus_type, plus_name_id)
+			Result.put (minus_type, minus_name_id)
+			Result.put (product_type, product_name_id)
+			Result.put (quotient_type, quotient_name_id)
+			Result.put (integer_quotient_type, integer_quotient_name_id)
+			Result.put (integer_remainder_type, integer_remainder_name_id)
+			Result.put (power_type, power_name_id)
+			Result.put (negated_type, negated_name_id)
 			Result.put (bit_and_type, bit_and_name_id)
 			Result.put (bit_and_type, infix_bit_and_name_id)
 			Result.put (bit_or_type, bit_or_name_id)
@@ -608,8 +658,28 @@ feature -- Fast access to feature name
 	ieee_is_less_equal_type: INTEGER = 70
 	ieee_maximum_number_type: INTEGER = 71
 	ieee_minimum_number_type: INTEGER = 72
+	identity_type: INTEGER = 73
+	opposite_type: INTEGER = 74
+	plus_type: INTEGER = 75
+	minus_type: INTEGER = 76
+	product_type: INTEGER = 77
+	quotient_type: INTEGER = 78
+	integer_quotient_type: INTEGER = 79
+	integer_remainder_type: INTEGER = 80
+	power_type: INTEGER = 81
+	is_less_type: INTEGER = 82
+	is_less_equal_type: INTEGER = 83
+	is_greater_type: INTEGER = 84
+	is_greater_equal_type: INTEGER = 85
+	negated_type: INTEGER = 86
+	conjuncted_type: INTEGER = 86
+	conjuncted_semistrict_type: INTEGER = 87
+	disjuncted_type: INTEGER = 88
+	disjuncted_semistrict_type: INTEGER = 89
+	disjuncted_exclusive_type: INTEGER = 90
+	implication_type: INTEGER = 91
 
-	max_type_id: INTEGER = 72
+	max_type_id: INTEGER = 91
 
 feature {NONE} -- IL code generation
 
@@ -618,6 +688,16 @@ feature {NONE} -- IL code generation
 		do
  			inspect
  				op
+ 			when plus_type then
+ 				il_generator.generate_binary_operator (il_plus, is_natural)
+ 			when minus_type then
+ 				il_generator.generate_binary_operator (il_minus, is_natural)
+ 			when product_type then
+ 				il_generator.generate_binary_operator (il_star, is_natural)
+ 			when integer_quotient_type then
+ 				il_generator.generate_binary_operator (il_div, is_natural)
+ 			when integer_remainder_type then
+ 				il_generator.generate_binary_operator (il_mod, is_natural)
  			when bit_and_type then
 				il_generator.generate_binary_operator (il_and, is_natural)
  			when bit_or_type then
@@ -634,6 +714,39 @@ feature {NONE} -- IL code generation
 				check
 					not_implemented_yet: False
 				end
+			end
+		end
+
+	generate_power (p: PARAMETER_B; t: CL_TYPE_A; g: IL_NODE_GENERATOR)
+			-- Generate code to raise stack top to the value specified by `p` of type `t` using generator `g`.
+		local
+			power_value: REAL_64
+		do
+			il_generator.convert_to_real_64
+			if attached {REAL_CONST_B} p.expression as power_nb then
+				power_value := power_nb.value.to_real_64
+				if power_value = 0.0 then
+					il_generator.pop
+					il_generator.put_real_64_constant (1.0)
+				elseif power_value = 1.0 then
+						-- Nothing to be done.
+				elseif power_value = 2.0 then
+					il_generator.duplicate_top
+					il_generator.generate_binary_operator (il_star, False)
+				elseif power_value = 3.0 then
+					il_generator.duplicate_top
+					il_generator.duplicate_top
+					il_generator.generate_binary_operator (il_star, False)
+					il_generator.generate_binary_operator (il_star, False)
+				else
+					p.process (g)
+					il_generator.convert_to_real_64
+					il_generator.generate_binary_operator (il_power, False)
+				end
+			else
+				p.process (g)
+				il_generator.convert_to_real_64
+				il_generator.generate_binary_operator (il_power, False)
 			end
 		end
 
@@ -669,7 +782,7 @@ feature {NONE} -- IL code generation
 			end
 		end
 
-	generate_extremum_number (c: like {MD_OPCODES}.ble; e: EXPR_B; t: CL_TYPE_A; g: IL_NODE_GENERATOR)
+	generate_extremum_number (c: like {MD_OPCODES}.ble; e: PARAMETER_B; t: CL_TYPE_A; g: IL_NODE_GENERATOR)
 			-- Generate code for "ieee_maximum_number" (when `c = {MD_OPCODES}.bge_un`) or "ieee_minimum_number" (when `c = {MD_OPCODES}.ble_un`)
 			-- for the value on stack and the value of `e` of type `t` using generator `g`.
 		require

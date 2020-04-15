@@ -442,6 +442,21 @@ feature {NONE} -- Implementation: access
 			put ("ieee_maximum_number") check found_item = ieee_maximum_number_name_id end
 			put ("ieee_minimum_number") check found_item = ieee_minimum_number_name_id end
 			put ("make_from_c_byte_array") check found_item = make_from_c_byte_array_name_id end
+			put ("identity") check found_item = identity_name_id end
+			put ("opposite") check found_item = opposite_name_id end
+			put ("product") check found_item = product_name_id end
+			put ("quotient") check found_item = quotient_name_id end
+			put ("integer_quotient") check found_item = integer_quotient_name_id end
+			put ("integer_remainder") check found_item = integer_remainder_name_id end
+			put ("power") check found_item = power_name_id end
+			put ("is_less") check found_item = is_less_name_id end
+			put ("is_less_equal") check found_item = is_less_equal_name_id end
+			put ("is_greater") check found_item = is_greater_name_id end
+			put ("is_greater_equal") check found_item = is_greater_equal_name_id end
+			put ("negated") check found_item = negated_name_id end
+			put ("conjuncted") check found_item = conjuncted_name_id end
+			put ("disjuncted") check found_item = disjuncted_name_id end
+			put ("disjuncted_exclusive") check found_item = disjuncted_exclusive_name_id end
 		end
 
 invariant

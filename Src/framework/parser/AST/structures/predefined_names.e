@@ -241,6 +241,21 @@ feature -- Constants
 	ieee_maximum_number_name_id: INTEGER = 228
 	ieee_minimum_number_name_id: INTEGER = 229
 	make_from_c_byte_array_name_id: INTEGER = 230
+	identity_name_id: INTEGER = 231
+	opposite_name_id: INTEGER = 232
+	product_name_id: INTEGER = 233
+	quotient_name_id: INTEGER = 234
+	integer_quotient_name_id: INTEGER = 235
+	integer_remainder_name_id: INTEGER = 236
+	power_name_id: INTEGER = 237
+	is_less_name_id: INTEGER = 238
+	is_less_equal_name_id: INTEGER = 239
+	is_greater_name_id: INTEGER = 240
+	is_greater_equal_name_id: INTEGER = 241
+	negated_name_id: INTEGER = 242
+	conjuncted_name_id: INTEGER = 243
+	disjuncted_name_id: INTEGER = 244
+	disjuncted_exclusive_name_id: INTEGER = 245
 
 feature -- Classification
 

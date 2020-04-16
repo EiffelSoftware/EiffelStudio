@@ -1,19 +1,20 @@
-indexing
+﻿indexing
 	description: "Objects that is a two dimensional vector."
 	author: "Benno Baumgartner"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
 	VECTOR2D [G -> NUMERIC]
-	
+
 inherit
 	VECTOR [G]
-	
+
 create
 	make,
 	default_create
-	
+
 feature -- Initialization
 
 	make, set (ax, ay: G) is
@@ -24,12 +25,12 @@ feature -- Initialization
 		ensure
 			set: x = ax and y = ay
 		end
-		
+
 feature -- Access
 
 	x: G
 			-- X position of `Current'.
-			
+
 	y: G
 			-- Y position of `Current'.
 
@@ -67,13 +68,13 @@ feature -- Basic operations
 			create Result.make (x + other.x, y + other.y)
 		end
 
-	minus alias "-" (other: like Current): like Current is
+	minus alias "-" alias "−" (other: like Current): like Current is
 			-- Result of subtracting `other'
 		do
 			create Result.make (x - other.x, y - other.y)
 		end
 
-	product alias "*" (other: like Current): like Current is
+	product alias "*" alias "×" (other: like Current): like Current is
 			-- Product by `other'
 		do
 			check
@@ -81,7 +82,7 @@ feature -- Basic operations
 			end
 		end
 
-	quotient alias "/" (other: like Current): like Current is
+	quotient alias "/" alias "÷" (other: like Current): like Current is
 			-- Division by `other'
 		do
 		end
@@ -92,12 +93,12 @@ feature -- Basic operations
 			create Result.make (x, y)
 		end
 
-	opposite alias "-": like Current is
+	opposite alias "-" alias "−": like Current is
 			-- Unary minus
 		do
 			create Result.make (-x, -y)
 		end
-		
+
 	scalar_product alias "|*" (other: G): like Current is
 			-- Scalar product between `Current' and other.
 		do

@@ -176,14 +176,14 @@ feature -- Element Change
 
 feature -- Basic operations
 
-	opposite alias "-": ECOM_CURRENCY
+	opposite alias "-" alias "−": ECOM_CURRENCY
 			-- Negative value of currency
 		do
 			create Result.make
 			ccom_currency_negative (item, Result.item)
 		end
 
-	minus alias "-" (other: ECOM_CURRENCY): ECOM_CURRENCY
+	minus alias "-" alias "−" (other: ECOM_CURRENCY): ECOM_CURRENCY
 			-- Subtract with `other'
 		do
 			create Result.make
@@ -197,7 +197,7 @@ feature -- Basic operations
 			ccom_currency_add (item, other.item, Result.item)
 		end
 
-	product alias "*" (other: ECOM_CURRENCY): ECOM_CURRENCY
+	product alias "*" alias "×" (other: ECOM_CURRENCY): ECOM_CURRENCY
 			-- Multiply by `other'
 		do
 			create Result.make
@@ -213,7 +213,7 @@ feature -- Basic operations
 			valid_result: Result /= Void
 		end
 
-	quotient alias "/" (other: ECOM_CURRENCY): ECOM_CURRENCY
+	quotient alias "/" alias "÷" (other: ECOM_CURRENCY): ECOM_CURRENCY
 		-- Division by 'other'
 		do
 		end
@@ -325,7 +325,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

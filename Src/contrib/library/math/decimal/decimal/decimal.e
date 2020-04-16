@@ -9,8 +9,8 @@ inherit
 	NUMERIC
 		rename
 			plus as binary_plus alias "+",
-			minus as binary_minus alias "-",
-			quotient as numeric_quotient alias "/",
+			minus as binary_minus alias "-" alias "−",
+			quotient as numeric_quotient alias "/" alias "÷",
 			out as out_tuple
 		redefine
 			out_tuple,
@@ -588,7 +588,7 @@ feature -- Status report
 
 feature -- Basic operations
 
-	product alias "*" (other: like Current): like Current
+	product alias "*" alias "×" (other: like Current): like Current
 			-- Product by `other'
 		do
 			Result := multiply (other, shared_decimal_context)
@@ -612,7 +612,7 @@ feature -- Basic operations
 			sum_not_void: Result /= Void
 		end
 
-	opposite alias "-": like Current
+	opposite alias "-" alias "−": like Current
 			-- Unary minus
 		do
 			Result := minus (shared_decimal_context)
@@ -620,7 +620,7 @@ feature -- Basic operations
 			unary_minus_not_void: Result /= Void
 		end
 
-	binary_minus alias "-" (other: like Current): like Current
+	binary_minus alias "-" alias "−" (other: like Current): like Current
 			-- Result of subtracting `other'
 		do
 			Result := subtract (other, shared_decimal_context)
@@ -628,7 +628,7 @@ feature -- Basic operations
 			subtract_not_void: Result /= Void
 		end
 
-	numeric_quotient alias "/" (other: like Current): like Current
+	numeric_quotient alias "/" alias "÷" (other: like Current): like Current
 			-- Division by `other'
 		require else
 			exception_trap: not shared_decimal_context.exception_on_trap or else not other.is_zero

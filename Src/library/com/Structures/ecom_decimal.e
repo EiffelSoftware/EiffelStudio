@@ -160,7 +160,7 @@ feature -- Conversion
 
 feature -- Basic operations
 
-	opposite alias "-": like Current
+	opposite alias "-" alias "−": like Current
 			-- Negative value of decimal
 		require else
 			valid_item: item /= default_pointer
@@ -169,7 +169,7 @@ feature -- Basic operations
 			ccom_decimal_negative (item, Result.item)
 		end
 
-	minus alias "-" (other: like Current): like Current
+	minus alias "-" alias "−" (other: like Current): like Current
 			-- Subtract with `other'
 		require else
 			valid_item: item /= default_pointer
@@ -187,7 +187,7 @@ feature -- Basic operations
 			ccom_decimal_add (item, other.item, Result.item)
 		end
 
-	product alias "*" (other: like Current): like Current
+	product alias "*" alias "×" (other: like Current): like Current
 			-- Multiply by `other'
 		require else
 			valid_item: item /= default_pointer
@@ -196,7 +196,7 @@ feature -- Basic operations
 			ccom_decimal_multiply (item, other.item, Result.item)
 		end
 
-	quotient alias "/" (other: like Current): like Current
+	quotient alias "/" alias "÷" (other: like Current): like Current
 			-- Multiply by `other'
 		require else
 			valid_item: item /= default_pointer
@@ -301,7 +301,7 @@ feature {NONE} -- Externals
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software and others"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software and others"
 	license:	"Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

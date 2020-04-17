@@ -26,5 +26,10 @@ execute_final	NONE exec_output_f
 execute_result	ok
 compare		exec_output_f output
 
+preference	pretty_printer.line_processing keep
+preference	pretty_printer.loop_expression_style keep
+prettify	test.e output_p
+compile_result ok
+compare		output_p test.e
 
 test_end

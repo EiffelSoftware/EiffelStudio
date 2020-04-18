@@ -537,12 +537,12 @@ debug ("GELEX")
 end
 
 				update_character_locations
-				if syntax_version /= obsolete_syntax then
-					last_symbol_id_value := ast_factory.new_symbol_id_as (TE_FORALL, Current)
-					last_token := TE_FORALL
-				else
+				if syntax_version = obsolete_syntax then
 					process_id_as
 					last_token := TE_FREE
+				else
+					last_symbol_id_value := ast_factory.new_symbol_id_as (TE_FORALL, Current)
+					last_token := TE_FORALL
 				end
 			
 when 42 then
@@ -554,12 +554,12 @@ debug ("GELEX")
 end
 
 				update_character_locations
-				if syntax_version /= obsolete_syntax then
-					last_symbol_id_value := ast_factory.new_symbol_id_as (TE_EXISTS, Current)
-					last_token := TE_EXISTS
-				else
+				if syntax_version = obsolete_syntax then
 					process_id_as
 					last_token := TE_FREE
+				else
+					last_symbol_id_value := ast_factory.new_symbol_id_as (TE_EXISTS, Current)
+					last_token := TE_EXISTS
 				end
 			
 when 43 then
@@ -583,12 +583,12 @@ debug ("GELEX")
 end
 
 				update_character_locations
-				if syntax_version /= obsolete_syntax then
-					last_symbol_id_value := ast_factory.new_symbol_id_as (TE_REPEAT_OPEN, Current)
-					last_token := TE_REPEAT_OPEN
-				else
+				if syntax_version = obsolete_syntax then
 					process_id_as
 					last_token := TE_FREE
+				else
+					last_symbol_id_value := ast_factory.new_symbol_id_as (TE_REPEAT_OPEN, Current)
+					last_token := TE_REPEAT_OPEN
 				end
 			
 when 45 then
@@ -600,12 +600,12 @@ debug ("GELEX")
 end
 
 				update_character_locations
-				if syntax_version /= obsolete_syntax then
-					last_symbol_id_value := ast_factory.new_symbol_id_as (TE_REPEAT_CLOSE, Current)
-					last_token := TE_REPEAT_CLOSE
-				else
+				if syntax_version = obsolete_syntax then
 					process_id_as
 					last_token := TE_FREE
+				else
+					last_symbol_id_value := ast_factory.new_symbol_id_as (TE_REPEAT_CLOSE, Current)
+					last_token := TE_REPEAT_CLOSE
 				end
 			
 when 46 then
@@ -617,12 +617,12 @@ debug ("GELEX")
 end
 
 				update_character_locations
-				if syntax_version /= obsolete_syntax then
-					last_symbol_id_value := ast_factory.new_symbol_id_as (TE_BLOCK_OPEN, Current)
-					last_token := TE_BLOCK_OPEN
-				else
+				if syntax_version = obsolete_syntax then
 					process_id_as
 					last_token := TE_FREE
+				else
+					last_symbol_id_value := ast_factory.new_symbol_id_as (TE_BLOCK_OPEN, Current)
+					last_token := TE_BLOCK_OPEN
 				end
 			
 when 47 then
@@ -634,12 +634,12 @@ debug ("GELEX")
 end
 
 				update_character_locations
-				if syntax_version /= obsolete_syntax then
-					last_symbol_id_value := ast_factory.new_symbol_id_as (TE_BLOCK_CLOSE, Current)
-					last_token := TE_BLOCK_CLOSE
-				else
+				if syntax_version = obsolete_syntax then
 					process_id_as
 					last_token := TE_FREE
+				else
+					last_symbol_id_value := ast_factory.new_symbol_id_as (TE_BLOCK_CLOSE, Current)
+					last_token := TE_BLOCK_CLOSE
 				end
 			
 when 48 then

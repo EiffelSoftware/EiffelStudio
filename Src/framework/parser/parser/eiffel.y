@@ -156,7 +156,6 @@ create
 %type <detachable LOOP_EXPR_AS>			Loop_expression
 %type <detachable LOOP_AS>				Loop_instruction
 %type <detachable NAMED_EXPRESSION_AS>		Separate_argument
-%type <detachable NESTED_AS>			Call_on_feature_access
 %type <detachable OPERAND_AS>			Delayed_actual
 %type <detachable PARENT_AS>			Parent Parent_clause
 %type <detachable PRECURSOR_AS>		A_precursor
@@ -3305,7 +3304,6 @@ Expression:
 					l_type.set_lcurly_symbol ($2)
 					l_type.set_rcurly_symbol ($4)
 				end
-				check_object_test_expression ($5)
 				$$ := ast_factory.new_object_test_as (extract_keyword ($1), $3, $5, Void, Void)
 			}
 	|	TE_ATTACHED TE_LCURLY Type TE_RCURLY Expression TE_AS Identifier_as_lower
@@ -3314,7 +3312,6 @@ Expression:
 					l_type.set_lcurly_symbol ($2)
 					l_type.set_rcurly_symbol ($4)
 				end
-				check_object_test_expression ($5)
 				$$ := ast_factory.new_object_test_as (extract_keyword ($1), $3, $5, $6, $7)
 				if attached $7 as l_name and attached $3 as l_type then
 					insert_object_test_locals ([l_name, l_type])
@@ -3323,7 +3320,6 @@ Expression:
 			}
 	|	TE_LCURLY Identifier_as_lower TE_COLON Type TE_RCURLY Expression %prec TE_NOT
 			{
-				check_object_test_expression ($6)
 				$$ := ast_factory.new_old_syntax_object_test_as ($1, $2, $4, $6)
 				if attached $2 as l_name and attached $4 as l_type then
 					insert_object_test_locals ([l_name, l_type])
@@ -3582,16 +3578,10 @@ Old_a_static_call:
 			}
 	;
 
-Remote_call: Call_on_feature_access
-			{ $$ := $1 }
+Remote_call: Feature_access TE_DOT Remote_call
+			{ $$ := ast_factory.new_nested_as ($1, $3, $2) }
 	|	Feature_access
 			{ $$ := $1 }
-	;
-
-Call_on_feature_access: Feature_access TE_DOT Feature_access
-			{ $$ := ast_factory.new_nested_as ($1, $3, $2) }
-	|	Feature_access TE_DOT Call_on_feature_access
-			{ $$ := ast_factory.new_nested_as ($1, $3, $2) }
 	;
 
 A_feature: Identifier_as_lower Parameters
@@ -3626,12 +3616,12 @@ Bracket_target:
 				else
 					-- Nothing to do.
 				end
-				$$ := ast_factory.new_expr_call_as ($1)
+				$$ := $1
 			}
 	|	TE_RESULT
-			{ $$ := ast_factory.new_expr_call_as ($1) }
+			{ $$ := $1 }
 	|	Creation_expression
-			{ $$ := ast_factory.new_expr_call_as ($1) }
+			{ $$ := $1 }
 	|	Loop_expression
 			{ $$ := $1 }
 	|	TE_LPARAN Expression TE_RPARAN

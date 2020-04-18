@@ -8,6 +8,7 @@
 			Usually it is a typing error.
 		]"
 	author: "Stefan Zurfluh", "Eiffel Software"
+	revised_by: "Alexander Kogtenkov"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -75,7 +76,11 @@ feature {NONE} -- Context analysis
 		local
 			value: PROCEDURE [TEXT_FORMATTER]
 		do
-			if
+			if attached {CURRENT_AS} a.left and then attached {CURRENT_AS} a.right then
+				value := agent {TEXT_FORMATTER}.process_keyword_text ({TEXT_FORMATTER}.ti_current, Void)
+			elseif attached {RESULT_AS} a.left and then attached {RESULT_AS} a.right then
+				value := agent {TEXT_FORMATTER}.process_keyword_text ({TEXT_FORMATTER}.ti_result, Void)
+			elseif
 				attached {EXPR_CALL_AS} a.left as e1 and then
 				attached {ACCESS_AS} e1.call as call1 and then
 				attached {EXPR_CALL_AS} a.right as e2
@@ -99,10 +104,6 @@ feature {NONE} -- Context analysis
 							-- It's a named local (including argument, object-test local, separate variable, iteration cursor).
 						value := agent {TEXT_FORMATTER}.process_local_text (l.feature_name, l.feature_name.name_32)
 					end
-				elseif attached {CURRENT_AS} call1 and then attached {CURRENT_AS} e2.call then
-					value := agent {TEXT_FORMATTER}.process_keyword_text ({TEXT_FORMATTER}.ti_current, Void)
-				elseif attached {RESULT_AS} call1 and then attached {RESULT_AS} e2.call then
-					value := agent {TEXT_FORMATTER}.process_keyword_text ({TEXT_FORMATTER}.ti_result, Void)
 				elseif
 					attached {PRECURSOR_AS} call1 as l and then
 					attached {PRECURSOR_AS} e2.call as r and then
@@ -114,19 +115,19 @@ feature {NONE} -- Context analysis
 				then
 					value := agent {TEXT_FORMATTER}.process_keyword_text ({TEXT_FORMATTER}.ti_precursor_keyword, f.e_feature)
 				end
-				if attached value then
-					put_violation
-						(ca_messages.locale.translation_in_context ("{1} is compared to itself.", once "code_analysis.violation"),
-						<<value>>,
-						ca_messages.locale.translation_in_context ("Self-comparison: {1} compared to itself always evaluates to the same boolean value.", once "code_analysis.violation"),
-						<<value>>,
-						a.operator_index)
-				end
+			end
+			if attached value then
+				put_violation
+					(ca_messages.locale.translation_in_context ("{1} is compared to itself.", once "code_analysis.violation"),
+					<<value>>,
+					ca_messages.locale.translation_in_context ("Self-comparison: {1} compared to itself always evaluates to the same boolean value.", once "code_analysis.violation"),
+					<<value>>,
+					a.operator_index)
 			end
 		end
 
 note
-	copyright:	"Copyright (c) 2014-2018, Eiffel Software"
+	copyright:	"Copyright (c) 2014-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

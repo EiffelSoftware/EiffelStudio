@@ -9,7 +9,10 @@ deferred class
 	CREATION_EXPR_AS
 
 inherit
-	CALL_AS
+	EXPR_AS
+		redefine
+			is_detachable_expression
+		end
 
 feature {NONE} -- Initialization
 
@@ -26,6 +29,16 @@ feature {NONE} -- Initialization
 			type_set: type = t
 			call_set: call = c
 		end
+
+feature -- Status report
+
+	is_detachable_expression: BOOLEAN = True
+			-- <Precursor>
+			--
+			-- Although the expression is always attached, its computation may be sophisticated.
+			-- Treating is as detachable allows for using it in assertions like
+			--     expected_data: attached (create {FOO}.make (something_complicated)) as foo
+			--     is_valid: some_checks_on (foo)
 
 feature -- Visitor
 
@@ -64,7 +77,7 @@ invariant
 	type_exists: type /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

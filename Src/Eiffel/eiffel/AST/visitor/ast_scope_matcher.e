@@ -167,9 +167,9 @@ feature {NONE} -- Check for void test
 				if attached {EXPR_CALL_AS} expr as expr_call_as then
 					if attached {ACCESS_INV_AS} expr_call_as.call as access_inv_as then
 						add_access_scope (access_inv_as)
-					elseif attached {RESULT_AS} expr_call_as.call as result_as then
-						add_result_scope
 					end
+				elseif attached {RESULT_AS} expr then
+					add_result_scope
 				end
 			end
 		end
@@ -208,9 +208,9 @@ feature {NONE} -- Check for void test
 				if attached {EXPR_CALL_AS} e as expr_call_as then
 					if attached {ACCESS_INV_AS} expr_call_as.call as access_inv_as then
 						add_access_scope (access_inv_as)
-					elseif attached {RESULT_AS} expr_call_as.call as result_as then
-						add_result_scope
 					end
+				elseif attached {RESULT_AS} e then
+					add_result_scope
 				end
 			end
 		end
@@ -296,7 +296,7 @@ invariant
 	context_attached: context /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

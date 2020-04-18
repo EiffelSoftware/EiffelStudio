@@ -14,6 +14,11 @@ inherit
 			text
 		end
 
+	EXPR_AS
+		redefine
+			is_detachable_expression
+		end
+
 	KEYWORD_AS
 		undefine
 			is_equivalent,
@@ -22,6 +27,11 @@ inherit
 
 create
 	make_with_location
+
+feature -- Status Report
+
+	is_detachable_expression: BOOLEAN = True
+			-- <Precursor>
 
 feature -- Visitor
 
@@ -49,7 +59,7 @@ feature -- Comparison
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

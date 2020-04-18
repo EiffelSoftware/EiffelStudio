@@ -81,8 +81,11 @@ feature -- Attributes
 
 feature -- Status Report
 
-	is_detachable_expression: BOOLEAN = True
+	is_detachable_expression: BOOLEAN
 			-- <Precursor>
+		do
+			Result := expr.is_detachable_expression
+		end
 
 feature -- Roundtrip/Token
 
@@ -116,7 +119,7 @@ invariant
 	expr_not_void: expr /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

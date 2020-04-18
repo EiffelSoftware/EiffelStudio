@@ -288,22 +288,22 @@ BREAK	{HORIZONAL_BREAK}|\n
 
 \xE2\x88\x80 {
 				update_character_locations
-				if syntax_version /= obsolete_syntax then
-					last_symbol_id_value := ast_factory.new_symbol_id_as (TE_FORALL, Current)
-					last_token := TE_FORALL
-				else
+				if syntax_version = obsolete_syntax then
 					process_id_as
 					last_token := TE_FREE
+				else
+					last_symbol_id_value := ast_factory.new_symbol_id_as (TE_FORALL, Current)
+					last_token := TE_FORALL
 				end
 			}
 \xE2\x88\x83 {
 				update_character_locations
-				if syntax_version /= obsolete_syntax then
-					last_symbol_id_value := ast_factory.new_symbol_id_as (TE_EXISTS, Current)
-					last_token := TE_EXISTS
-				else
+				if syntax_version = obsolete_syntax then
 					process_id_as
 					last_token := TE_FREE
+				else
+					last_symbol_id_value := ast_factory.new_symbol_id_as (TE_EXISTS, Current)
+					last_token := TE_EXISTS
 				end
 			}
 \xC2\xA6 {
@@ -313,44 +313,45 @@ BREAK	{HORIZONAL_BREAK}|\n
 			}
 \xE2\x9F\xB3 {
 				update_character_locations
-				if syntax_version /= obsolete_syntax then
-					last_symbol_id_value := ast_factory.new_symbol_id_as (TE_REPEAT_OPEN, Current)
-					last_token := TE_REPEAT_OPEN
-				else
+				if syntax_version = obsolete_syntax then
 					process_id_as
 					last_token := TE_FREE
+				else
+					last_symbol_id_value := ast_factory.new_symbol_id_as (TE_REPEAT_OPEN, Current)
+					last_token := TE_REPEAT_OPEN
 				end
 			}
 \xE2\x9F\xB2 {
 				update_character_locations
-				if syntax_version /= obsolete_syntax then
-					last_symbol_id_value := ast_factory.new_symbol_id_as (TE_REPEAT_CLOSE, Current)
-					last_token := TE_REPEAT_CLOSE
-				else
+				if syntax_version = obsolete_syntax then
 					process_id_as
 					last_token := TE_FREE
+				else
+					last_symbol_id_value := ast_factory.new_symbol_id_as (TE_REPEAT_CLOSE, Current)
+					last_token := TE_REPEAT_CLOSE
 				end
 			}
 \xE2\x9F\xA6 {
 				update_character_locations
-				if syntax_version /= obsolete_syntax then
-					last_symbol_id_value := ast_factory.new_symbol_id_as (TE_BLOCK_OPEN, Current)
-					last_token := TE_BLOCK_OPEN
-				else
+				if syntax_version = obsolete_syntax then
 					process_id_as
 					last_token := TE_FREE
+				else
+					last_symbol_id_value := ast_factory.new_symbol_id_as (TE_BLOCK_OPEN, Current)
+					last_token := TE_BLOCK_OPEN
 				end
 			}
 \xE2\x9F\xA7 {
 				update_character_locations
-				if syntax_version /= obsolete_syntax then
-					last_symbol_id_value := ast_factory.new_symbol_id_as (TE_BLOCK_CLOSE, Current)
-					last_token := TE_BLOCK_CLOSE
-				else
+				if syntax_version = obsolete_syntax then
 					process_id_as
 					last_token := TE_FREE
+				else
+					last_symbol_id_value := ast_factory.new_symbol_id_as (TE_BLOCK_CLOSE, Current)
+					last_token := TE_BLOCK_CLOSE
 				end
 			}
+
 (@|#|\||&)[@#0-9a-zA-Z_!\$&\'\(\)\*\+\,\-\./:;<>=\?\[\\\]\^\`\{\}\|\~]*		|
 {NON_ASCII_NB}+ {
 				update_character_locations

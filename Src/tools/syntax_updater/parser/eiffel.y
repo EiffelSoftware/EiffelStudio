@@ -3056,12 +3056,12 @@ Agent_target: Identifier_as_lower
 			else
 				-- Nothing to do.
 			end
-			$$ := ast_factory.new_agent_target_triple (Void, Void, ast_factory.new_operand_as (Void, ast_factory.new_access_id_as ($1, Void), Void))
+			$$ := ast_factory.new_agent_target_triple (Void, Void, ast_factory.new_operand_as (Void, ast_factory.new_expr_call_as (ast_factory.new_access_id_as ($1, Void))))
 		}
 	|	TE_LPARAN Add_counter Add_counter Expression Remove_counter Remove_counter TE_RPARAN
-		{ $$ := ast_factory.new_agent_target_triple ($1, $7, ast_factory.new_operand_as (Void, Void, $4)) }	
+		{ $$ := ast_factory.new_agent_target_triple ($1, $7, ast_factory.new_operand_as (Void, $4)) }	
 	|	TE_RESULT
-		{ $$ := ast_factory.new_agent_target_triple (Void, Void, ast_factory.new_operand_as (Void, $1, Void)) }
+		{ $$ := ast_factory.new_agent_target_triple (Void, Void, ast_factory.new_operand_as (Void, $1)) }
 	|	TE_CURRENT
 		{
 			inspect id_level when Precondition_level, Postcondition_level then
@@ -3069,13 +3069,13 @@ Agent_target: Identifier_as_lower
 			else
 				-- Nothing to do.
 			end
-			$$ := ast_factory.new_agent_target_triple (Void, Void, ast_factory.new_operand_as (Void, $1, Void))
+			$$ := ast_factory.new_agent_target_triple (Void, Void, ast_factory.new_operand_as (Void, $1))
 		}
 	|	Typed
-		{ $$ := ast_factory.new_agent_target_triple (Void, Void, ast_factory.new_operand_as ($1, Void, Void))}
+		{ $$ := ast_factory.new_agent_target_triple (Void, Void, ast_factory.new_operand_as ($1, Void))}
 	|	TE_QUESTION
 		{
-			if attached ast_factory.new_operand_as (Void, Void, Void) as l_temp_operand_as then
+			if attached ast_factory.new_operand_as (Void, Void) as l_temp_operand_as then
 				l_temp_operand_as.set_question_mark_symbol ($1)
 				$$ := ast_factory.new_agent_target_triple (Void, Void, l_temp_operand_as)
 			else
@@ -3119,7 +3119,7 @@ Delayed_actual_list: Delayed_actual
 	;
 
 Delayed_actual: TE_QUESTION
-			{ $$ := ast_factory.new_operand_as (Void, Void, Void)
+			{ $$ := ast_factory.new_operand_as (Void, Void)
 				if attached $$ as l_actual then
 					l_actual.set_question_mark_symbol ($1)
 				end
@@ -3129,13 +3129,13 @@ Delayed_actual: TE_QUESTION
 -- To preserve this feature in case it is needed by some of our customers
 -- we have invented the new syntax Typed ?.
 	|	Typed TE_QUESTION
-			{ $$ := ast_factory.new_operand_as ($1, Void, Void)
+			{ $$ := ast_factory.new_operand_as ($1, Void)
 				if attached $$ as l_actual then
 					l_actual.set_question_mark_symbol ($2)
 				end
 			}
 	|	Expression
-			{ $$ := ast_factory.new_operand_as (Void, Void, $1) }
+			{ $$ := ast_factory.new_operand_as (Void, $1) }
 	;
 
 Creation: TE_BANG TE_BANG Creation_target Creation_call
@@ -3495,10 +3495,10 @@ Qualified_call:
 				else
 					-- Nothing to do.
 				end
-				$$ := ast_factory.new_nested_as ($1, $3, $2)
+				$$ := ast_factory.new_nested_expr_as ($1, $3, $2, Void, Void)
 			}
 	|	TE_RESULT TE_DOT Remote_call
-			{ $$ := ast_factory.new_nested_as ($1, $3, $2) }
+			{ $$ := ast_factory.new_nested_expr_as ($1, $3, $2, Void, Void) }
 	|	A_feature TE_DOT Remote_call
 			{ $$ := ast_factory.new_nested_as ($1, $3, $2) }
 	|	TE_LPARAN Expression TE_RPARAN TE_DOT Remote_call
@@ -3578,12 +3578,6 @@ Old_a_static_call:
 			}
 	;
 
-Remote_call: Feature_access TE_DOT Remote_call
-			{ $$ := ast_factory.new_nested_as ($1, $3, $2) }
-	|	Feature_access
-			{ $$ := $1 }
-	;
-
 A_feature: Identifier_as_lower Parameters
 			{
 				inspect id_level
@@ -3596,6 +3590,12 @@ A_feature: Identifier_as_lower Parameters
 					$$ := ast_factory.new_access_inv_as ($1, $2, Void)
 				end
 			}
+	;
+
+Remote_call: Feature_access TE_DOT Remote_call
+			{ $$ := ast_factory.new_nested_as ($1, $3, $2) }
+	|	Feature_access
+			{ $$ := $1 }
 	;
 
 Feature_access: Identifier_as_lower Parameters
@@ -4224,7 +4224,7 @@ Remove_counter: { remove_counter }
 %%
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

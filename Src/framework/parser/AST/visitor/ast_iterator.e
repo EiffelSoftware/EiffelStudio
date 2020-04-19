@@ -264,7 +264,6 @@ feature {NONE} -- Implementation
 		do
 			safe_process (l_as.class_type)
 			safe_process (l_as.expression)
-			safe_process (l_as.target)
 		end
 
 	process_tagged_as (l_as: TAGGED_AS)

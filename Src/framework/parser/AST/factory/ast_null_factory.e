@@ -957,7 +957,7 @@ feature -- Access
 		do
 		end
 
-	new_operand_as (c: detachable TYPE_AS; t: detachable ACCESS_AS; e: detachable EXPR_AS): detachable OPERAND_AS
+	new_operand_as (c: detachable TYPE_AS; e: detachable EXPR_AS): detachable OPERAND_AS
 			-- New OPERAND AST node
 		do
 		end

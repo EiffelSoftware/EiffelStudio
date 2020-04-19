@@ -1507,30 +1507,21 @@ feature {NONE} -- Implementation
 			l_text_formatter_decorator: like text_formatter_decorator
 		do
 			l_text_formatter_decorator := text_formatter_decorator
-			if l_as.class_type /= Void then
+			if attached l_as.class_type as t then
 				if not expr_type_visiting then
 					l_text_formatter_decorator.process_symbol_text (ti_l_curly)
 				end
-				l_as.class_type.process (Current)
+				t.process (Current)
 				if not expr_type_visiting then
 					l_text_formatter_decorator.process_symbol_text (ti_r_curly)
 				end
+			elseif attached l_as.expression as e then
+				e.process (Current)
+			elseif not expr_type_visiting then
+				l_text_formatter_decorator.process_symbol_text (ti_question)
 			else
-				if l_as.expression /= Void then
-					l_as.expression.process (Current)
-				else
-					if l_as.target /= Void then
-						reset_last_class_and_type
-						l_as.target.process (Current)
-					else
-						if not expr_type_visiting then
-							l_text_formatter_decorator.process_symbol_text (ti_question)
-						else
-							fixme ("Currently we only handle ? for targets, current code does not handle ? for arguments")
-							last_type := current_class.actual_type
-						end
-					end
-				end
+				fixme ("Currently we only handle ? for targets, current code does not handle ? for arguments")
+				last_type := current_class.actual_type
 			end
 		end
 

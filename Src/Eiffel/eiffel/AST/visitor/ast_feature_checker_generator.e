@@ -1689,7 +1689,7 @@ feature {NONE} -- Implementation
 								until
 									i = l_formal_count
 								loop
-									l_parameters.extend (create {OPERAND_AS}.initialize (Void, Void, Void))
+									l_parameters.extend (create {OPERAND_AS}.initialize (Void, Void))
 									i := i + 1
 								end
 								l_actual_count := l_formal_count
@@ -3940,13 +3940,11 @@ feature {NONE} -- Visitor
 		local
 			l_class_type: TYPE_A
 		do
-			if l_as.target /= Void then
-				l_as.target.process (Current)
-			elseif l_as.expression /= Void then
+			if attached l_as.expression as e then
 				reset_for_unqualified_call_checking
-				l_as.expression.process (Current)
-			elseif l_as.class_type /= Void then
-				l_as.class_type.process (Current)
+				e.process (Current)
+			elseif attached l_as.class_type as t then
+				t.process (Current)
 				l_class_type := last_type
 				if l_class_type /= Void then
 					instantiator.dispatch (l_class_type, context.current_class)

@@ -8,10 +8,6 @@
 class CURRENT_AS
 
 inherit
-	ACCESS_AS
-		undefine
-			text
-		end
 
 	EXPR_AS
 

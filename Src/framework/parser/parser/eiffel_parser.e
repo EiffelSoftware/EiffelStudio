@@ -14921,7 +14921,7 @@ end
 			else
 				-- Nothing to do.
 			end
-			yyval25 := ast_factory.new_agent_target_triple (Void, Void, ast_factory.new_operand_as (Void, ast_factory.new_access_id_as (yyvs2.item (yyvsp2), Void), Void))
+			yyval25 := ast_factory.new_agent_target_triple (Void, Void, ast_factory.new_operand_as (Void, ast_factory.new_expr_call_as (ast_factory.new_access_id_as (yyvs2.item (yyvsp2), Void))))
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
@@ -14948,7 +14948,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval25 := ast_factory.new_agent_target_triple (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4), ast_factory.new_operand_as (Void, Void, yyvs50.item (yyvsp50))) 
+yyval25 := ast_factory.new_agent_target_triple (yyvs4.item (yyvsp4 - 1), yyvs4.item (yyvsp4), ast_factory.new_operand_as (Void, yyvs50.item (yyvsp50))) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 7
 	yyvsp25 := yyvsp25 + 1
@@ -14976,7 +14976,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval25 := ast_factory.new_agent_target_triple (Void, Void, ast_factory.new_operand_as (Void, yyvs8.item (yyvsp8), Void)) 
+yyval25 := ast_factory.new_agent_target_triple (Void, Void, ast_factory.new_operand_as (Void, yyvs8.item (yyvsp8))) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp25 := yyvsp25 + 1
@@ -15007,7 +15007,7 @@ end
 			else
 				-- Nothing to do.
 			end
-			yyval25 := ast_factory.new_agent_target_triple (Void, Void, ast_factory.new_operand_as (Void, yyvs11.item (yyvsp11), Void))
+			yyval25 := ast_factory.new_agent_target_triple (Void, Void, ast_factory.new_operand_as (Void, yyvs11.item (yyvsp11)))
 		
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
@@ -15034,7 +15034,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval25 := ast_factory.new_agent_target_triple (Void, Void, ast_factory.new_operand_as (yyvs87.item (yyvsp87), Void, Void))
+yyval25 := ast_factory.new_agent_target_triple (Void, Void, ast_factory.new_operand_as (yyvs87.item (yyvsp87), Void))
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp25 := yyvsp25 + 1
@@ -15060,7 +15060,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-			if attached ast_factory.new_operand_as (Void, Void, Void) as l_temp_operand_as then
+			if attached ast_factory.new_operand_as (Void, Void) as l_temp_operand_as then
 				l_temp_operand_as.set_question_mark_symbol (yyvs4.item (yyvsp4))
 				yyval25 := ast_factory.new_agent_target_triple (Void, Void, l_temp_operand_as)
 			else
@@ -15234,7 +15234,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval73 := ast_factory.new_operand_as (Void, Void, Void)
+yyval73 := ast_factory.new_operand_as (Void, Void)
 				if attached yyval73 as l_actual then
 					l_actual.set_question_mark_symbol (yyvs4.item (yyvsp4))
 				end
@@ -15264,7 +15264,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval73 := ast_factory.new_operand_as (yyvs87.item (yyvsp87), Void, Void)
+yyval73 := ast_factory.new_operand_as (yyvs87.item (yyvsp87), Void)
 				if attached yyval73 as l_actual then
 					l_actual.set_question_mark_symbol (yyvs4.item (yyvsp4))
 				end
@@ -15295,7 +15295,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval73 := ast_factory.new_operand_as (Void, Void, yyvs50.item (yyvsp50)) 
+yyval73 := ast_factory.new_operand_as (Void, yyvs50.item (yyvsp50)) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 1
 	yyvsp73 := yyvsp73 + 1
@@ -17694,7 +17694,7 @@ end
 				else
 					-- Nothing to do.
 				end
-				yyval35 := ast_factory.new_nested_as (yyvs11.item (yyvsp11), yyvs35.item (yyvsp35), yyvs4.item (yyvsp4))
+				yyval35 := ast_factory.new_nested_expr_as (yyvs11.item (yyvsp11), yyvs35.item (yyvsp35), yyvs4.item (yyvsp4), Void, Void)
 			
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
@@ -17714,7 +17714,7 @@ debug ("GEYACC")
 	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
 end
 
-yyval35 := ast_factory.new_nested_as (yyvs8.item (yyvsp8), yyvs35.item (yyvsp35), yyvs4.item (yyvsp4)) 
+yyval35 := ast_factory.new_nested_expr_as (yyvs8.item (yyvsp8), yyvs35.item (yyvsp35), yyvs4.item (yyvsp4), Void, Void) 
 if yy_parsing_status >= yyContinue then
 	yyssp := yyssp - 3
 	yyvsp8 := yyvsp8 -1
@@ -18027,51 +18027,6 @@ end
 	yy_do_action_548
 			--|#line <not available> "eiffel.y"
 		local
-			yyval35: detachable CALL_AS
-		do
---|#line <not available> "eiffel.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
-end
-
-yyval35 := ast_factory.new_nested_as (yyvs27.item (yyvsp27), yyvs35.item (yyvsp35), yyvs4.item (yyvsp4)) 
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 3
-	yyvsp27 := yyvsp27 -1
-	yyvsp4 := yyvsp4 -1
-	yyspecial_routines35.force (yyvs35, yyval35, yyvsp35)
-end
-		end
-
-	yy_do_action_549
-			--|#line <not available> "eiffel.y"
-		local
-			yyval35: detachable CALL_AS
-		do
---|#line <not available> "eiffel.y"
-debug ("GEYACC")
-	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
-end
-
-yyval35 := yyvs27.item (yyvsp27) 
-if yy_parsing_status >= yyContinue then
-	yyssp := yyssp - 1
-	yyvsp35 := yyvsp35 + 1
-	yyvsp27 := yyvsp27 -1
-	if yyvsp35 >= yyvsc35 then
-		debug ("GEYACC")
-			std.error.put_line ("Resize yyvs35")
-		end
-		yyvsc35 := yyvsc35 + yyInitial_yyvs_size
-		yyvs35 := yyspecial_routines35.aliased_resized_area (yyvs35, yyvsc35)
-	end
-	yyspecial_routines35.force (yyvs35, yyval35, yyvsp35)
-end
-		end
-
-	yy_do_action_550
-			--|#line <not available> "eiffel.y"
-		local
 			yyval26: detachable ACCESS_AS
 		do
 --|#line <not available> "eiffel.y"
@@ -18102,6 +18057,51 @@ if yy_parsing_status >= yyContinue then
 		yyvs26 := yyspecial_routines26.aliased_resized_area (yyvs26, yyvsc26)
 	end
 	yyspecial_routines26.force (yyvs26, yyval26, yyvsp26)
+end
+		end
+
+	yy_do_action_549
+			--|#line <not available> "eiffel.y"
+		local
+			yyval35: detachable CALL_AS
+		do
+--|#line <not available> "eiffel.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
+end
+
+yyval35 := ast_factory.new_nested_as (yyvs27.item (yyvsp27), yyvs35.item (yyvsp35), yyvs4.item (yyvsp4)) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 3
+	yyvsp27 := yyvsp27 -1
+	yyvsp4 := yyvsp4 -1
+	yyspecial_routines35.force (yyvs35, yyval35, yyvsp35)
+end
+		end
+
+	yy_do_action_550
+			--|#line <not available> "eiffel.y"
+		local
+			yyval35: detachable CALL_AS
+		do
+--|#line <not available> "eiffel.y"
+debug ("GEYACC")
+	std.error.put_line ("Executing parser user-code from file 'eiffel.y' at line <not available>")
+end
+
+yyval35 := yyvs27.item (yyvsp27) 
+if yy_parsing_status >= yyContinue then
+	yyssp := yyssp - 1
+	yyvsp35 := yyvsp35 + 1
+	yyvsp27 := yyvsp27 -1
+	if yyvsp35 >= yyvsc35 then
+		debug ("GEYACC")
+			std.error.put_line ("Resize yyvs35")
+		end
+		yyvsc35 := yyvsc35 + yyInitial_yyvs_size
+		yyvs35 := yyspecial_routines35.aliased_resized_area (yyvs35, yyvsc35)
+	end
+	yyspecial_routines35.force (yyvs35, yyval35, yyvsp35)
 end
 		end
 
@@ -21815,8 +21815,8 @@ feature {NONE} -- Table templates
 			  194,  194,  194,  194,  195,  195,  195,  195,  195,  195,
 			  195,  195,  195,  195,  195,  195,  196,  196,  196,  212,
 			  198,  198,  199,  199,  174,  174,  174,  174,  174,  174,
-			  174,  174,  238,  238,  239,  239,  241,  240,  173,  173,
-			  158,  160,  192,  192,  192,  192,  192,  192,  192,  192,
+			  174,  174,  238,  238,  239,  239,  241,  240,  158,  173,
+			  173,  160,  192,  192,  192,  192,  192,  192,  192,  192,
 			  304,  304,  304,  197,  197,  303,  303,  302,  302,  208,
 			  208,  209,  209,  209,  209,  209,  209,  209,  210,  211,
 			  211,  211,  211,  211,  211,  214,  214,  297,  298,  298,
@@ -22121,7 +22121,7 @@ feature {NONE} -- Table templates
 			  698,  698,    0,    0,    0,    0,    0,    0,    0,    0,
 			    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
 			    0,    0,    0,    0,    0,    0,    0,    0,  698,    0,
-			  698,    0,  550,  519,    0,    0,  698,  621,  641,  630,
+			  698,    0,  548,  519,    0,    0,  698,  621,  641,  630,
 			    0,    0,    0,  649,  698,  388,    0,  260,  238,    0,
 			  259,  239,  576,  575,    0,  262,  241,  263,  242,  279,
 
@@ -22133,7 +22133,7 @@ feature {NONE} -- Table templates
 			  634,  635,  639,  640,  609,    0,   72,    0,  698,    8,
 			  702,  170,  386,    0,   80,    0,  700,   75,    0,    0,
 			    0,    0,    0,    0,    0,    0,    0,  450,  161,  698,
-			    0,  698,  422,    0,   54,    0,  561,    0,  549,  534,
+			    0,  698,  422,    0,   54,    0,  561,    0,  550,  534,
 			  560,  535,  450,    0,  463,  567,  702,  702,  559,    0, yyDummy>>,
 			1, 200, 200)
 		end
@@ -22174,7 +22174,7 @@ feature {NONE} -- Table templates
 			   91,   78,   94,    0,  698,   15,   76,   93,  474,    0,
 			    0,    0,  594,    0,    0,    0,  547,  560,  698,    0,
 			  702,  702,  560,  423,  437,  439,  435,  526,  702,   54,
-			   55,  213,  432,  543,    0,  700,    0,  548,    0,    0,
+			   55,  213,  432,  543,    0,  700,    0,  549,    0,    0,
 			  693,  696,  537,  173,  380,  378,    0,    0,    0,    0,
 			    0,  390,  390,  700,  295,  299,  571,    0,  300,  301,
 			  309,   41,    0,   54,  700,   33,   29,   39,   44,   72,
@@ -25977,7 +25977,7 @@ feature -- User-defined features
 
 
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

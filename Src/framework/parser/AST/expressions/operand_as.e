@@ -1,8 +1,7 @@
-note
-	description: "Abstract description of an Eiffel operand of a routine object"
+﻿note
+	description: "Abstract description of an Eiffel operand of a routine object."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -20,15 +19,13 @@ create
 
 feature {NONE} -- Initialization
 
-	initialize (c: like class_type; t: like target; e: like expression)
+	initialize (c: like class_type; e: like expression)
 			-- Create a new OPERAND AST node.
 		do
 			class_type := c
-			target := t
 			expression := e
 		ensure
 			class_type_set: class_type = c
-			target_set: target = t
 			expression_set: expression = e
 		end
 
@@ -78,9 +75,6 @@ feature -- Attributes
 	class_type: detachable TYPE_AS
 			-- Type from which the feature comes if specified
 
-	target : detachable ACCESS_AS
-			-- Name of target of delayed call
-
 	expression: detachable EXPR_AS
 			-- Object expression given at routine object evaluation
 
@@ -92,8 +86,6 @@ feature -- Roundtrip/Token
 				Result := l_class_type.first_token (a_list)
 			elseif a_list /= Void and question_mark_symbol_index /= 0 then
 				Result := question_mark_symbol (a_list)
-			elseif attached target as l_target then
-				Result := l_target.first_token (a_list)
 			elseif attached expression as l_expr then
 				Result := l_expr.first_token (a_list)
 			else
@@ -107,8 +99,6 @@ feature -- Roundtrip/Token
 				Result := l_class_type.last_token (a_list)
 			elseif a_list /= Void and question_mark_symbol_index /= 0 then
 				Result := question_mark_symbol (a_list)
-			elseif attached target as l_target then
-				Result := l_target.last_token (a_list)
 			elseif attached expression as l_expr then
 				Result := l_expr.last_token (a_list)
 			end
@@ -120,7 +110,6 @@ feature -- Comparison
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (class_type, other.class_type) and then
-					  equivalent (target, other.target) and then
 					  equivalent (expression, other.expression)
 		end
 
@@ -129,9 +118,9 @@ feature -- Status report
 	is_open : BOOLEAN
 			-- Is it an open operand?
 		do
-			Result := (expression = Void) and then (target = Void)
+			Result := not attached expression
 		ensure
-			Result = ((expression = Void) and then (target = Void))
+			Result = not attached expression
 		end
 
 feature -- Conversion
@@ -148,7 +137,7 @@ feature -- Conversion
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[
@@ -179,5 +168,4 @@ note
 			Customer support http://support.eiffel.com
 		]"
 
-end -- class OPERAND_AS
-
+end

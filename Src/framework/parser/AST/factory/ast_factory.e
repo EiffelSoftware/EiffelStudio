@@ -1778,10 +1778,10 @@ feature -- Access
 			create Result.make (o, k, c)
 		end
 
-	new_operand_as (c: detachable TYPE_AS; t: detachable ACCESS_AS; e: detachable EXPR_AS): detachable OPERAND_AS
+	new_operand_as (c: detachable TYPE_AS; e: detachable EXPR_AS): detachable OPERAND_AS
 			-- New OPERAND AST node
 		do
-			create Result.initialize (c, t, e)
+			create Result.initialize (c, e)
 		end
 
 	new_paran_as (e: detachable EXPR_AS; l_as, r_as: detachable SYMBOL_AS): detachable PARAN_AS

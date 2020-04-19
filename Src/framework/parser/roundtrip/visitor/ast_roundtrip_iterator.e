@@ -545,7 +545,6 @@ feature
 		do
 			safe_process (l_as.class_type)
 			safe_process (l_as.question_mark_symbol (match_list))
-			safe_process (l_as.target)
 			safe_process (l_as.expression)
 		end
 

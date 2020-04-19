@@ -937,22 +937,13 @@ feature {NONE} -- Implementation
 
 	process_operand_as (l_as: OPERAND_AS)
 		do
-			if l_as.class_type /= Void then
-				l_as.class_type.process (Current)
-			else
-				if l_as.expression /= Void then
-					l_as.expression.process (Current)
-				else
-					if l_as.target /= Void then
-						reset_last_class_and_type
-						l_as.target.process (Current)
-					else
-						if expr_type_visiting then
-							fixme ("Currently we only handle ? for targets, current code does not handle ? for arguments")
-							last_type := current_class.actual_type
-						end
-					end
-				end
+			if attached l_as.class_type as t then
+				t.process (Current)
+			elseif attached l_as.expression as e then
+					e.process (Current)
+			elseif expr_type_visiting then
+				fixme ("Currently we only handle ? for targets, current code does not handle ? for arguments")
+				last_type := current_class.actual_type
 			end
 		end
 

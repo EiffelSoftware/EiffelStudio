@@ -67,7 +67,7 @@ feature -- Access
 	access_current3
 			-- Access `Current' without making it explicitly targeted.
 		do
-			if attached Current then end -- VEVI
+			if attached {STRING} Current then end -- VEVI
 		end
 
 feature {NONE} -- Access

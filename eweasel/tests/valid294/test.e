@@ -22,31 +22,31 @@ feature -- Test
 		local
 			fl: ANY
 		do
-			if attached Current as fo then
+			if attached twin as fo then
 				across <<>> as fc loop
 					separate (create {separate ANY}) as ft do
 						(agent (aa: ANY)
 							local
 								al: ANY
 							do
-								if attached Current as ao then
+								if attached twin as ao then
 									across <<>> as ac loop
 										separate (create {separate ANY}) as at do
 											(agent
 												do
 													(agent
 														do
-															if attached Current as ca then end -- VUOT(1)
-															if attached Current as fa then end -- VUOT(1)
-															if attached Current as fl then end -- VUOT(1)
-															if attached Current as fo then end -- VUOT(1)
-															if attached Current as fc then end -- VUOT(1)
-															if attached Current as ft then end -- VUOT(1)
-															if attached Current as aa then end -- VUOT(1)
-															if attached Current as al then end -- VUOT(1)
-															if attached Current as ao then end -- VUOT(1)
-															if attached Current as ac then end -- VUOT(1)
-															if attached Current as at then end -- VUOT(1)
+															if attached twin as ca then end -- VUOT(1)
+															if attached twin as fa then end -- VUOT(1)
+															if attached twin as fl then end -- VUOT(1)
+															if attached twin as fo then end -- VUOT(1)
+															if attached twin as fc then end -- VUOT(1)
+															if attached twin as ft then end -- VUOT(1)
+															if attached twin as aa then end -- VUOT(1)
+															if attached twin as al then end -- VUOT(1)
+															if attached twin as ao then end -- VUOT(1)
+															if attached twin as ac then end -- VUOT(1)
+															if attached twin as at then end -- VUOT(1)
 															across <<>> as ca loop end -- VOIT(2)
 															across <<>> as fa loop end -- VOIT(2)
 															across <<>> as fl loop end -- VOIT(2)

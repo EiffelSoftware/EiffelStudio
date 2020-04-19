@@ -19,7 +19,7 @@ copy_sub test2.e $CLUSTER test2.e
 copy_sub test3.e $CLUSTER test3.e
 copy_sub test4.e $CLUSTER test4.e
 resume_compile
-compile_result	syntax_error TEST1 7; TEST2 7; TEST3 7; TEST4 7
+compile_result	syntax_error TEST1 7; TEST2 7
 
 define OBJECT_TEST "attached {INTEGER_16} 1"
 copy_sub test1.e $CLUSTER test1.e
@@ -27,7 +27,7 @@ copy_sub test2.e $CLUSTER test2.e
 copy_sub test3.e $CLUSTER test3.e
 copy_sub test4.e $CLUSTER test4.e
 resume_compile
-compile_result	syntax_error TEST1 7; TEST2 7; TEST3 7; TEST4 7
+compile_result	syntax_error TEST1 7; TEST2 7
 
 define OBJECT_TEST "attached {INTEGER_32} 1"
 copy_sub test1.e $CLUSTER test1.e
@@ -35,7 +35,7 @@ copy_sub test2.e $CLUSTER test2.e
 copy_sub test3.e $CLUSTER test3.e
 copy_sub test4.e $CLUSTER test4.e
 resume_compile
-compile_result	syntax_error TEST1 7; TEST2 7; TEST3 7; TEST4 7
+compile_result	syntax_error TEST1 7; TEST2 7
 
 define OBJECT_TEST "attached {INTEGER_64} 1"
 copy_sub test1.e $CLUSTER test1.e
@@ -43,7 +43,7 @@ copy_sub test2.e $CLUSTER test2.e
 copy_sub test3.e $CLUSTER test3.e
 copy_sub test4.e $CLUSTER test4.e
 resume_compile
-compile_result	syntax_error TEST1 7; TEST2 7; TEST3 7; TEST4 7
+compile_result	syntax_error TEST1 7; TEST2 7
 
 define OBJECT_TEST "attached {NATURAL_8} 1"
 copy_sub test1.e $CLUSTER test1.e
@@ -51,7 +51,7 @@ copy_sub test2.e $CLUSTER test2.e
 copy_sub test3.e $CLUSTER test3.e
 copy_sub test4.e $CLUSTER test4.e
 resume_compile
-compile_result	syntax_error TEST1 7; TEST2 7; TEST3 7; TEST4 7
+compile_result	syntax_error TEST1 7; TEST2 7
 
 define OBJECT_TEST "attached {NATURAL_16} 1"
 copy_sub test1.e $CLUSTER test1.e
@@ -59,7 +59,7 @@ copy_sub test2.e $CLUSTER test2.e
 copy_sub test3.e $CLUSTER test3.e
 copy_sub test4.e $CLUSTER test4.e
 resume_compile
-compile_result	syntax_error TEST1 7; TEST2 7; TEST3 7; TEST4 7
+compile_result	syntax_error TEST1 7; TEST2 7
 
 define OBJECT_TEST "attached {NATURAL_32} 1"
 copy_sub test1.e $CLUSTER test1.e
@@ -67,7 +67,7 @@ copy_sub test2.e $CLUSTER test2.e
 copy_sub test3.e $CLUSTER test3.e
 copy_sub test4.e $CLUSTER test4.e
 resume_compile
-compile_result	syntax_error TEST1 7; TEST2 7; TEST3 7; TEST4 7
+compile_result	syntax_error TEST1 7; TEST2 7
 
 define OBJECT_TEST "attached {NATURAL_64} 1"
 copy_sub test1.e $CLUSTER test1.e
@@ -75,7 +75,7 @@ copy_sub test2.e $CLUSTER test2.e
 copy_sub test3.e $CLUSTER test3.e
 copy_sub test4.e $CLUSTER test4.e
 resume_compile
-compile_result	syntax_error TEST1 7; TEST2 7; TEST3 7; TEST4 7
+compile_result	syntax_error TEST1 7; TEST2 7
 
 define OBJECT_TEST "1.0"
 copy_sub test1.e $CLUSTER test1.e
@@ -83,7 +83,7 @@ copy_sub test2.e $CLUSTER test2.e
 copy_sub test3.e $CLUSTER test3.e
 copy_sub test4.e $CLUSTER test4.e
 resume_compile
-compile_result	syntax_error TEST1 7; TEST2 7; TEST3 7; TEST4 7
+compile_result	syntax_error TEST1 7; TEST2 7
 
 define OBJECT_TEST "{REAL_32} 1.0"
 copy_sub test1.e $CLUSTER test1.e
@@ -91,23 +91,23 @@ copy_sub test2.e $CLUSTER test2.e
 copy_sub test3.e $CLUSTER test3.e
 copy_sub test4.e $CLUSTER test4.e
 resume_compile
-compile_result	syntax_error TEST1 7; TEST2 7; TEST3 7; TEST4 7
+compile_result	ok
 
 define OBJECT_TEST "{REAL_64} 1.0"
 copy_sub test1.e $CLUSTER test1.e
 copy_sub test2.e $CLUSTER test2.e
 copy_sub test3.e $CLUSTER test3.e
 copy_sub test4.e $CLUSTER test4.e
-resume_compile
-compile_result	syntax_error TEST1 7; TEST2 7; TEST3 7; TEST4 7
+compile_melted
+compile_result	ok
 
 define OBJECT_TEST "'c'"
 copy_sub test1.e $CLUSTER test1.e
 copy_sub test2.e $CLUSTER test2.e
 copy_sub test3.e $CLUSTER test3.e
 copy_sub test4.e $CLUSTER test4.e
-resume_compile
-compile_result	syntax_error TEST1 7; TEST2 7; TEST3 7; TEST4 7
+compile_melted
+compile_result	syntax_error TEST1 7; TEST2 7
 
 define OBJECT_TEST "True"
 copy_sub test1.e $CLUSTER test1.e
@@ -115,7 +115,7 @@ copy_sub test2.e $CLUSTER test2.e
 copy_sub test3.e $CLUSTER test3.e
 copy_sub test4.e $CLUSTER test4.e
 resume_compile
-compile_result	syntax_error TEST1 7; TEST2 7; TEST3 7; TEST4 7
+compile_result	syntax_error TEST1 7; TEST2 7
 
 define OBJECT_TEST ""ter""
 copy_sub test1.e $CLUSTER test1.e
@@ -123,7 +123,7 @@ copy_sub test2.e $CLUSTER test2.e
 copy_sub test3.e $CLUSTER test3.e
 copy_sub test4.e $CLUSTER test4.e
 resume_compile
-compile_result	syntax_error TEST1 7; TEST2 7; TEST3 7; TEST4 7
+compile_result	syntax_error TEST1 7; TEST2 7
 
 -- Manifest TUPLE/ARRAY
 define OBJECT_TEST "<< 1, 2 >>"
@@ -132,7 +132,7 @@ copy_sub test2.e $CLUSTER test2.e
 copy_sub test3.e $CLUSTER test3.e
 copy_sub test4.e $CLUSTER test4.e
 resume_compile
-compile_result	syntax_error TEST1 7; TEST2 7; TEST3 7; TEST4 7
+compile_result	syntax_error TEST1 7; TEST2 7
 
 define OBJECT_TEST "[1, 2]"
 copy_sub test1.e $CLUSTER test1.e
@@ -140,7 +140,7 @@ copy_sub test2.e $CLUSTER test2.e
 copy_sub test3.e $CLUSTER test3.e
 copy_sub test4.e $CLUSTER test4.e
 resume_compile
-compile_result	syntax_error TEST1 7; TEST2 7; TEST3 7; TEST4 7
+compile_result	syntax_error TEST1 7; TEST2 7
 
 -- Agents
 define OBJECT_TEST "agent make"
@@ -149,7 +149,7 @@ copy_sub test2.e $CLUSTER test2.e
 copy_sub test3.e $CLUSTER test3.e
 copy_sub test4.e $CLUSTER test4.e
 resume_compile
-compile_result	syntax_error TEST1 7; TEST2 7; TEST3 7; TEST4 7
+compile_result	syntax_error TEST1 7; TEST2 7
 
 -- Object test
 define OBJECT_TEST "attached object as loc"
@@ -158,7 +158,7 @@ copy_sub test2.e $CLUSTER test2.e
 copy_sub test3.e $CLUSTER test3.e
 copy_sub test4.e $CLUSTER test4.e
 resume_compile
-compile_result	syntax_error TEST1 7; TEST2 7; TEST3 7; TEST4 7
+compile_result	syntax_error TEST1 7; TEST2 7
 
 -- Once string
 define OBJECT_TEST "once "string""
@@ -167,7 +167,7 @@ copy_sub test2.e $CLUSTER test2.e
 copy_sub test3.e $CLUSTER test3.e
 copy_sub test4.e $CLUSTER test4.e
 resume_compile
-compile_result	syntax_error TEST1 7; TEST2 7; TEST3 7; TEST4 7
+compile_result	syntax_error TEST1 7; TEST2 7
 
 -- Address
 define OBJECT_TEST "$object"
@@ -176,7 +176,7 @@ copy_sub test2.e $CLUSTER test2.e
 copy_sub test3.e $CLUSTER test3.e
 copy_sub test4.e $CLUSTER test4.e
 resume_compile
-compile_result	syntax_error TEST1 7; TEST2 7; TEST3 7; TEST4 7
+compile_result	syntax_error TEST1 7; TEST2 7
 
 -- Creation expression
 define OBJECT_TEST "create {TEST}.make"
@@ -185,7 +185,7 @@ copy_sub test2.e $CLUSTER test2.e
 copy_sub test3.e $CLUSTER test3.e
 copy_sub test4.e $CLUSTER test4.e
 resume_compile
-compile_result	syntax_error TEST1 7; TEST2 7; TEST3 7; TEST4 7
+compile_result	ok
 
 -- Equality 
 define OBJECT_TEST "object = b"
@@ -193,7 +193,7 @@ copy_sub test1.e $CLUSTER test1.e
 copy_sub test2.e $CLUSTER test2.e
 copy_sub test3.e $CLUSTER test3.e
 copy_sub test4.e $CLUSTER test4.e
-resume_compile
+compile_melted
 compile_result	syntax_error TEST2 7; TEST3 7
 
 define OBJECT_TEST "object /= b"

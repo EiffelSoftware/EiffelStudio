@@ -1385,7 +1385,7 @@ note
 		"CA033", "CA033: very long class"
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

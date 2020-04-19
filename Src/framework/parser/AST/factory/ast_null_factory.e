@@ -932,7 +932,7 @@ feature -- Access
 		do
 		end
 
-	new_nested_expr_as (t: detachable EXPR_AS; m: detachable CALL_AS; d_as, l_as, r_as: detachable SYMBOL_AS): detachable NESTED_EXPR_AS
+	new_nested_expr_as (t: detachable EXPR_AS; m: detachable CALL_AS; d_as: detachable SYMBOL_AS): detachable NESTED_EXPR_AS
 			-- New NESTED_EXPR CALL AST node
 		do
 		end

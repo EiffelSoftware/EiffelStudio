@@ -9,6 +9,9 @@ class TUPLE_AS
 
 inherit
 	EXPR_AS
+		redefine
+			is_detachable_expression
+		end
 
 create
 	initialize
@@ -33,6 +36,18 @@ feature {NONE} -- Initialization
 			lbracket_symbol_set: internal_lbracket_symbol = l_as and (l_as /= Void implies lbracket_symbol_index = l_as.index)
 			rbracket_symbol_set: r_as /= Void implies rbracket_symbol_index = r_as.index
 		end
+
+feature -- Status report
+
+	is_detachable_expression: BOOLEAN = True
+			-- <Precursor>
+			-- Although the expression is always attached, its computation might be costly.
+			-- Treating it as detachable allows for reusing the same manifest tuple if needed:
+			--    check
+			--       attached [compute_x, compute_y] as point
+			--       has_property_1 (point)
+			--       has_property_2 (point)
+			--    end
 
 feature -- Attributes
 
@@ -131,7 +146,7 @@ invariant
 	expressions_not_void: expressions /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

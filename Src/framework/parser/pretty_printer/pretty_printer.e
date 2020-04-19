@@ -2057,9 +2057,7 @@ feature {CLASS_AS} -- Calls
 				loop_cursors.has (n.name_id)
 			then
 					-- This must be a call on to feature "item" on the loop cursor, remove it.
-				safe_process (a.lparan_symbol (match_list))
 				safe_process (a.target)
-				safe_process (a.rparan_symbol (match_list))
 				if attached {NESTED_AS} a.message as m then
 					check
 						is_feature_call: attached {ACCESS_FEAT_AS} m.target as t
@@ -2086,9 +2084,7 @@ feature {CLASS_AS} -- Calls
 					process_leading_leaves_of_token (a.message.first_token (match_list))
 				end
 			else
-				safe_process (a.lparan_symbol (match_list))
 				safe_process (a.target)
-				safe_process (a.rparan_symbol (match_list))
 				safe_process (a.dot_symbol (match_list))
 				is_qualified := True
 				safe_process (a.message)

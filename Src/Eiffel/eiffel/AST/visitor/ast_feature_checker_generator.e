@@ -4139,16 +4139,11 @@ feature {NONE} -- Visitor
 			end
 		end
 
-	process_paran_as (l_as: PARAN_AS)
-		local
-			l_expr: EXPR_B
+	process_paran_as (a: PARAN_AS)
 		do
-			l_as.expr.process (Current)
-			if is_byte_node_enabled then
-				l_expr ?= last_byte_node
-				if l_expr /= Void then
-					create {PARAN_B} last_byte_node.make (l_expr)
-				end
+			a.expr.process (Current)
+			if attached last_type as t then
+				set_type (t, a)
 			end
 		end
 

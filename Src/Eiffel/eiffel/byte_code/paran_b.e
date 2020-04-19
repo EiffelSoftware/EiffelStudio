@@ -2,7 +2,7 @@ note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
 
-class PARAN_B
+deferred class PARAN_B
 
 inherit
 
@@ -17,21 +17,6 @@ inherit
 			pre_inlined_code, inlined_byte_code,
 			is_constant_expression, print_checked_target_register,
 			evaluate
-		end
-
-create
-	make
-
-feature {NONE} -- Initialize
-
-	make (e: EXPR_B)
-			-- Set `expr' to `e'
-		require
-			e_not_void: e /= Void
-		do
-			expr := e
-		ensure
-			expr_set: expr = e
 		end
 
 feature -- Visitor
@@ -212,7 +197,7 @@ invariant
 	expr_not_void: expr /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -115,7 +115,7 @@ create
 %type <detachable BODY_AS>				Declaration_body
 %type <detachable BOOL_AS>				Boolean_constant
 %type <BOOLEAN>					Creation_region
-%type <detachable CALL_AS>				Call Remote_call Qualified_call
+%type <detachable CALL_AS>				Call
 %type <detachable CASE_AS>				When_part
 %type <detachable CASE_EXPRESSION_AS>				When_expression_part
 %type <detachable CHAR_AS>				Character_constant
@@ -156,6 +156,7 @@ create
 %type <detachable LOOP_EXPR_AS>			Loop_expression
 %type <detachable LOOP_AS>				Loop_instruction
 %type <detachable NAMED_EXPRESSION_AS>		Separate_argument
+%type <detachable NESTED_EXPR_AS>		Qualified_call
 %type <detachable OPERAND_AS>			Delayed_actual
 %type <detachable PARENT_AS>			Parent Parent_clause
 %type <detachable PRECURSOR_AS>		A_precursor
@@ -3473,44 +3474,46 @@ Free_operator: TE_FREE
 -- Bracket expression
 Bracket_expression:
 	  	Bracket_target TE_LSQURE Add_counter Expression_list Remove_counter TE_RSQURE
-			{		$$ := ast_factory.new_bracket_as ($1, $4, $2, $6) }
+			{ $$ := ast_factory.new_bracket_as ($1, $4, $2, $6) }
 	| 	Bracket_expression TE_LSQURE Add_counter Expression_list Remove_counter TE_RSQURE
-			{		$$ := ast_factory.new_bracket_as ($1, $4, $2, $6) }
+			{ $$ := ast_factory.new_bracket_as ($1, $4, $2, $6) }
 	;      
 
 Call_bracket_expression:
 		Call TE_LSQURE Add_counter Expression_list Remove_counter TE_RSQURE
 			{ $$ := ast_factory.new_bracket_as (ast_factory.new_expr_call_as ($1), $4, $2, $6) }
 	| 	Call_bracket_expression TE_LSQURE Add_counter Expression_list Remove_counter TE_RSQURE
-			{		$$ := ast_factory.new_bracket_as ($1, $4, $2, $6) }
+			{ $$ := ast_factory.new_bracket_as ($1, $4, $2, $6) }
 	;      
 
 -- Expression call
 
 Qualified_call:
-		TE_CURRENT TE_DOT Remote_call
+		Qualified_call TE_DOT Feature_access
+			{ $$ := ast_factory.new_nested_expr_as (ast_factory.new_expr_call_as ($1), $3, $2) }
+	|	TE_CURRENT TE_DOT Feature_access
 			{
 				inspect id_level when Precondition_level, Postcondition_level then
 					set_has_unqualified_call_in_assertion (True)
 				else
 					-- Nothing to do.
 				end
-				$$ := ast_factory.new_nested_expr_as ($1, $3, $2, Void, Void)
+				$$ := ast_factory.new_nested_expr_as ($1, $3, $2)
 			}
-	|	TE_RESULT TE_DOT Remote_call
-			{ $$ := ast_factory.new_nested_expr_as ($1, $3, $2, Void, Void) }
-	|	A_feature TE_DOT Remote_call
-			{ $$ := ast_factory.new_nested_as ($1, $3, $2) }
-	|	TE_LPARAN Expression TE_RPARAN TE_DOT Remote_call
-			{ $$ := ast_factory.new_nested_expr_as ($2, $5, $4, $1, $3) }
-	|	Bracket_expression TE_DOT Remote_call
-			{ $$ := ast_factory.new_nested_expr_as ($1, $3, $2, Void, Void) }
-	|	Call_bracket_expression TE_DOT Remote_call
-			{ $$ := ast_factory.new_nested_expr_as ($1, $3, $2, Void, Void) }
-	|	A_precursor TE_DOT Remote_call
-			{ $$ := ast_factory.new_nested_as ($1, $3, $2) }
-	|	A_static_call TE_DOT Remote_call
-			{ $$ := ast_factory.new_nested_as ($1, $3, $2) }
+	|	TE_RESULT TE_DOT Feature_access
+			{ $$ := ast_factory.new_nested_expr_as ($1, $3, $2) }
+	|	TE_LPARAN Expression TE_RPARAN TE_DOT Feature_access
+			{ $$ := ast_factory.new_nested_expr_as (ast_factory.new_paran_as ($2, $1, $3), $5, $4) }
+	|	A_feature TE_DOT Feature_access
+			{ $$ := ast_factory.new_nested_expr_as (ast_factory.new_expr_call_as ($1), $3, $2) }
+	|	A_precursor TE_DOT Feature_access
+			{ $$ := ast_factory.new_nested_expr_as (ast_factory.new_expr_call_as ($1), $3, $2) }
+	|	A_static_call TE_DOT Feature_access
+			{ $$ := ast_factory.new_nested_expr_as ($1, $3, $2) }
+	|	Bracket_expression TE_DOT Feature_access
+			{ $$ := ast_factory.new_nested_expr_as ($1, $3, $2) }
+	|	Call_bracket_expression TE_DOT Feature_access
+			{ $$ := ast_factory.new_nested_expr_as ($1, $3, $2) }
 	;
 
 A_precursor: TE_PRECURSOR Parameters
@@ -3592,12 +3595,6 @@ A_feature: Identifier_as_lower Parameters
 			}
 	;
 
-Remote_call: Feature_access TE_DOT Remote_call
-			{ $$ := ast_factory.new_nested_as ($1, $3, $2) }
-	|	Feature_access
-			{ $$ := $1 }
-	;
-
 Feature_access: Identifier_as_lower Parameters
 			{ $$ := ast_factory.new_access_feat_as ($1, $2) }
 	;
@@ -3620,12 +3617,12 @@ Bracket_target:
 			}
 	|	TE_RESULT
 			{ $$ := $1 }
+	|	TE_LPARAN Expression TE_RPARAN
+			{ $$ := ast_factory.new_paran_as ($2, $1, $3) }
 	|	Creation_expression
 			{ $$ := $1 }
 	|	Loop_expression
 			{ $$ := $1 }
-	|	TE_LPARAN Expression TE_RPARAN
-			{ $$ := ast_factory.new_paran_as ($2, $1, $3) }
 	;
 
 Parameters: -- Empty

@@ -1190,16 +1190,9 @@ feature {NONE} -- Implementation
 			l_text_formatter_decorator := text_formatter_decorator
 			if not expr_type_visiting then
 				l_text_formatter_decorator.begin
-				if l_as.has_lparan then
-					l_text_formatter_decorator.process_symbol_text (ti_l_parenthesis)
-				end
 			end
 			l_as.target.process (Current)
 			if not expr_type_visiting then
-				if l_as.has_rparan then
-					l_text_formatter_decorator.set_without_tabs
-					l_text_formatter_decorator.process_symbol_text (ti_r_parenthesis)
-				end
 				l_text_formatter_decorator.need_dot
 			end
 			l_as.message.process (Current)

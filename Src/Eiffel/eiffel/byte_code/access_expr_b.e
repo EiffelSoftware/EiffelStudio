@@ -17,6 +17,7 @@ inherit
 			generate,
 			has_call,
 			has_gcable_variable,
+			is_feature,
 			is_hector,
 			is_predefined,
 			is_temporary,
@@ -52,6 +53,12 @@ feature -- Status report
 			-- so that there is no variation at run-time?
 		do
 			Result := expr.is_type_fixed
+		end
+
+	is_feature: BOOLEAN
+			-- <Precursor>
+		do
+			Result := expr.is_feature
 		end
 
 feature -- Status
@@ -224,7 +231,7 @@ feature {REGISTRABLE} -- C code generation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

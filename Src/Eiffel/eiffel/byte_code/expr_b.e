@@ -108,6 +108,11 @@ feature -- Status report
 			end
 		end
 
+	is_feature: BOOLEAN
+			-- Is Current an access to an Eiffel feature?
+		do
+		end
+
 feature -- C generation: status report
 
 	is_simple_expr: BOOLEAN
@@ -378,7 +383,7 @@ feature -- Inlining
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

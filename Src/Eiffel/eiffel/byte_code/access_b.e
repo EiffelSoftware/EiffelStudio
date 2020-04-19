@@ -218,11 +218,6 @@ feature -- Status
 			Result := parent.message.canonical = Current
 		end
 
-	is_feature: BOOLEAN
-			-- Is Current an access to an Eiffel feature?
-		do
-		end
-
 	is_assignable: BOOLEAN
 			-- Can the access be a target of an assignment or of a creation instruction?
 		do
@@ -787,7 +782,7 @@ feature -- Inlining
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

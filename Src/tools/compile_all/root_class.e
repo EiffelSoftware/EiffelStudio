@@ -756,9 +756,12 @@ feature {NONE} -- Implementation
 				l_raw_file.open_read
 				l_raw_file.read_stream (l_raw_file.count)
 				l_raw_file.close
-				localized_print ("%N")
-				localized_print (l_raw_file.last_string)
-				localized_print ("%N")
+				io.put_new_line
+					-- Output file data unmodified (without any localization)
+					-- to avoid any unncessary conversion and preserve Unicode as is.
+					-- Localized printing could be used only when data would be read as localized.
+				io.put_string (l_raw_file.last_string)
+				io.put_new_line
 			end
 		end
 
@@ -968,7 +971,7 @@ feature {NONE} -- Directory manipulation
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

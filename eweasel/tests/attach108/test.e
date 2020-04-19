@@ -4,6 +4,6 @@ create
 feature
 	make
 		do
-			if attached Current as c and Current ~ Current implies c = Current then end
+			if attached {STRING} Current as c and Current ~ Current implies c = Current then end
 		end
 end

@@ -29,7 +29,7 @@ feature -- Test
 		do
 			t := s.tuple
 			i := t.i       -- VUTA(3)
-			x := t.x       -- VUTA(3)
+			x := t.x       -- VUTA(3) VJAR
 			e := t.e       -- VUTA(3) VUER
 			t.i := i       -- VUTA(3)
 			t.x := Current -- VUTA(3) VUAR(3)

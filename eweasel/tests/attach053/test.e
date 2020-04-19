@@ -77,104 +77,104 @@ feature -- Initialization
 			e5: attached old o
 			e6: attached old o as x6
 			e7: attached {STRING} old o
-			e7: attached {STRING} old o as x7
+			e8: attached {STRING} old o as x7
 
-			e1: attached (o)
-			e2: attached (o) as y2
-			e3: attached {STRING} (o)
-			e4: attached {STRING} (o) as y4
-			e5: attached (old o)
-			e6: attached (old o) as y6
-			e7: attached {STRING} (old o)
-			e7: attached {STRING} (old o) as y7
+			p1: attached (o)
+			p2: attached (o) as y2
+			p3: attached {STRING} (o)
+			p4: attached {STRING} (o) as y4
+			p5: attached (old o)
+			p6: attached (old o) as y6
+			p7: attached {STRING} (old o)
+			p8: attached {STRING} (old o) as y7
 
-$COMMENT			e1: attached u + u
-$COMMENT			e3: attached {STRING} u + u
-			e1: attached (u + u)
-			e2: attached (u + u) as w2
-			e3: attached {STRING} (u + u)
-			e4: attached {STRING} (u + u) as w4
+$COMMENT			s1: attached u + u
+$COMMENT			s2: attached {STRING} u + u
+			s3: attached (u + u)
+			s4: attached (u + u) as w2
+			s5: attached {STRING} (u + u)
+			s6: attached {STRING} (u + u) as w4
 
-$COMMENT			e1: attached old u + u
-$COMMENT			e3: attached {STRING} old u + u
-$COMMENT			e1: attached old u + old u
-$COMMENT			e3: attached {STRING} old u + old u
-			e1: attached old (u + u)
-			e2: attached old (u + u) as v2
-			e3: attached {STRING} old (u + u)
-			e4: attached {STRING} old (u + u) as v4
+$COMMENT			o1: attached old u + u
+$COMMENT			o2: attached {STRING} old u + u
+$COMMENT			o3: attached old u + old u
+$COMMENT			o4: attached {STRING} old u + old u
+			o5: attached old (u + u)
+			o6: attached old (u + u) as v2
+			o7: attached {STRING} old (u + u)
+			o8: attached {STRING} old (u + u) as v4
 
-			e1: attached -i
-			e2: attached -i as j2
-			e3: attached {STRING} -i
-			e4: attached {STRING} -i as j4
-			e5: attached old -i
-			e6: attached old -i as j6
-			e7: attached {STRING} old -i
-			e7: attached {STRING} old -i as j7
+			i1: attached -i
+			i2: attached -i as j2
+			i3: attached {STRING} -i
+			i4: attached {STRING} -i as j4
+			i5: attached old -i
+			i6: attached old -i as j6
+			i7: attached {STRING} old -i
+			i8: attached {STRING} old -i as j7
 
-			e1: attached not b
-			e1: attached not b as c1
-			e1: attached {STRING} not b
-			e1: attached {STRING} not b as c2
-			e1: attached old not b
-			e1: attached old not b as c6
-			e1: attached {STRING} old not b
-			e1: attached {STRING} old not b as c7
+			b1: attached not b
+			b2: attached not b as c1
+			b3: attached {STRING} not b
+			b4: attached {STRING} not b as c2
+			b5: attached old not b
+			b6: attached old not b as c6
+			b7: attached {STRING} old not b
+			b8: attached {STRING} old not b as c7
 
-			e1: attached o = u
-			e1: attached o ~ u
-			e1: attached o /= u
-			e1: attached o /~ u
-			e1: attached {STRING} o = u
-			e1: attached {STRING} o ~ u
-			e1: attached {STRING} o /= u
-			e1: attached {STRING} o /~ u
+			q1: attached o = u
+			q2: attached o ~ u
+			q3: attached o /= u
+			q4: attached o /~ u
+			q5: attached {STRING} o = u
+			q6: attached {STRING} o ~ u
+			q7: attached {STRING} o /= u
+			q8: attached {STRING} o /~ u
 
 			a1: attached agent_f
-			a1: attached agent_f as p1
-			a1: attached {STRING} agent_f
-			a1: attached {STRING} agent_f as p2
+			a2: attached agent_f as p1
+			a3: attached {STRING} agent_f
+			a4: attached {STRING} agent_f as p2
 
-			e1: attached g ([attached o, attached u, attached i, attached b], "", 4, True)
-			e1: attached g ([attached o, attached u, attached i, attached b], "", 4, True) as bool1
-			e1: attached {STRING} g ([attached o, attached u, attached i, attached b], "", 4, True)
-			e1: attached {STRING} g ([attached o, attached u, attached i, attached b], "", 4, True) as bool2
+			f1: attached g ([attached o, attached u, attached i, attached b], "", 4, True)
+			f2: attached g ([attached o, attached u, attached i, attached b], "", 4, True) as bool1
+			f3: attached {STRING} g ([attached o, attached u, attached i, attached b], "", 4, True)
+			f4: attached {STRING} g ([attached o, attached u, attached i, attached b], "", 4, True) as bool2
 
-			e1: attached g (<<attached o, attached u, attached i, attached b>>, "", 4, True)
-			e1: attached g (<<attached o, attached u, attached i, attached b>>, "", 4, True) as bool3
-			e1: attached {STRING} g (<<attached o, attached u, attached i, attached b>>, "", 4, True)
-			e1: attached {STRING} g (<<attached o, attached u, attached i, attached b>>, "", 4, True) as bool4
+			f5: attached g (<<attached o, attached u, attached i, attached b>>, "", 4, True)
+			f6: attached g (<<attached o, attached u, attached i, attached b>>, "", 4, True) as bool3
+			f7: attached {STRING} g (<<attached o, attached u, attached i, attached b>>, "", 4, True)
+			f8: attached {STRING} g (<<attached o, attached u, attached i, attached b>>, "", 4, True) as bool4
 
-			b1: attached u [1]
-			b1: attached u [1] as d1
-			b1: attached {STRING} u [1]
-			b1: attached {STRING} u [1] as d2
+			d1: attached u [1]
+			d2: attached u [1] as d1
+			d3: attached {STRING} u [1]
+			d4: attached {STRING} u [1] as d2
 
-			c1: attached Current
-			c1: attached Current as cur1
-			c1: attached {STRING} Current
-			c1: attached {STRING} Current as cur2
+			-- c1: attached Current -- Reported as syntax error
+			-- c2: attached Current as cur1 -- Reported as syntax error
+			c3: attached {STRING} Current
+			c4: attached {STRING} Current as cur2
 
-			c1: attached Current.f
-			c1: attached Current.f as cur3
-			c1: attached {STRING} Current.f
-			c1: attached {STRING} Current.f as cur4
+			t1: attached Current.f
+			t2: attached Current.f as cur3
+			t3: attached {STRING} Current.f
+			t4: attached {STRING} Current.f as cur4
 
-			e1: attached u implies u.is_empty
-			e1: attached u as w implies w.is_empty
-			e1: attached {STRING} u implies u.is_empty
-			e1: attached {STRING} u as w implies w.is_empty
+			w1: attached u implies u.is_empty
+			w2: attached u as w implies w.is_empty
+			w3: attached {STRING} u implies u.is_empty
+			w4: attached {STRING} u as w implies w.is_empty
 
-			e1: attached u and then u.is_empty
-			e1: attached u as wa and then wa.is_empty
-			e1: attached {STRING} u and then u.is_empty
-			e1: attached {STRING} u as wb and then wb.is_empty
+			v1: attached u and then u.is_empty
+			v2: attached u as wa and then wa.is_empty
+			v3: attached {STRING} u and then u.is_empty
+			v4: attached {STRING} u as wb and then wb.is_empty
 
-			e1: not attached u or else u.is_empty
-			e1: not attached u as wc or else wc.is_empty
-			e1: not attached {STRING} u or else u.is_empty
-			e1: not attached {STRING} u as wd or else wd.is_empty
+			n1: not attached u or else u.is_empty
+			n2: not attached u as wc or else wc.is_empty
+			n3: not attached {STRING} u or else u.is_empty
+			n4: not attached {STRING} u as wd or else wd.is_empty
 		end
 
 end

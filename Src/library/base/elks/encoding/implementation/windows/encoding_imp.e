@@ -19,7 +19,7 @@ inherit
 feature -- String encoding convertion
 
 	convert_to (a_from_code_page: STRING; a_from_string: READABLE_STRING_GENERAL; a_to_code_page: STRING)
-			-- Convert `a_from_string' of `a_from_code_page' to a string of `a_to_code_page'.
+			-- Convert `a_from_string` of `a_from_code_page` to a string of `a_to_code_page`.
 		local
 			l_from_code_page, l_to_code_page: STRING
 			l_string_32: STRING_32
@@ -135,7 +135,7 @@ feature -- String encoding convertion
 		end
 
 	wide_char_to_multi_byte (a_code_page: STRING; a_string: STRING_32): STRING_8
-			-- Convert UTF-16 string into 8bit string by `a_code_page'.
+			-- Convert UTF-16 string into 8bit string by `a_code_page`.
 		local
 			l_count: INTEGER
 			l_string: MANAGED_POINTER
@@ -149,7 +149,7 @@ feature -- String encoding convertion
 		end
 
 	multi_byte_to_wide_char (a_code_page: STRING; a_string: STRING_8): STRING_32
-			-- Convert 8bit string into UTF-16 string by `a_code_page'.
+			-- Convert 8bit string into UTF-16 string by `a_code_page`.
 		local
 			l_count: INTEGER
 			l_string: MANAGED_POINTER
@@ -165,7 +165,7 @@ feature -- String encoding convertion
 feature -- Status report
 
 	is_code_page_valid (a_code_page: STRING): BOOLEAN
-			-- Is `a_code_page' valid?
+			-- Is `a_code_page` valid?
 		do
 			if a_code_page /= Void and then not a_code_page.is_empty then
 				Result := is_known_code_page (a_code_page)
@@ -173,10 +173,10 @@ feature -- Status report
 		end
 
 	is_code_page_convertable (a_from_code_page, a_to_code_page: STRING): BOOLEAN
-			-- Is `a_from_code_page' convertable to `a_to_code_page'.
+			-- Is `a_from_code_page` convertable to `a_to_code_page`.
 		do
 				-- Always true. It is not really interesting here on windows without converting strings.
-				-- `last_conversion_successful' reflects correct result.
+				-- `last_conversion_successful` reflects correct result.
 			Result := True
 		end
 
@@ -205,7 +205,7 @@ feature {NONE} -- Access
 feature {NONE} -- Status report
 
 	is_known_code_page (a_code_page: STRING): BOOLEAN
-			-- Is `a_code_page' a known code page?
+			-- Is `a_code_page` a known code page?
 		require
 			a_code_page_not_void: a_code_page /= Void
 			a_code_page_not_empty: not a_code_page.is_empty
@@ -214,7 +214,7 @@ feature {NONE} -- Status report
 		end
 
 	is_two_byte_code_page (a_code_page: STRING): BOOLEAN
-			-- Is `a_code_page' a known code page?
+			-- Is `a_code_page` a known code page?
 		require
 			a_code_page_not_void: a_code_page /= Void
 			a_code_page_not_empty: not a_code_page.is_empty
@@ -223,7 +223,7 @@ feature {NONE} -- Status report
 		end
 
 	is_four_bype_code_page (a_code_page: STRING): BOOLEAN
-			-- Is `a_code_page' a known code page?
+			-- Is `a_code_page` a known code page?
 		require
 			a_code_page_not_void: a_code_page /= Void
 			a_code_page_not_empty: not a_code_page.is_empty
@@ -232,7 +232,7 @@ feature {NONE} -- Status report
 		end
 
 	is_big_endian_code_page (a_code_page: STRING): BOOLEAN
-			-- Is `a_code_page' a known code page?
+			-- Is `a_code_page` a known code page?
 		require
 			a_code_page_not_void: a_code_page /= Void
 			a_code_page_not_empty: not a_code_page.is_empty

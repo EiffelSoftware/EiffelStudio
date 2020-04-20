@@ -10,6 +10,9 @@ class
 
 inherit
 	ENCODING_I
+		rename
+			is_code_page_convertable as is_code_page_convertible
+		end
 
 	STRING_HANDLER
 
@@ -19,15 +22,15 @@ create {ENCODING}
 feature -- Query
 
 	is_code_page_valid (a_code_page: STRING): BOOLEAN
-			-- Is `a_code_page' valid?
+			-- Is `a_code_page` valid?
 		do
 			if a_code_page /= Void and then not a_code_page.is_empty then
 				Result := unicode_encodings.has (a_code_page.as_lower)
 			end
 		end
 
-	is_code_page_convertable (a_from_code_page, a_to_code_page: STRING): BOOLEAN
-			-- Is `a_from_code_page' convertable to `a_to_code_page'.
+	is_code_page_convertible (a_from_code_page, a_to_code_page: STRING): BOOLEAN
+			-- Is `a_from_code_page` convertible to `a_to_code_page`.
 		do
 				-- We accept conversion between the same encodings to optimize.
 			Result := a_from_code_page = {CODE_PAGE_CONSTANTS}.utf8 and then a_to_code_page = {CODE_PAGE_CONSTANTS}.utf32
@@ -56,10 +59,10 @@ feature -- Query
 		end
 
 	last_conversion_lost_data: BOOLEAN = False
-			-- Conversion between Unicode encoding does not lose data.
+			-- Conversion between Unicode encoding does not loose data.
 
 	is_valid_utf8 (a_string: STRING): BOOLEAN
-			-- Is `a_string' valid UTF-8 string?
+			-- Is `a_string` valid UTF-8 string?
 		require
 			a_string_not_void: a_string /= Void
 		local
@@ -189,7 +192,7 @@ feature -- Explicit Conversion
 		do
 			l_string_length := a_string.count
 
-				-- First compute how many bytes we need to convert `a_string' to UTF-8.
+				-- First compute how many bytes we need to convert `a_string` to UTF-8.
 			from
 				i := l_string_length
 				bytes_written := 0
@@ -209,7 +212,7 @@ feature -- Explicit Conversion
 				i := i - 1
 			end
 
-				-- Fill `utf_ptr8' with the converted data.
+				-- Fill `utf_ptr8` with the converted data.
 			from
 				i := 1
 				create Result.make (bytes_written)
@@ -225,7 +228,7 @@ feature -- Explicit Conversion
 		end
 
 	append_code_point_to_utf8 (a_code: NATURAL_32; a_string: STRING_8)
-			-- Append a Unicode code point `a_code' to a UTF-8 stream.
+			-- Append a Unicode code point `a_code` to a UTF-8 stream.
 		require
 			a_string_not_void: a_string /= Void
 				-- According to ISO/IEC 10646, the maximum Unicode point is 10FFFF.
@@ -263,9 +266,9 @@ feature -- Explicit Conversion
 
 	read_character_from_utf8 (a_position: INTEGER; a_read_bytes: detachable INTEGER_32_REF; a_string: STRING_8): CHARACTER_32
 			-- Read a Unicode character from UTF-8 string.
-			-- `a_string' is in UTF-8.
-			-- `a_position' is the starting byte point of a character.
-			-- `a_read_bytes' is the number of bytes read.
+			-- `a_string` is in UTF-8.
+			-- `a_position` is the starting byte point of a character.
+			-- `a_read_bytes` is the number of bytes read.
 		require
 			a_string_not_void: a_string /= Void
 			a_position_in_range: a_position > 0 and a_position <= a_string.count
@@ -354,7 +357,7 @@ feature {NONE} -- Implementation
 
 note
 	library:   "Encoding: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

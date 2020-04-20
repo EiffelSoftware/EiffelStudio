@@ -19,7 +19,7 @@ inherit
 feature {ENCODING} -- String encoding convertion
 
 	convert_to (a_from_code_page: STRING; a_from_string: READABLE_STRING_GENERAL; a_to_code_page: STRING)
-			-- Convert `a_from_string' of `a_from_code_page' to a string of `a_to_code_page'.
+			-- Convert `a_from_string` of `a_from_code_page` to a string of `a_to_code_page`.
 		require
 			a_from_code_page_valid: is_code_page_valid (a_from_code_page)
 			a_to_code_page_valid: is_code_page_valid (a_to_code_page)
@@ -82,12 +82,12 @@ feature {ENCODING} -- Access
 feature {ENCODING} -- Status report
 
 	is_code_page_valid (a_code_page: STRING): BOOLEAN
-			-- Is `a_code_page' valid?
+			-- Is `a_code_page` valid?
 		deferred
 		end
 
 	is_code_page_convertable (a_from_code_page, a_to_code_page: STRING): BOOLEAN
-			-- Is `a_from_code_page' convertable to `a_to_code_page'.
+			-- Is `a_from_code_page` convertable to `a_to_code_page`.
 		deferred
 		end
 
@@ -105,7 +105,7 @@ feature {ENCODING} -- Status report
 feature {NONE} -- Status report
 
 	is_valid_as_string_16 (a_string: READABLE_STRING_GENERAL): BOOLEAN
-			-- Check high 16 bit of any char in `a_string' is zero.
+			-- Check high 16 bit of any char in `a_string` is zero.
 		local
 			i, nb: INTEGER_32
 			l_area: SPECIAL [CHARACTER_32]

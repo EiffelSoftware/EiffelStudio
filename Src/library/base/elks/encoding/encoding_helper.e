@@ -11,7 +11,7 @@ class
 feature -- Conversion
 
 	multi_byte_to_pointer (a_string: STRING): MANAGED_POINTER
-			-- Managed pointer of `a_string'.
+			-- Managed pointer of `a_string`.
 		require
 			a_string_not_void: a_string /= Void
 		local
@@ -25,8 +25,8 @@ feature -- Conversion
 		end
 
 	wide_string_to_pointer (a_string: STRING_32): MANAGED_POINTER
-			-- Managed pointer of `a_string' which is taken as
-			-- 16bits string. High 16bits of characters of `a_string' are discarded.
+			-- Managed pointer of `a_string` which is taken as
+			-- 16bits string. High 16bits of characters of `a_string` are discarded.
 		require
 			a_string_not_void: a_string /= Void
 		local
@@ -49,7 +49,7 @@ feature -- Conversion
 		end
 
 	pointer_to_multi_byte (a_multi_string: POINTER; a_count: INTEGER): STRING_8
-			-- STRING_8 read from `a_multi_string'.
+			-- STRING_8 read from `a_multi_string`.
 		require
 			a_multi_string_not_default: a_multi_string /= default_pointer
 			a_count_non_negative: a_count >= 0
@@ -73,7 +73,7 @@ feature -- Conversion
 		end
 
 	pointer_to_wide_string (a_w_string: POINTER; a_count: INTEGER): STRING_32
-			-- STRING_32 read from `a_w_string' of `a_count' bytes.
+			-- STRING_32 read from `a_w_string` of `a_count` bytes.
 		require
 			a_w_string_not_default: a_w_string /= default_pointer
 			a_count_non_negative: a_count >= 0
@@ -101,7 +101,7 @@ feature -- Conversion
 		end
 
 	pointer_to_string_32 (a_w_string: POINTER; a_count: INTEGER_32): STRING_32
-			-- STRING_32 read from `a_w_string' of `a_count' bytes.
+			-- STRING_32 read from `a_w_string` of `a_count` bytes.
 		require
 			a_w_string_not_default: a_w_string /= default_pointer
 			a_count_non_negative: a_count >= 0
@@ -128,18 +128,8 @@ feature -- Conversion
 			Result_not_void: Result /= Void
 		end
 
-	string_32_to_stream (a_string: STRING_32): STRING_8
-			-- Byte stream of `a_string' in endianness of the current platform.
-		obsolete
-			"Use `string_to_multi_byte' instead."
-		do
-			Result := string_32_to_multi_byte (a_string)
-		ensure
-			instance_free: class
-		end
-
 	string_32_to_multi_byte (a_string: STRING_32): STRING_8
-			-- Byte stream of `a_string' in endianness of the current platform.
+			-- Byte stream of `a_string` in endianness of the current platform.
 		require
 			a_string_not_void: a_string /= Void
 		local
@@ -180,7 +170,7 @@ feature -- Conversion
 		end
 
 	string_8_to_wide_string (a_w_string: STRING_8): STRING_32
-			-- Interpret `a_w_string' as a sequence of 2-byte characters into a STRING_32
+			-- Interpret `a_w_string` as a sequence of 2-byte characters into a STRING_32
 			-- in endianness of the current platform.
 		require
 			a_w_string_not_void: a_w_string /= Void
@@ -215,7 +205,7 @@ feature -- Conversion
 		end
 
 	string_16_to_stream (a_string: STRING_32): STRING_8
-			-- We use `a_string' as 2 bytes encoding string, the first two bytes are not used.
+			-- We use `a_string` as 2 bytes encoding string, the first two bytes are not used.
 			-- in the endianness of the current platform.
 		require
 			a_string_not_void: a_string /= Void
@@ -241,7 +231,7 @@ feature -- Conversion
 		end
 
 	string_general_to_stream (a_string: READABLE_STRING_GENERAL): STRING
-			-- Streamize `a_string'.
+			-- Streamize `a_string`.
 		require
 			a_string_not_void: a_string /= Void
 		do
@@ -258,7 +248,7 @@ feature -- Conversion
 feature -- Endian
 
 	string_32_switch_endian (a_str: STRING_32): STRING_32
-			-- Switch endian of `a_str' for both high and low bits.
+			-- Switch endian of `a_str` for both high and low bits.
 		require
 			a_str_not_void: a_str /= Void
 		local
@@ -285,7 +275,7 @@ feature -- Endian
 		end
 
 	string_16_switch_endian (a_str: STRING_32): STRING_32
-			-- Switch endian of `a_str' for low bits.
+			-- Switch endian of `a_str` for low bits.
 			-- High bits are cleaned.
 		require
 			a_str_not_void: a_str /= Void
@@ -320,7 +310,7 @@ feature -- Endian
 
 note
 	library:   "Encoding: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

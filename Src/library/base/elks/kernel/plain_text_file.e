@@ -110,6 +110,45 @@ feature -- Output
 			file_pd (file_pointer, d)
 		end
 
+	put_string_32 (s: READABLE_STRING_32)
+			-- Write Unicode string `s` at current position.
+		local
+			str: STRING
+			utf32, utf8: ENCODING
+		do
+			if attached encoding as l_encoding then
+				utf32 := {SYSTEM_ENCODINGS}.utf32
+				utf32.convert_to (l_encoding, s)
+				if utf32.last_conversion_successful then
+					str := utf32.last_converted_string_8
+				else
+						-- This is a hack, since some OSes don't support convertion from/to UTF-32 to `a_console_encoding'.
+						-- We convert UTF-32 to UTF-8 first, then convert UTF-8 to `a_console_encoding'.
+					utf8 := {SYSTEM_ENCODINGS}.utf8
+					utf32.convert_to (utf8, s)
+					if utf32.last_conversion_successful then
+						str := utf32.last_converted_string_8
+						if not utf8.same_as (l_encoding) then
+							utf8.convert_to (l_encoding, str)
+							if utf8.last_conversion_successful then
+								str := utf8.last_converted_string_8
+							end
+						end
+					end
+				end
+			end
+			if str = Void then
+				str :=  if s.is_valid_as_string_8 then
+								-- Use original string.
+							s.to_string_8
+						else
+								-- Fallback to UTF-8.
+							{UTF_CONVERTER}.string_32_to_utf_8_string_8 (s)
+						end
+			end
+			put_string (str)
+		end
+
 feature -- Input
 
 	read_integer_64
@@ -305,12 +344,18 @@ feature {NONE} -- Implementation
 			"eif_file_pd"
 		end
 
+feature {NONE} -- Implementation: Unicode/encoding
+
+	encoding: detachable ENCODING
+			-- Associated encoding.
+
+
 invariant
 
 	plain_text: is_plain_text
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

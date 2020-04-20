@@ -20,21 +20,6 @@
 			<warning name="vweq" enabled="true"/>
 		</option>
 		<setting name="dotnet_naming_convention" value="true"/>
-		<external_include location="$(ISE_LIBRARY)/library/encoding/implementation/include">
-			<condition>
-				<platform excluded_value="windows"/>
-			</condition>
-		</external_include>
-		<external_cflag value="`$ISE_LIBRARY/library/encoding/implementation/unix/Clib/iconv-config --include_path`">
-			<condition>
-				<platform excluded_value="windows"/>
-			</condition>
-		</external_cflag>
-		<external_linker_flag value="`$(ISE_LIBRARY)/library/encoding/implementation/unix/Clib/iconv-config --library`">
-			<condition>
-				<platform excluded_value="windows"/>
-			</condition>
-		</external_linker_flag>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf" readonly="true"/>
 		<library name="wel" location="$ISE_LIBRARY\library\wel\wel.ecf">
 			<condition>
@@ -44,22 +29,6 @@
 		<cluster name="encoding" location=".\">
 			<option namespace="Encoding">
 			</option>
-			<cluster name="implementation" location=".\implementation\">
-				<option namespace="Implementation">
-				</option>
-				<cluster name="windows" location=".\implementation\windows\">
-					<condition>
-						<platform value="windows"/>
-					</condition>
-					<option namespace="Windows">
-					</option>
-				</cluster>
-				<cluster name="unix" location=".\implementation\unix\">
-					<condition>
-						<platform excluded_value="windows"/>
-					</condition>
-				</cluster>
-			</cluster>
 			<cluster name="encoding_detector" location=".\encoding_detector\"/>
 		</cluster>
 	</target>

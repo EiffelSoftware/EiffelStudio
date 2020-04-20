@@ -8,20 +8,14 @@ note
 class
 	ENCODING
 
-inherit
-	ANY
-		redefine
-			is_equal
-		end
-
 create
 	make
 
 feature {NONE} -- Initialization
 
 	make (a_code_page: STRING)
-			-- Set `code_page' with `a_code_page'
-			-- `a_code_page' should be valid, either it is from CODE_PAGE_CONSTANTS
+			-- Set `code_page` with `a_code_page`
+			-- `a_code_page` should be valid, either it is from CODE_PAGE_CONSTANTS
 			-- or dynamically from i18n library.
 			-- Other names of code page/character set are not guaranteed valid for all platforms,
 			-- though they would work on certain platforms.
@@ -37,7 +31,9 @@ feature -- Access
 
 	code_page: STRING
 			-- Code page/Character set name.
-			-- Immutable name.
+			-- Immutable name.	
+
+feature -- Access
 
 	last_converted_stream: STRING_8
 			-- Stream representation of last converted string.
@@ -56,10 +52,8 @@ feature -- Access
 		require
 			last_conversion_successful: last_conversion_successful
 		do
-			check attached encoding_i.last_converted_stream as l_str then
-					-- Implied from the precondition and postcondition of `encoding_i.convert_to'
-				Result := l_str
-			end
+				-- Implied from the precondition and postcondition of `encoding_i.convert_to`
+			Result := last_converted_stream
 		ensure
 			last_converted_string_not_void: Result /= Void
 		end
@@ -70,10 +64,8 @@ feature -- Access
 		require
 			last_conversion_successful: last_conversion_successful
 		do
-			check attached encoding_i.last_converted_string as l_str then
-					-- Implied from the precondition and postcondition of `encoding_i.convert_to'
-				Result := l_str.as_string_32
-			end
+				-- Implied from the precondition and postcondition of `encoding_i.convert_to`
+			Result := last_converted_string.as_string_32
 		ensure
 			last_converted_string_not_void: Result /= Void
 		end
@@ -84,9 +76,9 @@ feature -- Access
 		require
 			last_conversion_successful: last_conversion_successful
 		do
-			check attached encoding_i.last_converted_string as l_str then
-				-- Implied from the precondition and postcondition of `encoding_i.convert_to'
-				Result := l_str
+			check attached encoding_i.last_converted_string as str then
+					-- Implied from the precondition and postcondition of `encoding_i.convert_to`
+				Result := str
 			end
 		ensure
 			last_converted_string_not_void: Result /= Void
@@ -95,10 +87,10 @@ feature -- Access
 feature -- Conversion
 
 	convert_to (a_to_encoding: ENCODING; a_string: READABLE_STRING_GENERAL)
-			-- Convert `a_string' from current encoding to `a_to_encoding'.
-			-- If either current or `a_to_encoding' is not `is_valid', or an error occurs during conversion,
-			-- `last_conversion_successful' is unset.
-			-- Conversion result can be retrieved via `last_converted_string' or `last_converted_stream'.
+			-- Convert `a_string` from current encoding to `a_to_encoding`.
+			-- If either current or `a_to_encoding` is not `is_valid`, or an error occurs during conversion,
+			-- `last_conversion_successful` is unset.
+			-- Conversion result can be retrieved via `last_converted_string` or `last_converted_stream`.
 		require
 			a_to_encoding_not_void: a_to_encoding /= Void
 			a_string_not_void: a_string /= Void
@@ -108,7 +100,7 @@ feature -- Conversion
 		do
 			l_unicode_conversion := unicode_conversion
 			if
-				l_unicode_conversion.is_code_page_convertable (code_page, a_to_encoding.code_page)
+				l_unicode_conversion.is_code_page_convertible (code_page, a_to_encoding.code_page)
 			then
 				encoding_i := l_unicode_conversion
 				l_is_unicode_conversion := True
@@ -140,10 +132,8 @@ feature -- Status report
 
 feature -- Comparison
 
-	is_equal (other: like Current): BOOLEAN
-			-- Is `other' attached to an object considered
-			-- equal to current object?
-			-- |FIXME: Different names can indicate the same encoding.
+	same_as (other: ENCODING): BOOLEAN
+			-- Is Current same encoding as `other`?
 		do
 			Result := code_page.is_case_insensitive_equal (other.code_page)
 		end
@@ -180,7 +170,7 @@ feature {NONE} -- Implementation
 	regular_encoding_imp: ENCODING_I
 			-- Regular encoding implementation (Distinguished from Unicode conversion)
 		once
-			create {ENCODING_IMP}Result
+			create {ENCODING_IMP} Result
 		end
 
 invariant
@@ -188,8 +178,8 @@ invariant
 	encoding_i_not_void: encoding_i /= Void
 
 note
-	library:   "Encoding: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2011, Eiffel Software and others"
+	library:   "Base: Library of reusable components for Eiffel."
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software
@@ -198,7 +188,5 @@ note
 			Website http://www.eiffel.com
 			Customer support http://support.eiffel.com
 		]"
-
-
 
 end

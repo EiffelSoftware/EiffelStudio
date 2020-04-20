@@ -30,13 +30,13 @@ feature -- Access
 	console_code_page: STRING
 			-- Console code page
 		local
-			code_page: like {WEL_API}.console_input_code_page
+			code_page: like console_input_code_page
 		do
-			code_page := {WEL_API}.console_output_code_page
+			code_page := console_output_code_page
 			if code_page = 0 then
-				code_page := {WEL_API}.console_input_code_page
+				code_page := console_input_code_page
 				if code_page = 0 then
-					code_page := {WEL_API}.oem_code_page
+					code_page := oem_code_page
 				end
 			end
 			create Result.make (5)
@@ -53,6 +53,74 @@ feature {NONE} -- NLS LC CTYPE CONSTANTS
 	locale_idefaultansicodepage_maxlen: INTEGER = 	6
 	LOCALE_IDEFAULTMACCODEPAGE: INTEGER 		=	0x00001011   -- default mac code page
 	locale_idefaultmaccodepage_maxlen: INTEGER 	= 	6
+
+feature -- Code pages
+
+	console_input_code_page: NATURAL_32
+			-- Input code page of the console.
+		external
+			"C inline use <windows.h>"
+		alias
+			"return (EIF_NATURAL_32) GetConsoleCP ();"
+		ensure
+			is_class: class
+		end
+
+	console_output_code_page: NATURAL_32
+			-- Output code page of the console.
+		external
+			"C inline use <windows.h>"
+		alias
+			"return (EIF_NATURAL_32) GetConsoleOutputCP ();"
+		ensure
+			is_class: class
+		end
+
+	set_console_input_code_page (cp: NATURAL_32): BOOLEAN
+			-- Set input code page of the console to `cp`.
+			-- Return True on success and False on error.
+			-- Use `get_last_error` to get extended error information.
+		external
+			"C inline use <windows.h>"
+		alias
+			"return EIF_TEST (SetConsoleCP ((UINT) $cp));"
+		ensure
+			is_class: class
+		end
+
+	set_console_output_code_page (cp: NATURAL_32): BOOLEAN
+			-- Set output code page of the console to `cp`.
+			-- Return True on success and False on error.
+			-- Use `get_last_error` to get extended error information.
+		external
+			"C inline use <windows.h>"
+		alias
+			"return EIF_TEST (SetConsoleOutputCP ((UINT) $cp));"
+		ensure
+			is_class: class
+		end
+
+
+	oem_code_page: NATURAL_32
+			-- The current OEM code page identifier for the operating system.
+			-- The OEM code page is used for conversion from MS-DOS-based, text-mode applications.
+		external
+			"C inline use <Winnls.h>"
+		alias
+			"return (EIF_NATURAL_32) GetOEMCP ();"
+		ensure
+			is_class: class
+		end
+
+	ansi_code_page: NATURAL_32
+			-- The current Windows ANSI code page (ACP) identifier for the operating system.
+		external
+			"C inline use <Winnls.h>"
+		alias
+			"return (EIF_NATURAL_32) GetACP ();"
+		ensure
+			is_class: class
+		end
 
 feature {NONE} -- Implementation
 
@@ -111,7 +179,7 @@ invariant
 
 note
 	library:   "Encoding: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2018, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

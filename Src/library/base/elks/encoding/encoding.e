@@ -125,7 +125,7 @@ feature -- Status report
 		end
 
 	last_conversion_lost_data: BOOLEAN
-			-- Did last conversion lose data?
+			-- Has last conversion between two encodings lost data?
 		do
 			Result := encoding_i.last_conversion_lost_data
 		end

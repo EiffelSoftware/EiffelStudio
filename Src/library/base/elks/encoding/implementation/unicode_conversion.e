@@ -59,7 +59,7 @@ feature -- Query
 		end
 
 	last_conversion_lost_data: BOOLEAN = False
-			-- Conversion between Unicode encoding does not loose data.
+			-- Has last conversion between two encodings lost data?
 
 	is_valid_utf8 (a_string: STRING): BOOLEAN
 			-- Is `a_string` valid UTF-8 string?

@@ -140,7 +140,7 @@ copy_sub test2.e $CLUSTER test2.e
 copy_sub test3.e $CLUSTER test3.e
 copy_sub test4.e $CLUSTER test4.e
 resume_compile
-compile_result	syntax_error TEST1 7; TEST2 7
+compile_result	ok
 
 -- Agents
 define OBJECT_TEST "agent make"
@@ -148,7 +148,7 @@ copy_sub test1.e $CLUSTER test1.e
 copy_sub test2.e $CLUSTER test2.e
 copy_sub test3.e $CLUSTER test3.e
 copy_sub test4.e $CLUSTER test4.e
-resume_compile
+compile_melted
 compile_result	syntax_error TEST1 7; TEST2 7
 
 -- Object test

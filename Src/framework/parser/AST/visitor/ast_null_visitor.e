@@ -184,10 +184,6 @@ feature -- Implementation
 		do
 		end
 
-	process_nested_as (l_as: NESTED_AS)
-		do
-		end
-
 	process_creation_expr_as (l_as: CREATION_EXPR_AS)
 		do
 		end

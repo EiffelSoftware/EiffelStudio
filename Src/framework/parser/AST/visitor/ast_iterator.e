@@ -215,12 +215,6 @@ feature {NONE} -- Implementation
 			l_as.message.process (Current)
 		end
 
-	process_nested_as (l_as: NESTED_AS)
-		do
-			l_as.target.process (Current)
-			l_as.message.process (Current)
-		end
-
 	process_creation_expr_as (l_as: CREATION_EXPR_AS)
 		do
 			l_as.type.process (Current)

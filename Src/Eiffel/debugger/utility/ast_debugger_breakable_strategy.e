@@ -25,8 +25,7 @@ inherit
 			process_separate_instruction_as,
 			process_tagged_as,
 			process_object_test_as,
-			process_named_expression_as,
-			process_nested_as
+			process_named_expression_as
 		end
 
 	REFACTORING_HELPER
@@ -561,13 +560,6 @@ feature {NONE} -- Iteration
 			Precursor (l_as)
 		end
 
-	process_nested_as (l_as: NESTED_AS)
-		do
-			l_as.target.process (Current)
-			register_nested_breakable (l_as.message)
-			l_as.message.process (Current)
-		end
-
 	process_object_test_as (l_as: OBJECT_TEST_AS)
 			-- Process `l_as'.
 		local
@@ -717,7 +709,7 @@ feature {NONE} -- Implementation: Iteration
 ;note
 	date: "$Date$"
 	revision: "$Revision$"
-	copyright: "Copyright (c) 1984-2015, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

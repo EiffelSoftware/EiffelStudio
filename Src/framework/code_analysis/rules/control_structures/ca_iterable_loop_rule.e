@@ -102,13 +102,14 @@ feature {NONE} -- Rule checking
 			if
 				attached a_stop_condition and then
 				attached {EXPR_CALL_AS} a_stop_condition as l_call and then
-				attached {NESTED_AS} l_call.call as l_nested_call and then
-				attached {ACCESS_AS} l_nested_call.message as l_msg and then
-				l_msg.access_name_32.is_case_insensitive_equal ({STRING_32} "after") and then
+				attached {NESTED_EXPR_AS} l_call.call as l_nested_call and then
+				l_nested_call.message.access_name_8.is_case_insensitive_equal ("after") and then
 				attached current_context.node_type (l_nested_call.target, current_feature_i) as t and then
-				t.base_class.conform_to (iterable)
+				t.base_class.conform_to (iterable) and then
+				attached {EXPR_CALL_AS} l_nested_call.target as c and then
+				attached {ACCESS_FEAT_AS} c.call as f
 			then
-				loops.last.cursor := l_nested_call.target.access_name_32
+				loops.last.cursor := f.access_name_32
 			end
 		end
 
@@ -130,10 +131,11 @@ feature {NONE} -- Rule checking
 				loop
 					if
 						attached {INSTR_CALL_AS} l_instr.item as l_call and then
-						attached {NESTED_AS} l_call.call as l_nested_call and then
-						l_nested_call.target.access_name_32.is_case_insensitive_equal (expected_var) and then
-						attached {ACCESS_AS} l_nested_call.message as l_msg and then
-						l_msg.access_name_32.is_case_insensitive_equal ({STRING_32} "start")
+						attached {NESTED_EXPR_AS} l_call.call as l_nested_call and then
+						attached {EXPR_CALL_AS} l_nested_call.target as c and then
+						attached {ACCESS_FEAT_AS} c.call as f and then
+						f.access_name_32.is_case_insensitive_equal (expected_var) and then
+						l_nested_call.message.feature_name.name_id = {PREDEFINED_NAMES}.start_name_id
 					then
 							-- We do not have to check the type of `l_target' since we know it is the expected variable
 							-- that has already been checked for conformance to {ITERABLE}.
@@ -146,8 +148,10 @@ feature {NONE} -- Rule checking
 	process_instruction_call (a: INSTR_CALL_AS)
 		do
 			if
-				attached {NESTED_AS} a.call as c and then
-				attached loop_with_variable (c.target.access_name_32) as l and then
+				attached {NESTED_EXPR_AS} a.call as n and then
+				attached {EXPR_CALL_AS} n.target as c and then
+				attached {ACCESS_FEAT_AS} c.call as f and then
+				attached loop_with_variable (f.access_name_32) as l and then
 				l.start /= a and then
 				l.forth /= a
 			then
@@ -182,10 +186,11 @@ feature {NONE} -- Rule checking
 				attached a and then
 				attached inner_loop.cursor as expected_var and then
 				attached {INSTR_CALL_AS} a.last as l_call and then
-				attached {NESTED_AS} l_call.call as l_nested_call and then
-				l_nested_call.target.access_name_32.is_equal (expected_var) and then
-				attached {ACCESS_AS} l_nested_call.message as l_msg and then
-				l_msg.access_name_8.is_equal ("forth")
+				attached {NESTED_EXPR_AS} l_call.call as l_nested_call and then
+				attached {EXPR_CALL_AS} l_nested_call.target as c and then
+				attached {ACCESS_FEAT_AS} c.call as f and then
+				f.access_name_32.is_case_insensitive_equal (expected_var) and then
+				l_nested_call.message.access_name_8.is_case_insensitive_equal ("forth")
 			then
 					-- We do not have to check the type of `l_target' since we know it is the expected variable
 					-- that has already been checked for conformance to {ITERABLE}.

@@ -76,24 +76,24 @@ feature {NONE} -- Initialization
 				-- Build initialization code in the form
 				--    `identifier'.start
 			create {INSTR_CALL_AS} initialization.initialize (
-				create {NESTED_AS}.initialize (
-					create {ACCESS_ID_AS}.initialize (i, Void),
+				create {NESTED_EXPR_AS}.initialize (
+					create {EXPR_CALL_AS}.initialize (create {ACCESS_ID_AS}.initialize (i, Void)),
 					create_access_feat_as ("start", i),
 					Void
 			))
 				-- Build exit condition in the form
 				--    `identifier'.after
 			create {EXPR_CALL_AS} exit_condition.initialize (
-				create {NESTED_AS}.initialize (
-					create {ACCESS_ID_AS}.initialize (i, Void),
+				create {NESTED_EXPR_AS}.initialize (
+					create {EXPR_CALL_AS}.initialize (create {ACCESS_ID_AS}.initialize (i, Void)),
 					create_access_feat_as ("after", i),
 					Void
 			))
 				-- Build advance code in the form
 				--    `identifier'.forth
 			create {INSTR_CALL_AS} advance.initialize (
-				create {NESTED_AS}.initialize (
-					create {ACCESS_ID_AS}.initialize (i, Void),
+				create {NESTED_EXPR_AS}.initialize (
+					create {EXPR_CALL_AS}.initialize (create {ACCESS_ID_AS}.initialize (i, Void)),
 					create_access_feat_as ("forth", i),
 					Void
 			))
@@ -101,8 +101,8 @@ feature {NONE} -- Initialization
 					-- Build advance code in the form
 					--    `identifier'.item
 				create {EXPR_CALL_AS} item.initialize (
-					create {NESTED_AS}.initialize (
-						create {ACCESS_ID_AS}.initialize (i, Void),
+				create {NESTED_EXPR_AS}.initialize (
+					create {EXPR_CALL_AS}.initialize (create {ACCESS_ID_AS}.initialize (i, Void)),
 						create_access_feat_as ("item", i),
 						Void
 				))
@@ -297,7 +297,7 @@ invariant
 
 note
 	ca_ignore: "CA011", "CA011: too many arguments"
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

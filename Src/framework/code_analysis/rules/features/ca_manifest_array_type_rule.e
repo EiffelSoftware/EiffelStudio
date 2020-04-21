@@ -49,7 +49,6 @@ feature {NONE} -- Activation
 			c.add_inline_agent_creation_pre_action (agent process_agent_start)
 			c.add_inline_agent_creation_post_action (agent process_agent_end)
 			c.add_instruction_call_pre_action (agent process_instr_call)
-			c.add_nested_pre_action (agent process_nested)
 			c.add_nested_expr_pre_action (agent process_nested_expr)
 			c.add_precursor_pre_action (agent process_precursor)
 			checker := c
@@ -212,12 +211,6 @@ feature {NONE} -- Checking the rule
 			-- Check arguments of `a` for rule violations.
 		do
 			process_call (a.call, current_context.checking_class.actual_type)
-		end
-
-	process_nested (a: NESTED_AS)
-			-- Check arguments of the call in `a` for rule violations.
-		do
-			process_call (a.message, current_context.node_type (a.target, current_feature))
 		end
 
 	process_nested_expr (a: NESTED_EXPR_AS)

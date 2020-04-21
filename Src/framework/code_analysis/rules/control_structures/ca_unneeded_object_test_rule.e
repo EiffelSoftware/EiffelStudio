@@ -95,9 +95,9 @@ feature {NONE} -- AST Visits
 
 				if attached {ACCESS_FEAT_AS} l_call.call as l_af then
 					l_access := l_af
-				elseif attached {NESTED_AS} l_call.call as l_nested then
+				elseif attached {NESTED_EXPR_AS} l_call.call as l_nested then
 						-- Extract the rightmost feature in the nested call.
-					l_access := find_access_id (l_nested)
+					l_access := l_nested.message
 				end
 				if l_access /= Void and then attached {CLASS_TYPE_AS} a_ot.type as l_type then
 					l_static_variable_type := current_context.node_type (l_access, current_feature_i)
@@ -112,31 +112,6 @@ feature {NONE} -- AST Visits
 						violations.extend (l_violation)
 					end
 				end
-			end
-		end
-
-feature {NONE} -- Helpers
-
-	find_access_id (a_nested_call: attached NESTED_AS): detachable ACCESS_FEAT_AS
-			-- Retrieves the rightmost feature in the nested call `a_nested_call'.
-		local
-			l_nested: NESTED_AS
-		do
-				-- Follow the chain of nested calls.
-			from
-				l_nested := a_nested_call
-			until
-				not (attached {NESTED_AS} l_nested.message)
-			loop
-				if attached {NESTED_AS} l_nested.message as l_subnested then
-					l_nested := l_subnested
-				end
-			end
-
-			if attached {ACCESS_FEAT_AS} l_nested.message as l_access_id then
-				Result := l_access_id
-			else
-				Result := Void
 			end
 		end
 

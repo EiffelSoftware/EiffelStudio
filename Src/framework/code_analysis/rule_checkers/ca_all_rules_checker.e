@@ -68,7 +68,6 @@ inherit
 			process_integer_as,
 			process_invariant_as,
 			process_loop_as,
-			process_nested_as,
 			process_nested_expr_as,
 			process_object_test_as,
 			process_once_as,
@@ -186,8 +185,6 @@ feature {NONE} -- Initialization
 			create loop_body_post_actions
 			create loop_variant_pre_actions
 			create loop_variant_post_actions
-			create nested_pre_actions
-			create nested_post_actions
 			create nested_expr_pre_actions
 			create nested_expr_post_actions
 			create object_test_pre_actions
@@ -664,16 +661,6 @@ feature {CA_STANDARD_RULE} -- Adding agents
 			loop_variant_post_actions.extend (a)
 		end
 
-	add_nested_pre_action (a_action: attached PROCEDURE [NESTED_AS])
-		do
-			nested_pre_actions.extend (a_action)
-		end
-
-	add_nested_post_action (a_action: attached PROCEDURE [NESTED_AS])
-		do
-			nested_post_actions.extend (a_action)
-		end
-
 	add_nested_expr_pre_action (a: PROCEDURE [NESTED_EXPR_AS])
 		do
 			nested_expr_pre_actions.extend (a)
@@ -895,8 +882,6 @@ feature {NONE} -- Agent lists
 	loop_body_pre_actions, loop_body_post_actions: ACTION_SEQUENCE [TUPLE [EIFFEL_LIST [INSTRUCTION_AS], LOOP_AS]]
 
 	loop_variant_pre_actions, loop_variant_post_actions: ACTION_SEQUENCE [TUPLE [VARIANT_AS, LOOP_AS]]
-
-	nested_pre_actions, nested_post_actions: ACTION_SEQUENCE [TUPLE [NESTED_AS]]
 
 	nested_expr_pre_actions, nested_expr_post_actions: ACTION_SEQUENCE [NESTED_EXPR_AS]
 
@@ -1266,19 +1251,6 @@ feature {NONE} -- Processing
 				loop_variant_post_actions.call (p, a)
 			end
 			loop_post_actions.call (a)
-		end
-
-	process_nested_as (a: NESTED_AS)
-		local
-			old_is_assigner_call: BOOLEAN
-		do
-			nested_pre_actions.call (a)
-			old_is_assigner_call := is_assigner_call
-			is_assigner_call := False
-			a.target.process (Current)
-			is_assigner_call := old_is_assigner_call
-			a.message.process (Current)
-			nested_post_actions.call (a)
 		end
 
 	process_nested_expr_as (a: NESTED_EXPR_AS)

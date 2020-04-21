@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "A visitor that nomalizes loop bodies using specified cursor."
 
 class
@@ -10,7 +10,6 @@ inherit
 			process_access_feat_as,
 			process_binary_as,
 			process_eiffel_list,
-			process_nested_as,
 			process_nested_expr_as,
 			process_unary_as
 		end
@@ -110,29 +109,6 @@ feature {NONE} -- Visitor
 			is_message := old_is_message
 		end
 
-	process_nested_as (a: NESTED_AS)
-			-- <Precursor>
-		do
-			if can_be_symbolic and then not is_message then
-				if
-					attached {ACCESS_FEAT_AS} a.target as f and then
-					attached f.feature_name as n and then
-					n.name_id = name_id
-				then
-						-- The target of a call is the cursor name.
-						-- The only allowed feature call is "item".
-					can_be_symbolic := is_item_call (a.message)
-				else
-					is_target := True
-					safe_process (a.target)
-					is_target := False
-					is_message := True
-					safe_process (a.message)
-					is_message := False
-				end
-			end
-		end
-
 	process_nested_expr_as (a: NESTED_EXPR_AS)
 			-- <Precursor>
 		do
@@ -170,8 +146,14 @@ feature {NONE} -- Feature name test
 			-- Does `a` represent  a call to a feature of name "item"?
 		do
 			Result :=
-					-- Take care about involved structure of `NESTED_AS` and consider only feature calls.
-				attached {ACCESS_FEAT_AS} if attached {NESTED_AS} a as m then m.target else a end as f and then
+					-- Take care about involved structure of qualified calls and consider only feature calls.
+				attached {ACCESS_FEAT_AS}
+						if attached {NESTED_EXPR_AS} a as m then
+							if attached {EXPR_CALL_AS} m.target as c then c.call else m.target end
+						else
+							a
+						end
+					as f and then
 					-- Pick up the feature name.
 				attached f.feature_name as n and then
 					-- Test if this is the name of a feature "item".
@@ -182,7 +164,7 @@ note
 	date: "$Date$"
 	revision: "$Revision$"
 	author: "Alexander Kogtenkov"
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

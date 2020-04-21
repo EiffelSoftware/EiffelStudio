@@ -29,7 +29,6 @@ inherit
 			process_access_assert_as,
 			process_precursor_as,
 			process_nested_expr_as,
-			process_nested_as,
 			process_creation_expr_as,
 			process_type_expr_as,
 			process_routine_as,
@@ -815,12 +814,6 @@ feature {NONE} -- Implementation
 		end
 
 	process_nested_expr_as (l_as: NESTED_EXPR_AS)
-		do
-			l_as.target.process (Current)
-			l_as.message.process (Current)
-		end
-
-	process_nested_as (l_as: NESTED_AS)
 		do
 			l_as.target.process (Current)
 			l_as.message.process (Current)

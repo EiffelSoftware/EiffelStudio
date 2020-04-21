@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "AST visitor to retrieve auto expressions."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -27,7 +27,6 @@ inherit
 			process_interval_as,
 			process_loop_as,
 			process_named_expression_as,
-			process_nested_as,
 			process_parameter_list_as,
 			process_reverse_as,
 			process_separate_instruction_as,
@@ -376,24 +375,6 @@ feature -- Processing
 		do
 			a_as.expression.process (Current)
 			add_auto_span (a_as.name)
-		end
-
-	process_nested_as (a_as: NESTED_AS)
-			-- Processes a nested instruction/expression 'a.b.c'.
-			--
-			-- `a_as': Abstract syntax node to process.
-		local
-			a_assign: like is_expression_instruction
-		do
-			a_assign := is_expression_instruction
-			if not a_assign then
-				set_is_expression_instruction (True)
-			end
-			a_as.target.process (Current)
-			if not a_assign then
-				set_is_expression_instruction (False)
-			end
-			a_as.message.process (Current)
 		end
 
 	process_parameter_list_as (a_as: PARAMETER_LIST_AS)

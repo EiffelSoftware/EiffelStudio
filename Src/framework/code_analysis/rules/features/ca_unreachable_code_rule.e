@@ -90,15 +90,15 @@ feature {NONE} -- Rule Checking
 								create_violation (l_compound, l_index + 1)
 							end
 						end
-					elseif attached {INSTR_CALL_AS} l_compound.item as l_call and then
-						   attached {NESTED_AS} l_call.call as l_nested and then
-						   attached {ACCESS_FEAT_AS} l_nested.message as l_feat_access and then
-						   l_feat_access.feature_name.name_32.is_equal ("raise") then
-						if not l_compound.islast then
+					elseif
+						attached {INSTR_CALL_AS} l_compound.item as l_call and then
+						attached {NESTED_EXPR_AS} l_call.call as l_nested and then
+						attached l_nested.message.feature_name.name_8.same_string ("raise") and then
+						not l_compound.islast
+					then
 							-- There are still more instructions after the exception is raised.
-							l_found_violation := True
-							create_violation (l_compound, l_index + 1)
-						end
+						l_found_violation := True
+						create_violation (l_compound, l_index + 1)
 					end
 					l_compound.forth
 					l_index := l_index + 1

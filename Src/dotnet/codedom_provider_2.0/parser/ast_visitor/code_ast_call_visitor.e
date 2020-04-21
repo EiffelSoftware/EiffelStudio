@@ -433,33 +433,6 @@ feature {AST_YACC} -- Implementation
 			pop_current_element (l_expression)
 		end
 
-	process_nested_as (l_as: NESTED_AS)
-			-- Process `l_as'.
-		local
-			l_method_invoke_expression: SYSTEM_DLL_CODE_METHOD_INVOKE_EXPRESSION
-			l_variable_reference_expression: SYSTEM_DLL_CODE_VARIABLE_REFERENCE_EXPRESSION
-		do	
-			l_method_invoke_expression ?= current_element
-			if l_method_invoke_expression = Void then
-				create l_method_invoke_expression.make
-				set_current_element (l_method_invoke_expression)
-			end
-			
-			l_as.target.process (Visitor)
-			l_as.message.process (Visitor)
-			--set_last_element_created (l_method_invoke_expression)
-
-			l_method_invoke_expression ?= current_element
-			if l_method_invoke_expression /= Void then
-				pop_current_element (l_method_invoke_expression)
-			end
-			
-			l_variable_reference_expression ?= current_element
-			if l_variable_reference_expression /= Void then
-				pop_current_element (l_variable_reference_expression)
-			end
-		end
-
 	process_creation_expr_as (l_as: CREATION_EXPR_AS)
 			-- Process `l_as'.
 		local

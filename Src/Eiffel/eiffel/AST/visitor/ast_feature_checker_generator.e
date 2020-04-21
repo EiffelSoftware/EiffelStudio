@@ -3487,7 +3487,7 @@ feature {NONE} -- Visitor
 				assigner_source := old_assigner_source
 					-- Make sure separate call is valid.
 				if l_target_type.is_separate then
-					validate_separate_target (l_as.target)
+					validate_separate_target (l_as.message.access_name_32, l_as.target)
 				end
 				if is_byte_node_enabled then
 					check last_byte_node_not_void: last_byte_node /= Void end
@@ -3517,88 +3517,6 @@ feature {NONE} -- Visitor
 					l_call.set_parent (l_nested)
 					last_byte_node := l_nested
 				end
-			end
-		end
-
-	process_nested_as (l_as: NESTED_AS)
-		local
-			l_target_access: ACCESS_B
-			l_call: CALL_B
-			l_nested: NESTED_B
-			l_intermediate_nested: NESTED_B
-			old_assigner_source: like assigner_source
-			l_is_qualified_call: BOOLEAN
-			l_error_level: NATURAL_32
-		do
-			if attached last_type as c then
-					-- Mask out assigner call flag for target of the call.
-				old_assigner_source := assigner_source
-				assigner_source := Void
-					-- Type check the target
-				l_as.target.process (Current)
-				if attached last_type as t then
-						-- Restore assigner source for nested call.
-					assigner_source := old_assigner_source
-					l_is_qualified_call := is_qualified_call
-					is_qualified_call := True
-					if is_byte_node_enabled then
-						if attached {ACCESS_B} last_byte_node as a then
-							l_target_access := a
-						else
-								-- Target generated an additional nested byte node.
-								-- The byte node tree has to be normalized.
-							check attached {NESTED_B} last_byte_node as n then
-								l_intermediate_nested := n
-								l_target_access := n.target
-							end
-						end
-					end
-					l_error_level := error_level
-						-- Check the target of a separate feature call.
-					if t.is_separate then
-						validate_separate_target (l_as.target)
-					end
-						-- Type check the message
-					l_as.message.process (Current)
-					if error_level /= l_error_level then
-						reset_types
-					elseif is_byte_node_enabled then
-							-- Create byte node.
-						l_call ?= last_byte_node
-						check
-							l_call_not_void: l_call /= Void
-						end
-
-						create l_nested
-						l_nested.set_target (l_target_access)
-						l_target_access.set_parent (l_nested)
-
-						if attached l_intermediate_nested then
-								-- Change intermediate nested to take intermediate message as a target to which message is applied.
-							check attached {ACCESS_B} l_intermediate_nested.message as m then
-								l_intermediate_nested.set_target (m)
-								m.set_parent (l_intermediate_nested)
-								l_intermediate_nested.set_message (l_call)
-								l_call.set_parent (l_intermediate_nested)
-							end
-								-- Use intermediate nested as a message.
-							l_call := l_intermediate_nested
-						end
-
-						l_nested.set_message (l_call)
-						l_call.set_parent (l_nested)
-
-						last_byte_node := l_nested
-					end
-					is_qualified_call := l_is_qualified_call
-				end
-			else
-					-- We should not get there, but just in case we generate an internal
-					-- error message.
-				reset_types
-				error_handler.insert_error (create {INTERNAL_ERROR}.make (
-					"In {AST_FEATURE_CHECKER_GENERATOR}.process_nested_as we could%N%
-					%not find `last_type'."))
 			end
 		end
 
@@ -4499,7 +4417,7 @@ feature {NONE} -- Visitor
 						-- Insert an error if the target type is separate and open.
 					if system.is_scoop and then l_target_type.is_separate and then l_as.target.is_open then
 							-- TODO: It might be a better idea to create a new error class.
-						Error_handler.insert_error (create {VUTA3}.make (context, last_type, l_as.target.start_location))
+						Error_handler.insert_error (create {VUTA3}.make (context, last_type, Void, l_as.target.start_location))
 					end
   				end
 			end
@@ -4687,7 +4605,7 @@ feature {NONE} -- Visitor
 			l_target_type := last_type
 			if attached l_target_type then
 				if l_target_type.is_separate then
-					validate_separate_target (l_as.expr)
+					validate_separate_target (Void, l_as.expr)
 					l_is_controlled := is_controlled
 				end
 				if l_needs_byte_node then
@@ -5038,7 +4956,7 @@ feature {NONE} -- Visitor
 			l_target_type := last_type
 			if attached l_target_type then
 				if l_target_type.is_separate then
-					validate_separate_target (l_as.left)
+					validate_separate_target (Void, l_as.left)
 					l_is_controlled := is_controlled
 				end
 				l_left_type := l_target_type.actual_type
@@ -5581,9 +5499,6 @@ feature {NONE} -- Visitor
 				if is_byte_node_enabled then
 					target_expr ?= last_byte_node
 				end
-				if l_target_type.is_separate then
-					validate_separate_target (l_as.target)
-				end
 				l_is_multi_constraint := attached {FORMAL_A} last_type.actual_type as p and then not p.is_single_constraint_without_renaming (context.current_class)
 				lookup_feature_alias (bracket_str, l_as, l_as.left_bracket_location, l_target_type)
 
@@ -5592,6 +5507,9 @@ feature {NONE} -- Visitor
 					last_alias_error := Void
 				else
 					bracket_feature := last_alias_feature
+				end
+				if l_target_type.is_separate then
+					validate_separate_target (bracket_feature.feature_name_32, l_as.target)
 				end
 
 				if l_error_level = error_level then
@@ -7376,9 +7294,6 @@ feature {NONE} -- Visitor
 					local_info.set_type (iteration_cursor_type)
 					is_byte_node_enabled := False
 					i.exit_condition.process (Current)
-					if attached last_type and then attached i.item as access then
-						access.process (Current)
-					end
 					is_byte_node_enabled := l_needs_byte_node
 					local_info.set_type (local_type)
 						-- If everything is OK, recompute the code using actual local type.
@@ -7856,10 +7771,6 @@ feature {NONE} -- Visitor
 			end
 
 			if attached last_type as iteration_type then
-					-- Check the target of a separate feature call.
-				if iteration_type.is_separate then
-					validate_separate_target (l_as.expression)
-				end
 					-- Calculate the type of an iteration local.
 				context.find_iteration_classes (context.written_class)
 				if not attached context.iterable_class as i then
@@ -7896,6 +7807,10 @@ feature {NONE} -- Visitor
 							-- Clear `last_type' to make sure it is not set when there is an error.
 						reset_types
 					else
+						-- Check the target of a separate feature call.
+					if iteration_type.is_separate then
+						validate_separate_target (n.feature_name_32, l_as.expression)
+					end
 							-- Record dependency on cursor creation.
 						if not is_inherited then
 							context.supplier_ids.extend_depend_unit_with_level (iteration_base_type.class_id, f, depend_unit_level)
@@ -9029,6 +8944,9 @@ feature {NONE} -- Parenthesis alias
 				lookup_feature_alias (parentheses_str, p, p.first_token (void), l_target_type)
 					-- Report original error if alias feature is not found.
 				l_report_error := attached {VWBR} last_alias_error or else attached {VKCN3} last_alias_error
+				if not l_report_error and then l_target_type.is_separate then
+					validate_separate_target (last_alias_feature.feature_name_32, p)
+				end
 				if attached last_alias_feature as alias_feature then
 						-- Process arguments
 						-- Initialize feature name token.
@@ -9071,9 +8989,6 @@ feature {NONE} -- Parenthesis alias
 				else
 						-- Parenthesis alias cannot be found for unknown type.
 					set_type (unknown_type, p)
-				end
-				if not l_report_error and then l_target_type.is_separate then
-					validate_separate_target (p)
 				end
 			end
 			if l_report_error then
@@ -11964,14 +11879,15 @@ feature {NONE} -- Separateness
 	is_controlled: BOOLEAN
 			-- Is last expression of a separate type controlled?
 
-	validate_separate_target (a: AST_EIFFEL)
-			-- Check validity rules for the target `a' of a separate type.
+	validate_separate_target (f: detachable STRING_32; a: AST_EIFFEL)
+			-- Check validity rules for the target `a` of a separate type on which `f` is called.
 		require
 			a_attached: attached a
 			is_last_type_separate: attached last_type as t and then t.is_separate
 		do
-			if system.is_scoop and then not is_controlled then
-				error_handler.insert_error (create {VUTA3}.make (context, last_type, a.start_location))
+			if system.is_scoop and then not is_controlled and then not is_inherited then
+				error_handler.insert_error (create {VUTA3}.make
+					(context, last_type, f, a.start_location))
 			end
 		end
 

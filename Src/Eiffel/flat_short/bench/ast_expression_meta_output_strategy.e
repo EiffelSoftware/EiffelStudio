@@ -22,7 +22,6 @@ inherit
 			process_bin_tilde_as,
 			process_bracket_as,
 			process_expr_call_as,
-			process_nested_as,
 			process_address_as,
 			format_feature_name
 		end
@@ -197,49 +196,6 @@ feature {NONE} -- Processing
 			Precursor {AST_DECORATED_OUTPUT_STRATEGY}(a_as)
 			if not expr_type_visiting then
 				pop_expression
-			end
-		end
-
-	process_nested_as (l_as: NESTED_AS)
-		local
-			l_text_formatter_decorator: like text_formatter_decorator
-			l_nested_ex: like nested_expression
-		do
-			if not expr_type_visiting then
-				l_nested_ex := nested_expression
-				if attached expression_meta_from_as (l_as.target) as l_ex then
-					if not l_nested_ex.is_empty then
-						l_nested_ex.append (".")
-					end
-					l_nested_ex.append_string_general (l_ex)
-				end
-				push_expression
-				if not l_nested_ex.is_empty then
-					text_formatter_decorator.set_meta_data (l_nested_ex.twin)
-				else
-					text_formatter_decorator.set_meta_data (Void)
-				end
-			end
-
-				-- Format the target.
-			l_text_formatter_decorator := text_formatter_decorator
-			if not expr_type_visiting then
-				l_text_formatter_decorator.begin
-			end
-			l_as.target.process (Current)
-
-				-- We only analyze the target.
-			if not expr_type_visiting then
-				pop_expression
-			end
-
-				-- Format the message part
-			if not expr_type_visiting then
-				l_text_formatter_decorator.need_dot
-			end
-			l_as.message.process (Current)
-			if not expr_type_visiting then
-				l_text_formatter_decorator.commit
 			end
 		end
 

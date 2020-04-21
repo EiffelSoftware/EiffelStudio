@@ -15,7 +15,7 @@ inherit
 
 	AST_ITERATOR
 		redefine
-			process_nested_as
+			process_nested_expr_as
 		end
 
 create
@@ -85,13 +85,12 @@ feature {NONE} -- Implementation
 			Result := found_qualified_call
 		end
 
-	process_nested_as (a_nested: attached NESTED_AS)
+	process_nested_expr_as (a_nested: NESTED_EXPR_AS)
 		do
 			if
-				attached {ACCESS_FEAT_AS} a_nested as l_feat
-				and then l_feat.access_name_32.same_string (current_feature_name)
-				and then attached current_context.node_type (a_nested.target, current_feature) as l_type
-				and then l_type.name.is_equal (current_context.checking_class.name)
+				a_nested.message.access_name_32.same_string (current_feature_name) and then
+				attached current_context.node_type (a_nested.target, current_feature) as l_type and then
+				l_type.name.is_equal (current_context.checking_class.name)
 			then
 				found_qualified_call := True
 			end

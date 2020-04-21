@@ -66,7 +66,7 @@ feature -- Attributes
 	target: EXPR_AS
 			-- Target of the call.
 
-	message: CALL_AS
+	message: ACCESS_FEAT_AS
 			-- Message send to the target.
 
 feature -- Roundtrip/Token

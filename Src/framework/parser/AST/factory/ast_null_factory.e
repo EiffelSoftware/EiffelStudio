@@ -35,7 +35,7 @@ inherit
 			new_instr_call_as, new_integer_as, new_integer_hexa_as, new_integer_octal_as,
 			new_integer_binary_as, new_interval_as, new_invariant_as, new_iteration_as,
 			new_like_id_as, new_like_current_as, new_list_dec_as, new_location_as, new_loop_as, new_loop_expr_as,
-			new_named_expression_as, new_nested_as, new_nested_expr_as, new_none_type_as,
+			new_named_expression_as, new_nested_expr_as, new_none_type_as,
 			new_object_test_as, new_old_syntax_object_test_as, new_once_as, new_operand_as,
 			new_paran_as, new_parent_as, new_precursor_as,
 			new_qualified_anchored_type, new_qualified_anchored_type_with_type,
@@ -927,12 +927,7 @@ feature -- Access
 		do
 		end
 
-	new_nested_as (t: detachable ACCESS_AS; m: detachable CALL_AS; d_as: detachable SYMBOL_AS): detachable NESTED_AS
-			-- New NESTED CALL AST node
-		do
-		end
-
-	new_nested_expr_as (t: detachable EXPR_AS; m: detachable CALL_AS; d_as: detachable SYMBOL_AS): detachable NESTED_EXPR_AS
+	new_nested_expr_as (t: detachable EXPR_AS; m: detachable ACCESS_FEAT_AS; d_as: detachable SYMBOL_AS): detachable NESTED_EXPR_AS
 			-- New NESTED_EXPR CALL AST node
 		do
 		end

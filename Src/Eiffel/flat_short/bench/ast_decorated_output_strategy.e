@@ -1201,24 +1201,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	process_nested_as (l_as: NESTED_AS)
-		local
-			l_text_formatter_decorator: like text_formatter_decorator
-		do
-			l_text_formatter_decorator := text_formatter_decorator
-			if not expr_type_visiting then
-				l_text_formatter_decorator.begin
-			end
-			l_as.target.process (Current)
-			if not expr_type_visiting then
-				l_text_formatter_decorator.need_dot
-			end
-			l_as.message.process (Current)
-			if not expr_type_visiting then
-				l_text_formatter_decorator.commit
-			end
-		end
-
 	process_creation_expr_as (l_as: CREATION_EXPR_AS)
 		local
 			l_type: TYPE_A

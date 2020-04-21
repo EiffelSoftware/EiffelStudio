@@ -18,7 +18,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_nested (a_class: attached CLASS_C; a_nested: attached NESTED_AS)
+	make_with_nested (a_class: attached CLASS_C; a_nested: attached NESTED_EXPR_AS)
 			-- Initializes `Current' with class `a_class'. `a_nested' is the nested call which is to be changed.
 		do
 			make (ca_names.void_check_using_is_equal_fix, a_class)
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 
 feature {NONE} -- Implementation
 
-	nested_to_change: NESTED_AS
+	nested_to_change: NESTED_EXPR_AS
 			-- The creation procedure this fix will change.
 
 feature {NONE} -- Visitor
@@ -35,7 +35,7 @@ feature {NONE} -- Visitor
 	execute
 			-- <Precursor>
 		do
-			nested_to_change.replace_text ("not attached " + nested_to_change.target.access_name, match_list)
+			nested_to_change.replace_text ("not attached " + nested_to_change.target.text (match_list), match_list)
 		end
 
 end

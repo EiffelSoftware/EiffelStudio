@@ -38,7 +38,6 @@ inherit
 			process_loop_as,
 			process_named_expression_as,
 			process_nested_expr_as,
-			process_nested_as,
 			process_once_as,
 			process_precursor_as,
 			process_result_as,
@@ -925,27 +924,6 @@ feature {AST_EIFFEL} -- Visitor: nested call
 		end
 
 	process_nested_expr_as (a: NESTED_EXPR_AS)
-			-- <Precursor>
-		local
-			q: BOOLEAN
-			c: BOOLEAN
-			s: like assigner_source
-		do
-			q := is_qualified
-			c := is_creation
-			s := assigner_source
-			assigner_source := Void
-			a.target.process (Current)
-			is_qualified := True
-			is_creation := False
-			assigner_source := s
-			a.message.process (Current)
-			is_creation := c
-			is_qualified := q
-			record_qualified_call (a)
-		end
-
-	process_nested_as (a: NESTED_AS)
 			-- <Precursor>
 		local
 			q: BOOLEAN

@@ -324,14 +324,6 @@ feature {AST_EIFFEL} -- Skeleton Visitors
 		deferred
 		end
 
-	process_nested_as (l_as: NESTED_AS)
-			-- Process `l_as'.
-		require
-			is_valid_visitor: is_valid
-			non_void_as: l_as /= Void
-		deferred
-		end
-
 	process_creation_expr_as (l_as: CREATION_EXPR_AS)
 			-- Process `l_as'.
 		require

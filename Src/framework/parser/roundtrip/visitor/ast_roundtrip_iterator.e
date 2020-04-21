@@ -455,13 +455,6 @@ feature
 			safe_process (l_as.message)
 		end
 
-	process_nested_as (l_as: NESTED_AS)
-		do
-			safe_process (l_as.target)
-			safe_process (l_as.dot_symbol (match_list))
-			safe_process (l_as.message)
-		end
-
 	process_creation_expr_as (l_as: CREATION_EXPR_AS)
 		do
 			check

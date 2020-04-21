@@ -143,7 +143,6 @@ inherit
 			process_access_id_as,
 			process_access_inv_as,
 			process_create_creation_expr_as,
-			process_nested_as,
 			process_nested_expr_as,
 			process_parameter_list_as,
 			process_precursor_as,
@@ -1993,98 +1992,30 @@ feature {CLASS_AS} -- Calls
 			safe_process (l_as.call)
 		end
 
-	process_nested_as (a: NESTED_AS)
-			-- <Precursor>
-		local
-			old_is_qualified: like is_qualified
-		do
-			old_is_qualified := is_qualified
-			if
-				not old_is_qualified and then
-				not loop_cursors.is_empty and then
-				attached {ACCESS_FEAT_AS} a.target as f and then
-				attached f.feature_name as n and then
-				loop_cursors.has (n.name_id)
-			then
-					-- This must be a call on to feature "item" on the loop cursor, remove it.
-				safe_process (a.target)
-				if attached {NESTED_AS} a.message as m then
-					check
-						is_feature_call: attached {ACCESS_FEAT_AS} m.target as t
-						has_name: attached t.feature_name as q
-						is_item: q.name_id = {NAMES_HEAP}.item_name_id
-					end
-					safe_process (a.dot_symbol (match_list))
-					process_leading_leaves_of_token (m.target)
-					if attached m.target.last_token (match_list) as t then
-						last_index := t.index
-					end
-					process_leading_leaves (m.dot_symbol_index)
-					last_index := m.dot_symbol_index
-					is_qualified := True
-					safe_process (m.message)
-					is_qualified := old_is_qualified
-				else
-					check
-						is_feature_call: attached {ACCESS_FEAT_AS} a.message as m
-						has_name: attached m.feature_name as q
-						is_item: q.name_id = {NAMES_HEAP}.item_name_id
-					end
-					process_leading_leaves (a.dot_symbol_index)
-					last_index := a.dot_symbol_index
-					process_leading_leaves_of_token (a.message.first_token (match_list))
-					last_index := a.message.index
-				end
-			else
-				safe_process (a.target)
-				is_qualified := True
-				safe_process (a.message)
-				is_qualified := old_is_qualified
-			end
-		end
-
 	process_nested_expr_as (a: NESTED_EXPR_AS)
 			-- <Precursor>
 		local
 			old_is_qualified: like is_qualified
 		do
 			old_is_qualified := is_qualified
+			safe_process (a.target)
 			if
 				not old_is_qualified and then
 				not loop_cursors.is_empty and then
-				attached {ACCESS_FEAT_AS} a.target as f and then
+				attached {EXPR_CALL_AS} a.target as c and then
+				attached {ACCESS_FEAT_AS} c.call as f and then
 				attached f.feature_name as n and then
 				loop_cursors.has (n.name_id)
 			then
 					-- This must be a call on to feature "item" on the loop cursor, remove it.
-				safe_process (a.target)
-				if attached {NESTED_AS} a.message as m then
-					check
-						is_feature_call: attached {ACCESS_FEAT_AS} m.target as t
-						has_name: attached t.feature_name as q
-						is_item: q.name_id = {NAMES_HEAP}.item_name_id
-					end
-					safe_process (a.dot_symbol (match_list))
-					process_leading_leaves_of_token (m.target)
-					if attached m.target.last_token (match_list) as t then
-						last_index := t.index
-					end
-					process_leading_leaves (m.dot_symbol_index)
-					last_index := m.dot_symbol_index
-					is_qualified := True
-					safe_process (m.message)
-					is_qualified := old_is_qualified
-				else
-					check
-						is_feature_call: attached {ACCESS_FEAT_AS} a.message as m
-						has_name: attached m.feature_name as q
-						is_item: q.name_id = {NAMES_HEAP}.item_name_id
-					end
-					process_leading_leaves (a.dot_symbol_index)
-					process_leading_leaves_of_token (a.message.first_token (match_list))
+				check
+					is_feature_call: attached a.message as m
+					has_name: attached m.feature_name as q
+					is_item: q.name_id = {PREDEFINED_NAMES}.item_name_id
 				end
+				process_leading_leaves (a.dot_symbol_index)
+				process_leading_leaves_of_token (a.message.first_token (match_list))
 			else
-				safe_process (a.target)
 				safe_process (a.dot_symbol (match_list))
 				is_qualified := True
 				safe_process (a.message)

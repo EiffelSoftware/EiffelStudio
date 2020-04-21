@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Error in Object_call which separate target is uncontrolled."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -9,17 +9,57 @@ class VUTA3
 
 inherit
 	VUTA
+		rename
+			make as make_vuta
+		redefine
+			build_explain
+		end
 
 create
 	make
+
+feature {NONE} -- Creation
+
+	make (c: AST_CONTEXT; t: like target_type; m: detachable STRING_32; l: LOCATION_AS)
+			-- Create error object for Object_call target
+			-- of type `t' at location `l' in the context `c'.
+		require
+			c_attached: c /= Void
+			t_attached: t /= Void
+			l_attached: l /= Void
+		do
+			make_vuta (c, t, l)
+			message := m
+		ensure
+			target_type_set: target_type = t
+			message = m
+		end
 
 feature -- Error properties
 
 	subcode: INTEGER = 3
 			-- Subcode of error
 
+feature {NONE} -- Access
+
+	message: detachable STRING_32
+			-- Feature called on a separate target.
+
+feature -- Output
+
+	build_explain (t: TEXT_FORMATTER)
+			-- <Precursor>
+		do
+			Precursor (t)
+			if attached message as m then
+				t.add ("Called feature: ")
+				t.add (m)
+				t.add_new_line
+			end
+		end
+
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

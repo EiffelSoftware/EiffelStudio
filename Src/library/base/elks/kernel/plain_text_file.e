@@ -112,6 +112,9 @@ feature -- Output
 
 	put_string_32 (s: READABLE_STRING_32)
 			-- Write Unicode string `s` at current position.
+		require
+			extendible: extendible
+			non_void: s /= Void			
 		local
 			str: STRING
 			utf32, utf8: ENCODING

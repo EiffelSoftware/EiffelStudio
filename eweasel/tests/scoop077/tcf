@@ -5,7 +5,7 @@ copy_sub 	Ace $TEST Ace
 copy_raw 	test0.e      $CLUSTER test.e
 
 compile_melted
-compile_result validity_error TEST VUTA(3):19 VUTA(3):19 VUTA(3):19 VUTA(3):22 VUTA(3):22 VUTA(3):25 VUTA(3):25 VUTA(3):25 VUTA(3):25
+compile_result validity_error TEST VUTA(3):19 VUTA(3):19 VUTA(3):19 VUTA(3):22 VUTA(3):22 VUTA(3):25 VUTA(3):25 VUTA(3):25 VUTA(3):25 VUTA(3):28
 
 copy_raw 	test1.e      $CLUSTER test.e
 

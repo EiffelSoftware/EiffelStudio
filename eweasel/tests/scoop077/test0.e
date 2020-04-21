@@ -25,7 +25,7 @@ feature {NONE} -- Creation
 				s is c            -- VUTA(3) for `s.new_cursor`
 			loop                      -- VUTA(3) for `c.after`
 				i := i + 1
-				c.report (i)      -- VUTA(3) for `c.item`
+				c.report (i)      -- VUTA(3) for `c.item`; VUTA(3) for `report`
 			end                       -- VUTA(3) for `c.forth`
 			io.put_integer (0)
 			io.put_new_line

@@ -24,22 +24,22 @@ feature -- Test
 		local
 			fl: ANY
 		do
-			if attached Current as fo then
+			if attached twin as fo then
 				across <<>> as fc loop
 					separate (create {separate ANY}) as ft do
 						(agent (aa: ANY)
 							local
 								al: ANY
 							do
-								if attached Current as ao then
+								if attached twin as ao then
 									across <<>> as ac loop
 										separate (create {separate ANY}) as at do
 											(agent
 												do
 													(agent
 														do
-															if attached Current as pa then end -- VUOT(1): parent
-															if attached Current as ca then end -- VUOT(1): child
+															if attached twin as pa then end -- VUOT(1): parent
+															if attached twin as ca then end -- VUOT(1): child
 															across <<>> as pa loop end -- VOIT(2): parent
 															across <<>> as ca loop end -- VOIT(2): child
 															separate (create {separate ANY}) as pa do end -- FRESH_IDENTIFIER: parent

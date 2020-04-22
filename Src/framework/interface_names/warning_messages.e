@@ -1001,6 +1001,13 @@ feature -- Warning messages
 
 	w_MakefileSH_more_recent: STRING_32 do Result := locale.translation ("The Makefile.SH is more recent than the system.") end
 
+	w_Must_save_before_reloading (class_name: READABLE_STRING_GENERAL): STRING_32
+		require
+			class_name_not_void: class_name /= Void
+		do
+			Result := locale.formatted_string (locale.translation ("You must save your changes before reloading class $1.%N%NWould you like to continue?"), [class_name])
+		end
+
 	w_Must_save_before_prettifying (class_name: READABLE_STRING_GENERAL): STRING_32
 		require
 			class_name_not_void: class_name /= Void

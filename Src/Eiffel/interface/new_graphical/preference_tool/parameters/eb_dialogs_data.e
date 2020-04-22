@@ -88,6 +88,13 @@ feature {EB_SHARED_PREFERENCES} -- Value
 			Result := confirm_save_before_compile_preference.value
 		end
 
+	confirm_save_before_reloading: BOOLEAN
+			-- Should file be saved before reloading without displaying
+			-- a dialog?
+		do
+			Result := confirm_save_before_reloading_preference.value
+		end
+
 	confirm_save_before_prettifying: BOOLEAN
 			-- Should a file be saved before prettifying without displaying
 			-- a dialog?
@@ -353,6 +360,10 @@ feature {EB_SHARED_PREFERENCES, EB_TOOL} -- Preference
 			-- Should all files be saved before compiling without displaying
 			-- a dialog?
 
+	confirm_save_before_reloading_preference: BOOLEAN_PREFERENCE
+			-- Should a file be saved before reloading without displaying
+			-- a dialog?
+
 	confirm_save_before_prettifying_preference: BOOLEAN_PREFERENCE
 			-- Should a file be saved before prettifying without displaying
 			-- a dialog?
@@ -474,6 +485,7 @@ feature -- Preference strings
 	confirm_finalize_string: STRING = "interface.dialogs.confirm_finalize"
 	confirm_freeze_string: STRING = "interface.dialogs.confirm_freeze"
 	confirm_save_before_compile_string: STRING = "interface.dialogs.confirm_save_before_compile"
+	confirm_save_before_reloading_string: STRING = "interface.dialogs.confirm_save_before_reloading"
 	confirm_save_before_prettifying_string: STRING = "interface.dialogs.confirm_save_before_prettifying"
 	confirm_finalize_assertions_string: STRING = "interface.dialogs.confirm_finalize_assertions"
 	confirm_clear_breakpoints_string: STRING = "interface.dialogs.confirm_clear_breakpoints"
@@ -560,6 +572,7 @@ feature {NONE} -- Implementation
 			confirm_finalize_preference := l_manager.new_boolean_preference_value (l_manager, confirm_finalize_string, True)
 			confirm_freeze_preference := l_manager.new_boolean_preference_value (l_manager, confirm_freeze_string, True)
 			confirm_save_before_compile_preference := l_manager.new_boolean_preference_value (l_manager, confirm_save_before_compile_string,True)
+			confirm_save_before_reloading_preference := l_manager.new_boolean_preference_value (l_manager, confirm_save_before_reloading_string,True)
 			confirm_save_before_prettifying_preference := l_manager.new_boolean_preference_value (l_manager, confirm_save_before_prettifying_string, True)
 			confirm_finalize_assertions_preference := l_manager.new_boolean_preference_value (l_manager, confirm_finalize_assertions_string, True)
 			confirm_clear_breakpoints_preference := l_manager.new_boolean_preference_value (l_manager, confirm_clear_breakpoints_string, True)
@@ -640,6 +653,7 @@ invariant
 	confirm_finalize_preference_not_void: confirm_finalize_preference /= Void
 	confirm_freeze_preference_not_void: confirm_freeze_preference /= Void
 	confirm_save_before_compile_preference_not_void: confirm_save_before_compile_preference /= Void
+	confirm_save_before_reloading_preference_not_void: confirm_save_before_reloading_preference /= Void
 	confirm_save_before_prettifying_preference_not_void: confirm_save_before_prettifying_preference /= Void
 	confirm_finalize_assertions_preference_not_void: confirm_finalize_assertions_preference /= Void
 	confirm_clear_breakpoints_preference_not_void: confirm_clear_breakpoints_preference /= Void

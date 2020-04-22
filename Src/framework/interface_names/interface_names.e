@@ -164,6 +164,7 @@ feature -- Button texts
 	b_previous: STRING_32 						do Result := locale.translation ("Previous") end
 	b_purchase: STRING_32 						do Result := locale.translation ("Purchase") end
 	b_quit: STRING_32 							do Result := locale.translation ("Quit") end
+	b_reject_and_quit: STRING_32 				do Result := locale.translation ("Reject and Quit") end
 	b_System_info: STRING_32					do Result := locale.translation("System Info")	end
 	b_arrow_back: STRING_32						do Result := locale.translation ("< Back") end
 	b_arrow_next: STRING_32						do Result := locale.translation ("Next >") end
@@ -1378,6 +1379,7 @@ feature -- Label texts
 	l_Discard_freeze_dialog: STRING_32			do Result := locale.translation("Always compile C/C++ code.")	end
 	l_Discard_ignore_contract_violation_dialog: STRING_32 do Result := locale.translation("Always break into debugger on contract violation.")	end
 	l_Discard_save_before_compile_dialog: STRING_32	do Result := locale.translation("Always save files before compiling.")	end
+	l_Discard_save_before_reloading_dialog: STRING_32	do Result := locale.translation("Always save file before reloading.")	end
 	l_discard_save_before_prettifying_dialog: STRING_32 do Result := locale.translation ("Always save class before prettifying.") end
 	l_Discard_starting_dialog: STRING_32			do Result := locale.translation("Hide this dialog at startup.")	end
 	l_Discard_replace_all_warning_dialog: STRING_32 do Result := locale.translation("Always replace all.")	end

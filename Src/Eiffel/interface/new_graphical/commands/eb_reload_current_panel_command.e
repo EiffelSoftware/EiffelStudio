@@ -21,6 +21,10 @@ inherit
 			make
 		end
 
+	EB_SHARED_PREFERENCES
+
+	ES_DIALOG_BUTTONS
+
 create
 	make
 
@@ -29,13 +33,11 @@ feature {NONE} -- Creation method
 	make (a_develop_window: EB_DEVELOPMENT_WINDOW)
 			-- Creation method
 		local
-			l_preference: EB_SHARED_PREFERENCES
 			l_shortcut: SHORTCUT_PREFERENCE
 		do
 			Precursor {EB_DEVELOPMENT_WINDOW_COMMAND}(a_develop_window)
 
-			create l_preference
-			l_shortcut := l_preference.preferences.misc_shortcut_data.Shortcuts.item ("reload_current_tab")
+			l_shortcut := preferences.misc_shortcut_data.Shortcuts.item ("reload_current_tab")
 			create accelerator.make_with_key_combination (l_shortcut.key, l_shortcut.is_ctrl, l_shortcut.is_alt, l_shortcut.is_shift)
 			accelerator.actions.extend (agent execute)
 			set_referred_shortcut (l_shortcut)
@@ -64,16 +66,38 @@ feature -- Command
 			-- <Precursor>
 		local
 			l_manager: EB_EDITORS_MANAGER
+			dev_window: EB_DEVELOPMENT_WINDOW
 			l_smart_editor: EB_SMART_EDITOR
 			l_content: like current_focused_content
+			l_save_request: ES_DISCARDABLE_QUESTION_PROMPT
 		do
 			l_content := current_focused_content
 			if l_content /= Void then
 				if l_content.type = {SD_ENUMERATION}.editor then
-					l_manager := window_manager.last_focused_development_window.editors_manager
+					dev_window := window_manager.last_focused_development_window
+					l_manager := dev_window.editors_manager
 					l_smart_editor := l_manager.editor_with_content (l_content)
 					if l_smart_editor /= Void then
-						l_smart_editor.reload
+						if l_smart_editor.text_displayed.is_modified then
+							create l_save_request.make (warning_messages.w_Must_save_before_reloading (l_smart_editor.stone.stone_name),
+									yes_no_buttons,
+									no_button,
+									yes_button,
+									no_button,
+									interface_names.l_Discard_save_before_reloading_dialog,
+									create {ES_BOOLEAN_PREFERENCE_SETTING}.make (preferences.dialog_data.confirm_save_before_reloading_preference, True)
+								)
+							l_save_request.set_title (interface_names.t_eiffelstudio_question)
+							l_save_request.set_button_text (yes_button, interface_names.b_continue)
+
+							l_save_request.set_button_action (yes_button, agent (i_dev_window: EB_DEVELOPMENT_WINDOW; i_smart_editor: EB_SMART_EDITOR)
+									do
+										i_dev_window.save_text
+										i_smart_editor.reload
+									end(dev_window, l_smart_editor)
+								)
+							l_save_request.show_on_active_window
+						end
 					else
 						check not_possible: False end
 					end
@@ -84,7 +108,7 @@ feature -- Command
 		end
 
 ;note
-	copyright: "Copyright (c) 1984-2018, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

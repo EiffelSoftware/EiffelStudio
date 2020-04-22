@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Detector of local scopes."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -18,9 +18,12 @@ inherit
 			process_bin_ne_as,
 			process_bin_or_as,
 			process_bin_or_else_as,
-			process_object_test_as,
 			process_converted_expr_as,
+			process_expr_call_as,
+			process_nested_expr_as,
+			process_object_test_as,
 			process_paran_as,
+			process_un_free_as,
 			process_un_not_as
 		end
 
@@ -103,16 +106,58 @@ feature {AST_EIFFEL} -- Visitor pattern: boolean logic
 			end
 		end
 
-	process_un_not_as (l_as: UN_NOT_AS)
+	process_expr_call_as (a: EXPR_CALL_AS)
+			-- <Precursor>
 		do
-				-- Apply the CAP only if `l_as' corresponds to the corresponding boolean operator.
-			if l_as.class_id = boolean_type.class_id then
-					-- Boolean expression is negated
-				is_negated := not is_negated
-				l_as.expr.process (Current)
-					-- Revert original status in case there are other voidness tests
-				is_negated := not is_negated
+				-- Look for expressions of the form
+				--     (something).negated
+			a.call.process (Current)
+		end
+
+	process_nested_expr_as (a: NESTED_EXPR_AS)
+			-- <Precursor>
+		do
+			if a.message.class_id = boolean_type.class_id then
+				inspect a.message.feature_name.name_id
+				when {PREDEFINED_NAMES}.negated_name_id then
+					process_negation (a.target)
+				else
+						-- A call to some non-built-in feature.
+				end
 			end
+		end
+
+	process_un_free_as (a: UN_FREE_AS)
+			-- <Precursor>
+		do
+				-- Apply the CAP only if `a' corresponds to the boolean operator.
+			if
+				a.class_id = boolean_type.class_id and then
+				boolean_type.base_class.feature_of_rout_id (a.first).feature_name_id = {PREDEFINED_NAMES}.negated_name_id
+			then
+				process_negation (a.expr)
+			end
+		end
+
+	process_un_not_as (a: UN_NOT_AS)
+			-- <Precursor>
+		do
+				-- Apply the CAP only if `a' corresponds to the boolean operator.
+			if a.class_id = boolean_type.class_id then
+				process_negation (a.expr)
+			end
+		end
+
+feature {NONE} -- Boolean connectives
+
+	process_negation (e: EXPR_AS)
+			-- Process negation of expression `e`.
+		do
+				-- Boolean expression is negated.
+			is_negated := not is_negated
+			e.process (Current)
+				-- Revert original status in case there are other voidness tests.
+			is_negated := not is_negated
 		end
 
 feature {AST_EIFFEL} -- Visitor pattern: content

@@ -153,7 +153,7 @@ feature {ENCODING} -- Status report
 			a_to_encoding_valid: a_to_encoding.is_valid
 			is_valid: is_valid
 		do
-			Result := regular_encoding_imp.is_code_page_convertable (code_page, a_to_encoding.code_page)
+			Result := regular_encoding_imp.is_code_page_convertible (code_page, a_to_encoding.code_page)
 		end
 
 feature {NONE} -- Implementation

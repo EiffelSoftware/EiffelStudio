@@ -23,7 +23,7 @@ feature {ENCODING} -- String encoding convertion
 		require
 			a_from_code_page_valid: is_code_page_valid (a_from_code_page)
 			a_to_code_page_valid: is_code_page_valid (a_to_code_page)
-			code_page_convertable: is_code_page_convertable (a_from_code_page, a_to_code_page)
+			code_page_convertible: is_code_page_convertible (a_from_code_page, a_to_code_page)
 			a_from_string_not_void: a_from_string /= Void
 		deferred
 		ensure
@@ -87,7 +87,15 @@ feature {ENCODING} -- Status report
 		end
 
 	is_code_page_convertable (a_from_code_page, a_to_code_page: STRING): BOOLEAN
-			-- Is `a_from_code_page` convertable to `a_to_code_page`.
+			-- Is `a_from_code_page` convertible to `a_to_code_page`.
+		obsolete
+			"Use is_code_page_convertible [2020-04-22]"
+		do
+			Result := is_code_page_convertible (a_from_code_page, a_to_code_page)
+		end
+
+	is_code_page_convertible (a_from_code_page, a_to_code_page: STRING): BOOLEAN
+			-- Is `a_from_code_page` convertible to `a_to_code_page`.
 		deferred
 		end
 
@@ -199,7 +207,7 @@ feature {NONE} -- Implementation
 
 note
 	library:   "Encoding: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2013, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

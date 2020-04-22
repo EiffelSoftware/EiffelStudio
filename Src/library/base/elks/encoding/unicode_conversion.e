@@ -10,9 +10,6 @@ class
 
 inherit
 	ENCODING_I
-		rename
-			is_code_page_convertable as is_code_page_convertible
-		end
 
 	STRING_HANDLER
 

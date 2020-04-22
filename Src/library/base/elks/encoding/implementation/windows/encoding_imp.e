@@ -172,8 +172,8 @@ feature -- Status report
 			end
 		end
 
-	is_code_page_convertable (a_from_code_page, a_to_code_page: STRING): BOOLEAN
-			-- Is `a_from_code_page` convertable to `a_to_code_page`.
+	is_code_page_convertible (a_from_code_page, a_to_code_page: STRING): BOOLEAN
+			-- Is `a_from_code_page` convertible to `a_to_code_page`.
 		do
 				-- Always true. It is not really interesting here on windows without converting strings.
 				-- `last_conversion_successful` reflects correct result.
@@ -286,7 +286,7 @@ feature {NONE} -- Implementation
 				}
 				
 				WideCharToMultiByte ((UINT) $cpid, dwFlags, (LPCWSTR) $a_wide_string,
-					(int) $a_wide_count, (LPSTR) $a_out_pointer, (int) $a_count_to_buffer, (LPCSTR) NULL, lpUsedDefaultChar);
+					(int) $a_wide_count, (LPSTR) $a_out_pointer, (int) $a_count_to_buffer, (LPCCH) NULL, lpUsedDefaultChar);
 					
 				dw = GetLastError();
 				if (dw == ERROR_INSUFFICIENT_BUFFER || dw == ERROR_INVALID_FLAGS || dw == ERROR_INVALID_PARAMETER) {
@@ -303,7 +303,7 @@ feature {NONE} -- Implementation
 			"[
 				DWORD dw;
 			    
-				MultiByteToWideChar ((UINT) $cpid, (DWORD) 0, (LPCSTR) $a_multi_byte,
+				MultiByteToWideChar ((UINT) $cpid, (DWORD) 0, (LPCCH) $a_multi_byte,
 					(int) $a_multi_byte_count, (LPWSTR) $a_out_pointer, (int) $a_count_to_buffer);
 				dw = GetLastError();
 				if (dw == ERROR_INSUFFICIENT_BUFFER || dw == ERROR_INVALID_FLAGS || dw == ERROR_INVALID_PARAMETER || dw == ERROR_NO_UNICODE_TRANSLATION) {
@@ -322,7 +322,7 @@ feature {NONE} -- Implementation
 
 note
 	library:   "Encoding: Library of reusable components for Eiffel."
-	copyright: "Copyright (c) 1984-2019, Eiffel Software and others"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software and others"
 	license:   "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

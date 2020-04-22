@@ -202,7 +202,7 @@ feature {NONE}
 			args.extend (Integer_type)
 			create  Result
 			Result.set_arguments (args)
-			Result.set_feature_name_id ({PREDEFINED_NAMES}.make_name_id, 0)
+			Result.set_feature_name_id ({PREDEFINED_NAMES}.make_name_id, Void)
 		end
 
 	count_signature: DYN_FUNC_I
@@ -214,7 +214,7 @@ feature {NONE}
 			create Result
 			Result.set_arguments (args)
 			Result.set_type (Integer_type, 0)
-			Result.set_feature_name_id ({PREDEFINED_NAMES}.count_name_id, 0)
+			Result.set_feature_name_id ({PREDEFINED_NAMES}.count_name_id, Void)
 		ensure
 			item_signature_not_void: Result /= Void
 		end
@@ -229,7 +229,7 @@ feature {NONE}
 			create Result
 			Result.set_arguments (args)
 			Result.set_type (actual_type.generics [1], 0)
-			Result.set_feature_name_id ({PREDEFINED_NAMES}.item_name_id, 0)
+			Result.set_feature_name_id ({PREDEFINED_NAMES}.item_name_id, Void)
 		ensure
 			item_signature_not_void: Result /= Void
 		end
@@ -244,7 +244,7 @@ feature {NONE}
 			create Result
 			Result.set_arguments (args)
 			Result.set_type (actual_type.generics [1], 0)
-			Result.set_feature_name_id ({PREDEFINED_NAMES}.at_name_id, 0)
+			Result.set_feature_name_id ({PREDEFINED_NAMES}.at_name_id, Void)
 		ensure
 			item_signature_not_void: Result /= Void
 		end
@@ -259,7 +259,7 @@ feature {NONE}
 			create Result
 			Result.set_arguments (args)
 			Result.set_type (actual_type.generics [1], 0)
-			Result.set_feature_name_id ({PREDEFINED_NAMES}.infix_at_name_id, 0)
+			Result.set_feature_name_id ({PREDEFINED_NAMES}.infix_at_name_id, Void)
 		ensure
 			item_signature_not_void: Result /= Void
 		end
@@ -274,13 +274,13 @@ feature {NONE}
 			args.extend (actual_type.generics [1])
 			create Result
 			Result.set_arguments (args)
-			Result.set_feature_name_id ({PREDEFINED_NAMES}.put_name_id, 0)
+			Result.set_feature_name_id ({PREDEFINED_NAMES}.put_name_id, Void)
 		ensure
 			put_signature_not_void: Result /= Void
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

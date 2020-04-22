@@ -172,7 +172,7 @@ feature
 		end
 
 	check_validity1
-			-- Check validity of renamings
+			-- Check validity of renamings.
 		local
 			parent_table: FEATURE_TABLE
 			vhrc1: VHRC1
@@ -183,8 +183,9 @@ feature
 			old_name: STRING
 			feature_renaming: RENAMING
 			new_name: STRING
-			alias_name_id: INTEGER
-			alias_name: STRING
+			alias_name_id: like {NAMES_HEAP}.id_of
+			i, n: like {RENAMING}.alias_name_id.lower
+			alias_name: READABLE_STRING_8
 			f: FEATURE_I
 			local_renaming: like renaming
 		do
@@ -205,7 +206,6 @@ feature
 					old_name := names_heap.item (old_name_id)
 					feature_renaming := local_renaming.item_for_iteration
 					new_name := names_heap.item (feature_renaming.feature_name_id)
-					alias_name_id := feature_renaming.alias_name_id
 					check_inherited_name (old_name_id, parent_table)
 					if not has_inherited_name then
 						create vhrc1
@@ -231,55 +231,72 @@ feature
 							vhrc4.set_feature_name (old_name)
 							Error_handler.insert_error (vhrc4)
 						end
-					elseif alias_name_id > 0 then
-						vfav := Void
+					elseif attached feature_renaming.alias_name_id as alias_name_ids then
 						f := inherited_feature
-						if alias_name_id = {PREDEFINED_NAMES}.bracket_symbol_id then
-							if f.argument_count = 0 or else f.type.is_void then
-									-- Bracket features should have at least one argument and a return type.
-								create {VFAV2_VHRC} vfav
-							elseif feature_renaming.has_convert_mark then
-									-- Bracket alias cannot have convert mark
-								create {VFAV5_VHRC} vfav
-							end
-						elseif alias_name_id = {PREDEFINED_NAMES}.parentheses_symbol_id then
-							if f.argument_count = 0 then
-									-- Parenthesis alias features should have at least one argument.
-								create {VFAV3_VHRC} vfav
-							elseif feature_renaming.has_convert_mark then
-									-- Parenthesis alias cannot have convert mark
-								create {VFAV5_VHRC} vfav
-							end
-						else
-							alias_name := extract_alias_name (names_heap.item (alias_name_id))
-							if
-								not f.type.is_void and then
-								(f.argument_count = 0 and then is_valid_unary_operator (alias_name) or else
-								f.argument_count = 1 and then is_valid_binary_operator (alias_name))
-							then
-								if f.argument_count = 1 then
-										-- Ensure the alias name is in binary form.
-									names_heap.put (infix_feature_name_with_symbol (alias_name))
-									feature_renaming.set_alias_name_id (names_heap.found_item)
-								else
-										-- Ensure the alias name is in unary form.
-									names_heap.put (prefix_feature_name_with_symbol (alias_name))
-									feature_renaming.set_alias_name_id (names_heap.found_item)
-									if feature_renaming.has_convert_mark then
-											-- Unary operator cannot have convert mark
-										create {VFAV5_VHRC} vfav
-									end
+						from
+							i := alias_name_ids.lower
+							n := alias_name_ids.upper
+						until
+							i > n
+						loop
+							alias_name_id := alias_name_ids [i]
+							vfav := Void
+							if alias_name_id = {PREDEFINED_NAMES}.bracket_symbol_id then
+								if f.argument_count = 0 or else f.type.is_void then
+										-- Bracket features should have at least one argument and a return type.
+									create {VFAV2_VHRC} vfav
+								elseif feature_renaming.has_convert_mark then
+										-- Bracket alias cannot have convert mark
+									create {VFAV5_VHRC} vfav
+								end
+							elseif alias_name_id = {PREDEFINED_NAMES}.parentheses_symbol_id then
+								if f.argument_count = 0 then
+										-- Parenthesis alias features should have at least one argument.
+									create {VFAV3_VHRC} vfav
+								elseif feature_renaming.has_convert_mark then
+										-- Parenthesis alias cannot have convert mark
+									create {VFAV5_VHRC} vfav
 								end
 							else
-									-- Report wrong argument number or return type for operator alias.
-								create {VFAV1_VHRC} vfav
+								alias_name := extract_alias_name (names_heap.item (alias_name_id))
+								if
+									not f.type.is_void and then
+									(f.argument_count = 0 and then is_valid_unary_operator (alias_name) or else
+									f.argument_count = 1 and then is_valid_binary_operator (alias_name))
+								then
+									if f.argument_count = 1 then
+											-- Ensure the alias name is in binary form.
+										names_heap.put (infix_feature_name_with_symbol (alias_name))
+										if feature_renaming.alias_name_id = alias_name_ids then
+												-- Avoid changing original aliases/
+											feature_renaming.set_alias_name_id (alias_name_ids.twin)
+										end
+										feature_renaming.alias_name_id [i] := names_heap.found_item
+									else
+											-- Ensure the alias name is in unary form.
+										names_heap.put (prefix_feature_name_with_symbol (alias_name))
+										if feature_renaming.alias_name_id = alias_name_ids then
+												-- Avoid changing original aliases/
+											feature_renaming.set_alias_name_id (alias_name_ids.twin)
+										end
+										feature_renaming.alias_name_id [i] := names_heap.found_item
+										if feature_renaming.has_convert_mark then
+												-- Unary operator cannot have convert mark
+											create {VFAV5_VHRC} vfav
+										end
+									end
+								else
+										-- Report wrong argument number or return type for operator alias.
+									create {VFAV1_VHRC} vfav
+								end
 							end
-						end
-						if vfav /= Void then
-							vfav.set_class (System.current_class)
-							vfav.set_parent (parent)
-							vfav.set_feature_name (old_name)
-							Error_handler.insert_error (vfav)
+							if vfav /= Void then
+								vfav.set_class (System.current_class)
+								vfav.set_parent (parent)
+								vfav.set_feature_name (old_name)
+								Error_handler.insert_error (vfav)
+							end
+							i := i + 1
 						end
 					end
 						-- Remove it from memory since we do not need it anymore.
@@ -483,13 +500,17 @@ feature -- Debug
 					io.error.put_string (names_heap.item (renaming.key_for_iteration))
 					io.error.put_string (" as ")
 					io.error.put_string (names_heap.item (renaming.item_for_iteration.feature_name_id))
-					if renaming.item_for_iteration.alias_name_id > 0 then
-						io.error.put_string (" alias %"")
-						io.error.put_string (names_heap.item (renaming.item_for_iteration.alias_name_id))
-						io.error.put_string ("%"")
-						if renaming.item_for_iteration.has_convert_mark then
-							io.error.put_string (" convert")
+					if attached renaming.item_for_iteration.alias_name_id as alias_ids then
+						across
+							alias_ids as alias_id
+						loop
+							io.error.put_string (" alias %"")
+							io.error.put_string (names_heap.item (alias_id.item))
+							io.error.put_character ('"')
 						end
+					end
+					if renaming.item_for_iteration.has_convert_mark then
+						io.error.put_string (" convert")
 					end
 					io.error.put_new_line
 					renaming.forth
@@ -568,7 +589,7 @@ feature {NONE} -- Implementation
 							if renaming = Void then
 								create renaming.make (1)
 							end
-							renaming.put (create {RENAMING}.make (a_name_id, a_name_id,
+							renaming.put (create {RENAMING}.make (a_name_id, create {SPECIAL [like {NAMES_HEAP}.found_item]}.make_filled (a_name_id, 1),
 								inherited_feature.has_convert_mark), inherited_feature.feature_name_id)
 						end
 					end
@@ -577,7 +598,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

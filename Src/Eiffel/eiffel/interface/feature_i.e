@@ -129,19 +129,29 @@ feature -- Access
 			-- Id of `feature_name' in `Names_heap' table.
 
 
-	alias_name_ids: detachable LIST [INTEGER]
-			-- Ids of `alias_names' in `Names_heap' table.
+	alias_name_ids: detachable SPECIAL [INTEGER]
+			-- Ids of `alias_names` in `names_heap` table.
 
 	has_alias: BOOLEAN
 			-- Has alias name?
 		do
-			Result := attached alias_name_ids as lst and then not lst.is_empty
+			Result := attached alias_name_ids as a and then a.count > 0
 		end
 
 	has_alias_name_id (a_alias_name_id: INTEGER): BOOLEAN
+		local
+			i, n: like alias_name_ids.index_of
 		do
-			if attached alias_name_ids as lst then
-				Result := lst.has (a_alias_name_id)
+			if attached alias_name_ids as a then
+				from
+					i := a.lower
+					n := a.upper
+				until
+					i > n or else Result
+				loop
+					Result := a [i] = a_alias_name_id
+					i := i + 1
+				end
 			end
 		end
 
@@ -733,70 +743,29 @@ feature -- Setting
 			pattern_id := i
 		end
 
-	set_feature_name_id (a_id: INTEGER; a_alias_id: INTEGER)
-			-- Assign `a_id' to `feature_name_id'.
+	frozen set_feature_name_id (a_id: INTEGER; a_alias_ids: like alias_name_ids)
+			-- Assign `a_id` to `feature_name_id` and set `alias_name_ids` according to `a_alias_id`.
 		require
 			valid_id: Names_heap.valid_index (a_id)
-			valid_alias_id: a_alias_id /= 0 implies Names_heap.valid_index (a_alias_id)
+			valid_alias_id: attached a_alias_ids implies ∀ i: a_alias_ids ¦ names_heap.valid_index (i)
 		do
 			feature_name_id := a_id
-			alias_name_ids := Void
-			if a_alias_id /= 0 then
-				add_alias_id (a_alias_id)
-			end
+			alias_name_ids := a_alias_ids
 		ensure
 			feature_name_id_set: feature_name_id = a_id
-			a_alias_id_set: a_alias_id /= 0 implies has_alias_name_id (a_alias_id)
+			a_alias_id_set: attached a_alias_ids implies ∀ i: a_alias_ids ¦ has_alias_name_id (i)
 		end
 
-	set_renamed_name_id (a_id: INTEGER; a_alias_id: INTEGER)
-			-- Assign `a_id' to `feature_name_id'.
+	set_renamed_name_id (a_id: INTEGER; a_alias_id: like {RENAMING}.alias_name_id)
+			-- Same as `set_feature_name_id` but redefined in `{EXTERNAL_I}`.
 		require
 			valid_id: Names_heap.valid_index (a_id)
-			valid_alias_id: a_alias_id /= 0 implies Names_heap.valid_index (a_alias_id)
+			valid_alias_id: attached a_alias_id implies ∀ i: a_alias_id ¦ names_heap.valid_index (i)
 		do
-			feature_name_id := a_id
-			alias_name_ids := Void
-			if a_alias_id /= 0 then
-				add_alias_id (a_alias_id)
-			end
+			set_feature_name_id (a_id, a_alias_id)
 		ensure
 			feature_name_id_set: feature_name_id = a_id
-			a_alias_id_set: a_alias_id /= 0 implies has_alias_name_id (a_alias_id)
-		end
-
-	set_alias_name_ids (a_alias_name_ids: detachable LIST [INTEGER])
-		require
-			valid_alias_name_ids: a_alias_name_ids /= Void implies across a_alias_name_ids as ic all ic.item /= 0 implies Names_heap.valid_index (ic.item) end
-		local
-			lst: like alias_name_ids
-		do
-			if a_alias_name_ids /= Void then
-				create {ARRAYED_LIST [INTEGER]} lst.make (a_alias_name_ids.count)
-				across
-					a_alias_name_ids as ic
-				loop
-					if ic.item /= 0 then
-						lst.force (ic.item)
-					end
-				end
-			end
-			alias_name_ids := lst
-		end
-
-	add_alias_id (a_alias_id: INTEGER)
-			-- Add `a_alias_id` value as alias name id.
-		require
-			valid_alias_id: Names_heap.valid_index (a_alias_id)
-		local
-			lst: like alias_name_ids
-		do
-			lst := alias_name_ids
-			if lst = Void then
-				create {ARRAYED_LIST [INTEGER]} lst.make (1)
-				alias_name_ids := lst
-			end
-			lst.force (a_alias_id)
+			a_alias_id_set: attached a_alias_id implies ∀ i: a_alias_id ¦ has_alias_name_id (i)
 		end
 
 	set_written_in (a_class_id: like written_in)
@@ -1207,37 +1176,8 @@ feature -- Incrementality
 
 	same_aliases (other: FEATURE_I): BOOLEAN
 			-- Does `Current` and `other` have same aliases?
-		local
-			lst1, lst2: like alias_name_ids
-			c1, c2: CURSOR
 		do
-			lst1 := alias_name_ids
-			lst2 := other.alias_name_ids
-			if lst1 = lst2 then
-				Result := True
-			elseif lst1 = Void then
-				Result := lst2 = Void
-			elseif lst2 = Void then
-				Result := False
-			elseif lst1.count = lst2.count then
-				Result := True
-				c1 := lst1.cursor
-				c2 := lst2.cursor
-				from
-					lst1.start
-					lst2.start
-				until
-					not Result or lst1.off or lst2.off
-				loop
-					Result := lst1.item = lst2.item
-					lst1.forth
-					lst2.forth
-				end
-				lst1.go_to (c1)
-				lst2.go_to (c2)
-			else
-					-- not the same aliases!
-			end
+			Result := other.alias_name_ids ~ alias_name_ids
 		end
 
 	equiv (other: FEATURE_I): BOOLEAN
@@ -3275,8 +3215,7 @@ feature -- Undefinition
 			Result.set_is_infix (is_infix)
 			Result.set_is_prefix (is_prefix)
 			Result.set_is_frozen (is_frozen)
-			Result.set_feature_name_id (feature_name_id, 0)
-			Result.set_alias_name_ids (alias_name_ids)
+			Result.set_feature_name_id (feature_name_id, alias_name_ids)
 			Result.set_feature_id (feature_id)
 			Result.set_pattern_id (pattern_id)
 			Result.set_is_require_else (is_require_else)
@@ -3392,8 +3331,7 @@ feature -- Replication
 		do
 			other.set_export_status (export_status)
 			other.set_feature_id (feature_id)
-			other.set_feature_name_id (feature_name_id, 0)
-			other.set_alias_name_ids (alias_name_ids)
+			other.set_feature_name_id (feature_name_id, alias_name_ids)
 			other.set_written_feature_id (written_feature_id)
 			other.set_origin_feature_id (origin_feature_id)
 			other.set_origin_class_id (origin_class_id)
@@ -3438,7 +3376,7 @@ feature -- Replication
 
 			--feature_id := other.feature_id
 			feature_name_id := other.feature_name_id
-			set_alias_name_ids (other.alias_name_ids)
+			alias_name_ids := other.alias_name_ids
 			written_feature_id := other.written_feature_id
 			origin_feature_id := other.origin_feature_id
 			origin_class_id := other.origin_class_id
@@ -3902,7 +3840,7 @@ note
 	ca_ignore:
 		"CA033", "CA033: very long class",
 		"CA082", "CA082: missing redeclaration of `is_equal`"
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

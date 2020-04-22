@@ -4755,7 +4755,7 @@ feature -- Anchored types
 						l_previous_anchor := l_inherited_features.item (l_rout_id)
 						l_anchor.set_origin_class_id (l_previous_anchor.origin_class_id)
 						l_anchor.set_origin_feature_id (l_previous_anchor.origin_feature_id)
-						l_anchor.set_feature_name_id (l_previous_anchor.feature_name_id, 0)
+						l_anchor.set_feature_name_id (l_previous_anchor.feature_name_id, Void)
 						l_anchor.set_is_origin (False)
 					else
 						l_anchor.set_is_origin (True)
@@ -5334,7 +5334,7 @@ invariant
 	-- has_ast: has_ast
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

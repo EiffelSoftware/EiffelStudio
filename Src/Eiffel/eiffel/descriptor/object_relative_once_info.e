@@ -475,7 +475,7 @@ feature -- Element change
 			l_att_i.set_origin_class_id (routine.origin_class_id)
 			l_att_i.set_feature_id (called_feature_id)
 			l_att_i.set_origin_feature_id (called_feature_id)
-			l_att_i.set_feature_name_id (called_name_id, 0)
+			l_att_i.set_feature_name_id (called_name_id, Void)
 			l_att_i.set_is_transient (routine.is_transient)
 			l_att_i.set_is_hidden (True)
 
@@ -508,7 +508,7 @@ feature -- Element change
 			l_att_i.set_origin_class_id (routine.origin_class_id)
 			l_att_i.set_feature_id (exception_feature_id)
 			l_att_i.set_origin_feature_id (exception_feature_id)
-			l_att_i.set_feature_name_id (exception_name_id, 0)
+			l_att_i.set_feature_name_id (exception_name_id, Void)
 			l_att_i.set_is_transient (routine.is_transient)
 			l_att_i.set_is_hidden (True)
 
@@ -544,7 +544,7 @@ feature -- Element change
 			l_att_i.set_origin_class_id (routine.origin_class_id)
 			l_att_i.set_feature_id (result_feature_id)
 			l_att_i.set_origin_feature_id (result_feature_id)
-			l_att_i.set_feature_name_id (result_name_id, 0)
+			l_att_i.set_feature_name_id (result_name_id, Void)
 			l_att_i.set_is_transient (routine.is_transient)
 			l_att_i.set_is_hidden (True)
 
@@ -791,7 +791,7 @@ invariant
 	rout_id_set_attached: rout_id_set /= Void
 
 ;note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

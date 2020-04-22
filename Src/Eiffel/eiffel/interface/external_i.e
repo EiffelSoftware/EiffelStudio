@@ -107,13 +107,13 @@ feature
 	encapsulated: BOOLEAN;
 			-- Has the feature some assertion declared ?
 
-	set_renamed_name_id (a_id: INTEGER; alias_id: INTEGER)
+	set_renamed_name_id (a_id: INTEGER; alias_ids: like alias_name_ids)
 			-- Assign `id' to `feature_name_id'.
 		do
 			if external_alias_name_id = 0 then
 				extension.set_alias_name_id (feature_name_id)
 			end
-			Precursor {PROCEDURE_I} (a_id, alias_id)
+			Precursor (a_id, alias_ids)
 		end
 
 	set_encapsulated (b: BOOLEAN)
@@ -288,7 +288,7 @@ invariant
 	extension_not_void: extension /= Void
 
 note
-	copyright:	"Copyright (c) 1984-2018, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

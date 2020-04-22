@@ -694,7 +694,8 @@ end;
 			i, l_count: INTEGER
 			l_inherit_info: INHERIT_INFO
 			l_from_features_list: BOOLEAN
-			new_name_id, new_alias_name_id: INTEGER
+			new_name_id: INTEGER
+			new_alias_name_id: like {RENAMING}.alias_name_id
 			names: like names_heap
 		do
 				-- Loop through the parent list
@@ -780,38 +781,30 @@ end;
 									l_inherit_info.a_feature.set_is_infix (False)
 									l_inherit_info.a_feature.set_is_prefix (False)
 								end
-								if new_alias_name_id > 0 then
-									if new_alias_name_id = {PREDEFINED_NAMES}.bracket_symbol_id then
-											-- Bracket alias.
-										l_inherit_info.a_feature.set_is_binary (False)
-										l_inherit_info.a_feature.set_is_bracket (True)
-										l_inherit_info.a_feature.set_is_parentheses (False)
-										l_inherit_info.a_feature.set_is_unary (False)
-									elseif new_alias_name_id = {PREDEFINED_NAMES}.parentheses_symbol_id then
-											-- Parenthesis alias.
-										l_inherit_info.a_feature.set_is_binary (False)
-										l_inherit_info.a_feature.set_is_bracket (False)
-										l_inherit_info.a_feature.set_is_parentheses (True)
-										l_inherit_info.a_feature.set_is_unary (False)
-									elseif l_inherit_info.a_feature.argument_count = 0 then
-											-- Unary operator.
-										l_inherit_info.a_feature.set_is_binary (False)
-										l_inherit_info.a_feature.set_is_bracket (False)
-										l_inherit_info.a_feature.set_is_parentheses (False)
-										l_inherit_info.a_feature.set_is_unary (True)
-									else
-											-- Binary operator.
-										l_inherit_info.a_feature.set_is_binary (True)
-										l_inherit_info.a_feature.set_is_bracket (False)
-										l_inherit_info.a_feature.set_is_parentheses (False)
-										l_inherit_info.a_feature.set_is_unary (False)
+									-- Assume a feature name without aliases.
+								l_inherit_info.a_feature.set_is_binary (False)
+								l_inherit_info.a_feature.set_is_bracket (False)
+								l_inherit_info.a_feature.set_is_parentheses (False)
+								l_inherit_info.a_feature.set_is_unary (False)
+								if attached new_alias_name_id then
+										-- Update information for aliases.
+									across
+										new_alias_name_id is a
+									loop
+										if a = {PREDEFINED_NAMES}.bracket_symbol_id then
+												-- Bracket alias.
+											l_inherit_info.a_feature.set_is_bracket (True)
+										elseif a = {PREDEFINED_NAMES}.parentheses_symbol_id then
+												-- Parenthesis alias.
+											l_inherit_info.a_feature.set_is_parentheses (True)
+										elseif l_inherit_info.a_feature.argument_count = 0 then
+												-- Unary operator.
+											l_inherit_info.a_feature.set_is_unary (True)
+										else
+												-- Binary operator.
+											l_inherit_info.a_feature.set_is_binary (True)
+										end
 									end
-								else
-										-- Feature name without alias.
-									l_inherit_info.a_feature.set_is_binary (False)
-									l_inherit_info.a_feature.set_is_bracket (False)
-									l_inherit_info.a_feature.set_is_parentheses (False)
-									l_inherit_info.a_feature.set_is_unary (False)
 								end
 									-- Remove the inherit info from its old location
 								if l_from_features_list then
@@ -1320,8 +1313,9 @@ end;
 				-- Is the parsed feature the same than a previous
 				-- compiled one ?
 			feature_name_id: INTEGER
-			integer_value: INTEGER_CONSTANT
 				-- Internal name of the feature
+			alias_name_ids: like {FEATURE_I}.alias_name_ids
+			integer_value: INTEGER_CONSTANT
 			vffd4: VFFD4
 		do
 			feature_name_id := feat.internal_name.name_id
@@ -1332,14 +1326,17 @@ debug ("ACTIVITY")
 end;
 
 			Result := feature_i_generator.new_feature (yacc_feature, feature_name_id, a_class)
-			Result.set_feature_name_id (feature_name_id, 0)
 			if attached {FEATURE_NAME_ALIAS_AS} feat as l_alias_feat and then l_alias_feat.has_alias then
+				create alias_name_ids.make_empty (l_alias_feat.aliases.count)
 				across
 					l_alias_feat.aliases as ic
 				loop
-					Result.add_alias_id (ic.item.internal_alias_name_id)
+					alias_name_ids.extend (ic.item.internal_alias_name_id)
 				end
+				Result.set_feature_name_id (feature_name_id, alias_name_ids)
 				Result.set_has_convert_mark (l_alias_feat.has_convert_mark)
+			else
+				Result.set_feature_name_id (feature_name_id, Void)
 			end
 			Result.set_written_in (a_class.class_id)
 			Result.set_is_frozen (feat.is_frozen)
@@ -2037,7 +2034,7 @@ feature {NONE} -- Temporary body index
 		end
 
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

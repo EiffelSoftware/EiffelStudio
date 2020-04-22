@@ -1,4 +1,4 @@
-note
+﻿note
 	description: "Compiler representation of feature renaming."
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
@@ -22,8 +22,8 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		require
 			valid_name_id: names_heap.valid_index (name_id)
-			valid_alias_id: alias_id /= 0 implies names_heap.valid_index (alias_id)
-			valid_convert_mark: convert_mark implies alias_id /= 0
+			valid_alias_id: attached alias_id implies ∀ i: alias_id ¦ names_heap.valid_index (i)
+			valid_convert_mark: convert_mark implies attached alias_id
 		do
 			feature_name_id := name_id
 			alias_name_id := alias_id
@@ -39,8 +39,8 @@ feature -- Access
 	feature_name_id: INTEGER
 			-- ID of new feature name
 
-	alias_name_id: INTEGER
-			-- ID of new alias name or 0
+	alias_name_id: detachable SPECIAL [INTEGER]
+			-- IDs of new alias names or Void
 
 	has_convert_mark: BOOLEAN
 			-- Does new feature have a convert mark?
@@ -50,10 +50,12 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Modification
 	set_alias_name_id (alias_id: like alias_name_id)
 			-- Set `alias_name_id' to `alias_id'.
 		require
-			valid_alias_id: alias_id /= 0 and then names_heap.valid_index (alias_id)
+			alias_id_attached: attached alias_id
+			valid_alias_id: ∀ i: alias_id ¦ names_heap.valid_index (i)
 			is_operator:
-				is_valid_binary_operator (extract_alias_name (names_heap.item (alias_id))) or else
-				is_valid_unary_operator (extract_alias_name (names_heap.item (alias_id)))
+				∀ i: alias_id ¦
+					is_valid_binary_operator (extract_alias_name (names_heap.item (i))) or else
+					is_valid_unary_operator (extract_alias_name (names_heap.item (i)))
 		do
 			alias_name_id := alias_id
 		ensure
@@ -62,11 +64,11 @@ feature {INTERNAL_COMPILER_STRING_EXPORTER} -- Modification
 
 invariant
 	valid_feature_name_id: names_heap.valid_index (feature_name_id)
-	valid_alias_name_id: alias_name_id /= 0 implies names_heap.valid_index (alias_name_id)
-	valid_has_convert_mark: has_convert_mark implies alias_name_id /= 0
+	valid_alias_name_id: attached alias_name_id as a implies ∀ i: a ¦ names_heap.valid_index (i)
+	valid_has_convert_mark: has_convert_mark implies attached alias_name_id
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

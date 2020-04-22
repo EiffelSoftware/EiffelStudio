@@ -103,7 +103,7 @@ feature {NONE} -- Initialization
 					end
 
 						-- If previously it was an alias routine, we removed the alias from the original class.
-					if attached l_old_feature.alias_name_ids as l_ids and then not l_ids.is_empty then
+					if attached l_old_feature.alias_name_ids as l_ids and then l_ids.count > 0 then
 						if removed_alias = Void then
 							create removed_alias.make (10)
 						end
@@ -426,7 +426,7 @@ feature {NONE} -- Implementation
 			result_not_void: Result /= Void
 		end
 note
-	copyright: "Copyright (c) 1984-2019, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

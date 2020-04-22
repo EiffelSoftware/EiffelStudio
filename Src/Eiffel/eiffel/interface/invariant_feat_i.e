@@ -31,7 +31,7 @@ feature
 
 	make (a_class: CLASS_C)
 		do
-			set_feature_name_id (Names_heap.internal_invariant_name_id, 0)
+			set_feature_name_id (Names_heap.internal_invariant_name_id, Void)
 			create rout_id_set.make
 			rout_id_set.put (System.routine_id_counter.invariant_rout_id)
 			written_in := a_class.class_id
@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2014, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

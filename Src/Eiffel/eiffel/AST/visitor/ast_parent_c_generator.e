@@ -83,6 +83,7 @@ feature {NONE} -- Implementation
 			l_old_name, l_new_name: FEATURE_NAME
 			old_name_id: INTEGER
 			l_vhrc2: VHRC2
+			alias_name_ids: SPECIAL [like {NAMES_HEAP}.found_item]
 		do
 			if is_non_conforming then
 					-- If non-conforming then we will we create the appropriate non conforming parent c class
@@ -128,13 +129,15 @@ feature {NONE} -- Implementation
 								attached {FEATURE_NAME_ALIAS_AS} l_new_name as l_new_feat_name and then
 								l_new_feat_name.has_alias
 							then
+								create alias_name_ids.make_empty (l_new_feat_name.aliases.count)
 								across
 									l_new_feat_name.aliases as ic
 								loop
-									l_renaming_c.put (create {RENAMING}.make (l_new_name.internal_name.name_id, ic.item.internal_alias_name_id, l_new_feat_name.has_convert_mark), old_name_id)
+									alias_name_ids.extend (ic.item.internal_alias_name_id)
 								end
+								l_renaming_c.put (create {RENAMING}.make (l_new_name.internal_name.name_id, alias_name_ids, l_new_feat_name.has_convert_mark), old_name_id)
 							else
-								l_renaming_c.put (create {RENAMING}.make (l_new_name.internal_name.name_id, 0, False), old_name_id)
+								l_renaming_c.put (create {RENAMING}.make (l_new_name.internal_name.name_id, Void, False), old_name_id)
 							end
 						end
 
@@ -257,7 +260,7 @@ feature {NONE} -- Implementation
 	Selec: INTEGER = 3;
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -289,7 +289,7 @@ feature {NONE} -- Implementation
 			args.extend (Integer_type)
 			create Result
 			Result.set_arguments (args)
-			Result.set_feature_name_id (Names_heap.make_name_id, 0)
+			Result.set_feature_name_id (Names_heap.make_name_id, Void)
 		ensure
 			item_signature_not_void: Result /= Void
 		end
@@ -303,7 +303,7 @@ feature {NONE} -- Implementation
 			args.extend (Integer_type)
 			create  Result
 			Result.set_arguments (args)
-			Result.set_feature_name_id ({PREDEFINED_NAMES}.make_empty_name_id, 0)
+			Result.set_feature_name_id ({PREDEFINED_NAMES}.make_empty_name_id, Void)
 		end
 
 	make_filled_signature: DYN_PROC_I
@@ -316,7 +316,7 @@ feature {NONE} -- Implementation
 			args.extend (Integer_type)
 			create Result
 			Result.set_arguments (args)
-			Result.set_feature_name_id (Names_heap.make_filled_name_id, 0)
+			Result.set_feature_name_id (Names_heap.make_filled_name_id, Void)
 		ensure
 			put_signature_not_void: Result /= Void
 		end
@@ -331,7 +331,7 @@ feature {NONE} -- Implementation
 			create Result
 			Result.set_arguments (args)
 			Result.set_type (actual_type.generics [1], 0)
-			Result.set_feature_name_id (Names_heap.item_name_id, 0)
+			Result.set_feature_name_id (Names_heap.item_name_id, Void)
 		ensure
 			item_signature_not_void: Result /= Void
 		end
@@ -350,7 +350,7 @@ feature {NONE} -- Implementation
 				l_gen_type.set_is_attached
 			end
 			Result.set_type (l_gen_type, 0)
-			Result.set_feature_name_id ({PREDEFINED_NAMES}.to_array_name_id, 0)
+			Result.set_feature_name_id ({PREDEFINED_NAMES}.to_array_name_id, Void)
 		ensure
 			to_array_signature_not_void: Result /= Void
 		end
@@ -380,7 +380,7 @@ feature {NONE} -- Implementation
 			args.extend (Integer_type)
 			create Result
 			Result.set_arguments (args)
-			Result.set_feature_name_id ({PREDEFINED_NAMES}.put_name_id, 0)
+			Result.set_feature_name_id ({PREDEFINED_NAMES}.put_name_id, Void)
 		ensure
 			put_signature_not_void: Result /= Void
 		end
@@ -394,12 +394,12 @@ feature {NONE} -- Implementation
 			args.extend (actual_type.generics [1])
 			create Result
 			Result.set_arguments (args)
-			Result.set_feature_name_id ({PREDEFINED_NAMES}.extend_name_id, 0)
+			Result.set_feature_name_id ({PREDEFINED_NAMES}.extend_name_id, Void)
 		ensure
 			put_signature_not_void: Result /= Void
 		end
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

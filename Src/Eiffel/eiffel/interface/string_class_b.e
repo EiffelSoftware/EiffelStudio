@@ -185,7 +185,7 @@ feature {NONE} -- Implementation
 			args.extend (Integer_type);
 			create Result;
 			Result.set_arguments (args);
-			Result.set_feature_name_id (Names_heap.make_name_id, 0)
+			Result.set_feature_name_id (Names_heap.make_name_id, Void)
 		end
 
 	make_from_c_byte_array_signature: DYN_PROC_I
@@ -198,7 +198,7 @@ feature {NONE} -- Implementation
 			args.extend (Integer_type);
 			create Result;
 			Result.set_arguments (args);
-			Result.set_feature_name_id (Names_heap.make_from_cil_name_id, 0)
+			Result.set_feature_name_id (Names_heap.make_from_cil_name_id, Void)
 		end
 
 	area_type: GEN_TYPE_A
@@ -226,11 +226,11 @@ feature {NONE} -- Implementation
 			args.extend (Integer_type);
 			create Result;
 			Result.set_arguments (args);
-			Result.set_feature_name_id (Names_heap.set_count_name_id, 0)
+			Result.set_feature_name_id (Names_heap.set_count_name_id, Void)
 		end;
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -95,7 +95,7 @@ feature {NONE}
 			args.extend (Integer_type)
 			create Result
 			Result.set_arguments (args)
-			Result.set_feature_name_id ({PREDEFINED_NAMES}.make_name_id, 0)
+			Result.set_feature_name_id ({PREDEFINED_NAMES}.make_name_id, Void)
 		end;
 
 	area_type: GEN_TYPE_A
@@ -109,7 +109,7 @@ feature {NONE}
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2013, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

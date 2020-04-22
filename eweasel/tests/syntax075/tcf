@@ -1,0 +1,13 @@
+test_name renaming-to-multiple-aliases
+test_description Renaming should allow for using all specified multiple aliases.
+
+copy_sub Ace $TEST Ace
+copy_raw test.e $CLUSTER test.e
+
+compile_melted
+compile_result	ok
+execute_work	NONE exec_output_m
+execute_result	ok
+compare		exec_output_m output
+
+test_end

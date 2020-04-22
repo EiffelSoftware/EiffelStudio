@@ -14,7 +14,7 @@ test	ca-load-preferences				codeanalysis002 tcf pass code_analysis
 test	ca-forced-rules-preferences			codeanalysis003 tcf pass code_analysis
 test	ca-various-warnings				codeanalysis004 tcf pass code_analysis
 test	ca-024-bug-001					codeanalysis005 tcf fail code_analysis
-test	ca-071-bug-001					codeanalysis006 tcf pass code_analysis
+test	ca-071-bug-001					codeanalysis006 tcf pass code_analysis ca071
 test	ca-080-bug-001					codeanalysis007 tcf pass code_analysis
 test	ca-030-001						codeanalysis008 tcf pass code_analysis
 test	ca-051-001						codeanalysis009 tcf pass code_analysis
@@ -297,6 +297,7 @@ test	object-test-with-operators	syntax071 tcf fail syntax attached_types void_sa
 test	bracket-expression-as-bracket-target	syntax072 tcf pass syntax bracket_expression
 test	across-loop-unicode-syntax		syntax073 tcf pass syntax loop across iteration unicode pretty
 test	built-in-unicode-operators-syntax	syntax074 tcf pass syntax unicode expression execution
+test	renaming-to-multiple-aliases		syntax075 tcf fail syntax rename alias
 
 -- Validity tests
 

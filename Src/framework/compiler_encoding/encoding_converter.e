@@ -32,7 +32,7 @@ inherit
 
 	UNICODE_CONVERSION
 		rename
-			string_32_to_stream as string_32_to_stream_encoding
+			string_32_to_multi_byte as string_32_to_stream_encoding
 		end
 
 create
@@ -417,7 +417,7 @@ invariant
 	string_buffer_not_void: string_buffer /= Void
 
 note
-	copyright: "Copyright (c) 1984-2016, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license:   "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

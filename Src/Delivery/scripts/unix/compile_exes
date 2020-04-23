@@ -143,7 +143,7 @@ if [ ! -f x2c ]; then
 fi
 move x2c $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin
 
-remtrace the Eiffel libraries
+remtrace Extract the Eiffel libraries
 cd $EXPORT_DIR
 if [ ! -f libs.tar.bz2 ]; then
 	remtrace 'No.tar.bz2 for the library directory'
@@ -152,17 +152,6 @@ fi
 bunzip2 -c libs.tar.bz2 | tar -xf -
 if [ ! -d library ]; then
 	remtrace No library directory
-	CANCEL
-fi
-
-remtrace Then the C libraries
-if [ ! -f c_libs.tar.bz2 ]; then
-	remtrace 'No.tar.bz2 for the C_library directory'
-	CANCEL
-fi
-bunzip2 -c c_libs.tar.bz2 | tar -xf -
-if [ ! -d C_library ]; then
-	remtrace No C_library directory
 	CANCEL
 fi
 
@@ -179,6 +168,17 @@ if [ ! -f ecdbgd ]; then
 	CANCEL
 fi
 move ecdbgd $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin
+
+remtrace Then extract the C libraries
+if [ ! -f c_libs.tar.bz2 ]; then
+	remtrace 'No.tar.bz2 for the C_library directory'
+	CANCEL
+fi
+bunzip2 -c c_libs.tar.bz2 | tar -xf -
+if [ ! -d C_library ]; then
+	remtrace No C_library directory
+	CANCEL
+fi
 
 # In the following calls we do not source the script because on some platforms you cannot
 # pass arguments to the sourced script, instead we execute it.

@@ -169,6 +169,7 @@ if [ ! -f ecdbgd ]; then
 fi
 move ecdbgd $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin
 
+cd $EXPORT_DIR
 remtrace Then extract the C libraries
 if [ ! -f c_libs.tar.bz2 ]; then
 	remtrace 'No.tar.bz2 for the C_library directory'

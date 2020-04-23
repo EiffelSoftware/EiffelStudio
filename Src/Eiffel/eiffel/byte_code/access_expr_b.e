@@ -17,6 +17,7 @@ inherit
 			generate,
 			has_call,
 			has_gcable_variable,
+			inlined_byte_code,
 			is_feature,
 			is_hector,
 			is_predefined,
@@ -119,10 +120,8 @@ feature -- C code generation
 	propagate (r: REGISTRABLE)
 			-- Propagate a register in expression.
 		do
-			if r = No_register or not used (r) then
-				if not context.propagated or r = No_register then
-					expr.propagate (r)
-				end
+			if r = No_register or (not used (r) and then not context.propagated) then
+				expr.propagate (r)
 			end
 		end
 
@@ -187,7 +186,7 @@ feature -- Array optimization
 
 	optimized_byte_node: like Current
 		do
-			Result := Current;
+			Result := Current
 			expr := expr.optimized_byte_node
 		end
 
@@ -195,7 +194,7 @@ feature -- Inlining
 
 	size: INTEGER
 		do
-			Result := 1 + expr.size
+			Result := expr.size
 		end
 
 	pre_inlined_code: like Current
@@ -205,7 +204,7 @@ feature -- Inlining
 		end
 
 	is_temporary: BOOLEAN
-			-- Is register a temporary one ?
+			-- Is register a temporary one?
 		do
 			Result := expr.is_temporary
 		end
@@ -220,6 +219,13 @@ feature -- Inlining
 			-- The ASCII representation of the register
 		do
 			Result := expr.register_name
+		end
+
+	inlined_byte_code: ACCESS_B
+			-- Redefined for type check
+		do
+			Result := Current
+			expr := expr.inlined_byte_code
 		end
 
 feature {REGISTRABLE} -- C code generation

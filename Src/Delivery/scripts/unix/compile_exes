@@ -143,21 +143,7 @@ if [ ! -f x2c ]; then
 fi
 move x2c $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin
 
-remtrace Recompile quick_finalize
-cd $EXPORT_DIR/bin
-untgz_ccode quick_finalize
-move quick_finalize $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin
-
-remtrace "Put ecdbgd in the new delivery"
-# It should already have been compiled by the configure of the run-time.
-cd $EXPORT_DIR/C/ipc/daemon
-if [ ! -f ecdbgd ]; then
-	echo Could not finalize a new ecdbgd
-	CANCEL
-fi
-move ecdbgd $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin
-
-remtrace Then the Eiffel libraries
+remtrace the Eiffel libraries
 cd $EXPORT_DIR
 if [ ! -f libs.tar.bz2 ]; then
 	remtrace 'No.tar.bz2 for the library directory'
@@ -179,6 +165,20 @@ if [ ! -d C_library ]; then
 	remtrace No C_library directory
 	CANCEL
 fi
+
+remtrace Recompile quick_finalize
+cd $EXPORT_DIR/bin
+untgz_ccode quick_finalize
+move quick_finalize $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin
+
+remtrace "Put ecdbgd in the new delivery"
+# It should already have been compiled by the configure of the run-time.
+cd $EXPORT_DIR/C/ipc/daemon
+if [ ! -f ecdbgd ]; then
+	echo Could not finalize a new ecdbgd
+	CANCEL
+fi
+move ecdbgd $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin
 
 # In the following calls we do not source the script because on some platforms you cannot
 # pass arguments to the sourced script, instead we execute it.

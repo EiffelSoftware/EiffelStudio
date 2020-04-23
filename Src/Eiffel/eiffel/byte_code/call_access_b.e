@@ -308,18 +308,19 @@ feature {NONE} -- Finalized C code generation: inlining
 			-- <Precursor>
 		local
 			inlined_current_b: INLINED_CURRENT_B
+			nested_b: NESTED_B
 		do
 			if attached parent then
 					-- Inlining is done by updating the parent.
 				Result := Current
 			else
 					-- Use an inline current instead of the regular one.
-				create parent
 				create inlined_current_b
-				parent.set_target (inlined_current_b)
-				inlined_current_b.set_parent (parent)
-				parent.set_message (Current)
-				Result := parent
+				create nested_b
+				nested_b.set_target (inlined_current_b)
+				nested_b.set_message (Current)
+				inlined_current_b.set_parent (nested_b)
+				Result := nested_b
 			end
 			if attached parameters as p then
 					-- Update paramaters.

@@ -35,6 +35,7 @@
 		<cluster name="cursor_tree" location="$CURSOR_TREE\"/>
 		<cluster name="cursors" location="$CURSORS\"/>
 		<cluster name="dispenser" location="$DISPENSER\"/>
+		$ENCODING_CLUSTER
 		<cluster name="iteration" location="$ITERATION\"/>
 		$KERNEL_CLASSIC
 		$KERNEL_DOTNET

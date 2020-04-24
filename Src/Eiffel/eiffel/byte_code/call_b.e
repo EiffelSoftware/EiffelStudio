@@ -31,19 +31,14 @@ feature
 	set_parent (p: NESTED_B)
 			-- Set parent to `p'
 		do
-			parent := p;
-		end;
-
-	is_attribute: BOOLEAN
-			-- Is Current an access to an attribute ?
-		do
+			parent := p
 		end
 
 	is_simple_expr: BOOLEAN
 			-- A call/access is a simple expression
 		do
-			Result := true;
-		end;
+			Result := True
+		end
 
 	is_single: BOOLEAN
 			-- Is call/access a single one ?
@@ -136,7 +131,7 @@ feature -- Inlining
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2010, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

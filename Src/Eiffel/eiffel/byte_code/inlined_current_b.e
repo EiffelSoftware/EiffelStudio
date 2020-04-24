@@ -1,6 +1,7 @@
 note
 	legal: "See notice at end of class."
 	status: "See notice at end of class."
+
 class INLINED_CURRENT_B
 
 inherit
@@ -23,9 +24,10 @@ feature
 			-- Current is the inlined current register.
 
 	is_current: BOOLEAN
-			-- `is_current' is used for dtype optimization
-			-- hence it should return false for inlined code
+			-- `is_current` is used for dtype optimization
+			-- hence it should return false unless the call is unqalified or is performed on original Current.
 		do
+			Result := System.remover.inliner.inlined_feature.current_reg.is_current
 		end
 
 	used (r: REGISTRABLE): BOOLEAN
@@ -44,24 +46,26 @@ feature -- Register and code generation
 	propagate (r: REGISTRABLE)
 			-- Do nothing
 		do
-		end;
+		end
 
 	analyze
 			-- Do nothing
 		do
-		end;
+		end
 
 	generate
 			-- Do nothing
 		do
-		end;
+		end
 
 	free_register
 			-- Do nothing
 		do
-		end;
+		end
 
-	print_register
+	print_register, print_checked_target_register
+			-- The check whether the register is void is performed when entering an inlined feature.
+			-- Therefore, `print_register` and `print_checked_target_register` are the same.
 		local
 			inlined_feature: INLINED_FEAT_B
 			current_reg: REGISTRABLE
@@ -76,36 +80,15 @@ feature -- Register and code generation
 
 			context.resume_inline_context
 			Context.set_inlined_current_register (current_reg)
-		end;
+		end
 
 	register_name: STRING
 		do
-			--Result := Context.current_register.register_name
 			Result := System.remover.inliner.inlined_feature.current_reg.register_name
 		end
 
-feature {REGISTRABLE} -- C code generation
-
-	print_checked_target_register
-			-- <Precursor>
-		local
-			inlined_feature: INLINED_FEAT_B
-			current_reg: REGISTRABLE
-		do
-			inlined_feature := System.remover.inliner.inlined_feature
-
-			current_reg := Context.inlined_current_register
-			context.suspend_inline_context
-			Context.set_inlined_current_register (Void)
-
-			inlined_feature.current_reg.print_checked_target_register
-
-			context.resume_inline_context
-			Context.set_inlined_current_register (current_reg)
-		end
-
 note
-	copyright:	"Copyright (c) 1984-2016, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

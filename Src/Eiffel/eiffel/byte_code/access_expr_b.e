@@ -18,9 +18,12 @@ inherit
 			has_call,
 			has_gcable_variable,
 			inlined_byte_code,
+			is_attribute,
 			is_feature,
 			is_hector,
+			is_polymorphic,
 			is_predefined,
+			is_result,
 			is_temporary,
 			is_type_fixed,
 			is_unsafe,
@@ -29,6 +32,7 @@ inherit
 			print_checked_target_register,
 			print_register,
 			propagate,
+			register,
 			register_name,
 			unanalyze,
 			used
@@ -56,13 +60,29 @@ feature -- Status report
 			Result := expr.is_type_fixed
 		end
 
+	is_result: BOOLEAN
+			-- <Precursor>
+		do
+			Result := expr.is_result
+		end
+
+	is_attribute: BOOLEAN
+			-- <Precursor>
+		do
+			Result := expr.is_attribute
+		end
+
 	is_feature: BOOLEAN
 			-- <Precursor>
 		do
 			Result := expr.is_feature
 		end
 
-feature -- Status
+	is_polymorphic: BOOLEAN
+			-- <Precursor>
+		do
+			Result := attached {ACCESS_B} expr as a and then a.is_polymorphic
+		end
 
 	is_hector: BOOLEAN
 			-- Is the current expression an hector one ?
@@ -72,6 +92,8 @@ feature -- Status
 		do
 			Result := expr.is_hector
 		end
+
+feature -- Status
 
 	set_expr (e: EXPR_B)
 			-- Set `expr' to `e'ю
@@ -120,9 +142,13 @@ feature -- C code generation
 	propagate (r: REGISTRABLE)
 			-- Propagate a register in expression.
 		do
-			if r = No_register or (not used (r) and then not context.propagated) then
-				expr.propagate (r)
-			end
+			expr.propagate (r)
+		end
+
+	register: REGISTRABLE
+			-- <Precursor>
+		do
+			Result := expr.register
 		end
 
 	free_register

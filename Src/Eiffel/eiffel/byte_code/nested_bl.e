@@ -272,7 +272,6 @@ feature
 					not
 						(target.is_attribute or else
 						target.is_polymorphic or else
-						attached {ACCESS_EXPR_B} target or else
 						msg_target.is_polymorphic or else
 							-- If assertions are kept, calls cannot be arguments of each other
 							-- because the flag indicating a nested call ("nstcall") should be set separately for each of them.
@@ -419,7 +418,7 @@ feature {REGISTRABLE} -- C code generation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

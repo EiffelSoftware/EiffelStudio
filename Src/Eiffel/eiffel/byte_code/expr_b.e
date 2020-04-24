@@ -108,6 +108,11 @@ feature -- Status report
 			end
 		end
 
+	is_attribute: BOOLEAN
+			-- Is Current an access to an attribute?
+		do
+		end
+
 	is_feature: BOOLEAN
 			-- Is Current an access to an Eiffel feature?
 		do

@@ -159,7 +159,6 @@ feature
 			r_type: TYPE_A
 			reg_type: TYPE_C
 			local_is_current_temporary: BOOLEAN
-			l_curr_reg: like current_reg
 			reg: REGISTRABLE
 		do
 				-- First, standard analysis of the call.
@@ -172,7 +171,7 @@ feature
 				system.class_type_of_id (written_type_id), written_cl_type)
 
 			local_regs := get_inlined_registers (byte_code.locals)
-			argument_regs := get_inlined_param_registers (byte_code.arguments)
+			argument_regs := get_inlined_param_registers (byte_code.arguments, byte_code.has_hector)
 
 				-- Instantiation of the result type (used by INLINED_RESULT_B)
 			r_type := real_type (result_type)
@@ -180,49 +179,18 @@ feature
 				result_reg := get_inline_register (r_type)
 			end
 
-			local_is_current_temporary := reg.is_temporary or reg.is_predefined
-
-			if local_is_current_temporary then
+			if reg.is_temporary or reg.is_predefined then
+				local_is_current_temporary := True
 				current_reg := reg
 			else
-				-- We have to check if `Current' is an attribute. A much nicer way
-				-- would be to define a feature in REGISTRABLE which would indicate
-				-- whether the register can be used during inlining, and to
-				-- redefine it in the appropriate descendants.
-
-				if attached {ATTRIBUTE_BL} reg as l_attrib_bl then
-					l_curr_reg := l_attrib_bl.register
-					current_reg := l_curr_reg
-					if l_curr_reg /= Void then
-						local_is_current_temporary := l_curr_reg.is_temporary
-					end
-				else
-					-- There is the case where `reg' is of type ACCESS_EXPR_B (if the
-					-- feature is an infixed routine). The attribute is stored in
-					-- field `expr'.
-					if attached {ACCESS_EXPR_B} reg as access then
-						if attached {ATTRIBUTE_BL} access.expr as l_attrib_bl then
-							l_curr_reg := l_attrib_bl.register
-							current_reg := l_curr_reg
-							if l_curr_reg /= Void then
-								local_is_current_temporary := l_curr_reg.is_temporary
-							end
-						end
-					end
-				end
-			end
-
-			is_current_temporary := local_is_current_temporary
-
-			if not local_is_current_temporary then
 				create {REGISTER} current_reg.make (reg_type)
 			end
+			is_current_temporary := local_is_current_temporary
 
 			context.restore_class_type_context
 			context.put_inline_context (Current,
 				system.class_type_of_id (context_type_id), context_cl_type,
-				system.class_type_of_id (written_type_id), written_cl_type
-				)
+				system.class_type_of_id (written_type_id), written_cl_type)
 			Context.set_inlined_current_register (current_reg)
 
 			if attached compound as l_compound then
@@ -257,12 +225,12 @@ feature -- Generation
 
 	generate_parameters (gen_reg: REGISTRABLE)
 		local
-			expr: EXPR_B
+			expr: PARAMETER_B
 			context_class_type: CLASS_TYPE
 			written_class_type: CLASS_TYPE
 			buf: GENERATION_BUFFER
 			p: like parameters
-			l_area: SPECIAL [EXPR_B]
+			l_area: SPECIAL [PARAMETER_B]
 			b_area: SPECIAL [BOOLEAN]
 			i, count: INTEGER
 		do
@@ -314,8 +282,7 @@ feature -- Generation
 
 			Context.put_inline_context (Current,
 				context_class_type, context_cl_type,
-				written_class_type, written_cl_type
-				)
+				written_class_type, written_cl_type)
 			Context.set_inlined_current_register (current_reg)
 
 			if attached local_regs as l_local_regs then
@@ -338,8 +305,8 @@ feature -- Generation
 
 			if not is_current_temporary then
 				buf.put_new_line
-				current_register.print_register;
-				buf.put_string (" = ");
+				current_register.print_register
+				buf.put_string (" = ")
 
 				-- `print_register' on `gen_reg' must be generated
 				-- with the old context
@@ -352,6 +319,22 @@ feature -- Generation
 
 				context.resume_inline_context
 				Context.set_inlined_current_register (current_reg)
+			end
+
+				-- Generate a check that Current is not Void (see test#final088 when class removal is disabled).
+			if not current_reg.is_current then
+				buf.put_new_line
+				buf.put_string ("(void) ")
+
+				context.suspend_inline_context
+				Context.set_inlined_current_register (Void)
+
+				current_reg.print_checked_target_register
+
+				context.resume_inline_context
+				Context.set_inlined_current_register (current_reg)
+
+				buf.put_character (';')
 			end
 
 			if inlined_dt_current > 1 or inlined_dftype_current > 1 then
@@ -463,7 +446,7 @@ feature {NONE} -- Registers
 			end
 		end
 
-	get_inlined_param_registers (a: ARRAY [TYPE_A]): ARRAY [REGISTRABLE]
+	get_inlined_param_registers (a: ARRAY [TYPE_A]; has_hector: BOOLEAN): ARRAY [REGISTRABLE]
 		local
 			i ,count: INTEGER
 			is_param_temporary_reg: BOOLEAN
@@ -486,26 +469,43 @@ feature {NONE} -- Registers
 					i > count
 				loop
 					is_param_temporary_reg := False
-
 					l_param := parameters.item
 					expr := l_param
-
-						-- First, let's check if we have a local (LOCAL_BL):
-					if expr.is_temporary or else expr.is_predefined then
-						local_reg := expr
+					if l_param.is_temporary then
+							-- It is safe to use a temporary register as an argument.
+						local_reg := l_param
 						is_param_temporary_reg := True
+					elseif
+						l_param.is_predefined or else
+						(l_param.is_fast_as_local and then l_param.is_constant_expression)
+					then
+							-- It is safe to use a predefined register or a constant
+							-- unless it is going to be accessed/changed by using address of the argument.
+						if has_hector then
+							local_reg := Void
+						else
+							local_reg := l_param
+							is_param_temporary_reg := True
+						end
 					else
-						local_reg := expr.register
+						local_reg := l_param.register
 						if local_reg = Void then
 								-- We have a parameter.
 							expr := l_param.expression
-								-- If the rest fails, at least local_reg will be this,
-								-- which includes the ATTRIBUTE_BL case.
 							local_reg := expr.register
-								-- Do we have a local (LOCAL_BL)?
-							if expr.is_temporary or else expr.is_predefined then
+							if expr.is_temporary then
+									-- It is safe to use a temporary register as an argument.
 								local_reg := expr
 								is_param_temporary_reg := True
+							elseif expr.is_predefined then
+									-- It is safe to use a predefined register
+									-- unless it is going to be accessed/changed by using address of the argument.
+								if has_hector then
+									local_reg := Void
+								else
+									local_reg := expr
+									is_param_temporary_reg := True
+								end
 							else
 									-- We might have a nested call: `a.b.c.d'. The
 									-- register we're looking for is d's, but we have to
@@ -526,20 +526,20 @@ feature {NONE} -- Registers
 						end
 					end
 
-					if not is_param_temporary_reg and then local_reg /= Void then
+					if not is_param_temporary_reg and then attached local_reg then
 						is_param_temporary_reg :=
 							if local_reg.is_temporary then
-								not attached {VOID_REGISTER} local_reg
+								local_reg /= no_register
 							else
-								local_reg.is_predefined
+								local_reg.is_predefined and then not has_hector
 							end
 					end
 
 					if is_param_temporary_reg then
 							-- We only forbid inlining if basic types are not matching,
 							-- to force a C cast to be performed.
-						is_param_temporary_reg := not expr.type.is_basic or else
-							expr.type.same_as (l_param.attachment_type)
+						is_param_temporary_reg :=
+							expr.type.is_basic implies expr.type.same_as (l_param.attachment_type)
 					end
 					temporary_parameters.put (is_param_temporary_reg, i)
 					if is_param_temporary_reg then
@@ -672,7 +672,7 @@ feature {NONE} -- Code generation
 note
 	date: "$Date$"
 	version: "$Revision$"
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

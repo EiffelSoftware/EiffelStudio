@@ -16,7 +16,12 @@ inherit
 			free_register,
 			generate,
 			generate_sk_value,
+			is_constant_expression,
+			is_fast_as_local,
+			is_predefined,
+			is_temporary,
 			print_register,
+			print_checked_target_register,
 			propagate,
 			register,
 			set_register,
@@ -29,6 +34,52 @@ feature -- Status report
 
 	is_address_needed: BOOLEAN
 			-- Does current parameter needs to be passed as address rather than an object?
+
+feature -- C code generation: status report
+
+	is_constant_expression: BOOLEAN
+			-- <Precursor>
+		do
+			Result := expression.is_constant_expression
+		end
+
+	is_fast_as_local: BOOLEAN
+			-- <Precursor>
+		do
+			if attached register as r implies r = no_register then
+				Result := expression.is_fast_as_local
+			end
+		end
+
+	is_predefined: BOOLEAN
+			-- <Precursor>
+		do
+			if attached register as r implies r = no_register then
+				Result := expression.is_predefined
+			end
+		end
+
+	is_temporary: BOOLEAN
+			-- <Precursor>
+		do
+			if attached register as r then
+				Result := r.is_temporary
+			else
+				Result := expression.is_temporary
+			end
+		end
+
+feature -- C code generation
+
+	print_checked_target_register
+			-- <Precursor>
+		do
+			if attached register as r and then r /= no_register then
+				r.print_checked_target_register
+			else
+				expression.print_checked_target_register
+			end
+		end
 
 feature -- Access
 
@@ -243,7 +294,7 @@ feature -- Settings
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -433,6 +433,9 @@ feature {NONE} -- Implementation: State
 	has_loop: BOOLEAN
 			-- Does Current have a loop instruction?
 
+	has_hector: BOOLEAN
+			-- Does Current have an address expression?
+
 	once_manifest_string_index: INTEGER
 			-- Index of once manifest strings from the beginning
 			-- of the current routine or of the current class invariant
@@ -631,6 +634,7 @@ feature {NONE} -- Settings
 			old_expressions := Void
 			reset_types
 			has_loop := False
+			has_hector := False
 			once_manifest_string_index := 0
 			is_in_rescue := False
 			is_in_creation_expression := False
@@ -4136,6 +4140,7 @@ feature {NONE} -- Visitor
 			instantiator.dispatch (l_typed_pointer, context.current_class)
 			if is_byte_node_enabled then
 				create {HECTOR_B} last_byte_node.make_with_type (create {RESULT_B}, l_typed_pointer)
+				has_hector := True
 			end
 		end
 
@@ -4151,6 +4156,7 @@ feature {NONE} -- Visitor
 			instantiator.dispatch (l_typed_pointer, context.current_class)
 			if is_byte_node_enabled then
 				create {HECTOR_B} last_byte_node.make_with_type (create {CURRENT_B}, l_typed_pointer)
+				has_hector := True
 			end
 		end
 
@@ -4205,6 +4211,7 @@ feature {NONE} -- Visitor
 					create l_argument
 					l_argument.set_position (l_arg_pos)
 					create {HECTOR_B} last_byte_node.make_with_type (l_argument, l_typed_pointer)
+					has_hector := True
 				end
 				if not is_inherited then
 					l_as.enable_argument
@@ -4230,6 +4237,7 @@ feature {NONE} -- Visitor
 						if l_needs_byte_node then
 							create l_local.make (l_local_info.position)
 							create {HECTOR_B} last_byte_node.make_with_type (l_local, l_typed_pointer)
+							has_hector := True
 						end
 					else
 						set_type (unknown_type, l_as)
@@ -4275,6 +4283,7 @@ feature {NONE} -- Visitor
 							if l_needs_byte_node then
 								create {OBJECT_TEST_LOCAL_B} l_local.make (l_local_info.position, l_feature.body_index, l_type)
 								create {HECTOR_B} last_byte_node.make_with_type (l_local, l_typed_pointer)
+								has_hector := True
 							end
 						end
 					else
@@ -4324,6 +4333,7 @@ feature {NONE} -- Visitor
 										check is_attribte: l_feature.is_attribute end
 										l_access := l_feature.access (l_type, False, False)
 										create {HECTOR_B} last_byte_node.make_with_type (l_access, l_typed_pointer)
+										has_hector := True
 									else
 										create {ADDRESS_B} last_byte_node.make (context.current_class.class_id, l_feature)
 									end
@@ -5701,6 +5711,7 @@ feature {NONE} -- Visitor
 					if attached l_byte_code then
 						l_byte_code.set_start_line_number (l_as.start_location.line)
 						l_byte_code.set_has_loop (has_loop)
+						l_byte_code.set_has_hector (has_hector)
 					end
 				end
 					-- For the moment, there is no point in checking custom attributes in non-dotnet mode.

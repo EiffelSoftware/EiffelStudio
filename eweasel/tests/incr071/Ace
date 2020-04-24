@@ -29,20 +29,7 @@
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
 		<assembly name="system_" location="$ISE_DOTNET_FRAMEWORK\System.dll" prefix="SYSTEM_DLL_"/>
 		<assembly name="system_xml" location="$ISE_DOTNET_FRAMEWORK\System.Xml.dll" prefix="XML_"/>
-		<cluster name="encoding" location="$ISE_LIBRARY\library\base\elks\encoding\">
-			<cluster name="implementation" location="$|implementation\" hidden="true">
-				<cluster name="windows" location="$|windows\" hidden="true">
-					<condition>
-						<platform value="windows"/>
-					</condition>
-				</cluster>
-				<cluster name="unix" location="$|unix\" hidden="true">
-					<condition>
-						<platform excluded_value="windows"/>
-					</condition>
-				</cluster>
-			</cluster>
-		</cluster>
+		$ENCODING_CLUSTER
 		<cluster name="elks_exceptions" location="$ISE_LIBRARY\library\base\elks\kernel\exceptions\"/>
 		<cluster name="exceptions" location="$ISE_LIBRARY\library\base\ise\kernel\exceptions\"/>
 		<cluster name="kernel" location="$ISE_LIBRARY\library\base\elks\kernel\"/>

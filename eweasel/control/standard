@@ -32,6 +32,7 @@ define_directory	STORAGE		$BASE structures storage
 define_directory	TABLE		$BASE structures table
 define_directory	TRAVERSING	$BASE structures traversing
 define_directory	TREE		$BASE structures tree
+define_directory	ENCODING	$BASE encoding
 define_directory	THREAD		$ISE_LIBRARY library thread
 
 -- EiffelTime directories
@@ -57,3 +58,7 @@ define_file PRECOMPILED_BASE	$ISE_PRECOMP base.ecf
 define_file PRECOMPILED_BASE_SAFE	$ISE_PRECOMP base-safe.ecf
 define_file PRECOMPILED_BASE_MT	$ISE_PRECOMP base-mt.ecf
 define_file PRECOMPILED_BASE_SCOOP_SAFE	$ISE_PRECOMP base-scoop-safe.ecf
+
+-- EiffelBase encoding specific
+define ENCODING_CLUSTER	"<cluster name="encoding" location="$ENCODING"><cluster name="implementation" location="$|implementation\" hidden="true"><cluster name="windows" location="$|windows\" hidden="true"><condition><platform value="windows"/></condition></cluster><cluster name="unix" location="$|unix\" hidden="true"><condition><platform excluded_value="windows"/></condition></cluster></cluster></cluster>"
+define	EXCLUDE_RULE_ENCODING "<file_rule><exclude>/encoding/implementation/windows$</exclude><condition><platform excluded_value="windows"/></condition></file_rule><file_rule><exclude>/encoding/implementation/unix$</exclude><condition><platform value="windows"/></condition></file_rule>"

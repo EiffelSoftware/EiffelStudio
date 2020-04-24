@@ -85,6 +85,7 @@
 					<dotnet value="true"/>
 				</condition>
 			</file_rule>
+			$EXCLUDE_RULE_ENCODING
 			<file_rule>
 				$EXCLUDE
 			</file_rule>

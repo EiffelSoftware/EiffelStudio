@@ -24,6 +24,7 @@ inherit
 			generate_parameters_list,
 			basic_register,
 			is_feature_call,
+			is_temporary,
 			analyze,
 			set_register,
 			register,
@@ -307,7 +308,7 @@ feature {NONE} --Implementation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

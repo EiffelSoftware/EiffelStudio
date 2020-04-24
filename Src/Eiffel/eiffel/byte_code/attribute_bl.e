@@ -19,7 +19,8 @@ inherit
 			parent,
 			set_register,
 			register,
-			generate_finalized_separate_call_args
+			generate_finalized_separate_call_args,
+			is_temporary
 		end
 
 	SHARED_TABLE
@@ -89,6 +90,16 @@ feature {NONE} -- Creation
 			type = a.type
 			multi_constraint_static = a.multi_constraint_static
 			not is_attachment
+		end
+
+feature -- C code generation: status report
+
+	is_temporary: BOOLEAN
+			-- <Precursor>
+		do
+			if attached register as r and then r /= no_register then
+				Result := r.is_temporary
+			end
 		end
 
 feature
@@ -207,7 +218,7 @@ feature {NONE} -- Separate call
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

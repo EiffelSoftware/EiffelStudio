@@ -20,6 +20,7 @@ inherit
 			generate_parameters,
 			has_one_signature,
 			is_polymorphic,
+			is_temporary,
 			register,
 			set_call_kind,
 			set_parent,

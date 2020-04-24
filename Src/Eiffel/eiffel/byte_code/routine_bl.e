@@ -32,6 +32,7 @@ inherit
 			generate_parameters,
 			has_one_signature,
 			is_polymorphic,
+			is_temporary,
 			parent,
 			register,
 			set_call_kind,
@@ -42,6 +43,16 @@ inherit
 	SHARED_TYPE_I
 		export
 			{NONE} all
+		end
+
+feature -- C code generation: status report
+
+	is_temporary: BOOLEAN
+			-- <Precursor>
+		do
+			if attached register as r and then r /= no_register then
+				Result := r.is_temporary
+			end
 		end
 
 feature -- Access

@@ -10,7 +10,7 @@ inherit
 		rename
 			make as make_opt_feat
 		undefine
-			is_polymorphic, free_register,
+			is_polymorphic, is_temporary, free_register,
 			has_one_signature,
 			generate_on, basic_register, generate_access,
 			register, analyze_on, set_register,
@@ -162,7 +162,7 @@ feature -- Code generation
 		end
 
 note
-	copyright:	"Copyright (c) 1984-2019, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

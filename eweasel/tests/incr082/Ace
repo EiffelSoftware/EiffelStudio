@@ -29,6 +29,7 @@
 		<assembly name="mscorlib" location="$ISE_DOTNET_FRAMEWORK\mscorlib.dll"/>
 		<assembly name="system_" location="$ISE_DOTNET_FRAMEWORK\System.dll" prefix="SYSTEM_DLL_"/>
 		<assembly name="system_xml" location="$ISE_DOTNET_FRAMEWORK\System.Xml.dll" prefix="XML_"/>
+		$ENCODING_EXTERNALS
 		<cluster name="elks" location="$ISE_LIBRARY\library\base\elks\" recursive="true">
 			<option namespace="Base">
 			</option>

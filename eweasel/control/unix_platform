@@ -7,6 +7,7 @@ define_file		EWEASEL_EXECUTE $EWEASEL bin eiffel_execute
 define	KERNEL_CLASSIC	"<cluster name="kernel" location="$ISE_LIBRARY\library\base\elks\kernel"/><cluster name="exceptions" location="$ISE_LIBRARY\library\base\ise\kernel\exceptions"/><cluster name="elks_exceptions" location="$ISE_LIBRARY\library\base\elks\kernel\exceptions"/><cluster name="string" location="$ISE_LIBRARY\library\base\elks\kernel\string"/>"
 define	KERNEL_DOTNET	""
 define	SUPPORT_DOTNET	""
+define	ENCODING_EXTERNALS	"<external_include location="$(ISE_LIBRARY)/library/base/elks/encoding/implementation/include"><condition><platform excluded_value="windows"/></condition></external_include><external_cflag value="`$ISE_LIBRARY/library/base/elks/encoding/implementation/unix/Clib/iconv-config --include_path`"><condition><platform excluded_value="windows"/></condition></external_cflag><external_linker_flag value="`$(ISE_LIBRARY)/library/base/elks/encoding/implementation/unix/Clib/iconv-config --library`"><condition><platform excluded_value="windows"/></condition></external_linker_flag>" 
 
 -- Dotnet specific options
 define	EWEASEL_DOTNET_SETTING	""

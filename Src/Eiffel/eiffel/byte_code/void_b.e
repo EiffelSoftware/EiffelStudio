@@ -11,9 +11,12 @@ class
 inherit
 	EXPR_B
 		redefine
-			is_simple_expr, is_predefined,
-			print_register, is_fast_as_local,
-			is_constant_expression
+			is_constant_expression,
+			is_fast_as_local,
+			is_predefined,
+			is_simple_expr,
+			print_checked_target_register,
+			print_register
 		end
 
 	SHARED_TYPES
@@ -71,8 +74,25 @@ feature -- C code generation
 			buffer.put_string ("NULL")
 		end
 
+	print_checked_target_register
+			-- <Precursor>
+		local
+			buf: like {BYTE_CONTEXT}.buffer
+		do
+				-- Specify explicit type to allow for code with constant propagation, e.g.
+				--    f (a: CELL [BOOLEAN]): BOOLEAN do if attached a then Result := a.item end end
+				--    f (Void)
+				-- After inlining the generated code could be
+				--    if (NULL != NULL) { tb1 = *(EIF_BOOLEAN *)(RTCW(NULL) + O1234[Dtype(NULL)-56]); }
+				-- so that the part "RTCW(NULL)" would expand into "((void *) 0)",
+				-- but there is no operation "+" for type "(void *)", and C compilation would fail.
+			buf := Context.buffer
+			buf.put_string ({C_CONST}.rtcw_open)
+			buf.put_string ("(EIF_REFERENCE) NULL)")
+		end
+
 note
-	copyright:	"Copyright (c) 1984-2017, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -962,6 +962,21 @@ end
 			create Result.make
 		end
 
+feature -- Status report
+
+	has_hector: BOOLEAN
+			-- Does the current byte code has a hector?
+
+feature -- Status setting
+
+	set_has_hector (v: BOOLEAN)
+			-- Set `has_hector` to `v`.
+		do
+			has_hector := v
+		ensure
+			has_hector_set: has_hector = v
+		end
+
 feature -- Array optimization
 
 	has_loop: BOOLEAN
@@ -1026,7 +1041,7 @@ invariant
 	valid_once_manifest_string_count: once_manifest_string_count >= 0
 
 note
-	copyright:	"Copyright (c) 1984-2015, Eiffel Software"
+	copyright:	"Copyright (c) 1984-2020, Eiffel Software"
 	license:	"GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"http://www.eiffel.com/licensing"
 	copying: "[

@@ -2,7 +2,7 @@
 	description: "Declarations for miscellenaous externals."
 	date:		"$Date$"
 	revision:	"$Revision$"
-	copyright:	"Copyright (c) 1985-2012, Eiffel Software."
+	copyright:	"Copyright (c) 1985-2020, Eiffel Software."
 	license:	"GPL version 2 see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options:	"Commercial license is available at http://www.eiffel.com/licensing"
 	copying: "[
@@ -77,8 +77,8 @@ RT_LNK EIF_INTEGER upintdiv(EIF_INTEGER n1, EIF_INTEGER n2);
 #define eif_bit_shift_left(i,n)		((i)<<(n))
 #define eif_bit_shift_right(i,n)	((i)>>(n))
 #define eif_bit_test(t,i,n)	(EIF_TEST((i)&((t)1 << (n))))
-#define eif_set_bit(t,i,b,n)			(b ? (i) | (t)((t)1<< (n)) : (i) & (t)(~((t)1 << (n))))
-#define eif_set_bit_with_mask(i,b,m)	(b ? (i) | (m) : (i) & ~(m))
+#define eif_set_bit(t,i,b,n)			((b) ? (i) | (t)((t)1<< (n)) : (i) & (t)(~((t)1 << (n))))
+#define eif_set_bit_with_mask(i,b,m)	((b) ? (i) | (m) : (i) & ~(m))
 
 
 RT_LNK void eif_sleep(EIF_INTEGER_64);

@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+
+<project name="ewg_parser" default="help">
+
+	<description>
+		description: "Eiffel Ant file for EWG Library"
+		library: "Eiffel Wrapper Generator Library"
+		copyright: "Copyright (c) 2001-2002, Andreas Leitner and others"
+		license: "Eiffel Forum License v2 (see forum.txt)"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message="   geant install"/>
+		<echo message="   geant clean"/>
+		<echo message="   geant clobber"/>
+	</target>
+
+	<target name="install">
+		<description>
+			Install the Gobo Eiffel Tools Library.
+			Generate scanner and parser files.
+		</description>
+
+		<geant target="ewg_c_parser"/>
+		<!--geant target="ewg_c_macro_parser"/> -->
+	</target>
+
+	<target name="clean">
+		<description>
+			Remove intermediary generated files.
+		</description>
+	</target>
+
+	<target name="clobber">
+		<description>
+			Remove all generated files.
+		</description>
+
+		<geant target="clean"/>
+		<delete file="parser/c_parser/ewg_c_scanner.e"/>
+		<delete file="parser/c_parser/ewg_c_parser.e"/>
+		<delete file="parser/c_parser/ewg_c_tokens.e"/>
+		<delete file="parser/c_parser/ewg_c_parser.txt"/>
+		<delete file="parser/c_macro_parser/ewg_c_macro_scanner.e"/>
+		<delete file="parser/c_macro_parser/ewg_c_macro_parser.e"/>
+		<delete file="parser/c_macro_parser/ewg_c_macro_tokens.e"/>
+		<delete file="parser/c_macro_parser/ewg_c_macro_parser.txt"/>
+	</target>
+
+
+<!-- Implementation -->
+
+	<target name="ewg_c_parser" dir="parser/c_parser">
+		<gelex input="ewg_c_scanner.l" output="ewg_c_scanner.e"/>
+		<geyacc verbose="ewg_c_parser.txt" 
+			 new_typing="true"
+			 input="ewg_c_parser.y" 
+			 tokens="EWG_C_TOKENS" 
+			 output="ewg_c_parser.e"/>
+	</target>
+
+	<target name="ewg_c_macro_parser" dir="parser/c_macro_parser">
+		<gelex input="ewg_c_macro_scanner.l" output="ewg_c_macro_scanner.e"/>
+		<geyacc verbose="ewg_c_macro_parser.txt" 
+			 new_typing="true"
+			 input="ewg_c_macro_parser.y"
+			 tokens="EWG_C_MACRO_TOKENS"
+			 output="ewg_c_macro_parser.e"/>
+	</target>
+
+</project>

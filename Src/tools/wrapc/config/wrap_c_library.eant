@@ -1,0 +1,189 @@
+<?xml version="1.0"?>
+
+<project name="wrap_clibrary" default="help">
+
+  <description>
+    description: "targets for generating wrap_c wrappers"
+    copyright: "Copyright (c) 2003, Andreas Leitner and others"
+    license: "Eiffel Forum License v2 (see forum.txt)"
+    date: "$Date$"
+    revision: "$Revision$"
+  </description>
+
+  <inherit>
+    <parent location="./wrap_c_c_compilation.eant">
+      <redefine target="init"/>
+      <redefine target="set_default_options_windows"/>
+      <redefine target="set_default_options_unix"/>
+      <redefine target="init_wrap_c"/>
+      <redefine target="help"/>
+    </parent>
+  </inherit>
+
+  <target name="help">
+    <echo message="usage:"/>
+    <echo message="   geant install"/>
+    <echo message="   geant c_build_library_ise"/>
+    <echo message="   geant pre_process"/>
+    <echo message="   geant process_wrap_c"/>
+    <echo message="   geant post_process"/>
+    <echo message="   geant clean"/>
+    <echo message="   geant clobber"/>
+    <echo message=""/>
+    <echo message="$${GOBO_EIFFEL} ... Eiffel Compiler (ise)"/>
+    <echo message="$${GOBO_CC}     ... C Compiler (gcc|msc)"/>
+  </target>
+
+  <target name="install" depend="init">
+    <description>
+      Generate wrap_c wrappers for ${wrap_c.full_header_file_name}.
+      Post process code 
+      C build
+   </description>
+    <echo message="Generating wrappers for ${wrap_c.library_name}, Post proccess, C build" if="${wrap_c.verbose}=--verbose"/>
+    <geant target="pre_process"/>
+    <geant target="process_wrap_c"/>
+     <geant target="post_process"/> 
+    <geant target="c_build_library_ise"/>
+  </target>
+
+ 
+  <target name="process_wrap_c" depend="init">
+    <description>
+      Generate wrap_c wrappers for ${wrap_c.full_header_file_name}.
+    </description>
+    <echo message="Generating wrappers for ${wrap_c.library_name}" if="${wrap_c.verbose}=--verbose"/>
+    <mkdir directory="${wrap_c.wrapper_dir}/eiffel"/>
+    <geant target="copy_wrap_cruntime"/>
+    <geant target="c_preprocess"/>
+    <set name="msc_extensions_flag" value=""/>
+    <set name="msc_extensions_flag" value="--enable-msc-extensions" if="${wrap_c.msc_extensions}"/>
+    <set name="wrap_c.config_file_option" value=""/>
+    <set name="wrap_c.config_file_option" value="--config=config.xml" if="${wrap_c.use_config_file}=True"/>
+    <geant target="do_wrap_c"/>
+  </target>
+
+  <target name="do_wrap_c" depend="init">
+    <description>
+      Generate wrapper files
+    </description>
+    <exec executable="wrap_c ${wrap_c.verbose} ${msc_extensions_flag} --output-dir=${wrap_c.wrapper_dir} --cpp-full-header=${wrap_c.cpp_header_name} --include-header=${wrap_c.short_header_name} ${wrap_c.config_file_option}"/>
+  </target>
+
+<target name="pre_process" depend="init">
+    <description>
+      Pre process Eiffel wrapped code (script defined by user).
+    </description>
+    <!-- To be redefined in descendant if necessary -->
+    <echo message="Pre-process wrap for ${wrap_c.library_name} default target without action" if="${wrap_c.verbose}=--verbose"/>
+  </target>
+
+  <target name="post_process" depend="init">
+    <description>
+      Post process Eiffel wrapped code (script defined by user).
+    </description>
+    <!-- To be redefined in descendant if necessary -->
+    <echo message="Post-process wrap for ${wrap_c.library_name} default target without action" if="${wrap_c.verbose}=--verbose"/>
+  </target>
+
+
+  <target name="copy_wrap_cruntime" depend="init">
+    <description>
+      Copy wrap_c runtime C library into the wrapper libraries C directory.
+    </description>
+    <copy to_directory="${wrap_c.wrapper_dir}/c/" dir="${wrap_c}/library/runtime/c">
+      <fileset include="@(**/*.c|**/*.h)"/>
+    </copy>
+    <available resource="${system_dir}/manual_wrapper/c" variable="manual_wrapper_available"/>
+    <copy to_directory="${wrap_c.wrapper_dir}/c" dir="${system_dir}/manual_wrapper/c" if="${manual_wrapper_available}">
+      <fileset include="@(**/*)"/>
+    </copy>
+  </target>
+
+  <target name="clean" depend="init">
+    <description>
+      Remove intermediary generated files.
+    </description>
+    <delete file="${wrap_c.c_preprocess.cpp_header_name}"/>
+    <delete>
+      <fileset dir="${system_dir}" include="*.BAK"/>
+    </delete>
+    <delete>
+      <fileset dir="${system_dir}" include="*${wrap_c.obj}"/>
+    </delete>
+    <geant target="other_clean" />
+  </target>
+
+  <target name="clobber" depend="init">
+    <description>
+      Remove all generated files.
+    </description>
+
+    <geant target="clean"/>
+    <delete directory="${wrap_c.wrapper_dir}"/>
+    <delete>
+      <fileset dir="${system_dir}" include="*${wrap_c.lib}"/>
+    </delete>
+    <geant target="other_clobber" />
+  </target>
+
+  <target name="init_wrap_c">
+    <!--
+    Values to be defined:
+    . ${system_dir} : directory for the compilation
+    . ${wrap_c.library_name} : short name for library to wrap
+    . ${wrap_c.full_header_file_name} : name of header file to parse with full path
+    . ${wrap_c.short_header_file_name} : name of header file to parse relative to include dir
+    . ${wrap_c.c_compile_options} : custom C compiler options
+    . ${wrap_c.c_link_options} : custom C link options
+    . ${wrap_c.use_config_file} : If set to "True", "config.wrap_c" will be read
+    -->
+  </target>
+
+  <!-- Implementation -->
+
+  <target name="init">
+    <precursor/>
+    <set name="wrap_c.verbose" value="--verbose"/>
+    <set name="wrap_c.c_compile_options" value=""/>
+    <set name="wrap_c.c_link_options" value=""/>
+    <geant target="init_wrap_c"/>
+    <set name="wrap_c.c_preprocess.full_header_file_name" value="${wrap_c.full_header_file_name"/>
+    <set name="wrap_c.c_preprocess.cpp_header_name" value="${system_dir}${path_separator}${wrap_c.library_name}_cpp.h"/>
+    <set name="wrap_c.wrapper_dir" value="${system_dir}${path_separator}generated_wrapper"/>
+    <set name="wrap_c.c_compile.dir_name" value="${wrap_c.wrapper_dir}/c/src"/>
+    <set name="wrap_c.c_build_library.dir_name" value="${wrap_c.wrapper_dir}/c/src"/>
+    <set name="wrap_c.c_build_library.lib_name" value="${wrap_c.library_name}_c_eiffel_glue_library"/>
+    <set name="wrap_c.cpp_header_name" value="${wrap_c.library_name}_cpp.h"/>
+    <set name="wrap_c.msc_extensions" value="true" if="${cc}=msc"/>
+  </target>
+
+  <target name="set_default_options_windows" if="${GOBO_OS}=windows">
+    <precursor/>
+    <set name="wrap_c.c_compile.options.default" value="${wrap_c.c_compile.options.default} /I${system_dir}\generated_wrapper\c\include"/>
+    <set name="wrap_c.c_compile.options.default" value="${wrap_c.c_compile.options.default} /I${system_dir}\generated_wrapper\c\include\"/>
+  </target>
+
+  <target name="set_default_options_unix" unless="${GOBO_OS}=windows">
+    <precursor/>
+    <set name="wrap_c.c_compile.options.default" value="${wrap_c.c_compile.options.default} -I${system_dir}/generated_wrapper/c/include"/>
+    <set name="wrap_c.c_compile.options.default" value="${wrap_c.c_compile.options.default} -I${system_dir}/generated_wrapper/c/include/"/>
+  </target>
+
+  <target name="other_clean" depend="init">
+    <description>
+      Remove other intermediary generated files.
+    </description>
+    
+    <!-- To be redefined in descendant if necessary -->
+  </target>
+  
+  <target name="other_clobber" depend="init">
+    <description>
+      Remove other generated files.
+    </description>
+    
+    <!-- To be redefined in descendant if necessary -->
+  </target>
+
+</project>

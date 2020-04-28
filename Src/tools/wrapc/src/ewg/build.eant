@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+
+<project name="ewg" default="help">
+
+  <description>
+    description: "Eiffel Ant file for 'ewg' command line tool"
+    system: "Eiffel Wrapper Generator"
+    copyright: "Copyright (c) 2001-2002, Andreas Leitner and others"
+    license: "Eiffel Forum License v2 (see forum.txt)"
+    date: "$Date$"
+    revision: "$Revision$"
+  </description>
+
+  <inherit>
+    <parent location="$ISE_EIFFEL/contrib/library/gobo/library/common/config/eiffel.eant">
+      <redefine target="init_system"/>
+      <redefine target="clean"/>
+      <redefine  target="adapt_ecf"/>
+      <redefine  target="update_ecf"/>
+    </parent>
+  </inherit>
+
+  <!-- Implementation -->
+
+  <target name="init_system">
+    <set name="system" value="wrap_c"/>
+    <set name="system_dir" value="${cwd}"/>
+  </target>
+
+  <target name="clean" depend="init">
+    <delete file="TAGS"/>
+    <delete file="cecil.h"/>
+    <precursor/>
+  </target>
+
+  <target name="tags" depend="init">
+    <set name="eiffel" value="ise"/>
+    <set name="define" value="GOBO_EIFFEL=${eiffel}"/>
+    <set name="define" value="${define} GOBO_OS=${GOBO_OS}"/>
+    <set name="define" value="${define} GOBO_CC=${GOBO_CC}" if="${GOBO_CC}"/>
+    <set name="define" value="${define} GOBO_XML_EXPAT=true" if="${GOBO_XML_EXPAT}"/>
+    <set name="define" value="${define} GOBO_DOTNET=true" if="${GOBO_DOTNET}"/>
+    <exec executable="gutentag ${void} /-/-define=&quot;${define}&quot;"/>
+  </target>
+
+
+  <target name="adapt_ecf">
+    <argument name="a_ecf_filename"/>
+    <argument name="a_library_root"/>
+    <description>
+      Regenerate ECF file ${a_ecf_filename}.
+      Override $DEBUG option if ${debug} is defined.
+      Override $GOBO_EIFFEL value.
+      Override $GOBO_OS value.
+      Override $GOBO_CC value if defined.
+      Override $GOBO_XML_EXPAT option if defined.
+      Override $GOBO_DOTNET option if defined.
+      Override $GOBO_COMPATIBLE option if defined.
+      Override $GOBO_VOID_UNSAFE option if defined.
+      Override $BOEHM_GC option if defined.
+      To be redefined in descendant if additional options are
+      necessary.
+    </description>
+
+    <set name="l_setting_options" value=""/>
+    <set name="l_capability_options" value=""/>
+    <set name="l_variable_options" value=""/>
+    <set name="l_setting_options" value="${l_setting_options} &quot;--setting=library_root=${a_library_root}&quot;" unless="${a_library_root}="/>
+    <set name="l_variable_options" value="${l_variable_options} --variable=DEBUG=${debug}" if="${debug}"/>
+    <set name="l_setting_options" value="${l_setting_options} --setting=all_assertions=true --setting=exception_trace=true" if="${debug}"/>
+    <set name="l_variable_options" value="${l_variable_options} --variable=GOBO_EIFFEL=${eiffel}" unless="${a_library_root}="/>
+    <set name="l_variable_options" value="${l_variable_options} --variable=GOBO_OS=${GOBO_OS}" unless="${a_library_root}="/>
+    <set name="l_variable_options" value="${l_variable_options} --variable=GOBO_CC=${GOBO_CC}" if="${GOBO_CC}"/>
+    <set name="l_variable_options" value="${l_variable_options} --variable=GOBO_XML_EXPAT=true" if="${GOBO_XML_EXPAT}"/>
+    <set name="l_variable_options" value="${l_variable_options} --variable=GOBO_DOTNET=true" if="${GOBO_DOTNET}"/>
+    <set name="l_setting_options" value="${l_setting_options} --setting=msil_generation=true --setting=line_generation=true" if="${GOBO_DOTNET}"/>
+    <set name="l_variable_options" value="${l_variable_options} --variable=GOBO_COMPATIBLE=true" if="${GOBO_COMPATIBLE}"/>
+    <set name="l_variable_options" value="${l_variable_options} &quot;--variable=BOEHM_GC=${BOEHM_GC}&quot;" if="${BOEHM_GC}"/>
+    <set name="l_variable_options" value="${l_variable_options} --variable=GOBO_VOID_UNSAFE=true" if="${GOBO_VOID_UNSAFE}"/>
+    <set name="l_capability_options" value="${l_capability_options} --capability=void_safety=none" if="${GOBO_VOID_UNSAFE}"/>
+    <set name="l_variable_options" value="${l_variable_options} &quot;--variable=GOBO_TESTGEN=${GOBO_TESTGEN}&quot;" if="${GOBO_TESTGEN}"/>
+   </target> 
+
+  <target name="update_ecf">
+    <argument name="a_ecf_filename"/>
+    <description>
+      Regenerate ECF file ${a_ecf_filename}.
+    </description>
+
+  </target>
+
+
+</project>

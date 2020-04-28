@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+
+<project name="callback_hello_world" default="help">
+
+	<description>
+		description: "Eiffel Ant file for 'callback_library'"
+		system: "Eiffel Wrapper Generator Test with callback test cases"
+		copyright: "Copyright (c) 2001-2002, Andreas Leitner and others"
+		license: "Eiffel Forum License v2 (see forum.txt)"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<inherit>
+   		<parent location="$ISE_EIFFEL/contrib/library/gobo/library/common/config/eiffel.eant">
+      		<redefine target="init_system"/>
+    	</parent>
+  	</inherit>
+
+
+<!-- Implementation -->
+
+	<target name="init_system">
+		<set name="system" value="callback_hello_world"/>
+		<set name="system_dir" value="${cwd}"/>
+	</target>
+
+</project>

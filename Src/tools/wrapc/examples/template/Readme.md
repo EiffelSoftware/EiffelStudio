@@ -1,0 +1,1 @@
+Template example to be used to start wrapping new C libraries.

@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+
+<project name="wrap_c_ge2e_directory" default="help">
+
+  <description>
+    description: "Targets for 'gepp'-ing whole directories"
+    copyright: "Copyright (c) 2004, Andreas Leitner and others"
+    license: "Eiffel Forum License v2 (see forum.txt)"
+    date: "$Date$"
+    revision: "$Revision$"
+  </description>
+
+  <target name="ge2e_dir">
+    <description>
+      Generate Eiffel files to directory '${spec_dir}/[compiler]'
+      from '${gepp_dir}', where [compiler] is
+      'ise' or 'ge'. Create spec directories
+      if necessary.
+    </description>
+
+
+    <geant target="ge2e_dir_ise"/>
+  </target>
+
+  <!-- Implementation -->
+
+  <target name="ge2e_dir_ise" dir="${gepp_dir}">
+    <description>
+      Generate Eiffel files to directory '${spec_dir}/ise'
+      from '${gepp_dir}'.
+      Create spec directories if necessary.
+    </description>
+    <gepp lines="true">
+      <define name="ISE"/>
+      <define name="ISE_5_1" if="${ISE_5_1}"/>
+      <define name="GOBO_DOTNET" if="${GOBO_DOTNET}"/>
+      <fileset include="@(**/*.ge)" mapped_filename_directory="${spec_dir}/ise">
+	 <map type="glob" from="*.ge" to="*.e"/>
+      </fileset>
+    </gepp>
+  </target>
+
+</project>

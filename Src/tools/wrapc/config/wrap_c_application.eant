@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+
+<project name="wrap_c_application" default="help">
+
+  <description>
+    description: "common targets for wrap_c applications"
+    copyright: "Copyright (c) 2003, Andreas Leitner and others"
+    license: "Eiffel Forum License v2 (see forum.txt)"
+    date: "$Date$"
+    revision: "$Revision$"
+  </description>
+
+  <inherit>
+    <parent location="$ISE_EIFFEL/contrib/library/gobo/library/common/config/eiffel.eant">
+      <redefine target="init"/>
+      <redefine target="init_windows"/>
+      <redefine target="init_unix"/>
+      <redefine target="ecf"/>
+      <redefine target="clean"/>
+    </parent>
+  </inherit>
+
+  <!-- Implementation -->
+
+  <target name="init">
+    <set name="cc" value="${GOBO_CC}" if="${GOBO_CC}"/>
+    <precursor/>
+  </target>
+
+  <target name="init_windows" if="${GOBO_OS}=windows">
+    <set name="wrap_c.obj" value=".obj"/>
+    <set name="wrap_c.lib" value=".lib"/>
+    <set name="cc" value="msc" unless="${cc}"/>
+  </target>
+
+  <target name="init_unix" unless="${GOBO_OS}=windows">
+    <set name="wrap_c.obj" value=".o"/>
+    <set name="wrap_c.lib" value=".a"/>
+    <set name="cc" value="gcc" unless="${cc}"/>
+    <available resource="/usr/include/crt_externs.h" variable="wrap_c.is_mac_os_x"/>
+  </target>
+
+  <target name="ecf" depend="init">
+    <argument name="a_ecf_filename"/>
+    <argument name="a_library_root"/>
+      <description>
+      Build Ace file or ESD file for Eiffel compiler ${eiffel}.
+      Generate file in ${gexace_output} if specified.
+      Pass $DEBUG option to 'gexace' if ${debug} is defined.
+      Pass $BOOTSTRAP option to 'gexace' if ${bootstrap} is defined.
+      Pass $GOBO_OS value to 'gexace'.
+      Pass $cc value to 'gexace' as $GOBO_CC.
+      Pass $eiffel value to 'gexace' as $GOBO_EIFFEL.
+      Pass $GOBO_XML_EXPAT option to 'gexace' if defined.
+      Pass $GOBO_DOTNET option to 'gexace' if defined.
+      Pass $IS_MAC_OS_X option to 'gexace' if `ewg.is_mac_os_x' is set to 'true'.
+      To be redefined in descendant if additional options are
+      necessary.
+    </description>
+
+    <geant target="ecf">
+      <argument name="a_compiler" value="${a_compiler}"/>
+      <argument name="a_ecf_filename" value="${system_dir}/system.ecf"/>
+      <argument name="a_library_root" value=""/>
+      <define name="DEBUG" value="${debug}" if="${debug}"/>
+      <define name="BOOTSTRAP" value="${bootstrap}" if="${bootstrap}"/>
+      <define name="GOBO_OS" value="${GOBO_OS}"/>
+      <define name="GOBO_CC" value="${cc}"/>
+      <define name="GOBO_EIFFEL" value="${eiffel}"/>
+      <define name="GOBO_XML_EXPAT" value="true" if="${GOBO_XML_EXPAT}"/>
+      <define name="GOBO_DOTNET" value="true" if="${GOBO_DOTNET}"/>
+      <define name="IS_MAC_OS_X" value="true" if="${wrap_c.is_mac_os_x}=true"/>
+    </geant>
+  </target>
+
+
+  
+
+  <target name="tags_ise" depend="init">
+    <set name="eiffel" value="ise"/>
+    <geant target="tags"/>
+  </target>
+  
+  <target name="tags" depend="init">
+    <set name="define" value="GOBO_EIFFEL=${eiffel}"/>
+    <set name="define" value="${define} GOBO_OS=${GOBO_OS}"/>
+    <set name="define" value="${define} GOBO_CC=${GOBO_CC}" if="${GOBO_CC}"/>
+    <set name="define" value="${define} GOBO_XML_EXPAT=true" if="${GOBO_XML_EXPAT}"/>
+    <set name="define" value="${define} GOBO_DOTNET=true" if="${GOBO_DOTNET}"/>
+    <exec executable="gutentag ${void} --define=&quot;${define}&quot;"/>
+  </target>
+
+  <target name="clean">
+    <precursor/>
+    <delete file="TAGS"/>
+  </target>
+
+</project>

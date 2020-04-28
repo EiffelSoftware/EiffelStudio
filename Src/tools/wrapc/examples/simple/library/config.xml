@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<ewg_config name="simple">
+
+  <rule_list>
+    <rule>
+      <match>
+      </match>
+      <wrapper type="default">
+      </wrapper>
+    </rule>
+  </rule_list>
+
+</ewg_config>

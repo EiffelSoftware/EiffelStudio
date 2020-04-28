@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system
+	xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd"
+	name="simple_hello_world"
+>
+	<target name="simple_hello_world">
+		<root class="SIMPLE_HELLO_WORLD" feature="make"/>
+		<option warning="warning" full_class_checking="false" is_attached_by_default="True" manifest_array_type="mismatch_warning">
+			<assertions check="false" invariant="false" loop="false" postcondition="false" precondition="false" supplier_precondition="false"/>
+		</option>
+		<variable name="GOBO_CC" value="msc"/>
+		<library name="base" location="${ISE_LIBRARY}\library\base\base.ecf" readonly="true"/>
+		<library name="time" location="${ISE_LIBRARY}\library\time\time.ecf" readonly="true"/>
+		<library name="simple_library" location="..\..\library\library.ecf" readonly="true"/>
+		<cluster name="simple_hello_world" location="." recursive="true">
+			<file_rule>
+				<exclude>/c$</exclude>
+				<exclude>/include$</exclude>
+				<exclude>/EIFGENs$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+</system>

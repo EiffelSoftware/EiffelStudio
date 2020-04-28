@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+
+<project name="callback_library" default="help">
+
+	<description>
+		description: "Eiffel Callback Library"
+	</description>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message=" geant wrap_c"/>
+		<echo message=" geant compile"/>
+		<echo message=" geant clean"/>
+		<echo message=" geant clobber"/>
+	</target>
+	
+
+	<!-- Implementation -->
+
+	<target name="init_wrap_c">
+		<set name="system_dir" value="${cwd}"/>
+		<set name="wrap_c.library_name" value="callback"/>
+		<set name="wrap_c.full_header_name" value="${cwd}${path_separator}manual_wrapper${path_separator}c${path_separator}include${path_separator}callback.h"/>
+		<set name="wrap_c.short_header_name" value="callback.h"/>
+        	<set name="wrap_c.use_config_file" value="True"/>
+       	 	<set name="wrap_c.verbose" value="--verbose"/>
+        	<set name="wrap_c.wrapper_dir" value="${system_dir}${path_separator}generated_wrapper"/>
+ 	</target>
+
+
+  	<target name="wrap_c" depend="init_wrap_c">
+   		 <description>
+     			 Generate wrapper files
+    		</description>
+		<set name="pre_script" value="pre_script.bat" if="${is_windows}" />
+		<set name="pre_script" value="pre_script.sh" unless="${is_windows}" />
+		<set name="post_script" value="post_script.bat" if="${is_windows}" />
+		<set name="post_script" value="post_script.sh" unless="${is_windows}" />
+    		<set name="wrap_c.config_file_option" value="--config=config.xml" if="${wrap_c.use_config_file}=True"/>	
+    		<exec executable="wrap_c ${wrap_c.verbose} --script_pre_process=${cwd}${path_separator}${pre_script} --script_post_process=${cwd}${path_separator}${post_script} --output-dir=${wrap_c.wrapper_dir} --full-header=${wrap_c.full_header_name} ${wrap_c.config_file_option}"/>
+  	</target>
+
+
+	<target name="clean">
+		<echo message="- Clean [EiffelCallback]" />
+		<delete directory="C/spec/${ISE_PLATFORM}" unless="${is_windows}"/>
+		<delete directory="C\spec\${ISE_C_COMPILER}\${ISE_PLATFORM}" if="${is_windows}" />
+		<delete directory="generated_wrapper"/>
+		<delete file="callback_cpp.h"/>
+	</target>
+
+	<target name="compile" depend="init_wrap_c"> 
+		<geant file="${wrap_c.wrapper_dir}${path_separator}c${path_separator}src${path_separator}build.eant" target="compile" dir="${wrap_c.wrapper_dir}${path_separator}c${path_separator}src"/>
+	</target>
+
+	<target name="clobber" depend="clean" />
+
+</project>
+
+
+

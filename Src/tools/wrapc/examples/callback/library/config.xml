@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<ewg_config name="callback">
+
+  <rule_list>
+ 
+    <!-- Enable it if you want to generate a different number of callbacks per type 
+    <rule>
+      <match>
+        <identifier name=".*"/>
+        <type name="callback"/>		
+      </match>
+      <wrapper type="default">
+        <callbacks_per_type value="2"/>
+      </wrapper>
+    </rule>    
+    -->
+
+    <rule>
+      <match>
+      </match>
+      <wrapper type="default">
+      </wrapper>
+    </rule>
+ 
+
+ </rule_list>
+
+</ewg_config>

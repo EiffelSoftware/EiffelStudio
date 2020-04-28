@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-21-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-21-0 http://www.eiffel.com/developers/xml/configuration-1-21-0.xsd" name="wrapcui" uuid="7E82F67B-4620-03D0-5532-000042077D14" readonly="false">
+	<description>wrapcui implementation</description>
+	<target name="wrapcui">
+		<root class="WUI_APP" feature="default_create"/>
+		<option warning="warning" syntax="provisional" manifest_array_type="mismatch_warning">
+			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
+		</option>
+		<setting name="dead_code_removal" value="feature"/>
+		<capability>
+			<concurrency support="none" use="thread"/>
+			<void_safety support="transitional" use="none"/>
+		</capability>
+		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
+		<library name="encoding" location="$ISE_LIBRARY\library\encoding\encoding.ecf"/>
+		<library name="ewg_library" location="..\src\library\library.ecf"/>
+		<library name="kernel" location="$ISE_LIBRARY\contrib\library\gobo\library\kernel\src\library.ecf"/>
+		<library name="process" location="$ISE_LIBRARY\library\process\base\base_process.ecf"/>
+		<library name="regexp" location="$ISE_LIBRARY\contrib\library\gobo\library\regexp\src\library.ecf"/>
+		<library name="thread" location="$ISE_LIBRARY\library\thread\thread.ecf"/>
+		<library name="time" location="$ISE_LIBRARY\contrib\library\gobo\library\time\src\library.ecf"/>
+		<library name="uri_launcher" location="$EIFFEL_SRC\framework\uri_launcher\uri_launcher.ecf"/>
+		<library name="vision2" location="$ISE_LIBRARY\library\vision2\vision2.ecf"/>
+		<library name="vision2_extension" location="$ISE_LIBRARY\library\vision2_extension\vision2_extension.ecf"/>
+		<library name="xml_parser" location="$ISE_LIBRARY\library\text\parser\xml\parser\xml_parser.ecf"/>
+		<library name="uri_launcher" location="$EIFFEL_SRC\framework\uri_launcher\uri_launcher.ecf"/>
+		<cluster name="wrapcui" location=".\" recursive="true">
+			<file_rule>
+				<exclude>/.git$</exclude>
+				<exclude>/.svn$</exclude>
+				<exclude>/CVS$</exclude>
+				<exclude>/EIFGENs$</exclude>
+				<exclude>tests</exclude>
+			</file_rule>
+			<cluster name="ewg" location="..\src\ewg\" recursive="true"/>
+		</cluster>
+	</target>
+	<target name="test" extends="wrapcui">
+		<description>wrapcui Tests</description>
+		<root class="ANY" feature="default_create"/>
+		<file_rule>
+			<exclude>/.git$</exclude>
+			<exclude>/.svn$</exclude>
+			<exclude>/CVS$</exclude>
+			<exclude>/EIFGENs$</exclude>
+			<include>tests</include>
+		</file_rule>
+		<option profile="false">
+		</option>
+		<setting name="console_application" value="false"/>
+		<setting name="total_order_on_reals" value="false"/>
+		<library name="testing" location="$ISE_LIBRARY\library\testing\testing-safe.ecf"/>
+		<cluster name="tests" location=".\tests\" recursive="true"/>
+	</target>
+</system>

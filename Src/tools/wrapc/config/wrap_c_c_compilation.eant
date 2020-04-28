@@ -1,0 +1,216 @@
+<?xml version="1.0"?>
+
+<project name="wrap_c_c_compilation" default="help">
+
+  <description>
+    description: "targets for C preprocessing, compiling and building libraries"
+    copyright: "Copyright (c) 2004, Andreas Leitner and others"
+    license: "Eiffel Forum License v2 (see forum.txt)"
+    date: "$Date$"
+    revision: "$Revision$"
+  </description>
+
+  <target name="help">
+    <echo message="usage:"/>
+
+    <echo message="   geant c_preprocess"/>
+    <echo message="   geant c_preprocess_ise"/>
+    <echo message="   geant c_compile"/>
+    <echo message="   geant c_build_library"/>
+    <echo message="   geant c_build_library_all"/>
+    <echo message="   geant c_build_library_ise"/>
+    <echo message=""/>
+    <echo message="$${GOBO_EIFFEL} ... Eiffel Compiler (ise)"/>
+    <echo message="$${GOBO_CC}     ... C Compiler (gcc|msc)"/>
+  </target>
+
+  <target name="c_preprocess" depend="init">
+    <description>
+      C Preprocess ${wrap_c.full_header_file_name}.
+      (Using options from ${wrap_c.c_compile_options.default} and ${wrap_c.c_compile_options})
+      The preprocessed code will be stored as file ${wrap_c.cpp_header_name}.
+    </description>
+    <geant target="c_preprocess_${cc}"/>
+  </target>
+
+  <target name="c_preprocess_gcc" depend="init">
+    <description>
+      C Preprocess ${wrap_c.full_header_file_name}.
+      (Using options from ${wrap_c.c_compile_options.default} and ${wrap_c.c_compile.options})
+      The preprocessed code will be stored as file ${wrap_c.cpp_header_name}.
+    </description>
+    <geant target="set_default_options"/>
+    <exec executable="gcc -E ${wrap_c.c_compile.options.default} ${wrap_c.c_compile.options} ${wrap_c.full_header_name} &gt; ${wrap_c.cpp_header_name}"/>
+  </target>
+
+  <target name="c_preprocess_msc" depend="init">
+    <description>
+      C Preprocess ${wrap_c.full_header_file_name}.
+      (Using options from ${wrap_c.c_compile.options.default} and ${wrap_c.c_compile.options})
+      The preprocessed code will be stored as file ${wrap_c.cpp_header_name}.
+    </description>
+    <geant target="set_default_options"/>
+    <exec executable="cl /nologo /E ${wrap_c.c_compile.options.default} ${wrap_c.c_compile.options} ${wrap_c.full_header_name} &gt; ${wrap_c.cpp_header_name}"/>
+  </target>
+
+
+  <target name="c_compile_ise" depend="init">
+    <set name="eiffel" value="ise"/>
+    <geant target="c_compile"/>
+  </target>
+
+  <target name="c_compile" depend="init">
+    <description>
+      Compile C code.
+      ${wrap_c.c_compile.dir_name} ... root directory of C files
+      ${wrap_c.c_compile.options.default}  ... C compiler options
+      ${wrap_c.c_compile.options})  ... C compiler options
+    </description>
+    <echo message="C compiling for ${eiffel} / ${cc}" if="${wrap_c.verbose}=--verbose"/>
+    <geant target="c_compile_${cc}"/>
+  </target>
+
+
+  <target name="c_compile_gcc">
+    <geant target="set_default_options"/>
+    <exec executable="gcc ${wrap_c.c_compile.options.default} ${wrap_c.c_compile.options} -c ${fs.filename} -o ${fs.mapped_filename}">
+      <fileset
+	dir="${wrap_c.c_compile.dir_name}"
+	filename_directory="${wrap_c.c_compile.dir_name}"
+	mapped_filename_directory="${wrap_c.c_compile.dir_name}"
+	include="@(*.c)">
+	 <map type="glob" from="*.c" to="*${wrap_c.obj}"/>
+      </fileset>
+    </exec>
+  </target>
+
+  <target name="c_compile_msc">
+    <geant target="set_default_options"/>
+    <exec executable="cl /nologo ${wrap_c.c_compile.options.default} ${wrap_c.c_compile.options} /c /Fo${fs.mapped_filename} ${fs.filename}">
+      <fileset
+	 dir="${wrap_c.c_compile.dir_name}"
+	 filename_directory="${wrap_c.c_compile.dir_name}"
+	 mapped_filename_directory="${wrap_c.c_compile.dir_name}"
+	 include="@(*.c)">
+	 <map type="glob" from="*.c" to="*${wrap_c.obj}"/>
+      </fileset>
+    </exec>
+  </target>
+
+
+  <target name="c_build_library_all">
+    <geant target="c_build_library_ise"/>
+  </target>
+
+  <target name="c_build_library_ise" depend="init">
+    <set name="eiffel" value="ise"/>
+    <geant target="c_build_library"/>
+  </target>
+
+  <target name="c_build_library" depend="init">
+    <description>
+      Put generated Code in an archive.
+      ${wrap_c.c_build_library.dir_name} ... root directory of object files
+      ${wrap_c.c_build_library.lib_name} ... library name
+    </description>
+    <geant target="c_build_library_${cc}"/>
+  </target>
+
+  <target name="c_build_library_gcc">
+    <geant target="c_compile"/>
+    <exec executable="ar rcs ${wrap_c.c_build_library.lib_name}_${eiffel}_${cc}${wrap_c.lib} ${fs.filename}">
+      <fileset
+	 dir="${wrap_c.c_build_library.dir_name}"
+	 filename_directory="${wrap_c.c_build_library.dir_name}"
+	 mapped_filename_directory="${wrap_c.c_build_library.dir_name}"
+	 include="@(*${wrap_c.obj})"/>
+    </exec>
+  </target>
+
+  <target name="c_build_library_msc">
+    <geant target="c_compile"/>
+    <!-- Dirty hack: First create the lib, then add files to it -->
+    <!-- TODO: find better solution -->
+    <exec executable="lib /nologo /OUT:${wrap_c.c_build_library.lib_name}_${eiffel}_${cc}${wrap_c.lib} ${fs.filename}">
+      <fileset
+	 dir="${wrap_c.c_build_library.dir_name}"
+	 filename_directory="${wrap_c.c_build_library.dir_name}"
+	 mapped_filename_directory="${wrap_c.c_build_library.dir_name}"
+	 include="@(*${wrap_c.obj})"/>
+    </exec>
+    <exec executable="lib /nologo ${wrap_c.c_build_library.lib_name}_${eiffel}_${cc}${wrap_c.lib} ${fs.filename}">
+      <fileset
+	 dir="${wrap_c.c_build_library.dir_name}"
+	 filename_directory="${wrap_c.c_build_library.dir_name}"
+	 mapped_filename_directory="${wrap_c.c_build_library.dir_name}"
+	 include="@(*${wrap_c.obj})"/>
+    </exec>
+  </target>
+
+
+  <!-- Implementation -->
+
+  <target name="init">
+    <set name="eiffel" value="ise"/>
+    <set name="wrap_c.c_compile.options" value=""/>
+    <set name="wrap_c.c_link_options" value=""/>
+
+    <geant target="init_eiffel"/>
+    <geant target="init_cc"/>
+    <geant target="init_os"/>
+    <geant target="init_wrap_c"/>
+  </target>
+
+  <target name="init_wrap_c">
+    <!--
+    Values to be defined:
+      ${wrap_c.c_preprocess.full_header_file_name}  ... Header file name to preprocess
+      ${wrap_c.c_preprocess.cpp_header_name}        ... Filename of preprocessed header file
+      ${wrap_c.c_compile.dir_name}                  ... Root directory of C files
+      ${wrap_c.c_compile.options})                  ... C compiler options
+      ${wrap_c.c_build_library.dir_name}            ... Root directory of object files
+      ${wrap_c.c_build_library.lib_name}            ... Library name
+    -->
+  </target>
+
+  <target name="init_eiffel" if="${GOBO_EIFFEL}">
+    <set name="eiffel" value="${GOBO_EIFFEL}"/>
+  </target>
+
+  <target name="init_cc" if="${GOBO_CC}">
+    <set name="cc" value="${GOBO_CC}"/>
+  </target>
+
+  <target name="init_os">
+    <geant target="init_windows"/>
+    <geant target="init_unix"/>
+  </target>
+
+  <target name="init_windows" if="${GOBO_OS}=windows">
+    <set name="wrap_c.obj" value=".obj"/>
+    <set name="wrap_c.lib" value=".lib"/>
+    <set name="cc" value="msc" unless="${cc}"/>
+  </target>
+
+  <target name="init_unix" unless="${GOBO_OS}=windows">
+    <set name="wrap_c.obj" value=".o"/>
+    <set name="wrap_c.lib" value=".a"/>
+    <set name="cc" value="gcc" unless="${cc}"/>
+    <available resource="/usr/include/crt_externs.h" variable="wrap_c.is_mac_os_x"/>
+  </target>
+
+  <target name="set_default_options">
+    <set name="wrap_c.c_compile.options.default" value=""/>
+    <geant target="set_default_options_windows"/>
+    <geant target="set_default_options_unix"/>
+  </target>
+
+  <target name="set_default_options_windows" if="${GOBO_OS}=windows">
+    <set name="wrap_c.c_compile.options.default" value="${wrap_c.c_compile.options.default} /I${ISE_EIFFEL}\studio\spec\$ISE_PLATFORM\include" if="${eiffel}=ise"/>
+  </target>
+
+  <target name="set_default_options_unix" unless="${GOBO_OS}=windows">
+    <set name="wrap_c.c_compile.options.default" value="${wrap_c.c_compile.options.default} -I${ISE_EIFFEL}/studio/spec/$ISE_PLATFORM/include" if="${eiffel}=ise"/>
+  </target>
+
+</project>

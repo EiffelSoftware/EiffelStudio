@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-20-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-20-0 http://www.eiffel.com/developers/xml/configuration-1-20-0.xsd" name="template_library"  library_target="template_library">
+	<target name="template_library">
+		<root all_classes="true"/>
+		<option warning="true" full_class_checking="false" is_attached_by_default="True" manifest_array_type="mismatch_warning">
+			<assertions precondition="true"/>
+		</option>
+		<setting name="console_application" value="true"/>
+		<setting name="inlining_size" value="0"/>
+		<setting name="msil_classes_per_module" value="5"/>
+		<setting name="dead_code_removal" value="feature"/>
+		<external_include location="$ECF_CONFIG_PATH\generated_wrapper\c\include">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</external_include>
+		<external_include location="$ECF_CONFIG_PATH/generated_wrapper/c/include">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_include>
+		<external_include location="$HEADER_TEMPLATE_PATH">
+			<condition>
+				<platform value="windows"/>
+			</condition>		
+		</external_include>
+		<external_include location="$HEADER_TEMPLATE_PATH">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_include>
+		
+		<!-- Manual Wrapper add this only if it's needed 
+		
+		<external_include location="$ECF_CONFIG_PATH\manual_wrapper\c\include">
+			<condition>
+				<platform value="windows"/>
+			</condition>		
+		</external_include>
+
+		<external_include location="$ECF_CONFIG_PATH/manual_wrapper/c/include">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>		
+		</external_include>
+
+
+		-->
+		<external_object location="$ECF_CONFIG_PATH/C/spec/$ISE_C_COMPILER/$ISE_PLATFORM/lib/eif_$template_library.lib">
+			<condition>
+				<platform value="windows"/>
+			</condition>
+		</external_object>
+		<external_object location="$ECF_CONFIG_PATH/C/spec/$(ISE_PLATFORM)/lib/eif_$template_library.a">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</external_object>
+
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<cluster name="src" location="." recursive="true">
+			<file_rule>
+				<exclude>/c$</exclude>
+				<exclude>/include$</exclude>
+				<exclude>/EIFGENs$</exclude>
+			</file_rule>
+		</cluster>
+	</target>
+</system>

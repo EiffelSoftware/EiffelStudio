@@ -1,0 +1,90 @@
+* parsing:
+
+** grammar is not up to latest ANSI C (restricted pointers, etc)
+
+** add macro scanner/parser to wrap simple macro constants
+*** if the target of the macro is a known function name add an alias (for example: SDL_BlitSurface)
+*** how do i find out all headers that need to be parsed (the root header might #include other headers)
+*** the only sensible way i think this can be done, is require the user to give ewg a list of such headers
+
+* code generation:
+** structs or unions as members of structs or unions not accessible yet
+** generate code for unions
+** user can tell ewg about callbacks that have a free void* parameter
+   this parameter can be used to dispatch on a per object basis.
+** add indexing clauses
+** allow to properly wrap dependent c libraries
+*** for example wrapping gnome
+    one should wrap gtk and gnome seperatly
+    but the gnome wrapper should reuse the already existing
+    gtk wrapper
+** make callback dispatchers true singletons with shared access.
+** c function generation at runtime
+*** will be specific per
+**** cpu architecture
+**** calling convention (stdcall, cdecl)
+**** c compiler (memory allignment: '#pragma', '__attribute__ ((packed))')
+**** os (allocation of executable memory: VirtualAlloc, mprotect)
+*** see: ELJ_ROOT/lib/ifs/c/win32/kernel/e2c_eiffelproc_global.c
+   for a windows implementation
+*** http://www.gnu.org/directory/libs/c/ffcall.html
+*** libffi
+** support variable arguments (va_list) directly
+** C callbacks as members of structs should have a caller in the struct wrapper
+** Add runtime classes for references to pointer/integer/double/.../array
+
+* build environment:
+** build files 
+*** find a way to let the user use `pkg-config' on all eiffel compilers
+*** find a way to let user autoconf/automake
+
+* ewg code base:
+* Come up with some good assertions for `is_valid_c_identifier' and `is_valid_eiffel_identifier'
+
+* Make ewg properly wrap functions that have struct parameters as in "void foo (struct bar mybar)". Will need an extra layer of C code, or "C inline"
+
+* Add repository for standard windows libraries (generation takes a while)
+
+* ePosix uses `is_owner' instead of `not is_shared'. Maybe I should follow suite.
+
+* provide general purpose mountable library.xace for generated wrappers (or generate one)
+
+* Add FFCALL documentation (EWG_FFCALL, ...)
+
+* Add precondition to struct member setter when type is not signed int32 but another integer (Benno)
+
+* (Paul) Let the number of callback stub slots be configurable
+
+* Clean up EWG_ERROR_HANDLER
+
+* EWG_EXTERNAL_MEMORY_ROUTINES read and put routines on VE can use POINTER.mem_copy (just as ISE)
+
+* Introduce *_SHARED_* classes for functions, enums and callback dispatchers
+
+* Wrap anonymous enums
+  * What name to give their class? How will users find it?
+
+* Need to be able to get size of arrays (as members of struct/unions)
+
+* functions that return a function-pointer trigger bad c glue code
+
+* fix test system
+
+* Add 0.8.0 -> 0.9.0 upgrade howto:
+ * src/c_glue_code -> manual_wrapper/c/include resp. manual_wrapper/c/src
+ * build.eant
+  * c_compile_options -> c_compile.options (provide legacy fallback)
+  * c compilation no longer needed
+ * library.xace (union cluster, only one .a)
+
+
+* in build file, guess full header from short header (if full header not given)
+
+* Now that VE 5.0 has INTEGER_8, INTEGER_16 and INTEGER, EWG should use it
+
+* Add C libs to distribution
+
+* Structs without a size (e.g.: "struct foo;") do not work, you cannot even create them (s.make_unshared (p)) fails.
+  EWG_MANAGED_POINTER always wants to know the size, but in this case it is not available.
+
+* Add new ECMA keywords to escape code (esp. attribute)

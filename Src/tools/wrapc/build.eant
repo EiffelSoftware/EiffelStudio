@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+
+<project name="ewg_root" default="help">
+
+	<description>
+		description: "Eiffel Ant file for WRAP_C"
+		copyright: "Copyright (c) 2001-2002, Andreas Leitner and others"
+		license: "Eiffel Forum License v2 (see forum.txt)"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message="   geant install"/>
+		<!--echo message="   geant install_examples"/-->
+		<echo message="   geant clobber"/>
+		<echo message="   geant clean"/>
+		<echo message="   geant compile"/>
+		<echo message="   geant delivery"/>
+	</target>
+
+	<target name="install" depend="init">
+		<description>
+			Invokes gepp on .ge files.
+			Preprocesses header files for test cluster
+		</description>
+		<geant file="build.eant" target="install" dir="src"/>
+		<geant file="build.eant" target="install" dir="src/library"/>
+		<!--geant file="build.eant" target="install" dir="test"/>-->
+	</target>
+
+	<target name="install_examples" depend="init">
+		<geant file="build.eant" target="install" dir="example"/>
+	</target>
+
+	<target name="clean" depend="init">
+		<description>
+			Remove intermediary generated files.
+		</description>
+
+		<geant target="remove_backup_files"/>
+		<geant file="build.eant" target="clean" dir="src"/>
+		<!--geant file="build.eant" target="clean" dir="test"/>-->
+		<geant file="build.eant" target="clean" dir="src/library"/>
+		<!--geant file="build.eant" target="clean" dir="example"/>-->
+	</target>
+
+	<target name="compile" depend="init">
+		<description>
+			Compile WRAP_C tools into /bin.
+		</description>
+		<!--copy file="${cwd}/src/ewg/system.ecf" to_file="${cwd}/bin/system.ecf"/>-->
+		<geant file="${cwd}/src/ewg/build.eant" target="compile" dir="src/ewg"/>
+		<geant file="${cwd}/src/ewg/build.eant" target="clean" dir="src/ewg"/>
+		<copy file="${cwd}/src/ewg/wrap_c.exe" to_file="${cwd}/bin/wrap_c.exe"  if="${is_windows}"/>
+		<copy file="${cwd}/src/ewg/wrap_c" to_file="${cwd}/bin/wrap_c"  unless="${is_windows}"/>			
+<!--delete file="${cwd}/bin/system.ecf"/>-->
+		<!--
+			geant file="${WRAP_C}/src/drc/build.eant" target="compile" dir="bin" if="${EPOSIX}"/>
+			<geant file="${WRAP_C}/src/drc/build.eant" target="clean" dir="bin" if="${EPOSIX}"/> 
+		-->
+		<geant file="build.eant" target="install" dir="src"/>
+	</target>
+
+	<target name="clobber" depend="init">
+		<description>
+			Remove all generated files.
+		</description>
+
+		<geant target="remove_backup_files"/>
+		<geant file="${cwd}/src/build.eant" target="clobber" dir="src"/>
+		<geant file="${cwd}/src/ewg/build.eant" target="clobber" dir="bin"/>
+		<delete file="${cwd}/bin/wrap_c.exe"/>
+		<!--geant file="${WRAP_C}/test/build.eant" target="clobber" dir="test"/>-->
+		<geant file="${cwd}/src/library/build.eant" target="clobber" dir="src/library"/>
+		<!--geant file="${WRAP_C}/example/build.eant" target="clobber" dir="example"/>-->
+		<!--geant file="${WRAP_C}/doc/build.eant" target="clobber" dir="doc"/>-->
+	</target>
+
+	<target name="remove_backup_files" depend="init">
+		<description>
+			Remove backup files made by editors.
+		</description>
+		<delete>
+			<fileset directory="." include="**/*~"/>
+		</delete>
+	</target>
+
+	<target name="delivery" depend="init">
+		<description>
+			Build delivery package.
+		</description>
+
+		<geant target="clobber"/>
+		<geant target="install"/>
+		<geant target="clean"/>
+		<geant target="install"/>
+		<delete>
+			<fileset directory="." include="@(**/.cvsignore)"/>
+		</delete>
+		<delete>
+			<directoryset directory="." include="@(**/CVS)"/>
+		</delete>
+	</target>
+
+<!-- Implementation -->
+
+	<target name="init">
+		<geant target="init_gobo_eiffel"/>
+	</target>
+
+	<target name="init_gobo_eiffel">
+		<set name="GOBO_EIFFEL" value="ise"/>
+		<setenv name="GOBO_EIFFEL" value="ise"/>
+	</target>
+
+</project>

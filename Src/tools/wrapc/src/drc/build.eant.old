@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+
+<project name="drc" default="help">
+
+  <description>
+    description: "Eiffel Ant file for 'drc'"
+    system: "Eiffel Wrapper Generator"
+    copyright: "Copyright (c) 2001-2002, Andreas Leitner and others"
+    license: "Eiffel Forum License v2 (see forum.txt)"
+    date: "$Date: 2008-05-21 17:02:13 +0900 (Wed, 21 May 2008) $"
+    revision: "$Revision: 4 $"
+  </description>
+
+  <inherit>
+    <parent location="${GOBO}/library/common/config/eiffel.eant">
+      <redefine target="init_system"/>
+      <redefine target="clean"/>
+    </parent>
+  </inherit>
+
+
+  <!-- Implementation -->
+
+  <target name="init_system">
+    <set name="system" value="drc"/>
+    <set name="system_dir" value="${EWG}/src/drc"/>
+  </target>
+
+  <target name="clean" depend="init">
+    <delete file="TAGS"/>
+    <delete file="cecil.h"/>
+    <precursor/>
+  </target>
+
+  <target name="tags" depend="init">
+    <set name="eiffel" value="ise"/>
+    <set name="define" value="GOBO_EIFFEL=${eiffel}"/>
+    <set name="define" value="${define} GOBO_OS=${GOBO_OS}"/>
+    <set name="define" value="${define} GOBO_CC=${GOBO_CC}" if="${GOBO_CC}"/>
+    <set name="define" value="${define} GOBO_XML_EXPAT=true" if="${GOBO_XML_EXPAT}"/>
+    <set name="define" value="${define} GOBO_DOTNET=true" if="${GOBO_DOTNET}"/>
+    <exec executable="gutentag ${void} --define=&quot;${define}&quot;"/>
+  </target>
+
+</project>

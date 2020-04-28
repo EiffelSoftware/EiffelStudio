@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+
+<project name="src" default="help">
+
+	<description>
+		description: "Eiffel Ant file for WRAP_C tools"
+		copyright: "Copyright (c) 2001, Andreas Leitner and others"
+		license: "Eiffel Forum License v2 (see forum.txt)"
+		date: "$Date$"
+		revision: "$Revision$"
+	</description>
+
+	<target name="help">
+		<echo message="usage:"/>
+		<echo message="   geant install"/>
+		<echo message="   geant compile"/>
+		<echo message="   geant compile_ise"/>
+		<echo message="   geant compile_debug"/>
+		<echo message="   geant compile_debug_ise"/>
+		<echo message="   geant clean"/>
+		<echo message="   geant clobber"/>
+	</target>
+
+	<target name="install" depend="init">
+		<description>
+			Install the WRAP_C tools.
+		</description>
+
+		<set name="target" value="install"/>
+		<geant target="do_all"/>
+	</target>
+
+	<target name="compile" depend="init">
+		<description>
+			Compile WRAP_C tools.
+			Use Eiffel compiler set in ${GOBO_EIFFEL}
+			or 'ge' if this variable is not defined.
+		</description>
+
+		<set name="target" value="compile"/>
+		<geant target="do_all"/>
+	</target>
+
+	<target name="compile_ise" depend="init">
+		<description>
+			Compile WRAP_C tools with ISE Eiffel.
+		</description>
+
+		<set name="target" value="compile_ise"/>
+		<geant target="do_all"/>
+	</target>
+
+	<target name="compile_debug" depend="init">
+		<description>
+			Compile WRAP_C tools in debug mode.
+			Use Eiffel compiler set in ${GOBO_EIFFEL}
+			or 'ge' if this variable is not defined.
+		</description>
+
+		<set name="target" value="compile_debug"/>
+		<geant target="do_all"/>
+	</target>
+
+	<target name="compile_debug_ise" depend="init">
+		<description>
+			Compile WRAP_C tools with ISE Eiffel in debug mode.
+		</description>
+
+		<set name="target" value="compile_debug_ise"/>
+		<geant target="do_all"/>
+	</target>
+
+	<target name="clean" depend="init">
+		<description>
+			Remove intermediary generated files.
+		</description>
+
+		<set name="target" value="clean"/>
+		<geant target="do_all"/>
+	</target>
+
+	<target name="clobber" depend="init">
+		<description>
+			Remove all generated files.
+		</description>
+
+		<set name="target" value="clobber"/>
+		<geant target="do_all"/>
+	</target>
+
+
+<!-- Implementation -->
+
+	<target name="init">
+			<!-- do nothing -->
+		<set name="GOBO_EIFFEL" value="ise"/>	
+	</target>
+
+	<target name="do_all" depend="init">
+		<description>
+			Call 'geant' with the same target ${target}
+			in all subdirectories.
+		</description>
+
+		<geant file="${cwd}/ewg/build.eant" target="${target}" dir="${cwd}/ewg"/>
+		<!--
+			geant file="${WRAP_C}/src/drc/build.eant" target="${target}" dir="${WRAP_C}/src/drc" if="${EPOSIX}"/>
+		-->
+	</target>
+
+</project>

@@ -63,6 +63,17 @@ iff not exist eiffel.exe then
 endiff
 move eiffel.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
 
+remtrace Recompile wrap_c tool
+cdd %EIFFEL_SRC\tools\wrap_c\src\ewb
+clean_project
+finalize system.ecf
+cleanup_eiffel wrap_c wrap_c.exe
+iff not exist wrap_c.exe then
+	remtrace Could not finalize a new wrap_c tool
+	CANCEL
+endiff
+move wrap_c.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
+
 remtrace Recompile eiffel_image_embedder
 cdd %EIFFEL_SRC\tools\eiffel_image_embedder
 clean_project

@@ -50,6 +50,18 @@ fi
 clean_project
 move eiffel.tar.bz2 $EXPORT_DIR/bin
 
+remtrace Recompile wrap_c tool
+cd $EIFFEL_SRC/tools/wrap_c/src/ewb
+clean_project
+finalize system.ecf wrap_c
+tgz_ccode wrap_c wrap_c.tar.bz2
+if [ ! -f wrap_c.tar.bz2 ]; then
+	echo Could not finalize a new wrap_c tool 
+	CANCEL
+fi
+clean_project
+move wrap_c.tar.bz2 $EXPORT_DIR/bin
+
 remtrace Recompile eiffel_image_embedder
 cd $EIFFEL_SRC/tools/eiffel_image_embedder
 clean_project

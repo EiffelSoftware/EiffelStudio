@@ -296,6 +296,11 @@ cd $EXPORT_DIR/bin
 untgz_ccode eiffel
 move eiffel $INSTALL_DIR/tools/spec/$ISE_PLATFORM/bin/eiffel
 
+remtrace Recompile wrap_c tool
+cd $EXPORT_DIR/bin
+untgz_ccode wrap_c
+move wrap_c $INSTALL_DIR/tools/spec/$ISE_PLATFORM/bin/wrap_c
+
 remtrace Recompile Eiffel Image Embedder
 cd $EXPORT_DIR/bin
 untgz_ccode eimgemb

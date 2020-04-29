@@ -10,6 +10,11 @@
 		<option warning="warning" full_class_checking="false" is_attached_by_default="True" manifest_array_type="mismatch_warning">
 			<assertions check="false" invariant="false" loop="false" postcondition="false" precondition="false" supplier_precondition="false"/>
 		</option>
+		<pre_compile_action working_directory="../../library" command="wrap_c --verbose --script_pre_process=pre_script.sh --script_post_process=post_script.sh --output-dir=generated_wrapper  --full-header=./manual_wrapper/c/include/simple_header.h  --config=config.xml" succeed="true">
+			<condition>
+				<platform excluded_value="windows"/>
+			</condition>
+		</pre_compile_action>
 		<variable name="GOBO_CC" value="msc"/>
 		<library name="base" location="${ISE_LIBRARY}\library\base\base.ecf" readonly="true"/>
 		<library name="time" location="${ISE_LIBRARY}\library\time\time.ecf" readonly="true"/>

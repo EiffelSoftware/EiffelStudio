@@ -97,6 +97,8 @@ feature -- Command
 									end(dev_window, l_smart_editor)
 								)
 							l_save_request.show_on_active_window
+						else
+							l_smart_editor.reload
 						end
 					else
 						check not_possible: False end

@@ -64,7 +64,7 @@ endiff
 move eiffel.exe %STUDIO_DIR\tools\spec\%ISE_PLATFORM\bin
 
 remtrace Recompile wrap_c tool
-cdd %EIFFEL_SRC\tools\wrap_c\src\ewb
+cdd %EIFFEL_SRC\tools\wrapc\src\ewg
 clean_project
 finalize system.ecf
 cleanup_eiffel wrap_c wrap_c.exe

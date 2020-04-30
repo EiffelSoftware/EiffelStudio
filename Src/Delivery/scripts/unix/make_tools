@@ -51,7 +51,7 @@ clean_project
 move eiffel.tar.bz2 $EXPORT_DIR/bin
 
 remtrace Recompile wrap_c tool
-cd $EIFFEL_SRC/tools/wrap_c/src/ewb
+cd $EIFFEL_SRC/tools/wrapc/src/ewg
 clean_project
 finalize system.ecf wrap_c
 tgz_ccode wrap_c wrap_c.tar.bz2

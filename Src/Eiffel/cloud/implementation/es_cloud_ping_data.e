@@ -8,7 +8,9 @@ class
 
 feature -- Access
 
-	has_error: BOOLEAN assign set_has_error
+	has_error: BOOLEAN
+
+	error_message: detachable READABLE_STRING_GENERAL
 
 	json: detachable STRING
 
@@ -20,13 +22,16 @@ feature -- Access: session
 
 	session_state_changed: BOOLEAN assign set_session_state_changed
 
-	plan_expired: BOOLEAN assign set_plan_expired
+	license_missing: BOOLEAN assign set_license_missing
+
+	license_expired: BOOLEAN assign set_license_expired
 
 feature -- Element change
 
-	set_has_error (v: like has_error)
+	report_error (msg: like error_message)
 		do
-			has_error := v
+			error_message := msg
+			has_error := True
 		end
 
 	set_heartbeat (v: like heartbeat)
@@ -34,9 +39,14 @@ feature -- Element change
 			heartbeat := v
 		end
 
-	set_plan_expired (b: BOOLEAN)
+	set_license_missing (b: BOOLEAN)
 		do
-			plan_expired := b
+			license_missing := b
+		end
+
+	set_license_expired (b: BOOLEAN)
+		do
+			license_expired := b
 		end
 
 	set_session_state (v: like session_state)

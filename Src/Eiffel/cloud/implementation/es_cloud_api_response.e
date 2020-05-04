@@ -20,6 +20,7 @@ feature {NONE} -- Creation
 		do
 			if a_resp.error_occurred then
 				create error.make (a_resp.error_message)
+				has_internal_error := True
 			elseif attached a_resp.body as s then
 				create jp.make_with_string (s)
 				jp.parse_content
@@ -47,6 +48,9 @@ feature {NONE} -- Internal
 	json: detachable JSON_VALUE
 
 feature -- Access
+
+	has_internal_error: BOOLEAN
+			-- Is `error` an internal (network) error?
 
 	has_error: BOOLEAN
 		do

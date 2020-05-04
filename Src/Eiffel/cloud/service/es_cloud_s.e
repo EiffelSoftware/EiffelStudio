@@ -94,6 +94,16 @@ feature -- Access
 		deferred
 		end
 
+feature -- Remember credentials
+
+	kept_credential: detachable TUPLE [username: READABLE_STRING_32; password: detachable READABLE_STRING_32]
+		deferred
+		end
+
+	keep_credential (u,p: detachable READABLE_STRING_32)
+		deferred
+		end
+
 feature -- Sign in
 
 	continue_as_guest
@@ -249,13 +259,13 @@ feature -- Events
 				-- FIXME: if gpl edition, quit EiffelStudio?
 		end
 
-	on_account_plan_expired (acc: ES_ACCOUNT)
+	on_account_license_expired (acc: ES_ACCOUNT)
 		do
 			if attached observers as lst then
 				across
 					lst as ic
 				loop
-					ic.item.on_account_plan_expired (acc)
+					ic.item.on_account_license_expired (acc)
 				end
 			end
 		end

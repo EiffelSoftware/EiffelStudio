@@ -12,7 +12,7 @@ inherit
 		redefine
 			on_account_signed_in,
 			on_account_signed_out,
-			on_account_plan_expired,
+			on_account_license_expired,
 			on_account_updated,
 			on_cloud_available,
 			on_session_state_changed,
@@ -44,10 +44,21 @@ feature {NONE} -- Background ping
 
 	ping_timeout: detachable EV_TIMEOUT
 
+	is_pinging_in_background: BOOLEAN
+		do
+			Result := attached ping_timeout as t and then
+					not t.is_destroyed and then
+					t.interval > 0 and then
+					not t.actions.is_empty
+		end
+
 	start_background_pinging (acc: ES_ACCOUNT)
 		local
 			t: EV_TIMEOUT
 		do
+			debug ("es_cloud")
+				print (generator + ".start_background_pinging (" + acc.username + ")%N")
+			end
 			if
 				attached es_cloud_s.service as l_service and then
 				l_service.session_heartbeat > 0
@@ -70,7 +81,9 @@ feature {NONE} -- Background ping
 		do
 			if attached ping_timeout as t then
 				t.destroy
-				ping_timeout := t
+				t.set_interval (0)
+				t.actions.wipe_out
+				ping_timeout := Void
 			end
 		end
 
@@ -80,6 +93,7 @@ feature {NONE} -- Background ping
 		do
 			if attached es_cloud_s.service as cld then
 				debug ("es_cloud")
+					print ("%N" +  (create {DATE_TIME}.make_now).out + "%N")
 					print (generator + ".process_ping (" + acc.username + ") HEARTBEAT=" + ping_heartbeat.out + "%N")
 				end
 				if attached acc.access_token as l_access_token then
@@ -116,13 +130,18 @@ feature -- Events
 			start_background_pinging (acc)
 		end
 
-	on_account_plan_expired (acc: ES_ACCOUNT)
+	on_account_license_expired (acc: ES_ACCOUNT)
 		local
-			dlg: ES_CLOUD_EXPIRED_PLAN_DIALOG
+			dlg: ES_CLOUD_LICENSE_ISSUE_DIALOG
 			w: detachable EB_DEVELOPMENT_WINDOW
 		do
+			debug ("es_cloud")
+				print (generator + ".on_account_license_expired (" + acc.username + ")%N")
+			end
+			stop_background_pinging
+
 			if attached es_cloud_s.service as l_cloud_service then
-				create dlg.make (l_cloud_service, "Your plan expired!")
+				create dlg.make (l_cloud_service, "Your license expired!")
 				w := window_manager.last_focused_development_window
 				if
 					w = Void and then
@@ -148,6 +167,10 @@ feature -- Events
 
 	on_account_updated (acc: detachable ES_ACCOUNT)
 		do
+			debug ("es_cloud")
+				print (generator + ".on_account_updated (" + acc.username + ")%N")
+			end
+
 			on_account_changed (acc)
 		end
 

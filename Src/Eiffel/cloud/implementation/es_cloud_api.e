@@ -276,19 +276,19 @@ feature -- Plan
 		local
 			ctx: HTTP_CLIENT_REQUEST_CONTEXT
 			resp: like response
-			l_account_href: READABLE_STRING_8
+			l_installation_href, l_account_href: READABLE_STRING_8
 		do
 			reset_api_call
 			if
 				attached new_http_client_session as sess
 			then
-				l_account_href := es_account_endpoint_for_token (a_token, sess)
+				l_installation_href := es_account_installations_endpoint_for_token (a_token, sess)
 				ctx := new_jwt_auth_context (a_token)
-				if l_account_href /= Void then
-					resp := response (sess.get (l_account_href, ctx))
+				if l_installation_href /= Void then
+					resp := response (sess.get (l_installation_href, ctx))
 					if not has_error then
-						if attached account_from_response (resp) as acc then
-							Result := acc.plan
+						if attached installation_from_response (resp) as inst then
+							Result := inst.associated_plan
 						end
 					end
 				end
@@ -452,12 +452,11 @@ feature -- Installation
 						ctx.add_form_parameter (ic.key, ic.item)
 					end
 					resp := response (sess.post (l_installations_href, ctx, Void))
-					if resp.has_error then
+					if resp.has_error and then resp.has_internal_error then
 						if a_output /= Void then
-							a_output.has_error := True
+							a_output.report_error (Void)
 						end
 							-- Too bad, but not critical
-						reset_error
 					else
 						if attached resp.string_8_item ("_links|es:installation|href") as v then
 							record_endpoint_for_token (a_token, {STRING_32} "_links|es:installation|href;installation=" + params.installation_id.as_string_32, v)
@@ -466,8 +465,18 @@ feature -- Installation
 							record_endpoint_for_token (a_token, {STRING_32} "_links|es:session|href;session=" + params.session_id.as_string_32, v)
 						end
 						if a_output /= Void then
-							if attached resp.boolean_item_is_true ("es:plan_expired") as l_plan_expired then
-								a_output.plan_expired := l_plan_expired
+							if attached resp.error then
+								check not_internal_error: not resp.has_internal_error end
+								a_output.report_error (resp.error.message)
+							end
+							if resp.boolean_item_is_true ("es:license_missing") then
+								a_output.license_missing := True
+							end
+							if
+								resp.boolean_item_is_true ("es:license_expired")
+								or resp.boolean_item_is_true ("es:plan_expired")
+							then
+								a_output.license_expired := True
 							end
 							if
 								attached resp.string_32_item ("es:session_state") as l_sess_state and then
@@ -481,6 +490,7 @@ feature -- Installation
 							end
 						end
 					end
+					reset_error
 				end
 			end
 		rescue
@@ -805,12 +815,12 @@ feature {NONE} -- Json handling
 				elseif attached r.string_32_item ("uid") as s_uid then
 					Result.set_user_id (s_uid.to_integer_64)
 				end
-				if
-					attached r.sub_item ("es:plan") as r_plan and then
-					attached plan_from_response (r_plan) as l_plan
-				then
-					Result.set_plan (l_plan)
-				end
+--				if
+--					attached r.sub_item ("es:plan") as r_plan and then
+--					attached plan_from_response (r_plan) as l_plan
+--				then
+--					Result.set_plan (l_plan)
+--				end
 			end
 		end
 
@@ -864,6 +874,12 @@ feature {NONE} -- Json handling
 				if attached resp.date_time_item ("es:installation|creation_date") as v_creation then
 					Result.set_creation_date (v_creation)
 				end
+			end
+			if
+				attached resp.sub_item ("es:plan") as r_plan and then
+				attached plan_from_response (r_plan) as l_plan
+			then
+				Result.set_associated_plan (l_plan)
 			end
 		end
 

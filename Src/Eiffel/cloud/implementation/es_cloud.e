@@ -99,6 +99,7 @@ feature {NONE} -- Default
 				if attached eiffel_layout.get_environment_8 ("ES_CLOUD_SERVER_URL") as l_env_url then
 					Result := l_env_url
 				end
+				print ("Use cloud url: " + Result + "%N")
 			end
 		end
 
@@ -153,6 +154,81 @@ feature {NONE} -- Initialization
 				inst.set_application_item (l_var_name, l_app_name, env.version_name, installation.id)
 			end
 			installation.set_platform (env.eiffel_platform)
+		end
+
+feature -- Remember credentials
+
+	kept_credential: detachable TUPLE [username: READABLE_STRING_32; password: detachable READABLE_STRING_32]
+		local
+			retried: BOOLEAN
+			p: PATH
+			f: RAW_FILE
+			sed: SED_STORABLE_FACILITIES
+		do
+			if not retried then
+				p := credential_storage_filename
+				if p /= Void then
+					create f.make_with_path (p)
+					if f.exists and then f.is_access_readable then
+						f.open_read
+						create sed
+						if attached {TUPLE [username: READABLE_STRING_GENERAL; password: detachable READABLE_STRING_GENERAL]} sed.retrieved_from_medium (f) as d then
+							if attached d.password as pwd then
+								Result := [d.username.to_string_32, pwd.to_string_32]
+							else
+								Result := [d.username.to_string_32, Void]
+							end
+						end
+					end
+				end
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+	keep_credential (u,pwd: detachable READABLE_STRING_32)
+		local
+			p: PATH
+			sed: SED_STORABLE_FACILITIES
+			d: like kept_credential
+			f: RAW_FILE
+			retried: BOOLEAN
+		do
+			if not retried then
+				-- FIXME: use json or xml storage!
+				p := credential_storage_filename
+				if p /= Void then
+					create f.make_with_path (p)
+					if u = Void then
+						if f.exists then
+							f.delete
+						end
+					elseif not f.exists or else f.is_access_writable then
+						if ensure_parent_exists (p) then
+							d := [u, pwd]
+							f.open_write
+							create sed
+							sed.store_in_medium (d, f)
+							f.close
+						else
+								-- FIXME ...
+						end
+					end
+				end
+			end
+		rescue
+			retried := True
+			retry
+		end
+
+	credential_storage_filename: detachable PATH
+		do
+			Result := accounts_location
+			if Result /= Void then
+				Result := Result.extended (installation.id)
+				Result := Result.appended ("-credential.dat")
+			end
 		end
 
 feature {NONE} -- Clean up
@@ -405,9 +481,10 @@ feature -- Sign
 				active_account := acc
 				update_account (acc)
 				store
---				on_account_signed_in (acc)
+				on_account_signed_in (acc)
 			else
 				active_account := Void
+				active_session := Void
 					-- If guest, remains guest.
 				if web_api.has_error then
 					check_cloud_availability
@@ -501,11 +578,11 @@ feature -- Updating
 				if d.heartbeat > 0 then
 					on_session_heartbeat_updated (d.heartbeat)
 				end
-				if d.plan_expired then
-					on_account_plan_expired (a_account)
+				if d.license_expired then
+					on_account_license_expired (a_account)
 				end
 				if False then
-					on_account_plan_expired (a_account)
+					on_account_license_expired (a_account)
 				end
 			end
 		end
@@ -561,7 +638,7 @@ feature -- Updating
 				else
 					a_account.set_access_token (Void)
 				end
-				a_account.set_plan (acc.plan)
+--				a_account.set_plan (acc.plan)
 				if attached web_api.installation (tok.token, installation.id) as inst then
 						-- Ok good.
 					installation := inst
@@ -572,7 +649,9 @@ feature -- Updating
 						-- Keep the same
 				end
 				store
-				if a_account.has_active_plan or else not a_account.is_expired then
+				if a_account.is_expired then
+					on_account_signed_out
+				elseif attached installation as l_installation and then l_installation.is_active then
 					on_account_updated (a_account)
 				else
 					on_account_signed_out
@@ -709,6 +788,12 @@ feature -- Storage
 							else
 								active_account := Void
 							end
+							if attached d.installation as l_installation and then l_installation.is_active then
+								installation := l_installation
+							else
+								-- Keep current installation !
+							end
+
 							guest_mode_ending_date := d.guest_mode_ending_date
 							guest_mode_signed_in_count := d.guest_mode_signed_in_count
 							if d.session_heartbeat > 0 then
@@ -746,6 +831,7 @@ feature -- Storage
 					if ensure_parent_exists (p) then
 						create d
 						d.active_account := active_account
+						d.installation := installation
 						d.guest_mode_ending_date := guest_mode_ending_date
 						d.guest_mode_signed_in_count := guest_mode_signed_in_count
 						f.open_write

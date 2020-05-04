@@ -26,6 +26,8 @@ feature -- Access
 
 	info: detachable READABLE_STRING_8
 
+	associated_plan: detachable ES_ACCOUNT_PLAN
+
 feature -- Status report
 
 	is_active: BOOLEAN
@@ -35,6 +37,11 @@ feature -- Optional properties
 	platform: detachable IMMUTABLE_STRING_8
 
 feature -- Element change
+
+	set_associated_plan (a_plan: like associated_plan)
+		do
+			associated_plan := a_plan
+		end
 
 	set_platform (pf: detachable READABLE_STRING_8)
 		do
@@ -67,7 +74,7 @@ feature -- Element change
 
 
 ;note
-	copyright: "Copyright (c) 1984-2017, Eiffel Software"
+	copyright: "Copyright (c) 1984-2020, Eiffel Software"
 	license: "GPL version 2 (see http://www.eiffel.com/licensing/gpl.txt)"
 	licensing_options: "http://www.eiffel.com/licensing"
 	copying: "[

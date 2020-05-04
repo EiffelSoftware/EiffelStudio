@@ -54,13 +54,13 @@ feature -- Execution
 		do
 			if is_community_edition then
 				if not license_accepted then
-					switch_to_community_agreement_page
+					switch_to_user_agreement_page
 					show_modal_to_window (win)
 				elseif is_cloud_enabled and then attached es_cloud_s.service as cld then
 					if is_logged_in then
 						acc := cld.active_account
 					end
-					if acc /= Void and then not acc.is_expired and then acc.has_active_plan then
+					if acc /= Void and then not acc.is_expired then --and then acc.has_active_plan then
 						cld.on_account_signed_in (acc)
 						on_next
 					elseif {ES_IDE_SETTINGS}.cloud_required then
@@ -77,7 +77,7 @@ feature -- Execution
 			end
 		end
 
-	switch_to_community_agreement_page
+	switch_to_user_agreement_page
 		local
 			vb: EV_VERTICAL_BOX
 			hb: EV_HORIZONTAL_BOX
@@ -154,7 +154,7 @@ feature -- Execution
 				layout_constants.set_default_size_for_button (but)
 				append_label_and_item_horizontally (interface_names.l_purchase_enterprise_edition, but, vb)
 
-				create but.make_with_text_and_action (interface_names.b_quit, agent on_quit)
+				create but.make_with_text_and_action (interface_names.b_reject_and_quit, agent on_quit)
 				layout_constants.set_default_size_for_button (but)
 				append_label_and_item_horizontally ("", but, vb)
 
@@ -167,7 +167,7 @@ feature -- Execution
 			main_box.propagate_background_color
 		end
 
-	switch_to_account_page (cld: ES_CLOUD_S; a_username: READABLE_STRING_GENERAL; a_sign_in_dialog: BOOLEAN)
+	switch_to_account_page (cld: ES_CLOUD_S; a_username: detachable READABLE_STRING_GENERAL; a_sign_in_dialog: BOOLEAN)
 		require
 			is_cloud_enabled: is_cloud_enabled
 		local

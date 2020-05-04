@@ -157,7 +157,7 @@ feature {NONE} -- Action handlers
 					append_text_to ("%N%N", txt)
 					if cld.is_enterprise_edition then
 						append_bold_text_to ("Edition: enterprise%N", txt)
-					elseif attached acc.plan as l_plan then
+					elseif attached cld.installation.associated_plan as l_plan then
 						append_bold_text_to ("License: ", txt)
 						append_text_to (l_plan.name, txt)
 						append_text_to ("%N", txt)
@@ -172,11 +172,15 @@ feature {NONE} -- Action handlers
 								append_text_to (nb_days.out, txt)
 								append_text_to ("%N", txt)
 							else
-								append_bold_text_to ("Subscription: EXPIRED!%N", txt)
+								append_bold_text_to ("License: EXPIRED!%N", txt)
 							end
 						end
+						append_bold_text_to ("Installation id: ", txt)
+						append_text_to (cld.installation.id, txt)
+						append_text_to ("%N", txt)
 					end
 					if attached cld.active_session as sess then
+						append_text_to ("%N", txt)
 						append_bold_text_to ("Session: ", txt)
 						append_text_to (sess.id.out, txt)
 						append_text_to ("%N", txt)
@@ -209,8 +213,6 @@ feature {NONE} -- Action handlers
 										end
 									end
 								end
-
-
 								append_text_to (s, txt)
 								append_text_to ("%N", txt)
 							end

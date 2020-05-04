@@ -9,7 +9,7 @@ class
 
 feature -- Access
 
-	installation: detachable READABLE_STRING_8 assign set_installation
+	installation: detachable ES_ACCOUNT_INSTALLATION assign set_installation
 
 	active_account: detachable ES_ACCOUNT assign set_active_account
 			-- Active account if logged in, otherwise Void.

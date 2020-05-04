@@ -55,7 +55,7 @@ feature {NONE} -- Access: after thread completed
 
 	session_heartbeat: NATURAL_32
 
-	plan_expired: BOOLEAN
+	license_expired: BOOLEAN
 
 feature {NONE} -- Access: worker thread
 
@@ -126,8 +126,8 @@ feature -- Access
 				reset
 				service.on_session_state_changed (session)
 			end
-			if plan_expired then
-				service.on_account_plan_expired (session.account)
+			if license_expired then
+				service.on_account_license_expired (session.account)
 			end
 		end
 
@@ -135,7 +135,7 @@ feature -- Access
 		do
 			completed := False
 			session_state_changed := False
-			plan_expired := False
+			license_expired := False
 		end
 
 	execute
@@ -170,8 +170,8 @@ feature -- Access
 			if d.heartbeat > 0 then
 				session_heartbeat := d.heartbeat
 			end
-			if d.plan_expired then
-				plan_expired := d.plan_expired
+			if d.license_expired then
+				license_expired := d.license_expired
 			end
 			mutex.lock
 			completed := True

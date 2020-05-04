@@ -93,6 +93,7 @@ feature {NONE} -- Initialization
 			vb_learn.set_border_width (layout_constants.default_border_size)
 			create txt
 			txt.set_text ("User information provided during the registration process is used solely for the purpose of creating a user account at " + cloud_service.associated_website_url + " and enforcing the usage rules (number of concurrent sessions) according to the terms of the EiffelStudio license. Eiffel Software does not share such information with any third party.")
+			txt.set_tooltip ("Double click to collapse")
 			txt.set_is_text_wrapped (True); txt.align_text_left; txt.align_text_top
 			vb_learn.extend (txt)
 			create l_weblnk.make_with_text ("Terms of use")
@@ -277,11 +278,17 @@ feature {NONE} -- Initialization
 			tf_password: EV_PASSWORD_FIELD
 			tf_username: EV_TEXT_FIELD
 			but: EV_BUTTON
+			cb: EV_CHECK_BUTTON
 			l_focus: detachable EV_WIDGET
 			l_scaler: EVS_DPI_SCALER
+			l_kept_credential: detachable TUPLE [username, password: READABLE_STRING_32]
 		do
 			create l_scaler.make
 			l_field_width := l_scaler.scaled_size (300)
+
+			if attached es_cloud_s.service as cld then
+				l_kept_credential := cld.kept_credential
+			end
 
 			create Result
 			Result.set_border_width (layout_constants.default_border_size)
@@ -289,6 +296,7 @@ feature {NONE} -- Initialization
 			create tf_username
 			username_input := tf_username
 			create tf_password
+			password_input := tf_password
 			w := tf_username
 			w.set_minimum_width (l_field_width)
 			append_label_and_item_horizontally (interface_names.l_user_name, w, Result)
@@ -302,10 +310,19 @@ feature {NONE} -- Initialization
 			Result.extend (lab)
 			Result.disable_item_expand (lab)
 
-			create but.make_with_text_and_action (interface_names.b_sign_in, agent process_account_sign_in (new_gui_form (<<["user_name", tf_username], ["password", tf_password]>>), lab))
-
+			create cb.make_with_text ("Remember my credentials?")
+			cb.set_tooltip ("Do not use this option on public machine!")
+			layout_constants.set_default_width_for_button (cb)
+			create but.make_with_text_and_action (
+					interface_names.b_sign_in,
+					agent process_account_sign_in (new_gui_form ({ARRAY [TUPLE [name: READABLE_STRING_GENERAL; widget: EV_ANY]]} <<
+								["user_name", tf_username], ["password", tf_password], ["remember", cb]
+							>>), lab)
+				)
 			layout_constants.set_default_width_for_button (but)
 			append_label_and_item_horizontally ("", but, Result)
+			append_label_and_item_horizontally ("", cb, Result)
+
 
 			create lab.make_with_text ("Note: the account is also used at https://support.eiffel.com/")
 			lab.set_foreground_color (colors.stock_colors.dark_grey)
@@ -317,8 +334,15 @@ feature {NONE} -- Initialization
 			tf_username.return_actions.extend (agent tf_password.set_focus)
 			tf_password.return_actions.extend (agent (i_but: EV_BUTTON) do i_but.select_actions.call (Void) end(but))
 
-			if username /= Void then
-				tf_username.set_text (username)
+			if l_kept_credential /= Void then
+				cb.enable_select
+				tf_username.set_text (l_kept_credential.username)
+				tf_password.set_text (l_kept_credential.password)
+			elseif attached username as u then
+				tf_username.set_text (u)
+				if attached password as p then
+					tf_password.set_text (p)
+				end
 			end
 		end
 
@@ -447,7 +471,11 @@ feature -- Optional properties
 
 	username_input: detachable EV_TEXT_FIELD
 
+	password_input: detachable EV_TEXT_FIELD
+
 	username: detachable IMMUTABLE_STRING_32
+
+	password: detachable IMMUTABLE_STRING_32
 
 feature -- Optional element change
 
@@ -462,6 +490,21 @@ feature -- Optional element change
 				create username.make_from_string_general (a_username)
 				if attached username_input as tf then
 					tf.set_text (username)
+				end
+			end
+		end
+
+	set_password (a_pwd: detachable READABLE_STRING_GENERAL)
+		do
+			if a_pwd = Void then
+				password := Void
+				if attached password_input as tf then
+					tf.remove_text
+				end
+			else
+				create password.make_from_string_general (a_pwd)
+				if attached password_input as tf then
+					tf.set_text (password)
 				end
 			end
 		end
@@ -525,10 +568,17 @@ feature -- UI callbacks
 							s32.append_character ('%N')
 							on_system_error (s32, a_report_label)
 						elseif attached cld.active_account as acc then
-							if acc.has_active_plan then
-								on_user_signed_in (acc)
+							if gui_form_boolean_item ("remember", a_form) then
+								cld.keep_credential (u, p)
+							end
+							if attached cld.installation as inst then
+								if inst.is_active then
+									on_user_signed_in (acc)
+								else
+									on_user_expired_plan_error (a_form, a_report_label)
+								end
 							else
-								on_user_expired_plan_in_error (a_form, a_report_label)
+								on_user_expired_plan_error (a_form, a_report_label)
 							end
 						else
 							on_user_sign_in_refused (a_form, a_report_label)
@@ -580,7 +630,9 @@ feature -- UI callbacks
 				across
 					a_form as ic
 				loop
-					tb.force (ic.item.text, ic.key)
+					if attached {EV_TEXTABLE} ic.item as tt then
+						tb.force (tt.text, ic.key)
+					end
 				end
 				l_style := widget.pointer_style
 				widget.set_pointer_style ((create {EV_STOCK_PIXMAPS}).busy_cursor)
@@ -611,7 +663,7 @@ feature -- UI callbacks
 			end
 		end
 
-	on_user_expired_plan_in_error (a_form: like new_gui_form; a_report_label: detachable EV_LABEL)
+	on_user_expired_plan_error (a_form: like new_gui_form; a_report_label: detachable EV_LABEL)
 		do
 			on_system_error ("Your plan is expired, please renew or purchase a new one.", a_report_label)
 		end
@@ -644,20 +696,27 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	new_gui_form (arr: ITERABLE [TUPLE [name: READABLE_STRING_GENERAL; text: EV_TEXTABLE]]): STRING_TABLE [EV_TEXTABLE]
+	new_gui_form (arr: ITERABLE [TUPLE [name: READABLE_STRING_GENERAL; widget: EV_ANY]]): STRING_TABLE [EV_ANY]
 		do
 			create Result.make_caseless (1)
 			across
 				arr as ic
 			loop
-				Result.force (ic.item.text, ic.item.name)
+				Result.force (ic.item.widget, ic.item.name)
 			end
 		end
 
 	gui_form_string_item (a_name: READABLE_STRING_GENERAL; a_form: like new_gui_form): detachable READABLE_STRING_32
 		do
-			if attached a_form.item (a_name) as t then
+			if attached {EV_TEXTABLE} a_form.item (a_name) as t then
 				Result := t.text
+			end
+		end
+
+	gui_form_boolean_item (a_name: READABLE_STRING_GENERAL; a_form: like new_gui_form): BOOLEAN
+		do
+			if attached {EV_CHECK_BUTTON} a_form.item (a_name) as cb then
+				Result := cb.is_selected
 			end
 		end
 
@@ -710,78 +769,13 @@ feature {NONE} -- Implementation
 
 	open_url (a_url: READABLE_STRING_8; a_report_label: detachable EV_LABEL)
 		local
-			popup: EV_POPUP_WINDOW
-			t: EV_TIMEOUT
-			lab: EV_LABEL
-			is_launched: BOOLEAN
-			l_was_hidden: BOOLEAN
-			m: STRING_32
+			l_launcher: ES_CLOUD_URL_LAUNCHER
 		do
-			if a_report_label = Void then
-				create popup.make_with_shadow
-				create lab.make_with_text ("Launching link " + a_url)
-				popup.extend (lab)
-				popup.set_size (200, 50)
-				lab.pointer_button_release_actions.extend (agent (i_popup: EV_POPUP_WINDOW; x, y, button: INTEGER; x_tilt, y_tilt, pressure: DOUBLE; screen_x, screen_y: INTEGER)
-					do
-						i_popup.destroy
-					end (popup, ?, ?, ?, ?, ?, ?, ?, ?))
-
-				if attached parent_window_of (widget) as win then
-					popup.set_position (win.x_position + (win.width - popup.width) // 2, win.y_position + (win.height - popup.height) // 2)
-					popup.show_relative_to_window (win)
-				else
-					popup.show
-				end
-			else
-				a_report_label.set_foreground_color (colors.stock_colors.gray)
-				a_report_label.set_text ("Launching link "+ a_url)
-				if not a_report_label.is_displayed then
-					l_was_hidden := True
-					a_report_label.show
-				end
-			end
-			if
-				attached {STRING_32_PREFERENCE} preferences.misc_data.internet_browser_preference as pref and then
-				attached pref.value as l_default_browser and then
-				not l_default_browser.is_empty
-			then
-				is_launched := (create {URI_LAUNCHER}).launch_with_default_app (a_url, l_default_browser)
-			else
-				is_launched := (create {URI_LAUNCHER}).launch (a_url)
-					-- This check is here because it lets us know if the preference wasn't initialized.
-				check internet_browser_preference_set: False end
-			end
-			if is_launched then
-				if popup /= Void then
-					create t.make_with_interval (5_000) -- 5 seconds
-					t.actions.extend (agent popup.destroy)
-				elseif a_report_label /= Void then
-					clear_label_after_delay (5_000, a_report_label, l_was_hidden) -- 5 seconds
-				end
-			else
-				create m.make_from_string_general ("Error: could not launch link " + a_url)
-				if a_report_label /= Void then
-					a_report_label.set_foreground_color (colors.stock_colors.red)
-					a_report_label.set_text (m)
-				elseif popup /= Void and lab /= Void then
-					lab.set_text (m)
-				end
-			end
+			create l_launcher.make (a_url)
+			l_launcher.set_status_label (a_report_label)
+			l_launcher.set_associated_widget (widget)
+			l_launcher.execute
 		end
-
-	clear_label_after_delay (a_timeout_delay: INTEGER; lab: EV_LABEL; a_hide: BOOLEAN)
-		local
-			t: EV_TIMEOUT
-		do
-			create t.make_with_interval (a_timeout_delay)
-			t.actions.extend (agent lab.remove_text)
-			if a_hide then
-				t.actions.extend (agent lab.hide)
-			end
-			t.actions.extend (agent t.destroy)
-		end
-
 
 ;note
 	copyright: "Copyright (c) 1984-2020, Eiffel Software"

@@ -121,10 +121,15 @@ feature -- Access
 
 feature -- Access: licenses
 
-	licenses: LIST [ES_CLOUD_LICENSE]
+	licenses: LIST [TUPLE [license: ES_CLOUD_LICENSE; user: detachable ES_CLOUD_USER]]
 			-- Licenses
 		do
 			Result := es_cloud_storage.licenses
+		end
+
+	licenses_for_plan (a_plan: ES_CLOUD_PLAN): like licenses
+		do
+			Result := es_cloud_storage.licenses_for_plan (a_plan)
 		end
 
 	license (a_license_id: INTEGER_64): detachable ES_CLOUD_LICENSE
@@ -145,11 +150,6 @@ feature -- Access: licenses
 	user_licenses (a_user: ES_CLOUD_USER): LIST [ES_CLOUD_USER_LICENSE]
 		do
 			Result := es_cloud_storage.user_licenses (a_user)
-		end
-
-	licences_for_plan (a_plan: ES_CLOUD_PLAN): LIST [ES_CLOUD_LICENSE]
-		do
-			Result := es_cloud_storage.licences_for_plan (a_plan)
 		end
 
 feature -- Element change license
@@ -348,6 +348,11 @@ feature -- Access: subscriptions
 	last_user_session (a_user: ES_CLOUD_USER): detachable ES_CLOUD_SESSION
 		do
 			Result := es_cloud_storage.last_user_session (a_user)
+		end
+
+	last_license_session (a_license: ES_CLOUD_LICENSE): detachable ES_CLOUD_SESSION
+		do
+			Result := es_cloud_storage.last_license_session (a_license)
 		end
 
 	user_session (a_user: ES_CLOUD_USER; a_install_id, a_session_id: READABLE_STRING_GENERAL): detachable ES_CLOUD_SESSION

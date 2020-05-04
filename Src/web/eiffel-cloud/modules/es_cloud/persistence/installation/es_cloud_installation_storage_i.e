@@ -33,6 +33,10 @@ feature -- Access: sessions
 		deferred
 		end
 
+	last_license_session (a_license: ES_CLOUD_LICENSE): detachable ES_CLOUD_SESSION
+		deferred
+		end
+
 	user_sessions (a_user: ES_CLOUD_USER; a_install_id: detachable READABLE_STRING_GENERAL; a_only_active: BOOLEAN): detachable LIST [ES_CLOUD_SESSION]
 		deferred
 		end

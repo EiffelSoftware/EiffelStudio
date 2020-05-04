@@ -35,7 +35,12 @@ feature -- Change
 
 feature -- Access: License
 
-	licenses: LIST [ES_CLOUD_LICENSE]
+	licenses: LIST [TUPLE [license: ES_CLOUD_LICENSE; user: detachable ES_CLOUD_USER]]
+			-- Licenses
+		deferred
+		end
+
+	licenses_for_plan (a_plan: ES_CLOUD_PLAN): like licenses
 		deferred
 		end
 
@@ -56,10 +61,6 @@ feature -- Access: License
 		end
 
 	user_licenses (a_user: ES_CLOUD_USER): LIST [ES_CLOUD_USER_LICENSE]
-		deferred
-		end
-
-	licences_for_plan (a_plan: ES_CLOUD_PLAN): LIST [ES_CLOUD_LICENSE]
 		deferred
 		end
 

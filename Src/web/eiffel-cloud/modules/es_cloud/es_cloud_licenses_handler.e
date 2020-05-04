@@ -59,24 +59,24 @@ feature -- Execution
 
 			s.append ("<h2>Buy a new license</h2>")
 
-			s.append ("<div class=%"es-plans%">")
-			s.append ("<strong>Plans</strong><ul>")
-			across
-				es_cloud_api.sorted_plans as ic
-			loop
-				l_plan := ic.item
-				if l_plan.is_public then
-					s.append ("<li class=%"es-plan-box%"><div class=%"title%">")
-					s.append (html_encoded (l_plan.title_or_name))
-					s.append ("</div>")
-					if attached l_plan.description as l_plan_description then
-						s.append ("<div class=%"description%">"+ html_encoded (l_plan_description) + "</div>")
-					end
-					s.append ("</li>")
-				end
-			end
-			s.append ("</ul>")
-			s.append ("</div>")
+--			s.append ("<div class=%"es-plans%">")
+--			s.append ("<strong>Plans</strong><ul>")
+--			across
+--				es_cloud_api.sorted_plans as ic
+--			loop
+--				l_plan := ic.item
+--				if l_plan.is_public then
+--					s.append ("<li class=%"es-plan-box%"><div class=%"title%">")
+--					s.append (html_encoded (l_plan.title_or_name))
+--					s.append ("</div>")
+--					if attached l_plan.description as l_plan_description then
+--						s.append ("<div class=%"description%">"+ html_encoded (l_plan_description) + "</div>")
+--					end
+--					s.append ("</li>")
+--				end
+--			end
+--			s.append ("</ul>")
+--			s.append ("</div>")
 			if attached es_cloud_module.new_store_block (es_cloud_api, r) as bl then
 				r.add_block (bl, "content")
 				r.add_style (r.module_resource_url (es_cloud_module, "/files/css/pricing.css", Void), Void)

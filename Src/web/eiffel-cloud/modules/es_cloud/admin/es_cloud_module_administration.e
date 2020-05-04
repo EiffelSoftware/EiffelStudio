@@ -48,7 +48,7 @@ feature {NONE} -- Router/administration
 				create org_hlr.make (l_es_cloud_api)
 				org_hlr.setup_router (a_router, "/cloud/organizations/")
 				a_router.handle ("/cloud/subscriptions/", create {ES_CLOUD_SUBSCRIPTIONS_ADMIN_HANDLER}.make (l_es_cloud_api), a_router.methods_get_post)
---				a_router.handle ("/cloud/licenses/", create {ES_CLOUD_LICENSES_ADMIN_HANDLER}.make (l_es_cloud_api), a_router.methods_get_post)
+				a_router.handle ("/cloud/licenses/", create {ES_CLOUD_LICENSES_ADMIN_HANDLER}.make (l_es_cloud_api), a_router.methods_get) --_post)
 				a_router.handle ("/cloud/installations/", create {ES_CLOUD_INSTALLATIONS_ADMIN_HANDLER}.make (l_es_cloud_api), a_router.methods_get_post)
 				a_router.handle ("/cloud/plans/", create {ES_CLOUD_PLANS_ADMIN_HANDLER}.make (l_es_cloud_api), a_router.methods_get_post)
 				a_router.handle ("/cloud/plans/{pid}", create {ES_CLOUD_PLANS_ADMIN_HANDLER}.make (l_es_cloud_api), a_router.methods_get_post)
@@ -79,10 +79,15 @@ feature -- Hooks configuration
 		do
 				 -- Add the link to the taxonomy to the main menu
 			if a_response.has_permission ("admin subscriptions") then
-				lnk := a_response.api.administration_link ("ES Subscriptions", "cloud/subscriptions/")
-				a_menu_system.management_menu.extend_into (lnk, "Admin", a_response.api.administration_path_location (""))
 				lnk := a_response.api.administration_link ("ES Plans", "cloud/plans/")
 				a_menu_system.management_menu.extend_into (lnk, "Admin", a_response.api.administration_path_location (""))
+
+				lnk := a_response.api.administration_link ("ES Licenses", "cloud/licenses/")
+				a_menu_system.management_menu.extend_into (lnk, "Admin", a_response.api.administration_path_location (""))
+
+				lnk := a_response.api.administration_link ("ES Subscriptions", "cloud/subscriptions/")
+				a_menu_system.management_menu.extend_into (lnk, "Admin", a_response.api.administration_path_location (""))
+				
 				lnk := a_response.api.administration_link ("ES organizations", "cloud/organizations/")
 				a_menu_system.management_menu.extend_into (lnk, "Admin", a_response.api.administration_path_location (""))
 

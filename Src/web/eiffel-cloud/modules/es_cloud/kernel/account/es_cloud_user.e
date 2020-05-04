@@ -11,7 +11,7 @@ create
 	make
 
 convert
---	make ({CMS_USER, CMS_PARTIAL_USER}),
+	make ({CMS_USER, CMS_PARTIAL_USER}),
 	cms_user: {CMS_USER}
 
 feature {NONE} -- Initialization

@@ -56,10 +56,13 @@ feature -- Access: plan
 
 feature -- Access: License
 
-	licenses: LIST [ES_CLOUD_LICENSE]
+	licenses: LIST [TUPLE [license: ES_CLOUD_LICENSE; user: detachable ES_CLOUD_USER]]
+		local
+			uid: INTEGER_64
+			u: ES_CLOUD_USER
 		do
 			reset_error
-			create {ARRAYED_LIST [ES_CLOUD_LICENSE]} Result.make (0)
+			create {ARRAYED_LIST [TUPLE [license: ES_CLOUD_LICENSE; user: detachable ES_CLOUD_USER]]} Result.make (0)
 			sql_query (sql_select_licenses, Void)
 			sql_start
 			if not has_error then
@@ -68,8 +71,46 @@ feature -- Access: License
 				until
 					sql_after or has_error
 				loop
-					if attached fetch_license as lic then
-						Result.force (lic)
+					if attached fetch_license (Void) as lic then
+						uid := sql_read_integer_64 (11)
+						if uid /= 0 then
+							u := create {CMS_PARTIAL_USER}.make_with_id (uid)
+						else
+							u := Void
+						end
+						Result.force ([lic, u])
+					else
+						check valid_record: False end
+					end
+					sql_forth
+				end
+			end
+			sql_finalize_query (sql_select_licenses)
+		end
+
+	licenses_for_plan (a_plan: ES_CLOUD_PLAN): like licenses
+		local
+			uid: INTEGER_64
+			u: ES_CLOUD_USER
+		do
+			reset_error
+			create {ARRAYED_LIST [TUPLE [license: ES_CLOUD_LICENSE; user: detachable ES_CLOUD_USER]]} Result.make (0)
+			sql_query (sql_select_licenses_by_plan, sql_parameters (1, <<["pid", a_plan.id]>>))
+			sql_start
+			if not has_error then
+				from
+					sql_start
+				until
+					sql_after or has_error
+				loop
+					if attached fetch_license (a_plan) as lic then
+						uid := sql_read_integer_64 (11)
+						if uid /= 0 then
+							u := create {CMS_PARTIAL_USER}.make_with_id (uid)
+						else
+							u := Void
+						end
+						Result.force ([lic, u])
 					else
 						check valid_record: False end
 					end
@@ -89,7 +130,7 @@ feature -- Access: License
 			sql_query (sql_select_license_by_id, l_params)
 			sql_start
 			if not has_error and not sql_after then
-				Result := fetch_license
+				Result := fetch_license (Void)
 				check valid_record: Result /= Void end
 			end
 			sql_finalize_query (sql_select_license_by_id)
@@ -105,7 +146,7 @@ feature -- Access: License
 			sql_query (sql_select_license_by_key, l_params)
 			sql_start
 			if not has_error and not sql_after then
-				Result := fetch_license
+				Result := fetch_license (Void)
 				check valid_record: Result /= Void end
 			end
 			sql_finalize_query (sql_select_license_by_key)
@@ -174,11 +215,6 @@ feature -- Access: License
 					Result.force (create {ES_CLOUD_USER_LICENSE}.make (a_user, lic))
 				end
 			end
-		end
-
-	licences_for_plan (a_plan: ES_CLOUD_PLAN): LIST [ES_CLOUD_LICENSE]
-		do
-			check not_yet_implemented: False then end
 		end
 
 feature -- Element change: license
@@ -331,43 +367,52 @@ feature {NONE} -- Fetcher
 			Result.set_data (sql_read_string_32 (5))
 		end
 
-	fetch_license: detachable ES_CLOUD_LICENSE
+	fetch_license (a_plan: detachable ES_CLOUD_PLAN): detachable ES_CLOUD_LICENSE
 		local
 			lid: INTEGER_64
 			pid: INTEGER
 			l_key: READABLE_STRING_32
 			l_plan_name: READABLE_STRING_8
 			l_plan: ES_CLOUD_PLAN
+			i: INTEGER
 		do
 			lid := sql_read_integer_64 (1)
 			l_key := sql_read_string_32 (2)
 
 			pid := sql_read_integer_32 (3)
-			l_plan_name := sql_read_string (4)
-			if l_plan_name = Void then
-				l_plan_name := "plan#" + pid.out
-			end
 
-			create l_plan.make_with_id_and_name (pid, l_plan_name)
-			l_plan.set_data (sql_read_string_32 (5))
+			if a_plan /= Void then
+				l_plan := a_plan
+				i := 3
+			else
+				l_plan_name := sql_read_string (4)
+				if l_plan_name = Void then
+					l_plan_name := "plan#" + pid.out
+				end
+
+				create l_plan.make_with_id_and_name (pid, l_plan_name)
+				l_plan.set_data (sql_read_string_32 (5))
+
+				i := 5
+			end
 
 			if l_key = Void then
 				l_key := l_plan.name.to_string_32 + "_LIC_" + lid.out
 			end
 			create Result.make (lid, l_key, l_plan)
-			if attached sql_read_string_32 (6) as s then
+			if attached sql_read_string_32 (i + 1) as s then
 				Result.set_platform (s)
 			end
-			if attached sql_read_string_32 (7) as s then
+			if attached sql_read_string_32 (i + 2) as s then
 				Result.set_version (s)
 			end
-			if attached sql_read_date_time (8) as dt then
+			if attached sql_read_date_time (i + 3) as dt then
 				Result.set_creation_date (dt)
 			end
-			if attached sql_read_date_time (9) as dt then
+			if attached sql_read_date_time (i + 4) as dt then
 				Result.set_expiration_date (dt)
 			end
-			if attached sql_read_date_time (10) as dt then
+			if attached sql_read_date_time (i + 5) as dt then
 				Result.set_fallback_date (dt)
 			end
 		end
@@ -399,8 +444,22 @@ feature {NONE} -- Queries: licenses
 	sql_select_licenses: STRING = "[
 			SELECT 
 				lic.lid, lic.key, lic.pid, es_plans.name, es_plans.data,
-				lic.platform, lic.version, lic.creation, lic.expiration, lic.fallback
-			FROM es_licenses AS lic INNER JOIN es_plans ON lic.pid = es_plans.pid 
+				lic.platform, lic.version, lic.creation, lic.expiration, lic.fallback,
+				es_licenses_users.uid
+			FROM es_licenses AS lic 
+			INNER JOIN es_plans ON lic.pid = es_plans.pid 
+			LEFT JOIN es_licenses_users ON lic.lid = es_licenses_users.lid
+			;
+		]"
+
+	sql_select_licenses_by_plan: STRING = "[
+			SELECT
+				lic.lid, lic.key, lic.pid,
+				lic.platform, lic.version, lic.creation, lic.expiration, lic.fallback,
+				es_licenses_users.uid
+			FROM es_licenses AS lic
+			INNER JOIN es_licenses_users ON lic.lid = es_licenses_users.lid
+			WHERE lic.pid=:pid
 			;
 		]"
 
@@ -425,6 +484,8 @@ feature {NONE} -- Queries: licenses
 	sql_select_user_license_by_id: STRING = "SELECT lid, uid FROM es_licenses_users WHERE uid=:uid AND lid=:lid;"
 
 	sql_select_user_with_license_id: STRING = "SELECT uid FROM es_licenses_users WHERE lid=:lid;"
+
+	sql_select_users_licenses: STRING = "SELECT lid, uid FROM es_licenses_users ;"
 
 	sql_select_user_licenses: STRING = "SELECT lid, uid FROM es_licenses_users WHERE uid=:uid;"
 

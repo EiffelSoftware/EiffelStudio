@@ -225,12 +225,11 @@ feature -- Constants
 			create Result.make_from_string ("macos")
 		end
 
-feature {CMS_STORAGE_SQL_I} -- Element change		
+feature {CMS_STORAGE_SQL_I} -- Element change
 
 	update_id (a_id: like id)
 		do
 			id := a_id
 		end
-
 
 end

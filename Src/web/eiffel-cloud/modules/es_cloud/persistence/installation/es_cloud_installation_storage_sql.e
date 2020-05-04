@@ -102,7 +102,6 @@ feature -- Access: sessions
 	last_user_session (a_user: ES_CLOUD_USER): detachable ES_CLOUD_SESSION
 		local
 			l_params: STRING_TABLE [detachable ANY]
-			sid, iid: detachable READABLE_STRING_32
 		do
 			reset_error
 			create l_params.make (1)
@@ -110,26 +109,28 @@ feature -- Access: sessions
 			sql_query (sql_select_last_user_session, l_params)
 			sql_start
 			if not has_error and not sql_after then
-				sid := sql_read_string_32 (1)
-				iid := sql_read_string_32 (2)
-				if iid /= Void and then sid /= Void and then not sid.is_whitespace then
-					check same_uid: sql_read_integer_64 (3) = a_user.id end
-					if attached sql_read_date_time (5) as dt_first then
-						create Result.make (a_user, iid, sid, dt_first)
-						Result.set_state (sql_read_integer_32 (4))
-						Result.set_last_date (sql_read_date_time (6))
-						Result.set_title (sql_read_string_32 (7))
-					end
-				end
+				Result := fetch_user_session (a_user)
 			end
 			sql_finalize_query (sql_select_last_user_session)
 		end
 
+	last_license_session (a_license: ES_CLOUD_LICENSE): detachable ES_CLOUD_SESSION
+		local
+			l_params: STRING_TABLE [detachable ANY]
+		do
+			reset_error
+			create l_params.make (1)
+			l_params.force (a_license.id, "lid")
+			sql_query (sql_select_last_user_session_by_license, l_params)
+			sql_start
+			if not has_error and not sql_after then
+				Result := fetch_user_session (Void)
+			end
+			sql_finalize_query (sql_select_last_user_session_by_license)
+		end
+
 	user_sessions (a_user: ES_CLOUD_USER; a_install_id: detachable READABLE_STRING_GENERAL; a_only_active: BOOLEAN): detachable LIST [ES_CLOUD_SESSION]
 		local
-			sid, iid: READABLE_STRING_GENERAL
-			uid: INTEGER_64
-			l_session: ES_CLOUD_SESSION
 			l_params: STRING_TABLE [detachable ANY]
 			l_query: READABLE_STRING_8
 		do
@@ -160,19 +161,8 @@ feature -- Access: sessions
 				until
 					sql_after or has_error
 				loop
-					sid := sql_read_string_32 (1)
-					iid := sql_read_string_32 (2)
-					uid := sql_read_integer_64 (3)
-					if
-						iid /= Void and then
-						sid /= Void and then uid > 0 and then
-						attached sql_read_date_time (5) as dt_first
-					then
-						create l_session.make (a_user, iid, sid, dt_first)
-						l_session.set_state (sql_read_integer_32 (4))
-						l_session.set_last_date (sql_read_date_time (6))
-						l_session.set_title (sql_read_string_32 (7))
-						Result.force (l_session)
+					if attached fetch_user_session (a_user) as sess then
+						Result.force (sess)
 					else
 						check valid_record: False end
 					end
@@ -185,7 +175,6 @@ feature -- Access: sessions
 	user_session (a_user: ES_CLOUD_USER; a_installation_id, a_session_id: READABLE_STRING_GENERAL): detachable ES_CLOUD_SESSION
 		local
 			l_params: STRING_TABLE [detachable ANY]
-			sid, iid: detachable READABLE_STRING_32
 		do
 			reset_error
 			create l_params.make (3)
@@ -195,21 +184,34 @@ feature -- Access: sessions
 			sql_query (sql_select_user_session, l_params)
 			sql_start
 			if not has_error and not sql_after then
-				sid := sql_read_string_32 (1)
-				iid := sql_read_string_32 (2)
-				if iid /= Void and then sid /= Void and then not sid.is_whitespace then
-					check same_iid: iid.is_case_insensitive_equal_general (a_installation_id) end
-					check same_uid: sql_read_integer_64 (3) = a_user.id end
-
-					if attached sql_read_date_time (5) as dt_first then
-						create Result.make (a_user, iid, sid, dt_first)
-						Result.set_state (sql_read_integer_32 (4))
-						Result.set_last_date (sql_read_date_time (6))
-						Result.set_title (sql_read_string_32 (7))
-					end
-				end
+				Result := fetch_user_session (a_user)
 			end
 			sql_finalize_query (sql_select_user_session)
+		end
+
+	fetch_user_session (a_user: detachable ES_CLOUD_USER): detachable ES_CLOUD_SESSION
+		local
+			uid: INTEGER_64
+			sid, iid: detachable READABLE_STRING_32
+		do
+			sid := sql_read_string_32 (1)
+			iid := sql_read_string_32 (2)
+			uid := sql_read_integer_64 (3)
+			if
+				iid /= Void and then
+				sid /= Void and then not sid.is_whitespace and then
+				attached sql_read_date_time (5) as dt_first
+			then
+				check same_uid: a_user /= Void implies sql_read_integer_64 (3) = a_user.id end
+				if a_user = Void then
+					create Result.make (create {CMS_PARTIAL_USER}.make_with_id (uid), iid, sid, dt_first)
+				else
+					create Result.make (a_user, iid, sid, dt_first)
+				end
+				Result.set_state (sql_read_integer_32 (4))
+				Result.set_last_date (sql_read_date_time (6))
+				Result.set_title (sql_read_string_32 (7))
+			end
 		end
 
 feature -- Change
@@ -332,6 +334,17 @@ feature {NONE} -- Sessions
 	sql_delete_installation_sessions: STRING = "DELETE FROM es_sessions WHERE iid=:iid AND uid=:uid;"
 
 	sql_select_last_user_session: STRING = "SELECT sid, iid, uid, state, first, last, title FROM es_sessions WHERE uid=:uid ORDER BY last DESC LIMIT 1;"
+
+	sql_select_last_user_session_by_license: STRING = "[
+	
+			SELECT 
+				s.sid, s.iid, s.uid, s.state, s.first, s.last, s.title
+			FROM es_sessions as s
+			INNER JOIN es_installations ON es_installations.iid = s.iid
+			WHERE es_installations.lid=:lid
+			ORDER BY s.last DESC LIMIT 1
+			;
+		]"
 
 	sql_select_user_session: STRING = "SELECT sid, iid, uid, state, first, last, title FROM es_sessions WHERE sid=:sid AND iid=:iid AND uid=:uid;"
 

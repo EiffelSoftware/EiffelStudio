@@ -30,8 +30,13 @@ feature -- Access: plan
 
 feature -- Licenses
 
-	licenses: LIST [ES_CLOUD_LICENSE]
+	licenses: LIST [TUPLE [license: ES_CLOUD_LICENSE; user: detachable ES_CLOUD_USER]]
 			-- Licenses
+		do
+			check False then end
+		end
+
+	licenses_for_plan (a_plan: ES_CLOUD_PLAN): like licenses
 		do
 			check False then end
 		end
@@ -52,12 +57,12 @@ feature -- Licenses
 		do
 		end
 
-	user_licenses (a_user: ES_CLOUD_USER): LIST [ES_CLOUD_USER_LICENSE]
+	users_licenses: LIST [ES_CLOUD_USER_LICENSE]
 		do
 			check False then end
 		end
 
-	licences_for_plan (a_plan: ES_CLOUD_PLAN): LIST [ES_CLOUD_LICENSE]
+	user_licenses (a_user: ES_CLOUD_USER): LIST [ES_CLOUD_USER_LICENSE]
 		do
 			check False then end
 		end
@@ -140,6 +145,10 @@ feature -- Access: installations
 feature -- Access: sessions		
 
 	last_user_session (a_user: ES_CLOUD_USER): detachable ES_CLOUD_SESSION
+		do
+		end
+
+	last_license_session (a_license: ES_CLOUD_LICENSE): detachable ES_CLOUD_SESSION
 		do
 		end
 

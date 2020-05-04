@@ -1,6 +1,6 @@
 /* ALTER */
-ALTER TABLE es_test RENAME TO es_test_tmp;
-CREATE TABLE es_test (
+ALTER TABLE es_installations RENAME TO es_installations_old;
+CREATE TABLE es_installations (
   `iid` VARCHAR(255) PRIMARY KEY NOT NULL ,
   `lid`	INTEGER NOT NULL,
   `name` TEXT,
@@ -8,7 +8,7 @@ CREATE TABLE es_test (
   `status` INTEGER NOT NULL,
   `creation` DATETIME NOT NULL
 );
-DROP TABLE es_test_tmp;
+/* DROP TABLE es_installations_old; */
 
 /* Addition */
 

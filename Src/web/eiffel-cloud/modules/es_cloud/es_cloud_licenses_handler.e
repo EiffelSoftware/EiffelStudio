@@ -184,9 +184,13 @@ feature -- Execution
 					end
 					s.append ("</ul>")
 					s.append ("</div>")
+					if sub /= Void then
+						if attached {ES_CLOUD_LICENSE} es_cloud_api.converted_license_from_user_subscription (sub, Void) as lic then
+							s.append ("<div>Subscription converted to license " + html_encoded (lic.key))
+							s.append ("</div>")
+						end
+					end
 				end
-
-
 			else
 				s.append ("<p>Please Login or Register...</p>")
 			end

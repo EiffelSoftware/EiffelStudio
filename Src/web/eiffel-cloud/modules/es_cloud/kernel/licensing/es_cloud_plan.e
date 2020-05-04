@@ -15,6 +15,7 @@ feature {NONE} -- Creation
 	make (a_name: READABLE_STRING_8)
 		do
 			create name.make_from_string (a_name)
+			trial_period_in_days := 15 -- Default
 		end
 
 	make_with_id_and_name (a_pid: INTEGER; a_name: READABLE_STRING_8)
@@ -142,6 +143,9 @@ feature -- Element change
 			installations_limit := inst
 			concurrent_sessions_limit := sess
 			heartbeat := l_heartbeat
+			if l_trial_days = 0 then
+				l_trial_days := 15
+			end
 			trial_period_in_days := l_trial_days
 			weight := l_weight
 		end

@@ -77,7 +77,7 @@ feature -- Query
 			connection.commit
 		end
 
-	sql_query (a_sql_statement: STRING; a_params: detachable STRING_TABLE [detachable ANY])
+	sql_query (a_sql_statement: READABLE_STRING_8; a_params: detachable STRING_TABLE [detachable ANY])
 			-- Execute an sql query `a_sql_statement' with the params `a_params'.
 		do
 			check_sql_query_validity (a_sql_statement, a_params)
@@ -92,7 +92,7 @@ feature -- Query
 			-- N/A
 		end
 
-	sql_insert (a_sql_statement: STRING; a_params: detachable STRING_TABLE [detachable ANY])
+	sql_insert (a_sql_statement: READABLE_STRING_8; a_params: detachable STRING_TABLE [detachable ANY])
 			-- <Precursor>
 		do
 			check_sql_query_validity (a_sql_statement, a_params)
@@ -101,7 +101,7 @@ feature -- Query
 			sql_post_execution
 		end
 
-	sql_modify (a_sql_statement: STRING; a_params: detachable STRING_TABLE [detachable ANY])
+	sql_modify (a_sql_statement: READABLE_STRING_8; a_params: detachable STRING_TABLE [detachable ANY])
 			-- <Precursor>
 		do
 			check_sql_query_validity (a_sql_statement, a_params)
@@ -110,7 +110,7 @@ feature -- Query
 			sql_post_execution
 		end
 
-	sql_delete (a_sql_statement: STRING; a_params: detachable STRING_TABLE [detachable ANY])
+	sql_delete (a_sql_statement: READABLE_STRING_8; a_params: detachable STRING_TABLE [detachable ANY])
 			-- <Precursor>
 		do
 			sql_modify (a_sql_statement, a_params)
@@ -177,7 +177,7 @@ feature -- Query
 					Result := i64.to_integer_32
 				else
 					check is_integer_32: False end
-				end				
+				end
 			end
 		end
 

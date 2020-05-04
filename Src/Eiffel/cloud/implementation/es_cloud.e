@@ -83,7 +83,6 @@ feature {NONE} -- Default
 	default_server_url: STRING
 		do
 			Result := "https://cloud.eiffel.com/api" -- Default
-
 			debug ("es_cloud")
 				-- On Windows: Computer\HKEY_CURRENT_USER\Software\ISE\Eiffel_19.09\installation\es_cloud\default_server_url
 				if
@@ -644,9 +643,8 @@ feature -- Updating
 					installation := inst
 				elseif attached	web_api.register_installation (tok.token, installation) as inst then
 					installation := inst
-				else
-						-- Error!
-						-- Keep the same
+				elseif not web_api.has_error then
+					installation.mark_inactive
 				end
 				store
 				if a_account.is_expired then
@@ -654,7 +652,7 @@ feature -- Updating
 				elseif attached installation as l_installation and then l_installation.is_active then
 					on_account_updated (a_account)
 				else
-					on_account_signed_out
+					on_account_license_expired (acc)
 				end
 			elseif is_available then
 				sign_out

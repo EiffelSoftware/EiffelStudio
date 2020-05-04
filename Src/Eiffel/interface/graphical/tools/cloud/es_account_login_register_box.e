@@ -580,6 +580,9 @@ feature -- UI callbacks
 							else
 								on_user_expired_plan_error (a_form, a_report_label)
 							end
+						elseif cld.is_guest then
+								-- Continue
+							on_guest
 						else
 							on_user_sign_in_refused (a_form, a_report_label)
 						end

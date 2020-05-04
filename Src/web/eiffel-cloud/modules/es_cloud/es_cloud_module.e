@@ -24,13 +24,19 @@ inherit
 
 	CMS_HOOK_AUTO_REGISTER
 
+	CMS_HOOK_MENU_SYSTEM_ALTER
+
 	CMS_HOOK_RESPONSE_ALTER
+
+	CMS_HOOK_FORM_ALTER
 
 	CMS_HOOK_BLOCK
 
 	CMS_HOOK_BLOCK_HELPER
 
-	STRIPE_HOOK
+	SHOP_HOOK
+
+--	STRIPE_HOOK
 
 create
 	make
@@ -42,7 +48,9 @@ feature {NONE} -- Initialization
 			version := "1.0"
 			description := "ES Cloud"
 			package := "EiffelStudio"
-			add_optional_dependency ({STRIPE_MODULE})
+			add_optional_dependency ({SHOP_MODULE})
+--			add_optional_dependency ({STRIPE_MODULE})
+			add_optional_dependency ({CMS_AUTHENTICATION_MODULE})
 		end
 
 feature -- Access
@@ -63,8 +71,9 @@ feature {CMS_MODULE} -- Access control
 feature -- Access control
 
 	perm_manage_es_accounts: STRING = "manager es accounts"
-	perm_view_es_accounts: STRING = "view es account"
+	perm_view_es_accounts: STRING = "view es accounts"
 	perm_discard_own_installations: STRING = "discard own installations"
+	perm_manage_es_licenses: STRING = "manager es licenses"
 
 feature {CMS_API} -- Module Initialization			
 
@@ -102,6 +111,7 @@ feature {CMS_API} -- Module management
 				es_cloud_api := l_es_cloud_api
 				create pl.make ("trial")
 				pl.set_title ("Trial")
+				pl.trial_period_in_days := 15
 				l_es_cloud_api.save_plan (pl)
 
 				if attached api.user_api.anonymous_user_role as l_anonymous_role then
@@ -135,10 +145,33 @@ feature -- Access: router
 
 	setup_router (a_router: WSF_ROUTER; a_api: CMS_API)
 			-- <Precursor>
+		local
+			h: ES_CLOUD_HANDLER
+			h_act: ES_CLOUD_ACTIVITIES_HANDLER
+			h_lic: ES_CLOUD_LICENSES_HANDLER
 		do
 			if attached es_cloud_api as l_mod_api then
-				a_router.handle ("/cloud", create {ES_CLOUD_HANDLER}.make (l_mod_api), a_router.methods_get)
+				create h.make (l_mod_api)
+				a_router.handle ("/" + root_location, h, a_router.methods_get)
+
+				create h_act.make (l_mod_api)
+				a_router.handle ("/" + activities_location, h_act, a_router.methods_get)
+				a_router.handle ("/" + activities_location + "{license_key}", h_act, a_router.methods_get)
+
+				create h_lic.make (Current, l_mod_api)
+				a_router.handle ("/" + licenses_location, h_lic, a_router.methods_get_post)
 			end
+		end
+
+	root_location: STRING = "cloud"
+
+	activities_location: STRING = "activities/"
+
+	licenses_location: STRING = "licenses/"
+
+	license_activities_location (lic: ES_CLOUD_LICENSE): STRING
+		do
+			Result := activities_location + url_encoded (lic.key)
 		end
 
 feature -- Hooks configuration
@@ -146,39 +179,154 @@ feature -- Hooks configuration
 	setup_hooks (a_hooks: CMS_HOOK_CORE_MANAGER)
 			-- Module hooks configuration.
 		do
---			a_hooks.subscribe_to_form_alter_hook (Current)
-			a_hooks.subscribe_to_hook (Current, {STRIPE_HOOK})
+			a_hooks.subscribe_to_form_alter_hook (Current)
+			a_hooks.subscribe_to_menu_system_alter_hook (Current)
+			a_hooks.subscribe_to_response_alter_hook (Current)
+			a_hooks.subscribe_to_hook (Current, {SHOP_HOOK})
+--			a_hooks.subscribe_to_hook (Current, {STRIPE_HOOK})
 		end
 
 feature -- Hook
 
-	prepare_payment (p: STRIPE_PAYMENT)
+	shop_provider_name: STRING = "es"
+
+	fill_cart_item (a_cart: SHOPPING_CART; a_cart_item: SHOPPING_ITEM)
+		local
+			l_prov_name: READABLE_STRING_GENERAL
+			d: SHOPPING_ITEM_DETAILS
+			l_price, l_cents_price: NATURAL_32
+			l_quantity: NATURAL_32
 		do
-			if p.category.is_case_insensitive_equal_general ("es_cloud") then
-				if
-					attached es_cloud_api as l_cloud_api and then
-					attached l_cloud_api.store as l_store and then
-					attached l_store.item (p.product_name) as l_store_item
-				then
-					p.set_price (l_store_item.price * 100 + l_store_item.cents_price, l_store_item.currency)
-					p.set_business_name ("EiffelSoftware")
-					if attached l_cloud_api.cms_api.user as u then
-						p.set_customer_name (l_cloud_api.cms_api.user_display_name (u))
-						p.set_customer_email (u.email)
+			if
+				attached es_cloud_api as api and then
+				attached api.store (a_cart.currency) as l_store
+			then
+				l_prov_name := api.config.shop_provider_name
+				if a_cart_item.provider.is_case_insensitive_equal_general (l_prov_name) then
+					if
+						attached l_store.item (a_cart_item.code) as l_store_item and then
+						a_cart.is_currency_accepted (l_store_item.currency)
+					then
+						l_quantity := a_cart_item.quantity
+						l_price := l_store_item.price * l_quantity
+						l_cents_price := l_store_item.cents_price * l_quantity
+						if l_cents_price > 99 then
+							l_price := l_price + l_cents_price // 100
+							l_cents_price := l_cents_price \\ 100
+						end
+
+						create d
+						d.set_price (l_price, l_cents_price, l_store_item.currency)
+						if l_store_item.is_yearly then
+							d.set_yearly (1)
+						elseif l_store_item.is_monthly then
+							d.set_monthly (1)
+						elseif l_store_item.is_weekly then
+							d.set_weekly (1)
+						elseif l_store_item.is_daily then
+							d.set_daily (1)
+						end
+						a_cart_item.set_details (d)
 					end
-					p.mark_prepared
 				end
 			end
 		end
 
-	response_alter (a_response: CMS_RESPONSE)
+	commit_cart_item (a_cart: SHOPPING_CART; a_cart_item: SHOPPING_ITEM)
 		local
-			b: CMS_CONTENT_BLOCK
+			l_prov_name: READABLE_STRING_GENERAL
+			l_quantity: NATURAL_32
+			lic: ES_CLOUD_LICENSE
 		do
+			if
+				attached es_cloud_api as api and then
+				attached api.active_user as l_user and then
+				attached api.store (a_cart.currency) as l_store
+			then
+				l_prov_name := api.config.shop_provider_name
+				if a_cart_item.provider.is_case_insensitive_equal_general (l_prov_name) then
+					if
+						attached l_store.item (a_cart_item.code) as l_store_item and then
+						a_cart.is_currency_accepted (l_store_item.currency)
+					then
+						if
+							attached l_store_item.name as l_item_name and then
+							attached api.plan_by_name (l_item_name) as l_plan
+						then
+							from
+								l_quantity := a_cart_item.quantity
+							until
+								l_quantity = 0
+							loop
+								lic := api.new_license_for_plan (l_plan)
+								if lic /= Void then
+									api.assign_license_to_user (lic, l_user)
+								end
+								l_quantity := l_quantity - 1
+							end
+						end
+					end
+				end
+			end
+		end
+
+--	prepare_payment (p: STRIPE_PAYMENT)
+--		do
+--			if p.category.is_case_insensitive_equal_general ("es_cloud") then
+--				if
+--					attached es_cloud_api as l_cloud_api and then
+--					attached l_cloud_api.store (p.currency) as l_store and then
+--					attached l_store.item (p.checkout_id) as l_store_item
+--				then
+--					p.set_price (l_store_item.price * 100 + l_store_item.cents_price, l_store_item.currency)
+--					p.set_business_name ("EiffelSoftware")
+--					if attached l_cloud_api.cms_api.user as u then
+--						p.set_customer_name (l_cloud_api.cms_api.user_display_name (u))
+--						p.set_customer_email (u.email)
+--					end
+--					p.mark_prepared
+--				end
+--			end
+--		end
+
+	response_alter (a_response: CMS_RESPONSE)
+		do
+			a_response.add_style (a_response.module_resource_url (Current, "/files/css/es_cloud.css", Void), Void)
 			if a_response.is_front then
-				a_response.set_value (a_response.url ("/cloud", Void), "escloud_url")
---				create b.make_raw ("Welcome", Void, "<h1>Hello EiffelStudio users</h1><p><a href=%""+ a_response.url ("/cloud", Void) +"%">Go to Cloud page...</a>", Void)
---				a_response.add_block (b, "content")
+				a_response.set_value (a_response.url ("/" + root_location, Void), "escloud_url")
+				a_response.set_value (a_response.url ("/" + licenses_location, Void), "escloud_licenses_url")
+			end
+		end
+
+	menu_system_alter (a_menu_system: CMS_MENU_SYSTEM; a_response: CMS_RESPONSE)
+			-- Hook execution on collection of menu contained by `a_menu_system'
+			-- for related response `a_response'.
+		local
+			lnk: CMS_LOCAL_LINK
+		do
+			if attached a_response.user as u then
+				create lnk.make (a_response.api.translation ("Licenses", Void), licenses_location)
+				lnk.set_weight (10)
+				a_menu_system.primary_menu.extend (lnk)
+			end
+		end
+
+feature -- Hooks: forms alter
+
+	form_alter (a_form: CMS_FORM; a_form_data: detachable WSF_FORM_DATA; a_response: CMS_RESPONSE)
+			-- Hook execution on form `a_form' and its associated data `a_form_data',
+			-- for related response `a_response'.
+		local
+			wtxt: WSF_WIDGET_TEXT
+		do
+			if
+				attached es_cloud_api as l_cloud_api and then
+				attached a_form.id as l_form_id
+			then
+				if l_form_id.same_string ({CMS_AUTHENTICATION_MODULE}.view_account_form_id) then
+					create wtxt.make_with_text ("<hr/><div class=%"user-view-cloud-box%"><a href=%"" + a_response.api.location_url ("/" + licenses_location, Void) + "%">View your licenses</a>.</div>")
+					a_form.prepend (wtxt)
+				end
 			end
 		end
 
@@ -213,46 +361,85 @@ feature -- Hooks: block
 		local
 			l_html: STRING
 			l_item: ES_CLOUD_STORE_ITEM
+			tb: STRING_TABLE [ARRAYED_LIST [ES_CLOUD_STORE_ITEM]]
+			lst: ARRAYED_LIST [ES_CLOUD_STORE_ITEM]
+			l_plan_name: READABLE_STRING_GENERAL
 		do
 			create l_html.make (1024)
-			l_html.append ("<div class=%"pricing%">")
+			l_html.append ("<div class=%"pricing%"><form action=%"%">")
 			if
-				attached api.store as l_store
+				attached api.store (Void) as l_store
 			then
 				l_html.append ("<div class=%"plans%">")
+				create tb.make_caseless (3)
 				across
 					l_store.items as ic
 				loop
 					l_item := ic.item
-					if attached api.plan_by_name (l_item.id) as pl then
-						l_html.append ("<div class=%"plan "+ html_encoded (pl.name) +"%">")
+					if attached l_item.name as l_name then
+						lst := tb [l_name]
+						if lst = Void then
+							create lst.make (1)
+							tb [l_name] := lst
+						end
+						lst.force (l_item)
+					end
+				end
 
+				across
+					tb as tb_ic
+				loop
+					l_plan_name := tb_ic.key
+					if attached api.plan_by_name (l_plan_name) as pl then
+						l_html.append ("<div class=%"plan "+ html_encoded (pl.name) +"%">")
 						l_html.append ("<h2>"+ html_encoded (pl.title_or_name) + "</h2>")
-						l_html.append ("<div class=%"prices%">")
-						if l_item.is_free then
-							l_html.append ("Free")
-						else
-							l_html.append (l_item.price.out + " " + l_item.currency.as_upper)
-						end
-						l_html.append ("</div>")
-						l_html.append ("<div class=%"actions%">")
-						if attached {STRIPE_MODULE} api.cms_api.module ({STRIPE_MODULE}) as l_stripe_module then
-							l_html.append ("<a href=%"" + api.cms_api.location_url ("/try_now", Void) + "%">Try now</a>")
-							if not l_item.is_free then
-								l_html.append ("<a href=%""+ api.cms_api.location_url (l_stripe_module.payment_link ("es_cloud", pl.name), Void) + "%">Buy now</a>")
+						across
+							tb_ic.item as ic
+						loop
+							l_item := ic.item
+							l_html.append ("<div class=%"option%">")
+							l_html.append ("<div class=%"prices%">")
+							if l_item.is_free then
+								l_html.append ("Free")
+							else
+								l_html.append (l_item.price_as_string)
+								if l_item.is_monthly then
+									l_html.append (" /month")
+								elseif l_item.is_yearly then
+									l_html.append (" /year")
+								elseif l_item.is_weekly then
+									l_html.append (" /week")
+								elseif l_item.is_daily then
+									l_html.append (" /day")
+								end
 							end
+							l_html.append ("</div>")
+							l_html.append ("<div class=%"actions%">")
+							if attached {SHOP_MODULE} api.cms_api.module ({SHOP_MODULE}) as l_shop_module then
+								if not l_item.is_free then
+									l_html.append ("<button formmethod=%"post%" formaction=%""+ api.cms_api.location_url (l_shop_module.submit_single_item_link (api.config.shop_provider_name, l_item.id), Void)
+											 + "%" type=%"submit%" class=%"buy%">Buy now</button>")
+								end
+							end
+							l_html.append ("</div>") -- actions							
+							l_html.append ("</div>") -- option
 						end
-						l_html.append ("</div>")
 						if attached pl.description as l_desc then
 							l_html.append ("<div class=%"features%"><header>")
 							l_html.append (html_encoded (l_desc))
 							l_html.append ("</header></div>")
 						end
-						l_html.append ("</div>")
+						l_html.append ("<div class=%"actions%">")
+						l_html.append ("<button formmethod=%"post%" formaction=%""+ api.cms_api.location_url ("/try_now", Void)
+							 + "%" type=%"submit%" class=%"try%">Try now</button>")
+--						l_html.append ("<a href=%"" + api.cms_api.location_url ("/try_now", Void) + "%">Try now</a>")
+						l_html.append ("</div>") -- actions
+						l_html.append ("</div>") -- plan
 					end
 				end
-				l_html.append ("</div></div>")
+				l_html.append ("</div>") -- plans
 			end
+			l_html.append ("</form></div>") -- pricings
 			create Result.make_raw ("cloud_store", "EiffelStudio plans", l_html, a_response.api.formats.full_html)
 		end
 

@@ -7,14 +7,20 @@ class
 	ES_CLOUD_INSTALLATION
 
 create
-	make
+	make,
+	make_with_license_id
 
 feature {NONE} -- Creation
 
-	make (a_installation_id: READABLE_STRING_GENERAL; a_user: ES_CLOUD_USER)
+	make (a_installation_id: READABLE_STRING_GENERAL; a_license: ES_CLOUD_LICENSE)
 		do
-			user := a_user
-			create installation_id.make_from_string_general (a_installation_id)
+			make_with_license_id (a_installation_id, a_license.id)
+		end
+
+	make_with_license_id (a_installation_id: READABLE_STRING_GENERAL; a_license_id: like {ES_CLOUD_LICENSE}.id)
+		do
+			license_id := a_license_id
+			create id.make_from_string_general (a_installation_id)
 			create info.make_empty
 			status := status_active
 			get_product_info
@@ -22,38 +28,55 @@ feature {NONE} -- Creation
 
 	get_product_info
 		local
-			i,j: INTEGER
-			s: like installation_id
+			i,j,k: INTEGER
+			s,p: like id
 		do
-			s := installation_id
+				-- Eiffel_20.03.10.3992-win64-...
+			s := id
 			i := s.index_of ('_', 1)
 			if i > 0 then
 				product_id := s.head (i - 1)
-				j := s.index_of ('-', i + 1)
-				if j > 0 then
-					s := s.substring (i + 1, j - 1)
-					product_version := s
-					i := s.index_of ('.', 1)
-					if i > 0 then
-						i := s.index_of ('.', i + 1)
-						if i > 0 then
-							product_version := s.head (i - 1)
+				s := s.substring (i + 1, s.count)
+				i := s.index_of ('-', 1)
+				if i > 0 then
+					p := s.substring (1, i - 1)
+					product_version := p
+					j := p.index_of ('.', 1)
+					if j > 0 then
+						k := p.index_of ('.', j + 1)
+						if k > 0 then
+							product_version := p.head (k - 1)
+						end
+					end
+					s := s.substring (i + 1, s.count)
+					j := s.index_of ('-', 1)
+					if j > 0 then
+						s := s.head (j - 1)
+						if s.starts_with ("win") then
+							platform := "windows"
+						elseif s.starts_with ("linux") then
+							platform := "linux"
+						elseif s.starts_with ("macos") then
+							platform := "macos"
+						else
+							create platform.make_from_string_general (s)
 						end
 					end
 				end
 			else
 				product_id := Void
 				product_version := Void
+				platform := Void
 			end
 		end
 
 feature -- Access
 
-	installation_id: IMMUTABLE_STRING_32
+	id: IMMUTABLE_STRING_32
+
+	license_id: like {ES_CLOUD_LICENSE}.id
 
 	name: detachable IMMUTABLE_STRING_32
-
-	user: ES_CLOUD_USER
 
 	info: IMMUTABLE_STRING_32
 
@@ -65,6 +88,8 @@ feature -- Access
 	product_id: detachable IMMUTABLE_STRING_32
 
 	product_version: detachable IMMUTABLE_STRING_32
+
+	platform: detachable IMMUTABLE_STRING_32
 
 feature -- status report
 
@@ -106,6 +131,13 @@ feature -- Element change
 	set_creation_date (dt: like creation_date)
 		do
 			creation_date := dt
+		end
+
+feature {ES_CLOUD_API} -- Update element
+
+	update_license_id (a_license_id: like license_id)
+		do
+			license_id := a_license_id
 		end
 
 end

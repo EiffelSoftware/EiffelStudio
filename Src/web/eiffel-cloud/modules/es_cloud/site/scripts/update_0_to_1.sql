@@ -1,0 +1,31 @@
+/* ALTER */
+ALTER TABLE es_test RENAME TO es_test_tmp;
+CREATE TABLE es_test (
+  `iid` VARCHAR(255) PRIMARY KEY NOT NULL ,
+  `lid`	INTEGER NOT NULL,
+  `name` TEXT,
+  `info` TEXT NOT NULL,
+  `status` INTEGER NOT NULL,
+  `creation` DATETIME NOT NULL
+);
+DROP TABLE es_test_tmp;
+
+/* Addition */
+
+CREATE TABLE es_licenses(
+  `lid` INTEGER PRIMARY KEY AUTO_INCREMENT NOT NULL,
+  `pid`	INTEGER NOT NULL, /* es_plans.id */
+  `key` TEXT NOT NULL,
+  `platform` TEXT,
+  `version` TEXT,
+  `creation` DATETIME NOT NULL,
+  `expiration` DATETIME,
+  `fallback` DATETIME
+);
+
+CREATE TABLE es_licenses_users(
+  `lid` INTEGER NOT NULL,
+  `uid`	INTEGER NOT NULL,
+  CONSTRAINT PK_lid_uid_key PRIMARY KEY (lid,uid)
+);
+

@@ -42,14 +42,14 @@ feature -- Execution
 					if
 						attached {WSF_STRING} req.query_parameter ("installation") as p_installation
 					then
-						inst := es_cloud_api.user_installation (l_user, p_installation.value)
+						inst := es_cloud_api.installation (p_installation.value)
 					end
 
 					r := new_generic_response (req, res)
 					add_primary_tabs (r)
 
 					if inst /= Void then
-						create s.make_from_string ("<h1>Installation %""+ html_encoded (inst.installation_id) +"%" for user " + api.user_html_administration_link (l_user) + "</h1>")
+						create s.make_from_string ("<h1>Installation %""+ html_encoded (inst.id) +"%" for user " + api.user_html_administration_link (l_user) + "</h1>")
 						s.append ("Click for")
 						s.append (" <a href=%"" + req.script_url (req.percent_encoded_path_info) + "%">any user</a> ")
 						s.append (" | ")
@@ -57,19 +57,19 @@ feature -- Execution
 						s.append ("<p><strong>User:</strong> " + api.user_html_administration_link (l_user))
 						l_only_active := attached {WSF_STRING} req.query_parameter ("only_active") as p and then p.is_case_insensitive_equal ("true")
 						if l_only_active then
-							s.append (" (<a href=%"" + req.script_url (req.percent_encoded_path_info) + "?user=" + l_user.id.out + "&installation="+ url_encoded (inst.installation_id) +"&only_active=true%">active sessions</a>)")
+							s.append (" (<a href=%"" + req.script_url (req.percent_encoded_path_info) + "?user=" + l_user.id.out + "&installation="+ url_encoded (inst.id) +"&only_active=true%">active sessions</a>)")
 						else
-							s.append (" (<a href=%"" + req.script_url (req.percent_encoded_path_info) + "?user=" + l_user.id.out + "&installation="+ url_encoded (inst.installation_id) +"%">all sessions</a>)")
+							s.append (" (<a href=%"" + req.script_url (req.percent_encoded_path_info) + "?user=" + l_user.id.out + "&installation="+ url_encoded (inst.id) +"%">all sessions</a>)")
 						end
 						s.append ("</p>")
-						s.append ("<p><strong>Installation:</strong> " + html_encoded (inst.installation_id) + "</p>")
+						s.append ("<p><strong>Installation:</strong> " + html_encoded (inst.id) + "</p>")
 						s.append ("<p><strong>Sessions:</strong><ul class=%"es-sessions%">")
 						if attached inst.info as l_info and then not l_info.is_whitespace then
 							s.append ("<p class=%"info%"><strong>Information:</strong><pre class=%"es-info%">")
 							s.append (html_encoded (l_info))
 							s.append ("</pre></p>%N")
 						end
-						if attached es_cloud_api.user_sessions (l_user, inst.installation_id, l_only_active) as l_sessions then
+						if attached es_cloud_api.user_sessions (l_user, inst.id, l_only_active) as l_sessions then
 							across
 								l_sessions as sess_ic
 							loop
@@ -131,9 +131,9 @@ feature -- Execution
 							inst := ic.item
 							s.append ("<tr>")
 							s.append ("<td>" + api.user_html_administration_link (l_user) + "</td>")
-							s.append ("<td><a href=%""+ req.script_url (req.percent_encoded_path_info) + "?user=" + l_user.id.out + "&installation="+ url_encoded (inst.installation_id) +"%">" + inst.installation_id + "</a></td>")
+							s.append ("<td><a href=%""+ req.script_url (req.percent_encoded_path_info) + "?user=" + l_user.id.out + "&installation="+ url_encoded (inst.id) +"%">" + inst.id + "</a></td>")
 							if
-								attached es_cloud_api.user_sessions (l_user, inst.installation_id, True) as l_sessions and then
+								attached es_cloud_api.user_sessions (l_user, inst.id, True) as l_sessions and then
 								not l_sessions.is_empty and then
 								attached l_sessions.first as l_last_session
 							then

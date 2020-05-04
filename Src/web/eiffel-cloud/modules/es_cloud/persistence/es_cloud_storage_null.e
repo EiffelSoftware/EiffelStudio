@@ -28,6 +28,52 @@ feature -- Access: plan
 		do
 		end
 
+feature -- Licenses
+
+	licenses: LIST [ES_CLOUD_LICENSE]
+			-- Licenses
+		do
+			check False then end
+		end
+
+	license (a_license_id: INTEGER_64): detachable ES_CLOUD_LICENSE
+		do
+		end
+
+	license_by_key (a_license_key: READABLE_STRING_GENERAL): detachable ES_CLOUD_LICENSE
+		do
+		end
+
+	user_id_with_license (a_license: ES_CLOUD_LICENSE): INTEGER_64
+		do
+		end
+
+	user_has_license (a_user: ES_CLOUD_USER; a_license_id: INTEGER_64): BOOLEAN
+		do
+		end
+
+	user_licenses (a_user: ES_CLOUD_USER): LIST [ES_CLOUD_USER_LICENSE]
+		do
+			check False then end
+		end
+
+	licences_for_plan (a_plan: ES_CLOUD_PLAN): LIST [ES_CLOUD_LICENSE]
+		do
+			check False then end
+		end
+
+feature -- Element change: license
+
+	save_license (a_license: ES_CLOUD_LICENSE)
+		do
+		end
+
+	assign_license_to_user (a_license: ES_CLOUD_LICENSE; a_user: ES_CLOUD_USER)
+		do
+		end
+
+feature -- Subscriptions		
+
 	subscriptions: LIST [ES_CLOUD_PLAN_SUBSCRIPTION]
 		do
 			create {ARRAYED_LIST [ES_CLOUD_PLAN_SUBSCRIPTION]} Result.make (0)
@@ -61,17 +107,17 @@ feature -- Access: organization
 		do
 		end
 
-feature -- Access: subscriptions		
+feature -- Access: subscriptions
 
-	user_subscription (a_user: ES_CLOUD_USER): detachable ES_CLOUD_PLAN_SUBSCRIPTION
+	user_plan_subscription (a_user: ES_CLOUD_USER): detachable ES_CLOUD_PLAN_SUBSCRIPTION
 		do
 		end
 
-	organization_subscription (org: ES_CLOUD_ORGANIZATION): detachable ES_CLOUD_PLAN_SUBSCRIPTION
+	organization_plan_subscription (org: ES_CLOUD_ORGANIZATION): detachable ES_CLOUD_PLAN_SUBSCRIPTION
 		do
 		end
 
-	plan_subscriptions (a_plan: ES_CLOUD_PLAN): detachable LIST [ES_CLOUD_PLAN_SUBSCRIPTION]
+	plan_subscriptions_for (a_plan: ES_CLOUD_PLAN): detachable LIST [ES_CLOUD_PLAN_SUBSCRIPTION]
 		do
 		end
 
@@ -82,8 +128,13 @@ feature -- Access: installations
 			create {ARRAYED_LIST [ES_CLOUD_INSTALLATION]} Result.make (0)
 		end
 
-	user_installation (a_user: ES_CLOUD_USER; a_install_id: READABLE_STRING_GENERAL): detachable ES_CLOUD_INSTALLATION
+	installation (a_install_id: READABLE_STRING_GENERAL): detachable ES_CLOUD_INSTALLATION
 		do
+		end
+
+	license_installations (a_license_id: like {ES_CLOUD_LICENSE}.id): LIST [ES_CLOUD_INSTALLATION]
+		do
+			check False then end
 		end
 
 feature -- Access: sessions		

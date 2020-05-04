@@ -152,6 +152,20 @@ feature -- Change
 			discard_uid_token (a_user.id, a_token)
 		end
 
+	discard_all_user_tokens (a_user: CMS_USER)
+			-- Discard all tokens for `a_user`.
+			-- Discard `a_token` from `a_uid`.
+		local
+			l_parameters: STRING_TABLE [detachable ANY]
+		do
+			create l_parameters.make (1)
+			l_parameters.put (a_user.id, "uid")
+
+			reset_error
+			sql_delete (sql_delete_all_user_tokens, l_parameters)
+			sql_finalize_delete (sql_delete_all_user_tokens)
+		end
+
 	discard_uid_token (a_uid: INTEGER_64; a_token: READABLE_STRING_GENERAL)
 			-- Discard `a_token` from `a_uid`.
 		local
@@ -175,6 +189,8 @@ feature {NONE} -- Queries
 	sql_insert_user_token: STRING = "INSERT INTO jwt_auth (uid, token, secret, apps, refresh) VALUES (:uid, :token, :secret, :apps, :refresh);"
 
 	sql_delete_user_token: STRING = "DELETE FROM jwt_auth WHERE uid=:uid AND token=:token;"
+
+	sql_delete_all_user_tokens: STRING = "DELETE FROM jwt_auth WHERE uid=:uid;"
 
 note
 	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"

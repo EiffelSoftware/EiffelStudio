@@ -1,0 +1,42 @@
+note
+	description: "Interface for accessing stripe storage"
+	date: "$Date$"
+	revision: "$Revision$"
+
+class
+	STRIPE_STORAGE_NULL
+
+inherit
+	STRIPE_STORAGE_I
+
+feature -- Error handler
+
+	error_handler: ERROR_HANDLER
+			-- Error handler.
+		do
+			create Result.make
+		end
+
+feature -- Store
+
+	customers_by_uid (a_user: CMS_USER): detachable LIST [READABLE_STRING_32]
+		do
+		end
+
+	customers_by_email (a_email: READABLE_STRING_GENERAL): detachable LIST [READABLE_STRING_32]
+		do
+		end
+
+	user_by_customer_id (a_customer_id: READABLE_STRING_GENERAL): detachable CMS_USER
+		do
+		end
+
+	save_customer_id (a_customer_id: READABLE_STRING_GENERAL; a_user_id: like {CMS_USER}.id; a_email: detachable READABLE_STRING_GENERAL)
+		do
+		end
+
+note
+	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
+end
+

@@ -59,6 +59,7 @@ feature -- CMS modules
 
 				-- EiffelStudio
 			a_setup.register_module (create {ES_CLOUD_MODULE}.make)
+			a_setup.register_module (create {SHOP_MODULE}.make)
 			a_setup.register_module (create {STRIPE_MODULE}.make)
 
 

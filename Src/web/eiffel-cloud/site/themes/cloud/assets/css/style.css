@@ -135,22 +135,102 @@
   border-left: solid 5px #ccc;
   border-top: dotted 1px #ccc;
 }
-#main div.es-subscription > p {
+#main div.es-subscription > p, #main div.es-licenses > p {
   font-weight: bold;
 }
-#main div.es-subscription li {
+#main div.es-subscription li, #main div.es-licenses li {
   list-style: none;
 }
-#main div.es-subscription li.status {
+#main div.es-subscription li.status, #main div.es-licenses li.status {
   padding-left: 5px;
 }
-#main div.es-subscription li.status.success {
+#main div.es-subscription li.status.success, #main div.es-licenses li.status.success {
   color: #0a0;
   border-left: solid 5px #090;
 }
-#main div.es-subscription li.status.warning {
+#main div.es-subscription li.status.warning, #main div.es-licenses li.status.warning {
   color: #990;
   border-left: solid 5px #900;
+}
+
+div.es-new-license {
+  position: relative;
+  margin-top: 4rem;
+}
+div.es-new-license form .button {
+  position: absolute;
+  top: -4rem;
+  right: 1rem;
+  margin: 1rem;
+  padding: .3rem;
+  color: #fff;
+  background-color: #00a6fd;
+  border-radius: 20px;
+  border: solid .3rem #00a6fd;
+  font-size: 110%;
+  font-weight: bold;
+}
+div.es-new-license form .button:hover {
+  color: #00a6fd;
+  border: solid .3rem #00a6fd;
+  background-color: #00a6fd20;
+}
+
+div.es-license {
+  color: #5b5b5b;
+  padding: 1rem;
+  border: solid 1px #ccc;
+  background-color: #f5f5f5;
+}
+div.es-license div.header {
+  padding: 1rem;
+  background-color: #fff;
+  position: relative;
+  box-sizing: border-box;
+}
+div.es-license div.header div.title {
+  font-weight: bold;
+  font-size: larger;
+}
+div.es-license div.header div.license-id {
+  box-sizing: border-box;
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+}
+div.es-license div.header div.license-id span.id {
+  display: block;
+  font-weight: bold;
+}
+div.es-license div.details div.es-installations {
+  margin-top: 0.2rem;
+}
+div.es-license div.details li {
+  margin-bottom: 0.2rem;
+}
+div.es-license div.details li span.title {
+  font-weight: bold;
+}
+div.es-license div.details li.status.warning {
+  color: red !important;
+  font-weight: bold;
+}
+div.es-license div.details li.es-installation {
+  font-style: italic;
+}
+div.es-license div.details li.es-installation button {
+  color: #c00;
+  padding: 2px 4px 2px 4px;
+  border-radius: 3px;
+  border: solid 1px #ccc;
+  font-size: larger;
+  font-weight: bold;
+  margin-left: .5rem;
+  margin-right: .5rem;
+}
+div.es-license div.details li.es-installation button:hover {
+  color: white;
+  background-color: #f00;
 }
 
 div.cms-node div.info {
@@ -195,13 +275,13 @@ div.login-box {
   background: url(../images/outer_header_bg.jpg) repeat-x 0 0;
   color: black;
   font-family: roboto;
-  font-size: x-large;
+  font-size: 110%;
 }
 #header #logo {
   padding: 10px 20px 0 20px;
 }
 #header #menu-bar ul.horizontal {
-  margin: 6px 0 0 0;
+  margin: 10px 0 0 0;
 }
 #header #menu-bar ul.horizontal li {
   margin: 0 10px 5px 0;

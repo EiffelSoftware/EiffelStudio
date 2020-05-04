@@ -16,4 +16,8 @@ feature -- Hook
 		deferred
 		end
 
+	validate_payment (a_validation: STRIPE_PAYMENT_VALIDATION)
+		deferred
+		end
+
 end

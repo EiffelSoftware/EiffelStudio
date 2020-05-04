@@ -5,7 +5,7 @@
 		<file_rule>
 			<exclude>/EIFGENs$</exclude>
 		</file_rule>
-		<option warning="none">
+		<option warning="warning">
 		</option>
 		<library name="auth_module" location="$ISE_LIBRARY\unstable\library\web\cms\modules\auth\auth.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
@@ -13,8 +13,8 @@
 		<library name="cms" location="$ISE_LIBRARY\unstable\library\web\cms\cms.ecf" readonly="false"/>
 		<library name="cms_config" location="$ISE_LIBRARY\unstable\library\web\cms\library\configuration\config.ecf"/>
 		<library name="cms_model" location="$ISE_LIBRARY\unstable\library\web\cms\library\model\cms_model.ecf"/>
+		<library name="error" location="$ISE_LIBRARY\contrib\library\utility\general\error\error.ecf"/>
 		<library name="http" location="$ISE_LIBRARY\contrib\library\network\protocol\http\http.ecf"/>
-
 		<library name="http_client" location="$ISE_LIBRARY\contrib\library\network\http_client\http_client.ecf"/>
 		<library name="json" location="$ISE_LIBRARY\contrib\library\text\parser\json\library\json.ecf"/>
 		<library name="time" location="$ISE_LIBRARY\library\time\time.ecf"/>

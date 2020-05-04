@@ -3,13 +3,11 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
-        <!-- EWF CMS -->
         <link rel="stylesheet" href="{$theme_path/}css/style.css"/>
 {if isset="$head"}{$head/}{/if}
 {if isset="$styles"}{$styles/}{/if}
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> 
-	<script src="{$theme_path/}js/jquery.timeago.js"/>
-
+	<script src="{$theme_path/}js/jquery.timeago.js"></script>
 {if isset="$scripts"}{$scripts/}{/if}
 {if isset="$head_lines"}{$head_lines/}{/if}
         <title>{$head_title/}</title>

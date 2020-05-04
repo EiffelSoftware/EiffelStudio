@@ -41,6 +41,12 @@ feature -- Change
 		do
 		end
 
+	discard_all_user_tokens (a_user: CMS_USER)
+			-- Discard all tokens for `a_user`.
+		do
+		end
+
+
 note
 	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"

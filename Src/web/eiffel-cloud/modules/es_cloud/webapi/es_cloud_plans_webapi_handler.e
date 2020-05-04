@@ -16,9 +16,6 @@ feature -- Execution
 
 	execute (a_version: READABLE_STRING_GENERAL; req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Execute handler for `req' and respond in `res'.
-		local
-			l_uid: READABLE_STRING_GENERAL
-			l_user: ES_CLOUD_USER
 		do
 			if req.is_get_request_method then
 				if attached {WSF_STRING} req.path_parameter ("pid") as pid and then pid.is_integer then

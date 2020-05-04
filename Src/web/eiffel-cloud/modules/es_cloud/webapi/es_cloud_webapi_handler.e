@@ -107,6 +107,34 @@ feature -- Helper
 			Result := cloud_user_installation_sessions_link (a_version, a_user, iid) + url_encoded (sid)
 		end
 
+	cloud_user_licenses_link (a_version: READABLE_STRING_GENERAL; a_user: ES_CLOUD_USER): STRING
+		do
+			Result := cloud_user_link (a_version, a_user) + "/licenses/"
+		end
+
+	cloud_user_license_link (a_version: READABLE_STRING_GENERAL; a_user: ES_CLOUD_USER; a_lic_key: READABLE_STRING_GENERAL): STRING
+		do
+			Result := cloud_user_licenses_link (a_version, a_user) + url_encoded (a_lic_key)
+		end
+
+feature {NONE} -- Response helper
+
+	license_to_table (lic: ES_CLOUD_LICENSE): STRING_TABLE [detachable ANY]
+		do
+			create Result.make (8)
+--			Result.force (lic.id, "id")
+			Result.force (lic.key, "key")
+			Result.force (lic.plan.id, "plan_id")
+			Result.force (lic.plan.name, "plan")
+			Result.force (date_time_to_string (lic.creation_date), "creation")
+			Result.force (lic.is_active, "is_active")
+			Result.force (lic.is_fallback, "is_fallback")
+			if attached lic.expiration_date as exp then
+				Result.force (date_time_to_string (exp), "expiration")
+				Result.force (lic.days_remaining, "days_remaining")
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	remove_last_segment (a_location: STRING_8; a_keep_ending_slash: BOOLEAN)

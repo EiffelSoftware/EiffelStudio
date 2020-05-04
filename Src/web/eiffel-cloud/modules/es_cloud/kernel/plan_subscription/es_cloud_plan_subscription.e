@@ -43,7 +43,6 @@ feature -- Status report
 			-- Relevant only when `expiration_date` is set!
 		local
 			now: DATE_TIME
-			dur: DATE_TIME_DURATION
 			secs: INTEGER_64
 			is_neg: BOOLEAN
 		do

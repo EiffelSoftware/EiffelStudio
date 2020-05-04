@@ -28,6 +28,7 @@ feature {NONE} -- Router/administration
 			l_plans: ES_CLOUD_PLANS_WEBAPI_HANDLER
 			l_account: ES_CLOUD_ACCOUNT_WEBAPI_HANDLER
 			l_inst_hlr: ES_CLOUD_INSTALLATIONS_WEBAPI_HANDLER
+			l_lic_hlr: ES_CLOUD_LICENSES_WEBAPI_HANDLER
 		do
 			if attached module.es_cloud_api as l_mod_api then
 				create l_root.make (l_mod_api)
@@ -40,6 +41,9 @@ feature {NONE} -- Router/administration
 				create l_account.make (l_mod_api)
 				a_router.handle ("/cloud/{version}/account/", l_account, a_router.methods_get)
 				a_router.handle ("/cloud/{version}/account/{uid}", l_account, a_router.methods_get)
+				create l_lic_hlr.make (l_mod_api)
+				a_router.handle ("/cloud/{version}/account/{uid}/licenses/", l_lic_hlr, a_router.methods_get) --_post)
+				a_router.handle ("/cloud/{version}/account/{uid}/licenses/{license_id}", l_lic_hlr, a_router.methods_get)
 				create l_inst_hlr.make (l_mod_api)
 				a_router.handle ("/cloud/{version}/account/{uid}/installations", l_inst_hlr, a_router.methods_get_post)
 				a_router.handle ("/cloud/{version}/account/{uid}/installations/{installation_id}", l_inst_hlr, a_router.methods_get_put_delete)
@@ -54,7 +58,7 @@ feature -- Hooks configuration
 			-- Module hooks configuration.
 		do
 			a_hooks.subscribe_to_webapi_response_alter_hook (Current)
-			a_hooks.subscribe_to_hook (module, {STRIPE_HOOK})
+			module.setup_hooks (a_hooks)
 		end
 
 feature -- Hook

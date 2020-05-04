@@ -58,6 +58,9 @@ feature -- Access: private
 			-- Weight of Current plan among other plans
 			-- used to sort list of plans.
 
+	trial_period_in_days: NATURAL assign set_trial_period_in_days
+			-- Trial period in days.
+
 	data: detachable IMMUTABLE_STRING_32
 		local
 			s: STRING_32
@@ -67,6 +70,7 @@ feature -- Access: private
 			s.append (";session.limit="); s.append_natural_32 (concurrent_sessions_limit)
 			s.append (";session.heartbeat="); s.append_natural_32 (heartbeat)
 			s.append (";order.weight="); s.append_integer (weight)
+			s.append (";trial.days="); s.append_natural_32 (trial_period_in_days)
 			s.append (";public=")
 			if is_public then
 				s.append ("yes")
@@ -75,7 +79,6 @@ feature -- Access: private
 			end
 			create Result.make_from_string_32 (s)
 		end
-
 
 feature -- Status report	
 
@@ -106,7 +109,7 @@ feature -- Element change
 
 	set_data (a_data: detachable READABLE_STRING_GENERAL)
 		local
-			sess,inst,l_heartbeat: NATURAL
+			sess,inst,l_heartbeat, l_trial_days: NATURAL
 			l_weight: INTEGER
 			s: READABLE_STRING_GENERAL
 		do
@@ -114,6 +117,7 @@ feature -- Element change
 			inst := 0
 			l_heartbeat := 0
 			l_weight := 0
+			l_trial_days := 0
 			if a_data /= Void then
 				across
 					a_data.split (';') as ic
@@ -127,6 +131,8 @@ feature -- Element change
 						l_heartbeat := s.substring (s.index_of ('=', 1) + 1, s.count).to_natural
 					elseif s.starts_with ("order.weight=") then
 						l_weight := s.substring (s.index_of ('=', 1) + 1, s.count).to_integer
+					elseif s.starts_with ("trial.days=") then
+						l_trial_days := s.substring (s.index_of ('=', 1) + 1, s.count).to_natural
 					elseif s.starts_with ("public=") then
 						s := s.substring (s.index_of ('=', 1) + 1, s.count)
 						is_public := s.is_case_insensitive_equal ("yes")
@@ -136,7 +142,13 @@ feature -- Element change
 			installations_limit := inst
 			concurrent_sessions_limit := sess
 			heartbeat := l_heartbeat
+			trial_period_in_days := l_trial_days
 			weight := l_weight
+		end
+
+	set_trial_period_in_days (n: NATURAL)
+		do
+			trial_period_in_days := n
 		end
 
 	set_name (s: READABLE_STRING_8)
@@ -160,6 +172,14 @@ feature -- Element change
 			else
 				create description.make_from_string_general (d)
 			end
+		end
+
+
+feature {CMS_STORAGE_SQL_I} -- Element change		
+
+	update_id (a_id: like id)
+		do
+			id := a_id
 		end
 
 end

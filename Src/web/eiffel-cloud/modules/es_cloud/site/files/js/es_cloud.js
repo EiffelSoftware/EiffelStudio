@@ -1,9 +1,13 @@
 class ESCL_inst_trash {
 	constructor(a_line) {
 		this.line = a_line;
+
 		var l_url = $(location).attr('href');
 		var i = l_url.lastIndexOf('/');
+		l_url = l_url.slice (0, i)
+		i = l_url.lastIndexOf('/');
 		this.host_url = l_url.slice (0, i)
+
 		this.uid = this.line.attr('data-user-id');
 		this.iid = this.line.attr('data-installation-id');
 		this.failures_count = 0;
@@ -11,14 +15,18 @@ class ESCL_inst_trash {
 		this.deleted = false;
 	}
 	insert_form() {
-		var but = $("<button style=\"color: red;\" type=\"button\">&#x1F5D1;</button>");
-		this.line.prepend(but);
+		var but = $("<button title=\"Revoke installation\">&#x1F5D1;</button>");
+		this.line.append(but);
 		this.discard_widget = but;
 
 		$(this.discard_widget).on('click', this, function(event) { 
 			if (event.data.deleted) {
 			} else {
-				event.data.process_discard();
+				var result = confirm(("You are about to revoke installation\n").concat(event.data.iid, "\nDo you confirm ?"));
+				if (result == true) {
+					event.data.process_discard();
+				} else {
+				};
 			}
 		});
 	}

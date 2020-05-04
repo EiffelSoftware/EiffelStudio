@@ -167,6 +167,14 @@ feature -- Change
 			jwt_auth_storage.discard_user_token (a_user, a_token)
 		end
 
+	discard_all_user_tokens (a_user: CMS_USER)
+			-- Discard all tokens from `a_user`.
+		require
+			user_has_id: a_user.has_id
+		do
+			jwt_auth_storage.discard_all_user_tokens (a_user)
+		end
+
 feature {NONE} -- Implementation
 
 	new_secret_key (len, off: INTEGER): STRING_8

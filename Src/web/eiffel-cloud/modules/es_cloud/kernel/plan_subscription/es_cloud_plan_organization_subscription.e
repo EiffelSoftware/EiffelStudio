@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {ES_CLOUD_PLAN_organization_SUBSCRIPTION}."
+	description: "Summary description for {ES_CLOUD_PLAN_ORGANIZATION_SUBSCRIPTION}."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"

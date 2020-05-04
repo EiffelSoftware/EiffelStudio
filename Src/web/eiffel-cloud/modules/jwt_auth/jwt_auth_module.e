@@ -112,7 +112,7 @@ feature -- Hook
 					fid.same_string ({CMS_AUTHENTICATION_MODULE}.view_account_form_id) and then
 					attached a_response.user as u
 				then
-					a_form.extend_html_text ("<li><a href=%"" + a_response.url ("/user/" + u.id.out + "/jwt_access_token", Void) + "%">JWT management...</a></li>")
+					a_form.extend_html_text ("<hr/><h4>Authentication with JWT token</h4><ul><li><a href=%"" + a_response.url ("/user/" + u.id.out + "/jwt_access_token", Void) + "%">manage your tokens.</a></li></ul>%N")
 				end
 			end
 		end

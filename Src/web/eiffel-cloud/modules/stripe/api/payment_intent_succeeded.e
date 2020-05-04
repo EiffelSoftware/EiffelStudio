@@ -21,7 +21,6 @@ feature {NONE} -- Initialization
 
 	make_with_json (j: like json)
 		local
-			l_user: detachable READABLE_STRING_32
 			l_charges: ARRAYED_LIST [PAYMENT_CHARGE]
 		do
 			Precursor (j)
@@ -57,8 +56,6 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
-
-	id: READABLE_STRING_8
 
 	amount: INTEGER
 			-- Amount in cents.

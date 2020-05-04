@@ -4,7 +4,7 @@ note
 	revision: "$Revision$"
 
 class
-	STRIPE_HANDLER
+	STRIPE_PAYMENT_HANDLER
 
 inherit
 	CMS_HANDLER
@@ -37,31 +37,21 @@ feature -- Execution
 	execute (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Execute handler for `req' and respond in `res'.
 		local
-			r: WSF_ROUTER
-			p: READABLE_STRING_8
 			rep: like new_generic_response
 			pay: STRIPE_PAYMENT
 		do
 			if stripe_api.config.is_valid then
 				if
 					attached {WSF_STRING} req.path_parameter ("category") as p_cat and
-					attached {WSF_STRING} req.path_parameter ("product") as p_prod
+					attached {WSF_STRING} req.path_parameter ("checkout") as p_checkout
 				then
 					if req.percent_encoded_path_info.ends_with_general ("/terms") then
 						rep := new_generic_response (req, res)
 						rep.set_redirection (rep.api.location_url ("/terms_of_use", Void)) -- Global site terms of use
 						rep.set_main_content ("Terms of use ....")
 					elseif attached stripe_api.cms_api.user as l_user then
-						create pay.make (p_cat.value, p_prod.value)
-						if attached api.hooks.subscribers ({STRIPE_HOOK}) as lst then
-							across
-								lst as ic
-							loop
-								if attached {STRIPE_HOOK} ic.item as h then
-									h.prepare_payment (pay)
-								end
-							end
-						end
+						create pay.make (p_cat.value, p_checkout.value)
+						stripe_api.invoke_prepare_payment (pay)
 						rep := new_generic_response (req, res)
 
 						if pay.is_prepared then
@@ -71,19 +61,21 @@ feature -- Execution
 							rep.add_style (rep.module_resource_url (module, "/files/css/stripe.css", Void), Void)
 							rep.set_main_content (card_html(
 								<<
-									["product.title", pay.title_or_product_name],
+									["product.title", pay.title_or_checkout_id],
 									["product.price", pay.price_text],
 									["product.category", pay.category],
-									["product.name", pay.product_name],
+									["product.name", pay.title_or_checkout_id],
 									["title", safe_string (pay.business_name)],
 									["business.name", safe_string (pay.business_name)],
 									["customer.name", safe_string (pay.customer_name)],
 									["customer.email", safe_string (pay.customer_email)],
+									["metadata", safe_string (pay.meta_data_as_json_string)],
+									["order.id", safe_string (pay.order_id)],
 									["stripe.host_url", stripe_api.cms_api.webapi_path (stripe_api.config.base_path)]
 								>>
 								))
 						else
-							rep.set_main_content ("No payment information for <strong>" + html_encoded (pay.title_or_product_name)
+							rep.set_main_content ("No payment information for <strong>" + html_encoded (pay.title_or_checkout_id)
 									+ "</strong> in category <strong>" + html_encoded (pay.category)
 									+ "</strong> !"
 								)
@@ -171,7 +163,8 @@ feature -- Resources
       productName: "{{product.name}}",
       productCategory: "{{product.category}}",
       customerEmail: "{{customer.email}}",
-      customerName: "{{customer.name}}"
+      customerName: "{{customer.name}}",
+      metadataOrderId: "{{order.id}}"
     });
     
     // Remove the comment for this to automatically open the modal demo

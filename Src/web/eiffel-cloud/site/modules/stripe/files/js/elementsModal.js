@@ -78,6 +78,7 @@ eStripeMod.init = function (content, paymentIntent, publicKey) {
             <input type="hidden" name="amount" value="${amount}" />
             <input type="hidden" name="currency" value="${content.currency}" />
             <input type="hidden" name="description" value="${content.productName}" />
+            <input type="hidden" name="metadata[order-id]" value="${content.metadataOrderId}" />
             <button class="ElementsModal--pay-button">Pay ${amount}</button>
           </div>
 

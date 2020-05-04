@@ -27,21 +27,20 @@ feature {NONE} -- Initialization
 			last_date := d
 		end
 
-	make_new (a_user: ES_CLOUD_USER; a_installation_id: READABLE_STRING_GENERAL; a_first: detachable DATE_TIME)
-		local
-			d: DATE_TIME
-			uuidg: UUID_GENERATOR
-		do
-			user := a_user
-			create id.make_from_string_general ((create {UUID_GENERATOR}).generate_uuid.out)
-			create installation_id.make_from_string_general (a_installation_id)
-			d := a_first
-			if d = Void then
-				create d.make_now_utc
-			end
-			first_date := d
-			last_date := d
-		end
+--	make_new (a_user: ES_CLOUD_USER; a_installation_id: READABLE_STRING_GENERAL; a_first: detachable DATE_TIME)
+--		local
+--			d: DATE_TIME
+--		do
+--			user := a_user
+--			create id.make_from_string_general ((create {UUID_GENERATOR}).generate_uuid.out)
+--			create installation_id.make_from_string_general (a_installation_id)
+--			d := a_first
+--			if d = Void then
+--				create d.make_now_utc
+--			end
+--			first_date := d
+--			last_date := d
+--		end
 
 feature -- Access
 

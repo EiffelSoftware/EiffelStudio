@@ -7,6 +7,10 @@ class
 	ES_CLOUD_API
 
 inherit
+	ES_CLOUD_ACCOUNT_API_I
+
+	ES_CLOUD_SUBSCRIPTION_API_I
+
 	CMS_MODULE_API
 		redefine
 			initialize
@@ -48,6 +52,13 @@ feature -- Settings
 	config: ES_CLOUD_CONFIG
 
 feature -- Access
+
+	active_user: detachable ES_CLOUD_USER
+		do
+			if attached cms_api.user as u then
+				create Result.make (u)
+			end
+		end
 
 	plans: LIST [ES_CLOUD_PLAN]
 		do
@@ -108,138 +119,120 @@ feature -- Access
 			end
 		end
 
-	plan_subscriptions (a_plan: ES_CLOUD_PLAN): detachable LIST [ES_CLOUD_PLAN_SUBSCRIPTION]
+feature -- Access: licenses
+
+	licenses: LIST [ES_CLOUD_LICENSE]
+			-- Licenses
 		do
-			Result := es_cloud_storage.plan_subscriptions (a_plan)
+			Result := es_cloud_storage.licenses
 		end
 
-feature -- Access: organizations
-
-	organizations: LIST [ES_CLOUD_ORGANIZATION]
+	license (a_license_id: INTEGER_64): detachable ES_CLOUD_LICENSE
 		do
-			Result := es_cloud_storage.organizations
+			Result := es_cloud_storage.license (a_license_id)
 		end
 
-	organization (a_id_or_name: READABLE_STRING_GENERAL): detachable ES_CLOUD_ORGANIZATION
+	license_by_key (a_license_key: READABLE_STRING_GENERAL): detachable ES_CLOUD_LICENSE
+		do
+			Result := es_cloud_storage.license_by_key (a_license_key)
+		end
+
+	user_has_license (a_user: ES_CLOUD_USER; a_license_id: INTEGER_64): BOOLEAN
+		do
+			Result := es_cloud_storage.user_has_license (a_user, a_license_id)
+		end
+
+	user_licenses (a_user: ES_CLOUD_USER): LIST [ES_CLOUD_USER_LICENSE]
+		do
+			Result := es_cloud_storage.user_licenses (a_user)
+		end
+
+	licences_for_plan (a_plan: ES_CLOUD_PLAN): LIST [ES_CLOUD_LICENSE]
+		do
+			Result := es_cloud_storage.licences_for_plan (a_plan)
+		end
+
+feature -- Element change license
+
+	new_license_for_plan (a_plan: ES_CLOUD_PLAN): ES_CLOUD_LICENSE
 		local
-			l_id: INTEGER_64
+			k: STRING_32
 		do
-			if a_id_or_name.is_integer_64 then
-				l_id := a_id_or_name.to_integer_64
+			k := cms_api.new_random_identifier (16, once "ABCDEFGHJKMNPQRSTUVW23456789") -- Without I O L 0 1 , which are sometime hard to distinguish!
+			create Result.make (0, k, a_plan)
+			es_cloud_storage.save_license (Result)
+		end
+
+	save_new_license (a_license: ES_CLOUD_LICENSE; a_user: detachable ES_CLOUD_USER)
+		do
+			es_cloud_storage.save_license (a_license)
+			if a_user /= Void then
+				assign_license_to_user (a_license, a_user)
 			end
-			across
-				organizations as ic
-			until
-				Result /= Void
-			loop
-				Result := ic.item
-				if l_id /= 0 and then Result.id = l_id then
-						-- Found by id
-				elseif Result.name.is_case_insensitive_equal_general (a_id_or_name) then
-						-- Found by name
+		end
+
+	update_license (a_license: ES_CLOUD_LICENSE; a_user: detachable ES_CLOUD_USER)
+		require
+			existing_license: license (a_license.id) /= Void
+		do
+			if a_user /= Void and then not user_has_license (a_user, a_license.id) then
+				assign_license_to_user (a_license, a_user)
+			end
+			es_cloud_storage.save_license (a_license)
+		end
+
+	assign_license_to_user (a_license: ES_CLOUD_LICENSE; a_user: ES_CLOUD_USER)
+		do
+			es_cloud_storage.assign_license_to_user (a_license, a_user)
+		end
+
+	converted_license_from_user_subscription (a_sub: ES_CLOUD_PLAN_SUBSCRIPTION; a_installation: detachable ES_CLOUD_INSTALLATION): detachable ES_CLOUD_LICENSE
+		local
+			inst: ES_CLOUD_INSTALLATION
+		do
+			if attached {ES_CLOUD_PLAN_USER_SUBSCRIPTION} a_sub as sub then
+				Result := new_license_for_plan (sub.plan)
+				Result.set_creation_date (sub.creation_date)
+				if attached sub.expiration_date as exp then
+					Result.set_expiration_date (exp)
 				else
-					Result := Void
+					Result.set_remaining_days (sub.plan.trial_period_in_days)
+				end
+				if a_installation /= Void then
+					Result.set_platform (a_installation.platform)
+					Result.set_version (a_installation.product_version)
+				end
+				save_new_license (Result, sub.user)
+				es_cloud_storage.discard_user_subscription (sub)
+					-- HACK: previously installation tables included the uid, now we have license id `lid`
+				if attached es_cloud_storage.license_installations (sub.user_id) as lst then
+					across
+						lst as ic
+					loop
+						inst := ic.item
+						inst.update_license_id (Result.id)
+						es_cloud_storage.save_installation (inst)
+					end
 				end
 			end
-		end
-
-	user_organizations (a_user: ES_CLOUD_USER): detachable LIST [ES_CLOUD_ORGANIZATION]
-		do
-			Result := es_cloud_storage.user_organizations (a_user)
-		end
-
-	save_organization (org: ES_CLOUD_ORGANIZATION)
-		do
-			es_cloud_storage.save_organization (org)
-		end
-
-	delete_organization (org: ES_CLOUD_ORGANIZATION)
-		do
-			es_cloud_storage.delete_organization (org)
-		end
-
-	is_current_user_organization_owner_of (org: ES_CLOUD_ORGANIZATION): BOOLEAN
-		local
-			l_user: ES_CLOUD_USER
-		do
-			if attached cms_api.user as u then
-				create l_user.make (u)
-				Result := has_organization_role (l_user, {ES_CLOUD_ORGANIZATION}.role_owner_id, org)
-			end
-		end
-
-	is_current_user_organization_manager_of (org: ES_CLOUD_ORGANIZATION): BOOLEAN
-		local
-			l_user: ES_CLOUD_USER
-		do
-			if attached cms_api.user as u then
-				create l_user.make (u)
-				Result := is_organization_manager (l_user, org)
-			end
-		end
-
-	is_organization_manager (a_user: ES_CLOUD_USER; org: ES_CLOUD_ORGANIZATION): BOOLEAN
-		do
-			Result := has_organization_role (a_user, {ES_CLOUD_ORGANIZATION}.role_owner_id, org)
-				or else has_organization_role (a_user, {ES_CLOUD_ORGANIZATION}.role_manager_id, org)
-		end
-
-	has_organization_role (a_user: ES_CLOUD_USER; a_role: INTEGER; org: ES_CLOUD_ORGANIZATION): BOOLEAN
-		do
-			across
-				es_cloud_storage.organization_members (org, a_role) as ic
-			until
-				Result
-			loop
-				if a_user.same_as (ic.item) then
-					Result := True
-				end
-			end
-		end
-
-	organization_owners (org: ES_CLOUD_ORGANIZATION): LIST [ES_CLOUD_USER]
-		do
-			Result := es_cloud_storage.organization_members (org, {ES_CLOUD_ORGANIZATION}.role_owner_id)
-		end
-
-	organization_managers (org: ES_CLOUD_ORGANIZATION): LIST [ES_CLOUD_USER]
-		do
-			Result := es_cloud_storage.organization_members (org, {ES_CLOUD_ORGANIZATION}.role_manager_id)
-			Result.append (organization_owners (org))
-		end
-
-	organization_members (org: ES_CLOUD_ORGANIZATION): LIST [ES_CLOUD_USER]
-		do
-			Result := es_cloud_storage.organization_members (org, {ES_CLOUD_ORGANIZATION}.role_member_id)
-			Result.append (organization_managers (org))
-		end
-
-	new_membership (org: ES_CLOUD_ORGANIZATION; a_user: ES_CLOUD_USER; a_role: INTEGER)
-		do
-			es_cloud_storage.save_membership (org, a_user, a_role)
-		end
-
-	update_membership (org: ES_CLOUD_ORGANIZATION; a_user: ES_CLOUD_USER; a_role: INTEGER)
-		do
-			es_cloud_storage.save_membership (org, a_user, a_role)
-		end
-
-	discard_membership (org: ES_CLOUD_ORGANIZATION; a_user: ES_CLOUD_USER; a_role: INTEGER)
-		do
-			es_cloud_storage.discard_membership (org, a_user, a_role)
 		end
 
 feature -- Access: store
 
-	store: ES_CLOUD_STORE
+	store (a_currency: detachable READABLE_STRING_8): ES_CLOUD_STORE
 		local
 			l_item: ES_CLOUD_STORE_ITEM
-			l_cents: INTEGER
+			l_cents: NATURAL_32
 		do
-			Result := internal_store
+			Result := internal_store (a_currency)
 			if Result = Void then
-				create Result.make
-				if attached cms_api.module_configuration_by_name ({ES_CLOUD_MODULE}.name, "store") as cfg then
+				if a_currency = Void then
+					create Result.make
+				else
+					create Result.make_with_currency (a_currency)
+				end
+				if attached cms_api.module_configuration_by_name ({ES_CLOUD_MODULE}.name, "store-" + Result.currency) as cfg then
+					set_internal_store (Result)
 					if attached cfg.table_keys ("") as lst then
 						across
 							lst as ic
@@ -251,12 +244,13 @@ feature -- Access: store
 								attached tb.item ("currency") as l_currency
 							then
 								if attached tb.item ("price.cents") as l_cents_price then
-									l_cents := l_cents_price.to_integer
+									l_cents := l_cents_price.to_natural_32
 								else
 									l_cents := 0
 								end
-								create l_item.make (l_plan)
-								l_item.set_price (l_price.to_integer, l_cents, l_currency.as_string_8)
+								create l_item.make (ic.item)
+								l_item.set_price (l_price.to_natural_32, l_cents, l_currency.to_string_8, tb.item ("interval"))
+								l_item.set_name (l_plan)
 								Result.extend (l_item)
 							end
 						end
@@ -265,15 +259,33 @@ feature -- Access: store
 			end
 		end
 
-	internal_store: detachable ES_CLOUD_STORE
-
-
-feature -- Access: users
-
-	subscriptions: LIST [ES_CLOUD_PLAN_SUBSCRIPTION]
+	internal_store (a_currency: detachable READABLE_STRING_8): detachable ES_CLOUD_STORE
+		local
+			l_currency: READABLE_STRING_8
 		do
-			Result := es_cloud_storage.subscriptions
+			l_currency := a_currency
+			if l_currency = Void then
+				l_currency := {ES_CLOUD_STORE}.default_currency
+			end
+			if attached internal_store_by_currency as tb then
+				Result := tb.item (l_currency)
+			end
 		end
+
+	set_internal_store (a_store: ES_CLOUD_STORE)
+		local
+			tb: like internal_store_by_currency
+		do
+			tb := internal_store_by_currency
+			if tb = Void then
+				create tb.make_caseless (1)
+			end
+			tb[a_store.currency] := a_store
+		end
+
+	internal_store_by_currency: detachable STRING_TABLE [ES_CLOUD_STORE]
+
+feature -- Access: subscriptions
 
 	default_concurrent_sessions_limit: NATURAL = 1
 	 		-- Default, a unique concurrent session!
@@ -290,45 +302,6 @@ feature -- Access: users
 			end
 		end
 
-	user_direct_subscription (a_user: ES_CLOUD_USER): detachable ES_CLOUD_PLAN_SUBSCRIPTION
-		do
-			Result := es_cloud_storage.user_subscription (a_user)
-		end
-
-	user_subscription (a_user: ES_CLOUD_USER): detachable ES_CLOUD_PLAN_SUBSCRIPTION
-		local
-			sub: detachable ES_CLOUD_PLAN_SUBSCRIPTION
-		do
-			Result := es_cloud_storage.user_subscription (a_user)
-			if Result = Void or else Result.is_expired then
-				if attached user_organizations (a_user) as orgs then
-					across
-						orgs as ic
-					until
-						sub /= Void
-					loop
-						sub := organization_subscription (ic.item)
-					end
-					if sub /= Void and then sub.is_active then
-						Result := sub
-					end
-				end
-			end
-			if Result = Void then
-					-- Subscribe to default plan
-				if attached default_plan as dft then
-					create {ES_CLOUD_PLAN_USER_SUBSCRIPTION} Result.make (a_user, dft)
-						-- Set default plan!
-					es_cloud_storage.save_subscription (Result)
-				end
-			end
-		end
-
-	organization_subscription (org: ES_CLOUD_ORGANIZATION): detachable ES_CLOUD_PLAN_SUBSCRIPTION
-		do
-			Result := es_cloud_storage.organization_subscription (org)
-		end
-
 	discard_installation (inst: ES_CLOUD_INSTALLATION)
 		do
 			es_cloud_storage.discard_installation (inst)
@@ -340,9 +313,14 @@ feature -- Access: users
 			user_installations_sorter.reverse_sort (Result)
 		end
 
-	user_installation (a_user: ES_CLOUD_USER; a_install_id: READABLE_STRING_GENERAL): detachable ES_CLOUD_INSTALLATION
+	installation (a_install_id: READABLE_STRING_GENERAL): detachable ES_CLOUD_INSTALLATION
 		do
-			Result := es_cloud_storage.user_installation (a_user, a_install_id)
+			Result := es_cloud_storage.installation (a_install_id)
+		end
+
+	license_installations (a_license: ES_CLOUD_LICENSE): LIST [ES_CLOUD_INSTALLATION]
+		do
+			Result := es_cloud_storage.license_installations (a_license.id)
 		end
 
 	user_installations_sorter: SORTER [ES_CLOUD_INSTALLATION]
@@ -355,12 +333,12 @@ feature -- Access: users
 							if attached v.creation_date as v_cd then
 								Result := u_cd < v_cd
 							else
-								Result := u.installation_id < v.installation_id
+								Result := u.id < v.id
 							end
 						elseif v.creation_date /= Void then
 							Result := True
 						else
-							Result := u.installation_id < v.installation_id
+							Result := u.id < v.id
 						end
 					end
 				)
@@ -469,53 +447,6 @@ feature -- Change
 			es_cloud_storage.delete_plan (a_plan)
 		end
 
-	subscribe_user_to_plan_until_date (a_user: ES_CLOUD_USER; a_plan: ES_CLOUD_PLAN; a_exp_date: DATE)
-		require
-			a_plan.has_id
-		local
-			sub: ES_CLOUD_PLAN_USER_SUBSCRIPTION
-			l_date: DATE
-			y,mo: INTEGER
-		do
-			create sub.make (a_user, a_plan)
-			sub.set_expiration_date (create {DATE_TIME}.make_by_date_time (a_exp_date, create {TIME}.make (23, 59, 59)))
-			es_cloud_storage.save_user_subscription (sub)
-		end
-
-	subscribe_user_to_plan (a_user: ES_CLOUD_USER; a_plan: ES_CLOUD_PLAN; nb_days: INTEGER)
-		require
-			a_plan.has_id
-		local
-			sub: ES_CLOUD_PLAN_USER_SUBSCRIPTION
-			l_date: DATE
-			y,mo: INTEGER
-		do
-			create sub.make (a_user, a_plan)
-			l_date := sub.creation_date.date.twin
-			l_date.day_add (nb_days)
-			if nb_days /= 0 then
-				sub.set_expiration_date (create {DATE_TIME}.make_by_date_time (l_date, sub.creation_date.time))
-			end
-			es_cloud_storage.save_user_subscription (sub)
-		end
-
-	subscribe_organization_to_plan (org: ES_CLOUD_ORGANIZATION; a_plan: ES_CLOUD_PLAN; nb_days: INTEGER)
-		require
-			a_plan.has_id
-		local
-			sub: ES_CLOUD_PLAN_ORGANIZATION_SUBSCRIPTION
-			l_date: DATE
-			y,mo: INTEGER
-		do
-			create sub.make (org, a_plan)
-			l_date := sub.creation_date.date.twin
-			l_date.day_add (nb_days)
-			if nb_days /= 0 then
-				sub.set_expiration_date (create {DATE_TIME}.make_by_date_time (l_date, sub.creation_date.time))
-			end
-			es_cloud_storage.save_organization_subscription (sub)
-		end
-
 	ping_installation (a_user: ES_CLOUD_USER; a_session: ES_CLOUD_SESSION)
 		do
 			a_session.set_last_date (create {DATE_TIME}.make_now_utc)
@@ -548,11 +479,11 @@ feature -- Change
 			end
 		end
 
-	register_installation (a_user: ES_CLOUD_USER; a_install_id: READABLE_STRING_GENERAL; a_info: detachable READABLE_STRING_GENERAL)
+	register_installation (a_license: ES_CLOUD_LICENSE; a_install_id: READABLE_STRING_GENERAL; a_info: detachable READABLE_STRING_GENERAL)
 		local
 			ins: ES_CLOUD_INSTALLATION
 		do
-			create ins.make (a_install_id, a_user)
+			create ins.make (a_install_id, a_license)
 			ins.set_info (a_info)
 			es_cloud_storage.save_installation (ins)
 		end

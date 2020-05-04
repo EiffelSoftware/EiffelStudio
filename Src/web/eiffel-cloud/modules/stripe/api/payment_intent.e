@@ -36,8 +36,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	id: IMMUTABLE_STRING_8
-
 	client_secret: IMMUTABLE_STRING_8
 
 	amount: INTEGER_32
@@ -45,11 +43,6 @@ feature -- Access
 	currency: READABLE_STRING_8
 
 feature -- Element change
-
-	set_id (v: READABLE_STRING_8)
-		do
-			id := v
-		end
 
 	set_client_secret (v: READABLE_STRING_8)
 		do

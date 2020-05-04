@@ -33,8 +33,6 @@ feature -- Execution
 
 	execute (req: WSF_REQUEST; res: WSF_RESPONSE)
 			-- Execute handler for `req' and respond in `res'.
-		local
-			l_uid: READABLE_STRING_GENERAL
 		do
 			if req.is_get_request_method then
 				get_cloud (req, res)
@@ -57,7 +55,8 @@ feature -- Execution
 			l_display_all: BOOLEAN
 			k: READABLE_STRING_32
 			ago: DATE_TIME_AGO_CONVERTER
-			l_can_be_deleted: BOOLEAN
+			l_can_be_deleted,
+			l_user_has_no_license: BOOLEAN
 		do
 			if attached req.query_parameter ("display") as d and then d.is_case_insensitive_equal ("all") then
 				l_display_all := True
@@ -80,7 +79,7 @@ feature -- Execution
 					attached es_cloud_api.user_installations (l_user) as l_installations and then
 					not l_installations.is_empty
 				then
-					s.append ("<p>EiffelStudio is installed on: ")
+					s.append ("<p>EiffelStudio is installed on " + l_installations.count.out + " devices: ")
 					if l_display_all then
 						s.append ("<a class=%"note%" href=%"" + req.percent_encoded_path_info + "%">only active sessions</a>")
 					else
@@ -91,7 +90,7 @@ feature -- Execution
 						l_installations as ic
 					loop
 						inst := ic.item
-						l_sessions := es_cloud_api.user_sessions (l_user, inst.installation_id, not l_display_all)
+						l_sessions := es_cloud_api.user_sessions (l_user, inst.id, not l_display_all)
 						s.append ("<li class=%"es-installation")
 						-- FIXME: [2019-10-10]
 						l_can_be_deleted := True
@@ -109,11 +108,11 @@ feature -- Execution
 							l_can_be_deleted := False
 						end
 						if l_can_be_deleted and then api.has_permission ({ES_CLOUD_MODULE}.perm_discard_own_installations) then
-							s.append (" discardable%" data-user-id=%""+ l_user.id.out +"%" data-installation-id=%""+ url_encoded (inst.installation_id) +"%">")
+							s.append (" discardable%" data-user-id=%""+ l_user.id.out +"%" data-installation-id=%""+ url_encoded (inst.id) +"%">")
 						else
 							s.append ("%">")
 						end
-						s.append (html_encoded (inst.installation_id))
+						s.append (html_encoded (inst.id))
 						if attached inst.creation_date as l_creation_date then
 							s.append (" <span class=%"creation%" title=%"" + date_time_to_string (l_creation_date) + "%">")
 							ago.append_date_to ("", l_creation_date, s)
@@ -195,8 +194,84 @@ feature -- Execution
 				end
 				s.append ("</div>")
 
-				s.append ("<div class=%"es-subscription%">")
-				if attached es_cloud_api.user_subscription (l_user) as sub then
+				s.append ("<div class=%"es-licenses%">")
+				if attached es_cloud_api.user_licenses (l_user) as lics and then not lics.is_empty then
+					across
+						lics as ic
+					loop
+						if
+							attached ic.item as l_user_lic and then
+							attached l_user_lic.license as lic
+						then
+							l_plan := lic.plan
+							s.append ("<p>License "+ html_encoded (lic.key) + " for plan <span class=%"es-plan-title%">")
+							s.append (html_encoded (l_plan.title_or_name))
+							s.append ("</span>")
+							s.append ("<ul>")
+							s.append ("<li class=%"creation%">Started ")
+							s.append (api.date_time_to_string (lic.creation_date))
+							s.append ("</li>")
+							if lic.is_active then
+								if attached lic.expiration_date as exp then
+									s.append ("<li class=%"expiration%">Renewal date ")
+									s.append (api.date_time_to_string (exp))
+									s.append (" (")
+									s.append (lic.days_remaining.out)
+									s.append (" days remaining)")
+									s.append ("</li>")
+								else
+									s.append ("<li class=%"status success%">ACTIVE</li>")
+								end
+							elseif lic.is_fallback then
+								s.append ("<li class=%"status warning%">Fallback license</li>")
+							else
+								s.append ("<li class=%"status warning%">EXPIRED</li>")
+							end
+							if attached lic.platform as l_platform then
+								s.append ("<li class=%"limit warning%">Limited to platform: " + html_encoded (l_platform) + "</li>")
+							end
+							if attached lic.version as l_product_version then
+								s.append ("<li class=%"limit warning%">Limited to version: " + html_encoded (l_product_version) + "</li>")
+							end
+							if attached es_cloud_api.license_installations (lic) as lst and then not lst.is_empty then
+								s.append ("<li class=%"limit%">Installation(s): " + lst.count.out)
+								if l_plan.installations_limit > 0 then
+									s.append (" / " + l_plan.installations_limit.out + " device(s)")
+									if l_plan.installations_limit.to_integer_32 <= lst.count then
+										s.append (" (<span class=%"warning%">No more installation available</span>)")
+										s.append ("<div class=%"es-installations%">To install on another device, please revoke one the previous installation(s):")
+									end
+								end
+								s.append ("<ul>")
+								across
+									lst as inst_ic
+								loop
+									inst := inst_ic.item
+									s.append ("<li class=%"es-installation discardable%" data-user-id=%"" + u.id.out + "%" data-installation-id=%"" + url_encoded (inst.id) + "%" >")
+									s.append (html_encoded (inst.id))
+									s.append ("</li>%N")
+								end
+								s.append ("</ul>")
+
+								s.append ("</li>")
+							elseif l_plan.installations_limit > 0 then
+								s.append ("<li class=%"limit warning%">Can be installed on: " + l_plan.installations_limit.out + " devices</li>")
+							end
+
+							s.append ("</ul>")
+						end
+					end
+				else
+					s.append ("Please subscribe to a license ...")
+					l_user_has_no_license := True
+				end
+				s.append ("</div>")
+
+				if
+					l_user_has_no_license and then
+					attached es_cloud_api.user_subscription (l_user) as sub
+				then
+					s.append ("<div class=%"es-subscription%">")
 					l_plan := sub.plan
 					s.append ("<p>You are subscribed to plan: <span class=%"es-plan-title%">")
 					s.append (html_encoded (l_plan.title_or_name))
@@ -225,10 +300,10 @@ feature -- Execution
 						s.append ("<li class=%"status warning%">EXPIRED</li>")
 					end
 					s.append ("</ul>")
-				else
-					s.append ("Please subscribe to a plan ...")
+					s.append ("</div>")
 				end
-				s.append ("</div>")
+
+
 			else
 				s.append ("<p>Please Login or Register...</p>")
 			end

@@ -1,58 +1,56 @@
 div.pricing {
-	background-color: #eaedf5;
-}
+  background-color: #eaedf5; }
+
 div.plans {
-	display: flex;
-	flex-wrap: wrap;
-}
+  display: flex;
+  flex-wrap: wrap; }
+  div.plans > div {
+    width: 25%;
+    margin: 20px;
+    padding: 20px;
+    flex: 1;
+    border: solid 1px #999;
+    background-color: #fff; }
 
-div.plans > div {
-	width: 25%;
-	margin: 20px;
-	padding: 20px;
-	flex: 1;
-	border: solid 1px #999;
-	background-color: #fff;
-}
-div.plan div.prices {
-	margin: 5px 0 5px 0;
-}
 div.plan div.actions {
-	margin-top: 10px;
-	padding: 10px;
-	display: flex;
-	flex-wrap: wrap;
-}
-div.plan div.actions a {
-	border: solid 1px white;
-	font-family: arial;
-	font-weight: bold;
-	text-decoration: none;
-	background-color: #00a9e2;
-	color: white;
-	padding: 15px;
-	margin: 5px auto 5px auto;
-	width: 90%;
-	clear: both;
-	display: block;
-	text-align: center;
-}
-div.plan div.actions a:hover {
-	border: solid 1px blue;
-	background-color: #0091D7;
-}
-
+  margin-top: 10px;
+  padding: 10px;
+  display: flex;
+  flex-wrap: wrap; }
+  div.plan div.actions a, div.plan div.actions button {
+    border: solid 1px white;
+    font-family: arial;
+    font-weight: bold;
+    text-decoration: none;
+    background-color: #00a9e2;
+    color: white;
+    padding: 15px;
+    margin: 5px auto 5px auto;
+    width: 90%;
+    clear: both;
+    display: block;
+    text-align: center; }
+  div.plan div.actions a:hover, div.plan div.actions button:hover {
+    border: solid 1px blue;
+    background-color: #0091D7; }
+  div.plan div.actions button.try {
+    background-color: #006f9f;
+    padding: 5px 15px 5px 15px; }
+div.plan div.option {
+  border-bottom: solid 1px #ccc; }
+  div.plan div.option div.prices {
+    margin: 5px 0 5px 0; }
+  div.plan div.option button {
+    width: 90%; }
 
 div.pay {
-	padding: 10px;
-}
-div.pay div#card-element {
-	margin: 20px;
-	padding: 20px;
-	border: dotted 1px #ccc;
-}
+  padding: 10px; }
+  div.pay div#card-element {
+    margin: 20px;
+    padding: 20px;
+    border: dotted 1px #ccc; }
+  div.pay button {
+    margin: 10px;
+    padding: 10px; }
 
-div.pay button {
-	margin: 10px;
-	padding: 10px;
-}
+/*# sourceMappingURL=pricing.css.map */

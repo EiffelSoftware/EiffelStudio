@@ -18,9 +18,6 @@ create
 feature -- Execution
 
 	execute (req: WSF_REQUEST; res: WSF_RESPONSE)
-		local
-			r: like new_generic_response
-			s: STRING
 		do
 			if api.has_permission ("manage es accounts") then
 				if req.is_get_request_method then

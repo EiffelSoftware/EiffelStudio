@@ -30,9 +30,6 @@ feature -- Execution
 
 	execute (req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
-			r: like new_generic_response
-			s: STRING
-			l_organizations: LIST [ES_CLOUD_ORGANIZATION]
 			l_organization: detachable ES_CLOUD_ORGANIZATION
 		do
 			if attached {WSF_STRING} req.path_parameter ("oid") as p_oid then
@@ -153,11 +150,8 @@ feature {NONE} -- Authorized request handling
 	handle_plan (org: ES_CLOUD_ORGANIZATION; req: WSF_REQUEST; res: WSF_RESPONSE)
 		local
 			f: like new_edit_membership_form
-			uid, l_op: READABLE_STRING_GENERAL
-			l_user: ES_CLOUD_USER
 			r: like new_generic_response
 			oid: INTEGER_64
-			l_role: INTEGER
 		do
 
 			r := new_generic_response (req, res)
@@ -448,7 +442,6 @@ feature {NONE} -- Web Forms
 	new_delete_membership_form (req: WSF_REQUEST; org: ES_CLOUD_ORGANIZATION; u: ES_CLOUD_USER; a_role: INTEGER): CMS_FORM
 		local
 			hf: WSF_FORM_HIDDEN_INPUT
-			tf: WSF_FORM_TEXT_INPUT
 			l_submit: WSF_FORM_SUBMIT_INPUT
 		do
 			inspect
@@ -493,7 +486,6 @@ feature {NONE} -- Implementation: organization with plan
 			num: WSF_FORM_NUMBER_INPUT
 			s: STRING
 			l_submit: WSF_FORM_SUBMIT_INPUT
-			l_user: detachable ES_CLOUD_USER
 			l_sub: detachable ES_CLOUD_PLAN_SUBSCRIPTION
 			l_plan: detachable ES_CLOUD_PLAN
 		do

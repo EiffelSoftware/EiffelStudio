@@ -118,7 +118,7 @@ feature -- Operation
 			end
 		end
 
-	sql_query (a_sql_statement: STRING; a_params: detachable STRING_TABLE [detachable ANY])
+	sql_query (a_sql_statement: READABLE_STRING_8; a_params: detachable STRING_TABLE [detachable ANY])
 			-- Execute sql query `a_sql_statement' with optional parameters `a_params'.
 		deferred
 		end
@@ -128,42 +128,42 @@ feature -- Operation
 		deferred
 		end
 
-	sql_insert (a_sql_statement: STRING; a_params: detachable STRING_TABLE [detachable ANY])
+	sql_insert (a_sql_statement: READABLE_STRING_8; a_params: detachable STRING_TABLE [detachable ANY])
 			-- Execute sql insert `a_sql_statement' with optional parameters `a_params'.
 		deferred
 		end
 
-	sql_modify (a_sql_statement: STRING; a_params: detachable STRING_TABLE [detachable ANY])
+	sql_modify (a_sql_statement: READABLE_STRING_8; a_params: detachable STRING_TABLE [detachable ANY])
 			-- Execute sql modify `a_sql_statement' with optional parameters `a_params'.
 		deferred
 		end
 
-	sql_delete (a_sql_statement: STRING; a_params: detachable STRING_TABLE [detachable ANY])
+	sql_delete (a_sql_statement: READABLE_STRING_8; a_params: detachable STRING_TABLE [detachable ANY])
 			-- Execute sql delete `a_sql_statement' with optional parameters `a_params'.
 		deferred
 		end
 
-	sql_finalize_query (a_sql_statement: STRING)
+	sql_finalize_query (a_sql_statement: READABLE_STRING_8)
 		do
 			sql_finalize_statement (a_sql_statement)
 		end
 
-	sql_finalize_insert (a_sql_statement: STRING)
+	sql_finalize_insert (a_sql_statement: READABLE_STRING_8)
 		do
 			sql_finalize_statement (a_sql_statement)
 		end
 
-	sql_finalize_modify (a_sql_statement: STRING)
+	sql_finalize_modify (a_sql_statement: READABLE_STRING_8)
 		do
 			sql_finalize_statement (a_sql_statement)
 		end
 
-	sql_finalize_delete (a_sql_statement: STRING)
+	sql_finalize_delete (a_sql_statement: READABLE_STRING_8)
 		do
 			sql_finalize_statement (a_sql_statement)
 		end
 
-	sql_finalize_statement (a_sql_statement: STRING)
+	sql_finalize_statement (a_sql_statement: READABLE_STRING_8)
 		do
 			sql_finalize
 		end
@@ -350,7 +350,7 @@ feature -- Access
 		deferred
 		end
 
-	sql_read_string (a_index: INTEGER): detachable STRING
+	sql_read_string (a_index: INTEGER): detachable READABLE_STRING_8
 			-- Retrieved value at `a_index' position in `item'.
 		local
 			l_item: like sql_item
@@ -372,7 +372,7 @@ feature -- Access
 			end
 		end
 
-	sql_read_string_32 (a_index: INTEGER): detachable STRING_32
+	sql_read_string_32 (a_index: INTEGER): detachable READABLE_STRING_32
 			-- Retrieved value at `a_index' position in `item'.
 		local
 			l_item: like sql_item
@@ -415,14 +415,35 @@ feature -- Access
 
 feature -- Conversion
 
-	sql_statement (a_statement: STRING): STRING
+	sql_statement (a_statement: READABLE_STRING_8): READABLE_STRING_8
 			-- Statement normalized for underlying SQL database.
 		deferred
 		end
 
+feature -- Parameters helpers
+
+	sql_parameters (nb: INTEGER; d: detachable ITERABLE [TUPLE [name: READABLE_STRING_GENERAL; value: detachable ANY]]): STRING_TABLE [detachable ANY]
+		do
+			create Result.make (nb)
+			if d /= Void then
+				sql_append_parameters (d, Result)
+			end
+		end
+
+	sql_append_parameters (d: ITERABLE [TUPLE [name: READABLE_STRING_GENERAL; value: detachable ANY]]; a_params: STRING_TABLE [detachable ANY])
+		do
+			across
+				d as ic
+			loop
+				if attached ic.item as l_item then
+					a_params.put (l_item.value, l_item.name)
+				end
+			end
+		end
+
 feature {NONE} -- Implementation
 
-	next_sql_statement (a_script: STRING; a_start_index: INTEGER; a_offset: CELL [INTEGER]): detachable STRING
+	next_sql_statement (a_script: STRING; a_start_index: INTEGER; a_offset: CELL [INTEGER]): detachable STRING_8
 		local
 			i,j,n: INTEGER
 			c: CHARACTER
@@ -511,6 +532,6 @@ feature {NONE} -- Implementation
 		end
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

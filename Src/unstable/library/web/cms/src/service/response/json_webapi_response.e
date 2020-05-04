@@ -34,6 +34,25 @@ feature -- Element change
 			add_link ("self", Void, a_href)
 		end
 
+feature -- Fields / json
+
+	import_json_object (a_json: READABLE_STRING_8)
+		local
+			jp: JSON_PARSER
+		do
+			create jp.make_with_string (a_json)
+			jp.parse_content
+			if jp.is_valid and jp.is_parsed then
+				if attached jp.parsed_json_object as jo then
+					across
+						jo as ic
+					loop
+						resource.put (ic.item, ic.key)
+					end
+				end
+			end
+		end
+
 feature -- Fields		
 
 --	add_field (a_name: READABLE_STRING_GENERAL; a_value: detachable ANY)
@@ -165,6 +184,6 @@ feature {NONE} -- Implementation factory
 invariant
 
 note
-	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

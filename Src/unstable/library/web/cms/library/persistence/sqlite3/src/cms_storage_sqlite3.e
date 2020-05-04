@@ -133,7 +133,7 @@ feature -- Operation
 
 	last_sqlite_result_cursor: detachable SQLITE_STATEMENT_ITERATION_CURSOR
 
-	sql_query (a_sql_statement: STRING; a_params: detachable STRING_TABLE [detachable ANY])
+	sql_query (a_sql_statement: READABLE_STRING_8; a_params: detachable STRING_TABLE [detachable ANY])
 			-- <Precursor>
 		local
 			st: SQLITE_QUERY_STATEMENT
@@ -185,7 +185,7 @@ feature -- Operation
 			end
 		end
 
-	sql_insert (a_sql_statement: STRING; a_params: detachable STRING_TABLE [detachable ANY])
+	sql_insert (a_sql_statement: READABLE_STRING_8; a_params: detachable STRING_TABLE [detachable ANY])
 			-- <Precursor>
 		local
 			st: SQLITE_INSERT_STATEMENT
@@ -211,7 +211,7 @@ feature -- Operation
 			end
 		end
 
-	sql_modify (a_sql_statement: STRING; a_params: detachable STRING_TABLE [detachable ANY])
+	sql_modify (a_sql_statement: READABLE_STRING_8; a_params: detachable STRING_TABLE [detachable ANY])
 			-- <Precursor>
 		local
 			st: SQLITE_MODIFY_STATEMENT
@@ -237,7 +237,7 @@ feature -- Operation
 			end
 		end
 
-	sql_delete (a_sql_statement: STRING; a_params: detachable STRING_TABLE [detachable ANY])
+	sql_delete (a_sql_statement: READABLE_STRING_8; a_params: detachable STRING_TABLE [detachable ANY])
 			-- <Precursor>
 		do
 			sql_modify (a_sql_statement, a_params)
@@ -246,7 +246,7 @@ feature -- Operation
 	sqlite_arguments (a_params: STRING_TABLE [detachable ANY]): ARRAYED_LIST [SQLITE_BIND_ARG [ANY]]
 		local
 			k: READABLE_STRING_GENERAL
-			k8: STRING
+			k8: READABLE_STRING_8
 			utf: UTF_CONVERTER
 		do
 			create Result.make (a_params.count)
@@ -255,7 +255,7 @@ feature -- Operation
 			loop
 				k := ic.key
 				if k.is_valid_as_string_8 then
-					k8 := k.as_string_8
+					k8 := k.to_string_8
 				else
 					k8 := utf.utf_32_string_to_utf_8_string_8 (k)
 				end
@@ -385,7 +385,7 @@ feature -- Access
 			end
 		end
 
-	sql_read_string_32 (a_index: INTEGER): detachable STRING_32
+	sql_read_string_32 (a_index: INTEGER): detachable READABLE_STRING_32
 			-- <Precursor>
 		local
 			utf: UTF_CONVERTER
@@ -442,10 +442,11 @@ feature -- Access
 
 feature -- Conversion
 
-	sql_statement (a_statement: STRING): STRING
+	sql_statement (a_statement: READABLE_STRING_8): READABLE_STRING_8
 			-- <Precursor>.
 		local
 			i: INTEGER
+			s: STRING_8
 		do
 			Result := a_statement
 			from
@@ -455,10 +456,9 @@ feature -- Conversion
 			loop
 				i := a_statement.substring_index ("KEY AUTO_INCREMENT", i)
 				if i > 0 then
-					if Result = a_statement then
-						create Result.make_from_string (a_statement)
-					end
-					Result.remove (i + 8)
+					create s.make_from_string (a_statement)
+					s.remove (i + 8)
+					Result := s
 					i := i + 14
 				end
 			end

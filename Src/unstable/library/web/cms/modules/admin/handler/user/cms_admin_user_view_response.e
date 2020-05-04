@@ -50,6 +50,7 @@ feature -- Execution
 			s: STRING
 			l_role: CMS_USER_ROLE
 			ago: DATE_TIME_AGO_CONVERTER
+			f: CMS_FORM
 		do
 			a_response.set_value (a_user, "user")
 			lnk := api.administration_link (a_response.translation ("View", Void), "user/" + a_user.id.out)
@@ -120,8 +121,11 @@ feature -- Execution
 				end
 				s.append ("</ul>%N")
 			end
-
 			s.append ("</div>")
+			create f.make (a_response.request.percent_encoded_path_info, "admin-view-user")
+			f.extend (create {WSF_FORM_HIDDEN_INPUT}.make_with_text ("user-id", a_user.id.out))
+			api.hooks.invoke_form_alter (f, Void, Current)
+			f.append_to_html (wsf_theme, s)
 			a_response.set_title (a_user.name)
 			a_response.set_main_content (s)
 		end

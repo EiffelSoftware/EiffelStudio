@@ -575,15 +575,24 @@ feature -- Access: storage
 			l_message: STRING
 		do
 			if not retried then
-				to_implement ("Refactor database setup")
+				debug
+					to_implement ("Refactor database setup")
+				end
 				if
 					attached storage_configuration_driver as l_db_driver and then
 					attached storage_drivers.item (l_db_driver) as l_builder
 				then
 					Result := l_builder.storage (Current, a_error_handler)
+					if Result = Void and not a_error_handler.has_error then
+						a_error_handler.add_custom_error (0, "Database storage not found", l_message)
+					end
+				elseif not a_error_handler.has_error then
+					a_error_handler.add_custom_error (0, "Database driver not found", l_message)
 				end
 			else
-				to_implement ("Workaround code, persistence layer does not implement yet this kind of error handling.")
+				debug
+					to_implement ("Workaround code, persistence layer does not implement yet this kind of error handling.")
+				end
 					-- error handling.
 				create l_message.make (1024)
 				if attached (create {EXCEPTION_MANAGER}).last_exception as l_exception then
@@ -635,6 +644,6 @@ feature -- Element change
 		end
 
 note
-	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

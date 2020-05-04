@@ -89,6 +89,15 @@ feature -- Change
 			items.force (m, m.name)
 		end
 
+	sort
+		do
+			across
+				items as ic
+			loop
+				ic.item.sort
+			end
+		end
+
 feature -- Access
 
 	new_cursor: ITERATION_CURSOR [CMS_MENU]
@@ -102,6 +111,6 @@ feature {NONE} -- Implementation
 	items: STRING_TABLE [CMS_MENU]
 
 ;note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

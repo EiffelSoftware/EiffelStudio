@@ -101,7 +101,7 @@ feature -- Link
 
 feature -- Url
 
-	absolute_url (a_path: STRING; opts: detachable CMS_API_OPTIONS): STRING
+	absolute_url (a_path: READABLE_STRING_8; opts: detachable CMS_API_OPTIONS): STRING_8
 		local
 			l_opts: detachable CMS_API_OPTIONS
 		do
@@ -113,7 +113,7 @@ feature -- Url
 			Result := url (a_path, l_opts)
 		end
 
-	url (a_path: READABLE_STRING_8; opts: detachable CMS_API_OPTIONS): STRING
+	url (a_path: READABLE_STRING_8; opts: detachable CMS_API_OPTIONS): STRING_8
 			-- URL for path `a_path' and optional parameters from `opts'.
 			--| Options `opts' could be
 			--|  - absolute: True|False	=> return absolute url
@@ -193,6 +193,6 @@ feature -- Url
 		end
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

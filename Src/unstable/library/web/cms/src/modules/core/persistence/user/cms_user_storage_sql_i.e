@@ -228,10 +228,7 @@ feature -- Change: user
 			l_security: SECURITY_PROVIDER
 		do
 			error_handler.reset
-			if
-				attached a_user.password as l_password and then
-				attached a_user.email as l_email
-			then
+			if attached a_user.password as l_password then
 				sql_begin_transaction
 				create l_security
 				l_password_salt := l_security.salt
@@ -242,7 +239,11 @@ feature -- Change: user
 				l_parameters.put (a_user.name, "name")
 				l_parameters.put (l_password_hash, "password")
 				l_parameters.put (l_password_salt, "salt")
-				l_parameters.put (l_email, "email")
+				if attached a_user.email as l_email then
+					l_parameters.put (l_email, "email")
+				else
+					l_parameters.put (Void, "email") -- CHECK if this is ok ...
+				end
 				l_parameters.put (create {DATE_TIME}.make_now_utc, "created")
 				l_parameters.put (a_user.status, "status")
   				l_parameters.put (a_user.profile_name, "profile_name")
@@ -260,7 +261,7 @@ feature -- Change: user
 				end
 			else
 				-- set error
-				error_handler.add_custom_error (-1, "bad request" , "Missing password or email")
+				error_handler.add_custom_error (-1, "bad request" , "Missing password")
 			end
 		end
 
@@ -1224,7 +1225,7 @@ feature -- Acess: Temp users
 			sql_finalize_query (sql_select_temp_recent_users)
 		end
 
-	token_by_temp_user_id (a_id: like {CMS_USER}.id): detachable STRING
+	token_by_temp_user_id (a_id: like {CMS_USER}.id): detachable READABLE_STRING_8
 			-- Number of items users.
 		local
 			l_parameters: STRING_TABLE [detachable ANY]
@@ -1463,6 +1464,6 @@ feature {NONE} -- SQL select
 
 
 note
-	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

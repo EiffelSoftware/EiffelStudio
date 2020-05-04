@@ -205,13 +205,16 @@ feature -- Hooks configuration
 			lnk: CMS_LOCAL_LINK
 		do
 			if attached a_response.user as u then
-				create lnk.make (u.name, "account")
+				create lnk.make (a_response.api.translation ("Your Account", Void), "account")
+					-- it could also use the display username
+				-- create lnk.make (u.name, "account")
+
 				lnk.set_weight (97)
 				a_menu_system.primary_menu.extend (lnk)
 
-				create lnk.make ("Logout", roc_logout_location)
+				create lnk.make (a_response.api.translation ("Logout", Void), roc_logout_location)
 			else
-				create lnk.make ("Login", roc_login_location)
+				create lnk.make (a_response.api.translation ("Login", Void), roc_login_location)
 			end
 			lnk.set_weight (98)
 			if

@@ -201,19 +201,18 @@ feature -- Access: user
 feature -- Change User
 
 	new_user (a_user: CMS_USER)
-			-- Add a new user `a_user'.
+			-- Add a new user `a_user`.
 		require
 			no_id: not a_user.has_id
+			has_password: a_user.password /= Void
 			no_hashed_password: a_user.hashed_password = Void
 		do
 			reset_error
-			if
-				attached a_user.email as l_email
-			then
+			if attached a_user.password then
 				user_storage.new_user (a_user)
 				error_handler.append (user_storage.error_handler)
 			else
-				error_handler.add_custom_error (0, "bad new user request", "Missing password or email to create new user!")
+				error_handler.add_custom_error (0, "bad new user request", "Missing password to create new user!")
 			end
 		end
 
@@ -584,7 +583,7 @@ feature -- Access - Temp User
 			Result := user_storage.temp_recent_users (params.offset.to_integer_32, params.size.to_integer_32)
 		end
 
-	token_by_temp_user_id (a_id: like {CMS_USER}.id): detachable STRING
+	token_by_temp_user_id (a_id: like {CMS_USER}.id): detachable READABLE_STRING_8
 		do
 			Result := user_storage.token_by_temp_user_id (a_id)
 		end
@@ -673,6 +672,6 @@ feature -- Change Temp User
 --		end
 
 note
-	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

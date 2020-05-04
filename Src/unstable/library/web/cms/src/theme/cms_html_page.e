@@ -46,7 +46,7 @@ feature -- Access
 
 	language: STRING
 
-	head_lines: LIST [STRING]
+	head_lines: LIST [READABLE_STRING_8]
 
 	head_lines_to_string: STRING
 		do
@@ -72,13 +72,13 @@ feature -- Header
 
 feature -- Region
 
-	regions: STRING_TABLE [STRING_8]
+	regions: STRING_TABLE [READABLE_STRING_8]
 			-- header
 			-- content
 			-- footer
 			-- could have sidebar first, sidebar second, ...
 
-	region (n: STRING_8): STRING_8
+	region (n: READABLE_STRING_GENERAL): READABLE_STRING_8
 		do
 			if attached regions.item (n) as r then
 				Result := r
@@ -111,18 +111,22 @@ feature -- Element change
 
 	add_to_region (a_content: READABLE_STRING_8; k: READABLE_STRING_GENERAL)
 		local
-			r: detachable STRING_8
+			r: detachable READABLE_STRING_8
 		do
 			r := regions.item (k)
 			if r = Void then
-				create r.make_from_string (a_content)
-				set_region (a_content, k)
+				create {STRING_8} r.make_from_string (a_content)
+				set_region (r, k)
 			else
-				r.append (a_content)
+				if attached {STRING_8} r as rw  then
+					rw.append (a_content)
+				else
+					set_region (r + a_content, k)
+				end
 			end
 		end
 
-	set_region (a_content: STRING; k: READABLE_STRING_GENERAL)
+	set_region (a_content: READABLE_STRING_8; k: READABLE_STRING_GENERAL)
 		do
 			regions.force (a_content, k)
 		end
@@ -211,7 +215,7 @@ feature -- Element change
 		end
 
 note
-	copyright: "2011-2018, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 	source: "[
 			Eiffel Software

@@ -78,10 +78,10 @@ feature -- Status report
 
 feature -- Parameters			
 
-	page_parameter_id: STRING
+	page_parameter_id: READABLE_STRING_8
 			-- Parameter id for page value.
 
-	size_parameter_id: STRING
+	size_parameter_id: READABLE_STRING_8
 			-- Parameter id for size value.
 
 	maximum_ith_page_links: INTEGER
@@ -205,8 +205,8 @@ feature -- Conversion
 			end
 
 			create tb.make (2)
-			tb.force (page_size, size_parameter_id)
-			tb.force (1, page_parameter_id)
+			tb.force (page_size, size_parameter_id.to_string_8)
+			tb.force (1, page_parameter_id.to_string_8)
 			if curr > 1 then
 				create lnk.make (label_first, resource.expanded_string (tb))
 				Result.force (lnk)
@@ -284,6 +284,6 @@ feature -- Convertion
 		end
 
 note
-	copyright: "2011-2015, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

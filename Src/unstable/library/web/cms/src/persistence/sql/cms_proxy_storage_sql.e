@@ -64,7 +64,7 @@ feature -- Execution
 
 feature -- Operation
 
-	sql_query (a_sql_statement: STRING; a_params: detachable STRING_TABLE [detachable ANY])
+	sql_query (a_sql_statement: READABLE_STRING_8; a_params: detachable STRING_TABLE [detachable ANY])
 		do
 			sql_storage.sql_query (a_sql_statement, a_params)
 		end
@@ -75,17 +75,17 @@ feature -- Operation
 			sql_storage.sql_finalize
 		end
 
-	sql_insert (a_sql_statement: STRING; a_params: detachable STRING_TABLE [detachable ANY])
+	sql_insert (a_sql_statement: READABLE_STRING_8; a_params: detachable STRING_TABLE [detachable ANY])
 		do
 			sql_storage.sql_insert (a_sql_statement, a_params)
 		end
 
-	sql_modify (a_sql_statement: STRING; a_params: detachable STRING_TABLE [detachable ANY])
+	sql_modify (a_sql_statement: READABLE_STRING_8; a_params: detachable STRING_TABLE [detachable ANY])
 		do
 			sql_storage.sql_modify (a_sql_statement, a_params)
 		end
 
-	sql_delete (a_sql_statement: STRING; a_params: detachable STRING_TABLE [detachable ANY])
+	sql_delete (a_sql_statement: READABLE_STRING_8; a_params: detachable STRING_TABLE [detachable ANY])
 		do
 			sql_storage.sql_delete (a_sql_statement, a_params)
 		end
@@ -132,13 +132,13 @@ feature -- Access
 
 feature -- Conversion
 
-	sql_statement (a_statement: STRING): STRING
+	sql_statement (a_statement: READABLE_STRING_8): READABLE_STRING_8
 			-- <Precursor>
 		do
 			Result := sql_storage.sql_statement (a_statement)
 		end
 
 note
-	copyright: "2011-2017, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

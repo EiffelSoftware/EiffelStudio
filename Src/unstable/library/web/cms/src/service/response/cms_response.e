@@ -426,7 +426,7 @@ feature -- Blocks regions
 			l_region_name := block_region_settings.item (b.name)
 			if l_region_name = Void then
 				if attached setup.text_item ("blocks." + b.name + ".region") as l_setup_name then
-					l_region_name := l_setup_name.as_string_8 -- FIXME: potential truncated string 32.
+					l_region_name := utf_8_encoded (l_setup_name) -- FIXME: is utf-8 ok here?
 						-- Remember for later.
 					block_region_settings.force (l_region_name, b.name)
 				elseif a_default_region /= Void then
@@ -869,13 +869,36 @@ feature -- Generation
 
 			if api.enabled_modules.count <= 1 then
 					-- It is the required CMS_CORE_MODULE!
-				lnk := api.administration_link ("Install", "install")
-				if lnk.location.same_string (location) then
-						-- We are on the Install page!
+				if api.has_storage_error then
+					add_error_message ("Issue with the storage initialization!")
 				else
-					add_to_primary_menu (lnk)
+					lnk := api.administration_link ("Install", "install")
+					if lnk.location.same_string (location) then
+							-- We are on the Install page!
+					else
+						add_to_primary_menu (lnk)
+					end
 				end
 			end
+
+				-- Cms response
+			api.hooks.invoke_response_alter (Current)
+
+				-- Sort items
+			menu_system.sort
+
+				-- Values
+			common_prepare (page)
+			custom_prepare (page)
+
+				-- Cms values
+			api.hooks.invoke_value_table_alter (values, Current)
+
+				-- Predefined values
+			page.register_variable (page, "page") -- DO NOT REMOVE
+
+				-- Sort items
+			menu_system.sort
 
 				-- Blocks
 			create l_menu_list_prepared.make (0)
@@ -918,24 +941,6 @@ feature -- Generation
 				end
 			end
 			l_menu_list_prepared.wipe_out -- Clear for memory purpose.
-
-				-- Sort items
-			across menu_system as ic loop
-				ic.item.sort
-			end
-
-				-- Values
-			common_prepare (page)
-			custom_prepare (page)
-
-				-- Cms response
-			api.hooks.invoke_response_alter (Current)
-
-				-- Cms values
-			api.hooks.invoke_value_table_alter (values, Current)
-
-				-- Predefined values
-			page.register_variable (page, "page") -- DO NOT REMOVE
 
 				-- Values Associated with current Execution object.
 			across
@@ -1192,6 +1197,6 @@ feature {NONE} -- Execution
 		end
 
 note
-	copyright: "2011-2019, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
+	copyright: "2011-2020, Jocelyn Fiat, Javier Velilla, Eiffel Software and others"
 	license: "Eiffel Forum License v2 (see http://www.eiffel.com/licensing/forum.txt)"
 end

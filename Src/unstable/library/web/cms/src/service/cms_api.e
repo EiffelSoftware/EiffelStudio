@@ -66,11 +66,14 @@ feature {NONE} -- Initialize
 			initialize_content_filters_and_formats
 
 				-- Initialize storage.
+			has_storage_error := False
 			if attached setup.storage (error_handler) as l_storage then
 				storage := l_storage
+				has_storage_error := error_handler.has_error
 			else
 				create {CMS_STORAGE_NULL} storage
 				storage.error_handler.append (error_handler)
+				has_storage_error := error_handler.has_error
 				error_handler.remove_all_errors
 			end
 
@@ -794,18 +797,30 @@ feature -- Template
 		local
 			smt: CMS_SMARTY_TEMPLATE_TEXT
 		do
-			if attached file_content (a_loc) as txt then
-				create smt.make (txt)
-				across
-					builtin_variables as ic
-				loop
-					smt.set_value (ic.item, ic.key)
-				end
+			smt := resolved_smarty_template (a_loc)
+			if smt /= Void then
 				Result := smt.string
 			end
 		end
 
+	resolved_smarty_template (a_loc: PATH): detachable CMS_SMARTY_TEMPLATE_TEXT
+			-- Resolved smarty template located at `a_loc`.
+		do
+			if attached file_content (a_loc) as txt then
+				create Result.make (txt)
+				across
+					builtin_variables as ic
+				loop
+					Result.set_value (ic.item, ic.key)
+				end
+			end
+		end
+
 feature -- Status Report
+
+	has_storage_error: BOOLEAN
+			-- Has storage issue?
+			--| Can not connect, or database not found, or ...
 
 	has_error: BOOLEAN
 			-- Has error?
@@ -905,6 +920,8 @@ feature -- Internationalization (i18n)
 			Result := l_formatter.formatted_string (a_text, args)
 		end
 
+feature -- Formating		
+
 	formatted_date_time_ago (dt: DATE_TIME): STRING_32
 			-- Output date `dt` using time ago duration.
 		local
@@ -961,7 +978,53 @@ feature -- Internationalization (i18n)
 				Result.append_character ('0')
 			end
 			Result.append_integer (i)
+		end
 
+feature -- Factory
+
+	new_uppercase_uuid: STRING
+		do
+			Result := {UUID_GENERATOR}.generate_uuid.out
+		end
+
+	new_lowercase_uuid: STRING
+		do
+			Result := {UUID_GENERATOR}.generate_uuid.out.as_lower
+		end
+
+	new_random_identifier (a_length: INTEGER; a_chars: detachable READABLE_STRING_8): STRING
+		require
+			a_chars /= Void implies a_chars.count > 1
+		local
+			rnd: RANDOM
+			dt: DATE_TIME
+			n,i: INTEGER
+		do
+			create dt.make_now_utc
+			create rnd.set_seed (dt.seconds)
+			rnd.start
+			create Result.make_filled ('_', a_length)
+			n := a_length
+			if a_chars /= Void then
+				from until n = 0 loop
+					rnd.forth
+					i := rnd.item \\ a_chars.count
+					Result [n] := a_chars[i + 1]
+					n := n - 1
+				end
+			else
+				from until n = 1 loop
+					rnd.forth
+					i := rnd.item \\ 36
+					if i <= 9 then
+						Result [n] := '0' + i
+					else
+						Result [n] := 'A' + i - 10
+					end
+					n := n - 1
+				end
+				Result.put ('A' + i \\ 26, 1) -- Start with a letter!
+			end
 		end
 
 feature -- Emails
